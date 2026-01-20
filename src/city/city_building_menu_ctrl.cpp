@@ -53,11 +53,12 @@ void building_menu_ctrl_t::toggle_building(e_building_type type, bool enabled) {
 
     // additional buildings / building menus
     if (enabled) {
+        const auto &params = building_static_params::get(type);
         if (building_is_farm((e_building_type)type)) {
             toggle_building(BUILDING_MENU_FARMS);
         }
 
-        if (building_is_extractor(type) || building_is_harvester((e_building_type)type)) {
+        if (params.flags.is_extractor || building_is_harvester((e_building_type)type)) {
             toggle_building(BUILDING_MENU_RAW_MATERIALS);
             toggle_building(BUILDING_MENU_INDUSTRY);
         }
@@ -91,8 +92,9 @@ void building_menu_ctrl_t::toggle_building(e_building_type type, bool enabled) {
         if (building_is_water_crossing((e_building_type)type))
             toggle_building(BUILDING_MENU_WATER_CROSSINGS);
 
-        if (building_is_monument((e_building_type)type))
+        if (params.flags.is_monument) {
             toggle_building(BUILDING_MENU_MONUMENTS);
+        }
 
         if (building_is_education((e_building_type)type)) {
             toggle_building(BUILDING_MENU_EDUCATION);

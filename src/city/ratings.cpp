@@ -77,7 +77,8 @@ void city_ratings_t::reduce_prosperity_after_bailout() {
 }
 
 void city_ratings_t::monument_building_destroyed(e_building_type type) {
-    if (building_is_monument(type)) {
+    const auto &bparams = building_static_params::get(type);
+    if (bparams.flags.is_monument) {
         monument_destroyed_buildings++;
     }
 

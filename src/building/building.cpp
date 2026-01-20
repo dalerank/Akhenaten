@@ -94,6 +94,9 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     input = params().input;
     output = params().output;
 
+    set_flag(e_building_monument, params().flags.is_monument);
+    set_flag(e_building_extractor, params().flags.is_extractor);
+
     dcast()->on_create(orientation);
 }
 
@@ -317,12 +320,29 @@ bool building::is_workshop() {
 }
 
 bool building::is_extractor() {
-    return building_is_extractor(type);
+    return get_flag(e_building_extractor);
 }
 
-bool building::is_monument() {
-    return building_is_monument(type);
+bool building::is_monument() const {
+    switch (type) {
+    case BUILDING_SPHINX:
+    case BUILDING_MAUSOLEUM:
+    case BUILDING_ALEXANDRIA_LIBRARY:
+    case BUILDING_CAESAREUM:
+    case BUILDING_PHAROS_LIGHTHOUSE:
+    case BUILDING_SMALL_ROYAL_TOMB:
+    case BUILDING_ABU_SIMBEL:
+    case BUILDING_MEDIUM_ROYAL_TOMB:
+    case BUILDING_LARGE_ROYAL_TOMB:
+    case BUILDING_GRAND_ROYAL_TOMB:
+    case BUILDING_SUN_TEMPLE:
+        return true;
+
+    default:
+        return get_flag(e_building_monument);
+    }
 }
+
 bool building::is_palace() {
     return building_is_palace(type);
 }
@@ -850,44 +870,8 @@ bool building_is_workshop(int type) {
            || type == BUILDING_LAMP_WORKSHOP || type == BUILDING_PAINT_WORKSHOP || type == BUILDING_JEWELS_WORKSHOP;
 }
 
-bool building_is_extractor(int type) {
-    return (type == BUILDING_STONE_QUARRY || type == BUILDING_LIMESTONE_QUARRY || type == BUILDING_CLAY_PIT)
-           || type == BUILDING_GOLD_MINE || type == BUILDING_GEMSTONE_MINE || type == BUILDING_COPPER_MINE
-           || type == BUILDING_GRANITE_QUARRY || type == BUILDING_SANDSTONE_QUARRY;
-}
-
 bool building_is_harvester(e_building_type type) {
     return (type == BUILDING_REED_GATHERER || type == BUILDING_WOOD_CUTTERS);
-}
-
-bool building_is_monument(e_building_type type) {
-    switch (type) {
-    case BUILDING_SMALL_MASTABA:
-    case BUILDING_SMALL_MASTABA_SIDE:
-    case BUILDING_SMALL_MASTABA_WALL:
-    case BUILDING_SMALL_MASTABA_ENTRANCE:
-    case BUILDING_SMALL_STEPPED_PYRAMID:
-    case BUILDING_MEDIUM_MASTABA:
-    case BUILDING_MEDIUM_MASTABA_SIDE:
-    case BUILDING_MEDIUM_MASTABA_WALL:
-    case BUILDING_MEDIUM_MASTABA_ENTRANCE:
-    case BUILDING_PYRAMID:
-    case BUILDING_SPHINX:
-    case BUILDING_MAUSOLEUM:
-    case BUILDING_ALEXANDRIA_LIBRARY:
-    case BUILDING_CAESAREUM:
-    case BUILDING_PHAROS_LIGHTHOUSE:
-    case BUILDING_SMALL_ROYAL_TOMB:
-    case BUILDING_ABU_SIMBEL:
-    case BUILDING_MEDIUM_ROYAL_TOMB:
-    case BUILDING_LARGE_ROYAL_TOMB:
-    case BUILDING_GRAND_ROYAL_TOMB:
-    case BUILDING_SUN_TEMPLE:
-        return true;
-
-    default:
-        return false;
-    }
 }
 
 bool building_is_palace(e_building_type type) {
@@ -931,8 +915,10 @@ bool building_is_industry_type(building* b) {
 }
 
 bool building_is_industry(e_building_type type) {
-    if (building_is_extractor(type))
+    const auto &params = building_static_params::get(type);
+    if (params.flags.is_extractor)
         return true;
+
     if (building_is_harvester(type))
         return true;
     if (building_is_workshop(type))

@@ -2142,26 +2142,31 @@ building_irrigation_ditch {
   canal_irrigation_value_multiplier : 2
 }
 
-building_clay_pit = {
-  animations : {
-    preview : { pos : [-1, -1], pack:PACK_GENERAL, id:40 },
-    base : { pos : [-1, -1], pack:PACK_GENERAL, id:40 },
-    work : { pos : [18, -20], pack:PACK_GENERAL, id:40, offset:1, max_frames:23, duration:2 }
-  },
-  output : {
+building_clay_pit {
+  animations {
+    preview { pack:PACK_GENERAL, id:40 }
+    base { pack:PACK_GENERAL, id:40 }
+    work { pos[18, -20], pack:PACK_GENERAL, id:40, offset:1, max_frames:23, duration:2 }
+  }
+  output {
     resource : RESOURCE_CLAY
   }
   progress_max : 200,
   building_size : 2,
   production_rate : 100,
-  meta : { help_id:92, text_id:121 }
-  needs : {
+  meta { help_id:92, text_id:121 }
+  needs {
     nearby_water : true
   }
+  flags {
+    is_extractor: true
+  }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
-  cost: [ 8, 15, 30, 50, 100 ]
-  desirability : { value:[-3], step:[1], step_size:[1], range: [2] }
-  laborers:[8], fire_risk:[0], damage_risk: [1]
+  cost[ 8, 15, 30, 50, 100 ]
+  desirability { value[-3], step[1], step_size[1], range[2] }
+  laborers[8]
+  fire_risk[0]
+  damage_risk[1]
 }
 
 building_brewery {
@@ -2209,6 +2214,9 @@ building_mine_copper {
     rock : true
     ore : true
   }
+  flags {
+    is_extractor: true
+  }
   cost [ 50, 75, 100, 150, 300 ]
   desirability { value[-12], step[2], step_size[2], range[6] }
   laborers[10]
@@ -2236,6 +2244,9 @@ building_mine_gems {
   needs {
     rock : true
   }
+  flags {
+    is_extractor: true
+  }
   cost [ 50, 75, 100, 150, 300 ]
   desirability { value[-12], step[2], step_size[2], range[6] }
   laborers[8]
@@ -2243,107 +2254,136 @@ building_mine_gems {
   damage_risk[2]
 }
 
-building_sandstone_quarry = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:197 },
-    base : { pack:PACK_GENERAL, id:197 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16, duration:2 }
-  },
-  output : {
+building_sandstone_quarry {
+  animations {
+    preview { pack:PACK_GENERAL, id:197 },
+    base { pack:PACK_GENERAL, id:197 },
+    work { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16, duration:2 }
+  }
+  output {
     resource : RESOURCE_SANDSTONE
   }
   progress_max : 200,
   production_rate : 100,
   building_size : 2,
-  meta : { help_id:93, text_id:162 }
+  meta { help_id:93, text_id:162 }
   //help_id:92, type:"sandstone_quarry", text_id:194
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  needs : {
+  needs {
     rock : true
   }
-  cost: [ 15, 30, 50, 80, 150 ]
-  desirability : { value:[-6], step:[1], step_size:[1], range: [6] }
-  laborers:[12], fire_risk:[0], damage_risk: [1]
+  flags {
+    is_extractor: true
+  }
+  cost [ 15, 30, 50, 80, 150 ]
+  desirability { value[-6], step[1], step_size[1], range[6] }
+  laborers[12]
+  fire_risk[0]
+  damage_risk[1]
 }
 
-building_marble_quarry = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:197 },
-    base : { pack:PACK_GENERAL, id:197 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16 }
-  },
-  meta : { help_id:95, text_id:118 }
-  cost: [ 15, 30, 50, 80, 150 ]
-  desirability : { value:[-6], step:[1], step_size:[1], range: [6] }
-  laborers:[12], fire_risk:[0], damage_risk: [1]
+building_marble_quarry {
+  animations {
+    preview { pack:PACK_GENERAL, id:197 },
+    base { pack:PACK_GENERAL, id:197 },
+    work { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16 }
+  }
+  meta { help_id:95, text_id:118 }
+  cost[ 15, 30, 50, 80, 150 ]
+  desirability { value[-6], step[1], step_size[1], range[6] }
+  laborers[12]
+  fire_risk[0]
+  damage_risk[1]
+
+  flags {
+    is_extractor: true
+  }
 }
 
-building_stone_quarry = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:187 },
-    base : { pack:PACK_GENERAL, id:187 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16, duration:2 }
-  },
-  output : {
+building_stone_quarry {
+  animations {
+    preview { pack:PACK_GENERAL, id:187 },
+    base { pack:PACK_GENERAL, id:187 },
+    work { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16, duration:2 }
+  }
+  output {
     resource : RESOURCE_STONE
   }
   progress_max : 200,
   production_rate : 100,
   building_size : 2,
-  meta : { help_id:93, text_id:162 }
+  meta { help_id:93, text_id:162 }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  needs : {
+  needs {
     rock : true
   }
-  cost: [ 15, 30, 50, 80, 150 ]
-  desirability : { value:[-6], step:[1], step_size:[1], range: [6] }
-  laborers:[12], fire_risk:[0], damage_risk: [2]
+
+  flags {
+    is_extractor: true
+  }
+
+  cost [ 15, 30, 50, 80, 150 ]
+  desirability { value[-6], step[1], step_size[1], range[6] }
+  laborers[12]
+  fire_risk[0]
+  damage_risk[2]
 }
 
-building_granite_quarry = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:38 },
-    base : { pack:PACK_GENERAL, id:38 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16, duration:2 }
-  },
-  output : {
+building_granite_quarry {
+  animations {
+    preview { pack:PACK_GENERAL, id:38 },
+    base { pack:PACK_GENERAL, id:38 },
+    work { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16, duration:2 }
+  }
+  output {
     resource : RESOURCE_GRANITE
   }
   progress_max : 200,
   production_rate : 100,
   building_size : 2,
-  meta : { help_id:93, text_id:162 }
+  meta { help_id:93, text_id:162 }
   //help_id:92, text_id:192
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  needs : {
+  needs {
     rock : true
   }
-  cost: [ 20, 40, 80, 150, 200 ]
-  desirability : { value:[-6], step:[1], step_size:[1], range: [6] }
-  laborers:[12], fire_risk:[0], damage_risk: [1]
+  flags {
+    is_extractor: true
+  }
+  cost [ 20, 40, 80, 150, 200 ]
+  desirability { value[-6], step[1], step_size[1], range[6] }
+  laborers[12]
+  fire_risk[0]
+  damage_risk[1]
 }
 
-building_limestone_quarry = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:170 },
-    base : { pack:PACK_GENERAL, id:170 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16, duration:2 }
+building_limestone_quarry {
+  animations {
+    preview { pack:PACK_GENERAL, id:170 },
+    base { pack:PACK_GENERAL, id:170 },
+    work { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16, duration:2 }
   }
-  output : {
+  output {
     resource : RESOURCE_LIMESTONE
   }
   progress_max : 200,
   production_rate : 100,
   building_size : 2,
-  meta : { help_id:93, text_id:162 }
+  meta { help_id:93, text_id:162 }
   //help_id:93, text_id:119}
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  needs : {
+  needs {
     rock : true
   }
-  cost: [ 15, 30, 50, 80, 150 ]
-  desirability : { value:[-6], step:[1], step_size:[1], range: [6] }
-  laborers:[12], fire_risk:[0], damage_risk: [2]
+  cost [ 15, 30, 50, 80, 150 ]
+  desirability { value[-6], step[1], step_size[1], range[6] }
+  laborers[12]
+  fire_risk[0]
+  damage_risk[2]
+
+  flags {
+    is_extractor: true
+  }
 }
 
 building_mine_gold {
@@ -2362,6 +2402,9 @@ building_mine_gold {
   needs {
     rock : true
     ore : true
+  }
+  flags {
+    is_extractor: true
   }
   cost [ 50, 100, 150, 250, 400 ]
   desirability { value[-16], step[2], step_size[3], range[6] }

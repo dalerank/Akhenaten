@@ -99,6 +99,7 @@ ANK_CONFIG_STRUCT(building_planner_need_rule, meadow, rock, ore, altar, oracle,
 
 struct building_flags_rule {
     bool is_monument;
+    bool is_extractor;
 };
 ANK_CONFIG_STRUCT(building_flags_rule,
     is_monument)
