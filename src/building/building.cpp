@@ -106,6 +106,8 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     set_flag(e_building_tax_collector, params().flags.is_tax_collector);
     set_flag(e_building_statue, params().flags.is_statue);
     set_flag(e_building_administration, params().flags.is_administration);
+    set_flag(e_building_water_crossing, params().flags.is_water_crossing);
+    set_flag(e_building_infrastructure, params().flags.is_infrastructure);
 
     dcast()->on_create(orientation);
 }
@@ -364,18 +366,12 @@ bool building::is_guild() const {
 bool building::is_beautification() {
     return building_is_beautification(type);
 }
-bool building::is_water_crossing() {
-    return building_is_water_crossing(type);
-}
 
 bool building::is_industry() {
     return building_is_industry(type);
 }
 bool building::is_food_category() {
     return building_is_food_category(type);
-}
-bool building::is_infrastructure() {
-    return building_is_infrastructure(type);
 }
 bool building::is_religion() {
     return building_is_religion(type);
@@ -863,9 +859,6 @@ bool building_is_beautification(e_building_type type) {
     const auto &params = building_static_params::get(type);
     return params.flags.is_statue || type == BUILDING_GARDENS || type == BUILDING_PLAZA;
 }
-bool building_is_water_crossing(e_building_type type) {
-    return (type == BUILDING_FERRY) || type == BUILDING_LOW_BRIDGE || type == BUILDING_UNUSED_SHIP_BRIDGE_83;
-}
 
 bool building_is_industry_type(building* b) {
     return b->output.resource || b->dcast_industry();
@@ -904,16 +897,6 @@ bool building_is_food_category(e_building_type type) {
         || type == BUILDING_FISHING_WHARF || type == BUILDING_CATTLE_RANCH || type == BUILDING_HUNTING_LODGE) {
         return true;
     }
-
-    return false;
-}
-
-bool building_is_infrastructure(e_building_type type) {
-    if (type == BUILDING_ARCHITECT_POST || type == BUILDING_FIREHOUSE || type == BUILDING_POLICE_STATION)
-        return true;
-
-    if (building_is_water_crossing(type))
-        return true;
 
     return false;
 }

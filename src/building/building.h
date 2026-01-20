@@ -81,6 +81,8 @@ enum e_building_flag : uint8_t {
     e_building_tax_collector = 10,
     e_building_statue = 11,
     e_building_administration = 12,
+    e_building_water_crossing = 13,
+    e_building_infrastructure = 14,
 };
 
 class building_work_camp;
@@ -254,11 +256,10 @@ public:
     bool is_shrine() const { return get_flag(e_building_shrine); }
     bool is_guild() const;
     bool is_beautification();
-    bool is_water_crossing();
 
     bool is_industry();
     bool is_food_category();
-    bool is_infrastructure();
+    bool is_infrastructure() const { return get_flag(e_building_infrastructure); }
     bool is_administration() const { return get_flag(e_building_administration); }
     bool is_religion();
     bool is_education() const { return get_flag(e_building_education); }
@@ -505,12 +506,10 @@ bool building_is_workshop(int type);
 bool building_is_temple_complex(e_building_type type);
 bool building_is_guild(e_building_type type);
 bool building_is_beautification(e_building_type type);
-bool building_is_water_crossing(e_building_type type);
 bool building_is_industry_type(building* b);
 
 bool building_is_industry(e_building_type type);
 bool building_is_food_category(e_building_type type);
-bool building_is_infrastructure(e_building_type type);
 bool building_is_religion(e_building_type type);
 bool building_is_entertainment(e_building_type type);
 bool building_is_military(e_building_type type);
