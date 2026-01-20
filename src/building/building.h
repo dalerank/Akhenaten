@@ -75,6 +75,7 @@ enum e_building_flag : uint8_t {
     e_building_farm = 4,
     e_building_fort = 5,
     e_building_education = 6,
+    e_building_palace = 7,
 };
 
 class building_work_camp;
@@ -242,7 +243,7 @@ public:
     bool is_extractor();
     bool is_monument() const;
     bool is_harverster() const { return get_flag(e_building_harvester); }
-    bool is_palace();
+    bool is_palace() const { return get_flag(e_building_palace); }
     bool is_tax_collector();
     bool is_temple();
     bool is_temple_complex() const;
@@ -497,7 +498,6 @@ inline bool building_is_house(e_building_type type) { return type >= BUILDING_HO
 bool building_is_defense(e_building_type type);
 bool building_is_workshop(int type);
 bool building_is_administration(e_building_type type);
-bool building_is_palace(e_building_type type);
 bool building_is_tax_collector(e_building_type type);
 bool building_is_governor_mansion(e_building_type type);
 bool building_is_temple(e_building_type type);
