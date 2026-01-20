@@ -257,7 +257,7 @@ void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
                 image_id = terrain_light_yellow.first_img(); // light yellow
             } else if (building_is_infrastructure(b->type)) {
                 image_id = terrain_bright_blue.first_img(); // bright blue
-            } else if (building_is_administration(b->type)) {
+            } else if (b->is_administration()) {
                 image_id = terrain_lilac.first_img(); // lilac
             } else if (building_is_military(b->type)) {
                 image_id = terrain_orange.first_img(); // orange

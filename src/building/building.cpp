@@ -104,6 +104,8 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     set_flag(e_building_temple, params().flags.is_temple);
     set_flag(e_building_shrine, params().flags.is_shrine);
     set_flag(e_building_tax_collector, params().flags.is_tax_collector);
+    set_flag(e_building_statue, params().flags.is_statue);
+    set_flag(e_building_administration, params().flags.is_administration);
 
     dcast()->on_create(orientation);
 }
@@ -374,9 +376,6 @@ bool building::is_food_category() {
 }
 bool building::is_infrastructure() {
     return building_is_infrastructure(type);
-}
-bool building::is_administration() {
-    return building_is_administration(type);
 }
 bool building::is_religion() {
     return building_is_religion(type);
@@ -852,10 +851,6 @@ bool building_is_workshop(int type) {
            || type == BUILDING_LAMP_WORKSHOP || type == BUILDING_PAINT_WORKSHOP || type == BUILDING_JEWELS_WORKSHOP;
 }
 
-bool building_is_governor_mansion(e_building_type type) {
-    return (type >= BUILDING_PERSONAL_MANSION && type <= BUILDING_DYNASTY_MANSION);
-}
-
 bool building_is_temple_complex(e_building_type type) {
     return (type >= BUILDING_TEMPLE_COMPLEX_OSIRIS && type <= BUILDING_TEMPLE_COMPLEX_BAST);
 }
@@ -863,11 +858,10 @@ bool building_is_temple_complex(e_building_type type) {
 bool building_is_guild(e_building_type type) {
     return building_type_any_of(type, { BUILDING_CARPENTERS_GUILD, BUILDING_STONEMASONS_GUILD, BUILDING_BRICKLAYERS_GUILD });
 }
-bool building_is_statue(e_building_type type) {
-    return (type >= BUILDING_SMALL_STATUE && type <= BUILDING_LARGE_STATUE);
-}
+
 bool building_is_beautification(e_building_type type) {
-    return building_is_statue(type) || type == BUILDING_GARDENS || type == BUILDING_PLAZA;
+    const auto &params = building_static_params::get(type);
+    return params.flags.is_statue || type == BUILDING_GARDENS || type == BUILDING_PLAZA;
 }
 bool building_is_water_crossing(e_building_type type) {
     return (type == BUILDING_FERRY) || type == BUILDING_LOW_BRIDGE || type == BUILDING_UNUSED_SHIP_BRIDGE_83;
@@ -920,19 +914,6 @@ bool building_is_infrastructure(e_building_type type) {
 
     if (building_is_water_crossing(type))
         return true;
-
-    return false;
-}
-
-bool building_is_administration(e_building_type type) {
-    const auto &params = building_static_params::get(type);
-    if (params.flags.is_palace || params.flags.is_tax_collector || building_is_governor_mansion(type)) {
-        return true;
-    }
-
-    if (type == BUILDING_COURTHOUSE) {
-        return true;
-    }
 
     return false;
 }

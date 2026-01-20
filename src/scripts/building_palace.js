@@ -28,6 +28,7 @@ building_palace_base {
     }
     flags {
       is_palace: true
+      is_administration: true
     }
     cost [ 100, 200, 300, 400, 500 ]
     desirability { value:[8], step:[2], step_size:[-2], range: [6] }
@@ -58,6 +59,7 @@ building_palace_base {
 
     flags {
       is_palace: true
+      is_administration: true
     }
   
     cost [ 200, 300, 400, 500, 800 ]
@@ -90,6 +92,7 @@ building_palace_base {
 
     flags {
       is_palace: true
+      is_administration: true
     }
     
     cost [ 300, 400, 500, 800, 1000 ]
