@@ -5,6 +5,7 @@
 #include "graphics/view/view.h"
 #include "grid/point.h"
 #include "grid/terrain.h"
+#include "core/tokenum.h"
 
 enum e_planner_rule : uint8_t {
     Groundwater = 0,
@@ -34,7 +35,11 @@ enum e_planner_rule : uint8_t {
     //
     TempleUpgradeAltar = 24,
     TempleUpgradeOracle = 25,
+
+    PlannerRuleMax
 };
+using e_planner_rules_t = token_holder<e_planner_rule, e_planner_rule::Groundwater, e_planner_rule::PlannerRuleMax>;
+extern e_planner_rules_t e_planner_rules;
 
 enum e_place_action {
     CAN_PLACE = 0,

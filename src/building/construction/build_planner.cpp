@@ -60,6 +60,8 @@ public:
 };
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(build_planner_clear_land);
 
+e_planner_rules_t e_planner_rules;
+
 enum e_place_reservoir {
     PLACE_RESERVOIR_BLOCKED = -1,
     PLACE_RESERVOIR_NO = 0,
@@ -474,14 +476,10 @@ void build_planner::setup_build_flags() {
     const auto &params = building_static_params::get(build_type);
     const auto &preview = building_planer_renderer::get(build_type);
 
-    const e_planner_rule flags[] = { e_planner_rule::Meadow, e_planner_rule::Rock, e_planner_rule::Ore, e_planner_rule::TempleUpgradeAltar,
-                                     e_planner_rule::TempleUpgradeOracle, e_planner_rule::NearbyWater, e_planner_rule::Groundwater, e_planner_rule::ShoreLine,
-                                     e_planner_rule::Canals, e_planner_rule::FloodplainShore };
-
-    for (const auto flag: flags) {
-        const bool is_need = preview.is_need_flag(*this, flag);
+    for (const auto flag: e_planner_rules.values) {
+        const bool is_need = preview.is_need_flag(*this, flag.id);
         if (is_need) {
-            set_flag(flag);
+            set_flag((e_planner_rule)flag.id);
         }
     }
 
@@ -762,7 +760,7 @@ void build_planner::update_special_case_orientations_check() {
         }
     }
 
-    if (is_flag(e_planner_rule::Intersection)) {
+    if (needIntersection()) {
         bool match = map_orientation_for_venue_with_map_orientation(end, (e_venue_mode_orientation)additional_req_param1, &dir_relative);
         int city_direction = dir_relative / 2;
         if (!match) {
