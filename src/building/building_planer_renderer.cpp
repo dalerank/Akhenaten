@@ -13,16 +13,16 @@ bool building_planer_renderer::is_need_flag(build_planner &planer, e_building_ne
     const auto &params = building_static_params::get(planer.build_type);
     const auto &needs = params.needs;
     switch (flag) {
-    case e_building_need_flag::Meadow: return needs.meadow;
-    case e_building_need_flag::Rock: return needs.rock;
-    case e_building_need_flag::Ore: return needs.ore;
-    case e_building_need_flag::TempleUpgradeAltar: return needs.altar;
-    case e_building_need_flag::TempleUpgradeOracle: return needs.oracle;
-    case e_building_need_flag::NearbyWater: return needs.nearby_water;
-    case e_building_need_flag::Groundwater: return needs.groundwater;
-    case e_building_need_flag::ShoreLine: return needs.shoreline;
-    case e_building_need_flag::Canals: return needs.canals;
-    case e_building_need_flag::FloodplainShore: return needs.floodplain_shoreline;
+    case e_planner_rule::Meadow: return needs.meadow;
+    case e_planner_rule::Rock: return needs.rock;
+    case e_planner_rule::Ore: return needs.ore;
+    case e_planner_rule::TempleUpgradeAltar: return needs.altar;
+    case e_planner_rule::TempleUpgradeOracle: return needs.oracle;
+    case e_planner_rule::NearbyWater: return needs.nearby_water;
+    case e_planner_rule::Groundwater: return needs.groundwater;
+    case e_planner_rule::ShoreLine: return needs.shoreline;
+    case e_planner_rule::Canals: return needs.canals;
+    case e_planner_rule::FloodplainShore: return needs.floodplain_shoreline;
     }
 
     return false;
@@ -94,12 +94,11 @@ int building_planer_renderer::update_building_variant(build_planner &planer) con
 }
 
 int building_planer_renderer::construction_update(build_planner &planer, tile2i start, tile2i end) const {
-    int special_flags = planer.special_flags;
-    if ((special_flags & e_building_need_flag::Meadow) || (special_flags & e_building_need_flag::Rock)
-        || (special_flags & e_building_need_flag::Trees) || (special_flags & e_building_need_flag::NearbyWater)
-        || (special_flags & e_building_need_flag::Walls) || (special_flags & e_building_need_flag::Groundwater)
-        || (special_flags & e_building_need_flag::Water) || (special_flags & e_building_need_flag::ShoreLine)
-        || (special_flags & e_building_need_flag::Road) || (special_flags & e_building_need_flag::Intersection)) {
+    if (planer.needMeadow() || planer.needRock()
+        || planer.needTrees() || planer.needNearbyWater()
+        || planer.needWalls() || planer.needGroundwater()
+        || planer.needWater() || planer.needShoreLine()
+        || planer.needRoad() || planer.needIntersection()) {
         return 0;
     }
 

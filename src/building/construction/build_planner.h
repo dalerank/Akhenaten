@@ -6,34 +6,34 @@
 #include "grid/point.h"
 #include "grid/terrain.h"
 
-enum e_building_need_flag : uint32_t {
-    Groundwater = 1,
-    Water = 1 << 1,
-    NearbyWater = 1 << 2,
-    ShoreLine = 1 << 3,
-    RiverAccess = 1 << 4,
-    FloodplainShore = 1 << 5,
+enum e_planner_rule : uint8_t {
+    Groundwater = 0,
+    Water = 1,
+    NearbyWater = 2,
+    ShoreLine = 3,
+    RiverAccess = 4,
+    FloodplainShore = 5,
     //
-    Meadow = 1 << 6,
-    Trees = 1 << 7,
-    Rock = 1 << 8,
-    Ore = 1 << 9,
-    Road = 1 << 10,
-    Intersection = 1 << 11,
-    FancyRoad = 1 << 12,
-    Walls = 1 << 13,
-    Canals = 1 << 14,
+    Meadow = 6,
+    Trees = 7,
+    Rock = 8,
+    Ore = 9,
+    Road = 10,
+    Intersection = 11,
+    FancyRoad = 12,
+    Walls = 13,
+    Canals = 14,
     //
-    Reserved = 1 << 16,
-    Resources = 1 << 17,
-    IgnoreNearbyEnemy = 1 << 18,
+    Reserved = 16,
+    Resources = 17,
+    IgnoreNearbyEnemy = 18,
     //
-    Draggable = 1 << 21,
-    Ferry = 1 << 22,
-    Bridge = 1 << 23,
+    Draggable = 21,
+    Ferry = 22,
+    Bridge = 23,
     //
-    TempleUpgradeAltar = 1 << 24,
-    TempleUpgradeOracle = 1 << 25,
+    TempleUpgradeAltar = 24,
+    TempleUpgradeOracle = 25,
 };
 
 enum e_place_action {
@@ -68,7 +68,7 @@ class build_planner {
 
     void set_tile_size(int row, int column, int size);
 
-    void set_flag(uint64_t flags, int param1 = -1, int param2 = -1, int param3 = -1);
+    void set_flag(e_planner_rule flags, int param1 = -1, int param2 = -1, int param3 = -1);
     void update_obstructions_check();
     void update_requirements_check();
     void update_special_case_orientations_check();
@@ -85,13 +85,36 @@ public:
     void set_warning(xstring warning) { immediate_warning = warning; }
     void set_extra_warning(xstring warning) { extra_warning = warning; }
 
+    inline bool needGroundwater() const { return is_flag(e_planner_rule::Groundwater); }
+    inline bool needWater() const { return is_flag(e_planner_rule::Water); }
+    inline bool needShoreLine() const { return is_flag(e_planner_rule::ShoreLine); }
+    inline bool needNearbyWater() const { return is_flag(e_planner_rule::NearbyWater); }
+    inline bool needMeadow() const { return is_flag(e_planner_rule::Meadow); }
+    inline bool needRiverAccess() const { return is_flag(e_planner_rule::RiverAccess); }
+    inline bool needFloodplainShore() const { return is_flag(e_planner_rule::FloodplainShore); }
+    inline bool needTrees() const { return is_flag(e_planner_rule::Trees); }
+    inline bool needRock() const { return is_flag(e_planner_rule::Rock); }
+    inline bool needOre() const { return is_flag(e_planner_rule::Ore); }
+    inline bool needRoad() const { return is_flag(e_planner_rule::Road); }
+    inline bool needIntersection() const { return is_flag(e_planner_rule::Intersection); }
+    inline bool needFancyRoad() const { return is_flag(e_planner_rule::FancyRoad); }
+    inline bool needWalls() const { return is_flag(e_planner_rule::Walls); }
+    inline bool needCanals() const { return is_flag(e_planner_rule::Canals); }
+    inline bool needResources() const { return is_flag(e_planner_rule::Resources); }
+    inline bool ignoreNearbyEnemy() const { return is_flag(e_planner_rule::IgnoreNearbyEnemy); }
+    inline bool draggable() const { return is_flag(e_planner_rule::Draggable); }
+    inline bool needFerry() const { return is_flag(e_planner_rule::Ferry); }
+    inline bool needBridge() const { return is_flag(e_planner_rule::Bridge); }
+    inline bool needTempleUpgradeAltar() const { return is_flag(e_planner_rule::TempleUpgradeAltar); }
+    inline bool needTempleUpgradeOracle() const { return is_flag(e_planner_rule::TempleUpgradeOracle); }
+
     int additional_req_param1 = -1;
 
     e_building_type build_type;
     building* last_created_building = nullptr;
     bool should_update_land_routing = false;
     bool in_progress;
-    uint64_t special_flags;
+    sbitarray64 rules;
     bool draw_as_constructing;
     tile2i start;
     tile2i end;
@@ -131,7 +154,7 @@ public:
     void construction_record_view_position(vec2i pixel, tile2i point);
 
     int get_total_drag_size(int* x, int* y);
-    bool has_flag_set(int flag, int param1 = -1, int param2 = -1, int param3 = -1);
+    bool is_flag(e_planner_rule flag, int param1 = -1, int param2 = -1, int param3 = -1) const;
 
     void update(tile2i cursor_tile);
     void draw(painter &ctx);
