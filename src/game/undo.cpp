@@ -208,13 +208,15 @@ void game_undo_perform() {
     auto &data = g_undo_data;
     if (!game_can_undo())
         return;
+    
     data.available = 0;
+
     g_city.finance.process_construction(-data.building_cost);
     if (data.type == BUILDING_CLEAR_LAND) {
         for (int i = 0; i < data.num_buildings; i++) {
             if (data.buildings[i].id) {
                 building* b = building_get(data.buildings[i].id);
-                if (building_is_house(data.buildings[i].type) && true) {
+                if (data.buildings[i].is_house() ) {
                     restore_housing(&data.buildings[i]);
                 } else {
                     memcpy(b, &data.buildings[i], sizeof(building));

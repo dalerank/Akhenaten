@@ -86,7 +86,8 @@ enum e_building_flag : uint8_t {
     e_building_beautification = 15,
     e_building_guild = 16,
     e_building_industry = 17,
-    e_building_workshop = 18
+    e_building_workshop = 18,
+    e_building_house = 19,
 };
 
 class building_work_camp;
@@ -257,6 +258,7 @@ public:
     bool is_palace() const { return get_flag(e_building_palace); }
     bool is_temple() const { return get_flag(e_building_temple); }
     bool is_temple_complex() const;
+    bool is_house() const { return get_flag(e_building_house); }
     bool is_shrine() const { return get_flag(e_building_shrine); }
     bool is_guild() const { return get_flag(e_building_guild); }
     bool is_beautification() const { return get_flag(e_building_beautification); }
@@ -503,7 +505,6 @@ inline r_type smart_cast(building *b) {
     return ::smart_cast<r_type>(b->dcast());
 }
 
-inline bool building_is_house(e_building_type type) { return type >= BUILDING_HOUSE_CRUDE_HUT && type <= BUILDING_HOUSE_PALATIAL_ESTATE; }
 bool building_is_defense(e_building_type type);
 
 bool building_is_temple_complex(e_building_type type);

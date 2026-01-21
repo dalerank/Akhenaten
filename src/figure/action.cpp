@@ -70,7 +70,7 @@ bool figure::do_gotobuilding(building* dest, bool stop_at_road, e_terrain_usage 
                 }
 
                 if (!found_road) {
-                    if (building_is_house(dest->type) || dest->type == BUILDING_BURNING_RUIN) {
+                    if (dest->is_house() || dest->type == BUILDING_BURNING_RUIN) {
                         finish_tile = map_closest_road_within_radius(dest->tile, dest->size, 2);
                         found_road = finish_tile.valid();
                     } else {
