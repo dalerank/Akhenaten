@@ -30,6 +30,7 @@ building_meadow_farm_tile_offsets = [
     flags {
       is_farm: true
       is_industry: true
+      is_food: true
     }
     output_resource_second_rate : 10
   
@@ -76,6 +77,7 @@ building_meadow_farm_tile_offsets = [
     flags {
       is_farm: true
       is_industry: true
+      is_food: true
     }
     output_resource_second_rate : 10
   
@@ -119,7 +121,8 @@ building_meadow_farm_tile_offsets = [
     }
     flags {
       is_farm: true
-      is_industry: true
+      is_industry: true 
+      is_food: true
     }
   
     build_menu_text : "Chickpeas Meadow Farm"
@@ -177,6 +180,7 @@ building_meadow_farm_tile_offsets = [
     flags {
       is_farm: true
       is_industry: true
+      is_food: true
     }
   
     cost[ 8, 10, 15, 20, 50 ]
@@ -222,6 +226,7 @@ building_meadow_farm_tile_offsets = [
     flags {
       is_farm: true
       is_industry: true
+      is_food: true
     }
     
     cost[ 8, 10, 15, 20, 50 ]
@@ -253,6 +258,7 @@ building_meadow_farm_tile_offsets = [
     flags {
       is_farm: true
       is_industry: true
+      is_food: true
     }
     
     building_size : 3
@@ -309,6 +315,7 @@ building_meadow_farm_tile_offsets = [
     flags {
       is_farm: true
       is_industry: true
+      is_food: true
     }
     
     
@@ -341,6 +348,7 @@ building_meadow_farm_tile_offsets = [
     flags {
       is_farm: true
       is_industry: true
+      is_food: true
     }
   
     building_size : 3
@@ -396,6 +404,7 @@ building_meadow_farm_tile_offsets = [
     flags {
       is_farm: true
       is_industry: true
+      is_food: true
     }
     
     cost[ 8, 10, 15, 20, 50 ]
@@ -438,6 +447,7 @@ building_meadow_farm_tile_offsets = [
     flags {
       is_farm: true
       is_industry: true
+      is_food: true
     }
   
     cost[ 8, 10, 15, 20, 50 ]
@@ -469,6 +479,7 @@ building_meadow_farm_tile_offsets = [
     flags {
       is_farm: true
       is_industry: true
+      is_food: true
     }
   
     build_menu_text : "Flax Meadow Farm"
@@ -656,6 +667,7 @@ building_meadow_farm_tile_offsets = [
     flags {
       is_farm: true
       is_industry: true
+      is_food: true
     }
     
     cost[ 8, 10, 15, 20, 50 ]
@@ -697,7 +709,8 @@ building_meadow_farm_tile_offsets = [
     }
     flags {
       is_farm: true
-      is_industry: true
+      is_industry: true 
+      is_food: true
     }
   
     cost[ 8, 10, 15, 20, 50 ]

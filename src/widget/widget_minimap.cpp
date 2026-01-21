@@ -249,7 +249,7 @@ void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
                 image_id = terrain_dark_red.first_img(); // dark red
             } else if(b->is_workshop()) {
                 image_id = terrain_dark_red.first_img(); // dark red
-            } else if (building_is_entertainment(b->type)) {
+            } else if (b->is_entertainment()) {
                 image_id = terrain_bright_teal.first_img(); // bright teal
             } else if (b->is_religion()) {
                 image_id = terrain_purple.first_img(); // purple
@@ -259,7 +259,7 @@ void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
                 image_id = terrain_bright_blue.first_img(); // bright blue
             } else if (b->is_administration()) {
                 image_id = terrain_lilac.first_img(); // lilac
-            } else if (building_is_military(b->type)) {
+            } else if (b->is_military()) {
                 image_id = terrain_orange.first_img(); // orange
             } else if (b->is_beautification()) {
                 image_id = terrain_teal.first_img(); // spent teal

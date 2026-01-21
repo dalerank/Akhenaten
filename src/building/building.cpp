@@ -117,6 +117,9 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     set_flag(e_building_defense, params().flags.is_defense);
     set_flag(e_building_temple_complex, params().flags.is_temple_complex);
     set_flag(e_building_religion, params().flags.is_religion);
+    set_flag(e_building_military, params().flags.is_military);
+    set_flag(e_building_entertainment, params().flags.is_entertainment);
+    set_flag(e_building_food, params().flags.is_food);
 
     dcast()->on_create(orientation);
 }
@@ -350,14 +353,6 @@ bool building::is_monument() const {
     default:
         return get_flag(e_building_monument);
     }
-}
-
-bool building::is_food_category() {
-    return building_is_food_category(type);
-}
-
-bool building::is_military() {
-    return building_is_military(type);
 }
 
 bool building::common_spawn_figure_trigger(int min_houses, int slot) {
@@ -815,57 +810,6 @@ bool building::has_figure(int i, int figure_id) const {
 }
 
 ///////////////
-
-bool building_is_food_category(e_building_type type) {
-    const auto &params = building_static_params::get(type);
-    if (params.flags.is_farm) { // special case for food-producing farms
-        return (type >= BUILDING_GRAIN_FARM && type <= BUILDING_CHICKPEAS_FARM) || type == BUILDING_FIGS_FARM;
-    }
-
-    if (type == BUILDING_GRANARY || type == BUILDING_BAZAAR || type == BUILDING_WORK_CAMP
-        || type == BUILDING_FISHING_WHARF || type == BUILDING_CATTLE_RANCH || type == BUILDING_HUNTING_LODGE) {
-        return true;
-    }
-
-    return false;
-}
-
-bool building_is_entertainment(e_building_type type) {
-    if (type == BUILDING_BOOTH || type == BUILDING_BANDSTAND || type == BUILDING_PAVILLION) {
-        return true;
-    }
-
-    if (type == BUILDING_JUGGLER_SCHOOL || type == BUILDING_CONSERVATORY || type == BUILDING_DANCE_SCHOOL) {
-        return true;
-    }
-
-    if (type == BUILDING_SENET_HOUSE || type == BUILDING_ZOO) {
-        return true;
-    }
-
-    return false;
-}
-
-bool building_is_military(e_building_type type) {
-    const auto &params = building_static_params::get(type);
-    if (params.flags.is_fort) {
-        return true;
-    }
-    
-    if (building_type_any_of(type, { BUILDING_MILITARY_ACADEMY, BUILDING_RECRUITER, BUILDING_FORT_GROUND })) {
-        return true;
-    }
-    
-    return false;
-}
-
-bool building_is_draggable(e_building_type type) {
-    if (BUILDING_CLEAR_LAND == type) {
-        return true;
-    }
-
-    return building_static_params::get(type).planner_update_rule.is_draggable;
-}
 
 int building::mothball_toggle() {
     if (state == BUILDING_STATE_VALID) {

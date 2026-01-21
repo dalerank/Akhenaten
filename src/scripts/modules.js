@@ -28,6 +28,7 @@ import building_statue
 import building_mansion
 import building_workshop
 import building_temple_complex
+import building_entertainment
 import overlays
 import building_sounds
 import images
