@@ -88,6 +88,8 @@ enum e_building_flag : uint8_t {
     e_building_industry = 17,
     e_building_workshop = 18,
     e_building_house = 19,
+    e_building_wall = 20,
+    e_building_defense = 21,
 };
 
 class building_work_camp;
@@ -504,8 +506,6 @@ template <typename dest_type, typename r_type>
 inline r_type smart_cast(building *b) {
     return ::smart_cast<r_type>(b->dcast());
 }
-
-bool building_is_defense(e_building_type type);
 
 bool building_is_temple_complex(e_building_type type);
 bool building_is_food_category(e_building_type type);

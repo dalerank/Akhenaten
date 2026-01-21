@@ -113,6 +113,8 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     set_flag(e_building_industry, params().flags.is_industry);
     set_flag(e_building_workshop, params().flags.is_workshop);
     set_flag(e_building_house, params().flags.is_house);
+    set_flag(e_building_wall, params().flags.is_wall);
+    set_flag(e_building_defense, params().flags.is_defense);
 
     dcast()->on_create(orientation);
 }
@@ -322,10 +324,6 @@ void building::clear_related_data() {
 
 e_overlay building::get_overlay() const {
     return const_cast<building*>(this)->dcast()->get_overlay();
-}
-
-bool building::is_defense() {
-    return building_is_defense(type);
 }
 
 bool building::is_floodplain_farm() {
@@ -822,10 +820,6 @@ bool building::has_figure(int i, int figure_id) const {
 }
 
 ///////////////
-
-bool building_is_defense(e_building_type type) {
-    return building_type_any_of(type, { BUILDING_BRICK_WALL, BUILDING_BRICK_GATEHOUSE, BUILDING_BRICK_TOWER });
-}
 
 bool building_is_temple_complex(e_building_type type) {
     return (type >= BUILDING_TEMPLE_COMPLEX_OSIRIS && type <= BUILDING_TEMPLE_COMPLEX_BAST);

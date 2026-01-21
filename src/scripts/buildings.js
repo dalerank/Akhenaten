@@ -706,6 +706,10 @@ building_brick_tower = {
   cost : [ 50, 100, 150, 300, 500 ]
   desirability : { value:[16], step:[2], step_size:[-3], range: [5] }
   laborers:[20], fire_risk:[0], damage_risk: [4]
+  flags {
+    is_wall: true
+    is_tower: true
+  }
 }
 
 building_clay_tower = {
@@ -720,6 +724,10 @@ building_clay_tower = {
   cost : [ 50, 80, 100, 150, 300 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [6] }
   laborers:[20], fire_risk:[4], damage_risk: [4]
+  flags {
+    is_wall: true
+    is_defense: true
+  }
 }
 
 building_mud_tower = {
@@ -735,6 +743,10 @@ building_mud_tower = {
   cost: [ 30, 50, 100, 150, 200 ]
   desirability : { value:[-8], step:[1], step_size:[2], range: [3] }
   laborers:[6], fire_risk:[0], damage_risk: [3]
+  flags {
+    is_wall: true
+    is_defense: true
+  }
 }
 
 building_ferry {
@@ -1308,6 +1320,10 @@ building_clay_gatehouse = {
   cost : [ 60, 90, 150, 250, 300 ]
   desirability : { value:[-5], step:[1], step_size:[1], range: [5] }
   laborers:[9], fire_risk:[0], damage_risk: [2]
+  flags {
+    is_wall: true
+    is_gatehouse: true
+  }
 }
 
 building_brick_gatehouse = {
@@ -1332,6 +1348,10 @@ building_brick_gatehouse = {
   cost : [ 60, 90, 150, 250, 300 ]
   desirability : { value:[-7], step:[1], step_size:[1], range: [6] }
   laborers:[9], fire_risk:[0], damage_risk: [2]
+  flags {
+    is_defense: true
+    is_wall: true
+  }
 }
 
 building_tower_gatehouse = {
@@ -1351,6 +1371,10 @@ building_tower_gatehouse = {
   cost : [ 200, 300, 400, 500, 600 ]
   desirability : { value:[4], step:[1], step_size:[1], range: [3] }
   laborers:[6], fire_risk:[0], damage_risk: [2]
+  flags {
+    is_defense: true
+    is_wall: true
+  }
 }
 
 building_mud_gatehouse = {
@@ -1375,18 +1399,30 @@ building_mud_gatehouse = {
   cost : [ 50, 70, 100, 150, 200 ]
   desirability : { value:[-6], step:[1], step_size:[2], range: [6] }
   laborers:[3], fire_risk:[0], damage_risk: [3]
+  flags {
+    is_defense: true
+    is_wall: true
+  }
 }
 
-building_brick_wall = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:138, offset:27 },
-    base : { pack:PACK_GENERAL, id:138 },
+building_brick_wall {
+  animations {
+    preview { pack:PACK_GENERAL, id:138, offset:27 },
+    base { pack:PACK_GENERAL, id:138 },
   }
   building_size : 1
-  planner_update_rule : {
+  planner_update_rule {
     is_draggable : true
   }
-  cost : [ 7, 12, 25, 40, 70 ]
+  cost [7, 12, 25, 40, 70]
+  desirability { value[-3], step[3], step_size[3], range[3] }
+  laborers[0]
+  fire_risk[0]
+  damage_risk[0]
+  flags {
+    is_wall: true
+    is_defense: true
+  }
 }
 
 building_mud_wall = {
@@ -1404,6 +1440,10 @@ building_mud_wall = {
     step : [3]
     step_size : [3]
     range : [3]
+  }
+  flags {
+    is_wall: true
+    is_defense: true
   }
 }
 
