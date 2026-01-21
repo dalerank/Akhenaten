@@ -22,7 +22,7 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mine_copper);
 bool building_mine_copper::preview::is_need_flag(build_planner &planer, e_building_need_rules flag) const {
     const auto &params = building_static_params::get(planer.build_type);
     switch (flag) {
-    case e_building_need_flag::Ore:
+    case e_planner_rule::Ore:
         return !game_features::gameplay_copper_mine_can_build_near_mountains && params.needs.ore;
     }
 

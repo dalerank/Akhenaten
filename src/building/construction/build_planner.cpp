@@ -309,7 +309,7 @@ void build_planner::reset() {
     building_variant = 0;
 
     // reset special requirements flags/params
-    special_flags = 0;
+    rules.zero();
     additional_req_param1 = -1;
     additional_req_param2 = -1;
     additional_req_param3 = -1;
@@ -343,8 +343,8 @@ void build_planner::set_tile_size(int row, int column, int size) {
     tile_sizes_array[row][column] = size;
 }
 
-void build_planner::set_flag(uint64_t flags, int param1, int param2, int param3) {
-    special_flags |= flags;
+void build_planner::set_flag(e_planner_rule flags, int param1, int param2, int param3) {
+    rules.set(flags, true);
     if (param1 != -1)
         additional_req_param1 = param1;
 
@@ -355,7 +355,7 @@ void build_planner::set_flag(uint64_t flags, int param1, int param2, int param3)
         additional_req_param3 = param3;
 }
 
-bool build_planner::has_flag_set(int flag, int param1, int param2, int param3) {
+bool build_planner::is_flag(e_planner_rule flag, int param1, int param2, int param3) const {
     if (param1 != -1 && additional_req_param1 != param1)
         return false;
 
@@ -365,10 +365,7 @@ bool build_planner::has_flag_set(int flag, int param1, int param2, int param3) {
     if (param3 != -1 && additional_req_param3 != param3)
         return false;
 
-    if (special_flags & flag)
-        return true;
-
-    return false;
+    return rules.is_set(flag);
 }
 
 void build_planner::set_graphics_row(int row, custom_span<int> image_ids, int def) {
@@ -477,9 +474,9 @@ void build_planner::setup_build_flags() {
     const auto &params = building_static_params::get(build_type);
     const auto &preview = building_planer_renderer::get(build_type);
 
-    const e_building_need_flag flags[] = { e_building_need_flag::Meadow, e_building_need_flag::Rock, e_building_need_flag::Ore, e_building_need_flag::TempleUpgradeAltar,
-                                           e_building_need_flag::TempleUpgradeOracle, e_building_need_flag::NearbyWater, e_building_need_flag::Groundwater, e_building_need_flag::ShoreLine,
-                                           e_building_need_flag::Canals, e_building_need_flag::FloodplainShore };
+    const e_planner_rule flags[] = { e_planner_rule::Meadow, e_planner_rule::Rock, e_planner_rule::Ore, e_planner_rule::TempleUpgradeAltar,
+                                     e_planner_rule::TempleUpgradeOracle, e_planner_rule::NearbyWater, e_planner_rule::Groundwater, e_planner_rule::ShoreLine,
+                                     e_planner_rule::Canals, e_planner_rule::FloodplainShore };
 
     for (const auto flag: flags) {
         const bool is_need = preview.is_need_flag(*this, flag);
@@ -494,7 +491,7 @@ void build_planner::setup_build_flags() {
         break;
 
     case BUILDING_MUD_TOWER:
-        set_flag(e_building_need_flag::Walls);
+        set_flag(e_planner_rule::Walls);
         break;
 
         //        case BUILDING_LIBRARY: // TODO
@@ -506,58 +503,58 @@ void build_planner::setup_build_flags() {
 
     case BUILDING_LOW_BRIDGE:
     case BUILDING_UNUSED_SHIP_BRIDGE_83:
-        set_flag(e_building_need_flag::ShoreLine, 1);
-        set_flag(e_building_need_flag::Bridge);
+        set_flag(e_planner_rule::ShoreLine, 1);
+        set_flag(e_planner_rule::Bridge);
         break;
 
     case BUILDING_ROAD:
-        set_flag(e_building_need_flag::Road, false);
+        set_flag(e_planner_rule::Road, false);
         break;
 
     case BUILDING_MUD_GATEHOUSE:
     case BUILDING_MUD_GATEHOUSE_UP:
     case BUILDING_BRICK_GATEHOUSE:
     case BUILDING_BRICK_GATEHOUSE_UP:
-        set_flag(e_building_need_flag::Road, false);
+        set_flag(e_planner_rule::Road, false);
         break;
 
     case BUILDING_ROADBLOCK:
         set_warning("#only_build_roadblocks_on_roads");
-        set_flag(e_building_need_flag::Road, true);
+        set_flag(e_planner_rule::Road, true);
         break;
 
     case BUILDING_PLAZA:
-        set_flag(e_building_need_flag::Road, true);
-        set_flag(e_building_need_flag::FancyRoad);
+        set_flag(e_planner_rule::Road, true);
+        set_flag(e_planner_rule::FancyRoad);
         break;
 
     case BUILDING_BOOTH:
         set_warning("#entertainment_venue_at_intersection");
-        set_flag(e_building_need_flag::Intersection, 0);
+        set_flag(e_planner_rule::Intersection, 0);
         break;
 
     case BUILDING_BANDSTAND:
         set_warning("#entertainment_venue_at_intersection");
-        set_flag(e_building_need_flag::Intersection, 1);
+        set_flag(e_planner_rule::Intersection, 1);
         break;
 
     case BUILDING_PAVILLION:
         set_warning("#entertainment_venue_at_intersection");
-        set_flag(e_building_need_flag::Intersection, 2);
+        set_flag(e_planner_rule::Intersection, 2);
         break;
 
     case BUILDING_FESTIVAL_SQUARE:
         set_warning("#entertainment_venue_at_intersection");
-        set_flag(e_building_need_flag::Intersection, 3);
+        set_flag(e_planner_rule::Intersection, 3);
         break;
 
     case BUILDING_CLEAR_LAND:
-        set_flag(e_building_need_flag::IgnoreNearbyEnemy);
+        set_flag(e_planner_rule::IgnoreNearbyEnemy);
         break;
     }
 
     if (params.planner_update_rule.is_draggable) {
-        set_flag(e_building_need_flag::Draggable);
+        set_flag(e_planner_rule::Draggable);
     }
 }
 
@@ -578,34 +575,29 @@ void build_planner::update_obstructions_check() {
             unsigned int restricted_terrain = TERRAIN_ALL;
 
             // special cases
-            if (special_flags & e_building_need_flag::Meadow
-                || special_flags & e_building_need_flag::FloodplainShore
-                || special_flags & e_building_need_flag::Road
-                || special_flags & e_building_need_flag::Canals) {
+            if (needMeadow() || needFloodplainShore() || needRoad() || needCanals()) {
                 restricted_terrain -= TERRAIN_FLOODPLAIN;
             }
 
             bool can_blocked_by_floodplain_edge = !params.flags.is_farm;
-            if (special_flags & e_building_need_flag::Road
-                || special_flags & e_building_need_flag::Intersection
-                || special_flags & e_building_need_flag::Canals) {
+            if (needRoad() || needIntersection() || needCanals()) {
                 restricted_terrain -= TERRAIN_ROAD;
                 can_blocked_by_floodplain_edge = false;
             }
 
-            if (special_flags & e_building_need_flag::Road || special_flags & e_building_need_flag::Canals) {
+            if (needRoad() || needCanals()) {
                 restricted_terrain -= TERRAIN_CANAL;
             }
 
-            if (special_flags & e_building_need_flag::Walls) {
+            if (needWalls()) {
                 restricted_terrain -= TERRAIN_WALL;
             }
 
-            if (special_flags & e_building_need_flag::Water || special_flags & e_building_need_flag::ShoreLine) {
+            if (needWater() || needShoreLine()) {
                 restricted_terrain -= TERRAIN_WATER;
             }
 
-            if ((special_flags & e_building_need_flag::TempleUpgradeAltar) || (special_flags & e_building_need_flag::TempleUpgradeOracle)) { // special case
+            if (needTempleUpgradeAltar() || needTempleUpgradeOracle()) { // special case
                 return;
             }
 
@@ -645,20 +637,20 @@ void build_planner::update_requirements_check() {
 
     /////// special requirements
     //
-    if (special_flags & e_building_need_flag::Resources) {
+    if (needResources()) {
         if (g_city.resource.yards_stored((e_resource)additional_req_param1) < additional_req_param2) {
             //immediate_warning_id = additional_req_param3;
             can_place = CAN_NOT_BUT_GREEN;
         }
     }
 
-    if (special_flags & e_building_need_flag::Groundwater) {
+    if (needGroundwater()) {
         if (!map_terrain_exists_tile_in_radius_with_type(end, size.x, 0, TERRAIN_GROUNDWATER)) {
             immediate_warning = "#needs_groundwater";
             can_place = CAN_NOT_PLACE;
         }
     }
-    if (special_flags & e_building_need_flag::NearbyWater) {
+    if (needNearbyWater()) {
         if (!map_terrain_exists_tile_in_radius_with_type(end, size.x, 3, TERRAIN_WATER)
             && !map_terrain_exists_tile_in_radius_with_type(end, size.x, 3, TERRAIN_FLOODPLAIN)) {
             immediate_warning = "#building_not_next_to_water";
@@ -666,7 +658,7 @@ void build_planner::update_requirements_check() {
         }
     }
 
-    if (special_flags & e_building_need_flag::Meadow) {
+    if (needMeadow()) {
         if (!map_terrain_exists_tile_in_radius_with_type(end, size.x, 1, TERRAIN_MEADOW)
             && !map_terrain_all_tiles_in_radius_are(end, size.x, 0, TERRAIN_FLOODPLAIN)) {
             immediate_warning = "#build_farms_on_meadow";
@@ -674,53 +666,53 @@ void build_planner::update_requirements_check() {
         }
     }
 
-    if (special_flags & e_building_need_flag::Rock) {
+    if (needRock()) {
         if (!map_terrain_exists_tile_in_radius_with_type(end, size.x, 1, TERRAIN_ROCK)) {
             immediate_warning = "#build_next_to_rocky_areas";
             can_place = CAN_NOT_PLACE;
         }
     }
 
-    if (special_flags & e_building_need_flag::Ore) {
+    if (needOre()) {
         if (!map_terrain_exists_tile_in_radius_with_type(end, size.x, 1, TERRAIN_ORE)) {
             immediate_warning = "#build_next_to_rocky_areas";
             can_place = CAN_NOT_PLACE;
         }
     }
 
-    if (special_flags & e_building_need_flag::Trees) {
+    if (needTrees()) {
         if (!map_terrain_exists_tile_in_radius_with_type(end, size.x, 1, TERRAIN_SHRUB | TERRAIN_TREE)) {
             immediate_warning = "#build_wood_cutters_next_to_trees";
             can_place = CAN_NOT_PLACE;
         }
     }
 
-    if (special_flags & e_building_need_flag::Walls) {
+    if (needWalls()) {
         if (!map_terrain_all_tiles_in_radius_are(end, size.x, 0, TERRAIN_WALL)) {
             immediate_warning = "#build_towers_on_thick_walls";
             can_place = CAN_NOT_PLACE;
         }
     }
 
-    if (!!(special_flags & e_building_need_flag::IgnoreNearbyEnemy) == false) {
+    if (!ignoreNearbyEnemy()) {
         if (has_nearby_enemy(start.x(), start.y(), end.x(), end.y())) {
             immediate_warning = "#too_close_to_enemy_troops";
             can_place = CAN_NOT_PLACE;
         }
     }
-    if ((!!(special_flags & e_building_need_flag::Road) && !!additional_req_param1) == true) {
+    if (needRoad() && !!additional_req_param1) {
         if (!map_terrain_is(end.grid_offset(), TERRAIN_ROAD)) {
             can_place = CAN_NOT_PLACE;
         }
     }
 
-    if ((!!(special_flags & e_building_need_flag::Canals) && !!additional_req_param1) == true) {
+    if (needCanals() && !!additional_req_param1) {
         if (!map_terrain_is(end.grid_offset(), TERRAIN_CANAL)) {
             can_place = CAN_NOT_PLACE;
         }
     }
 
-    if (special_flags & e_building_need_flag::FancyRoad) {
+    if (needFancyRoad()) {
         if (!building_road::is_paved(end)) {
             can_place = CAN_NOT_PLACE;
         }
@@ -729,7 +721,7 @@ void build_planner::update_requirements_check() {
     const auto &preview = building_planer_renderer::get(build_type);
     can_place = preview.can_place(*this, start, end, can_place);
 
-    if (special_flags & e_building_need_flag::RiverAccess) {
+    if (needRiverAccess()) {
         if (!map_tile_is_connected_to_open_water(end)) {
             immediate_warning = "#inland_lake_has_no_sea_access";
         }
@@ -740,11 +732,11 @@ void build_planner::update_special_case_orientations_check() {
     int dir_relative;
 
     // for special buildings that require oriented terrain
-    if (special_flags & e_building_need_flag::ShoreLine) {
+    if (needShoreLine()) {
         const auto &params = building_static_params::get(build_type);
         int shoreline_size = (additional_req_param1 > 0) ? additional_req_param1 : params.building_size;
         shore_orientation result = map_shore_determine_orientation(end, shoreline_size, true);
-        if (special_flags & e_building_need_flag::FloodplainShore) {
+        if (needFloodplainShore()) {
             // in original Pharaoh, this actually is allowed to be built over the EDGE CORNERS.
             // it looks off, but it's legit!
             building_variant = 0;
@@ -770,7 +762,7 @@ void build_planner::update_special_case_orientations_check() {
         }
     }
 
-    if (special_flags & e_building_need_flag::Intersection) {
+    if (is_flag(e_planner_rule::Intersection)) {
         bool match = map_orientation_for_venue_with_map_orientation(end, (e_venue_mode_orientation)additional_req_param1, &dir_relative);
         int city_direction = dir_relative / 2;
         if (!match) {
@@ -782,8 +774,8 @@ void build_planner::update_special_case_orientations_check() {
         }
     }
 
-    const bool temple_altar = (special_flags & e_building_need_flag::TempleUpgradeAltar);
-    const bool temple_oracle = (special_flags & e_building_need_flag::TempleUpgradeOracle);
+    const bool temple_altar = needTempleUpgradeAltar();
+    const bool temple_oracle = is_flag(e_planner_rule::TempleUpgradeOracle);
     const int temple_options = (temple_altar ? etc_upgrade_altar : 0) | (temple_oracle ? etc_upgrade_oracle : 0);
     if (temple_altar || temple_oracle) {
         auto complex = building_at(end)->main()->dcast_temple_complex();
@@ -946,7 +938,7 @@ void build_planner::dispatch_warnings() {
 }
 
 int build_planner::get_total_drag_size(int* x, int* y) {
-    if (!game_features::gameui_show_construction_size || !(special_flags & e_building_need_flag::Draggable)
+    if (!game_features::gameui_show_construction_size || !draggable()
         || (build_type != BUILDING_CLEAR_LAND && !total_cost)) {
         return 0;
     }
@@ -990,7 +982,7 @@ void build_planner::construction_start(tile2i tile) {
 
 void build_planner::construction_cancel() {
     map_property_clear_constructing_and_deleted();
-    if (in_progress && special_flags & e_building_need_flag::Draggable) {
+    if (in_progress && draggable()) {
         game_undo_restore_map(1);
         in_progress = false;
     } else {
@@ -1121,7 +1113,7 @@ void build_planner::construction_finalize() { // confirm final placement
     update_orientations(false);
 
     // update terrain data for certain special cases
-    if (special_flags & e_building_need_flag::Meadow) {
+    if (needMeadow()) {
         for (int y = end.y(); y < end.y() + size.y; y++) {
             for (int x = end.x(); x < end.x() + size.x; x++) {
                 map_set_floodplain_growth(MAP_OFFSET(x, y), 0);
@@ -1129,18 +1121,18 @@ void build_planner::construction_finalize() { // confirm final placement
         }
     }
 
-    if (special_flags & e_building_need_flag::Road) {
+    if (needRoad()) {
         map_terrain_add_in_area(end, end.shifted(size.x - 1, size.y - 1), TERRAIN_ROAD);
         map_tiles_update_area_roads(end.x(), end.y(), 5);
         map_tiles_update_all_plazas();
     }
 
-    if (special_flags & e_building_need_flag::Walls) {
+    if (needWalls()) {
         events::emit(event_building_update_walls{ end, 5 });
     }
 
     // consume resources for specific buildings (e.g. marble, granite)
-    if (special_flags & e_building_need_flag::Resources) {
+    if (needResources()) {
         events::emit(event_storageyards_remove_resource{ (e_resource)additional_req_param1, additional_req_param2 });
     }
 
