@@ -112,6 +112,7 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     set_flag(e_building_guild, params().flags.is_guild);
     set_flag(e_building_industry, params().flags.is_industry);
     set_flag(e_building_workshop, params().flags.is_workshop);
+    set_flag(e_building_house, params().flags.is_house);
 
     dcast()->on_create(orientation);
 }

@@ -501,7 +501,7 @@ bool city_religion_t::BAST_houses_destruction() {
     // first, find the first 20 houses
     for (int i = 1; i < MAX_BUILDINGS; ++i) {
         building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || !building_is_house(b->type))
+        if (b->state != BUILDING_STATE_VALID || !b->is_house())
             continue;
         if (houses_found < 20)
             houses[houses_found++] = i; // add to the list
