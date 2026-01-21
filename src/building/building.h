@@ -92,6 +92,9 @@ enum e_building_flag : uint8_t {
     e_building_defense = 21,
     e_building_temple_complex = 22,
     e_building_religion = 23,
+    e_building_military = 24,
+    e_building_entertainment = 25,
+    e_building_food = 26,
 };
 
 class building_work_camp;
@@ -258,6 +261,7 @@ public:
     bool is_workshop() const { return get_flag(e_building_workshop); }
     bool is_extractor() const { return get_flag(e_building_extractor); }
     bool is_monument() const;
+    bool is_entertainment() const { return get_flag(e_building_entertainment); }
     bool is_harverster() const { return get_flag(e_building_harvester); }
     bool is_palace() const { return get_flag(e_building_palace); }
     bool is_temple() const { return get_flag(e_building_temple); }
@@ -268,12 +272,12 @@ public:
     bool is_beautification() const { return get_flag(e_building_beautification); }
 
     bool is_industry() const { return get_flag(e_building_industry); }
-    bool is_food_category();
+    bool is_food_category() const { return get_flag(e_building_food); }
     bool is_infrastructure() const { return get_flag(e_building_infrastructure); }
     bool is_administration() const { return get_flag(e_building_administration); }
     bool is_religion() const { return get_flag(e_building_religion); }
     bool is_education() const { return get_flag(e_building_education); }
-    bool is_military();
+    bool is_military() const { return get_flag(e_building_military); }
 
     inline bool same_network(building &b) const { return road_network_id == b.road_network_id; }
     xstring get_sound();
@@ -509,10 +513,5 @@ inline r_type smart_cast(building *b) {
     return ::smart_cast<r_type>(b->dcast());
 }
 
-bool building_is_food_category(e_building_type type);
-bool building_is_entertainment(e_building_type type);
-bool building_is_military(e_building_type type);
-
-bool building_is_draggable(e_building_type type);
 building *building_begin();
 building *building_end();

@@ -52,6 +52,13 @@
 #include "game/game_config.h"
 #include "routed.h"
 #include "city/city.h"
+#include "js/js_game.h"
+
+class build_planner_clear_land : public building_impl {
+public:
+    BUILDING_METAINFO(BUILDING_CLEAR_LAND, build_planner_clear_land, building_impl)
+};
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(build_planner_clear_land);
 
 enum e_place_reservoir {
     PLACE_RESERVOIR_BLOCKED = -1,
@@ -549,7 +556,7 @@ void build_planner::setup_build_flags() {
         break;
     }
 
-    if (building_is_draggable(build_type)) {
+    if (params.planner_update_rule.is_draggable) {
         set_flag(e_building_need_flag::Draggable);
     }
 }
@@ -1082,15 +1089,15 @@ void build_planner::construction_finalize() { // confirm final placement
     in_progress = false;
 
     const auto &preview = building_planer_renderer::get(build_type);
+    const auto &params = building_static_params::get(build_type);
     can_place = preview.finalize_check(*this, start, end, can_place);
 
-    if (can_place != CAN_PLACE && !building_is_draggable(build_type)) { // this is the FINAL check!
+    if (can_place != CAN_PLACE && !params.planner_update_rule.is_draggable) { // this is the FINAL check!
         dispatch_warnings();
         return;
     }
 
     // attempt placing, restore terrain data on failure
-    const auto &params = building_static_params::get(build_type);
     if (!place()) {
         map_property_clear_constructing_and_deleted();
         if (building_type_any_of(build_type, { BUILDING_MUD_WALL, BUILDING_ROAD, BUILDING_IRRIGATION_DITCH })) {
