@@ -251,7 +251,7 @@ void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
                 image_id = terrain_dark_red.first_img(); // dark red
             } else if (building_is_entertainment(b->type)) {
                 image_id = terrain_bright_teal.first_img(); // bright teal
-            } else if (building_is_religion(b->type)) {
+            } else if (b->is_religion()) {
                 image_id = terrain_purple.first_img(); // purple
             } else if (b->is_education()) {
                 image_id = terrain_light_yellow.first_img(); // light yellow

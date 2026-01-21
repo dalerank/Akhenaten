@@ -115,6 +115,8 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     set_flag(e_building_house, params().flags.is_house);
     set_flag(e_building_wall, params().flags.is_wall);
     set_flag(e_building_defense, params().flags.is_defense);
+    set_flag(e_building_temple_complex, params().flags.is_temple_complex);
+    set_flag(e_building_religion, params().flags.is_religion);
 
     dcast()->on_create(orientation);
 }
@@ -350,15 +352,8 @@ bool building::is_monument() const {
     }
 }
 
-bool building::is_temple_complex() const {
-    return building_is_temple_complex(type);
-}
-
 bool building::is_food_category() {
     return building_is_food_category(type);
-}
-bool building::is_religion() {
-    return building_is_religion(type);
 }
 
 bool building::is_military() {
@@ -821,10 +816,6 @@ bool building::has_figure(int i, int figure_id) const {
 
 ///////////////
 
-bool building_is_temple_complex(e_building_type type) {
-    return (type >= BUILDING_TEMPLE_COMPLEX_OSIRIS && type <= BUILDING_TEMPLE_COMPLEX_BAST);
-}
-
 bool building_is_food_category(e_building_type type) {
     const auto &params = building_static_params::get(type);
     if (params.flags.is_farm) { // special case for food-producing farms
@@ -833,19 +824,6 @@ bool building_is_food_category(e_building_type type) {
 
     if (type == BUILDING_GRANARY || type == BUILDING_BAZAAR || type == BUILDING_WORK_CAMP
         || type == BUILDING_FISHING_WHARF || type == BUILDING_CATTLE_RANCH || type == BUILDING_HUNTING_LODGE) {
-        return true;
-    }
-
-    return false;
-}
-
-bool building_is_religion(e_building_type type) {
-    const auto &params = building_static_params::get(type);
-    if (params.flags.is_temple || building_is_temple_complex(type) || params.flags.is_shrine) {
-        return true;
-    }
-
-    if (type == BUILDING_FESTIVAL_SQUARE) {
         return true;
     }
 

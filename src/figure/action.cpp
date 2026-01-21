@@ -53,7 +53,7 @@ bool figure::do_gotobuilding(building* dest, bool stop_at_road, e_terrain_usage 
             if (found_road && is_coords_within_range(tile.x(), tile.y(), main->tile.x(), main->tile.y(), 3, 1)) {
                 finish_tile = tile;
             }
-        } else if (building_is_temple_complex(dest->type)) { // TODO: proper return home for temple complexes
+        } else if (dest->is_temple_complex()) { // TODO: proper return home for temple complexes
             building* main = dest->main();
             if (main->has_road_access) {
                 found_road = true;

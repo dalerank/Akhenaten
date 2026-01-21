@@ -80,7 +80,7 @@ void building_menu_ctrl_t::toggle_building(e_building_type type, bool enabled) {
         if (params.flags.is_temple)
             toggle_building(BUILDING_MENU_TEMPLES);
 
-        if (building_is_temple_complex((e_building_type)type))
+        if (params.flags.is_temple_complex)
             toggle_building(BUILDING_MENU_TEMPLE_COMPLEX);
 
         if (params.flags.is_guild)

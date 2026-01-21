@@ -19,6 +19,7 @@ building_temple_osiris {
 
     flags {
       is_temple: true
+      is_religion: true
     }
   }
   
@@ -41,6 +42,7 @@ building_temple_osiris {
 
     flags {
       is_temple: true
+      is_religion: true
     }
   }
   
@@ -63,6 +65,7 @@ building_temple_osiris {
 
     flags {
       is_temple: true
+      is_religion: true
     }
   }
   
@@ -85,6 +88,7 @@ building_temple_osiris {
 
     flags {
       is_temple: true
+      is_religion: true
     }
   }
   
@@ -107,5 +111,6 @@ building_temple_osiris {
 
     flags {
       is_temple: true
+      is_religion: true
     }
   }
