@@ -14,6 +14,7 @@ building_shrine_osiris = {
 
     flags {
       is_shrine: true
+      is_religion: true
     }
   }
   
@@ -31,6 +32,7 @@ building_shrine_osiris = {
 
     flags {
       is_shrine: true
+      is_religion: true
     }
   }
   
@@ -48,6 +50,7 @@ building_shrine_osiris = {
 
     flags {
       is_shrine: true
+      is_religion: true
     }
   }
   
@@ -65,6 +68,7 @@ building_shrine_osiris = {
 
     flags {
       is_shrine: true
+      is_religion: true
     }
   }
   
@@ -82,5 +86,6 @@ building_shrine_osiris = {
 
     flags {
       is_shrine: true
+      is_religion: true
     }
   }

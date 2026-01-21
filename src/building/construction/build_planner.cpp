@@ -1058,7 +1058,7 @@ void build_planner::construction_update(tile2i tile) {
 }
 
 void build_planner::check_road_access(building *b, tile2i tile, int size, int orientation) {
-    if (!building_is_temple_complex(b->type)) {
+    if (!b->is_temple_complex()) {
         return;
     }
 

@@ -90,6 +90,8 @@ enum e_building_flag : uint8_t {
     e_building_house = 19,
     e_building_wall = 20,
     e_building_defense = 21,
+    e_building_temple_complex = 22,
+    e_building_religion = 23,
 };
 
 class building_work_camp;
@@ -249,7 +251,7 @@ public:
     inline bool is_valid() { return type != BUILDING_NONE && state == BUILDING_STATE_VALID; }
     inline bool is_valid() const { return type != BUILDING_NONE && state == BUILDING_STATE_VALID; }
 
-    bool is_defense();
+    bool is_defense() const { return get_flag(e_building_defense); }
     bool is_farm() const { return get_flag(e_building_farm); }
     bool is_fort() const { return get_flag(e_building_fort); }
     bool is_floodplain_farm();
@@ -259,7 +261,7 @@ public:
     bool is_harverster() const { return get_flag(e_building_harvester); }
     bool is_palace() const { return get_flag(e_building_palace); }
     bool is_temple() const { return get_flag(e_building_temple); }
-    bool is_temple_complex() const;
+    bool is_temple_complex() const { return get_flag(e_building_temple_complex); }
     bool is_house() const { return get_flag(e_building_house); }
     bool is_shrine() const { return get_flag(e_building_shrine); }
     bool is_guild() const { return get_flag(e_building_guild); }
@@ -269,7 +271,7 @@ public:
     bool is_food_category();
     bool is_infrastructure() const { return get_flag(e_building_infrastructure); }
     bool is_administration() const { return get_flag(e_building_administration); }
-    bool is_religion();
+    bool is_religion() const { return get_flag(e_building_religion); }
     bool is_education() const { return get_flag(e_building_education); }
     bool is_military();
 
@@ -507,9 +509,7 @@ inline r_type smart_cast(building *b) {
     return ::smart_cast<r_type>(b->dcast());
 }
 
-bool building_is_temple_complex(e_building_type type);
 bool building_is_food_category(e_building_type type);
-bool building_is_religion(e_building_type type);
 bool building_is_entertainment(e_building_type type);
 bool building_is_military(e_building_type type);
 
