@@ -25,7 +25,7 @@ vfs::path fullpath_saves(vfs::path filename);
 void fullpath_maps(char* full, const char* filename);
 
 namespace GamestateIO {
-const int get_campaign_scenario_offset(int scenario_id);
+int get_campaign_scenario_offset(int scenario_id);
 const int read_file_version(const char* filename, int offset);
 
 bool write_mission(const int scenario_id);
