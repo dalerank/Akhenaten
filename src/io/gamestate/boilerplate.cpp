@@ -865,5 +865,4 @@ declare_console_command_p(save_map) {
     os << success 
            ? "Map saved successfully!\n"
            : "Error: Failed to save map.\n";
-    }
 }
