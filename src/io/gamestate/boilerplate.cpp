@@ -83,9 +83,13 @@
 #include "io/io.h"
 #include "io/manager.h"
 #include "js/js_game.h"
+#include "dev/debug.h"
 
 #include <cassert>
+#include <cstdlib>
 #include <filesystem>
+#include <vector>
+#include <cstdio>
 
 #ifdef _MSC_VER
 // not #if defined(_WIN32) || defined(_WIN64) because we have strncasecmp in mingw
@@ -117,7 +121,7 @@ void fullpath_maps(char* full, const char* filename) {
 }
 
 static buffer* small_buffer = new buffer(4);
-const int GamestateIO::get_campaign_scenario_offset(int scenario_id) {
+int GamestateIO::get_campaign_scenario_offset(int scenario_id) {
     // init 4-byte buffer and read from file header corresponding to scenario index (i.e. mission 20 = offset 20*4 = 80)
     small_buffer->clear();
     if (!io_read_file_part_into_buffer(MISSION_PACK_FILE, NOT_LOCALIZED, small_buffer, 4, 4 * scenario_id))
@@ -634,8 +638,6 @@ bool GamestateIO::write_savegame(pcstr filename_short) {
 }
 
 bool GamestateIO::write_map(pcstr filename_short) {
-    return false; // TODO
-
     // concatenate string
     char full[MAX_FILE_NAME] = {0};
     fullpath_maps(full, filename_short);
@@ -839,4 +841,29 @@ bool GamestateIO::delete_map(const char* filename_short) {
 
     // delete file
     return vfs::file_remove(full);
+}
+
+declare_console_command_p(save_map) {
+    std::string filename;
+
+    // Read filename from input stream
+    if (!(is >> filename)) {
+        os << "Error: Please provide a filename.\n";
+        os << "Usage: save_map <filename>\n";
+        os << "Example: save_map my_custom_map\n";
+        return;
+    }
+
+    // Check if we're in a valid game state
+    if (!game.session.active) {
+        os << "Error: No active game session. Please load a map or start a mission first.\n";
+        return;
+    }
+    
+    bool success = GamestateIO::write_map(filename.c_str());
+    
+    os << success 
+           ? "Map saved successfully!\n"
+           : "Error: Failed to save map.\n";
+    }
 }
