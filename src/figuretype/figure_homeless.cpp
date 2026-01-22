@@ -78,7 +78,7 @@ void figure_homeless::on_destroy() {
 }
 
 void figure_homeless::figure_action() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Homeless");
+    OZZY_PROFILER_FUNCTION();
     auto &d = runtime_data();
 
     switch (action_state()) {

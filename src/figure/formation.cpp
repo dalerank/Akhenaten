@@ -589,7 +589,7 @@ static void set_legion_max_figures(void) {
 }
 
 void formation_update_all() {
-    OZZY_PROFILER_SECTION("Game/Update/Formations");
+    OZZY_PROFILER_FUNCTION();
 
     g_formations.calculate_batalion_totals();
     g_formations.calculate_figures();

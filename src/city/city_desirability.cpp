@@ -7,7 +7,7 @@
 #include "grid/desirability.h"
 
 void building_update_desirability(void) {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Building Update Desirability");
+    OZZY_PROFILER_SECTION(_, "Game/Run/Tick/Building Update Desirability");
     buildings_valid_do([] (building &b) {
         b.current_desirability = g_desirability.get_max(b.tile, b.size);
         if (b.is_adjacent_to_water) {

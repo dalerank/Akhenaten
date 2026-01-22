@@ -489,14 +489,14 @@ void city_t::update_allowed_foods() {
 }
 
 void city_t::house_decay_tax_coverage() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Tax Collector Update");
+    OZZY_PROFILER_FUNCTION();
     buildings_house_do([&] (building_house *house) {
         house->decay_tax_coverage();
     });
 }
 
 void city_t::house_decay_services() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/House Decay Culture");
+    OZZY_PROFILER_FUNCTION();
     buildings_house_do([] (auto house) {
         house->decay_services();
     });
@@ -514,7 +514,7 @@ bool city_t::available_resource(e_resource resource) {
 }
 
 void city_t::buildings_generate_figure() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure Generate");
+    OZZY_PROFILER_FUNCTION();
     buildings_valid_do([] (building &b) {
         switch (b.type) {
         case BUILDING_UNUSED_NATIVE_HUT_88: 

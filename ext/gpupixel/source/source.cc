@@ -63,7 +63,7 @@ bool Source::proceed(bool bUpdateTargets /* = true*/, int64_t frameTime /* = 0*/
 }
 
 void Source::updateTargets(int64_t frameTime) {
-    OZZY_PROFILER_SECTION("UpdateTargets");
+    OZZY_PROFILER_FUNCTION();
     for (auto &it : _targets) {
         auto target = it.first;
         target->setInputFramebuffer(_framebuffer, _outputRotation, _targets[target]);

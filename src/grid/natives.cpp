@@ -183,7 +183,7 @@ void map_natives_init_editor(void) {
 }
 
 void map_natives_check_land(void) {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Map Natives Update");
+    OZZY_PROFILER_FUNCTION();
     map_property_clear_all_native_land();
     g_city.military.decrease_native_attack_duration();
 

@@ -842,7 +842,7 @@ void city_religion_t::update_monthly_data(e_god randm_god) {
 }
 
 void city_religion_t::update() {
-    OZZY_PROFILER_SECTION("Game/Religion/Update");
+    OZZY_PROFILER_FUNCTION();
     calc_coverage();
     calculate_gods_mood_targets();
 

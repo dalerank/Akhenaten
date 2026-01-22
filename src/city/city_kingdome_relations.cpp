@@ -203,7 +203,7 @@ void kingdome_relation_t::process_invasion() {
 }
 
 void kingdome_relation_t::update() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Emperor Update");
+    OZZY_PROFILER_FUNCTION();
     update_debt_state();
     reset_gifts();
     update_gifts();

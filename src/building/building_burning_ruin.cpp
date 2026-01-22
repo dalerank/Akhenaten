@@ -113,7 +113,7 @@ custom_span<uint16_t> building_burning_ruin::get_all() {
 }
 
 void building_burning_ruin::update_all_ruins() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Burning Ruins Update");
+    OZZY_PROFILER_FUNCTION();
     int climate = scenario_property_climate();
     bool recalculate_terrain = 0;
 

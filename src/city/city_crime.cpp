@@ -84,7 +84,7 @@ static void generate_protestor(building* b) {
 }
 
 void city_t::figures_generate_criminals() {
-    OZZY_PROFILER_SECTION("Game/Update/Generate Criminals");
+    OZZY_PROFILER_FUNCTION();
     building* min_building = nullptr;
     int min_happiness = 50;
 

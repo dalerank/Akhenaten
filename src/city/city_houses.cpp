@@ -8,7 +8,7 @@
 #include "building/building_house.h"
 
 void city_t::house_service_update_health() {
-    OZZY_PROFILER_SECTION("Game/Update/House Service Update Health");
+    OZZY_PROFILER_FUNCTION();
     buildings_house_do([] (auto house) {
         if (house->house_population() <= 0) {
             return;
@@ -92,7 +92,7 @@ void city_t::houses_calculate_culture_demands(void) {
 }
 
 void city_t::house_service_decay_houses_covered() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/House Service Decay Update");
+    OZZY_PROFILER_FUNCTION();
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
         if (b->state != BUILDING_STATE_UNUSED) { // b->type != BUILDING_TOWER
@@ -116,7 +116,7 @@ void city_t::house_service_decay_houses_covered() {
 }
 
 void city_t::house_process_evolve() {
-    OZZY_PROFILER_SECTION("Game/Update/Process And Consume Goods");
+    OZZY_PROFILER_FUNCTION();
     g_city.houses_reset_demands();
     house_demands &demands = g_city.houses;
     bool has_expanded = false;
@@ -135,7 +135,7 @@ void city_t::house_process_evolve() {
 }
 
 void city_t::house_service_calculate_culture_aggregates() {
-    OZZY_PROFILER_SECTION("Game/Update/House Aggreate Culture");
+    OZZY_PROFILER_FUNCTION();
     int base_entertainment = avg_coverage.calc_average_entertainment() / 5;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         auto house = building_get(i)->dcast_house();

@@ -48,7 +48,7 @@ tile2i figure_enemy_fast_sword::get_formation_position(formation *m, int figure_
 }
 
 void figure_enemy_fast_sword::figure_action() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/EnemyFastSword");
+    OZZY_PROFILER_FUNCTION();
 
     base.speed_multiplier = 1;
     formation *m = formation_get(base.formation_id);
@@ -94,7 +94,7 @@ void figure_enemy_fast_sword::leave_city() {
 }
 
 void figure_enemy_fast_sword::enemy_fighting(formation *m) {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/EnemyFastSword/EnemyFighting");
+    OZZY_PROFILER_FUNCTION();
 
     base.set_flag(e_figure_flag_inattack, false);
     if (!m->recent_fight) {
@@ -159,7 +159,7 @@ void figure_enemy_fast_sword::enemy_fighting(formation *m) {
 }
 
 void figure_enemy_fast_sword::enemy_marching(formation *m) {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/EnemyFastSword/EnemyMarching");
+    OZZY_PROFILER_FUNCTION();
 
     base.wait_ticks--;
     if (base.wait_ticks <= 0) {

@@ -11,7 +11,7 @@
 #include "core/buffer.h"
 
 void city_average_coverage_t::update() {
-    OZZY_PROFILER_SECTION("Game/Update/Culture Calculate");
+    OZZY_PROFILER_FUNCTION();
     average_entertainment = 0;
     average_religion = 0;
     average_education = 0;
@@ -88,7 +88,7 @@ void city_coverage_t::load(buffer *buf) {
 }
 
 void city_coverage_t::update() {
-    OZZY_PROFILER_SECTION("Game/Update/Avg Coverage Update");
+    OZZY_PROFILER_FUNCTION();
     auto &population = g_city.population;
     const int pop = population.current;
 

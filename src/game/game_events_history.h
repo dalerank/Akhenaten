@@ -3,42 +3,39 @@
 #include <iostream>
 #include <ostream>
 
-#include "core/bstring.h"
+#include "core/xstring.h"
+#include "core/circullar_buffer.h"
 
-namespace events_history
-{
-    constexpr int EVENT_HISTORY_SIZE = 1000;
-
+namespace events_history {
     struct event_history_record_s
     {
         time_t timestamp;
-        std::string name;
-        std::string source;
-        std::string description;
+        xstring name;
+        xstring source;
+        xstring description;
     };
 
     struct event_history_s
     {
-        int size = EVENT_HISTORY_SIZE;
-        std::vector<event_history_record_s> events;
+        circular_buffer<event_history_record_s, 8> events;
     };
-    inline event_history_s event_history;
+    extern event_history_s event_history;
 
     inline void _append_record(const event_history_record_s &record)
     {
-        event_history.events.push_back(record);
-        if (event_history.events.size() > event_history.size)
-        {
-            event_history.events.erase(event_history.events.begin());
-        }
+        event_history.events.write_tail(record);
     }
 
-    inline std::string _event_to_string(const event_history_record_s &record)
+    inline const bstring1024& _event_to_string(const event_history_record_s &record)
     {
         const tm *loctime = localtime(&record.timestamp);
         bstring32 timestamp;
         strftime(timestamp, bstring32::capacity, "%FT%TZ", loctime);
-        const std::string event_str = std::string(timestamp) + " " + record.name + " " + record.source + " " + record.description;
+        static bstring1024 event_str;
+        event_str.append(timestamp);
+        event_str.append_fmt(" %s", record.name.c_str());
+        event_str.append_fmt(" %s", record.source.c_str());
+        event_str.append_fmt(" %s", record.description.c_str());
         return event_str;
     }
 
@@ -47,18 +44,7 @@ namespace events_history
     {
         const char* event_name = typeid(EventType).name();
         // TODO: Replace placeholders with actual source and misc info
-        const event_history_record_s record = {time(nullptr), event_name, std::string(), std::string()};
-        event_history.events.push_back(record);
-    }
-
-    inline std::vector<std::string> get_history_lines()
-    {
-        std::vector<std::string> lines;
-        lines.reserve(event_history.size);
-        for (const auto & event : event_history.events)
-        {
-            lines.push_back(_event_to_string(event));
-        }
-        return lines;
+        const event_history_record_s record = {time(nullptr), event_name, xstring(), xstring()};
+        event_history.events.write_tail(record);
     }
 }

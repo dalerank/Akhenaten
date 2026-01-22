@@ -150,7 +150,7 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
 }
 
 void city_health_t::update_coverage() {
-    OZZY_PROFILER_SECTION("Game/Update/Health Coverage");
+    OZZY_PROFILER_FUNCTION();
     int population = g_city.population.current;
 
     const auto &mortuary_params = building_mortuary::current_params();

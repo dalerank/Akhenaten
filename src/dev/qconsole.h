@@ -600,10 +600,10 @@ inline void dev::qconsole::eventsHistory(std::ostream &os) const
 {
     os << "\nEvents history:";
 
-    const std::vector<std::string> lines = events_history::get_history_lines();
-    for (const auto &line : lines)
+    const auto &lines = events_history::event_history;
+    for (int i = 0; i < lines.events.size(); ++i)
     {
-        os << line << std::endl;
+        os << events_history::_event_to_string(lines.events[i]).c_str() << std::endl;
     }
 
     os << std::endl;

@@ -9,7 +9,7 @@
 #include "city/city_buildings.h"
 
 void building_update_malaria_risk(void) {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Building Update Malaria Risk");
+    OZZY_PROFILER_FUNCTION();
     buildings_valid_do([] (building &b) {
         int risk = g_malaria_risk.get_max(b.tile, b.size);
         

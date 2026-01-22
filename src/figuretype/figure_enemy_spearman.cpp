@@ -20,7 +20,7 @@ void figure_enemy_spearman::on_create() {
 }
 
 void figure_enemy_spearman::enemy_initial(formation *m) {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/EnemySpearman/Initial");
+    OZZY_PROFILER_FUNCTION();
 
     base.map_figure_update();
     base.animctx.frame = 0;
@@ -93,7 +93,7 @@ void figure_enemy_spearman::enemy_initial(formation *m) {
 }
 
 void figure_enemy_spearman::enemy_marching(formation *m) {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/EnemySpearman/Marching");
+    OZZY_PROFILER_FUNCTION();
     base.wait_ticks--;
     if (base.wait_ticks <= 0) {
         base.wait_ticks = 50;
@@ -122,7 +122,7 @@ void figure_enemy_spearman::enemy_marching(formation *m) {
 }
 
 void figure_enemy_spearman::enemy_fighting(formation *m) {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/EnemySpearman/Fighting");
+    OZZY_PROFILER_FUNCTION();
 
     base.set_flag(e_figure_flag_inattack);
 
@@ -187,7 +187,7 @@ void figure_enemy_spearman::leave_city() {
 }
 
 void figure_enemy_spearman::figure_action() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/EnemySpearman");
+    OZZY_PROFILER_FUNCTION();
 
     base.speed_multiplier = 1;
     formation *m = formation_get(base.formation_id);

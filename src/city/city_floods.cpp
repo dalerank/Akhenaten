@@ -236,7 +236,7 @@ void floods_t::post_flood_prediction_message() {
 }
 
 void floods_t::tick_update(bool calc_only) {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Floodplains Update");
+    OZZY_PROFILER_FUNCTION();
     cycle_states_recalc();
 
     int cycle = current_cycle();

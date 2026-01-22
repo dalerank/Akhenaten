@@ -133,7 +133,7 @@ bool minimap_window::is_in_minimap(const mouse *m) {
 }
 
 void minimap_window::draw_foreground(UiFlags flags) {
-    OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded/Minimap");
+    OZZY_PROFILER_FUNCTION();
 
     painter ctx = game.painter();
     graphics_set_clip_rectangle(screen_offset, size);
@@ -347,7 +347,7 @@ void minimap_window::clear() {
 }
 
 void minimap_window::draw(UiFlags flags) {
-    OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded/Minimap Tiles");
+    OZZY_PROFILER_FUNCTION();
     clear();
     city_view_foreach_minimap_tile(screen_offset.x, screen_offset.y, absolute_tile.x(), absolute_tile.y(), draw_size.x, draw_size.y, [this] (vec2i screen, tile2i point) {
         draw_minimap_tile(screen, point);

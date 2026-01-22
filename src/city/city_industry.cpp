@@ -85,7 +85,7 @@ float get_farm_produce_uptick_per_day(building &b) {
 // }
 
 void city_industry_t::update_production() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Industry Update");
+    OZZY_PROFILER_FUNCTION();
     buildings_valid_do([] (building &b) {
         if (!b.output.resource) {
             return;
@@ -110,7 +110,7 @@ void city_industry_t::update_production() {
 }
 
 void building_industry_update_farms(void) {
-    OZZY_PROFILER_SECTION("Game/Update/Farms");
+    OZZY_PROFILER_FUNCTION();
 
     buildings_valid_farms_do([] (building &b) {
         building_farm *farm = b.dcast_farm();
@@ -173,7 +173,7 @@ void building_industry_update_farms(void) {
 }
 
 void building_industry_update_wheat_production() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Wheat Production Update");
+    OZZY_PROFILER_FUNCTION();
     if (scenario_property_climate() == CLIMATE_NORTHERN)
         return;
 

@@ -135,11 +135,11 @@ int city_buildings_unknown_value() {
 }
 
 void city_t::buildings_update_open_water_access() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Open Water Access Update");
+    OZZY_PROFILER_FUNCTION();
 }
 
 void city_buildings_t::update_counters() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Buildin Count Update");
+    OZZY_PROFILER_FUNCTION();
 
     std::fill(buildings.begin(), buildings.end(), record{ 0, 0 });
     std::fill(industry.begin(), industry.end(), record{ 0, 0 });
@@ -288,7 +288,7 @@ void city_buildings_t::update_week() {
 }
 
 void city_buildings_t::update_religion_supply_houses() {
-    OZZY_PROFILER_SECTION("Game/Update/Religion Supply Update");
+    OZZY_PROFILER_FUNCTION();
     svector<building*, 512> shrines;
 
     auto mark_shrine_access = [] (building *shrine, int radius) {

@@ -80,7 +80,7 @@ void sound_manager_t::play_editor() {
 }
 
 void sound_manager_t::music_update(bool force) {
-    OZZY_PROFILER_SECTION("Game/Sound/Music Update");
+    OZZY_PROFILER_FUNCTION();
     if (music.next_check && !force) {
         --music.next_check;
         return;

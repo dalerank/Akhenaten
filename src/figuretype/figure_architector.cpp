@@ -11,7 +11,7 @@
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_architector);
 
 void figure_architector::figure_action() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Architector");
+    OZZY_PROFILER_FUNCTION();
 
     switch (action_state()) {
     default:

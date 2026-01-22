@@ -153,7 +153,7 @@ void ui::sidebar_window_expanded_t::expand() {
 }
 
 void ui::sidebar_window_expanded_t::ui_draw_foreground(UiFlags flags) {
-    OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded");
+    OZZY_PROFILER_FUNCTION();
 
     x_offset = screen_width();
     slider.update(x_offset, expanded_offset_x, [this] {
@@ -298,7 +298,7 @@ int widget_sidebar_city_expanded_max() {
 }
 
 void widget_sidebar_city_draw_foreground() {
-    OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar");
+    OZZY_PROFILER_FUNCTION();
 
     bool collapsed = city_view_is_sidebar_collapsed();
     if (!collapsed) {

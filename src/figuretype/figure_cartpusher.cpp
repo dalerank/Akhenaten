@@ -456,7 +456,7 @@ void figure_cartpusher::before_poof() {
 }
 
 void figure_cartpusher::figure_action() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Cartpusher");
+    OZZY_PROFILER_FUNCTION();
     building* b = home();
     int road_network_id = map_road_network_get(tile());
 

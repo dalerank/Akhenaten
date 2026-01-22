@@ -11,7 +11,7 @@
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_physician);
 
 void figure_physician::figure_action() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Physician");
+    OZZY_PROFILER_FUNCTION();
     //    building *b = building_get(building_id);
     switch (action_state()) {
     case ACTION_60_PHYSICIAN_CREATED:

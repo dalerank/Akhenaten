@@ -106,7 +106,7 @@ void crime_t::clear_map() {
 }
 
 void crime_t::update() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Crime Update");
+    OZZY_PROFILER_FUNCTION();
     clear_map();
     update_buildings();
     update_houses();

@@ -17,7 +17,7 @@ void figure_herbalist::figure_before_action() {
 }
 
 void figure_herbalist::figure_action() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Herbalist");
+    OZZY_PROFILER_FUNCTION();
     //    building *b = building_get(building_id);
     switch (action_state()) {
     default:

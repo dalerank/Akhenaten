@@ -78,7 +78,7 @@ int city_population_t::remove_from_houses(int num_people) {
 }
 
 void city_population_t::update_room() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/House Population Update");
+    OZZY_PROFILER_FUNCTION();
     city_population_clear_capacity();
 
     buildings_house_do([&] (building_house *house) {
@@ -194,7 +194,7 @@ void city_population_t::reached_milestone(bool force) {
 }
 
 void city_population_t::evict_overcrowded() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/House Overcrown Update");
+    OZZY_PROFILER_FUNCTION();
 
     buildings_house_do([] (building_house *house) {
         int16_t population_room = house->population_room();
@@ -214,7 +214,7 @@ void city_population_t::evict_overcrowded() {
 }
 
 void city_population_t::update_migration() {
-    OZZY_PROFILER_SECTION("Game/Update/House Migration Update");
+    OZZY_PROFILER_FUNCTION();
 
     yearly_update();
     calculate_working_people();

@@ -59,7 +59,7 @@ void vegetation_tile_update(int grid_offset, vegetation_opt opt) {
 }
 
 void map_vegetation_growth_update() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Vegetation Groth Update");
+    OZZY_PROFILER_FUNCTION();
     const auto &opt = g_scenario.env.marshland_grow;
     for (int tile_offset : marshland_tiles_cache) {
         vegetation_tile_update(tile_offset, opt);

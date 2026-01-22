@@ -144,7 +144,7 @@ void city_remove_resource(event_city_remove_resource ev) {
 }
 
 void city_resources_t::calculate_stocks() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Storages Calculate Stocks");
+    OZZY_PROFILER_FUNCTION();
 
     g_city_gettable_storages.clear();
 
@@ -236,7 +236,7 @@ void city_resources_t::init() {
 }
 
 void city_resource_calculate_storageyard_stocks() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Warehouse Stocks Update");
+    OZZY_PROFILER_FUNCTION();
     for (int i = 0; i < RESOURCES_MAX; i++) {
         g_city.resource.space_in_storages[i] = 0;
         g_city.resource.stored_in_storages[i] = 0;
@@ -381,7 +381,7 @@ void city_resources_t::calculate_available_food() {
 }
 
 void city_resources_t::calculate_food_stocks_and_supply_wheat() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Food Stocks Update");
+    OZZY_PROFILER_FUNCTION();
     calculate_available_food();
     if (!g_scenario.kingdom_supplies_grain) {
         return;
