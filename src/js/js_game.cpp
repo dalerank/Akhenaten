@@ -212,10 +212,22 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
             logs::info("Fatal error on call function %s", funcname);
         }
 
-        // Clean up stack: function result and 'this' and function
-        js_pop(J, 2);
-        if (savetop - js_gettop(J) != 0) {
-            logs::info("STACK grow for %s [%d]", funcname, js_gettop(J));
+        int current_top = js_gettop(J);
+        if (current_top > savetop) {
+            js_pop(J, current_top - savetop);
+        } else if (current_top < savetop) {
+            // Stack underflow - this shouldn't happen, but log it
+            logs::info("STACK underflow for %s [%d] (expected %d)", funcname, current_top, savetop);
+        }
+        
+        // Verify stack is correct
+        int final_top = js_gettop(J);
+        if (final_top != savetop) {
+            logs::info("STACK mismatch for %s [%d] (expected %d) - forcing cleanup", funcname, final_top, savetop);
+            // Force cleanup to prevent stack overflow
+            while (js_gettop(J) > savetop) {
+                js_pop(J, 1);
+            }
         }
     }
 }

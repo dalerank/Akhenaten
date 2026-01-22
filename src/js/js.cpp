@@ -179,18 +179,18 @@ int js_vm_trypcall(js_State *J, int params) {
         return 0;
     }
 
-    int error = js_pcall(vm.J, params);
+    int error = js_pcall(J, params);
     if (error) {
         vm.have_error = 1;
-        const char *error_msg = js_tostring(vm.J, -1);
+        const char *error_msg = js_tostring(J, -1);
         
         // Log error type if it's an Error object
-        if (js_isobject(vm.J, -1)) {
-            if (js_hasproperty(vm.J, -1, "name")) {
-                js_getproperty(vm.J, -1, "name");
-                const char *error_name = js_tostring(vm.J, -1);
+        if (js_isobject(J, -1)) {
+            if (js_hasproperty(J, -1, "name")) {
+                js_getproperty(J, -1, "name");
+                const char *error_name = js_tostring(J, -1);
                 logs::info("!!! Error type: %s", error_name ? error_name : "<unknown>");
-                js_pop(vm.J, 1);
+                js_pop(J, 1);
             }
         }
         
@@ -212,17 +212,17 @@ int js_vm_trypcall(js_State *J, int params) {
         logs::info("!!! %s", start_str);
         
         // Log stack trace
-        js_vm_log_stacktrace(vm.J);
+        js_vm_log_stacktrace(J);
         
         // Dump stack values for additional debugging info
-        js_vm_dump_stack(vm.J);
+        js_vm_dump_stack(J);
         
         vm.error_str = error_msg;
         js_pop(J, 1);
         return 0;
     }
 
-    js_pop(vm.J, -1);
+    js_pop(J, 1);
     return 1;
 }
 
@@ -467,7 +467,10 @@ void js_reset_vm_state() {
 
     int ok = js_vm_load_file_and_exec(":modules.js");
     if (ok) {
-        js_pop(vm.J, 2); //restore stack after call js-function
+        int stack_top = js_gettop(vm.J);
+        if (stack_top > 0) {
+            js_pop(vm.J, stack_top);
+        }
     }
     logs::info( "STACK state %d", js_gettop(vm.J));
 }
