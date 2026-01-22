@@ -156,7 +156,7 @@ void map_update_canals_from_river() {
 }
 
 void map_update_canals() {
-    OZZY_PROFILER_SECTION("Game/Update/Canals");
+    OZZY_PROFILER_FUNCTION();
     // first, reset all canals
     map_terrain_remove_all(TERRAIN_IRRIGATION_RANGE);
     canals_decrease_water_level();

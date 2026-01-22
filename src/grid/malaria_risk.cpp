@@ -122,7 +122,7 @@ void malaria_risk_t::clear_map() {
 }
 
 void malaria_risk_t::update() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Malaria Risk Update");
+    OZZY_PROFILER_FUNCTION();
     clear_map();
     update_terrain();
     update_buildings();

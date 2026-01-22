@@ -50,7 +50,7 @@ static tile2i find_nearby_reeds(tile2i start, int max_radius = 20) {
 }
 
 void figure_hippo::figure_action() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Hippo");
+    OZZY_PROFILER_FUNCTION();
     const formation* m = formation_get(base.formation_id);
     g_city.figures.add_animal();
 

@@ -42,7 +42,7 @@ void figure_emigrant::debug_show_properties() {
 }
 
 void figure_emigrant::figure_action() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Emigrant");
+    OZZY_PROFILER_FUNCTION();
     switch (action_state()) {
     case ACTION_4_EMIGRANT_CREATED:
         base.animctx.frame = 0;

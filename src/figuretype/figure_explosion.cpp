@@ -32,7 +32,7 @@ void figure_create_explosion_cloud(tile2i tile, int size) {
 }
 
 void figure_explosion::figure_action() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Explode Cloud");
+    OZZY_PROFILER_FUNCTION();
     base.use_cross_country = true;
     base.progress_on_tile++;
     if (base.progress_on_tile > 44) {

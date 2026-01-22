@@ -115,7 +115,7 @@ bool game_t::animation_should_advance(uint32_t speed) {
 }
 
 void game_t::update_tick(int simtick) {
-    OZZY_PROFILER_SECTION("Game/Update/Impl");
+    OZZY_PROFILER_FUNCTION();
     if (editor_is_active()) {
         random_generate_next(); // update random to randomize native huts
         g_city.figures.update(); // just update the flag figures
@@ -193,7 +193,7 @@ void game_t::advance_month() {
 }
 
 void game_t::advance_day() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Advance Day");
+    OZZY_PROFILER_FUNCTION();
     //    map_advance_floodplain_growth();
 
     day_result dr = simtime.advance_day();
@@ -425,7 +425,7 @@ int game_reload_language() {
 }
 
 void game_t::update() {
-    OZZY_PROFILER_SECTION("Game/Update");
+    OZZY_PROFILER_FUNCTION();
     animation_timers_update();
 
     int num_ticks = get_elapsed_ticks();
@@ -441,7 +441,7 @@ void game_t::update() {
 }
 
 void game_t::frame_begin() {
-    OZZY_PROFILER_SECTION("Render/Frame");
+    OZZY_PROFILER_FUNCTION();
     frame++;
     window_draw(false);
 }
@@ -455,7 +455,7 @@ void game_t::time_init(int year) {
 }
 
 void game_t::sound_frame_begin() {
-    OZZY_PROFILER_SECTION("Sound/Frame");
+    OZZY_PROFILER_FUNCTION();
     sound_city_play();
 }
 
@@ -509,7 +509,7 @@ void game_t::before_start_simulation() {
 }
 
 void game_t::handle_input_frame() {
-    OZZY_PROFILER_SECTION("Input/Frame/Current");
+    OZZY_PROFILER_FUNCTION();
     const mouse& m = mouse::get();
     const hotkeys *h = hotkey_state();
 

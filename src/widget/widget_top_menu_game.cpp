@@ -335,7 +335,7 @@ void top_menu_widget_t::draw_rotate_buttons() {
 }
 
 void top_menu_widget_t::draw_foreground(UiFlags flags) {
-    OZZY_PROFILER_SECTION("Render/Frame/Window/City/Topmenu");
+    OZZY_PROFILER_FUNCTION();
 
     draw_background_impl();
     draw_elements_impl();

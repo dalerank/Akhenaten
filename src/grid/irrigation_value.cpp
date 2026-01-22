@@ -155,7 +155,7 @@ void irrigation_value_t::clear_map() {
 }
 
 void irrigation_value_t::update() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Irrigation Value Update");
+    OZZY_PROFILER_FUNCTION();
     clear_map();
     update_water_lifts();
     update_canals();

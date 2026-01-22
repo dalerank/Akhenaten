@@ -5,7 +5,7 @@ include(ExternalProject)
 
 set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: android default")
 
-option(OPTION_ENABLE_TRACY "Enable Tracy profiler support" OFF)
+option(OPTION_ENABLE_TRACY "Enable Tracy profiler support" ON)
 
 message(STATUS "OPTION_ENABLE_TRACY: ${OPTION_ENABLE_TRACY}")
 
@@ -54,7 +54,7 @@ set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
 set(SDL2_VERSION "2.32.10")
 set(SDL2_MIXER_VERSION "2.8.0")
 set(CPPTRACE_VERSION "v1.0.4")
-set(TRACY_VERSION "v0.10")
+set(TRACY_VERSION "v0.13.1")
 set(CURL_VERSION "curl-8_10_1")
 set(ZLIB_VERSION "v1.3.1")
 set(FREETYPE_VERSION "VER-2-13-3")
@@ -182,6 +182,7 @@ if (OPTION_ENABLE_TRACY)
     # Build Tracy as static library
     set(TRACY_STATIC ON CACHE BOOL "" FORCE)
     option(TRACY_ENABLE "Enable profiling" ON)
+    option(TRACY_MEMORY_ENABLE "Enable memory profiling" ON)
 
     FetchContent_MakeAvailable(tracy)
 endif()

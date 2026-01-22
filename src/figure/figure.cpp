@@ -234,7 +234,7 @@ nearby_result figure::is_nearby(int rule, int max_distance, bool gang_on, std::f
 }
 
 bool figure::do_goto(tile2i dest, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
-    OZZY_PROFILER_SECTION("Figure/Goto");
+    OZZY_PROFILER_FUNCTION();
     terrain_usage = terrainchoice;
     if (use_cross_country) {
         terrain_usage = TERRAIN_USAGE_ANY;
@@ -242,20 +242,20 @@ bool figure::do_goto(tile2i dest, int terrainchoice, short NEXT_ACTION, short FA
 
     // refresh routing if destination is different
     if (destination_tile != dest) {
-        OZZY_PROFILER_SECTION("Figure/Goto/Route remove (no dest)");
+        OZZY_PROFILER_SECTION(_, "Figure/Goto/Route remove (no dest)");
         route_remove();
     }
 
     // set up destination and move!!!
     if (use_cross_country) {
-        OZZY_PROFILER_SECTION("Figure/Goto/CrossCountry");
+        OZZY_PROFILER_SECTION(_, "Figure/Goto/CrossCountry");
         set_cross_country_destination(dest);
         if (move_ticks_cross_country(1) == 1) {
             advance_action(NEXT_ACTION);
             return true;
         }
     } else {
-        OZZY_PROFILER_SECTION("Figure/Goto/MoveTicks");
+        OZZY_PROFILER_SECTION(_, "Figure/Goto/MoveTicks");
         destination_tile = dest;
         move_ticks(speed_multiplier);
     }
@@ -268,7 +268,7 @@ bool figure::do_goto(tile2i dest, int terrainchoice, short NEXT_ACTION, short FA
     }
 
     if (direction == DIR_FIGURE_REROUTE) {
-        OZZY_PROFILER_SECTION("Figure/Goto/Route Remove (reroute)");
+        OZZY_PROFILER_SECTION(_, "Figure/Goto/Route Remove (reroute)");
         route_remove();
     }
 

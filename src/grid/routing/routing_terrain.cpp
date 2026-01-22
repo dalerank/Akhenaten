@@ -326,7 +326,7 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
 }
 
 void map_routing_update_land_citizen(void) {
-    OZZY_PROFILER_SECTION("Game/Run/Routing/Update land/Citizen");
+    OZZY_PROFILER_FUNCTION();
     map_grid_fill(routing_land_citizen, -1);
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
@@ -364,7 +364,7 @@ void map_routing_update_land_citizen(void) {
 }
 
 static void map_routing_update_amphibia() {
-    OZZY_PROFILER_SECTION("Game/Run/Routing/Update land/Amphibia");
+    OZZY_PROFILER_FUNCTION();
     map_grid_fill(routing_land_amphibia, -1);
     int grid_offset = scenario_map_data()->start_offset;
 
@@ -380,7 +380,7 @@ static void map_routing_update_amphibia() {
 }
 
 static void map_routing_update_land_noncitizen() {
-    OZZY_PROFILER_SECTION("Game/Run/Routing/Update land/Noncitizen");
+    OZZY_PROFILER_FUNCTION();
     map_grid_fill(routing_land_noncitizen, -1);
     int grid_offset = scenario_map_data()->start_offset;
 
@@ -414,7 +414,7 @@ static void map_routing_update_land_noncitizen() {
 }
 
 void map_routing_update_land() {
-    OZZY_PROFILER_SECTION("Game/Run/Routing/Update land");
+    OZZY_PROFILER_FUNCTION();
     map_routing_update_land_citizen();
     map_routing_update_land_noncitizen();
     map_routing_update_amphibia();

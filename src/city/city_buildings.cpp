@@ -205,7 +205,7 @@ building_id building_closest_route(building &home, std::function<bool(building &
 }
 
 void building_update_state(void) {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Building State Update");
+    OZZY_PROFILER_FUNCTION();
     bool lands_recalc = false;
     bool walls_recalc = false;
     bool roads_recalc = false;

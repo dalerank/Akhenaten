@@ -76,8 +76,8 @@ static bool can_place_on_crossing_no_neighboring(int grid_offset, int terrain_un
     return true;
 }
 
-static void callback_calc_distance(int next_offset, int dist) {
-    OZZY_PROFILER_SECTION("callback_calc_distance");
+void callback_calc_distance(int next_offset, int dist) {
+    OZZY_PROFILER_FUNCTION();
     if (map_grid_get(routing_land_citizen, next_offset) >= CITIZEN_0_ROAD)
         enqueue(next_offset, dist);
 }

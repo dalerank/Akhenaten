@@ -615,7 +615,7 @@ void city_labor_t::allocate_workers() {
 }
 
 void city_labor_t::update() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Labor Update");
+    OZZY_PROFILER_FUNCTION();
     calculate_workers_needed_per_category();
     check_employment();
     allocate_workers_to_buildings();

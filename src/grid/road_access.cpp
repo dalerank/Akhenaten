@@ -202,7 +202,7 @@ bool map_has_road_access_temple_complex(tile2i tile, int orientation, bool from_
 }
 
 bool map_road_within_radius(tile2i tile, int size, int radius, tile2i &road_tile, bool avoid_center) {
-    OZZY_PROFILER_SECTION("road_within_radius");
+    OZZY_PROFILER_FUNCTION();
     grid_area area = map_grid_get_area(tile, size, radius);
     uint32_t center_offset = tile.grid_offset();
 
@@ -233,7 +233,7 @@ tile2i map_closest_road_within_radius(building &b, int radius) {
 }
 
 tile2i map_closest_road_within_radius(tile2i tile, int size, int radius, bool avoid_center) {
-    OZZY_PROFILER_SECTION("map_closest_road_within_radius");
+    OZZY_PROFILER_FUNCTION();
     tile2i result;
     for (int r = 1; r <= radius; r++) {
         if (map_road_within_radius(tile, size, r, result, avoid_center)) {
@@ -244,7 +244,7 @@ tile2i map_closest_road_within_radius(tile2i tile, int size, int radius, bool av
 }
 
 bool map_reachable_road_within_radius(tile2i tile, int size, int radius, tile2i &road_tile) {
-    OZZY_PROFILER_SECTION("reachable_road_within_radius");
+    OZZY_PROFILER_FUNCTION();
     grid_area area = map_grid_get_area(tile, size, radius);
 
     for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
@@ -262,7 +262,7 @@ bool map_reachable_road_within_radius(tile2i tile, int size, int radius, tile2i 
 }
 
 bool map_closest_reachable_road_within_radius(tile2i tile, int size, int radius, tile2i &road_tile) {
-    OZZY_PROFILER_SECTION("map_closest_reachable_road_within_radius");
+    OZZY_PROFILER_FUNCTION();
     for (int r = 1; r <= radius; r++) {
         if (map_reachable_road_within_radius(tile, size, r, road_tile))
             return true;

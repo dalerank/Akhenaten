@@ -73,7 +73,7 @@ void figure_immigrant::on_destroy() {
 }
 
 void figure_immigrant::figure_action() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Immigrant");
+    OZZY_PROFILER_FUNCTION();
     building* home = immigrant_home();
     auto &d = runtime_data();
 
@@ -91,7 +91,7 @@ void figure_immigrant::figure_action() {
     case ACTION_2_IMMIGRANT_ARRIVING:
     case ACTION_9_IMMIGRANT_ENTERING_HOUSE: // arriving
         {
-            OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Immigrant/Goto Building");
+        OZZY_PROFILER_FUNCTION();
             if (direction() <= 8) {
                 int next_tile_grid_offset = tile().grid_offset() + map_grid_direction_delta(direction());
                 if (map_terrain_is(next_tile_grid_offset, TERRAIN_WATER)) {

@@ -1146,7 +1146,7 @@ void graphics_renderer_interface::apply_filter() {
         return;
     }
 
-    OZZY_PROFILER_SECTION("Game/Run/Renderer/Render/Filter");
+    OZZY_PROFILER_FUNCTION();
     float texw, texh;
     int pitch, w, h;
     uint32_t format;
@@ -1163,7 +1163,7 @@ void graphics_renderer_interface::apply_filter() {
     SDL_RenderFlush(data.renderer);
     int error = -1;
     {
-        OZZY_PROFILER_SECTION("Game/Run/Renderer/Render/Filter/ReadPixels");
+        OZZY_PROFILER_SECTION(_, "Game/Run/Renderer/Render/Filter/ReadPixels");
         error = SDL_RenderReadPixels(data.renderer, NULL, format, data.filter_source_pixels.data(), w * SDL_BYTESPERPIXEL(format));
         
         SDL_RenderFlush(data.renderer);
@@ -1191,7 +1191,7 @@ void graphics_renderer_interface::apply_filter() {
 }
 
 void platform_renderer_render() {
-    OZZY_PROFILER_SECTION("Game/Run/Renderer/Render");
+    OZZY_PROFILER_FUNCTION();
     auto &data = g_renderer_data;
 
     g_render.apply_filter();

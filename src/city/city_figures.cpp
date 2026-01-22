@@ -74,7 +74,7 @@ void city_figures_t::on_post_load() {
 }
 
 void city_figures_t::update() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure Action");
+    OZZY_PROFILER_FUNCTION();
     reset();
     //g_city.entertainment.hippodrome_has_race = false;
 

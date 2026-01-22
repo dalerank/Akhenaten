@@ -10,7 +10,7 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_sled);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_sled_puller);
 
 void figure_sled::figure_action() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Sled");
+    OZZY_PROFILER_FUNCTION();
     if (base.leading_figure_id > 0) {
         figure* leader = figure_get(base.leading_figure_id);
         if (leader->type == FIGURE_SLED_PULLER && leader->state == FIGURE_STATE_ALIVE) {
@@ -70,7 +70,7 @@ void figure_sled::do_deliver(int action_done) {
 }
 
 void figure_sled_puller::figure_action() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/SledPuller");
+    OZZY_PROFILER_FUNCTION();
     if (base.leading_figure_id > 0) {
         --base.wait_ticks;
         if (base.wait_ticks > 0) {

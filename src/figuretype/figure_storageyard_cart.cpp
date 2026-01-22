@@ -94,7 +94,7 @@ void figure_storageyard_cart::do_retrieve(int action_done) {
 }
 
 void figure_storageyard_cart::figure_action() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Warehouse Man");
+    OZZY_PROFILER_FUNCTION();
     int road_network_id = map_road_network_get(tile());
 
     base.use_cart = true;

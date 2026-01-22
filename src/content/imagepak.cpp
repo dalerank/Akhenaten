@@ -415,7 +415,7 @@ struct offset_ids {
 };
 
 bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
-    OZZY_PROFILER_SECTION("Game/Loading/Resources/ImageFolderPak");
+    OZZY_PROFILER_FUNCTION();
     name = pak;
 
     entries_num = 0;
@@ -671,7 +671,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
 
 buffer* pak_buf = new buffer(MAX_FILE_SCRATCH_SIZE);
 bool imagepak::load_pak(pcstr pak_name, int starting_index) {
-    OZZY_PROFILER_SECTION("Game/Loading/Resources/ImagePak");
+    OZZY_PROFILER_FUNCTION();
 
     // construct proper filepaths
     name = pak_name;

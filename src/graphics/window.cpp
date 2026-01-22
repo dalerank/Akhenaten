@@ -103,17 +103,17 @@ void window_draw(int force) {
     window_type* w = data.current_window;
 
     {
-        OZZY_PROFILER_SECTION("Render/Frame/Refresh");
+        OZZY_PROFILER_SECTION(_, "Render/Frame/Refresh");
         g_render.clear_screen();
     }
         
     {
-        OZZY_PROFILER_SECTION("Render/Frame/Window/Background");
+        OZZY_PROFILER_SECTION(_, "Render/Frame/Window/Background");
         w->draw_background(UiFlags_None);
     }
 
     {
-        OZZY_PROFILER_SECTION("Render/Frame/Foreground");
+        OZZY_PROFILER_SECTION(_, "Render/Frame/Foreground");
         w->draw_foreground(UiFlags_None);
     }
 }

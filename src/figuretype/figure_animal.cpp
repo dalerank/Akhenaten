@@ -48,7 +48,7 @@ static const int SHEEP_IMAGE_OFFSETS[] = {
 enum E_HORSE { HORSE_CREATED = 0, HORSE_RACING = 1, HORSE_FINISHED = 2 };
 
 bool figure_herd_roost(figure* f, int step, int bias, int max_dist, int terrain_mask) {
-    OZZY_PROFILER_SECTION("Figure/Herd Rooost");
+    OZZY_PROFILER_FUNCTION();
     if (!f->formation_id) {
         return false;
     }

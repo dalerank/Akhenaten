@@ -2,6 +2,7 @@
 #include "core/string.h"
 #include "core/log.h"
 #include "core/zip.h"
+#include "core/profiler.h"
 #include "io/gamestate/boilerplate.h"
 #include "platform/platform.h"
 
@@ -199,6 +200,8 @@ bool FileIOManager::serialize(const char* filename, int offset, e_file_format fo
 bool FileIOManager::unserialize(pcstr filename, int offset, e_file_format format,
                                 const int (*determine_file_version)(pcstr fnm, int ofst),
                                 void (*init_schema)(e_file_format _format, const int _version)) {
+    OZZY_PROFILER_FUNCTION();
+
     // first, clear up the manager data and set the new file info
     clear();
     strncpy_safe(file_path, filename, MAX_FILE_NAME);
@@ -240,8 +243,7 @@ bool FileIOManager::unserialize(pcstr filename, int offset, e_file_format format
     // read file contents into buffers
     for (int i = 0; i < num_chunks(); i++) {
         file_chunk_t* chunk = &file_chunks.at(i);
-        //findex = i;
-        //fname = chunk->name;
+        OZZY_PROFILER_SECTION(_, chunk->name);
 
         long offs = ftell(fp);
 

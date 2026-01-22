@@ -46,6 +46,6 @@ void city_map_t::add_to_largest_road_networks(int network_id, int size) {
 }
 
 tile2i city_map_t::closest_exit_tile_within_radius(int size, int radius) {
-    OZZY_PROFILER_SECTION("closest_exit_tile_within_radius");
+    OZZY_PROFILER_FUNCTION();
     return map_closest_road_within_radius(exit_point, size, radius, true);
 }

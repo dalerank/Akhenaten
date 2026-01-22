@@ -35,7 +35,7 @@ sound_key figure_caravan_donkey::phrase_key() const {
 }
 
 void figure_caravan_donkey::figure_action() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/CaravanDonkey");
+    OZZY_PROFILER_FUNCTION();
     figure* leader = figure_get(base.leading_figure_id);
     if (leader->action_state == FIGURE_ACTION_149_CORPSE)
         poof();

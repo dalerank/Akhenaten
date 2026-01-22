@@ -138,10 +138,20 @@ namespace ui {
 
     struct state {
         std::stack<vec2i> _offset;
-        std::vector<universal_button> buttons;
-        svector<scrollbar_t*, 32> scrollbars;
-        svector<scrollable_list*, 32> scrollable_lists;
+        hvector<universal_button, 32> buttons;
+        hvector<scrollbar_t*, 4> scrollbars;
+        hvector<scrollable_list*, 4> scrollable_lists;
         widget* current_widget = nullptr;
+
+        void reset() {
+            while (!_offset.empty()) {
+                _offset.pop();
+            };
+            buttons.clear();
+            scrollbars.clear();
+            scrollable_lists.clear();
+            current_widget = nullptr;
+        }
 
         void remove_scrolbar(scrollbar_t *p) {
             auto it = std::find(scrollbars.begin(), scrollbars.end(), p);
@@ -247,10 +257,7 @@ vec2i ui::current_offset() {
 void ui::begin_frame() {
     assert(g_state.buttons.size() < 1000);
     //assert(g_state._offset.size() == 0);
-    g_state._offset = {};
-    g_state.buttons.clear();
-    g_state.scrollbars.clear();
-    g_state.scrollable_lists.clear();
+    g_state.reset();
     tooltipctx.set(0, "");
 }
 

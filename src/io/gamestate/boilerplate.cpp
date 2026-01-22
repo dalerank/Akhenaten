@@ -80,6 +80,7 @@
 #include "chunks.h"
 #include "city/coverage.h"
 #include "city/city_floods.h"
+#include "core/profiler.h"
 #include "io/io.h"
 #include "io/manager.h"
 #include "js/js_game.h"
@@ -136,6 +137,7 @@ const int GamestateIO::read_file_version(const char* filename, int offset) {
 }
 
 static void pre_load() { // do we NEED this...?
+    OZZY_PROFILER_FUNCTION();
     g_scenario.set_campaign_scenario(-1);
 
     // clear data
@@ -704,6 +706,7 @@ bool GamestateIO::load_savegame(pcstr filename_short, bool start_immediately) {
 }
 
 bool GamestateIO::load_map(pcstr filename_short, bool start_immediately) {
+    OZZY_PROFILER_FUNCTION();
     // concatenate string
     char full[MAX_FILE_NAME] = {0};
     fullpath_maps(full, filename_short);

@@ -17,7 +17,7 @@
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_tax_collector);
 
 void figure_tax_collector::figure_action() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Tax Collector");
+    OZZY_PROFILER_FUNCTION();
     building* b = home();
     switch (action_state()) {
     case ACTION_40_TAX_COLLECTOR_CREATED:

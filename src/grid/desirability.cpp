@@ -114,7 +114,7 @@ void desirability_t::clear_map() {
 }
 
 void desirability_t::update() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Desirability Update");
+    OZZY_PROFILER_FUNCTION();
     clear_map();
     update_buildings();
     update_terrain();

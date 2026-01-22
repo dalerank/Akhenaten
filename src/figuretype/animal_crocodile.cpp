@@ -18,7 +18,7 @@ void figure_crocodile::on_post_load() {
 }
 
 void figure_crocodile::figure_action() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Crocodile");
+    OZZY_PROFILER_FUNCTION();
     const formation* m = formation_get(base.formation_id);
     g_city.figures.add_animal();
 

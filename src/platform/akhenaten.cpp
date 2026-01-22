@@ -293,7 +293,7 @@ static void teardown() {
 }
 
 static void run_and_draw() {
-    OZZY_PROFILER_FRAME(x);
+    OZZY_PROFILER_BEGIN_FRAME();
     time_millis time_before_run = SDL_GetTicks();
     time_set_millis(time_before_run);
 

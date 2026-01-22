@@ -7,7 +7,7 @@
 #include "game/game_config.h"
 
 void city_t::government_distribute_treasury() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Distribute Treasury");
+    OZZY_PROFILER_FUNCTION();
 
     constexpr int greate_palace_units = 8;
     constexpr int palace_units = 5;

@@ -8,7 +8,7 @@
 #include "game/game_config.h"
 
 void city_t::trade_update() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Trade Update");
+    OZZY_PROFILER_FUNCTION();
 
     trade.num_sea_routes = 0;
     trade.num_land_routes = 0;

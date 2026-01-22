@@ -31,7 +31,7 @@ void city_buildings_t::mark_well_access(building *well) {
 }
 
 void city_buildings_t::update_wells_range() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Wells Range Update");
+    OZZY_PROFILER_FUNCTION();
     map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE);
     buildings_valid_do<building_well>([](building_well *b) {
         map_terrain_add_with_radius(b->tile(), 1, 3, TERRAIN_FOUNTAIN_RANGE);
@@ -39,7 +39,7 @@ void city_buildings_t::update_wells_range() {
 }
 
 void city_buildings_t::update_water_supply_houses() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Well Access Update");
+    OZZY_PROFILER_FUNCTION();
     svector<building *, 512> wells;
     buildings_valid_do([&] (building &b) {
         if (b.type == BUILDING_WELL) {
@@ -59,7 +59,7 @@ void city_buildings_t::update_water_supply_houses() {
 }
 
 void city_buildings_t::update_canals_from_water_lifts() {
-    OZZY_PROFILER_SECTION("Game/Update/Canals From Water Lifts");
+    OZZY_PROFILER_FUNCTION();
     
     // do nothing
 }

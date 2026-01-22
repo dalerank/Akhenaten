@@ -248,7 +248,7 @@ int empire_t::get_city_vulnerable() {
 }
 
 void empire_t::generate_traders() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Trade Update/Generate trader");
+    OZZY_PROFILER_FUNCTION();
         
     for (auto &city: cities) {
         if (!city.in_use || !city.is_open) {

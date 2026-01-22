@@ -182,7 +182,7 @@ void city_sentiment_t::init() {
 }
 
 void city_sentiment_t::update() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Sentiment Update");
+    OZZY_PROFILER_FUNCTION();
     city_population_check_consistency();
 
     contribution_taxes = SENTIMENT_PER_TAX_RATE[g_city.finance.tax_percentage];

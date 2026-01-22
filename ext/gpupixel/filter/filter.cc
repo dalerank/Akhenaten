@@ -112,13 +112,13 @@ bool Filter::proceed(bool bUpdateTargets /* = true*/, int64_t frametime /* = 0*/
     };
 
     {
-        OZZY_PROFILER_SECTION("Filter::procced::active");
+        OZZY_PROFILER_SECTION(_, "Filter::procced::active");
         GPUPixelContext::getInstance()->setActiveShaderProgram(_filterProgram);
         _framebuffer->active();
     }
 
     {
-        OZZY_PROFILER_SECTION("Filter::procced::run");
+        OZZY_PROFILER_SECTION(_, "Filter::procced::run");
         CHECK_GL(glClearColor(_backgroundColor.r, _backgroundColor.g, _backgroundColor.b, _backgroundColor.a));
         CHECK_GL(glClear(GL_COLOR_BUFFER_BIT));
         for (std::map<int, InputFrameBufferInfo>::const_iterator it = _inputFramebuffers.begin(); it != _inputFramebuffers.end(); ++it) {
@@ -137,7 +137,7 @@ bool Filter::proceed(bool bUpdateTargets /* = true*/, int64_t frametime /* = 0*/
     }
 
     {
-        OZZY_PROFILER_SECTION("Filter::procced::inactive");
+        OZZY_PROFILER_SECTION(_, "Filter::procced::inactive");
         _framebuffer->inactive();
     }
 
@@ -232,7 +232,7 @@ const GLfloat *Filter::_getTexureCoordinate(
 }
 
 void Filter::update(int64_t frameTime) {
-    OZZY_PROFILER_SECTION("Filter::update");
+    OZZY_PROFILER_FUNCTION();
     if (_inputFramebuffers.empty()) {
         return;
     }
@@ -277,7 +277,7 @@ void Filter::update(int64_t frameTime) {
         }
 
         {
-            OZZY_PROFILER_SECTION("Filter::update::proceed");
+            OZZY_PROFILER_SECTION(_, "Filter::update::proceed");
             proceed(true, frameTime);
         }
     }
