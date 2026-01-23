@@ -245,9 +245,15 @@ void window_advisors::handle_input(const mouse* m, const hotkeys* h) {
 void window_advisors_show_checked() {
     e_availability avail = NOT_AVAILABLE;
 
-    for (int adv = ADVISOR_NONE; adv < ADVISOR_MAX; ++adv) {
-        if (g_city.is_advisor_available((e_advisor)adv)) {
-            avail = AVAILABLE;
+    if(g_city.is_advisor_available((e_advisor)g_settings.last_advisor)) {
+        avail = AVAILABLE;
+    } else {
+        for (int adv = ADVISOR_NONE+1; adv < ADVISOR_MAX; ++adv) {
+            if (g_city.is_advisor_available((e_advisor)adv)) {
+                g_settings.last_advisor = adv;
+                avail = AVAILABLE;
+                break;
+            }
         }
     }
 

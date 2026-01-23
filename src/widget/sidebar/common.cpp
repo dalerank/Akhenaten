@@ -17,7 +17,7 @@ void sidebar_common_draw_relief(vec2i offset, image_desc desc) {
     int y_max = screen_height();
 
     while (offset.y < y_max) {
-        ctx.img_generic(image_id, { offset.x, offset.y + 6 });
+        ctx.img_generic(image_id, { offset.x, offset.y });
         offset.y += 285;
     }
 }
