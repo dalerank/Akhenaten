@@ -223,100 +223,148 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
     int x = MAP_X(grid_offset);
     int y = MAP_Y(grid_offset);
     switch (routing_type) {
-    case ROUTING_TYPE_CITIZEN:
-        if (!!(terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_WATER)) {
-            return CITIZEN_0_ROAD;
-        } else if (!!(terrain & TERRAIN_FERRY_ROUTE) && !!(terrain & TERRAIN_WATER)) {
-            return CITIZEN_0_ROAD;
-        } else if (terrain & (TERRAIN_RUBBLE | TERRAIN_ACCESS_RAMP | TERRAIN_GARDEN | TERRAIN_MARSHLAND | TERRAIN_FLOODPLAIN | TERRAIN_TREE)) {// TODO?
-            return CITIZEN_2_PASSABLE_TERRAIN;
-        } else if (terrain & (TERRAIN_BUILDING | TERRAIN_GATEHOUSE)) {
-            if (fix_incorrect_buildings(grid_offset)) {
-                return CITIZEN_4_CLEAR_TERRAIN;
-            } else {
-                return get_land_type_citizen_building(grid_offset);
+    case ROUTING_TYPE_CITIZEN: {
+            // Exclude river shoreline tiles from citizen pathfinding
+            if (terrain & TERRAIN_SHORE) {
+                return CITIZEN_N1_BLOCKED;
             }
-        } else if (terrain & TERRAIN_CANAL) {
-            return get_land_type_citizen_canal(grid_offset);
-        } else if (terrain & TERRAIN_NOT_CLEAR) {
-            return CITIZEN_N1_BLOCKED;
-        } else {
+        
+            if (!!(terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_WATER)) {
+                return CITIZEN_0_ROAD;
+            } 
+        
+            if (!!(terrain & TERRAIN_FERRY_ROUTE) && !!(terrain & TERRAIN_WATER)) {
+                return CITIZEN_0_ROAD;
+            } 
+        
+            if (terrain & (TERRAIN_RUBBLE | TERRAIN_ACCESS_RAMP | TERRAIN_GARDEN | TERRAIN_MARSHLAND | TERRAIN_FLOODPLAIN | TERRAIN_TREE)) {// TODO?
+                return CITIZEN_2_PASSABLE_TERRAIN;
+            } 
+        
+            if (terrain & (TERRAIN_BUILDING | TERRAIN_GATEHOUSE)) {
+                if (fix_incorrect_buildings(grid_offset)) {
+                    return CITIZEN_4_CLEAR_TERRAIN;
+                } else {
+                    return get_land_type_citizen_building(grid_offset);
+                }
+            } 
+        
+            if (terrain & TERRAIN_CANAL) {
+                return get_land_type_citizen_canal(grid_offset);
+            } 
+        
+            if (terrain & TERRAIN_NOT_CLEAR) {
+                return CITIZEN_N1_BLOCKED;
+            } 
+        
             return CITIZEN_4_CLEAR_TERRAIN;
         }
 
-    case ROUTING_TYPE_NONCITIZEN:
-        if (terrain & TERRAIN_GATEHOUSE)
-            return NONCITIZEN_4_GATEHOUSE;
-        else if (terrain & TERRAIN_ROAD)
-            return NONCITIZEN_0_PASSABLE;
-        else if (terrain & (TERRAIN_GARDEN | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE | TERRAIN_MARSHLAND))
-            return NONCITIZEN_2_CLEARABLE;
-        else if (terrain & TERRAIN_BUILDING)
-            return get_land_type_noncitizen(grid_offset);
-        else if (terrain & TERRAIN_CANAL)
-            return NONCITIZEN_2_CLEARABLE;
-        else if (terrain & TERRAIN_WALL)
-            return NONCITIZEN_3_WALL;
-        else if (terrain & TERRAIN_NOT_CLEAR)
-            return NONCITIZEN_N1_BLOCKED;
-        else
-            return NONCITIZEN_0_PASSABLE;
+    case ROUTING_TYPE_NONCITIZEN: {
+            if (terrain & TERRAIN_GATEHOUSE) {
+                return NONCITIZEN_4_GATEHOUSE;
+            }
+        
+            if (terrain & TERRAIN_ROAD) {
+                return NONCITIZEN_0_PASSABLE;
+            }
+        
+            if (terrain & (TERRAIN_GARDEN | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE | TERRAIN_MARSHLAND)) {
+                return NONCITIZEN_2_CLEARABLE;
+            }
+        
+            if (terrain & TERRAIN_BUILDING) {
+                return get_land_type_noncitizen(grid_offset);
+            }
+        
+            if (terrain & TERRAIN_CANAL) {
+                return NONCITIZEN_2_CLEARABLE;
+            }
 
-    case ROUTING_TYPE_AMPHIBIA:
-        if (terrain & TERRAIN_GATEHOUSE)
-            return AMPHIBIA_1_BUILDING;
-        else if (terrain & (TERRAIN_GARDEN | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE | TERRAIN_CANAL | TERRAIN_MARSHLAND))
-            return AMPHIBIA_0_PASSABLE;
-        else if (terrain & TERRAIN_ROAD)
-            return AMPHIBIA_0_PASSABLE;
-        else if (terrain & (TERRAIN_WALL | TERRAIN_ROCK | TERRAIN_TREE))
-            return AMPHIBIA_N1_BLOCKED;
-        else if (terrain & TERRAIN_BUILDING)
-            return map_routing_land_penalty_amphibia(grid_offset);
-        else if (terrain & TERRAIN_WATER && is_surrounded_by_water(grid_offset)) {
-            if (x > 0 && x < scenario_map_data()->width - 1 && y > 0 && y < scenario_map_data()->height - 1) {
-                switch (map_sprite_animation_at(grid_offset)) {
-                case 5:
-                case 6: // low bridge middle section
-                    return AMPHIBIA_N3_LOW_BRIDGE;
-                case 13: // ship bridge pillar
-                    return AMPHIBIA_N1_BLOCKED;
-                default:
-                    return AMPHIBIA_0_PASSABLE;
-                }
-            } else
-                return AMPHIBIA_N2_MAP_EDGE;
-        } else {
+            if (terrain & TERRAIN_WALL) {
+                return NONCITIZEN_3_WALL;
+            }
+        
+            if (terrain & TERRAIN_NOT_CLEAR) {
+                return NONCITIZEN_N1_BLOCKED;
+            }
+        
+            return NONCITIZEN_0_PASSABLE;
+        }
+
+    case ROUTING_TYPE_AMPHIBIA: {
+            if (terrain & TERRAIN_GATEHOUSE) {
+                return AMPHIBIA_1_BUILDING;
+            }
+            
+            if (terrain & (TERRAIN_GARDEN | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE | TERRAIN_CANAL | TERRAIN_MARSHLAND)) {
+                return AMPHIBIA_0_PASSABLE;
+            }
+
+            if (terrain & TERRAIN_ROAD) {
+                return AMPHIBIA_0_PASSABLE;
+            }
+
+            if (terrain & (TERRAIN_WALL | TERRAIN_ROCK | TERRAIN_TREE)) {
+                return AMPHIBIA_N1_BLOCKED;
+            }
+            
+            if (terrain & TERRAIN_BUILDING) {
+                return map_routing_land_penalty_amphibia(grid_offset);
+            }
+            
+            if (terrain & TERRAIN_WATER && is_surrounded_by_water(grid_offset)) {
+                if (x > 0 && x < scenario_map_data()->width - 1 && y > 0 && y < scenario_map_data()->height - 1) {
+                    switch (map_sprite_animation_at(grid_offset)) {
+                    case 5:
+                    case 6: // low bridge middle section
+                        return AMPHIBIA_N3_LOW_BRIDGE;
+                    case 13: // ship bridge pillar
+                        return AMPHIBIA_N1_BLOCKED;
+                    default:
+                        return AMPHIBIA_0_PASSABLE;
+                    }
+                } else
+                    return AMPHIBIA_N2_MAP_EDGE;
+            } 
+
             return AMPHIBIA_0_PASSABLE;
         }
 
-    case ROUTING_TYPE_WATER:
-        if ((terrain & TERRAIN_WATER) && !(terrain & TERRAIN_FLOODPLAIN) && is_surrounded_by_water(grid_offset) && !has_land_corner(grid_offset)) {
-            if (x > 0 && x < scenario_map_data()->width - 1 && y > 0 && y < scenario_map_data()->height - 1) {
-                switch (map_sprite_animation_at(grid_offset)) {
-                case 5:
-                case 6: // low bridge middle section
-                    return WATER_N3_LOW_BRIDGE;
-                case 13: // ship bridge pillar
-                    return WATER_N1_BLOCKED;
-                default:
-                    return WATER_0_PASSABLE;
-                }
-            } else
+    case ROUTING_TYPE_WATER: {
+            if ((terrain & TERRAIN_WATER) && !(terrain & TERRAIN_FLOODPLAIN) && is_surrounded_by_water(grid_offset) && !has_land_corner(grid_offset)) {
+                if (x > 0 && x < scenario_map_data()->width - 1 && y > 0 && y < scenario_map_data()->height - 1) {
+                    switch (map_sprite_animation_at(grid_offset)) {
+                    case 5:
+                    case 6: // low bridge middle section
+                        return WATER_N3_LOW_BRIDGE;
+
+                    case 13: // ship bridge pillar
+                        return WATER_N1_BLOCKED;
+
+                    default:
+                        return WATER_0_PASSABLE;
+                    }
+                } 
+
                 return WATER_N2_MAP_EDGE;
-        } else {
+            } 
+
             return WATER_N1_BLOCKED;
         }
 
-    case ROUTING_TYPE_WALLS:
-        if (terrain & TERRAIN_WALL) {
-            if (count_adjacent_wall_tiles(grid_offset) == 3)
-                return WALL_0_PASSABLE;
-            else
+    case ROUTING_TYPE_WALLS: {
+            if (terrain & TERRAIN_WALL) {
+                if (count_adjacent_wall_tiles(grid_offset) == 3)
+                    return WALL_0_PASSABLE;
+        
                 return WALL_N1_BLOCKED;
-        } else if (map_terrain_is(grid_offset, TERRAIN_GATEHOUSE)) {
-            return WALL_0_PASSABLE;
-        } else {
+            } 
+            
+            if (map_terrain_is(grid_offset, TERRAIN_GATEHOUSE)) {
+                return WALL_0_PASSABLE;
+            }
+
             return WALL_N1_BLOCKED;
         }
     }
