@@ -20,6 +20,7 @@
 #include "graphics/view/lookup.h"
 #include "city/city_buildings.h"
 #include "city/city.h"
+#include "core/profiler.h"
 
 #include "overlays/city_overlay.h"
 #include "overlays/city_overlay_risks.h"
@@ -62,6 +63,7 @@ static const int ADJACENT_OFFSETS_PH[2][4][7]
 grid_xx g_render_grid = {0, FS_UINT32};
 
 void map_render_clear() {
+    OZZY_PROFILER_FUNCTION();
     map_grid_clear(g_render_grid);
 }
 

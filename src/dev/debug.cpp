@@ -16,6 +16,7 @@
 #include "building/building_entertainment.h"
 #include "building/building_house.h"
 #include "city/city.h"
+#include "core/profiler.h"
 #include "graphics/clouds.h"
 #include "graphics/view/lookup.h"
 #include "graphics/view/zoom.h"
@@ -226,6 +227,7 @@ static int north_tile_grid_offset(int x, int y) {
 }
 
 void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
+    OZZY_PROFILER_FUNCTION();
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -807,6 +809,7 @@ struct spawn_area_data_t {
 static std::vector<spawn_area_data_t> g_spawn_areas;
 
 void draw_debug_animal_spawn_areas(painter &ctx) {
+    OZZY_PROFILER_FUNCTION();
     if (debug_render_mode() != e_debug_render_animal_spawn_area) {
         return;
     }

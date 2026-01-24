@@ -353,6 +353,7 @@ void top_menu_widget_t::draw_foreground(UiFlags flags) {
 }
 
 void widget_top_menu_draw() {
+    OZZY_PROFILER_FUNCTION();
     top_menu_widget.draw_foreground(0);
 }
 

@@ -136,6 +136,8 @@ bool window_city_draw_construction_cost_and_size() {
 }
 
 void window_city_draw_foreground(int) {
+    OZZY_PROFILER_FUNCTION();
+
     window_city_draw();
     widget_sidebar_city_draw_foreground();
     widget_top_menu_draw();
@@ -204,6 +206,7 @@ void window_city_draw_panels() {
 }
 
 void window_city_draw() {
+    OZZY_PROFILER_FUNCTION();
     painter ctx = game.painter();
     g_screen_city.draw(ctx);
 

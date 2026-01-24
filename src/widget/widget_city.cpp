@@ -46,16 +46,19 @@
 #include "graphics/elements/tooltip.h"
 #include "city/city_figures.h"
 #include "input/mouse.h"
+#include "core/profiler.h"
 
 screen_city_t g_screen_city;
 
 void set_city_clip_rectangle(painter &ctx) {
+    OZZY_PROFILER_FUNCTION();
     vec2i view_pos, view_size;
     city_view_get_viewport(*ctx.view, view_pos, view_size);
     graphics_set_clip_rectangle(view_pos, view_size);
 }
 
 void screen_city_t::update_zoom_level(painter &ctx) {
+    OZZY_PROFILER_FUNCTION();
     vec2i offset = camera_get_position();
 
     if (g_zoom.update_value(&offset)) {
@@ -132,6 +135,7 @@ void update_tile_coords(vec2i pixel, tile2i tile, painter &ctx) {
 }
 
 void screen_city_t::update_clouds(painter &ctx) {
+    OZZY_PROFILER_FUNCTION();
     if (game.paused || (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY))) {
         g_clouds.pause();
     }
@@ -156,6 +160,7 @@ void screen_city_t::clear_current_tile() {
 }
 
 void screen_city_t::draw_figures_on_flat_tiles(vec2i pixel, tile2i tile, painter &ctx) {
+    OZZY_PROFILER_FUNCTION();
     auto figures = map_figures_in_row(tile);
 
     for (const auto &f : figures) {
@@ -183,6 +188,7 @@ void screen_city_t::draw_figures_on_flat_tiles(vec2i pixel, tile2i tile, painter
 }
 
 void screen_city_t::draw_postrender_building_effects(vec2i pixel, tile2i tile, painter &ctx) {
+    OZZY_PROFILER_FUNCTION();
     int grid_offset = tile.grid_offset();
     
     int building_id = map_building_at(grid_offset);
@@ -197,6 +203,7 @@ void screen_city_t::draw_postrender_building_effects(vec2i pixel, tile2i tile, p
 }
 
 void screen_city_t::draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool force) {
+    OZZY_PROFILER_FUNCTION();
     auto figures = map_figures_in_row(tile);
 
     for (const auto &f : figures) {
@@ -280,6 +287,7 @@ void screen_city_t::draw_isometric_mark_sound(int building_id, int grid_offset, 
 }
 
 void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
+    OZZY_PROFILER_FUNCTION();
     highlighted_formation = 0;
 
     // If the game feature for highlighting legions is enabled, check if there's a formation
@@ -386,12 +394,14 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
 }
 
 void screen_city_t::debug_draw_figures() {
+    OZZY_PROFILER_FUNCTION();
     for (auto &f : map_figures()) {
         f->draw_debug();
     }
 }
 
 void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
+    OZZY_PROFILER_FUNCTION();
     // black tile outside of map
     const bool is_tree = map_terrain_is(tile, TERRAIN_TREE);
     const bool is_water = map_terrain_is(tile, TERRAIN_WATER);
@@ -498,6 +508,7 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, c
 }
 
 void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, painter &ctx) {
+    OZZY_PROFILER_FUNCTION();
     int grid_offset = tile.grid_offset();
     // black tile outside of map
     if (grid_offset < 0) {
@@ -567,6 +578,7 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
 }
 
 void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, painter &ctx) {
+    OZZY_PROFILER_FUNCTION();
     // black tile outside of map
     if (!tile.valid()) {
         auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
@@ -628,6 +640,7 @@ void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, pain
 }
 
 void screen_city_t::draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx) {
+    OZZY_PROFILER_FUNCTION();
     int grid_offset = tile.grid_offset();
     // tile must contain image draw data
     if (!map_property_is_draw_tile(grid_offset)) {
@@ -670,6 +683,7 @@ void screen_city_t::draw_ornaments_overlay(vec2i pixel, tile2i point, painter &c
 
 
 void screen_city_t::draw_with_overlay(painter &ctx) {
+    OZZY_PROFILER_FUNCTION();
     const auto overlay = g_city.overlay();
     if (!overlay) {
         return;
@@ -710,6 +724,7 @@ void screen_city_t::draw_with_overlay(painter &ctx) {
 }
 
 void screen_city_t::draw(painter &ctx) {
+    OZZY_PROFILER_FUNCTION();
     update_zoom_level(ctx);
     set_render_scale(ctx, g_zoom.get_scale());
     set_city_clip_rectangle(ctx);
