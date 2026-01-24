@@ -271,12 +271,10 @@ bool FaceReshapeFilter::proceed(bool updateSinks, int64_t frametime) {
     return Filter::proceed(updateSinks, frametime);
 }
 
-#pragma mark - face slim
 void FaceReshapeFilter::SetFaceSlimLevel(float level) {
     thin_face_delta_ = level;
 }
 
-#pragma mark - eye zoom
 void FaceReshapeFilter::SetEyeZoomLevel(float level) {
     big_eye_delta_ = level;
 }

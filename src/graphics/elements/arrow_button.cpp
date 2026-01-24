@@ -100,9 +100,14 @@ int arrow_buttons_handle_mouse(const mouse* m, arrow_button* buttons, int num_bu
     if (m->left.went_up) {
         btn->pressed = BUTTON_PRESSED_FRAMES;
         btn->repeats = 0;
-        btn->click_handler(btn->parameter1, btn->parameter2);
+        if (btn->click_handler) {
+            btn->click_handler(btn->parameter1, btn->parameter2);
+        }
         if (btn->_onclick) {
             btn->_onclick(btn->parameter1, btn->parameter2);
+        }
+        if (btn->_onclick_void) {
+            btn->_onclick_void();
         }
         return button_id;
     }
@@ -118,9 +123,14 @@ int arrow_buttons_handle_mouse(const mouse* m, arrow_button* buttons, int num_bu
             } else {
                 btn->repeats = 47;
             }
-            btn->click_handler(btn->parameter1, btn->parameter2);
+            if (btn->click_handler) {
+                btn->click_handler(btn->parameter1, btn->parameter2);
+            }
             if (btn->_onclick) {
                 btn->_onclick(btn->parameter1, btn->parameter2);
+            }
+            if (btn->_onclick_void) {
+                btn->_onclick_void();
             }
         }
         return button_id;

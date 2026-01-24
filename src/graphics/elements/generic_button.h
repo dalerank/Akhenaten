@@ -4,9 +4,9 @@
 #include "input/mouse.h"
 #include "graphics/text.h"
 #include "graphics/elements/button.h"
+#include "core/inplace_function.h"
 
 #include <vector>
-#include <cstdint>
 #include <functional>
 
 struct generic_button {
@@ -19,10 +19,12 @@ struct generic_button {
     int parameter1 = 0;
     int parameter2 = 0;
 
-    using onclick_cb = std::function<void(int, int)>;
-    using onclick_void = std::function<void()>;
-    onclick_cb _onclick = nullptr;
-    onclick_cb _onrclick = nullptr;
+    using onclick_cb = inplace_function<void(int, int)>;
+    using onclick_void = inplace_function<void()>;
+    onclick_cb _onclick;
+    onclick_void _onclick_void;
+    onclick_cb _onrclick;
+    onclick_void _onrclick_void;
     xstring _tooltip;
     bool hovered = false;
     rect clip = { {0, 0}, {0, 0} };
@@ -31,11 +33,11 @@ struct generic_button {
     inline vec2i size() const { return {width, height}; }
 
     generic_button &onclick(onclick_cb f) { _onclick = f; return *this; }
-    generic_button &onclick(onclick_void f) { return onclick([f] (int, int) { f(); }); }
+    generic_button &onclick(onclick_void f) { _onclick_void = f; return *this; }
     
     generic_button &onrclick(onclick_cb f) { _onrclick = f; return *this; }
-    generic_button &onrclick(onclick_void f) { return onrclick([f] (int, int) { f(); }); }
-    
+    generic_button &onrclick(onclick_void f) { _onrclick_void = f; return *this; }
+   
     generic_button &tooltip(textid t);
     generic_button &tooltip(const xstring &t);
     generic_button &tooltip(const std::initializer_list<int> &t);

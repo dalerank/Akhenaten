@@ -323,7 +323,7 @@ int ui::button_hover(const mouse *m) {
     return 0;
 }
 
-generic_button &ui::link(pcstr label, vec2i pos, vec2i size, e_font font, UiFlags flags, std::function<void(int, int)> cb) {
+generic_button &ui::link(pcstr label, vec2i pos, vec2i size, e_font font, UiFlags flags, button_onclick_cb cb) {
     const vec2i offset = g_state.offset();
 
     g_state.buttons.push_back(generic_button{pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
@@ -352,7 +352,7 @@ void splitStringByNewline(const std::string &str, T &result) {
     result.push_back(str.substr(start));
 }
 
-generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, UiFlags flags, std::function<void(int, int)> cb) {
+generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, UiFlags flags, button_onclick_cb cb) {
     const bool darkened = !!(flags & UiFlags_Darkened);
     const bool hasbody = !(flags & UiFlags_NoBody);
     const bool hasborder = !(flags & UiFlags_NoBorder);
@@ -504,13 +504,13 @@ image_button &ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_b
     return ibutton;
 }
 
-image_button &ui::imgok_button(vec2i pos, std::function<void(int, int)> cb) {
+image_button &ui::imgok_button(vec2i pos, ui::button_onclick_cb cb) {
     auto &btn = img_button({ PACK_GENERAL, 96 }, pos, { 39, 26 });
     btn.onclick(cb);
     return btn;
 }
 
-image_button &ui::imgcancel_button(vec2i pos, std::function<void(int, int)> cb) {
+image_button &ui::imgcancel_button(vec2i pos, ui::button_onclick_cb cb) {
     auto &btn = img_button({ PACK_GENERAL, 96 }, pos, { 39, 26 }, { 4, 1, 2, 3 });
     btn.onclick(cb);
     return btn;
@@ -1128,7 +1128,10 @@ void ui::eimage_button::draw(UiFlags gflags) {
             js_call_function(js_ref);
         });
     } else {
-        btn->onclick(_func);
+        if (_func) btn->onclick(_func);
+        if (_sfunc) btn->onclick(_sfunc);
+        if (_rfunc) btn->onrclick(_rfunc);
+        if (_srfunc) btn->onrclick(_srfunc);
     }
     
     btn->tooltip(_tooltip);
@@ -1451,17 +1454,20 @@ ui::earrow_button::~earrow_button() {
     js_unref_function(_js_onclick_ref);
 }
 
+void ui::earrow_button::js_call() {
+    js_call_function(_js_onclick_ref);
+}
+
 void ui::earrow_button::draw(UiFlags flags) {
     auto &btn = ui::arw_button(pos, down, tiny);
     
     // Set up click handler - prefer JS callback if available, otherwise use C++ callback
     if (!_js_onclick_ref.empty()) {
-        btn.onclick([js_ref = _js_onclick_ref](int, int) {
-            js_call_function(js_ref);
-        });
-    } else if (_func) {
+        btn.onclick([this] { this->js_call(); });
+    } else if (_func || _sfunc) {
         btn.onclick(_func);
-    }
+        btn.onclick(_sfunc);
+    } 
 }
 
 ui::egeneric_button::~egeneric_button() {
@@ -1503,28 +1509,28 @@ void ui::egeneric_button::draw(UiFlags gflags) {
     
     // Set up click handler - prefer JS callback if available, otherwise use C++ callback
     if (clickable && !!_js_onclick_ref) {
-        btn->onclick([js_ref = _js_onclick_ref] (int, int) {
-            js_call_function(js_ref); 
-        });
+        btn->onclick([this] { this->js_call(); });
     }
 
     if (clickable && !!_js_onrclick_ref) {
-        btn->onrclick([js_ref = _js_onrclick_ref] (int, int) {
-            js_call_function(js_ref);
-        });
+        btn->onrclick([this] { this->js_call(); });
     }
 
-    if (clickable && _func && !_js_onclick_ref) {
-        btn->onclick(_func);
-    }
+    if (clickable && _func && !_js_onclick_ref) { btn->onclick(_func); }
+    if (clickable && _sfunc && !_js_onclick_ref) { btn->onclick(_sfunc); }
 
-    if (clickable && _rfunc && !_js_onrclick_ref) {
-        btn->onrclick(_rfunc);
-    }
+    if (clickable && _rfunc && !_js_onrclick_ref) { btn->onrclick(_rfunc); }
+    if (clickable && _srfunc && !_js_onrclick_ref) { btn->onrclick(_srfunc); }
 
     const vec2i offset = g_state.offset();
     if (clickable && is_button_hover(*btn, offset)) {
         ui::set_tooltip(_tooltip);
+    }
+}
+
+void ui::egeneric_button::js_call() {
+    if (!_js_onclick_ref.empty()) {
+        js_call_function(_js_onclick_ref);
     }
 }
 

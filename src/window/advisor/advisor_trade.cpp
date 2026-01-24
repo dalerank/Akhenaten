@@ -29,8 +29,13 @@ int ui::advisor_trade_window::draw_background(UiFlags flags) {
     });
 
     ui["scrollbar"].max_value(g_city.resource.available().size() - 14);
-    ui["show_prices"].onclick([] { window_trade_prices_show(); });
-    ui["goto_empire"].onclick([] { window_empire_show(); });
+    ui["show_prices"].onclick([] { 
+        window_trade_prices_show();
+    });
+
+    ui["goto_empire"].onclick([] { 
+        window_empire_show(); 
+    });
 
     return 0;
 }

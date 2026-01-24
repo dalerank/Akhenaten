@@ -56,6 +56,9 @@ namespace ui {
 
 struct img_button_offsets { int data[4] = {0, 1, 2, 3}; };
 
+using button_onclick_cb = inplace_function<void(int, int)>;
+using button_onclick_simple_cb = inplace_function<void()>;
+
 const tooltip_context &get_tooltip();
 void set_tooltip(const xstring &text);
 void begin_frame();
@@ -90,14 +93,14 @@ void icon(vec2i pos, e_advisor advisor);
 int button_hover(const mouse *m);
 
 inline fonts_vec fonts_def() { return { FONT_NORMAL_BLACK_ON_LIGHT, FONT_INVALID }; }
-generic_button &button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts = fonts_def(), UiFlags flags = UiFlags_None, std::function<void(int, int)> cb = {});
-generic_button &link(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_WHITE_ON_DARK, UiFlags flags = UiFlags_None, std::function<void(int, int)> cb = {});
+generic_button &button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts = fonts_def(), UiFlags flags = UiFlags_None, button_onclick_cb cb = {});
+generic_button &link(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_WHITE_ON_DARK, UiFlags flags = UiFlags_None, button_onclick_cb cb = {});
 generic_button &large_button(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
 generic_button &button(uint32_t id);
 pcstr button_tooltip(uint32_t id);
 image_button &img_button(image_desc desc, vec2i pos, vec2i size, const img_button_offsets offsets = {}, UiFlags flags = UiFlags_None);
-image_button &imgok_button(vec2i pos, std::function<void(int, int)> cb);
-image_button &imgcancel_button(vec2i pos, std::function<void(int, int)> cb);
+image_button &imgok_button(vec2i pos, button_onclick_cb cb);
+image_button &imgcancel_button(vec2i pos, button_onclick_cb cb);
 arrow_button &arw_button(vec2i pos, bool down, bool tiny = false, UiFlags_ flags = UiFlags_None);
 scrollbar_t &scrollbar(scrollbar_t &scrollbar, vec2i pos, int &value, vec2i size = {-1, -1});
 void fill_rect(vec2i offset, vec2i size, color c);
@@ -266,11 +269,11 @@ struct element {
     virtual const xstring &tooltip() const { static xstring dummy;  return dummy; }
     virtual const xstring &format() const { static xstring dummy; return dummy; }
     virtual const xstring &text() const { static xstring dummy; return dummy; }
-    virtual element &onclick(std::function<void(int, int)>) { return *this; }
-            element &onclick(std::function<void()> f) { onclick([f] (int, int) { f(); });  return *this; }
+    virtual element &onclick(button_onclick_cb) { return *this; }
+    virtual element &onclick(button_onclick_simple_cb f) { return *this; }
     virtual void onevent(std::function<void()>) { }
-    virtual element &onrclick(std::function<void(int, int)>) { return *this; }
-            element &onrclick(std::function<void()> f) { onrclick([f] (int, int) { f(); }); return *this;}
+    virtual element &onrclick(button_onclick_cb) { return *this; }
+    virtual element &onrclick(button_onclick_simple_cb f) { return *this; }
     virtual void ondraw(draw_callback f) { _draw_callback = f;};
 
     virtual emenu_header *dcast_menu_header() { return nullptr; }
@@ -516,7 +519,8 @@ struct egeneric_button : public elabel {
     int mode = 0;
     int param1 = 0;
     int param2 = 0;
-    std::function<void(int, int)> _func, _rfunc;
+    button_onclick_cb _func, _rfunc;
+    button_onclick_simple_cb _sfunc, _srfunc;
     xstring _tooltip;
     xstring _js_onclick_ref;  // JS function reference for onclick
     xstring _js_onrclick_ref;  // JS function reference for onrclick
@@ -533,21 +537,29 @@ struct egeneric_button : public elabel {
     virtual void tooltip(const xstring &t) override { _tooltip = t; }
     virtual void select(bool v) override { _selected = v; }
 
-    virtual element &onclick(std::function<void(int, int)> func) override { _func = func; return *this; }
-    virtual element &onrclick(std::function<void(int, int)> func) override { _rfunc = func; return *this; }
+    void js_call();
+
+    virtual element &onclick(button_onclick_cb func) override { _func = func; return *this; }
+    virtual element &onclick(button_onclick_simple_cb func) override { _sfunc = func; return *this; }
+    virtual element &onrclick(button_onclick_cb func) override { _rfunc = func; return *this; }
+    virtual element &onrclick(button_onclick_simple_cb func) override { _srfunc = func; return *this; }
 };
 
 struct earrow_button : public element {
     bool down;
     bool tiny;
 
-    std::function<void(int, int)> _func;
+    button_onclick_cb _func;
+    button_onclick_simple_cb _sfunc;
     xstring _js_onclick_ref;  // JS function reference for onclick
     
     virtual ~earrow_button();
     virtual void load(archive elem, element *parent, items &elems) override;
     virtual void draw(UiFlags flags) override;
-    virtual element &onclick(std::function<void(int, int)> func) override { _func = func; return *this; }
+    virtual element &onclick(button_onclick_cb func) override { _func = func; return *this; }
+    virtual element &onclick(button_onclick_simple_cb func) override { _sfunc = func; return *this; }
+
+    void js_call();
 };
 
 struct eimage_button : public element {
@@ -562,7 +574,8 @@ struct eimage_button : public element {
     int texture_id = -1;
     xstring _tooltip;
 
-    std::function<void(int, int)> _func, _rfunc;
+    button_onclick_cb _func, _rfunc;
+    button_onclick_simple_cb _sfunc, _srfunc;
     xstring _js_onclick_ref;  // JS function reference for onclick
 
     virtual ~eimage_button();
@@ -571,9 +584,10 @@ struct eimage_button : public element {
     virtual bool selected() const override { return _selected; }
     virtual void draw(UiFlags flags) override;
 
-    using element::onclick;
-    virtual element &onclick(std::function<void(int, int)> func) override { _func = func; return *this; }
-    virtual element &onrclick(std::function<void(int, int)> func) override { _rfunc = func; return *this; }
+    virtual element &onclick(button_onclick_cb func) override { _func = func; return *this; }
+    virtual element &onclick(button_onclick_simple_cb func) override { _sfunc = func; return *this; }
+    virtual element &onrclick(button_onclick_cb func) override { _rfunc = func; return *this; }
+    virtual element &onrclick(button_onclick_simple_cb func) override { _srfunc = func; return *this; }
     virtual void tooltip(textid t) override { _tooltip = ui::str(t); }
     virtual void tooltip(const xstring& t) override { _tooltip = t; }
     virtual void image(const image_desc& d) override { img_desc = d; }

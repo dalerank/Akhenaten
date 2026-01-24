@@ -365,8 +365,13 @@ int ui::advisor_population_window::draw_background(UiFlags flags) {
         window_advisors_show_advisor(ADVISOR_HOUSING);
     });
 
-    ui["next_graph"].onclick([this] { ++graph_order; graph_order %= 3; });
-    ui["prev_graph"].onclick([this] { --graph_order; if (graph_order < 0) graph_order = 2; });
+    ui["next_graph"].onclick([this] { 
+        ++graph_order; graph_order %= 3; 
+    });
+
+    ui["prev_graph"].onclick([this] {
+        --graph_order; if (graph_order < 0) graph_order = 2; 
+    });
 
     return 0;
 }

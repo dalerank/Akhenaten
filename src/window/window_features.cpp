@@ -287,7 +287,7 @@ void ui::window_features::init(std::function<void()> cb) {
         auto &pageref = pages.emplace_back();
         pages.back().title = "#TR_CONFIG_HEADER_LANGUAGES";
 
-        auto& game_languages = get_available_languages();
+        const auto& game_languages = get_available_languages();
         for (int i = 0; i < game_languages.size(); i++) {
             const auto &config = game_languages[i];
             if (i != 0 && (i % FEATURES_PER_PAGE) == 0) {
@@ -307,7 +307,9 @@ void ui::window_features::init(std::function<void()> cb) {
             feature.new_value = value;
             feature.volatile_value = true;
             feature.change_action = [] () -> bool { return false; };
-            feature.toggle_action = [lpack = config, this, &feature] (int p1, int p2) {
+            feature.toggle_action = [lpack_idx = i, this] (int p1, int p2) {
+                const auto &game_languages = get_available_languages();
+                const auto &lpack = game_languages[lpack_idx];
                 this->config_change_string_language(lpack);
             };
             feature.text = config.caption;
