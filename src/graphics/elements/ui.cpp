@@ -1124,8 +1124,8 @@ void ui::eimage_button::draw(UiFlags gflags) {
 
     // Set up click handler - prefer JS callback if available, otherwise use C++ callback
     if (!_js_onclick_ref.empty()) {
-        btn->onclick([this](int, int) {
-            js_call_function(_js_onclick_ref);
+        btn->onclick([js_ref = _js_onclick_ref](int, int) {
+            js_call_function(js_ref);
         });
     } else {
         btn->onclick(_func);
@@ -1456,8 +1456,8 @@ void ui::earrow_button::draw(UiFlags flags) {
     
     // Set up click handler - prefer JS callback if available, otherwise use C++ callback
     if (!_js_onclick_ref.empty()) {
-        btn.onclick([this](int, int) {
-            js_call_function(_js_onclick_ref);
+        btn.onclick([js_ref = _js_onclick_ref](int, int) {
+            js_call_function(js_ref);
         });
     } else if (_func) {
         btn.onclick(_func);
@@ -1502,10 +1502,25 @@ void ui::egeneric_button::draw(UiFlags gflags) {
     const bool clickable = !darkened && !readonly;
     
     // Set up click handler - prefer JS callback if available, otherwise use C++ callback
-    if (clickable && !!_js_onclick_ref) { btn->onclick([this] (int, int) { js_call_function(_js_onclick_ref); }); }
-    if (clickable && !!_js_onrclick_ref) { btn->onrclick([this] (int, int) { js_call_function(_js_onrclick_ref); }); }
-    if (clickable && _func && !_js_onclick_ref) btn->onclick(_func);
-    if (clickable && _rfunc && !_js_onrclick_ref) btn->onrclick(_rfunc);
+    if (clickable && !!_js_onclick_ref) {
+        btn->onclick([js_ref = _js_onclick_ref] (int, int) {
+            js_call_function(js_ref); 
+        });
+    }
+
+    if (clickable && !!_js_onrclick_ref) {
+        btn->onrclick([js_ref = _js_onrclick_ref] (int, int) {
+            js_call_function(js_ref);
+        });
+    }
+
+    if (clickable && _func && !_js_onclick_ref) {
+        btn->onclick(_func);
+    }
+
+    if (clickable && _rfunc && !_js_onrclick_ref) {
+        btn->onrclick(_rfunc);
+    }
 
     const vec2i offset = g_state.offset();
     if (clickable && is_button_hover(*btn, offset)) {
