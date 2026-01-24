@@ -8,8 +8,7 @@
 #include <sstream>
 #include <memory>
 #include <string>
-
-#include "game/game_events_history.h"
+#include <algorithm>
 
 namespace dev
 {
@@ -591,19 +590,6 @@ inline void dev::qconsole::listCVars(std::ostream &os) const {
 
     for (CVarReadTable::const_iterator it = cvarReadFTable.begin(); it != cvarReadFTable.end(); it++) {
         os << "\n" << it->first;
-    }
-
-    os << std::endl;
-}
-
-inline void dev::qconsole::eventsHistory(std::ostream &os) const
-{
-    os << "\nEvents history:";
-
-    const auto &lines = events_history::event_history;
-    for (int i = 0; i < lines.events.size(); ++i)
-    {
-        os << events_history::_event_to_string(lines.events[i]).c_str() << std::endl;
     }
 
     os << std::endl;
