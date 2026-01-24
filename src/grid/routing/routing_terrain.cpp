@@ -237,6 +237,11 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
                 return CITIZEN_0_ROAD;
             } 
         
+            // Block pure water tiles (lakes, rivers) - citizens cannot build roads through water
+            if (!!(terrain & TERRAIN_WATER) && !(terrain & TERRAIN_FERRY_ROUTE)) {
+                return CITIZEN_N1_BLOCKED;
+            }
+        
             if (terrain & (TERRAIN_RUBBLE | TERRAIN_ACCESS_RAMP | TERRAIN_GARDEN | TERRAIN_MARSHLAND | TERRAIN_FLOODPLAIN | TERRAIN_TREE)) {// TODO?
                 return CITIZEN_2_PASSABLE_TERRAIN;
             } 
