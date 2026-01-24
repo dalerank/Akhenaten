@@ -22,6 +22,7 @@
 #include "js/js.h"
 #include "ui_scope_property.h"
 #include "graphics/elements/scroll_list_panel.h"
+#include "game/game_pool.h"
 
 #include <stack>
 
@@ -197,7 +198,7 @@ static ui::element::ptr create_element(const xstring type) {
     case _("background"):  elm = std::make_shared<ui::ebackground>(); break;
     case _("image"): elm = std::make_shared<ui::eimg>(); break;
     case _("label"): elm = std::make_shared<ui::elabel>(); break;
-    case _("text"):  elm = std::make_shared<ui::etext>(); break;
+    case _("text"):  elm = ui::etext::acquire(); break;
     case _("generic_button"): elm = std::make_shared<ui::egeneric_button>(); break;
     case _("image_button"): elm = std::make_shared<ui::eimage_button>(); break;
     case _("resource_icon"): elm = std::make_shared<ui::eresource_icon>(); break;
@@ -1263,6 +1264,10 @@ void ui::escrollable_list::load(archive arch, element *parent, items &elems) {
     params.font_asleep = (e_font)arch.r_int("font_asleep", FONT_NORMAL_BLACK_ON_DARK);
     params.font_focus = (e_font)arch.r_int("font_focus", FONT_NORMAL_YELLOW);
     params.font_selected = (e_font)arch.r_int("font_selected", FONT_NORMAL_WHITE_ON_DARK);
+}
+
+std::shared_ptr<ui::etext> ui::etext::acquire() {
+    return std::make_shared<etext>();
 }
 
 void ui::etext::draw(UiFlags flags) {
