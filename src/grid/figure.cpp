@@ -7,6 +7,7 @@
 #include "graphics/view/lookup.h"
 #include "graphics/view/view.h"
 #include "city/city_figures.h"
+#include "core/profiler.h"
 
 #include <assert.h>
 
@@ -23,6 +24,7 @@ int map_figure_id_get(int grid_offset) {
 }
 
 void map_figure_sort_by_y() {
+    OZZY_PROFILER_FUNCTION();
     g_figures_y_sort.clear();
     for (figure *f : map_figures()) {
         if (f->state == FIGURE_STATE_NONE) {

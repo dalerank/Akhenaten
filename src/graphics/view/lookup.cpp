@@ -3,6 +3,7 @@
 #include "graphics/elements/menu.h"
 #include "graphics/image.h"
 #include "grid/grid.h"
+#include "core/profiler.h"
 
 constexpr int map_lookup_size = 500;
 static tile2i SCREENTILE_TO_MAPPOINT_LOOKUP[4][map_lookup_size][map_lookup_size];
@@ -127,6 +128,7 @@ vec2i tile_to_screen(tile2i point) {
 
 static vec2i MAPPOINT_TO_PIXEL_LOOKUP[GRID_SIZE_TOTAL];
 void clear_mappoint_pixelcoord() {
+    OZZY_PROFILER_FUNCTION();
     memset(MAPPOINT_TO_PIXEL_LOOKUP, 0, sizeof(MAPPOINT_TO_PIXEL_LOOKUP));
 }
 

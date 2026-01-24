@@ -19,6 +19,7 @@
 #include "platform/renderer.h"
 #include "city/city.h"
 #include "game/game.h"
+#include "core/profiler.h"
 
 viewport_t g_city_view;
 
@@ -470,6 +471,7 @@ void city_view_foreach_valid_map_tile(painter &ctx,
                                       tile_draw_callback callback4,
                                       tile_draw_callback callback5,
                                       tile_draw_callback callback6) {
+    OZZY_PROFILER_FUNCTION();
     auto& data = g_city_view;
 
     int odd = 0;

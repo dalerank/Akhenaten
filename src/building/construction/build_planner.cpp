@@ -53,6 +53,7 @@
 #include "routed.h"
 #include "city/city.h"
 #include "js/js_game.h"
+#include "core/profiler.h"
 
 class build_planner_clear_land : public building_impl {
 public:
@@ -1150,6 +1151,7 @@ void build_planner::construction_finalize() { // confirm final placement
 //////////////////////
 
 void build_planner::update(tile2i cursor_tile) {
+    OZZY_PROFILER_FUNCTION();
     if (!build_type) {
         return;
     }
@@ -1263,6 +1265,7 @@ void build_planner::draw_flat_tile(painter &ctx, vec2i pixel, color color_mask) 
 }
 
 void build_planner::draw(painter &ctx) {
+    OZZY_PROFILER_FUNCTION();
     // empty building
     if (size.x < 1 || size.y < 1) {
         return;

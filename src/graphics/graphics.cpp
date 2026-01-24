@@ -161,11 +161,13 @@ render_command_t& ImageDraw::create_subcommand(render_command_t::e_render_type r
 }
 
 void ImageDraw::clear_render_commands() {
+    OZZY_PROFILER_FUNCTION();
     g_render_commands.clear();
     g_render_subcommands.clear();
 }
 
 void ImageDraw::apply_render_commands(painter& ctx) {
+    OZZY_PROFILER_FUNCTION();
     std::sort(g_render_commands.begin(), g_render_commands.end(),
         [] (const auto& lhs, const auto& rhs) {
             const vec2i lhs_sort = lhs.use_sort_pixel ? lhs.sort_pixel : lhs.pixel;

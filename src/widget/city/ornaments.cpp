@@ -21,6 +21,7 @@
 #include "grid/property.h"
 #include "grid/random.h"
 #include "grid/terrain.h"
+#include "core/profiler.h"
 #include <cmath>
 
 void building_draw_normal_anim(painter &ctx, vec2i pixel, building *b, tile2i tile, const animation_t &anim, int color_mask) {
@@ -72,6 +73,7 @@ static void draw_hippodrome_ornaments(vec2i pixel, tile2i point, painter &ctx) {
 }
 
 void draw_ornaments_flat(vec2i point, tile2i tile, painter &ctx) {
+    OZZY_PROFILER_FUNCTION();
     int grid_offset = tile.grid_offset();
     // tile must contain image draw data
     if (!map_property_is_draw_tile(grid_offset)) {

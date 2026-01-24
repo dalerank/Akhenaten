@@ -16,6 +16,7 @@
 #include "game/settings.h"
 #include "graphics/window.h"
 #include "game/game.h"
+#include "core/profiler.h"
 
 window_warnings g_warning_manager;
 
@@ -113,6 +114,7 @@ int window_warnings::determine_width(pcstr text) {
 }
 
 void window_warnings::draw_foreground(UiFlags flags) {
+    OZZY_PROFILER_FUNCTION();
     if (!window_is(WINDOW_CITY) && !window_is(WINDOW_EDITOR_MAP)) {
         clear_all();
         return;
