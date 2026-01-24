@@ -10,11 +10,10 @@
 namespace vfs {
 
 struct reader_base {
-    inline reader_base() : __data(nullptr), __pos(0) { __debug_info = nullptr; }
+    inline reader_base() : __data(nullptr), __pos(0) {}
     inline reader_base(pcstr _debug_info, const void *data, int size)
         : __data((const uint8_t *)data), __pos(0), __size(size) {
         __debug_info = _debug_info;
-        assert(__debug_info.size() > 0u);
     }
 
     inline int elapsed() const { return __size - __pos; };
@@ -131,17 +130,14 @@ protected:
         __size = size;
         __pos = pos;
         __debug_info = _debug_info;
-        verify_no_crash(__debug_info.size() > 0u);
     }
 
 private:
-    std::string __debug_info;
+    bstring128 __debug_info;
 
 public:
     pcstr debug_info() const {
-        verify_no_crash(__debug_info.size() > 0);
         return __debug_info.c_str();
-        return nullptr;
     }
 
 protected:
