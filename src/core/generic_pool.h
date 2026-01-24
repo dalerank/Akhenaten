@@ -131,7 +131,7 @@ public:
     {
         char* next;                                                 ///< Pointer to the next free element.
         char value[VTypeSize];                                      ///< Storage for value type.
-        typename type_with_alignment<VAlignment>::type dummy;  ///< Dummy item to get correct alignment.
+        typename type_with_alignment<VAlignment>::type dummy;       ///< Dummy item to get correct alignment.
     };
 
     static const size_t ELEMENT_INTERNAL_SIZE = sizeof(element_internal);
