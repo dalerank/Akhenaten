@@ -67,7 +67,10 @@ struct render_command_t {
     uint32_t tag = 0;
     vec2i pixel = {};
     vec2i sort_pixel = {};
-    std::vector<render_command_t> commands;
+
+    int subcommand = -1;
+
+    render_command_t* last_subcommand();
 };
 
 namespace ImageDraw {

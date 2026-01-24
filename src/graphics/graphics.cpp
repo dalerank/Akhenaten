@@ -6,8 +6,10 @@
 
 #include "dev/debug.h"
 #include <vector>
+#include <deque>
 
 std::vector<render_command_t> g_render_commands;
+std::vector<render_command_t> g_render_subcommands;
 std::vector<render_command_t> g_render_debug_commands;
 
 void graphics_draw_line(vec2i start, vec2i end, color color) {
@@ -93,8 +95,11 @@ void ImageDraw::execute_render_command(painter& ctx, const render_command_t& com
         break;
     }
 
-    for (const auto& subcommand : command.commands) {
-        execute_render_command(ctx, subcommand);
+    int sid = command.subcommand;
+    while (sid != -1) {
+        const render_command_t *subcommand = &g_render_subcommands[sid];
+        execute_render_command(ctx, *subcommand);
+        sid = subcommand->subcommand;
     }
 }
 
@@ -104,6 +109,7 @@ render_command_t& ImageDraw::create_command(render_command_t::e_render_type rt) 
     command.rtype = rt;
     command.use_sort_pixel = false;
     command.sort_pixel = {};
+    command.subcommand = -1;
     return command;
 }
 
@@ -113,6 +119,7 @@ render_command_t &ImageDraw::create_dcommand(render_command_t::e_render_type rt)
     command.rtype = rt;
     command.use_sort_pixel = false;
     command.sort_pixel = {};
+    command.subcommand = -1;
     return command;
 }
 
@@ -124,17 +131,38 @@ render_command_t& ImageDraw::create_subcommand(render_command_t::e_render_type r
     if (g_render_commands.empty()) {
         return create_command(rt);
     }
-    auto& commands = g_render_commands.back().commands;
-    auto& subcommand = commands.emplace_back();
-    subcommand.id = commands.size() - 1;
+
+    int last_idx = g_render_commands.size() - 1;
+    int new_id = 0;
+    
+    // Add new subcommand to g_render_subcommands
+    auto& subcommand = g_render_subcommands.emplace_back();
+    int new_idx = g_render_subcommands.size() - 1;
+
+    if (g_render_commands[last_idx].subcommand == -1) {
+        // First subcommand - attach to main command
+        g_render_commands[last_idx].subcommand = new_idx;
+        subcommand.id = 0;
+    } else {
+        // Find last subcommand in chain
+        render_command_t *current = g_render_commands[last_idx].last_subcommand();
+        int current_idx = current - &g_render_subcommands[0];
+        
+        // Link to new subcommand
+        g_render_subcommands[current_idx].subcommand = new_idx;
+        subcommand.id = current->id + 1;
+    }
+
     subcommand.rtype = rt;
     subcommand.use_sort_pixel = false;
     subcommand.sort_pixel = {};
+    subcommand.subcommand = -1;
     return subcommand;
 }
 
 void ImageDraw::clear_render_commands() {
     g_render_commands.clear();
+    g_render_subcommands.clear();
 }
 
 void ImageDraw::apply_render_commands(painter& ctx) {
@@ -162,4 +190,19 @@ void ImageDraw::finalize_render(painter &ctx) {
     }
 
     g_render_debug_commands.clear();
+}
+
+render_command_t *render_command_t::last_subcommand() {
+    if (this->subcommand == -1) {
+        return nullptr;
+    }
+    
+    // First subcommand is in g_render_subcommands
+    render_command_t *cmd = &g_render_subcommands[this->subcommand];
+    
+    // Traverse the rest of the chain in g_render_subcommands
+    while (cmd->subcommand != -1) {
+        cmd = &g_render_subcommands[cmd->subcommand];
+    }
+    return cmd;
 }
