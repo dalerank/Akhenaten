@@ -424,6 +424,8 @@ struct etext : public elabel {
     // here need todo rich_text_pool
     std::unique_ptr<rich_text_t> rich_text;
 
+    static std::shared_ptr<etext> acquire();
+
     virtual void draw(UiFlags flags) override;
     virtual void load(archive elem, element *parent, items &elems) override;
 };
