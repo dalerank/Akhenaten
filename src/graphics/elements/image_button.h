@@ -4,11 +4,9 @@
 #include "input/mouse.h"
 #include "core/xstring.h"
 #include "core/system_time.h"
+#include "core/delegate.h"
 
-#include <vector>
-#include <functional>
-
-enum { 
+enum {
     IB_BUILD = 2,
     IB_NORMAL = 4,
     IB_SCROLL = 6,
@@ -36,8 +34,8 @@ struct image_button {
     time_millis pressed_since;
     xstring _tooltip;
 
-    using onclick_cb = std::function<void(int, int)>;
-    using onclick_void = std::function<void()>;
+    using onclick_cb = delegate<void(int, int)>;
+    using onclick_void = delegate<void()>;
 
     onclick_cb _onclick, _onrclick;
 
@@ -49,20 +47,20 @@ struct image_button {
 
     image_button &tooltip(textid t);
     image_button &tooltip(const xstring &t);
-    inline vec2i pos() const { return {x, y}; }
-    inline vec2i size() const { return {width, height}; }
+    inline vec2i pos() const { return { x, y }; }
+    inline vec2i size() const { return { width, height }; }
 };
 
 template<size_t N>
-bool image_buttons_handle_mouse(const mouse *m, vec2i pos, image_button (&buttons)[N], int &focus_button_id) {
+bool image_buttons_handle_mouse(const mouse *m, vec2i pos, image_button(&buttons)[N], int &focus_button_id) {
     return image_buttons_handle_mouse(m, pos, std::begin(buttons), (int)N, &focus_button_id);
 }
 
 template<class T>
 bool image_buttons_handle_mouse(const mouse *m, vec2i pos, T &buttons, int &focus_button_id) {
-    return buttons.size() > 0 
-                ? image_buttons_handle_mouse(m, pos.x, pos.y, &buttons.front(), (int)buttons.size(), &focus_button_id)
-                : 0;
+    return buttons.size() > 0
+        ? image_buttons_handle_mouse(m, pos.x, pos.y, &buttons.front(), (int)buttons.size(), &focus_button_id)
+        : 0;
 }
 
 template<class T>
@@ -70,7 +68,7 @@ void image_buttons_draw(vec2i pos, T &buttons, int starting_button = 0) {
     image_buttons_draw(pos, std::begin(buttons), (int)std::size(buttons), starting_button);
 }
 
-void image_buttons_draw(vec2i pos, image_button* buttons, int num_buttons, int starting_button = 0);
-bool image_buttons_handle_mouse(const mouse* m, vec2i pos, image_button* buttons, int num_buttons, int* focus_button_id);
+void image_buttons_draw(vec2i pos, image_button *buttons, int num_buttons, int starting_button = 0);
+bool image_buttons_handle_mouse(const mouse *m, vec2i pos, image_button *buttons, int num_buttons, int *focus_button_id);
 
-void image_buttons_release_press(image_button* buttons, int num_buttons);
+void image_buttons_release_press(image_button *buttons, int num_buttons);
