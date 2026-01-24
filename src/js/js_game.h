@@ -304,10 +304,10 @@ namespace config {
     static config::FunctionIterator ANK_CONFIG_CC1(func_handler, __LINE__)(func)
 
 template<typename Func>
-struct function_traits;
+struct js_function_traits;
 
 template<typename R, typename... Args>
-struct function_traits<R(*)(Args...)> {
+struct js_function_traits<R(*)(Args...)> {
     using return_type = R;
     static constexpr size_t arity = sizeof...(Args);
 
@@ -318,10 +318,10 @@ struct function_traits<R(*)(Args...)> {
 };
 
 template<typename R, typename... Args>
-struct function_traits<R(Args...)> : function_traits<R(*)(Args...)> {};
+struct js_function_traits<R(Args...)> : js_function_traits<R(*)(Args...)> {};
 
 template<typename C, typename R, typename... Args>
-struct function_traits<R(C:: *)(Args...)> {
+struct js_function_traits<R(C:: *)(Args...)> {
     using return_type = R;
     static constexpr size_t arity = sizeof...(Args);
 
@@ -332,7 +332,7 @@ struct function_traits<R(C:: *)(Args...)> {
 };
 
 template<typename C, typename R, typename... Args>
-struct function_traits<R(C:: *)(Args...) const> : function_traits<R(C:: *)(Args...)> {};
+struct js_function_traits<R(C:: *)(Args...) const> : js_function_traits<R(C:: *)(Args...)> {};
 
 #define ANK_FUNCTION_NAMED(fname, func) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##fname); \
@@ -340,7 +340,7 @@ struct function_traits<R(C:: *)(Args...) const> : function_traits<R(C:: *)(Args.
         js_getglobal(J, #fname); bool exists = js_iscallable(J, -1); js_pop(J, 1); \
         if (!exists) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 0); } \
     } void permanent_js2cpp_callback_##fname(js_State *J) { \
-        constexpr bool is_void = (std::is_void_v<function_traits<decltype(&func)>::return_type>); \
+        constexpr bool is_void = (std::is_void_v<js_function_traits<decltype(&func)>::return_type>); \
         js_helpers::js_invoke_and_push<is_void>(J, [&]() { return func(); }); \
     }
 
@@ -353,7 +353,7 @@ template<auto Func>
 inline void ank_function_1_callback_impl(js_State* J) {
     // std::decay_t converts function types to function pointer types
     using func_ptr_type = std::decay_t<decltype(Func)>;
-    using traits = function_traits<func_ptr_type>;
+    using traits = js_function_traits<func_ptr_type>;
     using param_type = typename traits:: template arg<0>::type;
     using return_type = typename traits::return_type;
     
@@ -383,7 +383,7 @@ inline void ank_register_callback_1(js_State* J, pcstr name) {
 template<auto Func>
 inline void ank_function_2_callback_impl(js_State* J) {
     using func_ptr_type = std::decay_t<decltype(Func)>;
-    using traits = function_traits<func_ptr_type>;
+    using traits = js_function_traits<func_ptr_type>;
     using param1_type = typename traits:: template arg<0>::type;
     using param2_type = typename traits:: template arg<1>::type;
     using return_type = typename traits::return_type;
@@ -415,7 +415,7 @@ inline void ank_register_callback_2(js_State* J, pcstr name) {
 template<auto Func>
 inline void ank_function_3_callback_impl(js_State* J) {
     using func_ptr_type = std::decay_t<decltype(Func)>;
-    using traits = function_traits<func_ptr_type>;
+    using traits = js_function_traits<func_ptr_type>;
     using param1_type = typename traits:: template arg<0>::type;
     using param2_type = typename traits:: template arg<1>::type;
     using param3_type = typename traits:: template arg<2>::type;
@@ -449,7 +449,7 @@ inline void ank_register_callback_3(js_State* J, pcstr name) {
 template<auto Func>
 inline void ank_function_4_callback_impl(js_State* J) {
     using func_ptr_type = std::decay_t<decltype(Func)>;
-    using traits = function_traits<func_ptr_type>;
+    using traits = js_function_traits<func_ptr_type>;
     using param1_type = typename traits:: template arg<0>::type;
     using param2_type = typename traits:: template arg<1>::type;
     using param3_type = typename traits:: template arg<2>::type;
@@ -485,7 +485,7 @@ inline void ank_register_callback_4(js_State* J, pcstr name) {
 template<auto Func>
 inline void ank_function_5_callback_impl(js_State* J) {
     using func_ptr_type = std::decay_t<decltype(Func)>;
-    using traits = function_traits<func_ptr_type>;
+    using traits = js_function_traits<func_ptr_type>;
     using param1_type = typename traits:: template arg<0>::type;
     using param2_type = typename traits:: template arg<1>::type;
     using param3_type = typename traits:: template arg<2>::type;
@@ -523,7 +523,7 @@ inline void ank_register_callback_5(js_State* J, pcstr name) {
 template<auto Func>
 inline void ank_function_unified_callback_impl(js_State* J) {
     using func_ptr_type = std::decay_t<decltype(Func)>;
-    using traits = function_traits<func_ptr_type>;
+    using traits = js_function_traits<func_ptr_type>;
     using return_type = typename traits::return_type;
     
     bvariant_map params = js_helpers::js_object_to_bvariant_map(J, 1);
@@ -549,7 +549,7 @@ inline void ank_register_callback_unified(js_State* J, pcstr name) {
     inline void register_js2cpp_callback_##func(js_State* J) {                          \
         ank_register_callback_unified<&func>(J, #func);                                 \
     }                                                                                   \
-    function_traits<decltype(&func)>::return_type func
+    js_function_traits<decltype(&func)>::return_type func
 
 #define ANK_CONFIG_ENUM(enumt) enumt; \
     void register_enum_##enumt(config::type_enum); \
