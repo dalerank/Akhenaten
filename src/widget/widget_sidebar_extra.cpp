@@ -62,8 +62,13 @@ struct sidebar_window_extra : public autoconfig_window_t<sidebar_window_extra> {
     virtual void archive_load(archive arch) override {
         widget::archive_load(arch);
 
-        ui["dec_speed"].onclick([] { events::emit( event_change_gamespeed{ HOTKEY_DECREASE_GAME_SPEED }); });
-        ui["inc_speed"].onclick([] { events::emit( event_change_gamespeed{ HOTKEY_INCREASE_GAME_SPEED }); });
+        ui["dec_speed"].onclick([] { 
+            events::emit( event_change_gamespeed{ HOTKEY_DECREASE_GAME_SPEED }); 
+        });
+
+        ui["inc_speed"].onclick([] { 
+            events::emit( event_change_gamespeed{ HOTKEY_INCREASE_GAME_SPEED });
+        });
     }
 };
 

@@ -4,7 +4,7 @@
 #include "input/mouse.h"
 #include "core/xstring.h"
 #include "core/system_time.h"
-#include "core/delegate.h"
+#include "core/inplace_function.h"
 
 enum {
     IB_BUILD = 2,
@@ -34,16 +34,17 @@ struct image_button {
     time_millis pressed_since;
     xstring _tooltip;
 
-    using onclick_cb = delegate<void(int, int)>;
-    using onclick_void = delegate<void()>;
+    using onclick_cb = inplace_function<void(int, int)>;
+    using onclick_void = inplace_function<void()>;
 
     onclick_cb _onclick, _onrclick;
+    onclick_void _onclick_void, _onrclick_void;
 
-    template<class Func> image_button &onclick(Func f) { _onclick = f; return *this; }
-    image_button &onclick(onclick_void f) { return onclick([f] (int, int) { f(); }); }
+    image_button &onclick(onclick_cb f) { _onclick = f; return *this; }
+    image_button &onclick(onclick_void f) { _onclick_void = f; return *this; }
 
-    template<class Func> image_button &onrclick(Func f) { _onrclick = f; return *this; }
-    image_button &onrclick(onclick_void f) { return onrclick([f] (int, int) { f(); }); }
+    image_button &onrclick(onclick_cb f) { _onrclick = f; return *this; }
+    image_button &onrclick(onclick_void f) { _onrclick_void = f; return *this; }
 
     image_button &tooltip(textid t);
     image_button &tooltip(const xstring &t);

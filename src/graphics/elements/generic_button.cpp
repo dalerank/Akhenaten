@@ -41,17 +41,24 @@ int generic_buttons_handle_mouse(const mouse* m, vec2i pos, const generic_button
     }
 
     if (m->left.went_up) {
-        button.left_click_handler(button.parameter1, button.parameter2);
+        if (button.left_click_handler) {
+            button.left_click_handler(button.parameter1, button.parameter2);
+        }
         if (button._onclick) {
             button._onclick(button.parameter1, button.parameter2);
+        }
+        if (button._onclick_void) {
+            button._onclick_void();
         }
     } else if (m->right.went_up) {
         if (button.right_click_handler) {
             button.right_click_handler(button.parameter1, button.parameter2);
         }
-
         if (button._onrclick) {
             button._onrclick(button.parameter1, button.parameter2);
+        }
+        if (button._onrclick_void) {
+            button._onrclick_void();
         }
     } else {
         return 0;

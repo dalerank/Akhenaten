@@ -1,6 +1,7 @@
 #pragma once
 
 #include "input/mouse.h"
+#include "core/delegate.h"
 
 #include "generic_button.h"
 
@@ -17,14 +18,16 @@ struct arrow_button {
     int state;
     int repeats;
 
-    using function_cb = std::function<void(int, int)>;
-    function_cb _onclick;
+    using onclick_cb = inplace_function<void(int, int)>;
+    using onclick_simple_cb = inplace_function<void()>;
+    onclick_cb _onclick;
+    onclick_simple_cb _onclick_void;
 
     inline vec2i pos() const { return { x, y }; }
     inline vec2i size() const { return { wsize, wsize }; }
 
-    arrow_button &onclick(function_cb f) { _onclick = f; return *this; }
-    arrow_button &onclick(std::function<void()> f) { return onclick([f] (int, int) { f(); }); }
+    arrow_button &onclick(onclick_cb f) { _onclick = f; return *this; }
+    arrow_button &onclick(onclick_simple_cb f) { _onclick_void = f; return *this; }
 };
 
 void arrow_buttons_draw(arrow_button* buttons, int num_buttons, bool tiny = false);

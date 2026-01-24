@@ -120,9 +120,11 @@ bool image_buttons_handle_mouse(const mouse* m, vec2i pos, image_button* buttons
         if (hit_button->left_click_handler) {
             hit_button->left_click_handler(hit_button->parameter1, hit_button->parameter2);
         }
-
         if (hit_button->_onclick) {
             hit_button->_onclick(hit_button->parameter1, hit_button->parameter2);
+        }
+        if (hit_button->_onclick_void) {
+            hit_button->_onclick_void();
         }
     } else if (m->right.went_up) {
         if (hit_button->button_type == IB_BUILD || hit_button->button_type == IB_OVERSEER)
@@ -133,9 +135,11 @@ bool image_buttons_handle_mouse(const mouse* m, vec2i pos, image_button* buttons
         if (hit_button->right_click_handler) {
             hit_button->right_click_handler(hit_button->parameter1, hit_button->parameter2);
         }
-
         if (hit_button->_onrclick) {
             hit_button->_onrclick(hit_button->parameter1, hit_button->parameter2);
+        }
+        if (hit_button->_onrclick_void) {
+            hit_button->_onrclick_void();
         }
     } else if (hit_button->button_type == IB_SCROLL && m->left.is_down) {
         time_millis delay = hit_button->pressed == 2 ? PRESSED_REPEAT_MILLIS : PRESSED_REPEAT_INITIAL_MILLIS;

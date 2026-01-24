@@ -121,14 +121,18 @@ void ui::sidebar_window_expanded_t::init_ui() {
         game_undo_perform();
     });
 
-    ui["show_messages"].onclick([] { ui::message_list_window::show([] {}); });
+    ui["show_messages"].onclick([] {
+        ui::message_list_window::show([] {});
+    });
 
     ui["show_briefing"].readonly = !(g_scenario.mode() == e_scenario_normal || g_scenario.mode() == e_scenario_selected);
-    ui["show_briefing"].onclick([] { mission_briefing_window::mission_review(); });
+    ui["show_briefing"].onclick([] { 
+        mission_briefing_window::mission_review();
+    });
 
     ui["show_overlays"]
         .onclick([] { window_overlay_menu_show(); })
-        .onrclick([] { window_message_dialog_show("message_overlay_selector", -1, window_city_draw_all);; });
+        .onrclick([] { window_message_dialog_show("message_overlay_selector", -1, window_city_draw_all); });
 
     ui["collapse"].onclick([this] { collapse(); });
 }
@@ -243,7 +247,9 @@ void ui::sidebar_window_collapsed_t::init() {
     });
 
     for (const auto &btn : button_ids) {
-        ui[btn.id].onclick([type = btn.type] { window_build_menu_show(type); });
+        ui[btn.id].onclick([type = btn.type] {
+            window_build_menu_show(type);
+        });
     }
 
     events::subscribe([this] (event_building_menu_changed ev) {

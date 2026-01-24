@@ -28,7 +28,7 @@ namespace ui {
             bool new_value;
             xstring text;
             bool volatile_value = false;
-            std::function<void(int, int)> toggle_action;
+            inplace_function<void(int, int)> toggle_action;
             std::function<bool()> change_action;
             std::function<bool()> get_value;
 

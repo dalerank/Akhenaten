@@ -74,7 +74,9 @@ void ui::advisor_imperial_window::draw_foreground(UiFlags flags) {
 int ui::advisor_imperial_window::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
 
-    ui["salary_rank"].onclick([] { set_salary_window::show(window_advisors_show, true); });
+    ui["salary_rank"].onclick([] { 
+        set_salary_window::show(window_advisors_show, true); 
+    });
 
     return 0;
 }
