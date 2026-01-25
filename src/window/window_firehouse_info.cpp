@@ -1,7 +1,6 @@
 #include "window/window_building_info.h"
 
 #include "city/object_info.h"
-#include "window/window_building_info.h"
 #include "graphics/elements/lang_text.h"
 #include "building/building_firehouse.h"
 

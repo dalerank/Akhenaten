@@ -2,6 +2,9 @@
 
 #include "city/city.h"
 #include "building/building_house.h"
+#include "city/object_info.h"
+
+extern object_info def_object_info;
 
 int __city_count_active_buildings(int btype) {
     return g_city.buildings.count_active((e_building_type)btype);
@@ -78,3 +81,24 @@ void __building_add_collapse_damage(int bid, int damage) {
     }
 }
 ANK_FUNCTION_2(__building_add_collapse_damage)
+
+bool __building_has_road_access(int bid) { return building_get(bid)->has_road_access; }
+ANK_FUNCTION_1(__building_has_road_access)
+
+int __city_get_object_info_building_id() { return def_object_info.bid;}
+ANK_FUNCTION(__city_get_object_info_building_id)
+
+int __city_get_object_info_group() { return def_object_info.group_id; }
+ANK_FUNCTION(__city_get_object_info_group)
+
+int __building_get_worker_percentage(int bid) { return building_get(bid)->worker_percentage();}
+ANK_FUNCTION_1(__building_get_worker_percentage)
+
+int __building_get_num_workers(int bid) { return building_get(bid)->num_workers;}
+ANK_FUNCTION_1(__building_get_num_workers)
+
+bool __building_has_figure(int bid, int index) { return building_get(bid)->has_figure(index); }
+ANK_FUNCTION_2(__building_has_figure)
+
+int __building_get_figure_id(int bid, int index) { return building_get(bid)->get_figure(index)->id; }
+ANK_FUNCTION_2(__building_get_figure_id)

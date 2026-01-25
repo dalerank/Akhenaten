@@ -20,10 +20,6 @@ ui::advisor_financial_window g_advisor_financial_window;
 struct advisor_financial_window_draw { vec2i pos; };
 ANK_REGISTER_STRUCT_WRITER(advisor_financial_window_draw, pos);
 
-void ui::advisor_financial_window::archive_load(archive arch) {
-    autoconfig_window::archive_load(arch);
-}
-
 void ui::advisor_financial_window::ui_draw_foreground(UiFlags flags) {
     ui.begin_widget(pos);
     ui.draw();

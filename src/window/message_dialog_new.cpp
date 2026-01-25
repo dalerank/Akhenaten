@@ -139,6 +139,12 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
 
     ui["button_close"].enabled = true;
 
+    // Reset scroll position for content_text when opening a new dialog
+    auto* content_text_element = ui["content_text"].dcast_etext();
+    if (content_text_element) {
+        content_text_element->reset_scroll();
+    }
+
     // Config is already loaded by the derived class constructor
     _is_inited = false;
 

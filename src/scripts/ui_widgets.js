@@ -587,20 +587,14 @@ health_info_window = {
     })
 }
 
-info_window_work_camp = {
-    ui : __baseui(building_info_window, {
-
-    })
-}
-
 taxcollector_info_window = {
     ui : {
         background    : outer_panel({size: [29, 17]}),
-        title             : text({pos: [0, 12], size: [px(29), 20], text:"${text.0}", font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+        title         : text({pos: [0, 12], size: [px(29), 20], text:"${text.0}", font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
         deben_icon    : resource_icon({pos: [16, 46], resource:RESOURCE_GOLD}),
         tax_level     : label({pos:[px(29) / 2 + 40, 46], text:"${60.1} ${city.tax_percentage}%", font : FONT_NORMAL_BLACK_ON_LIGHT }),
-        dec_tax         : arrowdown({pos:[px(29) / 2 + 170, 38]}),
-        inc_tax           : arrowup({pos:[px(29) / 2 + 193, 38]}),
+        dec_tax       : arrowdown({pos:[px(29) / 2 + 170, 38]}),
+        inc_tax       : arrowup({pos:[px(29) / 2 + 193, 38]}),
         money_text    : text({pos: [44, 44], wrap:px(26), font : FONT_NORMAL_BLACK_ON_LIGHT }),
         warning_text  : text({pos: [28, 66], font : FONT_NORMAL_BLACK_ON_LIGHT }),
         building_desc : text({pos: [28, 86], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
