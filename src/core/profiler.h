@@ -186,11 +186,11 @@ inline uint64_t TracyAllocSrclocName(uint32_t Line,
 	const auto TracyConcat( __tracy_source_location, TracyLine ) = TracyAllocSrclocName(    \
 		static_cast<uint32_t>( TracyLine ),                                                 \
 		TracyFile,                                                                          \
-		std::strlen( TracyFile ),                                                           \
+		strlen( TracyFile ),                                                           \
 		__func__,                                                                           \
-		std::strlen( __func__ ),                                                            \
+		strlen( __func__ ),                                                            \
 		TracyGetStr( name ),                                                                \
-		std::strlen( TracyGetStr( name ) ) );                                               \
+		strlen( TracyGetStr( name ) ) );                                               \
 	TracyCZoneCtx ctx = ___tracy_emit_zone_begin_alloc( TracyConcat( __tracy_source_location, TracyLine ), active );
 
 #define OZZY_PROFILER_BEGIN_FRAME( ... ) FrameMark;
