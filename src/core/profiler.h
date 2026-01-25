@@ -19,12 +19,13 @@
 
 #undef TRACY_CALLSTACK 
 
-#define TRACY_MEMORY_ENABLE
+
 #ifdef TRACY_MEMORY_ENABLE
-#define TRACY_CALLSTACK 10
+#define TRACY_CALLSTACK 20
 #endif
 
 #include <cstdint>
+#include <cinttypes>
 
 #include "tracy/Tracy.hpp"
 #include "tracy/TracyC.h"
@@ -103,7 +104,7 @@ namespace Profiler {
 		TRACY_SCOPE_IMPLEMENT_TAG_FUNC(float, Value, "%f", Value);
 		TRACY_SCOPE_IMPLEMENT_TAG_FUNC(int32_t, Value, "%d", Value);
 		TRACY_SCOPE_IMPLEMENT_TAG_FUNC(uint32_t, Value, "%u", Value);
-		TRACY_SCOPE_IMPLEMENT_TAG_FUNC(uint64_t, Value, "%llu", Value);
+		TRACY_SCOPE_IMPLEMENT_TAG_FUNC(uint64_t, Value, "%" PRIu64, Value);
 		TRACY_SCOPE_IMPLEMENT_TAG_FUNC(const char *, pValue, "%s", pValue);
 		TRACY_SCOPE_IMPLEMENT_TAG_FUNC(const std::string_view&, Value, "%.*s", static_cast<int>(Value.size()), Value.data());
 

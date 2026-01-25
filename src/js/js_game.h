@@ -283,7 +283,7 @@ namespace js_helpers {
                 value = bvariant(); // none
             }
             
-            result.values[xstring(key)] = value;
+            result[xstring(key)] = value;
             js_pop(J, 1); // pop value
         }
         js_pop(J, 1); // pop iterator
