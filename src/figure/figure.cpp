@@ -26,6 +26,8 @@
 #include "game/game.h"
 #include "game/game_config.h"
 #include "grid/routing/routing.h"
+#include "graphics/elements/tooltip.h"
+#include "building/construction/build_planner.h"
 #include "js/js_game.h"
 #include "core/pool.h"
 
@@ -983,6 +985,202 @@ void figure::draw(painter &ctx, int highlight) {
     }
 
     is_main_drawn = true;
+}
+
+void figure::draw_debug() {
+    if (draw_mode == 0) {
+        debug_lines_clear();
+        return;
+    }
+
+    building *b = home();
+    building *bdest = destination();
+
+    // Clear previous debug lines
+    auto &dlines = debug_lines();
+    dlines.clear();
+
+    char str[10];
+    vec2i pixel = lookup_tile_to_pixel(tile);
+    pixel = adjust_pixel_offset(pixel);
+    float zoom_scale = g_zoom.get_scale();
+    pixel.x = (int)(pixel.x * zoom_scale);
+    pixel.y = (int)(pixel.y * zoom_scale);
+    int text_offset_x = (int)(-10 * zoom_scale);
+    int text_offset_y = (int)(-80 * zoom_scale);
+    int text_line_height = (int)(10 * zoom_scale);
+    int text_block_spacing = (int)(80 * zoom_scale);
+    pixel.x += text_offset_x;
+    pixel.y += text_offset_y;
+    int indent = 0;
+    color col = COLOR_WHITE;
+    painter ctx = game.painter();
+
+    if (!!(draw_mode & e_figure_draw_overlay)) {
+        dlines.emplace_back().printf("ID: %d", id);
+        dlines.emplace_back().printf("Type: %d", type);
+        dlines.emplace_back().printf("Action: %d", action_state);
+        dlines.emplace_back().printf("Wait: %d", wait_ticks);
+        dlines.emplace_back().printf("Roam: %d", roam_length);
+
+        if (true) {
+            vec2i tp = lookup_tile_to_pixel(tile);
+            if (tile.grid_offset() != -1)
+                debug_draw_tile_box(tp.x, tp.y, COLOR_LIGHT_BLUE, COLOR_GREEN);
+        }
+        pixel.y += text_block_spacing;
+        dlines.emplace_back().printf("Tile: (%d, %d)", tile.x(), tile.y());
+        dlines.emplace_back().printf("Grid: %d", tile.grid_offset());
+        dlines.emplace_back().printf("Progress: %d", progress_on_tile);
+        dlines.emplace_back().printf("Path Tile: %d", routing_path_current_tile);
+    }
+
+    if (!!(draw_mode & e_figure_draw_routing)) {
+        // draw path
+        if (routing_path_id) {
+            vec2i coords = lookup_tile_to_pixel(destination()->tile);
+            build_planner::draw_building_ghost(ctx, image_id_from_group(PACK_CUSTOM, 1) + 3, coords);
+            coords = lookup_tile_to_pixel(destination_tile);
+            build_planner::draw_building_ghost(ctx, image_id_from_group(PACK_CUSTOM, 1) + 3, coords);
+            int tx = tile.x();
+            int ty = tile.y();
+            coords = lookup_tile_to_pixel(tile);
+            ctx.img_generic(image_id_from_group(PACK_CUSTOM, 1) + 3, coords * zoom_scale);
+            int starting_tile_index = routing_path_current_tile;
+            if (progress_on_tile >= 0 && progress_on_tile < 8) { // adjust half-tile offset
+                starting_tile_index--;
+            }
+
+            for (int i = starting_tile_index; i < routing_path_length; i++) {
+                int img_index = 10;
+                auto pdir = figure_route_get_direction(routing_path_id, i);
+                switch (pdir) {
+                case 0: ty--; img_index = 0; break;
+                case 1: tx++; ty--; break;
+                case 2: tx++; img_index = 1; break;
+                case 3: tx++; ty++; break;
+                case 4: ty++; img_index = 0; break;
+                case 5: tx--; ty++; break;
+                case 6: tx--; img_index = 1; break;
+                case 7: tx--; ty--; break;
+                }
+                coords = lookup_tile_to_pixel(tile2i(tx, ty));
+                ctx.img_generic(image_id_from_group(PACK_CUSTOM, 1) + img_index, coords * zoom_scale);
+            }
+        }
+
+        // the rest of values, on top of all else
+        if (routing_path_id) {
+            dlines.emplace_back().printf("Path ID: %d", routing_path_id);
+            dlines.emplace_back().printf("Path Tile: %d", routing_path_current_tile);
+            dlines.emplace_back().printf("Path Length: %d", routing_path_length);
+        } else {
+            dlines.emplace_back().printf("Roam Length: %d", roam_length);
+            dlines.emplace_back().printf("Roam Free: %d", roam_wander_freely);
+            dlines.emplace_back().printf("Max Roam: %d", max_roam_length);
+        }
+
+        dlines.emplace_back().printf("Terrain Usage: %d", terrain_usage);
+
+        switch (direction) {
+        case DIR_FIGURE_CAN_NOT_REACH: dlines.emplace_back().printf("Direction: %d (CANNOT_REACH)", direction); break;
+        case DIR_FIGURE_REROUTE: dlines.emplace_back().printf("Direction: %d (REROUTE)", direction); break;
+        case DIR_FIGURE_NONE: dlines.emplace_back().printf("Direction: %d (NONE)", direction); break;
+        default:
+            dlines.emplace_back().printf("Direction: %d", direction);
+            break;
+        }
+
+        dlines.emplace_back().printf("Roam Turn: %d", roam_turn_direction);
+        dlines.emplace_back().printf("Progress on tile %d", progress_on_tile);
+    }
+
+    if (!!(draw_mode & e_figure_draw_carry)) { // RESOURCE CARRY
+        if (resource_id) {
+            dlines.emplace_back().printf("Resource: %d", resource_id);
+            dlines.emplace_back().printf("Amount: %d", resource_amount_full);
+            dlines.emplace_back().printf("Collecting: %d", collecting_item_id);
+        }
+    }
+
+    if (!!(draw_mode & e_figure_draw_building)) {
+        dlines.emplace_back().printf("Home: %d (slot: %d)", homeID(), homeID() > 0 ? home()->get_figure_slot(this) : -1);
+        dlines.emplace_back().printf("Dest: %d (slot: %d)", destinationID(), destinationID() > 0 ? destination()->get_figure_slot(this) : -1);
+    }
+
+    if (!!(draw_mode & e_figure_draw_festival)) {
+        pixel.y += (int)(30 * zoom_scale);
+        //debug_text(ctx, str, pixel.x, pixel.y, indent, "", unk_ph1_269, COLOR_WHITE);
+        //debug_text(ctx, str, pixel.x, pixel.y + text_line_height, indent, "service[0]", data.value[0], COLOR_WHITE);
+        //debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 2, indent, "service[1]", data.value[1], COLOR_WHITE);
+        //debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 3, indent, "service[2]", data.value[2], COLOR_WHITE);
+        // debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 4, indent, "", festival_remaining_dances, COLOR_WHITE);
+    }
+
+    if (!!(draw_mode & e_figure_cross_country_move)) { // CROSS-COUNTRY MOVEMENT
+        if (use_cross_country) {
+            vec2i tp;
+            if (tile.grid_offset() != -1) {
+                tp = lookup_tile_to_pixel(tile);
+                debug_draw_tile_box(tp.x, tp.y, COLOR_NULL, COLOR_GREEN);
+            }
+            if (destination_tile.grid_offset() != -1) {
+                tp = lookup_tile_to_pixel(destination_tile);
+                debug_draw_tile_box(tp.x, tp.y, COLOR_NULL, COLOR_FONT_YELLOW);
+            }
+        }
+        col = use_cross_country ? COLOR_WHITE : COLOR_FONT_MEDIUM_GRAY;
+        dlines.emplace_back().printf("CC Move: %d", use_cross_country);
+        dlines.emplace_back().printf("CC Dir: %d", cc_direction);
+        dlines.emplace_back().printf("CC Coords: (%d, %d)", cc_coords.x, cc_coords.y);
+        dlines.emplace_back().printf("CC Dest: (%d, %d)", cc_destination.x, cc_destination.y);
+        dlines.emplace_back().printf("CC Delta XY: %d", cc_delta_xy);
+        dlines.emplace_back().printf("CC Delta: (%d, %d)", cc_delta.x, cc_delta.y);
+    }
+
+    dcast()->debug_draw();
+}
+
+void figure::draw_tooltip(tooltip_context *c) const {
+    if (!_debug_lines) {
+        return;
+    }
+
+    vec2i mpos = c->mpos;
+
+    int width = 220;
+    int line_height = 14;
+    int height = (int)_debug_lines->size() * line_height + 10;
+    vec2i pos;
+
+    if (mpos.x < width + 20)
+        pos.x = mpos.x + 20;
+    else {
+        pos.x = mpos.x - width - 20;
+    }
+
+    if (mpos.y < 200) {
+        pos.y = mpos.y + 10;
+    } else if (mpos.y + height - 32 > screen_height()) {
+        pos.y = screen_height() - height;
+    } else {
+        pos.y = mpos.y - 32;
+    }
+
+    ui::begin_widget(pos);
+
+    ui::fill_rect({ 0, 0 }, { width, height }, COLOR_TOOLTIP_FILL);
+    ui::border({ 0, 0 }, { width, height }, 0, COLOR_TOOLTIP_BORDER, UiFlags_None);
+
+    int y_offset = 5;
+    int label_x = 5;
+
+    for (const auto &line : *_debug_lines) {
+        ui::label_colored(line.c_str(), { label_x, y_offset }, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+        y_offset += line_height;
+    }
+
+    ui::end_widget();
 }
 
 void figure::bind(io_buffer* iob) {
