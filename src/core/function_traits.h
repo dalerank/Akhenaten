@@ -170,7 +170,7 @@ struct has_unique_call_operator {
     // Test for presence of operator()
     //*********************************
     template <typename U>
-    static auto test(int) -> decltype(&U::operator(), etl::true_type());
+    static auto test(int) -> decltype(&U::operator(), std::true_type());
 
     //*********************************
     // Fallback

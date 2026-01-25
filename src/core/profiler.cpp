@@ -2,7 +2,6 @@
 
 #include "dev/debug.h"
 
-
 #if defined( TRACY_MEMORY_ENABLE )
 
 bool TracyProfilerAvailable = true;

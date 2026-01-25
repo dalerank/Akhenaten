@@ -9,7 +9,7 @@ template <typename T> struct type_size_of : std::integral_constant<size_t, sizeo
 template <> struct type_size_of<void> : std::integral_constant<size_t, 1U> {};
 
 template <typename T>
-inline constexpr size_t type_size_of_v = etl::size_of<T>::value;
+inline constexpr size_t type_size_of_v = type_size_of<T>::value;
 
 template <typename T1, typename... TRest>
 class largest_type {

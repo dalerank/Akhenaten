@@ -5,6 +5,7 @@
 #include "graphics/image_groups.h"
 #include "graphics/animation.h"
 #include "core/stable_array.h"
+#include "core/profiler.h"
 
 #include "js/js_game.h"
 
@@ -106,6 +107,7 @@ void figure::image_set_animation(int collection, int group, int offset, int max_
 }
 
 void figure::figure_image_update(bool refresh_only) {
+    OZZY_PROFILER_FUNCTION();
     if (!animctx.valid()) {
         return;
     }
@@ -157,6 +159,7 @@ image_desc resource2cartanim(e_resource resource_id) {
 }
 
 void figure::cart_image_update() {
+    OZZY_PROFILER_FUNCTION();
     // determine cart sprite
     cart_image_id = 0;
 
