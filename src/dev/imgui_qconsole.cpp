@@ -1,5 +1,8 @@
 #include "imgui_qconsole.h"
 
+#include "content/vfs.h"
+#include "platform/platform.h"
+
 namespace dev {
 
     bool IMGUIOstream::linePassFilter(const ConsoleBuf::Line &l) const {
@@ -60,8 +63,7 @@ namespace dev {
 
         con.bind_member_command("clear", *this, &imgui_qconsole::clear, "Clear the console");
         con.bind_cvar("fontScale", fontScale);
-
-        con.style = qconsole::ConsoleStylingColor();
+        con.style = qconsole::ConsoleStylingColor();        
     }
 
     void imgui_qconsole::clear() { os.Clear(); }
@@ -100,8 +102,8 @@ namespace dev {
         if (is.render(width)) {
             HistoryPos = -1;
 
-            con.commandExecute(is.getStream(), (*this));
-
+            con.commandExecute(is.getStream(), (*this)); 
+            saveCommandHistory();
             // On command input, we scroll to bottom even if AutoScroll==false
             os.shouldScrollToBottom = true;
         }
@@ -449,5 +451,24 @@ namespace dev {
         return rval;
     }
 
+    void imgui_qconsole::loadCommandHistory() {
+        pcstr base_path = vfs::platform_file_manager_get_base_path();
+        if (!base_path) {
+            return;
+        }
+        
+        vfs::path filepath(base_path, "/qconsole_history.txt");
+        con.loadHistoryBuffer(filepath);
+    }
+
+    void imgui_qconsole::saveCommandHistory() {
+        pcstr base_path = vfs::platform_file_manager_get_base_path();
+        if (!base_path) {
+            return;
+        }
+        
+        vfs::path filepath(base_path, "/qconsole_history.txt");
+        con.saveHistoryBuffer(filepath);
+    }
 
 }
