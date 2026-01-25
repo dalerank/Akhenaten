@@ -81,7 +81,7 @@ template <typename... TTypes>
 struct type_list_size<type_list<TTypes...>> : public std::integral_constant<size_t, sizeof...(TTypes)> {};
 
 template <typename... TTypes>
-inline constexpr size_t type_list_size_v = type_list_size<std::type_list<TTypes...>>::value;
+inline constexpr size_t type_list_size_v = type_list_size<type_list<TTypes...>>::value;
 
 //***************************************************************************
 /// Defines type as the type found at Index in the type_list.
