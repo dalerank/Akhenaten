@@ -344,12 +344,12 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
 
     // Apply all accumulated render commands from phases 1 and 2 to the graphics context
     // This actually draws the flat and terrain height layers to the screen
-    ImageDraw::apply_render_commands(ctx);
+    ImageDraw::apply_render_commands(ctx, "draw_flat");
 
     // PHASE 3: Experimental debug layer - draw animal spawn area indicators
     // This is a debugging feature to visualize where animals can spawn in the game
     draw_debug_animal_spawn_areas(ctx);
-    ImageDraw::apply_render_commands(ctx);
+    ImageDraw::apply_render_commands(ctx, "draw_debug_animal_areas");
        
     // PHASE 4: Draw height-based elements (buildings, decorations, and figures)
     // This includes buildings with height, animated decorations, and all figures (people, animals, etc.)
@@ -361,7 +361,7 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     );
 
     // Apply all render commands from phase 4
-    ImageDraw::apply_render_commands(ctx);
+    ImageDraw::apply_render_commands(ctx, "draw_height_based_tiles");
 
     // Draw the city planner overlay (construction previews, ghost buildings) if no figure is selected
     // When a figure is selected, we skip the planner drawing to avoid visual clutter
@@ -375,14 +375,14 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
         [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_postrender_building_effects(pixel, tile, ctx); }
     );
 
-    ImageDraw::apply_render_commands(ctx);
+    ImageDraw::apply_render_commands(ctx, "draw_post_processing_tile");
 
     // PHASE 6: Draw debug overlays on top of everything else
     // These debug elements should be visible above all game elements for debugging purposes
     city_view_foreach_valid_map_tile(ctx, draw_debug_tile);
     debug_draw_figures();
 
-    ImageDraw::apply_render_commands(ctx);
+    ImageDraw::apply_render_commands(ctx, "draw_debug_tile");
 
     // Finalize the rendering by completing any remaining render operations
     // This ensures all graphics commands are flushed and the frame is ready
@@ -698,7 +698,7 @@ void screen_city_t::draw_with_overlay(painter &ctx) {
     map_figure_sort_by_y();
     city_view_foreach_valid_map_tile(ctx, draw_isometrics_overlay_flat);
 
-    ImageDraw::apply_render_commands(ctx);
+    ImageDraw::apply_render_commands(ctx, "draw_isometrics_overlay_flat");
 
     city_view_foreach_valid_map_tile(ctx,
         draw_isometrics_overlay_height,
@@ -706,18 +706,18 @@ void screen_city_t::draw_with_overlay(painter &ctx) {
         [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_figures_overlay(pixel, tile, ctx); }
     );
 
-    ImageDraw::apply_render_commands(ctx);
+    ImageDraw::apply_render_commands(ctx, "draw_ornaments_figures_overlay");
 
     g_city_planner.update(current_tile);
     g_city_planner.draw(ctx);
 
-    ImageDraw::apply_render_commands(ctx);
+    ImageDraw::apply_render_commands(ctx, "draw_city_planer_overlay");
 
     // finally, draw these on top of everything else
     city_view_foreach_valid_map_tile(ctx, draw_debug_tile);
     debug_draw_figures();
 
-    ImageDraw::apply_render_commands(ctx);
+    ImageDraw::apply_render_commands(ctx, "debug_draw_figures");
     ImageDraw::finalize_render(ctx);
 
     update_clouds(ctx);
