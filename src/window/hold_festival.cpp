@@ -83,6 +83,16 @@ int ui::hold_festival_window::ui_handle_mouse(const mouse *m) {
 void ui::hold_festival_window::init() {
     autoconfig_window::init();
 
+    // If the currently selected god is not known, select the first available god
+    if (g_city.religion.is_god_known(g_city.festival.selected_god) == GOD_STATUS_UNKNOWN) {
+        for (e_god god = GOD_OSIRIS; god < MAX_GODS; ++god) {
+            if (g_city.religion.is_god_known(god) != GOD_STATUS_UNKNOWN) {
+                g_city.festival.select_god(god);
+                break;
+            }
+        }
+    }
+
     ui["background_image"].enabled = background;
 
     int resource_image_deben = image_id_from_group(PACK_GENERAL, 103) + 18;
