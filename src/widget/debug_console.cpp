@@ -383,6 +383,12 @@ void game_toggle_debug_console() {
     if (game.debug_console) {
         debug_console().is.reclaim_focus = true;
     }
+
+    static bool first_time = true;
+    if (first_time) {
+        first_time = false;
+        debug_console().loadCommandHistory();
+    }
 }
 
 void bind_debug_command(pcstr cmd, std::function<void(std::istream &, std::ostream &)> f) {

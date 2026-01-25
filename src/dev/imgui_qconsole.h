@@ -239,7 +239,7 @@ class imgui_qconsole : public MultiStream
     bool skip_event = false;
 
     void clear(); ///< Clear the ostream
-
+    void loadCommandHistory();
     void render(const char *title, bool& p_open, int width, int height); ///< Renders an IMGUI window implementation of the console
 
     imgui_qconsole();
@@ -250,6 +250,8 @@ class imgui_qconsole : public MultiStream
     void historyCallback(ImGuiInputTextCallbackData *data);
 
     void textCompletionCallback(ImGuiInputTextCallbackData *data);
+    
+    void saveCommandHistory();
 };
 
 // -------------------------------------------
