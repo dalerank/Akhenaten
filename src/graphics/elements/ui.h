@@ -123,6 +123,7 @@ pcstr resource_name(e_resource r);
 struct emenu_header;
 struct eimage_button;
 struct escrollable_list;
+struct etext;
 
 template<typename T>
 bstring1024 format(const T *o, pcstr fmt) {
@@ -279,6 +280,7 @@ struct element {
     virtual emenu_header *dcast_menu_header() { return nullptr; }
     virtual eimage_button *dcast_image_button() { return nullptr; }
     virtual escrollable_list *dcast_scrollable_list() { return nullptr; }
+    virtual etext *dcast_etext() { return nullptr; }
 
     pcstr text_from_key(pcstr key);
 
@@ -431,6 +433,9 @@ struct etext : public elabel {
 
     virtual void draw(UiFlags flags) override;
     virtual void load(archive elem, element *parent, items &elems) override;
+    virtual etext *dcast_etext() override { return this; }
+    
+    void reset_scroll();
 };
 
 struct escrollbar : public element {

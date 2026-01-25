@@ -9,3 +9,9 @@ ANK_FUNCTION_1(__city_get_figures_property)
 
 void __city_remove_figures(int ftype) { g_city.figures.remove_figures((e_figure_type)ftype); }
 ANK_FUNCTION_1(__city_remove_figures)
+
+int __figure_get_type(int fid) { return figure_get(fid)->type; }
+ANK_FUNCTION_1(__figure_get_type)
+
+int __figure_get_destination_building_id(int fid) { return figure_get(fid)->destination_building_id; }
+ANK_FUNCTION_1(__figure_get_destination_building_id)

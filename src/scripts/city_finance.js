@@ -1,7 +1,7 @@
 log_info("akhenaten: city finance started")
 
 city.finance = { 
-    __property_getter: function(property) { return __city_get_finance_property(property) }
+    __property_getter: __city_get_finance_property
 
     this_year {
         __property_getter: function(property) { return __city_finance_overview(property, true) }

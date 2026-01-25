@@ -1157,6 +1157,12 @@ void ui::etext::load(archive arch, element* parent, items &elems) {
     assert(!strcmp(type, "text"));
 }
 
+void ui::etext::reset_scroll() {
+    if (rich_text) {
+        rich_text->reset(0);
+    }
+}
+
 void ui::escrollbar::draw(UiFlags flags) {
     ui::scrollbar(this->scrollbar, pos, this->scrollbar.scroll_position);
 }

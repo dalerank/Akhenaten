@@ -2,7 +2,7 @@ log_info("akhenaten: city.js started")
 
 city {
     festival {
-        __property_getter: function(property) { return __city_get_festival_property(property) }
+        __property_getter: __city_get_festival_property
         @selected_god { }        
     }
 
@@ -11,7 +11,7 @@ city {
     @num_forts { get: __formation_get_num_forts }
 
     figures {
-        __property_getter: function(property) { return __city_get_figures_property(property) }
+        __property_getter: __city_get_figures_property
         @enemies { }
         @kingdome_soldiers { }
 
@@ -19,16 +19,21 @@ city {
     }    
 
     taxes {
-        __property_getter: function(property) { return __city_get_taxes_property(property) }
+        __property_getter: __city_get_taxes_property
         @percentage_taxed_people { }
         @estimated_uncollected { }
         @estimated_income { }
     }
     
     military {
-        __property_getter: function(property) { return __city_get_military_property(property) }
+        __property_getter: __city_get_military_property
         @total_soldiers { }
         @total_batalions { }
+    }
+
+    object_info {
+        @building_id { get: __city_get_object_info_building_id }
+        @group { get: __city_get_object_info_group }
     }
     
     use_building: __city_use_building
@@ -119,6 +124,28 @@ city.get_random_building = function() {
         id: building_id
         add_fire_damage: function(damage) { __building_add_fire_damage(this.id, damage) }
         add_collapse_damage: function(damage) { __building_add_collapse_damage(this.id, damage) }
+    }
+}
+
+city.get_figure = function(figure_id) {
+    return {
+        id: figure_id
+        @type { get: function() { return __figure_get_type(this.id) } }
+        @destination_id { get: function() { return __figure_get_destination_building_id(this.id) } }
+        @destination { get: function() { return city.get_building(__figure_get_destination_building_id(this.id)) } }
+    }
+}
+
+city.get_building = function(building_id) {
+    return {
+        id: building_id
+        add_fire_damage: function(damage) { __building_add_fire_damage(this.id, damage) }
+        add_collapse_damage: function(damage) { __building_add_collapse_damage(this.id, damage) }
+        has_figure: function(index) { return __building_has_figure(this.id, index) }
+        get_figure: function(index) { return city.get_figure(__building_get_figure_id(this.id, index)) }
+        @has_road_access : { get: function() { return __building_has_road_access(this.id) } }   
+        @worker_percentage : { get: function() { return __building_get_worker_percentage(this.id) } }
+        @num_workers : { get: function() { return __building_get_num_workers(this.id) } }
     }
 }
 

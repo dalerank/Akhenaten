@@ -34,7 +34,7 @@ int rich_text_t::init(pcstr text, vec2i ptext, int width_blocks, int height_bloc
         dscrollbar.pos.x = x_text + 16 * text_width_blocks - 1;
         dscrollbar.pos.y = y_text;
         dscrollbar.height = 16 * text_height_blocks;
-        dscrollbar.init(dscrollbar.scroll_position, num_lines - text_height_lines);
+        dscrollbar.init(0, num_lines - text_height_lines);
         if (num_lines <= text_height_lines && adjust_width_on_no_scroll) {
             text_width_blocks += 2;
         }

@@ -11,7 +11,6 @@ namespace ui {
         virtual int get_tooltip_text() override { return 0; }
         virtual void draw_foreground(UiFlags flags) override {};
         virtual void init() override {}
-        virtual void archive_load(archive arch) override;
 
         static advisor_window *instance();
     };
