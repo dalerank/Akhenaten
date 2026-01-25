@@ -128,6 +128,7 @@ render_command_t& ImageDraw::active_command() {
 }
 
 render_command_t& ImageDraw::create_subcommand(render_command_t::e_render_type rt) {
+    OZZY_PROFILER_FUNCTION();
     if (g_render_commands.empty()) {
         return create_command(rt);
     }

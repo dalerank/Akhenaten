@@ -723,6 +723,7 @@ bool figure_impl::can_move_by_water() const {
 }
 
 void figure_impl::main_image_update() {
+    OZZY_PROFILER_FUNCTION();
     if (base.state == FIGURE_STATE_DYING) {
         base.main_image_id = base.animctx.start_frame() + base.animctx.current_frame();
     } else {
@@ -853,6 +854,7 @@ figure_impl *figures::create(e_figure_type e, figure &f) {
 }
 
 void figure::draw_map_flag(vec2i pixel, int highlight, vec2i *coord_out) {
+    OZZY_PROFILER_FUNCTION();
     painter ctx = game.painter();
     // base
     ctx.img_generic(main_image_id, pixel);
@@ -943,6 +945,7 @@ vec2i figure::adjust_pixel_offset(const vec2i pixel) {
 }
 
 void figure::draw_main_sprite(painter &ctx, vec2i pixel, int highlight) {
+    OZZY_PROFILER_FUNCTION();
     const image_t *img = image_get(main_image_id);
     auto& command = ImageDraw::create_subcommand(render_command_t::ert_sprite);
     command.image_id = main_image_id;
@@ -951,6 +954,7 @@ void figure::draw_main_sprite(painter &ctx, vec2i pixel, int highlight) {
 }
 
 void figure::draw(painter &ctx, int highlight) {
+    OZZY_PROFILER_FUNCTION();
     if (!is_visible()) {    
         return;
     }
