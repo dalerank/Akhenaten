@@ -231,9 +231,8 @@ public:
     /// Call operator
     //*************************************************************************
     Return operator()(Args... args) const {
-        if (!invoker_) {
-            throw std::bad_function_call();
-        }
+        verify_no_crash(invoker_);
+
         return invoker_(storage_, std::forward<Args>(args)...);
     }
 
