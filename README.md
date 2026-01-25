@@ -20,7 +20,7 @@ from Pharaoh and play the initial campaign missions without major issues.
 
 For the original game, check out the page on [Steam](https://store.steampowered.com/app/564530/Pharaoh__Cleopatra/)
 or [GOG](https://www.gog.com/en/game/pharaoh_cleopatra).<br>
-For the official 2023 remaster (unrelated to Akhenaten) called _Pharaoh: A New Era_, check out the Steam page [here](https://store.steampowered.com/app/1351080/Pharaoh_A_New_Era/).
+For the official 2023 remaster called _Pharaoh: A New Era_ (a separate project from Akhenaten, though Akhenaten can work with it), check out the Steam page [here](https://store.steampowered.com/app/1351080/Pharaoh_A_New_Era/). Note: Don't try to use resources from the remaster, as they are not compatible with this project.
 
 ## Running the game
 
@@ -44,7 +44,7 @@ Akhenaten, like Julius and Augustus, requires the original assets (graphics, sou
 from an unmodified game installation to run, in this case it needs _Pharaoh_ **as well as the _Cleopatra_ expansion.**
 
 Note that you must have permission to write in the game data directory as the saves will be
-stored there; also, your game must be patched to last version to run Akhenaten.
+stored there; also, your game must be patched to last version (1.3 + Cleopatra) to run Akhenaten.
 
 [![Become a patron](https://github.com/user-attachments/assets/f8f97765-7dad-428b-a722-a26a2d3d39fb)](https://patreon.com/imspinner)[![Become a patron](https://github.com/user-attachments/assets/ed3eed16-0419-49ba-8a8c-53c1413c125b)](https://github.com/sponsors/dalerank)
 
@@ -72,11 +72,7 @@ To build with your favorite IDE, just import the cmakelists.txt file as a projec
   mingw32-make
   ```
 
-To run the engine, you'll also need the necessary dynamic libraries in the same folder as the executable, unless the project is set to build with static linkage.
-
-- Navigate to the SDL2, SDL2_mixer and SDL2_image extracted files, and locate the .dll files inside the `bin` folder of the correct architecture (e.g. `SDL2_image-2.6.2/x86_64-w64-mingw32/bin/`)
-
-- Copy the .dll files from each of the above to the `build` folder
+Note: All dependencies (SDL2, SDL2_mixer, zlib, etc.) are automatically downloaded and built via CMake's FetchContent, so no manual DLL copying is required for static builds.
 
 ### Linux
 
@@ -101,18 +97,6 @@ To run the engine, you'll also need the necessary dynamic libraries in the same 
     ```
 
 #### Running the binary
-
-##### Installing dependencies
-
-On Ubuntu and other `deb` distributions:
-
-`sudo apt install libsdl2-2.0.0 libsdl2-mixer-2.0.0`
-
-On Fedora and other `rpm` distributions:
-
-`sudo yum install SDL2 SDL2_mixer`
-
-##### Running the game
 
 Assuming the zip file is in your Downloads directory:
 ```shell
@@ -149,7 +133,7 @@ And after reboot:
 
 - Clone the repository
 
-- From the root folder executr:
+- From the root folder execute:
 
   ```
   sudo apt install openjdk-17-jdk openjdk-17-jre ninja-build
@@ -167,14 +151,15 @@ And after reboot:
 
 ### Building with logging stack trace on crash
 
-Checkout `cpptrace` submodule:
+Stack trace logging is automatically enabled when building in `Debug` or `RelWithDebInfo` mode. The `cpptrace` library is automatically downloaded via CMake's FetchContent, so no manual submodule checkout is required.
+
+Simply build in Debug or RelWithDebInfo mode:
 
 ```shell
-git submodule init
-git submodule update ext/cpptrace
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+# or
+cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
 ```
-
-Build in Debug mode.
 
 ### Running with different log levels
 
@@ -188,38 +173,88 @@ By default `info` level is set.
 
 ### Running with tracy
 
-Enable tracy submodule:
+Tracy profiler support is enabled by default via `OPTION_ENABLE_TRACY` (set to `ON`). The Tracy library is automatically downloaded via CMake's FetchContent, so no manual submodule checkout is required.
+
+**Important:** This project uses Tracy v0.13.1. You must use the matching Tracy Profiler GUI version (v0.13.1) to connect to the application. Using a different version (e.g., v0.11.0 or v0.11.1) will result in a protocol mismatch error and the profiler will not work.
+
+To build with tracy enabled (default):
 
 ```shell
-git submodule init
-git submodule update ext/tracy
+cmake -DOPTION_ENABLE_TRACY=ON ..
+# or simply (since it's ON by default)
+cmake ..
 ```
 
-Run profiler:
+To disable tracy:
 
 ```shell
-cd ext/tracy/profiler/build/unix && make && ./Tracy-release
+cmake -DOPTION_ENABLE_TRACY=OFF ..
 ```
 
-Build & run with tracy enabled:
+To use the profiler, download and run the Tracy Profiler GUI v0.13.1 from the [Tracy releases page](https://github.com/wolfpld/tracy/releases/tag/v0.13.1). If you need to build the profiler from source (e.g., for older hardware compatibility), make sure to build version v0.13.1.
 
-```shell
-cmake -DUSE_FUTURE_TRACY=ON .. && make akhenaten && ./akhenaten
-```
-
-### Parameters:
+### Command line parameters:
 
 ```
- --display-scale NUMBER //Scales the display by a factor of NUMBER. Number can be between 0.5 and 5
- --cursor-scale NUMBER //Scales the mouse cursor by a factor of NUMBER. Number can be 1, 1.5 or 2
- --render // use specific renderer directx, opengl, vulkan
- --size // window size. Example: 800x600
- --window // enable window mode
- --mixed // hot reload scripts from disk
- --unpack_scripts // unpack embedded scripts to user directory (exits after unpacking)
- --language=CODE or --language CODE // set game language (e.g., ru, en, fr, de, it, sp, po, pr, sw, tc, sc, kr)
- --save_debug_texture // save screen output to game folder
+--logjsfiles
+          print logs which files open with js
+--nocrashdlg
+          do not show crash dialog
+--fulldmp
+          create full dump on crash
+--config
+          always show configuration window on startup
+--save_debug_texture
+          save debug textures to DEV_TESTING/tex/
+--unpack_scripts
+          unpack embedded scripts to user directory
+--nosound
+          not use sound manager
+--window
+          enable window mode
+--render RENDERER
+          use specific renderer
+--mods PATH
+          set mods data directory path
+--mixed PATH
+          hot reload scripts from disk
+--language CODE
+          set game language (e.g., ru, en, fr, de, it, sp, po, pr, sw, tc, sc, kr)
+--font PATH
+          use custom TTF font file (overrides font from localization.js)
+--display-scale NUMBER
+          Scales the display by a factor of NUMBER. Number can be between 0.5 and 5
+--cursor-scale NUMBER
+          Scales the mouse cursor by a factor of NUMBER. Number can be 1, 1.5 or 2
+--size WxH
+          window size. Example: 800x600
+--pos x,y
+          window pos. Example: 10,10
+--help
+          show this help message
 ```
+
+The last argument, if present, is interpreted as data directory of the Pharaoh installation.
+
+### Mods and Scripts
+
+Akhenaten supports modding through the `--mods` parameter, which allows you to specify a directory containing mod files (`.sgx` archives). The game will load mods from this directory in addition to the base game assets.
+
+The `--mixed` parameter enables hot-reloading of JavaScript scripts from disk, which is useful for development and testing. The `--unpack_scripts` parameter extracts embedded scripts to the user directory for inspection or modification.
+
+## Contributing
+
+We welcome contributions! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to the project.
+
+## Changelog
+
+See [CHANGELOG_2025.md](CHANGELOG_2025.md) or [CHANGELOG_2025_EN.md](CHANGELOG_2025_EN.md) for a summary of recent changes.
+
+## Support
+
+- **Issues**: Report bugs or request features on [GitHub Issues](https://github.com/dalerank/Akhenaten/issues)
+- **Discord**: Join our [Discord community](https://discord.gg/HS4njmBvpb)
+- **Website**: Visit [akhenatengame.squarespace.com](https://akhenatengame.squarespace.com/)
 
 ![Alt](https://repobeats.axiom.co/api/embed/99a27c096522f0ed847ec37c6495d79552aeb13e.svg "Repobeats analytics image")
 
