@@ -406,6 +406,8 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
                     command.pixel = offset;
                     command.mask = ((0xff * progress / 200) << COLOR_BITSHIFT_ALPHA) | (color_mask & 0x00ffffff);;
                     command.flags = ImgFlag_Alpha;
+                    command.use_sort_pixel = true;
+                    command.sort_pixel = offset + vec2i(0, 1);
                 }
             }
         }
