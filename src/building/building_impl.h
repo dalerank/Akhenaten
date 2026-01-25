@@ -32,7 +32,7 @@ public:
     virtual void on_before_collapse() {}
     virtual void on_before_flooded() {}
     virtual void on_undo() {}
-    virtual void on_post_load() {}
+    virtual void on_post_load();
     virtual void spawn_figure() {}
     virtual void update_graphic();
     virtual void update_day();

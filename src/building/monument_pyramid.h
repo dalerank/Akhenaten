@@ -32,6 +32,7 @@ public:
 
     virtual void on_place(int orientation, int variant) override;
     virtual void on_create(int orientation) override;
+    virtual void on_post_load() override;
     virtual void on_place_checks() override;
     virtual void update_count() const override;
     virtual void update_month() override;

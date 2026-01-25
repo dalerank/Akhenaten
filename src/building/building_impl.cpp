@@ -63,6 +63,12 @@ void building_impl::remove_dead_figures() {
     }
 }
 
+void building_impl::on_post_load() {
+    base.setup_static_flags();
+    update_graphic();
+    remove_dead_figures();
+}
+
 void building_impl::update_day() {
     update_graphic();
     remove_dead_figures();

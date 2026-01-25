@@ -286,6 +286,7 @@ public:
     void clear_related_data();
     void clear_impl();
     void reset_impl();
+    void setup_static_flags();
     void initialize(e_building_type type, tile2i tile, int orientation);
 
     e_overlay get_overlay() const;

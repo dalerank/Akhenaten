@@ -94,6 +94,12 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     input = params().input;
     output = params().output;
 
+    setup_static_flags();
+
+    dcast()->on_create(orientation);
+}
+
+void building::setup_static_flags() {
     set_flag(e_building_monument, params().flags.is_monument);
     set_flag(e_building_extractor, params().flags.is_extractor);
     set_flag(e_building_harvester, params().flags.is_harvester);
@@ -120,8 +126,6 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     set_flag(e_building_military, params().flags.is_military);
     set_flag(e_building_entertainment, params().flags.is_entertainment);
     set_flag(e_building_food, params().flags.is_food);
-
-    dcast()->on_create(orientation);
 }
 
 desirability_t::influence_t building_desirability_t::to_influence() const {

@@ -58,7 +58,7 @@ struct building_static_params {
 };
 ANK_CONFIG_STRUCT(building_static_params,
     labor_category, fire_proof, damage_proof, input, output,
-    fire_proof, damage_proof, animations, laborers, fire_risk, damage_risk, planner_update_rule, needs,
+    fire_proof, damage_proof, animations, laborers, fire_risk, damage_risk, planner_update_rule, needs, flags,
     build_menu_text, cost, desirability, crime,
     output_resource_second_rate, building_size, info_title_id, progress_max, overlay, max_service, max_storage_amount,
     meta_id, meta, production_rate, min_houses_coverage)

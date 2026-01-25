@@ -300,6 +300,10 @@ int building_stepped_pyramid::get_image(int orientation, tile2i tile, tile2i sta
 void building_stepped_pyramid::on_create(int orientation) {
 }
 
+void building_stepped_pyramid::on_post_load() {
+    building_monument::on_post_load();
+}
+
 bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(building &base, painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
     // Use the same implementation as building_mastaba::draw_ornaments_and_animations_flat_impl
     // This can be customized later if pyramid needs different rendering
