@@ -40,6 +40,7 @@ void building_mansion::on_place(int orientation, int variant) {
 }
 
 void building_mansion::on_post_load() {
+    building_impl::on_post_load();
     g_city.buildings.track_building(base, true);
     // Sync personal savings from kingdome to mansion on load
     auto &d = runtime_data();

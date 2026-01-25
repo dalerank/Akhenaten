@@ -1183,6 +1183,8 @@ void building_house::on_destroy() {
 }
 
 void building_house::on_post_load() {
+    building_impl::on_post_load();
+
     const int imgid = map_image_at(tile());
     map_building_tiles_add(id(), tile(), size(), imgid, TERRAIN_BUILDING);
 
