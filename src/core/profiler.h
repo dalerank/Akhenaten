@@ -4,10 +4,10 @@
 
 #define OZZY_PROFILER_BEGIN_FRAME( ... )
 #define OZZY_PROFILER_FUNCTION( ... )
-#define OZZY_PROFILER_SECTION(x)
-#define OZZY_PROFILER_TAG(y, x)
-#define OZZY_PROFILER_LOG(text, size)
-#define OZZY_PROFILER_VALUE(text, value)
+#define OZZY_PROFILER_SECTION( ... )
+#define OZZY_PROFILER_TAG( ... )
+#define OZZY_PROFILER_LOG( ... )
+#define OZZY_PROFILER_VALUE( ... )
 
 #else
 
