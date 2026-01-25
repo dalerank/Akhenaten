@@ -5,14 +5,12 @@
 
 #if defined( TRACY_MEMORY_ENABLE )
 
-constexpr int TracyStackDepth = 10;
-
 bool TracyProfilerAvailable = true;
 
 void *operator new(std::size_t count) {
 	auto ptr = malloc(count);
 	if (TracyProfilerAvailable) {
-		TracyAllocS(ptr, count, 8);
+		TracyAllocS(ptr, count, 20);
 	}
 	return ptr;
 }
@@ -20,21 +18,21 @@ void *operator new(std::size_t count) {
 void *operator new[](std::size_t count) {
 	auto ptr = malloc(count);
 	if (TracyProfilerAvailable) {
-		TracyAllocS(ptr, count, 8);
+		TracyAllocS(ptr, count, 20);
 	}
 	return ptr;
 }
 
 void operator delete(void *ptr) noexcept {
 	if (TracyProfilerAvailable) {
-		TracyFreeS(ptr, 8);
+		TracyFreeS(ptr, 20);
 	}
 	free(ptr);
 }
 
 void operator delete[](void *ptr) noexcept {
 	if (TracyProfilerAvailable) {
-		TracyFreeS(ptr, 8);
+		TracyFreeS(ptr, 20);
 	}
 	free(ptr);
 }
@@ -42,14 +40,14 @@ void operator delete[](void *ptr) noexcept {
 // Sized delete operators (C++14)
 void operator delete(void *ptr, std::size_t) noexcept {
 	if (TracyProfilerAvailable) {
-		TracyFreeS(ptr, 8);
+		TracyFreeS(ptr, 20);
 	}
 	free(ptr);
 }
 
 void operator delete[](void *ptr, std::size_t) noexcept {
 	if (TracyProfilerAvailable) {
-		TracyFreeS(ptr, 8);
+		TracyFreeS(ptr, 20);
 	}
 	free(ptr);
 }

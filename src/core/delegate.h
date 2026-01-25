@@ -535,7 +535,7 @@ private:
 template <auto Function>
 [[nodiscard]]
 constexpr auto make_delegate() noexcept {
-    using function_type = typename std::function_traits<decltype(Function)>::function_type;
+    using function_type = typename function_traits<decltype(Function)>::function_type;
 
     return delegate<function_type>::template create<Function>();
 }
@@ -546,7 +546,7 @@ constexpr auto make_delegate() noexcept {
 template <typename TLambda, typename = std::enable_if_t<std::is_class<TLambda>::value, void>>
 [[nodiscard]]
 constexpr auto make_delegate(TLambda &instance) noexcept {
-    using function_type = typename std::function_traits<decltype(&TLambda::operator())>::function_type;
+    using function_type = typename function_traits<decltype(&TLambda::operator())>::function_type;
 
     return delegate<function_type>(instance);
 }
@@ -557,7 +557,7 @@ constexpr auto make_delegate(TLambda &instance) noexcept {
 template <typename T, T &Instance>
 [[nodiscard]]
 constexpr auto make_delegate() noexcept {
-    using function_type = typename std::function_traits<decltype(&T::operator())>::function_type;
+    using function_type = typename function_traits<decltype(&T::operator())>::function_type;
 
     return delegate<function_type>::template create<T, Instance>();
 }
@@ -568,7 +568,7 @@ constexpr auto make_delegate() noexcept {
 template <typename T, auto Method, T &Instance, typename = std::enable_if_t<!function_traits<decltype(Method)>::is_const>>
 [[nodiscard]]
 constexpr auto make_delegate() noexcept {
-    using function_type = typename std::function_traits<decltype(Method)>::function_type;
+    using function_type = typename function_traits<decltype(Method)>::function_type;
 
     return delegate<function_type>::template create<T, Method, Instance>();
 }
@@ -579,7 +579,7 @@ constexpr auto make_delegate() noexcept {
 template <typename T, auto Method, const T &Instance, typename = std::enable_if_t<function_traits<decltype(Method)>::is_const>>
 [[nodiscard]]
 constexpr auto make_delegate() noexcept {
-    using function_type = typename std::function_traits<decltype(Method)>::function_type;
+    using function_type = typename function_traits<decltype(Method)>::function_type;
 
     return delegate<function_type>::template create<T, Method, Instance>();
 }
@@ -590,7 +590,7 @@ constexpr auto make_delegate() noexcept {
 template <typename T, auto Method>
 [[nodiscard]]
 constexpr auto make_delegate(T &instance) noexcept {
-    using function_type = typename std::function_traits<decltype(Method)>::function_type;
+    using function_type = typename function_traits<decltype(Method)>::function_type;
 
     return delegate<function_type>::template create<T, Method>(instance);
 }
@@ -601,7 +601,7 @@ constexpr auto make_delegate(T &instance) noexcept {
 template <typename T, auto Method>
 [[nodiscard]]
 constexpr auto make_delegate(const T &instance) noexcept {
-    using function_type = typename std::function_traits<decltype(Method)>::function_type;
+    using function_type = typename function_traits<decltype(Method)>::function_type;
 
     return delegate<function_type>::template create<T, Method>(instance);
 }

@@ -1,10 +1,15 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
+#include <utility>
+#include <algorithm>
 
 #include "xstring.h"
 #include "core/vec2i.h"
 #include "grid/point.h"
+#include "core/hvector.h"
+
 
 template <uint32_t size = 16>
 class variant_t {
@@ -275,7 +280,8 @@ protected:
 using bvariant = variant_t<8>;
 
 struct bvariant_map {
-    using ValuesT = std::unordered_map<xstring, bvariant>;
+    using PairT = std::pair<xstring, bvariant>;
+    using ValuesT = hvector<PairT, 32>;
 
     const bvariant& def() const {
         static bvariant dummy;
@@ -283,9 +289,12 @@ struct bvariant_map {
     }
 
     const bvariant& value(const xstring &name) const {
-        auto it = values.find(name);
+        auto it = find(name);
         return (it != values.end()) ? it->second : def();
     }
+
+    static bvariant_map* acquire_from_pool();
+    static void return_to_pool(bvariant_map *);
 
     inline float n(const xstring &name) const {
         const auto &v = value(name);
@@ -365,16 +374,29 @@ struct bvariant_map {
     }
 
     const bvariant& operator[](const xstring& name) const {
-        auto it = values.find(name);
+        auto it = find(name);
         return (it != values.end()) ? it->second : def();
     }
 
     bvariant &operator[](const xstring &name) {
-        return values[name];
+        auto it = find(name);
+        if (it != values.end()) {
+            return it->second;
+        }
+        // Создаем новый элемент
+        values.emplace_back(name, bvariant());
+        return values.back().second;
     }
 
-    ValuesT::iterator find(const xstring &name) { return values.find(name); }
-    ValuesT::const_iterator find(const xstring &name) const { return values.find(name); }
+    ValuesT::iterator find(const xstring &name) {
+        return std::find_if(values.begin(), values.end(), 
+            [&name](const PairT &p) { return p.first == name; });
+    }
+    
+    ValuesT::const_iterator find(const xstring &name) const {
+        return std::find_if(values.begin(), values.end(), 
+            [&name](const PairT &p) { return p.first == name; });
+    }
 
     ValuesT::iterator begin() { return values.begin(); }
     ValuesT::const_iterator begin() const { return values.begin(); }
