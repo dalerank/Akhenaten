@@ -963,9 +963,7 @@ void figure::draw_debug() {
         }
 
         dlines.emplace_back().printf("Roam Turn: %d", roam_turn_direction);
-
-        pixel.y += (int)(50 * zoom_scale);
-        text_draw(bstring32(progress_on_tile).c_str(), pixel.x, pixel.y + (int)(30 * zoom_scale), FONT_SMALL_PLAIN, 0);
+        dlines.emplace_back().printf("Progress on tile %d", progress_on_tile);
     }
 
     if (!!(draw_mode & e_figure_draw_carry)) { // RESOURCE CARRY
