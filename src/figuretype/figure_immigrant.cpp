@@ -48,19 +48,11 @@ void figure_immigrant::debug_draw() {
     if (!base.draw_mode) {
         return;
     }
-
-    char str[10];
-    vec2i pixel = lookup_tile_to_pixel(tile());
-    pixel = base.adjust_pixel_offset(pixel);
-    pixel.x -= 10;
-    pixel.y -= 80;
-    int indent = 0;
-    painter ctx = game.painter();
-
+    
     auto &d = runtime_data();
     if (!!(base.draw_mode & e_figure_draw_building)) {
-        debug_text(ctx, str, pixel.x + 0, pixel.y + 20, indent, "", d.adv_home_building_id, d.adv_home_building_id > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
-        debug_text(ctx, str, pixel.x + 20, pixel.y + 20, 8, ":", building_get(d.adv_home_building_id)->get_figure_slot(&base), d.adv_home_building_id > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
+        auto &dlines = base.debug_lines();
+        dlines.emplace_back().printf("Home: %d", d.adv_home_building_id);
     }
 }
 
@@ -80,7 +72,6 @@ void figure_immigrant::figure_action() {
     switch (action_state()) {
     case ACTION_1_IMMIGRANT_CREATED:
     case ACTION_8_RECALCULATE:
-        //            is_ghost = true;
         base.animctx.frame = 0;
         base.wait_ticks--;
         if (base.wait_ticks <= 0) {
@@ -91,8 +82,8 @@ void figure_immigrant::figure_action() {
     case ACTION_2_IMMIGRANT_ARRIVING:
     case ACTION_9_IMMIGRANT_ENTERING_HOUSE: // arriving
         {
-        OZZY_PROFILER_FUNCTION();
-            if (direction() <= 8) {
+            OZZY_PROFILER_FUNCTION();
+            if (direction() <= DIR_FIGURE_NONE) {
                 int next_tile_grid_offset = tile().grid_offset() + map_grid_direction_delta(direction());
                 if (map_terrain_is(next_tile_grid_offset, TERRAIN_WATER)) {
                     bool is_ferry_route = map_terrain_is(next_tile_grid_offset, TERRAIN_FERRY_ROUTE);
@@ -115,7 +106,7 @@ void figure_immigrant::figure_action() {
                 map_refresh_river_image_at(tile().grid_offset(), false);
             }
 
-            if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+            if (direction(DIR_FIGURE_CAN_NOT_REACH, DIR_FIGURE_REROUTE)) {
                 base.routing_try_reroute_counter++;
                 if (base.routing_try_reroute_counter > 20) {
                     poof();
