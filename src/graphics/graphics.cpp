@@ -167,10 +167,12 @@ void ImageDraw::clear_render_commands() {
     g_render_subcommands.clear();
 }
 
-void ImageDraw::apply_render_commands(painter& ctx) {
-    OZZY_PROFILER_FUNCTION();
-    std::sort(g_render_commands.begin(), g_render_commands.end(),
-        [] (const auto& lhs, const auto& rhs) {
+void ImageDraw::apply_render_commands(painter& ctx, std::string_view p) {
+    OZZY_PROFILER_SECTION(_, p);
+    {
+        OZZY_PROFILER_SECTION(_, "sort");
+        std::sort(g_render_commands.begin(), g_render_commands.end(),
+            [] (const auto &lhs, const auto &rhs) {
             const vec2i lhs_sort = lhs.use_sort_pixel ? lhs.sort_pixel : lhs.pixel;
             const vec2i rhs_sort = rhs.use_sort_pixel ? rhs.sort_pixel : rhs.pixel;
             if (lhs_sort.y == rhs_sort.y) {
@@ -179,9 +181,13 @@ void ImageDraw::apply_render_commands(painter& ctx) {
 
             return lhs_sort.y < rhs_sort.y;
         });
+    }
 
-    for (const auto& command : g_render_commands) {
-        execute_render_command(ctx, command);
+    {
+        OZZY_PROFILER_SECTION(_, "draw");
+        for (const auto &command : g_render_commands) {
+            execute_render_command(ctx, command);
+        }
     }
 
     clear_render_commands();
