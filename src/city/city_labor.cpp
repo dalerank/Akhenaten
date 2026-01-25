@@ -16,7 +16,7 @@
 
 #include <algorithm>
 
-const token_holder<e_labor_category, LABOR_CATEGORY_NONE, LABOR_CATEGORY_SIZE> ANK_CONFIG_ENUM(e_labor_category_tokens);
+const e_labor_category_tokens_t ANK_CONFIG_ENUM(e_labor_category_tokens);
 
 static int category_for_int_arr[300] = {
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0
