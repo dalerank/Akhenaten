@@ -92,6 +92,7 @@ void building_festival_square::on_undo() {
 }
 
 void building_festival_square::on_post_load() {
+    building_impl::on_post_load();
     g_city.buildings.festival_square = this->tile();
 }
 

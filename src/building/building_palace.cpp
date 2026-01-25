@@ -52,6 +52,7 @@ void building_palace::on_create(int orientation) {
 }
 
 void building_palace::on_post_load() {
+    building_impl::on_post_load();
     g_city.buildings.track_building(base, true);
 }
 

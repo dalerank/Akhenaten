@@ -359,6 +359,8 @@ void building_temple_complex::on_create(int orientation) {
 }
 
 void building_temple_complex::on_post_load() {
+    building_impl::on_post_load();
+
     const bool is_active = num_workers() > 0;
     g_city.buildings.track_building(base, is_active);
 
