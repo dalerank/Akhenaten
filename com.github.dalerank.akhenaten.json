@@ -17,7 +17,8 @@
             "name" : "akhenaten",
             "buildsystem" : "cmake-ninja",
             "config-opts" : [
-                "-DCMAKE_BUILD_TYPE=Release"
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DOPTION_ENABLE_TRACY=OFF"
             ],
             "sources" : [
                 {
