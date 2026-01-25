@@ -182,6 +182,7 @@ if (OPTION_ENABLE_TRACY)
     # Build Tracy as static library
     set(TRACY_STATIC ON CACHE BOOL "" FORCE)
     option(TRACY_ENABLE "Enable profiling" ON)
+    option(TRACY_ON_DEMAND "Enable tracy on demand profiling" ON)
     option(TRACY_MEMORY_ENABLE "Enable memory profiling" ON)
 
     FetchContent_MakeAvailable(tracy)
