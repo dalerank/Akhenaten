@@ -752,7 +752,7 @@ storage_worker_task building_storageyard_deliver_to_monuments(building *b) {
         return { STORAGEYARD_TASK_NONE };
     }
 
-    svector<building *, 10> monuments;
+    svector<building_monument*, 10> monuments;
     buildings_valid_do([&] (building &b) { 
         auto monument = b.dcast_monument();
         if (!monument) {
@@ -761,7 +761,7 @@ storage_worker_task building_storageyard_deliver_to_monuments(building *b) {
 
         auto &monumentd = monument->runtime_data();
         if (!monuments.full() && monumentd.phase != MONUMENT_FINISHED) {
-            monuments.push_back(&b);
+            monuments.push_back(monument);
         }
     });
 
@@ -782,10 +782,10 @@ storage_worker_task building_storageyard_deliver_to_monuments(building *b) {
         }
 
         for (auto monument : monuments) {
-            int monuments_want = building_monument_needs_resource(monument, resource);
+            int monuments_want = monument->needs_resource(resource);
             if (monuments_want > 0) {
                 int amount = std::min(available, monuments_want);
-                return {STORAGEYARD_TASK_MONUMENT, &space->base, amount, resource, monument};
+                return {STORAGEYARD_TASK_MONUMENT, &space->base, amount, resource, &monument->base};
             }
         }
     }

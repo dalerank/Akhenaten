@@ -98,9 +98,12 @@ void figure_bricklayer::figure_action() {
             if (area_ready) {
                 advance_action(ACTION_14_BRICKLAYER_LAY_BRICKS);
             } else if (d.idle_wait_count > 20) {
-                base.destination_tile = building_monument_access_point(destination());
-                base.destination_tile.shift(1, 1);
-                advance_action(ACTION_17_BRICKLAYER_EXIT_FROM_MONUMENT);
+                auto monument = destination()->dcast_monument();
+                if (monument) {
+                    base.destination_tile = monument->access_point();
+                    base.destination_tile.shift(1, 1);
+                    advance_action(ACTION_17_BRICKLAYER_EXIT_FROM_MONUMENT);
+                }
             }
         }
         break;

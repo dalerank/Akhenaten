@@ -21,7 +21,7 @@ void info_window_mastaba::init(object_info &c) {
 
     auto mastaba = c.building_get()->dcast_monument();
 
-    if (building_monument_is_unfinished(&mastaba->base)) {
+    if (mastaba->is_unfinished()) {
         textid reason = { 0, 0 };
 
         int workers_num = 0;

@@ -17,6 +17,7 @@ struct arrow_button {
     char pressed;
     int state;
     int repeats;
+    xstring _tooltip;
 
     using onclick_cb = inplace_function<void(int, int)>;
     using onclick_simple_cb = inplace_function<void()>;

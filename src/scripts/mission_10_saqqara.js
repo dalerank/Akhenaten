@@ -12,6 +12,10 @@ mission10 { // Saqqara
 	rescue_loans [7500, 5000, 3750, 2500, 2000]
 	house_tax_multipliers [300, 200, 150, 100, 75]
 
+	init_resources : {
+		bricks: { type:RESOURCE_BRICKS, allow: true},
+	}
+
 	env {
 		has_animals : true		
 	    hide_nilometer : true

@@ -9,6 +9,22 @@
 #define MONUMENT_START 1
 #define MARS_OFFERING_FREQUENCY 16
 
+#define ARCHITECTS RESOURCE_NONE
+
+struct monument_phase_resource {
+    e_resource resource;
+    uint16_t count;
+};
+
+struct monument_phase {
+    std::array<monument_phase_resource, 6> resources;
+};
+
+struct monument {
+    e_building_type btype;
+    svector<monument_phase, 10> phases;
+};
+
 class building_monument : public building_impl {
 public:
     building_monument(building &b) : building_impl(b) {}
@@ -27,56 +43,52 @@ public:
 
     virtual bool need_workers() const { return false; }
     virtual uint8_t phase() const { return runtime_data().phase; }
+
+    virtual bool deliver_resource(e_resource resource, int amount);
+    virtual int needs_resource(e_resource resource, int phase) const;
+    virtual int needs_resource(e_resource resource) const;
+    virtual bool needs_resources() const;
+    virtual int progress();
+    virtual void set_phase(int phase);
+    virtual int phases() const;
+    virtual grid_area get_area();
+    virtual int needs_bricklayers(int ph_id) const;
+    virtual void add_delivery(int figure_id, int resource_id, int num_loads);
+    virtual bool requires_resource(e_resource resource) const;
+    bool has_labour_problems() const;
+
+    virtual bool has_required_resources_to_build() const;
+    virtual tile2i center_point() const = 0;
+    virtual tile2i access_point() const = 0;
+    virtual const monument &config() const = 0;
+    virtual int upgraded();
+    virtual int working();
+    virtual int module_type();
+    virtual bool need_workers();
+    virtual int is_construction_halted();
+    virtual int toggle_construction_halted();
+    virtual bool need_stonemason();
+    virtual bool need_carpenter();
+    virtual bool need_bricklayers();
+    virtual bool is_unfinished() const;
+    virtual bool is_finished() const;
 };
 
 enum module_type {
     
 };
 
-tile2i building_monument_access_point(building *b);
-tile2i building_monument_center_point(building *b);
-grid_area building_monument_get_area(building *b);
-int building_monument_add_module(building *b, int module_type);
-bool building_monument_deliver_resource(building *b, e_resource resource, int amount);
 int building_monument_has_unfinished_monuments();
-void building_monument_set_phase(building *b, int phase);
-bool building_monument_is_monument(const building *b);
-bool building_monument_type_is_monument(e_building_type type);
-bool building_monument_type_is_mini_monument(e_building_type type);
-bool building_monument_is_temple_complex(e_building_type type);
-bool building_monument_needs_resources(building *b);
-int building_monument_progress(building *b);
-bool building_monument_has_labour_problems(building *b);
-int building_monument_working(e_building_type type);
-bool building_monument_requires_resource(e_building_type type, e_resource resource);
-bool building_monument_has_required_resources_to_build(e_building_type type);
-int building_monument_needs_resource(building *b, e_resource resource);
-int building_monument_needs_resources(e_building_type type, e_resource resource, int phase);
-int building_monument_needs_bricklayers(e_building_type type, int phase);
-bool building_monument_need_bricklayers(const building *b);
-bool building_monument_need_stonemason(const building *b);
-bool building_monument_need_carpenter(const building *b);
+bool building_monument_has_delivery_for_worker(int figure_id);
+
 int building_monument_resource_in_delivery(building *b, int resource_id);
 void building_monument_remove_delivery(int figure_id);
-void building_monument_add_delivery(int monument_id, int figure_id, int resource_id, int num_loads);
-bool building_monument_has_delivery_for_worker(int figure_id);
 void building_monument_remove_all_deliveries(int monument_id);
 int building_monument_get_id(e_building_type type);
-int building_monument_upgraded(e_building_type type);
-int building_monument_module_type(e_building_type type);
-int building_monument_phases(e_building_type building_type);
 void building_monument_finish_monuments();
-void building_monument_initialize_deliveries();
 
-bool building_monument_need_workers(building *b);
-int building_monument_is_construction_halted(building *b);
-int building_monument_toggle_construction_halted(building *b);
-bool building_monument_is_unfinished(const building *b);
-bool building_monument_is_finished(const building *b);
 
 int building_monument_workers_onsite(building *b, e_figure_type figure_type);
-
-int get_monument_part_image(int part, int orientation, int level);
 
 uint32_t map_monuments_get_progress(tile2i tile);
 void map_monuments_set_progress(tile2i tile, uint32_t progress);
