@@ -416,10 +416,12 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(building 
                 vec2i offset = lookup_tile_to_pixel(ntile);
                 uint32_t progress = map_monuments_get_progress(ntile);
                 if (progress < 200) {
-                    auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                    auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
                     command.image_id = image_grounded + ((dy * 4 + dx) & 7);
                     command.pixel = offset;
                     command.mask = color_mask;
+                    command.use_sort_pixel = true;
+                    command.sort_pixel = offset + vec2i(0, 1);
                 }
 
                 if (progress > 0 && progress <= 200) {
@@ -430,6 +432,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(building 
                     command.pixel = offset;
                     command.mask = ((0xff * progress / 200) << COLOR_BITSHIFT_ALPHA) | (color_mask & 0x00ffffff);
                     command.flags = ImgFlag_Alpha;
+
                 }
             }
         }
