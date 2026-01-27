@@ -46,6 +46,34 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_medium_mastaba_part_side);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_medium_mastaba_part_wall);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_medium_mastaba_part_entrance);
 
+struct monument_small_mastaba : public monument {
+    monument_small_mastaba() : monument{ BUILDING_SMALL_MASTABA } {
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_BRICKS, 4800} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 2000}, {RESOURCE_BRICKS, 4000} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 1600}, {RESOURCE_BRICKS, 3200} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 1200}, {RESOURCE_BRICKS, 2400} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 800}, {RESOURCE_BRICKS, 1600} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 400}, {RESOURCE_BRICKS, 800} });
+        phases.push_back({ monument_phase_resource{RESOURCE_NONE, 0} });
+    }
+} g_monument_small_mastaba;
+
+struct monument_medium_mastaba : public monument {
+    monument_medium_mastaba() : monument{ BUILDING_MEDIUM_MASTABA } {
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_BRICKS, 8000} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 4000}, {RESOURCE_BRICKS, 8000} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 3200}, {RESOURCE_BRICKS, 6400} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 2400}, {RESOURCE_BRICKS, 4800} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 1600}, {RESOURCE_BRICKS, 3200} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 800}, {RESOURCE_BRICKS, 1600} });
+        phases.push_back({ monument_phase_resource{RESOURCE_NONE, 0} });
+    }
+} g_monument_medium_mastaba;
+
 template<typename T>
 const building_mastaba::base_params &mastaba_base_params(const building_static_params &params) {
     using static_params = typename T::static_params;
@@ -229,11 +257,7 @@ void building_mastaba::finalize(building *b, const vec2i size_b) {
 void building_small_mastaba::update_day() {
     building_impl::update_day();
 
-    if (!building_monument_is_monument(&base)) {
-        return;
-    }
-
-    if (building_monument_is_finished(&base)) {
+    if (is_finished()) {
         return;
     }
 
@@ -377,7 +401,7 @@ void building_mastaba::on_place(int orientation, int variant) {
 }
 
 bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
-    if (building_monument_is_finished(&base)) {
+    if (is_finished()) {
         return false;
     }
 
@@ -614,7 +638,7 @@ void building_mastaba::update_day(const vec2i tiles_size) {
     tile2i tile2works = map_grid_area_first(tiles, [] (tile2i tile) { return map_monuments_get_progress(tile) < 200; });
     bool all_tiles_finished = (tile2works == tile2i{ -1, -1 });
     building *main = base.main();
-    building *part = &base;
+    building_impl *part = this;
     if (!is_main()) {
         return;
     }
@@ -624,7 +648,8 @@ void building_mastaba::update_day(const vec2i tiles_size) {
         map_grid_area_foreach(tiles, [] (tile2i tile) { map_monuments_set_progress(tile, 0); });
         update_images(&base, curr_phase, tiles_size);
         while (part) {
-            building_monument_set_phase(part, curr_phase + 1);
+            verify_no_crash(part->dcast_monument());
+            part->dcast_monument()->set_phase(curr_phase + 1);
             part = part->has_next() ? part->next() : nullptr;
         }
     }
@@ -632,7 +657,7 @@ void building_mastaba::update_day(const vec2i tiles_size) {
     if (monumentd.phase >= 2) {
         int minimal_percent = 100;
         for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
-            bool need_resource = building_monument_needs_resource(&base, r);
+            bool need_resource = needs_resource(r);
             if (need_resource) {
                 minimal_percent = std::min<int>(minimal_percent, monumentd.resources_pct[r]);
             }
@@ -684,7 +709,7 @@ void building_mastaba::update_month() {
 }
 
 void building_mastaba::update_map_orientation(int map_orientation) {
-    if (building_monument_is_finished(&base)) {
+    if (is_finished()) {
         building *main = base.main();
         int image_id = building_small_mastabe_get_bricks_image(base.orientation, type(), tile(), main->tile, main->tile.shifted(3, 9), 6);
         map_building_tiles_add(id(), tile(), base.size, image_id, TERRAIN_BUILDING);
@@ -692,7 +717,7 @@ void building_mastaba::update_map_orientation(int map_orientation) {
 }
 
 bool building_mastaba::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
-    if (building_monument_is_finished(&base)) {
+    if (is_finished()) {
         return false;
     }
 
@@ -719,7 +744,7 @@ void building_mastaba::bind_dynamic(io_buffer *iob, size_t version) {
 }
 
 bool building_small_mastaba::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    if (building_monument_is_finished(&base)) {
+    if (is_finished()) {
         return false;
     }
 
@@ -731,13 +756,27 @@ bool building_small_mastaba::draw_ornaments_and_animations_height(painter &ctx, 
     return draw_ornaments_and_animations_hight_impl(base, ctx, point, tile, color_mask, current_params().init_tiles);
 }
 
+const monument &building_small_mastaba::config() const {
+    return g_monument_small_mastaba;
+}
+
+tile2i building_small_mastaba::center_point() const {
+    tile2i main = tile();
+    tile2i end = main.shifted(3, 9);
+    return main.add(end).div(2);
+}
+
+tile2i building_small_mastaba::access_point() const {
+    return main()->tile().shifted(0, 10);
+}
+
 declare_console_command_p(monument_up) {
     buildings_valid_do([&] (building &b) {
         if (!b.is_monument()) {
             return;
         }
 
-        if (!building_monument_is_unfinished(&b)) {
+        if (!b.dcast_monument()->is_unfinished()) {
             return;
         }
 
@@ -753,12 +792,26 @@ declare_console_command_p(monument_up) {
     });
 }
 
+const monument &building_medium_mastaba::config() const {
+    return g_monument_small_mastaba;
+}
+
+tile2i building_medium_mastaba::center_point() const {
+    tile2i main = tile();
+    tile2i end = main.shifted(5, 13);
+    return main.add(end).div(2);
+}
+
+tile2i building_medium_mastaba::access_point() const {
+    return main()->tile().shifted(0, 14);
+}
+
 bool building_medium_mastaba::draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) {
     return draw_ornaments_and_animations_flat_impl(base, ctx, point, tile, mask, current_params().init_tiles);
 }
 
 bool building_medium_mastaba::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    if (building_monument_is_finished(&base)) {
+    if (is_finished()) {
         return false;
     }
 
@@ -773,11 +826,7 @@ bool building_medium_mastaba::draw_ornaments_and_animations_height(painter &ctx,
 void building_medium_mastaba::update_day() {
     building_impl::update_day();
 
-    if (!building_monument_is_monument(&base)) {
-        return;
-    }
-
-    if (building_monument_is_finished(&base)) {
+    if (is_finished()) {
         return;
     }
 

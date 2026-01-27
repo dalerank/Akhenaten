@@ -149,7 +149,9 @@ public:
     ALLOW_SMART_CAST_BUILDING_I(medium_stepped_pyramid)
 
     building_impl *next();
+    bool has_next() const;
     building_impl *main();
+    const building_impl *main() const;
     bool is_main() const;
     bool has_figure(int slot);
     bool is_valid() const;

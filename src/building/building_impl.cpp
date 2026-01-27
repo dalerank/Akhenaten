@@ -256,7 +256,9 @@ int building_impl::get_orientation() const {
 }
 
 building_impl *building_impl::next() { return base.next()->dcast(); }
+bool building_impl::has_next() const { return base.has_next(); }
 building_impl *building_impl::main() { return base.main()->dcast(); }
+const building_impl *building_impl::main() const { return base.main()->dcast(); }
 bool building_impl::is_main() const { return base.is_main(); }
 bool building_impl::has_figure(int slot) { return base.has_figure(slot); }
 bool building_impl::is_valid() const { return base.is_valid(); }

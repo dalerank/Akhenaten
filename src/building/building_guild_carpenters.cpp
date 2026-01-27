@@ -68,15 +68,20 @@ void building_carpenters_guild::spawn_figure() {
     }
 
     building *monument = buildings_valid_first([&] (building &b) {
-        if (!b.is_monument() || !building_monument_is_unfinished(&b)) {
-            return false;
-        }
-
         if (!b.is_main()) {
             return false;
         }
 
-        return building_monument_need_carpenter(&b);
+        if (!b.is_monument()) {
+            return false;
+        }
+
+        const auto monument = b.dcast_monument();
+        if (!monument->is_unfinished()) {
+            return false;
+        }
+
+        return monument->need_carpenter();
     });
 
     if (monument) {

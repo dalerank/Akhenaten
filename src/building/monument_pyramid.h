@@ -70,6 +70,10 @@ public:
     virtual void update_day() override;
     virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
+
+    virtual const monument &config() const override;
+    virtual tile2i center_point() const override;
+    virtual tile2i access_point() const override;
 };
 ANK_CONFIG_STRUCT(building_small_stepped_pyramid::static_params, 
     init_tiles, corner_type, wall_type, cone_type, filler_type);
@@ -89,11 +93,16 @@ public:
     BUILDING_METAINFO(BUILDING_MEDIUM_STEPPED_PYRAMID, building_medium_stepped_pyramid, building_stepped_pyramid)
     virtual building_medium_stepped_pyramid *dcast_medium_stepped_pyramid() override { return this; }
 
-    struct static_params : public base_params, public building_static_params {} BUILDING_STATIC_DATA_T;
+    struct static_params : public base_params, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
 
     virtual void update_day() override;
     virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
+
+    virtual const monument &config() const override;
+    virtual tile2i center_point() const override;
+    virtual tile2i access_point() const override;
 };
 ANK_CONFIG_STRUCT(building_medium_stepped_pyramid::static_params,
     init_tiles, corner_type, wall_type, cone_type, filler_type);

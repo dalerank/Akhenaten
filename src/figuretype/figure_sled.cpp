@@ -16,9 +16,12 @@ void figure_sled::figure_action() {
         if (leader->type == FIGURE_SLED_PULLER && leader->state == FIGURE_STATE_ALIVE) {
             follow_ticks(1);
         } else {
-            grid_area area = building_monument_get_area(destination());
-            if (map_tile_is_inside_area(tile(), area.tmin, area.tmax)) {
-                do_deliver(ACTION_11_SLED_RETURNING_EMPTY);
+            auto monument = destination()->dcast_monument();
+            if (monument) {
+                grid_area area = monument->get_area();
+                if (map_tile_is_inside_area(tile(), area.tmin, area.tmax)) {
+                    do_deliver(ACTION_11_SLED_RETURNING_EMPTY);
+                }
             }
             poof();
             return;
@@ -56,17 +59,11 @@ void figure_sled::do_deliver(int action_done) {
         return advance_action(action_done);
     }
 
-    building* dest = destination();
-    switch (dest->type) {
-    case BUILDING_SMALL_MASTABA:
-    case BUILDING_SMALL_STEPPED_PYRAMID:
-    case BUILDING_MEDIUM_MASTABA:
-        building_monument_deliver_resource(dest, resource, carrying);
-        break;
-
-    default:
-        assert(false);
-    };
+    auto monument = destination()->dcast_monument();
+    assert(monument);
+    if (monument) {
+        monument->deliver_resource(resource, carrying);
+    }
 }
 
 void figure_sled_puller::figure_action() {
@@ -88,13 +85,18 @@ void figure_sled_puller::figure_action() {
 
     switch (action_state()) {
     case ACTION_8_RECALCULATE:
-    case ACTION_50_SLED_PULLER_CREATED:
-        --base.wait_ticks;
-        if (base.wait_ticks > 0) {
-            return;
+    case ACTION_50_SLED_PULLER_CREATED: {
+            --base.wait_ticks;
+            if (base.wait_ticks > 0) {
+                return;
+            }
+            advance_action(ACTION_51_SLED_PULLER_DELIVERING_RESOURCE);
+            auto monument = destination()->dcast_monument();
+            assert(monument);
+            if (!monument) {
+                base.destination_tile = monument->center_point();
+            }
         }
-        advance_action(ACTION_51_SLED_PULLER_DELIVERING_RESOURCE);
-        base.destination_tile = building_monument_center_point(destination());
         break;
 
     case ACTION_51_SLED_PULLER_DELIVERING_RESOURCE:

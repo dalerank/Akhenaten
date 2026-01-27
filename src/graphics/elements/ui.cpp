@@ -66,6 +66,7 @@ namespace ui {
             switch (type) {
             case generic: return g_button._tooltip.c_str();
             case image: return i_button._tooltip.c_str(); 
+            case arrow: return a_button._tooltip.c_str();
             default:
                 assert(false);
             }
