@@ -119,6 +119,7 @@ static void draw_TEST(vec2i pixel, tile2i point, painter &ctx) {
         command.image_id = anim;
         command.pixel = pixel;
         command.mask = COLOR_CHANNEL_GREEN;
+        command.location = SOURCE_LOCATION;
         return;
     }
 }
@@ -411,6 +412,7 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
         command.image_id = image_id_from_group(GROUP_TERRAIN_UGLY_GRASS);
         command.pixel = pixel;
         command.mask = COLOR_MASK_NONE;
+        command.location = SOURCE_LOCATION;
         return;
     }
 
@@ -494,6 +496,7 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
         command.pixel = pixel;
         command.mask = (0x00ffffff | (image_alt_alpha << 24));
         command.flags = ImgFlag_Alpha;
+        command.location = SOURCE_LOCATION;
     }
 
     int top_height = img->isometric_top_height();
@@ -516,6 +519,7 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
         command.image_id = image_id_from_group(GROUP_TERRAIN_BLACK);
         command.pixel = pixel;
         command.mask = COLOR_BLACK;
+        command.location = SOURCE_LOCATION;
         return;
     }
 
@@ -559,6 +563,7 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
             command.mask = color_mask;
             command.use_sort_pixel = true;
             command.sort_pixel = pixel;
+            command.location = SOURCE_LOCATION;
         }
 
         int image_alt_value = map_image_alt_at(grid_offset);
@@ -572,6 +577,7 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
             command.pixel = pixel;
             command.mask = (0x00ffffff | (image_alt_alpha << 24));
             command.flags = ImgFlag_Alpha;
+            command.location = SOURCE_LOCATION;
         }
         return;
     }
@@ -585,6 +591,7 @@ void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, pain
         command.image_id = image_id_from_group(GROUP_TERRAIN_BLACK);
         command.pixel = pixel;
         command.mask = COLOR_BLACK;
+        command.location = SOURCE_LOCATION;
         return;
     }
 
@@ -621,6 +628,7 @@ void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, pain
         command.mask = color_mask;
         command.use_sort_pixel = true;
         command.sort_pixel = pixel;
+        command.location = SOURCE_LOCATION;
     } 
 
     {
@@ -635,6 +643,7 @@ void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, pain
             command.pixel = pixel - vec2i(0, offset_y);
             command.mask = (0x00ffffff | (image_alt_alpha << 24));
             command.flags = ImgFlag_Alpha;
+            command.location = SOURCE_LOCATION;
         }
     }
 }

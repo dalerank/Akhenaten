@@ -174,11 +174,13 @@ void build_planner::draw_tile_graphics_array(painter &ctx, tile2i start, tile2i 
                 command.image_id = image_id;
                 command.pixel = pixel_coords_cache[row][column];
                 command.mask = COLOR_MASK_GREEN;
+                command.location = SOURCE_LOCATION;
             } else if(image_id < 0) {
                 auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
                 command.image_id = image_id_from_group(GROUP_TERRAIN_BLACK);
                 command.pixel = pixel_coords_cache[row][column];
                 command.mask = COLOR_MASK_GREEN;
+                command.location = SOURCE_LOCATION;
             }
         }
     }
@@ -1290,6 +1292,7 @@ void build_planner::draw_building_ghost(painter &ctx, int image_id, vec2i pixel,
     command.image_id = image_id;
     command.pixel = pixel;
     command.mask = color_mask;
+    command.location = SOURCE_LOCATION;
 }
 
 void build_planner::draw_graphics(painter &ctx) {

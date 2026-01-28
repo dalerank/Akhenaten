@@ -59,6 +59,7 @@ bool city_overlay_water::draw_custom_footprint(vec2i pixel, tile2i tile, painter
             command.image_id = map_image_at(tile);
             command.pixel = pixel;
             command.mask = COLOR_MASK_NONE;
+            command.location = SOURCE_LOCATION;
         }
         return true;
     } 
@@ -90,6 +91,7 @@ bool city_overlay_water::draw_custom_footprint(vec2i pixel, tile2i tile, painter
     command.image_id = image_id;
     command.pixel = pixel;
     command.mask = COLOR_MASK_NONE;
+    command.location = SOURCE_LOCATION;
 
     return true;
 }

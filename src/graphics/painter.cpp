@@ -1,6 +1,7 @@
 #include "graphics/painter.h"
 
 #include "game/game.h"
+#include "core/profiler.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "platform/renderer.h"
@@ -14,6 +15,7 @@ std::unordered_map<uint64_t, SDL_Texture *> grayscaled_txs;
 
 void painter::draw(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, color color, float scale_x, float scale_y,
                    double angle, ImgFlags flags, const bool force_linear) {
+    OZZY_PROFILER_FUNCTION();
     const bool use_grayscale = !!(flags & ImgFlag_Grayscale);
     if (!use_grayscale) {
         draw_impl(texture, pos, offset, size, color, scale_x, scale_y, angle, flags, force_linear);
@@ -26,6 +28,7 @@ void painter::draw(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, co
         auto &command = ImageDraw::create_dcommand(render_command_t::ert_draw_rect);
         command.pixel = pos * global_render_scale;
         command.size = size * global_render_scale;
+        command.location = SOURCE_LOCATION;
     }
 }
 
@@ -40,6 +43,8 @@ void painter::draw_image_part(const image_t *img, int offset, vec2i pos, color c
 }
 
 void painter::draw_image(const image_t *img, vec2i pos, color color, float scale, ImgFlags flags) {
+    OZZY_PROFILER_FUNCTION();
+
     if (!img) {
         return;
     }
@@ -90,6 +95,8 @@ const image_t *painter::img_generic(const image_desc &imgd, vec2i p, color color
 }
 
 const image_t *painter::img_generic(int image_id, vec2i p, color color_mask, float scale, ImgFlags flags) {
+    OZZY_PROFILER_FUNCTION();
+
     const image_t *img = image_get(image_id);
     vec2i offset{ 0, 0 };
     if (!!(flags & ImgFlag_InternalOffset)) {
@@ -101,6 +108,8 @@ const image_t *painter::img_generic(int image_id, vec2i p, color color_mask, flo
 }
 
 const image_t *painter::img_sprite(int image_id, vec2i p, color color_mask, float scale, ImgFlags flags) {
+    OZZY_PROFILER_FUNCTION();
+
     const image_t *img = image_get(image_id);
     if (!img) {
         return nullptr;
@@ -124,6 +133,8 @@ const image_t *painter::img_sprite(int image_id, vec2i p, color color_mask, floa
 }
 
 const image_t *painter::img_ornament(int image_id, int base_id, int x, int y, color color_mask, float scale) {
+    OZZY_PROFILER_FUNCTION();
+
     const image_t *img = image_get(image_id);
     const image_t *base = image_get(base_id);
     int ydiff = HALF_TILE_HEIGHT_PIXELS * (base->isometric_size() + 1);
@@ -135,6 +146,8 @@ const image_t *painter::img_ornament(int image_id, int base_id, int x, int y, co
 }
 
 const image_t *painter::img_from_below(int image_id, int x, int y, color color_mask, float scale) {
+    OZZY_PROFILER_FUNCTION();
+
     const image_t *img = image_get(image_id);
     draw_image(img, vec2i{ x, y - img->height }, color_mask, scale);
     return img;
@@ -145,6 +158,8 @@ void painter::fill_rect(vec2i start, vec2i size, color color) {
 }
 
 void painter::draw_rect(vec2i start, vec2i size, color color) {
+    OZZY_PROFILER_FUNCTION();
+
     g_render.draw_rect(start, size, color);
 }
 
@@ -176,6 +191,8 @@ const image_t* painter::img_isometric(int image_id, vec2i pixel, color color_mas
 }
 
 const image_t *painter::isometric_from_drawtile(int image_id, vec2i pos, color color_mask, ImgFlags flags) {
+    OZZY_PROFILER_FUNCTION();
+
     const image_t *img = image_get(image_id);
     if (!img) {
         return nullptr;
@@ -188,6 +205,8 @@ const image_t *painter::isometric_from_drawtile(int image_id, vec2i pos, color c
 }
 
 const image_t *painter::isometric_from_drawtile_top(int image_id, vec2i pos, color color_mask, ImgFlags flags) {
+    OZZY_PROFILER_FUNCTION();
+
     const image_t *img = image_get(image_id);
     if (!img) {
         return nullptr;
@@ -209,6 +228,7 @@ const image_t *painter::img_isometric(int image_id, vec2i p, color color_mask, f
 
 void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, color color, float scale_x,
                         float scale_y, double angle, ImgFlags flags, const bool force_linear) {
+    OZZY_PROFILER_FUNCTION();
     if (texture == nullptr) {
         return;
     }
@@ -363,6 +383,7 @@ SDL_Texture* painter::convertToGrayscale(SDL_Texture *tx, vec2i offset, vec2i si
 
 auto painter::draw_grayscale(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, float scale_x, float scale_y,
                              double angle, ImgFlags flags, bool force_linear) -> void {
+    OZZY_PROFILER_FUNCTION();
     if (texture == nullptr) {
         return;
     }

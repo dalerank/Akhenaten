@@ -43,6 +43,7 @@ inline void city_overlay_routing::draw_custom_top(vec2i pixel, tile2i point, pai
         command.image_id = map_image_at(grid_offset);
         command.pixel = pixel;
         command.mask = color_mask;
+        command.location = SOURCE_LOCATION;
     }
 
     if (!drawn && map_terrain_is(grid_offset, TERRAIN_WATER)) {
@@ -58,6 +59,7 @@ inline void city_overlay_routing::draw_custom_top(vec2i pixel, tile2i point, pai
         command.image_id = image_id;
         command.pixel = pixel;
         command.mask = color_mask;
+        command.location = SOURCE_LOCATION;
     }
 
     if (!drawn) {
@@ -70,6 +72,7 @@ inline void city_overlay_routing::draw_custom_top(vec2i pixel, tile2i point, pai
                 command.image_id = image_id + offset;
                 command.pixel = pixel;
                 command.mask = color_mask;
+                command.location = SOURCE_LOCATION;
                 drawn = true;
             }
         }
@@ -95,6 +98,7 @@ inline void city_overlay_routing::draw_custom_top(vec2i pixel, tile2i point, pai
         command.image_id = map_image_at(grid_offset);
         command.pixel = pixel;
         command.mask = color_mask;
+        command.location = SOURCE_LOCATION;
     }
 }
 

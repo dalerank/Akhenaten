@@ -374,6 +374,7 @@ void figure_enemy_archer::debug_draw() {
             command.image_id = map_image_at(target_building->tile);
             command.pixel = target_coords;
             command.mask = COLOR_LIGHT_RED;
+            command.location = SOURCE_LOCATION;
         }
     }
 
@@ -383,6 +384,7 @@ void figure_enemy_archer::debug_draw() {
         command.image_id = map_image_at(base.destination_tile);
         command.pixel = target_coords;
         command.mask = COLOR_LIGHT_BLUE;
+        command.location = SOURCE_LOCATION;
     }
 
     {
@@ -392,6 +394,7 @@ void figure_enemy_archer::debug_draw() {
         command.image_id = map_image_at(d.last_target);
         command.pixel = target_coords;
         command.mask = COLOR_RED;
+        command.location = SOURCE_LOCATION;
     }
 
     // Draw target figure
