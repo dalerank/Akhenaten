@@ -130,10 +130,11 @@ void city_overlay::draw_overlay_column(e_column_color color, vec2i pixel, int he
 
     height = std::min(height, 10);
     int capital_height = image_get(image_id)->height;
-    // base
+    // base 
     auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
     command.image_id = image_id + 2;
     command.pixel = pixel + vec2i{ 9, -8 };
+    command.location = SOURCE_LOCATION;
 
     if (height) {
         // column
@@ -141,11 +142,13 @@ void city_overlay::draw_overlay_column(e_column_color color, vec2i pixel, int he
             auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
             command.image_id = image_id + 1;
             command.pixel = pixel + vec2i{ 17, -8 - 10 * i + 13 };
+            command.location = SOURCE_LOCATION;
         }
         // capital
         auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
         command.image_id = image_id;
         command.pixel = pixel + vec2i{ 5, -8 - capital_height - 10 * (height - 1) + 13 };
+        command.location = SOURCE_LOCATION;
     }
 }
 
@@ -195,6 +198,7 @@ void city_overlay::draw_flattened_footprint_anysize(vec2i pos, int size_x, int s
             command.image_id = image_base + shape_offset;
             command.pixel = tp;
             command.mask = color_mask;
+            command.location = SOURCE_LOCATION;
         }
     }
 }
@@ -214,17 +218,20 @@ void city_overlay::draw_building_footprint(painter &ctx, vec2i pos, tile2i tile,
                 command.image_id = map_image_at(tile);
                 command.pixel = pos;
                 command.mask = color_mask;
+                command.location = SOURCE_LOCATION;
             } else if (map_property_is_draw_tile(tile)) {
                 auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
                 command.image_id = map_image_at(tile);
                 command.pixel = pos;
                 command.mask = color_mask;
+                command.location = SOURCE_LOCATION;
             }
         } else {
             auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
             command.image_id = map_image_at(tile);
             command.pixel = pos;
             command.mask = color_mask;
+            command.location = SOURCE_LOCATION;
         }
     } else {
         bool draw = true;

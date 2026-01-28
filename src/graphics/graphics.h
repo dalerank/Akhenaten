@@ -67,10 +67,10 @@ struct render_command_t {
     uint32_t tag = 0;
     vec2i pixel = {};
     vec2i sort_pixel = {};
+    pcstr location = nullptr;
 
-    int subcommand = -1;
-
-    render_command_t* last_subcommand();
+    int start_subcommand = -1;
+    int finish_subcommand = -1;
 };
 
 namespace ImageDraw {

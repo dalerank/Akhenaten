@@ -117,6 +117,7 @@ bool city_overlay_desirability::draw_custom_footprint(vec2i pixel, tile2i point,
             command.image_id = map_image_at(grid_offset);
             command.pixel = pixel;
             command.mask = color_mask;
+            command.location = SOURCE_LOCATION;
         }
 
     } else if (map_terrain_is(grid_offset, TERRAIN_CANAL | TERRAIN_WALL)) {
@@ -126,6 +127,7 @@ bool city_overlay_desirability::draw_custom_footprint(vec2i pixel, tile2i point,
         command.image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
         command.pixel = pixel;
         command.mask = color_mask;
+        command.location = SOURCE_LOCATION;
 
     } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || g_desirability.get(grid_offset)) {
         if (has_deleted_building(grid_offset)) {
@@ -139,6 +141,7 @@ bool city_overlay_desirability::draw_custom_footprint(vec2i pixel, tile2i point,
         command.image_id = img_id + offset;
         command.pixel = pixel;
         command.mask = color_mask;
+        command.location = SOURCE_LOCATION;
     } else {
         int img_id = map_image_at(grid_offset);
 
@@ -146,7 +149,7 @@ bool city_overlay_desirability::draw_custom_footprint(vec2i pixel, tile2i point,
         command.image_id = img_id;
         command.pixel = pixel;
         command.mask = color_mask;
-
+        command.location = SOURCE_LOCATION;
     }
 
     return true;

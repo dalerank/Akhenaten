@@ -104,6 +104,7 @@ bool city_overlay_native::draw_custom_footprint(vec2i pixel, tile2i tile, painte
             command.image_id = map_image_at(tile);
             command.pixel = pixel;
             command.mask = COLOR_MASK_NONE;
+            command.location = SOURCE_LOCATION;
         }
     } else if (map_terrain_is(tile, TERRAIN_CANAL | TERRAIN_WALL)) {
         // display groundwater
@@ -125,6 +126,7 @@ bool city_overlay_native::draw_custom_footprint(vec2i pixel, tile2i tile, painte
         command.image_id = image_id;
         command.pixel = pixel;
         command.mask = COLOR_MASK_NONE;
+        command.location = SOURCE_LOCATION;
     }
 
     return true;

@@ -156,6 +156,7 @@ void building_mastaba::preview::ghost_preview(build_planner &planer, painter &ct
             command.image_id = image_id;
             command.pixel = p;
             command.mask = COLOR_MASK_GREEN;
+            command.location = SOURCE_LOCATION;
         }
     }
 }
@@ -447,6 +448,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
             command.mask = color_mask;
             command.use_sort_pixel = true;
             command.sort_pixel = offset + vec2i(0, 1);
+            command.location = SOURCE_LOCATION;
         }
         tile2i right_top = base.tile.shifted(1, 0);
         if (right_top == main->tile.shifted(tiles_size.y - 1, 0) && map_monuments_get_progress(right_top) == 0) {
@@ -457,7 +459,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
             command.mask = color_mask;
             command.use_sort_pixel = true;
             command.sort_pixel = offset + vec2i(0, 1);
-        
+            command.location = SOURCE_LOCATION;
         }        
         tile2i left_bottom = base.tile.shifted(0, 1);
         if (left_bottom == main->tile.shifted(0, tiles_size.x - 1) && map_monuments_get_progress(left_bottom) == 0) {
@@ -468,6 +470,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
             command.mask = color_mask;
             command.use_sort_pixel = true;
             command.sort_pixel = offset + vec2i(0, 1);
+            command.location = SOURCE_LOCATION;
         }        
         tile2i right_bottom = base.tile.shifted(1, 1);
         if (right_bottom == main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1) && map_monuments_get_progress(right_bottom) == 0) {
@@ -478,6 +481,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
             command.mask = color_mask;
             command.use_sort_pixel = true;
             command.sort_pixel = offset + vec2i(0, 1);
+            command.location = SOURCE_LOCATION;
         }
     } else if (monumentd.phase == 1) {
         for (int dy = 0; dy < base.size; dy++) {

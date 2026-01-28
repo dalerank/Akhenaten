@@ -168,6 +168,7 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
         command.image_id = image_id_from_group(GROUP_TERRAIN_BLACK);
         command.pixel = pixel;
         command.mask = COLOR_MASK_NONE;
+        command.location = SOURCE_LOCATION;
         return;
     }
 
@@ -185,6 +186,7 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
             command.image_id = map_image_at(tile);
             command.pixel = pixel;
             command.mask = COLOR_MASK_NONE;
+            command.location = SOURCE_LOCATION;
 
             const image_t* img = image_get(command.image_id);
             int top_height = img->isometric_top_height();
@@ -197,6 +199,7 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
             command.image_id = map_image_at(tile);
             command.pixel = pixel;
             command.mask = mode_highlighted[mode];
+            command.location = SOURCE_LOCATION;
         
         } else if (terrain & TERRAIN_BUILDING) {
             overlay->draw_building_footprint(ctx, pixel, tile, 0);
@@ -206,6 +209,7 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
             command.image_id = map_image_at(tile);
             command.pixel = pixel;
             command.mask = COLOR_MASK_NONE;
+            command.location = SOURCE_LOCATION;
 
             const image_t* img = image_get(command.image_id);
             int top_height = img->isometric_top_height();
@@ -237,6 +241,7 @@ void draw_isometrics_overlay_height(vec2i pixel, tile2i point, painter &ctx) {
             command.pixel = pixel - vec2i(0, offset_y);
             command.use_sort_pixel = true;
             command.sort_pixel = pixel;
+            command.location = SOURCE_LOCATION;
         }
 
         //int terrain = map_terrain_get(grid_offset);
