@@ -106,7 +106,7 @@ overlays = [
     id:OVERLAY_BAZAAR_ACCESS
     caption: "Bazaar access"
     walkers:[FIGURE_MARKET_BUYER, FIGURE_MARKET_TRADER]
-    buildings:[BUILDING_BAZAAR, BUILDING_ROADBLOCK]
+    buildings:[BUILDING_BAZAAR, BUILDING_ROADBLOCK, BUILDING_GRANARY]
     column_type: COLUMN_TYPE_POSITIVE
     column_anim: {pack:PACK_GENERAL, id:103}
   }
