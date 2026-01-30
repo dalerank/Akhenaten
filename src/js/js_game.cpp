@@ -404,8 +404,9 @@ void js_register_game_handlers(xstring missionid) {
                         
                         // Second pass: register events and console commands
                         mod = func->modifiers;
+                        auto is_es = [] (pcstr k) { return strcmp(k, "event") == 0 || strcmp(k, "es") == 0; };
                         while (mod) {
-                            if (mod->key && strcmp(mod->key, "event") == 0) {
+                            if (mod->key && is_es(mod->key)) {
                                 auto r = event_type_handlers.insert(std::make_pair(xstring(mod->value),  event_handlers{}));
                                 auto &handlers = r.first->second;
                                 handlers.insert(prop->name);

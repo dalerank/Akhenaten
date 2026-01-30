@@ -74,31 +74,59 @@ struct resource_data {
     }
 };
 
+uint16_t building_bazaar::get_resource_amount(e_resource res) const {
+    auto it = std::find_if(std::begin(runtime_data().inventory), std::end(runtime_data().inventory),
+                           [res] (const resource_value &rv) { return rv.type == res; });
+
+    if (it != std::end(runtime_data().inventory)) {
+        return it->value;
+    }
+
+    return 0;
+}
+
 int building_bazaar::max_food_stock() {
     const auto &d = runtime_data();
-    auto it = std::max_element(d.inventory + INVENTORY_MIN_FOOD, d.inventory + INVENTORY_MAX_FOOD);
-    return *it;
+    auto it = std::max_element(d.inventory, d.inventory + INVENTORY_MAX_FOOD, [](const resource_value &a, const resource_value &b) { return a.value < b.value; });
+    return it->value;
 }
 
 int building_bazaar::max_goods_stock() {
     const auto &d = runtime_data();
-    auto it = std::max_element(d.inventory + INVENTORY_MIN_GOOD, d.inventory + INVENTORY_MAX_GOOD);
-    return *it;
+    auto it = std::max_element(d.inventory + INVENTORY_MIN_GOOD, d.inventory + INVENTORY_MAX_GOOD, [](const resource_value &a, const resource_value &b) { return a.value < b.value; });
+    return it->value;
 }
 
-bool building_bazaar::is_good_accepted(int index) {
-    int goods_bit = 1 << index;
-    return !(runtime_data().market_goods & goods_bit);
+bool building_bazaar::idx_accepted(uint8_t index) {
+    return runtime_data().market_goods.is_set(index);
 }
 
-void building_bazaar::toggle_good_accepted(int index) {
-    int goods_bit = (1 << index);
+bool building_bazaar::res_accepted(e_resource res) {
+    auto &d = runtime_data();
+    auto it = std::find_if(std::begin(d.inventory), std::end(d.inventory), [res] (const resource_value &rv) { return rv.type == res; });
+    if (it == std::end(d.inventory)) {
+        return false;
+    }
 
-    runtime_data().market_goods ^= goods_bit;
+    const uint8_t idx = std::distance(d.inventory, it);
+    return d.market_goods.is_set(idx);
+}
+
+void building_bazaar::toggle_res_accepted(e_resource res) {
+    auto &d = runtime_data();
+    auto it = std::find_if(std::begin(d.inventory), std::end(d.inventory), [res] (const resource_value &rv) { return rv.type == res; });
+    if (it != std::end(d.inventory)) {
+        const uint8_t idx = std::distance(d.inventory, it);
+        d.market_goods.inv(idx);
+    }
+}
+
+void building_bazaar::toggle_idx_accepted(uint8_t idx) {
+    runtime_data().market_goods.inv(idx);
 }
 
 void building_bazaar::unaccept_all_goods() {
-    runtime_data().market_goods = (short)0xFFFF;
+    runtime_data().market_goods.set_one();
 }
 
 building *building_bazaar::get_storage_destination() {
@@ -187,7 +215,7 @@ building *building_bazaar::get_storage_destination() {
 
     // prefer food if we don't have it
     for (int foodi = INVENTORY_FOOD1; foodi <= INVENTORY_FOOD4; ++foodi) {
-        if (!d.inventory[foodi] && resources[foodi].num_buildings && is_good_accepted(foodi)) {
+        if (!d.inventory[foodi].value && resources[foodi].num_buildings && idx_accepted(foodi)) {
             d.fetch_inventory_id = foodi;
             return building_get(resources[foodi].building_id);
         }
@@ -195,7 +223,7 @@ building *building_bazaar::get_storage_destination() {
     
     // then prefer resource if we don't have it
     for (int goodi = INVENTORY_GOOD1; goodi <= INVENTORY_GOOD4; ++goodi) {
-        if (!d.inventory[goodi] && resources[goodi].num_buildings && is_good_accepted(goodi)) {
+        if (!d.inventory[goodi].value && resources[goodi].num_buildings && idx_accepted(goodi)) {
             d.fetch_inventory_id = goodi;
             return building_get(resources[goodi].building_id);
         }
@@ -212,32 +240,32 @@ building *building_bazaar::get_storage_destination() {
         }
 
         int pickup_threshold = (goodi <= INVENTORY_FOOD4) ? pick_good_below[goodi] : pick_good_below[goodi - INVENTORY_GOOD1];
-        if (d.inventory[goodi] > pickup_threshold) {
+        if (d.inventory[goodi].value > pickup_threshold) {
             continue;
         }
 
-        if (!is_good_accepted(goodi)) {
+        if (!idx_accepted(goodi)) {
             continue;
         }
 
-        if (d.inventory[goodi] < min_stock) {
-            min_stock = d.inventory[goodi];
+        if (d.inventory[goodi].value < min_stock) {
+            min_stock = d.inventory[goodi].value;
             fetch_inventory = goodi;
         }
     }
 
     if (fetch_inventory == -1) {
         // all items well stocked: pick food below threshold
-        if (resources[INVENTORY_FOOD1].num_buildings && d.inventory[INVENTORY_FOOD1] < pick_food_below[INVENTORY_FOOD1]  && is_good_accepted(INVENTORY_FOOD1)) {
+        if (resources[INVENTORY_FOOD1].num_buildings && d.inventory[INVENTORY_FOOD1].value < pick_food_below[INVENTORY_FOOD1]  && idx_accepted(INVENTORY_FOOD1)) {
             fetch_inventory = INVENTORY_FOOD1;
         }
-        if (resources[INVENTORY_FOOD2].num_buildings && d.inventory[INVENTORY_FOOD2] < pick_food_below[INVENTORY_FOOD2] && is_good_accepted(INVENTORY_FOOD2)) {
+        if (resources[INVENTORY_FOOD2].num_buildings && d.inventory[INVENTORY_FOOD2].value < pick_food_below[INVENTORY_FOOD2] && idx_accepted(INVENTORY_FOOD2)) {
             fetch_inventory = INVENTORY_FOOD2;
         }
-        if (resources[INVENTORY_FOOD3].num_buildings && d.inventory[INVENTORY_FOOD3] < pick_food_below[INVENTORY_FOOD3] && is_good_accepted(INVENTORY_FOOD3)) {
+        if (resources[INVENTORY_FOOD3].num_buildings && d.inventory[INVENTORY_FOOD3].value < pick_food_below[INVENTORY_FOOD3] && idx_accepted(INVENTORY_FOOD3)) {
             fetch_inventory = INVENTORY_FOOD3;
         }
-        if (resources[INVENTORY_FOOD4].num_buildings && d.inventory[INVENTORY_FOOD4] < pick_food_below[INVENTORY_FOOD4] && is_good_accepted(INVENTORY_FOOD4)) {
+        if (resources[INVENTORY_FOOD4].num_buildings && d.inventory[INVENTORY_FOOD4].value < pick_food_below[INVENTORY_FOOD4] && idx_accepted(INVENTORY_FOOD4)) {
             fetch_inventory = INVENTORY_FOOD4;
         }
     }
@@ -265,8 +293,22 @@ void building_bazaar::update_graphic() {
 }
 
 void building_bazaar::on_create(int orientation) {
-    runtime_data().market_goods = 0;
+    runtime_data().market_goods.set_one();
     base.set_flag(e_building_fancy, false);
+}
+
+void building_bazaar::on_post_load() {
+    building_impl::on_post_load();
+
+    auto &d = runtime_data();
+    d.inventory[INVENTORY_FOOD1].type = g_city.allowed_foods(INVENTORY_FOOD1);
+    d.inventory[INVENTORY_FOOD2].type = g_city.allowed_foods(INVENTORY_FOOD2);
+    d.inventory[INVENTORY_FOOD3].type = g_city.allowed_foods(INVENTORY_FOOD3);
+    d.inventory[INVENTORY_FOOD4].type = g_city.allowed_foods(INVENTORY_FOOD4);
+    d.inventory[INVENTORY_GOOD1].type = RESOURCE_POTTERY;
+    d.inventory[INVENTORY_GOOD2].type = RESOURCE_LUXURY_GOODS;
+    d.inventory[INVENTORY_GOOD3].type = RESOURCE_LINEN;
+    d.inventory[INVENTORY_GOOD4].type = RESOURCE_BEER;
 }
 
 void building_bazaar::spawn_figure() {
@@ -293,7 +335,8 @@ void building_bazaar::spawn_figure() {
 
     // market trader
     if (!base.has_figure_of_type(BUILDING_SLOT_SERVICE, FIGURE_MARKET_TRADER)) {
-        int bazar_inventory = std::accumulate(d.inventory, d.inventory + 7, 0);
+        int bazar_inventory = std::accumulate(d.inventory, d.inventory + 7, 0,
+                                              [](int sum, const resource_value &rv) { return sum + rv.value; });
         if (bazar_inventory > 0) { // do not spawn trader if bazaar is 100% empty!
             base.figure_spawn_delay++;
             if (base.figure_spawn_delay > spawn_delay) {
@@ -316,7 +359,7 @@ bool building_bazaar::draw_ornaments_and_animations_height(painter &ctx, vec2i p
 void building_bazaar::bind_dynamic(io_buffer *iob, size_t version) {
     auto &d = runtime_data();
 
-    iob->bind(BIND_SIGNATURE_INT16, &d.market_goods);
+    iob->bind(BIND_SIGNATURE_INT16, d.market_goods.data_ptr());
     iob->bind(BIND_SIGNATURE_INT16, &d.pottery_demand);
     iob->bind(BIND_SIGNATURE_INT16, &d.luxurygoods_demand);
     iob->bind(BIND_SIGNATURE_INT16, &d.linen_demand);
@@ -324,8 +367,9 @@ void building_bazaar::bind_dynamic(io_buffer *iob, size_t version) {
 
     uint16_t tmp;
     for (int i = 0; i < INVENTORY_MAX; i++) {
-        iob->bind(BIND_SIGNATURE_UINT16, &tmp);
-        iob->bind(BIND_SIGNATURE_UINT16, &d.inventory[i]);
+        iob->bind(BIND_SIGNATURE_UINT8,  &d.inventory[i].type);
+        iob->bind(BIND_SIGNATURE_UINT8, &tmp);
+        iob->bind(BIND_SIGNATURE_UINT16, &d.inventory[i].value);
     }
 
     iob->bind(BIND_SIGNATURE_UINT8, &d.fetch_inventory_id);

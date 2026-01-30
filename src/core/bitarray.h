@@ -16,8 +16,8 @@ struct bitarray_base {
     typedef parent_type self_type;
     static const uint32_t size_of_int = sizeof(uint32_t) * 8;
 
-    inline self_type &one() { memset(ptr(), 0xff, size_in_bytes()); return self(); }
-    inline self_type &zero() { memzero(ptr(), size_in_bytes()); return self(); }
+    inline self_type &set_one() { memset(ptr(), 0xff, size_in_bytes()); return self(); }
+    inline self_type &set_zero() { memzero(ptr(), size_in_bytes()); return self(); }
 
     inline self_type &assign(const self_type &o) { memcpy(ptr(), o.ptr(), this->size_in_bytes()); return self(); }
 
@@ -93,7 +93,7 @@ struct bitarray_base {
     inline uint32_t is_unset(const uint32_t id) const { return !test(id); }
 
     inline self_type &_or(const self_type &other) {
-        verify(other.size_in_ints() == this->size_in_ints());
+        verify_no_crash(other.size_in_ints() == this->size_in_ints());
 
         const uint32_t *src_cur = other.ptr(),
             *src_end = src_cur + other.size_in_ints();
@@ -306,6 +306,12 @@ public:
         return *this;
     }
 
+    inline self_type &inv(const uint32_t idx) {
+        const bool s = is_set(idx);
+        set(idx, !s);
+        return *this;
+    }
+
     inline uint32_t data(const uint32_t idx) const {
         verify_no_crash(idx < ints);
         return _data[idx];
@@ -395,5 +401,7 @@ protected:
     uint32_t _data[ints];
 };
 
+using sbitarray8 = sbitarray<8>;
+using sbitarray16 = sbitarray<16>;
 using sbitarray32 = sbitarray<32>;
 using sbitarray64 = sbitarray<64>;

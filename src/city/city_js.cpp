@@ -45,3 +45,6 @@ ANK_FUNCTION_1(__city_camera_go_to)
 
 void js_register_city_objects(js_State *J) {
 }
+
+e_resource __city_allowed_foods(int index) { return g_city.allowed_foods(index); }
+ANK_FUNCTION_1(__city_allowed_foods)

@@ -222,15 +222,15 @@ static void post_load() {
     map_image_fix_icorrect_tiles();
 
     // building counts / storage
+    city_resource_determine_available();
+    g_city.update_allowed_foods();
     g_city.buildings.update_counters();
     g_city.on_post_load();
     g_city.resource.calculate_stocks();
     city_resource_calculate_storageyard_stocks();
-    city_resource_determine_available();
     building_storage_reset_building_ids();
     g_city.avg_coverage.update();
 
-    g_city.update_allowed_foods();
     g_city.religion.ra_no_traders_months_left = std::clamp<int>(g_city.religion.ra_no_traders_months_left, 0, 12);
     g_city.religion.ra_harshly_reduced_trading_months_left = std::clamp<int>(g_city.religion.ra_harshly_reduced_trading_months_left, 0, 12);
 

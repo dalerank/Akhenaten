@@ -115,7 +115,7 @@ struct building_store : public std::array<resource_value, 4> {
         );
     }
 
-    inline int &operator[](e_resource r) {
+    inline uint16_t &operator[](e_resource r) {
         for (auto &it: *this) {
             if (it.type == r) {
                 return it.value;
@@ -131,7 +131,7 @@ struct building_store : public std::array<resource_value, 4> {
         }
 
         verify_no_crash(false);
-        static int dummy = 0;
+        static uint16_t dummy = 0;
         return dummy;
     }
 

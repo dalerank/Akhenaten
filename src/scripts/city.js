@@ -3,7 +3,7 @@ log_info("akhenaten: city.js started")
 city {
     festival {
         __property_getter: __city_get_festival_property
-        @selected_god { }        
+        @selected_god { }
     }
 
     @population { get: __city_population }
@@ -16,7 +16,7 @@ city {
         @kingdome_soldiers { }
 
         remove_figures: __city_remove_figures
-    }    
+    }
 
     taxes {
         __property_getter: __city_get_taxes_property
@@ -24,7 +24,7 @@ city {
         @estimated_uncollected { }
         @estimated_income { }
     }
-    
+
     military {
         __property_getter: __city_get_military_property
         @total_soldiers { }
@@ -35,7 +35,7 @@ city {
         @building_id { get: __city_get_object_info_building_id }
         @group { get: __city_get_object_info_group }
     }
-    
+
     use_building: __city_use_building
     set_goal_tooltip: __scenario_set_goal_tooltip
     set_victory_reason : city_set_victory_reason
@@ -52,9 +52,10 @@ city {
     rank_salary : __city_rank_salary
     start_foreign_army_invasion : __city_start_foreign_army_invasion
     camera_go_to : __city_camera_go_to
+    allowed_foods : __city_allowed_foods
 }
 
-city.get_battalion_by_index = function(index) { 
+city.get_battalion_by_index = function(index) {
     return {
         index: index
         __property_getter: function(property) { return __city_get_battalion_property(this.index, property) }
@@ -74,9 +75,10 @@ city.get_battalion_by_index = function(index) {
 
 city.get_granary = function(building_id) {
     return {
-        id: building_id        
-        amount: function(resource_type) { return __granary_get_amount(this.id, resource_type) }    
+        id: building_id
         total_stored: function() { return __granary_get_total_stored(this.id) }
+        resource_amount: function(resource) { return __granary_resource_amount(this.id, resource) }
+        is_good_accepted: function(index) { return __granary_is_good_accepted(this.id, index) }
     }
 }
 
@@ -86,6 +88,15 @@ city.get_random_house = function() {
         id: building_id
         add_fire_damage: function(damage) { __building_add_fire_damage(this.id, damage) }
         add_collapse_damage: function(damage) { __building_add_collapse_damage(this.id, damage) }
+    }
+}
+
+city.get_bazaar = function(building_id) {
+    return {
+        id: building_id
+        resource_amount: function(resource_type) { return __bazaar_resource_amount(this.id, resource_type) }
+        idx_accepted: function(index) { return __bazaar_idx_accepted(this.id, index) }
+        res_accepted: function(resource_type) { return __bazaar_is_good_accepted(this.id, resource_type) }
     }
 }
 
@@ -162,5 +173,5 @@ city.create_distant_battle = function(obj) {
 }
 
 crime {
-    
+
 }

@@ -82,6 +82,14 @@ int __ui_element_get_text_color(pcstr element_id) {
 }
 ANK_FUNCTION_1(__ui_element_get_text_color)
 
+void __ui_element_set_image(pcstr element_id, int v) {
+    ui::widget *w = ui::get_current_widget();
+    if (w && element_id) {
+        (*w)[element_id].image(v);
+    }
+}
+ANK_FUNCTION_2(__ui_element_set_image)
+
 void __ui_element_set_text_color(pcstr element_id, int v) {
     ui::widget *w = ui::get_current_widget();
     if (w && element_id) {
