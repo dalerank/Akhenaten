@@ -307,8 +307,8 @@ public:
     }
 
     inline self_type &inv(const uint32_t idx) {
-        const bool s = is_set(idx);
-        set(idx, !s);
+        const bool s = this->is_set(idx);
+        this->set(idx, !s);
         return *this;
     }
 
