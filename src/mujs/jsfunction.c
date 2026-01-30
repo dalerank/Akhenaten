@@ -49,7 +49,7 @@ static void jsB_Function_prototype(js_State *J)
 static void Fp_toString(js_State *J)
 {
 	js_Object *self = js_toobject(J, 0);
-	char *s;
+	char *s = 0;
 	int i, n;
 
 	if (!js_iscallable(J, 0))
@@ -61,7 +61,8 @@ static void Fp_toString(js_State *J)
 		n += strlen(F->name);
 		for (i = 0; i < F->numparams; ++i)
 			n += strlen(F->vartab[i]) + 1;
-		s = js_malloc(J, n);
+		//s = js_malloc(J, n);
+		s = _alloca(n + 16);
 		strcpy(s, "function ");
 		strcat(s, F->name);
 		strcat(s, "(");
@@ -71,11 +72,11 @@ static void Fp_toString(js_State *J)
 		}
 		strcat(s, ") { ... }");
 		if (js_try(J)) {
-			js_free(J, s);
+			//js_free(J, s);
 			js_throw(J);
 		}
 		js_pushstring(J, s);
-		js_free(J, s);
+		//js_free(J, s);
 		js_endtry(J);
 	} else {
 		js_pushliteral(J, "function () { ... }");

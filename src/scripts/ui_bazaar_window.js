@@ -4,7 +4,7 @@ bazaar_info_window {
     ui {
         background   : outer_panel({size[29, 17]})
         title        : text({text: "#bazaar_info_title", pos[0, 10], size: [16 * 29, 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        warning_text : text({pos[32, 36], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
+        warning_text : text({pos[32, 36], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true})
 
         food0_icon   : resource_icon({pos[32, 85]})
         food0_text   : text({pos: [64, 90], font: FONT_NORMAL_BLACK_ON_LIGHT })
@@ -36,7 +36,53 @@ bazaar_info_window {
     }
 }
 
-[es=bazaar_info_window_draw]
+[es=bazaar_info_window_init]
+function bazaar_info_window_init(window) {
+    var bazaar = city.get_bazaar(window.bid)
+    var meta_text_id = bazaar.meta_text_id
+    var reason = { group: 0, id: 0 }
+
+
+    if (bazaar.has_road_access == false) {
+        reason = { group: 69, id: 25 }
+    } else if (bazaar.num_workers <= 0) {
+        reason = { group: meta_text_id, id: 2 }
+    }
+
+    if (reason.group) {
+        window.workers_desc.text = ""
+        window.workers_desc.text = __loc(reason.group, reason.id)
+    }
+}
+
+[es=bazaar_info_window_init]
+function bazaar_info_window_init_warning_text(window) {
+    var bazaar = city.get_bazaar(window.bid)
+    var meta_text_id = bazaar.meta_text_id
+
+    var warning_text = ""
+    var amount = bazaar.idx_amount(0) || bazaar.idx_amount(1) || bazaar.idx_amount(2) || bazaar.idx_amount(3)
+    if (amount > 0) {
+        var buyer = bazaar.get_figure(BUILDING_SLOT_MARKET_BUYER)
+        var trader = bazaar.get_figure(BUILDING_SLOT_SERVICE)
+
+        if (buyer.valid && trader.valid) {
+            warning_text = __loc(meta_text_id, 1)
+        } else if (buyer.valid) {
+            warning_text = __loc(meta_text_id, 10)
+        } else if (trader.valid) {
+            var state = (trader.action_state == ACTION_126_ROAMER_RETURNING) ? 12 : 11
+            warning_text = __loc(meta_text_id, state)
+        }
+    } else {
+       warning_text = __loc(meta_text_id, 4)
+    }
+
+    log_info("akhenaten: warning_text = " + warning_text +  " " +meta_text_id)
+    window.warning_text.text = warning_text
+}
+
+[es=bazaar_info_window_init]
 function bazaar_info_window_draw_foods(window) {
     var bazaar = city.get_bazaar(window.bid)
 
@@ -51,6 +97,22 @@ function bazaar_info_window_draw_foods(window) {
     draw_food(bazaar, 1, window.food1_icon, window.food1_text)
     draw_food(bazaar, 2, window.food2_icon, window.food2_text)
     draw_food(bazaar, 3, window.food3_icon, window.food3_text)
+}
+
+[es=bazaar_info_window_init]
+function bazaar_info_window_draw_goods(window) {
+    var bazaar = city.get_bazaar(window.bid)
+
+    function draw_good(bazaar, resource, index, icon, text) {
+        icon.image = resource
+        text.font = bazaar.idx_accepted(index) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW
+        text.text = bazaar.resource_amount(resource)
+    }
+
+    draw_good(bazaar, RESOURCE_POTTERY, 4, window.good0_icon, window.good0_text)
+    draw_good(bazaar, RESOURCE_LUXURY_GOODS, 5, window.good1_icon, window.good1_text)
+    draw_good(bazaar, RESOURCE_LINEN, 6, window.good2_icon, window.good2_text)
+    draw_good(bazaar, RESOURCE_BEER, 7, window.good3_icon, window.good3_text)
 }
 
 bazaar_orders_window {

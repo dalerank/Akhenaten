@@ -3,6 +3,7 @@
 #include "content/vfs.h"
 #include "core/log.h"
 #include "core/settings_vars.h"
+#include "platform/arguments.h"
 
 #include "sound/sound_mission.h"
 #include "sound/sound_building.h"
@@ -54,6 +55,7 @@ void js_log_warn_native(js_State *J) {
 void js_loc_native(js_State *J) {
     int p1 = js_tointeger(J, 1);
     int p2 = js_tointeger(J, 2);
+    verify_no_crash(p1 >= 0 && p2 >= 0);
 
     pcstr result = lang_get_string(p1, p2);
 
@@ -357,12 +359,16 @@ void js_register_game_handlers(xstring missionid) {
                 js_Function *func = obj->u.f.function;
 
                 if (func && func->modifiers && prop->name) {
-                    logs::info("JS: Function '%s' has modifiers:", prop->name);
+                    if (g_args.is_log_js_handlers()) {
+                        logs::info("JS: Function '%s' has modifiers:", prop->name);
+                    }
                     function_count++;
 
                     js_FunctionModifier *mod = func->modifiers;
                     while (mod) {
-                        logs::info("  - %s: %s", mod->key ? mod->key : "<no-key>", mod->value ? mod->value : "<no-value>");
+                        if (g_args.is_log_js_handlers()) {
+                            logs::info("  - %s: %s", mod->key ? mod->key : "<no-key>", mod->value ? mod->value : "<no-value>");
+                        }
                         mod = mod->next;
                     }
 
@@ -393,7 +399,7 @@ void js_register_game_handlers(xstring missionid) {
                     if (should_handle_this_function) {
                         mod = func->modifiers;
                         const char *consoleCommandName = nullptr;
-                        
+
                         // First pass: collect console_command and help modifiers
                         while (mod) {
                             if (mod->key && strcmp(mod->key, "console_command") == 0) {
@@ -401,7 +407,7 @@ void js_register_game_handlers(xstring missionid) {
                             }
                             mod = mod->next;
                         }
-                        
+
                         // Second pass: register events and console commands
                         mod = func->modifiers;
                         auto is_es = [] (pcstr k) { return strcmp(k, "event") == 0 || strcmp(k, "es") == 0; };
@@ -410,7 +416,9 @@ void js_register_game_handlers(xstring missionid) {
                                 auto r = event_type_handlers.insert(std::make_pair(xstring(mod->value),  event_handlers{}));
                                 auto &handlers = r.first->second;
                                 handlers.insert(prop->name);
-                                logs::info("JS: Registered handler '%s' for event '%s' (mission: '%s')", prop->name, mod->value, missionid.c_str());
+                                if (g_args.is_log_js_handlers()) {
+                                    logs::info("JS: Registered handler '%s' for event '%s' (mission: '%s')", prop->name, mod->value, missionid.c_str());
+                                }
                             } else if (mod->key && strcmp(mod->key, "console_command") == 0) {
                                 // Register console command from function modifier
                                 const char *commandName = consoleCommandName ? consoleCommandName : prop->name;

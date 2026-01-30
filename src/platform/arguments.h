@@ -57,6 +57,7 @@ public:
     void set_window_mode(bool flag = true) { args_["window"] = flag; }
 
     [[nodiscard]] bool is_logjsfiles() const { return is("logjsfiles", false); }
+    [[nodiscard]] bool is_log_js_handlers() const { return is("log_js_handlers", false); }
 
     [[nodiscard]] int get_display_scale_percentage() const;
     void set_display_scale_percentage(int value);

@@ -10,7 +10,7 @@ function work_camp_warning_text() {
     } else if (b.has_figure(0)) {
         var f = b.get_figure(0)
         var dest = f.destination
-        
+
         if (dest.is_farm) { reason.id = 5 }// working on floodplains
         else if (dest.is_monument) { reason.id = 6 } // working on monuments
         else { reason.id = 4 }

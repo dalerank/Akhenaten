@@ -746,7 +746,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     pak_buf->read_raw(names.data(), num_bmp_names * bmp_name::capacity);
     for (int i = 0; i < num_bmp_names; ++i) {
         bmp_names[i] = names[i].data();
-        logs::info("%s, %u", bmp_names[i].c_str(), i);
+        //logs::info("%s, %u", bmp_names[i].c_str(), i);
     }
 
     // (move buffer to the rest of the data)

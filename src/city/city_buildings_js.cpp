@@ -3,6 +3,7 @@
 #include "city/city.h"
 #include "building/building_house.h"
 #include "building/building_bazaar.h"
+#include "core/log.h"
 #include "city/object_info.h"
 
 extern object_info def_object_info;
@@ -67,6 +68,9 @@ int __city_get_random_house_id() {
 }
 ANK_FUNCTION(__city_get_random_house_id)
 
+int __building_meta_text_id(int bid) { return building_get(bid)->params().meta.text_id; }
+ANK_FUNCTION_1(__building_meta_text_id)
+
 void __building_add_fire_damage(int bid, int damage) {
     building *b = building_get(bid);
     if (b->is_valid()) {
@@ -104,8 +108,8 @@ ANK_FUNCTION_2(__building_has_figure)
 int __building_get_figure_id(int bid, int index) { return building_get(bid)->get_figure(index)->id; }
 ANK_FUNCTION_2(__building_get_figure_id)
 
-int __bazaar_get_amount(int bid, int index) { auto b = building_get(bid)->dcast_bazaar(); return b ? b->get_food_amount(index) : 0; }
-ANK_FUNCTION_2(__bazaar_get_amount)
+int __bazaar_idx_amount(int bid, int index) { auto b = building_get(bid)->dcast_bazaar(); return b ? b->get_idx_amount(index) : 0; }
+ANK_FUNCTION_2(__bazaar_idx_amount)
 
 bool __bazaar_idx_accepted(int bid, int index) { auto b = building_get(bid)->dcast_bazaar(); return b ? b->idx_accepted(index) : false; }
 ANK_FUNCTION_2(__bazaar_idx_accepted)
