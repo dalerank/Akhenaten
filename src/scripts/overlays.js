@@ -109,6 +109,14 @@ overlays = [
     buildings:[BUILDING_BAZAAR, BUILDING_ROADBLOCK, BUILDING_GRANARY]
     column_type: COLUMN_TYPE_POSITIVE
     column_anim: {pack:PACK_GENERAL, id:103}
+
+    tooltips {
+      not_provided { values:[ "#food_stocks_not_provided" ] }
+      none { values:[ "#food_stocks_none" ] }
+      low { values:[ "#food_stocks_low" ] }
+      medium { values:[ "#food_stocks_medium" ] }
+      high { values:[ "#food_stocks_high" ] }
+    }
   }
 
   {
