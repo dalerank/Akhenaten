@@ -117,7 +117,7 @@ void city_overlay::draw_overlay_column(e_column_color color, vec2i pixel, int he
             break;
 
         case COLUMN_TYPE_POSITIVE:
-            color = COLUMN_COLOR_BLUE;
+            color = COLUMN_COLOR_PLAIN;
             break;
 
         case COLUMN_TYPE_WATER_ACCESS:

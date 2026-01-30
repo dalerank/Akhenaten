@@ -433,4 +433,12 @@ localization_ru = [
     
     { key:"#difficulty_gods_effects_off", text: "Эффекты богов ВЫКЛ" }
     { key:"#difficulty_gods_effects_on", text: "Эффекты богов ВКЛ" }
+    
+    // overlays. tooltips for buildings. group 66 
+    // bazaar access (food stocks)
+    { key: "#food_stocks_not_provided", text: "Эта хижина добывает себе еду..." }
+    { key: "#food_stocks_none", text: "В этом доме нет запасов еды" }
+    { key: "#food_stocks_low", text: "Этот дом скоро съест свои ограниченные запасы еды" }
+    { key: "#food_stocks_medium", text: "У этого дома есть запасы еды минимум на предстоящий месяц" }
+    { key: "#food_stocks_high", text: "У этого дома нет проблем с получением еды, необходимой для выживания" }
 ]
