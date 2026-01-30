@@ -134,19 +134,7 @@ image_desc resource_to_sled_image(e_resource res) {
 }
 
 int cart_image_offset_from_amount(int amount) {
-    if (amount <= 100) {
-        return 0;
-    } 
-    
-    if (amount <= 200) {
-        return 1;
-    } 
-    
-    if (amount <= 400) {
-        return 2;
-    }
-
-    return 2;
+    return ((amount > 100)&1) + ((amount > 200)&1);
 }
 
 image_desc resource2cartanim(e_resource resource_id) {

@@ -378,7 +378,7 @@ static void toggle_resource_state(int param1, int param2) {
 
     building_bazaar *bazaar = b->dcast_bazaar();
     if (bazaar) {
-        bazaar->toggle_good_accepted(param1);
+        bazaar->toggle_idx_accepted(param1);
         return;
     } 
     
@@ -403,7 +403,7 @@ static void toggle_resource_state_backwards(int index, int param2) {
     building* b = building_get(data.bid);
     building_bazaar *bazaar = b->dcast_bazaar();
     if (bazaar) {
-        bazaar->toggle_good_accepted(index - 1);
+        bazaar->toggle_idx_accepted(index - 1);
         return;
     }
     

@@ -168,7 +168,7 @@ const id_resources_t& resources();
 
 struct resource_value {
     e_resource type;
-    int value;
+    uint16_t value;
 };
 
 struct resource_allow {
@@ -199,7 +199,7 @@ struct resource_list : public svector<resource_value, RESOURCES_MAX> {
         }
     }
 
-    inline int &operator[](e_resource r) {
+    inline uint16_t &operator[](e_resource r) {
         auto it = std::find_if(begin(), end(), [r] (auto &i) { return i.type == r; });
         if (it == end()) {
             push_back({r, 0});
@@ -208,7 +208,7 @@ struct resource_list : public svector<resource_value, RESOURCES_MAX> {
         return it->value; 
     }
 
-    inline int operator[](e_resource r) const {
+    inline uint16_t operator[](e_resource r) const {
         auto it = std::find_if(begin(), end(), [r] (auto &i) { return i.type == r; });
         return it == end() ? 0 : it->value; 
     }
@@ -220,7 +220,7 @@ struct resource_list : public svector<resource_value, RESOURCES_MAX> {
     }
 
     inline bool any() const { return std::find_if(begin(), end(), [] (auto &it) { return it.value > 0; }) != end(); }
-    inline int sum() const { return std::accumulate(begin(), end(), 0, [] (int r, resource_value it) { return r + it.value; }); }
+    inline uint16_t sum() const { return std::accumulate(begin(), end(), 0, [] (int r, resource_value it) { return r + it.value; }); }
     static const resource_list foods;
     static const resource_list all;
     static const resource_list values;

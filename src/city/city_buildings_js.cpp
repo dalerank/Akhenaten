@@ -2,6 +2,7 @@
 
 #include "city/city.h"
 #include "building/building_house.h"
+#include "building/building_bazaar.h"
 #include "city/object_info.h"
 
 extern object_info def_object_info;
@@ -102,3 +103,15 @@ ANK_FUNCTION_2(__building_has_figure)
 
 int __building_get_figure_id(int bid, int index) { return building_get(bid)->get_figure(index)->id; }
 ANK_FUNCTION_2(__building_get_figure_id)
+
+int __bazaar_get_amount(int bid, int index) { auto b = building_get(bid)->dcast_bazaar(); return b ? b->get_food_amount(index) : 0; }
+ANK_FUNCTION_2(__bazaar_get_amount)
+
+bool __bazaar_idx_accepted(int bid, int index) { auto b = building_get(bid)->dcast_bazaar(); return b ? b->idx_accepted(index) : false; }
+ANK_FUNCTION_2(__bazaar_idx_accepted)
+
+bool __bazaar_res_accepted(int bid, e_resource res) { auto b = building_get(bid)->dcast_bazaar(); return b ? b->res_accepted(res) : false; }
+ANK_FUNCTION_2(__bazaar_res_accepted)
+
+int __bazaar_resource_amount(int bid, e_resource resource) { auto b = building_get(bid)->dcast_bazaar(); return b ? b->get_resource_amount(resource) : 0; }
+ANK_FUNCTION_2(__bazaar_resource_amount)

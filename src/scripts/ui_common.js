@@ -11,7 +11,7 @@ ui.image = function(image, pos) {
 
     if (image.tid !== undefined) {
         __ui_draw_image(image.tid, pos)
-    } 
+    }
 }
 
 ui.button = function(config) {
@@ -46,36 +46,33 @@ ui.window_city_show = __ui_window_city_show
 ui.window_message_dialog_show = __ui_window_message_dialog_show
 
 function ui_create_element_proxy(elementId) {
-    var proxy = {};
-    Object.defineProperty(proxy, "text", {
-        get: function() { return __ui_element_get_text(elementId); }
-        set: function(v) { __ui_element_set_text(elementId, v); }
-        enumerable: true
-        configurable: true
-    })
+    return {
+        id: elementId
 
-    Object.defineProperty(proxy, "enabled", {
-        get: function() { return __ui_element_get_enabled(elementId); }
-        set: function(v) { __ui_element_set_enabled(elementId, v); }
-        enumerable: true
-        configurable: true
-    })
+        @text {
+            get: function() { return __ui_element_get_enabled(this.id) }
+            set: function(v) { __ui_element_set_text(this.id, v) }
+        }
 
-    Object.defineProperty(proxy, "font", {
-        get: function() { return __ui_element_get_font(elementId); }
-        set: function(v) { __ui_element_set_font(elementId, v); }
-        enumerable: true
-        configurable: true
-    })
+        @enabled {
+            get: function() { return __ui_element_get_enabled(this.id) }
+            set: function(v) { __ui_element_set_enabled(this.id, v) }
+        }
 
-    Object.defineProperty(proxy, "text_color", {
-        get: function() { return __ui_element_get_text_color(elementId); }
-        set: function(v) { __ui_element_set_text_color(elementId, v); }
-        enumerable: true
-        configurable: true
-    })
+        @font {
+            get: function() { return __ui_element_get_font(this.id) }
+            set: function(v) { __ui_element_set_font(this.id, v) }
+        }
 
-    return proxy;
+        @text_color { 
+            get: function() { return __ui_element_get_text_color(this.id) }
+            set: function(v) { __ui_element_set_text_color(this.id, v) }
+        }
+
+        @image { 
+            set: function(v) { __ui_element_set_image(this.id, v) }
+        }
+    }
 }
 
 function px(i) { return i * 16 }

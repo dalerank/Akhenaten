@@ -58,11 +58,11 @@ void bazaar_orders_window::window_info_foreground(object_info &c) {
         ui.icon(items_area.pos + item_icon_column_2.pos + vec2i{ 0, row_y }, r.type);
         ui.label(ui::resource_name(r.type), items_area.pos + item_name_column.pos + vec2i{ 0, row_y }, item_name_column.font());
 
-        auto status = window_market_get_order_instruction(INSTR_MARKET, r.type, bazaar->is_good_accepted(r.type));
+        auto status = window_market_get_order_instruction(INSTR_MARKET, r.type, bazaar->res_accepted(r.type));
         ui.button(status.first, items_area.pos + vec2i{ item_orders_column.pos.x, row_y }, item_row.size, fonts_vec{ status.second }, UiFlags_NoBody | UiFlags_AlignYCentered)
             .onclick([building_id, resource = r.type] {
                 building_bazaar *b = ::building_get(building_id)->dcast_bazaar();
-                b->toggle_good_accepted(resource);
+                b->toggle_res_accepted(resource);
             });
 
         row_y += item_row.size.y;

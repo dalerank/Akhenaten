@@ -390,7 +390,7 @@ void city_resources_t::calculate_food_stocks_and_supply_wheat() {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building_bazaar* bazaar = building_get(i)->dcast_bazaar();
         if (bazaar && bazaar->state() == BUILDING_STATE_VALID) {
-            bazaar->runtime_data().inventory[0] = 200;
+            bazaar->runtime_data().inventory[0].value = 200;
         }
     }
 }

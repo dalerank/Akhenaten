@@ -22,6 +22,10 @@ building_info_window::building_info_window() {
 }
 
 int building_info_window::window_info_handle_mouse(const mouse *m, object_info &c) {
+    ui.begin_widget(c.offset, true);
+    ui.handle_mouse(m);
+    ui.end_widget();
+
     building *b = building_get(c);
     return b->dcast()->window_info_handle_mouse(m, c);
 }

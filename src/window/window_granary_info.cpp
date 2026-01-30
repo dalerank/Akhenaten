@@ -31,7 +31,6 @@ struct granary_info_window : public building_info_window_t<granary_info_window> 
     }
 
     virtual void init(object_info &c) override;
-    virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
 };
 
 granary_info_window granary_infow;
@@ -76,19 +75,10 @@ void granary_info_window::init(object_info &c) {
         ui[food_text(food_index)].text_var("%u %s", stored, bstring32("#", resource_name(r.type)).c_str() );
         food_index++;
     }
-   
     const uint8_t laborers = granary->max_workers();
     ui["workers_text"].text_var("%u %s (%d %s", granary->num_workers(), ui::str(8, 12), laborers, ui::str(69, 0));
 
     ui["orders"].onclick([&c] {
         window_granary_orders_show(c);
     });
-}
-
-int granary_info_window::window_info_handle_mouse(const mouse *m, object_info &c) {
-    ui.begin_widget(c.offset, true);
-    int result = ui.handle_mouse(m);
-    ui.end_widget();
-
-    return result;
 }

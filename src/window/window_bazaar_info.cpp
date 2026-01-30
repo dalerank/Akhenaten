@@ -12,16 +12,31 @@
 #include "figure/figure.h"
 #include "game/game.h"
 
+#include "js/js_game.h"
+#include "graphics/elements/ui_js.h"
+#include "js/js_events.h"
+
 void window_bazaar_orders_show(object_info &c);
 
 struct bazaar_info_window : public building_info_window_t<bazaar_info_window> {
     virtual void init(object_info &c) override;
+    virtual void window_info_foreground(object_info &c) override;
     virtual bool check(object_info &c) override {
-        return c.building_get()->type == BUILDING_BAZAAR;
+        return !!c.building_get()->dcast_bazaar();
     }
 };
 
 bazaar_info_window g_bazaar_infow;
+
+struct bazaar_info_window_draw { vec2i pos; int bid; };
+ANK_REGISTER_STRUCT_WRITER(bazaar_info_window_draw, pos, bid);
+
+void bazaar_info_window::window_info_foreground(object_info &c) {
+    ui.begin_widget(c.offset);
+    ui.draw();
+    ui.event(bazaar_info_window_draw{ pos, c.bid });
+    ui.end_widget();
+}
 
 void bazaar_info_window::init(object_info &c) {
     building_info_window::init(c);
@@ -49,7 +64,7 @@ void bazaar_info_window::init(object_info &c) {
 
     int image_id = image_id_resource_icon(0);
     auto &d = bazaar->runtime_data();
-    if (d.inventory[0] || d.inventory[1] || d.inventory[2] || d.inventory[3]) {
+    if (d.inventory[0].value || d.inventory[1].value || d.inventory[2].value || d.inventory[3].value) {
         figure *buyer = bazaar->get_figure(BUILDING_SLOT_MARKET_BUYER);
         figure *trader = bazaar->get_figure(BUILDING_SLOT_SERVICE);
         if (buyer->is_valid() && trader->is_valid()) {
@@ -64,17 +79,6 @@ void bazaar_info_window::init(object_info &c) {
         ui["warning_text"] = ui::str(meta.text_id, 4);
     }
 
-    // food stocks
-    for (int i = 0; i < bazaar->allow_food_types(); ++i) {
-        bstring32 id_icon; id_icon.printf("food%u_icon", i);
-        bstring32 id_text; id_text.printf("food%u_text", i);
-
-        e_resource food_res = g_city.allowed_foods(i);
-        ui[id_icon].image(food_res);
-        ui[id_text].font(bazaar->is_good_accepted(i) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
-        ui[id_text].text_var(food_res ? "%u" : "", d.inventory[INVENTORY_FOOD1 + i]);
-    }
-
     // good stocks
     for (int i = 0; i < bazaar->allow_good_types(); ++i) {
         bstring32 id_icon; id_icon.printf("good%u_icon", i);
@@ -82,7 +86,7 @@ void bazaar_info_window::init(object_info &c) {
 
         e_resource good_res = INV_RESOURCES[i];
         ui[id_icon].image(good_res);
-        ui[id_text].font(bazaar->is_good_accepted(INVENTORY_GOOD1 + i) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
+        ui[id_text].font(bazaar->idx_accepted(INVENTORY_GOOD1 + i) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
         ui[id_text].text_var(good_res ? "%u" : "", d.inventory[INVENTORY_GOOD1 + i]);
     }
 
