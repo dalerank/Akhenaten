@@ -1157,4 +1157,12 @@ localization_de = [
   
   { key: "#difficulty_gods_effects_off", text: "Göttereffekte AUS" }
   { key: "#difficulty_gods_effects_on", text: "Göttereffekte AN" }
+
+  // overlays. tooltips for buildings. group 66 
+  // bazaar access (food stocks)
+  { key: "#food_stocks_not_provided", text: "Diese Hütte sammelt ihre eigene Nahrung..." }
+  { key: "#food_stocks_none", text: "Dieses Haus hat keine Nahrungsvorräte" }
+  { key: "#food_stocks_low", text: "Dieses Haus wird bald seine begrenzten Nahrungsvorräte aufgebraucht haben" }
+  { key: "#food_stocks_medium", text: "Dieses Haus hat Nahrungsvorräte für mindestens den kommenden Monat" }
+  { key: "#food_stocks_high", text: "Dieses Haus hat keine Probleme, die Nahrung zu bekommen, die es zum Überleben braucht" }
 ]
