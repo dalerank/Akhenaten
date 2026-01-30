@@ -1169,4 +1169,13 @@ localization_en = [
   
   { key: "#difficulty_gods_effects_off", text: "Gods effects OFF" }
   { key: "#difficulty_gods_effects_on", text: "Gods effects ON" }
+
+  // overlays. tooltips for buildings. group 66 
+  // bazaar access (food stocks)
+  { key: "#food_stocks_not_provided", text: "This hut scavenges for its own food..." }
+  { key: "#food_stocks_none", text: "This house has no stocks of food" }
+  { key: "#food_stocks_low", text: "This house will soon eat through its limited stocks of food" }
+  { key: "#food_stocks_medium", text: "This house has food stocks to last for at least the coming month" }
+  { key: "#food_stocks_high", text: "This house has no problems in getting the food it requires to survive" }
+
 ]

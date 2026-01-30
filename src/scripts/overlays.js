@@ -284,8 +284,16 @@ overlays = [
     caption: "Food stocks"
     walkers:[FIGURE_EMBALMER]
     buildings:[BUILDING_BAZAAR, BUILDING_FISHING_WHARF, BUILDING_GRANARY, BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_RISK
+    column_type: COLUMN_TYPE_POSITIVE
     column_anim: {pack:PACK_GENERAL, id:103}
+
+    tooltips {
+      not_provided { values:[ "#food_stocks_not_provided" ] }
+      none { values:[ "#food_stocks_none" ] }
+      low { values:[ "#food_stocks_low" ] }
+      medium { values:[ "#food_stocks_medium" ] }
+      high { values:[ "#food_stocks_high" ] }
+    }
   }
 
   {
