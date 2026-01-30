@@ -35,7 +35,7 @@ public:
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
     building *get_storage_destination();
-    uint16_t get_food_amount(uint8_t index) const { return runtime_data().inventory[index].value; }
+    uint16_t get_idx_amount(uint8_t index) const { return runtime_data().inventory[index].value; }
     uint16_t get_resource_amount(e_resource res) const;
     int max_food_stock();
     int max_goods_stock();

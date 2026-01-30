@@ -13,5 +13,11 @@ ANK_FUNCTION_1(__city_remove_figures)
 int __figure_get_type(int fid) { return figure_get(fid)->type; }
 ANK_FUNCTION_1(__figure_get_type)
 
+bool __figure_is_valid(int fid) { return figure_get(fid)->is_valid(); }
+ANK_FUNCTION_1(__figure_is_valid)
+
+int __figure_get_action_state(int fid) { return figure_get(fid)->action_state; }
+ANK_FUNCTION_1(__figure_get_action_state)
+
 int __figure_get_destination_building_id(int fid) { return figure_get(fid)->destination_building_id; }
 ANK_FUNCTION_1(__figure_get_destination_building_id)
