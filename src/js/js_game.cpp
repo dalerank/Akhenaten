@@ -82,14 +82,14 @@ void js_game_get_image(js_State *J) {
 
     int tid;
     if (js_isstring(J, 1)) {
-        const char *path = js_tostring(J, 1);
+        pcstr path = js_tostring(J, 1);
         image_desc desc;
         desc.path = path;
         tid = desc.tid();
     } else if (js_isnumber(J, 1) || js_iscnumber(J, 1)) {
-        int pack = js_touint32(J, 1);
-        int id = (js_isnumber(J, 2) || js_iscnumber(J, 2)) ? js_touint32(J, 2) : 0;
-        int offset = (js_isnumber(J, 3) || js_iscnumber(J, 3)) ? js_touint32(J, 3) : 0;
+        int16_t pack = js_touint32(J, 1);
+        int16_t id = (js_isnumber(J, 2) || js_iscnumber(J, 2)) ? js_touint32(J, 2) : 0;
+        int16_t offset = (js_isnumber(J, 3) || js_iscnumber(J, 3)) ? js_touint32(J, 3) : 0;
 
         image_desc desc{ pack, id, offset };
         tid = desc.tid();
@@ -106,13 +106,9 @@ void js_game_get_image(js_State *J) {
     }
 
     js_newobject(J);
-    js_pushnumber(J, tid);
-    js_setproperty(J, -2, "tid");
-
-    js_pushnumber(J, img->width);
-    js_setproperty(J, -2, "width");
-    js_pushnumber(J, img->height);
-    js_setproperty(J, -2, "height");
+    js_pushnumber(J, tid); js_setproperty(J, -2, "tid");
+    js_pushnumber(J, img->width); js_setproperty(J, -2, "width");
+    js_pushnumber(J, img->height); js_setproperty(J, -2, "height");
 }
 
 void js_call_event_handlers(const xstring &event_name, const bvariant_map &object) {

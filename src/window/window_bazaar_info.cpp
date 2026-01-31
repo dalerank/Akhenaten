@@ -19,8 +19,4 @@ ANK_REGISTER_STRUCT_WRITER(bazaar_info_window_init, pos, bid);
 void bazaar_info_window::init(object_info &c) {
     building_info_window::init(c);
     ui.event(bazaar_info_window_init{ pos, c.bid });
-
-    ui["orders"].onclick([&c] {
-       // window_bazaar_orders_show(c);
-    });
 }

@@ -105,7 +105,9 @@ void initialize() {
     } 
 #endif
 
+#if !(defined(GAME_PLATFORM_UNIX) && !defined(GAME_PLATFORM_WIN64) && !defined(ANDROID_BUILD))
     signal(SIGSEGV, sig_handler);
+#endif
     signal(SIGABRT, sig_handler);
 }
 

@@ -311,6 +311,10 @@ void common_info_window::register_handlers() {
     });
 }
 
+object_info &common_info_window::get_object_info() {
+    return def_object_info;
+}
+
 void common_info_window::update_buttons(object_info &c) {
     vec2i bgsize = ui["background"].pxsize();
     ui["button_help"].onclick([&c] {

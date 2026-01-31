@@ -5,8 +5,7 @@
 #include "building/building_bazaar.h"
 #include "core/log.h"
 #include "city/object_info.h"
-
-extern object_info def_object_info;
+#include "window/window_info.h"
 
 int __city_count_active_buildings(int btype) {
     return g_city.buildings.count_active((e_building_type)btype);
@@ -90,10 +89,10 @@ ANK_FUNCTION_2(__building_add_collapse_damage)
 bool __building_has_road_access(int bid) { return building_get(bid)->has_road_access; }
 ANK_FUNCTION_1(__building_has_road_access)
 
-int __city_get_object_info_building_id() { return def_object_info.bid;}
+int __city_get_object_info_building_id() { return common_info_window::get_object_info().bid;}
 ANK_FUNCTION(__city_get_object_info_building_id)
 
-int __city_get_object_info_group() { return def_object_info.group_id; }
+int __city_get_object_info_group() { return common_info_window::get_object_info().group_id; }
 ANK_FUNCTION(__city_get_object_info_group)
 
 int __building_get_worker_percentage(int bid) { return building_get(bid)->worker_percentage();}
