@@ -35,7 +35,7 @@ ANK_FUNCTION_1(__ui_element_get_text)
 
 void __ui_element_set_text(pcstr element_id, pcstr text) {
     auto elem = __ui_get_element(element_id);
-    elem ? elem->text(text) : 0;
+    if (elem) { elem->text(text); }
 }
 ANK_FUNCTION_2(__ui_element_set_text)
 
