@@ -47,7 +47,7 @@ ANK_FUNCTION_1(__ui_element_get_enabled)
 
 void __ui_element_set_enabled(pcstr element_id, bool v) {
     auto elem = __ui_get_element(element_id);
-    elem ? elem->set_enabled(v) : 0;
+    if (elem) { elem->set_enabled(v); }
 }
 ANK_FUNCTION_2(__ui_element_set_enabled)
 
@@ -59,7 +59,7 @@ ANK_FUNCTION_1(__ui_element_get_font)
 
 void __ui_element_set_font(pcstr element_id, int v) {
     auto elem = __ui_get_element(element_id);
-    elem ?  elem->font(v) : 0;
+    if (elem) { elem->font(v); }
 }
 ANK_FUNCTION_2(__ui_element_set_font)
 
@@ -71,13 +71,13 @@ ANK_FUNCTION_1(__ui_element_get_text_color)
 
 void __ui_element_set_image(pcstr element_id, int v) {
     auto elem = __ui_get_element(element_id);
-    elem ? elem->image(v) : 0;
+    if (elem) { elem->image(v); }
 }
 ANK_FUNCTION_2(__ui_element_set_image)
 
 void __ui_element_set_text_color(pcstr element_id, int v) {
     auto elem = __ui_get_element(element_id);
-    elem ? elem->text_color(v) : 0;
+    if (elem) { elem->text_color(v); }
 }
 ANK_FUNCTION_2(__ui_element_set_text_color)
 
