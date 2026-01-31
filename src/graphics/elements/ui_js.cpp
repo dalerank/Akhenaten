@@ -22,85 +22,66 @@ void __ui_draw_label(pcstr text, vec2i pos, int font) { ui::label(text, pos, (e_
 void __ui_draw_line(bool hline, vec2i pos, int size) { ui::line(hline, pos, size, 0xff000000); } ANK_FUNCTION_3(__ui_draw_line);
 void __ui_window_city_show() { window_city_show(); } ANK_FUNCTION(__ui_window_city_show)
 
+static inline ui::element* __ui_get_element(pcstr element_id) {
+    ui::widget *w = ui::get_current_widget();
+    return (w && element_id) ? &(*w)[element_id] : nullptr;
+}
+
 pcstr __ui_element_get_text(pcstr element_id) {
-    ui::widget* w = ui::get_current_widget();
-    if (w && element_id) {
-        return (*w)[element_id].text().c_str();
-    }
-    return "";
+    auto elem = __ui_get_element(element_id);
+    return elem ? elem->text().c_str() : "";
 }
 ANK_FUNCTION_1(__ui_element_get_text)
 
 void __ui_element_set_text(pcstr element_id, pcstr text) {
-    ui::widget* w = ui::get_current_widget();
-    if (w && element_id && text) {
-        (*w)[element_id].text(text);
-    }
+    auto elem = __ui_get_element(element_id);
+    elem ? elem->text(text) : 0;
 }
 ANK_FUNCTION_2(__ui_element_set_text)
 
 bool __ui_element_get_enabled(pcstr element_id) {
-    ui::widget *w = ui::get_current_widget();
-    if (w && element_id) {
-        return (*w)[element_id].enabled;
-    }
-    return false;
+    auto elem = __ui_get_element(element_id);
+    return elem ? elem->enabled : false;
 }
 ANK_FUNCTION_1(__ui_element_get_enabled)
 
 void __ui_element_set_enabled(pcstr element_id, bool v) {
-    ui::widget *w = ui::get_current_widget();
-    if (w && element_id) {
-        (*w)[element_id].set_enabled(v);
-    }
+    auto elem = __ui_get_element(element_id);
+    elem ? elem->set_enabled(v) : 0;
 }
 ANK_FUNCTION_2(__ui_element_set_enabled)
 
 int __ui_element_get_font(pcstr element_id) {
-    ui::widget *w = ui::get_current_widget();
-    if (w && element_id) {
-        return (*w)[element_id].font();
-    }
-    return FONT_INVALID;
+    auto elem = __ui_get_element(element_id);
+    return elem ? elem->font() : FONT_INVALID;
 }
 ANK_FUNCTION_1(__ui_element_get_font)
 
 void __ui_element_set_font(pcstr element_id, int v) {
-    ui::widget *w = ui::get_current_widget();
-    if (w && element_id) {
-        (*w)[element_id].font(v);
-    }
+    auto elem = __ui_get_element(element_id);
+    elem ?  elem->font(v) : 0;
 }
 ANK_FUNCTION_2(__ui_element_set_font)
 
 int __ui_element_get_text_color(pcstr element_id) {
-    ui::widget *w = ui::get_current_widget();
-    if (w && element_id) {
-        return (*w)[element_id].text_color();
-    }
-    return COLOR_NULL;
+    auto elem = __ui_get_element(element_id);
+    return elem ? elem->text_color() : COLOR_NULL;
 }
 ANK_FUNCTION_1(__ui_element_get_text_color)
 
 void __ui_element_set_image(pcstr element_id, int v) {
-    ui::widget *w = ui::get_current_widget();
-    if (w && element_id) {
-        (*w)[element_id].image(v);
-    }
+    auto elem = __ui_get_element(element_id);
+    elem ? elem->image(v) : 0;
 }
 ANK_FUNCTION_2(__ui_element_set_image)
 
 void __ui_element_set_text_color(pcstr element_id, int v) {
-    ui::widget *w = ui::get_current_widget();
-    if (w && element_id) {
-        (*w)[element_id].text_color(v);
-    }
+    auto elem = __ui_get_element(element_id);
+    elem ? elem->text_color(v) : 0;
 }
 ANK_FUNCTION_2(__ui_element_set_text_color)
 
-void __ui_window_message_dialog_show(pcstr template_name) {
-    window_message_dialog_show(template_name, -1, nullptr);
-}
+void __ui_window_message_dialog_show(pcstr template_name) { window_message_dialog_show(template_name, -1, nullptr); }
 ANK_FUNCTION_1(__ui_window_message_dialog_show)
 
 #define _R(name) js_newnumber(J, name); js_setglobal(J, #name);

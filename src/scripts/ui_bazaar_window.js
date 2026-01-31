@@ -27,7 +27,7 @@ bazaar_info_window {
         workers_img  : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142 + 6] })
         workers_text : text({pos[70, 142 + 12], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) })
         workers_desc : text({pos[70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK })
-        orders       : button({margin{left:100, bottom:-40}, size[270, 25], text:"${98.5}"})
+        orders       : button({margin{left:100, bottom:-40}, size[270, 25], text:"${98.5}", onclick:__window_bazaar_orders_show })
         show_overlay : button({margin{right:-64, bottom:-40}, size[23, 23]})
         mothball     : button({margin{right:-90, bottom:-40}, size[23, 23]})
 

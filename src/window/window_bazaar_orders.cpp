@@ -9,6 +9,7 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
 struct bazaar_orders_window : public building_info_window_t<bazaar_orders_window> {
     virtual void window_info_foreground(object_info &c) override;
@@ -18,12 +19,13 @@ struct bazaar_orders_window : public building_info_window_t<bazaar_orders_window
 
 bazaar_orders_window bazaar_ordersw;
 
-void window_bazaar_orders_show(object_info &c) {
-    c.ui = &bazaar_ordersw;
-    c.ui->init(c);
+void __window_bazaar_orders_show() {
+    bazaar_ordersw.init(common_info_window::get_object_info());
 }
+ANK_FUNCTION(__window_bazaar_orders_show);
 
 void bazaar_orders_window::init(object_info &c) {
+    c.ui = this;
     building *b = c.building_get();
     ui["accept_none"].onclick([building_id = b->id] {
         building_bazaar *b = ::building_get(building_id)->dcast_bazaar();

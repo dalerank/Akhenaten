@@ -25,6 +25,7 @@ struct common_info_window : public ui::widget {
     virtual void archive_load(archive arch) override;
     virtual void init(object_info &c);
     virtual void update(object_info &c) {}
+    static object_info& get_object_info();
 
     void draw_tooltip(tooltip_context *c);
 
