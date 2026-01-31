@@ -62,7 +62,11 @@ static void Fp_toString(js_State *J)
 		for (i = 0; i < F->numparams; ++i)
 			n += strlen(F->vartab[i]) + 1;
 		//s = js_malloc(J, n);
+#if defined(_WIN32)
 		s = _alloca(n + 16);
+#else
+		s = alloca(n + 16);
+#endif
 		strcpy(s, "function ");
 		strcat(s, F->name);
 		strcat(s, "(");
