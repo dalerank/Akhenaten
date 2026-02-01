@@ -328,6 +328,10 @@ figure_impl *figure::dcast() {
         return nullptr;
     }
 
+    if (!type) {
+        return nullptr;
+    }
+
     if (!_ptr) {
         figure_impl::acquire(type, *this);
     }
@@ -403,6 +407,10 @@ bool figure::can_move_by_terrain() {
 
 void figure::set_direction_to(building *b) {
     direction = calc_general_direction(tile, b->tile);
+}
+
+void figure::set_direction(int dir) {
+    direction = dir;
 }
 
 void figure::clear_impl() {
