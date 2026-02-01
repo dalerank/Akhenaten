@@ -28,6 +28,7 @@ public:
     virtual void bind_dynamic(io_buffer *iob, size_t verrsion) override;
     virtual void set_water_access_tiles(const water_access_tiles &tiles) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
+    virtual bool target_route_tile_blocked(int grid_offset) const override;
 
     virtual bool get_permission(e_permission p) override { return false; }
     

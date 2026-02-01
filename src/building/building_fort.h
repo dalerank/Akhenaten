@@ -51,6 +51,8 @@ class building_fort_ground : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_FORT_GROUND, building_fort_ground, building_impl)
     virtual building_fort_ground *dcast_fort_ground() override { return this; }
+    
+    virtual bool target_route_tile_blocked(int grid_offset) const override;
 };
 
 class building_fort_charioteers : public building_fort {

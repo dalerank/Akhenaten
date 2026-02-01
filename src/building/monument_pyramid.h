@@ -14,6 +14,9 @@ public:
     building_pyramid(building &b) : building_monument(b) {}
     virtual building_pyramid *dcast_pyramid() override { return this; }
 
+    virtual bool get_route_citizen_land_type(int grid_offset, int &land_result) const override;
+    virtual bool target_route_tile_blocked(int grid_offset) const override;
+
     struct base_params {
         e_building_type corner_type;
         e_building_type wall_type;

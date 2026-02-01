@@ -278,3 +278,7 @@ void building_fort::highlight_waypoints() {
 void building_fort::spawn_figure() {
     formation_batalion_update_recruit_status(&base);
 }
+
+bool building_fort_ground::target_route_tile_blocked(int grid_offset) const {
+    return false;
+}

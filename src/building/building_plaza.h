@@ -13,6 +13,7 @@ public:
     };
 
     virtual building_plaza *dcast_plaza() override { return this; }
+    virtual bool target_route_tile_blocked(int grid_offset) const override;
 
     static void set_image(int grid_offset);
 };

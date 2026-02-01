@@ -37,3 +37,7 @@ bool building_roadblock::get_permission(e_permission p) {
     const int permission_bit = 1 << p;
     return (runtime_data().exceptions & permission_bit);
 }
+
+bool building_roadblock::target_route_tile_blocked(int grid_offset) const {
+    return false;
+}

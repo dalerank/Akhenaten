@@ -42,6 +42,10 @@ void building_festival_square::preview::ghost_preview(build_planner &planer, pai
     }
 }
 
+bool building_festival_square::target_route_tile_blocked(int grid_offset) const {
+    return false;
+}
+
 void building_festival_square::on_place(int orientation, int variant) {
     building_impl::on_place(orientation, variant);
 

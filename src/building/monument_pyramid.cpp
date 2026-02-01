@@ -30,6 +30,7 @@
 #include "figuretype/figure_worker.h"
 #include "construction/build_planner.h"
 #include "widget/widget_city.h"
+#include "grid/routing/routing_grids.h"
 #include "dev/debug.h"
 #include "js/js_game.h"
 #include "building/monument_mastaba.h"
@@ -84,6 +85,27 @@ const building_pyramid::base_params &pyramid_base_params(const building_static_p
     using static_params = typename T::static_params;
     const auto &bparams = (const static_params &)params;
     return (const building_pyramid::base_params &)bparams;
+}
+
+bool building_pyramid::get_route_citizen_land_type(int grid_offset, int &land_result) const {
+    {
+        if (phase() == MONUMENT_FINISHED) {
+            land_result = CITIZEN_N1_BLOCKED;
+            return true;
+        } else if (phase() > 2) {
+            tile2i maint = main()->tile();
+            tile2i end = maint.shifted(3, 9);
+            tile2i tile(grid_offset);
+            land_result =(tile.x() == maint.x() || tile.y() == maint.y() || tile.x() == end.x()) ? CITIZEN_N1_BLOCKED : CITIZEN_2_PASSABLE_TERRAIN;
+            return true;
+        }
+    }
+    land_result = CITIZEN_2_PASSABLE_TERRAIN;
+    return true;
+}
+
+bool building_pyramid::target_route_tile_blocked(int grid_offset) const {
+    return is_finished();
 }
 
 const building_pyramid::base_params &get_pyramid_params(e_building_type type) {

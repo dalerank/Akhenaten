@@ -1754,3 +1754,7 @@ bool building_house::draw_ornaments_and_animations_height(painter &ctx, vec2i po
     
     return true;
 }
+
+bool building_house::target_route_tile_blocked(int grid_offset) const {
+    return house_level() > 0 || house_population() > 0;
+}

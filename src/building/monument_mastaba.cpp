@@ -29,6 +29,7 @@
 #include "graphics/elements/lang_text.h"
 #include "figuretype/figure_worker.h"
 #include "construction/build_planner.h"
+#include "grid/routing/routing_grids.h"
 #include "widget/widget_city.h"
 #include "dev/debug.h"
 #include "js/js_game.h"
@@ -745,6 +746,27 @@ void building_mastaba::bind_dynamic(io_buffer *iob, size_t version) {
     for (int i = 0; i < RESOURCES_MAX; i++) {
         iob->bind(BIND_SIGNATURE_UINT8, &monumentd.resources_pct[i]);
     }
+}
+
+bool building_mastaba::get_route_citizen_land_type(int grid_offset, int &land_result) const {
+    {
+        if (phase() == MONUMENT_FINISHED) {
+            land_result = CITIZEN_N1_BLOCKED;
+            return true;
+        } else if (phase() > 2) {
+            tile2i maint = main()->tile();
+            tile2i end = maint.shifted(3, 9);
+            tile2i tile(grid_offset);
+            land_result = (tile.x() == maint.x() || tile.y() == maint.y() || tile.x() == end.x()) ? CITIZEN_N1_BLOCKED : CITIZEN_2_PASSABLE_TERRAIN;
+            return true;
+        }
+    }
+    land_result = CITIZEN_2_PASSABLE_TERRAIN;
+    return true;
+}
+
+bool building_mastaba::target_route_tile_blocked(int grid_offset) const {
+    return is_finished();
 }
 
 bool building_small_mastaba::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

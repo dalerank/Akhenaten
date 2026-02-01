@@ -29,4 +29,5 @@ public:
     virtual void on_post_load() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void update_map_orientation(int map_orientation) override;
+    virtual bool target_route_tile_blocked(int grid_offset) const override;
 };

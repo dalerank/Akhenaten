@@ -32,6 +32,10 @@ void building_ferry::update_month() {
     map_water_update_docking_points(base, get_orientation(), 2);
 }
 
+bool building_ferry::target_route_tile_blocked(int grid_offset) const {
+    return false;
+}
+
 void building_ferry::on_place_update_tiles(int orientation, int variant) {
     int img_id = base_img() + orientation;
     map_water_add_building(id(), tile(), size(), img_id);

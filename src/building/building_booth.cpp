@@ -22,10 +22,10 @@
 #include "widget/city/ornaments.h"
 #include "widget/city/building_ghost.h"
 #include "sound/sound_building.h"
-#include "construction/build_planner.h"
 #include "figuretype/figure_entertainer.h"
 #include "city/city_labor.h"
 #include "figure/figure.h"
+#include "grid/routing/routing_grids.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_booth);
@@ -34,6 +34,20 @@ bool building_booth::preview::ghost_allow_tile(build_planner &p, tile2i tile) co
     const bool is_road = map_terrain_is(tile, TERRAIN_ROAD);
     const bool has_figure = map_has_figure_at(tile);
     return (is_road || !has_figure);
+}
+
+bool building_booth::get_route_citizen_land_type(int grid_offset, int &land_result) const {
+    if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+        land_result = CITIZEN_0_ROAD;
+        return true;
+    }
+
+    land_result = CITIZEN_N1_BLOCKED;
+    return true;
+}
+
+bool building_booth::target_route_tile_blocked(int grid_offset) const {
+    return false;
 }
 
 void building_booth::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {

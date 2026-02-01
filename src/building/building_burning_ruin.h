@@ -16,6 +16,7 @@ public:
     virtual bool can_play_animation() const override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_BURNING_RUIN; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
+    virtual bool target_route_tile_blocked(int grid_offset) const override;
     bool update();
 
     tile2i can_be_accessed();

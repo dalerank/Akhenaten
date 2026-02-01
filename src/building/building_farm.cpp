@@ -78,6 +78,10 @@ void building_farm::map_building_tiles_add_farm(e_building_type type, int buildi
     map_building_tiles_add(building_id, tile, b->size, get_farm_image(type, tile), TERRAIN_BUILDING);
 }
 
+bool building_farm::target_route_tile_blocked(int grid_offset) const {
+    return false;
+}
+
 bool building_floodplain_farm::preview::is_blocked(tile2i tile, int size, blocked_tile_vec &blocked_tiles) const {
     int orientation_index = city_view_orientation() / 2;
     int blocked = 0;
