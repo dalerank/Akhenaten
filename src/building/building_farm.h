@@ -43,12 +43,15 @@ public:
     virtual void draw_normal_anim(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual e_sound_channel_city sound_channel() const override;
     virtual void update_count() const override;
+    virtual void update_month() override;
     virtual void spawn_figure() override;
     virtual void update_graphic() override;
     virtual void on_undo() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void start_production() override;
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
+    virtual figure_id expected_worker_id() const { return runtime_data().worker_id; }
+    virtual bool requested_workers() const;
 
     short progress() const { return runtime_data().progress; }
     short progress_max() const { return runtime_data().progress_max; }
