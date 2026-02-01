@@ -70,14 +70,10 @@ void figure_worker::figure_action() {
         return;
     }
 
-    if (b_dest->is_floodplain_farm()) {
-        auto &d = b_dest->dcast_farm()->runtime_data();
-        if (d.worker_id != id()) {
-            poof();
-            return;
-        }
-
+    figure_id dest_fid = 0;
+    if (b_dest->is_floodplain_farm()) {       
         terrain_usage = TERRAIN_USAGE_ROADS;
+        dest_fid = b_dest->dcast_farm()->expected_worker_id();
     } else if (b_dest->is_monument()) {
         terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
         stop_at_road = false;
@@ -86,11 +82,26 @@ void figure_worker::figure_action() {
     }
 
     switch (base.action_state) {
-    case 9:
+    case ACTION_9_WORKER_CREATED:
+    case ACTION_14_WORKER_CHECK_DESTINATION:        
+        if (dest_fid && dest_fid != id()) {
+            set_destination(home());
+            advance_action(ACTION_13_WORKER_BACK_FROM_WORKS);
+        } else {
+            advance_action(ACTION_10_WORKER_GOING);
+        }
+        break;
+
+    case ACTION_15_REACHED_DESTINATION:
+        if (dest_fid && dest_fid == id()) {
+            poof();
+        } else {
+            advance_action(ACTION_13_WORKER_BACK_FROM_WORKS);
+        }
         break;
 
     case ACTION_10_WORKER_GOING:
-        if (do_gotobuilding(destination(), stop_at_road, terrain_usage)) {
+        if (do_gotobuilding(destination(), stop_at_road, terrain_usage, ACTION_15_REACHED_DESTINATION, ACTION_14_WORKER_CHECK_DESTINATION)) {
             if (b_dest->is_floodplain_farm()) {
                 auto &d = b_dest->dcast_farm()->runtime_data();
                 b_dest->num_workers = std::clamp<int>((1.f - bhome->tile.dist(b_dest->tile) / 20.f) * 12, 2, 10);
@@ -114,7 +125,7 @@ void figure_worker::figure_action() {
         break;
 
     case ACTION_11_WORKER_GOING_TO_PLACE:
-        if (do_goto(base.destination_tile, false, TERRAIN_USAGE_ANY)) {
+        if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY, ACTION_15_REACHED_DESTINATION, ACTION_14_WORKER_CHECK_DESTINATION)) {
             base.wait_ticks = 0;
             base.direction = 0;
             advance_action(ACTION_12_WORKER_LEVELING_GROUND);
@@ -134,7 +145,7 @@ void figure_worker::figure_action() {
         break;
 
     case ACTION_13_WORKER_BACK_FROM_WORKS:
-        if (do_gotobuilding(destination(), stop_at_road, TERRAIN_USAGE_PREFER_ROADS)) {
+        if (do_gotobuilding(destination(), stop_at_road, TERRAIN_USAGE_PREFER_ROADS, ACTION_15_REACHED_DESTINATION, ACTION_14_WORKER_CHECK_DESTINATION)) {
             poof();
         }
         break;
@@ -162,14 +173,15 @@ void figure_worker::update_animation() {
     }
 }
 
-void figure_worker::poof() {
-    figure_impl::poof();
-
+void figure_worker::on_destroy() {
     building_impl *b = destination()->dcast();
-
     if (b) {
         b->remove_worker(id());
     }
+}
+
+void figure_worker::poof() {
+    figure_impl::poof();
 }
 
 sound_key figure_worker::phrase_key() const {
