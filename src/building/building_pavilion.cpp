@@ -17,6 +17,7 @@
 #include "grid/orientation.h"
 #include "grid/building_tiles.h"
 #include "figure/figure.h"
+#include "grid/routing/routing_grids.h"
 
 #include "js/js_game.h"
 
@@ -41,6 +42,20 @@ void building_pavilion::static_params::archive_load(archive arch) {
 
 void building_pavilion::preview::setup_preview_graphics(build_planner &planer) const {
     planer.init_tiles(4, 4);
+}
+
+bool building_pavilion::get_route_citizen_land_type(int grid_offset, int &land_result) const {
+    if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+        land_result = CITIZEN_0_ROAD;
+        return true;
+    }
+
+    land_result = CITIZEN_N1_BLOCKED;
+    return true;
+}
+
+bool building_pavilion::target_route_tile_blocked(int grid_offset) const {
+    return false;
 }
 
 void building_pavilion::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {

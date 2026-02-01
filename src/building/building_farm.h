@@ -52,6 +52,7 @@ public:
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
     virtual figure_id expected_worker_id() const { return runtime_data().worker_id; }
     virtual bool requested_workers() const;
+    virtual bool target_route_tile_blocked(int grid_offset) const override;
 
     short progress() const { return runtime_data().progress; }
     short progress_max() const { return runtime_data().progress_max; }

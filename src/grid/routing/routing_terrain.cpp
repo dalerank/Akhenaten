@@ -57,68 +57,32 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_routing_config) {
 }
 
 static int get_land_type_citizen_building(int grid_offset) {
-    building* b = building_at(grid_offset);
-    switch (b->type) {
-    case BUILDING_SMALL_MASTABA:
-    case BUILDING_SMALL_MASTABA_SIDE:
-    case BUILDING_SMALL_MASTABA_WALL:
-    case BUILDING_SMALL_MASTABA_ENTRANCE:
-    case BUILDING_SMALL_STEPPED_PYRAMID:
-    case BUILDING_SMALL_STEPPED_PYRAMID_CORNER:
-    case BUILDING_SMALL_STEPPED_PYRAMID_WALL:
-    case BUILDING_MEDIUM_STEPPED_PYRAMID:
-    case BUILDING_MEDIUM_STEPPED_PYRAMID_CORNER:
-    case BUILDING_MEDIUM_STEPPED_PYRAMID_WALL:
-    case BUILDING_MEDIUM_MASTABA:
-    case BUILDING_MEDIUM_MASTABA_SIDE:
-    case BUILDING_MEDIUM_MASTABA_WALL:
-    case BUILDING_MEDIUM_MASTABA_ENTRANCE:
-        {
-            auto monument = b->dcast_monument();
-            int phase = monument->runtime_data().phase;
-            if (phase == MONUMENT_FINISHED) {
-                return CITIZEN_N1_BLOCKED;
-            } else if (phase > 2) {
-                tile2i main = b->main()->tile;
-                tile2i end = main.shifted(3, 9);
-                tile2i tile(grid_offset);
-                return (tile.x() == main.x() || tile.y() == main.y() || tile.x() == end.x()) ? CITIZEN_N1_BLOCKED : CITIZEN_2_PASSABLE_TERRAIN;
-            }
-        }
-        return CITIZEN_2_PASSABLE_TERRAIN;
-
-    case BUILDING_BANDSTAND:
-    case BUILDING_PAVILLION:
-    case BUILDING_BOOTH:
-        if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
-            return CITIZEN_0_ROAD;
-        }
-        return CITIZEN_N1_BLOCKED;
-
-    case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
-        if (b->orientation == 3) {
-            switch (map_property_multi_tile_xy(grid_offset)) {
-            case EDGE_X0Y1:
-            case EDGE_X1Y1:
-            case EDGE_X2Y1:
-                return CITIZEN_0_ROAD;
-            }
-        } else {
-            switch (map_property_multi_tile_xy(grid_offset)) {
-            case EDGE_X1Y0:
-            case EDGE_X1Y1:
-            case EDGE_X1Y2:
-                return CITIZEN_0_ROAD;
-            }
-        }
-        break;
-
-    default:
-        // no special case, value from config
-        break;
+    auto base = building_at(grid_offset);
+    auto b = base->dcast();
+    int land_result;
+    if (b->get_route_citizen_land_type(grid_offset, land_result)) {
+        return land_result;
     }
 
-    return routing_citizen_buildings[b->type].penalty;
+    //case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
+    //    if (b->orientation == 3) {
+    //        switch (map_property_multi_tile_xy(grid_offset)) {
+    //        case EDGE_X0Y1:
+    //        case EDGE_X1Y1:
+    //        case EDGE_X2Y1:
+    //            return CITIZEN_0_ROAD;
+    //        }
+    //    } else {
+    //        switch (map_property_multi_tile_xy(grid_offset)) {
+    //        case EDGE_X1Y0:
+    //        case EDGE_X1Y1:
+    //        case EDGE_X1Y2:
+    //            return CITIZEN_0_ROAD;
+    //        }
+    //    }
+    //    break;
+
+    return routing_citizen_buildings[base->type].penalty;
 }
 static int get_land_type_citizen_canal(int grid_offset) {
     return CITIZEN_N3_CANAL;

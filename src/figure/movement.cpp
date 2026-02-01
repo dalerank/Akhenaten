@@ -201,53 +201,9 @@ void figure::advance_route_tile(int roaming_enabled) {
             }
         }
     } else if (map_terrain_is(target_grid_offset, TERRAIN_BUILDING)) {
-        building *b = building_at(target_grid_offset);
-        switch (b->type) {
-            //            case BUILDING_WAREHOUSE_SPACE:
-            //            case BUILDING_GRANARY:
-        case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
-        case BUILDING_HOUSE_VACANT_LOT:
-        case BUILDING_FORT_GROUND:
-        case BUILDING_FESTIVAL_SQUARE:
-        case BUILDING_PLAZA:
-        case BUILDING_FERRY:
-        case BUILDING_BOOTH:
-        case BUILDING_BANDSTAND:
-        case BUILDING_FIGS_FARM:
-        case BUILDING_GRAIN_FARM:
-        case BUILDING_CHICKPEAS_FARM:
-        case BUILDING_BARLEY_FARM:
-        case BUILDING_FLAX_FARM:
-        case BUILDING_PAVILLION:
-            //
-            break; // OK to walk
-
-        case BUILDING_ROADBLOCK:
-            break;
-
-        case BUILDING_BURNING_RUIN:
-            if (b->state != BUILDING_STATE_RUBBLE) {
-                direction = DIR_FIGURE_REROUTE;
-            }
-            break;
-
-        case BUILDING_SMALL_MASTABA:
-        case BUILDING_SMALL_MASTABA_SIDE:
-        case BUILDING_SMALL_MASTABA_WALL:
-        case BUILDING_SMALL_MASTABA_ENTRANCE:
-        case BUILDING_MEDIUM_MASTABA:
-        case BUILDING_MEDIUM_MASTABA_SIDE:
-        case BUILDING_MEDIUM_MASTABA_WALL:
-        case BUILDING_MEDIUM_MASTABA_ENTRANCE:
-            {
-                auto &d = b->dcast_monument()->runtime_data();
-                if (d.phase > 2) {
-                    //direction = DIR_FIGURE_REROUTE;
-                }
-            }
-            break;
-            
-        default:
+        building *base = building_at(target_grid_offset);
+        auto b = base->dcast();
+        if (b->target_route_tile_blocked(target_grid_offset)) {
             direction = DIR_FIGURE_REROUTE;
         }
     }

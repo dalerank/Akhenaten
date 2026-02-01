@@ -27,4 +27,5 @@ public:
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void set_permission(e_permission p) override;
     virtual bool get_permission(e_permission p) override;
+    virtual bool target_route_tile_blocked(int grid_offset) const override;
 };

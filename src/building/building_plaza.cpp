@@ -73,6 +73,10 @@ int is_two_tile_square_plaza(int grid_offset) {
     return is_tile_plaza(grid_offset + GRID_OFFSET(1, 0)) && is_tile_plaza(grid_offset + GRID_OFFSET(0, 1)) && is_tile_plaza(grid_offset + GRID_OFFSET(1, 1));
 }
 
+bool building_plaza::target_route_tile_blocked(int grid_offset) const {
+    return false;
+}
+
 void building_plaza::set_image(int grid_offset) {
     tile2i btile(grid_offset);
 
