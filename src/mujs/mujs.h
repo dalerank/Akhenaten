@@ -180,6 +180,7 @@ int js_isregexp(js_State *J, int idx);
 int js_iscoercible(js_State *J, int idx);
 int js_iscallable(js_State *J, int idx);
 int js_isuserdata(js_State *J, int idx, const char *tag);
+void *js_stack_alloc(int size);
 
 /* Object modifiers */
 int js_hasobject_modifier(js_State *J, int idx, const char *key);
