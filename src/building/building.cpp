@@ -36,9 +36,9 @@
 #include "sound/sound_building.h"
 #include "city/city.h"
 #include "figure/figure.h"
+#include "figure/route.h"
 #include "figuretype/figure_cartpusher.h"
 #include "core/object_property.h"
-#include "graphics/view/view.h"
 #include "game/game_config.h"
 #include "core/random.h"
 #include "sound/sound.h"
@@ -419,6 +419,7 @@ figure *building::create_cartpusher(e_resource resource_id, int quantity, e_figu
 figure *building::create_figure_with_destination(e_figure_type _type, building *destination, e_figure_action created_action, e_building_slot slot) {
     figure *f = create_figure_generic(_type, created_action, slot, DIR_4_BOTTOM_LEFT);
     f->set_destination(destination->id);
+    f->set_direction(figure_find_best_road_direction(f->tile, destination->tile));
 
     set_figure(slot, f->id); // warning: this overwrites any existing figure!
     return f;

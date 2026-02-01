@@ -26,8 +26,7 @@
 #include "widget/city/building_ghost.h"
 #include "construction/build_planner.h"
 #include "sound/sound_building.h"
-#include "game/game.h"
-#include "figure/figure.h"
+#include "figuretype/figure_worker.h"
 #include "grid/tiles.h"
 #include "dev/debug.h"
 #include "figuretype/figure_cartpusher.h"
@@ -268,6 +267,11 @@ bvariant building_farm::get_property(const xstring &domain, const xstring &name)
     return building_impl::get_property(domain, name);
 }
 
+bool building_farm::requested_workers() const {
+    auto &d = runtime_data();
+    return !d.worker_id && d.labor_days_left <= 47 && !num_workers();
+}
+
 void building_farm::draw_workers(painter &ctx, building* b, tile2i tile, vec2i pos) {
     if (b->num_workers == 0) {
         return;
@@ -431,6 +435,16 @@ void building_farm::update_count() const {
     };
     auto it = std::find_if(std::begin(farms), std::end(farms), [btype = type()](auto &t) { return t.first == btype; });
     g_city.buildings.increase_industry_count(it->second, num_workers() > 0);
+}
+
+void building_farm::update_month() {
+    building_impl::update_month();
+    
+    figure_id fid = runtime_data().worker_id;
+    auto worker = figure_get(fid)->dcast_worker();
+    if (!worker || !worker->is_destination(&base)) {
+        runtime_data().worker_id = 0;
+    }
 }
 
 void building_farm::spawn_figure() {
