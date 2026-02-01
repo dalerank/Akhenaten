@@ -24,7 +24,7 @@ building* building_work_camp::determine_worker_needed() {
     building *result = nullptr;
     float mindist_sq = 9999.f;
 
-    const bool floodplain = g_floods.state_is(FLOOD_STATE_FARMABLE);       
+    const bool floodplain = g_floods.state_is(FLOOD_STATE_FARMABLE);
     buildings_valid_do([&] (building &b) {
         const float curdist_sq = b.tile.dist_sq(this->tile());
 
@@ -34,8 +34,7 @@ building* building_work_camp::determine_worker_needed() {
 
         auto farm = b.dcast_farm();
         if (floodplain && farm && farm->is_floodplain_farm()) {
-            const auto &d = farm->runtime_data();
-            if (!d.worker_id && d.labor_days_left <= 47 && !b.num_workers) {
+            if (farm->has_road_access() && farm->requested_workers()) {
                 mindist_sq = curdist_sq;
                 result = &farm->base;
                 return;
@@ -53,7 +52,6 @@ building* building_work_camp::determine_worker_needed() {
     return result;
 }
 
-
 void building_work_camp::spawn_figure() {
     if (!common_spawn_figure_trigger(current_params().min_houses_coverage)) {
         return;
@@ -69,7 +67,7 @@ void building_work_camp::spawn_figure() {
         return;
     }
 
-    figure *f = base.create_figure_with_destination(FIGURE_LABORER, dest, (e_figure_action)ACTION_10_WORKER_CREATED, BUILDING_SLOT_SERVICE);
+    figure *f = base.create_figure_with_destination(FIGURE_LABORER, dest, (e_figure_action)ACTION_9_WORKER_CREATED, BUILDING_SLOT_SERVICE);
     base.spawned_worker_this_month = true;
 
     dest->dcast()->add_workers(f->id);
