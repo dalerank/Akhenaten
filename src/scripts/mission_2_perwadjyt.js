@@ -120,8 +120,8 @@ function mission2_on_filled_granary(ev) {
 function mission2_warehouse_pottery_1_check(ev) {
     if (mission.pottery_step1_stored_handled) {
         return
-    } 
-    	
+    }
+
     var amount = city.yards_stored(RESOURCE_POTTERY)
     if (amount < mission.pottery_step1_stored) {
         return
@@ -135,12 +135,12 @@ function mission2_warehouse_pottery_1_check(ev) {
 function mission2_warehouse_pottery_2_check(ev) {
 	if (!mission.pottery_step1_stored_handled) {
         return
-    } 
+    }
 
 	if (mission.pottery_step2_stored_handled) {
         return
     }
-    
+
 	var amount = city.yards_stored(RESOURCE_POTTERY)
     if (amount < mission.pottery_step2_stored) {
         return

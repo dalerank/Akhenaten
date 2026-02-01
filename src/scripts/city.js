@@ -77,7 +77,7 @@ city.get_granary = function(building_id) {
     return {
         id: building_id
         total_stored: function() { return __granary_get_total_stored(this.id) }
-        resource_amount: function(resource) { return __granary_resource_amount(this.id, resource) }
+        amount: function(resource) { return __granary_get_amount(this.id, resource) }
         is_good_accepted: function(index) { return __granary_is_good_accepted(this.id, index) }
     }
 }
