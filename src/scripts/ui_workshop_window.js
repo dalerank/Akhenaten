@@ -25,7 +25,7 @@ workshop_info_window {
 
 brickworks_info_window {
     related_buildings [BUILDING_BRICKS_WORKSHOP]
-    ui : __baseui(workshop_info_window, {
+    ui : baseui(workshop_info_window, {
         background    : outer_panel({size[29, 18] })
         warning_text  : text({pos[32, 58], wrap:px(26), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
 
@@ -38,19 +38,19 @@ brickworks_info_window {
 }
 
 bricklayers_guild_info_window = {
-    ui : __baseui(workshop_info_window, {
+    ui : baseui(workshop_info_window, {
 
     })
 }
 
 carpenters_guild_info_window = {
-    ui : __baseui(workshop_info_window, {
+    ui : baseui(workshop_info_window, {
 
     })
 }
 
 stonemason_guild_info_window = {
-    ui : __baseui(workshop_info_window, {
+    ui : baseui(workshop_info_window, {
 
     })
 }

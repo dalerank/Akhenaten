@@ -837,6 +837,31 @@ static void ccall(JF, js_Ast *fun, js_Ast *args)
 			ceval(J, F, fun, args);
 			return;
 		}
+		if (fun->string && fun->string[0] == '_' && fun->string[1] == '_') {
+			js_Property *ref = jsV_getproperty(J, J->G, fun->string);
+			if (!ref) {
+				/* Function not found in global object - check if it's a local variable */
+				int local_idx = findlocal(J, F, fun->string);
+				if (local_idx < 0) {
+					/* Not found in local variables either - error */
+					jsC_error(J, fun, "Function '%s' starting with __ is not registered as a global C-function", fun->string);
+				}
+				/* If found as local variable, assume it's a JavaScript function - allowed */
+			} else {
+				if (ref->value.type == JS_TOBJECT && ref->value.u.object) {
+					js_Object *obj = ref->value.u.object;
+					if (obj->type == JS_CFUNCTION || obj->type == JS_CSCRIPT) {
+						/* JavaScript function - allowed, no check needed */
+					} else if (obj->type != JS_CCFUNCTION) {
+						/* Must be C-function if not JavaScript function */
+						jsC_error(J, fun, "Function '%s' starting with __ must be registered as a global C-function", fun->string);
+					}
+				} else {
+					/* Not an object - must be C-function */
+					jsC_error(J, fun, "Function '%s' starting with __ must be registered as a global C-function", fun->string);
+				}
+			}
+		}
 		/* fall through */
 	default:
 		cexp(J, F, fun);

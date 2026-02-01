@@ -1906,7 +1906,7 @@ static const int stbi__jbias[16] = {0,-1,-3,-7,-15,-31,-63,-127,-255,-511,-1023,
 
 // combined JPEG 'receive' and JPEG 'extend', since baseline
 // always extends everything it receives.
-stbi_inline static int stbi__extend_receive(stbi__jpeg *j, int n)
+stbi_inline static int stbiextend_receive(stbi__jpeg *j, int n)
 {
    unsigned int k;
    int sgn;
@@ -1973,7 +1973,7 @@ static int stbi__jpeg_decode_block(stbi__jpeg *j, short data[64], stbi__huffman 
    // 0 all the ac values now so we can do it 32-bits at a time
    memset(data,0,64*sizeof(data[0]));
 
-   diff = t ? stbi__extend_receive(j, t) : 0;
+   diff = t ? stbiextend_receive(j, t) : 0;
    dc = j->img_comp[b].dc_pred + diff;
    j->img_comp[b].dc_pred = dc;
    data[0] = (short) (dc * dequant[0]);
@@ -2006,7 +2006,7 @@ static int stbi__jpeg_decode_block(stbi__jpeg *j, short data[64], stbi__huffman 
             k += r;
             // decode into unzigzag'd location
             zig = stbi__jpeg_dezigzag[k++];
-            data[zig] = (short) (stbi__extend_receive(j,s) * dequant[zig]);
+            data[zig] = (short) (stbiextend_receive(j,s) * dequant[zig]);
          }
       }
    } while (k < 64);
@@ -2025,7 +2025,7 @@ static int stbi__jpeg_decode_block_prog_dc(stbi__jpeg *j, short data[64], stbi__
       // first scan for DC coefficient, must be first
       memset(data,0,64*sizeof(data[0])); // 0 all the ac values now
       t = stbi__jpeg_huff_decode(j, hdc);
-      diff = t ? stbi__extend_receive(j, t) : 0;
+      diff = t ? stbiextend_receive(j, t) : 0;
 
       dc = j->img_comp[b].dc_pred + diff;
       j->img_comp[b].dc_pred = dc;
@@ -2084,7 +2084,7 @@ static int stbi__jpeg_decode_block_prog_ac(stbi__jpeg *j, short data[64], stbi__
             } else {
                k += r;
                zig = stbi__jpeg_dezigzag[k++];
-               data[zig] = (short) (stbi__extend_receive(j,s) << shift);
+               data[zig] = (short) (stbiextend_receive(j,s) << shift);
             }
          }
       } while (k <= j->spec_end);

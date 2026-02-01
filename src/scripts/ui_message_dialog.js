@@ -35,7 +35,7 @@ message_dialog_window_disaster {
     pos: [(sw(0) - px(30))/2, (sh(0) - px(20))/2]
     help_id: ""
     
-    ui : __baseui(message_dialog_window_general, {
+    ui : baseui(message_dialog_window_general, {
         content_panel  : inner_panel({pos: [16, 48], size: [28, 13]})
         content_text   : text({pos: [24, 54], size: [px(28), px(34)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true, clip_area: true})
         
@@ -49,7 +49,7 @@ message_dialog_window_imperial {
     pos: [(sw(0) - px(30))/2, (sh(0) - px(20))/2]
     help_id: ""
     
-    ui : __baseui(message_dialog_window_general, {
+    ui : baseui(message_dialog_window_general, {
         content_panel  : inner_panel({pos[16, 48], size[28, 14]}),
         content_text   : text({pos[24, 54], size[px(28), px(14)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true, clip_area: true})
     })
@@ -60,7 +60,7 @@ message_dialog_window_emigration {
     pos: [(sw(0) - px(30))/2, (sh(0) - px(20))/2]
     help_id: ""
     
-    ui :__baseui(message_dialog_window_general, {
+    ui :baseui(message_dialog_window_general, {
 
     })
 }
@@ -70,7 +70,7 @@ message_dialog_window_tutorial {
     pos: [(sw(0) - px(30))/2, (sh(0) - px(20))/2]
     help_id: ""
     
-    ui :__baseui(message_dialog_window_general, {
+    ui :baseui(message_dialog_window_general, {
         title          : text({ pos[0, 14], size[px(30), 20], align:"center", font: FONT_LARGE_BLACK_ON_LIGHT}) 
     })
 }
@@ -80,7 +80,7 @@ message_dialog_window_trade_change {
     pos: [(sw(0) - px(30))/2, (sh(0) - px(20))/2]
     help_id: ""
     
-    ui :__baseui(message_dialog_window_general, {
+    ui :baseui(message_dialog_window_general, {
 
     })
 }
@@ -90,7 +90,7 @@ message_dialog_window_price_change {
     pos: [(sw(0) - px(30))/2, (sh(0) - px(20))/2]
     help_id: ""
     
-    ui :__baseui(message_dialog_window_general, {
+    ui :baseui(message_dialog_window_general, {
 
     })
 }
@@ -100,7 +100,7 @@ message_dialog_window_invasion {
     pos: [(sw(0) - px(30))/2, (sh(0) - px(20))/2]
     help_id: ""
     
-    ui :__baseui(message_dialog_window_general, {
+    ui :baseui(message_dialog_window_general, {
         button_go_to_problem : image_button({pos: [0, 0], size: [27, 27], pack:PACK_GENERAL, id:136, enabled: false})
     })
 }
@@ -118,7 +118,7 @@ message_dialog_window_god {
         ptah   { pack:PACK_UNLOADED, id:16, offset:22 }
     }
     
-    ui : __baseui(message_dialog_window_general, {
+    ui : baseui(message_dialog_window_general, {
         background     : outer_panel({size: [30, 28]}) 
         title          : text({margin{ bottom:-36 }, size [px(30), 20], align: "center", font: FONT_NORMAL_BLACK_ON_LIGHT})
         god_image_area : dummy({ margin{ top:px(2) }, size [px(29), px(10)]})
@@ -131,7 +131,7 @@ message_dialog_window_image {
     pos: [(sw(0) - px(30))/2, (sh(0) - px(20))/2]
     help_id: ""
     
-    ui :__baseui(message_dialog_window_general, {
+    ui :baseui(message_dialog_window_general, {
 
     })
 }
@@ -140,7 +140,7 @@ message_dialog_window_troop_request {
     pos: [(sw(0) - px(30))/2, (sh(0) - px(32))/2]
     help_id: ""
     
-    ui :__baseui(message_dialog_window_general, {
+    ui :baseui(message_dialog_window_general, {
         background     : outer_panel({size: [30, 30]}) 
         image          : image({ margin { left:0, top:16 }, pack:PACK_UNLOADED, id:16, offset:11, size [px(30), px(16)], centering [0, 0] })
         content_panel  : inner_panel({ margin{ left:8, bottom:-px(14) }, size [29, 11]})

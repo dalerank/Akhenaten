@@ -78,7 +78,7 @@ city.get_granary = function(building_id) {
         id: building_id
         total_stored: function() { return __granary_get_total_stored(this.id) }
         amount: function(resource) { return __granary_get_amount(this.id, resource) }
-        is_good_accepted: function(index) { return __granary_is_good_accepted(this.id, index) }
+        is_accepting: function(resource) { return __granary_is_accepting(this.id, resource) }
     }
 }
 
@@ -98,7 +98,7 @@ city.get_bazaar = function(building_id) {
         resource_amount: function(resource_type) { return __bazaar_resource_amount(this.id, resource_type) }
         idx_amount: function(index) { return __bazaar_idx_amount(this.id, index) }
         idx_accepted: function(index) { return __bazaar_idx_accepted(this.id, index) }
-        res_accepted: function(resource_type) { return __bazaar_is_good_accepted(this.id, resource_type) }
+        res_accepted: function(resource_type) { return __bazaar_res_accepted(this.id, resource_type) }
         get_figure: function(slot) { return city.get_figure(__building_get_figure_id(this.id, slot)) }
     }
 }
