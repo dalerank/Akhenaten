@@ -224,44 +224,44 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
     int y = MAP_Y(grid_offset);
     switch (routing_type) {
     case ROUTING_TYPE_CITIZEN: {
-            // Exclude river shoreline tiles from citizen pathfinding
-            if (terrain & TERRAIN_SHORE) {
+            // Exclude river shoreline tiles from citizen pathfinding, unless there's a road
+            if ((terrain & TERRAIN_SHORE) && !(terrain & TERRAIN_ROAD)) {
                 return CITIZEN_N1_BLOCKED;
             }
-        
+
             if (!!(terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_WATER)) {
                 return CITIZEN_0_ROAD;
-            } 
-        
+            }
+
             if (!!(terrain & TERRAIN_FERRY_ROUTE) && !!(terrain & TERRAIN_WATER)) {
                 return CITIZEN_0_ROAD;
-            } 
-        
+            }
+
             // Block pure water tiles (lakes, rivers) - citizens cannot build roads through water
             if (!!(terrain & TERRAIN_WATER) && !(terrain & TERRAIN_FERRY_ROUTE)) {
                 return CITIZEN_N1_BLOCKED;
             }
-        
+
             if (terrain & (TERRAIN_RUBBLE | TERRAIN_ACCESS_RAMP | TERRAIN_GARDEN | TERRAIN_MARSHLAND | TERRAIN_FLOODPLAIN | TERRAIN_TREE)) {// TODO?
                 return CITIZEN_2_PASSABLE_TERRAIN;
-            } 
-        
+            }
+
             if (terrain & (TERRAIN_BUILDING | TERRAIN_GATEHOUSE)) {
                 if (fix_incorrect_buildings(grid_offset)) {
                     return CITIZEN_4_CLEAR_TERRAIN;
                 } else {
                     return get_land_type_citizen_building(grid_offset);
                 }
-            } 
-        
+            }
+
             if (terrain & TERRAIN_CANAL) {
                 return get_land_type_citizen_canal(grid_offset);
-            } 
-        
+            }
+
             if (terrain & TERRAIN_NOT_CLEAR) {
                 return CITIZEN_N1_BLOCKED;
-            } 
-        
+            }
+
             return CITIZEN_4_CLEAR_TERRAIN;
         }
 
@@ -269,19 +269,19 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
             if (terrain & TERRAIN_GATEHOUSE) {
                 return NONCITIZEN_4_GATEHOUSE;
             }
-        
+
             if (terrain & TERRAIN_ROAD) {
                 return NONCITIZEN_0_PASSABLE;
             }
-        
+
             if (terrain & (TERRAIN_GARDEN | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE | TERRAIN_MARSHLAND)) {
                 return NONCITIZEN_2_CLEARABLE;
             }
-        
+
             if (terrain & TERRAIN_BUILDING) {
                 return get_land_type_noncitizen(grid_offset);
             }
-        
+
             if (terrain & TERRAIN_CANAL) {
                 return NONCITIZEN_2_CLEARABLE;
             }
@@ -289,11 +289,11 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
             if (terrain & TERRAIN_WALL) {
                 return NONCITIZEN_3_WALL;
             }
-        
+
             if (terrain & TERRAIN_NOT_CLEAR) {
                 return NONCITIZEN_N1_BLOCKED;
             }
-        
+
             return NONCITIZEN_0_PASSABLE;
         }
 
@@ -301,7 +301,7 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
             if (terrain & TERRAIN_GATEHOUSE) {
                 return AMPHIBIA_1_BUILDING;
             }
-            
+
             if (terrain & (TERRAIN_GARDEN | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE | TERRAIN_CANAL | TERRAIN_MARSHLAND)) {
                 return AMPHIBIA_0_PASSABLE;
             }
@@ -313,11 +313,11 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
             if (terrain & (TERRAIN_WALL | TERRAIN_ROCK | TERRAIN_TREE)) {
                 return AMPHIBIA_N1_BLOCKED;
             }
-            
+
             if (terrain & TERRAIN_BUILDING) {
                 return map_routing_land_penalty_amphibia(grid_offset);
             }
-            
+
             if (terrain & TERRAIN_WATER && is_surrounded_by_water(grid_offset)) {
                 if (x > 0 && x < scenario_map_data()->width - 1 && y > 0 && y < scenario_map_data()->height - 1) {
                     switch (map_sprite_animation_at(grid_offset)) {
@@ -331,7 +331,7 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
                     }
                 } else
                     return AMPHIBIA_N2_MAP_EDGE;
-            } 
+            }
 
             return AMPHIBIA_0_PASSABLE;
         }
@@ -350,10 +350,10 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
                     default:
                         return WATER_0_PASSABLE;
                     }
-                } 
+                }
 
                 return WATER_N2_MAP_EDGE;
-            } 
+            }
 
             return WATER_N1_BLOCKED;
         }
@@ -362,10 +362,10 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
             if (terrain & TERRAIN_WALL) {
                 if (count_adjacent_wall_tiles(grid_offset) == 3)
                     return WALL_0_PASSABLE;
-        
+
                 return WALL_N1_BLOCKED;
-            } 
-            
+            }
+
             if (map_terrain_is(grid_offset, TERRAIN_GATEHOUSE)) {
                 return WALL_0_PASSABLE;
             }
@@ -511,12 +511,12 @@ void map_routing_update_ferry_routes() {
             tile2i tile2 = (*f2)->tile;
             int dx = std::abs(tile1.x() - tile2.x());
             int dy = std::abs(tile1.y() - tile2.y());
-            
+
             // Only connect ferries that are close (difference in x or y <= 2)
             if (dx > 4 && dy > 4) {
                 continue;
             }
-            
+
             water_access_tiles fpoints_begin = map_water_get_access_points(**f1, (*f1)->dcast()->get_orientation(), 1);
             water_access_tiles fpoints_end = map_water_get_access_points(**f2, (*f2)->dcast()->get_orientation(), 1);
 
