@@ -32,7 +32,7 @@ function work_camp_workers_description() {
 }
 
 info_window_work_camp {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
         workers_desc  : text({ pos[70, 124 + 20], font: FONT_NORMAL_BLACK_ON_DARK, wrap:px(24), multiline:true
                                textfn:work_camp_workers_description })
         warning_text  : text({ pos[32, 46], wrap:px(26), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true

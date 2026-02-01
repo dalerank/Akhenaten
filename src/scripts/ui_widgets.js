@@ -220,7 +220,7 @@ empty_info_window = {
 }
 
 info_window_figure_animal = {
-    ui : __baseui(figure_info_window, {
+    ui : baseui(figure_info_window, {
 
     })
 }
@@ -253,7 +253,7 @@ figure_warship_info_window = {
 }
 
 figure_carrier_info_window = {
-    ui : __baseui(figure_info_window, {
+    ui : baseui(figure_info_window, {
         typename         : text({pos: [92, 139], text:"${figure.class_name} ( @Y${figure.home}& )", font : FONT_NORMAL_BLACK_ON_DARK, rich:true, scroll:false }),
         items            : text({pos: [102, 158], size:[px(29), 20], font : FONT_NORMAL_BLACK_ON_DARK, rich:true, scroll:false }),
         phrase           : text({pos: [90, 180], font : FONT_NORMAL_BLACK_ON_DARK, wrap:px(22), multiline:true }),
@@ -322,19 +322,19 @@ building_info_window {
 }
 
 water_supply_info_window = {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
         background  : outer_panel({size: [29, 20]}),
     })
 }
 
 info_window_ferry = {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
         background  : outer_panel({size: [29, 20]}),
     })
 }
 
 info_window_hunting_lodge = {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
         background   : outer_panel({size: [29, 20]}),
         resource     : resource_icon({ pos:[10, 10], prop:"${building.output_resource}" }),
         resource_amount : { type : "text", pos: [62, 186 + 2], font: FONT_NORMAL_BLACK_ON_LIGHT },
@@ -342,7 +342,7 @@ info_window_hunting_lodge = {
 }
 
 info_window_bandstand = {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
         background   : outer_panel({size: [29, 20]}),
         title        : text({pos: [0, 16], text:"${building.name}", size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
         warning_text : text({pos: [20, 46], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
@@ -356,7 +356,7 @@ info_window_bandstand = {
 }
 
 info_window_pavilion = {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
         background   : outer_panel({size: [29, 20]}),
         title        : text({pos: [0, 16], text:"${building.name}", size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
         warning_text : text({pos: [20, 46], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
@@ -401,7 +401,7 @@ info_window_mastaba = {
 }
 
 info_window_booth = {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
         background   : outer_panel({pos: [0, 0], size: [29, 16]}),
         play_text    : text({pos: [32, 162], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
         inner_panel  : inner_panel({pos : [16, 110], size: [27, 6],
@@ -415,14 +415,14 @@ info_window_booth = {
 }
 
 info_window_fishing_wharf = {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
         resource_img : { type : "resource_icon", pos: [32, 186] },
         storage_desc : { type : "text", pos: [62, 186 + 2], font: FONT_NORMAL_BLACK_ON_LIGHT },
     })
 }
 
 info_window_recruiter = {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
         background    : outer_panel({size: [29, 20]}),
         warning_text  : text({pos: [20, 46], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
         icon_weapon   : resource_icon({pos:[24, 100], resource:RESOURCE_WEAPONS  }),
@@ -444,7 +444,7 @@ info_window_recruiter = {
 }
 
 info_window_farm = {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
         background    : outer_panel({size: [29, 18]}),
         resource      : resource_icon({ pos:[10, 10], prop:"${building.output_resource}" }),
         workers_desc  : text({ pos: [70, 116], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(23) }),
@@ -457,13 +457,13 @@ info_window_farm = {
 
 info_window_architect_post {
     related_buildings [BUILDING_ARCHITECT_POST]
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
 
     })
 }
 
 info_window_firehouse = {
-  ui : __baseui(building_info_window, {
+  ui : baseui(building_info_window, {
 
   })
 }
@@ -508,7 +508,7 @@ info_window_mansion {
 }
 
 info_window_raw_material = {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
         resource_img  : resource_icon({pos: [14, 14], prop:"${building.output_resource}"}),
         progress_desc : text({pos: [32, 44], text:"${text.2} ${industry.progress} % ${text.3}", font: FONT_NORMAL_BLACK_ON_LIGHT }),
         warning_desc  : text({pos: [32, 66], text:"${text.1}", font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true }),
@@ -533,7 +533,7 @@ info_window_garden = {
 }
 
 info_window_palace = {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
         background    : outer_panel({size: [29, 18]}),
         resource_img  : resource_icon({pos: [16, 16], resource:RESOURCE_GOLD}),
         inner_panel   : inner_panel({pos : [16, 120], size: [27, 6],
@@ -551,7 +551,7 @@ info_window_palace = {
 }
 
 info_window_courthouse = {
-    ui : __baseui(building_info_window, { 
+    ui : baseui(building_info_window, { 
         background    : outer_panel({size: [29, 17]}),
         vaults_hold   : text({pos: [44, 54], font: FONT_NORMAL_BLACK_ON_LIGHT }),
         state         : text({margin:{left:20, bottom: -80} , font: FONT_NORMAL_BLACK_ON_DARK}),
@@ -582,7 +582,7 @@ info_window_entertainment {
 }
 
 health_info_window = {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
 
     })
 }
@@ -612,7 +612,7 @@ taxcollector_info_window = {
 }
 
 dock_info_window = {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
         background   : outer_panel({size: [29, 16]}),
         orders       : button({margin:{left:100, bottom:-40}, size:[270, 25], text:{group: 98, id: 5}}),
     })
@@ -620,7 +620,7 @@ dock_info_window = {
 
 warshipwharf_info_window = {
     first_advisor       : ADVISOR_MILITARY,
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
         background    : outer_panel({size: [29, 16]}),
         resource_icon : resource_icon({pos: [32, 56] }),
         resource_stored : text({pos: [60, 60], size: [px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT }),
@@ -629,7 +629,7 @@ warshipwharf_info_window = {
 }
 
 shipyard_info_window = {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
         background    : outer_panel({size: [29, 18]}),
         warning_text  : text({pos: [28, 40], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
         inner_panel   : inner_panel({pos : [16, 150], size: [27, 5],
@@ -646,7 +646,7 @@ shipyard_info_window = {
 }
 
 scribal_school_info_window = {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
         background    : outer_panel({size: [29, 17]}),
         resource_icon : resource_icon({pos: [32, 100] }),
         resource_stored : text({pos: [60, 100], size: [px(27), 20], text:"${23.77} ${stored.papyrus}", font : FONT_NORMAL_BLACK_ON_LIGHT }),
@@ -695,39 +695,39 @@ festival_square_info_window = {
 }
 
 info_window_tower = {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
 
     })
 }
 
 info_window_senet_house = {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
         advice        : text({pos: [36, 164], wrap:400, font : FONT_NORMAL_BLACK_ON_DARK, multiline:true }),
     })
 }
 
 info_window_bullfight = {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
 
     })
 }
 
 info_window_police_station = {
     related_buildings [BUILDING_POLICE_STATION]
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
         weapon_icon     : resource_icon({ pos[32, 205], resource:RESOURCE_WEAPONS })
         weapon_stored   : text({ pos[55, 210], size[px(27), 20], text:"${building.weapon_stored}", font:FONT_NORMAL_BLACK_ON_LIGHT })
     })
 }
 
 info_window_gatehouse = {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
 
     })
 }
 
 info_window_milacademy = {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
 
     })
 }
@@ -874,7 +874,7 @@ window_warnings = {
 }
 
 info_window_education = {
-    ui : __baseui(building_info_window, {
+    ui : baseui(building_info_window, {
         background    : outer_panel({size: [29, 17]}),
         resource_icon : resource_icon({pos: [32, 100] }),
         resource_stored : text({pos: [60, 100], size: [px(27), 20], text:"${23.77} ${stored.papyrus}", font : FONT_NORMAL_BLACK_ON_LIGHT }),

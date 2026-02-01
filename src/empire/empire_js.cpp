@@ -18,7 +18,7 @@ std::optional<bvariant> __empire_get_city_object_property(int cid, pcstr propert
 }
 ANK_FUNCTION_2(__empire_get_city_object_property)
 
-std::optional<bvariant> __empire_get_ourcity_object_property(pcstr property) {
+std::optional<bvariant> __empire_get_ourcity_property(pcstr property) {
     const auto *ourcity_obj = g_empire.ourcity_object();
     if (!ourcity_obj) {
         return {};
@@ -27,7 +27,7 @@ std::optional<bvariant> __empire_get_ourcity_object_property(pcstr property) {
     verify_no_crash(ourcity_obj && "empire_obj should exist");
     return archive_helper::get(*ourcity_obj, property, true);
 }
-ANK_FUNCTION_1(__empire_get_ourcity_object_property)
+ANK_FUNCTION_1(__empire_get_ourcity_property)
 
 void js_register_empire_objects(js_State *J) {
 }
