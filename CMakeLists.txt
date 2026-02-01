@@ -11,7 +11,7 @@ message(STATUS "OPTION_ENABLE_TRACY: ${OPTION_ENABLE_TRACY}")
 
 if (CMAKE_BUILD_PLATFORM STREQUAL "win_emscripten")
     message("Platform: win + emscripten")
-    set(WIN_EMSCRIPTEN TRUE) 
+    set(WIN_EMSCRIPTEN TRUE)
 else()
     set(WIN_EMSCRIPTEN FALSE)
 endif()
@@ -194,17 +194,17 @@ if (MSVC)
         set(FETCHCONTENT_SOURCE_DIR_CURL "${LOCAL_DEPS_ROOT}/curl-src")
         set(FETCHCONTENT_UPDATES_DISCONNECTED_CURL TRUE)
     endif()
-    
+
     FetchContent_Declare(
         curl
         GIT_REPOSITORY https://github.com/curl/curl.git
         GIT_TAG        ${CURL_VERSION}
     )
-    
+
     # Configure curl build options
     set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
     set(BUILD_CURL_EXE OFF CACHE BOOL "" FORCE)
-    set(BUILD_TESTING OFF CACHE BOOL "" FORCE) 
+    set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
     set(CURL_DISABLE_LDAP ON CACHE BOOL "" FORCE)
     set(CURL_DISABLE_LDAPS ON CACHE BOOL "" FORCE)
     set(CURL_DISABLE_TELNET ON CACHE BOOL "" FORCE)
@@ -221,7 +221,7 @@ if (MSVC)
     set(CURL_USE_OPENSSL OFF CACHE BOOL "" FORCE)  # Explicitly disable OpenSSL
     set(CURL_CA_BUNDLE "" CACHE STRING "" FORCE)
     set(CURL_CA_PATH "" CACHE STRING "" FORCE)
-    
+
     FetchContent_MakeAvailable(curl)
 endif()
 
@@ -240,7 +240,7 @@ endif()
 # FetchContent_Declare(
 #     bugtrap
 #     GIT_REPOSITORY https://github.com/bchavez/BugTrap.git
-#     GIT_TAG        master  
+#     GIT_TAG        master
 # )
 # FetchContent_MakeAvailable(bugtrap)
 
@@ -302,7 +302,7 @@ if(MSVC)
     endif()
 else()
     set(ZLIB_LIBRARY "${ZLIB_INSTALL_DIR}/libzlibstatic.a")
-endif()   
+endif() 
 
 # Convert to absolute path to ensure correct linking
 get_filename_component(ZLIB_LIBRARY "${ZLIB_LIBRARY}" ABSOLUTE)
@@ -325,39 +325,39 @@ set(ZLIB_LIBRARIES "${ZLIB_LIBRARY}" CACHE FILEPATH "Path to zlib library" FORCE
 # Skip SDL2 build for Emscripten as it uses ports (-sUSE_SDL=2)
 if(NOT WIN_EMSCRIPTEN)
     set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
-    
+
     # Setup SDL2 FetchContent
     if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2-src/CMakeLists.txt")
         set(FETCHCONTENT_SOURCE_DIR_SDL2 "${LOCAL_DEPS_ROOT}/SDL2-src")
         set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2 TRUE)
     endif()
-    
+
     FetchContent_Declare(
         SDL2
         GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
         GIT_TAG        release-${SDL2_VERSION}
     )
-    
+
     FetchContent_GetProperties(SDL2)
     if(NOT SDL2_POPULATED)
         FetchContent_Populate(SDL2)
     endif()
-    
+
     # FetchContent_Populate creates SDL2_SOURCE_DIR automatically
     set(SDL2_SOURCE_DIR "${sdl2_SOURCE_DIR}")
     set(SDL2_BUILD_BASE_DIR "${PREBUILT_LIBS_INTERMEDIATE_DIR}/SDL2")
     set(SDL2_BUILD_DIR "${SDL2_BUILD_BASE_DIR}/build")
     set(SDL2_INSTALL_DIR "${CMAKE_BINARY_DIR}/libs/SDL2")
     set(SDL2_BUILD_CONFIG ${CMAKE_BUILD_TYPE})
-    
+
     # Create build directory in prebuild_libs/SDL2
     file(MAKE_DIRECTORY ${SDL2_BUILD_BASE_DIR})
     file(MAKE_DIRECTORY ${SDL2_BUILD_DIR})
     file(MAKE_DIRECTORY ${SDL2_INSTALL_DIR})
-    
+
     # Prepare variables for BuildSDL2.cmake
     set(SDL2_BUILD_SCRIPT "${CMAKE_SOURCE_DIR}/cmake/BuildSDL2.cmake")
-    
+
     # Build SDL2 using execute_process (runs during configuration phase)
     message(STATUS "Building SDL2 static library...")
     set(SDL2_BUILD_CMAKE_ARGS
@@ -375,34 +375,34 @@ if(NOT WIN_EMSCRIPTEN)
         WORKING_DIRECTORY ${SDL2_BUILD_BASE_DIR}
         RESULT_VARIABLE SDL2_BUILD_RESULT
     )
-    
+
     # Set SDL2 library path - use absolute path to avoid issues with find_package
     if(MSVC)
         if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT CMAKE_BUILD_TYPE)
             set(SDL2_LIBRARY "${SDL2_INSTALL_DIR}/SDL2-staticd.lib")
-            set(SDL2_MAIN_LIBRARY "${SDL2_INSTALL_DIR}/SDL2maind.lib")            
+            set(SDL2_MAIN_LIBRARY "${SDL2_INSTALL_DIR}/SDL2maind.lib")
         else()
             set(SDL2_LIBRARY "${SDL2_INSTALL_DIR}/SDL2-static.lib")
-            set(SDL2_MAIN_LIBRARY "${SDL2_INSTALL_DIR}/SDL2main.lib")            
+            set(SDL2_MAIN_LIBRARY "${SDL2_INSTALL_DIR}/SDL2main.lib")
         endif()
 
         get_filename_component(SDL2_LIBRARY "${SDL2_LIBRARY}" ABSOLUTE)
         get_filename_component(SDL2_MAIN_LIBRARY "${SDL2_MAIN_LIBRARY}" ABSOLUTE)
     else()
         set(SDL2_LIBRARY "${SDL2_INSTALL_DIR}/libSDL2-static.a")
-        set(SDL2_MAIN_LIBRARY "") 
-    endif()   
-  
+        set(SDL2_MAIN_LIBRARY "")
+    endif()
+
     set(SDL2_INCLUDE_DIR "${SDL2_INSTALL_DIR}/include/SDL2" CACHE PATH "Path to SDL2 include directory" FORCE)
-    set(SDL2_INCLUDE_ADD_DIR "${SDL2_INSTALL_DIR}/include" CACHE PATH "Path to SDL2 include directory" FORCE)    
+    set(SDL2_INCLUDE_ADD_DIR "${SDL2_INSTALL_DIR}/include" CACHE PATH "Path to SDL2 include directory" FORCE)
     set(SDL2_ROOT "${SDL2_INSTALL_DIR}" CACHE PATH "Path to SDL2 installation" FORCE)
     set(SDL2_FOUND TRUE CACHE BOOL "Whether SDL2 was found" FORCE)
-    
+
     # Add SDL2 to CMAKE_PREFIX_PATH so SDL2_mixer can find it
     set(CMAKE_PREFIX_PATH "${SDL2_ROOT};${CMAKE_PREFIX_PATH}" CACHE PATH "" FORCE)
     # Set SDL2_DIR to help SDL2_mixer find SDL2 config files
     set(SDL2_DIR "${SDL2_INSTALL_DIR}/lib/cmake/SDL2" CACHE PATH "" FORCE)
-    
+
     set(SDL_EXT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2)
 endif()
 
@@ -417,39 +417,39 @@ endif()
 # Skip SDL2_mixer build for Emscripten as it uses ports (-sUSE_SDL_MIXER=2)
 if(NOT WIN_EMSCRIPTEN)
     set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
-    
+
     # Setup SDL2_mixer FetchContent
     if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2_mixer-src/CMakeLists.txt")
         set(FETCHCONTENT_SOURCE_DIR_SDL2_MIXER "${LOCAL_DEPS_ROOT}/SDL2_mixer-src")
         set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2_MIXER TRUE)
     endif()
-    
+
     FetchContent_Declare(
         SDL2_mixer
         GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
         GIT_TAG        release-${SDL2_MIXER_VERSION}
     )
-    
+
     FetchContent_GetProperties(SDL2_mixer)
     if(NOT SDL2_mixer_POPULATED)
         FetchContent_Populate(SDL2_mixer)
     endif()
-    
+
     # FetchContent_Populate creates SDL2_mixer_SOURCE_DIR automatically
     set(SDL2_MIXER_SOURCE_DIR "${sdl2_mixer_SOURCE_DIR}")
     set(SDL2_MIXER_BUILD_BASE_DIR "${PREBUILT_LIBS_INTERMEDIATE_DIR}/SDL2_mixer")
     set(SDL2_MIXER_BUILD_DIR "${SDL2_MIXER_BUILD_BASE_DIR}/build")
     set(SDL2_MIXER_INSTALL_DIR "${CMAKE_BINARY_DIR}/libs/SDL2_mixer")
     set(SDL2_MIXER_BUILD_CONFIG ${CMAKE_BUILD_TYPE})
-    
+
     # Create build directory in prebuild_libs/SDL2_mixer
     file(MAKE_DIRECTORY ${SDL2_MIXER_BUILD_BASE_DIR})
     file(MAKE_DIRECTORY ${SDL2_MIXER_BUILD_DIR})
     file(MAKE_DIRECTORY ${SDL2_MIXER_INSTALL_DIR})
-    
+
     # Prepare variables for BuildSDL2_mixer.cmake
     set(SDL2_MIXER_BUILD_SCRIPT "${CMAKE_SOURCE_DIR}/cmake/BuildSDL2_mixer.cmake")
-    
+
     # Build SDL2_mixer using execute_process (runs during configuration phase)
     message(STATUS "Building SDL2_mixer static library...")
     set(SDL2_MIXER_BUILD_CMAKE_ARGS
@@ -468,7 +468,7 @@ if(NOT WIN_EMSCRIPTEN)
         WORKING_DIRECTORY ${SDL2_MIXER_BUILD_BASE_DIR}
         RESULT_VARIABLE SDL2_MIXER_BUILD_RESULT
     )
-    
+
     # Set SDL2_mixer library path - use absolute path to avoid issues with find_package
     if(MSVC)
         if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT CMAKE_BUILD_TYPE)
@@ -480,8 +480,8 @@ if(NOT WIN_EMSCRIPTEN)
         get_filename_component(SDL2_MIXER_LIBRARY "${SDL2_MIXER_LIBRARY}" ABSOLUTE)
     else()
         set(SDL2_MIXER_LIBRARY "${SDL2_MIXER_INSTALL_DIR}/libSDL2_mixer-static.a")
-    endif()   
-  
+    endif()
+
     # Determine the correct include directory based on where headers are actually installed
     if(EXISTS "${SDL2_MIXER_INSTALL_DIR}/include/SDL2/SDL_mixer.h")
         set(SDL2_MIXER_INCLUDE_DIR "${SDL2_MIXER_INSTALL_DIR}/include/SDL2" CACHE PATH "Path to SDL2_mixer include directory" FORCE)
@@ -492,7 +492,7 @@ if(NOT WIN_EMSCRIPTEN)
         set(SDL2_MIXER_INCLUDE_DIR "${SDL2_MIXER_INSTALL_DIR}/include/SDL2" CACHE PATH "Path to SDL2_mixer include directory" FORCE)
         message(WARNING "SDL2_mixer: Headers not found in expected locations. Using default: ${SDL2_MIXER_INCLUDE_DIR}")
     endif()
-    
+
     set(SDL2_MIXER_ROOT "${SDL2_MIXER_INSTALL_DIR}" CACHE PATH "Path to SDL2_mixer installation" FORCE)
     set(SDL2_MIXER_FOUND TRUE CACHE BOOL "Whether SDL2_mixer was found" FORCE)
 endif()
@@ -567,7 +567,7 @@ if(MSVC)
     endif()
 else()
     set(FREETYPE_LIBRARY "${FREETYPE_INSTALL_DIR}/libfreetype.a")
-endif()   
+endif()
 
 # Convert to absolute path to ensure correct linking
 get_filename_component(FREETYPE_LIBRARY "${FREETYPE_LIBRARY}" ABSOLUTE)
@@ -647,7 +647,7 @@ if(MSVC)
     endif()
 else()
     set(HARFBUZZ_LIBRARY "${HARFBUZZ_INSTALL_DIR}/libharfbuzz.a")
-endif()   
+endif()
 
 # Convert to absolute path to ensure correct linking
 get_filename_component(HARFBUZZ_LIBRARY "${HARFBUZZ_LIBRARY}" ABSOLUTE)
@@ -1005,7 +1005,7 @@ if(APPLE)
     install(TARGETS ${GAME}
         BUNDLE DESTINATION .
         RUNTIME DESTINATION bin)
-    
+
     install(CODE "
         include(BundleUtilities)
         fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}.app\" \"${LIBS}\" \"${DIRS}\")
@@ -1231,7 +1231,7 @@ if(WIN_EMSCRIPTEN)
                             akhenaten::rc)
 else()
     target_link_libraries (${GAME}
-                            ${SDL2_LIBRARY} 
+                            ${SDL2_LIBRARY}
                             ${SDL2_MAIN_LIBRARY}
                             ${FREETYPE_LIBRARY}
                             ${HARFBUZZ_LIBRARY}
@@ -1239,7 +1239,7 @@ else()
                                 $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,
                                     $<IF:$<TARGET_EXISTS:SDL2_mixer>,SDL2_mixer,${SDL2_MIXER_LIBRARY}>>>
                             ${CPPTRACE_LIBRARY}
-                            ${GPUPIXEL_LIBRARY} 
+                            ${GPUPIXEL_LIBRARY}
                             ${ZLIB_LIBRARY}
                             akhenaten::rc
                             $<IF:$<TARGET_EXISTS:Tracy::TracyClient>,Tracy::TracyClient,>)
@@ -1247,55 +1247,55 @@ endif()
 
 if(MSVC)
     target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi" "setupapi" "version")
-    
+
     set(LIBVPX_DEPS_ROOT "${CMAKE_BINARY_DIR}/_deps")
     set(LIBVPX_INSTALL_DIR "${LIBVPX_DEPS_ROOT}/libvpx")
     set(LIBVPX_LIB_DIR "${LIBVPX_INSTALL_DIR}/lib")
     set(LIBVPX_INCLUDE_DIR "${LIBVPX_INSTALL_DIR}/include")
-    
+
     message(STATUS "libvpx: Checking for pre-built installation...")
     set(LIBVPX_FOUND FALSE)
-    
+
     # Check for existing installation
     if(EXISTS "${LIBVPX_LIB_DIR}/libvpx.lib" AND EXISTS "${LIBVPX_INCLUDE_DIR}/vpx/vpx_encoder.h")
         message(STATUS "libvpx: Found pre-built installation")
         message(STATUS "libvpx: Installation directory: ${LIBVPX_INSTALL_DIR}")
         set(LIBVPX_FOUND TRUE)
     endif()
-    
+
     # Download pre-built library if not found
     if(NOT LIBVPX_FOUND)
         message(STATUS "libvpx: Pre-built installation not found, downloading...")
-        
+
         # Determine architecture
         if(CMAKE_SIZEOF_VOID_P EQUAL 8)
             set(LIBVPX_ARCH "x64")
         else()
             set(LIBVPX_ARCH "x86")
         endif()
-        
+
         set(LIBVPX_VERSION "1.15.1")
         set(LIBVPX_ZIP_FILE "${LIBVPX_DEPS_ROOT}/libvpx-v${LIBVPX_VERSION}-msvc.zip")
-        
+
         file(MAKE_DIRECTORY ${LIBVPX_DEPS_ROOT})
         message(STATUS "libvpx: Dependencies directory: ${LIBVPX_DEPS_ROOT}")
-        
+
         if(NOT EXISTS "${LIBVPX_ZIP_FILE}")
             message(STATUS "libvpx: Archive not found, starting download...")
             message(STATUS "libvpx: Target archive: ${LIBVPX_ZIP_FILE}")
-            
+
             set(DOWNLOAD_URLS
                 "https://github.com/ShiftMediaProject/libvpx/releases/download/v1.15.1/libvpx_v1.15.1_msvc17.zip"
             )
-            
+
             set(DOWNLOAD_SUCCESS FALSE)
             set(URL_INDEX 0)
             foreach(DOWNLOAD_URL ${DOWNLOAD_URLS})
                 math(EXPR URL_INDEX "${URL_INDEX} + 1")
                 message(STATUS "libvpx: [${URL_INDEX}] Attempting download from: ${DOWNLOAD_URL}")
-                
-                file(DOWNLOAD 
-                    ${DOWNLOAD_URL} 
+
+                file(DOWNLOAD
+                    ${DOWNLOAD_URL}
                     ${LIBVPX_ZIP_FILE}
                     SHOW_PROGRESS
                     STATUS DOWNLOAD_STATUS
@@ -1322,7 +1322,7 @@ if(MSVC)
                     endif()
                 endif()
             endforeach()
-            
+
             if(NOT DOWNLOAD_SUCCESS)
                 message(FATAL_ERROR "libvpx: Failed to download from all sources.\n"
                     "Please download libvpx manually and extract to: ${LIBVPX_INSTALL_DIR}\n"
@@ -1334,15 +1334,15 @@ if(MSVC)
             message(STATUS "libvpx: Archive already exists: ${LIBVPX_ZIP_FILE}")
             message(STATUS "libvpx: Archive size: ${FILE_SIZE} bytes (${FILE_SIZE_MB} MB)")
         endif()
-        
+
         # Extract ZIP file
         message(STATUS "libvpx: Starting extraction process...")
         message(STATUS "libvpx: Source archive: ${LIBVPX_ZIP_FILE}")
         message(STATUS "libvpx: Target directory: ${LIBVPX_INSTALL_DIR}")
-        
+
         set(LIBVPX_EXTRACT_TEMP "${LIBVPX_DEPS_ROOT}/libvpx-temp")
         file(MAKE_DIRECTORY ${LIBVPX_EXTRACT_TEMP})
-        
+
         execute_process(
             COMMAND ${CMAKE_COMMAND} -E tar xf ${LIBVPX_ZIP_FILE}
             WORKING_DIRECTORY ${LIBVPX_EXTRACT_TEMP}
@@ -1350,18 +1350,18 @@ if(MSVC)
             OUTPUT_QUIET
             ERROR_QUIET
         )
-        
+
         if(NOT EXTRACT_RESULT EQUAL 0)
             message(FATAL_ERROR "libvpx: Extraction failed with exit code ${EXTRACT_RESULT}.\n"
                 "Please extract manually: ${LIBVPX_ZIP_FILE} to ${LIBVPX_INSTALL_DIR}")
         endif()
-        
+
         message(STATUS "libvpx: Archive extracted successfully")
-        
+
         # Move extracted files to install directory
         file(GLOB EXTRACTED_DIRS "${LIBVPX_EXTRACT_TEMP}/*")
         list(LENGTH EXTRACTED_DIRS EXTRACTED_COUNT)
-        
+
         if(EXTRACTED_COUNT EQUAL 1)
             list(GET EXTRACTED_DIRS 0 EXTRACTED_ROOT)
             file(MAKE_DIRECTORY ${LIBVPX_INSTALL_DIR})
@@ -1386,21 +1386,21 @@ if(MSVC)
                 file(RENAME ${ITEM} ${TARGET_PATH})
             endforeach()
         endif()
-        
+
         file(REMOVE_RECURSE ${LIBVPX_EXTRACT_TEMP})
         message(STATUS "libvpx: Extraction completed")
-        
+
         # Find lib and include directories
         file(GLOB_RECURSE VPX_LIB "${LIBVPX_INSTALL_DIR}/*/libvpx.lib")
         file(GLOB_RECURSE VPX_HEADER "${LIBVPX_INSTALL_DIR}/*/vpx/vpx_encoder.h")
-        
+
         if(VPX_LIB)
             list(GET VPX_LIB 0 VPX_LIB_FILE)
             get_filename_component(FOUND_LIB_DIR ${VPX_LIB_FILE} DIRECTORY)
             set(LIBVPX_LIB_DIR ${FOUND_LIB_DIR})
             message(STATUS "libvpx: Library directory found: ${LIBVPX_LIB_DIR}")
         endif()
-        
+
         if(VPX_HEADER)
             list(GET VPX_HEADER 0 VPX_HEADER_FILE)
             get_filename_component(FOUND_INCLUDE_DIR ${VPX_HEADER_FILE} DIRECTORY)
@@ -1408,7 +1408,7 @@ if(MSVC)
             set(LIBVPX_INCLUDE_DIR ${FOUND_INCLUDE_DIR})
             message(STATUS "libvpx: Include directory found: ${LIBVPX_INCLUDE_DIR}")
         endif()
-        
+
         # Verify installation
         if(EXISTS "${LIBVPX_LIB_DIR}/libvpx.lib")
             if(EXISTS "${LIBVPX_INCLUDE_DIR}/vpx/vpx_encoder.h")
@@ -1417,7 +1417,7 @@ if(MSVC)
             endif()
         endif()
     endif()
-    
+
     # Link libvpx if found
     if(LIBVPX_FOUND)
         target_link_libraries(${GAME} "${LIBVPX_LIB_DIR}/libvpx.lib")
@@ -1434,7 +1434,7 @@ if(MSVC)
         target_link_libraries(${GAME} delayimp)
     endif()
     target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/bugtrap/BugTrap-x64.lib)
-    
+
     if(TARGET CURL::libcurl)
         target_link_libraries(${GAME} CURL::libcurl)
     else()
@@ -1444,7 +1444,7 @@ if(MSVC)
             message(WARNING "CURL::libcurl target not found, curl may not be built correctly")
         endif()
     endif()
-      
+
     # harfbuzz and freetype are static libraries, no need to copy DLL
 endif()
 
@@ -1466,7 +1466,7 @@ if(UNIX AND NOT APPLE)
 endif()
 
 if (MSVC)
-    set(BINARY_FILES 
+    set(BINARY_FILES
         "${CMAKE_BINARY_DIR}/${GAME_BUILD_TYPE}/${GAME}.exe"
         "${CMAKE_BINARY_DIR}/${GAME_BUILD_TYPE}/${GAME}.pdb"
         "${CMAKE_SOURCE_DIR}/ext/bugtrap/BugTrap-x64.dll"
@@ -1482,9 +1482,9 @@ if (MSVC)
 
     set(DATA_FILES "${CMAKE_SOURCE_DIR}/data/pharaoh_custom_pack.sgx" "${CMAKE_SOURCE_DIR}/data/pharaoh_fonts_pack.sgx")
     add_custom_command(
-        OUTPUT 
-        ${GAME_WORKING_DIRECTORY}/Data    
-        COMMAND ${CMAKE_COMMAND} 
+        OUTPUT
+        ${GAME_WORKING_DIRECTORY}/Data
+        COMMAND ${CMAKE_COMMAND}
         -E make_directory ${GAME_WORKING_DIRECTORY}/Data
     )
     set(BINARY_FILES_DIRECTORY "${GAME_WORKING_DIRECTORY}/Data")
