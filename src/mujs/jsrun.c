@@ -218,6 +218,14 @@ int js_isregexp(js_State *J, int idx)
 	return v->type == JS_TOBJECT && v->u.object->type == JS_CREGEXP;
 }
 
+void* js_stack_alloc(int size) {
+	#if defined(_WIN32)
+	return _alloca(size);
+	#else
+	return alloca(size);
+	#endif
+}
+
 int js_isuserdata(js_State *J, int idx, const char *tag)
 {
 	js_Value *v = stackidx(J, idx);

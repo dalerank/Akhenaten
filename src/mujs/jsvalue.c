@@ -495,17 +495,17 @@ void js_concat(js_State *J)
 		const char *sa = js_tostring(J, -2);
 		const char *sb = js_tostring(J, -1);
 		/* TODO: create js_String directly */
-		char *sab = js_malloc(J, strlen(sa) + strlen(sb) + 1);
+		char *sab = js_stack_alloc(strlen(sa) + strlen(sb) + 1);
 		strcpy(sab, sa);
 		strcat(sab, sb);
 		if (js_try(J)) {
-			js_free(J, sab);
+			//js_free(J, sab);
 			js_throw(J);
 		}
 		js_pop(J, 2);
 		js_pushstring(J, sab);
 		js_endtry(J);
-		js_free(J, sab);
+		//js_free(J, sab);
 	} else {
 		double x = js_tonumber(J, -2);
 		double y = js_tonumber(J, -1);
