@@ -61,6 +61,7 @@ class figure_market_buyer;
 class figure_bricklayer;
 class figure_ferry_boat;
 class figure_carpenter;
+class figure_worker;
 
 struct animation_t;
 struct figure_static_params;
@@ -252,6 +253,7 @@ public:
     ALLOW_SMART_CAST_FIGURE(ferry_boat)
     ALLOW_SMART_CAST_FIGURE(soldier)
     ALLOW_SMART_CAST_FIGURE(enemy)
+    ALLOW_SMART_CAST_FIGURE(worker)
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -297,6 +299,7 @@ public:
     bool can_move_by_water();
     bool can_move_by_terrain();
     void set_direction_to(building *b);
+    void set_direction(int dir);
     void clear_impl();
 
     e_figure_category category() const;
@@ -547,7 +550,8 @@ public:
     virtual xstring action_tip() const { static xstring tip(""); return tip; }
     virtual void debug_show_properties() {}
     virtual void debug_draw() {}
-    virtual bool is_home(const building *b) const { return base.home_building_id > 0 && base.home_building_id == b->id; }
+    virtual bool is_home(const building *b) const { return base.home_building_id > 0 && base.home_building_id == (b ? b->id : 0); }
+    virtual bool is_destination(const building *b) const { return base.destination_building_id > 0 && base.destination_building_id == (b ? b->id : 0); }
     virtual empire_city_handle empire_city() const { return empire_city_handle{}; }
     virtual void formation_reset_to_initial(const formation *m) {}
     virtual void apply_damage(int hit_dmg, figure_id attaker_id) { base.damage += hit_dmg; }
