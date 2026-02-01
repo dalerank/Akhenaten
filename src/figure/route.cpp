@@ -9,7 +9,7 @@
 #include "grid/grid.h"
 #include "grid/figure.h"
 #include "grid/random.h"
-#include "grid/routing/routing.h"
+#include "grid/terrain.h"
 
 #include <assert.h>
 
@@ -219,6 +219,46 @@ void figure::route_remove() {
 int figure_route_get_direction(int path_id, int index) {
     auto &data = g_figure_route_data;
     return data.direction_paths[path_id][index];
+}
+
+int figure_find_best_road_direction(tile2i spawn_tile, tile2i target_tile) {
+    // Calculate target direction
+    int target_direction = calc_general_direction(spawn_tile, target_tile);
+
+    // Check neib tiles (8 dirs) that find better available for start
+    int best_direction = DIR_4_BOTTOM_LEFT;
+    int min_direction_diff = 8;
+
+    // (dx, dy) -> direction
+    struct {
+        int dx, dy;
+        int dir;
+    } neighbors[] = {
+        {0, -1, DIR_7_TOP},           // 0: top
+        {1, -1, DIR_0_TOP_RIGHT},     // 1: top-right
+        {1, 0, DIR_1_RIGHT},          // 2: right
+        {1, 1, DIR_2_BOTTOM_RIGHT},   // 3: down-right
+        {0, 1, DIR_3_BOTTOM},         // 4: down
+        {-1, 1, DIR_4_BOTTOM_LEFT},   // 5: down-left
+        {-1, 0, DIR_5_LEFT},          // 6: left
+        {-1, -1, DIR_6_TOP_LEFT}       // 7: top-left
+    };
+
+    for (int i = 0; i < 8; i++) {
+        tile2i neighbor_tile = spawn_tile.shifted(neighbors[i].dx, neighbors[i].dy);
+
+        if (map_terrain_is(neighbor_tile.grid_offset(), TERRAIN_ROAD | TERRAIN_ACCESS_RAMP)) {
+            int dir_diff = std::abs(target_direction - neighbors[i].dir);
+            int circular_diff = std::min(dir_diff, 8 - dir_diff);
+
+            if (circular_diff < min_direction_diff) {
+                min_direction_diff = circular_diff;
+                best_direction = neighbors[i].dir;
+            }
+        }
+    }
+
+    return best_direction;
 }
 
 io_buffer* iob_route_figures = new io_buffer([](io_buffer* iob, size_t version) {
