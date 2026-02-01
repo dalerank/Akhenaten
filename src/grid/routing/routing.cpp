@@ -193,12 +193,12 @@ static void callback_calc_distance_build_aqueduct(int next_offset, int dist) {
         enqueue(next_offset, dist);
 }
 
-bool map_can_place_initial_road_or_canal(int grid_offset, int is_aqueduct) {
+bool map_can_place_initial_road_or_canal(int grid_offset, int is_canal) {
     switch (map_grid_get(routing_land_citizen, grid_offset)) {
     case CITIZEN_N1_BLOCKED:
         // not open land, can only if:
         // - aqueduct should be placed, and:
-        // - land is a reservoir building OR an aqueduct
+        // - land is a reservoir building OR an canal
         if (!map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) || map_terrain_is(grid_offset, TERRAIN_WATER)) {
             return false;
         }
@@ -209,7 +209,7 @@ bool map_can_place_initial_road_or_canal(int grid_offset, int is_aqueduct) {
         break;
 
     case CITIZEN_0_ROAD:
-        if (is_aqueduct) {
+        if (is_canal) {
             if (!map_can_place_canal_on_road(tile2i(grid_offset)))
                 return false;
 
@@ -219,7 +219,7 @@ bool map_can_place_initial_road_or_canal(int grid_offset, int is_aqueduct) {
         break;
 
     case CITIZEN_N3_CANAL:
-        if (!is_aqueduct) {
+        if (!is_canal) {
             if (!map_can_place_road_under_canal(tile2i(grid_offset)))
                 return false;
             if (!can_place_on_crossing_no_neighboring(grid_offset, TERRAIN_CANAL, TERRAIN_ROAD, 0, 0, false))
@@ -234,7 +234,7 @@ bool map_can_place_initial_road_or_canal(int grid_offset, int is_aqueduct) {
                 != 1) // floodplain CORNER
                 return false;
             else { // floodplain EDGES
-                if (is_aqueduct)
+                if (is_canal)
                     return false; // CAN NOT place canals on floodplain edges directly in Pharaoh
                 else if (!can_place_on_crossing_no_neighboring(grid_offset, TERRAIN_FLOODPLAIN, TERRAIN_ROAD, 0, 0, true))
                     return false;

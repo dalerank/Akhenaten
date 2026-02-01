@@ -129,16 +129,24 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
 
         int savetop = js_gettop(J);
         js_getglobal(J, funcname);
+
+        verify_no_crash(js_iscallable(J, -1));
+        if (!js_iscallable(J, -1)) {
+            logs::info("JS event handler '%s' is not callable, skipping", funcname);
+            js_pop(J, 1);
+            continue;
+        }
+
         js_pushnull(J); // this
 
         js_newobject(J);
-        
+
         // First pass: add regular properties
         bool has_ui_elements = false;
         for (const auto &kv : object) {
             const xstring &key = kv.first;
             const bvariant &val = kv.second;
-            
+
             // Skip UI element markers in first pass
             bstring64 keystr = key.c_str();
             if (keystr.starts_with("__ui_elem_")) {
