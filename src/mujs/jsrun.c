@@ -1,4 +1,5 @@
 #include "jsi.h"
+
 #include "jscompile.h"
 #include "jsvalue.h"
 #include "jsrun.h"
@@ -223,6 +224,49 @@ int js_isuserdata(js_State *J, int idx, const char *tag)
 	if (v->type == JS_TOBJECT && v->u.object->type == JS_CUSERDATA)
 		return !strcmp(tag, v->u.object->u.user.tag);
 	return 0;
+}
+
+/* Object modifiers */
+int js_hasobject_modifier(js_State *J, int idx, const char *key)
+{
+	js_Value *v = stackidx(J, idx);
+	if (v->type != JS_TOBJECT) {
+		return 0;
+	}
+
+	js_Object *obj = v->u.object;
+	if (!obj || !obj->modifiers) {
+		return 0;
+	}
+
+	js_FunctionModifier *mod = obj->modifiers;
+	while (mod) {
+		if (strcmp(mod->key, key) == 0)
+			return 1;
+		mod = mod->next;
+	}
+	return 0;
+}
+
+const char *js_getobject_modifier(js_State *J, int idx, const char *key)
+{
+	js_Value *v = stackidx(J, idx);
+	if (v->type != JS_TOBJECT) {
+		return NULL;
+	}
+
+	js_Object *obj = v->u.object;
+	if (!obj || !obj->modifiers) {
+		return NULL;
+	}
+
+	js_FunctionModifier *mod = obj->modifiers;
+	while (mod) {
+		if (strcmp(mod->key, key) == 0)
+			return mod->value;
+		mod = mod->next;
+	}
+	return NULL;
 }
 
 static const char *js_typeof(js_State *J, int idx)
@@ -1308,6 +1352,41 @@ static void jsR_run(js_State *J, js_Function *F)
 		case OP_NEWOBJECT: js_newobject(J); break;
 		case OP_NEWARRAY: js_newarray(J); break;
 		case OP_NEWREGEXP: js_newregexp(J, ST[pc[0]], pc[1]); pc += 2; break;
+		case OP_SETMODIFIERS: {
+			int mod_count = *pc++;
+			int obj_idx = -1 - mod_count * 2;
+
+			/* Debug: check what's at the expected object position */
+			js_Value *obj_val = stackidx(J, obj_idx);
+			if (obj_val->type != JS_TOBJECT) {
+				/* Print error with details */
+				js_error(J, "OP_SETMODIFIERS: expected object at index %d (mod_count=%d), got type %d", 
+					obj_idx, mod_count, obj_val->type);
+			}
+
+			js_Object *obj = obj_val->u.object;
+			js_FunctionModifier **tail = &obj->modifiers;
+
+			/* Read modifiers from stack (in reverse order) */
+			for (int i = 0; i < mod_count; i++) {
+				int idx = -1 - (mod_count - i - 1) * 2;
+				const char *value = js_tostring(J, idx);
+				const char *key = js_tostring(J, idx - 1);
+
+				js_FunctionModifier *mod = js_malloc(J, sizeof(js_FunctionModifier));
+				mod->key = js_intern(J, key);
+				mod->value = js_intern(J, value);
+				mod->next = NULL;
+
+				*tail = mod;
+				tail = &mod->next;
+			}
+
+			/* Pop modifier strings from stack */
+			for (int i = 0; i < mod_count * 2; i++) {
+				js_pop(J, 1);
+			}
+		} break;
 
 		case OP_UNDEF: js_pushundefined(J); break;
 		case OP_NULL: js_pushnull(J); break;

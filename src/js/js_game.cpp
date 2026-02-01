@@ -26,6 +26,7 @@
 #include "mujs/jscompile.h"
 #include "widget/debug_console.h"
 #include "graphics/elements/ui.h"
+#include "window/js_window_registry.h"
 
 #include <vector>
 #include <sstream>
@@ -431,6 +432,49 @@ void js_register_game_handlers(xstring missionid) {
     }
 
     logs::info("JS: Found %d functions with modifiers", function_count);
+}
+
+// Scan for window declarations and register them dynamically
+void js_scan_and_register_windows() {
+    js_window_registry_clear();
+
+    js_State *J = js_vm_state();
+    if (!J || !J->G) {
+        return;
+    }
+
+    js_Property *prop = J->G->head;
+    int window_count = 0;
+
+    while (prop) {
+        if (prop->value.type == JS_TOBJECT && prop->value.u.object && prop->name) {
+            js_Object *obj = prop->value.u.object;
+
+            // Only process plain objects (not functions)
+            if (obj->type == JS_COBJECT) {
+                pcstr name = prop->name;
+
+                // Push object to stack for checking
+                js_getglobal(J, name);
+
+                if (js_hasobject_modifier(J, -1, "es")) {
+                    pcstr es_value = js_getobject_modifier(J, -1, "es");
+                    if (es_value && strcmp(es_value, "building_info_window") == 0) {
+                        window_count++;
+                        bstring64 init_event_name(name, "_init");
+                        js_register_building_info_window(name, init_event_name.c_str());
+                        logs::info("JS: Registered window '%s' [es=building_info_window]", name);
+                    }
+                }
+
+                js_pop(J, 1);
+            }
+        }
+
+        prop = prop->next;
+    }
+
+    logs::info("JS: Registered %d dynamic windows", window_count);
 }
 
 int __game_screen_width() { return screen_width(); } ANK_FUNCTION(__game_screen_width);

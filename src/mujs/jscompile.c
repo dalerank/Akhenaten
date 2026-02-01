@@ -871,6 +871,20 @@ static void cexp(JF, js_Ast *exp)
 	case EXP_OBJECT:
 		emit(J, F, OP_NEWOBJECT);
 		cobject(J, F, exp->a);
+		/* If this object has modifiers, emit them */
+		if (exp->modifiers) {
+			js_AstModifier *mod = exp->modifiers;
+			int mod_count = 0;
+			while (mod) {
+				emitstring(J, F, OP_STRING, mod->key);
+				emitstring(J, F, OP_STRING, mod->value ? mod->value : "true");
+				mod_count++;
+				mod = mod->next;
+			}
+			/* Emit opcode first, then operand */
+			emit(J, F, OP_SETMODIFIERS);
+			emitraw(J, F, mod_count);
+		}
 		break;
 
 	case EXP_ARRAY:

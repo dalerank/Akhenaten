@@ -3,6 +3,7 @@
 
 typedef struct js_Property js_Property;
 typedef struct js_Iterator js_Iterator;
+typedef struct js_FunctionModifier js_FunctionModifier;
 
 /* Hint to ToPrimitive() */
 enum {
@@ -120,6 +121,7 @@ struct js_Object
 	} u;
 	js_Object *gcnext;
 	int gcmark;
+	struct js_FunctionModifier *modifiers; /* object modifiers/attributes */
 };
 
 struct js_Property
