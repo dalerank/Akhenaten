@@ -2,6 +2,7 @@
 
 #include "content/dir.h"
 #include "core/log.h"
+#include "core/profiler.h"
 #include "graphics/window.h"
 #include "js/js_constants.h"
 #include "js/js_defines.h"
@@ -21,6 +22,8 @@
 #include "widget/debug_console.h"
 
 #include <filesystem>
+#include <new>
+#include <cstdlib>
 
 #if defined(GAME_PLATFORM_LINUX)
 #include <linux/limits.h>
@@ -438,6 +441,48 @@ void js_register_vm_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_vm_load_module, "include", 1);
 }
 
+#if defined(TRACY_MEMORY_ENABLE)
+extern bool TracyProfilerAvailable;
+#endif
+void *js_alloc_wrapper(void *actx, void *ptr, int size) {
+    if (size == 0) {
+        if (ptr) {
+#if defined(TRACY_MEMORY_ENABLE)
+            if (TracyProfilerAvailable) {
+                TracyFreeS(ptr, 20);
+            }
+#endif
+            free(ptr);
+        }
+        return nullptr;
+    }
+
+    if (!ptr) {
+        void *new_ptr = malloc(size);
+#if defined(TRACY_MEMORY_ENABLE)
+        if (new_ptr && TracyProfilerAvailable) {
+            TracyAllocS(new_ptr, size, 20);
+        }
+#endif
+        return new_ptr;
+    }
+
+    void *old_ptr = ptr;
+    void *new_ptr = realloc(ptr, size);
+
+#if defined(TRACY_MEMORY_ENABLE)
+    if (TracyProfilerAvailable && new_ptr) {
+        TracyFreeS(old_ptr, 20);
+        TracyAllocS(new_ptr, size, 20);
+    }
+#endif
+
+    if (!new_ptr && size > 0) {
+        return nullptr;
+    }
+    return new_ptr;
+}
+
 void js_reset_vm_state() {
     if (vm.J) {
         js_freestate(vm.J);
@@ -450,7 +495,7 @@ void js_reset_vm_state() {
     vm.files2load_num = 0;
     vm.have_error = 0;
 
-    vm.J = js_newstate(NULL, NULL, JS_STRICT);
+    vm.J = js_newstate(js_alloc_wrapper, nullptr, JS_STRICT);
     js_atpanic(vm.J, js_game_panic);
     js_registerimport(vm.J, js_game_import);
 
