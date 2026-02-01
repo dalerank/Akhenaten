@@ -181,6 +181,10 @@ int js_iscoercible(js_State *J, int idx);
 int js_iscallable(js_State *J, int idx);
 int js_isuserdata(js_State *J, int idx, const char *tag);
 
+/* Object modifiers */
+int js_hasobject_modifier(js_State *J, int idx, const char *key);
+const char *js_getobject_modifier(js_State *J, int idx, const char *key);
+
 int js_toboolean(js_State *J, int idx);
 double js_tonumber(js_State *J, int idx);
 const char *js_tostring(js_State *J, int idx);

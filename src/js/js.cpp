@@ -331,8 +331,10 @@ bool js_vm_sync(const xstring &mission_id) {
         vm.files2load[i].clear();
     }
 
-    config::refresh(vm.J);
     js_register_game_handlers(mission_id);
+    js_scan_and_register_windows();
+
+    config::refresh(vm.J);
 
     vm.files2load_num = 0;
     vm.have_error = 0;

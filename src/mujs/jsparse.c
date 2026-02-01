@@ -18,7 +18,7 @@
 static js_Ast *expression(js_State *J, int notin);
 static js_Ast *assignment(js_State *J, int notin);
 static js_Ast *memberexp(js_State *J);
-static js_Ast *statement(js_State *J);
+static js_Ast *statement(js_State *J, js_AstModifier *modifiers);
 static js_Ast *funbody(js_State *J);
 
 JS_NORETURN static void jsP_error(js_State *J, const char *fmt, ...) JS_PRINTFLIKE(2,3);
@@ -664,9 +664,9 @@ static js_Ast *statementlist(js_State *J)
 	js_Ast *head, *tail;
 	if (J->lookahead == '}' || J->lookahead == TK_CASE || J->lookahead == TK_DEFAULT)
 		return NULL;
-	head = tail = LIST(statement(J));
+	head = tail = LIST(statement(J, NULL));
 	while (J->lookahead != '}' && J->lookahead != TK_CASE && J->lookahead != TK_DEFAULT)
-		tail = tail->b = LIST(statement(J));
+		tail = tail->b = LIST(statement(J, NULL));
 	return jsP_list(head);
 }
 
@@ -728,13 +728,13 @@ static js_Ast *forstatement(js_State *J)
 		if (jsP_accept(J, ';')) {
 			b = forexpression(J, ';');
 			c = forexpression(J, ')');
-			d = statement(J);
+			d = statement(J, NULL);
 			return STM4(FOR_VAR, a, b, c, d);
 		}
 		if (jsP_accept(J, TK_IN)) {
 			b = expression(J, 0);
 			jsP_expect(J, ')');
-			c = statement(J);
+			c = statement(J, NULL);
 			return STM3(FOR_IN_VAR, a, b, c);
 		}
 		jsP_error(J, "unexpected token in for-var-statement: %s", jsY_tokenstring(J->lookahead));
@@ -747,19 +747,20 @@ static js_Ast *forstatement(js_State *J)
 	if (jsP_accept(J, ';')) {
 		b = forexpression(J, ';');
 		c = forexpression(J, ')');
-		d = statement(J);
+		d = statement(J, NULL);
 		return STM4(FOR, a, b, c, d);
 	}
 	if (jsP_accept(J, TK_IN)) {
 		b = expression(J, 0);
 		jsP_expect(J, ')');
-		c = statement(J);
+		c = statement(J, NULL);
 		return STM3(FOR_IN, a, b, c);
 	}
 	jsP_error(J, "unexpected token in for-statement: %s", jsY_tokenstring(J->lookahead));
 }
 
-static js_Ast *statement(js_State *J)
+/* Global variable to pass modifiers to statement() */
+static js_Ast *statement(js_State *J, js_AstModifier *modifiers)
 {
 	js_Ast *a, *b, *c, *d;
 
@@ -782,16 +783,16 @@ static js_Ast *statement(js_State *J)
 		jsP_expect(J, '(');
 		a = expression(J, 0);
 		jsP_expect(J, ')');
-		b = statement(J);
+		b = statement(J, NULL);
 		if (jsP_accept(J, TK_ELSE))
-			c = statement(J);
+			c = statement(J, NULL);
 		else
 			c = NULL;
 		return STM3(IF, a, b, c);
 	}
 
 	if (jsP_accept(J, TK_DO)) {
-		a = statement(J);
+		a = statement(J, NULL);
 		jsP_expect(J, TK_WHILE);
 		jsP_expect(J, '(');
 		b = expression(J, 0);
@@ -804,7 +805,7 @@ static js_Ast *statement(js_State *J)
 		jsP_expect(J, '(');
 		a = expression(J, 0);
 		jsP_expect(J, ')');
-		b = statement(J);
+		b = statement(J, NULL);
 		return STM2(WHILE, a, b);
 	}
 
@@ -839,7 +840,7 @@ static js_Ast *statement(js_State *J)
 		jsP_expect(J, '(');
 		a = expression(J, 0);
 		jsP_expect(J, ')');
-		b = statement(J);
+		b = statement(J, NULL);
 		return STM2(WITH, a, b);
 	}
 
@@ -892,7 +893,7 @@ static js_Ast *statement(js_State *J)
 		a = expression(J, 0);
 		if (a->type == EXP_IDENTIFIER && jsP_accept(J, ':')) {
 			a->type = AST_IDENTIFIER;
-			b = statement(J);
+			b = statement(J, NULL);
 			return STM2(LABEL, a, b);
 		}
 
@@ -902,6 +903,10 @@ static js_Ast *statement(js_State *J)
 			obj = EXP1(OBJECT, objectliteral(J));
 			jsP_expect(J, '}');
 			jsP_semicolon(J);
+			/* Apply modifiers if they were set in scriptelement */
+			if (modifiers) {
+				obj->modifiers = modifiers;
+			}
 			return EXP2(ASS, a, obj);
 		}
 
@@ -921,23 +926,22 @@ static js_Ast *statement(js_State *J)
 static js_AstModifier *parsemodifiers(js_State *J)
 {
 	js_AstModifier *head = NULL, *tail = NULL;
-	
 	if (!jsP_accept(J, '['))
 		return NULL;
-	
+
 	/* Parse first modifier */
 	if (J->lookahead != TK_IDENTIFIER)
 		jsP_error(J, "expected identifier in function modifier");
-	
+
 	const char *key = J->text;
 	jsP_next(J);
-	
+
 	/* Check if there's a value assignment or just a flag */
 	const char *value;
 	if (jsP_accept(J, '=')) {
 		if (J->lookahead != TK_IDENTIFIER && J->lookahead != TK_STRING && J->lookahead != TK_NUMBER)
 			jsP_error(J, "expected value in function modifier");
-		
+
 		if (J->lookahead == TK_NUMBER) {
 			char buf[32];
 			snprintf(buf, sizeof(buf), "%g", J->number);
@@ -950,25 +954,25 @@ static js_AstModifier *parsemodifiers(js_State *J)
 		/* No value means it's a flag, set value to "true" */
 		value = js_intern(J, "true");
 	}
-	
+
 	head = tail = js_malloc(J, sizeof(js_AstModifier));
 	head->key = js_intern(J, key);
 	head->value = value;
 	head->next = NULL;
-	
+
 	/* Parse additional modifiers */
 	while (jsP_accept(J, ',')) {
 		if (J->lookahead != TK_IDENTIFIER)
 			jsP_error(J, "expected identifier in function modifier");
-		
+
 		key = J->text;
 		jsP_next(J);
-		
+
 		/* Check if there's a value assignment or just a flag */
 		if (jsP_accept(J, '=')) {
 			if (J->lookahead != TK_IDENTIFIER && J->lookahead != TK_STRING && J->lookahead != TK_NUMBER)
 				jsP_error(J, "expected value in function modifier");
-			
+
 			if (J->lookahead == TK_NUMBER) {
 				char buf[32];
 				snprintf(buf, sizeof(buf), "%g", J->number);
@@ -981,16 +985,16 @@ static js_AstModifier *parsemodifiers(js_State *J)
 			/* No value means it's a flag, set value to "true" */
 			value = js_intern(J, "true");
 		}
-		
+
 		js_AstModifier *mod = js_malloc(J, sizeof(js_AstModifier));
 		mod->key = js_intern(J, key);
 		mod->value = value;
 		mod->next = NULL;
-		
+
 		tail->next = mod;
 		tail = mod;
 	}
-	
+
 	jsP_expect(J, ']');
 	return head;
 }
@@ -998,24 +1002,22 @@ static js_AstModifier *parsemodifiers(js_State *J)
 static js_Ast *scriptelement(js_State *J)
 {
 	js_AstModifier *modifiers = NULL;
-	
-	/* Check for function modifiers */
+
+	/* Check for modifiers (can be for functions or objects) */
 	if (J->lookahead == '[') {
 		modifiers = parsemodifiers(J);
 	}
-	
+
 	if (jsP_accept(J, TK_FUNCTION)) {
 		js_Ast *fun = fundec(J);
 		fun->modifiers = modifiers;
 		return fun;
 	}
-	
-	/* If modifiers were found but no function follows, error */
-	if (modifiers) {
-		jsP_error(J, "function modifiers can only be applied to function declarations");
-	}
-	
-	return statement(J);
+
+	/* If modifiers were found, pass them to statement via global */
+	js_Ast *stmt = statement(J, modifiers);
+
+	return stmt;
 }
 
 static js_Ast *script(js_State *J, int terminator)

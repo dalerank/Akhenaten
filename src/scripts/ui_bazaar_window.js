@@ -1,6 +1,10 @@
 log_info("akhenaten: ui bazaar window started")
 
+building_info_window {}
+
+[es=building_info_window]
 bazaar_info_window {
+    related_buildings [BUILDING_BAZAAR, BUILDING_BAZAAR_UP]
     ui {
         background   : outer_panel({size[29, 17]})
         title        : text({text: "#bazaar_info_title", pos[0, 10], size: [16 * 29, 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
@@ -37,7 +41,7 @@ bazaar_info_window {
 }
 
 bazaar_orders_window {
-ui {
+    ui {
         background   : outer_panel({size[29, 17]}),
         title        : text({pos[0, 12], size[px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
         orders_panel : inner_panel({pos[16, 42], size[27, 11] })
