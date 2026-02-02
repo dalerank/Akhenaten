@@ -33,7 +33,7 @@ public:
     virtual void on_undo() override;
     virtual void on_tick(bool refresh_only) override;
     virtual bool get_route_citizen_land_type(int grid_offset, int &land_result) const override;
-    virtual bool building_bandstand::target_route_tile_blocked(int grid_offset) const override;
+    virtual bool target_route_tile_blocked(int grid_offset) const override;
      
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     void draw_shows_musicians(painter &ctx, vec2i pixel, tile2i tile, int direction, color color_mask);
