@@ -623,11 +623,6 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(building &base, 
     return true;
 }
 
-span_const<uint16_t> building_mastaba::active_workers() const {
-    auto &monumentd = runtime_data();
-    return span_const<uint16_t>(monumentd.workers);
-}
-
 void building_mastaba::update_day(const vec2i tiles_size) {
     auto &monumentd = runtime_data();
     if (monumentd.phase >= 8) {

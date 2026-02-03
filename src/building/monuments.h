@@ -55,6 +55,8 @@ public:
     virtual int needs_bricklayers(int ph_id) const;
     virtual void add_delivery(int figure_id, int resource_id, int num_loads);
     virtual bool requires_resource(e_resource resource) const;
+    virtual span_const<uint16_t> active_workers() const;
+
     bool has_labour_problems() const;
 
     virtual bool has_required_resources_to_build() const;

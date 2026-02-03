@@ -457,6 +457,11 @@ bool building_monument::requires_resource(e_resource resource) const {
     return false;
 }
 
+span_const<uint16_t> building_monument::active_workers() const {
+    auto &d = runtime_data();
+    return span_const<uint16_t>(d.workers);
+}
+
 bool building_monument::has_required_resources_to_build() const {
     int phases = this->phases();
     for (int phase = 1; phase < phases; phase++) {

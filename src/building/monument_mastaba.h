@@ -31,7 +31,7 @@ public:
     virtual void update_map_orientation(int map_orientation) override;
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
-    virtual bool get_route_citizen_land_type(int grid_offset, int &land_result) const;
+    virtual bool get_route_citizen_land_type(int grid_offset, int &land_result) const override;
     virtual bool target_route_tile_blocked(int grid_offset) const override;
 
     struct preview : building_planer_renderer {
@@ -52,7 +52,6 @@ public:
 
     void update_day(const vec2i tiles_size);
     virtual bool need_workers() const override;
-    span_const<uint16_t> active_workers() const;
 
     static void update_images(building *b, int curr_phase, const vec2i size_b);
     static void finalize(building *b, const vec2i size_b);
