@@ -36,13 +36,13 @@
 #define MAX_FILES_RELOAD 255
 
 struct {
+    const size_t FRAME_ALLOC_BUFFER_SIZE = 64 * 1024;
     svector<vfs::path, 4> scripts_folders;
     vfs::path files2load[MAX_FILES_RELOAD];
     int files2load_num;
     int have_error;
     bstring256 error_str;
     js_State *J;
-    static constexpr size_t FRAME_ALLOC_BUFFER_SIZE = 64 * 1024;
     char *frame_alloc_buffer = nullptr;
     std::pmr::monotonic_buffer_resource frame_alloc_ctx;
 } vm;

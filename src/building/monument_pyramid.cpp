@@ -697,6 +697,24 @@ void building_stepped_pyramid::bind_dynamic(io_buffer *iob, size_t version) {
     }
 }
 
+int building_small_stepped_pyramid::building_image_get() const {
+    switch (runtime_data().phase) {
+    case MONUMENT_START:
+        return building_static_params::get(BUILDING_SMALL_STEPPED_PYRAMID).base_img();
+    default:
+        return building_static_params::get(BUILDING_SMALL_STEPPED_PYRAMID).base_img() + 1;
+    }
+
+    return 0;
+}
+
+grid_area building_small_stepped_pyramid::get_area() const {
+    tile2i main = tile();
+    tile2i end = main.shifted(size() - 1, size() - 1); 
+
+    return { main, end };
+}
+
 void building_small_stepped_pyramid::update_day() {
     building_impl::update_day();
 
@@ -837,6 +855,24 @@ void building_medium_stepped_pyramid::update_day() {
     }
 
     building_stepped_pyramid::update_day(current_params().init_tiles);
+}
+
+int building_medium_stepped_pyramid::building_image_get() const {
+    switch (runtime_data().phase) {
+    case MONUMENT_START:
+        return current_params().base_img();
+    default:
+        return current_params().base_img() + 1;
+    }
+
+    return 0;
+}
+
+grid_area building_medium_stepped_pyramid::get_area() const {
+    tile2i main = tile();
+    tile2i end = main.shifted(size() - 1, size() - 1);
+
+    return { main, end };
 }
 
 bool building_medium_stepped_pyramid::draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) {

@@ -280,7 +280,7 @@ building_bazaar {
   meta { help_id: 2, text_id: 97 }
   cost [ 8, 15, 30, 50, 100 ]
   desirability { value[-2], step[1], step_size[1], range[6] }
-  
+
   laborers[5]
   fire_risk[4]
   damage_risk[2]
@@ -1016,7 +1016,8 @@ building_stone_quarry {
   animations {
     preview { pack:PACK_GENERAL, id:187 },
     base { pack:PACK_GENERAL, id:187 },
-    work { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16, duration:2 }
+    work { pos : [84, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 6, duration:3, internal_offset:true }
+    work_2 { pos : [44, 20], pack:PACK_SPR_AMBIENT, id:49, offset:7, max_frames: 6, duration:3, internal_offset:true }
   }
   output {
     resource : RESOURCE_STONE

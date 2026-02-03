@@ -73,6 +73,8 @@ public:
     virtual void update_day() override;
     virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
+    virtual int building_image_get() const override;
+    virtual grid_area get_area() const override;
 
     virtual const monument &config() const override;
     virtual tile2i center_point() const override;
@@ -102,6 +104,8 @@ public:
     virtual void update_day() override;
     virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
+    virtual int building_image_get() const override;
+    virtual grid_area get_area() const override;
 
     virtual const monument &config() const override;
     virtual tile2i center_point() const override;

@@ -31,7 +31,6 @@ public:
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
     virtual bool force_draw_height_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
     virtual void on_undo() override;
-    virtual void on_tick(bool refresh_only) override;
     virtual bool get_route_citizen_land_type(int grid_offset, int &land_result) const override;
     virtual bool target_route_tile_blocked(int grid_offset) const override;
      

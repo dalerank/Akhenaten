@@ -75,20 +75,10 @@ void map_monuments_clear() {
     map_grid_fill(g_monuments_progress_grid, 0);
 }
 
-grid_area building_monument::get_area() {
+grid_area building_monument::get_area() const {
     tile2i main = tile();
-    tile2i end = main;
-
-    switch (type()) {
-    case BUILDING_SMALL_MASTABA: end = main.shifted(3, 9); break;
-    case BUILDING_SMALL_STEPPED_PYRAMID: end = main.shifted(3, 9); break;
-    case BUILDING_MEDIUM_MASTABA: end = main.shifted(5, 13); break;
-
-    default:
-        verify_no_crash(false);
-    }
-
-    return {main, end};
+    verify_no_crash(false);
+    return {main, main};
 }
 
 int building_monument_workers_onsite(building *b, e_figure_type figure_type) {
@@ -190,54 +180,6 @@ int building_monument::needs_resource(e_resource resource, int phase) const {
     return (r_it != ph.resources.end() ? r_it->count : 0);
 }
 
-int building_image_get(building *b) {
-    switch (b->type) {
-    case BUILDING_SMALL_MASTABA:
-    case BUILDING_SMALL_MASTABA_SIDE:
-    case BUILDING_SMALL_MASTABA_WALL:
-    case BUILDING_SMALL_MASTABA_ENTRANCE:
-        {
-            auto monument = b->dcast_monument();
-            switch (monument->runtime_data().phase) {
-            case MONUMENT_START:
-                return building_static_params::get(BUILDING_SMALL_MASTABA).base_img();
-            default:
-                return building_static_params::get(BUILDING_SMALL_MASTABA).base_img() + 1;
-            }
-        }
-
-    case BUILDING_SMALL_STEPPED_PYRAMID:
-        {
-            auto monument = b->dcast_monument();
-            switch (monument->runtime_data().phase) {
-            case MONUMENT_START:
-                return building_static_params::get(BUILDING_SMALL_STEPPED_PYRAMID).base_img();
-            default:
-                return building_static_params::get(BUILDING_SMALL_STEPPED_PYRAMID).base_img() + 1;
-            }
-        }
-
-    case BUILDING_MEDIUM_MASTABA:
-    case BUILDING_MEDIUM_MASTABA_SIDE:
-    case BUILDING_MEDIUM_MASTABA_WALL:
-    case BUILDING_MEDIUM_MASTABA_ENTRANCE:
-        {
-            auto monument = b->dcast_monument();
-            switch (monument->runtime_data().phase) {
-            case MONUMENT_START:
-                return building_static_params::get(BUILDING_MEDIUM_MASTABA).base_img();
-            default:
-                return building_static_params::get(BUILDING_MEDIUM_MASTABA).base_img() + 1;
-            }
-        }
-
-    default:
-        verify_no_crash(false);
-    }
-
-    return 0;
-}
-
 void building_monument::set_phase(int phase) {
     if (phase == phases()) {
         phase = MONUMENT_FINISHED;
@@ -250,7 +192,7 @@ void building_monument::set_phase(int phase) {
 
     d.phase = phase;
     if (phase >= 2) {
-        map_building_tiles_add(id(), tile(), size(), building_image_get(&base), TERRAIN_BUILDING);
+        map_building_tiles_add(id(), tile(), size(), this->building_image_get(), TERRAIN_BUILDING);
     }
 
     if (d.phase != MONUMENT_FINISHED) {
