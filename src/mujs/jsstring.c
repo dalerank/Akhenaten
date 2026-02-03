@@ -116,24 +116,27 @@ static void Sp_concat(js_State *J)
 
 	s = checkstring(J, 0);
 	n = strlen(s);
-	out = js_malloc(J, n + 1);
+	out = js_frame_alloc(J, n + 1);
 	strcpy(out, s);
 
 	if (js_try(J)) {
-		js_free(J, out);
+		js_frame_free(J, out);
 		js_throw(J);
 	}
 
 	for (i = 1; i < top; ++i) {
 		s = js_tostring(J, i);
+		int old_n = n;
 		n += strlen(s);
-		out = js_realloc(J, out, n + 1);
-		strcat(out, s);
+		char *new_out = js_frame_alloc(J, n + 1);
+		memcpy(new_out, out, old_n + 1); /* copy including null terminator */
+		strcat(new_out, s);
+		out = new_out;
 	}
 
 	js_pushstring(J, out);
 	js_endtry(J);
-	js_free(J, out);
+	js_frame_free(J, out);
 }
 
 static void Sp_indexOf(js_State *J)
@@ -229,7 +232,7 @@ static void Sp_substring(js_State *J)
 static void Sp_toLowerCase(js_State *J)
 {
 	const char *src = checkstring(J, 0);
-	char *dst = js_malloc(J, UTFmax * strlen(src) + 1);
+	char *dst = js_frame_alloc(J, UTFmax * strlen(src) + 1);
 	const char *s = src;
 	char *d = dst;
 	Rune rune;
@@ -240,18 +243,18 @@ static void Sp_toLowerCase(js_State *J)
 	}
 	*d = 0;
 	if (js_try(J)) {
-		js_free(J, dst);
+		js_frame_free(J, dst);
 		js_throw(J);
 	}
 	js_pushstring(J, dst);
 	js_endtry(J);
-	js_free(J, dst);
+	js_frame_free(J, dst);
 }
 
 static void Sp_toUpperCase(js_State *J)
 {
 	const char *src = checkstring(J, 0);
-	char *dst = js_malloc(J, UTFmax * strlen(src) + 1);
+	char *dst = js_frame_alloc(J, UTFmax * strlen(src) + 1);
 	const char *s = src;
 	char *d = dst;
 	Rune rune;
@@ -262,12 +265,12 @@ static void Sp_toUpperCase(js_State *J)
 	}
 	*d = 0;
 	if (js_try(J)) {
-		js_free(J, dst);
+		js_frame_free(J, dst);
 		js_throw(J);
 	}
 	js_pushstring(J, dst);
 	js_endtry(J);
-	js_free(J, dst);
+	js_frame_free(J, dst);
 }
 
 static int istrim(int c)

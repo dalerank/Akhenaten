@@ -204,17 +204,17 @@ int js_vm_trypcall(js_State *J, int params) {
         // Log full error message (MuJS now provides detailed context)
         const char *cur_symbol = error_msg;
         const char *start_str = cur_symbol;
-        bstring256 temp_str;
+        bstring256 error_msg_copy;
         while (*cur_symbol) {
             if (*cur_symbol != '\n') {
                 cur_symbol++;
                 continue;
             }
 
-            temp_str.printf("%.*s", cur_symbol - start_str, start_str);
+            error_msg_copy.printf("%.*s", cur_symbol - start_str, start_str);
             start_str = cur_symbol + 1;
             cur_symbol += 2;
-            logs::info("!!! %s", temp_str.c_str());
+            logs::info("!!! %s", error_msg_copy.c_str());
         }
         logs::info("!!! %s", start_str);
 
