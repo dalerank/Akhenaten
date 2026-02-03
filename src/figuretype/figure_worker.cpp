@@ -13,8 +13,8 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_worker);
 
-tile2i figure_worker::mastaba_tile4work(building *b) {
-    building_mastaba *mastaba = b->dcast_mastaba();
+tile2i figure_worker::monumen_tile4work(building *b) {
+    building_monument *mastaba = b->dcast_monument();
     if (!mastaba) {
         return tile2i{-1, -1};
     }
@@ -104,9 +104,9 @@ void figure_worker::figure_action() {
                 d.labor_state = LABOR_STATE_JUST_ENTERED;
                 d.labor_days_left = 96;
             } else if (b_dest->is_monument()) {
-                tile2i tile_need_leveling = mastaba_tile4work(b_dest);
+                tile2i tile_need_leveling = monumen_tile4work(b_dest);
                 if (tile_need_leveling == tile2i{-1, -1}) {
-                    poof();
+                    advance_action(ACTION_13_WORKER_BACK_FROM_WORKS);
                     return;
                 }
                 map_monuments_set_progress(tile_need_leveling, 1);

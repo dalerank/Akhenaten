@@ -29,5 +29,5 @@ public:
     virtual e_overlay get_overlay() const override { return OVERLAY_LABOR; }
     virtual figure_sound_t get_sound_reaction(pcstr key) const;
 
-    tile2i mastaba_tile4work(building *b);
+    tile2i monumen_tile4work(building *b);
 };
