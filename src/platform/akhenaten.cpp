@@ -294,6 +294,8 @@ static void teardown() {
 
 static void run_and_draw() {
     OZZY_PROFILER_BEGIN_FRAME();
+    js_vm_frame_begin();
+
     time_millis time_before_run = SDL_GetTicks();
     time_set_millis(time_before_run);
 
