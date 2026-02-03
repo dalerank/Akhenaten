@@ -266,14 +266,6 @@ void building_bandstand::draw_shows_musicians(painter &ctx, vec2i pixel, tile2i 
     draw_normal_anim(ctx, base.anims[musician_anim], pixel, tile, color_mask);
 }
 
-void building_bandstand::on_tick(bool refresh_only) {
-    inherited::on_tick(refresh_only);
-
-    auto &d = runtime_data();
-    base.anims[musician_anim].update(refresh_only);
-    base.anims[juggler_anim].update(refresh_only);
-}
-
 void building_bandstand::draw_shows_juggler(painter &ctx, vec2i pixel, tile2i tile, int direction, color color_mask) {
     auto &d = runtime_data();
     if (!d.juggler_visited) {

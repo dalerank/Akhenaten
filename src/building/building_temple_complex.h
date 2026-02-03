@@ -75,7 +75,7 @@ public:
     } BUILDING_STATIC_DATA_T;
 
     virtual e_overlay get_overlay() const override { return OVERLAY_RELIGION_OSIRIS; }
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+    virtual const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(building_temple_complex_osiris::static_params, allowed_altar, allowed_oracle)
 
@@ -87,7 +87,7 @@ public:
     } BUILDING_STATIC_DATA_T;
 
     virtual e_overlay get_overlay() const override { return OVERLAY_RELIGION_RA; }
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+    virtual const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(building_temple_complex_ra::static_params, allowed_altar, allowed_oracle)
   
@@ -99,7 +99,7 @@ public:
     } BUILDING_STATIC_DATA_T;
 
     virtual e_overlay get_overlay() const override { return OVERLAY_RELIGION_PTAH; }
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+    virtual const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(building_temple_complex_ptah::static_params, allowed_altar, allowed_oracle)
 
@@ -111,7 +111,7 @@ public:
     } BUILDING_STATIC_DATA_T;
 
     virtual e_overlay get_overlay() const override { return OVERLAY_RELIGION_SETH; }
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+    virtual const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(building_temple_complex_seth::static_params, allowed_altar, allowed_oracle)
 
@@ -123,6 +123,6 @@ public:
     } BUILDING_STATIC_DATA_T;
 
     virtual e_overlay get_overlay() const override { return OVERLAY_RELIGION_BAST; }
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+    virtual const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(building_temple_complex_bast::static_params, allowed_altar, allowed_oracle)

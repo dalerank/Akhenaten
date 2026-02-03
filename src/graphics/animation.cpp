@@ -55,6 +55,10 @@ void animation_context::setup(const animation_t &anim) {
 }
 
 void animation_context::update(bool refresh_only) {
+    if (!valid()) {
+        return;
+    }
+
     if (was_finished) {
         tick_updated = true;
         return;

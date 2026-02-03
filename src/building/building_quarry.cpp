@@ -23,6 +23,7 @@ bool building_sandstone_quarry::draw_ornaments_and_animations_height(painter &ct
 
 bool building_stone_quarry::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     draw_normal_anim(ctx, point, tile, color_mask);
+    draw_normal_anim(ctx, base.anims[work_2], point, tile, color_mask);
     return true;
 }
 
@@ -48,6 +49,12 @@ void building_stone_quarry::update_production() {
         [](tile2i t) { return map_get_stone(t); },
         [](tile2i t, int amount) { map_stone_deplete(t, amount); }
     );
+}
+
+void building_stone_quarry::update_day() {
+    building_quarry::update_day();
+
+    base.anims[work_2] = anim(pct_workers() > 50 ? animkeys().work_2 : animkeys().none);
 }
 
 void building_limestone_quarry::update_production() {

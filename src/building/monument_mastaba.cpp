@@ -764,6 +764,22 @@ bool building_mastaba::target_route_tile_blocked(int grid_offset) const {
     return is_finished();
 }
 
+int building_small_mastaba::building_image_get() const {
+    switch (runtime_data().phase) {
+    case MONUMENT_START:
+        return current_params().base_img();
+    default:
+        return current_params().base_img() + 1;
+    }
+}
+
+grid_area building_small_mastaba::get_area() const {
+    tile2i main = tile();
+    tile2i end = main.shifted(3, 9);
+
+    return { main, end };
+}
+
 bool building_small_mastaba::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     if (is_finished()) {
         return false;
@@ -821,6 +837,23 @@ tile2i building_medium_mastaba::center_point() const {
     tile2i main = tile();
     tile2i end = main.shifted(5, 13);
     return main.add(end).div(2);
+}
+
+int building_medium_mastaba::building_image_get() const {
+    switch (runtime_data().phase) {
+    case MONUMENT_START:
+        return current_params().base_img();
+    default:
+        return current_params().base_img() + 1;
+    }
+    return 0;
+}
+
+grid_area building_medium_mastaba::get_area() const {
+    tile2i main = tile();
+    tile2i end =  main.shifted(5, 13);
+
+    return { main, end };
 }
 
 tile2i building_medium_mastaba::access_point() const {

@@ -337,4 +337,7 @@ void building_impl::on_tick(bool refresh_only) {
     }
 
     base.anim.update(refresh_only);
+    for (auto &anim : base.anims) {
+        anim.update(refresh_only);
+    }
 }

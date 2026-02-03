@@ -51,11 +51,12 @@ public:
     virtual int progress();
     virtual void set_phase(int phase);
     virtual int phases() const;
-    virtual grid_area get_area();
+    virtual grid_area get_area() const;
     virtual int needs_bricklayers(int ph_id) const;
     virtual void add_delivery(int figure_id, int resource_id, int num_loads);
     virtual bool requires_resource(e_resource resource) const;
     virtual span_const<uint16_t> active_workers() const;
+    virtual int building_image_get() const { return 0; }
 
     bool has_labour_problems() const;
 

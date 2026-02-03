@@ -11,6 +11,7 @@ struct id_anim_t {
     static const xstring fancy_work;
     static const xstring preview;
     static const xstring work;
+    static const xstring work_2;
     static const xstring work_ground;
     static const xstring work_wall;
     static const xstring womit;

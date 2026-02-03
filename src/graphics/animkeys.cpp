@@ -9,6 +9,7 @@ const xstring id_anim_t::fancy = "fancy";
 const xstring id_anim_t::fancy_work = "fancy_work";
 const xstring id_anim_t::preview = "preview";
 const xstring id_anim_t::work = "work";
+const xstring id_anim_t::work_2 = "work_2";
 const xstring id_anim_t::work_ground = "work_ground";
 const xstring id_anim_t::work_wall = "work_wall";
 const xstring id_anim_t::womit = "womit";
