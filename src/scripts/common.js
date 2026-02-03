@@ -63,26 +63,26 @@ function vec2i(x, y) {
     } else {
         obj = {x: x, y: y};
     }
-    
+
     // Add chainable methods
     obj.add = function(other) {
         var o = vec2i(other);
         return vec2i(this.x + o.x, this.y + o.y);
     };
-    
+
     obj.sub = function(other) {
         var o = vec2i(other);
         return vec2i(this.x - o.x, this.y - o.y);
     };
-    
+
     obj.mul = function(scalar) {
         return vec2i(this.x * scalar, this.y * scalar);
     };
-    
+
     obj.div = function(scalar) {
         return vec2i(this.x / scalar, this.y / scalar);
     };
-    
+
     return obj;
 }
 

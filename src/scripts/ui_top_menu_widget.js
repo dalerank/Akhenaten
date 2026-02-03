@@ -79,7 +79,7 @@ top_menu_widget {
 		autosave_options: menu_item({text {group:19, id:51}
 				                     textfn: top_menu_autosave_options_text
 									 onclick: top_menu_autosave_options_toggle })
-									 
+
 		hotkeys_options : menu_item({text: "Hotkeys options", onclick: __widget_top_menu_hotkeys_options })
 		enhanced_options: menu_item({text: "Enhanced options", onclick: __widget_top_menu_features })
 	}
@@ -155,12 +155,12 @@ function top_menu_widget_open_submenu(window) {
 
 [event=top_menu_widget_draw]
 function top_menu_widget_draw(window) {
-	var treasury = city.finance.treasury;
-	
+	var treasury = city.finance.treasury
+
     window.funds.font = treasury >= 0 ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_BLUE
     window.funds.text_color = treasury < 0 ? COLOR_FONT_RED : COLOR_WHITE
     window.funds.text = __loc(6, 0) + " " + treasury
-	
+
 	window.date.text = top_menu_widget.date_str
 	window.population.text = top_menu_widget.population_str
 }
@@ -178,7 +178,7 @@ function top_menu_update_date_text(ev) {
 			 							? _format("{0} {1} AD", month_str, ev.year)
 			                            : _format("{0} AD {1}", month_str, ev.year);
 
-    }  else {	
+    }  else {
 		top_menu_widget.date_str = _format("{0} {1} BC", month_str, -ev.year);
 	}
 }
