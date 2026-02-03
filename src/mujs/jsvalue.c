@@ -498,13 +498,13 @@ void js_concat(js_State *J)
 		strcpy(sab, sa);
 		strcat(sab, sb);
 		if (js_try(J)) {
-			js_free(J, sab);
+			js_frame_free(J, sab);
 			js_throw(J);
 		}
 		js_pop(J, 2);
 		js_pushstring(J, sab);
 		js_endtry(J);
-		js_free(J, sab);
+		js_frame_free(J, sab);
 	} else {
 		double x = js_tonumber(J, -2);
 		double y = js_tonumber(J, -1);
