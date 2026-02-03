@@ -148,6 +148,8 @@ struct js_State
 	void *actx;
 	void *uctx;
 	js_Alloc alloc;
+	void *frame_actx;
+	js_Alloc frame_alloc;
 	js_Panic panic;
 
 	js_StringNode *strings;

@@ -24,6 +24,8 @@
 #include <filesystem>
 #include <new>
 #include <cstdlib>
+#include <cstring>
+#include <memory_resource>
 
 #if defined(GAME_PLATFORM_LINUX)
 #include <linux/limits.h>
@@ -33,7 +35,6 @@
 
 #define MAX_FILES_RELOAD 255
 
-
 struct {
     svector<vfs::path, 4> scripts_folders;
     vfs::path files2load[MAX_FILES_RELOAD];
@@ -41,6 +42,9 @@ struct {
     int have_error;
     bstring256 error_str;
     js_State *J;
+    static constexpr size_t FRAME_ALLOC_BUFFER_SIZE = 64 * 1024;
+    char *frame_alloc_buffer = nullptr;
+    std::pmr::monotonic_buffer_resource frame_alloc_ctx;
 } vm;
 
 void js_reset_vm_state();
@@ -196,7 +200,7 @@ int js_vm_trypcall(js_State *J, int params) {
                 js_pop(J, 1);
             }
         }
-        
+
         // Log full error message (MuJS now provides detailed context)
         const char *cur_symbol = error_msg;
         const char *start_str = cur_symbol;
@@ -213,14 +217,14 @@ int js_vm_trypcall(js_State *J, int params) {
             logs::info("!!! %s", temp_str.c_str());
         }
         logs::info("!!! %s", start_str);
-        
+
         // Log stack trace
         js_vm_log_stacktrace(J);
-        
+
         // Dump stack values for additional debugging info
         js_vm_dump_stack(J);
-        
-        vm.error_str = error_msg;
+
+        vm.error_str = error_msg_copy;
         js_pop(J, 1);
         return 0;
     }
@@ -483,6 +487,24 @@ void *js_alloc_wrapper(void *actx, void *ptr, int size) {
     return new_ptr;
 }
 
+void *js_frame_alloc_wrapper(void *actx, void *ptr, int size) {
+    if (size == 0) {
+        // Free all blocks in arena (arena-style deallocation)
+        // monotonic_buffer_resource::release() releases all allocated memory
+        vm.frame_alloc_ctx.release();
+        return nullptr;
+    }
+
+    if (!ptr) {
+        // New allocation using monotonic_buffer_resource
+        size_t alloc_size = static_cast<size_t>(size);
+        return vm.frame_alloc_ctx.allocate(alloc_size, alignof(std::max_align_t));
+    }
+
+    void *new_ptr = js_frame_alloc_wrapper(actx, nullptr, size);
+    return new_ptr;
+}
+
 void js_reset_vm_state() {
     if (vm.J) {
         js_freestate(vm.J);
@@ -494,8 +516,10 @@ void js_reset_vm_state() {
     }
     vm.files2load_num = 0;
     vm.have_error = 0;
+    vm.frame_alloc_ctx.release();
 
     vm.J = js_newstate(js_alloc_wrapper, nullptr, JS_STRICT);
+    js_setframealloc(vm.J, js_frame_alloc_wrapper, nullptr);
     js_atpanic(vm.J, js_game_panic);
     js_registerimport(vm.J, js_game_import);
 
@@ -520,6 +544,10 @@ void js_reset_vm_state() {
         }
     }
     logs::info( "STACK state %d", js_gettop(vm.J));
+}
+
+void js_vm_frame_begin() {
+    vm.frame_alloc_ctx.release();
 }
 
 void js_vm_add_scripts_folder(vfs::path folder) {
@@ -573,6 +601,11 @@ vfs::path js_vm_get_absolute_path(vfs::path path) {
 
 void js_vm_setup() {
     vm.J = nullptr;
+    if (!vm.frame_alloc_buffer) {
+        vm.frame_alloc_buffer = (char*)malloc(vm.FRAME_ALLOC_BUFFER_SIZE);
+    }
+    vm.frame_alloc_ctx.~monotonic_buffer_resource();
+    new (&vm.frame_alloc_ctx)std::pmr::monotonic_buffer_resource( vm.frame_alloc_buffer,  vm.FRAME_ALLOC_BUFFER_SIZE, std::pmr::get_default_resource());   
     js_reset_vm_state();
 
     vfs::path abspath = js_vm_get_absolute_path("");
