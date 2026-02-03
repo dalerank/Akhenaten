@@ -18,5 +18,6 @@ void js_vm_add_scripts_folder(vfs::path folder);
 void js_call_event_handlers(const xstring &event_name, const bvariant_map &object);
 int js_vm_trypcall(js_State *J, int params);
 bool js_vm_have_error();
+void js_vm_frame_begin();
 
 vfs::path js_vm_get_absolute_path(vfs::path file);

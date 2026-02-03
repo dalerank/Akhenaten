@@ -184,6 +184,12 @@ void *js_getcontext(js_State *J)
 	return J->uctx;
 }
 
+void js_setframealloc(js_State *J, js_Alloc frame_alloc, void *frame_actx)
+{
+	J->frame_alloc = frame_alloc;
+	J->frame_actx = frame_actx;
+}
+
 js_State *js_newstate(js_Alloc alloc, void *actx, int flags)
 {
 	js_State *J;
@@ -200,6 +206,8 @@ js_State *js_newstate(js_Alloc alloc, void *actx, int flags)
 	memset(J, 0, sizeof(*J));
 	J->actx = actx;
 	J->alloc = alloc;
+	J->frame_actx = actx;
+	J->frame_alloc = alloc;
 
 	if (flags & JS_STRICT)
 		J->strict = 1;

@@ -51,6 +51,13 @@ void js_free(js_State *J, void *ptr)
 	J->alloc(J->actx, ptr, 0);
 }
 
+void js_frame_free(js_State *J, void *ptr)
+{
+	js_Alloc frame_alloc = J->frame_alloc ? J->frame_alloc : J->alloc;
+	void *frame_actx = J->frame_actx ? J->frame_actx : J->actx;
+	frame_alloc(frame_actx, ptr, 0);
+}
+
 js_String *jsV_newmemstring(js_State *J, const char *s, int n)
 {
 	js_String *v = js_malloc(J, soffsetof(js_String, p) + n + 1);
@@ -224,6 +231,16 @@ void* js_stack_alloc(int size) {
 	#else
 	return alloca(size);
 	#endif
+}
+
+void *js_frame_alloc(js_State *J, int size)
+{
+	js_Alloc frame_alloc = J->frame_alloc ? J->frame_alloc : J->alloc;
+	void *frame_actx = J->frame_actx ? J->frame_actx : J->actx;
+	void *ptr = frame_alloc(frame_actx, NULL, size);
+	if (!ptr)
+		js_outofmemory(J);
+	return ptr;
 }
 
 int js_isuserdata(js_State *J, int idx, const char *tag)
