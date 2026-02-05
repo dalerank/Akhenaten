@@ -462,12 +462,6 @@ info_window_architect_post {
     })
 }
 
-info_window_firehouse = {
-  ui : baseui(building_info_window, {
-
-  })
-}
-
 ruin_info_window {
     open_sounds [ "wavs/fire.wav" ]
     ui {
@@ -563,7 +557,7 @@ info_window_entertainment {
     ui {
         background    : outer_panel({ size[29, 17]})
         title         : text({ pos[0, 12], size[px(29), 25], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        
+
         warning_text  : text({ pos[32, 46], wrap:px(26), text:"${text.1}", font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
         inner_panel   : inner_panel({ pos[16, 116], size[27, 5] })
         workers_img   : image({ pack:PACK_GENERAL, id:134, offset:14, pos[40, 126] })

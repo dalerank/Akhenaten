@@ -1,7 +1,5 @@
 log_info("akhenaten: ui bazaar window started")
 
-building_info_window {}
-
 [es=building_info_window]
 bazaar_info_window {
     related_buildings [BUILDING_BAZAAR, BUILDING_BAZAAR_UP]
@@ -101,7 +99,6 @@ function bazaar_info_window_init_warning_text(window) {
        warning_text = __loc(meta_text_id, 4)
     }
 
-    log_info("akhenaten: warning_text = " + warning_text +  " " +meta_text_id)
     window.warning_text.text = warning_text
 }
 

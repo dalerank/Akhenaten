@@ -3,7 +3,7 @@ function _format() {
     for (var arg in arguments) {
         if(arg==0)
            continue
-        
+
         formatted = formatted.replace("{" + (arg-1) + "}", arguments[arg])
     }
     return formatted
@@ -22,7 +22,7 @@ function _eformat(message, locals) {
                     } else {
                         result = eval(expr);
                     }
-                    
+
                     if (result === undefined) return 'undefined';
                     if (result === null) return 'null';
                     if (typeof result === 'object') {

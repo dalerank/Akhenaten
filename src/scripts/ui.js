@@ -42,3 +42,4 @@ import ui_message_dialog
 import ui_display_options_window
 import ui_speed_options_window
 import ui_work_camp_window
+import ui_infrastructure_window

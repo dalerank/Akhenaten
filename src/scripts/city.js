@@ -162,6 +162,7 @@ city.get_building = function(building_id) {
         @has_road_access : { get: function() { return __building_has_road_access(this.id) } }   
         @worker_percentage : { get: function() { return __building_get_worker_percentage(this.id) } }
         @num_workers : { get: function() { return __building_get_num_workers(this.id) } }
+        @meta_text_id { get: function() { return __building_meta_text_id(this.id) } }
     }
 }
 
