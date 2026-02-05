@@ -36,6 +36,7 @@
 
 #include <numeric>
 #include <string>
+#include <random>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_small_mastaba);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_small_mastaba_part_side);
@@ -46,6 +47,53 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_medium_mastaba);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_medium_mastaba_part_side);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_medium_mastaba_part_wall);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_medium_mastaba_part_entrance);
+
+declare_console_command_p(monument_up) {
+    std::string args; is >> args;
+    int amount = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+
+    hvector<building_monument *, 64> monuments;
+    buildings_valid_do([&] (building &b) {
+        if (!b.is_monument()) {
+            return;
+        }
+
+        auto m = b.dcast_monument();
+        if (!m->is_unfinished()) {
+            return;
+        }
+
+        monuments.push_back(m);
+    });
+
+    struct monument_area {
+        building_monument *m;
+        grid_area area;
+    };
+    hvector<monument_area, 64> areas;
+    for (auto m : monuments) {
+        building *part = &(m->base);
+        while (part) {
+            grid_area area = map_grid_get_area(part->tile, part->size, 0);
+            areas.push_back({ m, area });
+
+            part = (part->next_part_building_id > 0) ? building_get(part->next_part_building_id) : nullptr;
+        };
+    }
+
+    int m = 0;
+    for (auto &item : areas) {
+        if (amount > 0 && m > amount) {
+            break;
+        }
+        map_grid_area_foreach(item.area.tmin, item.area.tmax, [&] (tile2i tile) {
+            if (amount > 0 && map_monuments_get_progress(tile) < 200) {
+                ++m;
+            }
+            item.m->set_tile_progress(tile, 200);
+        });
+    }
+}
 
 struct monument_small_mastaba : public monument {
     monument_small_mastaba() : monument{ BUILDING_SMALL_MASTABA } {
@@ -805,28 +853,6 @@ tile2i building_small_mastaba::center_point() const {
 
 tile2i building_small_mastaba::access_point() const {
     return main()->tile().shifted(0, 10);
-}
-
-declare_console_command_p(monument_up) {
-    buildings_valid_do([&] (building &b) {
-        if (!b.is_monument()) {
-            return;
-        }
-
-        if (!b.dcast_monument()->is_unfinished()) {
-            return;
-        }
-
-        building *part = &b;
-        while (part) {
-            grid_area area = map_grid_get_area(part->tile, part->size, 0);
-            map_grid_area_foreach(area.tmin, area.tmax, [] (tile2i tile) {
-                map_monuments_set_progress(tile, 200);
-            });
-
-            part = (part->next_part_building_id > 0) ? building_get(part->next_part_building_id) : nullptr;
-        };
-    });
 }
 
 const monument &building_medium_mastaba::config() const {
