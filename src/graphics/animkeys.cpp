@@ -75,6 +75,8 @@ const xstring id_anim_t::empty_land = "empty_land";
 const xstring id_anim_t::base_grounded = "base_grounded";
 const xstring id_anim_t::clear_land = "clear_land";
 const xstring id_anim_t::image_stick = "image_stick";
+const xstring id_anim_t::ditches_phase_1 = "ditches_phase_1";
+const xstring id_anim_t::ditches_phase_2 = "ditches_phase_2";
 
 const id_anim_t &animkeys() {
     return g_animkeys;

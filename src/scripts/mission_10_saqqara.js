@@ -17,7 +17,7 @@ mission10 { // Saqqara
 	}
 
 	env {
-		has_animals : true		
+		has_animals : true
 	    hide_nilometer : true
 	    marshland_grow : default_marshland_grow
 	    tree_grow : default_tree_grow
@@ -29,7 +29,7 @@ mission10 { // Saqqara
                 BUILDING_WATER_SUPPLY, BUILDING_APOTHECARY, BUILDING_PHYSICIAN, BUILDING_MORTUARY,
 				BUILDING_WATER_LIFT, BUILDING_IRRIGATION_DITCH,
 				BUILDING_STONEMASONS_GUILD, BUILDING_CARPENTERS_GUILD, BUILDING_BRICKLAYERS_GUILD,
-				BUILDING_VILLAGE_PALACE, BUILDING_HUNTING_LODGE, BUILDING_WORK_CAMP,			
+				BUILDING_VILLAGE_PALACE, BUILDING_HUNTING_LODGE, BUILDING_WORK_CAMP,
 				BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA, BUILDING_BRICKS_WORKSHOP,
                 BUILDING_JEWELS_WORKSHOP, BUILDING_POTTERY_WORKSHOP, BUILDING_BREWERY_WORKSHOP, BUILDING_PAPYRUS_WORKSHOP, BUILDING_WEAVER_WORKSHOP,
 				BUILDING_TAX_COLLECTOR, BUILDING_COURTHOUSE, BUILDING_PERSONAL_MANSION, BUILDING_BAZAAR, BUILDING_GRANARY, BUILDING_STORAGE_YARD,
@@ -104,7 +104,7 @@ mission10 { // Saqqara
 			max_traders : 1
 			trade_limits : default_trade_limits
             // sell chickpeas, pottery, papyrus
-            // buys bricks, barley, beer, jewelry 
+            // buys bricks, barley, beer, jewelry
 		}
 
         {
@@ -116,12 +116,16 @@ mission10 { // Saqqara
             buys [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_COPPER, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_PAPYRUS ]
 		}
 	]
+
+	vars {
+		pharaoh_requested_gamemeat : false
+	}
 }
 
 [event=event_register_mission_animals, mission=mission10]
 function mission10_register_animals(ev) {
 	city.remove_animals()
-	
+
 	city.add_animals_point(0, /*x*/55, /*y*/75, FIGURE_OSTRICH, 5)
 	city.set_animals_area(0, 16)
 
@@ -130,4 +134,20 @@ function mission10_register_animals(ev) {
 
 	city.add_animals_point(1, /*x*/90, /*y*/155, FIGURE_HYENA, 5)
 	city.set_animals_area(1, 16)
+}
+
+[event=event_advance_month, mission=mission10]
+function mission8_pharaoh_requested1_gamemeat(ev) {
+	if (mission.pharaoh_requested_gamemeat) {
+		return
+	}
+
+	log_info("akhenaten: mission 10 saqqara:${ev.years_since_start}:${ev.month} pharaoh requested gamemeat", {ev:ev})
+	if (ev.years_since_start < 2 && ev.month < 2) {
+		return
+	}
+
+	mission.pharaoh_requested_gamemeat = true
+	var request = city.create_good_request({ tag_id: 1, resource: RESOURCE_GAMEMEAT, amount: 7, months_initial: 4 })
+	request.execute()
 }

@@ -124,7 +124,7 @@ const building_pyramid::base_params &get_pyramid_params(e_building_type type) {
 
 void building_stepped_pyramid::set_tile_progress(tile2i tile, int v) {
     building_pyramid::set_tile_progress(tile, v);
-    if (phase() == 2) {
+    if (phase() == 2 || phase() == 3) {
         map_terrain_add(tile, v > 0 ? TERRAIN_CANAL : TERRAIN_NONE);
     }
 }
@@ -529,8 +529,11 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(building 
                 }
             }
         }
-    } else if (monumentd.phase == 2) {
-        int channel_base_id = current_params().animations["ditches_phase_1"].first_img();
+    } else if (monumentd.phase == 2 || monumentd.phase == 3) {
+        const xstring empty_key;
+        const xstring* base_keys[4] = { &empty_key, &empty_key, &animkeys().ditches_phase_1, &animkeys().ditches_phase_2 };
+        const xstring& base_key = *base_keys[monumentd.phase];
+        int channel_base_id = current_params().animations[base_key].first_img();
         for (int dy = 0; dy < base.size; dy++) {
             for (int dx = 0; dx < base.size; dx++) {
                 tile2i ntile = base.tile.shifted(dx, dy);
@@ -567,23 +570,20 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(building 
             }
         }
     } else if (monumentd.phase == 3) {
-        int channel_base_id = current_params().animations["ditches_phase_1"].first_img();
+        int channel_base_id = current_params().animations["ditches_phase_2"].first_img();
         for (int dy = 0; dy < base.size; dy++) {
             for (int dx = 0; dx < base.size; dx++) {
                 tile2i ntile = base.tile.shifted(dx, dy);
                 vec2i offset = lookup_tile_to_pixel(ntile);
                 uint32_t progress = map_monuments_get_progress(ntile);
-
-                int img = get_image(base.orientation, base.tile.shifted(dx, dy), main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1));
-
-                auto& base_command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
-                base_command.image_id = img;
-                base_command.pixel = offset;
-                base_command.mask = color_mask;
-                base_command.location = SOURCE_LOCATION;
-
-                // Draw channel tiles based on channel pattern logic
-                
+                {
+                    int channel_img = get_channel_image(base.orientation, ntile, main->tile, channel_base_id);
+                    auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                    command.image_id = channel_img;
+                    command.pixel = offset;
+                    command.mask = color_mask;
+                    command.location = SOURCE_LOCATION;
+                }
             }
         }
     }
