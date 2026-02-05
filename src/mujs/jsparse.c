@@ -469,18 +469,52 @@ static js_Ast *newexp(js_State *J)
 static js_Ast *memberexp(js_State *J)
 {
 	js_Ast *a = newexp(J);
+	int prevline = J->astline; /* Remember line where expression started */
 loop:
 	if (jsP_accept(J, '.')) { a = EXP2(MEMBER, a, identifiername(J)); goto loop; }
-	if (jsP_accept(J, '[')) { a = EXP2(INDEX, a, expression(J, 0)); jsP_expect(J, ']'); goto loop; }
+	/*
+	 * Automatic Semicolon Insertion (ASI):
+	 * Only parse '[' as property access if:
+	 * 1. There was no newline before it, OR
+	 * 2. There was only one newline (next line) without empty lines
+	 * If there are empty lines (line difference > 1), treat '[' as new statement.
+	 */
+	if (J->lookahead == '[') {
+		int hasEmptyLines = J->newline && (J->lexline - prevline > 1);
+		if (!hasEmptyLines) {
+			jsP_accept(J, '[');
+			a = EXP2(INDEX, a, expression(J, 0));
+			jsP_expect(J, ']');
+			prevline = J->astline; /* Update for next iteration */
+			goto loop;
+		}
+	}
 	return a;
 }
 
 static js_Ast *callexp(js_State *J)
 {
 	js_Ast *a = newexp(J);
+	int prevline = J->astline; /* Remember line where expression started */
 loop:
 	if (jsP_accept(J, '.')) { a = EXP2(MEMBER, a, identifiername(J)); goto loop; }
-	if (jsP_accept(J, '[')) { a = EXP2(INDEX, a, expression(J, 0)); jsP_expect(J, ']'); goto loop; }
+	/*
+	 * Automatic Semicolon Insertion (ASI):
+	 * Only parse '[' as property access if:
+	 * 1. There was no newline before it, OR
+	 * 2. There was only one newline (next line) without empty lines
+	 * If there are empty lines (line difference > 1), treat '[' as new statement.
+	 */
+	if (J->lookahead == '[') {
+		int hasEmptyLines = J->newline && (J->lexline - prevline > 1);
+		if (!hasEmptyLines) {
+			jsP_accept(J, '[');
+			a = EXP2(INDEX, a, expression(J, 0));
+			jsP_expect(J, ']');
+			prevline = J->astline; /* Update for next iteration */
+			goto loop;
+		}
+	}
 	if (jsP_accept(J, '(')) { a = EXP2(CALL, a, arguments(J)); jsP_expect(J, ')'); goto loop; }
 	return a;
 }
@@ -947,7 +981,7 @@ static js_AstModifier *parsemodifiers(js_State *J)
 			snprintf(buf, sizeof(buf), "%g", J->number);
 			value = js_intern(J, buf);
 		} else {
-			value = J->text;
+			value = js_intern(J, J->text);
 		}
 		jsP_next(J);
 	} else {
@@ -978,7 +1012,7 @@ static js_AstModifier *parsemodifiers(js_State *J)
 				snprintf(buf, sizeof(buf), "%g", J->number);
 				value = js_intern(J, buf);
 			} else {
-				value = J->text;
+				value = js_intern(J, J->text);
 			}
 			jsP_next(J);
 		} else {
@@ -1005,6 +1039,7 @@ static js_Ast *scriptelement(js_State *J)
 
 	/* Check for modifiers (can be for functions or objects) */
 	if (J->lookahead == '[') {
+		/* Try to parse as modifiers - if it fails, it will be parsed as array literal later */
 		modifiers = parsemodifiers(J);
 	}
 
