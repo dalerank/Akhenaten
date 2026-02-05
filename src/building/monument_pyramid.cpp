@@ -33,7 +33,9 @@
 #include "grid/routing/routing_grids.h"
 #include "dev/debug.h"
 #include "js/js_game.h"
+#include "grid/canals.h"
 #include "building/monument_mastaba.h"
+#include "graphics/image_groups.h"
 
 #include <numeric>
 #include <string>
@@ -119,6 +121,13 @@ const building_pyramid::base_params &get_pyramid_params(e_building_type type) {
     static building_pyramid::base_params dummy;
     return dummy;
 };
+
+void building_stepped_pyramid::set_tile_progress(tile2i tile, int v) {
+    building_pyramid::set_tile_progress(tile, v);
+    if (phase() == 2) {
+        map_terrain_add(tile, v > 0 ? TERRAIN_CANAL : TERRAIN_NONE);
+    }
+}
 
 void building_stepped_pyramid::preview::setup_preview_graphics(build_planner &planer) const {
     const auto &params = building_static_params::get(planer.build_type);
@@ -253,7 +262,7 @@ void building_pyramid::update_images(building *b, int curr_phase, const vec2i si
     building *main = b->main();
     building *part = b;
 
-    if (curr_phase < 2) {
+    if (curr_phase < 3) {
         return;
     }
 
@@ -345,6 +354,62 @@ int building_stepped_pyramid::get_image(int orientation, tile2i tile, tile2i sta
     }
 
     return result;
+}
+
+int building_stepped_pyramid::get_channel_image(int orientation, tile2i tile, tile2i main_tile, int channel_base_id) {
+    bool north = map_terrain_is(tile.shifted(0, -1), TERRAIN_CANAL);
+    bool east  = map_terrain_is(tile.shifted(1, 0), TERRAIN_CANAL);
+    bool south = map_terrain_is(tile.shifted(0, 1), TERRAIN_CANAL);
+    bool west  = map_terrain_is(tile.shifted(-1, 0), TERRAIN_CANAL);
+
+    int neighbors_count = (north ? 1 : 0) + (east ? 1 : 0) + (south ? 1 : 0) + (west ? 1 : 0);
+
+    // 0: zero tile left-corner 
+    // 1-2: lines (vert or horz)
+    // 3-4: corners (+ city orientation)
+    // 5-7: T-corners (4 directions)
+    // 8 - cross
+
+    int variant = 0;
+    int orientation_offset = (city_view_orientation() / 2) % 4;
+
+    if (neighbors_count == 0) {
+        variant = 0;
+    } else if (neighbors_count == 1) {
+        variant = 0;
+    } else if (neighbors_count == 2) {
+        if (north && south) {
+            variant = (orientation_offset % 2 == 0) ? 1 : 2;
+        } else if (east && west) {
+            variant = (orientation_offset % 2 == 0) ? 2 : 1;
+        } else {
+            // corners
+            if (north && east) {
+                variant = 0 + (orientation_offset % 2);
+            } else if (east && south) {
+                variant = 1 + (orientation_offset % 2);
+            } else if (south && west) {
+                variant = 2 + (orientation_offset % 2);
+            } else if (west && north) {
+                variant = 3 + (orientation_offset % 2);
+            }
+        }
+    } else if (neighbors_count == 3) {
+        // T-corners
+        if (!north) {
+            variant = 5 + ((0 + orientation_offset) % 4);
+        } else if (!east) {
+            variant = 5 + ((1 + orientation_offset) % 4);
+        } else if (!south) {
+            variant = 5 + ((2 + orientation_offset) % 4);
+        } else { // !west
+            variant = 5 + ((3 + orientation_offset) % 4);
+        }
+    } else {
+        variant = 8;
+    }
+
+    return channel_base_id + variant;
 }
 
 void building_stepped_pyramid::on_create(int orientation) {
@@ -465,6 +530,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(building 
             }
         }
     } else if (monumentd.phase == 2) {
+        int channel_base_id = current_params().animations["ditches_phase_1"].first_img();
         for (int dy = 0; dy < base.size; dy++) {
             for (int dx = 0; dx < base.size; dx++) {
                 tile2i ntile = base.tile.shifted(dx, dy);
@@ -477,7 +543,47 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(building 
                     command.image_id = img;
                     command.pixel = offset;
                     command.mask = color_mask;
+
+                    int channel_img = get_channel_image(base.orientation, ntile, main->tile, channel_base_id);
+                    if (channel_img > 0 && progress > 0) {
+
+                        auto &channel_command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                        channel_command.image_id = channel_img;
+                        channel_command.pixel = offset;
+
+                        const uint8_t alpha = (0xff * progress / 200);
+                        channel_command.mask = ((alpha << COLOR_BITSHIFT_ALPHA) | (color_mask & 0x00ffffff));
+                        channel_command.flags = (progress < 200) ? ImgFlag_Alpha : 0;
+                        channel_command.location = SOURCE_LOCATION;
+                    }
+                } else {
+                    int channel_img = get_channel_image(base.orientation, ntile, main->tile, channel_base_id);
+                    auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                    command.image_id = channel_img;
+                    command.pixel = offset;
+                    command.mask = color_mask;
+                    command.location = SOURCE_LOCATION;
                 }
+            }
+        }
+    } else if (monumentd.phase == 3) {
+        int channel_base_id = current_params().animations["ditches_phase_1"].first_img();
+        for (int dy = 0; dy < base.size; dy++) {
+            for (int dx = 0; dx < base.size; dx++) {
+                tile2i ntile = base.tile.shifted(dx, dy);
+                vec2i offset = lookup_tile_to_pixel(ntile);
+                uint32_t progress = map_monuments_get_progress(ntile);
+
+                int img = get_image(base.orientation, base.tile.shifted(dx, dy), main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1));
+
+                auto& base_command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                base_command.image_id = img;
+                base_command.pixel = offset;
+                base_command.mask = color_mask;
+                base_command.location = SOURCE_LOCATION;
+
+                // Draw channel tiles based on channel pattern logic
+                
             }
         }
     }
@@ -525,22 +631,23 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(building
     };
 
     auto &monumentd = runtime_data();
-    if (monumentd.phase == 2) {
-        for (auto &tile : tiles2draw) {
-            uint32_t progress = map_monuments_get_progress(tile);
-            if (progress >= 200) {
-                vec2i offset = lookup_tile_to_pixel(tile);
-                int img = building_small_mastabe_get_bricks_image(base.orientation, base.type, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), 1);
-
-                auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
-                command.image_id = img;
-                command.pixel = offset + city_orientation_offset;
-                command.mask = color_mask;
-
-                fill_tiles_height(ctx, tile, img);
-            }
-        }
-    } else if (monumentd.phase > 2 && monumentd.phase < 8) {
+    //if (monumentd.phase == 2) {
+    //    for (auto &tile : tiles2draw) {
+    //        uint32_t progress = map_monuments_get_progress(tile);
+    //        if (progress >= 200) {
+    //            vec2i offset = lookup_tile_to_pixel(tile);
+    //            int img = building_small_mastabe_get_bricks_image(base.orientation, base.type, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), 1);
+    //
+    //            auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+    //            command.image_id = img;
+    //            command.pixel = offset + city_orientation_offset;
+    //            command.mask = color_mask;
+    //
+    //            fill_tiles_height(ctx, tile, img);
+    //        }
+    //    }
+    //} else 
+    if (monumentd.phase > 3 && monumentd.phase < 8) {
         int phase = monumentd.phase;
         for (auto &tile : tiles2draw) {
             uint32_t progress = map_monuments_get_progress(tile);
@@ -608,7 +715,7 @@ void building_stepped_pyramid::update_day(const vec2i tiles_size) {
         }
     }
 
-    if (monumentd.phase >= 2) {
+    if (monumentd.phase >= 3) {
         int minimal_percent = 100;
         for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
             bool need_resource = needs_resource(r);

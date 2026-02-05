@@ -127,7 +127,8 @@ void figure_worker::figure_action() {
     case ACTION_12_WORKER_LEVELING_GROUND:
         progress = map_monuments_get_progress(tile());
         if (progress < 200) {
-            map_monuments_set_progress(tile(), progress + 1);
+            auto monument = b_dest->dcast_monument();
+            monument->set_tile_progress(tile(), progress + 1);
         } else {
             advance_action(ACTION_13_WORKER_BACK_FROM_WORKS);
             if (home()) {
