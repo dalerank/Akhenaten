@@ -19,6 +19,12 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_irrigation_ditch);
 
+building_irrigation_ditch::image_set g_canal_images;
+
+void building_irrigation_ditch::static_params::archive_load(archive arch) {
+    g_canal_images.begin = first_img("set_begin");
+}
+
 static bool has_water_source_nearby(tile2i tile) {
     // Check for water (river/lake) directly adjacent
     if (map_terrain_count_directly_adjacent_with_type(tile, TERRAIN_WATER) > 0) {
@@ -200,6 +206,10 @@ int building_irrigation_ditch::preview::can_place(build_planner &p, tile2i tile,
         return CAN_NOT_PLACE;
     }
     return state;
+}
+
+const building_irrigation_ditch::image_set &building_irrigation_ditch::images() {
+    return g_canal_images;
 }
 
 void building_irrigation_ditch::on_place_checks() {

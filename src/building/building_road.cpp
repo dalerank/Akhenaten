@@ -6,6 +6,7 @@
 #include "grid/routing/routing.h"
 #include "grid/routing/routing_terrain.h"
 #include "building/construction/routed.h"
+#include "building/building_irrigation_ditch.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
 #include "grid/floodplain.h"
@@ -71,7 +72,7 @@ void building_road::preview::ghost_preview(build_planner &planer, painter &ctx, 
     int image_id = 0;
 
     if (map_terrain_is(grid_offset, TERRAIN_CANAL)) {
-        image_id = image_id_from_group(GROUP_BUILDING_CANAL);
+        image_id = building_irrigation_ditch::images().begin;
         if (map_can_place_road_under_canal(end)) {
             image_id += map_get_canal_with_road_image(grid_offset);
         } else {

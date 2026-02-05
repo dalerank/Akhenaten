@@ -10,6 +10,7 @@
 #include "grid/image.h"
 #include "sound/sound.h"
 #include "building/building_plaza.h"
+#include "building/building_irrigation_ditch.h"
 #include "window/building/common.h"
 #include "window_figure_info.h"
 #include "city/city.h"
@@ -19,7 +20,8 @@ void window_building_draw_aqueduct(object_info* c) {
     window_building_play_sound(c, "Wavs/aquaduct.wav");
     outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
     lang_text_draw_centered(141, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    bool canal_has_water = !!map_canal_at(c->grid_offset) && ((map_image_at(c->grid_offset) - image_id_from_group(GROUP_BUILDING_CANAL)) < 15);
+    int water_start_image = building_irrigation_ditch::images().begin;
+    bool canal_has_water = !!map_canal_at(c->grid_offset) && ((map_image_at(c->grid_offset) - water_start_image) < 15);
     window_building_draw_description_at(c, 16 * c->bgsize.y - 144, 141, canal_has_water ? 1 : 2);
 }
 
