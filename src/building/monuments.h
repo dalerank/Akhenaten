@@ -57,6 +57,7 @@ public:
     virtual bool requires_resource(e_resource resource) const;
     virtual span_const<uint16_t> active_workers() const;
     virtual int building_image_get() const { return 0; }
+    virtual void set_tile_progress(tile2i tile, int v);
 
     bool has_labour_problems() const;
 

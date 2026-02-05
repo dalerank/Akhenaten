@@ -57,9 +57,11 @@ public:
 
     static void finalize(building *b, const vec2i size_b);
     static int get_image(int orientation, tile2i tile, tile2i start, tile2i end);
+    static int get_channel_image(int orientation, tile2i tile, tile2i main_tile, int channel_base_id);
 
     virtual void remove_worker(figure_id fid) override;
     virtual void add_workers(figure_id fid) override;
+    virtual void set_tile_progress(tile2i tile, int v) override;
 };
 
 class building_small_stepped_pyramid : public building_stepped_pyramid {

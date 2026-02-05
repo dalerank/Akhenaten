@@ -404,6 +404,10 @@ span_const<uint16_t> building_monument::active_workers() const {
     return span_const<uint16_t>(d.workers);
 }
 
+void building_monument::set_tile_progress(tile2i tile, int v) {
+    map_monuments_set_progress(tile, v);
+}
+
 bool building_monument::has_required_resources_to_build() const {
     int phases = this->phases();
     for (int phase = 1; phase < phases; phase++) {

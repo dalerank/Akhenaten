@@ -10,6 +10,7 @@ building_small_stepped_pyramid {
       clear_land { id:2, offset:12 }
       image_stick { path:"stepped_pyramid/pyramid_phase_one_00021" }
       empty_land {path:"stepped_pyramid/stepped_pyramid_00109"}
+      ditches_phase_1 { path:"stepped_pyramid/pyramid_phase_one_00022" }
       enter {id:114}
     }
     build_menu_text : "Small Stepped Pyramid"
@@ -46,6 +47,7 @@ building_small_stepped_pyramid {
       clear_land { id:2, offset:12 }
       image_stick { path:"stepped_pyramid/pyramid_phase_one_00021" }
       empty_land {path:"stepped_pyramid/stepped_pyramid_00109"}
+      ditches_phase_1 { path:"stepped_pyramid/pyramid_phase_one_00022" }
       enter {id:114}
     }
     build_menu_text : "Medium Stepped Pyramid"
