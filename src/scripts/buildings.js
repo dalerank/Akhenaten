@@ -832,7 +832,7 @@ building_garden {
   variants3 {
     _1 { pack:PACK_GENERAL, id:59, offset:7 }
   }
-  
+
   planner_update_rule : {
     is_draggable : true
   }
@@ -850,9 +850,10 @@ building_garden {
 
 building_road {
   animations {
-    preview { pack:PACK_TERRAIN, id:33 },
-    base { pack:PACK_TERRAIN, id:33 },
+    preview { pack:PACK_TERRAIN, id:33 }
+    base { pack:PACK_TERRAIN, id:33 }
   }
+
   building_size : 1
   cost [ 1, 2, 5, 10, 15 ]
   planner_update_rule {
@@ -862,16 +863,20 @@ building_road {
 
 building_irrigation_ditch {
   animations {
-    preview { pack:PACK_TERRAIN, id:33 },
-    base { pack:PACK_TERRAIN, id:33 },
+    preview { pack:PACK_TERRAIN, id:33 }
+    base { pack:PACK_TERRAIN, id:33 }
+    set_begin { pack:PACK_TERRAIN, id:9 }
   }
+
   building_size : 1
   planner_update_rule {
     is_draggable : true
   }
+
   needs {
     canals : false
   }
+
   cost [ 2, 4, 7, 10, 15 ]
   canal_irrigation_value_multiplier : 2
 }

@@ -11,11 +11,10 @@
 #include "io/io_buffer.h"
 #include "grid/terrain.h"
 #include "building/building_road.h"
+#include "building/building_irrigation_ditch.h"
 #include "city/city_buildings.h"
 #include "grid/image_context.h"
 #include "graphics/view/view.h"
-
-#define IMAGE_CANAL_FULL_OFFSET 48
 
 static int canals_include_construction = 0;
 
@@ -81,7 +80,8 @@ void canals_decrease_water_level() {
 
     river_access_canal_offsets->clear();
 
-    int image_without_water = image_id_from_group(GROUP_BUILDING_CANAL) + IMAGE_CANAL_FULL_OFFSET;
+    int image_canal_set_begin = building_irrigation_ditch::images().begin; // 119 C3
+    int image_without_water = image_canal_set_begin + building_irrigation_ditch::image_set::IMAGE_FULL_OFFSET;
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
@@ -94,7 +94,7 @@ void canals_decrease_water_level() {
             map_canal_set(grid_offset, level);
             int image_id = map_image_at(grid_offset);
             if (level <= 0 && image_id < image_without_water) {
-                map_image_set(grid_offset, image_id + IMAGE_CANAL_FULL_OFFSET);
+                map_image_set(grid_offset, image_id + building_irrigation_ditch::image_set::IMAGE_FULL_OFFSET);
             }
 
             // check if canal has river access
@@ -110,9 +110,10 @@ void map_canal_fill_from_offset(tile2i tile, int water) {
         return;
     }
 
-    std::vector<water_supply_queue_tile> g_water_supply_queue;
+    hvector<water_supply_queue_tile, 64> g_water_supply_queue;
     int next_offset;
-    int image_without_water = image_id_from_group(GROUP_BUILDING_CANAL) + IMAGE_CANAL_FULL_OFFSET;
+    int image_canal_set_begin = building_irrigation_ditch::images().begin; // 119 C3
+    int image_without_water = image_canal_set_begin + building_irrigation_ditch::image_set::IMAGE_FULL_OFFSET;
     g_water_supply_queue.push_back({ tile, water });
 
     std::array<vec2i, 4> adjacent_offsets = { vec2i(0, 1), vec2i(1, 0), vec2i(0, -1), vec2i(-1, 0) };
@@ -125,7 +126,7 @@ void map_canal_fill_from_offset(tile2i tile, int water) {
 
         int image_id = map_image_at(wtile.tile);
         if (image_id >= image_without_water) {
-            map_image_set(wtile.tile, image_id - IMAGE_CANAL_FULL_OFFSET);
+            map_image_set(wtile.tile, image_id - building_irrigation_ditch::image_set::IMAGE_FULL_OFFSET);
         }
 
         map_terrain_add_with_radius(wtile.tile, 1, 2, TERRAIN_IRRIGATION_RANGE);
@@ -212,13 +213,14 @@ int get_canal_image(int grid_offset, bool is_road, int terrain, const terrain_im
         return 0;
     }
 
-    int image_aqueduct = image_id_from_group(GROUP_BUILDING_CANAL); // 119 C3
+    int image_canal_set_begin = building_irrigation_ditch::images().begin; // 119 C3
+    int image_canal_set_end = image_canal_set_begin + building_irrigation_ditch::image_set::IMAGE_FULL_OFFSET;
     int water_offset = 0;
     int terrain_image = map_image_at(grid_offset);
-    if (terrain_image >= image_aqueduct && terrain_image < image_aqueduct + IMAGE_CANAL_FULL_OFFSET)
+    if (terrain_image >= image_canal_set_begin && terrain_image < image_canal_set_end)
         water_offset = 0; // has water
     else                  // has no water
-        water_offset = IMAGE_CANAL_FULL_OFFSET;
+        water_offset = building_irrigation_ditch::image_set::IMAGE_FULL_OFFSET;
 
     // floodplains
     int floodplains_offset = 0;
@@ -232,11 +234,12 @@ int get_canal_image(int grid_offset, bool is_road, int terrain, const terrain_im
         bool road_dir_right = false;
         if (map_terrain_is(grid_offset + GRID_OFFSET(0, -1), TERRAIN_ROAD))
             road_dir_right = true;
+
         if (map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_ROAD))
             road_dir_right = true;
+
         road_dir_right = city_view_relative_orientation(road_dir_right) % 2;
         bool is_paved = building_road::is_paved(tile2i(grid_offset));
-
 
         if (road_dir_right) // left/right offset is opposite from C3
             image_offset = 0;
@@ -255,7 +258,7 @@ int get_canal_image(int grid_offset, bool is_road, int terrain, const terrain_im
         }
     }
     // TODO: canals disappearing into the Nile river --- good luck with that!
-    return image_id_from_group(GROUP_BUILDING_CANAL) + water_offset + floodplains_offset + image_offset;
+    return image_canal_set_begin + water_offset + floodplains_offset + image_offset;
 }
 
 void map_tiles_set_canal_image(int grid_offset) {

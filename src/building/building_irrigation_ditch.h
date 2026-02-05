@@ -8,7 +8,17 @@ public:
 
     struct static_params : public building_static_params {
         uint8_t canal_irrigation_value_multiplier;
+
+        void archive_load(archive arch);
     } BUILDING_STATIC_DATA_T;
+
+    struct image_set {
+        int begin;
+        int end;
+
+        static constexpr int IMAGE_FULL_OFFSET = 48;
+    };
+    static const image_set &images();
 
     struct preview : building_planer_renderer {
         virtual bool can_construction_start(build_planner &p, tile2i start) const override;
