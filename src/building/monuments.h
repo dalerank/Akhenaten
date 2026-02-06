@@ -50,6 +50,7 @@ public:
     virtual bool needs_resources() const;
     virtual int progress();
     virtual void set_phase(int phase);
+    virtual void on_phase_changed(int old, int current);
     virtual int phases() const;
     virtual grid_area get_area() const;
     virtual int needs_bricklayers(int ph_id) const;
