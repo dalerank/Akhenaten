@@ -91,7 +91,7 @@
                 {
                     "type" : "archive",
                     "url" : "https://github.com/libsdl-org/flac/archive/refs/heads/1.3.4-SDL.tar.gz",
-                    "sha256" : "69521888b6edc7357bf77771d578eb56be0ea0d17b9512684a190d3b88d94adf",
+                    "sha256" : "1588b88d9e7f372a3265a31697b94fd448750e1403ef46179c7b1b27f8b95d01",
                     "dest" : "_deps/sdl_mixer_deps/flac",
                     "strip-components" : 1
                 },
