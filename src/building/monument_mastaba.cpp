@@ -315,7 +315,7 @@ void building_small_mastaba::update_day() {
 }
 
 bool building_small_mastaba::draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) {
-    return draw_ornaments_and_animations_flat_impl(base, ctx, point, tile, mask, current_params().init_tiles);
+    return draw_ornaments_and_animations_flat_impl(ctx, point, tile, mask, current_params().init_tiles);
 }
 
 void building_mastaba::remove_worker(figure_id fid) {
@@ -450,7 +450,7 @@ void building_mastaba::on_place(int orientation, int variant) {
     }
 }
 
-bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
+bool building_mastaba::draw_ornaments_and_animations_flat_impl(painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
     if (is_finished()) {
         return false;
     }
@@ -577,7 +577,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
     return true;
 }
 
-bool building_mastaba::draw_ornaments_and_animations_hight_impl(building &base, painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
+bool building_mastaba::draw_ornaments_and_animations_hight_impl(painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
     int image_grounded = current_params().base_img() + 5;
     color_mask = (color_mask ? color_mask : 0xffffffff);
     building *main = base.main();
@@ -838,7 +838,7 @@ bool building_small_mastaba::draw_ornaments_and_animations_height(painter &ctx, 
         return false;
     }
 
-    return draw_ornaments_and_animations_hight_impl(base, ctx, point, tile, color_mask, current_params().init_tiles);
+    return draw_ornaments_and_animations_hight_impl(ctx, point, tile, color_mask, current_params().init_tiles);
 }
 
 const monument &building_small_mastaba::config() const {
@@ -887,7 +887,7 @@ tile2i building_medium_mastaba::access_point() const {
 }
 
 bool building_medium_mastaba::draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) {
-    return draw_ornaments_and_animations_flat_impl(base, ctx, point, tile, mask, current_params().init_tiles);
+    return draw_ornaments_and_animations_flat_impl(ctx, point, tile, mask, current_params().init_tiles);
 }
 
 bool building_medium_mastaba::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
@@ -900,7 +900,7 @@ bool building_medium_mastaba::draw_ornaments_and_animations_height(painter &ctx,
         return false;
     }
 
-    return draw_ornaments_and_animations_hight_impl(base, ctx, point, tile, color_mask, current_params().init_tiles);
+    return draw_ornaments_and_animations_hight_impl(ctx, point, tile, color_mask, current_params().init_tiles);
 }
 
 void building_medium_mastaba::update_day() {

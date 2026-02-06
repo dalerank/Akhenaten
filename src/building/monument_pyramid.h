@@ -49,16 +49,17 @@ public:
         virtual void ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
     };
 
-    bool draw_ornaments_and_animations_flat_impl(building &base, painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
-    bool draw_ornaments_and_animations_hight_impl(building &base, painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
+    bool draw_ornaments_and_animations_flat_impl(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
+    bool draw_ornaments_and_animations_hight_impl(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
 
     void update_day(const vec2i tiles_size);
+    void draw_phase_3_5_tile(color color_mask, int channel_base_id_1, int channel_base_id_2, const vec2i tiles_size);
     virtual bool need_workers() const override;
     span_const<uint16_t> active_workers() const;
 
     static void finalize(building *b, const vec2i size_b);
-    static int get_image(int orientation, tile2i tile, tile2i start, tile2i end);
-    static int get_channel_image(int orientation, tile2i tile, tile2i main_tile, int channel_base_id);
+    static int get_image(const building_static_params &, int orientation, tile2i tile, tile2i start, tile2i end);
+    static int get_channel_image(int orientation, tile2i tile, tile2i start, tile2i end, int channel_base_id);
 
     virtual void remove_worker(figure_id fid) override;
     virtual void add_workers(figure_id fid) override;

@@ -79,6 +79,8 @@ struct id_anim_t {
     static const xstring image_stick;
     static const xstring ditches_phase_1;
     static const xstring ditches_phase_2;
+    static const xstring ditches_phase_3;
+    static const xstring ground_phase_0;
 };
 
 const id_anim_t &animkeys();
