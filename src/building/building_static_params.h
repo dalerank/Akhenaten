@@ -7,6 +7,7 @@
 #include "graphics/animation.h"
 #include "game/difficulty.h"
 #include "overlays/city_overlay_fwd.h"
+#include "core/inplace_function.h"
 
 struct building_static_params {
     static building_static_params dummy;
@@ -50,7 +51,8 @@ struct building_static_params {
     inline const int first_img(const xstring &anim_key) const { return animations[anim_key].first_img(); }
     const int base_img() const;
 
-    static void for_each(std::function<void(const building_static_params &params)> f);
+    using handler = inplace_function<void(const building_static_params &params)>;
+    static void for_each(handler f);
 
     static void register_model(e_building_type, const building_static_params &);
     static const building_static_params &get(e_building_type);
