@@ -94,7 +94,7 @@ bool building_pyramid::get_route_citizen_land_type(int grid_offset, int &land_re
         if (phase() == MONUMENT_FINISHED) {
             land_result = CITIZEN_N1_BLOCKED;
             return true;
-        } else if (phase() > 2) {
+        } else if (phase() > 4) {
             tile2i maint = main()->tile();
             tile2i end = maint.shifted(3, 9);
             tile2i tile(grid_offset);
@@ -129,7 +129,7 @@ void building_stepped_pyramid::set_tile_progress(tile2i tile, int v) {
         return;
     } 
 
-    if (phase() == 3) {
+    if (phase() == 3 || phase() == 4) {
         map_terrain_add(tile, TERRAIN_CANAL);
         return;
     }
@@ -268,13 +268,13 @@ void building_pyramid::update_images(building *b, int curr_phase, const vec2i si
     building *main = b->main();
     building *part = b;
 
-    if (curr_phase < 3) {
+    if (curr_phase < 5) {
         return;
     }
 
     while (part) {
         int image_id = 0;
-        // Use mastaba bricks image function for now, can be customized later
+        // Use pyramid bricks image function for now, can be customized later
         image_id = building_small_pyramid_get_bricks_image(b->orientation, part->type, part->tile, main->tile, main->tile.shifted(size_b.y - 1, size_b.x - 1), curr_phase - 2);
         for (int dy = 0; dy < part->size; dy++) {
             for (int dx = 0; dx < part->size; dx++) {
@@ -328,12 +328,12 @@ void building_stepped_pyramid::add_workers(figure_id fid) {
     }
 }
 
-int building_stepped_pyramid::get_image(int orientation, tile2i tile, tile2i start, tile2i end) {
-    int image_id = building_static_params::get(BUILDING_SMALL_STEPPED_PYRAMID).base_img();
+int building_stepped_pyramid::get_image(const building_static_params& params, int orientation, tile2i tile, tile2i start, tile2i end) {
+    int image_id = params.base_img();
     int base_image_id = image_id - 7;
     bool insidex = (tile.x() > start.x() && tile.x() < end.x());
     bool insidey = (tile.y() > start.y() && tile.y() < end.y());
-    int random = (image_id + 5 + (tile.x() + tile.y()) % 7);
+    int random = params.first_img(animkeys().ground_phase_0) + ((tile.x() + tile.y()) % 7);
     int result = random;
     if (tile == start) { // top corner
         result = image_id;
@@ -362,7 +362,7 @@ int building_stepped_pyramid::get_image(int orientation, tile2i tile, tile2i sta
     return result;
 }
 
-int building_stepped_pyramid::get_channel_image(int orientation, tile2i tile, tile2i main_tile, int channel_base_id) {
+int building_stepped_pyramid::get_channel_image(int orientation, tile2i tile, tile2i start, tile2i end, int channel_base_id) {  
     bool north = map_terrain_is(tile.shifted(0, -1), TERRAIN_CANAL);
     bool east  = map_terrain_is(tile.shifted(1, 0), TERRAIN_CANAL);
     bool south = map_terrain_is(tile.shifted(0, 1), TERRAIN_CANAL);
@@ -391,13 +391,13 @@ int building_stepped_pyramid::get_channel_image(int orientation, tile2i tile, ti
         } else {
             // corners
             if (north && east) {
-                variant = 0 + (orientation_offset % 2);
+                variant = 0 + (orientation_offset % 4);
             } else if (east && south) {
-                variant = 1 + (orientation_offset % 2);
+                variant = 1 + (orientation_offset % 4);
             } else if (south && west) {
-                variant = 2 + (orientation_offset % 2);
+                variant = 2 + (orientation_offset % 4);
             } else if (west && north) {
-                variant = 3 + (orientation_offset % 2);
+                variant = 3 + (orientation_offset % 4);
             }
         }
     } else if (neighbors_count == 3) {
@@ -425,7 +425,7 @@ void building_stepped_pyramid::on_post_load() {
     building_monument::on_post_load();
 }
 
-bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(building &base, painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
+bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
     // Use the same implementation as building_mastaba::draw_ornaments_and_animations_flat_impl
     // This can be customized later if pyramid needs different rendering
     if (is_finished()) {
@@ -524,7 +524,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(building 
                 }
 
                 if (progress > 0 && progress <= 200) {
-                    int img = get_image(base.orientation, base.tile.shifted(dx, dy), main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1));
+                    int img = get_image(current_params(), base.orientation, base.tile.shifted(dx, dy), main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1));
 
                     auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
                     command.image_id = img;
@@ -544,14 +544,17 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(building 
                 vec2i offset = lookup_tile_to_pixel(ntile);
                 uint32_t progress = map_monuments_get_progress(ntile);
                 if (progress < 200) {
-                    int img = get_image(base.orientation, base.tile.shifted(dx, dy), main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1));
+                    int img = get_image(current_params(), base.orientation, base.tile.shifted(dx, dy), main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1));
 
-                    auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                    auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
                     command.image_id = img;
                     command.pixel = offset;
                     command.mask = color_mask;
+                    command.use_sort_pixel = true;
+                    command.sort_pixel = offset + vec2i(0, 1);
+                    command.location = SOURCE_LOCATION;
 
-                    int channel_img = get_channel_image(base.orientation, ntile, main->tile, channel_base_id);
+                    int channel_img = get_channel_image(base.orientation, ntile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), channel_base_id);
                     if (channel_img > 0 && progress > 0) {
 
                         auto &channel_command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
@@ -564,11 +567,13 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(building 
                         channel_command.location = SOURCE_LOCATION;
                     }
                 } else {
-                    int channel_img = get_channel_image(base.orientation, ntile, main->tile, channel_base_id);
-                    auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                    int channel_img = get_channel_image(base.orientation, ntile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), channel_base_id);
+                    auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
                     command.image_id = channel_img;
                     command.pixel = offset;
                     command.mask = color_mask;
+                    command.use_sort_pixel = true;
+                    command.sort_pixel = offset + vec2i(0, 1);
                     command.location = SOURCE_LOCATION;
                 }
             }
@@ -578,47 +583,65 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(building 
         const xstring &base_key_2 = animkeys().ditches_phase_2;
         int channel_base_id_1 = current_params().animations[base_key_1].first_img();
         int channel_base_id_2 = current_params().animations[base_key_2].first_img();
-        for (int dy = 0; dy < base.size; dy++) {
-            for (int dx = 0; dx < base.size; dx++) {
-                tile2i ntile = base.tile.shifted(dx, dy);
-                vec2i offset = lookup_tile_to_pixel(ntile);
-                uint32_t progress = map_monuments_get_progress(ntile);
-                if (progress < 200) {
-                    int ditch_empty_img = get_channel_image(base.orientation, ntile, main->tile, channel_base_id_1);
-
-                    auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
-                    command.image_id = ditch_empty_img;
-                    command.pixel = offset;
-                    command.mask = color_mask;
-
-                    int ditch_water_img = get_channel_image(base.orientation, ntile, main->tile, channel_base_id_2);
-                    if (ditch_water_img > 0 && progress > 0) {
-
-                        auto &channel_command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
-                        channel_command.image_id = ditch_water_img;
-                        channel_command.pixel = offset;
-
-                        const uint8_t alpha = (0xff * progress / 200);
-                        channel_command.mask = ((alpha << COLOR_BITSHIFT_ALPHA) | (color_mask & 0x00ffffff));
-                        channel_command.flags = (progress < 200) ? ImgFlag_Alpha : 0;
-                        channel_command.location = SOURCE_LOCATION;
-                    }
-                } else {
-                    int channel_img = get_channel_image(base.orientation, ntile, main->tile, channel_base_id_2);
-                    auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
-                    command.image_id = channel_img;
-                    command.pixel = offset;
-                    command.mask = color_mask;
-                    command.location = SOURCE_LOCATION;
-                }
-            }
-        }
+        draw_phase_3_5_tile(color_mask, channel_base_id_1, channel_base_id_2, tiles_size);
+    } else if (monumentd.phase == 4) {
+        const xstring &base_key_2 = animkeys().ditches_phase_2;
+        const xstring &base_key_3 = animkeys().ditches_phase_3;
+        int channel_base_id_2 = current_params().animations[base_key_2].first_img();
+        int channel_base_id_3 = current_params().animations[base_key_3].first_img();
+        draw_phase_3_5_tile(color_mask, channel_base_id_2, channel_base_id_3, tiles_size);
     }
 
     return true;
 }
 
-bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(building &base, painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
+void building_stepped_pyramid::draw_phase_3_5_tile(color color_mask, int channel_base_id_1, int channel_base_id_2, const vec2i tiles_size) {
+    building *main = base.main();
+    tile2i end = main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1);
+
+    for (int dy = 0; dy < base.size; dy++) {
+        for (int dx = 0; dx < base.size; dx++) {
+            tile2i ntile = base.tile.shifted(dx, dy);
+            vec2i offset = lookup_tile_to_pixel(ntile);
+            uint32_t progress = map_monuments_get_progress(ntile);
+            if (progress < 200) {
+                int ditch_empty_img = get_channel_image(base.orientation, ntile, main->tile, end, channel_base_id_1);
+
+                auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
+                command.image_id = ditch_empty_img;
+                command.pixel = offset;
+                command.mask = color_mask;
+                command.use_sort_pixel = true;
+                command.sort_pixel = offset + vec2i(0, 1);
+                command.location = SOURCE_LOCATION;
+
+                int ditch_water_img = get_channel_image(base.orientation, ntile, main->tile, end, channel_base_id_2);
+                if (ditch_water_img > 0 && progress > 0) {
+
+                    auto &channel_command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                    channel_command.image_id = ditch_water_img;
+                    channel_command.pixel = offset;
+
+                    const uint8_t alpha = (0xff * progress / 200);
+                    channel_command.mask = ((alpha << COLOR_BITSHIFT_ALPHA) | (color_mask & 0x00ffffff));
+                    channel_command.flags = (progress < 200) ? ImgFlag_Alpha : 0;
+                    channel_command.location = SOURCE_LOCATION;
+                }
+            } else {
+                int channel_img = get_channel_image(base.orientation, ntile, main->tile, end, channel_base_id_2);
+                auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
+                command.image_id = channel_img;
+                command.pixel = offset;
+                command.mask = color_mask;
+                command.use_sort_pixel = true;
+                command.sort_pixel = offset + vec2i(0, 1);
+                command.location = SOURCE_LOCATION;
+            }
+        }
+    }
+}
+
+bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
     // Use similar implementation to building_mastaba
     int image_grounded = building_static_params::get(base.type).base_img() + 5;
     color_mask = (color_mask ? color_mask : 0xffffffff);
@@ -658,7 +681,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(building
     };
 
     auto &monumentd = runtime_data();
-    if (monumentd.phase > 3 && monumentd.phase < 8) {
+    if (monumentd.phase > 4 && monumentd.phase < 8) {
         int phase = monumentd.phase;
         for (auto &tile : tiles2draw) {
             uint32_t progress = map_monuments_get_progress(tile);
@@ -726,7 +749,7 @@ void building_stepped_pyramid::update_day(const vec2i tiles_size) {
         }
     }
 
-    if (monumentd.phase >= 4) {
+    if (monumentd.phase >= 5) {
         int minimal_percent = 100;
         for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
             bool need_resource = needs_resource(r);
@@ -794,7 +817,7 @@ bool building_stepped_pyramid::force_draw_flat_tile(painter &ctx, tile2i tile, v
     }
 
     auto &monumentd = runtime_data();
-    return (monumentd.phase < 2);
+    return (monumentd.phase < 5);
 }
 
 void building_stepped_pyramid::bind_dynamic(io_buffer *iob, size_t version) {
@@ -844,7 +867,7 @@ void building_small_stepped_pyramid::update_day() {
 }
 
 bool building_small_stepped_pyramid::draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) {
-    return draw_ornaments_and_animations_flat_impl(base, ctx, point, tile, mask, current_params().init_tiles);
+    return draw_ornaments_and_animations_flat_impl(ctx, point, tile, mask, current_params().init_tiles);
 }
 
 bool building_small_stepped_pyramid::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
@@ -853,11 +876,11 @@ bool building_small_stepped_pyramid::draw_ornaments_and_animations_height(painte
     }
 
     auto &monumentd = runtime_data();
-    if (monumentd.phase < 2) {
+    if (monumentd.phase < 5) {
         return false;
     }
 
-    return draw_ornaments_and_animations_hight_impl(base, ctx, point, tile, color_mask, current_params().init_tiles);
+    return draw_ornaments_and_animations_hight_impl(ctx, point, tile, color_mask, current_params().init_tiles);
 }
 
 const monument &building_small_stepped_pyramid::config() const {
@@ -1010,7 +1033,7 @@ grid_area building_medium_stepped_pyramid::get_area() const {
 }
 
 bool building_medium_stepped_pyramid::draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) {
-    return draw_ornaments_and_animations_flat_impl(base, ctx, point, tile, mask, current_params().init_tiles);
+    return draw_ornaments_and_animations_flat_impl(ctx, point, tile, mask, current_params().init_tiles);
 }
 
 bool building_medium_stepped_pyramid::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
@@ -1019,11 +1042,11 @@ bool building_medium_stepped_pyramid::draw_ornaments_and_animations_height(paint
     }
 
     auto &monumentd = runtime_data();
-    if (monumentd.phase < 2) {
+    if (monumentd.phase < 5) {
         return false;
     }
 
-    return draw_ornaments_and_animations_hight_impl(base, ctx, point, tile, color_mask, current_params().init_tiles);
+    return draw_ornaments_and_animations_hight_impl(ctx, point, tile, color_mask, current_params().init_tiles);
 }
 
 const monument &building_medium_stepped_pyramid::config() const {

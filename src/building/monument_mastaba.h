@@ -47,8 +47,8 @@ public:
         vec2i init_tiles;
     };
     
-    bool draw_ornaments_and_animations_flat_impl(building &base, painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
-    bool draw_ornaments_and_animations_hight_impl(building &base, painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
+    bool draw_ornaments_and_animations_flat_impl(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
+    bool draw_ornaments_and_animations_hight_impl(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
 
     void update_day(const vec2i tiles_size);
     virtual bool need_workers() const override;
