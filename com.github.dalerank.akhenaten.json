@@ -98,7 +98,7 @@
                 {
                     "type" : "archive",
                     "url" : "https://github.com/libsdl-org/ogg/archive/refs/heads/v1.3.5-SDL.tar.gz",
-                    "sha256" : "029be168a1bc67fd6f167d3887fceca4fcdc3bcfd79e525d92ecdc3e7a09184a",
+                    "sha256" : "f445e525aa498476aeac314daf73cc0a25d2dd352509eac764e349426401e4ba",
                     "dest" : "_deps/sdl_mixer_deps/ogg",
                     "strip-components" : 1
                 },
