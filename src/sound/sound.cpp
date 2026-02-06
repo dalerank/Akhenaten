@@ -164,7 +164,7 @@ void* sound_manager_t::load_chunk(pcstr filename) {
         SDL_RWops* sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
         return Mix_LoadWAV_RW(sdl_fp, 1);
 #else
-        verify_no_crash(false && "unsupported format");
+        //verify_no_crash(false && "unsupported format");
         //return Mix_LoadWAV_RW(SDL_RWFromFile(filename, "rb"), 1);
 #endif
     } 
