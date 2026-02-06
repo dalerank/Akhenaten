@@ -180,6 +180,19 @@ int building_monument::needs_resource(e_resource resource, int phase) const {
     return (r_it != ph.resources.end() ? r_it->count : 0);
 }
 
+void building_monument::on_phase_changed(int old, int current) {
+    if (current >= 2) {
+        map_building_tiles_add(id(), tile(), size(), this->building_image_get(), TERRAIN_BUILDING);
+    }
+
+    if (current != MONUMENT_FINISHED) {
+        auto &d = runtime_data();
+        for (e_resource resource = RESOURCE_NONE; resource < RESOURCES_MAX; ++resource) {
+            d.resources_pct[resource] = 0;
+        }
+    }
+}
+
 void building_monument::set_phase(int phase) {
     if (phase == phases()) {
         phase = MONUMENT_FINISHED;
@@ -190,16 +203,9 @@ void building_monument::set_phase(int phase) {
         return;
     }
 
+    int old_phase = d.phase;
     d.phase = phase;
-    if (phase >= 2) {
-        map_building_tiles_add(id(), tile(), size(), this->building_image_get(), TERRAIN_BUILDING);
-    }
-
-    if (d.phase != MONUMENT_FINISHED) {
-        for (e_resource resource = RESOURCE_NONE; resource < RESOURCES_MAX; ++resource) {
-            d.resources_pct[resource] = 0;
-        }
-    }
+    on_phase_changed(old_phase, phase);
 }
 
 void building_monument_finish_monuments() {

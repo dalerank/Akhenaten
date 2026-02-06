@@ -485,7 +485,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         break;
 
     case e_debug_render_terrain_bits: // TERRAIN BIT FIELD
-        debug_text(ctx, str, x, y + 10, 0, "", map_terrain_get(grid_offset), COLOR_LIGHT_BLUE);
+        text_draw(ctx, bstring32().printf("%x", map_terrain_get(grid_offset)), x, y + 10, FONT_SMALL_PLAIN, COLOR_LIGHT_BLUE, 0.5f);
         break;
 
     case e_debug_render_tile_pos:
