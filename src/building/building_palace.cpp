@@ -34,18 +34,9 @@
 #include "game/game.h"
 #include "js/js_game.h"
 
-struct info_window_palace : public building_info_window_t<info_window_palace> {
-    virtual void init(object_info &c) override;
-    virtual bool check(object_info &c) override {
-        return c.building_get()->dcast_palace();
-    }
-};
-
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_village_palace);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_town_palace);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_city_palace);
-
-info_window_palace palace_infow;
 
 void building_palace::on_create(int orientation) {
     base.labor_category = current_params().labor_category;
@@ -176,21 +167,3 @@ bvariant building_palace::get_property(const xstring &domain, const xstring &nam
 
     return building_impl::get_property(domain, name);
 }
-
-void info_window_palace::init(object_info &c) {
-    building_info_window::init(c);
-
-    building_impl *palace = c.building_get()->dcast();
-
-    std::pair<int, int> reason = { c.group_id, 0 };
-    if (!palace->has_road_access()) reason = { 69, 25 };
-    else if (palace->num_workers() <= 0) reason.second = 10;
-    else reason.second = approximate_value(palace->worker_percentage() / 100.f, make_array(9, 8, 7, 6, 5));
-
-    ui["workers_desc"] = ui::str(reason.first, reason.second);
-
-    ui["visit_advisor"].onclick([] {
-        window_advisors_show_advisor(ADVISOR_RATINGS);
-    });
-}
-
