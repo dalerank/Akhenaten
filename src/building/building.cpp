@@ -213,7 +213,7 @@ xstring building_impl::get_sound() {
 
 const int building_static_params::base_img() const { return first_img(animkeys().base); }
 
-void building_static_params::for_each(std::function<void(const building_static_params &params)> f) {
+void building_static_params::for_each(handler f) {
     if (building_impl_params) {
         for (const auto& p: *building_impl_params) {
             if (p) {

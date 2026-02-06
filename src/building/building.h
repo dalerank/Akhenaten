@@ -27,6 +27,7 @@
 #include "building_model.h"
 #include "building_impl.h"
 #include "building_cast.h"
+#include "core/inplace_function.h"
 
 #include <stdint.h>
 #include <algorithm>
@@ -468,7 +469,8 @@ struct bproperty {
     xstring domain;
     xstring name;
 
-    std::function<bvariant(building&, const xstring&)> handler;
+    using handler_t = inplace_function<bvariant(building &, const xstring &)>;
+    handler_t handler;
 };
 
 template<typename T>
