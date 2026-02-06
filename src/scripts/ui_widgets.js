@@ -526,24 +526,6 @@ info_window_garden = {
     }
 }
 
-info_window_palace = {
-    ui : baseui(building_info_window, {
-        background    : outer_panel({size: [29, 18]}),
-        resource_img  : resource_icon({pos: [16, 16], resource:RESOURCE_GOLD}),
-        inner_panel   : inner_panel({pos : [16, 120], size: [27, 6],
-                                                                ui : {
-                                                                    workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
-                                                                    workers_text : text({pos: [50, 16], text:"${building.num_workers} ${8.12} (${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK}),
-                                                                    workers_desc : text({pos: [50, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
-                                                                }
-                                                          }),
-        vaults_hold   : text({pos: [44, 44], text:"${text.2} ${building.tax_income_or_storage} Db", font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        warning_desc  : text({pos: [32, 66], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-        text_visit    : text({pos: [90, 252], font: FONT_NORMAL_BLACK_ON_LIGHT, text:"#visit_rating_advisor" }),
-        visit_advisor : image_button({pos:[52, 246], size:[28, 28], pack:PACK_GENERAL, id:106 }),
-    })
-}
-
 info_window_courthouse = {
     ui : baseui(building_info_window, { 
         background    : outer_panel({size: [29, 17]}),

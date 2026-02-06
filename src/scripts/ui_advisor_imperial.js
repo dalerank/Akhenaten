@@ -20,7 +20,7 @@ advisor_imperial_window {
         rating_label : label({pos[60, 42], text:"${52.0} ${rating.kingdom}", font:FONT_NORMAL_BLACK_ON_LIGHT})
         rating_advice : multiline({pos[60, 64], size[px(36), 20], wrap:px(35), font:FONT_NORMAL_BLACK_ON_LIGHT, textfn:rating_advice_text})
         inner_panel  : inner_panel({pos[32, 110], size[36, 13] })
-        
+
         button_request : dummy({pos[38, 116], size[562, 45],
             ui {
                 button_request_icon   : dummy({pos[7, 7]})
@@ -32,21 +32,21 @@ advisor_imperial_window {
         })
 
         bottom_panel : inner_panel({pos[64, 324], size[32, 6] })
-        player_rank  : header({pos[72, 332], textfn:player_rank_text})            
+        player_rank  : header({pos[72, 332], textfn:player_rank_text})
 
         donate_to_city : button({pos[320, 330], size[250, 20]
-                                 text{group:52, id:2}, tooltip:"${68.96}", font:FONT_NORMAL_WHITE_ON_DARK 
+                                 text{group:52, id:2}, tooltip:"${68.96}", font:FONT_NORMAL_WHITE_ON_DARK
                                  onclick: window_donate_to_city_show
                                 })
-                                
+
         send_gift    : button({pos[320, 352], size[250, 20]
-                               text{group:52, id:49}, tooltip:"${68.133}", font:FONT_NORMAL_WHITE_ON_DARK, 
+                               text{group:52, id:49}, tooltip:"${68.133}", font:FONT_NORMAL_WHITE_ON_DARK,
                                onclick: window_gift_to_kingdome_show })
 
         personal_savings : label({pos[72, 374], text:"${52.1} ${city.personal_savings} ${6.0}" })
         money_lost   : label({pos[272, 374], text:"0 debens lost this year throught theft" })
         no_requests  : label({margin{ centerx:-100, centery:-10}, text:"${52.21}", font:FONT_NORMAL_WHITE_ON_DARK })
-        
+
         salary_rank  : button({pos[70, 392], size[500, 24], tooltip[68, 97], textfn:salary_rank_text, font:FONT_NORMAL_WHITE_ON_DARK })
 
         big_text     : text_center({pos[60, 295], size[400, 20], font:FONT_NORMAL_BLACK_ON_LIGHT})

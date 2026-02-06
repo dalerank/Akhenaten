@@ -39,6 +39,7 @@
 #include "window/message_dialog.h"
 #include "game/game_events.h"
 #include "game/game.h"
+#include "js/js_game.h"
 #include "io/gamefiles/lang.h"
 
 static const int ADVISOR_TO_MESSAGE_TEXT[] = {
@@ -278,6 +279,10 @@ int window_advisors_show_advisor(e_advisor advisor) {
     window_advisors_show();
     return 1;
 }
+void __window_advisors_show_advisor(int advisor) {
+    window_advisors_show_advisor((e_advisor)advisor);
+}
+ANK_FUNCTION_1(__window_advisors_show_advisor)
 
 void window_advisors_show() {
     static window_type window = {
