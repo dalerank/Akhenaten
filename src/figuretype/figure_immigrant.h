@@ -4,7 +4,7 @@ struct event_create_immigrant {
     building_id bid;
     int num_people;
     pcstr src_location;
-    std::function<void()> payload;
+    //inplace_function<void()> payload;
 };
 
 enum e_immigrant_action : uint16_t {
