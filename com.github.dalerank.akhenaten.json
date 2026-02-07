@@ -105,7 +105,7 @@
                 {
                     "type" : "archive",
                     "url" : "https://github.com/libsdl-org/vorbis/archive/refs/heads/v1.3.7-SDL.tar.gz",
-                    "sha256" : "94fbfd0ef67c3ce6b662de01f3bc2308fb21760cdbd47dddfbf900d26abbb4ce",
+                    "sha256" : "848c2c9707cf60b9811b5c772afc865b8e8a9ef6d4eea9c32bdc78283b7be281",
                     "dest" : "_deps/sdl_mixer_deps/vorbis",
                     "strip-components" : 1
                 },
