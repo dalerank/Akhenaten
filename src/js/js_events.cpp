@@ -12,6 +12,7 @@
 #include "city/victory.h"
 #include "city/city_animals.h"
 #include "city/city_population.h"
+#include "building/building_palace.h"
 #include "js/js_game.h"
 #include "js/js.h"
 
@@ -31,3 +32,4 @@ ANK_SCRIPT_EVENT(event_warehouse_filled, bid)
 ANK_SCRIPT_EVENT(event_update_mission_goal, mid)
 ANK_SCRIPT_EVENT(event_register_mission_animals, mid)
 ANK_SCRIPT_EVENT(event_finance_changed, value)
+ANK_SCRIPT_EVENT(building_palace_show_tooltip, bid, mx, my)

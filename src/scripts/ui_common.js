@@ -14,6 +14,12 @@ ui.image = function(image, pos) {
     }
 }
 
+ui.begin_widget = function(pos) { __ui_begin_widget(pos.x, pos.y) }
+ui.end_widget = function() { return __ui_end_widget() }
+ui.fill_rect = function(pos, size, color) { __ui_fill_rect(pos.x, pos.y, size.w, size.h, color) }
+ui.border = function(pos, size, type, color, flags) { __ui_border(pos.x, pos.y, size.w, size.h, type, color, flags) }
+ui.label_colored = function(text, pos, font, color) { __ui_label_colored(text, pos.x, pos.y, font, color) }
+
 ui.button = function(config) {
     if (!config) {
         return

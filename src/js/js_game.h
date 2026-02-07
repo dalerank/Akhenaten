@@ -34,6 +34,11 @@ namespace js_helpers {
     }
 
     template<>
+    inline unsigned int js_to_value<unsigned int>(js_State *J, int idx) {
+        return (unsigned int)js_tonumber(J, idx);
+    }
+
+    template<>
     inline double js_to_value<double>(js_State *J, int idx) {
         return js_tonumber(J, idx);
     }
@@ -530,6 +535,88 @@ inline void ank_register_callback_5(js_State* J, pcstr name) {
 #define ANK_FUNCTION_5(func) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##func); \
     inline void register_js2cpp_callback_##func(js_State* J) { ank_register_callback_5<&func>(J, #func); }
+
+// Template function version of ANK_FUNCTION_6
+// This template function handles the callback logic (extracted from macro)
+template<auto Func>
+inline void ank_function_6_callback_impl(js_State* J) {
+    using func_ptr_type = std::decay_t<decltype(Func)>;
+    using traits = js_function_traits<func_ptr_type>;
+    using param1_type = typename traits:: template arg<0>::type;
+    using param2_type = typename traits:: template arg<1>::type;
+    using param3_type = typename traits:: template arg<2>::type;
+    using param4_type = typename traits:: template arg<3>::type;
+    using param5_type = typename traits:: template arg<4>::type;
+    using param6_type = typename traits:: template arg<5>::type;
+    using return_type = typename traits::return_type;
+
+    param1_type param1 = js_helpers::js_to_value<param1_type>(J, 1);
+    param2_type param2 = js_helpers::js_to_value<param2_type>(J, 2);
+    param3_type param3 = js_helpers::js_to_value<param3_type>(J, 3);
+    param4_type param4 = js_helpers::js_to_value<param4_type>(J, 4);
+    param5_type param5 = js_helpers::js_to_value<param5_type>(J, 5);
+    param6_type param6 = js_helpers::js_to_value<param6_type>(J, 6);
+    constexpr bool is_void = std::is_void_v<return_type>;
+    js_helpers::js_invoke_and_push<is_void>(J, [&]() { return Func(param1, param2, param3, param4, param5, param6); });
+}
+
+// Template function to register callback with 6 parameters
+template<auto Func>
+inline void ank_register_callback_6(js_State* J, pcstr name) {
+    auto callback_impl = [](js_State *J) { ank_function_6_callback_impl<Func>(J); };
+    js_getglobal(J, name);
+    bool exists = js_iscallable(J, -1);
+    js_pop(J, 1);
+    if (!exists) {
+        REGISTER_GLOBAL_FUNCTION(J, callback_impl, name, 6);
+    }
+}
+
+#define ANK_FUNCTION_6(func) \
+    ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##func); \
+    inline void register_js2cpp_callback_##func(js_State* J) { ank_register_callback_6<&func>(J, #func); }
+
+// Template function version of ANK_FUNCTION_7
+// This template function handles the callback logic (extracted from macro)
+template<auto Func>
+inline void ank_function_7_callback_impl(js_State* J) {
+    using func_ptr_type = std::decay_t<decltype(Func)>;
+    using traits = js_function_traits<func_ptr_type>;
+    using param1_type = typename traits:: template arg<0>::type;
+    using param2_type = typename traits:: template arg<1>::type;
+    using param3_type = typename traits:: template arg<2>::type;
+    using param4_type = typename traits:: template arg<3>::type;
+    using param5_type = typename traits:: template arg<4>::type;
+    using param6_type = typename traits:: template arg<5>::type;
+    using param7_type = typename traits:: template arg<6>::type;
+    using return_type = typename traits::return_type;
+
+    param1_type param1 = js_helpers::js_to_value<param1_type>(J, 1);
+    param2_type param2 = js_helpers::js_to_value<param2_type>(J, 2);
+    param3_type param3 = js_helpers::js_to_value<param3_type>(J, 3);
+    param4_type param4 = js_helpers::js_to_value<param4_type>(J, 4);
+    param5_type param5 = js_helpers::js_to_value<param5_type>(J, 5);
+    param6_type param6 = js_helpers::js_to_value<param6_type>(J, 6);
+    param7_type param7 = js_helpers::js_to_value<param7_type>(J, 7);
+    constexpr bool is_void = std::is_void_v<return_type>;
+    js_helpers::js_invoke_and_push<is_void>(J, [&]() { return Func(param1, param2, param3, param4, param5, param6, param7); });
+}
+
+// Template function to register callback with 7 parameters
+template<auto Func>
+inline void ank_register_callback_7(js_State* J, pcstr name) {
+    auto callback_impl = [](js_State *J) { ank_function_7_callback_impl<Func>(J); };
+    js_getglobal(J, name);
+    bool exists = js_iscallable(J, -1);
+    js_pop(J, 1);
+    if (!exists) {
+        REGISTER_GLOBAL_FUNCTION(J, callback_impl, name, 7);
+    }
+}
+
+#define ANK_FUNCTION_7(func) \
+    ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##func); \
+    inline void register_js2cpp_callback_##func(js_State* J) { ank_register_callback_7<&func>(J, #func); }
 
 // Template function version of ANK_FUNCTION_UNIFIED
 // This template function handles the callback logic (extracted from macro)

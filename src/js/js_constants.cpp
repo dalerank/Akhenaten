@@ -49,6 +49,9 @@ void js_register_game_constants(js_State *J) {
     _R(COLOR_GREEN)
     _R(COLOR_YELLOW)
     _R(COLOR_WHITE)
+    _R(COLOR_TOOLTIP_FILL)
+    _R(COLOR_TOOLTIP_BORDER)
+    _R(COLOR_TOOLTIP_TEXT)
 
     _R(BUILDING_SLOT_SERVICE)
     _R(BUILDING_SLOT_CARTPUSHER)

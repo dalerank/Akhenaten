@@ -17,7 +17,7 @@ city_population_rules {
     ]
 }
 
-[event=event_population_changed]
+[es=event_population_changed]
 function on_population_changed(ev) {
     log_info("Population changed! New value: " + ev.value)
 }

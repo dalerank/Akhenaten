@@ -106,6 +106,9 @@ scrollbar_t &scrollbar(scrollbar_t &scrollbar, vec2i pos, int &value, vec2i size
 void fill_rect(vec2i offset, vec2i size, color c);
 vec2i current_offset();
 
+template<typename T>
+void event(const T &ev);
+
 pcstr str(int group, int id);
 pcstr str_from_key(pcstr key);
 

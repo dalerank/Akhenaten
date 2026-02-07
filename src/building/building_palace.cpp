@@ -33,6 +33,8 @@
 #include "sound/sound_building.h"
 #include "game/game.h"
 #include "js/js_game.h"
+#include "js/js_struct.h"
+#include "graphics/elements/ui_js.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_village_palace);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_town_palace);
@@ -67,64 +69,7 @@ void building_palace::update_graphic() {
 }
 
 void building_palace::draw_tooltip(tooltip_context *c) const {
-    vec2i mpos = c->mpos;
-    
-    const auto &tooltip_lines = palace_params().tooltips;
-    
-    if (tooltip_lines.empty()) {
-        return;
-    }
-    
-    int width = 220;
-    int line_height = 14;
-    int height = (int)tooltip_lines.size() * line_height + 10;
-    vec2i pos;
-
-    if (mpos.x < width + 20)
-        pos.x = mpos.x + 20;
-    else {
-        pos.x = mpos.x - width - 20;
-    }
-
-    if (mpos.y < 200) {
-        pos.y = mpos.y + 10;
-    } else if (mpos.y + height - 32 > screen_height()) {
-        pos.y = screen_height() - height;
-    } else {
-        pos.y = mpos.y - 32;
-    }
-
-    ui::begin_widget(pos);
-    
-    ui::fill_rect({ 0, 0 }, { width, height }, COLOR_TOOLTIP_FILL);
-    ui::border({ 0, 0 }, { width, height }, 0, COLOR_TOOLTIP_BORDER, UiFlags_None);
-    
-    int y_offset = 5;
-    int label_x = 5;
-    int value_x = 140;
-    
-    for (const auto &line : tooltip_lines) {
-        bstring1024 formatted = ui::format(this, line.c_str());
-        
-        // Split line into label and value parts (format: "label@value" or "label@value (extra)")
-        int at_pos = formatted.find('\t');
-        if (at_pos >= 0) {
-            bstring512 label_part;
-            label_part.ncat(formatted.c_str(), at_pos);
-            ui::label_colored(label_part.c_str(), { label_x, y_offset }, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-            
-            // Draw value part starting from value_x
-            pcstr value_start = formatted.c_str() + at_pos + 1; // "\t"
-            int value_width = ui::label_colored(value_start, { value_x, y_offset }, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-        } else {
-            // No \t separator, draw as single label
-            ui::label(formatted.c_str(), { label_x, y_offset }, FONT_SMALL_SHADED, UiFlags_None);
-        }
-        
-        y_offset += line_height;
-    }
-    
-    ui::end_widget();
+    ui::event(building_palace_show_tooltip{ base.id, c->mpos.x, c->mpos.y });
 }
 
 bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
@@ -136,7 +81,7 @@ bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i p
     // ctx.img_generic(image_id + 2, point + vec2i{168, 36 - g_city.ratings.prosperity / 2}, color_mask);
     // ctx.img_generic(image_id + 3, point + vec2i{198, 27 - g_city.ratings.monument / 2}, color_mask);
     // ctx.img_generic(image_id + 4, point + vec2i{228, 19 - g_city.kingdome.rating / 2}, color_mask);
-    
+
     // Draw unemployed people when unemployment is high
     // int unemployment_pct = g_city.labor.unemployment_percentage;
     // int homeless_image_id = image_id_from_group(GROUP_FIGURE_PEASANT);
