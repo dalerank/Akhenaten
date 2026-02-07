@@ -615,67 +615,45 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
         int channel_base_id_3 = current_params().animations[base_key_3].first_img();
         int channel_base_id_4 = current_params().animations[base_key_4].first_img();
         draw_phase_3_5_tile(color_mask, channel_base_id_3, channel_base_id_4, tiles_size);
-    } else if (monumentd.phase == 6) {        
-        draw_phase_6_basement(color_mask, tiles_size);
     }
 
     return true;
 }
 
-void building_stepped_pyramid::draw_phase_6_basement(color color_mask, const vec2i tiles_size) {
+void building_stepped_pyramid::setup_phase_6_basement() {
     if (!is_main()) {
         return;
     }
 
     tile2i ctile = center_point();
 
-    tile2i left_top = ctile.shifted(-2, 1);
     int image_basement = current_params().animations["basement"].first_img();
-    if (map_monuments_get_progress(left_top) == 0) {
-        vec2i offset = lookup_tile_to_pixel(left_top);
-        auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
-        command.image_id = image_basement + 1;
-        command.pixel = offset;
-        command.mask = color_mask;
-        command.use_sort_pixel = true;
-        command.sort_pixel = offset + vec2i(0, 2);
-        command.location = SOURCE_LOCATION;
+    {
+        tile2i left_top = ctile.shifted(-2, 0);
+        auto m = building_at(left_top)->dcast_monument();
+        auto &md = m->runtime_data();
+        md.alt_image = image_basement + 1;
     }
 
-    tile2i right_top = ctile.shifted(0, 1);
-    if (map_monuments_get_progress(right_top) == 0) {
-        vec2i offset = lookup_tile_to_pixel(right_top);
-        auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
-        command.image_id = image_basement + 3;
-        command.pixel = offset;
-        command.mask = color_mask;
-        command.use_sort_pixel = true;
-        command.sort_pixel = offset + vec2i(0, 2);
-        command.location = SOURCE_LOCATION;
+    {
+        tile2i right_top = ctile.shifted(0, 0);
+        auto m = building_at(right_top)->dcast_monument();
+        auto &md = m->runtime_data();
+        md.alt_image = image_basement + 3;
     }
 
-    tile2i left_bottom = ctile.shifted(-2, -1);
-    if (map_monuments_get_progress(left_bottom) == 0) {
-        //vec2i offset = lookup_tile_to_pixel(left_bottom);
-        //auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
-        //command.image_id = image_basement + 2;
-        //command.pixel = offset;
-        //command.mask = color_mask;
-        //command.use_sort_pixel = true;
-        //command.sort_pixel = offset + vec2i(0, 1);
-        //command.location = SOURCE_LOCATION;
+    {
+        tile2i left_bottom = ctile.shifted(-2, -2);
+        auto m = building_at(left_bottom)->dcast_monument();
+        auto &md = m->runtime_data();
+        md.alt_image = image_basement + 2;
     }
 
-    tile2i right_bottom = ctile.shifted(1, 0);
-    if (right_bottom == tile() && map_monuments_get_progress(right_bottom) == 0) {
-        //vec2i offset = lookup_tile_to_pixel(right_bottom);
-        //auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
-        //command.image_id = image_basement + 1;
-        //command.pixel = offset;
-        //command.mask = color_mask;
-        //command.use_sort_pixel = true;
-        //command.sort_pixel = offset + vec2i(0, 1);
-        //command.location = SOURCE_LOCATION;
+    {
+        tile2i right_bottom = ctile.shifted(0, -2);
+        auto m = building_at(right_bottom)->dcast_monument();
+        auto &md = m->runtime_data();
+        md.alt_image = image_basement;
     }
 }
 
@@ -925,18 +903,19 @@ bool building_stepped_pyramid::force_draw_flat_tile(painter &ctx, tile2i tile, v
 void building_stepped_pyramid::bind_dynamic(io_buffer *iob, size_t version) {
     auto &monumentd = runtime_data();
 
-    iob->bind____skip(38);
-    iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
+    iob->bind____skip(36);
+    iob->bind_u16(monumentd.alt_image);
+    iob->bind_u8(base.orientation);
     for (int i = 0; i < 5; i++) {
-        iob->bind(BIND_SIGNATURE_UINT16, &monumentd.workers[i]);
+        iob->bind_u16(monumentd.workers[i]);
     }
-    iob->bind(BIND_SIGNATURE_UINT8, &monumentd.phase);
-    iob->bind____skip(1); // (BIND_SIGNATURE_UINT8, &data.monuments.statue_offset);
-    iob->bind____skip(1); // (BIND_SIGNATURE_UINT8, &data.monuments.temple_complex_attachments);
-    iob->bind(BIND_SIGNATURE_UINT8, &monumentd.variant);
+    iob->bind_i8(monumentd.phase);
+    iob->bind____skip(1);
+    iob->bind____skip(1);
+    iob->bind_u8(monumentd.variant);
 
     for (int i = 0; i < RESOURCES_MAX; i++) {
-        iob->bind(BIND_SIGNATURE_UINT8, &monumentd.resources_pct[i]);
+        iob->bind_u8(monumentd.resources_pct[i]);
     }
 }
 
@@ -977,8 +956,17 @@ bool building_small_stepped_pyramid::draw_ornaments_and_animations_height(painte
         return false;
     }
 
-    auto &monumentd = runtime_data();
-    if (monumentd.phase < 7) {
+    if (phase() == 6 && runtime_data().alt_image > 0) {
+        auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        command.image_id = runtime_data().alt_image;
+        command.pixel = point;
+        command.mask = color_mask;
+        command.use_sort_pixel = true;
+        command.sort_pixel = point + vec2i(0, 1);
+        command.location = SOURCE_LOCATION;
+    }
+
+    if (phase() < 7) {
         return false;
     }
 
@@ -1094,6 +1082,7 @@ void building_stepped_pyramid::on_phase_changed(int old, int current) {
 
     if (current == 6) {
         setup_phase_6_tiles();
+        setup_phase_6_basement();
     }
 
     if (current != MONUMENT_FINISHED) {
@@ -1141,8 +1130,17 @@ bool building_medium_stepped_pyramid::draw_ornaments_and_animations_height(paint
         return false;
     }
 
-    auto &monumentd = runtime_data();
-    if (monumentd.phase < 7) {
+    if (phase() == 6 && runtime_data().alt_image > 0) {
+        auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        command.image_id = runtime_data().alt_image;
+        command.pixel = point;
+        command.mask = color_mask;
+        command.use_sort_pixel = true;
+        command.sort_pixel = point + vec2i(0, 1);
+        command.location = SOURCE_LOCATION;
+    }
+
+    if (phase() < 7) {
         return false;
     }
 
