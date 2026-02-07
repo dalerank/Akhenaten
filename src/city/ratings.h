@@ -20,7 +20,7 @@ struct city_ratings_t {
 
     int32_t culture;
     int32_t prosperity;
-    int32_t monument; // peace
+    int32_t monument;
     struct {
         int32_t entertainment;
         int32_t religion;
@@ -41,7 +41,7 @@ struct city_ratings_t {
     int32_t culture_explanation;
     int32_t prosperity_explanation;
     int32_t monument_explanation;
-    
+
     int selected_explanation();
     void reduce_prosperity_after_bailout();
     void monument_building_destroyed(e_building_type type);

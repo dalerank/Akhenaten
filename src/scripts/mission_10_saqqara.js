@@ -119,10 +119,11 @@ mission10 { // Saqqara
 
 	vars {
 		pharaoh_requested_gamemeat : false
+		pharaoh_requested_pomegranates : false
 	}
 }
 
-[event=event_register_mission_animals, mission=mission10]
+[es=event_register_mission_animals, mission=mission10]
 function mission10_register_animals(ev) {
 	city.remove_animals()
 
@@ -136,8 +137,8 @@ function mission10_register_animals(ev) {
 	city.set_animals_area(1, 16)
 }
 
-[event=event_advance_month, mission=mission10]
-function mission8_pharaoh_requested1_gamemeat(ev) {
+[es=event_advance_month, mission=mission10]
+function mission10_pharaoh_requested1_gamemeat(ev) {
 	if (mission.pharaoh_requested_gamemeat) {
 		return
 	}
@@ -149,5 +150,21 @@ function mission8_pharaoh_requested1_gamemeat(ev) {
 
 	mission.pharaoh_requested_gamemeat = true
 	var request = city.create_good_request({ tag_id: 1, resource: RESOURCE_GAMEMEAT, amount: 7, months_initial: 4 })
+	request.execute()
+}
+
+[es=event_advance_month, mission=mission10]
+function mission10_pharaoh_requested1_pomegranates(ev) {
+	if (mission.pharaoh_requested_pomegranates) {
+		return
+	}
+
+	log_info("akhenaten: mission 10 saqqara:${ev.years_since_start}:${ev.month} pharaoh requested pomegranates", {ev:ev})
+	if (ev.years_since_start < 3 && ev.month < 3) {
+		return
+	}
+
+	mission.pharaoh_requested_pomegranates = true
+	var request = city.create_good_request({ tag_id: 1, resource: RESOURCE_POMEGRANATES, amount: 11, months_initial: 4 })
 	request.execute()
 }

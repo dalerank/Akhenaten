@@ -90,7 +90,7 @@ building_palace_base {
   tooltips [
     function() { return {
       label:  __loc(68, 135)
-      value:  "" + city.unemployment_percentage + "%"
+      value:  "" + city.labor.unemployment_percentage + "%"
     }}
 
     function() { return {
@@ -140,13 +140,12 @@ function on_building_palace_show_tooltip(ev) {
         pos.y = ev.my - 32
     }
 
-    log_info("akhenaten: building_palace_show_tooltip", ev)
     ui.begin_widget(pos)
     ui.fill_rect({x: 0, y: 0}, {w: width, h: height}, COLOR_TOOLTIP_FILL)
     ui.border({x: 0, y: 0}, {w: width, h: height}, 0, COLOR_TOOLTIP_BORDER, UiFlags_None)
 
     var label = {x: 5, y: 5}
-    var value_x = 140
+    var value_x = 180
     for (var i = 0; i < tooltip_lines.length; i++) {
         var line = tooltip_lines[i]()
         var tlabel = label
