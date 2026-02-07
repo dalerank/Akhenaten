@@ -14,7 +14,7 @@ advisor_entertainment_window = {
         city_coverage : text({text:[58, 4], pos:[470, 56], font:FONT_NORMAL_BLACK_ON_LIGHT}),
 
         advice        : multiline({ margin:{left:30, bottom:-110}, size:[px(38), 208], wrap:512, font:FONT_NORMAL_BLACK_ON_LIGHT }),
-        
+
         inner_panel   : inner_panel({pos:[32, 70], size:[36, 8],
             ui : {
                 booth_total      : text({pos:[10,  5]}),

@@ -38,13 +38,17 @@ std::optional<bvariant> __city_get_battalion_property(int fid, pcstr property) {
 }
 ANK_FUNCTION_2(__city_get_battalion_property)
 
-void __city_camera_go_to(tile2i tile) {
-    camera_go_to_mappoint(tile);
-}
-ANK_FUNCTION_1(__city_camera_go_to)
+std::optional<bvariant> __city_get_labor_property(pcstr property) { return archive_helper::get(g_city.labor, property, true); }
+ANK_FUNCTION_1(__city_get_labor_property)
+
+void __city_camera_go_to(tile2i tile) { camera_go_to_mappoint(tile); } ANK_FUNCTION_1(__city_camera_go_to)
 
 void js_register_city_objects(js_State *J) {
 }
 
 e_resource __city_allowed_foods(int index) { return g_city.allowed_foods(index); }
 ANK_FUNCTION_1(__city_allowed_foods)
+
+int __city_rating_culture() { return g_city.ratings.culture; } ANK_FUNCTION(__city_rating_culture)
+int __city_rating_prosperity() { return g_city.ratings.prosperity; } ANK_FUNCTION(__city_rating_prosperity)
+int __city_rating_monument() { return g_city.ratings.monument; } ANK_FUNCTION(__city_rating_monument)

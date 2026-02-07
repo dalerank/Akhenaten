@@ -18,6 +18,18 @@ city {
         remove_figures: __city_remove_figures
     }
 
+    labor {
+        __property_getter: __city_get_labor_property
+        @unemployment_percentage { }
+    }
+
+    rating {
+        @culture { get: __city_rating_culture }
+        @prosperity { get: __city_rating_prosperity }
+        @monument { get: __city_rating_monument }
+        @kingdom { get: __city_rating_kingdom }
+    }
+
     taxes {
         __property_getter: __city_get_taxes_property
         @percentage_taxed_people { }

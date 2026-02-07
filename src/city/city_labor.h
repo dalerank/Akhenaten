@@ -1,6 +1,7 @@
 #pragma once
 
 #include "labor_category.h"
+#include "core/archive.h"
 #include "building/building_type.h"
 
 struct building;
@@ -38,6 +39,7 @@ struct city_labor_t {
     const labor_category* category(int category);
     static void set_category(e_building_type type, int category);
 };
+ANK_CONFIG_PROPERTY(city_labor_t, unemployment_percentage)
 
 e_labor_category category_for_building(building* b);
 
