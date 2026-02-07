@@ -39,6 +39,7 @@ public:
         std::array<uint16_t, 5> workers;
         int8_t phase;
         uint8_t upgrades;
+        uint16_t alt_image;
     } BUILDING_RUNTIME_DATA_T;
 
     virtual bool need_workers() const { return false; }
