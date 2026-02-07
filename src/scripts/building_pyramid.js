@@ -15,6 +15,7 @@ building_small_stepped_pyramid {
       ditches_phase_3 { path:"stepped_pyramid/pyramid_phase_one_00040" }
       ditches_phase_4 { path:"stepped_pyramid/pyramid_phase_one_00049" }
       ground_phase_0 { path:"stepped_pyramid/pyramid_phase_one_00013" }
+      basement { path:"stepped_pyramid/pyramid_phase_one_00058" }
       enter {id:114}
     }
     build_menu_text : "Small Stepped Pyramid"
@@ -56,6 +57,7 @@ building_small_stepped_pyramid {
       ditches_phase_3 { path:"stepped_pyramid/pyramid_phase_one_00040" }
       ditches_phase_4 { path:"stepped_pyramid/pyramid_phase_one_00049" }
       ground_phase_0 { path:"stepped_pyramid/pyramid_phase_one_00013" }
+      basement { path:"stepped_pyramid/pyramid_phase_one_00058" }
       enter {id:114}
     }
     build_menu_text : "Medium Stepped Pyramid"

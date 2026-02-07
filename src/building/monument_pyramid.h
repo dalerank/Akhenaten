@@ -26,7 +26,10 @@ public:
         vec2i init_tiles;
     };
 
+    virtual const base_params &pyramid_params() const = 0;
+
     static void update_images(building *b, int curr_phase, const vec2i size_b);
+    virtual tile2i center_point() const override;
 };
 
 class building_stepped_pyramid : public building_pyramid {
@@ -54,6 +57,8 @@ public:
 
     void update_day(const vec2i tiles_size);
     void draw_phase_3_5_tile(color color_mask, int channel_base_id_1, int channel_base_id_2, const vec2i tiles_size);
+    void setup_phase_6_tiles();
+    void draw_phase_6_basement(color color_mask, const vec2i tiles_size);
     virtual bool need_workers() const override;
     span_const<uint16_t> active_workers() const;
 
@@ -79,9 +84,9 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual int building_image_get() const override;
     virtual grid_area get_area() const override;
+    virtual const base_params &pyramid_params() const override { return current_params(); }
 
     virtual const monument &config() const override;
-    virtual tile2i center_point() const override;
     virtual tile2i access_point() const override;
 };
 ANK_CONFIG_STRUCT(building_small_stepped_pyramid::static_params, 
@@ -110,9 +115,9 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual int building_image_get() const override;
     virtual grid_area get_area() const override;
+    virtual const base_params &pyramid_params() const override { return current_params(); }
 
     virtual const monument &config() const override;
-    virtual tile2i center_point() const override;
     virtual tile2i access_point() const override;
 };
 ANK_CONFIG_STRUCT(building_medium_stepped_pyramid::static_params,
