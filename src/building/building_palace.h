@@ -1,8 +1,7 @@
 #pragma once
 
 #include "building/building.h"
-
-struct building_palace_show_tooltip { building_id bid; int mx, my; };
+#include "js/js_struct.h"
 
 class building_palace : public building_impl {
 public:

@@ -89,6 +89,18 @@ declare_console_command_p(ra_no_trade) {
     g_warning_manager.show_console_var("Ra no month trade %d", nomonth);
 }
 
+declare_console_command_p(reset_god_moods) {
+    for (auto &god: g_city.religion.gods) {
+        god.target_mood = 50;
+        god.mood = 50;
+        god.wrath_bolts = 0;
+        god.happy_ankhs = 0;
+        god.blessing_done = false;
+        god.curse_done = false;
+    }
+    os << "God moods reset to initial values (50)" << std::endl;
+}
+
 stable_array<god_state::static_params_t> ANK_VARIABLE_N(gods_static_data, "gods");
 
 city_god *city_religion_t::get(e_god god) {

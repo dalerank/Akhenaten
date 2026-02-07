@@ -40,6 +40,9 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_village_palace);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_town_palace);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_city_palace);
 
+struct building_palace_show_tooltip { building_id bid; int mx, my; };
+ANK_REGISTER_STRUCT_WRITER(building_palace_show_tooltip, bid, mx, my)
+
 void building_palace::on_create(int orientation) {
     base.labor_category = current_params().labor_category;
 }
