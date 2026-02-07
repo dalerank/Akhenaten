@@ -682,6 +682,9 @@ void load_unpacked_image(const image_t* img, const color* pixels) {
     }
     int index = first_empty != -1 ? first_empty : oldest_texture_index;
 
+    if (g_args.is_log_resources()) {
+        logs::info("VFS: Loading unpacked image - size %dx%d", img->width, img->height);
+    }
     SDL_Surface* surface = SDL_CreateRGBSurfaceFrom((void*)pixels, img->width, img->height, 32, img->width * sizeof(color),
                                                     COLOR_CHANNEL_RED,
                                                     COLOR_CHANNEL_GREEN,
@@ -717,6 +720,9 @@ void load_unpacked_image(const image_t* img, const color* pixels) {
         data.unpacked_images[oldest_texture_index].texture = 0;
         data.unpacked_images[index].texture = SDL_CreateTextureFromSurface(data.renderer, surface);
     }
+    if (g_args.is_log_resources()) {
+        logs::info("VFS: Unpacked image texture created successfully - %dx%d", img->width, img->height);
+    }
     SDL_SetTextureBlendMode(data.unpacked_images[index].texture, SDL_BLENDMODE_BLEND);
     SDL_FreeSurface(surface);
 }
@@ -732,6 +738,9 @@ SDL_Texture* graphics_renderer_interface::create_texture_from_buffer(color* p_da
 #else
     // create RGB surface, and texture atlas from that surface
     // SDL_Log("Creating atlas texture with size %dx%d", width, height);
+    if (g_args.is_log_resources()) {
+        logs::info("VFS: Creating texture from buffer - size %dx%d", width, height);
+    }
     SDL_Surface* surface = SDL_CreateRGBSurfaceFrom((void*)p_data, width, height, 32, width * sizeof(color), COLOR_CHANNEL_RED, COLOR_CHANNEL_GREEN, COLOR_CHANNEL_BLUE, COLOR_CHANNEL_ALPHA);
     if (!surface) {
         logs::error("Unable to create surface for texture. Reason: %s", SDL_GetError());
@@ -740,7 +749,11 @@ SDL_Texture* graphics_renderer_interface::create_texture_from_buffer(color* p_da
     SDL_Texture* texture = SDL_CreateTextureFromSurface(data.renderer, surface);
     if (!texture) {
         logs::error("Unable to create texture. Reason: %s", SDL_GetError());
+        SDL_FreeSurface(surface);
         return nullptr;
+    }
+    if (g_args.is_log_resources()) {
+        logs::info("VFS: Texture created successfully - %dx%d", width, height);
     }
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
     SDL_FreeSurface(surface);

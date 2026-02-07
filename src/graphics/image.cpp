@@ -7,6 +7,7 @@
 #include "content/dir.h"
 #include "core/svector.h"
 #include "core/log.h"
+#include "platform/arguments.h"
 
 #include <array>
 
@@ -85,8 +86,17 @@ bool image_load_paks() {
             imgpak.entries_num = imgpak.handle->get_entry_count();
         }
 
+        if (g_args.is_log_resources()) {
+            if (imgpak.handle) {
+                logs::info("VFS: Pack %d (%s) loaded - %d groups, %d entries", 
+                           pakidx, imgpak.name.c_str(), imgpak.handle->image_ids().size(), imgpak.entries_num);
+            } else {
+                logs::warn("VFS: Pack %d (%s) failed to load", pakidx, imgpak.name.c_str());
+            }
+        }
+
         if (imgpak.handle && imgpak.handle->image_ids().size() == 0) {
-            logs::error("image_load_paks: pack %d (%s) loaded but has 0 groups", pakidx, imgpak.name.c_str());
+            logs::warn("image_load_paks: pack %d (%s) loaded but has 0 groups", pakidx, imgpak.name.c_str());
         }
     }
 
@@ -102,7 +112,7 @@ static imagepak* pak_from_collection_name(const xstring &name) {
     for (const auto& pak: pak_list) {
         if (pak.name != name) {
             continue;
-        }        
+        }
 
         if (!pak.handle) {
             image_data_touch(pak);

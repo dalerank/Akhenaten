@@ -40,10 +40,10 @@ public:
     };
 
     struct base_params {
-        hvector<mastaba_part, 10> config_north;
-        hvector<mastaba_part, 10> config_east;
-        hvector<mastaba_part, 10> config_south;
-        hvector<mastaba_part, 10> config_west;
+        hvector<mastaba_part, 32> config_north;
+        hvector<mastaba_part, 32> config_east;
+        hvector<mastaba_part, 32> config_south;
+        hvector<mastaba_part, 32> config_west;
         vec2i init_tiles;
     };
     
