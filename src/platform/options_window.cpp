@@ -122,7 +122,11 @@ void show_options_window(Arguments& args) {
                 args.set_window_mode(is_window_mode);
             }
 
-            ImGui::Checkbox("Store configuration (to skip this dialog for the next time)", &store_configuration);
+            if (ImGui::Checkbox("Store configuration (to skip this dialog for the next time)", &store_configuration)) {
+                if (store_configuration) {
+                    arguments::store(args);
+                }
+            }
 
             ImGui::EndChild();} // ResolitionSection
             ImGui::SameLine();
@@ -152,6 +156,9 @@ void show_options_window(Arguments& args) {
             ImGui::SetCursorPos(left_bottom_corner);
             {ImGui::BeginChild("StartSection");
                 if (ImGui::Button("RUN GAME")) {
+                    if (store_configuration) {
+                        arguments::store(args);
+                    }
                     done = true;
                 }
                 ImGui::SameLine();
@@ -164,10 +171,6 @@ void show_options_window(Arguments& args) {
             // ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
             // ImGui::GetIO().Framerate);
             ImGui::End();
-        }
-
-        if (store_configuration) {
-            arguments::store(args);
         }
 
         // Rendering

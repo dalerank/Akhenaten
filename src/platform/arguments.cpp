@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <vector>
 #include <algorithm>
+#include <SDL.h>
 #include <SDL_system.h>
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -51,16 +52,26 @@ auto string_format(char const* format, Args... args) {
 }
 
 std::string get_configuration_path() {
+    std::string result;
 #if defined(_WIN32) || defined(_WIN64)
     TCHAR app_data_path[MAX_PATH];
 
     if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, 0, app_data_path))) {
-        return std::string(app_data_path) + '/' + CFG_FILE_NAME;
+        result = std::string(app_data_path) + '/' + CFG_FILE_NAME;
+    } else {
+        logs::error("Failed to retrieve AppData path.");
+        result = CFG_FILE_NAME;
     }
-
-    logs::error("Failed to retrieve AppData path.");
-#else // Unix
-
+#elif defined(GAME_PLATFORM_MACOSX)
+    char* tmp_path = SDL_GetPrefPath("", "Akhenaten");
+    if (tmp_path) {
+        result = std::string(tmp_path) + '/' + CFG_FILE_NAME;
+        SDL_free(tmp_path);
+    } else {
+        logs::error("Failed to retrieve SDL pref path.");
+        result = CFG_FILE_NAME;
+    }
+#else // Unix (Linux, etc.)
     std::string cfg_dir_path;
     if (const char* xdg_cfg_dir_path = std::getenv("XDG_CONFIG_HOME")) {
         cfg_dir_path = std::string(xdg_cfg_dir_path) + '/' + CFG_FILE_DIR;
@@ -77,8 +88,7 @@ std::string get_configuration_path() {
     std::error_code ec;
     if (std::filesystem::create_directories(cfg_dir_path, ec)) {
         logs::info(("Created configuration directory " + cfg_dir_path).c_str());
-    }
-    else if (ec.value() != 0) {
+    } else if (ec.value() != 0) {
         constexpr int buffer_size = 1000;
         auto const format = "Failed to create configuration directory %s; Error code: %i; Error message: %s";
         char err_msg[buffer_size];
@@ -90,11 +100,11 @@ std::string get_configuration_path() {
 
     // Always return the full path, even if directory creation failed
     // The file might still be readable if it was manually created
-    return cfg_dir_path + '/' + CFG_FILE_NAME;
+    result = cfg_dir_path + '/' + CFG_FILE_NAME;
 #endif
-    logs::warn("Home folder to keep configuration file was not found");
 
-    return CFG_FILE_NAME;
+    logs::info("get_configuration_path: returning %s", result.c_str());
+    return result;
 }
 
 static int parse_decimal_as_percentage(const char *str) {
@@ -445,7 +455,10 @@ void store(Arguments const& arguments) {
 
     output << "data_directory" << '=' << arguments.get_data_directory().c_str() << '\n';
     output << "window_mode" << '=' << arguments.is_window_mode() << '\n';
-    output << "renderer" << '=' << arguments.get_renderer().c_str() << '\n';
+    const xstring& renderer = arguments.get_renderer();
+    if (!renderer.empty()) {
+        output << "renderer" << '=' << renderer.c_str() << '\n';
+    }
     output << "display_scale_percentage" << '=' << arguments.get_display_scale_percentage() << '\n';
     output << "cursor_scale_percentage" << '=' << arguments.get_cursor_scale_percentage() << '\n';
     output << "window_width" << '=' << arguments.get_window_size().x << '\n';
