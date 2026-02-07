@@ -590,6 +590,12 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
         int channel_base_id_2 = current_params().animations[base_key_2].first_img();
         int channel_base_id_3 = current_params().animations[base_key_3].first_img();
         draw_phase_3_5_tile(color_mask, channel_base_id_2, channel_base_id_3, tiles_size);
+    } else if (monumentd.phase == 5) {
+        const xstring &base_key_3 = animkeys().ditches_phase_3;
+        const xstring &base_key_4 = animkeys().ditches_phase_4;
+        int channel_base_id_3 = current_params().animations[base_key_3].first_img();
+        int channel_base_id_4 = current_params().animations[base_key_4].first_img();
+        draw_phase_3_5_tile(color_mask, channel_base_id_3, channel_base_id_4, tiles_size);
     }
 
     return true;
@@ -681,7 +687,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
     };
 
     auto &monumentd = runtime_data();
-    if (monumentd.phase > 4 && monumentd.phase < 8) {
+    if (monumentd.phase > 5 && monumentd.phase < 8) {
         int phase = monumentd.phase;
         for (auto &tile : tiles2draw) {
             uint32_t progress = map_monuments_get_progress(tile);
@@ -749,7 +755,7 @@ void building_stepped_pyramid::update_day(const vec2i tiles_size) {
         }
     }
 
-    if (monumentd.phase >= 5) {
+    if (monumentd.phase > 5) {
         int minimal_percent = 100;
         for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
             bool need_resource = needs_resource(r);
@@ -817,7 +823,7 @@ bool building_stepped_pyramid::force_draw_flat_tile(painter &ctx, tile2i tile, v
     }
 
     auto &monumentd = runtime_data();
-    return (monumentd.phase < 5);
+    return (monumentd.phase < 6);
 }
 
 void building_stepped_pyramid::bind_dynamic(io_buffer *iob, size_t version) {
@@ -876,7 +882,7 @@ bool building_small_stepped_pyramid::draw_ornaments_and_animations_height(painte
     }
 
     auto &monumentd = runtime_data();
-    if (monumentd.phase < 5) {
+    if (monumentd.phase < 6) {
         return false;
     }
 
@@ -1042,7 +1048,7 @@ bool building_medium_stepped_pyramid::draw_ornaments_and_animations_height(paint
     }
 
     auto &monumentd = runtime_data();
-    if (monumentd.phase < 5) {
+    if (monumentd.phase < 6) {
         return false;
     }
 
