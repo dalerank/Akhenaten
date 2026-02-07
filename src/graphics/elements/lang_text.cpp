@@ -128,6 +128,18 @@ bool lang_reload_localized_files() {
     }
 
     {
+        const xstring message_table = current_lang.message_table;
+        if (!message_table.empty()) {
+            vfs::path eventmsg_file(":", message_table.c_str(), ".js");
+            const bool eventmsg_loaded = js_vm_load_file_and_exec(eventmsg_file.c_str());
+            if (!eventmsg_loaded && message_table == "eventmsg_en") {
+                logs::error("Failed to load eventmsg file: %s", eventmsg_file.c_str());
+                return false;
+            }
+        }
+    }
+
+    {
         const xstring game_message_table = current_lang.game_messages;
         if (game_message_table.empty()) {
             logs::error("game_message_table is empty, cannot load game messages");
