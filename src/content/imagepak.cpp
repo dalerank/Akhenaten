@@ -10,6 +10,7 @@
 #include "io/io.h"
 #include "platform/renderer.h"
 #include "platform/platform.h"
+#include "platform/arguments.h"
 #include "graphics/text.h"
 #include "graphics/screen.h"
 #include "graphics/image.h"
@@ -366,8 +367,16 @@ imagepak::imagepak(uint8_t ipack, xstring pak_name, int starting_index, bool sys
     should_convert_fonts = fonts;
     userpack = custom;
 
+    if (g_args.is_log_resources()) {
+        logs::info("VFS: Starting to load pack '%s' (id=%d, index=%d, custom=%d)", 
+                   pak_name.c_str(), ipack, starting_index, custom ? 1 : 0);
+    }
+
     if (custom) {
         if (!load_zip_pak(pak_name.c_str(), starting_index)) {
+            if (g_args.is_log_resources()) {
+                logs::warn("VFS: Failed to load zip pack '%s'", pak_name.c_str());
+            }
             cleanup_and_destroy();
         }
         return;
@@ -376,8 +385,11 @@ imagepak::imagepak(uint8_t ipack, xstring pak_name, int starting_index, bool sys
     useridx_update(ipack);
 
     if (!load_pak(pak_name.c_str(), starting_index)) {
-        logs::error("imagepak: failed to load pack '%s' (id=%d, index=%d) - file may be missing or corrupted", 
+        logs::warn("imagepak: failed to load pack '%s' (id=%d, index=%d) - file may be missing or corrupted", 
                     pak_name.c_str(), ipack, starting_index);
+        if (g_args.is_log_resources()) {
+            logs::warn("VFS: Failed to load pack '%s' (id=%d, index=%d)", pak_name.c_str(), ipack, starting_index);
+        }
         cleanup_and_destroy();
     }
 }
@@ -418,6 +430,10 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
     OZZY_PROFILER_FUNCTION();
     name = pak;
 
+    if (g_args.is_log_resources()) {
+        logs::info("VFS: Loading zip pack '%s' (starting_index=%d)", pak, starting_index);
+    }
+
     entries_num = 0;
     groups_num = 0;
     int bmp_last_group_id = 0;
@@ -437,7 +453,14 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
     }
 
     if (!found) {
+        if (g_args.is_log_resources()) {
+            logs::warn("VFS: Zip pack file not found: '%s'", pak);
+        }
         return false;
+    }
+
+    if (g_args.is_log_resources()) {
+        logs::info("VFS: Zip pack file found: '%s'", datafile.c_str());
     }
 
     if (!vfs::mount_pack(datafile)) {
@@ -632,14 +655,26 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
     // create textures from atlas data
     for (int i = 0; i < atlas_pages.size(); ++i) {
         atlas_data_t& atlas_data = atlas_pages.at(i);
+        if (g_args.is_log_resources()) {
+            logs::info("VFS: Creating atlas texture %d/%d for folder pak '%s' - size %dx%d", 
+                       i + 1, atlas_pages.size(), name.c_str(), atlas_data.width, atlas_data.height);
+        }
         atlas_data.texture = g_render.create_texture_from_buffer(atlas_data.temp.pixel_buffer, atlas_data.width, atlas_data.height);
         if (atlas_data.texture == nullptr) {
+            if (g_args.is_log_resources()) {
+                logs::error("VFS: Failed to create atlas texture %d/%d for folder pak '%s'", 
+                           i + 1, atlas_pages.size(), name.c_str());
+            }
             return false;
         }
 
         // delete temp data buffer in the atlas
         delete atlas_data.temp.pixel_buffer;
         atlas_data.temp.pixel_buffer = nullptr;
+        if (g_args.is_log_resources()) {
+            logs::info("VFS: Atlas texture %d/%d created successfully for folder pak '%s'", 
+                       i + 1, atlas_pages.size(), name.c_str());
+        }
     }
 
     // remove pointers to raw data buffer in the images
@@ -653,6 +688,11 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
 
     logs::info("Loaded folder pak from '%s' ---- %i images, %i groups, %ix%i atlas pages (%u)",
                name.c_str(), entries_num, groups_num, atlas_pages.at(atlas_pages.size() - 1).width, atlas_pages.at(atlas_pages.size() - 1).height, atlas_pages.size());
+    if (g_args.is_log_resources()) {
+        logs::info("VFS: Folder pak '%s' loaded successfully - %i images, %i groups, %u atlas pages (%ix%i)",
+                   name.c_str(), entries_num, groups_num, atlas_pages.size(),
+                   atlas_pages.at(atlas_pages.size() - 1).width, atlas_pages.at(atlas_pages.size() - 1).height);
+    }
 
     int y_offset = screen_height() - 24;
     g_render.clear_screen();
@@ -673,6 +713,10 @@ buffer* pak_buf = new buffer(MAX_FILE_SCRATCH_SIZE);
 bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     OZZY_PROFILER_FUNCTION();
 
+    if (g_args.is_log_resources()) {
+        logs::info("VFS: Loading pak '%s' (starting_index=%d)", pak_name, starting_index);
+    }
+
     // construct proper filepaths
     name = pak_name;
     vfs::path filename_full("Data/", pak_name);
@@ -681,11 +725,18 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     vfs::path filename_555(filename_full, ".555");
     vfs::path filename_sgx(filename_full, ".sg3");
 
+    if (g_args.is_log_resources()) {
+        logs::info("VFS: Looking for pak files: '%s' and '%s'", filename_555.c_str(), filename_sgx.c_str());
+    }
+
     // *********** PAK_FILE.SGX ************
 
     // read sgx data into buffer
     safe_realloc_for_size(&pak_buf, MAX_FILE_SCRATCH_SIZE);
     if (!io_read_file_into_buffer((pcstr)filename_sgx, MAY_BE_LOCALIZED, pak_buf, MAX_FILE_SCRATCH_SIZE)) {
+        if (g_args.is_log_resources()) {
+            logs::warn("VFS: Failed to read pak file '%s'", filename_sgx.c_str());
+        }
         return false;
     }
 
@@ -950,13 +1001,26 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     // create textures from atlas data
     for (int i = 0; i < atlas_pages.size(); ++i) {
         atlas_data_t& atlas_data = atlas_pages.at(i);
+        if (g_args.is_log_resources()) {
+            logs::info("VFS: Creating atlas texture %d/%d for pak '%s' - size %dx%d", 
+                       i + 1, atlas_pages.size(), pak_name, atlas_data.width, atlas_data.height);
+        }
         atlas_data.texture = g_render.create_texture_from_buffer(atlas_data.temp.pixel_buffer, atlas_data.width, atlas_data.height);
-        if (atlas_data.texture == nullptr)
+        if (atlas_data.texture == nullptr) {
+            if (g_args.is_log_resources()) {
+                logs::error("VFS: Failed to create atlas texture %d/%d for pak '%s'", i + 1, atlas_pages.size(), pak_name);
+            }
             return false;
+        }
 
         // delete temp data buffer in the atlas
         delete atlas_data.temp.pixel_buffer;
         atlas_data.temp.pixel_buffer = nullptr;
+
+        if (g_args.is_log_resources()) {
+            logs::info("VFS: Atlas texture %d/%d created successfully for pak '%s'", 
+                       i + 1, atlas_pages.size(), pak_name);
+        }
 
         // ********* DEBUGGING **********
 #if defined(GAME_PLATFORM_WIN)
@@ -977,10 +1041,11 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
 
     image_packer_reset(packer);
 
-    logs::info("Loaded imagepak from '%s' ---- %i images, %i groups, %ix%i atlas pages (%u)",
-               filename_sgx.c_str(),
-               entries_num, groups_num,
-               atlas_pages.at(atlas_pages.size() - 1).width, atlas_pages.at(atlas_pages.size() - 1).height, atlas_pages.size());
+    if (g_args.is_log_resources()) {
+        logs::info("Loaded imagepak from '%s' ---- %i images, %i groups, %ix%i atlas pages (%u)",
+                    filename_sgx.c_str(), entries_num, groups_num, atlas_pages.at(atlas_pages.size() - 1).width, 
+                    atlas_pages.at(atlas_pages.size() - 1).height, atlas_pages.size());
+    }
 
     int y_offset = screen_height() - 24;
 

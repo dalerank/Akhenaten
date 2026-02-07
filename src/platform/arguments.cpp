@@ -157,6 +157,7 @@ ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--fulldmp", "fulldmp", true, "create full du
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--config", "config", true, "always show configuration window on startup");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--save_debug_texture", "save_debug_texture", true, "save debug textures to DEV_TESTING/tex/");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--unpack_scripts", "unpack_scripts", true, "unpack embedded scripts to user directory");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-resources", "log_resources", true, "log resource loading (textures, image packs, etc.)");
 
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--render", "renderer", "Option --render must be opengl,direct3d", "--render RENDERER", "use specific renderer");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--mods", "mods_directory", "Option --mods folder should exist", "--mods PATH", "set mods data directory path");
@@ -247,11 +248,16 @@ void Arguments::parse(int argc, char** argv) {
         }
     }
 
-    args_["data_directory"] = bvariant(data_dir);    
+    args_["data_directory"] = bvariant(data_dir);
     const bool file_exists = arguments::load(*this);
     args_["config_file_exists"] = bvariant(file_exists);
+
+    if (platform.is_emscripten()) {
+        args_["log_resources"] = bvariant(true);
+    }
+
     parse_cli_(argc, argv);
-    
+
     // Apply save_debug_texture from args to game
     if (is("save_debug_texture", false)) {
         game.save_debug_texture = true;
@@ -264,19 +270,19 @@ char const* Arguments::usage() {
         usage_text = "Usage: akhenaten [ARGS] [DATA_DIR]\n"
                      "\n"
                      "ARGS may be:\n";
-        
+
         auto descriptions = arguments::get_argument_descriptions();
         // Sort by argument name for consistent output
         std::sort(descriptions.begin(), descriptions.end(), 
                   [](const auto& a, const auto& b) { return a.first < b.first; });
-        
+
         for (const auto& desc : descriptions) {
             bstring1024 help;
             help.append_fmt("  %s\n", desc.first.c_str());
             help.append_fmt("          %s\n", desc.second.c_str());
             usage_text.append(help.c_str());
         }
-        
+    
         usage_text += "\n"
                       "The last argument, if present, is interpreted as data directory of the Pharaoh installation";
     }
