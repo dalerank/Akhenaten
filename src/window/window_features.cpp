@@ -67,6 +67,9 @@ bool ui::window_features::config_change_string_language(const game_language &lan
         return false;
     }
 
+    // Refresh all autoconfig windows to apply new language
+    autoconfig_window::refresh_all();
+
     return true;
 }
 
