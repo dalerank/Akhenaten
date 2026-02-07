@@ -13,6 +13,7 @@ building_small_stepped_pyramid {
       ditches_phase_1 { path:"stepped_pyramid/pyramid_phase_one_00022" }
       ditches_phase_2 { path:"stepped_pyramid/pyramid_phase_one_00031" }
       ditches_phase_3 { path:"stepped_pyramid/pyramid_phase_one_00040" }
+      ditches_phase_4 { path:"stepped_pyramid/pyramid_phase_one_00049" }
       ground_phase_0 { path:"stepped_pyramid/pyramid_phase_one_00013" }
       enter {id:114}
     }
@@ -53,6 +54,7 @@ building_small_stepped_pyramid {
       ditches_phase_1 { path:"stepped_pyramid/pyramid_phase_one_00022" }
       ditches_phase_2 { path:"stepped_pyramid/pyramid_phase_one_00031" }
       ditches_phase_3 { path:"stepped_pyramid/pyramid_phase_one_00040" }
+      ditches_phase_4 { path:"stepped_pyramid/pyramid_phase_one_00049" }
       ground_phase_0 { path:"stepped_pyramid/pyramid_phase_one_00013" }
       enter {id:114}
     }

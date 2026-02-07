@@ -6,9 +6,16 @@
 #include "window/window_city.h"
 #include "window/message_dialog_new.h"
 #include "city/city_message.h"
+#include "graphics/graphics.h"
 
 void __ui_draw_image(int imgid, vec2i pos) { ui::eimage(imgid, pos); } ANK_FUNCTION_2(__ui_draw_image);
 void __ui_popup_message(xstring message) { messages::popup(message, 0, 0); } ANK_FUNCTION_1(__ui_popup_message)
+
+void __ui_begin_widget(int x, int y) { ui::begin_widget({x, y}); } ANK_FUNCTION_2(__ui_begin_widget);
+void __ui_end_widget() { ui::end_widget(); } ANK_FUNCTION(__ui_end_widget);
+void __ui_fill_rect(int x, int y, int width, int height, unsigned int c) { ui::fill_rect({x, y}, {width, height}, (color)c); } ANK_FUNCTION_5(__ui_fill_rect);
+void __ui_border(int x, int y, int width, int height, int type, unsigned int c, int flags) { ui::border({x, y}, {width, height}, type, (color)c, (UiFlags)flags); } ANK_FUNCTION_7(__ui_border);
+void __ui_label_colored(pcstr text, int x, int y, int font, unsigned int c) { ui::label_colored(text, {x, y}, (e_font)font, (color)c); } ANK_FUNCTION_5(__ui_label_colored);
 
 bool __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags) {
     const vec2i offset = ui::current_offset();
@@ -75,9 +82,9 @@ void __ui_element_set_image(pcstr element_id, int v) {
 }
 ANK_FUNCTION_2(__ui_element_set_image)
 
-void __ui_element_set_text_color(pcstr element_id, int v) {
+void __ui_element_set_text_color(pcstr element_id, unsigned int v) {
     auto elem = __ui_get_element(element_id);
-    if (elem) { elem->text_color(v); }
+    if (elem) { elem->text_color((color)v); }
 }
 ANK_FUNCTION_2(__ui_element_set_text_color)
 
