@@ -1523,7 +1523,7 @@ void ui::egeneric_button::draw(UiFlags gflags) {
     }
 
     if (clickable && !!_js_onrclick_ref) {
-        btn->onrclick([this] { this->js_call(); });
+        btn->onrclick([this] { this->js_rcall(); });
     }
 
     if (clickable && _func && !_js_onclick_ref) { btn->onclick(_func); }
@@ -1541,6 +1541,12 @@ void ui::egeneric_button::draw(UiFlags gflags) {
 void ui::egeneric_button::js_call() {
     if (!_js_onclick_ref.empty()) {
         js_call_function(_js_onclick_ref);
+    }
+}
+
+void ui::egeneric_button::js_rcall() {
+    if (!_js_onrclick_ref.empty()) {
+        js_call_function(_js_onrclick_ref);
     }
 }
 

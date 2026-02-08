@@ -546,6 +546,7 @@ struct egeneric_button : public elabel {
     virtual void select(bool v) override { _selected = v; }
 
     void js_call();
+    void js_rcall();
 
     virtual element &onclick(button_onclick_cb func) override { _func = func; return *this; }
     virtual element &onclick(button_onclick_simple_cb func) override { _sfunc = func; return *this; }
