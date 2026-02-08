@@ -247,6 +247,13 @@ xstring lang_xtext_from_key(const xstring& key) {
 }
 
 pcstr lang_text_from_key(pcstr key) {
+    if (!!key && key[0u] == '#' && strchr(key, '.')) {
+        int group, id;
+        if (sscanf(key, "#%d.%d", &group, &id) == 2) {
+            return lang_get_string(group, id);
+        }
+    }
+
     if (!key) {
         return "";
     }

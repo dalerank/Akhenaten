@@ -133,7 +133,11 @@ void top_menu_widget_t::draw_elements_impl() {
         header->draw(UiFlags_None);
 
         if (is_hovered) {
-            ui::set_tooltip(header->tooltip());
+            xstring tooltip_text = header->tooltip();
+            if (!!tooltip_text && tooltip_text[0u] == '#') {
+                tooltip_text = lang_text_from_key(tooltip_text.c_str());
+            }
+            ui::set_tooltip(tooltip_text);
         }
 
         cur_offset.x += header->text_width();
@@ -197,6 +201,10 @@ void top_menu_widget_t::sub_menu_draw_text(const xstring header, const xstring f
         pcstr text = item.text.c_str();
         if (item._textfn) {
             text = item._textfn(item.parameter);
+        } else if (item.text_group != 0 || item.text_number != 0) {
+            text = lang_get_string(item.text_group, item.text_number);
+        } else if (!!item.text && item.text[0u] == '#') {
+            text = lang_text_from_key(item.text.c_str());
         }
 
         lang_text_draw(text, vec2i{impl.x_start + 8, y_offset}, item.id == focus_item_id ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT);

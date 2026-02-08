@@ -21,6 +21,8 @@ struct menu_item {
 };
 
 struct menu_header {
+    short text_group;
+    short text_number;
     svector<menu_item, 48> items;
     xstring text;
     short x_start;
