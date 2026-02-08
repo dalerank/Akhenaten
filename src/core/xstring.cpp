@@ -6,11 +6,91 @@
 
 #include <mutex>
 #include <unordered_map>
+#include <memory_resource>
+#include <vector>
+#include <memory>
 
 static std::mutex xstring_container_m;
 
+// Custom memory resource that allocates large buffers and manages them manually
+// This avoids using standard new/delete for buffer allocation
+class buffer_memory_resource : public std::pmr::memory_resource {
+private:
+    static constexpr size_t BUFFER_SIZE = 1024 * 1024; // 256KB per buffer
+
+    struct buffer {
+        void* data;
+        size_t size;
+
+        buffer(size_t sz) : size(sz) {
+            data = ::operator new(sz);
+        }
+
+        ~buffer() {
+            ::operator delete(data);
+        }
+
+        // Non-copyable
+        buffer(const buffer&) = delete;
+        buffer& operator=(const buffer&) = delete;
+    };
+
+    std::vector<std::unique_ptr<buffer>> buffers;
+protected:
+    void* do_allocate(size_t bytes, size_t alignment) override {
+        // Allocate a new buffer for each request
+        // monotonic_buffer_resource will manage the buffer internally
+        auto new_buf = std::make_unique<buffer>(std::max(bytes, BUFFER_SIZE));
+        void* ptr = new_buf->data;
+        buffers.push_back(std::move(new_buf));
+        return ptr;
+    }
+
+    void do_deallocate(void* p, size_t bytes, size_t alignment) override {
+        // No-op: monotonic_buffer_resource doesn't deallocate individual blocks
+        // All buffers will be freed when buffers vector is destroyed
+    }
+
+    bool do_is_equal(const std::pmr::memory_resource& other) const noexcept override {
+        return this == &other;
+    }
+};
+
+// Linear allocator wrapper for xstring_value objects using pmr::monotonic_buffer_resource
+class linear_allocator {
+private:
+    static constexpr size_t INITIAL_BUFFER_SIZE = 256 * 1024; // 256KB initial buffer
+
+    buffer_memory_resource buffer_resource_impl;
+    std::pmr::monotonic_buffer_resource buffer_resource;
+
+public:
+    linear_allocator()
+        : buffer_resource_impl()
+        , buffer_resource(INITIAL_BUFFER_SIZE, &buffer_resource_impl)
+    {}
+
+    ~linear_allocator() {
+        // Note: Destructors should be called explicitly for objects that are still in use
+        // This is done in xstring_container::clean() before the allocator is destroyed
+    }
+
+    xstring_value* allocate() {
+        constexpr size_t obj_size = sizeof(xstring_value);
+        constexpr size_t alignment = alignof(xstring_value);
+
+        // Allocate memory with proper alignment
+        void* ptr = buffer_resource.allocate(obj_size, alignment);
+
+        // Construct object using placement new
+        return new(ptr) xstring_value();
+    }
+};
+
 struct xstring_container {
     std::unordered_map<uint32_t, xstring_value *> data;
+    linear_allocator allocator;
+
     void verify();
     void dump(FILE *f) const;
     static xstring_value *dock(pcstr value);
@@ -68,7 +148,7 @@ xstring_value *xstring_container::dock(pcstr value) {
 
     // it may be the case, string is not found or has "non-exact" match
     if (it == g_xstring->data.end()) {
-        xstring_value *new_xstr = new xstring_value;
+        xstring_value *new_xstr = g_xstring->allocator.allocate();
         new_xstr->reference = 0;
         new_xstr->length = length;
         new_xstr->crc = crc;
@@ -89,10 +169,13 @@ void xstring_container::dump() {
 }
 
 void xstring_container::clean() {
+    // Call destructors for all xstring_value objects
+    // (they are allocated in linear allocator, so we just need to destruct them)
     for (const auto &it : data) {
-        delete it.second;
+        it.second->~xstring_value();
     }
     data.clear();
+    // Linear allocator will free all buffers in its destructor
 }
 
 xstring_value *xstring::_dock(pcstr value) {

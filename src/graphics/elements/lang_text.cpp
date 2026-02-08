@@ -71,8 +71,9 @@ struct std::hash<loc_message> {
     }
 };
 
+using localization_table = std::unordered_map<xstring_hash, loc_textid>;
 std::unordered_set<loc_base_textid> g_localization_base;
-std::unordered_set<loc_textid> g_localization;
+localization_table g_localization;
 std::unordered_set<loc_message> g_event_messages;
 
 game_languages_vec ANK_VARIABLE(game_languages);
@@ -190,7 +191,12 @@ bool lang_reload_localized_tables() {
     // restore the default localization (english), for values without translates
     g_config_arch.r_array("localization_base_en", loc_base_item_read);
 
-    g_config_arch.insert("localization_en", g_localization);
+    g_config_arch.r_array("localization_en", [&] (archive arch) {
+        localization_table::mapped_type itemv;
+        arch.r(itemv);
+        g_localization.insert({ str_hash(itemv.key), itemv });
+    });
+
     g_config_arch.insert("eventmsg_en", g_event_messages);
 
     game.system_language_changed = true;
@@ -220,8 +226,8 @@ xstring lang_text_from_message(int id) {
 }
 
 textid loc_text_from_key(pcstr key) {
-    auto it = g_localization.find({ key });
-    return (it != g_localization.end()) ? textid{it->group, it->id} : textid{ 0, 0 };
+    auto it = g_localization.find(str_hash(key));
+    return (it != g_localization.end()) ? textid{it->second.group, it->second.id} : textid{ 0, 0 };
 }
 
 const game_languages_vec & get_available_languages() {
@@ -233,13 +239,13 @@ xstring lang_xtext_from_key(const xstring& key) {
         return "";
     }
 
-    auto it = g_localization.find({ key });
+    auto it = g_localization.find(str_hash(key));
     if (it != g_localization.end()) {
-        if (!it->text.empty()) {
-            return it->text;
+        if (!it->second.text.empty()) {
+            return it->second.text;
         }
 
-        xstring str = lang_get_string(it->group, it->id);
+        xstring str = lang_get_string(it->second.group, it->second.id);
         return str;
     }
 
@@ -251,13 +257,13 @@ pcstr lang_text_from_key(pcstr key) {
         return "";
     }
 
-    auto it = g_localization.find({ key });
+    auto it = g_localization.find(str_hash(key));
     if (it != g_localization.end()) {
-        if (!it->text.empty()) {
-            return it->text.c_str();
+        if (!it->second.text.empty()) {
+            return it->second.text.c_str();
         }
 
-        pcstr str = lang_get_string(it->group, it->id);
+        pcstr str = lang_get_string(it->second.group, it->second.id);
         return str;
     }
 

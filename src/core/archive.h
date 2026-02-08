@@ -17,6 +17,7 @@
 #include <unordered_map>
 #include <variant>
 #include <optional>
+#include <type_traits>
 #include "core/variant.h"
 
 struct animation_t;
@@ -465,20 +466,63 @@ struct g_archive : public archive {
         return true;
     }
 
-    template<typename N, typename T>
-    inline bool r(pcstr name, std::unordered_map<N, T> &v) {
+    template<typename T>
+    inline bool r(pcstr name, std::unordered_map<xstring, T> &v) {
         v.clear();
-        this->r_objects(name, [&] (pcstr key, archive arch) {
-            auto &itemv = v[key];
-            itemv.key = key;
-            arch.r(itemv);
-        });
+
+        getglobal(name);
+        if (isarray(-1)) {
+            r_array_impl([&] (void* arch_state) {
+                T itemv;
+                archive arch(arch_state);
+                arch.r(itemv);
+                v[itemv.key] = itemv;
+            });
+            pop(1);
+        } else if (isobject(-1)) {
+            this->r_objects(name, [&] (pcstr key, archive arch) {
+                auto &itemv = v[key];
+                itemv.key = key;
+                arch.r(itemv);
+            });
+        } else {
+            pop(1);
+        }
+
+        return true;
+
+    }
+
+    template<typename T>
+    inline bool r(pcstr name, std::unordered_map<xstring_hash, T> &v) {
+        v.clear();
+
+        getglobal(name);
+        if (isarray(-1)) {
+            r_array_impl([&] (void* arch_state) {
+                T itemv;
+                archive arch(arch_state);
+                arch.r(itemv);
+                verify_no_crash(!itemv.key.empty());
+                v[str_hash(itemv.key)] = itemv;
+            });
+            pop(1);
+        } else if (isobject(-1)) {
+            pop(1);
+            this->r_objects(name, [&] (pcstr key, archive arch) {
+                auto &itemv = v[str_hash(key)];
+                itemv.key = key;
+                arch.r(itemv);
+            });
+        } else {
+            pop(1);
+        }
         return true;
     }
 
     template<typename T, std::size_t N>
     inline bool r(pcstr name, std::array<T, N> &v) {
-        return r_sarray_impl<true>(name, v);    
+        return r_sarray_impl<true>(name, v);
     }
 
     template<typename T>
@@ -496,7 +540,7 @@ struct g_archive : public archive {
         if (!state) {
             return true;
         }
-        
+
         return r_section_impl<true>(name, read_func);
     }
 
