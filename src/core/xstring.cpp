@@ -118,7 +118,11 @@ void xstring_container::verify() {
 
 void xstring_container::dump(FILE *f) const {
     for (const auto &it: data) {
+#ifdef XSTRING_USE_REFERENCE_COUNTING
         fprintf(f, "ref[%4u]-len[%3u]-crc[%8X] : %s\n", it.second->reference, it.second->length, it.second->crc, it.second->value.c_str());
+#else
+        fprintf(f, "len[%3u]-crc[%8X] : %s\n", it.second->length, it.second->crc, it.second->value.c_str());
+#endif
     }
 }
 
@@ -149,7 +153,9 @@ xstring_value *xstring_container::dock(pcstr value) {
     // it may be the case, string is not found or has "non-exact" match
     if (it == g_xstring->data.end()) {
         xstring_value *new_xstr = g_xstring->allocator.allocate();
+#ifdef XSTRING_USE_REFERENCE_COUNTING
         new_xstr->reference = 0;
+#endif
         new_xstr->length = length;
         new_xstr->crc = crc;
         new_xstr->value = value;
