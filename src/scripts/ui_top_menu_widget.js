@@ -25,7 +25,7 @@ function top_menu_debug_properties_text(p1, p2) { return game.debug_properties ?
 function top_menu_debug_write_video_text(p1, p2) { return game.debug_write_video ? "Write Video ON" : "Write Video OFF" }
 
 function top_menu_debug_buildings_text(p1, p2) { return game.debug_render_mode == e_debug_render_building ? "Buildings ON" : "Buildings OFF" }
-function top_menu_debug_buildings_toggle(p1, p2) { 
+function top_menu_debug_buildings_toggle(p1, p2) {
 	var mode = game.debug_render_mode;
 	mode = (mode == e_debug_render_building) ? e_debug_render_none : e_debug_render_building;
 	game.debug_render_mode = mode;
@@ -34,7 +34,7 @@ function top_menu_debug_buildings_toggle(p1, p2) {
 function top_menu_date_explanation(p1, p2) { ui.window_message_dialog_show("message_game_control_date_display", -1) }
 function top_menu_population_explanation(p1, p2) { ui.window_message_dialog_show("message_game_control_population_display", -1) }
 function top_menu_funds_explanation(p1, p2) { ui.window_message_dialog_show("message_game_control_money_display_window", -1) }
-function widget_top_menu_show_speed_options(p1, p2) { 
+function widget_top_menu_show_speed_options(p1, p2) {
 	widget_top_menu_clear_state()
 	window_go_back()
 	window_speed_options_show()
@@ -122,7 +122,7 @@ top_menu_widget {
 
  		write_video     : menu_item({textfn: top_menu_debug_write_video_text
 			                         onclick: game.toggle_video_writing })
- 		
+
 		show_console    : menu_item({text: "Cheat console", onclick: top_menu_show_console })
 	}
 
