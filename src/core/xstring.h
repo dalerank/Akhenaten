@@ -10,9 +10,13 @@
 
 #include "core/crc32.h"
 
+//#define XSTRING_USE_REFERENCE_COUNTING
+
 struct xstring_value {
     uint32_t crc;
+#ifdef XSTRING_USE_REFERENCE_COUNTING
     uint16_t reference;
+#endif
     uint16_t length;
     std::string value;
 };
@@ -23,30 +27,36 @@ class xstring {
 protected:
     // ref-counting
     void _dec() {
+#ifdef XSTRING_USE_REFERENCE_COUNTING
         if (0 == _p)
             return;
 
         _p->reference--;
         if (0 == _p->reference)
             _p = 0;
+#endif
     }
 
 public:
     xstring_value *_dock(pcstr value);
     void _set(pcstr rhs) {
         xstring_value* v = _dock(rhs);
+#ifdef XSTRING_USE_REFERENCE_COUNTING
         if (0 != v) {
             v->reference++;
         }
+#endif
         _dec();
         _p = v;
     }
 
     void _set(xstring const& rhs) {
         xstring_value* v = rhs._p;
+#ifdef XSTRING_USE_REFERENCE_COUNTING
         if (0 != v) {
             v->reference++;
         }
+#endif
         _dec();
         _p = v;
     }
