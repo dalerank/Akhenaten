@@ -2,7 +2,7 @@ log_info("akhenaten: localization_de config started")
 
 localization_de = [
   {key:"#TR_NO_PATCH_TITLE", text:"Patch ???"}
-  {key:"#TR_NO_PATCH_MESSAGE", text:"Eure Pharao-Installation hat den Patch 1.2.1.0 nicht installiert. "}
+  {key:"#TR_NO_PATCH_MESSAGE", text:"Eure Pharao-Installation hat den nicht installiert. "}
   {key:"#TR_MISSING_FONTS_TITLE", text:"Fehlende Schriftarten"}
   {key:"#TR_MISSING_FONTS_MESSAGE", text:"Die Pharao-Installation benötigt zusätzliche Schriftartendateien. "}
   {key:"#TR_NO_EDITOR_TITLE", text:"Editor nicht installiert"}

@@ -72,12 +72,10 @@ top_menu_widget {
 		speed_options  	: menu_item({text {group:2, id:3}, onclick: widget_top_menu_show_speed_options })
 		difficulty_options: menu_item({ text {group:2, id:6}, onclick: __widget_top_menu_difficulty_options })
 
-		cities_options  : menu_item({text {group:2, id:7}
-			                         textfn: top_menu_cities_old_text
+		cities_options  : menu_item({textfn: top_menu_cities_old_text
 									 onclick: top_menu_cities_old_toggle })
 
-		autosave_options: menu_item({text {group:19, id:51}
-				                     textfn: top_menu_autosave_options_text
+		autosave_options: menu_item({textfn: top_menu_autosave_options_text
 									 onclick: top_menu_autosave_options_toggle })
 
 		hotkeys_options : menu_item({text: "Hotkeys options", onclick: __widget_top_menu_hotkeys_options })
@@ -87,12 +85,10 @@ top_menu_widget {
 	help {
 		help 			: menu_item({text {group:3, id:1}, onclick: __widget_top_menu_show_help })
 
-		mouse 			: menu_item({text {group:3, id:2}
-			                         textfn: top_menu_tooltip_text
+		mouse 			: menu_item({textfn: top_menu_tooltip_text
 									 onclick: top_menu_tooltip_toggle })
 
-		warnings 		: menu_item({text {group:3, id:5}
-			                         textfn: top_menu_warnings_text
+		warnings 		: menu_item({textfn: top_menu_warnings_text
 									 onclick: top_menu_warnings_toggle })
 
 		about 			: menu_item({text: {group:3, id:7}, onclick: __widget_top_menu_show_about })
@@ -147,13 +143,13 @@ top_menu_widget {
 	}
 }
 
-[event=top_menu_widget_init]
+[es=top_menu_widget_init]
 function top_menu_widget_open_submenu(window) {
 	window.new_game.enabled = !game_features.gameui_hide_new_game_top_menu
 	window.display_options.enabled = !game.screen.is_fullscreen_only
 }
 
-[event=top_menu_widget_draw]
+[es=top_menu_widget_draw]
 function top_menu_widget_draw(window) {
 	var treasury = city.finance.treasury
 
@@ -165,12 +161,12 @@ function top_menu_widget_draw(window) {
 	window.population.text = top_menu_widget.population_str
 }
 
-[event=event_population_changed]
+[es=event_population_changed]
 function top_menu_update_population_text(ev) {
 	top_menu_widget.population_str = __loc(6, 1) + " " + ev.value;
 }
 
-[event=event_advance_day]
+[es=event_advance_day]
 function top_menu_update_date_text(ev) {
 	var month_str = __loc(25, ev.month);
     if (ev.year >= 0) {

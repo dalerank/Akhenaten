@@ -2,7 +2,7 @@ log_info("akhenaten: localization_en config started")
 
 localization_en = [
   {key:"#TR_NO_PATCH_TITLE", text:"Patch ???"}
-  {key:"#TR_NO_PATCH_MESSAGE", text:"Your Pharahoh installation does not have the 1.2.1.0 patch installed. "}
+  {key:"#TR_NO_PATCH_MESSAGE", text:"Your Pharahoh installation does not have patch installed. "}
   {key:"#TR_MISSING_FONTS_TITLE", text:"Missing fonts"}
   {key:"#TR_MISSING_FONTS_MESSAGE", text:"Pharahoh installation requires extra font files. "}
   {key:"#TR_NO_EDITOR_TITLE", text:"Editor not installed"}

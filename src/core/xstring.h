@@ -8,6 +8,8 @@
 #include <type_traits>
 #include <functional>
 
+#include "core/crc32.h"
+
 struct xstring_value {
     uint32_t crc;
     uint16_t reference;
@@ -136,6 +138,29 @@ struct std::hash<xstring>
     }
 };
 
+using xstring_hash = uint32_t;
+
+inline xstring_hash str_hash(pcstr str) {
+    if (str == nullptr) {
+        return 0;
+    }
+
+    // FNV-1a hash constants
+    constexpr uint32_t FNV_OFFSET_BASIS = 2166136261u;
+    constexpr uint32_t FNV_PRIME = 16777619u;
+
+    uint32_t hash = FNV_OFFSET_BASIS;
+    const unsigned char* p = reinterpret_cast<const unsigned char*>(str);
+
+    while (*p) {
+        hash ^= *p++;
+        hash *= FNV_PRIME;
+    }
+
+    return hash;
+}
+
+inline xstring_hash str_hash(const xstring &str) { return str_hash(str.c_str()); }
 inline bool operator==(xstring const& a, xstring const& b) { return a._get() == b._get(); }
 inline bool operator==(xstring const& a, pcstr b) { return a.equal(b); }
 inline bool operator!=(xstring const& a, xstring const& b) { return a._get() != b._get(); }
