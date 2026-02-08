@@ -22,7 +22,7 @@ struct monument_phase {
 
 struct monument {
     e_building_type btype;
-    svector<monument_phase, 10> phases;
+    svector<monument_phase, 16> phases;
 };
 
 class building_monument : public building_impl {

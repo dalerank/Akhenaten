@@ -28,7 +28,6 @@ public:
 
     virtual const base_params &pyramid_params() const = 0;
 
-    static void update_images(building *b, int curr_phase, const vec2i size_b);
     virtual tile2i center_point() const override;
 };
 
@@ -54,6 +53,7 @@ public:
 
     bool draw_ornaments_and_animations_flat_impl(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
     bool draw_ornaments_and_animations_hight_impl(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
+    int get_bricks_image(int orientation, tile2i tile, tile2i start, tile2i end, int layer);
 
     void update_day(const vec2i tiles_size);
     void draw_phase_3_5_tile(color color_mask, int channel_base_id_1, int channel_base_id_2, const vec2i tiles_size);

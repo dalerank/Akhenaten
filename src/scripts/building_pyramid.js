@@ -5,7 +5,9 @@ building_small_stepped_pyramid {
       _pack { pack:PACK_STEPPED_PYRAMID }
       preview { id:2, offset:7 }
       base { id:2, offset:7 }
-      base_bricks { id:1, offset:0 }
+      base_bricks { path:"stepped_pyramid/stepped_pyramid_00103" }
+      corner_bricks { path:"stepped_pyramid/stepped_pyramid_00001" }
+      wall_bricks { path:"stepped_pyramid/stepped_pyramid_00005" }
       base_grounded { path:"stepped_pyramid/pyramid_phase_one_00013" }
       clear_land { id:2, offset:12 }
       image_stick { path:"stepped_pyramid/pyramid_phase_one_00021" }
@@ -47,7 +49,9 @@ building_small_stepped_pyramid {
       _pack { pack:PACK_STEPPED_PYRAMID }
       preview { pack:PACK_STEPPED_PYRAMID, id:2, offset:7 }
       base { id:2, offset:7 }
-      base_bricks { id:1, offset:0 }
+      base_bricks { path:"stepped_pyramid/stepped_pyramid_00103" }
+      corner_bricks { path:"stepped_pyramid/stepped_pyramid_00001" }
+      wall_bricks { path:"stepped_pyramid/stepped_pyramid_00005" }
       base_grounded { path:"stepped_pyramid/pyramid_phase_one_00013" }
       clear_land { id:2, offset:12 }
       image_stick { path:"stepped_pyramid/pyramid_phase_one_00021" }
