@@ -63,6 +63,7 @@ static generic_button orientation_buttons_ph[] = {
 
 void top_menu_widget_t::on_mission_start() {
     init();
+    reload_from_config(); // Refresh menu strings for save/mission language
 }
 
 void top_menu_widget_t::init() {
@@ -77,8 +78,17 @@ void top_menu_widget_t::menu_item_update(pcstr header, int item, pcstr text) {
     menu->item(item).text = text;
 }
 
+void top_menu_widget_t::reload_from_config() {
+    g_config_arch.r_section(get_section(), [this](archive arch) { archive_load(arch); });
+}
+
 void top_menu_widget_t::archive_load(archive arch) {
     autoconfig_window::archive_load(arch);
+
+    // Load menu headers (File, Options, Help, ...) so they participate in runtime language.
+    // Without this, headers.elements is empty when using generic reader on refresh.
+    headers.elements.clear();
+    ui_widget_load_elements(arch, "headers", nullptr, headers.elements);
 
     svector<ui::emenu_header *, 16> headers_elms;
     for (auto &header : headers.elements) {
@@ -123,7 +133,11 @@ void top_menu_widget_t::draw_elements_impl() {
         header->draw(UiFlags_None);
 
         if (is_hovered) {
-            ui::set_tooltip(header->tooltip());
+            xstring tooltip_text = header->tooltip();
+            if (!!tooltip_text && tooltip_text[0u] == '#') {
+                tooltip_text = lang_text_from_key(tooltip_text.c_str());
+            }
+            ui::set_tooltip(tooltip_text);
         }
 
         cur_offset.x += header->text_width();
@@ -187,6 +201,10 @@ void top_menu_widget_t::sub_menu_draw_text(const xstring header, const xstring f
         pcstr text = item.text.c_str();
         if (item._textfn) {
             text = item._textfn(item.parameter);
+        } else if (item.text_group != 0 || item.text_number != 0) {
+            text = lang_get_string(item.text_group, item.text_number);
+        } else if (!!item.text && item.text[0u] == '#') {
+            text = lang_text_from_key(item.text.c_str());
         }
 
         lang_text_draw(text, vec2i{impl.x_start + 8, y_offset}, item.id == focus_item_id ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT);

@@ -25,13 +25,17 @@ autoconfig_windows& autoconfig_registry() {
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_autoconfig_windows) {
     for (auto *w : autoconfig_registry()) {
-        w->load(w->get_section());
+        w->reload_from_config();
     }
 }
 
 
 void autoconfig_window::refresh_all() {
     config_load_autoconfig_windows();
+}
+
+void autoconfig_window::reload_from_config() {
+    load(get_section());
 }
 
 autoconfig_window::autoconfig_window(pcstr s) {

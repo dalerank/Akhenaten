@@ -1377,7 +1377,22 @@ void ui::emenu_header::load(archive arch, element *parent, items &elems) {
     _onclick_js = arch.r_function("onclick");
     _textfn_js = arch.r_function("textfn");
 
-    impl.text = arch.r_string("text");
+    // Загружаем группу и id текста, если они есть
+    auto vm = (js_State *)arch.state;
+    js_getproperty(vm, -1, "text");
+    if (js_isarray(vm, -1)) {
+        int length = js_getlength(vm, -1);
+        if (length == 2) {
+            js_getindex(vm, -1, 0); impl.text_group = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
+            js_getindex(vm, -1, 1); impl.text_number = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
+        }
+    } else if (js_isobject(vm, -1)) {
+        js_getproperty(vm, -1, "group"); impl.text_group = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
+        js_getproperty(vm, -1, "id"); impl.text_number = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
+    } else if (js_isstring(vm, -1)) {
+        impl.text = js_tostring(vm, -1);
+    }
+    js_pop(vm, 1);
 
     if (!!_onclick_js) {
         impl._onclick = [jsref = _onclick_js] (auto &item) {
@@ -1389,10 +1404,6 @@ void ui::emenu_header::load(archive arch, element *parent, items &elems) {
         impl._textfn = [jsref = _textfn_js] () {
             return js_call_function_with_result(jsref, 0, 0);
         };
-    }
-
-    if (!!impl.text && impl.text[0u] == '#') {
-        impl.text = lang_text_from_key(impl.text.c_str());
     }
 }
 
@@ -1408,10 +1419,24 @@ void ui::emenu_header::load_items(archive arch, pcstr section, element::items& e
 
         menu_item& item = impl.items.emplace_back();
         item.id = key;
-        item.text = elem.r_string("text");
-        if (!!item.text && item.text[0u] == '#') {
-            item.text = lang_text_from_key(item.text.c_str());
+
+        // Загружаем группу и id текста, если они есть
+        auto vm = (js_State *)elem.state;
+        js_getproperty(vm, -1, "text");
+        if (js_isarray(vm, -1)) {
+            int length = js_getlength(vm, -1);
+            if (length == 2) {
+                js_getindex(vm, -1, 0); item.text_group = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
+                js_getindex(vm, -1, 1); item.text_number = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
+            }
+        } else if (js_isobject(vm, -1)) {
+            js_getproperty(vm, -1, "group"); item.text_group = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
+            js_getproperty(vm, -1, "id"); item.text_number = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
+        } else if (js_isstring(vm, -1)) {
+            item.text = js_tostring(vm, -1);
         }
+        js_pop(vm, 1);
+
         item.parameter = elem.r_int("parameter");
         item.hidden = elem.r_bool("hidden");
         auto proxy_item = std::make_shared<emenu_header_item_proxy>();
@@ -1437,18 +1462,34 @@ void ui::emenu_header::draw(UiFlags flags) {
     pcstr text = impl.text.c_str();
     if (impl._textfn) {
         text = impl._textfn();
+    } else if (impl.text_group != 0 || impl.text_number != 0) {
+        text = lang_get_string(impl.text_group, impl.text_number);
+    } else if (!!impl.text && impl.text[0u] == '#') {
+        text = lang_text_from_key(impl.text.c_str());
     }
 
     lang_text_draw(text, pos, _font);
 }
 
 int ui::emenu_header::text_width() {
-    return lang_text_get_width(impl.text.c_str(), _font);
+    pcstr text = impl.text.c_str();
+    if (impl.text_group != 0 || impl.text_number != 0) {
+        text = lang_get_string(impl.text_group, impl.text_number);
+    } else if (!!impl.text && impl.text[0u] == '#') {
+        text = lang_text_from_key(impl.text.c_str());
+    }
+    return lang_text_get_width(text, _font);
 }
 
 menu_item &ui::emenu_header::item(pcstr key) {
     static menu_item dummy;
     auto it = std::find_if(impl.items.begin(), impl.items.end(), [key] (auto &it) { return it.id == key; });
+    if (it != impl.items.end() && it->text_group != 0 || it->text_number != 0) {
+        // Обновляем текст элемента меню при получении ссылки на него
+        it->text = lang_get_string(it->text_group, it->text_number);
+    } else if (it != impl.items.end() && !!it->text && it->text[0u] == '#') {
+        it->text = lang_text_from_key(it->text.c_str());
+    }
     return it != impl.items.end() ? *it : dummy;
 }
 

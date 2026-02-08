@@ -84,6 +84,7 @@ pcstr archive::r_string(pcstr name) {
     auto vm = (js_State *)state;
     js_getproperty(vm, -1, name);
     pcstr result = "";
+    static bstring64 buf1, buf2;
     if (js_isundefined(vm, -1)) {
         ;
     } else if (js_isstring(vm, -1)) {
@@ -96,11 +97,13 @@ pcstr archive::r_string(pcstr name) {
             js_getindex(vm, -1, 1); gx.y = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
         }
 
-        result = lang_get_string(gx.x, gx.y);
+        buf1.printf("#%d.%d", gx.x, gx.y);
+        result = buf1.c_str();
     } else if (js_isobject(vm, -1)) {
         js_getproperty(vm, -1, "group"); int group = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
         js_getproperty(vm, -1, "id"); int id = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
-        result = lang_get_string(group, id);
+        buf2.printf("#%d.%d", group, id);
+        result = buf2.c_str();
     }
     js_pop(vm, 1);
     return result;
