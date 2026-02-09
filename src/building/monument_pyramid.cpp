@@ -693,7 +693,7 @@ int building_stepped_pyramid::get_bricks_image(int orientation, tile2i tile, til
         if (m) {
             return image_corner_bricks + 0;
         }
-        
+
         tile2i l2 = tile.shifted(2, -2);
         m = building_at(l2)->dcast_monument();
         if (m) {
