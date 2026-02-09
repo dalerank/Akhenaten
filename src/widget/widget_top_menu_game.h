@@ -30,6 +30,7 @@ struct top_menu_widget_t : autoconfig_window {
 
     top_menu_widget_t() : autoconfig_window("top_menu_widget") {}
 
+    virtual pcstr get_section() const override { return "top_menu_widget"; }
     virtual void archive_load(archive arch) override;
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual void draw_foreground(UiFlags flags) override;

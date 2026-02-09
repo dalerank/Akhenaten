@@ -43,6 +43,7 @@ struct sidebar_window_expanded_t : public autoconfig_window {
     virtual void draw_foreground(UiFlags flags) override {}
     virtual int draw_background(UiFlags flags) override { return 0; }
     virtual void ui_draw_foreground(UiFlags flags) override;
+    virtual pcstr get_section() const override { return "sidebar_window_expanded"; }
 
     virtual void archive_load(archive arch) override;
     virtual void init() override;
@@ -78,6 +79,7 @@ struct sidebar_window_collapsed_t : public autoconfig_window {
     virtual void draw_foreground(UiFlags flags) override {}
     virtual int draw_background(UiFlags flags) override { return 0; }
     virtual void ui_draw_foreground(UiFlags flags) override;
+    virtual pcstr get_section() const override { return "sidebar_window_collapsed"; }
 
     virtual void archive_load(archive arch) override;
     virtual void init() override;
