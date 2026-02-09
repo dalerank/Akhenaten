@@ -44,7 +44,7 @@ void tooltip_context::draw_tooltip_impl() {
     const bool need_localize = ptext.find('$') >= 0;
     if (need_localize) {
         ui_scope_property holder;
-        ptext = ui::format(&holder, text.c_str());
+        ui::format(ptext, &holder, text.c_str());
     }
 
     int width = 200;

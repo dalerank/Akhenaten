@@ -128,10 +128,11 @@ struct eimage_button;
 struct escrollable_list;
 struct etext;
 
-template<typename T>
-bstring1024 format(const T *o, pcstr fmt) {
-    if (!fmt || !*fmt) {
-        return {};
+template<typename T, typename R>
+void format(R& result, const T *o, std::string_view fmt) {
+    if (fmt.empty()) {
+        result = "";
+        return;
     }
 
     struct kv {
@@ -144,7 +145,7 @@ bstring1024 format(const T *o, pcstr fmt) {
     };
     svector<kv, 32> items;
 
-    const char *start = fmt;
+    pcstr start = fmt.data();
     while ((start = strstr(start, "${")) != NULL) {  // Find the start of "${"
         const char *end = ::strchr(start, '}'); // Find the closing '}'
         if (end != NULL) {
@@ -201,14 +202,19 @@ bstring1024 format(const T *o, pcstr fmt) {
         }
     }
 
-    bstring1024 result = fmt;
+    result = fmt.data();
     for (const auto &item : items) {
         if (item.value.len()) {
             result.replace_str(item.key, item.value);
         }
     }
+}
 
-    return result;
+template<size_t S, typename T>
+bstring<S> sformat(const T *o, std::string_view fmt) {
+    bstring<S> r;
+    format(r, o, fmt);
+    return r;
 }
 
 struct margini {
@@ -502,7 +508,9 @@ struct emenu_header_item_proxy : public element {
 
 struct emenu_header : public element {
     menu_header impl;
-    xstring _tooltip;
+    mutable xstring _tooltip;
+    xstring _tooltip_format;
+    xstring _text_format;
     e_font _font;
 
     xstring _onclick_js;
@@ -511,11 +519,11 @@ struct emenu_header : public element {
     ~emenu_header();
 
     virtual void load(archive elem, element *parent, items &elems) override;
-            void load_items(archive elem, pcstr section, element::items& elements);
+            void load_items(archive elem, xstring section, element::items& elements);
     virtual void draw(UiFlags flags) override;
     virtual void font(int v) override { _font = (e_font)v; }
     virtual void text(pcstr text) override { impl.text = text; }
-    virtual const xstring &tooltip() const override { return _tooltip; }
+    virtual const xstring &tooltip() const override;
     virtual int text_width() override;
             menu_item &item(int i) { static menu_item dummy; return i < impl.items.size() ? impl.items[i] : dummy; }
             menu_item &item(pcstr key);
@@ -654,7 +662,7 @@ struct widget {
     void format_all(const T *o) {
         for (auto &w : elements) {
             bstring1024 formated_text;
-            formated_text = format(o, w->format().c_str());
+            format(formated_text, o, w->format());
             if (!formated_text.empty()) {
                 w->text(formated_text);
             }
