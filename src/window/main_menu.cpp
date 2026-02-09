@@ -22,6 +22,7 @@
 #include "io/gamestate/boilerplate.h"
 #include "resource/icons.h"
 #include "js/js_game.h"
+#include <climits>
 #include <regex>
 
 #ifdef GAME_PLATFORM_WIN
@@ -181,8 +182,8 @@ void main_menu_screen::draw_foreground(UiFlags flags) {
     // keep this anchor and only shift the whole menu so that this center
     // stays in the middle of the screen even if the resolution changes.
     if (!_base_center_initialized) {
-        vec2i minp{INT_MAX, INT_MAX};
-        vec2i maxp{INT_MIN, INT_MIN};
+        vec2i minp(INT_MAX, INT_MAX);
+        vec2i maxp(INT_MIN, INT_MIN);
 
         const char *ids[] = {
             "continue_game",
@@ -202,10 +203,10 @@ void main_menu_screen::draw_foreground(UiFlags flags) {
             vec2i p = e.screen_pos();
             vec2i s = e.pxsize();
 
-            minp.x = std::min(minp.x, p.x);
-            minp.y = std::min(minp.y, p.y);
-            maxp.x = std::max(maxp.x, p.x + s.x);
-            maxp.y = std::max(maxp.y, p.y + s.y);
+            minp.x = (std::min)(minp.x, p.x);
+            minp.y = (std::min)(minp.y, p.y);
+            maxp.x = (std::max)(maxp.x, p.x + s.x);
+            maxp.y = (std::max)(maxp.y, p.y + s.y);
         }
 
         if (minp.x <= maxp.x && minp.y <= maxp.y) {
