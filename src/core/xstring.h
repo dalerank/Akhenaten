@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <cstdarg>
 #include <string>
+#include <string_view>
 #include <type_traits>
 #include <functional>
 
@@ -100,6 +101,11 @@ public:
 
     [[nodiscard]]
     bool empty() const { return size() == 0; }
+
+    [[nodiscard]]
+    operator std::string_view() const {
+        return _p ? std::string_view(_p->value.data(), _p->length) : std::string_view();
+    }
 
     void swap(xstring& rhs) noexcept { xstring_value* tmp = _p; _p = rhs._p; rhs._p = tmp; }
 
