@@ -582,6 +582,10 @@ struct eimage_button : public element {
     uint8_t border = 0;
     int texture_id = -1;
     xstring _tooltip;
+    // Optional original (group,id) source for tooltip, if it was specified
+    // as [group, id] or {group, id} in script. Used to re-resolve tooltip
+    // text after language changes.
+    vec2i _tooltip_textid{0, 0};
 
     button_onclick_cb _func, _rfunc;
     button_onclick_simple_cb _sfunc, _srfunc;

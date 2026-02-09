@@ -1055,6 +1055,14 @@ void ui::eimage_button::load(archive arch, element *parent, items &elems) {
     offsets.data[1] = arch.r_int("offset_focused", 1);
     offsets.data[2] = arch.r_int("offset_pressed", 2);
     offsets.data[3] = arch.r_int("offset_disabled", 3);
+    // Resolve tooltip both as localized string and, if possible, remember
+    // original (group,id) so we can re-evaluate it when language changes.
+    vec2i tid;
+    if (arch.r_textid("tooltip", tid)) {
+        _tooltip_textid = tid;
+    } else {
+        _tooltip_textid = {0, 0};
+    }
     _tooltip = arch.r_string("tooltip");
     _js_onclick_ref = arch.r_function("onclick");
 
@@ -1142,8 +1150,12 @@ void ui::eimage_button::draw(UiFlags gflags) {
     btn->parameter1 = param1;
     btn->parameter2 = param2;
 
-    if (!_tooltip.empty() && btn->hovered) {
-        tooltipctx.set(0, _tooltip);
+    if (btn->hovered) {
+        if (_tooltip_textid.x != 0) {
+            tooltipctx.set(0, ui::str(_tooltip_textid.x, _tooltip_textid.y));
+        } else if (!_tooltip.empty()) {
+            tooltipctx.set(0, _tooltip);
+        }
     }
 }
 

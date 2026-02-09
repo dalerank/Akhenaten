@@ -4,12 +4,13 @@ sidebar_window_extra {
   ui {
     background        : inner_panel({pos[0, 480], size[10, 19]}),
 
-    speed_header      : text({pos[11, 485], text[45, 2], font:FONT_NORMAL_WHITE_ON_DARK}), 
+    // use textfn + __loc so captions follow runtime language changes
+    speed_header      : text({pos[11, 485], font:FONT_NORMAL_WHITE_ON_DARK, textfn: function(p1, p2) { return __loc(45, 2) }}), 
     speed_current     : text({pos[65, 480 + 28], font:FONT_NORMAL_WHITE_ON_DARK}), 
     dec_speed         : arrowdown({pos[11, 470 + 30], tiny:false}),
     inc_speed         : arrowup({pos[35, 470 + 30], tiny:false}),
 
-    unemp_header      : text({pos[11, 480 + 50], text:[68, 135], font:FONT_NORMAL_WHITE_ON_DARK}), 
+    unemp_header      : text({pos[11, 480 + 50], font:FONT_NORMAL_WHITE_ON_DARK, textfn: function(p1, p2) { return __loc(68, 135) }}), 
     unemp_current     : text({pos[11, 480 + 70], font:FONT_NORMAL_WHITE_ON_DARK}), 
 
     population_header : text({pos[11, 480 + 90], font:FONT_NORMAL_WHITE_ON_DARK}), 

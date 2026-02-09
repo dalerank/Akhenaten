@@ -12,6 +12,12 @@ function top_menu_warnings_toggle(p1, p2) { game.warnings = !game.warnings }
 function top_menu_cities_old_text(p1, p2) { return __loc(2, game_features.gameui_empire_city_old_names ? 7 : 8) }
 function top_menu_cities_old_toggle(p1, p2) { game_features.gameui_empire_city_old_names = !game_features.gameui_empire_city_old_names }
 
+// Header texts use textfn so they update when language changes at runtime
+function top_menu_header_file_text(p1, p2)     { return __loc(7, 0) }
+function top_menu_header_options_text(p1, p2)  { return __loc(2, 0) }
+function top_menu_header_help_text(p1, p2)     { return __loc(3, 0) }
+function top_menu_header_advisors_text(p1, p2) { return __loc(4, 0) }
+
 function top_menu_open_advisor(advisor, p2) {
 	widget_top_menu_clear_state()
 	window_go_back()
@@ -49,28 +55,30 @@ top_menu_widget {
 	offset_rotate_basic : 200
 
 	headers {
-		file 			: menu_header({text {group:7, id:0}, tooltip[68, 51] })
-		options			: menu_header({text {group:2, id:0}, tooltip[68, 52] })
-		help		   	: menu_header({text {group:3, id:0}, tooltip[68, 53] })
-		advisors  		: menu_header({text {group:4, id:0}, onclick: top_menu_open_advisor })
+		// text {group,id} обеспечивает корректный расчёт ширины,
+		// textfn подтягивает актуальный текст на текущем языке
+		file 			: menu_header({text {group:7, id:0}, textfn: top_menu_header_file_text,    tooltip[68, 51] })
+		options			: menu_header({text {group:2, id:0}, textfn: top_menu_header_options_text, tooltip[68, 52] })
+		help		   	: menu_header({text {group:3, id:0}, textfn: top_menu_header_help_text,    tooltip[68, 53] })
+		advisors  		: menu_header({text {group:4, id:0}, textfn: top_menu_header_advisors_text, onclick: top_menu_open_advisor })
 		debug		   	: menu_header({text: "Debug" })
 		debug_render  	: menu_header({text: "Render" })
 	}
 
 	file {
-		new_game     	: menu_item({text {group:1, id:1}, onclick: __widget_top_menu_new_game })
-		replay_map   	: menu_item({text {group:1, id:2}, onclick: __widget_top_menu_replay_map })
-		load_game	    : menu_item({text {group:1, id:3}, onclick: __widget_top_menu_load_map })
-		save_game	    : menu_item({text {group:1, id:4}, onclick: __widget_top_menu_save_map })
-		delete_game	  	: menu_item({text {group:1, id:6}, onclick: __widget_top_menu_delete_map })
-		exit_game	    : menu_item({text {group:1, id:5}, onclick: __widget_top_menu_exit_game })
+		new_game     	: menu_item({text {group:1, id:1}, textfn: function(p1, p2) { return __loc(1, 1) }, onclick: __widget_top_menu_new_game })
+		replay_map   	: menu_item({text {group:1, id:2}, textfn: function(p1, p2) { return __loc(1, 2) }, onclick: __widget_top_menu_replay_map })
+		load_game	    : menu_item({text {group:1, id:3}, textfn: function(p1, p2) { return __loc(1, 3) }, onclick: __widget_top_menu_load_map })
+		save_game	    : menu_item({text {group:1, id:4}, textfn: function(p1, p2) { return __loc(1, 4) }, onclick: __widget_top_menu_save_map })
+		delete_game	  	: menu_item({text {group:1, id:6}, textfn: function(p1, p2) { return __loc(1, 6) }, onclick: __widget_top_menu_delete_map })
+		exit_game	    : menu_item({text {group:1, id:5}, textfn: function(p1, p2) { return __loc(1, 5) }, onclick: __widget_top_menu_exit_game })
 	}
 
 	options {
-		display_options	: menu_item({text {group:2, id:1}, onclick: __widget_top_menu_display_options })
-		sound_options  	: menu_item({text {group:2, id:2}, onclick: __widget_top_menu_sound_options })
-		speed_options  	: menu_item({text {group:2, id:3}, onclick: widget_top_menu_show_speed_options })
-		difficulty_options: menu_item({ text {group:2, id:6}, onclick: __widget_top_menu_difficulty_options })
+		display_options	: menu_item({text {group:2, id:1}, textfn: function(p1, p2) { return __loc(2, 1) }, onclick: __widget_top_menu_display_options })
+		sound_options  	: menu_item({text {group:2, id:2}, textfn: function(p1, p2) { return __loc(2, 2) }, onclick: __widget_top_menu_sound_options })
+		speed_options  	: menu_item({text {group:2, id:3}, textfn: function(p1, p2) { return __loc(2, 3) }, onclick: widget_top_menu_show_speed_options })
+		difficulty_options: menu_item({ text {group:2, id:6}, textfn: function(p1, p2) { return __loc(2, 6) }, onclick: __widget_top_menu_difficulty_options })
 
 		cities_options  : menu_item({textfn: top_menu_cities_old_text
 									 onclick: top_menu_cities_old_toggle })
@@ -83,7 +91,7 @@ top_menu_widget {
 	}
 
 	help {
-		help 			: menu_item({text {group:3, id:1}, onclick: __widget_top_menu_show_help })
+		help 			: menu_item({text {group:3, id:1}, textfn: function(p1, p2) { return __loc(3, 1) }, onclick: __widget_top_menu_show_help })
 
 		mouse 			: menu_item({textfn: top_menu_tooltip_text
 									 onclick: top_menu_tooltip_toggle })
@@ -91,22 +99,22 @@ top_menu_widget {
 		warnings 		: menu_item({textfn: top_menu_warnings_text
 									 onclick: top_menu_warnings_toggle })
 
-		about 			: menu_item({text: {group:3, id:7}, onclick: __widget_top_menu_show_about })
+		about 			: menu_item({text: {group:3, id:7}, textfn: function(p1, p2) { return __loc(3, 7) }, onclick: __widget_top_menu_show_about })
 	}
 
 	advisors {
-		advisor_labor 	 :  menu_item({text{group: 4, id: ADVISOR_LABOR}, parameter: ADVISOR_LABOR})
-	    advisor_military :  menu_item({text{group: 4, id: ADVISOR_MILITARY}, parameter: ADVISOR_MILITARY})
-	    advisor_imperial :  menu_item({text{group: 4, id: ADVISOR_IMPERIAL}, parameter: ADVISOR_IMPERIAL})
-	    advisor_ratings  :  menu_item({text{group: 4, id: ADVISOR_RATINGS}, parameter: ADVISOR_RATINGS})
-	    advisor_trade    :  menu_item({text{group: 4, id: ADVISOR_TRADE}, parameter: ADVISOR_TRADE})
-	    advisor_population: menu_item({text{group: 4, id: ADVISOR_POPULATION}, parameter: ADVISOR_POPULATION})
-	    advisor_health   :  menu_item({text{group: 4, id: ADVISOR_HEALTH}, parameter: ADVISOR_HEALTH})
-	    advisor_education:  menu_item({text{group: 4, id: ADVISOR_EDUCATION}, parameter: ADVISOR_EDUCATION})
-	    advisor_entertainment: menu_item({text{group: 4, id: ADVISOR_ENTERTAINMENT}, parameter: ADVISOR_ENTERTAINMENT})
-	    advisor_religion :  menu_item({text{group: 4, id: ADVISOR_RELIGION}, parameter: ADVISOR_RELIGION})
-	    advisor_financial:  menu_item({text{group: 4, id: ADVISOR_FINANCIAL}, parameter: ADVISOR_FINANCIAL})
-	    advisor_chief    :  menu_item({text{group: 4, id: ADVISOR_CHIEF}, parameter: ADVISOR_CHIEF})
+		advisor_labor 	 :  menu_item({text{group: 4, id: ADVISOR_LABOR}, textfn: function(p1, p2) { return __loc(4, ADVISOR_LABOR) }, parameter: ADVISOR_LABOR})
+	    advisor_military :  menu_item({text{group: 4, id: ADVISOR_MILITARY}, textfn: function(p1, p2) { return __loc(4, ADVISOR_MILITARY) }, parameter: ADVISOR_MILITARY})
+	    advisor_imperial :  menu_item({text{group: 4, id: ADVISOR_IMPERIAL}, textfn: function(p1, p2) { return __loc(4, ADVISOR_IMPERIAL) }, parameter: ADVISOR_IMPERIAL})
+	    advisor_ratings  :  menu_item({text{group: 4, id: ADVISOR_RATINGS}, textfn: function(p1, p2) { return __loc(4, ADVISOR_RATINGS) }, parameter: ADVISOR_RATINGS})
+	    advisor_trade    :  menu_item({text{group: 4, id: ADVISOR_TRADE}, textfn: function(p1, p2) { return __loc(4, ADVISOR_TRADE) }, parameter: ADVISOR_TRADE})
+	    advisor_population: menu_item({text{group: 4, id: ADVISOR_POPULATION}, textfn: function(p1, p2) { return __loc(4, ADVISOR_POPULATION) }, parameter: ADVISOR_POPULATION})
+	    advisor_health   :  menu_item({text{group: 4, id: ADVISOR_HEALTH}, textfn: function(p1, p2) { return __loc(4, ADVISOR_HEALTH) }, parameter: ADVISOR_HEALTH})
+	    advisor_education:  menu_item({text{group: 4, id: ADVISOR_EDUCATION}, textfn: function(p1, p2) { return __loc(4, ADVISOR_EDUCATION) }, parameter: ADVISOR_EDUCATION})
+	    advisor_entertainment: menu_item({text{group: 4, id: ADVISOR_ENTERTAINMENT}, textfn: function(p1, p2) { return __loc(4, ADVISOR_ENTERTAINMENT) }, parameter: ADVISOR_ENTERTAINMENT})
+	    advisor_religion :  menu_item({text{group: 4, id: ADVISOR_RELIGION}, textfn: function(p1, p2) { return __loc(4, ADVISOR_RELIGION) }, parameter: ADVISOR_RELIGION})
+	    advisor_financial:  menu_item({text{group: 4, id: ADVISOR_FINANCIAL}, textfn: function(p1, p2) { return __loc(4, ADVISOR_FINANCIAL) }, parameter: ADVISOR_FINANCIAL})
+	    advisor_chief    :  menu_item({text{group: 4, id: ADVISOR_CHIEF}, textfn: function(p1, p2) { return __loc(4, ADVISOR_CHIEF) }, parameter: ADVISOR_CHIEF})
 	}
 
 	debug {

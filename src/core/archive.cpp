@@ -106,6 +106,42 @@ pcstr archive::r_string(pcstr name) {
     return result;
 }
 
+bool archive::r_textid(pcstr name, vec2i &out) {
+    auto vm = (js_State *)state;
+    js_getproperty(vm, -1, name);
+
+    bool ok = false;
+    out = {0, 0};
+
+    if (js_isarray(vm, -1)) {
+        int length = js_getlength(vm, -1);
+        if (length == 2) {
+            js_getindex(vm, -1, 0);
+            out.x = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0;
+            js_pop(vm, 1);
+
+            js_getindex(vm, -1, 1);
+            out.y = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0;
+            js_pop(vm, 1);
+
+            ok = (out.x != 0);
+        }
+    } else if (js_isobject(vm, -1)) {
+        js_getproperty(vm, -1, "group");
+        out.x = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1);
+        js_pop(vm, 1);
+
+        js_getproperty(vm, -1, "id");
+        out.y = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1);
+        js_pop(vm, 1);
+
+        ok = (out.x != 0);
+    }
+
+    js_pop(vm, 1);
+    return ok;
+}
+
 std::vector<std::string> archive::r_array_str(pcstr name) {
     auto vm = (js_State *)state;
 

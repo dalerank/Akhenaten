@@ -59,6 +59,9 @@ struct archive {
     pcstr to_string();
 
     std::vector<vec2i> r_array_vec2i(pcstr name, pcstr px = "x", pcstr py = "y");
+    // Read "text id" (group,id) from array [g, i] or object {group, id} without resolving to text.
+    // Returns true if value exists and contains valid pair, false otherwise.
+    bool r_textid(pcstr name, vec2i &out);
 
     template<typename T, typename C>
     inline void r_array_num(pcstr name, C &arr) {
