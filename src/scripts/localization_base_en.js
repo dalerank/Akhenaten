@@ -1,7 +1,6 @@
 log_info("akhenaten: localization_en config started")
 
 localization_base_en = [
-    { group:1, id:0, text: "File" }
     { group:1, id:1, text: "New game" }
     { group:1, id:2, text: "Replay mission" }
     { group:1, id:3, text: "Load game" }
@@ -3107,7 +3106,7 @@ localization_base_en = [
     { group:68, id:48, text: "mouse help free" }
     { group:68, id:49, text: "mouse help free" }
     { group:68, id:50, text: "mouse help free" }
-    { group:68, id:51, text: "Load, save, new game and exit" }
+    
     { group:68, id:52, text: "Sound and speed options" }
     { group:68, id:53, text: "Access game help" }
     { group:68, id:54, text: "Go directly to specific overseer reports" }

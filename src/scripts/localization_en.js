@@ -1178,4 +1178,7 @@ localization_en = [
   { key: "#food_stocks_medium", text: "This house has food stocks to last for at least the coming month" }
   { key: "#food_stocks_high", text: "This house has no problems in getting the food it requires to survive" }
 
+  { key: "#top_menu_file", text: "File" }
+  { key: "#top_menu_file_tooltip", text: "Load, save, new game and exit" }
+
 ]

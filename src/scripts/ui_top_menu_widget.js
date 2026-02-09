@@ -49,7 +49,7 @@ top_menu_widget {
 	offset_rotate_basic : 200
 
 	headers {
-		file 			: menu_header({text {group:7, id:0}, tooltip[68, 51] })
+		file 			: menu_header({text: "${loc.top_menu_file}", tooltip: "${loc.top_menu_file_tooltip}" })
 		options			: menu_header({text {group:2, id:0}, tooltip[68, 52] })
 		help		   	: menu_header({text {group:3, id:0}, tooltip[68, 53] })
 		advisors  		: menu_header({text {group:4, id:0}, onclick: top_menu_open_advisor })

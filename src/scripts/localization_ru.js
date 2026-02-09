@@ -441,4 +441,7 @@ localization_ru = [
     { key: "#food_stocks_low", text: "Этот дом скоро съест свои ограниченные запасы еды" }
     { key: "#food_stocks_medium", text: "У этого дома есть запасы еды минимум на предстоящий месяц" }
     { key: "#food_stocks_high", text: "У этого дома нет проблем с получением еды, необходимой для выживания" }
+
+    { key: "#top_menu_file", text: "Файл" }
+    { key: "#top_menu_file_tooltip", text: "Загрузить, сохранить, начать новую игру и выйти" }
 ]
