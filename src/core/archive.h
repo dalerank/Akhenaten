@@ -203,7 +203,7 @@ struct archive {
     }
 
     template<bool global, typename T>
-    inline bool r_section_impl(pcstr name, T read_func) {
+    inline bool r_section_impl(std::string_view name, T read_func) {
         bool ok = false;
         if constexpr (global) {
             getglobal(name);
@@ -220,7 +220,7 @@ struct archive {
     }
 
     template<typename T>
-    inline bool r_section(pcstr name, T read_func) {
+    inline bool r_section(std::string_view name, T read_func) {
         return r_section_impl<false>(name, read_func);
     }
 
@@ -242,7 +242,7 @@ struct archive {
     bool r_desc_impl(image_desc &desc);
 
     template<typename T>
-    inline void r_objects(pcstr name, T read_func) {
+    inline void r_objects(std::string_view name, T read_func) {
         this->r_section(name, [this, &read_func] (archive s_arch) {
             hvector<pcstr, 512, false> keys;
             {
@@ -387,8 +387,8 @@ protected:
         }
     }
 
-    void getproperty(int idx, pcstr name);
-    static void getproperty(archive arch, int idx, pcstr name);
+    void getproperty(int idx, std::string_view name);
+    static void getproperty(archive arch, int idx, std::string_view name);
     bool isarray(int idx);
     int getlength(int idx);
     void getindex(int idx, int i);
@@ -404,7 +404,7 @@ protected:
     static bool isobject(archive arch, int idx);
     static void pushiterator(archive arch, int idx, int own);
     static pcstr nextiterator(archive arch, int idx);
-    void getglobal(pcstr name);
+    void getglobal(std::string_view name);
 };
 
 struct g_archive : public archive {

@@ -7,12 +7,12 @@
 
 g_archive g_config_arch{ nullptr };
 
-void archive::getproperty(int idx, pcstr name) {
-    js_getproperty((js_State*)state, idx, name);
+void archive::getproperty(int idx, std::string_view name) {
+    js_getproperty((js_State*)state, idx, name.data());
 }
 
-void archive::getproperty(archive arch, int idx, pcstr name) {
-    js_getproperty((js_State *)(arch.state), idx, name);
+void archive::getproperty(archive arch, int idx, std::string_view name) {
+    js_getproperty((js_State *)(arch.state), idx, name.data());
 }
 
 bool archive::isarray(int idx) {
@@ -75,8 +75,8 @@ pcstr archive::nextiterator(archive arch, int idx) {
     return js_nextiterator((js_State *)(arch.state), idx);
 }
 
-void archive::getglobal(pcstr name) {
-    js_getglobal((js_State *)state, name);
+void archive::getglobal(std::string_view name) {
+    js_getglobal((js_State *)state, name.data());
 }
 
 pcstr lang_get_string(int group, int index);
