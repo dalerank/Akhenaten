@@ -321,12 +321,6 @@ building_info_window {
     }
 }
 
-water_supply_info_window = {
-    ui : baseui(building_info_window, {
-        background  : outer_panel({size: [29, 20]}),
-    })
-}
-
 info_window_ferry = {
     ui : baseui(building_info_window, {
         background  : outer_panel({size: [29, 20]}),
