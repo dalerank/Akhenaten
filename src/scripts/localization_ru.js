@@ -430,11 +430,11 @@ localization_ru = [
     { key:"#difficulty_normal", text: "Нормально" }
     { key:"#difficulty_hard", text: "Сложно" }
     { key:"#difficulty_very_hard", text: "Очень сложно" }
-    
+
     { key:"#difficulty_gods_effects_off", text: "Эффекты богов ВЫКЛ" }
     { key:"#difficulty_gods_effects_on", text: "Эффекты богов ВКЛ" }
-    
-    // overlays. tooltips for buildings. group 66 
+
+    // overlays. tooltips for buildings. group 66
     // bazaar access (food stocks)
     { key: "#food_stocks_not_provided", text: "Эта хижина добывает себе еду..." }
     { key: "#food_stocks_none", text: "В этом доме нет запасов еды" }
@@ -444,4 +444,6 @@ localization_ru = [
 
     { key: "#top_menu_file", text: "Файл" }
     { key: "#top_menu_file_tooltip", text: "Загрузить, сохранить, начать новую игру и выйти" }
+
+    { key: "#sidebar_speed_header", text: "Скорость" }
 ]

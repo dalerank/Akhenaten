@@ -175,6 +175,9 @@ void sidebar_window_extra::draw_objective(pcstr prefix, int text_group, int text
 int sidebar_window_extra::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
 
+    ui_scope_property holder;
+    ui.format_all(&holder);
+
     this->size.y = calculate_height();
 
     int available_height = screen_height() - offset.y - size.y;

@@ -1168,4 +1168,6 @@ localization_de = [
 
   { key: "#top_menu_file", text: "Datei" }
   { key: "#top_menu_file_tooltip", text: "Neues Spiel, Laden, Speichern, Spiel beenden" }
+
+  { key: "#sidebar_speed_header", text: "Geschwindigkeit" }
 ]
