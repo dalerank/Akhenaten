@@ -150,6 +150,13 @@ void city_buildings_t::update_counters() {
     buildings_valid_do([] (building &b) {
         b.dcast()->update_count();
     });
+
+    // Count buildings still in CREATED state (just placed, not yet VALID) so unique-building limit applies immediately
+    for (auto &b : city_buildings()) {
+        if (b.type != BUILDING_NONE && b.state == BUILDING_STATE_CREATED) {
+            increase_count(b.type, false);
+        }
+    }
 }
 
 
