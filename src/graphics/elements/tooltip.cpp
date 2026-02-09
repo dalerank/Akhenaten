@@ -35,16 +35,23 @@ void tooltip_context::draw_box(int x, int y, int width, int height) {
     ui::fill_rect(vec2i{x + 1, y + 1}, vec2i{width - 2, height - 2}, COLOR_TOOLTIP_FILL);
 }
 
-void tooltip_context::draw_button_tooltip() {
+void tooltip_context::draw_tooltip_impl() {
     if (text.empty()) {
         return;
     }
 
+    bstring1024 ptext = text.c_str();
+    const bool need_localize = ptext.find('$') >= 0;
+    if (need_localize) {
+        ui_scope_property holder;
+        ptext = ui::format(&holder, text.c_str());
+    }
+
     int width = 200;
-    int lines = text_measure_multiline(text.c_str(), width - 5, FONT_SMALL_SHADED);
+    int lines = text_measure_multiline(ptext, width - 5, FONT_SMALL_SHADED);
     if (lines > 2) {
         width = 300;
-        lines = text_measure_multiline(text.c_str(), width - 5, FONT_SMALL_SHADED);
+        lines = text_measure_multiline(ptext, width - 5, FONT_SMALL_SHADED);
     }
 
     int height = 16 * lines + 10;
@@ -82,7 +89,7 @@ void tooltip_context::draw_button_tooltip() {
 
     //save_window_under_tooltip_to_buffer(x, y, width, height);
     draw_box(x, y, width, height);
-    text_draw_multiline(text, { x + 5, y + 7 }, width - 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    text_draw_multiline(ptext.c_str(), { x + 5, y + 7 }, width - 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
 }
 
 void tooltip_context::draw_overlay_tooltip() {
@@ -165,7 +172,7 @@ void tooltip_context::draw_tooltip() {
     if (_drawtooltip) {
         _drawtooltip();
     } else {
-        draw_button_tooltip();
+        draw_tooltip_impl();
     }
 }
 

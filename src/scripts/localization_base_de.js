@@ -1,7 +1,6 @@
 log_info("akhenaten: localization_de config started")
 
 localization_base_de = [
-    { group:1, id:0, text: "Datei" }
     { group:1, id:1, text: "Neues Spiel" }
     { group:1, id:2, text: "Mission wiederholen" }
     { group:1, id:3, text: "Spiel laden" }
@@ -3112,7 +3111,7 @@ localization_base_de = [
     { group:68, id:48, text: "Maushilfe frei" }
     { group:68, id:49, text: "Maushilfe frei" }
     { group:68, id:50, text: "Maushilfe frei" }
-    { group:68, id:51, text: "Laden, Speichern, Neues Spiel und Beenden" }
+    
     { group:68, id:52, text: "Ton- und Geschwindigkeitsoptionen" }
     { group:68, id:53, text: "Spielhilfe aufrufen" }
     { group:68, id:54, text: "Direkt zu bestimmten Aufseherberichten gehen" }

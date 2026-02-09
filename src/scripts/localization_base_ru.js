@@ -1,7 +1,6 @@
 log_info("akhenaten: localization_ru config started")
 
 localization_base_ru = [
-    { group:1, id:0, text: "Файл" }
     { group:1, id:1, text: "Новая игра" }
     { group:1, id:2, text: "Повторить миссию" }
     { group:1, id:3, text: "Загрузить игру" }
@@ -3116,7 +3115,7 @@ localization_base_ru = [
     { group:68, id:48, text: "помощь мыши свободна" }
     { group:68, id:49, text: "помощь мыши свободна" }
     { group:68, id:50, text: "помощь мыши свободна" }
-    { group:68, id:51, text: "Загрузить, сохранить, новая игра и выход" }
+    
     { group:68, id:52, text: "Настройки звука и скорости" }
     { group:68, id:53, text: "Доступ к справке игры" }
     { group:68, id:54, text: "Перейти напрямую к конкретным отчётам надзирателей" }

@@ -1116,8 +1116,8 @@ localization_de = [
   { key: "#scriber_much_unemployments", text: "Es gibt viele Arbeitslose in der Stadt. Zumindest haben sie viel Zeit zum Lesen." }
   { key: "#scriber_low_entertainment", text: "Manchmal möchten meine Augen auf etwas anderem als Hieroglyphen ruhen. Ich möchte eine Show sehen!" }
   { key: "#scriber_city_is_ok", text: "Diese Stadt ist vergleichbar mit anderen, über die ich gelesen habe." }
-  { key: "#scriber_city_is_amazing", text: "Diese Stadt ist die beste, die die Geschichte je gekannt hat!" } 
-  
+  { key: "#scriber_city_is_amazing", text: "Diese Stadt ist die beste, die die Geschichte je gekannt hat!" }
+
   { key: "#dentist_concerned_about_plague", text: "Die Leute sind so besorgt, die Seuche zu bekommen, dass sie ihre Zähne vernachlässigen." }
   { key: "#dentist_no_food_in_city", text: "Ich hatte in letzter Zeit so wenig zu essen... was für eine traurige Verschwendung perfekter Zähne." }
   { key: "#dentist_defenses_are_weak", text: "Die Verteidigungen der Stadt sind voller Lücken. Unsere Feinde könnten mit uns machen, was sie wollen." }
@@ -1127,8 +1127,8 @@ localization_de = [
   { key: "#dentist_much_unemployments", text: "Ich habe noch nie so viele Menschen ohne Arbeit gesehen!" }
   { key: "#dentist_low_entertainment", text: "Mir ist langweilig! Ich schätze, ich putze wieder meine Zähne." }
   { key: "#dentist_city_is_ok", text: "Diese Stadt ist okay. Nur ein paar Löcher!" }
-  { key: "#dentist_city_is_amazing", text: "Diese Stadt hat das strahlendste Lächeln in ganz Ägypten." }    
-  
+  { key: "#dentist_city_is_amazing", text: "Diese Stadt hat das strahlendste Lächeln in ganz Ägypten." }
+
   { key: "#magistrate_i_hope_we_are_ready", text: "Die Gesundheitsbedingungen in dieser Stadt sind kriminell. Seuche ist die Strafe, die zum Verbrechen passt." }
   { key: "#magistrate_no_food_in_city", text: "Ich bin so hungrig, eine gute Mahlzeit erkauft Euch jedes Urteil, das Ihr wollt." }
   { key: "#magistrate_city_not_safety", text: "Was für jämmerliche Verteidigungen! Unsere Feinde könnten direkt in die Stadt spazieren und sie übernehmen." }
@@ -1154,15 +1154,18 @@ localization_de = [
   { key: "#difficulty_normal", text: "Normal" }
   { key: "#difficulty_hard", text: "Schwer" }
   { key: "#difficulty_very_hard", text: "Sehr schwer" }
-  
+
   { key: "#difficulty_gods_effects_off", text: "Göttereffekte AUS" }
   { key: "#difficulty_gods_effects_on", text: "Göttereffekte AN" }
 
-  // overlays. tooltips for buildings. group 66 
+  // overlays. tooltips for buildings. group 66
   // bazaar access (food stocks)
   { key: "#food_stocks_not_provided", text: "Diese Hütte sammelt ihre eigene Nahrung..." }
   { key: "#food_stocks_none", text: "Dieses Haus hat keine Nahrungsvorräte" }
   { key: "#food_stocks_low", text: "Dieses Haus wird bald seine begrenzten Nahrungsvorräte aufgebraucht haben" }
   { key: "#food_stocks_medium", text: "Dieses Haus hat Nahrungsvorräte für mindestens den kommenden Monat" }
   { key: "#food_stocks_high", text: "Dieses Haus hat keine Probleme, die Nahrung zu bekommen, die es zum Überleben braucht" }
+
+  { key: "#top_menu_file", text: "Datei" }
+  { key: "#top_menu_file_tooltip", text: "Neues Spiel, Laden, Speichern, Spiel beenden" }
 ]

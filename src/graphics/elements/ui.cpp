@@ -1373,11 +1373,37 @@ void ui::emenu_header::load(archive arch, element *parent, items &elems) {
 
     _font = arch.r_type<e_font>("font", FONT_NORMAL_BLACK_ON_LIGHT);
     _tooltip = arch.r_string("tooltip");
+    if (!!_tooltip) {
+        const bool has_static_loc = (_tooltip[0] == '#');
+        if (has_static_loc) {
+            _tooltip = lang_text_from_key(_tooltip.c_str());
+        }
+
+        pcstr ptooltip = _tooltip.c_str();
+        const bool has_dyn_loc = (strstr(ptooltip, "${") != nullptr);
+        if (has_dyn_loc) {
+            ui_scope_property holder;
+            _tooltip = ui::format(&holder, ptooltip);
+        }
+    }
 
     _onclick_js = arch.r_function("onclick");
     _textfn_js = arch.r_function("textfn");
 
     impl.text = arch.r_string("text");
+    if (!!impl.text) {
+        const bool has_static_loc = (impl.text[0] == '#');
+        if (has_static_loc) {
+            impl.text = lang_text_from_key(impl.text.c_str());
+        }
+
+        pcstr ptext = impl.text.c_str();
+        const bool has_dyn_loc = (strstr(ptext, "${") != nullptr);
+        if (has_dyn_loc) {
+            ui_scope_property holder;
+            impl.text = ui::format(&holder, ptext);
+        }
+    }
 
     if (!!_onclick_js) {
         impl._onclick = [jsref = _onclick_js] (auto &item) {
@@ -1389,10 +1415,6 @@ void ui::emenu_header::load(archive arch, element *parent, items &elems) {
         impl._textfn = [jsref = _textfn_js] () {
             return js_call_function_with_result(jsref, 0, 0);
         };
-    }
-
-    if (!!impl.text && impl.text[0u] == '#') {
-        impl.text = lang_text_from_key(impl.text.c_str());
     }
 }
 
@@ -1409,9 +1431,20 @@ void ui::emenu_header::load_items(archive arch, pcstr section, element::items& e
         menu_item& item = impl.items.emplace_back();
         item.id = key;
         item.text = elem.r_string("text");
-        if (!!item.text && item.text[0u] == '#') {
-            item.text = lang_text_from_key(item.text.c_str());
+        if (!!item.text) {
+            const bool has_static_loc = (item.text[0] == '#');
+            if (has_static_loc) {
+                item.text = lang_text_from_key(item.text.c_str());
+            }
+
+            pcstr ptext = item.text.c_str();
+            const bool has_dyn_loc = (strstr(ptext, "${") != nullptr);
+            if (has_dyn_loc) {
+                ui_scope_property holder;
+                item.text = ui::format(&holder, ptext);
+            }
         }
+
         item.parameter = elem.r_int("parameter");
         item.hidden = elem.r_bool("hidden");
         auto proxy_item = std::make_shared<emenu_header_item_proxy>();
