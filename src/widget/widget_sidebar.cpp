@@ -189,7 +189,7 @@ void ui::sidebar_window_expanded_t::ui_draw_foreground(UiFlags flags) {
     ui["show_messages"].readonly = (messages <= 0);
     ui["num_messages"] = messages > 0 ? bstring32(messages) : bstring32();
 
-    ui["undo_btn"].readonly = game_can_undo();
+    ui["undo_btn"].readonly = !game_can_undo();
     ui["goto_problem"].readonly = !city_message_problem_area_count();
 
     xstring overlay_text = g_city.overlay()
