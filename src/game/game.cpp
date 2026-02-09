@@ -275,29 +275,8 @@ void game_t::reload_objects() {
     return ctx;
 }
 
-static void update_encoding() {
-    int language = locale_determine_language();
-}
-
-static bool reload_language(int is_editor, int reload_images) {
-    const xstring lang_dir = game_features::gameopt_language.to_string();
-    //std::vector<lang_pack> lang_packs;
-    //if (lang_dir.empty()) {
-    //    lang_packs = get_def_lang_packs();
-    //} else {
-    //    lang_packs.emplace_back(lang_dir.c_str(), "loc", "Pharaoh_Text");
-    //}
-
-    //if (!lang_load(is_editor, lang_packs)) {
-    //    if (is_editor)
-    //        logs::error("'pharaoh_map.eng' or 'pharaoh_map_mm.eng' files not found or too large.");
-    //    else
-    //        logs::error("'pharaoh_text.eng' or 'pharaoh_mm.eng' files not found or too large.");
-    //    return false;
-    //}
-
-    update_encoding();
-    return true;
+void game_t::reload_language() {
+    locale_determine_language();
 }
 
 static int get_elapsed_ticks() {
@@ -352,7 +331,7 @@ bool game_t::check_valid() {
     vfs::content_cache_paths();
 
     logs::switch_output(vfs::platform_file_manager_get_base_path());
-    update_encoding();
+    locale_determine_language();
 
     scroll_speed = 70;
 
@@ -395,9 +374,7 @@ bool game_init(game_opts opts) {
 }
 
 bool game_init_editor() {
-    if (!reload_language(1, 0)) {
-        return false;
-    }
+    locale_determine_language();
 
     game_file_editor_clear_data();
     game_file_editor_create_scenario(2);
@@ -412,16 +389,10 @@ bool game_init_editor() {
 }
 
 void game_exit_editor() {
-    if (!reload_language(0, 0)) {
-        return;
-    }
+    locale_determine_language();
 
     editor_set_active(0);
     main_menu_screen::show(/*restart_music*/true);
-}
-
-int game_reload_language() {
-    return reload_language(0, 1);
 }
 
 void game_t::update() {
