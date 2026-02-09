@@ -20,7 +20,7 @@ bool game_init(game_opts opts);
 
 bool game_init_editor();
 
-int game_reload_language();
+void game_reload_language();
 
 void game_exit_editor();
 
@@ -108,6 +108,8 @@ struct game_t {
 
     void increase_scroll_speed();
     void decrease_scroll_speed();
+
+    void reload_language();
 
     threading::thread_pool mtrpc;
     threading::thread_pool mt;
