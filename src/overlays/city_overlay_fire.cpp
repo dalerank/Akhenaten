@@ -98,7 +98,8 @@ xstring city_overlay_fire::get_tooltip_for_building(tooltip_context *c, const bu
         int value_x = 140;
         
         for (const auto &tooltip_line : building_tooltip_config->tooltips) {
-            bstring1024 formatted = ui::format(building_ptr->dcast(), tooltip_line.c_str());
+            bstring1024 formatted;
+            ui::format(formatted, building_ptr->dcast(), tooltip_line);
             
             // Split line into label and value parts (format: "label\tvalue")
             int at_pos = formatted.find('\t');

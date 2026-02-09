@@ -952,7 +952,7 @@ void ui::elabel::draw(UiFlags flags) {
         pcstr dynamic_text = js_call_function_with_result(_js_textfn_ref, 0, 0);
         if (dynamic_text && *dynamic_text) {
             ui_scope_property holder;
-            _text = ui::format(&holder, dynamic_text);
+            _text = ui::sformat<1024>(&holder, dynamic_text);
         }
     }
 
@@ -1290,7 +1290,7 @@ void ui::etext::draw(UiFlags flags) {
         pcstr dynamic_text = js_call_function_with_result(_js_textfn_ref, 0, 0);
         if (dynamic_text && *dynamic_text) {
             ui_scope_property holder;
-            _text = ui::format(&holder, dynamic_text);
+            _text = ui::sformat<1024>(&holder, dynamic_text);
         }
     }
 
@@ -1373,37 +1373,17 @@ void ui::emenu_header::load(archive arch, element *parent, items &elems) {
 
     _font = arch.r_type<e_font>("font", FONT_NORMAL_BLACK_ON_LIGHT);
     _tooltip = arch.r_string("tooltip");
-    if (!!_tooltip) {
-        const bool has_static_loc = (_tooltip[0] == '#');
-        if (has_static_loc) {
-            _tooltip = lang_text_from_key(_tooltip.c_str());
-        }
 
-        pcstr ptooltip = _tooltip.c_str();
-        const bool has_dyn_loc = (strstr(ptooltip, "${") != nullptr);
-        if (has_dyn_loc) {
-            ui_scope_property holder;
-            _tooltip = ui::format(&holder, ptooltip);
-        }
-    }
+    const bool has_dyn_tooltip = (!!_tooltip && strstr(_tooltip.c_str(), "${") != nullptr);
+    _tooltip_format = has_dyn_tooltip ? _tooltip : "";
 
     _onclick_js = arch.r_function("onclick");
     _textfn_js = arch.r_function("textfn");
 
     impl.text = arch.r_string("text");
-    if (!!impl.text) {
-        const bool has_static_loc = (impl.text[0] == '#');
-        if (has_static_loc) {
-            impl.text = lang_text_from_key(impl.text.c_str());
-        }
 
-        pcstr ptext = impl.text.c_str();
-        const bool has_dyn_loc = (strstr(ptext, "${") != nullptr);
-        if (has_dyn_loc) {
-            ui_scope_property holder;
-            impl.text = ui::format(&holder, ptext);
-        }
-    }
+    const bool has_dyn_text = (!!impl.text && strstr(impl.text.c_str(), "${") != nullptr);
+    _text_format = has_dyn_text ? impl.text : "";
 
     if (!!_onclick_js) {
         impl._onclick = [jsref = _onclick_js] (auto &item) {
@@ -1418,7 +1398,7 @@ void ui::emenu_header::load(archive arch, element *parent, items &elems) {
     }
 }
 
-void ui::emenu_header::load_items(archive arch, pcstr section, element::items& elements) {
+void ui::emenu_header::load_items(archive arch, xstring section, element::items& elements) {
     impl.items.clear();
 
     arch.r_objects(section, [&] (pcstr key, archive elem) {
@@ -1431,18 +1411,11 @@ void ui::emenu_header::load_items(archive arch, pcstr section, element::items& e
         menu_item& item = impl.items.emplace_back();
         item.id = key;
         item.text = elem.r_string("text");
-        if (!!item.text) {
-            const bool has_static_loc = (item.text[0] == '#');
-            if (has_static_loc) {
-                item.text = lang_text_from_key(item.text.c_str());
-            }
-
-            pcstr ptext = item.text.c_str();
-            const bool has_dyn_loc = (strstr(ptext, "${") != nullptr);
-            if (has_dyn_loc) {
-                ui_scope_property holder;
-                item.text = ui::format(&holder, ptext);
-            }
+        
+        const bool has_dyn_loc = (strstr(item.text.c_str(), "${") != nullptr);
+        if (has_dyn_loc) {
+            ui_scope_property holder;
+            item.text = ui::sformat<128>(&holder, item.text);
         }
 
         item.parameter = elem.r_int("parameter");
@@ -1467,12 +1440,23 @@ void ui::emenu_header::load_items(archive arch, pcstr section, element::items& e
 }
 
 void ui::emenu_header::draw(UiFlags flags) {
-    pcstr text = impl.text.c_str();
     if (impl._textfn) {
-        text = impl._textfn();
+        impl.text = impl._textfn();
+    } else if (!!_text_format) {
+        ui_scope_property holder;
+        impl.text = ui::sformat<128>(&holder, impl.text);
     }
 
-    lang_text_draw(text, pos, _font);
+    lang_text_draw(impl.text.c_str(), pos, _font);
+}
+
+const xstring &ui::emenu_header::tooltip() const { 
+    if (!!_tooltip_format) {
+        ui_scope_property holder;
+        _tooltip = ui::sformat<128>(&holder, _tooltip_format);
+    }
+
+    return _tooltip; 
 }
 
 int ui::emenu_header::text_width() {
@@ -1528,12 +1512,12 @@ void ui::egeneric_button::draw(UiFlags gflags) {
                       | (_selected ? UiFlags_Selected : UiFlags_None)
                       | (readonly ? UiFlags_Readonly : UiFlags_None);
 
-    pcstr button_text = _text.c_str();
+    bstring256 button_text = _text.c_str();
     if (!_js_textfn_ref.empty()) {
         pcstr dynamic_text = js_call_function_with_result(_js_textfn_ref, param1, param2);
         if (dynamic_text && *dynamic_text) {
             ui_scope_property holder;
-            button_text = ui::format(&holder, dynamic_text);
+            ui::format(button_text, &holder, dynamic_text);
         }
     }
 
