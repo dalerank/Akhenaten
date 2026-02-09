@@ -229,6 +229,12 @@ city_message &message_manager_t::post_common(bool use_popup, xstring mm_text, in
 
     city_message &msg = messages[id];
     memset(&msg, 0, sizeof(city_message));
+    // For non-eventmsg messages these fields must be explicitly marked
+    // as "no eventmsg", otherwise message_list will treat them as
+    // event messages and always show the first eventmsg title.
+    msg.eventmsg_body_id = -1;
+    msg.eventmsg_title_id = -1;
+    msg.eventmsg_phrase_id = -1;
 
     msg.MM_text_id = lang_get_message_uid(mm_text);
     msg.is_read = 0;
