@@ -150,6 +150,12 @@ void city_buildings_t::update_counters() {
     buildings_valid_do([] (building &b) {
         b.dcast()->update_count();
     });
+
+    for (auto &b : city_buildings()) {
+        if (b.type != BUILDING_NONE && b.state == BUILDING_STATE_CREATED) {
+            increase_count(b.type, false);
+        }
+    }
 }
 
 
