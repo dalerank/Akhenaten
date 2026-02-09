@@ -1166,11 +1166,11 @@ localization_en = [
   { key: "#difficulty_normal", text: "Normal" }
   { key: "#difficulty_hard", text: "Hard" }
   { key: "#difficulty_very_hard", text: "Very hard" }
-  
+
   { key: "#difficulty_gods_effects_off", text: "Gods effects OFF" }
   { key: "#difficulty_gods_effects_on", text: "Gods effects ON" }
 
-  // overlays. tooltips for buildings. group 66 
+  // overlays. tooltips for buildings. group 66
   // bazaar access (food stocks)
   { key: "#food_stocks_not_provided", text: "This hut scavenges for its own food..." }
   { key: "#food_stocks_none", text: "This house has no stocks of food" }
@@ -1181,4 +1181,5 @@ localization_en = [
   { key: "#top_menu_file", text: "File" }
   { key: "#top_menu_file_tooltip", text: "Load, save, new game and exit" }
 
+  { key: "#sidebar_speed_header", text: "Speed" }
 ]
