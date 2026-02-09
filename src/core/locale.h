@@ -34,9 +34,3 @@ pcstr locale_determine_language_short();
  * @return Boolean true if years should be written as "200 AD", false for "AD 200"
  */
 int locale_year_before_ad(void);
-
-/**
- * Returns whether we should use localized filenames for the "Citizen.sav", etc autosaves
- * @return Boolean true if the filenames should be translated, false if we should use English
- */
-int locale_translate_rank_autosaves(void);
