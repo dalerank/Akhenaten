@@ -89,7 +89,7 @@ void top_menu_widget_t::archive_load(archive arch) {
     }
 
     for (auto header : headers_elms) {
-        header->load_items(arch, header->id.c_str(), headers.elements);
+        header->load_items(arch, header->id, headers.elements);
     }
 }
 
@@ -236,21 +236,6 @@ xstring top_menu_widget_t::menu_handle_mouse(const mouse* m, menu_header* menu, 
     }
 
     return item_id;
-}
-
-void top_menu_widget_t::header_update_text(pcstr header, pcstr text) {
-    auto &impl = ((ui::emenu_header *)&headers[header])->impl;
-
-    headers[header].text(text);
-    if (impl.calculated_width_blocks == 0) {
-        return;
-    }
-
-    int item_width = lang_text_get_width(impl.text.c_str(), FONT_NORMAL_BLACK_ON_LIGHT);
-    int blocks = (item_width + 8) / 16 + 1;
-    if (blocks > impl.calculated_width_blocks) {
-        impl.calculated_width_blocks = blocks;
-    }
 }
 
 std::pair<bstring64, bstring64> split_string(pcstr input) {
