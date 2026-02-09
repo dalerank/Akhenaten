@@ -1,5 +1,6 @@
 #include "city_buildings.h"
 
+#include "city/city.h"
 #include "game/undo.h"
 #include "core/custom_span.hpp"
 #include "core/profiler.h"
@@ -115,6 +116,8 @@ building *building_create(e_building_type type, tile2i tile, int orientation) {
     b->initialize(type, tile, orientation);
 
     events::emit(event_building_create{ b->id });
+
+    g_city.buildings.update_counters();
 
     return b;
 }
