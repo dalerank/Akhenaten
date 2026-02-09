@@ -13,7 +13,7 @@ struct autoconfig_window : public ui::widget {
     virtual void ui_draw_foreground(UiFlags flags);
     virtual int get_tooltip_text() = 0;
     virtual void init();
-    virtual pcstr get_section() const { return "non_exist_window"; };
+    virtual pcstr get_section() const { verify_no_crash(false); return "non_exist_window"; };
     virtual void on_mission_start() {}
 
     virtual void archive_load(archive arch) override;
