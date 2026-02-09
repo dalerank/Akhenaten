@@ -117,8 +117,6 @@ building *building_create(e_building_type type, tile2i tile, int orientation) {
 
     events::emit(event_building_create{ b->id });
 
-    // Refresh building counts immediately so unique-building checks (castle, mansion, temple complex)
-    // see the new building and block a second placement without waiting for the next update_tick.
     g_city.buildings.update_counters();
 
     return b;
