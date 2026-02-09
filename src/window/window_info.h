@@ -39,3 +39,6 @@ void window_building_info_show_storage_orders();
 
 void window_building_register_handler(common_info_window *handler);
 void window_figure_register_handler(common_info_window *handler);
+
+// Recompute size/position of the currently open info window after resolution change.
+void window_info_on_resolution_changed();

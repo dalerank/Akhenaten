@@ -44,6 +44,7 @@ namespace ui {
         virtual void ui_draw_foreground(UiFlags flags) override {}
         virtual int ui_handle_mouse(const mouse *m) override;
         virtual void init() override;
+        virtual void on_resolution_changed_instance() override;
 
         void show(xstring text_id, int message_id, void (*background_callback)(void));
         void show_city_message(xstring text_id, int message_id, int year, int month, int param1, int param2, int message_advisor, bool use_popup);

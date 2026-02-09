@@ -6,6 +6,8 @@
 #include "platform/renderer.h"
 #include "graphics/graphics.h"
 #include "window.h"
+#include "window/autoconfig_window.h"
+#include "window/window_info.h"
 
 struct screen_data_t {
     int width;
@@ -16,6 +18,8 @@ struct screen_data_t {
 screen_data_t g_screen_data;
 
 void screen_set_resolution(int width, int height) {
+    const bool changed = (width != g_screen_data.width) || (height != g_screen_data.height);
+
     g_screen_data.width = width;
     g_screen_data.height = height;
     g_screen_data.dialog_offset.x = (width - 640) / 2;
@@ -26,6 +30,12 @@ void screen_set_resolution(int width, int height) {
 
     city_view_set_viewport(width, height);
     g_warning_manager.clear_all();
+
+    if (changed) {
+        // Recenter existing UI windows for the new resolution.
+        autoconfig_window::on_resolution_changed();
+        window_info_on_resolution_changed();
+    }
 }
 
 int screen_width() {

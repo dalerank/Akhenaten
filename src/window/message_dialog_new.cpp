@@ -130,6 +130,18 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
         ui["title"].size.x = msg.size.x * 16;
     }
 
+    // После того как мы задали актуальный размер фона из данных сообщения,
+    // центрируем само диалоговое окно под текущее разрешение, чтобы не
+    // зависеть от "жестких" координат из скрипта.
+    if (contains("background")) {
+        auto &bg = (*this)["background"];
+        vec2i bsize = bg.pxsize();
+        if (bsize.x > 0 && bsize.y > 0) {
+            pos.x = (screen_width()  - bsize.x) / 2;
+            pos.y = (screen_height() - bsize.y) / 2;
+        }
+    }
+
     if (is_eventmsg && !title_text.empty()) {
         ui["title"] = title_text;
     } else {
@@ -363,6 +375,21 @@ int ui::message_dialog_base::ui_handle_mouse(const mouse *m) {
 
 int ui::message_dialog_base::handle_mouse(const mouse *m) {
     return 0;
+}
+
+void ui::message_dialog_base::on_resolution_changed_instance() {
+    // При изменении разрешения (и, как следствие, переразмещении окна)
+    // нужно один раз пересчитать геометрию rich_text, чтобы его скроллбар
+    // "привязался" к новому положению окна, подобно тому, как это сделано
+    // для панели в окне records.
+    if (ui.contains("content_text")) {
+        auto* content_text_element = ui["content_text"].dcast_etext();
+        if (content_text_element) {
+            if (auto* rt = content_text_element->rich_text.get()) {
+                rt->reset(0);
+            }
+        }
+    }
 }
 
 void ui::message_dialog_base::cleanup() {

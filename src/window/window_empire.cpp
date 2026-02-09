@@ -742,6 +742,41 @@ void empire_window::ui_draw_foreground(UiFlags flags) {
         ui["button_open_trade"].text_var("%s %d %s", ui::str(8, 0), city->cost_to_open, ui::str(sell_res_group, 6 + city->is_sea_trade));
     }
 
+    // Обновляем размер фонового элемента, чтобы все дочерние элементы,
+    // размеченные через margin (включая нижнюю плашку с кнопками и текстом),
+    // пересчитывали своё положение под текущее разрешение.
+    const int sw = screen_width();
+    const int sh = screen_height();
+    if (ui.contains("background")) {
+        auto &bg = ui["background"];
+        bg.size = { sw, sh };
+    }
+
+    // Гарантируем, что крайние нижние кнопки (кураторы слева, help/close справа)
+    // влезают в плашку и не уходят за края экрана.
+    auto clamp_button_centerx = [sw](ui::element &e, int base_centerx) {
+        const int w = e.pxsize().x;
+        const int min_center = w / 2 + 8;
+        const int max_center = sw - w / 2 - 8;
+
+        int center = sw / 2 + base_centerx;
+        int clamped = center;
+        if (clamped < min_center) clamped = min_center;
+        if (clamped > max_center) clamped = max_center;
+
+        e.margin.centerx = clamped - sw / 2;
+    };
+
+    if (ui.contains("button_advisor")) {
+        clamp_button_centerx(ui["button_advisor"], -595);
+    }
+    if (ui.contains("button_help")) {
+        clamp_button_centerx(ui["button_help"], 575);
+    }
+    if (ui.contains("button_close")) {
+        clamp_button_centerx(ui["button_close"], 575);
+    }
+
     draw_paneling();
 
     ui.begin_widget({ 0, 0 });

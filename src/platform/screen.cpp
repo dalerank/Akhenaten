@@ -329,6 +329,11 @@ void platform_screen_set_window_size(int logical_width, int logical_height) {
     }
     g_settings.set_fullscreen(0);
     g_settings.display_size = {pixel_width, pixel_height};
+
+    // Обновляем логическое разрешение экрана, чтобы все окна и UI
+    // могли переразместиться под новый размер (центровка диалогов,
+    // пересчёт автоконфиг-окон и т.п.).
+    screen_set_resolution(logical_width, logical_height);
 }
 
 void platform_screen_center_window() {

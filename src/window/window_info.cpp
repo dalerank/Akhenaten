@@ -378,6 +378,18 @@ void common_info_window::update_buttons(object_info &c) {
     }
 }
 
+void window_info_on_resolution_changed() {
+    auto &context = def_object_info;
+    if (!context.ui) {
+        return;
+    }
+
+    // Re-evaluate dialog size from current UI config and place it again
+    // so it stays within the visible area after a resolution change.
+    context.bgsize = context.ui->bgsize();
+    context.offset = window_building_set_possible_position(mouse::get().pos(), context.bgsize);
+}
+
 void common_info_window::archive_load(archive arch) {
     widget::archive_load(arch);
 

@@ -57,6 +57,19 @@ void popup_dialog::draw_background(int flags) {
 void popup_dialog::draw_foreground(int flags) {
     window_draw_underlying_window(UiFlags_Readonly);
 
+    // Re-center the popup every frame based on the current resolution
+    // and the size of its background element. This keeps the dialog
+    // correctly positioned when the window resolution changes while
+    // the popup is visible.
+    if (contains("background")) {
+        auto &bg = (*this)["background"];
+        vec2i bgsize = bg.pxsize();
+        if (bgsize.x > 0 && bgsize.y > 0) {
+            pos.x = (screen_width()  - bgsize.x) / 2;
+            pos.y = (screen_height() - bgsize.y) / 2;
+        }
+    }
+
     ui.begin_widget(pos);
     ui.draw();
     ui.end_widget();
@@ -78,6 +91,27 @@ void popup_dialog::handle_input(const mouse* m, const hotkeys* h) {
         window_go_back();
         this->close_func(1);
     }
+}
+
+void popup_dialog::on_resolution_changed() {
+    // If no popup is currently shown, nothing to do.
+    if (!window_is(WINDOW_POPUP_DIALOG)) {
+        return;
+    }
+
+    // Center the popup based on its background element size, if any.
+    if (!g_popup_dialog.contains("background")) {
+        return;
+    }
+
+    auto &bg = g_popup_dialog["background"];
+    vec2i bgsize = bg.pxsize();
+    if (bgsize.x <= 0 || bgsize.y <= 0) {
+        return;
+    }
+
+    g_popup_dialog.pos.x = (screen_width()  - bgsize.x) / 2;
+    g_popup_dialog.pos.y = (screen_height() - bgsize.y) / 2;
 }
 
 void popup_dialog::show(pcstr loc_id, e_popup_dialog_btns buttons, window_popup_dialog_callback close_func) {

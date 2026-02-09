@@ -121,4 +121,7 @@ struct popup_dialog : public ui::widget {
             if (accepted) { close_func(); }
         });
     }
+
+    // Adjust popup position when the screen resolution/size changes.
+    static void on_resolution_changed();
 };

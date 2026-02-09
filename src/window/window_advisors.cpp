@@ -211,6 +211,46 @@ void window_advisors::draw_background(int flags) {
 }
 
 void window_advisors::draw_foreground(int flags) {
+    // Плашка с кнопками кураторов: пересчитываем её положение
+    // под текущее разрешение, как в скрипте ui_advisors_window.js,
+    // но с учётом текущего размера экрана.
+    const int sw = screen_width();
+    const int sh = screen_height();
+
+    const int layout_x = (sw - 640) / 2;
+    const int layout_y = (sh + 400) / 2;
+    const int buttons_y = (sh + 418) / 2;
+
+
+
+    if (ui.contains("layout")) {
+        ui["layout"].pos = { layout_x, layout_y };
+    }
+
+    struct BtnDef { const char* id; int dx; };
+    static const BtnDef defs[] = {
+        { "labor_btn",        12 },
+        { "military_btn",     52 },
+        { "imperial_btn",     96 },
+        { "ratings_btn",      135 },
+        { "trade_btn",        178 },
+        { "population_btn",   229 },
+        { "health_btn",       282 },
+        { "education_btn",    322 },
+        { "entertainment_btn",363 },
+        { "religion_btn",     406 },
+        { "financial_btn",    445 },
+        { "chief_btn",        490 },
+        { "monuments_btn",    542 },
+        { "back_btn",         588 },
+    };
+
+    for (const auto &d : defs) {
+        if (ui.contains(d.id)) {
+            ui[d.id].pos = { (sw - 640) / 2 + d.dx, buttons_y };
+        }
+    }
+
     ui.draw();
 
     current_advisor_window->format_all(&g_city);

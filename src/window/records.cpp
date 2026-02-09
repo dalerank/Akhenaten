@@ -85,7 +85,9 @@ void ui::records_window::ui_draw_foreground(UiFlags flags) {
     ui.draw(flags);
 
     if (panel) {
-        panel->ui_params.pos = ui["records_panel"].pos;
+        // Use screen-space position so the scroll panel follows the window
+        // when it is re-centered for a different resolution.
+        panel->ui_params.pos = ui["records_panel"].screen_pos();
         panel->draw();
     }
 
@@ -106,7 +108,7 @@ int ui::records_window::ui_handle_mouse(const mouse* m) {
         ui.begin_widget(pos);
         
         mouse m_dialog = *m;
-        vec2i panel_offset = ui["records_panel"].pos;
+        vec2i panel_offset = ui["records_panel"].screen_pos();
         m_dialog.x -= panel_offset.x;
         m_dialog.y -= panel_offset.y;
         

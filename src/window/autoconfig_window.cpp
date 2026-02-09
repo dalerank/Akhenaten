@@ -30,8 +30,44 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_autoconfig_windows) {
 }
 
 
+static void autoconfig_center_window(autoconfig_window *w) {
+    if (!w) {
+        return;
+    }
+
+    // Only recenter windows that have an explicit background element.
+    if (!w->contains("background")) {
+        return;
+    }
+
+    auto &bg = (*w)["background"];
+    vec2i bsize = bg.pxsize();
+    if (bsize.x <= 0 || bsize.y <= 0) {
+        return;
+    }
+
+    w->pos.x = (screen_width() - bsize.x) / 2;
+    w->pos.y = (screen_height() - bsize.y) / 2;
+
+    // Даем окну шанс обновить свою внутреннюю геометрию (скроллбары и т.п.)
+    // после изменения позиции/размера.
+    w->on_resolution_changed_instance();
+}
+
 void autoconfig_window::refresh_all() {
     config_load_autoconfig_windows();
+
+    // После перезагрузки конфигов сразу рассчитываем позиции окон
+    // под текущее разрешение.
+    for (auto *w : autoconfig_registry()) {
+        autoconfig_center_window(w);
+    }
+}
+
+void autoconfig_window::on_resolution_changed() {
+    for (auto *w : autoconfig_registry()) {
+        autoconfig_center_window(w);
+    }
 }
 
 autoconfig_window::autoconfig_window(pcstr s) {
@@ -47,6 +83,11 @@ void autoconfig_window::archive_load(archive arch) {
     _is_inited = false;
     help_id = arch.r_string("help_id");
     allow_rmb_goback = arch.r_string("allow_rmb_goback");
+
+    // При первичной загрузке окна сразу подгоняем его позицию
+    // под текущее разрешение, чтобы не зависеть от "жестких"
+    // координат из конфигов (рассчитанных под базовое окно).
+    autoconfig_center_window(this);
 }
 
 int autoconfig_window::ui_handle_mouse(const mouse *m) {

@@ -16,6 +16,11 @@ struct autoconfig_window : public ui::widget {
     virtual pcstr get_section() const { return "non_exist_window"; };
     virtual void on_mission_start() {}
 
+    // Вызывается, когда разрешение экрана изменилось и окно было
+    // переразмещено. Базовая реализация ничего не делает; наследники
+    // могут переопределить, чтобы пересчитать свою внутреннюю геометрию.
+    virtual void on_resolution_changed_instance() {}
+
     virtual void archive_load(archive arch) override;
     virtual int ui_handle_mouse(const mouse *m);
 
@@ -25,6 +30,7 @@ struct autoconfig_window : public ui::widget {
 
     static void before_mission_start();
     static void refresh_all();
+    static void on_resolution_changed();
 };
 
 template<typename T>

@@ -175,7 +175,89 @@ int main_menu_screen::draw_background(UiFlags flags) {
 
 void main_menu_screen::draw_foreground(UiFlags flags) {
     ui.begin_frame();
-    ui.draw();
+
+    // Lazily compute the logical center of the main menu button column
+    // for the initial resolution when the UI was loaded. Afterwards we
+    // keep this anchor and only shift the whole menu so that this center
+    // stays in the middle of the screen even if the resolution changes.
+    if (!_base_center_initialized) {
+        vec2i minp{INT_MAX, INT_MAX};
+        vec2i maxp{INT_MIN, INT_MIN};
+
+        const char *ids[] = {
+            "continue_game",
+            "select_player",
+            "show_records",
+            "show_config",
+            "show_mods",
+            "quit_game"
+        };
+
+        for (auto id : ids) {
+            if (!ui.contains(id)) {
+                continue;
+            }
+
+            auto &e = ui[id];
+            vec2i p = e.screen_pos();
+            vec2i s = e.pxsize();
+
+            minp.x = std::min(minp.x, p.x);
+            minp.y = std::min(minp.y, p.y);
+            maxp.x = std::max(maxp.x, p.x + s.x);
+            maxp.y = std::max(maxp.y, p.y + s.y);
+        }
+
+        if (minp.x <= maxp.x && minp.y <= maxp.y) {
+            _base_center = { (minp.x + maxp.x) / 2, (minp.y + maxp.y) / 2 };
+        } else {
+            _base_center = { screen_width() / 2, screen_height() / 2 };
+        }
+
+        _base_center_initialized = true;
+    }
+
+    vec2i desired_center{ screen_width() / 2, screen_height() / 2 };
+    vec2i delta{ desired_center.x - _base_center.x, desired_center.y - _base_center.y };
+
+    // Привязываем иконки Discord / Patreon к правому нижнему углу
+    // экрана, независимо от смещения основного меню к центру.
+    if (ui.contains("discord")) {
+        auto &discord = ui["discord"];
+        vec2i desired{ screen_width() - 100, screen_height() - 50 }; // sw(-100), sh(-50)
+        discord.pos = desired - delta;
+    }
+    if (ui.contains("patreon")) {
+        auto &patreon = ui["patreon"];
+        vec2i desired{ screen_width() - 50, screen_height() - 50 }; // sw(-50), sh(-50)
+        patreon.pos = desired - delta;
+    }
+
+    ui.begin_widget(delta);
+    ui.draw(flags);
+    ui.end_widget();
+}
+
+int main_menu_screen::ui_handle_mouse(const mouse *m) {
+    // Пока еще не знаем базовый центр — используем стандартное поведение.
+    if (!_base_center_initialized) {
+        return autoconfig_window::ui_handle_mouse(m);
+    }
+
+    vec2i desired_center{ screen_width() / 2, screen_height() / 2 };
+    vec2i delta{ desired_center.x - _base_center.x, desired_center.y - _base_center.y };
+
+    ui.begin_widget(delta);
+    bool handled = ui::handle_mouse(m);
+    ui.end_widget();
+
+    return handled ? 1 : 0;
+}
+
+void main_menu_screen::on_resolution_changed_instance() {
+    // При смене разрешения пересчитаем "якорь" центра меню при следующем кадре,
+    // чтобы и сами кнопки, и Discord/Patreon корректно переехали.
+    _base_center_initialized = false;
 }
 
 void main_menu_screen::init() {
