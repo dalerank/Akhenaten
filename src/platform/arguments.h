@@ -75,6 +75,9 @@ public:
     [[nodiscard]] vec2i get_window_size() const;
     void set_window_size(vec2i value);
 
+    [[nodiscard]] int get_scroll_speed() const;
+    void set_scroll_speed(int value);
+
     [[nodiscard]] vec2i get_window_pos() const { return get_arg("window_pos").as_vec2i(); }
     [[nodiscard]] bool has_window_pos() const { return has_arg("window_pos"); }
 

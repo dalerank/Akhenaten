@@ -494,7 +494,15 @@ void __game_decrease_game_speed() { game.decrease_game_speed(); } ANK_FUNCTION(_
 void __game_increase_scroll_speed() { game.increase_scroll_speed(); } ANK_FUNCTION(__game_increase_scroll_speed)
 void __game_decrease_scroll_speed() { game.decrease_scroll_speed(); } ANK_FUNCTION(__game_decrease_scroll_speed)
 void __game_set_game_speed(int v) { game.game_speed = v; } ANK_FUNCTION_1(__game_set_game_speed)
-void __game_set_scroll_speed(int v) { game.scroll_speed = v; } ANK_FUNCTION_1(__game_set_scroll_speed)
+void __game_set_scroll_speed(int v) { 
+    game.scroll_speed = (uint16_t)calc_bound(v, 0, 100); 
+} ANK_FUNCTION_1(__game_set_scroll_speed)
+
+void __game_commit_scroll_speed() {
+    // Сохраняем текущую скорость прокрутки в akhenaten.cfg немедленно
+    g_args.set_scroll_speed(game.scroll_speed);
+    arguments::store(g_args);
+} ANK_FUNCTION(__game_commit_scroll_speed)
 
 std::optional<bvariant> __game_get_property(pcstr property) {
     return archive_helper::get(game, property, true);

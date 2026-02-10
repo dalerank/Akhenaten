@@ -356,6 +356,18 @@ void Arguments::set_window_size(vec2i value) {
     args_["window_size"] = bvariant(value);
 }
 
+int Arguments::get_scroll_speed() const {
+    const bvariant& v = get_arg("scroll_speed");
+    if (v.is_int32()) {
+        return v.as_int32();
+    }
+    return 0;
+}
+
+void Arguments::set_scroll_speed(int value) {
+    args_["scroll_speed"] = bvariant(value);
+}
+
 void Arguments::parse_cli_(int argc, char** argv) {
     for (int i = 1; i < argc; i++) {
         // ignore "-psn" arguments, this is needed to launch the app
@@ -447,6 +459,8 @@ bool load(Arguments& arguments) {
             auto v = arguments.get_window_size();
             v.y = std::stoi(value);
             arguments.set_window_size(v);
+        } else if (key == "scroll_speed") {
+            arguments.set_scroll_speed(std::stoi(value));
         } else if (key == "custom_font") {
             arguments.set_custom_font(value.c_str());
         } else {
@@ -469,6 +483,7 @@ void store(Arguments const& arguments) {
     output << "cursor_scale_percentage" << '=' << arguments.get_cursor_scale_percentage() << '\n';
     output << "window_width" << '=' << arguments.get_window_size().x << '\n';
     output << "window_height" << '=' << arguments.get_window_size().y << '\n';
+    output << "scroll_speed" << '=' << arguments.get_scroll_speed() << '\n';
     if (!arguments.get_custom_font().empty()) {
         output << "custom_font" << '=' << arguments.get_custom_font().c_str() << '\n';
     }

@@ -22,9 +22,15 @@ speed_options_window {
         arrow_scroll_down  : arrowdown({pos[192, 96], tiny:false, onclick: __game_decrease_scroll_speed})
         arrow_scroll_up    : arrowup({pos[216, 96], tiny:false, onclick: __game_increase_scroll_speed})
         
-        btn_ok             : button({margin{centerx: -96, bottom: -34}, size[192, 24], text[45, 4], font: FONT_NORMAL_BLACK_ON_DARK, onclick: window_go_back})
+        btn_ok             : button({margin{centerx: -96, bottom: -34}, size[192, 24], text[45, 4], font: FONT_NORMAL_BLACK_ON_DARK, onclick: speed_options_window_onok})
         btn_cancel         : button({margin{centerx: -96, bottom: -60}, size[192, 24], text[45, 1], font: FONT_NORMAL_BLACK_ON_DARK, onclick: speed_options_window_oncancel})
     }
+}
+
+[event=speed_options_window_ok]
+function speed_options_window_onok(p1, p2) {
+    __game_commit_scroll_speed()
+    window_go_back()
 }
 
 [event=speed_options_window_cancel]

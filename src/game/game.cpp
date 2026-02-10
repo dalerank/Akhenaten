@@ -55,6 +55,7 @@
 #include "grid/tiles.h"
 #include "content/mods.h"
 #include "undo.h"
+#include "platform/arguments.h"
 
 #include "dev/debug.h"
 #include <iostream>
@@ -333,13 +334,19 @@ bool game_t::check_valid() {
     logs::switch_output(vfs::platform_file_manager_get_base_path());
     locale_determine_language();
 
-    scroll_speed = 70;
-
     g_settings.load(); // c3.inf
     game_features::load();   // akhenaten.conf
     game_hotkeys::load();    // hotkeys.conf
     g_scenario.init();
     random_init();
+
+    {
+        int cfg_scroll = g_args.get_scroll_speed();
+        if (cfg_scroll <= 0) {
+            cfg_scroll = 70;
+        }
+        scroll_speed = (uint16_t)calc_bound(cfg_scroll, 0, 100);
+    }
 
     paused = false;
     mt.reset(4);
