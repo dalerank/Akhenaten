@@ -43,7 +43,6 @@ struct btnid {
 };
 
 const btnid button_ids[] = {
-    {"build_house", BUILDING_MENU_VACANT_HOUSE},
     {"build_road", BUILDING_MENU_ROAD},
     {"clear_land", BUILDING_MENU_CLEAR_LAND},
     {"build_food", BUILDING_MENU_FOOD},
@@ -289,6 +288,10 @@ int widget_sidebar_city_collapsed_max() {
 
 int widget_sidebar_city_expanded_max() {
     return sidebar_window_expanded.expanded_offset_x;
+}
+
+int widget_sidebar_set_type(int id) {
+    return sidebar_window_expanded.opened_menu = id;
 }
 
 void widget_sidebar_city_draw_foreground() {

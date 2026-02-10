@@ -87,7 +87,6 @@ struct sidebar_window_collapsed_t : public autoconfig_window {
     sidebar_window_collapsed_t() : autoconfig_window("sidebar_window_collapsed") {}
 
     void refresh_build_menu_buttons();
-
     void expand();
     void collapse();
 };
@@ -115,6 +114,7 @@ int widget_sidebar_city_offset_x();
 int widget_sidebar_city_offset_max();
 int widget_sidebar_city_collapsed_max();
 int widget_sidebar_city_expanded_max();
+int widget_sidebar_set_type(int id);
 
 void widget_sidebar_city_draw_foreground();
 void widget_sidebar_city_draw_foreground_military();
