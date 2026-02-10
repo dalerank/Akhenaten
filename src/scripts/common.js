@@ -99,3 +99,12 @@ function approximate_value(v, arr) {
     var index = Math.max(0, Math.min(Math.floor(v * arr.length), arr.length - 1));
     return arr[index];
 }
+
+function calc_percentage(value, total) {
+    if (total) {
+        var value_times_100 = 100 * value;
+        return Math.floor(value_times_100 / total);
+    }
+
+    return 0;
+}

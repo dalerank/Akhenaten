@@ -445,6 +445,7 @@ private:
     void destroy_on_fire_impl(bool plagued);
     void destroy_linked_parts(bool on_fire);
 };
+ANK_CONFIG_PROPERTY(building, has_road_access, num_workers, max_workers, type)
 
 #define BUILDING_METAINFO(type, clsid, base_class)                                                      \
     clsid(building &b) : base_class(b) {}                                                               \

@@ -262,23 +262,6 @@ figure_carrier_info_window = {
     })
 }
 
-temple_info_window = {
-    ui : {
-        background   : outer_panel({ pos: [0, 0], size: [29, 18]}),
-        title        : text({ pos: [0, 16], size: [px(29), 13], text:"${building.name}", font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-
-        inner_panel  : inner_panel({ pos : [16, 56], size: [27, 4] }),
-        workers_img  : image({ pack:PACK_GENERAL, id:134, offset:14, pos:[40, 70] }),
-        workers_text : text({ text:"${building.num_workers} ${loc.building_employee} ( ${model.laborers} ${loc.building_employee_needed} )", pos: [70, 74], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
-        workers_desc : text({ pos: [70, 74 + 16], font: FONT_NORMAL_BLACK_ON_DARK }),
-        button_help  : image_button({ margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
-        button_close : image_button({ margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
-        show_overlay : button({ margin:{right:-64, bottom:-40}, size:[23, 23]}),
-        god_image    : image({ pos: [190, 134] }),
-        mothball     : button({ margin:{right:-90, bottom:-40}, size:[23, 23]}),
-    }
-}
-
 temple_complex_info_window = {
     ui : {
         background   : outer_panel({ pos: [0, 0], size: [29, 18]}),
