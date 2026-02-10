@@ -149,6 +149,25 @@ function top_menu_widget_open_submenu(window) {
 	window.display_options.enabled = !game.screen.is_fullscreen_only
 }
 
+[es=top_menu_widget_background_draw]
+function top_menu_widget_background_draw(window) {
+	var block_img = get_image(top_menu_widget.background)
+    if (!block_img) {
+		return
+    }
+
+	var want_sidebar_offset = top_menu_widget.sidebar_offset;
+	var block_width = block_img.width;
+	var screen_width = game.screen.w;
+	var current_sidebar_offset = ui.sidebar.offset_x;
+
+    for (var x = -(screen_width - current_sidebar_offset); x < screen_width; x += (block_width - want_sidebar_offset)) {
+        ui.draw_texture({ x: x, y: 0 }, block_img.tid)
+    }
+
+    ui.draw_texture({ x: current_sidebar_offset - block_width + want_sidebar_offset, y: 0 }, block_img.tid)
+}
+
 [es=top_menu_widget_draw]
 function top_menu_widget_draw(window) {
 	var treasury = city.finance.treasury

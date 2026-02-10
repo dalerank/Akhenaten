@@ -39,7 +39,6 @@ struct top_menu_widget_t : autoconfig_window {
     virtual int ui_handle_mouse(const mouse *m) override;
     virtual void init() override;
     virtual void on_mission_start() override;
-    void draw_background_impl();
     void draw_elements_impl();
     void draw_rotate_buttons();
     xstring get_selected_header(const mouse *m);
@@ -49,7 +48,6 @@ struct top_menu_widget_t : autoconfig_window {
     void sub_menu_draw_background(int flags);
     void sub_menu_draw_text(const xstring header, const xstring focus_item_id);
     void sub_menu_init();
-    void item_update_text(pcstr path, pcstr text);
     xstring menu_handle_mouse(const mouse *m, menu_header *menu, xstring &focus_item_id);
     xstring get_subitem(const mouse *m, menu_header &menu);
     void calculate_menu_dimensions(menu_header &menu);
