@@ -37,6 +37,24 @@ game_languages = [
       { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:true, line_height:12 }
     ]
   }
+  {
+    lang:"ru_f", caption:"Russian (Fargus)", key:"russian_fargus",
+    base_table:"localization_base_ru_f", table:"localization_ru_f", message_table:"eventmsg_ru_f", game_messages:"game_messages_ru_f"
+    symbols:"А,Б,В,Г,Д,Е,Ж,З,И,Й,К,Л,М,Н,О,П,Р,С,Т,У,Ф,Х,Ц,Ч,Ш,Щ,Ъ,Ы,Ь,Э,Ю,Я,а,б,в,г,д,е,ж,з,и,й,к,л,м,н,о,п,р,с,т,у,ф,х,ц,ч,ш,щ,ъ,ы,ь,э,ю,я"
+    font:"data/neucha.ttf"
+    font_configs [
+      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true, line_height:14 },
+      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true, line_height:14 },
+      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true, line_height:14 },
+      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:true, line_height:12 }
+    ]
+  }
   { 
     lang:"de", caption:"German", key:"german",
     base_table:"localization_base_de", table:"localization_de", message_table:"eventmsg_de", game_messages:"game_messages_de"
