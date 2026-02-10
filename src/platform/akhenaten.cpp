@@ -28,6 +28,7 @@
 #include "window/autoconfig_window.h"
 #include "graphics/imagepak_holder.h"
 #include "game/mission.h"
+#include "core/cstring.h"
 #include "renderer.h"
 
 #include <SDL.h>
@@ -173,6 +174,8 @@ static void setup() {
         exit(-1);
     }
 
+    initialize_frame_string_allocator();
+
 #ifdef PLATFORM_ENABLE_INIT_CALLBACK
     platform_init_callback();
 #endif
@@ -295,6 +298,7 @@ static void teardown() {
 static void run_and_draw() {
     OZZY_PROFILER_BEGIN_FRAME();
     js_vm_frame_begin();
+    reset_frame_string_allocator();
 
     time_millis time_before_run = SDL_GetTicks();
     time_set_millis(time_before_run);
