@@ -80,7 +80,6 @@ void game_settings::load_settings(buffer* buf) {
     buf->skip(8); // ram
     display_size.x = buf->read_i32();
     display_size.y = buf->read_i32();
-    display_size = {0, 0};
 
     buf->skip(8); // int max_confirmed_resolution;
     for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
