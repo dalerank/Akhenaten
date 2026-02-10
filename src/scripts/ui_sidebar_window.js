@@ -84,7 +84,11 @@ sidebar_window_expanded {
         background     : image({pos[0, 30], pack:PACK_GENERAL, id:121})
         build_image    : image({pos[11, 211]})
 
-        show_overlays  : link({pos[4, 30], size[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW })
+        show_overlays  : link({
+                            pos[4, 30], size[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW
+                            onclick: ui.window_overlay_menu_show
+                            onrclick: window_city_overlays_right_click
+                         })
         collapse       : image_button({pos[128, 30], pack:PACK_GENERAL, id:110, offset:7, tooltip:[68, 10]})
 
         show_advisors  : advisor_button({pos[16, 173], pack:PACK_GENERAL, id:136, offset:64, tooltip:[68, 41], onclick: window_advisors_show_checked })
@@ -107,9 +111,24 @@ sidebar_window_expanded {
         build_security : image_button({pos[125, 381], pack:PACK_GENERAL, id:136, offset:44, tooltip:[68, 31]})
 
         show_messages  : image_button({pos[46, 434], pack:PACK_GENERAL, id:136, offset:52, tooltip:[68,33]})
-        goto_problem     : image_button({pos[86, 434], pack:PACK_GENERAL, id:136, offset:56, tooltip:[68,34]})
+        goto_problem   : image_button({
+                            pos[86, 434], pack:PACK_GENERAL, id:136, offset:56, tooltip:[68,34]
+                            onclick: window_city_show_problem_area
+                         })
         show_briefing  : image_button({pos[116, 434], pack:PACK_GENERAL, id:136, offset:60, tooltip:[68,35]})
         num_messages   : text({pos[52, 450], shadow:0xff000000, font:FONT_NORMAL_BLACK_ON_DARK, color:0xffffffff })
         undo_btn       : image_button({pos[9, 434], pack:PACK_GENERAL, id:136, offset:48, tooltip:[68,32]})
     }
+}
+
+function window_city_show_problem_area() {
+    var tile = __city_message_next_problem_area_grid_offset()
+    if (tile.x >= 0 && tile.y >= 0) {
+        city.camera_go_to(tile)
+        ui.window_city_show()
+    }
+}
+
+function window_city_overlays_right_click() {
+    ui.window_message_dialog_show("message_overlay_selector")
 }

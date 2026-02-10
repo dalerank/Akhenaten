@@ -55,6 +55,7 @@ ui.line = function(hline, pos, size) {
 
 ui.window_city_show = __ui_window_city_show
 ui.window_message_dialog_show = __ui_window_message_dialog_show
+ui.window_overlay_menu_show = __ui_window_overlay_menu_show
 
 function ui_create_element_proxy(elementId) {
     return {

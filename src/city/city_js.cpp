@@ -2,6 +2,7 @@
 
 #include "io/gamefiles/lang.h"
 #include "city/city.h"
+#include "city/city_message.h"
 #include "city/city_building_menu_ctrl.h"
 
 pcstr __city_rank_title(int rank) { return lang_get_string(52, rank + 4); }
@@ -43,12 +44,15 @@ ANK_FUNCTION_1(__city_get_labor_property)
 
 void __city_camera_go_to(tile2i tile) { camera_go_to_mappoint(tile); } ANK_FUNCTION_1(__city_camera_go_to)
 
-void js_register_city_objects(js_State *J) {
-}
-
 e_resource __city_allowed_foods(int index) { return g_city.allowed_foods(index); }
 ANK_FUNCTION_1(__city_allowed_foods)
 
 int __city_rating_culture() { return g_city.ratings.culture; } ANK_FUNCTION(__city_rating_culture)
 int __city_rating_prosperity() { return g_city.ratings.prosperity; } ANK_FUNCTION(__city_rating_prosperity)
 int __city_rating_monument() { return g_city.ratings.monument; } ANK_FUNCTION(__city_rating_monument)
+
+tile2i __city_message_next_problem_area_grid_offset() { return tile2i(city_message_next_problem_area_grid_offset()); } ANK_FUNCTION(__city_message_next_problem_area_grid_offset)
+
+
+void js_register_city_objects(js_State *J) {
+}
