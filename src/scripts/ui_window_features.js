@@ -24,16 +24,16 @@ window_features = {
 
         bfeature2     : button({pos:wposbtn(2), size:[23, 23]})
         tfeature2     : text({pos:wpostxt(2) })
-        
+
         bfeature3     : button({pos:wposbtn(3), size:[23, 23]})
         tfeature3     : text({pos:wpostxt(3) })
-        
+
         bfeature4     : button({pos:wposbtn(4), size:[23, 23]})
         tfeature4     : text({pos:wpostxt(4) })
-        
+
         bfeature5     : button({pos:wposbtn(5), size:[23, 23]})
         tfeature5     : text({pos:wpostxt(5) })
-        
+
         bfeature6     : button({pos:wposbtn(6), size:[23, 23]})
         tfeature6     : text({pos:wpostxt(6) })
 

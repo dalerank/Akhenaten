@@ -23,7 +23,7 @@ figure_trader_info_window {
 
         button_help: help_button({})
         button_close: close_button({})
-        
+
         show_path: button({ margin{right: -64, bottom: -40}, size[23, 23] })
     }
 }

@@ -35,7 +35,7 @@ empire_window {
         city_sell_title      : text({text[47, 11], margin{centerx:250, bottom:-120}, font: FONT_NORMAL_BLACK_ON_LIGHT })
         city_sell_items      : dummy({pos[0, 100], size[200, 0], margin{centerx:100, bottom:-90}})
         city_sell_item       : dummy({size[120, 20], font:FONT_SMALL_PLAIN})
-    
+
         city_buy_title       : text({text[47, 10], margin{centerx:-300, bottom:-120}, font: FONT_NORMAL_BLACK_ON_LIGHT })
         city_buy_items       : dummy({pos[0, 0], size[200, 0], margin{centerx:-430, bottom:-90}})
         city_buy_item        : dummy({size[120, 20], font:FONT_SMALL_PLAIN})
@@ -51,14 +51,14 @@ empire_window {
 }
 
 [event=empire_window_draw]
-function empire_window_draw_distant_battle_icon(window) {    
+function empire_window_draw_distant_battle_icon(window) {
     if (!empire.has_distant_battle) {
         return
     }
 
     var ecity = empire.get_city(empire.active_battle.city)
     if (!ecity) {
-        return 
+        return
     }
 
     var battle_icon = get_image("pharaoh_general/empire_bits_00001")
@@ -69,7 +69,7 @@ function empire_window_draw_distant_battle_icon(window) {
     var battle_icon_pos = vec2i(window.draw_offset)
                             .add(ecity.empire_object.pos)
                             .add({x:-battle_icon.width / 2, y:-battle_icon.height / 2})
-                            
+
     ui.image(battle_icon, battle_icon_pos)
 }
 
@@ -78,7 +78,7 @@ function empire_window_draw_dispatched_army_icon(window) {
     if (empire.dispatched_army.state <= 0) {
         return
     }
-    
+
     var army_icon = get_image("pharaoh_general/empire_bits_00009")
     if (!army_icon) {
         return
@@ -87,6 +87,6 @@ function empire_window_draw_dispatched_army_icon(window) {
     var army_icon_pos = vec2i(window.draw_offset)
                             .add(empire.dispatched_army.pos)
                             .add({x:-army_icon.width / 2, y:-army_icon.height / 2})
-                            
+
     ui.image(army_icon, army_icon_pos)
 }

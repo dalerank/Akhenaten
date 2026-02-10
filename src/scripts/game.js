@@ -14,7 +14,7 @@ game {
     @debug_render_mode { get: __game_debug_render_mode, set: __game_set_debug_render_mode }
     @game_speed { set: __game_set_game_speed }
     @scroll_speed { set: __game_set_scroll_speed }
-    
+
     screen {
         @w { get: __game_screen_width }
         @h { get: __game_screen_height }

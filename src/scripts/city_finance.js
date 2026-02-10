@@ -37,9 +37,9 @@ city.finance = {
     last_year {
         __property_getter: function(property) { return __city_finance_overview(property, false) }
 
-        income { 
+        income {
             __property_getter: function(property) { return __city_finance_income(property, false) }
-            
+
             @taxes { }
             @exports { }
             @donated { }
