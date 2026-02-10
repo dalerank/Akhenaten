@@ -24,7 +24,6 @@ struct top_menu_widget_t : autoconfig_window {
     int item_height;
     int spacing;
     int sidebar_offset;
-    image_desc background;
 
     ui::widget headers;
 
@@ -55,4 +54,4 @@ struct top_menu_widget_t : autoconfig_window {
     void menu_item_update(pcstr header, int item, pcstr text);
 };
 ANK_CONFIG_STRUCT(top_menu_widget_t,
-    headers, offset, item_height, background, spacing, offset_rotate_basic, sidebar_offset)
+    headers, offset, item_height, spacing, offset_rotate_basic, sidebar_offset)
