@@ -6,7 +6,7 @@ display_options_window {
     ui {
         background  : outer_panel({size[24, 21] })
         title       : header({pos[10, 10], size[px(24), 20], text:"${42.0}", align:"center"})
-        
+
         btnfullscreen : button({pos[16, 46], size[224, 20] })
         videodriver : text({pos[px(24)/2 + 60, 50]})
 
@@ -15,5 +15,5 @@ display_options_window {
         save_changes: text({margin{left:px(24)/2 - 80, bottom:-35}, text[43, 5]})
         btnok       : ok_button({margin{left:px(24)/2 + 10, bottom:-40}})
         btncancel   : cancel_button({margin{left:px(24)/2 + 60, bottom:-40}})
-    } 
+    }
 }

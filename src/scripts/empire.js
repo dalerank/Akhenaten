@@ -6,11 +6,11 @@ empire_city_options {
 }
 
 empire_traders {
-    ship_movement_delay [2, 5]       
+    ship_movement_delay [2, 5]
     land_movement_delay [1, 4]
 }
 
-empire {  
+empire {
     @has_distant_battle { get: __empire_has_distant_battle }
     active_battle {
         __property_getter: function(property) { return __game_get_active_battle_property(property) }
@@ -36,8 +36,8 @@ empire {
 
 empire.get_city_object = function(city_id) {
     return {
-        city_id: city_id        
-        __property_getter: function(property) { return __empire_get_city_object_property(this.city_id, property) }        
+        city_id: city_id
+        __property_getter: function(property) { return __empire_get_city_object_property(this.city_id, property) }
         @id {}
         @pos {}
         @type {}
@@ -46,7 +46,7 @@ empire.get_city_object = function(city_id) {
 
 empire.get_city = function(city_id) {
     return {
-        city_id: city_id        
+        city_id: city_id
         @empire_object { get: function() { return empire.get_city_object(this.city_id) } }
     }
 }

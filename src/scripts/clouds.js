@@ -11,5 +11,5 @@ clouds_config {
     cloud_scale : 12
     cloud_min_creation_timeout : 200
     cloud_max_creation_timeout : 2400
-    pause_min_frames : 2 
+    pause_min_frames : 2
 }
