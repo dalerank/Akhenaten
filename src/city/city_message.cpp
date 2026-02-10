@@ -433,7 +433,7 @@ int city_message_problem_area_count() {
     return data.problem_count;
 }
 
-static int has_problem_area(const city_message* msg, int lang_msg_type) {
+int has_problem_area(const city_message* msg, int lang_msg_type) {
     if (lang_msg_type == MESSAGE_TYPE_DISASTER)
         return 1;
 

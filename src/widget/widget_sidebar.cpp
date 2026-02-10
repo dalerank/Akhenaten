@@ -101,14 +101,6 @@ void ui::sidebar_window_expanded_t::subscribe_events() {
 }
 
 void ui::sidebar_window_expanded_t::init_ui() {
-    ui["goto_problem"].onclick([] {
-        int grid_offset = city_message_next_problem_area_grid_offset();
-        if (grid_offset) {
-            camera_go_to_mappoint(tile2i(grid_offset));
-            window_city_show();
-        }
-    });
-
     for (const auto &btn : button_ids) {
         ui[btn.id].onclick([this, type = btn.type] {
             this->opened_menu = type;
@@ -129,10 +121,6 @@ void ui::sidebar_window_expanded_t::init_ui() {
     ui["show_briefing"].onclick([] { 
         mission_briefing_window::mission_review();
     });
-
-    ui["show_overlays"]
-        .onclick([] { window_overlay_menu_show(); })
-        .onrclick([] { window_message_dialog_show("message_overlay_selector", -1, window_city_draw_all); });
 
     ui["collapse"].onclick([this] { collapse(); });
 }
