@@ -51,7 +51,6 @@ struct sidebar_window_expanded_t : public autoconfig_window {
     void init_ui();
     void subscribe_events();
 
-    void refresh_build_menu_buttons();
     void expand();
     void collapse();
 

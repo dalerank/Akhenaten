@@ -58,6 +58,7 @@ ui.window_message_dialog_show = __ui_window_message_dialog_show
 ui.window_overlay_menu_show = __ui_window_overlay_menu_show
 ui.window_build_menu_show = __ui_window_build_menu_show
 ui.sidebar_set_type = __ui_widget_sidebar_set_type
+ui.building_menu_items = __ui_building_menu_items
 
 function ui_create_element_proxy(elementId) {
     return {
@@ -85,6 +86,11 @@ function ui_create_element_proxy(elementId) {
 
         @image {
             set: function(v) { __ui_element_set_image(this.id, v) }
+        }
+
+        @selected {
+            get: function() { return __ui_element_get_selected(this.id) }
+            set: function(v) { __ui_element_set_selected(this.id, v) }
         }
     }
 }

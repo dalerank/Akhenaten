@@ -8,6 +8,7 @@
 #include "window/window_build_menu.h"
 #include "window/message_dialog_new.h"
 #include "city/city_message.h"
+#include "city/city_building_menu_ctrl.h"
 #include "graphics/graphics.h"
 #include "game/game.h"
 
@@ -95,11 +96,25 @@ void __ui_element_set_image(pcstr element_id, int v) {
 }
 ANK_FUNCTION_2(__ui_element_set_image)
 
+bool __ui_element_get_selected(pcstr element_id) {
+    auto elem = __ui_get_element(element_id);
+    return elem ? elem->selected() : false;
+}
+ANK_FUNCTION_1(__ui_element_get_selected)
+
+void __ui_element_set_selected(pcstr element_id, bool v) {
+    auto elem = __ui_get_element(element_id);
+    if (elem) { elem->select(v); }
+}
+ANK_FUNCTION_2(__ui_element_set_selected)
+
 void __ui_element_set_text_color(pcstr element_id, unsigned int v) {
     auto elem = __ui_get_element(element_id);
     if (elem) { elem->text_color((color)v); }
 }
 ANK_FUNCTION_2(__ui_element_set_text_color)
+
+int __ui_building_menu_items(int type) { return g_building_menu_ctrl.count_items(type); } ANK_FUNCTION_1(__ui_building_menu_items)
 
 void __ui_window_message_dialog_show(pcstr template_name) { window_message_dialog_show(template_name, -1, nullptr); }
 ANK_FUNCTION_1(__ui_window_message_dialog_show)

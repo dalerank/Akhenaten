@@ -47,21 +47,57 @@ sidebar_window_collapsed {
         background     : image({pos[0, 30], pack:PACK_GENERAL, id:121, offset:1})
         expand         : image_button({pos[8, 30], pack:PACK_GENERAL, id:110, offset:10, tooltip:[68, 12]})
 
-        build_house    : image_button({pos[9, 21+30], pack:PACK_GENERAL, id:108, offset:0, tooltip:[68, 20]})
-        build_road     : image_button({pos[9, 21+66], pack:PACK_GENERAL, id:108, offset:4, tooltip:[68, 21]})
-        clear_land     : image_button({pos[9, 122], pack:PACK_GENERAL, id:108, offset:8, tooltip:[68, 22]})
+        build_house    : image_button({
+                            pos[9, 21+30], pack:PACK_GENERAL, id:108, offset:0, tooltip:[68, 20],
+                            onclick: window_build_menu_build_house
+                         })
+        build_road     : image_button({
+                            pos[9, 21+66], pack:PACK_GENERAL, id:108, offset:4, tooltip:[68, 21],
+                            onclick: window_build_menu_build_road
+                         })
+        clear_land     : image_button({
+                            pos[9, 122], pack:PACK_GENERAL, id:108, offset:8, tooltip:[68, 22],
+                            onclick: window_build_menu_clear_land
+                         })
 
-        build_food     : image_button({pos[9, 159], pack:PACK_GENERAL, id:108, offset:12, tooltip:[68, 23]})
-        build_industry : image_button({pos[9, 193], pack:PACK_GENERAL, id:108, offset:16, tooltip:[68, 24]})
-        build_distribution : image_button({pos[9, 228], pack:PACK_GENERAL, id:108, offset:20, tooltip:[68, 25]})
+        build_food     : image_button({
+                            pos[9, 159], pack:PACK_GENERAL, id:108, offset:12, tooltip:[68, 23],
+                            onclick: window_build_menu_build_food
+                         })
+        build_industry : image_button({
+                            pos[9, 193], pack:PACK_GENERAL, id:108, offset:16, tooltip:[68, 24],
+                            onclick: window_build_menu_build_industry
+                         })
+        build_distribution : image_button({
+                            pos[9, 228], pack:PACK_GENERAL, id:108, offset:20, tooltip:[68, 25],
+                            onclick: window_build_menu_build_distribution
+                         })
 
-        build_entertainment: image_button({pos[9, 263], pack:PACK_GENERAL, id:108, offset:24, tooltip:[68, 26]})
-        build_religion : image_button({pos[9, 296], pack:PACK_GENERAL, id:108, offset:28, tooltip:[68, 27]})
-        build_education: image_button({pos[9, 332], pack:PACK_GENERAL, id:108, offset:32, tooltip:[68, 28]})
+        build_entertainment: image_button({
+                            pos[9, 263], pack:PACK_GENERAL, id:108, offset:24, tooltip:[68, 26],
+                            onclick: window_build_menu_build_entertainment
+                         })
+        build_religion : image_button({
+                            pos[9, 296], pack:PACK_GENERAL, id:108, offset:28, tooltip:[68, 27],
+                            onclick: window_build_menu_build_religion
+                         })
+        build_education: image_button({
+                            pos[9, 332], pack:PACK_GENERAL, id:108, offset:32, tooltip:[68, 28],
+                            onclick: window_build_menu_build_education
+                         })
 
-        build_health   : image_button({pos[9, 368], pack:PACK_GENERAL, id:108, offset:36, tooltip:[68, 29]})
-        build_admin    : image_button({pos[9, 404], pack:PACK_GENERAL, id:108, offset:40, tooltip:[68, 30]})
-        build_security : image_button({pos[9, 436], pack:PACK_GENERAL, id:108, offset:44, tooltip:[68, 31]})
+        build_health   : image_button({
+                            pos[9, 368], pack:PACK_GENERAL, id:108, offset:36, tooltip:[68, 29],
+                            onclick: window_build_menu_build_health
+                         })
+        build_admin    : image_button({
+                            pos[9, 404], pack:PACK_GENERAL, id:108, offset:40, tooltip:[68, 30],
+                            onclick: window_build_menu_build_admin
+                         })
+        build_security : image_button({
+                            pos[9, 436], pack:PACK_GENERAL, id:108, offset:44, tooltip:[68, 31],
+                            onclick: window_build_menu_build_security
+                         })
     }
 }
 
@@ -98,20 +134,53 @@ sidebar_window_expanded {
                             pos[9, 281], pack:PACK_GENERAL, id:136, offset:0, tooltip:[68, 20]
                             onclick: window_build_menu_build_house
                          })
-        build_road     : image_button({pos[9, 330], pack:PACK_GENERAL, id:136, offset:4, tooltip:[68, 21]})
-        clear_land     : image_button({pos[9, 381], pack:PACK_GENERAL, id:136, offset:8, tooltip:[68, 22]})
+        build_road     : image_button({
+                            pos[9, 330], pack:PACK_GENERAL, id:136, offset:4, tooltip:[68, 21],
+                            onclick: window_build_menu_build_road
+                         })
+        clear_land     : image_button({
+                            pos[9, 381], pack:PACK_GENERAL, id:136, offset:8, tooltip:[68, 22],
+                            onclick: window_build_menu_clear_land
+                         })
 
-        build_food     : image_button({pos[46, 281], pack:PACK_GENERAL, id:136, offset:12, tooltip:[68, 23]})
-        build_industry : image_button({pos[46, 330], pack:PACK_GENERAL, id:136, offset:16, tooltip:[68, 24]})
-        build_distribution : image_button({pos[46, 381], pack:PACK_GENERAL, id:136, offset:20, tooltip:[68, 25]})
+        build_food     : image_button({
+                            pos[46, 281], pack:PACK_GENERAL, id:136, offset:12, tooltip:[68, 23],
+                            onclick: window_build_menu_build_food
+                         })
+        build_industry : image_button({
+                            pos[46, 330], pack:PACK_GENERAL, id:136, offset:16, tooltip:[68, 24],
+                            onclick: window_build_menu_build_industry
+                         })
+        build_distribution : image_button({
+                            pos[46, 381], pack:PACK_GENERAL, id:136, offset:20, tooltip:[68, 25],
+                            onclick: window_build_menu_build_distribution
+                         })
 
-        build_entertainment: image_button({pos[86, 281], pack:PACK_GENERAL, id:136, offset:24, tooltip:[68, 26]})
-        build_religion : image_button({pos[86, 330], pack:PACK_GENERAL, id:136, offset:28, tooltip:[68, 27]})
-        build_education: image_button({pos[86, 381], pack:PACK_GENERAL, id:136, offset:32, tooltip:[68, 28]})
+        build_entertainment: image_button({
+                            pos[86, 281], pack:PACK_GENERAL, id:136, offset:24, tooltip:[68, 26],
+                            onclick: window_build_menu_build_entertainment
+                         })
+        build_religion : image_button({
+                            pos[86, 330], pack:PACK_GENERAL, id:136, offset:28, tooltip:[68, 27],
+                            onclick: window_build_menu_build_religion
+                         })
+        build_education: image_button({
+                            pos[86, 381], pack:PACK_GENERAL, id:136, offset:32, tooltip:[68, 28],
+                            onclick: window_build_menu_build_education
+                         })
 
-        build_health   : image_button({pos[125, 281], pack:PACK_GENERAL, id:136, offset:36, tooltip:[68, 29]})
-        build_admin    : image_button({pos[125, 330], pack:PACK_GENERAL, id:136, offset:40, tooltip:[68, 30]})
-        build_security : image_button({pos[125, 381], pack:PACK_GENERAL, id:136, offset:44, tooltip:[68, 31]})
+        build_health   : image_button({
+                            pos[125, 281], pack:PACK_GENERAL, id:136, offset:36, tooltip:[68, 29],
+                            onclick: window_build_menu_build_health
+                         })
+        build_admin    : image_button({
+                            pos[125, 330], pack:PACK_GENERAL, id:136, offset:40, tooltip:[68, 30],
+                            onclick: window_build_menu_build_admin
+                         })
+        build_security : image_button({
+                            pos[125, 381], pack:PACK_GENERAL, id:136, offset:44, tooltip:[68, 31],
+                            onclick: window_build_menu_build_security
+                         })
 
         show_messages  : image_button({pos[46, 434], pack:PACK_GENERAL, id:136, offset:52, tooltip:[68,33]})
         goto_problem   : image_button({
@@ -122,6 +191,45 @@ sidebar_window_expanded {
         num_messages   : text({pos[52, 450], shadow:0xff000000, font:FONT_NORMAL_BLACK_ON_DARK, color:0xffffffff })
         undo_btn       : image_button({pos[9, 434], pack:PACK_GENERAL, id:136, offset:48, tooltip:[68,32]})
     }
+}
+
+[es=sidebar_window_draw]
+function window_build_menu_on_draw(window) {
+    window.build_house.readonly = (ui.building_menu_items(BUILDING_MENU_VACANT_HOUSE) == 0)
+    window.build_house.selected = (BUILDING_MENU_VACANT_HOUSE == window.opened_menu)
+
+    window.build_road.readonly = (ui.building_menu_items(BUILDING_MENU_ROAD) == 0)
+    window.build_road.selected = (BUILDING_MENU_ROAD == window.opened_menu)
+
+    window.clear_land.readonly = (ui.building_menu_items(BUILDING_MENU_CLEAR_LAND) == 0)
+    window.clear_land.selected = (BUILDING_MENU_CLEAR_LAND == window.opened_menu)
+
+    window.build_food.readonly = (ui.building_menu_items(BUILDING_MENU_FOOD) == 0)
+    window.build_food.selected = (BUILDING_MENU_FOOD == window.opened_menu)
+
+    window.build_industry.readonly = (ui.building_menu_items(BUILDING_MENU_INDUSTRY) == 0)
+    window.build_industry.selected = (BUILDING_MENU_INDUSTRY == window.opened_menu)
+
+    window.build_distribution.readonly = (ui.building_menu_items(BUILDING_MENU_DISTRIBUTION) == 0)
+    window.build_distribution.selected = (BUILDING_MENU_DISTRIBUTION == window.opened_menu)
+
+    window.build_entertainment.readonly = (ui.building_menu_items(BUILDING_MENU_ENTERTAINMENT) == 0)
+    window.build_entertainment.selected = (BUILDING_MENU_ENTERTAINMENT == window.opened_menu)
+
+    window.build_religion.readonly = (ui.building_menu_items(BUILDING_MENU_RELIGION) == 0)
+    window.build_religion.selected = (BUILDING_MENU_RELIGION == window.opened_menu)
+
+    window.build_education.readonly = (ui.building_menu_items(BUILDING_MENU_EDUCATION) == 0)
+    window.build_education.selected = (BUILDING_MENU_EDUCATION == window.opened_menu)
+
+    window.build_health.readonly = (ui.building_menu_items(BUILDING_MENU_HEALTH) == 0)
+    window.build_health.selected = (BUILDING_MENU_HEALTH == window.opened_menu)
+
+    window.build_admin.readonly = (ui.building_menu_items(BUILDING_MENU_ADMINISTRATION) == 0)
+    window.build_admin.selected = (BUILDING_MENU_ADMINISTRATION == window.opened_menu)
+
+    window.build_security.readonly = (ui.building_menu_items(BUILDING_MENU_SECURITY) == 0)
+    window.build_security.selected = (BUILDING_MENU_SECURITY == window.opened_menu)
 }
 
 function window_city_show_problem_area() {
@@ -139,4 +247,59 @@ function window_build_menu_build_house() {
 
 function window_city_overlays_right_click() {
     ui.window_message_dialog_show("message_overlay_selector")
+}
+
+function window_build_menu_build_road() {
+    ui.sidebar_set_type(BUILDING_MENU_ROAD)
+    ui.window_build_menu_show(BUILDING_MENU_ROAD)
+}
+
+function window_build_menu_clear_land() {
+    ui.sidebar_set_type(BUILDING_MENU_CLEAR_LAND)
+    ui.window_build_menu_show(BUILDING_MENU_CLEAR_LAND)
+}
+
+function window_build_menu_build_food() {
+    ui.sidebar_set_type(BUILDING_MENU_FOOD)
+    ui.window_build_menu_show(BUILDING_MENU_FOOD)
+}
+
+function window_build_menu_build_industry() {
+    ui.sidebar_set_type(BUILDING_MENU_INDUSTRY)
+    ui.window_build_menu_show(BUILDING_MENU_INDUSTRY)
+}
+
+function window_build_menu_build_distribution() {
+    ui.sidebar_set_type(BUILDING_MENU_DISTRIBUTION)
+    ui.window_build_menu_show(BUILDING_MENU_DISTRIBUTION)
+}
+
+function window_build_menu_build_entertainment() {
+    ui.sidebar_set_type(BUILDING_MENU_ENTERTAINMENT)
+    ui.window_build_menu_show(BUILDING_MENU_ENTERTAINMENT)
+}
+
+function window_build_menu_build_religion() {
+    ui.sidebar_set_type(BUILDING_MENU_RELIGION)
+    ui.window_build_menu_show(BUILDING_MENU_RELIGION)
+}
+
+function window_build_menu_build_education() {
+    ui.sidebar_set_type(BUILDING_MENU_EDUCATION)
+    ui.window_build_menu_show(BUILDING_MENU_EDUCATION)
+}
+
+function window_build_menu_build_health() {
+    ui.sidebar_set_type(BUILDING_MENU_HEALTH)
+    ui.window_build_menu_show(BUILDING_MENU_HEALTH)
+}
+
+function window_build_menu_build_admin() {
+    ui.sidebar_set_type(BUILDING_MENU_ADMINISTRATION)
+    ui.window_build_menu_show(BUILDING_MENU_ADMINISTRATION)
+}
+
+function window_build_menu_build_security() {
+    ui.sidebar_set_type(BUILDING_MENU_SECURITY)
+    ui.window_build_menu_show(BUILDING_MENU_SECURITY)
 }

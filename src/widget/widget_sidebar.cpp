@@ -34,6 +34,8 @@
 #include "game/game.h"
 
 #include "js/js_game.h"
+#include "js/js_struct.h"
+#include "graphics/elements/ui_js.h"
 
 #define MINIMAP_Y_OFFSET 59
 
@@ -42,19 +44,9 @@ struct btnid {
     e_building_type type;
 };
 
-const btnid button_ids[] = {
-    {"build_road", BUILDING_MENU_ROAD},
-    {"clear_land", BUILDING_MENU_CLEAR_LAND},
-    {"build_food", BUILDING_MENU_FOOD},
-    {"build_industry", BUILDING_MENU_INDUSTRY},
-    {"build_distribution", BUILDING_MENU_DISTRIBUTION},
-    {"build_entertainment", BUILDING_MENU_ENTERTAINMENT},
-    {"build_religion", BUILDING_MENU_RELIGION},
-    {"build_education", BUILDING_MENU_EDUCATION},
-    {"build_health", BUILDING_MENU_HEALTH},
-    {"build_security", BUILDING_MENU_SECURITY},
-    {"build_admin", BUILDING_MENU_ADMINISTRATION },
-};
+
+struct sidebar_window_draw { vec2i pos; int opened_menu; };
+ANK_REGISTER_STRUCT_WRITER(sidebar_window_draw, pos, opened_menu);
 
 ui::sidebar_window_expanded_t ANK_VARIABLE(sidebar_window_expanded);
 ui::sidebar_window_collapsed_t ANK_VARIABLE(sidebar_window_collapsed);
@@ -65,12 +57,6 @@ void ui::sidebar_window_expanded_t::draw_sidebar_extra(vec2i offset) {
     int extra_height = sidebar_extra_draw(offset);
     int relief_y_offset = SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT + extra_height;
     sidebar_common_draw_relief({ x_offset, relief_y_offset }, relief_block);
-}
-
-void ui::sidebar_window_expanded_t::refresh_build_menu_buttons() {
-    for (const auto &btn: button_ids) {
-        ui[btn.id].readonly = (g_building_menu_ctrl.count_items(btn.type) == 0);
-    }
 }
 
 void ui::sidebar_window_expanded_t::archive_load(archive arch) {
@@ -100,13 +86,6 @@ void ui::sidebar_window_expanded_t::subscribe_events() {
 }
 
 void ui::sidebar_window_expanded_t::init_ui() {
-    for (const auto &btn : button_ids) {
-        ui[btn.id].onclick([this, type = btn.type] {
-            this->opened_menu = type;
-            window_build_menu_show(type);
-        });
-    }
-
     ui["build_image"].image(def_image);
     ui["undo_btn"].onclick([] {
         game_undo_perform();
@@ -146,6 +125,8 @@ void ui::sidebar_window_expanded_t::expand() {
 void ui::sidebar_window_expanded_t::ui_draw_foreground(UiFlags flags) {
     OZZY_PROFILER_FUNCTION();
 
+    ui.event(sidebar_window_draw{ pos, opened_menu });
+
     x_offset = screen_width();
     slider.update(x_offset, expanded_offset_x, [this] {
         city_view_toggle_sidebar(slider.slide_mode == slider.e_slide_collapse);
@@ -153,11 +134,6 @@ void ui::sidebar_window_expanded_t::ui_draw_foreground(UiFlags flags) {
 
     if (!window_build_menu_selected()) {
         opened_menu = 0;
-    }
-
-    for (const auto &btn : button_ids) {
-        ui[btn.id].readonly = (g_building_menu_ctrl.count_items(btn.type) == 0);
-        ui[btn.id].select(btn.type == opened_menu);
     }
 
     ui.pos.x = x_offset;
@@ -198,12 +174,6 @@ void ui::sidebar_window_collapsed_t::collapse() {
     g_sound.play_effect(SOUND_EFFECT_SIDEBAR);
 }
 
-void ui::sidebar_window_collapsed_t::refresh_build_menu_buttons() {
-    for (const auto &btn : button_ids) {
-        ui[btn.id].readonly = (g_building_menu_ctrl.count_items(btn.type) == 0);
-    }
-}
-
 void ui::sidebar_window_collapsed_t::expand() {
     city_view_start_sidebar_toggle();
     city_view_toggle_sidebar(false);
@@ -231,16 +201,6 @@ void ui::sidebar_window_collapsed_t::init() {
         speed_clear(slider.slide_speed);
         speed_set_target(slider.slide_speed, slider.slide_speed_x, slider.slide_acceleration_millis, 1);
         g_sound.play_effect(SOUND_EFFECT_SIDEBAR);
-    });
-
-    for (const auto &btn : button_ids) {
-        ui[btn.id].onclick([type = btn.type] {
-            window_build_menu_show(type);
-        });
-    }
-
-    events::subscribe([this] (event_building_menu_changed ev) {
-        refresh_build_menu_buttons();
     });
 
     widget_minimap_init();
