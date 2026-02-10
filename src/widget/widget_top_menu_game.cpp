@@ -47,8 +47,10 @@ static void button_rotate_right(int param1, int param2);
 
 struct top_menu_widget_init { vec2i pos; };
 struct top_menu_widget_draw { vec2i pos; };
+struct top_menu_widget_background_draw { vec2i pos;  };
 ANK_REGISTER_STRUCT_WRITER(top_menu_widget_init, pos);
 ANK_REGISTER_STRUCT_WRITER(top_menu_widget_draw, pos);
+ANK_REGISTER_STRUCT_WRITER(top_menu_widget_background_draw, pos);
 
 top_menu_widget_t ANK_VARIABLE(top_menu_widget);
 
@@ -238,24 +240,6 @@ xstring top_menu_widget_t::menu_handle_mouse(const mouse* m, menu_header* menu, 
     return item_id;
 }
 
-std::pair<bstring64, bstring64> split_string(pcstr input) {
-    std::pair<bstring64, bstring64> result;
-    pcstr pos = strstr(input, "/");
-    if (pos) {
-        result.first.ncat(input, (pos - input));
-        result.second.cat(pos + 1);
-    }
-
-    return result;
-}
-
-void top_menu_widget_t::item_update_text(pcstr path, pcstr text) {
-    auto pair = split_string(path);
-    auto header = headers[pair.first].dcast_menu_header();
-    auto &item = header->item(pair.second);
-    item.text = text;
-}
-
 void widget_top_menu_clear_state() {
     auto& data = top_menu_widget;
 
@@ -293,21 +277,6 @@ void widget_sub_menu_show() {
     window_show(&window);
 }
 
-void top_menu_widget_t::draw_background_impl() {
-    painter ctx = game.painter();
-
-    int img_id = background.tid();
-    const image_t *img = image_get(img_id);
-    const int block_width = img->width;
-    assert(block_width > 0);
-
-    for (int x = -(screen_width() - widget_sidebar_city_offset_x()); x < screen_width(); x += (block_width - sidebar_offset)) {
-        ctx.img_generic(img_id, { x, 0 });
-    }
-
-    ctx.img_generic(img_id, { widget_sidebar_city_offset_x() - block_width + sidebar_offset, 0 });
-}
-
 void top_menu_widget_t::draw_rotate_buttons() {
     // Orientation icon
     painter ctx = game.painter();
@@ -322,7 +291,7 @@ void top_menu_widget_t::draw_rotate_buttons() {
 void top_menu_widget_t::draw_foreground(UiFlags flags) {
     OZZY_PROFILER_FUNCTION();
 
-    draw_background_impl();
+    ui.event(top_menu_widget_background_draw{ pos });
     draw_elements_impl();
     draw_rotate_buttons();
 

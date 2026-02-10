@@ -71,7 +71,7 @@ void js_game_load_text(js_State *J) {
     if (!ftext) {
         return;
     }
-    
+
     js_pushstring(J, ftext->begin());
 }
 
@@ -86,6 +86,21 @@ void js_game_get_image(js_State *J) {
         pcstr path = js_tostring(J, 1);
         image_desc desc;
         desc.path = path;
+        tid = desc.tid();
+    } else if (js_isobject(J, 1) && !js_isarray(J, 1)) {
+        js_getproperty(J, 1, "pack");
+        int16_t pack = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
+        js_pop(J, 1);
+
+        js_getproperty(J, 1, "id");
+        int16_t id = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
+        js_pop(J, 1);
+
+        js_getproperty(J, 1, "offset");
+        int16_t offset = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
+        js_pop(J, 1);
+
+        image_desc desc{ pack, id, offset };
         tid = desc.tid();
     } else if (js_isnumber(J, 1) || js_iscnumber(J, 1)) {
         int16_t pack = js_touint32(J, 1);

@@ -284,7 +284,7 @@ void widget_sidebar_city_init() {
 }
 
 int widget_sidebar_city_offset_x() {
-    return (city_view_is_sidebar_collapsed())
+    return city_view_is_sidebar_collapsed()
              ? sidebar_window_collapsed.pos.x
              : sidebar_window_expanded.pos.x;
 }
