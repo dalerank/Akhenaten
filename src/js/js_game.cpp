@@ -18,6 +18,7 @@
 #include "graphics/screen.h"
 #include "game/game.h"
 #include "game/mission.h"
+#include "game/game_config.h"
 
 #include "js.h"
 #include "mujs/mujs.h"
@@ -499,9 +500,8 @@ void __game_set_scroll_speed(int v) {
 } ANK_FUNCTION_1(__game_set_scroll_speed)
 
 void __game_commit_scroll_speed() {
-    // Сохраняем текущую скорость прокрутки в akhenaten.cfg немедленно
-    g_args.set_scroll_speed(game.scroll_speed);
-    arguments::store(g_args);
+    game_features::gameopt_scroll_speed.set((float)game.scroll_speed);
+    game_features::save();
 } ANK_FUNCTION(__game_commit_scroll_speed)
 
 std::optional<bvariant> __game_get_property(pcstr property) {

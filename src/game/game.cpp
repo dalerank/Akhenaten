@@ -55,7 +55,6 @@
 #include "grid/tiles.h"
 #include "content/mods.h"
 #include "undo.h"
-#include "platform/arguments.h"
 
 #include "dev/debug.h"
 #include <iostream>
@@ -340,13 +339,7 @@ bool game_t::check_valid() {
     g_scenario.init();
     random_init();
 
-    {
-        int cfg_scroll = g_args.get_scroll_speed();
-        if (cfg_scroll <= 0) {
-            cfg_scroll = 70;
-        }
-        scroll_speed = (uint16_t)calc_bound(cfg_scroll, 0, 100);
-    }
+    scroll_speed = 70;
 
     paused = false;
     mt.reset(4);
