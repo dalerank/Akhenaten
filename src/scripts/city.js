@@ -167,13 +167,17 @@ city.get_figure = function(figure_id) {
 city.get_building = function(building_id) {
     return {
         id: building_id
+        __property_getter: function(property) { return __building_get_property(this.id, property) }
+
         add_fire_damage: function(damage) { __building_add_fire_damage(this.id, damage) }
         add_collapse_damage: function(damage) { __building_add_collapse_damage(this.id, damage) }
         has_figure: function(index) { return __building_has_figure(this.id, index) }
         get_figure: function(index) { return city.get_figure(__building_get_figure_id(this.id, index)) }
-        @has_road_access : { get: function() { return __building_has_road_access(this.id) } }   
-        @worker_percentage : { get: function() { return __building_get_worker_percentage(this.id) } }
-        @num_workers : { get: function() { return __building_get_num_workers(this.id) } }
+        @type { }
+        @num_workers { }
+        @max_workers { }
+        @has_road_access { }
+        @worker_percentage { get: function() { return calc_percentage(this.num_workers, this.max_workers) } }
         @meta_text_id { get: function() { return __building_meta_text_id(this.id) } }
     }
 }
