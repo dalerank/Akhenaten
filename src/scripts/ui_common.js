@@ -56,6 +56,8 @@ ui.line = function(hline, pos, size) {
 ui.window_city_show = __ui_window_city_show
 ui.window_message_dialog_show = __ui_window_message_dialog_show
 ui.window_overlay_menu_show = __ui_window_overlay_menu_show
+ui.window_build_menu_show = __ui_window_build_menu_show
+ui.sidebar_set_type = __ui_widget_sidebar_set_type
 
 function ui_create_element_proxy(elementId) {
     return {
@@ -76,12 +78,12 @@ function ui_create_element_proxy(elementId) {
             set: function(v) { __ui_element_set_font(this.id, v) }
         }
 
-        @text_color { 
+        @text_color {
             get: function() { return __ui_element_get_text_color(this.id) }
             set: function(v) { __ui_element_set_text_color(this.id, v) }
         }
 
-        @image { 
+        @image {
             set: function(v) { __ui_element_set_image(this.id, v) }
         }
     }
