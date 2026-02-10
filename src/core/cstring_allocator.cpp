@@ -23,10 +23,7 @@ class LinearAllocator {
 public:
     explicit LinearAllocator(size_t size)
         : _size(size) {
-        _buffer = static_cast<uint8_t *>(::operator new(size));
-        if (!_buffer) {
-            throw std::bad_alloc();
-        }
+        _buffer = static_cast<uint8_t *>(::operator new(size));        
         _current = _buffer;
     }
     ~LinearAllocator() {
