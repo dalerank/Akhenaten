@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <cstring>
 #include <cctype>
+#include <algorithm>
 
 #include "core/cstring_allocator.h"
 #include "core/crc32.h"
