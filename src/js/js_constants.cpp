@@ -20,7 +20,7 @@ using e_advisor_tokens_t = token_holder<e_advisor, ADVISOR_NONE, ADVISOR_MAX>;
 e_advisor_tokens_t ANK_CONFIG_ENUM(e_advisor_tokens);
 
 js_State *js_vm_state();
-#define _R(name) js_newnumber(J, name); js_setglobal(J, #name);
+#define _R(name) js_pushnumber(J, name); js_setglobal(J, #name);
 void js_register_game_constants(js_State *J) {
     _R(FILE_TYPE_SAVED_GAME)
 
@@ -84,7 +84,7 @@ void js_register_token(int id, pcstr name) {
         return; // skip empty names
     }
     auto J = js_vm_state();
-    js_newnumber(J, id);
+    js_pushnumber(J, id);  // Use js_pushnumber instead of js_newnumber to create primitive number
     js_setglobal(J, name);
 }
 
