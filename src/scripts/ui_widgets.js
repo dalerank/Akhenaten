@@ -139,29 +139,18 @@ granary_orders_window = {
         item_orders_column : dummy({margin:{centerx:0}}),
         item_arrows_column : dummy({margin:{centerx:-36}}),
         item_icon_column : dummy({pos:[25, 0]}),
-        item_row     : dummy({size:[px(13), 20]}),      
-        items_area   : dummy({pos:[0, 50]}), 
+        item_row     : dummy({size:[px(13), 20]}),
+        items_area   : dummy({pos:[0, 50]}),
     }
 }
 
 info_window_vacant_lot = {
     help_id : 128,
     ui : {
-        background   : outer_panel({size: [29, 21] }), 
+        background   : outer_panel({size: [29, 21] }),
         title          : text({pos: [0, 16], text:"${128.0}", size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
         inner_panel  : inner_panel({pos : [16, 40], size: [27, 13] }),
         describe       : text({pos: [36, 114], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(25) }),
-
-        button_close : close_button({}),
-        button_help  : help_button({}),
-    }
-}
-
-info_window_statue {
-    ui {
-        background   : outer_panel({size[29, 17] }), // pos/size setup from code
-        title        : text({pos[0, 16], text:"${building.name}", size[px(28), px(1)], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        warning_text : text({pos[20, 46], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
 
         button_close : close_button({}),
         button_help  : help_button({}),
