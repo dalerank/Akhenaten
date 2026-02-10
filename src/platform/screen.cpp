@@ -133,9 +133,15 @@ int platform_screen_create(const xstring& title, const xstring& renderer, bool f
         SDL_GetDesktopDisplayMode(0, &mode);
         wsize = { mode.w, mode.h };
     } else {
-        wsize = g_settings.display_size;
-        wsize.x = std::max<int>(wsize.x, screen_size.x);
-        wsize.y = std::max<int>(wsize.y, screen_size.y);
+        wsize = screen_size;
+        if (wsize.x <= 0 || wsize.y <= 0) {
+            wsize = g_settings.display_size;
+        }
+        if (wsize.x <= 0 || wsize.y <= 0) {
+            wsize = { 800, 600 };
+        }
+
+        g_settings.display_size = wsize;
 
         wsize.x = scale_logical_to_pixels(wsize.x);
         wsize.y = scale_logical_to_pixels(wsize.y);
@@ -216,6 +222,7 @@ bool platform_screen_resize(int pixel_width, int pixel_height, int save) {
 
     if (save) {
         g_settings.display_size = {logical_width, logical_height};
+        g_args.set_window_size({ logical_width, logical_height });
     }
 
     if (platform_renderer_create_render_texture(logical_width, logical_height)) {
@@ -329,6 +336,7 @@ void platform_screen_set_window_size(int logical_width, int logical_height) {
     }
     g_settings.set_fullscreen(0);
     g_settings.display_size = {pixel_width, pixel_height};
+    g_args.set_window_size({ logical_width, logical_height });
 }
 
 void platform_screen_center_window() {
