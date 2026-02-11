@@ -164,6 +164,11 @@ city.get_figure = function(figure_id) {
     }
 }
 
+city.get_random_building_by_type = function(type) {
+    var building_id = __city_get_random_building_id_by_type(type)
+    return city.get_building(building_id)
+}
+
 city.get_building = function(building_id) {
     return {
         id: building_id

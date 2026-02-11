@@ -33,6 +33,12 @@ public:
 
 class building_stepped_pyramid : public building_pyramid {
 public:
+    struct layer_area {
+        tile2i begin;
+        tile2i end;
+        vec2i size;
+    };
+
     building_stepped_pyramid(building &b) : building_pyramid(b) {}
 
     virtual void on_place(int orientation, int variant) override;
@@ -53,6 +59,8 @@ public:
 
     bool draw_ornaments_and_animations_flat_impl(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
     bool draw_ornaments_and_animations_hight_impl(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
+    void change_parts_types_in_layer(tile2i begin, const vec2i layer_size, uint8_t layer);
+    layer_area get_layer_area(int layer) const;
     int get_bricks_image(int orientation, tile2i tile, tile2i start, tile2i end, int layer);
 
     void update_day(const vec2i tiles_size);

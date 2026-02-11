@@ -120,6 +120,8 @@ mission10 { // Saqqara
 	vars {
 		pharaoh_requested_gamemeat : false
 		pharaoh_requested_pomegranates : false
+		pharaoh_goldmine_collapsed : false
+		pharaoh_trade_highwinds : false
 	}
 }
 
@@ -165,6 +167,36 @@ function mission10_pharaoh_requested1_pomegranates(ev) {
 	}
 
 	mission.pharaoh_requested_pomegranates = true
-	var request = city.create_good_request({ tag_id: 1, resource: RESOURCE_POMEGRANATES, amount: 11, months_initial: 4 })
+	var request = city.create_good_request({ tag_id: 2, resource: RESOURCE_POMEGRANATES, amount: 11, months_initial: 4 })
 	request.execute()
+}
+
+[es=event_advance_month, mission=mission10]
+function mission10_pharaoh_goldmie_collapsed(ev) {
+	if (mission.pharaoh_goldmine_collapsed) {
+		return
+	}
+
+	log_info("akhenaten: mission 10 saqqara:${ev.years_since_start}:${ev.month} gold mine collapsed", {ev:ev})
+	if (ev.years_since_start < 4 && ev.month < 4) {
+		return
+	}
+
+	mission.pharaoh_goldmine_collapsed = true
+	var building = city.get_random_building_by_type(BUILDING_GOLD_MINE)
+	building.add_collapse_damage(2000)
+}
+
+[es=event_advance_month, mission=mission10]
+function mission10_pharaoh_trade_highwinds(ev) {
+	if (mission.pharaoh_trade_highwinds) {
+		return
+	}
+
+	// mission.pharaoh_trade_highwinds = true
+	// var request = city.create_trade_city_highwinds({ tag_id: 3, months_initial: 12 })
+	// request.set_location_fields(-1, -1, -1, -1)
+	// request.set_image("pharaoh_unloaded/dialougedrawing_00002")
+	// request.set_reasons(PHRASE_trade_city_highwinds_no_reason_A, PHRASE_trade_city_highwinds_no_reason_B, PHRASE_trade_city_highwinds_no_reason_C, -1)
+	// request.execute()
 }
