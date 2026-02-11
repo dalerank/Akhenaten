@@ -24,13 +24,13 @@
 #include "js/js_game.h"
 #include <regex>
 
-#ifdef HAVE_LIBCURL
+#ifdef GAME_HAVE_CURL
 #include <curl/curl.h>
 #endif
 
 main_menu_screen g_main_menu;
 
-#ifdef HAVE_LIBCURL
+#ifdef GAME_HAVE_CURL
 // Callback function for curl to write response data
 size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* data) {
     size_t totalSize = size * nmemb;
@@ -47,7 +47,7 @@ size_t HeaderCallback(char* buffer, size_t size, size_t nitems, std::string* hea
 #endif
 
 std::string main_menu_download_changelog() {
-#ifdef HAVE_LIBCURL
+#ifdef GAME_HAVE_CURL
     CURL* curl;
     CURLcode res;
     std::string readBuffer;
@@ -95,7 +95,7 @@ std::string main_menu_download_changelog() {
 }
 
 int main_menu_get_total_commits(pcstr owner, pcstr repo) {
-#ifdef HAVE_LIBCURL
+#ifdef GAME_HAVE_CURL
     CURL* curl;
     CURLcode res;
     std::string readBuffer;
