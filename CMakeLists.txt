@@ -188,67 +188,53 @@ if (OPTION_ENABLE_TRACY)
     FetchContent_MakeAvailable(tracy)
 endif()
 
-set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
-if (EXISTS "${LOCAL_DEPS_ROOT}/curl-src/CMakeLists.txt")
-    set(FETCHCONTENT_SOURCE_DIR_CURL "${LOCAL_DEPS_ROOT}/curl-src")
-    set(FETCHCONTENT_UPDATES_DISCONNECTED_CURL TRUE)
-endif()
+if (MSVC)
+    set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+    if (EXISTS "${LOCAL_DEPS_ROOT}/curl-src/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_CURL "${LOCAL_DEPS_ROOT}/curl-src")
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_CURL TRUE)
+    endif()
 
-FetchContent_Declare(
-    curl
-    GIT_REPOSITORY https://github.com/curl/curl.git
-    GIT_TAG        ${CURL_VERSION}
-)
+    FetchContent_Declare(
+        curl
+        GIT_REPOSITORY https://github.com/curl/curl.git
+        GIT_TAG        ${CURL_VERSION}
+    )
 
-# Configure curl build options (одинаково на всех платформах,
-# с отдельными настройками TLS только для Windows)
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-set(BUILD_CURL_EXE OFF CACHE BOOL "" FORCE)
-set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
-set(CURL_DISABLE_LDAP ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_LDAPS ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_TELNET ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_DICT ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_FILE ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_FTP ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_GOPHER ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_IMAP ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_POP3 ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_RTSP ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_SMTP ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_TFTP ON CACHE BOOL "" FORCE)
-# Без опциональных зависимостей, чтобы не требовать libidn2/libpsl на всех дистрибутивах
-set(USE_LIBIDN2 OFF CACHE BOOL "" FORCE)
-set(USE_LIBPSL OFF CACHE BOOL "" FORCE)
-
-if (WIN32)
-    # На Windows используем Schannel вместо OpenSSL
-    set(CURL_USE_SCHANNEL ON CACHE BOOL "" FORCE)
+    # Configure curl build options
+    set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+    set(BUILD_CURL_EXE OFF CACHE BOOL "" FORCE)
+    set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_LDAP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_LDAPS ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_TELNET ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_DICT ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_FILE ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_FTP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_GOPHER ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_IMAP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_POP3 ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_RTSP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_SMTP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_TFTP ON CACHE BOOL "" FORCE)
+    set(CURL_USE_SCHANNEL ON CACHE BOOL "" FORCE)  # Use Windows Schannel instead of OpenSSL
     set(CURL_USE_OPENSSL OFF CACHE BOOL "" FORCE)
     set(CURL_CA_BUNDLE "" CACHE STRING "" FORCE)
     set(CURL_CA_PATH "" CACHE STRING "" FORCE)
-elseif (WIN_EMSCRIPTEN OR CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
-    # Emscripten: без OpenSSL, чтобы конфигурация проходила без системного SSL
-    set(CURL_USE_OPENSSL OFF CACHE BOOL "" FORCE)
-    set(CMAKE_DISABLE_FIND_PACKAGE_OpenSSL ON CACHE BOOL "" FORCE)
-    set(CURL_CA_BUNDLE "" CACHE STRING "" FORCE)
-    set(CURL_CA_PATH "" CACHE STRING "" FORCE)
+
+    FetchContent_MakeAvailable(curl)
+
+    add_definitions(-DGAME_HAVE_CURL)
 else()
-    # macOS/Linux: если OpenSSL не найден — собираем curl без SSL (HTTPS в игре работать не будет)
-    find_package(OpenSSL QUIET)
-    if (NOT OPENSSL_FOUND)
-        message(STATUS "curl: OpenSSL not found, building without SSL (HTTPS disabled)")
-        set(CURL_USE_OPENSSL OFF CACHE BOOL "" FORCE)
-        set(CMAKE_DISABLE_FIND_PACKAGE_OpenSSL ON CACHE BOOL "" FORCE)
-        set(CURL_CA_BUNDLE "" CACHE STRING "" FORCE)
-        set(CURL_CA_PATH "" CACHE STRING "" FORCE)
+    # On non-MSVC platforms (e.g. macOS, Linux) use system libcurl
+    find_package(CURL)
+    if (CURL_FOUND)
+        message(STATUS "curl: Found system libcurl, enabling HTTP mods download")
+        add_definitions(-DGAME_HAVE_CURL)
+    else()
+        message(STATUS "curl: libcurl not found, HTTP mods download will be disabled")
     endif()
 endif()
-
-FetchContent_MakeAvailable(curl)
-
-# Enable libcurl usage in code (единый дефайн, чтобы не путать с системным)
-add_definitions(-DGAME_HAVE_CURL)
 
 
 set(PREBUILT_LIBS_INTERMEDIATE_DIR "${CMAKE_BINARY_DIR}/prebuilt_libs" CACHE PATH "Directory for prebuilt libraries")
@@ -1460,16 +1446,26 @@ if(MSVC)
     endif()
     target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/bugtrap/BugTrap-x64.lib)
 
+    if(TARGET CURL::libcurl)
+        target_link_libraries(${GAME} CURL::libcurl)
+    else()
+        if(TARGET libcurl)
+            target_link_libraries(${GAME} libcurl)
+        else()
+            message(WARNING "CURL::libcurl target not found, curl may not be built correctly")
+        endif()
+    endif()
+
     # harfbuzz and freetype are static libraries, no need to copy DLL
 endif()
 
-# Link libcurl (FetchContent на всех платформах — одна точка линковки)
-if(TARGET CURL::libcurl)
-    target_link_libraries(${GAME} CURL::libcurl)
-elseif(TARGET libcurl)
-    target_link_libraries(${GAME} libcurl)
-else()
-    message(WARNING "CURL::libcurl target not found, curl may not be built correctly")
+# Link libcurl on non-MSVC platforms if it was found
+if(NOT MSVC AND CURL_FOUND)
+    if(TARGET CURL::libcurl)
+        target_link_libraries(${GAME} CURL::libcurl)
+    else()
+        target_link_libraries(${GAME} ${CURL_LIBRARIES})
+    endif()
 endif()
 
 if (PLATFORM_ANDROID)
