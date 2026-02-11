@@ -19,7 +19,7 @@
 #include <fstream>
 #include <filesystem>
 
-#ifdef GAME_PLATFORM_WIN
+#ifdef HAVE_LIBCURL
 #include <curl/curl.h>
 #endif
 
@@ -67,7 +67,7 @@ void mods_set_enabled(xstring name, bool enabled) {
     mods_save();
 }
 
-#ifdef GAME_PLATFORM_WIN
+#ifdef HAVE_LIBCURL
 struct mod_download_progress_data {
     mod_info *mod;
     std::ofstream *file;
@@ -135,7 +135,7 @@ void mods_download_mod_async(xstring name) {
         return;
     }
 
-#ifdef GAME_PLATFORM_WIN
+#ifdef HAVE_LIBCURL
     // Start download in background thread
     game.mt.detach_task([name]() {
         auto it = g_mods_list.find(name);
@@ -246,7 +246,7 @@ void mods_download_mod_async(xstring name) {
         // The download_progress field is already updated during download
     });
 #else
-    logs::error("Mod download not supported on this platform");
+    logs::error("Mod download not supported on this platform (libcurl is not available).");
     mod.download_progress = 0;
 #endif
 }
@@ -451,7 +451,7 @@ void mods_load() {
     }
 }
 
-#ifdef GAME_PLATFORM_WIN
+#ifdef HAVE_LIBCURL
 // Callback function for curl to write response data
 static size_t mods_refresh_available_list_cb(void *contents, size_t size, size_t nmemb, std::string *data) {
     size_t totalSize = size * nmemb;
@@ -461,7 +461,7 @@ static size_t mods_refresh_available_list_cb(void *contents, size_t size, size_t
 #endif
 
 void mods_refresh_from_remote_repo (pcstr remote_repo) {
-#ifdef GAME_PLATFORM_WIN
+#ifdef HAVE_LIBCURL
     CURLcode res;
     std::string readBuffer;
 
@@ -601,7 +601,7 @@ void mods_refresh_from_config() {
 }
 
 void mods_refresh_available_list() {
-#ifdef GAME_PLATFORM_WIN
+#ifdef HAVE_LIBCURL
     if (!g_mods_config.mods_repo.empty()) {
         mods_refresh_from_remote_repo(g_mods_config.mods_repo.front().url.c_str());
     } else {
@@ -612,7 +612,7 @@ void mods_refresh_available_list() {
 
     mods_remount();
 #else
-    popup_dialog::show_ok("Error", "Mods list download not supported on this platform.");
+    popup_dialog::show_ok("Error", "Mods list download not supported on this platform (libcurl was not found at build time).");
 #endif
 }
 

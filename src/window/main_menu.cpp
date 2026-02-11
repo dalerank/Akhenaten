@@ -24,13 +24,13 @@
 #include "js/js_game.h"
 #include <regex>
 
-#ifdef GAME_PLATFORM_WIN
+#ifdef HAVE_LIBCURL
 #include <curl/curl.h>
 #endif
 
 main_menu_screen g_main_menu;
 
-#ifdef GAME_PLATFORM_WIN
+#ifdef HAVE_LIBCURL
 // Callback function for curl to write response data
 size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* data) {
     size_t totalSize = size * nmemb;
@@ -47,7 +47,7 @@ size_t HeaderCallback(char* buffer, size_t size, size_t nitems, std::string* hea
 #endif
 
 std::string main_menu_download_changelog() {
-#ifdef GAME_PLATFORM_WIN
+#ifdef HAVE_LIBCURL
     CURL* curl;
     CURLcode res;
     std::string readBuffer;
@@ -90,12 +90,12 @@ std::string main_menu_download_changelog() {
         return "Failed to download changelog from GitHub.";
     }
 #else
-    return "Changelog download not supported on this platform.";
+    return "Changelog download not supported on this platform (libcurl is not available).";
 #endif
 }
 
 int main_menu_get_total_commits(pcstr owner, pcstr repo) {
-#ifdef GAME_PLATFORM_WIN
+#ifdef HAVE_LIBCURL
     CURL* curl;
     CURLcode res;
     std::string readBuffer;

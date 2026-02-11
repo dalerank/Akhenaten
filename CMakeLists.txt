@@ -223,6 +223,18 @@ if (MSVC)
     set(CURL_CA_PATH "" CACHE STRING "" FORCE)
 
     FetchContent_MakeAvailable(curl)
+
+    # Enable libcurl usage in code
+    add_definitions(-DHAVE_LIBCURL)
+else()
+    # On non-MSVC platforms (e.g. macOS, Linux) try to use system libcurl
+    find_package(CURL)
+    if (CURL_FOUND)
+        message(STATUS "curl: Found system libcurl, enabling HTTP mods download")
+        add_definitions(-DHAVE_LIBCURL)
+    else()
+        message(STATUS "curl: libcurl not found, HTTP mods download will be disabled")
+    endif()
 endif()
 
 
@@ -1446,6 +1458,15 @@ if(MSVC)
     endif()
 
     # harfbuzz and freetype are static libraries, no need to copy DLL
+endif()
+
+# Link libcurl on non-MSVC platforms if it was found
+if(NOT MSVC AND CURL_FOUND)
+    if(TARGET CURL::libcurl)
+        target_link_libraries(${GAME} CURL::libcurl)
+    else()
+        target_link_libraries(${GAME} ${CURL_LIBRARIES})
+    endif()
 endif()
 
 if (PLATFORM_ANDROID)
