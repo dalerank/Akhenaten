@@ -96,3 +96,6 @@ ANK_FUNCTION_2(__bazaar_res_accepted)
 
 int __bazaar_resource_amount(int bid, e_resource resource) { auto b = building_get(bid)->dcast_bazaar(); return b ? b->get_resource_amount(resource) : 0; }
 ANK_FUNCTION_2(__bazaar_resource_amount)
+
+int __city_get_random_building_id_by_type(int type) { return building_id_random((e_building_type)type); }
+ANK_FUNCTION_1(__city_get_random_building_id_by_type)

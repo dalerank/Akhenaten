@@ -22,7 +22,7 @@ struct monument_phase {
 
 struct monument {
     e_building_type btype;
-    svector<monument_phase, 16> phases;
+    hvector<monument_phase, 16> phases;
 };
 
 class building_monument : public building_impl {
@@ -33,8 +33,7 @@ public:
 
     struct runtime_data_t {
         uint8_t variant;
-        uint8_t statue_offset;
-        uint8_t temple_complex_upgrades;
+        uint8_t layer;
         uint8_t resources_pct[RESOURCES_MAX];
         std::array<uint16_t, 5> workers;
         int8_t phase;

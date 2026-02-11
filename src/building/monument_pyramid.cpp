@@ -68,6 +68,14 @@ struct monument_small_stepped_pyramid : public monument {
         phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
         phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
         phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
         phases.push_back({ monument_phase_resource{RESOURCE_NONE, 0} });
     }
 } g_monument_small_stepped_pyramid;
@@ -81,6 +89,14 @@ struct monument_medium_stepped_pyramid : public monument {
         phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 1600}, {RESOURCE_STONE, 3200} });
         phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 1200}, {RESOURCE_STONE, 2400} });
         phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 800}, {RESOURCE_STONE, 1600} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
         phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
         phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
         phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
@@ -678,6 +694,8 @@ void building_stepped_pyramid::draw_phase_3_5_tile(color color_mask, int channel
 }
 
 int building_stepped_pyramid::get_bricks_image(int orientation, tile2i tile, tile2i start, tile2i end, int layer) {
+    layer %= 6;
+
     const bool is_bmain = is_main();
     const bool is_floor = building_type_any_of(type(), { BUILDING_SMALL_STEPPED_PYRAMID, BUILDING_MEDIUM_STEPPED_PYRAMID });
     if (is_floor && !is_bmain) {
@@ -685,70 +703,43 @@ int building_stepped_pyramid::get_bricks_image(int orientation, tile2i tile, til
         return image_base_bricks;
     }
 
+    tile = building_at(tile)->tile;
+    start = building_at(start)->tile;
+    end = building_at(end)->tile;
+
     const bool is_corner = building_type_any_of(type(), { BUILDING_SMALL_STEPPED_PYRAMID_CORNER, BUILDING_MEDIUM_STEPPED_PYRAMID_CORNER });
     if (is_corner || is_bmain) {
         int image_corner_bricks = current_params().first_img("corner_bricks") + (layer * 8);
-        tile2i l1 = tile.shifted(2, 2);
-        auto m = building_at(l1)->dcast_monument();
-        if (m) {
-            return image_corner_bricks + 0;
-        }
-
-        tile2i l2 = tile.shifted(2, -2);
-        m = building_at(l2)->dcast_monument();
-        if (m) {
-            return image_corner_bricks + 1;
-        }
-
-        tile2i l3 = tile.shifted(-2, -2);
-        m = building_at(l3)->dcast_monument();
-        if (m) {
-            return image_corner_bricks + 2;
-        }
-
-        tile2i l4 = tile.shifted(-2, 2);
-        m = building_at(l4)->dcast_monument();
-        if (m) {
-            return image_corner_bricks + 3;
-        }
+        const bool at_min_x = (tile.x() == start.x());
+        const bool at_min_y = (tile.y() == start.y());
+        const bool at_max_x = (tile.x() == end.x());
+        const bool at_max_y = (tile.y() == end.y());
+        if (at_min_x && at_min_y) return image_corner_bricks + 0;
+        if (at_min_x && at_max_y) return image_corner_bricks + 1;
+        if (at_max_x && at_max_y) return image_corner_bricks + 2;
+        if (at_max_x && at_min_y) return image_corner_bricks + 3;
         return image_corner_bricks;
     }
 
     const bool is_wall = building_type_any_of(type(), { BUILDING_SMALL_STEPPED_PYRAMID_WALL, BUILDING_MEDIUM_STEPPED_PYRAMID_WALL });
     if (is_wall) {
         int image_wall_bricks = current_params().first_img("wall_bricks") + (layer * 8);
-        tile2i l1 = tile.shifted(0, 2);
-        auto m = building_at(l1)->dcast_monument();
-        if (m && building_type_any_of(m->type(), { BUILDING_SMALL_STEPPED_PYRAMID, BUILDING_MEDIUM_STEPPED_PYRAMID })) {
-            return image_wall_bricks + 3;
-        }
-
-        tile2i l2 = tile.shifted(2, 0);
-        m = building_at(l2)->dcast_monument();
-        if (m && building_type_any_of(m->type(), { BUILDING_SMALL_STEPPED_PYRAMID, BUILDING_MEDIUM_STEPPED_PYRAMID })) {
-            return image_wall_bricks + 0;
-        }
-
-        tile2i l3 = tile.shifted(0, -2);
-        m = building_at(l3)->dcast_monument();
-        if (m && building_type_any_of(m->type(), { BUILDING_SMALL_STEPPED_PYRAMID, BUILDING_MEDIUM_STEPPED_PYRAMID })) {
-            return image_wall_bricks + 1;
-        }
-
-        tile2i l4 = tile.shifted(-2, 0);
-        m = building_at(l4)->dcast_monument();
-        if (m && building_type_any_of(m->type(), { BUILDING_SMALL_STEPPED_PYRAMID, BUILDING_MEDIUM_STEPPED_PYRAMID })) {
-            return image_wall_bricks + 2;
-        }
+        if (tile.x() == start.x()) return image_wall_bricks + 0;
+        if (tile.y() == start.y()) return image_wall_bricks + 3;
+        if (tile.x() == end.x()) return image_wall_bricks + 2;
+        if (tile.y() == end.y()) return image_wall_bricks + 1;
         return image_wall_bricks;
     }
 
     return 0;
 }
 
+
+
 bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
     color_mask = (color_mask ? color_mask : 0xffffffff);
     building *main = base.main();
+    const auto &d = runtime_data();
 
     auto fill_tiles_height = [] (painter &ctx, tile2i tile, int img) {
         auto image = image_get(img);
@@ -773,7 +764,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
 
             fill_tiles_height(ctx, tile, img);
         }
-    } else if (phase() > 6 && phase() < 16) {
+    } else if (phase() > 6 && phase() < 11) {
         uint32_t progress = map_monuments_get_progress(tile);
         int img = get_bricks_image(base.orientation, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), (progress >= 200) ? (phase() - 5) : (phase() - 6));
         vec2i offset = lookup_tile_to_pixel(tile);
@@ -784,11 +775,42 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
         command.mask = color_mask;
 
         fill_tiles_height(ctx, tile, img);
-    } else if (phase() == 16) {
+    } else if (phase() >= 11 && phase() < 19) {
+        uint32_t progress = map_monuments_get_progress(tile);
+        if (d.layer < 1) {
+            int img = get_bricks_image(base.orientation, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), 5);
+            vec2i offset = lookup_tile_to_pixel(tile);
+
+            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            command.image_id = img;
+            command.pixel = point;
+            command.mask = color_mask;
+
+            fill_tiles_height(ctx, tile, img);
+        } else {
+            int layer_img = current_params().first_img("base_bricks") + 5;
+            vec2i offset = lookup_tile_to_pixel(tile);
+
+            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            command.image_id = layer_img;
+            command.pixel = point;
+            command.mask = color_mask;
+
+            if (progress >= 200 || phase() > 11) {
+                auto layer_area = get_layer_area(1);
+
+                int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, phase() - 11);
+                auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+                command.image_id = img;
+                command.pixel = point - vec2i{0, TILE_HEIGHT_PIXELS * 3};
+                command.mask = color_mask;
+            }
+        }
+    } else if (phase() == 24) {
         uint32_t progress = map_monuments_get_progress(tile);
         vec2i offset = lookup_tile_to_pixel(tile);
         int img = get_bricks_image(base.orientation, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), 6);
-            
+
         auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
         command.image_id = img;
         command.pixel = point;
@@ -915,7 +937,7 @@ void building_stepped_pyramid::bind_dynamic(io_buffer *iob, size_t version) {
         iob->bind_u16(monumentd.workers[i]);
     }
     iob->bind_i8(monumentd.phase);
-    iob->bind____skip(1);
+    iob->bind_u8(monumentd.layer);
     iob->bind____skip(1);
     iob->bind_u8(monumentd.variant);
 
@@ -986,6 +1008,79 @@ tile2i building_small_stepped_pyramid::access_point() const {
     return main()->tile().shifted(0, 10);
 }
 
+// Helper function to check if a block is a corner block (by block index)
+bool is_corner_block(int block_x, int block_y, int blocks_x, int blocks_y) {
+    return (block_x == 0 && block_y == 0) ||                                  // top-left
+        (block_x == blocks_x - 1 && block_y == 0) ||                       // top-right
+        (block_x == blocks_x - 1 && block_y == blocks_y - 1) ||            // bottom-right
+        (block_x == 0 && block_y == blocks_y - 1);                         // bottom-left
+}
+
+// Helper function to check if a block is on the perimeter (by block index)
+bool is_on_perimeter_block(int block_x, int block_y, int blocks_x, int blocks_y) {
+    return block_x == 0 || block_x == blocks_x - 1 ||
+        block_y == 0 || block_y == blocks_y - 1;
+}
+
+void building_stepped_pyramid::change_parts_types_in_layer(tile2i begin, const vec2i layer_size, uint8_t layer) {
+    hvector<pyramid_part, 256> parts;
+
+    // Parts are 2x2 tiles, so calculate number of blocks in each dimension
+    const int part_size = 2;
+    int blocks_x = layer_size.x / part_size;  // e.g., 10/2 = 5
+    int blocks_y = layer_size.y / part_size;  // e.g., 10/2 = 5
+
+    const auto &pi_params = pyramid_params();
+
+    // Fill pyramid parts for the first layer
+    // Iterate through blocks (each block is 2x2 tiles)
+    for (int block_y = 0; block_y < blocks_y; block_y++) {
+        for (int block_x = 0; block_x < blocks_x; block_x++) {
+            // Calculate tile offset for this block (top-left corner of 2x2 block)
+            int tile_x = block_x * part_size;
+            int tile_y = block_y * part_size;
+
+            // Skip the main building position (top-left block)
+            if (block_x == 0 && block_y == 0) {
+                continue;
+            }
+
+            // Determine part type based on block position
+            e_building_type part_type;
+            if (is_on_perimeter_block(block_x, block_y, blocks_x, blocks_y)) {
+                // Block is on perimeter
+                if (is_corner_block(block_x, block_y, blocks_x, blocks_y)) {
+                    part_type = pi_params.corner_type;
+                } else {
+                    part_type = pi_params.wall_type;
+                }
+            } else {
+                // Block is interior (filler)
+                part_type = pi_params.filler_type;
+            }
+
+            tile2i part_tile = begin.shifted(tile_x, tile_y);
+            parts.push_back({ part_type, {tile_x, tile_y}, building_at(part_tile) });
+        }
+    }
+
+    for (auto &part : parts) {
+        part.b->clear_impl();
+        part.b->type = part.type;
+        part.b->dcast_monument()->runtime_data().layer = layer;
+    }
+}
+
+building_stepped_pyramid::layer_area building_stepped_pyramid::get_layer_area(int layer) const {
+    const auto &pi_params = pyramid_params();
+    vec2i layer_size = pi_params.init_tiles;
+    layer_size -= vec2i{ layer * 4, layer * 4 };
+    tile2i begin_tile = main()->tile().shifted(layer * 2, layer * 2);
+    tile2i end_tile = begin_tile.shifted(layer_size - vec2i{1, 1});
+
+    return { begin_tile, end_tile, layer_size };
+}
+
 void building_stepped_pyramid::on_place(int orientation, int variant) {
     building_pyramid::on_place(orientation, variant);
 
@@ -1003,20 +1098,6 @@ void building_stepped_pyramid::on_place(int orientation, int variant) {
     int blocks_x = pyramid_size.x / part_size;  // e.g., 10/2 = 5
     int blocks_y = pyramid_size.y / part_size;  // e.g., 10/2 = 5
     
-    // Helper function to check if a block is a corner block (by block index)
-    auto is_corner_block = [blocks_x, blocks_y](int block_x, int block_y) {
-        return (block_x == 0 && block_y == 0) ||                                  // top-left
-               (block_x == blocks_x - 1 && block_y == 0) ||                       // top-right
-               (block_x == blocks_x - 1 && block_y == blocks_y - 1) ||            // bottom-right
-               (block_x == 0 && block_y == blocks_y - 1);                         // bottom-left
-    };
-    
-    // Helper function to check if a block is on the perimeter (by block index)
-    auto is_on_perimeter_block = [blocks_x, blocks_y](int block_x, int block_y) {
-        return block_x == 0 || block_x == blocks_x - 1 || 
-               block_y == 0 || block_y == blocks_y - 1;
-    };
-    
     // Fill pyramid parts for the first layer
     // Iterate through blocks (each block is 2x2 tiles)
     for (int block_y = 0; block_y < blocks_y; block_y++) {
@@ -1032,9 +1113,9 @@ void building_stepped_pyramid::on_place(int orientation, int variant) {
             
             // Determine part type based on block position
             e_building_type part_type;
-            if (is_on_perimeter_block(block_x, block_y)) {
+            if (is_on_perimeter_block(block_x, block_y, blocks_x, blocks_y)) {
                 // Block is on perimeter
-                if (is_corner_block(block_x, block_y)) {
+                if (is_corner_block(block_x, block_y, blocks_x, blocks_y)) {
                     part_type = pi_params.corner_type;
                 } else {
                     part_type = pi_params.wall_type;
@@ -1088,6 +1169,11 @@ void building_stepped_pyramid::on_phase_changed(int old, int current) {
     if (current == 6) {
         setup_phase_6_tiles();
         setup_phase_6_basement();
+    }
+
+    if (current == 11 && is_main()) {
+        auto area = get_layer_area(1);
+        change_parts_types_in_layer(area.begin, area.size, 1);
     }
 
     if (current != MONUMENT_FINISHED) {
