@@ -224,7 +224,7 @@ else()
     set(CURL_USE_OPENSSL ON CACHE BOOL "" FORCE)  # Use OpenSSL on Linux/Unix
 endif()
 set(CURL_CA_BUNDLE "auto" CACHE STRING "Use system default CA bundle" FORCE)
-set(CURL_CA_PATH "" CACHE STRING "" FORCE)
+set(CURL_CA_PATH "auto" CACHE STRING "" FORCE)
 
 FetchContent_MakeAvailable(curl)
 
