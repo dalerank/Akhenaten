@@ -188,54 +188,42 @@ if (OPTION_ENABLE_TRACY)
     FetchContent_MakeAvailable(tracy)
 endif()
 
-if (MSVC)
-    set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
-    if (EXISTS "${LOCAL_DEPS_ROOT}/curl-src/CMakeLists.txt")
-        set(FETCHCONTENT_SOURCE_DIR_CURL "${LOCAL_DEPS_ROOT}/curl-src")
-        set(FETCHCONTENT_UPDATES_DISCONNECTED_CURL TRUE)
-    endif()
-
-    FetchContent_Declare(
-        curl
-        GIT_REPOSITORY https://github.com/curl/curl.git
-        GIT_TAG        ${CURL_VERSION}
-    )
-
-    # Configure curl build options
-    set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-    set(BUILD_CURL_EXE OFF CACHE BOOL "" FORCE)
-    set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
-    set(CURL_DISABLE_LDAP ON CACHE BOOL "" FORCE)
-    set(CURL_DISABLE_LDAPS ON CACHE BOOL "" FORCE)
-    set(CURL_DISABLE_TELNET ON CACHE BOOL "" FORCE)
-    set(CURL_DISABLE_DICT ON CACHE BOOL "" FORCE)
-    set(CURL_DISABLE_FILE ON CACHE BOOL "" FORCE)
-    set(CURL_DISABLE_FTP ON CACHE BOOL "" FORCE)
-    set(CURL_DISABLE_GOPHER ON CACHE BOOL "" FORCE)
-    set(CURL_DISABLE_IMAP ON CACHE BOOL "" FORCE)
-    set(CURL_DISABLE_POP3 ON CACHE BOOL "" FORCE)
-    set(CURL_DISABLE_RTSP ON CACHE BOOL "" FORCE)
-    set(CURL_DISABLE_SMTP ON CACHE BOOL "" FORCE)
-    set(CURL_DISABLE_TFTP ON CACHE BOOL "" FORCE)
-    set(CURL_USE_SCHANNEL ON CACHE BOOL "" FORCE)  # Use Windows Schannel instead of OpenSSL
-    set(CURL_USE_OPENSSL OFF CACHE BOOL "" FORCE)
-    set(CURL_CA_BUNDLE "" CACHE STRING "" FORCE)
-    set(CURL_CA_PATH "" CACHE STRING "" FORCE)
-
-    FetchContent_MakeAvailable(curl)
-
-    add_definitions(-DGAME_HAVE_CURL)
-else()
-    # On non-MSVC platforms (e.g. macOS, Linux) use system libcurl
-    find_package(CURL)
-    if (CURL_FOUND)
-        message(STATUS "curl: Found system libcurl, enabling HTTP mods download")
-        add_definitions(-DGAME_HAVE_CURL)
-    else()
-        message(STATUS "curl: libcurl not found, HTTP mods download will be disabled")
-    endif()
+set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+if (EXISTS "${LOCAL_DEPS_ROOT}/curl-src/CMakeLists.txt")
+    set(FETCHCONTENT_SOURCE_DIR_CURL "${LOCAL_DEPS_ROOT}/curl-src")
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_CURL TRUE)
 endif()
 
+FetchContent_Declare(
+    curl
+    GIT_REPOSITORY https://github.com/curl/curl.git
+    GIT_TAG        ${CURL_VERSION}
+)
+
+# Configure curl build options
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(BUILD_CURL_EXE OFF CACHE BOOL "" FORCE)
+set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
+set(CURL_DISABLE_LDAP ON CACHE BOOL "" FORCE)
+set(CURL_DISABLE_LDAPS ON CACHE BOOL "" FORCE)
+set(CURL_DISABLE_TELNET ON CACHE BOOL "" FORCE)
+set(CURL_DISABLE_DICT ON CACHE BOOL "" FORCE)
+set(CURL_DISABLE_FILE ON CACHE BOOL "" FORCE)
+set(CURL_DISABLE_FTP ON CACHE BOOL "" FORCE)
+set(CURL_DISABLE_GOPHER ON CACHE BOOL "" FORCE)
+set(CURL_DISABLE_IMAP ON CACHE BOOL "" FORCE)
+set(CURL_DISABLE_POP3 ON CACHE BOOL "" FORCE)
+set(CURL_DISABLE_RTSP ON CACHE BOOL "" FORCE)
+set(CURL_DISABLE_SMTP ON CACHE BOOL "" FORCE)
+set(CURL_DISABLE_TFTP ON CACHE BOOL "" FORCE)
+set(CURL_USE_SCHANNEL ON CACHE BOOL "" FORCE)  # Use Windows Schannel instead of OpenSSL
+set(CURL_USE_OPENSSL OFF CACHE BOOL "" FORCE)
+set(CURL_CA_BUNDLE "" CACHE STRING "" FORCE)
+set(CURL_CA_PATH "" CACHE STRING "" FORCE)
+
+FetchContent_MakeAvailable(curl)
+
+add_definitions(-DGAME_HAVE_CURL)
 
 set(PREBUILT_LIBS_INTERMEDIATE_DIR "${CMAKE_BINARY_DIR}/prebuilt_libs" CACHE PATH "Directory for prebuilt libraries")
 set(PREBUILT_LIBS_DIR "${CMAKE_BINARY_DIR}/libs")
@@ -738,6 +726,7 @@ file(GLOB OVERLAYS_FILES ${PROJECT_SOURCE_DIR}/src/overlays/*.cpp)
 file(GLOB WIDGET_SIDEBAR_FILES ${PROJECT_SOURCE_DIR}/src/widget/sidebar/*.cpp)
 file(GLOB WINDOW_ADVISOR_FILES ${PROJECT_SOURCE_DIR}/src/window/advisor/*.cpp)
 file(GLOB WINDOW_FILES ${PROJECT_SOURCE_DIR}/src/window/*.cpp)
+list(REMOVE_ITEM WINDOW_FILES ${PROJECT_SOURCE_DIR}/src/window/window_shrine_info.cpp)
 file(GLOB WINDOW_EDITOR_FILES ${PROJECT_SOURCE_DIR}/src/window/editor/*.cpp)
 file(GLOB WINDOW_BUILDING_FILES ${PROJECT_SOURCE_DIR}/src/window/building/*.cpp)
 file(GLOB DEV_FILES ${PROJECT_SOURCE_DIR}/src/dev/*.cpp)
@@ -1445,27 +1434,13 @@ if(MSVC)
         target_link_libraries(${GAME} delayimp)
     endif()
     target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/bugtrap/BugTrap-x64.lib)
-
-    if(TARGET CURL::libcurl)
-        target_link_libraries(${GAME} CURL::libcurl)
-    else()
-        if(TARGET libcurl)
-            target_link_libraries(${GAME} libcurl)
-        else()
-            message(WARNING "CURL::libcurl target not found, curl may not be built correctly")
-        endif()
-    endif()
-
-    # harfbuzz and freetype are static libraries, no need to copy DLL
 endif()
 
 # Link libcurl on non-MSVC platforms if it was found
-if(NOT MSVC AND CURL_FOUND)
-    if(TARGET CURL::libcurl)
-        target_link_libraries(${GAME} CURL::libcurl)
-    else()
-        target_link_libraries(${GAME} ${CURL_LIBRARIES})
-    endif()
+if(TARGET CURL::libcurl)
+    target_link_libraries(${GAME} CURL::libcurl)
+else()
+    target_link_libraries(${GAME} ${CURL_LIBRARIES})
 endif()
 
 if (PLATFORM_ANDROID)
