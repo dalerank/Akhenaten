@@ -16,7 +16,8 @@ info_window_mortuary {
     })
 }
 
-function info_window_mortuary_common_init(window) {
+[es=info_window_mortuary_init]
+function info_window_mortuary_on_init(window) {
     var b = city.get_building(window.bid)
     var group = b.meta_text_id
 
@@ -39,9 +40,4 @@ function info_window_mortuary_common_init(window) {
     }
 
     window.workers_desc.text = __loc(reason.group, reason.id)
-}
-
-[es=info_window_mortuary_init]
-function info_window_mortuary_on_init(window) {
-    info_window_mortuary_common_init(window)
 }

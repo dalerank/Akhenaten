@@ -26,7 +26,7 @@ building_small_stepped_pyramid {
     fire_proof :  true
     damage_proof : true
     meta { help_id:375, text_id:120 }
-    init_tiles [10, 10]
+    init_tiles [8, 8]
 
     flags {
         is_monument: true
@@ -70,7 +70,7 @@ building_small_stepped_pyramid {
     fire_proof :  true
     damage_proof : true
     meta { help_id:375, text_id:120 }
-    init_tiles [14, 14]
+    init_tiles [12, 12]
 
     flags {
         is_monument: true

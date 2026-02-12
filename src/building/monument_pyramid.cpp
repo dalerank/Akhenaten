@@ -56,55 +56,69 @@ struct pyramid_part {
 
 struct monument_small_stepped_pyramid : public monument {
     monument_small_stepped_pyramid() : monument{ BUILDING_SMALL_STEPPED_PYRAMID } {
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_STONE, 4800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 2000}, {RESOURCE_STONE, 4000} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 1600}, {RESOURCE_STONE, 3200} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 1200}, {RESOURCE_STONE, 2400} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 800}, {RESOURCE_STONE, 1600} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{RESOURCE_NONE, 0} });
+        phases.push_back({ 0, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
+        phases.push_back({ 1, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
+        phases.push_back({ 2, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_STONE, 4800} });
+        phases.push_back({ 3, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 2000}, {RESOURCE_STONE, 4000} });
+        phases.push_back({ 4, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 1600}, {RESOURCE_STONE, 3200} });
+        phases.push_back({ 5, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 1200}, {RESOURCE_STONE, 2400} });
+        phases.push_back({ 6, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 800}, {RESOURCE_STONE, 1600} });
+        phases.push_back({ 7, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 8, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 9, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({10, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({11, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({12, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({13, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({14, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({15, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({16, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({17, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({18, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({19, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({20, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({21, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({22, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({23, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({24, monument_phase_resource{RESOURCE_NONE, 0} });
     }
 } g_monument_small_stepped_pyramid;
 
 struct monument_medium_stepped_pyramid : public monument {
     monument_medium_stepped_pyramid() : monument{ BUILDING_SMALL_STEPPED_PYRAMID } {
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_STONE, 4800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 2000}, {RESOURCE_STONE, 4000} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 1600}, {RESOURCE_STONE, 3200} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 1200}, {RESOURCE_STONE, 2400} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 800}, {RESOURCE_STONE, 1600} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
-        phases.push_back({ monument_phase_resource{RESOURCE_NONE, 0} });
+        phases.push_back({ 0, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
+        phases.push_back({ 1, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
+        phases.push_back({ 2, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_STONE, 4800} });
+        phases.push_back({ 3, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 2000}, {RESOURCE_STONE, 4000} });
+        phases.push_back({ 4, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 1600}, {RESOURCE_STONE, 3200} });
+        phases.push_back({ 5, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 1200}, {RESOURCE_STONE, 2400} });
+        phases.push_back({ 6, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 800}, {RESOURCE_STONE, 1600} });
+        phases.push_back({ 7, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 8, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 9, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 10, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 11, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 12, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 13, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 14, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 15, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 16, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 17, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 18, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 19, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 20, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 21, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 22, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 23, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 24, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 25, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 26, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 27, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 28, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 29, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 30, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 31, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ 32, monument_phase_resource{RESOURCE_NONE, 0} });
     }
 } g_monument_medium_stepped_pyramid;
 
@@ -780,7 +794,8 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
     } else if (phase() >= 12 && phase() < 18) {
         uint32_t progress = map_monuments_get_progress(tile);
         if (d.layer == 0) {
-            int img = get_bricks_image(base.orientation, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), 5);
+            auto layer_area = get_layer_area(0);
+            int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
             vec2i offset = lookup_tile_to_pixel(tile);
 
             auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
@@ -798,11 +813,11 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             command.pixel = point;
             command.mask = color_mask;
 
-            int additional_level = (phase() > 12 ? 1 : 0);
-            if (progress >= 200 || additional_level) {
+            int base_level = (phase() - 12) + ((progress >= 200) ? 1 : 0);
+            if (base_level > 0) {
                 auto layer_area = get_layer_area(1);
 
-                int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, phase() - (12 + additional_level));
+                int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, base_level - 1);
                 auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
                 command.image_id = img;
                 command.pixel = point - vec2i{0, TILE_HEIGHT_PIXELS * 3};
@@ -812,7 +827,8 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
     } else if (phase() >= 18 && phase() < 24) {
         uint32_t progress = map_monuments_get_progress(tile);
         if (d.layer == 0) {
-            int img = get_bricks_image(base.orientation, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), 5);
+            auto layer_area = get_layer_area(0);
+            int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
             vec2i offset = lookup_tile_to_pixel(tile);
 
             auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
@@ -822,7 +838,8 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
 
             fill_tiles_height(ctx, tile, img);
         } else if (d.layer == 1) {
-            int img = get_bricks_image(base.orientation, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), 5);
+            auto layer_area = get_layer_area(1);
+            int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
             vec2i offset = lookup_tile_to_pixel(tile);
 
             auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
@@ -837,30 +854,121 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
 
             auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
             command.image_id = layer_img;
-            command.pixel = point;
+            command.pixel = point - vec2i{ 0, TILE_HEIGHT_PIXELS * 3 };
             command.mask = color_mask;
 
-            if (progress >= 200 || phase() > 12) {
-                auto layer_area = get_layer_area(1);
+            int base_level = (phase() - 18) + ((progress >= 200) ? 1 : 0);
+            if (base_level > 0) {
+                auto layer_area = get_layer_area(2);
 
-                int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, phase() - 18);
+                int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, base_level - 1);
                 auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
                 command.image_id = img;
                 command.pixel = point - vec2i{ 0, TILE_HEIGHT_PIXELS * 6 };
                 command.mask = color_mask;
             }
         }
-    } else if (phase() == 24) {
+    } else if (phase() >= 24 && phase() < 32) {
         uint32_t progress = map_monuments_get_progress(tile);
-        vec2i offset = lookup_tile_to_pixel(tile);
-        int img = get_bricks_image(base.orientation, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), 6);
+        if (d.layer == 0) {
+            auto layer_area = get_layer_area(0);
+            int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
+            vec2i offset = lookup_tile_to_pixel(tile);
 
-        auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
-        command.image_id = img;
-        command.pixel = point;
-        command.mask = color_mask;
+            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            command.image_id = img;
+            command.pixel = point;
+            command.mask = color_mask;
 
-        fill_tiles_height(ctx, tile, img);
+            fill_tiles_height(ctx, tile, img);
+        } else if (d.layer == 1) {
+            auto layer_area = get_layer_area(1);
+            int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
+            vec2i offset = lookup_tile_to_pixel(tile);
+
+            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            command.image_id = img;
+            command.pixel = point - vec2i{ 0, TILE_HEIGHT_PIXELS * 3 };
+            command.mask = color_mask;
+
+            fill_tiles_height(ctx, tile, img);
+        } else if (d.layer == 2) {
+            auto layer_area = get_layer_area(2);
+            int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
+            vec2i offset = lookup_tile_to_pixel(tile);
+
+            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            command.image_id = img;
+            command.pixel = point - vec2i{ 0, TILE_HEIGHT_PIXELS * 6 };
+            command.mask = color_mask;
+
+            fill_tiles_height(ctx, tile, img);
+        } else {
+            int layer_img = current_params().first_img("base_bricks") + 5;
+            vec2i offset = lookup_tile_to_pixel(tile);
+
+            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            command.image_id = layer_img;
+            command.pixel = point - vec2i{ 0, TILE_HEIGHT_PIXELS * 3 };
+            command.mask = color_mask;
+
+            int base_level = (phase() - 24) + ((progress >= 200) ? 1 : 0);
+            if (base_level > 0) {
+                auto layer_area = get_layer_area(2);
+
+                int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, base_level - 1);
+                auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+                command.image_id = img;
+                command.pixel = point - vec2i{ 0, TILE_HEIGHT_PIXELS * 9 };
+                command.mask = color_mask;
+            }
+        }
+    } else if (phase() == 32) {
+        if (d.layer == 0) {
+            auto layer_area = get_layer_area(0);
+            int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
+            vec2i offset = lookup_tile_to_pixel(tile);
+
+            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            command.image_id = img;
+            command.pixel = point;
+            command.mask = color_mask;
+
+            fill_tiles_height(ctx, tile, img);
+        } else if (d.layer == 1) {
+            auto layer_area = get_layer_area(1);
+            int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
+            vec2i offset = lookup_tile_to_pixel(tile);
+
+            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            command.image_id = img;
+            command.pixel = point - vec2i{ 0, TILE_HEIGHT_PIXELS * 3 };
+            command.mask = color_mask;
+
+            fill_tiles_height(ctx, tile, img);
+        } else if (d.layer == 2) {
+            auto layer_area = get_layer_area(2);
+            int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
+            vec2i offset = lookup_tile_to_pixel(tile);
+
+            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            command.image_id = img;
+            command.pixel = point - vec2i{ 0, TILE_HEIGHT_PIXELS * 6 };
+            command.mask = color_mask;
+
+            fill_tiles_height(ctx, tile, img);
+        } else if (d.layer == 3) {
+            auto layer_area = get_layer_area(3);
+            int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
+            vec2i offset = lookup_tile_to_pixel(tile);
+
+            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            command.image_id = img;
+            command.pixel = point - vec2i{ 0, TILE_HEIGHT_PIXELS * 9 };
+            command.mask = color_mask;
+
+            fill_tiles_height(ctx, tile, img);
+        }
     }
 
     return true;
@@ -1218,6 +1326,16 @@ void building_stepped_pyramid::on_phase_changed(int old, int current) {
     if (current == 12 && is_main()) {
         auto area = get_layer_area(1);
         change_parts_types_in_layer(area.begin, area.size, 1);
+    }
+
+    if (current == 18 && is_main()) {
+        auto area = get_layer_area(2);
+        change_parts_types_in_layer(area.begin, area.size, 2);
+    }
+
+    if (current == 24 && is_main()) {
+        auto area = get_layer_area(3);
+        change_parts_types_in_layer(area.begin, area.size, 3);
     }
 
     if (current != MONUMENT_FINISHED) {

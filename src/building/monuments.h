@@ -17,6 +17,7 @@ struct monument_phase_resource {
 };
 
 struct monument_phase {
+    uint8_t id;
     std::array<monument_phase_resource, 6> resources;
 };
 
