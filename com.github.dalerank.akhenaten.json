@@ -18,7 +18,8 @@
             "buildsystem" : "cmake-ninja",
             "config-opts" : [
                 "-DCMAKE_BUILD_TYPE=Release",
-                "-DOPTION_ENABLE_TRACY=OFF"
+                "-DOPTION_ENABLE_TRACY=OFF",
+                "-DOPENSSL_ROOT_DIR=/usr"
             ],
             "sources" : [
                 {

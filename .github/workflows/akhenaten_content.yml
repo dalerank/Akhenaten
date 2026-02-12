@@ -15,7 +15,7 @@ jobs:
     - name: update-workspace
       run: |
         sudo apt -qq update
-        sudo apt install --yes cmake build-essential libgl1-mesa-dev unzip
+        sudo apt install --yes cmake build-essential libgl1-mesa-dev libssl-dev unzip
     - name: build-project
       run: |
         git clone https://github.com/jeremy-rifkin/cpptrace.git etc/cpptrace
@@ -29,7 +29,7 @@ jobs:
         cp ./build/akhenaten ./artifacts/akhenaten.linux
         zip -r linux_build.zip ./artifacts
         wget https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_windows/master/windows_build.zip
-        wget https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac_arm/master/macos_build.zip        
+        wget https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac_arm/master/macos_build.zip
         unzip windows_build.zip -d artifacts
     - uses: actions/upload-artifact@v4
       with:
