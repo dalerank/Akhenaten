@@ -195,13 +195,13 @@ sidebar_window_expanded {
 
 [es=sidebar_window_draw]
 function window_build_menu_on_draw(window) {
-    window.build_house.readonly = (ui.building_menu_items(BUILDING_MENU_VACANT_HOUSE) == 0)
+    window.build_house.readonly = false
     window.build_house.selected = (BUILDING_MENU_VACANT_HOUSE == window.opened_menu)
 
-    window.build_road.readonly = (ui.building_menu_items(BUILDING_MENU_ROAD) == 0)
+    window.build_road.readonly = false
     window.build_road.selected = (BUILDING_MENU_ROAD == window.opened_menu)
 
-    window.clear_land.readonly = (ui.building_menu_items(BUILDING_MENU_CLEAR_LAND) == 0)
+    window.clear_land.readonly = false
     window.clear_land.selected = (BUILDING_MENU_CLEAR_LAND == window.opened_menu)
 
     window.build_food.readonly = (ui.building_menu_items(BUILDING_MENU_FOOD) == 0)

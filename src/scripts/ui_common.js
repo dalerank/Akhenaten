@@ -74,6 +74,11 @@ function ui_create_element_proxy(elementId) {
             set: function(v) { __ui_element_set_enabled(this.id, v) }
         }
 
+        @readonly {
+            get: function() { return __ui_element_get_readonly(this.id) }
+            set: function(v) { __ui_element_set_readonly(this.id, v) }
+        }
+
         @font {
             get: function() { return __ui_element_get_font(this.id) }
             set: function(v) { __ui_element_set_font(this.id, v) }
