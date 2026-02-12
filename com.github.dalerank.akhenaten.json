@@ -91,7 +91,7 @@
                 {
                     "type" : "archive",
                     "url" : "https://github.com/curl/curl/archive/refs/tags/curl-8_10_1.tar.gz",
-                    "sha256" : "8b8ed2f3ef3143fcf1c9e47e7045f5c5f4c1f62cec4bc8c9d03a49a8cddb8d22",
+                    "sha256" : "5aaf131294f734756325dd99d849518c9a5060fc702517ab3064c76257dc700c",
                     "dest" : "_deps/curl-src",
                     "strip-components" : 1
                 },
