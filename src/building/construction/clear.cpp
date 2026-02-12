@@ -153,26 +153,23 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
                 b->state = BUILDING_STATE_DELETED_BY_PLAYER;
                 b->is_deleted = 1;
                 building* space = b;
-                for (int i = 0; i < 9; i++) {
-                    if (space->prev_part_building_id <= 0)
-                        break;
-
+                const int max_parts = 128;
+                int iter = 0;
+                while (space->prev_part_building_id > 0) {
+                    verify_no_crash(iter++ < max_parts && "too many building parts (prev chain)");
                     space = building_get(space->prev_part_building_id);
                     game_undo_add_building(space);
                     space->state = BUILDING_STATE_DELETED_BY_PLAYER;
                 }
 
                 space = b;
-                for (int i = 0; i < 9; i++) {
-                    if (space->next_part_building_id <= 0) {
-                        break;
-                    }
-
+                iter = 0;
+                while (space->next_part_building_id > 0) {
+                    verify_no_crash(iter++ < max_parts && "too many building parts (next chain)");
                     space = space->next();
                     if (space->id <= 0) {
                         break;
                     }
-
                     game_undo_add_building(space);
                     space->state = BUILDING_STATE_DELETED_BY_PLAYER;
                 }
