@@ -318,27 +318,6 @@ info_window_pavilion = {
     })
 }
 
-shrine_info_window = {
-    ui : {
-        background   : outer_panel({size: [29, 14]}),
-        title        : text({pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        warning_text : text({pos: [20, 46], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-        god_image    : image({pos: [190, 94] }),
-        show_overlay : button({margin:{right:-64, bottom:-40}, size:[23, 23]}),
-
-        button_help  : help_button({}),
-        button_close : close_button({}),
-    },
-
-    gods : [
-        { type: BUILDING_SHRINE_OSIRIS, image : {pack:PACK_UNLOADED, id:21, offset:21}, title:[161, 0], text:[161, 1] },
-        { type: BUILDING_SHRINE_RA, image : {pack:PACK_UNLOADED, id:21, offset:22}, title:[161, 2], text:[161, 3] },
-        { type: BUILDING_SHRINE_PTAH, image : {pack:PACK_UNLOADED, id:21, offset:23}, title:[161, 4], text:[161, 5] },
-        { type: BUILDING_SHRINE_SETH, image : {pack:PACK_UNLOADED, id:21, offset:24}, title:[161, 6], text:[161, 7] },
-        { type: BUILDING_SHRINE_BAST, image : {pack:PACK_UNLOADED, id:21, offset:25}, title:[161, 8], text:[161, 9] },
-    ]
-}
-
 info_window_mastaba = {
     ui : {
         background    : outer_panel({size: [29, 18]}),
