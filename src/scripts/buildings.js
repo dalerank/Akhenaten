@@ -1030,7 +1030,7 @@ building_stone_quarry {
   progress_max : 200,
   production_rate : 100,
   building_size : 2,
-  meta { help_id:93, text_id:162 }
+  meta { help_id:93, text_id:118 }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   needs {
     rock : true
