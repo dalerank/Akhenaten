@@ -66,6 +66,18 @@ bool __ui_element_get_enabled(pcstr element_id) {
 }
 ANK_FUNCTION_1(__ui_element_get_enabled)
 
+bool __ui_element_get_readonly(pcstr element_id) {
+    auto elem = __ui_get_element(element_id);
+    return elem ? elem->readonly : false;
+}
+ANK_FUNCTION_1(__ui_element_get_readonly)
+
+void __ui_element_set_readonly(pcstr element_id, bool v) {
+    auto elem = __ui_get_element(element_id);
+    if (elem) { elem->readonly = v; }
+}
+ANK_FUNCTION_2(__ui_element_set_readonly)
+
 void __ui_element_set_enabled(pcstr element_id, bool v) {
     auto elem = __ui_get_element(element_id);
     if (elem) { elem->set_enabled(v); }
