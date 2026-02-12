@@ -76,6 +76,7 @@ struct monument_small_stepped_pyramid : public monument {
         phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
         phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
         phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
         phases.push_back({ monument_phase_resource{RESOURCE_NONE, 0} });
     }
 } g_monument_small_stepped_pyramid;
@@ -89,6 +90,7 @@ struct monument_medium_stepped_pyramid : public monument {
         phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 1600}, {RESOURCE_STONE, 3200} });
         phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 1200}, {RESOURCE_STONE, 2400} });
         phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 800}, {RESOURCE_STONE, 1600} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
         phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
         phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
         phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800} });
@@ -764,9 +766,9 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
 
             fill_tiles_height(ctx, tile, img);
         }
-    } else if (phase() > 6 && phase() < 11) {
+    } else if (phase() > 6 && phase() < 12) {
         uint32_t progress = map_monuments_get_progress(tile);
-        int img = get_bricks_image(base.orientation, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), (progress >= 200) ? (phase() - 5) : (phase() - 6));
+        int img = get_bricks_image(base.orientation, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), (progress >= 200) ? (phase() - 6) : (phase() - 7));
         vec2i offset = lookup_tile_to_pixel(tile);
 
         auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
@@ -775,9 +777,9 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
         command.mask = color_mask;
 
         fill_tiles_height(ctx, tile, img);
-    } else if (phase() >= 11 && phase() < 19) {
+    } else if (phase() >= 12 && phase() < 18) {
         uint32_t progress = map_monuments_get_progress(tile);
-        if (d.layer < 1) {
+        if (d.layer == 0) {
             int img = get_bricks_image(base.orientation, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), 5);
             vec2i offset = lookup_tile_to_pixel(tile);
 
@@ -796,13 +798,55 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             command.pixel = point;
             command.mask = color_mask;
 
-            if (progress >= 200 || phase() > 11) {
+            int additional_level = (phase() > 12 ? 1 : 0);
+            if (progress >= 200 || additional_level) {
                 auto layer_area = get_layer_area(1);
 
-                int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, phase() - 11);
+                int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, phase() - (12 + additional_level));
                 auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
                 command.image_id = img;
                 command.pixel = point - vec2i{0, TILE_HEIGHT_PIXELS * 3};
+                command.mask = color_mask;
+            }
+        }
+    } else if (phase() >= 18 && phase() < 24) {
+        uint32_t progress = map_monuments_get_progress(tile);
+        if (d.layer == 0) {
+            int img = get_bricks_image(base.orientation, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), 5);
+            vec2i offset = lookup_tile_to_pixel(tile);
+
+            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            command.image_id = img;
+            command.pixel = point;
+            command.mask = color_mask;
+
+            fill_tiles_height(ctx, tile, img);
+        } else if (d.layer == 1) {
+            int img = get_bricks_image(base.orientation, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), 5);
+            vec2i offset = lookup_tile_to_pixel(tile);
+
+            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            command.image_id = img;
+            command.pixel = point - vec2i{ 0, TILE_HEIGHT_PIXELS * 3 };
+            command.mask = color_mask;
+
+            fill_tiles_height(ctx, tile, img);
+        } else {
+            int layer_img = current_params().first_img("base_bricks") + 5;
+            vec2i offset = lookup_tile_to_pixel(tile);
+
+            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            command.image_id = layer_img;
+            command.pixel = point;
+            command.mask = color_mask;
+
+            if (progress >= 200 || phase() > 12) {
+                auto layer_area = get_layer_area(1);
+
+                int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, phase() - 18);
+                auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+                command.image_id = img;
+                command.pixel = point - vec2i{ 0, TILE_HEIGHT_PIXELS * 6 };
                 command.mask = color_mask;
             }
         }
@@ -829,7 +873,7 @@ span_const<uint16_t> building_stepped_pyramid::active_workers() const {
 
 void building_stepped_pyramid::update_day(const vec2i tiles_size) {
     auto &monumentd = runtime_data();
-    if (phase() >= 16) {
+    if (phase() >= phases()) {
         finalize(&base, tiles_size);
         if (is_main()) {
             city_message &message = city_message_post_with_popup_delay(MESSAGE_CAT_MONUMENTS, true, "stepped_pyramid_congratulations", type(), tile().grid_offset());
@@ -1171,7 +1215,7 @@ void building_stepped_pyramid::on_phase_changed(int old, int current) {
         setup_phase_6_basement();
     }
 
-    if (current == 11 && is_main()) {
+    if (current == 12 && is_main()) {
         auto area = get_layer_area(1);
         change_parts_types_in_layer(area.begin, area.size, 1);
     }
