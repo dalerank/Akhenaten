@@ -218,11 +218,22 @@ if (MSVC)
     set(CURL_DISABLE_SMTP ON CACHE BOOL "" FORCE)
     set(CURL_DISABLE_TFTP ON CACHE BOOL "" FORCE)
     set(CURL_USE_SCHANNEL ON CACHE BOOL "" FORCE)  # Use Windows Schannel instead of OpenSSL
-    set(CURL_USE_OPENSSL OFF CACHE BOOL "" FORCE)  # Explicitly disable OpenSSL
+    set(CURL_USE_OPENSSL OFF CACHE BOOL "" FORCE)
     set(CURL_CA_BUNDLE "" CACHE STRING "" FORCE)
     set(CURL_CA_PATH "" CACHE STRING "" FORCE)
 
     FetchContent_MakeAvailable(curl)
+
+    add_definitions(-DGAME_HAVE_CURL)
+else()
+    # On non-MSVC platforms (e.g. macOS, Linux) use system libcurl
+    find_package(CURL)
+    if (CURL_FOUND)
+        message(STATUS "curl: Found system libcurl, enabling HTTP mods download")
+        add_definitions(-DGAME_HAVE_CURL)
+    else()
+        message(STATUS "curl: libcurl not found, HTTP mods download will be disabled")
+    endif()
 endif()
 
 
@@ -1446,6 +1457,15 @@ if(MSVC)
     endif()
 
     # harfbuzz and freetype are static libraries, no need to copy DLL
+endif()
+
+# Link libcurl on non-MSVC platforms if it was found
+if(NOT MSVC AND CURL_FOUND)
+    if(TARGET CURL::libcurl)
+        target_link_libraries(${GAME} CURL::libcurl)
+    else()
+        target_link_libraries(${GAME} ${CURL_LIBRARIES})
+    endif()
 endif()
 
 if (PLATFORM_ANDROID)
