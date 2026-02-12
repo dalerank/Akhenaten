@@ -188,47 +188,51 @@ if (OPTION_ENABLE_TRACY)
     FetchContent_MakeAvailable(tracy)
 endif()
 
-set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
-if (EXISTS "${LOCAL_DEPS_ROOT}/curl-src/CMakeLists.txt")
-    set(FETCHCONTENT_SOURCE_DIR_CURL "${LOCAL_DEPS_ROOT}/curl-src")
-    set(FETCHCONTENT_UPDATES_DISCONNECTED_CURL TRUE)
+# curl: do not fetch or build for Emscripten (avoids OpenSSL dependency in wasm)
+if(NOT WIN_EMSCRIPTEN)
+    set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+    if (EXISTS "${LOCAL_DEPS_ROOT}/curl-src/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_CURL "${LOCAL_DEPS_ROOT}/curl-src")
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_CURL TRUE)
+    endif()
+
+    FetchContent_Declare(
+        curl
+        GIT_REPOSITORY https://github.com/curl/curl.git
+        GIT_TAG        ${CURL_VERSION}
+    )
+
+    # Configure curl build options
+    set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+    set(BUILD_CURL_EXE OFF CACHE BOOL "" FORCE)
+    set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_LDAP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_LDAPS ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_TELNET ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_DICT ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_FILE ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_FTP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_GOPHER ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_IMAP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_POP3 ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_RTSP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_SMTP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_TFTP ON CACHE BOOL "" FORCE)
+    set(USE_LIBIDN2 OFF CACHE BOOL "" FORCE)  # Avoid libidn2 dependency (e.g. not found on macOS)
+    if(WIN32)
+        set(CURL_USE_SCHANNEL ON CACHE BOOL "" FORCE)  # Use Windows Schannel on Windows
+        set(CURL_USE_OPENSSL OFF CACHE BOOL "" FORCE)
+    else()
+        set(CURL_USE_SCHANNEL OFF CACHE BOOL "" FORCE)
+        set(CURL_USE_OPENSSL ON CACHE BOOL "" FORCE)  # Use OpenSSL on Linux/Unix
+    endif()
+    set(CURL_CA_BUNDLE "auto" CACHE STRING "Use system default CA bundle" FORCE)
+    set(CURL_CA_PATH "auto" CACHE STRING "" FORCE)
+
+    FetchContent_MakeAvailable(curl)
+
+    add_definitions(-DGAME_HAVE_CURL)
 endif()
-
-FetchContent_Declare(
-    curl
-    GIT_REPOSITORY https://github.com/curl/curl.git
-    GIT_TAG        ${CURL_VERSION}
-)
-
-# Configure curl build options
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-set(BUILD_CURL_EXE OFF CACHE BOOL "" FORCE)
-set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
-set(CURL_DISABLE_LDAP ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_LDAPS ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_TELNET ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_DICT ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_FILE ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_FTP ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_GOPHER ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_IMAP ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_POP3 ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_RTSP ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_SMTP ON CACHE BOOL "" FORCE)
-set(CURL_DISABLE_TFTP ON CACHE BOOL "" FORCE)
-if(WIN32)
-    set(CURL_USE_SCHANNEL ON CACHE BOOL "" FORCE)  # Use Windows Schannel on Windows
-    set(CURL_USE_OPENSSL OFF CACHE BOOL "" FORCE)
-else()
-    set(CURL_USE_SCHANNEL OFF CACHE BOOL "" FORCE)
-    set(CURL_USE_OPENSSL ON CACHE BOOL "" FORCE)  # Use OpenSSL on Linux/Unix
-endif()
-set(CURL_CA_BUNDLE "auto" CACHE STRING "Use system default CA bundle" FORCE)
-set(CURL_CA_PATH "auto" CACHE STRING "" FORCE)
-
-FetchContent_MakeAvailable(curl)
-
-add_definitions(-DGAME_HAVE_CURL)
 
 set(PREBUILT_LIBS_INTERMEDIATE_DIR "${CMAKE_BINARY_DIR}/prebuilt_libs" CACHE PATH "Directory for prebuilt libraries")
 set(PREBUILT_LIBS_DIR "${CMAKE_BINARY_DIR}/libs")
@@ -1440,11 +1444,12 @@ if(MSVC)
     target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/bugtrap/BugTrap-x64.lib)
 endif()
 
-# Link libcurl on non-MSVC platforms if it was found
-if(TARGET CURL::libcurl)
-    target_link_libraries(${GAME} CURL::libcurl)
-else()
-    target_link_libraries(${GAME} ${CURL_LIBRARIES})
+if(NOT WIN_EMSCRIPTEN)
+    if(TARGET CURL::libcurl)
+        target_link_libraries(${GAME} CURL::libcurl)
+    else()
+        target_link_libraries(${GAME} ${CURL_LIBRARIES})
+    endif()
 endif()
 
 if (PLATFORM_ANDROID)
