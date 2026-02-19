@@ -659,8 +659,9 @@ void city_t::houses_reset_demands() {
 }
 
 uint16_t &game_speed();
-uint16_t &game_scroll_speed();
 bool &game_monthly_autosave();
+
+static uint16_t g_legacy_scroll_speed;
 
 io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     auto &data = g_city;
@@ -681,7 +682,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.health.value);
     iob->bind(BIND_SIGNATURE_INT32, &data.health.num_mortuary_workers);
     iob->bind(BIND_SIGNATURE_UINT16, &game_speed());
-    iob->bind(BIND_SIGNATURE_UINT16, &game_scroll_speed());
+    iob->bind(BIND_SIGNATURE_UINT16, &g_legacy_scroll_speed);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.current);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.last_year);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.school_age);

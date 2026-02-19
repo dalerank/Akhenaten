@@ -3,13 +3,19 @@
 #include "content/vfs.h"
 #include "core/log.h"
 #include "core/svector.h"
+#include "core/calc.h"
 #include "js/js_game.h"
 #include "dev/debug.h"
+#include "game/game.h"
 
 static const char* CONF_FILENAME = "akhenaten.conf";
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_game_settings) {
     game_features::load();
+    int cfg_scroll = game_features::gameopt_scroll_speed.to_int();
+    if (cfg_scroll > 0) {
+        game.scroll_speed = (uint16_t)calc_bound(cfg_scroll, 0, 100);
+    }
 }
 
 namespace game_features {
@@ -98,6 +104,7 @@ namespace game_features {
     game_feature gameplay_jewels_workshops_culture_bonus{ "gameplay_jewels_workshops_culture_bonus", "#TR_CONFIG_JEWELS_WORKSHOPS_CULTURE_BONUS", true };
     game_feature gameui_overlay_show_gray_buildings{ "gameui_overlay_show_gray_buildings", "#TR_CONFIG_OVERLAY_SHOW_GRAY_BUILDINGS", false };
     game_feature gameplay_prevent_delete_near_burning_ruins{ "gameplay_prevent_delete_near_burning_ruins", "#TR_CONFIG_PREVENT_DELETE_NEAR_BURNING_RUINS", true };
+    game_feature gameopt_scroll_speed{ "gameopt_scroll_speed", "", 70.0f };
 
     custom_span<game_feature*> all() {
         return { _features.data(), _features.size() };
@@ -124,6 +131,10 @@ bool game_features::game_feature::to_bool() const {
 
 xstring game_features::game_feature::to_string() const {
     return _settings.get_string(name);
+}
+
+int game_features::game_feature::to_int() const {
+    return (int)_settings.get_float(name, 0.0f);
 }
 
 void game_features::game_feature::set(bool value) {

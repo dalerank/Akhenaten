@@ -333,13 +333,13 @@ bool game_t::check_valid() {
     logs::switch_output(vfs::platform_file_manager_get_base_path());
     locale_determine_language();
 
-    scroll_speed = 70;
-
     g_settings.load(); // c3.inf
     game_features::load();   // akhenaten.conf
     game_hotkeys::load();    // hotkeys.conf
     g_scenario.init();
     random_init();
+
+    scroll_speed = 70;
 
     paused = false;
     mt.reset(4);
