@@ -522,21 +522,6 @@ shipyard_info_window = {
     })
 }
 
-scribal_school_info_window = {
-    ui : baseui(building_info_window, {
-        background    : outer_panel({size: [29, 17]}),
-        resource_icon : resource_icon({pos: [32, 100] }),
-        resource_stored : text({pos: [60, 100], size: [px(27), 20], text:"${23.77} ${stored.papyrus}", font : FONT_NORMAL_BLACK_ON_LIGHT }),
-        inner_panel   : inner_panel({pos : [16, 120], size: [27, 5],
-                                                        ui : {
-                                                            workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
-                                                            workers_text : text({pos: [50, 16], text:"${building.num_workers} ${8.12} (${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK}),
-                                                            workers_desc : text({pos: [50, 32], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
-                                                        }
-                                                    }),
-    })
-}
-
 dock_orders_window = {
     parent_offset: [0, -px(4)],
     ui : {
