@@ -31,9 +31,7 @@ void building_water_lift::on_create(int orientation) {
 }
 
 void building_water_lift::on_place_update_tiles(int orientation, int variant) {
-    int orientation_rel = city_view_relative_orientation(orientation);
-    const int imgid = base_img() + orientation_rel + 4 * variant;
-    map_water_add_building(id(), tile(), size(), imgid);
+    update_map_orientation(orientation);
 }
 
 void building_water_lift::on_place_checks() {
@@ -43,6 +41,10 @@ void building_water_lift::on_place_checks() {
     warnings.add_if(!has_water_lift, "#needs_access_to_water_lift");
 }
 
+void building_water_lift::on_post_load() {
+    building_impl::on_post_load();
+    update_map_orientation(base.orientation);
+}
 
 void building_water_lift::update_day() {
     building_impl::update_day();
@@ -90,13 +92,15 @@ bool building_water_lift::draw_ornaments_and_animations_height(painter &ctx, vec
 }
 
 void building_water_lift::update_map_orientation(int orientation) {
-    int image_offset = city_view_relative_orientation(orientation);
+    int base_image = base_img();
     if (!map_terrain_exists_tile_in_radius_with_type(tile(), 2, 1, TERRAIN_WATER)) {
-        image_offset += 4;
+        base_image = first_img("base_no_water");
     } else if (map_terrain_exists_tile_in_radius_with_type(tile(), 2, 1, TERRAIN_FLOODPLAIN)) {
-        image_offset += 8;
+        base_image = first_img("base_floodplain");
     }
-    int image_id = base_img() + image_offset;
+
+    int image_offset = city_view_relative_orientation(orientation);
+    int image_id = base_image + image_offset + base.orientation;
     map_water_add_building(id(), tile(), 2, image_id);
 }
 
@@ -108,10 +112,12 @@ void building_water_lift::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT32, &d.input_tiles[1]);
     iob->bind(BIND_SIGNATURE_UINT32, &d.output_tiles[0]);
     iob->bind(BIND_SIGNATURE_UINT32, &d.output_tiles[1]);
-    iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
+    iob->bind_u8(base.orientation);
 }
 
 void building_water_lift::update_graphic() {
+    building_impl::update_graphic();
+
     if (!can_play_animation()) {
         set_animation(animkeys().none);
         building_impl::update_graphic();
@@ -128,7 +134,6 @@ void building_water_lift::update_graphic() {
     }
 
     set_animation(animkey);
-    building_impl::update_graphic();
 }
 
 void building_water_lift::highlight_waypoints() {

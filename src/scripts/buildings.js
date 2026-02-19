@@ -1311,18 +1311,20 @@ building_physician {
 building_water_lift {
   animations {
     _pack { pack:PACK_TERRAIN }
-    preview {id:50 }
-    base {  id:50 }
-    work_n { pos [35, 0], pack:PACK_SPR_AMBIENT, id:1, offset:0, duration:8, max_frames:12 }
-    work_e { pos [54, 14], pack:PACK_SPR_AMBIENT, id:1, offset:14, duration:8, max_frames:12 }
-    work_s { pos [45, 0], pack:PACK_SPR_AMBIENT, id:1, offset:27, duration:8, max_frames:12 }
-    work_w { pos [68, 20], pack:PACK_SPR_AMBIENT, id:1, offset:40, duration:8, max_frames:12 }
+    preview { path: "pharaoh_terrain/transport_00029" }
+    base { path: "pharaoh_terrain/transport_00029" }
+    base_no_water { path: "pharaoh_terrain/transport_00033" }
+    base_floodplain { path: "pharaoh_terrain/transport_00037" }
+    work_n { pos [35, 0], path:"sprambient/sprambient_00037", duration:8, max_frames:12 }
+    work_e { pos [54, 14], path:"sprambient/sprambient_00050", duration:8, max_frames:12 }
+    work_s { pos [45, 0], path:"sprambient/SprAmbient_00063", duration:8, max_frames:12 }
+    work_w { pos [68, 20], path:"sprambient/sprambient_00076", duration:8, max_frames:12 }
     minimap { pack:PACK_GENERAL, id:151 }
   }
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
   fire_proof : 1
   building_size : 2
-  planner_update_rule { 
+  planner_update_rule {
     canals : true
     relative_orientation: true
   }
