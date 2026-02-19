@@ -16,7 +16,7 @@ workshop_info_window {
         workers_img   : image({pos[30, 122 + 6], pack:PACK_GENERAL, id:134, offset:14})
         resource_icon : resource_icon({pos[32, 205], prop:"${building.first_material}" })
         resource_stored : text({pos[55, 210], size[px(27), 20], text:"${text.12} ${building.first_material_stored}", font:FONT_NORMAL_BLACK_ON_LIGHT })
-        
+
         button_help   : help_button({})
         button_close  : close_button({})
         mothball      : button({margin{right:-90, bottom:-40}, size[23, 23]})
