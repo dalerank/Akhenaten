@@ -15,14 +15,11 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Install OpenSSL (for curl)
-      run: brew install openssl@3
     - name: update-workspace
       run: |
         mkdir -p build
         cd build
         export CXXFLAGS=-stdlib=libc++
-        export OPENSSL_ROOT_DIR=$(brew --prefix openssl@3)
         cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_OSX_ARCHITECTURES="x86_64" -DOPTION_SYSTEM_LIBPNG=OFF -DOPTION_BUILD_LIBPNG=ON -DCMAKE_INSTALL_PREFIX="$PWD/install" .. -G "Unix Makefiles"
         cd ..
 
