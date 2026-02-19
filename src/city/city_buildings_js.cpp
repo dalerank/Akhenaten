@@ -67,6 +67,9 @@ int __city_get_random_house_id() {
 }
 ANK_FUNCTION(__city_get_random_house_id)
 
+int __building_stored_resource(int bid, int resource) { return building_get(bid)->stored_amount((e_resource)resource); }
+ANK_FUNCTION_2(__building_stored_resource)
+
 int __city_get_object_info_building_id() { return common_info_window::get_object_info().bid;}
 ANK_FUNCTION(__city_get_object_info_building_id)
 

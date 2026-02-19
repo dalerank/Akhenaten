@@ -43,6 +43,7 @@ import ui_display_options_window
 import ui_speed_options_window
 import ui_work_camp_window
 import ui_water_lift_window
+import ui_scribal_school_window
 import ui_infrastructure_window
 import ui_palace_window
 import ui_water_supply_window

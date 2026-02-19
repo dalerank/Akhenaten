@@ -177,6 +177,7 @@ city.get_building = function(building_id) {
         add_fire_damage: function(damage) { __building_add_fire_damage(this.id, damage) }
         add_collapse_damage: function(damage) { __building_add_collapse_damage(this.id, damage) }
         has_figure: function(index) { return __building_has_figure(this.id, index) }
+        stored_resource: function(resource) { return __building_stored_resource(this.id, resource) }
         get_figure: function(index) { return city.get_figure(__building_get_figure_id(this.id, index)) }
         @type { }
         @num_workers { }
