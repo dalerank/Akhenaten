@@ -157,17 +157,6 @@ info_window_vacant_lot = {
     }
 }
 
-info_window_water_lift = {
-    ui : {
-        background   : outer_panel({size: [29, 17] }), // pos/size setup from code
-        title          : text({pos: [0, 16], text:"${building.name}", size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        warning_text : text({pos: [20, 46], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-
-        button_close : close_button({}),
-        button_help  : help_button({}),
-    }
-}
-
 trade_resource_settings_window = {
     pos : [(sw(0) - px(36)) / 2, (sh(0) - px(15)) / 2],
     ui : {
