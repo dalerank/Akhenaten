@@ -1,6 +1,6 @@
 log_info("akhenaten: ui garden info started")
 
-info_window_garden {
+terrain_info_garden {
     open_sounds       : [ "Wavs/park1.wav" ]
     ui : baseui(terrain_info_window, {
         title   : text({pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
@@ -9,7 +9,7 @@ info_window_garden {
 }
 
 [es=terrain_info_garden_init]
-function garden_info_window_on_init(window) {
+function terrain_info_garden_on_init(window) {
     window.title.text = __loc(building_garden.meta.text_id, 0)
     window.describe.text = __loc(building_garden.meta.text_id, 1)
 }

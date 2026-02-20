@@ -16,7 +16,7 @@
 #include "window_figure_info.h"
 #include "city/city.h"
 
-void window_building_draw_aqueduct(object_info* c) {
+void window_building_draw_canal(object_info* c) {
     c->help_id = 60;
     window_building_play_sound(c, "Wavs/aquaduct.wav");
     outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
@@ -31,22 +31,14 @@ void terrain_info_window::window_info_background(object_info &c) {
 }
 
 void terrain_info_window::update(object_info &c) {
-    xstring terrain_config = "terrain_info_window";
-
-    switch (c.terrain_type) {
-    case terrain_info_road: terrain_config = "terrain_road_info_window"; break;
-    case terrain_info_wall: terrain_config = "terrain_wall_info_window"; break;
-    case terrain_info_plaza: terrain_config = "terrain_plaza_info_window"; break;
-    case terrain_info_ore_rock: terrain_config = "terrain_orerock_info_window"; break;
-    case terrain_info_rock: terrain_config = "terrain_rock_info_window"; break;
-    case terrain_info_floodplain: terrain_config = "terrain_floodplain_info_window"; break;
-    case terrain_info_garden: terrain_config = "info_window_garden"; break;
-    default:
-        break;
-    }
+    xstring terrain_config =  terrain_info_type_tokens.name(c.terrain_type);
 
     ui.load(terrain_config.c_str());
     c.help_id = io.r_int("help_id");
+}
+
+void terrain_info_window::init(object_info &c) {
+    common_info_window::init(c);
 
     bvariant_map event_data;
     event_data["pos"] = bvariant(pos);
@@ -55,10 +47,6 @@ void terrain_info_window::update(object_info &c) {
     auto type_str = terrain_info_type_tokens.name(c.terrain_type);
     bstring64 init_event_name(type_str, "_init");
     ui.event(init_event_name.c_str(), event_data);
-}
-
-void terrain_info_window::init(object_info &c) {
-    common_info_window::init(c);
 
     textid reason;
     textid describe;
@@ -81,11 +69,12 @@ void terrain_info_window::init(object_info &c) {
     case terrain_info_rock:
     case terrain_info_floodplain:
     case terrain_info_garden:
+    case terrain_info_water:
         break;
 
     case terrain_info_canal:
         c.help_id = 60;
-        window_building_draw_aqueduct(&c);
+        window_building_draw_canal(&c);
         break;
 
     case terrain_info_bridge:
