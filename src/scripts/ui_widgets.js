@@ -240,6 +240,18 @@ figure_carrier_info_window = {
     })
 }
 
+function building_info_window_toggle_overlay() {
+    log_info("building_info_window_toggle_overlay")
+    var b = city.get_building(city.object_info.building_id)
+    city.current_overlay = (city.current_overlay == b.overlay) ? OVERLAY_NONE : b.overlay
+}
+
+function building_info_window_text_overlay(window) {
+    var b = city.get_building(city.object_info.building_id)
+    return (city.overlay == b.overlay ? "V" : "v")
+}
+
+
 building_info_window {
     ui {
         background     : outer_panel({size: [29, 17]})
@@ -256,7 +268,7 @@ building_info_window {
         second_advisor : image_button({ pos[64, -1], size[28, 28], pack:PACK_GENERAL, id:106 })
         third_advisor  : image_button({ pos[96, -1], size[28, 28], pack:PACK_GENERAL, id:106 })
 
-        show_overlay   : button({ margin{right:-64, bottom:-40}, size[23, 23]})
+        show_overlay   : button({ margin{right:-64, bottom:-40}, size[23, 23], textfn:building_info_window_text_overlay, onclick: building_info_window_toggle_overlay })
         mothball       : button({ margin{right:-90, bottom:-40}, size[23, 23]})
 
         button_help    : help_button({})
@@ -535,8 +547,8 @@ dock_orders_window = {
         item_orders_column : dummy({margin:{centerx:0}}),
         item_icon_column : dummy({pos:[25, 0]}),
         item_name_column : dummy({pos:[55, 0]}),
-        item_row     : dummy({size:[px(13), 20]}),      
-        items_area   : dummy({pos:[0, 50]}), 
+        item_row     : dummy({size:[px(13), 20]}),
+        items_area   : dummy({pos:[0, 50]}),
     }
 }
 

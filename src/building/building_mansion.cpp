@@ -76,10 +76,6 @@ void building_mansion::update_graphic() {
     set_animation(animkeys().work);
 }
 
-int building_mansion::window_info_handle_mouse(const mouse *m, object_info &c) {
-    return 0;
-}
-
 bool building_mansion::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
     switch (type()) {
     case BUILDING_PERSONAL_MANSION: 
