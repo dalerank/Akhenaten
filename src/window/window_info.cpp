@@ -107,7 +107,7 @@ void object_info::reset(tile2i tile) {
     storage_show_special_orders = 0;
     go_to_advisor = {ADVISOR_NONE, ADVISOR_NONE, ADVISOR_NONE};
     bid = map_building_at(tile);
-    terrain_type = TERRAIN_INFO_EMPTY;
+    terrain_type = terrain_info_empty;
     nfigure.drawn = 0;
 }
 
@@ -152,7 +152,7 @@ void window_info_update(bool avoid_mouse) {
     }
 
     if (!context.ui && map_terrain_is(context.grid_offset, TERRAIN_RUBBLE)) {
-        context.terrain_type = TERRAIN_INFO_RUBBLE;
+        context.terrain_type = terrain_info_rubble;
         context.ui = &g_ruin_info_window;
     }
 
