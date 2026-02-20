@@ -6,6 +6,8 @@
 
 declare_console_var_int(fill_figure_radius, 30);
 
+const terrain_info_type_tokens_t terrain_info_type_tokens;
+
 figure *object_info::nfigure_t::get() const {
     const figure_id fid = ids[selected_index];
     return ::figure_get(fid);

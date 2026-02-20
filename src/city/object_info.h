@@ -8,37 +8,42 @@
 #include "overlays/city_overlay_fwd.h"
 #include "core/svector.h"
 #include "figure/figure.h"
+#include "core/tokenum.h"
 
 enum terrain_info_type {
-    TERRAIN_INFO_NONE = 0,
-    TERRAIN_INFO_TREE = 1,
-    TERRAIN_INFO_ROCK = 2,
-    TERRAIN_INFO_WATER = 3,
-    TERRAIN_INFO_SHRUB = 4,
-    TERRAIN_INFO_EARTHQUAKE = 5,
-    TERRAIN_INFO_ROAD = 6,
-    TERRAIN_INFO_CANAL = 7,
-    TERRAIN_INFO_RUBBLE = 8,
-    TERRAIN_INFO_WALL = 9,
-    TERRAIN_INFO_EMPTY = 10,
-    TERRAIN_INFO_BRIDGE = 11,
-    TERRAIN_INFO_GARDEN = 12,
-    TERRAIN_INFO_PLAZA = 13,
-    TERRAIN_INFO_ENTRY_FLAG = 14,
-    TERRAIN_INFO_EXIT_FLAG = 15,
+    terrain_info_none = 0,
+    terrain_info_tree = 1,
+    terrain_info_rock = 2,
+    terrain_info_water = 3,
+    terrain_info_shrub = 4,
+    terrain_info_earthquake = 5,
+    terrain_info_road = 6,
+    terrain_info_canal = 7,
+    terrain_info_rubble = 8,
+    terrain_info_wall = 9,
+    terrain_info_empty = 10,
+    terrain_info_bridge = 11,
+    terrain_info_garden = 12,
+    terrain_info_plaza = 13,
+    terrain_info_entry_flag = 14,
+    terrain_info_exit_flag = 15,
     //
-    TERRAIN_INFO_ORE_ROCK = 16,
-    TERRAIN_INFO_NORMAL_ROCK = 17,
-    TERRAIN_INFO_SPECIAL_ROCK = 18,
-    TERRAIN_INFO_FLOODPLAIN = 19,
-    TERRAIN_INFO_FLOODPLAIN_SUBMERGED = 20,
-    TERRAIN_INFO_MARSHLAND = 21,
-    TERRAIN_INFO_DUNES = 22,
-    TERRAIN_INFO_BRICK_WALL = 23,
-    TERRAIN_INFO_MUD_WALL = 24,
-    TERRAIN_INFO_MEADOWS = 25,
-    TERRAIN_INFO_CLIFFS = 26,
+    terrain_info_ore_rock = 16,
+    terrain_info_normal_rock = 17,
+    terrain_info_special_rock = 18,
+    terrain_info_floodplain = 19,
+    terrain_info_floodplain_submerged = 20,
+    terrain_info_marshland = 21,
+    terrain_info_dunes = 22,
+    terrain_info_brick_wall = 23,
+    terrain_info_mud_wall = 24,
+    terrain_info_meadows = 25,
+    terrain_info_cliffs = 26,
+
+    terrain_info_count
 };
+using terrain_info_type_tokens_t = token_holder<terrain_info_type, terrain_info_none, terrain_info_count>;
+extern const terrain_info_type_tokens_t terrain_info_type_tokens;
 
 struct common_info_window;
 class building;

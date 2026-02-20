@@ -9,6 +9,7 @@
 #include "grid/canals.h"
 #include "grid/image.h"
 #include "sound/sound.h"
+#include "building/building_garden.h"
 #include "building/building_plaza.h"
 #include "building/building_irrigation_ditch.h"
 #include "window/building/common.h"
@@ -33,18 +34,27 @@ void terrain_info_window::update(object_info &c) {
     xstring terrain_config = "terrain_info_window";
 
     switch (c.terrain_type) {
-    case TERRAIN_INFO_ROAD: terrain_config = "terrain_road_info_window"; break;
-    case TERRAIN_INFO_WALL: terrain_config = "terrain_wall_info_window"; break;
-    case TERRAIN_INFO_PLAZA: terrain_config = "terrain_plaza_info_window"; break;
-    case TERRAIN_INFO_ORE_ROCK: terrain_config = "terrain_orerock_info_window"; break;
-    case TERRAIN_INFO_ROCK: terrain_config = "terrain_rock_info_window"; break;
-    case TERRAIN_INFO_FLOODPLAIN: terrain_config = "terrain_floodplain_info_window"; break;
+    case terrain_info_road: terrain_config = "terrain_road_info_window"; break;
+    case terrain_info_wall: terrain_config = "terrain_wall_info_window"; break;
+    case terrain_info_plaza: terrain_config = "terrain_plaza_info_window"; break;
+    case terrain_info_ore_rock: terrain_config = "terrain_orerock_info_window"; break;
+    case terrain_info_rock: terrain_config = "terrain_rock_info_window"; break;
+    case terrain_info_floodplain: terrain_config = "terrain_floodplain_info_window"; break;
+    case terrain_info_garden: terrain_config = "info_window_garden"; break;
     default:
         break;
     }
 
     ui.load(terrain_config.c_str());
     c.help_id = io.r_int("help_id");
+
+    bvariant_map event_data;
+    event_data["pos"] = bvariant(pos);
+    event_data["terrain_type"] = bvariant(c.terrain_type);
+
+    auto type_str = terrain_info_type_tokens.name(c.terrain_type);
+    bstring64 init_event_name(type_str, "_init");
+    ui.event(init_event_name.c_str(), event_data);
 }
 
 void terrain_info_window::init(object_info &c) {
@@ -64,20 +74,21 @@ void terrain_info_window::init(object_info &c) {
         ui["describe"] = ui::str(describe);
         break;
 
-    case TERRAIN_INFO_ROAD:
-    case TERRAIN_INFO_WALL:
-    case TERRAIN_INFO_PLAZA:
-    case TERRAIN_INFO_ORE_ROCK:
-    case TERRAIN_INFO_ROCK:
-    case TERRAIN_INFO_FLOODPLAIN:
+    case terrain_info_road:
+    case terrain_info_wall:
+    case terrain_info_plaza:
+    case terrain_info_ore_rock:
+    case terrain_info_rock:
+    case terrain_info_floodplain:
+    case terrain_info_garden:
         break;
 
-    case TERRAIN_INFO_CANAL:
+    case terrain_info_canal:
         c.help_id = 60;
         window_building_draw_aqueduct(&c);
         break;
 
-    case TERRAIN_INFO_BRIDGE:
+    case terrain_info_bridge:
         c.help_id = 58;
         break;
     }
@@ -95,68 +106,68 @@ bool terrain_info_window::check(object_info &c) {
     tile2i tile(c.grid_offset);
     if (!c.bid && map_sprite_animation_at(c.grid_offset) > 0) {
         if (map_terrain_is(c.grid_offset, TERRAIN_WATER)) {
-            c.terrain_type = TERRAIN_INFO_BRIDGE;
+            c.terrain_type = terrain_info_bridge;
         } else {
-            c.terrain_type = TERRAIN_INFO_EMPTY;
+            c.terrain_type = terrain_info_empty;
         }
         return true;
     } else if (map_property_is_plaza_or_earthquake(tile)) {
         if (map_terrain_is(c.grid_offset, TERRAIN_ROAD)) {
-            c.terrain_type = TERRAIN_INFO_PLAZA;
+            c.terrain_type = terrain_info_plaza;
         }
 
         if (map_terrain_is(c.grid_offset, TERRAIN_ROCK)) {
-            c.terrain_type = TERRAIN_INFO_EARTHQUAKE;
+            c.terrain_type = terrain_info_earthquake;
         }
 
     } else if (map_terrain_is(c.grid_offset, TERRAIN_TREE)) {
-        c.terrain_type = TERRAIN_INFO_TREE;
+        c.terrain_type = terrain_info_tree;
 
     } else if (!c.bid && map_terrain_is(c.grid_offset, TERRAIN_FLOODPLAIN)) {
         if (map_terrain_is(c.grid_offset, TERRAIN_WATER)) {
-            c.terrain_type = TERRAIN_INFO_FLOODPLAIN_SUBMERGED;
+            c.terrain_type = terrain_info_floodplain_submerged;
         } else if (map_terrain_is(c.grid_offset, TERRAIN_ROAD)) {
-            c.terrain_type = TERRAIN_INFO_ROAD;
+            c.terrain_type = terrain_info_road;
         } else {
-            c.terrain_type = TERRAIN_INFO_FLOODPLAIN;
+            c.terrain_type = terrain_info_floodplain;
         }
 
     } else if (map_terrain_is(c.grid_offset, TERRAIN_MARSHLAND)) {
-        c.terrain_type = TERRAIN_INFO_MARSHLAND;
+        c.terrain_type = terrain_info_marshland;
 
     } else if (map_terrain_is(c.grid_offset, TERRAIN_DUNE)) {
-        c.terrain_type = TERRAIN_INFO_DUNES;
+        c.terrain_type = terrain_info_dunes;
 
     } else if (map_terrain_is(c.grid_offset, TERRAIN_ROCK)) {
         if (c.grid_offset == g_city.map.entry_flag.grid_offset()) {
-            c.terrain_type = TERRAIN_INFO_ENTRY_FLAG;
+            c.terrain_type = terrain_info_entry_flag;
         } else if (c.grid_offset == g_city.map.exit_flag.grid_offset()) {
-            c.terrain_type = TERRAIN_INFO_EXIT_FLAG;
+            c.terrain_type = terrain_info_exit_flag;
         } else {
             if (map_terrain_is(c.grid_offset, TERRAIN_ORE)) {
-                c.terrain_type = TERRAIN_INFO_ORE_ROCK;
+                c.terrain_type = terrain_info_ore_rock;
             } else {
-                c.terrain_type = TERRAIN_INFO_ROCK;
+                c.terrain_type = terrain_info_rock;
             }
         }
     } else if ((map_terrain_get(c.grid_offset) & (TERRAIN_WATER | TERRAIN_BUILDING)) == TERRAIN_WATER) {
-        c.terrain_type = TERRAIN_INFO_WATER;
+        c.terrain_type = terrain_info_water;
 
     } else if (map_terrain_is(c.grid_offset, TERRAIN_SHRUB)) {
-        c.terrain_type = TERRAIN_INFO_SHRUB;
+        c.terrain_type = terrain_info_shrub;
 
     } else if (map_terrain_is(c.grid_offset, TERRAIN_GARDEN)) {
-        c.terrain_type = TERRAIN_INFO_GARDEN;
+        c.terrain_type = terrain_info_garden;
 
     } else if ((map_terrain_get(c.grid_offset) & (TERRAIN_ROAD | TERRAIN_BUILDING)) == TERRAIN_ROAD) {
-        c.terrain_type = TERRAIN_INFO_ROAD;
+        c.terrain_type = terrain_info_road;
 
     } else if (map_terrain_is(c.grid_offset, TERRAIN_CANAL)) {
-        c.terrain_type = TERRAIN_INFO_CANAL;
+        c.terrain_type = terrain_info_canal;
 
     } else if (map_terrain_is(c.grid_offset, TERRAIN_WALL)) {
-        c.terrain_type = TERRAIN_INFO_WALL;
+        c.terrain_type = terrain_info_wall;
     }
 
-    return (c.terrain_type != TERRAIN_INFO_NONE);
+    return (c.terrain_type != terrain_info_none);
 }

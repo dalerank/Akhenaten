@@ -455,16 +455,6 @@ info_window_mansion {
     }
 }
 
-info_window_garden = {
-    ui : {
-        background    : outer_panel({size: [29, 17]}),
-        title             : text({pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        describe        : text({pos: [32, 66], text: "#gardens_describe", wrap:px(26), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-        button_help   : help_button({}),
-        button_close  : close_button({}),
-    }
-}
-
 info_window_courthouse = {
     ui : baseui(building_info_window, { 
         background    : outer_panel({size: [29, 17]}),
