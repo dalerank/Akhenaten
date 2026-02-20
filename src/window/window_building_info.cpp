@@ -16,6 +16,11 @@
 #include "dev/debug.h"
 #include "io/gamefiles/lang.h"
 #include "core/variant.h"
+#include "js/js_struct.h"
+#include "graphics/elements/ui_js.h"
+
+struct building_info_window_draw { vec2i pos; building_id bid; };
+ANK_REGISTER_STRUCT_WRITER(building_info_window_draw, pos, bid);
 
 building_info_window::building_info_window() {
     window_building_register_handler(this);
@@ -23,11 +28,10 @@ building_info_window::building_info_window() {
 
 int building_info_window::window_info_handle_mouse(const mouse *m, object_info &c) {
     ui.begin_widget(c.offset, true);
-    ui.handle_mouse(m);
+    int result = ui::handle_mouse(m);
     ui.end_widget();
 
-    building *b = building_get(c);
-    return b->dcast()->window_info_handle_mouse(m, c);
+    return result;
 }
 
 void building_info_window::archive_load(archive arch) {
@@ -106,6 +110,7 @@ void building_info_window::window_info_background(object_info &c) {
     }
 
     update_buttons(c);
+    ui.event(building_info_window_draw{ pos, c.bid });
 }
 
 textid building_info_window::get_tooltip(object_info &c) {
@@ -181,17 +186,6 @@ void building_info_window::init(object_info &c) {
             if (workers_needed) {
                 b->mothball_toggle();
             }
-        });;
-    }
-
-    if (ui.contains("show_overlay")) {
-        ui["show_overlay"].onclick([&c] {
-            e_overlay show_overlay = c.building_get()->get_overlay();
-            if (!g_city.overlay_is(show_overlay)) {
-                g_city.set_overlay(show_overlay);
-            } else {
-                g_city.reset_overlay();
-            }
         });
     }
 }
@@ -208,12 +202,6 @@ void building_info_window::update_buttons(object_info &c) {
             auto tooltip = (b->state == BUILDING_STATE_VALID) ? textid{ 54, 16 } : textid{ 54, 17 };
             ui["mothball"].tooltip(tooltip);
         }
-    }
-
-    if (ui.contains("show_overlay")) {
-        e_overlay show_overlay = b->get_overlay();
-        ui["show_overlay"].enabled = (show_overlay != OVERLAY_NONE);
-        ui["show_overlay"] = (g_city.overlay_is(show_overlay) ? "V" : "v");
     }
 }
 

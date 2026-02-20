@@ -9,6 +9,7 @@ city {
     @population { get: __city_population }
     @rating_kingdom { get: __city_rating_kingdom }
     @num_forts { get: __formation_get_num_forts }
+    @current_overlay { get: __city_get_current_overlay, set: __city_set_current_overlay }
 
     figures {
         __property_getter: __city_get_figures_property
@@ -45,6 +46,7 @@ city {
 
     object_info {
         @building_id { get: __city_get_object_info_building_id }
+        @bid { get: __city_get_object_info_building_id }
         @group { get: __city_get_object_info_group }
     }
 
@@ -183,6 +185,7 @@ city.get_building = function(building_id) {
         @num_workers { }
         @max_workers { }
         @has_road_access { }
+        @overlay { get: function() { return __building_get_overlay(this.id) } }
         @worker_percentage { get: function() { return calc_percentage(this.num_workers, this.max_workers) } }
         @meta_text_id { get: function() { return __building_meta_text_id(this.id) } }
     }

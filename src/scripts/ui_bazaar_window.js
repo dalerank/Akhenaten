@@ -30,7 +30,12 @@ bazaar_info_window {
         workers_text : text({pos[70, 142 + 12], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) })
         workers_desc : text({pos[70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK })
         orders       : button({margin{left:100, bottom:-40}, size[270, 25], text:"${98.5}", onclick:__window_bazaar_orders_show })
-        show_overlay : button({margin{right:-64, bottom:-40}, size[23, 23]})
+
+        show_overlay : button({
+                               margin{right:-64, bottom:-40}, size[23, 23]
+                               textfn:bazaar_info_window_text_overlay
+                               onclick: bazaar_info_window_toggle_overlay
+                              })
         mothball     : button({margin{right:-90, bottom:-40}, size[23, 23]})
 
         button_help  : help_button({})
@@ -55,6 +60,17 @@ bazaar_orders_window {
         button_help   : help_button({})
         button_close  : close_button({})
     }
+}
+
+function bazaar_info_window_toggle_overlay() {
+    log_info("building_info_window_toggle_overlay")
+    var b = city.get_building(city.object_info.building_id)
+    city.current_overlay = (city.current_overlay == b.overlay) ? OVERLAY_NONE : b.overlay
+}
+
+function bazaar_info_window_text_overlay(window) {
+    var b = city.get_building(city.object_info.building_id)
+    return (city.overlay == b.overlay ? "V" : "v")
 }
 
 [es=bazaar_info_window_init]

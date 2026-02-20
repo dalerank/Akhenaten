@@ -251,7 +251,7 @@ building_storage_room {
 
   building_size : 3
   fire_proof : true
-  
+
   flags {
     is_industry: true
   }

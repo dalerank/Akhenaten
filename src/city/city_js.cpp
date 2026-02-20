@@ -14,6 +14,12 @@ ANK_FUNCTION_1(__city_rank_salary)
 int __city_rating_kingdom() { return g_city.kingdome.rating; }
 ANK_FUNCTION(__city_rating_kingdom)
 
+int __city_get_current_overlay() { return g_city.current_overlay; }
+ANK_FUNCTION(__city_get_current_overlay)
+
+void __city_set_current_overlay(int overlay) { g_city.set_overlay((e_overlay)overlay); }
+ANK_FUNCTION_1(__city_set_current_overlay)
+
 int __city_population() { return g_city.population.current; }
 ANK_FUNCTION(__city_population)
 
