@@ -944,6 +944,14 @@ static js_Ast *statement(js_State *J, js_AstModifier *modifiers)
 			return EXP2(ASS, a, obj);
 		}
 
+		/* Handle: name = { ... } — expression() consumed the full assignment,
+		 * so a->type is EXP_ASS; attach modifiers to the RHS object literal. */
+		if (modifiers && a->type == EXP_ASS &&
+		    a->a && a->a->type == EXP_IDENTIFIER &&
+		    a->b && a->b->type == EXP_OBJECT) {
+			a->b->modifiers = modifiers;
+		}
+
 		jsP_semicolon(J);
 		return a;
 	}
