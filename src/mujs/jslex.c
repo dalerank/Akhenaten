@@ -553,7 +553,7 @@ static int jsY_lexx(js_State *J)
 			} else if (isregexpcontext(J->lasttoken)) {
 				return lexregexp(J);
 			} else if (jsY_accept(J, '=')) {
-				return TK_DIV_ASS;
+				return TK_DIV_ASSIGN;
 			} else {
 				return '/';
 			}
@@ -588,7 +588,7 @@ static int jsY_lexx(js_State *J)
 			jsY_next(J);
 			if (jsY_accept(J, '<')) {
 				if (jsY_accept(J, '='))
-					return TK_SHL_ASS;
+					return TK_SHL_ASSIGN;
 				return TK_SHL;
 			}
 			if (jsY_accept(J, '='))
@@ -600,11 +600,11 @@ static int jsY_lexx(js_State *J)
 			if (jsY_accept(J, '>')) {
 				if (jsY_accept(J, '>')) {
 					if (jsY_accept(J, '='))
-						return TK_USHR_ASS;
+						return TK_USHR_ASSIGN;
 					return TK_USHR;
 				}
 				if (jsY_accept(J, '='))
-					return TK_SHR_ASS;
+					return TK_SHR_ASSIGN;
 				return TK_SHR;
 			}
 			if (jsY_accept(J, '='))
@@ -634,7 +634,7 @@ static int jsY_lexx(js_State *J)
 			if (jsY_accept(J, '+'))
 				return TK_INC;
 			if (jsY_accept(J, '='))
-				return TK_ADD_ASS;
+				return TK_ADD_ASSIGN;
 			return '+';
 
 		case '-':
@@ -642,19 +642,19 @@ static int jsY_lexx(js_State *J)
 			if (jsY_accept(J, '-'))
 				return TK_DEC;
 			if (jsY_accept(J, '='))
-				return TK_SUB_ASS;
+				return TK_SUB_ASSIGN;
 			return '-';
 
 		case '*':
 			jsY_next(J);
 			if (jsY_accept(J, '='))
-				return TK_MUL_ASS;
+				return TK_MUL_ASSIGN;
 			return '*';
 
 		case '%':
 			jsY_next(J);
 			if (jsY_accept(J, '='))
-				return TK_MOD_ASS;
+				return TK_MOD_ASSIGN;
 			return '%';
 
 		case '&':
@@ -662,7 +662,7 @@ static int jsY_lexx(js_State *J)
 			if (jsY_accept(J, '&'))
 				return TK_AND;
 			if (jsY_accept(J, '='))
-				return TK_AND_ASS;
+				return TK_AND_ASSIGN;
 			return '&';
 
 		case '|':
@@ -670,13 +670,13 @@ static int jsY_lexx(js_State *J)
 			if (jsY_accept(J, '|'))
 				return TK_OR;
 			if (jsY_accept(J, '='))
-				return TK_OR_ASS;
+				return TK_OR_ASSIGN;
 			return '|';
 
 		case '^':
 			jsY_next(J);
 			if (jsY_accept(J, '='))
-				return TK_XOR_ASS;
+				return TK_XOR_ASSIGN;
 			return '^';
 
 		case 0:
