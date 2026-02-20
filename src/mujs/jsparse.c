@@ -651,18 +651,18 @@ static js_Ast *conditional(js_State *J, int notin)
 static js_Ast *assignment(js_State *J, int notin)
 {
 	js_Ast *a = conditional(J, notin);
-	if (jsP_accept(J, '=')) return EXP2(ASS, a, assignment(J, notin));
-	if (jsP_accept(J, TK_MUL_ASS)) return EXP2(ASS_MUL, a, assignment(J, notin));
-	if (jsP_accept(J, TK_DIV_ASS)) return EXP2(ASS_DIV, a, assignment(J, notin));
-	if (jsP_accept(J, TK_MOD_ASS)) return EXP2(ASS_MOD, a, assignment(J, notin));
-	if (jsP_accept(J, TK_ADD_ASS)) return EXP2(ASS_ADD, a, assignment(J, notin));
-	if (jsP_accept(J, TK_SUB_ASS)) return EXP2(ASS_SUB, a, assignment(J, notin));
-	if (jsP_accept(J, TK_SHL_ASS)) return EXP2(ASS_SHL, a, assignment(J, notin));
-	if (jsP_accept(J, TK_SHR_ASS)) return EXP2(ASS_SHR, a, assignment(J, notin));
-	if (jsP_accept(J, TK_USHR_ASS)) return EXP2(ASS_USHR, a, assignment(J, notin));
-	if (jsP_accept(J, TK_AND_ASS)) return EXP2(ASS_BITAND, a, assignment(J, notin));
-	if (jsP_accept(J, TK_XOR_ASS)) return EXP2(ASS_BITXOR, a, assignment(J, notin));
-	if (jsP_accept(J, TK_OR_ASS)) return EXP2(ASS_BITOR, a, assignment(J, notin));
+	if (jsP_accept(J, '=')) return EXP2(ASSIGN, a, assignment(J, notin));
+	if (jsP_accept(J, TK_MUL_ASSIGN)) return EXP2(ASSIGN_MUL, a, assignment(J, notin));
+	if (jsP_accept(J, TK_DIV_ASSIGN)) return EXP2(ASSIGN_DIV, a, assignment(J, notin));
+	if (jsP_accept(J, TK_MOD_ASSIGN)) return EXP2(ASSIGN_MOD, a, assignment(J, notin));
+	if (jsP_accept(J, TK_ADD_ASSIGN)) return EXP2(ASSIGN_ADD, a, assignment(J, notin));
+	if (jsP_accept(J, TK_SUB_ASSIGN)) return EXP2(ASSIGN_SUB, a, assignment(J, notin));
+	if (jsP_accept(J, TK_SHL_ASSIGN)) return EXP2(ASSIGN_SHL, a, assignment(J, notin));
+	if (jsP_accept(J, TK_SHR_ASSIGN)) return EXP2(ASSIGN_SHR, a, assignment(J, notin));
+	if (jsP_accept(J, TK_USHR_ASSIGN)) return EXP2(ASSIGN_USHR, a, assignment(J, notin));
+	if (jsP_accept(J, TK_AND_ASSIGN)) return EXP2(ASSIGN_BITAND, a, assignment(J, notin));
+	if (jsP_accept(J, TK_XOR_ASSIGN)) return EXP2(ASSIGN_BITXOR, a, assignment(J, notin));
+	if (jsP_accept(J, TK_OR_ASSIGN)) return EXP2(ASSIGN_BITOR, a, assignment(J, notin));
 	return a;
 }
 
@@ -941,12 +941,12 @@ static js_Ast *statement(js_State *J, js_AstModifier *modifiers)
 			if (modifiers) {
 				obj->modifiers = modifiers;
 			}
-			return EXP2(ASS, a, obj);
+			return EXP2(ASSIGN, a, obj);
 		}
 
 		/* Handle: name = { ... } — expression() consumed the full assignment,
 		 * so a->type is EXP_ASS; attach modifiers to the RHS object literal. */
-		if (modifiers && a->type == EXP_ASS &&
+		if (modifiers && a->type == EXP_ASSIGN &&
 		    a->a && a->a->type == EXP_IDENTIFIER &&
 		    a->b && a->b->type == EXP_OBJECT) {
 			a->b->modifiers = modifiers;

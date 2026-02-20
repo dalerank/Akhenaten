@@ -108,18 +108,18 @@ static int prec(enum js_AstType type)
 	case EXP_COND:
 		return 30;
 
-	case EXP_ASS:
-	case EXP_ASS_MUL:
-	case EXP_ASS_DIV:
-	case EXP_ASS_MOD:
-	case EXP_ASS_ADD:
-	case EXP_ASS_SUB:
-	case EXP_ASS_SHL:
-	case EXP_ASS_SHR:
-	case EXP_ASS_USHR:
-	case EXP_ASS_BITAND:
-	case EXP_ASS_BITXOR:
-	case EXP_ASS_BITOR:
+	case EXP_ASSIGN:
+	case EXP_ASSIGN_MUL:
+	case EXP_ASSIGN_DIV:
+	case EXP_ASSIGN_MOD:
+	case EXP_ASSIGN_ADD:
+	case EXP_ASSIGN_SUB:
+	case EXP_ASSIGN_SHL:
+	case EXP_ASSIGN_SHR:
+	case EXP_ASSIGN_USHR:
+	case EXP_ASSIGN_BITAND:
+	case EXP_ASSIGN_BITXOR:
+	case EXP_ASSIGN_BITOR:
 		return 20;
 
 #define COMMA 15
@@ -338,18 +338,18 @@ static void pexpi(int d, int p, js_Ast *exp)
 	case EXP_MUL: pbin(d, p, exp, " * "); break;
 	case EXP_DIV: pbin(d, p, exp, " / "); break;
 	case EXP_MOD: pbin(d, p, exp, " % "); break;
-	case EXP_ASS: pbin(d, p, exp, " = "); break;
-	case EXP_ASS_MUL: pbin(d, p, exp, " *= "); break;
-	case EXP_ASS_DIV: pbin(d, p, exp, " /= "); break;
-	case EXP_ASS_MOD: pbin(d, p, exp, " %= "); break;
-	case EXP_ASS_ADD: pbin(d, p, exp, " += "); break;
-	case EXP_ASS_SUB: pbin(d, p, exp, " -= "); break;
-	case EXP_ASS_SHL: pbin(d, p, exp, " <<= "); break;
-	case EXP_ASS_SHR: pbin(d, p, exp, " >>= "); break;
-	case EXP_ASS_USHR: pbin(d, p, exp, " >>>= "); break;
-	case EXP_ASS_BITAND: pbin(d, p, exp, " &= "); break;
-	case EXP_ASS_BITXOR: pbin(d, p, exp, " ^= "); break;
-	case EXP_ASS_BITOR: pbin(d, p, exp, " |= "); break;
+	case EXP_ASSIGN: pbin(d, p, exp, " = "); break;
+	case EXP_ASSIGN_MUL: pbin(d, p, exp, " *= "); break;
+	case EXP_ASSIGN_DIV: pbin(d, p, exp, " /= "); break;
+	case EXP_ASSIGN_MOD: pbin(d, p, exp, " %= "); break;
+	case EXP_ASSIGN_ADD: pbin(d, p, exp, " += "); break;
+	case EXP_ASSIGN_SUB: pbin(d, p, exp, " -= "); break;
+	case EXP_ASSIGN_SHL: pbin(d, p, exp, " <<= "); break;
+	case EXP_ASSIGN_SHR: pbin(d, p, exp, " >>= "); break;
+	case EXP_ASSIGN_USHR: pbin(d, p, exp, " >>>= "); break;
+	case EXP_ASSIGN_BITAND: pbin(d, p, exp, " &= "); break;
+	case EXP_ASSIGN_BITXOR: pbin(d, p, exp, " ^= "); break;
+	case EXP_ASSIGN_BITOR: pbin(d, p, exp, " |= "); break;
 
 	case EXP_COMMA: pbin(d, p, exp, ", "); break;
 
