@@ -6,6 +6,7 @@
 #include "core/log.h"
 #include "city/object_info.h"
 #include "window/window_info.h"
+#include "building/building.h"
 
 int __city_count_active_buildings(int btype) {
     return g_city.buildings.count_active((e_building_type)btype);
@@ -105,3 +106,12 @@ ANK_FUNCTION_2(__bazaar_resource_amount)
 
 int __city_get_random_building_id_by_type(int type) { return building_id_random((e_building_type)type); }
 ANK_FUNCTION_1(__city_get_random_building_id_by_type)
+
+int __building_get_state(int bid) { return (int)building_get(bid)->state; }
+ANK_FUNCTION_1(__building_get_state)
+
+int __building_mothball_toggle(int bid) {
+    building* b = building_get(bid);
+    return b->max_workers ? b->mothball_toggle() : 0;
+}
+ANK_FUNCTION_1(__building_mothball_toggle)

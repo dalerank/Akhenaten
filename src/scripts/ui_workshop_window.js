@@ -1,5 +1,17 @@
 log_info("akhenaten: ui workshops info window started")
 
+function workshop_info_window_text_mothball() {
+    var b = city.get_building(city.object_info.building_id)
+    return (b.state == 1 ? "x" : "")
+}
+
+function workshop_info_window_toggle_mothball() {
+    var b = city.get_building(city.object_info.building_id)
+    if (b.max_workers) {
+        b.mothball_toggle()
+    }
+}
+
 workshop_info_window {
     related_buildings [BUILDING_BREWERY_WORKSHOP, BUILDING_POTTERY_WORKSHOP
                        BUILDING_PAPYRUS_WORKSHOP, BUILDING_CHARIOTS_WORKSHOP, BUILDING_CATTLE_RANCH
@@ -19,7 +31,11 @@ workshop_info_window {
 
         button_help   : help_button({})
         button_close  : close_button({})
-        mothball      : button({margin{right:-90, bottom:-40}, size[23, 23]})
+        mothball      : button({
+                                margin{right:-90, bottom:-40}, size[23, 23]
+                                textfn: workshop_info_window_text_mothball
+                                onclick: workshop_info_window_toggle_mothball
+                               })
     }
 }
 

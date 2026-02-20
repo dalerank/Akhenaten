@@ -1,5 +1,27 @@
 log_info("akhenaten: ui granary window started")
 
+function granary_info_window_text_overlay(window) {
+    var b = city.get_building(city.object_info.building_id)
+    return (city.overlay == b.overlay ? "V" : "v")
+}
+
+function granary_info_window_toggle_overlay() {
+    var b = city.get_building(city.object_info.building_id)
+    city.current_overlay = (city.current_overlay == b.overlay) ? OVERLAY_NONE : b.overlay
+}
+
+function granary_info_window_text_mothball() {
+    var b = city.get_building(city.object_info.building_id)
+    return (b.state == 1 ? "x" : "")
+}
+
+function granary_info_window_toggle_mothball() {
+    var b = city.get_building(city.object_info.building_id)
+    if (b.max_workers) {
+        b.mothball_toggle()
+    }
+}
+
 granary_info_window {
     resource_text_group : 23
     resource_number : 4
@@ -25,7 +47,16 @@ granary_info_window {
         orders       : button({margin{centerx:-135, bottom:-40}, size[270, 25], text:"${98.5}"}), 
         button_help  : image_button({margin{left:14, bottom:-40}, size[27, 27], pack:PACK_GENERAL, id:134 })
         button_close : image_button({margin{right:-40, bottom:-40}, size[27, 27], pack:PACK_GENERAL, id:134, offset:4 })
-        show_overlay : button({margin{right:-64, bottom:-40}, size[23, 23]})
-        mothball     : button({margin{right:-90, bottom:-40}, size[23, 23]})
+        show_overlay : button({
+                               margin{right:-64, bottom:-40}, size[23, 23]
+                               textfn: granary_info_window_text_overlay
+                               onclick: granary_info_window_toggle_overlay
+                              })
+
+        mothball     : button({
+                               margin{right:-90, bottom:-40}, size[23, 23]
+                               textfn: granary_info_window_text_mothball
+                               onclick: granary_info_window_toggle_mothball
+                              })
     }
 }

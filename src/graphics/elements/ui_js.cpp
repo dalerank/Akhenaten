@@ -84,6 +84,12 @@ void __ui_element_set_enabled(pcstr element_id, bool v) {
 }
 ANK_FUNCTION_2(__ui_element_set_enabled)
 
+void __ui_element_set_tooltip(pcstr element_id, pcstr text) {
+    auto elem = __ui_get_element(element_id);
+    if (elem && text) { elem->tooltip(xstring(text)); }
+}
+ANK_FUNCTION_2(__ui_element_set_tooltip)
+
 int __ui_element_get_font(pcstr element_id) {
     auto elem = __ui_get_element(element_id);
     return elem ? elem->font() : FONT_INVALID;

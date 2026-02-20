@@ -97,6 +97,10 @@ function ui_create_element_proxy(elementId) {
             get: function() { return __ui_element_get_selected(this.id) }
             set: function(v) { __ui_element_set_selected(this.id, v) }
         }
+
+        @tooltip {
+            set: function(v) { __ui_element_set_tooltip(this.id, v) }
+        }
     }
 }
 
