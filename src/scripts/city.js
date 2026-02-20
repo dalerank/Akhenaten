@@ -181,11 +181,13 @@ city.get_building = function(building_id) {
         has_figure: function(index) { return __building_has_figure(this.id, index) }
         stored_resource: function(resource) { return __building_stored_resource(this.id, resource) }
         get_figure: function(index) { return city.get_figure(__building_get_figure_id(this.id, index)) }
+        mothball_toggle: function() { __building_mothball_toggle(this.id) }
         @type { }
         @num_workers { }
         @max_workers { }
         @has_road_access { }
         @overlay { get: function() { return __building_get_overlay(this.id) } }
+        @state { get: function() { return __building_get_state(this.id) } }
         @worker_percentage { get: function() { return calc_percentage(this.num_workers, this.max_workers) } }
         @meta_text_id { get: function() { return __building_meta_text_id(this.id) } }
     }

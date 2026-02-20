@@ -1,5 +1,28 @@
 log_info("akhenaten: ui bazaar window started")
 
+function bazaar_info_window_toggle_overlay() {
+    log_info("building_info_window_toggle_overlay")
+    var b = city.get_building(city.object_info.building_id)
+    city.current_overlay = (city.current_overlay == b.overlay) ? OVERLAY_NONE : b.overlay
+}
+
+function bazaar_info_window_text_overlay(window) {
+    var b = city.get_building(city.object_info.building_id)
+    return (city.overlay == b.overlay ? "V" : "v")
+}
+
+function bazaar_info_window_text_mothball() {
+    var b = city.get_building(city.object_info.building_id)
+    return (b.state == 1 ? "x" : "")
+}
+
+function bazaar_info_window_toggle_mothball() {
+    var b = city.get_building(city.object_info.building_id)
+    if (b.max_workers) {
+        b.mothball_toggle()
+    }
+}
+
 [es=building_info_window]
 bazaar_info_window {
     related_buildings [BUILDING_BAZAAR, BUILDING_BAZAAR_UP]
@@ -33,10 +56,15 @@ bazaar_info_window {
 
         show_overlay : button({
                                margin{right:-64, bottom:-40}, size[23, 23]
-                               textfn:bazaar_info_window_text_overlay
+                               textfn: bazaar_info_window_text_overlay
                                onclick: bazaar_info_window_toggle_overlay
                               })
-        mothball     : button({margin{right:-90, bottom:-40}, size[23, 23]})
+
+        mothball     : button({
+                               margin{right:-90, bottom:-40}, size[23, 23]
+                               textfn: bazaar_info_window_text_mothball
+                               onclick: bazaar_info_window_toggle_mothball
+                              })
 
         button_help  : help_button({})
         button_close : close_button({})
@@ -60,17 +88,6 @@ bazaar_orders_window {
         button_help   : help_button({})
         button_close  : close_button({})
     }
-}
-
-function bazaar_info_window_toggle_overlay() {
-    log_info("building_info_window_toggle_overlay")
-    var b = city.get_building(city.object_info.building_id)
-    city.current_overlay = (city.current_overlay == b.overlay) ? OVERLAY_NONE : b.overlay
-}
-
-function bazaar_info_window_text_overlay(window) {
-    var b = city.get_building(city.object_info.building_id)
-    return (city.overlay == b.overlay ? "V" : "v")
 }
 
 [es=bazaar_info_window_init]

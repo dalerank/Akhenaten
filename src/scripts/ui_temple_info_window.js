@@ -13,7 +13,11 @@ temple_info_window {
         button_close : image_button({ margin:{right:-40, bottom:-40}, size[27, 27], pack:PACK_GENERAL, id:134, offset:4 })
         show_overlay : button({ margin:{right:-64, bottom:-40}, size[23, 23]})
         god_image    : image({ pos[190, 134] })
-        mothball     : button({ margin:{right:-90, bottom:-40}, size[23, 23]})
+        mothball     : button({
+                               margin:{right:-90, bottom:-40}, size[23, 23]
+                               textfn:building_info_window_text_mothball
+                               onclick: building_info_window_toggle_mothball
+                              })
     }
 }
 
@@ -33,7 +37,11 @@ info_window_temple_complex {
         show_overlay : button({ margin{right:-64, bottom:-40}, size[23, 23]})
         god_image    : image({ pos[190, 134] })
 
-        mothball     : button({ margin{right:-90, bottom:-40}, size[23, 23]})
+        mothball     : button({ 
+                                margin{right:-90, bottom:-40}, size[23, 23]
+                                textfn:building_info_window_text_mothball
+                                onclick: building_info_window_toggle_mothball
+                              })
     }
 }
 
