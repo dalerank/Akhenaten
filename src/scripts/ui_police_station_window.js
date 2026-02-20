@@ -1,7 +1,7 @@
 log_info("akhenaten: ui police station info window started")
 
 [es=building_info_window]
-info_window_police_station = {
+info_window_police_station {
     related_buildings [BUILDING_POLICE_STATION]
     ui : baseui(building_info_window, {
         weapon_icon     : resource_icon({ pos[32, 205], resource:RESOURCE_WEAPONS })
@@ -10,7 +10,7 @@ info_window_police_station = {
 }
 
 [es=info_window_police_station_init]
-function info_window_police_station_init(window) {
+function info_window_police_station_on_init(window) {
     log_info("akhenaten: info_window_police_station_init")
     var b = city.get_building(window.bid)
     var reason = { group: b.meta_text_id, id: 0 }
