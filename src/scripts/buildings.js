@@ -1370,7 +1370,7 @@ building_police_station = {
   animations {
     preview { pack:PACK_GENERAL, id:64 },
     base { pack:PACK_GENERAL, id:64 },
-    work { pack:PACK_GENERAL, id:64, offset:1, max_frames:12 },
+    work { pos[20, -40], pack:PACK_GENERAL, id:64, offset:1, max_frames:12 },
     resources {pack:PACK_GENERAL, id:99, offset:2},
   }
 
