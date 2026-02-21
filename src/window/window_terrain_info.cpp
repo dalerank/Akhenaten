@@ -28,21 +28,30 @@ void window_building_draw_canal(object_info* c) {
 
 void terrain_info_window::window_info_background(object_info &c) {
     update_buttons(c);
+
+    ui_scope_property holder;
+    ui.format_all(&holder);
 }
 
 void terrain_info_window::update(object_info &c) {
-    xstring terrain_config =  terrain_info_type_tokens.name(c.terrain_type);
-
-    ui.load(terrain_config.c_str());
-    c.help_id = io.r_int("help_id");
 }
 
 void terrain_info_window::init(object_info &c) {
     common_info_window::init(c);
 
+    xstring terrain_config = terrain_info_type_tokens.name(c.terrain_type);
+    ui.load(terrain_config.c_str());
+
+    if (c.can_play_sound && !open_sounds.empty()) {
+        c.can_play_sound = 0;
+        const xstring &wav = open_sounds[rand() % open_sounds.size()];
+        window_building_play_sound(&c, wav.c_str());
+    }
+
     bvariant_map event_data;
     event_data["pos"] = bvariant(pos);
     event_data["terrain_type"] = bvariant(c.terrain_type);
+    event_data["grid_offset"] = bvariant(c.grid_offset);
 
     auto type_str = terrain_info_type_tokens.name(c.terrain_type);
     bstring64 init_event_name(type_str, "_init");
@@ -70,6 +79,7 @@ void terrain_info_window::init(object_info &c) {
     case terrain_info_floodplain:
     case terrain_info_garden:
     case terrain_info_water:
+    case terrain_info_rubble:
         break;
 
     case terrain_info_canal:
@@ -89,6 +99,8 @@ void terrain_info_window::init(object_info &c) {
             g_sound.speech_play_file(sound, 255);
         }
     }
+
+    c.help_id = io.r_int("help_id");
 }
 
 bool terrain_info_window::check(object_info &c) {
@@ -156,6 +168,9 @@ bool terrain_info_window::check(object_info &c) {
 
     } else if (map_terrain_is(c.grid_offset, TERRAIN_WALL)) {
         c.terrain_type = terrain_info_wall;
+
+    } else if (!c.bid && map_terrain_is(c.grid_offset, TERRAIN_RUBBLE)) {
+        c.terrain_type = terrain_info_rubble;
     }
 
     return (c.terrain_type != terrain_info_none);

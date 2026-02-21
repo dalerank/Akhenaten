@@ -65,7 +65,7 @@ function ui_create_element_proxy(elementId) {
         id: elementId
 
         @text {
-            get: function() { return __ui_element_get_enabled(this.id) }
+            get: function() { return __ui_element_get_text(this.id) }
             set: function(v) { __ui_element_set_text(this.id, v) }
         }
 

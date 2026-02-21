@@ -39,7 +39,6 @@
 #include "window/window_building_info.h"
 #include "window/window_terrain_info.h"
 #include "window/window_figure_info.h"
-#include "window/window_ruin_info.h"
 #include "window/window_city.h"
 #include "window/message_dialog.h"
 #include "widget/widget_sidebar.h"
@@ -66,7 +65,6 @@ terrain_info_window g_terrain_info_window;
 figure_info_window figure_common_window;
 building_info_window g_building_common_window;
 empty_info_window g_empty_info_window;
-ruin_info_window g_ruin_info_window;
 
 void window_info_show(const tile2i& point, bool avoid_mouse);
 
@@ -75,7 +73,6 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_info_window) {
     g_empty_info_window.load("empty_info_window");
     figure_common_window.load("figure_info_window");
     g_terrain_info_window.load("terrain_info_window");
-    g_ruin_info_window.load("ruin_info_window");
 
     auto load_configs = [] (auto &handlers) {
         for (auto &handler : *handlers) {
@@ -149,11 +146,6 @@ void window_info_update(bool avoid_mouse) {
     if (!context.ui && building_id) {
         context.ui = &g_building_common_window;
         context.bid = building_id;
-    }
-
-    if (!context.ui && map_terrain_is(context.grid_offset, TERRAIN_RUBBLE)) {
-        context.terrain_type = terrain_info_rubble;
-        context.ui = &g_ruin_info_window;
     }
 
     if (!context.ui && g_terrain_info_window.check(context)) {
@@ -380,11 +372,6 @@ void common_info_window::update_buttons(object_info &c) {
 
 void common_info_window::archive_load(archive arch) {
     widget::archive_load(arch);
-
-    if (check(def_object_info)) {
-        init(def_object_info);
-    }
-
     arch.r_array_str("open_sounds", open_sounds);
 }
 
