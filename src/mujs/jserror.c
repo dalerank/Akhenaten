@@ -85,39 +85,92 @@ static const char *jsB_getline_from_file(const char *filename, int target_line, 
   return NULL;
 }
 
-/* Find the position of property access in a line (simple heuristic) */
+/* Find the position of property access in a line (simple heuristic).
+ * For assignments like "a.b.c = x.y", the error is on the LHS member
+ * access, so we return the last dot before the '='. For non-assignment
+ * expressions we fall back to the last dot in the whole expression. */
 static int jsB_find_property_access_pos(const char *line)
 {
-  const char *last_dot = NULL;
   const char *p = line;
-  
-  /* Find the last dot before end of meaningful code */
-  while (*p) {
-    if (*p == '.') {
-      last_dot = p;
-    } else if (*p == ';' || *p == '/' || *p == '\n') {
+  const char *assign_pos = NULL;
+  const char *last_dot = NULL;
+  const char *last_dot_before_assign = NULL;
+
+  while (*p && *p != ';' && *p != '\n') {
+    /* Stop at line comments */
+    if (*p == '/' && *(p + 1) == '/')
       break;
+
+    if (*p == '=') {
+      char prev = (p > line) ? *(p - 1) : 0;
+      char next = *(p + 1);
+      /* Ignore ==, !=, <=, >= */
+      if (prev != '!' && prev != '<' && prev != '>' && prev != '=' && next != '=') {
+        if (!assign_pos)
+          assign_pos = p;
+      }
+    } else if (*p == '.') {
+      last_dot = p;
+      if (!assign_pos)
+        last_dot_before_assign = p;
     }
     p++;
   }
-  
-  /* If we found a dot, return its position */
-  if (last_dot) {
-    return (int)(last_dot - line);
-  }
-  
-  /* Otherwise, try to find the last identifier before end of line */
-  /* This is a simple heuristic - point to near the end of code */
+
+  /* Prefer last dot in LHS of assignment, fall back to last dot overall */
+  const char *target = last_dot_before_assign ? last_dot_before_assign : last_dot;
+  if (target)
+    return (int)(target - line);
+
+  /* Last resort: find last alphanumeric character */
   p = line;
   int last_alphanum = -1;
   while (*p && *p != ';' && *p != '/' && *p != '\n') {
-    if ((*p >= 'a' && *p <= 'z') || (*p >= 'A' && *p <= 'Z') || (*p >= '0' && *p <= '9')) {
+    if ((*p >= 'a' && *p <= 'z') || (*p >= 'A' && *p <= 'Z') || (*p >= '0' && *p <= '9'))
       last_alphanum = (int)(p - line);
-    }
     p++;
   }
-  
+
   return last_alphanum > 0 ? last_alphanum : (int)strlen(line) - 1;
+}
+
+/* Find the position to highlight for "cannot convert undefined to object".
+ * If prop_name is given (the property that was being accessed on the undefined
+ * value), we search for the dot before it and then step back one more dot so
+ * the arrow lands on the object expression that returned undefined.
+ * Example: "window.mothball.enabled = ..."  prop_name="enabled"
+ *   -> find ".enabled", then the previous "." -> points at ".mothball". */
+static int jsB_find_error_pos(const char *line, const char *prop_name)
+{
+  if (prop_name && prop_name[0]) {
+    /* Build ".propname" and search for it */
+    size_t plen = strlen(prop_name);
+    const char *p = line;
+    while (*p) {
+      if (*p == '.' && strncmp(p + 1, prop_name, plen) == 0) {
+        /* Make sure it's not a prefix of a longer name */
+        char after = p[1 + plen];
+        if (!((after >= 'a' && after <= 'z') || (after >= 'A' && after <= 'Z') ||
+              (after >= '0' && after <= '9') || after == '_' || after == '$')) {
+          /* Found ".propname" at position (p - line).
+           * Now search backwards for the previous dot — that's the object
+           * expression that evaluated to undefined. */
+          if (p > line) {
+            const char *q = p - 1;
+            while (q > line && *q != '.') q--;
+            if (*q == '.')
+              return (int)(q - line);
+          }
+          /* No previous dot: point at this dot */
+          return (int)(p - line);
+        }
+      }
+      p++;
+    }
+  }
+
+  /* Fallback: last dot before '=' (LHS), or last dot overall */
+  return jsB_find_property_access_pos(line);
 }
 
 /* Format detailed error message with code context */
@@ -150,20 +203,13 @@ static void jsB_format_detailed_error(js_State *J, const char *error_type, const
   if (line_text && line_text[0]) {
     /* Trim leading whitespace for display */
     const char *trimmed = line_text;
-    int leading_spaces = 0;
-    while (*trimmed == ' ' || *trimmed == '\t') {
-      if (*trimmed == '\t') {
-        leading_spaces += 4;
-      } else {
-        leading_spaces++;
-      }
+    while (*trimmed == ' ' || *trimmed == '\t')
       trimmed++;
-    }
-    
-    /* Find approximate position of the error */
-    int error_pos = jsB_find_property_access_pos(trimmed);
+
+    /* Find position of the error using runtime property name when available */
+    int error_pos = jsB_find_error_pos(trimmed, J->pending_prop);
     if (error_pos < 0) error_pos = 0;
-    if (error_pos > (int)strlen(trimmed) - 1) error_pos = strlen(trimmed) - 1;
+    if (error_pos > (int)strlen(trimmed) - 1) error_pos = (int)strlen(trimmed) - 1;
     
     /* Build detailed error message with code context */
     snprintf(outbuf, outsize,

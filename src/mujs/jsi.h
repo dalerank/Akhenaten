@@ -224,6 +224,9 @@ struct js_State
 	/* exception stack */
 	int trytop;
 	js_Jumpbuf trybuf[JS_TRYLIMIT];
+
+	/* property name being accessed when toobject fails — used for error location */
+	const char *pending_prop;
 };
 
 #endif

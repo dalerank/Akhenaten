@@ -358,6 +358,14 @@ js_Object *js_toobject(js_State *J, int idx)
 	return jsV_toobject(J, stackidx(J, idx));
 }
 
+js_Object *js_toobject_pending(js_State *J, int idx, const char *prop)
+{
+	J->pending_prop = prop;
+	js_Object *obj = jsV_toobject(J, stackidx(J, idx));
+	J->pending_prop = NULL;
+	return obj;
+}
+
 void js_toprimitive(js_State *J, int idx, int hint)
 {
 	jsV_toprimitive(J, stackidx(J, idx), hint);
@@ -1501,28 +1509,28 @@ static void jsR_run(js_State *J, js_Function *F)
 
 		case OP_GETPROP:
 			str = js_tostring(J, -1);
-			obj = js_toobject(J, -2);
+			obj = js_toobject_pending(J, -2, str);
 			jsR_getproperty(J, obj, str);
 			js_rot3pop2(J);
 			break;
 
 		case OP_GETPROP_S:
 			str = ST[*pc++];
-			obj = js_toobject(J, -1);
+			obj = js_toobject_pending(J, -1, str);
 			jsR_getproperty(J, obj, str);
 			js_rot2pop1(J);
 			break;
 
 		case OP_SETPROP:
 			str = js_tostring(J, -2);
-			obj = js_toobject(J, -3);
+			obj = js_toobject_pending(J, -3, str);
 			jsR_setproperty(J, obj, str);
 			js_rot3pop2(J);
 			break;
 
 		case OP_SETPROP_S:
 			str = ST[*pc++];
-			obj = js_toobject(J, -2);
+			obj = js_toobject_pending(J, -2, str);
 			jsR_setproperty(J, obj, str);
 			js_rot2pop1(J);
 			break;
