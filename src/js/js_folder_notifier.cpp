@@ -31,7 +31,7 @@ struct FileInfo {
 };
 
 struct notifier_data_t {
-    svector<FileInfo, 256> files;
+    hvector<FileInfo, 256> files;
     vfs::path dir;
     SDL_Thread *thread;
     int finished;
