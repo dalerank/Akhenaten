@@ -34,3 +34,49 @@ info_window_house {
         button_help  : help_button({})
     }
 }
+
+var HOUSE_GOODS = [RESOURCE_POTTERY, RESOURCE_LUXURY_GOODS, RESOURCE_LINEN, RESOURCE_BEER]
+
+[es=info_window_house_init]
+function info_window_house_init_fill(window) {
+    var house = city.get_house(window.bid)
+    if (house.population <= 0)
+        return
+
+    __house_prepare_evolve_info(window.bid)
+    window.evolve_reason.text = __house_get_evolve_reason(window.bid)
+
+    var foodIndex = 0
+    for (var i = 0; i < 4; i++) {
+        var resource = city.allowed_foods(i)
+        if (resource != RESOURCE_NONE) {
+            window["food" + foodIndex + "_icon"].image = resource
+            window["food" + foodIndex + "_text"].text = "" + house.foods[i]
+            foodIndex++
+        }
+    }
+
+    window.good0_icon.image = HOUSE_GOODS[0]
+    window.good0_text.text = "" + house.inventory[0]
+    window.good1_icon.image = HOUSE_GOODS[1]
+    window.good1_text.text = "" + house.inventory[1]
+    window.good2_icon.image = HOUSE_GOODS[2]
+    window.good2_text.text = "" + house.inventory[2]
+    window.good3_icon.image = HOUSE_GOODS[3]
+    window.good3_text.text = "" + house.inventory[3]
+
+    window.people_text.text = __house_get_people_text(window.bid)
+    window.tax_info.text = __house_get_tax_info(window.bid)
+    window.happiness_info.text = __loc(127, __house_get_happiness_text_id(window.bid))
+
+    var addInfo = __house_get_additional_info(window.bid)
+    if (addInfo) {
+        window.additional_info.text = addInfo
+    }
+}
+
+[es=info_window_vacant_lot_init]
+function info_window_vacant_lot_init_fill(window) {
+    var textId = __house_has_road_nearby(window.bid) ? 1 : 2
+    window.describe.text = __loc(128, textId)
+}

@@ -98,8 +98,18 @@ city.get_granary = function(building_id) {
 
 city.get_random_house = function() {
     var building_id = __city_get_random_house_id()
+    return city.get_house(building_id)
+}
+
+city.get_house = function(building_id) {
     return {
+        __property_getter: function(property) { return __house_get_property(this.id, property) }
+
         id: building_id
+        @meta_text_id { get: function() { return __building_meta_text_id(this.id) } }
+        @population { }
+        @foods { }
+        @inventory { }
         add_fire_damage: function(damage) { __building_add_fire_damage(this.id, damage) }
         add_collapse_damage: function(damage) { __building_add_collapse_damage(this.id, damage) }
     }
