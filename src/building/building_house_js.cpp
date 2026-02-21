@@ -1,7 +1,6 @@
 #include "building_house.h"
 #include "building/building.h"
 #include "city/city.h"
-#include "core/calc.h"
 #include "game/resource.h"
 #include "graphics/elements/lang_text.h"
 #include "io/gamefiles/lang.h"
@@ -49,21 +48,6 @@ xstring __house_get_evolve_reason(int bid) {
     return housed.evolve_text;
 }
 ANK_FUNCTION_1(__house_get_evolve_reason)
-
-xstring __house_get_tax_info(int bid) {
-    building_house* house = house_from_bid(bid);
-    if (!house) return "";
-    auto& housed = house->runtime_data();
-    bstring256 tax_info_text;
-    if (housed.tax_coverage) {
-        int pct = calc_adjust_with_percentage<int>(housed.tax_income_or_storage / 2, g_city.finance.tax_percentage);
-        tax_info_text.printf("%s %u %s", lang_get_string(127, 24), pct, lang_get_string(127, 25));
-    } else {
-        tax_info_text = lang_get_string(127, 23);
-    }
-    return tax_info_text;
-}
-ANK_FUNCTION_1(__house_get_tax_info)
 
 int __house_get_happiness_text_id(int bid) {
     building_house* house = house_from_bid(bid);
