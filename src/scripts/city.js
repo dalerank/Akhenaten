@@ -110,6 +110,9 @@ city.get_house = function(building_id) {
         @tile { get: function() { return __building_tile(this.id) } }
         @meta_text_id { get: function() { return __building_meta_text_id(this.id) } }
         @population { }
+        @tax_coverage { }
+        @tax_income_or_storage { }
+        @population_room { get: function() { return __house_population_room(this.id) } }
         food: function(index) { return __house_get_food(this.id, index) }
         inv: function(index) { return __house_get_inventory(this.id, index) }
         add_fire_damage: function(damage) { __building_add_fire_damage(this.id, damage) }

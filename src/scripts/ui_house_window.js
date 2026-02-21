@@ -35,8 +35,12 @@ info_window_house {
     }
 }
 
-function house_has_road_nearby(bid) {
-    return __map_road_within_radius(house.tile, 1, 2)
+function house_tax_info(house) {
+    if (!house.tax_coverage)
+        return __loc(127, 23)
+
+    var pct = Math.floor((house.tax_income_or_storage / 2) * city.finance.tax_percentage / 100)
+    return __loc(127, 24) + " " + pct + " " + __loc(127, 25)
 }
 
 function house_people_text(bid) {
@@ -85,7 +89,7 @@ function info_window_house_init_fill(window) {
     window.good3_text.text = "" + house.inv(3)
 
     window.people_text.text = house_people_text(window.bid)
-    window.tax_info.text = __house_get_tax_info(window.bid)
+    window.tax_info.text = house_tax_info(house)
     window.happiness_info.text = __loc(127, __house_get_happiness_text_id(window.bid))
 
     var addInfo = __house_get_additional_info(window.bid)
@@ -96,6 +100,6 @@ function info_window_house_init_fill(window) {
 
 [es=info_window_vacant_lot_init]
 function info_window_vacant_lot_init_fill(window) {
-    var textId = house_has_road_nearby(window.bid) ? 1 : 2
+    var textId = __map_road_within_radius(house.tile, 1, 2) ? 1 : 2
     window.describe.text = __loc(128, textId)
 }

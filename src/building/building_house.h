@@ -146,7 +146,7 @@ public:
     static void create_vacant_lot(tile2i tile, int image_id);
     static const model_house &get_model(int level);
 };
-ANK_CONFIG_PROPERTY(building_house::runtime_data_t, population, foods, inventory)
+ANK_CONFIG_PROPERTY(building_house::runtime_data_t, population, tax_coverage, tax_income_or_storage)
 
 // --- Individual housing tiers -------------------------------------------------
 // some info shared with vacant lot, so this is unique twice-config class
