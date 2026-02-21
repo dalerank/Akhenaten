@@ -242,9 +242,11 @@ figure_carrier_info_window = {
 
 [es=building_info_window_init]
 function building_info_window_on_init(window) {
-    var b = city.get_building(window.bid)
-    window.mothball.enabled = b.max_workers > 0
-    window.mothball.tooltip = __loc(54, b.state == 1 ? 16 : 17)
+    if (window.mothball) {
+        var b = city.get_building(window.bid)
+        window.mothball.enabled = b.max_workers && b.max_workers > 0
+        window.mothball.tooltip = __loc(54, b.state == 1 ? 16 : 17)
+    }
 }
 
 function building_info_window_toggle_overlay() {
