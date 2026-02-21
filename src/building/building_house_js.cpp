@@ -4,7 +4,6 @@
 #include "core/calc.h"
 #include "game/resource.h"
 #include "graphics/elements/lang_text.h"
-#include "grid/road_access.h"
 #include "io/gamefiles/lang.h"
 #include "js/js_game.h"
 
@@ -24,14 +23,6 @@ std::optional<bvariant> __house_get_property(int bid, pcstr property) {
     return archive_helper::get(house->runtime_data(), property, true);
 }
 ANK_FUNCTION_2(__house_get_property)
-
-bool __house_has_road_nearby(int bid) {
-    building_house* house = house_from_bid(bid);
-    if (!house) return false;
-    tile2i road_tile = map_closest_road_within_radius(house->tile(), 1, 2);
-    return road_tile.valid();
-}
-ANK_FUNCTION_1(__house_has_road_nearby)
 
 void __house_prepare_evolve_info(int bid) {
     building_house* house = house_from_bid(bid);
@@ -58,25 +49,6 @@ xstring __house_get_evolve_reason(int bid) {
     return housed.evolve_text;
 }
 ANK_FUNCTION_1(__house_get_evolve_reason)
-
-xstring __house_get_people_text(int bid) {
-    building_house* house = house_from_bid(bid);
-    if (!house) return "";
-    bstring256 people_text, adv_people_text;
-    int house_population_room = house->population_room();
-    people_text.printf("%u %s", house->house_population(), lang_get_string(127, 20));
-    if (house_population_room < 0) {
-        adv_people_text.printf("%u %s", -house_population_room, lang_get_string(127, 21));
-    } else if (house_population_room > 0) {
-        adv_people_text.printf("%s %u", lang_get_string(127, 22), house_population_room);
-    } else {
-        adv_people_text = "no rooms";
-    }
-    bstring256 result;
-    result.printf("%s ( %s )", people_text.c_str(), adv_people_text.c_str());
-    return result;
-}
-ANK_FUNCTION_1(__house_get_people_text)
 
 xstring __house_get_tax_info(int bid) {
     building_house* house = house_from_bid(bid);
@@ -125,3 +97,23 @@ int __house_population(int bid) {
     return house ? house->house_population() : 0;
 }
 ANK_FUNCTION_1(__house_population)
+
+int __house_population_room(int bid) {
+    building_house* house = house_from_bid(bid);
+    return house ? house->population_room() : 0;
+}
+ANK_FUNCTION_1(__house_population_room)
+
+int __house_get_food(int bid, int index) {
+    building_house* house = house_from_bid(bid);
+    if (!house || index < 0 || index >= 8) return 0;
+    return house->runtime_data().foods[index];
+}
+ANK_FUNCTION_2(__house_get_food)
+
+int __house_get_inventory(int bid, int index) {
+    building_house* house = house_from_bid(bid);
+    if (!house || index < 0 || index >= 8) return 0;
+    return house->runtime_data().inventory[index];
+}
+ANK_FUNCTION_2(__house_get_inventory)

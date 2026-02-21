@@ -35,7 +35,23 @@ info_window_house {
     }
 }
 
-var HOUSE_GOODS = [RESOURCE_POTTERY, RESOURCE_LUXURY_GOODS, RESOURCE_LINEN, RESOURCE_BEER]
+function house_has_road_nearby(bid) {
+    return __map_road_within_radius(house.tile, 1, 2)
+}
+
+function house_people_text(bid) {
+    var pop = __house_population(bid)
+    var room = __house_population_room(bid)
+    var people_str = pop + " " + __loc(127, 20)
+    var adv_str
+    if (room < 0)
+        adv_str = (-room) + " " + __loc(127, 21)
+    else if (room > 0)
+        adv_str = __loc(127, 22) + " " + room
+    else
+        adv_str = "no rooms"
+    return people_str + " ( " + adv_str + " )"
+}
 
 [es=info_window_house_init]
 function info_window_house_init_fill(window) {
@@ -46,26 +62,29 @@ function info_window_house_init_fill(window) {
     __house_prepare_evolve_info(window.bid)
     window.evolve_reason.text = __house_get_evolve_reason(window.bid)
 
-    var foodIndex = 0
-    for (var i = 0; i < 4; i++) {
-        var resource = city.allowed_foods(i)
-        if (resource != RESOURCE_NONE) {
-            window["food" + foodIndex + "_icon"].image = resource
-            window["food" + foodIndex + "_text"].text = "" + house.foods[i]
-            foodIndex++
-        }
-    }
+    var resource1 = city.allowed_foods(0)
+    window.food0_icon.image = resource1
+    window.food0_text.text = (resource1 != RESOURCE_NONE) ? (" " + house.food(0)) : ""
+    var resource2 = city.allowed_foods(1)
+    window.food1_icon.image = resource2
+    window.food1_text.text = (resource2 != RESOURCE_NONE) ? (" " + house.food(1)) : ""
+    var resource3 = city.allowed_foods(2)
+    window.food2_icon.image = resource3
+    window.food2_text.text = (resource3 != RESOURCE_NONE) ? (" " + house.food(2)) : ""
+    var resource4 = city.allowed_foods(3)
+    window.food3_icon.image = resource4
+    window.food3_text.text = (resource4 != RESOURCE_NONE) ? (" " + house.food(3)) : ""
 
-    window.good0_icon.image = HOUSE_GOODS[0]
-    window.good0_text.text = "" + house.inventory[0]
-    window.good1_icon.image = HOUSE_GOODS[1]
-    window.good1_text.text = "" + house.inventory[1]
-    window.good2_icon.image = HOUSE_GOODS[2]
-    window.good2_text.text = "" + house.inventory[2]
-    window.good3_icon.image = HOUSE_GOODS[3]
-    window.good3_text.text = "" + house.inventory[3]
+    window.good0_icon.image = RESOURCE_POTTERY
+    window.good0_text.text = "" + house.inv(0)
+    window.good1_icon.image = RESOURCE_LUXURY_GOODS
+    window.good1_text.text = "" + house.inv(1)
+    window.good2_icon.image = RESOURCE_LINEN
+    window.good2_text.text = "" + house.inv(2)
+    window.good3_icon.image = RESOURCE_BEER
+    window.good3_text.text = "" + house.inv(3)
 
-    window.people_text.text = __house_get_people_text(window.bid)
+    window.people_text.text = house_people_text(window.bid)
     window.tax_info.text = __house_get_tax_info(window.bid)
     window.happiness_info.text = __loc(127, __house_get_happiness_text_id(window.bid))
 
@@ -77,6 +96,6 @@ function info_window_house_init_fill(window) {
 
 [es=info_window_vacant_lot_init]
 function info_window_vacant_lot_init_fill(window) {
-    var textId = __house_has_road_nearby(window.bid) ? 1 : 2
+    var textId = house_has_road_nearby(window.bid) ? 1 : 2
     window.describe.text = __loc(128, textId)
 }
