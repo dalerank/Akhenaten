@@ -55,4 +55,5 @@ import ui_raw_material_info_window
 import ui_mortuary_info_window
 import ui_health_info_window
 import ui_burning_ruin_window
+import ui_hunting_lodge_window
 import ui_statue_window

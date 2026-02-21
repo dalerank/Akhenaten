@@ -115,3 +115,8 @@ int __building_mothball_toggle(int bid) {
     return b->max_workers ? b->mothball_toggle() : 0;
 }
 ANK_FUNCTION_1(__building_mothball_toggle)
+
+bool __city_resource_is_mothballed(int resource) {
+    return g_city.resource.is_mothballed((e_resource)resource);
+}
+ANK_FUNCTION_1(__city_resource_is_mothballed)
