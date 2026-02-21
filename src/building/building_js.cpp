@@ -1,5 +1,6 @@
 #include "building.h"
 #include "grid/building.h"
+#include "grid/road_access.h"
 
 #include "js/js_game.h"
 
@@ -37,3 +38,14 @@ int __map_rubble_building_type_at_grid(int grid_offset) {
     return map_rubble_building_type(grid_offset);
 }
 ANK_FUNCTION_1(__map_rubble_building_type_at_grid)
+
+tile2i __building_tile(int bid) {
+    building* b = building_get(bid);
+    return b ? b->tile : tile2i::invalid;
+}
+ANK_FUNCTION_1(__building_tile)
+
+bool __map_road_within_radius(tile2i tile, int size, int radius) {
+    return map_closest_road_within_radius(tile, size, radius).valid();
+}
+ANK_FUNCTION_3(__map_road_within_radius)

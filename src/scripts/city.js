@@ -90,6 +90,7 @@ city.get_battalion_by_index = function(index) {
 city.get_granary = function(building_id) {
     return {
         id: building_id
+        @tile { get: function() { return __building_tile(this.id) } }
         total_stored: function() { return __granary_get_total_stored(this.id) }
         amount: function(resource) { return __granary_get_amount(this.id, resource) }
         is_accepting: function(resource) { return __granary_is_accepting(this.id, resource) }
@@ -106,10 +107,11 @@ city.get_house = function(building_id) {
         __property_getter: function(property) { return __house_get_property(this.id, property) }
 
         id: building_id
+        @tile { get: function() { return __building_tile(this.id) } }
         @meta_text_id { get: function() { return __building_meta_text_id(this.id) } }
         @population { }
-        @foods { }
-        @inventory { }
+        food: function(index) { return __house_get_food(this.id, index) }
+        inv: function(index) { return __house_get_inventory(this.id, index) }
         add_fire_damage: function(damage) { __building_add_fire_damage(this.id, damage) }
         add_collapse_damage: function(damage) { __building_add_collapse_damage(this.id, damage) }
     }
@@ -119,6 +121,7 @@ city.get_bazaar = function(building_id) {
     return {
         id: building_id
         @meta_text_id { get: function() { return __building_meta_text_id(this.id) } }
+        @tile { get: function() { return __building_tile(this.id) } }
         resource_amount: function(resource_type) { return __bazaar_resource_amount(this.id, resource_type) }
         idx_amount: function(index) { return __bazaar_idx_amount(this.id, index) }
         idx_accepted: function(index) { return __bazaar_idx_accepted(this.id, index) }
@@ -158,11 +161,7 @@ city.create_foreign_army_attack_warning = function(obj) {
 
 city.get_random_building = function() {
     var building_id = __city_get_random_building_id()
-    return {
-        id: building_id
-        add_fire_damage: function(damage) { __building_add_fire_damage(this.id, damage) }
-        add_collapse_damage: function(damage) { __building_add_collapse_damage(this.id, damage) }
-    }
+    return city.get_building(building_id)
 }
 
 city.get_figure = function(figure_id) {
@@ -192,6 +191,7 @@ city.get_building = function(building_id) {
         stored_resource: function(resource) { return __building_stored_resource(this.id, resource) }
         get_figure: function(index) { return city.get_figure(__building_get_figure_id(this.id, index)) }
         mothball_toggle: function() { __building_mothball_toggle(this.id) }
+        @tile { get: function() { return __building_tile(this.id) } }
         @type { }
         @num_workers { }
         @max_workers { }
