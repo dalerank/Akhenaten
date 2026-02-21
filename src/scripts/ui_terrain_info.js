@@ -106,3 +106,18 @@ terrain_info_tree = {
 function terrain_info_tree_on_init(window) {
 
 }
+
+terrain_info_rubble {
+    open_sounds [ "wavs/fire.wav" ]
+    ui : baseui(terrain_info_window, {
+        title         : text({pos: [0, 16], text:"${140.0}", size: [px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
+        warning_text  : text({debug_tag:1, pos: [0, 46], text:"no_text", size: [px(29), 20], wrap:px(29), align:"center", font : FONT_NORMAL_BLACK_ON_LIGHT })
+        subtitle      : text({pos: [30, 76], text:"${140.1}", size: [px(26), -1], wrap:px(26), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
+    })
+}
+
+[es=terrain_info_rubble_init]
+function terrain_info_rubble_on_init(window) {
+    var rubble_type = __map_rubble_building_type_at_grid(window.grid_offset)
+    window.warning_text.text = __loc(41, rubble_type)
+}

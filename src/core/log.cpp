@@ -100,9 +100,10 @@ void initialize() {
     SDL_LogSetAllPriority(get_log_priority());
 
 #if defined(GAME_PLATFORM_WIN)
+    SetConsoleOutputCP(CP_UTF8);
     if (IsDebuggerPresent()) {
         return;
-    } 
+    }
 #endif
 
 #if !(defined(GAME_PLATFORM_UNIX) && !defined(GAME_PLATFORM_WIN64) && !defined(ANDROID_BUILD))
@@ -115,13 +116,21 @@ void switch_output(pcstr folder) {
     logger_file_stream_.close();
 
     bstring256 filename(folder, "/", logger_filename_);
-    logger_file_stream_.open(filename, std::fstream::out | std::fstream::trunc);
+    logger_file_stream_.open(filename, std::fstream::out | std::fstream::trunc | std::fstream::binary);
+    if (logger_file_stream_.is_open()) {
+        const unsigned char bom[] = { 0xEF, 0xBB, 0xBF };
+        logger_file_stream_.write(reinterpret_cast<const char*>(bom), sizeof(bom));
+    }
 }
 
 } // namespace logs
 
 Logger::Logger() {
-    logger_file_stream_.open(logger_filename_, std::fstream::out | std::fstream::trunc);
+    logger_file_stream_.open(logger_filename_, std::fstream::out | std::fstream::trunc | std::fstream::binary);
+    if (logger_file_stream_.is_open()) {
+        const unsigned char bom[] = { 0xEF, 0xBB, 0xBF };
+        logger_file_stream_.write(reinterpret_cast<const char*>(bom), sizeof(bom));
+    }
 }
 
 Logger::~Logger() {
