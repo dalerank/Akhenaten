@@ -102,6 +102,29 @@ city.get_random_house = function() {
     return city.get_house(building_id)
 }
 
+city.get_house_model = function(level) {
+    return {
+        __property_getter: function(property) { return __house_model_property(this.level, property) }
+
+        level: level
+        @devolve_desirability { }
+        @evolve_desirability { }
+        @entertainment { }
+        @water { }
+        @food_types { }
+        @pottery { }
+        @linen { }
+        @jewelry { }
+        @beer { }
+        @religion { }
+        @education { }
+        @health { }
+        @dentist { }
+        @physician { }
+        @fancy_bazaar { }
+    }
+}
+
 city.get_house = function(building_id) {
     return {
         __property_getter: function(property) { return __house_get_property(this.id, property) }
@@ -113,6 +136,29 @@ city.get_house = function(building_id) {
         @tax_coverage { }
         @tax_income_or_storage { }
         @population_room { get: function() { return __house_population_room(this.id) } }
+        @house_happiness { }
+        @current_desirability { }
+        @has_water_access { }
+        @has_well_access { }
+        @water_supply { }
+        @entertainment { }
+        @bazaar_access { }
+        @education { }
+        @school { }
+        @library { }
+        @magistrate { }
+        @num_gods { }
+        @dentist { }
+        @health { }
+        @mortuary { }
+        @physician { }
+        @worst_desirability_building_id { }
+        @fancy_bazaar_access { }
+        @no_space_to_expand { }
+        @level { get: function() { return __house_level(this.id) } }
+        @model { get: function() { return city.get_house_model(this.level) } }
+        @evolve_text { set: function(text) { __house_set_evolve_text(this.id, text) } }
+
         food: function(index) { return __house_get_food(this.id, index) }
         inv: function(index) { return __house_get_inventory(this.id, index) }
         add_fire_damage: function(damage) { __building_add_fire_damage(this.id, damage) }
@@ -125,6 +171,7 @@ city.get_bazaar = function(building_id) {
         id: building_id
         @meta_text_id { get: function() { return __building_meta_text_id(this.id) } }
         @tile { get: function() { return __building_tile(this.id) } }
+
         resource_amount: function(resource_type) { return __bazaar_resource_amount(this.id, resource_type) }
         idx_amount: function(index) { return __bazaar_idx_amount(this.id, index) }
         idx_accepted: function(index) { return __bazaar_idx_accepted(this.id, index) }
