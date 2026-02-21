@@ -102,11 +102,11 @@ public:
     virtual bool evolve(house_demands* demands) = 0;
     virtual int get_fire_risk(int value) const override;
     virtual void highlight_waypoints() override;
-    virtual bvariant get_property(const xstring &domain, const xstring &name) const override; 
+    virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
     virtual void spawn_figure() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual bool target_route_tile_blocked(int grid_offset) const override;
-    
+
     void update_fade_alpha();
 
     inline short house_population() const { return runtime_data().population; }
@@ -115,7 +115,6 @@ public:
     inline uint8_t hsize() const { return runtime_data().hsize; }
     inline bool is_nobles() const { return (house_level() >= HOUSE_COMMON_MANOR); }
 
-    void determine_evolve_text();
     void determine_worst_desirability_building();
 
     void decay_services();
@@ -129,7 +128,7 @@ public:
     static void change_to(building &b, e_building_type type, bool force = false);
     void merge();
     void merge_impl();
-    inline bool is_merged() const { return runtime_data().is_merged; }    
+    inline bool is_merged() const { return runtime_data().is_merged; }
     resource_list consume_goods_weekly();
     resource_list consume_food_weekly();
     void split(int num_tiles);
@@ -146,14 +145,19 @@ public:
     static void create_vacant_lot(tile2i tile, int image_id);
     static const model_house &get_model(int level);
 };
-ANK_CONFIG_PROPERTY(building_house::runtime_data_t, population, tax_coverage, tax_income_or_storage)
+ANK_CONFIG_PROPERTY(building_house::runtime_data_t,
+    population, tax_coverage, tax_income_or_storage, house_happiness,
+    entertainment, water_supply, bazaar_access, education, school, library,
+    magistrate, num_gods, dentist, health, mortuary, physician,
+    no_space_to_expand, fancy_bazaar_access, worst_desirability_building_id,
+    evolve_text)
 
 // --- Individual housing tiers -------------------------------------------------
 // some info shared with vacant lot, so this is unique twice-config class
 
 /**
  * First and most basic housing tier - crude hut.
- * 
+ *
  * Characteristics:
  * - Maximum population: 5 people
  * - Building size: 1x1 tile
@@ -163,7 +167,7 @@ ANK_CONFIG_PROPERTY(building_house::runtime_data_t, population, tax_coverage, ta
  * - High crime risk (5) and fire risk (3)
  * - Low prosperity level (15)
  * - Tax multiplier: 2x
- * 
+ *
  * Evolution: can evolve into sturdy_hut when minimal conditions are met.
  * Devolution: cant devolve (des setup to -99).
  */
@@ -176,12 +180,12 @@ public:
 
     virtual bool evolve(house_demands *demands) override;
 };
-ANK_CONFIG_STRUCT(building_house_crude_hut::static_params, 
+ANK_CONFIG_STRUCT(building_house_crude_hut::static_params,
     model, can_merge, variants, variants_merged, variants_merged_inside)
 
 /**
  * Second housing tier - sturdy hut.
- * 
+ *
  * Characteristics:
  * - Maximum population: 7 people
  * - Building size: 1x1 tile
@@ -191,7 +195,7 @@ ANK_CONFIG_STRUCT(building_house_crude_hut::static_params,
  * - Crime risk: 4, fire risk: 3
  * - Prosperity level: 20-15
  * - Tax multiplier: 2x
- * 
+ *
  * Evolution: can evolve into meager_shanty when conditions improve.
  * Devolution: can devolve at desirability below -12.
  */

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "building/building_type.h"
+#include "core/archive.h"
 #include "game/difficulty.h"
 
 /**
@@ -50,7 +51,7 @@ struct model_house {
 };
 ANK_CONFIG_STRUCT(model_house, devolve_desirability,
     evolve_desirability, entertainment, water, religion,
-    education, food, dentist, physician, health, 
+    education, food, dentist, physician, health,
     food_types, food_consumption_percentage,
     pottery, linen, jewelry, beer, food_storage_multiplier,
     crime_risk, crime_risk_base,
@@ -60,3 +61,8 @@ ANK_CONFIG_STRUCT(model_house, devolve_desirability,
     entertainment_dancer_divider, entertainment_senet_divider,
     unreachable_ticks_devolve_threshold, unreachable_ticks_block_evolve_threshold,
     days_without_food_devolve_threshold)
+
+ANK_CONFIG_PROPERTY(model_house,
+    devolve_desirability, evolve_desirability, entertainment, water, food_types,
+    pottery, linen, jewelry, beer, religion, education, health, dentist, physician,
+    fancy_bazaar)
