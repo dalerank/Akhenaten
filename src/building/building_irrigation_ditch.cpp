@@ -102,8 +102,8 @@ int building_irrigation_ditch::preview::construction_update(build_planner &p, ti
     if (items_placed > 0) {
         grid_area area = map_grid_get_area(start, end);
         // Add padding for neighboring tiles (like routed.cpp does with -4, +4)
-        tile2i pmin = area.tmin.shifted(-2, -2);
-        tile2i pmax = area.tmax.shifted(2, 2);
+        tile2i pmin = area.tmin().shifted(-2, -2);
+        tile2i pmax = area.tmax().shifted(2, 2);
         map_tiles_update_region_canals(pmin, pmax);
     }
     

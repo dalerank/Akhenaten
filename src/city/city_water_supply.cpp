@@ -19,7 +19,7 @@ void city_buildings_t::mark_well_access(building *well) {
 
     grid_area area = map_grid_get_area(well->tile, 1, radius);
 
-    map_grid_area_foreach(area.tmin, area.tmax, [] (tile2i tile) {
+    map_grid_area_foreach(area, [] (tile2i tile) {
         int building_id = map_building_at(tile.grid_offset());
 
         if (building_id) {

@@ -97,7 +97,7 @@ int figure_architector::provide_service() {
 
     // Use custom radius for service area
     grid_area area = map_grid_get_area(tile(), 1, effect_radius);
-    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
+    map_grid_area_foreach(area, [&] (tile2i tile) {
         int grid_offset = tile.grid_offset();
         int building_id = map_building_at(grid_offset);
         if (building_id) {

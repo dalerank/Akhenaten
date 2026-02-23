@@ -300,8 +300,8 @@ void city_buildings_t::update_religion_supply_houses() {
     auto mark_shrine_access = [] (building *shrine, int radius) {
         grid_area area = map_grid_get_area(shrine->tile, 1, radius);
 
-        for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
-            for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
+        for (int yy = area.tmin_y, endy = area.tmax_y; yy <= endy; yy++) {
+            for (int xx = area.tmin_x, endx = area.tmax_x; xx <= endx; xx++) {
                 int building_id = map_building_at(tile2i(xx, yy));
 
                 auto house = building_get(building_id)->dcast_house();

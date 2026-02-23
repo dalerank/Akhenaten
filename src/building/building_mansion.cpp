@@ -116,7 +116,7 @@ bool building_mansion::is_protected_by_police() const {
     grid_area area = map_grid_get_area(tile(), size(), 2);
     bool has_protection = false;
     
-    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i check_tile) {
+    map_grid_area_foreach(area, [&] (tile2i check_tile) {
         int figure_id = map_figure_id_get(check_tile);
         while (figure_id > 0 && !has_protection) {
             figure *f = figure_get(figure_id);

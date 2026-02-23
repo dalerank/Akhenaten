@@ -11,7 +11,7 @@ inline int figure_provide_service(tile2i tile, figure* f, T callback) {
     int serviced = 0;
     grid_area area = map_grid_get_area(tile, 1, 2);
 
-    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
+    map_grid_area_foreach(area, [&] (tile2i tile) {
         int grid_offset = tile.grid_offset();
         int building_id = map_building_at(grid_offset);
         if (building_id) {

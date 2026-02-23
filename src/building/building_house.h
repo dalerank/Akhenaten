@@ -115,8 +115,6 @@ public:
     inline uint8_t hsize() const { return runtime_data().hsize; }
     inline bool is_nobles() const { return (house_level() >= HOUSE_COMMON_MANOR); }
 
-    void determine_worst_desirability_building();
-
     void decay_services();
     void decay_tax_coverage();
     void update_monthly_nobles_toothache();
@@ -772,8 +770,8 @@ void buildings_house_do(T func) {
 template<typename T, typename Processed>
 void buildings_house_in_radius_do(tile2i center, int radius, Processed* processed_buildings, T func) {
     grid_area area = map_grid_get_area(center, 1, radius);
-    for (int yy = area.tmin.y(); yy <= area.tmax.y(); yy++) {
-        for (int xx = area.tmin.x(); xx <= area.tmax.x(); xx++) {
+    for (int yy = area.tmin_y; yy <= area.tmax_y; yy++) {
+        for (int xx = area.tmin_x; xx <= area.tmax_x; xx++) {
             tile2i current_tile(xx, yy);
             int grid_offset = current_tile.grid_offset();
             int building_id = map_building_at(grid_offset);

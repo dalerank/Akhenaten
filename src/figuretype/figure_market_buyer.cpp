@@ -258,7 +258,7 @@ int provide_market_goods(building* market, tile2i tile) {
     int serviced = 0;
     grid_area area = map_grid_get_area(tile, 1, 2);
 
-    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
+    map_grid_area_foreach(area, [&] (tile2i tile) {
         int grid_offset = tile.grid_offset();
         building_id bid = map_building_at(grid_offset);
         auto house = building_get(bid)->dcast_house();

@@ -195,7 +195,7 @@ void figure_enemy_archer::enemy_fighting(formation *m) {
         grid_area area = map_grid_get_area(tile(), 1, attack_distance());
         building *b = nullptr;
         float dist = 100.f;
-        map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i t) {
+        map_grid_area_foreach(area, [&] (tile2i t) {
             building_id bid = map_building_at(t);
             int cur_dist = t.dist(tile());
             if (bid && building_get(bid)->is_valid() && cur_dist < dist) {
@@ -248,7 +248,7 @@ void figure_enemy_archer::enemy_fighting(formation *m) {
         grid_area area = map_grid_get_area(tile(), 1, attack_distance());
         figure *f = nullptr;
         float dist = 100.f;
-        map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i t) {
+        map_grid_area_foreach(area, [&] (tile2i t) {
             figure *ftile = map_figure_get(t);
             int cur_dist = t.dist(tile());
             if (ftile && ftile->is_valid() && cur_dist < dist) {

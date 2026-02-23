@@ -36,7 +36,7 @@ void building_mine_gems::update_production() {
     int best_resource = 0;
 
     grid_area search_area = map_grid_get_area(base.tile, base.size, 0);
-    map_grid_area_foreach(search_area.tmin, search_area.tmax, [&] (tile2i t) {
+    map_grid_area_foreach(search_area, [&] (tile2i t) {
         int resource = map_get_gems(t);
         if (resource > 0 && resource > best_resource) {
             best_tile = t;

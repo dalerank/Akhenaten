@@ -3,6 +3,8 @@
 #include "building/building_house_model.h"
 #include "city/city.h"
 #include "game/resource.h"
+#include "grid/building.h"
+#include "grid/grid.h"
 #include "js/js_game.h"
 #include "core/bstring.h"
 
@@ -44,12 +46,12 @@ std::optional<bvariant> __house_model_property(int level, pcstr property) {
 }
 ANK_FUNCTION_2(__house_model_property)
 
-void __house_prepare_evolve_info(int bid) {
+void __house_set_worst_desirability_building_id(int bid, int building_id) {
     building_house* house = house_from_bid(bid);
     if (house)
-        house->determine_worst_desirability_building();
+        house->runtime_data().worst_desirability_building_id = building_id;
 }
-ANK_FUNCTION_1(__house_prepare_evolve_info)
+ANK_FUNCTION_2(__house_set_worst_desirability_building_id)
 
 bool __house_is_vacant_lot(int bid) {
     building_house* house = house_from_bid(bid);

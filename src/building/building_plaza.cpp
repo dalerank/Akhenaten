@@ -29,8 +29,8 @@ int building_plaza::preview::planer_place(build_planner &planer, tile2i start, t
     game_undo_restore_map(1);
 
     int items_placed = 0;
-    for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
-        for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
+    for (int y = area.tmin_y, endy = area.tmax_y; y <= endy; y++) {
+        for (int x = area.tmin_x, endx = area.tmax_x; x <= endx; x++) {
             tile2i curtile(x, y);
 
             const bool is_road = map_terrain_is(curtile, TERRAIN_ROAD);

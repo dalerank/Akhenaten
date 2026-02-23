@@ -206,8 +206,8 @@ bool map_road_within_radius(tile2i tile, int size, int radius, tile2i &road_tile
     grid_area area = map_grid_get_area(tile, size, radius);
     uint32_t center_offset = tile.grid_offset();
 
-    for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
-        for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
+    for (int yy = area.tmin_y, endy = area.tmax_y; yy <= endy; yy++) {
+        for (int xx = area.tmin_x, endx = area.tmax_x; xx <= endx; xx++) {
             uint32_t grid_offset = MAP_OFFSET(xx, yy);
             if (grid_offset == center_offset) {
                 continue;
@@ -247,8 +247,8 @@ bool map_reachable_road_within_radius(tile2i tile, int size, int radius, tile2i 
     OZZY_PROFILER_FUNCTION();
     grid_area area = map_grid_get_area(tile, size, radius);
 
-    for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
-        for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
+    for (int yy = area.tmin_y, endy = area.tmax_y; yy <= endy; yy++) {
+        for (int xx = area.tmin_x, endx = area.tmax_x; xx <= endx; xx++) {
             int grid_offset = MAP_OFFSET(xx, yy);
             if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
                 if (map_routing_distance(grid_offset) > 0) {

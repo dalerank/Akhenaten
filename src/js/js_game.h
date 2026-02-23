@@ -9,6 +9,7 @@
 #include "core/vec2i.h"
 #include "core/archive.h"
 #include "core/variant.h"
+#include "grid/grid.h"
 #include "grid/point.h"
 
 #include <vector>
@@ -185,6 +186,15 @@ namespace js_helpers {
     }
 
     template<>
+    inline void js_push_value<grid_area>(js_State *J, grid_area value) {
+        js_newobject(J);
+        js_pushnumber(J, value.tmin_x); js_setproperty(J, -2, "min_x");
+        js_pushnumber(J, value.tmin_y); js_setproperty(J, -2, "min_y");
+        js_pushnumber(J, value.tmax_x); js_setproperty(J, -2, "max_x");
+        js_pushnumber(J, value.tmax_y); js_setproperty(J, -2, "max_y");
+    }
+
+    template<>
     inline void js_push_value<xstring>(js_State *J, xstring value) {
         js_pushstring(J, value.c_str());
     }
@@ -226,11 +236,29 @@ namespace js_helpers {
             js_setproperty(J, -2, "y");
             break;
         }
+        case bvariant::etype_tile2i: {
+            js_newobject(J);
+            const tile2i pos = val.as_tile2i();
+            js_pushnumber(J, pos.x());
+            js_setproperty(J, -2, "x");
+            js_pushnumber(J, pos.y());
+            js_setproperty(J, -2, "y");
+            break;
+        }
+        case bvariant::etype_grid_area: {
+            const grid_area a = val.as_grid_area();
+            js_newobject(J);
+            js_pushnumber(J, a.tmin_x); js_setproperty(J, -2, "min_x");
+            js_pushnumber(J, a.tmin_y); js_setproperty(J, -2, "min_y");
+            js_pushnumber(J, a.tmax_x); js_setproperty(J, -2, "max_x");
+            js_pushnumber(J, a.tmax_y); js_setproperty(J, -2, "max_y");
+            break;
+        }
         case bvariant::etype_none:
         default:
             js_pushundefined(J);
             break;
-        }
+    }
     }
 
     template<>

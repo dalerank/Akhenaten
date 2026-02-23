@@ -3,6 +3,7 @@
 #include "city/city.h"
 #include "building/building_house.h"
 #include "building/building_bazaar.h"
+#include "grid/grid.h"
 #include "core/log.h"
 #include "city/object_info.h"
 #include "window/window_info.h"
@@ -53,7 +54,7 @@ ANK_FUNCTION(__city_get_random_building_id)
 
 int __city_get_random_house_id() {
     hvector<building_id, 128> houses;
-    buildings_valid_do([&] (building &b) { 
+    buildings_valid_do([&] (building &b) {
         auto house = b.dcast_house();
         if (house && house->house_population() > 0) {
             houses.push_back(b.id);
@@ -67,6 +68,40 @@ int __city_get_random_house_id() {
     return houses[rand() % houses.size()];
 }
 ANK_FUNCTION(__city_get_random_house_id)
+
+int __building_at(int x, int y) {
+    return map_building_at(tile2i(x, y));
+}
+ANK_FUNCTION_2(__building_at)
+
+bvariant __map_grid_get_area(tile2i tile, int size, int radius) {
+    return bvariant(map_grid_get_area(tile2i(tile), size, radius));
+}
+ANK_FUNCTION_3(__map_grid_get_area)
+
+bool __building_is_valid(int bid) {
+    building* b = building_get(bid);
+    return b && b->is_valid();
+}
+ANK_FUNCTION_1(__building_is_valid)
+
+int __building_des_influence_value(int bid) {
+    building* b = building_get(bid);
+    return b ? (int)b->des_influence.value : 0;
+}
+ANK_FUNCTION_1(__building_des_influence_value)
+
+int __building_des_influence_step_size(int bid) {
+    building* b = building_get(bid);
+    return b ? b->des_influence.step_size : 0;
+}
+ANK_FUNCTION_1(__building_des_influence_step_size)
+
+int __building_des_influence_range(int bid) {
+    building* b = building_get(bid);
+    return b ? b->des_influence.range : 0;
+}
+ANK_FUNCTION_1(__building_des_influence_range)
 
 int __building_stored_resource(int bid, int resource) { return building_get(bid)->stored_amount((e_resource)resource); }
 ANK_FUNCTION_2(__building_stored_resource)

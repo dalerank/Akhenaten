@@ -396,7 +396,7 @@ formation_destination formation_enemy_move_formation_to(const formation* m, tile
     for (int r = 0; r <= 10; r++) {
         grid_area area = map_grid_get_area(tile, 1, r);
 
-        tile2i ftile = map_grid_area_first(area.tmin, area.tmax, [m, &figure_offsets] (tile2i nt) {
+        tile2i ftile = map_grid_area_first(area, [m, &figure_offsets] (tile2i nt) {
             for (int fig = 0; fig < m->num_figures; fig++) {
                 tile2i pr_tile = nt.shifted(figure_offsets[fig]);
                 if (!pr_tile.valid()) {                   
