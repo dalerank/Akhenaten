@@ -24,11 +24,13 @@ public:
         e_building_type filler_type;
 
         vec2i init_tiles;
+        vec2i enter_offset;
     };
 
     virtual const base_params &pyramid_params() const = 0;
 
     virtual tile2i center_point() const override;
+    virtual tile2i access_point() const override { return tile().shifted(pyramid_params().enter_offset); }
 };
 
 class building_stepped_pyramid : public building_pyramid {
@@ -95,10 +97,9 @@ public:
     virtual const base_params &pyramid_params() const override { return current_params(); }
 
     virtual const monument &config() const override;
-    virtual tile2i access_point() const override;
 };
 ANK_CONFIG_STRUCT(building_small_stepped_pyramid::static_params, 
-    init_tiles, corner_type, wall_type, cone_type, filler_type);
+    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset);
 
 class building_small_stepped_pyramid_corner : public building_small_stepped_pyramid {
 public:
@@ -126,10 +127,9 @@ public:
     virtual const base_params &pyramid_params() const override { return current_params(); }
 
     virtual const monument &config() const override;
-    virtual tile2i access_point() const override;
 };
 ANK_CONFIG_STRUCT(building_medium_stepped_pyramid::static_params,
-    init_tiles, corner_type, wall_type, cone_type, filler_type);
+    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset);
 
 class building_medium_stepped_pyramid_corner : public building_medium_stepped_pyramid {
 public:

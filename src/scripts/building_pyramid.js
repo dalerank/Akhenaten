@@ -32,6 +32,8 @@ building_small_stepped_pyramid {
         is_monument: true
     }
 
+    enter_offset : [1, 8]
+
     corner_type : BUILDING_SMALL_STEPPED_PYRAMID_CORNER
     wall_type : BUILDING_SMALL_STEPPED_PYRAMID_WALL
     cone_type : BUILDING_SMALL_STEPPED_PYRAMID_CONE
@@ -71,6 +73,8 @@ building_small_stepped_pyramid {
     damage_proof : true
     meta { help_id:375, text_id:120 }
     init_tiles [12, 12]
+
+    enter_offset : [1, 12]
 
     flags {
         is_monument: true
