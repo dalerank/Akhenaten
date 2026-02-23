@@ -439,6 +439,15 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
         return false;
     }
 
+    if (is_main()) {
+        auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        command.image_id = first_img(animkeys().enter);
+        command.pixel = lookup_tile_to_pixel(access_point());
+        command.use_sort_pixel = true;
+        command.sort_pixel = command.pixel + vec2i(0, 1);
+        command.location = SOURCE_LOCATION;
+    }
+
     int clear_land_id = first_img(animkeys().clear_land);
     int image_grounded = first_img(animkeys().base_grounded);
     building *main = base.main();
@@ -1156,10 +1165,6 @@ const monument &building_small_stepped_pyramid::config() const {
     return g_monument_small_stepped_pyramid;
 }
 
-tile2i building_small_stepped_pyramid::access_point() const {
-    return main()->tile().shifted(0, 10);
-}
-
 // Helper function to check if a block is a corner block (by block index)
 bool is_corner_block(int block_x, int block_y, int blocks_x, int blocks_y) {
     return (block_x == 0 && block_y == 0) ||                                  // top-left
@@ -1402,8 +1407,4 @@ bool building_medium_stepped_pyramid::draw_ornaments_and_animations_height(paint
 
 const monument &building_medium_stepped_pyramid::config() const {
     return g_monument_medium_stepped_pyramid;
-}
-
-tile2i building_medium_stepped_pyramid::access_point() const {
-    return main()->tile().shifted(0, 10);
 }
