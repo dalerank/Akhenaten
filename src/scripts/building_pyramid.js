@@ -18,7 +18,7 @@ building_small_stepped_pyramid {
       ditches_phase_4 { path:"stepped_pyramid/pyramid_phase_one_00049" }
       ground_phase_0 { path:"stepped_pyramid/pyramid_phase_one_00013" }
       basement { path:"stepped_pyramid/pyramid_phase_one_00058" }
-      enter {id:114}
+      enter { path:"pharaoh_general/plazatiles_00064"}
     }
     build_menu_text : "Small Stepped Pyramid"
     building_size : 2
@@ -62,7 +62,7 @@ building_small_stepped_pyramid {
       ditches_phase_4 { path:"stepped_pyramid/pyramid_phase_one_00049" }
       ground_phase_0 { path:"stepped_pyramid/pyramid_phase_one_00013" }
       basement { path:"stepped_pyramid/pyramid_phase_one_00058" }
-      enter {id:114}
+      enter { path:"pharaoh_general/plazatiles_00064"}
     }
     build_menu_text : "Medium Stepped Pyramid"
     building_size : 2
