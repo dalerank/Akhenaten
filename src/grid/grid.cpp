@@ -306,12 +306,10 @@ void map_grid_bound_area(tile2i &tmin, tile2i &tmax) {
 }
 
 grid_area map_grid_get_area(tile2i tile, int size, int radius) {
-    grid_area t {
-        tile2i(tile.x() - radius, tile.y() - radius),
-        tile2i(tile.x() + size + radius - 1, tile.y() + size + radius - 1)
-    };
-    map_grid_bound_area(t.tmin(), t.tmax());
-    return t;
+    tile2i tmin(tile.x() - radius, tile.y() - radius);
+    tile2i tmax(tile.x() + size + radius - 1, tile.y() + size + radius - 1);
+    map_grid_bound_area(tmin, tmax);
+    return grid_area(tmin, tmax);
 }
 
 template<typename T>
