@@ -53,7 +53,7 @@ void map_terrain_add_in_area(tile2i pmin, tile2i pmax, int terrain) {
 void map_terrain_add_with_radius(tile2i tile, int size, int radius, int terrain) {
     grid_area area = map_grid_get_area(tile, size, radius);
 
-    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i t) {
+    map_grid_area_foreach(area, [&] (tile2i t) {
         map_terrain_add(t, terrain);
     });
 }
@@ -61,7 +61,7 @@ void map_terrain_add_with_radius(tile2i tile, int size, int radius, int terrain)
 void map_terrain_remove_with_radius(tile2i c, int size, int radius, int terrain) {
     grid_area area = map_grid_get_area(c, size, radius);
 
-    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i t) {
+    map_grid_area_foreach(area, [&] (tile2i t) {
         map_terrain_remove(t, terrain);
     });
 }
@@ -142,8 +142,8 @@ bool map_terrain_exists_tile_in_area_with_type(tile2i tile, int size, int terrai
 bool map_terrain_exists_tile_in_radius_with_type(tile2i tile, int size, int radius, int terrain) {
     grid_area area = map_grid_get_area(tile, size, radius);
 
-    for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
-        for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
+    for (int yy = area.tmin_y, endy = area.tmax_y; yy <= endy; yy++) {
+        for (int xx = area.tmin_x, endx = area.tmax_x; xx <= endx; xx++) {
             if (map_terrain_is(MAP_OFFSET(xx, yy), terrain))
                 return true;
         }
@@ -153,8 +153,8 @@ bool map_terrain_exists_tile_in_radius_with_type(tile2i tile, int size, int radi
 bool map_terrain_exists_tile_in_radius_with_exact(int x, int y, int size, int radius, int terrain) {
     grid_area area = map_grid_get_area(tile2i(x, y), size, radius);
 
-    for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
-        for (int xx = area.tmin.x(), endx = area.tmin.x(); xx <= endx; xx++) {
+    for (int yy = area.tmin_y, endy = area.tmax_y; yy <= endy; yy++) {
+        for (int xx = area.tmin_x, endx = area.tmin_x; xx <= endx; xx++) {
             if (map_terrain_get(MAP_OFFSET(xx, yy)) == terrain)
                 return true;
         }
@@ -165,8 +165,8 @@ bool map_terrain_exists_tile_in_radius_with_exact(int x, int y, int size, int ra
 bool map_terrain_exists_clear_tile_in_radius(tile2i tile, int size, int radius, int except_grid_offset, tile2i &result) {
     grid_area area = map_grid_get_area(tile, size, radius);
 
-    for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
-        for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
+    for (int yy = area.tmin_y, endy = area.tmax_y; yy <= endy; yy++) {
+        for (int xx = area.tmin_x, endx = area.tmax_x; xx <= endx; xx++) {
             int grid_offset = MAP_OFFSET(xx, yy);
             if (grid_offset != except_grid_offset && !map_grid_get(g_terrain_grid, grid_offset)) {
                 result = {xx,yy};
@@ -175,7 +175,7 @@ bool map_terrain_exists_clear_tile_in_radius(tile2i tile, int size, int radius, 
         }
     }
 
-    result = {area.tmax.x(), area.tmax.y()};
+    result = {area.tmax_x, area.tmax_y};
     return false;
 }
 
@@ -196,8 +196,8 @@ bool map_terrain_all_tiles_in_area_are(tile2i tile, int size, int terrain) {
 bool map_terrain_all_tiles_in_radius_are(tile2i c, int size, int radius, int terrain) {
     grid_area area = map_grid_get_area(c, size, radius);
 
-    for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
-        for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
+    for (int yy = area.tmin_y, endy = area.tmax_y; yy <= endy; yy++) {
+        for (int xx = area.tmin_x, endx = area.tmax_x; xx <= endx; xx++) {
             if (!map_terrain_is(MAP_OFFSET(xx, yy), terrain))
                 return false;
         }

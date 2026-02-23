@@ -142,7 +142,7 @@ void map_water_rebuild_shores() {
         bool ground_aside = false;
         int ground_tiles_num = 0;
         int water_tiles_num = 0;
-        map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i t) {
+        map_grid_area_foreach(area, [&] (tile2i t) {
             if (map_terrain_is(t, TERRAIN_WATER|TERRAIN_FLOODPLAIN)) {
                 water_tiles_num++;
             } else {
@@ -292,8 +292,8 @@ water_dest map_water_find_shipwreck_tile(figure &wreck) {
     for (int radius = 1; radius <= 5; radius++) {
         grid_area area = map_grid_get_area(wreck.tile, 1, radius);
 
-        for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
-            for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
+        for (int yy = area.tmin_y, endy = area.tmax_y; yy <= endy; yy++) {
+            for (int xx = area.tmin_x, endx = area.tmax_x; xx <= endx; xx++) {
                 int grid_offset = MAP_OFFSET(xx, yy);
                 if (!map_has_figure_at(grid_offset) || map_figure_id_get(grid_offset) == wreck.id) {
                     if (map_terrain_is(grid_offset, TERRAIN_WATER)

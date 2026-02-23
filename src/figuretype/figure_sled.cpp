@@ -19,7 +19,7 @@ void figure_sled::figure_action() {
             auto monument = destination()->dcast_monument();
             if (monument) {
                 grid_area area = monument->get_area();
-                if (map_tile_is_inside_area(tile(), area.tmin, area.tmax)) {
+                if (map_tile_is_inside_area(tile(), area.tmin(), area.tmax())) {
                     do_deliver(ACTION_11_SLED_RETURNING_EMPTY);
                 }
             }

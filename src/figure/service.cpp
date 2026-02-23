@@ -11,7 +11,7 @@
 static int provide_missionary_coverage(int x, int y) {
     grid_area area = map_grid_get_area(tile2i(x, y), 1, 4);
 
-    map_grid_area_foreach(area.tmin, area.tmax, [] (tile2i tile) {
+    map_grid_area_foreach(area, [] (tile2i tile) {
         int building_id = map_building_at(tile.grid_offset());
         if (building_id) {
             building *b = building_get(building_id);

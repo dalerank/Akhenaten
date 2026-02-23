@@ -306,10 +306,11 @@ void map_grid_bound_area(tile2i &tmin, tile2i &tmax) {
 }
 
 grid_area map_grid_get_area(tile2i tile, int size, int radius) {
-    grid_area t;
-    t.tmin.set(tile.x() - radius, tile.y() - radius);
-    t.tmax.set(tile.x() + size + radius - 1, tile.y() + size + radius - 1);
-    map_grid_bound_area(t.tmin, t.tmax);
+    grid_area t {
+        tile2i(tile.x() - radius, tile.y() - radius),
+        tile2i(tile.x() + size + radius - 1, tile.y() + size + radius - 1)
+    };
+    map_grid_bound_area(t.tmin(), t.tmax());
     return t;
 }
 
@@ -318,7 +319,7 @@ T& map_grid_get_tiles_impl(building *b, int radius, T& arr) {
     building *part = b;
     while (part) {
         grid_area area = map_grid_get_area(part->tile, part->size, radius);
-        map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) { arr.push_back(tile); });
+        map_grid_area_foreach(area, [&] (tile2i tile) { arr.push_back(tile); });
         part = part->has_next() ? part->next() : nullptr;
     }
 
@@ -362,7 +363,7 @@ grid_tiles map_grid_get_tiles(tile2i start, tile2i end) {
     grid_tiles tiles;
     tiles.reserve(16);
     grid_area area = map_grid_get_area(start, end);
-    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) { tiles.push_back(tile); });
+    map_grid_area_foreach(area, [&] (tile2i tile) { tiles.push_back(tile); });
 
     return tiles;
 }

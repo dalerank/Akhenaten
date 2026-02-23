@@ -61,7 +61,7 @@ void building_clay_pit::update_production() {
     int best_clay = 0;
 
     grid_area search_area = map_grid_get_area(base.tile, base.size, 0);
-    map_grid_area_foreach(search_area.tmin, search_area.tmax, [&] (tile2i t) {
+    map_grid_area_foreach(search_area.tmin(), search_area.tmax(), [&] (tile2i t) {
         int clay = map_get_clay(t);
         if (clay > 0 && clay > best_clay) {
             best_tile = t;

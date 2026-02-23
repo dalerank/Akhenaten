@@ -15,7 +15,7 @@
 int figure_entertainer::provide_entertainment(int shows, void (*callback)(building*, int)) {
     int serviced = 0;
     grid_area area = map_grid_get_area(tile(), 1, 2);
-    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i t) {
+    map_grid_area_foreach(area, [&] (tile2i t) {
         auto building_id = map_building_at(t);
         if (!building_id) {
             return;

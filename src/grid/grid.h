@@ -4,6 +4,7 @@
 #include "core/vec2i.h"
 #include "core/svector.h"
 #include "core/hvector.h"
+#include "grid_area.h"
 #include "point.h"
 #include "scenario/map.h"
 #include "core/core_utility.h"
@@ -52,68 +53,6 @@ struct grid_xx {
     void* items_xx;
 
     inline int32_t get(uint32_t grid_offset);
-};
-
-struct grid_area {
-    tile2i tmin;
-    tile2i tmax;
-
-    template<typename T>
-    void for_each_bound(T f) {
-        for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++)   { f(tile2i(xx, tmin.y())); }
-        for (int yy = tmin.y()+1, endy = tmax.y(); yy <= endy; yy++) { f(tile2i(tmax.x(), yy)); }
-        for (int xx = tmax.x()-1, endx = tmin.x(); xx >= endx; xx--) { f(tile2i(xx, tmax.y())); }
-        for (int yy = tmax.y()-1, endy = tmin.y(); yy >= endy; yy--) { f(tile2i(tmin.x(), yy)); }
-    }
-
-    template<typename T>
-    void for_each(T f) {
-        for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
-            for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
-                tile2i tt(xx, yy);
-                f(tt);
-            }
-        }
-    }
-
-    bool contains(tile2i t) {
-        for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
-            for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
-                tile2i tt(xx, yy);
-                if (tt == t) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    template<typename T>
-    void find_all(T& out, std::function<bool(tile2i)> f) {
-        for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
-            for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
-                tile2i tt(xx, yy);
-                if (f(tt)) {
-                    out.push_back(tt);
-                }
-            }
-        }
-    }
-
-    template<typename T>
-    tile2i find_if(T f) {
-        for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
-            for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
-                tile2i tt(xx, yy);
-                if (f(tt)) {
-                    return tt;
-                }
-            }
-        }
-
-        return tile2i::invalid;
-    }
 };
 
 using grid_tiles = std::vector<tile2i>;
@@ -194,8 +133,8 @@ inline void map_grid_area_foreach(tile2i center, int size, T func) {
 namespace detail {
     template<bool is_tile2i_type, typename Func>
     inline void map_grid_area_foreach(grid_area area, Func func) {
-        for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
-            for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
+        for (int yy = area.tmin_y, endy = area.tmax_y; yy <= endy; yy++) {
+            for (int xx = area.tmin_x, endx = area.tmax_x; xx <= endx; xx++) {
                 if constexpr (is_tile2i_type) {
                     func(tile2i(xx, yy));
                 } else {
@@ -241,7 +180,7 @@ inline tile2i map_grid_area_first(tile2i tmin, tile2i tmax, T func) {
 
 template<typename T>
 inline tile2i map_grid_area_first(grid_area area, T func) {
-    return map_grid_area_first(area.tmin, area.tmax, func);
+    return map_grid_area_first(area.tmin(), area.tmax(), func);
 }
 
 template<typename T>

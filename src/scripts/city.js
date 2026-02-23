@@ -125,6 +125,10 @@ city.get_house_model = function(level) {
     }
 }
 
+city.get_grid_area = function(tile, size, radius) {
+    return __map_grid_get_area(tile, size, radius)
+}
+
 city.get_house = function(building_id) {
     return {
         __property_getter: function(property) { return __house_get_property(this.id, property) }
@@ -158,6 +162,11 @@ city.get_house = function(building_id) {
         @level { get: function() { return __house_level(this.id) } }
         @model { get: function() { return city.get_house_model(this.level) } }
         @evolve_text { set: function(text) { __house_set_evolve_text(this.id, text) } }
+        @des_influence_value { get: function() { return __building_des_influence_value(this.id) } }
+        @des_influence_step_size { get: function() { return __building_des_influence_step_size(this.id) } }
+        @des_influence_range: { get: function() { return __building_des_influence_range(this.id) } }
+        @valid { get: function() { return __building_is_valid(this.id) } }
+        @is_vacant_lot { get: function() { return __house_is_vacant_lot(this.id) } }
 
         food: function(index) { return __house_get_food(this.id, index) }
         inv: function(index) { return __house_get_inventory(this.id, index) }
@@ -167,6 +176,7 @@ city.get_house = function(building_id) {
 }
 
 city.get_bazaar = function(building_id) {
+    var building = city.get_building(building_id)
     return {
         id: building_id
         @meta_text_id { get: function() { return __building_meta_text_id(this.id) } }
@@ -230,6 +240,10 @@ city.get_random_building_by_type = function(type) {
     return city.get_building(building_id)
 }
 
+city.get_building_at = function(x, y) {
+    return city.get_building(__building_at(x, y))
+}
+
 city.get_building = function(building_id) {
     return {
         id: building_id
@@ -241,6 +255,9 @@ city.get_building = function(building_id) {
         stored_resource: function(resource) { return __building_stored_resource(this.id, resource) }
         get_figure: function(index) { return city.get_figure(__building_get_figure_id(this.id, index)) }
         mothball_toggle: function() { __building_mothball_toggle(this.id) }
+        @des_influence_value { get: function() { return __building_des_influence_value(this.id) } }
+        @des_influence_step_size { get: function() { return __building_des_influence_step_size(this.id) } }
+        @des_influence_range: { get: function() { return __building_des_influence_range(this.id) } }
         @tile { get: function() { return __building_tile(this.id) } }
         @type { }
         @num_workers { }
@@ -248,6 +265,7 @@ city.get_building = function(building_id) {
         @has_road_access { }
         @overlay { get: function() { return __building_get_overlay(this.id) } }
         @state { get: function() { return __building_get_state(this.id) } }
+        @valid { get: function() { return __building_is_valid(this.id) } }
         @worker_percentage { get: function() { return calc_percentage(this.num_workers, this.max_workers) } }
         @meta_text_id { get: function() { return __building_meta_text_id(this.id) } }
     }

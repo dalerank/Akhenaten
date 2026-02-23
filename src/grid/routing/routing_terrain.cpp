@@ -596,8 +596,8 @@ static bool wall_tile_in_radius(int x, int y, int radius, int* x_wall, int* y_wa
     int size = 1;
     grid_area area = map_grid_get_area(tile2i(x, y), size, radius);
 
-    for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
-        for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
+    for (int yy = area.tmin_y, endy = area.tmax_y; yy <= endy; yy++) {
+        for (int xx = area.tmin_x, endx = area.tmax_x; xx <= endx; xx++) {
             if (map_routing_is_wall_passable(MAP_OFFSET(xx, yy))) {
                 *x_wall = xx;
                 *y_wall = yy;

@@ -33,7 +33,7 @@ int building_garden::preview::place_impl(tile2i start, tile2i end, bool place) c
     grid_area area = map_grid_get_area(start, end);
 
     int items_placed = 0;
-    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i rtile) {
+    map_grid_area_foreach(area, [&] (tile2i rtile) {
         if (map_terrain_is(rtile, TERRAIN_NOT_CLEAR)) {
             return;
         }

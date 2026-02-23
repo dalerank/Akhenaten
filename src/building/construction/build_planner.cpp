@@ -223,8 +223,8 @@ int build_planner::place_houses(bool measure_only, int x_start, int y_start, int
     game_undo_restore_building_state();
     const auto &bparams = building_static_params::get(BUILDING_HOUSE_VACANT_LOT);
     int vacant_lot_id = bparams.first_img(animkeys().preview);
-    for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
-        for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
+    for (int y = area.tmin_y, endy = area.tmax_y; y <= endy; y++) {
+        for (int x = area.tmin_x, endx = area.tmax_x; x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);
             if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)
                 || map_terrain_exists_tile_in_radius_with_type(tile2i(x, y), 1, 1, TERRAIN_FLOODPLAIN)) {

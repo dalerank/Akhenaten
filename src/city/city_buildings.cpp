@@ -75,7 +75,7 @@ building_id building_id_closest(e_building_type type, tile2i center, int8_t radi
     grid_area area = map_grid_get_area(center, 1, radius);
     building_id result = 0;
     float dist = 100.f;
-    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i t) {
+    map_grid_area_foreach(area, [&] (tile2i t) {
         building_id bid = map_building_at(t);
         int cur_dist = t.dist(center);
         if (bid && building_get(bid)->is_valid() && cur_dist < dist) {

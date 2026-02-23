@@ -79,8 +79,8 @@ bool city_animals_t::get_free_tile(int x, int y, int allow_negative_desirability
     tile2i tfound;
     grid_area area = map_grid_get_area(tile2i(x, y), 1, 4);
 
-    for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
-        for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
+    for (int yy = area.tmin_y, endy = area.tmax_y; yy <= endy; yy++) {
+        for (int xx = area.tmin_x, endx = area.tmax_x; xx <= endx; xx++) {
             int grid_offset = MAP_OFFSET(xx, yy);
             if (!map_terrain_is(grid_offset, disallowed_terrain)) {
                 if (map_soldier_strength_get(grid_offset)) {

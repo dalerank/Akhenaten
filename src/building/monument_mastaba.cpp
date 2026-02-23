@@ -86,7 +86,7 @@ declare_console_command_p(monument_up) {
         if (amount > 0 && m > amount) {
             break;
         }
-        map_grid_area_foreach(item.area.tmin, item.area.tmax, [&] (tile2i tile) {
+        map_grid_area_foreach(item.area, [&] (tile2i tile) {
             if (amount > 0 && map_monuments_get_progress(tile) < 200) {
                 ++m;
             }

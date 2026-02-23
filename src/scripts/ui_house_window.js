@@ -75,6 +75,47 @@ function house_foodtypes_available(house) {
     return n
 }
 
+function house_determine_worst_desirability_building(house) {
+    log_info("house_determine_worst_desirability_building")
+    var house_id = house.id
+    __house_set_worst_desirability_building_id(house_id, 0)
+    var myLevel = house.level
+    if (!myLevel)
+        return
+
+    var area = city.get_grid_area(house.tile, 1, 6)
+
+    var lowest_desirability = 0
+    var lowest_building_id = 0
+    var myTile = house.tile
+
+    for (var y = area.min_y; y <= area.max_y; y++) {
+        for (var x = area.min_x; x <= area.max_x; x++) {
+            var building = city.get_building_at(x, y)
+            var building_id = building.id
+            if (!building.valid || building.id === house_id)
+                continue
+
+            var des = building.des_influence_value
+            if (des >= 0)
+                continue
+
+            var step_size = building.des_influence_step_size
+            var range = building.des_influence_range
+            var dist = Math.max(Math.abs(x - myTile.x), Math.abs(y - myTile.y))
+            if (dist <= range) {
+                var d = dist
+                while (--d > 1) des += step_size
+                if (des < lowest_desirability) {
+                    lowest_desirability = des
+                    lowest_building_id = building_id
+                }
+            }
+        }
+    }
+    __house_set_worst_desirability_building_id(house_id, lowest_building_id)
+}
+
 function house_determine_evolve_text(house) {
     var bid = house.id
     var level = house.level
@@ -250,7 +291,7 @@ function info_window_house_init_fill(window) {
     if (house.population <= 0)
         return
 
-    __house_prepare_evolve_info(window.bid)
+    house_determine_worst_desirability_building(house)
     house_determine_evolve_text(house)
     window.evolve_reason.text = house_get_evolve_reason(house)
 

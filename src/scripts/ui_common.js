@@ -119,7 +119,7 @@ function baseui(base, ext) {
 }
 
 function extend(base, ext) {
-		var newobj = {};
+	var newobj = {};
 
     for (var key in base) { newobj[key] = base[key] }
     for (var key in ext) { newobj[key] = ext[key]}

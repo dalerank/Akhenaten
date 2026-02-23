@@ -32,7 +32,7 @@ void map_enemy_strength_add(tile2i tile, int radius, int amount) {
     // Add strength in radius (for backward compatibility)
     grid_area area = map_grid_get_area(tile, 1, radius);
 
-    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i t) {
+    map_grid_area_foreach(area, [&] (tile2i t) {
         int grid_offset = t.grid_offset();
         int v = map_grid_get(g_enemy_strength, grid_offset);
         map_grid_set(g_enemy_strength, grid_offset, v + amount);
@@ -55,7 +55,7 @@ max_enemy_strength_tile map_enemy_strength_get_max(tile2i tile, int radius) {
 
     int max_value = 0;
     tile2i max_tile(0, 0);
-    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
+    map_grid_area_foreach(area, [&] (tile2i tile) {
         int grid_offset = tile.grid_offset();
         if (map_routing_distance(grid_offset) > 0 && map_grid_get(g_enemy_strength, grid_offset) > max_value) {
             max_value = map_grid_get(g_enemy_strength, grid_offset);

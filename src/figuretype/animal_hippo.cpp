@@ -35,7 +35,7 @@ void figure_hippo::on_post_load() {
 static tile2i find_nearby_reeds(tile2i start, int max_radius = 20) {
     for (int radius = 1; radius <= max_radius; radius++) {
         grid_area area = map_grid_get_area(start, 1, radius);
-        tile2i result = map_grid_area_first(area.tmin, area.tmax, [](tile2i t) {
+        tile2i result = map_grid_area_first(area, [](tile2i t) {
             if (map_terrain_is(t, TERRAIN_MARSHLAND) && can_harvest_point(t)) {
                 return true;
             }

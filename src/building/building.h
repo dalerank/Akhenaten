@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "building_fwd.h"
 #include "city/labor_category.h"
@@ -445,7 +445,8 @@ private:
     void destroy_on_fire_impl(bool plagued);
     void destroy_linked_parts(bool on_fire);
 };
-ANK_CONFIG_PROPERTY(building, has_road_access, num_workers, max_workers, type)
+ANK_CONFIG_PROPERTY(building, has_road_access, num_workers, max_workers, type,
+    current_desirability, has_water_access, has_well_access)
 
 #define BUILDING_METAINFO(type, clsid, base_class)                                                      \
     clsid(building &b) : base_class(b) {}                                                               \
@@ -453,7 +454,7 @@ ANK_CONFIG_PROPERTY(building, has_road_access, num_workers, max_workers, type)
     static constexpr pcstr CLSID = #clsid;                                                              \
     using self_type = clsid;                                                                            \
     using model_type = buildings::model_t<clsid>;                                                       \
-    using inherited = base_class;                                                                       
+    using inherited = base_class;
 
 #define BUILDING_RUNTIME_DATA(type) ;                                                                   \
     type& runtime_data() { return *(type*)this->base.runtime_data; }                                    \

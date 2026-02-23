@@ -86,8 +86,8 @@ public:
     tile2i(int _x, int _y);
 
     // COMPARISON
-    inline bool operator==(self rhs) { return p_GRID_OFFSET == rhs.p_GRID_OFFSET; }
-    inline bool operator!=(self rhs) { return p_GRID_OFFSET != rhs.p_GRID_OFFSET; }
+    inline bool operator==(self rhs) const { return p_GRID_OFFSET == rhs.p_GRID_OFFSET; }
+    inline bool operator!=(self rhs) const { return p_GRID_OFFSET != rhs.p_GRID_OFFSET; }
     static const self invalid;
 };
 

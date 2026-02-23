@@ -6,7 +6,7 @@ building_house_crude_hut {
     preview{ id: 36 }
     base{ id: 36 }
     house{ id: 26 }
-    minimap{ id:148 }    
+    minimap{ id:148 }
   }
 
   meta { help_id:128, text_id:-1 }
@@ -22,7 +22,7 @@ building_house_crude_hut {
   variants_merged {
     _1 { pack: PACK_GENERAL, id: 26, offset:4 }
   }
-  
+
   planner_update_rule {
     is_draggable : true
   }
@@ -33,7 +33,7 @@ building_house_crude_hut {
 
   laborers[0]
   cost [ 5, 10, 20, 40, 50 ]
-  
+
   fire_risk[3]
   damage_risk[0]
 

@@ -19,15 +19,15 @@
 
 static void mark_native_land(int x, int y, int size, int radius) {
     grid_area area = map_grid_get_area(tile2i(x, y), size, radius);
-    map_grid_area_foreach(area.tmin, area.tmax, [] (tile2i tile) {
+    map_grid_area_foreach(area, [] (tile2i tile) {
         map_property_mark_native_land(tile.grid_offset());
     });
 }
 
 static bool has_building_on_native_land(int x, int y, int size, int radius) {
     grid_area area = map_grid_get_area(tile2i(x, y), size, radius);
-    for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
-        for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
+    for (int yy = area.tmin_y, endy = area.tmax_y; yy <= endy; yy++) {
+        for (int xx = area.tmin_x, endx = area.tmax_x; xx <= endx; xx++) {
             int building_id = map_building_at(MAP_OFFSET(xx, yy));
             if (building_id > 0) {
                 int type = building_get(building_id)->type;

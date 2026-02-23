@@ -29,8 +29,8 @@ e_well_status map_water_supply_is_well_unnecessary(int well_id, int radius) {
     int num_houses = 0;
     grid_area area = map_grid_get_area(well->tile, 1, radius);
 
-    for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
-        for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
+    for (int yy = area.tmin_y, endy = area.tmax_y; yy <= endy; yy++) {
+        for (int xx = area.tmin_x, endx = area.tmax_x; xx <= endx; xx++) {
             int grid_offset = MAP_OFFSET(xx, yy);
             int building_id = map_building_at(grid_offset);
 

@@ -86,8 +86,8 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
     grid_area area = map_grid_get_area(confirm.cstart, confirm.cend);
 
     const int visual_feedback_on_delete = !!game_features::gameui_visual_feedback_on_delete;
-    for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
-        for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
+    for (int y = area.tmin_y, endy = area.tmax_y; y <= endy; y++) {
+        for (int x = area.tmin_x, endx = area.tmax_x; x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);
             if (map_terrain_is(grid_offset, TERRAIN_ROCK | TERRAIN_ELEVATION | TERRAIN_DUNE)) {
                 continue;
@@ -199,23 +199,23 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
     
     if (!measure_only || !visual_feedback_on_delete) {
         int radius;
-        if (area.tmax.x() - area.tmin.x() <= area.tmax.y() - area.tmin.y()) {
-            radius = area.tmax.y() - area.tmin.y() + 3;
+        if (area.tmax_x - area.tmin_x <= area.tmax_y - area.tmin_y) {
+            radius = area.tmax_y - area.tmin_y + 3;
         } else {
-            radius = area.tmax.x() - area.tmin.x() + 3;
+            radius = area.tmax_x - area.tmin_x + 3;
         }
 
-        const int x_min = area.tmin.x();
-        const int y_min = area.tmin.y();
-        const int x_max = area.tmax.x();
-        const int y_max = area.tmax.y();
-        map_tiles_update_region_empty_land(true, area.tmin, area.tmax);
+        const int x_min = area.tmin_x;
+        const int y_min = area.tmin_y;
+        const int x_max = area.tmax_x;
+        const int y_max = area.tmax_y;
+        map_tiles_update_region_empty_land(true, area.tmin(), area.tmax());
         map_tiles_update_region_meadow(x_min, y_min, x_max, y_max);
         map_tiles_update_region_rubble(x_min, y_min, x_max, y_max);
         map_tiles_gardens_update_all();
         map_tiles_update_area_roads(x_min, y_min, radius);
         map_tiles_update_all_plazas();
-        building_mud_wall::update_area_walls(area.tmin, radius);
+        building_mud_wall::update_area_walls(area.tmin(), radius);
         map_tiles_update_region_canals(tile2i(x_min - 3, y_min - 3), tile2i(x_max + 3, y_max + 3));
     }
 
@@ -245,7 +245,7 @@ int building_construction_clear_land(bool measure_only, tile2i start, tile2i end
 
     int ask_confirm_bridge = 0;
     int ask_confirm_fort = 0;
-    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
+    map_grid_area_foreach(area, [&] (tile2i tile) {
         int building_id = map_building_at(tile);
         building *b = building_get(building_id);
         ask_confirm_fort |= (building_id && (b->dcast_fort() || b->dcast_fort_ground()));
