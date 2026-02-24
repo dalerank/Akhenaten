@@ -40,6 +40,7 @@ public:
         int8_t phase;
         uint8_t upgrades;
         uint16_t alt_image;
+        uint8_t stair_index;
     } BUILDING_RUNTIME_DATA_T;
 
     virtual bool need_workers() const { return false; }

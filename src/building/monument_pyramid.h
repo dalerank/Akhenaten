@@ -9,6 +9,14 @@
 
 struct painter;
 
+struct stair_t {
+    uint8_t phase;
+    tile2i part;
+    animation_t tex;
+    vec2i offset;
+};
+ANK_CONFIG_STRUCT(stair_t, phase, part, tex, offset)
+
 class building_pyramid : public building_monument {
 public:
     building_pyramid(building &b) : building_monument(b) {}
@@ -25,6 +33,7 @@ public:
 
         vec2i init_tiles;
         vec2i enter_offset;
+        hvector<stair_t, 16> stairs;
     };
 
     virtual const base_params &pyramid_params() const = 0;
@@ -61,7 +70,10 @@ public:
 
     bool draw_ornaments_and_animations_flat_impl(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
     bool draw_ornaments_and_animations_hight_impl(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
+    void draw_ornaments_and_animations_stairs_impl(painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size);
     void change_parts_types_in_layer(tile2i begin, const vec2i layer_size, uint8_t layer);
+
+    void assign_stair();
     layer_area get_layer_area(int layer) const;
     int get_bricks_image(int orientation, tile2i tile, tile2i start, tile2i end, int layer);
 
@@ -99,7 +111,7 @@ public:
     virtual const monument &config() const override;
 };
 ANK_CONFIG_STRUCT(building_small_stepped_pyramid::static_params, 
-    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset);
+    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs);
 
 class building_small_stepped_pyramid_corner : public building_small_stepped_pyramid {
 public:
@@ -129,7 +141,7 @@ public:
     virtual const monument &config() const override;
 };
 ANK_CONFIG_STRUCT(building_medium_stepped_pyramid::static_params,
-    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset);
+    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs);
 
 class building_medium_stepped_pyramid_corner : public building_medium_stepped_pyramid {
 public:
