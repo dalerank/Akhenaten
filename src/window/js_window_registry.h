@@ -28,4 +28,3 @@ private:
 
 // Wrapper functions for use from js_game.cpp
 void js_window_registry_clear();
-void js_register_building_info_window(const xstring &name, const xstring &event_name);
