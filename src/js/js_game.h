@@ -343,7 +343,22 @@ namespace config {
     using jsfunc_iterator_function_cb = void(js_State *);
     using FunctionIterator = FuncLinkedList<jsfunc_iterator_function_cb *>;
 
+    struct ESIteratorEntry {
+        pcstr es_type;
+        void (*regnew)(pcstr name);
+        void (*clear)();
+        ESIteratorEntry *next;
+        static ESIteratorEntry *tail;
+        ESIteratorEntry(pcstr t, void (*cb)(pcstr), void (*cl)()) : es_type(t), regnew(cb), clear(cl) {
+            next = tail;
+            tail = this;
+        }
+    };
+
 } // end namespace config
+
+#define ANK_REGISTER_ES_ITERATOR(es_type, func, clear) \
+    static config::ESIteratorEntry ANK_CONFIG_CC1(es_iter_entry, __LINE__)(#es_type, func, clear)
 
 #define ANK_DECLARE_JSFUNCTION_ITERATOR(func) void func(js_State*); \
     namespace config {int ANK_CONFIG_PULL_VAR_NAME(func) = 1;} \
@@ -705,4 +720,4 @@ void js_call_function(xstring onclick_ref);
 pcstr js_call_function_with_result(xstring js_ref, int param1, int param2);
 void js_register_game_handlers(xstring missionid);
 void js_call_event_handlers(const xstring &event_name, const bvariant_map &object);
-void js_scan_and_register_windows();
+void js_register_entity_systems();

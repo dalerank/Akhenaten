@@ -3,6 +3,16 @@
 #include "js/js_game.h"
 #include "core/log.h"
 
+void window_registry_clear() {
+    js_window_registry::instance().clear();
+}
+
+void register_es_building_info_window(pcstr name) {
+    bstring64 init_event_name(name, "_init");
+    js_window_registry::instance().register_building_info_window(name, init_event_name.c_str());
+}
+ANK_REGISTER_ES_ITERATOR(building_info_window, register_es_building_info_window, window_registry_clear);
+
 void js_building_info_window::init(object_info &c) {
     building_info_window::init(c);
 
@@ -33,13 +43,4 @@ void js_window_registry::register_building_info_window(const xstring &name, cons
 void js_window_registry::clear() {
     logs::info("JS Window Registry: Clearing %d registered windows", (int)windows.size());
     windows.clear();
-}
-
-// Wrapper functions for use from js_game.cpp
-void js_window_registry_clear() {
-    js_window_registry::instance().clear();
-}
-
-void js_register_building_info_window(const xstring &name, const xstring &event_name) {
-    js_window_registry::instance().register_building_info_window(name, event_name);
 }

@@ -339,7 +339,7 @@ bool js_vm_sync(const xstring &mission_id) {
     }
 
     js_register_game_handlers(mission_id);
-    js_scan_and_register_windows();
+    js_register_entity_systems();
 
     config::refresh(vm.J);
 
