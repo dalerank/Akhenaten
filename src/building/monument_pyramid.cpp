@@ -428,8 +428,19 @@ int building_stepped_pyramid::get_channel_image(int orientation, tile2i tile, ti
 void building_stepped_pyramid::on_create(int orientation) {
 }
 
+void building_stepped_pyramid::assign_stair() {
+    tile2i mtile = main()->tile();
+    tile2i btile = tile();
+    auto it = std::find_if(pyramid_params().stairs.begin(), pyramid_params().stairs.end(), [&] (auto &it) { return mtile.shifted(it.part) == btile; });
+    runtime_data().stair_index = (it != pyramid_params().stairs.end())
+                                    ? std::distance(pyramid_params().stairs.begin(), it)
+                                    : 0xff;
+}
+
 void building_stepped_pyramid::on_post_load() {
     building_monument::on_post_load();
+
+    assign_stair();
 }
 
 bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
@@ -759,7 +770,20 @@ int building_stepped_pyramid::get_bricks_image(int orientation, tile2i tile, til
     return 0;
 }
 
+void building_stepped_pyramid::draw_ornaments_and_animations_stairs_impl(painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
+    auto &d = runtime_data();
+    if (d.stair_index == 0xff) {
+        return;
+    }
 
+    const auto &stair = pyramid_params().stairs[d.stair_index];
+    if (phase() >= stair.phase) {
+        auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+        command.image_id = stair.tex.first_img();
+        command.pixel = point + stair.offset;
+        command.mask = color_mask;
+    }
+}
 
 bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
     color_mask = (color_mask ? color_mask : 0xffffffff);
@@ -800,6 +824,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
         command.mask = color_mask;
 
         fill_tiles_height(ctx, tile, img);
+        draw_ornaments_and_animations_stairs_impl(ctx, point, tile, color_mask, tiles_size);
     } else if (phase() >= 12 && phase() < 18) {
         uint32_t progress = map_monuments_get_progress(tile);
         if (d.layer == 0) {
@@ -1048,6 +1073,8 @@ void building_stepped_pyramid::on_place_checks() {
 
     construction_warnings warnings;
     warnings.add_if(!has_water, "#needs_groundwater");
+
+    assign_stair();
 }
 
 void building_stepped_pyramid::update_count() const {
@@ -1099,7 +1126,7 @@ void building_stepped_pyramid::bind_dynamic(io_buffer *iob, size_t version) {
     }
     iob->bind_i8(monumentd.phase);
     iob->bind_u8(monumentd.layer);
-    iob->bind____skip(1);
+    iob->bind_u8(monumentd.stair_index);
     iob->bind_u8(monumentd.variant);
 
     for (int i = 0; i < RESOURCES_MAX; i++) {

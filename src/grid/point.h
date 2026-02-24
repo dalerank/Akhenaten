@@ -86,8 +86,21 @@ public:
     tile2i(int _x, int _y);
 
     // COMPARISON
-    inline bool operator==(self rhs) const { return p_GRID_OFFSET == rhs.p_GRID_OFFSET; }
-    inline bool operator!=(self rhs) const { return p_GRID_OFFSET != rhs.p_GRID_OFFSET; }
+    inline bool operator==(self rhs) const { 
+        if (p_GRID_OFFSET >= 0 && rhs.p_GRID_OFFSET >= 0) {
+            return p_GRID_OFFSET == rhs.p_GRID_OFFSET;
+        }
+
+        return (p_X == rhs.p_X) && (p_Y == rhs.p_Y);
+    }
+
+    inline bool operator!=(self rhs) const { 
+        if (p_GRID_OFFSET >= 0 && rhs.p_GRID_OFFSET >= 0) {
+            return p_GRID_OFFSET != rhs.p_GRID_OFFSET;
+        }
+
+        return (p_X != rhs.p_X) || (p_Y != rhs.p_Y);
+    }
     static const self invalid;
 };
 
