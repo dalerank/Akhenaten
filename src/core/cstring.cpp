@@ -6,7 +6,10 @@
 #include <cstdio>
 #include <cstring>
 #include <iomanip>
+#include <istream>
+#include <ostream>
 #include <sstream>
+#include <string>
 
 cstring::cstring(const cstring_allocator &allocator)
     : _str(allocator) {
@@ -250,4 +253,15 @@ void cstring::AddNewlinesIfNeeded(int32_t nAmountToAdd) {
     for (int32_t i = 0; i < nAmountToAdd; i++) {
         *this += "\n";
     }
+}
+
+std::istream &operator>>(std::istream &is, cstring &s) {
+    std::string temp;
+    if (is >> temp)
+        s = std::string_view(temp);
+    return is;
+}
+
+std::ostream &operator<<(std::ostream &os, const cstring &s) {
+    return os << s.c_str();
 }

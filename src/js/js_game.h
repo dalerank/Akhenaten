@@ -355,10 +355,24 @@ namespace config {
         }
     };
 
+    struct ModifierIteratorEntry {
+        pcstr modifier_key;
+        void (*callback)(js_State *J, pcstr name, pcstr value);
+        ModifierIteratorEntry *next;
+        static ModifierIteratorEntry *tail;
+        ModifierIteratorEntry(pcstr key, void (*cb)(js_State *, pcstr, pcstr)) : modifier_key(key), callback(cb) {
+            next = tail;
+            tail = this;
+        }
+    };
+
 } // end namespace config
 
 #define ANK_REGISTER_ES_ITERATOR(es_type, func, clear) \
-    static config::ESIteratorEntry ANK_CONFIG_CC1(es_iter_entry, __LINE__)(#es_type, func, clear)
+    static config::ESIteratorEntry ANK_CONFIG_CC1(es_iter_entry, __LINE__)(#es_type, func, clear);
+
+#define ANK_REGISTER_MODIFIER_ITERATOR(modifier_key, func) \
+    static config::ModifierIteratorEntry ANK_CONFIG_CC1(mod_iter_entry, __LINE__)(#modifier_key, func);
 
 #define ANK_DECLARE_JSFUNCTION_ITERATOR(func) void func(js_State*); \
     namespace config {int ANK_CONFIG_PULL_VAR_NAME(func) = 1;} \
@@ -721,3 +735,4 @@ pcstr js_call_function_with_result(xstring js_ref, int param1, int param2);
 void js_register_game_handlers(xstring missionid);
 void js_call_event_handlers(const xstring &event_name, const bvariant_map &object);
 void js_register_entity_systems();
+void js_register_console_command(js_State *J);

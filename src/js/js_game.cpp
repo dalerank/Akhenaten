@@ -24,7 +24,6 @@
 #include "mujs/jsi.h"
 #include "mujs/jsvalue.h"
 #include "mujs/jscompile.h"
-#include "widget/debug_console.h"
 #include "graphics/elements/ui.h"
 
 #include <vector>
@@ -198,16 +197,16 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
 
             js_setproperty(J, -2, key.c_str());
         }
-                
+
         if (has_ui_elements) {
             for (const auto &kv : object) {
                 const xstring &key = kv.first;
-                const bvariant &val = kv.second;         
+                const bvariant &val = kv.second;
 
                 bstring64 keystr = key.c_str();
                 if (keystr.starts_with("__ui_elem_")) {
                     auto element_id = keystr.substr(10, -1); // Remove "__ui_elem_" prefix
-                    
+
                     // Call helper function to create proxy object
                     js_getglobal(J, "ui_create_element_proxy");
                     verify_no_crash(js_iscallable(J, -1));
@@ -220,7 +219,7 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
                         js_pop(J, 1);
                         continue;
                     }
-                    
+
                     // Set the element as property (without __ui_elem_ prefix)
                     js_setproperty(J, -2, element_id.c_str());
                 }
@@ -240,7 +239,7 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
             // Stack underflow - this shouldn't happen, but log it
             logs::info("STACK underflow for %s [%d] (expected %d)", funcname, current_top, savetop);
         }
-        
+
         // Verify stack is correct
         int final_top = js_gettop(J);
         if (final_top != savetop) {
@@ -251,110 +250,6 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
             }
         }
     }
-}
-
-template<bool Global>
-void js_console_command_wrapper(const std::string &funcRefStr, std::istream &is, std::ostream &os) {
-    auto J = js_vm_state();
-    if (js_vm_have_error() || J == nullptr) {
-        os << "Error: JavaScript VM is not available" << std::endl;
-        return;
-    }
-
-    // Get the function from registry
-    if (Global) {
-        js_getglobal(J, funcRefStr.c_str());
-    } else {
-        js_getregistry(J, funcRefStr.c_str());
-    }
-    if (!js_iscallable(J, -1)) {
-        os << "Error: Console command function not found" << std::endl;
-        js_pop(J, 1);
-        return;
-    }
-
-    js_pushnull(J); // 'this' context
-
-    std::string arg;
-    int num_args = 0;
-    while (is >> arg) {
-        js_pushstring(J, arg.c_str());
-        num_args++;
-    }
-
-    bool ok = js_vm_trypcall(J, num_args);
-    if (!ok) {
-        const char *error = js_tostring(J, -1);
-        os << "Error executing console command: " << error << std::endl;
-        logs::error("JS console command error: %s", error);
-        js_pop(J, 1);
-    }
-
-    js_pop(J, 2);
-}
-
-void js_register_console_command(js_State *J) {
-#if !defined(GAME_PLATFORM_ANDROID)
-    if (js_gettop(J) < 2) {
-        logs::error("__register_console_command: expected at least 2 arguments (commandName, callback)");
-        js_pushundefined(J);
-        return;
-    }
-
-    if (!js_isstring(J, 1)) {
-        logs::error("__register_console_command: first argument must be a string (command name)");
-        js_pushundefined(J);
-        return;
-    }
-
-    if (!js_iscallable(J, 2)) {
-        logs::error("__register_console_command: second argument must be a function");
-        js_pushundefined(J);
-        return;
-    }
-
-    pcstr commandName = js_tostring(J, 1);
-
-    js_copy(J, 2);
-    pcstr funcRef = js_ref(J);
-    js_setregistry(J, funcRef);
-    js_pop(J, 1); // Remove function from stack after js_ref
-
-    std::string funcRefStr(funcRef);
-    auto wrapper = [funcRefStr] (std::istream &is, std::ostream &os) {
-        js_console_command_wrapper<false>(funcRefStr, is, os);
-    };
-
-    bind_debug_command(commandName, wrapper);
-#endif
-
-    js_pushundefined(J);
-}
-
-void js_register_console_command_from_function(pcstr functionName, pcstr commandName) {
-#if !defined(GAME_PLATFORM_ANDROID)
-    auto J = js_vm_state();
-    if (js_vm_have_error() || J == nullptr) {
-        logs::error("JS: Cannot register console command '%s': VM not available", commandName);
-        return;
-    }
-
-    // Get the function from global scope
-    js_getglobal(J, functionName);
-    if (!js_iscallable(J, -1)) {
-        logs::error("JS: Function '%s' is not callable for console command '%s'", functionName, commandName);
-        js_pop(J, 1);
-        return;
-    }
-
-    // Store the reference string in a std::string to ensure it remains valid in the lambda
-    std::string funcRefStr(functionName);
-    auto wrapper = [funcRefStr] (std::istream &is, std::ostream &os) {
-        js_console_command_wrapper<true>(funcRefStr, is, os);
-    };
-
-    bind_debug_command(commandName, wrapper);
-#endif
 }
 
 void js_register_game_handlers(xstring missionid) {
@@ -417,18 +312,6 @@ void js_register_game_handlers(xstring missionid) {
 
                     if (should_handle_this_function) {
                         mod = func->modifiers;
-                        const char *consoleCommandName = nullptr;
-
-                        // First pass: collect console_command and help modifiers
-                        while (mod) {
-                            if (mod->key && strcmp(mod->key, "console_command") == 0) {
-                                consoleCommandName = mod->value ? mod->value : prop->name;
-                            }
-                            mod = mod->next;
-                        }
-
-                        // Second pass: register events and console commands
-                        mod = func->modifiers;
                         auto is_es = [] (pcstr k) { return strcmp(k, "event") == 0 || strcmp(k, "es") == 0; };
                         while (mod) {
                             if (mod->key && is_es(mod->key)) {
@@ -438,11 +321,17 @@ void js_register_game_handlers(xstring missionid) {
                                 if (g_args.is_log_js_handlers()) {
                                     logs::info("JS: Registered handler '%s' for event '%s' (mission: '%s')", prop->name, mod->value, missionid.c_str());
                                 }
-                            } else if (mod->key && strcmp(mod->key, "console_command") == 0) {
-                                // Register console command from function modifier
-                                const char *commandName = consoleCommandName ? consoleCommandName : prop->name;
-                                js_register_console_command_from_function(prop->name, commandName);
-                                logs::info("JS: Registered console command '%s' ", mod->value);
+                            } else if (mod->key) {
+                                for (config::ModifierIteratorEntry *e = config::ModifierIteratorEntry::tail; e; e = e->next) {
+                                    if (e->modifier_key && strcmp(mod->key, e->modifier_key) == 0) {
+                                        pcstr value = mod->value ? mod->value : prop->name;
+                                        e->callback(J, prop->name, value);
+                                        if (g_args.is_log_js_handlers()) {
+                                            logs::info("JS: Modifier '%s' -> '%s' (name=%s)", mod->key, value, prop->name);
+                                        }
+                                        break;
+                                    }
+                                }
                             }
                             mod = mod->next;
                         }
@@ -457,6 +346,7 @@ void js_register_game_handlers(xstring missionid) {
 }
 
 config::ESIteratorEntry *config::ESIteratorEntry::tail = nullptr;
+config::ModifierIteratorEntry *config::ModifierIteratorEntry::tail = nullptr;
 
 void js_register_entity_systems() {
     for (config::ESIteratorEntry *e = config::ESIteratorEntry::tail; e; e = e->next) {
@@ -527,7 +417,7 @@ void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_game_load_text, "load_text", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_get_image, "get_image", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_register_console_command, "__register_console_command", 3);
-    
+
     animation_t::global_hashtime = game.frame;
     for (config::FunctionIterator *s = config::FunctionIterator::tail; s; s = s->next) {
         s->func(J);
@@ -584,7 +474,7 @@ pcstr js_call_function_with_result(xstring js_ref, int param1, int param2) {
             js_pop(J, 1);
             return "";
         }
-        
+
         pcstr result_str = "";
         if (js_isstring(J, -1)) {
             result_str = js_tostring(J, -1);
@@ -596,7 +486,7 @@ pcstr js_call_function_with_result(xstring js_ref, int param1, int param2) {
     } else {
         js_pop(J, 1);
     }
-    
+
     return "";
 }
 
