@@ -168,6 +168,10 @@ private:
     BaseStringType _str;
 };
 
+// Stream operators
+std::istream &operator>>(std::istream &is, cstring &s);
+std::ostream &operator<<(std::ostream &os, const cstring &s);
+
 // Non-member operators
 inline cstring operator+(const cstring &lhs, const cstring &rhs) {
     auto tmp = lhs;
