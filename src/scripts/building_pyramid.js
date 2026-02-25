@@ -101,6 +101,111 @@ building_small_stepped_pyramid {
         tex { path:"stepped_pyramid/stepped_pyramid_00111" }
         offset : [-15, 25]
       }
+
+      {
+        phase : 9
+        part : [6, 10]
+        tex { path:"stepped_pyramid/stepped_pyramid_00112" }
+        offset : [-15, 25]
+      }
+
+      {
+        phase : 10
+        part : [8, 10]
+        tex { path:"stepped_pyramid/stepped_pyramid_00110" }
+        offset : [15, -35]
+      }
+
+      {
+        phase : 10
+        part : [10, 10]
+        tex { path:"stepped_pyramid/stepped_pyramid_00122" }
+        offset : [15, -40]
+      }
+
+      {
+        phase : 11
+        part : [10, 8]
+        tex { path:"stepped_pyramid/stepped_pyramid_00114" }
+        offset : [25, -30]
+      }
+
+      {
+        phase : 12
+        part : [10, 6]
+        tex { path:"stepped_pyramid/stepped_pyramid_00115" }
+        offset : [20, -30]
+      }
+
+      {
+        phase : 13
+        part : [10, 4]
+        tex { path:"stepped_pyramid/stepped_pyramid_00113" }
+        offset : [0, -90]
+      }
+
+      {
+        phase : 13
+        part : [10, 2]
+        tex { path:"stepped_pyramid/stepped_pyramid_00124" }
+        offset : [0, -95]
+      }
+
+      {
+        phase : 16
+        part : [4, 8]
+        tex { path:"stepped_pyramid/stepped_pyramid_00118" }
+        offset : [-28, -155]
+      }
+
+      {
+        phase : 17
+        part : [6, 8]
+        tex { path:"stepped_pyramid/stepped_pyramid_00111" }
+        offset : [-48, -158]
+      }
+
+      {
+        phase : 18
+        part : [8, 8]
+        tex { path:"stepped_pyramid/stepped_pyramid_00112" }
+        offset : [-48, -158]
+      }
+
+      {
+        phase : 19
+        part : [8, 6]
+        tex { path:"stepped_pyramid/stepped_pyramid_00113" }
+        offset : [0, -180]
+      }
+
+      {
+        phase : 20
+        part : [8, 4]
+        tex { path:"stepped_pyramid/stepped_pyramid_00124" }
+        offset : [-0, -180]
+      }
+
+      {
+        phase : 21
+        part : [4, 6]
+        tex { path:"stepped_pyramid/stepped_pyramid_00119" }
+        offset : [-20, -175]
+      }
+
+      {
+        phase : 21
+        part : [6, 6]
+        tex { path:"stepped_pyramid/stepped_pyramid_00112" }
+        offset : [-40, -175]
+      }
+
+      {
+        phase : 22
+        part : [6, 4]
+        tex { path:"stepped_pyramid/stepped_pyramid_00113" }
+        offset : [10, -200]
+      }
     ]
 
     flags {

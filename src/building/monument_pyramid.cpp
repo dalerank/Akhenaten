@@ -858,6 +858,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
                 command.mask = color_mask;
             }
         }
+        draw_ornaments_and_animations_stairs_impl(ctx, point, tile, color_mask, tiles_size);
     } else if (phase() >= 18 && phase() < 24) {
         uint32_t progress = map_monuments_get_progress(tile);
         if (d.layer == 0) {
@@ -902,6 +903,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
                 command.mask = color_mask;
             }
         }
+        draw_ornaments_and_animations_stairs_impl(ctx, point, tile, color_mask, tiles_size);
     } else if (phase() >= 24 && phase() < 32) {
         uint32_t progress = map_monuments_get_progress(tile);
         if (d.layer == 0) {
