@@ -53,6 +53,7 @@ struct animation_context {
     bool is_reverse = false;
     bool was_finished = false;
     bool tick_updated = false;
+    xstring path;
     std::function<void()> on_finished_cb;
 
     void setup(const animation_t &anim);

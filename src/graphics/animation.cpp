@@ -39,8 +39,15 @@ void animation_context::setup(const animation_t &anim) {
     }
 
     key = anim.key;
-    base = image_id_from_group(anim.pack, anim.id);
-    offset = anim.offset;
+    path = anim.path;
+    if (!anim.path.empty()) {
+        image_desc desc = image_desc_from_name(anim.path);
+        base = image_id_from_group(desc.pack, desc.id);
+        offset = desc.offset;
+    } else {
+        base = image_id_from_group(anim.pack, anim.id);
+        offset = anim.offset;
+    }
     max_frames = anim.max_frames;
     frame_duration = std::max<int16_t>(1, anim.duration);
     pos = anim.pos;
