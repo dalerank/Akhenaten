@@ -46,6 +46,15 @@ void building_water_lift::on_post_load() {
     update_map_orientation(base.orientation);
 }
 
+void building_water_lift::spawn_figure() {
+    check_labor_problem();
+    if (!has_road_access()) {
+        return;
+    }
+
+    common_spawn_labor_seeker(current_params().min_houses_coverage);
+}
+
 void building_water_lift::update_day() {
     building_impl::update_day();
 
@@ -99,8 +108,8 @@ void building_water_lift::update_map_orientation(int orientation) {
         base_image = first_img("base_floodplain");
     }
 
-    int image_offset = city_view_relative_orientation(orientation);
-    int image_id = base_image + image_offset + base.orientation;
+    int image_offset = city_view_relative_orientation(base.orientation);
+    int image_id = base_image + image_offset;
     map_water_add_building(id(), tile(), 2, image_id);
 }
 
