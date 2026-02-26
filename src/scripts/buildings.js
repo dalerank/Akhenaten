@@ -1315,10 +1315,10 @@ building_water_lift {
     base { path: "pharaoh_terrain/transport_00029" }
     base_no_water { path: "pharaoh_terrain/transport_00033" }
     base_floodplain { path: "pharaoh_terrain/transport_00037" }
-    work_n { pos [35, 0], path:"sprambient/sprambient_00037", duration:8, max_frames:12 }
-    work_e { pos [54, 14], path:"sprambient/sprambient_00050", duration:8, max_frames:12 }
-    work_s { pos [45, 0], path:"sprambient/SprAmbient_00063", duration:8, max_frames:12 }
-    work_w { pos [68, 20], path:"sprambient/sprambient_00076", duration:8, max_frames:12 }
+    work_n { pos [50, 15], path:"sprambient/shadne_00038", duration:8, max_frames:12, internal_offset:true }
+    work_e { pos [54, 14], path:"sprambient/shadse_00051", duration:8, max_frames:12, internal_offset:true }
+    work_s { pos [60, 15], path:"sprambient/shadsw_00064", duration:8, max_frames:12, internal_offset:true }
+    work_w { pos [68, 20], path:"sprambient/shadnw_00077", duration:8, max_frames:12, internal_offset:true }
     minimap { pack:PACK_GENERAL, id:151 }
   }
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
