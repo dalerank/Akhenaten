@@ -429,6 +429,7 @@ struct offset_ids {
 bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
     OZZY_PROFILER_FUNCTION();
     name = pak;
+    has_system_bmp = false;
 
     if (g_args.is_log_resources()) {
         logs::info("VFS: Loading zip pack '%s' (starting_index=%d)", pak, starting_index);
@@ -779,7 +780,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     }
 
     // determine if and when to load SYSTEM.BMP sprites
-    bool has_system_bmp = false;
+    has_system_bmp = false;
     if (groups_num > 0 && group_image_ids[0] == 0) {
         has_system_bmp = true;
     }
@@ -874,9 +875,13 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
                 --group_it;
                 img.bmp.group_id = group_it->id;
                 img.bmp.name.printf("group_%d", img.bmp.group_id);
+                img.group_id = group_it->id;
+                img.group_index = img.sgx_index - group_it->start;
             } else if (!offset_ids_vec.empty()) {
                 img.bmp.group_id = offset_ids_vec.front().id;
                 img.bmp.name.printf("group_%d", img.bmp.group_id);
+                img.group_id = offset_ids_vec.front().id;
+                img.group_index = img.sgx_index - offset_ids_vec.front().start;
             }
         } else {
             // Find the last group where start <= i
@@ -1065,7 +1070,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
 
 image_desc imagepak::get_image_desc(const xstring &name) const {
     const xstring name_lower = name.tolower();
-    
+
     for (const auto& img : images_array) {
         verify_no_crash(!img.bmp.tname.empty() && "Texture name shouldn't be empty");
         if (img.bmp.tname.empty()) {
@@ -1081,7 +1086,7 @@ image_desc imagepak::get_image_desc(const xstring &name) const {
             return desc;
         }
     }
-    
+
     return image_desc{};
 }
 
