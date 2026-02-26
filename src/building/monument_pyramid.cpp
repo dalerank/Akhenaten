@@ -959,6 +959,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
                 command.mask = color_mask;
             }
         }
+        draw_ornaments_and_animations_stairs_impl(ctx, point, tile, color_mask, tiles_size);
     } else if (phase() == 32) {
         if (d.layer == 0) {
             auto layer_area = get_layer_area(0);
