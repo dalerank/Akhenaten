@@ -47,7 +47,11 @@ bool game_debug_show_properties_object(imagepak_handle &ipak) {
                     ImGui::TableSetColumnIndex(0);
                     ImGui::AlignTextToFramePadding();
                     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_Bullet;
-                    ImGui::TreeNodeEx("Field", flags, "Image");
+                    ImGui::TreeNodeEx("Field", flags, "Image [%s]", img->bmp.tname.c_str());
+                    ImGui::SameLine();
+                    if (ImGui::SmallButton("Copy")) {
+                        ImGui::SetClipboardText(img->bmp.tname.c_str());
+                    }
                     ImGui::TableSetColumnIndex(1);
                     ImGui::SetNextItemWidth(-FLT_MIN);
 
@@ -68,7 +72,7 @@ bool game_debug_show_properties_object(imagepak_handle &ipak) {
 
                     auto maxImageSize = [] (const image_t *img, vec2i msize) {
                         if (img->mirrored_img != 0) {
-                            img = img->mirrored_img;                            
+                            img = img->mirrored_img;
                         }
                         msize.x = (img->width < msize.x ? msize.x : img->width);
                         msize.y = (img->height < msize.y ? msize.y : img->height);
