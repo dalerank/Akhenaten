@@ -23,6 +23,7 @@ public:
 
 private:
     bool userpack;
+    bool has_system_bmp;
     uint8_t pack;
     uint16_t useridx;
 
