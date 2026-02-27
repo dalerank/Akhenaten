@@ -138,8 +138,8 @@ void map_canal_fill_from_offset(tile2i tile, int water) {
             }
 
             int cwater = map_canal_at(new_offset);
-            if (cwater < wtile.water) {
-                g_water_supply_queue.push_back({ new_offset, wtile.water - 1 });
+            if (cwater >= 3 && cwater < wtile.water) {
+                g_water_supply_queue.push_back({ new_offset, std::max(0, wtile.water - 3) });
             }
         }
     }
@@ -279,8 +279,6 @@ void map_tiles_set_canal_image(int grid_offset) {
         map_property_set_multi_tile_size(grid_offset, 1);
         map_property_mark_draw_tile(grid_offset);
     }
-
-    map_canal_set(grid_offset, 0);// img->canal_offset);
 }
 
 void map_canal_update_all_tiles(int include_construction) {

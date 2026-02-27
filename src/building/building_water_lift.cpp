@@ -63,10 +63,18 @@ void building_water_lift::update_day() {
     const auto &d = runtime_data();
     const bool is_water1 = map_terrain_is(d.input_tiles[0], TERRAIN_WATER);
     const bool is_water2 = map_terrain_is(d.input_tiles[1], TERRAIN_WATER);
-    base.has_water_access = (is_water1 || is_water2);
+    base.has_water_access = (is_water1 || is_water2);   
+}
 
-    // checks done, update
+void building_water_lift::on_tick(bool b) {
+    building_impl::on_tick(b);
+
     if (!base.has_water_access) {
+        return;
+    }
+
+    const auto &d = runtime_data();
+    if (d.tick % 25 != 0) {
         return;
     }
 

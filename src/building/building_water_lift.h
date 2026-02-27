@@ -18,8 +18,9 @@ public:
     };
 
     struct runtime_data_t {
-        int input_tiles[2];
-        int output_tiles[2];
+        int16_t input_tiles[2];
+        int16_t output_tiles[2];
+        int8_t tick;
     } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_create(int orientation) override;
@@ -27,6 +28,7 @@ public:
     virtual void on_place_checks() override;
     virtual void on_post_load() override;
     virtual void update_day() override;
+    virtual void on_tick(bool) override;
     virtual int animation_speed(int speed) const override;
     virtual e_overlay get_overlay() const override { return OVERLAY_WATER; }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_POLICE; }
