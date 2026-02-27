@@ -8,7 +8,6 @@
 // Dynamic window registered from JavaScript
 struct js_building_info_window : public building_info_window {
     xstring window_name;
-    xstring init_event_name;
 
     virtual pcstr section() const override { return window_name.c_str(); }
     virtual void init(object_info &c) override;
@@ -19,7 +18,7 @@ class js_window_registry {
 public:
     static js_window_registry& instance();
 
-    void register_building_info_window(const xstring &name, const xstring &event_name);
+    void register_building_info_window(const xstring &name);
     void clear();
 
 private:

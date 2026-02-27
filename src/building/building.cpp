@@ -387,7 +387,6 @@ bool building::common_spawn_figure_trigger(int min_houses, int slot) {
     return false;
 }
 
-
 figure *building::create_figure_generic(e_figure_type _type, e_figure_action created_action, e_building_slot slot, int created_dir) {
     figure *f = figure_create(_type, road_access, created_dir);
     f->action_state = created_action;
