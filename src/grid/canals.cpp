@@ -214,13 +214,7 @@ int get_canal_image(int grid_offset, bool is_road, int terrain, const terrain_im
     }
 
     int image_canal_set_begin = building_irrigation_ditch::images().begin; // 119 C3
-    int image_canal_set_end = image_canal_set_begin + building_irrigation_ditch::image_set::IMAGE_FULL_OFFSET;
-    int water_offset = 0;
-    int terrain_image = map_image_at(grid_offset);
-    if (terrain_image >= image_canal_set_begin && terrain_image < image_canal_set_end)
-        water_offset = 0; // has water
-    else                  // has no water
-        water_offset = building_irrigation_ditch::image_set::IMAGE_FULL_OFFSET;
+    int water_offset = (map_canal_at(grid_offset) > 0) ? 0 : building_irrigation_ditch::image_set::IMAGE_FULL_OFFSET;
 
     // floodplains
     int floodplains_offset = 0;
