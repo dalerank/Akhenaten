@@ -244,6 +244,18 @@ city.get_building_at = function(x, y) {
     return city.get_building(__building_at(x, y))
 }
 
+city.get_farm = function(building_id) {
+    return {
+        id: building_id
+        __property_getter: function(property) { return __farm_get_property(this.id, property) }
+        @flood_imminent { }
+        @progress { }
+        @is_floodplain { }
+
+        set_worker: function(action, coords) { __farm_set_worker(this.id, action, coords) }
+    }
+}
+
 city.get_building = function(building_id) {
     return {
         id: building_id
