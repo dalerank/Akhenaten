@@ -151,6 +151,12 @@ int __building_mothball_toggle(int bid) {
 }
 ANK_FUNCTION_1(__building_mothball_toggle)
 
+bool __building_can_play_animation(int bid) { return building_get(bid)->dcast()->can_play_animation(); }
+ANK_FUNCTION_1(__building_can_play_animation)
+
+void __building_set_animation(int bid, pcstr animkey) { building_get(bid)->dcast()->set_animation(animkey); }
+ANK_FUNCTION_2(__building_set_animation)
+
 bool __city_resource_is_mothballed(int resource) {
     return g_city.resource.is_mothballed((e_resource)resource);
 }

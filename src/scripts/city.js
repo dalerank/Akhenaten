@@ -255,6 +255,8 @@ city.get_building = function(building_id) {
         stored_resource: function(resource) { return __building_stored_resource(this.id, resource) }
         get_figure: function(index) { return city.get_figure(__building_get_figure_id(this.id, index)) }
         mothball_toggle: function() { __building_mothball_toggle(this.id) }
+        can_play_animation: function() { return __building_can_play_animation(this.id) }
+        set_animation: function(animkey) { __building_set_animation(this.id, animkey) }
         @des_influence_value { get: function() { return __building_des_influence_value(this.id) } }
         @des_influence_step_size { get: function() { return __building_des_influence_step_size(this.id) } }
         @des_influence_range: { get: function() { return __building_des_influence_range(this.id) } }
