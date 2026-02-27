@@ -35,7 +35,7 @@ declare_console_command_p(fire_start) {
 }
 
 void building_firehouse::spawn_figure() {
-    base.common_spawn_roamer(FIGURE_FIREMAN, current_params().min_houses_coverage, (e_figure_action)ACTION_70_FIREMAN_CREATED);
+    common_spawn_roamer(FIGURE_FIREMAN, current_params().min_houses_coverage, (e_figure_action)ACTION_70_FIREMAN_CREATED);
 }
 
 void building_firehouse::update_graphic() {
