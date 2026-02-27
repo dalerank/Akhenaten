@@ -1340,8 +1340,8 @@ building_water_lift {
   fire_risk [0]
   damage_risk [3]
   irrigation_radius : 2
-  canal_fill_water_level : 10
-  base_irrigation_value : 10
+  canal_fill_water_level : 32
+  base_irrigation_value : 32
 }
 
 building_police_station = {
