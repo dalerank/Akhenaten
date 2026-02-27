@@ -106,8 +106,8 @@ scrollbar_t &scrollbar(scrollbar_t &scrollbar, vec2i pos, int &value, vec2i size
 void fill_rect(vec2i offset, vec2i size, color c);
 vec2i current_offset();
 
-template<typename T>
-void event(const T &ev);
+template<typename T> inline void event(const T &ev);
+template<typename T> inline void event(xstring evname, const T &ev);
 
 pcstr str(int group, int id);
 pcstr str_from_key(pcstr key);
@@ -641,9 +641,10 @@ struct widget {
     inline void image(image_desc img, vec2i pos) { ui::eimage(img, pos); }
     inline void icon(vec2i pos, e_resource img) { ui::icon(pos, img); }
 
-    template<typename T>
-    inline void event(const T &ev);
-    void event(pcstr evname, const bvariant_map &js_j);
+    template<typename T> inline void event(const T &ev);
+    template<typename T> inline void event(xstring evname, const T &ev);
+
+    void event(xstring evname, const bvariant_map &js_j);
 
     inline void begin_widget(vec2i offset, bool relative = false) { check_errors = true; ui::begin_widget(offset, relative); }
     inline void end_widget() { ui::end_widget(); }

@@ -51,7 +51,7 @@ public:
     virtual bool can_play_animation() const;
     virtual bool is_enemies_nearby() const;
     virtual void update_count() const;
-    virtual void update_map_orientation(int orientation) {}
+    virtual void update_map_orientation(int orientation);
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_NONE; }
     virtual int animation_speed(int speed) const { return speed; }
     virtual int get_fire_risk(int value) const { return value; }

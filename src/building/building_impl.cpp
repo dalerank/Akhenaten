@@ -157,6 +157,9 @@ void building_impl::update_count() const {
     g_city.buildings.increase_count(base.type, base.num_workers > 0);
 }
 
+void building_impl::update_map_orientation(int orientation) {
+}
+
 void building_impl::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, color mask) {
     if (!can_play_animation()) {
         return;
