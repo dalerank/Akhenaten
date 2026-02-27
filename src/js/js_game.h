@@ -3,8 +3,10 @@
 #include "mujs/mujs.h"
 
 #include "js/js_constants.h"
+#include "js/js_struct.h"
 #include "core/bstring.h"
 #include "core/core.h"
+#include "core/typename.h"
 #include "js/js_defines.h"
 #include "core/vec2i.h"
 #include "core/archive.h"
@@ -749,6 +751,5 @@ template<typename T>
 inline void js_event(const T &ev) {
     type_name_holder<T> evname;
     xstring evname_str(type_simplified_name(evname.value.data()));
-    auto js_j = bvariant_map::acquire_from_pool();
-    ui::event(evname_str, ev);
+    js_event(evname_str, ev);
 }
