@@ -377,12 +377,13 @@ void building_impl::highlight_waypoints() { // highlight the 4 routing tiles for
 }
 
 void building_impl::on_tick(bool refresh_only) {
-    if (!base.anim.valid()) {
-        return;
+    if (base.anim.valid()) {
+        base.anim.update(refresh_only);
     }
 
-    base.anim.update(refresh_only);
     for (auto &anim : base.anims) {
-        anim.update(refresh_only);
+        if (anim.valid()) {
+            anim.update(refresh_only);
+        }
     }
 }

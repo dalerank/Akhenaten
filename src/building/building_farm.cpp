@@ -58,6 +58,9 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_meadow_farm_henna);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_figs);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_meadow_farm_figs);
 
+using e_farm_worker_state_tokens_t = token_holder<e_farm_worker_state, e_farm_worker_tiling, e_farm_worker_count>;
+const e_farm_worker_state_tokens_t ANK_CONFIG_ENUM(e_farm_worker_state_tokens);
+
 declare_console_command(add_grain, game_cheat_add_resource<RESOURCE_GRAIN>);
 declare_console_command_p(farm_grow) {
     std::string args; is >> args;
@@ -220,15 +223,14 @@ bool building_farm::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel,
 }
 
 void building_farm::draw_farm_worker(painter &ctx, int direction, int action, vec2i coords, color color_mask) {
-    pcstr anim_key = std::array{"tiling", "seeding", "harvesting"}[action];
-    const animation_t &action_anim = anim(anim_key);
-    animation_context context;
+    if (action < 0 || action >= e_farm_worker_count) {
+        return;
+    }
 
-    auto &d = runtime_data();
-    context.setup(action_anim);
-    context.frame = d.worker_frame;
-    context.update(false);
-    d.worker_frame = context.frame;
+    pcstr anim_key = std::array{ "tiling", "seeding", "harvesting" } [action] ;
+
+    auto &context = base.anims[0];
+    context.setup(anim(anim_key));
 
     auto& command = ImageDraw::create_subcommand(render_command_t::ert_sprite);
     command.image_id = context.start_frame() + direction + 8 * context.current_frame();
@@ -276,76 +278,20 @@ bool building_farm::requested_workers() const {
     return !d.worker_id && d.labor_days_left <= 47 && !num_workers();
 }
 
-void building_farm::draw_workers(painter &ctx, building* b, tile2i tile, vec2i pos) {
+void building_farm::draw_workers(painter &ctx, building *b, tile2i tile, vec2i pos) {
     if (b->num_workers == 0) {
         return;
     }
 
+    auto &d = runtime_data();
+
     pos += {30, -15};
-    int random_seed = 1234.567f * (1 + game.simtime.day) * map_random_get(b->tile.grid_offset());
-    int d = random_seed % 8;
-    if (b->is_floodplain_farm()) {
-        auto farm = b->dcast_farm();
-        const short progress = farm->progress();
-        if (g_floods.state_is(FLOOD_STATE_IMMINENT)) {
-            //int random_x = random_seed % 3;
-            //int random_y = int(1234.567f * random_seed) % 3;
-            //auto coords = farm_tile_coords(x, y, random_x, random_y);
-            //draw_ph_worker(d, 2, animation_offset, coords);
-        } else {
-            const auto &fparams = farm_params();
-            if (progress < 400)
-                draw_farm_worker(ctx, game.simtime.absolute_tick() % 128 / 16, 1, fparams.tile_coord(pos, 1, 1));
-            else if (progress < 500)
-                draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 1, 0));
-            else if (progress < 600)
-                draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 2, 0));
-            else if (progress < 700)
-                draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 0, 1));
-            else if (progress < 800)
-                draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 1, 1));
-            else if (progress < 900)
-                draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 2, 1));
-            else if (progress < 1000)
-                draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 0, 2));
-            else if (progress < 1100)
-                draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 1, 2));
-            else if (progress < 1200)
-                draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 2, 2));
-            else if (progress < 1300)
-                draw_farm_worker(ctx, d, 2, fparams.tile_coord(pos, 1, 0));
-            else if (progress < 1400)
-                draw_farm_worker(ctx, d, 2, fparams.tile_coord(pos, 2, 0));
-            else if (progress < 1500)
-                draw_farm_worker(ctx, d, 2, fparams.tile_coord(pos, 0, 1));
-            else if (progress < 1600)
-                draw_farm_worker(ctx, d, 2, fparams.tile_coord(pos, 1, 1));
-            else if (progress < 1700)
-                draw_farm_worker(ctx, d, 2, fparams.tile_coord(pos, 2, 1));
-            else if (progress < 1800)
-                draw_farm_worker(ctx, d, 2, fparams.tile_coord(pos, 0, 2));
-            else if (progress < 1900)
-                draw_farm_worker(ctx, d, 2, fparams.tile_coord(pos, 1, 2));
-            else if (progress < 2000)
-                draw_farm_worker(ctx, d, 2, fparams.tile_coord(pos, 2, 2));
-        }
-    } else {
-        auto farm = b->dcast_farm();
-        const short progress = farm->progress();
-        const auto &fparams = farm_params();
-        if (progress < 100)
-            draw_farm_worker(ctx, game.simtime.absolute_tick() % 128 / 16, 1, fparams.tile_coord(pos, 1, 1));
-        else if (progress < 400)
-            draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 0, 2));
-        else if (progress < 800)
-            draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 1, 2));
-        else if (progress < 1200)
-            draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 2, 2));
-        else if (progress < 1600)
-            draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 2, 1));
-        else if (progress < 2000)
-            draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 2, 0));
-    }
+    int direction = map_random_get(b->tile.grid_offset()) % 8;
+    const bool flood_imminent = b->is_floodplain_farm() && g_floods.state_is(FLOOD_STATE_IMMINENT);
+
+    direction = (direction >= 0) ? direction : (game.simtime.absolute_tick() % 128 / 16);
+    vec2i coords = farm_params().tile_coord(pos, d.worker_tile.x, d.worker_tile.y);
+    draw_farm_worker(ctx, direction, d.worker_action, coords);
 }
 
 bool building_farm::time_to_deliver(bool floodplains, int resource_id) {
@@ -374,8 +320,8 @@ bool building_farm::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     if (is_currently_flooded()) {
         return true;
     }
-    draw_crops(ctx, type(), progress(), tile(), point, mask);
     draw_workers(ctx, &base, t, point);
+    draw_crops(ctx, type(), progress(), tile(), point, mask);
 
     return true;
 }
@@ -473,6 +419,14 @@ void building_farm::on_undo() {
     map_building_tiles_add_farm(type(), id(), tile(), 0);
 }
 
+void building_farm::on_tick(bool refresh) {
+    building_impl::on_tick(refresh);
+    
+    auto &d = runtime_data();
+    d.is_floodplain = base.is_floodplain_farm();
+    d.flood_imminent = (d.is_floodplain && g_floods.state_is(FLOOD_STATE_IMMINENT));
+}
+
 void building_farm::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind____skip(22);
     iob->bind____skip(48);
@@ -485,7 +439,7 @@ void building_farm::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &d.labor_state);
     iob->bind(BIND_SIGNATURE_UINT8, &d.labor_days_left);
     iob->bind(BIND_SIGNATURE_UINT16, &d.progress);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.worker_frame);
+    iob->bind____skip(1);
 }
 
 void building_farm::start_production() {

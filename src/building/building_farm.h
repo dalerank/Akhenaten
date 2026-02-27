@@ -4,9 +4,11 @@
 #include "game/simulation_time.h"
 
 enum e_farm_worker_state {
-    FARM_WORKER_TILING,
-    FARM_WORKER_SEEDING,
-    FARM_WORKER_HARVESTING
+    e_farm_worker_tiling,
+    e_farm_worker_seeding,
+    e_farm_worker_harvesting,
+
+    e_farm_worker_count
 };
 
 class building_farm : public building_impl {
@@ -25,7 +27,10 @@ public:
     };
 
     struct runtime_data_t : public no_copy_assignment {
-        uint8_t worker_frame;
+        vec2i worker_tile;
+        uint8_t worker_action;
+        bool is_floodplain;
+        bool flood_imminent;
         uint16_t progress;
         uint16_t progress_max;
         uint16_t ready_production;
@@ -47,6 +52,7 @@ public:
     virtual void spawn_figure() override;
     virtual void update_graphic() override;
     virtual void on_undo() override;
+    virtual void on_tick(bool refresh) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void start_production() override;
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
@@ -79,6 +85,7 @@ public:
 
     virtual const farm_params_t &farm_params() const = 0;
 };
+ANK_CONFIG_PROPERTY(building_farm::runtime_data_t, is_floodplain, flood_imminent, progress)
 
 struct building_floodplain_farm : public building_farm {
     building_floodplain_farm(building &b) : building_farm(b) {}
