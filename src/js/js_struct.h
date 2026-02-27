@@ -19,6 +19,8 @@
 
 #define ANK_SCRIPT_STRUCT_FROM(v1) js_j[#v1] = bvariant(js_t.v1); 
 
+class bvariant_map;
+
 namespace js_helper {
     template<typename T>
     inline void writer(bvariant_map &js_j, const T &js_t);
