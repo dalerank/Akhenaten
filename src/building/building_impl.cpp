@@ -269,8 +269,6 @@ e_building_state building_impl::state() const { return base.state; }
 void building_impl::check_labor_problem() { base.check_labor_problem(); }
 int building_impl::worker_percentage() const { return base.worker_percentage(); }
 void building_impl::common_spawn_labor_seeker(int min_houses) { base.common_spawn_labor_seeker(min_houses); }
-bool building_impl::common_spawn_figure_trigger(int min_houses, int slot) { return base.common_spawn_figure_trigger(min_houses, slot); }
-bool building_impl::common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action) { return base.common_spawn_roamer(type, min_houses, created_action); }
 int building_impl::max_workers() const { return base.max_workers; }
 int building_impl::pct_workers() const { return calc_percentage<int>(num_workers(), max_workers()); }
 int building_impl::get_figure_id(int i) const { return base.get_figure_id(i); }
@@ -292,6 +290,42 @@ void building_impl::destroy_by_poof(bool clouds) {
 
         b = b->next();
     } while (true);
+}
+
+bool building_impl::common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action) {
+    if (common_spawn_figure_trigger(min_houses)) {
+        create_roaming_figure(type, created_action, BUILDING_SLOT_SERVICE);
+        return true;
+    }
+    return false;
+}
+
+bool building_impl::common_spawn_figure_trigger(int min_houses, int slot) {
+    check_labor_problem();
+    if (!has_road_access()) {
+        return false;
+    }
+
+    if (main() == this) { // only spawn from the main building
+        common_spawn_labor_seeker(min_houses);
+    }
+
+    if (has_figure(slot)) {
+        return false;
+    }
+
+    int spawn_delay = figure_spawn_timer();
+    if (spawn_delay == -1) {
+        return false;
+    }
+
+    base.figure_spawn_delay++;
+    if (base.figure_spawn_delay > spawn_delay) {
+        base.figure_spawn_delay = 0;
+        return true;
+    }
+
+    return false;
 }
 
 void building_impl::highlight_waypoints() { // highlight the 4 routing tiles for roams from this building

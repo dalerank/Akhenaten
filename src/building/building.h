@@ -322,9 +322,7 @@ public:
     int worker_percentage() const;
     int figure_spawn_timer();
     void check_labor_problem();
-    bool common_spawn_figure_trigger(int min_houses, int slot = BUILDING_SLOT_SERVICE);
     void common_spawn_labor_seeker(int min_houses);
-    bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action);
     figure* common_spawn_goods_output_cartpusher(int min_carry = 100, int max_carry = 800);
     bool workshop_has_resources();
 
