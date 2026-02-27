@@ -788,7 +788,7 @@ ui::element& ui::widget::operator[](pcstr id) {
     return (it != elements.end() ? **it : ui::dummy_element);
 }
 
-void ui::widget::event(pcstr evname, const bvariant_map &js_j) {
+void ui::widget::event(xstring evname, const bvariant_map &js_j) {
     widget* prev_widget = g_state.current_widget;
     g_state.current_widget = this;
     
