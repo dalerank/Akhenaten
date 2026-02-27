@@ -736,3 +736,19 @@ void js_register_game_handlers(xstring missionid);
 void js_call_event_handlers(const xstring &event_name, const bvariant_map &object);
 void js_register_entity_systems();
 void js_register_console_command(js_State *J);
+
+template<typename T>
+inline void js_event(xstring evname_str, const T &ev) {
+    auto js_j = bvariant_map::acquire_from_pool();
+    js_helper::writer(*js_j, ev);
+    js_call_event_handlers(evname_str, *js_j);
+    bvariant_map::return_to_pool(js_j);
+}
+
+template<typename T>
+inline void js_event(const T &ev) {
+    type_name_holder<T> evname;
+    xstring evname_str(type_simplified_name(evname.value.data()));
+    auto js_j = bvariant_map::acquire_from_pool();
+    ui::event(evname_str, ev);
+}

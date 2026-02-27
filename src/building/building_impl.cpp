@@ -17,6 +17,8 @@
 #include "grid/enemy_strength.h"
 #include "grid/tiles.h"
 #include "sound/sound.h"
+#include "js/js_game.h"
+#include "js/js_struct.h"
 
 void building_impl::on_place(int orientation, int variant) {
     const auto &p = current_params();
@@ -50,7 +52,13 @@ void building_impl::on_place_checks() {
     warnings.add_if(need_workers, "#city_needs_more_workers");
 }
 
+struct event_update_graphic { building_id bid; };
+ANK_REGISTER_STRUCT_WRITER(event_update_graphic, bid)
+
 void building_impl::update_graphic() {
+    bstring64 evname(current_params().name, "_update_graphic");
+    js_event(evname.c_str(), event_update_graphic{ base.id });
+
     base.minimap_anim = anim("minimap");
 }
 

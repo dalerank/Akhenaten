@@ -24,6 +24,3 @@ public:
 private:
     hvector<std::unique_ptr<js_building_info_window>, 32> windows;
 };
-
-// Wrapper functions for use from js_game.cpp
-void js_window_registry_clear();
