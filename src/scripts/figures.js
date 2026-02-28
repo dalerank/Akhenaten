@@ -989,6 +989,15 @@ figure_stonemason {
 	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
+figure_cart {
+	stone: { pack:PACK_SPR_MAIN, id:102  }
+	granite: { pack:PACK_SPR_MAIN, id:103 }
+	sandstone: { pack:PACK_SPR_MAIN, id:101 }
+	limestone: { pack:PACK_SPR_MAIN, id:104 }
+	bricks: { pack:PACK_SPR_MAIN, id:89 }
+	empty: { pack:PACK_SPR_MAIN, id:77 }
+}
+
 figure_cartpusher {
 	animations {
 		_pack { pack:PACK_SPR_MAIN }
@@ -1005,15 +1014,6 @@ figure_cartpusher {
 		cartpusher_i_have_no_destination { sound:"cartpusher_e01.wav", group:223, text:0}
 		cartpusher_back_to_home { sound:"cartpusher_e02.wav", group:223, text:1}
 		cartpusher_delivering_items { sound:"cartpusher_e03.wav", group:223, text:2}
-	}
-
-	cart {
-		stone: { pack:PACK_SPR_MAIN, id:102  }
-		granite: { pack:PACK_SPR_MAIN, id:103 }
-		sandstone: { pack:PACK_SPR_MAIN, id:101 }
-		limestone: { pack:PACK_SPR_MAIN, id:104 }
-		bricks: { pack:PACK_SPR_MAIN, id:89 }
-		empty: { pack:PACK_SPR_MAIN, id:77 }
 	}
 
 	use_cart : true
