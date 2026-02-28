@@ -246,7 +246,8 @@ struct model_t {
         base.initialize();
     }
 
-    static figure_impl *create(e_figure_type e, figure &f) {
+    template<typename F>
+    static figure_impl *create(e_figure_type e, F &f) {
         if (e == TYPE) {
             return f.template acquire_impl<figure_type>();
         }
