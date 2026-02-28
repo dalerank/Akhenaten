@@ -750,7 +750,6 @@ function building_floodplain_farm_on_update_graphic(ev) {
 function building_meadow_farm_on_update_graphic(ev) {
   var farm = city.get_farm(ev.bid)
   var progress = farm.progress
-  log_info("akhenaten: building_meadow_farm_on_update_graphic: " + progress)
   if (progress < 100)  { farm.set_worker(-1, {x:1, y:1})
   } else if (progress < 400)  { farm.set_worker(e_farm_worker_tiling, {x:0, y:1})
   } else if (progress < 800)  { farm.set_worker(e_farm_worker_seeding, {x:1, y:2})
