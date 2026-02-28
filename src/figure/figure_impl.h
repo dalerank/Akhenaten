@@ -203,11 +203,6 @@ GENERATE_SMART_CAST_FIGURE(ballista)
 GENERATE_SMART_CAST_FIGURE(market_buyer)
 GENERATE_SMART_CAST_FIGURE(bricklayer)
 
-template <typename dest_type>
-inline dest_type *smart_cast(figure *b) {
-    return ::smart_cast<dest_type*>(b->dcast());
-}
-
 namespace figures {
 
 figure_impl *create(e_figure_type, figure&);
@@ -253,7 +248,7 @@ struct model_t {
 
     static figure_impl *create(e_figure_type e, figure &f) {
         if (e == TYPE) {
-            return f.acquire_impl<figure_type>();
+            return f.template acquire_impl<figure_type>();
         }
         return nullptr;
     }

@@ -439,3 +439,8 @@ struct fproperty {
 figure *figure_create(e_figure_type type, tile2i tile, int dir);
 int figure_movement_can_launch_cross_country_missile(tile2i src, tile2i dst);
 void figure_create_explosion_cloud(tile2i tile, int size);
+
+template <typename dest_type>
+inline dest_type *smart_cast(figure *f) {
+    return ::smart_cast<dest_type*>(f->dcast());
+}
