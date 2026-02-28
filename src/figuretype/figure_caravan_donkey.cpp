@@ -12,7 +12,6 @@
 
 #include "city/city_resource.h"
 #include "city/city_finance.h"
-#include "figure/image.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "game/game.h"

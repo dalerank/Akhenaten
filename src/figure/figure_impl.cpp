@@ -4,7 +4,7 @@
 #include "city/city.h"
 #include "city/city_resource.h"
 #include "figure/figure_names.h"
-#include "figure/image.h"
+#include "figure/cart_images.h"
 #include "graphics/animkeys.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/ui.h"
@@ -19,21 +19,6 @@ std::array<vec2i, 8> ANK_VARIABLE(cartpusher_cart_offsets);
 
 static int cart_image_offset_from_amount(int amount) {
     return ((amount > 100) & 1) + ((amount > 200) & 1);
-}
-
-static image_desc resource_to_sled_image(e_resource res) {
-    switch (res) {
-    case RESOURCE_STONE: return { PACK_SPR_MAIN, 102 };
-    case RESOURCE_GRANITE: return { PACK_SPR_MAIN, 103 };
-    case RESOURCE_SANDSTONE: return { PACK_SPR_MAIN, 101 };
-    case RESOURCE_LIMESTONE: return { PACK_SPR_MAIN, 104 };
-    case RESOURCE_BRICKS: return { PACK_SPR_MAIN, 89 };
-
-    default:
-        verify_no_crash(false);
-    }
-
-    return { PACK_SPR_MAIN, 77 };
 }
 
 void figure_impl::acquire(e_figure_type e, figure &f) {
@@ -86,10 +71,10 @@ void figure_impl::cart_image_update() {
     case RESOURCE_SANDSTONE:
     case RESOURCE_BRICKS:
         if (base.resource_amount_full > 0) {
-            image_desc imgd = resource_to_sled_image(base.resource_id);
+            image_desc imgd = resource2sled(base.resource_id);
             base.cart_image_id = imgd.tid();
         } else {
-            image_desc imgd = resource_to_sled_image(RESOURCE_NONE);
+            image_desc imgd = resource2sled(RESOURCE_NONE);
             base.cart_image_id = imgd.tid();
         }
         break;
@@ -103,16 +88,16 @@ void figure_impl::cart_image_update() {
     case RESOURCE_GEMS:
     case RESOURCE_FLAX:
     case RESOURCE_TIMBER:
-        base.cart_image_id = resource2cartanim(RESOURCE_NONE).tid();
+        base.cart_image_id = resource2cart(RESOURCE_NONE).tid();
         if (base.resource_amount_full > 0) {
-            base.cart_image_id = resource2cartanim(base.resource_id).tid();
+            base.cart_image_id = resource2cart(base.resource_id).tid();
             int amount_offset = cart_image_offset_from_amount(base.resource_amount_full);
             base.cart_image_id += 8 * amount_offset;
         }
         break;
 
     default:
-        base.cart_image_id = resource2cartanim(RESOURCE_NONE).tid();
+        base.cart_image_id = resource2cart(RESOURCE_NONE).tid();
         if (base.resource_amount_full > 0) {
             int amount_offset = cart_image_offset_from_amount(base.resource_amount_full);
             base.cart_image_id += 8 + 24 * (base.resource_id - 1) + 8 * amount_offset;

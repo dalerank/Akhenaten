@@ -6,7 +6,6 @@
 #include "figure/combat.h"
 #include "figure/formation.h"
 #include "figure/formation_layout.h"
-#include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "figuretype/figure_missile.h"

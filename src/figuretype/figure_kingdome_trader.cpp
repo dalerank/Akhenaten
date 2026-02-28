@@ -15,7 +15,6 @@
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
 #include "figure/combat.h"
-#include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "empire/trader_handler.h"

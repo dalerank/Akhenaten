@@ -4,7 +4,6 @@
 #include "grid/road_access.h"
 #include "grid/building.h"
 #include "figure/enemy_army.h"
-#include "figure/image.h"
 #include "figure/service.h"
 #include "city/city.h"
 #include "city/city_labor.h"

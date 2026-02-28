@@ -5,7 +5,6 @@
 #include "city/military.h"
 #include "figure/combat.h"
 #include "figure/formation.h"
-#include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "grid/terrain.h"

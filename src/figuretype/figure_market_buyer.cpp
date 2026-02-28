@@ -8,7 +8,6 @@
 #include "building/building_storage_yard.h"
 #include "building/building_bazaar.h"
 #include "figure/combat.h"
-#include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "game/resource.h"

@@ -1,7 +1,6 @@
 #include "figure_ferry_boat.h"
 
 #include "figure/route.h"
-#include "figure/image.h"
 #include "window/building/figures.h"
 #include "grid/water.h"
 #include "grid/figure.h"

@@ -12,7 +12,6 @@
 #include "empire/empire_map.h"
 #include "empire/trade_route.h"
 #include "figure/combat.h"
-#include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "empire/trader_handler.h"

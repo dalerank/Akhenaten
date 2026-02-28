@@ -1,7 +1,6 @@
 #include "figure_fishing_boat.h"
 
 #include "figure/route.h"
-#include "figure/image.h"
 #include "figure_shipwreck.h"
 #include "figure_fishing_boat.h"
 #include "window/building/figures.h"

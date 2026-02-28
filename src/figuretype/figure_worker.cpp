@@ -2,7 +2,6 @@
 
 #include "building/monument_mastaba.h"
 #include "building/building_farm.h"
-#include "figure/image.h"
 #include "graphics/image_groups.h"
 #include "city/city.h"
 #include "city/city_floods.h"

@@ -1,4 +1,4 @@
-#include "image.h"
+#include "figure/figure.h"
 
 #include "graphics/image.h"
 #include "graphics/image_desc.h"
@@ -22,27 +22,6 @@ static const int MISSILE_LAUNCHER_OFFSETS[128] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
-
-
-
-struct cart_image_desc : public image_desc {
-    e_resource resource;
-};
-
-template<>
-struct stable_array_max_elements<cart_image_desc> {
-    enum { max_elements = RESOURCES_MAX };
-};
-
-template<>
-struct std::hash<cart_image_desc> {
-    [[nodiscard]] size_t operator()(const cart_image_desc &desc) const noexcept {
-        return desc.resource;
-    }
-};
-
-ANK_CONFIG_STRUCT(cart_image_desc, resource, pack, id, offset)
-stable_array<cart_image_desc> ANK_VARIABLE(cart_images);
 
 static void cc_coords_to_pixel_offset(int cross_country_x, int cross_country_y, int* pixel_x, int* pixel_y) {
     int dir = city_view_orientation();
@@ -114,15 +93,6 @@ void figure::figure_image_update(bool refresh_only) {
 
     dcast()->main_image_update();
     dcast()->cart_image_update();
-}
-
-image_desc resource2cartanim(e_resource resource_id) {
-    image_desc ret = cart_images[resource_id];
-    if (ret.pack && ret.id) {
-        return ret;
-    }
-
-    return cart_images[RESOURCE_NONE];
 }
 
 int figure::figure_image_corpse_offset() {
