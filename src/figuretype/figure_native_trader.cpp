@@ -103,7 +103,7 @@ void figure_native_trader::update_animation() {
     base.cart_image_id = cart_img + 8 + 8 * base.resource_id; // BUGFIX should be within else statement?
     if (base.cart_image_id) {
         base.cart_image_id += dir;
-        base.figure_image_set_cart_offset(dir);
+        set_cart_offset(dir);
     }
 }
 

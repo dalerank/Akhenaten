@@ -17,7 +17,7 @@ cart_images = [
 	{resource: RESOURCE_TIMBER, pack:PACK_SPR_MAIN, id:97 },
 ]
 
-cart_offsets = [
+cartpusher_cart_offsets = [
   {x:17, y:-7},
   {x:22, y:-1},
   {x:17, y:7},
@@ -28,7 +28,29 @@ cart_offsets = [
   {x:0, y:-12}
 ]
 
-sled_offsets = [
+immigrant_cart_offsets = [
+  {x:17, y:-7},
+  {x:22, y:-1},
+  {x:17, y:7},
+  {x:0, 	y:11},
+  {x:-17, y:6},
+  {x:-22, y:-1},
+  {x:-17, y:-7},
+  {x:0, y:-12}
+]
+
+docker_cart_offsets = [
+  {x:17, y:-7},
+  {x:22, y:-1},
+  {x:17, y:7},
+  {x:0, 	y:11},
+  {x:-17, y:6},
+  {x:-22, y:-1},
+  {x:-17, y:-7},
+  {x:0, y:-12}
+]
+
+cartpusher_sled_offsets = [
   {x:-17, y:9},
   {x:22, y:-1},
   {x:-15, y:-5},

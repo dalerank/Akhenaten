@@ -32,4 +32,5 @@ public:
     virtual figure_sound_t get_sound_reaction(xstring key) const override;
     virtual void debug_show_properties() override;
     virtual sound_key phrase_key() const override;
+    virtual void set_cart_offset(int direction) const override;
 };

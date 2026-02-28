@@ -24,8 +24,6 @@ static const int MISSILE_LAUNCHER_OFFSETS[128] = {
 };
 
 
-std::array<vec2i, 8> ANK_VARIABLE(cart_offsets); //= { {17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12} };
-std::array<vec2i, 8> ANK_VARIABLE(sled_offsets); // = { {17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12} };
 
 struct cart_image_desc : public image_desc {
     e_resource resource;
@@ -118,25 +116,6 @@ void figure::figure_image_update(bool refresh_only) {
     dcast()->cart_image_update();
 }
 
-image_desc resource_to_sled_image(e_resource res) {
-    switch (res) {
-    case RESOURCE_STONE: return {PACK_SPR_MAIN, 102};
-    case RESOURCE_GRANITE: return {PACK_SPR_MAIN, 103};
-    case RESOURCE_SANDSTONE: return {PACK_SPR_MAIN, 101};
-    case RESOURCE_LIMESTONE: return {PACK_SPR_MAIN, 104};
-    case RESOURCE_BRICKS: return {PACK_SPR_MAIN, 89};
-
-    default:
-        verify_no_crash(false);
-    }
-
-    return { PACK_SPR_MAIN, 77 };
-}
-
-int cart_image_offset_from_amount(int amount) {
-    return ((amount > 100)&1) + ((amount > 200)&1);
-}
-
 image_desc resource2cartanim(e_resource resource_id) {
     image_desc ret = cart_images[resource_id];
     if (ret.pack && ret.id) {
@@ -144,72 +123,6 @@ image_desc resource2cartanim(e_resource resource_id) {
     }
 
     return cart_images[RESOURCE_NONE];
-}
-
-void figure::cart_image_update() {
-    OZZY_PROFILER_FUNCTION();
-    // determine cart sprite
-    cart_image_id = 0;
-
-    switch (resource_id) {
-    case RESOURCE_STONE:
-    case RESOURCE_LIMESTONE:
-    case RESOURCE_GRANITE:
-    case RESOURCE_SANDSTONE:
-    case RESOURCE_BRICKS:
-        if (resource_amount_full > 0) {
-            image_desc imgd = resource_to_sled_image(resource_id);
-            cart_image_id = imgd.tid();
-        } else {
-            image_desc imgd = resource_to_sled_image(RESOURCE_NONE);
-            cart_image_id = imgd.tid();
-        }
-        break;
-
-    case RESOURCE_BARLEY:
-    case RESOURCE_COPPER:
-    case RESOURCE_BEER:
-    case RESOURCE_PAPYRUS:
-    case RESOURCE_REEDS:
-    case RESOURCE_GOLD:
-    case RESOURCE_GEMS:
-    case RESOURCE_FLAX:
-    case RESOURCE_TIMBER:
-        cart_image_id = resource2cartanim(RESOURCE_NONE).tid();
-        if (resource_amount_full > 0) {
-            cart_image_id = resource2cartanim(resource_id).tid();
-            int amount_offset = cart_image_offset_from_amount(resource_amount_full);
-            cart_image_id += 8 * amount_offset;
-        }
-        break;
-
-    default:
-        cart_image_id = resource2cartanim(RESOURCE_NONE).tid();
-        if (resource_amount_full > 0) {
-            int amount_offset = cart_image_offset_from_amount(resource_amount_full);
-            cart_image_id += 8 + 24 * (resource_id - 1) + 8 * amount_offset;
-        }
-    }
-    int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
-
-    switch (resource_id) {
-    case RESOURCE_GRANITE:
-    case RESOURCE_STONE:
-    case RESOURCE_SANDSTONE:
-    case RESOURCE_LIMESTONE:
-    case RESOURCE_BRICKS:
-        if (cart_image_id) {
-            cart_image_id += dir;
-            figure_image_set_sled_offset(dir);
-        }
-        break;
-
-    default:
-        if (cart_image_id) {
-            cart_image_id += dir;
-            figure_image_set_cart_offset(dir);
-        }
-    }
 }
 
 int figure::figure_image_corpse_offset() {
@@ -257,14 +170,6 @@ int figure::figure_image_corpse_offset() {
     //    break;
     }
     return CORPSE_IMAGE_OFFSETS[wait_ticks / 2];// +type_offset;
-}
-
-void figure::figure_image_set_sled_offset(int direction) {
-    cart_offset = sled_offsets[direction];
-}
-
-void figure::figure_image_set_cart_offset(int direction) {
-    cart_offset = cart_offsets[direction];
 }
 
 int figure::figure_image_missile_launcher_offset() {

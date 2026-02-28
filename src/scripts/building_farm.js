@@ -731,7 +731,7 @@ function building_floodplain_farm_on_update_graphic(ev) {
   } else if (progress < 500)  { farm.set_worker(e_farm_worker_tiling, {x:1, y:0})
   } else if (progress < 600)  { farm.set_worker(e_farm_worker_tiling, {x:2, y:0})
   } else if (progress < 700)  { farm.set_worker(e_farm_worker_tiling, {x:0, y:1})
-  } else if (progress < 800)  { farm.set_worker(e_farm_worker_tiling, 1, 1)
+  } else if (progress < 800)  { farm.set_worker(e_farm_worker_tiling, {x:1, y:1})
   } else if (progress < 900)  { farm.set_worker(e_farm_worker_tiling, {x:2, y:1})
   } else if (progress < 1000) { farm.set_worker(e_farm_worker_seeding, {x:0, y:2})
   } else if (progress < 1100) { farm.set_worker(e_farm_worker_seeding, {x:1, y:2})
@@ -743,7 +743,7 @@ function building_floodplain_farm_on_update_graphic(ev) {
   } else if (progress < 1700) { farm.set_worker(e_farm_worker_harvesting, {x:2, y:1})
   } else if (progress < 1800) { farm.set_worker(e_farm_worker_harvesting, {x:0, y:2})
   } else if (progress < 1900) { farm.set_worker(e_farm_worker_harvesting, {x:1, y:2})
-  } else { farm.set_worker(e_farm_worker_harvesting, {x:2, y:2})
+  } else                      { farm.set_worker(e_farm_worker_harvesting, {x:2, y:2})
   }
 }
 
@@ -752,7 +752,7 @@ function building_meadow_farm_on_update_graphic(ev) {
   var progress = farm.progress
   log_info("akhenaten: building_meadow_farm_on_update_graphic: " + progress)
   if (progress < 100)  { farm.set_worker(-1, {x:1, y:1})
-  } else if (progress < 400)  { farm.set_worker(e_farm_worker_tiling, {x:0, y:2})
+  } else if (progress < 400)  { farm.set_worker(e_farm_worker_tiling, {x:0, y:1})
   } else if (progress < 800)  { farm.set_worker(e_farm_worker_seeding, {x:1, y:2})
   } else if (progress < 1200) { farm.set_worker(e_farm_worker_harvesting, {x:2, y:2})
   } else if (progress < 1600) { farm.set_worker(e_farm_worker_harvesting, {x:2, y:1})
@@ -762,7 +762,6 @@ function building_meadow_farm_on_update_graphic(ev) {
 
 [es=building_meadow_farm_grain_update_graphic]
 function building_meadow_farm_grain_on_update_graphic(ev) {
-  log_info("akhenaten: building_meadow_farm_grain_on_update_graphic")
   building_meadow_farm_on_update_graphic(ev)
 }
 
@@ -793,7 +792,6 @@ function building_farm_lettuce_on_update_graphic(ev) {
 
 [es=building_meadow_farm_pomegranates_update_graphic]
 function building_meadow_farm_pomegranates_on_update_graphic(ev) {
-  log_info("akhenaten: building_meadow_farm_pomegranates_on_update_graphic")
   building_meadow_farm_on_update_graphic(ev)
 }
 

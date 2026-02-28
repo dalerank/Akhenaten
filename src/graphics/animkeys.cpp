@@ -81,6 +81,7 @@ const xstring id_anim_t::ditches_phase_3 = "ditches_phase_3";
 const xstring id_anim_t::ditches_phase_4 = "ditches_phase_4";
 const xstring id_anim_t::ground_phase_0 = "ground_phase_0";
 const xstring id_anim_t::enter = "enter";
+const xstring id_anim_t::cart = "cart";
 
 const id_anim_t &animkeys() {
     return g_animkeys;

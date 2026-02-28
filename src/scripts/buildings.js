@@ -112,7 +112,7 @@ building_stonemason_guild = {
     base : { pack:PACK_GENERAL, id:88 },
     work : { pos:[73, -12], pack:PACK_GENERAL, id:88, offset:1, max_frames:12, duration:4 },
   }
-  
+
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
   building_size: 2
   meta : { help_id: 363, text_id: 173 }

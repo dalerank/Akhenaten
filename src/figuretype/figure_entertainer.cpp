@@ -243,12 +243,14 @@ void figure_entertainer::update_animation() {
     if (action_state() == FIGURE_ACTION_149_CORPSE) {
         image_id = image_id + 96 + base.figure_image_corpse_offset();
         base.cart_image_id = 0;
-    } else
+    } else {
         image_id = image_id + dir + 8 * base.animctx.frame;
-    if (base.cart_image_id) {
-        base.cart_image_id += dir + 8 * base.animctx.frame;
-        base.figure_image_set_cart_offset(dir);
     }
+
+    //if (base.cart_image_id) {
+    //    base.cart_image_id += dir + 8 * base.animctx.frame;
+    //    base.figure_image_set_cart_offset(dir);
+    //}
 }
 
 building *figure_entertainer::current_destination() {

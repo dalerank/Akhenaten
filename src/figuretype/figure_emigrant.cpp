@@ -13,6 +13,8 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_emigrant);
 
+std::array<vec2i, 8> ANK_VARIABLE(immigrant_cart_offsets); //= { {17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12} };
+
 void ANK_PERMANENT_CALLBACK(event_create_emigrant, ev) {
     auto house = building_get(ev.bid)->dcast_house();
     if (!house) {
@@ -103,7 +105,7 @@ void figure_emigrant::update_animation() {
     case ACTION_2_EMIGRANT_ARRIVING:
     case ACTION_6_EMIGRANT_LEAVING:
         base.cart_image_id = anim("cart").first_img() + dir;
-        base.figure_image_set_cart_offset((dir + 4) % 8);
+        set_cart_offset((dir + 4) % 8);
         break;
     }
 }
@@ -126,4 +128,8 @@ sound_key figure_emigrant::phrase_key() const {
     }
 
     return "emigrant_all_good_in_city";
+}
+
+void figure_emigrant::set_cart_offset(int direction) const {
+    base.cart_offset = immigrant_cart_offsets[direction];
 }

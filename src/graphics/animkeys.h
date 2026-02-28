@@ -83,6 +83,7 @@ struct id_anim_t {
     static const xstring ditches_phase_4;
     static const xstring ground_phase_0;
     static const xstring enter;
+    static const xstring cart;
 };
 
 const id_anim_t &animkeys();
