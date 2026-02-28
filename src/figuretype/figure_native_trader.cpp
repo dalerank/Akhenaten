@@ -2,9 +2,6 @@
 
 #include "empire/trader_handler.h"
 #include "figure/figure.h"
-
-#include "figure/image.h"
-
 #include "widget/debug_console.h"
 #include "graphics/image_groups.h"
 #include "graphics/image.h"

@@ -1,7 +1,6 @@
 #include "figure_trader_ship.h"
 
 #include "figure/figure.h"
-#include "figure/image.h"
 #include "empire/trader_handler.h"
 #include "figure_shipwreck.h"
 #include "building/building_dock.h"

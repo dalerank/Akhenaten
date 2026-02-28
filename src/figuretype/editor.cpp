@@ -1,6 +1,5 @@
 #include "editor.h"
 
-#include "figure/image.h"
 #include "graphics/image.h"
 #include "grid/figure.h"
 #include "grid/grid.h"

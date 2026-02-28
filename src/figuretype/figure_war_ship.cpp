@@ -1,7 +1,6 @@
 #include "figure_war_ship.h"
 
 #include "figure/route.h"
-#include "figure/image.h"
 #include "figure_shipwreck.h"
 #include "grid/water.h"
 #include "grid/figure.h"

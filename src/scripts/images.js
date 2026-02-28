@@ -17,6 +17,15 @@ cart_images = [
 	{resource: RESOURCE_TIMBER, pack:PACK_SPR_MAIN, id:97 },
 ]
 
+sled_images = [
+	{resource: RESOURCE_STONE, pack:PACK_SPR_MAIN, id:101 },
+	{resource: RESOURCE_LIMESTONE, pack:PACK_SPR_MAIN, id:104 },
+	{resource: RESOURCE_GRANITE, pack:PACK_SPR_MAIN, id:103 },
+	{resource: RESOURCE_SANDSTONE, pack:PACK_SPR_MAIN, id:101 },
+	{resource: RESOURCE_BRICKS, pack:PACK_SPR_MAIN, id:89 },
+	{resource: RESOURCE_NONE, pack:PACK_SPR_MAIN, id:77 },
+]
+
 cartpusher_cart_offsets = [
   {x:17, y:-7},
   {x:22, y:-1},

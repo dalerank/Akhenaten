@@ -12,7 +12,6 @@
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "figure/combat.h"
-#include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "game/resource.h"

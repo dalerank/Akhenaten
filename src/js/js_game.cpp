@@ -12,7 +12,6 @@
 #include "overlays/city_overlay.h"
 #include "graphics/image_desc.h"
 #include "figure/figure.h"
-#include "figure/image.h"
 #include "io/gamefiles/lang.h"
 #include "platform/version.hpp"
 #include "graphics/screen.h"

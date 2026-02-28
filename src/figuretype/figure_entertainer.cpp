@@ -7,7 +7,6 @@
 #include "grid/road_network.h"
 #include "grid/road_access.h"
 #include "graphics/image.h"
-#include "figure/image.h"
 #include "grid/building.h"
 #include "figure/service.h"
 #include "building/building_house.h"

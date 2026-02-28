@@ -22,7 +22,6 @@
 #include "core/profiler.h"
 #include "widget/widget_city.h"
 #include "figuretype/editor.h"
-#include "figure/image.h"
 #include "game/game.h"
 #include "game/game_config.h"
 #include "grid/routing/routing.h"
