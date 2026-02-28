@@ -7,10 +7,9 @@
 namespace ui {
     template<typename T>
     inline void widget::event(xstring evname_str, const T &ev) {
-        auto js_j = bvariant_map::acquire_from_pool();
+        bvariant_map::scoped js_j;
         js_helper::writer(*js_j, ev);
         event(evname_str, *js_j);
-        bvariant_map::return_to_pool(js_j);
     }
 
     template<typename T>
@@ -22,17 +21,15 @@ namespace ui {
 
     template<typename T>
     inline void event(xstring evname_str, const T &ev) {
-        auto js_j = bvariant_map::acquire_from_pool();
+        bvariant_map::scoped js_j;
         js_helper::writer(*js_j, ev);
         js_call_event_handlers(evname_str, *js_j);
-        bvariant_map::return_to_pool(js_j);
     }
 
     template<typename T>
     inline void event(const T &ev) {
         type_name_holder<T> evname;
         xstring evname_str(type_simplified_name(evname.value.data()));
-        auto js_j = bvariant_map::acquire_from_pool();
         ui::event(evname_str, ev);
     }
 }

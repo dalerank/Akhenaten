@@ -111,14 +111,14 @@ public:
     template<typename ... Args>
     bool action_state(const Args... args) const {
         int states[] = {args...};
-        return std::find(std::begin(states), std::end(states), base.action_state) != std::end(states);
+        return std::find(std::begin(states), std::end(states), this->action_state()) != std::end(states);
     }
 
     uint8_t direction() const;
     template<typename ... Args>
     bool direction(const Args... args) const {
         int states[] = { args... };
-        return std::find(std::begin(states), std::end(states), base.direction) != std::end(states);
+        return std::find(std::begin(states), std::end(states), this->direction()) != std::end(states);
     }
 
     const building *home() const;

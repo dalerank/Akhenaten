@@ -255,6 +255,20 @@ struct bvariant_map {
     static bvariant_map* acquire_from_pool();
     static void return_to_pool(bvariant_map *);
 
+    struct scoped {
+        scoped() : _ptr(bvariant_map::acquire_from_pool()) {}
+        ~scoped() { bvariant_map::return_to_pool(_ptr); }
+
+        scoped(const scoped &) = delete;
+        scoped &operator=(const scoped &) = delete;
+
+        bvariant_map &operator*() { return *_ptr; }
+        bvariant_map *operator->() { return _ptr; }
+
+    private:
+        bvariant_map *_ptr;
+    };
+
     inline float n(const xstring &name) const {
         const auto &v = value(name);
         switch (v.value_type()) {
