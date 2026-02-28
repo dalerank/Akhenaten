@@ -41,6 +41,9 @@
 
 pool<figure::debug_lines_t, 64> debug_tooltip_lines;
 
+std::array<vec2i, 8> ANK_VARIABLE(cartpusher_sled_offsets); // = { {17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12} };
+std::array<vec2i, 8> ANK_VARIABLE(cartpusher_cart_offsets); //= { {17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12} };
+
 static const vec2i crowd_offsets[] = {
     {0, 0}, {3, 0}, {3, 3}, {-3, 6}, {-3, -3},
     {0, -6}, {6, 0}, {0, 6}, {-6, 0}, {3, -6},
@@ -121,6 +124,7 @@ void figure::reset_flags() {
     flags = 0;
     flags |= (params().is_enemy ? e_figure_flag_enemy : e_figure_flag_friendly);
     flags |= (params().is_soldier ? e_figure_flag_soldier : e_figure_flag_none);
+    flags |= (params().use_cart ? e_figure_flag_use_cart : e_figure_flag_none);
 }
 
 void figure::acquire_attack() {
@@ -598,6 +602,103 @@ void figure_impl::on_post_load() {
 
     if (base.name.len() < 4) {
         base.name = figure_name_get(base.type);
+    }
+}
+
+int cart_image_offset_from_amount(int amount) {
+    return ((amount > 100) & 1) + ((amount > 200) & 1);
+}
+
+void figure_impl::set_cart_offset(int direction) const {
+    base.cart_offset = cartpusher_cart_offsets[direction];
+}
+
+image_desc resource_to_sled_image(e_resource res) {
+    switch (res) {
+    case RESOURCE_STONE: return { PACK_SPR_MAIN, 102 };
+    case RESOURCE_GRANITE: return { PACK_SPR_MAIN, 103 };
+    case RESOURCE_SANDSTONE: return { PACK_SPR_MAIN, 101 };
+    case RESOURCE_LIMESTONE: return { PACK_SPR_MAIN, 104 };
+    case RESOURCE_BRICKS: return { PACK_SPR_MAIN, 89 };
+
+    default:
+        verify_no_crash(false);
+    }
+
+    return { PACK_SPR_MAIN, 77 };
+}
+
+void figure_impl::set_sled_offset(int direction) {
+    base.cart_offset = cartpusher_sled_offsets[direction];
+}
+
+void figure_impl::cart_image_update() {
+    if (!base.use_cart) {
+        return;
+    }
+
+    OZZY_PROFILER_FUNCTION();
+    // determine cart sprite
+    base.cart_image_id = 0;
+
+    switch (base.resource_id) {
+    case RESOURCE_STONE:
+    case RESOURCE_LIMESTONE:
+    case RESOURCE_GRANITE:
+    case RESOURCE_SANDSTONE:
+    case RESOURCE_BRICKS:
+        if (base.resource_amount_full > 0) {
+            image_desc imgd = resource_to_sled_image(base.resource_id);
+            base.cart_image_id = imgd.tid();
+        } else {
+            image_desc imgd = resource_to_sled_image(RESOURCE_NONE);
+            base.cart_image_id = imgd.tid();
+        }
+        break;
+
+    case RESOURCE_BARLEY:
+    case RESOURCE_COPPER:
+    case RESOURCE_BEER:
+    case RESOURCE_PAPYRUS:
+    case RESOURCE_REEDS:
+    case RESOURCE_GOLD:
+    case RESOURCE_GEMS:
+    case RESOURCE_FLAX:
+    case RESOURCE_TIMBER:
+        base.cart_image_id = resource2cartanim(RESOURCE_NONE).tid();
+        if (base.resource_amount_full > 0) {
+            base.cart_image_id = resource2cartanim(base.resource_id).tid();
+            int amount_offset = cart_image_offset_from_amount(base.resource_amount_full);
+            base.cart_image_id += 8 * amount_offset;
+        }
+        break;
+
+    default:
+        base.cart_image_id = resource2cartanim(RESOURCE_NONE).tid();
+        if (base.resource_amount_full > 0) {
+            int amount_offset = cart_image_offset_from_amount(base.resource_amount_full);
+            base.cart_image_id += 8 + 24 * (base.resource_id - 1) + 8 * amount_offset;
+        }
+    }
+    int dir = base.figure_image_normalize_direction(base.direction < 8 ? base.direction : base.previous_tile_direction);
+
+    switch (base.resource_id) {
+    case RESOURCE_GRANITE:
+    case RESOURCE_STONE:
+    case RESOURCE_SANDSTONE:
+    case RESOURCE_LIMESTONE:
+    case RESOURCE_BRICKS:
+        if (base.cart_image_id) {
+            base.cart_image_id += dir;
+            set_sled_offset(dir);
+        }
+        break;
+
+    default:
+        if (base.cart_image_id) {
+            base.cart_image_id += dir;
+            set_cart_offset(dir);
+        }
     }
 }
 

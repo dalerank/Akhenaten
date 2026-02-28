@@ -113,6 +113,7 @@ enum e_figure_flag {
     e_figure_flag_criminal = 1 << 3,
     e_figure_flag_inattack = 1 << 4,
     e_figure_flag_invisible = 1 << 5,
+    e_figure_flag_use_cart = 1 << 6,
 };
 
 class figure {
@@ -358,8 +359,6 @@ public:
     void image_set_animation(const xstring &anim);
     void image_set_animation(int collection, int group, int offset = 0, int max_frames = 12, int duration = 1, bool loop = true);
     void figure_image_update(bool refresh_only);
-    void figure_image_set_sled_offset(int direction);
-    void figure_image_set_cart_offset(int direction);
     int figure_image_corpse_offset();
     int figure_image_missile_launcher_offset();
     int figure_image_direction();
@@ -417,7 +416,6 @@ public:
     inline void set_resource(e_resource resource) { resource_id = resource; }
     e_resource get_resource() const { return resource_id; }
     int get_carrying_amount();
-    void cart_image_update();
     
     int trader_total_sold();
 
@@ -496,6 +494,7 @@ struct figure_static_params {
     e_permission permission;
     bool is_enemy;
     bool is_soldier;
+    bool use_cart;
     e_figure_category category;
     uint16_t max_damage;
     int8_t attack_value;
@@ -511,8 +510,9 @@ struct figure_static_params {
     void initialize();
 };
 ANK_CONFIG_STRUCT(figure_static_params, terrain_usage,  animations, sounds, 
-    max_roam_length, speed_mult, meta, permission, is_enemy, is_soldier, category, attack_value, defense_value,
-    missile_defense_value, corpse_time_delay, render_on_flat_tiles)
+    max_roam_length, speed_mult, meta, permission, is_enemy, is_soldier, use_cart,
+    category, attack_value, defense_value, missile_defense_value, corpse_time_delay,
+    render_on_flat_tiles)
 
 class figure_impl {
 public:
@@ -539,7 +539,8 @@ public:
     virtual void update_animation();
     virtual void update_day() {}
     virtual bool can_move_by_water() const;
-    virtual void cart_image_update() { base.cart_image_update(); }
+    virtual void cart_image_update();
+    virtual void set_cart_offset(int direction) const;
     virtual void main_image_update();
     virtual e_minimap_figure_color minimap_color() const { return FIGURE_COLOR_NONE; }
     virtual const animations_t &anim() const { return current_params().animations; }
@@ -652,6 +653,8 @@ public:
     inline const static_params &current_params() { return (static_params &)figure_static_params::get(type()); }
     inline const static_params &params() const { return (const static_params &)figure_static_params::get(type()); }
     inline const static_params &params() { return (static_params &)figure_static_params::get(type()); }
+
+    void set_sled_offset(int direction);    
 
     metainfo get_info() const;
 

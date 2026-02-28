@@ -149,8 +149,8 @@ void figure_immigrant::update_animation() {
     switch (action_state()) {
     case ACTION_2_IMMIGRANT_ARRIVING:
     case ACTION_6_IMMIGRANT_LEAVING:
-        base.cart_image_id = anim("cart").first_img() + dir;
-        base.figure_image_set_cart_offset((dir + 4) % 8);
+        base.cart_image_id = anim(animkeys().cart).first_img() + dir;
+        set_cart_offset((dir + 4) % 8);
         break;
     }
 

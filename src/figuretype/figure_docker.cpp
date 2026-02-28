@@ -26,6 +26,8 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_docker);
 
+std::array<vec2i, 8> ANK_VARIABLE(docker_cart_offsets); //= { {17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12} };
+
 bool figure_docker::try_import_resource(building* b, e_resource resource, empire_city_handle city) {
     building_storage_yard *warehouse = b->dcast_storage_yard();
     if (!warehouse) {
@@ -62,6 +64,10 @@ bool figure_docker::try_import_resource(building* b, e_resource resource, empire
         space = space->next_room();
     }
     return false;
+}
+
+void figure_docker::set_cart_offset(int direction) const {
+    base.cart_offset = docker_cart_offsets[direction];
 }
 
 bool figure_docker::try_export_resource(building* b, e_resource resource, empire_city_handle city) {
@@ -542,7 +548,7 @@ void figure_docker::update_animation() {
 
     if (base.cart_image_id) {
         base.cart_image_id += dir;
-        base.figure_image_set_cart_offset(dir);
+        set_cart_offset(dir);
     } else {
         base.main_image_id = 0;
     }

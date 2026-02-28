@@ -2,7 +2,7 @@
 
 #include "game/game_pool.h"
 
-game_permanent_memory_pool<bvariant_map, 32> g_bvariant_map_pool;
+game_permanent_memory_pool<bvariant_map, 64> g_bvariant_map_pool;
 
 bvariant_map* bvariant_map::acquire_from_pool() {
     return g_bvariant_map_pool.create();

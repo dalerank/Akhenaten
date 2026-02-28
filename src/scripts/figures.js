@@ -1007,6 +1007,16 @@ figure_cartpusher {
 		cartpusher_delivering_items { sound:"cartpusher_e03.wav", group:223, text:2}
 	}
 
+	cart {
+		stone: { pack:PACK_SPR_MAIN, id:102  }
+		granite: { pack:PACK_SPR_MAIN, id:103 }
+		sandstone: { pack:PACK_SPR_MAIN, id:101 }
+		limestone: { pack:PACK_SPR_MAIN, id:104 }
+		bricks: { pack:PACK_SPR_MAIN, id:89 }
+		empty: { pack:PACK_SPR_MAIN, id:77 }
+	}
+
+	use_cart : true
 	wait_on_calculate_destination : 30
 	category: figure_category_citizen
 	max_damage : 20
@@ -1019,7 +1029,7 @@ figure_zookeeper {
 		death { pack:PACK_SPR_MAIN, id:156, max_frames:8, loop:false }
 		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_ZOOKEEPER }
 	}
-		
+
 	sounds {
 		zookeeper_danger_of_plague : { sound: "zookeeper_e01.wav"},
 		zookeeper_no_food_in_city : { sound: "zookeeper_e02.wav"},
@@ -1047,6 +1057,7 @@ figure_docker {
 		docker_cant_haul_goods_much_farther {sound:"dockpusher_e03.wav"}
 	}
 
+	use_cart : true
 	category: figure_category_citizen
 	max_damage : 10
 	terrain_usage : TERRAIN_USAGE_ROADS,
