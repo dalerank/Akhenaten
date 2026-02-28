@@ -41,9 +41,6 @@
 
 pool<figure::debug_lines_t, 64> debug_tooltip_lines;
 
-std::array<vec2i, 8> ANK_VARIABLE(cartpusher_sled_offsets); // = { {17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12} };
-std::array<vec2i, 8> ANK_VARIABLE(cartpusher_cart_offsets); //= { {17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12} };
-
 static const vec2i crowd_offsets[] = {
     {0, 0}, {3, 0}, {3, 3}, {-3, 6}, {-3, -3},
     {0, -6}, {6, 0}, {0, 6}, {-6, 0}, {3, -6},
@@ -51,8 +48,6 @@ static const vec2i crowd_offsets[] = {
     {3, 6}, {-3, -6}, {0,-10}, {10,0}, {0, 10}, {-10, 0}
 };
 constexpr int crowd_offsets_size = (int)std::size(crowd_offsets);
-
-static std::array<const figure_static_params *, FIGURE_MAX> figure_impl_params;
 
 using e_permission_tokens_t = token_holder<e_permission, epermission_none, epermission_count>;
 const e_permission_tokens_t ANK_CONFIG_ENUM(e_permission_tokens);
@@ -495,21 +490,6 @@ bool figure::is_citizen() {
     return 0;
 }
 
-void figure_impl::acquire(e_figure_type e, figure &f) {
-    static_assert(sizeof(figure_impl) <= sizeof(figure::ptr_buffer_t));
-
-    using namespace figures;
-    for (auto static_ctor = FigureCtorIterator::tail; static_ctor; static_ctor = static_ctor->next) {
-        auto impl = static_ctor->func(e, f);
-        if (impl) {
-            return;
-        }
-    }
-
-    assert(false && "Cant find building type in config");
-    f.acquire_impl<figure_impl>();
-}
-
 bool figure::is_non_citizen() {
     if (action_state == FIGURE_ACTION_149_CORPSE)
         return 0;
@@ -593,167 +573,6 @@ void figure::kill() {
     set_state(FIGURE_STATE_DYING);
 }
 
-void figure_impl::on_create() {
-    assert(base.tile.x() < GRID_LENGTH && base.tile.y() < GRID_LENGTH);
-}
-
-void figure_impl::on_post_load() {
-    on_change_terrain(0, base.terrain_type);
-
-    if (base.name.len() < 4) {
-        base.name = figure_name_get(base.type);
-    }
-}
-
-int cart_image_offset_from_amount(int amount) {
-    return ((amount > 100) & 1) + ((amount > 200) & 1);
-}
-
-void figure_impl::set_cart_offset(int direction) const {
-    base.cart_offset = cartpusher_cart_offsets[direction];
-}
-
-image_desc resource_to_sled_image(e_resource res) {
-    switch (res) {
-    case RESOURCE_STONE: return { PACK_SPR_MAIN, 102 };
-    case RESOURCE_GRANITE: return { PACK_SPR_MAIN, 103 };
-    case RESOURCE_SANDSTONE: return { PACK_SPR_MAIN, 101 };
-    case RESOURCE_LIMESTONE: return { PACK_SPR_MAIN, 104 };
-    case RESOURCE_BRICKS: return { PACK_SPR_MAIN, 89 };
-
-    default:
-        verify_no_crash(false);
-    }
-
-    return { PACK_SPR_MAIN, 77 };
-}
-
-void figure_impl::set_sled_offset(int direction) {
-    base.cart_offset = cartpusher_sled_offsets[direction];
-}
-
-void figure_impl::cart_image_update() {
-    if (!base.use_cart) {
-        return;
-    }
-
-    OZZY_PROFILER_FUNCTION();
-    // determine cart sprite
-    base.cart_image_id = 0;
-
-    switch (base.resource_id) {
-    case RESOURCE_STONE:
-    case RESOURCE_LIMESTONE:
-    case RESOURCE_GRANITE:
-    case RESOURCE_SANDSTONE:
-    case RESOURCE_BRICKS:
-        if (base.resource_amount_full > 0) {
-            image_desc imgd = resource_to_sled_image(base.resource_id);
-            base.cart_image_id = imgd.tid();
-        } else {
-            image_desc imgd = resource_to_sled_image(RESOURCE_NONE);
-            base.cart_image_id = imgd.tid();
-        }
-        break;
-
-    case RESOURCE_BARLEY:
-    case RESOURCE_COPPER:
-    case RESOURCE_BEER:
-    case RESOURCE_PAPYRUS:
-    case RESOURCE_REEDS:
-    case RESOURCE_GOLD:
-    case RESOURCE_GEMS:
-    case RESOURCE_FLAX:
-    case RESOURCE_TIMBER:
-        base.cart_image_id = resource2cartanim(RESOURCE_NONE).tid();
-        if (base.resource_amount_full > 0) {
-            base.cart_image_id = resource2cartanim(base.resource_id).tid();
-            int amount_offset = cart_image_offset_from_amount(base.resource_amount_full);
-            base.cart_image_id += 8 * amount_offset;
-        }
-        break;
-
-    default:
-        base.cart_image_id = resource2cartanim(RESOURCE_NONE).tid();
-        if (base.resource_amount_full > 0) {
-            int amount_offset = cart_image_offset_from_amount(base.resource_amount_full);
-            base.cart_image_id += 8 + 24 * (base.resource_id - 1) + 8 * amount_offset;
-        }
-    }
-    int dir = base.figure_image_normalize_direction(base.direction < 8 ? base.direction : base.previous_tile_direction);
-
-    switch (base.resource_id) {
-    case RESOURCE_GRANITE:
-    case RESOURCE_STONE:
-    case RESOURCE_SANDSTONE:
-    case RESOURCE_LIMESTONE:
-    case RESOURCE_BRICKS:
-        if (base.cart_image_id) {
-            base.cart_image_id += dir;
-            set_sled_offset(dir);
-        }
-        break;
-
-    default:
-        if (base.cart_image_id) {
-            base.cart_image_id += dir;
-            set_cart_offset(dir);
-        }
-    }
-}
-
-void figure_impl::on_attacked(figure *attacker) {
-    if (base.state != FIGURE_STATE_ALIVE) {
-        return;
-    }
-
-    if (action_state(FIGURE_ACTION_149_CORPSE)) {
-        return;
-    }
-
-    kill();
-}
-
-void figure_impl::on_change_terrain(int old, int current) {
-    const bool is_water = (!!(current & TERRAIN_WATER) || !!(current & TERRAIN_DEEPWATER)
-                            && !(current & TERRAIN_SHORE))
-                            && !(current & TERRAIN_BUILDING);
-
-    const bool is_swim_animaion = base.animctx.key == animkeys().swim;
-    const bool is_walk_animaion = base.animctx.key == animkeys().walk;
-    const bool is_moving_animation = is_swim_animaion || is_walk_animaion;
-
-    if (!is_moving_animation) {
-        return;
-    }
-
-    if (is_water && is_walk_animaion) {
-        image_set_animation(animkeys().swim);
-    } else if (!is_water && is_swim_animaion) {
-        image_set_animation(animkeys().walk);
-    }
-}
-
-void figure_impl::figure_roaming_action() {
-    switch (action_state()) {
-    //case FIGURE_ACTION_150_ATTACK:
-    //    base.figure_combat_handle_attack();
-    //    break;
-
-    case FIGURE_ACTION_149_CORPSE:
-        base.figure_combat_handle_corpse();
-        break;
-
-    case ACTION_125_ROAMER_ROAMING:
-        base.do_roam();
-        break;
-
-    case ACTION_126_ROAMER_RETURNING:
-        base.do_returnhome();
-        break;
-    }
-}
-
 vec2i figure::main_sprite_pixel() const {
     return lookup_tile_to_pixel(tile);
 }
@@ -773,195 +592,8 @@ void figure::draw_cart_sprite(painter &ctx, vec2i pixel, int highlight) {
     is_cart_drawn = true;
 }
 
-figure_sound_t figure_impl::get_sound_reaction(xstring key) const {
-    return params().sounds[key];
-}
-
-sound_key figure_impl::default_phrase_key() const {
-    e_god_mood god_mood = g_city.religion.least_mood();
-
-    if (city_resource_food_supply_months() <= 0) {
-        return "def_no_food_in_city";
-    }
-
-    const int unemployment_pct = g_city.labor.unemployment_percentage;
-    if (unemployment_pct >= 17) {
-        return "def_too_much_unemployments";
-    }
-
-    if (g_city.labor.workers_needed >= 10) {
-        return "def_need_more_workers";
-    }
-
-    if (g_city.avg_coverage.average_entertainment == 0) {
-        return "def_low_entertainment";
-    }
-
-    if (god_mood == GOD_MOOD_VERY_ANGRY) {
-        return "def_gods_very_angry";
-    }
-
-    if (g_city.avg_coverage.average_entertainment <= 10) {
-        return "def_little_entertainment";
-    }
-    
-    if (god_mood == GOD_MOOD_ANGRY) {
-        return "def_gods_angry";
-    }
-    
-    if (g_city.avg_coverage.average_entertainment <= 20) {
-        return "def_need_entertainment";
-    }
-    
-    if (city_resource_food_supply_months() >= 4 && unemployment_pct <= 5 &&
-        g_city.avg_coverage.average_health > 0 && g_city.avg_coverage.average_education > 0) {
-        if (g_city.population.current < 500) {
-            return "def_city_not_bad";
-        }
-        
-        return "def_city_may_be_better";
-    } 
-    
-    if (unemployment_pct >= 10) {
-        return "def_city_need_some_workers";
-    }
-
-    return "def_city_is_good";
-}
-
-bool figure_impl::can_move_by_water() const {
-    return (base.allow_move_type == EMOVE_WATER || base.allow_move_type == EMOVE_DEEPWATER || base.allow_move_type == EMOVE_AMPHIBIAN);
-}
-
-void figure_impl::main_image_update() {
-    OZZY_PROFILER_FUNCTION();
-    if (base.state == FIGURE_STATE_DYING) {
-        base.main_image_id = base.animctx.start_frame() + base.animctx.current_frame();
-    } else {
-        base.main_image_id = base.animctx.start_frame() + base.figure_image_direction() + 8 * base.animctx.current_frame();
-    }
-}
-
 bool figure::do_returnhome(e_terrain_usage terrainchoice, short NEXT_ACTION) {
     return do_gotobuilding(home(), true, terrainchoice, NEXT_ACTION);
-}
-
-void figure_impl::kill() {
-    base.kill();
-}
-
-void figure_impl::acquire_attack() {
-
-}
-
-void figure_static_params::set(e_figure_type e, const figure_static_params &p) {
-    //if (!figure_impl_params) {
-    //    figure_impl_params = new std::map<e_figure_type, const figure_impl::static_params *>();
-    //}
-    figure_impl_params[e] = &p;
-}
-
-const figure_static_params &figure_static_params::get(e_figure_type e) {
-    const auto* cfg = figure_impl_params[e];
-    return (!cfg ? figure_static_params::dummy : *cfg);
-}
-
-figure_static_params &figure_static_params::ref(e_figure_type e) {
-    auto *cfg = figure_impl_params[e];
-    assert(cfg);
-    return *const_cast<figure_static_params*>(cfg);
-}
-
-void figure_impl::advance_action(int action, tile2i t) {
-    advance_action(action);
-    base.destination_tile = t;
-}
-
-void figure_impl::draw_main_sprite(painter &ctx, vec2i pixel, int highlight) {
-    base.draw_main_sprite(ctx, base.main_cached_pos, highlight);
-}
-
-void figure_impl::set_destination(building *b, tile2i t) {
-    base.set_destination(b);
-    base.destination_tile = t;
-}
-
-metainfo figure_impl::get_info() const {
-    return params().meta;
-}
-
-figure_static_params figure_static_params::dummy;
-void figure_static_params::initialize() {
-    assert(animations.data.size() > 0);
-
-    if (speed_mult == 0) speed_mult = 1;
-    if (max_damage == 0) max_damage = 100;
-    if (corpse_time_delay == 0) corpse_time_delay = 128;
-}
-
-void figure_impl::update_animation() {
-    xstring animkey;
-    if (!base.animctx.key) {
-        animkey = animkeys().walk;
-    }
- 
-    if (action_state() == FIGURE_ACTION_149_CORPSE) {
-        animkey = animkeys().death;
-    }    
-
-    if (!!animkey) {
-        image_set_animation(animkey);
-    }
-}
-
-const fproperty fproperties[] = {
-    //{ tags().stored, xstring("*"),
-    //    [] (figure &b, const xstring &name) {
-    //        e_resource res = resource_type(name);
-    //        return bvariant(b.stored_amount(res));
-    //    }
-    //},
-
-    { tags().text, xstring("*"),
-        [] (figure &b, const xstring &name) {
-             int id = atoi(name.c_str());
-             const auto &m = figure_static_params::get(b.type).meta;
-             return bvariant(ui::str(m.text_id, id));
-        }
-    },
-
-    { tags().figure, tags().name, [] (figure &f, const xstring &) { return bvariant(f.name.c_str()); }},
-    { tags().figure, tags().class_name, [] (figure &f, const xstring &) { bstring64 clname("#", f.params().name); return bvariant(lang_text_from_key(clname)); }},
-    { tags().figure, tags().city_name, [] (figure &f, const xstring &) { return bvariant(f.dcast()->empire_city().name()); }},
-    { tags().figure, tags().action_tip, [] (figure &f, const xstring &) { return bvariant(f.action_tip()); }},
-    { tags().figure, tags().home, [] (figure &f, const xstring &) { return bvariant(ui::str(41, f.home()->type)); }},
-};
-
-bvariant figure_impl::get_property(const xstring &domain, const xstring &name) const {
-    static const xstring wildname("*");
-    for (const auto &prop : fproperties) {
-        if (prop.domain != domain) {
-            continue;
-        }
-
-        if (prop.name == name || prop.name == wildname) {
-            return prop.handler(base, name);
-        }
-    }
-
-    return bvariant();
-}
-
-figure_impl *figures::create(e_figure_type e, figure &f) {
-    for (FigureCtorIterator *s = FigureCtorIterator::tail; s; s = s->next) {
-        auto impl = s->func(e, f);
-        if (impl) {
-            return impl;
-        }
-    }
-
-    assert(false);
-    return f.acquire_impl<figure_impl>();
 }
 
 void figure::draw_map_flag(vec2i pixel, int highlight, vec2i *coord_out) {
@@ -1066,7 +698,7 @@ void figure::draw_main_sprite(painter &ctx, vec2i pixel, int highlight) {
 
 void figure::draw(painter &ctx, int highlight) {
     OZZY_PROFILER_FUNCTION();
-    if (!is_visible()) {    
+    if (!is_visible()) {
         return;
     }
 
