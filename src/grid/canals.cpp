@@ -138,7 +138,12 @@ void map_canal_fill_from_offset(tile2i tile, int water) {
             }
 
             int cwater = map_canal_at(new_offset);
-            if (cwater >= 3 && cwater < wtile.water) {
+            if (cwater >= wtile.water) {
+                continue;
+            }
+
+            int min_recipient = (wtile.water >= 6) ? 0 : 3;
+            if (cwater >= min_recipient) {
                 g_water_supply_queue.push_back({ new_offset, std::max(0, wtile.water - 3) });
             }
         }
