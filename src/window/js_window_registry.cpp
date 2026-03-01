@@ -32,7 +32,7 @@ js_window_registry& js_window_registry::instance() {
 }
 
 void js_window_registry::register_building_info_window(const xstring &name) {
-    logs::info("JS Window Registry: Registering window '%s' with event '%s'", name.c_str());
+    logs::info("JS Window Registry: Registering window '%s'", name.c_str());
 
     auto window = new js_building_info_window();
     window->window_name = name;
