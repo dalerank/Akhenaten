@@ -151,7 +151,7 @@ namespace dev {
         }
 
         // Build a list of candidates
-        ImVector<std::string> candidates;
+        std::vector<std::string> candidates;
 
         // autocomplete commands...
         for (auto it = con.getCommandTable().begin(); it != con.getCommandTable().end(); it++) {
@@ -167,14 +167,14 @@ namespace dev {
             }
         }
 
-        if (candidates.Size == 0) {
+        if (candidates.size() == 0) {
             // No match
             //AddLog("No match for %.*s, , word_start);
             (*this) << "No match for ";
             (*this) << (int)(word_end - word_start);
             (*this) << ' ' << word_start;
             (*this) << "!\n";
-        } else if (candidates.Size == 1) {
+        } else if (candidates.size() == 1) {
             // Single match. Delete the beginning of the word and replace it entirely so we've got nice casing.
             data->DeleteChars((int)(word_start - data->Buf), (int)(word_end - word_start));
             data->InsertChars(data->CursorPos, candidates[0].c_str());
@@ -186,7 +186,7 @@ namespace dev {
             for (;;) {
                 int c = 0;
                 bool all_candidates_matches = true;
-                for (int i = 0; i < candidates.Size && all_candidates_matches; i++) {
+                for (int i = 0; i < (int)candidates.size() && all_candidates_matches; i++) {
                     if (i == 0) {
                         c = toupper(candidates[i][match_len]);
                     } else if (c == 0 || c != toupper(candidates[i][match_len])) {
@@ -208,7 +208,7 @@ namespace dev {
             // List matches
             (*this) << "Possible matches:\n";
             std::sort(candidates.begin(), candidates.end());
-            for (int i = 0; i < candidates.Size; i++) {
+            for (int i = 0; i < (int)candidates.size(); i++) {
                 (*this) << "- " << candidates[i] << '\n';
             }
         }

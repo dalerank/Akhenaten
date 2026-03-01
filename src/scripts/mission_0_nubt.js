@@ -58,7 +58,7 @@ function mission0_on_start(ev) {
 	if (mission.tutorial_fire_handled) {
 		city.use_building(BUILDING_FIREHOUSE, true)
 	}
-	
+
 	if (mission.tutorial_collapsed_handled) {
 		city.use_building(BUILDING_ARCHITECT_POST, true)
 	}
@@ -122,10 +122,10 @@ function mission0_handle_fire(ev) {
 	if (mission.tutorial_fire_handled) {
 		return
 	}
-    
+
 	mission.last_action_time = game.absolute_day
 	mission.tutorial_fire_handled = true
-	
+
 	city.use_building(BUILDING_FIREHOUSE, true)
 	ui.popup_message("message_fire_in_the_village")
 }
@@ -135,7 +135,7 @@ function mission0_handle_collapse(ev) {
     if (mission.tutorial_collapsed_handled) {
         return;
     }
-	
+
 	mission.last_action_time = game.absolute_day
 	mission.tutorial_collapsed_handled = true
 
