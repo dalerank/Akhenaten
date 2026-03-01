@@ -6,8 +6,12 @@
 #include "input/scroll.h"
 #include "graphics/elements/ui.h"
 #include "platform/renderer.h"
+#include "core/tokenum.h"
+#include "js/js_game.h"
 
 windows_manager_t g_window_manager;
+using e_window_id_tokens_t = token_holder<e_window_id, WINDOW_LOGO, WINDOW_COUNT>;
+const e_window_id_tokens_t ANK_CONFIG_ENUM(e_window_id_tokens);
 
 static void noop(int) {
 }
