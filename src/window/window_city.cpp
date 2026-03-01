@@ -182,7 +182,7 @@ static void cycle_legion(void) {
 bool city_has_loaded = false;
 
 void window_city_handle_hotkeys(const hotkeys* h) {
-        
+
 }
 
 void window_city_handle_input(const mouse* m, const hotkeys* h) {
@@ -215,14 +215,6 @@ void window_city_draw() {
 
 void window_city_init() {
     widget_sidebar_city_init();
-
-    events::subscribe([] (event_show_advisor ev) {
-        if (!window_is(WINDOW_CITY)) {
-            return;
-        }
-
-         window_advisors_show_advisor((e_advisor)ev.advisor);
-    });
 
     events::subscribe([] (event_set_bookmark ev) {
         tile2i center_p = city_view_get_center();

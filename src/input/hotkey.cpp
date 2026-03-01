@@ -93,7 +93,7 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
         def->callback = [] { events::emit(event_show_advisor{ ADVISOR_RATINGS }); };
         break;
     case HOTKEY_SHOW_ADVISOR_TRADE:
-        def->callback = [] { events::emit(event_show_advisor{ ADVISOR_RATINGS }); };
+        def->callback = [] { events::emit(event_show_advisor{ ADVISOR_TRADE }); };
         break;
     case HOTKEY_SHOW_ADVISOR_POPULATION:
         def->callback = [] { events::emit(event_show_advisor{ ADVISOR_POPULATION }); };

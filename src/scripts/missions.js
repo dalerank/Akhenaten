@@ -2,7 +2,7 @@ log_info("akhenaten: missions started")
 
 mission_sounds = []
 // 0: no traders, less 1500: 1 trader, less 2500: 2 traders, less 4000: 3 traders, less 10000: 4 traders
-default_trade_limits = [0, 1500, 2500, 4000, 10000] 
+default_trade_limits = [0, 1500, 2500, 4000, 10000]
 
 for (var i = 0; i < 38; i++) {
 	mission_sounds[i] = {
@@ -19,7 +19,7 @@ default_marshland_grow {
 
 default_tree_grow {
 	random_max : 2
-	random_min : 1	
+	random_min : 1
 }
 
 import mission_0_nubt
