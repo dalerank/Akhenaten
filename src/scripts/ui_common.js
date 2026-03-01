@@ -18,12 +18,14 @@ ui.image = function(image, pos) {
     }
 }
 
-ui.begin_widget = function(pos) { __ui_begin_widget(pos.x, pos.y) }
-ui.end_widget = function() { return __ui_end_widget() }
-ui.fill_rect = function(pos, size, color) { __ui_fill_rect(pos.x, pos.y, size.w, size.h, color) }
-ui.border = function(pos, size, type, color, flags) { __ui_border(pos.x, pos.y, size.w, size.h, type, color, flags) }
-ui.label_colored = function(text, pos, font, color) { __ui_label_colored(text, pos.x, pos.y, font, color) }
-ui.draw_texture = function(pos, img_id) { __ui_draw_texture(pos, img_id) }
+ui.begin_widget = __ui_begin_widget
+ui.end_widget = __ui_end_widget
+ui.fill_rect = __ui_fill_rect
+ui.border = __ui_border
+ui.label_colored = __ui_label_colored
+ui.draw_texture = __ui_draw_texture
+ui.window_is = __ui_window_is
+ui.show_advisor = __ui_window_advisors_show_advisor
 
 ui.button = function(config) {
     if (!config) {

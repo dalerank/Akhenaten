@@ -51,8 +51,7 @@ namespace game_hotkeys {
     hotkey_mapping build_canal ("build_canal", KEY_V, KEY_MOD_NONE, HOTKEY_BUILD_CANAL);
     hotkey_mapping build_water_supply ("build_water_supply", KEY_T, KEY_MOD_NONE, HOTKEY_BUILD_WATER_SUPPLY);
     hotkey_mapping build_roadblock ("build_roadblock", KEY_L, KEY_MOD_NONE, HOTKEY_BUILD_ROADBLOCK);
-    hotkey_mapping show_advisor_labor ("show_advisor_labor", KEY_KP_1, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_LABOR);
-    hotkey_mapping show_advisor_labor_alt ("show_advisor_labor_alt", KEY_1, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_LABOR);
+    hotkey_mapping show_advisor_labor ("show_advisor_labor", KEY_KP_1, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_LABOR, KEY_1, KEY_MOD_NONE);
     hotkey_mapping show_advisor_military ("show_advisor_military", KEY_KP_2, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_MILITARY, KEY_2, KEY_MOD_NONE);
     hotkey_mapping show_advisor_kingdome ("show_advisor_kingdome", KEY_KP_3, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_KINGDOME, KEY_3, KEY_MOD_NONE);
     hotkey_mapping show_advisor_ratings ("show_advisor_ratings", KEY_KP_4, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_RATINGS, KEY_4);
