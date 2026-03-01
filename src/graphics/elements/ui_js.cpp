@@ -4,9 +4,11 @@
 #include "js/js_game.h"
 #include "widget/widget_sidebar.h"
 #include "graphics/elements/generic_button.h"
+#include "graphics/window.h"
 #include "window/window_city.h"
 #include "window/window_build_menu.h"
 #include "window/message_dialog_new.h"
+#include "window/window_advisors.h"
 #include "city/city_message.h"
 #include "city/city_building_menu_ctrl.h"
 #include "graphics/graphics.h"
@@ -15,11 +17,11 @@
 void __ui_draw_image(int imgid, vec2i pos) { ui::eimage(imgid, pos); } ANK_FUNCTION_2(__ui_draw_image);
 void __ui_popup_message(xstring message) { messages::popup(message, 0, 0); } ANK_FUNCTION_1(__ui_popup_message)
 
-void __ui_begin_widget(int x, int y) { ui::begin_widget({x, y}); } ANK_FUNCTION_2(__ui_begin_widget);
+void __ui_begin_widget(vec2i pos) { ui::begin_widget(pos); } ANK_FUNCTION_1(__ui_begin_widget);
 void __ui_end_widget() { ui::end_widget(); } ANK_FUNCTION(__ui_end_widget);
-void __ui_fill_rect(int x, int y, int width, int height, unsigned int c) { ui::fill_rect({x, y}, {width, height}, (color)c); } ANK_FUNCTION_5(__ui_fill_rect);
-void __ui_border(int x, int y, int width, int height, int type, unsigned int c, int flags) { ui::border({x, y}, {width, height}, type, (color)c, (UiFlags)flags); } ANK_FUNCTION_7(__ui_border);
-void __ui_label_colored(pcstr text, int x, int y, int font, unsigned int c) { ui::label_colored(text, {x, y}, (e_font)font, (color)c); } ANK_FUNCTION_5(__ui_label_colored);
+void __ui_fill_rect(vec2i pos, vec2i size, unsigned int c) { ui::fill_rect(pos, size, (color)c); } ANK_FUNCTION_3(__ui_fill_rect);
+void __ui_border(vec2i pos, vec2i size, int type, unsigned int c, int flags) { ui::border(pos, size, type, (color)c, (UiFlags)flags); } ANK_FUNCTION_5(__ui_border);
+void __ui_label_colored(pcstr text, vec2i pos, int font, unsigned int c) { ui::label_colored(text, pos, (e_font)font, (color)c); } ANK_FUNCTION_4(__ui_label_colored);
 
 bool __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags) {
     const vec2i offset = ui::current_offset();
@@ -29,6 +31,8 @@ bool __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags) {
 }
 ANK_FUNCTION_5(__ui_draw_button);
 
+bool __ui_window_is(int window_id) { return window_is((e_window_id)window_id); } ANK_FUNCTION_1(__ui_window_is)
+void __ui_window_advisors_show_advisor(int advisor) { window_advisors_show_advisor((e_advisor)advisor); } ANK_FUNCTION_1(__ui_window_advisors_show_advisor)
 void __ui_draw_label(pcstr text, vec2i pos, int font) { ui::label(text, pos, (e_font)font); } ANK_FUNCTION_3(__ui_draw_label);
 void __ui_draw_line(bool hline, vec2i pos, int size) { ui::line(hline, pos, size, 0xff000000); } ANK_FUNCTION_3(__ui_draw_line);
 void __ui_window_city_show() { window_city_show(); } ANK_FUNCTION(__ui_window_city_show)

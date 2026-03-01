@@ -141,8 +141,8 @@ function on_building_palace_show_tooltip(ev) {
     }
 
     ui.begin_widget(pos)
-    ui.fill_rect({x: 0, y: 0}, {w: width, h: height}, COLOR_TOOLTIP_FILL)
-    ui.border({x: 0, y: 0}, {w: width, h: height}, 0, COLOR_TOOLTIP_BORDER, UiFlags_None)
+    ui.fill_rect({x: 0, y: 0}, {x: width, y: height}, COLOR_TOOLTIP_FILL)
+    ui.border({x: 0, y: 0}, {x: width, y: height}, 0, COLOR_TOOLTIP_BORDER, UiFlags_None)
 
     var label = {x: 5, y: 5}
     var value_x = 180
