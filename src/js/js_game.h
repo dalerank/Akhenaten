@@ -748,6 +748,15 @@ inline void js_event(const T &ev, const bstring64& evname_str) {
 }
 
 template<typename T>
+inline void js_event(const T &ev, pcstr id1, pcstr id2) {
+    if (strcmp(id1, id2) <= 0) {
+        js_event(ev, bstring64(id1, "+", id2));
+    } else {
+        js_event(ev, bstring64(id2, "+", id1));
+    }
+}
+
+template<typename T>
 inline void js_event(const T &ev) {
     type_name_holder<T> evname;
     js_event(ev, type_simplified_name(evname.value.data()));
