@@ -96,6 +96,10 @@ function house_determine_worst_desirability_building(house) {
             if (!building.valid || building.id === house_id)
                 continue
 
+            var otherLevel = __house_level(building_id)
+            if (otherLevel > 0 && otherLevel === myLevel)
+                continue
+
             var des = building.des_influence_value
             if (des >= 0)
                 continue
