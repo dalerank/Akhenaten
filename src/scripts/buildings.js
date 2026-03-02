@@ -1228,12 +1228,12 @@ building_mud_gatehouse = {
     base_second_w : { pack:PACK_GENERAL, id:219, offset:1 },
     base_cover_w : { pack:PACK_GENERAL, id:220, offset:1 },
   }
-  
+
   ghost : {
       main_view_offset : [[0, 0], [0, 2], [-28, -14], [0, 0], [0, 0], [-28, -15], [-28, -15]]
       part_view_offset : [[28, -15], [28, 15], [0, 0], [28, -15], [28, -15], [-0, -2], [0, -2]]
   }
-  
+
   building_size : 1
   meta : { help_id:85, text_id:90 }
   cost : [ 50, 70, 100, 150, 200 ]

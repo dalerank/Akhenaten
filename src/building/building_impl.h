@@ -19,6 +19,8 @@ class figure;
 struct painter;
 struct animation_context;
 
+struct event_building_place_checks { building_id bid; };
+
 class building_impl {
 public:
     using preview = building_planer_renderer;

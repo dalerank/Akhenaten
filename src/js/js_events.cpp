@@ -33,3 +33,5 @@ ANK_SCRIPT_EVENT(event_update_mission_goal, mid)
 ANK_SCRIPT_EVENT(event_register_mission_animals, mid)
 ANK_SCRIPT_EVENT(event_finance_changed, value)
 ANK_SCRIPT_EVENT(event_show_advisor, advisor)
+ANK_SCRIPT_EVENT(event_building_place_checks, bid)
+

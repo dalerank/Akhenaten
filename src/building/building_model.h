@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/log.h"
 #include "core/archive.h"
 #include "building_static_params.h"
 #include "building_planer_renderer.h"
@@ -42,7 +43,10 @@ namespace buildings {
             building_static_params &base = building_static_params::ref(TYPE);
 
             const bool loaded = g_config_arch.r(CLSID, base);
-            assert(loaded);
+            verify_no_crash(loaded);
+            if (!loaded) {
+                logs::error("Failed to load building static params for TYPE %d with CLSID %s", TYPE, CLSID);
+            }
 
             g_config_arch.r(CLSID, static_params());
 
