@@ -739,20 +739,33 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
 void js_register_entity_systems();
 void js_register_console_command(js_State *J);
 
-template<typename T>
-inline void js_event(const T &ev, const bstring64& evname_str) {
+template<typename T, typename S>
+inline void js_event(const T &ev, const S& evname_str) {
     auto js_j = bvariant_map::acquire_from_pool();
     js_helper::writer(*js_j, ev);
     js_call_event_handlers(evname_str.c_str(), *js_j);
     bvariant_map::return_to_pool(js_j);
 }
 
-template<typename T>
-inline void js_event(const T &ev, pcstr id1, pcstr id2) {
-    if (strcmp(id1, id2) <= 0) {
-        js_event(ev, bstring64(id1, "+", id2));
+namespace js_helpers {
+    inline pcstr es2str(pcstr es) { return es; }
+
+    template<typename ES>
+    inline bstring64 es2str(const ES &) {
+        type_name_holder<ES> esname;
+        auto buf = type_enclosing_function_name(esname.value.data());
+        return bstring64(buf);
+    }
+}
+
+template<typename T, typename ES1, typename ES2>
+inline void js_event(const T &ev, ES1 es1, ES2 es2) {
+    bstring64 es1s = js_helpers::es2str(es1);
+    bstring64 es2s = js_helpers::es2str(es2);
+    if (strcmp(es1s, es2s) <= 0) {
+        js_event(ev, bstring64(es1s.c_str(), "+", es2s.c_str()));
     } else {
-        js_event(ev, bstring64(id2, "+", id1));
+        js_event(ev, bstring64(es2s.c_str(), "+", es1s.c_str()));
     }
 }
 

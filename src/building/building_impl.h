@@ -168,6 +168,7 @@ public:
     int pct_workers() const;
     int get_figure_id(int i) const;
     int need_resource_amount(e_resource r) const;
+    void es(pcstr es_name) const;
     figure *get_figure_in_slot(int i);
 
     bool has_figure_of_type(int i, e_figure_type _type) const;
