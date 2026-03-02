@@ -143,12 +143,12 @@ function house_determine_evolve_text(house) {
 
     house.evolve_text = ""
 
-    // devolve: desirability
-    if (curDes <= model.devolve_desirability) return set("#house_low_desirabilty")
     // water
     var water = model.water
     if (water == 1 && !hasWater && !hasWell) return set("#lacks_access_primitive_water")
     if (water == 2 && (!hasWater || !waterSupply)) return set("#not_visited_by_water_carrier")
+    // devolve: desirability
+    if (curDes <= model.devolve_desirability) return set("#house_low_desirabilty")
     // entertainment
     var entReq = model.entertainment
     if (entertainment < entReq) {
@@ -204,12 +204,6 @@ function house_determine_evolve_text(house) {
 
     if (level >= 19) return set("#dwellers_palace_are_pinnacle")
 
-    // evolve: desirability
-    if (curDes < model.evolve_desirability) {
-        if (worstDesBid) return set("")
-        return set("#cannot_evolve_cause_low_desirability")
-    }
-
     var nextLevel = level + 1
     var nextModel = city.get_house_model(nextLevel)
 
@@ -217,6 +211,12 @@ function house_determine_evolve_text(house) {
     water = nextModel.water
     if (water == 1 && !hasWater && !hasWell) return set("#cannot_evolve_most_primitive_water_source")
     if (water == 2 && !hasWater) return set("#cannot_evolve_access_to_water_carrier")
+
+    // evolve: desirability
+    if (curDes < model.evolve_desirability) {
+        if (worstDesBid) return set("")
+        return set("#cannot_evolve_cause_low_desirability")
+    }
     // entertainment (next)
     entReq = nextModel.entertainment
     if (entertainment < entReq) {
