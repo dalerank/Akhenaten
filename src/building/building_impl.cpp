@@ -20,6 +20,9 @@
 #include "js/js_game.h"
 #include "js/js_struct.h"
 
+struct building_ev { building_id bid; };
+ANK_REGISTER_STRUCT_WRITER(building_ev, bid)
+
 void building_impl::on_place(int orientation, int variant) {
     const auto &p = current_params();
 
@@ -50,14 +53,12 @@ void building_impl::on_place_checks() {
 
     const bool need_workers = (base.max_workers > 0 && g_city.labor.workers_needed >= 10);
     warnings.add_if(need_workers, "#city_needs_more_workers");
+
+    js_event(building_ev{ base.id }, { current_params().name, "_place_checks" });
 }
 
-struct event_update_graphic { building_id bid; };
-ANK_REGISTER_STRUCT_WRITER(event_update_graphic, bid)
-
 void building_impl::update_graphic() {
-    bstring64 evname(current_params().name, "_update_graphic");
-    js_event(evname.c_str(), event_update_graphic{ base.id });
+    js_event(building_ev{ base.id }, { current_params().name, "_update_graphic" });
 
     base.minimap_anim = anim("minimap");
 }

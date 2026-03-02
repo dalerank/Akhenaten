@@ -2,11 +2,7 @@
 
 #include "building/building_workshop.h"
 #include "graphics/animation.h"
-#include "city/city_resource.h"
-#include "city/city_warnings.h"
 #include "city/city.h"
-#include "city/city_resource_handle.h"
-#include "empire/empire.h"
 
 #include "widget/city/ornaments.h"
 #include "graphics/window.h"
@@ -27,24 +23,6 @@ bool building_pottery::can_play_animation() const {
     }
 
     return building_industry::can_play_animation();
-}
-
-void building_pottery::on_place_checks() {
-    if (g_city.buildings.count_industry_active(RESOURCE_CLAY) > 0) {
-        return;
-    }
-
-    if (g_city.resource.yards_stored(RESOURCE_CLAY) > 0) {
-        return;
-    }
-
-    construction_warnings warnings("#building_needs_clay");
-
-    const bool is_importing_clay = city_resource_clay.trade_status() == TRADE_STATUS_IMPORT;
-
-    warnings.add_if(!city_resource_clay.can_produce(), "#build_clay_pit");
-    warnings.add_if(!city_resource_clay.can_import(true), "#setup_trade_route_to_import");
-    warnings.add_if(!is_importing_clay, "#overseer_of_commerce_to_import");
 }
 
 bool building_pottery::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

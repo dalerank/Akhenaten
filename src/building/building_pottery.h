@@ -10,7 +10,6 @@ public:
 
     virtual bool can_play_animation() const override;
     virtual bool is_workshop() const override { return true; }
-    virtual void on_place_checks() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_POTTERY_WORKSHOP; }
     virtual void update_graphic() override;

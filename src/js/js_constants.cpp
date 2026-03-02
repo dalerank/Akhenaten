@@ -74,6 +74,8 @@ void js_register_game_constants(js_State *J) {
     _R(ACTION_125_ROAMER_ROAMING)
     _R(ACTION_126_ROAMER_RETURNING)
 
+    _R(TRADE_STATUS_IMPORT)
+
     for (config::EnumIterator *s = config::EnumIterator::tail; s; s = s->next) {
         s->func({});
     }

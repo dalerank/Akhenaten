@@ -50,6 +50,16 @@ city {
         @group { get: __city_get_object_info_group }
     }
 
+    warnings {
+        show : __city_show_warning
+    }
+
+    resources {
+        can_produce : __city_resource_can_produce
+        can_import : __city_resource_can_import
+        trade_status : __city_resource_trade_status
+    }
+
     use_building: __city_use_building
     set_goal_tooltip: __scenario_set_goal_tooltip
     set_victory_reason : city_set_victory_reason
@@ -61,12 +71,21 @@ city {
     building_is_tax_collector : __city_building_is_tax_collector
     count_active_buildings : __city_count_active_buildings
     count_total_buildings : __city_count_total_buildings
+    count_active_industry : __city_count_industry_active
     set_advisor_available : __city_set_advisor_available
     rank_title : __city_rank_title
     rank_salary : __city_rank_salary
     start_foreign_army_invasion : __city_start_foreign_army_invasion
     camera_go_to : __city_camera_go_to
     allowed_foods : __city_allowed_foods
+}
+
+city.resources.clay = {
+    @can_produce { get: function() { return __city_resource_can_produce(RESOURCE_CLAY) } }
+    @can_import { get: function() { return __city_resource_can_import(RESOURCE_CLAY, true) } }
+    @trade_status { get: function() { return __city_resource_trade_status(RESOURCE_CLAY) } }
+    @yards_stored { get: function() { return __city_yards_stored(RESOURCE_CLAY) } }
+    @count_active_industry { get: function() { return __city_count_industry_active(RESOURCE_CLAY) } }
 }
 
 city.get_battalion_by_index = function(index) {

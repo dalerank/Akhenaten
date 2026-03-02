@@ -1,6 +1,9 @@
 #include "js/js_game.h"
 
 #include "city/city.h"
+#include "city/city_warnings.h"
+#include "city/constants.h"
+#include "empire/empire.h"
 #include "building/building_house.h"
 #include "building/building_bazaar.h"
 #include "grid/grid.h"
@@ -8,6 +11,32 @@
 #include "city/object_info.h"
 #include "window/window_info.h"
 #include "building/building.h"
+#include "game/game_events.h"
+
+int __city_count_industry_active(int resource) {
+    return g_city.buildings.count_industry_active((e_resource)resource);
+}
+ANK_FUNCTION_1(__city_count_industry_active)
+
+void __city_show_warning(pcstr id) {
+    events::emit(event_construction_warning{ id });
+}
+ANK_FUNCTION_1(__city_show_warning)
+
+bool __city_resource_can_produce(int resource) {
+    return g_city.can_produce_resource((e_resource)resource);
+}
+ANK_FUNCTION_1(__city_resource_can_produce)
+
+bool __city_resource_can_import(int resource, bool check_if_import) {
+    return g_empire.can_import_resource((e_resource)resource, check_if_import);
+}
+ANK_FUNCTION_2(__city_resource_can_import)
+
+int __city_resource_trade_status(int resource) {
+    return (int)g_city.resource.trade_status[(e_resource)resource];
+}
+ANK_FUNCTION_1(__city_resource_trade_status)
 
 int __city_count_active_buildings(int btype) {
     return g_city.buildings.count_active((e_building_type)btype);
