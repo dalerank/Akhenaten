@@ -29,7 +29,7 @@ void building_hunting_lodge::on_create(int orientation) {
 int building_hunting_lodge::spawn_timer() {
     const auto &params = current_params();
     int pct_workers = worker_percentage();
-    
+
     if (pct_workers >= 100) {
         return params.spawn_delay_100_percent;
     } else if (pct_workers >= 75) {
@@ -57,7 +57,7 @@ void building_hunting_lodge::spawn_figure() {
     if (g_city.resource.is_mothballed(RESOURCE_GAMEMEAT)) {
         return;
     }
-    
+
     check_labor_problem();
 
     if (!base.has_road_access) {
@@ -105,16 +105,6 @@ bool building_hunting_lodge::draw_ornaments_and_animations_height(painter &ctx, 
     return true;
 }
 
-void building_hunting_lodge::update_graphic() {
-    const xstring &animkey = can_play_animation()
-                                ? animkeys().work
-                                : animkeys().none;
-
-    set_animation(animkey);
-
-    building_impl::update_graphic();
-}
-
 bool building_hunting_lodge::can_play_animation() const {
     if (!building_impl::can_play_animation()) {
         return false;
@@ -123,6 +113,6 @@ bool building_hunting_lodge::can_play_animation() const {
     if (worker_percentage() <= 50) {
         return false;
     }
-    
+
     return (stored_amount(RESOURCE_GAMEMEAT) > 0 || has_figure_of_type(BUILDING_SLOT_HUNTER, FIGURE_OSTRICH_HUNTER));
 }
