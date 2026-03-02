@@ -54,7 +54,7 @@ void building_impl::on_place_checks() {
     const bool need_workers = (base.max_workers > 0 && g_city.labor.workers_needed >= 10);
     warnings.add_if(need_workers, "#city_needs_more_workers");
 
-    js_event(building_ev{ base.id }, { current_params().name, "_place_checks" });
+    js_event(building_ev{ base.id }, current_params().name, "place_checks");
 }
 
 void building_impl::update_graphic() {

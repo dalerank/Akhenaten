@@ -37,7 +37,7 @@ building_pottery {
 }
 
 
-[es=building_pottery_place_checks]
+[es=(building_pottery, place_checks)]
 function building_pottery_on_place_checks(ev) {
     if (city.resources.clay.count_active_industry > 0)
         return

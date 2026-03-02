@@ -964,6 +964,57 @@ static js_Ast *statement(js_State *J, js_AstModifier *modifiers)
 
 /* Program */
 
+/* Parse a modifier tuple (id1, id2, ...) after '(' was already consumed.
+   Sorts identifiers lexicographically and joins them with '+'.
+   Returns an interned string like "building_pottery+place_checks". */
+static const char *parse_modifier_tuple_value(js_State *J)
+{
+	char parts[16][64];
+	int nparts = 0;
+	char tmp[64];
+	char buf[512];
+	int i, j, len;
+
+	do {
+		if (J->lookahead != TK_IDENTIFIER)
+			jsP_error(J, "expected identifier in modifier tuple");
+		if (nparts < 16) {
+			strncpy(parts[nparts], J->text, 63);
+			parts[nparts][63] = '\0';
+			nparts++;
+		}
+		jsP_next(J);
+	} while (jsP_accept(J, ','));
+	jsP_expect(J, ')');
+
+	/* Insertion sort */
+	for (i = 1; i < nparts; i++) {
+		strcpy(tmp, parts[i]);
+		j = i;
+		while (j > 0 && strcmp(parts[j - 1], tmp) > 0) {
+			strcpy(parts[j], parts[j - 1]);
+			j--;
+		}
+		strcpy(parts[j], tmp);
+	}
+
+	/* Join with "+" */
+	len = 0;
+	buf[0] = '\0';
+	for (i = 0; i < nparts; i++) {
+		int plen = (int)strlen(parts[i]);
+		if (i > 0)
+			buf[len++] = '+';
+		if (len + plen < (int)sizeof(buf) - 1) {
+			memcpy(buf + len, parts[i], plen);
+			len += plen;
+			buf[len] = '\0';
+		}
+	}
+
+	return js_intern(J, buf);
+}
+
 /* Parse function modifiers: [key=value, key2=value2, ...] or [key, key2] */
 static js_AstModifier *parsemodifiers(js_State *J)
 {
@@ -981,17 +1032,21 @@ static js_AstModifier *parsemodifiers(js_State *J)
 	/* Check if there's a value assignment or just a flag */
 	const char *value;
 	if (jsP_accept(J, '=')) {
-		if (J->lookahead != TK_IDENTIFIER && J->lookahead != TK_STRING && J->lookahead != TK_NUMBER)
-			jsP_error(J, "expected value in function modifier");
-
-		if (J->lookahead == TK_NUMBER) {
-			char buf[32];
-			snprintf(buf, sizeof(buf), "%g", J->number);
-			value = js_intern(J, buf);
+		if (jsP_accept(J, '(')) {
+			value = parse_modifier_tuple_value(J);
 		} else {
-			value = js_intern(J, J->text);
+			if (J->lookahead != TK_IDENTIFIER && J->lookahead != TK_STRING && J->lookahead != TK_NUMBER)
+				jsP_error(J, "expected value in function modifier");
+
+			if (J->lookahead == TK_NUMBER) {
+				char buf[32];
+				snprintf(buf, sizeof(buf), "%g", J->number);
+				value = js_intern(J, buf);
+			} else {
+				value = js_intern(J, J->text);
+			}
+			jsP_next(J);
 		}
-		jsP_next(J);
 	} else {
 		/* No value means it's a flag, set value to "true" */
 		value = js_intern(J, "true");
@@ -1012,17 +1067,21 @@ static js_AstModifier *parsemodifiers(js_State *J)
 
 		/* Check if there's a value assignment or just a flag */
 		if (jsP_accept(J, '=')) {
-			if (J->lookahead != TK_IDENTIFIER && J->lookahead != TK_STRING && J->lookahead != TK_NUMBER)
-				jsP_error(J, "expected value in function modifier");
-
-			if (J->lookahead == TK_NUMBER) {
-				char buf[32];
-				snprintf(buf, sizeof(buf), "%g", J->number);
-				value = js_intern(J, buf);
+			if (jsP_accept(J, '(')) {
+				value = parse_modifier_tuple_value(J);
 			} else {
-				value = js_intern(J, J->text);
+				if (J->lookahead != TK_IDENTIFIER && J->lookahead != TK_STRING && J->lookahead != TK_NUMBER)
+					jsP_error(J, "expected value in function modifier");
+
+				if (J->lookahead == TK_NUMBER) {
+					char buf[32];
+					snprintf(buf, sizeof(buf), "%g", J->number);
+					value = js_intern(J, buf);
+				} else {
+					value = js_intern(J, J->text);
+				}
+				jsP_next(J);
 			}
-			jsP_next(J);
 		} else {
 			/* No value means it's a flag, set value to "true" */
 			value = js_intern(J, "true");
