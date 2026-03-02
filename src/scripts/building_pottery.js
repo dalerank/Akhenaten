@@ -43,7 +43,6 @@ function building_pottery_on_place_checks(ev) {
     var has_stored_clay = (city.resources.clay.yards_stored > 0)
     var is_import_clay = (city.resources.clay.trade_status == TRADE_STATUS_IMPORT)
     city.warnings.show_if_not(has_active_industry || has_stored_clay, "#building_needs_clay")
-    city.warnings.show_if_not(city.resources.clay.can_produce, "#building_needs_clay")
     city.warnings.show_if_not(city.resources.clay.can_import, "#setup_trade_route_to_import")
     city.warnings.show_if_not(city.resources.clay.can_import && is_import_clay, "#overseer_of_commerce_to_import")
 }
