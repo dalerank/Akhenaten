@@ -54,3 +54,35 @@ inline const char* type_simplified_name(const char* data) {
         : strstr(data, "class ") ? strstr(data, "class ") + strlen("class ")
         : data;
 }
+
+// Given a type name of a local struct, extracts the name of the enclosing function.
+// e.g. "building_impl::on_place_checks::place_checks" -> "on_place_checks"
+//      "building_impl::on_place_checks()::place_checks" -> "on_place_checks" (GCC/Clang)
+template<size_t N = 64>
+inline bstring<N> type_enclosing_function_name(pcstr data) {
+    const char* simplified = type_simplified_name(data);
+    // Find the last "::" — everything before it is the function name
+    const char* last_sep = nullptr;
+    for (const char* p = simplified; *p; p++) {
+        if (p[0] == ':' && p[1] == ':') last_sep = p;
+    }
+
+    const char* end = last_sep ? last_sep : (simplified + strlen(simplified));
+    // Strip trailing "()" added by GCC/Clang: "on_place_checks()"
+    if (end > simplified + 1 && end[-1] == ')' && end[-2] == '(') {
+        end -= 2;
+    }
+
+    int len = (int)(end - simplified);
+    if (len >= N) {
+        len = N - 1;
+    }
+
+    bstring<N> buf;
+    if (len > 0) {
+        memcpy(buf.data(), simplified, len);
+    }
+
+    buf[len] = '\0';
+    return buf;
+}

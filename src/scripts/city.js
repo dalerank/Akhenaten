@@ -52,6 +52,7 @@ city {
 
     warnings {
         show : __city_show_warning
+        show_if_not : function (condition, id) { if (!condition) { __city_show_warning(id) } }
     }
 
     resources {

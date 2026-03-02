@@ -54,11 +54,11 @@ void building_impl::on_place_checks() {
     const bool need_workers = (base.max_workers > 0 && g_city.labor.workers_needed >= 10);
     warnings.add_if(need_workers, "#city_needs_more_workers");
 
-    js_event(building_ev{ base.id }, current_params().name, "place_checks");
+    es(__func__);
 }
 
 void building_impl::update_graphic() {
-    js_event(building_ev{ base.id }, { current_params().name, "_update_graphic" });
+    es(__func__);
 
     base.minimap_anim = anim("minimap");
 }
@@ -282,6 +282,10 @@ int building_impl::max_workers() const { return base.max_workers; }
 int building_impl::pct_workers() const { return calc_percentage<int>(num_workers(), max_workers()); }
 int building_impl::get_figure_id(int i) const { return base.get_figure_id(i); }
 int building_impl::need_resource_amount(e_resource r) const { return base.need_resource_amount(r); }
+
+void building_impl::es(pcstr es_name) const {
+    js_event(building_ev{ base.id }, current_params().name, es_name);
+}
 
 void building_impl::destroy_by_poof(bool clouds) {
     building* b = base.main();
