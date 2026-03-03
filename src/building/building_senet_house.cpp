@@ -84,7 +84,7 @@ bool building_senet_house::draw_ornaments_and_animations_height(painter &ctx, ve
         const auto &ranim = anim(animkeys().beer);
         vec2i pos = ranim.pos;
         for (int i = 0; i < amount; ++i) {
-            auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+            auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
             command.image_id = ranim.first_img();
             command.pixel = point + pos;
             command.mask = color_mask;
@@ -104,7 +104,7 @@ bool building_bullfight_school::draw_ornaments_and_animations_height(painter &ct
         const auto &ranim = anim(animkeys().straw);
         vec2i pos = ranim.pos;
         for (int i = 0; i < amount; ++i) {
-            auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+            auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
             command.image_id = ranim.first_img();
             command.pixel = point + pos;
             command.mask = color_mask;

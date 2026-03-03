@@ -39,7 +39,7 @@ inline void city_overlay_routing::draw_custom_top(vec2i pixel, tile2i point, pai
     if (map_terrain_is(grid_offset, terrain_on_routing_overlay()) && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         drawn = true;
 
-        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = map_image_at(grid_offset);
         command.pixel = pixel;
         command.mask = color_mask;
@@ -55,7 +55,7 @@ inline void city_overlay_routing::draw_custom_top(vec2i pixel, tile2i point, pai
         } else {
             image_id = map_image_at(grid_offset);
         }
-        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = image_id;
         command.pixel = pixel;
         command.mask = color_mask;
@@ -68,7 +68,7 @@ inline void city_overlay_routing::draw_custom_top(vec2i pixel, tile2i point, pai
             int offset = 2;
 
             if (b && !building_on_routing_overlay(b->type)) {
-                auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+                auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
                 command.image_id = image_id + offset;
                 command.pixel = pixel;
                 command.mask = color_mask;
@@ -86,7 +86,7 @@ inline void city_overlay_routing::draw_custom_top(vec2i pixel, tile2i point, pai
         if (road || building_road) {
             drawn = true;
 
-            auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+            auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile);
             command.image_id = image_id + 5;
             command.pixel = pixel;
             command.mask = color_mask;
@@ -94,7 +94,7 @@ inline void city_overlay_routing::draw_custom_top(vec2i pixel, tile2i point, pai
     }
 
     if (!drawn) {
-        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = map_image_at(grid_offset);
         command.pixel = pixel;
         command.mask = color_mask;

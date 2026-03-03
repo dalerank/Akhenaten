@@ -44,7 +44,7 @@ void ANK_PERMANENT_CALLBACK(event_create_immigrant, ev) {
     imm->set_immigrant_home(ev.bid);
 }
 
-void figure_immigrant::debug_draw() {
+void figure_immigrant::debug_draw(painter &ctx) {
     if (!base.draw_mode) {
         return;
     }

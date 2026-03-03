@@ -131,7 +131,7 @@ void city_overlay::draw_overlay_column(e_column_color color, vec2i pixel, int he
     height = std::min(height, 10);
     int capital_height = image_get(image_id)->height;
     // base 
-    auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+    auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
     command.image_id = image_id + 2;
     command.pixel = pixel + vec2i{ 9, -8 };
     command.location = SOURCE_LOCATION;
@@ -139,13 +139,13 @@ void city_overlay::draw_overlay_column(e_column_color color, vec2i pixel, int he
     if (height) {
         // column
         for (int i = 1; i < height; i++) {
-            auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+            auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
             command.image_id = image_id + 1;
             command.pixel = pixel + vec2i{ 17, -8 - 10 * i + 13 };
             command.location = SOURCE_LOCATION;
         }
         // capital
-        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
         command.image_id = image_id;
         command.pixel = pixel + vec2i{ 5, -8 - capital_height - 10 * (height - 1) + 13 };
         command.location = SOURCE_LOCATION;
@@ -194,7 +194,7 @@ void city_overlay::draw_flattened_footprint_anysize(vec2i pos, int size_x, int s
                 shape_offset = 2;
             }
 
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = image_base + shape_offset;
             command.pixel = tp;
             command.mask = color_mask;
@@ -214,20 +214,20 @@ void city_overlay::draw_building_footprint(painter &ctx, vec2i pos, tile2i tile,
         color color_mask = color_mask_building_def(b);
         if (b->is_farm()) {
             if (is_drawable_farmhouse(tile, city_view_orientation())) {
-                auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+                auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
                 command.image_id = map_image_at(tile);
                 command.pixel = pos;
                 command.mask = color_mask;
                 command.location = SOURCE_LOCATION;
             } else if (map_property_is_draw_tile(tile)) {
-                auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+                auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
                 command.image_id = map_image_at(tile);
                 command.pixel = pos;
                 command.mask = color_mask;
                 command.location = SOURCE_LOCATION;
             }
         } else {
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = map_image_at(tile);
             command.pixel = pos;
             command.mask = color_mask;

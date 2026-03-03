@@ -583,7 +583,7 @@ vec2i figure::cart_sprite_pixel() const {
 
 void figure::draw_cart_sprite(painter &ctx, vec2i pixel, int highlight) {
     const image_t *img = image_get(cart_image_id);
-    auto& command = ImageDraw::create_subcommand(render_command_t::ert_sprite);
+    auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_sprite);
     command.image_id = cart_image_id;
     command.pixel = pixel;
     command.mask = COLOR_MASK_NONE;
@@ -689,7 +689,7 @@ vec2i figure::adjust_pixel_offset(const vec2i pixel) {
 void figure::draw_main_sprite(painter &ctx, vec2i pixel, int highlight) {
     OZZY_PROFILER_FUNCTION();
     const image_t *img = image_get(main_image_id);
-    auto& command = ImageDraw::create_subcommand(render_command_t::ert_sprite);
+    auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_sprite);
     command.image_id = main_image_id;
     command.pixel = pixel;
     command.mask = COLOR_MASK_NONE;
@@ -727,7 +727,7 @@ void figure::draw(painter &ctx, int highlight) {
     is_main_drawn = true;
 }
 
-void figure::draw_debug() {
+void figure::draw_debug(painter &ctx) {
     if (draw_mode == 0) {
         debug_lines_clear();
         return;
@@ -754,7 +754,6 @@ void figure::draw_debug() {
     pixel.y += text_offset_y;
     int indent = 0;
     color col = COLOR_WHITE;
-    painter ctx = game.painter();
 
     if (!!(draw_mode & e_figure_draw_overlay)) {
         dlines.emplace_back().printf("ID: %d", id);
@@ -878,7 +877,7 @@ void figure::draw_debug() {
         dlines.emplace_back().printf("CC Delta: (%d, %d)", cc_delta.x, cc_delta.y);
     }
 
-    dcast()->debug_draw();
+    dcast()->debug_draw(ctx);
 }
 
 void figure::draw_tooltip(tooltip_context *c) const {

@@ -326,7 +326,7 @@ public:
     vec2i main_sprite_pixel() const;
     vec2i cart_sprite_pixel() const;
 
-    void draw_debug();
+    void draw_debug(painter &ctx);
     void draw_tooltip(tooltip_context *c) const;
     void draw_main_sprite(painter &ctx, vec2i pixel, int highlight);
     void draw_cart_sprite(painter &ctx, vec2i pixel, int highlight);

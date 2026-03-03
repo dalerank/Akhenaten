@@ -134,7 +134,7 @@ bool building_impl::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     if (base.has_plague) {
         int skull_img = image_id_from_group(GROUP_PLAGUE_SKULL);
 
-        auto &command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
         command.image_id = skull_img;
         command.pixel = { point.x + 18, point.y - 32 };
         command.mask = color_mask;
@@ -183,7 +183,7 @@ void building_impl::draw_normal_anim(painter &ctx, const animation_context &rani
     }
 
     vec2i pos = pixel + ranim.pos;
-    auto &command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+    auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
     command.image_id = ranim.start_frame() + ranim.current_frame();
     command.pixel = pos;
     command.mask = mask;

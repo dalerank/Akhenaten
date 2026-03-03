@@ -164,7 +164,7 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
     if (!tile.valid()) {
         // Outside map: draw black tile
 
-        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = image_id_from_group(GROUP_TERRAIN_BLACK);
         command.pixel = pixel;
         command.mask = COLOR_MASK_NONE;
@@ -182,7 +182,7 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
             overlay->draw_flattened_footprint_anysize(pixel, 1, 1, 0, 0, ctx);
 
         } else if (!!(terrain & TERRAIN_CANAL)) {
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = map_image_at(tile);
             command.pixel = pixel;
             command.mask = COLOR_MASK_NONE;
@@ -194,17 +194,17 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
         } else if (map_is_highlighted(tile)) {
             e_highligth_mode mode = map_is_highlighted(tile);
 
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = map_image_at(tile);
             command.pixel = pixel;
             command.mask = mode_highlighted[mode];
             command.location = SOURCE_LOCATION;
-        
+
         } else if (terrain & TERRAIN_BUILDING) {
             overlay->draw_building_footprint(ctx, pixel, tile, 0);
-        
+
         } else {
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = map_image_at(tile);
             command.pixel = pixel;
             command.mask = COLOR_MASK_NONE;
@@ -230,7 +230,7 @@ void draw_isometrics_overlay_height(vec2i pixel, tile2i point, painter &ctx) {
     } else if (map_property_is_draw_tile(grid_offset)) {
         bool tall_flat_tile = map_render_is(grid_offset, RENDER_TALL_TILE);
         if (tall_flat_tile) {
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_top);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile_top);
 
             int image_id = map_image_at(grid_offset);
             const image_t *img = image_get(image_id);

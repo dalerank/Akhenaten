@@ -232,7 +232,7 @@ void building_farm::draw_farm_worker(painter &ctx, int direction, int action, ve
     auto &context = base.anims[0];
     context.setup(anim(anim_key));
 
-    auto& command = ImageDraw::create_subcommand(render_command_t::ert_sprite);
+    auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_sprite);
     command.image_id = context.start_frame() + direction + 8 * context.current_frame();
     command.pixel = coords + context.pos;
     command.mask = color_mask;
@@ -247,7 +247,7 @@ void building_farm::draw_crops(painter &ctx, e_building_type type, int progress,
         for (int i = 0; i < 9; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i * 200) / 100));
 
-            auto& command = ImageDraw::create_subcommand(render_command_t::ert_from_below);
+            auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_from_below);
             command.image_id = image_crops + growth_offset;
             command.pixel = point + fparams.tile_offsets[i];
             command.mask = color_mask;
@@ -256,7 +256,7 @@ void building_farm::draw_crops(painter &ctx, e_building_type type, int progress,
         // on meadows
         for (int i = 0; i < 5; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i * 400) / 100));
-            auto& command = ImageDraw::create_subcommand(render_command_t::ert_from_below);
+            auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_from_below);
             command.image_id = image_crops + growth_offset;
             command.pixel = point + fparams.tile_offsets[i];
             command.mask = color_mask;

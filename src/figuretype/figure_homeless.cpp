@@ -27,7 +27,7 @@ void ANK_PERMANENT_CALLBACK(event_create_homeless, ev) {
     g_city.population.remove_homeless(ev.num_people);
 }
 
-void figure_homeless::debug_draw() {
+void figure_homeless::debug_draw(painter &ctx) {
     if (!base.draw_mode) {
         return;
     }
@@ -39,7 +39,6 @@ void figure_homeless::debug_draw() {
     pixel.y -= 80;
     int indent = 0;
     color col = COLOR_WHITE;
-    painter ctx = game.painter();
 
     auto &d = runtime_data();
     if (!!(base.draw_mode & e_figure_draw_building)) {

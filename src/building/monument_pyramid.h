@@ -78,7 +78,7 @@ public:
     int get_bricks_image(int orientation, tile2i tile, tile2i start, tile2i end, int layer);
 
     void update_day(const vec2i tiles_size);
-    void draw_phase_3_5_tile(color color_mask, int channel_base_id_1, int channel_base_id_2, const vec2i tiles_size);
+    void draw_phase_3_5_tile(painter &ctx, color color_mask, int channel_base_id_1, int channel_base_id_2, const vec2i tiles_size);
     void setup_phase_6_tiles();
     void setup_phase_6_basement();
     virtual bool need_workers() const override;

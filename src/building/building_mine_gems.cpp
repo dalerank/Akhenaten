@@ -47,10 +47,10 @@ void building_mine_gems::update_production() {
     if (best_resource <= 0) {
         return;
     }
-    
+
     building_industry::update_production();
     int delta_progress = d.progress - current_progress;
-    
+
     if (delta_progress > 0) {
         map_gems_deplete(best_tile, delta_progress);
     }
@@ -70,7 +70,7 @@ bool building_mine_gems::draw_ornaments_and_animations_height(painter &ctx, vec2
     int amount = ceil((float)stored_amount(RESOURCE_GEMS) / 100.0) - 1;
     if (amount >= 0) {
         const auto &ranim = anim(animkeys().gems);
-        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
         command.image_id = ranim.first_img() + amount;
         command.pixel = point + ranim.pos;
         command.mask = color_mask;

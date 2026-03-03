@@ -55,25 +55,25 @@ bool city_overlay_water::draw_custom_footprint(vec2i pixel, tile2i tile, painter
         if (building_at(tile)->type == BUILDING_ROADBLOCK) {
             city_overlay::draw_building_footprint(ctx, pixel, tile, 0);
         } else if (map_property_is_draw_tile(tile)) {
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_full);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile_full);
             command.image_id = map_image_at(tile);
             command.pixel = pixel;
             command.mask = COLOR_MASK_NONE;
             command.location = SOURCE_LOCATION;
         }
         return true;
-    } 
+    }
 
     int terrain = map_terrain_get(tile);
     building* b = building_at(tile);
     // draw houses, wells and water supplies either fully or flattened
     if ((terrain & TERRAIN_BUILDING) && (b->dcast_house() || show_building(b))) {
         if (map_property_is_draw_tile(tile)) {
-            city_overlay::draw_building_footprint(ctx, pixel, tile, 0);          
+            city_overlay::draw_building_footprint(ctx, pixel, tile, 0);
         }
 
         return true;
-    } 
+    }
 
     // draw groundwater levels
     int image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_WATER);
@@ -87,7 +87,7 @@ bool city_overlay_water::draw_custom_footprint(vec2i pixel, tile2i tile, painter
         image_id += 1;
         break;
     }
-    auto &command = ImageDraw::create_command(render_command_t::ert_generic);
+    auto &command = ImageDraw::create_command(ctx, render_command_t::ert_generic);
     command.image_id = image_id;
     command.pixel = pixel;
     command.mask = COLOR_MASK_NONE;

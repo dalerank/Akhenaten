@@ -1704,21 +1704,21 @@ bool building_house_palatial_estate::evolve(house_demands* demands) {
 
 void building_house::update_fade_alpha() {
     auto &d = runtime_data();
-    
+
     // Check if cursor is over this house building
     extern screen_city_t g_screen_city;
     tile2i current_tile = g_screen_city.current_tile;
-    
+
     bool is_hovered = false;
     if (current_tile.valid()) {
         int hover_building_id = map_building_at(current_tile);
         building* hover_b = building_get(hover_building_id);
-        
+
         if (hover_b && hover_b->main()->id == base.main()->id && hover_b->dcast_house()) {
             is_hovered = true;
         }
     }
-    
+
     if (is_hovered) {
         if (d.fade_alpha < 255) {
             d.fade_alpha = std::min<int>(255, d.fade_alpha + 15); // Increase by 15 per frame
@@ -1732,18 +1732,18 @@ void building_house::update_fade_alpha() {
 
 bool building_house::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     building_impl::draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
-    
+
     update_fade_alpha();
-    
+
     auto &d = runtime_data();
     if (d.fade_alpha > 0) {
         const auto &params = get_house_params(base.type);
-        
+
         if (!params.variants_merged_inside.empty() && is_merged()) {
             const auto& ranim = params.variants_merged_inside[d.image_key];
-              
+
             if (ranim.first_img() > 0) {
-                auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile);
                 command.image_id = ranim.first_img();
                 command.pixel = point;
                 command.mask = (d.fade_alpha << COLOR_BITSHIFT_ALPHA) | (color_mask != 0 ? (color_mask & 0x00FFFFFF) : 0x00FFFFFF);
@@ -1751,7 +1751,7 @@ bool building_house::draw_ornaments_and_animations_height(painter &ctx, vec2i po
             }
         }
     }
-    
+
     return true;
 }
 

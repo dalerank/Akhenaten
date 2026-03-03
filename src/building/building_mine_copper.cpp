@@ -105,7 +105,7 @@ bool building_mine_copper::draw_ornaments_and_animations_height(painter &ctx, ve
     int amount = ceil((float)stored_amount(RESOURCE_COPPER) / 100.0) - 1;
     if (amount >= 0) {
         const auto &ranim = anim(animkeys().copper);
-        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
         command.image_id = ranim.first_img() + amount;
         command.pixel = point + ranim.pos;
         command.mask = color_mask;

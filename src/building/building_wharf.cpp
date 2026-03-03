@@ -82,7 +82,7 @@ bool building_wharf::draw_ornaments_and_animations_height(painter &ctx, vec2i po
     if (anim_wharf.valid()) {
         int img_id = anim_wharf.start_frame() + (d.docker_anim_frame / anim_wharf.frame_duration) * 4;
         const image_t *img = image_get(img_id);
-        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
         command.image_id = img_id;
         command.pixel = point + anim_wharf.pos;
         command.mask = color_mask;

@@ -35,7 +35,7 @@ public:
     virtual figure_sound_t get_sound_reaction(xstring key) const override;
     virtual sound_key phrase_key() const override;
     virtual void debug_show_properties() override;
-    virtual void debug_draw() override;
+    virtual void debug_draw(painter &ctx) override;
     virtual bool is_home(const building *b) const override {
         return (base.home_building_id > 0) &&
             (base.home_building_id == b->id || runtime_data().adv_home_building_id == b->id);

@@ -160,7 +160,7 @@ void building_police_station::draw_weapons(vec2i point, color color_mask, painte
     int resources_id = first_img("resources");
     const vec2i weapon_spot_pos = current_params().weapon_spot_pos;
 
-    auto &command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+    auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
     command.image_id = resources_id + RESOURCE_WEAPONS;
     command.pixel = point + weapon_spot_pos;
     command.mask = color_mask;

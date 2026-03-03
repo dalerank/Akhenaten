@@ -201,7 +201,7 @@ void building_mastaba::preview::ghost_preview(build_planner &planer, painter &ct
             vec2i p = pixel + (vec2i(-30, 15) * i) + (vec2i(30, 15) * j);
             int image_id = get_image(end.shifted(i, j), end, size);
 
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_full);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile_full);
             command.image_id = image_id;
             command.pixel = p;
             command.mask = COLOR_MASK_GREEN;
@@ -468,14 +468,14 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(painter &ctx, vec
                 vec2i offset = lookup_tile_to_pixel(ntile);
                 uint32_t progress = map_monuments_get_progress(ntile);
                 //if (progress < 200) {
-                //    auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                //    auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile);
                 //    command.image_id = clear_land_id + ((dy * 4 + dx) & 7);
                 //    command.pixel = offset;
                 //    command.mask = color_mask;
                 //}
 
                 if (progress > 0 && progress <= 200) {
-                    auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                    auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile);
                     command.image_id = image_grounded + ((dy * 4 + dx) & 7);
                     command.pixel = offset;
                     command.mask = ((0xff * progress / 200) << COLOR_BITSHIFT_ALPHA) | (color_mask & 0x00ffffff);;
@@ -491,7 +491,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(painter &ctx, vec
         tile2i left_top = base.tile.shifted(0, 0);
         if (left_top == main->tile && map_monuments_get_progress(left_top) == 0) {
             vec2i offset = lookup_tile_to_pixel(left_top);
-            auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = image_stick;
             command.pixel = offset;
             command.mask = color_mask;
@@ -502,7 +502,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(painter &ctx, vec
         tile2i right_top = base.tile.shifted(1, 0);
         if (right_top == main->tile.shifted(tiles_size.y - 1, 0) && map_monuments_get_progress(right_top) == 0) {
             vec2i offset = lookup_tile_to_pixel(right_top);
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = image_stick;
             command.pixel = offset;
             command.mask = color_mask;
@@ -513,7 +513,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(painter &ctx, vec
         tile2i left_bottom = base.tile.shifted(0, 1);
         if (left_bottom == main->tile.shifted(0, tiles_size.x - 1) && map_monuments_get_progress(left_bottom) == 0) {
             vec2i offset = lookup_tile_to_pixel(left_bottom);
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = image_stick;
             command.pixel = offset;
             command.mask = color_mask;
@@ -524,7 +524,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(painter &ctx, vec
         tile2i right_bottom = base.tile.shifted(1, 1);
         if (right_bottom == main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1) && map_monuments_get_progress(right_bottom) == 0) {
             vec2i offset = lookup_tile_to_pixel(right_bottom);
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = image_stick;
             command.pixel = offset;
             command.mask = color_mask;
@@ -539,7 +539,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(painter &ctx, vec
                 vec2i offset = lookup_tile_to_pixel(ntile);
                 uint32_t progress = map_monuments_get_progress(ntile);
                 if (progress < 200) {
-                    auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                    auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile);
                     command.image_id = image_grounded + ((dy * 4 + dx) & 7);
                     command.pixel = offset;
                     command.mask = color_mask;
@@ -548,7 +548,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(painter &ctx, vec
                 if (progress > 0 && progress <= 200) {
                     int img = get_image(base.orientation, base.tile.shifted(dx, dy), main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1));
 
-                    auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                    auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile);
                     command.image_id = img;
                     command.pixel = offset;
                     command.mask = ((0xff * progress / 200) << COLOR_BITSHIFT_ALPHA) | (color_mask & 0x00ffffff);
@@ -565,7 +565,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(painter &ctx, vec
                 if (progress < 200) {
                     int img = get_image(base.orientation, base.tile.shifted(dx, dy), main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1));
 
-                    auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                    auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile);
                     command.image_id = img;
                     command.pixel = offset;
                     command.mask = color_mask;
@@ -623,7 +623,7 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(painter &ctx, ve
                 vec2i offset = lookup_tile_to_pixel(tile);
                 int img = building_small_mastabe_get_bricks_image(base.orientation, base.type, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), 1);
 
-                auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+                auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
                 command.image_id = img;
                 command.pixel = offset + city_orientation_offset;
                 command.mask = color_mask;
@@ -638,7 +638,7 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(painter &ctx, ve
             int img = building_small_mastabe_get_bricks_image(base.orientation, base.type, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), (progress >= 200) ? (phase - 1) : (phase - 2));
             vec2i offset = lookup_tile_to_pixel(tile);
 
-            auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
             command.pixel = offset + city_orientation_offset;
             command.mask = color_mask;
@@ -650,8 +650,8 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(painter &ctx, ve
             uint32_t progress = map_monuments_get_progress(tile);
             vec2i offset = lookup_tile_to_pixel(tile);
             int img = building_small_mastabe_get_bricks_image(base.orientation, base.type, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), 6);
-            
-            auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+
+            auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
             command.pixel = offset + city_orientation_offset;
             command.mask = color_mask;

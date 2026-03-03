@@ -117,7 +117,7 @@ static void draw_TEST(vec2i pixel, tile2i point, painter &ctx) {
     const auto &params = building_static_params::get(BUILDING_GARDENS);
     const auto &anim = params.base_img();
     if (map_grid_inside_map_area(grid_offset, 1)) {
-        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = anim;
         command.pixel = pixel;
         command.mask = COLOR_CHANNEL_GREEN;
@@ -365,17 +365,18 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
             const int y_start = block_start(blk);
             const int y_end = block_start(blk + 1);
             futures.push_back(game.mt.submit_task([this, &ctx, y_start, y_end, &block_commands, &block_subcommands, blk]() {
-                ImageDraw::set_thread_command_buffers(&block_commands[blk], &block_subcommands[blk]);
-                city_view_foreach_valid_map_tile_rows(ctx, y_start, y_end,
+                painter worker_ctx = ctx;
+                worker_ctx.command_buffer = &block_commands[blk];
+                worker_ctx.subcommand_buffer = &block_subcommands[blk];
+                city_view_foreach_valid_map_tile_rows(worker_ctx, y_start, y_end,
                     [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_flat(pixel, tile, ctx); },
                     [this](vec2i pixel, tile2i tile, painter& ctx) { draw_figures_on_flat_tiles(pixel, tile, ctx); },
                     draw_ornaments_flat
                 );
-                city_view_foreach_valid_map_tile_rows(ctx, y_start, y_end,
+                city_view_foreach_valid_map_tile_rows(worker_ctx, y_start, y_end,
                     [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_terrain_height(pixel, tile, ctx); }
                 );
-                ImageDraw::clear_thread_command_buffers();
-            }));
+                }));
         }
 
         for (auto &f : futures) {
@@ -420,7 +421,7 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     // PHASE 6: Draw debug overlays on top of everything else
     // These debug elements should be visible above all game elements for debugging purposes
     city_view_foreach_valid_map_tile(ctx, draw_debug_tile);
-    debug_draw_figures();
+    debug_draw_figures(ctx);
 
     ImageDraw::apply_render_commands(ctx, "draw_debug_tile");
 
@@ -433,10 +434,10 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     update_clouds(ctx);
 }
 
-void screen_city_t::debug_draw_figures() {
+void screen_city_t::debug_draw_figures(painter &ctx) {
     OZZY_PROFILER_FUNCTION();
     for (auto &f : map_figures()) {
-        f->draw_debug();
+        f->draw_debug(ctx);
     }
 }
 
@@ -447,7 +448,7 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
     const bool is_water = map_terrain_is(tile, TERRAIN_WATER);
     const bool outside_map = is_tree && is_water;
     if (!tile.valid() || outside_map) {
-        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = image_id_from_group(GROUP_TERRAIN_UGLY_GRASS);
         command.pixel = pixel;
         command.mask = COLOR_MASK_NONE;
@@ -526,7 +527,7 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
 
     {
         OZZY_PROFILER_SECTION(_, "ert_drawtile")
-        auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = image_id;
         command.pixel = pixel;
         command.mask = color_mask;
@@ -538,7 +539,7 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
         int image_alt_id = (image_alt_value & 0x00ffffff);
         uint8_t image_alt_alpha = ((image_alt_value & 0xff000000) >> 24);
         if (image_alt_id > 0 && image_alt_alpha > 0) {
-            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+            auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile);
             command.image_id = image_alt_id;
             command.pixel = pixel;
             command.mask = (0x00ffffff | (image_alt_alpha << 24));
@@ -562,7 +563,7 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
     int grid_offset = tile.grid_offset();
     // black tile outside of map
     if (grid_offset < 0) {
-        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = image_id_from_group(GROUP_TERRAIN_BLACK);
         command.pixel = pixel;
         command.mask = COLOR_BLACK;
@@ -602,7 +603,7 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
     int image_id = map_image_at(grid_offset);
     if (tall_flat_tile) {
         {
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_top);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile_top);
             command.image_id = image_id;
             const image_t* img = image_get(image_id);
             int offset_y = 15 * (img->width / 58);
@@ -617,7 +618,7 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
         int image_alt_id = (image_alt_value & 0x00ffffff);
         uint8_t image_alt_alpha = ((image_alt_value & 0xff000000) >> 24);
         if (image_alt_id > 0 && image_alt_alpha > 0) {
-            auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_top);
+            auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_top);
             const image_t *img = image_get(image_alt_id);
             int offset_y = 15 * (img->width / 58);
             command.image_id = image_alt_id;
@@ -634,7 +635,7 @@ void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, pain
     OZZY_PROFILER_FUNCTION();
     // black tile outside of map
     if (!tile.valid()) {
-        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = image_id_from_group(GROUP_TERRAIN_BLACK);
         command.pixel = pixel;
         command.mask = COLOR_BLACK;
@@ -667,7 +668,7 @@ void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, pain
     map_render_add(tile.grid_offset(), RENDER_TALL_TILE_DRAWN);
     {
         int image_id = map_image_at(tile);
-        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_top);
+        auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile_top);
         const image_t *img = image_get(image_id);
         int offset_y = 15 * (img->width / 58) - 1;
         command.image_id = image_id;
@@ -683,7 +684,7 @@ void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, pain
         int image_alt_id = (image_alt_value & 0x00ffffff);
         uint8_t image_alt_alpha = ((image_alt_value & 0xff000000) >> 24);
         if (image_alt_id > 0 && image_alt_alpha > 0) {
-            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_top);
+            auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_top);
             command.image_id = image_alt_id;
             const image_t *img = image_get(image_alt_id);
             int offset_y = 15 * (img->width / 58) - 1;
@@ -771,7 +772,7 @@ void screen_city_t::draw_with_overlay(painter &ctx) {
 
     // finally, draw these on top of everything else
     city_view_foreach_valid_map_tile(ctx, draw_debug_tile);
-    debug_draw_figures();
+    debug_draw_figures(ctx);
 
     ImageDraw::apply_render_commands(ctx, "debug_draw_figures");
     ImageDraw::finalize_render(ctx);

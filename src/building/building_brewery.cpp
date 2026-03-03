@@ -34,7 +34,7 @@ bool building_brewery::draw_ornaments_and_animations_height(painter &ctx, vec2i 
     if (amount >= 0) {
         const auto &ranim = anim(animkeys().barley);
 
-        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
         command.image_id = ranim.first_img() + amount;
         command.pixel = point + ranim.pos;
         command.mask = color_mask;
@@ -59,7 +59,7 @@ void building_brewery::on_place_checks() {
         // Barley in storage, skip barley warnings
     } else {
         const bool is_import_barley = (city_resource_barley.trade_status() == TRADE_STATUS_IMPORT);
-        
+
         warnings.add_if(!city_resource_barley.can_produce(), "#needs_barley");
         warnings.add_if(!city_resource_barley.can_import(true), "#setup_trade_route_to_import");
         warnings.add_if(!is_import_barley, "#overseer_of_commerce_to_import");

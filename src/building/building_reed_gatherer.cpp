@@ -54,7 +54,7 @@ bool building_reed_gatherer::draw_ornaments_and_animations_height(painter &ctx, 
     if (amount >= 0) {
         const auto &ranim = anim(animkeys().reeds);
 
-        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
         command.image_id = ranim.first_img() + amount;
         command.pixel = point + ranim.pos;
         command.mask = color_mask;

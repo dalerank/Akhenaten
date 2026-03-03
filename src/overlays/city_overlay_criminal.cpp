@@ -105,7 +105,7 @@ bool city_overlay_crime::draw_custom_footprint(vec2i pixel, tile2i point, painte
     if (map_terrain_is(grid_offset, terrain_on_crime_overlay()) && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         // display normal tile
         if (map_property_is_draw_tile(grid_offset)) {
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = map_image_at(grid_offset);
             command.pixel = pixel;
             command.mask = color_mask;
@@ -115,7 +115,7 @@ bool city_overlay_crime::draw_custom_footprint(vec2i pixel, tile2i point, painte
     } else if (map_terrain_is(grid_offset, TERRAIN_CANAL | TERRAIN_WALL)) {
         // display empty land/groundwater
 
-        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
         command.pixel = pixel;
         command.mask = color_mask;
@@ -129,7 +129,7 @@ bool city_overlay_crime::draw_custom_footprint(vec2i pixel, tile2i point, painte
         int offset = get_crime_image_offset(crime_level);
         int img_id = image_id_from_group(GROUP_TERRAIN_DESIRABILITY);
 
-        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_full);
+        auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile_full);
         command.image_id = img_id + offset;
         command.pixel = pixel;
         command.mask = color_mask;
@@ -137,7 +137,7 @@ bool city_overlay_crime::draw_custom_footprint(vec2i pixel, tile2i point, painte
     } else {
         int img_id = map_image_at(grid_offset);
 
-        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_full);
+        auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile_full);
         command.image_id = img_id;
         command.pixel = pixel;
         command.mask = color_mask;

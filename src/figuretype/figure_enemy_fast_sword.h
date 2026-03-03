@@ -35,7 +35,7 @@ public:
     virtual void enemy_marching(formation *m) override;
     virtual void enemy_fighting(formation *m) override;
     virtual void leave_city() override;
-    virtual void debug_draw() override;
+    virtual void debug_draw(painter &ctx) override;
 
     virtual int8_t interval_attack_delay() const { return 100; }
     tile2i get_formation_position(formation *m, int figure_index);

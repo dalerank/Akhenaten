@@ -123,7 +123,7 @@ bool building_shipyard::draw_ornaments_and_animations_height(painter &ctx, vec2i
     int amount = ceil((float)base.stored_amount(RESOURCE_TIMBER) / 100.0) - 1;
     if (amount >= 0) {
         const auto &canim = anim(animkeys().wood);
-        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
         command.image_id = canim.first_img() + amount;
         command.pixel = point + canim.pos;
         command.mask = mask;
