@@ -464,6 +464,57 @@ static vec2i starting_pixel_coord(painter &ctx) {
     return pixel - camera_get_pixel_offset_internal(ctx);
 }
 
+static void city_view_foreach_valid_map_tile_impl(painter &ctx,
+                                                  int y_begin, int y_end,
+                                                  tile_draw_callback callback1,
+                                                  tile_draw_callback callback2,
+                                                  tile_draw_callback callback3,
+                                                  tile_draw_callback callback4,
+                                                  tile_draw_callback callback5,
+                                                  tile_draw_callback callback6) {
+    auto& data = g_city_view;
+
+    vec2i screen_0 = starting_tile(ctx);
+    vec2i pixel_0 = starting_pixel_coord(ctx);
+    const int width_tiles = data.viewport.width_tiles + 7;
+
+    for (int y = y_begin; y < y_end; y++) {
+        const int odd = y & 1;
+        vec2i screen;
+        screen.y = screen_0.y + y;
+        if (screen.y < 0 || screen.y >= (2 * GRID_LENGTH) + 1) {
+            continue;
+        }
+
+        vec2i pixel;
+        pixel.y = pixel_0.y + y * HALF_TILE_HEIGHT_PIXELS;
+        screen.x = screen_0.x;
+        pixel.x = pixel_0.x + (odd ? data.viewport.offset.x - HALF_TILE_WIDTH_PIXELS : data.viewport.offset.x);
+
+        for (int x = 0; x < width_tiles; x++) {
+            if (screen.x >= 0 && screen.x < (2 * GRID_LENGTH) + 1) {
+                tile2i point = screen_to_tile(screen);
+                if (point.grid_offset() >= 0) {
+                    if (callback1)
+                        callback1(pixel, point, ctx);
+                    if (callback2)
+                        callback2(pixel, point, ctx);
+                    if (callback3)
+                        callback3(pixel, point, ctx);
+                    if (callback4)
+                        callback4(pixel, point, ctx);
+                    if (callback5)
+                        callback5(pixel, point, ctx);
+                    if (callback6)
+                        callback6(pixel, point, ctx);
+                }
+            }
+            pixel.x += TILE_WIDTH_PIXELS;
+            screen.x++;
+        }
+    }
+}
+
 void city_view_foreach_valid_map_tile(painter &ctx,
                                       tile_draw_callback callback1,
                                       tile_draw_callback callback2,
@@ -473,56 +524,23 @@ void city_view_foreach_valid_map_tile(painter &ctx,
                                       tile_draw_callback callback6) {
     OZZY_PROFILER_FUNCTION();
     auto& data = g_city_view;
+    const int total_rows = data.viewport.height_tiles + 21;
+    city_view_foreach_valid_map_tile_impl(ctx, 0, total_rows,
+                                         callback1, callback2, callback3,
+                                         callback4, callback5, callback6);
+}
 
-    int odd = 0;
-    vec2i screen_0 = starting_tile(ctx);
-    vec2i screen = screen_0;
-    vec2i pixel_0 = starting_pixel_coord(ctx);
-    vec2i pixel = pixel_0;
-
-    for (int y = 0; y < data.viewport.height_tiles + 21; y++) {
-        if (screen.y >= 0 && screen.y < (2 * GRID_LENGTH) + 1) {
-            screen.x = screen_0.x;
-            pixel.x = pixel_0.x;
-            if (odd) {
-                pixel.x += data.viewport.offset.x - HALF_TILE_WIDTH_PIXELS;
-            } else {
-                pixel.x += data.viewport.offset.x;
-            }
-
-            for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
-                if (screen.x >= 0 && screen.x < (2 * GRID_LENGTH) + 1) {
-                    tile2i point = screen_to_tile(screen);
-                    if (point.grid_offset() >= 0) {
-                        if (callback1)
-                            callback1(pixel, point, ctx);
-
-                        if (callback2)
-                            callback2(pixel, point, ctx);
-
-                        if (callback3)
-                            callback3(pixel, point, ctx);
-
-                        if (callback4)
-                            callback4(pixel, point, ctx);
-
-                        if (callback5)
-                            callback5(pixel, point, ctx);
-
-                        if (callback6)
-                            callback6(pixel, point, ctx);
-                    }
-                }
-
-                pixel.x += TILE_WIDTH_PIXELS;
-                screen.x++;
-            }
-        }
-
-        odd = 1 - odd;
-        pixel.y += HALF_TILE_HEIGHT_PIXELS;
-        screen.y++;
-    }
+void city_view_foreach_valid_map_tile_rows(painter &ctx,
+                                           int y_begin, int y_end,
+                                           tile_draw_callback callback1,
+                                           tile_draw_callback callback2,
+                                           tile_draw_callback callback3,
+                                           tile_draw_callback callback4,
+                                           tile_draw_callback callback5,
+                                           tile_draw_callback callback6) {
+    city_view_foreach_valid_map_tile_impl(ctx, y_begin, y_end,
+                                         callback1, callback2, callback3,
+                                         callback4, callback5, callback6);
 }
 
 static void do_valid_callback(painter &ctx, vec2i pixel, tile2i point, tile_draw_callback callback) {

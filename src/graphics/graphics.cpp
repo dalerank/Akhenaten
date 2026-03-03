@@ -12,6 +12,11 @@ std::vector<render_command_t> g_render_commands;
 std::vector<render_command_t> g_render_subcommands;
 std::vector<render_command_t> g_render_debug_commands;
 
+namespace {
+thread_local ImageDraw::render_command_vec* tls_render_commands = nullptr;
+thread_local ImageDraw::render_command_vec* tls_render_subcommands = nullptr;
+}
+
 void graphics_draw_line(vec2i start, vec2i end, color color) {
     g_render.draw_line(start, end, color);
 }
@@ -110,9 +115,38 @@ void ImageDraw::execute_render_command(painter& ctx, const render_command_t& com
     }
 }
 
+void ImageDraw::set_thread_command_buffers(render_command_vec* commands, render_command_vec* subcommands) {
+    tls_render_commands = commands;
+    tls_render_subcommands = subcommands;
+}
+
+void ImageDraw::clear_thread_command_buffers() {
+    tls_render_commands = nullptr;
+    tls_render_subcommands = nullptr;
+}
+
+void ImageDraw::merge_block_commands_into_global(const render_command_block& block_commands, const render_command_block & block_subcommands) {
+    for (size_t b = 0; b < block_commands.size(); b++) {
+        const auto& subcmds = block_subcommands[b];
+        const size_t sub_offset = g_render_subcommands.size();
+        g_render_subcommands.insert(g_render_subcommands.end(), subcmds.begin(), subcmds.end());
+
+        for (const auto& cmd : block_commands[b]) {
+            render_command_t c = cmd;
+            if (c.start_subcommand >= 0) {
+                c.start_subcommand += static_cast<int>(sub_offset);
+                c.finish_subcommand += static_cast<int>(sub_offset);
+            }
+            c.id = static_cast<uint32_t>(g_render_commands.size());
+            g_render_commands.push_back(c);
+        }
+    }
+}
+
 render_command_t& ImageDraw::create_command(render_command_t::e_render_type rt) {
-    auto &command = g_render_commands.emplace_back();
-    command.id = g_render_commands.size() - 1;
+    std::vector<render_command_t>* dst = tls_render_commands ? tls_render_commands : &g_render_commands;
+    auto& command = dst->emplace_back();
+    command.id = static_cast<uint32_t>(dst->size() - 1);
     command.rtype = rt;
     command.use_sort_pixel = false;
     command.sort_pixel = {};
@@ -133,33 +167,32 @@ render_command_t &ImageDraw::create_dcommand(render_command_t::e_render_type rt)
 }
 
 render_command_t& ImageDraw::active_command() {
+    if (tls_render_commands && !tls_render_commands->empty())
+        return tls_render_commands->back();
     return g_render_commands.back();
 }
 
 render_command_t& ImageDraw::create_subcommand(render_command_t::e_render_type rt) {
     OZZY_PROFILER_FUNCTION();
-    if (g_render_commands.empty()) {
+    std::vector<render_command_t>* cmds = tls_render_commands ? tls_render_commands : &g_render_commands;
+    std::vector<render_command_t>* subcmds = tls_render_subcommands ? tls_render_subcommands : &g_render_subcommands;
+
+    if (cmds->empty()) {
         return create_command(rt);
     }
 
-    int last_idx = g_render_commands.size() - 1;
-    int new_id = 0;
-    
-    // Add new subcommand to g_render_subcommands
-    auto& subcommand = g_render_subcommands.emplace_back();
-    int new_idx = g_render_subcommands.size() - 1;
+    int last_idx = static_cast<int>(cmds->size()) - 1;
+    auto& subcommand = subcmds->emplace_back();
+    int new_idx = static_cast<int>(subcmds->size()) - 1;
 
-    if (g_render_commands[last_idx].start_subcommand == -1) {
-        // First subcommand - attach to main command
-        g_render_commands[last_idx].start_subcommand = new_idx;
-        g_render_commands[last_idx].finish_subcommand = new_idx;
+    if ((*cmds)[last_idx].start_subcommand == -1) {
+        (*cmds)[last_idx].start_subcommand = new_idx;
+        (*cmds)[last_idx].finish_subcommand = new_idx;
         subcommand.id = 0;
     } else {
-        // Use stored last subcommand index
-        int current_idx = g_render_commands[last_idx].finish_subcommand;
-        
-        g_render_commands[last_idx].finish_subcommand = new_idx;
-        subcommand.id = g_render_subcommands[current_idx].id + 1;
+        int current_idx = (*cmds)[last_idx].finish_subcommand;
+        (*cmds)[last_idx].finish_subcommand = new_idx;
+        subcommand.id = (*subcmds)[current_idx].id + 1;
     }
 
     subcommand.rtype = rt;
