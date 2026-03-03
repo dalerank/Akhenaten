@@ -63,9 +63,6 @@ class build_planner {
     xstring immediate_warning;
     xstring extra_warning;
 
-    int start_offset_screen_x;
-    int start_offset_screen_y;
-
     void set_graphics_row(int row, custom_span<int> image_ids, int def);
 
     void setup_build_flags();
@@ -156,7 +153,6 @@ public:
     void add_building_tiles_from_list(int building_id, bool graphics_only);
 
     void update_orientations(bool check_if_changed = true);
-    void construction_record_view_position(vec2i pixel, tile2i point);
 
     int get_total_drag_size(int* x, int* y);
     bool is_flag(e_planner_rule flag, int param1 = -1, int param2 = -1, int param3 = -1) const;

@@ -2,6 +2,7 @@
 
 #include "core/vec2i.h"
 #include "graphics/color.h"
+#include <type_traits>
 #include <vector>
 #include "core/hvector.h"
 #include "graphics/font.h"
@@ -74,6 +75,7 @@ struct render_command_t {
     int start_subcommand = -1;
     int finish_subcommand = -1;
 };
+static_assert(std::is_trivially_copyable_v<render_command_t>, "render_command_t must be trivially copyable");
 
 namespace ImageDraw {
 

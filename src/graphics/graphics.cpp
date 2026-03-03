@@ -4,14 +4,18 @@
 #include "core/profiler.h"
 #include "platform/renderer.h"
 #include "graphics/screen.h"
+#include "game/game.h"
 
 #include "dev/debug.h"
 #include <vector>
 #include <deque>
+#include <algorithm>
+#include <queue>
 
-std::vector<render_command_t> g_render_commands;
-std::vector<render_command_t> g_render_subcommands;
-std::vector<render_command_t> g_render_debug_commands;
+ImageDraw::render_command_vec g_render_commands;
+ImageDraw::render_command_vec g_render_draw_temp_commands;
+ImageDraw::render_command_vec g_render_subcommands;
+ImageDraw::render_command_vec g_render_debug_commands;
 
 void graphics_draw_line(vec2i start, vec2i end, color color) {
     g_render.draw_line(start, end, color);
@@ -200,16 +204,73 @@ void ImageDraw::apply_render_commands(painter& ctx, std::string_view p) {
     OZZY_PROFILER_SECTION(_, p);
     {
         OZZY_PROFILER_SECTION(_, "sort");
-        std::sort(g_render_commands.begin(), g_render_commands.end(),
-            [] (const auto &lhs, const auto &rhs) {
+        auto sort_less = [](const render_command_t& lhs, const render_command_t& rhs) {
             const vec2i lhs_sort = lhs.use_sort_pixel ? lhs.sort_pixel : lhs.pixel;
             const vec2i rhs_sort = rhs.use_sort_pixel ? rhs.sort_pixel : rhs.pixel;
             if (lhs_sort.y == rhs_sort.y) {
                 return lhs_sort.x > rhs_sort.x;
             }
-
             return lhs_sort.y < rhs_sort.y;
-        });
+        };
+
+        auto& vec = g_render_commands;
+        const size_t n = vec.size();
+        const size_t num_threads = static_cast<size_t>(game.mt.get_thread_count());
+
+        if (n < 256 || num_threads < 2) {
+            std::sort(vec.begin(), vec.end(), sort_less);
+        } else {
+            auto futures = game.mt.submit_blocks(size_t(0), n, [&vec, sort_less](size_t start, size_t end) {
+                OZZY_PROFILER_SECTION(_, "parallel_sort");
+                std::sort(vec.begin() + start, vec.begin() + end, sort_less);
+            });
+            futures.wait();
+
+            const size_t num_blocks = std::min(n, num_threads);
+            const size_t block_size = n / num_blocks;
+            const size_t remainder = n % num_blocks;
+            auto boundary = [&](size_t b) {
+                return b * block_size + (b < remainder ? b : remainder);
+            };
+
+            g_render_draw_temp_commands.clear();
+            g_render_draw_temp_commands.reserve(n);
+            using It = render_command_vec::iterator;
+            hvector<std::pair<It, It>, 64> segments;
+            for (size_t b = 0; b < num_blocks; ++b) {
+                size_t s = boundary(b), e = boundary(b + 1);
+                if (s < e) {
+                    segments.push_back({ vec.begin() + s, vec.begin() + e });
+                }
+            }
+            auto heap_comp = [&sort_less, &segments](size_t i, size_t j) {
+                return sort_less(*segments[j].first, *segments[i].first);
+            };
+            std::priority_queue<size_t, hvector<size_t, 256>, decltype(heap_comp)> pq(heap_comp);
+            for (size_t i = 0; i < segments.size(); ++i) {
+                pq.push(i);
+            }
+            while (!pq.empty()) {
+                const size_t i = pq.top();
+                pq.pop();
+                // Copy a run from this segment while it stays ≤ other segments' heads (bulk copy + fewer heap ops)
+                It cur = segments[i].first;
+                It run_end = cur;
+                const It seg_end = segments[i].second;
+                for (;;) {
+                    ++run_end;
+                    if (run_end == seg_end)
+                        break;
+                    if (!pq.empty() && sort_less(*segments[pq.top()].first, *run_end))
+                        break;
+                }
+                g_render_draw_temp_commands.insert(g_render_draw_temp_commands.end(), cur, run_end);
+                segments[i].first = run_end;
+                if (run_end != seg_end)
+                    pq.push(i);
+            }
+            vec = std::move(g_render_draw_temp_commands);
+        }
     }
 
     {

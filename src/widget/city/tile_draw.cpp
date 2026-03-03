@@ -71,6 +71,10 @@ bool map_render_is(int grid_offset, int render_mask) {
     return map_grid_is_valid_offset(grid_offset) && !!(map_grid_get(g_render_grid, grid_offset) & render_mask);
 }
 
+bool map_render_isu(int grid_offset, int render_mask) {
+    return !!(map_grid_get(g_render_grid, grid_offset) & render_mask);
+}
+
 bool map_render_is(tile2i tile, int render_mask) {
     return map_render_is(tile.grid_offset(), render_mask);
 }
@@ -122,6 +126,14 @@ bool drawing_building_as_deleted(building* b) {
     return false;
 }
 
+bool drawing_building_as_deleted(building_id bid) {
+    if (bid == 0) {
+        return false;
+    }
+
+    return drawing_building_as_deleted(building_get(bid));
+}
+
 static bool is_multi_tile_terrain(int grid_offset) {
     return (!map_building_at(grid_offset) && map_property_multi_tile_size(grid_offset) > 1);
 }
@@ -159,7 +171,6 @@ static void clip_between_rectangles(int* xOut, int* yOut, int* wOut, int* hOut, 
 }
 
 void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
-    g_city_planner.construction_record_view_position(pixel, tile);
     constexpr uint32_t mode_highlighted[] = {0, COLOR_BLUE, COLOR_RED, COLOR_GREEN, COLOR_YELLOW};
     if (!tile.valid()) {
         // Outside map: draw black tile

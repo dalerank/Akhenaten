@@ -168,6 +168,8 @@ bool building_booth::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel
 }
 
 bool building_booth::force_draw_height_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
+    OZZY_PROFILER_FUNCTION()
+
     int image_id = map_image_at(tile);
     if (first_img(animkeys().booth) == image_id) {
         auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
