@@ -265,6 +265,8 @@ building::building() {
 }
 
 building* building::main() {
+    OZZY_PROFILER_SECTION(_, "building_main")
+
     if (prev_part_building_id <= 0) {
         return this;
     }

@@ -921,13 +921,6 @@ void build_planner::update_orientations(bool check_if_changed) {
     update_coord_caches();  // refresh caches
 }
 
-void build_planner::construction_record_view_position(vec2i pixel, tile2i point) {
-    if (point == start) {
-        start_offset_screen_x = pixel.x;
-        start_offset_screen_y = pixel.y;
-    }
-}
-
 void build_planner::dispatch_warnings() {
     if (!!immediate_warning) {
         events::emit(event_city_warning{ immediate_warning });

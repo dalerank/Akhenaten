@@ -299,7 +299,7 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     if (!!game_features::gameui_highlight_legions) {
         // Get the battalion ID at the current tile position (if any)
         highlighted_formation = formation_batalion_at(current_tile);
-        
+
         // If a formation exists but it's currently in a distant battle, don't highlight it
         // (formations in distant battles should not be highlighted on the main city map)
         if (highlighted_formation > 0 && formation_get(highlighted_formation)->in_distant_battle) {
@@ -349,6 +349,7 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
             [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_terrain_height(pixel, tile, ctx); }
         );
     } else {
+        OZZY_PROFILER_SECTION(_, "draw_isometric_flat_parallel")
         const size_t block_size = total_rows / num_blocks;
         const size_t remainder = total_rows % num_blocks;
         auto block_start = [&](size_t blk) {
@@ -395,11 +396,46 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     // PHASE 4: Draw height-based elements (buildings, decorations, and figures)
     // This includes buildings with height, animated decorations, and all figures (people, animals, etc.)
     // These are drawn after flat terrain so they appear on top
-    city_view_foreach_valid_map_tile(ctx,
-        [this] (vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_nonterrain_height(pixel, tile, ctx); },
-        [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_ornaments_and_animations_height(pixel, tile, ctx); },
-        [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_figures(pixel, tile, ctx, false); }
-    );
+    if (num_blocks <= 1) {
+        city_view_foreach_valid_map_tile(ctx,
+            [this] (vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_nonterrain_height(pixel, tile, ctx); },
+            [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_ornaments_and_animations_height(pixel, tile, ctx); },
+            [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_figures(pixel, tile, ctx, false); }
+        );
+    } else {
+        OZZY_PROFILER_SECTION(_, "draw_isometric_nonterrain_height_parallel")
+        const size_t block_size = total_rows / num_blocks;
+        const size_t remainder = total_rows % num_blocks;
+        auto block_start = [&](size_t blk) {
+            return static_cast<int>(blk * block_size + (blk < remainder ? blk : remainder));
+        };
+
+        ImageDraw::render_command_block block_commands;
+        block_commands.resize(num_blocks);
+        ImageDraw::render_command_block block_subcommands;
+        block_subcommands.resize(num_blocks);
+        hvector<std::future<void>, 32> futures;
+
+        for (size_t blk = 0; blk < num_blocks; blk++) {
+            const int y_start = block_start(blk);
+            const int y_end = block_start(blk + 1);
+            futures.push_back(game.mt.submit_task([this, &ctx, y_start, y_end, &block_commands, &block_subcommands, blk]() {
+                painter worker_ctx = ctx;
+                worker_ctx.command_buffer = &block_commands[blk];
+                worker_ctx.subcommand_buffer = &block_subcommands[blk];
+                city_view_foreach_valid_map_tile_rows(worker_ctx, y_start, y_end,
+                    [this] (vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_nonterrain_height(pixel, tile, ctx); },
+                    [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_ornaments_and_animations_height(pixel, tile, ctx); },
+                    [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_figures(pixel, tile, ctx, false); }
+                );
+            }));
+        }
+
+        for (auto &f : futures) {
+            f.wait();
+        }
+        ImageDraw::merge_block_commands_into_global(block_commands, block_subcommands);
+    }
 
     // Apply all render commands from phase 4
     ImageDraw::apply_render_commands(ctx, "draw_height_based_tiles");
@@ -456,7 +492,6 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
         return;
     }
 
-    g_city_planner.construction_record_view_position(pixel, tile);
     int building_id = map_building_at(tile);
 
     color color_mask = COLOR_MASK_NONE;
@@ -559,7 +594,8 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, c
 }
 
 void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, painter &ctx) {
-    OZZY_PROFILER_FUNCTION();
+    OZZY_PROFILER_FUNCTION()
+
     int grid_offset = tile.grid_offset();
     // black tile outside of map
     if (grid_offset < 0) {
@@ -571,21 +607,20 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
         return;
     }
 
-    g_city_planner.construction_record_view_position(pixel, tile);
     int building_id = map_building_at(grid_offset);
 
-    color color_mask = force_mask;
-    building *b = building_get(building_id);
+    color color_mask = force_mask;    
     bool deletion_tool = (g_city_planner.build_type == BUILDING_CLEAR_LAND && g_city_planner.end == tile);
-    if (deletion_tool || map_property_is_deleted(tile) || drawing_building_as_deleted(b)) {
+    if (deletion_tool || map_property_is_deleted(tile) || drawing_building_as_deleted(building_id)) {
         color_mask = COLOR_MASK_RED;
     }
 
     if (!map_property_is_draw_tile(grid_offset)) {
         bool force_draw_tile = false;
         if (building_id > 0) {
-            force_draw_tile = b->dcast()->force_draw_height_tile(ctx, tile, pixel, color_mask);
-            b->dcast()->force_draw_top_tile(ctx, tile, pixel, color_mask);
+            building_impl *b = building_get(building_id)->dcast();
+            force_draw_tile = b->force_draw_height_tile(ctx, tile, pixel, color_mask);
+            b->force_draw_top_tile(ctx, tile, pixel, color_mask);
         }
 
         if (!force_draw_tile) {
@@ -593,8 +628,8 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
         }
     }
 
-    bool tall_flat_tile = map_render_is(grid_offset, RENDER_TALL_TILE);
-    bool tall_flat_tile_drawn = map_render_is(grid_offset, RENDER_TALL_TILE_DRAWN);
+    bool tall_flat_tile = map_render_isu(grid_offset, RENDER_TALL_TILE);
+    bool tall_flat_tile_drawn = map_render_isu(grid_offset, RENDER_TALL_TILE_DRAWN);
     bool should_draw = building_id > 0 || (tall_flat_tile && !tall_flat_tile_drawn);
     if (!should_draw) {
         return;
@@ -643,7 +678,6 @@ void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, pain
         return;
     }
 
-    g_city_planner.construction_record_view_position(pixel, tile);
     if (!map_property_is_draw_tile(tile)) {
         return;
     }
