@@ -40,10 +40,12 @@
 #include "window/window_city.h"
 #include "window/window_city_military.h"
 #include "game/game.h"
+#include "core/threading.h"
 #include "overlays/city_overlay.h"
 #include "building/building.h"
 #include "dev/debug.h"
 #include "graphics/elements/tooltip.h"
+#include <future>
 #include "city/city_figures.h"
 #include "input/mouse.h"
 #include "core/profiler.h"
@@ -321,7 +323,7 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     ImageDraw::clear_render_commands();
 
     clear_mappoint_pixelcoord();
-    
+
     // Rebuild the coordinate mapping by iterating through all valid visible map tiles
     // This updates the pixel positions for each tile based on the current camera view
     city_view_foreach_valid_map_tile(ctx, update_tile_coords);
@@ -329,30 +331,66 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     // Sort all figures by their Y coordinate for proper depth ordering
     // This ensures figures are drawn in the correct order (back-to-front) for isometric rendering
     map_figure_sort_by_y();
-    
-    // PHASE 1: Draw flat ground layer and bottom-level elements
-    // This includes terrain, flat buildings, figures that walk on flat tiles, and flat decorations
-    city_view_foreach_valid_map_tile(ctx, 
-        [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_isometric_flat(pixel, tile, ctx); },
-        [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_figures_on_flat_tiles(pixel, tile, ctx); },
-        draw_ornaments_flat
-    );
 
-    // PHASE 2: Draw terrain height elements (hills, slopes, raised terrain)
-    // This adds the vertical height information to terrain features
-    city_view_foreach_valid_map_tile(ctx, 
-        [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_isometric_terrain_height(pixel, tile, ctx); }
-    );
+    // PHASE 1+2: Draw flat + terrain height. Split by rows across threads when beneficial.
+    const int total_rows = g_city_view.viewport.height_tiles + 21;
+    const size_t num_threads = game.mt.get_thread_count();
+    const size_t num_blocks = (num_threads > 0 && total_rows > 1)
+        ? std::min(num_threads, static_cast<size_t>(total_rows))
+        : 0;
 
-    // Apply all accumulated render commands from phases 1 and 2 to the graphics context
-    // This actually draws the flat and terrain height layers to the screen
+    if (num_blocks <= 1) {
+        city_view_foreach_valid_map_tile(ctx,
+            [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_flat(pixel, tile, ctx); },
+            [this](vec2i pixel, tile2i tile, painter& ctx) { draw_figures_on_flat_tiles(pixel, tile, ctx); },
+            draw_ornaments_flat
+        );
+        city_view_foreach_valid_map_tile(ctx,
+            [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_terrain_height(pixel, tile, ctx); }
+        );
+    } else {
+        const size_t block_size = total_rows / num_blocks;
+        const size_t remainder = total_rows % num_blocks;
+        auto block_start = [&](size_t blk) {
+            return static_cast<int>(blk * block_size + (blk < remainder ? blk : remainder));
+        };
+
+        ImageDraw::render_command_block block_commands;
+        block_commands.resize(num_blocks);
+        ImageDraw::render_command_block block_subcommands;
+        block_subcommands.resize(num_blocks);
+        hvector<std::future<void>, 32> futures;
+
+        for (size_t blk = 0; blk < num_blocks; blk++) {
+            const int y_start = block_start(blk);
+            const int y_end = block_start(blk + 1);
+            futures.push_back(game.mt.submit_task([this, &ctx, y_start, y_end, &block_commands, &block_subcommands, blk]() {
+                ImageDraw::set_thread_command_buffers(&block_commands[blk], &block_subcommands[blk]);
+                city_view_foreach_valid_map_tile_rows(ctx, y_start, y_end,
+                    [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_flat(pixel, tile, ctx); },
+                    [this](vec2i pixel, tile2i tile, painter& ctx) { draw_figures_on_flat_tiles(pixel, tile, ctx); },
+                    draw_ornaments_flat
+                );
+                city_view_foreach_valid_map_tile_rows(ctx, y_start, y_end,
+                    [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_terrain_height(pixel, tile, ctx); }
+                );
+                ImageDraw::clear_thread_command_buffers();
+            }));
+        }
+
+        for (auto &f : futures) {
+            f.wait();
+        }
+        ImageDraw::merge_block_commands_into_global(block_commands, block_subcommands);
+    }
+
     ImageDraw::apply_render_commands(ctx, "draw_flat");
 
     // PHASE 3: Experimental debug layer - draw animal spawn area indicators
     // This is a debugging feature to visualize where animals can spawn in the game
     draw_debug_animal_spawn_areas(ctx);
     ImageDraw::apply_render_commands(ctx, "draw_debug_animal_areas");
-       
+
     // PHASE 4: Draw height-based elements (buildings, decorations, and figures)
     // This includes buildings with height, animated decorations, and all figures (people, animals, etc.)
     // These are drawn after flat terrain so they appear on top

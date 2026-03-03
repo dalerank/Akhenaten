@@ -101,4 +101,14 @@ void city_view_foreach_valid_map_tile(painter &ctx,
                                       tile_draw_callback callback5 = nullptr,
                                       tile_draw_callback callback6 = nullptr);
 
+/// Iterate only over rows y in [y_begin, y_end). Used to split work for parallel rendering.
+void city_view_foreach_valid_map_tile_rows(painter &ctx,
+                                          int y_begin, int y_end,
+                                          tile_draw_callback callback1,
+                                          tile_draw_callback callback2 = nullptr,
+                                          tile_draw_callback callback3 = nullptr,
+                                          tile_draw_callback callback4 = nullptr,
+                                          tile_draw_callback callback5 = nullptr,
+                                          tile_draw_callback callback6 = nullptr);
+
 void city_view_foreach_tile_in_range(painter &ctx, int grid_offset, int size, int radius, tile_draw_callback callback);

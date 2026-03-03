@@ -710,8 +710,11 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
 }
 
 buffer* pak_buf = new buffer(MAX_FILE_SCRATCH_SIZE);
+std::mutex pak_buf_mutex;
 bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     OZZY_PROFILER_FUNCTION();
+
+    std::scoped_lock lock(pak_buf_mutex);
 
     if (g_args.is_log_resources()) {
         logs::info("VFS: Loading pak '%s' (starting_index=%d)", pak_name, starting_index);
