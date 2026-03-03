@@ -55,6 +55,7 @@
 #include "grid/tiles.h"
 #include "content/mods.h"
 #include "undo.h"
+#include "platform/arguments.h"
 
 #include "dev/debug.h"
 #include <iostream>
@@ -342,8 +343,12 @@ bool game_t::check_valid() {
     random_init();
 
     paused = false;
-    mt.reset(4);
-    mtrpc.reset(4);
+    unsigned int n = g_args.get_thread_count();
+    if (n == 0) {
+        n = std::thread::hardware_concurrency();
+    }
+    mt.reset(n);
+    mtrpc.reset(n);
 
     return true;
 }

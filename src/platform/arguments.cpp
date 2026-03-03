@@ -234,6 +234,23 @@ std::optional<arguments::argument_result> handle_pos(int argc, char **argv, int 
 }
 ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_pos, "--pos x,y", "window pos. Example: 10,10");
 
+std::optional<arguments::argument_result> handle_threads(int argc, char** argv, int current_index) {
+    const char* arg = argv[current_index];
+    const char* prefix_long = "--threads=";
+    if (SDL_strncmp(arg, prefix_long, SDL_strlen(prefix_long)) == 0) {
+        arg += SDL_strlen(prefix_long);
+    } else {
+        return std::nullopt;
+    }
+    char* end = nullptr;
+    long n = SDL_strtol(arg, &end, 10);
+    if (end == arg || *end != '\0' || n < 0 || n > 1024) {
+        app_terminate("Option --threads=N must have a number N in range 0..1024 (0 = auto)");
+    }
+    return arguments::argument_result("threads", bvariant(static_cast<int32_t>(n)), 1);
+}
+ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_threads, "-threads=N", "number of worker threads (0 = auto by CPU cores)");
+
 void Arguments::parse(int argc, char** argv) {
     xstring data_dir = std::filesystem::current_path().string().c_str();
 
@@ -320,6 +337,18 @@ int Arguments::get_cursor_scale_percentage() const {
 
 void Arguments::set_cursor_scale_percentage(int value) {
     args_["cursor_scale_percentage"] = bvariant(std::clamp(value, 100, 200));
+}
+
+unsigned int Arguments::get_thread_count() const {
+    if (!has_arg("threads")) {
+        return 0; // 0 = auto (hardware_concurrency)
+    }
+    const auto& v = get_arg("threads");
+    if (!v.is_int32()) {
+        return 0;
+    }
+    int n = v.as_int32();
+    return n <= 0 ? 0 : static_cast<unsigned int>(n);
 }
 
 void Arguments::set_renderer(pcstr value) {
