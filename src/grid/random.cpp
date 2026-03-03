@@ -4,7 +4,7 @@
 #include "core/random.h"
 #include "grid/grid.h"
 
-static grid_xx random_xx = {0, FS_UINT8};
+static grid_xx random_xx(FS_UINT8);
 
 void map_random_clear() {
     map_grid_clear(random_xx);

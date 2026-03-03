@@ -12,8 +12,7 @@
 #include "city/city.h"
 #include "js/js_game.h"
 
-grid_xx g_desirability_grid = {0, FS_INT8};
- 
+grid_xx g_desirability_grid(FS_INT8);
 desirability_t ANK_VARIABLE_N(g_desirability, "desirability");
 
 void desirability_t::add_to_terrain_at_distance(tile2i tile, int size, int distance, int desirability) {

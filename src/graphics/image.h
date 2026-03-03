@@ -100,7 +100,7 @@ struct image_t {
     int8_t unk17; //
     int8_t unk18; //
 
-    int unk19; //
+    short isometric_top_height; //
     int unk20; //
 
     struct {
@@ -126,9 +126,9 @@ struct image_t {
     } temp;
 
     inline vec2i size() const { return {width, height}; }
-    const int isometric_size() const;
-    const int isometric_top_height() const;
-    const int isometric_3d_height() const;
+    int isometric_size() const;
+    int calc_isometric_top_height() const;
+    int isometric_3d_height() const;
 
     image_desc desc() const { return { pak_id, group_id, group_index }; }
 };
@@ -141,7 +141,6 @@ bool image_load_paks();
 
 int image_id_resource_icon(int resource);
 int image_id_from_group(int collection, int group);
-int image_id_from_name(const xstring &name);
 
 image_desc image_desc_from_name(const xstring &name);
 

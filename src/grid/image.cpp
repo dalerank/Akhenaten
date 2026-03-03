@@ -5,10 +5,9 @@
 #include "grid/grid.h"
 #include "image.h"
 
-grid_xx g_images_grid = {0, FS_UINT32};
-grid_xx g_images_grid_backup = {0, FS_UINT32};
-
-grid_xx g_images_alt_grid = {0, FS_UINT32};
+grid_xx g_images_grid(FS_UINT32);
+grid_xx g_images_grid_backup(FS_UINT32);
+grid_xx g_images_alt_grid(FS_UINT32);
 
 int map_image_at(int grid_offset) {
     return (int)map_grid_get(g_images_grid, grid_offset);

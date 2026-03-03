@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <cmath>
 
-grid_xx g_terrain_clay = {0, FS_UINT16};
+grid_xx g_terrain_clay(FS_UINT16);
 
 int map_get_clay(int grid_offset) {
     return map_grid_get(g_terrain_clay, grid_offset);

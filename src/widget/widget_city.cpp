@@ -274,6 +274,7 @@ void screen_city_t::draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx)
 }
 
 void screen_city_t::draw_isometric_mark_sound(int building_id, int grid_offset, color &color_mask, int direction) {
+    OZZY_PROFILER_FUNCTION()
     if (building_id) {
         building *b = building_get(building_id);
         if (!!game_features::gameui_visual_feedback_on_delete && drawing_building_as_deleted(b)) {
@@ -426,15 +427,18 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
     }
 
     bool force_tile_draw = false;
-    if (!map_property_is_draw_tile(tile)) {
-        bool force_tile_draw = false;
-        if (building_id > 0) {
-            building_impl *b = building_get(building_id)->dcast();
-            force_tile_draw = b->force_draw_flat_tile(ctx, tile, pixel, color_mask);
-        }
+    {
+        OZZY_PROFILER_SECTION(_, "draw_isometric_flat")
+        if (!map_property_is_draw_tile(tile)) {
+            bool force_tile_draw = false;
+            if (building_id > 0) {
+                building_impl *b = building_get(building_id)->dcast();
+                force_tile_draw = b->force_draw_flat_tile(ctx, tile, pixel, color_mask);
+            }
 
-        if (!force_tile_draw) {
-            return;
+            if (!force_tile_draw) {
+                return;
+            }
         }
     }
 
@@ -482,25 +486,30 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
         return;
     }
 
-    auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
-    command.image_id = image_id;
-    command.pixel = pixel;
-    command.mask = color_mask;
-
-    int image_alt_value = map_image_alt_at(tile);
-    int image_alt_id = (image_alt_value & 0x00ffffff);
-    uint8_t image_alt_alpha = ((image_alt_value & 0xff000000) >> 24);
-    if (image_alt_id > 0 && image_alt_alpha > 0) {
-        auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
-        command.image_id = image_alt_id;
+    {
+        OZZY_PROFILER_SECTION(_, "ert_drawtile")
+        auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        command.image_id = image_id;
         command.pixel = pixel;
-        command.mask = (0x00ffffff | (image_alt_alpha << 24));
-        command.flags = ImgFlag_Alpha;
-        command.location = SOURCE_LOCATION;
+        command.mask = color_mask;
     }
 
-    int top_height = img->isometric_top_height();
-    map_render_set(tile, (top_height > 0) ? RENDER_TALL_TILE : 0);
+    {
+        OZZY_PROFILER_SECTION(_, "ert_drawtile_alt")
+        int image_alt_value = map_image_alt_at(tile);
+        int image_alt_id = (image_alt_value & 0x00ffffff);
+        uint8_t image_alt_alpha = ((image_alt_value & 0xff000000) >> 24);
+        if (image_alt_id > 0 && image_alt_alpha > 0) {
+            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+            command.image_id = image_alt_id;
+            command.pixel = pixel;
+            command.mask = (0x00ffffff | (image_alt_alpha << 24));
+            command.flags = ImgFlag_Alpha;
+            command.location = SOURCE_LOCATION;
+        }
+    }
+
+    map_render_set(tile, (img->isometric_top_height > 0) ? RENDER_TALL_TILE : 0);
 }
 
 void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, color mask, painter &ctx) {

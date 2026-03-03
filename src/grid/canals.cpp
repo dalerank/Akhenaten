@@ -25,8 +25,8 @@ struct water_supply_queue_tile {
 
 std::vector<tile2i> *river_access_canal_offsets = nullptr;
 
-static grid_xx canals_grid = {0, FS_UINT8};
-static grid_xx canals_grid_backup = {0, FS_UINT8};
+grid_xx canals_grid(FS_UINT8);
+grid_xx canals_grid_backup(FS_UINT8);
 
 int map_canal_at(int grid_offset) {
     return map_grid_get(canals_grid, grid_offset);

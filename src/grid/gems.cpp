@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <cmath>
 
-grid_xx g_terrain_gems = {0, FS_UINT16};
+grid_xx g_terrain_gems(FS_UINT16);
 
 int map_get_gems(int grid_offset) {
     return map_grid_get(g_terrain_gems, grid_offset);

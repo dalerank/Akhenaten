@@ -611,7 +611,7 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(painter &ctx, ve
         int iso_size = image->isometric_size() - 1;
         grid_tiles tiles = map_grid_get_tiles(tile, tile.shifted(iso_size, iso_size));
         for (auto &t : tiles) {
-            map_building_height_set(t.grid_offset(), image->isometric_top_height());
+            map_building_height_set(t.grid_offset(), image->isometric_top_height);
         }
     };
 

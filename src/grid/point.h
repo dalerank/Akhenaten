@@ -29,7 +29,10 @@ public:
     const int y() const { return p_Y; }
 
     int grid_offset(int v);
-    int grid_offset();
+    int grid_offset() {
+        self_correct();
+        return p_GRID_OFFSET;
+    }
     int grid_offset() const;
 
     int abs_x(int v);
@@ -65,9 +68,38 @@ public:
         return { x, y };
     }
 
+    int MAP_X_IMPL(int _grid_offset) const;
+    int MAP_Y_IMPL(int _grid_offset) const;
+
+    int GRID_X_IMPL(int _grid_offset) const;
+    int GRID_Y_IMPL(int _grid_offset) const;
+
     // SET BY CONSTRUCTION
     void set(int _x, int _y);
-    void set(int _grid_offset);
+    void set(int _grid_offset) {
+        if (_grid_offset < 0) {
+            p_GRID_OFFSET = _INVALID_COORD;
+            p_X = _INVALID_COORD;
+            p_Y = _INVALID_COORD;
+            p_ABS_X = _INVALID_COORD;
+            p_ABS_Y = _INVALID_COORD;
+            return;
+        }
+
+        if (p_GRID_OFFSET == _grid_offset) {
+            return;
+        }
+
+        p_GRID_OFFSET = _grid_offset;
+
+        p_X = MAP_X_IMPL(p_GRID_OFFSET);
+        p_Y = MAP_Y_IMPL(p_GRID_OFFSET);
+
+        p_ABS_X = GRID_X_IMPL(p_GRID_OFFSET);
+        p_ABS_Y = GRID_Y_IMPL(p_GRID_OFFSET);
+    }
+
+
 
     // direct access to private fields, for iob read/write without recalc
     int* private_access(int i);

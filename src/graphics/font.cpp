@@ -326,7 +326,6 @@ void add_symbols_to_font_packer(imagepak_handle font_pack, pcstr symbols_font, f
         img.unk16 = -1;
         img.unk17 = -1;
         img.unk18 = -1;
-        img.unk19 = -1;
         img.unk20 = -1;
 
         image_packer_rect *rect = &font_packer.rects[cp_index];

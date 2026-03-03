@@ -6,7 +6,7 @@
 #include "grid/routing/routing.h"
 #include "city/city_figures.h"
 
-grid_xx g_soldier_strength = {0, FS_UINT8};
+grid_xx g_soldier_strength(FS_UINT8);
 
 void map_soldier_strength_clear() {
     map_grid_clear(g_soldier_strength);
