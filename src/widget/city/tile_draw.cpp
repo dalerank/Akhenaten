@@ -60,7 +60,7 @@ static const int ADJACENT_OFFSETS_PH[2][4][7]
        GRID_OFFSET(-3, -2)}}};
 
 
-grid_xx g_render_grid = {0, FS_UINT32};
+grid_xx g_render_grid(FS_UINT32);
 
 void map_render_clear() {
     OZZY_PROFILER_FUNCTION();
@@ -189,8 +189,7 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
             command.location = SOURCE_LOCATION;
 
             const image_t* img = image_get(command.image_id);
-            int top_height = img->isometric_top_height();
-            map_render_set(tile, top_height > 0 ? RENDER_TALL_TILE : 0);
+            map_render_set(tile, img->isometric_top_height > 0 ? RENDER_TALL_TILE : 0);
 
         } else if (map_is_highlighted(tile)) {
             e_highligth_mode mode = map_is_highlighted(tile);
@@ -212,8 +211,7 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
             command.location = SOURCE_LOCATION;
 
             const image_t* img = image_get(command.image_id);
-            int top_height = img->isometric_top_height();
-            map_render_set(tile, top_height > 0 ? RENDER_TALL_TILE : 0);
+            map_render_set(tile, img->isometric_top_height > 0 ? RENDER_TALL_TILE : 0);
         }
     }
 

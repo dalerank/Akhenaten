@@ -45,12 +45,18 @@ static size_t gr_sizes[] = {
 };
 
 struct grid_xx {
-    int initialized;
+    int initialized = false;
     e_grid_data_type datatype;
     size_t size_field;
     uint32_t size_total;
 
-    void* items_xx;
+    void* items_xx = nullptr;
+
+    inline grid_xx(e_grid_data_type type) : datatype(type) {
+        register_grid_init(this);
+    }
+    static void register_grid_init(grid_xx* p);
+    static void init_all_grids();
 
     inline int32_t get(uint32_t grid_offset);
 };
@@ -92,7 +98,9 @@ void map_grid_load_buffer(grid_xx& grid, buffer* buf);
 
 // void map_grid_data_init(int width, int height, int start_offset, int border_size);
 
-bool map_grid_is_valid_offset(int grid_offset);
+inline bool map_grid_is_valid_offset(int grid_offset) {
+    return grid_offset >= 0 && grid_offset < GRID_SIZE_TOTAL;
+}
 inline bool map_grid_is_valid_offset(tile2i tile) { return map_grid_is_valid_offset(tile.grid_offset()); }
 int map_grid_direction_delta(int direction);
 // void map_grid_size(int *width, int *height);

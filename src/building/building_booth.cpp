@@ -27,6 +27,7 @@
 #include "figure/figure.h"
 #include "grid/routing/routing_grids.h"
 #include "js/js_game.h"
+#include "core/profiler.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_booth);
 
@@ -161,6 +162,7 @@ bool building_booth::draw_ornaments_and_animations_height(painter &ctx, vec2i po
 }
 
 bool building_booth::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
+    OZZY_PROFILER_FUNCTION()
     int image_id = map_image_at(tile);
     return (first_img(animkeys().booth)!= image_id);
 }

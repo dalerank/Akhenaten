@@ -1,5 +1,6 @@
 #include "grid.h"
 #include "scenario/map.h"
+#include "point.h"
 
 int* tile2i::private_access(int i) {
     switch (i) {
@@ -76,11 +77,6 @@ int tile2i::y() {
     return p_Y;
 }
 
-int tile2i::grid_offset() {
-    self_correct();
-    return p_GRID_OFFSET;
-}
-
 int tile2i::grid_offset() const {
     self tmp = *this;
     tmp.self_correct();
@@ -117,30 +113,28 @@ tile2i tile2i::shifted(int _grid_offset) {
     return p2;
 }
 
+int tile2i::MAP_X_IMPL(int _grid_offset) const {
+    return MAP_X(_grid_offset);
+}
+
+int tile2i::MAP_Y_IMPL(int _grid_offset) const {
+    return MAP_Y(_grid_offset);
+}
+
+int tile2i::GRID_X_IMPL(int _grid_offset) const {
+    return GRID_X(_grid_offset);
+}
+
+int tile2i::GRID_Y_IMPL(int _grid_offset) const {
+    return GRID_Y(_grid_offset);
+}
+
 // SET BY CONSTRUCTION
 void tile2i::set(int _x, int _y) {
     p_GRID_OFFSET = MAP_OFFSET(_x, _y);
 
     p_X = _x;
     p_Y = _y;
-
-    p_ABS_X = GRID_X(p_GRID_OFFSET);
-    p_ABS_Y = GRID_Y(p_GRID_OFFSET);
-}
-
-void tile2i::set(int _grid_offset) {
-    if (_grid_offset < 0) {
-        p_GRID_OFFSET = _INVALID_COORD;
-        p_X = _INVALID_COORD;
-        p_Y = _INVALID_COORD;
-        p_ABS_X = _INVALID_COORD;
-        p_ABS_Y = _INVALID_COORD;
-        return;
-    }
-    p_GRID_OFFSET = _grid_offset;
-
-    p_X = MAP_X(p_GRID_OFFSET);
-    p_Y = MAP_Y(p_GRID_OFFSET);
 
     p_ABS_X = GRID_X(p_GRID_OFFSET);
     p_ABS_Y = GRID_Y(p_GRID_OFFSET);

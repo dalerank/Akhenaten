@@ -9,7 +9,7 @@
 #include "city/city_figures.h"
 #include "figuretype/animal_hyena.h"
 
-grid_xx g_hyena_strength = {0, FS_UINT8};
+grid_xx g_hyena_strength(FS_UINT8);
 
 void map_hyena_strength_clear() {
     map_grid_clear(g_hyena_strength);

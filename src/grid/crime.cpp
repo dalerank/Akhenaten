@@ -14,7 +14,7 @@
 #include "city/city_buildings.h"
 #include "js/js_game.h"
 
-grid_xx g_crime_grid = {0, FS_INT8};
+grid_xx g_crime_grid(FS_INT8);
  
 crime_t ANK_VARIABLE_N(g_crime, "crime");
 

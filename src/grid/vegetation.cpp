@@ -17,7 +17,7 @@
 #include "js/js_game.h"
 
 tile_cache marshland_tiles_cache;
-grid_xx g_terrain_vegetation_growth = {0, FS_UINT8};
+grid_xx g_terrain_vegetation_growth(FS_UINT8);
 
 void foreach_marshland_tile(void (*callback)(int grid_offset)) {
     for (int grid_offset: marshland_tiles_cache)

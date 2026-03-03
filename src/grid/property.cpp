@@ -23,11 +23,10 @@ enum e_tile_prop {
     EDGE_NO_NATIVE_LAND = 0x7f,
 };
 
-grid_xx g_edge_grid = {0, FS_UINT8};
-static grid_xx bitfields_grid = {0, FS_UINT8};
-
-static grid_xx edge_backup = {0, FS_UINT8};
-static grid_xx bitfields_backup = {0, FS_UINT8};
+grid_xx g_edge_grid(FS_UINT8);
+grid_xx bitfields_grid(FS_UINT8);
+grid_xx edge_backup(FS_UINT8);
+grid_xx bitfields_backup(FS_UINT8);
 
 static int edge_for(int x, int y) {
     return 8 * y + x;

@@ -24,10 +24,33 @@ void map_grid_init(grid_xx& grid) {
     grid.initialized = 1;
 }
 
-int32_t map_grid_get(grid_xx& grid, uint32_t at) {
-    if (!grid.initialized)
-        map_grid_init(grid);
 
+namespace detail {
+    svector<grid_xx *, 64>& registered_grids() {
+        static svector<grid_xx *, 64> s;
+        return s;
+    }
+    std::mutex& registered_grids_mutex() {
+        static std::mutex m;
+        return m;
+    }
+}
+
+void grid_xx::register_grid_init(grid_xx *p) {
+    std::scoped_lock lock(detail::registered_grids_mutex());
+    detail::registered_grids().push_back(p);
+}
+
+void grid_xx::init_all_grids() {
+    std::scoped_lock lock(detail::registered_grids_mutex());
+    for (grid_xx *p : detail::registered_grids()) {
+        if (!p->initialized) {
+            map_grid_init(*p);
+        }
+    }
+}
+
+int32_t map_grid_get(grid_xx& grid, uint32_t at) {
     if (at >= GRID_SIZE_TOTAL)
         return 0;
 
@@ -56,13 +79,11 @@ int32_t map_grid_get(grid_xx& grid, uint32_t at) {
     default:
         assert(false);
     }
+
     return res;
 }
 
 void map_grid_set(grid_xx& grid, uint32_t at, int64_t value) {
-    if (!grid.initialized)
-        map_grid_init(grid);
-
     if (at >= GRID_SIZE_TOTAL) {
         return;
     }
@@ -92,9 +113,6 @@ void map_grid_set(grid_xx& grid, uint32_t at, int64_t value) {
     }
 }
 void map_grid_fill(grid_xx& grid, int64_t value) {
-    if (!grid.initialized)
-        map_grid_init(grid);
-
     switch (grid.datatype) {
     case FS_UINT8:
         memset(grid.items_xx, (uint8_t)value, grid.size_total);
@@ -121,19 +139,10 @@ void map_grid_fill(grid_xx& grid, int64_t value) {
 }
 
 void map_grid_clear(grid_xx& grid) {
-    if (!grid.initialized)
-        map_grid_init(grid);
-
     memset(grid.items_xx, 0, grid.size_total);
 }
 
 void map_grid_copy(grid_xx& src, grid_xx& dst) {
-    if (!src.initialized)
-        map_grid_init(src);
-
-    if (!dst.initialized)
-        map_grid_init(dst);
-
     assert(src.datatype == dst.datatype);
     assert(src.size_total == dst.size_total);
 
@@ -141,27 +150,17 @@ void map_grid_copy(grid_xx& src, grid_xx& dst) {
 }
 
 void map_grid_and(grid_xx& grid, uint32_t at, int mask) {
-    if (!grid.initialized)
-        map_grid_init(grid);
-
     int v = map_grid_get(grid, at);
     v &= mask;
     map_grid_set(grid, at, v);
 }
 void map_grid_or(grid_xx& grid, uint32_t at, int mask) {
-    if (!grid.initialized)
-        map_grid_init(grid);
-
     int v = map_grid_get(grid, at);
     v |= mask;
     map_grid_set(grid, at, v);
 }
 
 void map_grid_and_all(grid_xx& grid, int mask) {
-    if (!grid.initialized) {
-        map_grid_init(grid);
-    }
-
     for (int i = 0; i < GRID_SIZE_TOTAL; i++) {
         switch (grid.datatype) {
         case FS_UINT8:
@@ -223,10 +222,6 @@ void map_grid_save_buffer(grid_xx& grid, buffer* buf) {
 }
 
 void map_grid_load_buffer(grid_xx& grid, buffer* buf) {
-    if (!grid.initialized) {
-        map_grid_init(grid);
-    }
-
     switch (grid.datatype) {
     case FS_UINT8:
         buf->read_raw(grid.items_xx, GRID_SIZE_TOTAL);
@@ -263,10 +258,6 @@ void map_grid_load_buffer(grid_xx& grid, buffer* buf) {
         assert(false);
     }
     return;
-}
-
-bool map_grid_is_valid_offset(int grid_offset) {
-    return grid_offset >= 0 && grid_offset < GRID_SIZE_TOTAL;
 }
 
 int map_grid_direction_delta(int direction) {

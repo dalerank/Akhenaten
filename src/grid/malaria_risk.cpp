@@ -13,7 +13,7 @@
 #include "scenario/map.h"
 #include "city/city.h"
 
-grid_xx g_malaria_risk_grid = {0, FS_INT8};
+grid_xx g_malaria_risk_grid(FS_INT8);
 
 malaria_risk_t ANK_VARIABLE_N(g_malaria_risk, "malaria_risk");
 
