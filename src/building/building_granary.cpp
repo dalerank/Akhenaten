@@ -609,7 +609,7 @@ void building_granary::draw_stores(vec2i point, color color_mask, painter &ctx) 
             for (int spot = last_spot_filled; spot < last_spot_filled + spots_filled; spot++) {
                 // draw sprite on each granary "spot"
                 vec2i spot_pos = res_image_offsets[spot];
-                auto &command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+                auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
                 command.image_id = resources_id + r;
                 command.pixel = point + spot_pos + begin_spot_pos;
                 command.mask = color_mask;

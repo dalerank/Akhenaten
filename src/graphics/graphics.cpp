@@ -1,4 +1,5 @@
 #include "graphics/graphics.h"
+#include "graphics/painter.h"
 
 #include "core/profiler.h"
 #include "platform/renderer.h"
@@ -11,11 +12,6 @@
 std::vector<render_command_t> g_render_commands;
 std::vector<render_command_t> g_render_subcommands;
 std::vector<render_command_t> g_render_debug_commands;
-
-namespace {
-thread_local ImageDraw::render_command_vec* tls_render_commands = nullptr;
-thread_local ImageDraw::render_command_vec* tls_render_subcommands = nullptr;
-}
 
 void graphics_draw_line(vec2i start, vec2i end, color color) {
     g_render.draw_line(start, end, color);
@@ -115,16 +111,6 @@ void ImageDraw::execute_render_command(painter& ctx, const render_command_t& com
     }
 }
 
-void ImageDraw::set_thread_command_buffers(render_command_vec* commands, render_command_vec* subcommands) {
-    tls_render_commands = commands;
-    tls_render_subcommands = subcommands;
-}
-
-void ImageDraw::clear_thread_command_buffers() {
-    tls_render_commands = nullptr;
-    tls_render_subcommands = nullptr;
-}
-
 void ImageDraw::merge_block_commands_into_global(const render_command_block& block_commands, const render_command_block & block_subcommands) {
     for (size_t b = 0; b < block_commands.size(); b++) {
         const auto& subcmds = block_subcommands[b];
@@ -143,8 +129,8 @@ void ImageDraw::merge_block_commands_into_global(const render_command_block& blo
     }
 }
 
-render_command_t& ImageDraw::create_command(render_command_t::e_render_type rt) {
-    std::vector<render_command_t>* dst = tls_render_commands ? tls_render_commands : &g_render_commands;
+render_command_t& ImageDraw::create_command(painter& ctx, render_command_t::e_render_type rt) {
+    render_command_vec* dst = ctx.command_buffer ? ctx.command_buffer : &g_render_commands;
     auto& command = dst->emplace_back();
     command.id = static_cast<uint32_t>(dst->size() - 1);
     command.rtype = rt;
@@ -166,19 +152,20 @@ render_command_t &ImageDraw::create_dcommand(render_command_t::e_render_type rt)
     return command;
 }
 
-render_command_t& ImageDraw::active_command() {
-    if (tls_render_commands && !tls_render_commands->empty())
-        return tls_render_commands->back();
+render_command_t& ImageDraw::active_command(painter& ctx) {
+    if (ctx.command_buffer && !ctx.command_buffer->empty())
+        return ctx.command_buffer->back();
+
     return g_render_commands.back();
 }
 
-render_command_t& ImageDraw::create_subcommand(render_command_t::e_render_type rt) {
+render_command_t& ImageDraw::create_subcommand(painter& ctx, render_command_t::e_render_type rt) {
     OZZY_PROFILER_FUNCTION();
-    std::vector<render_command_t>* cmds = tls_render_commands ? tls_render_commands : &g_render_commands;
-    std::vector<render_command_t>* subcmds = tls_render_subcommands ? tls_render_subcommands : &g_render_subcommands;
+    render_command_vec* cmds = ctx.command_buffer ? ctx.command_buffer : &g_render_commands;
+    render_command_vec* subcmds = ctx.subcommand_buffer ? ctx.subcommand_buffer : &g_render_subcommands;
 
     if (cmds->empty()) {
-        return create_command(rt);
+        return create_command(ctx, rt);
     }
 
     int last_idx = static_cast<int>(cmds->size()) - 1;

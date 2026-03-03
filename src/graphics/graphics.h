@@ -83,17 +83,13 @@ void apply_render_commands(painter& ctx, std::string_view p);
 void execute_render_command(painter& ctx, const render_command_t& command);
 void finalize_render(painter &ctx);
 void clear_render_commands();
-render_command_t& create_command(render_command_t::e_render_type rt);
+render_command_t& create_command(painter& ctx, render_command_t::e_render_type rt);
 render_command_t& create_dcommand(render_command_t::e_render_type rt);
-render_command_t& active_command();
-render_command_t& create_subcommand(render_command_t::e_render_type rt);
+render_command_t& active_command(painter& ctx);
+render_command_t& create_subcommand(painter& ctx, render_command_t::e_render_type rt);
 
 using render_command_vec = std::vector<render_command_t>;
 using render_command_block = hvector<render_command_vec, 32>;
-
-/// Optional buffers for parallel tile iteration. When set, create_command/create_subcommand push there instead of globals.
-void set_thread_command_buffers(render_command_vec* commands, render_command_vec * subcommands);
-void clear_thread_command_buffers();
 /// Merge per-block buffers into g_render_commands/g_render_subcommands (fixes subcommand indices). Call from main thread after workers finish.
 void merge_block_commands_into_global(const render_command_block& block_commands,
                                       const render_command_block & block_subcommands);

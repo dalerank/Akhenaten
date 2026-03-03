@@ -40,7 +40,7 @@ void building_jewels_workshop::on_place_checks() {
 
     warnings.add_if(!city_resource_gems.can_produce(), "#build_gem_mine");
     warnings.add_if(!city_resource_gems.can_import(true), "#setup_trade_route_to_import");
-    warnings.add_if(!is_import_gems, "#overseer_of_commerce_to_import");    
+    warnings.add_if(!is_import_gems, "#overseer_of_commerce_to_import");
 }
 
 bool building_jewels_workshop::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
@@ -49,8 +49,8 @@ bool building_jewels_workshop::draw_ornaments_and_animations_height(painter &ctx
     int amount = std::min<int>(2, ceil((float)base.stored_amount(RESOURCE_GEMS) / 100.0) - 1);
     if (amount >= 0) {
         int image_id = image_id_from_group(GROUP_RESOURCE_STOCK_GEMS_2) + amount;
-        
-        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+
+        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
         command.image_id = image_id;
         command.pixel = point + vec2i(65, 3);
         command.mask = color_mask;
@@ -68,14 +68,14 @@ void building_jewels_workshop::update_graphic() {
 
 int building_jewels_workshop::count_nearby_workshops() const {
     std::set<building_id> nearby_workshop_ids;
-    
+
     // Get main building ID of current workshop
     building *current_main = base.main();
     building_id current_main_id = current_main->id;
-    
+
     // Get all tiles adjacent to this building
     grid_tiles_sm adjacent_tiles = map_grid_get_adjacent_tiles_sm(&base, 1);
-    
+
     for (const auto &tile : adjacent_tiles) {
         building_id bid = map_building_at(tile);
         if (bid > 0) {
@@ -89,7 +89,7 @@ int building_jewels_workshop::count_nearby_workshops() const {
             }
         }
     }
-    
+
     return nearby_workshop_ids.size();
 }
 
@@ -97,33 +97,33 @@ void building_jewels_workshop::start_production() {
     bool can_start_b = true;
     if (base.input.resource_second != RESOURCE_NONE) {
         can_start_b = (stored_amount(base.input.resource_second) >= 100);
-    } 
-    
+    }
+
     bool can_start_a = true;
     verify_no_crash(base.input.resource != RESOURCE_NONE);
     can_start_a = (stored_amount(base.input.resource) >= 100);
-    
+
     if (can_start_b && can_start_a) {
         auto &d = runtime_data();
         d.progress = 0;
        // d.has_raw_materials = true;
-        
+
         int nearby_count = count_nearby_workshops();
         int reduction_per_workshop = current_params().material_reduction_per_nearby_workshop;
         int material_reduction = nearby_count * reduction_per_workshop;
-        
+
         // Apply reduction to second resource if present
         if (stored_amount(base.input.resource_second) >= 100) {
             int amount_to_consume = std::max(100 - material_reduction, 50); // Minimum 50, maximum reduction to 50
             consume_resource(base.input.resource_second, amount_to_consume);
         }
-        
+
         // Apply reduction to first resource
         if (stored_amount(base.input.resource) >= 100) {
             int amount_to_consume = std::max(100 - material_reduction, 50); // Minimum 50, maximum reduction to 50
             consume_resource(base.input.resource, amount_to_consume);
         }
-        
+
         production_started();
     }
 }

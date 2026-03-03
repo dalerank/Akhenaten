@@ -45,7 +45,7 @@ public:
     virtual void enemy_marching(formation *m) override;
     virtual void enemy_fighting(formation *m) override;
     virtual void leave_city() override;
-    virtual void debug_draw() override;
+    virtual void debug_draw(painter &ctx) override;
 
     void enemy_shoot_around(formation *m);
 };

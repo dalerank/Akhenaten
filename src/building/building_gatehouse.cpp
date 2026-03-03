@@ -372,24 +372,24 @@ bool building_mud_gatehouse::draw_ornaments_and_animations_height(painter &ctx, 
 
         if (base.orientation == 1) {
             if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_4_BOTTOM_LEFT) {
-                auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+                auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
                 command.image_id = image_id;
                 command.pixel = vec2i{ x - 22, y - 80 };
                 command.mask = color_mask;
             } else {
-                auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+                auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
                 command.image_id = image_id + 1;
                 command.pixel = vec2i{ x - 18, y - 81 };
                 command.mask = color_mask;
             }
         } else if (base.orientation == 2) {
             if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_4_BOTTOM_LEFT) {
-                auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+                auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
                 command.image_id = image_id + 1;
                 command.pixel = vec2i{ x - 18, y - 81 };
                 command.mask = color_mask;
             } else {
-                auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+                auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
                 command.image_id = image_id;
                 command.pixel = vec2i{ x - 22, y - 80 };
                 command.mask = color_mask;
@@ -399,23 +399,23 @@ bool building_mud_gatehouse::draw_ornaments_and_animations_height(painter &ctx, 
     return true;
 }
 
-void building_tower_gatehouse::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {  
+void building_tower_gatehouse::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
     uint32_t restricted_terrain = TERRAIN_ALL;
     restricted_terrain -= TERRAIN_WALL;
-    
+
     const auto &params = building_static_params::get(planer.build_type);
     auto result = map_adjust_building_determine_orientation(end, params.building_size, true, true, BUILDING_MUD_GATEHOUSE);
-    
+
     blocked_tile_vec blocked_tiles;
     bool fully_blocked = (!result.match);
     bool blocked = !!planer.is_blocked_for_building(end, 2, blocked_tiles, restricted_terrain);
     blocked |= (result.orientation < 0) || fully_blocked;
-    
+
     if (blocked) {
         planer.draw_partially_blocked(ctx, fully_blocked, blocked_tiles);
         return;
     }
-    
+
     int image_id = params.base_img();
     image_id += (result.orientation == 0 || result.orientation == 2) ? 1 : 0;
     planer.update_tiles_building(image_id);

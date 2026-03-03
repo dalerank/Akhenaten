@@ -100,7 +100,7 @@ bool city_overlay_native::draw_custom_footprint(vec2i pixel, tile2i tile, painte
         if (map_terrain_is(tile, TERRAIN_BUILDING))
             city_overlay::draw_building_footprint(ctx, pixel, tile, 0);
         else {
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = map_image_at(tile);
             command.pixel = pixel;
             command.mask = COLOR_MASK_NONE;
@@ -108,7 +108,7 @@ bool city_overlay_native::draw_custom_footprint(vec2i pixel, tile2i tile, painte
         }
     } else if (map_terrain_is(tile, TERRAIN_CANAL | TERRAIN_WALL)) {
         // display groundwater
-        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(tile) & 7);
         command.pixel = pixel;
         command.mask = COLOR_MASK_NONE;
@@ -122,7 +122,7 @@ bool city_overlay_native::draw_custom_footprint(vec2i pixel, tile2i tile, painte
             image_id = map_image_at(tile);
         }
 
-        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = image_id;
         command.pixel = pixel;
         command.mask = COLOR_MASK_NONE;

@@ -43,7 +43,7 @@ inline void city_overlay_fertility::draw_custom_top(vec2i pixel, tile2i point, p
 
     color color_mask = 0;
     if (map_terrain_is(grid_offset, terrain_on_fertility_overlay()) && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = map_image_at(grid_offset);
         command.pixel = pixel;
         command.mask = color_mask;
@@ -52,14 +52,14 @@ inline void city_overlay_fertility::draw_custom_top(vec2i pixel, tile2i point, p
         int fertility = map_get_fertility(grid_offset, FERT_WITH_MALUS);
         int offset = get_fertility_image_offset(fertility);
 
-        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset;
         command.pixel = pixel;
         command.mask = color_mask;
         command.location = SOURCE_LOCATION;
 
     } else {
-        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = map_image_at(grid_offset);
         command.pixel = pixel;
         command.mask = color_mask;

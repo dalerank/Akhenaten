@@ -340,7 +340,7 @@ void figure_enemy_archer::update_animation() {
     image_set_animation(animkey);
 }
 
-void figure_enemy_archer::debug_draw() {
+void figure_enemy_archer::debug_draw(painter &ctx) {
     // Draw target building and target figure in routing mode
     if (!(base.draw_mode & e_figure_draw_routing)) {
         return;
@@ -370,7 +370,7 @@ void figure_enemy_archer::debug_draw() {
             }
             vec2i target_coords = lookup_tile_to_pixel(target_building->tile.shifted(offset));
 
-            auto &command = ImageDraw::create_command(render_command_t::ert_drawtile_full);
+            auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile_full);
             command.image_id = map_image_at(target_building->tile);
             command.pixel = target_coords;
             command.mask = COLOR_LIGHT_RED;
@@ -380,7 +380,7 @@ void figure_enemy_archer::debug_draw() {
 
     {
         vec2i target_coords = lookup_tile_to_pixel(base.destination_tile);
-        auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = map_image_at(base.destination_tile);
         command.pixel = target_coords;
         command.mask = COLOR_LIGHT_BLUE;
@@ -390,7 +390,7 @@ void figure_enemy_archer::debug_draw() {
     {
         auto &d = runtime_data();
         vec2i target_coords = lookup_tile_to_pixel(d.last_target);
-        auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = map_image_at(d.last_target);
         command.pixel = target_coords;
         command.mask = COLOR_RED;

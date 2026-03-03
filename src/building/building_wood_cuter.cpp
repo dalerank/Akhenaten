@@ -87,7 +87,7 @@ bool building_wood_cutter::draw_ornaments_and_animations_height(painter &ctx, ve
     if (amount >= 0) {
         const auto &eanim = anim(animkeys().wood);
 
-        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
         command.image_id = eanim.first_img() + amount;
         command.pixel = point + eanim.pos;
         command.mask = color_mask;

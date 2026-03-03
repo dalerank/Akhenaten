@@ -33,7 +33,7 @@ bool building_pottery::draw_ornaments_and_animations_height(painter &ctx, vec2i 
         const auto &ranim = anim(animkeys().clay);
         vec2i pos = ranim.pos;
         for (int i = 0; i < amount; ++i) {
-            auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+            auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
             command.image_id = ranim.first_img();
             command.pixel = point + pos;
             command.mask = color_mask;

@@ -253,7 +253,7 @@ void building_stepped_pyramid::preview::ghost_preview(build_planner &planer, pai
             vec2i p = pixel + (vec2i(-30, 15) * i) + (vec2i(30, 15) * j);
             int image_id = get_image(end.shifted(i, j), end, size);
 
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_full);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile_full);
             command.image_id = image_id;
             command.pixel = p;
             command.mask = COLOR_MASK_GREEN;
@@ -451,7 +451,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
     }
 
     if (is_main()) {
-        auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = first_img(animkeys().enter);
         command.pixel = lookup_tile_to_pixel(access_point());
         command.use_sort_pixel = true;
@@ -473,7 +473,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
                 uint32_t progress = map_monuments_get_progress(ntile);
 
                 if (progress > 0 && progress <= 200) {
-                    auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+                    auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
                     command.image_id = image_grounded + ((dy * 4 + dx) & 7);
                     command.pixel = offset;
                     command.mask = ((0xff * progress / 200) << COLOR_BITSHIFT_ALPHA) | (color_mask & 0x00ffffff);
@@ -490,7 +490,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
         tile2i left_top = base.tile.shifted(0, 0);
         if (left_top == main->tile && map_monuments_get_progress(left_top) == 0) {
             vec2i offset = lookup_tile_to_pixel(left_top);
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = image_stick;
             command.pixel = offset;
             command.mask = color_mask;
@@ -502,7 +502,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
         tile2i right_top = base.tile.shifted(1, 0);
         if (right_top == main->tile.shifted(tiles_size.y - 1, 0) && map_monuments_get_progress(right_top) == 0) {
             vec2i offset = lookup_tile_to_pixel(right_top);
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = image_stick;
             command.pixel = offset;
             command.mask = color_mask;
@@ -514,7 +514,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
         tile2i left_bottom = base.tile.shifted(0, 1);
         if (left_bottom == main->tile.shifted(0, tiles_size.x - 1) && map_monuments_get_progress(left_bottom) == 0) {
             vec2i offset = lookup_tile_to_pixel(left_bottom);
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = image_stick;
             command.pixel = offset;
             command.mask = color_mask;
@@ -526,7 +526,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
         tile2i right_bottom = base.tile.shifted(1, 1);
         if (right_bottom == main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1) && map_monuments_get_progress(right_bottom) == 0) {
             vec2i offset = lookup_tile_to_pixel(right_bottom);
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = image_stick;
             command.pixel = offset;
             command.mask = color_mask;
@@ -541,7 +541,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
                 vec2i offset = lookup_tile_to_pixel(ntile);
                 uint32_t progress = map_monuments_get_progress(ntile);
                 if (progress < 200) {
-                    auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+                    auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
                     command.image_id = image_grounded + ((dy * 4 + dx) & 7);
                     command.pixel = offset;
                     command.mask = color_mask;
@@ -553,7 +553,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
                 if (progress > 0 && progress <= 200) {
                     int img = get_image(current_params(), base.orientation, base.tile.shifted(dx, dy), main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1));
 
-                    auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                    auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile);
                     command.image_id = img;
                     command.pixel = offset;
                     command.mask = ((0xff * progress / 200) << COLOR_BITSHIFT_ALPHA) | (color_mask & 0x00ffffff);
@@ -573,7 +573,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
                 if (progress < 200) {
                     int img = get_image(current_params(), base.orientation, base.tile.shifted(dx, dy), main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1));
 
-                    auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+                    auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
                     command.image_id = img;
                     command.pixel = offset;
                     command.mask = color_mask;
@@ -584,7 +584,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
                     int channel_img = get_channel_image(base.orientation, ntile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), channel_base_id);
                     if (channel_img > 0 && progress > 0) {
 
-                        auto &channel_command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                        auto &channel_command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile);
                         channel_command.image_id = channel_img;
                         channel_command.pixel = offset;
 
@@ -595,7 +595,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
                     }
                 } else {
                     int channel_img = get_channel_image(base.orientation, ntile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), channel_base_id);
-                    auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
+                    auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
                     command.image_id = channel_img;
                     command.pixel = offset;
                     command.mask = color_mask;
@@ -610,19 +610,19 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
         const xstring &base_key_2 = animkeys().ditches_phase_2;
         int channel_base_id_1 = current_params().animations[base_key_1].first_img();
         int channel_base_id_2 = current_params().animations[base_key_2].first_img();
-        draw_phase_3_5_tile(color_mask, channel_base_id_1, channel_base_id_2, tiles_size);
+        draw_phase_3_5_tile(ctx, color_mask, channel_base_id_1, channel_base_id_2, tiles_size);
     } else if (monumentd.phase == 4) {
         const xstring &base_key_2 = animkeys().ditches_phase_2;
         const xstring &base_key_3 = animkeys().ditches_phase_3;
         int channel_base_id_2 = current_params().animations[base_key_2].first_img();
         int channel_base_id_3 = current_params().animations[base_key_3].first_img();
-        draw_phase_3_5_tile(color_mask, channel_base_id_2, channel_base_id_3, tiles_size);
+        draw_phase_3_5_tile(ctx, color_mask, channel_base_id_2, channel_base_id_3, tiles_size);
     } else if (monumentd.phase == 5) {
         const xstring &base_key_3 = animkeys().ditches_phase_3;
         const xstring &base_key_4 = animkeys().ditches_phase_4;
         int channel_base_id_3 = current_params().animations[base_key_3].first_img();
         int channel_base_id_4 = current_params().animations[base_key_4].first_img();
-        draw_phase_3_5_tile(color_mask, channel_base_id_3, channel_base_id_4, tiles_size);
+        draw_phase_3_5_tile(ctx, color_mask, channel_base_id_3, channel_base_id_4, tiles_size);
     }
 
     return true;
@@ -683,7 +683,7 @@ void building_stepped_pyramid::setup_phase_6_tiles() {
     }    
 }
 
-void building_stepped_pyramid::draw_phase_3_5_tile(color color_mask, int channel_base_id_1, int channel_base_id_2, const vec2i tiles_size) {
+void building_stepped_pyramid::draw_phase_3_5_tile(painter& ctx, color color_mask, int channel_base_id_1, int channel_base_id_2, const vec2i tiles_size) {
     building *main = base.main();
     tile2i end = main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1);
 
@@ -695,7 +695,7 @@ void building_stepped_pyramid::draw_phase_3_5_tile(color color_mask, int channel
             if (progress < 200) {
                 int ditch_empty_img = get_channel_image(base.orientation, ntile, main->tile, end, channel_base_id_1);
 
-                auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
+                auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
                 command.image_id = ditch_empty_img;
                 command.pixel = offset;
                 command.mask = color_mask;
@@ -706,7 +706,7 @@ void building_stepped_pyramid::draw_phase_3_5_tile(color color_mask, int channel
                 int ditch_water_img = get_channel_image(base.orientation, ntile, main->tile, end, channel_base_id_2);
                 if (ditch_water_img > 0 && progress > 0) {
 
-                    auto &channel_command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                    auto &channel_command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile);
                     channel_command.image_id = ditch_water_img;
                     channel_command.pixel = offset;
 
@@ -717,7 +717,7 @@ void building_stepped_pyramid::draw_phase_3_5_tile(color color_mask, int channel
                 }
             } else {
                 int channel_img = get_channel_image(base.orientation, ntile, main->tile, end, channel_base_id_2);
-                auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
+                auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
                 command.image_id = channel_img;
                 command.pixel = offset;
                 command.mask = color_mask;
@@ -778,7 +778,7 @@ void building_stepped_pyramid::draw_ornaments_and_animations_stairs_impl(painter
 
     const auto &stair = pyramid_params().stairs[d.stair_index];
     if (phase() >= stair.phase) {
-        auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+        auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
         command.image_id = stair.tex.first_img();
         command.pixel = point + stair.offset;
         command.mask = color_mask;
@@ -806,7 +806,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             int img = get_bricks_image(base.orientation, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), phase() - 6);
             vec2i offset = lookup_tile_to_pixel(tile);
 
-            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
             command.pixel = point;
             command.mask = color_mask;
@@ -818,7 +818,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
         int img = get_bricks_image(base.orientation, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), (progress >= 200) ? (phase() - 6) : (phase() - 7));
         vec2i offset = lookup_tile_to_pixel(tile);
 
-        auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
         command.image_id = img;
         command.pixel = point;
         command.mask = color_mask;
@@ -832,7 +832,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
             vec2i offset = lookup_tile_to_pixel(tile);
 
-            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
             command.pixel = point;
             command.mask = color_mask;
@@ -842,7 +842,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             int layer_img = current_params().first_img("base_bricks") + 5;
             vec2i offset = lookup_tile_to_pixel(tile);
 
-            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = layer_img;
             command.pixel = point;
             command.mask = color_mask;
@@ -852,7 +852,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
                 auto layer_area = get_layer_area(1);
 
                 int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, base_level - 1);
-                auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+                auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
                 command.image_id = img;
                 command.pixel = point - vec2i{0, TILE_HEIGHT_PIXELS * 3};
                 command.mask = color_mask;
@@ -866,7 +866,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
             vec2i offset = lookup_tile_to_pixel(tile);
 
-            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
             command.pixel = point;
             command.mask = color_mask;
@@ -877,7 +877,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
             vec2i offset = lookup_tile_to_pixel(tile);
 
-            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
             command.pixel = point - vec2i{ 0, TILE_HEIGHT_PIXELS * 3 };
             command.mask = color_mask;
@@ -887,7 +887,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             int layer_img = current_params().first_img("base_bricks") + 5;
             vec2i offset = lookup_tile_to_pixel(tile);
 
-            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = layer_img;
             command.pixel = point - vec2i{ 0, TILE_HEIGHT_PIXELS * 3 };
             command.mask = color_mask;
@@ -897,7 +897,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
                 auto layer_area = get_layer_area(2);
 
                 int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, base_level - 1);
-                auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+                auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
                 command.image_id = img;
                 command.pixel = point - vec2i{ 0, TILE_HEIGHT_PIXELS * 6 };
                 command.mask = color_mask;
@@ -911,7 +911,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
             vec2i offset = lookup_tile_to_pixel(tile);
 
-            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
             command.pixel = point;
             command.mask = color_mask;
@@ -922,7 +922,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
             vec2i offset = lookup_tile_to_pixel(tile);
 
-            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
             command.pixel = point - vec2i{ 0, TILE_HEIGHT_PIXELS * 3 };
             command.mask = color_mask;
@@ -933,7 +933,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
             vec2i offset = lookup_tile_to_pixel(tile);
 
-            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
             command.pixel = point - vec2i{ 0, TILE_HEIGHT_PIXELS * 6 };
             command.mask = color_mask;
@@ -943,7 +943,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             int layer_img = current_params().first_img("base_bricks") + 5;
             vec2i offset = lookup_tile_to_pixel(tile);
 
-            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = layer_img;
             command.pixel = point - vec2i{ 0, TILE_HEIGHT_PIXELS * 3 };
             command.mask = color_mask;
@@ -953,7 +953,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
                 auto layer_area = get_layer_area(2);
 
                 int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, base_level - 1);
-                auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+                auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
                 command.image_id = img;
                 command.pixel = point - vec2i{ 0, TILE_HEIGHT_PIXELS * 9 };
                 command.mask = color_mask;
@@ -966,7 +966,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
             vec2i offset = lookup_tile_to_pixel(tile);
 
-            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
             command.pixel = point;
             command.mask = color_mask;
@@ -977,7 +977,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
             vec2i offset = lookup_tile_to_pixel(tile);
 
-            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
             command.pixel = point - vec2i{ 0, TILE_HEIGHT_PIXELS * 3 };
             command.mask = color_mask;
@@ -988,7 +988,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
             vec2i offset = lookup_tile_to_pixel(tile);
 
-            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
             command.pixel = point - vec2i{ 0, TILE_HEIGHT_PIXELS * 6 };
             command.mask = color_mask;
@@ -999,7 +999,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
             vec2i offset = lookup_tile_to_pixel(tile);
 
-            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
             command.pixel = point - vec2i{ 0, TILE_HEIGHT_PIXELS * 9 };
             command.mask = color_mask;
@@ -1175,7 +1175,7 @@ bool building_small_stepped_pyramid::draw_ornaments_and_animations_height(painte
     }
 
     if (phase() == 6 && runtime_data().alt_image > 0) {
-        auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = runtime_data().alt_image;
         command.pixel = point;
         command.mask = color_mask;
@@ -1419,7 +1419,7 @@ bool building_medium_stepped_pyramid::draw_ornaments_and_animations_height(paint
     }
 
     if (phase() == 6 && runtime_data().alt_image > 0) {
-        auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = runtime_data().alt_image;
         command.pixel = point;
         command.mask = color_mask;

@@ -91,7 +91,7 @@ bool building_mortuary::draw_ornaments_and_animations_height(painter &ctx, vec2i
         const auto &ranim = anim(animkeys().linen);
         vec2i pos = ranim.pos;
         for (int i = 0; i < amount; ++i) {
-            auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+            auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
             command.image_id = ranim.first_img();
             command.pixel = point + pos;
             command.mask = color_mask;
@@ -109,26 +109,26 @@ void building_mortuary::update_count() const {
 
 void building_mortuary::update_month() {
     building_impl::update_month();
-    
+
     auto &data = runtime_data();
-    
+
     // Update statistics
     if (data.residents_served_this_month > 0) {
         data.months_active++;
     }
     data.total_residents_served += data.residents_served_this_month;
     data.residents_served_this_year += data.residents_served_this_month;
-    
+
     // Reset monthly counter
     data.residents_served_this_month = 0;
-    
+
     // Monthly linen consumption if there are workers and road access
     if (num_workers() > 0 && has_road_access()) {
         const auto &params = current_params();
         if (params.monthly_linen_consumption > 0) {
             int pct_workers = worker_percentage();
             int consumption = calc_adjust_with_percentage<int>(params.monthly_linen_consumption, pct_workers);
-            
+
             int available = base.stored_amount(RESOURCE_LINEN);
             int to_consume = std::min<int>(available, consumption);
             consume_resource(RESOURCE_LINEN, to_consume);
