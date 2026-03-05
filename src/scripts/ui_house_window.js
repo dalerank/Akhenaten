@@ -333,6 +333,7 @@ function info_window_house_init_fill(window) {
 
 [es=info_window_vacant_lot_init]
 function info_window_vacant_lot_init_fill(window) {
+    var house = city.get_house(window.bid)
     var textId = __map_road_within_radius(house.tile, 1, 2) ? 1 : 2
     window.describe.text = __loc(128, textId)
 }
