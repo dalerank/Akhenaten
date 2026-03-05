@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "grid/building_tiles.h"
+#include "city/object_info.h"
 #include "grid/terrain.h"
 #include "city/city_warnings.h"
 #include "grid/road_access.h"
@@ -14,6 +15,7 @@
 #include "core/archive.h"
 #include "grid/floodplain.h"
 #include "building/destruction.h"
+#include "graphics/elements/tooltip.h"
 #include "grid/enemy_strength.h"
 #include "grid/tiles.h"
 #include "sound/sound.h"
@@ -22,6 +24,14 @@
 
 struct building_ev { building_id bid; };
 ANK_REGISTER_STRUCT_WRITER(building_ev, bid)
+
+struct building_tooltip_ev { building_id bid; int mx, my; };
+ANK_REGISTER_STRUCT_WRITER(building_tooltip_ev, bid, mx, my)
+
+template<typename T>
+void building_impl::es_t(const T &ev, pcstr func) const {
+    js_event(ev, current_params().name, func);
+}
 
 void building_impl::on_place(int orientation, int variant) {
     const auto &p = current_params();
@@ -190,6 +200,10 @@ void building_impl::draw_normal_anim(painter &ctx, const animation_context &rani
     command.flags = ranim.flags;
 }
 
+void building_impl::draw_tooltip(tooltip_context *c) const {
+    es_t(building_tooltip_ev{ base.id, c->mpos.x, c->mpos.y }, __func__);
+}
+
 void building_impl::bind_dynamic(io_buffer *iob, size_t version) {
     verify_no_crash(base.output.resource == current_params().output.resource);
 }
@@ -284,7 +298,7 @@ int building_impl::get_figure_id(int i) const { return base.get_figure_id(i); }
 int building_impl::need_resource_amount(e_resource r) const { return base.need_resource_amount(r); }
 
 void building_impl::es(pcstr es_name) const {
-    js_event(building_ev{ base.id }, current_params().name, es_name);
+    es_t(building_ev{ base.id }, es_name);
 }
 
 void building_impl::destroy_by_poof(bool clouds) {

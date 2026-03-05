@@ -61,7 +61,7 @@ public:
     virtual int ready_production() const { return current_params().production_rate; }
     virtual void draw_normal_anim(painter &ctx, vec2i point, tile2i tile, color mask);
     virtual void draw_normal_anim(painter &ctx, const animation_context &ranim, vec2i point, tile2i tile, color mask);
-    virtual void draw_tooltip(tooltip_context *c) const {};
+    virtual void draw_tooltip(tooltip_context *c) const;;
     virtual void bind_dynamic(io_buffer *iob, size_t version);
     virtual bvariant get_property(const xstring &domain, const xstring &name) const;
     virtual bool add_resource(e_resource resource, int amount) { return false; }
@@ -169,6 +169,10 @@ public:
     int get_figure_id(int i) const;
     int need_resource_amount(e_resource r) const;
     void es(pcstr es_name) const;
+
+    template<typename T>
+    void es_t(const T& ev, pcstr func) const;
+
     figure *get_figure_in_slot(int i);
 
     bool has_figure_of_type(int i, e_figure_type _type) const;

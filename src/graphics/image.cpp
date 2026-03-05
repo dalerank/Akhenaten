@@ -7,6 +7,7 @@
 #include "content/dir.h"
 #include "core/svector.h"
 #include "core/log.h"
+#include "core/profiler.h"
 #include "platform/arguments.h"
 
 #include <array>
@@ -238,6 +239,8 @@ const image_t *image_get(int pak, int id, int offset) {
 }
 
 const image_t* image_get(int id) {
+    OZZY_PROFILER_FUNCTION();
+
     if (id < 0) {
         return nullptr;
     }
