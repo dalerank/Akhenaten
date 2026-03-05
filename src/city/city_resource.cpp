@@ -33,6 +33,12 @@ int __city_yards_stored(int resource) {
 }
 ANK_FUNCTION_1(__city_yards_stored)
 
+void __cheat_add_resource(int resource, int amount) {
+    city_resource_add_items((e_resource)resource, amount);
+    city_resource_was_added_warning((e_resource)resource);
+}
+ANK_FUNCTION_2(__cheat_add_resource)
+
 int city_resources_t::yards_stored(e_resource resource) {
     return stored_in_storages[resource];
 }

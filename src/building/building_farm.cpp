@@ -481,7 +481,6 @@ int building_farm::expected_produce() {
     return int((progress / 2.5f) * modifier);
 }
 
-
 void building_farm::spawn_figure_harvests() {
     if (is_floodplain_farm()) { // floodplain farms
                                 // In OG Pharaoh, farms can NOT send out a cartpusher if the cartpusher

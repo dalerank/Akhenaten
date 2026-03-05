@@ -8,13 +8,9 @@
 #include "graphics/window.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
-#include "dev/debug.h"
 #include "js/js_game.h"
-#include <iostream>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_pottery);
-
-declare_console_command(addpottery, game_cheat_add_resource<RESOURCE_POTTERY>);
 
 bool building_pottery::can_play_animation() const {
     auto &d = runtime_data();
@@ -43,11 +39,4 @@ bool building_pottery::draw_ornaments_and_animations_height(painter &ctx, vec2i 
     }
 
     return true;
-}
-
-void building_pottery::update_graphic() {
-    const xstring &animkey = can_play_animation()
-                                ? animkeys().work
-                                : animkeys().none;
-    set_animation(animkey);
 }
