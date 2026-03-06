@@ -319,7 +319,7 @@ namespace js_helpers {
                 value = bvariant(js_toboolean(J, -1));
             } else if (js_isstring(J, -1)) {
                 value = bvariant(xstring(js_tostring(J, -1)));
-            } else if (js_isnumber(J, -1) || js_iscnumber(J, 1)) {
+            } else if (js_isnumber(J, -1) || js_iscnumber(J, -1)) {
                 double num = js_tonumber(J, -1);
                 // Try to preserve integer if possible
                 if (num == (int)num) {
