@@ -19,6 +19,7 @@ static js_Ast *expression(js_State *J, int notin);
 static js_Ast *assignment(js_State *J, int notin);
 static js_Ast *memberexp(js_State *J);
 static js_Ast *statement(js_State *J, js_AstModifier *modifiers);
+static js_Ast *emitstatement(js_State *J);
 static js_Ast *funbody(js_State *J);
 
 JS_NORETURN static void jsP_error(js_State *J, const char *fmt, ...) JS_PRINTFLIKE(2,3);
@@ -793,6 +794,45 @@ static js_Ast *forstatement(js_State *J)
 	jsP_error(J, "unexpected token in for-statement: %s", jsY_tokenstring(J->lookahead));
 }
 
+/* emit EventName{ payload } -> __emit({ event: "EventName", ...payload }) */
+static js_Ast *emitstatement(js_State *J)
+{
+	js_Ast *payload_props, *event_name_node, *event_value_node, *event_prop;
+	js_Ast *object_props, *object_expr, *callee, *args, *call;
+	const char *event_name;
+
+	/* consume "emit" identifier */
+	jsP_next(J);
+
+	if (J->lookahead != TK_IDENTIFIER)
+		jsP_error(J, "unexpected token: %s (expected event identifier)", jsY_tokenstring(J->lookahead));
+
+	event_name = js_intern(J, J->text);
+	jsP_next(J);
+
+	jsP_expect(J, '{');
+	payload_props = objectliteral(J);
+	jsP_expect(J, '}');
+
+	event_name_node = jsP_newstrnode(J, AST_IDENTIFIER, js_intern(J, "event"));
+	event_value_node = jsP_newstrnode(J, EXP_STRING, event_name);
+	event_prop = EXP2(PROP_VAL, event_name_node, event_value_node);
+
+	object_props = LIST(event_prop);
+	if (payload_props) {
+		object_props->b = payload_props;
+	}
+	object_props = jsP_list(object_props);
+
+	object_expr = EXP1(OBJECT, object_props);
+	callee = jsP_newstrnode(J, EXP_IDENTIFIER, "__emit");
+	args = jsP_list(LIST(object_expr));
+	call = EXP2(CALL, callee, args);
+
+	jsP_semicolon(J);
+	return call;
+}
+
 /* Global variable to pass modifiers to statement() */
 static js_Ast *statement(js_State *J, js_AstModifier *modifiers)
 {
@@ -919,6 +959,11 @@ static js_Ast *statement(js_State *J, js_AstModifier *modifiers)
 	if (jsP_accept(J, TK_FUNCTION)) {
 		jsP_warning(J, "function statements are not standard");
 		return funstm(J);
+	}
+
+	/* custom DSL statement */
+	if (J->lookahead == TK_IDENTIFIER && !strcmp(J->text, "emit")) {
+		return emitstatement(J);
 	}
 
 	/* labelled statement or expression statement */

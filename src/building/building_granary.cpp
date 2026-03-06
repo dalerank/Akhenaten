@@ -25,10 +25,8 @@
 #include "window/building/distribution.h"
 #include "city/city_labor.h"
 #include "figuretype/figure_storageyard_cart.h"
-#include "dev/debug.h"
 #include "js/js_game.h"
 #include <cmath>
-#include <iostream>
 
 const int ONE_LOAD = 100;
 const int CURSE_LOADS = 16;
@@ -37,9 +35,6 @@ const int FULL_GRANARY = 3200;
 const int THREEQUARTERS_GRANARY = 2400;
 const int HALF_GRANARY = 1600;
 const int QUARTER_GRANARY = 800;
-
-declare_console_command(add_chickpeas, game_cheat_add_resource<RESOURCE_CHICKPEAS>);
-declare_console_command(add_gamemeat, game_cheat_add_resource<RESOURCE_GAMEMEAT>);
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_granary);
 

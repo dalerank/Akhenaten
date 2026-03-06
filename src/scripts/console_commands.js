@@ -14,6 +14,20 @@ function console_command_add_pottery(args) {
 	__cheat_add_resource(RESOURCE_POTTERY, amount)
 }
 
+[console_command=add_chickpeas]
+function console_command_add_chickpeas(args) {
+	var amount = parseInt((args && args[0]) || "100", 10)
+	if (amount <= 0) amount = 100
+	__cheat_add_resource(RESOURCE_CHICKPEAS, amount)
+}
+
+[console_command=add_gamemeat]
+function console_command_add_gamemeat(args) {
+	var amount = parseInt((args && args[0]) || "100", 10)
+	if (amount <= 0) amount = 100
+	__cheat_add_resource(RESOURCE_GAMEMEAT, amount)
+}
+
 [console_command=collapse_random_buildings]
 function console_command_collapse_random_buildings(args) {
 	var count = parseInt((args && args[0]) || "0", 10)
