@@ -1,6 +1,5 @@
 #include "advisor_labor.h"
 
-#include "city/city_finance.h"
 #include "city/city.h"
 #include "core/calc.h"
 #include "graphics/elements/ui.h"
@@ -13,14 +12,6 @@ ui::advisor_labors_window g_advisor_labor_window;
 
 void ui::advisor_labors_window::init() {
     advisor_window::init();
-
-    ui["dec_wages"].onclick([] {
-        events::emit(event_finance_change_wages{ -1 });
-    });
-
-    ui["inc_wages"].onclick([] {
-        events::emit(event_finance_change_wages{ 1 });
-    });
 }
 
 int ui::advisor_labors_window::draw_background(UiFlags flags) {
@@ -34,7 +25,7 @@ void ui::advisor_labors_window::ui_draw_foreground(UiFlags flags) {
     ui.draw();
 
     auto cat_name = [] (int cat) {
-        if (cat == LABOR_CATEGORY_CULTURE) 
+        if (cat == LABOR_CATEGORY_CULTURE)
              return "Culture";
 
         return ui::str(50, cat + 1);

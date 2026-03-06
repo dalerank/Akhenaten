@@ -17,6 +17,8 @@
 #include "graphics/screen.h"
 #include "game/game.h"
 #include "game/mission.h"
+#include "game/game_events.h"
+#include "city/city_finance.h"
 
 #include "js.h"
 #include "mujs/mujs.h"

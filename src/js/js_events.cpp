@@ -35,3 +35,13 @@ ANK_SCRIPT_EVENT(event_finance_changed, value)
 ANK_SCRIPT_EVENT(event_show_advisor, advisor)
 ANK_SCRIPT_EVENT(event_building_place_checks, bid)
 
+void ANK_FUNCTION_UNIFIED(__emit)(const bvariant_map &args) {
+    const xstring event_name = args.s("event");
+
+    if (event_name == "event_finance_change_wages") {
+        events::emit(event_finance_change_wages{ args.int32_or_def("value", 0) });
+        return;
+    }
+
+    logs::info("JS: __emit unknown event '%s' (ignored)", event_name.c_str());
+}
