@@ -13,7 +13,6 @@
 
 #include "js/js_game.h"
 #include "graphics/elements/ui_js.h"
-#include "js/js_events.h"
 
 ui::advisor_financial_window g_advisor_financial_window;
 

@@ -6,7 +6,6 @@
 #include "game/game.h"
 #include "input/input.h"
 
-#include "js/js_events.h"
 #include "graphics/elements/ui_js.h"
 
 speed_options_window g_speed_options_window;

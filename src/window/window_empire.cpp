@@ -43,7 +43,6 @@
 #include "game/game.h"
 
 #include "js/js_game.h"
-#include "js/js_events.h"
 #include "graphics/elements/ui_js.h"
 #include "dev/debug.h"
 

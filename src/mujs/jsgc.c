@@ -12,8 +12,18 @@ static void jsG_freeenvironment(js_State *J, js_Environment *env)
 	js_free(J, env);
 }
 
+static void jsG_freemodifiers(js_State *J, js_FunctionModifier *mod)
+{
+	while (mod) {
+		js_FunctionModifier *next = mod->next;
+		js_free(J, mod);
+		mod = next;
+	}
+}
+
 static void jsG_freefunction(js_State *J, js_Function *fun)
 {
+	jsG_freemodifiers(J, fun->modifiers);
 	js_free(J, fun->funtab);
 	js_free(J, fun->numtab);
 	js_free(J, fun->strtab);
@@ -42,6 +52,7 @@ static void jsG_freeiterator(js_State *J, js_Iterator *node)
 
 static void jsG_freeobject(js_State *J, js_Object *obj)
 {
+	jsG_freemodifiers(J, obj->modifiers);
 	if (obj->head)
 		jsG_freeproperty(J, obj->head);
 	if (obj->type == JS_CREGEXP)
