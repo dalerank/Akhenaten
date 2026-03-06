@@ -39,6 +39,7 @@ typedef int (*js_HasProperty)(js_State *J, void *p, const char *name);
 typedef int (*js_Put)(js_State *J, void *p, const char *name);
 typedef int (*js_Delete)(js_State *J, void *p, const char *name);
 typedef int (*js_Import)(js_State *J, const char *name);
+typedef int (*js_Emit)(js_State *J, const char *name);
 
 /* Basic functions */
 js_State *js_newstate(js_Alloc alloc, void *actx, int flags);
@@ -104,8 +105,10 @@ JS_NORETURN void js_throw(js_State *J);
 void js_loadstring(js_State *J, const char *filename, const char *source);
 void js_loadfile(js_State *J, const char *filename);
 void js_importfile(js_State *J, const char *filename);
+void js_emit(js_State *J, const char *name);
 
 js_Import js_registerimport(js_State *J, js_Import importFunc);
+js_Emit js_registeremit(js_State *J, js_Emit emitFunc);
 
 void js_eval(js_State *J);
 void js_call(js_State *J, int n);

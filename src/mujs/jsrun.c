@@ -1585,6 +1585,13 @@ static void jsR_run(js_State *J, js_Function *F)
 			js_construct(J, *pc++);
 			break;
 
+		case OP_EMIT:
+			str = ST[*pc++];
+			js_emit(J, str);
+			js_pop(J, 1); /* payload */
+			js_pushnull(J);
+			break;
+
 		/* Unary operators */
 
 		case OP_TYPEOF:

@@ -137,6 +137,18 @@ js_Import js_registerimport(js_State *J, js_Import importFunc) {
 	return old;
 }
 
+void js_emit(js_State *J, const char *name) {
+	if (J->jscemit) {
+		J->jscemit(J, name);
+	}
+}
+
+js_Emit js_registeremit(js_State *J, js_Emit emitFunc) {
+	js_Emit old = J->jscemit;
+	J->jscemit = emitFunc;
+	return old;
+}
+
 int js_dostring(js_State *J, const char *source)
 {
 	if (js_try(J)) {
