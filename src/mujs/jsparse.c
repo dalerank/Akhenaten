@@ -801,9 +801,6 @@ static js_Ast *emitstatement(js_State *J)
 	js_Ast *object_props, *object_expr, *callee, *args, *call;
 	const char *event_name;
 
-	/* consume "emit" identifier */
-	jsP_next(J);
-
 	if (J->lookahead != TK_IDENTIFIER)
 		jsP_error(J, "unexpected token: %s (expected event identifier)", jsY_tokenstring(J->lookahead));
 
@@ -962,7 +959,7 @@ static js_Ast *statement(js_State *J, js_AstModifier *modifiers)
 	}
 
 	/* custom DSL statement */
-	if (J->lookahead == TK_IDENTIFIER && !strcmp(J->text, "emit")) {
+	if (jsP_accept(J, TK_EMIT)) {
 		return emitstatement(J);
 	}
 

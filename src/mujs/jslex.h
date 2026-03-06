@@ -44,6 +44,7 @@ enum
 	TK_DELETE,
 	TK_DO,
 	TK_ELSE,
+	TK_EMIT,
 	TK_FALSE,
 	TK_FINALLY,
 	TK_FOR,
