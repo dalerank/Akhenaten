@@ -211,6 +211,7 @@ struct js_State
 	js_Object *gcobj;
 	js_String *gcstr;
 	js_Import jscimport;
+	js_Emit jscemit;
 	void (*dumpfunction)(js_State *J, const char *);
 
 	/* environments on the call stack but currently not in scope */

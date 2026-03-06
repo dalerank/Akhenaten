@@ -783,6 +783,18 @@ static void cimport(JF, js_Ast *exp) {
 	}
 }
 
+static void cemit(JF, js_Ast *exp)
+{
+	if (exp->type != EXP_EMIT || !exp->a || !exp->b || exp->a->type != AST_IDENTIFIER) {
+		jsC_error(J, exp, "invalid emit expression");
+	}
+
+	/* push payload object and dispatch by event name at runtime */
+	cexp(J, F, exp->b);
+	emit(J, F, OP_EMIT);
+	emitraw(J, F, addstring(J, F, exp->a->string));
+}
+
 static void cdelete(JF, js_Ast *exp)
 {
 	switch (exp->type) {
@@ -953,6 +965,9 @@ static void cexp(JF, js_Ast *exp)
 
 	case EXP_IMPORT:
 		cimport(J, F, exp->a);
+		break;
+	case EXP_EMIT:
+		cemit(J, F, exp);
 		break;
 
 	case EXP_PREINC:

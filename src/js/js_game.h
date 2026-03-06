@@ -734,6 +734,7 @@ void js_register_mission_vars(const settings_vars_t &vars);
 void js_unref_function(xstring onclick_ref);
 void js_call_function(xstring onclick_ref);
 pcstr js_call_function_with_result(xstring js_ref, int param1, int param2);
+int js_game_emit(js_State *J, pcstr event_name);
 void js_register_game_handlers(xstring missionid);
 void js_call_event_handlers(const xstring &event_name, const bvariant_map &object);
 void js_register_entity_systems();

@@ -522,6 +522,7 @@ void js_reset_vm_state() {
     js_setframealloc(vm.J, js_frame_alloc_wrapper, nullptr);
     js_atpanic(vm.J, js_game_panic);
     js_registerimport(vm.J, js_game_import);
+    js_registeremit(vm.J, js_game_emit);
 
     js_register_vm_functions(vm.J);
     js_register_game_functions(vm.J);

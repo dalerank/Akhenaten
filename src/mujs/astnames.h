@@ -23,6 +23,8 @@
 "exp_postinc",
 "exp_postdec",
 "exp_delete",
+"exp_import",
+"exp_emit",
 "exp_void",
 "exp_typeof",
 "exp_preinc",

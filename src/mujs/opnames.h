@@ -46,6 +46,7 @@
 "eval",
 "call",
 "new",
+"emit",
 "typeof",
 "pos",
 "neg",

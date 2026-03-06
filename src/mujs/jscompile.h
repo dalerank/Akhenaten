@@ -64,6 +64,7 @@ enum js_OpCode
 	OP_EVAL,	/* <args...> -(numargs)- <returnvalue> */
 	OP_CALL,	/* <closure> <this> <args...> -(numargs)- <returnvalue> */
 	OP_NEW,		/* <closure> <args...> -(numargs)- <returnvalue> */
+	OP_EMIT,	/* <payload> -S- null */
 
 	OP_TYPEOF,
 	OP_POS,
