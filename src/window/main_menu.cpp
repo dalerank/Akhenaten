@@ -220,12 +220,6 @@ void main_menu_screen::init() {
             window_city_show();
         }
     });
-
-    ui["quit_game"].onclick([] {
-        popup_dialog::show_yesno("#popup_dialog_quit", [] {
-            app_request_exit();
-        });
-    });
 }
 
 void main_menu_screen::show(bool restart_music) {

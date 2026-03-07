@@ -71,6 +71,23 @@ namespace js_helpers {
         return xstring(js_tostring(J, idx));
     }
 
+    /** Reference to a JS function stored in the registry (for callbacks). */
+    struct js_function_ref {
+        xstring ref;
+        bool empty() const { return ref.empty(); }
+    };
+
+    template<>
+    inline js_function_ref js_to_value<js_function_ref>(js_State *J, int idx) {
+        if (!js_iscallable(J, idx)) {
+            return js_function_ref{};
+        }
+        js_copy(J, idx);
+        pcstr r = js_ref(J);
+        js_pop(J, 1);
+        return js_function_ref{xstring(r)};
+    }
+
     template<>
     inline vec2i js_to_value<vec2i>(js_State *J, int idx) {
         vec2i result;
@@ -733,6 +750,7 @@ void js_register_ui_objects(js_State *J);
 void js_register_mission_vars(const settings_vars_t &vars);
 void js_unref_function(xstring onclick_ref);
 void js_call_function(xstring onclick_ref);
+void js_call_function_bool(xstring js_ref, bool param);
 pcstr js_call_function_with_result(xstring js_ref, int param1, int param2);
 int js_game_emit(js_State *J, pcstr event_name);
 void js_register_game_handlers(xstring missionid);

@@ -4,7 +4,7 @@ ui {
     popup_message: __ui_popup_message
 
     sidebar {
-        @offset_x { get: __widget_sidebar_city_offset_x }
+        @offset_x { get: __ui_widget_sidebar_city_offset_x }
     }
 }
 
@@ -61,6 +61,7 @@ ui.window_overlay_menu_show = __ui_window_overlay_menu_show
 ui.window_build_menu_show = __ui_window_build_menu_show
 ui.sidebar_set_type = __ui_widget_sidebar_set_type
 ui.building_menu_items = __ui_building_menu_items
+ui.show_yesno = __ui_dialog_show_yesno
 
 function ui_create_element_proxy(elementId) {
     return {
