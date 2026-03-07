@@ -15,6 +15,7 @@
 #include "io/gamefiles/lang.h"
 #include "platform/version.hpp"
 #include "graphics/screen.h"
+#include "core/app.h"
 #include "game/game.h"
 #include "game/mission.h"
 #include "game/game_events.h"
@@ -402,6 +403,7 @@ void __game_increase_scroll_speed() { game.increase_scroll_speed(); } ANK_FUNCTI
 void __game_decrease_scroll_speed() { game.decrease_scroll_speed(); } ANK_FUNCTION(__game_decrease_scroll_speed)
 void __game_set_game_speed(int v) { game.game_speed = v; } ANK_FUNCTION_1(__game_set_game_speed)
 void __game_set_scroll_speed(int v) { game.scroll_speed = v; } ANK_FUNCTION_1(__game_set_scroll_speed)
+void __game_request_exit() { app_request_exit(); } ANK_FUNCTION(__game_request_exit)
 
 std::optional<bvariant> __game_get_property(pcstr property) {
     return archive_helper::get(game, property, true);
@@ -448,6 +450,28 @@ void js_call_function(xstring js_ref) {
         int result = js_pcall(J, 0);
         if (result != 0) {
             logs::error("JS onclick callback error: %s", js_tostring(J, -1));
+            js_pop(J, 1);
+        }
+    } else {
+        js_pop(J, 1);
+    }
+}
+
+void js_call_function_bool(xstring js_ref, bool param) {
+    if (js_ref.empty()) {
+        return;
+    }
+
+    js_State *J = js_vm_state();
+    verify_no_crash(J);
+
+    js_getregistry(J, js_ref.c_str());
+    if (js_iscallable(J, -1)) {
+        js_pushnull(J);
+        js_pushboolean(J, param);
+        int result = js_pcall(J, 1);
+        if (result != 0) {
+            logs::error("JS dialog callback error: %s", js_tostring(J, -1));
             js_pop(J, 1);
         }
     } else {

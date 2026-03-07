@@ -9,7 +9,7 @@ main_menu_screen {
 		show_records  : large_button({ pos:mbutton(2), size[256, 25], text[30, 5], onclick: window_records_show })
 		show_config   : large_button({ pos:mbutton(3), size[256, 25], text[2,  0], onclick: window_features_show })
 		show_mods     : large_button({ pos:mbutton(4), size[256, 25], text:"#main_menu_mods", onclick: window_mods_show })
-		quit_game     : large_button({ pos:mbutton(5), size[256, 25], text[30, 4]})
+		quit_game     : large_button({ pos:mbutton(5), size[256, 25], text[30, 4], onclick: quit_game })
 
 		discord 	  : image_button({ pos[sw(-100), sh(-50)], size[48, 48], icon_texture:"!discord", scale:0.75
 							           	onclick: function() { __platform_open_url("https://discord.gg/HS4njmBvpb") }
@@ -30,4 +30,8 @@ main_menu_screen {
 			}
 		})
 	}
+}
+
+function quit_game() {
+    ui.show_yesno("#popup_dialog_quit", __game_request_exit)
 }

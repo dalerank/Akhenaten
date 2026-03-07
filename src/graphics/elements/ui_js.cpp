@@ -9,6 +9,7 @@
 #include "window/window_build_menu.h"
 #include "window/message_dialog_new.h"
 #include "window/window_advisors.h"
+#include "window/popup_dialog.h"
 #include "city/city_message.h"
 #include "city/city_building_menu_ctrl.h"
 #include "graphics/graphics.h"
@@ -31,6 +32,17 @@ bool __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags) {
 }
 ANK_FUNCTION_5(__ui_draw_button);
 
+void __ui_dialog_show_yesno(pcstr text, js_helpers::js_function_ref callback) {
+    xstring ref = callback.ref;
+    popup_dialog::show_yesno(text, [ref](bool accepted) {
+        if (!ref.empty()) {
+            js_call_function_bool(ref, accepted);
+            js_unref_function(ref);
+        }
+    });
+}
+ANK_FUNCTION_2(__ui_dialog_show_yesno)
+
 bool __ui_window_is(int window_id) { return window_is((e_window_id)window_id); } ANK_FUNCTION_1(__ui_window_is)
 void __ui_window_advisors_show_advisor(int advisor) { window_advisors_show_advisor((e_advisor)advisor); } ANK_FUNCTION_1(__ui_window_advisors_show_advisor)
 void __ui_draw_label(pcstr text, vec2i pos, int font) { ui::label(text, pos, (e_font)font); } ANK_FUNCTION_3(__ui_draw_label);
@@ -39,13 +51,13 @@ void __ui_window_city_show() { window_city_show(); } ANK_FUNCTION(__ui_window_ci
 
 void __ui_draw_texture(vec2i pos, int img_id) {
     ::painter ctx = game.painter();
-    ctx.img_generic(img_id, pos); 
+    ctx.img_generic(img_id, pos);
 }
 ANK_FUNCTION_2(__ui_draw_texture)
 
 void __ui_window_build_menu_show(int id) { window_build_menu_show(id); } ANK_FUNCTION_1(__ui_window_build_menu_show)
 void __ui_widget_sidebar_set_type(int id) { widget_sidebar_set_type(id); } ANK_FUNCTION_1(__ui_widget_sidebar_set_type)
-int __widget_sidebar_city_offset_x() { return widget_sidebar_city_offset_x(); } ANK_FUNCTION(__widget_sidebar_city_offset_x)
+int __ui_widget_sidebar_city_offset_x() { return widget_sidebar_city_offset_x(); } ANK_FUNCTION(__ui_widget_sidebar_city_offset_x)
 
 static inline ui::element* __ui_get_element(pcstr element_id) {
     ui::widget *w = ui::get_current_widget();
