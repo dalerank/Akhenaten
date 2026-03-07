@@ -48,8 +48,9 @@ static void draw_foreground(int) {
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
-    if (generic_buttons_handle_mouse(mouse_in_dialog(m), {0, 0}, buttons, 2, &focus_button_id))
+    if (generic_buttons_handle_mouse(mouse_in_dialog(m), {0, 0}, buttons, 2, &focus_button_id, nullptr))
         return;
+
     if (input_go_back_requested(m, h))
         window_editor_starting_conditions_show();
 }

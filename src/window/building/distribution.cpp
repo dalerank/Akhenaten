@@ -325,12 +325,12 @@ int window_building_handle_mouse_granary_orders(const mouse* m, object_info* c) 
     // resources
     const size_t num_resources = g_city.resource.available_foods().size();
     data.bid = c->bid;
-    if (generic_buttons_handle_mouse(m, {c->offset.x + 205, y_offset + 46}, data.orders_resource_buttons.data(), (int)num_resources, &data.resource_focus_button_id)) {
+    if (generic_buttons_handle_mouse(m, {c->offset.x + 205, y_offset + 46}, data.orders_resource_buttons.data(), (int)num_resources, &data.resource_focus_button_id, nullptr)) {
         return 1;
     }
 
     // extra instructions
-    return generic_buttons_handle_mouse(m, {c->offset.x + 80, y_offset + 404}, granary_order_buttons, 2, &data.orders_focus_button_id);
+    return generic_buttons_handle_mouse(m, {c->offset.x + 80, y_offset + 404}, granary_order_buttons, 2, &data.orders_focus_button_id, nullptr);
 }
 
 textid window_building_get_tooltip_granary_orders() {

@@ -121,12 +121,12 @@ int info_window_roadblock::window_info_handle_mouse(const mouse *m, object_info 
         int y_offset = window_building_get_vertical_offset(&c, 28);
 
         data.bid = c.bid;
-        if (generic_buttons_handle_mouse(m, vec2i{ c.offset.x + 180, y_offset + 46 }, orders_permission_buttons, sizeof(orders_permission_buttons), &data.figure_focus_button_id)) {
+        if (generic_buttons_handle_mouse(m, vec2i{ c.offset.x + 180, y_offset + 46 }, orders_permission_buttons, sizeof(orders_permission_buttons), &data.figure_focus_button_id, nullptr)) {
             return 1;
         }
 
-        return generic_buttons_handle_mouse(m, vec2i{ c.offset.x + 80, y_offset + 404 }, roadblock_order_buttons, 1, &data.orders_focus_button_id);
+        return generic_buttons_handle_mouse(m, vec2i{ c.offset.x + 80, y_offset + 404 }, roadblock_order_buttons, 1, &data.orders_focus_button_id, nullptr);
     } else {
-        return generic_buttons_handle_mouse(m, vec2i{ c.offset.x + 80, c.offset.y + 16 * c.bgsize.y - 34 }, go_to_orders_button, 1, &data.focus_button_id);
+        return generic_buttons_handle_mouse(m, vec2i{ c.offset.x + 80, c.offset.y + 16 * c.bgsize.y - 34 }, go_to_orders_button, 1, &data.focus_button_id, nullptr);
     }
 }

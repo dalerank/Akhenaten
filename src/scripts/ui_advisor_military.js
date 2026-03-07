@@ -16,7 +16,7 @@ advisor_military_window {
         h4_morale    : text({text{group:138, id:36}, pos[234, 58], font:FONT_SMALL_PLAIN})
         h5_1         : text({text{group:51, id:17}, pos[304, 43], font:FONT_SMALL_PLAIN})
         h5_2         : text({text{group:51, id:18}, pos[304, 58], font:FONT_SMALL_PLAIN})
-        
+
         inner_panel  : inner_panel({pos[32, 70], size[36, 17]})
         forts_area   : dummy({ margin{left:30, bottom:-90}
                                ui {
@@ -41,7 +41,7 @@ function get_figure_type_str(figure_type) {
 }
 
 [event=advisor_military_window_init]
-function advisor_military_window_init(window) {    
+function advisor_military_window_init(window) {
     var enemy_text_id = 8
     if (city.figures.enemies) { enemy_text_id = 10 }
     else if (city.figures.kingdome_soldiers) { enemy_text_id = 11 }
@@ -54,14 +54,14 @@ function advisor_military_window_init(window) {
 
     window.enemy_text.text = __loc(51, enemy_text_id)
     window.distant_text.text = __loc(51, distant_battle_text_id)
-    
+
     var total_soldiers_str = __loc(8, 46) + " " + city.military.total_soldiers
     var total_batalions_str =  city.military.total_batalions + " Companies"
     window.forts_text.text = total_soldiers_str + " in " + total_batalions_str
 }
 
 [event=advisor_military_window_draw]
-function advisor_military_window_draw(window) {     
+function advisor_military_window_draw(window) {
     if (city.num_forts > 0) {
         var exp_image = get_image("pharaoh_general/paneling_00537")
         var goto_legion_image = get_image("pharaoh_general/paneling_00531")
@@ -69,24 +69,24 @@ function advisor_military_window_draw(window) {
         var kingdom_service = get_image("pharaoh_general/paneling_00534")
         for (var i = 0; i < city.num_forts; i++) {
             var form = city.get_battalion_by_index(i)
-            
+
             ui.button({ text:"", pos[40, 77 + 44 * i], size[px(35), 40], font:FONT_NORMAL_BLACK_ON_DARK, border:false, body:false })
 
             var battalion_image = get_image(PACK_GENERAL, 127, form.batalion_id)
             ui.image(battalion_image, {x:44, y:82 + 44 * i})
             ui.label(__loc(138, form.batalion_id), vec2i(84, 83 + 44 * i), FONT_NORMAL_WHITE_ON_DARK)
- 
+
             var num_figures_str = "" + form.num_figures + " " + get_figure_type_str(form.figure_type)
             ui.label(num_figures_str, vec2i(84, 100 + 44 * i), FONT_NORMAL_BLACK_ON_DARK);
 
             var morale_str = __loc(138, 37 + form.morale / 5)
             ui.label(morale_str, vec2i(224, 91 + 44 * i), FONT_NORMAL_BLACK_ON_DARK, UiFlags_AlignCentered);
-            
+
             var experience_level = form.experience / 100
             exp_image.tid += experience_level
             ui.button({ text:"", pos{x:314, y:83 + 44 * i}, size[30, 30], font:FONT_NORMAL_BLACK_ON_DARK})
             ui.image(exp_image, { x:317, y:86 + 44 * i})
- 
+
             var goto_clicked = ui.button({text:"", pos{ x:394, y:83 + 44 * i }, size[ 30, 30 ] })
             if (goto_clicked) {
                 city.camera_go_to(form.home)

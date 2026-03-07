@@ -33,6 +33,8 @@ void js_register_game_constants(js_State *J) {
     // coz it is eqaul to RESOURCE_MAX
     _R(RESOURCE_DEBEN)
     _R(LABOR_CATEGORY_NONE)
+    _R(LABOR_CATEGORY_SIZE)
+    _R(LABOR_CATEGORY_CULTURE)
 
     _R(COLOR_FONT_RED)
     _R(COLOR_FONT_BLUE)

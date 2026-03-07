@@ -2,6 +2,7 @@
 
 #include "io/gamefiles/lang.h"
 #include "city/city.h"
+#include "city/city_labor.h"
 #include "city/city_message.h"
 #include "city/city_building_menu_ctrl.h"
 
@@ -47,6 +48,13 @@ ANK_FUNCTION_2(__city_get_battalion_property)
 
 std::optional<bvariant> __city_get_labor_property(pcstr property) { return archive_helper::get(g_city.labor, property, true); }
 ANK_FUNCTION_1(__city_get_labor_property)
+
+std::optional<bvariant> __city_get_labor_category_property(int index, pcstr property) {
+    if (index < 0 || index >= LABOR_CATEGORY_SIZE)
+        return {};
+    return archive_helper::get(g_city.labor.categories[index], property, true);
+}
+ANK_FUNCTION_2(__city_get_labor_category_property)
 
 void __city_camera_go_to(tile2i tile) { camera_go_to_mappoint(tile); } ANK_FUNCTION_1(__city_camera_go_to)
 
