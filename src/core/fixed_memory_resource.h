@@ -4,6 +4,8 @@
 #include <memory_resource>
 #include <cstdio>
 
+#include "platform/platform.h"
+
 // A fixed memory resource where initial allocations come from a fixed buffer, with later allocations just doing new / delete.
 // Used with locally defined std::pmr types to allow intial container allocations to come from stack memory. (eg std::pmr::vector that is just a temporary buffer)
 //
@@ -34,6 +36,7 @@ public:
         // Check for free memory in the fixed buffer - else just call new
         void* currBuffer = &_fixed_buffer[FixedSize - _available_fixed_size];
         if (std::align(align, bytes, currBuffer, _available_fixed_size) == nullptr) {
+#ifndef GAME_PLATFORM_BROWSER
             if constexpr (WarnOnFull) {
                 printf(
                     "Local stack buffer exceeded - Max:%zu Free:%zu Alloc:%zu\n",
@@ -41,6 +44,7 @@ public:
                     _available_fixed_size,
                     bytes);
             }
+#endif
             return ::operator new(bytes, static_cast<std::align_val_t>(align));
         }
         _available_fixed_size -= bytes;
