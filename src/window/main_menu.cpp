@@ -9,6 +9,7 @@
 #include "graphics/screen.h"
 #include "graphics/image.h"
 #include "game/game.h"
+#include "game/settings.h"
 #include "game/game_config.h"
 #include "core/app.h"
 #include "window/records.h"
@@ -16,7 +17,9 @@
 #include "window/player_selection.h"
 #include "window/file_dialog.h"
 #include "window/window_features.h"
+#include "window/window_city.h"
 #include "sound/sound.h"
+#include "io/gamestate/boilerplate.h"
 #include "resource/icons.h"
 #include "js/js_game.h"
 #include <regex>
@@ -130,7 +133,7 @@ int main_menu_get_total_commits(pcstr owner, pcstr repo) {
     curl_easy_cleanup(curl);
 
     if (res != CURLE_OK || httpCode != 200) {
-        logs::error("Unable to fetch commits (curl error: %s, HTTP code: %ld)",
+        logs::error("Unable to fetch commits (curl error: %s, HTTP code: %ld)", 
                    res != CURLE_OK ? curl_easy_strerror(res) : "OK", httpCode);
         return -1;
     }
@@ -209,6 +212,7 @@ void main_menu_screen::init() {
         game_features::gameopt_last_game_version.set(current_commit);
     });
 
+    autoconfig_window::init();
 }
 
 void main_menu_screen::show(bool restart_music) {

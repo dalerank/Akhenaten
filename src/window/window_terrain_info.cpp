@@ -55,7 +55,7 @@ void terrain_info_window::init(object_info &c) {
 
     auto type_str = terrain_info_type_tokens.name(c.terrain_type);
     bstring64 init_event_name(type_str, "_init");
-    ui.event(init_event_name.c_str(), event_data);
+    ui.event(xstring(init_event_name), event_data);
 
     textid reason;
     textid describe;

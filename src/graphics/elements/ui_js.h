@@ -6,30 +6,42 @@
 
 namespace ui {
     template<typename T>
-    inline void widget::event(xstring evname_str, const T &ev) {
+    inline void widget::event(const T &ev, xstring evname_str) {
         bvariant_map::scoped js_j;
         js_helper::writer(*js_j, ev);
-        event(evname_str, *js_j);
+        widget::event(evname_str, *js_j);
     }
 
     template<typename T>
     inline void widget::event(const T &ev) {
         type_name_holder<T> evname;
         xstring evname_str(type_simplified_name(evname.value.data()));
-        widget::event(evname_str, ev);
+        widget::event(ev, evname_str);
+    }
+
+    template<typename T, typename ... ES>
+    inline void widget::event(const T &ev, ES ... es) {
+        xstring evname_str = js_helpers::es_hash_str<64>(es...);
+        widget::event(ev, evname_str);
     }
 
     template<typename T>
-    inline void event(xstring evname_str, const T &ev) {
+    inline void event(const T &ev, xstring evname_str) {
         bvariant_map::scoped js_j;
         js_helper::writer(*js_j, ev);
         js_call_event_handlers(evname_str, *js_j);
+    }
+
+    template<typename T, typename ... ES>
+    inline void event(const T &ev, ES ... es) {
+        xstring evname_str = js_helpers::es_hash_str<64>(es...);
+        ui::event(ev, evname_str);
     }
 
     template<typename T>
     inline void event(const T &ev) {
         type_name_holder<T> evname;
         xstring evname_str(type_simplified_name(evname.value.data()));
-        ui::event(evname_str, ev);
+        ui::event(ev, evname_str);
     }
 }

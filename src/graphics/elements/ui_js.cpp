@@ -32,16 +32,20 @@ bool __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags) {
 }
 ANK_FUNCTION_5(__ui_draw_button);
 
-void __ui_dialog_show_yesno(pcstr text, js_helpers::js_function_ref callback) {
-    xstring ref = callback.ref;
-    popup_dialog::show_yesno(text, [ref](bool accepted) {
-        if (!ref.empty()) {
-            js_call_function_bool(ref, accepted);
-            js_unref_function(ref);
+void __ui_dialog_show_yesno(pcstr text, js_helpers::js_function_ref cb_yes, js_helpers::js_function_ref cb_no) {
+    xstring yes_ref = cb_yes.ref;
+    xstring no_ref = cb_no.ref;
+    popup_dialog::show_yesno(text, [yes_ref, no_ref](bool accepted) {
+        if (accepted && !yes_ref.empty()) {
+            js_call_function_bool(yes_ref, true);
+            js_unref_function(yes_ref);
+        } else if (!accepted && !no_ref.empty()) {
+            js_call_function_bool(no_ref, false);
+            js_unref_function(no_ref);
         }
     });
 }
-ANK_FUNCTION_2(__ui_dialog_show_yesno)
+ANK_FUNCTION_3(__ui_dialog_show_yesno)
 
 bool __ui_window_is(int window_id) { return window_is((e_window_id)window_id); } ANK_FUNCTION_1(__ui_window_is)
 void __ui_window_advisors_show_advisor(int advisor) { window_advisors_show_advisor((e_advisor)advisor); } ANK_FUNCTION_1(__ui_window_advisors_show_advisor)

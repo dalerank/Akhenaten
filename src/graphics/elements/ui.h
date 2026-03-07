@@ -107,7 +107,8 @@ void fill_rect(vec2i offset, vec2i size, color c);
 vec2i current_offset();
 
 template<typename T> inline void event(const T &ev);
-template<typename T> inline void event(xstring evname, const T &ev);
+template<typename T> inline void event(const T &ev, xstring evname);
+template<typename T, typename ... ES> inline void event(const T &ev, ES ... es);
 
 pcstr str(int group, int id);
 pcstr str_from_key(pcstr key);
@@ -642,7 +643,8 @@ struct widget {
     inline void icon(vec2i pos, e_resource img) { ui::icon(pos, img); }
 
     template<typename T> inline void event(const T &ev);
-    template<typename T> inline void event(xstring evname, const T &ev);
+    template<typename T, typename ... Args> inline void event(const T &ev, Args ... args);
+    template<typename T> inline void event(const T &ev, xstring evname);
 
     void event(xstring evname, const bvariant_map &js_j);
 

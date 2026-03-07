@@ -47,3 +47,7 @@ function main_menu_continue_game() {
 function main_menu_quit_game() {
     ui.show_yesno("#popup_dialog_quit", __game_request_exit)
 }
+
+[es=(main_menu_screen, init)]
+function main_menu_on_init() {
+}
