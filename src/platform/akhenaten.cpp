@@ -277,18 +277,15 @@ static void setup() {
         exit(2);
     }
 
-    // Set language from command line if specified (after game_features::load() in check_valid())
+    config::refresh(g_config_arch);
+
     if (platform.is_emscripten()) {
         game_features::gameopt_language = "en";
-        game.reload_language();
     } else if (!g_args.get_language().empty()) {
-        game_features::gameopt_language = g_args.get_language();
         logs::info("Language set from command line: %s", g_args.get_language().c_str());
-        // Reload language to apply the change
+        game_features::gameopt_language = g_args.get_language();
         game.reload_language();
     }
-
-    config::refresh(g_config_arch);
 }
 
 static void teardown() {
