@@ -7,6 +7,7 @@
 #include <string.h>
 #include <cassert>
 #include <stdlib.h>
+#include <mutex>
 
 static const int DIRECTION_DELTA_PH[] = {-GRID_OFFSET(0, 1),
                                          GRID_OFFSET(1, -1),
