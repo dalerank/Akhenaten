@@ -22,8 +22,7 @@ void js_building_info_window::init(object_info &c) {
 
     verify_no_crash(!window_name.empty());
 
-    bstring64 init_event_name(window_name.c_str(), "_init");
-    ui.event(init_event_name.c_str(), building_info_window_init{pos, c.bid});
+    ui.event(building_info_window_init{pos, c.bid}, window_name.c_str(), __func__);
 }
 
 js_window_registry& js_window_registry::instance() {

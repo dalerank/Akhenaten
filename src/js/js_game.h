@@ -14,6 +14,7 @@
 #include "grid/grid.h"
 #include "grid/point.h"
 
+#include <algorithm>
 #include <vector>
 #include <string>
 #include <optional>
@@ -760,14 +761,13 @@ void js_register_console_command(js_State *J);
 
 template<typename T, typename S>
 inline void js_event(const T &ev, const S& evname_str) {
-    auto js_j = bvariant_map::acquire_from_pool();
+    bvariant_map::scoped js_j;
     js_helper::writer(*js_j, ev);
     js_call_event_handlers(evname_str.c_str(), *js_j);
-    bvariant_map::return_to_pool(js_j);
 }
 
 namespace js_helpers {
-    inline pcstr es2str(pcstr es) { return es; }
+    inline bstring64 es2str(pcstr es) { return { es }; }
 
     template<typename ES>
     inline bstring64 es2str(const ES &) {
@@ -775,17 +775,29 @@ namespace js_helpers {
         auto buf = type_enclosing_function_name(esname.value.data());
         return bstring64(buf);
     }
+
+    template<size_t S = 64, typename ... ES>
+    bstring<S> es_hash_str(ES ... es) {
+        hvector<bstring<S>, 4> parts;
+        (parts.push_back(es2str(es).c_str()), ...);
+        auto cstr_compare = [] (pcstr s1, pcstr s2) { return strcmp(s1, s2) < 0; };
+        std::sort(parts.begin(), parts.end(), cstr_compare);
+        bstring<S> result;
+        bool first = true;
+        for (const auto& p : parts) {
+            if (!first) {
+                result.cat("+");
+            }
+            result.cat(p.c_str());
+            first = false;
+        }
+        return result;
+    }
 }
 
-template<typename T, typename ES1, typename ES2>
-inline void js_event(const T &ev, ES1 es1, ES2 es2) {
-    bstring64 es1s = js_helpers::es2str(es1);
-    bstring64 es2s = js_helpers::es2str(es2);
-    if (strcmp(es1s, es2s) <= 0) {
-        js_event(ev, bstring64(es1s.c_str(), "+", es2s.c_str()));
-    } else {
-        js_event(ev, bstring64(es2s.c_str(), "+", es1s.c_str()));
-    }
+template<typename T, typename ... ES>
+inline void js_event(const T &ev, ES ... es) {
+    js_event(ev, js_helpers::es_hash_str<64>(es...));
 }
 
 template<typename T>

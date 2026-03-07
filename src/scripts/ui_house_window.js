@@ -289,7 +289,7 @@ function house_get_evolve_reason(house) {
     return et
 }
 
-[es=info_window_house_init]
+[es=(info_window_house, init)]
 function info_window_house_init_fill(window) {
     var house = city.get_house(window.bid)
     if (house.population <= 0)
@@ -331,7 +331,7 @@ function info_window_house_init_fill(window) {
     }
 }
 
-[es=info_window_vacant_lot_init]
+[es=(info_window_vacant_lot, init)]
 function info_window_vacant_lot_init_fill(window) {
     var house = city.get_house(window.bid)
     var textId = __map_road_within_radius(house.tile, 1, 2) ? 1 : 2

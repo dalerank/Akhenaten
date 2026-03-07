@@ -1062,6 +1062,8 @@ endif()
 if(MSVC)
     include_directories(ext/bugtrap)
     set_target_properties(${GAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${GAME_WORKING_DIRECTORY}")
+    target_sources(${GAME} PRIVATE ${CMAKE_SOURCE_DIR}/common.natvis)
+    set_source_files_properties(${CMAKE_SOURCE_DIR}/common.natvis PROPERTIES VS_TOOL_OVERRIDE "natvis")
 endif()
 
 if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang"))

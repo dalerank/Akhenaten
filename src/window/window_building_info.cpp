@@ -136,6 +136,7 @@ void building_info_window::init(object_info &c) {
     building *b = building_get(c);
     set_debug_building_id(b->id);
 
+    ui.event(building_info_window_init{ pos, c.bid }, section(), __func__);
     ui.event(building_info_window_init{ pos, c.bid });
 
     xstring correct_help_id = help_id;
