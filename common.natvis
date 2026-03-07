@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <!-- xstring: show as plain string -->
+  <Type Name="xstring">
+    <DisplayString Condition="_p == 0">(empty)</DisplayString>
+    <DisplayString Condition="_p != 0">{_p->value, sb}</DisplayString>
+    <Expand>
+      <Item Name="[value]" Condition="_p != 0">{_p->value, sb}</Item>
+      <Item Name="[empty]" Condition="_p == 0">(null)</Item>
+    </Expand>
+  </Type>
+  <Type Name="xstring_value">
+    <DisplayString>{value, sb}</DisplayString>
+    <Expand>
+      <Item Name="value">value</Item>
+      <Item Name="length">length</Item>
+      <Item Name="crc">crc</Item>
+    </Expand>
+  </Type>
+</AutoVisualizer>
