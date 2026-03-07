@@ -8,6 +8,8 @@
 #include "game/simulation_time.h"
 #include "game/game_events.h"
 #include "core/system_time.h"
+#include "core/inplace_function.h"
+#include "core/hvector.h"
 
 enum game_option {
     game_opt_none = 0,
@@ -42,6 +44,8 @@ struct event_game_mission_pre_load {};
 struct event_game_scripts_was_reloaded {};
 
 struct game_t {
+    using serial_event_t = inplace_function<void()>;
+
     enum {
         MAX_ANIM_TIMERS = 51
     };
@@ -110,9 +114,14 @@ struct game_t {
     void decrease_scroll_speed();
 
     void reload_language();
+    void add_frame_end_event(serial_event_t ev);
+    void execute_frame_end_events();
 
     threading::thread_pool mtrpc;
     threading::thread_pool mt;
+
+    std::mutex frame_end_events_mutex;
+    hvector<serial_event_t, 16> frame_end_events;
 
     ::painter painter();
 };

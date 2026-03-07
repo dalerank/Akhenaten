@@ -280,6 +280,19 @@ void game_t::reload_language() {
     locale_determine_language();
 }
 
+void game_t::add_frame_end_event(serial_event_t ev) {
+    std::lock_guard<std::mutex> lock(frame_end_events_mutex);
+    frame_end_events.push_back(std::move(ev));
+}
+
+void game_t::execute_frame_end_events() {
+    std::lock_guard<std::mutex> lock(frame_end_events_mutex);
+    for (auto &ev : frame_end_events) {
+        ev();
+    }
+    frame_end_events.clear();
+}
+
 static int get_elapsed_ticks() {
     if (game.paused || !city_has_loaded) {
         return 0;
@@ -424,6 +437,8 @@ void game_t::frame_begin() {
 
 void game_t::frame_end() {
     animation = true;
+
+    execute_frame_end_events();
 }
 
 void game_t::time_init(int year) {
