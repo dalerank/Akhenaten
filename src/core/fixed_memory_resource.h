@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <memory_resource>
+#include <cstdio>
 
 // A fixed memory resource where initial allocations come from a fixed buffer, with later allocations just doing new / delete.
 // Used with locally defined std::pmr types to allow intial container allocations to come from stack memory. (eg std::pmr::vector that is just a temporary buffer)
