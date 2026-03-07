@@ -1,6 +1,8 @@
 log_info("akhenaten: ui advisor labor started")
 
+[es=advisor_window]
 advisor_labors_window {
+    advisor: ADVISOR_LABOR
     ui {
         background      : outer_panel({size[40, 27]})
 
