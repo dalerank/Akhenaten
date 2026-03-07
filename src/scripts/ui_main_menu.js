@@ -4,12 +4,12 @@ main_menu_screen {
 	ui {
 		background    : { type:"background", path:"pharaoh_unloaded/title_00001" }
 
-		continue_game : large_button({ pos:mbutton(0), size[256, 25], text[13, 5]})
+		continue_game : large_button({ pos:mbutton(0), size[256, 25], text[13, 5], onclick: main_menu_continue_game })
 		select_player : large_button({ pos:mbutton(1), size[256, 25], text[30, 0], onclick: window_player_selection_show })
 		show_records  : large_button({ pos:mbutton(2), size[256, 25], text[30, 5], onclick: window_records_show })
 		show_config   : large_button({ pos:mbutton(3), size[256, 25], text[2,  0], onclick: window_features_show })
 		show_mods     : large_button({ pos:mbutton(4), size[256, 25], text:"#main_menu_mods", onclick: window_mods_show })
-		quit_game     : large_button({ pos:mbutton(5), size[256, 25], text[30, 4], onclick: quit_game })
+		quit_game     : large_button({ pos:mbutton(5), size[256, 25], text[30, 4], onclick: main_menu_quit_game })
 
 		discord 	  : image_button({ pos[sw(-100), sh(-50)], size[48, 48], icon_texture:"!discord", scale:0.75
 							           	onclick: function() { __platform_open_url("https://discord.gg/HS4njmBvpb") }
@@ -32,6 +32,18 @@ main_menu_screen {
 	}
 }
 
-function quit_game() {
+function main_menu_continue_game() {
+	var last_save = game_features.gameopt_last_save_filename
+    var last_player = game_features.gameopt_last_player
+	log_info("main menu show" + last_player + " " + last_save)
+    if (last_save && last_player) {
+        __game_set_player_name(last_player)
+        if (__game_load_savegame(last_save)) {
+            ui.window_city_show()
+        }
+    }
+}
+
+function main_menu_quit_game() {
     ui.show_yesno("#popup_dialog_quit", __game_request_exit)
 }

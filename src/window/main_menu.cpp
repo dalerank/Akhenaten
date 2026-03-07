@@ -9,7 +9,6 @@
 #include "graphics/screen.h"
 #include "graphics/image.h"
 #include "game/game.h"
-#include "game/settings.h"
 #include "game/game_config.h"
 #include "core/app.h"
 #include "window/records.h"
@@ -17,9 +16,7 @@
 #include "window/player_selection.h"
 #include "window/file_dialog.h"
 #include "window/window_features.h"
-#include "window/window_city.h"
 #include "sound/sound.h"
-#include "io/gamestate/boilerplate.h"
 #include "resource/icons.h"
 #include "js/js_game.h"
 #include <regex>
@@ -52,13 +49,13 @@ std::string main_menu_download_changelog() {
     CURLcode res;
     std::string readBuffer;
     std::string url = "https://raw.githubusercontent.com/dalerank/Akhenaten/master/changelog.txt";
-    
+
     curl = curl_easy_init();
     if (!curl) {
         logs::error("curl_easy_init failed");
         return "Failed to initialize HTTP client.";
     }
-    
+
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
@@ -67,21 +64,21 @@ std::string main_menu_download_changelog() {
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
     curl_easy_setopt(curl, CURLOPT_USERAGENT, "Akhenaten/1.0");
     curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
-    
+
     // Windows Schannel will automatically use system certificates
     res = curl_easy_perform(curl);
-    
+
     long httpCode = 0;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
-    
+
     if (res != CURLE_OK) {
         logs::error("curl_easy_perform failed: %s", curl_easy_strerror(res));
         curl_easy_cleanup(curl);
         return "Failed to download changelog from GitHub.";
     }
-    
+
     curl_easy_cleanup(curl);
-    
+
     if (httpCode == 200 && !readBuffer.empty()) {
         logs::info("Changelog downloaded successfully (%zu bytes)", readBuffer.size());
         return readBuffer;
@@ -106,13 +103,13 @@ int main_menu_get_total_commits(pcstr owner, pcstr repo) {
     url += "/";
     url += repo;
     url += "/commits?per_page=1";
-    
+
     curl = curl_easy_init();
     if (!curl) {
         logs::error("curl_easy_init failed");
         return -1;
     }
-    
+
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
@@ -123,25 +120,25 @@ int main_menu_get_total_commits(pcstr owner, pcstr repo) {
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
     curl_easy_setopt(curl, CURLOPT_USERAGENT, "Akhenaten/1.0");
     curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
-    
+
     // Windows Schannel will automatically use system certificates
     res = curl_easy_perform(curl);
-    
+
     long httpCode = 0;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
-    
+
     curl_easy_cleanup(curl);
-    
+
     if (res != CURLE_OK || httpCode != 200) {
-        logs::error("Unable to fetch commits (curl error: %s, HTTP code: %ld)", 
+        logs::error("Unable to fetch commits (curl error: %s, HTTP code: %ld)",
                    res != CURLE_OK ? curl_easy_strerror(res) : "OK", httpCode);
         return -1;
     }
-    
+
     // Parse Link header for pagination info
     std::regex linkRegex(R"(<([^>]+)>; rel="last")");
     std::smatch match;
-    
+
     if (std::regex_search(headers, match, linkRegex)) {
         std::string lastPageUrl = match[1].str();
         std::regex pageRegex(R"(&page=(\d+))");
@@ -149,7 +146,7 @@ int main_menu_get_total_commits(pcstr owner, pcstr repo) {
             return std::stoi(match[1].str());
         }
     }
-    
+
     // If no pagination info, assume 1 page
     return 1;
 #else
@@ -212,14 +209,6 @@ void main_menu_screen::init() {
         game_features::gameopt_last_game_version.set(current_commit);
     });
 
-    ui["continue_game"].onclick([] {
-        const xstring last_save = game_features::gameopt_last_save_filename.to_string();
-        const xstring last_player = game_features::gameopt_last_player.to_string();
-        g_settings.set_player_name((const uint8_t *)last_player.c_str());
-        if (GamestateIO::load_savegame(last_save.c_str())) {
-            window_city_show();
-        }
-    });
 }
 
 void main_menu_screen::show(bool restart_music) {
