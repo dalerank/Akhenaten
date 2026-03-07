@@ -21,7 +21,7 @@ namespace ui {
 
     template<typename T, typename ... ES>
     inline void widget::event(const T &ev, ES ... es) {
-        xstring evname_str = js_helpers::es_hash_str<64>(es...);
+        xstring evname_str = js_helpers::es_hash_str(es...).c_str();
         widget::event(ev, evname_str);
     }
 
@@ -34,7 +34,7 @@ namespace ui {
 
     template<typename T, typename ... ES>
     inline void event(const T &ev, ES ... es) {
-        xstring evname_str = js_helpers::es_hash_str<64>(es...);
+        xstring evname_str = js_helpers::es_hash_str(es...).c_str();
         ui::event(ev, evname_str);
     }
 
