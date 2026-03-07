@@ -20,7 +20,7 @@ main_menu_screen {
 		                             })
 		version_number: text({pos[18, sh(-30)], text: game.version, font: FONT_SMALL_PLAIN, color: 0xffb3b3b3})
 
-		update_panel  : outer_panel({size[20, 27], enabled:false,
+		update_panel  : outer_panel({ size[20, 27], enabled:false,
 			ui {
 				update_game : large_button({ pos[32, 16], size[256, 25], text:"update now", enabled: false
 					                         onclick: __game_download_latest_version
@@ -49,5 +49,22 @@ function main_menu_quit_game() {
 }
 
 [es=(main_menu_screen, init)]
-function main_menu_on_init() {
+function main_menu_on_init(window) {
+}
+
+[es=event_totals_commits_loaded]
+function main_menu_download_version(window) {
+	log_info("main_menu_download_version: " + window.current_commit)
+	if (window.current_commit <= 1)
+		return
+
+	if (game_features.gameopt_last_game_version == window.current_commit)
+		return
+
+	window.update_panel.enabled = true
+	window.new_version.enabled = true
+	window.update_game.enabled = true
+	window.new_version.text = "" + window.current_commit
+
+	game_features.gameopt_last_game_version = window.current_commit
 }

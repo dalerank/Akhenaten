@@ -20,6 +20,7 @@
 #include "window/window_city.h"
 #include "sound/sound.h"
 #include "io/gamestate/boilerplate.h"
+#include "graphics/elements/ui_js.h"
 #include "resource/icons.h"
 #include "js/js_game.h"
 #include <regex>
@@ -29,6 +30,11 @@
 #endif
 
 main_menu_screen g_main_menu;
+
+struct event_totals_commits_loaded { int current_commit; };
+struct event_changelog_loaded { xstring change_log; };
+ANK_REGISTER_STRUCT_WRITER(event_totals_commits_loaded, current_commit);
+ANK_REGISTER_STRUCT_WRITER(event_changelog_loaded, change_log);
 
 #ifdef GAME_HAVE_CURL
 // Callback function for curl to write response data
@@ -178,9 +184,10 @@ void main_menu_screen::draw_foreground(UiFlags flags) {
     ui.draw();
 }
 
+
 void main_menu_screen::init() {
     // Download changelog in background
-    game.mt.detach_task([&] () {
+    game.mt.detach_task([&, this] () {
         std::string changelog = main_menu_download_changelog();
         if (ui.contains("changelog")) {
             ui["changelog"] = changelog.c_str();
@@ -192,24 +199,9 @@ void main_menu_screen::init() {
     // Check for updates
     game.mt.detach_task([&] () {
         int current_commit = main_menu_get_total_commits("dalerank", "Akhenaten");
-
-        if (current_commit <= 1) {
-            return;
-        }
-
-        const xstring last_version_str = game_features::gameopt_last_game_version.to_string();
-        const int last_version = std::atoi(last_version_str.c_str());
-
-        if (last_version == current_commit) {
-            return;
-        }
-
-        ui["update_panel"].enabled = true;
-        ui["new_version"].enabled = true;
-        ui["update_game"].enabled = true;
-        ui["reload_changelog"].enabled = true;
-        ui["new_version"] = bstring32(current_commit);
-        game_features::gameopt_last_game_version.set(current_commit);
+        game.add_frame_end_event([this, current_commit] () {
+            ui.event(event_totals_commits_loaded{ current_commit });
+        });
     });
 
     autoconfig_window::init();

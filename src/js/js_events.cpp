@@ -11,6 +11,7 @@
 #include "city/city_animals.h"
 #include "city/city_population.h"
 #include "building/building_palace.h"
+#include "game/game.h"
 #include "js/js_game.h"
 #include "js/js_struct.h"
 #include "js/js.h"
