@@ -51,6 +51,7 @@ public:
     void music_stop();
     void play_track(const xstring track);
     void play_effect(int effect);
+    void stop_city_channels();
 
 public:
     void on_sound_effect(event_sound_effect);

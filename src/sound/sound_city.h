@@ -109,6 +109,7 @@ struct city_sounds_t {
 };
 
 void sound_city_init();
+void sound_city_stop();
 const city_sounds_t &sound_city_channels();
 void sound_city_mark_building_view(building* b, int direction);
 void sound_city_mark_terrain_view(int terrain, int grid_offset, int direction);

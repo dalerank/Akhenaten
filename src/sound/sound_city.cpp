@@ -41,6 +41,10 @@ void sound_city_init() {
     }
 }
 
+void sound_city_stop() {
+    g_sound.stop_city_channels();
+}
+
 int building_type_to_channel(building *b) {
     switch (b->type) {
     default:

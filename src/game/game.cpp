@@ -447,7 +447,9 @@ void game_t::time_init(int year) {
 
 void game_t::sound_frame_begin() {
     OZZY_PROFILER_FUNCTION();
-    sound_city_play();
+    if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY) || window_is(WINDOW_SLIDING_SIDEBAR)) {
+        sound_city_play();
+    }
 }
 
 void game_t::increase_game_speed() {

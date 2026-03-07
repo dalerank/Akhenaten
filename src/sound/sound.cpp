@@ -3,6 +3,7 @@
 #include <SDL_mixer.h>
 
 #include "sound/sound.h"
+#include "sound/channel.h"
 #include "content/file_formats.h"
 #include "core/log.h"
 #include "game/settings.h"
@@ -487,6 +488,15 @@ void sound_manager_t::stop_channel(int channel) {
     Mix_HaltChannel(channel);
     Mix_FreeChunk((Mix_Chunk*)ch->chunk);
     ch->chunk = 0;
+}
+
+void sound_manager_t::stop_city_channels() {
+    if (!initialized) {
+        return;
+    }
+    for (int i = SOUND_CHANNEL_CITY_MIN; i <= SOUND_CHANNEL_CITY_MAX; i++) {
+        stop_channel(i);
+    }
 }
 
 void sound_manager_t::free_custom_audio_stream() {
