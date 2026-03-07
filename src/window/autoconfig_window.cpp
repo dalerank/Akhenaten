@@ -7,6 +7,7 @@
 #include "js/js_struct.h"
 #include "graphics/window.h"
 #include "input/input.h"
+#include <algorithm>
 #include <mutex>
 
 using autoconfig_windows = std::vector<autoconfig_window *>;
@@ -57,7 +58,7 @@ void autoconfig_window::archive_load(archive arch) {
 int autoconfig_window::ui_handle_mouse(const mouse *m) {
     ui.begin_widget(pos);
     bool handled = ui::handle_mouse(m);
-    
+
     if (allow_rmb_goback && !handled) {
         const hotkeys *h = hotkey_state();
         if (input_go_back_requested(m, h)) {
@@ -66,7 +67,7 @@ int autoconfig_window::ui_handle_mouse(const mouse *m) {
             return 0;
         }
     }
-    
+
     ui.end_widget();
 
     return handled ? 1 : 0;
