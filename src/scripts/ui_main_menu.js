@@ -68,3 +68,10 @@ function main_menu_download_version(window) {
 
 	game_features.gameopt_last_game_version = window.current_commit
 }
+
+[es=event_changelog_loaded]
+function main_menu_download_changelog(window) {
+	log_info("main_menu_download_changelog: " + window.change_log)
+	window.changelog.text = window.change_log
+	window.changelog.enabled = true
+}

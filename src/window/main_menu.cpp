@@ -184,16 +184,13 @@ void main_menu_screen::draw_foreground(UiFlags flags) {
     ui.draw();
 }
 
-
 void main_menu_screen::init() {
     // Download changelog in background
     game.mt.detach_task([&, this] () {
-        std::string changelog = main_menu_download_changelog();
-        if (ui.contains("changelog")) {
-            ui["changelog"] = changelog.c_str();
-            ui["changelog"].enabled = true;
-            logs::info("Changelog loaded and displayed");
-        }
+        xstring changelog = main_menu_download_changelog().c_str();
+        game.add_frame_end_event([this, changelog] () {
+            ui.event(event_changelog_loaded{ changelog });
+        });        
     });
 
     // Check for updates
