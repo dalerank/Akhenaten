@@ -24,7 +24,7 @@ static int get_button_min(const mouse* m, vec2i pos, const generic_button* butto
     return 0;
 }
 
-int generic_buttons_handle_mouse(const mouse* m, vec2i pos, const generic_button* buttons, int num_buttons, int* focus_button_id) {
+int generic_buttons_handle_mouse(const mouse* m, vec2i pos, const generic_button* buttons, int num_buttons, int* focus_button_id, int* lmb_click) {
     int button_id = get_button(m, pos, buttons, num_buttons);
     if (focus_button_id) {
         *focus_button_id = button_id;
@@ -49,6 +49,9 @@ int generic_buttons_handle_mouse(const mouse* m, vec2i pos, const generic_button
         }
         if (button._onclick_void) {
             button._onclick_void();
+        }
+        if (lmb_click) {
+            *lmb_click = 1;
         }
     } else if (m->right.went_up) {
         if (button.right_click_handler) {

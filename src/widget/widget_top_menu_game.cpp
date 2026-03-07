@@ -353,9 +353,7 @@ void widget_top_menu_handle_input(const mouse* m, const hotkeys* h) {
     }
 
     int button_id = 0;
-    int handled = false;
-
-    handled = generic_buttons_handle_mouse(m, { top_menu_widget.offset_rotate, 0}, orientation_buttons_ph, 3, &button_id);
+    int handled = generic_buttons_handle_mouse(m, { top_menu_widget.offset_rotate, 0}, orientation_buttons_ph, 3, &button_id, nullptr);
     if (button_id) {
         orientation_button_state = button_id;
         if (handled)

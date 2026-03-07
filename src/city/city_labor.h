@@ -12,7 +12,8 @@ struct labor_category {
     int buildings;
     int priority;
     int total_houses_covered;
-} ;
+};
+ANK_CONFIG_PROPERTY(labor_category, workers_needed, workers_allocated, priority)
 
 struct city_labor_t {
     int32_t workers_available;

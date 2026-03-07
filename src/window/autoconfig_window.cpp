@@ -12,8 +12,8 @@
 using autoconfig_windows = std::vector<autoconfig_window *>;
 autoconfig_windows* g_autoconfig_windows = nullptr;
 
-struct window_config_init { vec2i pos; };
-ANK_REGISTER_STRUCT_WRITER(window_config_init, pos);
+struct window_info{ vec2i pos; };
+ANK_REGISTER_STRUCT_WRITER(window_info, pos);
 
 autoconfig_windows& autoconfig_registry() {
     if (!g_autoconfig_windows) {
@@ -89,11 +89,12 @@ int autoconfig_window::draw_background(UiFlags flags) {
 void autoconfig_window::ui_draw_foreground(UiFlags flags) {
     ui.begin_widget(pos);
     ui.draw(flags);
+    ui.event(window_info{ pos }, get_section(), __func__);
     ui.end_widget();
 }
 
 void autoconfig_window::init() {
-    ui.event(window_config_init{ pos }, get_section(), __func__);
+    ui.event(window_info{ pos }, get_section(), __func__);
 
     window_message_setup_help_id(help_id);
     _is_inited = true;

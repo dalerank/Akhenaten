@@ -168,7 +168,7 @@ int scrollable_list::input_handle(const mouse* m) {
     }
 
     int last_focused = focus_button_id;
-    int handled_button_id = generic_buttons_handle_mouse(m, vec2i{0, 0}, list_buttons, ui_params.view_items, &focus_button_id);
+    int handled_button_id = generic_buttons_handle_mouse(m, vec2i{0, 0}, list_buttons, ui_params.view_items, &focus_button_id, nullptr);
     if (handled_button_id > 0 && get_focused_entry_idx() < num_total_entries) {
         generic_button* button = &list_buttons[handled_button_id - 1];
         if (m->left.went_up) {

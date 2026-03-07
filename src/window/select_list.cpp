@@ -125,7 +125,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     //
     //} else 
     {
-        if (generic_buttons_handle_mouse(m, {data.x, data.y}, buttons_list1, data.items.size(), &data.focus_button_id))
+        if (generic_buttons_handle_mouse(m, {data.x, data.y}, buttons_list1, data.items.size(), &data.focus_button_id, nullptr))
             return;
     }
     if (input_go_back_requested(m, h))

@@ -9,6 +9,7 @@
 #include "window/window_build_menu.h"
 #include "window/message_dialog_new.h"
 #include "window/window_advisors.h"
+#include "window/window_labor_priority.h"
 #include "window/popup_dialog.h"
 #include "city/city_message.h"
 #include "city/city_building_menu_ctrl.h"
@@ -26,9 +27,17 @@ void __ui_label_colored(pcstr text, vec2i pos, int font, unsigned int c) { ui::l
 
 bool __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags) {
     const vec2i offset = ui::current_offset();
+    const bool is_underlying = g_window_manager.underlying_windows_redrawing > 0;
+    flags |= is_underlying ? UiFlags_Readonly : UiFlags_None;
     auto &btn = ui::button(text, pos, size, fonts_vec{ (e_font)font }, flags);
-    const bool handled = generic_buttons_handle_mouse(&mouse::ref(), offset, &btn, 1, nullptr);
-    return handled;
+
+    if (is_underlying) {
+        return false;
+    }
+
+    int lmb_click = 0;
+    generic_buttons_handle_mouse(&mouse::ref(), offset, &btn, 1, nullptr, &lmb_click);
+    return !!lmb_click;
 }
 ANK_FUNCTION_5(__ui_draw_button);
 
@@ -52,6 +61,7 @@ void __ui_window_advisors_show_advisor(int advisor) { window_advisors_show_advis
 void __ui_draw_label(pcstr text, vec2i pos, int font) { ui::label(text, pos, (e_font)font); } ANK_FUNCTION_3(__ui_draw_label);
 void __ui_draw_line(bool hline, vec2i pos, int size) { ui::line(hline, pos, size, 0xff000000); } ANK_FUNCTION_3(__ui_draw_line);
 void __ui_window_city_show() { window_city_show(); } ANK_FUNCTION(__ui_window_city_show)
+void __window_labor_priority_show(int category) { window_labor_priority_show(category); } ANK_FUNCTION_1(__window_labor_priority_show)
 
 void __ui_draw_texture(vec2i pos, int img_id) {
     ::painter ctx = game.painter();

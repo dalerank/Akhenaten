@@ -22,6 +22,15 @@ city {
     labor {
         __property_getter: __city_get_labor_property
         @unemployment_percentage { }
+
+        get_category: function(index) {
+            return {
+                __property_getter: function(property) { return __city_get_labor_category_property(index, property) }
+                @workers_needed { }
+                @workers_allocated { }
+                @priority { }
+            }
+        }
     }
 
     rating {
