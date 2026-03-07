@@ -19,6 +19,7 @@
 #include "window/window_features.h"
 #include "window/window_city.h"
 #include "sound/sound.h"
+#include "sound/sound_city.h"
 #include "io/gamestate/boilerplate.h"
 #include "graphics/elements/ui_js.h"
 #include "resource/icons.h"
@@ -190,7 +191,7 @@ void main_menu_screen::init() {
         xstring changelog = main_menu_download_changelog().c_str();
         game.add_frame_end_event([this, changelog] () {
             ui.event(event_changelog_loaded{ changelog });
-        });        
+        });
     });
 
     // Check for updates
@@ -205,6 +206,8 @@ void main_menu_screen::init() {
 }
 
 void main_menu_screen::show(bool restart_music) {
+    sound_city_stop();
+    sound_city_init();
     if (restart_music) {
         g_sound.play_intro();
     }
