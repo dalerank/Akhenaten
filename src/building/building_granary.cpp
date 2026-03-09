@@ -537,20 +537,13 @@ void building_granary::bind_dynamic(io_buffer *iob, size_t version) {
     }
 }
 
-void building_granary::on_place_checks() {
-    construction_warnings warnings;
-    const bool has_bazaar = g_city.buildings.count_active(BUILDING_BAZAAR) > 0;
-
-    warnings.add_if(!has_bazaar, "#build_bazaars_to_distribute_food");
-}
-
 void building_granary::spawn_figure() {
     check_labor_problem();
     tile2i road = map_get_road_access_tile(tile(), size());
     if (!road.valid()) {
         return;
     }
-    
+
     common_spawn_labor_seeker(current_params().min_houses_coverage);
     if (has_figure_of_type(0, FIGURE_STORAGEYARD_CART)) {
         return;
