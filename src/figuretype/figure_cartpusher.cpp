@@ -17,6 +17,7 @@
 #include "game/resource.h"
 #include "game/game.h"
 #include "graphics/image.h"
+#include "grid/figure.h"
 #include "grid/road_network.h"
 #include "grid/terrain.h"
 #include "window/building/figures.h"
@@ -456,6 +457,26 @@ void figure_cartpusher::before_poof() {
 
 void figure_cartpusher::figure_action() {
     OZZY_PROFILER_FUNCTION();
+
+    // Yield to cartpushers with a higher ID sharing the same tile to reduce visual overlap
+    if (!!game_features::gameplay_change_cartpushers_yield_by_id) {
+        int check_id = map_figure_id_get(tile());
+        while (check_id > 0) {
+            if (check_id != id()) {
+                figure *other = figure_get(check_id);
+                if (other->type == FIGURE_CART_PUSHER && check_id > id()) {
+                    return;
+                }
+            }
+            figure *other = figure_get(check_id);
+            int next_id = other->next_figure;
+            if (next_id == check_id || next_id == 0) {
+                break;
+            }
+            check_id = next_id;
+        }
+    }
+
     building* b = home();
     int road_network_id = map_road_network_get(tile());
 

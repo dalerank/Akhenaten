@@ -1,6 +1,7 @@
 #include "game_config.h"
 
 #include "js/js_game.h"
+#include "core/profiler.h"
 
 std::optional<bvariant> __game_feature_get(xstring feature_name) {
     auto feature = game_features::find(feature_name);

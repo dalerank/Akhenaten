@@ -98,6 +98,7 @@ namespace game_features {
     game_feature gameplay_jewels_workshops_culture_bonus{ "gameplay_jewels_workshops_culture_bonus", "#TR_CONFIG_JEWELS_WORKSHOPS_CULTURE_BONUS", true };
     game_feature gameui_overlay_show_gray_buildings{ "gameui_overlay_show_gray_buildings", "#TR_CONFIG_OVERLAY_SHOW_GRAY_BUILDINGS", false };
     game_feature gameplay_prevent_delete_near_burning_ruins{ "gameplay_prevent_delete_near_burning_ruins", "#TR_CONFIG_PREVENT_DELETE_NEAR_BURNING_RUINS", true };
+    game_feature gameplay_change_cartpushers_yield_by_id{ "gameplay_change_cartpushers_yield_by_id", "#TR_CONFIG_CARTPUSHERS_YIELD_BY_ID", true };
 
     custom_span<game_feature*> all() {
         return { _features.data(), _features.size() };
