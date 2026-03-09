@@ -46,19 +46,11 @@ declare_console_command_p(collapse_no) {
 declare_console_command_p(damage_no) {
     buildings_valid_do([&] (building &b) {
         b.structure_damage = 0;
-    });    
+    });
 }
 
 void building_architect_post::spawn_figure() {
     common_spawn_roamer(FIGURE_ARCHITECT, current_params().min_houses_coverage, (e_figure_action)ACTION_60_ENGINEER_CREATED);
-}
-
-void building_architect_post::update_graphic() {
-    const xstring& animkey = can_play_animation()
-        ? animkeys().work
-        : animkeys().none;
-    set_animation(animkey);
-    building_impl::update_graphic();
 }
 
 bool building_architect_post::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
