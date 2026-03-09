@@ -3,12 +3,17 @@
 #include "figure/figure.h"
 
 enum e_herbalist_action {
-    ACTION_10_HERBALIST_GOING = 10,
-    ACTION_60_HERBALIST_CREATED = 60,
-    ACTION_61_HERBALIST_ENTERING_EXITING = 61,
-    ACTION_62_HERBALIST_ROAMING = 62,
-    ACTION_63_HERBALIST_RETURNING = 63,
+    ACTION_0_HERBALIST_NONE = 0,
+    ACTION_1_HERBALIST_GOING = 1,
+    ACTION_2_HERBALIST_CREATED = 2,
+    ACTION_3_HERBALIST_ENTERING_EXITING = 3,
+    ACTION_4_HERBALIST_ROAMING = 4,
+    ACTION_5_HERBALIST_RETURNING = 5,
+
+    ACTION_6_HERBALIST_MAX
 };
+using figure_herbalist_action_tokens_t = token_holder<e_herbalist_action, ACTION_0_HERBALIST_NONE, ACTION_6_HERBALIST_MAX>;
+extern const figure_herbalist_action_tokens_t figure_herbalist_action_tokens;
 
 class figure_herbalist : public figure_impl {
 public:

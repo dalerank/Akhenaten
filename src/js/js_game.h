@@ -756,14 +756,19 @@ pcstr js_call_function_with_result(xstring js_ref, int param1, int param2);
 int js_game_emit(js_State *J, pcstr event_name);
 void js_register_game_handlers(xstring missionid);
 void js_call_event_handlers(const xstring &event_name, const bvariant_map &object);
+bool js_has_event_handlers(const xstring &event_name);
 void js_register_entity_systems();
 void js_register_console_command(js_State *J);
 
-template<typename T, typename S>
-inline void js_event(const T &ev, const S& evname_str) {
+template<typename T>
+inline void js_event(const T &ev, const xstring& evname_str) {
+    if (!js_has_event_handlers(evname_str)) {
+        return;
+    }
+
     bvariant_map::scoped js_j;
     js_helper::writer(*js_j, ev);
-    js_call_event_handlers(evname_str.c_str(), *js_j);
+    js_call_event_handlers(evname_str, *js_j);
 }
 
 namespace js_helpers {
@@ -797,11 +802,11 @@ namespace js_helpers {
 
 template<typename T, typename ... ES>
 inline void js_event(const T &ev, ES ... es) {
-    js_event(ev, js_helpers::es_hash_str<64>(es...));
+    js_event(ev, xstring(js_helpers::es_hash_str<64>(es...)));
 }
 
 template<typename T>
 inline void js_event(const T &ev) {
     type_name_holder<T> evname;
-    js_event(ev, type_simplified_name(evname.value.data()));
+    js_event(ev, xstring(type_simplified_name(evname.value.data())));
 }

@@ -88,6 +88,10 @@ void building_impl::on_post_load() {
     remove_dead_figures();
 }
 
+void building_impl::spawn_figure() {
+    es(__func__);
+}
+
 void building_impl::update_day() {
     update_graphic();
     remove_dead_figures();
@@ -177,6 +181,10 @@ void building_impl::update_count() const {
 }
 
 void building_impl::update_map_orientation(int orientation) {
+}
+
+e_sound_channel_city building_impl::sound_channel() const {
+    return current_params().sound_channel;
 }
 
 void building_impl::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, color mask) {

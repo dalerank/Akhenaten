@@ -129,6 +129,11 @@ void js_game_get_image(js_State *J) {
     js_pushnumber(J, img->height); js_setproperty(J, -2, "height");
 }
 
+bool js_has_event_handlers(const xstring &event_name) {
+    auto it = event_type_handlers.find(event_name);
+    return (it != event_type_handlers.end());
+}
+
 void js_call_event_handlers(const xstring &event_name, const bvariant_map &object) {
     auto it = event_type_handlers.find(event_name);
     if (it == event_type_handlers.end()) {
