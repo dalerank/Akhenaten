@@ -172,6 +172,7 @@ public:
     short attacker_id2;
     short opponent_id;
     vec2i main_cached_pos;
+    vec2i main_sort_pixel;
     vec2i cart_cached_pos;
 
     uint8_t routing_try_reroute_counter;
@@ -323,6 +324,7 @@ public:
 
 
     vec2i adjust_pixel_offset(const vec2i pixel);
+    vec2i crowd_pixel_offset() const;
     vec2i main_sprite_pixel() const;
     vec2i cart_sprite_pixel() const;
 
