@@ -6,12 +6,12 @@
 
 /**
  * @brief Building class representing an Architect Post in the city
- * 
+ *
  * The Architect Post is a specialized building that provides architectural services
  * to the city. It spawns architect figures who can perform various construction
  * and maintenance tasks throughout the city. This building is essential for
  * maintaining and improving the city's infrastructure.
- * 
+ *
  * Key features:
  * - Spawns architect figures for city maintenance
  * - Displays damage overlay to show building condition
@@ -31,34 +31,21 @@ public:
 
     /**
      * @brief Spawns architect figures from this building
-     * 
+     *
      * Creates architect figures that will perform various tasks around the city
      * such as building maintenance, construction assistance, and infrastructure
      * improvements. The spawning behavior depends on the building's state and
      * the city's needs.
      */
     virtual void spawn_figure() override;
-    
-    /**
-     * @brief Updates the building's visual appearance
-     * 
-     * Refreshes the building's graphics based on its current state
-     */
-    virtual void update_graphic() override;
-    
-    /**
-     * @brief Returns the sound channel for this building's audio
-     * @return SOUND_CHANNEL_CITY_ENGINEERS_POST - engineer post sound effects
-     */
-    virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_ENGINEERS_POST; }
-    
+
     /**
      * @brief Draws building ornaments and animations with height consideration
-     * 
+     *
      * Renders decorative elements and animated components of the building,
      * taking into account the building's height and position for proper
      * visual layering and depth effects.
-     * 
+     *
      * @param ctx The painter context for rendering
      * @param point The screen position to draw at
      * @param tile The tile position of the building
