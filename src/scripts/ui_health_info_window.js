@@ -8,7 +8,7 @@ health_info_window {
     })
 }
 
-[es=health_info_window_init]
+[es=(health_info_window, init)]
 function health_info_window_on_init(window) {
     var b = city.get_building(window.bid)
     var reason = { group: b.meta_text_id, id: 6 }
