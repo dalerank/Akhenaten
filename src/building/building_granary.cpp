@@ -514,7 +514,7 @@ void building_granary_draw_anim(building &b, vec2i point, tile2i tile, color mas
 }
 
 void building_granary::on_create(int orientation) {
-    runtime_data().resource_stored[RESOURCE_NONE] = capacity_stored();
+    runtime_data().resource_stored[RESOURCE_NONE] = current_params().max_capacty_stored;
     base.storage_id = building_storage_create(BUILDING_GRANARY);
 }
 
@@ -524,7 +524,7 @@ void building_granary::on_post_load() {
 
 void building_granary::update_day() {
     building_impl::update_day();
-    runtime_data().resource_stored[RESOURCE_NONE] = capacity_stored() - total_stored();
+    runtime_data().resource_stored[RESOURCE_NONE] = current_params().max_capacty_stored - total_stored();
 }
 
 void building_granary::bind_dynamic(io_buffer *iob, size_t version) {
