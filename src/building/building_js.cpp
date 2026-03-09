@@ -4,10 +4,11 @@
 
 #include "js/js_game.h"
 
-std::optional<bvariant> __building_get_property(int bid, pcstr property) {
-    return archive_helper::get(*building_get(bid), property, true);
-}
+std::optional<bvariant> __building_get_property(int bid, pcstr property) { return archive_helper::get(*building_get(bid), property, true); }
 ANK_FUNCTION_2(__building_get_property)
+
+std::optional<bvariant> __building_get_params_property(int bid, pcstr property) { return archive_helper::get(building_get(bid)->params(), property, true); }
+ANK_FUNCTION_2(__building_get_params_property)
 
 int __building_meta_text_id(int bid) { return building_get(bid)->params().meta.text_id; }\
 ANK_FUNCTION_1(__building_meta_text_id)
@@ -34,9 +35,7 @@ int __map_rubble_building_type(int bid) {
 }
 ANK_FUNCTION_1(__map_rubble_building_type)
 
-int __map_rubble_building_type_at_grid(int grid_offset) {
-    return map_rubble_building_type(grid_offset);
-}
+int __map_rubble_building_type_at_grid(int grid_offset) { return map_rubble_building_type(grid_offset); }
 ANK_FUNCTION_1(__map_rubble_building_type_at_grid)
 
 tile2i __building_tile(int bid) {

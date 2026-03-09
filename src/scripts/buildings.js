@@ -316,6 +316,8 @@ building_apothecary = {
     work : { pos : [25, -35], pack:PACK_GENERAL, id:68, offset:1, max_frames:11 },
   }
   labor_category : LABOR_CATEGORY_WATER_HEALTH
+  overlay : OVERLAY_APOTHECARY
+  sound_channel : SOUND_CHANNEL_CITY_APOTHECARY
   min_houses_coverage : 50
   max_serve_clients : 100
   meta : { help_id:63, text_id:81 }
