@@ -1,7 +1,8 @@
 #include "building.h"
+
 #include "grid/building.h"
 #include "grid/road_access.h"
-
+#include "core/profiler.h"
 #include "js/js_game.h"
 
 std::optional<bvariant> __building_get_property(int bid, pcstr property) { return archive_helper::get(*building_get(bid), property, true); }

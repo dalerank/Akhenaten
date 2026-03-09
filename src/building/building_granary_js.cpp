@@ -1,6 +1,8 @@
 #include "building_granary.h"
+
 #include "city/city_buildings.h"
 #include "js/js_game.h"
+#include "core/profiler.h"
 
 int __granary_get_amount(int bid, int resource) {
     building_granary *granary = building_get(bid)->dcast_granary();

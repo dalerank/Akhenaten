@@ -7,6 +7,8 @@
 namespace ui {
     template<typename T>
     inline void widget::event(const T &ev, xstring evname_str) {
+        OZZY_PROFILER_SECTION(_, evname_str.c_str());
+
         bvariant_map::scoped js_j;
         js_helper::writer(*js_j, ev);
         widget::event(evname_str, *js_j);
@@ -27,6 +29,8 @@ namespace ui {
 
     template<typename T>
     inline void event(const T &ev, xstring evname_str) {
+        OZZY_PROFILER_SECTION(_, evname_str.c_str());
+
         bvariant_map::scoped js_j;
         js_helper::writer(*js_j, ev);
         js_call_event_handlers(evname_str, *js_j);

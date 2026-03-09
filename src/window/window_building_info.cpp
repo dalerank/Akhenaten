@@ -17,6 +17,7 @@
 #include "io/gamefiles/lang.h"
 #include "core/variant.h"
 #include "js/js_struct.h"
+#include "core/profiler.h"
 #include "graphics/elements/ui_js.h"
 
 struct building_info_window_draw { vec2i pos; building_id bid; };

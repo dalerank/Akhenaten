@@ -41,6 +41,7 @@
 #include "game/game.h"
 #include "js/js_game.h"
 #include "io/gamefiles/lang.h"
+#include "core/profiler.h"
 
 static const int ADVISOR_TO_MESSAGE_TEXT[] = {
   MESSAGE_DIALOG_ABOUT,

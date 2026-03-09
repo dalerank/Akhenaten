@@ -13,8 +13,9 @@
 #include "window/mission_end.h"
 #include "window/victory_dialog.h"
 #include "js/js_game.h"
-
+#include "core/profiler.h"
 #include "dev/debug.h"
+
 #include <iostream>
 
 declare_console_command_p(victory) {

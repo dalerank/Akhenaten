@@ -648,7 +648,7 @@ struct widget {
 
     void event(xstring evname, const bvariant_map &js_j);
 
-    inline void begin_widget(vec2i offset, bool relative = false) { check_errors = true; ui::begin_widget(offset, relative); }
+    void begin_widget(vec2i offset, bool relative = false);
     inline void end_widget() { ui::end_widget(); }
     void set_clip_rectangle(vec2i pos, vec2i size);
     void set_clip_rectangle(const element &e);

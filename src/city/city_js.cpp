@@ -1,6 +1,7 @@
 #include "js/js_game.h"
 
 #include "io/gamefiles/lang.h"
+#include "core/profiler.h"
 #include "city/city.h"
 #include "city/city_labor.h"
 #include "city/city_message.h"

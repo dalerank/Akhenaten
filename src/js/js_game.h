@@ -429,14 +429,14 @@ struct js_function_traits<R(C:: *)(Args...)> {
 template<typename C, typename R, typename... Args>
 struct js_function_traits<R(C:: *)(Args...) const> : js_function_traits<R(C:: *)(Args...)> {};
 
-#define ANK_FUNCTION_NAMED(fname, func) \
-    ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##fname); \
-    void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { \
-        js_getglobal(J, #fname); bool exists = js_iscallable(J, -1); js_pop(J, 1); \
-        if (!exists) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 0); } \
-    } void permanent_js2cpp_callback_##fname(js_State *J) { \
-        constexpr bool is_void = (std::is_void_v<js_function_traits<decltype(&func)>::return_type>); \
-        js_helpers::js_invoke_and_push<is_void>(J, [&]() { return func(); }); \
+#define ANK_FUNCTION_NAMED(fname, func)                                                                         \
+    ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##fname);                                          \
+    void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) {   \
+        js_getglobal(J, #fname); bool exists = js_iscallable(J, -1); js_pop(J, 1);                              \
+        if (!exists) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 0); }             \
+    } void permanent_js2cpp_callback_##fname(js_State *J) {                                                     \
+        constexpr bool is_void = (std::is_void_v<js_function_traits<decltype(&func)>::return_type>);            \
+        js_helpers::js_invoke_and_push<is_void>(J, [&]() { return func(); });                                   \
     }
 
 #define ANK_FUNCTION(func) \
@@ -471,7 +471,7 @@ inline void ank_register_callback_1(js_State* J, pcstr name) {
 
 #define ANK_FUNCTION_1(func) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##func); \
-    inline void register_js2cpp_callback_##func(js_State* J) { ank_register_callback_1<&func>(J, #func); }
+    inline void register_js2cpp_callback_##func(js_State* J) { OZZY_PROFILER_FUNCTION(); ank_register_callback_1<&func>(J, #func); }
 
 // Template function version of ANK_FUNCTION_2
 // This template function handles the callback logic (extracted from macro)
@@ -503,7 +503,7 @@ inline void ank_register_callback_2(js_State* J, pcstr name) {
 
 #define ANK_FUNCTION_2(func) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##func); \
-    inline void register_js2cpp_callback_##func(js_State* J) { ank_register_callback_2<&func>(J, #func); }
+    inline void register_js2cpp_callback_##func(js_State* J) { OZZY_PROFILER_FUNCTION(); ank_register_callback_2<&func>(J, #func); }
 
 // Template function version of ANK_FUNCTION_3
 // This template function handles the callback logic (extracted from macro)
@@ -537,7 +537,7 @@ inline void ank_register_callback_3(js_State* J, pcstr name) {
 
 #define ANK_FUNCTION_3(func) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##func); \
-    inline void register_js2cpp_callback_##func(js_State* J) { ank_register_callback_3<&func>(J, #func); }
+    inline void register_js2cpp_callback_##func(js_State* J) { OZZY_PROFILER_FUNCTION(); ank_register_callback_3<&func>(J, #func); }
 
 // Template function version of ANK_FUNCTION_4
 // This template function handles the callback logic (extracted from macro)
@@ -573,7 +573,7 @@ inline void ank_register_callback_4(js_State* J, pcstr name) {
 
 #define ANK_FUNCTION_4(func) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##func); \
-    inline void register_js2cpp_callback_##func(js_State* J) { ank_register_callback_4<&func>(J, #func); }
+    inline void register_js2cpp_callback_##func(js_State* J) { OZZY_PROFILER_FUNCTION(); ank_register_callback_4<&func>(J, #func); }
 
 // Template function version of ANK_FUNCTION_5
 // This template function handles the callback logic (extracted from macro)
@@ -611,7 +611,7 @@ inline void ank_register_callback_5(js_State* J, pcstr name) {
 
 #define ANK_FUNCTION_5(func) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##func); \
-    inline void register_js2cpp_callback_##func(js_State* J) { ank_register_callback_5<&func>(J, #func); }
+    inline void register_js2cpp_callback_##func(js_State* J) { OZZY_PROFILER_FUNCTION(); ank_register_callback_5<&func>(J, #func); }
 
 // Template function version of ANK_FUNCTION_6
 // This template function handles the callback logic (extracted from macro)
@@ -651,7 +651,7 @@ inline void ank_register_callback_6(js_State* J, pcstr name) {
 
 #define ANK_FUNCTION_6(func) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##func); \
-    inline void register_js2cpp_callback_##func(js_State* J) { ank_register_callback_6<&func>(J, #func); }
+    inline void register_js2cpp_callback_##func(js_State* J) { OZZY_PROFILER_FUNCTION(); ank_register_callback_6<&func>(J, #func); }
 
 // Template function version of ANK_FUNCTION_7
 // This template function handles the callback logic (extracted from macro)
@@ -693,7 +693,7 @@ inline void ank_register_callback_7(js_State* J, pcstr name) {
 
 #define ANK_FUNCTION_7(func) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##func); \
-    inline void register_js2cpp_callback_##func(js_State* J) { ank_register_callback_7<&func>(J, #func); }
+    inline void register_js2cpp_callback_##func(js_State* J) { OZZY_PROFILER_FUNCTION(); ank_register_callback_7<&func>(J, #func); }
 
 // Template function version of ANK_FUNCTION_UNIFIED
 // This template function handles the callback logic (extracted from macro)

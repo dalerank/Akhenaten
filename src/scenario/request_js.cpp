@@ -4,6 +4,7 @@
 #include "scenario/scenario.h"
 #include "scenario/scenario_invasion.h"
 #include "core/variant.h"
+#include "core/profiler.h"
 
 void ANK_FUNCTION_UNIFIED(__city_create_good_request)(const bvariant_map &args) {
     g_scenario.events.create_good_request(

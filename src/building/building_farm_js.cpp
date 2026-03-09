@@ -1,4 +1,6 @@
 #include "building_farm.h"
+
+#include "core/profiler.h"
 #include "js/js_game.h"
 
 std::optional<bvariant> __farm_get_property(int bid, pcstr property) {

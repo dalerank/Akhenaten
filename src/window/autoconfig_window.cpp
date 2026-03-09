@@ -7,6 +7,7 @@
 #include "js/js_struct.h"
 #include "graphics/window.h"
 #include "input/input.h"
+#include "core/profiler.h"
 #include <algorithm>
 #include <mutex>
 #include <map>
@@ -88,6 +89,8 @@ int autoconfig_window::draw_background(UiFlags flags) {
 }
 
 void autoconfig_window::ui_draw_foreground(UiFlags flags) {
+    OZZY_PROFILER_FUNCTION();
+
     ui.begin_widget(pos);
     ui.draw(flags);
     ui.event(window_info{ pos }, get_section(), __func__);
