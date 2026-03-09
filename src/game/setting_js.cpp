@@ -5,6 +5,7 @@
 #include "platform/renderer.h"
 #include "dev/debug.h"
 #include "game/system.h"
+#include "core/profiler.h"
 
 int __game_difficulty() { return game_difficulty(); }
 ANK_FUNCTION(__game_difficulty)

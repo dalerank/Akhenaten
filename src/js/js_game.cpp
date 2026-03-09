@@ -22,7 +22,7 @@
 #include "game/settings.h"
 #include "city/city_finance.h"
 #include "io/gamestate/boilerplate.h"
-
+#include "core/profiler.h"
 #include "js.h"
 #include "mujs/mujs.h"
 #include "mujs/jsi.h"

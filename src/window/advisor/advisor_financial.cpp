@@ -10,7 +10,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "game/game.h"
-
+#include "core/profiler.h"
 #include "js/js_game.h"
 #include "graphics/elements/ui_js.h"
 

@@ -13,7 +13,7 @@
 #include "city/city_industry.h"
 #include "game/game_events.h"
 #include "building/building_temple_complex.h"
-
+#include "core/profiler.h"
 #include "dev/debug.h"
 #include "js/js_game.h"
 
@@ -356,6 +356,8 @@ void building_menu_ctrl_t::update(const xstring stage_name) {
 }
 
 int building_menu_ctrl_t::count_items(int submenu) {
+    OZZY_PROFILER_FUNCTION();
+
     auto &gr = group(submenu);
     int count = 0;
     for (auto &it : gr.items) {

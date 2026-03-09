@@ -1,6 +1,7 @@
 #include "scenario/distant_battle.h"
 
 #include "js/js_game.h"
+#include "core/profiler.h"
 
 bool __empire_has_distant_battle() { return g_distant_battle.has_distant_battle() != 0; }
 ANK_FUNCTION(__empire_has_distant_battle)

@@ -23,6 +23,7 @@
 #include "ui_scope_property.h"
 #include "graphics/elements/scroll_list_panel.h"
 #include "game/game_pool.h"
+#include "core/profiler.h"
 
 #include <stack>
 
@@ -807,6 +808,12 @@ void ui::widget::event(xstring evname, const bvariant_map &js_j) {
 
     // Restore previous widget
     g_state.current_widget = prev_widget;
+}
+
+void ui::widget::begin_widget(vec2i offset, bool relative) {
+    OZZY_PROFILER_FUNCTION();
+
+    check_errors = true; ui::begin_widget(offset, relative); 
 }
 
 void ui::widget::set_clip_rectangle(vec2i pos, vec2i size) {

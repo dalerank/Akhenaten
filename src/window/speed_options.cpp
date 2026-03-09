@@ -5,7 +5,7 @@
 #include "graphics/screen.h"
 #include "game/game.h"
 #include "input/input.h"
-
+#include "core/profiler.h"
 #include "graphics/elements/ui_js.h"
 
 speed_options_window g_speed_options_window;

@@ -981,6 +981,8 @@ void config_show_debug_render_properties(bool header) {
 }
 
 void draw_debug_ui(int x, int y) {
+    OZZY_PROFILER_FUNCTION();
+
     char str[300];
 
     painter ctx = game.painter();

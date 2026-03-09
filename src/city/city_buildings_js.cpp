@@ -11,6 +11,7 @@
 #include "city/object_info.h"
 #include "window/window_info.h"
 #include "building/building.h"
+#include "core/profiler.h"
 #include "game/game_events.h"
 
 int __city_count_industry_active(int resource) {

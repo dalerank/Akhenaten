@@ -1,8 +1,9 @@
 #include "empire/empire.h"
+
 #include "empire/empire_city.h"
 #include "city/city.h"
 #include "scenario/distant_battle.h"
-
+#include "core/profiler.h"
 #include "js/js_game.h"
 
 std::optional<bvariant> __empire_get_city_object_property(int cid, pcstr property) {

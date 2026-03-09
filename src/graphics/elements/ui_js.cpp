@@ -14,6 +14,7 @@
 #include "city/city_message.h"
 #include "city/city_building_menu_ctrl.h"
 #include "graphics/graphics.h"
+#include "core/profiler.h"
 #include "game/game.h"
 
 void __ui_draw_image(int imgid, vec2i pos) { ui::eimage(imgid, pos); } ANK_FUNCTION_2(__ui_draw_image);

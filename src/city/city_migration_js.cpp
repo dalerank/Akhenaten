@@ -1,6 +1,8 @@
 #include "city_migration.h"
+
 #include "city/city.h"
 #include "js/js_game.h"
+#include "core/profiler.h"
 
 void __migration_set_population_cap(xstring reason, int cap) {
     g_city.migration.set_migration_cap(reason, cap);

@@ -1,6 +1,7 @@
 #include "city/city_festival.h"
 
 #include "city/city.h"
+#include "core/profiler.h"
 #include "js/js_game.h"
 
 std::optional<bvariant> __city_get_festival_property(pcstr property) {

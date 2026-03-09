@@ -359,6 +359,8 @@ void city_view_set_viewport_without_sidebar() {
 }
 
 void city_view_refresh_viewport() {
+    OZZY_PROFILER_FUNCTION();
+
     auto& view = g_city_view;
 
     if (view.sidebar_collapsed) {
