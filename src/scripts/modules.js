@@ -32,6 +32,7 @@ import building_entertainment
 import building_firehouse
 import building_hunting_lodge
 import building_pottery
+import building_granary
 import building_health
 import overlays
 import building_sounds
