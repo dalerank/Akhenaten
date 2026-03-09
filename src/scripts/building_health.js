@@ -21,7 +21,6 @@ laborers:[5], fire_risk:[4], damage_risk: [2]
 
 [es=(building_apothecary, spawn_figure)]
 function building_apothecary_spawn_figure(ev) {
-    log_info("building_apothecary_spawn_figure: " + building_apothecary.min_houses_coverage)
     var building = city.get_building(ev.bid)
     building.common_spawn_roamer(FIGURE_HERBALIST, building_apothecary.min_houses_coverage, ACTION_4_HERBALIST_ROAMING)
 }

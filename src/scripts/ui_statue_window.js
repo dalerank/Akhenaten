@@ -13,7 +13,7 @@ info_window_statue {
     }
 }
 
-[es=info_window_statue_init]
+[es=(info_window_statue, init)]
 function info_window_statue_on_init(window) {
 
 }

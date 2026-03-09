@@ -58,3 +58,4 @@ import ui_burning_ruin_window
 import ui_hunting_lodge_window
 import ui_statue_window
 import ui_window_city
+import ui_architect_post_window

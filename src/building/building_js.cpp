@@ -29,6 +29,14 @@ void __building_add_collapse_damage(int bid, int damage) {
 }
 ANK_FUNCTION_2(__building_add_collapse_damage)
 
+void __building_add_structure_damage(int bid, int damage) {
+    building *b = building_get(bid);
+    if (b->is_valid()) {
+        b->force_damage(e_damage_enemy, damage);
+    }
+}
+ANK_FUNCTION_2(__building_add_structure_damage)
+
 int __map_rubble_building_type(int bid) {
     building *b = building_get(bid);
     return b ? map_rubble_building_type(b->tile.grid_offset()) : 0;

@@ -3,11 +3,16 @@
 #include "figure/figure.h"
 
 enum e_architector_action {
-    ACTION_60_ENGINEER_CREATED = 60,
-    ACTION_61_ENGINEER_ENTERING_EXITING = 61,
-    ACTION_62_ENGINEER_ROAMING = 62,
-    ACTION_63_ENGINEER_RETURNING = 63,
+    ACTION_0_ENGINEER_NONE = 0,
+    ACTION_1_ENGINEER_CREATED = 1,
+    ACTION_2_ENGINEER_ENTERING_EXITING = 2,
+    ACTION_3_ENGINEER_ROAMING = 3,
+    ACTION_4_ENGINEER_RETURNING = 4,
+
+    ACTION_64_ENGINEER_MAX
 };
+using figure_architector_action_tokens_t = token_holder<e_architector_action, ACTION_0_ENGINEER_NONE, ACTION_64_ENGINEER_MAX>;
+extern const figure_architector_action_tokens_t figure_architector_action_tokens;
 
 class figure_architector : public figure_impl {
 public:

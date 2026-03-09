@@ -28,6 +28,22 @@ function console_command_add_gamemeat(args) {
 	__cheat_add_resource(RESOURCE_GAMEMEAT, amount)
 }
 
+[console_command=collapse_no]
+function console_command_collapse_no(args) {
+	for (var i = 1; i <= MAX_BUILDINGS; i++) {
+		var building = city.get_building(i)
+		building.add_collapse_damage(-building.collapse_risk)
+	}
+}
+
+[console_command=damage_no]
+function console_command_damage_no(args) {
+	for (var i = 1; i <= MAX_BUILDINGS; i++) {
+		var building = city.get_building(i)
+		building.add_structure_damage(-building.structure_damage)
+	}
+}
+
 [console_command=collapse_random_buildings]
 function console_command_collapse_random_buildings(args) {
 	var count = parseInt((args && args[0]) || "0", 10)

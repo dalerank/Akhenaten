@@ -9,7 +9,7 @@ info_window_police_station {
     })
 }
 
-[es=info_window_police_station_init]
+[es=(info_window_police_station, init)]
 function info_window_police_station_on_init(window) {
     var b = city.get_building(window.bid)
     var reason = { group: b.meta_text_id, id: 0 }

@@ -449,7 +449,7 @@ bool building::workshop_has_resources() {
     return has_second_material && hase_first_resource;
 }
 
-void building::force_damage(e_damage_type type, int8_t value) {
+void building::force_damage(e_damage_type type, int16_t value) {
     const bool valid = (state == BUILDING_STATE_VALID || state == BUILDING_STATE_MOTHBALLED);
     if (!valid) {
         return;

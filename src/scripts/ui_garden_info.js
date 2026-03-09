@@ -8,7 +8,7 @@ terrain_info_garden {
     })
 }
 
-[es=terrain_info_garden_init]
+[es=(terrain_info_garden, init)]
 function terrain_info_garden_on_init(window) {
     window.title.text = __loc(building_garden.meta.text_id, 0)
     window.describe.text = __loc(building_garden.meta.text_id, 1)

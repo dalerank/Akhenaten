@@ -44,7 +44,7 @@ function info_window_shrine_common_init(window) {
     window.warning_text.text = __loc(161, text_id)
 }
 
-[es=info_window_shrine_init]
+[es=(info_window_shrine, init)]
 function info_window_shrine_on_init(window) {
     info_window_shrine_common_init(window)
 }

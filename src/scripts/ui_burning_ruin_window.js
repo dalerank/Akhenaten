@@ -13,7 +13,7 @@ info_window_burning_ruin {
     }
 }
 
-[es=info_window_burning_ruin_init]
+[es=(info_window_burning_ruin, init)]
 function info_window_burning_ruin_on_init(window) {
     var rubble_type = __map_rubble_building_type(window.bid)
     window.warning_text.text = __loc(41, rubble_type)
