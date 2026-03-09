@@ -16,7 +16,7 @@ info_window_mortuary {
     })
 }
 
-[es=info_window_mortuary_init]
+[es=(info_window_mortuary, init)]
 function info_window_mortuary_on_init(window) {
     var b = city.get_building(window.bid)
     var group = b.meta_text_id

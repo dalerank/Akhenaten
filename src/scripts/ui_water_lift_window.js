@@ -9,7 +9,7 @@ info_window_water_lift {
     })
 }
 
-[es=info_window_water_lift_init]
+[es=(info_window_water_lift, init)]
 function info_window_water_lift_init(window) {
     var b = city.get_building(window.bid)
     var reason = { group: b.meta_text_id, id: 0 }

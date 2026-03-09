@@ -77,6 +77,7 @@ void js_register_game_constants(js_State *J) {
     _R(ACTION_126_ROAMER_RETURNING)
 
     _R(TRADE_STATUS_IMPORT)
+    _R(MAX_BUILDINGS)
 
     for (config::EnumIterator *s = config::EnumIterator::tail; s; s = s->next) {
         s->func({});

@@ -1,8 +1,6 @@
 #pragma once
 
-#include "city/object_info.h"
 #include "building/building.h"
-#include "window/window_building_info.h"
 
 /**
  * @brief Building class representing an Architect Post in the city
@@ -30,16 +28,6 @@ public:
     virtual building_architect_post *dcast_architect_post() override { return this; }
 
     /**
-     * @brief Spawns architect figures from this building
-     *
-     * Creates architect figures that will perform various tasks around the city
-     * such as building maintenance, construction assistance, and infrastructure
-     * improvements. The spawning behavior depends on the building's state and
-     * the city's needs.
-     */
-    virtual void spawn_figure() override;
-
-    /**
      * @brief Draws building ornaments and animations with height consideration
      *
      * Renders decorative elements and animated components of the building,
@@ -53,10 +41,4 @@ public:
      * @return true if drawing was successful, false otherwise
      */
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
-};
-
-struct info_window_architect_post : public building_info_window_t<info_window_architect_post> {
-    virtual void window_info_background(object_info& c) override {
-        building_info_window::common_info_background(c);
-    }
 };

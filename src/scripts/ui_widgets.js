@@ -411,13 +411,6 @@ info_window_farm = {
     })
 }
 
-info_window_architect_post {
-    related_buildings [BUILDING_ARCHITECT_POST]
-    ui : baseui(building_info_window, {
-
-    })
-}
-
 ruin_info_window {
     open_sounds [ "wavs/fire.wav" ]
     ui {

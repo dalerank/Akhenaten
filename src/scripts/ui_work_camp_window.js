@@ -10,7 +10,7 @@ info_window_work_camp {
     })
 }
 
-[es=info_window_work_camp_init]
+[es=(info_window_work_camp, init)]
 function info_window_work_camp_warning_text(window) {
     var b = city.get_building(window.bid)
     var reason = { group:b.meta_text_id, id:0 }

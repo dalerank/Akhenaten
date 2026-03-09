@@ -326,7 +326,7 @@ public:
     figure* common_spawn_goods_output_cartpusher(int min_carry = 100, int max_carry = 800);
     bool workshop_has_resources();
 
-    void force_damage(e_damage_type type, int8_t value);
+    void force_damage(e_damage_type type, int16_t value);
     void destroy_by_collapse();
     void destroy_by_flooded();
     void destroy_by_fire();
@@ -444,6 +444,7 @@ private:
     void destroy_linked_parts(bool on_fire);
 };
 ANK_CONFIG_PROPERTY(building, has_road_access, num_workers, max_workers, type,
+    collapse_risk, fire_risk, structure_damage,
     current_desirability, has_water_access, has_well_access)
 
 #define BUILDING_METAINFO(type, clsid, base_class)                                                      \

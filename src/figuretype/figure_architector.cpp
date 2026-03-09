@@ -10,32 +10,34 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_architector);
 
+const figure_architector_action_tokens_t ANK_CONFIG_ENUM(figure_architector_action_tokens)
+
 void figure_architector::figure_action() {
     OZZY_PROFILER_FUNCTION();
 
     switch (action_state()) {
     default:
-        advance_action(ACTION_63_ENGINEER_RETURNING);
+        advance_action(ACTION_4_ENGINEER_RETURNING);
         break;
 
     case FIGURE_ACTION_149_CORPSE:
         break;
 
-    case ACTION_60_ENGINEER_CREATED:
-        advance_action(ACTION_62_ENGINEER_ROAMING);
+    case ACTION_1_ENGINEER_CREATED:
+        advance_action(ACTION_3_ENGINEER_ROAMING);
         break;
 
-    case ACTION_61_ENGINEER_ENTERING_EXITING:
+    case ACTION_2_ENGINEER_ENTERING_EXITING:
     case 9:
         do_enterbuilding(true, home());
         break;
 
-    case ACTION_62_ENGINEER_ROAMING:
-        do_roam(TERRAIN_USAGE_ROADS, ACTION_63_ENGINEER_RETURNING);
+    case ACTION_3_ENGINEER_ROAMING:
+        do_roam(TERRAIN_USAGE_ROADS, ACTION_4_ENGINEER_RETURNING);
         break;
 
-    case ACTION_63_ENGINEER_RETURNING:
-        do_returnhome(TERRAIN_USAGE_ROADS, ACTION_61_ENGINEER_ENTERING_EXITING);
+    case ACTION_4_ENGINEER_RETURNING:
+        do_returnhome(TERRAIN_USAGE_ROADS, ACTION_2_ENGINEER_ENTERING_EXITING);
         break;
     }
 }

@@ -1,15 +1,15 @@
-log_info("akhenaten: ui_infrastructure_window.js loaded")
+log_info("akhenaten: ui_architect_post_window.js loaded")
 
 [es=building_info_window]
-infrastructure_common_info_window {
-    related_buildings [BUILDING_FIREHOUSE]
+info_window_architect_post {
+    related_buildings [BUILDING_ARCHITECT_POST]
     ui : baseui(building_info_window, {
 
     })
 }
 
-[es=(infrastructure_common_info_window, init)]
-function infrastructure_common_info_window_init(window) {
+[es=(info_window_architect_post, init)]
+function info_window_architect_post_init(window) {
     var b = city.get_building(window.bid)
     var meta_text_id = b.meta_text_id
     var reason = { group: 0, id: 0 }
