@@ -9,8 +9,9 @@
 #include "input/input.h"
 #include <algorithm>
 #include <mutex>
+#include <map>
 
-using autoconfig_windows = std::vector<autoconfig_window *>;
+using autoconfig_windows = std::map<xstring, autoconfig_window *>;
 autoconfig_windows* g_autoconfig_windows = nullptr;
 
 struct window_info{ vec2i pos; };
@@ -22,7 +23,7 @@ autoconfig_windows& autoconfig_registry() {
 
         std::scoped_lock _(registry_locker);
         if (!g_autoconfig_windows) {
-            g_autoconfig_windows = new std::vector<autoconfig_window *>;
+            g_autoconfig_windows = new autoconfig_windows;
         }
     }
 
@@ -30,11 +31,10 @@ autoconfig_windows& autoconfig_registry() {
 }
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_autoconfig_windows) {
-    for (auto *w : autoconfig_registry()) {
-        w->load(w->get_section());
+    for (auto& w : autoconfig_registry()) {
+        w.second->load(w.second->get_section());
     }
 }
-
 
 void autoconfig_window::refresh_all() {
     config_load_autoconfig_windows();
@@ -43,7 +43,7 @@ void autoconfig_window::refresh_all() {
 autoconfig_window::autoconfig_window(pcstr s) {
     assert(!strstr(s, "::"));
     logs::info("Registered window config:%s", s);
-    autoconfig_registry().push_back(this);
+    autoconfig_registry()[s] = this;
 }
 
 void autoconfig_window::archive_load(archive arch) {
@@ -74,8 +74,8 @@ int autoconfig_window::ui_handle_mouse(const mouse *m) {
 }
 
 void autoconfig_window::before_mission_start() {
-    for (auto *w : autoconfig_registry()) {
-        w->on_mission_start();
+    for (auto& w : autoconfig_registry()) {
+        w.second->on_mission_start();
     }
 }
 
