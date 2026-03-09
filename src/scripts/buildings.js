@@ -51,37 +51,6 @@ building_burning_ruin = {
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
 }
 
-building_granary {
-  animations {
-    preview { pack:PACK_GENERAL, id:99 },
-    base { pack:PACK_GENERAL, id:99 },
-    work { pack:PACK_SPR_AMBIENT, id:47, max_frames:23 },
-    resources {pack:PACK_GENERAL, id:99, offset:2},
-    minimap {pack:PACK_GENERAL, id:149, offset:160},
-  }
-
-  min_houses_coverage : 100
-  labor_category : LABOR_CATEGORY_INFRASTRUCTURE
-  meta { help_id: 3, text_id: 98 }
-  building_size : 4
-  planner_update_rule {
-    roads : true
-  }
-  flags {
-    is_food: true
-  }
-  cost [ 50, 70, 100, 200, 300 ]
-  laborers[20]
-  fire_risk[0]
-  damage_risk[5]
-  desirability { value[-8], step[1], step_size[-2], range[4] }
-  begin_spot_pos [110, -74]
-  res_image_offsets [[0, 0], [16, 9], [35, 18], [51, 26], [-16, 7], [1, 16], [20, 26], [37, 35]]
-  min_workers_percent_for_tasks : 50
-  min_workers_percent_for_accepting :75
-  min_workers_percent_for_getting : 100
-}
-
 building_courthouse {
   animations {
     preview { pack:PACK_GENERAL, id:62, }
@@ -307,24 +276,6 @@ building_work_camp = {
   flags {
     is_food: true
   }
-}
-
-building_apothecary = {
-  animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:68 },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:68 },
-    work : { pos : [25, -35], pack:PACK_GENERAL, id:68, offset:1, max_frames:11 },
-  }
-  labor_category : LABOR_CATEGORY_WATER_HEALTH
-  overlay : OVERLAY_APOTHECARY
-  sound_channel : SOUND_CHANNEL_CITY_APOTHECARY
-  min_houses_coverage : 50
-  max_serve_clients : 100
-  meta : { help_id:63, text_id:81 }
-  building_size : 1
-  cost : [ 6, 10, 15, 30, 50 ]
-  desirability : { value:[1], step:[1], step_size:[-1], range: [1] }
-  laborers:[5], fire_risk:[4], damage_risk: [2]
 }
 
 building_water_supply {
@@ -1364,25 +1315,6 @@ building_police_station = {
   fire_risk [2]
   damage_risk [2]
   weapon_spot_pos [20, -20]
-  flags {
-    is_infrastructure: true
-  }
-}
-
-building_architect_post {
-  animations {
-    _pack {pack:PACK_GENERAL}
-    preview { id:81 },
-    base { id:81 },
-    work { pos[20, -35], id:81, offset:1, max_frames:11 },
-  }
-  labor_category : LABOR_CATEGORY_INFRASTRUCTURE
-  overlay: OVERLAY_DAMAGE
-  min_houses_coverage : 50
-  building_size : 1
-  meta { help_id: 81, text_id: 104 }
-  cost [ 6, 12, 25, 40, 60 ]
-  laborers[5], fire_risk[2], damage_risk[0]
   flags {
     is_infrastructure: true
   }
