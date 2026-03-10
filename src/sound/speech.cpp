@@ -7,6 +7,8 @@
 #include "sound/channel.h"
 #include "content/mods.h"
 
+#include <filesystem>
+
 vfs::path sound_manager_t::speech_filename(xstring filename) {
     pcstr filename_str = filename.c_str();
     vfs::path fs_path = filename_str;

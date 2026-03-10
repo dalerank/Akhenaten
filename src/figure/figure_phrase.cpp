@@ -21,6 +21,7 @@
 #include "sound/sound_walker.h"
 
 #include <string.h>
+#include <filesystem>
 
 static int citizen_phrase() {
     //    if (++f->phrase_sequence_exact >= 3)
