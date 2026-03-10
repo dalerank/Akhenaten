@@ -761,7 +761,7 @@ void ui::widget::archive_load(archive arch) {
     elements.clear();
     pos = arch.r_vec2i("pos");
     e_font default_font = arch.r_type<e_font>("default_font", FONT_NORMAL_BLACK_ON_LIGHT);
-    
+
     ui_widget_load_elements(arch, "ui", nullptr, elements);
 
     for (auto &e:  elements) {

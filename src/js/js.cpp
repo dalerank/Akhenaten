@@ -189,7 +189,7 @@ int js_vm_trypcall(js_State *J, int params) {
     int error = js_pcall(J, params);
     if (error) {
         vm.have_error = 1;
-        const char *error_msg = js_tostring(J, -1);
+        pcstr error_msg = js_tostring(J, -1);
         
         // Log error type if it's an Error object
         if (js_isobject(J, -1)) {
