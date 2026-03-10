@@ -439,7 +439,7 @@ void js_newuserdatax(js_State *J, const char *tag, void *data, js_HasProperty ha
 	js_Object *prototype = NULL;
 	js_Object *obj;
 
-	if (js_isobject(J, -1))
+	if (J->isobject(-1))
 		prototype = js_toobject(J, -1);
 	js_pop(J, 1);
 
@@ -467,11 +467,11 @@ int js_instanceof(js_State *J)
 	if (!js_iscallable(J, -1))
 		js_typeerror(J, "instanceof: invalid operand");
 
-	if (!js_isobject(J, -2))
+	if (!J->isobject(-2))
 		return 0;
 
 	js_getproperty(J, -1, "prototype");
-	if (!js_isobject(J, -1))
+	if (!J->isobject(-1))
 		js_typeerror(J, "instanceof: 'prototype' property is not an object");
 	O = js_toobject(J, -1);
 	js_pop(J, 1);

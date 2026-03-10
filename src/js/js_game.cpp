@@ -89,7 +89,7 @@ void js_game_get_image(js_State *J) {
         image_desc desc;
         desc.path = path;
         tid = desc.tid();
-    } else if (js_isobject(J, 1) && !js_isarray(J, 1)) {
+    } else if (J->isobject(1) && !js_isarray(J, 1)) {
         js_getproperty(J, 1, "pack");
         int16_t pack = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
         js_pop(J, 1);
@@ -219,7 +219,7 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
             OZZY_PROFILER_SECTION(_, "has_ui_elements")
             // Stack: event_obj at -1. Get shared accessors once (used by all proxies).
             js_getglobal(J, "__ui_proxy_accessors");
-            if (js_isobject(J, -1)) {
+            if (J->isobject(-1)) {
                 for (const auto &element_id : ui_element_ids) {
                     // Stack: event_obj (-2), accessors (-1). Create proxy and set event_obj[element_id].
                     js_newobject(J);

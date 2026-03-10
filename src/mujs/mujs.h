@@ -179,7 +179,6 @@ int js_isnumber(js_State *J, int idx);
 int js_iscnumber(js_State *J, int idx);
 int js_isstring(js_State *J, int idx);
 int js_isprimitive(js_State *J, int idx);
-int js_isobject(js_State *J, int idx);
 int js_isarray(js_State *J, int idx);
 int js_isregexp(js_State *J, int idx);
 int js_iscoercible(js_State *J, int idx);

@@ -76,7 +76,7 @@ static void js_mission_var_setter(js_State *J) {
     } else if (js_isstring(J, 1)) {
         const char *value = js_tostring(J, 1);
         g_scenario.vars.set_string(name, value);
-    } else if (js_isobject(J, 1)) {
+    } else if (J->isobject(1)) {
         js_getproperty(J, 1, "x");
         js_getproperty(J, 1, "y");
 

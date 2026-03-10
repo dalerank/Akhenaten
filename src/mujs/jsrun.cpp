@@ -168,11 +168,13 @@ void js_currentfunction(js_State *J) {
 
 /* Read values from stack */
 
+static js_Value stackidx_undefined = { {0}, {0}, JS_TUNDEFINED };
 static js_Value *stackidx(js_State *J, int idx) {
-    static js_Value undefined = { {0}, {0}, JS_TUNDEFINED };
     idx = idx < 0 ? TOP + idx : BOT + idx;
-    if (idx < 0 || idx >= TOP)
-        return &undefined;
+    if (idx < 0 || idx >= TOP) {
+        return &stackidx_undefined;
+    }
+
     return STACK + idx;
 }
 
@@ -188,7 +190,7 @@ int js_isnumber(js_State *J, int idx) { return stackidx(J, idx)->type == JS_TNUM
 int js_iscnumber(js_State *J, int idx) { return stackidx(J, idx)->type == JS_CNUMBER; }
 int js_isstring(js_State *J, int idx) { enum js_Type t = (js_Type)stackidx(J, idx)->type; return t == JS_TSHRSTR || t == JS_TLITSTR || t == JS_TMEMSTR; }
 int js_isprimitive(js_State *J, int idx) { return stackidx(J, idx)->type != JS_TOBJECT; }
-int js_isobject(js_State *J, int idx) { return stackidx(J, idx)->type == JS_TOBJECT; }
+int js_State::isobject(int idx) { return stackidx(this, idx)->type == JS_TOBJECT; }
 int js_iscoercible(js_State *J, int idx) { js_Value *v = stackidx(J, idx); return v->type != JS_TUNDEFINED && v->type != JS_TNULL; }
 
 int js_iscallable(js_State *J, int idx) {
@@ -1100,7 +1102,7 @@ void js_construct(js_State *J, int n) {
 
     /* extract the function object's prototype property */
     js_getproperty(J, -n - 1, "prototype");
-    if (js_isobject(J, -1))
+    if (J->isobject(-1))
         prototype = js_toobject(J, -1);
     else
         prototype = J->Object_prototype;
@@ -1116,7 +1118,7 @@ void js_construct(js_State *J, int n) {
     js_call(J, n);
 
     /* if result is not an object, return the original object we created */
-    if (!js_isobject(J, -1)) {
+    if (!J->isobject(-1)) {
         js_pop(J, 1);
         js_pushobject(J, newobj);
     }
@@ -1391,7 +1393,7 @@ void js::jsR_run(js_State *J, js_Function *F) {
 
         case OP_IN:
             str = js_tostring(J, -2);
-            if (!js_isobject(J, -1)) {
+            if (!J->isobject(-1)) {
                 js_typeerror(J, "operand to 'in' is not an object");
             }
             b = J->hasproperty(-1, str);
