@@ -481,12 +481,13 @@ static void js_pushrune(js_State *J, Rune rune) {
     }
 }
 
-static int jsR_hasproperty(js_State *J, js_Object *obj, const char *name) {
+int js_State::hasproperty(js_Object *obj, const char *name) {
     OZZY_PROFILER_FUNCTION();
 
     js_Property *ref;
     int k;
 
+    auto J = this;
     if (obj->type == JS_CARRAY) {
         if (!strcmp(name, "length")) {
             js_pushnumber(J, obj->u.a.length);
@@ -550,7 +551,7 @@ static int jsR_hasproperty(js_State *J, js_Object *obj, const char *name) {
 }
 
 void js_State::getproperty(js_Object *obj, const char *name) {
-    if (!jsR_hasproperty(this, obj, name)) {
+    if (!hasproperty(obj, name)) {
         pushundefined();
     }
 }
@@ -812,8 +813,8 @@ void js_defaccessor(js_State *J, int idx, const char *name, int atts) {
     js_pop(J, 2);
 }
 
-int js_hasproperty(js_State *J, int idx, const char *name) {
-    return jsR_hasproperty(J, js_toobject(J, idx), name);
+int js_State::hasproperty(int idx, const char *name) {
+    return hasproperty(js_toobject(this, idx), name);
 }
 
 void js_setdumping(js_State *J, void (*dumpfun)(js_State *, const char *)) {
@@ -1390,9 +1391,10 @@ void js::jsR_run(js_State *J, js_Function *F) {
 
         case OP_IN:
             str = js_tostring(J, -2);
-            if (!js_isobject(J, -1))
+            if (!js_isobject(J, -1)) {
                 js_typeerror(J, "operand to 'in' is not an object");
-            b = js_hasproperty(J, -1, str);
+            }
+            b = J->hasproperty(-1, str);
             js_pop(J, 2 + b);
             js_pushboolean(J, b);
             break;

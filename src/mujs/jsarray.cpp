@@ -20,7 +20,7 @@ void js_setlength(js_State *J, int idx, int len)
 int js_hasindex(js_State *J, int idx, int i)
 {
 	char buf[32];
-	return js_hasproperty(J, idx, js_itoa(buf, i));
+	return J->hasproperty(idx, js_itoa(buf, i));
 }
 
 void js_getindex(js_State *J, int idx, int i)
