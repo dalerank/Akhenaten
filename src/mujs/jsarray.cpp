@@ -152,7 +152,7 @@ static void Ap_pop(js_State *J)
 		js_setlength(J, 0, n - 1);
 	} else {
 		js_setlength(J, 0, 0);
-		js_pushundefined(J);
+		J->pushundefined();
 	}
 }
 
@@ -209,7 +209,7 @@ static void Ap_shift(js_State *J)
 
 	if (len == 0) {
 		js_setlength(J, 0, 0);
-		js_pushundefined(J);
+		J->pushundefined();
 		return;
 	}
 
@@ -265,7 +265,7 @@ static int compare(js_State *J, int x, int y, int *hasx, int *hasy, int hasfn)
 
 		if (hasfn) {
 			js_copy(J, 1); /* copy function */
-			js_pushundefinedthis(J); /* set this object */
+			J->pushundefined(); /* set this object */
 			js_copy(J, -4); /* copy x */
 			js_copy(J, -4); /* copy y */
 			js_call(J, 2);
@@ -459,7 +459,7 @@ static void Ap_every(js_State *J)
 			if (hasthis)
 				js_copy(J, 2);
 			else
-				js_pushundefined(J);
+				J->pushundefined();
 			js_copy(J, -3);
 			js_pushnumber(J, k);
 			js_copy(J, 0);
@@ -488,7 +488,7 @@ static void Ap_some(js_State *J)
 			if (hasthis)
 				js_copy(J, 2);
 			else
-				js_pushundefined(J);
+				J->pushundefined();
 			js_copy(J, -3);
 			js_pushnumber(J, k);
 			js_copy(J, 0);
@@ -517,7 +517,7 @@ static void Ap_forEach(js_State *J)
 			if (hasthis)
 				js_copy(J, 2);
 			else
-				js_pushundefined(J);
+				J->pushundefined();
 			js_copy(J, -3);
 			js_pushnumber(J, k);
 			js_copy(J, 0);
@@ -526,7 +526,7 @@ static void Ap_forEach(js_State *J)
 		}
 	}
 
-	js_pushundefined(J);
+	J->pushundefined();
 }
 
 static void Ap_map(js_State *J)
@@ -546,7 +546,7 @@ static void Ap_map(js_State *J)
 			if (hasthis)
 				js_copy(J, 2);
 			else
-				js_pushundefined(J);
+				J->pushundefined();
 			js_copy(J, -3);
 			js_pushnumber(J, k);
 			js_copy(J, 0);
@@ -575,7 +575,7 @@ static void Ap_filter(js_State *J)
 			if (hasthis)
 				js_copy(J, 2);
 			else
-				js_pushundefined(J);
+				J->pushundefined();
 			js_copy(J, -3);
 			js_pushnumber(J, k);
 			js_copy(J, 0);
@@ -618,7 +618,7 @@ static void Ap_reduce(js_State *J)
 	while (k < len) {
 		if (js_hasindex(J, 0, k)) {
 			js_copy(J, 1);
-			js_pushundefined(J);
+			J->pushundefined();
 			js_rot(J, 4); /* accumulator on top */
 			js_rot(J, 4); /* property on top */
 			js_pushnumber(J, k);
@@ -659,7 +659,7 @@ static void Ap_reduceRight(js_State *J)
 	while (k >= 0) {
 		if (js_hasindex(J, 0, k)) {
 			js_copy(J, 1);
-			js_pushundefined(J);
+			J->pushundefined();
 			js_rot(J, 4); /* accumulator on top */
 			js_rot(J, 4); /* property on top */
 			js_pushnumber(J, k);

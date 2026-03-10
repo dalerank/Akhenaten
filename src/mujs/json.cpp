@@ -287,7 +287,7 @@ static void JSON_stringify(js_State *J)
 			js_free(J, sb);
 		}
 	} else {
-		js_pushundefined(J);
+		J->pushundefined();
 	}
 }
 

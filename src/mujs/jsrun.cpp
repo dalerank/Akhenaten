@@ -3,8 +3,9 @@
 #include "jscompile.h"
 #include "jsvalue.h"
 #include "jsrun.h"
-
 #include "utf.h"
+
+#include "core/profiler.h"
 
 #include <setjmp.h>
 
@@ -71,6 +72,7 @@ js_String *jsV_newmemstring(js_State *J, const char *s, int n) {
 }
 
 #define CHECKSTACK(n) if (TOP + n >= JS_STACKSIZE) J->stackoverflow()
+#define JCHECKSTACK(n) if (top + n >= JS_STACKSIZE) stackoverflow()
 
 void js_pushvalue(js_State *J, js_Value v) {
     CHECKSTACK(1);
@@ -78,10 +80,10 @@ void js_pushvalue(js_State *J, js_Value v) {
     ++TOP;
 }
 
-void js_pushundefined(js_State *J) {
-    CHECKSTACK(1);
-    STACK[TOP].type = JS_TUNDEFINED;
-    ++TOP;
+void js_State::pushundefined() {
+    JCHECKSTACK(1);
+    stack[top].type = JS_TUNDEFINED;
+    ++top;
 }
 
 void js_pushnull(js_State *J) {
@@ -153,7 +155,7 @@ void js_pushglobal(js_State *J) {
 
 void js_pushundefinedthis(js_State *J) {
     if (J->strict)
-        js_pushundefined(J);
+        J->pushundefined();
     else
         js_pushobject(J, J->G);
 }
@@ -475,11 +477,13 @@ static void js_pushrune(js_State *J, Rune rune) {
         buf[runetochar(buf, &rune)] = 0;
         js_pushstring(J, buf);
     } else {
-        js_pushundefined(J);
+        J->pushundefined();
     }
 }
 
 static int jsR_hasproperty(js_State *J, js_Object *obj, const char *name) {
+    OZZY_PROFILER_FUNCTION();
+
     js_Property *ref;
     int k;
 
@@ -495,6 +499,7 @@ static int jsR_hasproperty(js_State *J, js_Object *obj, const char *name) {
             js_pushnumber(J, obj->u.s.length);
             return 1;
         }
+
         if (js_isarrayindex(J, name, &k)) {
             js_pushrune(J, js_runeat(J, obj->u.s.string, k));
             return 1;
@@ -544,9 +549,10 @@ static int jsR_hasproperty(js_State *J, js_Object *obj, const char *name) {
     return 0;
 }
 
-static void jsR_getproperty(js_State *J, js_Object *obj, const char *name) {
-    if (!jsR_hasproperty(J, obj, name))
-        js_pushundefined(J);
+void js_State::getproperty(js_Object *obj, const char *name) {
+    if (!jsR_hasproperty(this, obj, name)) {
+        pushundefined();
+    }
 }
 
 static void jsR_setproperty(js_State *J, js_Object *obj, const char *name) {
@@ -757,7 +763,7 @@ void js_unref(js_State *J, const char *ref) {
 }
 
 void js_getregistry(js_State *J, const char *name) {
-    jsR_getproperty(J, J->R, name);
+    J->getproperty(J->R, name);
 }
 
 void js_setregistry(js_State *J, const char *name) {
@@ -770,7 +776,7 @@ void js_delregistry(js_State *J, const char *name) {
 }
 
 void js_getglobal(js_State *J, const char *name) {
-    jsR_getproperty(J, J->G, name);
+    J->getproperty(J->G, name);
 }
 
 void js_setglobal(js_State *J, const char *name) {
@@ -784,7 +790,7 @@ void js_defglobal(js_State *J, const char *name, int atts) {
 }
 
 void js_getproperty(js_State *J, int idx, const char *name) {
-    jsR_getproperty(J, js_toobject(J, idx), name);
+    J->getproperty(js_toobject(J, idx), name);
 }
 
 void js_setproperty(js_State *J, int idx, const char *name) {
@@ -938,8 +944,10 @@ static void jsR_calllwfunction(js_State *J, int n, js_Function *F, js_Environmen
         js_pop(J, F->numparams - n);
         n = F->numparams;
     }
-    for (i = n; i < F->varlen; ++i)
-        js_pushundefined(J);
+
+    for (i = n; i < F->varlen; ++i) {
+        J->pushundefined();
+    }
 
     js::jsR_run(J, F);
     v = *stackidx(J, -1);
@@ -977,7 +985,7 @@ static void jsR_callfunction(js_State *J, int n, js_Function *F, js_Environment 
         if (i < n)
             js_initvar(J, F->vartab[i], i + 1);
         else {
-            js_pushundefined(J);
+            J->pushundefined();
             js_initvar(J, F->vartab[i], -1);
             js_pop(J, 1);
         }
@@ -1015,7 +1023,7 @@ static void jsR_callcfunction(js_State *J, int n, int min, js_CFunction F) {
     js_Value v;
 
     for (i = n; i < min; ++i)
-        js_pushundefined(J);
+        J->pushundefined();
 
     F(J);
     v = *stackidx(J, -1);
@@ -1324,7 +1332,7 @@ void js::jsR_run(js_State *J, js_Function *F) {
             }
         } break;
 
-        case OP_UNDEF: js_pushundefined(J); break;
+        case OP_UNDEF: J->pushundefined(); break;
         case OP_NULL: js_pushnull(J); break;
         case OP_TRUE: js_pushboolean(J, 1); break;
         case OP_FALSE: js_pushboolean(J, 0); break;
@@ -1368,7 +1376,7 @@ void js::jsR_run(js_State *J, js_Function *F) {
 
         case OP_HASVAR:
             if (!js_hasvar(J, ST[*pc++]))
-                js_pushundefined(J);
+                J->pushundefined();
             break;
 
         case OP_SETVAR:
@@ -1413,14 +1421,14 @@ void js::jsR_run(js_State *J, js_Function *F) {
         case OP_GETPROP:
             str = js_tostring(J, -1);
             obj = js_toobject_pending(J, -2, str);
-            jsR_getproperty(J, obj, str);
+            J->getproperty(obj, str);
             js_rot3pop2(J);
             break;
 
         case OP_GETPROP_S:
             str = ST[*pc++];
             obj = js_toobject_pending(J, -1, str);
-            jsR_getproperty(J, obj, str);
+            J->getproperty(obj, str);
             js_rot2pop1(J);
             break;
 

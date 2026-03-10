@@ -27,7 +27,7 @@ static void js_mission_var_getter(js_State *J) {
     js_pop(J, 2);
 
     if (!name || !g_scenario.vars.is_defined(name)) {
-        js_pushundefined(J);
+        J->pushundefined();
         return;
     }
 
@@ -52,7 +52,7 @@ static void js_mission_var_getter(js_State *J) {
         js_pushstring(J, std::get<xstring>(value).c_str());
         break;
     default:
-        js_pushundefined(J);
+        J->pushundefined();
         break;
     }
 }

@@ -104,7 +104,7 @@ static void O_getOwnPropertyDescriptor(js_State *J)
 	obj = js_toobject(J, 1);
 	ref = jsV_getproperty(J, obj, js_tostring(J, 2));
 	if (!ref)
-		js_pushundefined(J);
+		J->pushundefined();
 	else {
 		js_newobject(J);
 		if (!ref->getter && !ref->setter) {
@@ -116,12 +116,12 @@ static void O_getOwnPropertyDescriptor(js_State *J)
 			if (ref->getter)
 				js_pushobject(J, ref->getter);
 			else
-				js_pushundefined(J);
+				J->pushundefined();
 			js_setproperty(J, -2, "get");
 			if (ref->setter)
 				js_pushobject(J, ref->setter);
 			else
-				js_pushundefined(J);
+				J->pushundefined();
 			js_setproperty(J, -2, "set");
 		}
 		js_pushboolean(J, !(ref->atts & JS_DONTENUM));
@@ -216,14 +216,14 @@ static void ToPropertyDescriptor(js_State *J, js_Object *obj, const char *name, 
 		if (haswritable || hasvalue)
 			js_typeerror(J, "value/writable and get/set attributes are exclusive");
 	} else {
-		js_pushundefined(J);
+		J->pushundefined();
 	}
 
 	if (js_hasproperty(J, -2, "set")) {
 		if (haswritable || hasvalue)
 			js_typeerror(J, "value/writable and get/set attributes are exclusive");
 	} else {
-		js_pushundefined(J);
+		J->pushundefined();
 	}
 
 	js_defaccessor(J, -4, name, atts);

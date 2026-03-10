@@ -228,7 +228,7 @@ void jsB_init(js_State *J)
 	js_pushnumber(J, INFINITY);
 	js_defglobal(J, "Infinity", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
 
-	js_pushundefined(J);
+	J->pushundefined();
 	js_defglobal(J, "undefined", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
 
 	jsB_globalf(J, "parseInt", jsB_parseInt, 1);

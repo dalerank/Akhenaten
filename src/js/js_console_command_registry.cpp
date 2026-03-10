@@ -114,19 +114,19 @@ void js_register_console_command(js_State *J) {
 #if !defined(GAME_PLATFORM_ANDROID)
     if (js_gettop(J) < 2) {
         logs::error("__register_console_command: expected at least 2 arguments (commandName, callback)");
-        js_pushundefined(J);
+        J->pushundefined();
         return;
     }
 
     if (!js_isstring(J, 1)) {
         logs::error("__register_console_command: first argument must be a string (command name)");
-        js_pushundefined(J);
+        J->pushundefined();
         return;
     }
 
     if (!js_iscallable(J, 2)) {
         logs::error("__register_console_command: second argument must be a function");
-        js_pushundefined(J);
+        J->pushundefined();
         return;
     }
 
@@ -145,7 +145,7 @@ void js_register_console_command(js_State *J) {
     bind_debug_command(commandName, wrapper);
 #endif
 
-    js_pushundefined(J);
+    J->pushundefined();
 }
 
 static void on_modifier_console_command(js_State *J, pcstr name, pcstr value) {

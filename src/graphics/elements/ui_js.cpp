@@ -2,6 +2,7 @@
 
 #include "ui.h"
 #include "js/js_game.h"
+#include "mujs/jsi.h"
 #include "widget/widget_sidebar.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/window.h"
@@ -94,20 +95,20 @@ ui::element *GET_ELEM(js_State *J) {
 }
 
 void ui_proxy_get_text(js_State *J) { auto elem = GET_ELEM(J); js_pushstring(J, elem ? elem->text().c_str() : ""); }
-void ui_proxy_set_text(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->text(js_tostring(J, 1)); } js_pushundefined(J); }
+void ui_proxy_set_text(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->text(js_tostring(J, 1)); } J->pushundefined(); }
 void ui_proxy_get_enabled(js_State *J) { auto elem = GET_ELEM(J); js_pushboolean(J, elem ? elem->enabled : false); }
-void ui_proxy_set_enabled(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->set_enabled(js_toboolean(J, 1)); } js_pushundefined(J); }
+void ui_proxy_set_enabled(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->set_enabled(js_toboolean(J, 1)); } J->pushundefined(); }
 void ui_proxy_get_readonly(js_State *J) { auto elem = GET_ELEM(J); js_pushboolean(J, elem ? elem->readonly : false); }
-void ui_proxy_set_readonly(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->readonly = js_toboolean(J, 1); } js_pushundefined(J); }
+void ui_proxy_set_readonly(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->readonly = js_toboolean(J, 1); } J->pushundefined(); }
 void ui_proxy_get_font(js_State *J) { auto elem = GET_ELEM(J); js_pushnumber(J, elem ? elem->font() : FONT_INVALID); }
-void ui_proxy_set_font(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->font((int)js_tonumber(J, 1)); } js_pushundefined(J); }
+void ui_proxy_set_font(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->font((int)js_tonumber(J, 1)); } J->pushundefined(); }
 void ui_proxy_get_text_color(js_State *J) { auto elem = GET_ELEM(J); js_pushnumber(J, elem ? elem->text_color() : COLOR_NULL); }
-void ui_proxy_set_text_color(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->text_color((color)(unsigned int)js_tonumber(J, 1)); } js_pushundefined(J); }
-void ui_proxy_get_noop(js_State *J) { (void)J; js_pushundefined(J); }
-void ui_proxy_set_image(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->image((int)js_tonumber(J, 1)); } js_pushundefined(J); }
+void ui_proxy_set_text_color(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->text_color((color)(unsigned int)js_tonumber(J, 1)); } J->pushundefined(); }
+void ui_proxy_get_noop(js_State *J) { (void)J; J->pushundefined(); }
+void ui_proxy_set_image(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->image((int)js_tonumber(J, 1)); } J->pushundefined(); }
 void ui_proxy_get_selected(js_State *J) { auto elem = GET_ELEM(J); js_pushboolean(J, elem ? elem->selected() : false); }
-void ui_proxy_set_selected(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->select(js_toboolean(J, 1)); } js_pushundefined(J); }
-void ui_proxy_set_tooltip(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->tooltip(xstring(js_tostring(J, 1))); } js_pushundefined(J); }
+void ui_proxy_set_selected(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->select(js_toboolean(J, 1)); } J->pushundefined(); }
+void ui_proxy_set_tooltip(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->tooltip(xstring(js_tostring(J, 1))); } J->pushundefined(); }
 
 void js_register_ui_proxy_accessors(js_State *J) {
     js_newobject(J);
