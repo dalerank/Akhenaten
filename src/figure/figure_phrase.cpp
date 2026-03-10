@@ -84,12 +84,12 @@ void figure::figure_phrase_determine() {
 }
 
 int figure::figure_play_phrase_file() {
-    if (type == 0) {
+    // TODO: Exclude all non-speaking figures
+    if (type == 0 || category() == figure_category_animal) {
         return -1;
     }
 
     xstring path;
-    bool sound_found = false;
     if (phrase_key.empty() || phrase_key == "empty") {
         bstring32 prefix = params().name;
         prefix.replace_str("figure_", "");
@@ -105,6 +105,56 @@ int figure::figure_play_phrase_file() {
         path.printf("Voice/Walker/%s", reaction.sound.c_str());
     }
 
+    vfs::path tmp;
+    if(!g_sound.speech_file_exist(path, tmp)) {
+        figure_synthesize_phrase_file(path);
+    }
+
     g_sound.speech_play_file(path, 255);
     return 1;
+}
+
+void figure::figure_synthesize_phrase_file(const xstring& path)
+{        
+        logs::info("Run akhenaten-tts...");
+
+        xstring base_path = vfs::platform_file_manager_get_base_path();
+        xstring tts_base_path;
+        tts_base_path.printf("%s/akh-tts/", base_path.c_str());
+        xstring tts_path;
+        tts_path.printf("%s/akhenaten-tts", tts_base_path.c_str());
+
+        if (std::filesystem::exists(tts_path.c_str())) {
+
+            xstring original_path = std::filesystem::current_path().string().c_str();
+            std::filesystem::current_path(tts_base_path.c_str());
+
+            bstring32 prefix = params().name;
+            prefix.replace_str("figure_", "");
+
+            auto reaction = dcast()->get_sound_reaction(phrase_key);
+            xstring phrase_text = reaction.text;
+            if (!phrase_text) {
+                phrase_text = lang_get_string(reaction.group, reaction.id);
+            }
+            if (!phrase_text) {
+                phrase_text.printf("#%s", reaction.key.c_str());
+            }
+
+            xstring cmd;
+            cmd.printf("./akhenaten-tts -l en -p \"%s\" -f %s -o ../AUDIO/%s",
+                lang_text_from_key(phrase_text.c_str()), prefix.c_str(), path.c_str());
+
+            if (std::system(cmd.c_str()) == 0) {
+                logs::info("Create file: %s", path.c_str());
+            }
+            else {
+                logs::info("akhenaten-tts failed with cmd: %s", cmd.c_str());
+            }
+
+            std::filesystem::current_path(original_path.c_str());
+        }
+        else {
+            logs::info("%s not found", tts_path.c_str());
+        }
 }
