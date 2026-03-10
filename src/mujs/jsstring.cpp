@@ -413,7 +413,7 @@ loop:
 			js_pushlstring(J, m.sub[x].sp, m.sub[x].ep - m.sub[x].sp);
 		js_pushnumber(J, s - source); /* arg x+2: offset within search string */
 		js_copy(J, 0); /* arg x+3: search string */
-		js_call(J, 2 + x);
+		J->call(2 + x);
 		r = js_tostring(J, -1);
 		js_putm(J, &sb, source, s);
 		js_puts(J, &sb, r);
@@ -506,7 +506,7 @@ static void Sp_replace_string(js_State *J)
 		js_pushlstring(J, s, n); /* arg 1: substring that matched */
 		js_pushnumber(J, s - source); /* arg 2: offset within search string */
 		js_copy(J, 0); /* arg 3: search string */
-		js_call(J, 3);
+		J->call(3);
 		r = js_tostring(J, -1);
 		js_putm(J, &sb, source, s);
 		js_puts(J, &sb, r);

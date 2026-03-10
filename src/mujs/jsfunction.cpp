@@ -101,7 +101,7 @@ static void Fp_apply(js_State *J)
 			js_getindex(J, 2, i);
 	}
 
-	js_call(J, n);
+	J->call(n);
 }
 
 static void Fp_call(js_State *J)
@@ -114,7 +114,7 @@ static void Fp_call(js_State *J)
 	for (i = 0; i < top; ++i)
 		js_copy(J, i);
 
-	js_call(J, top - 2);
+	J->call(top - 2);
 }
 
 static void callbound(js_State *J)
@@ -137,7 +137,7 @@ static void callbound(js_State *J)
 	for (i = 1; i < top; ++i)
 		js_copy(J, i);
 
-	js_call(J, n + top - 1);
+	J->call(n + top - 1);
 }
 
 static void constructbound(js_State *J)

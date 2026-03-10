@@ -268,7 +268,7 @@ static int compare(js_State *J, int x, int y, int *hasx, int *hasy, int hasfn)
 			J->pushundefined(); /* set this object */
 			js_copy(J, -4); /* copy x */
 			js_copy(J, -4); /* copy y */
-			js_call(J, 2);
+			J->call(2);
 			c = js_tonumber(J, -1);
 			js_pop(J, 1);
 			return c;
@@ -463,7 +463,7 @@ static void Ap_every(js_State *J)
 			js_copy(J, -3);
 			js_pushnumber(J, k);
 			js_copy(J, 0);
-			js_call(J, 3);
+			J->call(3);
 			if (!js_toboolean(J, -1))
 				return;
 			js_pop(J, 2);
@@ -492,7 +492,7 @@ static void Ap_some(js_State *J)
 			js_copy(J, -3);
 			js_pushnumber(J, k);
 			js_copy(J, 0);
-			js_call(J, 3);
+			J->call(3);
 			if (js_toboolean(J, -1))
 				return;
 			js_pop(J, 2);
@@ -521,7 +521,7 @@ static void Ap_forEach(js_State *J)
 			js_copy(J, -3);
 			js_pushnumber(J, k);
 			js_copy(J, 0);
-			js_call(J, 3);
+			J->call(3);
 			js_pop(J, 2);
 		}
 	}
@@ -550,7 +550,7 @@ static void Ap_map(js_State *J)
 			js_copy(J, -3);
 			js_pushnumber(J, k);
 			js_copy(J, 0);
-			js_call(J, 3);
+			J->call(3);
 			js_setindex(J, -3, k);
 			js_pop(J, 1);
 		}
@@ -579,7 +579,7 @@ static void Ap_filter(js_State *J)
 			js_copy(J, -3);
 			js_pushnumber(J, k);
 			js_copy(J, 0);
-			js_call(J, 3);
+			J->call(3);
 			if (js_toboolean(J, -1)) {
 				js_pop(J, 1);
 				js_setindex(J, -2, to++);
@@ -623,7 +623,7 @@ static void Ap_reduce(js_State *J)
 			js_rot(J, 4); /* property on top */
 			js_pushnumber(J, k);
 			js_copy(J, 0);
-			js_call(J, 4); /* calculate new accumulator */
+			J->call(4); /* calculate new accumulator */
 		}
 		++k;
 	}
@@ -664,7 +664,7 @@ static void Ap_reduceRight(js_State *J)
 			js_rot(J, 4); /* property on top */
 			js_pushnumber(J, k);
 			js_copy(J, 0);
-			js_call(J, 4); /* calculate new accumulator */
+			J->call(4); /* calculate new accumulator */
 		}
 		--k;
 	}

@@ -15,8 +15,8 @@
 #define STM3(x,a,b,c)	jsP_newnode(J, STM_ ## x, a, b, c, 0)
 #define STM4(x,a,b,c,d)	jsP_newnode(J, STM_ ## x, a, b, c, d)
 
-static js_Ast *expression(js_State *J, int notin);
-static js_Ast *assignment(js_State *J, int notin);
+static js_Ast *expression(js_State *J, int _not_in_);
+static js_Ast *assignment(js_State *J, int _not_in_);
 static js_Ast *memberexp(js_State *J);
 static js_Ast *statement(js_State *J, js_AstModifier *modifiers);
 static js_Ast *emitstatement(js_State *J);
@@ -572,7 +572,7 @@ loop:
 	return a;
 }
 
-static js_Ast *relational(js_State *J, int notin)
+static js_Ast *relational(js_State *J, int _not_in_)
 {
 	js_Ast *a = shift(J);
 loop:
@@ -581,116 +581,117 @@ loop:
 	if (jsP_accept(J, TK_LE)) { a = EXP2(LE, a, shift(J)); goto loop; }
 	if (jsP_accept(J, TK_GE)) { a = EXP2(GE, a, shift(J)); goto loop; }
 	if (jsP_accept(J, TK_INSTANCEOF)) { a = EXP2(INSTANCEOF, a, shift(J)); goto loop; }
-	if (!notin && jsP_accept(J, TK_IN)) { a = EXP2(IN, a, shift(J)); goto loop; }
+	if (!_not_in_ && jsP_accept(J, TK_IN)) { a = EXP2(IN, a, shift(J)); goto loop; }
 	return a;
 }
 
-static js_Ast *equality(js_State *J, int notin)
+static js_Ast *equality(js_State *J, int _not_in_)
 {
-	js_Ast *a = relational(J, notin);
+	js_Ast *a = relational(J, _not_in_);
 loop:
-	if (jsP_accept(J, TK_EQ)) { a = EXP2(EQ, a, relational(J, notin)); goto loop; }
-	if (jsP_accept(J, TK_NE)) { a = EXP2(NE, a, relational(J, notin)); goto loop; }
-	if (jsP_accept(J, TK_STRICTEQ)) { a = EXP2(STRICTEQ, a, relational(J, notin)); goto loop; }
-	if (jsP_accept(J, TK_STRICTNE)) { a = EXP2(STRICTNE, a, relational(J, notin)); goto loop; }
+	if (jsP_accept(J, TK_EQ)) { a = EXP2(EQ, a, relational(J, _not_in_)); goto loop; }
+	if (jsP_accept(J, TK_NE)) { a = EXP2(NE, a, relational(J, _not_in_)); goto loop; }
+	if (jsP_accept(J, TK_STRICTEQ)) { a = EXP2(STRICTEQ, a, relational(J, _not_in_)); goto loop; }
+	if (jsP_accept(J, TK_STRICTNE)) { a = EXP2(STRICTNE, a, relational(J, _not_in_)); goto loop; }
 	return a;
 }
 
-static js_Ast *bitand(js_State *J, int notin)
+static js_Ast *bitand_(js_State *J, int _not_in_)
 {
-	js_Ast *a = equality(J, notin);
+	js_Ast *a = equality(J, _not_in_);
 	while (jsP_accept(J, '&'))
-		a = EXP2(BITAND, a, equality(J, notin));
+		a = EXP2(BITAND, a, equality(J, _not_in_));
 	return a;
 }
 
-static js_Ast *bitxor(js_State *J, int notin)
+static js_Ast *bitxor_(js_State *J, int _not_in_)
 {
-	js_Ast *a = bitand(J, notin);
-	while (jsP_accept(J, '^'))
-		a = EXP2(BITXOR, a, bitand(J, notin));
+	js_Ast *a = bitand_(J, _not_in_);
+	while (jsP_accept(J, '^')) {
+		a = EXP2(BITXOR, a, bitand_(J, _not_in_));
+	}
 	return a;
 }
 
-static js_Ast *bitor_(js_State *J, int notin)
+static js_Ast *bitor_(js_State *J, int _not_in_)
 {
-	js_Ast *a = bitxor(J, notin);
+	js_Ast *a = bitxor_(J, _not_in_);
 	while (jsP_accept(J, '|'))
-		a = EXP2(BITOR, a, bitxor(J, notin));
+		a = EXP2(BITOR, a, bitxor_(J, _not_in_));
 	return a;
 }
 
-static js_Ast *logand(js_State *J, int notin)
+static js_Ast *logand(js_State *J, int _not_in_)
 {
-	js_Ast *a = bitor_(J, notin);
+	js_Ast *a = bitor_(J, _not_in_);
 	if (jsP_accept(J, TK_AND))
-		a = EXP2(LOGAND, a, logand(J, notin));
+		a = EXP2(LOGAND, a, logand(J, _not_in_));
 	return a;
 }
 
-static js_Ast *logor(js_State *J, int notin)
+static js_Ast *logor(js_State *J, int _not_in_)
 {
-	js_Ast *a = logand(J, notin);
+	js_Ast *a = logand(J, _not_in_);
 	if (jsP_accept(J, TK_OR))
-		a = EXP2(LOGOR, a, logor(J, notin));
+		a = EXP2(LOGOR, a, logor(J, _not_in_));
 	return a;
 }
 
-static js_Ast *conditional(js_State *J, int notin)
+static js_Ast *conditional(js_State *J, int _not_in_)
 {
 	js_Ast *a, *b, *c;
-	a = logor(J, notin);
+	a = logor(J, _not_in_);
 	if (jsP_accept(J, '?')) {
 		b = assignment(J, 0);
 		jsP_expect(J, ':');
-		c = assignment(J, notin);
+		c = assignment(J, _not_in_);
 		return EXP3(COND, a, b, c);
 	}
 	return a;
 }
 
-static js_Ast *assignment(js_State *J, int notin)
+static js_Ast *assignment(js_State *J, int _not_in_)
 {
-	js_Ast *a = conditional(J, notin);
-	if (jsP_accept(J, '=')) return EXP2(ASSIGN, a, assignment(J, notin));
-	if (jsP_accept(J, TK_MUL_ASSIGN)) return EXP2(ASSIGN_MUL, a, assignment(J, notin));
-	if (jsP_accept(J, TK_DIV_ASSIGN)) return EXP2(ASSIGN_DIV, a, assignment(J, notin));
-	if (jsP_accept(J, TK_MOD_ASSIGN)) return EXP2(ASSIGN_MOD, a, assignment(J, notin));
-	if (jsP_accept(J, TK_ADD_ASSIGN)) return EXP2(ASSIGN_ADD, a, assignment(J, notin));
-	if (jsP_accept(J, TK_SUB_ASSIGN)) return EXP2(ASSIGN_SUB, a, assignment(J, notin));
-	if (jsP_accept(J, TK_SHL_ASSIGN)) return EXP2(ASSIGN_SHL, a, assignment(J, notin));
-	if (jsP_accept(J, TK_SHR_ASSIGN)) return EXP2(ASSIGN_SHR, a, assignment(J, notin));
-	if (jsP_accept(J, TK_USHR_ASSIGN)) return EXP2(ASSIGN_USHR, a, assignment(J, notin));
-	if (jsP_accept(J, TK_AND_ASSIGN)) return EXP2(ASSIGN_BITAND, a, assignment(J, notin));
-	if (jsP_accept(J, TK_XOR_ASSIGN)) return EXP2(ASSIGN_BITXOR, a, assignment(J, notin));
-	if (jsP_accept(J, TK_OR_ASSIGN)) return EXP2(ASSIGN_BITOR, a, assignment(J, notin));
+	js_Ast *a = conditional(J, _not_in_);
+	if (jsP_accept(J, '=')) return EXP2(ASSIGN, a, assignment(J, _not_in_));
+	if (jsP_accept(J, TK_MUL_ASSIGN)) return EXP2(ASSIGN_MUL, a, assignment(J, _not_in_));
+	if (jsP_accept(J, TK_DIV_ASSIGN)) return EXP2(ASSIGN_DIV, a, assignment(J, _not_in_));
+	if (jsP_accept(J, TK_MOD_ASSIGN)) return EXP2(ASSIGN_MOD, a, assignment(J, _not_in_));
+	if (jsP_accept(J, TK_ADD_ASSIGN)) return EXP2(ASSIGN_ADD, a, assignment(J, _not_in_));
+	if (jsP_accept(J, TK_SUB_ASSIGN)) return EXP2(ASSIGN_SUB, a, assignment(J, _not_in_));
+	if (jsP_accept(J, TK_SHL_ASSIGN)) return EXP2(ASSIGN_SHL, a, assignment(J, _not_in_));
+	if (jsP_accept(J, TK_SHR_ASSIGN)) return EXP2(ASSIGN_SHR, a, assignment(J, _not_in_));
+	if (jsP_accept(J, TK_USHR_ASSIGN)) return EXP2(ASSIGN_USHR, a, assignment(J, _not_in_));
+	if (jsP_accept(J, TK_AND_ASSIGN)) return EXP2(ASSIGN_BITAND, a, assignment(J, _not_in_));
+	if (jsP_accept(J, TK_XOR_ASSIGN)) return EXP2(ASSIGN_BITXOR, a, assignment(J, _not_in_));
+	if (jsP_accept(J, TK_OR_ASSIGN)) return EXP2(ASSIGN_BITOR, a, assignment(J, _not_in_));
 	return a;
 }
 
-static js_Ast *expression(js_State *J, int notin)
+static js_Ast *expression(js_State *J, int _not_in_)
 {
-	js_Ast *a = assignment(J, notin);
+	js_Ast *a = assignment(J, _not_in_);
 	while (jsP_accept(J, ','))
-		a = EXP2(COMMA, a, assignment(J, notin));
+		a = EXP2(COMMA, a, assignment(J, _not_in_));
 	return a;
 }
 
 /* Statements */
 
-static js_Ast *vardec(js_State *J, int notin)
+static js_Ast *vardec(js_State *J, int _not_in_)
 {
 	js_Ast *a = identifier(J);
 	if (jsP_accept(J, '='))
-		return EXP2(VAR, a, assignment(J, notin));
+		return EXP2(VAR, a, assignment(J, _not_in_));
 	return EXP1(VAR, a);
 }
 
-static js_Ast *vardeclist(js_State *J, int notin)
+static js_Ast *vardeclist(js_State *J, int _not_in_)
 {
 	js_Ast *head, *tail;
-	head = tail = LIST(vardec(J, notin));
+	head = tail = LIST(vardec(J, _not_in_));
 	while (jsP_accept(J, ','))
-		tail = tail->b = LIST(vardec(J, notin));
+		tail = tail->b = LIST(vardec(J, _not_in_));
 	return jsP_list(head);
 }
 
