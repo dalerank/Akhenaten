@@ -93,7 +93,7 @@ namespace js_helpers {
     template<>
     inline vec2i js_to_value<vec2i>(js_State *J, int idx) {
         vec2i result;
-        if (js_isobject(J, idx) && !js_isarray(J, idx)) {
+        if (J->isobject(idx) && !js_isarray(J, idx)) {
             js_getproperty(J, idx, "x"); result.x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
             js_getproperty(J, idx, "y"); result.y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
         } else if (js_isarray(J, idx)) {
@@ -106,7 +106,7 @@ namespace js_helpers {
     template<>
     inline tile2i js_to_value<tile2i>(js_State *J, int idx) {
         int x = 0, y = 0;
-        if (js_isobject(J, idx) && !js_isarray(J, idx)) {
+        if (J->isobject(idx) && !js_isarray(J, idx)) {
             js_getproperty(J, idx, "x"); x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
             js_getproperty(J, idx, "y"); y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
         } else if (js_isarray(J, idx)) {
@@ -132,7 +132,7 @@ namespace js_helpers {
             } else {
                 return bvariant((float)num);
             }
-        } else if (js_isobject(J, idx) && !js_isarray(J, idx)) {
+        } else if (J->isobject(idx) && !js_isarray(J, idx)) {
             // Check if it's a vec2i-like object with x and y properties
             js_getproperty(J, idx, "x");
             bool has_x = !js_isundefined(J, -1);
@@ -324,7 +324,7 @@ namespace js_helpers {
     // Convert JS object to bvariant_map
     inline bvariant_map js_object_to_bvariant_map(js_State *J, int idx) {
         bvariant_map result;
-        if (!js_isobject(J, idx) || js_isarray(J, idx)) {
+        if (!J->isobject(idx) || js_isarray(J, idx)) {
             return result;
         }
 

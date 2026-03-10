@@ -63,7 +63,7 @@ declare_console_command_p(reload_scripts){
 
 static void js_vm_log_stacktrace(js_State *J) {
     // Try to get stack trace from error object if it's an Error
-    if (js_isobject(J, -1)) {
+    if (J->isobject(-1)) {
         if (J->hasproperty(-1, "stackTrace")) {
             js_getproperty(J, -1, "stackTrace");
             if (js_isstring(J, -1)) {
@@ -132,7 +132,7 @@ static void js_vm_dump_stack(js_State *J) {
             } else {
                 value_desc.printf("string: \"%s\"", str ? str : "");
             }
-        } else if (js_isobject(J, idx)) {
+        } else if (J->isobject(idx)) {
             if (js_isarray(J, idx)) {
                 value_desc.printf("array (length: %d)", js_getlength(J, idx));
             } else if (js_iscallable(J, idx)) {
@@ -192,7 +192,7 @@ int js_vm_trypcall(js_State *J, int params) {
         pcstr error_msg = js_tostring(J, -1);
         
         // Log error type if it's an Error object
-        if (js_isobject(J, -1)) {
+        if (J->isobject(-1)) {
             if (J->hasproperty(-1, "name")) {
                 js_getproperty(J, -1, "name");
                 const char *error_name = js_tostring(J, -1);

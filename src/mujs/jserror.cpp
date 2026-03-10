@@ -257,8 +257,9 @@ static void Ep_toString(js_State *J)
   const char *name = "Error";
   const char *message = "";
 
-  if (!js_isobject(J, -1))
-    js_typeerror(J, "not an object");
+  if (!J->isobject(-1)) {
+      js_typeerror(J, "not an object");
+  }
 
   if (J->hasproperty(0, "name"))
     name = js_tostring(J, -1);

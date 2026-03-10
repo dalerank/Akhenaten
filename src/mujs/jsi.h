@@ -209,6 +209,8 @@ struct js_State
 	int hasproperty(js_Object *obj, const char *name);
 
 	int hasproperty(int idx, const char *name);
+	
+	int isobject(int idx);
 };
 
 #endif
