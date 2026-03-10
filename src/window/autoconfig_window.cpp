@@ -3,11 +3,11 @@
 #include "core/log.h"
 #include "js/js_game.h"
 #include "window/message_dialog.h"
+#include "core/profiler.h"
 #include "graphics/elements/ui_js.h"
 #include "js/js_struct.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "core/profiler.h"
 #include <algorithm>
 #include <mutex>
 #include <map>

@@ -135,6 +135,8 @@ bool js_has_event_handlers(const xstring &event_name) {
 }
 
 void js_call_event_handlers(const xstring &event_name, const bvariant_map &object) {
+    OZZY_PROFILER_SECTION(_, event_name.c_str())
+
     auto it = event_type_handlers.find(event_name);
     if (it == event_type_handlers.end()) {
         return;
@@ -147,7 +149,9 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
 
     const event_handlers &handlers = it->second;
     for (const auto &handlerName : handlers) {
-        const char *funcname = handlerName.c_str();
+        pcstr funcname = handlerName.c_str();
+
+        OZZY_PROFILER_SECTION(_, funcname)
 
         int savetop = js_gettop(J);
         js_getglobal(J, funcname);
@@ -208,6 +212,7 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
         }
 
         if (has_ui_elements) {
+            OZZY_PROFILER_SECTION(_, "has_ui_elements")
             for (const auto &kv : object) {
                 const xstring &key = kv.first;
                 const bvariant &val = kv.second;
@@ -236,7 +241,11 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
         }
 
         // Call with 1 argument (the object)
-        int ok = js_vm_trypcall(J, 1);
+        int ok; 
+        {
+            OZZY_PROFILER_SECTION(_, "function_call")
+            ok = js_vm_trypcall(J, 1);
+        }
         if (!ok) {
             logs::info("Fatal error on call function %s", funcname);
         }

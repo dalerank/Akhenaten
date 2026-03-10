@@ -1,7 +1,9 @@
 #include "js_window_registry.h"
+
 #include "window/window_info.h"
 #include "js/js_game.h"
 #include "js/js_struct.h"
+#include "core/profiler.h"
 #include "graphics/elements/ui_js.h"
 #include "core/log.h"
 #include "city/constants.h"

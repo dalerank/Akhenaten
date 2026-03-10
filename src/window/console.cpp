@@ -5,6 +5,7 @@
 #include "game/game_events.h"
 #include "core/string.h"
 #include "core/log.h"
+#include "core/profiler.h"
 #include "game/cheats.h"
 #include "graphics/graphics.h"
 #include "building/construction/build_planner.h"

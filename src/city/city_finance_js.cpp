@@ -1,6 +1,7 @@
 #include "city_finance.h"
 
 #include "city/city.h"
+#include "core/profiler.h"
 #include "js/js_game.h"
 
 std::optional<bvariant> __city_finance_income(pcstr property, bool this_year) {
