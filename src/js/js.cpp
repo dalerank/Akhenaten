@@ -186,7 +186,7 @@ int js_vm_trypcall(js_State *J, int params) {
         return 0;
     }
 
-    int error = js_pcall(J, params);
+    int error = J->pcall(params);
     if (error) {
         vm.have_error = 1;
         pcstr error_msg = js_tostring(J, -1);

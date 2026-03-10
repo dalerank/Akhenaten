@@ -54,7 +54,6 @@ int js_dostring(js_State *J, const char *source);
 int js_dofile(js_State *J, const char *filename);
 int js_ploadstring(js_State *J, const char *filename, const char *source);
 int js_ploadfile(js_State *J, const char *filename);
-int js_pcall(js_State *J, int n);
 int js_pconstruct(js_State *J, int n);
 
 /* Exception handling */
@@ -111,7 +110,6 @@ js_Import js_registerimport(js_State *J, js_Import importFunc);
 js_Emit js_registeremit(js_State *J, js_Emit emitFunc);
 
 void js_eval(js_State *J);
-void js_call(js_State *J, int n);
 void js_construct(js_State *J, int n);
 /** Dump current JS call stack (name, file, line) to stdout. Use when id/undefined to find caller. */
 void js_stacktrace(js_State *J);

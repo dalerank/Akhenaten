@@ -212,7 +212,7 @@ static int fmtvalue(js_State *J, js_Buffer **sb, const char *key, const char *ga
 			if (js_iscallable(J, -1)) {
 				js_copy(J, -2);
 				js_pushliteral(J, key);
-				js_call(J, 1);
+				J->call(1);
 				js_rot2pop1(J);
 			} else {
 				js_pop(J, 1);

@@ -158,7 +158,7 @@ int js_dostring(js_State *J, const char *source)
 	}
 	js_loadstring(J, "[string]", source);
 	js_pushglobal(J);
-	js_call(J, 0);
+	J->call(0);
 	js_pop(J, 1);
 	js_endtry(J);
 	return 0;
@@ -173,7 +173,7 @@ int js_dofile(js_State *J, const char *filename)
 	}
 	js_loadfile(J, filename);
 	js_pushglobal(J);
-	js_call(J, 0);
+	J->call(0);
 	js_pop(J, 1);
 	js_endtry(J);
 	return 0;

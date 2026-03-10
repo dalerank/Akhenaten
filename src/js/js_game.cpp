@@ -463,7 +463,7 @@ void js_call_function(xstring js_ref) {
     js_getregistry(J, js_ref.c_str());
     if (js_iscallable(J, -1)) {
         js_pushnull(J);  // 'this' context
-        int result = js_pcall(J, 0);
+        int result = J->pcall(0);
         if (result != 0) {
             logs::error("JS onclick callback error: %s", js_tostring(J, -1));
             js_pop(J, 1);
@@ -485,7 +485,7 @@ void js_call_function_bool(xstring js_ref, bool param) {
     if (js_iscallable(J, -1)) {
         js_pushnull(J);
         js_pushboolean(J, param);
-        int result = js_pcall(J, 1);
+        int result = J->pcall(1);
         if (result != 0) {
             logs::error("JS dialog callback error: %s", js_tostring(J, -1));
             js_pop(J, 1);
@@ -509,7 +509,7 @@ pcstr js_call_function_with_result(xstring js_ref, int param1, int param2) {
         js_pushnull(J);  // 'this' context
         js_pushnumber(J, (double)param1);
         js_pushnumber(J, (double)param2);
-        int result = js_pcall(J, 2);
+        int result = J->pcall(2);
         if (result != 0) {
             logs::error("JS textfn callback error: %s", js_tostring(J, -1));
             js_pop(J, 1);

@@ -54,7 +54,7 @@ static int jsV_toString(js_State *J, js_Object *obj)
 	js_getproperty(J, -1, "toString");
 	if (js_iscallable(J, -1)) {
 		js_rot2(J);
-		js_call(J, 0);
+		J->call(0);
 		if (js_isprimitive(J, -1))
 			return 1;
 		js_pop(J, 1);
@@ -71,7 +71,7 @@ static int jsV_valueOf(js_State *J, js_Object *obj)
 	js_getproperty(J, -1, "valueOf");
 	if (js_iscallable(J, -1)) {
 		js_rot2(J);
-		js_call(J, 0);
+		J->call(0);
 		if (js_isprimitive(J, -1))
 			return 1;
 		js_pop(J, 1);

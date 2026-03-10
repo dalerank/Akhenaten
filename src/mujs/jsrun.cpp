@@ -542,7 +542,7 @@ int js_State::hasproperty(js_Object *obj, const char *name) {
         if (ref->getter) {
             js_pushobject(J, ref->getter);
             js_pushobject(J, obj);
-            js_call(J, 0);
+            J->call(0);
         } else {
             js_pushvalue(J, ref->value);
         }
@@ -608,7 +608,7 @@ static void jsR_setproperty(js_State *J, js_Object *obj, const char *name) {
         js_pushobject(J, ref->setter);
         js_pushobject(J, obj);
         js_pushvalue(J, *value);
-        js_call(J, 1);
+        J->call(1);
         js_pop(J, 1);
         return;
     }
@@ -867,7 +867,7 @@ static int js_hasvar(js_State *J, const char *name) {
             if (ref->getter) {
                 js_pushobject(J, ref->getter);
                 js_pushobject(J, E->variables);
-                js_call(J, 0);
+                J->call(0);
             } else {
                 js_pushvalue(J, ref->value);
             }
@@ -887,7 +887,7 @@ static void js_setvar(js_State *J, const char *name) {
                 js_pushobject(J, ref->setter);
                 js_pushobject(J, E->variables);
                 js_copy(J, -3);
-                js_call(J, 1);
+                J->call(1);
                 js_pop(J, 1);
                 return;
             }
@@ -1042,12 +1042,16 @@ static void jsR_pushtrace(js_State *J, const char *name, const char *file, int l
     J->trace[J->tracetop].line = line;
 }
 
-void js_call(js_State *J, int n) {
+void js_State::call(int n) {
+    OZZY_PROFILER_FUNCTION();
+
     js_Object *obj;
     int savebot;
 
-    if (!js_iscallable(J, -n - 2))
+    auto J = this;
+    if (!js_iscallable(J, -n - 2)) {
         js_typeerror(J, "called object is not a function");
+    }
 
     obj = js_toobject(J, -n - 2);
 
@@ -1115,7 +1119,7 @@ void js_construct(js_State *J, int n) {
         js_rot(J, n + 1);
 
     /* call the function */
-    js_call(J, n);
+    J->call(n);
 
     /* if result is not an object, return the original object we created */
     if (!J->isobject(-1)) {
@@ -1125,12 +1129,13 @@ void js_construct(js_State *J, int n) {
 }
 
 void js_eval(js_State *J) {
-    if (!js_isstring(J, -1))
+    if (!js_isstring(J, -1)) {
         return;
+    }
     js_loadeval(J, "(eval)", js_tostring(J, -1));
     js_rot2pop1(J);
     js_copy(J, 0); /* copy 'this' */
-    js_call(J, 0);
+    J->call(0);
 }
 
 int js_pconstruct(js_State *J, int n) {
@@ -1146,24 +1151,28 @@ int js_pconstruct(js_State *J, int n) {
     return 0;
 }
 
-int js_pcall(js_State *J, int n) {
-    int savetop = TOP - n - 2;
-    if (js_try(J)) {
+int js_State::pcall(int n) {
+    OZZY_PROFILER_FUNCTION();
+
+    int savetop = top - n - 2;
+    if (js_try(this)) {
         /* clean up the stack to only hold the error object */
-        STACK[savetop] = STACK[TOP - 1];
-        TOP = savetop + 1;
+        stack[savetop] = stack[top - 1];
+        top = savetop + 1;
         return 1;
     }
-    js_call(J, n);
-    js_endtry(J);
+    call(n);
+    js_endtry(this);
     return 0;
 }
 
 /* Exceptions */
 
 void *js_savetrypc(js_State *J, js_Instruction *pc) {
-    if (J->trytop == JS_TRYLIMIT)
+    if (J->trytop == JS_TRYLIMIT) {
         js_error(J, "try: exception stack overflow");
+    }
+
     J->trybuf[J->trytop].E = J->E;
     J->trybuf[J->trytop].envtop = J->envtop;
     J->trybuf[J->trytop].tracetop = J->tracetop;
@@ -1493,7 +1502,7 @@ void js::jsR_run(js_State *J, js_Function *F) {
             break;
 
         case OP_CALL:
-            js_call(J, *pc++);
+            J->call(*pc++);
             break;
 
         case OP_NEW:
