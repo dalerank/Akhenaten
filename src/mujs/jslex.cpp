@@ -188,7 +188,7 @@ static void textinit(js_State *J)
 {
 	if (!J->lexbuf.text) {
 		J->lexbuf.cap = 4096;
-		J->lexbuf.text = js_malloc(J, J->lexbuf.cap);
+		J->lexbuf.text = (char*)js_malloc(J, J->lexbuf.cap);
 	}
 	J->lexbuf.len = 0;
 }
@@ -198,7 +198,7 @@ static void textpush(js_State *J, Rune c)
 	int n = runelen(c);
 	if (J->lexbuf.len + n > J->lexbuf.cap) {
 		J->lexbuf.cap = J->lexbuf.cap * 2;
-		J->lexbuf.text = js_realloc(J, J->lexbuf.text, J->lexbuf.cap);
+		J->lexbuf.text = (char*)js_realloc(J, J->lexbuf.text, J->lexbuf.cap);
 	}
 	J->lexbuf.len += runetochar(J->lexbuf.text + J->lexbuf.len, &c);
 }

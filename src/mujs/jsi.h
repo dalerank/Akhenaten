@@ -140,7 +140,7 @@ struct js_Jumpbuf
 void *js_savetrypc(js_State *J, js_Instruction *pc);
 
 #define js_trypc(J, PC) \
-	setjmp(js_savetrypc(J, PC))
+	setjmp(*((jmp_buf *)js_savetrypc(J, PC)))
 
 /* State struct */
 

@@ -62,7 +62,7 @@ int js_pconstruct(js_State *J, int n);
 void *js_savetry(js_State *J); /* returns a jmp_buf */
 
 #define js_try(J) \
-  setjmp(js_savetry(J))
+  setjmp(*((jmp_buf *)js_savetry(J)))
 
 void js_endtry(js_State *J);
 
