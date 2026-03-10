@@ -134,6 +134,10 @@ bool js_has_event_handlers(const xstring &event_name) {
     return (it != event_type_handlers.end());
 }
 
+static const pcstr prop_names[] = {
+    "text", "enabled", "readonly", "font", "text_color", "image", "selected", "tooltip"
+};
+
 void js_call_event_handlers(const xstring &event_name, const bvariant_map &object) {
     OZZY_PROFILER_SECTION(_, event_name.c_str())
 
@@ -167,16 +171,16 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
 
         js_newobject(J);
 
-        // First pass: add regular properties
-        bool has_ui_elements = false;
+        // First pass: add regular properties and collect UI element IDs
+        hvector<bstring64, 32> ui_element_ids;
         for (const auto &kv : object) {
             const xstring &key = kv.first;
             const bvariant &val = kv.second;
 
-            // Skip UI element markers in first pass
+
             bstring64 keystr = key.c_str();
             if (keystr.starts_with("__ui_elem_")) {
-                has_ui_elements = true;
+                ui_element_ids.push_back(keystr.substr(10, -1));
                 continue;
             }
 
@@ -211,37 +215,31 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
             js_setproperty(J, -2, key.c_str());
         }
 
-        if (has_ui_elements) {
+        if (!ui_element_ids.empty()) {
             OZZY_PROFILER_SECTION(_, "has_ui_elements")
-            for (const auto &kv : object) {
-                const xstring &key = kv.first;
-                const bvariant &val = kv.second;
-
-                bstring64 keystr = key.c_str();
-                if (keystr.starts_with("__ui_elem_")) {
-                    auto element_id = keystr.substr(10, -1); // Remove "__ui_elem_" prefix
-
-                    // Call helper function to create proxy object
-                    js_getglobal(J, "ui_create_element_proxy");
-                    verify_no_crash(js_iscallable(J, -1));
-                    js_pushnull(J);  // 'this' context
+            // Stack: event_obj at -1. Get shared accessors once (used by all proxies).
+            js_getglobal(J, "__ui_proxy_accessors");
+            if (js_isobject(J, -1)) {
+                for (const auto &element_id : ui_element_ids) {
+                    // Stack: event_obj (-2), accessors (-1). Create proxy and set event_obj[element_id].
+                    js_newobject(J);
                     js_pushstring(J, element_id.c_str());
-
-                    int result = js_pcall(J, 1);
-                    if (result != 0) {
-                        logs::error("JS ui_create_element_proxy() callback error: %s", js_tostring(J, -1));
+                    js_setproperty(J, -2, "id");
+                    for (pcstr name : prop_names) {
+                        js_getproperty(J, -2, name);
+                        js_getindex(J, -1, 0);
+                        js_getindex(J, -2, 1);
+                        js_defaccessor(J, -4, name, 0);
                         js_pop(J, 1);
-                        continue;
                     }
-
-                    // Set the element as property (without __ui_elem_ prefix)
-                    js_setproperty(J, -2, element_id.c_str());
+                    js_setproperty(J, -3, element_id.c_str());
                 }
             }
+            js_pop(J, 1); // __ui_proxy_accessors
         }
 
         // Call with 1 argument (the object)
-        int ok; 
+        int ok;
         {
             OZZY_PROFILER_SECTION(_, "function_call")
             ok = js_vm_trypcall(J, 1);

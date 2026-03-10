@@ -113,6 +113,8 @@ js_Emit js_registeremit(js_State *J, js_Emit emitFunc);
 void js_eval(js_State *J);
 void js_call(js_State *J, int n);
 void js_construct(js_State *J, int n);
+/** Dump current JS call stack (name, file, line) to stdout. Use when id/undefined to find caller. */
+void js_stacktrace(js_State *J);
 
 const char *js_ref(js_State *J);
 void js_unref(js_State *J, const char *ref);

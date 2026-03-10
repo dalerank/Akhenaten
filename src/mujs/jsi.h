@@ -116,6 +116,7 @@ void js_pushundefinedthis(js_State *J); /* push 'global' if non-strict, undefine
 void js_RegExp_prototype_exec(js_State *J, js_Regexp *re, const char *text);
 
 void js_trap(js_State *J, int pc); /* dump stack and environment to stdout */
+void js_stacktrace(js_State *J);
 
 struct js_StackTrace
 {
