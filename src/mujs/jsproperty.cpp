@@ -29,7 +29,7 @@ static js_Property sentinel = {
 
 static js_Property *newproperty(js_State *J, js_Object *obj, const char *name)
 {
-	js_Property *node = js_malloc(J, sizeof *node);
+	js_Property *node = (js_Property*)js_malloc(J, sizeof *node);
 	node->name = js_intern(J, name);
 	node->left = node->right = &sentinel;
 	node->prevp = NULL;
@@ -109,16 +109,16 @@ static void freeproperty(js_State *J, js_Object *obj, js_Property *node)
 	--obj->count;
 }
 
-static js_Property *delete(js_State *J, js_Object *obj, js_Property *node, const char *name)
+js_Property *prop_delete(js_State *J, js_Object *obj, js_Property *node, const char *name)
 {
 	js_Property *temp, *succ;
 
 	if (node != &sentinel) {
 		int c = strcmp(name, node->name);
 		if (c < 0) {
-			node->left = delete(J, obj, node->left, name);
+			node->left = prop_delete(J, obj, node->left, name);
 		} else if (c > 0) {
-			node->right = delete(J, obj, node->right, name);
+			node->right = prop_delete(J, obj, node->right, name);
 		} else {
 			if (node->left == &sentinel) {
 				temp = node;
@@ -135,7 +135,7 @@ static js_Property *delete(js_State *J, js_Object *obj, js_Property *node, const
 				node->name = succ->name;
 				node->atts = succ->atts;
 				node->value = succ->value;
-				node->right = delete(J, obj, node->right, succ->name);
+				node->right = prop_delete(J, obj, node->right, succ->name);
 			}
 		}
 
@@ -157,7 +157,7 @@ static js_Property *delete(js_State *J, js_Object *obj, js_Property *node, const
 
 js_Object *jsV_newobject(js_State *J, enum js_Class type, js_Object *prototype)
 {
-	js_Object *obj = js_malloc(J, sizeof *obj);
+	js_Object *obj = (js_Object*)js_malloc(J, sizeof *obj);
 	memset(obj, 0, sizeof *obj);
 	obj->gcmark = 0;
 	obj->gcnext = J->gcobj;
@@ -224,7 +224,7 @@ js_Property *jsV_setproperty(js_State *J, js_Object *obj, const char *name)
 
 void jsV_delproperty(js_State *J, js_Object *obj, const char *name)
 {
-	obj->properties = delete(J, obj, obj->properties, name);
+	obj->properties = prop_delete(J, obj, obj->properties, name);
 }
 
 /* Flatten hierarchy of enumerable properties into an iterator object */
@@ -252,7 +252,7 @@ static void itwalk(js_State *J, js_Object *io, js_Object *top, int own)
 	int k;
 
 #define ITADD(x) \
-	js_Iterator *node = js_malloc(J, sizeof *node); \
+	js_Iterator *node = (js_Iterator*)js_malloc(J, sizeof *node); \
 	node->name = x; \
 	node->next = NULL; \
 	if (!tail) { \

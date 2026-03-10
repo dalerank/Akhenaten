@@ -97,7 +97,7 @@ void js_loadfile(js_State *J, const char *filename)
 		js_error(J, "cannot seek in file: '%s'", filename);
 	}
 
-	s = js_malloc(J, n + 1); /* add space for string terminator */
+	s = (char*)js_malloc(J, n + 1); /* add space for string terminator */
 	if (!s) {
 		fclose(f);
 		js_error(J, "cannot allocate storage for file contents: '%s'", filename);
@@ -212,9 +212,10 @@ js_State *js_newstate(js_Alloc alloc, void *actx, int flags)
 	if (!alloc)
 		alloc = js_defaultalloc;
 
-	J = alloc(actx, NULL, sizeof *J);
+	J = (js_State*)alloc(actx, NULL, sizeof *J);
 	if (!J)
 		return NULL;
+
 	memset(J, 0, sizeof(*J));
 	J->actx = actx;
 	J->alloc = alloc;
@@ -230,7 +231,7 @@ js_State *js_newstate(js_Alloc alloc, void *actx, int flags)
 
 	J->panic = js_defaultpanic;
 
-	J->stack = alloc(actx, NULL, JS_STACKSIZE * sizeof *J->stack);
+	J->stack = (js_Value*)alloc(actx, NULL, JS_STACKSIZE * sizeof *J->stack);
 	if (!J->stack) {
 		alloc(actx, NULL, 0);
 		return NULL;

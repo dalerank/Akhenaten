@@ -494,7 +494,7 @@ void js_concat(js_State *J)
 	if (js_isstring(J, -2) || js_isstring(J, -1)) {
 		const char *sa = js_tostring(J, -2);
 		const char *sb = js_tostring(J, -1);
-		char *sab = js_frame_alloc(J, strlen(sa) + strlen(sb) + 1);
+		char *sab = (char*)js_frame_alloc(J, strlen(sa) + strlen(sb) + 1);
 		strcpy(sab, sa);
 		strcat(sab, sb);
 		if (js_try(J)) {

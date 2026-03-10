@@ -769,7 +769,7 @@ file(GLOB SCRIPTS_FILES ${PROJECT_SOURCE_DIR}/src/scripts/*.cpp)
 file(GLOB LZMA_FILES ${PROJECT_SOURCE_DIR}/src/lzma/*.c)
 file(GLOB BZIP_FILES ${PROJECT_SOURCE_DIR}/src/bzip/*.c)
 file(GLOB LAME_FILES ${PROJECT_SOURCE_DIR}/src/lame/libmp3lame/*.c)
-file(GLOB MUJS_FILES ${PROJECT_SOURCE_DIR}/src/mujs/*.c)
+file(GLOB MUJS_FILES ${PROJECT_SOURCE_DIR}/src/mujs/*.cpp)
 
 if (PLATFORM_ANDROID)
     add_definitions(-DANDROID_BUILD=ON)

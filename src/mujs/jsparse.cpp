@@ -53,7 +53,7 @@ static void jsP_warning(js_State *J, const char *fmt, ...)
 
 static js_Ast *jsP_newnode(js_State *J, enum js_AstType type, js_Ast *a, js_Ast *b, js_Ast *c, js_Ast *d)
 {
-	js_Ast *node = js_malloc(J, sizeof *node);
+	js_Ast *node = (js_Ast *)js_malloc(J, sizeof *node);
 
 	node->type = type;
 	node->line = J->astline;
@@ -252,7 +252,7 @@ static js_Ast *propassign(js_State *J, js_AstModifier *modifiers)
 	/* Check if property starts with @ - if so, add [property] modifier */
 	if (jsP_accept(J, '@')) {
 		/* Add property modifier */
-		js_AstModifier *property_mod = js_malloc(J, sizeof(js_AstModifier));
+		js_AstModifier *property_mod = (js_AstModifier*)js_malloc(J, sizeof(js_AstModifier));
 		property_mod->key = js_intern(J, "property");
 		property_mod->value = js_intern(J, "true");
 		property_mod->next = modifiers;
@@ -1078,7 +1078,7 @@ static js_AstModifier *parsemodifiers(js_State *J)
 		value = js_intern(J, "true");
 	}
 
-	head = tail = js_malloc(J, sizeof(js_AstModifier));
+	head = tail = (js_AstModifier*)js_malloc(J, sizeof(js_AstModifier));
 	head->key = js_intern(J, key);
 	head->value = value;
 	head->next = NULL;
@@ -1113,7 +1113,7 @@ static js_AstModifier *parsemodifiers(js_State *J)
 			value = js_intern(J, "true");
 		}
 
-		js_AstModifier *mod = js_malloc(J, sizeof(js_AstModifier));
+		js_AstModifier *mod = (js_AstModifier*)js_malloc(J, sizeof(js_AstModifier));
 		mod->key = js_intern(J, key);
 		mod->value = value;
 		mod->next = NULL;
