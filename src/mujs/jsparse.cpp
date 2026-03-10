@@ -612,7 +612,7 @@ static js_Ast *bitxor(js_State *J, int notin)
 	return a;
 }
 
-static js_Ast *bitor(js_State *J, int notin)
+static js_Ast *bitor_(js_State *J, int notin)
 {
 	js_Ast *a = bitxor(J, notin);
 	while (jsP_accept(J, '|'))
@@ -622,7 +622,7 @@ static js_Ast *bitor(js_State *J, int notin)
 
 static js_Ast *logand(js_State *J, int notin)
 {
-	js_Ast *a = bitor(J, notin);
+	js_Ast *a = bitor_(J, notin);
 	if (jsP_accept(J, TK_AND))
 		a = EXP2(LOGAND, a, logand(J, notin));
 	return a;

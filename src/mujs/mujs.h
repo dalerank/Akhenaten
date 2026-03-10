@@ -29,7 +29,7 @@
 extern "C" {
 #endif
 
-typedef struct js_State js_State;
+struct js_State;
 
 typedef void *(*js_Alloc)(void *memctx, void *ptr, int size);
 typedef void (*js_Panic)(js_State *J);
@@ -127,7 +127,6 @@ void js_getglobal(js_State *J, const char *name);
 void js_setglobal(js_State *J, const char *name);
 void js_defglobal(js_State *J, const char *name, int atts);
 
-int js_hasproperty(js_State *J, int idx, const char *name);
 void js_getproperty(js_State *J, int idx, const char *name);
 void js_setproperty(js_State *J, int idx, const char *name);
 void js_defproperty(js_State *J, int idx, const char *name, int atts);

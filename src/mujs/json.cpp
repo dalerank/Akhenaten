@@ -208,7 +208,7 @@ static int fmtvalue(js_State *J, js_Buffer **sb, const char *key, const char *ga
 		js_throw(J);
 	}
 	if (js_isobject(J, -1)) {
-		if (js_hasproperty(J, -1, "toJSON")) {
+		if (J->hasproperty(-1, "toJSON")) {
 			if (js_iscallable(J, -1)) {
 				js_copy(J, -2);
 				js_pushliteral(J, key);

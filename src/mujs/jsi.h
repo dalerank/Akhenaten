@@ -206,6 +206,9 @@ struct js_State
 	void pushundefined();
 
 	void getproperty(js_Object *obj, const char *name);
+	int hasproperty(js_Object *obj, const char *name);
+
+	int hasproperty(int idx, const char *name);
 };
 
 #endif

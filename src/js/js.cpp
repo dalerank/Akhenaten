@@ -64,7 +64,7 @@ declare_console_command_p(reload_scripts){
 static void js_vm_log_stacktrace(js_State *J) {
     // Try to get stack trace from error object if it's an Error
     if (js_isobject(J, -1)) {
-        if (js_hasproperty(J, -1, "stackTrace")) {
+        if (J->hasproperty(-1, "stackTrace")) {
             js_getproperty(J, -1, "stackTrace");
             if (js_isstring(J, -1)) {
                 const char *stack_trace = js_tostring(J, -1);
@@ -193,7 +193,7 @@ int js_vm_trypcall(js_State *J, int params) {
         
         // Log error type if it's an Error object
         if (js_isobject(J, -1)) {
-            if (js_hasproperty(J, -1, "name")) {
+            if (J->hasproperty(-1, "name")) {
                 js_getproperty(J, -1, "name");
                 const char *error_name = js_tostring(J, -1);
                 logs::info("!!! Error type: %s", error_name ? error_name : "<unknown>");
