@@ -18,35 +18,6 @@
 #pragma warning(disable:4244) /* implicit conversion from double to int */
 #pragma warning(disable:4267) /* implicit conversion of int to smaller int */
 #define inline __inline
-#if _MSC_VER < 1900 /* MSVC 2015 */
-#define snprintf jsW_snprintf
-#define vsnprintf jsW_vsnprintf
-static int jsW_vsnprintf(char *str, size_t size, const char *fmt, va_list ap)
-{
-	int n;
-	n = _vsnprintf(str, size, fmt, ap);
-	str[size-1] = 0;
-	return n;
-}
-static int jsW_snprintf(char *str, size_t size, const char *fmt, ...)
-{
-	int n;
-	va_list ap;
-	va_start(ap, fmt);
-	n = jsW_vsnprintf(str, size, fmt, ap);
-	va_end(ap);
-	return n;
-}
-#endif
-#if _MSC_VER < 1700 /* MSVC 2012 */
-#define round(x) floor((x) < 0 ? (x) - 0.5 : (x) + 0.5)
-#define isnan(x) _isnan(x)
-#define isinf(x) (!_finite(x))
-#define isfinite(x) _finite(x)
-static __inline int signbit(double x) {union{double d;__int64 i;}u;u.d=x;return u.i>>63;}
-#define INFINITY (DBL_MAX+DBL_MAX)
-#define NAN (INFINITY-INFINITY)
-#endif
 #endif
 
 #define soffsetof(x,y) ((int)offsetof(x,y))
@@ -56,16 +27,16 @@ void *js_malloc(js_State *J, int size);
 void *js_realloc(js_State *J, void *ptr, int size);
 void js_free(js_State *J, void *ptr);
 
-typedef struct js_Regexp js_Regexp;
-typedef struct js_Value js_Value;
-typedef struct js_Object js_Object;
-typedef struct js_String js_String;
-typedef struct js_Ast js_Ast;
-typedef struct js_Function js_Function;
-typedef struct js_Environment js_Environment;
-typedef struct js_StringNode js_StringNode;
-typedef struct js_Jumpbuf js_Jumpbuf;
-typedef struct js_StackTrace js_StackTrace;
+struct js_Regexp;
+struct js_Value;
+struct js_Object;
+struct js_String;
+struct js_Ast;
+struct js_Function;
+struct js_Environment;
+struct js_StringNode;
+struct js_Jumpbuf;
+struct js_StackTrace;
 
 /* Limits */
 
@@ -229,6 +200,11 @@ struct js_State
 
 	/* property name being accessed when toobject fails — used for error location */
 	const char *pending_prop;
+
+	void stackoverflow();
+
+	void savescope(js_Environment *newE);
+	void restorescope();
 };
 
 #endif
