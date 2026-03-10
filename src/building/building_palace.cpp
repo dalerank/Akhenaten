@@ -33,6 +33,7 @@
 #include "game/game.h"
 #include "js/js_game.h"
 #include "js/js_struct.h"
+#include "core/profiler.h"
 #include "graphics/elements/ui_js.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_village_palace);
