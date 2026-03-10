@@ -43,7 +43,7 @@ void js_log_info_native(js_State *J) {
     } else {
         logs::info("%s", js_tostring(J, 1));
     }
-    js_pushundefined(J);
+    J->pushundefined();
 }
 
 void js_log_warn_native(js_State *J) {
@@ -52,7 +52,7 @@ void js_log_warn_native(js_State *J) {
     } else {
         logs::info("WARN: %s", js_tostring(J, 1));
     }
-    js_pushundefined(J);
+    J->pushundefined();
 }
 
 void js_loc_native(js_State *J) {
@@ -208,7 +208,7 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
                 break;
             case bvariant::etype_none:
             default:
-                js_pushundefined(J);
+                J->pushundefined();
                 break;
             }
 

@@ -17,7 +17,6 @@
 #pragma warning(disable:4996) /* _CRT_SECURE_NO_WARNINGS */
 #pragma warning(disable:4244) /* implicit conversion from double to int */
 #pragma warning(disable:4267) /* implicit conversion of int to smaller int */
-#define inline __inline
 #endif
 
 #define soffsetof(x,y) ((int)offsetof(x,y))
@@ -81,8 +80,6 @@ void js_rot2pop1(js_State *J);
 void js_rot3pop2(js_State *J);
 void js_dup1rot3(js_State *J);
 void js_dup1rot4(js_State *J);
-
-void js_pushundefinedthis(js_State *J); /* push 'global' if non-strict, undefined if strict */
 
 void js_RegExp_prototype_exec(js_State *J, js_Regexp *re, const char *text);
 
@@ -205,6 +202,10 @@ struct js_State
 
 	void savescope(js_Environment *newE);
 	void restorescope();
+	
+	void pushundefined();
+
+	void getproperty(js_Object *obj, const char *name);
 };
 
 #endif

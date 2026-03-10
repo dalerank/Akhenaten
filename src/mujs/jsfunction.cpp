@@ -43,7 +43,7 @@ static void jsB_Function(js_State *J)
 
 static void jsB_Function_prototype(js_State *J)
 {
-	js_pushundefined(J);
+	J->pushundefined();
 }
 
 static void Fp_toString(js_State *J)

@@ -4,6 +4,7 @@
 
 #include "js/js_constants.h"
 #include "js/js_struct.h"
+#include "mujs/jsi.h"
 #include "core/bstring.h"
 #include "core/core.h"
 #include "core/typename.h"
@@ -276,7 +277,7 @@ namespace js_helpers {
         }
         case bvariant::etype_none:
         default:
-            js_pushundefined(J);
+            J->pushundefined();
             break;
     }
     }
@@ -291,12 +292,12 @@ namespace js_helpers {
         if (value.has_value()) {
             js_push_bvariant(J, value.value());
         } else {
-            js_pushundefined(J);
+            J->pushundefined();
         }
     }
 
     inline void js_push_void(js_State *J) {
-        js_pushundefined(J);
+        J->pushundefined();
     }
 
     template<typename Func>
