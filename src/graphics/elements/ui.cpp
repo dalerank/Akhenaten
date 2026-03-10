@@ -790,18 +790,23 @@ ui::element& ui::widget::operator[](pcstr id) {
 }
 
 void ui::widget::event(xstring evname, const bvariant_map &js_j) {
+    OZZY_PROFILER_SECTION(_, evname.c_str())
+
     widget* prev_widget = g_state.current_widget;
     g_state.current_widget = this;
 
     bvariant_map::scoped enhanced_js_j_scoped;
     bvariant_map &enhanced_js_j = *enhanced_js_j_scoped;
 
-    enhanced_js_j = js_j;
-    for (const auto &elem : elements) {
-        if (!elem->id.empty()) {
-            bstring64 elmid("__ui_elem_", elem->id.c_str());
-            bstring64 elmkey("__ui_elem:", elem->id.c_str());
-            enhanced_js_j[elmid.c_str()] = bvariant(elmkey.c_str());
+    {
+        OZZY_PROFILER_SECTION(_, "prepare table")
+        enhanced_js_j = js_j;
+        for (const auto &elem : elements) {
+            if (!elem->id.empty()) {
+                bstring64 elmid("__ui_elem_", elem->id.c_str());
+                bstring64 elmkey("__ui_elem:", elem->id.c_str());
+                enhanced_js_j[elmid.c_str()] = bvariant(elmkey.c_str());
+            }
         }
     }
     js_call_event_handlers(evname, enhanced_js_j);

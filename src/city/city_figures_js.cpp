@@ -1,6 +1,7 @@
 #include "city/city.h"
 
 #include "js/js_game.h"
+#include "core/profiler.h"
 
 std::optional<bvariant> __city_get_figures_property(pcstr property) {
     return archive_helper::get(g_city.figures, property, true);

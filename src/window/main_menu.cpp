@@ -2,6 +2,7 @@
 
 #include "editor/editor.h"
 #include "core/log.h"
+#include "core/profiler.h"
 #include "platform/platform.h"
 #include "graphics/elements/ui.h"
 #include "graphics/graphics.h"
