@@ -20,14 +20,14 @@ namespace js {
 #define TOP (J->top)
 #define BOT (J->bot)
 
-static void js_stackoverflow(js_State *J) {
-    STACK[TOP].type = JS_TLITSTR;
-    STACK[TOP].u.litstr = "stack overflow";
-    ++TOP;
-    js_throw(J);
+void js_State::stackoverflow() {
+    stack[top].type = JS_TLITSTR;
+    stack[top].u.litstr = "stack overflow";
+    ++top;
+    js_throw(this);
 }
 
-static void js_outofmemory(js_State *J) {
+void js_outofmemory(js_State *J) {
     STACK[TOP].type = JS_TLITSTR;
     STACK[TOP].u.litstr = "out of memory";
     ++TOP;
@@ -70,7 +70,7 @@ js_String *jsV_newmemstring(js_State *J, const char *s, int n) {
     return v;
 }
 
-#define CHECKSTACK(n) if (TOP + n >= JS_STACKSIZE) js_stackoverflow(J)
+#define CHECKSTACK(n) if (TOP + n >= JS_STACKSIZE) J->stackoverflow()
 
 void js_pushvalue(js_State *J, js_Value v) {
     CHECKSTACK(1);
@@ -915,22 +915,24 @@ static int js_delvar(js_State *J, const char *name) {
 
 /* Function calls */
 
-static void jsR_savescope(js_State *J, js_Environment *newE) {
-    if (J->envtop + 1 >= JS_ENVLIMIT)
-        js_stackoverflow(J);
-    J->envstack[J->envtop++] = J->E;
-    J->E = newE;
+void js_State::savescope(js_Environment *newE) {
+    if (envtop + 1 >= JS_ENVLIMIT) {
+        stackoverflow();
+    }
+
+    envstack[envtop++] = E;
+    E = newE;
 }
 
-static void jsR_restorescope(js_State *J) {
-    J->E = J->envstack[--J->envtop];
+void js_State::restorescope() {
+    E = envstack[--envtop];
 }
 
 static void jsR_calllwfunction(js_State *J, int n, js_Function *F, js_Environment *scope) {
     js_Value v;
     int i;
 
-    jsR_savescope(J, scope);
+    J->savescope(scope);
 
     if (n > F->numparams) {
         js_pop(J, F->numparams - n);
@@ -944,7 +946,7 @@ static void jsR_calllwfunction(js_State *J, int n, js_Function *F, js_Environmen
     TOP = --BOT; /* clear stack */
     js_pushvalue(J, v);
 
-    jsR_restorescope(J);
+    J->restorescope();
 }
 
 static void jsR_callfunction(js_State *J, int n, js_Function *F, js_Environment *scope) {
@@ -953,7 +955,7 @@ static void jsR_callfunction(js_State *J, int n, js_Function *F, js_Environment 
 
     scope = jsR_newenvironment(J, jsV_newobject(J, JS_COBJECT, NULL), scope);
 
-    jsR_savescope(J, scope);
+    J->savescope(scope);
 
     if (F->arguments) {
         js_newobject(J);
@@ -987,14 +989,15 @@ static void jsR_callfunction(js_State *J, int n, js_Function *F, js_Environment 
     TOP = --BOT; /* clear stack */
     js_pushvalue(J, v);
 
-    jsR_restorescope(J);
+    J->restorescope();
 }
 
 static void jsR_callscript(js_State *J, int n, js_Function *F, js_Environment *scope) {
     js_Value v;
 
-    if (scope)
-        jsR_savescope(J, scope);
+    if (scope) {
+        J->savescope(scope);
+    }
 
     js_pop(J, n);
     js::jsR_run(J, F);
@@ -1002,8 +1005,9 @@ static void jsR_callscript(js_State *J, int n, js_Function *F, js_Environment *s
     TOP = --BOT; /* clear stack */
     js_pushvalue(J, v);
 
-    if (scope)
-        jsR_restorescope(J);
+    if (scope) {
+        J->restorescope();
+    }
 }
 
 static void jsR_callcfunction(js_State *J, int n, int min, js_CFunction F) {
