@@ -1,5 +1,7 @@
 #include "building/building_house.h"
+
 #include "window/building/common.h"
+#include "core/profiler.h"
 #include "graphics/elements/ui_js.h"
 #include "window/window_building_info.h"
 
