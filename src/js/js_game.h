@@ -81,7 +81,7 @@ namespace js_helpers {
 
     template<>
     inline js_function_ref js_to_value<js_function_ref>(js_State *J, int idx) {
-        if (!js_iscallable(J, idx)) {
+        if (!J->iscallable(idx)) {
             return js_function_ref{};
         }
         js_copy(J, idx);
@@ -433,7 +433,7 @@ struct js_function_traits<R(C:: *)(Args...) const> : js_function_traits<R(C:: *)
 #define ANK_FUNCTION_NAMED(fname, func)                                                                         \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##fname);                                          \
     void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) {   \
-        js_getglobal(J, #fname); bool exists = js_iscallable(J, -1); js_pop(J, 1);                              \
+        js_getglobal(J, #fname); bool exists = J->iscallable(-1); js_pop(J, 1);                                 \
         if (!exists) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 0); }             \
     } void permanent_js2cpp_callback_##fname(js_State *J) {                                                     \
         constexpr bool is_void = (std::is_void_v<js_function_traits<decltype(&func)>::return_type>);            \
@@ -463,7 +463,7 @@ template<auto Func>
 inline void ank_register_callback_1(js_State* J, pcstr name) {
     auto callback_impl = [](js_State *J) { ank_function_1_callback_impl<Func>(J); };
     js_getglobal(J, name);
-    bool exists = js_iscallable(J, -1);
+    bool exists = J->iscallable(-1);
     js_pop(J, 1);
     if (!exists) {
         REGISTER_GLOBAL_FUNCTION(J, callback_impl, name, 1);
@@ -495,7 +495,7 @@ template<auto Func>
 inline void ank_register_callback_2(js_State* J, pcstr name) {
     auto callback_impl = [](js_State *J) { ank_function_2_callback_impl<Func>(J); };
     js_getglobal(J, name);
-    bool exists = js_iscallable(J, -1);
+    bool exists = J->iscallable(-1);
     js_pop(J, 1);
     if (!exists) {
         REGISTER_GLOBAL_FUNCTION(J, callback_impl, name, 2);
@@ -529,7 +529,7 @@ template<auto Func>
 inline void ank_register_callback_3(js_State* J, pcstr name) {
     auto callback_impl = [](js_State *J) { ank_function_3_callback_impl<Func>(J); };
     js_getglobal(J, name);
-    bool exists = js_iscallable(J, -1);
+    bool exists = J->iscallable(-1);
     js_pop(J, 1);
     if (!exists) {
         REGISTER_GLOBAL_FUNCTION(J, callback_impl, name, 3);
@@ -565,7 +565,7 @@ template<auto Func>
 inline void ank_register_callback_4(js_State* J, pcstr name) {
     auto callback_impl = [](js_State *J) { ank_function_4_callback_impl<Func>(J); };
     js_getglobal(J, name);
-    bool exists = js_iscallable(J, -1);
+    bool exists = J->iscallable(-1);
     js_pop(J, 1);
     if (!exists) {
         REGISTER_GLOBAL_FUNCTION(J, callback_impl, name, 4);
@@ -603,7 +603,7 @@ template<auto Func>
 inline void ank_register_callback_5(js_State* J, pcstr name) {
     auto callback_impl = [](js_State *J) { ank_function_5_callback_impl<Func>(J); };
     js_getglobal(J, name);
-    bool exists = js_iscallable(J, -1);
+    bool exists = J->iscallable(-1);
     js_pop(J, 1);
     if (!exists) {
         REGISTER_GLOBAL_FUNCTION(J, callback_impl, name, 5);
@@ -643,7 +643,7 @@ template<auto Func>
 inline void ank_register_callback_6(js_State* J, pcstr name) {
     auto callback_impl = [](js_State *J) { ank_function_6_callback_impl<Func>(J); };
     js_getglobal(J, name);
-    bool exists = js_iscallable(J, -1);
+    bool exists = J->iscallable(-1);
     js_pop(J, 1);
     if (!exists) {
         REGISTER_GLOBAL_FUNCTION(J, callback_impl, name, 6);
@@ -685,7 +685,7 @@ template<auto Func>
 inline void ank_register_callback_7(js_State* J, pcstr name) {
     auto callback_impl = [](js_State *J) { ank_function_7_callback_impl<Func>(J); };
     js_getglobal(J, name);
-    bool exists = js_iscallable(J, -1);
+    bool exists = J->iscallable(-1);
     js_pop(J, 1);
     if (!exists) {
         REGISTER_GLOBAL_FUNCTION(J, callback_impl, name, 7);
@@ -714,7 +714,7 @@ template<auto Func>
 inline void ank_register_callback_unified(js_State* J, pcstr name) {
     auto callback_impl = [](js_State *J) { ank_function_unified_callback_impl<Func>(J); };
     js_getglobal(J, name);
-    bool exists = js_iscallable(J, -1);
+    bool exists = J->iscallable(-1);
     js_pop(J, 1);
     if (!exists) {
         REGISTER_GLOBAL_FUNCTION(J, callback_impl, name, 1);

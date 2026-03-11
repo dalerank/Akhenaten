@@ -230,7 +230,7 @@ struct margini {
 
 struct element {
     using ptr = std::shared_ptr<element>;
-    using items = std::vector<ptr>;
+    using items = hvector<ptr, 4>;
     using draw_callback = std::function<void(element*, UiFlags)>;
 
     int debug_tag;
@@ -630,9 +630,9 @@ struct widget {
     widget() : ui(*this) {}
 
     bool contains(const xstring &id) const;
-    element& operator[](pcstr id);
-    inline element &operator[](const bstring32 &id) { return (*this)[id.c_str()]; }
-    inline element &operator[](const xstring &id) { return (*this)[id.c_str()]; }
+    element& operator[](const xstring& id);
+    inline element &operator[](const bstring32 &id) { return (*this)[xstring(id)]; }
+    inline element &operator[](pcstr id) { return (*this)[xstring(id)]; }
 
     template<typename ... Args> int label(const Args ... args) { return ui::label(args...); }
     template<typename ... Args> generic_button &button(const Args ... args) { return ui::button(args...); }

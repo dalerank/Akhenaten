@@ -193,12 +193,14 @@ int js_isprimitive(js_State *J, int idx) { return stackidx(J, idx)->type != JS_T
 int js_State::isobject(int idx) { return stackidx(this, idx)->type == JS_TOBJECT; }
 int js_iscoercible(js_State *J, int idx) { js_Value *v = stackidx(J, idx); return v->type != JS_TUNDEFINED && v->type != JS_TNULL; }
 
-int js_iscallable(js_State *J, int idx) {
-    js_Value *v = stackidx(J, idx);
-    if (v->type == JS_TOBJECT)
+int js_State::iscallable(int idx) {
+    js_Value *v = stackidx(this, idx);
+    if (v->type == JS_TOBJECT) {
         return v->u.object->type == JS_CFUNCTION ||
-        v->u.object->type == JS_CSCRIPT ||
-        v->u.object->type == JS_CCFUNCTION;
+               v->u.object->type == JS_CSCRIPT ||
+               v->u.object->type == JS_CCFUNCTION;
+    }
+    
     return 0;
 }
 
@@ -1049,7 +1051,7 @@ void js_State::call(int n) {
     int savebot;
 
     auto J = this;
-    if (!js_iscallable(J, -n - 2)) {
+    if (!iscallable(-n - 2)) {
         js_typeerror(J, "called object is not a function");
     }
 
@@ -1083,7 +1085,7 @@ void js_construct(js_State *J, int n) {
     js_Object *prototype;
     js_Object *newobj;
 
-    if (!js_iscallable(J, -n - 1))
+    if (!J->iscallable(-n - 1))
         js_typeerror(J, "called object is not a function");
 
     obj = js_toobject(J, -n - 1);

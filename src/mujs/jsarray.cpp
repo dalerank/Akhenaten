@@ -291,7 +291,7 @@ static void Ap_sort(js_State *J)
 
 	len = js_getlength(J, 0);
 
-	hasfn = js_iscallable(J, 1);
+	hasfn = J->iscallable(1);
 
 	for (i = 1; i < len; ++i) {
 		k = i;
@@ -449,8 +449,9 @@ static void Ap_every(js_State *J)
 	int hasthis = js_gettop(J) >= 3;
 	int k, len;
 
-	if (!js_iscallable(J, 1))
+	if (!J->iscallable(1)) {
 		js_typeerror(J, "callback is not a function");
+	}
 
 	len = js_getlength(J, 0);
 	for (k = 0; k < len; ++k) {
@@ -478,7 +479,7 @@ static void Ap_some(js_State *J)
 	int hasthis = js_gettop(J) >= 3;
 	int k, len;
 
-	if (!js_iscallable(J, 1))
+	if (!J->iscallable(1))
 		js_typeerror(J, "callback is not a function");
 
 	len = js_getlength(J, 0);
@@ -507,7 +508,7 @@ static void Ap_forEach(js_State *J)
 	int hasthis = js_gettop(J) >= 3;
 	int k, len;
 
-	if (!js_iscallable(J, 1))
+	if (!J->iscallable(1))
 		js_typeerror(J, "callback is not a function");
 
 	len = js_getlength(J, 0);
@@ -534,7 +535,7 @@ static void Ap_map(js_State *J)
 	int hasthis = js_gettop(J) >= 3;
 	int k, len;
 
-	if (!js_iscallable(J, 1))
+	if (!J->iscallable(1))
 		js_typeerror(J, "callback is not a function");
 
 	js_newarray(J);
@@ -562,7 +563,7 @@ static void Ap_filter(js_State *J)
 	int hasthis = js_gettop(J) >= 3;
 	int k, to, len;
 
-	if (!js_iscallable(J, 1))
+	if (!J->iscallable(1))
 		js_typeerror(J, "callback is not a function");
 
 	js_newarray(J);
@@ -595,7 +596,7 @@ static void Ap_reduce(js_State *J)
 	int hasinitial = js_gettop(J) >= 3;
 	int k, len;
 
-	if (!js_iscallable(J, 1))
+	if (!J->iscallable(1))
 		js_typeerror(J, "callback is not a function");
 
 	len = js_getlength(J, 0);
@@ -636,7 +637,7 @@ static void Ap_reduceRight(js_State *J)
 	int hasinitial = js_gettop(J) >= 3;
 	int k, len;
 
-	if (!js_iscallable(J, 1))
+	if (!J->iscallable(1))
 		js_typeerror(J, "callback is not a function");
 
 	len = js_getlength(J, 0);

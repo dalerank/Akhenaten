@@ -76,7 +76,7 @@ void __ui_widget_sidebar_set_type(int id) { widget_sidebar_set_type(id); } ANK_F
 int __ui_widget_sidebar_city_offset_x() { return widget_sidebar_city_offset_x(); } ANK_FUNCTION(__ui_widget_sidebar_city_offset_x)
 
 ui::element* __ui_get_element(pcstr element_id) {
-    OZZY_PROFILER_SECTION(_, element_id)
+    OZZY_PROFILER_SECTION(_, bstring128("ui:get_elem+", element_id).c_str())
     ui::widget *w = ui::get_current_widget();
     return (w && element_id) ? &(*w)[element_id] : nullptr;
 }
