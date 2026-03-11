@@ -6,6 +6,7 @@
 #include "game/settings.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/lang_text.h"
+#include "graphics/elements/ui.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -31,7 +32,7 @@ void tooltip_context::reset() {
 }
 
 void tooltip_context::draw_box(int x, int y, int width, int height) {
-    graphics_draw_rect(vec2i{x, y}, vec2i{width, height}, COLOR_TOOLTIP_BORDER);
+    ui::draw_rect(vec2i{x, y}, vec2i{width, height}, COLOR_TOOLTIP_BORDER);
     ui::fill_rect(vec2i{x + 1, y + 1}, vec2i{width - 2, height - 2}, COLOR_TOOLTIP_FILL);
 }
 
@@ -89,7 +90,7 @@ void tooltip_context::draw_tooltip_impl() {
 
     //save_window_under_tooltip_to_buffer(x, y, width, height);
     draw_box(x, y, width, height);
-    text_draw_multiline(ptext.c_str(), { x + 5, y + 7 }, width - 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    ui::text_multiline(ptext.c_str(), { x + 5, y + 7 }, width - 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
 }
 
 void tooltip_context::draw_overlay_tooltip() {
@@ -136,7 +137,7 @@ void tooltip_context::draw_overlay_tooltip() {
     }
 
     draw_box(x, y, width, height);
-    text_draw_multiline(text.c_str(), { x + 5, y + 7 }, width - 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    ui::text_multiline(text.c_str(), { x + 5, y + 7 }, width - 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
 }
 
 void tooltip_context::draw_tile_tooltip() {
@@ -163,8 +164,11 @@ void tooltip_context::draw_tile_tooltip() {
             y = mpos.y - 32;
 
         draw_box(x, y, width, height);
-        text_draw_label_and_number("x: ", x_tile, " ", x + 2, y + 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-        text_draw_label_and_number("y: ", y_tile, " ", x + 2, y + 19, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+        bstring64 sx, sy;
+        sx.printf("x: %d", x_tile);
+        sy.printf("y: %d", y_tile);
+        ui::text_multiline(sx, {x + 2, y + 5}, width, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+        ui::text_multiline(sy, {x + 2, y + 19}, width, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
     }
 }
 

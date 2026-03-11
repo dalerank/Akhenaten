@@ -49,7 +49,7 @@ namespace ui {
         generic_button g_button;
         image_button i_button;
         arrow_button a_button;
-    
+
         bool handle_mouse(const mouse *m, vec2i offset) {
             int tmp_btn;
             switch (type) {
@@ -66,7 +66,7 @@ namespace ui {
         pcstr tooltip() const {
             switch (type) {
             case generic: return g_button._tooltip.c_str();
-            case image: return i_button._tooltip.c_str(); 
+            case image: return i_button._tooltip.c_str();
             case arrow: return a_button._tooltip.c_str();
             default:
                 assert(false);
@@ -99,7 +99,7 @@ namespace ui {
             return {0, 0};
         }
 
-        template<class Func> void onclick(Func f) { 
+        template<class Func> void onclick(Func f) {
             switch (type) {
             case generic: g_button.onclick(f); break;
             case image: i_button.onclick(f); break;
@@ -179,6 +179,8 @@ namespace ui {
 
     image_desc resource_icons;
     image_desc advisor_icons;
+
+    hvector<ui_cmd_t, 256> g_ui_commands;
 }
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_ui_options) {
@@ -206,7 +208,7 @@ static ui::element::ptr create_element(const xstring type) {
     case _("resource_icon"): elm = std::make_shared<ui::eresource_icon>(); break;
     case _("arrow_button"): elm = std::make_shared<ui::earrow_button>(); break;
     case _("border"): elm = std::make_shared<ui::eborder>(); break;
-    case _("large_button"): 
+    case _("large_button"):
         auto btn = std::make_shared<ui::egeneric_button>();
         btn->mode = 1;
         elm = btn;
@@ -217,7 +219,7 @@ static ui::element::ptr create_element(const xstring type) {
 
 void ui_widget_load_elements(archive arch, pcstr section, ui::element *parent, ui::element::items &elements) {
     e_font default_font = arch.r_type<e_font>("default_font", FONT_INVALID);
-    
+
     const int last_index = elements.size();
     arch.r_objects(section, [&elements, parent] (pcstr key, archive elem) {
         const xstring type = elem.r_string("type");
@@ -248,9 +250,35 @@ void ui::begin_widget(vec2i offset, bool relative) {
 }
 
 void ui::fill_rect(vec2i offset, vec2i size, color c) {
-    painter ctx = game.painter();
     const vec2i goffset = g_state.offset();
-    ctx.fill_rect(goffset + offset, size, c);
+    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::fill_rect});
+    cmd.pos = goffset + offset;
+    cmd.size = size;
+    cmd.clr = c;
+}
+
+void ui::draw_rect(vec2i pos, vec2i size, color c) {
+    const vec2i goffset = g_state.offset();
+    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::draw_rect});
+    cmd.pos = goffset + pos;
+    cmd.size = size;
+    cmd.clr = c;
+}
+
+void ui::image_abs(int image_id, vec2i abs_pos) {
+    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::image});
+    cmd.pos = abs_pos;
+    cmd.image_id = image_id;
+}
+
+void ui::text_multiline(pcstr text, vec2i pos, int width, e_font font, color clr) {
+    const vec2i goffset = g_state.offset();
+    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_multiline});
+    cmd.pos = goffset + pos;
+    cmd.box_width = width;
+    cmd.font = font;
+    cmd.clr = clr;
+    cmd.str = text;
 }
 
 vec2i ui::current_offset() {
@@ -261,11 +289,123 @@ void ui::begin_frame() {
     assert(g_state.buttons.size() < 1000);
     //assert(g_state._offset.size() == 0);
     g_state.reset();
+    g_ui_commands.clear();
     tooltipctx.set(0, "");
 }
 
 void ui::end_frame() {
-    
+
+}
+
+static void execute_ui_command(painter &ctx, const ui_cmd_t &cmd) {
+    switch (cmd.type) {
+    case ui_cmd_t::image:
+        ctx.img_generic(cmd.image_id, cmd.pos, cmd.mask, cmd.scale, cmd.img_flags);
+        break;
+
+    case ui_cmd_t::fill_rect:
+        ctx.fill_rect(cmd.pos, cmd.size, cmd.clr);
+        break;
+
+    case ui_cmd_t::draw_rect:
+        ctx.draw_rect(cmd.pos, cmd.size, cmd.clr);
+        break;
+
+    case ui_cmd_t::h_line:
+        graphics_draw_horizontal_line(cmd.pos, cmd.box_width, cmd.clr);
+        break;
+
+    case ui_cmd_t::v_line:
+        graphics_draw_vertical_line(cmd.pos, cmd.box_width, cmd.clr);
+        break;
+
+    case ui_cmd_t::panel_outer:
+        outer_panel_draw(cmd.pos, cmd.size.x, cmd.size.y);
+        break;
+
+    case ui_cmd_t::panel_inner:
+        inner_panel_draw(cmd.pos, cmd.size);
+        break;
+
+    case ui_cmd_t::text:
+        if (!!(cmd.flags & UiFlags_LabelMultiline)) {
+            text_draw_multiline(cmd.str.c_str(), cmd.pos, cmd.box_width, cmd.font, 0);
+        } else {
+            lang_text_draw(cmd.str.c_str(), cmd.pos, cmd.font, cmd.box_width);
+        }
+        break;
+
+    case ui_cmd_t::text_centered:
+        text_draw_centered(cmd.str.c_str(), cmd.pos.x, cmd.pos.y, cmd.box_width, cmd.font, cmd.clr);
+        break;
+
+    case ui_cmd_t::text_multiline:
+        text_draw_multiline(cmd.str.c_str(), cmd.pos, cmd.box_width, cmd.font, cmd.clr);
+        break;
+
+    case ui_cmd_t::text_colored:
+        if (cmd.box_width > 0) {
+            text_draw_centered(cmd.str.c_str(), cmd.pos.x, cmd.pos.y, cmd.box_width, cmd.font, cmd.clr);
+        } else {
+            lang_text_draw_colored(cmd.str.c_str(), cmd.pos.x, cmd.pos.y, cmd.font, cmd.clr);
+        }
+        break;
+
+    case ui_cmd_t::text_rich: {
+        rich_text_t rich_text;
+        rich_text.set_fonts(cmd.font, FONT_NORMAL_YELLOW);
+        const bool centered = !!(cmd.flags & UiFlags_AlignCentered);
+        rich_text.draw(cmd.str.c_str(), cmd.pos, cmd.box_width, cmd.size.y, false, centered);
+        break;
+    }
+
+    case ui_cmd_t::clip_set:
+        graphics_set_clip_rectangle(cmd.pos, cmd.size);
+        break;
+
+    case ui_cmd_t::clip_reset:
+        graphics_reset_clip_rectangle();
+        break;
+
+    case ui_cmd_t::button_border:
+        button_border_draw(cmd.pos, cmd.size, cmd.img_flags != 0);
+        break;
+
+    case ui_cmd_t::small_panel:
+        small_panel_draw_colored(cmd.pos, cmd.box_width, cmd.image_id, cmd.mask);
+        break;
+
+    case ui_cmd_t::shade_rect:
+        graphics_shade_rect(cmd.pos, cmd.size, cmd.image_id);
+        break;
+
+    case ui_cmd_t::large_label: {
+        large_label_draw(cmd.pos.x, cmd.pos.y, cmd.box_width, cmd.image_id);
+        const int letter_height = font_definition_for(cmd.font)->line_height;
+        text_draw_centered((uint8_t *)cmd.str.c_str(), cmd.pos.x + 1, cmd.pos.y + (cmd.size.y - letter_height) / 2, cmd.size.x, cmd.font, 0);
+        break;
+    }
+
+    case ui_cmd_t::rich_draw:
+        if (cmd.rt) {
+            cmd.rt->draw(cmd.str.c_str(), cmd.pos, cmd.box_width, cmd.size.y, false);
+            if (!(cmd.flags & UiFlags_NoScroll)) {
+                cmd.rt->draw_scrollbar(vec2i{-16, 0});
+            }
+        }
+        break;
+
+    default:
+        break;
+    }
+}
+
+void ui::flush_commands() {
+    painter ctx = game.painter();
+    for (const auto &cmd : g_ui_commands) {
+        execute_ui_command(ctx, cmd);
+    }
+    g_ui_commands.clear();
 }
 
 void ui::end_widget() {
@@ -374,20 +514,35 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
     gbutton.clip = graphics_clip_rectangle();
 
     if (small_panel) {
-        int mask = darkened ? 0xffe0e0e0 : 0xffffffff;
-        small_panel_draw_colored(offset + pos, (size.x / 16), gbutton.hovered ? 1 : 2, mask);
+        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::small_panel});
+        cmd.pos = offset + pos;
+        cmd.box_width = size.x / 16;
+        cmd.image_id = gbutton.hovered ? 1 : 2;
+        cmd.mask = darkened ? 0xffe0e0e0 : 0xffffffff;
     } else if (hasbody) {
         if (thinborder) {
-            graphics_draw_rect(offset + pos, size, 0xff00000);
+            auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::draw_rect});
+            cmd.pos = offset + pos;
+            cmd.size = size;
+            cmd.clr = 0xff00000;
         } else {
-            button_border_draw(offset + pos, size, gbutton.hovered && !darkened);
+            auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::button_border});
+            cmd.pos = offset + pos;
+            cmd.size = size;
+            cmd.img_flags = (gbutton.hovered && !darkened) ? 1 : 0;
         }
     } else if (hasborder) {
         if (gbutton.hovered && !darkened) {
             if (thinborder) {
-                graphics_draw_rect(offset + pos, size, 0xff000000);
+                auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::draw_rect});
+                cmd.pos = offset + pos;
+                cmd.size = size;
+                cmd.clr = 0xff000000;
             } else {
-                button_border_draw(offset + pos, size, true);
+                auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::button_border});
+                cmd.pos = offset + pos;
+                cmd.size = size;
+                cmd.img_flags = 1;
             }
         }
     }
@@ -406,10 +561,14 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
         int starty = offset.y + pos.y + (size.y - (symbolh + 2) * labels_num) / 2 + 4;
 
         for (const auto &str : labels) {
+            auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{alingxcenter ? ui_cmd_t::text_centered : ui_cmd_t::text});
+            cmd.font = font;
+            cmd.str = str.c_str();
             if (alingxcenter) {
-                text_draw_centered((uint8_t *)str.c_str(), offset.x + pos.x + 1, starty, size.x, font, 0);
+                cmd.pos = { offset.x + pos.x + 1, starty };
+                cmd.box_width = size.x;
             } else {
-                text_draw((uint8_t *)str.c_str(), offset.x + pos.x + 8, starty, font, 0);
+                cmd.pos = { offset.x + pos.x + 8, starty };
             }
             starty += symbolh + 2;
         }
@@ -420,22 +579,37 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
             int symbolw = text_get_width("H", font);
             int lines_num = std::max<int>(1, (int)strlen(label) * symbolw / size.x);
             int centering_y_offset = (size.y - lines_num * symbolh) / 2;
-            rich_text_t rich_text;
-            rich_text.set_fonts(font, FONT_NORMAL_YELLOW);
-            rich_text.draw(label, offset + pos + vec2i(0, centering_y_offset), size.x, lines_num, false, true);
-        } else if (alingycenter) {
-            text_draw((uint8_t *)label, offset.x + pos.x + 8, offset.y + pos.y + (size.y - symbolh) / 2 + 2, font, 0);
-        } else if (alignleft) {
-            text_draw((uint8_t *)label, offset.x + pos.x + 8, offset.y + pos.y + 8, font, 0);
-        } else if (alingxcenter) {
-            text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + 4, size.x, font, 0);
+            auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_rich});
+            cmd.font = font;
+            cmd.str = label;
+            cmd.pos = offset + pos + vec2i(0, centering_y_offset);
+            cmd.box_width = size.x;
+            cmd.size.y = lines_num;
+            cmd.flags = UiFlags_AlignCentered;
         } else {
-            text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + (size.y - symbolh) / 2, size.x, font, 0);
+            const bool left_aligned = alingycenter || alignleft;
+            auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{left_aligned ? ui_cmd_t::text : ui_cmd_t::text_centered});
+            cmd.font = font;
+            cmd.str = label;
+            if (alingycenter) {
+                cmd.pos = { offset.x + pos.x + 8, offset.y + pos.y + (size.y - symbolh) / 2 + 2 };
+            } else if (alignleft) {
+                cmd.pos = { offset.x + pos.x + 8, offset.y + pos.y + 8 };
+            } else if (alingxcenter) {
+                cmd.pos = { offset.x + pos.x + 1, offset.y + pos.y + 4 };
+                cmd.box_width = size.x;
+            } else {
+                cmd.pos = { offset.x + pos.x + 1, offset.y + pos.y + (size.y - symbolh) / 2 };
+                cmd.box_width = size.x;
+            }
         }
-    }    
+    }
 
     if (darkened) {
-        graphics_shade_rect(offset + pos, size, 0x80);
+        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::shade_rect});
+        cmd.pos = offset + pos;
+        cmd.size = size;
+        cmd.image_id = 0x80;
     }
 
     if (!(darkened || readonly) && !!cb) {
@@ -451,9 +625,13 @@ generic_button &ui::large_button(pcstr label, vec2i pos, vec2i size, e_font font
     auto &gbutton = g_state.buttons.back().g_button;
     int focused = is_button_hover(gbutton, offset);
 
-    large_label_draw(offset.x + pos.x, offset.y + pos.y, size.x / 16, focused ? 1 : 0);
-    const int letter_height = font_definition_for(font)->line_height;
-    text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + (size.y - letter_height) / 2, size.x, font, 0);
+    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::large_label});
+    cmd.pos = offset + pos;
+    cmd.size = size;
+    cmd.box_width = size.x / 16;
+    cmd.image_id = focused ? 1 : 0;
+    cmd.font = font;
+    cmd.str = label;
 
     return gbutton;
 }
@@ -498,9 +676,12 @@ image_button &ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_b
             image_id += offsets.data[3];
         }
 
-        painter ctx = game.painter();
-        ImgFlags imgflags = grayscaled ? ImgFlag_Grayscale : ImgFlag_None;
-        ctx.img_generic(image_id, state_offset + pos, COLOR_WHITE, 1.0f, imgflags);
+        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::image});
+        cmd.pos = state_offset + pos;
+        cmd.image_id = image_id;
+        cmd.mask = COLOR_WHITE;
+        cmd.scale = 1.0f;
+        cmd.img_flags = grayscaled ? ImgFlag_Grayscale : ImgFlag_None;
     }
 
     return ibutton;
@@ -526,16 +707,35 @@ int ui::label(int group, int number, vec2i pos, e_font font, UiFlags flags, int 
 int ui::label(pcstr label, vec2i pos, e_font font, UiFlags flags, int box_width) {
     const vec2i offset = g_state.offset();
     if (!!(flags & UiFlags_AlignCentered)) {
-        text_draw_centered(label, offset.x + pos.x, offset.y + pos.y, box_width, font, 0);
+        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_centered});
+        cmd.pos = offset + pos;
+        cmd.font = font;
+        cmd.flags = flags;
+        cmd.box_width = box_width;
+        cmd.str = label ? label : "";
         return box_width;
     } else if (!!(flags & UiFlags_LabelMultiline)) {
+        // keep immediate: returns line count, complex to measure ahead of time
         return text_draw_multiline(label, offset + pos, box_width, font, 0);
     } else if (!!(flags & UiFlags_Rich)) {
         rich_text_t rich_text;
         rich_text.set_fonts(font, FONT_NORMAL_YELLOW);
-        return rich_text.draw(label, offset, box_width, 10, false);
+        const int measured = rich_text.draw(label, offset + pos, box_width, 10, /*measure_only*/true);
+        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_rich});
+        cmd.pos = offset + pos;
+        cmd.font = font;
+        cmd.box_width = box_width;
+        cmd.size.y = 10;
+        cmd.str = label ? label : "";
+        return measured;
     } else {
-        return lang_text_draw(label, offset + pos, font, box_width);
+        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text});
+        cmd.pos = offset + pos;
+        cmd.font = font;
+        cmd.flags = flags;
+        cmd.box_width = box_width;
+        cmd.str = label ? label : "";
+        return text_get_width(label, font);
     }
 }
 
@@ -550,61 +750,72 @@ int ui::label_percent(int amount, vec2i pos, e_font font) {
 }
 
 int ui::label_colored(textid tx, vec2i pos, e_font font, color color, int box_width) {
-    painter ctx = game.painter();
     const vec2i offset = g_state.offset();
-
-    if (box_width > 0) {
-        lang_text_draw_centered_colored(tx.group, tx.id, offset.x + pos.x, offset.y + pos.y, box_width, font, color);
-        return box_width;
-    } else {
-        return lang_text_draw_colored(tx.group, tx.id, offset.x + pos.x, offset.y + pos.y, font, color);
-    }
+    pcstr str = lang_get_string(tx);
+    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_colored});
+    cmd.pos = offset + pos;
+    cmd.font = font;
+    cmd.clr = color;
+    cmd.box_width = box_width;
+    cmd.str = str ? str : "";
+    return box_width > 0 ? box_width : text_get_width(str, font);
 }
 
 int ui::label_colored(pcstr tx, vec2i pos, e_font font, color color, int box_width) {
-    painter ctx = game.painter();
     const vec2i offset = g_state.offset();
-    if (box_width > 0) {
-        text_draw_centered((const uint8_t*)tx, offset.x + pos.x, offset.y + pos.y, box_width, font, color);
-        return box_width;
-    } else {
-        return lang_text_draw_colored(tx, offset.x + pos.x, offset.y + pos.y, font, color);
-    }
+    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_colored});
+    cmd.pos = offset + pos;
+    cmd.font = font;
+    cmd.clr = color;
+    cmd.box_width = box_width;
+    cmd.str = tx ? tx : "";
+    return box_width > 0 ? box_width : text_get_width(tx, font);
 }
 
 const image_t *ui::eimage(int imgid, vec2i pos) {
-    painter ctx = game.painter();
     const vec2i offset = g_state.offset();
-    return ctx.img_generic(imgid, pos + offset);
+    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::image});
+    cmd.pos = pos + offset;
+    cmd.image_id = imgid;
+    return image_get(imgid);
 }
 
 const image_t *ui::eimage(image_desc imgd, vec2i pos) {
-    painter ctx = game.painter();
     const vec2i offset = g_state.offset();
-    return ctx.img_generic(imgd.tid(), pos + offset);
+    const int tid = imgd.tid();
+    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::image});
+    cmd.pos = pos + offset;
+    cmd.image_id = tid;
+    return image_get(tid);
 }
 
 void ui::panel(vec2i pos, vec2i size, UiFlags flags) {
     const vec2i offset = g_state.offset();
     if (!!(flags & UiFlags_PanelOuter)) {
-        outer_panel_draw(offset + pos, size.x, size.y);
+        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::panel_outer});
+        cmd.pos = offset + pos;
+        cmd.size = size;
     } else if (!!(flags & UiFlags_PanelInner)) {
-        inner_panel_draw(offset + pos, size);
+        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::panel_inner});
+        cmd.pos = offset + pos;
+        cmd.size = size;
     }
 }
 
 void ui::line(bool hline, vec2i npos, int size, color c) {
     const vec2i offset = g_state.offset();
-    if (hline) {
-        graphics_draw_horizontal_line(npos + offset, size, c);
-    } else {
-        graphics_draw_vertical_line(npos + offset, size, c);
-    }
+    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{hline ? ui_cmd_t::h_line : ui_cmd_t::v_line});
+    cmd.pos = npos + offset;
+    cmd.box_width = size;
+    cmd.clr = c;
 }
 
 void ui::border(vec2i pos, vec2i size, int type, int color, UiFlags flags) {
     const vec2i offset = g_state.offset();
-    graphics_draw_rect(offset + pos, size, color);
+    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::draw_rect});
+    cmd.pos = offset + pos;
+    cmd.size = size;
+    cmd.clr = color;
 }
 
 void ui::rect(vec2i pos, vec2i size, int fill, int color, UiFlags flags) {
@@ -618,17 +829,20 @@ void ui::rect(vec2i pos, vec2i size, int fill, int color, UiFlags flags) {
 
 void ui::icon(vec2i pos, e_resource res, UiFlags flags) {
     const vec2i offset = g_state.offset();
-    painter ctx = game.painter();
-    const image_t *img = ctx.img_generic(image_id_resource_icon(res), offset + pos);
+    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::image});
+    cmd.pos = offset + pos;
+    cmd.image_id = image_id_resource_icon(res);
     if (!!(flags & UiFlags_Outline)) {
-        graphics_draw_inset_rect(pos - vec2i{1, 1}, vec2i{ img->width, img->height } + vec2i{2, 2});
+        const image_t *img = image_get(cmd.image_id);
+        ui::draw_rect(pos - vec2i{1, 1}, vec2i{img->width, img->height} + vec2i{2, 2}, COLOR_BLACK);
     }
 }
 
 void ui::icon(vec2i pos, e_advisor adv) {
-    painter ctx = game.painter();
     const vec2i offset = g_state.offset();
-    ctx.img_generic(advisor_icons.tid() + (adv - 1), offset + pos);
+    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::image});
+    cmd.pos = offset + pos;
+    cmd.image_id = advisor_icons.tid() + (adv - 1);
 }
 
 arrow_button &ui::arw_button(vec2i pos, bool down, bool tiny, UiFlags_ flags) {
@@ -1106,7 +1320,7 @@ void ui::eimage_button::draw(UiFlags gflags) {
         painter ctx = game.painter();
         ctx.draw((SDL_Texture*)icon_texture, pos, {0, 0}, size, 0xffffffff, scale, scale, 0, ImgFlag_Alpha);
         btn = &ui::img_button({ 0, 0 }, pos, size, offsets, UiFlags_None);
-    } 
+    }
 
     if (!btn) {
         return;
@@ -1148,7 +1362,7 @@ void ui::eimage_button::draw(UiFlags gflags) {
         if (_rfunc) btn->onrclick(_rfunc);
         if (_srfunc) btn->onrclick(_srfunc);
     }
-    
+
     btn->tooltip(_tooltip);
     btn->parameter1 = param1;
     btn->parameter2 = param2;
@@ -1158,8 +1372,8 @@ void ui::eimage_button::draw(UiFlags gflags) {
     }
 }
 
-void ui::eimage_button::image(const animation_t &d) { 
-    img_desc = d.to_desc(); 
+void ui::eimage_button::image(const animation_t &d) {
+    img_desc = d.to_desc();
 }
 
 void ui::etext::load(archive arch, element* parent, items &elems) {
@@ -1253,7 +1467,7 @@ void ui::escrollable_list::draw(UiFlags flags) {
     vec2i screen_pos = this->screen_pos();
     panel->ui_params.pos = screen_pos;
     panel->draw();
-    
+
     g_state.scrollable_lists.push_back(panel.get());
 }
 
@@ -1307,58 +1521,96 @@ void ui::etext::draw(UiFlags flags) {
 
     if (!!(_flags & UiFlags_AlignCentered)) {
         int additionaly = 0;
-        if (pxsize().y > 0) {            
+        if (pxsize().y > 0) {
             const int symbolh = font_definition_for(_font)->line_height;
             additionaly = ((size.y - symbolh) * 0.5f);
         }
         if (_shadow_color) {
-            text_draw_centered((uint8_t *)_text.c_str(), offset.x + pos.x + 1, offset.y + pos.y + additionaly, size.x, _font, _shadow_color);
+            auto &shadow = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_centered});
+            shadow.pos = { offset.x + pos.x + 1, offset.y + pos.y + additionaly };
+            shadow.box_width = size.x;
+            shadow.font = _font;
+            shadow.clr = _shadow_color;
+            shadow.str = _text.c_str();
         }
-        text_draw_centered((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y + additionaly, size.x, _font, _color);
+        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_centered});
+        cmd.pos = { offset.x + pos.x, offset.y + pos.y + additionaly };
+        cmd.box_width = size.x;
+        cmd.font = _font;
+        cmd.clr = _color;
+        cmd.str = _text.c_str();
     } else if (!!(_flags & UiFlags_LabelMultiline)) {
-        text_draw_multiline(_text, offset + pos, _wrap, _font, _color);
+        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_multiline});
+        cmd.pos = offset + pos;
+        cmd.box_width = _wrap;
+        cmd.font = _font;
+        cmd.clr = _color;
+        cmd.str = _text.c_str();
     } else if (!!(_flags & UiFlags_AlignYCentered)) {
         const int symbolh = font_definition_for(_font)->line_height;
         if (_shadow_color) {
-            text_draw((uint8_t *)_text.c_str(), offset.x + pos.x + 1, offset.y + pos.y + (size.y - symbolh) / 2, _font, _shadow_color);
+            auto &shadow = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_colored});
+            shadow.pos = { offset.x + pos.x + 1, offset.y + pos.y + (size.y - symbolh) / 2 };
+            shadow.font = _font;
+            shadow.clr = _shadow_color;
+            shadow.str = _text.c_str();
         }
-        text_draw((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y + (size.y - symbolh) / 2, _font, _color);
+        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_colored});
+        cmd.pos = { offset.x + pos.x, offset.y + pos.y + (size.y - symbolh) / 2 };
+        cmd.font = _font;
+        cmd.clr = _color;
+        cmd.str = _text.c_str();
     } else if (!!(_flags & UiFlags_Rich)) {
-        if (_clip_area) {
-            graphics_set_clip_rectangle(offset + pos, pxsize());
-        }
-
         const int symbolh = font_definition_for(_font)->line_height;
-        int maxlines = pxsize().y > 0 
+        int maxlines = pxsize().y > 0
                         ? std::max(1, pxsize().y / symbolh)
                         : 0xff;
 
         int rwrap = _wrap <= 0 ? size.x : _wrap;
         rwrap = rwrap <= 0 ? 9999 : rwrap;
-        
+
         if (!rich_text) {
             rich_text = std::make_unique<rich_text_t>();
         }
 
         rich_text->set_fonts(_font, _font_link);
         rich_text->set_margin(_text_margin);
-
         rich_text->init(_text.c_str(), offset + pos, size.x / 16, size.y / 16, /*adjust_width_on_no_scroll*/true);
-        rich_text->draw(_text.c_str(), offset + pos, rwrap, maxlines, false);
-        
-        if (_clip_area) {
-            graphics_reset_clip_rectangle();
-        }
 
         if (!(_flags & UiFlags_NoScroll)) {
-            rich_text->draw_scrollbar(vec2i{-16, 0});
             g_state.scrollbars.push_back(rich_text->scrollbar());
+        }
+
+        if (_clip_area) {
+            auto &clip_cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::clip_set});
+            clip_cmd.pos = offset + pos;
+            clip_cmd.size = pxsize();
+        }
+
+        auto &draw_cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::rich_draw});
+        draw_cmd.rt = rich_text.get();
+        draw_cmd.str = _text.c_str();
+        draw_cmd.pos = offset + pos;
+        draw_cmd.box_width = rwrap;
+        draw_cmd.size.y = maxlines;
+        draw_cmd.flags = _flags & UiFlags_NoScroll;
+
+        if (_clip_area) {
+            g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::clip_reset});
         }
     } else {
         if (_shadow_color) {
-            text_draw((uint8_t *)_text.c_str(), offset.x + pos.x + 1, offset.y + pos.y, _font, _shadow_color);
+            auto &shadow = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_colored});
+            shadow.pos = { offset.x + pos.x + 1, offset.y + pos.y };
+            shadow.font = _font;
+            shadow.clr = _shadow_color;
+            shadow.str = _text.c_str();
         }
-        text_draw((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, _font, _color);
+        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_colored});
+        cmd.pos = { offset.x + pos.x, offset.y + pos.y };
+        cmd.font = _font;
+        cmd.clr = _color;
+        cmd.str = _text.c_str();
     }
 
     if (_draw_callback) {
@@ -1422,7 +1674,7 @@ void ui::emenu_header::load_items(archive arch, xstring section, element::items&
         menu_item& item = impl.items.emplace_back();
         item.id = key;
         item.text = elem.r_string("text");
-        
+
         const bool has_dyn_loc = (strstr(item.text.c_str(), "${") != nullptr);
         if (has_dyn_loc) {
             ui_scope_property holder;
@@ -1461,13 +1713,13 @@ void ui::emenu_header::draw(UiFlags flags) {
     lang_text_draw(impl.text.c_str(), pos, _font);
 }
 
-const xstring &ui::emenu_header::tooltip() const { 
+const xstring &ui::emenu_header::tooltip() const {
     if (!!_tooltip_format) {
         ui_scope_property holder;
         _tooltip = ui::sformat<128>(&holder, _tooltip_format);
     }
 
-    return _tooltip; 
+    return _tooltip;
 }
 
 int ui::emenu_header::text_width() {
@@ -1498,14 +1750,14 @@ void ui::earrow_button::js_call() {
 
 void ui::earrow_button::draw(UiFlags flags) {
     auto &btn = ui::arw_button(pos, down, tiny);
-    
+
     // Set up click handler - prefer JS callback if available, otherwise use C++ callback
     if (!_js_onclick_ref.empty()) {
         btn.onclick([this] { this->js_call(); });
     } else if (_func || _sfunc) {
         btn.onclick(_func);
         btn.onclick(_sfunc);
-    } 
+    }
 }
 
 ui::egeneric_button::~egeneric_button() {
@@ -1544,7 +1796,7 @@ void ui::egeneric_button::draw(UiFlags gflags) {
     }
 
     const bool clickable = !darkened && !readonly;
-    
+
     // Set up click handler - prefer JS callback if available, otherwise use C++ callback
     if (clickable && !!_js_onclick_ref) {
         btn->onclick([this] { this->js_call(); });
