@@ -146,8 +146,6 @@ struct js_Iterator
 js_String *jsV_newmemstring(js_State *J, const char *s, int n);
 js_Value *js_tovalue(js_State *J, int idx);
 void js_toprimitive(js_State *J, int idx, int hint);
-js_Object *js_toobject(js_State *J, int idx);
-js_Object *js_toobject_pending(js_State *J, int idx, const char *prop);
 void js_pushvalue(js_State *J, js_Value v);
 void js_pushobject(js_State *J, js_Object *v);
 
@@ -156,7 +154,6 @@ int jsV_toboolean(js_State *J, js_Value *v);
 double jsV_tonumber(js_State *J, js_Value *v);
 double jsV_tointeger(js_State *J, js_Value *v);
 const char *jsV_tostring(js_State *J, js_Value *v);
-js_Object *jsV_toobject(js_State *J, js_Value *v);
 void jsV_toprimitive(js_State *J, js_Value *v, int preferred);
 
 const char *js_itoa(char buf[32], int a);

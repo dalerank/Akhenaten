@@ -329,14 +329,16 @@ const char *js_tostring(js_State *J, int idx) {
     return jsV_tostring(J, stackidx(J, idx));
 }
 
-js_Object *js_toobject(js_State *J, int idx) {
-    return jsV_toobject(J, stackidx(J, idx));
+js_Object *js_State::toobject(int idx) {
+    return toobject(stackidx(this, idx));
 }
 
-js_Object *js_toobject_pending(js_State *J, int idx, const char *prop) {
-    J->pending_prop = prop;
-    js_Object *obj = jsV_toobject(J, stackidx(J, idx));
-    J->pending_prop = NULL;
+js_Object *js_State::toobject_pending(int idx, const char *prop) {
+    OZZY_PROFILER_SECTION(_, prop);
+
+    pending_prop = prop;
+    js_Object *obj = toobject(stackidx(this, idx));
+    pending_prop = nullptr;
     return obj;
 }
 
@@ -795,30 +797,30 @@ void js_defglobal(js_State *J, const char *name, int atts) {
 }
 
 void js_getproperty(js_State *J, int idx, const char *name) {
-    J->getproperty(js_toobject(J, idx), name);
+    J->getproperty(J->toobject(idx), name);
 }
 
 void js_setproperty(js_State *J, int idx, const char *name) {
-    jsR_setproperty(J, js_toobject(J, idx), name);
+    jsR_setproperty(J, J->toobject(idx), name);
     js_pop(J, 1);
 }
 
 void js_defproperty(js_State *J, int idx, const char *name, int atts) {
-    jsR_defproperty(J, js_toobject(J, idx), name, atts, stackidx(J, -1), NULL, NULL);
+    jsR_defproperty(J, J->toobject(idx), name, atts, stackidx(J, -1), NULL, NULL);
     js_pop(J, 1);
 }
 
 void js_delproperty(js_State *J, int idx, const char *name) {
-    jsR_delproperty(J, js_toobject(J, idx), name);
+    jsR_delproperty(J, J->toobject(idx), name);
 }
 
 void js_defaccessor(js_State *J, int idx, const char *name, int atts) {
-    jsR_defproperty(J, js_toobject(J, idx), name, atts, NULL, jsR_tofunction(J, -2), jsR_tofunction(J, -1));
+    jsR_defproperty(J, J->toobject(idx), name, atts, NULL, jsR_tofunction(J, -2), jsR_tofunction(J, -1));
     js_pop(J, 2);
 }
 
 int js_State::hasproperty(int idx, const char *name) {
-    return hasproperty(js_toobject(this, idx), name);
+    return hasproperty(toobject(idx), name);
 }
 
 void js_setdumping(js_State *J, void (*dumpfun)(js_State *, const char *)) {
@@ -826,17 +828,17 @@ void js_setdumping(js_State *J, void (*dumpfun)(js_State *, const char *)) {
 }
 
 void js_dumpobject_ex(js_State *J, int idx) {
-    js_dumpobject(J, js_toobject(J, -1));
+    js_dumpobject(J, J->toobject(-1));
 }
 
 /* Iterator */
 
 void js_pushiterator(js_State *J, int idx, int own) {
-    js_pushobject(J, jsV_newiterator(J, js_toobject(J, idx), own));
+    js_pushobject(J, jsV_newiterator(J, J->toobject(idx), own));
 }
 
 const char *js_nextiterator(js_State *J, int idx) {
-    return jsV_nextiterator(J, js_toobject(J, idx));
+    return jsV_nextiterator(J, J->toobject(idx));
 }
 
 /* Environment records */
@@ -939,40 +941,44 @@ void js_State::restorescope() {
     E = envstack[--envtop];
 }
 
-static void jsR_calllwfunction(js_State *J, int n, js_Function *F, js_Environment *scope) {
+void js_State::calllwfunction(int n, js_Function *F, js_Environment *scope) {
+    OZZY_PROFILER_FUNCTION();
+
     js_Value v;
     int i;
 
-    J->savescope(scope);
+    savescope(scope);
 
+    auto J = this;
     if (n > F->numparams) {
         js_pop(J, F->numparams - n);
         n = F->numparams;
     }
 
     for (i = n; i < F->varlen; ++i) {
-        J->pushundefined();
+        pushundefined();
     }
 
     js::jsR_run(J, F);
     v = *stackidx(J, -1);
-    TOP = --BOT; /* clear stack */
+    top = --bot; /* clear stack */
     js_pushvalue(J, v);
 
-    J->restorescope();
+    restorescope();
 }
 
-static void jsR_callfunction(js_State *J, int n, js_Function *F, js_Environment *scope) {
+void js_State::callfunction(int n, js_Function *F, js_Environment *scope) {
     js_Value v;
     int i;
 
+    auto J = this;
     scope = jsR_newenvironment(J, jsV_newobject(J, JS_COBJECT, NULL), scope);
 
-    J->savescope(scope);
+    savescope(scope);
 
     if (F->arguments) {
         js_newobject(J);
-        if (!J->strict) {
+        if (!strict) {
             js_currentfunction(J);
             js_defproperty(J, -2, "callee", JS_DONTENUM);
         }
@@ -999,7 +1005,7 @@ static void jsR_callfunction(js_State *J, int n, js_Function *F, js_Environment 
 
     js::jsR_run(J, F);
     v = *stackidx(J, -1);
-    TOP = --BOT; /* clear stack */
+    top = --bot; /* clear stack */
     js_pushvalue(J, v);
 
     J->restorescope();
@@ -1036,12 +1042,16 @@ static void jsR_callcfunction(js_State *J, int n, int min, js_CFunction F) {
     js_pushvalue(J, v);
 }
 
-static void jsR_pushtrace(js_State *J, const char *name, const char *file, int line) {
-    if (++J->tracetop == JS_ENVLIMIT)
-        js_error(J, "call stack overflow");
-    J->trace[J->tracetop].name = name;
-    J->trace[J->tracetop].file = file;
-    J->trace[J->tracetop].line = line;
+void js_State::pushtrace(const char *name, const char *file, int line) {
+    OZZY_PROFILER_SECTION(_, name);
+
+    if (++tracetop == JS_ENVLIMIT) {
+        js_error(this, "call stack overflow");
+    }
+
+    trace[tracetop].name = name;
+    trace[tracetop].file = file;
+    trace[tracetop].line = line;
 }
 
 void js_State::call(int n) {
@@ -1055,29 +1065,30 @@ void js_State::call(int n) {
         js_typeerror(J, "called object is not a function");
     }
 
-    obj = js_toobject(J, -n - 2);
+    obj = toobject(-n - 2);
 
-    savebot = BOT;
-    BOT = TOP - n - 1;
+    savebot = bot;
+    bot = top - n - 1;
 
     if (obj->type == JS_CFUNCTION) {
-        jsR_pushtrace(J, obj->u.f.function->name, obj->u.f.function->filename, obj->u.f.function->line);
-        if (obj->u.f.function->lightweight)
-            jsR_calllwfunction(J, n, obj->u.f.function, obj->u.f.scope);
-        else
-            jsR_callfunction(J, n, obj->u.f.function, obj->u.f.scope);
-        --J->tracetop;
+        pushtrace(obj->u.f.function->name, obj->u.f.function->filename, obj->u.f.function->line);
+        if (obj->u.f.function->lightweight) {
+            calllwfunction(n, obj->u.f.function, obj->u.f.scope);
+        } else {
+            callfunction(n, obj->u.f.function, obj->u.f.scope);
+        }
+        --tracetop;
     } else if (obj->type == JS_CSCRIPT) {
-        jsR_pushtrace(J, obj->u.f.function->name, obj->u.f.function->filename, obj->u.f.function->line);
+        pushtrace(obj->u.f.function->name, obj->u.f.function->filename, obj->u.f.function->line);
         jsR_callscript(J, n, obj->u.f.function, obj->u.f.scope);
-        --J->tracetop;
+        --tracetop;
     } else if (obj->type == JS_CCFUNCTION) {
-        jsR_pushtrace(J, obj->u.c.name, "native", 0);
+        pushtrace(obj->u.c.name, "native", 0);
         jsR_callcfunction(J, n, obj->u.c.length, obj->u.c.function);
-        --J->tracetop;
+        --tracetop;
     }
 
-    BOT = savebot;
+    bot = savebot;
 }
 
 void js_construct(js_State *J, int n) {
@@ -1085,10 +1096,11 @@ void js_construct(js_State *J, int n) {
     js_Object *prototype;
     js_Object *newobj;
 
-    if (!J->iscallable(-n - 1))
+    if (!J->iscallable(-n - 1)) {
         js_typeerror(J, "called object is not a function");
+    }
 
-    obj = js_toobject(J, -n - 1);
+    obj = J->toobject(-n - 1);
 
     /* built-in constructors create their own objects, give them a 'null' this */
     if (obj->type == JS_CCFUNCTION && obj->u.c.constructor) {
@@ -1098,7 +1110,7 @@ void js_construct(js_State *J, int n) {
             js_rot(J, n + 1);
         BOT = TOP - n - 1;
 
-        jsR_pushtrace(J, obj->u.c.name, "native", 0);
+        J->pushtrace(obj->u.c.name, "native", 0);
         jsR_callcfunction(J, n, obj->u.c.length, obj->u.c.constructor);
         --J->tracetop;
 
@@ -1109,7 +1121,7 @@ void js_construct(js_State *J, int n) {
     /* extract the function object's prototype property */
     js_getproperty(J, -n - 1, "prototype");
     if (J->isobject(-1))
-        prototype = js_toobject(J, -1);
+        prototype = J->toobject(-1);
     else
         prototype = J->Object_prototype;
     js_pop(J, 1);
@@ -1413,21 +1425,21 @@ void js::jsR_run(js_State *J, js_Function *F) {
             break;
 
         case OP_INITPROP:
-            obj = js_toobject(J, -3);
+            obj = J->toobject(-3);
             str = js_tostring(J, -2);
             jsR_setproperty(J, obj, str);
             js_pop(J, 2);
             break;
 
         case OP_INITGETTER:
-            obj = js_toobject(J, -3);
+            obj = J->toobject(-3);
             str = js_tostring(J, -2);
             jsR_defproperty(J, obj, str, 0, NULL, jsR_tofunction(J, -1), NULL);
             js_pop(J, 2);
             break;
 
         case OP_INITSETTER:
-            obj = js_toobject(J, -3);
+            obj = J->toobject(-3);
             str = js_tostring(J, -2);
             jsR_defproperty(J, obj, str, 0, NULL, NULL, jsR_tofunction(J, -1));
             js_pop(J, 2);
@@ -1435,35 +1447,35 @@ void js::jsR_run(js_State *J, js_Function *F) {
 
         case OP_GETPROP:
             str = js_tostring(J, -1);
-            obj = js_toobject_pending(J, -2, str);
+            obj = J->toobject_pending(-2, str);
             J->getproperty(obj, str);
             js_rot3pop2(J);
             break;
 
         case OP_GETPROP_S:
             str = ST[*pc++];
-            obj = js_toobject_pending(J, -1, str);
+            obj = J->toobject_pending(-1, str);
             J->getproperty(obj, str);
             js_rot2pop1(J);
             break;
 
         case OP_SETPROP:
             str = js_tostring(J, -2);
-            obj = js_toobject_pending(J, -3, str);
+            obj = J->toobject_pending(-3, str);
             jsR_setproperty(J, obj, str);
             js_rot3pop2(J);
             break;
 
         case OP_SETPROP_S:
             str = ST[*pc++];
-            obj = js_toobject_pending(J, -2, str);
+            obj = J->toobject_pending(-2, str);
             jsR_setproperty(J, obj, str);
             js_rot2pop1(J);
             break;
 
         case OP_DELPROP:
             str = js_tostring(J, -1);
-            obj = js_toobject(J, -2);
+            obj = J->toobject(-2);
             b = jsR_delproperty(J, obj, str);
             js_pop(J, 2);
             js_pushboolean(J, b);
@@ -1471,7 +1483,7 @@ void js::jsR_run(js_State *J, js_Function *F) {
 
         case OP_DELPROP_S:
             str = ST[*pc++];
-            obj = js_toobject(J, -1);
+            obj = J->toobject(-1);
             b = jsR_delproperty(J, obj, str);
             js_pop(J, 1);
             js_pushboolean(J, b);
@@ -1479,14 +1491,14 @@ void js::jsR_run(js_State *J, js_Function *F) {
 
         case OP_ITERATOR:
             if (!js_isundefined(J, -1) && !js_isnull(J, -1)) {
-                obj = jsV_newiterator(J, js_toobject(J, -1), 0);
+                obj = jsV_newiterator(J, J->toobject(-1), 0);
                 js_pop(J, 1);
                 js_pushobject(J, obj);
             }
             break;
 
         case OP_NEXTITER:
-            obj = js_toobject(J, -1);
+            obj = J->toobject(-1);
             str = jsV_nextiterator(J, obj);
             if (str) {
                 js_pushliteral(J, str);
@@ -1724,7 +1736,7 @@ void js::jsR_run(js_State *J, js_Function *F) {
             /* With */
 
         case OP_WITH:
-            obj = js_toobject(J, -1);
+            obj = J->toobject(-1);
             J->E = jsR_newenvironment(J, obj, J->E);
             js_pop(J, 1);
             break;
@@ -1772,7 +1784,7 @@ void js::jsR_run(js_State *J, js_Function *F) {
 /* Function modifiers API */
 
 int js_hasmodifier(js_State *J, int idx, const char *key) {
-    js_Object *obj = js_toobject(J, idx);
+    js_Object *obj = J->toobject(idx);
     if (!obj || obj->type != JS_CFUNCTION)
         return 0;
 
@@ -1789,7 +1801,7 @@ int js_hasmodifier(js_State *J, int idx, const char *key) {
 }
 
 const char *js_getmodifier(js_State *J, int idx, const char *key) {
-    js_Object *obj = js_toobject(J, idx);
+    js_Object *obj = J->toobject(idx);
     if (!obj || obj->type != JS_CFUNCTION) {
         js_typeerror(J, "not a function");
     }

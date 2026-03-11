@@ -324,14 +324,14 @@ static char *fmtdatetime(char *buf, double t, double tza) {
 /* Date functions */
 
 static double js_todate(js_State *J, int idx) {
-    js_Object *self = js_toobject(J, idx);
+    js_Object *self = J->toobject(idx);
     if (self->type != JS_CDATE)
         js_typeerror(J, "not a date");
     return self->u.number;
 }
 
 static void js_setdate(js_State *J, int idx, double t) {
-    js_Object *self = js_toobject(J, idx);
+    js_Object *self = J->toobject(idx);
     if (self->type != JS_CDATE)
         js_typeerror(J, "not a date");
     self->u.number = TimeClip(t);

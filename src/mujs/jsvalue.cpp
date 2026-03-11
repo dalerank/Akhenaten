@@ -312,9 +312,10 @@ static js_Object *jsV_newstring(js_State *J, const char *v) {
 }
 
 /* ToObject() on a value */
-js_Object *jsV_toobject(js_State *J, js_Value *v) {
+js_Object *js_State::toobject(js_Value *v) {
     OZZY_PROFILER_FUNCTION();
 
+    auto J = this;
     switch (v->type) {
     default:
     case JS_TSHRSTR: return jsV_newstring(J, v->u.shrstr);
@@ -413,8 +414,9 @@ void js_newuserdatax(js_State *J, const char *tag, void *data, js_HasProperty ha
     js_Object *prototype = NULL;
     js_Object *obj;
 
-    if (J->isobject(-1))
-        prototype = js_toobject(J, -1);
+    if (J->isobject(-1)) {
+        prototype = J->toobject(-1);
+    }
     js_pop(J, 1);
 
     obj = jsV_newobject(J, JS_CUSERDATA, prototype);
@@ -445,10 +447,10 @@ int js_instanceof(js_State *J) {
     js_getproperty(J, -1, "prototype");
     if (!J->isobject(-1))
         js_typeerror(J, "instanceof: 'prototype' property is not an object");
-    O = js_toobject(J, -1);
+    O = J->toobject(-1);
     js_pop(J, 1);
 
-    V = js_toobject(J, -2);
+    V = J->toobject(-2);
     while (V) {
         V = V->prototype;
         if (O == V)

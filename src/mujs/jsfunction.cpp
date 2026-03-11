@@ -48,7 +48,7 @@ static void jsB_Function_prototype(js_State *J)
 
 static void Fp_toString(js_State *J)
 {
-	js_Object *self = js_toobject(J, 0);
+	js_Object *self = J->toobject(0);
 	char *s = 0;
 	int i, n;
 
