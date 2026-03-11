@@ -17,7 +17,7 @@ static void console_command_wrapper_global(const std::string &funcRefStr, std::i
     }
 
     js_getglobal(J, funcRefStr.c_str());
-    if (!js_iscallable(J, -1)) {
+    if (!J->iscallable(-1)) {
         os << "Error: Console command function not found" << std::endl;
         js_pop(J, 1);
         return;
@@ -55,7 +55,7 @@ static void console_command_wrapper_registry(const std::string &funcRefStr, std:
     }
 
     js_getregistry(J, funcRefStr.c_str());
-    if (!js_iscallable(J, -1)) {
+    if (!J->iscallable(-1)) {
         os << "Error: Console command function not found" << std::endl;
         js_pop(J, 1);
         return;
@@ -95,7 +95,7 @@ void js_register_console_command_from_function(pcstr functionName, pcstr command
     }
 
     js_getglobal(J, functionName);
-    if (!js_iscallable(J, -1)) {
+    if (!J->iscallable(-1)) {
         logs::error("JS: Function '%s' is not callable for console command '%s'", functionName, commandName);
         js_pop(J, 1);
         return;
@@ -124,7 +124,7 @@ void js_register_console_command(js_State *J) {
         return;
     }
 
-    if (!js_iscallable(J, 2)) {
+    if (!J->iscallable(2)) {
         logs::error("__register_console_command: second argument must be a function");
         J->pushundefined();
         return;

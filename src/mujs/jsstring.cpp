@@ -406,7 +406,7 @@ loop:
 	s = m.sub[0].sp;
 	n = m.sub[0].ep - m.sub[0].sp;
 
-	if (js_iscallable(J, 2)) {
+	if (J->iscallable(2)) {
 		js_copy(J, 2);
 		J->pushundefined();
 		for (x = 0; m.sub[x].sp; ++x) /* arg 0..x: substring and subexps that matched */
@@ -500,7 +500,7 @@ static void Sp_replace_string(js_State *J)
 	}
 	n = strlen(needle);
 
-	if (js_iscallable(J, 2)) {
+	if (J->iscallable(2)) {
 		js_copy(J, 2);
 		J->pushundefined();
 		js_pushlstring(J, s, n); /* arg 1: substring that matched */

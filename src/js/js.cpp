@@ -135,7 +135,7 @@ static void js_vm_dump_stack(js_State *J) {
         } else if (J->isobject(idx)) {
             if (js_isarray(J, idx)) {
                 value_desc.printf("array (length: %d)", js_getlength(J, idx));
-            } else if (js_iscallable(J, idx)) {
+            } else if (J->iscallable(idx)) {
                 value_desc = "function";
             } else {
                 // Try to get some info about the object

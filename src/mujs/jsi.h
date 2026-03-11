@@ -214,6 +214,8 @@ struct js_State
 
 	int pcall(int n);
 	void call(int n);
+
+	int iscallable(int idx);
 };
 
 #endif

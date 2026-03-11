@@ -52,7 +52,7 @@ static void Fp_toString(js_State *J)
 	char *s = 0;
 	int i, n;
 
-	if (!js_iscallable(J, 0))
+	if (!J->iscallable(0))
 		js_typeerror(J, "not a function");
 
 	if (self->type == JS_CFUNCTION || self->type == JS_CSCRIPT) {
@@ -87,7 +87,7 @@ static void Fp_apply(js_State *J)
 {
 	int i, n;
 
-	if (!js_iscallable(J, 0))
+	if (!J->iscallable(0))
 		js_typeerror(J, "not a function");
 
 	js_copy(J, 0);
@@ -108,7 +108,7 @@ static void Fp_call(js_State *J)
 {
 	int i, top = js_gettop(J);
 
-	if (!js_iscallable(J, 0))
+	if (!J->iscallable(0))
 		js_typeerror(J, "not a function");
 
 	for (i = 0; i < top; ++i)
@@ -167,7 +167,7 @@ static void Fp_bind(js_State *J)
 	int i, top = js_gettop(J);
 	int n;
 
-	if (!js_iscallable(J, 0))
+	if (!J->iscallable(0))
 		js_typeerror(J, "not a function");
 
 	n = js_getlength(J, 0);

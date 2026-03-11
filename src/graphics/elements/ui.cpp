@@ -781,10 +781,10 @@ bool ui::widget::contains(const xstring &id) const {
     return (it != elements.end());
 }
 
-ui::element& ui::widget::operator[](pcstr id) {
-    auto it = std::find_if(elements.begin(), elements.end(), [xid = xstring(id)] (const auto &e) { return e->id == xid; });
+ui::element& ui::widget::operator[](const xstring& id) {
+    auto it = std::find_if(elements.begin(), elements.end(), [xid = id] (const auto &e) { return e->id == xid; });
     if (check_errors && it == elements.end()) {
-        logs::error("No element with id:%s", id);
+        logs::error("No element with id:%s", id.c_str());
     }
     return (it != elements.end() ? **it : ui::dummy_element);
 }

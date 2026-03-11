@@ -656,7 +656,7 @@ static void Dp_toJSON(js_State *J) {
     js_pop(J, 1);
 
     js_getproperty(J, 0, "toISOString");
-    if (!js_iscallable(J, -1))
+    if (!J->iscallable(-1))
         js_typeerror(J, "Date.prototype.toJSON: this.toISOString not a function");
     js_copy(J, 0);
     J->call(0);

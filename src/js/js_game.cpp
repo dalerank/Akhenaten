@@ -160,8 +160,9 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
         int savetop = js_gettop(J);
         js_getglobal(J, funcname);
 
-        verify_no_crash(js_iscallable(J, -1));
-        if (!js_iscallable(J, -1)) {
+        bool iscallable = J->iscallable(-1);
+        verify_no_crash(iscallable);
+        if (!iscallable) {
             logs::info("JS event handler '%s' is not callable, skipping", funcname);
             js_pop(J, 1);
             continue;
@@ -461,7 +462,7 @@ void js_call_function(xstring js_ref) {
 
     // Get the function from registry using the reference
     js_getregistry(J, js_ref.c_str());
-    if (js_iscallable(J, -1)) {
+    if (J->iscallable(-1)) {
         js_pushnull(J);  // 'this' context
         int result = J->pcall(0);
         if (result != 0) {
@@ -482,7 +483,7 @@ void js_call_function_bool(xstring js_ref, bool param) {
     verify_no_crash(J);
 
     js_getregistry(J, js_ref.c_str());
-    if (js_iscallable(J, -1)) {
+    if (J->iscallable(-1)) {
         js_pushnull(J);
         js_pushboolean(J, param);
         int result = J->pcall(1);
@@ -505,7 +506,7 @@ pcstr js_call_function_with_result(xstring js_ref, int param1, int param2) {
 
     // Get the function from registry using the reference
     js_getregistry(J, js_ref.c_str());
-    if (js_iscallable(J, -1)) {
+    if (J->iscallable(-1)) {
         js_pushnull(J);  // 'this' context
         js_pushnumber(J, (double)param1);
         js_pushnumber(J, (double)param2);
