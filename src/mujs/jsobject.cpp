@@ -7,7 +7,7 @@ static void jsB_new_Object(js_State *J)
 	if (js_isundefined(J, 1) || js_isnull(J, 1))
 		js_newobject(J);
 	else
-		js_pushobject(J, js_toobject(J, 1));
+		js_pushobject(J, J->toobject(1));
 }
 
 static void jsB_Object(js_State *J)
@@ -15,12 +15,12 @@ static void jsB_Object(js_State *J)
 	if (js_isundefined(J, 1) || js_isnull(J, 1))
 		js_newobject(J);
 	else
-		js_pushobject(J, js_toobject(J, 1));
+		js_pushobject(J, J->toobject(1));
 }
 
 static void Op_toString(js_State *J)
 {
-	js_Object *self = js_toobject(J, 0);
+	js_Object *self = J->toobject(0);
 	switch (self->type) {
 	case JS_COBJECT: js_pushliteral(J, "[object Object]"); break;
 	case JS_CARRAY: js_pushliteral(J, "[object Array]"); break;
@@ -53,7 +53,7 @@ static void Op_valueOf(js_State *J)
 
 static void Op_hasOwnProperty(js_State *J)
 {
-	js_Object *self = js_toobject(J, 0);
+	js_Object *self = J->toobject(0);
 	const char *name = js_tostring(J, 1);
 	js_Property *ref = jsV_getownproperty(J, self, name);
 	js_pushboolean(J, ref != NULL);
@@ -61,9 +61,9 @@ static void Op_hasOwnProperty(js_State *J)
 
 static void Op_isPrototypeOf(js_State *J)
 {
-	js_Object *self = js_toobject(J, 0);
+	js_Object *self = J->toobject(0);
 	if (J->isobject(1)) {
-		js_Object *V = js_toobject(J, 1);
+		js_Object *V = J->toobject(1);
 		do {
 			V = V->prototype;
 			if (V == self) {
@@ -77,7 +77,7 @@ static void Op_isPrototypeOf(js_State *J)
 
 static void Op_propertyIsEnumerable(js_State *J)
 {
-	js_Object *self = js_toobject(J, 0);
+	js_Object *self = J->toobject(0);
 	const char *name = js_tostring(J, 1);
 	js_Property *ref = jsV_getownproperty(J, self, name);
 	js_pushboolean(J, ref && !(ref->atts & JS_DONTENUM));
@@ -88,7 +88,7 @@ static void O_getPrototypeOf(js_State *J)
 	js_Object *obj;
 	if (!J->isobject(1))
 		js_typeerror(J, "not an object");
-	obj = js_toobject(J, 1);
+	obj = J->toobject(1);
 	if (obj->prototype)
 		js_pushobject(J, obj->prototype);
 	else
@@ -101,7 +101,7 @@ static void O_getOwnPropertyDescriptor(js_State *J)
 	js_Property *ref;
 	if (!J->isobject(1))
 		js_typeerror(J, "not an object");
-	obj = js_toobject(J, 1);
+	obj = J->toobject(1);
 	ref = jsV_getproperty(J, obj, js_tostring(J, 2));
 	if (!ref)
 		J->pushundefined();
@@ -140,7 +140,7 @@ static void O_getOwnPropertyNames(js_State *J)
 
 	if (!J->isobject(1))
 		js_typeerror(J, "not an object");
-	obj = js_toobject(J, 1);
+	obj = J->toobject(1);
 
 	js_newarray(J);
 
@@ -235,7 +235,7 @@ static void O_defineProperty(js_State *J)
 {
 	if (!J->isobject(1)) js_typeerror(J, "not an object");
 	if (!J->isobject(3)) js_typeerror(J, "not an object");
-	ToPropertyDescriptor(J, js_toobject(J, 1), js_tostring(J, 2), js_toobject(J, 3));
+	ToPropertyDescriptor(J, J->toobject(1), js_tostring(J, 2), J->toobject(3));
 	js_copy(J, 1);
 }
 
@@ -247,11 +247,11 @@ static void O_defineProperties(js_State *J)
 	if (!J->isobject(1)) js_typeerror(J, "not an object");
 	if (!J->isobject(2)) js_typeerror(J, "not an object");
 
-	props = js_toobject(J, 2);
+	props = J->toobject(2);
 	for (ref = props->head; ref; ref = ref->next) {
 		if (!(ref->atts & JS_DONTENUM)) {
 			js_pushvalue(J, ref->value);
-			ToPropertyDescriptor(J, js_toobject(J, 1), ref->name, js_toobject(J, -1));
+			ToPropertyDescriptor(J, J->toobject(1), ref->name, J->toobject(-1));
 			js_pop(J, 1);
 		}
 	}
@@ -267,7 +267,7 @@ static void O_create(js_State *J)
 	js_Property *ref;
 
 	if (J->isobject(1))
-		proto = js_toobject(J, 1);
+		proto = J->toobject(1);
 	else if (js_isnull(J, 1))
 		proto = NULL;
 	else
@@ -278,7 +278,7 @@ static void O_create(js_State *J)
 
 	if (js_isdefined(J, 2)) {
 		if (!J->isobject(2)) js_typeerror(J, "not an object");
-		props = js_toobject(J, 2);
+		props = J->toobject(2);
 		for (ref = props->head; ref; ref = ref->next) {
 			if (!(ref->atts & JS_DONTENUM)) {
 				if (ref->value.type != JS_TOBJECT) js_typeerror(J, "not an object");
@@ -298,7 +298,7 @@ static void O_keys(js_State *J)
 	if (!J->isobject(1))
 		js_typeerror(J, "not an object");
 
-	obj = js_toobject(J, 1);
+	obj = J->toobject(1);
 
 	js_newarray(J);
 
@@ -322,7 +322,7 @@ static void O_preventExtensions(js_State *J)
 {
 	if (!J->isobject(1))
 		js_typeerror(J, "not an object");
-	js_toobject(J, 1)->extensible = 0;
+	J->toobject(1)->extensible = 0;
 	js_copy(J, 1);
 }
 
@@ -330,7 +330,7 @@ static void O_isExtensible(js_State *J)
 {
 	if (!J->isobject(1))
 		js_typeerror(J, "not an object");
-	js_pushboolean(J, js_toobject(J, 1)->extensible);
+	js_pushboolean(J, J->toobject(1)->extensible);
 }
 
 static void O_seal(js_State *J)
@@ -341,7 +341,7 @@ static void O_seal(js_State *J)
 	if (!J->isobject(1))
 		js_typeerror(J, "not an object");
 
-	obj = js_toobject(J, 1);
+	obj = J->toobject(1);
 	obj->extensible = 0;
 
 	for (ref = obj->head; ref; ref = ref->next)
@@ -358,7 +358,7 @@ static void O_isSealed(js_State *J)
 	if (!J->isobject(1))
 		js_typeerror(J, "not an object");
 
-	obj = js_toobject(J, 1);
+	obj = J->toobject(1);
 	if (obj->extensible) {
 		js_pushboolean(J, 0);
 		return;
@@ -382,7 +382,7 @@ static void O_freeze(js_State *J)
 	if (!J->isobject(1))
 		js_typeerror(J, "not an object");
 
-	obj = js_toobject(J, 1);
+	obj = J->toobject(1);
 	obj->extensible = 0;
 
 	for (ref = obj->head; ref; ref = ref->next)
@@ -400,7 +400,7 @@ static void O_isFrozen(js_State *J)
 		js_typeerror(J, "not an object");
 	}
 
-	obj = js_toobject(J, 1);
+	obj = J->toobject(1);
 	if (obj->extensible) {
 		js_pushboolean(J, 0);
 		return;

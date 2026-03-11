@@ -224,7 +224,7 @@ static int fmtvalue(js_State *J, js_Buffer **sb, const char *key, const char *ga
 	// TODO: replacer()
 
 	if (J->isobject(-1) && !J->iscallable(-1)) {
-		js_Object *obj = js_toobject(J, -1);
+		js_Object *obj = J->toobject(-1);
 		switch (obj->type) {
 		case JS_CNUMBER: fmtnum(J, sb, obj->u.number); break;
 		case JS_CSTRING: fmtstr(J, sb, obj->u.s.string); break;

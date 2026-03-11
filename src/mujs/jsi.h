@@ -216,6 +216,14 @@ struct js_State
 	void call(int n);
 
 	int iscallable(int idx);
+	js_Object *toobject(int idx);
+
+	js_Object *toobject(js_Value *v);
+	js_Object *toobject_pending(int idx, const char *prop);
+
+	void pushtrace(const char *name, const char *file, int line);
+	void calllwfunction(int n, js_Function *F, js_Environment *scope);
+	void callfunction(int n, js_Function *F, js_Environment *scope);
 };
 
 #endif

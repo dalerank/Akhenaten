@@ -676,7 +676,7 @@ static void Ap_reduceRight(js_State *J)
 static void A_isArray(js_State *J)
 {
 	if (J->isobject(1)) {
-		js_Object *T = js_toobject(J, 1);
+		js_Object *T = J->toobject(1);
 		js_pushboolean(J, T->type == JS_CARRAY);
 	} else {
 		js_pushboolean(J, 0);
