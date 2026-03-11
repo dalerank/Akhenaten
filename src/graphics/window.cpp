@@ -110,7 +110,7 @@ void window_draw(int force) {
         OZZY_PROFILER_SECTION(_, "Render/Frame/Refresh");
         g_render.clear_screen();
     }
-        
+
     {
         OZZY_PROFILER_SECTION(_, "Render/Frame/Window/Background");
         w->draw_background(UiFlags_None);
@@ -120,6 +120,13 @@ void window_draw(int force) {
         OZZY_PROFILER_SECTION(_, "Render/Frame/Foreground");
         w->draw_foreground(UiFlags_None);
     }
+
+    {
+        OZZY_PROFILER_SECTION(_, "Render/Frame/Tooltip");
+        data.handle_tooltip(&mouse::get());
+    }
+
+    ui::flush_commands();
 }
 
 void window_draw_underlying_window(int flags) {

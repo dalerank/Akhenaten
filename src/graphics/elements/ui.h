@@ -6,6 +6,7 @@
 
 #include "core/archive.h"
 #include "core/variant.h"
+#include "core/cstring.h"
 
 #include "input/hotkey.h"
 #include "graphics/elements/scroll_list_panel.h"
@@ -52,6 +53,45 @@ enum UiFlags_ {
 };
 using UiFlags = int;
 
+struct ui_cmd_t {
+    enum e_type : uint8_t {
+        none = 0,
+        image,
+        fill_rect,
+        draw_rect,
+        h_line,
+        v_line,
+        panel_outer,
+        panel_inner,
+        text,
+        text_centered,
+        text_multiline,
+        text_colored,
+        text_rich,
+        clip_set,
+        clip_reset,
+        rich_draw,
+        button_border,
+        small_panel,
+        shade_rect,
+        large_label,
+    };
+
+    e_type type = none;
+    vec2i pos;
+    vec2i size;
+    int image_id = 0;
+    color mask = COLOR_MASK_NONE;
+    float scale = 1.f;
+    e_font font = FONT_INVALID;
+    color clr = 0;
+    UiFlags flags = UiFlags_None;
+    ImgFlags img_flags = ImgFlag_None;
+    cstring str{frameAlloc()};
+    int box_width = 0;
+    rich_text_t *rt = nullptr;
+};
+
 namespace ui {
 
 struct img_button_offsets { int data[4] = {0, 1, 2, 3}; };
@@ -63,6 +103,7 @@ const tooltip_context &get_tooltip();
 void set_tooltip(const xstring &text);
 void begin_frame();
 void end_frame();
+void flush_commands();
 void begin_widget(vec2i offset, bool relative = false);
 void end_widget();
 bool handle_mouse(const mouse *m);
@@ -104,6 +145,9 @@ image_button &imgcancel_button(vec2i pos, button_onclick_cb cb);
 arrow_button &arw_button(vec2i pos, bool down, bool tiny = false, UiFlags_ flags = UiFlags_None);
 scrollbar_t &scrollbar(scrollbar_t &scrollbar, vec2i pos, int &value, vec2i size = {-1, -1});
 void fill_rect(vec2i offset, vec2i size, color c);
+void draw_rect(vec2i pos, vec2i size, color c);
+void image_abs(int image_id, vec2i abs_pos);
+void text_multiline(pcstr text, vec2i pos, int width, e_font font, color clr);
 vec2i current_offset();
 
 template<typename T> inline void event(const T &ev);

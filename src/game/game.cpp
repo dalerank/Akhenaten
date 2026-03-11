@@ -507,7 +507,6 @@ void game_t::handle_input_frame() {
     const hotkeys *h = hotkey_state();
 
     g_window_manager.handle_input(&m ,h);
-    g_window_manager.handle_tooltip(&m);
 
     g_window_manager.update_input_after();
 }
