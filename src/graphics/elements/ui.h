@@ -53,7 +53,24 @@ enum UiFlags_ {
 };
 using UiFlags = int;
 
-struct ui_cmd_t {
+namespace ui {
+
+namespace opt {
+    struct Pos { vec2i value; };
+    struct Size { vec2i value; };
+    struct ImageId { int value; };
+    struct Mask { color value; };
+    struct Scale { float value; };
+    struct Font { e_font value; };
+    struct TextColor { color value; };
+    struct Flags { UiFlags value; };
+    struct ImgFlagsTag { ImgFlags value; ImgFlagsTag(ImgFlag_ v) : value((ImgFlags)v) {} };
+    struct Caption { pcstr value; };
+    struct BoxWidth { int value; };
+    struct RichTextPtr { rich_text_t *value; };
+}
+
+struct cmd_t {
     enum e_type : uint8_t {
         none = 0,
         image,
@@ -87,12 +104,35 @@ struct ui_cmd_t {
     color clr = 0;
     UiFlags flags = UiFlags_None;
     ImgFlags img_flags = ImgFlag_None;
-    cstring str{frameAlloc()};
+    cstring str{ frameAlloc() };
     int box_width = 0;
     rich_text_t *rt = nullptr;
-};
 
-namespace ui {
+    cmd_t() = default;
+    explicit cmd_t(e_type t) : type(t) {}
+
+    template<typename... Args>
+    cmd_t(e_type t, const Args&... args) : type(t) { set_props(args...); }
+
+    template<typename... Args>
+    void set_props(const Args&... args) {
+        (set_one(args), ...);
+    }
+
+private:
+    void set_one(const ui::opt::Pos &x) { pos = x.value; }
+    void set_one(const ui::opt::Size &x) { size = x.value; }
+    void set_one(const ui::opt::ImageId &x) { image_id = x.value; }
+    void set_one(const ui::opt::Mask &x) { mask = x.value; }
+    void set_one(const ui::opt::Scale &x) { scale = x.value; }
+    void set_one(const ui::opt::Font &x) { font = x.value; }
+    void set_one(const ui::opt::TextColor &x) { clr = x.value; }
+    void set_one(const ui::opt::Flags &x) { flags = x.value; }
+    void set_one(const ui::opt::ImgFlagsTag &x) { img_flags = x.value; }
+    void set_one(const ui::opt::Caption &x) { str = x.value; }
+    void set_one(const ui::opt::BoxWidth &x) { box_width = x.value; }
+    void set_one(const ui::opt::RichTextPtr &x) { rt = x.value; }
+};
 
 struct img_button_offsets { int data[4] = {0, 1, 2, 3}; };
 
@@ -103,6 +143,14 @@ const tooltip_context &get_tooltip();
 void set_tooltip(const xstring &text);
 void begin_frame();
 void end_frame();
+
+void push_cmd(cmd_t&& cmd);
+
+template<typename... Args>
+void push(cmd_t::e_type t, const Args&... args) {
+    push_cmd(cmd_t(t, args...));
+}
+
 void flush_commands();
 void begin_widget(vec2i offset, bool relative = false);
 void end_widget();
@@ -127,7 +175,7 @@ const image_t *eimage(int imgid, vec2i pos);
 const image_t *eimage(image_desc img, vec2i pos);
 void panel(vec2i pos, vec2i size, UiFlags flags);
 void line(bool hline, vec2i npos, int size, color c);
-void border(vec2i pos, vec2i size, int type, int color, UiFlags flags);
+void border(vec2i pos, vec2i size, int type, color c, UiFlags flags);
 void rect(vec2i pos, vec2i size, int fill, int color, UiFlags flags);
 void icon(vec2i pos, e_resource img, UiFlags flags = UiFlags_None);
 void icon(vec2i pos, e_advisor advisor);

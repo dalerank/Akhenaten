@@ -27,6 +27,8 @@
 
 #include <stack>
 
+using namespace ui::opt;
+
 namespace ui {
     tooltip_context tooltipctx;
 
@@ -180,7 +182,7 @@ namespace ui {
     image_desc resource_icons;
     image_desc advisor_icons;
 
-    hvector<ui_cmd_t, 256> g_ui_commands;
+    hvector<cmd_t, 256> g_ui_commands;
 }
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_ui_options) {
@@ -251,49 +253,29 @@ void ui::begin_widget(vec2i offset, bool relative) {
 
 void ui::fill_rect(vec2i offset, vec2i size, color c) {
     const vec2i goffset = g_state.offset();
-    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::fill_rect});
-    cmd.pos = goffset + offset;
-    cmd.size = size;
-    cmd.clr = c;
+    push(cmd_t::fill_rect, Pos{goffset + offset}, Size{size}, TextColor{c});
 }
 
 void ui::draw_rect(vec2i pos, vec2i size, color c) {
     const vec2i goffset = g_state.offset();
-    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::draw_rect});
-    cmd.pos = goffset + pos;
-    cmd.size = size;
-    cmd.clr = c;
+    push(cmd_t::draw_rect, Pos{goffset + pos}, Size{size}, TextColor{c});
 }
 
 void ui::image_abs(int image_id, vec2i abs_pos) {
-    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::image});
-    cmd.pos = abs_pos;
-    cmd.image_id = image_id;
+    push(cmd_t::image, Pos{abs_pos}, ImageId{image_id});
 }
 
 void ui::panel_abs(vec2i pos, vec2i size_blocks, UiFlags flags) {
-    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{!!(flags & UiFlags_PanelInner) ? ui_cmd_t::panel_inner : ui_cmd_t::panel_outer});
-    cmd.pos = pos;
-    cmd.size = size_blocks;
+    push(!!(flags & UiFlags_PanelInner) ? cmd_t::panel_inner : cmd_t::panel_outer, Pos{pos}, Size{size_blocks});
 }
 
 void ui::text_abs(pcstr str, vec2i pos, e_font font, color clr) {
-    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_colored});
-    cmd.pos = pos;
-    cmd.font = font;
-    cmd.clr = clr;
-    cmd.box_width = 0;
-    cmd.str = str;
+    push(cmd_t::text_colored, Pos{pos}, Font{font}, TextColor{clr}, BoxWidth{0}, Caption{str});
 }
 
 void ui::text_multiline(pcstr text, vec2i pos, int width, e_font font, color clr) {
     const vec2i goffset = g_state.offset();
-    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_multiline});
-    cmd.pos = goffset + pos;
-    cmd.box_width = width;
-    cmd.font = font;
-    cmd.clr = clr;
-    cmd.str = text;
+    push(cmd_t::text_multiline, Pos{goffset + pos}, BoxWidth{width}, Font{font}, TextColor{clr}, Caption{text});
 }
 
 vec2i ui::current_offset() {
@@ -308,110 +290,119 @@ void ui::begin_frame() {
     tooltipctx.set(0, "");
 }
 
+
 void ui::end_frame() {
 
 }
 
-static void execute_ui_command(painter &ctx, const ui_cmd_t &cmd) {
-    switch (cmd.type) {
-    case ui_cmd_t::image:
-        ctx.img_generic(cmd.image_id, cmd.pos, cmd.mask, cmd.scale, cmd.img_flags);
-        break;
-
-    case ui_cmd_t::fill_rect:
-        ctx.fill_rect(cmd.pos, cmd.size, cmd.clr);
-        break;
-
-    case ui_cmd_t::draw_rect:
-        ctx.draw_rect(cmd.pos, cmd.size, cmd.clr);
-        break;
-
-    case ui_cmd_t::h_line:
-        graphics_draw_horizontal_line(cmd.pos, cmd.box_width, cmd.clr);
-        break;
-
-    case ui_cmd_t::v_line:
-        graphics_draw_vertical_line(cmd.pos, cmd.box_width, cmd.clr);
-        break;
-
-    case ui_cmd_t::panel_outer:
-        outer_panel_draw(cmd.pos, cmd.size.x, cmd.size.y);
-        break;
-
-    case ui_cmd_t::panel_inner:
-        inner_panel_draw(cmd.pos, cmd.size);
-        break;
-
-    case ui_cmd_t::text:
-        if (!!(cmd.flags & UiFlags_LabelMultiline)) {
-            text_draw_multiline(cmd.str.c_str(), cmd.pos, cmd.box_width, cmd.font, 0);
-        } else {
-            lang_text_draw(cmd.str.c_str(), cmd.pos, cmd.font, cmd.box_width);
-        }
-        break;
-
-    case ui_cmd_t::text_centered:
-        text_draw_centered(cmd.str.c_str(), cmd.pos.x, cmd.pos.y, cmd.box_width, cmd.font, cmd.clr);
-        break;
-
-    case ui_cmd_t::text_multiline:
-        text_draw_multiline(cmd.str.c_str(), cmd.pos, cmd.box_width, cmd.font, cmd.clr);
-        break;
-
-    case ui_cmd_t::text_colored:
-        if (cmd.box_width > 0) {
-            text_draw_centered(cmd.str.c_str(), cmd.pos.x, cmd.pos.y, cmd.box_width, cmd.font, cmd.clr);
-        } else {
-            lang_text_draw_colored(cmd.str.c_str(), cmd.pos.x, cmd.pos.y, cmd.font, cmd.clr);
-        }
-        break;
-
-    case ui_cmd_t::text_rich: {
-        rich_text_t rich_text;
-        rich_text.set_fonts(cmd.font, FONT_NORMAL_YELLOW);
-        const bool centered = !!(cmd.flags & UiFlags_AlignCentered);
-        rich_text.draw(cmd.str.c_str(), cmd.pos, cmd.box_width, cmd.size.y, false, centered);
-        break;
+namespace ui {
+    void push_cmd(cmd_t &&cmd) {
+        g_ui_commands.push_back(std::move(cmd));
     }
 
-    case ui_cmd_t::clip_set:
-        graphics_set_clip_rectangle(cmd.pos, cmd.size);
-        break;
+    void execute_ui_command(painter &ctx, const cmd_t &cmd) {
+        switch (cmd.type) {
+        case cmd_t::image:
+            ctx.img_generic(cmd.image_id, cmd.pos, cmd.mask, cmd.scale, cmd.img_flags);
+            break;
 
-    case ui_cmd_t::clip_reset:
-        graphics_reset_clip_rectangle();
-        break;
+        case cmd_t::fill_rect:
+            ctx.fill_rect(cmd.pos, cmd.size, cmd.clr);
+            break;
 
-    case ui_cmd_t::button_border:
-        button_border_draw(cmd.pos, cmd.size, cmd.img_flags != 0);
-        break;
+        case cmd_t::draw_rect:
+            ctx.draw_rect(cmd.pos, cmd.size, cmd.clr);
+            break;
 
-    case ui_cmd_t::small_panel:
-        small_panel_draw_colored(cmd.pos, cmd.box_width, cmd.image_id, cmd.mask);
-        break;
+        case cmd_t::h_line:
+            graphics_draw_horizontal_line(cmd.pos, cmd.box_width, cmd.clr);
+            break;
 
-    case ui_cmd_t::shade_rect:
-        graphics_shade_rect(cmd.pos, cmd.size, cmd.image_id);
-        break;
+        case cmd_t::v_line:
+            graphics_draw_vertical_line(cmd.pos, cmd.box_width, cmd.clr);
+            break;
 
-    case ui_cmd_t::large_label: {
-        large_label_draw(cmd.pos.x, cmd.pos.y, cmd.box_width, cmd.image_id);
-        const int letter_height = font_definition_for(cmd.font)->line_height;
-        text_draw_centered((uint8_t *)cmd.str.c_str(), cmd.pos.x + 1, cmd.pos.y + (cmd.size.y - letter_height) / 2, cmd.size.x, cmd.font, 0);
-        break;
-    }
+        case cmd_t::panel_outer:
+            outer_panel_draw(cmd.pos, cmd.size.x, cmd.size.y);
+            break;
 
-    case ui_cmd_t::rich_draw:
-        if (cmd.rt) {
-            cmd.rt->draw(cmd.str.c_str(), cmd.pos, cmd.box_width, cmd.size.y, false);
-            if (!(cmd.flags & UiFlags_NoScroll)) {
-                cmd.rt->draw_scrollbar(vec2i{-16, 0});
+        case cmd_t::panel_inner:
+            inner_panel_draw(cmd.pos, cmd.size);
+            break;
+
+        case cmd_t::text:
+            if (!!(cmd.flags & UiFlags_LabelMultiline)) {
+                text_draw_multiline(cmd.str.c_str(), cmd.pos, cmd.box_width, cmd.font, 0);
+            } else {
+                lang_text_draw(cmd.str.c_str(), cmd.pos, cmd.font, cmd.box_width);
             }
-        }
-        break;
+            break;
 
-    default:
-        break;
+        case cmd_t::text_centered:
+            text_draw_centered(cmd.str.c_str(), cmd.pos.x, cmd.pos.y, cmd.box_width, cmd.font, cmd.clr);
+            break;
+
+        case cmd_t::text_multiline:
+            text_draw_multiline(cmd.str.c_str(), cmd.pos, cmd.box_width, cmd.font, cmd.clr);
+            break;
+
+        case cmd_t::text_colored:
+            if (cmd.box_width > 0) {
+                text_draw_centered(cmd.str.c_str(), cmd.pos.x, cmd.pos.y, cmd.box_width, cmd.font, cmd.clr);
+            } else {
+                lang_text_draw_colored(cmd.str.c_str(), cmd.pos.x, cmd.pos.y, cmd.font, cmd.clr);
+            }
+            break;
+
+        case cmd_t::text_rich:
+        {
+            rich_text_t rich_text;
+            rich_text.set_fonts(cmd.font, FONT_NORMAL_YELLOW);
+            const bool centered = !!(cmd.flags & UiFlags_AlignCentered);
+            rich_text.draw(cmd.str.c_str(), cmd.pos, cmd.box_width, cmd.size.y, false, centered);
+            break;
+        }
+
+        case cmd_t::clip_set:
+            graphics_set_clip_rectangle(cmd.pos, cmd.size);
+            break;
+
+        case cmd_t::clip_reset:
+            graphics_reset_clip_rectangle();
+            break;
+
+        case cmd_t::button_border:
+            button_border_draw(cmd.pos, cmd.size, cmd.img_flags != 0);
+            break;
+
+        case cmd_t::small_panel:
+            small_panel_draw_colored(cmd.pos, cmd.box_width, cmd.image_id, cmd.mask);
+            break;
+
+        case cmd_t::shade_rect:
+            graphics_shade_rect(cmd.pos, cmd.size, cmd.image_id);
+            break;
+
+        case cmd_t::large_label:
+        {
+            large_label_draw(cmd.pos.x, cmd.pos.y, cmd.box_width, cmd.image_id);
+            const int letter_height = font_definition_for(cmd.font)->line_height;
+            text_draw_centered((uint8_t *)cmd.str.c_str(), cmd.pos.x + 1, cmd.pos.y + (cmd.size.y - letter_height) / 2, cmd.size.x, cmd.font, 0);
+            break;
+        }
+
+        case cmd_t::rich_draw:
+            if (cmd.rt) {
+                cmd.rt->draw(cmd.str.c_str(), cmd.pos, cmd.box_width, cmd.size.y, false);
+                if (!(cmd.flags & UiFlags_NoScroll)) {
+                    cmd.rt->draw_scrollbar(vec2i{ -16, 0 });
+                }
+            }
+            break;
+
+        default:
+            break;
+        }
     }
 }
 
@@ -529,35 +520,19 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
     gbutton.clip = graphics_clip_rectangle();
 
     if (small_panel) {
-        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::small_panel});
-        cmd.pos = offset + pos;
-        cmd.box_width = size.x / 16;
-        cmd.image_id = gbutton.hovered ? 1 : 2;
-        cmd.mask = darkened ? 0xffe0e0e0 : 0xffffffff;
+        push(cmd_t::small_panel, Pos{offset + pos}, BoxWidth{size.x / 16}, ImageId{gbutton.hovered ? 1 : 2}, Mask{darkened ? 0xffe0e0e0u : 0xffffffffu});
     } else if (hasbody) {
         if (thinborder) {
-            auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::draw_rect});
-            cmd.pos = offset + pos;
-            cmd.size = size;
-            cmd.clr = 0xff00000;
+            push(cmd_t::draw_rect, Pos{offset + pos}, Size{size}, TextColor{0xff00000});
         } else {
-            auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::button_border});
-            cmd.pos = offset + pos;
-            cmd.size = size;
-            cmd.img_flags = (gbutton.hovered && !darkened) ? 1 : 0;
+            push(cmd_t::button_border, Pos{offset + pos}, Size{size}, ImgFlagsTag{((gbutton.hovered && !darkened) ? ImgFlag_Alpha : ImgFlag_None)});
         }
     } else if (hasborder) {
         if (gbutton.hovered && !darkened) {
             if (thinborder) {
-                auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::draw_rect});
-                cmd.pos = offset + pos;
-                cmd.size = size;
-                cmd.clr = 0xff000000;
+                push(cmd_t::draw_rect, Pos{offset + pos}, Size{size}, TextColor{0xff000000});
             } else {
-                auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::button_border});
-                cmd.pos = offset + pos;
-                cmd.size = size;
-                cmd.img_flags = 1;
+                push(cmd_t::button_border, Pos{offset + pos}, Size{size}, ImgFlagsTag{ ImgFlag_Alpha });
             }
         }
     }
@@ -576,15 +551,7 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
         int starty = offset.y + pos.y + (size.y - (symbolh + 2) * labels_num) / 2 + 4;
 
         for (const auto &str : labels) {
-            auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{alingxcenter ? ui_cmd_t::text_centered : ui_cmd_t::text});
-            cmd.font = font;
-            cmd.str = str.c_str();
-            if (alingxcenter) {
-                cmd.pos = { offset.x + pos.x + 1, starty };
-                cmd.box_width = size.x;
-            } else {
-                cmd.pos = { offset.x + pos.x + 8, starty };
-            }
+            push(alingxcenter ? cmd_t::text_centered : cmd_t::text, Font{font}, Caption{str.c_str()}, Pos{vec2i{offset.x + pos.x + (alingxcenter ? 1 : 8), starty}}, BoxWidth{alingxcenter ? size.x : 0});
             starty += symbolh + 2;
         }
     } else if (label) {
@@ -594,37 +561,28 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
             int symbolw = text_get_width("H", font);
             int lines_num = std::max<int>(1, (int)strlen(label) * symbolw / size.x);
             int centering_y_offset = (size.y - lines_num * symbolh) / 2;
-            auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_rich});
-            cmd.font = font;
-            cmd.str = label;
-            cmd.pos = offset + pos + vec2i(0, centering_y_offset);
-            cmd.box_width = size.x;
-            cmd.size.y = lines_num;
-            cmd.flags = UiFlags_AlignCentered;
+            push(cmd_t::text_rich, Font{font}, Caption{label}, Pos{offset + pos + vec2i(0, centering_y_offset)}, BoxWidth{size.x}, Size{vec2i(0, lines_num)}, Flags{(UiFlags)UiFlags_AlignCentered});
         } else {
             const bool left_aligned = alingycenter || alignleft;
-            auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{left_aligned ? ui_cmd_t::text : ui_cmd_t::text_centered});
-            cmd.font = font;
-            cmd.str = label;
+            vec2i txt_pos;
+            int bw = 0;
             if (alingycenter) {
-                cmd.pos = { offset.x + pos.x + 8, offset.y + pos.y + (size.y - symbolh) / 2 + 2 };
+                txt_pos = { offset.x + pos.x + 8, offset.y + pos.y + (size.y - symbolh) / 2 + 2 };
             } else if (alignleft) {
-                cmd.pos = { offset.x + pos.x + 8, offset.y + pos.y + 8 };
+                txt_pos = { offset.x + pos.x + 8, offset.y + pos.y + 8 };
             } else if (alingxcenter) {
-                cmd.pos = { offset.x + pos.x + 1, offset.y + pos.y + 4 };
-                cmd.box_width = size.x;
+                txt_pos = { offset.x + pos.x + 1, offset.y + pos.y + 4 };
+                bw = size.x;
             } else {
-                cmd.pos = { offset.x + pos.x + 1, offset.y + pos.y + (size.y - symbolh) / 2 };
-                cmd.box_width = size.x;
+                txt_pos = { offset.x + pos.x + 1, offset.y + pos.y + (size.y - symbolh) / 2 };
+                bw = size.x;
             }
+            push(left_aligned ? cmd_t::text : cmd_t::text_centered, Font{font}, Caption{label}, Pos{txt_pos}, BoxWidth{bw});
         }
     }
 
     if (darkened) {
-        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::shade_rect});
-        cmd.pos = offset + pos;
-        cmd.size = size;
-        cmd.image_id = 0x80;
+        push(cmd_t::shade_rect, Pos{offset + pos}, Size{size}, ImageId{0x80});
     }
 
     if (!(darkened || readonly) && !!cb) {
@@ -640,13 +598,7 @@ generic_button &ui::large_button(pcstr label, vec2i pos, vec2i size, e_font font
     auto &gbutton = g_state.buttons.back().g_button;
     int focused = is_button_hover(gbutton, offset);
 
-    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::large_label});
-    cmd.pos = offset + pos;
-    cmd.size = size;
-    cmd.box_width = size.x / 16;
-    cmd.image_id = focused ? 1 : 0;
-    cmd.font = font;
-    cmd.str = label;
+    push(cmd_t::large_label, Pos{offset + pos}, Size{size}, BoxWidth{size.x / 16}, ImageId{focused ? 1 : 0}, Font{font}, Caption{label});
 
     return gbutton;
 }
@@ -691,12 +643,7 @@ image_button &ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_b
             image_id += offsets.data[3];
         }
 
-        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::image});
-        cmd.pos = state_offset + pos;
-        cmd.image_id = image_id;
-        cmd.mask = COLOR_WHITE;
-        cmd.scale = 1.0f;
-        cmd.img_flags = grayscaled ? ImgFlag_Grayscale : ImgFlag_None;
+        push(cmd_t::image, Pos{state_offset + pos}, ImageId{image_id}, Mask{COLOR_WHITE}, Scale{1.0f}, ImgFlagsTag{grayscaled ? ImgFlag_Grayscale : ImgFlag_None});
     }
 
     return ibutton;
@@ -722,12 +669,7 @@ int ui::label(int group, int number, vec2i pos, e_font font, UiFlags flags, int 
 int ui::label(pcstr label, vec2i pos, e_font font, UiFlags flags, int box_width) {
     const vec2i offset = g_state.offset();
     if (!!(flags & UiFlags_AlignCentered)) {
-        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_centered});
-        cmd.pos = offset + pos;
-        cmd.font = font;
-        cmd.flags = flags;
-        cmd.box_width = box_width;
-        cmd.str = label ? label : "";
+        push(cmd_t::text_centered, Pos{offset + pos}, Font{font}, Flags{flags}, BoxWidth{box_width}, Caption{label ? label : ""});
         return box_width;
     } else if (!!(flags & UiFlags_LabelMultiline)) {
         // keep immediate: returns line count, complex to measure ahead of time
@@ -736,20 +678,10 @@ int ui::label(pcstr label, vec2i pos, e_font font, UiFlags flags, int box_width)
         rich_text_t rich_text;
         rich_text.set_fonts(font, FONT_NORMAL_YELLOW);
         const int measured = rich_text.draw(label, offset + pos, box_width, 10, /*measure_only*/true);
-        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_rich});
-        cmd.pos = offset + pos;
-        cmd.font = font;
-        cmd.box_width = box_width;
-        cmd.size.y = 10;
-        cmd.str = label ? label : "";
+        push(cmd_t::text_rich, Pos{offset + pos}, Font{font}, BoxWidth{box_width}, Size{vec2i(0, 10)}, Caption{label ? label : ""});
         return measured;
     } else {
-        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text});
-        cmd.pos = offset + pos;
-        cmd.font = font;
-        cmd.flags = flags;
-        cmd.box_width = box_width;
-        cmd.str = label ? label : "";
+        push(cmd_t::text, Pos{offset + pos}, Font{font}, Flags{flags}, BoxWidth{box_width}, Caption{label ? label : ""});
         return text_get_width(label, font);
     }
 }
@@ -767,70 +699,46 @@ int ui::label_percent(int amount, vec2i pos, e_font font) {
 int ui::label_colored(textid tx, vec2i pos, e_font font, color color, int box_width) {
     const vec2i offset = g_state.offset();
     pcstr str = lang_get_string(tx);
-    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_colored});
-    cmd.pos = offset + pos;
-    cmd.font = font;
-    cmd.clr = color;
-    cmd.box_width = box_width;
-    cmd.str = str ? str : "";
+    push(cmd_t::text_colored, Pos{offset + pos}, Font{font}, TextColor{color}, BoxWidth{box_width}, Caption{str ? str : ""});
     return box_width > 0 ? box_width : text_get_width(str, font);
 }
 
 int ui::label_colored(pcstr tx, vec2i pos, e_font font, color color, int box_width) {
     const vec2i offset = g_state.offset();
-    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_colored});
-    cmd.pos = offset + pos;
-    cmd.font = font;
-    cmd.clr = color;
-    cmd.box_width = box_width;
-    cmd.str = tx ? tx : "";
+    push(cmd_t::text_colored, Pos{offset + pos}, Font{font}, TextColor{color}, BoxWidth{box_width}, Caption{tx ? tx : ""});
     return box_width > 0 ? box_width : text_get_width(tx, font);
 }
 
 const image_t *ui::eimage(int imgid, vec2i pos) {
     const vec2i offset = g_state.offset();
-    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::image});
-    cmd.pos = pos + offset;
-    cmd.image_id = imgid;
+    push(cmd_t::image, Pos{pos + offset}, ImageId{imgid});
     return image_get(imgid);
 }
 
 const image_t *ui::eimage(image_desc imgd, vec2i pos) {
     const vec2i offset = g_state.offset();
     const int tid = imgd.tid();
-    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::image});
-    cmd.pos = pos + offset;
-    cmd.image_id = tid;
+    push(cmd_t::image, Pos{pos + offset}, ImageId{tid});
     return image_get(tid);
 }
 
 void ui::panel(vec2i pos, vec2i size, UiFlags flags) {
     const vec2i offset = g_state.offset();
     if (!!(flags & UiFlags_PanelOuter)) {
-        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::panel_outer});
-        cmd.pos = offset + pos;
-        cmd.size = size;
+        push(cmd_t::panel_outer, Pos{offset + pos}, Size{size});
     } else if (!!(flags & UiFlags_PanelInner)) {
-        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::panel_inner});
-        cmd.pos = offset + pos;
-        cmd.size = size;
+        push(cmd_t::panel_inner, Pos{offset + pos}, Size{size});
     }
 }
 
 void ui::line(bool hline, vec2i npos, int size, color c) {
     const vec2i offset = g_state.offset();
-    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{hline ? ui_cmd_t::h_line : ui_cmd_t::v_line});
-    cmd.pos = npos + offset;
-    cmd.box_width = size;
-    cmd.clr = c;
+    push(hline ? cmd_t::h_line : cmd_t::v_line, Pos{npos + offset}, BoxWidth{size}, TextColor{c});
 }
 
-void ui::border(vec2i pos, vec2i size, int type, int color, UiFlags flags) {
+void ui::border(vec2i pos, vec2i size, int type, color c, UiFlags flags) {
     const vec2i offset = g_state.offset();
-    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::draw_rect});
-    cmd.pos = offset + pos;
-    cmd.size = size;
-    cmd.clr = color;
+    push(cmd_t::draw_rect, Pos{offset + pos}, Size{size}, TextColor{c});
 }
 
 void ui::rect(vec2i pos, vec2i size, int fill, int color, UiFlags flags) {
@@ -844,20 +752,17 @@ void ui::rect(vec2i pos, vec2i size, int fill, int color, UiFlags flags) {
 
 void ui::icon(vec2i pos, e_resource res, UiFlags flags) {
     const vec2i offset = g_state.offset();
-    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::image});
-    cmd.pos = offset + pos;
-    cmd.image_id = image_id_resource_icon(res);
+    const int image_id = image_id_resource_icon(res);
+    push(cmd_t::image, Pos{offset + pos}, ImageId{image_id});
     if (!!(flags & UiFlags_Outline)) {
-        const image_t *img = image_get(cmd.image_id);
+        const image_t *img = image_get(image_id);
         ui::draw_rect(pos - vec2i{1, 1}, vec2i{img->width, img->height} + vec2i{2, 2}, COLOR_BLACK);
     }
 }
 
 void ui::icon(vec2i pos, e_advisor adv) {
     const vec2i offset = g_state.offset();
-    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::image});
-    cmd.pos = offset + pos;
-    cmd.image_id = advisor_icons.tid() + (adv - 1);
+    push(cmd_t::image, Pos{offset + pos}, ImageId{advisor_icons.tid() + (adv - 1)});
 }
 
 arrow_button &ui::arw_button(vec2i pos, bool down, bool tiny, UiFlags_ flags) {
@@ -1197,11 +1102,7 @@ void ui::elabel::draw(UiFlags flags) {
     }
 
     if (_body.x > 0) {
-        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::small_panel});
-        cmd.pos = offset + pos;
-        cmd.box_width = _body.x;
-        cmd.image_id = _body.y;
-        cmd.mask = 0xffffffff;
+        push(cmd_t::small_panel, Pos{offset + pos}, BoxWidth{_body.x}, ImageId{_body.y}, Mask{0xffffffffu});
     }
 
     auto dpos = pos + ((_body.x > 0) ? vec2i{ 8, 4 } : vec2i{ 0, 0 });
@@ -1209,28 +1110,16 @@ void ui::elabel::draw(UiFlags flags) {
     const vec2i text_pos = offset + dpos;
 
     if (!!(_flags & UiFlags_AlignCentered)) {
-        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_centered});
-        cmd.pos = text_pos;
-        cmd.box_width = box_width;
-        cmd.font = _font;
-        cmd.str = _text.c_str();
+        push(cmd_t::text_centered, Pos{text_pos}, BoxWidth{box_width}, Font{_font}, Caption{_text.c_str()});
     } else if (!!(_flags & UiFlags_LabelMultiline)) {
-        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_multiline});
-        cmd.pos = text_pos;
-        cmd.box_width = box_width;
-        cmd.font = _font;
-        cmd.str = _text.c_str();
+        push(cmd_t::text_multiline, Pos{text_pos}, BoxWidth{box_width}, Font{_font}, Caption{_text.c_str()});
     } else if (!!(_flags & UiFlags_Rich)) {
         rich_text_t rich_text;
         rich_text.set_fonts(_font, FONT_NORMAL_YELLOW);
         rich_text.set_margin(_text_margin);
         rich_text.draw(_text.c_str(), offset, box_width, 10, false);
     } else {
-        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text});
-        cmd.pos = text_pos;
-        cmd.box_width = box_width;
-        cmd.font = _font;
-        cmd.str = _text.c_str();
+        push(cmd_t::text, Pos{text_pos}, BoxWidth{box_width}, Font{_font}, Caption{_text.c_str()});
     }
 
     if (_draw_callback) {
@@ -1558,40 +1447,17 @@ void ui::etext::draw(UiFlags flags) {
             additionaly = ((size.y - symbolh) * 0.5f);
         }
         if (_shadow_color) {
-            auto &shadow = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_centered});
-            shadow.pos = { offset.x + pos.x + 1, offset.y + pos.y + additionaly };
-            shadow.box_width = size.x;
-            shadow.font = _font;
-            shadow.clr = _shadow_color;
-            shadow.str = _text.c_str();
+            push(cmd_t::text_centered, Pos{offset + pos + vec2i(1, additionaly)}, BoxWidth{size.x}, Font{_font}, TextColor{_shadow_color}, Caption{_text.c_str()});
         }
-        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_centered});
-        cmd.pos = { offset.x + pos.x, offset.y + pos.y + additionaly };
-        cmd.box_width = size.x;
-        cmd.font = _font;
-        cmd.clr = _color;
-        cmd.str = _text.c_str();
+        push(cmd_t::text_centered, Pos{ offset + pos + vec2i{0, additionaly} }, BoxWidth{ size.x }, Font{ _font }, TextColor{ _color }, Caption{ _text.c_str() });
     } else if (!!(_flags & UiFlags_LabelMultiline)) {
-        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_multiline});
-        cmd.pos = offset + pos;
-        cmd.box_width = _wrap;
-        cmd.font = _font;
-        cmd.clr = _color;
-        cmd.str = _text.c_str();
+        push(cmd_t::text_multiline, Pos{offset + pos}, BoxWidth{_wrap}, Font{_font}, TextColor{_color}, Caption{_text.c_str()});
     } else if (!!(_flags & UiFlags_AlignYCentered)) {
         const int symbolh = font_definition_for(_font)->line_height;
         if (_shadow_color) {
-            auto &shadow = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_colored});
-            shadow.pos = { offset.x + pos.x + 1, offset.y + pos.y + (size.y - symbolh) / 2 };
-            shadow.font = _font;
-            shadow.clr = _shadow_color;
-            shadow.str = _text.c_str();
+            push(cmd_t::text_colored, Pos{ offset + pos + vec2i{ 1, (size.y - symbolh) / 2} }, Font{ _font }, TextColor{ _shadow_color }, Caption{ _text.c_str() });
         }
-        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_colored});
-        cmd.pos = { offset.x + pos.x, offset.y + pos.y + (size.y - symbolh) / 2 };
-        cmd.font = _font;
-        cmd.clr = _color;
-        cmd.str = _text.c_str();
+        push(cmd_t::text_colored, Pos{ offset + pos + vec2i{ 0,  (size.y - symbolh) / 2 } }, Font{ _font }, TextColor{ _color }, Caption{ _text.c_str() });
     } else if (!!(_flags & UiFlags_Rich)) {
         const int symbolh = font_definition_for(_font)->line_height;
         int maxlines = pxsize().y > 0
@@ -1614,35 +1480,19 @@ void ui::etext::draw(UiFlags flags) {
         }
 
         if (_clip_area) {
-            auto &clip_cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::clip_set});
-            clip_cmd.pos = offset + pos;
-            clip_cmd.size = pxsize();
+            push(cmd_t::clip_set, Pos{offset + pos}, Size{pxsize()});
         }
 
-        auto &draw_cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::rich_draw});
-        draw_cmd.rt = rich_text.get();
-        draw_cmd.str = _text.c_str();
-        draw_cmd.pos = offset + pos;
-        draw_cmd.box_width = rwrap;
-        draw_cmd.size.y = maxlines;
-        draw_cmd.flags = _flags & UiFlags_NoScroll;
+        push(cmd_t::rich_draw, RichTextPtr{rich_text.get()}, Caption{_text.c_str()}, Pos{offset + pos}, BoxWidth{rwrap}, Size{vec2i(0, maxlines)}, Flags{_flags & UiFlags_NoScroll});
 
         if (_clip_area) {
-            g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::clip_reset});
+            push(cmd_t::clip_reset);
         }
     } else {
         if (_shadow_color) {
-            auto &shadow = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_colored});
-            shadow.pos = { offset.x + pos.x + 1, offset.y + pos.y };
-            shadow.font = _font;
-            shadow.clr = _shadow_color;
-            shadow.str = _text.c_str();
+            push(cmd_t::text_colored, Pos{ offset + pos + vec2i{1, 0} }, Font{ _font }, TextColor{ _shadow_color }, Caption{ _text.c_str() });
         }
-        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_colored});
-        cmd.pos = { offset.x + pos.x, offset.y + pos.y };
-        cmd.font = _font;
-        cmd.clr = _color;
-        cmd.str = _text.c_str();
+        push(cmd_t::text_colored, Pos{offset + pos}, Font{_font}, TextColor{_color}, Caption{_text.c_str()});
     }
 
     if (_draw_callback) {
