@@ -3,6 +3,7 @@
 #include "core/string.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "graphics/elements/ui.h"
 #include "content/vfs.h"
 #include "panel.h"
 #include <cstring>
@@ -226,7 +227,7 @@ int scrollable_list::input_handle(const mouse* m) {
 
 void scrollable_list::draw() {
     if (ui_params.draw_paneling) {
-        inner_panel_draw(ui_params.pos, { ui_params.blocks_x, ui_params.blocks_y });
+        ui::panel_abs(ui_params.pos, { ui_params.blocks_x, ui_params.blocks_y }, UiFlags_PanelInner);
     }
 
     bstring256 text_utf8;
@@ -269,7 +270,7 @@ void scrollable_list::draw() {
             if (ui_params.text_max_width != -1) {
                 text_ellipsize(text, font, ui_params.text_max_width);
             }
-            text_draw(text.c_str(), text_pos_x, text_pos_y, font, 0);
+            ui::text_abs(text.c_str(), { text_pos_x, text_pos_y }, font, 0);
         }
     }
 

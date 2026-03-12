@@ -3,6 +3,7 @@
 #include "core/calc.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/image_button.h"
+#include "graphics/elements/ui.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "game/game.h"
@@ -45,14 +46,14 @@ void scrollbar_update_max(scrollbar_t* scrollbar, int max_scroll_position) {
 }
 
 void scrollbar_draw(vec2i offset, scrollbar_t* scrollbar) {
-    painter ctx = game.painter();
     if (scrollbar->max_scroll_position > 0 || scrollbar->always_visible) {
+        const vec2i base = offset + scrollbar->pos;
         if (!scrollbar->thin) {
-            image_buttons_draw(scrollbar->pos + offset, &image_button_scroll_up, 1);
-            image_buttons_draw(offset + scrollbar->pos + vec2i{0, scrollbar->height - SCROLL_BUTTON_HEIGHT}, &image_button_scroll_down, 1);
+            image_buttons_push_commands(base, &image_button_scroll_up, 1);
+            image_buttons_push_commands(base + vec2i{0, scrollbar->height - SCROLL_BUTTON_HEIGHT}, &image_button_scroll_down, 1);
         } else {
-            image_buttons_draw(scrollbar->pos + offset, &image_button_scroll_up_thin, 1);
-            image_buttons_draw(offset + scrollbar->pos + vec2i{0, scrollbar->height - SCROLL_BUTTON_HEIGHT}, &image_button_scroll_down_thin, 1);
+            image_buttons_push_commands(base, &image_button_scroll_up_thin, 1);
+            image_buttons_push_commands(base + vec2i{0, scrollbar->height - SCROLL_BUTTON_HEIGHT}, &image_button_scroll_down_thin, 1);
         }
 
         int pct;
@@ -65,7 +66,7 @@ void scrollbar_draw(vec2i offset, scrollbar_t* scrollbar) {
             drag_offset = scrollbar->scroll_position_drag;
         }
 
-        ctx.img_generic(image_id_from_group(GROUP_PANEL_BUTTON) + 39, offset + scrollbar->pos + vec2i{ (SCROLL_BUTTON_WIDTH - SCROLL_DOT_SIZE) / 2, drag_offset + SCROLL_BUTTON_HEIGHT + scrollbar->dot_padding });
+        ui::image_abs(image_id_from_group(GROUP_PANEL_BUTTON) + 39, base + vec2i{ (SCROLL_BUTTON_WIDTH - SCROLL_DOT_SIZE) / 2, drag_offset + SCROLL_BUTTON_HEIGHT + scrollbar->dot_padding });
     }
 }
 

@@ -2,6 +2,7 @@
 
 #include "game/settings.h"
 #include "graphics/graphics.h"
+#include "graphics/screen.h"
 #include "graphics/elements/arrow_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
@@ -29,7 +30,7 @@ static void draw_foreground(int) {
 
     lang_text_draw_centered(153, g_settings.difficulty() + 1, 70, 142, 244, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw_centered(153, g_settings.gods_enabled ? 7 : 6, 70, 190, 244, FONT_NORMAL_BLACK_ON_LIGHT);
-    arrow_buttons_draw(/*{288, 80},*/ arrow_buttons, 3);
+    arrow_buttons_draw(arrow_buttons, 3, false, screen_dialog_offset());
     lang_text_draw_centered(153, 8, 48, 246, 384, FONT_NORMAL_BLACK_ON_LIGHT);
 
     graphics_reset_dialog();

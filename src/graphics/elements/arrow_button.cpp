@@ -30,7 +30,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_arrowbutton_options) {
     assert(g_arrow_button_images.arrow_button_tiny_down.valid() && "Incorrect image desc loaded");
 }
 
-void arrow_buttons_draw(arrow_button* buttons, int num_buttons, bool tiny) {
+void arrow_buttons_draw(arrow_button* buttons, int num_buttons, bool tiny, vec2i base_offset) {
     for (int i = 0; i < num_buttons; i++) {
         int image_id = buttons[i].image_id;
         if (image_id < 0) {
@@ -46,7 +46,7 @@ void arrow_buttons_draw(arrow_button* buttons, int num_buttons, bool tiny) {
             image_id += (buttons[i].state & 0xf);
         }
 
-        ui::image_abs(image_id, vec2i{ buttons[i].x, buttons[i].y });
+        ui::image_abs(image_id, base_offset + vec2i{ buttons[i].x, buttons[i].y });
     }
 }
 

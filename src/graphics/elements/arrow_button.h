@@ -31,7 +31,7 @@ struct arrow_button {
     arrow_button &onclick(onclick_simple_cb f) { _onclick_void = f; return *this; }
 };
 
-void arrow_buttons_draw(arrow_button* buttons, int num_buttons, bool tiny = false);
+void arrow_buttons_draw(arrow_button* buttons, int num_buttons, bool tiny = false, vec2i base_offset = {0, 0});
 int get_arrow_button(const mouse *m, arrow_button *buttons, int num_buttons);
 int arrow_buttons_handle_mouse(const mouse* m, arrow_button* buttons, int num_buttons, int* focus_button_id);
 
@@ -42,6 +42,6 @@ bool arrow_buttons_handle_mouse(const mouse *m, T &buttons, int &focus_button_id
         : 0;
 }
 
-inline void arrow_buttons_draw(arrow_button &button, bool tiny) {
-    arrow_buttons_draw(&button, 1, tiny);
+inline void arrow_buttons_draw(arrow_button &button, bool tiny, vec2i base_offset = {0, 0}) {
+    arrow_buttons_draw(&button, 1, tiny, base_offset);
 }

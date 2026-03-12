@@ -147,6 +147,8 @@ scrollbar_t &scrollbar(scrollbar_t &scrollbar, vec2i pos, int &value, vec2i size
 void fill_rect(vec2i offset, vec2i size, color c);
 void draw_rect(vec2i pos, vec2i size, color c);
 void image_abs(int image_id, vec2i abs_pos);
+void panel_abs(vec2i pos, vec2i size_blocks, UiFlags flags = UiFlags_None);
+void text_abs(pcstr str, vec2i pos, e_font font, color clr = 0);
 void text_multiline(pcstr text, vec2i pos, int width, e_font font, color clr);
 vec2i current_offset();
 
