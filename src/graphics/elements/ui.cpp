@@ -408,8 +408,8 @@ namespace ui {
 
 void ui::flush_commands() {
     painter ctx = game.painter();
-    for (const auto &cmd : g_ui_commands) {
-        execute_ui_command(ctx, cmd);
+    for (size_t i = 0; i < g_ui_commands.size(); ++i) {
+        execute_ui_command(ctx, g_ui_commands[i]);
     }
     g_ui_commands.clear();
 }
@@ -431,7 +431,7 @@ bool ui::handle_mouse(const mouse *m) {
     }
 
     for (int i = g_state.scrollbars.size() - 1; i >= 0 && !handle; --i) {
-        handle |= !!scrollbar_handle_mouse(g_state.offset(), g_state.scrollbars[i], m);
+        handle |= !!scrollbar_handle_mouse(g_state.scrollbars[i], m);
     }
 
     for (int i = g_state.scrollable_lists.size() - 1; i >= 0 && !handle; --i) {

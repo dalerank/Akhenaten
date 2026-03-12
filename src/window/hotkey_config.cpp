@@ -269,7 +269,7 @@ static void draw_foreground(int) {
 static void handle_input(const mouse* m, const hotkeys* h) {
     auto& data = g_hotkeys_window_data;
     const mouse* m_dialog = mouse_in_dialog(m);
-    if (scrollbar_handle_mouse(vec2i{0, 0}, &g_hotkey_window_scrollbar, m_dialog)) {
+    if (scrollbar_handle_mouse(&g_hotkey_window_scrollbar, m_dialog)) {
         return;
     }
 
