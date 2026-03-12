@@ -271,6 +271,21 @@ void ui::image_abs(int image_id, vec2i abs_pos) {
     cmd.image_id = image_id;
 }
 
+void ui::panel_abs(vec2i pos, vec2i size_blocks, UiFlags flags) {
+    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{!!(flags & UiFlags_PanelInner) ? ui_cmd_t::panel_inner : ui_cmd_t::panel_outer});
+    cmd.pos = pos;
+    cmd.size = size_blocks;
+}
+
+void ui::text_abs(pcstr str, vec2i pos, e_font font, color clr) {
+    auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_colored});
+    cmd.pos = pos;
+    cmd.font = font;
+    cmd.clr = clr;
+    cmd.box_width = 0;
+    cmd.str = str;
+}
+
 void ui::text_multiline(pcstr text, vec2i pos, int width, e_font font, color clr) {
     const vec2i goffset = g_state.offset();
     auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_multiline});
@@ -1182,23 +1197,40 @@ void ui::elabel::draw(UiFlags flags) {
     }
 
     if (_body.x > 0) {
-        small_panel_draw(pos + offset, _body.x, _body.y);
+        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::small_panel});
+        cmd.pos = offset + pos;
+        cmd.box_width = _body.x;
+        cmd.image_id = _body.y;
+        cmd.mask = 0xffffffff;
     }
 
     auto dpos = pos + ((_body.x > 0) ? vec2i{ 8, 4 } : vec2i{ 0, 0 });
     auto box_width = size.x;
+    const vec2i text_pos = offset + dpos;
 
     if (!!(_flags & UiFlags_AlignCentered)) {
-        ::text_draw_centered(_text.c_str(), offset.x + dpos.x, offset.y + dpos.y, box_width, _font, 0);
+        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_centered});
+        cmd.pos = text_pos;
+        cmd.box_width = box_width;
+        cmd.font = _font;
+        cmd.str = _text.c_str();
     } else if (!!(_flags & UiFlags_LabelMultiline)) {
-        text_draw_multiline(_text.c_str(), offset + dpos, box_width, _font, 0);
+        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text_multiline});
+        cmd.pos = text_pos;
+        cmd.box_width = box_width;
+        cmd.font = _font;
+        cmd.str = _text.c_str();
     } else if (!!(_flags & UiFlags_Rich)) {
         rich_text_t rich_text;
         rich_text.set_fonts(_font, FONT_NORMAL_YELLOW);
         rich_text.set_margin(_text_margin);
         rich_text.draw(_text.c_str(), offset, box_width, 10, false);
     } else {
-        lang_text_draw(_text.c_str(), offset + dpos, _font, box_width);
+        auto &cmd = g_ui_commands.emplace_back(ui_cmd_t{ui_cmd_t::text});
+        cmd.pos = text_pos;
+        cmd.box_width = box_width;
+        cmd.font = _font;
+        cmd.str = _text.c_str();
     }
 
     if (_draw_callback) {

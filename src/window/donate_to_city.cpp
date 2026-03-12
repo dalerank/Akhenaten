@@ -5,6 +5,7 @@
 #include "game/resource.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "graphics/screen.h"
 #include "graphics/elements/arrow_button.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
@@ -88,7 +89,7 @@ static void draw_foreground(int) {
     button_border_draw({ 336, 283 }, { 160, 20 }, data.focus_button_id == 1);
     button_border_draw({ 144, 283 }, { 160, 20 }, data.focus_button_id == 2);
 
-    arrow_buttons_draw(arrow_buttons, 2);
+    arrow_buttons_draw(arrow_buttons, 2, false, screen_dialog_offset());
 
     graphics_reset_dialog();
 }
