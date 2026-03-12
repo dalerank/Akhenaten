@@ -698,48 +698,47 @@ readonly:
         js_typeerror(J, "'%s' is read-only or non-configurable", name);
 }
 
-static int jsR_delproperty(js_State *J, js_Object *obj, const char *name) {
+int js_State::rdelproperty(js_Object *obj, const char *name) {
     js_Property *ref;
     int k;
 
+    auto dontconf = [&] () {
+        if (strict) {
+            js_typeerror(this, "'%s' is non-configurable", name);
+        }
+        return 0;
+    };
+
     if (obj->type == JS_CARRAY) {
         if (!strcmp(name, "length"))
-            goto dontconf;
-    }
-
-    else if (obj->type == JS_CSTRING) {
+            return dontconf();
+    } else if (obj->type == JS_CSTRING) {
         if (!strcmp(name, "length"))
-            goto dontconf;
-        if (js_isarrayindex(J, name, &k))
-            if (js_runeat(J, obj->u.s.string, k))
-                goto dontconf;
-    }
+            return dontconf();
 
-    else if (obj->type == JS_CREGEXP) {
-        if (!strcmp(name, "source")) goto dontconf;
-        if (!strcmp(name, "global")) goto dontconf;
-        if (!strcmp(name, "ignoreCase")) goto dontconf;
-        if (!strcmp(name, "multiline")) goto dontconf;
-        if (!strcmp(name, "lastIndex")) goto dontconf;
-    }
+        if (js_isarrayindex(this, name, &k))
+            if (js_runeat(this, obj->u.s.string, k))
+                return dontconf();
 
-    else if (obj->type == JS_CUSERDATA) {
-        if (obj->u.user.rdelete && obj->u.user.rdelete(J, obj->u.user.data, name))
+    } else if (obj->type == JS_CREGEXP) {
+        if (!strcmp(name, "source")) return dontconf();
+        if (!strcmp(name, "global")) return dontconf();
+        if (!strcmp(name, "ignoreCase")) return dontconf();
+        if (!strcmp(name, "multiline")) return dontconf();
+        if (!strcmp(name, "lastIndex")) return dontconf();
+    } else if (obj->type == JS_CUSERDATA) {
+        if (obj->u.user.rdelete && obj->u.user.rdelete(this, obj->u.user.data, name))
             return 1;
     }
 
-    ref = J->vget_ownproperty(obj, name);
+    ref = vget_ownproperty(obj, name);
     if (ref) {
-        if (ref->atts & JS_DONTCONF)
-            goto dontconf;
-        jsV_delproperty(J, obj, name);
+        if (ref->atts & JS_DONTCONF) {
+            return dontconf();
+        }
+        jsV_delproperty(this, obj, name);
     }
     return 1;
-
-dontconf:
-    if (J->strict)
-        js_typeerror(J, "'%s' is non-configurable", name);
-    return 0;
 }
 
 /* Registry, global and object property accessors */
@@ -781,7 +780,7 @@ void js_setregistry(js_State *J, const char *name) {
 }
 
 void js_delregistry(js_State *J, const char *name) {
-    jsR_delproperty(J, J->R, name);
+    J->rdelproperty(J->R, name);
 }
 
 void js_getglobal(js_State *J, const char *name) {
@@ -813,7 +812,7 @@ void js_defproperty(js_State *J, int idx, const char *name, int atts) {
 }
 
 void js_delproperty(js_State *J, int idx, const char *name) {
-    jsR_delproperty(J, J->toobject(idx), name);
+    J->rdelproperty(J->toobject(idx), name);
 }
 
 void js_defaccessor(js_State *J, int idx, const char *name, int atts) {
@@ -928,7 +927,7 @@ int js_State::delvar(const char *name) {
         pE = pE->outer;
     } while (pE);
 
-    return jsR_delproperty(this, this->G, name);
+    return rdelproperty(this->G, name);
 }
 
 /* Function calls */
@@ -1288,6 +1287,8 @@ void js_trap(js_State *J, int pc) {
 }
 
 void js::jsR_run(js_State *J, js_Function *F) {
+    OZZY_PROFILER_FUNCTION();
+
     js_Function **FT = F->funtab;
     double *NT = F->numtab;
     const char **ST = F->strtab;
@@ -1483,7 +1484,7 @@ void js::jsR_run(js_State *J, js_Function *F) {
         case OP_DELPROP:
             str = js_tostring(J, -1);
             obj = J->toobject(-2);
-            b = jsR_delproperty(J, obj, str);
+            b = J->rdelproperty(obj, str);
             js_pop(J, 2);
             js_pushboolean(J, b);
             break;
@@ -1491,7 +1492,7 @@ void js::jsR_run(js_State *J, js_Function *F) {
         case OP_DELPROP_S:
             str = ST[*pc++];
             obj = J->toobject(-1);
-            b = jsR_delproperty(J, obj, str);
+            b = J->rdelproperty(obj, str);
             js_pop(J, 1);
             js_pushboolean(J, b);
             break;

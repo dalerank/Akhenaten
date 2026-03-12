@@ -228,6 +228,7 @@ struct js_State
 
 	int delvar(const char *name);
 	js_Property *vget_ownproperty(js_Object *obj, const char *name);
+	int rdelproperty(js_Object *obj, const char *name);
 };
 
 #endif
