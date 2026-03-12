@@ -28,6 +28,8 @@ ANK_REGISTER_STRUCT_WRITER(building_ev, bid)
 struct building_tooltip_ev { building_id bid; int mx, my; };
 ANK_REGISTER_STRUCT_WRITER(building_tooltip_ev, bid, mx, my)
 
+using namespace render_cmd;
+
 template<typename T>
 void building_impl::es_t(const T &ev, pcstr func) const {
     js_event(ev, current_params().name, func);
@@ -148,10 +150,7 @@ bool building_impl::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     if (base.has_plague) {
         int skull_img = image_id_from_group(GROUP_PLAGUE_SKULL);
 
-        auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
-        command.image_id = skull_img;
-        command.pixel = { point.x + 18, point.y - 32 };
-        command.mask = color_mask;
+        ImageDraw::generic_sub(ctx, ImageId{skull_img}, Pixel{vec2i{point.x + 18, point.y - 32}}, Mask{color_mask});
     }
 
     return false;
@@ -201,11 +200,7 @@ void building_impl::draw_normal_anim(painter &ctx, const animation_context &rani
     }
 
     vec2i pos = pixel + ranim.pos;
-    auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
-    command.image_id = ranim.start_frame() + ranim.current_frame();
-    command.pixel = pos;
-    command.mask = mask;
-    command.flags = ranim.flags;
+    ImageDraw::generic_sub(ctx, ImageId{ranim.start_frame() + ranim.current_frame()}, Pixel{pos}, Mask{mask}, Flags{ranim.flags});
 }
 
 void building_impl::draw_tooltip(tooltip_context *c) const {
