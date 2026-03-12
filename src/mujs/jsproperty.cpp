@@ -44,17 +44,19 @@ static js_Property *newproperty(js_State *J, js_Object *obj, const char *name)
 	return node;
 }
 
-static js_Property *lookup(js_Property *node, const char *name)
-{
+js_Property *js_Property::lookup(const char *name) {
+	js_Property *node = this;
 	while (node != &sentinel) {
 		int c = strcmp(name, node->name);
-		if (c == 0)
+		if (c == 0) {
 			return node;
-		else if (c < 0)
+		} else if (c < 0) {
 			node = node->left;
-		else
+		} else {
 			node = node->right;
+		}
 	}
+
 	return NULL;
 }
 
@@ -173,16 +175,15 @@ js_Object *jsV_newobject(js_State *J, enum js_Class type, js_Object *prototype)
 	return obj;
 }
 
-js_Property *jsV_getownproperty(js_State *J, js_Object *obj, const char *name)
-{
-	return lookup(obj->properties, name);
+js_Property *js_State::vget_ownproperty(js_Object *obj, const char *name) {
+	return obj->properties->lookup(name);
 }
 
 js_Property *jsV_getpropertyx(js_State *J, js_Object *obj, const char *name, int *own)
 {
 	*own = 1;
 	do {
-		js_Property *ref = lookup(obj->properties, name);
+		js_Property *ref = obj->properties->lookup(name);
 		if (ref)
 			return ref;
 		obj = obj->prototype;
@@ -194,7 +195,7 @@ js_Property *jsV_getpropertyx(js_State *J, js_Object *obj, const char *name, int
 js_Property *jsV_getproperty(js_State *J, js_Object *obj, const char *name)
 {
 	do {
-		js_Property *ref = lookup(obj->properties, name);
+		js_Property *ref = obj->properties->lookup(name);
 		if (ref)
 			return ref;
 		obj = obj->prototype;
@@ -207,7 +208,7 @@ js_Property *jsV_setproperty(js_State *J, js_Object *obj, const char *name)
 	js_Property *result;
 
 	if (!obj->extensible) {
-		result = lookup(obj->properties, name);
+		result = obj->properties->lookup(name);
 		if (J->strict && !result)
 			js_typeerror(J, "object is non-extensible");
 		return result;
@@ -233,7 +234,7 @@ static int itshadow(js_State *J, js_Object *top, js_Object *bot, const char *nam
 {
 	int k;
 	while (top != bot) {
-		js_Property *prop = lookup(top->properties, name);
+		js_Property *prop = top->properties->lookup(name);
 		if (prop && !(prop->atts & JS_DONTENUM))
 			return 1;
 		if (top->type == JS_CSTRING)

@@ -36,6 +36,7 @@ struct js_Environment;
 struct js_StringNode;
 struct js_Jumpbuf;
 struct js_StackTrace;
+struct js_Property;
 
 /* Limits */
 
@@ -222,8 +223,11 @@ struct js_State
 	js_Object *toobject_pending(int idx, const char *prop);
 
 	void pushtrace(const char *name, const char *file, int line);
-	void calllwfunction(int n, js_Function *F, js_Environment *scope);
+	void callwfunction(int n, js_Function *F, js_Environment *scope);
 	void callfunction(int n, js_Function *F, js_Environment *scope);
+
+	int delvar(const char *name);
+	js_Property *vget_ownproperty(js_Object *obj, const char *name);
 };
 
 #endif

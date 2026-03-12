@@ -22,6 +22,8 @@ namespace js {
 #define BOT (J->bot)
 
 void js_State::stackoverflow() {
+    OZZY_PROFILER_FUNCTION();
+
     stack[top].type = JS_TLITSTR;
     stack[top].u.litstr = "stack overflow";
     ++top;
@@ -726,7 +728,7 @@ static int jsR_delproperty(js_State *J, js_Object *obj, const char *name) {
             return 1;
     }
 
-    ref = jsV_getownproperty(J, obj, name);
+    ref = J->vget_ownproperty(obj, name);
     if (ref) {
         if (ref->atts & JS_DONTCONF)
             goto dontconf;
@@ -908,27 +910,32 @@ static void js_setvar(js_State *J, const char *name) {
     jsR_setproperty(J, J->G, name);
 }
 
-static int js_delvar(js_State *J, const char *name) {
-    js_Environment *E = J->E;
+int js_State::delvar(const char *name) {
+    js_Environment *pE = this->E;
     do {
-        js_Property *ref = jsV_getownproperty(J, E->variables, name);
+        js_Property *ref = vget_ownproperty(pE->variables, name);
         if (ref) {
             if (ref->atts & JS_DONTCONF) {
-                if (J->strict)
-                    js_typeerror(J, "'%s' is non-configurable", name);
+                if (strict) {
+                    js_typeerror(this, "'%s' is non-configurable", name);
+                }
+                
                 return 0;
             }
-            jsV_delproperty(J, E->variables, name);
+            jsV_delproperty(this, pE->variables, name);
             return 1;
         }
-        E = E->outer;
-    } while (E);
-    return jsR_delproperty(J, J->G, name);
+        pE = pE->outer;
+    } while (pE);
+
+    return jsR_delproperty(this, this->G, name);
 }
 
 /* Function calls */
 
 void js_State::savescope(js_Environment *newE) {
+    OZZY_PROFILER_FUNCTION();
+
     if (envtop + 1 >= JS_ENVLIMIT) {
         stackoverflow();
     }
@@ -941,7 +948,7 @@ void js_State::restorescope() {
     E = envstack[--envtop];
 }
 
-void js_State::calllwfunction(int n, js_Function *F, js_Environment *scope) {
+void js_State::callwfunction(int n, js_Function *F, js_Environment *scope) {
     OZZY_PROFILER_FUNCTION();
 
     js_Value v;
@@ -1073,7 +1080,7 @@ void js_State::call(int n) {
     if (obj->type == JS_CFUNCTION) {
         pushtrace(obj->u.f.function->name, obj->u.f.function->filename, obj->u.f.function->line);
         if (obj->u.f.function->lightweight) {
-            calllwfunction(n, obj->u.f.function, obj->u.f.scope);
+            callwfunction(n, obj->u.f.function, obj->u.f.scope);
         } else {
             callfunction(n, obj->u.f.function, obj->u.f.scope);
         }
@@ -1410,7 +1417,7 @@ void js::jsR_run(js_State *J, js_Function *F) {
             break;
 
         case OP_DELVAR:
-            b = js_delvar(J, ST[*pc++]);
+            b = J->delvar(ST[*pc++]);
             js_pushboolean(J, b);
             break;
 

@@ -55,7 +55,7 @@ static void Op_hasOwnProperty(js_State *J)
 {
 	js_Object *self = J->toobject(0);
 	const char *name = js_tostring(J, 1);
-	js_Property *ref = jsV_getownproperty(J, self, name);
+	js_Property *ref = J->vget_ownproperty(self, name);
 	js_pushboolean(J, ref != NULL);
 }
 
@@ -79,7 +79,7 @@ static void Op_propertyIsEnumerable(js_State *J)
 {
 	js_Object *self = J->toobject(0);
 	const char *name = js_tostring(J, 1);
-	js_Property *ref = jsV_getownproperty(J, self, name);
+	js_Property *ref = J->vget_ownproperty(self, name);
 	js_pushboolean(J, ref && !(ref->atts & JS_DONTENUM));
 }
 
