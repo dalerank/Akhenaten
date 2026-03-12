@@ -458,7 +458,8 @@ void rich_text_t::draw_scrollbar(vec2i pos) {
 }
 
 int rich_text_t::handle_mouse(const mouse* m, vec2i pos) {
-    return scrollbar_handle_mouse(pos, &dscrollbar, m);
+    dscrollbar.offset = pos;
+    return scrollbar_handle_mouse(&dscrollbar, m);
 }
 
 int rich_text_t::scroll_position() {

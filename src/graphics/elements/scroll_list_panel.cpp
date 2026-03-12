@@ -164,7 +164,8 @@ int scrollable_list::input_handle(const mouse* m) {
     }
 
     WAS_DRAWN = false;
-    if (scrollbar_handle_mouse(vec2i{ 0, 0 }, &scrollbar, m)) {
+    scrollbar.offset = vec2i{0, 0};
+    if (scrollbar_handle_mouse(&scrollbar, m)) {
         return 0;
     }
 
