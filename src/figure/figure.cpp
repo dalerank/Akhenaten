@@ -38,6 +38,8 @@
 #include <windows.h>
 #endif // _MSC_VER
 
+using namespace render_cmd;
+
 pool<figure::debug_lines_t, 64> debug_tooltip_lines;
 
 static const vec2i crowd_offsets[] = {
@@ -583,12 +585,12 @@ vec2i figure::cart_sprite_pixel() const {
 
 void figure::draw_cart_sprite(painter &ctx, vec2i pixel, int highlight) {
     const image_t *img = image_get(cart_image_id);
-    auto& command = ImageDraw::create_command(ctx, render_command_t::ert_sprite);
-    command.image_id = cart_image_id;
-    command.pixel = pixel;
-    command.mask = COLOR_MASK_NONE;
-    command.use_sort_pixel = true;
-    command.sort_pixel = main_sort_pixel;
+    ImageDraw::sprite(ctx,
+        ImageId{cart_image_id},
+        Pixel{pixel},
+        Mask{COLOR_MASK_NONE},
+        UseSortPixel{true},
+        SortPixel{main_sort_pixel});
 
     is_cart_drawn = true;
 }

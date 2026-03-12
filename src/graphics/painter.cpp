@@ -25,10 +25,7 @@ void painter::draw(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, co
 
     const bool debug = !!(flags & ImgFlag_Debug);
     if (debug) {
-        auto &command = ImageDraw::create_dcommand(render_command_t::ert_draw_rect);
-        command.pixel = pos * global_render_scale;
-        command.size = size * global_render_scale;
-        command.location = SOURCE_LOCATION;
+        ImageDraw::push_d(render_command_t::ert_draw_rect, render_cmd::Pixel{pos * global_render_scale}, render_cmd::Size{size * global_render_scale}, render_cmd::Location{SOURCE_LOCATION});
     }
 }
 
