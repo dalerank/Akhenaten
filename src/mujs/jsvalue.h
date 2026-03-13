@@ -118,6 +118,8 @@ struct js_Object {
     js_Object *gcnext;
     int gcmark;
     struct js_FunctionModifier *modifiers; /* object modifiers/attributes */
+
+    js_Property *vgetproperty(const char *name);
 };
 
 struct js_Property {
@@ -165,7 +167,6 @@ double jsV_stringtonumber(js_State *J, const char *string);
 /* jsproperty.c */
 js_Object *jsV_newobject(js_State *J, enum js_Class type, js_Object *prototype);
 js_Property *jsV_getpropertyx(js_State *J, js_Object *obj, const char *name, int *own);
-js_Property *jsV_getproperty(js_State *J, js_Object *obj, const char *name);
 js_Property *jsV_setproperty(js_State *J, js_Object *obj, const char *name);
 void jsV_delproperty(js_State *J, js_Object *obj, const char *name);
 

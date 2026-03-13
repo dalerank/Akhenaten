@@ -853,7 +853,7 @@ static void ccall(JF, js_Ast *fun, js_Ast *args)
 			return;
 		}
 		if (fun->string && fun->string[0] == '_' && fun->string[1] == '_') {
-			js_Property *ref = jsV_getproperty(J, J->G, fun->string);
+			js_Property *ref = J->G->vgetproperty(fun->string);
 			if (!ref) {
 				/* Function not found in global object - check if it's a local variable */
 				int local_idx = findlocal(J, F, fun->string);

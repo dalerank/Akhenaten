@@ -496,14 +496,15 @@ int js_State::hasproperty(js_Object *obj, const char *name) {
     int k;
 
     auto J = this;
-    if (obj->type == JS_CARRAY) {
+    switch (obj->type) {
+    case JS_CARRAY:
         if (!strcmp(name, "length")) {
             js_pushnumber(J, obj->u.a.length);
             return 1;
         }
-    }
+        break;
 
-    else if (obj->type == JS_CSTRING) {
+    case JS_CSTRING:
         if (!strcmp(name, "length")) {
             js_pushnumber(J, obj->u.s.length);
             return 1;
@@ -513,9 +514,9 @@ int js_State::hasproperty(js_Object *obj, const char *name) {
             js_pushrune(J, js_runeat(J, obj->u.s.string, k));
             return 1;
         }
-    }
+        break;
 
-    else if (obj->type == JS_CREGEXP) {
+    case JS_CREGEXP:
         if (!strcmp(name, "source")) {
             js_pushliteral(J, obj->u.r.source);
             return 1;
@@ -536,14 +537,15 @@ int js_State::hasproperty(js_Object *obj, const char *name) {
             js_pushnumber(J, obj->u.r.last);
             return 1;
         }
-    }
+        break;
 
-    else if (obj->type == JS_CUSERDATA) {
-        if (obj->u.user.has && obj->u.user.has(J, obj->u.user.data, name))
+    case JS_CUSERDATA:
+        if (obj->u.user.has && obj->u.user.has(J, obj->u.user.data, name)) {
             return 1;
+        }
     }
 
-    ref = jsV_getproperty(J, obj, name);
+    ref = obj->vgetproperty(name);
     if (ref) {
         if (ref->getter) {
             js_pushobject(J, ref->getter);
@@ -867,7 +869,7 @@ static void js_defvar(js_State *J, const char *name) {
 static int js_hasvar(js_State *J, const char *name) {
     js_Environment *E = J->E;
     do {
-        js_Property *ref = jsV_getproperty(J, E->variables, name);
+        js_Property *ref = E->variables->vgetproperty(name);
         if (ref) {
             if (ref->getter) {
                 js_pushobject(J, ref->getter);
@@ -886,7 +888,7 @@ static int js_hasvar(js_State *J, const char *name) {
 static void js_setvar(js_State *J, const char *name) {
     js_Environment *E = J->E;
     do {
-        js_Property *ref = jsV_getproperty(J, E->variables, name);
+        js_Property *ref = E->variables->vgetproperty(name);
         if (ref) {
             if (ref->setter) {
                 js_pushobject(J, ref->setter);
@@ -1338,8 +1340,7 @@ void js::jsR_run(js_State *J, js_Function *F) {
             js_Value *obj_val = stackidx(J, obj_idx);
             if (obj_val->type != JS_TOBJECT) {
                 /* Print error with details */
-                js_error(J, "OP_SETMODIFIERS: expected object at index %d (mod_count=%d), got type %d",
-                    obj_idx, mod_count, obj_val->type);
+                js_error(J, "OP_SETMODIFIERS: expected object at index %d (mod_count=%d), got type %d", obj_idx, mod_count, obj_val->type);
             }
 
             js_Object *obj = obj_val->u.object;

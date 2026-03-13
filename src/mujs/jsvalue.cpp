@@ -207,6 +207,8 @@ double jsV_tointeger(js_State *J, js_Value *v) {
 
 /* ToString() on a number */
 const char *jsV_numbertostring(js_State *J, char buf[32], double f) {
+    OZZY_PROFILER_FUNCTION();
+
     char digits[32], *p = buf, *s = digits;
     int exp, neg, ndigits, point;
 
@@ -257,6 +259,8 @@ const char *jsV_numbertostring(js_State *J, char buf[32], double f) {
 
 /* ToString() on a value */
 const char *jsV_tostring(js_State *J, js_Value *v) {
+    OZZY_PROFILER_FUNCTION();
+
     char buf[32];
     const char *p;
     switch (v->type) {
