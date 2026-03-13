@@ -164,7 +164,7 @@ int scrollable_list::input_handle(const mouse* m) {
     }
 
     WAS_DRAWN = false;
-    scrollbar.offset = vec2i{0, 0};
+    scrollbar.offset = ui_params.pos;
     if (scrollbar_handle_mouse(&scrollbar, m)) {
         return 0;
     }
@@ -228,7 +228,7 @@ int scrollable_list::input_handle(const mouse* m) {
 
 void scrollable_list::draw() {
     if (ui_params.draw_paneling) {
-        ui::panel_abs(ui_params.pos, { ui_params.blocks_x, ui_params.blocks_y }, UiFlags_PanelInner);
+        ui::panel(vec2i{0, 0}, { ui_params.blocks_x, ui_params.blocks_y }, UiFlags_PanelInner);
     }
 
     bstring256 text_utf8;
@@ -245,8 +245,8 @@ void scrollable_list::draw() {
             font = ui_params.font_focus;
         }
 
-        int button_pos_x = ui_params.pos.x + ui_params.buttons_margin_x;
-        int button_pos_y = ui_params.pos.y + ui_params.buttons_size_y * i + ui_params.buttons_margin_y;
+        int button_pos_x = ui_params.buttons_margin_x;
+        int button_pos_y = ui_params.buttons_size_y * i + ui_params.buttons_margin_y;
         int text_pos_x = button_pos_x + ui_params.text_padding_x;
         int text_pos_y = button_pos_y + ui_params.text_padding_y;
 
@@ -271,15 +271,15 @@ void scrollable_list::draw() {
             if (ui_params.text_max_width != -1) {
                 text_ellipsize(text, font, ui_params.text_max_width);
             }
-            ui::text_abs(text.c_str(), { text_pos_x, text_pos_y }, font, 0);
+            ui::label(text.c_str(), vec2i{ text_pos_x, text_pos_y }, font, UiFlags_None, 0);
         }
     }
 
-    scrollbar.pos.x = DEFAULT_BLOCK_SIZE * ui_params.blocks_x + ui_params.scrollbar_margin_x;
+    scrollbar.pos.x = DEFAULT_BLOCK_SIZE * ui_params.blocks_x + scrollbar.scrollbar_offset.x + ui_params.scrollbar_margin_x;
     scrollbar.pos.y = ui_params.scrollbar_margin_top;
-    scrollbar.height = DEFAULT_BLOCK_SIZE * ui_params.blocks_y - ui_params.scrollbar_margin_bottom;
+    scrollbar.height = DEFAULT_BLOCK_SIZE * ui_params.blocks_y - ui_params.scrollbar_margin_top - ui_params.scrollbar_margin_bottom;
 
-    scrollbar_draw(ui_params.pos, &scrollbar);
+    scrollbar_draw(ui::current_offset(), &scrollbar);
     WAS_DRAWN = true;
 }
 

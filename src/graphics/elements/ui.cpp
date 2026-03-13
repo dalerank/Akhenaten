@@ -731,6 +731,11 @@ void ui::panel(vec2i pos, vec2i size, UiFlags flags) {
     }
 }
 
+void ui::button_border(vec2i pos, vec2i size, bool focused) {
+    const vec2i offset = g_state.offset();
+    push(cmd_t::button_border, Pos{offset + pos}, Size{size}, ImgFlagsTag{focused ? ImgFlag_Alpha : ImgFlag_None});
+}
+
 void ui::line(bool hline, vec2i npos, int size, color c) {
     const vec2i offset = g_state.offset();
     push(hline ? cmd_t::h_line : cmd_t::v_line, Pos{npos + offset}, BoxWidth{size}, TextColor{c});

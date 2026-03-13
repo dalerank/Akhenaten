@@ -10,7 +10,9 @@
 #include "game/file_editor.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/scroll_list_panel.h"
+#include "graphics/elements/ui.h"
 #include "graphics/elements/generic_button.h"
+#include "graphics/screen.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/scrollbar.h"
@@ -143,29 +145,32 @@ static void init(file_type type) {
     input_box_start(&file_name_input, data.typed_name, MAX_FILE_NAME, 0);
 }
 
+static const vec2i list_pos = {144, 120};
+
 static void draw_foreground(int) {
     auto& data = g_file_dialog_load;
-    graphics_set_to_dialog();
-    uint8_t file[MAX_FILE_NAME] = {0};
 
-    outer_panel_draw(vec2i{128, 40}, 24, 21);
-    input_box_draw(&file_name_input);
-
-    // title
+    data.panel->ui_params.pos = list_pos;
+    ui::begin_widget(screen_dialog_offset());
+    ui::panel(vec2i{128, 40}, vec2i{24, 21}, UiFlags_PanelOuter);
     if (data.message_not_exist_start_time
         && time_get_millis() - data.message_not_exist_start_time < NOT_EXIST_MESSAGE_TIMEOUT) {
-        lang_text_draw_centered(43, 2, 160, 50, 304, FONT_LARGE_BLACK_ON_LIGHT);
+        ui::label(43, 2, vec2i{160, 50}, FONT_LARGE_BLACK_ON_LIGHT, UiFlags_AlignCentered, 304);
     } else {
         int text_id = 1 + (data.type == FILE_TYPE_SCENARIO ? 3 : 0);
-        lang_text_draw_centered(43, text_id, 160, 50, 304, FONT_LARGE_BLACK_ON_LIGHT);
+        ui::label(43, text_id, vec2i{160, 50}, FONT_LARGE_BLACK_ON_LIGHT, UiFlags_AlignCentered, 304);
     }
-    lang_text_draw(43, 5, 224, 342, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::label(43, 5, vec2i{224, 342}, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    data.panel->ui_params.pos = { 144, 120 };
+    ui::begin_widget(list_pos, true);
     data.panel->draw();
+    ui::end_widget();
+    ui::end_widget();
+    ui::flush_commands();
 
+    graphics_set_to_dialog();
+    input_box_draw(&file_name_input);
     image_buttons_draw({0, 0}, image_buttons, 2);
-
     graphics_reset_dialog();
 }
 
