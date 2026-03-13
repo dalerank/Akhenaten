@@ -242,8 +242,6 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
 
     mouse m_dialog = *mouse_in_dialog(m);
-    m_dialog.x -= 140;
-    m_dialog.y -= 120;
     if (input_box_handle_mouse(&m_dialog, &file_name_input)
         || data.panel->input_handle(&m_dialog)) {
         return;
