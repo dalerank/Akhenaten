@@ -20,7 +20,9 @@
 #include "game/mission.h"
 #include "game/game_events.h"
 #include "game/settings.h"
+#include "game/player.h"
 #include "city/city_finance.h"
+#include "content/vfs.h"
 #include "io/gamestate/boilerplate.h"
 #include "core/profiler.h"
 #include "js.h"
@@ -420,7 +422,11 @@ void __game_set_game_speed(int v) { game.game_speed = v; } ANK_FUNCTION_1(__game
 void __game_set_scroll_speed(int v) { game.scroll_speed = v; } ANK_FUNCTION_1(__game_set_scroll_speed)
 void __game_request_exit() { app_request_exit(); } ANK_FUNCTION(__game_request_exit)
 void __game_set_player_name(pcstr name) { g_settings.set_player_name((const uint8_t *)name); } ANK_FUNCTION_1(__game_set_player_name)
+pcstr __game_get_player_name() { return g_settings.player_name_utf8.empty() ? g_settings.player_name.c_str() : g_settings.player_name_utf8.c_str(); } ANK_FUNCTION(__game_get_player_name)
 bool __game_load_savegame(pcstr filename) { return GamestateIO::load_savegame(filename); } ANK_FUNCTION_1(__game_load_savegame)
+void __game_load_mission(int scenario_id, int start_immediately) { GamestateIO::load_mission(scenario_id, !!start_immediately); } ANK_FUNCTION_2(__game_load_mission)
+bool __game_file_exists(pcstr path) { return path && *path && vfs::file_exists(path); } ANK_FUNCTION_1(__game_file_exists)
+pcstr __game_get_last_autosave() { const char* p = player_get_last_autosave(); return p ? p : ""; } ANK_FUNCTION(__game_get_last_autosave)
 
 std::optional<bvariant> __game_get_property(pcstr property) {
     return archive_helper::get(game, property, true);

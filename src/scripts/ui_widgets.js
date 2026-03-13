@@ -16,7 +16,7 @@ build_menu_widget = {
 
     btn_w_add : 128,
     btn_w_start_pos : [0, 110],
-    btn_text_w_offset : [0, 3],
+    btn_text_w_offset : [8, 3],
     btn_text_w_size : [176, 24],
     btn_w_cost_offset : -82,
     btn_w_tot_margin : 10,
@@ -46,21 +46,6 @@ trade_prices_window = {
         sellers_receive2 : text({text:[54, 23], pos:[26, 182], font:FONT_NORMAL_BLACK_ON_LIGHT}),
 
         back          : text_center({pos:[13, -1], margin:{bottom:-35}, text:[13, 1], size:[px(56), 20], font:FONT_NORMAL_BLACK_ON_LIGHT }),
-    }
-}
-
-window_dinasty_menu {
-    pos [(sw(0) - px(24))/2, (sh(0) - px(21))/2]
-    ui {
-        background_image: background({pack:PACK_UNLOADED, id:31})
-        background      : outer_panel({size[24, 19]})
-
-        title       : text_center({pos[0, 20], size[px(24), 20], font:FONT_LARGE_BLACK_ON_LIGHT})
-        btnresume   : button({margin{centerx: -135, top: 40 + 1 * 40}, size[270, 25], text[293, 5], font:FONT_NORMAL_BLACK_ON_LIGHT })
-        btnexplore  : button({margin{centerx: -135, top: 40 + 2 * 40}, size[270, 25], text[293, 6], font:FONT_NORMAL_BLACK_ON_LIGHT })
-        btnload     : button({margin{centerx: -135, top: 40 + 3 * 40}, size[270, 25], text[293, 2], font:FONT_NORMAL_BLACK_ON_LIGHT })
-        btncustom   : button({margin{centerx: -135, top: 40 + 4 * 40}, size[270, 25], text[293, 3], font:FONT_NORMAL_BLACK_ON_LIGHT })
-        btnback     : button({margin{centerx: -135, top: 40 + 5 * 40}, size[270, 25], text[293, 4], font:FONT_NORMAL_BLACK_ON_LIGHT })
     }
 }
 

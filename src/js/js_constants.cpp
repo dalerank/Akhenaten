@@ -5,6 +5,8 @@
 #include "input/hotkey.h"
 #include "mujs/mujs.h"
 #include "window/file_dialog.h"
+#include "window/scenario_selection.h"
+#include "game/mission.h"
 #include "overlays/city_overlay.h"
 #include "building/building.h"
 #include "graphics/image_desc.h"
@@ -23,10 +25,13 @@ js_State *js_vm_state();
 #define _R(name) js_pushnumber(J, name); js_setglobal(J, #name);
 void js_register_game_constants(js_State *J) {
     _R(FILE_TYPE_SAVED_GAME)
+    _R(MAP_SELECTION_CAMPAIGN)
+    _R(MAP_SELECTION_CUSTOM)
+    _R(SCENARIO_NUBT)
 
     // repeated for alias id
     _R(SOUND_CHANNEL_CITY_HOUSE_SLUM)
- 
+
     // cause it vacant lot id also
     _R(BUILDING_HOUSE_VACANT_LOT)
 
