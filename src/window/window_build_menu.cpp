@@ -1,5 +1,6 @@
 #include "window_build_menu.h"
 
+#include "core/bstring.h"
 #include "core/svector.h"
 #include "city/city.h"
 #include "city/city_building_menu_ctrl.h"
@@ -159,6 +160,11 @@ void build_menu_widget::draw_menu_buttons() {
         }
 
         const auto &params = building_static_params::get(type);
+        pcstr label_str = is_all_button(type) ? ui::str(52, 19) : (params.build_menu_text.empty() ? tgroup.c_str() : params.build_menu_text.c_str());
+
+        const vec2i btn_pos = btn_w_start_pos + vec2i{ x_offset - label_margin, y_offset + item.size.y * i };
+        const vec2i btn_size{ btn_w_tot, 20 };
+
         if (params.planner_update_rule.unique_building) {
             const bool has_building = g_city.buildings.count_total(type);
 
@@ -166,16 +172,12 @@ void build_menu_widget::draw_menu_buttons() {
             UiFlags flags = UiFlags_PanelSmall;
             flags |= (has_building ? UiFlags_Darkened : UiFlags_None);
 
-            const vec2i btn_pos = btn_w_start_pos + vec2i{ x_offset - label_margin, y_offset + item.size.y * i };
-            const vec2i btn_size{ btn_w_tot, 20 };
             btn = &ui.button("", btn_pos, btn_size, fonts_vec{ font, FONT_NORMAL_BLACK_ON_LIGHT }, flags,
                 [this, i] (int, int) {
                     int idx = button_index_to_submenu_item(i);
                     button_menu_item(idx);
                 });
         } else {
-            const vec2i btn_pos = btn_w_start_pos + vec2i{ x_offset - label_margin, y_offset + item.size.y * i };
-            const vec2i btn_size{ btn_w_tot, 20 };
             btn = &ui.button("", btn_pos, btn_size, fonts_vec{ FONT_NORMAL_BLACK_ON_DARK, FONT_NORMAL_BLACK_ON_LIGHT }, UiFlags_PanelSmall,
                 [this, i] (int, int) {
                     int idx = button_index_to_submenu_item(i);
@@ -187,14 +189,8 @@ void build_menu_widget::draw_menu_buttons() {
             font = FONT_NORMAL_BLACK_ON_DARK;
         }
 
-        int text_offset = btn_w_start_pos.y + btn_text_w_offset.y;
-        if (is_all_button(type)) {
-            lang_text_draw_centered(52, 19, x_offset - label_margin + btn_w_tot_offset, y_offset + text_offset + item.size.y * i, btn_text_w_size.x, font);
-        } else if (!params.build_menu_text.empty()) {
-            lang_text_draw_centered(params.build_menu_text, x_offset - label_margin + btn_w_tot_offset, y_offset + text_offset + item.size.y * i, btn_text_w_size.x, font);
-        } else {
-            lang_text_draw_centered(tgroup, x_offset - label_margin + btn_w_tot_offset, y_offset + text_offset + item.size.y * i, btn_text_w_size.x, font);
-        }
+        /* Text left-aligned with offset from config (btn_text_w_offset.x = left, .y = vertical) */
+        ui::label(label_str, btn_pos + btn_text_w_offset, font, UiFlags_None, btn_text_w_size.x);
 
         uint16_t cost = building_static_params::get(type).get_cost();
         if (type == BUILDING_MENU_FORTS) {
@@ -202,7 +198,12 @@ void build_menu_widget::draw_menu_buttons() {
         }
 
         if (cost) {
-            text_draw_money(cost, x_offset + btn_w_cost_offset - btn_w_tot_offset, y_offset + text_offset + item.size.y * i, font);
+            int text_offset = btn_w_start_pos.y + btn_text_w_offset.y;
+            int cost_x = x_offset + btn_w_cost_offset - btn_w_tot_offset;
+            int cost_y = y_offset + text_offset + item.size.y * i;
+            bstring128 cost_str;
+            cost_str.printf("%d %s", cost, ui::str(6, 0));
+            ui::text_abs(cost_str.c_str(), vec2i{ cost_x, cost_y }, font, 0);
         }
     }
 }
@@ -218,7 +219,7 @@ void build_menu_widget::draw_foreground(UiFlags flags) {
 
 void build_menu_widget::init(int sub_menu) {
     ctrl = &g_building_menu_ctrl;
-     
+
     selected_submenu = sub_menu;
     num_items = ctrl->count_items(selected_submenu);
     y_offset = y_menu_offsets[num_items];
