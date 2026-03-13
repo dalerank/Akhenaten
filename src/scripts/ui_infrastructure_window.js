@@ -8,7 +8,7 @@ infrastructure_common_info_window {
     })
 }
 
-[es=infrastructure_common_info_window_init]
+[es=(infrastructure_common_info_window, init)]
 function infrastructure_common_info_window_init(window) {
     var b = city.get_building(window.bid)
     var meta_text_id = b.meta_text_id

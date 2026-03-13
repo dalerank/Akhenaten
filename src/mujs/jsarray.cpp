@@ -20,7 +20,7 @@ void js_setlength(js_State *J, int idx, int len)
 int js_hasindex(js_State *J, int idx, int i)
 {
 	char buf[32];
-	return js_hasproperty(J, idx, js_itoa(buf, i));
+	return J->hasproperty(idx, js_itoa(buf, i));
 }
 
 void js_getindex(js_State *J, int idx, int i)
@@ -123,11 +123,11 @@ static void Ap_join(js_State *J)
 		n += strlen(r);
 
 		if (k == 0) {
-			out = js_malloc(J, n);
+			out = (char*)js_malloc(J, n);
 			strcpy(out, r);
 		} else {
 			n += seplen;
-			out = js_realloc(J, out, n);
+			out = (char*)js_realloc(J, out, n);
 			strcat(out, sep);
 			strcat(out, r);
 		}
@@ -152,7 +152,7 @@ static void Ap_pop(js_State *J)
 		js_setlength(J, 0, n - 1);
 	} else {
 		js_setlength(J, 0, 0);
-		js_pushundefined(J);
+		J->pushundefined();
 	}
 }
 
@@ -209,7 +209,7 @@ static void Ap_shift(js_State *J)
 
 	if (len == 0) {
 		js_setlength(J, 0, 0);
-		js_pushundefined(J);
+		J->pushundefined();
 		return;
 	}
 
@@ -265,10 +265,10 @@ static int compare(js_State *J, int x, int y, int *hasx, int *hasy, int hasfn)
 
 		if (hasfn) {
 			js_copy(J, 1); /* copy function */
-			js_pushundefinedthis(J); /* set this object */
+			J->pushundefined(); /* set this object */
 			js_copy(J, -4); /* copy x */
 			js_copy(J, -4); /* copy y */
-			js_call(J, 2);
+			J->call(2);
 			c = js_tonumber(J, -1);
 			js_pop(J, 1);
 			return c;
@@ -291,7 +291,7 @@ static void Ap_sort(js_State *J)
 
 	len = js_getlength(J, 0);
 
-	hasfn = js_iscallable(J, 1);
+	hasfn = J->iscallable(1);
 
 	for (i = 1; i < len; ++i) {
 		k = i;
@@ -449,8 +449,9 @@ static void Ap_every(js_State *J)
 	int hasthis = js_gettop(J) >= 3;
 	int k, len;
 
-	if (!js_iscallable(J, 1))
+	if (!J->iscallable(1)) {
 		js_typeerror(J, "callback is not a function");
+	}
 
 	len = js_getlength(J, 0);
 	for (k = 0; k < len; ++k) {
@@ -459,11 +460,11 @@ static void Ap_every(js_State *J)
 			if (hasthis)
 				js_copy(J, 2);
 			else
-				js_pushundefined(J);
+				J->pushundefined();
 			js_copy(J, -3);
 			js_pushnumber(J, k);
 			js_copy(J, 0);
-			js_call(J, 3);
+			J->call(3);
 			if (!js_toboolean(J, -1))
 				return;
 			js_pop(J, 2);
@@ -478,7 +479,7 @@ static void Ap_some(js_State *J)
 	int hasthis = js_gettop(J) >= 3;
 	int k, len;
 
-	if (!js_iscallable(J, 1))
+	if (!J->iscallable(1))
 		js_typeerror(J, "callback is not a function");
 
 	len = js_getlength(J, 0);
@@ -488,11 +489,11 @@ static void Ap_some(js_State *J)
 			if (hasthis)
 				js_copy(J, 2);
 			else
-				js_pushundefined(J);
+				J->pushundefined();
 			js_copy(J, -3);
 			js_pushnumber(J, k);
 			js_copy(J, 0);
-			js_call(J, 3);
+			J->call(3);
 			if (js_toboolean(J, -1))
 				return;
 			js_pop(J, 2);
@@ -507,7 +508,7 @@ static void Ap_forEach(js_State *J)
 	int hasthis = js_gettop(J) >= 3;
 	int k, len;
 
-	if (!js_iscallable(J, 1))
+	if (!J->iscallable(1))
 		js_typeerror(J, "callback is not a function");
 
 	len = js_getlength(J, 0);
@@ -517,16 +518,16 @@ static void Ap_forEach(js_State *J)
 			if (hasthis)
 				js_copy(J, 2);
 			else
-				js_pushundefined(J);
+				J->pushundefined();
 			js_copy(J, -3);
 			js_pushnumber(J, k);
 			js_copy(J, 0);
-			js_call(J, 3);
+			J->call(3);
 			js_pop(J, 2);
 		}
 	}
 
-	js_pushundefined(J);
+	J->pushundefined();
 }
 
 static void Ap_map(js_State *J)
@@ -534,7 +535,7 @@ static void Ap_map(js_State *J)
 	int hasthis = js_gettop(J) >= 3;
 	int k, len;
 
-	if (!js_iscallable(J, 1))
+	if (!J->iscallable(1))
 		js_typeerror(J, "callback is not a function");
 
 	js_newarray(J);
@@ -546,11 +547,11 @@ static void Ap_map(js_State *J)
 			if (hasthis)
 				js_copy(J, 2);
 			else
-				js_pushundefined(J);
+				J->pushundefined();
 			js_copy(J, -3);
 			js_pushnumber(J, k);
 			js_copy(J, 0);
-			js_call(J, 3);
+			J->call(3);
 			js_setindex(J, -3, k);
 			js_pop(J, 1);
 		}
@@ -562,7 +563,7 @@ static void Ap_filter(js_State *J)
 	int hasthis = js_gettop(J) >= 3;
 	int k, to, len;
 
-	if (!js_iscallable(J, 1))
+	if (!J->iscallable(1))
 		js_typeerror(J, "callback is not a function");
 
 	js_newarray(J);
@@ -575,11 +576,11 @@ static void Ap_filter(js_State *J)
 			if (hasthis)
 				js_copy(J, 2);
 			else
-				js_pushundefined(J);
+				J->pushundefined();
 			js_copy(J, -3);
 			js_pushnumber(J, k);
 			js_copy(J, 0);
-			js_call(J, 3);
+			J->call(3);
 			if (js_toboolean(J, -1)) {
 				js_pop(J, 1);
 				js_setindex(J, -2, to++);
@@ -595,7 +596,7 @@ static void Ap_reduce(js_State *J)
 	int hasinitial = js_gettop(J) >= 3;
 	int k, len;
 
-	if (!js_iscallable(J, 1))
+	if (!J->iscallable(1))
 		js_typeerror(J, "callback is not a function");
 
 	len = js_getlength(J, 0);
@@ -618,12 +619,12 @@ static void Ap_reduce(js_State *J)
 	while (k < len) {
 		if (js_hasindex(J, 0, k)) {
 			js_copy(J, 1);
-			js_pushundefined(J);
+			J->pushundefined();
 			js_rot(J, 4); /* accumulator on top */
 			js_rot(J, 4); /* property on top */
 			js_pushnumber(J, k);
 			js_copy(J, 0);
-			js_call(J, 4); /* calculate new accumulator */
+			J->call(4); /* calculate new accumulator */
 		}
 		++k;
 	}
@@ -636,7 +637,7 @@ static void Ap_reduceRight(js_State *J)
 	int hasinitial = js_gettop(J) >= 3;
 	int k, len;
 
-	if (!js_iscallable(J, 1))
+	if (!J->iscallable(1))
 		js_typeerror(J, "callback is not a function");
 
 	len = js_getlength(J, 0);
@@ -659,12 +660,12 @@ static void Ap_reduceRight(js_State *J)
 	while (k >= 0) {
 		if (js_hasindex(J, 0, k)) {
 			js_copy(J, 1);
-			js_pushundefined(J);
+			J->pushundefined();
 			js_rot(J, 4); /* accumulator on top */
 			js_rot(J, 4); /* property on top */
 			js_pushnumber(J, k);
 			js_copy(J, 0);
-			js_call(J, 4); /* calculate new accumulator */
+			J->call(4); /* calculate new accumulator */
 		}
 		--k;
 	}
@@ -674,8 +675,8 @@ static void Ap_reduceRight(js_State *J)
 
 static void A_isArray(js_State *J)
 {
-	if (js_isobject(J, 1)) {
-		js_Object *T = js_toobject(J, 1);
+	if (J->isobject(1)) {
+		js_Object *T = J->toobject(1);
 		js_pushboolean(J, T->type == JS_CARRAY);
 	} else {
 		js_pushboolean(J, 0);

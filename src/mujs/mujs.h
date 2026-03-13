@@ -29,7 +29,7 @@
 extern "C" {
 #endif
 
-typedef struct js_State js_State;
+struct js_State;
 
 typedef void *(*js_Alloc)(void *memctx, void *ptr, int size);
 typedef void (*js_Panic)(js_State *J);
@@ -39,6 +39,7 @@ typedef int (*js_HasProperty)(js_State *J, void *p, const char *name);
 typedef int (*js_Put)(js_State *J, void *p, const char *name);
 typedef int (*js_Delete)(js_State *J, void *p, const char *name);
 typedef int (*js_Import)(js_State *J, const char *name);
+typedef int (*js_Emit)(js_State *J, const char *name);
 
 /* Basic functions */
 js_State *js_newstate(js_Alloc alloc, void *actx, int flags);
@@ -53,7 +54,6 @@ int js_dostring(js_State *J, const char *source);
 int js_dofile(js_State *J, const char *filename);
 int js_ploadstring(js_State *J, const char *filename, const char *source);
 int js_ploadfile(js_State *J, const char *filename);
-int js_pcall(js_State *J, int n);
 int js_pconstruct(js_State *J, int n);
 
 /* Exception handling */
@@ -61,7 +61,7 @@ int js_pconstruct(js_State *J, int n);
 void *js_savetry(js_State *J); /* returns a jmp_buf */
 
 #define js_try(J) \
-  setjmp(js_savetry(J))
+  setjmp(*((jmp_buf *)js_savetry(J)))
 
 void js_endtry(js_State *J);
 
@@ -104,12 +104,15 @@ JS_NORETURN void js_throw(js_State *J);
 void js_loadstring(js_State *J, const char *filename, const char *source);
 void js_loadfile(js_State *J, const char *filename);
 void js_importfile(js_State *J, const char *filename);
+void js_emit(js_State *J, const char *name);
 
 js_Import js_registerimport(js_State *J, js_Import importFunc);
+js_Emit js_registeremit(js_State *J, js_Emit emitFunc);
 
 void js_eval(js_State *J);
-void js_call(js_State *J, int n);
 void js_construct(js_State *J, int n);
+/** Dump current JS call stack (name, file, line) to stdout. Use when id/undefined to find caller. */
+void js_stacktrace(js_State *J);
 
 const char *js_ref(js_State *J);
 void js_unref(js_State *J, const char *ref);
@@ -122,7 +125,6 @@ void js_getglobal(js_State *J, const char *name);
 void js_setglobal(js_State *J, const char *name);
 void js_defglobal(js_State *J, const char *name, int atts);
 
-int js_hasproperty(js_State *J, int idx, const char *name);
 void js_getproperty(js_State *J, int idx, const char *name);
 void js_setproperty(js_State *J, int idx, const char *name);
 void js_defproperty(js_State *J, int idx, const char *name, int atts);
@@ -175,11 +177,9 @@ int js_isnumber(js_State *J, int idx);
 int js_iscnumber(js_State *J, int idx);
 int js_isstring(js_State *J, int idx);
 int js_isprimitive(js_State *J, int idx);
-int js_isobject(js_State *J, int idx);
 int js_isarray(js_State *J, int idx);
 int js_isregexp(js_State *J, int idx);
 int js_iscoercible(js_State *J, int idx);
-int js_iscallable(js_State *J, int idx);
 int js_isuserdata(js_State *J, int idx, const char *tag);
 void *js_stack_alloc(int size);
 void *js_frame_alloc(js_State *J, int size);

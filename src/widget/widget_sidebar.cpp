@@ -54,6 +54,8 @@ ui::sidebar_window_collapsed_t ANK_VARIABLE(sidebar_window_collapsed);
 ui::sidebar_window g_sidebar;
 
 void ui::sidebar_window_expanded_t::draw_sidebar_extra(vec2i offset) {
+    OZZY_PROFILER_FUNCTION();
+
     int extra_height = sidebar_extra_draw(offset);
     int relief_y_offset = SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT + extra_height;
     sidebar_common_draw_relief({ x_offset, relief_y_offset }, relief_block);
@@ -125,12 +127,18 @@ void ui::sidebar_window_expanded_t::expand() {
 void ui::sidebar_window_expanded_t::ui_draw_foreground(UiFlags flags) {
     OZZY_PROFILER_FUNCTION();
 
-    ui.event(sidebar_window_draw{ pos, opened_menu });
+    {
+        OZZY_PROFILER_SECTION(_, "sidebar_window_draw")
+        ui.event(sidebar_window_draw{ pos, opened_menu });
+    }
 
     x_offset = screen_width();
-    slider.update(x_offset, expanded_offset_x, [this] {
-        city_view_toggle_sidebar(slider.slide_mode == slider.e_slide_collapse);
-    });
+    {
+        OZZY_PROFILER_SECTION(_, "slider.update")
+        slider.update(x_offset, expanded_offset_x, [this] {
+            city_view_toggle_sidebar(slider.slide_mode == slider.e_slide_collapse);
+        });
+    }
 
     if (!window_build_menu_selected()) {
         opened_menu = 0;

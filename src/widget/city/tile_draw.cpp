@@ -60,7 +60,7 @@ static const int ADJACENT_OFFSETS_PH[2][4][7]
        GRID_OFFSET(-3, -2)}}};
 
 
-grid_xx g_render_grid = {0, FS_UINT32};
+grid_xx g_render_grid(FS_UINT32);
 
 void map_render_clear() {
     OZZY_PROFILER_FUNCTION();
@@ -69,6 +69,10 @@ void map_render_clear() {
 
 bool map_render_is(int grid_offset, int render_mask) {
     return map_grid_is_valid_offset(grid_offset) && !!(map_grid_get(g_render_grid, grid_offset) & render_mask);
+}
+
+bool map_render_isu(int grid_offset, int render_mask) {
+    return !!(map_grid_get(g_render_grid, grid_offset) & render_mask);
 }
 
 bool map_render_is(tile2i tile, int render_mask) {
@@ -122,6 +126,14 @@ bool drawing_building_as_deleted(building* b) {
     return false;
 }
 
+bool drawing_building_as_deleted(building_id bid) {
+    if (bid == 0) {
+        return false;
+    }
+
+    return drawing_building_as_deleted(building_get(bid));
+}
+
 static bool is_multi_tile_terrain(int grid_offset) {
     return (!map_building_at(grid_offset) && map_property_multi_tile_size(grid_offset) > 1);
 }
@@ -159,12 +171,11 @@ static void clip_between_rectangles(int* xOut, int* yOut, int* wOut, int* hOut, 
 }
 
 void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
-    g_city_planner.construction_record_view_position(pixel, tile);
     constexpr uint32_t mode_highlighted[] = {0, COLOR_BLUE, COLOR_RED, COLOR_GREEN, COLOR_YELLOW};
     if (!tile.valid()) {
         // Outside map: draw black tile
 
-        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = image_id_from_group(GROUP_TERRAIN_BLACK);
         command.pixel = pixel;
         command.mask = COLOR_MASK_NONE;
@@ -182,38 +193,36 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
             overlay->draw_flattened_footprint_anysize(pixel, 1, 1, 0, 0, ctx);
 
         } else if (!!(terrain & TERRAIN_CANAL)) {
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = map_image_at(tile);
             command.pixel = pixel;
             command.mask = COLOR_MASK_NONE;
             command.location = SOURCE_LOCATION;
 
             const image_t* img = image_get(command.image_id);
-            int top_height = img->isometric_top_height();
-            map_render_set(tile, top_height > 0 ? RENDER_TALL_TILE : 0);
+            map_render_set(tile, img->isometric_top_height > 0 ? RENDER_TALL_TILE : 0);
 
         } else if (map_is_highlighted(tile)) {
             e_highligth_mode mode = map_is_highlighted(tile);
 
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = map_image_at(tile);
             command.pixel = pixel;
             command.mask = mode_highlighted[mode];
             command.location = SOURCE_LOCATION;
-        
+
         } else if (terrain & TERRAIN_BUILDING) {
             overlay->draw_building_footprint(ctx, pixel, tile, 0);
-        
+
         } else {
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = map_image_at(tile);
             command.pixel = pixel;
             command.mask = COLOR_MASK_NONE;
             command.location = SOURCE_LOCATION;
 
             const image_t* img = image_get(command.image_id);
-            int top_height = img->isometric_top_height();
-            map_render_set(tile, top_height > 0 ? RENDER_TALL_TILE : 0);
+            map_render_set(tile, img->isometric_top_height > 0 ? RENDER_TALL_TILE : 0);
         }
     }
 
@@ -232,7 +241,7 @@ void draw_isometrics_overlay_height(vec2i pixel, tile2i point, painter &ctx) {
     } else if (map_property_is_draw_tile(grid_offset)) {
         bool tall_flat_tile = map_render_is(grid_offset, RENDER_TALL_TILE);
         if (tall_flat_tile) {
-            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_top);
+            auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile_top);
 
             int image_id = map_image_at(grid_offset);
             const image_t *img = image_get(image_id);

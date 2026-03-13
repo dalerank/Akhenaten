@@ -1,6 +1,7 @@
 #include "window_advisors.h"
 
 #include "js/js_game.h"
+#include "core/profiler.h"
 
 ANK_FUNCTION(window_advisors_show_checked)
 

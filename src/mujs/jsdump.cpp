@@ -61,6 +61,7 @@ static int prec(enum js_AstType type)
 
 	case EXP_DELETE:
 	case EXP_IMPORT:
+	case EXP_EMIT:
 	case EXP_VOID:
 	case EXP_TYPEOF:
 	case EXP_PREINC:
@@ -304,6 +305,7 @@ static void pexpi(int d, int p, js_Ast *exp)
 
 	case EXP_DELETE: puna(d, p, exp, "delete ", ""); break;
 	case EXP_IMPORT: puna(d, p, exp, "import ", ""); break;
+	case EXP_EMIT: ps("emit "); pexpi(d, p, exp->a); pexpi(d, p, exp->b); break;
 	case EXP_VOID: puna(d, p, exp, "void ", ""); break;
 	case EXP_TYPEOF: puna(d, p, exp, "typeof ", ""); break;
 	case EXP_PREINC: puna(d, p, exp, "++", ""); break;

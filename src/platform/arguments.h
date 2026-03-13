@@ -90,6 +90,9 @@ public:
     [[nodiscard]] const xstring& get_custom_font() const { return get_str("custom_font"); }
 
     void set_custom_font(pcstr value);
+
+    /// Thread count for mt/mtrpc pools. 0 = use hardware_concurrency().
+    [[nodiscard]] unsigned int get_thread_count() const;
     
     void parse(int argc, char **argv);
 

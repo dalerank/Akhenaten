@@ -55,6 +55,7 @@
 #include "grid/tiles.h"
 #include "content/mods.h"
 #include "undo.h"
+#include "platform/arguments.h"
 
 #include "dev/debug.h"
 #include <iostream>
@@ -279,6 +280,19 @@ void game_t::reload_language() {
     locale_determine_language();
 }
 
+void game_t::add_frame_end_event(serial_event_t ev) {
+    std::lock_guard<std::mutex> lock(frame_end_events_mutex);
+    frame_end_events.push_back(std::move(ev));
+}
+
+void game_t::execute_frame_end_events() {
+    std::lock_guard<std::mutex> lock(frame_end_events_mutex);
+    for (auto &ev : frame_end_events) {
+        ev();
+    }
+    frame_end_events.clear();
+}
+
 static int get_elapsed_ticks() {
     if (game.paused || !city_has_loaded) {
         return 0;
@@ -342,8 +356,12 @@ bool game_t::check_valid() {
     random_init();
 
     paused = false;
-    mt.reset(4);
-    mtrpc.reset(4);
+    unsigned int n = g_args.get_thread_count();
+    if (n == 0) {
+        n = std::thread::hardware_concurrency();
+    }
+    mt.reset(n);
+    mtrpc.reset(n);
 
     return true;
 }
@@ -419,6 +437,8 @@ void game_t::frame_begin() {
 
 void game_t::frame_end() {
     animation = true;
+
+    execute_frame_end_events();
 }
 
 void game_t::time_init(int year) {
@@ -427,7 +447,9 @@ void game_t::time_init(int year) {
 
 void game_t::sound_frame_begin() {
     OZZY_PROFILER_FUNCTION();
-    sound_city_play();
+    if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY) || window_is(WINDOW_SLIDING_SIDEBAR)) {
+        sound_city_play();
+    }
 }
 
 void game_t::increase_game_speed() {
@@ -485,7 +507,6 @@ void game_t::handle_input_frame() {
     const hotkeys *h = hotkey_state();
 
     g_window_manager.handle_input(&m ,h);
-    g_window_manager.handle_tooltip(&m);
 
     g_window_manager.update_input_after();
 }

@@ -207,12 +207,12 @@ static int fmtvalue(js_State *J, js_Buffer **sb, const char *key, const char *ga
 		js_free(J, *sb);
 		js_throw(J);
 	}
-	if (js_isobject(J, -1)) {
-		if (js_hasproperty(J, -1, "toJSON")) {
-			if (js_iscallable(J, -1)) {
+	if (J->isobject(-1)) {
+		if (J->hasproperty(-1, "toJSON")) {
+			if (J->iscallable(-1)) {
 				js_copy(J, -2);
 				js_pushliteral(J, key);
-				js_call(J, 1);
+				J->call(1);
 				js_rot2pop1(J);
 			} else {
 				js_pop(J, 1);
@@ -223,8 +223,8 @@ static int fmtvalue(js_State *J, js_Buffer **sb, const char *key, const char *ga
 
 	// TODO: replacer()
 
-	if (js_isobject(J, -1) && !js_iscallable(J, -1)) {
-		js_Object *obj = js_toobject(J, -1);
+	if (J->isobject(-1) && !J->iscallable(-1)) {
+		js_Object *obj = J->toobject(-1);
 		switch (obj->type) {
 		case JS_CNUMBER: fmtnum(J, sb, obj->u.number); break;
 		case JS_CSTRING: fmtstr(J, sb, obj->u.s.string); break;
@@ -287,7 +287,7 @@ static void JSON_stringify(js_State *J)
 			js_free(J, sb);
 		}
 	} else {
-		js_pushundefined(J);
+		J->pushundefined();
 	}
 }
 

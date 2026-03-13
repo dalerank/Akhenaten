@@ -8,8 +8,8 @@
 #include "grid/tile_cache.h"
 #include "dev/debug.h"
 
-grid_xx g_terraing_garden_value = { 0, FS_INT8 };
-grid_xx g_terraing_garden_decay = { 0, FS_INT8 };
+grid_xx g_terraing_garden_value(FS_INT8);
+grid_xx g_terraing_garden_decay(FS_INT8);
 
 declare_console_command_p(gardendecay) {
     std::string args; is >> args;

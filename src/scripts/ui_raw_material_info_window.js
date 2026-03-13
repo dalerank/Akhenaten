@@ -43,7 +43,7 @@ function info_window_raw_material_common_init(window) {
     if (wdesc) wdesc.text = __loc(reason.group, reason.id)
 }
 
-[es=info_window_raw_material_init]
+[es=(info_window_raw_material, init)]
 function info_window_raw_material_on_init(window) {
     log_info("akhenaten: info_window_raw_material_on_init: window.bid = " + window.bid)
     info_window_raw_material_common_init(window)

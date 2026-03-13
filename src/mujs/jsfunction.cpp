@@ -43,16 +43,16 @@ static void jsB_Function(js_State *J)
 
 static void jsB_Function_prototype(js_State *J)
 {
-	js_pushundefined(J);
+	J->pushundefined();
 }
 
 static void Fp_toString(js_State *J)
 {
-	js_Object *self = js_toobject(J, 0);
+	js_Object *self = J->toobject(0);
 	char *s = 0;
 	int i, n;
 
-	if (!js_iscallable(J, 0))
+	if (!J->iscallable(0))
 		js_typeerror(J, "not a function");
 
 	if (self->type == JS_CFUNCTION || self->type == JS_CSCRIPT) {
@@ -62,7 +62,7 @@ static void Fp_toString(js_State *J)
 		for (i = 0; i < F->numparams; ++i)
 			n += strlen(F->vartab[i]) + 1;
 		//s = js_malloc(J, n);
-		s = js_stack_alloc(n + 16);
+		s = (char*)js_stack_alloc(n + 16);
 		strcpy(s, "function ");
 		strcat(s, F->name);
 		strcat(s, "(");
@@ -87,7 +87,7 @@ static void Fp_apply(js_State *J)
 {
 	int i, n;
 
-	if (!js_iscallable(J, 0))
+	if (!J->iscallable(0))
 		js_typeerror(J, "not a function");
 
 	js_copy(J, 0);
@@ -101,20 +101,20 @@ static void Fp_apply(js_State *J)
 			js_getindex(J, 2, i);
 	}
 
-	js_call(J, n);
+	J->call(n);
 }
 
 static void Fp_call(js_State *J)
 {
 	int i, top = js_gettop(J);
 
-	if (!js_iscallable(J, 0))
+	if (!J->iscallable(0))
 		js_typeerror(J, "not a function");
 
 	for (i = 0; i < top; ++i)
 		js_copy(J, i);
 
-	js_call(J, top - 2);
+	J->call(top - 2);
 }
 
 static void callbound(js_State *J)
@@ -137,7 +137,7 @@ static void callbound(js_State *J)
 	for (i = 1; i < top; ++i)
 		js_copy(J, i);
 
-	js_call(J, n + top - 1);
+	J->call(n + top - 1);
 }
 
 static void constructbound(js_State *J)
@@ -167,7 +167,7 @@ static void Fp_bind(js_State *J)
 	int i, top = js_gettop(J);
 	int n;
 
-	if (!js_iscallable(J, 0))
+	if (!J->iscallable(0))
 		js_typeerror(J, "not a function");
 
 	n = js_getlength(J, 0);

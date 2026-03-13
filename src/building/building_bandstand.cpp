@@ -25,6 +25,7 @@
 #include "sound/sound_building.h"
 #include "figure/figure.h"
 #include "grid/routing/routing_grids.h"
+#include "core/profiler.h"
 
 #include "js/js_game.h"
 
@@ -220,6 +221,7 @@ void building_bandstand::spawn_figure() {
 }
 
 bool building_bandstand::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
+    OZZY_PROFILER_FUNCTION()
     xstring imgs[] = { parts::booth, parts::stand_sn_n, parts::stand_sn_s, parts::stand_we_e, parts::stand_we_w };
     int image_id = map_image_at(tile);
     const auto it = std::find_if(std::begin(imgs), std::end(imgs), [&] (auto &p) { return first_img(p) == image_id; });
@@ -227,11 +229,13 @@ bool building_bandstand::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i p
 }
 
 bool building_bandstand::force_draw_height_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
+    OZZY_PROFILER_FUNCTION()
+
     xstring imgs[] = {parts::booth, parts::stand_sn_n, parts::stand_sn_s, parts::stand_we_e, parts::stand_we_w};
     int image_id = map_image_at(tile);
     const auto it = std::find_if(std::begin(imgs), std::end(imgs), [&] (auto &p) { return first_img(p) == image_id; });
     if (it != std::end(imgs)) {
-        auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
         command.image_id = image_id;
         command.pixel = pixel;
         command.mask = mask;

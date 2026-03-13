@@ -11,7 +11,7 @@
 
 #include <assert.h>
 
-static grid_xx grid_figures = {0, FS_UINT16};
+static grid_xx grid_figures(FS_UINT16);
 
 svector<figure_draw, 5000> g_figures_y_sort;
 
@@ -47,6 +47,7 @@ void map_figure_sort_by_y() {
         f->main_cached_pos = draw_pos;
 
         f->main_cached_pos = f->adjust_pixel_offset(f->main_cached_pos);
+        f->main_sort_pixel = f->main_cached_pos - f->crowd_pixel_offset() - vec2i(29, 15 + 8);
         f->is_main_drawn = false;
         f->is_cart_drawn = false;
         g_figures_y_sort.push_back({ f, f->main_cached_pos, false });
@@ -77,9 +78,10 @@ custom_span<figure_draw> map_figures_in_row(tile2i tile) {
     vec2i pixel_begin_scr = pixel_to_viewport(pixel_begin);
     vec2i pixel_end_scr = pixel_to_viewport(pixel_end);
 
-    if (pixel_end_scr.x < 0 || pixel_end_scr.y < 0 
-        || pixel_begin_scr.x > g_city_view.viewport.size_pixels.x
-        || pixel_begin_scr.y > g_city_view.viewport.size_pixels.y) {
+    const float scale = g_zoom.get_scale();
+    if (pixel_end_scr.x < 0 || pixel_end_scr.y < 0
+        || pixel_begin_scr.x * scale > g_city_view.viewport.size_pixels.x
+        || pixel_begin_scr.y * scale > g_city_view.viewport.size_pixels.y) {
         return {};
     }
 

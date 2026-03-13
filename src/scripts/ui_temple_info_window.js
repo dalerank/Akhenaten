@@ -74,12 +74,12 @@ function info_window_temple_common_init(window) {
     window.god_image.image = img_id.tid
 }
 
-[es=info_window_temple_init]
+[es=(info_window_temple, init)]
 function info_window_temple_on_init(window) {
     info_window_temple_common_init(window)
 }
 
-[es=info_window_temple_complex_init]
+[es=(info_window_temple_complex, init)]
 function info_window_temple_complex_on_init(window) {
     info_window_temple_common_init(window)
 }

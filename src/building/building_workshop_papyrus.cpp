@@ -34,7 +34,7 @@ bool building_papyrus_maker::draw_ornaments_and_animations_height(painter &ctx, 
     if (amount >= 0) {
         const auto &ranim = anim(animkeys().reeds);
 
-        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
         command.image_id = ranim.first_img() + amount;
         command.pixel = point + ranim.pos;
         command.mask = color_mask;
@@ -54,7 +54,7 @@ void building_papyrus_maker::on_place_checks() {
     construction_warnings warnings("#building_needs_reeds");
 
     const bool is_import_reeds = (city_resource_reeds.trade_status() == TRADE_STATUS_IMPORT);
-    
+
     warnings.add_if(!city_resource_reeds.can_produce(), "#build_reed_gatherer");
     warnings.add_if(!city_resource_reeds.can_import(true), "#setup_trade_route_to_import");
     warnings.add_if(!is_import_reeds, "#overseer_of_commerce_to_import");

@@ -67,14 +67,14 @@ static void jsB_String(js_State *J)
 
 static void Sp_toString(js_State *J)
 {
-	js_Object *self = js_toobject(J, 0);
+	js_Object *self = J->toobject(0);
 	if (self->type != JS_CSTRING) js_typeerror(J, "not a string");
 	js_pushliteral(J, self->u.s.string);
 }
 
 static void Sp_valueOf(js_State *J)
 {
-	js_Object *self = js_toobject(J, 0);
+	js_Object *self = J->toobject(0);
 	if (self->type != JS_CSTRING) js_typeerror(J, "not a string");
 	js_pushliteral(J, self->u.s.string);
 }
@@ -116,7 +116,7 @@ static void Sp_concat(js_State *J)
 
 	s = checkstring(J, 0);
 	n = strlen(s);
-	out = js_frame_alloc(J, n + 1);
+	out = (char*)js_frame_alloc(J, n + 1);
 	strcpy(out, s);
 
 	if (js_try(J)) {
@@ -128,7 +128,7 @@ static void Sp_concat(js_State *J)
 		s = js_tostring(J, i);
 		int old_n = n;
 		n += strlen(s);
-		char *new_out = js_frame_alloc(J, n + 1);
+		char *new_out = (char*)js_frame_alloc(J, n + 1);
 		memcpy(new_out, out, old_n + 1); /* copy including null terminator */
 		strcat(new_out, s);
 		out = new_out;
@@ -232,7 +232,7 @@ static void Sp_substring(js_State *J)
 static void Sp_toLowerCase(js_State *J)
 {
 	const char *src = checkstring(J, 0);
-	char *dst = js_frame_alloc(J, UTFmax * strlen(src) + 1);
+	char *dst = (char*)js_frame_alloc(J, UTFmax * strlen(src) + 1);
 	const char *s = src;
 	char *d = dst;
 	Rune rune;
@@ -254,7 +254,7 @@ static void Sp_toLowerCase(js_State *J)
 static void Sp_toUpperCase(js_State *J)
 {
 	const char *src = checkstring(J, 0);
-	char *dst = js_frame_alloc(J, UTFmax * strlen(src) + 1);
+	char *dst = (char *)js_frame_alloc(J, UTFmax * strlen(src) + 1);
 	const char *s = src;
 	char *d = dst;
 	Rune rune;
@@ -297,7 +297,7 @@ static void S_fromCharCode(js_State *J)
 	Rune c;
 	char *s, *p;
 
-	s = p = js_malloc(J, (top-1) * UTFmax + 1);
+	s = p = (char *)js_malloc(J, (top-1) * UTFmax + 1);
 
 	if (js_try(J)) {
 		js_free(J, s);
@@ -346,7 +346,7 @@ static void Sp_match(js_State *J)
 	a = text;
 	e = text + strlen(text);
 	while (a <= e) {
-		if (js_regexec(re->prog, a, &m, a > text ? REG_NOTBOL : 0))
+		if (js_regexec((Reprog*)re->prog, a, &m, a > text ? REG_NOTBOL : 0))
 			break;
 
 		b = m.sub[0].sp;
@@ -378,7 +378,7 @@ static void Sp_search(js_State *J)
 
 	re = js_toregexp(J, -1);
 
-	if (!js_regexec(re->prog, text, &m, 0))
+	if (!js_regexec((Reprog *)re->prog, text, &m, 0))
 		js_pushnumber(J, js_utfptrtoidx(text, m.sub[0].sp));
 	else
 		js_pushnumber(J, -1);
@@ -395,7 +395,7 @@ static void Sp_replace_regexp(js_State *J)
 	source = checkstring(J, 0);
 	re = js_toregexp(J, 1);
 
-	if (js_regexec(re->prog, source, &m, 0)) {
+	if (js_regexec((Reprog *)re->prog, source, &m, 0)) {
 		js_copy(J, 0);
 		return;
 	}
@@ -406,14 +406,14 @@ loop:
 	s = m.sub[0].sp;
 	n = m.sub[0].ep - m.sub[0].sp;
 
-	if (js_iscallable(J, 2)) {
+	if (J->iscallable(2)) {
 		js_copy(J, 2);
-		js_pushundefinedthis(J);
+		J->pushundefined();
 		for (x = 0; m.sub[x].sp; ++x) /* arg 0..x: substring and subexps that matched */
 			js_pushlstring(J, m.sub[x].sp, m.sub[x].ep - m.sub[x].sp);
 		js_pushnumber(J, s - source); /* arg x+2: offset within search string */
 		js_copy(J, 0); /* arg x+3: search string */
-		js_call(J, 2 + x);
+		J->call(2 + x);
 		r = js_tostring(J, -1);
 		js_putm(J, &sb, source, s);
 		js_puts(J, &sb, r);
@@ -467,7 +467,7 @@ loop:
 			else
 				goto end;
 		}
-		if (!js_regexec(re->prog, source, &m, REG_NOTBOL))
+		if (!js_regexec((Reprog *)re->prog, source, &m, REG_NOTBOL))
 			goto loop;
 	}
 
@@ -500,13 +500,13 @@ static void Sp_replace_string(js_State *J)
 	}
 	n = strlen(needle);
 
-	if (js_iscallable(J, 2)) {
+	if (J->iscallable(2)) {
 		js_copy(J, 2);
-		js_pushundefinedthis(J);
+		J->pushundefined();
 		js_pushlstring(J, s, n); /* arg 1: substring that matched */
 		js_pushnumber(J, s - source); /* arg 2: offset within search string */
 		js_copy(J, 0); /* arg 3: search string */
-		js_call(J, 3);
+		J->call(3);
 		r = js_tostring(J, -1);
 		js_putm(J, &sb, source, s);
 		js_puts(J, &sb, r);
@@ -570,7 +570,7 @@ static void Sp_split_regexp(js_State *J)
 
 	/* splitting the empty string */
 	if (e == text) {
-		if (js_regexec(re->prog, text, &m, 0)) {
+		if (js_regexec((Reprog *)re->prog, text, &m, 0)) {
 			if (len == limit) return;
 			js_pushliteral(J, "");
 			js_setindex(J, -2, 0);
@@ -580,7 +580,7 @@ static void Sp_split_regexp(js_State *J)
 
 	p = a = text;
 	while (a < e) {
-		if (js_regexec(re->prog, a, &m, a > text ? REG_NOTBOL : 0))
+		if (js_regexec((Reprog *)re->prog, a, &m, a > text ? REG_NOTBOL : 0))
 			break; /* no match */
 
 		b = m.sub[0].sp;

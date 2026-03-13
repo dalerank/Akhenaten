@@ -9,7 +9,7 @@ info_window_water_supply {
     })
 }
 
-[es=info_window_water_supply_init]
+[es=(info_window_water_supply, init)]
 function info_window_water_supply_warning_text(window) {
     var b = city.get_building(window.bid)
     var reason = { group:b.meta_text_id, id:1 }

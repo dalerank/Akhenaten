@@ -4,6 +4,7 @@
 
 #include "js/js_constants.h"
 #include "js/js_struct.h"
+#include "mujs/jsi.h"
 #include "core/bstring.h"
 #include "core/core.h"
 #include "core/typename.h"
@@ -14,6 +15,7 @@
 #include "grid/grid.h"
 #include "grid/point.h"
 
+#include <algorithm>
 #include <vector>
 #include <string>
 #include <optional>
@@ -71,10 +73,27 @@ namespace js_helpers {
         return xstring(js_tostring(J, idx));
     }
 
+    /** Reference to a JS function stored in the registry (for callbacks). */
+    struct js_function_ref {
+        xstring ref;
+        bool empty() const { return ref.empty(); }
+    };
+
+    template<>
+    inline js_function_ref js_to_value<js_function_ref>(js_State *J, int idx) {
+        if (!J->iscallable(idx)) {
+            return js_function_ref{};
+        }
+        js_copy(J, idx);
+        pcstr r = js_ref(J);
+        js_pop(J, 1);
+        return js_function_ref{xstring(r)};
+    }
+
     template<>
     inline vec2i js_to_value<vec2i>(js_State *J, int idx) {
         vec2i result;
-        if (js_isobject(J, idx) && !js_isarray(J, idx)) {
+        if (J->isobject(idx) && !js_isarray(J, idx)) {
             js_getproperty(J, idx, "x"); result.x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
             js_getproperty(J, idx, "y"); result.y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
         } else if (js_isarray(J, idx)) {
@@ -87,7 +106,7 @@ namespace js_helpers {
     template<>
     inline tile2i js_to_value<tile2i>(js_State *J, int idx) {
         int x = 0, y = 0;
-        if (js_isobject(J, idx) && !js_isarray(J, idx)) {
+        if (J->isobject(idx) && !js_isarray(J, idx)) {
             js_getproperty(J, idx, "x"); x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
             js_getproperty(J, idx, "y"); y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
         } else if (js_isarray(J, idx)) {
@@ -113,7 +132,7 @@ namespace js_helpers {
             } else {
                 return bvariant((float)num);
             }
-        } else if (js_isobject(J, idx) && !js_isarray(J, idx)) {
+        } else if (J->isobject(idx) && !js_isarray(J, idx)) {
             // Check if it's a vec2i-like object with x and y properties
             js_getproperty(J, idx, "x");
             bool has_x = !js_isundefined(J, -1);
@@ -258,7 +277,7 @@ namespace js_helpers {
         }
         case bvariant::etype_none:
         default:
-            js_pushundefined(J);
+            J->pushundefined();
             break;
     }
     }
@@ -273,12 +292,12 @@ namespace js_helpers {
         if (value.has_value()) {
             js_push_bvariant(J, value.value());
         } else {
-            js_pushundefined(J);
+            J->pushundefined();
         }
     }
 
     inline void js_push_void(js_State *J) {
-        js_pushundefined(J);
+        J->pushundefined();
     }
 
     template<typename Func>
@@ -305,7 +324,7 @@ namespace js_helpers {
     // Convert JS object to bvariant_map
     inline bvariant_map js_object_to_bvariant_map(js_State *J, int idx) {
         bvariant_map result;
-        if (!js_isobject(J, idx) || js_isarray(J, idx)) {
+        if (!J->isobject(idx) || js_isarray(J, idx)) {
             return result;
         }
 
@@ -319,7 +338,7 @@ namespace js_helpers {
                 value = bvariant(js_toboolean(J, -1));
             } else if (js_isstring(J, -1)) {
                 value = bvariant(xstring(js_tostring(J, -1)));
-            } else if (js_isnumber(J, -1) || js_iscnumber(J, 1)) {
+            } else if (js_isnumber(J, -1) || js_iscnumber(J, -1)) {
                 double num = js_tonumber(J, -1);
                 // Try to preserve integer if possible
                 if (num == (int)num) {
@@ -411,14 +430,14 @@ struct js_function_traits<R(C:: *)(Args...)> {
 template<typename C, typename R, typename... Args>
 struct js_function_traits<R(C:: *)(Args...) const> : js_function_traits<R(C:: *)(Args...)> {};
 
-#define ANK_FUNCTION_NAMED(fname, func) \
-    ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##fname); \
-    void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { \
-        js_getglobal(J, #fname); bool exists = js_iscallable(J, -1); js_pop(J, 1); \
-        if (!exists) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 0); } \
-    } void permanent_js2cpp_callback_##fname(js_State *J) { \
-        constexpr bool is_void = (std::is_void_v<js_function_traits<decltype(&func)>::return_type>); \
-        js_helpers::js_invoke_and_push<is_void>(J, [&]() { return func(); }); \
+#define ANK_FUNCTION_NAMED(fname, func)                                                                         \
+    ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##fname);                                          \
+    void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) {   \
+        js_getglobal(J, #fname); bool exists = J->iscallable(-1); js_pop(J, 1);                                 \
+        if (!exists) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 0); }             \
+    } void permanent_js2cpp_callback_##fname(js_State *J) {                                                     \
+        constexpr bool is_void = (std::is_void_v<js_function_traits<decltype(&func)>::return_type>);            \
+        js_helpers::js_invoke_and_push<is_void>(J, [&]() { return func(); });                                   \
     }
 
 #define ANK_FUNCTION(func) \
@@ -444,7 +463,7 @@ template<auto Func>
 inline void ank_register_callback_1(js_State* J, pcstr name) {
     auto callback_impl = [](js_State *J) { ank_function_1_callback_impl<Func>(J); };
     js_getglobal(J, name);
-    bool exists = js_iscallable(J, -1);
+    bool exists = J->iscallable(-1);
     js_pop(J, 1);
     if (!exists) {
         REGISTER_GLOBAL_FUNCTION(J, callback_impl, name, 1);
@@ -453,7 +472,7 @@ inline void ank_register_callback_1(js_State* J, pcstr name) {
 
 #define ANK_FUNCTION_1(func) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##func); \
-    inline void register_js2cpp_callback_##func(js_State* J) { ank_register_callback_1<&func>(J, #func); }
+    inline void register_js2cpp_callback_##func(js_State* J) { OZZY_PROFILER_FUNCTION(); ank_register_callback_1<&func>(J, #func); }
 
 // Template function version of ANK_FUNCTION_2
 // This template function handles the callback logic (extracted from macro)
@@ -476,7 +495,7 @@ template<auto Func>
 inline void ank_register_callback_2(js_State* J, pcstr name) {
     auto callback_impl = [](js_State *J) { ank_function_2_callback_impl<Func>(J); };
     js_getglobal(J, name);
-    bool exists = js_iscallable(J, -1);
+    bool exists = J->iscallable(-1);
     js_pop(J, 1);
     if (!exists) {
         REGISTER_GLOBAL_FUNCTION(J, callback_impl, name, 2);
@@ -485,7 +504,7 @@ inline void ank_register_callback_2(js_State* J, pcstr name) {
 
 #define ANK_FUNCTION_2(func) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##func); \
-    inline void register_js2cpp_callback_##func(js_State* J) { ank_register_callback_2<&func>(J, #func); }
+    inline void register_js2cpp_callback_##func(js_State* J) { OZZY_PROFILER_FUNCTION(); ank_register_callback_2<&func>(J, #func); }
 
 // Template function version of ANK_FUNCTION_3
 // This template function handles the callback logic (extracted from macro)
@@ -510,7 +529,7 @@ template<auto Func>
 inline void ank_register_callback_3(js_State* J, pcstr name) {
     auto callback_impl = [](js_State *J) { ank_function_3_callback_impl<Func>(J); };
     js_getglobal(J, name);
-    bool exists = js_iscallable(J, -1);
+    bool exists = J->iscallable(-1);
     js_pop(J, 1);
     if (!exists) {
         REGISTER_GLOBAL_FUNCTION(J, callback_impl, name, 3);
@@ -519,7 +538,7 @@ inline void ank_register_callback_3(js_State* J, pcstr name) {
 
 #define ANK_FUNCTION_3(func) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##func); \
-    inline void register_js2cpp_callback_##func(js_State* J) { ank_register_callback_3<&func>(J, #func); }
+    inline void register_js2cpp_callback_##func(js_State* J) { OZZY_PROFILER_FUNCTION(); ank_register_callback_3<&func>(J, #func); }
 
 // Template function version of ANK_FUNCTION_4
 // This template function handles the callback logic (extracted from macro)
@@ -546,7 +565,7 @@ template<auto Func>
 inline void ank_register_callback_4(js_State* J, pcstr name) {
     auto callback_impl = [](js_State *J) { ank_function_4_callback_impl<Func>(J); };
     js_getglobal(J, name);
-    bool exists = js_iscallable(J, -1);
+    bool exists = J->iscallable(-1);
     js_pop(J, 1);
     if (!exists) {
         REGISTER_GLOBAL_FUNCTION(J, callback_impl, name, 4);
@@ -555,7 +574,7 @@ inline void ank_register_callback_4(js_State* J, pcstr name) {
 
 #define ANK_FUNCTION_4(func) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##func); \
-    inline void register_js2cpp_callback_##func(js_State* J) { ank_register_callback_4<&func>(J, #func); }
+    inline void register_js2cpp_callback_##func(js_State* J) { OZZY_PROFILER_FUNCTION(); ank_register_callback_4<&func>(J, #func); }
 
 // Template function version of ANK_FUNCTION_5
 // This template function handles the callback logic (extracted from macro)
@@ -584,7 +603,7 @@ template<auto Func>
 inline void ank_register_callback_5(js_State* J, pcstr name) {
     auto callback_impl = [](js_State *J) { ank_function_5_callback_impl<Func>(J); };
     js_getglobal(J, name);
-    bool exists = js_iscallable(J, -1);
+    bool exists = J->iscallable(-1);
     js_pop(J, 1);
     if (!exists) {
         REGISTER_GLOBAL_FUNCTION(J, callback_impl, name, 5);
@@ -593,7 +612,7 @@ inline void ank_register_callback_5(js_State* J, pcstr name) {
 
 #define ANK_FUNCTION_5(func) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##func); \
-    inline void register_js2cpp_callback_##func(js_State* J) { ank_register_callback_5<&func>(J, #func); }
+    inline void register_js2cpp_callback_##func(js_State* J) { OZZY_PROFILER_FUNCTION(); ank_register_callback_5<&func>(J, #func); }
 
 // Template function version of ANK_FUNCTION_6
 // This template function handles the callback logic (extracted from macro)
@@ -624,7 +643,7 @@ template<auto Func>
 inline void ank_register_callback_6(js_State* J, pcstr name) {
     auto callback_impl = [](js_State *J) { ank_function_6_callback_impl<Func>(J); };
     js_getglobal(J, name);
-    bool exists = js_iscallable(J, -1);
+    bool exists = J->iscallable(-1);
     js_pop(J, 1);
     if (!exists) {
         REGISTER_GLOBAL_FUNCTION(J, callback_impl, name, 6);
@@ -633,7 +652,7 @@ inline void ank_register_callback_6(js_State* J, pcstr name) {
 
 #define ANK_FUNCTION_6(func) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##func); \
-    inline void register_js2cpp_callback_##func(js_State* J) { ank_register_callback_6<&func>(J, #func); }
+    inline void register_js2cpp_callback_##func(js_State* J) { OZZY_PROFILER_FUNCTION(); ank_register_callback_6<&func>(J, #func); }
 
 // Template function version of ANK_FUNCTION_7
 // This template function handles the callback logic (extracted from macro)
@@ -666,7 +685,7 @@ template<auto Func>
 inline void ank_register_callback_7(js_State* J, pcstr name) {
     auto callback_impl = [](js_State *J) { ank_function_7_callback_impl<Func>(J); };
     js_getglobal(J, name);
-    bool exists = js_iscallable(J, -1);
+    bool exists = J->iscallable(-1);
     js_pop(J, 1);
     if (!exists) {
         REGISTER_GLOBAL_FUNCTION(J, callback_impl, name, 7);
@@ -675,7 +694,7 @@ inline void ank_register_callback_7(js_State* J, pcstr name) {
 
 #define ANK_FUNCTION_7(func) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##func); \
-    inline void register_js2cpp_callback_##func(js_State* J) { ank_register_callback_7<&func>(J, #func); }
+    inline void register_js2cpp_callback_##func(js_State* J) { OZZY_PROFILER_FUNCTION(); ank_register_callback_7<&func>(J, #func); }
 
 // Template function version of ANK_FUNCTION_UNIFIED
 // This template function handles the callback logic (extracted from macro)
@@ -695,7 +714,7 @@ template<auto Func>
 inline void ank_register_callback_unified(js_State* J, pcstr name) {
     auto callback_impl = [](js_State *J) { ank_function_unified_callback_impl<Func>(J); };
     js_getglobal(J, name);
-    bool exists = js_iscallable(J, -1);
+    bool exists = J->iscallable(-1);
     js_pop(J, 1);
     if (!exists) {
         REGISTER_GLOBAL_FUNCTION(J, callback_impl, name, 1);
@@ -733,22 +752,28 @@ void js_register_ui_objects(js_State *J);
 void js_register_mission_vars(const settings_vars_t &vars);
 void js_unref_function(xstring onclick_ref);
 void js_call_function(xstring onclick_ref);
+void js_call_function_bool(xstring js_ref, bool param);
 pcstr js_call_function_with_result(xstring js_ref, int param1, int param2);
+int js_game_emit(js_State *J, pcstr event_name);
 void js_register_game_handlers(xstring missionid);
 void js_call_event_handlers(const xstring &event_name, const bvariant_map &object);
+bool js_has_event_handlers(const xstring &event_name);
 void js_register_entity_systems();
 void js_register_console_command(js_State *J);
 
-template<typename T, typename S>
-inline void js_event(const T &ev, const S& evname_str) {
-    auto js_j = bvariant_map::acquire_from_pool();
+template<typename T>
+inline void js_event(const T &ev, const xstring& evname_str) {
+    if (!js_has_event_handlers(evname_str)) {
+        return;
+    }
+
+    bvariant_map::scoped js_j;
     js_helper::writer(*js_j, ev);
-    js_call_event_handlers(evname_str.c_str(), *js_j);
-    bvariant_map::return_to_pool(js_j);
+    js_call_event_handlers(evname_str, *js_j);
 }
 
 namespace js_helpers {
-    inline pcstr es2str(pcstr es) { return es; }
+    inline bstring64 es2str(pcstr es) { return { es }; }
 
     template<typename ES>
     inline bstring64 es2str(const ES &) {
@@ -756,21 +781,33 @@ namespace js_helpers {
         auto buf = type_enclosing_function_name(esname.value.data());
         return bstring64(buf);
     }
+
+    template<size_t S = 64, typename ... ES>
+    bstring<S> es_hash_str(ES ... es) {
+        hvector<bstring<S>, 4> parts;
+        (parts.push_back(es2str(es).c_str()), ...);
+        auto cstr_compare = [] (pcstr s1, pcstr s2) { return strcmp(s1, s2) < 0; };
+        std::sort(parts.begin(), parts.end(), cstr_compare);
+        bstring<S> result;
+        bool first = true;
+        for (const auto& p : parts) {
+            if (!first) {
+                result.cat("+");
+            }
+            result.cat(p.c_str());
+            first = false;
+        }
+        return result;
+    }
 }
 
-template<typename T, typename ES1, typename ES2>
-inline void js_event(const T &ev, ES1 es1, ES2 es2) {
-    bstring64 es1s = js_helpers::es2str(es1);
-    bstring64 es2s = js_helpers::es2str(es2);
-    if (strcmp(es1s, es2s) <= 0) {
-        js_event(ev, bstring64(es1s.c_str(), "+", es2s.c_str()));
-    } else {
-        js_event(ev, bstring64(es2s.c_str(), "+", es1s.c_str()));
-    }
+template<typename T, typename ... ES>
+inline void js_event(const T &ev, ES ... es) {
+    js_event(ev, xstring(js_helpers::es_hash_str<64>(es...)));
 }
 
 template<typename T>
 inline void js_event(const T &ev) {
     type_name_holder<T> evname;
-    js_event(ev, type_simplified_name(evname.value.data()));
+    js_event(ev, xstring(type_simplified_name(evname.value.data())));
 }

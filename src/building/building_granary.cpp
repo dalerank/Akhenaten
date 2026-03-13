@@ -25,10 +25,8 @@
 #include "window/building/distribution.h"
 #include "city/city_labor.h"
 #include "figuretype/figure_storageyard_cart.h"
-#include "dev/debug.h"
 #include "js/js_game.h"
 #include <cmath>
-#include <iostream>
 
 const int ONE_LOAD = 100;
 const int CURSE_LOADS = 16;
@@ -37,9 +35,6 @@ const int FULL_GRANARY = 3200;
 const int THREEQUARTERS_GRANARY = 2400;
 const int HALF_GRANARY = 1600;
 const int QUARTER_GRANARY = 800;
-
-declare_console_command(add_chickpeas, game_cheat_add_resource<RESOURCE_CHICKPEAS>);
-declare_console_command(add_gamemeat, game_cheat_add_resource<RESOURCE_GAMEMEAT>);
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_granary);
 
@@ -519,7 +514,7 @@ void building_granary_draw_anim(building &b, vec2i point, tile2i tile, color mas
 }
 
 void building_granary::on_create(int orientation) {
-    runtime_data().resource_stored[RESOURCE_NONE] = capacity_stored();
+    runtime_data().resource_stored[RESOURCE_NONE] = current_params().max_capacty_stored;
     base.storage_id = building_storage_create(BUILDING_GRANARY);
 }
 
@@ -529,7 +524,7 @@ void building_granary::on_post_load() {
 
 void building_granary::update_day() {
     building_impl::update_day();
-    runtime_data().resource_stored[RESOURCE_NONE] = capacity_stored() - total_stored();
+    runtime_data().resource_stored[RESOURCE_NONE] = current_params().max_capacty_stored - total_stored();
 }
 
 void building_granary::bind_dynamic(io_buffer *iob, size_t version) {
@@ -542,20 +537,13 @@ void building_granary::bind_dynamic(io_buffer *iob, size_t version) {
     }
 }
 
-void building_granary::on_place_checks() {
-    construction_warnings warnings;
-    const bool has_bazaar = g_city.buildings.count_active(BUILDING_BAZAAR) > 0;
-
-    warnings.add_if(!has_bazaar, "#build_bazaars_to_distribute_food");
-}
-
 void building_granary::spawn_figure() {
     check_labor_problem();
     tile2i road = map_get_road_access_tile(tile(), size());
     if (!road.valid()) {
         return;
     }
-    
+
     common_spawn_labor_seeker(current_params().min_houses_coverage);
     if (has_figure_of_type(0, FIGURE_STORAGEYARD_CART)) {
         return;
@@ -609,7 +597,7 @@ void building_granary::draw_stores(vec2i point, color color_mask, painter &ctx) 
             for (int spot = last_spot_filled; spot < last_spot_filled + spots_filled; spot++) {
                 // draw sprite on each granary "spot"
                 vec2i spot_pos = res_image_offsets[spot];
-                auto &command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+                auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
                 command.image_id = resources_id + r;
                 command.pixel = point + spot_pos + begin_spot_pos;
                 command.mask = color_mask;

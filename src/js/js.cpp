@@ -63,8 +63,8 @@ declare_console_command_p(reload_scripts){
 
 static void js_vm_log_stacktrace(js_State *J) {
     // Try to get stack trace from error object if it's an Error
-    if (js_isobject(J, -1)) {
-        if (js_hasproperty(J, -1, "stackTrace")) {
+    if (J->isobject(-1)) {
+        if (J->hasproperty(-1, "stackTrace")) {
             js_getproperty(J, -1, "stackTrace");
             if (js_isstring(J, -1)) {
                 const char *stack_trace = js_tostring(J, -1);
@@ -132,10 +132,10 @@ static void js_vm_dump_stack(js_State *J) {
             } else {
                 value_desc.printf("string: \"%s\"", str ? str : "");
             }
-        } else if (js_isobject(J, idx)) {
+        } else if (J->isobject(idx)) {
             if (js_isarray(J, idx)) {
                 value_desc.printf("array (length: %d)", js_getlength(J, idx));
-            } else if (js_iscallable(J, idx)) {
+            } else if (J->iscallable(idx)) {
                 value_desc = "function";
             } else {
                 // Try to get some info about the object
@@ -186,14 +186,14 @@ int js_vm_trypcall(js_State *J, int params) {
         return 0;
     }
 
-    int error = js_pcall(J, params);
+    int error = J->pcall(params);
     if (error) {
         vm.have_error = 1;
-        const char *error_msg = js_tostring(J, -1);
+        pcstr error_msg = js_tostring(J, -1);
         
         // Log error type if it's an Error object
-        if (js_isobject(J, -1)) {
-            if (js_hasproperty(J, -1, "name")) {
+        if (J->isobject(-1)) {
+            if (J->hasproperty(-1, "name")) {
                 js_getproperty(J, -1, "name");
                 const char *error_name = js_tostring(J, -1);
                 logs::info("!!! Error type: %s", error_name ? error_name : "<unknown>");
@@ -522,6 +522,7 @@ void js_reset_vm_state() {
     js_setframealloc(vm.J, js_frame_alloc_wrapper, nullptr);
     js_atpanic(vm.J, js_game_panic);
     js_registerimport(vm.J, js_game_import);
+    js_registeremit(vm.J, js_game_emit);
 
     js_register_vm_functions(vm.J);
     js_register_game_functions(vm.J);

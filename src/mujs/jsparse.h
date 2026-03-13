@@ -38,6 +38,7 @@ enum js_AstType
 
 	EXP_DELETE,
 	EXP_IMPORT,
+	EXP_EMIT,
 	EXP_VOID,
 	EXP_TYPEOF,
 	EXP_PREINC,

@@ -262,7 +262,7 @@ static buffer* load_external_data(const image_t &img) {
 }
 
 static int isometric_calculate_top_height(image_t &img) {
-    int top_height = img.isometric_top_height();
+    const int top_height = img.isometric_top_height;
     int tri_rows = img.height - top_height - HALF_TILE_HEIGHT_PIXELS * img.isometric_size() - 1;
 
     for (int d = 0; d < tri_rows; ++d) {  // diagonals
@@ -578,7 +578,6 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
         img.unk16 = -1;
         img.unk17 = -1;
         img.unk18 = -1;
-        img.unk19 = -1;
         img.unk20 = -1;
 
         image_packer_rect* rect = &packer.rects[atlas_rect_id];
@@ -711,8 +710,11 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
 }
 
 buffer* pak_buf = new buffer(MAX_FILE_SCRATCH_SIZE);
+std::mutex pak_buf_mutex;
 bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     OZZY_PROFILER_FUNCTION();
+
+    std::scoped_lock lock(pak_buf_mutex);
 
     if (g_args.is_log_resources()) {
         logs::info("VFS: Loading pak '%s' (starting_index=%d)", pak_name, starting_index);
@@ -862,6 +864,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
         img.unk12 = pak_buf->read_i8();
         img.bmp.group_id = pak_buf->read_u8();
         img.bmp.name = bmp_names[img.bmp.group_id];
+        img.isometric_top_height = img.calc_isometric_top_height();
 
         if (img.bmp.group_id != bmp_last_group_id) {
             last_idx_in_bmp = 1; // new bitmap name, reset bitmap grouping index
@@ -914,7 +917,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
         img.unk17 = pak_buf->read_i8();
         img.unk18 = pak_buf->read_i8();
         if (version >= 214) {
-            img.unk19 = pak_buf->read_i32();
+            int tmp = pak_buf->read_i32();
             img.unk20 = pak_buf->read_i32();
         }
 

@@ -257,7 +257,7 @@ static void setup() {
     platform_init_cursors(g_args.get_cursor_scale_percentage()); // this has to come after platform_screen_create,
                                                                // otherwise it fails on Nintendo Switch
     image_data_init();                                         // image paks structures init
-                                                               
+
     pcstr base_path = vfs::platform_file_manager_get_base_path();
     vfs::path scripts_base_path(base_path, vfs::SCRIPTS_FOLDER);
     js_vm_add_scripts_folder(scripts_base_path);    // setup script engine data scripts folder
@@ -277,15 +277,15 @@ static void setup() {
         exit(2);
     }
 
-    // Set language from command line if specified (after game_features::load() in check_valid())
-    if (!g_args.get_language().empty()) {
-        game_features::gameopt_language.set(g_args.get_language());
+    config::refresh(g_config_arch);
+
+    if (platform.is_emscripten()) {
+        game_features::gameopt_language = "en";
+    } else if (!g_args.get_language().empty()) {
         logs::info("Language set from command line: %s", g_args.get_language().c_str());
-        // Reload language to apply the change
+        game_features::gameopt_language = g_args.get_language();
         game.reload_language();
     }
-
-    config::refresh(g_config_arch);
 }
 
 static void teardown() {

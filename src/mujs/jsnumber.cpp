@@ -14,7 +14,7 @@ static void jsB_Number(js_State *J)
 
 static void Np_valueOf(js_State *J)
 {
-	js_Object *self = js_toobject(J, 0);
+	js_Object *self = J->toobject(0);
 	if (self->type != JS_CNUMBER) js_typeerror(J, "not a number");
 	js_pushnumber(J, self->u.number);
 }
@@ -22,7 +22,7 @@ static void Np_valueOf(js_State *J)
 static void Np_toString(js_State *J)
 {
 	char buf[32];
-	js_Object *self = js_toobject(J, 0);
+	js_Object *self = J->toobject(0);
 	int radix = js_isundefined(J, 1) ? 10 : js_tointeger(J, 1);
 	if (self->type != JS_CNUMBER) js_typeerror(J, "not a number");
 	if (radix < 2 || radix > 36)
@@ -54,7 +54,7 @@ static void numtostr(js_State *J, const char *fmt, int w, double n)
 
 static void Np_toFixed(js_State *J)
 {
-	js_Object *self = js_toobject(J, 0);
+	js_Object *self = J->toobject(0);
 	int width = js_tointeger(J, 1);
 	if (self->type != JS_CNUMBER) js_typeerror(J, "not a number");
 	numtostr(J, "%.*f", width, self->u.number);
@@ -62,7 +62,7 @@ static void Np_toFixed(js_State *J)
 
 static void Np_toExponential(js_State *J)
 {
-	js_Object *self = js_toobject(J, 0);
+	js_Object *self = J->toobject(0);
 	int width = js_tointeger(J, 1);
 	if (self->type != JS_CNUMBER) js_typeerror(J, "not a number");
 	numtostr(J, "%.*e", width, self->u.number);
@@ -70,7 +70,7 @@ static void Np_toExponential(js_State *J)
 
 static void Np_toPrecision(js_State *J)
 {
-	js_Object *self = js_toobject(J, 0);
+	js_Object *self = J->toobject(0);
 	int width = js_tointeger(J, 1);
 	if (self->type != JS_CNUMBER) js_typeerror(J, "not a number");
 	numtostr(J, "%.*g", width, self->u.number);

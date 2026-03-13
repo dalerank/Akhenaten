@@ -22,6 +22,7 @@
 #include "graphics/window.h"
 #include "graphics/screenshot.h"
 #include "io/gamestate/boilerplate.h"
+#include "core/profiler.h"
 #include "game/game.h"
 
 pcstr __widget_top_menu_new_game(int, int) {

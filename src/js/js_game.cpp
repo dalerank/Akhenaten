@@ -15,9 +15,14 @@
 #include "io/gamefiles/lang.h"
 #include "platform/version.hpp"
 #include "graphics/screen.h"
+#include "core/app.h"
 #include "game/game.h"
 #include "game/mission.h"
-
+#include "game/game_events.h"
+#include "game/settings.h"
+#include "city/city_finance.h"
+#include "io/gamestate/boilerplate.h"
+#include "core/profiler.h"
 #include "js.h"
 #include "mujs/mujs.h"
 #include "mujs/jsi.h"
@@ -38,7 +43,7 @@ void js_log_info_native(js_State *J) {
     } else {
         logs::info("%s", js_tostring(J, 1));
     }
-    js_pushundefined(J);
+    J->pushundefined();
 }
 
 void js_log_warn_native(js_State *J) {
@@ -47,7 +52,7 @@ void js_log_warn_native(js_State *J) {
     } else {
         logs::info("WARN: %s", js_tostring(J, 1));
     }
-    js_pushundefined(J);
+    J->pushundefined();
 }
 
 void js_loc_native(js_State *J) {
@@ -84,7 +89,7 @@ void js_game_get_image(js_State *J) {
         image_desc desc;
         desc.path = path;
         tid = desc.tid();
-    } else if (js_isobject(J, 1) && !js_isarray(J, 1)) {
+    } else if (J->isobject(1) && !js_isarray(J, 1)) {
         js_getproperty(J, 1, "pack");
         int16_t pack = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
         js_pop(J, 1);
@@ -124,7 +129,18 @@ void js_game_get_image(js_State *J) {
     js_pushnumber(J, img->height); js_setproperty(J, -2, "height");
 }
 
+bool js_has_event_handlers(const xstring &event_name) {
+    auto it = event_type_handlers.find(event_name);
+    return (it != event_type_handlers.end());
+}
+
+static const pcstr prop_names[] = {
+    "text", "enabled", "readonly", "font", "text_color", "image", "selected", "tooltip"
+};
+
 void js_call_event_handlers(const xstring &event_name, const bvariant_map &object) {
+    OZZY_PROFILER_SECTION(_, event_name.c_str())
+
     auto it = event_type_handlers.find(event_name);
     if (it == event_type_handlers.end()) {
         return;
@@ -137,13 +153,16 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
 
     const event_handlers &handlers = it->second;
     for (const auto &handlerName : handlers) {
-        const char *funcname = handlerName.c_str();
+        pcstr funcname = handlerName.c_str();
+
+        OZZY_PROFILER_SECTION(_, funcname)
 
         int savetop = js_gettop(J);
         js_getglobal(J, funcname);
 
-        verify_no_crash(js_iscallable(J, -1));
-        if (!js_iscallable(J, -1)) {
+        bool iscallable = J->iscallable(-1);
+        verify_no_crash(iscallable);
+        if (!iscallable) {
             logs::info("JS event handler '%s' is not callable, skipping", funcname);
             js_pop(J, 1);
             continue;
@@ -153,16 +172,16 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
 
         js_newobject(J);
 
-        // First pass: add regular properties
-        bool has_ui_elements = false;
+        // First pass: add regular properties and collect UI element IDs
+        hvector<bstring64, 32> ui_element_ids;
         for (const auto &kv : object) {
             const xstring &key = kv.first;
             const bvariant &val = kv.second;
 
-            // Skip UI element markers in first pass
+
             bstring64 keystr = key.c_str();
             if (keystr.starts_with("__ui_elem_")) {
-                has_ui_elements = true;
+                ui_element_ids.push_back(keystr.substr(10, -1));
                 continue;
             }
 
@@ -190,43 +209,42 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
                 break;
             case bvariant::etype_none:
             default:
-                js_pushundefined(J);
+                J->pushundefined();
                 break;
             }
 
             js_setproperty(J, -2, key.c_str());
         }
 
-        if (has_ui_elements) {
-            for (const auto &kv : object) {
-                const xstring &key = kv.first;
-                const bvariant &val = kv.second;
-
-                bstring64 keystr = key.c_str();
-                if (keystr.starts_with("__ui_elem_")) {
-                    auto element_id = keystr.substr(10, -1); // Remove "__ui_elem_" prefix
-
-                    // Call helper function to create proxy object
-                    js_getglobal(J, "ui_create_element_proxy");
-                    verify_no_crash(js_iscallable(J, -1));
-                    js_pushnull(J);  // 'this' context
+        if (!ui_element_ids.empty()) {
+            OZZY_PROFILER_SECTION(_, "has_ui_elements")
+            // Stack: event_obj at -1. Get shared accessors once (used by all proxies).
+            js_getglobal(J, "__ui_proxy_accessors");
+            if (J->isobject(-1)) {
+                for (const auto &element_id : ui_element_ids) {
+                    // Stack: event_obj (-2), accessors (-1). Create proxy and set event_obj[element_id].
+                    js_newobject(J);
                     js_pushstring(J, element_id.c_str());
-
-                    int result = js_pcall(J, 1);
-                    if (result != 0) {
-                        logs::error("JS ui_create_element_proxy() callback error: %s", js_tostring(J, -1));
+                    js_setproperty(J, -2, "id");
+                    for (pcstr name : prop_names) {
+                        js_getproperty(J, -2, name);
+                        js_getindex(J, -1, 0);
+                        js_getindex(J, -2, 1);
+                        js_defaccessor(J, -4, name, 0);
                         js_pop(J, 1);
-                        continue;
                     }
-
-                    // Set the element as property (without __ui_elem_ prefix)
-                    js_setproperty(J, -2, element_id.c_str());
+                    js_setproperty(J, -3, element_id.c_str());
                 }
             }
+            js_pop(J, 1); // __ui_proxy_accessors
         }
 
         // Call with 1 argument (the object)
-        int ok = js_vm_trypcall(J, 1);
+        int ok;
+        {
+            OZZY_PROFILER_SECTION(_, "function_call")
+            ok = js_vm_trypcall(J, 1);
+        }
         if (!ok) {
             logs::info("Fatal error on call function %s", funcname);
         }
@@ -400,6 +418,9 @@ void __game_increase_scroll_speed() { game.increase_scroll_speed(); } ANK_FUNCTI
 void __game_decrease_scroll_speed() { game.decrease_scroll_speed(); } ANK_FUNCTION(__game_decrease_scroll_speed)
 void __game_set_game_speed(int v) { game.game_speed = v; } ANK_FUNCTION_1(__game_set_game_speed)
 void __game_set_scroll_speed(int v) { game.scroll_speed = v; } ANK_FUNCTION_1(__game_set_scroll_speed)
+void __game_request_exit() { app_request_exit(); } ANK_FUNCTION(__game_request_exit)
+void __game_set_player_name(pcstr name) { g_settings.set_player_name((const uint8_t *)name); } ANK_FUNCTION_1(__game_set_player_name)
+bool __game_load_savegame(pcstr filename) { return GamestateIO::load_savegame(filename); } ANK_FUNCTION_1(__game_load_savegame)
 
 std::optional<bvariant> __game_get_property(pcstr property) {
     return archive_helper::get(game, property, true);
@@ -441,11 +462,33 @@ void js_call_function(xstring js_ref) {
 
     // Get the function from registry using the reference
     js_getregistry(J, js_ref.c_str());
-    if (js_iscallable(J, -1)) {
+    if (J->iscallable(-1)) {
         js_pushnull(J);  // 'this' context
-        int result = js_pcall(J, 0);
+        int result = J->pcall(0);
         if (result != 0) {
             logs::error("JS onclick callback error: %s", js_tostring(J, -1));
+            js_pop(J, 1);
+        }
+    } else {
+        js_pop(J, 1);
+    }
+}
+
+void js_call_function_bool(xstring js_ref, bool param) {
+    if (js_ref.empty()) {
+        return;
+    }
+
+    js_State *J = js_vm_state();
+    verify_no_crash(J);
+
+    js_getregistry(J, js_ref.c_str());
+    if (J->iscallable(-1)) {
+        js_pushnull(J);
+        js_pushboolean(J, param);
+        int result = J->pcall(1);
+        if (result != 0) {
+            logs::error("JS dialog callback error: %s", js_tostring(J, -1));
             js_pop(J, 1);
         }
     } else {
@@ -463,11 +506,11 @@ pcstr js_call_function_with_result(xstring js_ref, int param1, int param2) {
 
     // Get the function from registry using the reference
     js_getregistry(J, js_ref.c_str());
-    if (js_iscallable(J, -1)) {
+    if (J->iscallable(-1)) {
         js_pushnull(J);  // 'this' context
         js_pushnumber(J, (double)param1);
         js_pushnumber(J, (double)param2);
-        int result = js_pcall(J, 2);
+        int result = J->pcall(2);
         if (result != 0) {
             logs::error("JS textfn callback error: %s", js_tostring(J, -1));
             js_pop(J, 1);

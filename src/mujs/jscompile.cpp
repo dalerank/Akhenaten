@@ -33,7 +33,7 @@ void jsC_error(js_State *J, js_Ast *node, const char *fmt, ...)
 
 static js_Function *newfun(js_State *J, js_Ast *node, js_Ast *name, js_Ast *params, js_Ast *body, int script)
 {
-	js_Function *F = js_malloc(J, sizeof *F);
+	js_Function *F = (js_Function*)js_malloc(J, sizeof *F);
 	memset(F, 0, sizeof *F);
 	F->gcmark = 0;
 	F->gcnext = J->gcfun;
@@ -52,7 +52,7 @@ static js_Function *newfun(js_State *J, js_Ast *node, js_Ast *name, js_Ast *para
 		js_FunctionModifier **tail = &F->modifiers;
 		
 		while (astmod) {
-			js_FunctionModifier *mod = js_malloc(J, sizeof(js_FunctionModifier));
+			js_FunctionModifier *mod = (js_FunctionModifier *)js_malloc(J, sizeof(js_FunctionModifier));
 			mod->key = astmod->key;
 			mod->value = astmod->value;
 			mod->next = NULL;
@@ -76,7 +76,7 @@ static void emitraw(JF, int value)
 		js_syntaxerror(J, "integer overflow in instruction coding");
 	if (F->codelen >= F->codecap) {
 		F->codecap = F->codecap ? F->codecap * 2 : 64;
-		F->code = js_realloc(J, F->code, F->codecap * sizeof *F->code);
+		F->code = (js_Instruction*)js_realloc(J, F->code, F->codecap * sizeof *F->code);
 	}
 	F->code[F->codelen++] = value;
 }
@@ -99,7 +99,7 @@ static int addfunction(JF, js_Function *value)
 {
 	if (F->funlen >= F->funcap) {
 		F->funcap = F->funcap ? F->funcap * 2 : 16;
-		F->funtab = js_realloc(J, F->funtab, F->funcap * sizeof *F->funtab);
+		F->funtab = (js_Function**)js_realloc(J, F->funtab, F->funcap * sizeof *F->funtab);
 	}
 	F->funtab[F->funlen] = value;
 	return F->funlen++;
@@ -111,9 +111,10 @@ static int addnumber(JF, double value)
 	for (i = 0; i < F->numlen; ++i)
 		if (F->numtab[i] == value)
 			return i;
+
 	if (F->numlen >= F->numcap) {
 		F->numcap = F->numcap ? F->numcap * 2 : 16;
-		F->numtab = js_realloc(J, F->numtab, F->numcap * sizeof *F->numtab);
+		F->numtab = (double*)js_realloc(J, F->numtab, F->numcap * sizeof *F->numtab);
 	}
 	F->numtab[F->numlen] = value;
 	return F->numlen++;
@@ -125,10 +126,12 @@ static int addstring(JF, const char *value)
 	for (i = 0; i < F->strlen; ++i)
 		if (!strcmp(F->strtab[i], value))
 			return i;
+
 	if (F->strlen >= F->strcap) {
 		F->strcap = F->strcap ? F->strcap * 2 : 16;
-		F->strtab = js_realloc(J, F->strtab, F->strcap * sizeof *F->strtab);
+		F->strtab = (const char**)js_realloc(J, F->strtab, F->strcap * sizeof *F->strtab);
 	}
+
 	F->strtab[F->strlen] = value;
 	return F->strlen++;
 }
@@ -155,7 +158,7 @@ static void addlocal(JF, js_Ast *ident, int reuse)
 	}
 	if (F->varlen >= F->varcap) {
 		F->varcap = F->varcap ? F->varcap * 2 : 16;
-		F->vartab = js_realloc(J, F->vartab, F->varcap * sizeof *F->vartab);
+		F->vartab = (const char**)js_realloc(J, F->vartab, F->varcap * sizeof *F->vartab);
 	}
 	F->vartab[F->varlen++] = name;
 }
@@ -348,7 +351,7 @@ static js_Ast *find_object_property(js_Ast *objlist, const char *name)
 /* Helper functions to create AST nodes */
 static js_Ast *new_ast_node(js_State *J, enum js_AstType type, js_Ast *a, js_Ast *b, js_Ast *c, js_Ast *d, int line)
 {
-	js_Ast *node = js_malloc(J, sizeof *node);
+	js_Ast *node = (js_Ast*)js_malloc(J, sizeof *node);
 	node->type = type;
 	node->line = line;
 	node->a = a;
@@ -783,6 +786,18 @@ static void cimport(JF, js_Ast *exp) {
 	}
 }
 
+static void cemit(JF, js_Ast *exp)
+{
+	if (exp->type != EXP_EMIT || !exp->a || !exp->b || exp->a->type != AST_IDENTIFIER) {
+		jsC_error(J, exp, "invalid emit expression");
+	}
+
+	/* push payload object and dispatch by event name at runtime */
+	cexp(J, F, exp->b);
+	emit(J, F, OP_EMIT);
+	emitraw(J, F, addstring(J, F, exp->a->string));
+}
+
 static void cdelete(JF, js_Ast *exp)
 {
 	switch (exp->type) {
@@ -838,7 +853,7 @@ static void ccall(JF, js_Ast *fun, js_Ast *args)
 			return;
 		}
 		if (fun->string && fun->string[0] == '_' && fun->string[1] == '_') {
-			js_Property *ref = jsV_getproperty(J, J->G, fun->string);
+			js_Property *ref = J->G->vgetproperty(fun->string);
 			if (!ref) {
 				/* Function not found in global object - check if it's a local variable */
 				int local_idx = findlocal(J, F, fun->string);
@@ -953,6 +968,9 @@ static void cexp(JF, js_Ast *exp)
 
 	case EXP_IMPORT:
 		cimport(J, F, exp->a);
+		break;
+	case EXP_EMIT:
+		cemit(J, F, exp);
 		break;
 
 	case EXP_PREINC:
@@ -1071,7 +1089,7 @@ static void cexp(JF, js_Ast *exp)
 
 static void addjump(JF, enum js_AstType type, js_Ast *target, int inst)
 {
-	js_JumpList *jump = js_malloc(J, sizeof *jump);
+	js_JumpList *jump = (js_JumpList*)js_malloc(J, sizeof *jump);
 	jump->type = type;
 	jump->inst = inst;
 	jump->next = target->jumps;

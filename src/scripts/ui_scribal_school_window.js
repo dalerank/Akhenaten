@@ -17,7 +17,7 @@ scribal_school_info_window {
     })
 }
 
-[es=scribal_school_info_window_init]
+[es=(scribal_school_info_window, init)]
 function scribal_school_info_window_init(window) {
     var b = city.get_building(window.bid)
     var group = b.meta_text_id

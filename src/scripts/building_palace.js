@@ -115,8 +115,7 @@ building_palace_base {
   ]
 }
 
-[es=building_palace_show_tooltip]
-function on_building_palace_show_tooltip(ev) {
+function building_palace_show_tooltip(ev) {
     var tooltip_lines = building_palace_base.tooltips
     if (!tooltip_lines || tooltip_lines.length === 0) {
       return
@@ -156,4 +155,19 @@ function on_building_palace_show_tooltip(ev) {
         label.y += line_height
     }
     ui.end_widget()
+}
+
+[es=(building_village_palace, draw_tooltip)]
+function building_village_palace_draw_tooltip(ev) {
+    building_palace_show_tooltip(ev)
+}
+
+[es=(building_town_palace, draw_tooltip)]
+function building_town_palace_draw_tooltip(ev) {
+    building_palace_show_tooltip(ev)
+}
+
+[es=(building_city_palace, draw_tooltip)]
+function building_city_palace_draw_tooltip(ev) {
+    building_palace_show_tooltip(ev)
 }

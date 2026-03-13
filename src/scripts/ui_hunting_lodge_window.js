@@ -10,7 +10,7 @@ info_window_hunting_lodge {
     })
 }
 
-[es=info_window_hunting_lodge_init]
+[es=(info_window_hunting_lodge, init)]
 function info_window_hunting_lodge_on_init(window) {
     var b = city.get_building(window.bid)
     var reason = { group: b.meta_text_id, id: 0 }

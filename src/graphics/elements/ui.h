@@ -6,6 +6,7 @@
 
 #include "core/archive.h"
 #include "core/variant.h"
+#include "core/cstring.h"
 
 #include "input/hotkey.h"
 #include "graphics/elements/scroll_list_panel.h"
@@ -54,6 +55,85 @@ using UiFlags = int;
 
 namespace ui {
 
+namespace opt {
+    struct Pos { vec2i value; };
+    struct Size { vec2i value; };
+    struct ImageId { int value; };
+    struct Mask { color value; };
+    struct Scale { float value; };
+    struct Font { e_font value; };
+    struct TextColor { color value; };
+    struct Flags { UiFlags value; };
+    struct ImgFlagsTag { ImgFlags value; ImgFlagsTag(ImgFlag_ v) : value((ImgFlags)v) {} };
+    struct Caption { pcstr value; };
+    struct BoxWidth { int value; };
+    struct RichTextPtr { rich_text_t *value; };
+}
+
+struct cmd_t {
+    enum e_type : uint8_t {
+        none = 0,
+        image,
+        fill_rect,
+        draw_rect,
+        h_line,
+        v_line,
+        panel_outer,
+        panel_inner,
+        text,
+        text_centered,
+        text_multiline,
+        text_colored,
+        text_rich,
+        clip_set,
+        clip_reset,
+        rich_draw,
+        button_border,
+        small_panel,
+        shade_rect,
+        large_label,
+    };
+
+    e_type type = none;
+    vec2i pos;
+    vec2i size;
+    int image_id = 0;
+    color mask = COLOR_MASK_NONE;
+    float scale = 1.f;
+    e_font font = FONT_INVALID;
+    color clr = 0;
+    UiFlags flags = UiFlags_None;
+    ImgFlags img_flags = ImgFlag_None;
+    cstring str{ frameAlloc() };
+    int box_width = 0;
+    rich_text_t *rt = nullptr;
+
+    cmd_t() = default;
+    explicit cmd_t(e_type t) : type(t) {}
+
+    template<typename... Args>
+    cmd_t(e_type t, const Args&... args) : type(t) { set_props(args...); }
+
+    template<typename... Args>
+    void set_props(const Args&... args) {
+        (set_one(args), ...);
+    }
+
+private:
+    void set_one(const ui::opt::Pos &x) { pos = x.value; }
+    void set_one(const ui::opt::Size &x) { size = x.value; }
+    void set_one(const ui::opt::ImageId &x) { image_id = x.value; }
+    void set_one(const ui::opt::Mask &x) { mask = x.value; }
+    void set_one(const ui::opt::Scale &x) { scale = x.value; }
+    void set_one(const ui::opt::Font &x) { font = x.value; }
+    void set_one(const ui::opt::TextColor &x) { clr = x.value; }
+    void set_one(const ui::opt::Flags &x) { flags = x.value; }
+    void set_one(const ui::opt::ImgFlagsTag &x) { img_flags = x.value; }
+    void set_one(const ui::opt::Caption &x) { str = x.value; }
+    void set_one(const ui::opt::BoxWidth &x) { box_width = x.value; }
+    void set_one(const ui::opt::RichTextPtr &x) { rt = x.value; }
+};
+
 struct img_button_offsets { int data[4] = {0, 1, 2, 3}; };
 
 using button_onclick_cb = inplace_function<void(int, int)>;
@@ -63,6 +143,15 @@ const tooltip_context &get_tooltip();
 void set_tooltip(const xstring &text);
 void begin_frame();
 void end_frame();
+
+void push_cmd(cmd_t&& cmd);
+
+template<typename... Args>
+void push(cmd_t::e_type t, const Args&... args) {
+    push_cmd(cmd_t(t, args...));
+}
+
+void flush_commands();
 void begin_widget(vec2i offset, bool relative = false);
 void end_widget();
 bool handle_mouse(const mouse *m);
@@ -86,7 +175,7 @@ const image_t *eimage(int imgid, vec2i pos);
 const image_t *eimage(image_desc img, vec2i pos);
 void panel(vec2i pos, vec2i size, UiFlags flags);
 void line(bool hline, vec2i npos, int size, color c);
-void border(vec2i pos, vec2i size, int type, int color, UiFlags flags);
+void border(vec2i pos, vec2i size, int type, color c, UiFlags flags);
 void rect(vec2i pos, vec2i size, int fill, int color, UiFlags flags);
 void icon(vec2i pos, e_resource img, UiFlags flags = UiFlags_None);
 void icon(vec2i pos, e_advisor advisor);
@@ -104,10 +193,16 @@ image_button &imgcancel_button(vec2i pos, button_onclick_cb cb);
 arrow_button &arw_button(vec2i pos, bool down, bool tiny = false, UiFlags_ flags = UiFlags_None);
 scrollbar_t &scrollbar(scrollbar_t &scrollbar, vec2i pos, int &value, vec2i size = {-1, -1});
 void fill_rect(vec2i offset, vec2i size, color c);
+void draw_rect(vec2i pos, vec2i size, color c);
+void image_abs(int image_id, vec2i abs_pos);
+void panel_abs(vec2i pos, vec2i size_blocks, UiFlags flags = UiFlags_None);
+void text_abs(pcstr str, vec2i pos, e_font font, color clr = 0);
+void text_multiline(pcstr text, vec2i pos, int width, e_font font, color clr);
 vec2i current_offset();
 
 template<typename T> inline void event(const T &ev);
-template<typename T> inline void event(xstring evname, const T &ev);
+template<typename T> inline void event(const T &ev, xstring evname);
+template<typename T, typename ... ES> inline void event(const T &ev, ES ... es);
 
 pcstr str(int group, int id);
 pcstr str_from_key(pcstr key);
@@ -229,7 +324,7 @@ struct margini {
 
 struct element {
     using ptr = std::shared_ptr<element>;
-    using items = std::vector<ptr>;
+    using items = hvector<ptr, 4>;
     using draw_callback = std::function<void(element*, UiFlags)>;
 
     int debug_tag;
@@ -629,9 +724,9 @@ struct widget {
     widget() : ui(*this) {}
 
     bool contains(const xstring &id) const;
-    element& operator[](pcstr id);
-    inline element &operator[](const bstring32 &id) { return (*this)[id.c_str()]; }
-    inline element &operator[](const xstring &id) { return (*this)[id.c_str()]; }
+    element& operator[](const xstring& id);
+    inline element &operator[](const bstring32 &id) { return (*this)[xstring(id)]; }
+    inline element &operator[](pcstr id) { return (*this)[xstring(id)]; }
 
     template<typename ... Args> int label(const Args ... args) { return ui::label(args...); }
     template<typename ... Args> generic_button &button(const Args ... args) { return ui::button(args...); }
@@ -642,11 +737,12 @@ struct widget {
     inline void icon(vec2i pos, e_resource img) { ui::icon(pos, img); }
 
     template<typename T> inline void event(const T &ev);
-    template<typename T> inline void event(xstring evname, const T &ev);
+    template<typename T, typename ... Args> inline void event(const T &ev, Args ... args);
+    template<typename T> inline void event(const T &ev, xstring evname);
 
     void event(xstring evname, const bvariant_map &js_j);
 
-    inline void begin_widget(vec2i offset, bool relative = false) { check_errors = true; ui::begin_widget(offset, relative); }
+    void begin_widget(vec2i offset, bool relative = false);
     inline void end_widget() { ui::end_widget(); }
     void set_clip_rectangle(vec2i pos, vec2i size);
     void set_clip_rectangle(const element &e);

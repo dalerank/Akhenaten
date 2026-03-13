@@ -37,6 +37,8 @@ public:
         uint8_t min_workers_percent_for_tasks;
         uint8_t min_workers_percent_for_accepting;
         uint8_t min_workers_percent_for_getting;
+        uint16_t max_capacty_stored;
+        uint8_t allow_food_types;
     } BUILDING_STATIC_DATA_T;
 
     struct runtime_data_t {
@@ -46,12 +48,9 @@ public:
     virtual void on_create(int orientation) override;
     virtual void on_post_load() override;
     virtual void spawn_figure() override;
-    virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_GRANARY; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual textid get_tooltip() const override;
-    virtual void on_place_checks() override;
     virtual void update_day() override;
-    virtual e_overlay get_overlay() const override { return OVERLAY_FOOD_STOCKS; }
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
     virtual int amount(e_resource resource) const override;
@@ -63,8 +62,6 @@ public:
     bool is_not_accepting(e_resource resource);
     granary_getting_result find_storage_for_getting();
     int total_stored() const override;
-    int capacity_stored() const { return 3200; }
-    int allow_food_types() const { return 4; }
 
     void bless();
     granary_task_status determine_worker_task();
@@ -74,7 +71,8 @@ public:
     int better_getting_storage();
 };
 ANK_CONFIG_STRUCT(building_granary::static_params, begin_spot_pos, res_image_offsets,
-    min_workers_percent_for_tasks, min_workers_percent_for_accepting, min_workers_percent_for_getting);
+    min_workers_percent_for_tasks, min_workers_percent_for_accepting, min_workers_percent_for_getting,
+    max_capacty_stored, allow_food_types);
 
 int building_granary_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, int force_on_stockpile, int* understaffed, tile2i* dst);
 int building_getting_granary_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, tile2i* dst);

@@ -58,7 +58,7 @@ static const char *tokenstring[] = {
 	"'++'", "'--'",
 
 	"'break'", "'case'", "'catch'", "'continue'", "'debugger'",
-	"'default'", "'delete'", "'do'", "'else'", "'false'", "'finally'", "'for'",
+	"'default'", "'delete'", "'do'", "'else'", "'emit'", "'false'", "'finally'", "'for'",
 	"'function'", "'if'", "'import'", "'in'", "'instanceof'", "'new'", "'null'", "'return'",
 	"'switch'", "'this'", "'throw'", "'true'", "'try'", "'typeof'", "'var'",
 	"'void'", "'while'", "'with'"
@@ -74,7 +74,7 @@ const char *jsY_tokenstring(int token)
 
 static const char *keywords[] = {
 	"break", "case", "catch", "continue", "debugger", "default", "delete",
-	"do", "else", "false", "finally", "for", "function", "if", "import", "in",
+	"do", "else", "emit", "false", "finally", "for", "function", "if", "import", "in",
 	"instanceof", "new", "null", "return", "switch", "this", "throw",
 	"true", "try", "typeof", "var", "void", "while", "with"
 };
@@ -188,7 +188,7 @@ static void textinit(js_State *J)
 {
 	if (!J->lexbuf.text) {
 		J->lexbuf.cap = 4096;
-		J->lexbuf.text = js_malloc(J, J->lexbuf.cap);
+		J->lexbuf.text = (char*)js_malloc(J, J->lexbuf.cap);
 	}
 	J->lexbuf.len = 0;
 }
@@ -198,7 +198,7 @@ static void textpush(js_State *J, Rune c)
 	int n = runelen(c);
 	if (J->lexbuf.len + n > J->lexbuf.cap) {
 		J->lexbuf.cap = J->lexbuf.cap * 2;
-		J->lexbuf.text = js_realloc(J, J->lexbuf.text, J->lexbuf.cap);
+		J->lexbuf.text = (char*)js_realloc(J, J->lexbuf.text, J->lexbuf.cap);
 	}
 	J->lexbuf.len += runetochar(J->lexbuf.text + J->lexbuf.len, &c);
 }

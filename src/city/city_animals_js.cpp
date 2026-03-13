@@ -1,6 +1,7 @@
 #include "city_animals.h"
 
 #include "js/js_game.h"
+#include "core/profiler.h"
 
 void __city_remove_animals() { g_city_animals.remove_all(); }
 ANK_FUNCTION(__city_remove_animals);

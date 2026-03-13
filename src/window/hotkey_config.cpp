@@ -269,13 +269,13 @@ static void draw_foreground(int) {
 static void handle_input(const mouse* m, const hotkeys* h) {
     auto& data = g_hotkeys_window_data;
     const mouse* m_dialog = mouse_in_dialog(m);
-    if (scrollbar_handle_mouse(vec2i{0, 0}, &g_hotkey_window_scrollbar, m_dialog)) {
+    if (scrollbar_handle_mouse(&g_hotkey_window_scrollbar, m_dialog)) {
         return;
     }
 
     int mouse_button = 0;
-    mouse_button |= generic_buttons_handle_mouse(m_dialog, {0, 0}, hotkey_buttons, NUM_VISIBLE_OPTIONS * 2, &data.focus_button);
-    mouse_button |= generic_buttons_handle_mouse(m_dialog, {0, 0}, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
+    mouse_button |= generic_buttons_handle_mouse(m_dialog, {0, 0}, hotkey_buttons, NUM_VISIBLE_OPTIONS * 2, &data.focus_button, nullptr);
+    mouse_button |= generic_buttons_handle_mouse(m_dialog, {0, 0}, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button, nullptr);
 
     if (!mouse_button && (m->right.went_up || h->escape_pressed)) {
         data.close_callback();

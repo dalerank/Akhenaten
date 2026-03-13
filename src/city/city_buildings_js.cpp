@@ -11,6 +11,7 @@
 #include "city/object_info.h"
 #include "window/window_info.h"
 #include "building/building.h"
+#include "core/profiler.h"
 #include "game/game_events.h"
 
 int __city_count_industry_active(int resource) {
@@ -185,6 +186,11 @@ ANK_FUNCTION_1(__building_can_play_animation)
 
 void __building_set_animation(int bid, pcstr animkey) { building_get(bid)->dcast()->set_animation(animkey); }
 ANK_FUNCTION_2(__building_set_animation)
+
+bool __building_common_spawn_roamer(int bid, int figure_type, int min_houses_coverage, int action) {
+    return building_get(bid)->dcast()->common_spawn_roamer((e_figure_type)figure_type, min_houses_coverage, (e_figure_action)action);
+}
+ANK_FUNCTION_4(__building_common_spawn_roamer)
 
 bool __city_resource_is_mothballed(int resource) {
     return g_city.resource.is_mothballed((e_resource)resource);

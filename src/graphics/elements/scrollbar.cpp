@@ -3,6 +3,7 @@
 #include "core/calc.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/image_button.h"
+#include "graphics/elements/ui.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "game/game.h"
@@ -45,14 +46,15 @@ void scrollbar_update_max(scrollbar_t* scrollbar, int max_scroll_position) {
 }
 
 void scrollbar_draw(vec2i offset, scrollbar_t* scrollbar) {
-    painter ctx = game.painter();
+    scrollbar->offset = offset;
     if (scrollbar->max_scroll_position > 0 || scrollbar->always_visible) {
+        const vec2i base = offset + scrollbar->pos;
         if (!scrollbar->thin) {
-            image_buttons_draw(scrollbar->pos + offset, &image_button_scroll_up, 1);
-            image_buttons_draw(offset + scrollbar->pos + vec2i{0, scrollbar->height - SCROLL_BUTTON_HEIGHT}, &image_button_scroll_down, 1);
+            image_buttons_push_commands(base, &image_button_scroll_up, 1);
+            image_buttons_push_commands(base + vec2i{0, scrollbar->height - SCROLL_BUTTON_HEIGHT}, &image_button_scroll_down, 1);
         } else {
-            image_buttons_draw(scrollbar->pos + offset, &image_button_scroll_up_thin, 1);
-            image_buttons_draw(offset + scrollbar->pos + vec2i{0, scrollbar->height - SCROLL_BUTTON_HEIGHT}, &image_button_scroll_down_thin, 1);
+            image_buttons_push_commands(base, &image_button_scroll_up_thin, 1);
+            image_buttons_push_commands(base + vec2i{0, scrollbar->height - SCROLL_BUTTON_HEIGHT}, &image_button_scroll_down_thin, 1);
         }
 
         int pct;
@@ -65,26 +67,27 @@ void scrollbar_draw(vec2i offset, scrollbar_t* scrollbar) {
             drag_offset = scrollbar->scroll_position_drag;
         }
 
-        ctx.img_generic(image_id_from_group(GROUP_PANEL_BUTTON) + 39, offset + scrollbar->pos + vec2i{ (SCROLL_BUTTON_WIDTH - SCROLL_DOT_SIZE) / 2, drag_offset + SCROLL_BUTTON_HEIGHT + scrollbar->dot_padding });
+        ui::image_abs(image_id_from_group(GROUP_PANEL_BUTTON) + 39, base + vec2i{ (SCROLL_BUTTON_WIDTH - SCROLL_DOT_SIZE) / 2, drag_offset + SCROLL_BUTTON_HEIGHT + scrollbar->dot_padding });
     }
 }
 
-static bool handle_scrollbar_dot(vec2i offset, scrollbar_t* scrollbar, const mouse* m) {
+static bool handle_scrollbar_dot(scrollbar_t* scrollbar, const mouse* m) {
     if (scrollbar->max_scroll_position <= 0 || !m->left.is_down) {
         return false;
     }
 
+    const vec2i base = scrollbar->pos + scrollbar->offset;
     int track_height = scrollbar->height - TOTAL_BUTTON_HEIGHT - 2 * scrollbar->dot_padding;
-    if (m->x < scrollbar->pos.x || m->x >= scrollbar->pos.x + SCROLL_BUTTON_WIDTH) {
+    if (m->x < base.x || m->x >= base.x + SCROLL_BUTTON_WIDTH) {
         return false;
     }
 
-    if (m->y < scrollbar->pos.y + SCROLL_BUTTON_HEIGHT + scrollbar->dot_padding
-        || m->y > scrollbar->pos.y + scrollbar->height - SCROLL_BUTTON_HEIGHT - scrollbar->dot_padding) {
+    if (m->y < base.y + SCROLL_BUTTON_HEIGHT + scrollbar->dot_padding
+        || m->y > base.y + scrollbar->height - SCROLL_BUTTON_HEIGHT - scrollbar->dot_padding) {
         return false;
     }
 
-    int dot_offset = m->y - scrollbar->pos.y - SCROLL_DOT_SIZE / 2 - SCROLL_BUTTON_HEIGHT;
+    int dot_offset = m->y - base.y - SCROLL_DOT_SIZE / 2 - SCROLL_BUTTON_HEIGHT;
     dot_offset = std::clamp(dot_offset, 0, track_height);
 
     int pct_scrolled = calc_percentage(dot_offset, track_height);
@@ -102,11 +105,12 @@ static bool handle_scrollbar_dot(vec2i offset, scrollbar_t* scrollbar, const mou
     return true;
 }
 
-int scrollbar_handle_mouse(vec2i offset, scrollbar_t* scrollbar, const mouse* m) {
+int scrollbar_handle_mouse(scrollbar_t* scrollbar, const mouse* m) {
     if (scrollbar->max_scroll_position <= 0) {
         return 0;
     }
 
+    const vec2i offset = scrollbar->offset;
     g_scrollbar_current = scrollbar;
     if (m->scrolled == SCROLL_DOWN) {
         text_scroll(1, 3);
@@ -130,7 +134,7 @@ int scrollbar_handle_mouse(vec2i offset, scrollbar_t* scrollbar, const mouse* m)
             return 1;
     }
 
-    return handle_scrollbar_dot(offset, scrollbar, m);
+    return handle_scrollbar_dot(scrollbar, m);
 }
 
 static void text_scroll(int is_down, int num_lines) {

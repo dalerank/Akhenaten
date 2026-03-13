@@ -6,6 +6,7 @@
 #include "graphics/imagepak_holder.h"
 #include "platform/renderer.h"
 #include "content/atlas_packer.h"
+#include "content/vfs.h"
 #include "graphics/fontgen/dynamic_atlas.h"
 #include "graphics/fontgen/atlas_charset.h"
 #include "graphics/fontgen/dynamic_font.h"
@@ -154,7 +155,7 @@ static uint32_t utf8_decode(const uint8_t* str, int* out_bytes) {
                ((str[2] & 0x3F) << 6) |
                (str[3] & 0x3F);
     }
-    
+
     // Invalid UTF-8 sequence
     *out_bytes = 1;
     return 0xFFFD; // Unicode replacement character
@@ -195,7 +196,7 @@ font_glyph font_letter_id(const font_definition* def, const uint8_t* str, int* n
         if (it != mbmap.end()) {
             return it->second;
         }
-        
+
         // Add missing glyph for later regeneration
         font_add_missing_glyph(code);
 
@@ -258,7 +259,7 @@ void add_symbols_to_font_packer(imagepak_handle font_pack, pcstr symbols_font, f
         DynamicFont::Charset charset;
         charset.AddCodepoint(codepoint);
 
-        uint8_t colors[4] = { 
+        uint8_t colors[4] = {
             uint8_t((fconfig.color >> 16) & 0xff),  // Red
             uint8_t((fconfig.color >> 8) & 0xff),   // Green
             uint8_t((fconfig.color >> 0) & 0xff),   // Blue
@@ -326,7 +327,6 @@ void add_symbols_to_font_packer(imagepak_handle font_pack, pcstr symbols_font, f
         img.unk16 = -1;
         img.unk17 = -1;
         img.unk18 = -1;
-        img.unk19 = -1;
         img.unk20 = -1;
 
         image_packer_rect *rect = &font_packer.rects[cp_index];
@@ -344,6 +344,13 @@ void font_atlas_regenerate() {
     if (!font_pack.handle) {
         return;
     }
+
+#ifdef __EMSCRIPTEN__
+    // On Emscripten do not load custom TTF fonts; use built-in Pharaoh_Fonts only
+    g_font_data.use_utf_font = false;
+    g_font_data.needs_regeneration = false;
+    return;
+#endif
 
     vfs::path symbols_font;
     svector<uint32_t, 1024> utf8_symbols;
@@ -368,11 +375,11 @@ void font_atlas_regenerate() {
 
         arch.r("font_configs", font_configs);
         symbols_font = arch.r_string("font");
- 
+
         svector<bstring32, 1024> data_str;
         string_to_array_t(data_str, symbols, ',');
-        
-        svector<uint64_t, 1024> data; 
+
+        svector<uint64_t, 1024> data;
         for (const auto& x: data_str) {
             char sym[8] = { 0 };
             memcpy(sym, (uint32_t *)x.c_str(), 4);
@@ -522,24 +529,24 @@ void font_atlas_regenerate() {
     font_pack.handle->entries_num = font_pack.handle->images_array.size();
     font_pack.entries_num = font_pack.handle->entries_num;
     image_packer_reset(font_packer);
-    
+
     g_font_data.needs_regeneration = false;
 }
 
 void font_add_missing_glyph(uint32_t codepoint) {
     auto& data = g_font_data;
-    
+
     // Don't add if it's a control character or already exists
     if (codepoint < 32 || codepoint == 0xFFFD) {
         return;
     }
-    
+
     // Check if already in any font
     auto it = std::find(data.missing_glyphs.begin(), data.missing_glyphs.end(), codepoint);
     if (it != data.missing_glyphs.end()) {
         return;
     }
-    
+
     // Add to missing glyphs set
     if (data.missing_glyphs.insert(codepoint).second) {
         data.needs_regeneration = true;

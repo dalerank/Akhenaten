@@ -11,18 +11,19 @@
 #include "graphics/image.h"
 #include "widget/city/ornaments.h"
 
-grid_xx g_buildings_grid = {0, FS_UINT16};
-grid_xx g_damage_grid = {0, FS_UINT16};
-grid_xx g_rubble_type_grid = {0, FS_UINT8};
-grid_xx g_highlight_grid = {0, FS_UINT8};
-grid_xx g_height_building_grid = {0, FS_UINT8};
+grid_xx g_buildings_grid(FS_UINT16);
+grid_xx g_damage_grid(FS_UINT16);
+grid_xx g_rubble_type_grid(FS_UINT8);
+grid_xx g_highlight_grid(FS_UINT8);
+grid_xx g_height_building_grid(FS_UINT8);
 
 int map_building_at(int grid_offset) {
     return map_grid_is_valid_offset(grid_offset) ? map_grid_get(g_buildings_grid, grid_offset) : 0;
 }
 
 int map_building_at(tile2i tile) {
-    return map_grid_is_valid_offset(tile.grid_offset()) ? map_grid_get(g_buildings_grid, tile.grid_offset()) : 0;
+    const int grid_offset = tile.grid_offset();
+    return map_grid_is_valid_offset(grid_offset) ? map_grid_get(g_buildings_grid, grid_offset) : 0;
 }
 
 void map_building_set(int grid_offset, int building_id) {

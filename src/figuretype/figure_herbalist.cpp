@@ -9,6 +9,8 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_herbalist);
 
+const figure_herbalist_action_tokens_t ANK_CONFIG_ENUM(figure_herbalist_action_tokens);
+
 void figure_herbalist::figure_before_action() {
     building* b = home();
     if (!b->is_valid() || !b->has_figure(0, id())) {
@@ -21,27 +23,27 @@ void figure_herbalist::figure_action() {
     //    building *b = building_get(building_id);
     switch (action_state()) {
     default:
-        advance_action(ACTION_63_HERBALIST_RETURNING);
+        advance_action(ACTION_5_HERBALIST_RETURNING);
         break;
 
     case FIGURE_ACTION_149_CORPSE:
         break;
 
-    case ACTION_60_HERBALIST_CREATED:
-        advance_action(ACTION_10_HERBALIST_GOING);
+    case ACTION_2_HERBALIST_CREATED:
+        advance_action(ACTION_1_HERBALIST_GOING);
         break;
 
-    case ACTION_61_HERBALIST_ENTERING_EXITING:
+    case ACTION_3_HERBALIST_ENTERING_EXITING:
     case 9:
         do_enterbuilding(true, home());
         break;
 
-    case ACTION_62_HERBALIST_ROAMING:
-        do_roam(TERRAIN_USAGE_ROADS, ACTION_63_HERBALIST_RETURNING);
+    case ACTION_4_HERBALIST_ROAMING:
+        do_roam(TERRAIN_USAGE_ROADS, ACTION_5_HERBALIST_RETURNING);
         break;
 
-    case ACTION_63_HERBALIST_RETURNING:
-        do_returnhome(TERRAIN_USAGE_ROADS, ACTION_61_HERBALIST_ENTERING_EXITING);
+    case ACTION_5_HERBALIST_RETURNING:
+        do_returnhome(TERRAIN_USAGE_ROADS, ACTION_3_HERBALIST_ENTERING_EXITING);
         break;
     }
 }

@@ -38,6 +38,8 @@
 #include <windows.h>
 #endif // _MSC_VER
 
+using namespace render_cmd;
+
 pool<figure::debug_lines_t, 64> debug_tooltip_lines;
 
 static const vec2i crowd_offsets[] = {
@@ -583,10 +585,12 @@ vec2i figure::cart_sprite_pixel() const {
 
 void figure::draw_cart_sprite(painter &ctx, vec2i pixel, int highlight) {
     const image_t *img = image_get(cart_image_id);
-    auto& command = ImageDraw::create_subcommand(render_command_t::ert_sprite);
-    command.image_id = cart_image_id;
-    command.pixel = pixel;
-    command.mask = COLOR_MASK_NONE;
+    ImageDraw::sprite(ctx,
+        ImageId{cart_image_id},
+        Pixel{pixel},
+        Mask{COLOR_MASK_NONE},
+        UseSortPixel{true},
+        SortPixel{main_sort_pixel});
 
     is_cart_drawn = true;
 }
@@ -686,13 +690,23 @@ vec2i figure::adjust_pixel_offset(const vec2i pixel) {
     return { pixel.x + offset.x + 29, pixel.y + offset.y + 15 + 8 };
 }
 
+vec2i figure::crowd_pixel_offset() const {
+    if (!!game_features::gameplay_change_citizen_road_offset && id && type != FIGURE_BALLISTA) {
+        return crowd_offsets[id % crowd_offsets_size];
+    }
+    return {0, 0};
+}
+
 void figure::draw_main_sprite(painter &ctx, vec2i pixel, int highlight) {
     OZZY_PROFILER_FUNCTION();
+
     const image_t *img = image_get(main_image_id);
-    auto& command = ImageDraw::create_subcommand(render_command_t::ert_sprite);
+    auto& command = ImageDraw::create_command(ctx, render_command_t::ert_sprite);
     command.image_id = main_image_id;
     command.pixel = pixel;
     command.mask = COLOR_MASK_NONE;
+    command.use_sort_pixel = true;
+    command.sort_pixel = main_sort_pixel;
 }
 
 void figure::draw(painter &ctx, int highlight) {
@@ -727,7 +741,7 @@ void figure::draw(painter &ctx, int highlight) {
     is_main_drawn = true;
 }
 
-void figure::draw_debug() {
+void figure::draw_debug(painter &ctx) {
     if (draw_mode == 0) {
         debug_lines_clear();
         return;
@@ -754,7 +768,6 @@ void figure::draw_debug() {
     pixel.y += text_offset_y;
     int indent = 0;
     color col = COLOR_WHITE;
-    painter ctx = game.painter();
 
     if (!!(draw_mode & e_figure_draw_overlay)) {
         dlines.emplace_back().printf("ID: %d", id);
@@ -878,7 +891,7 @@ void figure::draw_debug() {
         dlines.emplace_back().printf("CC Delta: (%d, %d)", cc_delta.x, cc_delta.y);
     }
 
-    dcast()->debug_draw();
+    dcast()->debug_draw(ctx);
 }
 
 void figure::draw_tooltip(tooltip_context *c) const {

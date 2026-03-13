@@ -16,7 +16,7 @@
 #include "scenario/scenario_invasion.h"
 #include "window/window_city.h"
 #include "game/game.h"
-
+#include "core/profiler.h"
 #include "js/js_game.h"
 #include "graphics/elements/ui_js.h"
 

@@ -275,7 +275,7 @@ bool building_storage_yard::is_accepting(e_resource resource) {
 bool building_storage_yard::is_getting(e_resource resource) {
     const storage_t* s = storage();
     int amount = this->amount(resource);
-    if ((s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] == FULL_WAREHOUSE) 
+    if ((s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] == FULL_WAREHOUSE)
         || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] >= THREEQ_WAREHOUSE && amount < THREEQ_WAREHOUSE / 100)
         || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] >= HALF_WAREHOUSE && amount < HALF_WAREHOUSE / 100)
         || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] >= QUARTER_WAREHOUSE && amount < QUARTER_WAREHOUSE / 100)) {
@@ -293,7 +293,7 @@ bool building_storage_yard::draw_ornaments_and_animations_height(painter &ctx, v
     draw_normal_anim(ctx, point, tile, color_mask);
 
     const auto &cover = anim("cover");
-    auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+    auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
     command.image_id = cover.first_img();
     command.pixel = point + cover.pos;
     command.mask = color_mask;

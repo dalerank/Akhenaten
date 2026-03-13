@@ -3,6 +3,7 @@
 #include "building/building_house.h"
 #include "city/city.h"
 #include "game/settings.h"
+#include "core/profiler.h"
 #include "grid/terrain.h"
 #include "io/io_buffer.h"
 #include "sound/channel.h"
@@ -38,6 +39,10 @@ void sound_city_init() {
         channel.last_played_time = 35000;
         channel.channel = i++;
     }
+}
+
+void sound_city_stop() {
+    g_sound.stop_city_channels();
 }
 
 int building_type_to_channel(building *b) {
@@ -131,13 +136,15 @@ void sound_city_mark_terrain_view(int terrain, int grid_offset, int direction) {
 }
 
 void sound_city_mark_building_view(building* b, int direction) {
+    OZZY_PROFILER_FUNCTION()
+
     auto &channels = g_city_sounds.channels;
     if (b->state == BUILDING_STATE_UNUSED) {
         return;
     }
 
     e_building_type type = b->type;
-    assert(type <= BUILDING_MAX);
+    verify_no_crash(type <= BUILDING_MAX);
     int system_channel_index = building_type_to_channel(b);
     if (!system_channel_index) {
         return;

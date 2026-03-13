@@ -6,6 +6,7 @@
 #include "grid/building.h"
 #include "grid/grid.h"
 #include "js/js_game.h"
+#include "core/profiler.h"
 #include "core/bstring.h"
 
 static building_house *house_from_bid(int bid) {

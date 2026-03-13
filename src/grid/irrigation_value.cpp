@@ -13,7 +13,7 @@
 #include "scenario/map.h"
 #include "city/city.h"
 
-grid_xx g_irrigation_value_grid = {0, FS_INT8};
+grid_xx g_irrigation_value_grid(FS_INT8);
 
 irrigation_value_t g_irrigation_value;
 

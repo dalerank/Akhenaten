@@ -814,8 +814,8 @@ Reprog *regcomp(const char *pattern, int cflags, const char **errorp)
 	Reinst *split, *jump;
 	int i;
 
-	g.prog = malloc(sizeof (Reprog));
-	g.pstart = g.pend = malloc(sizeof (Renode) * strlen(pattern) * 2);
+	g.prog = (Reprog *)malloc(sizeof (Reprog));
+	g.pstart = g.pend = (Renode*)malloc(sizeof (Renode) * strlen(pattern) * 2);
 
 	if (setjmp(g.kaboom)) {
 		if (errorp) *errorp = g.error;
@@ -840,7 +840,7 @@ Reprog *regcomp(const char *pattern, int cflags, const char **errorp)
 		die(&g, "syntax error");
 
 	g.prog->nsub = g.nsub;
-	g.prog->start = g.prog->end = malloc((count(node) + 6) * sizeof (Reinst));
+	g.prog->start = g.prog->end = (Reinst*)malloc((count(node) + 6) * sizeof (Reinst));
 
 	split = emit(g.prog, I_SPLIT);
 	split->x = split + 3;

@@ -28,7 +28,7 @@
 #include "window/advisor/advisor_health.h"
 #include "window/advisor/housing.h"
 #include "window/advisor/advisor_imperial.h"
-#include "window/advisor/advisor_labor.h"
+#include "window/js_window_registry.h"
 #include "window/advisor/advisor_military.h"
 #include "window/advisor/monuments.h"
 #include "window/advisor/advisor_population.h"
@@ -41,6 +41,7 @@
 #include "game/game.h"
 #include "js/js_game.h"
 #include "io/gamefiles/lang.h"
+#include "core/profiler.h"
 
 static const int ADVISOR_TO_MESSAGE_TEXT[] = {
   MESSAGE_DIALOG_ABOUT,
@@ -84,7 +85,7 @@ struct window_advisors : public ui::widget {
 
     autoconfig_window * sub_advisors[20] = {
         nullptr,
-        ui::advisor_labors_window::instance(),
+        nullptr, // ADVISOR_LABOR: from js_window_registry
         ui::advisor_military_window::instance(),
         ui::advisor_imperial_window::instance(),
         ui::advisor_ratings_window::instance(),
@@ -119,10 +120,15 @@ ANK_CONFIG_STRUCT(window_advisors, focus_button_id)
 window_advisors ANK_VARIABLE(advisors_window);
 
 void window_advisors::set_advisor_window() {
-    if (sub_advisors[current_advisor]) {
-        current_advisor_window = sub_advisors[current_advisor];
+    autoconfig_window *w = js_window_registry::instance().get_advisor_window((e_advisor)current_advisor);
+    if (!w) {
+        w = sub_advisors[current_advisor];
+    }
+
+    if (w) {
+        current_advisor_window = w;
         current_advisor_window->pos = screen_dialog_offset();
-        current_advisor_window->init();       
+        current_advisor_window->init();
     } else {
         current_advisor_window = nullptr;
     }
@@ -131,7 +137,7 @@ void window_advisors::set_advisor_window() {
 void window_advisors::set_advisor(int advisor) {
     current_advisor = advisor;
     g_settings.last_advisor = advisor;
-    
+
     for (auto &btn : btns) {
         ui[btn.id].select(false);
     }

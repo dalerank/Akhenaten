@@ -99,7 +99,7 @@ static void draw_foreground(int) {
 
 static void handle_input(const mouse* m, const hotkeys* h) {
     auto &data = g_numeric_input;
-    if (generic_buttons_handle_mouse(m, data, buttons, 12, &data.focus_button_id))
+    if (generic_buttons_handle_mouse(m, data, buttons, 12, &data.focus_button_id, nullptr))
         return;
 
     if (input_go_back_requested(m, h))

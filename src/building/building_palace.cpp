@@ -2,7 +2,6 @@
 #include "building_palace.h"
 
 #include "building/building.h"
-#include "city/object_info.h"
 #include "city/ratings.h"
 #include "city/city.h"
 #include "game/resource.h"
@@ -34,14 +33,12 @@
 #include "game/game.h"
 #include "js/js_game.h"
 #include "js/js_struct.h"
+#include "core/profiler.h"
 #include "graphics/elements/ui_js.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_village_palace);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_town_palace);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_city_palace);
-
-struct building_palace_show_tooltip { building_id bid; int mx, my; };
-ANK_REGISTER_STRUCT_WRITER(building_palace_show_tooltip, bid, mx, my)
 
 void building_palace::on_create(int orientation) {
     base.labor_category = current_params().labor_category;
@@ -69,10 +66,6 @@ void building_palace::update_graphic() {
     set_animation(animkey);
 
     building_impl::update_graphic();
-}
-
-void building_palace::draw_tooltip(tooltip_context *c) const {
-    ui::event(building_palace_show_tooltip{ base.id, c->mpos.x, c->mpos.y });
 }
 
 bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

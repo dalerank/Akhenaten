@@ -17,6 +17,7 @@
 #include "io/gamefiles/lang.h"
 #include "core/variant.h"
 #include "js/js_struct.h"
+#include "core/profiler.h"
 #include "graphics/elements/ui_js.h"
 
 struct building_info_window_draw { vec2i pos; building_id bid; };
@@ -136,6 +137,7 @@ void building_info_window::init(object_info &c) {
     building *b = building_get(c);
     set_debug_building_id(b->id);
 
+    ui.event(building_info_window_init{ pos, c.bid }, section(), __func__);
     ui.event(building_info_window_init{ pos, c.bid });
 
     xstring correct_help_id = help_id;

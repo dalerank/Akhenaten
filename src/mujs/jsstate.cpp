@@ -97,7 +97,7 @@ void js_loadfile(js_State *J, const char *filename)
 		js_error(J, "cannot seek in file: '%s'", filename);
 	}
 
-	s = js_malloc(J, n + 1); /* add space for string terminator */
+	s = (char*)js_malloc(J, n + 1); /* add space for string terminator */
 	if (!s) {
 		fclose(f);
 		js_error(J, "cannot allocate storage for file contents: '%s'", filename);
@@ -137,6 +137,18 @@ js_Import js_registerimport(js_State *J, js_Import importFunc) {
 	return old;
 }
 
+void js_emit(js_State *J, const char *name) {
+	if (J->jscemit) {
+		J->jscemit(J, name);
+	}
+}
+
+js_Emit js_registeremit(js_State *J, js_Emit emitFunc) {
+	js_Emit old = J->jscemit;
+	J->jscemit = emitFunc;
+	return old;
+}
+
 int js_dostring(js_State *J, const char *source)
 {
 	if (js_try(J)) {
@@ -146,7 +158,7 @@ int js_dostring(js_State *J, const char *source)
 	}
 	js_loadstring(J, "[string]", source);
 	js_pushglobal(J);
-	js_call(J, 0);
+	J->call(0);
 	js_pop(J, 1);
 	js_endtry(J);
 	return 0;
@@ -161,7 +173,7 @@ int js_dofile(js_State *J, const char *filename)
 	}
 	js_loadfile(J, filename);
 	js_pushglobal(J);
-	js_call(J, 0);
+	J->call(0);
 	js_pop(J, 1);
 	js_endtry(J);
 	return 0;
@@ -200,9 +212,10 @@ js_State *js_newstate(js_Alloc alloc, void *actx, int flags)
 	if (!alloc)
 		alloc = js_defaultalloc;
 
-	J = alloc(actx, NULL, sizeof *J);
+	J = (js_State*)alloc(actx, NULL, sizeof *J);
 	if (!J)
 		return NULL;
+
 	memset(J, 0, sizeof(*J));
 	J->actx = actx;
 	J->alloc = alloc;
@@ -218,7 +231,7 @@ js_State *js_newstate(js_Alloc alloc, void *actx, int flags)
 
 	J->panic = js_defaultpanic;
 
-	J->stack = alloc(actx, NULL, JS_STACKSIZE * sizeof *J->stack);
+	J->stack = (js_Value*)alloc(actx, NULL, JS_STACKSIZE * sizeof *J->stack);
 	if (!J->stack) {
 		alloc(actx, NULL, 0);
 		return NULL;

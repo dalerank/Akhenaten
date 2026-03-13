@@ -55,7 +55,7 @@ public:
     virtual void on_update_home() {}
     virtual xstring action_tip() const { static xstring tip(""); return tip; }
     virtual void debug_show_properties() {}
-    virtual void debug_draw() {}
+    virtual void debug_draw(painter &ctx) {}
     virtual bool is_home(const building *b) const;
     virtual bool is_destination(const building *b) const;
     virtual empire_city_handle empire_city() const { return empire_city_handle{}; }

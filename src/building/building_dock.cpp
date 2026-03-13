@@ -176,7 +176,7 @@ bool building_dock::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     if (anim_dockers.valid()) {
         int img_id = anim_dockers.start_frame() + (d.docker_anim_frame / anim_dockers.frame_duration) * 4;
 
-        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
         command.image_id = img_id;
         command.pixel = point + anim_dockers.pos;
         command.mask = color_mask;
@@ -200,7 +200,7 @@ void building_dock::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT16, &d.docker_ids[0]);
     iob->bind(BIND_SIGNATURE_INT16, &d.docker_ids[1]);
     iob->bind(BIND_SIGNATURE_INT16, &d.docker_ids[2]);
-                                     
+
     iob->bind(BIND_SIGNATURE_INT16, &d.trade_ship);
 }
 

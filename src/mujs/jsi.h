@@ -17,36 +17,6 @@
 #pragma warning(disable:4996) /* _CRT_SECURE_NO_WARNINGS */
 #pragma warning(disable:4244) /* implicit conversion from double to int */
 #pragma warning(disable:4267) /* implicit conversion of int to smaller int */
-#define inline __inline
-#if _MSC_VER < 1900 /* MSVC 2015 */
-#define snprintf jsW_snprintf
-#define vsnprintf jsW_vsnprintf
-static int jsW_vsnprintf(char *str, size_t size, const char *fmt, va_list ap)
-{
-	int n;
-	n = _vsnprintf(str, size, fmt, ap);
-	str[size-1] = 0;
-	return n;
-}
-static int jsW_snprintf(char *str, size_t size, const char *fmt, ...)
-{
-	int n;
-	va_list ap;
-	va_start(ap, fmt);
-	n = jsW_vsnprintf(str, size, fmt, ap);
-	va_end(ap);
-	return n;
-}
-#endif
-#if _MSC_VER < 1700 /* MSVC 2012 */
-#define round(x) floor((x) < 0 ? (x) - 0.5 : (x) + 0.5)
-#define isnan(x) _isnan(x)
-#define isinf(x) (!_finite(x))
-#define isfinite(x) _finite(x)
-static __inline int signbit(double x) {union{double d;__int64 i;}u;u.d=x;return u.i>>63;}
-#define INFINITY (DBL_MAX+DBL_MAX)
-#define NAN (INFINITY-INFINITY)
-#endif
 #endif
 
 #define soffsetof(x,y) ((int)offsetof(x,y))
@@ -56,16 +26,17 @@ void *js_malloc(js_State *J, int size);
 void *js_realloc(js_State *J, void *ptr, int size);
 void js_free(js_State *J, void *ptr);
 
-typedef struct js_Regexp js_Regexp;
-typedef struct js_Value js_Value;
-typedef struct js_Object js_Object;
-typedef struct js_String js_String;
-typedef struct js_Ast js_Ast;
-typedef struct js_Function js_Function;
-typedef struct js_Environment js_Environment;
-typedef struct js_StringNode js_StringNode;
-typedef struct js_Jumpbuf js_Jumpbuf;
-typedef struct js_StackTrace js_StackTrace;
+struct js_Regexp;
+struct js_Value;
+struct js_Object;
+struct js_String;
+struct js_Ast;
+struct js_Function;
+struct js_Environment;
+struct js_StringNode;
+struct js_Jumpbuf;
+struct js_StackTrace;
+struct js_Property;
 
 /* Limits */
 
@@ -111,11 +82,10 @@ void js_rot3pop2(js_State *J);
 void js_dup1rot3(js_State *J);
 void js_dup1rot4(js_State *J);
 
-void js_pushundefinedthis(js_State *J); /* push 'global' if non-strict, undefined if strict */
-
 void js_RegExp_prototype_exec(js_State *J, js_Regexp *re, const char *text);
 
 void js_trap(js_State *J, int pc); /* dump stack and environment to stdout */
+void js_stacktrace(js_State *J);
 
 struct js_StackTrace
 {
@@ -139,7 +109,7 @@ struct js_Jumpbuf
 void *js_savetrypc(js_State *J, js_Instruction *pc);
 
 #define js_trypc(J, PC) \
-	setjmp(js_savetrypc(J, PC))
+	setjmp(*((jmp_buf *)js_savetrypc(J, PC)))
 
 /* State struct */
 
@@ -211,6 +181,7 @@ struct js_State
 	js_Object *gcobj;
 	js_String *gcstr;
 	js_Import jscimport;
+	js_Emit jscemit;
 	void (*dumpfunction)(js_State *J, const char *);
 
 	/* environments on the call stack but currently not in scope */
@@ -227,6 +198,37 @@ struct js_State
 
 	/* property name being accessed when toobject fails — used for error location */
 	const char *pending_prop;
+
+	void stackoverflow();
+
+	void savescope(js_Environment *newE);
+	void restorescope();
+	
+	void pushundefined();
+
+	void getproperty(js_Object *obj, const char *name);
+	int hasproperty(js_Object *obj, const char *name);
+
+	int hasproperty(int idx, const char *name);
+	
+	int isobject(int idx);
+
+	int pcall(int n);
+	void call(int n);
+
+	int iscallable(int idx);
+	js_Object *toobject(int idx);
+
+	js_Object *toobject(js_Value *v);
+	js_Object *toobject_pending(int idx, const char *prop);
+
+	void pushtrace(const char *name, const char *file, int line);
+	void callwfunction(int n, js_Function *F, js_Environment *scope);
+	void callfunction(int n, js_Function *F, js_Environment *scope);
+
+	int delvar(const char *name);
+	js_Property *vget_ownproperty(js_Object *obj, const char *name);
+	int rdelproperty(js_Object *obj, const char *name);
 };
 
 #endif

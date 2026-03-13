@@ -139,6 +139,7 @@ const int GamestateIO::read_file_version(const char* filename, int offset) {
 static void pre_load() { // do we NEED this...?
     OZZY_PROFILER_FUNCTION();
     g_scenario.set_campaign_scenario(-1);
+    grid_xx::init_all_grids();
 
     // clear data
     g_city.victory_state.reset();

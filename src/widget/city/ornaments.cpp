@@ -47,13 +47,13 @@ void building_draw_normal_anim(painter &ctx, vec2i pos, building* b, tile2i tile
     }
 
     if (base_id == sprite_id) {
-        auto& command = ImageDraw::create_subcommand(render_command_t::ert_ornament);
+        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_ornament);
         command.image_id = sprite_id + animation_offset;
         command.base_id = base_id;
         command.pixel = pos;
         command.mask = color_mask;
     } else {
-        auto& command = ImageDraw::create_subcommand(render_command_t::ert_sprite);
+        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_sprite);
         command.image_id = sprite_id + animation_offset;
         command.pixel = pos;
         command.mask = color_mask;

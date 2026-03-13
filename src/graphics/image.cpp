@@ -7,6 +7,7 @@
 #include "content/dir.h"
 #include "core/svector.h"
 #include "core/log.h"
+#include "core/profiler.h"
 #include "platform/arguments.h"
 
 #include <array>
@@ -238,6 +239,8 @@ const image_t *image_get(int pak, int id, int offset) {
 }
 
 const image_t* image_get(int id) {
+    OZZY_PROFILER_FUNCTION();
+
     if (id < 0) {
         return nullptr;
     }
@@ -280,12 +283,14 @@ const image_t* image_letter(int letter_id) {
     auto fontpak = data.pak_list[PACK_FONT].handle;
     if (letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
         return image_get(letter_id);
-    } else if (letter_id < IMAGE_FONT_MULTIBYTE_OFFSET) {
+    } 
+    
+    if (letter_id < IMAGE_FONT_MULTIBYTE_OFFSET) {
         const int image_id = image_id_from_group(PACK_FONT, 1) + letter_id;
         return image_get(image_id);
-    } else {
-        return nullptr;
-    }
+    } 
+    
+    return nullptr;
 }
 
 const image_t* image_get_enemy(int type, int id) {
@@ -293,18 +298,19 @@ const image_t* image_get_enemy(int type, int id) {
     return data.pak_list[type].handle->get_image(id);
 }
 
-const int image_t::isometric_size() const {
+int image_t::isometric_size() const {
     return (width + 2) / TILE_WIDTH_PIXELS;
 }
-const int image_t::isometric_top_height() const {
+
+int image_t::calc_isometric_top_height() const {
     if (has_isometric_top)
         return height - (isometric_size() * TILE_HEIGHT_PIXELS);
+
     return 0;
 }
-const int image_t::isometric_3d_height() const {
+
+int image_t::isometric_3d_height() const {
     if (has_isometric_top)
         return isometric_box_height;
     return 0;
 }
-
-int terrain_ph_offset;

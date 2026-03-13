@@ -2,7 +2,7 @@
 
 #include "graphics/animation.h"
 #include "graphics/image_desc.h"
-
+#include "mujs/jsi.h"
 #include "mujs/mujs.h"
 
 g_archive g_config_arch{ nullptr };
@@ -60,11 +60,11 @@ void archive::pop(archive arch, int n) {
 }
 
 bool archive::isobject(int idx) {
-    return js_isobject((js_State *)state, idx);
+    return ((js_State *)state)->isobject(idx);
 }
 
 bool archive::isobject(archive arch, int idx) {
-    return js_isobject((js_State *)(arch.state), idx);
+    return ((js_State *)arch.state)->isobject(idx);
 }
 
 void archive::pushiterator(archive arch, int idx, int own) {
@@ -97,7 +97,7 @@ pcstr archive::r_string(pcstr name) {
         }
 
         result = lang_get_string(gx.x, gx.y);
-    } else if (js_isobject(vm, -1)) {
+    } else if (vm->isobject(-1)) {
         js_getproperty(vm, -1, "group"); int group = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
         js_getproperty(vm, -1, "id"); int id = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
         result = lang_get_string(group, id);
@@ -124,7 +124,7 @@ std::vector<std::string> archive::r_array_str(pcstr name) {
         int i = 0;
         ;
     }
-    if (js_isobject(vm, -1)) {
+    if (vm->isobject(-1)) {
         int i = 0;
         ;
     }
@@ -150,7 +150,7 @@ std::vector<std::string> archive::to_array_str() {
         int i = 0;
         ;
     }
-    if (js_isobject(vm, -1)) {
+    if (vm->isobject(-1)) {
         int i = 0;
         ;
     }
@@ -186,7 +186,7 @@ archive::variant_t archive::to_variant() {
     } else if (js_isnumber(vm, -1)) {
         const float f = js_tonumber(vm, -1);
         result = variant_t(f);
-    } else if (js_isobject(vm, -1)) {
+    } else if (vm->isobject(-1)) {
         result = variant_t(variant_object_t{ name });
     } else if (js_isarray(vm, -1)) {
         result = variant_t(variant_array_t{ name });
@@ -211,7 +211,7 @@ archive::variant_t archive::r_variant(pcstr name) {
     } else if (js_isnumber(vm, -1)) {
         const float f = js_tonumber(vm, -1);
         result = variant_t(f);
-    } else if (js_isobject(vm, -1)) {
+    } else if (vm->isobject(-1)) {
         result = variant_t(variant_object_t{ name });
     } else if (js_isarray(vm, -1)) {
         result = variant_t(variant_array_t{ name });
@@ -277,7 +277,7 @@ vec2i archive::r_size2i(pcstr name, vec2i def, pcstr w, pcstr h) {
 vec2i archive::r_vec2i_impl(vec2i def, pcstr x, pcstr y) {
     auto vm = (js_State *)state;
     vec2i result = def;
-    if (js_isobject(vm, -1)) {
+    if (vm->isobject(-1)) {
         if (js_isarray(vm, -1)) {
             int length = js_getlength(vm, -1);
             if (length > 0) {
@@ -319,7 +319,7 @@ bool archive::r_anim(pcstr name, animation_t &anim) {
     bool ok = false;
     if (js_isundefined(vm, -1)) {
         ;
-    } else if (js_isobject(vm, -1)) {
+    } else if (vm->isobject(-1)) {
         js_getproperty(vm, -1, "pack"); anim.pack = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
         js_getproperty(vm, -1, "id"); anim.id = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
         js_getproperty(vm, -1, "offset"); anim.offset = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
@@ -343,7 +343,7 @@ xstring archive::r_function(pcstr name) {
     js_State *J = (js_State *)state;
     xstring funcref;
     js_getproperty(J, -1, name);
-    if (js_iscallable(J, -1)) {
+    if (J->iscallable(-1)) {
         funcref = js_ref(J);
     } else {
         js_pop(J, 1);
@@ -358,7 +358,7 @@ bool archive::r_desc_impl(image_desc &desc) {
         return false;
     } 
     
-    if (js_isobject(vm, -1)) {
+    if (vm->isobject(-1)) {
         js_getproperty(vm, -1, "pack"); desc.pack = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
         js_getproperty(vm, -1, "id"); desc.id = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
         js_getproperty(vm, -1, "offset"); desc.offset = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);

@@ -2,6 +2,7 @@
 
 #include "game/game.h"
 
+#include "core/profiler.h"
 #include "graphics/elements/menu.h"
 #include "graphics/elements/ui.h"
 #include "graphics/elements/ui_js.h"
@@ -11,7 +12,6 @@
 #include "city/constants.h"
 #include "city/city.h"
 #include "game/game_events.h"
-#include "core/profiler.h"
 #include "core/core_utility.h"
 #include "game/game_config.h"
 #include "game/settings.h"
@@ -37,7 +37,6 @@
 #include "widget/widget_city.h"
 #include "window/console.h"
 #include "dev/debug.h"
-
 #include "js/js_game.h"
 #include "js/js_struct.h"
 
@@ -108,6 +107,8 @@ static void button_rotate_right(int param1, int param2) {
 }
 
 void top_menu_widget_t::draw_elements_impl() {
+    OZZY_PROFILER_FUNCTION();
+
     vec2i cur_offset = offset;
     const e_font hightlight_font = !!game_features::gameui_highlight_top_menu_hover ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT;
     for (auto &it : headers.elements) {
@@ -278,6 +279,8 @@ void widget_sub_menu_show() {
 }
 
 void top_menu_widget_t::draw_rotate_buttons() {
+    OZZY_PROFILER_FUNCTION();
+
     // Orientation icon
     painter ctx = game.painter();
     if (orientation_button_pressed) {
@@ -300,10 +303,13 @@ void top_menu_widget_t::draw_foreground(UiFlags flags) {
     offset_rotate = s_width - offset_rotate_basic;
 
     // "ui" is the Debens, Population and Date texts
-    ui.event(top_menu_widget_draw{ pos });
-    ui.begin_widget({ 0, 0 });
-    ui.draw();
-    ui.end_widget();
+    {
+        OZZY_PROFILER_SECTION(_, "js:top_menu_widget_draw")
+        ui.event(top_menu_widget_draw{ pos });
+        ui.begin_widget({ 0, 0 });
+        ui.draw();
+        ui.end_widget();
+    }
 }
 
 void widget_top_menu_draw() {
@@ -353,9 +359,7 @@ void widget_top_menu_handle_input(const mouse* m, const hotkeys* h) {
     }
 
     int button_id = 0;
-    int handled = false;
-
-    handled = generic_buttons_handle_mouse(m, { top_menu_widget.offset_rotate, 0}, orientation_buttons_ph, 3, &button_id);
+    int handled = generic_buttons_handle_mouse(m, { top_menu_widget.offset_rotate, 0}, orientation_buttons_ph, 3, &button_id, nullptr);
     if (button_id) {
         orientation_button_state = button_id;
         if (handled)

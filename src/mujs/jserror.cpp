@@ -257,18 +257,19 @@ static void Ep_toString(js_State *J)
   const char *name = "Error";
   const char *message = "";
 
-  if (!js_isobject(J, -1))
-    js_typeerror(J, "not an object");
+  if (!J->isobject(-1)) {
+      js_typeerror(J, "not an object");
+  }
 
-  if (js_hasproperty(J, 0, "name"))
+  if (J->hasproperty(0, "name"))
     name = js_tostring(J, -1);
-  if (js_hasproperty(J, 0, "message"))
+  if (J->hasproperty(0, "message"))
     message = js_tostring(J, -1);
 
   snprintf(buf, sizeof buf, "%s: %s", name, message);
   js_pushstring(J, buf);
 
-  if (js_hasproperty(J, 0, "stackTrace"))
+  if (J->hasproperty(0, "stackTrace"))
     js_concat(J);
 }
 

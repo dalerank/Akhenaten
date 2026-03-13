@@ -41,9 +41,8 @@
 #include "window/trade_opened.h"
 #include "platform/renderer.h"
 #include "game/game.h"
-
+#include "core/profiler.h"
 #include "js/js_game.h"
-#include "js/js_events.h"
 #include "graphics/elements/ui_js.h"
 #include "dev/debug.h"
 

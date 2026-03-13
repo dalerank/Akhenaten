@@ -7,7 +7,7 @@
 #include "city/city_figures.h"
 #include "figuretype/figure_enemy.h"
 
-grid_xx g_enemy_strength = {0, FS_UINT8};
+grid_xx g_enemy_strength(FS_UINT8);
 
 void map_enemy_strength_clear() {
     map_grid_clear(g_enemy_strength);

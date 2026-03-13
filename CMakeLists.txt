@@ -656,23 +656,21 @@ execute_process(
 
 # Set harfbuzz library path - use absolute path to avoid issues with find_package
 if(MSVC)
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT CMAKE_BUILD_TYPE)
-        set(HARFBUZZ_LIBRARY "${HARFBUZZ_INSTALL_DIR}/harfbuzzd.lib")
-    else()
-        set(HARFBUZZ_LIBRARY "${HARFBUZZ_INSTALL_DIR}/harfbuzz.lib")
-    endif()
+    # Multi-config generators (Visual Studio) select the config at build time, not configure time.
+    # CMAKE_BUILD_TYPE is empty for multi-config generators, so we must use a generator expression.
+    set(HARFBUZZ_LIBRARY
+        "$<$<CONFIG:Debug>:${HARFBUZZ_INSTALL_DIR}/harfbuzzd.lib>$<$<NOT:$<CONFIG:Debug>>:${HARFBUZZ_INSTALL_DIR}/harfbuzz.lib>"
+    )
 else()
     set(HARFBUZZ_LIBRARY "${HARFBUZZ_INSTALL_DIR}/libharfbuzz.a")
 endif()
 
-# Convert to absolute path to ensure correct linking
-get_filename_component(HARFBUZZ_LIBRARY "${HARFBUZZ_LIBRARY}" ABSOLUTE)
 set(HARFBUZZ_INCLUDE_DIR "${HARFBUZZ_INSTALL_DIR}/include/harfbuzz")
 set(HARFBUZZ_INCLUDE_DIRS "${HARFBUZZ_INCLUDE_DIR}" CACHE PATH "Path to harfbuzz include directory" FORCE)
 set(HARFBUZZ_ROOT "${HARFBUZZ_INSTALL_DIR}" CACHE PATH "Path to harfbuzz installation" FORCE)
 set(HarfBuzz_ROOT "${HARFBUZZ_INSTALL_DIR}" CACHE PATH "Path to harfbuzz installation (alternative name)" FORCE)
 set(HARFBUZZ_FOUND TRUE CACHE BOOL "Whether harfbuzz was found" FORCE)
-set(HARFBUZZ_LIBRARIES "${HARFBUZZ_LIBRARY}" CACHE FILEPATH "Path to harfbuzz library" FORCE)
+set(HARFBUZZ_LIBRARIES "${HARFBUZZ_LIBRARY}" CACHE STRING "Path to harfbuzz library" FORCE)
 
 #
 # harfbuzz section end
@@ -771,7 +769,7 @@ file(GLOB SCRIPTS_FILES ${PROJECT_SOURCE_DIR}/src/scripts/*.cpp)
 file(GLOB LZMA_FILES ${PROJECT_SOURCE_DIR}/src/lzma/*.c)
 file(GLOB BZIP_FILES ${PROJECT_SOURCE_DIR}/src/bzip/*.c)
 file(GLOB LAME_FILES ${PROJECT_SOURCE_DIR}/src/lame/libmp3lame/*.c)
-file(GLOB MUJS_FILES ${PROJECT_SOURCE_DIR}/src/mujs/*.c)
+file(GLOB MUJS_FILES ${PROJECT_SOURCE_DIR}/src/mujs/*.cpp)
 
 if (PLATFORM_ANDROID)
     add_definitions(-DANDROID_BUILD=ON)
@@ -1062,6 +1060,8 @@ endif()
 if(MSVC)
     include_directories(ext/bugtrap)
     set_target_properties(${GAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${GAME_WORKING_DIRECTORY}")
+    target_sources(${GAME} PRIVATE ${CMAKE_SOURCE_DIR}/common.natvis)
+    set_source_files_properties(${CMAKE_SOURCE_DIR}/common.natvis PROPERTIES VS_TOOL_OVERRIDE "natvis")
 endif()
 
 if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang"))

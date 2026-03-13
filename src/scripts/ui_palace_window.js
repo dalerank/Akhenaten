@@ -21,7 +21,7 @@ info_window_palace {
     })
 }
 
-[es=info_window_palace_init]
+[es=(info_window_palace, init)]
 function palace_info_window_init_workers_desc(window) {
     var palace = city.get_building(window.bid)
     var reason = { group: city.object_info.group, id: 0 }

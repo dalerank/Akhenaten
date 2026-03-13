@@ -388,7 +388,7 @@ void globals_settings_t::sync_global(pcstr filename, pcstr name) {
 	js_State *state = (js_State *)g_config_arch.state;
 	js_setdumping(state, &svarprintf);
 	js_getglobal(state, name);
-	if (js_isobject(state, -1)) {
+	if (state->isobject(-1)) {
 		js_dumpobject_ex(state, -1);
 	}
 	js_pop(state, 1);

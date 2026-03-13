@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "grid/building_tiles.h"
+#include "city/object_info.h"
 #include "grid/terrain.h"
 #include "city/city_warnings.h"
 #include "grid/road_access.h"
@@ -14,6 +15,7 @@
 #include "core/archive.h"
 #include "grid/floodplain.h"
 #include "building/destruction.h"
+#include "graphics/elements/tooltip.h"
 #include "grid/enemy_strength.h"
 #include "grid/tiles.h"
 #include "sound/sound.h"
@@ -22,6 +24,16 @@
 
 struct building_ev { building_id bid; };
 ANK_REGISTER_STRUCT_WRITER(building_ev, bid)
+
+struct building_tooltip_ev { building_id bid; int mx, my; };
+ANK_REGISTER_STRUCT_WRITER(building_tooltip_ev, bid, mx, my)
+
+using namespace render_cmd;
+
+template<typename T>
+void building_impl::es_t(const T &ev, pcstr func) const {
+    js_event(ev, current_params().name, func);
+}
 
 void building_impl::on_place(int orientation, int variant) {
     const auto &p = current_params();
@@ -76,6 +88,10 @@ void building_impl::on_post_load() {
     base.setup_static_flags();
     update_graphic();
     remove_dead_figures();
+}
+
+void building_impl::spawn_figure() {
+    es(__func__);
 }
 
 void building_impl::update_day() {
@@ -134,10 +150,7 @@ bool building_impl::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     if (base.has_plague) {
         int skull_img = image_id_from_group(GROUP_PLAGUE_SKULL);
 
-        auto &command = ImageDraw::create_subcommand(render_command_t::ert_generic);
-        command.image_id = skull_img;
-        command.pixel = { point.x + 18, point.y - 32 };
-        command.mask = color_mask;
+        ImageDraw::generic_sub(ctx, ImageId{skull_img}, Pixel{vec2i{point.x + 18, point.y - 32}}, Mask{color_mask});
     }
 
     return false;
@@ -169,6 +182,10 @@ void building_impl::update_count() const {
 void building_impl::update_map_orientation(int orientation) {
 }
 
+e_sound_channel_city building_impl::sound_channel() const {
+    return current_params().sound_channel;
+}
+
 void building_impl::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, color mask) {
     if (!can_play_animation()) {
         return;
@@ -183,11 +200,11 @@ void building_impl::draw_normal_anim(painter &ctx, const animation_context &rani
     }
 
     vec2i pos = pixel + ranim.pos;
-    auto &command = ImageDraw::create_subcommand(render_command_t::ert_generic);
-    command.image_id = ranim.start_frame() + ranim.current_frame();
-    command.pixel = pos;
-    command.mask = mask;
-    command.flags = ranim.flags;
+    ImageDraw::generic_sub(ctx, ImageId{ranim.start_frame() + ranim.current_frame()}, Pixel{pos}, Mask{mask}, Flags{ranim.flags});
+}
+
+void building_impl::draw_tooltip(tooltip_context *c) const {
+    es_t(building_tooltip_ev{ base.id, c->mpos.x, c->mpos.y }, __func__);
 }
 
 void building_impl::bind_dynamic(io_buffer *iob, size_t version) {
@@ -284,7 +301,7 @@ int building_impl::get_figure_id(int i) const { return base.get_figure_id(i); }
 int building_impl::need_resource_amount(e_resource r) const { return base.need_resource_amount(r); }
 
 void building_impl::es(pcstr es_name) const {
-    js_event(building_ev{ base.id }, current_params().name, es_name);
+    es_t(building_ev{ base.id }, es_name);
 }
 
 void building_impl::destroy_by_poof(bool clouds) {

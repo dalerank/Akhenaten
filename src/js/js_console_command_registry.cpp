@@ -17,7 +17,7 @@ static void console_command_wrapper_global(const std::string &funcRefStr, std::i
     }
 
     js_getglobal(J, funcRefStr.c_str());
-    if (!js_iscallable(J, -1)) {
+    if (!J->iscallable(-1)) {
         os << "Error: Console command function not found" << std::endl;
         js_pop(J, 1);
         return;
@@ -55,7 +55,7 @@ static void console_command_wrapper_registry(const std::string &funcRefStr, std:
     }
 
     js_getregistry(J, funcRefStr.c_str());
-    if (!js_iscallable(J, -1)) {
+    if (!J->iscallable(-1)) {
         os << "Error: Console command function not found" << std::endl;
         js_pop(J, 1);
         return;
@@ -95,7 +95,7 @@ void js_register_console_command_from_function(pcstr functionName, pcstr command
     }
 
     js_getglobal(J, functionName);
-    if (!js_iscallable(J, -1)) {
+    if (!J->iscallable(-1)) {
         logs::error("JS: Function '%s' is not callable for console command '%s'", functionName, commandName);
         js_pop(J, 1);
         return;
@@ -114,19 +114,19 @@ void js_register_console_command(js_State *J) {
 #if !defined(GAME_PLATFORM_ANDROID)
     if (js_gettop(J) < 2) {
         logs::error("__register_console_command: expected at least 2 arguments (commandName, callback)");
-        js_pushundefined(J);
+        J->pushundefined();
         return;
     }
 
     if (!js_isstring(J, 1)) {
         logs::error("__register_console_command: first argument must be a string (command name)");
-        js_pushundefined(J);
+        J->pushundefined();
         return;
     }
 
-    if (!js_iscallable(J, 2)) {
+    if (!J->iscallable(2)) {
         logs::error("__register_console_command: second argument must be a function");
-        js_pushundefined(J);
+        J->pushundefined();
         return;
     }
 
@@ -145,7 +145,7 @@ void js_register_console_command(js_State *J) {
     bind_debug_command(commandName, wrapper);
 #endif
 
-    js_pushundefined(J);
+    J->pushundefined();
 }
 
 static void on_modifier_console_command(js_State *J, pcstr name, pcstr value) {

@@ -242,7 +242,7 @@ bool building_fort::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
         int mask = drawing_building_as_deleted(&base) ? COLOR_MASK_RED : 0;
         const auto &ranim = anim(animkeys().picture);
 
-        auto& command = ImageDraw::create_command(render_command_t::ert_generic);
+        auto& command = ImageDraw::create_command(ctx, render_command_t::ert_generic);
         command.image_id = ranim.first_img();
         command.pixel = point + ranim.pos;
         command.mask = color_mask;

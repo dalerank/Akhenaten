@@ -363,6 +363,8 @@ void minimap_window::draw_uncached(vec2i pos) {
 }
 
 void widget_minimap_draw(vec2i offset, int force) {
+    OZZY_PROFILER_FUNCTION();
+
     g_minimap_window.screen_offset = offset;
     g_minimap_window.draw_force = force;
     g_minimap_window.draw_foreground(0);

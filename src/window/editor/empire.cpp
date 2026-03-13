@@ -329,7 +329,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
     data.focus_button_id = 0;
     if (!arrow_buttons_handle_mouse(m, /*{data.p_min.x + 20, data.p_max.y - 100},*/ arrow_buttons_empire, 2, 0)) {
-        if (!generic_buttons_handle_mouse(m, {data.p_min.x + 20, data.p_max.y - 100}, generic_button_ok, 1, &data.focus_button_id)) {
+        if (!generic_buttons_handle_mouse(m, {data.p_min.x + 20, data.p_max.y - 100}, generic_button_ok, 1, &data.focus_button_id, nullptr)) {
             determine_selected_object(m);
             int selected_object = g_empire_map.selected_object();
             if (selected_object) {

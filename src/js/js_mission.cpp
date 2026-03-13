@@ -27,7 +27,7 @@ static void js_mission_var_getter(js_State *J) {
     js_pop(J, 2);
 
     if (!name || !g_scenario.vars.is_defined(name)) {
-        js_pushundefined(J);
+        J->pushundefined();
         return;
     }
 
@@ -52,7 +52,7 @@ static void js_mission_var_getter(js_State *J) {
         js_pushstring(J, std::get<xstring>(value).c_str());
         break;
     default:
-        js_pushundefined(J);
+        J->pushundefined();
         break;
     }
 }
@@ -76,7 +76,7 @@ static void js_mission_var_setter(js_State *J) {
     } else if (js_isstring(J, 1)) {
         const char *value = js_tostring(J, 1);
         g_scenario.vars.set_string(name, value);
-    } else if (js_isobject(J, 1)) {
+    } else if (J->isobject(1)) {
         js_getproperty(J, 1, "x");
         js_getproperty(J, 1, "y");
 

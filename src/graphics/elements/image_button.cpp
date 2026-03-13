@@ -3,6 +3,7 @@
 #include "io/gamefiles/lang.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "graphics/elements/ui.h"
 #include "sound/sound.h"
 #include "core/custom_span.hpp"
 #include "game/game.h"
@@ -56,6 +57,24 @@ void image_buttons_draw(vec2i pos, image_button* buttons, int num_buttons, int s
         }
 
         ctx.img_generic(image_id, pos + vec2i{btn->x, btn->y});
+    }
+}
+
+void image_buttons_push_commands(vec2i base_pos, image_button* buttons, int num_buttons, int starting_button) {
+    fade_pressed_effect(buttons, num_buttons);
+    for (int i = starting_button; i < starting_button + num_buttons; i++) {
+        image_button* btn = &buttons[i];
+        int image_id = image_id_from_group(btn->image_collection, btn->image_group) + btn->image_offset;
+        if (btn->enabled) {
+            if (btn->pressed) {
+                image_id += 2;
+            } else if (btn->hovered) {
+                image_id += 1;
+            }
+        } else {
+            image_id += 3;
+        }
+        ui::image_abs(image_id, base_pos + vec2i{btn->x, btn->y});
     }
 }
 

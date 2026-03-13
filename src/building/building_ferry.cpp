@@ -12,6 +12,7 @@
 #include "io/gamefiles/lang.h"
 #include "figuretype/figure_ferry_boat.h"
 #include "core/random.h"
+#include "core/profiler.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_ferry);
 info_window_ferry ferry_infow;
@@ -49,11 +50,13 @@ void building_ferry::update_map_orientation(int orientation) {
 }
 
 bool building_ferry::force_draw_height_tile(painter &ctx, tile2i t, vec2i pixel, color mask) {
+    OZZY_PROFILER_FUNCTION()
+
     if (this->main()->tile() == t) {
         int image_id = current_params().first_img(animkeys().top);
         int image_offset = city_view_relative_orientation(base.orientation);
 
-        auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_top);
+        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_top);
         command.image_id = image_id + image_offset;
         command.pixel = pixel + vec2i{ -HALF_TILE_WIDTH_PIXELS, -HALF_TILE_HEIGHT_PIXELS };
         command.mask = mask;
@@ -65,6 +68,8 @@ bool building_ferry::force_draw_height_tile(painter &ctx, tile2i t, vec2i pixel,
 }
 
 bool building_ferry::force_draw_top_tile(painter &ctx, tile2i t, vec2i pixel, color mask) {
+    OZZY_PROFILER_FUNCTION()
+
     if (this->main()->tile() == t) {
         return true;
     }

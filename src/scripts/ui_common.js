@@ -4,7 +4,7 @@ ui {
     popup_message: __ui_popup_message
 
     sidebar {
-        @offset_x { get: __widget_sidebar_city_offset_x }
+        @offset_x { get: __ui_widget_sidebar_city_offset_x }
     }
 }
 
@@ -61,50 +61,7 @@ ui.window_overlay_menu_show = __ui_window_overlay_menu_show
 ui.window_build_menu_show = __ui_window_build_menu_show
 ui.sidebar_set_type = __ui_widget_sidebar_set_type
 ui.building_menu_items = __ui_building_menu_items
-
-function ui_create_element_proxy(elementId) {
-    return {
-        id: elementId
-
-        @text {
-            get: function() { return __ui_element_get_text(this.id) }
-            set: function(v) { __ui_element_set_text(this.id, v) }
-        }
-
-        @enabled {
-            get: function() { return __ui_element_get_enabled(this.id) }
-            set: function(v) { __ui_element_set_enabled(this.id, v) }
-        }
-
-        @readonly {
-            get: function() { return __ui_element_get_readonly(this.id) }
-            set: function(v) { __ui_element_set_readonly(this.id, v) }
-        }
-
-        @font {
-            get: function() { return __ui_element_get_font(this.id) }
-            set: function(v) { __ui_element_set_font(this.id, v) }
-        }
-
-        @text_color {
-            get: function() { return __ui_element_get_text_color(this.id) }
-            set: function(v) { __ui_element_set_text_color(this.id, v) }
-        }
-
-        @image {
-            set: function(v) { __ui_element_set_image(this.id, v) }
-        }
-
-        @selected {
-            get: function() { return __ui_element_get_selected(this.id) }
-            set: function(v) { __ui_element_set_selected(this.id, v) }
-        }
-
-        @tooltip {
-            set: function(v) { __ui_element_set_tooltip(this.id, v) }
-        }
-    }
-}
+ui.show_yesno = __ui_dialog_show_yesno
 
 function px(i) { return i * 16 }
 function sw(v) { return game.screen.w + v}
