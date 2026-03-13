@@ -2,6 +2,7 @@
 
 #include "core/encoding.h"
 #include "core/log.h"
+#include "core/profiler.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/image_button.h"
@@ -19,6 +20,7 @@
 #include "scenario/map.h"
 #include "scenario/scenario.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
 #include "dev/debug.h"
 #include "game/mission.h"
@@ -556,7 +558,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
 }
 
-void window_scenario_selection_show(e_map_selection_dialog_type dialog_type) {
+void window_scenario_selection_show(int dialog_type) {
     // city construction kit
     window_type window = {
         WINDOW_CCK_SELECTION,
@@ -564,6 +566,7 @@ void window_scenario_selection_show(e_map_selection_dialog_type dialog_type) {
         draw_foreground,
         handle_input
     };
-    init(dialog_type);
+    init((e_map_selection_dialog_type)dialog_type);
     window_show(&window);
 }
+ANK_FUNCTION_1(window_scenario_selection_show)

@@ -6,5 +6,5 @@
 #include "file_dialog_delete.h"
 
 void window_file_dialog_save_show(file_type type);
-void window_file_dialog_load_show(file_type type);
+void window_file_dialog_load_show(int type);
 void window_file_dialog_delete_show(file_type type);

@@ -229,3 +229,4 @@ void window_player_selection_show() {
 }
 
 ANK_FUNCTION(window_player_selection_show)
+ANK_FUNCTION(window_player_selection_init)

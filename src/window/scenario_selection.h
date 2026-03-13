@@ -8,4 +8,4 @@ enum e_map_selection_dialog_type {
     MAP_SELECTION_CAMPAIGN_UNUSED_BACKGROUND
 };
 
-void window_scenario_selection_show(e_map_selection_dialog_type dialog_type);
+void window_scenario_selection_show(int dialog_type);

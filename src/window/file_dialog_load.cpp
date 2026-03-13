@@ -1,9 +1,8 @@
 #include "file_dialog_load.h"
+
 #include "file_dialog_common.h"
-
-#include <cassert>
-
 #include "core/calc.h"
+#include "core/profiler.h"
 #include "core/encoding.h"
 #include "core/string.h"
 #include "content/dir.h"
@@ -30,6 +29,7 @@
 #include "window/autoconfig_window.h"
 #include "game/settings.h"
 #include "io/manager.h"
+#include "js/js_game.h"
 
 static const time_millis NOT_EXIST_MESSAGE_TIMEOUT = 500;
 
@@ -256,7 +256,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
 }
 
-void window_file_dialog_load_show(file_type type) {
+void window_file_dialog_load_show(int type) {
     if (!g_file_dialog_load.panel) {
         ui_params.use_file_finder = true;
         ui_params.view_items = NUM_FILES_IN_VIEW;
@@ -276,7 +276,8 @@ void window_file_dialog_load_show(file_type type) {
         handle_input
     };
 
-    init(type);
+    init((file_type)type);
     window_show(&window);
 }
+ANK_FUNCTION_1(window_file_dialog_load_show)
 
