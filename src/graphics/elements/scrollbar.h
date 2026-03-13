@@ -17,6 +17,7 @@ struct scrollbar_t {
     int is_dragging_scroll;
     int scroll_position_drag;
     bool thin;
+    vec2i scrollbar_offset = {};
     vec2i offset = {};
 
     void init(int scroll_position, int max_scroll_position);

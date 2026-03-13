@@ -30,6 +30,8 @@
 #include "game/settings.h"
 #include "js/js_game.h"
 #include "graphics/elements/scroll_list_panel.h"
+#include "graphics/elements/ui.h"
+#include "graphics/screen.h"
 #include "platform/renderer.h"
 
 #include <string.h>
@@ -108,7 +110,7 @@ void window_player_selection_init() {
     data.panel->refresh_file_finder();
     data.selected_player = g_settings.player_name;
     encoding_to_utf8(data.selected_player, data.selected_player_utf8, MAX_PLAYER_NAME, 0);
-    
+
     data.panel->select(data.selected_player_utf8);
     if (data.panel->get_total_entries() == 1) {
         data.panel->select_entry(0);
@@ -122,29 +124,23 @@ static void draw_background(int) {
     g_render.clear_screen();
     ImageDraw::img_background(ctx, image_id_from_group(GROUP_PLAYER_SELECTION));
 }
+
 static void draw_foreground(int) {
     auto& data = *g_window_player_selection;
-    graphics_set_to_dialog();
 
-    outer_panel_draw(vec2i{128, 40}, 24, 21);
+    ui::begin_widget(screen_dialog_offset());
+    ui::panel(vec2i{128, 40}, vec2i{24, 21}, UiFlags_PanelOuter);
+    ui::label(292, 3, vec2i{160, 60}, FONT_LARGE_BLACK_ON_LIGHT, UiFlags_AlignCentered, 304);
 
-    // title
-    lang_text_draw_centered(292, 3, 160, 60, 304, FONT_LARGE_BLACK_ON_LIGHT);
-
-    // family names
+    ui::begin_widget(ui_params.pos, true);
     data.panel->draw();
+    ui::end_widget();
 
-    // buttons
     for (int i = 0; i < 4; i++) {
-        button_border_draw(buttons[i].x, buttons[i].y, buttons[i].width, buttons[i].height, data.focus_button_id == i + 1 ? 1 : 0);
-        if (i < 3) {
-            lang_text_draw_centered(292, i, buttons[i].x, buttons[i].y + 6, buttons[i].width, FONT_NORMAL_BLACK_ON_LIGHT);
-        } else {
-            lang_text_draw_centered(292, 4, buttons[i].x, buttons[i].y + 6, buttons[i].width, FONT_NORMAL_BLACK_ON_LIGHT);
-        }
+        ui::button_border(vec2i{buttons[i].x, buttons[i].y}, vec2i{buttons[i].width, buttons[i].height}, data.focus_button_id == i + 1);
+        ui::label(i < 3 ? 292 : 292, i < 3 ? i : 4, vec2i{buttons[i].x, buttons[i].y + 6}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, buttons[i].width);
     }
-
-    graphics_reset_dialog();
+    ui::end_widget();
 }
 
 static void confirm_nothing(bool accepted) {
