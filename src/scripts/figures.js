@@ -17,8 +17,8 @@ figure_fireman {
 	fireman_no_food_in_city {sound:"fireman_g02.WAV", group: 242, text:4}
 	fireman_city_not_safety_workers_leaving {sound:"fireman_g03.WAV", group: 242, text:5}
 	fireman_need_workers {sound:"fireman_g04.WAV", group: 242, text:6}
-	fireman_hight_fire_level {sound:"fireman_g05.WAV", group: 242, text:7}
-	fireman_gods_are_angry {sound:"fireman_g06.WAV", group: 242, text:8}
+	fireman_gods_are_angry {sound:"fireman_g05.WAV", group: 242, text:8}
+	fireman_hight_fire_level {sound:"fireman_g06.WAV", group: 242, text:7}
 	fireman_need_more_workers {sound:"fireman_g07.WAV", group: 242, text:9}
 	fireman_low_entertainment {sound:"fireman_g08.WAV", group: 242, text:10}
 	fireman_gods_are_pleasures {sound:"fireman_g09.WAV", group: 242, text:11}
