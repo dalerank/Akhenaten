@@ -99,10 +99,12 @@ static void O_getOwnPropertyDescriptor(js_State *J)
 {
 	js_Object *obj;
 	js_Property *ref;
-	if (!J->isobject(1))
+	if (!J->isobject(1)) {
 		js_typeerror(J, "not an object");
+	}
+
 	obj = J->toobject(1);
-	ref = jsV_getproperty(J, obj, js_tostring(J, 2));
+	ref = obj->vgetproperty(js_tostring(J, 2));
 	if (!ref)
 		J->pushundefined();
 	else {
