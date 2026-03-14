@@ -20,7 +20,6 @@ namespace ui {
 
         void update_mods();
 
-        static void show();
         bool update_info = false;
         uint32_t time_last_update_check = 0;
     };

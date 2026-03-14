@@ -4,8 +4,9 @@ mods_window {
     pos: [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
     allow_rmb_goback : true
     ui {
-        background   : outer_panel({size[40, 30]})
-        title        : header({text:"Mods"
+        background_image : background({pack:PACK_UNLOADED, id:9})
+        background     : outer_panel({size[40, 30]})
+        title          : header({text:"Mods"
                                font:FONT_LARGE_BLACK_ON_LIGHT, size[px(40), 20]
                                multiline:false, align:"center"
                                margin{top:20}})
@@ -29,4 +30,8 @@ mods_window {
                              align:"center"
                              margin{bottom:-35}})
     }
+}
+
+[es=(mods_window, init)]
+function mods_window_on_init(window) {
 }
