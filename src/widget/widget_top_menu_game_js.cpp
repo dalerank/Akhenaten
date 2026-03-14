@@ -7,7 +7,7 @@
 #include "window/file_dialog_save.h"
 #include "window/file_dialog_delete.h"
 #include "window/main_menu.h"
-#include "window/window_dynasty_menu.h"
+#include "window/autoconfig_window.h"
 #include "window/display_options.h"
 #include "window/sound_options.h"
 #include "window/speed_options.h"
@@ -36,7 +36,7 @@ pcstr __widget_top_menu_new_game(int, int) {
         g_city_planner.reset();
         game_undo_disable();
         g_city.reset_overlay();
-        ui::window_dinasty_menu::show();
+        autoconfig_window::show_by_section("window_dinasty_menu");
     });
 
     return "";

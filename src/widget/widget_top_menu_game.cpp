@@ -27,7 +27,7 @@
 #include "window/window_city.h"
 #include "window/difficulty_options.h"
 #include "window/window_features.h"
-#include "window/window_dynasty_menu.h"
+#include "window/autoconfig_window.h"
 #include "window/hotkey_config.h"
 #include "window/main_menu.h"
 #include "window/popup_dialog.h"

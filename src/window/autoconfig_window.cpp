@@ -108,3 +108,26 @@ void autoconfig_window::init() {
     window_message_setup_help_id(help_id);
     _is_inited = true;
 }
+
+void autoconfig_window::show_by_section(pcstr section) {
+    auto it = autoconfig_registry().find(section);
+    if (it == autoconfig_registry().end()) {
+        logs::error("autoconfig_window_show: unknown section '%s'", section);
+        return;
+    }
+    autoconfig_window* w = it->second;
+    static autoconfig_window* s_current = nullptr;
+    static window_type s_type = {
+        WINDOW_GAME_SELECTION,
+        [] (int flags) { if (s_current) s_current->draw_background(flags); },
+        [] (int flags) { if (s_current) s_current->ui_draw_foreground(flags); },
+        [] (const mouse* m, const hotkeys* h) { if (s_current) s_current->ui_handle_mouse(m); }
+    };
+    s_current = w;
+    w->init();
+    window_show(&s_type);
+}
+
+void autoconfig_window::unregister_section(pcstr section) {
+    autoconfig_registry().erase(section);
+}
