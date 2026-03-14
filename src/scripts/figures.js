@@ -467,6 +467,9 @@ figure_ostrich_hunter {
 		hunter_hunting : {sound:"hunt_ostrich_e01.wav", text: "#hunter_ostrich_hunting" }
     	hunter_back : {sound:"hunt_ostrich_e02.wav", text: "#hunter_ostrich_back" }
     	hunter_city_is_good : {sound: "hunt_ostrich_e10.wav", text: "#hunter_ostrich_good_city"}
+		hunter_test_1 : {sound: "hunt_ostrich_e_test1.wav", text: "#hunter_ostrich_test_1"}
+		hunter_test_2 : {sound: "hunt_ostrich_e_test2.wav", text: "#hunter_ostrich_test_2"}
+		hunter_test_3 : {sound: "hunt_ostrich_e_test3.wav", text: "#hunter_ostrich_test_3"}
 	}
 
 	category: figure_category_armed

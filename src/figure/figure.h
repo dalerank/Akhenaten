@@ -400,6 +400,7 @@ public:
     // phrase.c
     void figure_phrase_determine();
     int figure_play_phrase_file();
+    void figure_synthesize_phrase_file(const xstring& path);
 
     // service.c
     int figure_service_provide_coverage();
