@@ -121,7 +121,7 @@ int ui::records_window::ui_handle_mouse(const mouse* m) {
 
 void ui::records_window::show() {
     static window_type instance = {
-        WINDOW_PLAYER_SELECTION,
+        "window_player_selection",
         [] (int flags) { g_records_window.draw_background(flags); },
         [] (int flags) { g_records_window.ui_draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { g_records_window.ui_handle_mouse(m); }

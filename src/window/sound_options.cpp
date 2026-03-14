@@ -197,7 +197,7 @@ static void arrow_button_city(int is_down, int param2) {
 
 void window_sound_options_show(void (*close_callback)(void)) {
     static window_type window = {
-      WINDOW_SOUND_OPTIONS,
+      "window_sound_options",
       window_draw_underlying_window,
       draw_foreground,
       handle_input,

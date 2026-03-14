@@ -115,7 +115,7 @@ int window_warnings::determine_width(pcstr text) {
 
 void window_warnings::draw_foreground(UiFlags flags) {
     OZZY_PROFILER_FUNCTION();
-    if (!window_is(WINDOW_CITY) && !window_is(WINDOW_EDITOR_MAP)) {
+    if (!window_is("window_city") && !window_is("window_editor_map")) {
         clear_all();
         return;
     }

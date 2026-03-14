@@ -56,7 +56,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 void window_intro_video_show(void) {
     if (init()) {
         window_type window = {
-            WINDOW_INTRO_VIDEO,
+            "window_intro_video",
             draw_background,
             draw_foreground,
             handle_input

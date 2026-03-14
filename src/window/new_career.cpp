@@ -83,7 +83,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 
 void window_new_career_show() {
     window_type window = {
-        WINDOW_NEW_CAREER,
+        "window_new_career",
         window_draw_underlying_window,
         draw_foreground,
         handle_input

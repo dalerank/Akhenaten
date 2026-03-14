@@ -198,7 +198,7 @@ static void button_open_play_toggle(int param1, int param2) {
 
 void window_editor_win_criteria_show(void) {
     window_type window = {
-        WINDOW_EDITOR_WIN_CRITERIA,
+        "window_editor_win_criteria",
         draw_background,
         draw_foreground,
         handle_input

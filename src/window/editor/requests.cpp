@@ -91,7 +91,7 @@ static void button_request(int id, int param2) {
 
 void window_editor_requests_show(void) {
     window_type window = {
-        WINDOW_EDITOR_REQUESTS,
+        "window_editor_requests",
         draw_background,
         draw_foreground,
         handle_input

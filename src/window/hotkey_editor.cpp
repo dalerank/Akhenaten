@@ -105,7 +105,7 @@ void window_hotkey_editor_key_released(int key, int modifiers) {
 
 void window_hotkey_editor_show(int action, int index, void (*callback)(int, int, e_key, e_key_mode)) {
     window_type window = {
-        WINDOW_HOTKEY_EDITOR,
+        "window_hotkey_editor",
         draw_background,
         draw_foreground,
         handle_input

@@ -240,7 +240,7 @@ void window_info_show(const tile2i& point, bool avoid_mouse) {
     };
 
     static window_type window = {
-        WINDOW_BUILDING_INFO,
+        "window_building_info",
         window_info_draw_background,
         window_info_draw_foreground,
         window_info_handle_input,

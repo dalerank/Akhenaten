@@ -778,7 +778,7 @@ void empire_window::draw_tooltip(tooltip_context *c) {
 
 void window_empire_show() {
     static window_type window = {
-        WINDOW_EMPIRE,
+        "window_empire",
         [] (int flags) { g_empire_window.draw_background(flags); },
         [] (int flags) { g_empire_window.ui_draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { g_empire_window.ui_handle_mouse(m); },

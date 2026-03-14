@@ -151,7 +151,7 @@ static void button_save(int param1, int param2) {
 
 void window_editor_edit_request_show(int id) {
     window_type window = {
-        WINDOW_EDITOR_EDIT_REQUEST,
+        "window_editor_edit_request",
         draw_background,
         draw_foreground,
         handle_input

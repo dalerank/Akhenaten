@@ -26,7 +26,7 @@ void window_city_military_show(int legion_formation_id) {
     selected_legion_formation_id = legion_formation_id;
 
     static window_type window = {
-        WINDOW_CITY_MILITARY,
+        "window_city_military",
         window_city_draw_background,
         draw_foreground_military,
         [] (auto m, auto h) {

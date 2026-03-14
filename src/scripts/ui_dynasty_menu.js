@@ -21,7 +21,7 @@ function dynasty_menu_btn_back() {
     window_player_selection_show()
 }
 
-[es=script_window]
+[es=window]
 window_dinasty_menu {
     pos [(sw(0) - px(24))/2, (sh(0) - px(21))/2]
     ui {

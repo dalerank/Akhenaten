@@ -205,7 +205,7 @@ static void button_clay_pit_toggle(int param1, int param2) {
 
 void window_editor_special_events_show(void) {
     window_type window = {
-        WINDOW_EDITOR_SPECIAL_EVENTS,
+        "window_editor_special_events",
         draw_background,
         draw_foreground,
         handle_input

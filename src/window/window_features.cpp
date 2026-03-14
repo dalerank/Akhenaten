@@ -361,7 +361,7 @@ void ui::window_features::ui_draw_foreground(UiFlags flags) {
 
 void ui::window_features::show(std::function<void()> close_callback) {
     static window_type window = {
-        WINDOW_CONFIG,
+        "window_config",
         [] (int flags) { g_features_window.draw_background(flags); },
         [] (int flags) { g_features_window.ui_draw_foreground(flags); },
         [] (auto m, auto h) { g_features_window.ui_handle_mouse(m); }

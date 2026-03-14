@@ -65,7 +65,7 @@ void clear_es_common_window() {
     }
     common_windows.clear();
 }
-ANK_REGISTER_ES_ITERATOR(script_window, register_es_common_window, clear_es_common_window);
+ANK_REGISTER_ES_ITERATOR(window, register_es_common_window, clear_es_common_window);
 
 struct building_info_window_init { vec2i pos; building_id bid; };
 ANK_REGISTER_STRUCT_WRITER(building_info_window_init, pos, bid)

@@ -42,7 +42,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 void window_victory_video_show(const char* filename, int width, int height, void (*callback)(void)) {
     if (init(filename, width, height, callback)) {
         window_type window = {
-            WINDOW_VICTORY_VIDEO,
+            "window_victory_video",
             draw_background,
             draw_foreground,
             handle_input

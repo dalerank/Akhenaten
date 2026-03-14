@@ -74,7 +74,7 @@ int set_salary_window::ui_handle_mouse(const mouse *m) {
 
 void set_salary_window::show(close_callback_t cb, bool show_bg) {
     static window_type window = {
-        WINDOW_SET_SALARY,
+        "window_set_salary",
         window_draw_underlying_window,
         [] (int flags) { g_set_salary_window.ui_draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { g_set_salary_window.ui_handle_mouse(m); }

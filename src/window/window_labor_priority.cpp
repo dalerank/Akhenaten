@@ -99,11 +99,10 @@ int labor_priority_window::ui_handle_mouse(const mouse *m) {
 
 void window_labor_priority_show(int category) {
     static window_type window = {
-        WINDOW_LABOR_PRIORITY, 
+        "window_labor_priority",
         [] (int flags) { g_labor_priority_window.draw_background(flags); },
-        [] (int flags) { g_labor_priority_window.ui_draw_foreground(flags); } ,
-        [] (auto m, auto h) { g_labor_priority_window.ui_handle_mouse(m); },
-        nullptr
+        [] (int flags) { g_labor_priority_window.ui_draw_foreground(flags); },
+        [] (auto m, auto h) { g_labor_priority_window.ui_handle_mouse(m); }
     };
 
     g_labor_priority_window.init(category);

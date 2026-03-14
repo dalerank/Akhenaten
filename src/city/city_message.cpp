@@ -204,7 +204,7 @@ void city_message_post_full(bool use_popup, xstring template_id, const event_ph_
 
     // default for sound info / template
 
-    if (use_popup && window_is(WINDOW_CITY))
+    if (use_popup && window_is("window_city"))
         show_message_popup(id);
     else if (use_popup) {
         // add to queue to be processed when player returns to city
@@ -253,7 +253,7 @@ city_message &message_manager_t::post_common(bool use_popup, xstring mm_text, in
         problem_count = 1;
     }
 
-    if (use_popup && window_is(WINDOW_CITY)) {
+    if (use_popup && window_is("window_city")) {
         show_message_popup(id);
     } else if (use_popup) { 
         // add to queue to be processed when player returns to city

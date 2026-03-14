@@ -46,7 +46,7 @@ int speed_options_window::handle_mouse(const mouse *m) {
 
 void speed_options_window::show(close_callback_t cb) {
     static window_type window = {
-        WINDOW_SPEED_OPTIONS,
+        "window_speed_options",
         window_draw_underlying_window,
         [] (int flags) { g_speed_options_window.ui_draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { g_speed_options_window.ui_handle_mouse(m); }

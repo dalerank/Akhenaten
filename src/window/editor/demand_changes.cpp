@@ -101,7 +101,7 @@ static void button_demand_change(int id, int param2) {
 
 void window_editor_demand_changes_show(void) {
     window_type window = {
-        WINDOW_EDITOR_DEMAND_CHANGES,
+        "window_editor_demand_changes",
         draw_background,
         draw_foreground,
         handle_input

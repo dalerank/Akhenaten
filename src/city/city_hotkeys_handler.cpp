@@ -16,7 +16,7 @@ void city_hotkeys_handler_t::init() {
         case HOTKEY_SHOW_OVERLAY_PROBLEMS: overlay = OVERLAY_PROBLEMS; break;
         }
 
-        if (window_is(WINDOW_CITY_MILITARY)) {
+        if (window_is("window_city_military")) {
             window_city_show();
         }
 
@@ -28,7 +28,7 @@ void city_hotkeys_handler_t::init() {
     });
 
     events::subscribe([] (event_toggle_overlay ev) {
-        if (window_is(WINDOW_CITY_MILITARY)) {
+        if (window_is("window_city_military")) {
             window_city_show();
         }
         g_city.toggle_overlay();

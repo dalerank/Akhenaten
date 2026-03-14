@@ -201,7 +201,7 @@ int trade_resource_settings_window::ui_handle_mouse(const mouse* m) {
 
 void window_resource_settings_show(e_resource resource) {
     static window_type window = {
-        WINDOW_RESOURCE_SETTINGS,
+        "window_resource_settings",
         [] (int) { trade_resource_settings_w.draw_background(0); },
         [] (int) { trade_resource_settings_w.draw_foreground(0); },
         [] (const mouse *m, const hotkeys *h) { trade_resource_settings_w.ui_handle_mouse(m); }

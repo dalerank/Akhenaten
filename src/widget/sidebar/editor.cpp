@@ -165,11 +165,11 @@ int widget_sidebar_editor_handle_mouse_attributes(const mouse* m) {
 
 static void button_attributes(int show, int param2) {
     if (show) {
-        if (!window_is(WINDOW_EDITOR_ATTRIBUTES))
+        if (!window_is("window_editor_attributes"))
             window_editor_attributes_show();
 
     } else {
-        if (!window_is(WINDOW_EDITOR_MAP))
+        if (!window_is("window_editor_map"))
             window_editor_map_show();
     }
 }
@@ -177,7 +177,7 @@ static void button_attributes(int show, int param2) {
 static void button_build_tool(int tool, int param2) {
     widget_map_editor_clear_current_tile();
     editor_tool_set_type(tool);
-    if (window_is(WINDOW_EDITOR_BUILD_MENU))
+    if (window_is("window_editor_build_menu"))
         window_editor_map_show();
 
 }

@@ -53,7 +53,7 @@ static void draw_foreground(int) {
     clear_city_view();
     widget_sidebar_editor_draw_foreground();
     widget_map_editor_draw();
-    if (window_is(WINDOW_EDITOR_MAP))
+    if (window_is("window_editor_map"))
         draw_cancel_construction();
 }
 
@@ -89,7 +89,7 @@ void window_editor_map_draw(void) {
 
 void window_editor_map_show(void) {
     static window_type window = {
-        WINDOW_EDITOR_MAP,
+        "window_editor_map",
         draw_background,
         draw_foreground,
         handle_input

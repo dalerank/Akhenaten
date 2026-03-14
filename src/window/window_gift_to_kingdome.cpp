@@ -113,7 +113,7 @@ int ui::gift_to_kingdome_window::ui_handle_mouse(const mouse* m) {
 
 void ui::gift_to_kingdome_window::show() {
     static window_type window = {
-        WINDOW_GIFT_TO_EMPEROR,
+        "window_gift_to_emperor",
         [] (int flags) { g_gift_to_kingdome_window.draw_background(flags); },
         [] (int flags) { g_gift_to_kingdome_window.ui_draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { g_gift_to_kingdome_window.ui_handle_mouse(m); },

@@ -12,7 +12,7 @@
 popup_dialog g_popup_dialog;
 
 bool popup_dialog::init(const xstring scheme, xstring header, xstring cbody, window_popup_dialog_callback close_cb, e_popup_dialog_btns buttons) {
-    if (window_is(WINDOW_POPUP_DIALOG)) {
+    if (window_is("window_popup_dialog")) {
         // don't show popup over popup
         return false;
     }
@@ -104,7 +104,7 @@ void popup_dialog::show(xstring text, xstring custom, e_popup_dialog_btns button
     }
 
     static window_type window = {
-        WINDOW_POPUP_DIALOG,
+        "window_popup_dialog",
         [] (int flags) { g_popup_dialog.draw_background(flags); },
         [] (int flags) { g_popup_dialog.draw_foreground(flags); },
         [] (auto m, auto h) { g_popup_dialog.handle_input(m, h); }

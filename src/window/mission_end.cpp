@@ -113,7 +113,7 @@ autoconfig_window &ui::window_mission_end::getui() {
 
 static void show_end_dialog(void) {
     window_type window = {
-        WINDOW_MISSION_END,
+        "window_mission_end",
         [] (int flags) {  
             auto &ui = g_mission_end.getui();
             ui.format_all(&g_city);

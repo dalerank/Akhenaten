@@ -198,7 +198,7 @@ void window_advisors::init() {
     });
 
     events::subscribe([this] (event_show_advisor ev) {
-        if (!window_is(WINDOW_ADVISORS)) {
+        if (!window_is("window_advisors")) {
             return;
         }
 
@@ -292,11 +292,10 @@ ANK_FUNCTION_1(__window_advisors_show_advisor)
 
 void window_advisors_show() {
     static window_type window = {
-        WINDOW_ADVISORS,
+        "window_advisors",
         [] (int flags) { advisors_window.draw_background(flags); },
         [] (int flags) { advisors_window.draw_foreground(flags); },
-        [] (const mouse *m, const hotkeys *h) { advisors_window.handle_input(m, h); },
-        nullptr
+        [] (const mouse *m, const hotkeys *h) { advisors_window.handle_input(m, h); }
     };
 
     advisors_window.init();

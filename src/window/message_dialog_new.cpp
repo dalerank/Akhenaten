@@ -405,7 +405,7 @@ void ui::message_dialog_base::show(xstring text_id, int message_id, void (*backg
     init_data(text_id, message_id, background_callback);
     
     static window_type instance = {
-        WINDOW_MESSAGE_DIALOG,
+        "window_message_dialog",
         [] (int flags) { g_message_dialog_instance->draw_background(flags); },
         [] (int flags) { g_message_dialog_instance->draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { g_message_dialog_instance->ui_handle_mouse(m); }
