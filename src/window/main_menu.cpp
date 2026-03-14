@@ -13,7 +13,6 @@
 #include "game/settings.h"
 #include "game/game_config.h"
 #include "core/app.h"
-#include "window/records.h"
 #include "window/popup_dialog.h"
 #include "window/player_selection.h"
 #include "window/file_dialog.h"

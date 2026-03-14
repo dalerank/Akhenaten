@@ -31,6 +31,7 @@
 #include "mujs/jsvalue.h"
 #include "mujs/jscompile.h"
 #include "graphics/elements/ui.h"
+#include "window/autoconfig_window.h"
 
 #include <vector>
 #include <sstream>
@@ -538,6 +539,70 @@ pcstr js_call_function_with_result(xstring js_ref, int param1, int param2) {
 
     return "";
 }
+
+// High scores
+void __highscores_load() { highscores_load(); }
+ANK_FUNCTION(__highscores_load)
+
+int __highscores_count() { return highscores_count(); }
+ANK_FUNCTION(__highscores_count)
+
+bool __highscore_nonempty(int rank) {
+    const auto* r = highscores_get(rank);
+    return r && r->nonempty;
+}
+ANK_FUNCTION_1(__highscore_nonempty)
+
+int __highscore_score(int rank) {
+    const auto* r = highscores_get(rank);
+    return r && r->nonempty ? (int)records_calc_score(r) : 0;
+}
+ANK_FUNCTION_1(__highscore_score)
+
+int __highscore_mission(int rank) {
+    const auto* r = highscores_get(rank);
+    return r && r->nonempty ? (int)r->mission_idx : 0;
+}
+ANK_FUNCTION_1(__highscore_mission)
+
+int __highscore_culture(int rank) {
+    const auto* r = highscores_get(rank);
+    return r && r->nonempty ? (int)r->rating_culture : 0;
+}
+ANK_FUNCTION_1(__highscore_culture)
+
+int __highscore_prosperity(int rank) {
+    const auto* r = highscores_get(rank);
+    return r && r->nonempty ? (int)r->rating_prosperity : 0;
+}
+ANK_FUNCTION_1(__highscore_prosperity)
+
+int __highscore_kingdom(int rank) {
+    const auto* r = highscores_get(rank);
+    return r && r->nonempty ? (int)r->rating_kingdom : 0;
+}
+ANK_FUNCTION_1(__highscore_kingdom)
+
+int __highscore_population(int rank) {
+    const auto* r = highscores_get(rank);
+    return r && r->nonempty ? (int)r->final_population : 0;
+}
+ANK_FUNCTION_1(__highscore_population)
+
+int __highscore_funds(int rank) {
+    const auto* r = highscores_get(rank);
+    return r && r->nonempty ? (int)r->final_funds : 0;
+}
+ANK_FUNCTION_1(__highscore_funds)
+
+int __highscore_months(int rank) {
+    const auto* r = highscores_get(rank);
+    return r && r->nonempty ? (int)r->completion_months : 0;
+}
+ANK_FUNCTION_1(__highscore_months)
+
+void window_records_show() { autoconfig_window::show_by_section("records_window"); }
+ANK_FUNCTION(window_records_show)
 
 void config::refresh(archive arch) {
     g_config_arch = {arch.state};
