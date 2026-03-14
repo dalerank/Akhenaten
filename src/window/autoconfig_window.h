@@ -25,11 +25,13 @@ struct autoconfig_window : public ui::widget {
 
     static void before_mission_start();
     static void refresh_all();
+    static void show_by_section(pcstr section);
+    static void unregister_section(pcstr section);
 };
 
 template<typename T>
 struct autoconfig_window_t : public autoconfig_window {
-    inline pcstr section() const { 
+    inline pcstr section() const {
         static type_name_holder<T> _impl;
         static pcstr _section = type_simplified_name(_impl.value.data());
         return _section;
