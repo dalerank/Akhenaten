@@ -69,6 +69,11 @@ int autoconfig_window::ui_handle_mouse(const mouse *m) {
         }
     }
 
+    const hotkeys *h = hotkey_state();
+    if (input_go_back_requested(m, h)) {
+        ui.event(window_info{ pos }, get_section(), "go_back");
+    }
+
     ui.end_widget();
 
     return handled ? 1 : 0;
