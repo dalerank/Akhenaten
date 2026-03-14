@@ -178,7 +178,7 @@ void overlay_menu_widget::button_submenu_item(int index, int param2) {
 
 void window_overlay_menu_show() {
     static window_type window = {
-        WINDOW_OVERLAY_MENU,
+        "window_overlay_menu",
         [] (int flags) { g_overlay_menu_widget.draw_background(flags); },
         [] (int flags) { g_overlay_menu_widget.ui_draw_foreground(flags); },
         [] (auto m, auto h) { g_overlay_menu_widget.ui_handle_mouse(m); },

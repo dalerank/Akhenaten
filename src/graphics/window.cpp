@@ -10,8 +10,6 @@
 #include "js/js_game.h"
 
 windows_manager_t g_window_manager;
-using e_window_id_tokens_t = token_holder<e_window_id, WINDOW_LOGO, WINDOW_COUNT>;
-const e_window_id_tokens_t ANK_CONFIG_ENUM(e_window_id_tokens);
 
 static void noop(int) {
 }
@@ -39,12 +37,12 @@ static void decrease_queue_index(void) {
     }
 }
 
-bool window_is(e_window_id id) {
+bool window_is(xstring id) {
     auto& data = g_window_manager;
     return data.current_window->id == id;
 }
 
-e_window_id window_get_id() {
+xstring window_get_id() {
     auto& data = g_window_manager;
     return data.current_window->id;
 }
@@ -71,7 +69,7 @@ void window_show(const window_type* window) {
 void window_go_back() {
     auto& data = g_window_manager;
     // cant exit from city with rmb
-    if (data.current_window->id == WINDOW_CITY || data.current_window->id == WINDOW_MAIN_MENU) {
+    if (data.current_window->id == "window_city" || data.current_window->id == "window_main_menu") {
         return;
     }
     reset_input();

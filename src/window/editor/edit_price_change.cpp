@@ -120,7 +120,7 @@ static void button_save(int param1, int param2) {
 
 void window_editor_edit_price_change_show(int id) {
     window_type window = {
-        WINDOW_EDITOR_EDIT_PRICE_CHANGE,
+        "window_editor_edit_price_change",
         draw_background,
         draw_foreground,
         handle_input

@@ -72,7 +72,7 @@ static void button_year(int param1, int param2) {
 
 void window_editor_start_year_show(void) {
     window_type window = {
-        WINDOW_EDITOR_START_YEAR,
+        "window_editor_start_year",
         draw_background,
         draw_foreground,
         handle_input

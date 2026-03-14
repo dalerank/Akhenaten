@@ -58,7 +58,7 @@ void tooltip_context::draw_tooltip_impl() {
     int height = 16 * lines + 10;
     int x, y;
     if (mpos.x < screen_dialog_offset_x() + width + 100) {
-        if (window_is(WINDOW_ADVISORS))
+        if (window_is("window_advisors"))
             x = mpos.x + 50;
         else
             x = mpos.x + 20;
@@ -66,27 +66,27 @@ void tooltip_context::draw_tooltip_impl() {
         x = mpos.x - width - 20;
     }
 
-    switch (window_get_id()) {
-    case WINDOW_TRADE_PRICES: // FIXED used to cause ghosting
-        y = mpos.y - 42;
-        break;
-    case WINDOW_DONATE_TO_CITY:
-        y = mpos.y - 52;
-        break;
-    case WINDOW_LABOR_PRIORITY:
-        x = mpos.x - width / 2 - 10;
-        if (mpos.y < screen_dialog_offset_y() + 200)
-            y = mpos.y + 40;
-        else
-            y = mpos.y - 72;
-        break;
-    default:
-        if (mpos.y < screen_dialog_offset_y() + 200)
-            y = mpos.y + 40;
-        else
-            y = mpos.y - 62;
-        break;
-    }
+    //switch (window_get_id()) {
+    //case "window_trade_prices": // FIXED used to cause ghosting
+    //    y = mpos.y - 42;
+    //    break;
+    //case WINDOW_DONATE_TO_CITY:
+    //    y = mpos.y - 52;
+    //    break;
+    //case WINDOW_LABOR_PRIORITY:
+    //    x = mpos.x - width / 2 - 10;
+    //    if (mpos.y < screen_dialog_offset_y() + 200)
+    //        y = mpos.y + 40;
+    //    else
+    //        y = mpos.y - 72;
+    //    break;
+    //default:
+    //    if (mpos.y < screen_dialog_offset_y() + 200)
+    //        y = mpos.y + 40;
+    //    else
+    //        y = mpos.y - 62;
+    //    break;
+    //}
 
     //save_window_under_tooltip_to_buffer(x, y, width, height);
     draw_box(x, y, width, height);
@@ -198,7 +198,7 @@ bool tooltip_context::should_draw_tooltip() {
     return true;
 }
 
-void tooltip_handle(const mouse* m, void (*func)(tooltip_context*)) {
+void tooltip_handle(const mouse* m, inplace_function<void(tooltip_context*)> func) {
     static tooltip_context context;
     if (m->is_touch && !m->left.is_down) {
         context.reset_timer();

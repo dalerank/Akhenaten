@@ -146,7 +146,7 @@ int ui::message_list_window::ui_handle_mouse(const mouse* m) {
 
 void ui::message_list_window::show(close_callback close_cb) {
     static window_type instance = {
-        WINDOW_MESSAGE_LIST,
+        "window_message_list",
         [] (int flags) { g_message_list_window.draw_background(flags); },
         [] (int flags) { g_message_list_window.ui_draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { g_message_list_window.ui_handle_mouse(m); }

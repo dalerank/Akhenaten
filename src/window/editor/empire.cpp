@@ -353,7 +353,7 @@ static void button_ok(int param1, int param2) {
 
 void window_editor_empire_show(void) {
     static window_type window = {
-        WINDOW_EDITOR_EMPIRE,
+        "window_editor_empire",
         draw_background,
         draw_foreground,
         handle_input

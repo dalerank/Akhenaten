@@ -3,6 +3,7 @@
 #include "core/vec2i.h"
 #include "core/string.h"
 #include "core/xstring.h"
+#include "core/inplace_function.h"
 
 #include <functional>
 
@@ -36,4 +37,4 @@ struct tooltip_context {
     void draw_tooltip_impl();
 };
 
-void tooltip_handle(const mouse* m, void (*func)(tooltip_context*));
+void tooltip_handle(const mouse* m, inplace_function<void(tooltip_context*)> func);

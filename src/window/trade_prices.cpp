@@ -100,7 +100,7 @@ int trade_prices_window::ui_handle_mouse(const mouse *m) {
 
 void window_trade_prices_show(void) {
     static window_type window = {
-        WINDOW_TRADE_PRICES,
+        "window_trade_prices",
         [] (int flags) { trade_prices_w.draw_background(flags); },
         [] (int flags) { trade_prices_w.ui_draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { trade_prices_w.ui_handle_mouse(m); },

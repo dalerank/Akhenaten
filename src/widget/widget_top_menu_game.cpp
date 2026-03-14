@@ -269,7 +269,7 @@ void top_menu_widget_t::sub_menu_draw_foreground(int) {
 
 void widget_sub_menu_show() {
     static window_type window = {
-        WINDOW_TOP_MENU,
+        "window_top_menu",
         [] (int flags) { top_menu_widget.sub_menu_draw_background(flags); },
         [] (int flags) { top_menu_widget.sub_menu_draw_foreground(flags); },
         widget_top_menu_handle_input

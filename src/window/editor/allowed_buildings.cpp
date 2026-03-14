@@ -91,7 +91,7 @@ void toggle_building(int id, int param2) {
 
 void window_editor_allowed_buildings_show() {
     window_type window = {
-        WINDOW_EDITOR_ALLOWED_BUILDINGS,
+        "window_editor_allowed_buildings",
         draw_background,
         draw_foreground,
         handle_input

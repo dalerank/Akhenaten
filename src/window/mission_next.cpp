@@ -70,7 +70,7 @@ void ui::mission_choice_window::show(int scenario_id) {
     }
 
     window_type window = {
-        WINDOW_MISSION_SELECTION,
+        "window_mission_selection",
         [] (int) { g_mission_next.draw_foreground(0); },
         [] (int flags) { 
             g_mission_next.format_all<city_t>(nullptr);

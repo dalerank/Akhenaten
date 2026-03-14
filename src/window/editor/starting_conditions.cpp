@@ -147,7 +147,7 @@ static void button_milestone(int milestone_pct, int param2) {
 
 void window_editor_starting_conditions_show(void) {
     window_type window = {
-        WINDOW_EDITOR_STARTING_CONDITIONS,
+        "window_editor_starting_conditions",
         draw_background,
         draw_foreground,
         handle_input

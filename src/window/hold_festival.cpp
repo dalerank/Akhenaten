@@ -187,7 +187,7 @@ void ui::hold_festival_window::get_tooltip(tooltip_context* c) {
 
 void ui::hold_festival_window::show(bool bg, std::function<void()> cb) {
     static window_type window = {
-        WINDOW_HOLD_FESTIVAL,
+        "window_hold_festival",
         [] (int flags) { g_hold_festival_window.draw_background(flags); },
         [] (int flags) { g_hold_festival_window.ui_draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { g_hold_festival_window.ui_handle_mouse(m); },

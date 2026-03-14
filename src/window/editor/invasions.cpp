@@ -83,7 +83,7 @@ static void button_invasion(int id, int param2) {
 
 void window_editor_invasions_show(void) {
     window_type window = {
-        WINDOW_EDITOR_INVASIONS,
+        "window_editor_invasions",
         draw_background,
         draw_foreground,
         handle_input

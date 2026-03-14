@@ -144,7 +144,7 @@ void select_item(int id, int list_id) {
 
 void window_select_list_show(int x, int y, int group, int num_items, void (*callback)(int)) {
     window_type window = {
-        WINDOW_SELECT_LIST,
+        "window_select_list",
         window_draw_underlying_window,
         draw_foreground,
         handle_input
@@ -155,7 +155,7 @@ void window_select_list_show(int x, int y, int group, int num_items, void (*call
 
 void window_select_list_show_text(int x, int y, const custom_span<xstring>& items, void (*callback)(int)) {
     window_type window = {
-        WINDOW_SELECT_LIST,
+        "window_select_list",
         window_draw_underlying_window,
         draw_foreground,
         handle_input

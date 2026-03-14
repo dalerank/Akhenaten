@@ -24,7 +24,7 @@ struct plain_message_dialog_t {
 plain_message_dialog_t plain_message_dialog;
 
 static int init(pcstr title, pcstr message, pcstr info) {
-    if (window_is(WINDOW_PLAIN_MESSAGE_DIALOG)) {
+    if (window_is("window_plain_message_dialog")) {
         // don't show popup over popup
         return 0;
     }
@@ -70,7 +70,7 @@ void window_plain_message_dialog_show(pcstr title, pcstr message, pcstr debug_in
     }
 
     static window_type window = {
-        WINDOW_PLAIN_MESSAGE_DIALOG,
+        "window_plain_message_dialog",
         draw_background,
         draw_foreground,
         handle_input

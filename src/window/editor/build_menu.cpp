@@ -189,7 +189,7 @@ static void button_menu_item(int index, int param2) {
 void window_editor_build_menu_show(int submenu) {
     init(submenu);
     window_type window = {
-        WINDOW_EDITOR_BUILD_MENU,
+        "window_editor_build_menu",
         draw_background,
         draw_foreground,
         handle_input

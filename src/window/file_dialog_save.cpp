@@ -262,7 +262,7 @@ void window_file_dialog_save_show(file_type type) {
     }
 
     static window_type window = {
-        WINDOW_FILE_DIALOG,
+        "window_file_dialog",
         window_draw_underlying_window,
         draw_foreground,
         handle_input

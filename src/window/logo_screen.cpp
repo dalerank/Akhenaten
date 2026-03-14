@@ -58,7 +58,7 @@ int logo_screen::ui_handle_mouse(const mouse *m){
 
 void window_logo_show(int show_patch_message) {
     static window_type window = {
-        WINDOW_LOGO,
+        "window_logo",
         [] (int f) { g_logo_screen.draw_background(f); } ,
         [] (int f) { g_logo_screen.draw_foreground(f); } ,
         [] (auto m, auto h) { g_logo_screen.ui_handle_mouse(m); }

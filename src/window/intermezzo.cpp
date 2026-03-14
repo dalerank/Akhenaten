@@ -85,9 +85,9 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 
 void window_intermezzo_show(int mission_id, intermezzo_type type, std::function<void()> callback) {
     window_type window = {
-        WINDOW_INTERMEZZO,
+        "window_intermezzo",
         draw_background,
-        nullptr,
+        [] (int) {},
         handle_input
     };
     init(mission_id, type, callback);

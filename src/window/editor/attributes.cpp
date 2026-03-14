@@ -235,7 +235,7 @@ static void change_image(int forward, int param2) {
 
 void window_editor_attributes_show(void) {
     static window_type window = {
-        WINDOW_EDITOR_ATTRIBUTES,
+        "window_editor_attributes",
         draw_background,
         draw_foreground,
         handle_input

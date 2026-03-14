@@ -50,7 +50,7 @@ struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
         btn_w_min = -btn_w_add - 8;
         btn_w_tot = 256 + btn_w_add;
 
-        if (game.session.active && window_is(WINDOW_BUILD_MENU)) {
+        if (game.session.active && window_is("window_build_menu")) {
             window_build_menu_show(selected_submenu);
         }
     }
@@ -260,11 +260,10 @@ void window_build_menu_show(int submenu) {
     }
 
     static window_type window = {
-        WINDOW_BUILD_MENU,
+        "window_build_menu",
         [] (int flags) { g_build_menuw.draw_background(flags); },
         [] (int flags) { g_build_menuw.draw_foreground(flags); },
-        [] (const mouse *m, const hotkeys *h) { g_build_menuw.ui_handle_mouse(m); },
-        0
+        [] (const mouse *m, const hotkeys *h) { g_build_menuw.ui_handle_mouse(m); }
     };
 
     window_show(&window);

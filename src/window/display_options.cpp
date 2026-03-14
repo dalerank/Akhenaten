@@ -97,7 +97,7 @@ int ui::display_options_window::ui_handle_mouse(const mouse* m) {
 
 void ui::display_options_window::show(close_callback close_cb) {
     static window_type instance = {
-        WINDOW_FILE_DIALOG,
+        "window_file_dialog",
         window_draw_underlying_window,
         [] (int) { g_display_options_window.ui_draw_foreground(0); },
         [] (const mouse *m, const hotkeys *h) { g_display_options_window.ui_handle_mouse(m); }

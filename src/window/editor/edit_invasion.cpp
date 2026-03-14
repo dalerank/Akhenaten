@@ -145,7 +145,7 @@ static void button_save(int param1, int param2) {
 
 void window_editor_edit_invasion_show(int id) {
     window_type window = {
-        WINDOW_EDITOR_EDIT_INVASION,
+        "window_editor_edit_invasion",
         draw_background,
         draw_foreground,
         handle_input

@@ -214,7 +214,7 @@ void main_menu_screen::show(bool restart_music) {
     }
 
     static window_type window = {
-        WINDOW_MAIN_MENU,
+        "window_main_menu",
         [] (int flags) { instance().draw_background(flags); },
         [] (int flags) { instance().draw_foreground(flags); },
         [] (auto m, auto h) { instance().ui_handle_mouse(m); },

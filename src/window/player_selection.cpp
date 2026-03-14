@@ -219,7 +219,7 @@ void window_player_selection_show() {
     }
 
     static window_type window = {
-        WINDOW_PLAYER_SELECTION,
+        "window_player_selection",
         draw_background,
         draw_foreground,
         handle_input

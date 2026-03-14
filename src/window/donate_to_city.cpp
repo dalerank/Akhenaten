@@ -144,11 +144,10 @@ static void arrow_button_amount(int is_down, int param2) {
 
 void window_donate_to_city_show(void) {
     static window_type window = {
-        WINDOW_DONATE_TO_CITY, 
+        "window_donate_to_city",
         draw_background, 
         draw_foreground, 
-        handle_input, 
-        nullptr
+        handle_input
     };
     g_city.kingdome.init_donation_amount();
     window_show(&window);

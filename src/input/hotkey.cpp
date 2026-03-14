@@ -344,7 +344,7 @@ void hotkey_reset_state(void) {
 
 void hotkey_key_pressed(int key, int modifiers, int repeat) {
     auto& data = g_hotkey_data;
-    if (window_is(WINDOW_HOTKEY_EDITOR)) {
+    if (window_is("window_hotkey_editor")) {
         window_hotkey_editor_key_pressed(key, modifiers);
         return;
     }
@@ -373,7 +373,7 @@ void hotkey_key_pressed(int key, int modifiers, int repeat) {
 
 void hotkey_key_released(int key, int modifiers) {
     auto& data = g_hotkey_data;
-    if (window_is(WINDOW_HOTKEY_EDITOR)) {
+    if (window_is("window_hotkey_editor")) {
         window_hotkey_editor_key_released(key, modifiers);
         return;
     }

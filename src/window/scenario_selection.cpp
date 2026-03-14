@@ -561,7 +561,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 void window_scenario_selection_show(int dialog_type) {
     // city construction kit
     window_type window = {
-        WINDOW_CCK_SELECTION,
+        "window_cck_selection",
         draw_background,
         draw_foreground,
         handle_input

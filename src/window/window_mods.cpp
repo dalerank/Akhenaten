@@ -115,7 +115,7 @@ int ui::mods_window::draw_background(UiFlags flags) {
 
 void ui::mods_window::show() {
     static window_type instance = {
-        WINDOW_PLAYER_SELECTION,
+        "window_player_selection",
         [] (int flags) { g_mods_window.draw_background(flags); },
         [] (int flags) { g_mods_window.ui_draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { g_mods_window.ui_handle_mouse(m); }

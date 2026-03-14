@@ -101,7 +101,7 @@ int ui::mission_briefing_window::draw_background(UiFlags flags) {
 
 void window_mission_briefing_show_impl() {
     static window_type window = {
-        WINDOW_MISSION_BRIEFING,
+        "window_mission_briefing",
         [] (int flags) { g_mission_briefing.draw_background(flags); },
         [] (int flags) { g_mission_briefing.ui_draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { g_mission_briefing.ui_handle_mouse(m); }

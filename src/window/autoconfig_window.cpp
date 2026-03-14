@@ -109,6 +109,11 @@ void autoconfig_window::init() {
     _is_inited = true;
 }
 
+static autoconfig_window* get_window_current(pcstr name) {
+    auto it = autoconfig_registry().find(name);
+    return (it != autoconfig_registry().end()) ? it->second : nullptr;
+}
+
 void autoconfig_window::show_by_section(pcstr section) {
     auto it = autoconfig_registry().find(section);
     if (it == autoconfig_registry().end()) {
@@ -116,16 +121,14 @@ void autoconfig_window::show_by_section(pcstr section) {
         return;
     }
     autoconfig_window* w = it->second;
-    static autoconfig_window* s_current = nullptr;
-    static window_type s_type = {
-        WINDOW_GAME_SELECTION,
-        [] (int flags) { if (s_current) s_current->draw_background(flags); },
-        [] (int flags) { if (s_current) s_current->ui_draw_foreground(flags); },
-        [] (const mouse* m, const hotkeys* h) { if (s_current) s_current->ui_handle_mouse(m); }
+    window_type s_script_window_type = {
+       section,
+       [section] (int flags) { auto *w = get_window_current(section); if (w) w->draw_background(flags); },
+       [section] (int flags) { auto *w = get_window_current(section); if (w) w->ui_draw_foreground(flags); },
+       [section] (const mouse *m, const hotkeys *h) { auto *w = get_window_current(section); if (w) w->ui_handle_mouse(m); }
     };
-    s_current = w;
     w->init();
-    window_show(&s_type);
+    window_show(&s_script_window_type);
 }
 
 void autoconfig_window::unregister_section(pcstr section) {

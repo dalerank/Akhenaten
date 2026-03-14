@@ -101,7 +101,7 @@ static void button_price_change(int id, int param2) {
 
 void window_editor_price_changes_show(void) {
     static window_type window = {
-        WINDOW_EDITOR_PRICE_CHANGES,
+        "window_editor_price_changes",
         draw_background,
         draw_foreground,
         handle_input

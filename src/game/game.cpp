@@ -300,15 +300,18 @@ static int get_elapsed_ticks() {
 
     int game_speed_index = 0;
     int ticks_per_frame = 1;
-    switch (window_get_id()) {
-    default:
-        return 0;
-
-    case WINDOW_CITY:
-    case WINDOW_CITY_MILITARY:
-    case WINDOW_SLIDING_SIDEBAR:
-    case WINDOW_OVERLAY_MENU:
-    case WINDOW_BUILD_MENU:
+    pcstr meaning_windows[] = {
+        "window_city",
+        "window_city_military",
+        "window_sliding_sidebar",
+        "window_overlay_menu",
+        "window_build_menu",
+        "window_editor_map"
+    };
+    auto it = std::find_if(std::begin(meaning_windows), std::end(meaning_windows), [] (pcstr id) {
+        return window_get_id() == id;
+    });
+    if (it != std::end(meaning_windows)) {
         game_speed_index = (100 - game.game_speed) / 10;
         if (game_speed_index >= 10) {
             return 0;
@@ -316,12 +319,9 @@ static int get_elapsed_ticks() {
             ticks_per_frame = game.game_speed / 100;
             game_speed_index = 0;
         }
-        break;
-
-    case WINDOW_EDITOR_MAP:
-        game_speed_index = 3; // 70%, nice speed for flag animations
-        break;
-    }
+    } else {
+        return 0;
+    }    
 
     if (g_city_planner.in_progress) {
         return 0;
@@ -422,7 +422,7 @@ void game_t::update() {
         update_tick(simtime.tick);
     }
 
-    if (window_is(WINDOW_CITY)) {
+    if (window_is("window_city")) {
         anti_scum_random_15bit();
     }
 
@@ -447,7 +447,7 @@ void game_t::time_init(int year) {
 
 void game_t::sound_frame_begin() {
     OZZY_PROFILER_FUNCTION();
-    if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY) || window_is(WINDOW_SLIDING_SIDEBAR)) {
+    if (window_is("window_city") || window_is("window_city_military") || window_is("window_sliding_sidebar")) {
         sound_city_play();
     }
 }

@@ -33,13 +33,10 @@
 #include <sys/syslimits.h>
 #endif
 
-#define MAX_FILES_RELOAD 255
-
 struct {
     const size_t FRAME_ALLOC_BUFFER_SIZE = 64 * 1024;
     svector<vfs::path, 4> scripts_folders;
-    vfs::path files2load[MAX_FILES_RELOAD];
-    int files2load_num;
+    std::vector<vfs::path> files2load;
     int have_error;
     bstring256 error_str;
     js_State *J;
@@ -319,7 +316,7 @@ js_State *js_vm_state() {
 }
 
 bool js_vm_sync(const xstring &mission_id) {
-    if (!vm.files2load_num) {
+    if (vm.files2load.empty()) {
         return false;
     }
 
@@ -327,30 +324,25 @@ bool js_vm_sync(const xstring &mission_id) {
         js_reset_vm_state();
     }
 
-    if (vm.files2load_num > 0) {
-        for (int i = 0; i < vm.files2load_num; i++) {
-            logs::info("JS: script reloaded %s", vm.files2load[i].c_str());
-            js_vm_load_file_and_exec(vm.files2load[i]);
-        }
+    // Iterate by index so newly appended imports (from js_game_import) are also processed
+    for (int i = 0; i < (int)vm.files2load.size(); i++) {
+        logs::info("JS: script reloaded %s", vm.files2load[i].c_str());
+        js_vm_load_file_and_exec(vm.files2load[i]);
     }
 
-    for (int i = 0; i < MAX_FILES_RELOAD; ++i) {
-        vm.files2load[i].clear();
-    }
+    vm.files2load.clear();
 
     js_register_game_handlers(mission_id);
     js_register_entity_systems();
 
     config::refresh(vm.J);
 
-    vm.files2load_num = 0;
     vm.have_error = 0;
     return true;
 }
 
 void js_vm_reload_file(pcstr path) {
-    vm.files2load[vm.files2load_num] = path;
-    vm.files2load_num++;
+    vm.files2load.push_back(vfs::path(path));
 }
 
 int js_vm_exec_function_args(pcstr funcname, const char *szTypes, ...) {
@@ -426,8 +418,7 @@ int js_vm_exec_function(pcstr funcname) {
 void js_vm_load_module(js_State *J) {
     pcstr scriptName = js_tostring(J, 1);
 
-    vm.files2load[vm.files2load_num] = scriptName;
-    vm.files2load_num++;
+    vm.files2load.push_back(vfs::path(scriptName));
 }
 
 void js_game_panic(js_State *J) {
@@ -435,9 +426,7 @@ void js_game_panic(js_State *J) {
 }
 
 int js_game_import(js_State *J, pcstr filename) {
-    vm.files2load[vm.files2load_num] = vfs::path(":", filename, ".js");
-    vm.files2load_num++;
-
+    vm.files2load.push_back(vfs::path(":", filename, ".js"));
     return 0;
 }
 
@@ -511,10 +500,7 @@ void js_reset_vm_state() {
         vm.J = NULL;
     }
 
-    for (int i = 0; i < MAX_FILES_RELOAD; ++i) {
-        vm.files2load[i].clear();
-    }
-    vm.files2load_num = 0;
+    vm.files2load.clear();
     vm.have_error = 0;
     vm.frame_alloc_ctx.release();
 

@@ -104,7 +104,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 static void top_menu_window_show(void) {
-    window_type window = {WINDOW_EDITOR_TOP_MENU, 0, draw_foreground, handle_input};
+    window_type window = { "window_editor_top_menu",[] (int) {}, draw_foreground, handle_input };
     init();
     window_show(&window);
 }

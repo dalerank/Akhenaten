@@ -329,7 +329,7 @@ static void button_close(int save, int param2) {
 
 void window_hotkey_config_show(void (*close_callback)(void)) {
     window_type window = {
-        WINDOW_HOTKEY_CONFIG,
+        "window_hotkey_config",
         draw_background, 
         draw_foreground,
         handle_input
