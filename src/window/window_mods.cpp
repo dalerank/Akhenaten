@@ -1,20 +1,13 @@
 #include "window_mods.h"
 
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/text.h"
-#include "graphics/window.h"
-#include "input/input.h"
-#include "game/player.h"
-#include "game/game.h"
-#include "content/content.h"
-#include "content/reader.h"
-#include "core/log.h"
-#include "js/js_game.h"
-#include "content/dir.h"
-#include "core/xstring.h"
-#include "core/flat_map.h"
 #include "content/mods.h"
+#include "content/vfs.h"
+#include "core/log.h"
+#include "core/xstring.h"
+#include "game/game.h"
+#include "graphics/text.h"
+#include "js/js_game.h"
+#include "window/autoconfig_window.h"
 #include "window/popup_dialog.h"
 
 #include <vector>
@@ -59,7 +52,7 @@ void ui::mods_window::init() {
                 text.printf("[%s] ", mod.enabled ? "ON" : "OFF");
                 mod_name = mod.name.c_str();
             }
-            
+
             text.append(mod_name.c_str());
             text_draw(text.c_str(), pos.x, pos.y, font, 0);
         });
@@ -93,9 +86,6 @@ void ui::mods_window::update_mods() {
 int ui::mods_window::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
 
-    painter ctx = game.painter();
-    ImageDraw::img_background(ctx, image_id_from_group(GROUP_SCORES_BACKGROUND));
-
     if (update_info) {
         if (time_last_update_check + 30 < game.frame) {
             bstring32 text = ui["refresh_mods"].text().c_str();
@@ -113,20 +103,8 @@ int ui::mods_window::draw_background(UiFlags flags) {
     return 0;
 }
 
-void ui::mods_window::show() {
-    static window_type instance = {
-        "window_player_selection",
-        [] (int flags) { g_mods_window.draw_background(flags); },
-        [] (int flags) { g_mods_window.ui_draw_foreground(flags); },
-        [] (const mouse *m, const hotkeys *h) { g_mods_window.ui_handle_mouse(m); }
-    };
-
-    g_mods_window.init();
-    window_show(&instance);
-}
-
 void window_mods_show(void) {
-    ui::mods_window::show();
+    autoconfig_window::show_by_section("mods_window");
 }
 
 void __window_mods_unpack_scripts() {
@@ -140,7 +118,7 @@ void __window_mods_refresh_available_list() {
         mods_refresh_available_list();
         g_mods_window.update_mods();
         g_mods_window.update_info = false;
-    });   
+    });
 }
 
 ANK_FUNCTION(window_mods_show)
