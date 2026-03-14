@@ -7,6 +7,8 @@
 #include "sound/channel.h"
 #include "content/mods.h"
 
+#include <filesystem>
+
 vfs::path sound_manager_t::speech_filename(xstring filename) {
     pcstr filename_str = filename.c_str();
     vfs::path fs_path = filename_str;
@@ -39,12 +41,12 @@ bool sound_manager_t::speech_file_exist(xstring filename, vfs::path& fs_path) {
         return false;
     }
 
-    return true;
+    return std::filesystem::exists(fs_path.c_str());
 }
 
 bool sound_manager_t::speech_play_file(xstring filename, int volume) {
     vfs::path fs_path;
-    if (!speech_file_exist(filename, fs_path)) {    
+    if (!speech_file_exist(filename, fs_path)) {
         return false;
     }
 

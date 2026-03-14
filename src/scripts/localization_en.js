@@ -894,6 +894,11 @@ localization_en = [
   { key: "#hunter_ostrich_hunting", text: "Ostriches are nearly invisible when they put their heads in the sand." }
   { key: "#hunter_ostrich_back", text: "Now, those are some BIG drumsticks!" }
   { key: "#hunter_ostrich_city_is_good", text: "This city is fantastic!" }
+  // test phrases
+  { key: "#hunter_ostrich_test_1", text: "This is a test phrase for checking TTS! Number 1." }
+  { key: "#hunter_ostrich_test_2", text: "Hello, player! This is another test phrase. Number 2." }
+  { key: "#hunter_ostrich_test_3", text: "Yet another test phrase. Number 3." }
+
 
   { key: "#lumberjack_hunting", text: "I am off for a hard day's logging." }
   { key: "#lumberjack_back", text: "This timber will be put to good use, I am sure." }
