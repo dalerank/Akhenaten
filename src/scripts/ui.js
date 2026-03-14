@@ -60,3 +60,4 @@ import ui_statue_window
 import ui_window_city
 import ui_architect_post_window
 import ui_dynasty_menu
+import ui_records_window
