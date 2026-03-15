@@ -73,24 +73,23 @@ public:
     static cstring jstr(const cstring &s);
 
 private:
-
     // ── State ────────────────────────────────────────────────────────────────
     js_State *J_ = nullptr;
-    int         port_ = 4711;
-    bool        verbose_ = false;
+    int port_ = 4711;
+    bool verbose_ = false;
 
-    sock_t      server_sock_ = JS_DBG_SOCK_INVALID;
-    sock_t      client_sock_ = JS_DBG_SOCK_INVALID;
+    sock_t server_sock_ = JS_DBG_SOCK_INVALID;
+    sock_t client_sock_ = JS_DBG_SOCK_INVALID;
     std::thread server_thread_;
     std::atomic<bool> running_{ false };
 
-    std::mutex              mtx_;
+    std::mutex mtx_;
     std::condition_variable cv_;
-    bool            paused_ = false;
-    DebugStepMode   step_mode_ = DebugStepMode::None;
-    int             step_depth_ = 0;
-    cstring         step_start_file_;
-    int             step_start_line_ = 0;
+    bool paused_ = false;
+    DebugStepMode step_mode_ = DebugStepMode::None;
+    int step_depth_ = 0;
+    cstring step_start_file_;
+    int step_start_line_ = 0;
 
     hvector<MujsBreakpoint, 16> breakpoints_;
 
@@ -114,9 +113,8 @@ private:
     // ── DAP messaging (server thread, game thread paused) ───────────────────
     void handle_request(const cstring &body);
     void send_event(const cstring &event, const cstring &body);
-    void send_response(int req_seq, const cstring &command,
-        bool success, const cstring &body = "{}");
-    void send_stopped_event(const char *reason, const char *file, int line);
+    void send_response(int req_seq, const cstring &command, bool success, const cstring &body = "{}");
+    void send_stopped_event(pcstr reason, pcstr file, int line);
 
     // ── Inspection (server thread, safe while game thread is on cv_.wait) ───
     cstring build_stack_trace_json(int levels);
@@ -127,9 +125,9 @@ private:
 
     // ── JSON parsing helpers ─────────────────────────────────────────────────
     static cstring extract_str(const cstring &json, const cstring &key);
-    static int         extract_int(const cstring &json, const cstring &key, int def = 0);
-    static cstring basename_of(const char *path);
-    static bool        file_matches(const char *trace_file, const xstring &bp_file);
+    static int extract_int(const cstring &json, const cstring &key, int def = 0);
+    static cstring basename_of(pcstr path);
+    static bool file_matches(pcstr trace_file, const xstring &bp_file);
 };
 
 // Global singleton — accessed from the static OP_LINE hook lambda.

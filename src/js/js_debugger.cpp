@@ -5,6 +5,7 @@
 #include "mujs/jsrun.h"     // js_Environment
 
 #include "core/log.h"
+#include "core/variant.h"
 
 #include <cstdio>
 #include <cstring>
@@ -243,7 +244,12 @@ bool MujsDebugger::send_packet(const cstring &json) {
         return false;
     }
 
-    cstring packet = cstring("Content-Length: ") + std::to_string(json.size()) + "\r\n\r\n" + json;
+    cstring packet;
+    packet += "Content-Length: ";
+    packet += bstring32(json.size());
+    packet += "\r\n\r\n";
+    packet += json;
+
     int total = static_cast<int>(packet.size());
     int sent = 0;
 
@@ -270,9 +276,10 @@ bool MujsDebugger::recv_packet(cstring &out) {
         size_t sz = header.size();
         if (sz >= 4) {
             // cstring::substr(start,end) needs end position; -1 is clamped and gives empty string
-            cstring tail = header.substr(static_cast<int32_t>(sz - 4), static_cast<int32_t>(sz));
-            if (tail == "\r\n\r\n")
+            cstring tail = header.substr(sz - 4, sz);
+            if (tail == "\r\n\r\n") {
                 break;
+            }
         }
     }
 
@@ -281,13 +288,15 @@ bool MujsDebugger::recv_packet(cstring &out) {
         return false;
     }
     size_t sz = header.size();
-    int content_len = std::stoi(header.substr(static_cast<int32_t>(pos + 16), static_cast<int32_t>(sz)).c_str());
+    int content_len = std::stoi(header.substr(pos + 16, sz).c_str());
 
     out.resize(content_len);
     int received = 0;
     while (received < content_len) {
         int n = recv(client_sock_, &out[received], content_len - received, 0);
-        if (n <= 0) return false;
+        if (n <= 0) {
+            return false;
+        }
         received += n;
     }
     return true;
@@ -327,8 +336,7 @@ void MujsDebugger::send_response(int req_seq, const cstring &command,
     send_packet(json);
 }
 
-void MujsDebugger::send_stopped_event(const char *reason,
-    const char *file, int line) {
+void MujsDebugger::send_stopped_event(pcstr reason, pcstr file, int line) {
     object_ref_map_.clear();
     next_variable_ref_ = 1000;
 
@@ -388,22 +396,27 @@ static const char *js_value_type(const js_Value *v) {
 }
 
 cstring MujsDebugger::build_evaluate_response(const cstring &expression, int /*frame_id*/) {
-    if (!J_ || !J_->E) return "{\"result\":\"\",\"variablesReference\":0}";
+    if (!J_ || !J_->E) {
+        return "{\"result\":\"\",\"variablesReference\":0}";
+    }
 
     // Trim
     size_t start = expression.find_first_not_of(" \t\r\n");
     if (start == std::string::npos) {
         return "{\"result\":\"\\\"\\\"\",\"variablesReference\":0}";
     }
+
     size_t end = expression.find_last_not_of(" \t\r\n");
     cstring expr = expression.substr(start, end - start + 1);
 
     // Only support simple identifier (one word)
-    if (expr.empty()) return "{\"result\":\"\\\"\\\"\",\"variablesReference\":0}";
+    if (expr.empty()) {
+        return "{\"result\":\"\\\"\\\"\",\"variablesReference\":0}";
+    }
+
     for (size_t i = 0; i < expr.size(); ++i) {
         char c = expr.data()[i];
-        bool ok = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' || c == '$' ||
-            (i > 0 && c >= '0' && c <= '9');
+        bool ok = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' || c == '$' || (i > 0 && c >= '0' && c <= '9');
         if (!ok) {
             return "{\"result\":\"" + jstr("Unsupported expression (use a variable name)") + "\",\"variablesReference\":0}";
         }
@@ -453,9 +466,9 @@ cstring MujsDebugger::build_stack_trace_json(int levels) {
         }
 
         const js_StackTrace &t = J_->trace[idx];
-        const char *name = t.name ? t.name : "<anonymous>";
-        const char *file = t.file ? t.file : "<unknown>";
-        int         line = t.line > 0 ? t.line : 1;
+        pcstr name = t.name ? t.name : "<anonymous>";
+        pcstr file = t.file ? t.file : "<unknown>";
+        int line = t.line > 0 ? t.line : 1;
 
         if (i > 0) {
             frames += ",";
@@ -463,14 +476,14 @@ cstring MujsDebugger::build_stack_trace_json(int levels) {
 
         frames +=
             cstring("{") +
-            "\"id\":" + std::to_string(i) + ","
-            "\"name\":" + jstr(name) + ","
-            "\"source\":{"
-            "\"name\":" + jstr(basename_of(file)) + ","
-            "\"path\":" + jstr(file) +
-            "},"
-            "\"line\":" + std::to_string(line) + ","
-            "\"column\":0"
+                "\"id\":" + std::to_string(i) + ","
+                "\"name\":" + jstr(name) + ","
+                "\"source\":{"
+                    "\"name\":" + jstr(basename_of(file)) + ","
+                    "\"path\":" + jstr(file) +
+                "},"
+                "\"line\":" + std::to_string(line) + ","
+                "\"column\":0"
             "}";
     }
     frames += "]";
@@ -504,7 +517,7 @@ js_Object *MujsDebugger::get_object_for_ref(int var_ref) {
         while (env->outer) {
             env = env->outer;
         }
-        
+
         return env->variables;
     }
 
@@ -580,10 +593,10 @@ cstring MujsDebugger::build_variables_json(int var_ref) {
 
         list +=
             "{"
-            "\"name\":" + jstr(p->name) + ","
-            "\"value\":" + js_value_display(J_, v) + ","
-            "\"type\":\"" + cstring(js_value_type(v)) + "\","
-            "\"variablesReference\":" + std::to_string(ref) +
+                "\"name\":" + jstr(p->name) + ","
+                "\"value\":" + js_value_display(J_, v) + ","
+                "\"type\":\"" + cstring(js_value_type(v)) + "\","
+                "\"variablesReference\":" + std::to_string(ref) +
             "}";
     }
     list += "]";
@@ -601,10 +614,10 @@ void MujsDebugger::handle_request(const cstring &body) {
     if (cmd == "initialize") {
         send_response(req_seq, cmd, true,
             "{"
-            "\"supportsConfigurationDoneRequest\":true,"
-            "\"supportsStepBack\":false,"
-            "\"supportsRestartRequest\":false,"
-            "\"supportsEvaluateForHovers\":false"
+                "\"supportsConfigurationDoneRequest\":true,"
+                "\"supportsStepBack\":false,"
+                "\"supportsRestartRequest\":false,"
+                "\"supportsEvaluateForHovers\":false"
             "}"
         );
         send_event("initialized", "{}");
@@ -839,22 +852,30 @@ int MujsDebugger::extract_int(const cstring &json,
 
     int sign = 1;
     if (json[pos] == '-') { sign = -1; ++pos; }
-    if (pos >= json.size() || !isdigit(static_cast<unsigned char>(json[pos]))) return def;
+    if (pos >= json.size() || !isdigit(static_cast<unsigned char>(json[pos]))) {
+        return def;
+    }
 
     int val = 0;
-    while (pos < json.size() && isdigit(static_cast<unsigned char>(json[pos])))
+    while (pos < json.size() && isdigit(static_cast<unsigned char>(json[pos]))) {
         val = val * 10 + (json[pos++] - '0');
+    }
     return sign * val;
 }
 
-cstring MujsDebugger::basename_of(const char *path) {
-    if (!path || !*path) return "<unknown>";
-    const char *p = path + strlen(path) - 1;
-    while (p > path && *p != '/' && *p != '\\') --p;
+cstring MujsDebugger::basename_of(pcstr path) {
+    if (!path || !*path) {
+        return "<unknown>";
+    }
+
+    pcstr p = path + strlen(path) - 1;
+    while (p > path && *p != '/' && *p != '\\') {
+        --p;
+    }
     return (*p == '/' || *p == '\\') ? cstring(p + 1) : cstring(path);
 }
 
-bool MujsDebugger::file_matches(const char *trace_file, const xstring &bp_file) {
+bool MujsDebugger::file_matches(pcstr trace_file, const xstring &bp_file) {
     if (!trace_file) {
         return false;
     }
@@ -862,6 +883,7 @@ bool MujsDebugger::file_matches(const char *trace_file, const xstring &bp_file) 
     if (bp_file == trace_file) {
         return true;
     }
+
     // Basename match fallback
     return basename_of(trace_file) == basename_of(bp_file.c_str());
 }

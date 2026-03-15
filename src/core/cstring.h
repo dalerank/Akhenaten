@@ -3,14 +3,15 @@
 #include <functional>
 #include <iosfwd>
 #include <string>
+#include <stdarg.h>
 #include <string_view>
-#include <vector>
 #include <cstdint>
 #include <cstring>
 #include <cctype>
 #include <algorithm>
 
 #include "core/cstring_allocator.h"
+#include <core/bstring.h>
 #include "core/crc32.h"
 
 // Base string type using custom allocator
@@ -87,6 +88,20 @@ public:
         return *this;
     }
 
+    template<size_t N = 1024>
+    cstring &printf(const char *format, ...) {
+        char buf[N] = { 0 };
+        va_list p;
+        va_start(p, format);
+        int vs_sz = vsnprintf(buf, sizeof(buf) - 1, format, p);
+        buf[sizeof(buf) - 1] = 0;
+        va_end(p);
+        if (vs_sz) {
+            _str = buf;
+        }
+        return *this;
+    }
+
     template <typename TArr>
     void SplitEmplace(TArr &Result, char Separator) const {
         Result.clear();
@@ -149,6 +164,7 @@ public:
     bool operator>(const cstring &other) const;
     cstring &operator+=(const cstring &other);
     cstring &operator+=(const std::string_view &other);
+    cstring &operator+=(const bstring32 &other);
     cstring &operator+=(const char *other);
     cstring &operator+=(char other);
 
