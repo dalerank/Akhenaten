@@ -81,12 +81,12 @@ void tooltip_context::draw_tooltip_impl() {
     //        y = mpos.y - 72;
     //    break;
     //default:
-    //    if (mpos.y < screen_dialog_offset_y() + 200)
-    //        y = mpos.y + 40;
-    //    else
-    //        y = mpos.y - 62;
-    //    break;
-    //}
+    {
+        if (mpos.y < screen_dialog_offset_y() + 200)
+            y = mpos.y + 40;
+        else
+            y = mpos.y - 62;
+    }
 
     //save_window_under_tooltip_to_buffer(x, y, width, height);
     draw_box(x, y, width, height);

@@ -119,7 +119,7 @@ inline pcstr string_item(pcstr src, int index, string_t &dst, char separator = '
 template<size_t Size = 32>
 inline bstring<Size> i2str(int value) {
     bstring<Size> buffer;
-    itoa(static_cast<int>(json.size()), buffer, 10);
+    itoa(static_cast<int>(value), buffer, 10);
     return buffer;
 }
 
