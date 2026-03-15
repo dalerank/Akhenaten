@@ -97,7 +97,7 @@ struct hotkey_mapping {
 };
 
 namespace game_hotkeys {
-    custom_span<hotkey_mapping *> all();
+    xspan<hotkey_mapping *> all();
     hotkey_mapping *find(const xstring &name);
 
     void load();

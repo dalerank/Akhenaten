@@ -373,7 +373,7 @@ bool build_planner::is_flag(e_planner_rule flag, int param1, int param2, int par
     return rules.is_set(flag);
 }
 
-void build_planner::set_graphics_row(int row, custom_span<int> image_ids, int def) {
+void build_planner::set_graphics_row(int row, xspan<int> image_ids, int def) {
     if (row < 0) {
         return;
     }
@@ -414,7 +414,7 @@ void build_planner::set_tiles_building(int image_id, int size_xx) {
     update_tiles_building(image_id);
 }
 
-void build_planner::set_graphics_array(custom_span<int> image_set, vec2i size) {
+void build_planner::set_graphics_array(xspan<int> image_set, vec2i size) {
     init_tiles(size.x, size.y);
     // int (*image_array)[size_y][size_x] = (int(*)[size_y][size_x])image_set;
 

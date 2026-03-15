@@ -137,27 +137,29 @@ bool js_has_event_handlers(const xstring &event_name) {
     return (it != event_type_handlers.end());
 }
 
-static const pcstr prop_names[] = {
-    "text", "enabled", "readonly", "font", "text_color", "image", "selected", "tooltip"
-};
-
 /** Stack on entry: event_obj (-2), accessors (-1). Creates proxy for element_id and sets event_obj[element_id]. */
-static void js_create_element_proxy(js_State *J, pcstr element_id) {
+namespace sfunc {
+    const xstring add_item("add_item");
+}
+
+static void js_create_element_proxy(js_State *J, pcstr element_id, xspan<xstring> props, xspan<xstring> funcs) {
     js_newobject(J);
     js_pushstring(J, element_id);
     js_setproperty(J, -2, "id");
-    for (pcstr name : prop_names) {
-        js_getproperty(J, -2, name);
+    for (const xstring& name: props) {
+        js_getproperty(J, -2, name.c_str());
         js_getindex(J, -1, 0);
         js_getindex(J, -2, 1);
-        js_defaccessor(J, -4, name, 0);
+        js_defaccessor(J, -4, name.c_str(), 0);
         js_pop(J, 1);
     }
-    js_getglobal(J, "__ui_proxy_add_item");
-    if (J->iscallable(-1)) {
-        js_setproperty(J, -2, "add_item");
-    } else {
-        js_pop(J, 1);
+
+    for (const xstring& name: funcs) {
+        if (name == sfunc::add_item) {
+            js_getglobal(J, "__ui_proxy_add_item");
+            verify_no_crash(J->iscallable(-1));
+            js_setproperty(J, -2, "add_item");
+        }
     }
     js_setproperty(J, -3, element_id);
 }
@@ -202,7 +204,6 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
             const xstring &key = kv.first;
             const bvariant &val = kv.second;
 
-
             bstring64 keystr = key.c_str();
             if (keystr.starts_with("__ui_elem_")) {
                 ui_element_ids.push_back(keystr.substr(10, -1));
@@ -245,8 +246,13 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
             // Stack: event_obj at -1. Get shared accessors once (used by all proxies).
             js_getglobal(J, "__ui_proxy_accessors");
             if (J->isobject(-1)) {
+                pcstr prop_buf[16];
+                auto w = ui::get_current_widget();
                 for (const auto &element_id : ui_element_ids) {
-                    js_create_element_proxy(J, element_id.c_str());
+                    const auto &elem = (*w)[element_id];
+                    auto props = elem.prop_names();
+                    auto funcs = elem.func_names();
+                    js_create_element_proxy(J, element_id.c_str(), props, funcs);
                 }
             }
             js_pop(J, 1); // __ui_proxy_accessors

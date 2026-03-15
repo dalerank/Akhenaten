@@ -42,7 +42,7 @@ inline T* figure_get(int id) {
     T* tf = (f->type != FIGURE_NONE) ? smart_cast<T>(f) : nullptr;
     return tf;
 }
-custom_span<figure *> map_figures();
+xspan<figure *> map_figures();
 
 template<typename ... Args>
 bool figure_type_none_of(const figure &f, Args ... args) {
