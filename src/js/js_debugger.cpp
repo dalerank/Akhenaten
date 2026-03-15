@@ -109,8 +109,7 @@ static cstring bvariant_to_json_value(const bvariant &v) {
     }
 }
 
-
-cstring json_from_bvariant_map(const bvariant_map &m, pcstr raw_tail_key = nullptr, const cstring *raw_tail_value = nullptr) {
+cstring json_from_bvariant_map(const bvariant_map &m, pcstr raw_tail_key = nullptr, const cstring &raw_tail_value = "") {
     cstring out = "{";
     bool first = true;
     for (const auto &kv : m.values) {
@@ -121,12 +120,13 @@ cstring json_from_bvariant_map(const bvariant_map &m, pcstr raw_tail_key = nullp
         out += bvariant_to_json_value(kv.second);
     }
 
-    if (raw_tail_key && raw_tail_value) {
+    if (raw_tail_key && !raw_tail_value.empty()) {
         out += ",";
         out += json_jstr(raw_tail_key);
         out += ":";
-        out += *raw_tail_value;
+        out += raw_tail_value;
     }
+
     out += "}";
     return out;
 }
@@ -406,27 +406,21 @@ void MujsDebugger::handle_client() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 void MujsDebugger::send_event(const cstring &event, const cstring &body) {
-    send_packet(json_from_bvariant_map(
-        {
-            { "seq", next_seq() },
-            { "type", "event" },
-            { "event", event }
-        },
-        "body", &body)
-    );
+    send_packet(json_from_bvariant_map({
+        { "seq", next_seq() },
+        { "type", "event" },
+        { "event", event }
+    }, "body", body));
 }
 
 void MujsDebugger::send_response(int req_seq, const cstring &command, bool success, const cstring &body) {
-    send_packet(json_from_bvariant_map(
-        {
-            { "seq", next_seq() },
-            { "type", "response" },
-            { "request_seq", req_seq },
-            { "success", success },
-            { "command", command }
-        },
-        "body", &body)
-    );
+    send_packet(json_from_bvariant_map({
+        { "seq", next_seq() },
+        { "type", "response" },
+        { "request_seq", req_seq },
+        { "success", success },
+        { "command", command }
+    }, "body", body));
 }
 
 void MujsDebugger::send_stopped_event(pcstr reason, pcstr file, int line) {
@@ -536,9 +530,10 @@ cstring MujsDebugger::build_evaluate_response(const cstring &expression, int /*f
         object_ref_map_[ref] = { parent_ref, expr };
     }
 
-    return json_from_bvariant_map({
-        { "variablesReference", ref }
-    }, "result", &js_value_display(J_, v));
+    cstring result = json_from_bvariant_map({ { "variablesReference", ref } }, 
+                                                "result", js_value_display(J_, v));
+
+    return result;
 }
 
 cstring MujsDebugger::build_stack_trace_json(int levels) {
@@ -565,22 +560,22 @@ cstring MujsDebugger::build_stack_trace_json(int levels) {
             frames += ",";
         }
 
+        cstring source_json = json_from_bvariant_map({
+            { "name", basename_of(file) },
+            { "path", file }
+        });
         frames += json_from_bvariant_map({
             { "id", i },
             { "name", name },
             { "line", line },
             { "column", 0 }
-        },
-        "source", &json_from_bvariant_map({
-            { "name", basename_of(file) },
-            { "path", file }
-        }));
+        }, "source", source_json);
     }
     frames += "]";
 
     return json_from_bvariant_map({
         { "totalFrames", count }
-    }, "stackFrames", &frames);
+    }, "stackFrames", frames);
 }
 
 // variablesReference encoding:
@@ -688,11 +683,12 @@ cstring MujsDebugger::build_variables_json(int var_ref) {
             object_ref_map_[ref] = { var_ref, p->name };
         }
 
+        cstring value_display = js_value_display(J_, v);
         list += json_from_bvariant_map({
             { "name", p->name },
             { "type", js_value_type(v) },
             { "variablesReference", ref }
-        }, "value", &js_value_display(J_, v));
+        }, "value", value_display);
     }
     list += "]";
     return "{\"variables\":" + list + "}";
@@ -782,11 +778,11 @@ void MujsDebugger::handle_request(const cstring &body) {
         cstring bps = "[";
         for (size_t i = 0; i < lines.size(); ++i) {
             if (i > 0) bps += ",";
-            cstring source_json = json_from_bvariant_map({{ "path", src_path }});
+            cstring source_json = json_from_bvariant_map({ { "path", src_path } });
             bps += json_from_bvariant_map({
                 { "verified", true },
                 { "line", lines[i] }
-            }, "source", &source_json);
+            }, "source", source_json);
         }
         bps += "]";
         send_response(req_seq, cmd, true, "{\"breakpoints\":" + bps + "}");

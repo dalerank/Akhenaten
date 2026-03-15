@@ -1335,6 +1335,24 @@ void ui::escrollable_list::clear() {
     panel->clear_entry_list();
 }
 
+void ui::escrollable_list::on_render_item(int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font) {
+    if (!_js_render_item_ref.empty()) {
+        js_call_function_with_result(_js_render_item_ref, {
+            { "index", (int32_t)index },
+            { "flags", (int32_t)flags },
+            { "text", entry.text },
+            { "x", (int32_t)pos.x },
+            { "y", (int32_t)pos.y },
+            { "font", (int32_t)font }
+            });
+        return;
+    } 
+    
+    if (_custom_render_cb) {
+        _custom_render_cb(index, flags, entry, pos, font);
+    }
+}
+
 void ui::escrollable_list::ensure_panel() {
     if (panel) {
         return;
@@ -1345,7 +1363,9 @@ void ui::escrollable_list::ensure_panel() {
     panel->set_onclick_entry(_onclick_cb);
     panel->set_onclick_entry(_onclick_ex_cb);
     panel->set_onclick_dbl_entry(_onclick_dbl_ex_cb);
-    panel->set_custom_render_func(_custom_render_cb);
+    panel->set_custom_render_func([&](int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font) { 
+        this->on_render_item(index, flags, entry, pos, font);
+    });
 }
 
 void ui::escrollable_list::add_item(pcstr item) {
@@ -1376,6 +1396,7 @@ void ui::escrollable_list::refill() {
 }
 
 ui::escrollable_list::~escrollable_list() {
+    js_unref_function(_js_render_item_ref);
     g_state.remove_scrollable_list(panel.get());
     // panel will be automatically destroyed by unique_ptr
 }
@@ -1398,6 +1419,8 @@ void ui::escrollable_list::load(archive arch, element *parent, items &elems) {
 
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "scrollable_list"));
+
+    _js_render_item_ref = arch.r_function("onrender_item");
 
     params.files_dir = arch.r_string("dir");
     params.file_ext = arch.r_string("file_ext");

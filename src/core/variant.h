@@ -264,14 +264,10 @@ struct bvariant_map {
 
     bvariant_map() = default;
 
-    bvariant_map(std::initializer_list<PairT> init) {
-        for (const auto &p : init)
-            values.emplace_back(p.first, p.second);
-    }
-
     bvariant_map(std::initializer_list<std::pair<xstring, bvariant_map_val>> init) {
-        for (const auto &p : init)
+        for (const auto &p : init) {
             values.emplace_back(p.first, p.second.v);
+        }
     }
 
     const bvariant& def() const {

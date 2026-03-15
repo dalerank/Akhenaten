@@ -754,6 +754,7 @@ void js_unref_function(xstring onclick_ref);
 void js_call_function(xstring onclick_ref);
 void js_call_function_bool(xstring js_ref, bool param);
 pcstr js_call_function_with_result(xstring js_ref, int param1, int param2);
+pcstr js_call_function_with_result(xstring js_ref, const bvariant_map &params);
 int js_game_emit(js_State *J, pcstr event_name);
 void js_register_game_handlers(xstring missionid);
 void js_call_event_handlers(const xstring &event_name, const bvariant_map &object);
