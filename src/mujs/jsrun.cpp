@@ -1785,9 +1785,20 @@ void js::jsR_run(js_State *J, js_Function *F) {
 
         case OP_LINE:
             J->trace[J->tracetop].line = *pc++;
+            if (J->debug_hook) {
+                const js_StackTrace &t = J->trace[J->tracetop];
+                J->debug_hook(J, t.file, t.line, J->debug_hook_udata);
+            }
             break;
         }
     }
+}
+
+/* Debug hook API */
+
+void js_setdebughook(js_State *J, js_DebugHook hook, void *udata) {
+    J->debug_hook = hook;
+    J->debug_hook_udata = udata;
 }
 
 /* Function modifiers API */

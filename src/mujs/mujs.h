@@ -41,6 +41,13 @@ typedef int (*js_Delete)(js_State *J, void *p, const char *name);
 typedef int (*js_Import)(js_State *J, const char *name);
 typedef int (*js_Emit)(js_State *J, const char *name);
 
+/* Debug hook: called on every source line change (OP_LINE opcode).
+   file and line identify the current position in the JS source.
+   udata is the pointer passed to js_setdebughook.
+   The hook may block to implement breakpoints / step commands. */
+typedef void (*js_DebugHook)(js_State *J, const char *file, int line, void *udata);
+void js_setdebughook(js_State *J, js_DebugHook hook, void *udata);
+
 /* Basic functions */
 js_State *js_newstate(js_Alloc alloc, void *actx, int flags);
 void js_setcontext(js_State *J, void *uctx);

@@ -199,18 +199,23 @@ struct js_State
 	/* property name being accessed when toobject fails — used for error location */
 	const char *pending_prop;
 
+	/* debug hook — called on every OP_LINE (source line change).
+	   Both fields are zero-initialised by js_newstate via memset. */
+	js_DebugHook debug_hook;
+	void *debug_hook_udata;
+
 	void stackoverflow();
 
 	void savescope(js_Environment *newE);
 	void restorescope();
-	
+
 	void pushundefined();
 
 	void getproperty(js_Object *obj, const char *name);
 	int hasproperty(js_Object *obj, const char *name);
 
 	int hasproperty(int idx, const char *name);
-	
+
 	int isobject(int idx);
 
 	int pcall(int n);
