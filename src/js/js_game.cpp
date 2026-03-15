@@ -141,6 +141,27 @@ static const pcstr prop_names[] = {
     "text", "enabled", "readonly", "font", "text_color", "image", "selected", "tooltip"
 };
 
+/** Stack on entry: event_obj (-2), accessors (-1). Creates proxy for element_id and sets event_obj[element_id]. */
+static void js_create_element_proxy(js_State *J, pcstr element_id) {
+    js_newobject(J);
+    js_pushstring(J, element_id);
+    js_setproperty(J, -2, "id");
+    for (pcstr name : prop_names) {
+        js_getproperty(J, -2, name);
+        js_getindex(J, -1, 0);
+        js_getindex(J, -2, 1);
+        js_defaccessor(J, -4, name, 0);
+        js_pop(J, 1);
+    }
+    js_getglobal(J, "__ui_proxy_add_item");
+    if (J->iscallable(-1)) {
+        js_setproperty(J, -2, "add_item");
+    } else {
+        js_pop(J, 1);
+    }
+    js_setproperty(J, -3, element_id);
+}
+
 void js_call_event_handlers(const xstring &event_name, const bvariant_map &object) {
     OZZY_PROFILER_SECTION(_, event_name.c_str())
 
@@ -225,18 +246,7 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
             js_getglobal(J, "__ui_proxy_accessors");
             if (J->isobject(-1)) {
                 for (const auto &element_id : ui_element_ids) {
-                    // Stack: event_obj (-2), accessors (-1). Create proxy and set event_obj[element_id].
-                    js_newobject(J);
-                    js_pushstring(J, element_id.c_str());
-                    js_setproperty(J, -2, "id");
-                    for (pcstr name : prop_names) {
-                        js_getproperty(J, -2, name);
-                        js_getindex(J, -1, 0);
-                        js_getindex(J, -2, 1);
-                        js_defaccessor(J, -4, name, 0);
-                        js_pop(J, 1);
-                    }
-                    js_setproperty(J, -3, element_id.c_str());
+                    js_create_element_proxy(J, element_id.c_str());
                 }
             }
             js_pop(J, 1); // __ui_proxy_accessors
