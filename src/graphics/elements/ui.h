@@ -573,6 +573,7 @@ struct escrollable_list : public element {
     onclick_ex_callback _onclick_ex_cb;
     onclick_double_ex_callback _onclick_dbl_ex_cb;
     custom_text_render_func _custom_render_cb;
+    xstring _js_render_item_ref;
 
     virtual void draw(UiFlags flags) override;
 
@@ -587,6 +588,7 @@ struct escrollable_list : public element {
     void onclick_double_ex_item(onclick_double_ex_callback lmb) { _onclick_dbl_ex_cb = lmb; }
     void onrender_item(custom_text_render_func f) { _custom_render_cb = f; }
     void onrefill(refill_callback f) { _refill_cb = f; }
+    void on_render_item(int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font);
     void refill();
 
     virtual escrollable_list *dcast_scrollable_list() override { return this; }

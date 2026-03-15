@@ -109,6 +109,7 @@ void ui_proxy_set_image(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem
 void ui_proxy_get_selected(js_State *J) { auto elem = GET_ELEM(J); js_pushboolean(J, elem ? elem->selected() : false); }
 void ui_proxy_set_selected(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->select(js_toboolean(J, 1)); } J->pushundefined(); }
 void ui_proxy_set_tooltip(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->tooltip(xstring(js_tostring(J, 1))); } J->pushundefined(); }
+void ui_proxy_get_noop_render_item(js_State *J) { (void)J; J->pushundefined(); }
 
 void ui_proxy_add_item(js_State *J) {
     ui::element* elem = GET_ELEM(J);

@@ -424,6 +424,7 @@ void js_register_entity_systems() {
 int __game_screen_width() { return screen_width(); } ANK_FUNCTION(__game_screen_width);
 int __game_screen_height() { return screen_height(); } ANK_FUNCTION(__game_screen_height)
 int __game_absolute_day() { return game.simtime.absolute_day(true); } ANK_FUNCTION(__game_absolute_day)
+int __game_frame() { return game.frame; } ANK_FUNCTION(__game_frame)
 xstring __game_version() { return get_version().c_str(); } ANK_FUNCTION(__game_version)
 void __game_increase_game_speed() { game.increase_game_speed(); } ANK_FUNCTION(__game_increase_game_speed)
 void __game_decrease_game_speed() { game.decrease_game_speed(); } ANK_FUNCTION(__game_decrease_game_speed)
@@ -542,6 +543,47 @@ pcstr js_call_function_with_result(xstring js_ref, int param1, int param2) {
             result_str = js_tostring(J, -1);
         }
         js_pop(J, 1);  // Pop the result
+        return result_str;
+    } else {
+        js_pop(J, 1);
+    }
+
+    return "";
+}
+
+static void js_push_bvariant_map_object(js_State *J, const bvariant_map &params) {
+    js_newobject(J);
+    for (const auto &kv : params) {
+        js_helpers::js_push_bvariant(J, kv.second);
+        js_setproperty(J, -2, kv.first.c_str());
+    }
+}
+
+pcstr js_call_function_with_result(xstring js_ref, const bvariant_map &params) {
+    if (js_ref.empty()) {
+        return "";
+    }
+
+    js_State *J = js_vm_state();
+
+    js_getregistry(J, js_ref.c_str());
+    if (J->iscallable(-1)) {
+        js_pushnull(J);
+        js_push_bvariant_map_object(J, params);
+        int result = J->pcall(1);
+        if (result != 0) {
+            logs::error("JS callback error (bvariant_map): %s", js_tostring(J, -1));
+            js_pop(J, 1);
+            return "";
+        }
+
+        pcstr result_str = "";
+        if (js_isstring(J, -1)) {
+            result_str = js_tostring(J, -1);
+        } else if (!js_isundefined(J, -1) && !js_isnull(J, -1)) {
+            result_str = js_tostring(J, -1);
+        }
+        js_pop(J, 1);
         return result_str;
     } else {
         js_pop(J, 1);

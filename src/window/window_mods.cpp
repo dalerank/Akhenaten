@@ -5,7 +5,6 @@
 #include "core/log.h"
 #include "core/xstring.h"
 #include "game/game.h"
-#include "graphics/text.h"
 #include "js/js_game.h"
 #include "window/autoconfig_window.h"
 #include "window/popup_dialog.h"
@@ -22,33 +21,6 @@ void ui::mods_window::init() {
     auto mods = ui["mods"].dcast_scrollable_list();
     if (mods) {
         mods->refill();
-        mods->onrender_item([] (int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font) {
-            const mod_info &mod = mods_find(entry.text);
-
-            bstring128 text;
-            bstring128 mod_name;
-            if (!mod.downloaded) {
-                if (mod.download_progress > 0) {
-                    text.printf("[%d] ", mod.download_progress);
-                } else {
-                    text.printf("[n/a] ");
-                }
-
-                mod_name = mod.name.c_str();
-                if (mod.download_progress > 0) {
-                    int num_points = (game.frame % 90) / 30;
-                    for (int i = 0; i < num_points; ++i) {
-                        mod_name.append('.');
-                    }
-                }
-            } else {
-                text.printf("[%s] ", mod.enabled ? "ON" : "OFF");
-                mod_name = mod.name.c_str();
-            }
-
-            text.append(mod_name.c_str());
-            text_draw(text.c_str(), pos.x, pos.y, font, 0);
-        });
 
         mods->onclick_double_ex_item([] (scrollable_list::entry_data*entry) {
             if (!entry) {

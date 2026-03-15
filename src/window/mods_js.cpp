@@ -3,9 +3,7 @@
 #include "core/profiler.h"
 #include "js/js_game.h"
 
-int __mods_count() {
-    return (int)g_mods_list.size();
-}
+int __mods_count() { return (int)g_mods_list.size(); } ANK_FUNCTION(__mods_count)
 
 pcstr __mods_name(int index) {
     int i = 0;
@@ -15,6 +13,10 @@ pcstr __mods_name(int index) {
     }
     return "";
 }
-
-ANK_FUNCTION(__mods_count)
 ANK_FUNCTION_1(__mods_name)
+
+pcstr __mods_display_name(pcstr mod_id) { return mods_find(mod_id).name.c_str(); } ANK_FUNCTION_1(__mods_display_name)
+bool __mods_downloaded(pcstr mod_id) { return mods_find(mod_id).downloaded; } ANK_FUNCTION_1(__mods_downloaded)
+int __mods_download_progress(pcstr mod_id) { return mods_find(mod_id).download_progress; } ANK_FUNCTION_1(__mods_download_progress)
+bool __mods_enabled(pcstr mod_id) { return mods_find(mod_id).enabled; } ANK_FUNCTION_1(__mods_enabled)
+

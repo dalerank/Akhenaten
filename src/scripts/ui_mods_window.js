@@ -1,5 +1,23 @@
 log_info("akhenaten: mods window started")
 
+function mods_window_on_render_item(p) {
+    var prefix, name
+    if (!__mods_downloaded(p.text)) {
+        var progress = __mods_download_progress(p.text)
+        prefix = progress > 0 ? "[" + progress + "] " : "[n/a] "
+        name = __mods_display_name(p.text)
+        if (progress > 0) {
+            var num_points = Math.floor((__game_frame() % 90) / 30)
+            for (var i = 0; i < num_points; i++)
+                name += "."
+        }
+    } else {
+        prefix = "[" + (__mods_enabled(p.text) ? "ON" : "OFF") + "] "
+        name = __mods_display_name(p.text)
+    }
+    __ui_draw_label(prefix + name, { x: p.x, y: p.y }, p.font)
+}
+
 mods_window {
     pos: [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
     allow_rmb_goback : true
@@ -23,7 +41,10 @@ mods_window {
                                       onclick: __window_mods_refresh_available_list
                                     })
 
-        mods         : scrollable_list({pos[16, 75], size[36, 23], view_items:11, draw_scrollbar_always:true })
+        mods         : scrollable_list({pos[16, 75], size[36, 23], view_items:11,
+                                        draw_scrollbar_always:true
+                                        onrender_item: mods_window_on_render_item })
+
         bottom_text  : text({text:"Right click to exit, double click to toggle mod"
                              font:FONT_NORMAL_BLACK_ON_LIGHT, size[px(40), 20]
                              multiline:false
