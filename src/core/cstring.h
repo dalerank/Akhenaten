@@ -119,6 +119,7 @@ public:
     }
 
     void removeAt(int32_t nPos);
+    void resize(size_t s) { _str.resize(s); }
 
     char &operator[](uint32_t index);
     const char &operator[](uint32_t index) const;
@@ -148,16 +149,6 @@ public:
 
     bool startsWith(const cstring &other) const;
     bool endsWith(const cstring &other) const;
-
-    void AddSpacing() { *this += " "; }
-    void AddSpacingIfNeeded();
-    void AddNewline() { *this += "\n"; }
-    void AddDoubleNewline() { *this += "\n\n"; }
-    void AddNewlineIfNeeded() { AddNewlinesIfNeeded(1); }
-    void AddDoubleNewlineIfNeeded() { AddNewlinesIfNeeded(2); }
-    void AddNewlinesIfNeeded(int32_t nAmountToAdd);
-
-    void IndentLine() { *this += "   "; }
 
     const BaseStringType &get_string() const { return _str; }
     BaseStringType &access() { return _str; }
@@ -218,6 +209,12 @@ inline cstring operator+(cstring &&lhs, char c) {
 inline cstring operator+(cstring &&lhs, cstring &&rhs) {
     cstring tmp = std::move(lhs);
     tmp += std::move(rhs);
+    return tmp;
+}
+
+inline cstring operator+(cstring &&lhs, const std::string_view rhs) {
+    cstring tmp = std::move(lhs);
+    tmp += rhs.data();
     return tmp;
 }
 

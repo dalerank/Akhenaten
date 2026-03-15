@@ -40,10 +40,9 @@ void taxcollector_info_window::init(object_info &c) {
 
     textid reason = {c.group_id, 0};
     if (!collector->has_road_access()) { reason = {69, 25}; }
-   
-    
+
     ui["warning_text"] = ui::str(reason);
-    
+
     uint8_t workers_desc = approximate_value(collector->worker_percentage() / 100.f, make_array(10, 9, 8, 7, 6, 5));
     ui["workers_desc"] = textid{c.group_id, workers_desc};
 }

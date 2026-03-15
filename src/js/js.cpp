@@ -21,6 +21,8 @@
 #include "game/mission.h"
 #include "widget/debug_console.h"
 
+#include "js/js_debugger.h"
+
 #include <filesystem>
 #include <new>
 #include <cstdlib>
@@ -58,6 +60,48 @@ declare_console_command_p(reload_scripts){
     os << (reloaded ? "JavaScript VM reloaded successfully!" : "JavaScript VM reloaded (no files to sync)") << std::endl;
 }
 
+declare_console_command_p(js_debugger){
+    std::string subcmd;
+    is >> subcmd;
+
+    if (subcmd == "start") {
+        int port = 4711;
+        is >> port; // optional — keeps default 4711 on parse failure
+        if (g_mujs_debugger.is_running()) {
+            os << "JS Debugger is already running on port " << g_mujs_debugger.port() << std::endl;
+        } else {
+            g_mujs_debugger.start(vm.J, port);
+            os << "JS Debugger started — attach VSCode on localhost:" << port << " (type: mujs)" << std::endl;
+        }
+    } else if (subcmd == "stop") {
+        if (!g_mujs_debugger.is_running()) {
+            os << "JS Debugger is not running" << std::endl;
+        } else {
+            g_mujs_debugger.stop();
+            os << "JS Debugger stopped" << std::endl;
+        }
+    } else if (subcmd == "status") {
+        if (g_mujs_debugger.is_running()) {
+            os << "JS Debugger: running on port " << g_mujs_debugger.port() << std::endl;
+        } else {
+            os << "JS Debugger: stopped" << std::endl;
+        }
+    } else if (subcmd == "verbose") {
+        std::string onoff;
+        is >> onoff;
+        bool enable = (onoff != "off");
+        g_mujs_debugger.set_verbose(enable);
+        os << "JS Debugger verbose trace: " << (enable ? "ON" : "OFF") << std::endl;
+        os << "(each JS line will be logged — use 'js_debugger verbose off' to stop)" << std::endl;
+    } else {
+        os << "Usage: js_debugger <start [port]|stop|status|verbose [on|off]>" << std::endl;
+        os << "  start [port]  — start DAP server (default port 4711)" << std::endl;
+        os << "  stop          — stop DAP server, resume game if paused" << std::endl;
+        os << "  status        — show current state" << std::endl;
+        os << "  verbose [off] — log every JS line (diagnosis for missing breakpoints)" << std::endl;
+    }
+}
+
 static void js_vm_log_stacktrace(js_State *J) {
     // Try to get stack trace from error object if it's an Error
     if (J->isobject(-1)) {
@@ -72,7 +116,7 @@ static void js_vm_log_stacktrace(js_State *J) {
             js_pop(J, 1);
         }
     }
-    
+
     // Fallback: try to get stack trace from current state
     // Access internal trace array (this requires accessing internal structure)
     // Note: This is implementation-dependent and may break if mujs internals change
@@ -531,6 +575,13 @@ void js_reset_vm_state() {
         }
     }
     logs::info( "STACK state %d", js_gettop(vm.J));
+
+    // After a VM reset the js_State pointer changes — always re-register the hook.
+    // The hook itself is a no-op when the debugger server is not running.
+    g_mujs_debugger.update_state(vm.J);
+    js_setdebughook(vm.J, [](js_State *J, const char *file, int line, void *) {
+        g_mujs_debugger.on_line(J, file, line);
+    }, nullptr);
 }
 
 void js_vm_frame_begin() {
@@ -592,7 +643,7 @@ void js_vm_setup() {
         vm.frame_alloc_buffer = (char*)malloc(vm.FRAME_ALLOC_BUFFER_SIZE);
     }
     vm.frame_alloc_ctx.~monotonic_buffer_resource();
-    new (&vm.frame_alloc_ctx)std::pmr::monotonic_buffer_resource( vm.frame_alloc_buffer,  vm.FRAME_ALLOC_BUFFER_SIZE, std::pmr::get_default_resource());   
+    new (&vm.frame_alloc_ctx)std::pmr::monotonic_buffer_resource( vm.frame_alloc_buffer,  vm.FRAME_ALLOC_BUFFER_SIZE, std::pmr::get_default_resource());
     js_reset_vm_state();
 
     vfs::path abspath = js_vm_get_absolute_path("");
