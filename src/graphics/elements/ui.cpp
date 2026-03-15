@@ -1337,15 +1337,25 @@ void ui::escrollable_list::clear() {
     panel->clear_entry_list();
 }
 
-void ui::escrollable_list::add_entry(pcstr item) {
-    if (!panel) {
+void ui::escrollable_list::ensure_panel() {
+    if (panel) {
         return;
     }
 
+    panel = std::make_unique<scrollable_list>(button_none, button_none, button_none, button_none, params);
+    refill();
+    panel->set_onclick_entry(_onclick_cb);
+    panel->set_onclick_entry(_onclick_ex_cb);
+    panel->set_onclick_dbl_entry(_onclick_dbl_ex_cb);
+    panel->set_custom_render_func(_custom_render_cb);
+}
+
+void ui::escrollable_list::add_item(pcstr item) {
+    ensure_panel();
     panel->add_entry(item);
 }
 
-void ui::escrollable_list::select_entry(pcstr item) {
+void ui::escrollable_list::select_item(pcstr item) {
     if (!panel) {
         return;
     }
@@ -1373,22 +1383,7 @@ ui::escrollable_list::~escrollable_list() {
 }
 
 void ui::escrollable_list::draw(UiFlags flags) {
-    if (!panel) {
-        panel = std::make_unique<scrollable_list>(
-            button_none,  // left_click_callback
-            button_none,  // right_click_callback
-            button_none,  // double_click_callback
-            button_none,  // focus_change_callback
-            params
-        );
-
-        refill();
-
-        panel->set_onclick_entry(_onclick_cb);
-        panel->set_onclick_entry(_onclick_ex_cb);
-        panel->set_onclick_dbl_entry(_onclick_dbl_ex_cb);
-        panel->set_custom_render_func(_custom_render_cb);
-    }
+    ensure_panel();
 
     vec2i screen_pos = this->screen_pos();
     panel->ui_params.pos = screen_pos;

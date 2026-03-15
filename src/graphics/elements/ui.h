@@ -378,6 +378,7 @@ struct element {
     virtual element &onclick(button_onclick_cb) { return *this; }
     virtual element &onclick(button_onclick_simple_cb f) { return *this; }
     virtual void onevent(std::function<void()>) { }
+    virtual void add_entry(pcstr) {}
     virtual element &onrclick(button_onclick_cb) { return *this; }
     virtual element &onrclick(button_onclick_simple_cb f) { return *this; }
     virtual void ondraw(draw_callback f) { _draw_callback = f;};
@@ -539,7 +540,7 @@ struct etext : public elabel {
     virtual void draw(UiFlags flags) override;
     virtual void load(archive elem, element *parent, items &elems) override;
     virtual etext *dcast_etext() override { return this; }
-    
+
     void reset_scroll();
 };
 
@@ -565,6 +566,8 @@ struct escrollable_list : public element {
     scrollable_list_ui_params params;
     std::unique_ptr<scrollable_list> panel;
 
+    void ensure_panel();
+
     refill_callback _refill_cb;
     onclick_callback _onclick_cb;
     onclick_ex_callback _onclick_ex_cb;
@@ -572,12 +575,13 @@ struct escrollable_list : public element {
     custom_text_render_func _custom_render_cb;
 
     virtual void draw(UiFlags flags) override;
+
     virtual void load(archive elem, element *parent, items &elems) override;
     virtual ~escrollable_list();
 
     void clear();
-    void add_entry(pcstr item);
-    void select_entry(pcstr item);
+    void add_item(pcstr item);
+    void select_item(pcstr item);
     void onclick_item(onclick_callback lmb) { _onclick_cb = lmb; }
     void onclick_ex_item(onclick_ex_callback lmb) { _onclick_ex_cb = lmb; }
     void onclick_double_ex_item(onclick_double_ex_callback lmb) { _onclick_dbl_ex_cb = lmb; }

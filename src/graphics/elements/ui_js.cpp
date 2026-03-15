@@ -110,6 +110,15 @@ void ui_proxy_get_selected(js_State *J) { auto elem = GET_ELEM(J); js_pushboolea
 void ui_proxy_set_selected(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->select(js_toboolean(J, 1)); } J->pushundefined(); }
 void ui_proxy_set_tooltip(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->tooltip(xstring(js_tostring(J, 1))); } J->pushundefined(); }
 
+void ui_proxy_add_item(js_State *J) {
+    ui::element* elem = GET_ELEM(J);
+    if (elem) {
+        auto* list = elem->dcast_scrollable_list();
+        if (list) list->add_item(js_isstring(J, 1) ? js_tostring(J, 1) : "");
+    }
+    J->pushundefined();
+}
+
 void js_register_ui_proxy_accessors(js_State *J) {
     js_newobject(J);
     struct { const char *name; js_CFunction getter; js_CFunction setter; } props[] = {
@@ -131,6 +140,9 @@ void js_register_ui_proxy_accessors(js_State *J) {
         js_setproperty(J, -2, p.name);
     }
     js_setglobal(J, "__ui_proxy_accessors");
+
+    js_newcfunction(J, ui_proxy_add_item, "add_item", 1);
+    js_setglobal(J, "__ui_proxy_add_item");
 }
 
 int __ui_building_menu_items(int type) { return g_building_menu_ctrl.count_items(type); } ANK_FUNCTION_1(__ui_building_menu_items)

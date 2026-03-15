@@ -34,4 +34,7 @@ mods_window {
 
 [es=(mods_window, init)]
 function mods_window_on_init(window) {
+    var n = __mods_count()
+    for (var i = 0; i < n; i++)
+        window.mods.add_item(__mods_name(i))
 }

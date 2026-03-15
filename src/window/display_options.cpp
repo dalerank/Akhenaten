@@ -44,7 +44,7 @@ void ui::display_options_window::init(close_callback close_cb) {
             }            
         });
 
-        resolutions->select_entry(selected.str.c_str());
+        resolutions->select_item(selected.str.c_str());
         resolutions->onclick_ex_item([this] (escrollable_list::entry_data *r) {
             auto video_modes = get_video_modes();
             for (const auto& mode : video_modes) {
