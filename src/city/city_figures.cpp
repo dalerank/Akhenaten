@@ -123,7 +123,7 @@ figure *figure_get(int id) {
     return g_figure_data.figures[id];
 }
 
-custom_span<figure *> map_figures() {
+xspan<figure *> map_figures() {
     return make_span(g_figure_data.figures.data(), g_figure_data.figures.size());
 }
 

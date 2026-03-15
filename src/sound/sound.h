@@ -27,7 +27,7 @@ public:
     void init();
     void shutdown();
     void init_channels();
-    inline custom_span<channel_t> channels() { return make_span<channel_t>(_channels.data(), _channels.size()); }
+    inline xspan<channel_t> channels() { return make_span<channel_t>(_channels.data(), _channels.size()); }
     bool speech_play_file(xstring filename, int volume);
     bool speech_file_exist(xstring filename, vfs::path &fs_path);
     void set_channel_volume(int channel, int volume_pct);

@@ -30,7 +30,7 @@ struct hotkeys {
 
     std::function<void()> callback;
 
-    static void install(const custom_span<hotkey_mapping> &mappings);
+    static void install(const xspan<hotkey_mapping> &mappings);
 };
 
 const hotkeys* hotkey_state(void);

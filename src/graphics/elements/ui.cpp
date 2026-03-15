@@ -800,6 +800,11 @@ scrollbar_t &ui::scrollbar(scrollbar_t &scr, vec2i pos, int &value, vec2i size) 
     return scr;
 }
 
+xstring ui_element_props[] = { "text", "enabled", "readonly", "font", "text_color", "image", "selected", "tooltip" };
+xspan<xstring> ui::element::prop_names() const {
+    return make_span(ui_element_props);
+}
+
 void ui::element::load(archive arch, element *parent, element::items &items) {
     debug_tag = arch.r_int("debug_tag");
     parent_id = parent ? parent->id : xstring();
@@ -1399,6 +1404,11 @@ ui::escrollable_list::~escrollable_list() {
     js_unref_function(_js_render_item_ref);
     g_state.remove_scrollable_list(panel.get());
     // panel will be automatically destroyed by unique_ptr
+}
+
+xstring escrollable_list_funcs[] = { "add_item" }; 
+xspan<xstring> ui::escrollable_list::func_names() const {
+    return escrollable_list_funcs;
 }
 
 void ui::escrollable_list::draw(UiFlags flags) {

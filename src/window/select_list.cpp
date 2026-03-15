@@ -49,7 +49,7 @@ struct select_list_t {
     int y;
     int mode;
     int group;
-    custom_span<xstring> items;
+    xspan<xstring> items;
     void (*callback)(int);
     int focus_button_id;
 };
@@ -66,7 +66,7 @@ static void init_group(int x, int y, int group, int num_items, void (*callback)(
     data.callback = callback;
 }
 
-static void init_text(int x, int y, const custom_span<xstring> &items, void (*callback)(int)) {
+static void init_text(int x, int y, const xspan<xstring> &items, void (*callback)(int)) {
     auto &data = g_select_list;
     data.x = x;
     data.y = y;
@@ -153,7 +153,7 @@ void window_select_list_show(int x, int y, int group, int num_items, void (*call
     window_show(&window);
 }
 
-void window_select_list_show_text(int x, int y, const custom_span<xstring>& items, void (*callback)(int)) {
+void window_select_list_show_text(int x, int y, const xspan<xstring>& items, void (*callback)(int)) {
     window_type window = {
         "window_select_list",
         window_draw_underlying_window,

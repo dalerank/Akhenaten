@@ -291,7 +291,7 @@ static void add_arrow(const hotkey_mapping& mapping, bool alt) {
     }
 }
 
-void hotkeys::install(const custom_span<hotkey_mapping> &mappings) {
+void hotkeys::install(const xspan<hotkey_mapping> &mappings) {
     auto& data = g_hotkey_data;
     
     data.definitions.clear();

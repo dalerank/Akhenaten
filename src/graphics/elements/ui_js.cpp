@@ -75,10 +75,10 @@ void __ui_window_build_menu_show(int id) { window_build_menu_show(id); } ANK_FUN
 void __ui_widget_sidebar_set_type(int id) { widget_sidebar_set_type(id); } ANK_FUNCTION_1(__ui_widget_sidebar_set_type)
 int __ui_widget_sidebar_city_offset_x() { return widget_sidebar_city_offset_x(); } ANK_FUNCTION(__ui_widget_sidebar_city_offset_x)
 
-ui::element* __ui_get_element(pcstr element_id) {
-    OZZY_PROFILER_SECTION(_, bstring128("ui:get_elem+", element_id).c_str())
+ui::element* __ui_get_element(xstring element_id) {
+    OZZY_PROFILER_SECTION(_, bstring128("ui:get_elem+", element_id.c_str()).c_str())
     ui::widget *w = ui::get_current_widget();
-    return (w && element_id) ? &(*w)[element_id] : nullptr;
+    return (w && !element_id.empty()) ? &(*w)[element_id] : nullptr;
 }
 
 // In MuJS: index 0 = this, index 1 = first argument.

@@ -112,7 +112,7 @@ bool building_burning_ruin::target_route_tile_blocked(int grid_offset) const {
     return (state() != BUILDING_STATE_RUBBLE);
 }
 
-custom_span<uint16_t> building_burning_ruin::get_all() {
+xspan<uint16_t> building_burning_ruin::get_all() {
     return make_span(g_burning_ruins.data(), g_burning_ruins.size());
 }
 

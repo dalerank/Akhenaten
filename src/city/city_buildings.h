@@ -6,7 +6,7 @@
 inline building *building_begin() { return building_get(1); }
 inline building *building_end() { return building_get(MAX_BUILDINGS); }
 
-custom_span<building> &city_buildings();
+xspan<building> city_buildings();
 
 building *building_next(building_id id, e_building_type type);
 

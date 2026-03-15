@@ -55,6 +55,14 @@ using UiFlags = int;
 
 namespace ui {
 
+/** Property names for JS UI element proxy; element can override js_proxy_prop_names() to expose a subset. */
+namespace js_proxy {
+    static constexpr const char* prop_names[] = {
+        "text", "enabled", "readonly", "font", "text_color", "image", "selected", "tooltip"
+    };
+    static constexpr int prop_count = 8;
+}
+
 namespace opt {
     struct Pos { vec2i value; };
     struct Size { vec2i value; };
@@ -388,6 +396,10 @@ struct element {
     virtual escrollable_list *dcast_scrollable_list() { return nullptr; }
     virtual etext *dcast_etext() { return nullptr; }
 
+    /** Fill \a out with prop names to expose on the JS proxy (default: all from js_proxy::prop_names). */
+    virtual xspan<xstring> prop_names() const;
+    virtual xspan<xstring> func_names() const { return {}; }
+
     pcstr text_from_key(pcstr key);
 
     inline void operator=(pcstr t) { text(t); }
@@ -579,6 +591,7 @@ struct escrollable_list : public element {
 
     virtual void load(archive elem, element *parent, items &elems) override;
     virtual ~escrollable_list();
+    virtual xspan<xstring> func_names() const override;
 
     void clear();
     void add_item(pcstr item);
