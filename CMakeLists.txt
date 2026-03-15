@@ -1460,6 +1460,11 @@ if(NOT WIN_EMSCRIPTEN AND NOT MACOS_X64_BUILD)
     endif()
 endif()
 
+if(WIN32)
+    # ws2_32 is required for the embedded JS DAP debugger server (always compiled in)
+    target_link_libraries(${GAME} ws2_32)
+endif()
+
 if (PLATFORM_ANDROID)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DPNG_ARM_NEON_OPT=0 -D_BSD_SOURCE")
     find_library(log-lib log)
