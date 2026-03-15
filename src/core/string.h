@@ -116,6 +116,13 @@ inline pcstr string_item(pcstr src, int index, string_t &dst, char separator = '
     return dst.c_str();
 }
 
+template<size_t Size = 32>
+inline bstring<Size> i2str(int value) {
+    bstring<Size> buffer;
+    itoa(static_cast<int>(json.size()), buffer, 10);
+    return buffer;
+}
+
 template<typename arr_t>
 inline void string_to_array_t(arr_t &lst, pcstr src, char separator) {
     int t_cnt = string_item_count(src, separator);

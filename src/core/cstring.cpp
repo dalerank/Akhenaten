@@ -99,6 +99,11 @@ cstring &cstring::operator+=(const std::string_view &other) {
     return *this;
 }
 
+cstring &cstring::operator+=(const bstring32 &other) {
+    _str.append(other.c_str(), other.len());
+    return *this;
+}
+
 cstring &cstring::operator+=(const char *other) {
     if (other) {
         _str += other;
