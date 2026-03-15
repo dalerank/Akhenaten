@@ -21,13 +21,6 @@ void ui::mods_window::init() {
 
     auto mods = ui["mods"].dcast_scrollable_list();
     if (mods) {
-        mods->clear();
-        mods->onrefill([] (escrollable_list::entry_data_vec &r) {
-            for (auto &mod : g_mods_list) {
-                r.push_back({ mod.second.name, 0 });
-            }
-        });
-
         mods->refill();
         mods->onrender_item([] (int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font) {
             const mod_info &mod = mods_find(entry.text);
