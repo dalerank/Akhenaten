@@ -436,9 +436,7 @@ bool ui::handle_mouse(const mouse *m) {
 
     for (int i = g_state.scrollable_lists.size() - 1; i >= 0 && !handle; --i) {
         auto panel = g_state.scrollable_lists[i];
-        mouse m_relative = *m;
-        m_relative -= g_state.offset();
-        handle |= !!panel->input_handle(&m_relative);
+        handle |= !!panel->input_handle(m);
     }
 
     return handle;
@@ -1387,7 +1385,10 @@ void ui::escrollable_list::draw(UiFlags flags) {
 
     vec2i screen_pos = this->screen_pos();
     panel->ui_params.pos = screen_pos;
+
+    begin_widget(screen_pos);
     panel->draw();
+    end_widget();
 
     g_state.scrollable_lists.push_back(panel.get());
 }
