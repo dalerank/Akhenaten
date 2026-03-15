@@ -14,6 +14,7 @@ struct js_Object;
 
 #include "core/cstring.h"
 #include "core/xstring.h"
+#include "core/variant.h"
 
 #include "core/hvector.h"
 
@@ -69,9 +70,6 @@ public:
 
     void set_verbose(bool v) { verbose_ = v; }
     void on_line(js_State *J, const char *file, int line);
-
-    static cstring jstr(const cstring &s);
-
 private:
     // ── State ────────────────────────────────────────────────────────────────
     js_State *J_ = nullptr;

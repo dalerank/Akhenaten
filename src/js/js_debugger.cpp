@@ -40,6 +40,98 @@ static void sock_platform_cleanup() {
 #endif
 }
 
+cstring json_jstr(const cstring &s) {
+    cstring r = "\"";
+    for (unsigned char c : s) {
+        switch (c) {
+        case '"':  r += "\\\""; break;
+        case '\\': r += "\\\\"; break;
+        case '\n': r += "\\n";  break;
+        case '\r': r += "\\r";  break;
+        case '\t': r += "\\t";  break;
+        default:
+            if (c < 0x20) {
+                char buf[8];
+                snprintf(buf, sizeof(buf), "\\u%04x", c);
+                r += buf;
+            } else {
+                r += static_cast<char>(c);
+            }
+            break;
+        }
+    }
+    r += '"';
+    return r;
+}
+
+static cstring bvariant_to_json_value(const bvariant &v) {
+    char buffer[64] = { 0 };
+    switch (v.value_type()) {
+    case bvariant::etype_none: return "null";
+    case bvariant::etype_bool: return v.as_bool() ? "true" : "false";
+    case bvariant::etype_int32:
+        snprintf(buffer, sizeof(buffer), "%d", v.as_int32());
+        return buffer;
+    case bvariant::etype_uint32:
+        snprintf(buffer, sizeof(buffer), "%u", v.as_uint32());
+        return buffer;
+    case bvariant::etype_uint64:
+        snprintf(buffer, sizeof(buffer), "%llu", (unsigned long long)v.as_uint64());
+        return buffer;
+    case bvariant::etype_u16:
+        snprintf(buffer, sizeof(buffer), "%u", (unsigned)v.as_u16());
+        return buffer;
+    case bvariant::etype_float:
+        snprintf(buffer, sizeof(buffer), "%g", v.as_float());
+        return buffer;
+    case bvariant::etype_str: return json_jstr(cstring(v.as_str().c_str()));
+    case bvariant::etype_ptr: return "null";
+    case bvariant::etype_vec2i:
+    {
+        const vec2i &p = v.as_vec2i();
+        snprintf(buffer, sizeof(buffer), "[%d,%d]", p.x, p.y);
+        return buffer;
+    }
+    case bvariant::etype_tile2i:
+    {
+        const tile2i &t = v.as_tile2i();
+        snprintf(buffer, sizeof(buffer), "[%d,%d]", t.x(), t.y());
+        return buffer;
+    }
+    case bvariant::etype_grid_area:
+    {
+        const grid_area &a = v.as_grid_area();
+        snprintf(buffer, sizeof(buffer), "[%d,%d,%d,%d]", a.tmin_x, a.tmin_y, a.tmax_x, a.tmax_y);
+        return buffer;
+    }
+    default:
+        return "null";
+    }
+}
+
+
+cstring json_from_bvariant_map(const bvariant_map &m, pcstr raw_tail_key = nullptr, const cstring *raw_tail_value = nullptr) {
+    cstring out = "{";
+    bool first = true;
+    for (const auto &kv : m.values) {
+        if (!first) out += ",";
+        first = false;
+        out += json_jstr(kv.first.c_str());
+        out += ":";
+        out += bvariant_to_json_value(kv.second);
+    }
+
+    if (raw_tail_key && raw_tail_value) {
+        out += ",";
+        out += json_jstr(raw_tail_key);
+        out += ":";
+        out += *raw_tail_value;
+    }
+    out += "}";
+    return out;
+}
+
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Public API
 // ─────────────────────────────────────────────────────────────────────────────
@@ -314,38 +406,39 @@ void MujsDebugger::handle_client() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 void MujsDebugger::send_event(const cstring &event, const cstring &body) {
-    cstring json =
-        cstring("{\"seq\":") + std::to_string(next_seq()) +
-        ",\"type\":\"event\""
-        ",\"event\":" + jstr(event) +
-        ",\"body\":" + body +
-        "}";
-    send_packet(json);
+    send_packet(json_from_bvariant_map(
+        {
+            { "seq", next_seq() },
+            { "type", "event" },
+            { "event", event }
+        },
+        "body", &body)
+    );
 }
 
-void MujsDebugger::send_response(int req_seq, const cstring &command,
-    bool success, const cstring &body) {
-    cstring json =
-        cstring("{\"seq\":") + std::to_string(next_seq()) +
-        ",\"type\":\"response\""
-        ",\"request_seq\":" + std::to_string(req_seq) +
-        ",\"success\":" + (success ? "true" : "false") +
-        ",\"command\":" + jstr(command) +
-        ",\"body\":" + body +
-        "}";
-    send_packet(json);
+void MujsDebugger::send_response(int req_seq, const cstring &command, bool success, const cstring &body) {
+    send_packet(json_from_bvariant_map(
+        {
+            { "seq", next_seq() },
+            { "type", "response" },
+            { "request_seq", req_seq },
+            { "success", success },
+            { "command", command }
+        },
+        "body", &body)
+    );
 }
 
 void MujsDebugger::send_stopped_event(pcstr reason, pcstr file, int line) {
     object_ref_map_.clear();
     next_variable_ref_ = 1000;
 
-    cstring body =
-        "{\"reason\":" + jstr(reason) +
-        ",\"description\":\"Paused on " + cstring(reason) + "\""
-        ",\"threadId\":1"
-        ",\"allThreadsStopped\":true}";
-    send_event("stopped", body);
+    send_event("stopped", json_from_bvariant_map({
+        { "reason", reason },
+        { "description", cstring("Paused on ") + reason },
+        { "threadId", 1 },
+        { "allThreadsStopped", true }
+    }));
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -357,27 +450,24 @@ void MujsDebugger::send_stopped_event(pcstr reason, pcstr file, int line) {
 static cstring js_value_display(js_State *J, const js_Value *v) {
     char buf[64];
     switch (static_cast<js_Type>(v->type)) {
-    case JS_TUNDEFINED: return MujsDebugger::jstr("undefined");
-    case JS_TNULL:      return MujsDebugger::jstr("null");
-    case JS_TBOOLEAN:   return MujsDebugger::jstr(v->u.boolean ? "true" : "false");
+    case JS_TUNDEFINED: return json_jstr("undefined");
+    case JS_TNULL:      return json_jstr("null");
+    case JS_TBOOLEAN:   return json_jstr(v->u.boolean ? "true" : "false");
     case JS_TNUMBER:
         snprintf(buf, sizeof(buf), "%g", v->u.number);
-        return MujsDebugger::jstr(buf);
-    case JS_TSHRSTR:
-        return MujsDebugger::jstr(cstring("\"") + v->u.shrstr + "\"");
-    case JS_TLITSTR:
-        return MujsDebugger::jstr(cstring("\"") + (v->u.litstr ? v->u.litstr : "") + "\"");
-    case JS_TMEMSTR:
-        return MujsDebugger::jstr(cstring("\"") + (v->u.memstr ? v->u.memstr->p : "") + "\"");
+        return json_jstr(buf);
+    case JS_TSHRSTR:    return json_jstr(cstring("\"") + v->u.shrstr + "\"");
+    case JS_TLITSTR:    return json_jstr(cstring("\"") + (v->u.litstr ? v->u.litstr : "") + "\"");
+    case JS_TMEMSTR:    return json_jstr(cstring("\"") + (v->u.memstr ? v->u.memstr->p : "") + "\"");
     case JS_TOBJECT:
-        if (!v->u.object) return MujsDebugger::jstr("null");
+        if (!v->u.object) return json_jstr("null");
         switch (v->u.object->type) {
-        case JS_CARRAY:    return MujsDebugger::jstr("[...]");
+        case JS_CARRAY:    return json_jstr("[...]");
         case JS_CFUNCTION:
-        case JS_CCFUNCTION:return MujsDebugger::jstr("[Function]");
-        default:           return MujsDebugger::jstr("{...}");
+        case JS_CCFUNCTION:return json_jstr("[Function]");
+        default:           return json_jstr("{...}");
         }
-    default: return MujsDebugger::jstr("<unknown>");
+    default: return json_jstr("<unknown>");
     }
 }
 
@@ -418,7 +508,7 @@ cstring MujsDebugger::build_evaluate_response(const cstring &expression, int /*f
         char c = expr.data()[i];
         bool ok = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' || c == '$' || (i > 0 && c >= '0' && c <= '9');
         if (!ok) {
-            return "{\"result\":\"" + jstr("Unsupported expression (use a variable name)") + "\",\"variablesReference\":0}";
+            return "{\"result\":\"" + json_jstr("Unsupported expression (use a variable name)") + "\",\"variablesReference\":0}";
         }
     }
 
@@ -436,7 +526,7 @@ cstring MujsDebugger::build_evaluate_response(const cstring &expression, int /*f
     }
 
     if (!prop) {
-        return "{\"result\":" + jstr("undefined") + ",\"variablesReference\":0}";
+        return "{\"result\":" + json_jstr("undefined") + ",\"variablesReference\":0}";
     }
 
     const js_Value *v = &prop->value;
@@ -446,8 +536,9 @@ cstring MujsDebugger::build_evaluate_response(const cstring &expression, int /*f
         object_ref_map_[ref] = { parent_ref, expr };
     }
 
-    cstring result = js_value_display(J_, v);
-    return "{\"result\":" + result + ",\"variablesReference\":" + std::to_string(ref) + "}";
+    return json_from_bvariant_map({
+        { "variablesReference", ref }
+    }, "result", &js_value_display(J_, v));
 }
 
 cstring MujsDebugger::build_stack_trace_json(int levels) {
@@ -474,33 +565,39 @@ cstring MujsDebugger::build_stack_trace_json(int levels) {
             frames += ",";
         }
 
-        frames +=
-            cstring("{") +
-                "\"id\":" + std::to_string(i) + ","
-                "\"name\":" + jstr(name) + ","
-                "\"source\":{"
-                    "\"name\":" + jstr(basename_of(file)) + ","
-                    "\"path\":" + jstr(file) +
-                "},"
-                "\"line\":" + std::to_string(line) + ","
-                "\"column\":0"
-            "}";
+        frames += json_from_bvariant_map({
+            { "id", i },
+            { "name", name },
+            { "line", line },
+            { "column", 0 }
+        },
+        "source", &json_from_bvariant_map({
+            { "name", basename_of(file) },
+            { "path", file }
+        }));
     }
     frames += "]";
 
-    return "{\"stackFrames\":" + frames +
-        ",\"totalFrames\":" + std::to_string(count) + "}";
+    return json_from_bvariant_map({
+        { "totalFrames", count }
+    }, "stackFrames", &frames);
 }
 
 // variablesReference encoding:
 //   1 = Local  (J_->E)
 //   2 = Global (walk up to J_->GE)
 cstring MujsDebugger::build_scopes_json(int /*frame_id*/) {
-    return
-        "{\"scopes\":["
-        "{\"name\":\"Local\",\"variablesReference\":1,\"expensive\":false},"
-        "{\"name\":\"Global\",\"variablesReference\":2,\"expensive\":true}"
-        "]}";
+    cstring local = json_from_bvariant_map({
+        { "name", "Local" },
+        { "variablesReference", 1 },
+        { "expensive", false }
+    });
+    cstring global = json_from_bvariant_map({
+        { "name", "Global" },
+        { "variablesReference", 2 },
+        { "expensive", true }
+    });
+    return "{\"scopes\":[" + local + "," + global + "]}";
 }
 
 js_Object *MujsDebugger::get_object_for_ref(int var_ref) {
@@ -591,13 +688,11 @@ cstring MujsDebugger::build_variables_json(int var_ref) {
             object_ref_map_[ref] = { var_ref, p->name };
         }
 
-        list +=
-            "{"
-                "\"name\":" + jstr(p->name) + ","
-                "\"value\":" + js_value_display(J_, v) + ","
-                "\"type\":\"" + cstring(js_value_type(v)) + "\","
-                "\"variablesReference\":" + std::to_string(ref) +
-            "}";
+        list += json_from_bvariant_map({
+            { "name", p->name },
+            { "type", js_value_type(v) },
+            { "variablesReference", ref }
+        }, "value", &js_value_display(J_, v));
     }
     list += "]";
     return "{\"variables\":" + list + "}";
@@ -612,14 +707,12 @@ void MujsDebugger::handle_request(const cstring &body) {
     int         req_seq = extract_int(body, "seq");
 
     if (cmd == "initialize") {
-        send_response(req_seq, cmd, true,
-            "{"
-                "\"supportsConfigurationDoneRequest\":true,"
-                "\"supportsStepBack\":false,"
-                "\"supportsRestartRequest\":false,"
-                "\"supportsEvaluateForHovers\":false"
-            "}"
-        );
+        send_response(req_seq, cmd, true, json_from_bvariant_map({
+            { "supportsConfigurationDoneRequest", true },
+            { "supportsStepBack", false },
+            { "supportsRestartRequest", false },
+            { "supportsEvaluateForHovers", false }
+        }));
         send_event("initialized", "{}");
     } else if (cmd == "attach" || cmd == "launch") {
         send_response(req_seq, cmd, true);
@@ -686,11 +779,14 @@ void MujsDebugger::handle_request(const cstring &body) {
 
         // Include "source" in each breakpoint so VSCode can bind it to the open document.
         // Without source, VSCode shows "Unbound breakpoint".
-        cstring src_json = jstr(src_path);
         cstring bps = "[";
         for (size_t i = 0; i < lines.size(); ++i) {
             if (i > 0) bps += ",";
-            bps += cstring("{\"verified\":true,\"line\":") + std::to_string(lines[i]) + ",\"source\":{\"path\":" + src_json + "}}";
+            cstring source_json = json_from_bvariant_map({{ "path", src_path }});
+            bps += json_from_bvariant_map({
+                { "verified", true },
+                { "line", lines[i] }
+            }, "source", &source_json);
         }
         bps += "]";
         send_response(req_seq, cmd, true, "{\"breakpoints\":" + bps + "}");
@@ -759,7 +855,7 @@ void MujsDebugger::handle_request(const cstring &body) {
         }
 
         cv_.notify_all();
-        
+
         if (client_sock_ != JS_DBG_SOCK_INVALID) {
             js_dbg_sock_close(client_sock_);
             client_sock_ = JS_DBG_SOCK_INVALID;
@@ -775,30 +871,6 @@ void MujsDebugger::handle_request(const cstring &body) {
 // ─────────────────────────────────────────────────────────────────────────────
 // JSON helpers
 // ─────────────────────────────────────────────────────────────────────────────
-
-cstring MujsDebugger::jstr(const cstring &s) {
-    cstring r = "\"";
-    for (unsigned char c : s) {
-        switch (c) {
-        case '"':  r += "\\\""; break;
-        case '\\': r += "\\\\"; break;
-        case '\n': r += "\\n";  break;
-        case '\r': r += "\\r";  break;
-        case '\t': r += "\\t";  break;
-        default:
-            if (c < 0x20) {
-                char buf[8];
-                snprintf(buf, sizeof(buf), "\\u%04x", c);
-                r += buf;
-            } else {
-                r += static_cast<char>(c);
-            }
-            break;
-        }
-    }
-    r += '"';
-    return r;
-}
 
 MujsDebugger::~MujsDebugger() {
     stop();

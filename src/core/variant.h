@@ -6,12 +6,14 @@
 #include <utility>
 #include <algorithm>
 #include <variant>
+#include <initializer_list>
 
 #include "xstring.h"
 #include "core/vec2i.h"
 #include "grid/grid_area.h"
 #include "grid/point.h"
 #include "core/hvector.h"
+#include "core/cstring.h"
 
 class bvariant {
 public:
@@ -48,6 +50,7 @@ public:
     inline explicit bvariant(float v) : _value(v) {}
     inline explicit bvariant(void *v) : _value(v) {}
     inline explicit bvariant(const xstring &v) : _value(v) {}
+    inline explicit bvariant(const cstring &v) : _value(v.data()) {}
     inline explicit bvariant(pcstr v) : _value(xstring(v)) {}
     inline explicit bvariant(vec2i v) : _value(v) {}
     inline explicit bvariant(tile2i v) : _value(v) {}
@@ -238,9 +241,38 @@ protected:
     inline bvariant &assign(const T &v, uint8_t) { _value = v; return *this; }
 };
 
+/// Helper for bvariant_map initializer list: values convert implicitly to bvariant.
+struct bvariant_map_val {
+    bvariant v;
+    bvariant_map_val() = default;
+    bvariant_map_val(pcstr s) : v(bvariant(s)) {}
+    bvariant_map_val(const xstring &s) : v(bvariant(s)) {}
+    bvariant_map_val(const cstring &s) : v(bvariant(s.data())) {}
+    bvariant_map_val(bool b) : v(bvariant(b)) {}
+    bvariant_map_val(int32_t i) : v(bvariant(i)) {}
+    bvariant_map_val(uint32_t u) : v(bvariant(u)) {}
+    bvariant_map_val(uint64_t u) : v(bvariant(u)) {}
+    bvariant_map_val(float f) : v(bvariant(f)) {}
+    bvariant_map_val(vec2i p) : v(bvariant(p)) {}
+    bvariant_map_val(tile2i t) : v(bvariant(t)) {}
+    bvariant_map_val(grid_area a) : v(bvariant(a)) {}
+};
+
 struct bvariant_map {
     using PairT = std::pair<xstring, bvariant>;
     using ValuesT = hvector<PairT, 32>;
+
+    bvariant_map() = default;
+
+    bvariant_map(std::initializer_list<PairT> init) {
+        for (const auto &p : init)
+            values.emplace_back(p.first, p.second);
+    }
+
+    bvariant_map(std::initializer_list<std::pair<xstring, bvariant_map_val>> init) {
+        for (const auto &p : init)
+            values.emplace_back(p.first, p.second.v);
+    }
 
     const bvariant& def() const {
         static bvariant dummy;
