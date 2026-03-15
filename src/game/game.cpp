@@ -514,6 +514,7 @@ void game_t::handle_input_frame() {
 void game_t::exit() {
     video_shutdown();
     g_settings.save();
+    arguments::store(g_args);
     game_features::save();
     g_sound.shutdown();
 }
