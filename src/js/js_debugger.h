@@ -12,6 +12,11 @@ struct js_Object;
 #include <thread>
 #include <atomic>
 
+#include "core/cstring.h"
+#include "core/xstring.h"
+
+#include "core/hvector.h"
+
 // ─── Platform socket types ───────────────────────────────────────────────────
 #ifdef _WIN32
 #  ifndef WIN32_LEAN_AND_MEAN
@@ -41,8 +46,8 @@ enum class DebugStepMode {
 
 // ─── Breakpoint ───────────────────────────────────────────────────────────────
 struct MujsBreakpoint {
-    std::string file;   // as received from VSCode (absolute path)
-    int         line;
+    xstring file;   // as received from VSCode (absolute path)
+    int line;
 };
 
 // ─── Debug Adapter Server ─────────────────────────────────────────────────────
@@ -53,6 +58,8 @@ struct MujsBreakpoint {
 //           (waiting on cv_), so no extra lock is needed for J_ inspection.
 class MujsDebugger {
 public:
+    ~MujsDebugger();
+
     void start(js_State *J, int port = 4711);
     void stop();
     void update_state(js_State *J);
@@ -63,9 +70,10 @@ public:
     void set_verbose(bool v) { verbose_ = v; }
     void on_line(js_State *J, const char *file, int line);
 
-    static std::string jstr(const std::string &s);
+    static cstring jstr(const cstring &s);
 
 private:
+
     // ── State ────────────────────────────────────────────────────────────────
     js_State *J_ = nullptr;
     int         port_ = 4711;
@@ -81,13 +89,13 @@ private:
     bool            paused_ = false;
     DebugStepMode   step_mode_ = DebugStepMode::None;
     int             step_depth_ = 0;
-    std::string     step_start_file_;
+    cstring         step_start_file_;
     int             step_start_line_ = 0;
 
-    std::vector<MujsBreakpoint> breakpoints_;
+    hvector<MujsBreakpoint, 16> breakpoints_;
 
     // Object expansion: ref_id >= 1000 -> (parent_ref, property_name)
-    std::map<int, std::pair<int, std::string>> object_ref_map_;
+    std::map<int, std::pair<int, cstring>> object_ref_map_;
     int next_variable_ref_ = 1000;
 
     int seq_ = 1;
@@ -100,28 +108,28 @@ private:
     // ── Network (server thread) ──────────────────────────────────────────────
     void server_loop(int port);
     void handle_client();
-    bool send_packet(const std::string &json);
-    bool recv_packet(std::string &out);
+    bool send_packet(const cstring &json);
+    bool recv_packet(cstring &out);
 
     // ── DAP messaging (server thread, game thread paused) ───────────────────
-    void handle_request(const std::string &body);
-    void send_event(const std::string &event, const std::string &body);
-    void send_response(int req_seq, const std::string &command,
-        bool success, const std::string &body = "{}");
+    void handle_request(const cstring &body);
+    void send_event(const cstring &event, const cstring &body);
+    void send_response(int req_seq, const cstring &command,
+        bool success, const cstring &body = "{}");
     void send_stopped_event(const char *reason, const char *file, int line);
 
     // ── Inspection (server thread, safe while game thread is on cv_.wait) ───
-    std::string build_stack_trace_json(int levels);
-    std::string build_scopes_json(int frame_id);
-    std::string build_variables_json(int var_ref);
+    cstring build_stack_trace_json(int levels);
+    cstring build_scopes_json(int frame_id);
+    cstring build_variables_json(int var_ref);
     js_Object *get_object_for_ref(int var_ref);
-    std::string build_evaluate_response(const std::string &expression, int frame_id);
+    cstring build_evaluate_response(const cstring &expression, int frame_id);
 
     // ── JSON parsing helpers ─────────────────────────────────────────────────
-    static std::string extract_str(const std::string &json, const std::string &key);
-    static int         extract_int(const std::string &json, const std::string &key, int def = 0);
-    static std::string basename_of(const char *path);
-    static bool        file_matches(const char *trace_file, const std::string &bp_file);
+    static cstring extract_str(const cstring &json, const cstring &key);
+    static int         extract_int(const cstring &json, const cstring &key, int def = 0);
+    static cstring basename_of(const char *path);
+    static bool        file_matches(const char *trace_file, const xstring &bp_file);
 };
 
 // Global singleton — accessed from the static OP_LINE hook lambda.
