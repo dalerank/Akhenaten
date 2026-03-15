@@ -238,12 +238,12 @@ void MujsDebugger::server_loop(int port) {
 }
 
 // DAP packet framing: "Content-Length: N\r\n\r\n<body>"
-bool MujsDebugger::send_packet(const std::string &json) {
+bool MujsDebugger::send_packet(const cstring &json) {
     if (client_sock_ == JS_DBG_SOCK_INVALID) {
         return false;
     }
 
-    std::string packet = "Content-Length: " + std::to_string(json.size()) + "\r\n\r\n" + json;
+    cstring packet = cstring("Content-Length: ") + std::to_string(json.size()) + "\r\n\r\n" + json;
     int total = static_cast<int>(packet.size());
     int sent = 0;
 
@@ -258,23 +258,30 @@ bool MujsDebugger::send_packet(const std::string &json) {
     return true;
 }
 
-bool MujsDebugger::recv_packet(std::string &out) {
+bool MujsDebugger::recv_packet(cstring &out) {
     // Read header byte-by-byte until \r\n\r\n
-    std::string header;
+    cstring header;
     char c;
 
     while (true) {
         int n = recv(client_sock_, &c, 1, 0);
         if (n <= 0) return false;
         header += c;
-        if (header.size() >= 4 &&
-            header.substr(header.size() - 4) == "\r\n\r\n")
-            break;
+        size_t sz = header.size();
+        if (sz >= 4) {
+            // cstring::substr(start,end) needs end position; -1 is clamped and gives empty string
+            cstring tail = header.substr(static_cast<int32_t>(sz - 4), static_cast<int32_t>(sz));
+            if (tail == "\r\n\r\n")
+                break;
+        }
     }
 
     auto pos = header.find("Content-Length: ");
-    if (pos == std::string::npos) return false;
-    int content_len = std::stoi(header.substr(pos + 16));
+    if (pos == std::string::npos) {
+        return false;
+    }
+    size_t sz = header.size();
+    int content_len = std::stoi(header.substr(static_cast<int32_t>(pos + 16), static_cast<int32_t>(sz)).c_str());
 
     out.resize(content_len);
     int received = 0;
@@ -287,7 +294,7 @@ bool MujsDebugger::recv_packet(std::string &out) {
 }
 
 void MujsDebugger::handle_client() {
-    std::string packet;
+    cstring packet;
     while (running_ && recv_packet(packet)) {
         handle_request(packet);
     }
@@ -297,9 +304,9 @@ void MujsDebugger::handle_client() {
 // DAP messaging
 // ─────────────────────────────────────────────────────────────────────────────
 
-void MujsDebugger::send_event(const std::string &event, const std::string &body) {
-    std::string json =
-        "{\"seq\":" + std::to_string(next_seq()) +
+void MujsDebugger::send_event(const cstring &event, const cstring &body) {
+    cstring json =
+        cstring("{\"seq\":") + std::to_string(next_seq()) +
         ",\"type\":\"event\""
         ",\"event\":" + jstr(event) +
         ",\"body\":" + body +
@@ -307,10 +314,10 @@ void MujsDebugger::send_event(const std::string &event, const std::string &body)
     send_packet(json);
 }
 
-void MujsDebugger::send_response(int req_seq, const std::string &command,
-    bool success, const std::string &body) {
-    std::string json =
-        "{\"seq\":" + std::to_string(next_seq()) +
+void MujsDebugger::send_response(int req_seq, const cstring &command,
+    bool success, const cstring &body) {
+    cstring json =
+        cstring("{\"seq\":") + std::to_string(next_seq()) +
         ",\"type\":\"response\""
         ",\"request_seq\":" + std::to_string(req_seq) +
         ",\"success\":" + (success ? "true" : "false") +
@@ -325,9 +332,9 @@ void MujsDebugger::send_stopped_event(const char *reason,
     object_ref_map_.clear();
     next_variable_ref_ = 1000;
 
-    std::string body =
+    cstring body =
         "{\"reason\":" + jstr(reason) +
-        ",\"description\":\"Paused on " + std::string(reason) + "\""
+        ",\"description\":\"Paused on " + cstring(reason) + "\""
         ",\"threadId\":1"
         ",\"allThreadsStopped\":true}";
     send_event("stopped", body);
@@ -339,7 +346,7 @@ void MujsDebugger::send_stopped_event(const char *reason,
 // ─────────────────────────────────────────────────────────────────────────────
 
 // Convert a js_Value to a human-readable JSON string (the "value" DAP field).
-static std::string js_value_display(js_State *J, const js_Value *v) {
+static cstring js_value_display(js_State *J, const js_Value *v) {
     char buf[64];
     switch (static_cast<js_Type>(v->type)) {
     case JS_TUNDEFINED: return MujsDebugger::jstr("undefined");
@@ -349,11 +356,11 @@ static std::string js_value_display(js_State *J, const js_Value *v) {
         snprintf(buf, sizeof(buf), "%g", v->u.number);
         return MujsDebugger::jstr(buf);
     case JS_TSHRSTR:
-        return MujsDebugger::jstr(std::string("\"") + v->u.shrstr + "\"");
+        return MujsDebugger::jstr(cstring("\"") + v->u.shrstr + "\"");
     case JS_TLITSTR:
-        return MujsDebugger::jstr(std::string("\"") + (v->u.litstr ? v->u.litstr : "") + "\"");
+        return MujsDebugger::jstr(cstring("\"") + (v->u.litstr ? v->u.litstr : "") + "\"");
     case JS_TMEMSTR:
-        return MujsDebugger::jstr(std::string("\"") + (v->u.memstr ? v->u.memstr->p : "") + "\"");
+        return MujsDebugger::jstr(cstring("\"") + (v->u.memstr ? v->u.memstr->p : "") + "\"");
     case JS_TOBJECT:
         if (!v->u.object) return MujsDebugger::jstr("null");
         switch (v->u.object->type) {
@@ -380,19 +387,21 @@ static const char *js_value_type(const js_Value *v) {
     }
 }
 
-std::string MujsDebugger::build_evaluate_response(const std::string &expression, int /*frame_id*/) {
+cstring MujsDebugger::build_evaluate_response(const cstring &expression, int /*frame_id*/) {
     if (!J_ || !J_->E) return "{\"result\":\"\",\"variablesReference\":0}";
 
     // Trim
     size_t start = expression.find_first_not_of(" \t\r\n");
-    if (start == std::string::npos) return "{\"result\":\"\\\"\\\"\",\"variablesReference\":0}";
+    if (start == std::string::npos) {
+        return "{\"result\":\"\\\"\\\"\",\"variablesReference\":0}";
+    }
     size_t end = expression.find_last_not_of(" \t\r\n");
-    std::string expr = expression.substr(start, end - start + 1);
+    cstring expr = expression.substr(start, end - start + 1);
 
     // Only support simple identifier (one word)
     if (expr.empty()) return "{\"result\":\"\\\"\\\"\",\"variablesReference\":0}";
     for (size_t i = 0; i < expr.size(); ++i) {
-        char c = expr[i];
+        char c = expr.data()[i];
         bool ok = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' || c == '$' ||
             (i > 0 && c >= '0' && c <= '9');
         if (!ok) {
@@ -424,11 +433,11 @@ std::string MujsDebugger::build_evaluate_response(const std::string &expression,
         object_ref_map_[ref] = { parent_ref, expr };
     }
 
-    std::string result = js_value_display(J_, v);
+    cstring result = js_value_display(J_, v);
     return "{\"result\":" + result + ",\"variablesReference\":" + std::to_string(ref) + "}";
 }
 
-std::string MujsDebugger::build_stack_trace_json(int levels) {
+cstring MujsDebugger::build_stack_trace_json(int levels) {
     if (!J_ || J_->tracetop < 0) {
         return "{\"stackFrames\":[],\"totalFrames\":0}";
     }
@@ -436,7 +445,7 @@ std::string MujsDebugger::build_stack_trace_json(int levels) {
     int top = J_->tracetop;
     int count = (levels <= 0 || levels > top + 1) ? (top + 1) : levels;
 
-    std::string frames = "[";
+    cstring frames = "[";
     for (int i = 0; i < count; ++i) {
         int idx = top - i;
         if (idx < 0) {
@@ -453,7 +462,7 @@ std::string MujsDebugger::build_stack_trace_json(int levels) {
         }
 
         frames +=
-            "{"
+            cstring("{") +
             "\"id\":" + std::to_string(i) + ","
             "\"name\":" + jstr(name) + ","
             "\"source\":{"
@@ -473,7 +482,7 @@ std::string MujsDebugger::build_stack_trace_json(int levels) {
 // variablesReference encoding:
 //   1 = Local  (J_->E)
 //   2 = Global (walk up to J_->GE)
-std::string MujsDebugger::build_scopes_json(int /*frame_id*/) {
+cstring MujsDebugger::build_scopes_json(int /*frame_id*/) {
     return
         "{\"scopes\":["
         "{\"name\":\"Local\",\"variablesReference\":1,\"expensive\":false},"
@@ -509,7 +518,7 @@ js_Object *MujsDebugger::get_object_for_ref(int var_ref) {
     }
 
     int parent_ref = it->second.first;
-    const std::string &name = it->second.second;
+    const cstring &name = it->second.second;
 
     js_Object *parent = get_object_for_ref(parent_ref);
     if (!parent) {
@@ -524,7 +533,7 @@ js_Object *MujsDebugger::get_object_for_ref(int var_ref) {
     return prop->value.u.object;
 }
 
-std::string MujsDebugger::build_variables_json(int var_ref) {
+cstring MujsDebugger::build_variables_json(int var_ref) {
     if (!J_) {
         return "{\"variables\":[]}";
     }
@@ -550,7 +559,7 @@ std::string MujsDebugger::build_variables_json(int var_ref) {
         return "{\"variables\":[]}";
     }
 
-    std::string list = "[";
+    cstring list = "[";
     bool first = true;
     for (js_Property *p = obj->head; p; p = p->next) {
         if (!p->name) {
@@ -573,7 +582,7 @@ std::string MujsDebugger::build_variables_json(int var_ref) {
             "{"
             "\"name\":" + jstr(p->name) + ","
             "\"value\":" + js_value_display(J_, v) + ","
-            "\"type\":\"" + std::string(js_value_type(v)) + "\","
+            "\"type\":\"" + cstring(js_value_type(v)) + "\","
             "\"variablesReference\":" + std::to_string(ref) +
             "}";
     }
@@ -585,8 +594,8 @@ std::string MujsDebugger::build_variables_json(int var_ref) {
 // DAP request dispatcher
 // ─────────────────────────────────────────────────────────────────────────────
 
-void MujsDebugger::handle_request(const std::string &body) {
-    std::string cmd = extract_str(body, "command");
+void MujsDebugger::handle_request(const cstring &body) {
+    cstring cmd = extract_str(body, "command");
     int         req_seq = extract_int(body, "seq");
 
     if (cmd == "initialize") {
@@ -607,28 +616,29 @@ void MujsDebugger::handle_request(const std::string &body) {
         send_response(req_seq, cmd, true,
             "{\"threads\":[{\"id\":1,\"name\":\"JS Main Thread\"}]}");
     } else if (cmd == "setBreakpoints") {
-        std::string src_path = extract_str(body, "path");
+        cstring src_path = extract_str(body, "path");
         if (src_path.empty()) {
             src_path = extract_str(body, "name");
         }
 
         // Collect requested line numbers from the "breakpoints" array
-        std::vector<int> lines;
-        auto bpos = body.find("\"breakpoints\"");
-        if (bpos != std::string::npos) {
-            auto astart = body.find('[', bpos);
-            auto aend = body.find(']', astart != std::string::npos ? astart : 0);
-            if (astart != std::string::npos && aend != std::string::npos) {
-                std::string arr = body.substr(astart, aend - astart + 1);
-                size_t p = 0;
-                while ((p = arr.find("\"line\":", p)) != std::string::npos) {
+        hvector<int, 16> lines;
+        int32_t bpos = body.find("\"breakpoints\"");
+        if (bpos >= 0) {
+            int32_t astart = body.find('[', bpos);
+            int32_t aend = (astart >= 0) ? body.find(']', astart) : -1;
+            if (astart >= 0 && aend >= 0 && aend >= astart) {
+                // cstring::substr(start, end) takes END POSITION; length = end - start
+                cstring arr = body.substr(astart, aend + 1);
+                int32_t p = 0;
+                while ((p = arr.find("\"line\":", p)) >= 0) {
                     p += 7;
-                    while (p < arr.size() && arr[p] == ' ') {
+                    while (p < arr.size() && arr.data()[p] == ' ') {
                         ++p;
                     }
                     int l = 0;
-                    while (p < arr.size() && isdigit(static_cast<unsigned char>(arr[p]))) {
-                        l = l * 10 + (arr[p++] - '0');
+                    while (p < arr.size() && isdigit(static_cast<unsigned char>(arr.data()[p]))) {
+                        l = l * 10 + (arr.data()[p++] - '0');
                     }
                     if (l > 0) lines.push_back(l);
                 }
@@ -641,12 +651,12 @@ void MujsDebugger::handle_request(const std::string &body) {
             breakpoints_.erase(
                 std::remove_if(breakpoints_.begin(), breakpoints_.end(),
                 [&] (const MujsBreakpoint &bp) {
-                return file_matches(bp.file.c_str(), src_path);
+                return file_matches(bp.file.c_str(), src_path.c_str());
             }),
                 breakpoints_.end());
             // Add new ones
             for (int l : lines)
-                breakpoints_.push_back({ src_path, l });
+                breakpoints_.push_back({ src_path.c_str(), l });
         }
 
         // Log so user sees add/remove breakpoints (stderr = terminal, logs = log file)
@@ -663,11 +673,11 @@ void MujsDebugger::handle_request(const std::string &body) {
 
         // Include "source" in each breakpoint so VSCode can bind it to the open document.
         // Without source, VSCode shows "Unbound breakpoint".
-        std::string src_json = jstr(src_path);
-        std::string bps = "[";
+        cstring src_json = jstr(src_path);
+        cstring bps = "[";
         for (size_t i = 0; i < lines.size(); ++i) {
             if (i > 0) bps += ",";
-            bps += "{\"verified\":true,\"line\":" + std::to_string(lines[i]) + ",\"source\":{\"path\":" + src_json + "}}";
+            bps += cstring("{\"verified\":true,\"line\":") + std::to_string(lines[i]) + ",\"source\":{\"path\":" + src_json + "}}";
         }
         bps += "]";
         send_response(req_seq, cmd, true, "{\"breakpoints\":" + bps + "}");
@@ -681,7 +691,7 @@ void MujsDebugger::handle_request(const std::string &body) {
         int var_ref = extract_int(body, "variablesReference", 0);
         send_response(req_seq, cmd, true, build_variables_json(var_ref));
     } else if (cmd == "evaluate") {
-        std::string expr = extract_str(body, "expression");
+        cstring expr = extract_str(body, "expression");
         int frame_id = extract_int(body, "frameId", 0);
         send_response(req_seq, cmd, true, build_evaluate_response(expr, frame_id));
     } else if (cmd == "continue") {
@@ -753,8 +763,8 @@ void MujsDebugger::handle_request(const std::string &body) {
 // JSON helpers
 // ─────────────────────────────────────────────────────────────────────────────
 
-std::string MujsDebugger::jstr(const std::string &s) {
-    std::string r = "\"";
+cstring MujsDebugger::jstr(const cstring &s) {
+    cstring r = "\"";
     for (unsigned char c : s) {
         switch (c) {
         case '"':  r += "\\\""; break;
@@ -777,20 +787,25 @@ std::string MujsDebugger::jstr(const std::string &s) {
     return r;
 }
 
+MujsDebugger::~MujsDebugger() {
+    stop();
+}
+
 // Extracts the string value of a JSON key at any nesting level.
 // Only handles simple (non-nested) string values.
-std::string MujsDebugger::extract_str(const std::string &json,
-    const std::string &key) {
-    std::string needle = "\"" + key + "\"";
+cstring MujsDebugger::extract_str(const cstring &json, const cstring &key) {
+    cstring needle = "\"" + key + "\"";
     auto pos = json.find(needle);
-    if (pos == std::string::npos) return {};
+    if (pos == std::string::npos) {
+        return {};
+    }
 
     pos += needle.size();
     while (pos < json.size() && (json[pos] == ':' || json[pos] == ' ')) ++pos;
     if (pos >= json.size() || json[pos] != '"') return {};
 
     ++pos; // skip opening quote
-    std::string result;
+    cstring result;
     while (pos < json.size() && json[pos] != '"') {
         if (json[pos] == '\\' && pos + 1 < json.size()) {
             ++pos;
@@ -810,11 +825,13 @@ std::string MujsDebugger::extract_str(const std::string &json,
     return result;
 }
 
-int MujsDebugger::extract_int(const std::string &json,
-    const std::string &key, int def) {
-    std::string needle = "\"" + key + "\"";
+int MujsDebugger::extract_int(const cstring &json,
+    const cstring &key, int def) {
+    cstring needle = "\"" + key + "\"";
     auto pos = json.find(needle);
-    if (pos == std::string::npos) return def;
+    if (pos == std::string::npos) {
+        return def;
+    }
 
     pos += needle.size();
     while (pos < json.size() && (json[pos] == ':' || json[pos] == ' ')) ++pos;
@@ -830,14 +847,14 @@ int MujsDebugger::extract_int(const std::string &json,
     return sign * val;
 }
 
-std::string MujsDebugger::basename_of(const char *path) {
+cstring MujsDebugger::basename_of(const char *path) {
     if (!path || !*path) return "<unknown>";
     const char *p = path + strlen(path) - 1;
     while (p > path && *p != '/' && *p != '\\') --p;
-    return (*p == '/' || *p == '\\') ? std::string(p + 1) : std::string(path);
+    return (*p == '/' || *p == '\\') ? cstring(p + 1) : cstring(path);
 }
 
-bool MujsDebugger::file_matches(const char *trace_file, const std::string &bp_file) {
+bool MujsDebugger::file_matches(const char *trace_file, const xstring &bp_file) {
     if (!trace_file) {
         return false;
     }

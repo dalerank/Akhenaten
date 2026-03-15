@@ -1,0 +1,63 @@
+{
+  "name": "mujs-debug",
+  "displayName": "MuJS Debugger",
+  "description": "Debug JavaScript running in Akhenaten's embedded MuJS engine via in-game 'js_debugger start'",
+  "version": "0.1.0",
+  "publisher": "akhenaten",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": ["Debuggers"],
+  "activationEvents": ["*"],
+  "main": "./extension.js",
+  "contributes": {
+    "debuggers": [
+      {
+        "type": "mujs",
+        "label": "MuJS Debugger",
+        "languages": ["javascript"],
+        "configurationAttributes": {
+          "attach": {
+            "properties": {
+              "host": {
+                "type": "string",
+                "description": "Hostname where Akhenaten is running.",
+                "default": "localhost"
+              },
+              "port": {
+                "type": "number",
+                "description": "TCP port of the MuJS DAP server. Start in-game: js_debugger start [port]",
+                "default": 4711
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "mujs",
+            "request": "attach",
+            "name": "Attach to Akhenaten JS",
+            "host": "localhost",
+            "port": 4711
+          }
+        ],
+        "configurationSnippets": [
+          {
+            "label": "MuJS: Attach to Akhenaten",
+            "description": "Attach to Akhenaten's embedded MuJS engine",
+            "body": {
+              "type": "mujs",
+              "request": "attach",
+              "name": "Attach to Akhenaten JS",
+              "host": "localhost",
+              "port": 4711
+            }
+          }
+        ]
+      }
+    ],
+    "breakpoints": [
+      { "language": "javascript" }
+    ]
+  }
+}

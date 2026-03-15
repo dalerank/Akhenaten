@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "mujs",
+      "request": "attach",
+      "name": "Attach to Akhenaten JS",
+      "host": "localhost",
+      "port": 4711
+    }
+  ]
+}

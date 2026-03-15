@@ -58,6 +58,12 @@ public:
     inline const char *c_str() const { return _str.c_str(); }
     inline const char *data() const { return _str.data(); }
 
+    inline auto begin() { return _str.begin(); }
+    inline auto end() { return _str.end(); }
+
+    inline auto begin() const { return _str.begin(); }
+    inline auto end() const { return _str.end(); }
+
     inline int32_t size() const { return _str.size(); }
 
     inline bool empty() const { return _str.empty(); }
@@ -67,6 +73,9 @@ public:
     // Return index to first instance found or -1 if not found
     int32_t find(char ch, int32_t nStartPos = 0) const;
     int32_t find(const cstring &String, int32_t nStartPos = 0) const;
+
+    size_t find_first_not_of(const char *szChars, int32_t nStartPos = 0) const { return _str.find_first_not_of(szChars, static_cast<size_t>(nStartPos)); }
+    size_t find_last_not_of(const char *szChars, int32_t nStartPos = -1) const { return _str.find_last_not_of(szChars, nStartPos >= 0 ? static_cast<size_t>(nStartPos) : std::string::npos); }
 
     // Return index to last instance found or -1 if not found
     int32_t findLast(char ch, int32_t nStartPos = -1) const;

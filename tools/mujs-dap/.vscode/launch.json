@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Install: copy to VSCode extensions",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": [
+        "--extensionDevelopmentPath=C:\\work\\Akhenaten\\tools\\mujs-dap",
+        "C:\\work\\Akhenaten"
+      ]
+    }
+  ]
+}
