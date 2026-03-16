@@ -25,7 +25,7 @@ struct autoconfig_window : public ui::widget {
 
     static void before_mission_start();
     static void refresh_all();
-    static void show_by_section(pcstr section);
+    static void show(xstring section);
     static void unregister_section(pcstr section);
     static void reset_script_window_current();
 };

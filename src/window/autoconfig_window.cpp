@@ -109,12 +109,12 @@ void autoconfig_window::init() {
     _is_inited = true;
 }
 
-static autoconfig_window* get_window_current(pcstr name) {
+static autoconfig_window* get_window_current(xstring name) {
     auto it = autoconfig_registry().find(name);
     return (it != autoconfig_registry().end()) ? it->second : nullptr;
 }
 
-void autoconfig_window::show_by_section(pcstr section) {
+void autoconfig_window::show(xstring section) {
     auto it = autoconfig_registry().find(section);
     if (it == autoconfig_registry().end()) {
         logs::error("autoconfig_window_show: unknown section '%s'", section);

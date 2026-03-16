@@ -646,8 +646,8 @@ int __highscore_months(int rank) {
 }
 ANK_FUNCTION_1(__highscore_months)
 
-void window_records_show() { autoconfig_window::show_by_section("records_window"); }
-ANK_FUNCTION(window_records_show)
+void window_show_by_id(pcstr section) { autoconfig_window::show(section); }
+ANK_FUNCTION_1(window_show_by_id)
 
 void config::refresh(archive arch) {
     g_config_arch = {arch.state};

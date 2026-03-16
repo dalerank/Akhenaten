@@ -182,7 +182,7 @@ static void button_click(int param1, int param2) {
         if (!is_valid_selected_player()) {
             popup_dialog::show_ok("#popup_dialog_no_dynasty");
         } else {
-            autoconfig_window::show_by_section("window_dinasty_menu");
+            autoconfig_window::show("window_dinasty_menu");
         }
         break;
 

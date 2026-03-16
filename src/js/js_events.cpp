@@ -11,6 +11,7 @@
 #include "city/city_animals.h"
 #include "city/city_population.h"
 #include "building/building_palace.h"
+#include "content/mods.h"
 #include "game/game.h"
 #include "js/js_game.h"
 #include "js/js_struct.h"
@@ -190,6 +191,7 @@ ANK_SCRIPT_EVENT(event_finance_changed, value)
 ANK_SCRIPT_EVENT(event_show_advisor, advisor)
 ANK_SCRIPT_EVENT(event_building_place_checks, bid)
 ANK_SCRIPT_EVENT(event_finance_change_wages, value)
+ANK_SCRIPT_EVENT(event_mods_info_updated, count)
 
 int js_emit_script_event(pcstr event_name, const bvariant_map &args) {
     auto it = g_script_emit_handlers.find(event_name);
