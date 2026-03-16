@@ -16,6 +16,7 @@
 #include "city/city_building_menu_ctrl.h"
 #include "graphics/graphics.h"
 #include "core/profiler.h"
+#include "core/flat_map.h"
 #include "game/game.h"
 
 void __ui_draw_image(int imgid, vec2i pos) { ui::eimage(imgid, pos); } ANK_FUNCTION_2(__ui_draw_image);
@@ -120,30 +121,56 @@ void ui_proxy_add_item(js_State *J) {
     J->pushundefined();
 }
 
-void js_register_ui_proxy_accessors(js_State *J) {
-    js_newobject(J);
-    struct { const char *name; js_CFunction getter; js_CFunction setter; } props[] = {
-        {"text", ui_proxy_get_text, ui_proxy_set_text},
-        {"enabled", ui_proxy_get_enabled, ui_proxy_set_enabled},
-        {"readonly", ui_proxy_get_readonly, ui_proxy_set_readonly},
-        {"font", ui_proxy_get_font, ui_proxy_set_font},
-        {"text_color", ui_proxy_get_text_color, ui_proxy_set_text_color},
-        {"image", ui_proxy_get_noop, ui_proxy_set_image},
-        {"selected", ui_proxy_get_selected, ui_proxy_set_selected},
-        {"tooltip", ui_proxy_get_noop, ui_proxy_set_tooltip},
-    };
-    for (const auto &p : props) {
-        js_newarray(J);
-        js_newcfunction(J, p.getter, "", 0);
-        js_setindex(J, -2, 0);
-        js_newcfunction(J, p.setter, "", 1);
-        js_setindex(J, -2, 1);
-        js_setproperty(J, -2, p.name);
+void ui_proxy_clear(js_State *J) {
+    ui::element* elem = GET_ELEM(J);
+    if (elem) {
+        auto* list = elem->dcast_scrollable_list();
+        if (list) list->clear();
     }
-    js_setglobal(J, "__ui_proxy_accessors");
+    J->pushundefined();
+}
 
-    js_newcfunction(J, ui_proxy_add_item, "add_item", 1);
-    js_setglobal(J, "__ui_proxy_add_item");
+struct ui_proxy_prop {
+    js_CFunction getter;
+    js_CFunction setter;
+};
+static const flat_map<xstring, ui_proxy_prop, 8> g_ui_proxy_props = {
+    {"text", {ui_proxy_get_text, ui_proxy_set_text}},
+    {"enabled", {ui_proxy_get_enabled, ui_proxy_set_enabled}},
+    {"readonly", {ui_proxy_get_readonly, ui_proxy_set_readonly}},
+    {"font", {ui_proxy_get_font, ui_proxy_set_font}},
+    {"text_color", {ui_proxy_get_text_color, ui_proxy_set_text_color}},
+    {"image", {ui_proxy_get_noop, ui_proxy_set_image}},
+    {"selected", {ui_proxy_get_selected, ui_proxy_set_selected}},
+    {"tooltip", {ui_proxy_get_noop, ui_proxy_set_tooltip}},
+};
+
+struct ui_proxy_func {
+    js_CFunction fn;
+    int nargs;
+};
+static const flat_map<xstring, ui_proxy_func, 4> g_ui_proxy_funcs = {
+    {"add_item", {ui_proxy_add_item, 1}},
+    {"clear", {ui_proxy_clear, 0}},
+};
+
+bool js_push_proxy_func_for_name(js_State *J, xstring func_name) {
+    auto it = g_ui_proxy_funcs.find(func_name);
+    if (it != g_ui_proxy_funcs.end()) {
+        js_newcfunction(J, it->second.fn, it->first.c_str(), it->second.nargs);
+        return true;
+    }
+    return false;
+}
+
+bool js_push_proxy_accessors_for_prop(js_State *J, xstring prop_name) {
+    auto it = g_ui_proxy_props.find(prop_name);
+    if (it != g_ui_proxy_props.end()) {
+        js_newcfunction(J, it->second.getter, "", 0);
+        js_newcfunction(J, it->second.setter, "", 1);
+        return true;
+    }
+    return false;
 }
 
 int __ui_building_menu_items(int type) { return g_building_menu_ctrl.count_items(type); } ANK_FUNCTION_1(__ui_building_menu_items)
@@ -173,6 +200,4 @@ void js_register_ui_objects(js_State *J) {
     _R(UiFlags_PanelSmall)
     _R(UiFlags_PanelOuter)
     _R(UiFlags_ThinBorder)
-
-    js_register_ui_proxy_accessors(J);
 }

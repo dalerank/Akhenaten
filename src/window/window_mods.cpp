@@ -21,22 +21,6 @@ void ui::mods_window::init() {
     auto mods = ui["mods"].dcast_scrollable_list();
     if (mods) {
         mods->refill();
-
-        mods->onclick_double_ex_item([] (scrollable_list::entry_data*entry) {
-            if (!entry) {
-                return;
-            }
-
-            const mod_info &mod = mods_find(entry->text);
-            if (!mod.downloaded) {
-                if (mod.download_progress == 0) {
-                    mods_download_mod_async(entry->text);
-                }
-            } else {
-                mods_toggle(entry->text);
-                mods_remount();
-            }
-        });
     }
 }
 

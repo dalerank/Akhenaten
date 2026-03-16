@@ -1340,6 +1340,12 @@ void ui::escrollable_list::clear() {
     panel->clear_entry_list();
 }
 
+void ui::escrollable_list::on_dblclick_item(const scrollable_list::entry_data *entry) {
+    if (!_js_ondoubleclick_item_ref.empty()) {
+        js_call_function_with_result(_js_ondoubleclick_item_ref, { { "text", entry->text } });
+    }
+}
+
 void ui::escrollable_list::on_render_item(int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font) {
     if (!_js_render_item_ref.empty()) {
         js_call_function_with_result(_js_render_item_ref, {
@@ -1351,8 +1357,8 @@ void ui::escrollable_list::on_render_item(int index, int flags, const scrollable
             { "font", (int32_t)font }
             });
         return;
-    } 
-    
+    }
+
     if (_custom_render_cb) {
         _custom_render_cb(index, flags, entry, pos, font);
     }
@@ -1370,6 +1376,10 @@ void ui::escrollable_list::ensure_panel() {
     panel->set_onclick_dbl_entry(_onclick_dbl_ex_cb);
     panel->set_custom_render_func([&](int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font) { 
         this->on_render_item(index, flags, entry, pos, font);
+    });
+
+    panel->set_onclick_dbl_entry([&](const scrollable_list::entry_data *entry) {
+        this->on_dblclick_item(entry);
     });
 }
 
@@ -1402,11 +1412,12 @@ void ui::escrollable_list::refill() {
 
 ui::escrollable_list::~escrollable_list() {
     js_unref_function(_js_render_item_ref);
+    js_unref_function(_js_ondoubleclick_item_ref);
     g_state.remove_scrollable_list(panel.get());
     // panel will be automatically destroyed by unique_ptr
 }
 
-xstring escrollable_list_funcs[] = { "add_item" }; 
+xstring escrollable_list_funcs[] = { "add_item", "clear" };
 xspan<xstring> ui::escrollable_list::func_names() const {
     return escrollable_list_funcs;
 }
@@ -1431,6 +1442,7 @@ void ui::escrollable_list::load(archive arch, element *parent, items &elems) {
     assert(!strcmp(type, "scrollable_list"));
 
     _js_render_item_ref = arch.r_function("onrender_item");
+    _js_ondoubleclick_item_ref = arch.r_function("ondoubleclick_item");
 
     params.files_dir = arch.r_string("dir");
     params.file_ext = arch.r_string("file_ext");
