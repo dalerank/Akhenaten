@@ -192,7 +192,7 @@ static void fmtarray(js_State *J, js_Buffer **sb, const char *gap, int level)
 		if (k) js_putc(J, sb, ',');
 		if (gap) fmtindent(J, sb, gap, level + 1);
 		js_itoa(buf, k);
-		js_getproperty(J, -1, buf);
+		J->getproperty(-1, buf);
 		if (!fmtvalue(J, sb, js_intern(J, buf), gap, level + 1))
 			js_puts(J, sb, "null");
 		js_pop(J, 1);

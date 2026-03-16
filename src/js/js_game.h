@@ -94,8 +94,8 @@ namespace js_helpers {
     inline vec2i js_to_value<vec2i>(js_State *J, int idx) {
         vec2i result;
         if (J->isobject(idx) && !js_isarray(J, idx)) {
-            js_getproperty(J, idx, "x"); result.x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
-            js_getproperty(J, idx, "y"); result.y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
+            J->getproperty(idx, "x"); result.x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
+            J->getproperty(idx, "y"); result.y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
         } else if (js_isarray(J, idx)) {
             js_getindex(J, idx, 0); result.x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
             js_getindex(J, idx, 1); result.y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
@@ -107,8 +107,8 @@ namespace js_helpers {
     inline tile2i js_to_value<tile2i>(js_State *J, int idx) {
         int x = 0, y = 0;
         if (J->isobject(idx) && !js_isarray(J, idx)) {
-            js_getproperty(J, idx, "x"); x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
-            js_getproperty(J, idx, "y"); y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
+            J->getproperty(idx, "x"); x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
+            J->getproperty(idx, "y"); y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
         } else if (js_isarray(J, idx)) {
             js_getindex(J, idx, 0); x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
             js_getindex(J, idx, 1); y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
@@ -134,15 +134,15 @@ namespace js_helpers {
             }
         } else if (J->isobject(idx) && !js_isarray(J, idx)) {
             // Check if it's a vec2i-like object with x and y properties
-            js_getproperty(J, idx, "x");
+            J->getproperty(idx, "x");
             bool has_x = !js_isundefined(J, -1);
             js_pop(J, 1);
 
             if (has_x) {
-                js_getproperty(J, idx, "x");
+                J->getproperty(idx, "x");
                 int x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0;
                 js_pop(J, 1);
-                js_getproperty(J, idx, "y");
+                J->getproperty(idx, "y");
                 int y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0;
                 js_pop(J, 1);
                 return bvariant(vec2i(x, y));
@@ -331,7 +331,7 @@ namespace js_helpers {
         js_pushiterator(J, idx, 1); // own properties only
         pcstr key;
         while ((key = js_nextiterator(J, -1))) {
-            js_getproperty(J, idx, key);
+            J->getproperty(idx, key);
             bvariant value;
 
             if (js_isboolean(J, -1)) {

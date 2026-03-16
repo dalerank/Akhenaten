@@ -94,15 +94,15 @@ void js_game_get_image(js_State *J) {
         desc.path = path;
         tid = desc.tid();
     } else if (J->isobject(1) && !js_isarray(J, 1)) {
-        js_getproperty(J, 1, "pack");
+        J->getproperty(1, "pack");
         int16_t pack = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
         js_pop(J, 1);
 
-        js_getproperty(J, 1, "id");
+        J->getproperty(1, "id");
         int16_t id = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
         js_pop(J, 1);
 
-        js_getproperty(J, 1, "offset");
+        J->getproperty(1, "offset");
         int16_t offset = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
         js_pop(J, 1);
 

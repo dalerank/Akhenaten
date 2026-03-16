@@ -124,11 +124,11 @@ static void callbound(js_State *J)
 
 	fun = js_gettop(J);
 	js_currentfunction(J);
-	js_getproperty(J, fun, "__TargetFunction__");
-	js_getproperty(J, fun, "__BoundThis__");
+	J->getproperty(fun, "__TargetFunction__");
+	J->getproperty(fun, "__BoundThis__");
 
 	args = js_gettop(J);
-	js_getproperty(J, fun, "__BoundArguments__");
+	J->getproperty(fun, "__BoundArguments__");
 	n = js_getlength(J, args);
 	for (i = 0; i < n; ++i)
 		js_getindex(J, args, i);
@@ -147,10 +147,10 @@ static void constructbound(js_State *J)
 
 	fun = js_gettop(J);
 	js_currentfunction(J);
-	js_getproperty(J, fun, "__TargetFunction__");
+	J->getproperty(fun, "__TargetFunction__");
 
 	args = js_gettop(J);
-	js_getproperty(J, fun, "__BoundArguments__");
+	J->getproperty(fun, "__BoundArguments__");
 	n = js_getlength(J, args);
 	for (i = 0; i < n; ++i)
 		js_getindex(J, args, i);
@@ -177,7 +177,7 @@ static void Fp_bind(js_State *J)
 		n = 0;
 
 	/* Reuse target function's prototype for HasInstance check. */
-	js_getproperty(J, 0, "prototype");
+	J->getproperty(0, "prototype");
 	js_newcconstructor(J, callbound, constructbound, "[bind]", n);
 
 	/* target function */

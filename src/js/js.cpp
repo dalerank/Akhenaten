@@ -106,7 +106,7 @@ static void js_vm_log_stacktrace(js_State *J) {
     // Try to get stack trace from error object if it's an Error
     if (J->isobject(-1)) {
         if (J->hasproperty(-1, "stackTrace")) {
-            js_getproperty(J, -1, "stackTrace");
+            J->getproperty(-1, "stackTrace");
             if (js_isstring(J, -1)) {
                 const char *stack_trace = js_tostring(J, -1);
                 logs::info("!!! Stack trace: %s", stack_trace);
@@ -212,10 +212,10 @@ static void js_vm_dump_stack(js_State *J) {
         } else {
             value_desc = "<unknown type>";
         }
-        
+
         logs::info("!!!   [%d]: %s", i, value_desc.c_str());
     }
-    
+
     if (stack_size > 10) {
         logs::info("!!!   ... (%d more items not shown)", stack_size - 10);
     }
@@ -231,11 +231,11 @@ int js_vm_trypcall(js_State *J, int params) {
     if (error) {
         vm.have_error = 1;
         pcstr error_msg = js_tostring(J, -1);
-        
+
         // Log error type if it's an Error object
         if (J->isobject(-1)) {
             if (J->hasproperty(-1, "name")) {
-                js_getproperty(J, -1, "name");
+                J->getproperty(-1, "name");
                 const char *error_name = js_tostring(J, -1);
                 logs::info("!!! Error type: %s", error_name ? error_name : "<unknown>");
                 js_pop(J, 1);

@@ -485,7 +485,7 @@ static void js_pushrune(js_State *J, Rune rune) {
     }
 }
 
-int js_State::hasproperty(js_Object *obj, const char *name) {
+int js_State::hasproperty(js_Object *obj, pcstr name) {
     OZZY_PROFILER_FUNCTION();
 
     js_Property *ref;
@@ -556,7 +556,7 @@ int js_State::hasproperty(js_Object *obj, const char *name) {
     return 0;
 }
 
-void js_State::getproperty(js_Object *obj, const char *name) {
+void js_State::getproperty(js_Object *obj, pcstr name) {
     if (!hasproperty(obj, name)) {
         pushundefined();
     }
@@ -793,10 +793,6 @@ void js_setglobal(js_State *J, const char *name) {
 void js_defglobal(js_State *J, const char *name, int atts) {
     jsR_defproperty(J, J->G, name, atts, stackidx(J, -1), NULL, NULL);
     js_pop(J, 1);
-}
-
-void js_getproperty(js_State *J, int idx, const char *name) {
-    J->getproperty(J->toobject(idx), name);
 }
 
 void js_setproperty(js_State *J, int idx, const char *name) {
@@ -1099,7 +1095,6 @@ void js_State::construct(int n) {
     OZZY_PROFILER_FUNCTION();
 
     js_Object *obj;
-    
     js_Object *newobj;
 
     auto J = this;
@@ -1127,7 +1122,7 @@ void js_State::construct(int n) {
     }
 
     /* extract the function object's prototype property */
-    js_getproperty(J, -n - 1, "prototype");
+    J->getproperty(-n - 1, "prototype");
     js_Object *prototype = (isobject(-1)) ? toobject(-1) : Object_prototype;
     js_pop(J, 1);
 

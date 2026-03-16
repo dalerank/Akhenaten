@@ -8,11 +8,11 @@
 g_archive g_config_arch{ nullptr };
 
 void archive::getproperty(int idx, std::string_view name) {
-    js_getproperty((js_State*)state, idx, name.data());
+    ((js_State*)state)->getproperty(idx, name.data());
 }
 
 void archive::getproperty(archive arch, int idx, std::string_view name) {
-    js_getproperty((js_State *)(arch.state), idx, name.data());
+    ((js_State *)(arch.state))->getproperty(idx, name.data());
 }
 
 bool archive::isarray(int idx) {
@@ -82,7 +82,7 @@ void archive::getglobal(std::string_view name) {
 pcstr lang_get_string(int group, int index);
 pcstr archive::r_string(pcstr name) {
     auto vm = (js_State *)state;
-    js_getproperty(vm, -1, name);
+    vm->getproperty(-1, name);
     pcstr result = "";
     if (js_isundefined(vm, -1)) {
         ;
@@ -98,8 +98,8 @@ pcstr archive::r_string(pcstr name) {
 
         result = lang_get_string(gx.x, gx.y);
     } else if (vm->isobject(-1)) {
-        js_getproperty(vm, -1, "group"); int group = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
-        js_getproperty(vm, -1, "id"); int id = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        vm->getproperty(-1, "group"); int group = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        vm->getproperty(-1, "id"); int id = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
         result = lang_get_string(group, id);
     }
     js_pop(vm, 1);
@@ -109,7 +109,7 @@ pcstr archive::r_string(pcstr name) {
 std::vector<std::string> archive::r_array_str(pcstr name) {
     auto vm = (js_State *)state;
 
-    js_getproperty(vm, -1, name);
+    vm->getproperty(-1, name);
     std::vector<std::string> result;
     if (js_isarray(vm, -1)) {
         int length = js_getlength(vm, -1);
@@ -198,7 +198,7 @@ archive::variant_t archive::to_variant() {
 archive::variant_t archive::r_variant(pcstr name) {
     auto vm = (js_State *)state;
 
-    js_getproperty(vm, -1, name);
+    vm->getproperty(-1, name);
     variant_t result;
     if (js_isundefined(vm, -1)) {
         result = variant_t(variant_none_t{name});
@@ -223,7 +223,7 @@ archive::variant_t archive::r_variant(pcstr name) {
 
 std::vector<vec2i> archive::r_array_vec2i(pcstr name, pcstr px, pcstr py) {
     auto vm = (js_State *)state;
-    js_getproperty(vm, -1, name);
+    vm->getproperty(-1, name);
     std::vector<vec2i> result;
     if (js_isarray(vm, -1)) {
         int length = js_getlength(vm, -1);
@@ -240,7 +240,7 @@ std::vector<vec2i> archive::r_array_vec2i(pcstr name, pcstr px, pcstr py) {
 
 int archive::r_int(pcstr name, int def) {
     auto vm = (js_State *)state;
-    js_getproperty(vm, -1, name);
+    vm->getproperty(-1, name);
     int result = js_isundefined(vm, -1) ? def : js_tointeger(vm, -1);
     js_pop(vm, 1);
     return result;
@@ -248,7 +248,7 @@ int archive::r_int(pcstr name, int def) {
 
 float archive::r_float(pcstr name, float def) {
     auto vm = (js_State *)state;
-    js_getproperty(vm, -1, name);
+    vm->getproperty(-1, name);
     float result = js_isundefined(vm, -1) ? def : (float)js_tonumber(vm, -1);
     js_pop(vm, 1);
     return result;
@@ -256,7 +256,7 @@ float archive::r_float(pcstr name, float def) {
 
 uint32_t archive::r_uint(pcstr name, uint32_t def) {
     auto vm = (js_State *)state;
-    js_getproperty(vm, -1, name);
+    vm->getproperty(-1, name);
     uint32_t result = js_isundefined(vm, -1) ? def : js_touint32(vm, -1);
     js_pop(vm, 1);
     return result;
@@ -264,7 +264,7 @@ uint32_t archive::r_uint(pcstr name, uint32_t def) {
 
 bool archive::r_bool(pcstr name, bool def) {
     auto vm = (js_State *)state;
-    js_getproperty(vm, -1, name);
+    vm->getproperty(-1, name);
     bool result = js_isundefined(vm, -1) ? def : js_toboolean(vm, -1);
     js_pop(vm, 1);
     return result;
@@ -287,8 +287,8 @@ vec2i archive::r_vec2i_impl(vec2i def, pcstr x, pcstr y) {
                 }
             }
         } else {
-            js_getproperty(vm, -1, x); result.x = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : def.x; js_pop(vm, 1);
-            js_getproperty(vm, -1, y); result.y = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : def.y; js_pop(vm, 1);
+            vm->getproperty(-1, x); result.x = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : def.x; js_pop(vm, 1);
+            vm->getproperty(-1, y); result.y = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : def.y; js_pop(vm, 1);
         }
     }
 
@@ -297,7 +297,7 @@ vec2i archive::r_vec2i_impl(vec2i def, pcstr x, pcstr y) {
 
 vec2i archive::r_vec2i(pcstr name, vec2i def, pcstr x, pcstr y) {
     auto vm = (js_State *)state;
-    js_getproperty(vm, -1, name);
+    vm->getproperty(-1, name);
     vec2i result = r_vec2i_impl(def, x, y);
     js_pop(vm, 1);
 
@@ -306,7 +306,7 @@ vec2i archive::r_vec2i(pcstr name, vec2i def, pcstr x, pcstr y) {
 
 tile2i archive::r_tile2i(pcstr name, pcstr i, pcstr j) {
     auto vm = (js_State*)state;
-    js_getproperty(vm, -1, name);
+    vm->getproperty(-1, name);
     vec2i t = r_vec2i_impl({ 0, 0 }, i, j);
     js_pop(vm, 1);
 
@@ -315,16 +315,16 @@ tile2i archive::r_tile2i(pcstr name, pcstr i, pcstr j) {
 
 bool archive::r_anim(pcstr name, animation_t &anim) {
     auto vm = (js_State *)state;
-    js_getproperty(vm, -1, name);
+    vm->getproperty(-1, name);
     bool ok = false;
     if (js_isundefined(vm, -1)) {
         ;
     } else if (vm->isobject(-1)) {
-        js_getproperty(vm, -1, "pack"); anim.pack = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
-        js_getproperty(vm, -1, "id"); anim.id = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
-        js_getproperty(vm, -1, "offset"); anim.offset = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
-        js_getproperty(vm, -1, "duration"); anim.duration = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
-        js_getproperty(vm, -1, "max_frames"); anim.max_frames = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        vm->getproperty(-1, "pack"); anim.pack = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        vm->getproperty(-1, "id"); anim.id = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        vm->getproperty(-1, "offset"); anim.offset = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        vm->getproperty(-1, "duration"); anim.duration = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        vm->getproperty(-1, "max_frames"); anim.max_frames = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
         ok = true;
     }
     js_pop(vm, 1);
@@ -333,7 +333,7 @@ bool archive::r_anim(pcstr name, animation_t &anim) {
 
 bool archive::r_desc(pcstr name, image_desc &desc) {
     auto vm = (js_State *)state;
-    js_getproperty(vm, -1, name);
+    vm->getproperty(-1, name);
     bool ok = r_desc_impl(desc);
     js_pop(vm, 1);
     return ok;
@@ -342,7 +342,7 @@ bool archive::r_desc(pcstr name, image_desc &desc) {
 xstring archive::r_function(pcstr name) {
     js_State *J = (js_State *)state;
     xstring funcref;
-    js_getproperty(J, -1, name);
+    J->getproperty(-1, name);
     if (J->iscallable(-1)) {
         funcref = js_ref(J);
     } else {
@@ -356,12 +356,12 @@ bool archive::r_desc_impl(image_desc &desc) {
     auto vm = (js_State *)state;
     if (js_isundefined(vm, -1)) {
         return false;
-    } 
-    
+    }
+
     if (vm->isobject(-1)) {
-        js_getproperty(vm, -1, "pack"); desc.pack = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
-        js_getproperty(vm, -1, "id"); desc.id = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
-        js_getproperty(vm, -1, "offset"); desc.offset = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        vm->getproperty(-1, "pack"); desc.pack = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        vm->getproperty(-1, "id"); desc.id = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        vm->getproperty(-1, "offset"); desc.offset = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
         return true;
     }
 

@@ -22,7 +22,7 @@ void js_register_mission_objects(js_State *J) {
 
 static void js_mission_var_getter(js_State *J) {
     js_currentfunction(J);
-    js_getproperty(J, -1, "__varname");
+    J->getproperty(-1, "__varname");
     const char *name = js_tostring(J, -1);
     js_pop(J, 2);
 
@@ -59,7 +59,7 @@ static void js_mission_var_getter(js_State *J) {
 
 static void js_mission_var_setter(js_State *J) {
     js_currentfunction(J);
-    js_getproperty(J, -1, "__varname");
+    J->getproperty(-1, "__varname");
     const char *name = js_tostring(J, -1);
     js_pop(J, 2);
 
@@ -77,8 +77,8 @@ static void js_mission_var_setter(js_State *J) {
         const char *value = js_tostring(J, 1);
         g_scenario.vars.set_string(name, value);
     } else if (J->isobject(1)) {
-        js_getproperty(J, 1, "x");
-        js_getproperty(J, 1, "y");
+        J->getproperty(1, "x");
+        J->getproperty(1, "y");
 
         if (js_isnumber(J, -2) && js_isnumber(J, -1)) {
             int x = (int)js_tonumber(J, -2);

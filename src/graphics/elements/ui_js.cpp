@@ -86,7 +86,7 @@ ui::element* __ui_get_element(xstring element_id) {
 
 // In MuJS: index 0 = this, index 1 = first argument.
 ui::element *GET_ELEM(js_State *J) {
-    js_getproperty(J, 0, "id");
+    J->getproperty(0, "id");
     pcstr id = js_isstring(J, -1) ? js_tostring(J, -1) : nullptr;
     js_pop(J, 1);
     if (!id || strcmp(id, "undefined") == 0) {
