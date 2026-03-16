@@ -74,7 +74,6 @@ int js_utfptrtoidx(const char *s, const char *p);
 const char *js_utfidxtoptr(const char *s, int i);
 
 void js_dup(js_State *J);
-void js_dup2(js_State *J);
 void js_rot2(js_State *J);
 void js_rot3(js_State *J);
 void js_rot4(js_State *J);
@@ -239,4 +238,7 @@ struct js_State
 	int rdelproperty(js_Object *obj, const char *name);
 	void r_run(js_Function *F);
 	void construct(int n);
+
+	void dup2();
+    void pushliteral(pcstr val);
 };

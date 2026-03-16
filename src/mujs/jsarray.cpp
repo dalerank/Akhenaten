@@ -95,7 +95,7 @@ static void Ap_join(js_State *J) {
     }
 
     if (len == 0) {
-        js_pushliteral(J, "");
+        J->pushliteral("");
         return;
     }
 

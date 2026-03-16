@@ -133,11 +133,11 @@ void js_pushlstring(js_State *J, const char *v, int n) {
     ++TOP;
 }
 
-void js_pushliteral(js_State *J, const char *v) {
-    CHECKSTACK(1);
-    STACK[TOP].type = JS_TLITSTR;
-    STACK[TOP].u.litstr = v;
-    ++TOP;
+void js_State::pushliteral(pcstr v) {
+    JCHECKSTACK(1);
+    stack[top].type = JS_TLITSTR;
+    stack[top].u.litstr = v;
+    ++top;
 }
 
 void js_pushobject(js_State *J, js_Object *v) {
@@ -198,7 +198,7 @@ int js_State::iscallable(int idx) {
                v->u.object->type == JS_CSCRIPT ||
                v->u.object->type == JS_CCFUNCTION;
     }
-    
+
     return 0;
 }
 
@@ -210,14 +210,6 @@ int js_isarray(js_State *J, int idx) {
 int js_isregexp(js_State *J, int idx) {
     js_Value *v = stackidx(J, idx);
     return v->type == JS_TOBJECT && v->u.object->type == JS_CREGEXP;
-}
-
-void *js_stack_alloc(int size) {
-#if defined(_WIN32)
-    return _alloca(size);
-#else
-    return alloca(size);
-#endif
 }
 
 void *js_frame_alloc(js_State *J, int size) {
@@ -415,11 +407,11 @@ void js_dup(js_State *J) {
     ++TOP;
 }
 
-void js_dup2(js_State *J) {
-    CHECKSTACK(2);
-    STACK[TOP] = STACK[TOP - 2];
-    STACK[TOP + 1] = STACK[TOP - 1];
-    TOP += 2;
+void js_State::dup2() {
+    JCHECKSTACK(2);
+    stack[top] = stack[top - 2];
+    stack[top + 1] = stack[top - 1];
+    top += 2;
 }
 
 void js_rot2(js_State *J) {
@@ -514,7 +506,7 @@ int js_State::hasproperty(js_Object *obj, pcstr name) {
 
     case JS_CREGEXP:
         if (!strcmp(name, "source")) {
-            js_pushliteral(J, obj->u.r.source);
+            J->pushliteral(obj->u.r.source);
             return 1;
         }
         if (!strcmp(name, "global")) {
@@ -1308,7 +1300,7 @@ void js_State::r_run(js_Function *F) {
         switch (opcode) {
         case OP_POP: js_pop(J, 1); break;
         case OP_DUP: js_dup(J); break;
-        case OP_DUP2: js_dup2(J); break;
+        case OP_DUP2: dup2(); break;
         case OP_ROT2: js_rot2(J); break;
         case OP_ROT3: js_rot3(J); break;
         case OP_ROT4: js_rot4(J); break;
@@ -1318,7 +1310,7 @@ void js_State::r_run(js_Function *F) {
         case OP_NUMBER_POS: js_pushnumber(J, *pc++); break;
         case OP_NUMBER_NEG: js_pushnumber(J, -(*pc++)); break;
         case OP_NUMBER: js_pushnumber(J, NT[*pc++]); break;
-        case OP_STRING: js_pushliteral(J, ST[*pc++]); break;
+        case OP_STRING: pushliteral(ST[*pc++]); break;
 
         case OP_CLOSURE: js_newfunction(J, FT[*pc++], J->E); break;
         case OP_NEWOBJECT: js_newobject(J); break;
@@ -1503,7 +1495,7 @@ void js_State::r_run(js_Function *F) {
             obj = toobject(-1);
             str = jsV_nextiterator(J, obj);
             if (str) {
-                js_pushliteral(J, str);
+                pushliteral(str);
                 js_pushboolean(J, 1);
             } else {
                 js_pop(J, 1);
@@ -1537,7 +1529,7 @@ void js_State::r_run(js_Function *F) {
         case OP_TYPEOF:
             str = js_typeof(J, -1);
             js_pop(J, 1);
-            js_pushliteral(J, str);
+            pushliteral(str);
             break;
 
         case OP_POS:
