@@ -18,15 +18,12 @@ jobs:
     - name: update-workspace
       shell: pwsh
       run: |
-        mkdir build
         mkdir bin_x64
         mkdir bin_x64/data
     - name: build-project
       run: |
-        cd build
-        cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
-        cd ..
-        cmake --build ./build --target akhenaten --config RelWithDebInfo
+        cmake --preset win-relwithdebinfo
+        cmake --build --preset win-relwithdebinfo --target akhenaten -j $env:NUMBER_OF_PROCESSORS
         copy ./build/RelWithDebInfo/akhenaten.exe ./bin_x64/akhenaten.exe
         copy ./build/RelWithDebInfo/akhenaten.pdb ./bin_x64/akhenaten.pdb
         copy ./data/pharaoh_fonts_pack.sgx ./bin_x64/data/pharaoh_fonts_pack.sgx
