@@ -32,9 +32,17 @@ function mods_window_on_render_item(p) {
     ui.label(prefix + name, { x: p.x, y: p.y }, p.font)
 }
 
+function mods_unpack_scripts() {
+    var vpath = __mods_unpack_scripts()
+    ui.show_ok("#scripts_unpacked_to " + vpath);
+}
+
+[es=window]
 mods_window {
     pos: [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
     allow_rmb_goback : true
+    refresh_mods_text : ""
+    refresh_mods_text_dots : 0
     ui {
         background_image : background({pack:PACK_UNLOADED, id:9})
         background     : outer_panel({size[40, 30]})
@@ -46,13 +54,13 @@ mods_window {
         unpack_scripts : large_button({ size[156, 25]
                                         text:"Unpack scripts"
                                         margin{right:-156, top:20}
-                                        onclick: __window_mods_unpack_scripts
+                                        onclick: __mods_unpack_scripts
                                       })
 
         refresh_mods : large_button({ size[156, 25]
                                       text:"Check on github"
                                       margin{right:-156, top:44}
-                                      onclick: __window_mods_refresh_available_list
+                                      onclick: __mods_download_info_async
                                     })
 
         mods         : scrollable_list({pos[16, 75], size[36, 23], view_items:11,
@@ -68,8 +76,24 @@ mods_window {
     }
 }
 
+[es=(mods_window, ui_draw_foreground)]
+function mods_window_update(window) {
+    if (!mods.inupdate) {
+        return
+    }
+
+    if (window.refresh_mods_text_dots + 30 >= __game_frame()) {
+        return
+    }
+
+    window.refresh_mods_text_dots = (window.refresh_mods_text_dots + 1) % 4
+    window.refresh_mods.text = mods_window.refresh_mods_text.replace(/\.*$/, "") + ".".repeat(window.refresh_mods_text_dots)
+}
+
 [es=(mods_window, init)]
 function mods_window_on_init(window) {
+    window.refresh_mods_text = window.refresh_mods.text
+
     var n = mods.count()
     window.mods.clear()
     for (var i = 0; i < n; i++) {

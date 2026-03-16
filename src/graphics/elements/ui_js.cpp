@@ -59,6 +59,8 @@ void __ui_dialog_show_yesno(pcstr text, js_helpers::js_function_ref cb_yes, js_h
 }
 ANK_FUNCTION_3(__ui_dialog_show_yesno)
 
+void __ui_dialog_show_ok(pcstr text) { popup_dialog::show_ok(text, [] {}); } ANK_FUNCTION_1(__ui_dialog_show_ok)
+
 bool __ui_window_is(pcstr window_id) { return window_is(window_id); } ANK_FUNCTION_1(__ui_window_is)
 void __ui_window_advisors_show_advisor(int advisor) { window_advisors_show_advisor((e_advisor)advisor); } ANK_FUNCTION_1(__ui_window_advisors_show_advisor)
 void __ui_draw_label(pcstr text, vec2i pos, int font) { ui::label(text, pos, (e_font)font); } ANK_FUNCTION_3(__ui_draw_label);

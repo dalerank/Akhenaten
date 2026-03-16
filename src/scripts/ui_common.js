@@ -62,6 +62,7 @@ ui.window_build_menu_show = __ui_window_build_menu_show
 ui.sidebar_set_type = __ui_widget_sidebar_set_type
 ui.building_menu_items = __ui_building_menu_items
 ui.show_yesno = __ui_dialog_show_yesno
+ui.show_ok = __ui_dialog_show_ok
 
 function px(i) { return i * 16 }
 function sw(v) { return game.screen.w + v}
