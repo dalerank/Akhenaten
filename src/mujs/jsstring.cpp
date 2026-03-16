@@ -69,14 +69,14 @@ static void Sp_toString(js_State *J)
 {
 	js_Object *self = J->toobject(0);
 	if (self->type != JS_CSTRING) js_typeerror(J, "not a string");
-	js_pushliteral(J, self->u.s.string);
+	J->pushliteral(self->u.s.string);
 }
 
 static void Sp_valueOf(js_State *J)
 {
 	js_Object *self = J->toobject(0);
 	if (self->type != JS_CSTRING) js_typeerror(J, "not a string");
-	js_pushliteral(J, self->u.s.string);
+	J->pushliteral(self->u.s.string);
 }
 
 static void Sp_charAt(js_State *J)
@@ -89,7 +89,7 @@ static void Sp_charAt(js_State *J)
 		buf[runetochar(buf, &rune)] = 0;
 		js_pushstring(J, buf);
 	} else {
-		js_pushliteral(J, "");
+		J->pushliteral("");
 	}
 }
 
@@ -572,7 +572,7 @@ static void Sp_split_regexp(js_State *J)
 	if (e == text) {
 		if (js_regexec((Reprog *)re->prog, text, &m, 0)) {
 			if (len == limit) return;
-			js_pushliteral(J, "");
+			J->pushliteral("");
 			js_setindex(J, -2, 0);
 		}
 		return;

@@ -22,25 +22,25 @@ static void Op_toString(js_State *J)
 {
 	js_Object *self = J->toobject(0);
 	switch (self->type) {
-	case JS_COBJECT: js_pushliteral(J, "[object Object]"); break;
-	case JS_CARRAY: js_pushliteral(J, "[object Array]"); break;
-	case JS_CFUNCTION: js_pushliteral(J, "[object Function]"); break;
-	case JS_CSCRIPT: js_pushliteral(J, "[object Function]"); break;
-	case JS_CCFUNCTION: js_pushliteral(J, "[object Function]"); break;
-	case JS_CERROR: js_pushliteral(J, "[object Error]"); break;
-	case JS_CBOOLEAN: js_pushliteral(J, "[object Boolean]"); break;
-	case JS_CNUMBER: js_pushliteral(J, "[object Number]"); break;
-	case JS_CSTRING: js_pushliteral(J, "[object String]"); break;
-	case JS_CREGEXP: js_pushliteral(J, "[object RegExp]"); break;
-	case JS_CDATE: js_pushliteral(J, "[object Date]"); break;
-	case JS_CMATH: js_pushliteral(J, "[object Math]"); break;
-	case JS_CJSON: js_pushliteral(J, "[object JSON]"); break;
-	case JS_CITERATOR: js_pushliteral(J, "[Iterator]"); break;
+	case JS_COBJECT: J->pushliteral("[object Object]"); break;
+	case JS_CARRAY: J->pushliteral("[object Array]"); break;
+	case JS_CFUNCTION: J->pushliteral("[object Function]"); break;
+	case JS_CSCRIPT: J->pushliteral("[object Function]"); break;
+	case JS_CCFUNCTION: J->pushliteral("[object Function]"); break;
+	case JS_CERROR: J->pushliteral("[object Error]"); break;
+	case JS_CBOOLEAN: J->pushliteral("[object Boolean]"); break;
+	case JS_CNUMBER: J->pushliteral("[object Number]"); break;
+	case JS_CSTRING: J->pushliteral("[object String]"); break;
+	case JS_CREGEXP: J->pushliteral("[object RegExp]"); break;
+	case JS_CDATE: J->pushliteral("[object Date]"); break;
+	case JS_CMATH: J->pushliteral("[object Math]"); break;
+	case JS_CJSON: J->pushliteral("[object JSON]"); break;
+	case JS_CITERATOR: J->pushliteral("[Iterator]"); break;
 	case JS_CUSERDATA:
-		js_pushliteral(J, "[object ");
-		js_pushliteral(J, self->u.user.tag);
+		J->pushliteral("[object ");
+		J->pushliteral(self->u.user.tag);
 		js_concat(J);
-		js_pushliteral(J, "]");
+		J->pushliteral("]");
 		js_concat(J);
 		break;
 	}
@@ -148,17 +148,17 @@ static void O_getOwnPropertyNames(js_State *J)
 
 	i = 0;
 	for (ref = obj->head; ref; ref = ref->next) {
-		js_pushliteral(J, ref->name);
+		J->pushliteral(ref->name);
 		js_setindex(J, -2, i++);
 	}
 
 	if (obj->type == JS_CARRAY) {
-		js_pushliteral(J, "length");
+		J->pushliteral("length");
 		js_setindex(J, -2, i++);
 	}
 
 	if (obj->type == JS_CSTRING) {
-		js_pushliteral(J, "length");
+		J->pushliteral("length");
 		js_setindex(J, -2, i++);
 		for (k = 0; k < obj->u.s.length; ++k) {
 			js_pushnumber(J, k);
@@ -167,15 +167,15 @@ static void O_getOwnPropertyNames(js_State *J)
 	}
 
 	if (obj->type == JS_CREGEXP) {
-		js_pushliteral(J, "source");
+		J->pushliteral("source");
 		js_setindex(J, -2, i++);
-		js_pushliteral(J, "global");
+		J->pushliteral("global");
 		js_setindex(J, -2, i++);
-		js_pushliteral(J, "ignoreCase");
+		J->pushliteral("ignoreCase");
 		js_setindex(J, -2, i++);
-		js_pushliteral(J, "multiline");
+		J->pushliteral("multiline");
 		js_setindex(J, -2, i++);
-		js_pushliteral(J, "lastIndex");
+		J->pushliteral("lastIndex");
 		js_setindex(J, -2, i++);
 	}
 }
@@ -307,7 +307,7 @@ static void O_keys(js_State *J)
 	i = 0;
 	for (ref = obj->head; ref; ref = ref->next) {
 		if (!(ref->atts & JS_DONTENUM)) {
-			js_pushliteral(J, ref->name);
+			J->pushliteral(ref->name);
 			js_setindex(J, -2, i++);
 		}
 	}

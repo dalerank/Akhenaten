@@ -36,10 +36,13 @@ static void Np_toString(js_State *J)
 static void numtostr(js_State *J, const char *fmt, int w, double n)
 {
 	char buf[32], *e;
-	if (isnan(n)) js_pushliteral(J, "NaN");
-	else if (isinf(n)) js_pushliteral(J, n < 0 ? "-Infinity" : "Infinity");
-	else if (n == 0) js_pushliteral(J, "0");
-	else {
+	if (isnan(n)) {
+		J->pushliteral("NaN");
+	} else if (isinf(n)) {
+		J->pushliteral(n < 0 ? "-Infinity" : "Infinity");
+	} else if (n == 0) {
+		J->pushliteral("0");
+	} else {
 		if (w < 1) w = 1;
 		if (w > 17) w = 17;
 		sprintf(buf, fmt, w, n);

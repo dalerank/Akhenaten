@@ -52,8 +52,9 @@ static void Fp_toString(js_State *J)
 	char *s = 0;
 	int i, n;
 
-	if (!J->iscallable(0))
+	if (!J->iscallable(0)) {
 		js_typeerror(J, "not a function");
+	}
 
 	if (self->type == JS_CFUNCTION || self->type == JS_CSCRIPT) {
 		js_Function *F = self->u.f.function;
@@ -61,13 +62,15 @@ static void Fp_toString(js_State *J)
 		n += strlen(F->name);
 		for (i = 0; i < F->numparams; ++i)
 			n += strlen(F->vartab[i]) + 1;
-		//s = js_malloc(J, n);
-		s = (char*)js_stack_alloc(n + 16);
+
+		s = (char*)js_frame_alloc(J, n + 16);
 		strcpy(s, "function ");
 		strcat(s, F->name);
 		strcat(s, "(");
 		for (i = 0; i < F->numparams; ++i) {
-			if (i > 0) strcat(s, ",");
+			if (i > 0) {
+				strcat(s, ",");
+			}
 			strcat(s, F->vartab[i]);
 		}
 		strcat(s, ") { ... }");
@@ -76,10 +79,9 @@ static void Fp_toString(js_State *J)
 			js_throw(J);
 		}
 		js_pushstring(J, s);
-		//js_free(J, s);
 		js_endtry(J);
 	} else {
-		js_pushliteral(J, "function () { ... }");
+		J->pushliteral("function () { ... }");
 	}
 }
 
