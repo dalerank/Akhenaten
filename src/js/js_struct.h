@@ -17,7 +17,7 @@
 #define ANK_SCRIPT_STRUCT_PASTE6(func, v1, v2, v3, v4, v5) ANK_SCRIPT_STRUCT_PASTE2(func, v1) ANK_SCRIPT_STRUCT_PASTE5(func, v2, v3, v4, v5)
 #define ANK_SCRIPT_STRUCT_PASTE7(func, v1, v2, v3, v4, v5, v6) ANK_SCRIPT_STRUCT_PASTE2(func, v1) ANK_SCRIPT_STRUCT_PASTE6(func, v2, v3, v4, v5, v6)
 
-#define ANK_SCRIPT_STRUCT_FROM(v1) js_j[#v1] = bvariant(js_t.v1); 
+#define ANK_SCRIPT_STRUCT_FROM(v1) js_j[#v1] = bvariant(js_t.v1);
 
 class bvariant_map;
 
@@ -33,3 +33,4 @@ namespace js_helper {                                                           
         ANK_SCRIPT_STRUCT_EXPAND(ANK_SCRIPT_STRUCT_PASTE(ANK_SCRIPT_STRUCT_FROM, __VA_ARGS__));   \
     }                                                                                             \
 }
+/* end ANK_REGISTER_STRUCT_WRITER */
