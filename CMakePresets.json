@@ -1,0 +1,476 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 30,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "base-compiler-gcc",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++"
+      }
+    },
+    {
+      "name": "base-compiler-clang",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
+      "name": "base-compiler-msvc",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "cl",
+        "CMAKE_CXX_COMPILER": "cl"
+      }
+    },
+    {
+      "name": "base-compiler-clang-cl",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-cl",
+        "CMAKE_CXX_COMPILER": "clang-cl"
+      }
+    },
+    {
+      "name": "base-buildtype-debug",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "base-buildtype-release",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "base-buildtype-relwithdebinfo",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "name": "base-linux",
+      "hidden": true,
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "base-macos",
+      "hidden": true,
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      }
+    },
+    {
+      "name": "base-win",
+      "hidden": true,
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "base-linux-make",
+      "hidden": true,
+      "inherits": "base-linux",
+      "generator": "Unix Makefiles"
+    },
+    {
+      "name": "base-linux-ninja",
+      "hidden": true,
+      "inherits": "base-linux",
+      "generator": "Ninja"
+    },
+    {
+      "name": "base-macos-make",
+      "hidden": true,
+      "inherits": "base-macos",
+      "generator": "Unix Makefiles"
+    },
+    {
+      "name": "base-macos-ninja",
+      "hidden": true,
+      "inherits": "base-macos",
+      "generator": "Ninja"
+    },
+    {
+      "name": "base-win-vs2019",
+      "hidden": true,
+      "inherits": "base-win",
+      "generator": "Visual Studio 16 2019"
+    },
+    {
+      "name": "base-win-vs2022",
+      "hidden": true,
+      "inherits": "base-win",
+      "generator": "Visual Studio 17 2022"
+    },
+    {
+      "name": "base-win-vs2026",
+      "hidden": true,
+      "inherits": "base-win",
+      "generator": "Visual Studio 18 2026"
+    },
+    {
+      "name": "base-win-ninja",
+      "hidden": true,
+      "inherits": "base-win",
+      "generator": "Ninja"
+    },
+    {
+      "name": "linux-gcc-debug-make",
+      "displayName": "Linux GCC Debug (Make)",
+      "inherits": [
+        "base-linux-make",
+        "base-compiler-gcc",
+        "base-buildtype-debug"
+      ]
+    },
+    {
+      "name": "linux-gcc-release-make",
+      "displayName": "Linux GCC Release (Make)",
+      "inherits": [
+        "base-linux-make",
+        "base-compiler-gcc",
+        "base-buildtype-release"
+      ]
+    },
+    {
+      "name": "linux-gcc-relwithdebinfo-make",
+      "displayName": "Linux GCC RelWithDebInfo (Make)",
+      "inherits": [
+        "base-linux-make",
+        "base-compiler-gcc",
+        "base-buildtype-relwithdebinfo"
+      ]
+    },
+    {
+      "name": "macos-clang-relwithdebinfo-make",
+      "displayName": "macOS Clang RelWithDebInfo (Make)",
+      "inherits": [
+        "base-macos-make",
+        "base-compiler-clang",
+        "base-buildtype-relwithdebinfo"
+      ]
+    },
+    {
+      "name": "linux-clang-debug-ninja",
+      "displayName": "Linux Clang Debug (Ninja)",
+      "inherits": [
+        "base-linux-ninja",
+        "base-compiler-clang",
+        "base-buildtype-debug"
+      ]
+    },
+    {
+      "name": "linux-clang-relwithdebinfo-ninja",
+      "displayName": "Linux Clang RelWithDebInfo (Ninja)",
+      "inherits": [
+        "base-linux-ninja",
+        "base-compiler-clang",
+        "base-buildtype-relwithdebinfo"
+      ]
+    },
+    {
+      "name": "macos-clang-relwithdebinfo-make-arm64",
+      "displayName": "macOS Clang RelWithDebInfo (Make, arm64)",
+      "inherits": [
+        "base-macos-make",
+        "base-compiler-clang",
+        "base-buildtype-relwithdebinfo"
+      ],
+      "cacheVariables": {
+        "CMAKE_OSX_ARCHITECTURES": "arm64"
+      }
+    },
+    {
+      "name": "macos-clang-relwithdebinfo-make-x86_64",
+      "displayName": "macOS Clang RelWithDebInfo (Make, x86_64)",
+      "inherits": [
+        "base-macos-make",
+        "base-compiler-clang",
+        "base-buildtype-relwithdebinfo"
+      ],
+      "cacheVariables": {
+        "CMAKE_OSX_ARCHITECTURES": "x86_64"
+      }
+    },
+    {
+      "name": "macos-clang-relwithdebinfo-ninja",
+      "displayName": "macOS Clang RelWithDebInfo (Ninja)",
+      "inherits": [
+        "base-macos-ninja",
+        "base-compiler-clang",
+        "base-buildtype-relwithdebinfo"
+      ]
+    },
+    {
+      "name": "macos-clang-relwithdebinfo-ninja-arm64",
+      "displayName": "macOS Clang RelWithDebInfo (Ninja, arm64)",
+      "inherits": [
+        "base-macos-ninja",
+        "base-compiler-clang",
+        "base-buildtype-relwithdebinfo"
+      ],
+      "cacheVariables": {
+        "CMAKE_OSX_ARCHITECTURES": "arm64"
+      }
+    },
+    {
+      "name": "win-msvc-debug-vs2019",
+      "displayName": "Windows MSVC Debug (VS 2019)",
+      "inherits": [
+        "base-win-vs2019",
+        "base-compiler-msvc",
+        "base-buildtype-debug"
+      ]
+    },
+    {
+      "name": "win-msvc-debug-vs2022",
+      "displayName": "Windows MSVC Debug (VS 2022)",
+      "inherits": [
+        "base-win-vs2022",
+        "base-compiler-msvc",
+        "base-buildtype-debug"
+      ]
+    },
+    {
+      "name": "win-msvc-debug-vs2026",
+      "displayName": "Windows MSVC Debug (VS 2026)",
+      "inherits": [
+        "base-win-vs2026",
+        "base-compiler-msvc",
+        "base-buildtype-debug"
+      ]
+    },
+    {
+      "name": "win-msvc-debug-ninja",
+      "displayName": "Windows MSVC Debug (Ninja)",
+      "inherits": [
+        "base-win-ninja",
+        "base-compiler-msvc",
+        "base-buildtype-debug"
+      ]
+    },
+    {
+      "name": "win-msvc-relwithdebinfo-vs2019",
+      "displayName": "Windows MSVC RelWithDebInfo (VS 2019)",
+      "inherits": [
+        "base-win-vs2019",
+        "base-compiler-msvc",
+        "base-buildtype-relwithdebinfo"
+      ]
+    },
+    {
+      "name": "win-msvc-relwithdebinfo-vs2022",
+      "displayName": "Windows MSVC RelWithDebInfo (VS 2022)",
+      "inherits": [
+        "base-win-vs2022",
+        "base-compiler-msvc",
+        "base-buildtype-relwithdebinfo"
+      ]
+    },
+    {
+      "name": "win-msvc-relwithdebinfo-vs2026",
+      "displayName": "Windows MSVC RelWithDebInfo (VS 2026)",
+      "inherits": [
+        "base-win-vs2026",
+        "base-compiler-msvc",
+        "base-buildtype-relwithdebinfo"
+      ]
+    },
+    {
+      "name": "win-msvc-relwithdebinfo",
+      "displayName": "Windows MSVC RelWithDebInfo (auto-detected generator)",
+      "inherits": [
+        "base-win",
+        "base-compiler-msvc",
+        "base-buildtype-relwithdebinfo"
+      ]
+    },
+    {
+      "name": "win-relwithdebinfo",
+      "displayName": "Windows RelWithDebInfo (auto-detected compiler and generator)",
+      "inherits": [
+        "base-win",
+        "base-buildtype-relwithdebinfo"
+      ]
+    },
+    {
+      "name": "win-debug",
+      "displayName": "Windows Debug (auto-detected compiler and generator)",
+      "inherits": [
+        "base-win",
+        "base-buildtype-debug"
+      ]
+    },
+    {
+      "name": "win-clang-cl-relwithdebinfo",
+      "displayName": "Windows ClangCl RelWithDebInfo (auto-detected generator)",
+      "inherits": [
+        "base-win",
+        "base-compiler-clang-cl",
+        "base-buildtype-relwithdebinfo"
+      ]
+    },
+    {
+      "name": "win-clang-cl-relwithdebinfo-ninja",
+      "displayName": "Windows ClangCl RelWithDebInfo (Ninja)",
+      "inherits": [
+        "base-win-ninja",
+        "base-compiler-clang-cl",
+        "base-buildtype-relwithdebinfo"
+      ]
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "linux-gcc-debug-make",
+      "configurePreset": "linux-gcc-debug-make",
+      "jobs": 0
+    },
+    {
+      "name": "linux-gcc-release-make",
+      "configurePreset": "linux-gcc-release-make",
+      "jobs": 0
+    },
+    {
+      "name": "linux-gcc-relwithdebinfo-make",
+      "configurePreset": "linux-gcc-relwithdebinfo-make",
+      "jobs": 0
+    },
+    {
+      "name": "linux-clang-debug-ninja",
+      "configurePreset": "linux-clang-debug-ninja",
+      "jobs": 0
+    },
+    {
+      "name": "linux-clang-relwithdebinfo-ninja",
+      "configurePreset": "linux-clang-relwithdebinfo-ninja",
+      "jobs": 0
+    },
+    {
+      "name": "macos-clang-relwithdebinfo-make",
+      "configurePreset": "macos-clang-relwithdebinfo-make",
+      "jobs": 0
+    },
+    {
+      "name": "macos-clang-relwithdebinfo-make-arm64",
+      "configurePreset": "macos-clang-relwithdebinfo-make-arm64",
+      "jobs": 0
+    },
+    {
+      "name": "macos-clang-relwithdebinfo-make-x86_64",
+      "configurePreset": "macos-clang-relwithdebinfo-make-x86_64",
+      "jobs": 0
+    },
+    {
+      "name": "macos-clang-relwithdebinfo-ninja",
+      "configurePreset": "macos-clang-relwithdebinfo-ninja",
+      "jobs": 0
+    },
+    {
+      "name": "macos-clang-relwithdebinfo-ninja-arm64",
+      "configurePreset": "macos-clang-relwithdebinfo-ninja-arm64",
+      "jobs": 0
+    },
+    {
+      "name": "win-msvc-debug-vs2019",
+      "configurePreset": "win-msvc-debug-vs2019",
+      "configuration": "Debug",
+      "jobs": 0
+    },
+    {
+      "name": "win-msvc-relwithdebinfo-vs2019",
+      "configurePreset": "win-msvc-relwithdebinfo-vs2019",
+      "configuration": "RelWithDebInfo",
+      "jobs": 0
+    },
+    {
+      "name": "win-msvc-debug-vs2022",
+      "configurePreset": "win-msvc-debug-vs2022",
+      "configuration": "Debug",
+      "jobs": 0
+    },
+    {
+      "name": "win-msvc-relwithdebinfo-vs2022",
+      "configurePreset": "win-msvc-relwithdebinfo-vs2022",
+      "configuration": "RelWithDebInfo",
+      "jobs": 0
+    },
+    {
+      "name": "win-msvc-debug-vs2026",
+      "configurePreset": "win-msvc-debug-vs2026",
+      "configuration": "Debug",
+      "jobs": 0
+    },
+    {
+      "name": "win-msvc-relwithdebinfo-vs2026",
+      "configurePreset": "win-msvc-relwithdebinfo-vs2026",
+      "configuration": "RelWithDebInfo",
+      "jobs": 0
+    },
+    {
+      "name": "win-msvc-debug-ninja",
+      "configurePreset": "win-msvc-debug-ninja",
+      "jobs": 0
+    },
+    {
+      "name": "win-msvc-relwithdebinfo",
+      "configurePreset": "win-msvc-relwithdebinfo",
+      "configuration": "RelWithDebInfo",
+      "jobs": 0
+    },
+    {
+      "name": "win-relwithdebinfo",
+      "configurePreset": "win-relwithdebinfo",
+      "configuration": "RelWithDebInfo",
+      "jobs": 0
+    },
+    {
+      "name": "win-debug",
+      "configurePreset": "win-debug",
+      "configuration": "Debug",
+      "jobs": 0
+    },
+    {
+      "name": "win-clang-cl-relwithdebinfo",
+      "configurePreset": "win-clang-cl-relwithdebinfo",
+      "configuration": "RelWithDebInfo",
+      "jobs": 0
+    },
+    {
+      "name": "win-clang-cl-relwithdebinfo-ninja",
+      "configurePreset": "win-clang-cl-relwithdebinfo-ninja",
+      "jobs": 0
+    }
+  ]
+}

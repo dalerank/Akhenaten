@@ -5,6 +5,7 @@
 .vscode
 .idea
 /CMakeSettings.json
+CMakeUserPresets.json
 
 # Generated resources
 src/platform/version.c
