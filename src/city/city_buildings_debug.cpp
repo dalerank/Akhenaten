@@ -20,13 +20,13 @@ void config_show_city_buildings_properties(bool header) {
         return;
     }
 
-    auto &buildings = city_buildings();
+    auto buildings = city_buildings();
 
     int total_slots = static_cast<int>(buildings.size());
     int valid_count = 0;
     std::array<int, BUILDING_MAX> type_counts{};
 
-    for (auto &b : buildings) {
+    for (const auto& b : buildings) {
         if (!b.is_valid()) {
             continue;
         }

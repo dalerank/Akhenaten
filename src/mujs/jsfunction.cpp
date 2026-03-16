@@ -159,7 +159,7 @@ static void constructbound(js_State *J)
 	for (i = 1; i < top; ++i)
 		js_copy(J, i);
 
-	js_construct(J, n + top - 1);
+	J->construct(n + top - 1);
 }
 
 static void Fp_bind(js_State *J)
