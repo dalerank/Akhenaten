@@ -47,7 +47,7 @@ unsigned short jsV_numbertouint16(double n) {
 /* obj.toString() */
 static int jsV_toString(js_State *J, js_Object *obj) {
     js_pushobject(J, obj);
-    js_getproperty(J, -1, "toString");
+    J->getproperty(-1, "toString");
     if (J->iscallable(-1)) {
         js_rot2(J);
         J->call(0);
@@ -63,7 +63,7 @@ static int jsV_toString(js_State *J, js_Object *obj) {
 /* obj.valueOf() */
 static int jsV_valueOf(js_State *J, js_Object *obj) {
     js_pushobject(J, obj);
-    js_getproperty(J, -1, "valueOf");
+    J->getproperty(-1, "valueOf");
     if (J->iscallable(-1)) {
         js_rot2(J);
         J->call(0);
@@ -448,7 +448,7 @@ int js_instanceof(js_State *J) {
     if (!J->isobject(-2))
         return 0;
 
-    js_getproperty(J, -1, "prototype");
+    J->getproperty(-1, "prototype");
     if (!J->isobject(-1))
         js_typeerror(J, "instanceof: 'prototype' property is not an object");
     O = J->toobject(-1);

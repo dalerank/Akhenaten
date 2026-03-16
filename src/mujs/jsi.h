@@ -1,5 +1,4 @@
-#ifndef jsi_h
-#define jsi_h
+#pragma once
 
 #include "mujs.h"
 
@@ -11,6 +10,8 @@
 #include <setjmp.h>
 #include <math.h>
 #include <float.h>
+
+#include "core/string.h"
 
 /* Microsoft Visual C */
 #ifdef _MSC_VER
@@ -211,8 +212,10 @@ struct js_State
 
 	void pushundefined();
 
-	void getproperty(js_Object *obj, const char *name);
-	int hasproperty(js_Object *obj, const char *name);
+	void getproperty(js_Object *obj, pcstr name);
+	void getproperty(int idx, pcstr name) { getproperty(toobject(idx), name); }
+
+	int hasproperty(js_Object *obj, pcstr name);
 
 	int hasproperty(int idx, const char *name);
 
@@ -237,5 +240,3 @@ struct js_State
 	void r_run(js_Function *F);
 	void construct(int n);
 };
-
-#endif
