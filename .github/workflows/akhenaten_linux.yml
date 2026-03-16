@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: run on linux
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
       with:
@@ -20,13 +20,10 @@ jobs:
         sudo apt install --yes cmake build-essential libgl1-mesa-dev libssl-dev
     - name: build-project
       run: |
-        mkdir build
         mkdir linux_build
         mkdir linux_build/data
-        cd build
-        cmake -DCMAKE_BUILD_TYPE=Release ..
-        cd ..
-        cmake --build ./build
+        cmake --preset linux-gcc-release-make
+        cmake --build --preset linux-gcc-release-make -- -j$(nproc)
         cp ./build/akhenaten ./linux_build/akhenaten.linux
         cp ./data/pharaoh_fonts_pack.sgx ./linux_build/data/pharaoh_fonts_pack.sgx
         cp ./data/pharaoh_custom_pack.sgx ./linux_build/data/pharaoh_custom_pack.sgx
