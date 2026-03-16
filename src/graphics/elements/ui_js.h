@@ -4,6 +4,9 @@
 #include "js/js_struct.h"
 #include "js/js_game.h"
 
+bool js_push_proxy_accessors_for_prop(js_State *J, xstring prop_name);
+bool js_push_proxy_func_for_name(js_State *J, xstring func_name);
+
 namespace ui {
     template<typename T>
     inline void widget::event(const T &ev, xstring evname_str) {

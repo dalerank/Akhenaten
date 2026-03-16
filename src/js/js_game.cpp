@@ -31,6 +31,7 @@
 #include "mujs/jsvalue.h"
 #include "mujs/jscompile.h"
 #include "graphics/elements/ui.h"
+#include "graphics/elements/ui_js.h"
 #include "window/autoconfig_window.h"
 
 #include <vector>
@@ -137,31 +138,23 @@ bool js_has_event_handlers(const xstring &event_name) {
     return (it != event_type_handlers.end());
 }
 
-/** Stack on entry: event_obj (-2), accessors (-1). Creates proxy for element_id and sets event_obj[element_id]. */
-namespace sfunc {
-    const xstring add_item("add_item");
-}
-
+/** Stack on entry: event_obj (-2). Creates proxy for element_id and sets event_obj[element_id]. */
 static void js_create_element_proxy(js_State *J, pcstr element_id, xspan<xstring> props, xspan<xstring> funcs) {
     js_newobject(J);
     js_pushstring(J, element_id);
     js_setproperty(J, -2, "id");
-    for (const xstring& name: props) {
-        js_getproperty(J, -2, name.c_str());
-        js_getindex(J, -1, 0);
-        js_getindex(J, -2, 1);
-        js_defaccessor(J, -4, name.c_str(), 0);
-        js_pop(J, 1);
-    }
-
-    for (const xstring& name: funcs) {
-        if (name == sfunc::add_item) {
-            js_getglobal(J, "__ui_proxy_add_item");
-            verify_no_crash(J->iscallable(-1));
-            js_setproperty(J, -2, "add_item");
+    for (const xstring& name : props) {
+        if (js_push_proxy_accessors_for_prop(J, name)) {
+            js_defaccessor(J, -3, name.c_str(), 0);
         }
     }
-    js_setproperty(J, -3, element_id);
+
+    for (const xstring& name : funcs) {
+        if (js_push_proxy_func_for_name(J, name)) {
+            js_setproperty(J, -2, name.c_str());
+        }
+    }
+    js_setproperty(J, -2, element_id);  // event_obj at -2, proxy at -1
 }
 
 void js_call_event_handlers(const xstring &event_name, const bvariant_map &object) {
@@ -243,19 +236,13 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
 
         if (!ui_element_ids.empty()) {
             OZZY_PROFILER_SECTION(_, "has_ui_elements")
-            // Stack: event_obj at -1. Get shared accessors once (used by all proxies).
-            js_getglobal(J, "__ui_proxy_accessors");
-            if (J->isobject(-1)) {
-                pcstr prop_buf[16];
-                auto w = ui::get_current_widget();
-                for (const auto &element_id : ui_element_ids) {
-                    const auto &elem = (*w)[element_id];
-                    auto props = elem.prop_names();
-                    auto funcs = elem.func_names();
-                    js_create_element_proxy(J, element_id.c_str(), props, funcs);
-                }
+            auto w = ui::get_current_widget();
+            for (const auto &element_id : ui_element_ids) {
+                const auto &elem = (*w)[element_id];
+                auto props = elem.prop_names();
+                auto funcs = elem.func_names();
+                js_create_element_proxy(J, element_id.c_str(), props, funcs);
             }
-            js_pop(J, 1); // __ui_proxy_accessors
         }
 
         // Call with 1 argument (the object)

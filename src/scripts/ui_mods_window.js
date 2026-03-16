@@ -1,21 +1,35 @@
 log_info("akhenaten: mods window started")
 
+function mods_window_on_double_click(p) {
+    if (!p || !p.text) return
+    var modId = p.text
+    if (!mods.downloaded(modId)) {
+        if (mods.download_progress(modId) === 0)
+            mods.download_mod_async(modId)
+    } else {
+        mods.toggle(modId)
+        mods.remount()
+    }
+}
+
 function mods_window_on_render_item(p) {
     var prefix, name
-    if (!__mods_downloaded(p.text)) {
-        var progress = __mods_download_progress(p.text)
+    if (!mods.downloaded(p.text)) {
+        var progress = mods.download_progress(p.text)
         prefix = progress > 0 ? "[" + progress + "] " : "[n/a] "
-        name = __mods_display_name(p.text)
+        name = mods.display_name(p.text)
         if (progress > 0) {
             var num_points = Math.floor((__game_frame() % 90) / 30)
-            for (var i = 0; i < num_points; i++)
+            for (var i = 0; i < num_points; i++) {
                 name += "."
+            }
         }
     } else {
-        prefix = "[" + (__mods_enabled(p.text) ? "ON" : "OFF") + "] "
-        name = __mods_display_name(p.text)
+        prefix = "[" + (mods.enabled(p.text) ? "ON" : "OFF") + "] "
+        name = mods.display_name(p.text)
     }
-    __ui_draw_label(prefix + name, { x: p.x, y: p.y }, p.font)
+
+    ui.label(prefix + name, { x: p.x, y: p.y }, p.font)
 }
 
 mods_window {
@@ -43,7 +57,8 @@ mods_window {
 
         mods         : scrollable_list({pos[16, 75], size[36, 23], view_items:11,
                                         draw_scrollbar_always:true
-                                        onrender_item: mods_window_on_render_item })
+                                        onrender_item: mods_window_on_render_item
+                                        ondoubleclick_item: mods_window_on_double_click })
 
         bottom_text  : text({text:"Right click to exit, double click to toggle mod"
                              font:FONT_NORMAL_BLACK_ON_LIGHT, size[px(40), 20]
@@ -55,7 +70,9 @@ mods_window {
 
 [es=(mods_window, init)]
 function mods_window_on_init(window) {
-    var n = __mods_count()
-    for (var i = 0; i < n; i++)
-        window.mods.add_item(__mods_name(i))
+    var n = mods.count()
+    window.mods.clear()
+    for (var i = 0; i < n; i++) {
+        window.mods.add_item(mods.name(i))
+    }
 }
