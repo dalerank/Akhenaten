@@ -117,7 +117,7 @@ static autoconfig_window* get_window_current(xstring name) {
 void autoconfig_window::show(xstring section) {
     auto it = autoconfig_registry().find(section);
     if (it == autoconfig_registry().end()) {
-        logs::error("autoconfig_window_show: unknown section '%s'", section);
+        logs::error("autoconfig_window_show: unknown section '%s'", section.c_str());
         return;
     }
     autoconfig_window* w = it->second;
