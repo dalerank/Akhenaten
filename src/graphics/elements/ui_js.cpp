@@ -61,7 +61,7 @@ ANK_FUNCTION_3(__ui_dialog_show_yesno)
 
 void __ui_dialog_show_ok(pcstr text) { popup_dialog::show_ok(text, [] {}); } ANK_FUNCTION_1(__ui_dialog_show_ok)
 
-bool __ui_window_is(pcstr window_id) { return window_is(window_id); } ANK_FUNCTION_1(__ui_window_is)
+bool __ui_window_is(pcstr window_id) { return g_window_manager.window_is(window_id); } ANK_FUNCTION_1(__ui_window_is)
 void __ui_window_advisors_show_advisor(int advisor) { window_advisors_show_advisor((e_advisor)advisor); } ANK_FUNCTION_1(__ui_window_advisors_show_advisor)
 void __ui_draw_label(pcstr text, vec2i pos, int font) { ui::label(text, pos, (e_font)font); } ANK_FUNCTION_3(__ui_draw_label);
 void __ui_draw_line(bool hline, vec2i pos, int size) { ui::line(hline, pos, size, 0xff000000); } ANK_FUNCTION_3(__ui_draw_line);
@@ -113,6 +113,8 @@ void ui_proxy_get_selected(js_State *J) { auto elem = GET_ELEM(J); js_pushboolea
 void ui_proxy_set_selected(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->select(js_toboolean(J, 1)); } J->pushundefined(); }
 void ui_proxy_set_tooltip(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->tooltip(xstring(js_tostring(J, 1))); } J->pushundefined(); }
 void ui_proxy_get_noop_render_item(js_State *J) { (void)J; J->pushundefined(); }
+void ui_proxy_get_value(js_State *J) { auto elem = GET_ELEM(J); js_pushstring(J, elem ? elem->get_value() : ""); }
+void ui_proxy_set_value(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->set_value(js_tostring(J, 1)); } J->pushundefined(); }
 
 void ui_proxy_add_item(js_State *J) {
     ui::element* elem = GET_ELEM(J);
@@ -179,7 +181,7 @@ struct ui_proxy_prop {
     js_CFunction getter;
     js_CFunction setter;
 };
-static const flat_map<xstring, ui_proxy_prop, 8> g_ui_proxy_props = {
+static const flat_map<xstring, ui_proxy_prop, 10> g_ui_proxy_props = {
     {"text", {ui_proxy_get_text, ui_proxy_set_text}},
     {"enabled", {ui_proxy_get_enabled, ui_proxy_set_enabled}},
     {"readonly", {ui_proxy_get_readonly, ui_proxy_set_readonly}},
@@ -189,6 +191,7 @@ static const flat_map<xstring, ui_proxy_prop, 8> g_ui_proxy_props = {
     {"selected", {ui_proxy_get_selected, ui_proxy_set_selected}},
     {"tooltip", {ui_proxy_get_noop, ui_proxy_set_tooltip}},
     {"items_count", {ui_proxy_get_items_count, nullptr}},
+    {"value", {ui_proxy_get_value, ui_proxy_set_value}},
 };
 
 struct ui_proxy_func {
