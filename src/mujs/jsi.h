@@ -1,5 +1,4 @@
-#ifndef jsi_h
-#define jsi_h
+#pragma once
 
 #include "mujs.h"
 
@@ -11,6 +10,8 @@
 #include <setjmp.h>
 #include <math.h>
 #include <float.h>
+
+#include "core/string.h"
 
 /* Microsoft Visual C */
 #ifdef _MSC_VER
@@ -73,7 +74,6 @@ int js_utfptrtoidx(const char *s, const char *p);
 const char *js_utfidxtoptr(const char *s, int i);
 
 void js_dup(js_State *J);
-void js_dup2(js_State *J);
 void js_rot2(js_State *J);
 void js_rot3(js_State *J);
 void js_rot4(js_State *J);
@@ -211,8 +211,10 @@ struct js_State
 
 	void pushundefined();
 
-	void getproperty(js_Object *obj, const char *name);
-	int hasproperty(js_Object *obj, const char *name);
+	void getproperty(js_Object *obj, pcstr name);
+	void getproperty(int idx, pcstr name) { getproperty(toobject(idx), name); }
+
+	int hasproperty(js_Object *obj, pcstr name);
 
 	int hasproperty(int idx, const char *name);
 
@@ -234,6 +236,9 @@ struct js_State
 	int delvar(const char *name);
 	js_Property *vget_ownproperty(js_Object *obj, const char *name);
 	int rdelproperty(js_Object *obj, const char *name);
-};
+	void r_run(js_Function *F);
+	void construct(int n);
 
-#endif
+	void dup2();
+    void pushliteral(pcstr val);
+};

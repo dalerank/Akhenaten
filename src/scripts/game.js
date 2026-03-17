@@ -15,7 +15,7 @@ game {
     @game_speed { set: __game_set_game_speed }
     @scroll_speed { set: __game_set_scroll_speed }
     @last_autosave { get: __game_get_last_autosave }
-    @dynasty_name { get: __game_get_player_name }
+    @dynasty_name { get: __game_get_player_name, set: __game_set_player_name }
 
     screen {
         @w { get: __game_screen_width }

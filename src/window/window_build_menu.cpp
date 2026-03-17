@@ -50,7 +50,7 @@ struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
         btn_w_min = -btn_w_add - 8;
         btn_w_tot = 256 + btn_w_add;
 
-        if (game.session.active && window_is("window_build_menu")) {
+        if (game.session.active && g_window_manager.window_is("window_build_menu")) {
             window_build_menu_show(selected_submenu);
         }
     }

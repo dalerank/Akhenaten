@@ -33,7 +33,7 @@ static void jsonvalue(js_State *J)
 
 	switch (J->lookahead) {
 	case TK_STRING:
-		js_pushliteral(J, J->text);
+		J->pushliteral(J->text);
 		jsonnext(J);
 		break;
 
@@ -192,7 +192,7 @@ static void fmtarray(js_State *J, js_Buffer **sb, const char *gap, int level)
 		if (k) js_putc(J, sb, ',');
 		if (gap) fmtindent(J, sb, gap, level + 1);
 		js_itoa(buf, k);
-		js_getproperty(J, -1, buf);
+		J->getproperty(-1, buf);
 		if (!fmtvalue(J, sb, js_intern(J, buf), gap, level + 1))
 			js_puts(J, sb, "null");
 		js_pop(J, 1);
@@ -211,7 +211,7 @@ static int fmtvalue(js_State *J, js_Buffer **sb, const char *key, const char *ga
 		if (J->hasproperty(-1, "toJSON")) {
 			if (J->iscallable(-1)) {
 				js_copy(J, -2);
-				js_pushliteral(J, key);
+				J->pushliteral(key);
 				J->call(1);
 				js_rot2pop1(J);
 			} else {

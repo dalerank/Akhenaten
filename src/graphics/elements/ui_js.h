@@ -4,6 +4,9 @@
 #include "js/js_struct.h"
 #include "js/js_game.h"
 
+void js_push_funcs(js_State *J, ui::widget *w, pcstr element_id);
+void js_push_props(js_State *J, ui::widget* w, pcstr element_id);
+
 namespace ui {
     template<typename T>
     inline void widget::event(const T &ev, xstring evname_str) {

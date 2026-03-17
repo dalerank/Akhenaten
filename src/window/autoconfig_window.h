@@ -15,6 +15,7 @@ struct autoconfig_window : public ui::widget {
     virtual void init();
     virtual pcstr get_section() const { verify_no_crash(false); return "non_exist_window"; };
     virtual void on_mission_start() {}
+    virtual void on_restore();
 
     virtual void archive_load(archive arch) override;
     virtual int ui_handle_mouse(const mouse *m);
@@ -25,7 +26,7 @@ struct autoconfig_window : public ui::widget {
 
     static void before_mission_start();
     static void refresh_all();
-    static void show_by_section(pcstr section);
+    static void show(xstring section);
     static void unregister_section(pcstr section);
     static void reset_script_window_current();
 };

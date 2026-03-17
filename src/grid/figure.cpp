@@ -71,7 +71,7 @@ void map_figure_sort_by_y() {
     });
 }
 
-custom_span<figure_draw> map_figures_in_row(tile2i tile) {
+xspan<figure_draw> map_figures_in_row(tile2i tile) {
     vec2i pixel_begin = lookup_tile_to_pixel(tile);
     vec2i pixel_end = pixel_begin + vec2i(0, TILE_HEIGHT_PIXELS);
 
@@ -98,10 +98,10 @@ custom_span<figure_draw> map_figures_in_row(tile2i tile) {
     });
 
     if (end == g_figures_y_sort.end()) {
-        custom_span<figure_draw>(begin, g_figures_y_sort.end());
+        xspan<figure_draw>(begin, g_figures_y_sort.end());
     }
 
-    return custom_span<figure_draw>(begin, end);
+    return xspan<figure_draw>(begin, end);
 }
 
 void map_figure_set(int grid_offset, int id) {

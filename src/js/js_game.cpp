@@ -21,8 +21,10 @@
 #include "game/game_events.h"
 #include "game/settings.h"
 #include "game/player.h"
+#include "scenario/scenario.h"
+#include "core/encoding.h"
+#include "game/game_environment.h"
 #include "city/city_finance.h"
-#include "content/vfs.h"
 #include "io/gamestate/boilerplate.h"
 #include "core/profiler.h"
 #include "js.h"
@@ -31,6 +33,7 @@
 #include "mujs/jsvalue.h"
 #include "mujs/jscompile.h"
 #include "graphics/elements/ui.h"
+#include "graphics/elements/ui_js.h"
 #include "window/autoconfig_window.h"
 
 #include <vector>
@@ -93,15 +96,15 @@ void js_game_get_image(js_State *J) {
         desc.path = path;
         tid = desc.tid();
     } else if (J->isobject(1) && !js_isarray(J, 1)) {
-        js_getproperty(J, 1, "pack");
+        J->getproperty(1, "pack");
         int16_t pack = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
         js_pop(J, 1);
 
-        js_getproperty(J, 1, "id");
+        J->getproperty(1, "id");
         int16_t id = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
         js_pop(J, 1);
 
-        js_getproperty(J, 1, "offset");
+        J->getproperty(1, "offset");
         int16_t offset = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
         js_pop(J, 1);
 
@@ -137,29 +140,14 @@ bool js_has_event_handlers(const xstring &event_name) {
     return (it != event_type_handlers.end());
 }
 
-static const pcstr prop_names[] = {
-    "text", "enabled", "readonly", "font", "text_color", "image", "selected", "tooltip"
-};
-
-/** Stack on entry: event_obj (-2), accessors (-1). Creates proxy for element_id and sets event_obj[element_id]. */
-static void js_create_element_proxy(js_State *J, pcstr element_id) {
+/** Stack on entry: event_obj (-2). Creates proxy for element_id and sets event_obj[element_id]. */
+static void js_create_element_proxy(js_State *J, ui::widget* w, pcstr element_id) {
     js_newobject(J);
     js_pushstring(J, element_id);
     js_setproperty(J, -2, "id");
-    for (pcstr name : prop_names) {
-        js_getproperty(J, -2, name);
-        js_getindex(J, -1, 0);
-        js_getindex(J, -2, 1);
-        js_defaccessor(J, -4, name, 0);
-        js_pop(J, 1);
-    }
-    js_getglobal(J, "__ui_proxy_add_item");
-    if (J->iscallable(-1)) {
-        js_setproperty(J, -2, "add_item");
-    } else {
-        js_pop(J, 1);
-    }
-    js_setproperty(J, -3, element_id);
+    js_push_props(J, w, element_id);
+    js_push_funcs(J, w, element_id);
+    js_setproperty(J, -2, element_id);  // event_obj at -2, proxy at -1
 }
 
 void js_call_event_handlers(const xstring &event_name, const bvariant_map &object) {
@@ -202,7 +190,6 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
             const xstring &key = kv.first;
             const bvariant &val = kv.second;
 
-
             bstring64 keystr = key.c_str();
             if (keystr.starts_with("__ui_elem_")) {
                 ui_element_ids.push_back(keystr.substr(10, -1));
@@ -242,14 +229,10 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
 
         if (!ui_element_ids.empty()) {
             OZZY_PROFILER_SECTION(_, "has_ui_elements")
-            // Stack: event_obj at -1. Get shared accessors once (used by all proxies).
-            js_getglobal(J, "__ui_proxy_accessors");
-            if (J->isobject(-1)) {
-                for (const auto &element_id : ui_element_ids) {
-                    js_create_element_proxy(J, element_id.c_str());
-                }
+            auto w = ui::get_current_widget();
+            for (const auto &element_id : ui_element_ids) {
+                js_create_element_proxy(J, w, element_id.c_str());
             }
-            js_pop(J, 1); // __ui_proxy_accessors
         }
 
         // Call with 1 argument (the object)
@@ -424,6 +407,7 @@ void js_register_entity_systems() {
 int __game_screen_width() { return screen_width(); } ANK_FUNCTION(__game_screen_width);
 int __game_screen_height() { return screen_height(); } ANK_FUNCTION(__game_screen_height)
 int __game_absolute_day() { return game.simtime.absolute_day(true); } ANK_FUNCTION(__game_absolute_day)
+int __game_frame() { return game.frame; } ANK_FUNCTION(__game_frame)
 xstring __game_version() { return get_version().c_str(); } ANK_FUNCTION(__game_version)
 void __game_increase_game_speed() { game.increase_game_speed(); } ANK_FUNCTION(__game_increase_game_speed)
 void __game_decrease_game_speed() { game.decrease_game_speed(); } ANK_FUNCTION(__game_decrease_game_speed)
@@ -432,13 +416,21 @@ void __game_decrease_scroll_speed() { game.decrease_scroll_speed(); } ANK_FUNCTI
 void __game_set_game_speed(int v) { game.game_speed = v; } ANK_FUNCTION_1(__game_set_game_speed)
 void __game_set_scroll_speed(int v) { game.scroll_speed = v; } ANK_FUNCTION_1(__game_set_scroll_speed)
 void __game_request_exit() { app_request_exit(); } ANK_FUNCTION(__game_request_exit)
-void __game_set_player_name(pcstr name) { g_settings.set_player_name((const uint8_t *)name); } ANK_FUNCTION_1(__game_set_player_name)
+void __game_set_player_name(pcstr name) { g_settings.set_player_name_utf8(name); } ANK_FUNCTION_1(__game_set_player_name)
 pcstr __game_get_player_name() { return g_settings.player_name_utf8.empty() ? g_settings.player_name.c_str() : g_settings.player_name_utf8.c_str(); } ANK_FUNCTION(__game_get_player_name)
 bool __game_load_savegame(pcstr filename) { return GamestateIO::load_savegame(filename); } ANK_FUNCTION_1(__game_load_savegame)
 void __game_load_mission(int scenario_id, int start_immediately) { GamestateIO::load_mission(scenario_id, !!start_immediately); } ANK_FUNCTION_2(__game_load_mission)
 bool __game_file_exists(pcstr path) { return path && *path && vfs::file_exists(path); } ANK_FUNCTION_1(__game_file_exists)
 pcstr __game_get_last_autosave() { const char* p = player_get_last_autosave(); return p ? p : ""; } ANK_FUNCTION(__game_get_last_autosave)
 void __game_load_player_data(pcstr name) { player_data_load((const uint8_t*)name); } ANK_FUNCTION_1(__game_load_player_data)
+void __game_delete_player(pcstr name) { player_data_delete((const uint8_t*)name); } ANK_FUNCTION_1(__game_delete_player)
+void __game_clear_personal_savings() { g_settings.clear_personal_savings(); } ANK_FUNCTION(__game_clear_personal_savings)
+void __scenario_init() { g_scenario.init(); } ANK_FUNCTION(__scenario_init)
+void __game_player_data_new(pcstr name_utf8) {
+    uint8_t internal[MAX_PLAYER_NAME];
+    encoding_from_utf8(name_utf8 ? name_utf8 : "", internal, MAX_PLAYER_NAME);
+    player_data_new(internal);
+} ANK_FUNCTION_1(__game_player_data_new)
 
 std::optional<bvariant> __game_get_property(pcstr property) {
     return archive_helper::get(game, property, true);
@@ -550,6 +542,47 @@ pcstr js_call_function_with_result(xstring js_ref, int param1, int param2) {
     return "";
 }
 
+static void js_push_bvariant_map_object(js_State *J, const bvariant_map &params) {
+    js_newobject(J);
+    for (const auto &kv : params) {
+        js_helpers::js_push_bvariant(J, kv.second);
+        js_setproperty(J, -2, kv.first.c_str());
+    }
+}
+
+pcstr js_call_function_with_result(xstring js_ref, const bvariant_map &params) {
+    if (js_ref.empty()) {
+        return "";
+    }
+
+    js_State *J = js_vm_state();
+
+    js_getregistry(J, js_ref.c_str());
+    if (J->iscallable(-1)) {
+        js_pushnull(J);
+        js_push_bvariant_map_object(J, params);
+        int result = J->pcall(1);
+        if (result != 0) {
+            logs::error("JS callback error (bvariant_map): %s", js_tostring(J, -1));
+            js_pop(J, 1);
+            return "";
+        }
+
+        pcstr result_str = "";
+        if (js_isstring(J, -1)) {
+            result_str = js_tostring(J, -1);
+        } else if (!js_isundefined(J, -1) && !js_isnull(J, -1)) {
+            result_str = js_tostring(J, -1);
+        }
+        js_pop(J, 1);
+        return result_str;
+    } else {
+        js_pop(J, 1);
+    }
+
+    return "";
+}
+
 // High scores
 void __highscores_load() { highscores_load(); }
 ANK_FUNCTION(__highscores_load)
@@ -611,8 +644,8 @@ int __highscore_months(int rank) {
 }
 ANK_FUNCTION_1(__highscore_months)
 
-void window_records_show() { autoconfig_window::show_by_section("records_window"); }
-ANK_FUNCTION(window_records_show)
+void window_show_by_id(pcstr section) { autoconfig_window::show(section); }
+ANK_FUNCTION_1(window_show_by_id)
 
 void config::refresh(archive arch) {
     g_config_arch = {arch.state};

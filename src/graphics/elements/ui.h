@@ -25,6 +25,8 @@
 #include "graphics/screen.h"
 #include "graphics/image.h"
 #include "graphics/text.h"
+#include "widget/input_box.h"
+#include "game/game_environment.h"
 
 struct mouse;
 struct tooltip_context;
@@ -54,6 +56,14 @@ enum UiFlags_ {
 using UiFlags = int;
 
 namespace ui {
+
+/** Property names for JS UI element proxy; element can override js_proxy_prop_names() to expose a subset. */
+namespace js_proxy {
+    static constexpr const char* prop_names[] = {
+        "text", "enabled", "readonly", "font", "text_color", "image", "selected", "tooltip"
+    };
+    static constexpr int prop_count = 8;
+}
 
 namespace opt {
     struct Pos { vec2i value; };
@@ -92,6 +102,10 @@ struct cmd_t {
         small_panel,
         shade_rect,
         large_label,
+        cursor_insert,
+        cursor_block,
+        cursor_capture,
+        cursor_consume,
     };
 
     e_type type = none;
@@ -156,6 +170,7 @@ void begin_widget(vec2i offset, bool relative = false);
 void end_widget();
 bool handle_mouse(const mouse *m);
 void clear_active_elements();
+void stop_active_input();
 
 int label(int group, int number, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags flags = UiFlags_None, int box_width = 0);
 int label(pcstr, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags flags = UiFlags_None, int box_width = 0);
@@ -200,6 +215,12 @@ void panel_abs(vec2i pos, vec2i size_blocks, UiFlags flags = UiFlags_None);
 void text_abs(pcstr str, vec2i pos, e_font font, color clr = 0);
 void text_multiline(pcstr text, vec2i pos, int width, e_font font, color clr);
 vec2i current_offset();
+
+// Cursor rendering helpers, used by text drawing code
+void cursor_capture(int cursor_position, int offset_start, int offset_end);
+void cursor_consume();
+void draw_cursor_insert(vec2i center_pos);
+void draw_cursor_block(vec2i pos, int width);
 
 template<typename T> inline void event(const T &ev);
 template<typename T> inline void event(const T &ev, xstring evname);
@@ -313,6 +334,8 @@ bstring<S> sformat(const T *o, std::string_view fmt) {
     return r;
 }
 
+struct einput;
+
 struct margini {
     static constexpr int nomargin = -99999;
     int left = nomargin;
@@ -379,6 +402,7 @@ struct element {
     virtual element &onclick(button_onclick_simple_cb f) { return *this; }
     virtual void onevent(std::function<void()>) { }
     virtual void add_entry(pcstr) {}
+    virtual void clear() {}
     virtual element &onrclick(button_onclick_cb) { return *this; }
     virtual element &onrclick(button_onclick_simple_cb f) { return *this; }
     virtual void ondraw(draw_callback f) { _draw_callback = f;};
@@ -387,6 +411,14 @@ struct element {
     virtual eimage_button *dcast_image_button() { return nullptr; }
     virtual escrollable_list *dcast_scrollable_list() { return nullptr; }
     virtual etext *dcast_etext() { return nullptr; }
+    virtual einput *dcast_einput() { return nullptr; }
+
+    virtual pcstr get_value() const { return ""; }
+    virtual void set_value(pcstr) {}
+
+    /** Fill \a out with prop names to expose on the JS proxy (default: all from js_proxy::prop_names). */
+    virtual xspan<xstring> prop_names() const;
+    virtual xspan<xstring> func_names() const { return {}; }
 
     pcstr text_from_key(pcstr key);
 
@@ -472,6 +504,25 @@ struct eborder : public element {
 
     virtual void load(archive elem, element *parent, items &elems) override;
     virtual void draw(UiFlags flags) override;
+};
+
+struct einput : public element {
+    input_box _box;
+    uint8_t _buffer[MAX_PLAYER_NAME] = {0};
+    uint8_t _last_buffer[MAX_PLAYER_NAME] = {0};
+    bool _started = false;
+    int _allow_punctuation = 1;
+    xstring _js_oninput_ref;
+
+    ~einput() override;
+    void stop_input();
+
+    virtual void draw(UiFlags flags) override;
+    virtual void load(archive elem, element *parent, items &elems) override;
+    virtual pcstr get_value() const override;
+    virtual void set_value(pcstr utf8) override;
+    virtual xspan<xstring> prop_names() const override;
+    virtual einput *dcast_einput() override { return this; }
 };
 
 struct eresource_icon : public element {
@@ -571,22 +622,34 @@ struct escrollable_list : public element {
     refill_callback _refill_cb;
     onclick_callback _onclick_cb;
     onclick_ex_callback _onclick_ex_cb;
-    onclick_double_ex_callback _onclick_dbl_ex_cb;
+    onclick_double_ex_callback _ondoubleclick_item_cb;
     custom_text_render_func _custom_render_cb;
+    xstring _js_render_item_ref;
+    xstring _js_onclick_item_ref;
+    xstring _js_ondoubleclick_item_ref;
 
     virtual void draw(UiFlags flags) override;
 
     virtual void load(archive elem, element *parent, items &elems) override;
     virtual ~escrollable_list();
 
-    void clear();
+    virtual xspan<xstring> func_names() const override;
+    virtual xspan<xstring> prop_names() const override;
+    virtual void clear() override;
+
     void add_item(pcstr item);
     void select_item(pcstr item);
+    void select_entry(int index);
+    void refresh_file_finder();
+    xstring selected_entry_text(int filename_syntax = 0) const;
+    int items_count() const;
     void onclick_item(onclick_callback lmb) { _onclick_cb = lmb; }
     void onclick_ex_item(onclick_ex_callback lmb) { _onclick_ex_cb = lmb; }
-    void onclick_double_ex_item(onclick_double_ex_callback lmb) { _onclick_dbl_ex_cb = lmb; }
+    void onclick_double_item(onclick_double_ex_callback lmb) { _ondoubleclick_item_cb = lmb; }
     void onrender_item(custom_text_render_func f) { _custom_render_cb = f; }
     void onrefill(refill_callback f) { _refill_cb = f; }
+    void on_render_item(int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font);
+    void on_dblclick_item(const scrollable_list::entry_data *entry);
     void refill();
 
     virtual escrollable_list *dcast_scrollable_list() override { return this; }

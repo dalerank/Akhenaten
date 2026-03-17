@@ -162,10 +162,13 @@ static void draw_foreground(int) {
     }
     ui::label(43, 5, vec2i{224, 342}, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    ui::begin_widget(list_pos, true);
-    data.panel->draw();
+    {
+        ui::begin_widget(list_pos, true);
+        data.panel->draw();
+        ui::end_widget();
+    }
     ui::end_widget();
-    ui::end_widget();
+
     ui::flush_commands();
 
     graphics_set_to_dialog();
@@ -218,7 +221,7 @@ static void button_ok_cancel(int is_ok, int param2) {
 
 static void button_select_file(int index, int param2) {
     auto& data = g_file_dialog_load;
-    if (index >= data.panel->get_total_entries()) {
+    if (index >= data.panel->items_count()) {
         return clear_chosen_filename();
     }
 

@@ -117,7 +117,6 @@ js_Import js_registerimport(js_State *J, js_Import importFunc);
 js_Emit js_registeremit(js_State *J, js_Emit emitFunc);
 
 void js_eval(js_State *J);
-void js_construct(js_State *J, int n);
 /** Dump current JS call stack (name, file, line) to stdout. Use when id/undefined to find caller. */
 void js_stacktrace(js_State *J);
 
@@ -132,7 +131,6 @@ void js_getglobal(js_State *J, const char *name);
 void js_setglobal(js_State *J, const char *name);
 void js_defglobal(js_State *J, const char *name, int atts);
 
-void js_getproperty(js_State *J, int idx, const char *name);
 void js_setproperty(js_State *J, int idx, const char *name);
 void js_defproperty(js_State *J, int idx, const char *name, int atts);
 void js_delproperty(js_State *J, int idx, const char *name);
@@ -160,7 +158,6 @@ void js_pushboolean(js_State *J, int v);
 void js_pushnumber(js_State *J, double v);
 void js_pushstring(js_State *J, const char *v);
 void js_pushlstring(js_State *J, const char *v, int n);
-void js_pushliteral(js_State *J, const char *v);
 
 void js_newobject(js_State *J);
 void js_newarray(js_State *J);
@@ -188,7 +185,6 @@ int js_isarray(js_State *J, int idx);
 int js_isregexp(js_State *J, int idx);
 int js_iscoercible(js_State *J, int idx);
 int js_isuserdata(js_State *J, int idx, const char *tag);
-void *js_stack_alloc(int size);
 void *js_frame_alloc(js_State *J, int size);
 void js_frame_free(js_State *J, void *ptr);
 

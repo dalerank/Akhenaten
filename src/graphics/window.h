@@ -25,6 +25,10 @@ struct windows_manager_t {
     void update_input_after();
     void handle_input(const mouse *m, const hotkeys *h);
     void handle_tooltip(const mouse *m);
+    bool window_is(xstring id);
+
+    static xstring window_city;
+    static xstring window_main_menu;
 };
 
 extern windows_manager_t g_window_manager;
@@ -32,8 +36,6 @@ extern windows_manager_t g_window_manager;
 void window_draw(int force);
 
 void window_draw_underlying_window(int);
-
-bool window_is(xstring id);
 
 void window_show(const window_type* window);
 

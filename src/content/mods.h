@@ -7,6 +7,8 @@
 #include "core/hvector.h"
 #include "core/archive.h"
 
+struct event_mods_info_updated { size_t count; };
+
 struct mod_entry {
     xstring name;
     xstring desc;
@@ -59,7 +61,12 @@ struct mod_reader {
     vfs::reader reader;
 };
 
-extern flat_map<xstring, mod_info, 32> g_mods_list;
+struct mods_mananger {
+    flat_map<xstring, mod_info, 32> list;
+    bool inupdate = false;
+};
+
+extern mods_mananger g_mods;
 
 vfs::path mods_get_path(xstring hash);
 bool mods_get_enabled(xstring hash);
@@ -72,6 +79,7 @@ void mods_save();
 void mods_load();
 void mods_refresh_available_list();
 void mods_download_mod_async(xstring name);
+void mods_download_info_async();
 
 mod_reader mods_find_script(pcstr script_path, bool find_in_enabled);
 mod_reader mods_find_audio(pcstr wav_path);

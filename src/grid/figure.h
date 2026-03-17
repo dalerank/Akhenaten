@@ -42,4 +42,4 @@ inline int map_figure_foreach_until(tile2i tile, int test) { return map_figure_f
 void map_figure_clear();
 void map_figure_sort_by_y();
 
-custom_span<figure_draw> map_figures_in_row(tile2i tile);
+xspan<figure_draw> map_figures_in_row(tile2i tile);

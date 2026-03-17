@@ -157,7 +157,7 @@ void scenario_data_t::set_campaign_scenario(int scenario_id) {
     settings.campaign_scenario_id = scenario_id;
 }
 
-bool scenario_data_t::is_scenario_id(custom_span<int> missions) {
+bool scenario_data_t::is_scenario_id(xspan<int> missions) {
     const bool is_custom_map = settings.scmode != e_scenario_normal;
     if (is_custom_map) {
         return false;

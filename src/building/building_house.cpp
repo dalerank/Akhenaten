@@ -910,7 +910,7 @@ e_house_progress building_house::check_evolve_desirability() {
     return status;
 }
 
-static void create_house_tile(e_building_type type, tile2i tile, int image_id, int population, custom_span<int> inventory, custom_span<int> foods) {
+static void create_house_tile(e_building_type type, tile2i tile, int image_id, int population, xspan<int> inventory, xspan<int> foods) {
     auto house = building_create(type, tile, 0)->dcast_house();
 
     auto &housed = house->runtime_data();

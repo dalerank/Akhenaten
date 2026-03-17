@@ -1,9 +1,12 @@
 #include "input_box.h"
 
 #include "game/system.h"
-#include "graphics/elements/panel.h"
+#include "graphics/elements/ui.h"
+#include "graphics/screen.h"
 #include "graphics/text.h"
 #include "input/keyboard.h"
+
+using namespace ui::opt;
 
 void input_box_start(input_box* box, uint8_t* text, int length, int allow_punctuation) {
     box->text = text;
@@ -41,12 +44,15 @@ static int is_mouse_inside_input(const mouse* m, const input_box* box) {
 }
 
 void input_box_draw(const input_box* box) {
-    inner_panel_draw({ box->x, box->y }, { box->width_blocks, box->height_blocks });
-    text_capture_cursor(keyboard_cursor_position(), keyboard_offset_start(), keyboard_offset_end());
-    int text_x = box->x + 16;
-    int text_y = box->y + 10;
-    text_draw(box->text, text_x, text_y, box->font, 0);
-    text_draw_cursor(text_x, text_y + 1, keyboard_is_insert());
+    const vec2i base = screen_dialog_offset();
+    const int text_x = box->x + 16;
+    const int text_y = box->y + 10;
+
+    ui::cursor_capture(keyboard_cursor_position(), keyboard_offset_start(), keyboard_offset_end());
+    ui::push(ui::cmd_t::panel_inner, Pos{base + vec2i{box->x, box->y}}, Size{vec2i{box->width_blocks, box->height_blocks}});
+    ui::push(ui::cmd_t::text_colored, Pos{base + vec2i{text_x, text_y - 3}}, Font{box->font}, TextColor{0}, BoxWidth{0}, Caption{(pcstr)box->text});
+    text_draw_cursor(text_x, text_y + 1, keyboard_is_insert(), base + vec2i{text_x, text_y + 1});
+    ui::cursor_consume();
 }
 
 int input_box_handle_mouse(const mouse* m, const input_box* box) {

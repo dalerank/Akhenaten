@@ -63,7 +63,7 @@ class build_planner {
     xstring immediate_warning;
     xstring extra_warning;
 
-    void set_graphics_row(int row, custom_span<int> image_ids, int def);
+    void set_graphics_row(int row, xspan<int> image_ids, int def);
 
     void setup_build_flags();
     void setup_build_graphics(); // fills in data automatically
@@ -142,7 +142,7 @@ private:
     void setup_build(e_building_type type);
 
 public:
-    void set_graphics_array(custom_span<int> image_set, vec2i size);
+    void set_graphics_array(xspan<int> image_set, vec2i size);
 
     void construction_start(tile2i tile);
     void construction_update(tile2i tile);

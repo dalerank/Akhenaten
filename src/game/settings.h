@@ -125,6 +125,7 @@ struct game_settings {
 
     bool show_victory_video() { victory_video = !victory_video; return victory_video; }
     void set_player_name(const uint8_t* player_name);
+    void set_player_name_utf8(pcstr name_utf8);
 
     int personal_savings_for_mission(int mission_id) { return personal_savings[mission_id]; }
     void set_personal_savings_for_mission(int mission_id, int savings) { personal_savings[mission_id] = savings; }

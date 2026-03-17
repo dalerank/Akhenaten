@@ -281,7 +281,7 @@ struct scenario_data_t {
     e_scenario_mode mode();
     void set_mode(e_scenario_mode m) { settings.scmode = m; }
 
-    bool is_scenario_id(custom_span<int> missions);
+    bool is_scenario_id(xspan<int> missions);
 
     int startup_funds() const;
     int rescue_loan() const;

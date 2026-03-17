@@ -3,14 +3,15 @@
 #include <functional>
 #include <iosfwd>
 #include <string>
+#include <stdarg.h>
 #include <string_view>
-#include <vector>
 #include <cstdint>
 #include <cstring>
 #include <cctype>
 #include <algorithm>
 
 #include "core/cstring_allocator.h"
+#include <core/bstring.h>
 #include "core/crc32.h"
 
 // Base string type using custom allocator
@@ -58,6 +59,12 @@ public:
     inline const char *c_str() const { return _str.c_str(); }
     inline const char *data() const { return _str.data(); }
 
+    inline auto begin() { return _str.begin(); }
+    inline auto end() { return _str.end(); }
+
+    inline auto begin() const { return _str.begin(); }
+    inline auto end() const { return _str.end(); }
+
     inline int32_t size() const { return _str.size(); }
 
     inline bool empty() const { return _str.empty(); }
@@ -68,6 +75,9 @@ public:
     int32_t find(char ch, int32_t nStartPos = 0) const;
     int32_t find(const cstring &String, int32_t nStartPos = 0) const;
 
+    size_t find_first_not_of(const char *szChars, int32_t nStartPos = 0) const { return _str.find_first_not_of(szChars, static_cast<size_t>(nStartPos)); }
+    size_t find_last_not_of(const char *szChars, int32_t nStartPos = -1) const { return _str.find_last_not_of(szChars, nStartPos >= 0 ? static_cast<size_t>(nStartPos) : std::string::npos); }
+
     // Return index to last instance found or -1 if not found
     int32_t findLast(char ch, int32_t nStartPos = -1) const;
     int32_t findLast(const char *szString) const;
@@ -75,6 +85,20 @@ public:
     template <typename... Args>
     cstring &Concat(Args&&... args) {
         ((*this += std::forward<Args>(args)), ...);
+        return *this;
+    }
+
+    template<size_t N = 1024>
+    cstring &printf(const char *format, ...) {
+        char buf[N] = { 0 };
+        va_list p;
+        va_start(p, format);
+        int vs_sz = vsnprintf(buf, sizeof(buf) - 1, format, p);
+        buf[sizeof(buf) - 1] = 0;
+        va_end(p);
+        if (vs_sz) {
+            _str = buf;
+        }
         return *this;
     }
 
@@ -119,6 +143,7 @@ public:
     }
 
     void removeAt(int32_t nPos);
+    void resize(size_t s) { _str.resize(s); }
 
     char &operator[](uint32_t index);
     const char &operator[](uint32_t index) const;
@@ -139,6 +164,7 @@ public:
     bool operator>(const cstring &other) const;
     cstring &operator+=(const cstring &other);
     cstring &operator+=(const std::string_view &other);
+    cstring &operator+=(const bstring32 &other);
     cstring &operator+=(const char *other);
     cstring &operator+=(char other);
 
@@ -148,16 +174,6 @@ public:
 
     bool startsWith(const cstring &other) const;
     bool endsWith(const cstring &other) const;
-
-    void AddSpacing() { *this += " "; }
-    void AddSpacingIfNeeded();
-    void AddNewline() { *this += "\n"; }
-    void AddDoubleNewline() { *this += "\n\n"; }
-    void AddNewlineIfNeeded() { AddNewlinesIfNeeded(1); }
-    void AddDoubleNewlineIfNeeded() { AddNewlinesIfNeeded(2); }
-    void AddNewlinesIfNeeded(int32_t nAmountToAdd);
-
-    void IndentLine() { *this += "   "; }
 
     const BaseStringType &get_string() const { return _str; }
     BaseStringType &access() { return _str; }
@@ -221,6 +237,12 @@ inline cstring operator+(cstring &&lhs, cstring &&rhs) {
     return tmp;
 }
 
+inline cstring operator+(cstring &&lhs, const std::string_view rhs) {
+    cstring tmp = std::move(lhs);
+    tmp += rhs.data();
+    return tmp;
+}
+
 inline cstring operator+(const char *s1, const cstring &s2) {
     cstring str(s1);
     str += s2;
@@ -243,7 +265,7 @@ struct std::hash<cstring> {
  * @brief User-defined literal to create CFrameString from a string literal.
  * @example "GFX_topbar_"_framestr + EnumToString( eView ) + "_button"
  */
-inline cstring operator"" _framestr(const char *str, std::size_t len) {
+inline cstring operator""_framestr(const char *str, std::size_t len) {
     cstring Ret(frameAlloc());
     Ret += std::string_view(str, static_cast<size_t>(len));
     return Ret;

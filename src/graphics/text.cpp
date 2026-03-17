@@ -52,12 +52,28 @@ void text_capture_cursor(int cursor_position, int offset_start, int offset_end) 
     input_cursor.text_offset_end = offset_end;
 }
 
-void text_draw_cursor(int x_offset, int y_offset, int is_insert) {
-    if (!input_cursor.capture)
-        return;
+bool text_cursor_capture_active(void) {
+    return input_cursor.capture != 0;
+}
+void text_cursor_consume_capture(void) {
     input_cursor.capture = 0;
+}
+int text_cursor_x_offset(void) {
+    return input_cursor.x_offset;
+}
+int text_cursor_y_offset(void) {
+    return input_cursor.y_offset;
+}
+int text_cursor_width(void) {
+    return input_cursor.width;
+}
+
+void text_draw_cursor(int x_offset, int y_offset, int is_insert, vec2i base_screen_pos) {
+    (void)x_offset;
+    (void)y_offset;
     time_millis curr = time_get_millis();
     time_millis diff = curr - input_cursor.updated;
+
     if (!input_cursor.visible && diff >= 200) {
         input_cursor.visible = 1;
         input_cursor.updated = curr;
@@ -65,21 +81,12 @@ void text_draw_cursor(int x_offset, int y_offset, int is_insert) {
         input_cursor.visible = 0;
         input_cursor.updated = curr;
     }
+
     if (input_cursor.visible) {
         if (is_insert) {
-            graphics_draw_horizontal_line(vec2i{x_offset + input_cursor.x_offset - 3, x_offset + input_cursor.x_offset + 1},
-                                          y_offset + input_cursor.y_offset - 3,
-                                          COLOR_WHITE);
-            graphics_draw_vertical_line(vec2i{x_offset + input_cursor.x_offset - 1, y_offset + input_cursor.y_offset - 3},
-                                        y_offset + input_cursor.y_offset + 13,
-                                        COLOR_WHITE);
-            graphics_draw_horizontal_line(vec2i{x_offset + input_cursor.x_offset - 3, x_offset + input_cursor.x_offset + 1},
-                                          y_offset + input_cursor.y_offset + 14,
-                                          COLOR_WHITE);
+            ui::draw_cursor_insert(base_screen_pos);
         } else {
-            ui::fill_rect(vec2i{x_offset + input_cursor.x_offset, y_offset + input_cursor.y_offset + 14},
-                                 vec2i{input_cursor.width, 2},
-                                 COLOR_WHITE);
+            ui::draw_cursor_block(base_screen_pos, 0);
         }
     }
 }
@@ -102,7 +109,7 @@ int text_get_width(const uint8_t* str, e_font font) {
     int width = 0;
     int last_letter_spacing = 0;
     int has_chars = 0;
-    
+
     while (*str && maxlen > 0) {
         int num_bytes = 1;
         if (*str == ' ')
@@ -122,12 +129,12 @@ int text_get_width(const uint8_t* str, e_font font) {
         str += num_bytes;
         maxlen -= num_bytes;
     }
-    
+
     // Remove letter_spacing after the last character
     if (has_chars && last_letter_spacing > 0) {
         width -= last_letter_spacing;
     }
-    
+
     return width;
 }
 
@@ -152,7 +159,7 @@ static int get_word_width(const uint8_t* str, e_font font, int* out_num_chars) {
     int word_char_seen = 0;
     int num_chars = 0;
     int last_letter_spacing = 0;
-    
+
     while (*str && ++guard < 200) {
         int num_bytes = 1;
         if (*str == ' ' || *str == '\n') {
@@ -165,7 +172,7 @@ static int get_word_width(const uint8_t* str, e_font font, int* out_num_chars) {
         } else if (*str == '$') {
             if (word_char_seen)
                 break;
-            
+
             str += 1;
             num_chars += 1;
         } else {
@@ -179,18 +186,18 @@ static int get_word_width(const uint8_t* str, e_font font, int* out_num_chars) {
                     width += last_letter_spacing;
                 }
             }
-            
+
             word_char_seen = 1;
             str += num_bytes;
             num_chars += num_bytes;
         }
     }
-    
+
     // Remove letter_spacing after the last character
     if (word_char_seen && last_letter_spacing > 0) {
         width -= last_letter_spacing;
     }
-    
+
     *out_num_chars = num_chars;
     return width;
 }
@@ -217,7 +224,7 @@ uint32_t text_get_max_length_for_width(const uint8_t* str, int length, e_font fo
             s += num_bytes;
             maxlen -= num_bytes;
         }
-        
+
         // Remove spacing after last letter
         if (last_letter_spacing > 0) {
             width -= last_letter_spacing;
@@ -236,27 +243,27 @@ uint32_t text_get_max_length_for_width(const uint8_t* str, int length, e_font fo
         unsigned int width = 0;
         int last_letter_spacing = 0;
         int char_count = 0;
-        
+
         while (maxlen) {
             int num_bytes;
             int letter_width = get_letter_width(str, def, &num_bytes);
-            
+
             // Check width without the trailing spacing
             int check_width = width + letter_width;
             if (*str != ' ' && char_count > 0) {
                 check_width -= def->letter_spacing;
             }
-            
+
             if (check_width > requested_width)
                 break;
-            
+
             width += letter_width;
             if (*str != ' ') {
                 last_letter_spacing = def->letter_spacing;
             } else {
                 last_letter_spacing = 0;
             }
-            
+
             str += num_bytes;
             maxlen -= num_bytes;
             char_count++;
@@ -274,7 +281,7 @@ void text_ellipsize(uint8_t* str, e_font font, int requested_width) {
     int length_with_ellipsis = 0;
     int last_letter_spacing = 0;
     int has_chars = 0;
-    
+
     while (*str && maxlen > 0) {
         int num_bytes = 1;
         if (*str == ' ')
@@ -329,7 +336,7 @@ int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color
     int current_x = x;
     int last_letter_spacing = 0;
     int has_letters = 0;
-    
+
     while (length > 0) {
         int num_bytes = 1;
 
@@ -384,6 +391,7 @@ int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color
     current_x += def->space_width;
     return current_x - x;
 }
+
 void text_draw_centered(const uint8_t* str, int x, int y, int box_width, e_font font, color color) {
     int offset = (box_width - (int)text_get_width(str, font)) / 2;
     if (offset < 0) {
@@ -392,6 +400,7 @@ void text_draw_centered(const uint8_t* str, int x, int y, int box_width, e_font 
 
     text_draw(str, offset + x, y, font, color);
 }
+
 int text_draw_left(pcstr str, int x, int y, e_font font, color color) {
     return text_draw(str, x - (int)text_get_width(str, font), y, font, color);
 }
@@ -415,21 +424,25 @@ int text_draw_number(int value, char prefix, const char* postfix, int x_offset, 
     number_to_string(str, value, prefix, postfix);
     return text_draw(str, x_offset, y_offset, font, 0);
 }
+
 int text_draw_number_colored(int value, char prefix, const char* postfix, int x_offset, int y_offset, e_font font, color color) {
     uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, prefix, postfix);
     return text_draw(str, x_offset, y_offset, font, color);
 }
+
 void text_draw_number_centered(int value, int x_offset, int y_offset, int box_width, e_font font) {
     uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, '@', " ");
     text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
+
 void text_draw_number_centered_prefix(int value, char prefix, int x_offset, int y_offset, int box_width, e_font font) {
     uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, prefix, " ");
     text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
+
 void text_draw_number_centered_colored(int value, int x_offset, int y_offset, int box_width, e_font font, color color) {
     uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, '@', " ");
@@ -455,6 +468,7 @@ int text_draw_label_and_number(const char* label, int value, const char* postfix
     number_to_string(pos, value, '@', postfix);
     return text_draw(str, x_offset, y_offset, font, color);
 }
+
 void text_draw_label_and_number_centered(const char* label, int value, const char* postfix, int x_offset, int y_offset, int box_width, e_font font, color color) {
     uint8_t str[2 * NUMBER_BUFFER_LENGTH];
     uint8_t* pos = label ? string_copy((const uint8_t*)label, str, NUMBER_BUFFER_LENGTH) : str;
@@ -484,25 +498,25 @@ int text_draw_multiline(xstring strkey, vec2i offset, int box_width, e_font font
         while (has_more_characters) {
             int word_num_chars;
             int word_width = get_word_width((const uint8_t*)str, font, &word_num_chars);
-            
+
             // If adding this word would exceed box width and we already have content, break to next line
             if (line_index > 0 && current_width + word_width >= box_width) {
                 break;
             }
-            
+
             // Skip whitespace at start of line
             while (line_index == 0 && *str && (unsigned char)*str <= ' ') {
                 str++;
                 word_num_chars--;
             }
-            
+
             // Copy word to line buffer
             for (int i = 0; i < word_num_chars; i++) {
                 tmp_line[line_index++] = *str++;
             }
-            
+
             current_width += word_width;
-            
+
             if (!*str) {
                 has_more_characters = 0;
                 break;
@@ -510,7 +524,7 @@ int text_draw_multiline(xstring strkey, vec2i offset, int box_width, e_font font
                 str++;
                 break;
             }
-            
+
             // Check if we've filled the line
             if (current_width >= box_width) {
                 break;
@@ -522,6 +536,7 @@ int text_draw_multiline(xstring strkey, vec2i offset, int box_width, e_font font
 
     return y - offset.y;
 }
+
 int text_measure_multiline(pcstr str, int box_width, e_font font) {
     int has_more_characters = 1;
     int guard = 0;
@@ -535,16 +550,16 @@ int text_measure_multiline(pcstr str, int box_width, e_font font) {
         while (has_more_characters) {
             int word_num_chars;
             int word_width = get_word_width((const uint8_t*)str, font, &word_num_chars);
-            
+
             // If adding this word would exceed box width and we already have content, break to next line
             if (line_has_content && current_width + word_width >= box_width) {
                 break;
             }
-            
+
             str += word_num_chars;
             current_width += word_width;
             line_has_content = 1;
-            
+
             if (!*str) {
                 has_more_characters = 0;
                 break;
@@ -552,7 +567,7 @@ int text_measure_multiline(pcstr str, int box_width, e_font font) {
                 str++;
                 break;
             }
-            
+
             // Check if we've filled the line
             if (current_width >= box_width) {
                 break;

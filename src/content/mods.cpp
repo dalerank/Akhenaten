@@ -23,17 +23,17 @@
 #include <curl/curl.h>
 #endif
 
-flat_map<xstring, mod_info, 32> g_mods_list;
+mods_mananger g_mods;
 mods_config ANK_VARIABLE_N(g_mods_config, "mods");
 
 mod_info& mods_add_remote_file(xstring name, xstring uri) {
-    auto it = g_mods_list.find(name);
+    auto it = g_mods.list.find(name);
 
-    if (it != g_mods_list.end()) {
+    if (it != g_mods.list.end()) {
         return it->second;
     }
 
-    auto &new_mod = g_mods_list[name];
+    auto &new_mod = g_mods.list[name];
     new_mod.path = "";
     new_mod.downloaded = false;
     new_mod.url = uri;
@@ -43,24 +43,24 @@ mod_info& mods_add_remote_file(xstring name, xstring uri) {
 }
 
 vfs::path mods_get_path(xstring name) {
-    auto it = g_mods_list.find(name);
-    if (it == g_mods_list.end()) {
+    auto it = g_mods.list.find(name);
+    if (it == g_mods.list.end()) {
         return "";
     }
     return it->second.path.c_str();
 }
 
 bool mods_get_enabled(xstring name) {
-    auto it = g_mods_list.find(name);
-    if (it == g_mods_list.end()) {
+    auto it = g_mods.list.find(name);
+    if (it == g_mods.list.end()) {
         return false;
     }
     return it->second.enabled;
 }
 
 void mods_set_enabled(xstring name, bool enabled) {
-    auto it = g_mods_list.find(name);
-    if (it == g_mods_list.end()) {
+    auto it = g_mods.list.find(name);
+    if (it == g_mods.list.end()) {
         return;
     }
     it->second.enabled = enabled;
@@ -111,9 +111,18 @@ static int mods_download_progress_callback(void* clientp, curl_off_t dltotal, cu
 }
 #endif
 
+void mods_download_info_async() {
+    game.mt.detach_task([] () {
+        g_mods.inupdate = true;
+        mods_refresh_available_list();
+        g_mods.inupdate = false;
+        events::emit(event_mods_info_updated{ g_mods.list.size() });
+    });
+}
+
 void mods_download_mod_async(xstring name) {
-    auto it = g_mods_list.find(name);
-    if (it == g_mods_list.end()) {
+    auto it = g_mods.list.find(name);
+    if (it == g_mods.list.end()) {
         logs::error("Mod not found: %s", name.c_str());
         return;
     }
@@ -138,8 +147,8 @@ void mods_download_mod_async(xstring name) {
 #ifdef GAME_HAVE_CURL
     // Start download in background thread
     game.mt.detach_task([name]() {
-        auto it = g_mods_list.find(name);
-        if (it == g_mods_list.end()) {
+        auto it = g_mods.list.find(name);
+        if (it == g_mods.list.end()) {
             return;
         }
         
@@ -252,8 +261,8 @@ void mods_download_mod_async(xstring name) {
 }
 
 void mods_toggle(xstring name) {
-    auto it = g_mods_list.find(name);
-    if (it == g_mods_list.end()) {
+    auto it = g_mods.list.find(name);
+    if (it == g_mods.list.end()) {
         return;
     }
 
@@ -262,7 +271,7 @@ void mods_toggle(xstring name) {
 }
 
 void mods_remount() {
-    for (auto &it : g_mods_list) {
+    for (auto &it : g_mods.list) {
         if (!it.second.downloaded) {
             continue;
         }
@@ -309,7 +318,7 @@ void mods_remount() {
 }
 
 void mods_init() {
-    g_mods_list.clear();
+    g_mods.list.clear();
 
     auto append_mods = [] (pcstr dir, const dir_listing *files) {
         for (int i = 0; i < files->num_files; ++i) {
@@ -318,9 +327,9 @@ void mods_init() {
             mod_name_short.replace_str(dir, "");
 
             xstring mod_name(mod_name_short.c_str());
-            auto it = g_mods_list.find(mod_name);
-            if (it == g_mods_list.end()) {
-                mod_info &mod = g_mods_list[mod_name];
+            auto it = g_mods.list.find(mod_name);
+            if (it == g_mods.list.end()) {
+                mod_info &mod = g_mods.list[mod_name];
                 mod.path.printf("Mods/%s", files->files[i]);
                 mod.name = mod_name;
                 mod.downloaded = true;
@@ -348,8 +357,8 @@ void mods_init() {
 }
 
 const mod_info &mods_find(xstring hash) {
-    auto it = g_mods_list.find(hash);
-    if (it != g_mods_list.end()) {
+    auto it = g_mods.list.find(hash);
+    if (it != g_mods.list.end()) {
         return it->second;
     }
 
@@ -364,7 +373,7 @@ vfs::path mods_exist_audio(pcstr wav_path) {
 
     vfs::path name_lower(wav_path);
     name_lower.tolower();
-    for (const auto &it : g_mods_list) {
+    for (const auto &it : g_mods.list) {
         if (!it.second.enabled) {
             continue;
         }
@@ -384,7 +393,7 @@ mod_reader mods_find_audio(pcstr wav_path) {
         return {};
     }
 
-    for (const auto &it : g_mods_list) {
+    for (const auto &it : g_mods.list) {
         if (!it.second.enabled) {
             continue;
         }
@@ -408,7 +417,7 @@ mod_reader mods_find_script(pcstr script_path, bool find_in_enabled) {
         return {};
     }
 
-    for (const auto &it : g_mods_list) {
+    for (const auto &it : g_mods.list) {
         if (!it.second.enabled) {
             continue;
         }
@@ -429,7 +438,7 @@ mod_reader mods_find_script(pcstr script_path, bool find_in_enabled) {
 
 void mods_save() {
     std::string enabled_mods;
-    for (const auto &it : g_mods_list) {
+    for (const auto &it : g_mods.list) {
         if (it.second.enabled) {
             enabled_mods.append(it.first.c_str());
             enabled_mods.append(",");

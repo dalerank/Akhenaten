@@ -40,8 +40,8 @@ public:
     empire_city *city(int city_id);
     empire_city *city(pcstr name);
 
-    custom_span<empire_city> get_cities() { return make_span(cities); }
-    custom_span<trade_route> get_routes() { return make_span(trade_routes.routes); }
+    xspan<empire_city> get_cities() { return make_span(cities); }
+    xspan<trade_route> get_routes() { return make_span(trade_routes.routes); }
 
     template<typename T, typename F>
     void select_cities(T& arr, F func) {

@@ -52,8 +52,9 @@ static void Fp_toString(js_State *J)
 	char *s = 0;
 	int i, n;
 
-	if (!J->iscallable(0))
+	if (!J->iscallable(0)) {
 		js_typeerror(J, "not a function");
+	}
 
 	if (self->type == JS_CFUNCTION || self->type == JS_CSCRIPT) {
 		js_Function *F = self->u.f.function;
@@ -61,13 +62,15 @@ static void Fp_toString(js_State *J)
 		n += strlen(F->name);
 		for (i = 0; i < F->numparams; ++i)
 			n += strlen(F->vartab[i]) + 1;
-		//s = js_malloc(J, n);
-		s = (char*)js_stack_alloc(n + 16);
+
+		s = (char*)js_frame_alloc(J, n + 16);
 		strcpy(s, "function ");
 		strcat(s, F->name);
 		strcat(s, "(");
 		for (i = 0; i < F->numparams; ++i) {
-			if (i > 0) strcat(s, ",");
+			if (i > 0) {
+				strcat(s, ",");
+			}
 			strcat(s, F->vartab[i]);
 		}
 		strcat(s, ") { ... }");
@@ -76,10 +79,9 @@ static void Fp_toString(js_State *J)
 			js_throw(J);
 		}
 		js_pushstring(J, s);
-		//js_free(J, s);
 		js_endtry(J);
 	} else {
-		js_pushliteral(J, "function () { ... }");
+		J->pushliteral("function () { ... }");
 	}
 }
 
@@ -124,11 +126,11 @@ static void callbound(js_State *J)
 
 	fun = js_gettop(J);
 	js_currentfunction(J);
-	js_getproperty(J, fun, "__TargetFunction__");
-	js_getproperty(J, fun, "__BoundThis__");
+	J->getproperty(fun, "__TargetFunction__");
+	J->getproperty(fun, "__BoundThis__");
 
 	args = js_gettop(J);
-	js_getproperty(J, fun, "__BoundArguments__");
+	J->getproperty(fun, "__BoundArguments__");
 	n = js_getlength(J, args);
 	for (i = 0; i < n; ++i)
 		js_getindex(J, args, i);
@@ -147,10 +149,10 @@ static void constructbound(js_State *J)
 
 	fun = js_gettop(J);
 	js_currentfunction(J);
-	js_getproperty(J, fun, "__TargetFunction__");
+	J->getproperty(fun, "__TargetFunction__");
 
 	args = js_gettop(J);
-	js_getproperty(J, fun, "__BoundArguments__");
+	J->getproperty(fun, "__BoundArguments__");
 	n = js_getlength(J, args);
 	for (i = 0; i < n; ++i)
 		js_getindex(J, args, i);
@@ -159,7 +161,7 @@ static void constructbound(js_State *J)
 	for (i = 1; i < top; ++i)
 		js_copy(J, i);
 
-	js_construct(J, n + top - 1);
+	J->construct(n + top - 1);
 }
 
 static void Fp_bind(js_State *J)
@@ -177,7 +179,7 @@ static void Fp_bind(js_State *J)
 		n = 0;
 
 	/* Reuse target function's prototype for HasInstance check. */
-	js_getproperty(J, 0, "prototype");
+	J->getproperty(0, "prototype");
 	js_newcconstructor(J, callbound, constructbound, "[bind]", n);
 
 	/* target function */

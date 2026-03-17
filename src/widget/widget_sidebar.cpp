@@ -146,7 +146,7 @@ void ui::sidebar_window_expanded_t::ui_draw_foreground(UiFlags flags) {
 
     ui.pos.x = x_offset;
 
-    const bool is_disabled = !(window_is("window_city") || window_is("window_build_menu"));
+    const bool is_disabled = !(g_window_manager.window_is("window_city") || g_window_manager.window_is("window_build_menu"));
     const UiFlags wflags = is_disabled ? UiFlags_Darkened : UiFlags_None;
 
     ui.begin_widget(ui.pos);

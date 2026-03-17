@@ -31,7 +31,7 @@ void bind_debug_console_var_float(pcstr var, float &ref);
 void bind_debug_console_var_bool(pcstr var, bool &ref);
 
 void game_debug_show_property(pcstr field, const int &v, bool disabled = false);
-void game_debug_show_property(pcstr field, const uint8_t &v, custom_span<pcstr> modes, bool disabled = false);
+void game_debug_show_property(pcstr field, const uint8_t &v, xspan<pcstr> modes, bool disabled = false);
 void game_debug_show_property(pcstr field, const float &v, bool disabled = false);
 void game_debug_set_property_opt(float opt);
 void game_debug_show_property(pcstr field, const double &v, bool disabled = false);

@@ -99,6 +99,11 @@ cstring &cstring::operator+=(const std::string_view &other) {
     return *this;
 }
 
+cstring &cstring::operator+=(const bstring32 &other) {
+    _str.append(other.c_str(), other.len());
+    return *this;
+}
+
 cstring &cstring::operator+=(const char *other) {
     if (other) {
         _str += other;
@@ -226,33 +231,6 @@ bool cstring::endsWith(const cstring &other) const {
     }
 
     return _str.compare(size() - other.size(), other.size(), other._str) == 0;
-}
-
-void cstring::AddSpacingIfNeeded() {
-    int32_t nSize = size();
-    if (nSize == 0) {
-        return;
-    }
-
-    if (data()[nSize - 1] == '\n' || data()[nSize - 1] == ' ') {
-        return;
-    }
-
-    *this += " ";
-}
-
-void cstring::AddNewlinesIfNeeded(int32_t nAmountToAdd) {
-    int32_t nSize = size();
-    if (nSize == 0) {
-        return;
-    }
-
-    if (data()[nSize - 1] == '\n') {
-        nAmountToAdd--;
-    }
-    for (int32_t i = 0; i < nAmountToAdd; i++) {
-        *this += "\n";
-    }
 }
 
 std::istream &operator>>(std::istream &is, cstring &s) {

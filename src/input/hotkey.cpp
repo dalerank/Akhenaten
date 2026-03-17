@@ -291,7 +291,7 @@ static void add_arrow(const hotkey_mapping& mapping, bool alt) {
     }
 }
 
-void hotkeys::install(const custom_span<hotkey_mapping> &mappings) {
+void hotkeys::install(const xspan<hotkey_mapping> &mappings) {
     auto& data = g_hotkey_data;
     
     data.definitions.clear();
@@ -344,7 +344,7 @@ void hotkey_reset_state(void) {
 
 void hotkey_key_pressed(int key, int modifiers, int repeat) {
     auto& data = g_hotkey_data;
-    if (window_is("window_hotkey_editor")) {
+    if (g_window_manager.window_is("window_hotkey_editor")) {
         window_hotkey_editor_key_pressed(key, modifiers);
         return;
     }
@@ -373,7 +373,7 @@ void hotkey_key_pressed(int key, int modifiers, int repeat) {
 
 void hotkey_key_released(int key, int modifiers) {
     auto& data = g_hotkey_data;
-    if (window_is("window_hotkey_editor")) {
+    if (g_window_manager.window_is("window_hotkey_editor")) {
         window_hotkey_editor_key_released(key, modifiers);
         return;
     }

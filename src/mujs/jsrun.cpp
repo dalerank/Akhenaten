@@ -13,10 +13,6 @@
 #include <malloc.h>
 #endif
 
-namespace js {
-    void jsR_run(js_State *J, js_Function *F);
-}
-
 #define STACK (J->stack)
 #define TOP (J->top)
 #define BOT (J->bot)
@@ -137,11 +133,11 @@ void js_pushlstring(js_State *J, const char *v, int n) {
     ++TOP;
 }
 
-void js_pushliteral(js_State *J, const char *v) {
-    CHECKSTACK(1);
-    STACK[TOP].type = JS_TLITSTR;
-    STACK[TOP].u.litstr = v;
-    ++TOP;
+void js_State::pushliteral(pcstr v) {
+    JCHECKSTACK(1);
+    stack[top].type = JS_TLITSTR;
+    stack[top].u.litstr = v;
+    ++top;
 }
 
 void js_pushobject(js_State *J, js_Object *v) {
@@ -202,7 +198,7 @@ int js_State::iscallable(int idx) {
                v->u.object->type == JS_CSCRIPT ||
                v->u.object->type == JS_CCFUNCTION;
     }
-    
+
     return 0;
 }
 
@@ -214,14 +210,6 @@ int js_isarray(js_State *J, int idx) {
 int js_isregexp(js_State *J, int idx) {
     js_Value *v = stackidx(J, idx);
     return v->type == JS_TOBJECT && v->u.object->type == JS_CREGEXP;
-}
-
-void *js_stack_alloc(int size) {
-#if defined(_WIN32)
-    return _alloca(size);
-#else
-    return alloca(size);
-#endif
 }
 
 void *js_frame_alloc(js_State *J, int size) {
@@ -419,11 +407,11 @@ void js_dup(js_State *J) {
     ++TOP;
 }
 
-void js_dup2(js_State *J) {
-    CHECKSTACK(2);
-    STACK[TOP] = STACK[TOP - 2];
-    STACK[TOP + 1] = STACK[TOP - 1];
-    TOP += 2;
+void js_State::dup2() {
+    JCHECKSTACK(2);
+    stack[top] = stack[top - 2];
+    stack[top + 1] = stack[top - 1];
+    top += 2;
 }
 
 void js_rot2(js_State *J) {
@@ -489,7 +477,7 @@ static void js_pushrune(js_State *J, Rune rune) {
     }
 }
 
-int js_State::hasproperty(js_Object *obj, const char *name) {
+int js_State::hasproperty(js_Object *obj, pcstr name) {
     OZZY_PROFILER_FUNCTION();
 
     js_Property *ref;
@@ -518,7 +506,7 @@ int js_State::hasproperty(js_Object *obj, const char *name) {
 
     case JS_CREGEXP:
         if (!strcmp(name, "source")) {
-            js_pushliteral(J, obj->u.r.source);
+            J->pushliteral(obj->u.r.source);
             return 1;
         }
         if (!strcmp(name, "global")) {
@@ -560,7 +548,7 @@ int js_State::hasproperty(js_Object *obj, const char *name) {
     return 0;
 }
 
-void js_State::getproperty(js_Object *obj, const char *name) {
+void js_State::getproperty(js_Object *obj, pcstr name) {
     if (!hasproperty(obj, name)) {
         pushundefined();
     }
@@ -799,10 +787,6 @@ void js_defglobal(js_State *J, const char *name, int atts) {
     js_pop(J, 1);
 }
 
-void js_getproperty(js_State *J, int idx, const char *name) {
-    J->getproperty(J->toobject(idx), name);
-}
-
 void js_setproperty(js_State *J, int idx, const char *name) {
     jsR_setproperty(J, J->toobject(idx), name);
     js_pop(J, 1);
@@ -967,7 +951,7 @@ void js_State::callwfunction(int n, js_Function *F, js_Environment *scope) {
         pushundefined();
     }
 
-    js::jsR_run(J, F);
+    r_run(F);
     v = *stackidx(J, -1);
     top = --bot; /* clear stack */
     js_pushvalue(J, v);
@@ -1011,7 +995,7 @@ void js_State::callfunction(int n, js_Function *F, js_Environment *scope) {
     }
     js_pop(J, n);
 
-    js::jsR_run(J, F);
+    J->r_run(F);
     v = *stackidx(J, -1);
     top = --bot; /* clear stack */
     js_pushvalue(J, v);
@@ -1027,7 +1011,7 @@ static void jsR_callscript(js_State *J, int n, js_Function *F, js_Environment *s
     }
 
     js_pop(J, n);
-    js::jsR_run(J, F);
+    J->r_run(F);
     v = *stackidx(J, -1);
     TOP = --BOT; /* clear stack */
     js_pushvalue(J, v);
@@ -1099,39 +1083,39 @@ void js_State::call(int n) {
     bot = savebot;
 }
 
-void js_construct(js_State *J, int n) {
+void js_State::construct(int n) {
+    OZZY_PROFILER_FUNCTION();
+
     js_Object *obj;
-    js_Object *prototype;
     js_Object *newobj;
 
-    if (!J->iscallable(-n - 1)) {
+    auto J = this;
+    if (!iscallable(-n - 1)) {
         js_typeerror(J, "called object is not a function");
     }
 
-    obj = J->toobject(-n - 1);
+    obj = toobject(-n - 1);
 
     /* built-in constructors create their own objects, give them a 'null' this */
     if (obj->type == JS_CCFUNCTION && obj->u.c.constructor) {
-        int savebot = BOT;
+        int savebot = bot;
         js_pushnull(J);
-        if (n > 0)
+        if (n > 0) {
             js_rot(J, n + 1);
-        BOT = TOP - n - 1;
+        }
+        bot = top - n - 1;
 
-        J->pushtrace(obj->u.c.name, "native", 0);
+        pushtrace(obj->u.c.name, "native", 0);
         jsR_callcfunction(J, n, obj->u.c.length, obj->u.c.constructor);
-        --J->tracetop;
+        --tracetop;
 
-        BOT = savebot;
+        bot = savebot;
         return;
     }
 
     /* extract the function object's prototype property */
-    js_getproperty(J, -n - 1, "prototype");
-    if (J->isobject(-1))
-        prototype = J->toobject(-1);
-    else
-        prototype = J->Object_prototype;
+    J->getproperty(-n - 1, "prototype");
+    js_Object *prototype = (isobject(-1)) ? toobject(-1) : Object_prototype;
     js_pop(J, 1);
 
     /* create a new object with above prototype, and shift it into the 'this' slot */
@@ -1141,10 +1125,10 @@ void js_construct(js_State *J, int n) {
         js_rot(J, n + 1);
 
     /* call the function */
-    J->call(n);
+    call(n);
 
     /* if result is not an object, return the original object we created */
-    if (!J->isobject(-1)) {
+    if (!isobject(-1)) {
         js_pop(J, 1);
         js_pushobject(J, newobj);
     }
@@ -1168,7 +1152,7 @@ int js_pconstruct(js_State *J, int n) {
         TOP = savetop + 1;
         return 1;
     }
-    js_construct(J, n);
+    J->construct(n);
     js_endtry(J);
     return 0;
 }
@@ -1288,7 +1272,7 @@ void js_trap(js_State *J, int pc) {
     js_stacktrace(J);
 }
 
-void js::jsR_run(js_State *J, js_Function *F) {
+void js_State::r_run(js_Function *F) {
     OZZY_PROFILER_FUNCTION();
 
     js_Function **FT = F->funtab;
@@ -1305,17 +1289,18 @@ void js::jsR_run(js_State *J, js_Function *F) {
     int ix, iy, okay;
     int b;
 
+    auto J = this;
     while (1) {
-        if (J->gccounter > JS_GCLIMIT) {
-            J->gccounter = 0;
-            js_gc(J, 0);
+        if (gccounter > JS_GCLIMIT) {
+            gccounter = 0;
+            js_gc(this, 0);
         }
 
         js_OpCode opcode = (js_OpCode)(*pc++);
         switch (opcode) {
         case OP_POP: js_pop(J, 1); break;
         case OP_DUP: js_dup(J); break;
-        case OP_DUP2: js_dup2(J); break;
+        case OP_DUP2: dup2(); break;
         case OP_ROT2: js_rot2(J); break;
         case OP_ROT3: js_rot3(J); break;
         case OP_ROT4: js_rot4(J); break;
@@ -1325,7 +1310,7 @@ void js::jsR_run(js_State *J, js_Function *F) {
         case OP_NUMBER_POS: js_pushnumber(J, *pc++); break;
         case OP_NUMBER_NEG: js_pushnumber(J, -(*pc++)); break;
         case OP_NUMBER: js_pushnumber(J, NT[*pc++]); break;
-        case OP_STRING: js_pushliteral(J, ST[*pc++]); break;
+        case OP_STRING: pushliteral(ST[*pc++]); break;
 
         case OP_CLOSURE: js_newfunction(J, FT[*pc++], J->E); break;
         case OP_NEWOBJECT: js_newobject(J); break;
@@ -1367,7 +1352,7 @@ void js::jsR_run(js_State *J, js_Function *F) {
             }
         } break;
 
-        case OP_UNDEF: J->pushundefined(); break;
+        case OP_UNDEF: pushundefined(); break;
         case OP_NULL: js_pushnull(J); break;
         case OP_TRUE: js_pushboolean(J, 1); break;
         case OP_FALSE: js_pushboolean(J, 0); break;
@@ -1411,7 +1396,7 @@ void js::jsR_run(js_State *J, js_Function *F) {
 
         case OP_HASVAR:
             if (!js_hasvar(J, ST[*pc++]))
-                J->pushundefined();
+                pushundefined();
             break;
 
         case OP_SETVAR:
@@ -1419,13 +1404,13 @@ void js::jsR_run(js_State *J, js_Function *F) {
             break;
 
         case OP_DELVAR:
-            b = J->delvar(ST[*pc++]);
+            b = delvar(ST[*pc++]);
             js_pushboolean(J, b);
             break;
 
         case OP_IN:
             str = js_tostring(J, -2);
-            if (!J->isobject(-1)) {
+            if (!isobject(-1)) {
                 js_typeerror(J, "operand to 'in' is not an object");
             }
             b = J->hasproperty(-1, str);
@@ -1434,21 +1419,21 @@ void js::jsR_run(js_State *J, js_Function *F) {
             break;
 
         case OP_INITPROP:
-            obj = J->toobject(-3);
+            obj = toobject(-3);
             str = js_tostring(J, -2);
             jsR_setproperty(J, obj, str);
             js_pop(J, 2);
             break;
 
         case OP_INITGETTER:
-            obj = J->toobject(-3);
+            obj = toobject(-3);
             str = js_tostring(J, -2);
             jsR_defproperty(J, obj, str, 0, NULL, jsR_tofunction(J, -1), NULL);
             js_pop(J, 2);
             break;
 
         case OP_INITSETTER:
-            obj = J->toobject(-3);
+            obj = toobject(-3);
             str = js_tostring(J, -2);
             jsR_defproperty(J, obj, str, 0, NULL, NULL, jsR_tofunction(J, -1));
             js_pop(J, 2);
@@ -1456,44 +1441,44 @@ void js::jsR_run(js_State *J, js_Function *F) {
 
         case OP_GETPROP:
             str = js_tostring(J, -1);
-            obj = J->toobject_pending(-2, str);
+            obj = toobject_pending(-2, str);
             J->getproperty(obj, str);
             js_rot3pop2(J);
             break;
 
         case OP_GETPROP_S:
             str = ST[*pc++];
-            obj = J->toobject_pending(-1, str);
+            obj = toobject_pending(-1, str);
             J->getproperty(obj, str);
             js_rot2pop1(J);
             break;
 
         case OP_SETPROP:
             str = js_tostring(J, -2);
-            obj = J->toobject_pending(-3, str);
+            obj = toobject_pending(-3, str);
             jsR_setproperty(J, obj, str);
             js_rot3pop2(J);
             break;
 
         case OP_SETPROP_S:
             str = ST[*pc++];
-            obj = J->toobject_pending(-2, str);
+            obj = toobject_pending(-2, str);
             jsR_setproperty(J, obj, str);
             js_rot2pop1(J);
             break;
 
         case OP_DELPROP:
             str = js_tostring(J, -1);
-            obj = J->toobject(-2);
-            b = J->rdelproperty(obj, str);
+            obj = toobject(-2);
+            b = rdelproperty(obj, str);
             js_pop(J, 2);
             js_pushboolean(J, b);
             break;
 
         case OP_DELPROP_S:
             str = ST[*pc++];
-            obj = J->toobject(-1);
-            b = J->rdelproperty(obj, str);
+            obj = toobject(-1);
+            b = rdelproperty(obj, str);
             js_pop(J, 1);
             js_pushboolean(J, b);
             break;
@@ -1507,10 +1492,10 @@ void js::jsR_run(js_State *J, js_Function *F) {
             break;
 
         case OP_NEXTITER:
-            obj = J->toobject(-1);
+            obj = toobject(-1);
             str = jsV_nextiterator(J, obj);
             if (str) {
-                js_pushliteral(J, str);
+                pushliteral(str);
                 js_pushboolean(J, 1);
             } else {
                 js_pop(J, 1);
@@ -1529,7 +1514,7 @@ void js::jsR_run(js_State *J, js_Function *F) {
             break;
 
         case OP_NEW:
-            js_construct(J, *pc++);
+            J->construct(*pc++);
             break;
 
         case OP_EMIT:
@@ -1544,7 +1529,7 @@ void js::jsR_run(js_State *J, js_Function *F) {
         case OP_TYPEOF:
             str = js_typeof(J, -1);
             js_pop(J, 1);
-            js_pushliteral(J, str);
+            pushliteral(str);
             break;
 
         case OP_POS:
@@ -1745,7 +1730,7 @@ void js::jsR_run(js_State *J, js_Function *F) {
             /* With */
 
         case OP_WITH:
-            obj = J->toobject(-1);
+            obj = toobject(-1);
             J->E = jsR_newenvironment(J, obj, J->E);
             js_pop(J, 1);
             break;
@@ -1784,10 +1769,10 @@ void js::jsR_run(js_State *J, js_Function *F) {
             return;
 
         case OP_LINE:
-            J->trace[J->tracetop].line = *pc++;
-            if (J->debug_hook) {
-                const js_StackTrace &t = J->trace[J->tracetop];
-                J->debug_hook(J, t.file, t.line, J->debug_hook_udata);
+            trace[tracetop].line = *pc++;
+            if (debug_hook) {
+                const js_StackTrace &t = trace[tracetop];
+                debug_hook(J, t.file, t.line, debug_hook_udata);
             }
             break;
         }

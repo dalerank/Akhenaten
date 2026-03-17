@@ -223,7 +223,7 @@ static void pobject(int d, js_Ast *list)
 	ps("}");
 }
 
-static void pstr(const char *s)
+static void ppstr(const char *s)
 {
 	static const char *HEX = "0123456789ABCDEF";
 	Rune c;
@@ -291,7 +291,7 @@ static void pexpi(int d, int p, js_Ast *exp)
 	case AST_IDENTIFIER: ps(exp->string); break;
 	case EXP_IDENTIFIER: ps(exp->string); break;
 	case EXP_NUMBER: printf("%.9g", exp->number); break;
-	case EXP_STRING: pstr(exp->string); break;
+	case EXP_STRING: ppstr(exp->string); break;
 	case EXP_REGEXP: pregexp(exp->string, exp->number); break;
 
 	case EXP_UNDEF: break;
@@ -660,7 +660,7 @@ static void snode(int d, js_Ast *node)
 	default: break;
 	case AST_IDENTIFIER: pc(' '); ps(node->string); break;
 	case EXP_IDENTIFIER: pc(' '); ps(node->string); break;
-	case EXP_STRING: pc(' '); pstr(node->string); break;
+	case EXP_STRING: pc(' '); ppstr(node->string); break;
 	case EXP_REGEXP: pc(' '); pregexp(node->string, node->number); break;
 	case EXP_NUMBER: printf(" %.9g", node->number); break;
 	case STM_BLOCK: afun = sblock; break;
@@ -751,7 +751,7 @@ void jsC_dumpfunction(js_State *J, js_Function *F)
 			break;
 		case OP_STRING:
 			pc(' ');
-			pstr(F->strtab[*p++]);
+			ppstr(F->strtab[*p++]);
 			break;
 		case OP_NEWREGEXP:
 			pc(' ');

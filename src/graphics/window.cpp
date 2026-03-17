@@ -7,12 +7,20 @@
 #include "graphics/elements/ui.h"
 #include "platform/renderer.h"
 #include "core/tokenum.h"
+#include "graphics/elements/ui_js.h"
 #include "js/js_game.h"
 
 windows_manager_t g_window_manager;
 
+xstring windows_manager_t::window_city = "window_city";
+xstring windows_manager_t::window_main_menu = "window_main_menu";
+
+struct event_window_back { vec2i pos; };
+ANK_REGISTER_STRUCT_WRITER(event_window_back, pos)
+
 static void noop(int) {
 }
+
 static void noop_input(const mouse* m, const hotkeys* h) {
 }
 
@@ -35,11 +43,13 @@ static void decrease_queue_index(void) {
     if (data.queue_index < 0) {
         data.queue_index = data.window_queue.size() - 1;
     }
+
+    auto w = data.window_queue[data.queue_index];
+    ui::event(event_window_back{ vec2i{0, 0} }, w.id.c_str(), "on_restore");
 }
 
-bool window_is(xstring id) {
-    auto& data = g_window_manager;
-    return data.current_window->id == id;
+bool windows_manager_t::window_is(xstring id) {
+    return current_window->id == id;
 }
 
 xstring window_get_id() {
@@ -51,6 +61,7 @@ void window_show(const window_type* window) {
     auto& data = g_window_manager;
     // push window into queue of screens to render
     reset_input();
+    ui::stop_active_input();
     ui::begin_frame();
     increase_queue_index();
     data.window_queue[data.queue_index] = *window;
@@ -69,11 +80,15 @@ void window_show(const window_type* window) {
 void window_go_back() {
     auto& data = g_window_manager;
     // cant exit from city with rmb
-    if (data.current_window->id == "window_city" || data.current_window->id == "window_main_menu") {
+    if (data.current_window->id == windows_manager_t::window_city 
+        || data.current_window->id == windows_manager_t::window_main_menu) {
         return;
     }
+
     reset_input();
+    ui::stop_active_input();
     decrease_queue_index();
+
     data.current_window = &data.window_queue[data.queue_index];
 }
 

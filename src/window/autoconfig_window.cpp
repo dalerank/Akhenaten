@@ -47,6 +47,10 @@ autoconfig_window::autoconfig_window(pcstr s) {
     autoconfig_registry()[s] = this;
 }
 
+void autoconfig_window::on_restore() {
+    ui.event(window_info{ pos }, get_section(), __func__);
+}
+
 void autoconfig_window::archive_load(archive arch) {
     ui::widget::archive_load(arch);
 
@@ -109,15 +113,15 @@ void autoconfig_window::init() {
     _is_inited = true;
 }
 
-static autoconfig_window* get_window_current(pcstr name) {
+static autoconfig_window* get_window_current(xstring name) {
     auto it = autoconfig_registry().find(name);
     return (it != autoconfig_registry().end()) ? it->second : nullptr;
 }
 
-void autoconfig_window::show_by_section(pcstr section) {
+void autoconfig_window::show(xstring section) {
     auto it = autoconfig_registry().find(section);
     if (it == autoconfig_registry().end()) {
-        logs::error("autoconfig_window_show: unknown section '%s'", section);
+        logs::error("autoconfig_window_show: unknown section '%s'", section.c_str());
         return;
     }
     autoconfig_window* w = it->second;

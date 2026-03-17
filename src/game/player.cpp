@@ -130,12 +130,11 @@ const char* player_get_last_autosave() {
 }
 
 bool player_data_prepare_savegame(const char* filename_short) {
-    // concatenate string
-    bstring256 savefile = vfs::content_path(fullpath_saves(filename_short));
+    vfs::path savefile = fullpath_saves(filename_short);
     bstring256 folders = vfs::content_path(fullpath_saves(""));
 
     vfs::create_folders(folders);
-    // write file
+    // write file (serialize applies content_path internally; do not pass pre-resolved path)
     return FILEIO.serialize(savefile, 0, FILE_FORMAT_SAVE_FILE, latest_save_version, [] (e_file_format file_format, const int file_version) {
         FILEIO.push_chunk(4, false, "family_index", 0);
     });

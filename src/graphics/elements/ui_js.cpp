@@ -16,6 +16,7 @@
 #include "city/city_building_menu_ctrl.h"
 #include "graphics/graphics.h"
 #include "core/profiler.h"
+#include "core/flat_map.h"
 #include "game/game.h"
 
 void __ui_draw_image(int imgid, vec2i pos) { ui::eimage(imgid, pos); } ANK_FUNCTION_2(__ui_draw_image);
@@ -58,7 +59,9 @@ void __ui_dialog_show_yesno(pcstr text, js_helpers::js_function_ref cb_yes, js_h
 }
 ANK_FUNCTION_3(__ui_dialog_show_yesno)
 
-bool __ui_window_is(pcstr window_id) { return window_is(window_id); } ANK_FUNCTION_1(__ui_window_is)
+void __ui_dialog_show_ok(pcstr text) { popup_dialog::show_ok(text, [] {}); } ANK_FUNCTION_1(__ui_dialog_show_ok)
+
+bool __ui_window_is(pcstr window_id) { return g_window_manager.window_is(window_id); } ANK_FUNCTION_1(__ui_window_is)
 void __ui_window_advisors_show_advisor(int advisor) { window_advisors_show_advisor((e_advisor)advisor); } ANK_FUNCTION_1(__ui_window_advisors_show_advisor)
 void __ui_draw_label(pcstr text, vec2i pos, int font) { ui::label(text, pos, (e_font)font); } ANK_FUNCTION_3(__ui_draw_label);
 void __ui_draw_line(bool hline, vec2i pos, int size) { ui::line(hline, pos, size, 0xff000000); } ANK_FUNCTION_3(__ui_draw_line);
@@ -75,15 +78,15 @@ void __ui_window_build_menu_show(int id) { window_build_menu_show(id); } ANK_FUN
 void __ui_widget_sidebar_set_type(int id) { widget_sidebar_set_type(id); } ANK_FUNCTION_1(__ui_widget_sidebar_set_type)
 int __ui_widget_sidebar_city_offset_x() { return widget_sidebar_city_offset_x(); } ANK_FUNCTION(__ui_widget_sidebar_city_offset_x)
 
-ui::element* __ui_get_element(pcstr element_id) {
-    OZZY_PROFILER_SECTION(_, bstring128("ui:get_elem+", element_id).c_str())
+ui::element* __ui_get_element(xstring element_id) {
+    OZZY_PROFILER_SECTION(_, bstring128("ui:get_elem+", element_id.c_str()).c_str())
     ui::widget *w = ui::get_current_widget();
-    return (w && element_id) ? &(*w)[element_id] : nullptr;
+    return (w && !element_id.empty()) ? &(*w)[element_id] : nullptr;
 }
 
 // In MuJS: index 0 = this, index 1 = first argument.
 ui::element *GET_ELEM(js_State *J) {
-    js_getproperty(J, 0, "id");
+    J->getproperty(0, "id");
     pcstr id = js_isstring(J, -1) ? js_tostring(J, -1) : nullptr;
     js_pop(J, 1);
     if (!id || strcmp(id, "undefined") == 0) {
@@ -109,6 +112,9 @@ void ui_proxy_set_image(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem
 void ui_proxy_get_selected(js_State *J) { auto elem = GET_ELEM(J); js_pushboolean(J, elem ? elem->selected() : false); }
 void ui_proxy_set_selected(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->select(js_toboolean(J, 1)); } J->pushundefined(); }
 void ui_proxy_set_tooltip(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->tooltip(xstring(js_tostring(J, 1))); } J->pushundefined(); }
+void ui_proxy_get_noop_render_item(js_State *J) { (void)J; J->pushundefined(); }
+void ui_proxy_get_value(js_State *J) { auto elem = GET_ELEM(J); js_pushstring(J, elem ? elem->get_value() : ""); }
+void ui_proxy_set_value(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->set_value(js_tostring(J, 1)); } J->pushundefined(); }
 
 void ui_proxy_add_item(js_State *J) {
     ui::element* elem = GET_ELEM(J);
@@ -119,30 +125,111 @@ void ui_proxy_add_item(js_State *J) {
     J->pushundefined();
 }
 
-void js_register_ui_proxy_accessors(js_State *J) {
-    js_newobject(J);
-    struct { const char *name; js_CFunction getter; js_CFunction setter; } props[] = {
-        {"text", ui_proxy_get_text, ui_proxy_set_text},
-        {"enabled", ui_proxy_get_enabled, ui_proxy_set_enabled},
-        {"readonly", ui_proxy_get_readonly, ui_proxy_set_readonly},
-        {"font", ui_proxy_get_font, ui_proxy_set_font},
-        {"text_color", ui_proxy_get_text_color, ui_proxy_set_text_color},
-        {"image", ui_proxy_get_noop, ui_proxy_set_image},
-        {"selected", ui_proxy_get_selected, ui_proxy_set_selected},
-        {"tooltip", ui_proxy_get_noop, ui_proxy_set_tooltip},
-    };
-    for (const auto &p : props) {
-        js_newarray(J);
-        js_newcfunction(J, p.getter, "", 0);
-        js_setindex(J, -2, 0);
-        js_newcfunction(J, p.setter, "", 1);
-        js_setindex(J, -2, 1);
-        js_setproperty(J, -2, p.name);
+void ui_proxy_clear(js_State *J) {
+    ui::element* elem = GET_ELEM(J);
+    if (elem) {
+        auto* list = elem->dcast_scrollable_list();
+        if (list) list->clear();
     }
-    js_setglobal(J, "__ui_proxy_accessors");
+    J->pushundefined();
+}
 
-    js_newcfunction(J, ui_proxy_add_item, "add_item", 1);
-    js_setglobal(J, "__ui_proxy_add_item");
+void ui_proxy_select_item(js_State *J) {
+    ui::element* elem = GET_ELEM(J);
+    auto list = elem ? elem->dcast_scrollable_list() : nullptr;
+    if (list) {
+        pcstr text = js_isstring(J, 1) ? js_tostring(J, 1) : "";
+        list->select_item(text);
+    }
+    J->pushundefined();
+}
+
+void ui_proxy_select_entry(js_State *J) {
+    ui::element* elem = GET_ELEM(J);
+    if (elem) {
+        auto* list = elem->dcast_scrollable_list();
+        if (list) list->select_entry(js_tointeger(J, 1));
+    }
+    J->pushundefined();
+}
+
+void ui_proxy_refresh_file_finder(js_State *J) {
+    ui::element* elem = GET_ELEM(J);
+    if (elem) {
+        auto* list = elem->dcast_scrollable_list();
+        if (list) list->refresh_file_finder();
+    }
+    J->pushundefined();
+}
+
+void ui_proxy_get_selected_text(js_State *J) {
+    ui::element* elem = GET_ELEM(J);
+    int syntax = js_tointeger(J, 1);
+    auto list = elem ? elem->dcast_scrollable_list() : nullptr;
+    xstring text = list ? list->selected_entry_text(syntax).c_str() : "";
+    js_pushstring(J, text.c_str());
+}
+
+void ui_proxy_get_items_count(js_State *J) {
+    ui::element* elem = GET_ELEM(J);
+    auto *list = elem ? elem->dcast_scrollable_list() : nullptr;
+    int items_count = list ? list->items_count() : 0;
+    js_pushnumber(J, items_count);
+}
+
+struct ui_proxy_prop {
+    js_CFunction getter;
+    js_CFunction setter;
+};
+static const flat_map<xstring, ui_proxy_prop, 10> g_ui_proxy_props = {
+    {"text", {ui_proxy_get_text, ui_proxy_set_text}},
+    {"enabled", {ui_proxy_get_enabled, ui_proxy_set_enabled}},
+    {"readonly", {ui_proxy_get_readonly, ui_proxy_set_readonly}},
+    {"font", {ui_proxy_get_font, ui_proxy_set_font}},
+    {"text_color", {ui_proxy_get_text_color, ui_proxy_set_text_color}},
+    {"image", {ui_proxy_get_noop, ui_proxy_set_image}},
+    {"selected", {ui_proxy_get_selected, ui_proxy_set_selected}},
+    {"tooltip", {ui_proxy_get_noop, ui_proxy_set_tooltip}},
+    {"items_count", {ui_proxy_get_items_count, nullptr}},
+    {"value", {ui_proxy_get_value, ui_proxy_set_value}},
+};
+
+struct ui_proxy_func {
+    js_CFunction fn;
+    int nargs;
+};
+static const flat_map<xstring, ui_proxy_func, 16> g_ui_proxy_funcs = {
+    {"add_item", {ui_proxy_add_item, 1}},
+    {"clear", {ui_proxy_clear, 0}},
+    {"select_item", {ui_proxy_select_item, 1}},
+    {"select_index", {ui_proxy_select_entry, 1}},
+    {"refresh_file_finder", {ui_proxy_refresh_file_finder, 0}},
+    {"selected_text", {ui_proxy_get_selected_text, 1}},
+};
+
+void js_push_props(js_State *J, ui::widget* w, pcstr element_id) {
+    const auto &elem = (*w)[element_id];
+    auto props = elem.prop_names();
+    for (const xstring &prop_name : props) {
+        auto it = g_ui_proxy_props.find(prop_name);
+        if (it != g_ui_proxy_props.end()) {
+            js_newcfunction(J, it->second.getter, "", 0);
+            js_newcfunction(J, it->second.setter, "", 1);
+            js_defaccessor(J, -3, prop_name.c_str(), 0);
+        }
+    }
+}
+
+void js_push_funcs(js_State *J, ui::widget* w, pcstr element_id) {
+    const auto &elem = (*w)[element_id];
+    auto funcs = elem.func_names();
+    for (const xstring &func_name : funcs) {
+        auto it = g_ui_proxy_funcs.find(func_name);
+        if (it != g_ui_proxy_funcs.end()) {
+            js_newcfunction(J, it->second.fn, it->first.c_str(), it->second.nargs);
+            js_setproperty(J, -2, func_name.c_str());
+        }
+    }
 }
 
 int __ui_building_menu_items(int type) { return g_building_menu_ctrl.count_items(type); } ANK_FUNCTION_1(__ui_building_menu_items)
@@ -172,6 +259,4 @@ void js_register_ui_objects(js_State *J) {
     _R(UiFlags_PanelSmall)
     _R(UiFlags_PanelOuter)
     _R(UiFlags_ThinBorder)
-
-    js_register_ui_proxy_accessors(J);
 }

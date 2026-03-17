@@ -24,6 +24,10 @@
 #include "graphics/elements/scroll_list_panel.h"
 #include "game/game_pool.h"
 #include "core/profiler.h"
+#include "widget/input_box.h"
+#include "core/encoding.h"
+#include "input/mouse.h"
+#include "graphics/screen.h"
 
 #include <stack>
 
@@ -146,6 +150,8 @@ namespace ui {
         hvector<universal_button, 32> buttons;
         hvector<scrollbar_t*, 4> scrollbars;
         hvector<scrollable_list*, 4> scrollable_lists;
+        hvector<input_box*, 4> input_boxes;
+        einput* active_input = nullptr;
         widget* current_widget = nullptr;
 
         void reset() {
@@ -155,6 +161,7 @@ namespace ui {
             buttons.clear();
             scrollbars.clear();
             scrollable_lists.clear();
+            input_boxes.clear();
             current_widget = nullptr;
         }
 
@@ -210,6 +217,7 @@ static ui::element::ptr create_element(const xstring type) {
     case _("resource_icon"): elm = std::make_shared<ui::eresource_icon>(); break;
     case _("arrow_button"): elm = std::make_shared<ui::earrow_button>(); break;
     case _("border"): elm = std::make_shared<ui::eborder>(); break;
+    case _("input"): elm = std::make_shared<ui::einput>(); break;
     case _("large_button"):
         auto btn = std::make_shared<ui::egeneric_button>();
         btn->mode = 1;
@@ -283,6 +291,7 @@ vec2i ui::current_offset() {
 }
 
 void ui::begin_frame() {
+    text_cursor_consume_capture();
     assert(g_state.buttons.size() < 1000);
     //assert(g_state._offset.size() == 0);
     g_state.reset();
@@ -349,6 +358,8 @@ namespace ui {
         case cmd_t::text_colored:
             if (cmd.box_width > 0) {
                 text_draw_centered(cmd.str.c_str(), cmd.pos.x, cmd.pos.y, cmd.box_width, cmd.font, cmd.clr);
+            } else if (text_cursor_capture_active()) {
+                text_draw((const uint8_t*)cmd.str.c_str(), cmd.pos.x, cmd.pos.y + 3, cmd.font, cmd.clr);
             } else {
                 lang_text_draw_colored(cmd.str.c_str(), cmd.pos.x, cmd.pos.y, cmd.font, cmd.clr);
             }
@@ -400,6 +411,29 @@ namespace ui {
             }
             break;
 
+        case cmd_t::cursor_capture:
+            text_capture_cursor(cmd.pos.x, cmd.pos.y, cmd.box_width);
+            break;
+
+        case cmd_t::cursor_consume:
+            text_cursor_consume_capture();
+            break;
+
+        case cmd_t::cursor_insert: {
+            const vec2i c = cmd.pos + vec2i{text_cursor_x_offset(), text_cursor_y_offset()};
+            graphics_draw_horizontal_line(vec2i{c.x - 3, c.x + 1}, c.y - 3, COLOR_WHITE);
+            graphics_draw_vertical_line(vec2i{c.x - 1, c.y - 3}, c.y + 13, COLOR_WHITE);
+            graphics_draw_horizontal_line(vec2i{c.x - 3, c.x + 1}, c.y + 14, COLOR_WHITE);
+            text_cursor_consume_capture();
+            break;
+        }
+        case cmd_t::cursor_block: {
+            const int w = cmd.box_width > 0 ? cmd.box_width : text_cursor_width();
+            graphics_fill_rect(cmd.pos + vec2i{text_cursor_x_offset(), 14}, vec2i{w, 2}, COLOR_WHITE);
+            text_cursor_consume_capture();
+            break;
+        }
+
         default:
             break;
         }
@@ -439,12 +473,24 @@ bool ui::handle_mouse(const mouse *m) {
         handle |= !!panel->input_handle(m);
     }
 
+    const mouse* m_dialog = mouse_in_dialog(m);
+    for (int i = (int)g_state.input_boxes.size() - 1; i >= 0 && !handle; --i) {
+        handle |= !!input_box_handle_mouse(m_dialog, g_state.input_boxes[i]);
+    }
+
     return handle;
 }
 
 void ui::clear_active_elements() {
     g_state.buttons.clear();
     g_state.scrollbars.clear();
+}
+
+void ui::stop_active_input() {
+    if (g_state.active_input) {
+        g_state.active_input->stop_input();
+        g_state.active_input = nullptr;
+    }
 }
 
 pcstr ui::str(int group, int id) {
@@ -753,6 +799,22 @@ void ui::rect(vec2i pos, vec2i size, int fill, int color, UiFlags flags) {
     }
 }
 
+void ui::cursor_capture(int cursor_position, int offset_start, int offset_end) {
+    push(cmd_t::cursor_capture, Pos{vec2i{cursor_position, offset_start}}, BoxWidth{offset_end});
+}
+
+void ui::cursor_consume() {
+    push_cmd(cmd_t(cmd_t::cursor_consume));
+}
+
+void ui::draw_cursor_insert(vec2i screen_pos) {
+    push(cmd_t::cursor_insert, Pos{screen_pos});
+}
+
+void ui::draw_cursor_block(vec2i screen_pos, int width) {
+    push(cmd_t::cursor_block, Pos{screen_pos}, BoxWidth{width});
+}
+
 void ui::icon(vec2i pos, e_resource res, UiFlags flags) {
     const vec2i offset = g_state.offset();
     const int image_id = image_id_resource_icon(res);
@@ -798,6 +860,11 @@ scrollbar_t &ui::scrollbar(scrollbar_t &scr, vec2i pos, int &value, vec2i size) 
     scrollbar_draw(offset, &scr);
 
     return scr;
+}
+
+xstring ui_element_props[] = { "text", "enabled", "readonly", "font", "text_color", "image", "selected", "tooltip" };
+xspan<xstring> ui::element::prop_names() const {
+    return make_span(ui_element_props);
 }
 
 void ui::element::load(archive arch, element *parent, element::items &items) {
@@ -1060,6 +1127,70 @@ void ui::eborder::draw(UiFlags flags) {
         graphics_draw_rect(offset + pos, size, colori);
         break;
     }
+}
+
+static xstring ui_einput_value_props[] = { "value" };
+xspan<xstring> ui::einput::prop_names() const {
+    return make_span(ui_einput_value_props);
+}
+
+ui::einput::~einput() {
+    js_unref_function(_js_oninput_ref);
+}
+
+void ui::einput::stop_input() {
+    if (_started) {
+        input_box_stop(&_box);
+        _started = false;
+    }
+    if (g_state.active_input == this) {
+        g_state.active_input = nullptr;
+    }
+}
+
+void ui::einput::load(archive arch, element *parent, items &elems) {
+    element::load(arch, parent, elems);
+    _box.font = (e_font)arch.r_type<e_font>("font", FONT_NORMAL_WHITE_ON_DARK);
+    if (size.x <= 0) { size.x = 20; }
+    if (size.y <= 0) { size.y = 2; }
+    _box.width_blocks = size.x;
+    _box.height_blocks = size.y;
+    _box.max_length = arch.r_int("max_length", MAX_PLAYER_NAME - 1);
+    _allow_punctuation = arch.r_int("allow_punctuation", 1);
+    _js_oninput_ref = arch.r_function("oninput");
+}
+
+void ui::einput::draw(UiFlags flags) {
+    const vec2i offset = g_state.offset();
+    const vec2i screen_pos = offset + pos;
+    _box.x = screen_pos.x - screen_dialog_offset_x();
+    _box.y = screen_pos.y - screen_dialog_offset_y();
+    _box.text = _buffer;
+    if (!_started) {
+        input_box_start(&_box, _buffer, _box.max_length, _allow_punctuation);
+        _started = true;
+        g_state.active_input = this;
+        memcpy(_last_buffer, _buffer, sizeof(_buffer));
+    }
+
+    g_state.input_boxes.push_back(&_box);
+    input_box_draw(&_box);
+
+    if (!_js_oninput_ref.empty() && memcmp(_buffer, _last_buffer, sizeof(_buffer)) != 0) {
+        memcpy(_last_buffer, _buffer, sizeof(_buffer));
+        xstring value(get_value());
+        js_call_function_with_result(_js_oninput_ref, bvariant_map{{ "value", bvariant_map_val(value.c_str()) }});
+    }
+}
+
+pcstr ui::einput::get_value() const {
+    static char utf8_buf[MAX_PLAYER_NAME * 4];
+    encoding_to_utf8(_buffer, utf8_buf, (int)sizeof(utf8_buf), encoding_system_uses_decomposed());
+    return utf8_buf;
+}
+
+void ui::einput::set_value(pcstr utf8) {
+    encoding_from_utf8(utf8 ? utf8 : "", _buffer, MAX_PLAYER_NAME);
 }
 
 void ui::eresource_icon::draw(UiFlags flags) {
@@ -1335,6 +1466,30 @@ void ui::escrollable_list::clear() {
     panel->clear_entry_list();
 }
 
+void ui::escrollable_list::on_dblclick_item(const scrollable_list::entry_data *entry) {
+    if (!_js_ondoubleclick_item_ref.empty()) {
+        js_call_function_with_result(_js_ondoubleclick_item_ref, { { "text", entry->text } });
+    }
+}
+
+void ui::escrollable_list::on_render_item(int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font) {
+    if (!_js_render_item_ref.empty()) {
+        js_call_function_with_result(_js_render_item_ref, {
+            { "index", (int32_t)index },
+            { "flags", (int32_t)flags },
+            { "text", entry.text },
+            { "x", (int32_t)pos.x },
+            { "y", (int32_t)pos.y },
+            { "font", (int32_t)font }
+            });
+        return;
+    }
+
+    if (_custom_render_cb) {
+        _custom_render_cb(index, flags, entry, pos, font);
+    }
+}
+
 void ui::escrollable_list::ensure_panel() {
     if (panel) {
         return;
@@ -1342,10 +1497,28 @@ void ui::escrollable_list::ensure_panel() {
 
     panel = std::make_unique<scrollable_list>(button_none, button_none, button_none, button_none, params);
     refill();
+
     panel->set_onclick_entry(_onclick_cb);
-    panel->set_onclick_entry(_onclick_ex_cb);
-    panel->set_onclick_dbl_entry(_onclick_dbl_ex_cb);
-    panel->set_custom_render_func(_custom_render_cb);
+    
+    if (_custom_render_cb || !_js_render_item_ref.empty()) {
+        panel->set_custom_render_func([&](int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font) { 
+            this->on_render_item(index, flags, entry, pos, font);
+        });
+    }
+
+    if (_ondoubleclick_item_cb || !_js_ondoubleclick_item_ref.empty()) {
+        panel->set_onclick_dbl_entry([&] (const scrollable_list::entry_data *entry) {
+            this->on_dblclick_item(entry);
+        });
+    }
+
+    if (_onclick_ex_cb || !_js_onclick_item_ref.empty()) {
+        panel->set_onclick_entry([this] (scrollable_list::entry_data *e) {
+            if (e) {
+                js_call_function_with_result(_js_onclick_item_ref, { { "text", e->text } });
+            }
+        });
+    }
 }
 
 void ui::escrollable_list::add_item(pcstr item) {
@@ -1354,11 +1527,30 @@ void ui::escrollable_list::add_item(pcstr item) {
 }
 
 void ui::escrollable_list::select_item(pcstr item) {
-    if (!panel) {
-        return;
+    if (panel) {
+        panel->select(item);
     }
+}
 
-    panel->select(item);
+void ui::escrollable_list::select_entry(int index) {
+    if (panel) {
+        panel->select_entry(index);
+    }
+}
+
+void ui::escrollable_list::refresh_file_finder() {
+    if (panel) {
+        panel->refresh_file_finder();
+    }
+}
+
+xstring ui::escrollable_list::selected_entry_text(int filename_syntax) const {
+    return panel ? panel->get_selected_entry_text(filename_syntax) : "";
+}
+
+
+int ui::escrollable_list::items_count() const { 
+    return panel ? panel->items_count() : 0;
 }
 
 void ui::escrollable_list::refill() {
@@ -1376,9 +1568,24 @@ void ui::escrollable_list::refill() {
 }
 
 ui::escrollable_list::~escrollable_list() {
+    js_unref_function(_js_render_item_ref);
+    js_unref_function(_js_onclick_item_ref);
+    js_unref_function(_js_ondoubleclick_item_ref);
     g_state.remove_scrollable_list(panel.get());
     // panel will be automatically destroyed by unique_ptr
 }
+
+
+xstring escrollable_list_funcs[] = { "add_item", "clear", "select_item", "select_index", "refresh_file_finder", "selected_text" };
+xspan<xstring> ui::escrollable_list::func_names() const {
+    return escrollable_list_funcs;
+}
+
+xstring escrollable_list_props[] = { "text", "enabled", "readonly", "font", "text_color", "selected", "tooltip", "items_count" };
+xspan<xstring> ui::escrollable_list::prop_names() const {
+    return escrollable_list_props;
+}
+
 
 void ui::escrollable_list::draw(UiFlags flags) {
     ensure_panel();
@@ -1398,6 +1605,10 @@ void ui::escrollable_list::load(archive arch, element *parent, items &elems) {
 
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "scrollable_list"));
+
+    _js_render_item_ref = arch.r_function("onrender_item");
+    _js_onclick_item_ref = arch.r_function("onclick_item");
+    _js_ondoubleclick_item_ref = arch.r_function("ondoubleclick_item");
 
     params.files_dir = arch.r_string("dir");
     params.file_ext = arch.r_string("file_ext");

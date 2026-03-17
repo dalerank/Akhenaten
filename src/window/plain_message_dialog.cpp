@@ -24,7 +24,7 @@ struct plain_message_dialog_t {
 plain_message_dialog_t plain_message_dialog;
 
 static int init(pcstr title, pcstr message, pcstr info) {
-    if (window_is("window_plain_message_dialog")) {
+    if (g_window_manager.window_is("window_plain_message_dialog")) {
         // don't show popup over popup
         return 0;
     }

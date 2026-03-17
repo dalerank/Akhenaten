@@ -22,13 +22,13 @@
 #include "grid/road_access.h"
 
 building g_all_buildings[5000];
-custom_span<building> g_city_buildings = make_span(g_all_buildings);
+xspan<building> g_city_buildings = make_span(g_all_buildings);
 
 building *building_get(building_id id) {
     return &g_all_buildings[id];
 }
 
-custom_span<building> &city_buildings() {
+xspan<building> city_buildings() {
     return g_city_buildings;
 }
 

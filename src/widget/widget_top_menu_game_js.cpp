@@ -36,7 +36,7 @@ pcstr __widget_top_menu_new_game(int, int) {
         g_city_planner.reset();
         game_undo_disable();
         g_city.reset_overlay();
-        autoconfig_window::show_by_section("window_dinasty_menu");
+        autoconfig_window::show("window_dinasty_menu");
     });
 
     return "";

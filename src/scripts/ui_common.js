@@ -62,6 +62,7 @@ ui.window_build_menu_show = __ui_window_build_menu_show
 ui.sidebar_set_type = __ui_widget_sidebar_set_type
 ui.building_menu_items = __ui_building_menu_items
 ui.show_yesno = __ui_dialog_show_yesno
+ui.show_ok = __ui_dialog_show_ok
 
 function px(i) { return i * 16 }
 function sw(v) { return game.screen.w + v}
@@ -107,6 +108,7 @@ function background(config) { return extend({type:"background", down:true}, conf
 function resource_icon(config) { return extend({ type : "resource_icon"}, config) }
 function large_button(config) { return extend({ type : "large_button"}, config) }
 function scrollable_list(config) { return extend({ type : "scrollable_list"}, config) }
+function input(config) { return extend({ type : "input", font : FONT_NORMAL_WHITE_ON_DARK }, config) }
 function menu_item(config) { return extend({ type : "menu_item"}, config) }
 function menu_header(config) { return extend({ type : "menu_header"}, config) }
 

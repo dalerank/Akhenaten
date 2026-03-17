@@ -4,7 +4,7 @@ mods {
     mods_repo [
         { url:"https://api.github.com/repos/dalerank/Akhenaten/contents/mods" }
     ]
- 
+
     mods_list [
         {
             name : "pharaoh_german_voices"
@@ -60,4 +60,14 @@ mods {
             email : "dalerankn8@gmail.com"
         }
     ]
+
+    count : __mods_count
+    name : __mods_name
+    display_name : __mods_display_name
+    enabled : __mods_enabled
+    download_progress : __mods_download_progress
+    downloaded : __mods_downloaded
+    download_mod_async : __mods_download_mod_async
+    toggle : __mods_toggle
+    remount : __mods_remount
 }

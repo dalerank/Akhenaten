@@ -118,7 +118,7 @@ namespace game_features {
     extern game_feature gameplay_prevent_delete_near_burning_ruins;
     extern game_feature gameplay_change_cartpushers_yield_by_id;
 
-    custom_span<game_feature*> all();
+    xspan<game_feature*> all();
     game_feature* find(const xstring& name);
 
     void load();
