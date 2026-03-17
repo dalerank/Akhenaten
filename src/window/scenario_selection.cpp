@@ -468,7 +468,7 @@ static void button_select_campaign(int index, int param2) {
 
 static void button_select_item(int index, int param2) {
     auto &data = g_window_scenario_selection;
-    if (index >= data.panel->get_total_entries())
+    if (index >= data.panel->items_count())
         return;
     switch (data.dialog) {
     case MAP_SELECTION_CUSTOM: {

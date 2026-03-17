@@ -139,21 +139,12 @@ bool js_has_event_handlers(const xstring &event_name) {
 }
 
 /** Stack on entry: event_obj (-2). Creates proxy for element_id and sets event_obj[element_id]. */
-static void js_create_element_proxy(js_State *J, pcstr element_id, xspan<xstring> props, xspan<xstring> funcs) {
+static void js_create_element_proxy(js_State *J, ui::widget* w, pcstr element_id) {
     js_newobject(J);
     js_pushstring(J, element_id);
     js_setproperty(J, -2, "id");
-    for (const xstring& name : props) {
-        if (js_push_proxy_accessors_for_prop(J, name)) {
-            js_defaccessor(J, -3, name.c_str(), 0);
-        }
-    }
-
-    for (const xstring& name : funcs) {
-        if (js_push_proxy_func_for_name(J, name)) {
-            js_setproperty(J, -2, name.c_str());
-        }
-    }
+    js_push_props(J, w, element_id);
+    js_push_funcs(J, w, element_id);
     js_setproperty(J, -2, element_id);  // event_obj at -2, proxy at -1
 }
 
@@ -238,10 +229,7 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
             OZZY_PROFILER_SECTION(_, "has_ui_elements")
             auto w = ui::get_current_widget();
             for (const auto &element_id : ui_element_ids) {
-                const auto &elem = (*w)[element_id];
-                auto props = elem.prop_names();
-                auto funcs = elem.func_names();
-                js_create_element_proxy(J, element_id.c_str(), props, funcs);
+                js_create_element_proxy(J, w, element_id.c_str());
             }
         }
 
@@ -426,13 +414,14 @@ void __game_decrease_scroll_speed() { game.decrease_scroll_speed(); } ANK_FUNCTI
 void __game_set_game_speed(int v) { game.game_speed = v; } ANK_FUNCTION_1(__game_set_game_speed)
 void __game_set_scroll_speed(int v) { game.scroll_speed = v; } ANK_FUNCTION_1(__game_set_scroll_speed)
 void __game_request_exit() { app_request_exit(); } ANK_FUNCTION(__game_request_exit)
-void __game_set_player_name(pcstr name) { g_settings.set_player_name((const uint8_t *)name); } ANK_FUNCTION_1(__game_set_player_name)
+void __game_set_player_name(pcstr name) { g_settings.set_player_name_utf8(name); } ANK_FUNCTION_1(__game_set_player_name)
 pcstr __game_get_player_name() { return g_settings.player_name_utf8.empty() ? g_settings.player_name.c_str() : g_settings.player_name_utf8.c_str(); } ANK_FUNCTION(__game_get_player_name)
 bool __game_load_savegame(pcstr filename) { return GamestateIO::load_savegame(filename); } ANK_FUNCTION_1(__game_load_savegame)
 void __game_load_mission(int scenario_id, int start_immediately) { GamestateIO::load_mission(scenario_id, !!start_immediately); } ANK_FUNCTION_2(__game_load_mission)
 bool __game_file_exists(pcstr path) { return path && *path && vfs::file_exists(path); } ANK_FUNCTION_1(__game_file_exists)
 pcstr __game_get_last_autosave() { const char* p = player_get_last_autosave(); return p ? p : ""; } ANK_FUNCTION(__game_get_last_autosave)
 void __game_load_player_data(pcstr name) { player_data_load((const uint8_t*)name); } ANK_FUNCTION_1(__game_load_player_data)
+void __game_delete_player(pcstr name) { player_data_delete((const uint8_t*)name); } ANK_FUNCTION_1(__game_delete_player)
 
 std::optional<bvariant> __game_get_property(pcstr property) {
     return archive_helper::get(game, property, true);

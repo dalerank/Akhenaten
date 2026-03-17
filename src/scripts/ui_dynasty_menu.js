@@ -16,14 +16,11 @@ function dynasty_menu_btn_resume() {
 function dynasty_menu_btn_explore() { window_scenario_selection_show(MAP_SELECTION_CAMPAIGN) }
 function dynasty_menu_btn_load() { window_file_dialog_load_show(FILE_TYPE_SAVED_GAME) }
 function dynasty_menu_btn_custom() { window_scenario_selection_show(MAP_SELECTION_CUSTOM) }
-function dynasty_menu_btn_back() {
-    window_player_selection_init();
-    window_player_selection_show()
-}
 
 [es=window]
 window_dinasty_menu {
     pos [(sw(0) - px(24))/2, (sh(0) - px(21))/2]
+    allow_rmb_goback : true
     ui {
         background_image: background({pack:PACK_UNLOADED, id:31})
         background      : outer_panel({size[24, 19]})
@@ -33,14 +30,8 @@ window_dinasty_menu {
         btnexplore  : button({margin{centerx: -135, top: 40 + 2 * 40}, size[270, 25], text[293, 6], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: dynasty_menu_btn_explore })
         btnload     : button({margin{centerx: -135, top: 40 + 3 * 40}, size[270, 25], text[293, 2], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: dynasty_menu_btn_load })
         btncustom   : button({margin{centerx: -135, top: 40 + 4 * 40}, size[270, 25], text[293, 3], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: dynasty_menu_btn_custom })
-        btnback     : button({margin{centerx: -135, top: 40 + 5 * 40}, size[270, 25], text[293, 4], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: dynasty_menu_btn_back })
+        btnback     : button({margin{centerx: -135, top: 40 + 5 * 40}, size[270, 25], text[293, 4], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: window_go_back })
     }
-}
-
-[es=(window_dinasty_menu, go_back)]
-function window_dinasty_menu_go_back(window) {
-    window_player_selection_init();
-    window_player_selection_show()
 }
 
 [es=(window_dinasty_menu, init)]

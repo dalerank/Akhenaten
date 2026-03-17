@@ -283,6 +283,7 @@ vec2i ui::current_offset() {
 }
 
 void ui::begin_frame() {
+    text_cursor_consume_capture();
     assert(g_state.buttons.size() < 1000);
     //assert(g_state._offset.size() == 0);
     g_state.reset();
@@ -349,6 +350,8 @@ namespace ui {
         case cmd_t::text_colored:
             if (cmd.box_width > 0) {
                 text_draw_centered(cmd.str.c_str(), cmd.pos.x, cmd.pos.y, cmd.box_width, cmd.font, cmd.clr);
+            } else if (text_cursor_capture_active()) {
+                text_draw((const uint8_t*)cmd.str.c_str(), cmd.pos.x, cmd.pos.y + 3, cmd.font, cmd.clr);
             } else {
                 lang_text_draw_colored(cmd.str.c_str(), cmd.pos.x, cmd.pos.y, cmd.font, cmd.clr);
             }
@@ -399,6 +402,25 @@ namespace ui {
                 }
             }
             break;
+
+        case cmd_t::cursor_capture:
+            text_capture_cursor(cmd.pos.x, cmd.pos.y, cmd.box_width);
+            break;
+
+        case cmd_t::cursor_insert: {
+            const vec2i c = cmd.pos + vec2i{text_cursor_x_offset(), text_cursor_y_offset()};
+            graphics_draw_horizontal_line(vec2i{c.x - 3, c.x + 1}, c.y - 3, COLOR_WHITE);
+            graphics_draw_vertical_line(vec2i{c.x - 1, c.y - 3}, c.y + 13, COLOR_WHITE);
+            graphics_draw_horizontal_line(vec2i{c.x - 3, c.x + 1}, c.y + 14, COLOR_WHITE);
+            text_cursor_consume_capture();
+            break;
+        }
+        case cmd_t::cursor_block: {
+            const int w = cmd.box_width > 0 ? cmd.box_width : text_cursor_width();
+            graphics_fill_rect(cmd.pos + vec2i{text_cursor_x_offset(), 14}, vec2i{w, 2}, COLOR_WHITE);
+            text_cursor_consume_capture();
+            break;
+        }
 
         default:
             break;
@@ -751,6 +773,18 @@ void ui::rect(vec2i pos, vec2i size, int fill, int color, UiFlags flags) {
     } else {
         graphics_draw_rect(offset + pos, size, color);
     }
+}
+
+void ui::cursor_capture(int cursor_position, int offset_start, int offset_end) {
+    push(cmd_t::cursor_capture, Pos{vec2i{cursor_position, offset_start}}, BoxWidth{offset_end});
+}
+
+void ui::draw_cursor_insert(vec2i screen_pos) {
+    push(cmd_t::cursor_insert, Pos{screen_pos});
+}
+
+void ui::draw_cursor_block(vec2i screen_pos, int width) {
+    push(cmd_t::cursor_block, Pos{screen_pos}, BoxWidth{width});
 }
 
 void ui::icon(vec2i pos, e_resource res, UiFlags flags) {
@@ -1371,16 +1405,28 @@ void ui::escrollable_list::ensure_panel() {
 
     panel = std::make_unique<scrollable_list>(button_none, button_none, button_none, button_none, params);
     refill();
-    panel->set_onclick_entry(_onclick_cb);
-    panel->set_onclick_entry(_onclick_ex_cb);
-    panel->set_onclick_dbl_entry(_onclick_dbl_ex_cb);
-    panel->set_custom_render_func([&](int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font) { 
-        this->on_render_item(index, flags, entry, pos, font);
-    });
 
-    panel->set_onclick_dbl_entry([&](const scrollable_list::entry_data *entry) {
-        this->on_dblclick_item(entry);
-    });
+    panel->set_onclick_entry(_onclick_cb);
+    
+    if (_custom_render_cb || !_js_render_item_ref.empty()) {
+        panel->set_custom_render_func([&](int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font) { 
+            this->on_render_item(index, flags, entry, pos, font);
+        });
+    }
+
+    if (_ondoubleclick_item_cb || !_js_ondoubleclick_item_ref.empty()) {
+        panel->set_onclick_dbl_entry([&] (const scrollable_list::entry_data *entry) {
+            this->on_dblclick_item(entry);
+        });
+    }
+
+    if (_onclick_ex_cb || !_js_onclick_item_ref.empty()) {
+        panel->set_onclick_entry([this] (scrollable_list::entry_data *e) {
+            if (e) {
+                js_call_function_with_result(_js_onclick_item_ref, { { "text", e->text } });
+            }
+        });
+    }
 }
 
 void ui::escrollable_list::add_item(pcstr item) {
@@ -1389,11 +1435,30 @@ void ui::escrollable_list::add_item(pcstr item) {
 }
 
 void ui::escrollable_list::select_item(pcstr item) {
-    if (!panel) {
-        return;
+    if (panel) {
+        panel->select(item);
     }
+}
 
-    panel->select(item);
+void ui::escrollable_list::select_entry(int index) {
+    if (panel) {
+        panel->select_entry(index);
+    }
+}
+
+void ui::escrollable_list::refresh_file_finder() {
+    if (!panel) {
+        panel->refresh_file_finder();
+    }
+}
+
+xstring ui::escrollable_list::selected_entry_text(int filename_syntax) const {
+    return panel ? panel->get_selected_entry_text(filename_syntax) : "";
+}
+
+
+int ui::escrollable_list::items_count() const { 
+    return panel ? panel->items_count() : 0;
 }
 
 void ui::escrollable_list::refill() {
@@ -1412,15 +1477,23 @@ void ui::escrollable_list::refill() {
 
 ui::escrollable_list::~escrollable_list() {
     js_unref_function(_js_render_item_ref);
+    js_unref_function(_js_onclick_item_ref);
     js_unref_function(_js_ondoubleclick_item_ref);
     g_state.remove_scrollable_list(panel.get());
     // panel will be automatically destroyed by unique_ptr
 }
 
-xstring escrollable_list_funcs[] = { "add_item", "clear" };
+
+xstring escrollable_list_funcs[] = { "add_item", "clear", "select_item", "select_index", "refresh_file_finder", "selected_text" };
 xspan<xstring> ui::escrollable_list::func_names() const {
     return escrollable_list_funcs;
 }
+
+xstring escrollable_list_props[] = { "text", "enabled", "readonly", "font", "text_color", "selected", "tooltip", "items_count" };
+xspan<xstring> ui::escrollable_list::prop_names() const {
+    return escrollable_list_props;
+}
+
 
 void ui::escrollable_list::draw(UiFlags flags) {
     ensure_panel();
@@ -1442,6 +1515,7 @@ void ui::escrollable_list::load(archive arch, element *parent, items &elems) {
     assert(!strcmp(type, "scrollable_list"));
 
     _js_render_item_ref = arch.r_function("onrender_item");
+    _js_onclick_item_ref = arch.r_function("onclick_item");
     _js_ondoubleclick_item_ref = arch.r_function("ondoubleclick_item");
 
     params.files_dir = arch.r_string("dir");
