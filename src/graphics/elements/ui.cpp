@@ -24,6 +24,10 @@
 #include "graphics/elements/scroll_list_panel.h"
 #include "game/game_pool.h"
 #include "core/profiler.h"
+#include "widget/input_box.h"
+#include "core/encoding.h"
+#include "input/mouse.h"
+#include "graphics/screen.h"
 
 #include <stack>
 
@@ -146,6 +150,8 @@ namespace ui {
         hvector<universal_button, 32> buttons;
         hvector<scrollbar_t*, 4> scrollbars;
         hvector<scrollable_list*, 4> scrollable_lists;
+        hvector<input_box*, 4> input_boxes;
+        einput* active_input = nullptr;
         widget* current_widget = nullptr;
 
         void reset() {
@@ -155,6 +161,7 @@ namespace ui {
             buttons.clear();
             scrollbars.clear();
             scrollable_lists.clear();
+            input_boxes.clear();
             current_widget = nullptr;
         }
 
@@ -210,6 +217,7 @@ static ui::element::ptr create_element(const xstring type) {
     case _("resource_icon"): elm = std::make_shared<ui::eresource_icon>(); break;
     case _("arrow_button"): elm = std::make_shared<ui::earrow_button>(); break;
     case _("border"): elm = std::make_shared<ui::eborder>(); break;
+    case _("input"): elm = std::make_shared<ui::einput>(); break;
     case _("large_button"):
         auto btn = std::make_shared<ui::egeneric_button>();
         btn->mode = 1;
@@ -407,6 +415,10 @@ namespace ui {
             text_capture_cursor(cmd.pos.x, cmd.pos.y, cmd.box_width);
             break;
 
+        case cmd_t::cursor_consume:
+            text_cursor_consume_capture();
+            break;
+
         case cmd_t::cursor_insert: {
             const vec2i c = cmd.pos + vec2i{text_cursor_x_offset(), text_cursor_y_offset()};
             graphics_draw_horizontal_line(vec2i{c.x - 3, c.x + 1}, c.y - 3, COLOR_WHITE);
@@ -461,12 +473,24 @@ bool ui::handle_mouse(const mouse *m) {
         handle |= !!panel->input_handle(m);
     }
 
+    const mouse* m_dialog = mouse_in_dialog(m);
+    for (int i = (int)g_state.input_boxes.size() - 1; i >= 0 && !handle; --i) {
+        handle |= !!input_box_handle_mouse(m_dialog, g_state.input_boxes[i]);
+    }
+
     return handle;
 }
 
 void ui::clear_active_elements() {
     g_state.buttons.clear();
     g_state.scrollbars.clear();
+}
+
+void ui::stop_active_input() {
+    if (g_state.active_input) {
+        g_state.active_input->stop_input();
+        g_state.active_input = nullptr;
+    }
 }
 
 pcstr ui::str(int group, int id) {
@@ -777,6 +801,10 @@ void ui::rect(vec2i pos, vec2i size, int fill, int color, UiFlags flags) {
 
 void ui::cursor_capture(int cursor_position, int offset_start, int offset_end) {
     push(cmd_t::cursor_capture, Pos{vec2i{cursor_position, offset_start}}, BoxWidth{offset_end});
+}
+
+void ui::cursor_consume() {
+    push_cmd(cmd_t(cmd_t::cursor_consume));
 }
 
 void ui::draw_cursor_insert(vec2i screen_pos) {
@@ -1099,6 +1127,70 @@ void ui::eborder::draw(UiFlags flags) {
         graphics_draw_rect(offset + pos, size, colori);
         break;
     }
+}
+
+static xstring ui_einput_value_props[] = { "value" };
+xspan<xstring> ui::einput::prop_names() const {
+    return make_span(ui_einput_value_props);
+}
+
+ui::einput::~einput() {
+    js_unref_function(_js_oninput_ref);
+}
+
+void ui::einput::stop_input() {
+    if (_started) {
+        input_box_stop(&_box);
+        _started = false;
+    }
+    if (g_state.active_input == this) {
+        g_state.active_input = nullptr;
+    }
+}
+
+void ui::einput::load(archive arch, element *parent, items &elems) {
+    element::load(arch, parent, elems);
+    _box.font = (e_font)arch.r_type<e_font>("font", FONT_NORMAL_WHITE_ON_DARK);
+    if (size.x <= 0) { size.x = 20; }
+    if (size.y <= 0) { size.y = 2; }
+    _box.width_blocks = size.x;
+    _box.height_blocks = size.y;
+    _box.max_length = arch.r_int("max_length", MAX_PLAYER_NAME - 1);
+    _allow_punctuation = arch.r_int("allow_punctuation", 1);
+    _js_oninput_ref = arch.r_function("oninput");
+}
+
+void ui::einput::draw(UiFlags flags) {
+    const vec2i offset = g_state.offset();
+    const vec2i screen_pos = offset + pos;
+    _box.x = screen_pos.x - screen_dialog_offset_x();
+    _box.y = screen_pos.y - screen_dialog_offset_y();
+    _box.text = _buffer;
+    if (!_started) {
+        input_box_start(&_box, _buffer, _box.max_length, _allow_punctuation);
+        _started = true;
+        g_state.active_input = this;
+        memcpy(_last_buffer, _buffer, sizeof(_buffer));
+    }
+
+    g_state.input_boxes.push_back(&_box);
+    input_box_draw(&_box);
+
+    if (!_js_oninput_ref.empty() && memcmp(_buffer, _last_buffer, sizeof(_buffer)) != 0) {
+        memcpy(_last_buffer, _buffer, sizeof(_buffer));
+        xstring value(get_value());
+        js_call_function_with_result(_js_oninput_ref, bvariant_map{{ "value", bvariant_map_val(value.c_str()) }});
+    }
+}
+
+pcstr ui::einput::get_value() const {
+    static char utf8_buf[MAX_PLAYER_NAME * 4];
+    encoding_to_utf8(_buffer, utf8_buf, (int)sizeof(utf8_buf), encoding_system_uses_decomposed());
+    return utf8_buf;
+}
+
+void ui::einput::set_value(pcstr utf8) {
+    encoding_from_utf8(utf8 ? utf8 : "", _buffer, MAX_PLAYER_NAME);
 }
 
 void ui::eresource_icon::draw(UiFlags flags) {
@@ -1447,7 +1539,7 @@ void ui::escrollable_list::select_entry(int index) {
 }
 
 void ui::escrollable_list::refresh_file_finder() {
-    if (!panel) {
+    if (panel) {
         panel->refresh_file_finder();
     }
 }

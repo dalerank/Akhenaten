@@ -25,6 +25,8 @@
 #include "graphics/screen.h"
 #include "graphics/image.h"
 #include "graphics/text.h"
+#include "widget/input_box.h"
+#include "game/game_environment.h"
 
 struct mouse;
 struct tooltip_context;
@@ -103,6 +105,7 @@ struct cmd_t {
         cursor_insert,
         cursor_block,
         cursor_capture,
+        cursor_consume,
     };
 
     e_type type = none;
@@ -167,6 +170,7 @@ void begin_widget(vec2i offset, bool relative = false);
 void end_widget();
 bool handle_mouse(const mouse *m);
 void clear_active_elements();
+void stop_active_input();
 
 int label(int group, int number, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags flags = UiFlags_None, int box_width = 0);
 int label(pcstr, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags flags = UiFlags_None, int box_width = 0);
@@ -214,6 +218,7 @@ vec2i current_offset();
 
 // Cursor rendering helpers, used by text drawing code
 void cursor_capture(int cursor_position, int offset_start, int offset_end);
+void cursor_consume();
 void draw_cursor_insert(vec2i center_pos);
 void draw_cursor_block(vec2i pos, int width);
 
@@ -329,6 +334,8 @@ bstring<S> sformat(const T *o, std::string_view fmt) {
     return r;
 }
 
+struct einput;
+
 struct margini {
     static constexpr int nomargin = -99999;
     int left = nomargin;
@@ -404,6 +411,10 @@ struct element {
     virtual eimage_button *dcast_image_button() { return nullptr; }
     virtual escrollable_list *dcast_scrollable_list() { return nullptr; }
     virtual etext *dcast_etext() { return nullptr; }
+    virtual einput *dcast_einput() { return nullptr; }
+
+    virtual pcstr get_value() const { return ""; }
+    virtual void set_value(pcstr) {}
 
     /** Fill \a out with prop names to expose on the JS proxy (default: all from js_proxy::prop_names). */
     virtual xspan<xstring> prop_names() const;
@@ -493,6 +504,25 @@ struct eborder : public element {
 
     virtual void load(archive elem, element *parent, items &elems) override;
     virtual void draw(UiFlags flags) override;
+};
+
+struct einput : public element {
+    input_box _box;
+    uint8_t _buffer[MAX_PLAYER_NAME] = {0};
+    uint8_t _last_buffer[MAX_PLAYER_NAME] = {0};
+    bool _started = false;
+    int _allow_punctuation = 1;
+    xstring _js_oninput_ref;
+
+    ~einput() override;
+    void stop_input();
+
+    virtual void draw(UiFlags flags) override;
+    virtual void load(archive elem, element *parent, items &elems) override;
+    virtual pcstr get_value() const override;
+    virtual void set_value(pcstr utf8) override;
+    virtual xspan<xstring> prop_names() const override;
+    virtual einput *dcast_einput() override { return this; }
 };
 
 struct eresource_icon : public element {
