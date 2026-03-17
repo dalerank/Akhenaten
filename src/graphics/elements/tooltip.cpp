@@ -58,7 +58,7 @@ void tooltip_context::draw_tooltip_impl() {
     int height = 16 * lines + 10;
     int x, y;
     if (mpos.x < screen_dialog_offset_x() + width + 100) {
-        if (window_is("window_advisors"))
+        if (g_window_manager.window_is("window_advisors"))
             x = mpos.x + 50;
         else
             x = mpos.x + 20;

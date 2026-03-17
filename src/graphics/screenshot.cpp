@@ -247,7 +247,7 @@ static void create_window_screenshot() {
 }
 
 static void create_full_city_screenshot() {
-    if (!window_is("window_city") && !window_is("window_city_military")) {
+    if (!g_window_manager.window_is("window_city") && !g_window_manager.window_is("window_city_military")) {
         return;
     }
     vec2i original_camera_pixels = camera_get_position();
@@ -367,7 +367,7 @@ static void create_full_city_screenshot() {
 }
 
 static void create_minimap_screenshot() {
-    if (!window_is("window_city") && !window_is("window_city_military")) {
+    if (!g_window_manager.window_is("window_city") && !g_window_manager.window_is("window_city_military")) {
         return;
     }
 

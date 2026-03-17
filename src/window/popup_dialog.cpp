@@ -12,7 +12,7 @@
 popup_dialog g_popup_dialog;
 
 bool popup_dialog::init(const xstring scheme, xstring header, xstring cbody, window_popup_dialog_callback close_cb, e_popup_dialog_btns buttons) {
-    if (window_is("window_popup_dialog")) {
+    if (g_window_manager.window_is("window_popup_dialog")) {
         // don't show popup over popup
         return false;
     }

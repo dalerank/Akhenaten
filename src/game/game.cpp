@@ -422,7 +422,7 @@ void game_t::update() {
         update_tick(simtime.tick);
     }
 
-    if (window_is("window_city")) {
+    if (g_window_manager.window_is("window_city")) {
         anti_scum_random_15bit();
     }
 
@@ -447,7 +447,7 @@ void game_t::time_init(int year) {
 
 void game_t::sound_frame_begin() {
     OZZY_PROFILER_FUNCTION();
-    if (window_is("window_city") || window_is("window_city_military") || window_is("window_sliding_sidebar")) {
+    if (g_window_manager.window_is("window_city") || g_window_manager.window_is("window_city_military") || g_window_manager.window_is("window_sliding_sidebar")) {
         sound_city_play();
     }
 }

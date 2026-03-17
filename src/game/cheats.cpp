@@ -73,7 +73,7 @@ bool game_cheat_is_active() {
 }
 
 void game_cheat_activate() {
-    if (window_is("window_building_info")) {
+    if (g_window_manager.window_is("window_building_info")) {
         g_cheats_data.is_cheating = (window_building_info_get_type() == BUILDING_WELL);
     } else {
         g_cheats_data.is_cheating = 0;

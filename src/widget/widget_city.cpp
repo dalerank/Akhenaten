@@ -140,7 +140,7 @@ void update_tile_coords(vec2i pixel, tile2i tile, painter &ctx) {
 void screen_city_t::update_clouds(painter &ctx) {
     OZZY_PROFILER_FUNCTION();
 
-    if (game.paused || (!window_is("window_city") && !window_is("window_city_military"))) {
+    if (game.paused || (!g_window_manager.window_is("window_city") && !g_window_manager.window_is("window_city_military"))) {
         g_clouds.pause();
     }
 
@@ -884,7 +884,7 @@ static bool has_confirmed_construction(tile2i ghost, tile2i point, int range_siz
 
 bool screen_city_t::allow_building_info(tile2i tile) {
     int allow = true;
-    if (!window_is("window_city")) {
+    if (!g_window_manager.window_is("window_city")) {
         allow = false;
     }
 
@@ -1305,7 +1305,7 @@ void screen_city_t::draw_tooltip(tooltip_context* c) {
         return;
     }
 
-    if (!window_is("window_city")) {
+    if (!g_window_manager.window_is("window_city")) {
         return;
     }
 

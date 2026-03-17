@@ -53,7 +53,7 @@ static void draw_foreground(int) {
     clear_city_view();
     widget_sidebar_editor_draw_foreground();
     widget_map_editor_draw();
-    if (window_is("window_editor_map"))
+    if (g_window_manager.window_is("window_editor_map"))
         draw_cancel_construction();
 }
 
