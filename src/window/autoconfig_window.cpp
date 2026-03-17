@@ -2,11 +2,13 @@
 
 #include "core/log.h"
 #include "js/js_game.h"
+#include "game/game_events.h"
 #include "window/message_dialog.h"
 #include "core/profiler.h"
 #include "graphics/elements/ui_js.h"
-#include "js/js_struct.h"
 #include "graphics/window.h"
+#include "js/js_struct.h"
+#include "js/js_events.h"
 #include "input/input.h"
 #include <algorithm>
 #include <mutex>
@@ -17,6 +19,12 @@ autoconfig_windows* g_autoconfig_windows = nullptr;
 
 struct window_info{ vec2i pos; };
 ANK_REGISTER_STRUCT_WRITER(window_info, pos);
+
+struct event_show_window { xstring id; };
+ANK_SCRIPT_EVENT(event_show_window, id)
+void ANK_PERMANENT_CALLBACK(event_show_window, ev) {
+    autoconfig_window::show(ev.id);
+}
 
 autoconfig_windows& autoconfig_registry() {
     if (!g_autoconfig_windows) {

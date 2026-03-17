@@ -198,7 +198,7 @@ void ui::window_features::init(std::function<void()> cb) {
 
         auto &pageref = pages.back();
         auto &alias = pageref.features.emplace_back();
-        
+
         alias.get_value = [feature] () -> int { return feature->to_bool(); };
         const bool value = alias.get_value();
         alias.original_value = value;
@@ -274,7 +274,7 @@ void ui::window_features::init(std::function<void()> cb) {
             feature.original_value = value;
             feature.new_value = value;
             feature.change_action = [this, r] () -> bool { this->toggle_resource(r.type); return true; };
-            feature.toggle_action = [&feature] (int p1, int p2) { 
+            feature.toggle_action = [&feature] (int p1, int p2) {
                 feature.new_value = (feature.new_value) ? false : true;
             };
 
@@ -298,7 +298,7 @@ void ui::window_features::init(std::function<void()> cb) {
             auto &pageref = pages.back();
             auto &feature = pageref.features.emplace_back();
 
-            feature.get_value = [lang = config, this] () -> bool { 
+            feature.get_value = [lang = config, this] () -> bool {
                 const xstring curlang = game_features::gameopt_language.to_string();
                 return (curlang == lang.lang || (curlang.empty() && lang.lang == "en"));
             };
@@ -314,7 +314,7 @@ void ui::window_features::init(std::function<void()> cb) {
             };
             feature.text = config.caption;
         }
-    }  
+    }
 
     ui["btn_defaults"].onclick([this] { button_reset_defaults(); });
     ui["btn_hotkeys"].onclick([this] { window_hotkey_config_show([] {}); });
@@ -336,7 +336,7 @@ void ui::window_features::ui_draw_foreground(UiFlags flags) {
 
     for (int i = 0; i < pages[page].features.size(); ++i) {
         auto &feature = pages[page].features[i];
-        
+
         auto &b = btn(i);
         if (feature.volatile_value) {
             b = feature.get_value() ? "x" : "";
