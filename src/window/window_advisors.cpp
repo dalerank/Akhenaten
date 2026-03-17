@@ -198,7 +198,7 @@ void window_advisors::init() {
     });
 
     events::subscribe([this] (event_show_advisor ev) {
-        if (!window_is("window_advisors")) {
+        if (!g_window_manager.window_is("window_advisors")) {
             return;
         }
 

@@ -142,20 +142,20 @@ void window_city_draw_foreground(int) {
     widget_sidebar_city_draw_foreground();
     widget_top_menu_draw();
 
-    if (window_is("window_city") || window_is("window_city_military")) {
+    if (g_window_manager.window_is("window_city") || g_window_manager.window_is("window_city_military")) {
         window_city_draw_paused_and_time_left();
         draw_cancel_construction();
     }
 
     window_city_draw_construction_cost_and_size();
-    if (window_is("window_city")) {
+    if (g_window_manager.window_is("window_city")) {
         city_message_process_queue();
     }
 }
 
 static void cycle_legion(void) {
     static int current_legion_id = 1;
-    if (window_is("window_city")) {
+    if (g_window_manager.window_is("window_city")) {
         int legion_id = current_legion_id;
         current_legion_id = 0;
         for (int i = 1; i < MAX_FORMATIONS; i++) {

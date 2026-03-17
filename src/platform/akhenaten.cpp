@@ -321,7 +321,8 @@ static void run_and_draw() {
         game.fps.frame_count = 0;
     }
 
-    if (!!game_features::gameui_draw_fps && (window_is("window_city") || window_is("window_city_military") || window_is("window_sliding_sidebar"))) {
+    const bool main_windows = (g_window_manager.window_is("window_city") || g_window_manager.window_is("window_city_military") || g_window_manager.window_is("window_sliding_sidebar"));
+    if (!!game_features::gameui_draw_fps && main_windows) {
         int y_offset = screen_height() - 24;
         int y_offset_text = y_offset + 5;
  
