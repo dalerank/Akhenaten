@@ -1,14 +1,22 @@
 #include "app.h"
 
+#include "core/archive.h"
 #include "game/settings.h"
 #include "game/game_events.h"
 #include "game/game_events_history.h"
 #include "platform/screen.h"
 #include "graphics/screenshot.h"
 #include "core/log.h"
+#include "js/js_events.h"
+#include "js/js_game.h"
 #include <SDL.h>
 
 application_t g_application;
+
+ANK_SCRIPT_EVENT(event_request_exit, value)
+void ANK_PERMANENT_CALLBACK(event_request_exit, ev) {
+    app_post_event(USER_EVENT_QUIT);
+}
 
 void app_window_resize(const vec2i& wsize) {
     static int s_width;
@@ -37,10 +45,6 @@ void app_post_event(int code) {
     event.user.type = SDL_USEREVENT;
     event.user.code = code;
     SDL_PushEvent(&event);
-}
-
-void app_request_exit() {
-    app_post_event(USER_EVENT_QUIT);
 }
 
 void app_terminate(const char* message) noexcept {
