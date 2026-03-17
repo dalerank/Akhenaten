@@ -169,6 +169,8 @@ static void draw_foreground(int) {
     }
     ui::end_widget();
 
+    ui::flush_commands();
+
     graphics_set_to_dialog();
     input_box_draw(&file_name_input);
     image_buttons_draw({0, 0}, image_buttons, 2);

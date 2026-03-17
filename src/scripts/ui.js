@@ -61,4 +61,5 @@ import ui_window_city
 import ui_architect_post_window
 import ui_dynasty_menu
 import ui_player_selection
+import ui_new_career
 import ui_records_window
