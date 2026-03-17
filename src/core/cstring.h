@@ -265,7 +265,7 @@ struct std::hash<cstring> {
  * @brief User-defined literal to create CFrameString from a string literal.
  * @example "GFX_topbar_"_framestr + EnumToString( eView ) + "_button"
  */
-inline cstring operator"" _framestr(const char *str, std::size_t len) {
+inline cstring operator""_framestr(const char *str, std::size_t len) {
     cstring Ret(frameAlloc());
     Ret += std::string_view(str, static_cast<size_t>(len));
     return Ret;
