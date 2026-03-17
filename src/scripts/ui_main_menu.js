@@ -57,7 +57,9 @@ function main_menu_show_mods() {
 }
 
 function main_menu_quit_game() {
-    ui.show_yesno("#popup_dialog_quit", __game_request_exit)
+    ui.show_yesno("#popup_dialog_quit", function() {
+		emit event_request_exit{ value: true }
+	})
 }
 
 [es=(main_menu_screen, init)]

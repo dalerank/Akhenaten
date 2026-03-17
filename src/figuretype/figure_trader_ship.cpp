@@ -13,7 +13,6 @@
 #include "grid/figure.h"
 #include "city/city_figures.h"
 #include "dev/debug.h"
-#include "game/game_events.h"
 #include "widget/debug_console.h"
 #include "core/object_property.h"
 #include "figuretype/figure_docker.h"
