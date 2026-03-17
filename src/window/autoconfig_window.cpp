@@ -47,6 +47,10 @@ autoconfig_window::autoconfig_window(pcstr s) {
     autoconfig_registry()[s] = this;
 }
 
+void autoconfig_window::on_restore() {
+    ui.event(window_info{ pos }, get_section(), __func__);
+}
+
 void autoconfig_window::archive_load(archive arch) {
     ui::widget::archive_load(arch);
 
