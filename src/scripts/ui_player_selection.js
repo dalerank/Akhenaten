@@ -10,7 +10,7 @@ function player_selection_on_double_click(entry) {
 }
 
 function player_selection_btn_new() {
-    window_new_career_show()
+    window_show_by_id("window_new_career")
 }
 
 function player_selection_btn_delete() {
@@ -92,6 +92,11 @@ function window_player_selection_ui_draw_foreground(window) {
     if (window_player_selection.need_refresh_list) {
         update_player_list(window)
     }
+}
+
+[es=(window_player_selection, on_restore)]
+function window_player_selection_on_restore(window) {
+    window_player_selection.need_refresh_list = true
 }
 
 [es=(window_player_selection, init)]

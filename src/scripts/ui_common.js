@@ -108,6 +108,7 @@ function background(config) { return extend({type:"background", down:true}, conf
 function resource_icon(config) { return extend({ type : "resource_icon"}, config) }
 function large_button(config) { return extend({ type : "large_button"}, config) }
 function scrollable_list(config) { return extend({ type : "scrollable_list"}, config) }
+function input(config) { return extend({ type : "input", font : FONT_NORMAL_WHITE_ON_DARK }, config) }
 function menu_item(config) { return extend({ type : "menu_item"}, config) }
 function menu_header(config) { return extend({ type : "menu_header"}, config) }
 
