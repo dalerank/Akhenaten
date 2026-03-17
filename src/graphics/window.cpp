@@ -8,7 +8,7 @@
 #include "platform/renderer.h"
 #include "core/tokenum.h"
 #include "graphics/elements/ui_js.h"
-#include "js/js_game.h"
+#include "game/game_events.h"
 
 windows_manager_t g_window_manager;
 
