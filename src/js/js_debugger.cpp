@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include <cassert>
 #include <algorithm>
+#include <numeric>
 #include <sstream>
 
 #ifdef _WIN32
@@ -769,7 +770,14 @@ void MujsDebugger::handle_request(const cstring &body) {
             if (lines.empty()) {
                 logs::info("JS DBG setBreakpoints: %s (none)", base);
             } else {
-                logs::info("JS DBG setBreakpoints: %s lines %zu", base, lines.size());
+                cstring strlines(frameAlloc());
+                char buffer[32] = { 0 };
+                int result = std::accumulate(lines.begin(), lines.end(), 0, [&] (auto &p, auto &item) { 
+                    strlines += itoa(item, buffer, 10); 
+                    strlines += ",";
+                    return 0;
+                });
+                logs::info("JS DBG setBreakpoints: %s lines [%s]", base, strlines.c_str());
             }
         }
 
