@@ -773,7 +773,7 @@ void MujsDebugger::handle_request(const cstring &body) {
                 cstring strlines(frameAlloc());
                 char buffer[32] = { 0 };
                 int result = std::accumulate(lines.begin(), lines.end(), 0, [&] (auto &p, auto &item) { 
-                    strlines += itoa(item, buffer, 10); 
+                    strlines += js_itoa(buffer, item);
                     strlines += ",";
                     return 0;
                 });
