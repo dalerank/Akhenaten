@@ -143,7 +143,7 @@ static int js_vm_notifier_watch_directory_thread(void *ptr) {
 }
 
 void js_vm_notifier_watch_directory_init(const char *dir) {
-    logs::info("start wtaching dir %s", dir);
+    logs::info("start watching dir %s", dir);
     g_script_notifier.dir = dir;
     js_vm_notifier_create_snapshot(dir);
 

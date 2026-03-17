@@ -88,7 +88,7 @@ struct path : public bstring256 {
      * Get the case sensitive and localized filename of the file
      * @param filepath File path to match to a case-sensitive file on the filesystem
      * @param localizable Whether the file may, must or must not be localized
-     * @return Corrected file, or NULL if the file was not found
+     * @return Corrected file, or base path as fallback if the file was not found
      */
     vfs::path resolve();
     static vfs::path resolve(pcstr p) {
