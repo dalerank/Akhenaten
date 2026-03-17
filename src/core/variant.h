@@ -47,6 +47,7 @@ public:
     inline explicit bvariant(uint16_t v) : _value(v) {}
     inline explicit bvariant(uint32_t v) : _value(v) {}
     inline explicit bvariant(uint64_t v) : _value(v) {}
+    inline explicit bvariant(size_t v) : _value(v) {}
     inline explicit bvariant(float v) : _value(v) {}
     inline explicit bvariant(void *v) : _value(v) {}
     inline explicit bvariant(const xstring &v) : _value(v) {}
