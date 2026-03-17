@@ -11,7 +11,12 @@
 struct painter;
 
 void text_capture_cursor(int cursor_position, int offset_start, int offset_end);
-void text_draw_cursor(int x_offset, int y_offset, int is_insert);
+void text_draw_cursor(int x_offset, int y_offset, int is_insert, vec2i base_screen_pos);
+bool text_cursor_capture_active(void);
+void text_cursor_consume_capture(void);
+int text_cursor_x_offset(void);
+int text_cursor_y_offset(void);
+int text_cursor_width(void);
 
 int get_letter_height(const uint8_t *str, e_font font);
 int get_letter_width(const uint8_t *str, const font_definition *def, int *num_bytes);

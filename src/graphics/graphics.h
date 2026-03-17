@@ -27,6 +27,7 @@ void graphics_draw_horizontal_line(vec2i start, int nx, color color);
 void graphics_draw_pixel(vec2i pixel, color color);
 void graphics_draw_rect(vec2i start, vec2i size, color color);
 void graphics_draw_inset_rect(vec2i start, vec2i size);
+void graphics_fill_rect(vec2i start, vec2i size, color color);
 
 void graphics_shade_rect(vec2i start, vec2i size, int darkness);
 

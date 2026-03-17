@@ -66,7 +66,7 @@ public:
     int get_selected_button_id();
     int get_focused_entry_idx();
     int get_selected_entry_idx();
-    int get_total_entries();
+    int items_count();
     const xstring get_entry_text_by_idx(int index, int filename_syntax);
     const xstring get_selected_entry_text(int filename_syntax);
     int get_entry_idx(pcstr button_text);
@@ -101,7 +101,7 @@ public:
 
 private:
     generic_button list_buttons[MAX_BUTTONS_IN_SCROLLABLE_LIST] = {};
-    int num_total_entries = 0;
+    int _items_count = 0;
     int focus_button_id = 0;     // first valid --> 1
     int selected_entry_idx = -1; // first valid --> 0
 

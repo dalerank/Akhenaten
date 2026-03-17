@@ -100,6 +100,9 @@ struct cmd_t {
         small_panel,
         shade_rect,
         large_label,
+        cursor_insert,
+        cursor_block,
+        cursor_capture,
     };
 
     e_type type = none;
@@ -208,6 +211,11 @@ void panel_abs(vec2i pos, vec2i size_blocks, UiFlags flags = UiFlags_None);
 void text_abs(pcstr str, vec2i pos, e_font font, color clr = 0);
 void text_multiline(pcstr text, vec2i pos, int width, e_font font, color clr);
 vec2i current_offset();
+
+// Cursor rendering helpers, used by text drawing code
+void cursor_capture(int cursor_position, int offset_start, int offset_end);
+void draw_cursor_insert(vec2i center_pos);
+void draw_cursor_block(vec2i pos, int width);
 
 template<typename T> inline void event(const T &ev);
 template<typename T> inline void event(const T &ev, xstring evname);
@@ -584,9 +592,10 @@ struct escrollable_list : public element {
     refill_callback _refill_cb;
     onclick_callback _onclick_cb;
     onclick_ex_callback _onclick_ex_cb;
-    onclick_double_ex_callback _onclick_dbl_ex_cb;
+    onclick_double_ex_callback _ondoubleclick_item_cb;
     custom_text_render_func _custom_render_cb;
     xstring _js_render_item_ref;
+    xstring _js_onclick_item_ref;
     xstring _js_ondoubleclick_item_ref;
 
     virtual void draw(UiFlags flags) override;
@@ -595,13 +604,18 @@ struct escrollable_list : public element {
     virtual ~escrollable_list();
 
     virtual xspan<xstring> func_names() const override;
+    virtual xspan<xstring> prop_names() const override;
     virtual void clear() override;
 
     void add_item(pcstr item);
     void select_item(pcstr item);
+    void select_entry(int index);
+    void refresh_file_finder();
+    xstring selected_entry_text(int filename_syntax = 0) const;
+    int items_count() const;
     void onclick_item(onclick_callback lmb) { _onclick_cb = lmb; }
     void onclick_ex_item(onclick_ex_callback lmb) { _onclick_ex_cb = lmb; }
-    void onclick_double_ex_item(onclick_double_ex_callback lmb) { _onclick_dbl_ex_cb = lmb; }
+    void onclick_double_item(onclick_double_ex_callback lmb) { _ondoubleclick_item_cb = lmb; }
     void onrender_item(custom_text_render_func f) { _custom_render_cb = f; }
     void onrefill(refill_callback f) { _refill_cb = f; }
     void on_render_item(int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font);

@@ -11,6 +11,8 @@
 
 #include <cassert>
 
+#pragma optimize("", off)
+
 void scrollable_list::select(const char* button_text) {
     return select_entry(get_entry_idx(button_text));
 }
@@ -38,11 +40,11 @@ int scrollable_list::get_focused_entry_idx() {
 int scrollable_list::get_selected_entry_idx() {
     return selected_entry_idx;
 }
-int scrollable_list::get_total_entries() {
-    return num_total_entries;
+int scrollable_list::items_count() {
+    return _items_count;
 }
 const xstring scrollable_list::get_entry_text_by_idx(int index, int filename_syntax) {
-    if (index < 0 || index > num_total_entries - 1) {
+    if (index < 0 || index > _items_count - 1) {
         return "";
     }
 
@@ -80,7 +82,7 @@ const xstring scrollable_list::get_selected_entry_text(int filename_syntax) {
 }
 
 int scrollable_list::get_entry_idx(pcstr button_text) {
-    for (int i = 0; i < num_total_entries; ++i) {
+    for (int i = 0; i < _items_count; ++i) {
         const xstring txt = get_entry_text_by_idx(i, FILE_NO_EXT);
         if (txt == button_text) {
             return i;
@@ -102,7 +104,7 @@ void scrollable_list::clear_entry_list() {
     if (ui_params.use_file_finder) {
         return;
     }
-    num_total_entries = 0;
+    _items_count = 0;
     unfocus();
     unselect();
     refresh_scrollbar();
@@ -111,7 +113,7 @@ void scrollable_list::clear_entry_list() {
 
 void scrollable_list::add_entry(xstring entry_text, uintptr_t user_data) {
     manual_entry_list.push_back({ entry_text, user_data });
-    num_total_entries++;
+    _items_count++;
     refresh_scrollbar();
 }
 
@@ -123,7 +125,7 @@ void scrollable_list::change_file_path(const xstring& dir, const xstring& ext) {
 
 void scrollable_list::append_files_with_extension(pcstr dir, pcstr extension) {
     file_finder = vfs::dir_append_files_with_extension(dir, extension);
-    num_total_entries = file_finder->num_files;
+    _items_count = file_finder->num_files;
     refresh_scrollbar();
 }
 
@@ -138,16 +140,16 @@ void scrollable_list::refresh_file_finder() {
     } else {
         file_finder = vfs::dir_find_files_with_extension(ui_params.files_dir.c_str(), ui_params.file_ext);
     }
-    num_total_entries = file_finder->num_files;
+    _items_count = file_finder->num_files;
     refresh_scrollbar();
 }
 
 void scrollable_list::refresh_scrollbar() {
-    scrollbar.init(0, num_total_entries - ui_params.view_items);
+    scrollbar.init(0, _items_count - ui_params.view_items);
 }
 
 void scrollable_list::clamp_scrollbar_position() {
-    while (scrollbar.scroll_position + ui_params.view_items >= num_total_entries) {
+    while (scrollbar.scroll_position + ui_params.view_items >= _items_count) {
         --scrollbar.scroll_position;
     }
 
@@ -171,7 +173,7 @@ int scrollable_list::input_handle(const mouse* m) {
 
     int last_focused = focus_button_id;
     int handled_button_id = generic_buttons_handle_mouse(m, ui_params.pos, list_buttons, ui_params.view_items, &focus_button_id, nullptr);
-    if (handled_button_id > 0 && get_focused_entry_idx() < num_total_entries) {
+    if (handled_button_id > 0 && get_focused_entry_idx() < _items_count) {
         generic_button* button = &list_buttons[handled_button_id - 1];
         if (m->left.went_up) {
             select_by_button_id(handled_button_id);
@@ -182,6 +184,9 @@ int scrollable_list::input_handle(const mouse* m) {
 
             auto &item = manual_entry_list[selected_entry_idx];
             if (left_click_ex_callback) {
+                if (ui_params.use_file_finder) {
+                    item.text = file_finder->files[selected_entry_idx];
+                }
                 left_click_ex_callback(&item);
             }
 
@@ -255,7 +260,7 @@ void scrollable_list::draw() {
             encoding_from_utf8(text_utf8, text, text.capacity);
             vfs::file_remove_extension(text);
         } else {
-            if (i < num_total_entries) {
+            if (i < _items_count) {
                 text_utf8 = manual_entry_list[current_index].text.c_str();
             } else {
                 text_utf8.clear();
@@ -299,7 +304,7 @@ scrollable_list::scrollable_list(onclick_callback lmb,
     }
 
     // init dynamic button list
-    num_total_entries = 0;
+    _items_count = 0;
     left_click_callback = lmb;
     right_click_callback = rmb;
     double_click_callback = dmb;
@@ -323,7 +328,7 @@ scrollable_list::scrollable_list(onclick_callback lmb,
     scrollbar.always_visible = ui_params.draw_scrollbar_always;
     scrollbar.dot_padding = ui_params.scrollbar_dot_padding;
     scrollbar.on_scroll_callback = on_scroll;
-    scrollbar.init(0, num_total_entries - ui_params.view_items);
+    scrollbar.init(0, _items_count - ui_params.view_items);
 
     change_file_path(ui_params.files_dir, ui_params.file_ext);
 }

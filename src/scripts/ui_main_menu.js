@@ -5,7 +5,7 @@ main_menu_screen {
 		background    : { type:"background", path:"pharaoh_unloaded/title_00001" }
 
 		continue_game : large_button({ pos:mbutton(0), size[256, 25], text[13, 5], onclick: main_menu_continue_game })
-		select_player : large_button({ pos:mbutton(1), size[256, 25], text[30, 0], onclick: window_player_selection_show })
+		select_player : large_button({ pos:mbutton(1), size[256, 25], text[30, 0], onclick: main_menu_show_player_selection })
 		show_records  : large_button({ pos:mbutton(2), size[256, 25], text[30, 5], onclick: main_menu_show_records })
 		show_config   : large_button({ pos:mbutton(3), size[256, 25], text[2,  0], onclick: window_features_show })
 		show_mods     : large_button({ pos:mbutton(4), size[256, 25], text:"#main_menu_mods", onclick: main_menu_show_mods })
@@ -42,6 +42,10 @@ function main_menu_continue_game() {
             ui.window_city_show()
         }
     }
+}
+
+function main_menu_show_player_selection() {
+	window_show_by_id("window_player_selection")
 }
 
 function main_menu_show_records() {

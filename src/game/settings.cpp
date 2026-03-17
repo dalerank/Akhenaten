@@ -177,6 +177,12 @@ void game_settings::set_player_name(const uint8_t* name) {
     encoding_to_utf8(name, player_name_utf8, MAX_PLAYER_NAME, 0);
 }
 
+void game_settings::set_player_name_utf8(pcstr name_utf8) {
+    bstring32 encoded;
+    encoding_from_utf8(name_utf8 ? name_utf8 : "", encoded, MAX_PLAYER_NAME);
+    set_player_name(encoded);
+}
+
 void game_settings::clear_personal_savings() {
     for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
         personal_savings[i] = 0;

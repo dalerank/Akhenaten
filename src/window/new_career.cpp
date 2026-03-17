@@ -12,10 +12,10 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "io/gamefiles/lang.h"
-#include "player_selection.h"
 #include "scenario/scenario.h"
 #include "widget/input_box.h"
 #include "window/mission_next.h"
+#include "js/js_game.h"
 
 static void confirm_new_player_name(int param1, int param2);
 static void button_back(int param1, int param2);
@@ -55,6 +55,7 @@ static void button_back(int param1, int param2) {
     input_box_stop(&g_new_career.player_name_input);
     window_go_back();
 }
+
 static void confirm_new_player_name(int param1, int param2) {
     input_box_stop(&g_new_career.player_name_input);
     g_settings.set_player_name(g_new_career.player_name);
@@ -62,7 +63,7 @@ static void confirm_new_player_name(int param1, int param2) {
     // game selection menu; here we first go back to the player list instead
     player_data_new(g_new_career.player_name);
     window_go_back();
-    window_player_selection_init();
+    autoconfig_window::show("window_player_selection");
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
@@ -92,3 +93,4 @@ void window_new_career_show() {
     init();
     window_show(&window);
 }
+ANK_FUNCTION(window_new_career_show)
