@@ -72,7 +72,7 @@ static void draw_foreground(int) {
 
     lang_text_draw(44, 80, 32, 285, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(262, 276, 200, 30, focus_button_id == 6);
-    lang_text_draw_centered(18, scenario_map_has_flotsam(), 262, 285, 200, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(18, g_scenario.env.flotsam_enabled, 262, 285, 200, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 91, 32, 325, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(262, 316, 200, 30, focus_button_id == 7);
