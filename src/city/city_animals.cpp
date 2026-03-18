@@ -377,7 +377,7 @@ void city_animals_t::remove_all() {
 }
 
 void city_animals_t::update() {
-    const bool has_animals = scenario_map_has_animals() || !!game_features::gameplay_change_hasanimals;
+    const bool has_animals = g_scenario.env.has_animals || !!game_features::gameplay_change_hasanimals;
     if (!has_animals) {
         return;
     }

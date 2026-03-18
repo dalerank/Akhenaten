@@ -1473,7 +1473,7 @@ void city_t::environment_t::river_update_flotsam() {
     constexpr int FLOTSAM_RESOURCE_IDS[] = {3, 1, 3, 2, 1, 3, 2, 3, 2, 1, 3, 3, 2, 3, 3, 3, 1, 2, 0, 1};
     constexpr int FLOTSAM_WAIT_TICKS[]  = {10, 50, 100, 130, 200, 250, 400, 430, 500, 600, 70, 750, 820, 830, 900, 980, 1010, 1030, 1200, 1300};
 
-    if (!scenario_map_has_river_entry() || !scenario_map_has_river_exit() || !scenario_map_has_flotsam()) {
+    if (!scenario_map_has_river_entry() || !scenario_map_has_river_exit() || !g_scenario.env.flotsam_enabled) {
         return;
     }
 
