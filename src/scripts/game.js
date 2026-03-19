@@ -44,6 +44,7 @@ scenario {
 game_features {
     __property_getter: function(property) { return __game_feature_get(property) }
     __property_setter: function(property, value) { __game_feature_set(property, value) }
+
     @gameui_hide_new_game_top_menu {}
     @gameui_empire_city_old_names {}
     @gameopt_last_save_filename {  }
@@ -51,14 +52,8 @@ game_features {
     @count { get: __game_features_count }
 }
 
-game_features.name = function(index) {
-    return __game_feature_name(index)
-}
-
-game_features.get = function(index) {
-    return __game_feature_by_idx(index)
-}
-
-game_features.text = function(index) {
-    return __game_feature_text(index)
-}
+game_features.name = __game_feature_name
+game_features.text = __game_feature_text
+game_features.get = __game_feature_get
+game_features.set = __game_feature_set
+game_features.count = __game_features_count

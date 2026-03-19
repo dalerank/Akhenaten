@@ -14,30 +14,30 @@ function window_features_build_pages() {
     var pf = []
     var n = game_features.count
     for (var i = 0; i < n; i++) {
-        var val = game_features.get(i)
+        var name = game_features.name(i)
+        var val = game_features.get(name)
 
         if (typeof val !== "boolean")
             continue
 
-        var name = game_features.name(i)
-        var text = game_features.text(i)
+        var text = game_features.text(name)
         if (!text)
             continue
 
-        ;(function (fname, fval, ftext) {
+        ;(function (fname, fidx, fval, ftext) {
             pf.push({
                 text: ftext
                 original: fval
                 type: "game_feature"
                 key: fname
-                is_enabled : function () { return game_features[fname] }
+                is_enabled : function () { return game_features.get(fname) === true }
                 toggle: function (p1, p2) {
-                    game_features[fname] = !game_features[fname];
+                    game_features.set(fname, !game_features.get(fname))
                     window_features.needs_rebuild = true
                 }
-                reset: function () { game_features[fname] = fval }
+                reset: function () { game_features.set(fname, fval) }
             })
-        })(name, val, text)
+        })(name, i, val, text)
 
         if (pf.length >= FEATURES_PER_PAGE) {
             pages.push({title: "#TR_CONFIG_HEADER_GAMEPLAY_CHANGES", features: pf})
