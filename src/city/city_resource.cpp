@@ -8,7 +8,6 @@
 #include "building/building_bazaar.h"
 #include "building/building_house.h"
 #include "city/city.h"
-#include "game/game_events.h"
 #include "city/city_warnings.h"
 #include "graphics/window.h"
 #include "core/calc.h"
@@ -17,7 +16,7 @@
 #include "game/tutorial.h"
 #include "grid/road_access.h"
 #include "scenario/scenario.h"
-#include "js/js_game.h"
+#include "game/game_events.h"
 
 struct available_data_t {
     resource_list resources;
@@ -27,17 +26,6 @@ struct available_data_t {
 
 available_data_t g_available_data;
 resource_list g_city_gettable_storages;
-
-int __city_yards_stored(int resource) {
-    return g_city.resource.yards_stored((e_resource)resource);
-}
-ANK_FUNCTION_1(__city_yards_stored)
-
-void __cheat_add_resource(int resource, int amount) {
-    city_resource_add_items((e_resource)resource, amount);
-    city_resource_was_added_warning((e_resource)resource);
-}
-ANK_FUNCTION_2(__cheat_add_resource)
 
 int city_resources_t::yards_stored(e_resource resource) {
     return stored_in_storages[resource];
