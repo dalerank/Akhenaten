@@ -539,6 +539,16 @@ int js_State::hasproperty(js_Object *obj, pcstr name) {
             js_pushobject(J, ref->getter);
             js_pushobject(J, obj);
             J->call(0);
+        } else if (ref->value.type == JS_TOBJECT && ref->value.u.object->type == JS_CPTR) {
+            /* Bound C pointer: push current *ptr so script sees number/bool */
+            js_Object *o = ref->value.u.object;
+            void *p = o->u.p.ptr;
+            switch (o->u.p.ptype) {
+            case JS_PTR_INT:   js_pushnumber(J, *(int*)p); break;
+            case JS_PTR_BOOL:  js_pushboolean(J, *(bool*)p); break;
+            case JS_PTR_FLOAT: js_pushnumber(J, (double)*(float*)p); break;
+            default: js_pushvalue(J, ref->value); break;
+            }
         } else {
             js_pushvalue(J, ref->value);
         }
@@ -559,6 +569,21 @@ static void jsR_setproperty(js_State *J, js_Object *obj, const char *name) {
     js_Property *ref;
     int k;
     int own;
+
+    /* If property exists and is JS_CPTR, write to *ptr and keep the cell */
+    ref = jsV_getpropertyx(J, obj, name, &own);
+    if (ref && ref->value.type == JS_TOBJECT && ref->value.u.object->type == JS_CPTR) {
+        js_Object *o = ref->value.u.object;
+        void *p = o->u.p.ptr;
+        switch (o->u.p.ptype) {
+        case JS_PTR_INT:   *(int*)p = js_tointeger(J, -1); break;
+        case JS_PTR_BOOL:  *(bool*)p = js_toboolean(J, -1) != 0; break;
+        case JS_PTR_FLOAT: *(float*)p = (float)js_tonumber(J, -1); break;
+        default: break;
+        }
+        js_pop(J, 1);
+        return;
+    }
 
     if (obj->type == JS_CARRAY) {
         if (!strcmp(name, "length")) {

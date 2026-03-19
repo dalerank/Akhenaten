@@ -85,6 +85,16 @@ void jsV_toprimitive(js_State *J, js_Value *v, int preferred) {
 
     obj = v->u.object;
 
+    if (obj->type == JS_CPTR) {
+        void *p = obj->u.p.ptr;
+        switch (obj->u.p.ptype) {
+        case JS_PTR_INT:   v->type = JS_TNUMBER; v->u.number = *(int*)p; return;
+        case JS_PTR_BOOL:  v->type = JS_TBOOLEAN; v->u.boolean = *(bool*)p; return;
+        case JS_PTR_FLOAT: v->type = JS_TNUMBER; v->u.number = (double)*(float*)p; return;
+        default: return;
+        }
+    }
+
     if (preferred == JS_HNONE)
         preferred = obj->type == JS_CDATE ? JS_HSTRING : JS_HNUMBER;
 
@@ -118,7 +128,19 @@ int jsV_toboolean(js_State *J, js_Value *v) {
     case JS_TNUMBER: return v->u.number != 0 && !isnan(v->u.number);
     case JS_TLITSTR: return v->u.litstr[0] != 0;
     case JS_TMEMSTR: return v->u.memstr->p[0] != 0;
-    case JS_TOBJECT: return 1;
+    case JS_TOBJECT: {
+        js_Object *obj = v->u.object;
+        if (obj->type == JS_CPTR) {
+            void *p = obj->u.p.ptr;
+            switch (obj->u.p.ptype) {
+            case JS_PTR_INT:   return *(int*)p != 0;
+            case JS_PTR_BOOL:  return *(bool*)p != 0;
+            case JS_PTR_FLOAT: return *(float*)p != 0;
+            default: return 1;
+            }
+        }
+        return 1;
+    }
     }
 }
 
@@ -195,9 +217,20 @@ double jsV_tonumber(js_State *J, js_Value *v) {
     case JS_TNUMBER: return v->u.number;
     case JS_TLITSTR: return jsV_stringtonumber(J, v->u.litstr);
     case JS_TMEMSTR: return jsV_stringtonumber(J, v->u.memstr->p);
-    case JS_TOBJECT:
+    case JS_TOBJECT: {
+        js_Object *obj = v->u.object;
+        if (obj->type == JS_CPTR) {
+            void *p = obj->u.p.ptr;
+            switch (obj->u.p.ptype) {
+            case JS_PTR_INT:   return *(int*)p;
+            case JS_PTR_BOOL:  return *(bool*)p ? 1 : 0;
+            case JS_PTR_FLOAT: return (double)*(float*)p;
+            default: return 0;
+            }
+        }
         jsV_toprimitive(J, v, JS_HNUMBER);
         return jsV_tonumber(J, v);
+    }
     }
 }
 

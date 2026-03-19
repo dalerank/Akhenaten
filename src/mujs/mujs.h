@@ -48,6 +48,12 @@ typedef int (*js_Emit)(js_State *J, const char *name);
 typedef void (*js_DebugHook)(js_State *J, const char *file, int line, void *udata);
 void js_setdebughook(js_State *J, js_DebugHook hook, void *udata);
 
+/* Bound globals: register C pointers so they appear in global scope (like C functions).
+   Script reads/writes the name and MuJS reads/writes *ptr. For bool use void* (bool* in C++, int* in C). */
+void js_register_bound_int(js_State *J, const char *name, int *ptr);
+void js_register_bound_bool(js_State *J, const char *name, void *ptr);
+void js_register_bound_float(js_State *J, const char *name, float *ptr);
+
 /* Basic functions */
 js_State *js_newstate(js_Alloc alloc, void *actx, int flags);
 void js_setcontext(js_State *J, void *uctx);

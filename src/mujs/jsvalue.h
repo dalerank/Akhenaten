@@ -39,6 +39,13 @@ enum js_Class {
     JS_CJSON,
     JS_CITERATOR,
     JS_CUSERDATA,
+    JS_CPTR, /* bound C pointer (int/bool/float), get/set via *ptr */
+};
+
+enum js_CPtrType {
+    JS_PTR_INT,
+    JS_PTR_BOOL,
+    JS_PTR_FLOAT
 };
 
 /*
@@ -114,10 +121,14 @@ struct js_Object {
             js_Delete rdelete;
             js_Finalize finalize;
         } user;
+        struct {
+            void *ptr;
+            js_CPtrType ptype;
+        } p;
     } u;
     js_Object *gcnext;
     int gcmark;
-    struct js_FunctionModifier *modifiers; /* object modifiers/attributes */
+    js_FunctionModifier *modifiers; /* object modifiers/attributes */
 
     js_Property *vgetproperty(const char *name);
 };
