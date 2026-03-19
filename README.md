@@ -51,6 +51,36 @@ stored there; also, your game must be patched to last version (1.3 + Cleopatra) 
 
 ## Building Akhenaten from source
 
+On Windows 10/11, major Linux distributions, and macOS (arm64 or x86_64), the project can be configured and built using CMake presets (CMake 3.30 or later required).
+
+With this approach, the project will be built into the ./build directory, and dependencies will be automatically downloaded and built via CMake's FetchContent.
+-	Clone the repository
+- In the project root directory, run (example for Linux):
+```
+# List available configuration presets
+cmake --list-presets
+
+# Configure the project
+cmake --preset linux-gcc-debug-make
+
+# Build the project
+cmake --build --preset linux-gcc-debug-make
+```
+
+If the list of presets does not include the configuration or build type you need, you can add it:
+-	Create a CMakeUserPreset.json file with your custom configuration (this file is not tracked by git)
+
+or:
+-	Override specific options or build types for an existing preset, for example:
+```
+# Configure the project
+cmake --preset linux-gcc-debug-make -DCMAKE_BUILD_TYPE=Release -DOPTION_ENABLE_TRACY=OFF
+
+# Build the project
+cmake --build --preset linux-gcc-debug-make
+```
+Below are additional and alternative methods for configuring and building the project, including instructions for other platforms.
+
 ### Windows + Visual Studio
 
 - Clone the repository
