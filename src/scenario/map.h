@@ -21,6 +21,3 @@ tile2i scenario_map_river_exit();
 
 void scenario_map_foreach_herd_point(std::function<void(tile2i)> callback);
 void scenario_map_foreach_fishing_point(void (*callback)(tile2i));
-
-bool scenario_map_has_flotsam();
-bool scenario_map_has_animals();

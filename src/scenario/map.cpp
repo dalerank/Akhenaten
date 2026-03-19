@@ -3,6 +3,7 @@
 #include "core/calc.h"
 #include "grid/grid.h"
 #include "scenario/scenario.h"
+#include "js/js_game.h"
 
 const map_data_t* scenario_map_data() {
     return &g_scenario.map;
@@ -65,10 +66,5 @@ void scenario_map_foreach_fishing_point(void (*callback)(tile2i)) {
     }
 }
 
-bool scenario_map_has_flotsam() {
-    return g_scenario.env.flotsam_enabled;
-}
-
-bool scenario_map_has_animals() {
-    return g_scenario.env.has_animals;
-}
+ANK_BOUND_BOOL(__scenario_flotsam_enabled, g_scenario.env.flotsam_enabled)
+ANK_BOUND_BOOL(__scenario_has_animals, g_scenario.env.has_animals)
