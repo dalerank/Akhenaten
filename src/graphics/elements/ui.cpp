@@ -862,7 +862,7 @@ scrollbar_t &ui::scrollbar(scrollbar_t &scr, vec2i pos, int &value, vec2i size) 
     return scr;
 }
 
-xstring ui_element_props[] = { "text", "enabled", "readonly", "font", "text_color", "image", "selected", "tooltip" };
+xstring ui_element_props[] = { "text", "enabled", "readonly", "font", "text_color", "image", "selected", "tooltip", "onclick" };
 xspan<xstring> ui::element::prop_names() const {
     return make_span(ui_element_props);
 }
@@ -1347,6 +1347,15 @@ void ui::eimage_button::load(archive arch, element *parent, items &elems) {
 
 ui::eimage_button::~eimage_button() {
     js_unref_function(_js_onclick_ref);
+}
+
+void ui::eimage_button::set_js_onclick_ref(const xstring &ref) {
+    js_unref_function(_js_onclick_ref);
+    _js_onclick_ref = ref;
+}
+
+const xstring &ui::eimage_button::js_onclick_ref() const {
+    return _js_onclick_ref;
 }
 
 void ui::eimage_button::draw(UiFlags gflags) {
@@ -1838,6 +1847,15 @@ ui::earrow_button::~earrow_button() {
     js_unref_function(_js_onclick_ref);
 }
 
+void ui::earrow_button::set_js_onclick_ref(const xstring &ref) {
+    js_unref_function(_js_onclick_ref);
+    _js_onclick_ref = ref;
+}
+
+const xstring &ui::earrow_button::js_onclick_ref() const {
+    return _js_onclick_ref;
+}
+
 void ui::earrow_button::js_call() {
     js_call_function(_js_onclick_ref);
 }
@@ -1858,6 +1876,15 @@ ui::egeneric_button::~egeneric_button() {
     js_unref_function(_js_onclick_ref);
     js_unref_function(_js_onrclick_ref);
     js_unref_function(_js_textfn_ref);
+}
+
+void ui::egeneric_button::set_js_onclick_ref(const xstring &ref) {
+    js_unref_function(_js_onclick_ref);
+    _js_onclick_ref = ref;
+}
+
+const xstring &ui::egeneric_button::js_onclick_ref() const {
+    return _js_onclick_ref;
 }
 
 void ui::egeneric_button::draw(UiFlags gflags) {

@@ -57,14 +57,6 @@ using UiFlags = int;
 
 namespace ui {
 
-/** Property names for JS UI element proxy; element can override js_proxy_prop_names() to expose a subset. */
-namespace js_proxy {
-    static constexpr const char* prop_names[] = {
-        "text", "enabled", "readonly", "font", "text_color", "image", "selected", "tooltip"
-    };
-    static constexpr int prop_count = 8;
-}
-
 namespace opt {
     struct Pos { vec2i value; };
     struct Size { vec2i value; };
@@ -400,6 +392,8 @@ struct element {
     virtual const xstring &text() const { static xstring dummy; return dummy; }
     virtual element &onclick(button_onclick_cb) { return *this; }
     virtual element &onclick(button_onclick_simple_cb f) { return *this; }
+    virtual void set_js_onclick_ref(const xstring &) {}
+    virtual const xstring &js_onclick_ref() const { static xstring dummy; return dummy; }
     virtual void onevent(std::function<void()>) { }
     virtual void add_entry(pcstr) {}
     virtual void clear() {}
@@ -416,7 +410,6 @@ struct element {
     virtual pcstr get_value() const { return ""; }
     virtual void set_value(pcstr) {}
 
-    /** Fill \a out with prop names to expose on the JS proxy (default: all from js_proxy::prop_names). */
     virtual xspan<xstring> prop_names() const;
     virtual xspan<xstring> func_names() const { return {}; }
 
@@ -721,6 +714,8 @@ struct egeneric_button : public elabel {
 
     virtual element &onclick(button_onclick_cb func) override { _func = func; return *this; }
     virtual element &onclick(button_onclick_simple_cb func) override { _sfunc = func; return *this; }
+    virtual void set_js_onclick_ref(const xstring &ref) override;
+    virtual const xstring &js_onclick_ref() const override;
     virtual element &onrclick(button_onclick_cb func) override { _rfunc = func; return *this; }
     virtual element &onrclick(button_onclick_simple_cb func) override { _srfunc = func; return *this; }
 };
@@ -732,12 +727,14 @@ struct earrow_button : public element {
     button_onclick_cb _func;
     button_onclick_simple_cb _sfunc;
     xstring _js_onclick_ref;  // JS function reference for onclick
-    
+
     virtual ~earrow_button();
     virtual void load(archive elem, element *parent, items &elems) override;
     virtual void draw(UiFlags flags) override;
     virtual element &onclick(button_onclick_cb func) override { _func = func; return *this; }
     virtual element &onclick(button_onclick_simple_cb func) override { _sfunc = func; return *this; }
+    virtual void set_js_onclick_ref(const xstring &ref) override;
+    virtual const xstring &js_onclick_ref() const override;
 
     void js_call();
 };
@@ -766,6 +763,8 @@ struct eimage_button : public element {
 
     virtual element &onclick(button_onclick_cb func) override { _func = func; return *this; }
     virtual element &onclick(button_onclick_simple_cb func) override { _sfunc = func; return *this; }
+    virtual void set_js_onclick_ref(const xstring &ref) override;
+    virtual const xstring &js_onclick_ref() const override;
     virtual element &onrclick(button_onclick_cb func) override { _rfunc = func; return *this; }
     virtual element &onrclick(button_onclick_simple_cb func) override { _srfunc = func; return *this; }
     virtual void tooltip(textid t) override { _tooltip = ui::str(t); }
