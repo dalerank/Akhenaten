@@ -14,7 +14,6 @@
 #include "window/hotkey_config.h"
 #include "window/difficulty_options.h"
 #include "window/message_dialog_new.h"
-#include "window/window_features.h"
 #include "city/city.h"
 #include "building/construction/build_planner.h"
 #include "game/undo.h"
@@ -139,7 +138,7 @@ pcstr __widget_top_menu_hotkeys_options(int, int) {
 ANK_FUNCTION_2(__widget_top_menu_hotkeys_options)
 
 pcstr __widget_top_menu_features(int, int) {
-    ui::window_features::show([] {});
+    autoconfig_window::show("window_features");
     return "";
 }
 ANK_FUNCTION_2(__widget_top_menu_features)

@@ -35,7 +35,6 @@
 #include "graphics/elements/ui.h"
 #include "graphics/elements/ui_js.h"
 #include "window/autoconfig_window.h"
-
 #include <vector>
 #include <sstream>
 #include <string>
@@ -408,6 +407,7 @@ int __game_screen_width() { return screen_width(); } ANK_FUNCTION(__game_screen_
 int __game_screen_height() { return screen_height(); } ANK_FUNCTION(__game_screen_height)
 int __game_absolute_day() { return game.simtime.absolute_day(true); } ANK_FUNCTION(__game_absolute_day)
 int __game_frame() { return game.frame; } ANK_FUNCTION(__game_frame)
+bool __game_session_active() { return game.session.active; } ANK_FUNCTION(__game_session_active)
 xstring __game_version() { return get_version().c_str(); } ANK_FUNCTION(__game_version)
 void __game_increase_game_speed() { game.increase_game_speed(); } ANK_FUNCTION(__game_increase_game_speed)
 void __game_decrease_game_speed() { game.decrease_game_speed(); } ANK_FUNCTION(__game_decrease_game_speed)

@@ -7,7 +7,7 @@ main_menu_screen {
 		continue_game : large_button({ pos:mbutton(0), size[256, 25], text[13, 5], onclick: main_menu_continue_game })
 		select_player : large_button({ pos:mbutton(1), size[256, 25], text[30, 0], onclick: main_menu_show_window("window_player_selection") })
 		show_records  : large_button({ pos:mbutton(2), size[256, 25], text[30, 5], onclick: main_menu_show_window("records_window") })
-		show_config   : large_button({ pos:mbutton(3), size[256, 25], text[2,  0], onclick: window_features_show })
+		show_config   : large_button({ pos:mbutton(3), size[256, 25], text[2,  0], onclick: main_menu_show_window("window_features") })
 		show_mods     : large_button({ pos:mbutton(4), size[256, 25], text:"#main_menu_mods", onclick: main_menu_show_window("mods_window") })
 		quit_game     : large_button({ pos:mbutton(5), size[256, 25], text[30, 4], onemit: main_menu_quit_game })
 

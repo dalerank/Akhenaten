@@ -16,6 +16,7 @@
 #include "window/hotkey_editor.h"
 #include "platform/renderer.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
 #define HOTKEY_HEADER -1
 #define TR_NONE -1
@@ -337,3 +338,6 @@ void window_hotkey_config_show(void (*close_callback)(void)) {
     init(close_callback);
     window_show(&window);
 }
+
+void __window_hotkey_config_show() { window_hotkey_config_show([] {}); }
+ANK_FUNCTION(__window_hotkey_config_show)
