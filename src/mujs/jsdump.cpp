@@ -853,6 +853,9 @@ void js_dumpvalue(js_State *J, js_Value v)
 		case JS_CUSERDATA:
 			LPRINTFMT("[Userdata %s %p]", v.u.object->u.user.tag, v.u.object->u.user.data);
 			break;
+		case JS_CPTR:
+			LPRINTFMT("[Bound %p]", v.u.object->u.p.ptr);
+			break;
 		default: LPRINTFMT("[Object %p]", v.u.object); break;
 		}
 		break;

@@ -443,6 +443,21 @@ struct js_function_traits<R(C:: *)(Args...) const> : js_function_traits<R(C:: *)
 #define ANK_FUNCTION(func) \
     ANK_FUNCTION_NAMED(func, func)
 
+/** Register a C int* as a global JS variable (JS_CPTR). Scripts read/write it directly. */
+#define ANK_BOUND_INT(js_name, cptr) \
+    static void ANK_CONFIG_CC1(ank_bound_int_reg_, __LINE__)(js_State* J) { js_register_bound_int(J, #js_name, &(cptr)); } \
+    ANK_DECLARE_JSFUNCTION_ITERATOR(ANK_CONFIG_CC1(ank_bound_int_reg_, __LINE__));
+
+/** Register a C bool* as a global JS variable (JS_CPTR). */
+#define ANK_BOUND_BOOL(js_name, cptr) \
+    static void ANK_CONFIG_CC1(ank_bound_bool_reg_, __LINE__)(js_State* J) { js_register_bound_bool(J, #js_name, &(cptr)); } \
+    ANK_DECLARE_JSFUNCTION_ITERATOR(ANK_CONFIG_CC1(ank_bound_bool_reg_, __LINE__));
+
+/** Register a C float* as a global JS variable (JS_CPTR). */
+#define ANK_BOUND_FLOAT(js_name, cptr) \
+    static void ANK_CONFIG_CC1(ank_bound_float_reg_, __LINE__)(js_State* J) { js_register_bound_float(J, #js_name, &(cptr)); } \
+    ANK_DECLARE_JSFUNCTION_ITERATOR(ANK_CONFIG_CC1(ank_bound_float_reg_, __LINE__));
+
 // Template function version of ANK_FUNCTION_1
 // This template function handles the callback logic (extracted from macro)
 template<auto Func>

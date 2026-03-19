@@ -196,6 +196,33 @@ void *js_getcontext(js_State *J)
 	return J->uctx;
 }
 
+void js_register_bound_int(js_State *J, const char *name, int *ptr)
+{
+	js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
+	obj->u.p.ptr = ptr;
+	obj->u.p.ptype = JS_PTR_INT;
+	js_pushobject(J, obj);
+	js_defglobal(J, name, 0);
+}
+
+void js_register_bound_bool(js_State *J, const char *name, void *ptr)
+{
+	js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
+	obj->u.p.ptr = ptr;
+	obj->u.p.ptype = JS_PTR_BOOL;
+	js_pushobject(J, obj);
+	js_defglobal(J, name, 0);
+}
+
+void js_register_bound_float(js_State *J, const char *name, float *ptr)
+{
+	js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
+	obj->u.p.ptr = ptr;
+	obj->u.p.ptype = JS_PTR_FLOAT;
+	js_pushobject(J, obj);
+	js_defglobal(J, name, 0);
+}
+
 void js_setframealloc(js_State *J, js_Alloc frame_alloc, void *frame_actx)
 {
 	J->frame_alloc = frame_alloc;

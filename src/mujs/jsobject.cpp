@@ -43,6 +43,9 @@ static void Op_toString(js_State *J)
 		J->pushliteral("]");
 		js_concat(J);
 		break;
+	case JS_CPTR:
+		J->pushliteral("[object Bound]");
+		break;
 	}
 }
 
