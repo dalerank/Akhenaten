@@ -68,6 +68,17 @@ city {
         can_produce : __city_resource_can_produce
         can_import : __city_resource_can_import
         trade_status : __city_resource_trade_status
+        count : __city_resources_count
+        type : __city_resource_at
+
+        get_name : __city_resource_name
+        set_produce : __city_resource_set_produce
+    }
+
+    gods {
+        get_name : __city_god_name
+        is_known : __city_god_is_known
+        set_known : __city_god_set_known
     }
 
     use_building: __city_use_building
