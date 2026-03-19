@@ -16,20 +16,6 @@ std::optional<bvariant> __game_feature_get(xstring feature_name) {
 }
 ANK_FUNCTION_1(__game_feature_get)
 
-std::optional<bvariant> __game_feature_by_idx(int index) {
-    auto feature = game_features::all()[index];
-    if (feature) {
-        switch (feature->type()) {
-        case setting_bool: return bvariant(feature->to_bool());
-        case setting_string: return bvariant(feature->to_string());
-        case setting_float: return bvariant(feature->to_float());
-        }
-    }
-
-    return {};
-}
-ANK_FUNCTION_1(__game_feature_by_idx)
-
 int __game_features_count() {
     return game_features::all().size();
 }
@@ -44,12 +30,9 @@ xstring __game_feature_name(int index) {
 }
 ANK_FUNCTION_1(__game_feature_name)
 
-xstring __game_feature_text(int index) {
-    auto all = game_features::all();
-    if (index < 0 || index >= (int)all.size())
-        return {};
-
-    return all[index]->text;
+xstring __game_feature_text(xstring feature_name) {
+    auto feature = game_features::find(feature_name);
+    return feature ? feature->text : xstring("<unknown>");
 }
 ANK_FUNCTION_1(__game_feature_text)
 
