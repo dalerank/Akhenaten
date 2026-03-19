@@ -127,6 +127,10 @@ xstring game_features::game_feature::to_string() const {
     return _settings.get_string(name);
 }
 
+float game_features::game_feature::to_float() const {
+    return _settings.get_float(name);
+}
+
 void game_features::game_feature::set(bool value) {
     _settings.set_bool(name, value);
 }

@@ -15,6 +15,7 @@ namespace game_features {
         game_feature(const xstring &n, const xstring &t, setting_variant def);
         bool to_bool() const;
         xstring to_string() const;
+        float to_float() const;
         inline bool operator!() const { return !to_bool(); }
         void set(bool value);
         void set(float value);
