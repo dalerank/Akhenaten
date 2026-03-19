@@ -13,7 +13,6 @@ gods = [
         shrine_type: BUILDING_SHRINE_RA,
         temple_type: BUILDING_TEMPLE_RA,
         complex_type: BUILDING_TEMPLE_COMPLEX_RA,
-
     }
 
     {

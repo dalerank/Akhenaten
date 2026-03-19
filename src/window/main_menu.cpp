@@ -15,13 +15,13 @@
 #include "core/app.h"
 #include "window/popup_dialog.h"
 #include "window/file_dialog.h"
-#include "window/window_features.h"
 #include "window/window_city.h"
 #include "sound/sound.h"
 #include "sound/sound_city.h"
 #include "io/gamestate/boilerplate.h"
 #include "graphics/elements/ui_js.h"
 #include "resource/icons.h"
+#include "platform/renderer.h"
 #include "js/js_game.h"
 #include <regex>
 
