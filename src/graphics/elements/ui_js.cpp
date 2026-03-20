@@ -112,23 +112,9 @@ void ui_proxy_set_image(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem
 void ui_proxy_get_selected(js_State *J) { auto elem = GET_ELEM(J); js_pushboolean(J, elem ? elem->selected() : false); }
 void ui_proxy_set_selected(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->select(js_toboolean(J, 1)); } J->pushundefined(); }
 void ui_proxy_set_tooltip(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->tooltip(xstring(js_tostring(J, 1))); } J->pushundefined(); }
-void ui_proxy_get_onclick(js_State *J) {
-    auto elem = GET_ELEM(J);
-    const xstring ref = elem ? elem->js_onclick_ref() : xstring();
-    if (ref.empty()) {
-        J->pushundefined();
-    } else {
-        js_getregistry(J, ref.c_str());
-    }
-}
 void ui_proxy_set_onclick(js_State *J) {
     auto elem = GET_ELEM(J);
     if (!elem) { J->pushundefined(); return; }
-
-    const xstring old_ref = elem->js_onclick_ref();
-    if (!old_ref.empty()) {
-        js_unref_function(old_ref);
-    }
 
     if (js_isnull(J, 1) || js_isundefined(J, 1)) {
         elem->set_js_onclick_ref("");
@@ -143,8 +129,32 @@ void ui_proxy_set_onclick(js_State *J) {
     }
 
     js_copy(J, 1);
-    const char *new_ref = js_ref(J);
+    pcstr new_ref = js_ref(J);
     elem->set_js_onclick_ref(new_ref ? xstring(new_ref) : xstring());
+    J->pushundefined();
+}
+void ui_proxy_set_textfn(js_State *J) {
+    auto elem = GET_ELEM(J);
+    if (!elem) {
+        J->pushundefined();
+        return;
+    }
+
+    if (js_isnull(J, 1) || js_isundefined(J, 1)) {
+        elem->set_js_textfn_ref("");
+        J->pushundefined();
+        return;
+    }
+
+    if (!J->iscallable(1)) {
+        elem->set_js_textfn_ref("");
+        J->pushundefined();
+        return;
+    }
+
+    js_copy(J, 1);
+    pcstr new_ref = js_ref(J);
+    elem->set_js_textfn_ref(new_ref ? xstring(new_ref) : xstring());
     J->pushundefined();
 }
 void ui_proxy_get_noop_render_item(js_State *J) { (void)J; J->pushundefined(); }
@@ -216,7 +226,7 @@ struct ui_proxy_prop {
     js_CFunction getter;
     js_CFunction setter;
 };
-static const flat_map<xstring, ui_proxy_prop, 11> g_ui_proxy_props = {
+static const flat_map<xstring, ui_proxy_prop, 12> g_ui_proxy_props = {
     {"text", {ui_proxy_get_text, ui_proxy_set_text}},
     {"enabled", {ui_proxy_get_enabled, ui_proxy_set_enabled}},
     {"readonly", {ui_proxy_get_readonly, ui_proxy_set_readonly}},
@@ -225,7 +235,8 @@ static const flat_map<xstring, ui_proxy_prop, 11> g_ui_proxy_props = {
     {"image", {ui_proxy_get_noop, ui_proxy_set_image}},
     {"selected", {ui_proxy_get_selected, ui_proxy_set_selected}},
     {"tooltip", {ui_proxy_get_noop, ui_proxy_set_tooltip}},
-    {"onclick", {ui_proxy_get_onclick, ui_proxy_set_onclick}},
+    {"onclick", {nullptr, ui_proxy_set_onclick}},
+    {"textfn", {nullptr, ui_proxy_set_textfn}},
     {"items_count", {ui_proxy_get_items_count, nullptr}},
     {"value", {ui_proxy_get_value, ui_proxy_set_value}},
 };

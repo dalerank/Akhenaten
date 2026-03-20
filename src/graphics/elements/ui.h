@@ -392,14 +392,15 @@ struct element {
     virtual const xstring &text() const { static xstring dummy; return dummy; }
     virtual element &onclick(button_onclick_cb) { return *this; }
     virtual element &onclick(button_onclick_simple_cb f) { return *this; }
-    virtual void set_js_onclick_ref(const xstring &) {}
-    virtual const xstring &js_onclick_ref() const { static xstring dummy; return dummy; }
     virtual void onevent(std::function<void()>) { }
     virtual void add_entry(pcstr) {}
     virtual void clear() {}
     virtual element &onrclick(button_onclick_cb) { return *this; }
     virtual element &onrclick(button_onclick_simple_cb f) { return *this; }
     virtual void ondraw(draw_callback f) { _draw_callback = f;};
+
+    virtual void set_js_onclick_ref(const xstring &) {}
+    virtual void set_js_textfn_ref(const xstring &ref) {}
 
     virtual emenu_header *dcast_menu_header() { return nullptr; }
     virtual eimage_button *dcast_image_button() { return nullptr; }
@@ -572,6 +573,7 @@ struct elabel : public element {
     virtual const xstring &tooltip() const override { return _tooltip; }
     virtual const xstring &format() const override { return _format; }
     virtual const xstring &text() const override { return _text; }
+    virtual void set_js_textfn_ref(const xstring &ref) override;
     virtual void width(int) override;
 };
 
@@ -715,7 +717,7 @@ struct egeneric_button : public elabel {
     virtual element &onclick(button_onclick_cb func) override { _func = func; return *this; }
     virtual element &onclick(button_onclick_simple_cb func) override { _sfunc = func; return *this; }
     virtual void set_js_onclick_ref(const xstring &ref) override;
-    virtual const xstring &js_onclick_ref() const override;
+    virtual void set_js_textfn_ref(const xstring &ref) override;
     virtual element &onrclick(button_onclick_cb func) override { _rfunc = func; return *this; }
     virtual element &onrclick(button_onclick_simple_cb func) override { _srfunc = func; return *this; }
 };
@@ -734,7 +736,6 @@ struct earrow_button : public element {
     virtual element &onclick(button_onclick_cb func) override { _func = func; return *this; }
     virtual element &onclick(button_onclick_simple_cb func) override { _sfunc = func; return *this; }
     virtual void set_js_onclick_ref(const xstring &ref) override;
-    virtual const xstring &js_onclick_ref() const override;
 
     void js_call();
 };
@@ -764,7 +765,6 @@ struct eimage_button : public element {
     virtual element &onclick(button_onclick_cb func) override { _func = func; return *this; }
     virtual element &onclick(button_onclick_simple_cb func) override { _sfunc = func; return *this; }
     virtual void set_js_onclick_ref(const xstring &ref) override;
-    virtual const xstring &js_onclick_ref() const override;
     virtual element &onrclick(button_onclick_cb func) override { _rfunc = func; return *this; }
     virtual element &onrclick(button_onclick_simple_cb func) override { _srfunc = func; return *this; }
     virtual void tooltip(textid t) override { _tooltip = ui::str(t); }

@@ -30,6 +30,7 @@ function window_features_build_pages() {
                 original: fval
                 type: "game_feature"
                 key: fname
+                textfn: function () { return game_features.get(fname) === true ? "x" : "" }
                 is_enabled : function () { return game_features.get(fname) === true }
                 toggle: function (p1, p2) {
                     game_features.set(fname, !game_features.get(fname))
@@ -60,6 +61,7 @@ function window_features_build_pages() {
                     text: "#TR_CONFIG_ANIMALS"
                     original: sc_orig_animals
                     type: "scenario_animals"
+                    textfn: function () { return scenario.has_animals ? "x" : "" }
                     is_enabled : function () { return scenario.has_animals }
                     toggle: function (p1, p2) {
                         scenario.has_animals = !scenario.has_animals;
@@ -70,8 +72,8 @@ function window_features_build_pages() {
                 {
                     text: "#TR_CONFIG_FLOTSAM"
                     original: sc_orig_flotsam
-
                     type: "scenario_flotsam"
+                    textfn: function () { return scenario.flotsam_enabled ? "x" : "" }
                     is_enabled : function () { return scenario.flotsam_enabled }
                     toggle: function (p1, p2) {
                         scenario.flotsam_enabled = !scenario.flotsam_enabled;
@@ -94,6 +96,7 @@ function window_features_build_pages() {
                     key: godIdx
                     original: godOrig
                     type: "god"
+                    textfn: function () { return city.gods.is_known(godIdx) ? "x" : "" }
                     is_enabled : function () { return city.gods.is_known(godIdx) }
                     toggle: function (p1, p2) {
                         city.gods.set_known(godIdx, !city.gods.is_known(godIdx));
@@ -118,6 +121,7 @@ function window_features_build_pages() {
                     original: resOrig
                     type: "resource"
                     key: res
+                    textfn: function () { return city.resources.can_produce(res) ? "x" : "" }
                     is_enabled : function () { return city.resources.can_produce(res) }
                     toggle: function (p1, p2) {
                         city.resources.set_produce(res, !city.resources.can_produce(res));
@@ -144,8 +148,12 @@ function window_features_build_pages() {
                 original: langId
                 type: "language"
                 key: langId
+                textfn: function () { return game.languages.current == langId ? "x" : "" }
                 is_enabled : function () { return game.languages.current == langId }
-                toggle: function (p1, p2) { game.languages.current = langId; window_features.needs_rebuild = true }
+                toggle: function (p1, p2) {
+                    game.languages.current = langId;
+                    window_features.needs_rebuild = true
+                }
                 reset: function () { game.languages.current = langId }
             })
             if (lf.length >= FEATURES_PER_PAGE) {
@@ -169,7 +177,7 @@ function window_features_rebuild_button_features(window) {
         var f = window_features.button_features[i]
         option.onclick = f ? f.toggle : undefined
         option.enabled = f ? true : false
-        option.text = f ? (f.is_enabled() ? "x" : "") : ""
+        option.textfn = f ? f.textfn : undefined
         label.text = f ? f.text : ""
     }
 }
