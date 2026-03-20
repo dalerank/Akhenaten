@@ -22,6 +22,8 @@
 #include <mutex>
 #include <type_traits>
 #include <cstdint>
+#include <cmath>
+#include <cstring>
 
 class settings_vars_t;
 
@@ -152,6 +154,13 @@ namespace js_helpers {
         } else {
             return bvariant(); // none
         }
+    }
+
+    inline bvariant js_bvariant_from_js_stack(js_State *J, int idx) {
+        if (js_isundefined(J, idx) || js_isnull(J, idx)) {
+            return bvariant();
+        }
+        return js_to_value<bvariant>(J, idx);
     }
 
     template<>
@@ -768,8 +777,8 @@ void js_register_mission_vars(const settings_vars_t &vars);
 void js_unref_function(xstring onclick_ref);
 void js_call_function(xstring onclick_ref);
 void js_call_function_bool(xstring js_ref, bool param);
-pcstr js_call_function_with_result(xstring js_ref, int param1, int param2);
-pcstr js_call_function_with_result(xstring js_ref, const bvariant_map &params);
+bvariant js_call_function_with_result(xstring js_ref, int param1, int param2);
+bvariant js_call_function_with_result(xstring js_ref, const bvariant_map &params);
 int js_game_emit(js_State *J, pcstr event_name);
 void js_register_game_handlers(xstring missionid);
 void js_call_event_handlers(const xstring &event_name, const bvariant_map &object);

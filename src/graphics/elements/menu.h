@@ -17,7 +17,7 @@ struct menu_item {
     xstring text;
     xstring id;
 
-    std::function<pcstr(int)> _textfn;
+    std::function<xstring(int)> _textfn;
 };
 
 struct menu_header {
@@ -29,5 +29,5 @@ struct menu_header {
     int calculated_height_blocks;
 
     std::function<void(menu_item&)> _onclick;
-    std::function<pcstr()> _textfn;
+    std::function<xstring()> _textfn;
 };

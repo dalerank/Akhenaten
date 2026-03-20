@@ -80,10 +80,10 @@ void archive::getglobal(std::string_view name) {
 }
 
 pcstr lang_get_string(int group, int index);
-pcstr archive::r_string(pcstr name) {
+pcstr archive::r_string(pcstr name, pcstr def) {
     auto vm = (js_State *)state;
     vm->getproperty(-1, name);
-    pcstr result = "";
+    pcstr result = def;
     if (js_isundefined(vm, -1)) {
         ;
     } else if (js_isstring(vm, -1)) {

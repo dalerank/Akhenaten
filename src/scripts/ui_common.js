@@ -101,6 +101,7 @@ function image_button(config) { return extend({type:"image_button"}, config) }
 function ok_button(config) { return extend({type:"image_button", size[39, 26], pack:PACK_GENERAL, id:96, offset:0 }, config) }
 function cancel_button(config) { return extend({type:"image_button", size[39, 26], pack:PACK_GENERAL, id:96, offset:4 }, config) }
 function button(config) { return extend({type:"generic_button", font : FONT_NORMAL_BLACK_ON_LIGHT}, config) }
+function checkbox(config) { return extend({type:"checkbox", size:[23, 23], font : FONT_NORMAL_BLACK_ON_LIGHT}, config) }
 function link(config) { return extend({type:"generic_button", hbody:false, border:false, font:FONT_NORMAL_BLACK_ON_LIGHT, font_hover:FONT_NORMAL_YELLOW,}, config) }
 function arrowup(config) { return extend({type:"arrow_button", down:false}, config) }
 function arrowdown(config) { return extend({type:"arrow_button", down:true}, config) }

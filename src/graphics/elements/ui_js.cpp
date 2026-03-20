@@ -157,6 +157,30 @@ void ui_proxy_set_textfn(js_State *J) {
     elem->set_js_textfn_ref(new_ref ? xstring(new_ref) : xstring());
     J->pushundefined();
 }
+void ui_proxy_set_checkedfn(js_State *J) {
+    auto elem = GET_ELEM(J);
+    if (!elem) {
+        J->pushundefined();
+        return;
+    }
+
+    if (js_isnull(J, 1) || js_isundefined(J, 1)) {
+        elem->set_js_checkedfn_ref("");
+        J->pushundefined();
+        return;
+    }
+
+    if (!J->iscallable(1)) {
+        elem->set_js_checkedfn_ref("");
+        J->pushundefined();
+        return;
+    }
+
+    js_copy(J, 1);
+    pcstr new_ref = js_ref(J);
+    elem->set_js_checkedfn_ref(new_ref ? xstring(new_ref) : xstring());
+    J->pushundefined();
+}
 void ui_proxy_get_noop_render_item(js_State *J) { (void)J; J->pushundefined(); }
 void ui_proxy_get_value(js_State *J) { auto elem = GET_ELEM(J); js_pushstring(J, elem ? elem->get_value() : ""); }
 void ui_proxy_set_value(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->set_value(js_tostring(J, 1)); } J->pushundefined(); }
@@ -226,7 +250,7 @@ struct ui_proxy_prop {
     js_CFunction getter;
     js_CFunction setter;
 };
-static const flat_map<xstring, ui_proxy_prop, 12> g_ui_proxy_props = {
+static const flat_map<xstring, ui_proxy_prop, 14> g_ui_proxy_props = {
     {"text", {ui_proxy_get_text, ui_proxy_set_text}},
     {"enabled", {ui_proxy_get_enabled, ui_proxy_set_enabled}},
     {"readonly", {ui_proxy_get_readonly, ui_proxy_set_readonly}},
@@ -237,6 +261,8 @@ static const flat_map<xstring, ui_proxy_prop, 12> g_ui_proxy_props = {
     {"tooltip", {ui_proxy_get_noop, ui_proxy_set_tooltip}},
     {"onclick", {nullptr, ui_proxy_set_onclick}},
     {"textfn", {nullptr, ui_proxy_set_textfn}},
+    {"checked", {ui_proxy_get_selected, ui_proxy_set_selected}},
+    {"checkedfn", {nullptr, ui_proxy_set_checkedfn}},
     {"items_count", {ui_proxy_get_items_count, nullptr}},
     {"value", {ui_proxy_get_value, ui_proxy_set_value}},
 };

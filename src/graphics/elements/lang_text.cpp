@@ -2,7 +2,6 @@
 
 #include "graphics/text.h"
 #include "io/gamefiles/lang.h"
-#include "io/gamefiles/lang.h"
 #include "core/bstring.h"
 #include "core/xstring.h"
 #include "js/js_game.h"

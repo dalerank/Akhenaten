@@ -366,7 +366,7 @@ struct element {
     virtual void tooltip(const xstring &t) {}
     virtual int text_width() { return 0; }
     virtual vec2i pxsize() const {
-        return vec2i { 
+        return vec2i {
             fill_width ? screen_width() : size.x,
             fill_height ? screen_height() : size.y,
         };
@@ -401,6 +401,7 @@ struct element {
 
     virtual void set_js_onclick_ref(const xstring &) {}
     virtual void set_js_textfn_ref(const xstring &ref) {}
+    virtual void set_js_checkedfn_ref(const xstring &ref) {}
 
     virtual emenu_header *dcast_menu_header() { return nullptr; }
     virtual eimage_button *dcast_image_button() { return nullptr; }
@@ -720,6 +721,21 @@ struct egeneric_button : public elabel {
     virtual void set_js_textfn_ref(const xstring &ref) override;
     virtual element &onrclick(button_onclick_cb func) override { _rfunc = func; return *this; }
     virtual element &onrclick(button_onclick_simple_cb func) override { _srfunc = func; return *this; }
+};
+
+struct echeckbox : public egeneric_button {
+    bool _checked = false;
+    xstring _checked_text = "X";
+    xstring _unchecked_text = "";
+    xstring _js_checkedfn_ref;
+
+    virtual ~echeckbox();
+    virtual void draw(UiFlags flags) override;
+    virtual void load(archive arch, element *parent, items &elems) override;
+    virtual void select(bool v) override { _checked = v; }
+    virtual bool selected() const override { return _checked; }
+    virtual void set_js_checkedfn_ref(const xstring &ref) override;
+    virtual xspan<xstring> prop_names() const override;
 };
 
 struct earrow_button : public element {

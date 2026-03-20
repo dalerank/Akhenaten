@@ -505,9 +505,9 @@ void js_call_function_bool(xstring js_ref, bool param) {
     }
 }
 
-pcstr js_call_function_with_result(xstring js_ref, int param1, int param2) {
+bvariant js_call_function_with_result(xstring js_ref, int param1, int param2) {
     if (js_ref.empty()) {
-        return "";
+        return bvariant();
     }
 
     js_State *J = js_vm_state();
@@ -523,22 +523,17 @@ pcstr js_call_function_with_result(xstring js_ref, int param1, int param2) {
         if (result != 0) {
             logs::error("JS textfn callback error: %s", js_tostring(J, -1));
             js_pop(J, 1);
-            return "";
+            return bvariant();
         }
 
-        pcstr result_str = "";
-        if (js_isstring(J, -1)) {
-            result_str = js_tostring(J, -1);
-        } else if (!js_isundefined(J, -1) && !js_isnull(J, -1)) {
-            result_str = js_tostring(J, -1);
-        }
+        bvariant out = js_helpers::js_bvariant_from_js_stack(J, -1);
         js_pop(J, 1);  // Pop the result
-        return result_str;
+        return out;
     } else {
         js_pop(J, 1);
     }
 
-    return "";
+    return bvariant();
 }
 
 static void js_push_bvariant_map_object(js_State *J, const bvariant_map &params) {
@@ -549,9 +544,9 @@ static void js_push_bvariant_map_object(js_State *J, const bvariant_map &params)
     }
 }
 
-pcstr js_call_function_with_result(xstring js_ref, const bvariant_map &params) {
+bvariant js_call_function_with_result(xstring js_ref, const bvariant_map &params) {
     if (js_ref.empty()) {
-        return "";
+        return bvariant();
     }
 
     js_State *J = js_vm_state();
@@ -564,22 +559,17 @@ pcstr js_call_function_with_result(xstring js_ref, const bvariant_map &params) {
         if (result != 0) {
             logs::error("JS callback error (bvariant_map): %s", js_tostring(J, -1));
             js_pop(J, 1);
-            return "";
+            return bvariant();
         }
 
-        pcstr result_str = "";
-        if (js_isstring(J, -1)) {
-            result_str = js_tostring(J, -1);
-        } else if (!js_isundefined(J, -1) && !js_isnull(J, -1)) {
-            result_str = js_tostring(J, -1);
-        }
+        bvariant out = js_helpers::js_bvariant_from_js_stack(J, -1);
         js_pop(J, 1);
-        return result_str;
+        return out;
     } else {
         js_pop(J, 1);
     }
 
-    return "";
+    return bvariant();
 }
 
 // High scores

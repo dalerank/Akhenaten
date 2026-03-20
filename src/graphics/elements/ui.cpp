@@ -213,6 +213,7 @@ static ui::element::ptr create_element(const xstring type) {
     case _("label"): elm = std::make_shared<ui::elabel>(); break;
     case _("text"):  elm = ui::etext::acquire(); break;
     case _("generic_button"): elm = std::make_shared<ui::egeneric_button>(); break;
+    case _("checkbox"): elm = std::make_shared<ui::echeckbox>(); break;
     case _("image_button"): elm = std::make_shared<ui::eimage_button>(); break;
     case _("resource_icon"): elm = std::make_shared<ui::eresource_icon>(); break;
     case _("arrow_button"): elm = std::make_shared<ui::earrow_button>(); break;
@@ -1228,11 +1229,9 @@ void ui::elabel::draw(UiFlags flags) {
     const vec2i offset = g_state.offset();
 
     if (!_js_textfn_ref.empty()) {
-        pcstr dynamic_text = js_call_function_with_result(_js_textfn_ref, 0, 0);
-        if (dynamic_text && *dynamic_text) {
-            ui_scope_property holder;
-            _text = ui::sformat<1024>(&holder, dynamic_text);
-        }
+        bvariant dyn = js_call_function_with_result(_js_textfn_ref, 0, 0);
+        ui_scope_property holder;
+        _text = ui::sformat<1024>(&holder, dyn.to_str().c_str());
     }
 
     if (_body.x > 0) {
@@ -1661,11 +1660,9 @@ void ui::etext::draw(UiFlags flags) {
     const vec2i offset = g_state.offset();
 
     if (!_js_textfn_ref.empty()) {
-        pcstr dynamic_text = js_call_function_with_result(_js_textfn_ref, 0, 0);
-        if (dynamic_text && *dynamic_text) {
-            ui_scope_property holder;
-            _text = ui::sformat<1024>(&holder, dynamic_text);
-        }
+        bvariant dyn = js_call_function_with_result(_js_textfn_ref, 0, 0);
+        ui_scope_property holder;
+         _text = ui::sformat<1024>(&holder, dyn.to_str().c_str());
     }
 
     if (!!(_flags & UiFlags_AlignCentered)) {
@@ -1766,7 +1763,7 @@ void ui::emenu_header::load(archive arch, element *parent, items &elems) {
 
     if (!!_textfn_js) {
         impl._textfn = [jsref = _textfn_js] () {
-            return js_call_function_with_result(jsref, 0, 0);
+            return xstring(js_call_function_with_result(jsref, 0, 0).to_str());
         };
     }
 }
@@ -1806,7 +1803,7 @@ void ui::emenu_header::load_items(archive arch, xstring section, element::items&
 
         if (!!_textfn_js) {
             item._textfn = [jsref = _textfn_js] (int param) {
-                return js_call_function_with_result(jsref, param, 0);
+                return xstring(js_call_function_with_result(jsref, param, 0).to_str());
             };
         }
     });
@@ -1911,11 +1908,9 @@ void ui::egeneric_button::draw(UiFlags gflags) {
 
     bstring256 button_text = _text.c_str();
     if (!_js_textfn_ref.empty()) {
-        pcstr dynamic_text = js_call_function_with_result(_js_textfn_ref, param1, param2);
-        if (dynamic_text && *dynamic_text) {
-            ui_scope_property holder;
-            ui::format(button_text, &holder, dynamic_text);
-        }
+        bvariant dyn = js_call_function_with_result(_js_textfn_ref, param1, param2);
+        ui_scope_property holder;
+        ui::format(button_text, &holder, dyn.to_str().c_str());
     }
 
     generic_button *btn = nullptr;
@@ -1980,4 +1975,49 @@ void ui::egeneric_button::load(archive arch, element *parent, items &elems) {
     _js_textfn_ref = arch.r_function("textfn");
     param1 = arch.r_int("param1");
     param2 = arch.r_int("param2");
+}
+
+static xstring ui_echeckbox_props[] = { "text", "enabled", "readonly", "font", "text_color", "selected", "tooltip", "onclick", "textfn", "checked", "checkedfn" };
+xspan<xstring> ui::echeckbox::prop_names() const {
+    return make_span(ui_echeckbox_props);
+}
+
+ui::echeckbox::~echeckbox() {
+    js_unref_function(_js_checkedfn_ref);
+}
+
+void ui::echeckbox::set_js_checkedfn_ref(const xstring &ref) {
+    if (ref == _js_checkedfn_ref) {
+        return;
+    }
+    js_unref_function(_js_checkedfn_ref);
+    _js_checkedfn_ref = ref;
+}
+
+void ui::echeckbox::draw(UiFlags flags) {
+    if (!_js_checkedfn_ref.empty()) {
+        bvariant dyn = js_call_function_with_result(_js_checkedfn_ref, param1, param2);
+        _checked = dyn.to_bool();
+    }
+
+    if (_js_textfn_ref.empty()) {
+        _text = _checked ? _checked_text : _unchecked_text;
+    } else {
+        bvariant dyn = js_call_function_with_result(_js_textfn_ref, 0, 0);
+        _text = dyn.to_str();
+    }
+
+    egeneric_button::draw(flags);
+}
+
+void ui::echeckbox::load(archive arch, element *parent, items &elems) {
+    egeneric_button::load(arch, parent, elems);
+
+    pcstr type = arch.r_string("type");
+    assert(!strcmp(type, "checkbox"));
+
+    _checked = arch.r_bool("checked", false);
+    _checked_text = arch.r_string("checked_text", "x");
+    _unchecked_text = arch.r_string("unchecked_text", "");
+    _js_checkedfn_ref = arch.r_function("checkedfn");
 }

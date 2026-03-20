@@ -186,9 +186,11 @@ void top_menu_widget_t::sub_menu_draw_text(const xstring header, const xstring f
             continue;
         }
         // Set color/font on the menu item mouse hover
+        xstring text_buf;
         pcstr text = item.text.c_str();
         if (item._textfn) {
-            text = item._textfn(item.parameter);
+            text_buf = item._textfn(item.parameter);
+            text = text_buf.c_str();
         }
 
         lang_text_draw(text, vec2i{impl.x_start + 8, y_offset}, item.id == focus_item_id ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT);
