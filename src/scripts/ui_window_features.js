@@ -5,12 +5,24 @@ var FEATURES_PER_PAGE = 14
 function wposbtn(i) { return { x: 32, y: 72 + i * 25} }
 function wpostxt(i) { return { x: 64, y: 78 + i * 25} }
 
-// ---- State management ----
+// ---- Feature descriptors by type ----
 
-function window_features_build_pages() {
-    var pages = []
+function window_features_make_game_feature(fname, fval, ftext) {
+    return {
+        text: ftext
+        original: fval
+        type: "game_feature"
+        key: fname
+        checkedfn: function () { return game_features.get(fname) === true }
+        toggle: function (p1, p2) {
+            game_features.set(fname, !game_features.get(fname))
+            window_features.needs_rebuild = true
+        }
+        reset: function () { game_features.set(fname, fval) }
+    }
+}
 
-    // Gameplay/UI features (bool type only), FEATURES_PER_PAGE per page
+function window_features_append_gameplay_pages(pages) {
     var pf = []
     var n = game_features.count
     for (var i = 0; i < n; i++) {
@@ -24,20 +36,7 @@ function window_features_build_pages() {
         if (!text)
             continue
 
-        ;(function (fname, fidx, fval, ftext) {
-            pf.push({
-                text: ftext
-                original: fval
-                type: "game_feature"
-                key: fname
-                checkedfn: function () { return game_features.get(fname) === true }
-                toggle: function (p1, p2) {
-                    game_features.set(fname, !game_features.get(fname))
-                    window_features.needs_rebuild = true
-                }
-                reset: function () { game_features.set(fname, fval) }
-            })
-        })(name, i, val, text)
+        pf.push(window_features_make_game_feature(name, val, text))
 
         if (pf.length >= FEATURES_PER_PAGE) {
             pages.push({title: "#TR_CONFIG_HEADER_GAMEPLAY_CHANGES", features: pf})
@@ -48,115 +47,148 @@ function window_features_build_pages() {
     if (pf.length > 0) {
         pages.push({title: "#TR_CONFIG_HEADER_GAMEPLAY_CHANGES", features: pf})
     }
+}
 
-    // Scenario env
-    if (game.session_active) {
-        var sc_orig_animals = scenario.has_animals
-        var sc_orig_flotsam = scenario.flotsam_enabled
-        pages.push({
-            title: "#TR_CONFIG_HEADER_SCENARIO_CHANGES",
-            features: [
-                {
-                    text: "#TR_CONFIG_ANIMALS"
-                    original: sc_orig_animals
-                    type: "scenario_animals"
-                    checkedfn: function () { return scenario.has_animals }
-                    toggle: function (p1, p2) {
-                        scenario.has_animals = !scenario.has_animals;
-                        window_features.needs_rebuild = true
-                    }
-                    reset: function () { scenario.has_animals = sc_orig_animals }
-                },
-                {
-                    text: "#TR_CONFIG_FLOTSAM"
-                    original: sc_orig_flotsam
-                    type: "scenario_flotsam"
-                    checkedfn: function () { return scenario.flotsam_enabled }
-                    toggle: function (p1, p2) {
-                        scenario.flotsam_enabled = !scenario.flotsam_enabled;
-                        window_features.needs_rebuild = true
-                    }
-                    reset: function () { scenario.flotsam_enabled = sc_orig_flotsam }
-                }
-            ]
-        })
-    }
-
-    // Gods
-    if (game.session_active) {
-        var gf = []
-        for (var i = 0; i < 5; i++) {
-            ;(function (godIdx) {
-                var godOrig = city.gods.is_known(godIdx)
-                gf.push({
-                    text: "God Enabled " + city.gods.get_name(godIdx)
-                    key: godIdx
-                    original: godOrig
-                    type: "god"
-                    checkedfn: function () { return city.gods.is_known(godIdx) }
-                    toggle: function (p1, p2) {
-                        city.gods.set_known(godIdx, !city.gods.is_known(godIdx));
-                        window_features.needs_rebuild = true
-                    }
-                    reset: function () { city.gods.set_known(godIdx, godOrig) }
-                })
-            })(i)
+function window_features_make_scenario_animals(orig) {
+    return {
+        text: "#TR_CONFIG_ANIMALS"
+        original: orig
+        type: "scenario_animals"
+        checkedfn: function () { return scenario.has_animals }
+        toggle: function (p1, p2) {
+            scenario.has_animals = !scenario.has_animals;
+            window_features.needs_rebuild = true
         }
-        pages.push({title: "#TR_CONFIG_HEADER_GODS_CHANGES", features: gf})
+        reset: function () { scenario.has_animals = orig }
     }
+}
 
-    // Resources (city session only — no loaded city from main menu)
-    if (game.session_active) {
-        var rf = []
-        var n_res = city.resources.count
-        for (var i = 0; i < n_res; i++) {
-            ;(function (res) {
-                var resOrig = city.resources.can_produce(res)
-                rf.push({
-                    text: "City allow " + city.resources.get_name(res)
-                    original: resOrig
-                    type: "resource"
-                    key: res
-                    checkedfn: function () { return city.resources.can_produce(res) }
-                    toggle: function (p1, p2) {
-                        city.resources.set_produce(res, !city.resources.can_produce(res));
-                        window_features.needs_rebuild = true
-                    }
-                    reset: function () { city.resources.set_produce(res, resOrig) }
-                })
-                if (rf.length >= FEATURES_PER_PAGE) {
-                    pages.push({title: "#TR_CONFIG_HEADER_RESOURCES", features: rf})
-                    rf = []
-                }
-            })(city.resources.get_id(i))
+function window_features_make_scenario_flotsam(orig) {
+    return {
+        text: "#TR_CONFIG_FLOTSAM"
+        original: orig
+        type: "scenario_flotsam"
+        checkedfn: function () { return scenario.flotsam_enabled }
+        toggle: function (p1, p2) {
+            scenario.flotsam_enabled = !scenario.flotsam_enabled;
+            window_features.needs_rebuild = true
         }
-        pages.push({title: "#TR_CONFIG_HEADER_RESOURCES", features: rf})
+        reset: function () { scenario.flotsam_enabled = orig }
     }
+}
 
-    // Languages (volatile — apply immediately on toggle)
+function window_features_append_scenario_pages(pages) {
+    if (!game.session_active)
+        return
+    var sc_orig_animals = scenario.has_animals
+    var sc_orig_flotsam = scenario.flotsam_enabled
+    pages.push({
+        title: "#TR_CONFIG_HEADER_SCENARIO_CHANGES",
+        features: [
+            window_features_make_scenario_animals(sc_orig_animals),
+            window_features_make_scenario_flotsam(sc_orig_flotsam)
+        ]
+    })
+}
+
+function window_features_make_god(godIdx) {
+    var godOrig = city.gods.is_known(godIdx)
+    return {
+        text: "God Enabled " + city.gods.get_name(godIdx)
+        key: godIdx
+        original: godOrig
+        type: "god"
+        checkedfn: function () { return city.gods.is_known(godIdx) }
+        toggle: function (p1, p2) {
+            city.gods.set_known(godIdx, !city.gods.is_known(godIdx));
+            window_features.needs_rebuild = true
+        }
+        reset: function () { city.gods.set_known(godIdx, godOrig) }
+    }
+}
+
+function window_features_append_gods_pages(pages) {
+    if (!game.session_active)
+        return
+    var gf = []
+    for (var i = 0; i < 5; i++) {
+        gf.push(window_features_make_god(i))
+    }
+    pages.push({title: "#TR_CONFIG_HEADER_GODS_CHANGES", features: gf})
+}
+
+function window_features_make_resource(res) {
+    var resOrig = city.resources.can_produce(res)
+    return {
+        text: "City allow " + city.resources.get_name(res)
+        original: resOrig
+        type: "resource"
+        key: res
+        checkedfn: function () { return city.resources.can_produce(res) }
+        toggle: function (p1, p2) {
+            city.resources.set_produce(res, !city.resources.can_produce(res));
+            window_features.needs_rebuild = true
+        }
+        reset: function () { city.resources.set_produce(res, resOrig) }
+    }
+}
+
+function window_features_append_resource_pages(pages) {
+    if (!game.session_active)
+        return
+    var rf = []
+    var n_res = city.resources.count
+    for (var i = 0; i < n_res; i++) {
+        var res = city.resources.get_id(i)
+        rf.push(window_features_make_resource(res))
+        if (rf.length >= FEATURES_PER_PAGE) {
+            pages.push({title: "#TR_CONFIG_HEADER_RESOURCES", features: rf})
+            rf = []
+        }
+    }
+    pages.push({title: "#TR_CONFIG_HEADER_RESOURCES", features: rf})
+}
+
+function window_features_make_language(langId, caption) {
+    return {
+        text: caption
+        original: langId
+        type: "language"
+        key: langId
+        checkedfn: function () { return game.languages.current == langId }
+        toggle: function (p1, p2) {
+            game.languages.current = langId;
+            window_features.needs_rebuild = true
+        }
+        reset: function () { game.languages.current = langId }
+    }
+}
+
+function window_features_append_language_pages(pages) {
     var lf = []
     var n_langs = game.languages.count
     for (var i = 0; i < n_langs; i++) {
-        ;(function (langId, caption) {
-            lf.push({
-                text: caption
-                original: langId
-                type: "language"
-                key: langId
-                checkedfn: function () { return game.languages.current == langId }
-                toggle: function (p1, p2) {
-                    game.languages.current = langId;
-                    window_features.needs_rebuild = true
-                }
-                reset: function () { game.languages.current = langId }
-            })
-            if (lf.length >= FEATURES_PER_PAGE) {
-                pages.push({title: "#TR_CONFIG_HEADER_LANGUAGES", features: lf})
-                lf = []
-            }
-        })(game.languages.get_id(i), game.languages.get_caption(i))
+        var langId = game.languages.get_id(i)
+        var caption = game.languages.get_caption(i)
+        lf.push(window_features_make_language(langId, caption))
+        if (lf.length >= FEATURES_PER_PAGE) {
+            pages.push({title: "#TR_CONFIG_HEADER_LANGUAGES", features: lf})
+            lf = []
+        }
     }
     pages.push({title: "#TR_CONFIG_HEADER_LANGUAGES", features: lf})
+}
+
+// ---- State management ----
+
+function window_features_build_pages() {
+    var pages = []
+
+    window_features_append_gameplay_pages(pages)
+    window_features_append_scenario_pages(pages)
+    window_features_append_gods_pages(pages)
+    window_features_append_resource_pages(pages)
+    window_features_append_language_pages(pages)
 
     window_features.pages = pages
 }
