@@ -78,7 +78,7 @@ file_dialog_delete g_file_dialog_delete;
 static void set_chosen_filename(const char* name) {
     auto& data = g_file_dialog_delete;
     strcpy(data.selected_file, name);
-    encoding_from_utf8(data.selected_file, data.typed_name, MAX_PLAYER_NAME);
+    encoding_from_utf8(data.selected_file, data.typed_name, MAX_FILE_NAME);
 }
 
 static void clear_chosen_filename() {
@@ -204,6 +204,7 @@ static void button_ok_cancel(int is_ok, int param2) {
     }
 
     strncpy(data.file_data->last_loaded_file, get_chosen_filename(), MAX_FILE_NAME - 1);
+    data.file_data->last_loaded_file[MAX_FILE_NAME - 1] = '\0';
 }
 
 static void button_select_file(int index, int param2) {

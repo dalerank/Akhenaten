@@ -83,6 +83,7 @@ public:
     void refresh_file_finder();
     void refresh_scrollbar();
     void clamp_scrollbar_position();
+    void scroll_to_entry(int entry_idx);
 
     void draw();
     int input_handle(const mouse* m);

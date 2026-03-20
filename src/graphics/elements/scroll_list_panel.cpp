@@ -1,6 +1,7 @@
 #include "scroll_list_panel.h"
 
 #include "core/string.h"
+#include "core/log.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "graphics/elements/ui.h"
@@ -35,7 +36,7 @@ int scrollable_list::get_selected_button_id() {
     return selected_entry_idx + 1 + scrollbar.scroll_position;
 }
 int scrollable_list::get_focused_entry_idx() {
-    return focus_button_id - 1 - scrollbar.scroll_position;
+    return focus_button_id - 1 + scrollbar.scroll_position;
 }
 int scrollable_list::get_selected_entry_idx() {
     return selected_entry_idx;
@@ -82,9 +83,12 @@ const xstring scrollable_list::get_selected_entry_text(int filename_syntax) {
 }
 
 int scrollable_list::get_entry_idx(pcstr button_text) {
+    if (!button_text || !*button_text) {
+        return -1;
+    }
     for (int i = 0; i < _items_count; ++i) {
         const xstring txt = get_entry_text_by_idx(i, FILE_NO_EXT);
-        if (txt == button_text) {
+        if (string_compare_case_insensitive(txt.c_str(), button_text) == 0) {
             return i;
         }
     }
@@ -157,6 +161,20 @@ void scrollable_list::clamp_scrollbar_position() {
         scrollbar.scroll_position = 0;
 }
 
+void scrollable_list::scroll_to_entry(int entry_idx) {
+    if (entry_idx < 0 || entry_idx >= _items_count) {
+        return;
+    }
+    if (entry_idx < scrollbar.scroll_position) {
+        scrollbar.scroll_position = entry_idx;
+    }
+    const int last_visible = scrollbar.scroll_position + (int)ui_params.view_items - 1;
+    if (entry_idx > last_visible) {
+        scrollbar.scroll_position = entry_idx - (int)ui_params.view_items + 1;
+    }
+    clamp_scrollbar_position();
+}
+
 static void on_scroll(void) {
 }
 
@@ -173,7 +191,8 @@ int scrollable_list::input_handle(const mouse* m) {
 
     int last_focused = focus_button_id;
     int handled_button_id = generic_buttons_handle_mouse(m, ui_params.pos, list_buttons, ui_params.view_items, &focus_button_id, nullptr);
-    if (handled_button_id > 0 && get_focused_entry_idx() < _items_count) {
+    const int global_row = handled_button_id > 0 ? (handled_button_id - 1 + scrollbar.scroll_position) : -1;
+    if (handled_button_id > 0 && global_row >= 0 && global_row < _items_count) {
         generic_button* button = &list_buttons[handled_button_id - 1];
         if (m->left.went_up) {
             select_by_button_id(handled_button_id);
@@ -182,12 +201,19 @@ int scrollable_list::input_handle(const mouse* m) {
                 left_click_callback(button->parameter1, button->parameter2);
             }
 
-            auto &item = manual_entry_list[selected_entry_idx];
-            if (left_click_ex_callback) {
+            entry_data click_item;
+            if (left_click_ex_callback || double_click_ex_callback) {
                 if (ui_params.use_file_finder) {
-                    item.text = file_finder->files[selected_entry_idx];
+                    click_item.text = file_finder && file_finder->files ? file_finder->files[global_row] : xstring();
+                    click_item.user_data = 0;
+                } else if (global_row < (int)manual_entry_list.size()) {
+                    click_item = manual_entry_list[global_row];
+                } else {
+                    click_item = {};
                 }
-                left_click_ex_callback(&item);
+            }
+            if (left_click_ex_callback) {
+                left_click_ex_callback(&click_item);
             }
 
             // double click callback (LMB only)
@@ -197,7 +223,7 @@ int scrollable_list::input_handle(const mouse* m) {
                 }
 
                 if (double_click_ex_callback) {
-                    double_click_ex_callback(&item);
+                    double_click_ex_callback(&click_item);
                 }
             }
 

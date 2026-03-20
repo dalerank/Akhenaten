@@ -16,6 +16,7 @@
 #include "city/city_building_menu_ctrl.h"
 #include "graphics/graphics.h"
 #include "core/profiler.h"
+#include "core/log.h"
 #include "core/flat_map.h"
 #include "game/game.h"
 
@@ -183,7 +184,14 @@ void ui_proxy_set_checkedfn(js_State *J) {
 }
 void ui_proxy_get_noop_render_item(js_State *J) { (void)J; J->pushundefined(); }
 void ui_proxy_get_value(js_State *J) { auto elem = GET_ELEM(J); js_pushstring(J, elem ? elem->get_value() : ""); }
-void ui_proxy_set_value(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->set_value(js_tostring(J, 1)); } J->pushundefined(); }
+void ui_proxy_set_value(js_State *J) {
+    auto elem = GET_ELEM(J);
+    pcstr v = js_tostring(J, 1);
+    if (elem) {
+        elem->set_value(v);
+    }
+    J->pushundefined();
+}
 
 void ui_proxy_add_item(js_State *J) {
     ui::element* elem = GET_ELEM(J);
@@ -231,6 +239,19 @@ void ui_proxy_refresh_file_finder(js_State *J) {
     J->pushundefined();
 }
 
+void ui_proxy_change_file_path(js_State *J) {
+    ui::element* elem = GET_ELEM(J);
+    if (elem) {
+        auto* list = elem->dcast_scrollable_list();
+        if (list) {
+            pcstr d = js_isstring(J, 1) ? js_tostring(J, 1) : "";
+            pcstr e = js_isstring(J, 2) ? js_tostring(J, 2) : "";
+            list->change_file_path(xstring(d), xstring(e));
+        }
+    }
+    J->pushundefined();
+}
+
 void ui_proxy_get_selected_text(js_State *J) {
     ui::element* elem = GET_ELEM(J);
     int syntax = js_tointeger(J, 1);
@@ -271,12 +292,13 @@ struct ui_proxy_func {
     js_CFunction fn;
     int nargs;
 };
-static const flat_map<xstring, ui_proxy_func, 16> g_ui_proxy_funcs = {
+static const flat_map<xstring, ui_proxy_func, 17> g_ui_proxy_funcs = {
     {"add_item", {ui_proxy_add_item, 1}},
     {"clear", {ui_proxy_clear, 0}},
     {"select_item", {ui_proxy_select_item, 1}},
     {"select_index", {ui_proxy_select_entry, 1}},
     {"refresh_file_finder", {ui_proxy_refresh_file_finder, 0}},
+    {"change_file_path", {ui_proxy_change_file_path, 2}},
     {"selected_text", {ui_proxy_get_selected_text, 1}},
 };
 
