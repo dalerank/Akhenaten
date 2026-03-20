@@ -22,6 +22,7 @@ struct autoconfig_window : public ui::widget {
 
     bool _is_inited = false;
     bool allow_rmb_goback = false;
+    bool draw_underlying = false;
     xstring help_id;
 
     static void before_mission_start();

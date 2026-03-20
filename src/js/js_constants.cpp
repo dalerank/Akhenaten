@@ -25,6 +25,7 @@ js_State *js_vm_state();
 #define _R(name) js_pushnumber(J, name); js_setglobal(J, #name);
 void js_register_game_constants(js_State *J) {
     _R(FILE_TYPE_SAVED_GAME)
+    _R(FILE_TYPE_SCENARIO)
     _R(MAP_SELECTION_CAMPAIGN)
     _R(MAP_SELECTION_CUSTOM)
     _R(SCENARIO_NUBT)

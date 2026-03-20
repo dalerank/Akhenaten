@@ -11,8 +11,8 @@
 #include "js/js_events.h"
 #include "input/input.h"
 #include <algorithm>
-#include <mutex>
 #include <map>
+#include <mutex>
 
 using autoconfig_windows = std::map<xstring, autoconfig_window *>;
 autoconfig_windows* g_autoconfig_windows = nullptr;
@@ -65,7 +65,8 @@ void autoconfig_window::archive_load(archive arch) {
     assert(elements.size() > 0);
     _is_inited = false;
     help_id = arch.r_string("help_id");
-    allow_rmb_goback = arch.r_string("allow_rmb_goback");
+    allow_rmb_goback = arch.r_bool("allow_rmb_goback");
+    draw_underlying = arch.r_bool("draw_underlying", false);
 }
 
 int autoconfig_window::ui_handle_mouse(const mouse *m) {
@@ -107,6 +108,10 @@ int autoconfig_window::draw_background(UiFlags flags) {
 
 void autoconfig_window::ui_draw_foreground(UiFlags flags) {
     OZZY_PROFILER_FUNCTION();
+
+    if (draw_underlying) {
+        window_draw_underlying_window(UiFlags_Readonly);
+    }
 
     ui.begin_widget(pos);
     ui.draw(flags);

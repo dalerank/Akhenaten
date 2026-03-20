@@ -1236,6 +1236,10 @@ pcstr ui::einput::get_value() const {
 
 void ui::einput::set_value(pcstr utf8) {
     encoding_from_utf8(utf8 ? utf8 : "", _buffer, MAX_PLAYER_NAME);
+    if (_started) {
+        input_box_refresh_text(&_box);
+        memcpy(_last_buffer, _buffer, sizeof(_last_buffer));
+    }
 }
 
 void ui::eresource_icon::draw(UiFlags flags) {
@@ -1580,6 +1584,13 @@ void ui::escrollable_list::refresh_file_finder() {
     }
 }
 
+void ui::escrollable_list::change_file_path(const xstring &dir, const xstring &ext) {
+    params.files_dir = dir;
+    params.file_ext = ext;
+    ensure_panel();
+    panel->change_file_path(dir, ext);
+}
+
 xstring ui::escrollable_list::selected_entry_text(int filename_syntax) const {
     return panel ? panel->get_selected_entry_text(filename_syntax) : "";
 }
@@ -1612,7 +1623,7 @@ ui::escrollable_list::~escrollable_list() {
 }
 
 
-xstring escrollable_list_funcs[] = { "add_item", "clear", "select_item", "select_index", "refresh_file_finder", "selected_text" };
+xstring escrollable_list_funcs[] = { "add_item", "clear", "select_item", "select_index", "refresh_file_finder", "change_file_path", "selected_text" };
 xspan<xstring> ui::escrollable_list::func_names() const {
     return escrollable_list_funcs;
 }

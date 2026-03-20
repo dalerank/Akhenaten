@@ -21,15 +21,18 @@
 #include "graphics/text.h"
 #include "input/input.h"
 #include "content/vfs.h"
-#include "io/gamefiles/lang.h"
 #include "io/gamestate/boilerplate.h"
 #include "widget/input_box.h"
 #include "window/window_city.h"
 #include "window/editor/window_editor.h"
 #include "window/autoconfig_window.h"
 #include "game/settings.h"
+#include "game/game.h"
+#include "game/game_config.h"
 #include "io/manager.h"
 #include "js/js_game.h"
+
+#include <cstring>
 
 static const time_millis NOT_EXIST_MESSAGE_TIMEOUT = 500;
 
@@ -75,10 +78,61 @@ struct file_dialog_load : public autoconfig_window_t<file_dialog_load> {
 
 file_dialog_load g_file_dialog_load;
 
+/** UTF-8: last path segment, then strip one extension (matches list FILE_NO_EXT entries). */
+static void utf8_basename_strip_extension(pcstr src, char* out, size_t out_sz) {
+    out[0] = '\0';
+    if (!src || !*src || out_sz == 0) {
+        return;
+    }
+    pcstr s = src;
+    pcstr slash = strrchr(s, '/');
+    if (!slash) {
+        slash = strrchr(s, '\\');
+    }
+    s = slash ? slash + 1 : s;
+    strncpy(out, s, out_sz - 1);
+    out[out_sz - 1] = '\0';
+    vfs::file_remove_extension(out);
+}
+
+/** Basename for load dialog: persisted last_loaded_file, else session / last written save path. */
+static void resolve_load_dialog_basename_utf8(file_type type, char* out, size_t out_sz) {
+    out[0] = '\0';
+    file_type_data* fd = type == FILE_TYPE_SCENARIO ? &map_file_data : &saved_game_data;
+
+    if (strlen(fd->last_loaded_file) > 0) {
+        utf8_basename_strip_extension(fd->last_loaded_file, out, out_sz);
+        if (out[0]) {
+            return;
+        }
+    }
+
+    if (type == FILE_TYPE_SAVED_GAME) {
+        if (game.session.last_loaded == e_session_save && !game.session.last_loaded_mission.empty()) {
+            utf8_basename_strip_extension(game.session.last_loaded_mission.c_str(), out, out_sz);
+            if (out[0]) {
+                return;
+            }
+        }
+        const xstring last_write = game_features::gameopt_last_save_filename.to_string();
+        if (!last_write.empty()) {
+            utf8_basename_strip_extension(last_write.c_str(), out, out_sz);
+        }
+    } else {
+        if (game.session.last_loaded == e_session_custom_map && !game.session.last_loaded_mission.empty()) {
+            utf8_basename_strip_extension(game.session.last_loaded_mission.c_str(), out, out_sz);
+        }
+    }
+}
+
 static void set_chosen_filename(const char* name) {
     auto& data = g_file_dialog_load;
-    strcpy(data.selected_file, name);
-    encoding_from_utf8(data.selected_file, data.typed_name, MAX_PLAYER_NAME);
+    if (!name) {
+        name = "";
+    }
+    strncpy(data.selected_file, name, MAX_FILE_NAME - 1);
+    data.selected_file[MAX_FILE_NAME - 1] = '\0';
+    encoding_from_utf8(data.selected_file, data.typed_name, MAX_FILE_NAME);
 }
 
 static void clear_chosen_filename() {
@@ -87,7 +141,9 @@ static void clear_chosen_filename() {
 
 static bool is_chosen_filename(int index) {
     auto& data = g_file_dialog_load;
-    return data.panel->get_selected_entry_text(FILE_NO_EXT) == data.selected_file;
+    return string_compare_case_insensitive(
+               data.panel->get_selected_entry_text(FILE_NO_EXT).c_str(),
+               data.selected_file) == 0;
 }
 
 static bool is_valid_chosen_filename() {
@@ -121,12 +177,9 @@ static void init(file_type type) {
     data.type = type;
     data.file_data = type == FILE_TYPE_SCENARIO ? &map_file_data : &saved_game_data;
 
-    // get last saved file name
-    if (strlen(data.file_data->last_loaded_file) == 0) {
-        set_chosen_filename((pcstr)lang_get_string(9, type == FILE_TYPE_SCENARIO ? 7 : 6));
-    } else {
-        encoding_from_utf8(data.file_data->last_loaded_file, data.typed_name, MAX_FILE_NAME);
-    }
+    char hint[MAX_FILE_NAME];
+    resolve_load_dialog_basename_utf8(type, hint, sizeof(hint));
+    set_chosen_filename(hint[0] ? hint : "");
 
     data.message_not_exist_start_time = 0;
 
@@ -141,7 +194,14 @@ static void init(file_type type) {
         data.panel->append_files_with_extension(folder_name, saved_game_data_expanded.extension);
     }
 
-    set_chosen_filename(data.file_data->last_loaded_file);
+    // Highlight list row for last_loaded_file (only input text was set before; list had no selection)
+    if (strlen(data.selected_file) > 0 && data.panel->has_entry(data.selected_file)) {
+        data.panel->select(data.selected_file);
+        data.panel->scroll_to_entry(data.panel->get_selected_entry_idx());
+    } else {
+        data.panel->unselect();
+    }
+
     input_box_start(&file_name_input, data.typed_name, MAX_FILE_NAME, 0);
 }
 
@@ -217,6 +277,7 @@ static void button_ok_cancel(int is_ok, int param2) {
     }
 
     strncpy(data.file_data->last_loaded_file, get_chosen_filename(), MAX_FILE_NAME - 1);
+    data.file_data->last_loaded_file[MAX_FILE_NAME - 1] = '\0';
 }
 
 static void button_select_file(int index, int param2) {
