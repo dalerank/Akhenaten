@@ -34,6 +34,14 @@
 using namespace ui::opt;
 
 namespace ui {
+
+    const xstring element::ONCLICK{"onclick"};
+    const xstring element::ONRCLICK{"onrclick"};
+    const xstring element::TEXTFN{"textfn"};
+    const xstring element::CHECKEDFN{"checkedfn"};
+    const xstring element::ONINPUT{"oninput"};
+    const xstring element::EMPTY_JS_REF{};
+
     tooltip_context tooltipctx;
 
     const tooltip_context &get_tooltip() {
@@ -868,6 +876,46 @@ xspan<xstring> ui::element::prop_names() const {
     return make_span(ui_element_props);
 }
 
+ui::element::~element() {
+    for (auto &kv : _js_refs) {
+        if (!kv.second.empty()) {
+            js_unref_function(kv.second);
+        }
+    }
+    _js_refs.clear();
+}
+
+void ui::element::set_ref(const xstring &key, const xstring &ref) {
+    auto it = _js_refs.find(key);
+    xstring old;
+    if (it != _js_refs.end()) {
+        old = it->second;
+    }
+    if (ref == old) {
+        return;
+    }
+    if (!old.empty()) {
+        js_unref_function(old);
+    }
+    if (ref.empty()) {
+        if (it != _js_refs.end()) {
+            _js_refs.erase(it);
+        }
+    } else if (it != _js_refs.end()) {
+        it->second = ref;
+    } else {
+        _js_refs.insert({key, ref});
+    }
+}
+
+const xstring &ui::element::js_ref(const xstring &key) const {
+    auto it = _js_refs.find(key);
+    if (it == _js_refs.end()) {
+        return EMPTY_JS_REF;
+    }
+    return it->second;
+}
+
 void ui::element::load(archive arch, element *parent, element::items &items) {
     debug_tag = arch.r_int("debug_tag");
     parent_id = parent ? parent->id : xstring();
@@ -1135,10 +1183,6 @@ xspan<xstring> ui::einput::prop_names() const {
     return make_span(ui_einput_value_props);
 }
 
-ui::einput::~einput() {
-    js_unref_function(_js_oninput_ref);
-}
-
 void ui::einput::stop_input() {
     if (_started) {
         input_box_stop(&_box);
@@ -1158,7 +1202,7 @@ void ui::einput::load(archive arch, element *parent, items &elems) {
     _box.height_blocks = size.y;
     _box.max_length = arch.r_int("max_length", MAX_PLAYER_NAME - 1);
     _allow_punctuation = arch.r_int("allow_punctuation", 1);
-    _js_oninput_ref = arch.r_function("oninput");
+    set_ref(ONINPUT, arch.r_function("oninput"));
 }
 
 void ui::einput::draw(UiFlags flags) {
@@ -1177,10 +1221,10 @@ void ui::einput::draw(UiFlags flags) {
     g_state.input_boxes.push_back(&_box);
     input_box_draw(&_box);
 
-    if (!_js_oninput_ref.empty() && memcmp(_buffer, _last_buffer, sizeof(_buffer)) != 0) {
+    if (!js_ref(ONINPUT).empty() && memcmp(_buffer, _last_buffer, sizeof(_buffer)) != 0) {
         memcpy(_last_buffer, _buffer, sizeof(_buffer));
         xstring value(get_value());
-        js_call_function_with_result(_js_oninput_ref, bvariant_map{{ "value", bvariant_map_val(value.c_str()) }});
+        js_call_function(js_ref(ONINPUT), bvariant_map{{ "value", bvariant_map_val(value.c_str()) }});
     }
 }
 
@@ -1221,15 +1265,11 @@ void ui::eresource_icon::load(archive arch, element *parent, items &elems) {
     prop = arch.r_string("prop");
 }
 
-ui::elabel::~elabel() {
-    js_unref_function(_js_textfn_ref);
-}
-
 void ui::elabel::draw(UiFlags flags) {
     const vec2i offset = g_state.offset();
 
-    if (!_js_textfn_ref.empty()) {
-        bvariant dyn = js_call_function_with_result(_js_textfn_ref, 0, 0);
+    if (!js_ref(TEXTFN).empty()) {
+        bvariant dyn = js_call_function(js_ref(TEXTFN), 0, 0);
         ui_scope_property holder;
         _text = ui::sformat<1024>(&holder, dyn.to_str().c_str());
     }
@@ -1264,7 +1304,7 @@ void ui::elabel::load(archive arch, element *parent, items &elems) {
     element::load(arch, parent, elems);
 
     _text = arch.r_string("text");
-    _js_textfn_ref = arch.r_function("textfn");
+    set_ref(TEXTFN, arch.r_function("textfn"));
     if (_text[0] == '#') {
         _text = lang_text_from_key(_text.c_str());
     }
@@ -1312,14 +1352,6 @@ void ui::elabel::font(int v) {
     _font = (e_font)v;
 }
 
-void ui::elabel::set_js_textfn_ref(const xstring &ref) {
-    if (ref == _js_textfn_ref) {
-        return;
-    }
-    js_unref_function(_js_textfn_ref);
-    _js_textfn_ref = ref;
-}
-
 void ui::elabel::width(int v) {
     size.x = v;
     _wrap = v;
@@ -1343,25 +1375,13 @@ void ui::eimage_button::load(archive arch, element *parent, items &elems) {
     offsets.data[2] = arch.r_int("offset_pressed", 2);
     offsets.data[3] = arch.r_int("offset_disabled", 3);
     _tooltip = arch.r_string("tooltip");
-    _js_onclick_ref = arch.r_function("onclick");
+    set_ref(ONCLICK, arch.r_function("onclick"));
 
     pcstr name_icon_texture = arch.r_string("icon_texture");
     if (name_icon_texture && *name_icon_texture) {
         vec2i tmp_size;
         icon_texture = load_icon_texture(name_icon_texture, tmp_size);
     }
-}
-
-ui::eimage_button::~eimage_button() {
-    js_unref_function(_js_onclick_ref);
-}
-
-void ui::eimage_button::set_js_onclick_ref(const xstring &ref) {
-    if (ref == _js_onclick_ref) {
-        return;
-    }
-    js_unref_function(_js_onclick_ref);
-    _js_onclick_ref = ref;
 }
 
 void ui::eimage_button::draw(UiFlags gflags) {
@@ -1422,8 +1442,9 @@ void ui::eimage_button::draw(UiFlags gflags) {
     }
 
     // Set up click handler - prefer JS callback if available, otherwise use C++ callback
-    if (!_js_onclick_ref.empty()) {
-        btn->onclick([js_ref = _js_onclick_ref](int, int) {
+    if (!js_ref(ONCLICK).empty()) {
+        const xstring js_onclick = js_ref(ONCLICK);
+        btn->onclick([js_ref = js_onclick](int, int) {
             js_call_function(js_ref);
         });
     } else {
@@ -1483,13 +1504,13 @@ void ui::escrollable_list::clear() {
 
 void ui::escrollable_list::on_dblclick_item(const scrollable_list::entry_data *entry) {
     if (!_js_ondoubleclick_item_ref.empty()) {
-        js_call_function_with_result(_js_ondoubleclick_item_ref, { { "text", entry->text } });
+        js_call_function(_js_ondoubleclick_item_ref, { { "text", entry->text } });
     }
 }
 
 void ui::escrollable_list::on_render_item(int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font) {
     if (!_js_render_item_ref.empty()) {
-        js_call_function_with_result(_js_render_item_ref, {
+        js_call_function(_js_render_item_ref, {
             { "index", (int32_t)index },
             { "flags", (int32_t)flags },
             { "text", entry.text },
@@ -1530,7 +1551,7 @@ void ui::escrollable_list::ensure_panel() {
     if (_onclick_ex_cb || !_js_onclick_item_ref.empty()) {
         panel->set_onclick_entry([this] (scrollable_list::entry_data *e) {
             if (e) {
-                js_call_function_with_result(_js_onclick_item_ref, { { "text", e->text } });
+                js_call_function(_js_onclick_item_ref, { { "text", e->text } });
             }
         });
     }
@@ -1659,8 +1680,8 @@ std::shared_ptr<ui::etext> ui::etext::acquire() {
 void ui::etext::draw(UiFlags flags) {
     const vec2i offset = g_state.offset();
 
-    if (!_js_textfn_ref.empty()) {
-        bvariant dyn = js_call_function_with_result(_js_textfn_ref, 0, 0);
+    if (!js_ref(TEXTFN).empty()) {
+        bvariant dyn = js_call_function(js_ref(TEXTFN), 0, 0);
         ui_scope_property holder;
          _text = ui::sformat<1024>(&holder, dyn.to_str().c_str());
     }
@@ -1757,13 +1778,13 @@ void ui::emenu_header::load(archive arch, element *parent, items &elems) {
 
     if (!!_onclick_js) {
         impl._onclick = [jsref = _onclick_js] (auto &item) {
-            js_call_function_with_result(jsref, item.parameter, 0);
+            js_call_function(jsref, item.parameter, 0);
         };
     }
 
     if (!!_textfn_js) {
         impl._textfn = [jsref = _textfn_js] () {
-            return xstring(js_call_function_with_result(jsref, 0, 0).to_str());
+            return xstring(js_call_function(jsref, 0, 0).to_str());
         };
     }
 }
@@ -1797,13 +1818,13 @@ void ui::emenu_header::load_items(archive arch, xstring section, element::items&
 
         if (!!_onclick_js) {
             item._onclick = [jsref = _onclick_js] (int param) {
-                js_call_function_with_result(jsref, param, 0);
+                js_call_function(jsref, param, 0);
             };
         }
 
         if (!!_textfn_js) {
             item._textfn = [jsref = _textfn_js] (int param) {
-                return xstring(js_call_function_with_result(jsref, param, 0).to_str());
+                return xstring(js_call_function(jsref, param, 0).to_str());
             };
         }
     });
@@ -1844,57 +1865,23 @@ void ui::earrow_button::load(archive arch, element *parent, items &elems) {
 
     tiny = arch.r_bool("tiny");
     down = arch.r_bool("down");
-    _js_onclick_ref = arch.r_function("onclick");
-}
-
-ui::earrow_button::~earrow_button() {
-    js_unref_function(_js_onclick_ref);
-}
-
-void ui::earrow_button::set_js_onclick_ref(const xstring &ref) {
-    if (ref == _js_onclick_ref) {
-        return;
-    }
-    js_unref_function(_js_onclick_ref);
-    _js_onclick_ref = ref;
+    set_ref(ONCLICK, arch.r_function("onclick"));
 }
 
 void ui::earrow_button::js_call() {
-    js_call_function(_js_onclick_ref);
+    js_call_function(js_ref(ONCLICK));
 }
 
 void ui::earrow_button::draw(UiFlags flags) {
     auto &btn = ui::arw_button(pos, down, tiny);
 
     // Set up click handler - prefer JS callback if available, otherwise use C++ callback
-    if (!_js_onclick_ref.empty()) {
+    if (!js_ref(ONCLICK).empty()) {
         btn.onclick([this] { this->js_call(); });
     } else if (_func || _sfunc) {
         btn.onclick(_func);
         btn.onclick(_sfunc);
     }
-}
-
-ui::egeneric_button::~egeneric_button() {
-    js_unref_function(_js_onclick_ref);
-    js_unref_function(_js_onrclick_ref);
-    js_unref_function(_js_textfn_ref);
-}
-
-void ui::egeneric_button::set_js_onclick_ref(const xstring &ref) {
-    if (ref == _js_onclick_ref) {
-        return;
-    }
-    js_unref_function(_js_onclick_ref);
-    _js_onclick_ref = ref;
-}
-
-void ui::egeneric_button::set_js_textfn_ref(const xstring &ref) {
-    if (ref == _js_textfn_ref) {
-        return;
-    }
-    js_unref_function(_js_textfn_ref);
-    _js_textfn_ref = ref;
 }
 
 void ui::egeneric_button::draw(UiFlags gflags) {
@@ -1907,8 +1894,8 @@ void ui::egeneric_button::draw(UiFlags gflags) {
                       | (readonly ? UiFlags_Readonly : UiFlags_None);
 
     bstring256 button_text = _text.c_str();
-    if (!_js_textfn_ref.empty()) {
-        bvariant dyn = js_call_function_with_result(_js_textfn_ref, param1, param2);
+    if (!js_ref(TEXTFN).empty()) {
+        bvariant dyn = js_call_function(js_ref(TEXTFN), param1, param2);
         ui_scope_property holder;
         ui::format(button_text, &holder, dyn.to_str().c_str());
     }
@@ -1927,19 +1914,19 @@ void ui::egeneric_button::draw(UiFlags gflags) {
     const bool clickable = !darkened && !readonly;
 
     // Set up click handler - prefer JS callback if available, otherwise use C++ callback
-    if (clickable && !!_js_onclick_ref) {
+    if (clickable && !js_ref(ONCLICK).empty()) {
         btn->onclick([this] { this->js_call(); });
     }
 
-    if (clickable && !!_js_onrclick_ref) {
+    if (clickable && !js_ref(ONRCLICK).empty()) {
         btn->onrclick([this] { this->js_rcall(); });
     }
 
-    if (clickable && _func && !_js_onclick_ref) { btn->onclick(_func); }
-    if (clickable && _sfunc && !_js_onclick_ref) { btn->onclick(_sfunc); }
+    if (clickable && _func && js_ref(ONCLICK).empty()) { btn->onclick(_func); }
+    if (clickable && _sfunc && js_ref(ONCLICK).empty()) { btn->onclick(_sfunc); }
 
-    if (clickable && _rfunc && !_js_onrclick_ref) { btn->onrclick(_rfunc); }
-    if (clickable && _srfunc && !_js_onrclick_ref) { btn->onrclick(_srfunc); }
+    if (clickable && _rfunc && js_ref(ONRCLICK).empty()) { btn->onrclick(_rfunc); }
+    if (clickable && _srfunc && js_ref(ONRCLICK).empty()) { btn->onrclick(_srfunc); }
 
     const vec2i offset = g_state.offset();
     if (clickable && is_button_hover(*btn, offset)) {
@@ -1948,14 +1935,14 @@ void ui::egeneric_button::draw(UiFlags gflags) {
 }
 
 void ui::egeneric_button::js_call() {
-    if (!_js_onclick_ref.empty()) {
-        js_call_function(_js_onclick_ref);
+    if (!js_ref(ONCLICK).empty()) {
+        js_call_function(js_ref(ONCLICK));
     }
 }
 
 void ui::egeneric_button::js_rcall() {
-    if (!_js_onrclick_ref.empty()) {
-        js_call_function(_js_onrclick_ref);
+    if (!js_ref(ONRCLICK).empty()) {
+        js_call_function(js_ref(ONRCLICK));
     }
 }
 
@@ -1970,9 +1957,9 @@ void ui::egeneric_button::load(archive arch, element *parent, items &elems) {
     _border = arch.r_int("border", 1);
     _hbody = arch.r_bool("hbody", true);
     _split = arch.r_bool("split", false);
-    _js_onclick_ref = arch.r_function("onclick");
-    _js_onrclick_ref = arch.r_function("onrclick");
-    _js_textfn_ref = arch.r_function("textfn");
+    set_ref(ONCLICK, arch.r_function("onclick"));
+    set_ref(ONRCLICK, arch.r_function("onrclick"));
+    set_ref(TEXTFN, arch.r_function("textfn"));
     param1 = arch.r_int("param1");
     param2 = arch.r_int("param2");
 }
@@ -1982,28 +1969,15 @@ xspan<xstring> ui::echeckbox::prop_names() const {
     return make_span(ui_echeckbox_props);
 }
 
-ui::echeckbox::~echeckbox() {
-    js_unref_function(_js_checkedfn_ref);
-}
-
-void ui::echeckbox::set_js_checkedfn_ref(const xstring &ref) {
-    if (ref == _js_checkedfn_ref) {
-        return;
-    }
-    js_unref_function(_js_checkedfn_ref);
-    _js_checkedfn_ref = ref;
-}
-
 void ui::echeckbox::draw(UiFlags flags) {
-    if (!_js_checkedfn_ref.empty()) {
-        bvariant dyn = js_call_function_with_result(_js_checkedfn_ref, param1, param2);
-        _checked = dyn.to_bool();
+    if (!js_ref(CHECKEDFN).empty()) {
+        _checked = js_call_function(js_ref(CHECKEDFN), param1, param2).to_bool();
     }
 
-    if (_js_textfn_ref.empty()) {
+    if (js_ref(TEXTFN).empty()) {
         _text = _checked ? _checked_text : _unchecked_text;
     } else {
-        bvariant dyn = js_call_function_with_result(_js_textfn_ref, 0, 0);
+        bvariant dyn = js_call_function(js_ref(TEXTFN), 0, 0);
         _text = dyn.to_str();
     }
 
@@ -2019,5 +1993,5 @@ void ui::echeckbox::load(archive arch, element *parent, items &elems) {
     _checked = arch.r_bool("checked", false);
     _checked_text = arch.r_string("checked_text", "x");
     _unchecked_text = arch.r_string("unchecked_text", "");
-    _js_checkedfn_ref = arch.r_function("checkedfn");
+    set_ref(CHECKEDFN, arch.r_function("checkedfn"));
 }

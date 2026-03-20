@@ -117,20 +117,20 @@ void ui_proxy_set_onclick(js_State *J) {
     if (!elem) { J->pushundefined(); return; }
 
     if (js_isnull(J, 1) || js_isundefined(J, 1)) {
-        elem->set_js_onclick_ref("");
+        elem->set_ref(ui::element::ONCLICK, "");
         J->pushundefined();
         return;
     }
 
     if (!J->iscallable(1)) {
-        elem->set_js_onclick_ref("");
+        elem->set_ref(ui::element::ONCLICK, "");
         J->pushundefined();
         return;
     }
 
     js_copy(J, 1);
     pcstr new_ref = js_ref(J);
-    elem->set_js_onclick_ref(new_ref ? xstring(new_ref) : xstring());
+    elem->set_ref(ui::element::ONCLICK, new_ref ? xstring(new_ref) : xstring());
     J->pushundefined();
 }
 void ui_proxy_set_textfn(js_State *J) {
@@ -141,20 +141,20 @@ void ui_proxy_set_textfn(js_State *J) {
     }
 
     if (js_isnull(J, 1) || js_isundefined(J, 1)) {
-        elem->set_js_textfn_ref("");
+        elem->set_ref(ui::element::TEXTFN, "");
         J->pushundefined();
         return;
     }
 
     if (!J->iscallable(1)) {
-        elem->set_js_textfn_ref("");
+        elem->set_ref(ui::element::TEXTFN, "");
         J->pushundefined();
         return;
     }
 
     js_copy(J, 1);
     pcstr new_ref = js_ref(J);
-    elem->set_js_textfn_ref(new_ref ? xstring(new_ref) : xstring());
+    elem->set_ref(ui::element::TEXTFN, new_ref ? xstring(new_ref) : xstring());
     J->pushundefined();
 }
 void ui_proxy_set_checkedfn(js_State *J) {
@@ -165,20 +165,20 @@ void ui_proxy_set_checkedfn(js_State *J) {
     }
 
     if (js_isnull(J, 1) || js_isundefined(J, 1)) {
-        elem->set_js_checkedfn_ref("");
+        elem->set_ref(ui::element::CHECKEDFN, "");
         J->pushundefined();
         return;
     }
 
     if (!J->iscallable(1)) {
-        elem->set_js_checkedfn_ref("");
+        elem->set_ref(ui::element::CHECKEDFN, "");
         J->pushundefined();
         return;
     }
 
     js_copy(J, 1);
     pcstr new_ref = js_ref(J);
-    elem->set_js_checkedfn_ref(new_ref ? xstring(new_ref) : xstring());
+    elem->set_ref(ui::element::CHECKEDFN, new_ref ? xstring(new_ref) : xstring());
     J->pushundefined();
 }
 void ui_proxy_get_noop_render_item(js_State *J) { (void)J; J->pushundefined(); }
