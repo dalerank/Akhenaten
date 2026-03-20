@@ -30,8 +30,7 @@ function window_features_build_pages() {
                 original: fval
                 type: "game_feature"
                 key: fname
-                textfn: function () { return game_features.get(fname) === true ? "x" : "" }
-                is_enabled : function () { return game_features.get(fname) === true }
+                checkedfn: function () { return game_features.get(fname) === true }
                 toggle: function (p1, p2) {
                     game_features.set(fname, !game_features.get(fname))
                     window_features.needs_rebuild = true
@@ -61,8 +60,7 @@ function window_features_build_pages() {
                     text: "#TR_CONFIG_ANIMALS"
                     original: sc_orig_animals
                     type: "scenario_animals"
-                    textfn: function () { return scenario.has_animals ? "x" : "" }
-                    is_enabled : function () { return scenario.has_animals }
+                    checkedfn: function () { return scenario.has_animals }
                     toggle: function (p1, p2) {
                         scenario.has_animals = !scenario.has_animals;
                         window_features.needs_rebuild = true
@@ -73,8 +71,7 @@ function window_features_build_pages() {
                     text: "#TR_CONFIG_FLOTSAM"
                     original: sc_orig_flotsam
                     type: "scenario_flotsam"
-                    textfn: function () { return scenario.flotsam_enabled ? "x" : "" }
-                    is_enabled : function () { return scenario.flotsam_enabled }
+                    checkedfn: function () { return scenario.flotsam_enabled }
                     toggle: function (p1, p2) {
                         scenario.flotsam_enabled = !scenario.flotsam_enabled;
                         window_features.needs_rebuild = true
@@ -96,8 +93,7 @@ function window_features_build_pages() {
                     key: godIdx
                     original: godOrig
                     type: "god"
-                    textfn: function () { return city.gods.is_known(godIdx) ? "x" : "" }
-                    is_enabled : function () { return city.gods.is_known(godIdx) }
+                    checkedfn: function () { return city.gods.is_known(godIdx) }
                     toggle: function (p1, p2) {
                         city.gods.set_known(godIdx, !city.gods.is_known(godIdx));
                         window_features.needs_rebuild = true
@@ -121,8 +117,7 @@ function window_features_build_pages() {
                     original: resOrig
                     type: "resource"
                     key: res
-                    textfn: function () { return city.resources.can_produce(res) ? "x" : "" }
-                    is_enabled : function () { return city.resources.can_produce(res) }
+                    checkedfn: function () { return city.resources.can_produce(res) }
                     toggle: function (p1, p2) {
                         city.resources.set_produce(res, !city.resources.can_produce(res));
                         window_features.needs_rebuild = true
@@ -148,8 +143,7 @@ function window_features_build_pages() {
                 original: langId
                 type: "language"
                 key: langId
-                textfn: function () { return game.languages.current == langId ? "x" : "" }
-                is_enabled : function () { return game.languages.current == langId }
+                checkedfn: function () { return game.languages.current == langId }
                 toggle: function (p1, p2) {
                     game.languages.current = langId;
                     window_features.needs_rebuild = true
@@ -177,7 +171,7 @@ function window_features_rebuild_button_features(window) {
         var f = window_features.button_features[i]
         option.onclick = f ? f.toggle : undefined
         option.enabled = f ? true : false
-        option.textfn = f ? f.textfn : undefined
+        option.checkedfn = f ? f.checkedfn : undefined
         label.text = f ? f.text : ""
     }
 }
@@ -240,33 +234,33 @@ window_features {
         btn_prev      : button({margin:{left:20, top:16}, size:[50, 25], text:"Prev",  onclick: window_features_btn_prev})
         btn_next      : button({margin:{right:-70, top:16}, size:[50, 25], text:"Next", onclick: window_features_btn_next})
 
-        bfeature0     : button({pos:wposbtn(0),  size:[23, 23]})
+        bfeature0     : checkbox({pos:wposbtn(0)})
         tfeature0     : text({pos:wpostxt(0)  })
-        bfeature1     : button({pos:wposbtn(1),  size:[23, 23]})
+        bfeature1     : checkbox({pos:wposbtn(1)})
         tfeature1     : text({pos:wpostxt(1)  })
-        bfeature2     : button({pos:wposbtn(2),  size:[23, 23]})
+        bfeature2     : checkbox({pos:wposbtn(2)})
         tfeature2     : text({pos:wpostxt(2)  })
-        bfeature3     : button({pos:wposbtn(3),  size:[23, 23]})
+        bfeature3     : checkbox({pos:wposbtn(3)})
         tfeature3     : text({pos:wpostxt(3)  })
-        bfeature4     : button({pos:wposbtn(4),  size:[23, 23]})
+        bfeature4     : checkbox({pos:wposbtn(4)})
         tfeature4     : text({pos:wpostxt(4)  })
-        bfeature5     : button({pos:wposbtn(5),  size:[23, 23]})
+        bfeature5     : checkbox({pos:wposbtn(5)})
         tfeature5     : text({pos:wpostxt(5)  })
-        bfeature6     : button({pos:wposbtn(6),  size:[23, 23]})
+        bfeature6     : checkbox({pos:wposbtn(6)})
         tfeature6     : text({pos:wpostxt(6)  })
-        bfeature7     : button({pos:wposbtn(7),  size:[23, 23]})
+        bfeature7     : checkbox({pos:wposbtn(7)})
         tfeature7     : text({pos:wpostxt(7)  })
-        bfeature8     : button({pos:wposbtn(8),  size:[23, 23]})
+        bfeature8     : checkbox({pos:wposbtn(8)})
         tfeature8     : text({pos:wpostxt(8)  })
-        bfeature9     : button({pos:wposbtn(9),  size:[23, 23]})
+        bfeature9     : checkbox({pos:wposbtn(9)})
         tfeature9     : text({pos:wpostxt(9)  })
-        bfeature10    : button({pos:wposbtn(10), size:[23, 23]})
+        bfeature10    : checkbox({pos:wposbtn(10)})
         tfeature10    : text({pos:wpostxt(10) })
-        bfeature11    : button({pos:wposbtn(11), size:[23, 23]})
+        bfeature11    : checkbox({pos:wposbtn(11)})
         tfeature11    : text({pos:wpostxt(11) })
-        bfeature12    : button({pos:wposbtn(12), size:[23, 23]})
+        bfeature12    : checkbox({pos:wposbtn(12)})
         tfeature12    : text({pos:wpostxt(12) })
-        bfeature13    : button({pos:wposbtn(13), size:[23, 23]})
+        bfeature13    : checkbox({pos:wposbtn(13)})
         tfeature13    : text({pos:wpostxt(13) })
 
         btn_defaults  : button({pos:[250, 436], size:[150, 30], text:"#TR_BUTTON_RESET_DEFAULTS",      onclick: window_features_btn_defaults}),

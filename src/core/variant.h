@@ -205,7 +205,7 @@ public:
             const grid_area &a = std::get<grid_area>(_value);
             result.printf("grid_area[%d,%d,%d,%d]", a.tmin_x, a.tmin_y, a.tmax_x, a.tmax_y);
             break;
-        }
+        } 
         default: verify_no_crash(false);
         }
         return result;
@@ -233,6 +233,21 @@ public:
         default: verify_no_crash(false);
         }
         return result;
+    }
+
+    inline bool to_bool() const {
+        switch (_value.index()) {
+        case etype_none: return false;
+        case etype_bool: return as_bool();
+        case etype_int32: return as_int32() != 0;
+        case etype_uint32:return as_uint32() != 0;
+        case etype_uint64: return as_uint64() != 0;
+        case etype_u16: return as_u16() != 0;
+        case etype_float: return std::fabs(as_float()) > 0.f;
+        default:
+            verify_no_crash("js_call_result_to_bool: string value");
+        }
+        return false;
     }
 
 protected:

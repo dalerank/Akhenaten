@@ -26,7 +26,7 @@ struct archive {
     void *state = nullptr;
     inline archive(void *_vm) : state(_vm) {}
 
-    pcstr r_string(pcstr name);
+    pcstr r_string(pcstr name, pcstr def = "");
     std::vector<std::string> r_array_str(pcstr name);
     std::vector<std::string> to_array_str();
     int r_int(pcstr name, int def = 0);
