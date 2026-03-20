@@ -7,6 +7,7 @@
 #include "core/archive.h"
 #include "core/variant.h"
 #include "core/cstring.h"
+#include "core/flat_map.h"
 
 #include "input/hotkey.h"
 #include "graphics/elements/scroll_list_panel.h"
@@ -356,7 +357,10 @@ struct element {
     bool fill_width = false;
     bool fill_height = false;
 
-    virtual ~element() {}
+    /** JS registry refs by name (onclick, textfn, …). Max 6 entries. */
+    flat_map<xstring, xstring, 6> _js_refs;
+
+    virtual ~element();
 
     virtual void draw(UiFlags flags) {}
     virtual void load(archive, element* parent, items &elems);
@@ -399,9 +403,8 @@ struct element {
     virtual element &onrclick(button_onclick_simple_cb f) { return *this; }
     virtual void ondraw(draw_callback f) { _draw_callback = f;};
 
-    virtual void set_js_onclick_ref(const xstring &) {}
-    virtual void set_js_textfn_ref(const xstring &ref) {}
-    virtual void set_js_checkedfn_ref(const xstring &ref) {}
+    void set_ref(const xstring &key, const xstring &ref);
+    const xstring &js_ref(const xstring &key) const;
 
     virtual emenu_header *dcast_menu_header() { return nullptr; }
     virtual eimage_button *dcast_image_button() { return nullptr; }
@@ -469,6 +472,13 @@ struct element {
         preformat_text(formated_text);
         text(formated_text);
     }
+
+    static const xstring ONCLICK;
+    static const xstring ONRCLICK;
+    static const xstring TEXTFN;
+    static const xstring CHECKEDFN;
+    static const xstring ONINPUT;
+    static const xstring EMPTY_JS_REF;
 };
 
 struct eimg : public element {
@@ -507,9 +517,7 @@ struct einput : public element {
     uint8_t _last_buffer[MAX_PLAYER_NAME] = {0};
     bool _started = false;
     int _allow_punctuation = 1;
-    xstring _js_oninput_ref;
 
-    ~einput() override;
     void stop_input();
 
     virtual void draw(UiFlags flags) override;
@@ -545,7 +553,6 @@ struct einner_panel : public element {
 
 struct elabel : public element {
     xstring _text;
-    xstring _js_textfn_ref;
 
     xstring _tooltip;
     xstring _format;
@@ -562,8 +569,6 @@ struct elabel : public element {
     int _wrap;
     bool _clip_area;
 
-    ~elabel() override;
-
     virtual void draw(UiFlags flags) override;
     virtual void load(archive elem, element *parent, items &elems) override;
     virtual void text(pcstr) override;
@@ -574,7 +579,6 @@ struct elabel : public element {
     virtual const xstring &tooltip() const override { return _tooltip; }
     virtual const xstring &format() const override { return _format; }
     virtual const xstring &text() const override { return _text; }
-    virtual void set_js_textfn_ref(const xstring &ref) override;
     virtual void width(int) override;
 };
 
@@ -697,15 +701,11 @@ struct egeneric_button : public elabel {
     button_onclick_cb _func, _rfunc;
     button_onclick_simple_cb _sfunc, _srfunc;
     xstring _tooltip;
-    xstring _js_onclick_ref;  // JS function reference for onclick
-    xstring _js_onrclick_ref;  // JS function reference for onrclick
-    xstring _js_textfn_ref;  // JS function reference for text generation
     uint8_t _border;
     bool _hbody;
     bool _split;
     bool _selected = false;
 
-    virtual ~egeneric_button();
     virtual void draw(UiFlags flags) override;
     virtual void load(archive arch, element *parent, items &elems) override;
     virtual void tooltip(textid t) override { _tooltip = ui::str(t); }
@@ -717,8 +717,6 @@ struct egeneric_button : public elabel {
 
     virtual element &onclick(button_onclick_cb func) override { _func = func; return *this; }
     virtual element &onclick(button_onclick_simple_cb func) override { _sfunc = func; return *this; }
-    virtual void set_js_onclick_ref(const xstring &ref) override;
-    virtual void set_js_textfn_ref(const xstring &ref) override;
     virtual element &onrclick(button_onclick_cb func) override { _rfunc = func; return *this; }
     virtual element &onrclick(button_onclick_simple_cb func) override { _srfunc = func; return *this; }
 };
@@ -727,14 +725,11 @@ struct echeckbox : public egeneric_button {
     bool _checked = false;
     xstring _checked_text = "X";
     xstring _unchecked_text = "";
-    xstring _js_checkedfn_ref;
 
-    virtual ~echeckbox();
     virtual void draw(UiFlags flags) override;
     virtual void load(archive arch, element *parent, items &elems) override;
     virtual void select(bool v) override { _checked = v; }
     virtual bool selected() const override { return _checked; }
-    virtual void set_js_checkedfn_ref(const xstring &ref) override;
     virtual xspan<xstring> prop_names() const override;
 };
 
@@ -744,14 +739,11 @@ struct earrow_button : public element {
 
     button_onclick_cb _func;
     button_onclick_simple_cb _sfunc;
-    xstring _js_onclick_ref;  // JS function reference for onclick
 
-    virtual ~earrow_button();
     virtual void load(archive elem, element *parent, items &elems) override;
     virtual void draw(UiFlags flags) override;
     virtual element &onclick(button_onclick_cb func) override { _func = func; return *this; }
     virtual element &onclick(button_onclick_simple_cb func) override { _sfunc = func; return *this; }
-    virtual void set_js_onclick_ref(const xstring &ref) override;
 
     void js_call();
 };
@@ -770,9 +762,7 @@ struct eimage_button : public element {
 
     button_onclick_cb _func, _rfunc;
     button_onclick_simple_cb _sfunc, _srfunc;
-    xstring _js_onclick_ref;  // JS function reference for onclick
 
-    virtual ~eimage_button();
     virtual void load(archive elem, element* parent, items &elems) override;
     virtual void select(bool v) override { _selected = v; }
     virtual bool selected() const override { return _selected; }
@@ -780,7 +770,6 @@ struct eimage_button : public element {
 
     virtual element &onclick(button_onclick_cb func) override { _func = func; return *this; }
     virtual element &onclick(button_onclick_simple_cb func) override { _sfunc = func; return *this; }
-    virtual void set_js_onclick_ref(const xstring &ref) override;
     virtual element &onrclick(button_onclick_cb func) override { _rfunc = func; return *this; }
     virtual element &onrclick(button_onclick_simple_cb func) override { _srfunc = func; return *this; }
     virtual void tooltip(textid t) override { _tooltip = ui::str(t); }

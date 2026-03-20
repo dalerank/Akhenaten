@@ -505,7 +505,7 @@ void js_call_function_bool(xstring js_ref, bool param) {
     }
 }
 
-bvariant js_call_function_with_result(xstring js_ref, int param1, int param2) {
+bvariant js_call_function(xstring js_ref, int param1, int param2) {
     if (js_ref.empty()) {
         return bvariant();
     }
@@ -544,7 +544,7 @@ static void js_push_bvariant_map_object(js_State *J, const bvariant_map &params)
     }
 }
 
-bvariant js_call_function_with_result(xstring js_ref, const bvariant_map &params) {
+bvariant js_call_function(xstring js_ref, const bvariant_map &params) {
     if (js_ref.empty()) {
         return bvariant();
     }
