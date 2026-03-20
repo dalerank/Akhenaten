@@ -862,7 +862,7 @@ scrollbar_t &ui::scrollbar(scrollbar_t &scr, vec2i pos, int &value, vec2i size) 
     return scr;
 }
 
-xstring ui_element_props[] = { "text", "enabled", "readonly", "font", "text_color", "image", "selected", "tooltip", "onclick" };
+xstring ui_element_props[] = { "text", "enabled", "readonly", "font", "text_color", "image", "selected", "tooltip", "onclick", "textfn" };
 xspan<xstring> ui::element::prop_names() const {
     return make_span(ui_element_props);
 }
@@ -1313,6 +1313,14 @@ void ui::elabel::font(int v) {
     _font = (e_font)v;
 }
 
+void ui::elabel::set_js_textfn_ref(const xstring &ref) {
+    if (ref == _js_textfn_ref) {
+        return;
+    }
+    js_unref_function(_js_textfn_ref);
+    _js_textfn_ref = ref;
+}
+
 void ui::elabel::width(int v) {
     size.x = v;
     _wrap = v;
@@ -1350,12 +1358,11 @@ ui::eimage_button::~eimage_button() {
 }
 
 void ui::eimage_button::set_js_onclick_ref(const xstring &ref) {
+    if (ref == _js_onclick_ref) {
+        return;
+    }
     js_unref_function(_js_onclick_ref);
     _js_onclick_ref = ref;
-}
-
-const xstring &ui::eimage_button::js_onclick_ref() const {
-    return _js_onclick_ref;
 }
 
 void ui::eimage_button::draw(UiFlags gflags) {
@@ -1848,12 +1855,11 @@ ui::earrow_button::~earrow_button() {
 }
 
 void ui::earrow_button::set_js_onclick_ref(const xstring &ref) {
+    if (ref == _js_onclick_ref) {
+        return;
+    }
     js_unref_function(_js_onclick_ref);
     _js_onclick_ref = ref;
-}
-
-const xstring &ui::earrow_button::js_onclick_ref() const {
-    return _js_onclick_ref;
 }
 
 void ui::earrow_button::js_call() {
@@ -1879,12 +1885,19 @@ ui::egeneric_button::~egeneric_button() {
 }
 
 void ui::egeneric_button::set_js_onclick_ref(const xstring &ref) {
+    if (ref == _js_onclick_ref) {
+        return;
+    }
     js_unref_function(_js_onclick_ref);
     _js_onclick_ref = ref;
 }
 
-const xstring &ui::egeneric_button::js_onclick_ref() const {
-    return _js_onclick_ref;
+void ui::egeneric_button::set_js_textfn_ref(const xstring &ref) {
+    if (ref == _js_textfn_ref) {
+        return;
+    }
+    js_unref_function(_js_textfn_ref);
+    _js_textfn_ref = ref;
 }
 
 void ui::egeneric_button::draw(UiFlags gflags) {
