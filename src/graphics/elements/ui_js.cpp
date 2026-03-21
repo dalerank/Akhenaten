@@ -7,6 +7,7 @@
 #include "graphics/elements/generic_button.h"
 #include "graphics/window.h"
 #include "window/window_city.h"
+#include "window/editor/window_editor.h"
 #include "window/window_build_menu.h"
 #include "window/message_dialog_new.h"
 #include "window/window_advisors.h"
@@ -67,6 +68,7 @@ void __ui_window_advisors_show_advisor(int advisor) { window_advisors_show_advis
 void __ui_draw_label(pcstr text, vec2i pos, int font) { ui::label(text, pos, (e_font)font); } ANK_FUNCTION_3(__ui_draw_label);
 void __ui_draw_line(bool hline, vec2i pos, int size) { ui::line(hline, pos, size, 0xff000000); } ANK_FUNCTION_3(__ui_draw_line);
 void __ui_window_city_show() { window_city_show(); } ANK_FUNCTION(__ui_window_city_show)
+void __ui_window_editor_map_show() { window_editor_map_show(); } ANK_FUNCTION(__ui_window_editor_map_show)
 void __window_labor_priority_show(int category) { window_labor_priority_show(category); } ANK_FUNCTION_1(__window_labor_priority_show)
 
 void __ui_draw_texture(vec2i pos, int img_id) {
@@ -252,6 +254,30 @@ void ui_proxy_change_file_path(js_State *J) {
     J->pushundefined();
 }
 
+void ui_proxy_append_files_with_extension(js_State *J) {
+    ui::element* elem = GET_ELEM(J);
+    if (elem) {
+        auto* list = elem->dcast_scrollable_list();
+        if (list) {
+            pcstr d = js_isstring(J, 1) ? js_tostring(J, 1) : "";
+            pcstr e = js_isstring(J, 2) ? js_tostring(J, 2) : "";
+            list->append_files_with_extension(d, e);
+        }
+    }
+    J->pushundefined();
+}
+
+void ui_proxy_scroll_to_selected(js_State *J) {
+    ui::element* elem = GET_ELEM(J);
+    if (elem) {
+        auto* list = elem->dcast_scrollable_list();
+        if (list) {
+            list->scroll_to_selected();
+        }
+    }
+    J->pushundefined();
+}
+
 void ui_proxy_get_selected_text(js_State *J) {
     ui::element* elem = GET_ELEM(J);
     int syntax = js_tointeger(J, 1);
@@ -292,13 +318,15 @@ struct ui_proxy_func {
     js_CFunction fn;
     int nargs;
 };
-static const flat_map<xstring, ui_proxy_func, 17> g_ui_proxy_funcs = {
+static const flat_map<xstring, ui_proxy_func, 19> g_ui_proxy_funcs = {
     {"add_item", {ui_proxy_add_item, 1}},
     {"clear", {ui_proxy_clear, 0}},
     {"select_item", {ui_proxy_select_item, 1}},
     {"select_index", {ui_proxy_select_entry, 1}},
     {"refresh_file_finder", {ui_proxy_refresh_file_finder, 0}},
     {"change_file_path", {ui_proxy_change_file_path, 2}},
+    {"append_files_with_extension", {ui_proxy_append_files_with_extension, 2}},
+    {"scroll_to_selected", {ui_proxy_scroll_to_selected, 0}},
     {"selected_text", {ui_proxy_get_selected_text, 1}},
 };
 

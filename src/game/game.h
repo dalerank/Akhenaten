@@ -63,6 +63,7 @@ struct game_t {
     color *frame_pixels = nullptr;
     bool write_video = false;
     bool system_language_changed = false;
+    uint8_t pending_load_type = 0;
 
     MovieWriter *mvwriter = nullptr;
     simulation_time_t simtime;
@@ -126,6 +127,6 @@ struct game_t {
     ::painter painter();
 };
 ANK_CONFIG_PROPERTY(game_t,
-    game_speed, scroll_speed, monthly_autosave)
+    game_speed, scroll_speed, monthly_autosave, pending_load_type)
 
 extern game_t game;

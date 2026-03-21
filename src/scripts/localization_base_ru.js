@@ -1574,6 +1574,7 @@ localization_base_ru = [
     { group:43, id:4, text: "Загрузка миссии" }
     { group:43, id:5, text: "Продолжить?" }
     { group:43, id:6, text: "Удалить файл" }
+    { group:43, id:7, text: "Не удалось загрузить файл" }
     { group:44, id:0, text: "Добавить объект" }
     { group:44, id:1, text: "Редактировать объекты" }
     { group:44, id:2, text: "Удалить объект" }

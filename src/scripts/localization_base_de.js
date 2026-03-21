@@ -1575,6 +1575,7 @@ localization_base_de = [
     { group:43, id:4, text: "Mission wird geladen" }
     { group:43, id:5, text: "Fortfahren?" }
     { group:43, id:6, text: "Datei löschen" }
+    { group:43, id:7, text: "Datei konnte nicht geladen werden" }
     { group:44, id:0, text: "Objekt hinzufügen" }
     { group:44, id:1, text: "Objekte bearbeiten" }
     { group:44, id:2, text: "Objekt löschen" }

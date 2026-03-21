@@ -16,6 +16,7 @@
 #include "platform/version.hpp"
 #include "graphics/screen.h"
 #include "core/app.h"
+#include "game/file_editor.h"
 #include "game/game.h"
 #include "game/mission.h"
 #include "game/game_events.h"
@@ -27,6 +28,7 @@
 #include "city/city_finance.h"
 #include "io/gamestate/boilerplate.h"
 #include "core/profiler.h"
+#include "core/system_time.h"
 #include "js.h"
 #include "mujs/mujs.h"
 #include "mujs/jsi.h"
@@ -35,6 +37,7 @@
 #include "graphics/elements/ui.h"
 #include "graphics/elements/ui_js.h"
 #include "window/autoconfig_window.h"
+#include "window/file_dialog_common.h"
 #include <vector>
 #include <sstream>
 #include <string>
@@ -403,12 +406,20 @@ void js_register_entity_systems() {
     logs::info("JS: Registered %d dynamic windows", window_count);
 }
 
+pcstr __game_get_last_loaded_file(int type) {
+    return file_data_for_file_type((file_type)type)->last_loaded_file;
+}
+ANK_FUNCTION_1(__game_get_last_loaded_file)
+
 int __game_screen_width() { return screen_width(); } ANK_FUNCTION(__game_screen_width);
 int __game_screen_height() { return screen_height(); } ANK_FUNCTION(__game_screen_height)
 int __game_absolute_day() { return game.simtime.absolute_day(true); } ANK_FUNCTION(__game_absolute_day)
 int __game_frame() { return game.frame; } ANK_FUNCTION(__game_frame)
+int __game_time_millis() { return (int)time_get_millis(); } ANK_FUNCTION(__game_time_millis)
 bool __game_session_active() { return game.session.active; } ANK_FUNCTION(__game_session_active)
-xstring __game_version() { return get_version().c_str(); } ANK_FUNCTION(__game_version)
+int __game_session_last_loaded_kind() { return (int)game.session.last_loaded; } ANK_FUNCTION(__game_session_last_loaded_kind)
+xstring __game_session_last_loaded_mission() { return game.session.last_loaded_mission.empty() ? "" : game.session.last_loaded_mission; } ANK_FUNCTION(__game_session_last_loaded_mission)
+xstring __game_version() { return get_version(); } ANK_FUNCTION(__game_version)
 void __game_increase_game_speed() { game.increase_game_speed(); } ANK_FUNCTION(__game_increase_game_speed)
 void __game_decrease_game_speed() { game.decrease_game_speed(); } ANK_FUNCTION(__game_decrease_game_speed)
 void __game_increase_scroll_speed() { game.increase_scroll_speed(); } ANK_FUNCTION(__game_increase_scroll_speed)
@@ -418,6 +429,7 @@ void __game_set_scroll_speed(int v) { game.scroll_speed = v; } ANK_FUNCTION_1(__
 void __game_set_player_name(pcstr name) { g_settings.set_player_name_utf8(name); } ANK_FUNCTION_1(__game_set_player_name)
 pcstr __game_get_player_name() { return g_settings.player_name_utf8.empty() ? g_settings.player_name.c_str() : g_settings.player_name_utf8.c_str(); } ANK_FUNCTION(__game_get_player_name)
 bool __game_load_savegame(pcstr filename) { return GamestateIO::load_savegame(filename); } ANK_FUNCTION_1(__game_load_savegame)
+bool __game_editor_load_scenario(pcstr path) { return game_file_editor_load_scenario(path) != 0; } ANK_FUNCTION_1(__game_editor_load_scenario)
 void __game_load_mission(int scenario_id, int start_immediately) { GamestateIO::load_mission(scenario_id, !!start_immediately); } ANK_FUNCTION_2(__game_load_mission)
 bool __game_file_exists(pcstr path) { return path && *path && vfs::file_exists(path); } ANK_FUNCTION_1(__game_file_exists)
 pcstr __game_get_last_autosave() { const char* p = player_get_last_autosave(); return p ? p : ""; } ANK_FUNCTION(__game_get_last_autosave)
