@@ -1591,6 +1591,19 @@ void ui::escrollable_list::change_file_path(const xstring &dir, const xstring &e
     panel->change_file_path(dir, ext);
 }
 
+void ui::escrollable_list::append_files_with_extension(pcstr dir, pcstr ext) {
+    ensure_panel();
+    panel->append_files_with_extension(dir, ext);
+}
+
+void ui::escrollable_list::scroll_to_selected() {
+    ensure_panel();
+    const int idx = panel->get_selected_entry_idx();
+    if (idx >= 0) {
+        panel->scroll_to_entry(idx);
+    }
+}
+
 xstring ui::escrollable_list::selected_entry_text(int filename_syntax) const {
     return panel ? panel->get_selected_entry_text(filename_syntax) : "";
 }
@@ -1623,7 +1636,7 @@ ui::escrollable_list::~escrollable_list() {
 }
 
 
-xstring escrollable_list_funcs[] = { "add_item", "clear", "select_item", "select_index", "refresh_file_finder", "change_file_path", "selected_text" };
+xstring escrollable_list_funcs[] = { "add_item", "clear", "select_item", "select_index", "refresh_file_finder", "change_file_path", "append_files_with_extension", "scroll_to_selected", "selected_text" };
 xspan<xstring> ui::escrollable_list::func_names() const {
     return escrollable_list_funcs;
 }

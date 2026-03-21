@@ -6,6 +6,7 @@
 #include "mujs/mujs.h"
 #include "window/file_dialog.h"
 #include "window/scenario_selection.h"
+#include "game/game.h"
 #include "game/mission.h"
 #include "overlays/city_overlay.h"
 #include "building/building.h"
@@ -26,6 +27,10 @@ js_State *js_vm_state();
 void js_register_game_constants(js_State *J) {
     _R(FILE_TYPE_SAVED_GAME)
     _R(FILE_TYPE_SCENARIO)
+    _R(e_session_none)
+    _R(e_session_mission)
+    _R(e_session_save)
+    _R(e_session_custom_map)
     _R(MAP_SELECTION_CAMPAIGN)
     _R(MAP_SELECTION_CUSTOM)
     _R(SCENARIO_NUBT)

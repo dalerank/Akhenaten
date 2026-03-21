@@ -642,6 +642,8 @@ struct escrollable_list : public element {
     void select_entry(int index);
     void refresh_file_finder();
     void change_file_path(const xstring &dir, const xstring &ext);
+    void append_files_with_extension(pcstr dir, pcstr ext);
+    void scroll_to_selected();
     xstring selected_entry_text(int filename_syntax = 0) const;
     int items_count() const;
     void onclick_item(onclick_callback lmb) { _onclick_cb = lmb; }

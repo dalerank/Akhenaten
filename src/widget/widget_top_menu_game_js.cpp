@@ -3,7 +3,6 @@
 #include "js/js_game.h"
 #include "window/popup_dialog.h"
 #include "window/window_city.h"
-#include "window/file_dialog_load.h"
 #include "window/file_dialog_save.h"
 #include "window/file_dialog_delete.h"
 #include "window/main_menu.h"

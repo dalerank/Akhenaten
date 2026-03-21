@@ -1574,6 +1574,7 @@ localization_base_en = [
     { group:43, id:4, text: "Loading a mission" }
     { group:43, id:5, text: "Proceed?" }
     { group:43, id:6, text: "Delete a file" }
+    { group:43, id:7, text: "Could not load this file" }
     { group:44, id:0, text: "Add object" }
     { group:44, id:1, text: "Edit objects" }
     { group:44, id:2, text: "Delete object" }

@@ -16,7 +16,10 @@ game {
     @scroll_speed { set: __game_set_scroll_speed }
     @last_autosave { get: __game_get_last_autosave }
     @session_active { get: __game_session_active }
+    @session_last_loaded_kind { get: __game_session_last_loaded_kind }
+    @session_last_loaded_mission { get: __game_session_last_loaded_mission }
     @dynasty_name { get: __game_get_player_name, set: __game_set_player_name }
+    @pending_load_type { }
 
     screen {
         @w { get: __game_screen_width }
@@ -34,6 +37,11 @@ game {
         get_caption : __game_language_caption
         get_id : __game_language_id
     }
+
+    file_exists: __game_file_exists
+    load_savegame: __game_load_savegame
+    get_last_loaded_file: __game_get_last_loaded_file
+    editor_load_scenario: __game_editor_load_scenario
 }
 
 scenario {
