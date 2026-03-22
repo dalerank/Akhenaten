@@ -9,7 +9,7 @@ main_menu_screen {
 		show_records  : large_button({ pos:mbutton(2), size[256, 25], text[30, 5], onclick: main_menu_show_window("records_window") })
 		show_config   : large_button({ pos:mbutton(3), size[256, 25], text[2,  0], onclick: main_menu_show_window("window_features") })
 		show_mods     : large_button({ pos:mbutton(4), size[256, 25], text:"#main_menu_mods", onclick: main_menu_show_window("mods_window") })
-		quit_game     : large_button({ pos:mbutton(5), size[256, 25], text[30, 4], onemit: main_menu_quit_game })
+		quit_game     : large_button({ pos:mbutton(5), size[256, 25], text[30, 4], onclick_event: "quit_game" })
 
 		discord 	  : image_button({ pos[sw(-100), sh(-50)], size[48, 48], icon_texture:"!discord", scale:0.75
 							           	onclick: function() { __platform_open_url("https://discord.gg/HS4njmBvpb") }
@@ -41,7 +41,6 @@ function main_menu_show_window(window_id) {
 function main_menu_continue_game() {
 	var last_save = game_features.gameopt_last_save_filename
     var last_player = game_features.gameopt_last_player
-	log_info("main menu show" + last_player + " " + last_save)
     if (last_save && last_player) {
         __game_set_player_name(last_player)
         if (__game_load_savegame(last_save)) {
@@ -50,6 +49,7 @@ function main_menu_continue_game() {
     }
 }
 
+[es=(main_menu_screen, quit_game)]
 function main_menu_quit_game() {
     ui.show_yesno("#popup_dialog_quit", function() {
 		emit event_request_exit{ value: true }
