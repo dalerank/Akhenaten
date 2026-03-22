@@ -189,7 +189,9 @@ void main_menu_screen::init() {
     game.mt.detach_task([&, this] () {
         xstring changelog = main_menu_download_changelog().c_str();
         game.add_frame_end_event([this, changelog] () {
+            ui.begin_widget(pos);
             ui.event(event_changelog_loaded{ changelog });
+            ui.end_widget();
         });
     });
 
@@ -197,7 +199,9 @@ void main_menu_screen::init() {
     game.mt.detach_task([&] () {
         int current_commit = main_menu_get_total_commits("dalerank", "Akhenaten");
         game.add_frame_end_event([this, current_commit] () {
+            ui.begin_widget(pos);
             ui.event(event_totals_commits_loaded{ current_commit });
+            ui.end_widget();
         });
     });
 

@@ -129,7 +129,9 @@ void ui::sidebar_window_expanded_t::ui_draw_foreground(UiFlags flags) {
 
     {
         OZZY_PROFILER_SECTION(_, "sidebar_window_draw")
+        ui.begin_widget(pos);
         ui.event(sidebar_window_draw{ pos, opened_menu });
+        ui.end_widget();
     }
 
     x_offset = screen_width();
@@ -149,7 +151,7 @@ void ui::sidebar_window_expanded_t::ui_draw_foreground(UiFlags flags) {
     const bool is_disabled = !(g_window_manager.window_is("window_city") || g_window_manager.window_is("window_build_menu"));
     const UiFlags wflags = is_disabled ? UiFlags_Darkened : UiFlags_None;
 
-    ui.begin_widget(ui.pos);
+    ui.begin_widget(pos);
     widget_minimap_draw({ x_offset + 12, MINIMAP_Y_OFFSET }, 0);
 
     ui.draw(wflags);

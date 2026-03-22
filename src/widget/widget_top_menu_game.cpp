@@ -251,7 +251,9 @@ void widget_top_menu_clear_state() {
 }
 
 void top_menu_widget_t::sub_menu_init() {
+    ui.begin_widget(pos);
     headers.event(top_menu_widget_init{ pos });
+    ui.end_widget();
 }
 
 void top_menu_widget_t::sub_menu_draw_background(int flags) {
@@ -306,8 +308,8 @@ void top_menu_widget_t::draw_foreground(UiFlags flags) {
     // "ui" is the Debens, Population and Date texts
     {
         OZZY_PROFILER_SECTION(_, "js:top_menu_widget_draw")
-        ui.event(top_menu_widget_draw{ pos });
         ui.begin_widget({ 0, 0 });
+        ui.event(top_menu_widget_draw{ pos });
         ui.draw();
         ui.end_widget();
     }

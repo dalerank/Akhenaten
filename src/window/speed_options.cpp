@@ -19,7 +19,9 @@ ANK_REGISTER_STRUCT_WRITER(speed_options_window_cancel, pos);
 
 void speed_options_window::init() {
     autoconfig_window::init();
+    ui.begin_widget(pos);
     ui.event(speed_options_window_init{ pos });
+    ui.end_widget();
 }
 
 void speed_options_window::ui_draw_foreground(UiFlags flags) {
@@ -32,10 +34,12 @@ void speed_options_window::ui_draw_foreground(UiFlags flags) {
 int speed_options_window::ui_handle_mouse(const mouse *m) {
     int result = autoconfig_window::ui_handle_mouse(m);
 
+    ui.begin_widget(pos);
     const hotkeys *h = hotkey_state();
     if (input_go_back_requested(m, h)) {
         ui.event(speed_options_window_cancel{ pos });
     }
+    ui.end_widget();
 
     return result;
 }

@@ -48,14 +48,15 @@ void terrain_info_window::init(object_info &c) {
         window_building_play_sound(&c, wav.c_str());
     }
 
-    bvariant_map event_data;
-    event_data["pos"] = bvariant(pos);
-    event_data["terrain_type"] = bvariant(c.terrain_type);
-    event_data["grid_offset"] = bvariant(c.grid_offset);
-
     auto type_str = terrain_info_type_tokens.name(c.terrain_type);
     bstring64 init_event_name(type_str, "_init");
-    ui.event(xstring(init_event_name), event_data);
+    ui.begin_widget(pos);
+    ui.event(xstring(init_event_name), {
+        { "pos", pos },
+        { "terrain_type", c.terrain_type },
+        { "grid_offset", c.grid_offset }
+    });
+    ui.end_widget();
 
     textid reason;
     textid describe;

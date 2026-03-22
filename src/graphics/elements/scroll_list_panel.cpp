@@ -12,8 +12,6 @@
 
 #include <cassert>
 
-#pragma optimize("", off)
-
 void scrollable_list::select(const char* button_text) {
     return select_entry(get_entry_idx(button_text));
 }

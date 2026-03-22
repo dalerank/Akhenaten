@@ -28,7 +28,9 @@ ANK_REGISTER_STRUCT_WRITER(advisor_military_window_init, pos);
 ANK_REGISTER_STRUCT_WRITER(advisor_military_window_draw, pos);
 
 void ui::advisor_military_window::init() {
+    ui.begin_widget(pos);
     ui.event(advisor_military_window_init{ pos });
+    ui.end_widget();
 }
 
 void ui::advisor_military_window::ui_draw_foreground(UiFlags flags) {

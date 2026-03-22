@@ -627,6 +627,8 @@ struct escrollable_list : public element {
     xstring _js_render_item_ref;
     xstring _js_onclick_item_ref;
     xstring _js_ondoubleclick_item_ref;
+    xstring _onclick_event;
+    xstring _ondoubleclick_event;
 
     virtual void draw(UiFlags flags) override;
 
@@ -818,7 +820,7 @@ struct widget {
     void event(xstring evname, const bvariant_map &js_j);
 
     void begin_widget(vec2i offset, bool relative = false);
-    inline void end_widget() { ui::end_widget(); }
+    void end_widget();
     void set_clip_rectangle(vec2i pos, vec2i size);
     void set_clip_rectangle(const element &e);
     void reset_clip_rectangle();
@@ -840,9 +842,15 @@ struct widget {
             }
         }
     }
+
+    /** Script/autoconfig window id; nullptr if this root widget is not a named window. */
+    virtual pcstr get_section() const { return nullptr; }
 };
 
 widget *get_current_widget();
+
+/** Dispatch payload to JS handlers registered as [es=(section_id, sub_event)]. */
+void dispatch_autoconfig_es_event(widget *root, pcstr sub_event, const bvariant_map &payload);
 
 } // ui
 

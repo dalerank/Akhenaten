@@ -56,7 +56,9 @@ autoconfig_window::autoconfig_window(pcstr s) {
 }
 
 void autoconfig_window::on_restore() {
+    ui.begin_widget(pos);
     ui.event(window_info{ pos }, get_section(), __func__);
+    ui.end_widget();
 }
 
 void autoconfig_window::archive_load(archive arch) {
@@ -120,10 +122,12 @@ void autoconfig_window::ui_draw_foreground(UiFlags flags) {
 }
 
 void autoconfig_window::init() {
+    ui.begin_widget(pos);
     ui.event(window_info{ pos }, get_section(), __func__);
 
     window_message_setup_help_id(help_id);
     _is_inited = true;
+    ui.end_widget();
 }
 
 static autoconfig_window* get_window_current(xstring name) {
