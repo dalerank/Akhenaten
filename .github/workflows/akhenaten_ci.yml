@@ -1,0 +1,48 @@
+name: Akhenaten CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  clang-format:
+    uses: ./.github/workflows/akhenaten_clang_format.yml
+    with:
+      base_branch: ${{ github.event.pull_request.base.ref || 'master' }}
+
+  content:
+    needs: clang-format
+    if: github.event_name == 'push'
+    uses: ./.github/workflows/akhenaten_content.yml
+    secrets: inherit
+
+  build-android:
+    needs: clang-format
+    uses: ./.github/workflows/akhenaten_android.yml
+
+  build-bazzite:
+    needs: clang-format
+    uses: ./.github/workflows/akhenaten_bazzite.yml
+    
+  build-emscripten:
+    needs: clang-format
+    uses: ./.github/workflows/akhenaten_emscripten.yml
+    secrets: inherit
+
+  build-flatpak:
+    needs: clang-format
+    uses: ./.github/workflows/akhenaten_flatpak.yml
+
+  build-mac_arm:
+    needs: clang-format
+    uses: ./.github/workflows/akhenaten_mac_arm.yml
+    
+  build-mac_x64:
+    needs: clang-format
+    uses: ./.github/workflows/akhenaten_mac_x64.yml
+
+  build-windows:
+    needs: clang-format
+    uses: ./.github/workflows/akhenaten_windows.yml

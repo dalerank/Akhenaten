@@ -1,10 +1,7 @@
 name: Akhenaten Build Android
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  workflow_call:
 
 jobs:
   build:
