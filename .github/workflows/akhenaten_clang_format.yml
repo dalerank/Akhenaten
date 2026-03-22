@@ -1,17 +1,33 @@
-name: Clang Format
+name: Akhenaten clang-format check
 
 on:
-  pull_request:
-    branches: [ "master" ]
+  workflow_call:
+    inputs:
+      base_branch:
+        required: true
+        type: string
 
 jobs:
   build:
-    name: Clang Format
+    name: run on linux
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: DoozyX/clang-format-lint-action@v0.16.2
-        with:
-          source: './src'
-          extensions: 'h,hpp,c,cpp'
-          clangFormatVersion: 15
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: update-workspace
+      run: |
+        sudo apt -qq update
+        sudo apt install -y clang-format-20
+        sudo ln -sf /usr/bin/clang-format-20 /usr/bin/clang-format
+    - name: check-format
+      run: |
+          git fetch origin ${{ inputs.base_branch }}
+          output=$(git clang-format --diff origin/${{ inputs.base_branch }} --extensions cpp,cc,cxx,h,hpp)
+          if [ "$output" != "no modified files to format" ]; then
+            echo "clang-format failed:"
+            echo "$output"
+            exit 1
+          else
+            echo "clang-format passed."
+          fi
