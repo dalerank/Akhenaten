@@ -18,7 +18,9 @@ jobs:
     - name: update-workspace
       run: |
         sudo apt -qq update
-        sudo apt install -y clang-format-20 git-clang-format
+        sudo apt install -y clang-format-20 wget
+        sudo wget -O /usr/local/bin/git-clang-format https://raw.githubusercontent.com/llvm/llvm-project/release/20.x/clang/tools/clang-format/git-clang-format
+        sudo chmod +x /usr/local/bin/git-clang-format
         sudo ln -sf /usr/bin/clang-format-20 /usr/bin/clang-format
     - name: check-format
       run: |
