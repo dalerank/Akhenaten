@@ -11,10 +11,10 @@
 #include "js/js_events.h"
 #include "input/input.h"
 #include <algorithm>
-#include <map>
+#include <unordered_map>
 #include <mutex>
 
-using autoconfig_windows = std::map<xstring, autoconfig_window *>;
+using autoconfig_windows = std::unordered_map<xstring, autoconfig_window *>;
 autoconfig_windows* g_autoconfig_windows = nullptr;
 
 struct window_info{ vec2i pos; };
@@ -49,7 +49,7 @@ void autoconfig_window::refresh_all() {
     config_load_autoconfig_windows();
 }
 
-autoconfig_window::autoconfig_window(pcstr s) {
+autoconfig_window::autoconfig_window(xstring s) {
     assert(!strstr(s, "::"));
     logs::info("Registered window config:%s", s);
     autoconfig_registry()[s] = this;
@@ -152,6 +152,6 @@ void autoconfig_window::show(xstring section) {
     window_show(&s_script_window_type);
 }
 
-void autoconfig_window::unregister_section(pcstr section) {
+void autoconfig_window::unregister_section(xstring section) {
     autoconfig_registry().erase(section);
 }

@@ -481,15 +481,15 @@ ui::widget* ui::get_current_widget() {
     return g_state.current_widget_stack.empty() ? nullptr : g_state.current_widget_stack.top();
 }
 
-void ui::dispatch_autoconfig_es_event(widget* root, pcstr sub_event, const bvariant_map& payload) {
+void ui::dispatch_autoconfig_es_event(widget* root, xstring sub_event, const bvariant_map& payload) {
     if (!root || !sub_event || !*sub_event) {
         return;
     }
-    pcstr sec = root->get_section();
-    if (!sec || !*sec) {
+    const xstring& sec = root->get_section();
+    if (sec.empty()) {
         return;
     }
-    xstring ev = js_helpers::es_hash_str<64>(xstring(sec), sub_event);
+    xstring ev = js_helpers::es_hash_str<64>(sec, sub_event).c_str();
     root->event(ev, payload);
 }
 
@@ -1050,9 +1050,9 @@ void ui::widget::archive_load(archive arch) {
     }
 }
 
-void ui::widget::load(pcstr section) {
+void ui::widget::load(xstring section) {
     io.name = section;
-    g_config_arch.r(section, *this);
+    g_config_arch.r(section.c_str(), *this);
 }
 
 bool ui::widget::contains(const xstring &id) const {
@@ -1413,6 +1413,7 @@ void ui::eimage_button::load(archive arch, element *parent, items &elems) {
     offsets.data[3] = arch.r_int("offset_disabled", 3);
     _tooltip = arch.r_string("tooltip");
     set_ref(ONCLICK, arch.r_function("onclick"));
+    _onclick_event = arch.r_string("onclick_event");
 
     pcstr name_icon_texture = arch.r_string("icon_texture");
     if (name_icon_texture && *name_icon_texture) {
@@ -1478,8 +1479,12 @@ void ui::eimage_button::draw(UiFlags gflags) {
         return;
     }
 
-    // Set up click handler - prefer JS callback if available, otherwise use C++ callback
-    if (!js_ref(ONCLICK).empty()) {
+    if (!_onclick_event.empty()) {
+        btn->onclick([this](int, int) {
+            bvariant_map::scoped s;
+            dispatch_autoconfig_es_event(get_current_widget(), _onclick_event, *s);
+        });
+    } else if (!js_ref(ONCLICK).empty()) {
         const xstring js_onclick = js_ref(ONCLICK);
         btn->onclick([js_ref = js_onclick](int, int) {
             js_call_function(js_ref);
@@ -1989,8 +1994,13 @@ void ui::egeneric_button::draw(UiFlags gflags) {
 
     const bool clickable = !darkened && !readonly;
 
-    // Set up click handler - prefer JS callback if available, otherwise use C++ callback
-    if (clickable && !js_ref(ONCLICK).empty()) {
+    // Set up click handler: ES sub-event, then JS onclick ref, then C++ callbacks
+    if (clickable && !_onclick_event.empty()) {
+        btn->onclick([this] {
+            bvariant_map::scoped s;
+            dispatch_autoconfig_es_event(get_current_widget(), _onclick_event.c_str(), *s);
+        });
+    } else if (clickable && !js_ref(ONCLICK).empty()) {
         btn->onclick([this] { this->js_call(); });
     }
 
@@ -1998,8 +2008,8 @@ void ui::egeneric_button::draw(UiFlags gflags) {
         btn->onrclick([this] { this->js_rcall(); });
     }
 
-    if (clickable && _func && js_ref(ONCLICK).empty()) { btn->onclick(_func); }
-    if (clickable && _sfunc && js_ref(ONCLICK).empty()) { btn->onclick(_sfunc); }
+    if (clickable && _func && js_ref(ONCLICK).empty() && _onclick_event.empty()) { btn->onclick(_func); }
+    if (clickable && _sfunc && js_ref(ONCLICK).empty() && _onclick_event.empty()) { btn->onclick(_sfunc); }
 
     if (clickable && _rfunc && js_ref(ONRCLICK).empty()) { btn->onrclick(_rfunc); }
     if (clickable && _srfunc && js_ref(ONRCLICK).empty()) { btn->onrclick(_srfunc); }
@@ -2036,6 +2046,7 @@ void ui::egeneric_button::load(archive arch, element *parent, items &elems) {
     set_ref(ONCLICK, arch.r_function("onclick"));
     set_ref(ONRCLICK, arch.r_function("onrclick"));
     set_ref(TEXTFN, arch.r_function("textfn"));
+    _onclick_event = arch.r_string("onclick_event");
     param1 = arch.r_int("param1");
     param2 = arch.r_int("param2");
 }
