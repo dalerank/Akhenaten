@@ -73,8 +73,8 @@ ui::message_dialog_base::message_dialog_base(pcstr config_name) : autoconfig_win
     subtitle_text = "";
 }
 
-pcstr ui::message_dialog_base::get_section() const {
-    return config_name.c_str();
+xstring ui::message_dialog_base::get_section() const {
+    return config_name;
 }
 
 void ui::message_dialog_base::init() {

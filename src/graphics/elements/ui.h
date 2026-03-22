@@ -705,6 +705,7 @@ struct egeneric_button : public elabel {
     int param2 = 0;
     button_onclick_cb _func, _rfunc;
     button_onclick_simple_cb _sfunc, _srfunc;
+    xstring _onclick_event;
     xstring _tooltip;
     uint8_t _border;
     bool _hbody;
@@ -767,6 +768,7 @@ struct eimage_button : public element {
 
     button_onclick_cb _func, _rfunc;
     button_onclick_simple_cb _sfunc, _srfunc;
+    xstring _onclick_event;
 
     virtual void load(archive elem, element* parent, items &elems) override;
     virtual void select(bool v) override { _selected = v; }
@@ -796,7 +798,7 @@ struct widget {
 
     virtual void draw(UiFlags flags = UiFlags_None);
     virtual void archive_load(archive arch);
-    void load(pcstr section);
+    void load(xstring section);
 
     widget() : ui(*this) {}
 
@@ -844,13 +846,13 @@ struct widget {
     }
 
     /** Script/autoconfig window id; nullptr if this root widget is not a named window. */
-    virtual pcstr get_section() const { return nullptr; }
+    virtual xstring get_section() const { return {}; }
 };
 
 widget *get_current_widget();
 
 /** Dispatch payload to JS handlers registered as [es=(section_id, sub_event)]. */
-void dispatch_autoconfig_es_event(widget *root, pcstr sub_event, const bvariant_map &payload);
+void dispatch_autoconfig_es_event(widget *root, xstring sub_event, const bvariant_map &payload);
 
 } // ui
 

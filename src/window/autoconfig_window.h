@@ -5,7 +5,7 @@
 #include "graphics/elements/ui.h"
 
 struct autoconfig_window : public ui::widget {
-    autoconfig_window(pcstr s);
+    autoconfig_window(xstring s);
 
     virtual int handle_mouse(const mouse *m) = 0;
     virtual int draw_background(UiFlags flags);
@@ -13,7 +13,7 @@ struct autoconfig_window : public ui::widget {
     virtual void ui_draw_foreground(UiFlags flags);
     virtual int get_tooltip_text() = 0;
     virtual void init();
-    virtual pcstr get_section() const override { verify_no_crash(false); return "non_exist_window"; };
+    virtual xstring get_section() const override { verify_no_crash(false); return "non_exist_window"; };
     virtual void on_mission_start() {}
     virtual void on_restore();
 
@@ -28,20 +28,19 @@ struct autoconfig_window : public ui::widget {
     static void before_mission_start();
     static void refresh_all();
     static void show(xstring section);
-    static void unregister_section(pcstr section);
-    static void reset_script_window_current();
+    static void unregister_section(xstring section);
 };
 
 template<typename T>
 struct autoconfig_window_t : public autoconfig_window {
-    inline pcstr section() const {
+    inline xstring section() const {
         static type_name_holder<T> _impl;
-        static pcstr _section = type_simplified_name(_impl.value.data());
+        static xstring _section = type_simplified_name(_impl.value.data());
         return _section;
     }
 
     inline autoconfig_window_t() : autoconfig_window(section()) {
     }
 
-    virtual pcstr get_section() const override { return section(); }
+    virtual xstring get_section() const override { return section(); }
 };

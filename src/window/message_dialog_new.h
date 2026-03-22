@@ -110,7 +110,7 @@ namespace ui {
         int resource_image(int resource);
         int get_message_image_id(const lang_message& msg);
         
-        virtual pcstr get_section() const override;
+        virtual xstring get_section() const override;
 
     protected:
         xstring config_name;
