@@ -146,17 +146,12 @@ function file_dialog_load_on_filename_input(p) {
     file_dialog_load.error_flash_start_ms = 0
 }
 
-function file_dialog_load_on_select(p) {
+function file_dialog_load_apply_list_selection(p) {
     if (!p || !p.text)
         return
 
     file_dialog_load.show_filename = file_dialog_load_basename_from_list_entry(p.text)
     file_dialog_load.error_flash_start_ms = 0
-}
-
-function file_dialog_load_on_double_click(p) {
-    file_dialog_load_on_select(p)
-    file_dialog_load_on_ok()
 }
 
 function file_dialog_load_on_ok() {
@@ -199,14 +194,25 @@ file_dialog_load {
                                  font_asleep: FONT_NORMAL_BLACK_ON_DARK
                                  font_focus: FONT_NORMAL_YELLOW
                                  font_selected: FONT_NORMAL_WHITE_ON_DARK
-                                 onclick_item: file_dialog_load_on_select
-                                 ondoubleclick_item: file_dialog_load_on_double_click })
+                                 onclick_event: "on_select_file"
+                                 ondoubleclick_event: "on_double_click_file" })
 
         hint: text({ margin{centerx:-80, bottom:-35}, align: "center", font: FONT_NORMAL_BLACK_ON_LIGHT, text: "" })
 
         btn_ok: ok_button({ margin{centerx:0, bottom:-40}, onclick: file_dialog_load_on_ok })
         btn_cancel: cancel_button({ margin{centerx:50, bottom:-40}, onclick: window_go_back })
     }
+}
+
+[es=(file_dialog_load, on_select_file)]
+function file_dialog_load_es_on_select_file(p) {
+    file_dialog_load_apply_list_selection(p)
+}
+
+[es=(file_dialog_load, on_double_click_file)]
+function file_dialog_load_es_on_double_click_file(p) {
+    file_dialog_load_apply_list_selection(p)
+    file_dialog_load_on_ok()
 }
 
 [es=(file_dialog_load, ui_draw_foreground)]

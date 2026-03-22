@@ -137,8 +137,10 @@ void building_info_window::init(object_info &c) {
     building *b = building_get(c);
     set_debug_building_id(b->id);
 
+    ui.begin_widget(pos);
     ui.event(building_info_window_init{ pos, c.bid }, section(), __func__);
     ui.event(building_info_window_init{ pos, c.bid });
+    ui.end_widget();
 
     xstring correct_help_id = help_id;
     const auto &meta = b->params().meta;

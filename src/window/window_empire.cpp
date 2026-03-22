@@ -657,7 +657,9 @@ void empire_window::draw_map() {
 
     draw_distant_battle_path();
 
+    ui.begin_widget(pos);
     ui.event(empire_window_draw{ draw_offset });
+    ui.end_widget();
 
     graphics_reset_clip_rectangle();
 }

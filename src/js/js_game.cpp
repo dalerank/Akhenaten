@@ -42,7 +42,7 @@
 #include <sstream>
 #include <string>
 
-using event_handlers = std::unordered_set<xstring>;
+using event_handlers = hvector<xstring, 16>;
 std::unordered_map<xstring, event_handlers> event_type_handlers;
 
 void js_log_info_native(js_State *J) {
@@ -160,13 +160,15 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
         return;
     }
 
+    // copy handlers because some events may clear global handlers
+    hvector<xstring, 16> handler_names = it->second;
+
     auto J = js_vm_state();
     if (js_vm_have_error() || J == nullptr) {
         return;
     }
 
-    const event_handlers &handlers = it->second;
-    for (const auto &handlerName : handlers) {
+    for (const xstring &handlerName : handler_names) {
         pcstr funcname = handlerName.c_str();
 
         OZZY_PROFILER_SECTION(_, funcname)
@@ -332,7 +334,7 @@ void js_register_game_handlers(xstring missionid) {
                             if (mod->key && is_es(mod->key)) {
                                 auto r = event_type_handlers.insert(std::make_pair(xstring(mod->value),  event_handlers{}));
                                 auto &handlers = r.first->second;
-                                handlers.insert(prop->name);
+                                handlers.push_back(prop->name);
                                 if (g_args.is_log_js_handlers()) {
                                     logs::info("JS: Registered handler '%s' for event '%s' (mission: '%s')", prop->name, mod->value, missionid.c_str());
                                 }

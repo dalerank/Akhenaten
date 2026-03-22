@@ -160,17 +160,19 @@ namespace ui {
         hvector<scrollable_list*, 4> scrollable_lists;
         hvector<input_box*, 4> input_boxes;
         einput* active_input = nullptr;
-        widget* current_widget = nullptr;
+        std::stack<widget*> current_widget_stack;
 
         void reset() {
             while (!_offset.empty()) {
                 _offset.pop();
             };
+            while (!current_widget_stack.empty()) {
+                current_widget_stack.pop();
+            }
             buttons.clear();
             scrollbars.clear();
             scrollable_lists.clear();
             input_boxes.clear();
-            current_widget = nullptr;
         }
 
         void remove_scrolbar(scrollbar_t *p) {
@@ -198,124 +200,23 @@ namespace ui {
     image_desc advisor_icons;
 
     hvector<cmd_t, 256> g_ui_commands;
-}
 
-void ANK_REGISTER_CONFIG_ITERATOR(config_load_ui_options) {
-    g_config_arch.r_section("uioptions", [] (archive arch) {
-        arch.r_desc("resource_icons", ui::resource_icons);
-        arch.r_desc("advisor_icons", ui::advisor_icons);
-    });
-}
-
-static ui::element::ptr create_element(const xstring type) {
-    ui::element::ptr elm;
-#define _ crc32_str
-    switch (type.crc()) {
-    case _("outer_panel"): elm = std::make_shared<ui::eouter_panel>(); break;
-    case _("scrollbar"): elm = std::make_shared<ui::escrollbar>(); break;
-    case _("scrollable_list"): elm = std::make_shared<ui::escrollable_list>(); break;
-    case _("menu_header"): elm = std::make_shared<ui::emenu_header>(); break;
-    case _("inner_panel"): elm = std::make_shared<ui::einner_panel>(); break;
-    case _("background"):  elm = std::make_shared<ui::ebackground>(); break;
-    case _("image"): elm = std::make_shared<ui::eimg>(); break;
-    case _("label"): elm = std::make_shared<ui::elabel>(); break;
-    case _("text"):  elm = ui::etext::acquire(); break;
-    case _("generic_button"): elm = std::make_shared<ui::egeneric_button>(); break;
-    case _("checkbox"): elm = std::make_shared<ui::echeckbox>(); break;
-    case _("image_button"): elm = std::make_shared<ui::eimage_button>(); break;
-    case _("resource_icon"): elm = std::make_shared<ui::eresource_icon>(); break;
-    case _("arrow_button"): elm = std::make_shared<ui::earrow_button>(); break;
-    case _("border"): elm = std::make_shared<ui::eborder>(); break;
-    case _("input"): elm = std::make_shared<ui::einput>(); break;
-    case _("large_button"):
-        auto btn = std::make_shared<ui::egeneric_button>();
-        btn->mode = 1;
-        elm = btn;
-    }
-
-    return elm;
-}
-
-void ui_widget_load_elements(archive arch, pcstr section, ui::element *parent, ui::element::items &elements) {
-    e_font default_font = arch.r_type<e_font>("default_font", FONT_INVALID);
-
-    const int last_index = elements.size();
-    arch.r_objects(section, [&elements, parent] (pcstr key, archive elem) {
-        const xstring type = elem.r_string("type");
-        ui::element::ptr elm = create_element(type);
-
-        if (elm) {
-            elm->id = key;
-            elements.push_back(elm);
-            elm->load(elem, parent, elements);
-        }
-    });
-
-    if (default_font != FONT_INVALID) {
-        for (size_t i = last_index; i < elements.size(); ++i) {
-            if (elements[i]->font() == FONT_INVALID) {
-                elements[i]->font(default_font);
-            }
-        }
-    }
-}
-
-void ui::begin_widget(vec2i offset, bool relative) {
-    if (relative) {
-        vec2i top = g_state._offset.empty() ? vec2i{0, 0} : g_state._offset.top();
-        offset += top;
-    }
-    g_state._offset.push(offset);
-}
-
-void ui::fill_rect(vec2i offset, vec2i size, color c) {
-    const vec2i goffset = g_state.offset();
-    push(cmd_t::fill_rect, Pos{goffset + offset}, Size{size}, TextColor{c});
-}
-
-void ui::draw_rect(vec2i pos, vec2i size, color c) {
-    const vec2i goffset = g_state.offset();
-    push(cmd_t::draw_rect, Pos{goffset + pos}, Size{size}, TextColor{c});
-}
-
-void ui::image_abs(int image_id, vec2i abs_pos) {
-    push(cmd_t::image, Pos{abs_pos}, ImageId{image_id});
-}
-
-void ui::panel_abs(vec2i pos, vec2i size_blocks, UiFlags flags) {
-    push(!!(flags & UiFlags_PanelInner) ? cmd_t::panel_inner : cmd_t::panel_outer, Pos{pos}, Size{size_blocks});
-}
-
-void ui::text_abs(pcstr str, vec2i pos, e_font font, color clr) {
-    push(cmd_t::text_colored, Pos{pos}, Font{font}, TextColor{clr}, BoxWidth{0}, Caption{str});
-}
-
-void ui::text_multiline(pcstr text, vec2i pos, int width, e_font font, color clr) {
-    const vec2i goffset = g_state.offset();
-    push(cmd_t::text_multiline, Pos{goffset + pos}, BoxWidth{width}, Font{font}, TextColor{clr}, Caption{text});
-}
-
-vec2i ui::current_offset() {
-    return g_state.offset();
-}
-
-void ui::begin_frame() {
-    text_cursor_consume_capture();
-    assert(g_state.buttons.size() < 1000);
-    //assert(g_state._offset.size() == 0);
-    g_state.reset();
-    g_ui_commands.clear();
-    tooltipctx.set(0, "");
-}
-
-
-void ui::end_frame() {
-
-}
-
-namespace ui {
     void push_cmd(cmd_t &&cmd) {
         g_ui_commands.push_back(std::move(cmd));
+    }
+
+    bool push_widget(widget* w) {
+        if (get_current_widget() == w) {
+            return false;
+        }
+        g_state.current_widget_stack.push(w);
+        return true;
+    }
+
+    void pop_widget(bool pushed) {
+        if (pushed) {
+            g_state.current_widget_stack.pop();
+        }
     }
 
     void execute_ui_command(painter &ctx, const cmd_t &cmd) {
@@ -449,6 +350,119 @@ namespace ui {
     }
 }
 
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_ui_options) {
+    g_config_arch.r_section("uioptions", [] (archive arch) {
+        arch.r_desc("resource_icons", ui::resource_icons);
+        arch.r_desc("advisor_icons", ui::advisor_icons);
+    });
+}
+
+static ui::element::ptr create_element(const xstring type) {
+    ui::element::ptr elm;
+#define _ crc32_str
+    switch (type.crc()) {
+    case _("outer_panel"): elm = std::make_shared<ui::eouter_panel>(); break;
+    case _("scrollbar"): elm = std::make_shared<ui::escrollbar>(); break;
+    case _("scrollable_list"): elm = std::make_shared<ui::escrollable_list>(); break;
+    case _("menu_header"): elm = std::make_shared<ui::emenu_header>(); break;
+    case _("inner_panel"): elm = std::make_shared<ui::einner_panel>(); break;
+    case _("background"):  elm = std::make_shared<ui::ebackground>(); break;
+    case _("image"): elm = std::make_shared<ui::eimg>(); break;
+    case _("label"): elm = std::make_shared<ui::elabel>(); break;
+    case _("text"):  elm = ui::etext::acquire(); break;
+    case _("generic_button"): elm = std::make_shared<ui::egeneric_button>(); break;
+    case _("checkbox"): elm = std::make_shared<ui::echeckbox>(); break;
+    case _("image_button"): elm = std::make_shared<ui::eimage_button>(); break;
+    case _("resource_icon"): elm = std::make_shared<ui::eresource_icon>(); break;
+    case _("arrow_button"): elm = std::make_shared<ui::earrow_button>(); break;
+    case _("border"): elm = std::make_shared<ui::eborder>(); break;
+    case _("input"): elm = std::make_shared<ui::einput>(); break;
+    case _("large_button"):
+        auto btn = std::make_shared<ui::egeneric_button>();
+        btn->mode = 1;
+        elm = btn;
+    }
+
+    return elm;
+}
+
+void ui_widget_load_elements(archive arch, pcstr section, ui::element *parent, ui::element::items &elements) {
+    e_font default_font = arch.r_type<e_font>("default_font", FONT_INVALID);
+
+    const int last_index = elements.size();
+    arch.r_objects(section, [&elements, parent] (pcstr key, archive elem) {
+        const xstring type = elem.r_string("type");
+        ui::element::ptr elm = create_element(type);
+
+        if (elm) {
+            elm->id = key;
+            elements.push_back(elm);
+            elm->load(elem, parent, elements);
+        }
+    });
+
+    if (default_font != FONT_INVALID) {
+        for (size_t i = last_index; i < elements.size(); ++i) {
+            if (elements[i]->font() == FONT_INVALID) {
+                elements[i]->font(default_font);
+            }
+        }
+    }
+}
+
+void ui::begin_widget(vec2i offset, bool relative) {
+    if (relative) {
+        vec2i top = g_state._offset.empty() ? vec2i{0, 0} : g_state._offset.top();
+        offset += top;
+    }
+    g_state._offset.push(offset);
+}
+
+void ui::fill_rect(vec2i offset, vec2i size, color c) {
+    const vec2i goffset = g_state.offset();
+    push(cmd_t::fill_rect, Pos{goffset + offset}, Size{size}, TextColor{c});
+}
+
+void ui::draw_rect(vec2i pos, vec2i size, color c) {
+    const vec2i goffset = g_state.offset();
+    push(cmd_t::draw_rect, Pos{goffset + pos}, Size{size}, TextColor{c});
+}
+
+void ui::image_abs(int image_id, vec2i abs_pos) {
+    push(cmd_t::image, Pos{abs_pos}, ImageId{image_id});
+}
+
+void ui::panel_abs(vec2i pos, vec2i size_blocks, UiFlags flags) {
+    push(!!(flags & UiFlags_PanelInner) ? cmd_t::panel_inner : cmd_t::panel_outer, Pos{pos}, Size{size_blocks});
+}
+
+void ui::text_abs(pcstr str, vec2i pos, e_font font, color clr) {
+    push(cmd_t::text_colored, Pos{pos}, Font{font}, TextColor{clr}, BoxWidth{0}, Caption{str});
+}
+
+void ui::text_multiline(pcstr text, vec2i pos, int width, e_font font, color clr) {
+    const vec2i goffset = g_state.offset();
+    push(cmd_t::text_multiline, Pos{goffset + pos}, BoxWidth{width}, Font{font}, TextColor{clr}, Caption{text});
+}
+
+vec2i ui::current_offset() {
+    return g_state.offset();
+}
+
+void ui::begin_frame() {
+    text_cursor_consume_capture();
+    assert(g_state.buttons.size() < 1000);
+    //assert(g_state._offset.size() == 0);
+    g_state.reset();
+    g_ui_commands.clear();
+    tooltipctx.set(0, "");
+}
+
+
+void ui::end_frame() {
+
+}
+
 void ui::flush_commands() {
     painter ctx = game.painter();
     for (size_t i = 0; i < g_ui_commands.size(); ++i) {
@@ -464,7 +478,19 @@ void ui::end_widget() {
 }
 
 ui::widget* ui::get_current_widget() {
-    return g_state.current_widget;
+    return g_state.current_widget_stack.empty() ? nullptr : g_state.current_widget_stack.top();
+}
+
+void ui::dispatch_autoconfig_es_event(widget* root, pcstr sub_event, const bvariant_map& payload) {
+    if (!root || !sub_event || !*sub_event) {
+        return;
+    }
+    pcstr sec = root->get_section();
+    if (!sec || !*sec) {
+        return;
+    }
+    xstring ev = js_helpers::es_hash_str<64>(xstring(sec), sub_event);
+    root->event(ev, payload);
 }
 
 bool ui::handle_mouse(const mouse *m) {
@@ -1045,8 +1071,7 @@ ui::element& ui::widget::operator[](const xstring& id) {
 void ui::widget::event(xstring evname, const bvariant_map &js_j) {
     OZZY_PROFILER_SECTION(_, evname.c_str())
 
-    widget* prev_widget = g_state.current_widget;
-    g_state.current_widget = this;
+    const bool pushed_current_layer = push_widget(this);
 
     bvariant_map::scoped enhanced_js_j_scoped;
     bvariant_map &enhanced_js_j = *enhanced_js_j_scoped;
@@ -1064,14 +1089,22 @@ void ui::widget::event(xstring evname, const bvariant_map &js_j) {
     }
     js_call_event_handlers(evname, enhanced_js_j);
 
-    // Restore previous widget
-    g_state.current_widget = prev_widget;
+    pop_widget(pushed_current_layer);
 }
 
 void ui::widget::begin_widget(vec2i offset, bool relative) {
     OZZY_PROFILER_FUNCTION();
 
-    check_errors = true; ui::begin_widget(offset, relative); 
+    check_errors = true;
+    g_state.current_widget_stack.push(this);
+    ui::begin_widget(offset, relative);
+}
+
+void ui::widget::end_widget() {
+    ui::end_widget();
+    if (!g_state.current_widget_stack.empty()) {
+        g_state.current_widget_stack.pop();
+    }
 }
 
 void ui::widget::set_clip_rectangle(vec2i pos, vec2i size) {
@@ -1507,6 +1540,15 @@ void ui::escrollable_list::clear() {
 }
 
 void ui::escrollable_list::on_dblclick_item(const scrollable_list::entry_data *entry) {
+    if (!entry) {
+        return;
+    }
+    if (!_ondoubleclick_event.empty()) {
+        bvariant_map::scoped m;
+        (*m)["text"] = bvariant(entry->text);
+        dispatch_autoconfig_es_event(get_current_widget(), _ondoubleclick_event.c_str(), *m);
+        return;
+    }
     if (!_js_ondoubleclick_item_ref.empty()) {
         js_call_function(_js_ondoubleclick_item_ref, { { "text", entry->text } });
     }
@@ -1539,22 +1581,30 @@ void ui::escrollable_list::ensure_panel() {
     refill();
 
     panel->set_onclick_entry(_onclick_cb);
-    
     if (_custom_render_cb || !_js_render_item_ref.empty()) {
         panel->set_custom_render_func([&](int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font) { 
             this->on_render_item(index, flags, entry, pos, font);
         });
     }
 
-    if (_ondoubleclick_item_cb || !_js_ondoubleclick_item_ref.empty()) {
+    if (_ondoubleclick_item_cb || !_js_ondoubleclick_item_ref.empty() || !_ondoubleclick_event.empty()) {
         panel->set_onclick_dbl_entry([&] (const scrollable_list::entry_data *entry) {
             this->on_dblclick_item(entry);
         });
     }
 
-    if (_onclick_ex_cb || !_js_onclick_item_ref.empty()) {
+    if (_onclick_ex_cb || !_js_onclick_item_ref.empty() || !_onclick_event.empty()) {
         panel->set_onclick_entry([this] (scrollable_list::entry_data *e) {
-            if (e) {
+            if (!e) {
+                return;
+            }
+            if (!_onclick_event.empty()) {
+                bvariant_map::scoped m;
+                (*m)["text"] = bvariant(e->text);
+                dispatch_autoconfig_es_event(get_current_widget(), _onclick_event.c_str(), *m);
+                return;
+            }
+            if (!_js_onclick_item_ref.empty()) {
                 js_call_function(_js_onclick_item_ref, { { "text", e->text } });
             }
         });
@@ -1669,6 +1719,8 @@ void ui::escrollable_list::load(archive arch, element *parent, items &elems) {
     _js_render_item_ref = arch.r_function("onrender_item");
     _js_onclick_item_ref = arch.r_function("onclick_item");
     _js_ondoubleclick_item_ref = arch.r_function("ondoubleclick_item");
+    _onclick_event = arch.r_string("onclick_event");
+    _ondoubleclick_event = arch.r_string("ondoubleclick_event");
 
     params.files_dir = arch.r_string("dir");
     params.file_ext = arch.r_string("file_ext");
