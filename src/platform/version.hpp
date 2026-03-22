@@ -1,9 +1,9 @@
 #pragma once
 
-#include "core/bstring.h"
+#include "core/xstring.h"
 
 /**
  * Gets the version of application
  * @return Version number
  */
-[[nodiscard]] bstring64 get_version();
+[[nodiscard]] xstring get_version();
