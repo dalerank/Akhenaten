@@ -1,6 +1,8 @@
 Language: Cpp
 Standard: c++20
 
+BasedOnStyle: Microsoft
+
 ColumnLimit: 120
 
 AccessModifierOffset: -4
@@ -8,16 +10,18 @@ IndentWidth: 4
 TabWidth: 4
 UseTab: Never
 
-AlignAfterOpenBracket: Align
+AlignAfterOpenBracket: DontAlign
+AlignConsecutiveMacros: Consecutive
 AllowAllParametersOfDeclarationOnNextLine: false
+AlignEscapedNewlines: LeftWithLastLine
 AlignOperands: true
 AllowShortCaseLabelsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: None
-AllowShortIfStatementsOnASingleLine: false
+AllowShortEnumsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: InlineOnly
 AllowShortLoopsOnASingleLine: false
 AlwaysBreakTemplateDeclarations: Yes
-BinPackArguments: false
-BinPackParameters: false
+BinPackArguments: true
+BinPackParameters: BinPack
 BreakBeforeBinaryOperators: All
 BreakBeforeBraces: Attach
 BreakBeforeTernaryOperators: true
@@ -29,11 +33,13 @@ IndentCaseLabels: false
 IndentWrappedFunctionNames: false
 KeepEmptyLinesAtTheStartOfBlocks: false
 MaxEmptyLinesToKeep: 2
-NamespaceIndentation: None
-PackConstructorInitializers: Never
+NamespaceIndentation: All
+PackConstructorInitializers: BinPack
 PenaltyBreakBeforeFirstCallParameter: 100
+PenaltyBreakComment: 1
+PenaltyBreakOpenParenthesis: 1
 PointerAlignment: Left
-SortIncludes: CaseSensitive
+SortIncludes: Never
 SpaceAfterCStyleCast: false
 SpaceAfterTemplateKeyword: true
 SpaceBeforeAssignmentOperators: true
