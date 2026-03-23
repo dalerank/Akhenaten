@@ -264,7 +264,7 @@ js_State *js_newstate(js_Alloc alloc, void *actx, int flags)
 		return NULL;
 	}
 
-	J->gcmark = 1;
+	J->gc_generation = 0;
 	J->nextref = 0;
 
 	J->R = jsV_newobject(J, JS_COBJECT, NULL);

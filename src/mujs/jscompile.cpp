@@ -1,6 +1,10 @@
 #include "jsi.h"
 #include "jsparse.h"
 #include "jscompile.h"
+
+#include <atomic>
+#include <cstddef>
+#include <new>
 #include "jsvalue.h" /* for jsV_numbertostring */
 
 #define cexp jsC_cexp /* collision with math.h */
@@ -34,8 +38,8 @@ void jsC_error(js_State *J, js_Ast *node, const char *fmt, ...)
 static js_Function *newfun(js_State *J, js_Ast *node, js_Ast *name, js_Ast *params, js_Ast *body, int script)
 {
 	js_Function *F = (js_Function*)js_malloc(J, sizeof *F);
-	memset(F, 0, sizeof *F);
-	F->gcmark = 0;
+	memset(F, 0, offsetof(js_Function, gcmark));
+	new (&F->gcmark) std::atomic<uint32_t>(0);
 	F->gcnext = J->gcfun;
 	J->gcfun = F;
 	++J->gccounter;
@@ -44,19 +48,19 @@ static js_Function *newfun(js_State *J, js_Ast *node, js_Ast *name, js_Ast *para
 	F->line = name ? name->line : params ? params->line : body ? body->line : 1;
 	F->script = script;
 	F->name = name ? name->string : "";
-	
+
 	/* Copy modifiers from AST to function */
 	F->modifiers = NULL;
 	if (node && node->modifiers) {
 		js_AstModifier *astmod = node->modifiers;
 		js_FunctionModifier **tail = &F->modifiers;
-		
+
 		while (astmod) {
 			js_FunctionModifier *mod = (js_FunctionModifier *)js_malloc(J, sizeof(js_FunctionModifier));
 			mod->key = astmod->key;
 			mod->value = astmod->value;
 			mod->next = NULL;
-			
+
 			*tail = mod;
 			tail = &mod->next;
 			astmod = astmod->next;

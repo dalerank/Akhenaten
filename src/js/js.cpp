@@ -586,6 +586,10 @@ void js_reset_vm_state() {
 
 void js_vm_frame_begin() {
     vm.frame_alloc_ctx.release();
+    if (vm.J && vm.J->gccounter > JS_GCLIMIT) {
+        vm.J->gccounter = 0;
+        vm.J->gc(0);
+    }
 }
 
 void js_vm_add_scripts_folder(vfs::path folder) {

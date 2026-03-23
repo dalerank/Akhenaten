@@ -1,6 +1,12 @@
 #include "jsi.h"
 #include "jsvalue.h"
 
+#include <atomic>
+#include <cstddef>
+#include <new>
+
+#include "core/profiler.h"
+
 /*
     Use an AA-tree to quickly look up properties in objects:
 
@@ -152,9 +158,11 @@ js_Property *prop_delete(js_State *J, js_Object *obj, js_Property *node, const c
 
 
 js_Object *jsV_newobject(js_State *J, enum js_Class type, js_Object *prototype) {
+    OZZY_PROFILER_FUNCTION();
+
     js_Object *obj = (js_Object *)js_malloc(J, sizeof * obj);
-    memset(obj, 0, sizeof * obj);
-    obj->gcmark = 0;
+    memset(obj, 0, offsetof(js_Object, gcmark));
+    new (&obj->gcmark) std::atomic<uint32_t>(0);
     obj->gcnext = J->gcobj;
     J->gcobj = obj;
     ++J->gccounter;
@@ -165,6 +173,7 @@ js_Object *jsV_newobject(js_State *J, enum js_Class type, js_Object *prototype) 
     obj->tailp = &obj->head;
     obj->prototype = prototype;
     obj->extensible = 1;
+
     return obj;
 }
 

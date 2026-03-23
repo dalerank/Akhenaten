@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <stddef.h>
 #include <stdarg.h>
 #include <string.h>
@@ -173,8 +174,8 @@ struct js_State
 	int top, bot;
 	js_Value *stack;
 
-	/* garbage collector list */
-	int gcmark;
+	/* garbage collector: increments each collection; objects store this value when live */
+	uint32_t gc_generation;
 	int gccounter;
 	js_Environment *gcenv;
 	js_Function *gcfun;
@@ -204,6 +205,7 @@ struct js_State
 	js_DebugHook debug_hook;
 	void *debug_hook_udata;
 
+	void gc(int report);
 	void stackoverflow();
 
 	void savescope(js_Environment *newE);

@@ -1,5 +1,9 @@
 #include "jsi.h"
 
+#include <atomic>
+#include <new>
+#include <cstring>
+
 #include "jscompile.h"
 #include "jsvalue.h"
 #include "jsrun.h"
@@ -62,9 +66,9 @@ js_String *jsV_newmemstring(js_State *J, const char *s, int n) {
     OZZY_PROFILER_FUNCTION();
 
     js_String *v = (js_String*)js_malloc(J, soffsetof(js_String, p) + n + 1);
+    new (&v->gcmark) std::atomic<uint32_t>(0);
     memcpy(v->p, s, n);
     v->p[n] = 0;
-    v->gcmark = 0;
     v->gcnext = J->gcstr;
     J->gcstr = v;
     ++J->gccounter;
@@ -863,7 +867,8 @@ const char *js_nextiterator(js_State *J, int idx) {
 
 js_Environment *jsR_newenvironment(js_State *J, js_Object *vars, js_Environment *outer) {
     js_Environment *E = (js_Environment*)js_malloc(J, sizeof * E);
-    E->gcmark = 0;
+    memset(E, 0, offsetof(js_Environment, gcmark));
+    new (&E->gcmark) std::atomic<uint32_t>(0);
     E->gcnext = J->gcenv;
     J->gcenv = E;
     ++J->gccounter;
@@ -1322,10 +1327,10 @@ void js_State::r_run(js_Function *F) {
 
     auto J = this;
     while (1) {
-        if (gccounter > JS_GCLIMIT) {
-            gccounter = 0;
-            js_gc(this, 0);
-        }
+        //if (gccounter > JS_GCLIMIT) {
+        //    gccounter = 0;
+        //    gc(0);
+        //}
 
         js_OpCode opcode = (js_OpCode)(*pc++);
         switch (opcode) {

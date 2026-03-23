@@ -1,6 +1,9 @@
 #ifndef js_compile_h
 #define js_compile_h
 
+#include <atomic>
+#include <stdint.h>
+
 enum js_OpCode
 {
 	OP_POP,		/* A -- */
@@ -159,7 +162,7 @@ struct js_Function
 	js_FunctionModifier *modifiers; /* function modifiers/attributes */
 
 	js_Function *gcnext;
-	int gcmark;
+	std::atomic<uint32_t> gcmark; /* generation from last GC that reached this function; 0 = never marked */
 };
 
 js_Function *jsC_compilefunction(js_State *J, js_Ast *prog);
