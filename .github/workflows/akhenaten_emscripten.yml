@@ -1,10 +1,7 @@
 name: Akhenaten Build Emscripten
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  workflow_call:
 
 jobs:
   build-akhenaten-emscripten-module:
