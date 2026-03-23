@@ -210,6 +210,7 @@ struct js_State
 	void restorescope();
 
 	void pushundefined();
+	void pushstring(pcstr v);
 
 	void getproperty(js_Object *obj, pcstr name);
 	void getproperty(int idx, pcstr name) { getproperty(toobject(idx), name); }

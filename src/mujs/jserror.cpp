@@ -245,7 +245,7 @@ static void jsB_stacktrace(js_State *J, int skip)
         snprintf(buf, sizeof buf, "\n\tat %s:%d", file, line);
     } else
       snprintf(buf, sizeof buf, "\n\tat %s (%s)", name, file);
-    js_pushstring(J, buf);
+    J->pushstring(buf);
     if (n < J->tracetop - skip)
       js_concat(J);
   }
@@ -267,7 +267,7 @@ static void Ep_toString(js_State *J)
     message = js_tostring(J, -1);
 
   snprintf(buf, sizeof buf, "%s: %s", name, message);
-  js_pushstring(J, buf);
+  J->pushstring(buf);
 
   if (J->hasproperty(0, "stackTrace"))
     js_concat(J);
@@ -278,7 +278,7 @@ static int jsB_ErrorX(js_State *J, js_Object *prototype)
   int top = js_gettop(J);
   js_pushobject(J, jsV_newobject(J, JS_CERROR, prototype));
   if (top > 1) {
-    js_pushstring(J, js_tostring(J, 1));
+    J->pushstring(js_tostring(J, 1));
     js_setproperty(J, -2, "message");
   }
   jsB_stacktrace(J, 1);
@@ -289,7 +289,7 @@ static int jsB_ErrorX(js_State *J, js_Object *prototype)
 static void js_newerrorx(js_State *J, const char *message, js_Object *prototype)
 {
   js_pushobject(J, jsV_newobject(J, JS_CERROR, prototype));
-  js_pushstring(J, message);
+  J->pushstring(message);
   js_setproperty(J, -2, "message");
   jsB_stacktrace(J, 0);
   js_setproperty(J, -2, "stackTrace");
@@ -302,7 +302,7 @@ void js_newtypeerror_detailed(js_State *J, const char *value_type, const char *t
   jsB_format_detailed_error(J, target_type, value_type, detailed_msg, sizeof(detailed_msg));
   
   js_pushobject(J, jsV_newobject(J, JS_CERROR, J->TypeError_prototype));
-  js_pushstring(J, detailed_msg);
+  J->pushstring(detailed_msg);
   js_setproperty(J, -2, "message");
   jsB_stacktrace(J, 0);
   js_setproperty(J, -2, "stackTrace");

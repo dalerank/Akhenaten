@@ -62,7 +62,7 @@ static void jsB_new_String(js_State *J)
 
 static void jsB_String(js_State *J)
 {
-	js_pushstring(J, js_gettop(J) > 1 ? js_tostring(J, 1) : "");
+	J->pushstring(js_gettop(J) > 1 ? js_tostring(J, 1) : "");
 }
 
 static void Sp_toString(js_State *J)
@@ -87,7 +87,7 @@ static void Sp_charAt(js_State *J)
 	Rune rune = js_runeat(J, s, pos);
 	if (rune > 0) {
 		buf[runetochar(buf, &rune)] = 0;
-		js_pushstring(J, buf);
+		J->pushstring(buf);
 	} else {
 		J->pushliteral("");
 	}
@@ -134,7 +134,7 @@ static void Sp_concat(js_State *J)
 		out = new_out;
 	}
 
-	js_pushstring(J, out);
+	J->pushstring(out);
 	js_endtry(J);
 	js_frame_free(J, out);
 }
@@ -246,7 +246,7 @@ static void Sp_toLowerCase(js_State *J)
 		js_frame_free(J, dst);
 		js_throw(J);
 	}
-	js_pushstring(J, dst);
+	J->pushstring(dst);
 	js_endtry(J);
 	js_frame_free(J, dst);
 }
@@ -268,7 +268,7 @@ static void Sp_toUpperCase(js_State *J)
 		js_frame_free(J, dst);
 		js_throw(J);
 	}
-	js_pushstring(J, dst);
+	J->pushstring(dst);
 	js_endtry(J);
 	js_frame_free(J, dst);
 }
@@ -309,7 +309,7 @@ static void S_fromCharCode(js_State *J)
 		p += runetochar(p, &c);
 	}
 	*p = 0;
-	js_pushstring(J, s);
+	J->pushstring(s);
 
 	js_endtry(J);
 	js_free(J, s);
@@ -479,7 +479,7 @@ end:
 		js_free(J, sb);
 		js_throw(J);
 	}
-	js_pushstring(J, sb ? sb->s : "");
+	J->pushstring(sb ? sb->s : "");
 	js_endtry(J);
 	js_free(J, sb);
 }
@@ -538,7 +538,7 @@ static void Sp_replace_string(js_State *J)
 		js_free(J, sb);
 		js_throw(J);
 	}
-	js_pushstring(J, sb ? sb->s : "");
+	J->pushstring(sb ? sb->s : "");
 	js_endtry(J);
 	js_free(J, sb);
 }
@@ -606,7 +606,7 @@ static void Sp_split_regexp(js_State *J)
 	}
 
 	if (len == limit) return;
-	js_pushstring(J, p);
+	J->pushstring(p);
 	js_setindex(J, -2, len);
 }
 
@@ -640,7 +640,7 @@ static void Sp_split_string(js_State *J)
 			js_setindex(J, -2, i);
 			str = s + n;
 		} else {
-			js_pushstring(J, str);
+			J->pushstring(str);
 			js_setindex(J, -2, i);
 			str = NULL;
 		}

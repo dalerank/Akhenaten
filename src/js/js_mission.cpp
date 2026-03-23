@@ -14,7 +14,7 @@
 void js_register_mission_objects(js_State *J) {
     js_newobject(J);
     {
-        js_pushstring(J, "mission");
+        J->pushstring("mission");
         js_setproperty(J, -2, "btype");
     }
     js_setglobal(J, "mission");
@@ -49,7 +49,7 @@ static void js_mission_var_getter(js_State *J) {
         break;
     }
     case setting_string:
-        js_pushstring(J, std::get<xstring>(value).c_str());
+        J->pushstring(std::get<xstring>(value).c_str());
         break;
     default:
         J->pushundefined();
@@ -122,11 +122,11 @@ void js_register_mission_vars(const settings_vars_t &vars) {
         bstring128 setter_name("set_", name.c_str());
 
         js_newcfunction(J, js_mission_var_getter, getter_name.c_str(), 0);
-        js_pushstring(J, name.c_str());
+        J->pushstring(name.c_str());
         js_setproperty(J, -2, "__varname");
 
         js_newcfunction(J, js_mission_var_setter, setter_name.c_str(), 1);
-        js_pushstring(J, name.c_str());
+        J->pushstring(name.c_str());
         js_setproperty(J, -2, "__varname");
 
         js_defaccessor(J, -3, name.c_str(), 0);

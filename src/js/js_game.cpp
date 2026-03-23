@@ -70,7 +70,7 @@ void js_loc_native(js_State *J) {
 
     pcstr result = lang_get_string(p1, p2);
 
-    js_pushstring(J, result);
+    J->pushstring(result);
 }
 
 void js_game_load_text(js_State *J) {
@@ -82,7 +82,7 @@ void js_game_load_text(js_State *J) {
         return;
     }
 
-    js_pushstring(J, ftext->begin());
+    J->pushstring(ftext->begin());
 }
 
 void js_game_get_image(js_State *J) {
@@ -144,8 +144,10 @@ bool js_has_event_handlers(const xstring &event_name) {
 
 /** Stack on entry: event_obj (-2). Creates proxy for element_id and sets event_obj[element_id]. */
 static void js_create_element_proxy(js_State *J, ui::widget* w, pcstr element_id) {
+    OZZY_PROFILER_FUNCTION();
+
     js_newobject(J);
-    js_pushstring(J, element_id);
+    J->pushstring(element_id);
     js_setproperty(J, -2, "id");
     js_push_props(J, w, element_id);
     js_push_funcs(J, w, element_id);
@@ -206,7 +208,7 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
             case bvariant::etype_uint32: js_pushnumber(J, (double)val.as_uint32()); break;
             case bvariant::etype_u16: js_pushnumber(J, (double)val.as_u16()); break;
             case bvariant::etype_float: js_pushnumber(J, (double)val.as_float()); break;
-            case bvariant::etype_str: js_pushstring(J, val.as_str().c_str()); break;
+            case bvariant::etype_str: J->pushstring(val.as_str().c_str()); break;
             case bvariant::etype_ptr:
                 // No direct pointer transport to JS; pass null
                 js_pushnull(J);

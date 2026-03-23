@@ -193,12 +193,12 @@ namespace js_helpers {
 
     template<>
     inline void js_push_value<const char*>(js_State *J, const char* value) {
-        js_pushstring(J, value);
+        J->pushstring(value);
     }
 
     template<>
     inline void js_push_value<const std::string&>(js_State *J, const std::string& value) {
-        js_pushstring(J, value.c_str());
+        J->pushstring(value.c_str());
     }
 
     template<>
@@ -226,7 +226,7 @@ namespace js_helpers {
 
     template<>
     inline void js_push_value<xstring>(js_State *J, xstring value) {
-        js_pushstring(J, value.c_str());
+        J->pushstring(value.c_str());
     }
 
     template<>
@@ -252,7 +252,7 @@ namespace js_helpers {
             js_pushnumber(J, (double)val.as_float());
             break;
         case bvariant::etype_str:
-            js_pushstring(J, val.as_str().c_str());
+            J->pushstring(val.as_str().c_str());
             break;
         case bvariant::etype_ptr:
             js_pushnull(J);

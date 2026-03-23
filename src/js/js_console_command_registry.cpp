@@ -32,7 +32,7 @@ static void console_command_wrapper_global(const std::string &funcRefStr, std::i
     }
     js_newarray(J);
     for (size_t i = 0; i < args.size(); ++i) {
-        js_pushstring(J, args[i].c_str());
+        J->pushstring(args[i].c_str());
         js_setindex(J, -2, (int)i);
     }
 
@@ -70,7 +70,7 @@ static void console_command_wrapper_registry(const std::string &funcRefStr, std:
     }
     js_newarray(J);
     for (size_t i = 0; i < args.size(); ++i) {
-        js_pushstring(J, args[i].c_str());
+        J->pushstring(args[i].c_str());
         js_setindex(J, -2, (int)i);
     }
 

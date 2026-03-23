@@ -4,6 +4,7 @@
 #include "jsrun.h"
 
 #include "regexp.h"
+#include "core/profiler.h"
 
 static void jsG_markobject(js_State *J, int mark, js_Object *obj);
 
@@ -123,6 +124,8 @@ static void jsG_markstack(js_State *J, int mark) {
 }
 
 void js_gc(js_State *J, int report) {
+    OZZY_PROFILER_FUNCTION();
+
     js_Function *fun, *nextfun, **prevnextfun;
     js_Object *obj, *nextobj, **prevnextobj;
     js_String *str, *nextstr, **prevnextstr;

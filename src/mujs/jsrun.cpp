@@ -59,6 +59,8 @@ void js_frame_free(js_State *J, void *ptr) {
 }
 
 js_String *jsV_newmemstring(js_State *J, const char *s, int n) {
+    OZZY_PROFILER_FUNCTION();
+
     js_String *v = (js_String*)js_malloc(J, soffsetof(js_String, p) + n + 1);
     memcpy(v->p, s, n);
     v->p[n] = 0;
@@ -98,25 +100,29 @@ void js_pushboolean(js_State *J, int v) {
 }
 
 void js_pushnumber(js_State *J, double v) {
+    OZZY_PROFILER_FUNCTION();
+
     CHECKSTACK(1);
     STACK[TOP].type = JS_TNUMBER;
     STACK[TOP].u.number = v;
     ++TOP;
 }
 
-void js_pushstring(js_State *J, const char *v) {
+void js_State::pushstring(pcstr v) {
+    OZZY_PROFILER_FUNCTION();
+
     int n = strlen(v);
-    CHECKSTACK(1);
+    JCHECKSTACK(1);
     if (n <= soffsetof(js_Value, type)) {
-        char *s = STACK[TOP].u.shrstr;
+        char *s = stack[top].u.shrstr;
         while (n--) *s++ = *v++;
         *s = 0;
-        STACK[TOP].type = JS_TSHRSTR;
+        stack[top].type = JS_TSHRSTR;
     } else {
-        STACK[TOP].type = JS_TMEMSTR;
-        STACK[TOP].u.memstr = jsV_newmemstring(J, v, n);
+        stack[top].type = JS_TMEMSTR;
+        stack[top].u.memstr = jsV_newmemstring(this, v, n);
     }
-    ++TOP;
+    ++top;
 }
 
 void js_pushlstring(js_State *J, const char *v, int n) {
@@ -471,7 +477,7 @@ static void js_pushrune(js_State *J, Rune rune) {
     char buf[UTFmax + 1];
     if (rune > 0) {
         buf[runetochar(buf, &rune)] = 0;
-        js_pushstring(J, buf);
+        J->pushstring(buf);
     } else {
         J->pushundefined();
     }

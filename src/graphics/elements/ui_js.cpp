@@ -100,7 +100,7 @@ ui::element *GET_ELEM(js_State *J) {
     return __ui_get_element(id);
 }
 
-void ui_proxy_get_text(js_State *J) { auto elem = GET_ELEM(J); js_pushstring(J, elem ? elem->text().c_str() : ""); }
+void ui_proxy_get_text(js_State *J) { auto elem = GET_ELEM(J); J->pushstring(elem ? elem->text().c_str() : ""); }
 void ui_proxy_set_text(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->text(js_tostring(J, 1)); } J->pushundefined(); }
 void ui_proxy_get_enabled(js_State *J) { auto elem = GET_ELEM(J); js_pushboolean(J, elem ? elem->enabled : false); }
 void ui_proxy_set_enabled(js_State *J) { auto elem = GET_ELEM(J); if (elem) { elem->set_enabled(js_toboolean(J, 1)); } J->pushundefined(); }
@@ -185,7 +185,7 @@ void ui_proxy_set_checkedfn(js_State *J) {
     J->pushundefined();
 }
 void ui_proxy_get_noop_render_item(js_State *J) { (void)J; J->pushundefined(); }
-void ui_proxy_get_value(js_State *J) { auto elem = GET_ELEM(J); js_pushstring(J, elem ? elem->get_value() : ""); }
+void ui_proxy_get_value(js_State *J) { auto elem = GET_ELEM(J); J->pushstring(elem ? elem->get_value() : ""); }
 void ui_proxy_set_value(js_State *J) {
     auto elem = GET_ELEM(J);
     pcstr v = js_tostring(J, 1);
@@ -283,7 +283,7 @@ void ui_proxy_get_selected_text(js_State *J) {
     int syntax = js_tointeger(J, 1);
     auto list = elem ? elem->dcast_scrollable_list() : nullptr;
     xstring text = list ? list->selected_entry_text(syntax).c_str() : "";
-    js_pushstring(J, text.c_str());
+    J->pushstring(text.c_str());
 }
 
 void ui_proxy_get_items_count(js_State *J) {
