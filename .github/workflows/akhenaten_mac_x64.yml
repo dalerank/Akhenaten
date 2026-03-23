@@ -1,10 +1,7 @@
 name: Akhenaten Build Mac x86_64
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  workflow_call:
 
 jobs:
   build:
@@ -36,5 +33,5 @@ jobs:
 
     - uses: actions/upload-artifact@v4
       with:
-        name: macos_build
+        name: macos_x64_build
         path: macos_build
