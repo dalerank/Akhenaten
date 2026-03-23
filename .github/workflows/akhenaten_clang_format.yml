@@ -6,6 +6,12 @@ on:
       base_branch:
         required: true
         type: string
+      pull_request_number:
+        required: false
+        type: string
+    secrets:
+      GITHUB_TOKEN:
+        required: false
 
 jobs:
   build:
@@ -23,13 +29,42 @@ jobs:
         sudo chmod +x /usr/local/bin/git-clang-format
         sudo ln -sf /usr/bin/clang-format-20 /usr/bin/clang-format
     - name: check-format
+      id: check-formatting
       run: |
           git fetch origin ${{ inputs.base_branch }}
           output=$(git clang-format --diff origin/${{ inputs.base_branch }} --extensions cpp,cc,cxx,h,hpp)
           if [ "$output" != "no modified files to format" ]; then
-            echo "clang-format failed:"
-            echo "$output"
+            echo "diff<<EOF" >> $GITHUB_OUTPUT
+            echo "$output" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
             exit 1
           else
             echo "clang-format passed."
           fi
+    - name: post-comment-on-pull-request
+      if: failure() && inputs.pull_request_number != ''
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const fs = require('fs');
+          const templatePath = '.github/COMMENT_TEMPLATE/code_format_failure.md';
+          let template;
+          try {
+            template = fs.readFileSync(templatePath, 'utf8');
+          } catch (err) {
+            console.error('Failed to read template:', err);
+            template = '## Code formatting issues found\n\nPlease format the code locally to fix these issues.\n\n```diff\n{{DIFF}}\n```';
+          }
+          const contributingUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/blob/master/CONTRIBUTING.md`;
+          const diff = `${{ steps.check-formatting.outputs.diff }}`;
+          const body = template
+            .replace(/{{CONTRIBUTING_URL}}/g, contributingUrl)
+            .replace(/{{DIFF}}/g, diff);
+          const prNumber = ${{ inputs.pull_request_number }};
+          await github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: prNumber,
+            body: body
+          });

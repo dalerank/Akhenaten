@@ -11,6 +11,8 @@ jobs:
     uses: ./.github/workflows/akhenaten_clang_format.yml
     with:
       base_branch: ${{ github.event.pull_request.base.ref || 'master' }}
+      pull_request_number: ${{ github.event.pull_request.number || '' }}
+    secrets: inherit
 
   content:
     needs: clang-format
