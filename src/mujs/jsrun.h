@@ -1,5 +1,8 @@
 #pragma once
 
+#include <atomic>
+#include <stdint.h>
+
 js_Environment *jsR_newenvironment(js_State *J, js_Object *variables, js_Environment *outer);
 
 struct js_Environment
@@ -8,5 +11,5 @@ struct js_Environment
 	js_Object *variables;
 
 	js_Environment *gcnext;
-	int gcmark;
+	std::atomic<uint32_t> gcmark;
 };

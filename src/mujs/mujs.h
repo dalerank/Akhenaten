@@ -61,7 +61,6 @@ void *js_getcontext(js_State *J);
 void js_setframealloc(js_State *J, js_Alloc frame_alloc, void *frame_actx);
 js_Panic js_atpanic(js_State *J, js_Panic panic);
 void js_freestate(js_State *J);
-void js_gc(js_State *J, int report);
 
 int js_dostring(js_State *J, const char *source);
 int js_dofile(js_State *J, const char *filename);

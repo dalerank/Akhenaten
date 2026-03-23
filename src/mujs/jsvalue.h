@@ -1,6 +1,9 @@
 #ifndef js_value_h
 #define js_value_h
 
+#include <atomic>
+#include <stdint.h>
+
 typedef struct js_Property js_Property;
 typedef struct js_Iterator js_Iterator;
 typedef struct js_FunctionModifier js_FunctionModifier;
@@ -70,7 +73,7 @@ struct js_Value {
 
 struct js_String {
     js_String *gcnext;
-    char gcmark;
+    std::atomic<uint32_t> gcmark;
     char p[1];
 };
 
@@ -127,8 +130,8 @@ struct js_Object {
         } p;
     } u;
     js_Object *gcnext;
-    int gcmark;
     js_FunctionModifier *modifiers; /* object modifiers/attributes */
+    std::atomic<uint32_t> gcmark;
 
     js_Property *vgetproperty(const char *name);
 };
