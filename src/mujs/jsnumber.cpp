@@ -29,7 +29,7 @@ static void Np_toString(js_State *J)
 		js_rangeerror(J, "invalid radix");
 	if (radix != 10)
 		js_rangeerror(J, "invalid radix");
-	js_pushstring(J, jsV_numbertostring(J, buf, self->u.number));
+	J->pushstring(jsV_numbertostring(J, buf, self->u.number));
 }
 
 /* Customized ToString() on a number */
@@ -51,7 +51,7 @@ static void numtostr(js_State *J, const char *fmt, int w, double n)
 			int exp = atoi(e+1);
 			sprintf(e, "e%+d", exp);
 		}
-		js_pushstring(J, buf);
+		J->pushstring(buf);
 	}
 }
 

@@ -126,7 +126,7 @@ static void Ap_join(js_State *J) {
         js_pop(J, 1);
     }
 
-    js_pushstring(J, out);
+    J->pushstring(out);
     js_endtry(J);
     js_free(J, out);
 }

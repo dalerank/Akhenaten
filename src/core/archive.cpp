@@ -380,7 +380,7 @@ void g_archive::w_property(pcstr name, pcstr prop, const xstring &value) {
         js_newobject(J);
     }
 
-    js_pushstring(J, value.c_str());
+    J->pushstring(value.c_str());
     js_setproperty(J, -2, prop);
     js_setglobal(J, name);
 }

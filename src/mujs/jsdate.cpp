@@ -364,7 +364,7 @@ static void D_now(js_State *J) {
 
 static void jsB_Date(js_State *J) {
     char buf[64];
-    js_pushstring(J, fmtdatetime(buf, LocalTime(Now()), LocalTZA()));
+    J->pushstring(fmtdatetime(buf, LocalTime(Now()), LocalTZA()));
 }
 
 static void jsB_new_Date(js_State *J) {
@@ -408,25 +408,25 @@ static void Dp_valueOf(js_State *J) {
 static void Dp_toString(js_State *J) {
     char buf[64];
     double t = js_todate(J, 0);
-    js_pushstring(J, fmtdatetime(buf, LocalTime(t), LocalTZA()));
+    J->pushstring(fmtdatetime(buf, LocalTime(t), LocalTZA()));
 }
 
 static void Dp_toDateString(js_State *J) {
     char buf[64];
     double t = js_todate(J, 0);
-    js_pushstring(J, fmtdate(buf, LocalTime(t)));
+    J->pushstring(fmtdate(buf, LocalTime(t)));
 }
 
 static void Dp_toTimeString(js_State *J) {
     char buf[64];
     double t = js_todate(J, 0);
-    js_pushstring(J, fmttime(buf, LocalTime(t), LocalTZA()));
+    J->pushstring(fmttime(buf, LocalTime(t), LocalTZA()));
 }
 
 static void Dp_toUTCString(js_State *J) {
     char buf[64];
     double t = js_todate(J, 0);
-    js_pushstring(J, fmtdatetime(buf, t, 0));
+    J->pushstring(fmtdatetime(buf, t, 0));
 }
 
 static void Dp_toISOString(js_State *J) {
@@ -434,7 +434,7 @@ static void Dp_toISOString(js_State *J) {
     double t = js_todate(J, 0);
     if (!isfinite(t))
         js_rangeerror(J, "invalid date");
-    js_pushstring(J, fmtdatetime(buf, t, 0));
+    J->pushstring(fmtdatetime(buf, t, 0));
 }
 
 static void Dp_getFullYear(js_State *J) {

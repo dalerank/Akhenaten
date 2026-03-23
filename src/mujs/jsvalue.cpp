@@ -367,6 +367,8 @@ js_Object *js_State::toobject(js_Value *v) {
 }
 
 void js_newobject(js_State *J) {
+    OZZY_PROFILER_FUNCTION();
+
     js_pushobject(J, jsV_newobject(J, JS_COBJECT, J->Object_prototype));
 }
 
@@ -512,7 +514,7 @@ void js_concat(js_State *J) {
             js_throw(J);
         }
         js_pop(J, 2);
-        js_pushstring(J, sab);
+        J->pushstring(sab);
         js_endtry(J);
         js_frame_free(J, sab);
     } else {

@@ -46,7 +46,7 @@ void js_RegExp_prototype_exec(js_State *J, js_Regexp *re, const char *text) {
 
     if (!js_regexec((Reprog *)re->prog, text, &m, opts)) {
         js_newarray(J);
-        js_pushstring(J, text);
+        J->pushstring(text);
         js_setproperty(J, -2, "input");
         js_pushnumber(J, js_utfptrtoidx(text, m.sub[0].sp));
         js_setproperty(J, -2, "index");
@@ -165,7 +165,7 @@ static void Rp_toString(js_State *J) {
         js_throw(J);
     }
     js_pop(J, 0);
-    js_pushstring(J, out);
+    J->pushstring(out);
     js_endtry(J);
     js_frame_free(J, out);
 }

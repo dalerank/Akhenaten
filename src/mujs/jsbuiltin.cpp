@@ -119,7 +119,7 @@ static void Encode(js_State *J, const char *str, const char *unescaped)
 		js_free(J, sb);
 		js_throw(J);
 	}
-	js_pushstring(J, sb ? sb->s : "");
+	J->pushstring(sb ? sb->s : "");
 	js_endtry(J);
 	js_free(J, sb);
 }
@@ -156,7 +156,7 @@ static void Decode(js_State *J, const char *str, const char *reserved)
 		js_free(J, sb);
 		js_throw(J);
 	}
-	js_pushstring(J, sb ? sb->s : "");
+	J->pushstring(sb ? sb->s : "");
 	js_endtry(J);
 	js_free(J, sb);
 }

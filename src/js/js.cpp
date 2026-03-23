@@ -420,10 +420,10 @@ int js_vm_exec_function_args(pcstr funcname, const char *szTypes, ...) {
                 break;
             case 'c':
                 msg[0] = va_arg(vl, int);
-                js_pushstring(vm.J, msg);
+                vm.J->pushstring(msg);
                 break;
             case 's':
-                js_pushstring(vm.J, va_arg(vl, char *));
+                vm.J->pushstring(va_arg(vl, char *));
                 break;
 
             default:
