@@ -33,6 +33,8 @@ jobs:
       run: |
           git fetch origin ${{ inputs.base_branch }}
           output=$(git clang-format --diff origin/${{ inputs.base_branch }} --extensions cpp,cc,cxx,h,hpp)
+          echo "clang-format output:"
+          echo "$output"
           if [ "$output" != "no modified files to format" ]; then
             echo "diff<<EOF" >> $GITHUB_OUTPUT
             echo "$output" >> $GITHUB_OUTPUT
