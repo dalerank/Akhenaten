@@ -359,6 +359,14 @@ js_State *js_vm_state() {
     return vm.J;
 }
 
+void js_vm_shutdown() {
+    if (!vm.J) {
+        return;
+    }
+    js_freestate(vm.J);
+    vm.J = nullptr;
+}
+
 bool js_vm_sync(const xstring &mission_id) {
     if (vm.files2load.empty()) {
         return false;

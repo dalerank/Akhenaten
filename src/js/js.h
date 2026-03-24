@@ -7,6 +7,7 @@ struct js_State;
 struct mission_id_t;
 
 void js_vm_setup();
+void js_vm_shutdown();
 bool js_vm_sync(const xstring& mission_id);
 js_State *js_vm_state();
 int js_vm_exec_function_args(pcstr funcname, const char *szTypes, ...);
