@@ -291,6 +291,7 @@ static void setup() {
 static void teardown() {
     logs::info("Exiting game");
     game.exit();
+    js_vm_shutdown();
     platform_screen_destroy();
     SDL_Quit();
 }

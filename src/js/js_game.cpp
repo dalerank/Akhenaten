@@ -470,10 +470,12 @@ void js_register_game_functions(js_State *J) {
 }
 
 void js_unref_function(xstring onclick_ref) {
-    if (!onclick_ref.empty()) {
-        js_State *J = js_vm_state();
-        assert(J);
-        js_unref(J, onclick_ref .c_str());
+    if (onclick_ref.empty()) {
+        return;
+    }
+
+    if (js_vm_state()) {
+        js_unref(js_vm_state(), onclick_ref.c_str());
     }
 }
 
