@@ -36,6 +36,7 @@ static void gc_markproperty(js_State *J, uint32_t mark, js_Property *node) {
 
         if (node->getter)
             gc_markobject(J, mark, node->getter);
+
         if (node->setter)
             gc_markobject(J, mark, node->setter);
 
@@ -46,8 +47,13 @@ static void gc_markproperty(js_State *J, uint32_t mark, js_Property *node) {
 static void gc_markobject(js_State *J, uint32_t mark, js_Object *obj) {
     OZZY_PROFILER_FUNCTION();
 
-    if (!obj) return;
-    if (gcmark_load(obj->gcmark) == mark) return;
+    if (!obj) {
+        return;
+    }
+
+    if (gcmark_load(obj->gcmark) == mark) {
+        return;
+    }
     obj->gcmark.store(mark, std::memory_order_relaxed);
 
     if (obj->head)
@@ -69,7 +75,9 @@ static void gc_markenvironment(js_State *J, uint32_t mark, js_Environment *env) 
     (void)J;
 
     while (env) {
-        if (gcmark_load(env->gcmark) == mark) break;
+        if (gcmark_load(env->gcmark) == mark) {
+            break;
+        }
         env->gcmark.store(mark, std::memory_order_relaxed);
         if (env->variables)
             gc_markobject(J, mark, env->variables);
@@ -195,14 +203,13 @@ void js_State::gc(int report) {
         gc_markobject(J, mark, J->TypeError_prototype);
         gc_markobject(J, mark, J->URIError_prototype);
 
-        gc_markobject(J, mark, J->R);
-        gc_markobject(J, mark, J->G);
-
         gc_markstack(J, mark);
 
         gc_markenvironment(J, mark, J->E);
         gc_markenvironment(J, mark, J->GE);
-        for (i = 0; i < envtop; ++i) gc_markenvironment(J, mark, J->envstack[i]);
+        for (i = 0; i < envtop; ++i) {
+            gc_markenvironment(J, mark, J->envstack[i]);
+        }
     }
 
     {
