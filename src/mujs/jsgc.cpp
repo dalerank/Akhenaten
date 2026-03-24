@@ -205,6 +205,9 @@ void js_State::gc(int report) {
 
         gc_markstack(J, mark);
 
+        gc_markobject(J, mark, J->G);
+        gc_markobject(J, mark, J->R);
+
         gc_markenvironment(J, mark, J->E);
         gc_markenvironment(J, mark, J->GE);
         for (i = 0; i < envtop; ++i) {
