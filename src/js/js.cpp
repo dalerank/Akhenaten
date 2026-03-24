@@ -549,7 +549,7 @@ void js_reset_vm_state() {
     vm.frame_alloc_ctx.release();
 
     vm.J = js_newstate(js_alloc_wrapper, nullptr, JS_STRICT);
-    js_setframealloc(vm.J, js_frame_alloc_wrapper, nullptr);
+    js_set_framealloc(vm.J, js_frame_alloc_wrapper, nullptr);
     js_atpanic(vm.J, js_game_panic);
     js_registerimport(vm.J, js_game_import);
     js_registeremit(vm.J, js_game_emit);
@@ -586,7 +586,7 @@ void js_reset_vm_state() {
 
 void js_vm_frame_begin() {
     vm.frame_alloc_ctx.release();
-    if (vm.J && vm.J->gccounter > JS_GCLIMIT) {
+    if (vm.J && vm.J->gccounter > JS_GCLIMIT * 10) {
         vm.J->gccounter = 0;
         vm.J->gc(0);
     }

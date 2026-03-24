@@ -223,7 +223,7 @@ void js_register_bound_float(js_State *J, const char *name, float *ptr)
 	js_defglobal(J, name, 0);
 }
 
-void js_setframealloc(js_State *J, js_Alloc frame_alloc, void *frame_actx)
+void js_set_framealloc(js_State *J, js_Alloc frame_alloc, void *frame_actx)
 {
 	J->frame_alloc = frame_alloc;
 	J->frame_actx = frame_actx;
