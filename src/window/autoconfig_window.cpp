@@ -51,7 +51,7 @@ void autoconfig_window::refresh_all() {
 
 autoconfig_window::autoconfig_window(xstring s) {
     assert(!strstr(s, "::"));
-    logs::info("Registered window config:%s", s);
+    logs::info("Registered window config:%s", s.c_str());
     autoconfig_registry()[s] = this;
 }
 
