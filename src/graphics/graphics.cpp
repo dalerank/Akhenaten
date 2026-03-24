@@ -210,10 +210,13 @@ void ImageDraw::apply_render_commands(painter& ctx, std::string_view p) {
         auto sort_less = [](const render_command_t& lhs, const render_command_t& rhs) {
             const vec2i lhs_sort = lhs.use_sort_pixel ? lhs.sort_pixel : lhs.pixel;
             const vec2i rhs_sort = rhs.use_sort_pixel ? rhs.sort_pixel : rhs.pixel;
-            if (lhs_sort.y == rhs_sort.y) {
+            if (lhs_sort.y != rhs_sort.y) {
+                return lhs_sort.y < rhs_sort.y;
+            }
+            if (lhs_sort.x != rhs_sort.x) {
                 return lhs_sort.x > rhs_sort.x;
             }
-            return lhs_sort.y < rhs_sort.y;
+            return lhs.id < rhs.id;
         };
 
         auto& vec = g_render_commands;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/core.h"
+#include "core/interlocked.h"
 #include "core/buffer.h"
 #include "core/string.h"
 #include "core/direction.h"

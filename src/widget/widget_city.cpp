@@ -173,19 +173,18 @@ void screen_city_t::draw_figures_on_flat_tiles(vec2i pixel, tile2i tile, painter
             continue;
         }
 
-        const bool should_draw_main = !f.f->is_main_drawn;
-        if (!should_draw_main) {
+        if (f.f->main_cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f.f->main_cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
             continue;
         }
 
-        if (f.f->main_cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f.f->main_cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
+        if (selected_figure_id && f.f->id != selected_figure_id) {
             continue;
         }
 
         if (!selected_figure_id) {
             int highlight = (f.f->formation_id > 0) && (f.f->formation_id == highlighted_formation);
             f.f->draw(ctx, highlight);
-        } else if (f.f->id == selected_figure_id) {
+        } else {
             f.f->draw(ctx, 0);
         }
     }
@@ -194,7 +193,7 @@ void screen_city_t::draw_figures_on_flat_tiles(vec2i pixel, tile2i tile, painter
 void screen_city_t::draw_postrender_building_effects(vec2i pixel, tile2i tile, painter &ctx) {
     OZZY_PROFILER_FUNCTION();
     int grid_offset = tile.grid_offset();
-    
+
     int building_id = map_building_at(grid_offset);
 
     color color_mask = force_mask;
@@ -203,7 +202,7 @@ void screen_city_t::draw_postrender_building_effects(vec2i pixel, tile2i tile, p
     if (building_id && b->is_valid()) {
         building_impl *bi = b->dcast();
         bi->draw_postrender_effects(ctx, pixel, tile, color_mask);
-    }    
+    }
 }
 
 void screen_city_t::draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool force) {

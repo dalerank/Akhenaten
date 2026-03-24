@@ -354,7 +354,7 @@ public:
     }
 
     const building_static_params &params() const;
-    
+
     #define ALLOW_SMART_CAST_BUILDING(type) building_##type *dcast_##type() { return dcast<building_##type>(); };
     ALLOW_SMART_CAST_BUILDING(farm)
     ALLOW_SMART_CAST_BUILDING(brewery)
