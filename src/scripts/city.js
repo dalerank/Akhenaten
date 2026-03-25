@@ -117,6 +117,8 @@ function city_resource_view(resource_id) {
         @count_active_industry { get: function() { return __city_count_industry_active(resource_id) } }
         @mothballed { get: function() { return __city_resource_is_mothballed(resource_id) } }
         @is_stockpiled { get: function() { return __city_resource_is_stockpiled(resource_id) } }
+        @price_buy { get: function() { return __trade_price_buy(resource_id) } }
+        @price_sell { get: function() { return __trade_price_sell(resource_id) } }
         stack_proper_quantity: function(value) { return __city_resource_stack_proper_quantity(resource_id, value) }
     }
 }

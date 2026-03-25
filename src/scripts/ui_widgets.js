@@ -25,30 +25,6 @@ build_menu_widget = {
                     -30, -46, -62, -78, -78, -94, -94, -110, -110, 0,   0,   0,  0,  0,  0],
 }
 
-trade_prices_window = {
-    pos: [(sw(0) - px(56))/2, (sh(0) - px(11))/2],
-    next_row_offset : [0, 90],
-    next_item_offset : [42, 0],
-    receive_offset : [0, 50],
-    buyer_offset : [0, 30],
-    next : 18,
-    ui : {
-        background       : outer_panel({pos:[0, 0], size:[56, 16]}),
-        title            : text_center({pos:[0, 12], size:[px(56), 20], text:[54, 21], font : FONT_LARGE_BLACK_ON_LIGHT }),
-
-        items            : dummy({pos:[156, 44]}),
-        item_button      : dummy({pos:[-7, -7], size:[38, 74]}),
-
-        buyers_pay1      : text({text:[54, 22], pos:[26, 72], font: FONT_NORMAL_BLACK_ON_LIGHT}),
-        sellers_receive1 : text({text:[54, 23], pos:[26, 92], font:FONT_NORMAL_BLACK_ON_LIGHT}),
-
-        buyers_pay2      : text({text:[54, 22], pos:[26, 162], font: FONT_NORMAL_BLACK_ON_LIGHT}),
-        sellers_receive2 : text({text:[54, 23], pos:[26, 182], font:FONT_NORMAL_BLACK_ON_LIGHT}),
-
-        back          : text_center({pos:[13, -1], margin:{bottom:-35}, text:[13, 1], size:[px(56), 20], font:FONT_NORMAL_BLACK_ON_LIGHT }),
-    }
-}
-
 window_mission_end = {
     pos: [(sw(0) - px(38))/2, (sh(0) - px(27))/2],
     ui : {

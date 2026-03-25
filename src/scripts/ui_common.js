@@ -27,6 +27,12 @@ ui.draw_texture = __ui_draw_texture
 ui.window_is = __ui_window_is
 ui.show_advisor = __ui_window_advisors_show_advisor
 
+function show_window_by_id(window_id) {
+	return function() {
+		emit event_show_window{ id:window_id }
+	}
+}
+
 ui.button = function(config) {
     if (!config) {
         return
@@ -36,7 +42,7 @@ ui.button = function(config) {
     flags |= (config.border === false ? UiFlags_NoBorder : 0)
     flags |= (config.body === false ? UiFlags_NoBody : 0)
 
-    return __ui_draw_button(config.text, config.pos, config.size, config.font, flags)
+    return __ui_draw_button(config.text, config.pos, config.size, config.font, flags, config.tooltip)
 }
 
 ui.label = function(text, pos, font) {
@@ -63,8 +69,6 @@ ui.resource_icon = function(pos, resource) {
     __ui_draw_resource_icon(pos, resource)
 }
 
-ui.set_clip_element = __ui_set_clip_element
-ui.reset_clip = __ui_reset_clip
 ui.element_value_int = __ui_element_value_int
 
 ui.line = function(hline, pos, size) {

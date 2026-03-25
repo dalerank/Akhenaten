@@ -13,8 +13,9 @@
 #include "window/window_advisors.h"
 #include "window/window_labor_priority.h"
 #include "window/resource_settings.h"
-#include "window/trade_prices.h"
+#include "window/autoconfig_window.h"
 #include "window/window_empire.h"
+#include "empire/trade_prices.h"
 #include "game/resource.h"
 #include "window/popup_dialog.h"
 #include "city/city_message.h"
@@ -34,11 +35,14 @@ void __ui_fill_rect(vec2i pos, vec2i size, unsigned int c) { ui::fill_rect(pos, 
 void __ui_border(vec2i pos, vec2i size, int type, unsigned int c, int flags) { ui::border(pos, size, type, (color)c, (UiFlags)flags); } ANK_FUNCTION_5(__ui_border);
 void __ui_label_colored(pcstr text, vec2i pos, int font, unsigned int c) { ui::label_colored(text, pos, (e_font)font, (color)c); } ANK_FUNCTION_4(__ui_label_colored);
 
-bool __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags) {
+bool __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags, pcstr tooltip) {
     const vec2i offset = ui::current_offset();
     const bool is_underlying = g_window_manager.underlying_windows_redrawing > 0;
     flags |= is_underlying ? UiFlags_Readonly : UiFlags_None;
-    auto &btn = ui::button(text, pos, size, fonts_vec{ (e_font)font }, flags);
+    auto &btn = ui::button(text, pos, size, fonts_vec{ (e_font)font }, (UiFlags)flags);
+    if (tooltip && *tooltip) {
+        btn.tooltip(xstring(tooltip));
+    }
 
     if (is_underlying) {
         return false;
@@ -48,7 +52,7 @@ bool __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags) {
     generic_buttons_handle_mouse(&mouse::ref(), offset, &btn, 1, nullptr, &lmb_click);
     return !!lmb_click;
 }
-ANK_FUNCTION_5(__ui_draw_button);
+ANK_FUNCTION_6(__ui_draw_button);
 
 void __ui_dialog_show_yesno(pcstr text, js_helpers::js_function_ref cb_yes, js_helpers::js_function_ref cb_no) {
     xstring yes_ref = cb_yes.ref;
@@ -81,24 +85,6 @@ void __ui_draw_resource_icon(vec2i pos, int resource) {
 }
 ANK_FUNCTION_2(__ui_draw_resource_icon)
 
-void __ui_set_clip_element(pcstr element_id) {
-    ui::widget *w = ui::get_current_widget();
-    if (!w) {
-        return;
-    }
-    w->set_clip_rectangle((*w)[element_id]);
-}
-ANK_FUNCTION_1(__ui_set_clip_element)
-
-void __ui_reset_clip() {
-    ui::widget *w = ui::get_current_widget();
-    if (!w) {
-        return;
-    }
-    w->reset_clip_rectangle();
-}
-ANK_FUNCTION(__ui_reset_clip)
-
 int __ui_element_value_int(pcstr id) {
     ui::widget *w = ui::get_current_widget();
     if (!w) {
@@ -123,9 +109,19 @@ void __window_resource_settings_show(int resource) {
 ANK_FUNCTION_1(__window_resource_settings_show)
 
 void __window_trade_prices_show() {
-    window_trade_prices_show();
+    autoconfig_window::show("trade_prices_window");
 }
 ANK_FUNCTION(__window_trade_prices_show)
+
+int __trade_price_buy(int resource) {
+    return trade_price_buy((e_resource)resource);
+}
+ANK_FUNCTION_1(__trade_price_buy)
+
+int __trade_price_sell(int resource) {
+    return trade_price_sell((e_resource)resource);
+}
+ANK_FUNCTION_1(__trade_price_sell)
 
 void __window_empire_show() {
     window_empire_show();

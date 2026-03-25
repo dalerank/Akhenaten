@@ -65,3 +65,4 @@ import ui_dynasty_menu
 import ui_player_selection
 import ui_new_career
 import ui_records_window
+import ui_trade_prices_window
