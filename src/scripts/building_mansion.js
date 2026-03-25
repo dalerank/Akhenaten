@@ -10,6 +10,7 @@ building_personal_mansion {
     min_houses_coverage : 50
     building_size : 3
     meta { help_id:78, text_id:103 }
+    info_sound : "Wavs/GOV_MAN1.WAV"
     planner_update_rule {
       unique_building : true
     }
@@ -31,6 +32,7 @@ building_personal_mansion {
     min_houses_coverage : 50
     building_size : 4
     meta { help_id:78, text_id:103 }
+    info_sound : "Wavs/GOV_MAN1.WAV"
     planner_update_rule {
       unique_building : true
     }
@@ -52,6 +54,7 @@ building_personal_mansion {
     min_houses_coverage : 50
     building_size : 4
     meta { help_id:78, text_id:103 }
+    info_sound : "Wavs/GOV_MAN2.WAV"
     planner_update_rule {
       unique_building : true
     }
@@ -76,6 +79,7 @@ building_personal_mansion {
     }
   
     min_houses_coverage : 50
+    info_sound : "Wavs/GOV_MAN3.WAV"
     cost [ 140, 200, 300, 400, 500 ]
     desirability { value[28], step[2], step_size[-4], range[6] }
     laborers[0], fire_risk[4], damage_risk[1]

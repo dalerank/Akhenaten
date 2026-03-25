@@ -11,6 +11,7 @@ building_scribal_school = {
     resource : RESOURCE_PAPYRUS
   }
   meta : { help_id: 68, text_id: 85 }
+  info_sound : "Wavs/school_scribe.wav"
   min_houses_coverage : 50
   building_size : 2
   labor_category : LABOR_CATEGORY_EDUCATION

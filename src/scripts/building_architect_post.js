@@ -14,6 +14,7 @@ building_architect_post {
     min_houses_coverage : 50
     building_size : 1
     meta { help_id: 81, text_id: 104 }
+    info_sound : "Wavs/eng.wav"
     cost [ 6, 12, 25, 40, 60 ]
     laborers[5], fire_risk[2], damage_risk[0]
     flags {

@@ -14,6 +14,7 @@ building_juggler_school {
     spawn_delay_25_percent : 60   // 1 жонглер за 2 месяца
     spawn_delay_default : 90      // 1 жонглер за 3 месяца (для 1-24% работников)
     meta { text_id:77, help_link:"message_building_booth" }
+    info_sound : "Wavs/juggler_school.wav"
 
     building_size : 2
     min_houses_coverage : 50
@@ -39,6 +40,7 @@ building_juggler_school {
     min_houses_coverage : 50
     building_size : 4
     meta { help_id:75, text_id:76 }
+    info_sound : "Wavs/dance_school.wav"
     cost [ 30, 50, 100, 150, 200 ]
     desirability { value[-3], step[1], step_size[1], range[3] }
     laborers[10]
@@ -177,6 +179,7 @@ building_juggler_school {
     min_houses_coverage : 100
     fire_proof: true
     meta { help_id:72, text_id:71 }
+    info_sound : "Wavs/music_r.wav"
     building_size : 3
     cost [ 30, 50, 100, 150, 200 ]
     desirability { value[4], step[1], step_size[-1], range[4] }
@@ -196,6 +199,7 @@ building_juggler_school {
     min_houses_coverage : 100
     labor_category : LABOR_CATEGORY_ENTERTAINMENT
     meta { help_id:71, text_id:72 }
+    info_sound : "Wavs/jugger_r.wav"
     building_size : 2
     cost [ 10, 20, 40, 80, 150 ]
     desirability { value[2], step[1], step_size[-1], range[2] }
@@ -235,6 +239,7 @@ building_juggler_school {
       base : { pack:PACK_CUSTOM, id:0 },
     }
     meta : { help_id:75, text_id:78 }
+    info_sound : "Wavs/bullfight_school.wav"
     building_size : 2
     cost: [ 50, 80, 100, 150, 200 ]
     desirability : { value:[-3], step:[1], step_size:[1], range: [3] }

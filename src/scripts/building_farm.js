@@ -35,6 +35,7 @@ building_meadow_farm_tile_offsets = [
     output_resource_second_rate : 10
 
     build_menu_text : "Grain Meadow Farm"
+    info_sound : "Wavs/farm1.wav"
 
     building_size : 3
     month_harvest: [MONTH_JANUARY, MONTH_MAY]
@@ -86,6 +87,7 @@ building_meadow_farm_tile_offsets = [
     fire_proof : true
     damage_proof : true
     meta { help_id:90, text_id:112 }
+    info_sound : "Wavs/farm1.wav"
     progress_max: 2000
     labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
 
@@ -126,6 +128,7 @@ building_meadow_farm_tile_offsets = [
     }
 
     build_menu_text : "Chickpeas Meadow Farm"
+    info_sound : "Wavs/chickfarm.wav"
 
     building_size : 3
     month_harvest: [MONTH_APRIL]
@@ -172,6 +175,7 @@ building_meadow_farm_tile_offsets = [
     month_harvest: [MONTH_APRIL]
     damage_proof : true
     meta { help_id:90, text_id:182 }
+    info_sound : "Wavs/chickfarm.wav"
     progress_max: 2000
     labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
     needs {
@@ -211,6 +215,7 @@ building_meadow_farm_tile_offsets = [
     }
 
     build_menu_text : "Lettuce Meadow Farm"
+    info_sound : "Wavs/lettucefarm.wav"
 
     building_size : 3
     month_harvest: [MONTH_APRIL]
@@ -266,6 +271,7 @@ building_meadow_farm_tile_offsets = [
     fire_proof : true
     damage_proof : true
     meta { help_id:91, text_id:113 }
+    info_sound : "Wavs/lettucefarm.wav"
     progress_max: 2000
     labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
     needs {
@@ -300,6 +306,7 @@ building_meadow_farm_tile_offsets = [
     }
 
     build_menu_text : "Pomegranates Meadow Farm"
+    info_sound : "Wavs/pomfarm.wav"
 
     building_size : 3
     month_harvest: [MONTH_JUNE, MONTH_NOVEMBER]
@@ -356,6 +363,7 @@ building_meadow_farm_tile_offsets = [
     fire_proof : true
     damage_proof : true
     meta { help_id:91, text_id:114 }
+    info_sound : "Wavs/pomfarm.wav"
     progress_max: 2000
     labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
     needs {
@@ -389,6 +397,7 @@ building_meadow_farm_tile_offsets = [
     }
 
     build_menu_text : "Barley Meadow Farm"
+    info_sound : "Wavs/barleyfarm.wav"
 
     building_size : 3
     month_harvest: [MONTH_FEBRUARY, MONTH_AUGUST]
@@ -439,6 +448,7 @@ building_meadow_farm_tile_offsets = [
     month_harvest [MONTH_FEBRUARY, MONTH_AUGUST]
     damage_proof : true
     meta { help_id:89, text_id:181 }
+    info_sound : "Wavs/barleyfarm.wav"
     progress_max: 2000
     labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
     needs {
@@ -483,6 +493,7 @@ building_meadow_farm_tile_offsets = [
     }
 
     build_menu_text : "Flax Meadow Farm"
+    info_sound : "Wavs/flaxfarm.wav"
 
     building_size : 3
     month_harvest: [MONTH_DECEMBER]
@@ -528,6 +539,7 @@ building_meadow_farm_tile_offsets = [
     damage_proof : true
     month_harvest: [MONTH_DECEMBER]
     meta { help_id: 90, text_id: 115 }
+    info_sound : "Wavs/flaxfarm.wav"
     progress_max: 2000
     labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
     needs {
@@ -570,6 +582,7 @@ building_meadow_farm_tile_offsets = [
     }
 
     build_menu_text : "Henna Meadow Farm"
+    info_sound : "Wavs/farm2.wav"
 
     building_size : 3
     month_harvest: [MONTH_DECEMBER]
@@ -615,6 +628,7 @@ building_meadow_farm_tile_offsets = [
     damage_proof : true
     month_harvest[MONTH_DECEMBER]
     meta { help_id:90, text_id:306 }
+    info_sound : "Wavs/farm2.wav"
     progress_max: 2000
     labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
     needs {
@@ -652,6 +666,7 @@ building_meadow_farm_figs {
   }
 
   build_menu_text : "Figs Meadow Farm"
+  info_sound : "Wavs/figs_farm.wav"
 
   building_size : 3
   month_harvest: [MONTH_SEPTEMBER]
@@ -702,6 +717,7 @@ building_farm_figs {
   month_harvest: [MONTH_SEPTEMBER]
   damage_proof : true
   meta { help_id:90, text_id:183 }
+  info_sound : "Wavs/figs_farm.wav"
   progress_max: 2000
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
   needs {
