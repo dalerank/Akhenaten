@@ -7,6 +7,7 @@ building_shrine_osiris = {
     }
     labor_category : LABOR_CATEGORY_RELIGION
     meta : { help_id: 67, text_id: 161 }
+    info_sound : "Wavs/shr_osiris.wav"
     building_size : 1
     cost: [ 20, 30, 50, 80, 120 ]
     laborers:[0], fire_risk:[0], damage_risk: [2]
@@ -17,7 +18,7 @@ building_shrine_osiris = {
       is_religion: true
     }
   }
-  
+
   building_shrine_ra = {
     animations : {
       preview : {pack:PACK_GENERAL, id:74, },
@@ -25,6 +26,7 @@ building_shrine_osiris = {
     },
     labor_category : LABOR_CATEGORY_RELIGION,
     meta : { help_id: 67, text_id: 161 }
+    info_sound : "Wavs/SHR_RA.wav"
     building_size : 1
     cost: [ 20, 30, 50, 80, 120 ]
     laborers:[0], fire_risk:[0], damage_risk: [2]
@@ -35,7 +37,7 @@ building_shrine_osiris = {
       is_religion: true
     }
   }
-  
+
   building_shrine_ptah = {
     animations : {
       preview : {pack:PACK_GENERAL, id:73, },
@@ -43,6 +45,7 @@ building_shrine_osiris = {
     },
     labor_category : LABOR_CATEGORY_RELIGION,
     meta : { help_id: 67, text_id: 161 }
+    info_sound : "Wavs/SHR_PTAH.wav"
     building_size : 1
     cost: [ 20, 30, 50, 80, 120 ]
     laborers:[0], fire_risk:[0], damage_risk: [2]
@@ -53,7 +56,7 @@ building_shrine_osiris = {
       is_religion: true
     }
   }
-  
+
   building_shrine_seth = {
     animations : {
       preview : {pack:PACK_GENERAL, id:72, },
@@ -61,6 +64,7 @@ building_shrine_osiris = {
     },
     labor_category : LABOR_CATEGORY_RELIGION,
     meta : { help_id: 67, text_id: 161 }
+    info_sound : "Wavs/SHR_SETH.wav"
     building_size : 1
     cost: [ 20, 30, 50, 80, 120 ]
     laborers:[0], fire_risk:[0], damage_risk: [2]
@@ -71,7 +75,7 @@ building_shrine_osiris = {
       is_religion: true
     }
   }
-  
+
   building_shrine_bast = {
     animations : {
       preview : {pack:PACK_GENERAL, id:71, },
@@ -79,6 +83,7 @@ building_shrine_osiris = {
     },
     labor_category : LABOR_CATEGORY_RELIGION,
     meta : { help_id: 67, text_id: 161 }
+    info_sound : "Wavs/SHR_BAST.wav"
     building_size : 1
     cost: [ 20, 30, 50, 80, 120 ]
     laborers:[0], fire_risk:[0], damage_risk: [2]

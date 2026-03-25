@@ -72,6 +72,8 @@ building_house_crude_hut {
     days_without_food_devolve_threshold[3,3,3,3,3]
   }
 
+  info_sound : "Wavs/housing_r.wav"
+
   flags {
     is_house: true
   }
@@ -137,6 +139,8 @@ building_house_sturdy_hut {
     days_without_food_devolve_threshold[3,3,3,3,3]
   }
 
+  info_sound : "Wavs/housing_r.wav"
+
   flags {
     is_house: true
   }
@@ -199,6 +203,8 @@ building_house_meager_shanty {
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
     days_without_food_devolve_threshold[3,3,3,3,3]
   }
+
+  info_sound : "Wavs/housing_r.wav"
 
   flags {
     is_house: true
@@ -263,6 +269,8 @@ building_house_common_shanty {
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
     days_without_food_devolve_threshold[3,3,3,3,3]
   }
+
+  info_sound : "Wavs/housing_r.wav"
 
   flags {
     is_house: true
@@ -332,6 +340,8 @@ building_house_rough_cottage {
     days_without_food_devolve_threshold[3,3,3,3,3]
   }
 
+  info_sound : "Wavs/housing_r.wav"
+
   flags {
     is_house: true
   }
@@ -394,6 +404,8 @@ building_house_ordinary_cottage {
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
     days_without_food_devolve_threshold[3,3,3,3,3]
   }
+
+  info_sound : "Wavs/housing_r.wav"
 
   flags {
     is_house: true
@@ -460,6 +472,8 @@ building_house_modest_homestead {
     days_without_food_devolve_threshold[3,3,3,3,3]
   }
 
+  info_sound : "Wavs/housing_r.wav"
+
   flags {
     is_house: true
   }
@@ -521,6 +535,8 @@ building_house_spacious_homestead {
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
     days_without_food_devolve_threshold[3,3,3,3,3]
   }
+
+  info_sound : "Wavs/housing_r.wav"
 
   flags {
     is_house: true
@@ -584,6 +600,8 @@ building_house_modest_apartment {
     days_without_food_devolve_threshold[3,3,3,3,3]
   }
 
+  info_sound : "Wavs/housing_r.wav"
+
   flags {
     is_house: true
   }
@@ -645,6 +663,8 @@ building_house_spacious_apartment {
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
     days_without_food_devolve_threshold[3,3,3,3,3]
   }
+
+  info_sound : "Wavs/housing_r.wav"
 
   flags {
     is_house: true
@@ -708,6 +728,8 @@ building_house_common_residence {
     days_without_food_devolve_threshold[3,3,3,3,3]
   }
 
+  info_sound : "Wavs/housing_r.wav"
+
   flags {
     is_house: true
   }
@@ -769,6 +791,8 @@ building_house_spacious_residence {
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
     days_without_food_devolve_threshold[3,3,3,3,3]
   }
+
+  info_sound : "Wavs/housing_r.wav"
 
   flags {
     is_house: true
@@ -832,6 +856,8 @@ building_house_elegant_residence {
     days_without_food_devolve_threshold[3,3,3,3,3]
   }
 
+  info_sound : "Wavs/housing_r.wav"
+
   flags {
     is_house: true
   }
@@ -894,6 +920,8 @@ building_house_fancy_residence {
     days_without_food_devolve_threshold[3,3,3,3,3]
   }
 
+  info_sound : "Wavs/housing_r.wav"
+
   flags {
     is_house: true
   }
@@ -949,6 +977,8 @@ building_house_common_manor {
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
     days_without_food_devolve_threshold[3,3,3,3,3]
   }
+  info_sound : "Wavs/housing_r.wav"
+
   flags {
     is_house: true
   }
@@ -1004,6 +1034,8 @@ building_house_spacious_manor {
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
     days_without_food_devolve_threshold[3,3,3,3,3]
   }
+  info_sound : "Wavs/housing_r.wav"
+
   flags {
     is_house: true
   }
@@ -1060,6 +1092,8 @@ building_house_elegant_manor {
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
     days_without_food_devolve_threshold[3,3,3,3,3]
   }
+  info_sound : "Wavs/housing_r.wav"
+
   flags {
     is_house: true
   }
@@ -1116,6 +1150,8 @@ building_house_stately_manor {
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
     days_without_food_devolve_threshold[3,3,3,3,3]
   }
+  info_sound : "Wavs/housing_r.wav"
+
   flags {
     is_house: true
   }
@@ -1172,6 +1208,8 @@ building_house_modest_estate {
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
     days_without_food_devolve_threshold[3,3,3,3,3]
   }
+  info_sound : "Wavs/housing_r.wav"
+
   flags {
     is_house: true
   }
@@ -1229,6 +1267,8 @@ building_house_palatial_estate {
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
     days_without_food_devolve_threshold[3,3,3,3,3]
   }
+  info_sound : "Wavs/housing_r.wav"
+
   flags {
     is_house: true
   }

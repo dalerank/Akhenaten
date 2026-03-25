@@ -47,6 +47,26 @@ ui.label = function(text, pos, font) {
     __ui_draw_label(text, pos, font)
 }
 
+ui.label_ex = function(text, pos, font, flags, box_width) {
+    if (!text || !pos) {
+        return
+    }
+
+    __ui_draw_label_ex(text, pos, font, flags, box_width || 0)
+}
+
+ui.resource_icon = function(pos, resource) {
+    if (!pos) {
+        return
+    }
+
+    __ui_draw_resource_icon(pos, resource)
+}
+
+ui.set_clip_element = __ui_set_clip_element
+ui.reset_clip = __ui_reset_clip
+ui.element_value_int = __ui_element_value_int
+
 ui.line = function(hline, pos, size) {
     if (!pos) {
         return

@@ -34,7 +34,6 @@
 #include "window/advisor/advisor_population.h"
 #include "window/advisor/advisor_ratings.h"
 #include "window/advisor/advisor_religion.h"
-#include "window/advisor/advisor_trade.h"
 #include "window/window_city.h"
 #include "window/message_dialog.h"
 #include "game/game_events.h"
@@ -89,7 +88,7 @@ struct window_advisors : public ui::widget {
         ui::advisor_military_window::instance(),
         ui::advisor_imperial_window::instance(),
         ui::advisor_ratings_window::instance(),
-        ui::advisor_trade_window::instance(),
+        nullptr, // ADVISOR_TRADE: from js_window_registry
         ui::advisor_population_window::instance(),
         ui::advisor_health_window::instance(),
         ui::advisor_education_window::instance(),
@@ -207,6 +206,14 @@ void window_advisors::init() {
         } else {
             window_advisors_show_advisor((e_advisor)ev.advisor);
         }
+    });
+
+    // After JS hot reload, js_advisor_window objects are recreated; refresh our pointer.
+    events::subscribe([this] (event_game_scripts_was_reloaded) {
+        if (!g_window_manager.window_is("window_advisors")) {
+            return;
+        }
+        set_advisor_window();
     });
 }
 

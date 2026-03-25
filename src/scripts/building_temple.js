@@ -11,6 +11,7 @@ building_temple_osiris {
     labor_category : LABOR_CATEGORY_RELIGION
     building_size : 3
     meta { help_id: 67, text_id: 92 }
+    info_sound : "Wavs/tem_osiris_l.wav"
     cost [ 30, 50, 80, 150, 300 ]
     desirability { value[6], step[2], step_size[-2], range[6] }
     laborers[8]
@@ -34,6 +35,7 @@ building_temple_osiris {
     labor_category : LABOR_CATEGORY_RELIGION
     building_size : 3
     meta  { help_id: 67, text_id: 93 }
+    info_sound : "Wavs/tem_RA_L.wav"
     cost [ 30, 50, 80, 150, 300 ]
     desirability { value[6], step[2], step_size[-2], range[6] }
     laborers[8]
@@ -57,6 +59,7 @@ building_temple_osiris {
     labor_category : LABOR_CATEGORY_RELIGION
     building_size : 3
     meta { help_id: 67, text_id: 94 }
+    info_sound : "Wavs/tem_ptah_l.wav"
     cost [ 30, 50, 80, 150, 300 ]
     desirability { value[6], step[2], step_size[-2], range[6] }
     laborers[8]
@@ -80,6 +83,7 @@ building_temple_osiris {
     labor_category : LABOR_CATEGORY_RELIGION
     building_size : 3
     meta { help_id: 67, text_id: 95 }
+    info_sound : "Wavs/tem_seth_l.wav"
     cost [ 30, 50, 80, 150, 300 ]
     desirability { value[6], step[2], step_size[-2], range[6] }
     laborers[8]
@@ -103,6 +107,7 @@ building_temple_osiris {
     labor_category : LABOR_CATEGORY_RELIGION
     building_size : 3
     meta { help_id: 67, text_id: 96 }
+    info_sound : "Wavs/tem_bast_l.wav"
     cost [ 30, 50, 80, 150, 300 ]
     desirability { value[6], step[2], step_size[-2], range[6] }
     laborers[8]

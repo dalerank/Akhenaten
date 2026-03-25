@@ -39,7 +39,7 @@ function main_menu_show_window(window_id) {
 }
 
 function main_menu_continue_game() {
-	var last_save = game_features.gameopt_last_save_filename
+	var last_save = normalize_savegame_path_for_load(game_features.gameopt_last_save_filename)
     var last_player = game_features.gameopt_last_player
     if (last_save && last_player) {
         __game_set_player_name(last_player)

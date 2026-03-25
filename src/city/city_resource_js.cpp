@@ -1,5 +1,6 @@
 #include "city/city_resource.h"
 
+#include "city/city_resource_handle.h"
 #include "core/profiler.h"
 #include "game/game_events.h"
 #include "js/js_game.h"
@@ -42,3 +43,50 @@ pcstr __city_resource_name(int resource) {
     return resource_name((e_resource)resource);
 }
 ANK_FUNCTION_1(__city_resource_name)
+
+int __city_resource_id_by_name(pcstr name) {
+    if (!name || !*name) {
+        return (int)RESOURCE_NONE;
+    }
+    return (int)resource_type(name);
+}
+ANK_FUNCTION_1(__city_resource_id_by_name)
+
+void __city_resource_determine_available() {
+    city_resource_determine_available();
+}
+ANK_FUNCTION(__city_resource_determine_available)
+
+int __city_resources_available_count() {
+    return (int)g_city.resource.available().size();
+}
+ANK_FUNCTION(__city_resources_available_count)
+
+int __city_resource_available_at(int index) {
+    return (int)g_city.resource.available().at(index).type;
+}
+ANK_FUNCTION_1(__city_resource_available_at)
+
+bool __city_resource_is_stockpiled(int resource) {
+    city_resource_handle h{(e_resource)resource};
+    return h.is_stockpiled();
+}
+ANK_FUNCTION_1(__city_resource_is_stockpiled)
+
+int __city_resource_stack_proper_quantity(int resource, int value) {
+    city_resource_handle h{(e_resource)resource};
+    return h.stack_proper_quantity(value);
+}
+ANK_FUNCTION_2(__city_resource_stack_proper_quantity)
+
+int __city_resource_trading_amount(int resource) {
+    city_resource_handle h{(e_resource)resource};
+    return h.trading_amount();
+}
+ANK_FUNCTION_1(__city_resource_trading_amount)
+
+bool __city_resource_can_export(int resource, bool check) {
+    city_resource_handle h{(e_resource)resource};
+    return h.can_export(check);
+}
+ANK_FUNCTION_2(__city_resource_can_export)

@@ -1,7 +1,7 @@
 log_info("akhenaten: dynasty menu started")
 
 function dynasty_menu_btn_resume() {
-    var last = game.last_autosave
+    var last = normalize_savegame_path_for_load(game.last_autosave)
     var to_begin = !last || last === "" || !__game_file_exists(last)
     if (to_begin) {
         __game_load_mission(SCENARIO_NUBT, 1)
@@ -39,7 +39,7 @@ function window_dinasty_menu_on_init(window) {
     __game_load_player_data(game.dynasty_name)
 
     window.title.text = __loc(293, 5).replace("[player_name]", game.dynasty_name)
-    var last = game.last_autosave
+    var last = normalize_savegame_path_for_load(game.last_autosave)
     var to_begin = !last || last === "" || !__game_file_exists(last)
 
     window.btnresume.text = __loc(293, to_begin ? 7 : 0)

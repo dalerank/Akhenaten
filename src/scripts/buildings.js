@@ -22,6 +22,7 @@ building_cattle_ranch {
   }
   building_size : 3
   meta { help_id:1, text_id:117 }
+  info_sound : "Wavs/cowfarm_r.wav"
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
   cost [ 15, 20, 30, 50, 80 ]
   desirability { value:[-4], step:[1], step_size:[1], range: [4] }
@@ -63,6 +64,7 @@ building_courthouse {
   min_houses_coverage : 50
   building_size : 3
   meta { help_id:75, text_id:176 }
+  info_sound : "Wavs/forum.WAV"
   cost [ 30, 50, 100, 200, 400 ]
   desirability { value[8], step[2], step_size[-2], range[3] }
   crime { value[-5], step[1], step_size[-1], range[4] }
@@ -150,6 +152,7 @@ building_dock = {
   min_houses_coverage : 50
   building_size : 3
   meta : { help_id:82, text_id:101 }
+  info_sound : "Wavs/DOCK1.WAV"
   needs : {
     water_access : true
     shoreline : true
@@ -204,6 +207,7 @@ building_storage_yard = {
   }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   meta : { help_id : 4, text_id:99 }
+  info_sound : "Wavs/warehouse1.wav"
   building_size : 3
   min_houses_coverage : 100
   cost: [ 14, 30, 50, 100, 150 ]
@@ -247,6 +251,7 @@ building_bazaar {
 
   building_size : 2
   meta { help_id: 2, text_id: 97 }
+  info_sound : "Wavs/MARKET.WAV"
   cost [ 8, 15, 30, 50, 100 ]
   desirability { value[-2], step[1], step_size[1], range[6] }
 
@@ -268,6 +273,7 @@ building_work_camp = {
   },
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   meta : { help_id: 81, text_id: 179 }
+  info_sound : "Wavs/eng_r.wav"
   building_size : 2,
   cost:  [ 12, 20, 40, 80, 120 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
@@ -291,6 +297,7 @@ building_water_supply {
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
   fire_proof : true
   meta { help_id:61, text_id:108 }
+  info_sound : "Wavs/WELL.WAV"
   building_size : 2
   needs { 
     groundwater : true
@@ -315,6 +322,7 @@ building_well {
   fire_proof : true
   building_size : 1
   meta { help_id:62, text_id:109 }
+  info_sound : "Wavs/WELL.WAV"
   needs {
     groundwater : true
   }
@@ -346,6 +354,7 @@ building_reed_gatherer {
   }
   building_size : 2
   meta { help_id : 92, text_id : 116 }
+  info_sound : "Wavs/reedfarm.wav"
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   min_houses_coverage : 100
   max_storage_amount : 200
@@ -373,6 +382,7 @@ building_wood_cutter {
   }
   building_size : 2
   meta { help_id:94, text_id:120 }
+  info_sound : "Wavs/lumber.wav"
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   min_houses_coverage : 100
   max_gatherers : 1
@@ -395,6 +405,7 @@ building_tax_collector = {
   }
   labor_category : LABOR_CATEGORY_GOVERNMENT
   meta : { help_id:76, text_id:106 }
+  info_sound : "Wavs/taxfarm.wav"
   building_size : 2
   min_houses_coverage : 50
   cost: [ 15, 20, 40, 70, 100 ]
@@ -414,6 +425,7 @@ building_tax_collector_up = {
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   meta : { help_id:76, text_id:120 }
+  info_sound : "Wavs/taxfarm.wav"
   building_size : 2
   cost: [ 15, 24, 40, 80, 100 ]
   desirability : { value:[3], step:[1], step_size:[-1], range: [3] }
@@ -433,6 +445,7 @@ building_recruiter = {
   labor_category : LABOR_CATEGORY_MILITARY
   min_houses_coverage : 100
   meta : { help_id:37, text_id:136 }
+  info_sound : "Wavs/barracks.WAV"
   building_size : 3
   planner_update_rule : {
     unique_building : true
@@ -452,6 +465,7 @@ building_festival_square = {
   },
   building_size : 5,
   meta : { help_id: 366, text_id: 188 }
+  info_sound : "Wavs/prefecture.wav"
   fire_proof : true,
   damage_proof : true,
   planner_update_rule : {
@@ -646,6 +660,7 @@ building_fishing_wharf {
     relative_orientation: 1
   }
   meta { help_id: 84, text_id: 102 }
+  info_sound : "Wavs/shipyrd_r.wav"
   needs {
     water_access : true
     shoreline : true
@@ -685,6 +700,7 @@ building_shipyard = {
     relative_orientation: 1
   }
   meta : { help_id: 82, text_id: 100 }
+  info_sound : "Wavs/shipyrd.wav"
   needs : {
     water_access : true
     shoreline : true
@@ -711,6 +727,7 @@ building_dentist {
   max_serve_clients : 1000
   building_size : 1
   meta { help_id:65, text_id:84 }
+  info_sound : "Wavs/dentist.wav"
   cost [ 10, 15, 30, 50, 80 ]
   desirability { value[2], step[1], step_size[-1], range[2] }
   laborers[2]
@@ -736,6 +753,7 @@ building_mortuary {
   min_houses_coverage : 50
   building_size : 2
   meta { help_id:66, text_id:82 }
+  info_sound : "Wavs/mortuary.wav"
   cost [ 20, 30, 50, 100, 200 ]
   desirability { value[-3], step[2], step_size[1], range[2] }
   laborers[8]
@@ -755,6 +773,7 @@ building_plaza {
   fire_proof : true
   damage_proof : true
   meta { help_id : 80, text_id : 137 }
+  info_sound : "Wavs/FANFARE1.wav"
   building_size : 1
   cost [ 3, 5, 10, 15, 20 ]
   desirability { value[4], step[1], step_size[-2], range[2] }
@@ -793,6 +812,7 @@ building_garden {
   fire_proof : true
   damage_proof : true
   meta { help_id:80, text_id:79 }
+  info_sound : "Wavs/park1.wav"
   building_size : 1
   cost [ 3, 5, 10, 15, 20 ]
   desirability { value[3], step[1], step_size[-1], range[3] }
@@ -847,6 +867,7 @@ building_clay_pit {
   building_size : 2,
   production_rate : 100,
   meta { help_id:92, text_id:121 }
+  info_sound : "Wavs/clay.wav"
   needs {
     nearby_water : true
   }
@@ -874,6 +895,7 @@ building_mine_copper {
   progress_max : 200,
   production_rate : 100,
   meta { help_id:93, text_id:193 }
+  info_sound : "Wavs/gold.wav"
   building_size : 2,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   needs {
@@ -1014,6 +1036,7 @@ building_granite_quarry {
   production_rate : 100,
   building_size : 2,
   meta { help_id:93, text_id:162 }
+  info_sound : "Wavs/marble.wav"
   //help_id:92, text_id:192
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   needs {
@@ -1072,6 +1095,7 @@ building_mine_gold {
   }
   building_size : 2
   meta { help_id:93, text_id:162 }
+  info_sound : "Wavs/gold.wav"
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   needs {
     rock : true
@@ -1253,6 +1277,7 @@ building_physician {
   overlay: OVERLAY_PHYSICIAN
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
   meta { help_id: 64, text_id: 83 }
+  info_sound : "Wavs/physician.wav"
   building_size : 2
   cost [ 10, 15, 30, 50, 100 ]
   desirability { value[2], step[1], step_size[-1], range[2] }
@@ -1287,6 +1312,7 @@ building_water_lift {
     floodplain_shoreline : true
   }
   meta { help_id: 59, text_id: 107 }
+  info_sound : "Wavs/waterwheel.WAV"
   cost [ 6, 12, 25, 50, 100 ]
   desirability { value[-3], step[1], step_size[1], range[3] }
   laborers [8]
@@ -1332,6 +1358,7 @@ building_conservatory {
   overlay : OVERLAY_ENTERTAINMENT
   min_houses_coverage : 50
   meta { help_id:75, text_id:75 }
+  info_sound : "Wavs/music_school.wav"
   building_size : 3
   cost [ 20, 50, 90, 150, 200 ]
   desirability { value[-3], step[1], step_size[1], range[3] }
