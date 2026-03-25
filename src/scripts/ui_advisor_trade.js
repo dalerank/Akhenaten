@@ -4,7 +4,7 @@ function advisor_trade_list_on_click_item(p) {
     if (!p || p.text === undefined || p.text === "") {
         return
     }
-    var res = __city_resource_id_by_name(p.text)
+    var res = city.resources.id_by_name(p.text)
     if (res === RESOURCE_NONE) {
         return
     }
@@ -12,31 +12,32 @@ function advisor_trade_list_on_click_item(p) {
 }
 
 function advisor_trade_render_row(res, px, py) {
-    var moth = __city_resource_is_mothballed(res)
+    var moth = res.mothballed
     var fontMain = moth ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK
 
-    var stored = __city_yards_stored(res)
-    var properQ = __city_resource_stack_proper_quantity(res, stored)
+    var stored = res.yards_stored
+    var properQ = res.stack_proper_quantity(stored)
 
-    ui.resource_icon([px + 8, py - 2], res)
+    ui.resource_icon([px + 8, py - 2], res.type)
 
-    ui.label_ex(__loc(23, res), [px + 32, py], fontMain, UiFlags_AlignYCentered, 0)
+    ui.label_ex(__loc(23, res.type), [px + 32, py], fontMain, UiFlags_AlignYCentered, 0)
     ui.label_ex(String(properQ), [px + 186, py], fontMain, UiFlags_AlignYCentered, 60)
 
-    if (__city_resource_is_stockpiled(res)) {
+    if (res.is_stockpiled) {
         ui.label_ex(__loc(54, 3), [px + 284, py - 2], fontMain, UiFlags_AlignYCentered, 100)
     } else if (moth) {
         ui.label_ex(__loc(18, 5), [px + 284, py - 2], FONT_NORMAL_YELLOW, UiFlags_AlignYCentered, 100)
     }
 
-    var ts = __city_resource_trade_status(res)
-    var tradeAmt = __city_resource_stack_proper_quantity(res, __city_resource_trading_amount(res))
+    var ts = res.trade_status
+    var tradeAmt = res.stack_proper_quantity(res.trading_amount)
 
-    if (ts === TRADE_STATUS_NONE) {
-        var can_import = __city_resource_can_import(res, true)
-        var can_export = __city_resource_can_export(res, true)
-        var could_import = __city_resource_can_import(res, false)
-        var could_export = __city_resource_can_export(res, false)
+    switch (ts) {
+    case TRADE_STATUS_NONE:
+        var can_import = res.can_import
+        var can_export = res.can_export
+        var could_import = res.could_import
+        var could_export = res.could_export
         var statusText = ""
         var statusFont = fontMain
         if (can_import && !can_export) { statusText = __loc(54, 31) }
@@ -48,23 +49,32 @@ function advisor_trade_render_row(res, px, py) {
         if (statusText) {
             ui.label(statusText, [px + 254, py - 2], statusFont)
         }
-    } else if (ts === TRADE_STATUS_IMPORT) {
+        break
+
+    case TRADE_STATUS_IMPORT:
         ui.label(__loc(54, 5) + " " + String(tradeAmt), [px + 254, py - 2], fontMain)
-    } else if (ts === TRADE_STATUS_EXPORT) {
+        break
+
+    case TRADE_STATUS_EXPORT:
         ui.label(__loc(54, 6) + " " + String(tradeAmt), [px + 254, py - 2], fontMain)
-    } else if (ts === TRADE_STATUS_IMPORT_AS_NEEDED) {
+        break
+
+    case TRADE_STATUS_IMPORT_AS_NEEDED:
         ui.label(__loc(54, 37), [px + 254, py - 2], fontMain)
-    } else if (ts === TRADE_STATUS_EXPORT_SURPLUS) {
+        break
+
+    case TRADE_STATUS_EXPORT_SURPLUS:
         ui.label(__loc(54, 38), [px + 254, py - 2], fontMain)
     }
 }
 
 function advisor_trade_list_on_render_item(p) {
-    if (!p || p.text === undefined || p.text === "") {
+    var resname = p.text
+    if (!resname || resname == "") {
         return
     }
-    var res = __city_resource_id_by_name(p.text)
-    if (res === RESOURCE_NONE) {
+    var res = city.resources[resname]
+    if (!res) {
         return
     }
     advisor_trade_render_row(res, p.x, p.y)
@@ -96,8 +106,8 @@ advisor_trade_window {
             onclick_item: advisor_trade_list_on_click_item
         })
 
-        show_prices  : button({pos:[48, 396], size:[200, 24], text:"#trade_overseer_goto_empire", tooltip:"#trade_overseer_goto_empire_hint", onclick: __window_empire_show })
-        goto_empireи  : button({pos:[368, 396], size:[200, 24], text:"#trade_overseer_prices", tooltip:"#trade_overseer_prices_hint", onclick: __window_trade_prices_show })
+        goto_empire  : button({pos:[48, 396], size:[200, 24], text:"#trade_overseer_goto_empire", tooltip:"#trade_overseer_goto_empire_hint", onclick: __window_empire_show })
+        show_prices  : button({pos:[368, 396], size:[200, 24], text:"#trade_overseer_prices", tooltip:"#trade_overseer_prices_hint", onclick: __window_trade_prices_show })
     }
 }
 

@@ -102,13 +102,59 @@ city {
     allowed_foods : __city_allowed_foods
 }
 
-city.resources.clay = {
-    @can_produce { get: function() { return __city_resource_can_produce(RESOURCE_CLAY) } }
-    @can_import { get: function() { return __city_resource_can_import(RESOURCE_CLAY, true) } }
-    @trade_status { get: function() { return __city_resource_trade_status(RESOURCE_CLAY) } }
-    @yards_stored { get: function() { return __city_yards_stored(RESOURCE_CLAY) } }
-    @count_active_industry { get: function() { return __city_count_industry_active(RESOURCE_CLAY) } }
+function city_resource_view(resource_id) {
+    return {
+        type: resource_id
+        name: __city_resource_name(resource_id)
+        @can_produce { get: function() { return __city_resource_can_produce(resource_id) } }
+        @can_import { get: function() { return __city_resource_can_import(resource_id, true) } }
+        @can_export { get: function() { return __city_resource_can_export(resource_id, true) } }
+        @could_import { get: function() { return __city_resource_can_import(resource_id, false) } }
+        @could_export { get: function() { return __city_resource_can_export(resource_id, false) } }
+        @trading_amount { get: function() { return __city_resource_trading_amount(resource_id) } }
+        @trade_status { get: function() { return __city_resource_trade_status(resource_id) } }
+        @yards_stored { get: function() { return __city_yards_stored(resource_id) } }
+        @count_active_industry { get: function() { return __city_count_industry_active(resource_id) } }
+        @mothballed { get: function() { return __city_resource_is_mothballed(resource_id) } }
+        @is_stockpiled { get: function() { return __city_resource_is_stockpiled(resource_id) } }
+        stack_proper_quantity: function(value) { return __city_resource_stack_proper_quantity(resource_id, value) }
+    }
 }
+
+city.resources.grain = city_resource_view(RESOURCE_GRAIN)
+city.resources.meat = city_resource_view(RESOURCE_MEAT)
+city.resources.lettuce = city_resource_view(RESOURCE_LETTUCE)
+city.resources.chickpeas = city_resource_view(RESOURCE_CHICKPEAS)
+city.resources.pomegranates = city_resource_view(RESOURCE_POMEGRANATES)
+city.resources.figs = city_resource_view(RESOURCE_FIGS)
+city.resources.fish = city_resource_view(RESOURCE_FISH)
+city.resources.gamemeat = city_resource_view(RESOURCE_GAMEMEAT)
+city.resources.straw = city_resource_view(RESOURCE_STRAW)
+city.resources.weapons = city_resource_view(RESOURCE_WEAPONS)
+city.resources.clay = city_resource_view(RESOURCE_CLAY)
+city.resources.bricks = city_resource_view(RESOURCE_BRICKS)
+city.resources.pottery = city_resource_view(RESOURCE_POTTERY)
+city.resources.barley = city_resource_view(RESOURCE_BARLEY)
+city.resources.beer = city_resource_view(RESOURCE_BEER)
+city.resources.flax = city_resource_view(RESOURCE_FLAX)
+city.resources.linen = city_resource_view(RESOURCE_LINEN)
+city.resources.gems = city_resource_view(RESOURCE_GEMS)
+city.resources.luxury_goods = city_resource_view(RESOURCE_LUXURY_GOODS)
+city.resources.timber = city_resource_view(RESOURCE_TIMBER)
+city.resources.gold = city_resource_view(RESOURCE_GOLD)
+city.resources.reeds = city_resource_view(RESOURCE_REEDS)
+city.resources.papyrus = city_resource_view(RESOURCE_PAPYRUS)
+city.resources.stone = city_resource_view(RESOURCE_STONE)
+city.resources.limestone = city_resource_view(RESOURCE_LIMESTONE)
+city.resources.granite = city_resource_view(RESOURCE_GRANITE)
+city.resources.chariots = city_resource_view(RESOURCE_CHARIOTS)
+city.resources.copper = city_resource_view(RESOURCE_COPPER)
+city.resources.sandstone = city_resource_view(RESOURCE_SANDSTONE)
+city.resources.oil = city_resource_view(RESOURCE_OIL)
+city.resources.henna = city_resource_view(RESOURCE_HENNA)
+city.resources.paint = city_resource_view(RESOURCE_PAINT)
+city.resources.lamps = city_resource_view(RESOURCE_LAMPS)
+city.resources.marble = city_resource_view(RESOURCE_MARBLE)
 
 city.get_battalion_by_index = function(index) {
     return {
