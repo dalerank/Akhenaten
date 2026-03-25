@@ -46,6 +46,10 @@ void register_es_advisor_window(pcstr name) {
 
 void clear_es_advisor_window() {
     logs::info("JS Window Registry: Clearing %d registered advisor windows", (int)advisor_windows.size());
+    for (auto &w : advisor_windows) {
+        verify_no_crash(w);
+        autoconfig_window::unregister_section(w->get_section());
+    }
     advisor_windows.clear();
 }
 ANK_REGISTER_ES_ITERATOR(advisor_window, register_es_advisor_window, clear_es_advisor_window);
@@ -59,9 +63,8 @@ void register_es_common_window(pcstr name) {
 void clear_es_common_window() {
     logs::info("JS Window Registry: Clearing %d registered common windows", (int)common_windows.size());
     for (auto &w : common_windows) {
-        if (w) {
-            autoconfig_window::unregister_section(w->get_section());
-        }
+        verify_no_crash(w);
+        autoconfig_window::unregister_section(w->get_section());
     }
     common_windows.clear();
 }

@@ -1561,12 +1561,18 @@ void ui::escrollable_list::on_dblclick_item(const scrollable_list::entry_data *e
 
 void ui::escrollable_list::on_render_item(int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font) {
     if (!_js_render_item_ref.empty()) {
+        ensure_panel();
+        const scrollable_list_ui_params &up = panel->ui_params;
         js_call_function(_js_render_item_ref, {
             { "index", (int32_t)index },
             { "flags", (int32_t)flags },
+            { "hover", (flags & 2) != 0 },
+            { "select", (flags & 1) != 0 },
             { "text", entry.text },
             { "x", (int32_t)pos.x },
             { "y", (int32_t)pos.y },
+            { "sizex", (int32_t)up.buttons_size_x },
+            { "sizey", (int32_t)up.buttons_size_y },
             { "font", (int32_t)font }
             });
         return;

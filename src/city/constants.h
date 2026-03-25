@@ -54,6 +54,8 @@ enum e_trade_status : uint8_t {
     TRADE_STATUS_EXPORT = 2,
     TRADE_STATUS_IMPORT_AS_NEEDED = 3,
     TRADE_STATUS_EXPORT_SURPLUS = 4,
+
+    TRADE_STATUS_MAX
 };
 
 enum e_availability : int8_t {
