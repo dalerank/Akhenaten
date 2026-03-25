@@ -203,13 +203,13 @@ localization_en = [
   {key: "#message_population_15000", text:"New cities can rival yours, which now houses fifteen thousand citizens."}
   {key: "#message_population_20000", text:"Other governors and nomarchs are awed that your city houses twenty thousand people!"}
   {key: "#message_population_25000", text:"The few immigrants who founded your city so many years ago never imagined that it would swell to twenty five thousand people!"}
-  
+
   {key: "#mission0_goal_create_housing", text:"Create an area of housing, and watch immigrants arrive" }
   {key: "#mission0_goal_build_granary", text:"Build a Granary that hunters can fill with game" }
   {key: "#mission1_goal_build_mines", text:"Mine some gold for the Palace's treasury" }
   {key: "#mission1_goal_build_temples", text:"Build some Temples and Shrines to Bast" }
   {key: "#mission1_goal_build_entertainment", text:"Build Booths and Juggler Schools to raise city Culture" }
-  
+
   {key: "#exit_this_panel", text:"Exit this panel"}
   {key: "#popup_dialog_quit", group:5, id:0 }
   {key: "#popup_dialog_open_trade", group:5, id:2 }
@@ -250,9 +250,9 @@ localization_en = [
   {key: "#building_have_no_access", group:69, id:25 }
   {key: "#bazaar_info_title", group: 97, id:0}
   {key: "#well_info_title", group:109, id:0}
-  {key: "#trade_overseer_prices", group:54, id:30}
+  {key: "#trade_overseer_prices", group:54, id:2}
   {key: "#trade_overseer_prices_hint", group:68, id:108}
-  {key: "#trade_overseer_goto_empire", group:54, id:2}
+  {key: "#trade_overseer_goto_empire", group:54, id:30}
   {key: "#trade_overseer_goto_empire_hint", group:68, id:42}
   {key: "#festival_square_info_title", group:188, id:0}
   {key: "#visit_rating_advisor", group:105, id:3}

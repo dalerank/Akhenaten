@@ -48,7 +48,7 @@ int __city_resource_id_by_name(pcstr name) {
     if (!name || !*name) {
         return (int)RESOURCE_NONE;
     }
-    return (int)resource_type(xstring(name));
+    return (int)resource_type(name);
 }
 ANK_FUNCTION_1(__city_resource_id_by_name)
 
