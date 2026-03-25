@@ -9,9 +9,6 @@ on:
       pull_request_number:
         required: false
         type: string
-    secrets:
-      GITHUB_TOKEN:
-        required: false
 
 jobs:
   build:
