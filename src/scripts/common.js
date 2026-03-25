@@ -108,3 +108,22 @@ function calc_percentage(value, total) {
 
     return 0;
 }
+
+function normalize_savegame_path_for_load(path) {
+    if (!path || path.length === 0)
+        return path
+
+    var s = path
+    if (s.length > 0 && s.charAt(s.length - 1) === ".")
+        s = s.substring(0, s.length - 1)
+
+    var n = s.length
+    var lower = s.toLowerCase()
+    if (n >= 4 && lower.substring(n - 4) === ".svx")
+        return s
+
+    if (n >= 4 && lower.substring(n - 4) === ".sav")
+        return s
+
+    return s + ".svx"
+}

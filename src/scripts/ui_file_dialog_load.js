@@ -124,7 +124,7 @@ function file_dialog_load_try_load(basename) {
         return 1
 
     if (pending === FILE_TYPE_SAVED_GAME) {
-        if (!game.load_savegame(full))
+        if (!game.load_savegame(normalize_savegame_path_for_load(full)))
             return 2
 
         ui.window_city_show()

@@ -232,8 +232,8 @@ void screen_city_t::draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool fo
             } else if (f.f->id == selected_figure_id) {
                 f.f->draw(ctx, 0);
             }
-        } 
-        
+        }
+
         if (should_draw_cart) { // draw cart
             if (f.f->cart_cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f.f->cart_cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
                 continue;
