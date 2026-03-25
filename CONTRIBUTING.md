@@ -14,16 +14,6 @@ or alter the UI in a major way will be declined.
 ## Code Style & Formatting
 We use **clang-format version 20.1.0** to enforce a consistent code style. All C++ files must be formatted according to the rules defined in [.clang-format](.clang-format) in the repository root.
 
-### Pre-commit (recommended)
-- Install [pre-commit](https://pre-commit.com/#install) (requires Python).
-
-- In the repository root, run:
-```bash
-pre-commit install
-```
-
-- Now every `git commit` will automatically format changed files. No extra steps needed.
-
 ### Manual formatting
 - Install **clang-format 20** (see [LLVM downloads](https://releases.llvm.org/download.html))
 - Run `git clang-format --style=file --extensions cpp,cc,cxx,h,hpp` to format only changed files.
