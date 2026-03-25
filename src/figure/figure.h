@@ -218,7 +218,7 @@ public:
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
         // the above members of "figure" ....for now...
-        memset(this, 0, sizeof(figure));
+        memset((void*)this, 0, sizeof(figure));
         id = _id;
     };
 

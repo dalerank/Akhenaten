@@ -5,10 +5,10 @@ main_menu_screen {
 		background    : { type:"background", path:"pharaoh_unloaded/title_00001" }
 
 		continue_game : large_button({ pos:mbutton(0), size[256, 25], text[13, 5], onclick: main_menu_continue_game })
-		select_player : large_button({ pos:mbutton(1), size[256, 25], text[30, 0], onclick: main_menu_show_window("window_player_selection") })
-		show_records  : large_button({ pos:mbutton(2), size[256, 25], text[30, 5], onclick: main_menu_show_window("records_window") })
-		show_config   : large_button({ pos:mbutton(3), size[256, 25], text[2,  0], onclick: main_menu_show_window("window_features") })
-		show_mods     : large_button({ pos:mbutton(4), size[256, 25], text:"#main_menu_mods", onclick: main_menu_show_window("mods_window") })
+		select_player : large_button({ pos:mbutton(1), size[256, 25], text[30, 0], onclick: show_window_by_id("window_player_selection") })
+		show_records  : large_button({ pos:mbutton(2), size[256, 25], text[30, 5], onclick: show_window_by_id("records_window") })
+		show_config   : large_button({ pos:mbutton(3), size[256, 25], text[2,  0], onclick: show_window_by_id("window_features") })
+		show_mods     : large_button({ pos:mbutton(4), size[256, 25], text:"#main_menu_mods", onclick: show_window_by_id("mods_window") })
 		quit_game     : large_button({ pos:mbutton(5), size[256, 25], text[30, 4], onclick_event: "quit_game" })
 
 		discord 	  : image_button({ pos[sw(-100), sh(-50)], size[48, 48], icon_texture:"!discord", scale:0.75
@@ -29,12 +29,6 @@ main_menu_screen {
 				changelog : text({pos[18, 73], size[560, 300], wrap:px(18), rich:true, text:"Loading changelog...", font: FONT_SMALL_PLAIN, enabled: false, clip_area: true})
 			}
 		})
-	}
-}
-
-function main_menu_show_window(window_id) {
-	return function() {
-		emit event_show_window{ id:window_id }
 	}
 }
 

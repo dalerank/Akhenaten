@@ -107,7 +107,7 @@ advisor_trade_window {
         })
 
         goto_empire  : button({pos:[48, 396], size:[200, 24], text:"#trade_overseer_goto_empire", tooltip:"#trade_overseer_goto_empire_hint", onclick: __window_empire_show })
-        show_prices  : button({pos:[368, 396], size:[200, 24], text:"#trade_overseer_prices", tooltip:"#trade_overseer_prices_hint", onclick: __window_trade_prices_show })
+        show_prices  : button({pos:[368, 396], size:[200, 24], text:"#trade_overseer_prices", tooltip:"#trade_overseer_prices_hint", onclick: show_window_by_id("trade_prices_window") })
     }
 }
 

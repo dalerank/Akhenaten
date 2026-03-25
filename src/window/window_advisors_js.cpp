@@ -4,6 +4,7 @@
 #include "core/profiler.h"
 
 ANK_FUNCTION(window_advisors_show_checked)
+ANK_FUNCTION(window_advisors_show)
 
 namespace js_helpers {
     template<>
