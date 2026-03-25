@@ -36,7 +36,6 @@ import building_granary
 import building_health
 import building_architect_post
 import overlays
-import building_sounds
 import images
 import population
 import images_remap

@@ -12,6 +12,7 @@ building_apothecary {
     min_houses_coverage : 50
     max_serve_clients : 100
     meta { help_id:63, text_id:81 }
+    info_sound : "Wavs/apothecary.wav"
     building_size : 1
     cost [ 6, 10, 15, 30, 50 ]
     desirability { value[1], step[1], step_size[-1], range[1] }

@@ -17,6 +17,7 @@ building_small_mastaba {
     fire_proof :  true
     damage_proof : true
     meta { help_id:4, text_id:120 }
+    info_sound : "Wavs/rock3.wav"
     init_tiles [10, 4]
 
     flags {
@@ -55,13 +56,13 @@ building_small_mastaba {
         { type: BUILDING_SMALL_MASTABA_SIDE, offset[2, 0] },      { type: BUILDING_SMALL_MASTABA, offset[-1, -1], base:true }
     ]
   }
-  
+
   building_small_mastaba_part_side = building_small_mastaba
   building_small_mastaba_part_wall = building_small_mastaba
   building_small_mastaba_part_entrance = building_small_mastaba
 
   building_medium_mastaba  {
-    animations {    
+    animations {
       _pack { pack:PACK_MASTABA }
       preview { id:2, offset:7 }
       base { id:2, offset:7 }
@@ -78,6 +79,7 @@ building_small_mastaba {
     fire_proof :  true
     damage_proof : true
     meta { help_id:4, text_id:120 }
+    info_sound : "Wavs/rock3.wav"
     init_tiles [14, 6]
 
     flags {

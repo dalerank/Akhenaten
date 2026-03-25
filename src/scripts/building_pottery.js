@@ -20,6 +20,7 @@ building_pottery {
     labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
     building_size : 2
     meta { help_id:1, text_id:126 }
+    info_sound : "Wavs/pottery.wav"
     cost [ 12, 20, 30, 40, 50 ]
     desirability {
         value[-4]

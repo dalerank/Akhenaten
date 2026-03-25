@@ -12,6 +12,7 @@ building_granary {
     min_houses_coverage : 100
     labor_category : LABOR_CATEGORY_INFRASTRUCTURE
     meta { help_id: 3, text_id: 98 }
+    info_sound : "Wavs/GRANARY1.wav"
     building_size : 4
     planner_update_rule {
         roads : true

@@ -12,6 +12,7 @@ building_village_palace {
     unique_building : true
   }
   meta { help_id:77, text_id:105 }
+  info_sound : "Wavs/palace.wav"
   building_size : 4
   needs {
     groundwater : true
@@ -40,6 +41,7 @@ building_town_palace {
   }
 
   meta { help_id:77, text_id:105 }
+  info_sound : "Wavs/palace.wav"
   building_size : 5
 
   needs {
@@ -72,6 +74,7 @@ building_city_palace {
   }
 
   meta { help_id:77, text_id:105 }
+  info_sound : "Wavs/palace.wav"
   building_size : 6
 
   needs {

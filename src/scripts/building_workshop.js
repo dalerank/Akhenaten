@@ -19,6 +19,7 @@ building_brewery {
   progress_max : 400,
   production_rate : 50,
   meta { help_id:96, text_id:122 }
+  info_sound : "Wavs/brewery.wav"
   building_size : 2
   cost [ 15, 25, 50, 80, 120 ]
   desirability { value[-5], step[1], step_size[1], range[5] }
@@ -46,6 +47,7 @@ building_weaver = {
   }
   building_size : 2,
   meta : { help_id:97, text_id:123 }
+  info_sound : "Wavs/flaxfarm.wav"
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   cost: [ 16, 30, 50, 100, 150 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
@@ -72,6 +74,7 @@ building_weaponsmith = {
   }
   labor_category : LABOR_CATEGORY_MILITARY
   meta : { help_id: 98, text_id: 124 }
+  info_sound : "Wavs/weapon.wav"
   building_size: 2
   cost: [ 24, 40, 80, 120, 150 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
@@ -96,6 +99,7 @@ building_jewels_workshop = {
   }
   building_size : 2,
   meta : { help_id:99, text_id:125 }
+  info_sound : "Wavs/gem_r.wav"
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   cost: [ 18, 30, 50, 100, 200 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
@@ -123,6 +127,7 @@ building_papyrus_maker = {
   production_rate : 50,
   building_size : 2,
   meta : { help_id:1, text_id:190 }
+  info_sound : "Wavs/paper.wav"
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   cost: [ 20, 30, 50, 100, 200 ]
   desirability : { value:[-4], step:[1], step_size:[1], range: [4] }
@@ -153,6 +158,7 @@ building_bricks_workshop = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   building_size : 2,
   meta : { help_id:1, text_id:180 }
+  info_sound : "Wavs/brick.wav"
   cost: [ 12, 20, 30, 40, 50 ]
   desirability : { value:[-4], step:[1], step_size:[1], range: [4] }
   laborers:[12], fire_risk:[2], damage_risk: [3]

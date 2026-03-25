@@ -15,6 +15,7 @@ building_hunting_lodge {
     }
 
     meta { help_id:90, text_id:154 }
+    info_sound : "Wavs/lo_hunt.wav"
     building_size : 2
     min_houses_coverage : 100
     cost [ 5, 10, 25, 40, 60 ]
