@@ -72,6 +72,7 @@ city {
         type : __city_resource_at
 
         get_name : __city_resource_name
+        id_by_name : __city_resource_id_by_name
         set_produce : __city_resource_set_produce
     }
 

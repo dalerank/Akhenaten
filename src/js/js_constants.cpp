@@ -22,6 +22,9 @@
 using e_advisor_tokens_t = token_holder<e_advisor, ADVISOR_NONE, ADVISOR_MAX>;
 e_advisor_tokens_t ANK_CONFIG_ENUM(e_advisor_tokens);
 
+using e_trade_status_tokens_t = token_holder<e_trade_status, TRADE_STATUS_NONE, TRADE_STATUS_MAX>;
+e_trade_status_tokens_t ANK_CONFIG_ENUM(e_trade_status_tokens);
+
 js_State *js_vm_state();
 #define _R(name) js_pushnumber(J, name); js_setglobal(J, #name);
 void js_register_game_constants(js_State *J) {
@@ -87,7 +90,6 @@ void js_register_game_constants(js_State *J) {
     _R(ACTION_125_ROAMER_ROAMING)
     _R(ACTION_126_ROAMER_RETURNING)
 
-    _R(TRADE_STATUS_IMPORT)
     _R(MAX_BUILDINGS)
 
     for (config::EnumIterator *s = config::EnumIterator::tail; s; s = s->next) {

@@ -14,7 +14,6 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "scenario/scenario.h"
-#include "window/advisor/advisor_trade.h"
 #include "window/message_dialog.h"
 #include "game/game.h"
 

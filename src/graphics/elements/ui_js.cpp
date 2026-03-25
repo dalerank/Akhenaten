@@ -12,6 +12,10 @@
 #include "window/message_dialog_new.h"
 #include "window/window_advisors.h"
 #include "window/window_labor_priority.h"
+#include "window/resource_settings.h"
+#include "window/trade_prices.h"
+#include "window/window_empire.h"
+#include "game/resource.h"
 #include "window/popup_dialog.h"
 #include "city/city_message.h"
 #include "city/city_building_menu_ctrl.h"
@@ -66,6 +70,68 @@ void __ui_dialog_show_ok(pcstr text) { popup_dialog::show_ok(text, [] {}); } ANK
 bool __ui_window_is(pcstr window_id) { return g_window_manager.window_is(window_id); } ANK_FUNCTION_1(__ui_window_is)
 void __ui_window_advisors_show_advisor(int advisor) { window_advisors_show_advisor((e_advisor)advisor); } ANK_FUNCTION_1(__ui_window_advisors_show_advisor)
 void __ui_draw_label(pcstr text, vec2i pos, int font) { ui::label(text, pos, (e_font)font); } ANK_FUNCTION_3(__ui_draw_label);
+
+void __ui_draw_label_ex(pcstr text, vec2i pos, int font, int flags, int box_width) {
+    ui::label(text, pos, (e_font)font, (UiFlags)flags, box_width);
+}
+ANK_FUNCTION_5(__ui_draw_label_ex)
+
+void __ui_draw_resource_icon(vec2i pos, int resource) {
+    ui::icon(pos, (e_resource)resource);
+}
+ANK_FUNCTION_2(__ui_draw_resource_icon)
+
+void __ui_set_clip_element(pcstr element_id) {
+    ui::widget *w = ui::get_current_widget();
+    if (!w) {
+        return;
+    }
+    w->set_clip_rectangle((*w)[element_id]);
+}
+ANK_FUNCTION_1(__ui_set_clip_element)
+
+void __ui_reset_clip() {
+    ui::widget *w = ui::get_current_widget();
+    if (!w) {
+        return;
+    }
+    w->reset_clip_rectangle();
+}
+ANK_FUNCTION(__ui_reset_clip)
+
+int __ui_element_value_int(pcstr id) {
+    ui::widget *w = ui::get_current_widget();
+    if (!w) {
+        return 0;
+    }
+    return (*w)[id].value();
+}
+ANK_FUNCTION_1(__ui_element_value_int)
+
+void __ui_element_max_value(pcstr id, int v) {
+    ui::widget *w = ui::get_current_widget();
+    if (!w) {
+        return;
+    }
+    (*w)[id].max_value(v);
+}
+ANK_FUNCTION_2(__ui_element_max_value)
+
+void __window_resource_settings_show(int resource) {
+    window_resource_settings_show((e_resource)resource);
+}
+ANK_FUNCTION_1(__window_resource_settings_show)
+
+void __window_trade_prices_show() {
+    window_trade_prices_show();
+}
+ANK_FUNCTION(__window_trade_prices_show)
+
+void __window_empire_show() {
+    window_empire_show();
+}
+ANK_FUNCTION(__window_empire_show)
+
 void __ui_draw_line(bool hline, vec2i pos, int size) { ui::line(hline, pos, size, 0xff000000); } ANK_FUNCTION_3(__ui_draw_line);
 void __ui_window_city_show() { window_city_show(); } ANK_FUNCTION(__ui_window_city_show)
 void __ui_window_editor_map_show() { window_editor_map_show(); } ANK_FUNCTION(__ui_window_editor_map_show)

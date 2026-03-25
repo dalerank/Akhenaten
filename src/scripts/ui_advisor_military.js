@@ -80,7 +80,7 @@ function advisor_military_window_draw(window) {
             ui.label(num_figures_str, vec2i(84, 100 + 44 * i), FONT_NORMAL_BLACK_ON_DARK);
 
             var morale_str = __loc(138, 37 + form.morale / 5)
-            ui.label(morale_str, vec2i(224, 91 + 44 * i), FONT_NORMAL_BLACK_ON_DARK, UiFlags_AlignCentered);
+            ui.label_ex(morale_str, vec2i(224, 91 + 44 * i), FONT_NORMAL_BLACK_ON_DARK, UiFlags_AlignCentered, 0);
 
             var experience_level = form.experience / 100
             exp_image.tid += experience_level
@@ -109,6 +109,6 @@ function advisor_military_window_draw(window) {
             ui.image(kingdom_service, vec2i(547, 86 + 44 * i ));
         }
     } else {
-        ui.label(__loc(51, 16), vec2i(64, 200), FONT_NORMAL_BLACK_ON_DARK, UiFlags_AlignCentered)
+        ui.label_ex(__loc(51, 16), vec2i(64, 200), FONT_NORMAL_BLACK_ON_DARK, UiFlags_AlignCentered, 0)
     }
 }
