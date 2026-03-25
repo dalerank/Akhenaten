@@ -12,6 +12,8 @@ jobs:
     with:
       base_branch: ${{ github.event.pull_request.base.ref || 'master' }}
       pull_request_number: ${{ github.event.pull_request.number || '' }}
+      event_name: ${{ github.event_name }}
+      event_before: ${{ github.event.before }}
     secrets: inherit
 
   content:

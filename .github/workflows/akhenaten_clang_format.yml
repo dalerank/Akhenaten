@@ -9,8 +9,14 @@ on:
       pull_request_number:
         required: false
         type: string
+      event_name:
+        required: true
+        type: string
+      event_before:
+        required: false
+        type: string
     secrets:
-      GITHUB_TOKEN:
+      COMMENT_TOKEN:
         required: false
 
 jobs:
@@ -31,21 +37,36 @@ jobs:
     - name: check-format
       id: check-formatting
       run: |
-          git fetch origin ${{ inputs.base_branch }}
-          output=$(git clang-format --diff origin/${{ inputs.base_branch }} --extensions cpp,cc,cxx,h,hpp)
-          if [ "$output" != "no modified files to format" ]; then
-            echo "diff<<EOF" >> $GITHUB_OUTPUT
-            echo "$output" >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
-            exit 1
+          if [ "${{ inputs.event_name }}" = "pull_request" ]; then
+            git fetch origin ${{ inputs.base_branch }}
+            compare_with="origin/${{ inputs.base_branch }}"
           else
-            echo "clang-format passed."
+            if [ -n "${{ inputs.event_before }}" ] && git rev-parse --verify --quiet "${{ inputs.event_before }}" >/dev/null; then
+              compare_with="${{ inputs.event_before }}"
+            else            
+              compare_with="HEAD^1"
+            fi
+          fi
+          set +e
+          output=$(git clang-format --diff "$compare_with" --extensions cpp,cc,cxx,h,hpp 2>&1)
+          exit_code=$?
+          set -e
+          echo "clang-format output:"
+          echo "$output"
+          if [ $exit_code -eq 0 ]; then
+              echo "clang-format passed."
+          else
+              echo "diff<<EOF" >> $GITHUB_OUTPUT
+              echo "$output" >> $GITHUB_OUTPUT
+              echo "EOF" >> $GITHUB_OUTPUT
+              echo "clang-format failed."
+              exit 1
           fi
     - name: post-comment-on-pull-request
       if: failure() && inputs.pull_request_number != ''
       uses: actions/github-script@v8
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ secrets.COMMENT_TOKEN }}
         script: |
           const fs = require('fs');
           const templatePath = '.github/COMMENT_TEMPLATE/code_format_failure.md';
