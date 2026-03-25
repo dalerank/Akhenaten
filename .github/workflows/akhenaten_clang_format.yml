@@ -25,7 +25,7 @@ jobs:
       run: |
         sudo apt -qq update
         sudo apt install -y clang-format-20 wget
-        sudo wget -O /usr/local/bin/git-clang-format https://raw.githubusercontent.com/llvm/llvm-project/release/20.x/clang/tools/clang-format/git-clang-format
+        sudo cp .github/scripts/git-clang-format /usr/local/bin/
         sudo chmod +x /usr/local/bin/git-clang-format
         sudo ln -sf /usr/bin/clang-format-20 /usr/bin/clang-format
     - name: check-format
