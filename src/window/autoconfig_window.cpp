@@ -10,6 +10,7 @@
 #include "js/js_struct.h"
 #include "js/js_events.h"
 #include "input/input.h"
+#include "input/mouse.h"
 #include <algorithm>
 #include <unordered_map>
 #include <mutex>
@@ -75,12 +76,12 @@ int autoconfig_window::ui_handle_mouse(const mouse *m) {
     ui.begin_widget(pos);
     bool handled = ui::handle_mouse(m);
 
-    if (allow_rmb_goback && !handled) {
+    if (allow_rmb_goback && (is_modal() || !handled)) {
         const hotkeys *h = hotkey_state();
         if (input_go_back_requested(m, h)) {
             window_go_back();
             ui.end_widget();
-            return 0;
+            return 1;
         }
     }
 
@@ -90,6 +91,12 @@ int autoconfig_window::ui_handle_mouse(const mouse *m) {
     }
 
     ui.end_widget();
+
+    if (is_modal()) {
+        mouse::ref().reset_up_state();
+        mouse::ref().reset_scroll();
+        return 1;
+    }
 
     return handled ? 1 : 0;
 }

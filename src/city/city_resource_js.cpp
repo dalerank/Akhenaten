@@ -3,8 +3,11 @@
 #include "city/city_resource_handle.h"
 #include "core/profiler.h"
 #include "game/game_events.h"
+#include "game/resource.h"
 #include "js/js_game.h"
 #include "city/city.h"
+
+#include <cstdio>
 
 int __city_yards_stored(int resource) {
     return g_city.resource.yards_stored((e_resource)resource);
@@ -52,20 +55,16 @@ int __city_resource_id_by_name(pcstr name) {
 }
 ANK_FUNCTION_1(__city_resource_id_by_name)
 
-void __city_resource_determine_available() {
+bvariant_map __city_resources_available() {
     city_resource_determine_available();
+    bvariant_map out;
+    const auto &av = g_city.resource.available();
+    for (const auto &r: av) {
+        out[resource_name(r.type)] = (int32_t)r.type;
+    }
+    return out;
 }
-ANK_FUNCTION(__city_resource_determine_available)
-
-int __city_resources_available_count() {
-    return (int)g_city.resource.available().size();
-}
-ANK_FUNCTION(__city_resources_available_count)
-
-int __city_resource_available_at(int index) {
-    return (int)g_city.resource.available().at(index).type;
-}
-ANK_FUNCTION_1(__city_resource_available_at)
+ANK_FUNCTION(__city_resources_available)
 
 bool __city_resource_is_stockpiled(int resource) {
     city_resource_handle h{(e_resource)resource};

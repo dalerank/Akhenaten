@@ -41,6 +41,11 @@ struct js_common_window : public autoconfig_window {
     virtual void draw_foreground(UiFlags flags) override {}
 };
 
+struct js_common_modal_window : public js_common_window {
+    js_common_modal_window(pcstr name) : js_common_window(name) {}
+    virtual bool is_modal() const override { return true; }
+};
+
 // Global registry for dynamically created windows
 class js_window_registry {
 public:

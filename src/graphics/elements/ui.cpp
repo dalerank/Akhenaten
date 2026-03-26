@@ -519,6 +519,11 @@ bool ui::handle_mouse(const mouse *m) {
 void ui::clear_active_elements() {
     g_state.buttons.clear();
     g_state.scrollbars.clear();
+    // Underlying windows register scroll lists / inputs during draw; they must not
+    // remain in the hit-test list for the window drawn on top (see window_draw_underlying_window).
+    g_state.scrollable_lists.clear();
+    g_state.input_boxes.clear();
+    stop_active_input();
 }
 
 void ui::stop_active_input() {
