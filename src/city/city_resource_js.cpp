@@ -59,7 +59,7 @@ bvariant_map __city_resources_available() {
     city_resource_determine_available();
     bvariant_map out;
     const auto &av = g_city.resource.available();
-    for (const auto &r: av) {
+    for (const auto &r : av) {
         out[resource_name(r.type)] = (int32_t)r.type;
     }
     return out;
@@ -67,25 +67,25 @@ bvariant_map __city_resources_available() {
 ANK_FUNCTION(__city_resources_available)
 
 bool __city_resource_is_stockpiled(int resource) {
-    city_resource_handle h{(e_resource)resource};
+    city_resource_handle h{ (e_resource)resource };
     return h.is_stockpiled();
 }
 ANK_FUNCTION_1(__city_resource_is_stockpiled)
 
 int __city_resource_stack_proper_quantity(int resource, int value) {
-    city_resource_handle h{(e_resource)resource};
+    city_resource_handle h{ (e_resource)resource };
     return h.stack_proper_quantity(value);
 }
 ANK_FUNCTION_2(__city_resource_stack_proper_quantity)
 
 int __city_resource_trading_amount(int resource) {
-    city_resource_handle h{(e_resource)resource};
+    city_resource_handle h{ (e_resource)resource };
     return h.trading_amount();
 }
 ANK_FUNCTION_1(__city_resource_trading_amount)
 
 bool __city_resource_can_export(int resource, bool check) {
-    city_resource_handle h{(e_resource)resource};
+    city_resource_handle h{ (e_resource)resource };
     return h.can_export(check);
 }
 ANK_FUNCTION_2(__city_resource_can_export)

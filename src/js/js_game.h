@@ -61,7 +61,7 @@ namespace js_helpers {
     }
 
     template<>
-    inline const char* js_to_value<const char*>(js_State *J, int idx) {
+    inline const char *js_to_value<const char *>(js_State *J, int idx) {
         return js_tostring(J, idx);
     }
 
@@ -89,7 +89,7 @@ namespace js_helpers {
         js_copy(J, idx);
         pcstr r = js_ref(J);
         js_pop(J, 1);
-        return js_function_ref{xstring(r)};
+        return js_function_ref{ xstring(r) };
     }
 
     template<>
@@ -192,12 +192,12 @@ namespace js_helpers {
     }
 
     template<>
-    inline void js_push_value<const char*>(js_State *J, const char* value) {
+    inline void js_push_value<const char *>(js_State *J, const char *value) {
         J->pushstring(value);
     }
 
     template<>
-    inline void js_push_value<const std::string&>(js_State *J, const std::string& value) {
+    inline void js_push_value<const std::string &>(js_State *J, const std::string &value) {
         J->pushstring(value.c_str());
     }
 
@@ -257,7 +257,8 @@ namespace js_helpers {
         case bvariant::etype_ptr:
             js_pushnull(J);
             break;
-        case bvariant::etype_vec2i: {
+        case bvariant::etype_vec2i:
+        {
             js_newobject(J);
             const vec2i pos = val.as_vec2i();
             js_pushnumber(J, pos.x);
@@ -266,7 +267,8 @@ namespace js_helpers {
             js_setproperty(J, -2, "y");
             break;
         }
-        case bvariant::etype_tile2i: {
+        case bvariant::etype_tile2i:
+        {
             js_newobject(J);
             const tile2i pos = val.as_tile2i();
             js_pushnumber(J, pos.x());
@@ -275,7 +277,8 @@ namespace js_helpers {
             js_setproperty(J, -2, "y");
             break;
         }
-        case bvariant::etype_grid_area: {
+        case bvariant::etype_grid_area:
+        {
             const grid_area a = val.as_grid_area();
             js_newobject(J);
             js_pushnumber(J, a.tmin_x); js_setproperty(J, -2, "min_x");
@@ -288,7 +291,7 @@ namespace js_helpers {
         default:
             J->pushundefined();
             break;
-    }
+        }
     }
 
     inline void js_push_bvariant_map_as_js_object(js_State *J, const bvariant_map &params) {
@@ -483,7 +486,7 @@ struct js_function_traits<R(C:: *)(Args...) const> : js_function_traits<R(C:: *)
 // Template function version of ANK_FUNCTION_1
 // This template function handles the callback logic (extracted from macro)
 template<auto Func>
-inline void ank_function_1_callback_impl(js_State* J) {
+inline void ank_function_1_callback_impl(js_State *J) {
     // std::decay_t converts function types to function pointer types
     using func_ptr_type = std::decay_t<decltype(Func)>;
     using traits = js_function_traits<func_ptr_type>;
@@ -492,13 +495,13 @@ inline void ank_function_1_callback_impl(js_State* J) {
 
     param_type param = js_helpers::js_to_value<param_type>(J, 1);
     constexpr bool is_void = std::is_void_v<return_type>;
-    js_helpers::js_invoke_and_push<is_void>(J, [&]() { return Func(param); });
+    js_helpers::js_invoke_and_push<is_void>(J, [&] () { return Func(param); });
 }
 
 // Template function to register callback with 1 parameter
 template<auto Func>
-inline void ank_register_callback_1(js_State* J, pcstr name) {
-    auto callback_impl = [](js_State *J) { ank_function_1_callback_impl<Func>(J); };
+inline void ank_register_callback_1(js_State *J, pcstr name) {
+    auto callback_impl = [] (js_State *J) { ank_function_1_callback_impl<Func>(J); };
     js_getglobal(J, name);
     bool exists = J->iscallable(-1);
     js_pop(J, 1);
@@ -514,7 +517,7 @@ inline void ank_register_callback_1(js_State* J, pcstr name) {
 // Template function version of ANK_FUNCTION_2
 // This template function handles the callback logic (extracted from macro)
 template<auto Func>
-inline void ank_function_2_callback_impl(js_State* J) {
+inline void ank_function_2_callback_impl(js_State *J) {
     using func_ptr_type = std::decay_t<decltype(Func)>;
     using traits = js_function_traits<func_ptr_type>;
     using param1_type = typename traits:: template arg<0>::type;
@@ -524,13 +527,13 @@ inline void ank_function_2_callback_impl(js_State* J) {
     param1_type param1 = js_helpers::js_to_value<param1_type>(J, 1);
     param2_type param2 = js_helpers::js_to_value<param2_type>(J, 2);
     constexpr bool is_void = std::is_void_v<return_type>;
-    js_helpers::js_invoke_and_push<is_void>(J, [&]() { return Func(param1, param2); });
+    js_helpers::js_invoke_and_push<is_void>(J, [&] () { return Func(param1, param2); });
 }
 
 // Template function to register callback with 2 parameters
 template<auto Func>
-inline void ank_register_callback_2(js_State* J, pcstr name) {
-    auto callback_impl = [](js_State *J) { ank_function_2_callback_impl<Func>(J); };
+inline void ank_register_callback_2(js_State *J, pcstr name) {
+    auto callback_impl = [] (js_State *J) { ank_function_2_callback_impl<Func>(J); };
     js_getglobal(J, name);
     bool exists = J->iscallable(-1);
     js_pop(J, 1);
@@ -546,7 +549,7 @@ inline void ank_register_callback_2(js_State* J, pcstr name) {
 // Template function version of ANK_FUNCTION_3
 // This template function handles the callback logic (extracted from macro)
 template<auto Func>
-inline void ank_function_3_callback_impl(js_State* J) {
+inline void ank_function_3_callback_impl(js_State *J) {
     using func_ptr_type = std::decay_t<decltype(Func)>;
     using traits = js_function_traits<func_ptr_type>;
     using param1_type = typename traits:: template arg<0>::type;
@@ -558,13 +561,13 @@ inline void ank_function_3_callback_impl(js_State* J) {
     param2_type param2 = js_helpers::js_to_value<param2_type>(J, 2);
     param3_type param3 = js_helpers::js_to_value<param3_type>(J, 3);
     constexpr bool is_void = std::is_void_v<return_type>;
-    js_helpers::js_invoke_and_push<is_void>(J, [&]() { return Func(param1, param2, param3); });
+    js_helpers::js_invoke_and_push<is_void>(J, [&] () { return Func(param1, param2, param3); });
 }
 
 // Template function to register callback with 3 parameters
 template<auto Func>
-inline void ank_register_callback_3(js_State* J, pcstr name) {
-    auto callback_impl = [](js_State *J) { ank_function_3_callback_impl<Func>(J); };
+inline void ank_register_callback_3(js_State *J, pcstr name) {
+    auto callback_impl = [] (js_State *J) { ank_function_3_callback_impl<Func>(J); };
     js_getglobal(J, name);
     bool exists = J->iscallable(-1);
     js_pop(J, 1);
@@ -580,7 +583,7 @@ inline void ank_register_callback_3(js_State* J, pcstr name) {
 // Template function version of ANK_FUNCTION_4
 // This template function handles the callback logic (extracted from macro)
 template<auto Func>
-inline void ank_function_4_callback_impl(js_State* J) {
+inline void ank_function_4_callback_impl(js_State *J) {
     using func_ptr_type = std::decay_t<decltype(Func)>;
     using traits = js_function_traits<func_ptr_type>;
     using param1_type = typename traits:: template arg<0>::type;
@@ -594,13 +597,13 @@ inline void ank_function_4_callback_impl(js_State* J) {
     param3_type param3 = js_helpers::js_to_value<param3_type>(J, 3);
     param4_type param4 = js_helpers::js_to_value<param4_type>(J, 4);
     constexpr bool is_void = std::is_void_v<return_type>;
-    js_helpers::js_invoke_and_push<is_void>(J, [&]() { return Func(param1, param2, param3, param4); });
+    js_helpers::js_invoke_and_push<is_void>(J, [&] () { return Func(param1, param2, param3, param4); });
 }
 
 // Template function to register callback with 4 parameters
 template<auto Func>
-inline void ank_register_callback_4(js_State* J, pcstr name) {
-    auto callback_impl = [](js_State *J) { ank_function_4_callback_impl<Func>(J); };
+inline void ank_register_callback_4(js_State *J, pcstr name) {
+    auto callback_impl = [] (js_State *J) { ank_function_4_callback_impl<Func>(J); };
     js_getglobal(J, name);
     bool exists = J->iscallable(-1);
     js_pop(J, 1);
@@ -616,7 +619,7 @@ inline void ank_register_callback_4(js_State* J, pcstr name) {
 // Template function version of ANK_FUNCTION_5
 // This template function handles the callback logic (extracted from macro)
 template<auto Func>
-inline void ank_function_5_callback_impl(js_State* J) {
+inline void ank_function_5_callback_impl(js_State *J) {
     using func_ptr_type = std::decay_t<decltype(Func)>;
     using traits = js_function_traits<func_ptr_type>;
     using param1_type = typename traits:: template arg<0>::type;
@@ -632,13 +635,13 @@ inline void ank_function_5_callback_impl(js_State* J) {
     param4_type param4 = js_helpers::js_to_value<param4_type>(J, 4);
     param5_type param5 = js_helpers::js_to_value<param5_type>(J, 5);
     constexpr bool is_void = std::is_void_v<return_type>;
-    js_helpers::js_invoke_and_push<is_void>(J, [&]() { return Func(param1, param2, param3, param4, param5); });
+    js_helpers::js_invoke_and_push<is_void>(J, [&] () { return Func(param1, param2, param3, param4, param5); });
 }
 
 // Template function to register callback with 5 parameters
 template<auto Func>
-inline void ank_register_callback_5(js_State* J, pcstr name) {
-    auto callback_impl = [](js_State *J) { ank_function_5_callback_impl<Func>(J); };
+inline void ank_register_callback_5(js_State *J, pcstr name) {
+    auto callback_impl = [] (js_State *J) { ank_function_5_callback_impl<Func>(J); };
     js_getglobal(J, name);
     bool exists = J->iscallable(-1);
     js_pop(J, 1);
@@ -654,7 +657,7 @@ inline void ank_register_callback_5(js_State* J, pcstr name) {
 // Template function version of ANK_FUNCTION_6
 // This template function handles the callback logic (extracted from macro)
 template<auto Func>
-inline void ank_function_6_callback_impl(js_State* J) {
+inline void ank_function_6_callback_impl(js_State *J) {
     using func_ptr_type = std::decay_t<decltype(Func)>;
     using traits = js_function_traits<func_ptr_type>;
     using param1_type = typename traits:: template arg<0>::type;
@@ -672,13 +675,13 @@ inline void ank_function_6_callback_impl(js_State* J) {
     param5_type param5 = js_helpers::js_to_value<param5_type>(J, 5);
     param6_type param6 = js_helpers::js_to_value<param6_type>(J, 6);
     constexpr bool is_void = std::is_void_v<return_type>;
-    js_helpers::js_invoke_and_push<is_void>(J, [&]() { return Func(param1, param2, param3, param4, param5, param6); });
+    js_helpers::js_invoke_and_push<is_void>(J, [&] () { return Func(param1, param2, param3, param4, param5, param6); });
 }
 
 // Template function to register callback with 6 parameters
 template<auto Func>
-inline void ank_register_callback_6(js_State* J, pcstr name) {
-    auto callback_impl = [](js_State *J) { ank_function_6_callback_impl<Func>(J); };
+inline void ank_register_callback_6(js_State *J, pcstr name) {
+    auto callback_impl = [] (js_State *J) { ank_function_6_callback_impl<Func>(J); };
     js_getglobal(J, name);
     bool exists = J->iscallable(-1);
     js_pop(J, 1);
@@ -694,7 +697,7 @@ inline void ank_register_callback_6(js_State* J, pcstr name) {
 // Template function version of ANK_FUNCTION_7
 // This template function handles the callback logic (extracted from macro)
 template<auto Func>
-inline void ank_function_7_callback_impl(js_State* J) {
+inline void ank_function_7_callback_impl(js_State *J) {
     using func_ptr_type = std::decay_t<decltype(Func)>;
     using traits = js_function_traits<func_ptr_type>;
     using param1_type = typename traits:: template arg<0>::type;
@@ -714,13 +717,13 @@ inline void ank_function_7_callback_impl(js_State* J) {
     param6_type param6 = js_helpers::js_to_value<param6_type>(J, 6);
     param7_type param7 = js_helpers::js_to_value<param7_type>(J, 7);
     constexpr bool is_void = std::is_void_v<return_type>;
-    js_helpers::js_invoke_and_push<is_void>(J, [&]() { return Func(param1, param2, param3, param4, param5, param6, param7); });
+    js_helpers::js_invoke_and_push<is_void>(J, [&] () { return Func(param1, param2, param3, param4, param5, param6, param7); });
 }
 
 // Template function to register callback with 7 parameters
 template<auto Func>
-inline void ank_register_callback_7(js_State* J, pcstr name) {
-    auto callback_impl = [](js_State *J) { ank_function_7_callback_impl<Func>(J); };
+inline void ank_register_callback_7(js_State *J, pcstr name) {
+    auto callback_impl = [] (js_State *J) { ank_function_7_callback_impl<Func>(J); };
     js_getglobal(J, name);
     bool exists = J->iscallable(-1);
     js_pop(J, 1);
@@ -736,20 +739,20 @@ inline void ank_register_callback_7(js_State* J, pcstr name) {
 // Template function version of ANK_FUNCTION_UNIFIED
 // This template function handles the callback logic (extracted from macro)
 template<auto Func>
-inline void ank_function_unified_callback_impl(js_State* J) {
+inline void ank_function_unified_callback_impl(js_State *J) {
     using func_ptr_type = std::decay_t<decltype(Func)>;
     using traits = js_function_traits<func_ptr_type>;
     using return_type = typename traits::return_type;
 
     bvariant_map params = js_helpers::js_object_to_bvariant_map(J, 1);
     constexpr bool is_void = std::is_void_v<return_type>;
-    js_helpers::js_invoke_and_push<is_void>(J, [&]() { return Func(params); });
+    js_helpers::js_invoke_and_push<is_void>(J, [&] () { return Func(params); });
 }
 
 // Template function to register unified callback
 template<auto Func>
-inline void ank_register_callback_unified(js_State* J, pcstr name) {
-    auto callback_impl = [](js_State *J) { ank_function_unified_callback_impl<Func>(J); };
+inline void ank_register_callback_unified(js_State *J, pcstr name) {
+    auto callback_impl = [] (js_State *J) { ank_function_unified_callback_impl<Func>(J); };
     js_getglobal(J, name);
     bool exists = J->iscallable(-1);
     js_pop(J, 1);
@@ -800,7 +803,7 @@ void js_register_entity_systems();
 void js_register_console_command(js_State *J);
 
 template<typename T>
-inline void js_event(const T &ev, const xstring& evname_str) {
+inline void js_event(const T &ev, const xstring &evname_str) {
     if (!js_has_event_handlers(evname_str)) {
         return;
     }
@@ -812,8 +815,8 @@ inline void js_event(const T &ev, const xstring& evname_str) {
 
 namespace js_helpers {
     inline bstring64 es2str(pcstr es) { return { es }; }
-    inline bstring64 es2str(const xstring& es) { return { es.c_str() }; }
-    inline bstring64 es2str(const cstring& es) { return { es.c_str() }; }
+    inline bstring64 es2str(const xstring &es) { return { es.c_str() }; }
+    inline bstring64 es2str(const cstring &es) { return { es.c_str() }; }
 
     template<typename ES>
     inline bstring64 es2str(const ES &) {
@@ -830,7 +833,7 @@ namespace js_helpers {
         std::sort(parts.begin(), parts.end(), cstr_compare);
         bstring<S> result;
         bool first = true;
-        for (const auto& p : parts) {
+        for (const auto &p : parts) {
             if (!first) {
                 result.cat("+");
             }
