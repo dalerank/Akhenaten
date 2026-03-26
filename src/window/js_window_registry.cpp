@@ -11,6 +11,7 @@
 hvector<std::unique_ptr<js_building_info_window>, 32> building_windows;
 hvector<std::unique_ptr<js_advisor_window>, 16> advisor_windows;
 hvector<std::unique_ptr<js_common_window>, 32> common_windows;
+hvector<std::unique_ptr<js_common_modal_window>, 32> modal_windows;
 
 void clear_es_builing_window() {
     logs::info("JS Window Registry: Clearing %d registered windows", (int)building_windows.size());
@@ -69,6 +70,22 @@ void clear_es_common_window() {
     common_windows.clear();
 }
 ANK_REGISTER_ES_ITERATOR(window, register_es_common_window, clear_es_common_window);
+
+void register_es_modal_window(pcstr name) {
+    logs::info("JS Window Registry: Registering modal script window '%s'", name);
+    auto w = std::make_unique<js_common_modal_window>(name);
+    modal_windows.push_back(std::move(w));
+}
+
+void clear_es_modal_window() {
+    logs::info("JS Window Registry: Clearing %d registered modal windows", (int)modal_windows.size());
+    for (auto &w : modal_windows) {
+        verify_no_crash(w);
+        autoconfig_window::unregister_section(w->get_section());
+    }
+    modal_windows.clear();
+}
+ANK_REGISTER_ES_ITERATOR(modal_window, register_es_modal_window, clear_es_modal_window);
 
 struct building_info_window_init { vec2i pos; building_id bid; };
 ANK_REGISTER_STRUCT_WRITER(building_info_window_init, pos, bid)

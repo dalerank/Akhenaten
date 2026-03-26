@@ -65,6 +65,8 @@ city {
     }
 
     resources {
+        @available { get: __city_resources_available }
+
         can_produce : __city_resource_can_produce
         can_import : __city_resource_can_import
         trade_status : __city_resource_trade_status

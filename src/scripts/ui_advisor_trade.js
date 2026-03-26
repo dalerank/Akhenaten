@@ -113,11 +113,8 @@ advisor_trade_window {
 
 [es=(advisor_trade_window, init)]
 function advisor_trade_window_init(window) {
-    __city_resource_determine_available()
-    var n = __city_resources_available_count()
     window.resources_list.clear()
-    for (var i = 0; i < n; i++) {
-        var rid = __city_resource_available_at(i)
-        window.resources_list.add_item(__city_resource_name(rid))
+    for (var name in city.resources.available) {
+        window.resources_list.add_item(name)
     }
 }

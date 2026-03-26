@@ -555,11 +555,7 @@ bvariant js_call_function(xstring js_ref, int param1, int param2) {
 }
 
 static void js_push_bvariant_map_object(js_State *J, const bvariant_map &params) {
-    js_newobject(J);
-    for (const auto &kv : params) {
-        js_helpers::js_push_bvariant(J, kv.second);
-        js_setproperty(J, -2, kv.first.c_str());
-    }
+    js_helpers::js_push_bvariant_map_as_js_object(J, params);
 }
 
 bvariant js_call_function(xstring js_ref, const bvariant_map &params) {

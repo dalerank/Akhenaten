@@ -16,6 +16,7 @@ struct autoconfig_window : public ui::widget {
     virtual xstring get_section() const override { verify_no_crash(false); return "non_exist_window"; };
     virtual void on_mission_start() {}
     virtual void on_restore();
+    virtual bool is_modal() const { return false; }
 
     virtual void archive_load(archive arch) override;
     virtual int ui_handle_mouse(const mouse *m);

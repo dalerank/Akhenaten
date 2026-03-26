@@ -108,11 +108,6 @@ void __window_resource_settings_show(int resource) {
 }
 ANK_FUNCTION_1(__window_resource_settings_show)
 
-void __window_trade_prices_show() {
-    autoconfig_window::show("trade_prices_window");
-}
-ANK_FUNCTION(__window_trade_prices_show)
-
 int __trade_price_buy(int resource) {
     return trade_price_buy((e_resource)resource);
 }

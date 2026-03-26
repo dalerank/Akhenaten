@@ -291,6 +291,19 @@ namespace js_helpers {
     }
     }
 
+    inline void js_push_bvariant_map_as_js_object(js_State *J, const bvariant_map &params) {
+        js_newobject(J);
+        for (const auto &kv : params) {
+            js_push_bvariant(J, kv.second);
+            js_setproperty(J, -2, kv.first.c_str());
+        }
+    }
+
+    template<>
+    inline void js_push_value<bvariant_map>(js_State *J, bvariant_map value) {
+        js_push_bvariant_map_as_js_object(J, value);
+    }
+
     template<>
     inline void js_push_value<bvariant>(js_State *J, bvariant value) {
         js_push_bvariant(J, value);
