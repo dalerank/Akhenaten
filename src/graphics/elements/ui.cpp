@@ -40,6 +40,7 @@ namespace ui {
     const xstring element::TEXTFN{"textfn"};
     const xstring element::CHECKEDFN{"checkedfn"};
     const xstring element::ONINPUT{"oninput"};
+    const xstring element::ONDRAW{"ondraw"};
     const xstring element::EMPTY_JS_REF{};
 
     tooltip_context tooltipctx;
@@ -902,7 +903,7 @@ scrollbar_t &ui::scrollbar(scrollbar_t &scr, vec2i pos, int &value, vec2i size) 
     return scr;
 }
 
-xstring ui_element_props[] = { "text", "enabled", "readonly", "font", "text_color", "image", "selected", "tooltip", "onclick", "textfn" };
+xstring ui_element_props[] = { "text", "enabled", "readonly", "font", "text_color", "image", "selected", "tooltip", "onclick", "textfn", "ondraw" };
 xspan<xstring> ui::element::prop_names() const {
     return make_span(ui_element_props);
 }
@@ -914,6 +915,24 @@ ui::element::~element() {
         }
     }
     _js_refs.clear();
+}
+
+void ui::element::invoke_draw_callbacks(UiFlags flags) {
+    const xstring& js = js_ref(ONDRAW);
+    if (!js.empty()) {
+        const vec2i sp = screen_pos();
+        const vec2i psz = pxsize();
+        bvariant_map::scoped m;
+        (*m)["x"] = (int32_t)sp.x;
+        (*m)["y"] = (int32_t)sp.y;
+        (*m)["sizex"] = (int32_t)psz.x;
+        (*m)["sizey"] = (int32_t)psz.y;
+        (*m)["flags"] = (int32_t)flags;
+        (*m)["id"] = bvariant(id.c_str());
+        js_call_function(js, *m);
+    } else if (_draw_callback) {
+        _draw_callback(this, flags);
+    }
 }
 
 void ui::element::set_ref(const xstring &key, const xstring &ref) {
@@ -1337,9 +1356,7 @@ void ui::elabel::draw(UiFlags flags) {
         push(cmd_t::text, Pos{text_pos}, BoxWidth{box_width}, Font{_font}, Caption{_text.c_str()});
     }
 
-    if (_draw_callback) {
-        _draw_callback(this, flags);
-    }
+    invoke_draw_callbacks(flags);
 }
 
 void ui::elabel::load(archive arch, element *parent, items &elems) {
@@ -1347,6 +1364,7 @@ void ui::elabel::load(archive arch, element *parent, items &elems) {
 
     _text = arch.r_string("text");
     set_ref(TEXTFN, arch.r_function("textfn"));
+    set_ref(ONDRAW, arch.r_function("ondraw"));
     if (_text[0] == '#') {
         _text = lang_text_from_key(_text.c_str());
     }
@@ -1833,9 +1851,7 @@ void ui::etext::draw(UiFlags flags) {
         push(cmd_t::text_colored, Pos{offset + pos}, Font{_font}, TextColor{_color}, Caption{_text.c_str()});
     }
 
-    if (_draw_callback) {
-        _draw_callback(this, flags);
-    }
+    invoke_draw_callbacks(flags);
 }
 
 ui::emenu_header_item_proxy::~emenu_header_item_proxy() {

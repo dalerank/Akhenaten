@@ -47,6 +47,13 @@ empire.get_city_object = function(city_id) {
 empire.get_city = function(city_id) {
     return {
         city_id: city_id
+
         @empire_object { get: function() { return empire.get_city_object(this.city_id) } }
+
+        city_buys_resource : function(resource) { return __empire_city_buys_resource(this.city_id, resource) }
+        city_sells_resource : function(resource) { return __empire_city_sells_resource(this.city_id, resource) }
+        trade_route_limit : function(resource) { return __empire_trade_route_limit(this.city_id, resource) }
+        trade_route_traded : function(resource) { return __empire_trade_route_traded(this.city_id, resource) }
+        stack_proper_quantity : function(resource, quantity) { return __city_resource_stack_proper_quantity(resource, quantity) }
     }
 }

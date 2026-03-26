@@ -26,11 +26,11 @@
 
 full_empire_object g_empire_objects[MAX_OBJECTS];
 
-void empire_t::foreach_object(std::function<void(const empire_object&)> callback) {
+void empire_t::foreach_object(std::function<void(int object_index, const empire_object&)> callback) {
     auto& objects = g_empire_objects;
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (objects[i].in_use)
-            callback(objects[i].obj);
+            callback(i, objects[i].obj);
     }
 }
 
@@ -309,10 +309,10 @@ static int get_animation_offset(int image_id, int current_index) {
     return current_index;
 }
 
-int empire_t::update_animation(const empire_object &obj, int image_id) {
+int empire_t::update_animation(int object_index, const empire_object &obj, int image_id) {
     auto& objects = g_empire_objects;
-    objects[obj.id].obj.animation_index = get_animation_offset(image_id, obj.animation_index);
-    return objects[obj.id].obj.animation_index;
+    objects[object_index].obj.animation_index = get_animation_offset(image_id, obj.animation_index);
+    return objects[object_index].obj.animation_index;
 }
 
 std::array<map_route_object, 50> g_empire_route_objects;

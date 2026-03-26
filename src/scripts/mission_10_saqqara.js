@@ -103,8 +103,8 @@ mission10 { // Saqqara
             is_sea_trade : false
 			max_traders : 1
 			trade_limits : default_trade_limits
-            // sell chickpeas, pottery, papyrus
-            // buys bricks, barley, beer, jewelry
+			sells [ RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
+			buys [ RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 		}
 
         {

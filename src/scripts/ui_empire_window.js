@@ -17,7 +17,6 @@ empire_window {
     horizontal_bar : {pack:PACK_GENERAL, id:172, offset:1}
     vertical_bar : {pack:PACK_GENERAL, id:172, offset:0}
     cross_bar : {pack:PACK_GENERAL, id:172, offset:2}
-    trade_amount : {pack:PACK_GENERAL, id:171}
     closed_trade_route_hl : {pack:PACK_GENERAL, id:149, offset:211}
     open_trade_route : {pack:PACK_GENERAL, id:149, offset:201}
     open_trade_route_hl : {pack:PACK_GENERAL, id:149, offset:186}
@@ -48,6 +47,56 @@ empire_window {
         city_want_buy_items  : dummy({pos[0, 0], margin{centerx:-170, bottom:-70}})
         city_want_buy_item   : dummy({size[110, 0], font:FONT_SMALL_PLAIN})
     }
+
+    trade_amount_image : function(extraOffset) {
+        return get_image({pack:PACK_GENERAL, id:171, offset: extraOffset })
+    }
+
+    @selected_empire_object_id { get: function() { return __empire_map_selected_empire_object_id() } }
+    @selected_city { get: function() { return __empire_map_selected_city() } }
+}
+
+function empire_window_draw_trade_resource_row(offset, flags, resource, tradeNow, tradeMax, font) {
+    var ox = offset.x
+    var oy = offset.y
+    ui.resource_icon_flags({ x: ox + 1, y: oy + 1 }, resource, UiFlags_Outline)
+    var clicked = ui.button({text:"", pos[ox - 2, oy - 2], size[105, 24], font:FONT_SMALL_PLAIN, body:false, tooltip:__loc(23, resource)})
+    if (clicked) {
+        __window_resource_settings_show(resource)
+    }
+
+    var text = "0"
+    if (tradeNow < 0) {
+        text = String(tradeMax)
+    } else {
+        text = String(tradeNow) + " " + __loc(47, 12) + " " + String(tradeMax)
+    }
+
+    ui.label(text, { x: ox + 40, y: oy }, font)
+    var img = null
+    switch (tradeMax) {
+    case 1500:
+    case 15:
+        img = empire_window.trade_amount_image(0)
+        if (img) {
+            ui.image(img, { x: ox + 21, y: oy - 1 })
+        }
+        break
+    case 2500:
+    case 25:
+        img = empire_window.trade_amount_image(1)
+        if (img) {
+            ui.image(img, { x: ox + 17, y: oy - 1 })
+        }
+        break
+    case 4000:
+    case 40:
+        img = empire_window.trade_amount_image(2)
+        if (img) {
+            ui.image(img, { x: ox + 13, y: oy - 1 })
+        }
+        break
+    }
 }
 
 function empire_window_screen_bounds() {
@@ -67,6 +116,114 @@ function empire_window_screen_bounds() {
     return { min_pos: {x: min_x, y: min_y}, max_pos: {x: max_x, y: max_y} }
 }
 
+function empire_window_draw_city_buy_items(ev) {
+    var cityId = empire_window.selected_city
+    var itemW = 120
+    var itemH = 20
+    var rowFont = FONT_SMALL_PLAIN
+    var index = 0
+    var e_offset_x = ev.x
+    var e_offset_y = ev.y
+    var panelW = ev.sizex
+
+    var city = empire.get_city(cityId)
+    for (var r = RESOURCE_GRAIN; r <= RESOURCE_MARBLE; r++) {
+        if (!city.city_buys_resource(r)) {
+            continue
+        }
+
+        var tradeMax = city.trade_route_limit(r)
+        var traded = city.trade_route_traded(r)
+        var tradeNow = tradeMax < traded ? tradeMax : traded
+
+        tradeNow = city.stack_proper_quantity(r, tradeNow)
+        tradeMax = city.stack_proper_quantity(r, tradeMax)
+
+        var local_x = itemW * index
+        var pos = { x: e_offset_x + local_x, y: e_offset_y }
+        empire_window_draw_trade_resource_row(pos, ev.flags, r, tradeNow, tradeMax, rowFont)
+        index++
+
+        if (local_x > panelW) {
+            e_offset_y += itemH
+            index = 0
+        }
+    }
+}
+
+function empire_window_draw_city_sell_items(ev) {
+    var cityId = empire_window.selected_city
+    var itemW = 120
+    var itemH = 20
+    var rowFont = FONT_SMALL_PLAIN
+    var index = 0
+    var e_offset_x = ev.x
+    var e_offset_y = ev.y
+    var panelW = ev.sizex
+
+    var city = empire.get_city(cityId)
+    for (var r = RESOURCE_GRAIN; r <= RESOURCE_MARBLE; r++) {
+        if (!city.city_sells_resource(r)) {
+            continue
+        }
+        var tradeMax = city.trade_route_limit(r)
+        var traded = city.trade_route_traded(r)
+        var tradeNow = tradeMax < traded ? tradeMax : traded
+        tradeNow = city.stack_proper_quantity(r, tradeNow)
+        tradeMax = city.stack_proper_quantity(r, tradeMax)
+
+        var local_x = itemW * index
+        var pos = { x: e_offset_x + local_x, y: e_offset_y }
+        empire_window_draw_trade_resource_row(pos, ev.flags, r, tradeNow, tradeMax, rowFont)
+        index++
+
+        if (local_x > panelW) {
+            e_offset_y += itemH
+            index = 0
+        }
+    }
+}
+
+function empire_window_draw_city_want_buy_items(ev) {
+    var cityId = empire_window.selected_city
+    var itemStepX = 110
+    var itemStepY = 0
+    var rowFont = FONT_SMALL_PLAIN
+    var buyIndex = 0
+
+    var city = empire.get_city(cityId)
+    for (var r = RESOURCE_GRAIN; r <= RESOURCE_MARBLE; r++) {
+        if (!city.city_buys_resource(r)) {
+            continue
+        }
+        var tradeMax = city.trade_route_limit(r)
+        tradeMax = city.stack_proper_quantity(r, tradeMax)
+        var pos = { x: ev.x + itemStepX * buyIndex, y: ev.y + itemStepY * buyIndex }
+        empire_window_draw_trade_resource_row(pos, ev.flags, r, -1, tradeMax, rowFont)
+        buyIndex++
+    }
+}
+
+function empire_window_draw_city_want_sell_items(ev) {
+    var cityId = empire_window.selected_city
+    var itemStepX = 110
+    var itemStepY = 0
+    var rowFont = FONT_SMALL_PLAIN
+    var sellIndex = 0
+
+    var city = empire.get_city(cityId)
+    for (var r = RESOURCE_GRAIN; r <= RESOURCE_MARBLE; r++) {
+        if (!city.city_sells_resource(r)) {
+            continue
+        }
+        var tradeMax = city.trade_route_limit(r)
+        tradeMax = city.stack_proper_quantity(r, tradeMax)
+        var pos = { x: ev.x + itemStepX * sellIndex, y: ev.y + itemStepY * sellIndex }
+        empire_window_draw_trade_resource_row(pos, ev.flags, r, -1, tradeMax, rowFont)
+        sellIndex++
+    }
+}
+
 [es=(empire_window, init)]
 function empire_window_on_init(window) {
     window.button_help.onclick = function() { ui.window_message_dialog_show("message_world_map") }
@@ -75,6 +232,10 @@ function empire_window_on_init(window) {
     window.button_open_trade.onclick = function() {
         ui.show_yesno("#popup_dialog_open_trade", function() { empire_window_confirm_open_trade() })
     }
+    window.city_want_sell_items.ondraw = empire_window_draw_city_want_sell_items
+    window.city_want_buy_items.ondraw = empire_window_draw_city_want_buy_items
+    window.city_sell_items.ondraw = empire_window_draw_city_sell_items
+    window.city_buy_items.ondraw = empire_window_draw_city_buy_items
 }
 
 [es=(empire_window, draw_map)]

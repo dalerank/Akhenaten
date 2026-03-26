@@ -28,6 +28,7 @@ ui.label_colored = __ui_label_colored
 ui.draw_texture = __ui_draw_texture
 ui.window_is = __ui_window_is
 ui.show_advisor = __ui_window_advisors_show_advisor
+ui.resource_icon_flags = __ui_draw_resource_icon_flags
 
 function show_window_by_id(window_id) {
 	return function() {
@@ -70,8 +71,6 @@ ui.resource_icon = function(pos, resource) {
 
     __ui_draw_resource_icon(pos, resource)
 }
-
-ui.element_value_int = __ui_element_value_int
 
 ui.line = function(hline, pos, size) {
     if (!pos) {

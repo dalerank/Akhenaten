@@ -15,7 +15,6 @@
 #include "empire_object.h"
 #include "io/io_buffer.h"
 #include "game/mission.h"
-#include "dev/debug.h"
 #include "io/gamefiles/lang.h"
 #include "game/game_config.h"
 #include "core/log.h"

@@ -78,7 +78,7 @@ public:
     } trade_routes;
 
     void init_cities();
-    void foreach_object(std::function<void(const empire_object &)> callback);
+    void foreach_object(std::function<void(int object_index, const empire_object &)> callback);
 
     void fix_trade_routes();
 
@@ -97,7 +97,7 @@ public:
     bool city_buys_resource(int object_id, e_resource resource, bool from_raw_object);
     bool city_sells_resource(int object_id, e_resource resource, bool from_raw_object);
 
-    int update_animation(const empire_object &obj, int image_id);
+    int update_animation(int object_index, const empire_object &obj, int image_id);
 
     const map_route_object &get_route_object(int id) const ;
     map_route_object &ref_route_object(int id);
