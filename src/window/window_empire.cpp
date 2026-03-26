@@ -59,8 +59,6 @@ int image_id_remap(int id) {
     return rimg ? rimg : id;
 }
 
-const static vec2i EMPIRE_SIZE{1200 + 32, 1600 + 136 + 20};
-
 struct object_trade_info {
     rect r;
     e_resource res;
@@ -77,6 +75,12 @@ struct empire_window_init_event {
     vec2i pos;
 };
 ANK_REGISTER_STRUCT_WRITER(empire_window_init_event, pos);
+
+struct empire_window_paneling {
+    vec2i min_pos;
+    vec2i max_pos;
+};
+ANK_REGISTER_STRUCT_WRITER(empire_window_paneling, min_pos, max_pos);
 
 void empire_window_confirm_open_trade() {
     empire_city* city = g_empire.city(g_empire_window.selected_city);
@@ -683,62 +687,28 @@ void empire_window::draw_map() {
     draw_distant_battle_path();
 
     ui.begin_widget(pos);
-    ui.event(empire_window_draw{draw_offset});
+    ui.event(empire_window_draw{draw_offset}, get_section(), __func__);
     ui.end_widget();
 
     graphics_reset_clip_rectangle();
 }
 
 void empire_window::draw_paneling() {
-    painter ctx = game.painter();
-    // bottom panel background
-    graphics_set_clip_rectangle(min_pos, max_pos - min_pos);
-
-    for (int x = min_pos.x; x < max_pos.x; x += 70) {
-        ctx.img_generic(bottom_image, vec2i{x, max_pos.y - 140});
-        ctx.img_generic(bottom_image, vec2i{x, max_pos.y - 100});
-        ctx.img_generic(bottom_image, vec2i{x, max_pos.y - 60});
-        ctx.img_generic(bottom_image, vec2i{x, max_pos.y - 20});
-    }
-
-    // horizontal bar borders
-    for (int x = min_pos.x; x < max_pos.x; x += 86) {
-        ctx.img_generic(horizontal_bar, vec2i{x, min_pos.y});
-        ctx.img_generic(horizontal_bar, vec2i{x, max_pos.y - 140});
-        ctx.img_generic(horizontal_bar, vec2i{x, max_pos.y - 16});
-    }
-
-    // vertical bar borders
-    for (int y = min_pos.y + 16; y < max_pos.y; y += 86) {
-        ctx.img_generic(vertical_bar, vec2i{min_pos.x, y});
-        ctx.img_generic(vertical_bar, vec2i{max_pos.x - 16, y});
-    }
-
-    // crossbars
-    ctx.img_generic(cross_bar, vec2i{min_pos.x, min_pos.y});
-    ctx.img_generic(cross_bar, vec2i{min_pos.x, max_pos.y - 140});
-    ctx.img_generic(cross_bar, vec2i{min_pos.x, max_pos.y - 16});
-    ctx.img_generic(cross_bar, vec2i{max_pos.x - 16, min_pos.y});
-    ctx.img_generic(cross_bar, vec2i{max_pos.x - 16, max_pos.y - 140});
-    ctx.img_generic(cross_bar, vec2i{max_pos.x - 16, max_pos.y - 16});
-
-    graphics_reset_clip_rectangle();
+    ui.event(empire_window_draw{pos}, get_section(), __func__);
 }
 
 int empire_window::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
 
-    auto& data = g_empire_window;
     int s_width = screen_width();
     int s_height = screen_height();
-    data.min_pos.x = s_width <= EMPIRE_SIZE.x ? 0 : (s_width - EMPIRE_SIZE.x) / 2;
-    data.max_pos.x = s_width <= EMPIRE_SIZE.x ? s_width : data.min_pos.x + EMPIRE_SIZE.x;
-    data.min_pos.y = s_height <= EMPIRE_SIZE.y ? 0 : (s_height - EMPIRE_SIZE.y) / 2;
-    data.max_pos.y = s_height <= EMPIRE_SIZE.y ? s_height : data.min_pos.y + EMPIRE_SIZE.y;
-
-    if (data.min_pos.x || data.min_pos.y) {
-        g_render.clear_screen();
-    }
+    const image_t *map_img = image_get(image);
+    const vec2i empire_size = map_img ? vec2i{map_img->width + finish_pos.x, map_img->height + finish_pos.y + 20}
+                                      : vec2i{1200 + 32, 1600 + 136 + 20};
+    min_pos.x = s_width <= empire_size.x ? 0 : (s_width - empire_size.x) / 2;
+    max_pos.x = s_width <= empire_size.x ? s_width : min_pos.x + empire_size.x;
+    min_pos.y = s_height <= empire_size.y ? 0 : (s_height - empire_size.y) / 2;
+    max_pos.y = s_height <= empire_size.y ? s_height : min_pos.y + empire_size.y;
 
     return 0;
 }

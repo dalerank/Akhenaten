@@ -23,6 +23,7 @@ ANK_REGISTER_STRUCT_WRITER(window_info, pos);
 
 struct event_show_window { xstring id; };
 ANK_SCRIPT_EVENT(event_show_window, id)
+
 void ANK_PERMANENT_CALLBACK(event_show_window, ev) {
     autoconfig_window::show(ev.id);
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include "core/xstring.h"
 #include "content/dir.h"
 #include "core/flat_map.h"
@@ -7,7 +9,7 @@
 #include "core/hvector.h"
 #include "core/archive.h"
 
-struct event_mods_info_updated { size_t count; };
+struct event_mods_info_updated { uint64_t count; };
 
 struct mod_entry {
     xstring name;
