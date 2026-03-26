@@ -9,38 +9,69 @@ on:
       pull_request_number:
         required: false
         type: string
+      event_name:
+        required: true
+        type: string
+      event_before:
+        required: false
+        type: string
+      head_sha:
+        required: false
+        type: string
 
 jobs:
   build:
     name: run on linux
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 0
     - name: update-workspace
       run: |
         sudo apt -qq update
         sudo apt install -y clang-format-20 wget
-        sudo wget -O /usr/local/bin/git-clang-format https://raw.githubusercontent.com/llvm/llvm-project/release/20.x/clang/tools/clang-format/git-clang-format
+        sudo cp .github/scripts/git-clang-format /usr/local/bin/
         sudo chmod +x /usr/local/bin/git-clang-format
         sudo ln -sf /usr/bin/clang-format-20 /usr/bin/clang-format
     - name: check-format
       id: check-formatting
       run: |
-          git fetch origin ${{ inputs.base_branch }}
-          output=$(git clang-format --diff origin/${{ inputs.base_branch }} --extensions cpp,cc,cxx,h,hpp)
-          if [ "$output" != "no modified files to format" ]; then
-            echo "diff<<EOF" >> $GITHUB_OUTPUT
-            echo "$output" >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
-            exit 1
+          if [[ "${{ inputs.event_name }}" == pull_request* ]]; then
+            git fetch origin ${{ inputs.base_branch }}
+            base_ref="origin/${{ inputs.base_branch }}"
+            head_ref="${{ inputs.head_sha }}"
+            if [ -z "$head_ref" ]; then
+              echo "head_sha is empty for PR event"
+              exit 1
+            fi
           else
-            echo "clang-format passed."
+            if [ -n "${{ inputs.event_before }}" ] && git rev-parse --verify --quiet "${{ inputs.event_before }}" >/dev/null; then
+              base_ref="${{ inputs.event_before }}"
+              head_ref="HEAD"
+            else
+              base_ref="HEAD^1"
+              head_ref="HEAD"
+            fi
+          fi
+          set +e
+          output=$(git clang-format --diff "$base_ref" "$head_ref" --extensions cpp,cc,cxx,h,hpp 2>&1)
+          exit_code=$?
+          set -e
+          echo "clang-format output:"
+          echo "$output"
+          if [ $exit_code -eq 0 ]; then
+              echo "clang-format passed."
+          else
+              echo "diff<<EOF" >> $GITHUB_OUTPUT
+              echo "$output" >> $GITHUB_OUTPUT
+              echo "EOF" >> $GITHUB_OUTPUT
+              echo "clang-format failed."
+              exit 1
           fi
     - name: post-comment-on-pull-request
       if: failure() && inputs.pull_request_number != ''
-      uses: actions/github-script@v7
+      uses: actions/github-script@v8
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |

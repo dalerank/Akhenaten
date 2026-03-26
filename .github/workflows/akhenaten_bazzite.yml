@@ -10,7 +10,7 @@ jobs:
     container:
       image: fedora:latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 0
     - name: Install dependencies
@@ -36,7 +36,7 @@ jobs:
         cp ./data/pharaoh_custom_pack.sgx ./bazzite_build/data/pharaoh_custom_pack.sgx
         cp ./data/pharaoh_houses_pack.sgx ./bazzite_build/data/pharaoh_houses_pack.sgx
         cp ./data/neucha.ttf ./bazzite_build/data/neucha.ttf
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v6
       with:
         name: bazzite_build
         path: bazzite_build

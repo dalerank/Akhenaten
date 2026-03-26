@@ -8,7 +8,7 @@ jobs:
     name: run on linux
     runs-on: ubuntu-24.04
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 0
     - name: update-workspace
@@ -21,7 +21,7 @@ jobs:
         sudo flatpak-builder repo com.github.dalerank.akhenaten.json --install-deps-from=flathub --keep-build-dirs
         flatpak build-export export repo
         flatpak build-bundle export akhenaten.flatpak com.github.dalerank.akhenaten --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v6
       with:
         name: akhenaten.flatpak
         path: akhenaten.flatpak

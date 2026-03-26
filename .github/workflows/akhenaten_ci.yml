@@ -3,8 +3,12 @@ name: Akhenaten CI
 on:
   push:
     branches: [ "master" ]
-  pull_request:
+  pull_request_target:
     branches: [ "master" ]
+
+permissions:
+  pull-requests: write
+  contents: read
 
 jobs:
   clang-format:
@@ -12,6 +16,9 @@ jobs:
     with:
       base_branch: ${{ github.event.pull_request.base.ref || 'master' }}
       pull_request_number: ${{ github.event.pull_request.number || '' }}
+      event_name: ${{ github.event_name }}
+      event_before: ${{ github.event.before }}
+      head_sha: ${{ github.event.pull_request.head.sha || '' }}
     secrets: inherit
 
   content:
