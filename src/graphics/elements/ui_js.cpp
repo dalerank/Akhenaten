@@ -25,6 +25,8 @@
 #include "core/flat_map.h"
 #include "game/game.h"
 
+#include <cstring>
+
 void __ui_draw_image(int imgid, vec2i pos) {
     ui::eimage(imgid, pos);
 }
@@ -126,14 +128,10 @@ void __ui_draw_resource_icon(vec2i pos, int resource) {
 }
 ANK_FUNCTION_2(__ui_draw_resource_icon)
 
-int __ui_element_value_int(pcstr id) {
-    ui::widget* w = ui::get_current_widget();
-    if (!w) {
-        return 0;
-    }
-    return (*w)[id].value();
+void __ui_draw_resource_icon_flags(vec2i pos, int resource, int flags) {
+    ui::icon(pos, (e_resource)resource, (UiFlags)flags);
 }
-ANK_FUNCTION_1(__ui_element_value_int)
+ANK_FUNCTION_3(__ui_draw_resource_icon_flags)
 
 void __ui_element_max_value(pcstr id, int v) {
     ui::widget* w = ui::get_current_widget();
@@ -327,6 +325,33 @@ void ui_proxy_set_onclick(js_State* J) {
     elem->set_ref(ui::element::ONCLICK, new_ref ? xstring(new_ref) : xstring());
     J->pushundefined();
 }
+void ui_proxy_set_ondraw(js_State* J) {
+    auto elem = GET_ELEM(J);
+    if (!elem) {
+        J->pushundefined();
+        return;
+    }
+
+    if (js_isnull(J, 1) || js_isundefined(J, 1)) {
+        elem->set_ref(ui::element::ONDRAW, "");
+        elem->ondraw(nullptr);
+        J->pushundefined();
+        return;
+    }
+
+    if (!J->iscallable(1)) {
+        elem->set_ref(ui::element::ONDRAW, "");
+        elem->ondraw(nullptr);
+        J->pushundefined();
+        return;
+    }
+
+    js_copy(J, 1);
+    pcstr new_ref = js_ref(J);
+    elem->set_ref(ui::element::ONDRAW, new_ref ? xstring(new_ref) : xstring());
+    elem->ondraw(nullptr);
+    J->pushundefined();
+}
 void ui_proxy_set_textfn(js_State* J) {
     auto elem = GET_ELEM(J);
     if (!elem) {
@@ -498,7 +523,7 @@ struct ui_proxy_prop {
     js_CFunction getter;
     js_CFunction setter;
 };
-static const flat_map<xstring, ui_proxy_prop, 14> g_ui_proxy_props = {
+static const flat_map<xstring, ui_proxy_prop, 16> g_ui_proxy_props = {
   {"text", {ui_proxy_get_text, ui_proxy_set_text}},
   {"enabled", {ui_proxy_get_enabled, ui_proxy_set_enabled}},
   {"readonly", {ui_proxy_get_readonly, ui_proxy_set_readonly}},
@@ -508,6 +533,7 @@ static const flat_map<xstring, ui_proxy_prop, 14> g_ui_proxy_props = {
   {"selected", {ui_proxy_get_selected, ui_proxy_set_selected}},
   {"tooltip", {ui_proxy_get_noop, ui_proxy_set_tooltip}},
   {"onclick", {nullptr, ui_proxy_set_onclick}},
+  {"ondraw", {nullptr, ui_proxy_set_ondraw}},
   {"textfn", {nullptr, ui_proxy_set_textfn}},
   {"checked", {ui_proxy_get_selected, ui_proxy_set_selected}},
   {"checkedfn", {nullptr, ui_proxy_set_checkedfn}},
@@ -519,7 +545,7 @@ struct ui_proxy_func {
     js_CFunction fn;
     int nargs;
 };
-static const flat_map<xstring, ui_proxy_func, 19> g_ui_proxy_funcs = {
+static const flat_map<xstring, ui_proxy_func, 16> g_ui_proxy_funcs = {
   {"add_item", {ui_proxy_add_item, 1}},
   {"clear", {ui_proxy_clear, 0}},
   {"select_item", {ui_proxy_select_item, 1}},

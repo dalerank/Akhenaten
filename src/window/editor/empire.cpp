@@ -137,7 +137,7 @@ static void draw_shadowed_number(int value, int x, int y, color color) {
     //    text_draw_number_colored(value, '@', " ", x, y, FONT_SMALL_PLAIN, color);
 }
 
-static void draw_empire_object(const empire_object &obj) {
+static void draw_empire_object(int object_index, const empire_object &obj) {
     auto &data = g_window_empire;
     painter ctx = game.painter();
     vec2i pos = obj.pos;
@@ -149,7 +149,7 @@ static void draw_empire_object(const empire_object &obj) {
     }
 
     if (obj.type == EMPIRE_OBJECT_CITY) {
-        int city_id = g_empire.get_city_for_object(obj.id);
+        int city_id = g_empire.get_city_for_object(object_index);
         const empire_city* city = g_empire.city(city_id);
         if (city->type == EMPIRE_CITY_EGYPTIAN || city->type == EMPIRE_CITY_FOREIGN) {
             image_id = image_id_from_group(GROUP_EDITOR_EMPIRE_FOREIGN_CITY);
@@ -163,7 +163,7 @@ static void draw_empire_object(const empire_object &obj) {
     ctx.img_generic(image_id, vec2i{data.draw_offset.x + pos.x, data.draw_offset.y + pos.y});
     const image_t* img = image_get(image_id);
     if (img->animation.speed_id) {
-        int new_animation = g_empire.update_animation(obj, image_id);
+        int new_animation = g_empire.update_animation(object_index, obj, image_id);
         ctx.img_generic(image_id + new_animation, data.draw_offset + pos + img->animation.sprite_offset);
     }
 }
@@ -182,7 +182,7 @@ static void window_editor_draw_map() {
     data.draw_offset = g_empire_map.adjust_scroll(data.draw_offset);
     ctx.img_generic(image_id_from_group(GROUP_EDITOR_EMPIRE_MAP), data.draw_offset);
 
-    g_empire.foreach_object(draw_empire_object);
+    g_empire.foreach_object([](int object_index, const empire_object &obj) { draw_empire_object(object_index, obj); });
 
     graphics_reset_clip_rectangle();
 }
@@ -285,7 +285,7 @@ static void draw_foreground(int) {
     if (selected_object) {
         const empire_object* object = g_empire.get_object(selected_object - 1);
         if (object->type == EMPIRE_OBJECT_CITY) {
-            data.selected_city = g_empire.get_city_for_object(object->id);
+            data.selected_city = g_empire.get_city_for_object(selected_object - 1);
             city = g_empire.city(data.selected_city);
         }
     }
@@ -312,7 +312,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE)) {
         g_empire_map.scroll_map(position);
     }
-        
+
     if (m->is_touch) {
         const touch_t* t = get_earliest_touch();
         if (!is_outside_map(t->current_point.x, t->current_point.y)) {

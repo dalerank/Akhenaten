@@ -403,6 +403,8 @@ struct element {
     virtual element &onrclick(button_onclick_simple_cb f) { return *this; }
     virtual void ondraw(draw_callback f) { _draw_callback = f;};
 
+    void invoke_draw_callbacks(UiFlags flags);
+
     void set_ref(const xstring &key, const xstring &ref);
     const xstring &js_ref(const xstring &key) const;
 
@@ -478,6 +480,7 @@ struct element {
     static const xstring TEXTFN;
     static const xstring CHECKEDFN;
     static const xstring ONINPUT;
+    static const xstring ONDRAW;
     static const xstring EMPTY_JS_REF;
 };
 

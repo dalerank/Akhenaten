@@ -67,3 +67,4 @@ import console_commands
 import malaria_risk
 import player
 import mods
+import empire_map
