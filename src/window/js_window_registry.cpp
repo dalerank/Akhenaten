@@ -95,15 +95,15 @@ void js_building_info_window::init(object_info &c) {
 
     verify_no_crash(!window_name.empty());
 
-    ui.event(building_info_window_init{pos, c.bid}, window_name.c_str(), __func__);
+    ui.event(building_info_window_init{ pos, c.bid }, window_name.c_str(), __func__);
 }
 
-js_window_registry& js_window_registry::instance() {
+js_window_registry &js_window_registry::instance() {
     static js_window_registry registry;
     return registry;
 }
 
-advisor_window* js_window_registry::get_advisor_window(e_advisor adv) const {
+advisor_window *js_window_registry::get_advisor_window(e_advisor adv) const {
     if (adv >= ADVISOR_MAX) {
         return nullptr;
     }
