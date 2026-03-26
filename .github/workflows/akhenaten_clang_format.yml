@@ -15,9 +15,9 @@ on:
       event_before:
         required: false
         type: string
-    secrets:
-      COMMENT_TOKEN:
+      head_sha:
         required: false
+        type: string
 
 jobs:
   build:
@@ -37,18 +37,25 @@ jobs:
     - name: check-format
       id: check-formatting
       run: |
-          if [ "${{ inputs.event_name }}" = "pull_request" ]; then
+          if [[ "${{ inputs.event_name }}" == pull_request* ]]; then
             git fetch origin ${{ inputs.base_branch }}
-            compare_with="origin/${{ inputs.base_branch }}"
+            base_ref="origin/${{ inputs.base_branch }}"
+            head_ref="${{ inputs.head_sha }}"
+            if [ -z "$head_ref" ]; then
+              echo "head_sha is empty for PR event"
+              exit 1
+            fi
           else
             if [ -n "${{ inputs.event_before }}" ] && git rev-parse --verify --quiet "${{ inputs.event_before }}" >/dev/null; then
-              compare_with="${{ inputs.event_before }}"
-            else            
-              compare_with="HEAD^1"
+              base_ref="${{ inputs.event_before }}"
+              head_ref="HEAD"
+            else
+              base_ref="HEAD^1"
+              head_ref="HEAD"
             fi
           fi
           set +e
-          output=$(git clang-format --diff "$compare_with" --extensions cpp,cc,cxx,h,hpp 2>&1)
+          output=$(git clang-format --diff "$base_ref" "$head_ref" --extensions cpp,cc,cxx,h,hpp 2>&1)
           exit_code=$?
           set -e
           echo "clang-format output:"
@@ -66,7 +73,7 @@ jobs:
       if: failure() && inputs.pull_request_number != ''
       uses: actions/github-script@v8
       with:
-        github-token: ${{ secrets.COMMENT_TOKEN }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           const fs = require('fs');
           const templatePath = '.github/COMMENT_TEMPLATE/code_format_failure.md';
