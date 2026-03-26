@@ -32,10 +32,7 @@
 #include "scenario/empire.h"
 #include "scenario/scenario_invasion.h"
 #include "scenario/scenario.h"
-#include "window/window_advisors.h"
 #include "window/window_city.h"
-#include "window/message_dialog.h"
-#include "window/popup_dialog.h"
 #include "window/resource_settings.h"
 #include "game/game_config.h"
 #include "window/trade_opened.h"
@@ -74,6 +71,22 @@ empire_window g_empire_window;
 struct empire_window_draw { vec2i draw_offset; };
 ANK_REGISTER_STRUCT_WRITER(empire_window_draw, draw_offset);
 
+struct empire_window_init_event { vec2i pos; };
+ANK_REGISTER_STRUCT_WRITER(empire_window_init_event, pos);
+
+void empire_window_confirm_open_trade() {
+    empire_city *city = g_empire.city(g_empire_window.selected_city);
+
+    if (city && city->is_sieged()) {
+        return;
+    }
+
+    g_city.finance.process_construction(city->cost_to_open);
+    city->is_open = 1;
+    window_trade_opened_show(g_empire_window.selected_city);
+}
+ANK_FUNCTION(empire_window_confirm_open_trade)
+
 void empire_window::init() {
     selected_button = 0;
     int selected_object = g_empire_map.selected_object();
@@ -84,24 +97,9 @@ void empire_window::init() {
     ui["city_sell_items"].ondraw([this] (ui::element *e, UiFlags flags) { draw_city_selling(e, flags); });
     ui["city_buy_items"].ondraw([this] (ui::element *e, UiFlags flags) { draw_city_buy(e, flags); });
 
-    ui["button_help"].onclick([] { window_message_dialog_show("message_world_map", -1, 0); });
-    ui["button_close"].onclick([] { window_city_show(); });
-    ui["button_advisor"].onclick([] { window_advisors_show_advisor(ADVISOR_TRADE); });
-
-    ui["button_open_trade"].onclick([] {
-        popup_dialog::show_yesno("#popup_dialog_open_trade", [] {
-            empire_city *city = g_empire.city(g_empire_window.selected_city);
-
-            if (city && city->is_sieged()) {
-                return;
-            }
-            
-            g_city.finance.process_construction(city->cost_to_open);
-            city->is_open = 1;
-            window_trade_opened_show(g_empire_window.selected_city);
-        });
-    });
-
+    ui.begin_widget(pos);
+    ui.event(empire_window_init_event{ pos }, get_section(), "init");
+    ui.end_widget();
 }
 
 inline void empire_window::archive_load(archive arch) {
