@@ -20,6 +20,8 @@ ui.image = function(image, pos) {
 
 ui.begin_widget = __ui_begin_widget
 ui.end_widget = __ui_end_widget
+ui.set_clip_rectangle = __ui_set_clip_rectangle
+ui.reset_clip_rectangle = __ui_reset_clip_rectangle
 ui.fill_rect = __ui_fill_rect
 ui.border = __ui_border
 ui.label_colored = __ui_label_colored

@@ -50,6 +50,23 @@ empire_window {
     }
 }
 
+function empire_window_screen_bounds() {
+    var map_img = get_image(empire_window.image)
+    var f = empire_window.finish_pos
+    var fx = f.x !== undefined ? f.x : f[0]
+    var fy = f.y !== undefined ? f.y : f[1]
+    var bottom_extra = 20
+    var ew = map_img ? (map_img.width + fx) : (1200 + 32)
+    var eh = map_img ? (map_img.height + fy + bottom_extra) : (1600 + 136 + 20)
+    var sw = game.screen.w
+    var sh = game.screen.h
+    var min_x = sw <= ew ? 0 : ((sw - ew) / 2) | 0
+    var max_x = sw <= ew ? sw : min_x + ew
+    var min_y = sh <= eh ? 0 : ((sh - eh) / 2) | 0
+    var max_y = sh <= eh ? sh : min_y + eh
+    return { min_pos: {x: min_x, y: min_y}, max_pos: {x: max_x, y: max_y} }
+}
+
 [es=(empire_window, init)]
 function empire_window_on_init(window) {
     window.button_help.onclick = function() { ui.window_message_dialog_show("message_world_map") }
@@ -60,7 +77,7 @@ function empire_window_on_init(window) {
     }
 }
 
-[event=empire_window_draw]
+[es=(empire_window, draw_map)]
 function empire_window_draw_distant_battle_icon(window) {
     if (!empire.has_distant_battle) {
         return
@@ -83,7 +100,7 @@ function empire_window_draw_distant_battle_icon(window) {
     ui.image(battle_icon, battle_icon_pos)
 }
 
-[event=empire_window_draw]
+[es=(empire_window, draw_map)]
 function empire_window_draw_dispatched_army_icon(window) {
     if (empire.dispatched_army.state <= 0) {
         return
@@ -99,4 +116,45 @@ function empire_window_draw_dispatched_army_icon(window) {
                             .add({x:-army_icon.width / 2, y:-army_icon.height / 2})
 
     ui.image(army_icon, army_icon_pos)
+}
+
+[es=(empire_window, draw_paneling)]
+function empire_window_draw_paneling(window) {
+    var bounds = empire_window_screen_bounds()
+    var min_pos = bounds.min_pos
+    var max_pos = bounds.max_pos
+
+    var bottom = get_image(empire_window.bottom_image)
+    var hbar = get_image(empire_window.horizontal_bar)
+    var vbar = get_image(empire_window.vertical_bar)
+    var cross = get_image(empire_window.cross_bar)
+
+    ui.set_clip_rectangle(min_pos, vec2i(max_pos).sub(min_pos))
+
+    for (var x = min_pos.x; x < max_pos.x; x += 70) {
+        ui.image(bottom, {x: x, y: max_pos.y - 140})
+        ui.image(bottom, {x: x, y: max_pos.y - 100})
+        ui.image(bottom, {x: x, y: max_pos.y - 60})
+        ui.image(bottom, {x: x, y: max_pos.y - 20})
+    }
+
+    for (var x = min_pos.x; x < max_pos.x; x += 86) {
+        ui.image(hbar, {x: x, y: min_pos.y})
+        ui.image(hbar, {x: x, y: max_pos.y - 140})
+        ui.image(hbar, {x: x, y: max_pos.y - 16})
+    }
+
+    for (var y = min_pos.y + 16; y < max_pos.y; y += 86) {
+        ui.image(vbar, {x: min_pos.x, y: y})
+        ui.image(vbar, {x: max_pos.x - 16, y: y})
+    }
+
+    ui.image(cross, {x: min_pos.x, y: min_pos.y})
+    ui.image(cross, {x: min_pos.x, y: max_pos.y - 140})
+    ui.image(cross, {x: min_pos.x, y: max_pos.y - 16})
+    ui.image(cross, {x: max_pos.x - 16, y: min_pos.y})
+    ui.image(cross, {x: max_pos.x - 16, y: max_pos.y - 140})
+    ui.image(cross, {x: max_pos.x - 16, y: max_pos.y - 16})
+
+    ui.reset_clip_rectangle()
 }

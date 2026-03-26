@@ -81,17 +81,17 @@ static size_t mods_download_write_callback(void* contents, size_t size, size_t n
     if (!data || !data->file || !data->file->is_open()) {
         return 0;
     }
-    
+
     size_t totalSize = size * nmemb;
     data->file->write((char*)contents, totalSize);
     data->downloaded_size += totalSize;
-    
+
     // Update progress (0-100)
     if (data->total_size > 0 && data->mod) {
         uint8_t progress = (uint8_t)((data->downloaded_size * 100) / data->total_size);
         data->mod->download_progress = progress;
     }
-    
+
     return totalSize;
 }
 
@@ -100,13 +100,13 @@ static int mods_download_progress_callback(void* clientp, curl_off_t dltotal, cu
     if (!data || !data->mod) {
         return 0;
     }
-    
+
     if (dltotal > 0) {
         data->total_size = (size_t)dltotal;
         uint8_t progress = (uint8_t)((dlnow * 100) / dltotal);
         data->mod->download_progress = progress;
     }
-    
+
     return 0;
 }
 #endif
@@ -116,7 +116,7 @@ void mods_download_info_async() {
         g_mods.inupdate = true;
         mods_refresh_available_list();
         g_mods.inupdate = false;
-        events::emit(event_mods_info_updated{ g_mods.list.size() });
+        events::emit(event_mods_info_updated{ static_cast<uint64_t>(g_mods.list.size()) });
     });
 }
 
@@ -128,17 +128,17 @@ void mods_download_mod_async(xstring name) {
     }
 
     mod_info& mod = it->second;
-    
+
     if (mod.downloaded) {
         logs::warn("Mod already downloaded: %s", name.c_str());
         return;
     }
-    
+
     if (mod.url.empty()) {
         logs::error("No download URL for mod: %s", name.c_str());
         return;
     }
-    
+
     if (mod.download_progress > 0 && mod.download_progress < 100) {
         logs::warn("Mod download already in progress: %s", name.c_str());
         return;
@@ -151,10 +151,10 @@ void mods_download_mod_async(xstring name) {
         if (it == g_mods.list.end()) {
             return;
         }
-        
+
         mod_info& mod = it->second;
         mod.download_progress = 1; // Start downloading
-        
+
         // Get base path and create Mods directory
         pcstr base_path = vfs::platform_file_manager_get_base_path();
         if (!base_path) {
@@ -162,15 +162,15 @@ void mods_download_mod_async(xstring name) {
             mod.download_progress = 0;
             return;
         }
-        
+
         std::filesystem::path mods_dir = std::filesystem::path(base_path) / "Mods";
         std::filesystem::create_directories(mods_dir);
-        
+
         // Create filename with .sgx extension
         bstring256 filename;
         filename.printf("%s.sgx", mod.name.c_str());
         std::filesystem::path file_path = mods_dir / filename.c_str();
-        
+
         // Open file for writing
         std::ofstream out_file(file_path, std::ios::binary);
         if (!out_file.is_open()) {
@@ -178,7 +178,7 @@ void mods_download_mod_async(xstring name) {
             mod.download_progress = 0;
             return;
         }
-        
+
         // Initialize curl
         CURL* curl = curl_easy_init();
         if (!curl) {
@@ -187,12 +187,12 @@ void mods_download_mod_async(xstring name) {
             mod.download_progress = 0;
             return;
         }
-        
+
         // Setup download progress tracking
         mod_download_progress_data *download_progress = new mod_download_progress_data;
         download_progress->mod = &mod;
         download_progress->file = &out_file;
-        
+
         // Configure curl
         curl_easy_setopt(curl, CURLOPT_URL, mod.url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, mods_download_write_callback);
@@ -206,51 +206,51 @@ void mods_download_mod_async(xstring name) {
         curl_easy_setopt(curl, CURLOPT_USERAGENT, "Akhenaten/1.0");
         curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 15L);
         curl_easy_setopt(curl, CURLOPT_TIMEOUT, 300L); // 5 minutes for large files
-        
+
         // Perform download
         CURLcode res = curl_easy_perform(curl);
-        
+
         long httpCode = 0;
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
-        
+
         out_file.close();
-        
+
         if (res != CURLE_OK || httpCode != 200) {
-            logs::error("Failed to download mod %s: %s (HTTP %ld)", name.c_str(), 
+            logs::error("Failed to download mod %s: %s (HTTP %ld)", name.c_str(),
                        curl_easy_strerror(res), httpCode);
             std::filesystem::remove(file_path); // Remove partial file
             mod.download_progress = 0;
             curl_easy_cleanup(curl);
             return;
         }
-        
+
         curl_easy_cleanup(curl);
-        
+
         // Verify file was written
         if (!std::filesystem::exists(file_path) || std::filesystem::file_size(file_path) == 0) {
             logs::error("Downloaded file is empty or missing: %s", file_path.string().c_str());
             mod.download_progress = 0;
             return;
         }
-        
+
         // Update mod info
         mod.downloaded = true;
         mod.download_progress = 100;
         mod.path.printf("Mods/%s", filename.c_str());
-        
+
         // Initialize mod metadata (similar to mods_init)
         mod.useridx = imagepak::get_max_useridx() + 1;
         mod.start_index = imagepak::get_maxseen_imgid() + 1;
-        
+
         vfs::path full_path = mod.path.resolve();
         if (!full_path.empty()) {
             mod.entries_num = imagepak::get_entries_num(mod.path.c_str());
             imagepak::useridx_update(mod.useridx);
-            imagepak::update_max_imgid(mod.start_index + mod.entries_num);           
+            imagepak::update_max_imgid(mod.start_index + mod.entries_num);
         }
-        
+
         logs::info("Successfully downloaded mod: %s", name.c_str());
-        
+
         // Note: UI update will happen automatically when the window is refreshed
         // The download_progress field is already updated during download
     });
@@ -279,14 +279,14 @@ void mods_remount() {
         if (it.second.enabled) {
             vfs::mount_pack(it.second.path.c_str());
 
-            auto &modpack = g_image_data->pak_list[it.second.useridx];            
+            auto &modpack = g_image_data->pak_list[it.second.useridx];
             if (!modpack.handle) {
                 modpack.entries_num = it.second.entries_num;
                 modpack.index = it.second.start_index;
                 modpack.id = it.second.useridx;
                 modpack.name = it.second.name;
                 modpack.delayed = true;
-                modpack.custom = true;                
+                modpack.custom = true;
             }
 
             it.second.fill_entries();
@@ -453,7 +453,7 @@ void mods_load() {
 
     svector<bstring64, 128> mod_names;
     string_to_array_t(mod_names, enabled_mods.c_str(), ',');
-    
+
     // Restore enabled status for each mod
     for (const auto &name : mod_names) {
         mods_set_enabled(name.c_str(), true);
