@@ -33,7 +33,7 @@ mod_info& mods_add_remote_file(xstring name, xstring uri) {
         return it->second;
     }
 
-    auto &new_mod = g_mods.list[name];
+    auto& new_mod = g_mods.list[name];
     new_mod.path = "";
     new_mod.downloaded = false;
     new_mod.url = uri;
@@ -69,15 +69,16 @@ void mods_set_enabled(xstring name, bool enabled) {
 
 #ifdef GAME_HAVE_CURL
 struct mod_download_progress_data {
-    mod_info *mod;
-    std::ofstream *file;
+    mod_info* mod;
+    std::ofstream* file;
     size_t total_size;
     size_t downloaded_size;
 
     mod_download_progress_data() : mod(nullptr), file(nullptr), total_size(0), downloaded_size(0) {}
 };
 
-static size_t mods_download_write_callback(void* contents, size_t size, size_t nmemb, mod_download_progress_data * data) {
+static size_t mods_download_write_callback(void* contents, size_t size, size_t nmemb,
+  mod_download_progress_data* data) {
     if (!data || !data->file || !data->file->is_open()) {
         return 0;
     }
@@ -95,8 +96,9 @@ static size_t mods_download_write_callback(void* contents, size_t size, size_t n
     return totalSize;
 }
 
-static int mods_download_progress_callback(void* clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t, curl_off_t) {
-    auto data = (mod_download_progress_data *)clientp;
+static int mods_download_progress_callback(void* clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t,
+  curl_off_t) {
+    auto data = (mod_download_progress_data*)clientp;
     if (!data || !data->mod) {
         return 0;
     }
@@ -112,11 +114,11 @@ static int mods_download_progress_callback(void* clientp, curl_off_t dltotal, cu
 #endif
 
 void mods_download_info_async() {
-    game.mt.detach_task([] () {
+    game.mt.detach_task([]() {
         g_mods.inupdate = true;
         mods_refresh_available_list();
         g_mods.inupdate = false;
-        events::emit(event_mods_info_updated{ static_cast<uint64_t>(g_mods.list.size()) });
+        events::emit(event_mods_info_updated{static_cast<uint64_t>(g_mods.list.size())});
     });
 }
 
@@ -189,7 +191,7 @@ void mods_download_mod_async(xstring name) {
         }
 
         // Setup download progress tracking
-        mod_download_progress_data *download_progress = new mod_download_progress_data;
+        mod_download_progress_data* download_progress = new mod_download_progress_data;
         download_progress->mod = &mod;
         download_progress->file = &out_file;
 
@@ -216,8 +218,7 @@ void mods_download_mod_async(xstring name) {
         out_file.close();
 
         if (res != CURLE_OK || httpCode != 200) {
-            logs::error("Failed to download mod %s: %s (HTTP %ld)", name.c_str(),
-                       curl_easy_strerror(res), httpCode);
+            logs::error("Failed to download mod %s: %s (HTTP %ld)", name.c_str(), curl_easy_strerror(res), httpCode);
             std::filesystem::remove(file_path); // Remove partial file
             mod.download_progress = 0;
             curl_easy_cleanup(curl);
@@ -271,7 +272,7 @@ void mods_toggle(xstring name) {
 }
 
 void mods_remount() {
-    for (auto &it : g_mods.list) {
+    for (auto& it : g_mods.list) {
         if (!it.second.downloaded) {
             continue;
         }
@@ -279,7 +280,7 @@ void mods_remount() {
         if (it.second.enabled) {
             vfs::mount_pack(it.second.path.c_str());
 
-            auto &modpack = g_image_data->pak_list[it.second.useridx];
+            auto& modpack = g_image_data->pak_list[it.second.useridx];
             if (!modpack.handle) {
                 modpack.entries_num = it.second.entries_num;
                 modpack.index = it.second.start_index;
@@ -291,13 +292,13 @@ void mods_remount() {
 
             it.second.fill_entries();
 
-            for (const auto &s: it.second.scripts) {
+            for (const auto& s : it.second.scripts) {
                 js_vm_reload_file(s.c_str());
             }
         } else {
             vfs::umount_pack(it.second.path.c_str());
 
-            auto &modpack = g_image_data->pak_list[it.second.useridx];
+            auto& modpack = g_image_data->pak_list[it.second.useridx];
             if (modpack.handle) {
                 delete modpack.handle;
 
@@ -308,7 +309,7 @@ void mods_remount() {
                 modpack.name = xstring();
             }
 
-            for (const auto &s : it.second.scripts) {
+            for (const auto& s : it.second.scripts) {
                 js_vm_reload_file(s.c_str());
             }
         }
@@ -320,7 +321,7 @@ void mods_remount() {
 void mods_init() {
     g_mods.list.clear();
 
-    auto append_mods = [] (pcstr dir, const dir_listing *files) {
+    auto append_mods = [](pcstr dir, const dir_listing* files) {
         for (int i = 0; i < files->num_files; ++i) {
             bstring128 mod_name_short(files->files[i]);
             mod_name_short.replace_str(".sgx", "");
@@ -329,7 +330,7 @@ void mods_init() {
             xstring mod_name(mod_name_short.c_str());
             auto it = g_mods.list.find(mod_name);
             if (it == g_mods.list.end()) {
-                mod_info &mod = g_mods.list[mod_name];
+                mod_info& mod = g_mods.list[mod_name];
                 mod.path.printf("Mods/%s", files->files[i]);
                 mod.name = mod_name;
                 mod.downloaded = true;
@@ -352,11 +353,11 @@ void mods_init() {
         }
     };
 
-    const dir_listing *sgx_files = vfs::dir_find_files_with_extension("Mods", "sgx");
+    const dir_listing* sgx_files = vfs::dir_find_files_with_extension("Mods", "sgx");
     append_mods("Mods/", sgx_files);
 }
 
-const mod_info &mods_find(xstring hash) {
+const mod_info& mods_find(xstring hash) {
     auto it = g_mods.list.find(hash);
     if (it != g_mods.list.end()) {
         return it->second;
@@ -373,7 +374,7 @@ vfs::path mods_exist_audio(pcstr wav_path) {
 
     vfs::path name_lower(wav_path);
     name_lower.tolower();
-    for (const auto &it : g_mods.list) {
+    for (const auto& it : g_mods.list) {
         if (!it.second.enabled) {
             continue;
         }
@@ -393,7 +394,7 @@ mod_reader mods_find_audio(pcstr wav_path) {
         return {};
     }
 
-    for (const auto &it : g_mods.list) {
+    for (const auto& it : g_mods.list) {
         if (!it.second.enabled) {
             continue;
         }
@@ -405,7 +406,7 @@ mod_reader mods_find_audio(pcstr wav_path) {
         vfs::path mod_audio_path(it.second.path.c_str(), "/", wav_path);
         vfs::reader reader = vfs::file_open(mod_audio_path, "r");
         if (reader) {
-            return { mod_audio_path.c_str(), reader };
+            return {mod_audio_path.c_str(), reader};
         }
     }
 
@@ -417,7 +418,7 @@ mod_reader mods_find_script(pcstr script_path, bool find_in_enabled) {
         return {};
     }
 
-    for (const auto &it : g_mods.list) {
+    for (const auto& it : g_mods.list) {
         if (!it.second.enabled) {
             continue;
         }
@@ -429,7 +430,7 @@ mod_reader mods_find_script(pcstr script_path, bool find_in_enabled) {
         vfs::path mod_script_path(it.second.path.c_str(), "/", script_path);
         vfs::reader reader = vfs::file_open(mod_script_path, "rt");
         if (reader) {
-            return { mod_script_path.c_str(), reader };
+            return {mod_script_path.c_str(), reader};
         }
     }
 
@@ -438,7 +439,7 @@ mod_reader mods_find_script(pcstr script_path, bool find_in_enabled) {
 
 void mods_save() {
     std::string enabled_mods;
-    for (const auto &it : g_mods.list) {
+    for (const auto& it : g_mods.list) {
         if (it.second.enabled) {
             enabled_mods.append(it.first.c_str());
             enabled_mods.append(",");
@@ -455,26 +456,26 @@ void mods_load() {
     string_to_array_t(mod_names, enabled_mods.c_str(), ',');
 
     // Restore enabled status for each mod
-    for (const auto &name : mod_names) {
+    for (const auto& name : mod_names) {
         mods_set_enabled(name.c_str(), true);
     }
 }
 
 #ifdef GAME_HAVE_CURL
 // Callback function for curl to write response data
-static size_t mods_refresh_available_list_cb(void *contents, size_t size, size_t nmemb, std::string *data) {
+static size_t mods_refresh_available_list_cb(void* contents, size_t size, size_t nmemb, std::string* data) {
     size_t totalSize = size * nmemb;
-    data->append((char *)contents, totalSize);
+    data->append((char*)contents, totalSize);
     return totalSize;
 }
 #endif
 
-void mods_refresh_from_remote_repo (pcstr remote_repo) {
+void mods_refresh_from_remote_repo(pcstr remote_repo) {
 #ifdef GAME_HAVE_CURL
     CURLcode res;
     std::string readBuffer;
 
-    CURL *curl = curl_easy_init();
+    CURL* curl = curl_easy_init();
     if (!curl) {
         logs::error("curl_easy_init failed");
         popup_dialog::show_ok("Error", "Failed to initialize HTTP client.");
@@ -488,7 +489,7 @@ void mods_refresh_from_remote_repo (pcstr remote_repo) {
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
     curl_easy_setopt(curl, CURLOPT_USERAGENT, "Akhenaten/1.0");
-    curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 15L);  // Timeout for connection
+    curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 15L); // Timeout for connection
     curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30L);        // Total timeout for the operation
 
     res = curl_easy_perform(curl);
@@ -554,24 +555,24 @@ void mods_refresh_from_remote_repo (pcstr remote_repo) {
             std::string url;
         };
         std::vector<pos_name> namePositions; // position, name
-        std::vector<pos_url> urlPositions;  // position, url
+        std::vector<pos_url> urlPositions;   // position, url
 
         std::sregex_iterator nameIter(readBuffer.begin(), readBuffer.end(), nameRegex);
         for (; nameIter != std::sregex_iterator(); ++nameIter) {
             size_t pos = nameIter->position();
-            namePositions.push_back({ pos, (*nameIter)[1].str() });
+            namePositions.push_back({pos, (*nameIter)[1].str()});
         }
 
         std::sregex_iterator urlIter(readBuffer.begin(), readBuffer.end(), urlRegex);
         for (; urlIter != std::sregex_iterator(); ++urlIter) {
             size_t pos = urlIter->position();
-            urlPositions.push_back({ pos, (*urlIter)[1].str() });
+            urlPositions.push_back({pos, (*urlIter)[1].str()});
         }
 
         // Match each .sgx name with the next download_url after it
-        for (const auto &namePair : namePositions) {
+        for (const auto& namePair : namePositions) {
             // Find the first URL that comes after this name
-            for (const auto &urlPair : urlPositions) {
+            for (const auto& urlPair : urlPositions) {
                 if (urlPair.position > namePair.position) {
                     modMap[namePair.name] = urlPair.url;
                     break;
@@ -586,7 +587,7 @@ void mods_refresh_from_remote_repo (pcstr remote_repo) {
     }
 
     logs::info("Available mods on repo: %s", remote_repo);
-    for (const auto &pair : modMap) {
+    for (const auto& pair : modMap) {
         logs::info("* %s|%s", pair.first.c_str(), pair.second.c_str());
         bstring128 mod_name = pair.first.c_str();
         mod_name.replace_str(".sgx", "");
@@ -594,14 +595,15 @@ void mods_refresh_from_remote_repo (pcstr remote_repo) {
     }
     logs::info("Total: %d mod(s)", modMap.size());
 
-    xstring result; result.printf("Found %zu mods on %s", modMap.size(), remote_repo);
+    xstring result;
+    result.printf("Found %zu mods on %s", modMap.size(), remote_repo);
     popup_dialog::show_ok("Mods", result);
 #endif
 }
 
 void mods_refresh_from_config() {
-    for (const auto &cmod : g_mods_config.mods_list) {
-        auto &mod_info = mods_add_remote_file(cmod.name, cmod.url);
+    for (const auto& cmod : g_mods_config.mods_list) {
+        auto& mod_info = mods_add_remote_file(cmod.name, cmod.url);
         mod_info.desc = cmod.desc;
         mod_info.version = cmod.version;
         mod_info.author = cmod.author;
@@ -621,17 +623,18 @@ void mods_refresh_available_list() {
 
     mods_remount();
 #else
-    popup_dialog::show_ok("Error", "Mods list download not supported on this platform (libcurl was not found at build time).");
+    popup_dialog::show_ok("Error",
+      "Mods list download not supported on this platform (libcurl was not found at build time).");
 #endif
 }
 
 void mod_info::fill_entries() {
     vfs::ZipArchive archive(path.c_str());
     if (archive.isValid()) {
-        const auto &entries = archive.entries();
+        const auto& entries = archive.entries();
         scripts.clear();
         sounds.clear();
-        for (const auto &entry : entries) {
+        for (const auto& entry : entries) {
             if (vfs::file_has_extension(entry.c_str(), "js")) {
                 scripts.push_back(entry.tolower());
             }
