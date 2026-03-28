@@ -41,36 +41,37 @@ namespace ui {
     const xstring element::CHECKEDFN{"checkedfn"};
     const xstring element::ONINPUT{"oninput"};
     const xstring element::ONDRAW{"ondraw"};
+    const xstring element::ONDRAW_EVENT{"ondraw_event"};
+    const xstring element::ONCLICK_EVENT{"onclick_event"};
+    const xstring element::ONDOUBLECLICK_EVENT{"ondoubleclick_event"};
     const xstring element::EMPTY_JS_REF{};
 
     tooltip_context tooltipctx;
 
-    const tooltip_context &get_tooltip() {
+    const tooltip_context& get_tooltip() {
         return tooltipctx;
     }
 
-    void set_tooltip(const xstring &text) {
+    void set_tooltip(const xstring& text) {
         tooltipctx.text = text;
     }
 
     struct universal_button {
-        enum e_btn_type {
-            unknown = -1,
-            generic = 0,
-            image,
-            arrow
-        };
+        enum e_btn_type { unknown = -1, generic = 0, image, arrow };
         e_btn_type type = unknown;
         generic_button g_button;
         image_button i_button;
         arrow_button a_button;
 
-        bool handle_mouse(const mouse *m, vec2i offset) {
+        bool handle_mouse(const mouse* m, vec2i offset) {
             int tmp_btn;
             switch (type) {
-            case generic: return !!generic_buttons_handle_mouse(m, offset, &g_button, 1, &tmp_btn, nullptr);
-            case image: return !!image_buttons_handle_mouse(m, offset, &i_button, 1, &tmp_btn);
-            case arrow: return !!arrow_buttons_handle_mouse(m, &a_button, 1, &tmp_btn);
+            case generic:
+                return !!generic_buttons_handle_mouse(m, offset, &g_button, 1, &tmp_btn, nullptr);
+            case image:
+                return !!image_buttons_handle_mouse(m, offset, &i_button, 1, &tmp_btn);
+            case arrow:
+                return !!arrow_buttons_handle_mouse(m, &a_button, 1, &tmp_btn);
             default:
                 assert(false);
             }
@@ -80,9 +81,12 @@ namespace ui {
 
         pcstr tooltip() const {
             switch (type) {
-            case generic: return g_button._tooltip.c_str();
-            case image: return i_button._tooltip.c_str();
-            case arrow: return a_button._tooltip.c_str();
+            case generic:
+                return g_button._tooltip.c_str();
+            case image:
+                return i_button._tooltip.c_str();
+            case arrow:
+                return a_button._tooltip.c_str();
             default:
                 assert(false);
             }
@@ -92,9 +96,12 @@ namespace ui {
 
         vec2i pos() const {
             switch (type) {
-            case generic: return { g_button.x, g_button.y };
-            case image: return { i_button.x, i_button.y };
-            case arrow: return { a_button.x, a_button.y };
+            case generic:
+                return {g_button.x, g_button.y};
+            case image:
+                return {i_button.x, i_button.y};
+            case arrow:
+                return {a_button.x, a_button.y};
             default:
                 assert(false);
             }
@@ -104,9 +111,12 @@ namespace ui {
 
         vec2i size() const {
             switch (type) {
-            case generic: return g_button.size();
-            case image: return { i_button.width, i_button.height };
-            case arrow: return a_button.size();
+            case generic:
+                return g_button.size();
+            case image:
+                return {i_button.width, i_button.height};
+            case arrow:
+                return a_button.size();
             default:
                 assert(false);
             }
@@ -114,11 +124,18 @@ namespace ui {
             return {0, 0};
         }
 
-        template<class Func> void onclick(Func f) {
+        template <class Func>
+        void onclick(Func f) {
             switch (type) {
-            case generic: g_button.onclick(f); break;
-            case image: i_button.onclick(f); break;
-            case arrow: a_button.onclick(f); break;
+            case generic:
+                g_button.onclick(f);
+                break;
+            case image:
+                i_button.onclick(f);
+                break;
+            case arrow:
+                a_button.onclick(f);
+                break;
             default:
                 assert(false);
             }
@@ -127,28 +144,34 @@ namespace ui {
         universal_button() {}
         ~universal_button() {}
 
-        universal_button(const universal_button &o) {
+        universal_button(const universal_button& o) {
             type = o.type;
             switch (type) {
-            case generic: g_button = o.g_button; break;
-            case image: i_button = o.i_button; break;
-            case arrow: a_button = o.a_button; break;
+            case generic:
+                g_button = o.g_button;
+                break;
+            case image:
+                i_button = o.i_button;
+                break;
+            case arrow:
+                a_button = o.a_button;
+                break;
             default:
                 assert(false);
             }
         }
 
-        universal_button(const generic_button &b) {
+        universal_button(const generic_button& b) {
             type = generic;
             g_button = b;
         }
 
-        universal_button(const image_button &b) {
+        universal_button(const image_button& b) {
             type = image;
             i_button = b;
         }
 
-        universal_button(const arrow_button &b) {
+        universal_button(const arrow_button& b) {
             type = arrow;
             a_button = b;
         }
@@ -176,7 +199,7 @@ namespace ui {
             input_boxes.clear();
         }
 
-        void remove_scrolbar(scrollbar_t *p) {
+        void remove_scrolbar(scrollbar_t* p) {
             auto it = std::find(scrollbars.begin(), scrollbars.end(), p);
             if (it != scrollbars.end()) {
                 scrollbars.erase(it);
@@ -202,7 +225,7 @@ namespace ui {
 
     hvector<cmd_t, 256> g_ui_commands;
 
-    void push_cmd(cmd_t &&cmd) {
+    void push_cmd(cmd_t&& cmd) {
         g_ui_commands.push_back(std::move(cmd));
     }
 
@@ -220,7 +243,7 @@ namespace ui {
         }
     }
 
-    void execute_ui_command(painter &ctx, const cmd_t &cmd) {
+    void execute_ui_command(painter& ctx, const cmd_t& cmd) {
         switch (cmd.type) {
         case cmd_t::image:
             ctx.img_generic(cmd.image_id, cmd.pos, cmd.mask, cmd.scale, cmd.img_flags);
@@ -276,8 +299,7 @@ namespace ui {
             }
             break;
 
-        case cmd_t::text_rich:
-        {
+        case cmd_t::text_rich: {
             rich_text_t rich_text;
             rich_text.set_fonts(cmd.font, FONT_NORMAL_YELLOW);
             const bool centered = !!(cmd.flags & UiFlags_AlignCentered);
@@ -305,11 +327,11 @@ namespace ui {
             graphics_shade_rect(cmd.pos, cmd.size, cmd.image_id);
             break;
 
-        case cmd_t::large_label:
-        {
+        case cmd_t::large_label: {
             large_label_draw(cmd.pos.x, cmd.pos.y, cmd.box_width, cmd.image_id);
             const int letter_height = font_definition_for(cmd.font)->line_height;
-            text_draw_centered((uint8_t *)cmd.str.c_str(), cmd.pos.x + 1, cmd.pos.y + (cmd.size.y - letter_height) / 2, cmd.size.x, cmd.font, 0);
+            text_draw_centered((uint8_t*)cmd.str.c_str(), cmd.pos.x + 1, cmd.pos.y + (cmd.size.y - letter_height) / 2,
+              cmd.size.x, cmd.font, 0);
             break;
         }
 
@@ -317,7 +339,7 @@ namespace ui {
             if (cmd.rt) {
                 cmd.rt->draw(cmd.str.c_str(), cmd.pos, cmd.box_width, cmd.size.y, false);
                 if (!(cmd.flags & UiFlags_NoScroll)) {
-                    cmd.rt->draw_scrollbar(vec2i{ -16, 0 });
+                    cmd.rt->draw_scrollbar(vec2i{-16, 0});
                 }
             }
             break;
@@ -349,10 +371,10 @@ namespace ui {
             break;
         }
     }
-}
+} // namespace ui
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_ui_options) {
-    g_config_arch.r_section("uioptions", [] (archive arch) {
+    g_config_arch.r_section("uioptions", [](archive arch) {
         arch.r_desc("resource_icons", ui::resource_icons);
         arch.r_desc("advisor_icons", ui::advisor_icons);
     });
@@ -362,22 +384,54 @@ static ui::element::ptr create_element(const xstring type) {
     ui::element::ptr elm;
 #define _ crc32_str
     switch (type.crc()) {
-    case _("outer_panel"): elm = std::make_shared<ui::eouter_panel>(); break;
-    case _("scrollbar"): elm = std::make_shared<ui::escrollbar>(); break;
-    case _("scrollable_list"): elm = std::make_shared<ui::escrollable_list>(); break;
-    case _("menu_header"): elm = std::make_shared<ui::emenu_header>(); break;
-    case _("inner_panel"): elm = std::make_shared<ui::einner_panel>(); break;
-    case _("background"):  elm = std::make_shared<ui::ebackground>(); break;
-    case _("image"): elm = std::make_shared<ui::eimg>(); break;
-    case _("label"): elm = std::make_shared<ui::elabel>(); break;
-    case _("text"):  elm = ui::etext::acquire(); break;
-    case _("generic_button"): elm = std::make_shared<ui::egeneric_button>(); break;
-    case _("checkbox"): elm = std::make_shared<ui::echeckbox>(); break;
-    case _("image_button"): elm = std::make_shared<ui::eimage_button>(); break;
-    case _("resource_icon"): elm = std::make_shared<ui::eresource_icon>(); break;
-    case _("arrow_button"): elm = std::make_shared<ui::earrow_button>(); break;
-    case _("border"): elm = std::make_shared<ui::eborder>(); break;
-    case _("input"): elm = std::make_shared<ui::einput>(); break;
+    case _("outer_panel"):
+        elm = std::make_shared<ui::eouter_panel>();
+        break;
+    case _("scrollbar"):
+        elm = std::make_shared<ui::escrollbar>();
+        break;
+    case _("scrollable_list"):
+        elm = std::make_shared<ui::escrollable_list>();
+        break;
+    case _("menu_header"):
+        elm = std::make_shared<ui::emenu_header>();
+        break;
+    case _("inner_panel"):
+        elm = std::make_shared<ui::einner_panel>();
+        break;
+    case _("background"):
+        elm = std::make_shared<ui::ebackground>();
+        break;
+    case _("image"):
+        elm = std::make_shared<ui::eimg>();
+        break;
+    case _("label"):
+        elm = std::make_shared<ui::elabel>();
+        break;
+    case _("text"):
+        elm = ui::etext::acquire();
+        break;
+    case _("generic_button"):
+        elm = std::make_shared<ui::egeneric_button>();
+        break;
+    case _("checkbox"):
+        elm = std::make_shared<ui::echeckbox>();
+        break;
+    case _("image_button"):
+        elm = std::make_shared<ui::eimage_button>();
+        break;
+    case _("resource_icon"):
+        elm = std::make_shared<ui::eresource_icon>();
+        break;
+    case _("arrow_button"):
+        elm = std::make_shared<ui::earrow_button>();
+        break;
+    case _("border"):
+        elm = std::make_shared<ui::eborder>();
+        break;
+    case _("input"):
+        elm = std::make_shared<ui::einput>();
+        break;
     case _("large_button"):
         auto btn = std::make_shared<ui::egeneric_button>();
         btn->mode = 1;
@@ -387,11 +441,11 @@ static ui::element::ptr create_element(const xstring type) {
     return elm;
 }
 
-void ui_widget_load_elements(archive arch, pcstr section, ui::element *parent, ui::element::items &elements) {
+void ui_widget_load_elements(archive arch, pcstr section, ui::element* parent, ui::element::items& elements) {
     e_font default_font = arch.r_type<e_font>("default_font", FONT_INVALID);
 
     const int last_index = elements.size();
-    arch.r_objects(section, [&elements, parent] (pcstr key, archive elem) {
+    arch.r_objects(section, [&elements, parent](pcstr key, archive elem) {
         const xstring type = elem.r_string("type");
         ui::element::ptr elm = create_element(type);
 
@@ -453,7 +507,7 @@ vec2i ui::current_offset() {
 void ui::begin_frame() {
     text_cursor_consume_capture();
     assert(g_state.buttons.size() < 1000);
-    //assert(g_state._offset.size() == 0);
+    // assert(g_state._offset.size() == 0);
     g_state.reset();
     g_ui_commands.clear();
     tooltipctx.set(0, "");
@@ -461,7 +515,6 @@ void ui::begin_frame() {
 
 
 void ui::end_frame() {
-
 }
 
 void ui::flush_commands() {
@@ -494,7 +547,7 @@ void ui::dispatch_autoconfig_es_event(widget* root, xstring sub_event, const bva
     root->event(ev, payload);
 }
 
-bool ui::handle_mouse(const mouse *m) {
+bool ui::handle_mouse(const mouse* m) {
     bool handle = false;
     for (int i = g_state.buttons.size() - 1; i >= 0 && !handle; --i) {
         handle |= !!g_state.buttons[i].handle_mouse(m, g_state.offset());
@@ -546,8 +599,8 @@ pcstr ui::resource_name(e_resource r) {
     return (pcstr)lang_get_string(23, r);
 }
 
-int ui::button_hover(const mouse *m) {
-    for (auto &btn : g_state.buttons) {
+int ui::button_hover(const mouse* m) {
+    for (auto& btn : g_state.buttons) {
         if (is_button_hover(btn, g_state.offset())) {
             return (std::distance(&g_state.buttons.front(), &btn) + 1);
         }
@@ -556,14 +609,15 @@ int ui::button_hover(const mouse *m) {
     return 0;
 }
 
-generic_button &ui::link(pcstr label, vec2i pos, vec2i size, e_font font, UiFlags flags, button_onclick_cb cb) {
+generic_button& ui::link(pcstr label, vec2i pos, vec2i size, e_font font, UiFlags flags, button_onclick_cb cb) {
     const vec2i offset = g_state.offset();
 
     g_state.buttons.push_back(generic_button{pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
-    auto &gbutton = g_state.buttons.back().g_button;
+    auto& gbutton = g_state.buttons.back().g_button;
     int focused = is_button_hover(gbutton, offset);
 
-    text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y, size.x, focused ? FONT_NORMAL_YELLOW : font, 0);
+    text_draw_centered((uint8_t*)label, offset.x + pos.x + 1, offset.y + pos.y, size.x,
+      focused ? FONT_NORMAL_YELLOW : font, 0);
 
     if (!!cb) {
         gbutton.onclick(cb);
@@ -571,8 +625,8 @@ generic_button &ui::link(pcstr label, vec2i pos, vec2i size, e_font font, UiFlag
     return gbutton;
 }
 
-template<typename T>
-void splitStringByNewline(const std::string &str, T &result) {
+template <typename T>
+void splitStringByNewline(const std::string& str, T& result) {
     size_t start = 0;
     size_t end = str.find('\n');
 
@@ -585,7 +639,7 @@ void splitStringByNewline(const std::string &str, T &result) {
     result.push_back(str.substr(start));
 }
 
-generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, UiFlags flags, button_onclick_cb cb) {
+generic_button& ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, UiFlags flags, button_onclick_cb cb) {
     const bool darkened = !!(flags & UiFlags_Darkened);
     const bool hasbody = !(flags & UiFlags_NoBody);
     const bool hasborder = !(flags & UiFlags_NoBorder);
@@ -599,25 +653,27 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
 
     const vec2i offset = g_state.offset();
 
-    g_state.buttons.push_back(generic_button{ pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0 });
-    generic_button &gbutton = g_state.buttons.back().g_button;
+    g_state.buttons.push_back(generic_button{pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
+    generic_button& gbutton = g_state.buttons.back().g_button;
     gbutton.hovered = (is_button_hover(gbutton, offset) || selected) && !readonly;
     gbutton.clip = graphics_clip_rectangle();
 
     if (small_panel) {
-        push(cmd_t::small_panel, Pos{offset + pos}, BoxWidth{size.x / 16}, ImageId{gbutton.hovered ? 1 : 2}, Mask{darkened ? 0xffe0e0e0u : 0xffffffffu});
+        push(cmd_t::small_panel, Pos{offset + pos}, BoxWidth{size.x / 16}, ImageId{gbutton.hovered ? 1 : 2},
+          Mask{darkened ? 0xffe0e0e0u : 0xffffffffu});
     } else if (hasbody) {
         if (thinborder) {
             push(cmd_t::draw_rect, Pos{offset + pos}, Size{size}, TextColor{0xff00000});
         } else {
-            push(cmd_t::button_border, Pos{offset + pos}, Size{size}, ImgFlagsTag{((gbutton.hovered && !darkened) ? ImgFlag_Alpha : ImgFlag_None)});
+            push(cmd_t::button_border, Pos{offset + pos}, Size{size},
+              ImgFlagsTag{((gbutton.hovered && !darkened) ? ImgFlag_Alpha : ImgFlag_None)});
         }
     } else if (hasborder) {
         if (gbutton.hovered && !darkened) {
             if (thinborder) {
                 push(cmd_t::draw_rect, Pos{offset + pos}, Size{size}, TextColor{0xff000000});
             } else {
-                push(cmd_t::button_border, Pos{offset + pos}, Size{size}, ImgFlagsTag{ ImgFlag_Alpha });
+                push(cmd_t::button_border, Pos{offset + pos}, Size{size}, ImgFlagsTag{ImgFlag_Alpha});
             }
         }
     }
@@ -635,8 +691,9 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
         int labels_num = labels.size();
         int starty = offset.y + pos.y + (size.y - (symbolh + 2) * labels_num) / 2 + 4;
 
-        for (const auto &str : labels) {
-            push(alingxcenter ? cmd_t::text_centered : cmd_t::text, Font{font}, Caption{str.c_str()}, Pos{vec2i{offset.x + pos.x + (alingxcenter ? 1 : 8), starty}}, BoxWidth{alingxcenter ? size.x : 0});
+        for (const auto& str : labels) {
+            push(alingxcenter ? cmd_t::text_centered : cmd_t::text, Font{font}, Caption{str.c_str()},
+              Pos{vec2i{offset.x + pos.x + (alingxcenter ? 1 : 8), starty}}, BoxWidth{alingxcenter ? size.x : 0});
             starty += symbolh + 2;
         }
     } else if (label) {
@@ -646,23 +703,25 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
             int symbolw = text_get_width("H", font);
             int lines_num = std::max<int>(1, (int)strlen(label) * symbolw / size.x);
             int centering_y_offset = (size.y - lines_num * symbolh) / 2;
-            push(cmd_t::text_rich, Font{font}, Caption{label}, Pos{offset + pos + vec2i(0, centering_y_offset)}, BoxWidth{size.x}, Size{vec2i(0, lines_num)}, Flags{(UiFlags)UiFlags_AlignCentered});
+            push(cmd_t::text_rich, Font{font}, Caption{label}, Pos{offset + pos + vec2i(0, centering_y_offset)},
+              BoxWidth{size.x}, Size{vec2i(0, lines_num)}, Flags{(UiFlags)UiFlags_AlignCentered});
         } else {
             const bool left_aligned = alingycenter || alignleft;
             vec2i txt_pos;
             int bw = 0;
             if (alingycenter) {
-                txt_pos = { offset.x + pos.x + 8, offset.y + pos.y + (size.y - symbolh) / 2 + 2 };
+                txt_pos = {offset.x + pos.x + 8, offset.y + pos.y + (size.y - symbolh) / 2 + 2};
             } else if (alignleft) {
-                txt_pos = { offset.x + pos.x + 8, offset.y + pos.y + 8 };
+                txt_pos = {offset.x + pos.x + 8, offset.y + pos.y + 8};
             } else if (alingxcenter) {
-                txt_pos = { offset.x + pos.x + 1, offset.y + pos.y + 4 };
+                txt_pos = {offset.x + pos.x + 1, offset.y + pos.y + 4};
                 bw = size.x;
             } else {
-                txt_pos = { offset.x + pos.x + 1, offset.y + pos.y + (size.y - symbolh) / 2 };
+                txt_pos = {offset.x + pos.x + 1, offset.y + pos.y + (size.y - symbolh) / 2};
                 bw = size.x;
             }
-            push(left_aligned ? cmd_t::text : cmd_t::text_centered, Font{font}, Caption{label}, Pos{txt_pos}, BoxWidth{bw});
+            push(left_aligned ? cmd_t::text : cmd_t::text_centered, Font{font}, Caption{label}, Pos{txt_pos},
+              BoxWidth{bw});
         }
     }
 
@@ -676,19 +735,20 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
     return gbutton;
 }
 
-generic_button &ui::large_button(pcstr label, vec2i pos, vec2i size, e_font font) {
+generic_button& ui::large_button(pcstr label, vec2i pos, vec2i size, e_font font) {
     const vec2i offset = g_state.offset();
 
     g_state.buttons.push_back(generic_button{pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
-    auto &gbutton = g_state.buttons.back().g_button;
+    auto& gbutton = g_state.buttons.back().g_button;
     int focused = is_button_hover(gbutton, offset);
 
-    push(cmd_t::large_label, Pos{offset + pos}, Size{size}, BoxWidth{size.x / 16}, ImageId{focused ? 1 : 0}, Font{font}, Caption{label});
+    push(cmd_t::large_label, Pos{offset + pos}, Size{size}, BoxWidth{size.x / 16}, ImageId{focused ? 1 : 0}, Font{font},
+      Caption{label});
 
     return gbutton;
 }
 
-generic_button &ui::button(uint32_t id) {
+generic_button& ui::button(uint32_t id) {
     return (id < g_state.buttons.size()) ? g_state.buttons[id].g_button : dummy;
 }
 
@@ -696,12 +756,13 @@ pcstr ui::button_tooltip(uint32_t id) {
     return (id < g_state.buttons.size()) ? g_state.buttons[id].tooltip() : "";
 }
 
-image_button &ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_button_offsets offsets, UiFlags flags) {
+image_button& ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_button_offsets offsets, UiFlags flags) {
     const vec2i state_offset = g_state.offset();
     const mouse& m = mouse::get();
 
-    g_state.buttons.push_back(image_button{pos.x, pos.y, size.x + 4, size.y + 4, IB_NORMAL, (uint32_t)desc.pack, (uint32_t)desc.id, offsets.data[0], button_none, button_none, 0, 0, true});
-    auto &ibutton = g_state.buttons.back().i_button;
+    g_state.buttons.push_back(image_button{pos.x, pos.y, size.x + 4, size.y + 4, IB_NORMAL, (uint32_t)desc.pack,
+      (uint32_t)desc.id, offsets.data[0], button_none, button_none, 0, 0, true});
+    auto& ibutton = g_state.buttons.back().i_button;
 
     const bool grayscaled = !!(flags & UiFlags_Grayscale);
     const bool darkened = !!(flags & UiFlags_Darkened);
@@ -721,27 +782,27 @@ image_button &ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_b
     int image_id = image_id_from_group(ibutton.image_collection, ibutton.image_group) + ibutton.image_offset;
     if (image_id > 0) {
         if (ibutton.enabled) {
-            const int offset = (ibutton.pressed || force_pressed) ? 2 :
-                               ibutton.hovered ? 1 : 0;
+            const int offset = (ibutton.pressed || force_pressed) ? 2 : ibutton.hovered ? 1 : 0;
             image_id += offset ? offsets.data[offset] : 0;
         } else {
             image_id += offsets.data[3];
         }
 
-        push(cmd_t::image, Pos{state_offset + pos}, ImageId{image_id}, Mask{COLOR_WHITE}, Scale{1.0f}, ImgFlagsTag{grayscaled ? ImgFlag_Grayscale : ImgFlag_None});
+        push(cmd_t::image, Pos{state_offset + pos}, ImageId{image_id}, Mask{COLOR_WHITE}, Scale{1.0f},
+          ImgFlagsTag{grayscaled ? ImgFlag_Grayscale : ImgFlag_None});
     }
 
     return ibutton;
 }
 
-image_button &ui::imgok_button(vec2i pos, ui::button_onclick_cb cb) {
-    auto &btn = img_button({ PACK_GENERAL, 96 }, pos, { 39, 26 });
+image_button& ui::imgok_button(vec2i pos, ui::button_onclick_cb cb) {
+    auto& btn = img_button({PACK_GENERAL, 96}, pos, {39, 26});
     btn.onclick(cb);
     return btn;
 }
 
-image_button &ui::imgcancel_button(vec2i pos, ui::button_onclick_cb cb) {
-    auto &btn = img_button({ PACK_GENERAL, 96 }, pos, { 39, 26 }, { 4, 1, 2, 3 });
+image_button& ui::imgcancel_button(vec2i pos, ui::button_onclick_cb cb) {
+    auto& btn = img_button({PACK_GENERAL, 96}, pos, {39, 26}, {4, 1, 2, 3});
     btn.onclick(cb);
     return btn;
 }
@@ -754,7 +815,8 @@ int ui::label(int group, int number, vec2i pos, e_font font, UiFlags flags, int 
 int ui::label(pcstr label, vec2i pos, e_font font, UiFlags flags, int box_width) {
     const vec2i offset = g_state.offset();
     if (!!(flags & UiFlags_AlignCentered)) {
-        push(cmd_t::text_centered, Pos{offset + pos}, Font{font}, Flags{flags}, BoxWidth{box_width}, Caption{label ? label : ""});
+        push(cmd_t::text_centered, Pos{offset + pos}, Font{font}, Flags{flags}, BoxWidth{box_width},
+          Caption{label ? label : ""});
         return box_width;
     } else if (!!(flags & UiFlags_LabelMultiline)) {
         // keep immediate: returns line count, complex to measure ahead of time
@@ -762,11 +824,13 @@ int ui::label(pcstr label, vec2i pos, e_font font, UiFlags flags, int box_width)
     } else if (!!(flags & UiFlags_Rich)) {
         rich_text_t rich_text;
         rich_text.set_fonts(font, FONT_NORMAL_YELLOW);
-        const int measured = rich_text.draw(label, offset + pos, box_width, 10, /*measure_only*/true);
-        push(cmd_t::text_rich, Pos{offset + pos}, Font{font}, BoxWidth{box_width}, Size{vec2i(0, 10)}, Caption{label ? label : ""});
+        const int measured = rich_text.draw(label, offset + pos, box_width, 10, /*measure_only*/ true);
+        push(cmd_t::text_rich, Pos{offset + pos}, Font{font}, BoxWidth{box_width}, Size{vec2i(0, 10)},
+          Caption{label ? label : ""});
         return measured;
     } else {
-        push(cmd_t::text, Pos{offset + pos}, Font{font}, Flags{flags}, BoxWidth{box_width}, Caption{label ? label : ""});
+        push(cmd_t::text, Pos{offset + pos}, Font{font}, Flags{flags}, BoxWidth{box_width},
+          Caption{label ? label : ""});
         return text_get_width(label, font);
     }
 }
@@ -784,23 +848,25 @@ int ui::label_percent(int amount, vec2i pos, e_font font) {
 int ui::label_colored(textid tx, vec2i pos, e_font font, color color, int box_width) {
     const vec2i offset = g_state.offset();
     pcstr str = lang_get_string(tx);
-    push(cmd_t::text_colored, Pos{offset + pos}, Font{font}, TextColor{color}, BoxWidth{box_width}, Caption{str ? str : ""});
+    push(cmd_t::text_colored, Pos{offset + pos}, Font{font}, TextColor{color}, BoxWidth{box_width},
+      Caption{str ? str : ""});
     return box_width > 0 ? box_width : text_get_width(str, font);
 }
 
 int ui::label_colored(pcstr tx, vec2i pos, e_font font, color color, int box_width) {
     const vec2i offset = g_state.offset();
-    push(cmd_t::text_colored, Pos{offset + pos}, Font{font}, TextColor{color}, BoxWidth{box_width}, Caption{tx ? tx : ""});
+    push(cmd_t::text_colored, Pos{offset + pos}, Font{font}, TextColor{color}, BoxWidth{box_width},
+      Caption{tx ? tx : ""});
     return box_width > 0 ? box_width : text_get_width(tx, font);
 }
 
-const image_t *ui::eimage(int imgid, vec2i pos) {
+const image_t* ui::eimage(int imgid, vec2i pos) {
     const vec2i offset = g_state.offset();
     push(cmd_t::image, Pos{pos + offset}, ImageId{imgid});
     return image_get(imgid);
 }
 
-const image_t *ui::eimage(image_desc imgd, vec2i pos) {
+const image_t* ui::eimage(image_desc imgd, vec2i pos) {
     const vec2i offset = g_state.offset();
     const int tid = imgd.tid();
     push(cmd_t::image, Pos{pos + offset}, ImageId{tid});
@@ -861,7 +927,7 @@ void ui::icon(vec2i pos, e_resource res, UiFlags flags) {
     const int image_id = image_id_resource_icon(res);
     push(cmd_t::image, Pos{offset + pos}, ImageId{image_id});
     if (!!(flags & UiFlags_Outline)) {
-        const image_t *img = image_get(image_id);
+        const image_t* img = image_get(image_id);
         ui::draw_rect(pos - vec2i{1, 1}, vec2i{img->width, img->height} + vec2i{2, 2}, COLOR_BLACK);
     }
 }
@@ -871,15 +937,16 @@ void ui::icon(vec2i pos, e_advisor adv) {
     push(cmd_t::image, Pos{offset + pos}, ImageId{advisor_icons.tid() + (adv - 1)});
 }
 
-arrow_button &ui::arw_button(vec2i pos, bool down, bool tiny, UiFlags_ flags) {
+arrow_button& ui::arw_button(vec2i pos, bool down, bool tiny, UiFlags_ flags) {
     const vec2i offset = g_state.offset();
     const mouse& m = mouse::get();
 
     int size = tiny ? 17 : 24;
     g_state.buttons.push_back(arrow_button{offset.x + pos.x, offset.y + pos.y, -1, size, button_none, 0, 0});
-    auto &abutton = g_state.buttons.back().a_button;
+    auto& abutton = g_state.buttons.back().a_button;
 
-    const bool hovered = !(flags & UiFlags_Darkened) && (is_button_hover(abutton, {0, 0}) || !!(flags & UiFlags_Selected));
+    const bool hovered
+      = !(flags & UiFlags_Darkened) && (is_button_hover(abutton, {0, 0}) || !!(flags & UiFlags_Selected));
     abutton.pressed = hovered && m.left.is_down;
     abutton.state = (hovered ? (abutton.pressed ? 2 : 1) : 0);
     abutton.state |= (down ? 0x10 : 0);
@@ -888,13 +955,13 @@ arrow_button &ui::arw_button(vec2i pos, bool down, bool tiny, UiFlags_ flags) {
     const bool darkened = !!(flags & UiFlags_Darkened);
 
     if (darkened) {
-        graphics_shade_rect(pos, vec2i{ size, size }, 0x80);
+        graphics_shade_rect(pos, vec2i{size, size}, 0x80);
     }
 
     return abutton;
 }
 
-scrollbar_t &ui::scrollbar(scrollbar_t &scr, vec2i pos, int &value, vec2i size) {
+scrollbar_t& ui::scrollbar(scrollbar_t& scr, vec2i pos, int& value, vec2i size) {
     const vec2i offset = g_state.offset();
 
     g_state.scrollbars.push_back(&scr);
@@ -903,25 +970,21 @@ scrollbar_t &ui::scrollbar(scrollbar_t &scr, vec2i pos, int &value, vec2i size) 
     return scr;
 }
 
-xstring ui_element_props[] = { "text", "enabled", "readonly", "font", "text_color", "image", "selected", "tooltip", "onclick", "textfn", "ondraw" };
+xstring ui_element_props[] = {"text", "enabled", "readonly", "font", "text_color", "image", "selected", "tooltip",
+  "onclick", "textfn", "ondraw", "ondraw_event"};
 xspan<xstring> ui::element::prop_names() const {
     return make_span(ui_element_props);
 }
 
 ui::element::~element() {
-    for (auto &kv : _js_refs) {
-        if (!kv.second.empty()) {
-            js_unref_function(kv.second);
-        }
-    }
     _js_refs.clear();
 }
 
 void ui::element::invoke_draw_callbacks(UiFlags flags) {
+    const vec2i sp = screen_pos();
+    const vec2i psz = pxsize();
     const xstring& js = js_ref(ONDRAW);
     if (!js.empty()) {
-        const vec2i sp = screen_pos();
-        const vec2i psz = pxsize();
         bvariant_map::scoped m;
         (*m)["x"] = (int32_t)sp.x;
         (*m)["y"] = (int32_t)sp.y;
@@ -930,12 +993,26 @@ void ui::element::invoke_draw_callbacks(UiFlags flags) {
         (*m)["flags"] = (int32_t)flags;
         (*m)["id"] = bvariant(id.c_str());
         js_call_function(js, *m);
-    } else if (_draw_callback) {
+    }
+
+    const xstring& ondraw_event = event_name(ONDRAW_EVENT);
+    if (!ondraw_event.empty()) {
+        bvariant_map::scoped m;
+        (*m)["x"] = (int32_t)sp.x;
+        (*m)["y"] = (int32_t)sp.y;
+        (*m)["sizex"] = (int32_t)psz.x;
+        (*m)["sizey"] = (int32_t)psz.y;
+        (*m)["flags"] = (int32_t)flags;
+        (*m)["id"] = bvariant(id.c_str());
+        dispatch_autoconfig_es_event(get_current_widget(), ondraw_event, *m);
+    }
+
+    if (_draw_callback) {
         _draw_callback(this, flags);
     }
 }
 
-void ui::element::set_ref(const xstring &key, const xstring &ref) {
+void ui::element::set_ref(const xstring& key, const xstring& ref) {
     auto it = _js_refs.find(key);
     xstring old;
     if (it != _js_refs.end()) {
@@ -943,9 +1020,6 @@ void ui::element::set_ref(const xstring &key, const xstring &ref) {
     }
     if (ref == old) {
         return;
-    }
-    if (!old.empty()) {
-        js_unref_function(old);
     }
     if (ref.empty()) {
         if (it != _js_refs.end()) {
@@ -958,7 +1032,7 @@ void ui::element::set_ref(const xstring &key, const xstring &ref) {
     }
 }
 
-const xstring &ui::element::js_ref(const xstring &key) const {
+const xstring& ui::element::js_ref(const xstring& key) const {
     auto it = _js_refs.find(key);
     if (it == _js_refs.end()) {
         return EMPTY_JS_REF;
@@ -966,16 +1040,30 @@ const xstring &ui::element::js_ref(const xstring &key) const {
     return it->second;
 }
 
-void ui::element::load(archive arch, element *parent, element::items &items) {
+void ui::element::set_event(const xstring& key, const xstring& ref) {
+    _events[key] = ref;    
+}
+
+
+const xstring& ui::element::event_name(const xstring& kind) const {
+    auto it = _events.find(kind);
+    if (it == _events.end()) {
+        return EMPTY_JS_REF;
+    }
+    return it->second;
+}
+
+void ui::element::load(archive arch, element* parent, element::items& items) {
     debug_tag = arch.r_int("debug_tag");
     parent_id = parent ? parent->id : xstring();
     pos = arch.r_vec2i("pos");
     size = arch.r_size2i("size");
+    set_event(ONDRAW_EVENT, arch.r_string(ONDRAW_EVENT));
     enabled = arch.r_bool("enabled", true);
     fill_width = arch.r_bool("fill_width", false);
     fill_height = arch.r_bool("fill_height", false);
 
-    arch.r_section("margin", [this] (archive m) {
+    arch.r_section("margin", [this](archive m) {
         margin.bottom = m.r_int("bottom", margini::nomargin);
         margin.left = m.r_int("left", margini::nomargin);
         margin.right = m.r_int("right", margini::nomargin);
@@ -992,13 +1080,25 @@ pcstr ui::element::text_from_key(pcstr key) {
     return lang_text_from_key(key);
 }
 
-void ui::element::update_pos(const margini &r) {
-    if (margin.left > margini::nomargin) { pos.x = r.left + margin.left; }
-    if (margin.bottom > margini::nomargin) { pos.y = r.bottom + margin.bottom; }
-    if (margin.right > margini::nomargin) { pos.x = r.right + margin.right; }
-    if (margin.top > margini::nomargin) { pos.y = r.top + margin.top; }
-    if (margin.centerx > margini::nomargin) { pos.x = (r.right - r.left) / 2 + margin.centerx; }
-    if (margin.centery > margini::nomargin) { pos.y = (r.bottom - r.top) / 2 + margin.centery; }
+void ui::element::update_pos(const margini& r) {
+    if (margin.left > margini::nomargin) {
+        pos.x = r.left + margin.left;
+    }
+    if (margin.bottom > margini::nomargin) {
+        pos.y = r.bottom + margin.bottom;
+    }
+    if (margin.right > margini::nomargin) {
+        pos.x = r.right + margin.right;
+    }
+    if (margin.top > margini::nomargin) {
+        pos.y = r.top + margin.top;
+    }
+    if (margin.centerx > margini::nomargin) {
+        pos.x = (r.right - r.left) / 2 + margin.centerx;
+    }
+    if (margin.centery > margini::nomargin) {
+        pos.y = (r.bottom - r.top) / 2 + margin.centery;
+    }
 }
 
 vec2i ui::element::screen_pos() const {
@@ -1010,7 +1110,7 @@ void ui::eouter_panel::draw(UiFlags flags) {
     ui::panel(pos, size, UiFlags_PanelOuter);
 }
 
-void ui::eouter_panel::load(archive arch, element *parent, items &elems) {
+void ui::eouter_panel::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
 
     pcstr type = arch.r_string("type");
@@ -1021,7 +1121,7 @@ void ui::einner_panel::draw(UiFlags flags) {
     ui::panel(pos, size, UiFlags_PanelInner);
 }
 
-void ui::einner_panel::load(archive arch, element *parent, items &elems) {
+void ui::einner_panel::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
 
     pcstr type = arch.r_string("type");
@@ -1030,21 +1130,21 @@ void ui::einner_panel::load(archive arch, element *parent, items &elems) {
 
 void ui::widget::draw(UiFlags flags) {
     vec2i bsize = ui["background"].pxsize();
-    for (auto &e : elements) {
+    for (auto& e : elements) {
         if (!e->enabled) {
             continue;
         }
 
-        margini current_margin{ 0, 0, bsize.x, bsize.y };
-        vec2i poffset = { 0, 0 };
+        margini current_margin{0, 0, bsize.x, bsize.y};
+        vec2i poffset = {0, 0};
         bool use_poffset = false;
         if (!e->parent_id.empty()) {
-            const auto &parent = ui[e->parent_id];
+            const auto& parent = ui[e->parent_id];
             const vec2i ebsize = parent.pxsize();
-            const vec2i top_offset = g_state._offset.empty() ? vec2i{ 0, 0 } : g_state._offset.top();
+            const vec2i top_offset = g_state._offset.empty() ? vec2i{0, 0} : g_state._offset.top();
             poffset = top_offset + parent.pos;
             use_poffset = true;
-            current_margin = { 0, 0, ebsize.x, ebsize.y };
+            current_margin = {0, 0, ebsize.x, ebsize.y};
         }
 
         e->update_pos(current_margin);
@@ -1052,7 +1152,7 @@ void ui::widget::draw(UiFlags flags) {
             g_state._offset.push(poffset);
         }
 
-        e->draw(flags);   
+        e->draw(flags);
 
         if (use_poffset) {
             g_state._offset.pop();
@@ -1067,7 +1167,7 @@ void ui::widget::archive_load(archive arch) {
 
     ui_widget_load_elements(arch, "ui", nullptr, elements);
 
-    for (auto &e:  elements) {
+    for (auto& e : elements) {
         if (e->font() == FONT_INVALID) {
             e->font(default_font);
         }
@@ -1079,31 +1179,32 @@ void ui::widget::load(xstring section) {
     g_config_arch.r(section.c_str(), *this);
 }
 
-bool ui::widget::contains(const xstring &id) const {
-    auto it = std::find_if(elements.begin(), elements.end(), [xid = xstring(id)] (const auto &e) { return e->id == xid; });
+bool ui::widget::contains(const xstring& id) const {
+    auto it
+      = std::find_if(elements.begin(), elements.end(), [xid = xstring(id)](const auto& e) { return e->id == xid; });
     return (it != elements.end());
 }
 
 ui::element& ui::widget::operator[](const xstring& id) {
-    auto it = std::find_if(elements.begin(), elements.end(), [xid = id] (const auto &e) { return e->id == xid; });
+    auto it = std::find_if(elements.begin(), elements.end(), [xid = id](const auto& e) { return e->id == xid; });
     if (check_errors && it == elements.end()) {
         logs::error("No element with id:%s", id.c_str());
     }
     return (it != elements.end() ? **it : ui::dummy_element);
 }
 
-void ui::widget::event(xstring evname, const bvariant_map &js_j) {
+void ui::widget::event(xstring evname, const bvariant_map& js_j) {
     OZZY_PROFILER_SECTION(_, evname.c_str())
 
     const bool pushed_current_layer = push_widget(this);
 
     bvariant_map::scoped enhanced_js_j_scoped;
-    bvariant_map &enhanced_js_j = *enhanced_js_j_scoped;
+    bvariant_map& enhanced_js_j = *enhanced_js_j_scoped;
 
     {
         OZZY_PROFILER_SECTION(_, "prepare table")
         enhanced_js_j = js_j;
-        for (const auto &elem : elements) {
+        for (const auto& elem : elements) {
             if (!elem->id.empty()) {
                 bstring64 elmid("__ui_elem_", elem->id.c_str());
                 bstring64 elmkey("__ui_elem:", elem->id.c_str());
@@ -1136,7 +1237,7 @@ void ui::widget::set_clip_rectangle(vec2i pos, vec2i size) {
     graphics_set_clip_rectangle(pos + offset, size);
 }
 
-void ui::widget::set_clip_rectangle(const element &e) {
+void ui::widget::set_clip_rectangle(const element& e) {
     const vec2i offset = g_state.offset();
     graphics_set_clip_rectangle(e.pos + offset, e.pxsize());
 }
@@ -1162,9 +1263,9 @@ void ui::eimg::draw(UiFlags flags) {
     } else {
         vec2i rpos = pos;
         if (centering.x > -1000 || centering.y > -1000) {
-            const image_t *img = image_get(img_desc);
+            const image_t* img = image_get(img_desc);
             if (img) {
-                const vec2i psize = pxsize();  
+                const vec2i psize = pxsize();
                 rpos.x += (centering.x > -1000) ? ((psize.x - img->width) / 2 + centering.x) : 0;
                 rpos.y += (centering.y > -1000) ? ((psize.y - img->height) / 2 + centering.y) : 0;
             }
@@ -1173,7 +1274,7 @@ void ui::eimg::draw(UiFlags flags) {
     }
 }
 
-void ui::eimg::load(archive arch, element *parent, items &elems) {
+void ui::eimg::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
 
     pcstr type = arch.r_string("type");
@@ -1182,7 +1283,7 @@ void ui::eimg::load(archive arch, element *parent, items &elems) {
     img_desc.id = arch.r_int("id");
     img_desc.offset = arch.r_int("offset");
     isometric = arch.r_bool("isometric");
-    centering = arch.r_vec2i("centering", { -1001, -1001 });
+    centering = arch.r_vec2i("centering", {-1001, -1001});
 }
 
 void ui::eimg::image(const image_desc& image) {
@@ -1202,7 +1303,7 @@ void ui::ebackground::draw(UiFlags flags) {
     ImageDraw::img_background(ctx, img_desc.tid(), 1.f, pos);
 }
 
-void ui::ebackground::load(archive arch, element *parent, items &elems) {
+void ui::ebackground::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
 
     pcstr type = arch.r_string("type");
@@ -1214,7 +1315,7 @@ void ui::ebackground::load(archive arch, element *parent, items &elems) {
     img_desc.path = arch.r_string("path");
 }
 
-void ui::eborder::load(archive arch, element *parent, items &elems) {
+void ui::eborder::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
 
     border = arch.r_int("border");
@@ -1224,7 +1325,7 @@ void ui::eborder::load(archive arch, element *parent, items &elems) {
 void ui::eborder::draw(UiFlags flags) {
     const vec2i offset = g_state.offset();
     switch (border) {
-    default: //fallthrought
+    default: // fallthrought
     case 0:
         button_border_draw(offset + pos, size, false);
         break;
@@ -1235,7 +1336,7 @@ void ui::eborder::draw(UiFlags flags) {
     }
 }
 
-static xstring ui_einput_value_props[] = { "value" };
+static xstring ui_einput_value_props[] = {"value"};
 xspan<xstring> ui::einput::prop_names() const {
     return make_span(ui_einput_value_props);
 }
@@ -1250,11 +1351,15 @@ void ui::einput::stop_input() {
     }
 }
 
-void ui::einput::load(archive arch, element *parent, items &elems) {
+void ui::einput::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
     _box.font = (e_font)arch.r_type<e_font>("font", FONT_NORMAL_WHITE_ON_DARK);
-    if (size.x <= 0) { size.x = 20; }
-    if (size.y <= 0) { size.y = 2; }
+    if (size.x <= 0) {
+        size.x = 20;
+    }
+    if (size.y <= 0) {
+        size.y = 2;
+    }
     _box.width_blocks = size.x;
     _box.height_blocks = size.y;
     _box.max_length = arch.r_int("max_length", MAX_PLAYER_NAME - 1);
@@ -1281,7 +1386,7 @@ void ui::einput::draw(UiFlags flags) {
     if (!js_ref(ONINPUT).empty() && memcmp(_buffer, _last_buffer, sizeof(_buffer)) != 0) {
         memcpy(_last_buffer, _buffer, sizeof(_buffer));
         xstring value(get_value());
-        js_call_function(js_ref(ONINPUT), bvariant_map{{ "value", bvariant_map_val(value.c_str()) }});
+        js_call_function(js_ref(ONINPUT), bvariant_map{{"value", bvariant_map_val(value.c_str())}});
     }
 }
 
@@ -1317,7 +1422,7 @@ void ui::eresource_icon::text(pcstr v) {
     }
 }
 
-void ui::eresource_icon::load(archive arch, element *parent, items &elems) {
+void ui::eresource_icon::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
 
     pcstr type = arch.r_string("type");
@@ -1339,7 +1444,7 @@ void ui::elabel::draw(UiFlags flags) {
         push(cmd_t::small_panel, Pos{offset + pos}, BoxWidth{_body.x}, ImageId{_body.y}, Mask{0xffffffffu});
     }
 
-    auto dpos = pos + ((_body.x > 0) ? vec2i{ 8, 4 } : vec2i{ 0, 0 });
+    auto dpos = pos + ((_body.x > 0) ? vec2i{8, 4} : vec2i{0, 0});
     auto box_width = size.x;
     const vec2i text_pos = offset + dpos;
 
@@ -1359,7 +1464,7 @@ void ui::elabel::draw(UiFlags flags) {
     invoke_draw_callbacks(flags);
 }
 
-void ui::elabel::load(archive arch, element *parent, items &elems) {
+void ui::elabel::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
 
     _text = arch.r_string("text");
@@ -1374,7 +1479,7 @@ void ui::elabel::load(archive arch, element *parent, items &elems) {
     }
     _font = arch.r_type<e_font>("font", FONT_INVALID);
     _font_link = arch.r_type<e_font>("font_link", FONT_NORMAL_YELLOW);
-    _font_hover = arch.r_type< e_font>("font_hover", FONT_INVALID);
+    _font_hover = arch.r_type<e_font>("font_hover", FONT_INVALID);
     _body = arch.r_size2i("body");
     _color = arch.r_uint("color");
     _wrap = arch.r_int("wrap");
@@ -1392,12 +1497,10 @@ void ui::elabel::load(archive arch, element *parent, items &elems) {
     bool alignycenter = strcmp("ycenter", talign) == 0;
     bool alignxcenter = strcmp("xcenter", talign) == 0;
     _flags = (aligncenter ? UiFlags_AlignCentered : UiFlags_None)
-               | (alignycenter ? UiFlags_AlignYCentered : UiFlags_None)
-               | (alignxcenter ? UiFlags_AlignXCentered : UiFlags_None)
-               | (alignleft ? UiFlags_AlignLeft : UiFlags_None)
-               | (multiline ? UiFlags_LabelMultiline : UiFlags_None)
-               | (rich ? UiFlags_Rich : UiFlags_None)
-               | (scroll ? UiFlags_None : UiFlags_NoScroll);
+             | (alignycenter ? UiFlags_AlignYCentered : UiFlags_None)
+             | (alignxcenter ? UiFlags_AlignXCentered : UiFlags_None) | (alignleft ? UiFlags_AlignLeft : UiFlags_None)
+             | (multiline ? UiFlags_LabelMultiline : UiFlags_None) | (rich ? UiFlags_Rich : UiFlags_None)
+             | (scroll ? UiFlags_None : UiFlags_NoScroll);
 }
 
 void ui::elabel::text(pcstr v) {
@@ -1417,7 +1520,7 @@ void ui::elabel::width(int v) {
     _wrap = v;
 }
 
-void ui::eimage_button::load(archive arch, element *parent, items &elems) {
+void ui::eimage_button::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
 
     pcstr type = arch.r_string("type");
@@ -1436,7 +1539,7 @@ void ui::eimage_button::load(archive arch, element *parent, items &elems) {
     offsets.data[3] = arch.r_int("offset_disabled", 3);
     _tooltip = arch.r_string("tooltip");
     set_ref(ONCLICK, arch.r_function("onclick"));
-    _onclick_event = arch.r_string("onclick_event");
+    set_event(ONCLICK_EVENT, arch.r_string(ONCLICK_EVENT.c_str()));
 
     pcstr name_icon_texture = arch.r_string("icon_texture");
     if (name_icon_texture && *name_icon_texture) {
@@ -1451,13 +1554,13 @@ void ui::eimage_button::draw(UiFlags gflags) {
     flags |= (readonly ? UiFlags_Readonly : UiFlags_None);
     flags |= (!!(darkened & UiFlags_Grayscale) ? UiFlags_Grayscale : UiFlags_None);
 
-    image_button *btn = nullptr;
+    image_button* btn = nullptr;
     pcstr pid = id.c_str();
 
     vec2i tsize;
     if (img_desc.id || img_desc.offset) {
         int img_id = image_id_from_group(img_desc.pack, img_desc.id);
-        const image_t *img_ptr = image_get(img_id + img_desc.offset);
+        const image_t* img_ptr = image_get(img_id + img_desc.offset);
 
         tsize.x = size.x > 0 ? size.x : img_ptr->width;
         tsize.y = size.y > 0 ? size.y : img_ptr->height;
@@ -1466,11 +1569,11 @@ void ui::eimage_button::draw(UiFlags gflags) {
     } else if (texture_id > 0) {
         graphics_draw_from_texture(texture_id, doffset + pos, size);
         tsize = size;
-        btn = &ui::img_button({ 0, 0 }, pos, size, offsets, flags);
+        btn = &ui::img_button({0, 0}, pos, size, offsets, flags);
     } else if (icon_texture) {
         painter ctx = game.painter();
         ctx.draw((SDL_Texture*)icon_texture, pos, {0, 0}, size, 0xffffffff, scale, scale, 0, ImgFlag_Alpha);
-        btn = &ui::img_button({ 0, 0 }, pos, size, offsets, UiFlags_None);
+        btn = &ui::img_button({0, 0}, pos, size, offsets, UiFlags_None);
     }
 
     if (!btn) {
@@ -1480,7 +1583,7 @@ void ui::eimage_button::draw(UiFlags gflags) {
     if (_selected) {
         switch (border) {
         case 1:
-            button_border_draw(doffset + pos - vec2i{ 4, 4 }, tsize + vec2i{ 8, 8 }, true);
+            button_border_draw(doffset + pos - vec2i{4, 4}, tsize + vec2i{8, 8}, true);
             break;
 
         case 2:
@@ -1509,14 +1612,16 @@ void ui::eimage_button::draw(UiFlags gflags) {
         });
     } else if (!js_ref(ONCLICK).empty()) {
         const xstring js_onclick = js_ref(ONCLICK);
-        btn->onclick([js_ref = js_onclick](int, int) {
-            js_call_function(js_ref);
-        });
+        btn->onclick([js_ref = js_onclick](int, int) { js_call_function(js_ref); });
     } else {
-        if (_func) btn->onclick(_func);
-        if (_sfunc) btn->onclick(_sfunc);
-        if (_rfunc) btn->onrclick(_rfunc);
-        if (_srfunc) btn->onrclick(_srfunc);
+        if (_func)
+            btn->onclick(_func);
+        if (_sfunc)
+            btn->onclick(_sfunc);
+        if (_rfunc)
+            btn->onrclick(_rfunc);
+        if (_srfunc)
+            btn->onrclick(_srfunc);
     }
 
     btn->tooltip(_tooltip);
@@ -1528,11 +1633,11 @@ void ui::eimage_button::draw(UiFlags gflags) {
     }
 }
 
-void ui::eimage_button::image(const animation_t &d) {
+void ui::eimage_button::image(const animation_t& d) {
     img_desc = d.to_desc();
 }
 
-void ui::etext::load(archive arch, element* parent, items &elems) {
+void ui::etext::load(archive arch, element* parent, items& elems) {
     elabel::load(arch, parent, elems);
 
     pcstr type = arch.r_string("type");
@@ -1549,7 +1654,7 @@ void ui::escrollbar::draw(UiFlags flags) {
     ui::scrollbar(this->scrollbar, pos, this->scrollbar.scroll_position);
 }
 
-void ui::escrollbar::load(archive arch, element *parent, items &elems) {
+void ui::escrollbar::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
 
     pcstr type = arch.r_string("type");
@@ -1567,7 +1672,7 @@ void ui::escrollable_list::clear() {
     panel->clear_entry_list();
 }
 
-void ui::escrollable_list::on_dblclick_item(const scrollable_list::entry_data *entry) {
+void ui::escrollable_list::on_dblclick_item(const scrollable_list::entry_data* entry) {
     if (!entry) {
         return;
     }
@@ -1578,26 +1683,19 @@ void ui::escrollable_list::on_dblclick_item(const scrollable_list::entry_data *e
         return;
     }
     if (!_js_ondoubleclick_item_ref.empty()) {
-        js_call_function(_js_ondoubleclick_item_ref, { { "text", entry->text } });
+        js_call_function(_js_ondoubleclick_item_ref, {{"text", entry->text}});
     }
 }
 
-void ui::escrollable_list::on_render_item(int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font) {
+void ui::escrollable_list::on_render_item(int index, int flags, const scrollable_list::entry_data& entry, vec2i pos,
+  e_font font) {
     if (!_js_render_item_ref.empty()) {
         ensure_panel();
-        const scrollable_list_ui_params &up = panel->ui_params;
-        js_call_function(_js_render_item_ref, {
-            { "index", (int32_t)index },
-            { "flags", (int32_t)flags },
-            { "hover", (flags & 2) != 0 },
-            { "select", (flags & 1) != 0 },
-            { "text", entry.text },
-            { "x", (int32_t)pos.x },
-            { "y", (int32_t)pos.y },
-            { "sizex", (int32_t)up.buttons_size_x },
-            { "sizey", (int32_t)up.buttons_size_y },
-            { "font", (int32_t)font }
-            });
+        const scrollable_list_ui_params& up = panel->ui_params;
+        js_call_function(_js_render_item_ref,
+          {{"index", (int32_t)index}, {"flags", (int32_t)flags}, {"hover", (flags & 2) != 0},
+            {"select", (flags & 1) != 0}, {"text", entry.text}, {"x", (int32_t)pos.x}, {"y", (int32_t)pos.y},
+            {"sizex", (int32_t)up.buttons_size_x}, {"sizey", (int32_t)up.buttons_size_y}, {"font", (int32_t)font}});
         return;
     }
 
@@ -1616,19 +1714,16 @@ void ui::escrollable_list::ensure_panel() {
 
     panel->set_onclick_entry(_onclick_cb);
     if (_custom_render_cb || !_js_render_item_ref.empty()) {
-        panel->set_custom_render_func([&](int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font) { 
-            this->on_render_item(index, flags, entry, pos, font);
-        });
+        panel->set_custom_render_func([&](int index, int flags, const scrollable_list::entry_data& entry, vec2i pos,
+                                        e_font font) { this->on_render_item(index, flags, entry, pos, font); });
     }
 
     if (_ondoubleclick_item_cb || !_js_ondoubleclick_item_ref.empty() || !_ondoubleclick_event.empty()) {
-        panel->set_onclick_dbl_entry([&] (const scrollable_list::entry_data *entry) {
-            this->on_dblclick_item(entry);
-        });
+        panel->set_onclick_dbl_entry([&](const scrollable_list::entry_data* entry) { this->on_dblclick_item(entry); });
     }
 
     if (_onclick_ex_cb || !_js_onclick_item_ref.empty() || !_onclick_event.empty()) {
-        panel->set_onclick_entry([this] (scrollable_list::entry_data *e) {
+        panel->set_onclick_entry([this](scrollable_list::entry_data* e) {
             if (!e) {
                 return;
             }
@@ -1639,7 +1734,7 @@ void ui::escrollable_list::ensure_panel() {
                 return;
             }
             if (!_js_onclick_item_ref.empty()) {
-                js_call_function(_js_onclick_item_ref, { { "text", e->text } });
+                js_call_function(_js_onclick_item_ref, {{"text", e->text}});
             }
         });
     }
@@ -1668,7 +1763,7 @@ void ui::escrollable_list::refresh_file_finder() {
     }
 }
 
-void ui::escrollable_list::change_file_path(const xstring &dir, const xstring &ext) {
+void ui::escrollable_list::change_file_path(const xstring& dir, const xstring& ext) {
     params.files_dir = dir;
     params.file_ext = ext;
     ensure_panel();
@@ -1693,7 +1788,7 @@ xstring ui::escrollable_list::selected_entry_text(int filename_syntax) const {
 }
 
 
-int ui::escrollable_list::items_count() const { 
+int ui::escrollable_list::items_count() const {
     return panel ? panel->items_count() : 0;
 }
 
@@ -1705,27 +1800,26 @@ void ui::escrollable_list::refill() {
     if (_refill_cb) {
         entry_data_vec items;
         _refill_cb(items);
-        for (const auto &it : items) {
+        for (const auto& it : items) {
             panel->add_entry(it.text, it.user_data);
         }
     }
 }
 
 ui::escrollable_list::~escrollable_list() {
-    js_unref_function(_js_render_item_ref);
-    js_unref_function(_js_onclick_item_ref);
-    js_unref_function(_js_ondoubleclick_item_ref);
     g_state.remove_scrollable_list(panel.get());
     // panel will be automatically destroyed by unique_ptr
 }
 
 
-xstring escrollable_list_funcs[] = { "add_item", "clear", "select_item", "select_index", "refresh_file_finder", "change_file_path", "append_files_with_extension", "scroll_to_selected", "selected_text" };
+xstring escrollable_list_funcs[] = {"add_item", "clear", "select_item", "select_index", "refresh_file_finder",
+  "change_file_path", "append_files_with_extension", "scroll_to_selected", "selected_text"};
 xspan<xstring> ui::escrollable_list::func_names() const {
     return escrollable_list_funcs;
 }
 
-xstring escrollable_list_props[] = { "text", "enabled", "readonly", "font", "text_color", "selected", "tooltip", "items_count" };
+xstring escrollable_list_props[]
+  = {"text", "enabled", "readonly", "font", "text_color", "selected", "tooltip", "items_count"};
 xspan<xstring> ui::escrollable_list::prop_names() const {
     return escrollable_list_props;
 }
@@ -1744,7 +1838,7 @@ void ui::escrollable_list::draw(UiFlags flags) {
     g_state.scrollable_lists.push_back(panel.get());
 }
 
-void ui::escrollable_list::load(archive arch, element *parent, items &elems) {
+void ui::escrollable_list::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
 
     pcstr type = arch.r_string("type");
@@ -1753,8 +1847,8 @@ void ui::escrollable_list::load(archive arch, element *parent, items &elems) {
     _js_render_item_ref = arch.r_function("onrender_item");
     _js_onclick_item_ref = arch.r_function("onclick_item");
     _js_ondoubleclick_item_ref = arch.r_function("ondoubleclick_item");
-    _onclick_event = arch.r_string("onclick_event");
-    _ondoubleclick_event = arch.r_string("ondoubleclick_event");
+    set_event(ONCLICK_EVENT, arch.r_string(ONCLICK_EVENT.c_str()));
+    set_event(ONDOUBLECLICK_EVENT, arch.r_string(ONDOUBLECLICK_EVENT.c_str()));
 
     params.files_dir = arch.r_string("dir");
     params.file_ext = arch.r_string("file_ext");
@@ -1793,7 +1887,7 @@ void ui::etext::draw(UiFlags flags) {
     if (!js_ref(TEXTFN).empty()) {
         bvariant dyn = js_call_function(js_ref(TEXTFN), 0, 0);
         ui_scope_property holder;
-         _text = ui::sformat<1024>(&holder, dyn.to_str().c_str());
+        _text = ui::sformat<1024>(&holder, dyn.to_str().c_str());
     }
 
     if (!!(_flags & UiFlags_AlignCentered)) {
@@ -1803,22 +1897,25 @@ void ui::etext::draw(UiFlags flags) {
             additionaly = ((size.y - symbolh) * 0.5f);
         }
         if (_shadow_color) {
-            push(cmd_t::text_centered, Pos{offset + pos + vec2i(1, additionaly)}, BoxWidth{size.x}, Font{_font}, TextColor{_shadow_color}, Caption{_text.c_str()});
+            push(cmd_t::text_centered, Pos{offset + pos + vec2i(1, additionaly)}, BoxWidth{size.x}, Font{_font},
+              TextColor{_shadow_color}, Caption{_text.c_str()});
         }
-        push(cmd_t::text_centered, Pos{ offset + pos + vec2i{0, additionaly} }, BoxWidth{ size.x }, Font{ _font }, TextColor{ _color }, Caption{ _text.c_str() });
+        push(cmd_t::text_centered, Pos{offset + pos + vec2i{0, additionaly}}, BoxWidth{size.x}, Font{_font},
+          TextColor{_color}, Caption{_text.c_str()});
     } else if (!!(_flags & UiFlags_LabelMultiline)) {
-        push(cmd_t::text_multiline, Pos{offset + pos}, BoxWidth{_wrap}, Font{_font}, TextColor{_color}, Caption{_text.c_str()});
+        push(cmd_t::text_multiline, Pos{offset + pos}, BoxWidth{_wrap}, Font{_font}, TextColor{_color},
+          Caption{_text.c_str()});
     } else if (!!(_flags & UiFlags_AlignYCentered)) {
         const int symbolh = font_definition_for(_font)->line_height;
         if (_shadow_color) {
-            push(cmd_t::text_colored, Pos{ offset + pos + vec2i{ 1, (size.y - symbolh) / 2} }, Font{ _font }, TextColor{ _shadow_color }, Caption{ _text.c_str() });
+            push(cmd_t::text_colored, Pos{offset + pos + vec2i{1, (size.y - symbolh) / 2}}, Font{_font},
+              TextColor{_shadow_color}, Caption{_text.c_str()});
         }
-        push(cmd_t::text_colored, Pos{ offset + pos + vec2i{ 0,  (size.y - symbolh) / 2 } }, Font{ _font }, TextColor{ _color }, Caption{ _text.c_str() });
+        push(cmd_t::text_colored, Pos{offset + pos + vec2i{0, (size.y - symbolh) / 2}}, Font{_font}, TextColor{_color},
+          Caption{_text.c_str()});
     } else if (!!(_flags & UiFlags_Rich)) {
         const int symbolh = font_definition_for(_font)->line_height;
-        int maxlines = pxsize().y > 0
-                        ? std::max(1, pxsize().y / symbolh)
-                        : 0xff;
+        int maxlines = pxsize().y > 0 ? std::max(1, pxsize().y / symbolh) : 0xff;
 
         int rwrap = _wrap <= 0 ? size.x : _wrap;
         rwrap = rwrap <= 0 ? 9999 : rwrap;
@@ -1829,7 +1926,7 @@ void ui::etext::draw(UiFlags flags) {
 
         rich_text->set_fonts(_font, _font_link);
         rich_text->set_margin(_text_margin);
-        rich_text->init(_text.c_str(), offset + pos, size.x / 16, size.y / 16, /*adjust_width_on_no_scroll*/true);
+        rich_text->init(_text.c_str(), offset + pos, size.x / 16, size.y / 16, /*adjust_width_on_no_scroll*/ true);
 
         if (!(_flags & UiFlags_NoScroll)) {
             g_state.scrollbars.push_back(rich_text->scrollbar());
@@ -1839,14 +1936,16 @@ void ui::etext::draw(UiFlags flags) {
             push(cmd_t::clip_set, Pos{offset + pos}, Size{pxsize()});
         }
 
-        push(cmd_t::rich_draw, RichTextPtr{rich_text.get()}, Caption{_text.c_str()}, Pos{offset + pos}, BoxWidth{rwrap}, Size{vec2i(0, maxlines)}, Flags{_flags & UiFlags_NoScroll});
+        push(cmd_t::rich_draw, RichTextPtr{rich_text.get()}, Caption{_text.c_str()}, Pos{offset + pos}, BoxWidth{rwrap},
+          Size{vec2i(0, maxlines)}, Flags{_flags & UiFlags_NoScroll});
 
         if (_clip_area) {
             push(cmd_t::clip_reset);
         }
     } else {
         if (_shadow_color) {
-            push(cmd_t::text_colored, Pos{ offset + pos + vec2i{1, 0} }, Font{ _font }, TextColor{ _shadow_color }, Caption{ _text.c_str() });
+            push(cmd_t::text_colored, Pos{offset + pos + vec2i{1, 0}}, Font{_font}, TextColor{_shadow_color},
+              Caption{_text.c_str()});
         }
         push(cmd_t::text_colored, Pos{offset + pos}, Font{_font}, TextColor{_color}, Caption{_text.c_str()});
     }
@@ -1855,16 +1954,12 @@ void ui::etext::draw(UiFlags flags) {
 }
 
 ui::emenu_header_item_proxy::~emenu_header_item_proxy() {
-    js_unref_function(_onclick_js);
-    js_unref_function(_textfn_js);
 }
 
 ui::emenu_header::~emenu_header() {
-    js_unref_function(_onclick_js);
-    js_unref_function(_textfn_js);
 }
 
-void ui::emenu_header::load(archive arch, element *parent, items &elems) {
+void ui::emenu_header::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
 
     pcstr type = arch.r_string("type");
@@ -1885,22 +1980,18 @@ void ui::emenu_header::load(archive arch, element *parent, items &elems) {
     _text_format = has_dyn_text ? impl.text : "";
 
     if (!!_onclick_js) {
-        impl._onclick = [jsref = _onclick_js] (auto &item) {
-            js_call_function(jsref, item.parameter, 0);
-        };
+        impl._onclick = [jsref = _onclick_js](auto& item) { js_call_function(jsref, item.parameter, 0); };
     }
 
     if (!!_textfn_js) {
-        impl._textfn = [jsref = _textfn_js] () {
-            return xstring(js_call_function(jsref, 0, 0).to_str());
-        };
+        impl._textfn = [jsref = _textfn_js]() { return xstring(js_call_function(jsref, 0, 0).to_str()); };
     }
 }
 
 void ui::emenu_header::load_items(archive arch, xstring section, element::items& elements) {
     impl.items.clear();
 
-    arch.r_objects(section, [&] (pcstr key, archive elem) {
+    arch.r_objects(section, [&](pcstr key, archive elem) {
         pcstr type = elem.r_string("type");
         assert(!strcmp(type, "menu_item"));
 
@@ -1925,15 +2016,12 @@ void ui::emenu_header::load_items(archive arch, xstring section, element::items&
         elements.push_back(proxy_item);
 
         if (!!_onclick_js) {
-            item._onclick = [jsref = _onclick_js] (int param) {
-                js_call_function(jsref, param, 0);
-            };
+            item._onclick = [jsref = _onclick_js](int param) { js_call_function(jsref, param, 0); };
         }
 
         if (!!_textfn_js) {
-            item._textfn = [jsref = _textfn_js] (int param) {
-                return xstring(js_call_function(jsref, param, 0).to_str());
-            };
+            item._textfn
+              = [jsref = _textfn_js](int param) { return xstring(js_call_function(jsref, param, 0).to_str()); };
         }
     });
 }
@@ -1949,7 +2037,7 @@ void ui::emenu_header::draw(UiFlags flags) {
     lang_text_draw(impl.text.c_str(), pos, _font);
 }
 
-const xstring &ui::emenu_header::tooltip() const {
+const xstring& ui::emenu_header::tooltip() const {
     if (!!_tooltip_format) {
         ui_scope_property holder;
         _tooltip = ui::sformat<128>(&holder, _tooltip_format);
@@ -1962,13 +2050,13 @@ int ui::emenu_header::text_width() {
     return lang_text_get_width(impl.text.c_str(), _font);
 }
 
-menu_item &ui::emenu_header::item(pcstr key) {
+menu_item& ui::emenu_header::item(pcstr key) {
     static menu_item dummy;
-    auto it = std::find_if(impl.items.begin(), impl.items.end(), [key] (auto &it) { return it.id == key; });
+    auto it = std::find_if(impl.items.begin(), impl.items.end(), [key](auto& it) { return it.id == key; });
     return it != impl.items.end() ? *it : dummy;
 }
 
-void ui::earrow_button::load(archive arch, element *parent, items &elems) {
+void ui::earrow_button::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
 
     tiny = arch.r_bool("tiny");
@@ -1981,7 +2069,7 @@ void ui::earrow_button::js_call() {
 }
 
 void ui::earrow_button::draw(UiFlags flags) {
-    auto &btn = ui::arw_button(pos, down, tiny);
+    auto& btn = ui::arw_button(pos, down, tiny);
 
     // Set up click handler - prefer JS callback if available, otherwise use C++ callback
     if (!js_ref(ONCLICK).empty()) {
@@ -1993,13 +2081,10 @@ void ui::earrow_button::draw(UiFlags flags) {
 }
 
 void ui::egeneric_button::draw(UiFlags gflags) {
-    UiFlags flags = _flags | gflags
-                      | ((darkened == 1) ? UiFlags_Darkened : UiFlags_None)
-                      | (!_border ? UiFlags_NoBorder : UiFlags_None)
-                      | (!_hbody ? UiFlags_NoBody : UiFlags_None)
-                      | (_split ? UiFlags_SplitText : UiFlags_None)
-                      | (_selected ? UiFlags_Selected : UiFlags_None)
-                      | (readonly ? UiFlags_Readonly : UiFlags_None);
+    UiFlags flags = _flags | gflags | ((darkened == 1) ? UiFlags_Darkened : UiFlags_None)
+                    | (!_border ? UiFlags_NoBorder : UiFlags_None) | (!_hbody ? UiFlags_NoBody : UiFlags_None)
+                    | (_split ? UiFlags_SplitText : UiFlags_None) | (_selected ? UiFlags_Selected : UiFlags_None)
+                    | (readonly ? UiFlags_Readonly : UiFlags_None);
 
     bstring256 button_text = _text.c_str();
     if (!js_ref(TEXTFN).empty()) {
@@ -2008,10 +2093,10 @@ void ui::egeneric_button::draw(UiFlags gflags) {
         ui::format(button_text, &holder, dyn.to_str().c_str());
     }
 
-    generic_button *btn = nullptr;
+    generic_button* btn = nullptr;
     switch (mode) {
     case 0:
-        btn = &ui::button(button_text, pos, size, { _font, _font_hover }, flags);
+        btn = &ui::button(button_text, pos, size, {_font, _font_hover}, flags);
         break;
 
     case 1:
@@ -2035,11 +2120,19 @@ void ui::egeneric_button::draw(UiFlags gflags) {
         btn->onrclick([this] { this->js_rcall(); });
     }
 
-    if (clickable && _func && js_ref(ONCLICK).empty() && _onclick_event.empty()) { btn->onclick(_func); }
-    if (clickable && _sfunc && js_ref(ONCLICK).empty() && _onclick_event.empty()) { btn->onclick(_sfunc); }
+    if (clickable && _func && js_ref(ONCLICK).empty() && _onclick_event.empty()) {
+        btn->onclick(_func);
+    }
+    if (clickable && _sfunc && js_ref(ONCLICK).empty() && _onclick_event.empty()) {
+        btn->onclick(_sfunc);
+    }
 
-    if (clickable && _rfunc && js_ref(ONRCLICK).empty()) { btn->onrclick(_rfunc); }
-    if (clickable && _srfunc && js_ref(ONRCLICK).empty()) { btn->onrclick(_srfunc); }
+    if (clickable && _rfunc && js_ref(ONRCLICK).empty()) {
+        btn->onrclick(_rfunc);
+    }
+    if (clickable && _srfunc && js_ref(ONRCLICK).empty()) {
+        btn->onrclick(_srfunc);
+    }
 
     const vec2i offset = g_state.offset();
     if (clickable && is_button_hover(*btn, offset)) {
@@ -2059,7 +2152,7 @@ void ui::egeneric_button::js_rcall() {
     }
 }
 
-void ui::egeneric_button::load(archive arch, element *parent, items &elems) {
+void ui::egeneric_button::load(archive arch, element* parent, items& elems) {
     elabel::load(arch, parent, elems);
 
     pcstr mode_str = arch.r_string("mode");
@@ -2073,12 +2166,13 @@ void ui::egeneric_button::load(archive arch, element *parent, items &elems) {
     set_ref(ONCLICK, arch.r_function("onclick"));
     set_ref(ONRCLICK, arch.r_function("onrclick"));
     set_ref(TEXTFN, arch.r_function("textfn"));
-    _onclick_event = arch.r_string("onclick_event");
+    set_event(ONCLICK_EVENT, arch.r_string(ONCLICK_EVENT));
     param1 = arch.r_int("param1");
     param2 = arch.r_int("param2");
 }
 
-static xstring ui_echeckbox_props[] = { "text", "enabled", "readonly", "font", "text_color", "selected", "tooltip", "onclick", "textfn", "checked", "checkedfn" };
+static xstring ui_echeckbox_props[] = {"text", "enabled", "readonly", "font", "text_color", "selected", "tooltip",
+  "onclick", "textfn", "checked", "checkedfn"};
 xspan<xstring> ui::echeckbox::prop_names() const {
     return make_span(ui_echeckbox_props);
 }
@@ -2098,7 +2192,7 @@ void ui::echeckbox::draw(UiFlags flags) {
     egeneric_button::draw(flags);
 }
 
-void ui::echeckbox::load(archive arch, element *parent, items &elems) {
+void ui::echeckbox::load(archive arch, element* parent, items& elems) {
     egeneric_button::load(arch, parent, elems);
 
     pcstr type = arch.r_string("type");
