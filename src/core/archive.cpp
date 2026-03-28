@@ -80,7 +80,7 @@ void archive::getglobal(std::string_view name) {
 }
 
 pcstr lang_get_string(int group, int index);
-pcstr archive::r_string(pcstr name, pcstr def) {
+pcstr archive::r_string_impl(pcstr name, pcstr def) {
     auto vm = (js_State *)state;
     vm->getproperty(-1, name);
     pcstr result = def;
@@ -104,6 +104,14 @@ pcstr archive::r_string(pcstr name, pcstr def) {
     }
     js_pop(vm, 1);
     return result;
+}
+
+pcstr archive::r_string(pcstr name, pcstr def) {
+    return r_string_impl(name, def);
+}
+
+pcstr archive::r_string(const xstring& name, pcstr def) {
+    return r_string_impl(name.c_str(), def);
 }
 
 std::vector<std::string> archive::r_array_str(pcstr name) {

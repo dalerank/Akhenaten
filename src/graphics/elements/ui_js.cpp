@@ -91,10 +91,8 @@ void __ui_dialog_show_yesno(pcstr text, js_helpers::js_function_ref cb_yes, js_h
     popup_dialog::show_yesno(text, [yes_ref, no_ref](bool accepted) {
         if (accepted && !yes_ref.empty()) {
             js_call_function_bool(yes_ref, true);
-            js_unref_function(yes_ref);
         } else if (!accepted && !no_ref.empty()) {
             js_call_function_bool(no_ref, false);
-            js_unref_function(no_ref);
         }
     });
 }

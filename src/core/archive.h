@@ -27,6 +27,7 @@ struct archive {
     inline archive(void *_vm) : state(_vm) {}
 
     pcstr r_string(pcstr name, pcstr def = "");
+    pcstr r_string(const xstring& name, pcstr def = "");
     std::vector<std::string> r_array_str(pcstr name);
     std::vector<std::string> to_array_str();
     int r_int(pcstr name, int def = 0);
@@ -305,6 +306,8 @@ struct archive {
     }
 
 protected:
+    pcstr r_string_impl(pcstr name, pcstr def = "");
+
     template<typename T>
     inline bool r_array_impl(T read_func) {
         if (!isarray(-1)) {
