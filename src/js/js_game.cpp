@@ -14,6 +14,7 @@
 #include "figure/figure.h"
 #include "io/gamefiles/lang.h"
 #include "platform/version.hpp"
+#include "graphics/elements/lang_text.h"
 #include "graphics/screen.h"
 #include "core/app.h"
 #include "game/file_editor.h"
@@ -646,6 +647,11 @@ int __highscore_months(int rank) {
     return r && r->nonempty ? (int)r->completion_months : 0;
 }
 ANK_FUNCTION_1(__highscore_months)
+
+void __lang_text_draw_multiline(int group, int number, int x, int y, int box_width, int font) {
+    lang_text_draw_multiline(group, number, vec2i{x, y}, box_width, (e_font)font);
+}
+ANK_FUNCTION_6(__lang_text_draw_multiline)
 
 void window_show_by_id(pcstr section) { autoconfig_window::show(section); }
 ANK_FUNCTION_1(window_show_by_id)

@@ -46,13 +46,9 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     void draw_map();
     void draw_empire_object(int object_index, const empire_object &obj);
     void draw_paneling();
-    void clear_city_info();
     void draw_object_info();
-    void draw_enemy_army_info(const empire_object *object);
-    void draw_kingdome_army_info(const empire_object *object);
     bool is_outside_map(int x, int y);
     void determine_selected_object(const mouse *m);
-    void draw_city_info(const empire_object *object);
     void draw_trade_route(int route_id, e_empire_route_state effect);
     void draw_distant_battle_path();
     void draw_object_tooltip();

@@ -5,8 +5,7 @@
 #include "io/gamefiles/lang.h"
 #include "js/js_game.h"
 
-const e_empire_city_tokens_t e_empire_city_tokens;
-
+const e_empire_city_tokens_t ANK_CONFIG_ENUM(e_empire_city_tokens);
 empire_city_options_t ANK_VARIABLE(empire_city_options);
 
 void empire_city::remove_trader(int figure_id) {
@@ -21,7 +20,7 @@ bool empire_city::can_trade() const {
     if (months_under_siege > 0) {
         return false;
     }
-    
+
     switch (type) {
         case EMPIRE_CITY_PHARAOH_TRADING:
         case EMPIRE_CITY_EGYPTIAN_TRADING:

@@ -54,6 +54,9 @@ empire_window {
 
     @selected_empire_object_id { get: function() { return __empire_map_selected_empire_object_id() } }
     @selected_city { get: function() { return __empire_map_selected_city() } }
+
+    /** Filled each frame in draw_paneling; used by draw_object_info*/
+    screen_bounds : null
 }
 
 function empire_window_draw_trade_resource_row(offset, flags, resource, tradeNow, tradeMax, font) {
@@ -114,6 +117,101 @@ function empire_window_screen_bounds() {
     var min_y = sh <= eh ? 0 : ((sh - eh) / 2) | 0
     var max_y = sh <= eh ? sh : min_y + eh
     return { min_pos: {x: min_x, y: min_y}, max_pos: {x: max_x, y: max_y} }
+}
+
+function empire_window_clear_city_trade_ui(w) {
+    w.city_sell_title.enabled = false
+    w.city_sell_items.enabled = false
+    w.city_buy_title.enabled = false
+    w.city_buy_items.enabled = false
+    w.city_want_sell_title.enabled = false
+    w.city_want_sell_items.enabled = false
+    w.city_want_buy_title.enabled = false
+    w.city_want_buy_items.enabled = false
+}
+
+[es=(empire_window, draw_object_info, none)]
+function empire_window_draw_object_info_none(ev) {
+    empire_window_clear_city_trade_ui(ev)
+    ev.info_tooltip.text = __loc(47, 9)
+}
+
+[es=(empire_window, draw_object_info, EMPIRE_OBJECT_ORNAMENT)]
+function empire_window_draw_object_info_ornament(ev) {
+    ev.info_tooltip.text = ""
+}
+
+[es=(empire_window, draw_object_info, EMPIRE_OBJECT_CITY)]
+function empire_window_draw_object_info_city(ev) {
+    ev.info_tooltip.text = ""
+    empire_window_clear_city_trade_ui(ev)
+    var city = empire.get_city(empire_window.selected_city)
+    if (!city) {
+        return
+    }
+    var t = city.type
+    var is_open = !!city.is_open
+    switch (t) {
+    case EMPIRE_CITY_OURS:
+        ev.info_tooltip.text = __loc(47, 1)
+        break
+    case EMPIRE_CITY_PHARAOH:
+        ev.info_tooltip.text = __loc(47, 19)
+        break
+    case EMPIRE_CITY_EGYPTIAN:
+        ev.info_tooltip.text = __loc(47, 13)
+        break
+    case EMPIRE_CITY_FOREIGN:
+        ev.info_tooltip.text = __loc(47, 0)
+        break
+    case EMPIRE_CITY_PHARAOH_TRADING:
+    case EMPIRE_CITY_EGYPTIAN_TRADING:
+    case EMPIRE_CITY_FOREIGN_TRADING:
+        ev.info_tooltip.text = ""
+        ev.city_sell_title.enabled = is_open
+        ev.city_sell_items.enabled = is_open
+        ev.city_buy_title.enabled = is_open
+        ev.city_buy_items.enabled = is_open
+        ev.city_want_sell_title.enabled = !is_open
+        ev.city_want_sell_items.enabled = !is_open
+        ev.city_want_buy_title.enabled = !is_open
+        ev.city_want_buy_items.enabled = !is_open
+        break
+    default:
+        break
+    }
+}
+
+[es=(empire_window, draw_object_info, EMPIRE_OBJECT_KINGDOME_ARMY)]
+function empire_window_draw_object_info_kingdome_army(ev) {
+    ev.info_tooltip.text = ""
+    if (ev.egyptian_months_to_travel_back > 0) {
+        if (ev.kingdome_months_traveled === ev.distant_battle_travel_months) {
+            var sb = empire_window.screen_bounds
+            var ox = ((sb.min_pos.x + sb.max_pos.x - 240) / 2) | 0
+            var oy = sb.max_pos.y - 68
+            var text_id = ev.egyptian_months_to_travel_forth ? 15 : 16
+            __lang_text_draw_multiline(47, text_id, ox, oy, 240, FONT_NORMAL_BLACK_ON_LIGHT)
+        }
+    }
+}
+
+[es=(empire_window, draw_object_info, EMPIRE_OBJECT_ENEMY_ARMY)]
+function empire_window_draw_object_info_enemy_army(ev) {
+    ev.info_tooltip.text = ""
+    if (ev.months_until_battle > 0) {
+        if (ev.enemy_months_traveled === ev.distant_battle_travel_months) {
+            var sb = empire_window.screen_bounds
+            var ox = ((sb.min_pos.x + sb.max_pos.x - 240) / 2) | 0
+            var oy = sb.max_pos.y - 68
+            __lang_text_draw_multiline(47, 14, ox, oy, 240, FONT_NORMAL_BLACK_ON_LIGHT)
+        }
+    }
+}
+
+[es=(empire_window, draw_object_info, other)]
+function empire_window_draw_object_info_other(ev) {
+    ev.info_tooltip.text = ""
 }
 
 [es=(empire_window, init)]
@@ -282,6 +380,7 @@ function empire_window_draw_dispatched_army_icon(window) {
 [es=(empire_window, draw_paneling)]
 function empire_window_draw_paneling(window) {
     var bounds = empire_window_screen_bounds()
+    empire_window.screen_bounds = bounds
     var min_pos = bounds.min_pos
     var max_pos = bounds.max_pos
 

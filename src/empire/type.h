@@ -9,6 +9,8 @@ enum e_empire_object {
     EMPIRE_OBJECT_SEA_TRADE_ROUTE = 5,
     EMPIRE_OBJECT_KINGDOME_ARMY = 6,
     EMPIRE_OBJECT_ENEMY_ARMY = 7,
+
+    EMPIRE_OBJECT_COUNT
 };
 
 enum e_empire_city {
