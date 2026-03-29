@@ -17,14 +17,7 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     vec2i last_mouse_pos;
     int is_scrolling;
     int finished_scroll;
-    int trade_column_spacing;
-    int trade_row_spacing;
-    int info_y_traded;
-    int trade_button_offset_x;
-    int info_y_city_desc;
-    int trade_resource_size;
     const int sell_res_group = 47;
-    int trade_button_offset_y;
     vec2i start_pos, finish_pos;
     image_desc image, horizontal_bar,
         cross_bar, trade_amount,
