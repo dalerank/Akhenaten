@@ -349,6 +349,72 @@ function empire_window_es_draw_city_buy_items(ev) {
     }
  }
 
+/** Sprites along one segment (spacing matches former C++ trade route / distant battle path). */
+function empire_window_route_segment_sprites(d, img, px, py, p2x, p2y) {
+    var dx = p2x - px
+    var dy = p2y - py
+    var len = 0.2 * Math.sqrt(dx * dx + dy * dy)
+    if (len <= 0) {
+        return
+    }
+    var scaled_x = dx / len
+    var scaled_y = dy / len
+    var progress = 1.0
+    while (progress < len) {
+        ui.image(img, {
+            x: d.x + px + ((scaled_x * progress) | 0),
+            y: d.y + py + ((scaled_y * progress) | 0)
+        })
+        progress += 1.0
+    }
+}
+
+[es=(empire_window, draw_map, EMPIRE_OBJECT_TRADE_ROUTE)]
+function empire_window_draw_trade_route(ev) {
+    if (ev.effect == 0) {
+        return
+    }
+    var route_id = ev.route_id
+    var n = empire.trade_route_num_points(route_id)
+    if (n <= 0) {
+        return
+    }
+    var imgDesc = null
+    switch (ev.effect) {
+    case 1:
+        imgDesc = empire_window.closed_trade_route_hl
+        break
+    case 2:
+        imgDesc = empire_window.open_trade_route
+        break
+    case 3:
+        imgDesc = empire_window.open_trade_route_hl
+        break
+    default:
+        return
+    }
+    var img = get_image(imgDesc)
+    if (!img) {
+        return
+    }
+    var d = vec2i(ev.draw_offset)
+    for (var i = 0; i < n; i++) {
+        var p = empire.trade_route_point(route_id, i)
+        var px = p.x
+        var py = p.y
+        var sx = d.x + px
+        var sy = d.y + py
+        ui.image(img, { x: sx, y: sy })
+        if (i < n - 1) {
+            var p2 = empire.trade_route_point(route_id, i + 1)
+            empire_window_route_segment_sprites(d, img, px, py, p2.x, p2.y)
+            if (empire.route_debug_points) {
+                ui.fill_rect({ x: sx - 4, y: sy - 4 }, { x: 8, y: 8 }, COLOR_BLACK)
+            }
+        }
+    }
+}
+
 [es=(empire_window, draw_map, EMPIRE_OBJECT_TRADER)]
 function empire_window_draw_trader(ev) {
     var t = empire.get_trader(ev.index)
@@ -390,21 +456,7 @@ function empire_window_draw_distant_battle_path(ev) {
         ui.image(img, { x: sx, y: sy })
         if (i < n - 1) {
             var p2 = empire.active_battle.path_point(i + 1)
-            var dx = p2.x - px
-            var dy = p2.y - py
-            var len = 0.2 * Math.sqrt(dx * dx + dy * dy)
-            if (len > 0) {
-                var scaled_x = dx / len
-                var scaled_y = dy / len
-                var progress = 1.0
-                while (progress < len) {
-                    ui.image(img, {
-                        x: d.x + px + ((scaled_x * progress) | 0),
-                        y: d.y + py + ((scaled_y * progress) | 0)
-                    })
-                    progress += 1.0
-                }
-            }
+            empire_window_route_segment_sprites(d, img, px, py, p2.x, p2.y)
             if (empire.route_debug_points) {
                 ui.fill_rect({ x: sx - 4, y: sy - 4 }, { x: 8, y: 8 }, COLOR_BLACK)
             }

@@ -10,6 +10,7 @@ enum e_empire_route_state {
 };
 
 struct empire_object;
+struct empire_city;
 
 struct empire_window : public autoconfig_window_t<empire_window> {
     vec2i min_pos, max_pos;
@@ -19,13 +20,11 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     int finished_scroll;
     const int sell_res_group = 47;
     vec2i start_pos, finish_pos;
-    image_desc image,
-        closed_trade_route_hl, open_trade_route, open_trade_route_hl;
+    image_desc image;
     xstring hovered_object_tooltip;
 
-    /** Filled in draw_empire_object, drawn last in draw_map (above other routes and map overlays). */
-    int deferred_selected_trade_route_id = -1;
-    e_empire_route_state deferred_selected_trade_route_state = ROUTE_CLOSED;
+    /** Empire city index (lookup_id); deferred route drawn at end of draw_map. */
+    int deffer_city_route_id = -1;
 
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }
@@ -42,7 +41,7 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     void draw_object_info();
     bool is_outside_map(int x, int y);
     void determine_selected_object(const mouse *m);
-    void draw_trade_route(int route_id, e_empire_route_state effect);
+    void draw_trade_route(const empire_city *city, int object_index, bool force);
     void draw_object_tooltip();
     void draw_tooltip(tooltip_context *c);
 };
