@@ -129,13 +129,6 @@ void empire_window::init() {
 inline void empire_window::archive_load(archive arch) {
     autoconfig_window::archive_load(arch);
 
-    trade_column_spacing = arch.r_int("trade_column_spacing");
-    trade_row_spacing = arch.r_int("trade_row_spacing");
-    info_y_traded = arch.r_int("info_y_traded");
-    trade_button_offset_x = arch.r_int("trade_button_offset_x");
-    info_y_city_desc = arch.r_int("info_y_city_desc");
-    trade_resource_size = arch.r_int("trade_resource_size");
-    trade_button_offset_y = arch.r_int("trade_button_offset_y");
     start_pos = arch.r_vec2i("start_pos");
     finish_pos = arch.r_vec2i("finish_pos");
     arch.r_desc("image", image);
@@ -150,8 +143,6 @@ inline void empire_window::archive_load(archive arch) {
 }
 
 void empire_window::draw_trade_route(int route_id, e_empire_route_state effect) {
-    painter ctx = game.painter();
-
     const map_route_object& obj = g_empire.get_route_object(route_id);
     if (!obj.in_use) {
         return;
@@ -181,8 +172,8 @@ void empire_window::draw_trade_route(int route_id, e_empire_route_state effect) 
     for (int i = 0; i < obj.num_points; i++) {
         const auto& route_point = obj.points[i];
 
-        // first corner in pair
-        ctx.img_generic(image_id, draw_offset + route_point.p);
+        // first corner in pair — enqueue so flush draws above the empire map bitmap
+        ui::image_abs(image_id, draw_offset + route_point.p);
 
         // draw lines connecting the turns
         if (i < obj.num_points - 1) {
@@ -197,7 +188,7 @@ void empire_window::draw_trade_route(int route_id, e_empire_route_state effect) 
             while (progress < len) {
                 vec2i disp
                   = draw_offset + route_point.p + vec2i{(int)(scaled_x * progress), (int)(scaled_y * progress)};
-                ctx.img_generic(image_id, disp);
+                ui::image_abs(image_id, disp);
                 progress += 1.0f;
             }
 
@@ -218,12 +209,10 @@ void empire_window::draw_distant_battle_path() {
         return;
     }
 
-    painter ctx = game.painter();
-
     int image_id = open_trade_route.tid();
     for (int i = 0; i < path.size(); i++) {
         const vec2i& route_point = path[i];
-        ctx.img_generic(image_id, draw_offset + route_point);
+        ui::image_abs(image_id, draw_offset + route_point);
 
         // Draw lines connecting the points
         if (i < path.size() - 1) {
@@ -239,7 +228,7 @@ void empire_window::draw_distant_battle_path() {
                 while (progress < len) {
                     vec2i disp
                       = draw_offset + route_point + vec2i{(int)(scaled_x * progress), (int)(scaled_y * progress)};
-                    ctx.img_generic(image_id, disp);
+                    ui::image_abs(image_id, disp);
                     progress += 1.0f;
                 }
             }
