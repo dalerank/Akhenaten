@@ -154,9 +154,11 @@ static void jsG_freeiterator(js_State *J, js_Iterator *node) {
 }
 
 static void jsG_freeobject(js_State *J, js_Object *obj) {
-    OZZY_PROFILER_FUNCTION();
+    //OZZY_PROFILER_FUNCTION();
 
-    jsG_freemodifiers(J, obj->modifiers);
+    if (obj->modifiers)
+        jsG_freemodifiers(J, obj->modifiers);
+
     if (obj->head)
         jsG_freeproperty(J, obj->head);
 

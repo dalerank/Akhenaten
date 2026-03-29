@@ -41,7 +41,7 @@ uint16_t empire_images_remap[32000] = {0};
 using empire_object_tokens_t = token_holder<e_empire_object, EMPIRE_OBJECT_ORNAMENT, EMPIRE_OBJECT_COUNT>;
 const empire_object_tokens_t ANK_CONFIG_ENUM(empire_object_tokens);
 
-declare_console_var_bool(empire_window_draw_points, false) void ANK_REGISTER_CONFIG_ITERATOR(
+void ANK_REGISTER_CONFIG_ITERATOR(
   config_load_images_remap_config) {
     g_config_arch.r_array("empire_images_remap", [](archive arch) {
         int id = arch.r_int("id");
@@ -66,6 +66,13 @@ struct empire_window_draw {
     vec2i draw_offset;
 };
 ANK_REGISTER_STRUCT_WRITER(empire_window_draw, draw_offset);
+
+struct empire_window_draw_trade_route {
+    vec2i draw_offset;
+    int route_id = 0;
+    int effect = 0;
+};
+ANK_REGISTER_STRUCT_WRITER(empire_window_draw_trade_route, draw_offset, route_id, effect);
 
 struct empire_window_draw_trader {
     int index;
@@ -119,68 +126,45 @@ void empire_window::archive_load(archive arch) {
     start_pos = arch.r_vec2i("start_pos");
     finish_pos = arch.r_vec2i("finish_pos");
     arch.r_desc("image", image);
-    arch.r_desc("closed_trade_route_hl", closed_trade_route_hl);
-    arch.r_desc("open_trade_route", open_trade_route);
-    arch.r_desc("open_trade_route_hl", open_trade_route_hl);
 
     init();
 }
 
-void empire_window::draw_trade_route(int route_id, e_empire_route_state effect) {
-    const map_route_object& obj = g_empire.get_route_object(route_id);
-    if (!obj.in_use) {
+void empire_window::draw_trade_route(const empire_city* city, int object_index, bool force) {
+    if (!city) {
         return;
     }
 
-    // get graphics ready..
-    int image_id = 0;
-    switch (effect) {
-    case ROUTE_CLOSED: // closed
+    if (city->type != EMPIRE_CITY_EGYPTIAN_TRADING && city->type != EMPIRE_CITY_FOREIGN_TRADING
+        && city->type != EMPIRE_CITY_PHARAOH_TRADING) {
         return;
-        // image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 211;
-        break;
-
-    case ROUTE_CLOSED_SELECTED: // highlighted, closed
-        image_id = closed_trade_route_hl.tid();
-        break;
-
-    case ROUTE_OPEN: // open
-        image_id = open_trade_route.tid();
-        break;
-
-    case ROUTE_OPEN_SELECTED: // highlighted, open
-        image_id = open_trade_route_hl.tid();
-        break;
     }
 
-    for (int i = 0; i < obj.num_points; i++) {
-        const auto& route_point = obj.points[i];
-
-        // first corner in pair — enqueue so flush draws above the empire map bitmap
-        ui::image_abs(image_id, draw_offset + route_point.p);
-
-        // draw lines connecting the turns
-        if (i < obj.num_points - 1) {
-            auto nextup_route_point = obj.points[i + 1];
-            vec2i d = nextup_route_point.p - route_point.p;
-            float len = 0.2f * sqrtf(float(d.x * d.x) + float(d.y * d.y));
-
-            float scaled_x = (float)d.x / len;
-            float scaled_y = (float)d.y / len;
-
-            float progress = 1.0;
-            while (progress < len) {
-                vec2i disp
-                  = draw_offset + route_point.p + vec2i{(int)(scaled_x * progress), (int)(scaled_y * progress)};
-                ui::image_abs(image_id, disp);
-                progress += 1.0f;
-            }
-
-            if (empire_window_draw_points()) {
-                ui::fill_rect(draw_offset + vec2i{route_point.p.x - 4, route_point.p.y - 4}, vec2i{8, 8}, COLOR_BLACK);
-            }
-        }
+    e_empire_route_state state = ROUTE_CLOSED;
+    if (city->is_open) {
+        state = (g_empire_map.selected_object()
+                  && g_empire_map.selected_city == g_empire.get_city_for_object(object_index))
+                  ? ROUTE_OPEN_SELECTED
+                  : ROUTE_OPEN;
+    } else {
+        state = (g_empire_map.selected_object()
+                  && g_empire_map.selected_city == g_empire.get_city_for_object(object_index))
+                  ? ROUTE_CLOSED_SELECTED
+                  : ROUTE_CLOSED;
     }
+
+    if ((state == ROUTE_OPEN_SELECTED || state == ROUTE_CLOSED_SELECTED) && !force) {
+        deffer_city_route_id = city->lookup_id;
+        return;
+    }
+
+    const map_route_object& obj = g_empire.get_route_object(city->route_id);
+    if (!obj.in_use || state == ROUTE_CLOSED) {
+        return;
+    }
+
+    ui::event(empire_window_draw_trade_route{draw_offset, city->route_id, (int)state}, get_section(), "draw_map",
+      empire_object_tokens.name(EMPIRE_OBJECT_TRADE_ROUTE));
 }
 
 void empire_window::draw_object_info() {
@@ -327,27 +311,7 @@ void empire_window::draw_empire_object(int object_index, const empire_object& ob
         }
 
         // draw routes! (highlighted path for the selected city is deferred to the end of draw_map)
-        if (city->type == EMPIRE_CITY_EGYPTIAN_TRADING || city->type == EMPIRE_CITY_FOREIGN_TRADING
-            || city->type == EMPIRE_CITY_PHARAOH_TRADING) {
-            e_empire_route_state state = ROUTE_CLOSED;
-            if (city->is_open) {
-                state = (g_empire_map.selected_object()
-                          && g_empire_map.selected_city == g_empire.get_city_for_object(object_index))
-                          ? ROUTE_OPEN_SELECTED
-                          : ROUTE_OPEN;
-            } else {
-                state = (g_empire_map.selected_object()
-                          && g_empire_map.selected_city == g_empire.get_city_for_object(object_index))
-                          ? ROUTE_CLOSED_SELECTED
-                          : ROUTE_CLOSED;
-            }
-            if (state == ROUTE_OPEN_SELECTED || state == ROUTE_CLOSED_SELECTED) {
-                deferred_selected_trade_route_id = city->route_id;
-                deferred_selected_trade_route_state = state;
-            } else {
-                draw_trade_route(city->route_id, state);
-            }
-        }
+        draw_trade_route(city, object_index, false);
 
         const int letter_height = font_definition_for(FONT_SMALL_PLAIN)->line_height;
         vec2i text_pos = draw_offset + pos + vec2i{img->width, (img->height - letter_height) / 2};
@@ -431,6 +395,7 @@ void empire_window::draw_map() {
     draw_offset = min_pos + start_pos;
     draw_offset = g_empire_map.adjust_scroll(draw_offset);
     hovered_object_tooltip = "";
+    deffer_city_route_id = -1;
 
     ui::eimage(image, draw_offset);
 
@@ -450,8 +415,11 @@ void empire_window::draw_map() {
     ui.event(empire_window_draw{draw_offset}, get_section(), __func__,
       empire_object_tokens.name(EMPIRE_OBJECT_DISTANT_BATTLE_ROUTE));
 
-    if (deferred_selected_trade_route_id >= 0) {
-        draw_trade_route(deferred_selected_trade_route_id, deferred_selected_trade_route_state);
+    if (deffer_city_route_id >= 0) {
+        const empire_city* deferred_city = g_empire.city(deffer_city_route_id);
+        if (deferred_city) {
+            draw_trade_route(deferred_city, deferred_city->empire_object_id, true);
+        }
     }
 
     ui.begin_widget(pos);

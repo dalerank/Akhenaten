@@ -132,5 +132,31 @@ vec2i __empire_map_adjust_scroll(vec2i pos) {
 }
 ANK_FUNCTION_1(__empire_map_adjust_scroll)
 
+static constexpr int EMPIRE_TRADE_ROUTE_COUNT = 50;
+
+int __empire_trade_route_num_points(int route_id) {
+    if (route_id < 0 || route_id >= EMPIRE_TRADE_ROUTE_COUNT) {
+        return 0;
+    }
+    const map_route_object& obj = g_empire.get_route_object(route_id);
+    if (!obj.in_use) {
+        return 0;
+    }
+    return obj.num_points;
+}
+ANK_FUNCTION_1(__empire_trade_route_num_points)
+
+vec2i __empire_trade_route_point(int route_id, int index) {
+    if (route_id < 0 || route_id >= EMPIRE_TRADE_ROUTE_COUNT) {
+        return {0, 0};
+    }
+    const map_route_object& obj = g_empire.get_route_object(route_id);
+    if (!obj.in_use || index < 0 || index >= obj.num_points) {
+        return {0, 0};
+    }
+    return obj.points[index].p;
+}
+ANK_FUNCTION_2(__empire_trade_route_point)
+
 void js_register_empire_objects(js_State *J) {
 }
