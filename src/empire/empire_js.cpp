@@ -3,6 +3,7 @@
 #include "empire/empire_city.h"
 #include "empire/empire_map.h"
 #include "empire/empire_object.h"
+#include "empire/empire_traders.h"
 #include "city/city.h"
 #include "scenario/distant_battle.h"
 #include "core/profiler.h"
@@ -97,6 +98,19 @@ bool __empire_city_is_open(int city_index) {
     return city && city->in_use && city->is_open;
 }
 ANK_FUNCTION_1(__empire_city_is_open)
+
+std::optional<bvariant> __empire_trader_get_property(int index, pcstr property) {
+    if (index < 0 || index >= g_empire_traders.traders.size()) {
+        return {};
+    }
+    return archive_helper::get(g_empire_traders.traders[index], property, true);
+}
+ANK_FUNCTION_2(__empire_trader_get_property)
+
+vec2i __empire_map_adjust_scroll(vec2i pos) {
+    return g_empire_map.adjust_scroll(pos);
+}
+ANK_FUNCTION_1(__empire_map_adjust_scroll)
 
 void js_register_empire_objects(js_State *J) {
 }

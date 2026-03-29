@@ -10,8 +10,8 @@ empire_window {
     trade_resource_size : 18
     trade_resource_offset : 3
     trade_button_offset_y : 10
-    start_pos : [16, 16]
-    finish_pos : [32, 136]
+    start_pos : {x: 16, y: 16}
+    finish_pos : {x: 32, y: 136}
     image : {pack:PACK_EMPIRE, id:1}
     bottom_image : {pack:PACK_GENERAL, id:172, offset:3}
     horizontal_bar : {pack:PACK_GENERAL, id:172, offset:1}
@@ -51,6 +51,8 @@ empire_window {
     trade_amount_image : function(extraOffset) {
         return get_image({pack:PACK_GENERAL, id:171, offset: extraOffset })
     }
+
+    adjust_scroll : __empire_map_adjust_scroll
 
     @selected_empire_object_id { get: function() { return __empire_map_selected_empire_object_id() } }
     @selected_city { get: function() { return __empire_map_selected_city() } }
@@ -105,11 +107,9 @@ function empire_window_draw_trade_resource_row(offset, flags, resource, tradeNow
 function empire_window_screen_bounds() {
     var map_img = get_image(empire_window.image)
     var f = empire_window.finish_pos
-    var fx = f.x !== undefined ? f.x : f[0]
-    var fy = f.y !== undefined ? f.y : f[1]
     var bottom_extra = 20
-    var ew = map_img ? (map_img.width + fx) : (1200 + 32)
-    var eh = map_img ? (map_img.height + fy + bottom_extra) : (1600 + 136 + 20)
+    var ew = map_img ? (map_img.width + f.x) : (1200 + 32)
+    var eh = map_img ? (map_img.height + f.y + bottom_extra) : (1600 + 136 + 20)
     var sw = game.screen.w
     var sh = game.screen.h
     var min_x = sw <= ew ? 0 : ((sw - ew) / 2) | 0
@@ -335,6 +335,21 @@ function empire_window_es_draw_city_buy_items(ev) {
         }
     }
  }
+
+[es=(empire_window, draw_map, EMPIRE_OBJECT_TRADER)]
+function empire_window_draw_trader(ev) {
+    var t = empire.get_trader(ev.index)
+
+    var img = get_image({ pack: PACK_GENERAL, id: 179, offset: t.is_ship ? 0 : 1 })
+    if (!img) {
+        return
+    }
+
+    var map_pos = vec2i(empire_window.screen_bounds.min_pos).add(empire_window.start_pos)
+    var map_offset = empire_window.adjust_scroll(map_pos)
+
+    ui.image(img, vec2i(map_offset).add(t.current_position))
+}
 
 [es=(empire_window, draw_map, EMPIRE_OBJECT_DISTANT_BATTLE_ROUTE)]
 function empire_window_draw_distant_battle_path(ev) {
