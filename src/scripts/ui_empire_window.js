@@ -425,12 +425,17 @@ function empire_window_draw_dispatched_army_icon(window) {
     ui.image(army_icon, army_icon_pos)
 }
 
-[es=(empire_window, draw_paneling)]
-function empire_window_draw_paneling(window) {
+[es=(empire_window, draw_background)]
+function empire_window_draw_background(window) {
     var bounds = empire_window_screen_bounds()
     empire_window.screen_bounds = bounds
-    var min_pos = bounds.min_pos
-    var max_pos = bounds.max_pos
+    __empire_window_set_map_bounds(bounds.min_pos.x, bounds.min_pos.y, bounds.max_pos.x, bounds.max_pos.y)
+}
+
+[es=(empire_window, draw_paneling)]
+function empire_window_draw_paneling(window) {
+    var min_pos = empire_window.screen_bounds.min_pos
+    var max_pos = empire_window.screen_bounds.max_pos
 
     var bottom = get_image(empire_window.bottom_image)
     var hbar = get_image(empire_window.horizontal_bar)

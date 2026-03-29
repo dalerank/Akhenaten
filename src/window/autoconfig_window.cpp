@@ -113,6 +113,9 @@ int autoconfig_window::draw_background(UiFlags flags) {
         init();
         _is_inited = true;
     }
+    ui.begin_widget(pos);
+    ui.event(window_info{pos}, get_section(), __func__);
+    ui.end_widget();
     return 0;
 }
 
