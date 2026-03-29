@@ -21,7 +21,6 @@
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/image_groups.h"
-#include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -76,11 +75,10 @@ struct empire_window_init_event {
 };
 ANK_REGISTER_STRUCT_WRITER(empire_window_init_event, pos);
 
-struct empire_window_paneling {
-    vec2i min_pos;
-    vec2i max_pos;
+struct empire_window_draw_background_evt {
+    int pad = 0;
 };
-ANK_REGISTER_STRUCT_WRITER(empire_window_paneling, min_pos, max_pos);
+ANK_REGISTER_STRUCT_WRITER(empire_window_draw_background_evt, pad);
 
 struct empire_window_object_info_empty {
     int unused = 0;
@@ -126,7 +124,7 @@ void empire_window::init() {
     ui.end_widget();
 }
 
-inline void empire_window::archive_load(archive arch) {
+void empire_window::archive_load(archive arch) {
     autoconfig_window::archive_load(arch);
 
     start_pos = arch.r_vec2i("start_pos");
@@ -475,22 +473,6 @@ void empire_window::draw_paneling() {
     ui.event(empire_window_draw{pos}, get_section(), __func__);
 }
 
-int empire_window::draw_background(UiFlags flags) {
-    autoconfig_window::draw_background(flags);
-
-    int s_width = screen_width();
-    int s_height = screen_height();
-    const image_t* map_img = image_get(image);
-    const vec2i empire_size = map_img ? vec2i{map_img->width + finish_pos.x, map_img->height + finish_pos.y + 20}
-                                      : vec2i{1200 + 32, 1600 + 136 + 20};
-    min_pos.x = s_width <= empire_size.x ? 0 : (s_width - empire_size.x) / 2;
-    max_pos.x = s_width <= empire_size.x ? s_width : min_pos.x + empire_size.x;
-    min_pos.y = s_height <= empire_size.y ? 0 : (s_height - empire_size.y) / 2;
-    max_pos.y = s_height <= empire_size.y ? s_height : min_pos.y + empire_size.y;
-
-    return 0;
-}
-
 void empire_window::ui_draw_foreground(UiFlags flags) {
     draw_map();
 
@@ -574,3 +556,9 @@ void window_empire_show_checked() {
     }
 }
 ANK_FUNCTION(window_empire_show_checked)
+
+void __empire_window_set_map_bounds(int min_x, int min_y, int max_x, int max_y) {
+    g_empire_window.min_pos = {min_x, min_y};
+    g_empire_window.max_pos = {max_x, max_y};
+}
+ANK_FUNCTION_4(__empire_window_set_map_bounds)

@@ -21,7 +21,7 @@ void game_debug_show_properties_object(pcstr prefix, empire_city *c) {
     ImGui::AlignTextToFramePadding();
     pcstr city_name = ui::str(195, c->name_id);
     bool common_open = ImGui::TreeNodeEx(city_name, ImGuiTreeNodeFlags_None, "%s", city_name);
-    ImGui::TableSetColumnIndex(1); 
+    ImGui::TableSetColumnIndex(1);
 
     if (common_open) {
         game_debug_show_property("in_use", c->in_use);
