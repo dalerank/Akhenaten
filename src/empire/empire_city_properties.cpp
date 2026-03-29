@@ -90,18 +90,27 @@ void config_load_selected_empire_city_properties(bool header) {
         return;
     }
 
-    int selected_object = g_empire_map.selected_object();
-    int selected_city = selected_object ? g_empire.get_city_for_object(selected_object - 1) : 0;
-    
     bool common_open = ImGui::TreeNodeEx("Selected Empire City", ImGuiTreeNodeFlags_None, "Selected Empire City");
     if (common_open) {
-        if (selected_city > 0) {
-            ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
-            empire_city *c = g_empire.city(selected_city);
-            game_debug_show_properties_object("City", c);
-            ImGui::EndTable();
+        const int selected_pick = g_empire_map.selected_object();
+        if (selected_pick <= 0) {
+            ImGui::Text("No selected empire object");
         } else {
-            ImGui::Text("No selected empire city");
+            const int object_slot = selected_pick - 1;
+            const empire_object* obj = g_empire.get_object(object_slot);
+            if (!obj || obj->type != EMPIRE_OBJECT_CITY) {
+                ImGui::Text("Selection is not a city");
+            } else {
+                const int selected_city = g_empire.get_city_for_object(object_slot);
+                empire_city* c = g_empire.city(selected_city);
+                if (!c || !c->in_use || c->empire_object_id != object_slot) {
+                    ImGui::Text("No city data for object slot %d", object_slot);
+                } else {
+                    ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
+                    game_debug_show_properties_object("City", c);
+                    ImGui::EndTable();
+                }
+            }
         }
 
         ImGui::TreePop();
