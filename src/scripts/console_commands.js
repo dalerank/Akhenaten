@@ -56,3 +56,15 @@ function console_command_collapse_random_buildings(args) {
 		building.add_collapse_damage(2000)
 	}
 }
+
+/** off/on or 0/1 sets explicitly; no or other arg toggles current */
+function console_tri_state_on_off(args, current) {
+	var v = args && args[0]
+	if (v === "0" || v === "off") {
+		return false
+	}
+	if (v === "1" || v === "on") {
+		return true
+	}
+	return !current
+}

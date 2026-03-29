@@ -336,6 +336,54 @@ function empire_window_es_draw_city_buy_items(ev) {
     }
  }
 
+[es=(empire_window, draw_map, EMPIRE_OBJECT_DISTANT_BATTLE_ROUTE)]
+function empire_window_draw_distant_battle_path(ev) {
+    if (!empire.has_distant_battle) {
+        return
+    }
+
+    var n = empire.active_battle.path_length
+    if (n <= 0) {
+        return
+    }
+
+    var img = get_image(empire_window.open_trade_route)
+    if (!img) {
+        return
+    }
+
+    var d = vec2i(ev.draw_offset)
+    for (var i = 0; i < n; i++) {
+        var p = empire.active_battle.path_point(i)
+        var px = p.x
+        var py = p.y
+        var sx = d.x + px
+        var sy = d.y + py
+        ui.image(img, { x: sx, y: sy })
+        if (i < n - 1) {
+            var p2 = empire.active_battle.path_point(i + 1)
+            var dx = p2.x - px
+            var dy = p2.y - py
+            var len = 0.2 * Math.sqrt(dx * dx + dy * dy)
+            if (len > 0) {
+                var scaled_x = dx / len
+                var scaled_y = dy / len
+                var progress = 1.0
+                while (progress < len) {
+                    ui.image(img, {
+                        x: d.x + px + ((scaled_x * progress) | 0),
+                        y: d.y + py + ((scaled_y * progress) | 0)
+                    })
+                    progress += 1.0
+                }
+            }
+            if (empire.route_debug_points) {
+                ui.fill_rect({ x: sx - 4, y: sy - 4 }, { x: 8, y: 8 }, COLOR_BLACK)
+            }
+        }
+    }
+}
+
 [es=(empire_window, draw_map)]
 function empire_window_draw_distant_battle_icon(window) {
     if (!empire.has_distant_battle) {

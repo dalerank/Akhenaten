@@ -1,5 +1,11 @@
 log_info("akhenaten: empire started")
 
+[console_command=empire_route_debug]
+function empire_route_debug_toggle(args) {
+	empire.route_debug_points = console_tri_state_on_off(args, empire.route_debug_points)
+	log_info("empire_route_debug_points: " + empire.route_debug_points)
+}
+
 empire_city_options {
     text_group_old_names : 195
     text_group_new_names : 21
@@ -18,6 +24,9 @@ empire {
         @kingdome_army_is_traveling_forth { }
         @months_until_distant_battle { }
         @city { }
+
+        @path_length { get: function() { return __distant_battle_army_path_length() } }
+        path_point : __distant_battle_army_path_point
     }
 
     ourcity {
@@ -32,6 +41,8 @@ empire {
         @state {}
         @pos {}
     }
+
+    route_debug_points : false
 }
 
 empire.get_city_object = function(city_id) {
