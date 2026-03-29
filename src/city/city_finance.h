@@ -14,6 +14,9 @@ enum e_finance_request_type {
     efinance_request_personal_salary,
     efinance_request_gold_delivered,
     efinance_request_tax_collected,
+    efinance_request_construction,
+
+    efinance_request_max
 };
 
 struct event_finance_changed { int value; };
@@ -21,7 +24,7 @@ struct event_finance_donation { int amount; };
 
 struct event_finance_change_wages { int value; };
 struct event_finance_change_tax { int value; };
-struct event_finance_request { e_finance_request_type type; uint32_t deben; };
+struct event_finance_request { e_finance_request_type type; int deben; };
 
 enum e_finance_value {
     e_finance_value_gold_delivered = 0,
@@ -61,7 +64,7 @@ ANK_CONFIG_PROPERTY(finance_overview,
 
 ANK_CONFIG_PROPERTY(finance_overview::income_t,
     taxes, exports, donated, gold_delivered, total)
-    
+
 ANK_CONFIG_PROPERTY(finance_overview::expenses_t,
     imports, wages, construction, interest, accountant_salary,
     stolen, tribute, festivals, kingdome, disasters, mayour_salary, total)
@@ -131,7 +134,6 @@ struct city_finance_t {
     int raise_wages_kingdome();
     int lower_wages_kingdome();
     void process_stolen(int stolen);
-    void process_construction(int cost);
     void update_interest();
     void change_tax(int value);
 

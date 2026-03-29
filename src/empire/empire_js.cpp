@@ -99,6 +99,26 @@ bool __empire_city_is_open(int city_index) {
 }
 ANK_FUNCTION_1(__empire_city_is_open)
 
+bool __empire_city_is_sieged(int city_index) {
+    const empire_city* city = g_empire.city(city_index);
+    return city && city->in_use && city->is_sieged();
+}
+ANK_FUNCTION_1(__empire_city_is_sieged)
+
+int __empire_city_cost_to_open(int city_index) {
+    const empire_city* city = g_empire.city(city_index);
+    return (city && city->in_use) ? city->cost_to_open : 0;
+}
+ANK_FUNCTION_1(__empire_city_cost_to_open)
+
+void __empire_city_set_open(int city_index, int is_open) {
+    empire_city* city = g_empire.city(city_index);
+    if (city && city->in_use) {
+        city->is_open = is_open != 0;
+    }
+}
+ANK_FUNCTION_2(__empire_city_set_open)
+
 std::optional<bvariant> __empire_trader_get_property(int index, pcstr property) {
     if (index < 0 || index >= g_empire_traders.traders.size()) {
         return {};

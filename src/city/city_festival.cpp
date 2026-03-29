@@ -44,7 +44,7 @@ void city_festival_t::schedule() {
     planned.god = selected_god;
     planned.size = selected_size;
 
-    uint32_t cost;
+    int cost;
     const int population = g_city.population.current;
     switch (selected_size) {
     case FESTIVAL_SMALL:

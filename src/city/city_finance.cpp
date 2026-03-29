@@ -21,6 +21,10 @@
 using e_finance_value_tokens_t = token_holder<e_finance_value, e_finance_value_gold_delivered, e_finance_value_max>;
 const e_finance_value_tokens_t ANK_CONFIG_ENUM(e_finance_value_tokens);
 
+using e_finance_request_type_tokens_t
+  = token_holder<e_finance_request_type, efinance_request_none, efinance_request_max>;
+const e_finance_request_type_tokens_t ANK_CONFIG_ENUM(e_finance_request_type_tokens);
+
 void city_finance_t::init() {
     wages_kingdome = 30;
     wages = 30;
@@ -83,11 +87,6 @@ bool city_finance_t::is_out_of_money() const{
 void city_finance_t::process_stolen(int stolen) {
     treasury -= stolen;
     this_year.expenses.stolen += stolen;
-}
-
-void city_finance_t::process_construction(int cost) {
-    treasury -= cost;
-    this_year.expenses.construction += cost;
 }
 
 void city_finance_t::update_interest() {
@@ -164,6 +163,11 @@ void city_finance_t::process_request(event_finance_request request) {
     case efinance_request_tax_collected:
         this_year.income.taxes += request.deben;
         treasury += request.deben;
+        break;
+
+    case efinance_request_construction:
+        treasury -= request.deben;
+        this_year.expenses.construction += request.deben;
         break;
 
     default:
@@ -317,7 +321,7 @@ void city_finance_t::pay_monthly_salary() {
         return;
     }
 
-    uint32_t salary = g_city.kingdome.salary_amount;
+    int salary = g_city.kingdome.salary_amount;
     process_request({ efinance_request_personal_salary, salary });
     
     // Store savings in the mansion building

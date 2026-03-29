@@ -50,6 +50,7 @@ ANK_SCRIPT_EVENT(event_finance_changed, value)
 ANK_SCRIPT_EVENT(event_show_advisor, advisor)
 ANK_SCRIPT_EVENT(event_building_place_checks, bid)
 ANK_SCRIPT_EVENT(event_finance_change_wages, value)
+ANK_SCRIPT_EVENT(event_finance_request, type, deben)
 ANK_SCRIPT_EVENT(event_mods_info_updated, count)
 
 int js_emit_script_event(pcstr event_name, const bvariant_map &args) {

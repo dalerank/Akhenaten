@@ -214,13 +214,26 @@ function empire_window_draw_object_info_other(ev) {
     ev.info_tooltip.text = ""
 }
 
+function empire_window_confirm_open_trade() {
+    var cityId = empire_window.selected_city
+    var city = empire.get_city(cityId)
+    if (!city || city.is_sieged) {
+        return
+    }
+
+    emit event_finance_request{ type: efinance_request_construction, deben: city.cost_to_open }
+    city.is_open = true
+
+    __window_trade_opened_show(cityId)
+}
+
 [es=(empire_window, init)]
 function empire_window_on_init(window) {
     window.button_help.onclick = function() { ui.window_message_dialog_show("message_world_map") }
     window.button_close.onclick = function() { ui.window_city_show() }
     window.button_advisor.onclick = function() { ui.show_advisor(ADVISOR_TRADE) }
     window.button_open_trade.onclick = function() {
-        ui.show_yesno("#popup_dialog_open_trade", function() { empire_window_confirm_open_trade() })
+        ui.show_yesno("#popup_dialog_open_trade", empire_window_confirm_open_trade )
     }
 }
 

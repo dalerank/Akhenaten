@@ -85,7 +85,12 @@ empire.get_city = function(city_id) {
 
         @empire_object { get: function() { return empire.get_city_object(this.city_id) } }
         @type { get: function() { return __empire_city_type(this.city_id) } }
-        @is_open { get: function() { return __empire_city_is_open(this.city_id) } }
+        @is_open { 
+            get: function() { return __empire_city_is_open(this.city_id) } 
+            set: function(open) { __empire_city_set_open(this.city_id, open) }
+        }
+        @is_sieged { get: function() { return __empire_city_is_sieged(this.city_id) } }
+        @cost_to_open { get: function() { return __empire_city_cost_to_open(this.city_id) } }
 
         city_buys_resource : function(resource) { return __empire_city_buys_resource(this.city_id, resource) }
         city_sells_resource : function(resource) { return __empire_city_sells_resource(this.city_id, resource) }
