@@ -383,7 +383,7 @@ void empire_window::draw_empire_object(int object_index, const empire_object& ob
             }
         }
 
-        // draw routes!
+        // draw routes! (highlighted path for the selected city is deferred to the end of draw_map)
         if (city->type == EMPIRE_CITY_EGYPTIAN_TRADING || city->type == EMPIRE_CITY_FOREIGN_TRADING
             || city->type == EMPIRE_CITY_PHARAOH_TRADING) {
             e_empire_route_state state = ROUTE_CLOSED;
@@ -398,7 +398,12 @@ void empire_window::draw_empire_object(int object_index, const empire_object& ob
                           ? ROUTE_CLOSED_SELECTED
                           : ROUTE_CLOSED;
             }
-            draw_trade_route(city->route_id, state);
+            if (state == ROUTE_OPEN_SELECTED || state == ROUTE_CLOSED_SELECTED) {
+                deferred_selected_trade_route_id = city->route_id;
+                deferred_selected_trade_route_state = state;
+            } else {
+                draw_trade_route(city->route_id, state);
+            }
         }
 
         const int letter_height = font_definition_for(FONT_SMALL_PLAIN)->line_height;
@@ -498,6 +503,10 @@ void empire_window::draw_map() {
     }
 
     draw_distant_battle_path();
+
+    if (deferred_selected_trade_route_id >= 0) {
+        draw_trade_route(deferred_selected_trade_route_id, deferred_selected_trade_route_state);
+    }
 
     ui.begin_widget(pos);
     ui.event(empire_window_draw{draw_offset}, get_section(), __func__);

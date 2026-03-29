@@ -23,8 +23,10 @@ struct empire_window : public autoconfig_window_t<empire_window> {
         cross_bar, trade_amount,
         closed_trade_route_hl, open_trade_route, open_trade_route_hl;
     xstring hovered_object_tooltip;
-    //svector<object_trade_info, 16> buying_goods;
-    //svector<object_trade_info, 16> selling_goods;
+
+    /** Filled in draw_empire_object, drawn last in draw_map (above other routes and map overlays). */
+    int deferred_selected_trade_route_id = -1;
+    e_empire_route_state deferred_selected_trade_route_state = ROUTE_CLOSED;
 
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }
