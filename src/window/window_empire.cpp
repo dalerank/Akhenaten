@@ -132,9 +132,6 @@ inline void empire_window::archive_load(archive arch) {
     start_pos = arch.r_vec2i("start_pos");
     finish_pos = arch.r_vec2i("finish_pos");
     arch.r_desc("image", image);
-    arch.r_desc("horizontal_bar", horizontal_bar);
-    arch.r_desc("cross_bar", cross_bar);
-    arch.r_desc("trade_amount", trade_amount);
     arch.r_desc("closed_trade_route_hl", closed_trade_route_hl);
     arch.r_desc("open_trade_route", open_trade_route);
     arch.r_desc("open_trade_route_hl", open_trade_route_hl);
@@ -194,47 +191,6 @@ void empire_window::draw_trade_route(int route_id, e_empire_route_state effect) 
 
             if (empire_window_draw_points()) {
                 ui::fill_rect(draw_offset + vec2i{route_point.p.x - 4, route_point.p.y - 4}, vec2i{8, 8}, COLOR_BLACK);
-            }
-        }
-    }
-}
-
-void empire_window::draw_distant_battle_path() {
-    if (!g_distant_battle.has_distant_battle()) {
-        return;
-    }
-
-    const army_path& path = g_distant_battle.get_path();
-    if (path.empty()) {
-        return;
-    }
-
-    int image_id = open_trade_route.tid();
-    for (int i = 0; i < path.size(); i++) {
-        const vec2i& route_point = path[i];
-        ui::image_abs(image_id, draw_offset + route_point);
-
-        // Draw lines connecting the points
-        if (i < path.size() - 1) {
-            const vec2i& next_point = path[i + 1];
-            vec2i d = next_point - route_point;
-            float len = 0.2f * sqrtf(float(d.x * d.x) + float(d.y * d.y));
-
-            if (len > 0.0f) {
-                float scaled_x = (float)d.x / len;
-                float scaled_y = (float)d.y / len;
-
-                float progress = 1.0f;
-                while (progress < len) {
-                    vec2i disp
-                      = draw_offset + route_point + vec2i{(int)(scaled_x * progress), (int)(scaled_y * progress)};
-                    ui::image_abs(image_id, disp);
-                    progress += 1.0f;
-                }
-            }
-
-            if (empire_window_draw_points()) {
-                ui::fill_rect(draw_offset + vec2i{route_point.x - 4, route_point.y - 4}, vec2i{8, 8}, COLOR_BLACK);
             }
         }
     }
@@ -502,7 +458,7 @@ void empire_window::draw_map() {
         ui::eimage(image_id, draw_pos);
     }
 
-    draw_distant_battle_path();
+    ui.event(empire_window_draw{draw_offset}, get_section(), __func__, empire_object_tokens.name(EMPIRE_OBJECT_DISTANT_BATTLE_ROUTE));
 
     if (deferred_selected_trade_route_id >= 0) {
         draw_trade_route(deferred_selected_trade_route_id, deferred_selected_trade_route_state);

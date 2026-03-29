@@ -19,8 +19,7 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     int finished_scroll;
     const int sell_res_group = 47;
     vec2i start_pos, finish_pos;
-    image_desc image, horizontal_bar,
-        cross_bar, trade_amount,
+    image_desc image,
         closed_trade_route_hl, open_trade_route, open_trade_route_hl;
     xstring hovered_object_tooltip;
 
@@ -45,7 +44,6 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     bool is_outside_map(int x, int y);
     void determine_selected_object(const mouse *m);
     void draw_trade_route(int route_id, e_empire_route_state effect);
-    void draw_distant_battle_path();
     void draw_object_tooltip();
     void draw_tooltip(tooltip_context *c);
 };
