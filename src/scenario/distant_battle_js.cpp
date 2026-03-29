@@ -6,7 +6,9 @@
 #include "core/log.h"
 #include "core/profiler.h"
 
-bool __empire_has_distant_battle() { return g_distant_battle.has_distant_battle() != 0; }
+bool __empire_has_distant_battle() {
+    return g_distant_battle.has_distant_battle() != 0;
+}
 ANK_FUNCTION(__empire_has_distant_battle)
 
 int __distant_battle_army_path_length() {
@@ -60,8 +62,7 @@ void __distant_battle_cheat_setup_test(int enemy_strength, int city_id) {
 
     g_distant_battle.battle.city = static_cast<uint8_t>(cid);
     g_distant_battle.init_distant_battle(enemy_strength > 0 ? enemy_strength : 50);
-    logs::info("distant_battle_test: city_id=%d enemy_strength=%d", cid,
-      enemy_strength > 0 ? enemy_strength : 50);
+    logs::info("distant_battle_test: city_id=%d enemy_strength=%d", cid, enemy_strength > 0 ? enemy_strength : 50);
 }
 ANK_FUNCTION_2(__distant_battle_cheat_setup_test)
 
