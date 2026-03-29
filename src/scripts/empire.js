@@ -6,6 +6,17 @@ function empire_route_debug_toggle(args) {
 	log_info("empire_route_debug_points: " + empire.route_debug_points)
 }
 
+[console_command=distant_battle_test]
+function console_command_distant_battle_test(args) {
+	var strength = parseInt((args && args[0]) || "50", 10)
+	var cityId = parseInt((args && args[1]) || "0", 10)
+	if (strength <= 0) {
+		strength = 50
+	}
+	__distant_battle_cheat_setup_test(strength, cityId)
+	log_info("distant_battle_test: city_id=ы" + cityId + " strength=" + strength)
+}
+
 empire_city_options {
     text_group_old_names : 195
     text_group_new_names : 21
