@@ -20,7 +20,6 @@
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/image_button.h"
-#include "graphics/elements/lang_text.h"
 #include "graphics/image_groups.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
@@ -42,6 +41,9 @@
 #include "dev/debug.h"
 
 uint16_t empire_images_remap[32000] = {0};
+
+using empire_object_tokens_t = token_holder<e_empire_object, EMPIRE_OBJECT_ORNAMENT, EMPIRE_OBJECT_COUNT>;
+const empire_object_tokens_t ANK_CONFIG_ENUM(empire_object_tokens);
 
 declare_console_var_bool(empire_window_draw_points, false) void ANK_REGISTER_CONFIG_ITERATOR(
   config_load_images_remap_config) {
@@ -79,6 +81,28 @@ struct empire_window_paneling {
     vec2i max_pos;
 };
 ANK_REGISTER_STRUCT_WRITER(empire_window_paneling, min_pos, max_pos);
+
+struct empire_window_object_info_empty {
+    int unused = 0;
+};
+ANK_REGISTER_STRUCT_WRITER(empire_window_object_info_empty, unused);
+
+struct empire_window_object_info_kingdome_army {
+    int distant_battle_travel_months;
+    int egyptian_months_to_travel_back;
+    int egyptian_months_to_travel_forth;
+    int kingdome_months_traveled;
+};
+ANK_REGISTER_STRUCT_WRITER(empire_window_object_info_kingdome_army, distant_battle_travel_months,
+  egyptian_months_to_travel_back, egyptian_months_to_travel_forth, kingdome_months_traveled);
+
+struct empire_window_object_info_enemy_army {
+    int distant_battle_travel_months;
+    int months_until_battle;
+    int enemy_months_traveled;
+};
+ANK_REGISTER_STRUCT_WRITER(empire_window_object_info_enemy_army, distant_battle_travel_months, months_until_battle,
+  enemy_months_traveled);
 
 void empire_window_confirm_open_trade() {
     empire_city* city = g_empire.city(g_empire_map.selected_city);
@@ -227,101 +251,44 @@ void empire_window::draw_distant_battle_path() {
     }
 }
 
-void empire_window::clear_city_info() {
-    ui["city_sell_title"].enabled = false;
-    ui["city_sell_items"].enabled = false;
-    ui["city_buy_title"].enabled = false;
-    ui["city_buy_items"].enabled = false;
-    ui["city_want_sell_title"].enabled = false;
-    ui["city_want_sell_items"].enabled = false;
-    ui["city_want_buy_title"].enabled = false;
-    ui["city_want_buy_items"].enabled = false;
-}
-
-void empire_window::draw_city_info(const empire_object* object) {
-    const empire_city* city = g_empire.city(g_empire_map.selected_city);
-
-    clear_city_info();
-    switch (city->type) {
-    case EMPIRE_CITY_OURS:
-        ui["info_tooltip"] = ui::str(sell_res_group, 1);
-        break;
-
-    case EMPIRE_CITY_PHARAOH:
-        ui["info_tooltip"] = ui::str(sell_res_group, 19);
-        break;
-
-    case EMPIRE_CITY_EGYPTIAN:
-        ui["info_tooltip"] = ui::str(sell_res_group, 13);
-        break;
-
-    case EMPIRE_CITY_FOREIGN:
-        ui["info_tooltip"] = ui::str(sell_res_group, 0);
-        break;
-
-    case EMPIRE_CITY_PHARAOH_TRADING:
-    case EMPIRE_CITY_EGYPTIAN_TRADING:
-    case EMPIRE_CITY_FOREIGN_TRADING:
-        ui["info_tooltip"] = "";
-        ui["city_sell_title"].enabled = city->is_open;
-        ui["city_sell_items"].enabled = city->is_open;
-        ui["city_buy_title"].enabled = city->is_open;
-        ui["city_buy_items"].enabled = city->is_open;
-        ui["city_want_sell_title"].enabled = !city->is_open;
-        ui["city_want_sell_items"].enabled = !city->is_open;
-        ui["city_want_buy_title"].enabled = !city->is_open;
-        ui["city_want_buy_items"].enabled = !city->is_open;
-        break;
-
-    default:
-        assert(false);
-    }
-}
-
-void empire_window::draw_kingdome_army_info(const empire_object* object) {
-    if (g_distant_battle.battle.egyptian_months_to_travel_back > 0) {
-        if (city_military_distant_battle_kingdome_months_traveled() == object->distant_battle_travel_months) {
-            vec2i offset{(min_pos.x + max_pos.x - 240) / 2, max_pos.y - 68};
-            int text_id;
-            if (g_distant_battle.battle.egyptian_months_to_travel_forth)
-                text_id = 15;
-            else {
-                text_id = 16;
-            }
-
-            lang_text_draw_multiline(sell_res_group, text_id, offset, 240, FONT_NORMAL_BLACK_ON_LIGHT);
-        }
-    }
-}
-
-void empire_window::draw_enemy_army_info(const empire_object* object) {
-    if (g_distant_battle.battle.months_until_battle > 0) {
-        if (g_distant_battle.enemy_months_traveled() == object->distant_battle_travel_months) {
-            lang_text_draw_multiline(sell_res_group, 14, vec2i{(min_pos.x + max_pos.x - 240) / 2, max_pos.y - 68}, 240,
-              FONT_NORMAL_BLACK_ON_LIGHT);
-        }
-    }
-}
-
 void empire_window::draw_object_info() {
-    int selected_object = g_empire_map.selected_object();
-    if (selected_object) {
-        ui["info_tooltip"] = "";
-        const empire_object* object = g_empire.get_object(selected_object - 1);
-        switch (object->type) {
-        case EMPIRE_OBJECT_CITY:
-            draw_city_info(object);
-            break;
-        case EMPIRE_OBJECT_KINGDOME_ARMY:
-            draw_kingdome_army_info(object);
-            break;
-        case EMPIRE_OBJECT_ENEMY_ARMY:
-            draw_enemy_army_info(object);
-            break;
-        }
-    } else {
-        clear_city_info();
-        ui["info_tooltip"] = ui::str(47, 9);
+    const int selected_object = g_empire_map.selected_object();
+    if (selected_object <= 0) {
+        ui.event(empire_window_object_info_empty{}, get_section(), "draw_object_info", "none");
+        return;
+    }
+
+    const empire_object* object = g_empire.get_object(selected_object - 1);
+    if (!object) {
+        ui.event(empire_window_object_info_empty{}, get_section(), "draw_object_info", "none");
+        return;
+    }
+
+    const e_empire_object ot = (e_empire_object)object->type;
+
+    switch (ot) {
+    case EMPIRE_OBJECT_KINGDOME_ARMY: {
+        const auto& battle = g_distant_battle.battle;
+        empire_window_object_info_kingdome_army info;
+        info.distant_battle_travel_months = object->distant_battle_travel_months;
+        info.egyptian_months_to_travel_back = battle.egyptian_months_to_travel_back;
+        info.egyptian_months_to_travel_forth = battle.egyptian_months_to_travel_forth;
+        info.kingdome_months_traveled = city_military_distant_battle_kingdome_months_traveled();
+        ui.event(info, get_section(), "draw_object_info", empire_object_tokens.name(ot));
+        break;
+    }
+    case EMPIRE_OBJECT_ENEMY_ARMY: {
+        const auto& battle = g_distant_battle.battle;
+        empire_window_object_info_enemy_army info;
+        info.distant_battle_travel_months = object->distant_battle_travel_months;
+        info.months_until_battle = battle.months_until_battle;
+        info.enemy_months_traveled = g_distant_battle.enemy_months_traveled();
+        ui.event(info, get_section(), "draw_object_info", empire_object_tokens.name(ot));
+        break;
+    }
+    default:
+        ui.event(empire_window_object_info_empty{}, get_section(), "draw_object_info", empire_object_tokens.name(ot));
+        break;
     }
 }
 
@@ -526,7 +493,8 @@ void empire_window::draw_map() {
 
     ui::eimage(image, draw_offset);
 
-    g_empire.foreach_object([this](int object_index, const empire_object& obj) { draw_empire_object(object_index, obj); });
+    g_empire.foreach_object(
+      [this](int object_index, const empire_object& obj) { draw_empire_object(object_index, obj); });
 
     scenario_invasion_foreach_warning([&](vec2i pos, int image_id) { ui::eimage(image_id, draw_offset + pos); });
 
@@ -558,7 +526,7 @@ int empire_window::draw_background(UiFlags flags) {
 
     int s_width = screen_width();
     int s_height = screen_height();
-    const image_t *map_img = image_get(image);
+    const image_t* map_img = image_get(image);
     const vec2i empire_size = map_img ? vec2i{map_img->width + finish_pos.x, map_img->height + finish_pos.y + 20}
                                       : vec2i{1200 + 32, 1600 + 136 + 20};
     min_pos.x = s_width <= empire_size.x ? 0 : (s_width - empire_size.x) / 2;

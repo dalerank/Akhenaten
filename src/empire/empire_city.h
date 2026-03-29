@@ -57,7 +57,7 @@ struct empire_city {
     void set_foreign() {
         type = EMPIRE_CITY_EGYPTIAN;
     }
-    
+
     void set_under_siege(uint8_t months) {
         months_under_siege = months;
         if (months_under_siege > 0) {
@@ -66,7 +66,7 @@ struct empire_city {
     }
 
     static bstring32 get_display_name(int id);
-    
+
     bool is_sieged() const {
         return months_under_siege > 0;
     }

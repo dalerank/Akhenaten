@@ -83,5 +83,20 @@ int __empire_map_selected_city() {
 }
 ANK_FUNCTION(__empire_map_selected_city)
 
+int __empire_city_type(int city_index) {
+    const empire_city* city = g_empire.city(city_index);
+    if (!city || !city->in_use) {
+        return -1;
+    }
+    return (int)city->type;
+}
+ANK_FUNCTION_1(__empire_city_type)
+
+bool __empire_city_is_open(int city_index) {
+    const empire_city* city = g_empire.city(city_index);
+    return city && city->in_use && city->is_open;
+}
+ANK_FUNCTION_1(__empire_city_is_open)
+
 void js_register_empire_objects(js_State *J) {
 }
