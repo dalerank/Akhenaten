@@ -37,6 +37,7 @@ struct empire_trader {
     bool is_at_destination() const;
     void complete_trade();
 };
+ANK_CONFIG_PROPERTY(empire_trader, current_position, is_ship, is_active, id, trade_route_id, destination_city_id)
 
 class empire_traders_manager {
 public:   

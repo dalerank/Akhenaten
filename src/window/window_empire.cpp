@@ -20,7 +20,6 @@
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/image_button.h"
-#include "graphics/image_groups.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -69,6 +68,11 @@ struct empire_window_draw {
     vec2i draw_offset;
 };
 ANK_REGISTER_STRUCT_WRITER(empire_window_draw, draw_offset);
+
+struct empire_window_draw_trader {
+    int index;
+};
+ANK_REGISTER_STRUCT_WRITER(empire_window_draw_trader, index);
 
 struct empire_window_init_event {
     vec2i pos;
@@ -416,6 +420,10 @@ void empire_window::draw_empire_object(int object_index, const empire_object& ob
             return;
     }
 
+    if (obj.type == EMPIRE_OBJECT_TRADER) {
+        return;
+    }
+
     {
         const image_t* img = ui::eimage(image_id, draw_pos);
         if (last_mouse_pos.x > draw_pos.x && last_mouse_pos.y > draw_pos.y && last_mouse_pos.x < draw_pos.x + img->width
@@ -450,13 +458,12 @@ void empire_window::draw_map() {
         if (!trader.is_active) {
             continue;
         }
-
-        const int image_id = image_id_from_group(PACK_GENERAL, 179) + (trader.is_ship ? 0 : 1);
-        const vec2i draw_pos = draw_offset + trader.current_position;
-        ui::eimage(image_id, draw_pos);
+        ui.event(empire_window_draw_trader{trader.id}, get_section(), __func__,
+          empire_object_tokens.name(EMPIRE_OBJECT_TRADER));
     }
 
-    ui.event(empire_window_draw{draw_offset}, get_section(), __func__, empire_object_tokens.name(EMPIRE_OBJECT_DISTANT_BATTLE_ROUTE));
+    ui.event(empire_window_draw{draw_offset}, get_section(), __func__,
+      empire_object_tokens.name(EMPIRE_OBJECT_DISTANT_BATTLE_ROUTE));
 
     if (deferred_selected_trade_route_id >= 0) {
         draw_trade_route(deferred_selected_trade_route_id, deferred_selected_trade_route_state);
