@@ -13,6 +13,7 @@
 #include "window/window_advisors.h"
 #include "window/window_labor_priority.h"
 #include "window/resource_settings.h"
+#include "window/trade_opened.h"
 #include "window/autoconfig_window.h"
 #include "window/window_empire.h"
 #include "empire/trade_prices.h"
@@ -159,6 +160,11 @@ void __window_empire_show() {
     window_empire_show();
 }
 ANK_FUNCTION(__window_empire_show)
+
+void __window_trade_opened_show(int city_id) {
+    window_trade_opened_show(city_id);
+}
+ANK_FUNCTION_1(__window_trade_opened_show)
 
 void __ui_draw_line(bool hline, vec2i pos, int size) {
     ui::line(hline, pos, size, 0xff000000);

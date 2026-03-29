@@ -84,7 +84,7 @@ e_resource empire_trader_handle::get_buy_resource(building* b, empire_city_handl
             space->take_resource(amount);
 
             // update finances
-            uint32_t price = trade_price_sell(resource);
+            int price = trade_price_sell(resource);
             events::emit(event_finance_request{ efinance_request_export, price });
 
             // update graphics

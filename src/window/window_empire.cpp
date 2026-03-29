@@ -5,7 +5,6 @@
 #include "game/game_events.h"
 #include "city/city_warnings.h"
 #include "city/constants.h"
-#include "city/city_finance.h"
 #include "empire/empire.h"
 #include "empire/empire_city.h"
 #include "empire/empire_map.h"
@@ -30,7 +29,6 @@
 #include "scenario/scenario.h"
 #include "window/window_city.h"
 #include "game/game_config.h"
-#include "window/trade_opened.h"
 #include "platform/renderer.h"
 #include "game/game.h"
 #include "core/profiler.h"
@@ -105,19 +103,6 @@ struct empire_window_object_info_enemy_army {
 };
 ANK_REGISTER_STRUCT_WRITER(empire_window_object_info_enemy_army, distant_battle_travel_months, months_until_battle,
   enemy_months_traveled);
-
-void empire_window_confirm_open_trade() {
-    empire_city* city = g_empire.city(g_empire_map.selected_city);
-
-    if (city && city->is_sieged()) {
-        return;
-    }
-
-    g_city.finance.process_construction(city->cost_to_open);
-    city->is_open = 1;
-    window_trade_opened_show(g_empire_map.selected_city);
-}
-ANK_FUNCTION(empire_window_confirm_open_trade)
 
 void empire_window::init() {
     int selected_object = g_empire_map.selected_object();

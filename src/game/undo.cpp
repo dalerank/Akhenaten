@@ -211,7 +211,7 @@ void game_undo_perform() {
     
     data.available = 0;
 
-    g_city.finance.process_construction(-data.building_cost);
+    events::emit(event_finance_request{efinance_request_construction, -data.building_cost});
     if (data.type == BUILDING_CLEAR_LAND) {
         for (int i = 0; i < data.num_buildings; i++) {
             if (data.buildings[i].id) {
