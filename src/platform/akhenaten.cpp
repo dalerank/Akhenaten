@@ -28,6 +28,7 @@
 #include "window/autoconfig_window.h"
 #include "graphics/imagepak_holder.h"
 #include "game/mission.h"
+#include "scenario/scenario.h"
 #include "core/cstring.h"
 #include "renderer.h"
 
@@ -52,8 +53,13 @@
 #include "platform/vita/vita_input.h"
 #endif
 
-#ifdef __EMSCRIPTEN__
+#ifdef GAME_PLATFORM_BROWSER
 #include <emscripten/emscripten.h>
+#endif
+
+#ifndef GAME_PLATFORM_ANDROID
+#include "dev/perfmon.h"
+#include "dev/perfmon_nanoprofiler.h"
 #endif
 
 #if defined(_WIN32)
@@ -297,51 +303,80 @@ static void teardown() {
 }
 
 static void run_and_draw() {
-    OZZY_PROFILER_BEGIN_FRAME();
-    js_vm_frame_begin();
-    reset_frame_string_allocator();
+    {
+        NANO_PROFILE_SCOPE("_Frame");
 
-    time_millis time_before_run = SDL_GetTicks();
-    time_set_millis(time_before_run);
+        OZZY_PROFILER_BEGIN_FRAME();
+        js_vm_frame_begin();
+        reset_frame_string_allocator();
 
-    game_imgui_overlay_begin_frame();
+        time_millis time_before_run = SDL_GetTicks();
+        time_set_millis(time_before_run);
 
-    game.update();
-    Uint32 time_between_run_and_draw = SDL_GetTicks();
+        game_imgui_overlay_begin_frame();
 
-    game.frame_begin();
-    game.sound_frame_begin();
+        {
+            NANO_PROFILE_SCOPE("_GameUpdate");
+            game.update();
+        }
+        Uint32 time_between_run_and_draw = SDL_GetTicks();
 
-    game.handle_input_frame();
-    Uint32 time_after_draw = SDL_GetTicks();
+        {
+            NANO_PROFILE_SCOPE("_GameDraw");
+            game.frame_begin();
+            game.sound_frame_begin();
+            game.handle_input_frame();
+        }
+        Uint32 time_after_draw = SDL_GetTicks();
 
-    game.fps.frame_count++;
-    if (time_after_draw - game.fps.last_update_time > 1000) {
-        game.fps.last_fps = game.fps.frame_count;
-        game.fps.last_update_time = time_after_draw;
-        game.fps.frame_count = 0;
+        game_perfmon_set_phase_ms(
+            (double)(time_between_run_and_draw - time_before_run),
+            (double)(time_after_draw - time_between_run_and_draw));
+
+        {
+            NANO_PROFILE_SCOPE("_HUD");
+            game.fps.frame_count++;
+            if (time_after_draw - game.fps.last_update_time > 1000) {
+                game.fps.last_fps = game.fps.frame_count;
+                game.fps.last_update_time = time_after_draw;
+                game.fps.frame_count = 0;
+            }
+
+            const bool main_windows = (g_window_manager.window_is("window_city") || g_window_manager.window_is("window_city_military") || g_window_manager.window_is("window_sliding_sidebar"));
+            if (!!game_features::gameui_draw_fps && main_windows) {
+                int y_offset = screen_height() - 24;
+                int y_offset_text = y_offset + 5;
+
+                text_draw_number_colored(game.fps.last_fps, 'f', "", 5, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
+                text_draw_number_colored(time_between_run_and_draw - time_before_run, 'g', "", 40, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
+                text_draw_number_colored(time_after_draw - time_between_run_and_draw, 'd', "", 70, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
+            }
+        }
+
+        {
+            NANO_PROFILE_SCOPE("_DebugUI");
+            game_debug_cli_draw();
+            game_debug_properties_draw();
+#if !defined(GAME_PLATFORM_ANDROID)
+            game_perfmon_draw();
+#endif
+        }
+
+        {
+            NANO_PROFILE_SCOPE("_ImGuiRender");
+            game_imgui_overlay_draw();
+        }
+
+        {
+            NANO_PROFILE_SCOPE("_Present");
+            platform_renderer_render();
+        }
+
+        game.frame_end();
+        game.write_frame();
     }
 
-    const bool main_windows = (g_window_manager.window_is("window_city") || g_window_manager.window_is("window_city_military") || g_window_manager.window_is("window_sliding_sidebar"));
-    if (!!game_features::gameui_draw_fps && main_windows) {
-        int y_offset = screen_height() - 24;
-        int y_offset_text = y_offset + 5;
- 
-        text_draw_number_colored(game.fps.last_fps, 'f', "", 5, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
-        text_draw_number_colored(time_between_run_and_draw - time_before_run, 'g', "", 40, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
-        text_draw_number_colored(time_after_draw - time_between_run_and_draw, 'd', "", 70, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
-    }
-
-    game_debug_cli_draw();
-    game_debug_properties_draw();
-
-    game_imgui_overlay_draw();
-    platform_renderer_render();
-
-    game.frame_end();
-    game.write_frame();
-
-    int scenario_id = g_scenario.campaign_scenario_id();
+    game_perfmon_frame_mark_end();
     mission_id_t missionid(scenario_id);
     const bool need_reload = js_vm_sync(missionid.value());
     if (need_reload) {
