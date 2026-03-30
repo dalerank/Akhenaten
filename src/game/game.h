@@ -57,6 +57,7 @@ struct game_t {
     bool animation = false;
     bool debug_console = false;
     bool debug_properties = false;
+    bool debug_perfmon = false;
     uint16_t game_speed;
     uint32_t frame = 0;
     uint16_t last_frame_tick = 0;
