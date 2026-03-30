@@ -3,6 +3,8 @@
 #include "content/vfs.h"
 #include "core/variant.h"
 
+#include <cstdint>
+
 struct js_State;
 struct mission_id_t;
 
@@ -20,5 +22,8 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
 int js_vm_trypcall(js_State *J, int params);
 bool js_vm_have_error();
 void js_vm_frame_begin();
+
+/** Bytes allocated for the JS VM via mujs main heap (malloc/realloc through js_alloc_wrapper). */
+uint64_t js_mujs_heap_bytes();
 
 vfs::path js_vm_get_absolute_path(vfs::path file);
