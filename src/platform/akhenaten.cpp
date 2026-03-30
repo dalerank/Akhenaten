@@ -371,6 +371,7 @@ static void run_and_draw() {
     }
 
     game_perfmon_frame_mark_end();
+    int scenario_id = g_scenario.campaign_scenario_id();
     mission_id_t missionid(scenario_id);
     const bool need_reload = js_vm_sync(missionid.value());
     if (need_reload) {

@@ -15,6 +15,7 @@
 #include "mujs/jscompile.h"
 #include "platform/arguments.h"
 #include "platform/platform.h"
+#include "core/interlocked.h"
 #include "core/variant.h"
 #include "content/mods.h"
 #include "scenario/scenario.h"
@@ -38,13 +39,49 @@
 struct {
     const size_t FRAME_ALLOC_BUFFER_SIZE = 64 * 1024;
     svector<vfs::path, 4> scripts_folders;
-    std::vector<vfs::path> files2load;
+    hvector<vfs::path, 16> files2load;
     int have_error;
     bstring256 error_str;
     js_State *J;
     char *frame_alloc_buffer = nullptr;
     std::pmr::monotonic_buffer_resource frame_alloc_ctx;
 } vm;
+
+namespace
+{
+    volatile std::uint64_t g_mujs_heap_bytes = 0;
+
+    void mujs_heap_add_bytes(size_t n)
+    {
+        threading::xchgadd(&g_mujs_heap_bytes, static_cast<std::uint64_t>(n));
+    }
+
+    void mujs_heap_sub_bytes(size_t n)
+    {
+        threading::xchgadd(&g_mujs_heap_bytes, static_cast<std::uint64_t>(0 - static_cast<std::uint64_t>(n)));
+    }
+
+    size_t mujs_malloc_block_size(void *ptr)
+    {
+        if (!ptr) {
+            return 0;
+        }
+#if defined(_WIN32)
+        return _msize(ptr);
+#elif defined(__APPLE__)
+        return malloc_size(ptr);
+#elif defined(__linux__) || defined(__ANDROID__)
+        return malloc_usable_size(ptr);
+#else
+        return 0;
+#endif
+    }
+} // namespace
+
+uint64_t js_mujs_heap_bytes()
+{
+    return g_mujs_heap_bytes;
+}
 
 void js_reset_vm_state();
 
@@ -197,12 +234,12 @@ static void js_vm_dump_stack(js_State *J) {
                     prop_count++;
                 }
                 js_pop(J, 1); // Remove iterator
-                
+
                 // Restore stack state
                 while (js_gettop(J) > save_top) {
                     js_pop(J, 1);
                 }
-                
+
                 if (prop_count > 0) {
                     value_desc.printf("object {%s, ...}", props_preview.c_str());
                 } else {
@@ -490,8 +527,12 @@ void js_register_vm_functions(js_State *J) {
 extern bool TracyProfilerAvailable;
 #endif
 void *js_alloc_wrapper(void *actx, void *ptr, int size) {
+    (void)actx;
+
     if (size == 0) {
         if (ptr) {
+            const size_t freed = mujs_malloc_block_size(ptr);
+            mujs_heap_sub_bytes(freed);
 #if defined(TRACY_MEMORY_ENABLE)
             if (TracyProfilerAvailable) {
                 TracyFreeS(ptr, 20);
@@ -503,17 +544,21 @@ void *js_alloc_wrapper(void *actx, void *ptr, int size) {
     }
 
     if (!ptr) {
-        void *new_ptr = malloc(size);
+        void *new_ptr = malloc((size_t)size);
 #if defined(TRACY_MEMORY_ENABLE)
         if (new_ptr && TracyProfilerAvailable) {
             TracyAllocS(new_ptr, size, 20);
         }
 #endif
+        if (new_ptr) {
+            mujs_heap_add_bytes(mujs_malloc_block_size(new_ptr));
+        }
         return new_ptr;
     }
 
     void *old_ptr = ptr;
-    void *new_ptr = realloc(ptr, size);
+    const size_t old_sz = mujs_malloc_block_size(old_ptr);
+    void *new_ptr = realloc(old_ptr, (size_t)size);
 
 #if defined(TRACY_MEMORY_ENABLE)
     if (TracyProfilerAvailable && new_ptr) {
@@ -525,6 +570,12 @@ void *js_alloc_wrapper(void *actx, void *ptr, int size) {
     if (!new_ptr && size > 0) {
         return nullptr;
     }
+
+    mujs_heap_sub_bytes(old_sz);
+    if (new_ptr) {
+        mujs_heap_add_bytes(mujs_malloc_block_size(new_ptr));
+    }
+
     return new_ptr;
 }
 

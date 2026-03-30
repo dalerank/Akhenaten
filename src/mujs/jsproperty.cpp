@@ -34,6 +34,8 @@ static js_Property sentinel = {
 };
 
 static js_Property *newproperty(js_State *J, js_Object *obj, const char *name) {
+    OZZY_PROFILER_FUNCTION();
+
     js_Property *node = (js_Property *)js_malloc(J, sizeof * node);
     node->name = js_intern(J, name);
     node->left = node->right = &sentinel;

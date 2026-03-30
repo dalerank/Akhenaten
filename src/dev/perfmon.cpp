@@ -5,6 +5,7 @@
 #include "dev/perfmon_nanoprofiler.h"
 #include "dev/perfmon_widget.h"
 #include "game/game.h"
+#include "js/js.h"
 #include "widget/debug_console.h"
 
 #include "imgui.h"
@@ -52,6 +53,19 @@ namespace
             []() { return g_draw_ms; },
             phaseSettings,
             { 4.0, 8.0, 16.0, 33.0, 66.0 }));
+
+        Perfmon::PerfMetricSettings memSettings;
+        memSettings.goodValue = 4.0;
+        memSettings.badValue = 48.0;
+
+        g_perfmon.RegisterMetric(Perfmon::Metric(
+            "mujs heap (MB, main alloc)",
+            []() -> double {
+                constexpr double kInv = 1.0 / (1024.0 * 1024.0);
+                return (double)js_mujs_heap_bytes() * kInv;
+            },
+            memSettings,
+            { 1.0, 4.0, 8.0, 16.0, 32.0, 64.0 }));
     }
 } // namespace
 
