@@ -81,15 +81,15 @@
 
 static_assert(SDL_VERSION_ATLEAST(2, 0, 17));
 #define URL_PATCHES "https://github.com/dalerank/akhenaten/wiki/Patches"
-#define URL_EDITOR "https://github.com/dalerank/akhenaten/wiki/Editor"
+#define URL_EDITOR  "https://github.com/dalerank/akhenaten/wiki/Editor"
 
 #define INTPTR(d) (*(int*)(d))
 
 namespace {
 
-void show_usage() {
-    platform_screen_show_error_message_box("Command line interface", Arguments::usage());
-}
+    void show_usage() {
+        platform_screen_show_error_message_box("Command line interface", Arguments::usage());
+    }
 
 } // namespace
 
@@ -112,7 +112,7 @@ static int init_sdl() {
     static_assert(SDL_VERSION_ATLEAST(2, 0, 10), "SDL version too old");
     SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
     SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
-    //SDL_SetHint(SDL_HINT_ANDROID_SEPARATE_MOUSE_AND_TOUCH, "1");
+    // SDL_SetHint(SDL_HINT_ANDROID_SEPARATE_MOUSE_AND_TOUCH, "1");
 
 #if defined(GAME_PLATFORM_ANDROID)
     SDL_SetHint(SDL_HINT_ANDROID_TRAP_BACK_BUTTON, "1");
@@ -204,32 +204,27 @@ static void setup() {
     bool again = false;
 #endif // GAME_PLATFORM_ANDROID
     while (!pre_init(g_args.get_data_directory())) {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
-                                 "Warning",
-                                 "Akhenaten requires the original files from Pharaoh to run.\n"
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Warning",
+          "Akhenaten requires the original files from Pharaoh to run.\n"
 #if defined(GAME_PLATFORM_ANDROID)
-                                 "Copy your entire Pharaoh folder to your Android device into folder"
-                                 "/sdcard0/Android/data/com.github.dalerank.akhenaten/files",
+          "Copy your entire Pharaoh folder to your Android device into folder"
+          "/sdcard0/Android/data/com.github.dalerank.akhenaten/files",
 #else
-                                 "Move the executable file to the directory containing an existing\n"
-                                 "Pharaoh installation, or run: akhenaten path/to/directory",
+          "Move the executable file to the directory containing an existing\n"
+          "Pharaoh installation, or run: akhenaten path/to/directory",
 #endif
-                                 nullptr);
+          nullptr);
 
 #if defined(GAME_PLATFORM_ANDROID)
         if (again) {
-            const SDL_MessageBoxButtonData buttons[] = {
-                {SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "OK"},
-                {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel"}
-            };
-            const SDL_MessageBoxData messageboxdata = {
-                SDL_MESSAGEBOX_WARNING, NULL, "Wrong folder selected",
-                "The selected folder is not a proper Pharaoh folder.\n\n"
-                "Please select a path directly from either the internal storage "
-                "or the SD card, otherwise the path may not be recognised.\n\n"
-                "Press OK to select another folder or Cancel to exit.",
-                SDL_arraysize(buttons), buttons, NULL
-            };
+            const SDL_MessageBoxButtonData buttons[] = {{SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "OK"},
+              {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel"}};
+            const SDL_MessageBoxData messageboxdata = {SDL_MESSAGEBOX_WARNING, NULL, "Wrong folder selected",
+              "The selected folder is not a proper Pharaoh folder.\n\n"
+              "Please select a path directly from either the internal storage "
+              "or the SD card, otherwise the path may not be recognised.\n\n"
+              "Press OK to select another folder or Cancel to exit.",
+              SDL_arraysize(buttons), buttons, NULL};
             int result;
             SDL_ShowMessageBox(&messageboxdata, &result);
             if (!result) {
@@ -239,37 +234,34 @@ static void setup() {
         again = true;
         pcstr user_dir = android_show_pharaoh_path_dialog(again);
         g_args.set_data_directory(user_dir);
- #endif
+#endif
         if (support_window_options) {
             show_options_window(g_args);
         }
     }
 
     // set up game display
-    if (!platform_screen_create("Akhenaten",
-                                g_args.get_renderer(),
-                                g_args.is_fullscreen(),
-                                g_args.get_display_scale_percentage(),
-                                g_args.get_window_size())) {
+    if (!platform_screen_create("Akhenaten", g_args.get_renderer(), g_args.is_fullscreen(),
+          g_args.get_display_scale_percentage(), g_args.get_window_size())) {
         logs::info("Exiting: SDL create window failed");
         exit(-2);
     }
 
     g_settings.set_cli_fullscreen(g_args.is_fullscreen());
     if (g_args.has_window_pos()) {
-        const auto &pos = g_args.get_window_pos();
+        const auto& pos = g_args.get_window_pos();
         platform_screen_move(pos.x, pos.y);
     }
     platform_init_cursors(g_args.get_cursor_scale_percentage()); // this has to come after platform_screen_create,
-                                                               // otherwise it fails on Nintendo Switch
-    image_data_init();                                         // image paks structures init
+                                                                 // otherwise it fails on Nintendo Switch
+    image_data_init();                                           // image paks structures init
 
     pcstr base_path = vfs::platform_file_manager_get_base_path();
     vfs::path scripts_base_path(base_path, vfs::SCRIPTS_FOLDER);
-    js_vm_add_scripts_folder(scripts_base_path);    // setup script engine data scripts folder
+    js_vm_add_scripts_folder(scripts_base_path); // setup script engine data scripts folder
 
-    js_vm_add_scripts_folder(g_args.get_scripts_directory().c_str());    // setup script engine user folder
-    js_vm_add_scripts_folder(vfs::SCRIPTS_FOLDER);      // setup script engine additional folder
+    js_vm_add_scripts_folder(g_args.get_scripts_directory().c_str()); // setup script engine user folder
+    js_vm_add_scripts_folder(vfs::SCRIPTS_FOLDER);                    // setup script engine additional folder
 
     js_vm_setup();
     js_vm_sync({});
@@ -329,9 +321,8 @@ static void run_and_draw() {
         }
         Uint32 time_after_draw = SDL_GetTicks();
 
-        game_perfmon_set_phase_ms(
-            (double)(time_between_run_and_draw - time_before_run),
-            (double)(time_after_draw - time_between_run_and_draw));
+        game_perfmon_set_phase_ms((double)(time_between_run_and_draw - time_before_run),
+          (double)(time_after_draw - time_between_run_and_draw));
 
         {
             NANO_PROFILE_SCOPE("_HUD");
@@ -342,14 +333,19 @@ static void run_and_draw() {
                 game.fps.frame_count = 0;
             }
 
-            const bool main_windows = (g_window_manager.window_is("window_city") || g_window_manager.window_is("window_city_military") || g_window_manager.window_is("window_sliding_sidebar"));
+            const bool main_windows
+              = (g_window_manager.window_is("window_city") || g_window_manager.window_is("window_city_military")
+                 || g_window_manager.window_is("window_sliding_sidebar"));
             if (!!game_features::gameui_draw_fps && main_windows) {
                 int y_offset = screen_height() - 24;
                 int y_offset_text = y_offset + 5;
 
-                text_draw_number_colored(game.fps.last_fps, 'f', "", 5, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
-                text_draw_number_colored(time_between_run_and_draw - time_before_run, 'g', "", 40, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
-                text_draw_number_colored(time_after_draw - time_between_run_and_draw, 'd', "", 70, y_offset_text, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
+                text_draw_number_colored(game.fps.last_fps, 'f', "", 5, y_offset_text, FONT_NORMAL_WHITE_ON_DARK,
+                  COLOR_FONT_RED);
+                text_draw_number_colored(time_between_run_and_draw - time_before_run, 'g', "", 40, y_offset_text,
+                  FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
+                text_draw_number_colored(time_after_draw - time_between_run_and_draw, 'd', "", 70, y_offset_text,
+                  FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
             }
         }
 
@@ -357,9 +353,7 @@ static void run_and_draw() {
             NANO_PROFILE_SCOPE("_DebugUI");
             game_debug_cli_draw();
             game_debug_properties_draw();
-#if !defined(GAME_PLATFORM_ANDROID)
             game_perfmon_draw();
-#endif
         }
 
         {
@@ -391,9 +385,9 @@ static void run_and_draw() {
 }
 
 static void handle_mouse_button(SDL_MouseButtonEvent* event, int is_down) {
-    auto &m = mouse::ref();
+    auto& m = mouse::ref();
     if (!SDL_GetRelativeMouseMode()) {
-        m.set_position({ event->x, event->y });
+        m.set_position({event->x, event->y});
     }
 
     if (event->button == SDL_BUTTON_LEFT) {
@@ -406,7 +400,7 @@ static void handle_mouse_button(SDL_MouseButtonEvent* event, int is_down) {
 }
 
 #ifndef __SWITCH__
-static void handle_window_event(SDL_WindowEvent* event, bool &window_active) {
+static void handle_window_event(SDL_WindowEvent* event, bool& window_active) {
     switch (event->event) {
     case SDL_WINDOWEVENT_ENTER:
         g_mouse.set_inside_window(1);
@@ -437,7 +431,7 @@ static void handle_window_event(SDL_WindowEvent* event, bool &window_active) {
     }
 }
 #endif
-static void handle_event(SDL_Event* event, bool &active, bool &quit) {
+static void handle_event(SDL_Event* event, bool& active, bool& quit) {
     switch (event->type) {
 #ifndef __SWITCH__
     case SDL_WINDOWEVENT:
@@ -453,9 +447,9 @@ static void handle_event(SDL_Event* event, bool &active, bool &quit) {
     case SDL_TEXTINPUT:
         platform_handle_text(&event->text);
         break;
-    case SDL_MOUSEMOTION: 
+    case SDL_MOUSEMOTION:
         if (event->motion.which != SDL_TOUCH_MOUSEID && !SDL_GetRelativeMouseMode()) {
-            mouse::ref().set_position({ event->motion.x, event->motion.y });
+            mouse::ref().set_position({event->motion.x, event->motion.y});
         }
 
         break;
@@ -562,9 +556,9 @@ int main(int argc, char** argv) {
     if (g_args.should_unpack_scripts()) {
         return handle_unpack_scripts();
     }
-    
+
     g_mouse.init();
-    
+
     game_imgui_overlay_init();
     g_application.subscribe_events();
     lang_reload_localized_files();
@@ -588,7 +582,7 @@ int main(int argc, char** argv) {
         main_loop();
     }
 #endif
-    
+
 
     game_imgui_overlay_destroy();
 
