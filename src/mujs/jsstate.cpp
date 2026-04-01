@@ -21,7 +21,7 @@ static void *js_defaultalloc(void *actx, void *ptr, int size)
 
 static void js_defaultpanic(js_State *J)
 {
-	fprintf(stderr, "uncaught exception: %s\n", js_tostring(J, -1));
+	fprintf(stderr, "uncaught exception: %s\n", js_strnode_cstr(js_tostring(J, -1)));
 	/* return to javascript to abort */
 }
 
@@ -153,7 +153,7 @@ js_Emit js_registeremit(js_State *J, js_Emit emitFunc) {
 int js_dostring(js_State *J, const char *source)
 {
 	if (js_try(J)) {
-		fprintf(stderr, "%s\n", js_tostring(J, -1));
+		fprintf(stderr, "%s\n", js_strnode_cstr(js_tostring(J, -1)));
 		js_pop(J, 1);
 		return 1;
 	}
@@ -168,7 +168,7 @@ int js_dostring(js_State *J, const char *source)
 int js_dofile(js_State *J, const char *filename)
 {
 	if (js_try(J)) {
-		fprintf(stderr, "%s\n", js_tostring(J, -1));
+		fprintf(stderr, "%s\n", js_strnode_cstr(js_tostring(J, -1)));
 		js_pop(J, 1);
 		return 1;
 	}
@@ -245,7 +245,7 @@ js_State *js_newstate(js_Alloc alloc, void *actx, int flags)
 		return NULL;
 
 	memset(J, 0, sizeof(*J));
-	new (&J->text) js_StringNode();
+	J->text = nullptr;
 	J->actx = actx;
 	J->alloc = alloc;
 	J->frame_actx = actx;

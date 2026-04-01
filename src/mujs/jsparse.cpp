@@ -62,7 +62,7 @@ static js_Ast* jsP_newnode(js_State* J, enum js_AstType type, js_Ast* a, js_Ast*
     node->c = c;
     node->d = d;
     node->number = 0;
-    new (&node->string) js_StringNode();
+    node->string = nullptr;
     node->jumps = NULL;
     node->casejump = 0;
     node->modifiers = NULL;
@@ -121,12 +121,12 @@ void jsP_freeparse(js_State* J) {
         jsP_freejumps(J, node->jumps);
         for (js_AstModifier* mod = node->modifiers; mod;) {
             js_AstModifier* mnext = mod->next;
-            mod->key.~js_StringNode();
-            mod->value.~js_StringNode();
+            mod->key = nullptr;
+            mod->value = nullptr;
             js_free(J, mod);
             mod = mnext;
         }
-        node->string.~js_StringNode();
+        node->string = nullptr;
         js_free(J, node);
         node = next;
     }

@@ -1,6 +1,5 @@
 #include "jsi.h"
 
-#include <atomic>
 #include <new>
 #include <cstring>
 
@@ -78,7 +77,7 @@ js_String *jsV_newmemstring(js_State *J, const char *s, int n) {
     OZZY_PROFILER_FUNCTION();
 
     js_String *v = (js_String*)js_malloc(J, soffsetof(js_String, p) + n + 1);
-    new (&v->gcmark) std::atomic<uint32_t>(0);
+    v->gcmark = 0;
     memcpy(v->p, s, n);
     v->p[n] = 0;
     v->gcnext = J->gcstr;
@@ -903,8 +902,8 @@ const js_StringNode js_nextiterator(js_State *J, int idx) {
 
 js_Environment *jsR_newenvironment(js_State *J, js_Object *vars, js_Environment *outer) {
     js_Environment *E = (js_Environment*)js_malloc(J, sizeof * E);
-    memset(E, 0, offsetof(js_Environment, gcmark));
-    new (&E->gcmark) std::atomic<uint32_t>(0);
+    memset(E, 0, sizeof js_Environment);
+    E->gcmark = 0;
     E->gcnext = J->gcenv;
     J->gcenv = E;
     ++J->gccounter;
