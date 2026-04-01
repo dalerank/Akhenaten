@@ -2,9 +2,11 @@
 #include "jsvalue.h"
 #include "jsbuiltin.h"
 
+static js_StringNode property_length = js_intern("length");
+
 int js_getlength(js_State *J, int idx) {
     int len;
-    J->getproperty(idx, "length");
+    J->getproperty(idx, property_length);
     len = js_tointeger(J, -1);
     js_pop(J, 1);
     return len;
@@ -12,27 +14,27 @@ int js_getlength(js_State *J, int idx) {
 
 void js_setlength(js_State *J, int idx, int len) {
     js_pushnumber(J, len);
-    js_setproperty(J, idx < 0 ? idx - 1 : idx, "length");
+    js_setproperty(J, idx < 0 ? idx - 1 : idx, property_length);
 }
 
 int js_hasindex(js_State *J, int idx, int i) {
     char buf[32];
-    return J->hasproperty(idx, js_itoa(buf, i));
+    return J->hasproperty(idx, js_intern(js_itoa(buf, i)));
 }
 
 void js_getindex(js_State *J, int idx, int i) {
     char buf[32];
-    J->getproperty(idx, js_itoa(buf, i));
+    J->getproperty(idx, js_intern(js_itoa(buf, i)));
 }
 
 void js_setindex(js_State *J, int idx, int i) {
     char buf[32];
-    js_setproperty(J, idx, js_itoa(buf, i));
+    js_setproperty(J, idx, js_intern(js_itoa(buf, i)));
 }
 
 void js_delindex(js_State *J, int idx, int i) {
     char buf[32];
-    js_delproperty(J, idx, js_itoa(buf, i));
+    js_delproperty(J, idx, js_intern(js_itoa(buf, i)));
 }
 
 static void jsB_new_Array(js_State *J) {
@@ -43,7 +45,7 @@ static void jsB_new_Array(js_State *J) {
     if (top == 2) {
         if (js_isnumber(J, 1)) {
             js_copy(J, 1);
-            js_setproperty(J, -2, "length");
+            js_setproperty(J, -2, property_length);
         } else {
             js_copy(J, 1);
             js_setindex(J, -2, 0);
@@ -77,17 +79,20 @@ static void Ap_concat(js_State *J) {
     }
 }
 
+js_StringNode property_empty = js_intern("");
+
 static void Ap_join(js_State *J) {
-    char *volatile out = NULL;
     const char *sep;
     const char *r;
     int seplen;
-    int k, n, len;
+    int k, len;
+    int n, cap;
+    char * volatile out;
 
     len = js_getlength(J, 0);
 
     if (js_isdefined(J, 1)) {
-        sep = js_tostring(J, 1);
+        sep = js_strnode_cstr(js_tostring(J, 1));
         seplen = strlen(sep);
     } else {
         sep = ",";
@@ -95,40 +100,55 @@ static void Ap_join(js_State *J) {
     }
 
     if (len == 0) {
-        J->pushliteral("");
+        J->pushliteral(property_empty);
         return;
     }
 
+    /* One pass: grow buffer geometrically (doubling). */
+    n = 0;
+    cap = 64;
+    out = (char *)js_frame_alloc(J, cap);
     if (js_try(J)) {
-        js_free(J, out);
+        js_frame_free(J, out);
         js_throw(J);
     }
+    out[0] = 0;
 
-    n = 1;
     for (k = 0; k < len; ++k) {
         js_getindex(J, 0, k);
         if (js_isundefined(J, -1) || js_isnull(J, -1))
             r = "";
         else
-            r = js_tostring(J, -1);
-        n += strlen(r);
+            r = js_strnode_cstr(js_tostring(J, -1));
 
-        if (k == 0) {
-            out = (char *)js_malloc(J, n);
-            strcpy(out, r);
-        } else {
-            n += seplen;
-            out = (char *)js_realloc(J, out, n);
-            strcat(out, sep);
-            strcat(out, r);
+        int rlen = (int)strlen(r);
+        int need = n + (k > 0 ? seplen : 0) + rlen + 1;
+        if (need > cap) {
+            int newcap = cap;
+            while (newcap < need) {
+                newcap *= 2;
+            }
+            char *new_out = (char *)js_frame_alloc(J, newcap);
+            memcpy(new_out, out, (size_t)n + 1); /* copy including null terminator */
+            js_frame_free(J, out);
+            out = new_out;
+            cap = newcap;
         }
+
+        if (k > 0) {
+            memcpy(out + n, sep, (size_t)seplen);
+            n += seplen;
+        }
+        memcpy(out + n, r, (size_t)rlen);
+        n += rlen;
+        out[n] = 0;
 
         js_pop(J, 1);
     }
 
     J->pushstring(out);
     js_endtry(J);
-    js_free(J, out);
+    js_frame_free(J, out);
 }
 
 static void Ap_pop(js_State *J) {
@@ -259,8 +279,8 @@ static int compare(js_State *J, int x, int y, int *hasx, int *hasy, int hasfn) {
             return c;
         }
 
-        sx = js_tostring(J, -2);
-        sy = js_tostring(J, -1);
+        sx = js_strnode_cstr(js_tostring(J, -2));
+        sy = js_strnode_cstr(js_tostring(J, -1));
         return strcmp(sx, sy);
     }
 
@@ -657,33 +677,33 @@ static void A_isArray(js_State *J) {
 void jsB_initarray(js_State *J) {
     js_pushobject(J, J->Array_prototype);
     {
-        jsB_propf(J, "Array.prototype.toString", Ap_toString, 0);
-        jsB_propf(J, "Array.prototype.concat", Ap_concat, 0); /* 1 */
-        jsB_propf(J, "Array.prototype.join", Ap_join, 1);
-        jsB_propf(J, "Array.prototype.pop", Ap_pop, 0);
-        jsB_propf(J, "Array.prototype.push", Ap_push, 0); /* 1 */
-        jsB_propf(J, "Array.prototype.reverse", Ap_reverse, 0);
-        jsB_propf(J, "Array.prototype.shift", Ap_shift, 0);
-        jsB_propf(J, "Array.prototype.slice", Ap_slice, 2);
-        jsB_propf(J, "Array.prototype.sort", Ap_sort, 1);
-        jsB_propf(J, "Array.prototype.splice", Ap_splice, 0); /* 2 */
-        jsB_propf(J, "Array.prototype.unshift", Ap_unshift, 0); /* 1 */
+        jsB_propf(J, js_intern("Array.prototype.toString"), Ap_toString, 0);
+        jsB_propf(J, js_intern("Array.prototype.concat"), Ap_concat, 0); /* 1 */
+        jsB_propf(J, js_intern("Array.prototype.join"), Ap_join, 1);
+        jsB_propf(J, js_intern("Array.prototype.pop"), Ap_pop, 0);
+        jsB_propf(J, js_intern("Array.prototype.push"), Ap_push, 0); /* 1 */
+        jsB_propf(J, js_intern("Array.prototype.reverse"), Ap_reverse, 0);
+        jsB_propf(J, js_intern("Array.prototype.shift"), Ap_shift, 0);
+        jsB_propf(J, js_intern("Array.prototype.slice"), Ap_slice, 2);
+        jsB_propf(J, js_intern("Array.prototype.sort"), Ap_sort, 1);
+        jsB_propf(J, js_intern("Array.prototype.splice"), Ap_splice, 0); /* 2 */
+        jsB_propf(J, js_intern("Array.prototype.unshift"), Ap_unshift, 0); /* 1 */
 
         /* ES5 */
-        jsB_propf(J, "Array.prototype.indexOf", Ap_indexOf, 1);
-        jsB_propf(J, "Array.prototype.lastIndexOf", Ap_lastIndexOf, 1);
-        jsB_propf(J, "Array.prototype.every", Ap_every, 1);
-        jsB_propf(J, "Array.prototype.some", Ap_some, 1);
-        jsB_propf(J, "Array.prototype.forEach", Ap_forEach, 1);
-        jsB_propf(J, "Array.prototype.map", Ap_map, 1);
-        jsB_propf(J, "Array.prototype.filter", Ap_filter, 1);
-        jsB_propf(J, "Array.prototype.reduce", Ap_reduce, 1);
-        jsB_propf(J, "Array.prototype.reduceRight", Ap_reduceRight, 1);
+        jsB_propf(J, js_intern("Array.prototype.indexOf"), Ap_indexOf, 1);
+        jsB_propf(J, js_intern("Array.prototype.lastIndexOf"), Ap_lastIndexOf, 1);
+        jsB_propf(J, js_intern("Array.prototype.every"), Ap_every, 1);
+        jsB_propf(J, js_intern("Array.prototype.some"), Ap_some, 1);
+        jsB_propf(J, js_intern("Array.prototype.forEach"), Ap_forEach, 1);
+        jsB_propf(J, js_intern("Array.prototype.map"), Ap_map, 1);
+        jsB_propf(J, js_intern("Array.prototype.filter"), Ap_filter, 1);
+        jsB_propf(J, js_intern("Array.prototype.reduce"), Ap_reduce, 1);
+        jsB_propf(J, js_intern("Array.prototype.reduceRight"), Ap_reduceRight, 1);
     }
     js_newcconstructor(J, jsB_new_Array, jsB_new_Array, "Array", 0); /* 1 */
     {
         /* ES5 */
-        jsB_propf(J, "Array.isArray", A_isArray, 1);
+        jsB_propf(J, js_intern("Array.isArray"), A_isArray, 1);
     }
     js_defglobal(J, "Array", JS_DONTENUM);
 }

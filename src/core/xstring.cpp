@@ -4,6 +4,9 @@
 #include "crc32.h"
 #include "core/core.h"
 
+#include <cassert>
+#include <cstring>
+#include <cstdint>
 #include <mutex>
 #include <unordered_map>
 #include <memory_resource>
@@ -107,21 +110,23 @@ xstring_container *g_xstring = nullptr;
 void xstring_container::verify() {
     std::scoped_lock _(xstring_container_m);
     logs::info("strings verify started");
-    for (const auto &it: data) {
-        const auto crc = crc32(it.second->value.c_str(), it.second->length);
-        bstring32 crc_str;
-        verify_no_crash(crc == it.second->crc);// , "error: read-only memory corruption (shared_strings)"); // itoa(value->dwCRC, crc_str, 16));
-        verify_no_crash(it.second->length == it.second->value.length());// , "error: read-only memory corruption (shared_strings, internal structures)");// , value->value);
+    for (const auto &it : data) {
+        xstring_value *const p = it.second;
+        const auto crc = crc32(p->value.c_str(), p->length);
+        verify_no_crash(crc == p->crc);
+        verify_no_crash(p->length == p->value.length());
+        verify_no_crash(p->crc == it.first);
     }
     logs::info("strings verify completed");
 }
 
 void xstring_container::dump(FILE *f) const {
-    for (const auto &it: data) {
+    for (const auto &it : data) {
+        xstring_value *const p = it.second;
 #ifdef XSTRING_USE_REFERENCE_COUNTING
-        fprintf(f, "ref[%4u]-len[%3u]-crc[%8X] : %s\n", it.second->reference, it.second->length, it.second->crc, it.second->value.c_str());
+        fprintf(f, "ref[%4u]-len[%3u]-crc[%8X] : %s\n", p->reference, p->length, p->crc, p->value.c_str());
 #else
-        fprintf(f, "len[%3u]-crc[%8X] : %s\n", it.second->length, it.second->crc, it.second->value.c_str());
+        fprintf(f, "len[%3u]-crc[%8X] : %s\n", p->length, p->crc, p->value.c_str());
 #endif
     }
 }
@@ -138,33 +143,28 @@ xstring_value *xstring_container::dock(pcstr value) {
         g_xstring->data.reserve(4096);
     }
 
-    // calc len
     const size_t s_len = strlen(value);
     const size_t s_len_with_zero = s_len + 1;
     verify_no_crash(sizeof(xstring_value) + s_len_with_zero < (3 * 4096));
+    verify_no_crash(s_len <= 65535u);
 
-    // setup find structure
-    uint16_t length = static_cast<uint32_t>(s_len);
-    uint32_t crc = crc32(value, uint32_t(s_len));
-
-    // search
-    auto it = g_xstring->data.find(crc);
-
-    // it may be the case, string is not found or has "non-exact" match
-    if (it == g_xstring->data.end()) {
-        xstring_value *new_xstr = g_xstring->allocator.allocate();
-#ifdef XSTRING_USE_REFERENCE_COUNTING
-        new_xstr->reference = 0;
-#endif
-        new_xstr->length = length;
-        new_xstr->crc = crc;
-        new_xstr->value = value;
-
-        g_xstring->data.insert({crc, new_xstr});
-        return new_xstr;
+    const std::uint32_t crc = crc32(value, static_cast<std::uint32_t>(s_len));
+    const auto it = g_xstring->data.find(crc);
+    if (it != g_xstring->data.end()) {
+        assert(std::strcmp(it->second->value.c_str(), value) == 0 && "xstring intern CRC collision");
+        return it->second;
     }
 
-    return it->second;
+    xstring_value *const new_xstr = g_xstring->allocator.allocate();
+#ifdef XSTRING_USE_REFERENCE_COUNTING
+    new_xstr->reference = 0;
+#endif
+    new_xstr->length = static_cast<uint16_t>(s_len);
+    new_xstr->crc = crc;
+    new_xstr->value = value;
+
+    g_xstring->data.emplace(crc, new_xstr);
+    return new_xstr;
 }
 
 void xstring_container::dump() {
@@ -175,8 +175,6 @@ void xstring_container::dump() {
 }
 
 void xstring_container::clean() {
-    // Call destructors for all xstring_value objects
-    // (they are allocated in linear allocator, so we just need to destruct them)
     for (const auto &it : data) {
         it.second->~xstring_value();
     }

@@ -148,7 +148,7 @@ const hotkey_mapping* game_hotkeys::hotkey_default(e_hotkey_action action) {
 void game_hotkeys::load() {
     init_defaults();
     
-    g_config_arch.r_objects("game_hotkeys", [&] (pcstr key, archive arch) {
+    g_config_arch.r_objects("game_hotkeys", [&] (xstring key, archive arch) {
         auto value = arch.to_array_str();
 
         if (value.empty()) {

@@ -13,6 +13,7 @@
 #include <float.h>
 
 #include "core/string.h"
+#include "jsstring.h"
 
 /* Microsoft Visual C */
 #ifdef _MSC_VER
@@ -35,7 +36,6 @@ struct js_String;
 struct js_Ast;
 struct js_Function;
 struct js_Environment;
-struct js_StringNode;
 struct js_Jumpbuf;
 struct js_StackTrace;
 struct js_Property;
@@ -50,14 +50,7 @@ struct js_Property;
 /* instruction size -- change to int if you get integer overflow syntax errors */
 typedef int js_Instruction;
 
-/* String interning */
-
-const char *js_intern(js_State *J, const char *s);
-void jsS_dumpstrings(js_State *J);
-void jsS_freestrings(js_State *J);
-
 /* Portable strtod and printf float formatting */
-
 void js_fmtexp(char *p, int e);
 void js_dtoa(double f, char *digits, int *exp, int *neg, int *ndigits);
 double js_strtod(const char *as, char **aas);
@@ -123,8 +116,6 @@ struct js_State
 	js_Alloc frame_alloc;
 	js_Panic panic;
 
-	js_StringNode *strings;
-
 	int strict;
 
 	/* parser input source */
@@ -142,7 +133,7 @@ struct js_State
 	/* parser state */
 	int astline;
 	int lookahead;
-	const char *text;
+	js_StringNode text;
 	double number;
 	js_Ast *gcast; /* list of allocated nodes to free after parsing */
 
@@ -214,12 +205,12 @@ struct js_State
 	void pushundefined();
 	void pushstring(pcstr v);
 
-	void getproperty(js_Object *obj, pcstr name);
-	void getproperty(int idx, pcstr name) { getproperty(toobject(idx), name); }
+	void getproperty(js_Object* obj, const js_StringNode name);
+    void getproperty(int idx, const js_StringNode name) { getproperty(toobject(idx), name); }
 
-	int hasproperty(js_Object *obj, pcstr name);
+	int hasproperty(js_Object *obj, js_StringNode name);
 
-	int hasproperty(int idx, const char *name);
+	int hasproperty(int idx, const js_StringNode name);
 
 	int isobject(int idx);
 
@@ -236,12 +227,12 @@ struct js_State
 	void callwfunction(int n, js_Function *F, js_Environment *scope);
 	void callfunction(int n, js_Function *F, js_Environment *scope);
 
-	int delvar(const char *name);
-	js_Property *vget_ownproperty(js_Object *obj, const char *name);
-	int rdelproperty(js_Object *obj, const char *name);
+	int delvar(const js_StringNode name);
+    js_Property* vget_ownproperty(js_Object* obj, const js_StringNode name);
+	int rdelproperty(js_Object *obj, const js_StringNode name);
 	void r_run(js_Function *F);
 	void construct(int n);
 
 	void dup2();
-    void pushliteral(pcstr val);
+    void pushliteral(js_StringNode val);
 };

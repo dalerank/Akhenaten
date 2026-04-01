@@ -139,14 +139,16 @@ declare_console_command_p(js_debugger){
     }
 }
 
+static js_StringNode property_stackTrace = js_intern("stackTrace");
+
 static void js_vm_log_stacktrace(js_State *J) {
     // Try to get stack trace from error object if it's an Error
     if (J->isobject(-1)) {
-        if (J->hasproperty(-1, "stackTrace")) {
-            J->getproperty(-1, "stackTrace");
+        if (J->hasproperty(-1, property_stackTrace)) {
+            J->getproperty(-1, property_stackTrace);
             if (js_isstring(J, -1)) {
-                const char *stack_trace = js_tostring(J, -1);
-                logs::info("!!! Stack trace: %s", stack_trace);
+                auto stack_trace = js_tostring(J, -1);
+                logs::info("!!! Stack trace: %s", stack_trace->value.c_str());
                 js_pop(J, 1);
                 return;
             }
@@ -204,11 +206,11 @@ static void js_vm_dump_stack(js_State *J) {
         } else if (js_isnumber(J, idx)) {
             value_desc.printf("number: %g", js_tonumber(J, idx));
         } else if (js_isstring(J, idx)) {
-            const char *str = js_tostring(J, idx);
-            if (str && strlen(str) > 50) {
-                value_desc.printf("string: \"%.50s...\"", str);
+            auto str = js_tostring(J, idx);
+            if (str->value.length() > 50) {
+                value_desc.printf("string: \"%.50s...\"", str->value.c_str());
             } else {
-                value_desc.printf("string: \"%s\"", str ? str : "");
+                value_desc.printf("string: \"%s\"", str->value.c_str());
             }
         } else if (J->isobject(idx)) {
             if (js_isarray(J, idx)) {
@@ -225,12 +227,12 @@ static void js_vm_dump_stack(js_State *J) {
                 
                 // Try to iterate first few properties
                 js_pushiterator(J, idx, 0);
-                const char *prop_name;
+                js_StringNode prop_name;
                 while (prop_count < 3 && (prop_name = js_nextiterator(J, -1)) != NULL) {
                     if (prop_count > 0) {
                         props_preview.append(", ");
                     }
-                    props_preview.append(prop_name);
+                    props_preview.append(prop_name->value.c_str());
                     prop_count++;
                 }
                 js_pop(J, 1); // Remove iterator
@@ -259,6 +261,9 @@ static void js_vm_dump_stack(js_State *J) {
     logs::info("!!! ==================================================");
 }
 
+static js_StringNode property_name = js_intern("name");
+static js_StringNode property_message = js_intern("message");
+
 int js_vm_trypcall(js_State *J, int params) {
     if (vm.have_error) {
         return 0;
@@ -267,20 +272,21 @@ int js_vm_trypcall(js_State *J, int params) {
     int error = J->pcall(params);
     if (error) {
         vm.have_error = 1;
-        pcstr error_msg = js_tostring(J, -1);
+        auto error_msg = js_tostring(J, -1);
 
         // Log error type if it's an Error object
         if (J->isobject(-1)) {
-            if (J->hasproperty(-1, "name")) {
-                J->getproperty(-1, "name");
-                const char *error_name = js_tostring(J, -1);
-                logs::info("!!! Error type: %s", error_name ? error_name : "<unknown>");
+            if (J->hasproperty(-1, property_name)) {
+                J->getproperty(-1, property_name);
+                auto error_name = js_tostring(J, -1);
+                pcstr en = js_strnode_cstr(error_name);
+                logs::info("!!! Error type: %s", en && en[0] ? en : "<unknown>");
                 js_pop(J, 1);
             }
         }
 
         // Log full error message (MuJS now provides detailed context)
-        const char *cur_symbol = error_msg;
+        const char *cur_symbol = error_msg->value.c_str();
         const char *start_str = cur_symbol;
         bstring256 error_msg_copy;
         while (*cur_symbol) {
@@ -315,6 +321,119 @@ bool js_vm_have_error() {
     return vm.have_error;
 }
 
+/** Copy primitive / string storage without relying on ToString (TMEMSTR from pushstring is common on Error#message). */
+static void copy_js_value_text(js_State *J, js_Value *v, char *out, size_t outsz) {
+    if (!out || !outsz) {
+        return;
+    }
+    out[0] = '\0';
+    if (!v) {
+        return;
+    }
+    switch (v->type) {
+    case JS_TMEMSTR:
+        if (v->u.memstr && v->u.memstr->p) {
+            snprintf(out, outsz, "%s", v->u.memstr->p);
+        }
+        return;
+    case JS_TLITSTR:
+        snprintf(out, outsz, "%s", js_strnode_cstr(v->u.litstr));
+        return;
+    case JS_TSHRSTR:
+        snprintf(out, outsz, "%s", js_strnode_cstr(v->u.shrstr));
+        return;
+    default:
+        break;
+    }
+    snprintf(out, outsz, "%s", js_strnode_cstr(jsV_tostring(J, v)));
+}
+
+/** Own properties only; enumeration list stays valid when AA-tree lookup is wrong for a key. */
+static js_Property *find_own_prop_by_name_cstr(js_Object *o, pcstr key) {
+    for (js_Property *p = o->head; p; p = p->next) {
+        pcstr pn = js_strnode_cstr(p->name);
+        if (pn && !strcmp(pn, key)) {
+            return p;
+        }
+    }
+    return nullptr;
+}
+
+/** js_ploadstring failed; stack[-1] is the thrown value. Read Error name/message without invoking toString. */
+static void js_vm_log_script_parse_or_compile_failure(js_State *J, pcstr path_label) {
+    char buf[768];
+    buf[0] = '\0';
+
+    if (js_gettop(J) > 0) {
+        js_Value *topv = js_tovalue(J, -1);
+        if (topv->type == JS_TOBJECT && topv->u.object->type == JS_CERROR) {
+            char namebuf[96];
+            char msgbuf[640];
+            namebuf[0] = '\0';
+            msgbuf[0] = '\0';
+
+            js_Object *eo = topv->u.object;
+
+            if (js_Property *ref = find_own_prop_by_name_cstr(eo, "name")) {
+                if (!ref->getter) {
+                    copy_js_value_text(J, &ref->value, namebuf, sizeof namebuf);
+                }
+            }
+            if (!namebuf[0]) {
+                if (js_Property *ref = eo->vgetproperty(property_name)) {
+                    if (!ref->getter) {
+                        copy_js_value_text(J, &ref->value, namebuf, sizeof namebuf);
+                    }
+                }
+            }
+
+            if (js_Property *ref = find_own_prop_by_name_cstr(eo, "message")) {
+                if (!ref->getter) {
+                    copy_js_value_text(J, &ref->value, msgbuf, sizeof msgbuf);
+                }
+            }
+            if (!msgbuf[0]) {
+                if (js_Property *ref = eo->vgetproperty(property_message)) {
+                    if (!ref->getter) {
+                        copy_js_value_text(J, &ref->value, msgbuf, sizeof msgbuf);
+                    }
+                }
+            }
+            if (!msgbuf[0]) {
+                if (js_Property *ref = find_own_prop_by_name_cstr(eo, "stackTrace")) {
+                    if (!ref->getter) {
+                        copy_js_value_text(J, &ref->value, msgbuf, sizeof msgbuf);
+                    }
+                }
+            }
+
+            if (msgbuf[0]) {
+                if (namebuf[0]) {
+                    snprintf(buf, sizeof buf, "%s: %s", namebuf, msgbuf);
+                } else {
+                    snprintf(buf, sizeof buf, "%s", msgbuf);
+                }
+            } else if (namebuf[0]) {
+                snprintf(buf, sizeof buf, "%s", namebuf);
+            }
+        }
+
+        if (!buf[0]) {
+            js_StringNode s = js_tostring(J, -1);
+            snprintf(buf, sizeof buf, "%s", js_strnode_cstr(s));
+            if (!buf[0]) {
+                snprintf(buf, sizeof buf, "unknown error");
+            }
+        }
+
+        js_pop(J, 1);
+    } else {
+        snprintf(buf, sizeof buf, "unknown error");
+    }
+
+    logs::info("!!! Script load failed (%s): %s", path_label, buf);
+}
+
 int js_vm_load_file_and_exec(pcstr path) {
     if (!path || !*path) {
         return 0;
@@ -329,7 +448,7 @@ int js_vm_load_file_and_exec(pcstr path) {
 
         int error = js_ploadstring(vm.J, r.path.c_str(), data.c_str());
         if (error) {
-            logs::info("!!! Error on open file %s", js_tostring(vm.J, -1));
+            js_vm_log_script_parse_or_compile_failure(vm.J, r.path.c_str());
             return 0;
         }
 
@@ -340,9 +459,9 @@ int js_vm_load_file_and_exec(pcstr path) {
             if (vm.error_str.len() > 0) {
                 logs::info("Error details: %s", vm.error_str.c_str());
             } else if (js_gettop(vm.J) > 0) {
-                pcstr error_msg = js_tostring(vm.J, -1);
-                if (error_msg && *error_msg) {
-                    logs::info("Error details: %s", error_msg);
+                auto error_msg = js_tostring(vm.J, -1);
+                if (!error_msg->value.empty()) {
+                    logs::info("Error details: %s", error_msg->value.c_str());
                 }
             }
             return 0;
@@ -353,7 +472,7 @@ int js_vm_load_file_and_exec(pcstr path) {
     vfs::path rpath = path;
     if (!vm.scripts_folders.empty()) {
         rpath = js_vm_get_absolute_path(npath);
-    } 
+    }
 
     vfs::reader reader = vfs::file_open(rpath, "rt");
     if (!reader) {
@@ -370,7 +489,7 @@ int js_vm_load_file_and_exec(pcstr path) {
 
     int error = js_ploadstring(vm.J, rpath, data.c_str());
     if (error) {
-        logs::info("!!! Error on open file %s", js_tostring(vm.J, -1));
+        js_vm_log_script_parse_or_compile_failure(vm.J, rpath.c_str());
         return 0;
     }
 
@@ -381,9 +500,9 @@ int js_vm_load_file_and_exec(pcstr path) {
         if (vm.error_str.len() > 0) {
             logs::info("Error details: %s", vm.error_str.c_str());
         } else if (js_gettop(vm.J) > 0) {
-            pcstr error_msg = js_tostring(vm.J, -1);
-            if (error_msg && *error_msg) {
-                logs::info("Error details: %s", error_msg);
+            auto error_msg = js_tostring(vm.J, -1);
+            if (!error_msg->value.empty()) {
+                logs::info("Error details: %s", js_strnode_cstr(error_msg));
             }
         }
         //js_pop(internal_J, 1);
@@ -485,9 +604,9 @@ int js_vm_exec_function_args(pcstr funcname, const char *szTypes, ...) {
         if (vm.error_str.len() > 0) {
             logs::info("Error details: %s", vm.error_str.c_str());
         } else if (js_gettop(vm.J) > 0) {
-            pcstr error_msg = js_tostring(vm.J, -1);
-            if (error_msg && *error_msg) {
-                logs::info("Error details: %s", error_msg);
+            auto error_msg = js_tostring(vm.J, -1);
+            if (!error_msg->value.empty()) {
+                logs::info("Error details: %s", error_msg->value.c_str());
             }
         }
         return 0;
@@ -505,9 +624,9 @@ int js_vm_exec_function(pcstr funcname) {
 }
 
 void js_vm_load_module(js_State *J) {
-    pcstr scriptName = js_tostring(J, 1);
+    auto scriptName = js_tostring(J, 1);
 
-    vm.files2load.push_back(vfs::path(scriptName));
+    vm.files2load.push_back(vfs::path(scriptName->value.c_str()));
 }
 
 void js_game_panic(js_State *J) {

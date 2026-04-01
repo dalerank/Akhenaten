@@ -1,6 +1,8 @@
 #ifndef js_compile_h
 #define js_compile_h
 
+#include "jsstring.h"
+
 #include <atomic>
 #include <stdint.h>
 
@@ -128,14 +130,14 @@ typedef struct js_FunctionModifier js_FunctionModifier;
 /* Function modifiers (attributes) */
 struct js_FunctionModifier
 {
-	const char *key;
-	const char *value;
+	js_StringNode key;
+	js_StringNode value;
 	js_FunctionModifier *next;
 };
 
 struct js_Function
 {
-	const char *name;
+	js_StringNode name;
 	int script;
 	int lightweight;
 	int arguments;
@@ -150,13 +152,13 @@ struct js_Function
 	double *numtab;
 	int numcap, numlen;
 
-	const char **strtab;
+	js_StringNode *strtab;
 	int strcap, strlen;
 
-	const char **vartab;
+	js_StringNode *vartab;
 	int varcap, varlen;
 
-	const char *filename;
+	js_StringNode filename;
 	int line, lastline;
 
 	js_FunctionModifier *modifiers; /* function modifiers/attributes */

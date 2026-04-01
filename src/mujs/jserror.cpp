@@ -14,11 +14,11 @@ static const char *jsB_getline(const char *source, int target_line, char *buf, s
   if (!source || target_line < 1 || !buf || bufsize < 2) {
     return NULL;
   }
-  
+
   int current_line = 1;
   const char *line_start = source;
   const char *p = source;
-  
+
   /* Find the target line */
   while (*p && current_line < target_line) {
     if (*p == '\n') {
@@ -27,29 +27,29 @@ static const char *jsB_getline(const char *source, int target_line, char *buf, s
     }
     p++;
   }
-  
+
   /* If we didn't reach the target line */
   if (current_line != target_line) {
     return NULL;
   }
-  
+
   /* Find the end of the line */
   const char *line_end = line_start;
   while (*line_end && *line_end != '\n' && *line_end != '\r') {
     line_end++;
   }
-  
+
   /* Copy the line to buffer */
   size_t len = line_end - line_start;
   if (len >= bufsize - 1) {
     len = bufsize - 2;
   }
-  
+
   if (len > 0) {
     memcpy(buf, line_start, len);
   }
   buf[len] = '\0';
-  
+
   return buf;
 }
 
@@ -59,18 +59,18 @@ static const char *jsB_getline_from_file(const char *filename, int target_line, 
   if (!filename || target_line < 1 || !buf || bufsize < 2) {
     return NULL;
   }
-  
+
   FILE *f = fopen(filename, "r");
   if (!f) {
     return NULL;
   }
-  
+
   int current_line = 1;
-  
+
   while (current_line < target_line && fgets(buf, bufsize, f)) {
     current_line++;
   }
-  
+
   if (current_line == target_line && fgets(buf, bufsize, f)) {
     /* Remove trailing newline */
     size_t len = strlen(buf);
@@ -80,7 +80,7 @@ static const char *jsB_getline_from_file(const char *filename, int target_line, 
     fclose(f);
     return buf;
   }
-  
+
   fclose(f);
   return NULL;
 }
@@ -251,9 +251,15 @@ static void jsB_stacktrace(js_State *J, int skip)
   }
 }
 
+static js_StringNode property_name = js_intern("name");
+static js_StringNode property_message = js_intern("message");
+static js_StringNode property_stackTrace = js_intern("stackTrace");
+
 static void Ep_toString(js_State *J)
 {
   char buf[256];
+  char namebuf[96];
+  char msgbuf[192];
   const char *name = "Error";
   const char *message = "";
 
@@ -261,15 +267,23 @@ static void Ep_toString(js_State *J)
       js_typeerror(J, "not an object");
   }
 
-  if (J->hasproperty(0, "name"))
-    name = js_tostring(J, -1);
-  if (J->hasproperty(0, "message"))
-    message = js_tostring(J, -1);
+  /* hasproperty() pushes the value; pop so the stack stays [this] before the result string. */
+  if (J->hasproperty(0, property_name)) {
+      snprintf(namebuf, sizeof namebuf, "%s", js_strnode_cstr(js_tostring(J, -1)));
+      name = namebuf;
+      js_pop(J, 1);
+  }
+
+  if (J->hasproperty(0, property_message)) {
+      snprintf(msgbuf, sizeof msgbuf, "%s", js_strnode_cstr(js_tostring(J, -1)));
+      message = msgbuf;
+      js_pop(J, 1);
+  }
 
   snprintf(buf, sizeof buf, "%s: %s", name, message);
   J->pushstring(buf);
 
-  if (J->hasproperty(0, "stackTrace"))
+  if (J->hasproperty(0, property_stackTrace))
     js_concat(J);
 }
 
@@ -278,11 +292,11 @@ static int jsB_ErrorX(js_State *J, js_Object *prototype)
   int top = js_gettop(J);
   js_pushobject(J, jsV_newobject(J, JS_CERROR, prototype));
   if (top > 1) {
-    J->pushstring(js_tostring(J, 1));
-    js_setproperty(J, -2, "message");
+    J->pushstring(js_strnode_cstr(js_tostring(J, 1)));
+    js_setproperty(J, -2, property_message);
   }
   jsB_stacktrace(J, 1);
-  js_setproperty(J, -2, "stackTrace");
+  js_setproperty(J, -2, property_stackTrace);
   return 1;
 }
 
@@ -290,9 +304,9 @@ static void js_newerrorx(js_State *J, const char *message, js_Object *prototype)
 {
   js_pushobject(J, jsV_newobject(J, JS_CERROR, prototype));
   J->pushstring(message);
-  js_setproperty(J, -2, "message");
+  js_setproperty(J, -2, property_message);
   jsB_stacktrace(J, 0);
-  js_setproperty(J, -2, "stackTrace");
+  js_setproperty(J, -2, property_stackTrace);
 }
 
 /* Create a detailed type error with code context */
@@ -303,9 +317,9 @@ void js_newtypeerror_detailed(js_State *J, const char *value_type, const char *t
   
   js_pushobject(J, jsV_newobject(J, JS_CERROR, J->TypeError_prototype));
   J->pushstring(detailed_msg);
-  js_setproperty(J, -2, "message");
+  js_setproperty(J, -2, property_message);
   jsB_stacktrace(J, 0);
-  js_setproperty(J, -2, "stackTrace");
+  js_setproperty(J, -2, property_stackTrace);
 }
 
 /* Throw a detailed type error with code context */
@@ -346,16 +360,16 @@ void jsB_initerror(js_State *J)
 {
   js_pushobject(J, J->Error_prototype);
   {
-      jsB_props(J, "name", "Error");
-      jsB_props(J, "message", "an error has occurred");
-      jsB_propf(J, "Error.prototype.toString", Ep_toString, 0);
+      jsB_props(J, property_name, "Error");
+      jsB_props(J, property_message, "an error has occurred");
+      jsB_propf(J, js_intern("Error.prototype.toString"), Ep_toString, 0);
   }
   js_newcconstructor(J, jsB_Error, jsB_Error, "Error", 1);
   js_defglobal(J, "Error", JS_DONTENUM);
 
   #define IERROR(NAME) \
     js_pushobject(J, J->NAME##_prototype); \
-    jsB_props(J, "name", Q(NAME)); \
+    jsB_props(J, property_name, Q(NAME)); \
     js_newcconstructor(J, jsB_##NAME, jsB_##NAME, Q(NAME), 1); \
     js_defglobal(J, Q(NAME), JS_DONTENUM);
 

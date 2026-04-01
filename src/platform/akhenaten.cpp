@@ -275,7 +275,7 @@ static void setup() {
         exit(2);
     }
 
-    config::refresh(g_config_arch);
+    config::refresh(js_vm_state());
 
     if (platform.is_emscripten()) {
         game_features::gameopt_language = "en";

@@ -51,6 +51,17 @@ public:
         _p = v;
     }
 
+    void _set(xstring_value* p) {
+        xstring_value* v = p;
+#ifdef XSTRING_USE_REFERENCE_COUNTING
+        if (0 != v) {
+            v->reference++;
+        }
+#endif
+        _dec();
+        _p = v;
+    }
+
     void _set(xstring const& rhs) {
         xstring_value* v = rhs._p;
 #ifdef XSTRING_USE_REFERENCE_COUNTING

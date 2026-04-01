@@ -22,29 +22,29 @@ static void Op_toString(js_State *J)
 {
 	js_Object *self = J->toobject(0);
 	switch (self->type) {
-	case JS_COBJECT: J->pushliteral("[object Object]"); break;
-	case JS_CARRAY: J->pushliteral("[object Array]"); break;
-	case JS_CFUNCTION: J->pushliteral("[object Function]"); break;
-	case JS_CSCRIPT: J->pushliteral("[object Function]"); break;
-	case JS_CCFUNCTION: J->pushliteral("[object Function]"); break;
-	case JS_CERROR: J->pushliteral("[object Error]"); break;
-	case JS_CBOOLEAN: J->pushliteral("[object Boolean]"); break;
-	case JS_CNUMBER: J->pushliteral("[object Number]"); break;
-	case JS_CSTRING: J->pushliteral("[object String]"); break;
-	case JS_CREGEXP: J->pushliteral("[object RegExp]"); break;
-	case JS_CDATE: J->pushliteral("[object Date]"); break;
-	case JS_CMATH: J->pushliteral("[object Math]"); break;
-	case JS_CJSON: J->pushliteral("[object JSON]"); break;
-	case JS_CITERATOR: J->pushliteral("[Iterator]"); break;
+	case JS_COBJECT: J->pushliteral(js_intern("[object Object]")); break;
+	case JS_CARRAY: J->pushliteral(js_intern("[object Array]")); break;
+	case JS_CFUNCTION: J->pushliteral(js_intern("[object Function]")); break;
+	case JS_CSCRIPT: J->pushliteral(js_intern("[object Function]")); break;
+	case JS_CCFUNCTION: J->pushliteral(js_intern("[object Function]")); break;
+	case JS_CERROR: J->pushliteral(js_intern("[object Error]")); break;
+	case JS_CBOOLEAN: J->pushliteral(js_intern("[object Boolean]")); break;
+	case JS_CNUMBER: J->pushliteral(js_intern("[object Number]")); break;
+	case JS_CSTRING: J->pushliteral(js_intern("[object String]")); break;
+	case JS_CREGEXP: J->pushliteral(js_intern("[object RegExp]")); break;
+	case JS_CDATE: J->pushliteral(js_intern("[object Date]")); break;
+	case JS_CMATH: J->pushliteral(js_intern("[object Math]")); break;
+	case JS_CJSON: J->pushliteral(js_intern("[object JSON]")); break;
+	case JS_CITERATOR: J->pushliteral(js_intern("[Iterator]")); break;
 	case JS_CUSERDATA:
-		J->pushliteral("[object ");
-		J->pushliteral(self->u.user.tag);
+        J->pushliteral(js_intern("[object "));
+        J->pushliteral(js_intern(self->u.user.tag));
 		js_concat(J);
-		J->pushliteral("]");
+        J->pushliteral(js_intern("]"));
 		js_concat(J);
 		break;
 	case JS_CPTR:
-		J->pushliteral("[object Bound]");
+        J->pushliteral(js_intern("[object Bound]"));
 		break;
 	}
 }
@@ -57,7 +57,7 @@ static void Op_valueOf(js_State *J)
 static void Op_hasOwnProperty(js_State *J)
 {
 	js_Object *self = J->toobject(0);
-	const char *name = js_tostring(J, 1);
+	auto name = js_tostring(J, 1);
 	js_Property *ref = J->vget_ownproperty(self, name);
 	js_pushboolean(J, ref != NULL);
 }
@@ -81,7 +81,7 @@ static void Op_isPrototypeOf(js_State *J)
 static void Op_propertyIsEnumerable(js_State *J)
 {
 	js_Object *self = J->toobject(0);
-	const char *name = js_tostring(J, 1);
+	auto name = js_tostring(J, 1);
 	js_Property *ref = J->vget_ownproperty(self, name);
 	js_pushboolean(J, ref && !(ref->atts & JS_DONTENUM));
 }
@@ -97,6 +97,19 @@ static void O_getPrototypeOf(js_State *J)
 	else
 		js_pushnull(J);
 }
+
+static js_StringNode property_writable = js_intern("writable");
+static js_StringNode property_enumerable = js_intern("enumerable");
+static js_StringNode property_configurable = js_intern("configurable");
+static js_StringNode property_value = js_intern("value");
+static js_StringNode property_get = js_intern("get");
+static js_StringNode property_set = js_intern("set");
+static js_StringNode property_length = js_intern("length");
+static js_StringNode property_source = js_intern("source");
+static js_StringNode property_global = js_intern("global");
+static js_StringNode property_ignoreCase = js_intern("ignoreCase");
+static js_StringNode property_multiline = js_intern("multiline");
+static js_StringNode property_lastIndex = js_intern("lastIndex");
 
 static void O_getOwnPropertyDescriptor(js_State *J)
 {
@@ -114,25 +127,25 @@ static void O_getOwnPropertyDescriptor(js_State *J)
 		js_newobject(J);
 		if (!ref->getter && !ref->setter) {
 			js_pushvalue(J, ref->value);
-			js_setproperty(J, -2, "value");
+            js_setproperty(J, -2, property_value);
 			js_pushboolean(J, !(ref->atts & JS_READONLY));
-			js_setproperty(J, -2, "writable");
+            js_setproperty(J, -2, property_writable);
 		} else {
 			if (ref->getter)
 				js_pushobject(J, ref->getter);
 			else
 				J->pushundefined();
-			js_setproperty(J, -2, "get");
+            js_setproperty(J, -2, property_get);
 			if (ref->setter)
 				js_pushobject(J, ref->setter);
 			else
 				J->pushundefined();
-			js_setproperty(J, -2, "set");
+            js_setproperty(J, -2, property_set);
 		}
 		js_pushboolean(J, !(ref->atts & JS_DONTENUM));
-		js_setproperty(J, -2, "enumerable");
+        js_setproperty(J, -2, property_enumerable);
 		js_pushboolean(J, !(ref->atts & JS_DONTCONF));
-		js_setproperty(J, -2, "configurable");
+        js_setproperty(J, -2, property_configurable);
 	}
 }
 
@@ -156,12 +169,12 @@ static void O_getOwnPropertyNames(js_State *J)
 	}
 
 	if (obj->type == JS_CARRAY) {
-		J->pushliteral("length");
+        J->pushliteral(property_length);
 		js_setindex(J, -2, i++);
 	}
 
 	if (obj->type == JS_CSTRING) {
-		J->pushliteral("length");
+        J->pushliteral(property_length);
 		js_setindex(J, -2, i++);
 		for (k = 0; k < obj->u.s.length; ++k) {
 			js_pushnumber(J, k);
@@ -170,20 +183,20 @@ static void O_getOwnPropertyNames(js_State *J)
 	}
 
 	if (obj->type == JS_CREGEXP) {
-		J->pushliteral("source");
+        J->pushliteral(property_source);
 		js_setindex(J, -2, i++);
-		J->pushliteral("global");
+        J->pushliteral(property_global);
 		js_setindex(J, -2, i++);
-		J->pushliteral("ignoreCase");
+        J->pushliteral(property_ignoreCase);
 		js_setindex(J, -2, i++);
-		J->pushliteral("multiline");
+        J->pushliteral(property_multiline);
 		js_setindex(J, -2, i++);
-		J->pushliteral("lastIndex");
+        J->pushliteral(property_lastIndex);
 		js_setindex(J, -2, i++);
 	}
 }
 
-static void ToPropertyDescriptor(js_State *J, js_Object *obj, const char *name, js_Object *desc)
+static void ToPropertyDescriptor(js_State *J, js_Object *obj, js_StringNode name, js_Object *desc)
 {
 	int haswritable = 0;
 	int hasvalue = 0;
@@ -195,20 +208,23 @@ static void ToPropertyDescriptor(js_State *J, js_Object *obj, const char *name, 
 	js_pushobject(J, obj);
 	js_pushobject(J, desc);
 
-	if (J->hasproperty(-1, "writable")) {
+	if (J->hasproperty(-1, property_writable)) {
 		haswritable = 1;
 		writable = js_toboolean(J, -1);
 		js_pop(J, 1);
 	}
-	if (J->hasproperty(-1, "enumerable")) {
+
+    if (J->hasproperty(-1, property_enumerable)) {
 		enumerable = js_toboolean(J, -1);
 		js_pop(J, 1);
 	}
-	if (J->hasproperty(-1, "configurable")) {
+
+    if (J->hasproperty(-1, property_configurable)) {
 		configurable = js_toboolean(J, -1);
 		js_pop(J, 1);
 	}
-	if (J->hasproperty(-1, "value")) {
+
+    if (J->hasproperty(-1, property_value)) {
 		hasvalue = 1;
 		js_setproperty(J, -3, name);
 	}
@@ -217,14 +233,14 @@ static void ToPropertyDescriptor(js_State *J, js_Object *obj, const char *name, 
 	if (!enumerable) atts |= JS_DONTENUM;
 	if (!configurable) atts |= JS_DONTCONF;
 
-	if (J->hasproperty(-1, "get")) {
+	if (J->hasproperty(-1, property_get)) {
 		if (haswritable || hasvalue)
 			js_typeerror(J, "value/writable and get/set attributes are exclusive");
 	} else {
 		J->pushundefined();
 	}
 
-	if (J->hasproperty(-2, "set")) {
+	if (J->hasproperty(-2, property_set)) {
 		if (haswritable || hasvalue)
 			js_typeerror(J, "value/writable and get/set attributes are exclusive");
 	} else {
@@ -325,16 +341,20 @@ static void O_keys(js_State *J)
 
 static void O_preventExtensions(js_State *J)
 {
-	if (!J->isobject(1))
-		js_typeerror(J, "not an object");
+    if (!J->isobject(1)) {
+        js_typeerror(J, "not an object");
+    }
+
 	J->toobject(1)->extensible = 0;
 	js_copy(J, 1);
 }
 
 static void O_isExtensible(js_State *J)
 {
-	if (!J->isobject(1))
-		js_typeerror(J, "not an object");
+    if (!J->isobject(1)) {
+        js_typeerror(J, "not an object");
+    }
+
 	js_pushboolean(J, J->toobject(1)->extensible);
 }
 
@@ -343,14 +363,16 @@ static void O_seal(js_State *J)
 	js_Object *obj;
 	js_Property *ref;
 
-	if (!J->isobject(1))
+	if (!J->isobject(1)) {
 		js_typeerror(J, "not an object");
+	}
 
 	obj = J->toobject(1);
 	obj->extensible = 0;
 
-	for (ref = obj->head; ref; ref = ref->next)
+	for (ref = obj->head; ref; ref = ref->next) {
 		ref->atts |= JS_DONTCONF;
+	}
 
 	js_copy(J, 1);
 }
@@ -425,29 +447,29 @@ void jsB_initobject(js_State *J)
 {
 	js_pushobject(J, J->Object_prototype);
 	{
-		jsB_propf(J, "Object.prototype.toString", Op_toString, 0);
-		jsB_propf(J, "Object.prototype.toLocaleString", Op_toString, 0);
-		jsB_propf(J, "Object.prototype.valueOf", Op_valueOf, 0);
-		jsB_propf(J, "Object.prototype.hasOwnProperty", Op_hasOwnProperty, 1);
-		jsB_propf(J, "Object.prototype.isPrototypeOf", Op_isPrototypeOf, 1);
-		jsB_propf(J, "Object.prototype.propertyIsEnumerable", Op_propertyIsEnumerable, 1);
+		jsB_propf(J, js_intern("Object.prototype.toString"), Op_toString, 0);
+		jsB_propf(J, js_intern("Object.prototype.toLocaleString"), Op_toString, 0);
+		jsB_propf(J, js_intern("Object.prototype.valueOf"), Op_valueOf, 0);
+		jsB_propf(J, js_intern("Object.prototype.hasOwnProperty"), Op_hasOwnProperty, 1);
+		jsB_propf(J, js_intern("Object.prototype.isPrototypeOf"), Op_isPrototypeOf, 1);
+		jsB_propf(J, js_intern("Object.prototype.propertyIsEnumerable"), Op_propertyIsEnumerable, 1);
 	}
 	js_newcconstructor(J, jsB_Object, jsB_new_Object, "Object", 1);
 	{
 		/* ES5 */
-		jsB_propf(J, "Object.getPrototypeOf", O_getPrototypeOf, 1);
-		jsB_propf(J, "Object.getOwnPropertyDescriptor", O_getOwnPropertyDescriptor, 2);
-		jsB_propf(J, "Object.getOwnPropertyNames", O_getOwnPropertyNames, 1);
-		jsB_propf(J, "Object.create", O_create, 2);
-		jsB_propf(J, "Object.defineProperty", O_defineProperty, 3);
-		jsB_propf(J, "Object.defineProperties", O_defineProperties, 2);
-		jsB_propf(J, "Object.seal", O_seal, 1);
-		jsB_propf(J, "Object.freeze", O_freeze, 1);
-		jsB_propf(J, "Object.preventExtensions", O_preventExtensions, 1);
-		jsB_propf(J, "Object.isSealed", O_isSealed, 1);
-		jsB_propf(J, "Object.isFrozen", O_isFrozen, 1);
-		jsB_propf(J, "Object.isExtensible", O_isExtensible, 1);
-		jsB_propf(J, "Object.keys", O_keys, 1);
+		jsB_propf(J, js_intern("Object.getPrototypeOf"), O_getPrototypeOf, 1);
+		jsB_propf(J, js_intern("Object.getOwnPropertyDescriptor"), O_getOwnPropertyDescriptor, 2);
+		jsB_propf(J, js_intern("Object.getOwnPropertyNames"), O_getOwnPropertyNames, 1);
+		jsB_propf(J, js_intern("Object.create"), O_create, 2);
+		jsB_propf(J, js_intern("Object.defineProperty"), O_defineProperty, 3);
+		jsB_propf(J, js_intern("Object.defineProperties"), O_defineProperties, 2);
+		jsB_propf(J, js_intern("Object.seal"), O_seal, 1);
+		jsB_propf(J, js_intern("Object.freeze"), O_freeze, 1);
+		jsB_propf(J, js_intern("Object.preventExtensions"), O_preventExtensions, 1);
+		jsB_propf(J, js_intern("Object.isSealed"), O_isSealed, 1);
+		jsB_propf(J, js_intern("Object.isFrozen"), O_isFrozen, 1);
+		jsB_propf(J, js_intern("Object.isExtensible"), O_isExtensible, 1);
+		jsB_propf(J, js_intern("Object.keys"), O_keys, 1);
 	}
 	js_defglobal(J, "Object", JS_DONTENUM);
 }

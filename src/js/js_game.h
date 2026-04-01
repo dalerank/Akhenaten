@@ -62,17 +62,22 @@ namespace js_helpers {
 
     template<>
     inline const char *js_to_value<const char *>(js_State *J, int idx) {
-        return js_tostring(J, idx);
+        auto pp = js_tostring(J, idx);
+        return js_strnode_cstr(pp);
     }
 
     template<>
     inline std::string js_to_value<std::string>(js_State *J, int idx) {
-        return std::string(js_tostring(J, idx));
+        auto pp = js_tostring(J, idx);
+        return std::string(js_strnode_cstr(pp));
     }
 
     template<>
     inline xstring js_to_value<xstring>(js_State *J, int idx) {
-        return xstring(js_tostring(J, idx));
+        auto pp = js_tostring(J, idx);
+        xstring r;
+        r._set(pp);
+        return r;
     }
 
     /** Reference to a JS function stored in the registry (for callbacks). */
@@ -87,17 +92,30 @@ namespace js_helpers {
             return js_function_ref{};
         }
         js_copy(J, idx);
-        pcstr r = js_ref(J);
+        auto pp = js_ref(J);
+        xstring r; r._set(pp);
         js_pop(J, 1);
-        return js_function_ref{ xstring(r) };
+        return js_function_ref{ r };
     }
+
+    extern js_StringNode property_x;
+    extern js_StringNode property_y;
+    extern js_StringNode property_minx;
+    extern js_StringNode property_miny;
+    extern js_StringNode property_maxx;
+    extern js_StringNode property_maxy;
 
     template<>
     inline vec2i js_to_value<vec2i>(js_State *J, int idx) {
         vec2i result;
         if (J->isobject(idx) && !js_isarray(J, idx)) {
-            J->getproperty(idx, "x"); result.x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
-            J->getproperty(idx, "y"); result.y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
+            J->getproperty(idx, property_x);
+            result.x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0;
+            js_pop(J, 1);
+
+            J->getproperty(idx, property_y);
+            result.y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0;
+            js_pop(J, 1);
         } else if (js_isarray(J, idx)) {
             js_getindex(J, idx, 0); result.x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
             js_getindex(J, idx, 1); result.y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
@@ -109,8 +127,13 @@ namespace js_helpers {
     inline tile2i js_to_value<tile2i>(js_State *J, int idx) {
         int x = 0, y = 0;
         if (J->isobject(idx) && !js_isarray(J, idx)) {
-            J->getproperty(idx, "x"); x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
-            J->getproperty(idx, "y"); y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
+            J->getproperty(idx, property_x);
+            x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0;
+            js_pop(J, 1);
+
+            J->getproperty(idx, property_y);
+            y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0;
+            js_pop(J, 1);
         } else if (js_isarray(J, idx)) {
             js_getindex(J, idx, 0); x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
             js_getindex(J, idx, 1); y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
@@ -125,7 +148,9 @@ namespace js_helpers {
         } else if (js_isboolean(J, idx)) {
             return bvariant(js_toboolean(J, idx));
         } else if (js_isstring(J, idx)) {
-            return bvariant(xstring(js_tostring(J, idx)));
+            xstring str;
+            str._set(js_tostring(J, idx));
+            return bvariant(str);
         } else if (js_isnumber(J, idx) || js_iscnumber(J, idx)) {
             double num = js_tonumber(J, idx);
             // Try to preserve integer if possible
@@ -136,15 +161,15 @@ namespace js_helpers {
             }
         } else if (J->isobject(idx) && !js_isarray(J, idx)) {
             // Check if it's a vec2i-like object with x and y properties
-            J->getproperty(idx, "x");
+            J->getproperty(idx, property_x);
             bool has_x = !js_isundefined(J, -1);
             js_pop(J, 1);
 
             if (has_x) {
-                J->getproperty(idx, "x");
+                J->getproperty(idx, property_x);
                 int x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0;
                 js_pop(J, 1);
-                J->getproperty(idx, "y");
+                J->getproperty(idx, property_y);
                 int y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0;
                 js_pop(J, 1);
                 return bvariant(vec2i(x, y));
@@ -204,24 +229,28 @@ namespace js_helpers {
     template<>
     inline void js_push_value<vec2i>(js_State *J, vec2i value) {
         js_newobject(J);
-        js_pushnumber(J, value.x); js_setproperty(J, -2, "x");
-        js_pushnumber(J, value.y); js_setproperty(J, -2, "y");
+        js_pushnumber(J, value.x);
+        js_setproperty(J, -2, property_x);
+        js_pushnumber(J, value.y);
+        js_setproperty(J, -2, property_y);
     }
 
     template<>
     inline void js_push_value<tile2i>(js_State *J, tile2i value) {
         js_newobject(J);
-        js_pushnumber(J, value.x()); js_setproperty(J, -2, "x");
-        js_pushnumber(J, value.y()); js_setproperty(J, -2, "y");
+        js_pushnumber(J, value.x());
+        js_setproperty(J, -2, property_x);
+        js_pushnumber(J, value.y());
+        js_setproperty(J, -2, property_y);
     }
 
     template<>
     inline void js_push_value<grid_area>(js_State *J, grid_area value) {
         js_newobject(J);
-        js_pushnumber(J, value.tmin_x); js_setproperty(J, -2, "min_x");
-        js_pushnumber(J, value.tmin_y); js_setproperty(J, -2, "min_y");
-        js_pushnumber(J, value.tmax_x); js_setproperty(J, -2, "max_x");
-        js_pushnumber(J, value.tmax_y); js_setproperty(J, -2, "max_y");
+        js_pushnumber(J, value.tmin_x); js_setproperty(J, -2, property_minx);
+        js_pushnumber(J, value.tmin_y); js_setproperty(J, -2, property_miny);
+        js_pushnumber(J, value.tmax_x); js_setproperty(J, -2, property_maxx);
+        js_pushnumber(J, value.tmax_y); js_setproperty(J, -2, property_maxy);
     }
 
     template<>
@@ -262,9 +291,9 @@ namespace js_helpers {
             js_newobject(J);
             const vec2i pos = val.as_vec2i();
             js_pushnumber(J, pos.x);
-            js_setproperty(J, -2, "x");
+            js_setproperty(J, -2, property_x);
             js_pushnumber(J, pos.y);
-            js_setproperty(J, -2, "y");
+            js_setproperty(J, -2, property_y);
             break;
         }
         case bvariant::etype_tile2i:
@@ -272,19 +301,19 @@ namespace js_helpers {
             js_newobject(J);
             const tile2i pos = val.as_tile2i();
             js_pushnumber(J, pos.x());
-            js_setproperty(J, -2, "x");
+            js_setproperty(J, -2, property_x);
             js_pushnumber(J, pos.y());
-            js_setproperty(J, -2, "y");
+            js_setproperty(J, -2, property_y);
             break;
         }
         case bvariant::etype_grid_area:
         {
             const grid_area a = val.as_grid_area();
             js_newobject(J);
-            js_pushnumber(J, a.tmin_x); js_setproperty(J, -2, "min_x");
-            js_pushnumber(J, a.tmin_y); js_setproperty(J, -2, "min_y");
-            js_pushnumber(J, a.tmax_x); js_setproperty(J, -2, "max_x");
-            js_pushnumber(J, a.tmax_y); js_setproperty(J, -2, "max_y");
+            js_pushnumber(J, a.tmin_x); js_setproperty(J, -2, property_minx);
+            js_pushnumber(J, a.tmin_y); js_setproperty(J, -2, property_miny);
+            js_pushnumber(J, a.tmax_x); js_setproperty(J, -2, property_maxx);
+            js_pushnumber(J, a.tmax_y); js_setproperty(J, -2, property_maxy);
             break;
         }
         case bvariant::etype_none:
@@ -298,7 +327,7 @@ namespace js_helpers {
         js_newobject(J);
         for (const auto &kv : params) {
             js_push_bvariant(J, kv.second);
-            js_setproperty(J, -2, kv.first.c_str());
+            js_setproperty(J, -2, js_intern(kv.first.c_str()));
         }
     }
 
@@ -354,7 +383,7 @@ namespace js_helpers {
         }
 
         js_pushiterator(J, idx, 1); // own properties only
-        pcstr key;
+        js_StringNode key;
         while ((key = js_nextiterator(J, -1))) {
             J->getproperty(idx, key);
             bvariant value;
@@ -362,7 +391,9 @@ namespace js_helpers {
             if (js_isboolean(J, -1)) {
                 value = bvariant(js_toboolean(J, -1));
             } else if (js_isstring(J, -1)) {
-                value = bvariant(xstring(js_tostring(J, -1)));
+                xstring pp;
+                pp._set(js_tostring(J, -1));
+                value = bvariant(pp);
             } else if (js_isnumber(J, -1) || js_iscnumber(J, -1)) {
                 double num = js_tonumber(J, -1);
                 // Try to preserve integer if possible
@@ -375,7 +406,9 @@ namespace js_helpers {
                 value = bvariant(); // none
             }
 
-            result[xstring(key)] = value;
+            xstring keyp;
+            keyp._set(key);
+            result[keyp] = value;
             js_pop(J, 1); // pop value
         }
         js_pop(J, 1); // pop iterator
@@ -390,7 +423,7 @@ namespace config {
     using FunctionIterator = FuncLinkedList<jsfunc_iterator_function_cb *>;
 
     struct ESIteratorEntry {
-        pcstr es_type;
+        xstring es_type;
         void (*regnew)(pcstr name);
         void (*clear)();
         ESIteratorEntry *next;
@@ -402,7 +435,7 @@ namespace config {
     };
 
     struct ModifierIteratorEntry {
-        pcstr modifier_key;
+        xstring modifier_key;
         void (*callback)(js_State *J, pcstr name, pcstr value);
         ModifierIteratorEntry *next;
         static ModifierIteratorEntry *tail;

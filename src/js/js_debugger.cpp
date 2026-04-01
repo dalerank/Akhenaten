@@ -451,8 +451,10 @@ static cstring js_value_display(js_State *J, const js_Value *v) {
     case JS_TNUMBER:
         snprintf(buf, sizeof(buf), "%g", v->u.number);
         return json_jstr(buf);
-    case JS_TSHRSTR:    return json_jstr(cstring("\"") + v->u.shrstr + "\"");
-    case JS_TLITSTR:    return json_jstr(cstring("\"") + (v->u.litstr ? v->u.litstr : "") + "\"");
+    case JS_TSHRSTR:
+        return json_jstr(cstring("\"") + js_strnode_cstr(v->u.shrstr) + "\"");
+    case JS_TLITSTR:
+        return json_jstr(cstring("\"") + (!!v->u.litstr ? js_strnode_cstr(v->u.litstr) : "") + "\"");
     case JS_TMEMSTR:    return json_jstr(cstring("\"") + (v->u.memstr ? v->u.memstr->p : "") + "\"");
     case JS_TOBJECT:
         if (!v->u.object) return json_jstr("null");
@@ -512,12 +514,19 @@ cstring MujsDebugger::build_evaluate_response(const cstring &expression, int /*f
     int parent_ref = 0;
 
     js_Environment *env = J_->E;
-    prop = env->variables->vgetproperty(name);
-    if (prop) parent_ref = 1;
-    else {
-        while (env->outer) env = env->outer;
-        prop = env->variables->vgetproperty(name);
-        if (prop) parent_ref = 2;
+
+    js_StringNode name_node = js_intern(name);
+    prop = env->variables->vgetproperty(name_node);
+    if (prop) {
+        parent_ref = 1;
+    } else {
+        while (env->outer) {
+            env = env->outer;
+        }
+        prop = env->variables->vgetproperty(name_node);
+        if (prop) {
+            parent_ref = 2;
+        }
     }
 
     if (!prop) {
@@ -528,7 +537,7 @@ cstring MujsDebugger::build_evaluate_response(const cstring &expression, int /*f
     int ref = 0;
     if (static_cast<js_Type>(v->type) == JS_TOBJECT && v->u.object) {
         ref = next_variable_ref_++;
-        object_ref_map_[ref] = { parent_ref, expr };
+        object_ref_map_[ref] = { parent_ref, js_intern(expr.c_str()) };
     }
 
     cstring result = json_from_bvariant_map({ { "variablesReference", ref } }, 
@@ -624,14 +633,14 @@ js_Object *MujsDebugger::get_object_for_ref(int var_ref) {
     }
 
     int parent_ref = it->second.first;
-    const cstring &name = it->second.second;
+    const js_StringNode name = it->second.second;
 
     js_Object *parent = get_object_for_ref(parent_ref);
     if (!parent) {
         return nullptr;
     }
 
-    js_Property *prop = parent->vgetproperty(name.c_str());
+    js_Property *prop = parent->vgetproperty(name);
     if (!prop || static_cast<js_Type>(prop->value.type) != JS_TOBJECT) {
         return nullptr;
     }

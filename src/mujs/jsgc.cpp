@@ -122,6 +122,8 @@ static void jsG_freeenvironment(js_State *J, js_Environment *env) {
 static void jsG_freemodifiers(js_State *J, js_FunctionModifier *mod) {
     while (mod) {
         js_FunctionModifier *next = mod->next;
+        mod->key.~js_StringNode();
+        mod->value.~js_StringNode();
         js_free(J, mod);
         mod = next;
     }
@@ -129,6 +131,8 @@ static void jsG_freemodifiers(js_State *J, js_FunctionModifier *mod) {
 
 static void jsG_freefunction(js_State *J, js_Function *fun) {
     jsG_freemodifiers(J, fun->modifiers);
+    fun->name.~js_StringNode();
+    fun->filename.~js_StringNode();
     js_free(J, fun->funtab);
     js_free(J, fun->numtab);
     js_free(J, fun->strtab);
@@ -140,6 +144,7 @@ static void jsG_freefunction(js_State *J, js_Function *fun) {
 static void jsG_freeproperty(js_State *J, js_Property *node) {
     while (node) {
         js_Property *next = node->next;
+        node->name.~js_StringNode();
         js_free(J, node);
         node = next;
     }
@@ -171,6 +176,7 @@ static void jsG_freeobject(js_State *J, js_Object *obj) {
     if (obj->type == JS_CUSERDATA && obj->u.user.finalize)
         obj->u.user.finalize(J, obj->u.user.data);
 
+    obj->~js_Object();
     js_free(J, obj);
 }
 
@@ -310,9 +316,8 @@ void js_freestate(js_State *J) {
     for (str = J->gcstr; str; str = nextstr)
         nextstr = str->gcnext, js_free(J, str);
 
-    jsS_freestrings(J);
-
     js_free(J, J->lexbuf.text);
+    J->text.~js_StringNode();
     J->alloc(J->actx, J->stack, 0);
     J->alloc(J->actx, J, 0);
 }

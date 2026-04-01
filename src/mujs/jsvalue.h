@@ -1,6 +1,8 @@
 #ifndef js_value_h
 #define js_value_h
 
+#include "jsstring.h"
+
 #include <atomic>
 #include <stdint.h>
 
@@ -62,8 +64,8 @@ struct js_Value {
     union {
         int boolean;
         double number;
-        char shrstr[8];
-        const char *litstr;
+        js_StringNode shrstr;
+        js_StringNode litstr;
         js_String *memstr;
         js_Object *object;
     } u;
@@ -95,7 +97,7 @@ struct js_Object {
         int boolean;
         double number;
         struct {
-            const char *string;
+            js_StringNode string;
             int length;
         } s;
         struct {
@@ -133,11 +135,14 @@ struct js_Object {
     js_FunctionModifier *modifiers; /* object modifiers/attributes */
     std::atomic<uint32_t> gcmark;
 
-    js_Property *vgetproperty(const char *name);
+    ~js_Object() {
+    }
+
+    js_Property* vgetproperty(const js_StringNode name);
 };
 
 struct js_Property {
-    const char *name;
+    js_StringNode name;
     js_Property *left, *right;
     js_Property *next, **prevp; /* for enumeration */
     int level;
@@ -146,11 +151,11 @@ struct js_Property {
     js_Object *getter;
     js_Object *setter;
 
-    js_Property *lookup(const char *name);
+    js_Property *lookup(js_StringNode name);
 };
 
 struct js_Iterator {
-    const char *name;
+    js_StringNode name;
     js_Iterator *next;
 };
 
@@ -165,7 +170,7 @@ void js_pushobject(js_State *J, js_Object *v);
 int jsV_toboolean(js_State *J, js_Value *v);
 double jsV_tonumber(js_State *J, js_Value *v);
 double jsV_tointeger(js_State *J, js_Value *v);
-const char *jsV_tostring(js_State *J, js_Value *v);
+const js_StringNode jsV_tostring(js_State* J, js_Value* v);
 void jsV_toprimitive(js_State *J, js_Value *v, int preferred);
 
 const char *js_itoa(char buf[32], int a);
@@ -180,12 +185,12 @@ double jsV_stringtonumber(js_State *J, const char *string);
 
 /* jsproperty.c */
 js_Object *jsV_newobject(js_State *J, enum js_Class type, js_Object *prototype);
-js_Property *jsV_getpropertyx(js_State *J, js_Object *obj, const char *name, int *own);
-js_Property *jsV_setproperty(js_State *J, js_Object *obj, const char *name);
-void jsV_delproperty(js_State *J, js_Object *obj, const char *name);
+js_Property* jsV_getpropertyx(js_State* J, js_Object* obj, const js_StringNode name, int* own);
+js_Property* jsV_setproperty(js_State* J, js_Object* obj, const js_StringNode name);
+void jsV_delproperty(js_State* J, js_Object* obj, const js_StringNode name);
 
 js_Object *jsV_newiterator(js_State *J, js_Object *obj, int own);
-const char *jsV_nextiterator(js_State *J, js_Object *iter);
+const js_StringNode jsV_nextiterator(js_State* J, js_Object* iter);
 
 void jsV_resizearray(js_State *J, js_Object *obj, int newlen);
 

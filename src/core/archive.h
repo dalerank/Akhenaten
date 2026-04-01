@@ -26,10 +26,10 @@ struct archive {
     void *state = nullptr;
     inline archive(void *_vm) : state(_vm) {}
 
-    pcstr r_string(pcstr name, pcstr def = "");
-    pcstr r_string(const xstring& name, pcstr def = "");
-    std::vector<std::string> r_array_str(pcstr name);
-    std::vector<std::string> to_array_str();
+    xstring r_string(pcstr name, pcstr def = "");
+    xstring r_string(const xstring& name, pcstr def = "");
+    std::vector<xstring> r_array_str(pcstr name);
+    std::vector<xstring> to_array_str();
     int r_int(pcstr name, int def = 0);
     float r_float(pcstr name, float def = 0.f);
     uint32_t r_uint(pcstr name, uint32_t def = 0);
@@ -57,7 +57,7 @@ struct archive {
     using variant_t = std::variant<variant_none_t, float, bool, xstring, vec2i, variant_array_t, variant_object_t>;
     variant_t r_variant(pcstr name);
     variant_t to_variant();
-    pcstr to_string();
+    xstring to_string();
 
     std::vector<vec2i> r_array_vec2i(pcstr name, pcstr px = "x", pcstr py = "y");
 
@@ -179,8 +179,8 @@ struct archive {
 
             for (int i = 0; i < length; ++i) {
                 getindex(-1, i);
-                pcstr v = isstring(-1) ? tostring(-1) : "";
-                arr.push_back(v);
+                xstring v = tostring(-1);
+                arr.push_back(v.c_str());
                 pop(1);
             }
         }
@@ -245,9 +245,9 @@ struct archive {
     template<typename T>
     inline void r_objects(std::string_view name, T read_func) {
         this->r_section(name, [this, &read_func] (archive s_arch) {
-            hvector<pcstr, 512, false> keys;
+            hvector<xstring_value*, 512, false> keys;
             {
-                pcstr key;
+                xstring_value* key;
                 pushiterator(s_arch, -1, 1);
                 while ((key = nextiterator(s_arch, -1))) {
                     keys.push_back(key);
@@ -258,7 +258,7 @@ struct archive {
             for (const auto &key : keys) {
                 getproperty(s_arch, -1, key);
                 //const bool isobj = isobject(s_arch, -1);
-                read_func(key, s_arch);
+                read_func(key->value.c_str(), s_arch);
                 pop(s_arch, 1);
             }
         });
@@ -266,12 +266,14 @@ struct archive {
 
     template<typename T>
     inline void r_variants_impl(archive s_arch, T &container) {
-        hvector<pcstr, 128, false> keys;
+        hvector<xstring, 128, false> keys;
         {
-            pcstr key;
+            xstring_value* key;
             pushiterator(s_arch, -1, 1);
             while ((key = nextiterator(s_arch, -1))) {
-                keys.push_back(key);
+                xstring keyp;
+                keyp._set(key);
+                keys.push_back(keyp);
             }
             pop(s_arch, 1);
         }
@@ -306,7 +308,7 @@ struct archive {
     }
 
 protected:
-    pcstr r_string_impl(pcstr name, pcstr def = "");
+    xstring r_string_impl(pcstr name, pcstr def = "");
 
     template<typename T>
     inline bool r_array_impl(T read_func) {
@@ -391,7 +393,9 @@ protected:
     }
 
     void getproperty(int idx, std::string_view name);
+    void getproperty(int idx, xstring_value* name);
     static void getproperty(archive arch, int idx, std::string_view name);
+    static void getproperty(archive arch, int idx, xstring_value* name);
     bool isarray(int idx);
     int getlength(int idx);
     void getindex(int idx, int i);
@@ -399,14 +403,14 @@ protected:
     bool isstring(int idx);
     bool isboolean(int idx);
     double tonumber(int idx);
-    pcstr tostring(int idx);
+    xstring tostring(int idx);
     bool toboolean(int idx);
     void pop(int num);
     static void pop(archive arch, int n);
     bool isobject(int idx);
     static bool isobject(archive arch, int idx);
     static void pushiterator(archive arch, int idx, int own);
-    static pcstr nextiterator(archive arch, int idx);
+    static xstring_value* nextiterator(archive arch, int idx);
     void getglobal(std::string_view name);
 };
 
@@ -483,7 +487,7 @@ struct g_archive : public archive {
             });
             pop(1);
         } else if (isobject(-1)) {
-            this->r_objects(name, [&] (pcstr key, archive arch) {
+            this->r_objects(name, [&] (xstring key, archive arch) {
                 auto &itemv = v[key];
                 itemv.key = key;
                 arch.r(itemv);
@@ -512,7 +516,7 @@ struct g_archive : public archive {
             pop(1);
         } else if (isobject(-1)) {
             pop(1);
-            this->r_objects(name, [&] (pcstr key, archive arch) {
+            this->r_objects(name, [&] (xstring key, archive arch) {
                 auto &itemv = v[str_hash(key)];
                 itemv.key = key;
                 arch.r(itemv);
@@ -567,12 +571,14 @@ struct g_archive : public archive {
 
         getglobal(name);
         if (isobject(-1)) {
-            pcstr key;
+            xstring_value* key;
 
-            hvector<pcstr, 256, false> keys;
+            hvector<xstring, 256, false> keys;
             pushiterator(state, -1, 1);
             while ((key = nextiterator(state, -1))) {
-                keys.push_back(key);
+                xstring keyp;
+                keyp._set(key);
+                keys.push_back(keyp);
             }
             pop(state, 1);
 
@@ -873,8 +879,8 @@ template<> inline void archive::r<vec2i>(pcstr name, vec2i &v) { v = r_vec2i(nam
 template<> inline void archive::r<xstring>(pcstr name, xstring &v) { v = r_string(name); }
 template<> inline void archive::r<tile2i>(pcstr name, tile2i &v) { v = r_tile2i(name); }
 template<> inline void archive::r<image_desc>(pcstr name, image_desc &v) { r_desc(name, v); }
-template<> inline void archive::r<bstring256>(pcstr name, bstring256 &v) { v = r_string(name); }
-template<> inline void archive::r<bstring32>(pcstr name, bstring32 &v) { v = r_string(name); }
+template<> inline void archive::r<bstring256>(pcstr name, bstring256 &v) { v = r_string(name).c_str(); }
+template<> inline void archive::r<bstring32>(pcstr name, bstring32 &v) { v = r_string(name).c_str(); }
 
 template<typename T>
 inline void archive::r(T &s) { archive_helper::reader(*this, s); }

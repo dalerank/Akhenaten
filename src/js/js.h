@@ -10,6 +10,7 @@ struct mission_id_t;
 
 void js_vm_setup();
 void js_vm_shutdown();
+/** False if no script reloads were queued (files2load empty). */
 bool js_vm_sync(const xstring& mission_id);
 js_State *js_vm_state();
 int js_vm_exec_function_args(pcstr funcname, const char *szTypes, ...);

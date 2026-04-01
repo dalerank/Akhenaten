@@ -32,16 +32,21 @@ static void Np_toString(js_State *J)
 	J->pushstring(jsV_numbertostring(J, buf, self->u.number));
 }
 
+js_StringNode property_nan = js_intern("NaN");
+js_StringNode property_minys_inf = js_intern("-Infinity");
+js_StringNode property_plus_inf = js_intern("Infinity");
+js_StringNode property_zero = js_intern("0");
+
 /* Customized ToString() on a number */
 static void numtostr(js_State *J, const char *fmt, int w, double n)
 {
 	char buf[32], *e;
 	if (isnan(n)) {
-		J->pushliteral("NaN");
+        J->pushliteral(property_nan);
 	} else if (isinf(n)) {
-		J->pushliteral(n < 0 ? "-Infinity" : "Infinity");
+        J->pushliteral(n < 0 ? property_minys_inf : property_plus_inf);
 	} else if (n == 0) {
-		J->pushliteral("0");
+        J->pushliteral(property_zero);
 	} else {
 		if (w < 1) w = 1;
 		if (w > 17) w = 17;
@@ -85,20 +90,20 @@ void jsB_initnumber(js_State *J)
 
 	js_pushobject(J, J->Number_prototype);
 	{
-		jsB_propf(J, "Number.prototype.valueOf", Np_valueOf, 0);
-		jsB_propf(J, "Number.prototype.toString", Np_toString, 1);
-		jsB_propf(J, "Number.prototype.toLocaleString", Np_toString, 0);
-		jsB_propf(J, "Number.prototype.toFixed", Np_toFixed, 1);
-		jsB_propf(J, "Number.prototype.toExponential", Np_toExponential, 1);
-		jsB_propf(J, "Number.prototype.toPrecision", Np_toPrecision, 1);
+		jsB_propf(J, js_intern("Number.prototype.valueOf"), Np_valueOf, 0);
+		jsB_propf(J, js_intern("Number.prototype.toString"), Np_toString, 1);
+		jsB_propf(J, js_intern("Number.prototype.toLocaleString"), Np_toString, 0);
+		jsB_propf(J, js_intern("Number.prototype.toFixed"), Np_toFixed, 1);
+		jsB_propf(J, js_intern("Number.prototype.toExponential"), Np_toExponential, 1);
+		jsB_propf(J, js_intern("Number.prototype.toPrecision"), Np_toPrecision, 1);
 	}
 	js_newcconstructor(J, jsB_Number, jsB_new_Number, "Number", 0); /* 1 */
 	{
-		jsB_propn(J, "MAX_VALUE", 1.7976931348623157e+308);
-		jsB_propn(J, "MIN_VALUE", 5e-324);
-		jsB_propn(J, "NaN", NAN);
-		jsB_propn(J, "NEGATIVE_INFINITY", -INFINITY);
-		jsB_propn(J, "POSITIVE_INFINITY", INFINITY);
+		jsB_propn(J, js_intern("MAX_VALUE"), 1.7976931348623157e+308);
+		jsB_propn(J, js_intern("MIN_VALUE"), 5e-324);
+		jsB_propn(J, js_intern("NaN"), NAN);
+		jsB_propn(J, js_intern("NEGATIVE_INFINITY"), -INFINITY);
+		jsB_propn(J, js_intern("POSITIVE_INFINITY"), INFINITY);
 	}
 	js_defglobal(J, "Number", JS_DONTENUM);
 }
