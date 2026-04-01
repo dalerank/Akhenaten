@@ -288,11 +288,19 @@ static void pexpi(int d, int p, js_Ast *exp)
 	p = tp;
 
 	switch (exp->type) {
-	case AST_IDENTIFIER: ps(exp->string); break;
-	case EXP_IDENTIFIER: ps(exp->string); break;
+    case AST_IDENTIFIER:
+        ps(js_strnode_cstr(exp->string));
+        break;
+    case EXP_IDENTIFIER:
+        ps(js_strnode_cstr(exp->string));
+        break;
 	case EXP_NUMBER: printf("%.9g", exp->number); break;
-	case EXP_STRING: ppstr(exp->string); break;
-	case EXP_REGEXP: pregexp(exp->string, exp->number); break;
+    case EXP_STRING:
+        ppstr(js_strnode_cstr(exp->string));
+        break;
+    case EXP_REGEXP:
+        pregexp(js_strnode_cstr(exp->string), exp->number);
+        break;
 
 	case EXP_UNDEF: break;
 	case EXP_NULL: ps("null"); break;
@@ -658,10 +666,19 @@ static void snode(int d, js_Ast *node)
 	ps(astname[node->type]);
 	switch (node->type) {
 	default: break;
-	case AST_IDENTIFIER: pc(' '); ps(node->string); break;
-	case EXP_IDENTIFIER: pc(' '); ps(node->string); break;
-	case EXP_STRING: pc(' '); ppstr(node->string); break;
-	case EXP_REGEXP: pc(' '); pregexp(node->string, node->number); break;
+	case AST_IDENTIFIER: pc(' '); ps(js_strnode_cstr(node->string)); break;
+    case EXP_IDENTIFIER:
+        pc(' ');
+        ps(js_strnode_cstr(node->string));
+        break;
+    case EXP_STRING:
+        pc(' ');
+        ppstr(js_strnode_cstr(node->string));
+        break;
+    case EXP_REGEXP:
+        pc(' ');
+        pregexp(js_strnode_cstr(node->string), node->number);
+        break;
 	case EXP_NUMBER: printf(" %.9g", node->number); break;
 	case STM_BLOCK: afun = sblock; break;
 	case AST_FUNDEC: case EXP_FUN: cfun = sblock; break;
@@ -724,17 +741,17 @@ void jsC_dumpfunction(js_State *J, js_Function *F)
 	js_Instruction *end = F->code + F->codelen;
 	int i;
 
-	LPRINTFMT("%s(%d)\n", F->name, F->numparams);
+	LPRINTFMT("%s(%d)\n", js_strnode_cstr(F->name), F->numparams);
 	if (F->lightweight) {
 			LPRINTF("\tlightweight\n");
 	}
-	
+
 	if (F->arguments) {
 			LPRINTF("\targuments\n");
 	}
-	LPRINTFMT("\tsource %s:%d\n", F->filename, F->line);
+	LPRINTFMT("\tsource %s:%d\n", js_strnode_cstr(F->filename), F->line);
 	for (i = 0; i < F->funlen; ++i)
-		LPRINTFMT("\tfunction %d %s\n", i, F->funtab[i]->name);
+		LPRINTFMT("\tfunction %d %s\n", i, js_strnode_cstr(F->funtab[i]->name));
 	for (i = 0; i < F->varlen; ++i)
 		LPRINTFMT("\tlocal %d %s\n", i + 1, F->vartab[i]);
 
@@ -751,11 +768,11 @@ void jsC_dumpfunction(js_State *J, js_Function *F)
 			break;
 		case OP_STRING:
 			pc(' ');
-			ppstr(F->strtab[*p++]);
+            ppstr(F->strtab[*p++]->value.c_str());
 			break;
 		case OP_NEWREGEXP:
 			pc(' ');
-			pregexp(F->strtab[p[0]], p[1]);
+            pregexp(F->strtab[p[0]]->value.c_str(), p[1]);
 			p += 2;
 			break;
 
@@ -769,7 +786,7 @@ void jsC_dumpfunction(js_State *J, js_Function *F)
 		case OP_DELPROP_S:
 		case OP_CATCH:
 			pc(' ');
-			ps(F->strtab[*p++]);
+			ps(F->strtab[*p++]->value.c_str());
 			break;
 
 		case OP_LINE:
@@ -827,7 +844,7 @@ void js_dumpvalue(js_State *J, js_Value v)
 			js_Property *p = v.u.object->head;
 			LPRINTF("{ ");
 			while (p) {
-				LPRINTFMT("%s: ", p->name);
+				LPRINTFMT("%s: ", js_strnode_cstr(p->name));
                 js_dumpvalue(J, p->value);
                 LPRINTF(", ");
                 p = p->next;
@@ -839,16 +856,16 @@ void js_dumpvalue(js_State *J, js_Value v)
 		case JS_CFUNCTION:
 			LPRINTFMT("[Function %p, %s, %s:%d]",
 				v.u.object,
-				v.u.object->u.f.function->name,
-				v.u.object->u.f.function->filename,
+				js_strnode_cstr(v.u.object->u.f.function->name),
+				js_strnode_cstr(v.u.object->u.f.function->filename),
 				v.u.object->u.f.function->line);
 			break;
-		case JS_CSCRIPT: LPRINTFMT("[Script %s]", v.u.object->u.f.function->filename); break;
+		case JS_CSCRIPT: LPRINTFMT("[Script %s]", js_strnode_cstr(v.u.object->u.f.function->filename)); break;
 		case JS_CCFUNCTION: LPRINTFMT("[CFunction %p]", v.u.object->u.c.function); break;
 		case JS_CBOOLEAN: LPRINTFMT("[Boolean %d]", v.u.object->u.boolean); break;
 		case JS_CNUMBER: LPRINTFMT("%g", v.u.object->u.number); break;
-		case JS_CSTRING: LPRINTFMT("[String'%s']", v.u.object->u.s.string); break;
-		case JS_CERROR: LPRINTFMT("[Error %s]", v.u.object->u.s.string); break;
+		case JS_CSTRING: LPRINTFMT("[String'%s']", js_strnode_cstr(v.u.object->u.s.string)); break;
+		case JS_CERROR: LPRINTFMT("[Error %s]", js_strnode_cstr(v.u.object->u.s.string)); break;
 		case JS_CITERATOR: LPRINTFMT("[Iterator %p]", v.u.object); break;
 		case JS_CUSERDATA:
 			LPRINTFMT("[Userdata %s %p]", v.u.object->u.user.tag, v.u.object->u.user.data);
@@ -867,7 +884,7 @@ static void js_dumpproperty(js_State *J, js_Property *node)
 	if (node->left->level) {
 		js_dumpproperty(J, node->left);
 	}
-	LPRINTFMT("\t%s: ", node->name);
+	LPRINTFMT("\t%s: ", js_strnode_cstr(node->name));
 	js_dumpvalue(J, node->value);
 	LPRINTF(",\n");
 	if (node->right->level) {

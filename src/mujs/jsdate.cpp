@@ -339,7 +339,7 @@ static void js_setdate(js_State *J, int idx, double t) {
 }
 
 static void D_parse(js_State *J) {
-    double t = parseDateTime(js_tostring(J, 1));
+    double t = parseDateTime(js_tostring(J, 1)->value.c_str());
     js_pushnumber(J, t);
 }
 
@@ -377,7 +377,7 @@ static void jsB_new_Date(js_State *J) {
     else if (top == 2) {
         js_toprimitive(J, 1, JS_HNONE);
         if (js_isstring(J, 1))
-            t = parseDateTime(js_tostring(J, 1));
+            t = parseDateTime(js_tostring(J, 1)->value.c_str());
         else
             t = TimeClip(js_tonumber(J, 1));
     } else {
@@ -646,7 +646,9 @@ static void Dp_setUTCFullYear(js_State *J) {
     js_setdate(J, 0, MakeDate(MakeDay(y, m, d), TimeWithinDay(t)));
 }
 
-static void Dp_toJSON(js_State *J) {
+js_StringNode toISOString = js_intern("toISOString");
+
+static void Dp_toJSON(js_State* J) {
     js_copy(J, 0);
     js_toprimitive(J, -1, JS_HNUMBER);
     if (js_isnumber(J, -1) && !isfinite(js_tonumber(J, -1))) {
@@ -655,9 +657,11 @@ static void Dp_toJSON(js_State *J) {
     }
     js_pop(J, 1);
 
-    J->getproperty(0, "toISOString");
-    if (!J->iscallable(-1))
+    J->getproperty(0, toISOString);
+    if (!J->iscallable(-1)) {
         js_typeerror(J, "Date.prototype.toJSON: this.toISOString not a function");
+    }
+
     js_copy(J, 0);
     J->call(0);
 }
@@ -667,61 +671,61 @@ void jsB_initdate(js_State *J) {
 
     js_pushobject(J, J->Date_prototype);
     {
-        jsB_propf(J, "Date.prototype.valueOf", Dp_valueOf, 0);
-        jsB_propf(J, "Date.prototype.toString", Dp_toString, 0);
-        jsB_propf(J, "Date.prototype.toDateString", Dp_toDateString, 0);
-        jsB_propf(J, "Date.prototype.toTimeString", Dp_toTimeString, 0);
-        jsB_propf(J, "Date.prototype.toLocaleString", Dp_toString, 0);
-        jsB_propf(J, "Date.prototype.toLocaleDateString", Dp_toDateString, 0);
-        jsB_propf(J, "Date.prototype.toLocaleTimeString", Dp_toTimeString, 0);
-        jsB_propf(J, "Date.prototype.toUTCString", Dp_toUTCString, 0);
+        jsB_propf(J, js_intern("Date.prototype.valueOf"), Dp_valueOf, 0);
+        jsB_propf(J, js_intern("Date.prototype.toString"), Dp_toString, 0);
+        jsB_propf(J, js_intern("Date.prototype.toDateString"), Dp_toDateString, 0);
+        jsB_propf(J, js_intern("Date.prototype.toTimeString"), Dp_toTimeString, 0);
+        jsB_propf(J, js_intern("Date.prototype.toLocaleString"), Dp_toString, 0);
+        jsB_propf(J, js_intern("Date.prototype.toLocaleDateString"), Dp_toDateString, 0);
+        jsB_propf(J, js_intern("Date.prototype.toLocaleTimeString"), Dp_toTimeString, 0);
+        jsB_propf(J, js_intern("Date.prototype.toUTCString"), Dp_toUTCString, 0);
 
-        jsB_propf(J, "Date.prototype.getTime", Dp_valueOf, 0);
-        jsB_propf(J, "Date.prototype.getFullYear", Dp_getFullYear, 0);
-        jsB_propf(J, "Date.prototype.getUTCFullYear", Dp_getUTCFullYear, 0);
-        jsB_propf(J, "Date.prototype.getMonth", Dp_getMonth, 0);
-        jsB_propf(J, "Date.prototype.getUTCMonth", Dp_getUTCMonth, 0);
-        jsB_propf(J, "Date.prototype.getDate", Dp_getDate, 0);
-        jsB_propf(J, "Date.prototype.getUTCDate", Dp_getUTCDate, 0);
-        jsB_propf(J, "Date.prototype.getDay", Dp_getDay, 0);
-        jsB_propf(J, "Date.prototype.getUTCDay", Dp_getUTCDay, 0);
-        jsB_propf(J, "Date.prototype.getHours", Dp_getHours, 0);
-        jsB_propf(J, "Date.prototype.getUTCHours", Dp_getUTCHours, 0);
-        jsB_propf(J, "Date.prototype.getMinutes", Dp_getMinutes, 0);
-        jsB_propf(J, "Date.prototype.getUTCMinutes", Dp_getUTCMinutes, 0);
-        jsB_propf(J, "Date.prototype.getSeconds", Dp_getSeconds, 0);
-        jsB_propf(J, "Date.prototype.getUTCSeconds", Dp_getUTCSeconds, 0);
-        jsB_propf(J, "Date.prototype.getMilliseconds", Dp_getMilliseconds, 0);
-        jsB_propf(J, "Date.prototype.getUTCMilliseconds", Dp_getUTCMilliseconds, 0);
-        jsB_propf(J, "Date.prototype.getTimezoneOffset", Dp_getTimezoneOffset, 0);
+        jsB_propf(J, js_intern("Date.prototype.getTime"), Dp_valueOf, 0);
+        jsB_propf(J, js_intern("Date.prototype.getFullYear"), Dp_getFullYear, 0);
+        jsB_propf(J, js_intern("Date.prototype.getUTCFullYear"), Dp_getUTCFullYear, 0);
+        jsB_propf(J, js_intern("Date.prototype.getMonth"), Dp_getMonth, 0);
+        jsB_propf(J, js_intern("Date.prototype.getUTCMonth"), Dp_getUTCMonth, 0);
+        jsB_propf(J, js_intern("Date.prototype.getDate"), Dp_getDate, 0);
+        jsB_propf(J, js_intern("Date.prototype.getUTCDate"), Dp_getUTCDate, 0);
+        jsB_propf(J, js_intern("Date.prototype.getDay"), Dp_getDay, 0);
+        jsB_propf(J, js_intern("Date.prototype.getUTCDay"), Dp_getUTCDay, 0);
+        jsB_propf(J, js_intern("Date.prototype.getHours"), Dp_getHours, 0);
+        jsB_propf(J, js_intern("Date.prototype.getUTCHours"), Dp_getUTCHours, 0);
+        jsB_propf(J, js_intern("Date.prototype.getMinutes"), Dp_getMinutes, 0);
+        jsB_propf(J, js_intern("Date.prototype.getUTCMinutes"), Dp_getUTCMinutes, 0);
+        jsB_propf(J, js_intern("Date.prototype.getSeconds"), Dp_getSeconds, 0);
+        jsB_propf(J, js_intern("Date.prototype.getUTCSeconds"), Dp_getUTCSeconds, 0);
+        jsB_propf(J, js_intern("Date.prototype.getMilliseconds"), Dp_getMilliseconds, 0);
+        jsB_propf(J, js_intern("Date.prototype.getUTCMilliseconds"), Dp_getUTCMilliseconds, 0);
+        jsB_propf(J, js_intern("Date.prototype.getTimezoneOffset"), Dp_getTimezoneOffset, 0);
 
-        jsB_propf(J, "Date.prototype.setTime", Dp_setTime, 1);
-        jsB_propf(J, "Date.prototype.setMilliseconds", Dp_setMilliseconds, 1);
-        jsB_propf(J, "Date.prototype.setUTCMilliseconds", Dp_setUTCMilliseconds, 1);
-        jsB_propf(J, "Date.prototype.setSeconds", Dp_setSeconds, 2);
-        jsB_propf(J, "Date.prototype.setUTCSeconds", Dp_setUTCSeconds, 2);
-        jsB_propf(J, "Date.prototype.setMinutes", Dp_setMinutes, 3);
-        jsB_propf(J, "Date.prototype.setUTCMinutes", Dp_setUTCMinutes, 3);
-        jsB_propf(J, "Date.prototype.setHours", Dp_setHours, 4);
-        jsB_propf(J, "Date.prototype.setUTCHours", Dp_setUTCHours, 4);
-        jsB_propf(J, "Date.prototype.setDate", Dp_setDate, 1);
-        jsB_propf(J, "Date.prototype.setUTCDate", Dp_setUTCDate, 1);
-        jsB_propf(J, "Date.prototype.setMonth", Dp_setMonth, 2);
-        jsB_propf(J, "Date.prototype.setUTCMonth", Dp_setUTCMonth, 2);
-        jsB_propf(J, "Date.prototype.setFullYear", Dp_setFullYear, 3);
-        jsB_propf(J, "Date.prototype.setUTCFullYear", Dp_setUTCFullYear, 3);
+        jsB_propf(J, js_intern("Date.prototype.setTime"), Dp_setTime, 1);
+        jsB_propf(J, js_intern("Date.prototype.setMilliseconds"), Dp_setMilliseconds, 1);
+        jsB_propf(J, js_intern("Date.prototype.setUTCMilliseconds"), Dp_setUTCMilliseconds, 1);
+        jsB_propf(J, js_intern("Date.prototype.setSeconds"), Dp_setSeconds, 2);
+        jsB_propf(J, js_intern("Date.prototype.setUTCSeconds"), Dp_setUTCSeconds, 2);
+        jsB_propf(J, js_intern("Date.prototype.setMinutes"), Dp_setMinutes, 3);
+        jsB_propf(J, js_intern("Date.prototype.setUTCMinutes"), Dp_setUTCMinutes, 3);
+        jsB_propf(J, js_intern("Date.prototype.setHours"), Dp_setHours, 4);
+        jsB_propf(J, js_intern("Date.prototype.setUTCHours"), Dp_setUTCHours, 4);
+        jsB_propf(J, js_intern("Date.prototype.setDate"), Dp_setDate, 1);
+        jsB_propf(J, js_intern("Date.prototype.setUTCDate"), Dp_setUTCDate, 1);
+        jsB_propf(J, js_intern("Date.prototype.setMonth"), Dp_setMonth, 2);
+        jsB_propf(J, js_intern("Date.prototype.setUTCMonth"), Dp_setUTCMonth, 2);
+        jsB_propf(J, js_intern("Date.prototype.setFullYear"), Dp_setFullYear, 3);
+        jsB_propf(J, js_intern("Date.prototype.setUTCFullYear"), Dp_setUTCFullYear, 3);
 
         /* ES5 */
-        jsB_propf(J, "Date.prototype.toISOString", Dp_toISOString, 0);
-        jsB_propf(J, "Date.prototype.toJSON", Dp_toJSON, 1);
+        jsB_propf(J, js_intern("Date.prototype.toISOString"), Dp_toISOString, 0);
+        jsB_propf(J, js_intern("Date.prototype.toJSON"), Dp_toJSON, 1);
     }
     js_newcconstructor(J, jsB_Date, jsB_new_Date, "Date", 0); /* 1 */
     {
-        jsB_propf(J, "Date.parse", D_parse, 1);
-        jsB_propf(J, "Date.UTC", D_UTC, 7);
+        jsB_propf(J, js_intern("Date.parse"), D_parse, 1);
+        jsB_propf(J, js_intern("Date.UTC"), D_UTC, 7);
 
         /* ES5 */
-        jsB_propf(J, "Date.now", D_now, 0);
+        jsB_propf(J, js_intern("Date.now"), D_now, 0);
     }
     js_defglobal(J, "Date", JS_DONTENUM);
 }

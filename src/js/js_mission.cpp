@@ -11,19 +11,28 @@
 #include "city/city_message.h"
 #include "js/js_game.h"
 
+static js_StringNode property_varname = js_intern("__varname");
+static js_StringNode property_x = js_intern("x");
+static js_StringNode property_y = js_intern("y");
+static js_StringNode property_minx = js_intern("minx");
+static js_StringNode property_miny = js_intern("miny");
+static js_StringNode property_maxx = js_intern("maxx");
+static js_StringNode property_maxy = js_intern("maxy");
+static js_StringNode property_btype = js_intern("btype");
+
 void js_register_mission_objects(js_State *J) {
     js_newobject(J);
     {
         J->pushstring("mission");
-        js_setproperty(J, -2, "btype");
+        js_setproperty(J, -2, property_btype);
     }
     js_setglobal(J, "mission");
 }
 
 static void js_mission_var_getter(js_State *J) {
     js_currentfunction(J);
-    J->getproperty(-1, "__varname");
-    const char *name = js_tostring(J, -1);
+    J->getproperty(-1, property_varname);
+    xstring name = js_tostring(J, -1)->value.c_str();
     js_pop(J, 2);
 
     if (!name || !g_scenario.vars.is_defined(name)) {
@@ -44,8 +53,10 @@ static void js_mission_var_getter(js_State *J) {
     {
         const vec2i &v = std::get<vec2i>(value);
         js_newobject(J);
-        js_pushnumber(J, v.x); js_setproperty(J, -2, "x");
-        js_pushnumber(J, v.y); js_setproperty(J, -2, "y");
+        js_pushnumber(J, v.x);
+        js_setproperty(J, -2, property_x);
+        js_pushnumber(J, v.y);
+        js_setproperty(J, -2, property_y);
         break;
     }
     case setting_string:
@@ -59,8 +70,8 @@ static void js_mission_var_getter(js_State *J) {
 
 static void js_mission_var_setter(js_State *J) {
     js_currentfunction(J);
-    J->getproperty(-1, "__varname");
-    const char *name = js_tostring(J, -1);
+    J->getproperty(-1, property_varname);
+    xstring name = js_tostring(J, -1)->value.c_str();
     js_pop(J, 2);
 
     if (!name || !g_scenario.vars.is_defined(name)) {
@@ -74,11 +85,11 @@ static void js_mission_var_setter(js_State *J) {
         float value = (float)js_tonumber(J, 1);
         g_scenario.vars.set_float(name, value);
     } else if (js_isstring(J, 1)) {
-        const char *value = js_tostring(J, 1);
-        g_scenario.vars.set_string(name, value);
+        auto value = js_tostring(J, 1);
+        g_scenario.vars.set_string(name, value->value.c_str());
     } else if (J->isobject(1)) {
-        J->getproperty(1, "x");
-        J->getproperty(1, "y");
+        J->getproperty(1, property_x);
+        J->getproperty(1, property_y);
 
         if (js_isnumber(J, -2) && js_isnumber(J, -1)) {
             int x = (int)js_tonumber(J, -2);
@@ -100,18 +111,19 @@ void js_register_mission_vars(const settings_vars_t &vars) {
 
     svector<xstring, 64> properties_to_delete;
     js_pushiterator(J, -1, 1);
-    const char *key;
+    js_StringNode key;
     const std::unordered_set<xstring> systemvars = { "id", "btype", "use_building" };
     while ((key = js_nextiterator(J, -1))) {
-        bool is_internal = (key[0] == '_') || (systemvars.count(key) == 0);
+        pcstr key_str = js_strnode_cstr(key);
+        bool is_internal = (key_str[0] == '_') || (systemvars.count(key_str) == 0);
         if (!is_internal) {
-            properties_to_delete.push_back(key);
+            properties_to_delete.push_back(key_str);
         }
     }
     js_pop(J, 1);
 
     for (const auto &prop : properties_to_delete) {
-        js_delproperty(J, -1, prop.c_str());
+        js_delproperty(J, -1, (js_StringNode)(prop._get()));
     }
 
     g_scenario.vars.foreach_vars([&] (xstring name, const setting_variant &value) {
@@ -123,13 +135,13 @@ void js_register_mission_vars(const settings_vars_t &vars) {
 
         js_newcfunction(J, js_mission_var_getter, getter_name.c_str(), 0);
         J->pushstring(name.c_str());
-        js_setproperty(J, -2, "__varname");
+        js_setproperty(J, -2, property_varname);
 
         js_newcfunction(J, js_mission_var_setter, setter_name.c_str(), 1);
         J->pushstring(name.c_str());
-        js_setproperty(J, -2, "__varname");
+        js_setproperty(J, -2, property_varname);
 
-        js_defaccessor(J, -3, name.c_str(), 0);
+        js_defaccessor(J, -3, (js_StringNode)(name._get()), 0);
         logs::info("Registered mission variable: %s", name.c_str());
     });
 

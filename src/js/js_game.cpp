@@ -75,16 +75,31 @@ void js_loc_native(js_State *J) {
 }
 
 void js_game_load_text(js_State *J) {
-    pcstr path = js_tostring(J, 1);
-    char *text = 0;
+    auto path = js_tostring(J, 1);
 
-    vfs::reader ftext = vfs::file_open(path, "rt");
+    vfs::reader ftext = vfs::file_open(path->value.c_str(), "rt");
     if (!ftext) {
         return;
     }
 
     J->pushstring(ftext->begin());
 }
+
+namespace js_helpers {
+    js_StringNode property_x = js_intern("x");
+    js_StringNode property_y = js_intern("y");
+    js_StringNode property_minx = js_intern("minx");
+    js_StringNode property_miny = js_intern("miny");
+    js_StringNode property_maxx = js_intern("maxx");
+    js_StringNode property_maxy = js_intern("maxy");
+}
+
+static js_StringNode property_pack = js_intern("pack");
+static js_StringNode property_offset = js_intern("offset");
+static js_StringNode property_id = js_intern("id");
+static js_StringNode property_tid = js_intern("tid");
+static js_StringNode property_width = js_intern("width");
+static js_StringNode property_height = js_intern("height");
 
 void js_game_get_image(js_State *J) {
     if (js_gettop(J) < 1) {
@@ -94,20 +109,20 @@ void js_game_get_image(js_State *J) {
 
     int tid;
     if (js_isstring(J, 1)) {
-        pcstr path = js_tostring(J, 1);
+        auto path = js_tostring(J, 1);
         image_desc desc;
-        desc.path = path;
+        desc.path = path->value.c_str();
         tid = desc.tid();
     } else if (J->isobject(1) && !js_isarray(J, 1)) {
-        J->getproperty(1, "pack");
+        J->getproperty(1, property_pack);
         int16_t pack = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
         js_pop(J, 1);
 
-        J->getproperty(1, "id");
+        J->getproperty(1, property_id);
         int16_t id = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
         js_pop(J, 1);
 
-        J->getproperty(1, "offset");
+        J->getproperty(1, property_offset);
         int16_t offset = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
         js_pop(J, 1);
 
@@ -133,9 +148,15 @@ void js_game_get_image(js_State *J) {
     }
 
     js_newobject(J);
-    js_pushnumber(J, tid); js_setproperty(J, -2, "tid");
-    js_pushnumber(J, img->width); js_setproperty(J, -2, "width");
-    js_pushnumber(J, img->height); js_setproperty(J, -2, "height");
+
+    js_pushnumber(J, tid);
+    js_setproperty(J, -2, property_tid);
+
+    js_pushnumber(J, img->width);
+    js_setproperty(J, -2, property_width);
+
+    js_pushnumber(J, img->height);
+    js_setproperty(J, -2, property_height);
 }
 
 bool js_has_event_handlers(const xstring &event_name) {
@@ -149,10 +170,12 @@ static void js_create_element_proxy(js_State *J, ui::widget* w, pcstr element_id
 
     js_newobject(J);
     J->pushstring(element_id);
-    js_setproperty(J, -2, "id");
+    
+    js_setproperty(J, -2, property_tid);
     js_push_props(J, w, element_id);
     js_push_funcs(J, w, element_id);
-    js_setproperty(J, -2, element_id);  // event_obj at -2, proxy at -1
+
+    js_setproperty(J, -2, js_intern(element_id));  // event_obj at -2, proxy at -1
 }
 
 void js_call_event_handlers(const xstring &event_name, const bvariant_map &object) {
@@ -220,9 +243,9 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
                 {
                     const vec2i pos = val.as_vec2i();
                     js_pushnumber(J, pos.x);
-                    js_setproperty(J, -2, "x");
+                    js_setproperty(J, -2, js_helpers::property_x);
                     js_pushnumber(J, pos.y);
-                    js_setproperty(J, -2, "y");
+                    js_setproperty(J, -2, js_helpers::property_y);
                 }
                 break;
             case bvariant::etype_none:
@@ -231,7 +254,7 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
                 break;
             }
 
-            js_setproperty(J, -2, key.c_str());
+            js_setproperty(J, -2, js_intern(key.c_str()));
         }
 
         if (!ui_element_ids.empty()) {
@@ -272,6 +295,16 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
     }
 }
 
+js_StringNode property_mission = js_intern("mission");
+js_StringNode property_event = js_intern("event");
+js_StringNode property_es = js_intern("es");
+
+xstring to_xstring(const js_StringNode str) {
+    xstring r;
+    r._set(str);
+    return r;
+}
+
 void js_register_game_handlers(xstring missionid) {
     auto J = js_vm_state();
     js_Object *global = J->G;
@@ -288,11 +321,12 @@ void js_register_game_handlers(xstring missionid) {
 
     while (prop) {
         if (prop->value.type == JS_TOBJECT && prop->value.u.object) {
+            xstring prop_name = to_xstring(prop->name);
             js_Object *obj = prop->value.u.object;
             if (obj->type == JS_CFUNCTION || obj->type == JS_CSCRIPT) {
                 js_Function *func = obj->u.f.function;
 
-                if (func && func->modifiers && prop->name) {
+                if (func && func->modifiers && !!prop->name) {
                     if (g_args.is_log_js_handlers()) {
                         logs::info("JS: Function '%s' has modifiers:", prop->name);
                     }
@@ -300,8 +334,11 @@ void js_register_game_handlers(xstring missionid) {
 
                     js_FunctionModifier *mod = func->modifiers;
                     while (mod) {
+                        xstring mod_value = to_xstring(mod->value);
+                        xstring mod_key = to_xstring(mod->key);
+
                         if (g_args.is_log_js_handlers()) {
-                            logs::info("  - %s: %s", mod->key ? mod->key : "<no-key>", mod->value ? mod->value : "<no-value>");
+                            logs::info("  - %s: %s", !!mod_key ? mod_key.c_str() : "<no-key>", !!mod_value ? mod_value.c_str() : "<no-value>");
                         }
                         mod = mod->next;
                     }
@@ -309,8 +346,9 @@ void js_register_game_handlers(xstring missionid) {
                     xstring require_mission_id;
                     mod = func->modifiers;
                     while (mod) {
-                        if (mod->key && strcmp(mod->key, "mission") == 0) {
-                            require_mission_id = mod->value;
+                        xstring mod_value = to_xstring(mod->value);
+                        if (!!mod->key && (mod->key == property_mission)) {
+                            require_mission_id = mod_value;
                             break;
                         }
                         mod = mod->next;
@@ -332,20 +370,23 @@ void js_register_game_handlers(xstring missionid) {
 
                     if (should_handle_this_function) {
                         mod = func->modifiers;
-                        auto is_es = [] (pcstr k) { return strcmp(k, "event") == 0 || strcmp(k, "es") == 0; };
+                        auto is_es = [](auto k) { return (k == property_event) || (k == property_es); };
                         while (mod) {
-                            if (mod->key && is_es(mod->key)) {
-                                auto r = event_type_handlers.insert(std::make_pair(xstring(mod->value),  event_handlers{}));
+                            xstring mod_value = to_xstring(mod->value);
+                            xstring mod_key = to_xstring(mod->key);
+
+                            if (!!mod_key && is_es(mod->key)) {
+                                auto r = event_type_handlers.insert(std::make_pair(mod_value, event_handlers{}));
                                 auto &handlers = r.first->second;
-                                handlers.push_back(prop->name);
+                                handlers.push_back(prop_name);
                                 if (g_args.is_log_js_handlers()) {
-                                    logs::info("JS: Registered handler '%s' for event '%s' (mission: '%s')", prop->name, mod->value, missionid.c_str());
+                                    logs::info("JS: Registered handler '%s' for event '%s' (mission: '%s')", prop_name.c_str(), mod_value.c_str(), missionid.c_str());
                                 }
-                            } else if (mod->key) {
+                            } else if (!!mod->key) {
                                 for (config::ModifierIteratorEntry *e = config::ModifierIteratorEntry::tail; e; e = e->next) {
-                                    if (e->modifier_key && strcmp(mod->key, e->modifier_key) == 0) {
-                                        pcstr value = mod->value ? mod->value : prop->name;
-                                        e->callback(J, prop->name, value);
+                                    if (!!e->modifier_key && (mod_key == e->modifier_key)) {
+                                        const xstring value = !!mod_value ? mod_value : prop_name;
+                                        e->callback(J, prop_name.c_str(), value.c_str());
                                         if (g_args.is_log_js_handlers()) {
                                             logs::info("JS: Modifier '%s' -> '%s' (name=%s)", mod->key, value, prop->name);
                                         }
@@ -382,20 +423,20 @@ void js_register_entity_systems() {
     int window_count = 0;
 
     while (prop) {
-        if (prop->value.type == JS_TOBJECT && prop->value.u.object && prop->name) {
+        if (prop->value.type == JS_TOBJECT && prop->value.u.object && !!prop->name) {
             js_Object *obj = prop->value.u.object;
 
             if (obj->type == JS_COBJECT) {
-                pcstr name = prop->name;
-                js_getglobal(J, name);
+                const auto name = prop->name;
+                js_getglobal(J, name->value.c_str());
 
-                if (js_hasobject_modifier(J, -1, "es")) {
-                    pcstr es_value = js_getobject_modifier(J, -1, "es");
+                if (js_hasobject_modifier(J, -1, property_es)) {
+                    auto es_value = js_getobject_modifier(J, -1, property_es);
                     for (config::ESIteratorEntry *e = config::ESIteratorEntry::tail; e; e = e->next) {
-                        if (e->es_type && es_value && strcmp(es_value, e->es_type) == 0) {
+                        if (!!e->es_type && es_value && (es_value == e->es_type._get())) {
                             window_count++;
-                            e->regnew(name);
-                            logs::info("JS: Registered '%s' [es=%s]", name, e->es_type);
+                            e->regnew(name->value.c_str());
+                            logs::info("JS: Registered '%s' [es=%s]", name->value.c_str(), e->es_type.c_str());
                             break;
                         }
                     }
@@ -489,7 +530,7 @@ void js_call_function(xstring js_ref) {
     assert(J);
 
     // Get the function from registry using the reference
-    js_getregistry(J, js_ref.c_str());
+    js_getregistry(J, (js_StringNode)js_ref._get());
     if (J->iscallable(-1)) {
         js_pushnull(J);  // 'this' context
         int result = J->pcall(0);
@@ -510,7 +551,7 @@ void js_call_function_bool(xstring js_ref, bool param) {
     js_State *J = js_vm_state();
     verify_no_crash(J);
 
-    js_getregistry(J, js_ref.c_str());
+    js_getregistry(J, (js_StringNode)js_ref._get());
     if (J->iscallable(-1)) {
         js_pushnull(J);
         js_pushboolean(J, param);
@@ -533,7 +574,7 @@ bvariant js_call_function(xstring js_ref, int param1, int param2) {
     assert(J);
 
     // Get the function from registry using the reference
-    js_getregistry(J, js_ref.c_str());
+    js_getregistry(J, (js_StringNode)js_ref._get());
     if (J->iscallable(-1)) {
         js_pushnull(J);  // 'this' context
         js_pushnumber(J, (double)param1);
@@ -566,7 +607,7 @@ bvariant js_call_function(xstring js_ref, const bvariant_map &params) {
 
     js_State *J = js_vm_state();
 
-    js_getregistry(J, js_ref.c_str());
+    js_getregistry(J, (js_StringNode)js_ref._get());
     if (J->iscallable(-1)) {
         js_pushnull(J);
         js_push_bvariant_map_object(J, params);

@@ -480,7 +480,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
         }
         verify_no_crash(finish_index >= start_index);
         group_image_ids[groups_num] = entries_num;
-        bmp_names[groups_num] = arch.r_string("name");
+        bmp_names[groups_num] = arch.r_string("name").c_str();
         entries_num += (finish_index - start_index) + 1;
         ++groups_num;
     });
@@ -596,7 +596,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
 
     int tmp_group_id = 0, atlas_rect_id = 0;
     g_config_arch.r_array(pak, [&] (archive arch) {
-        bstring128 prefix = arch.r_string("prefix");
+        bstring128 prefix = arch.r_string("prefix").c_str();
         int start_index = arch.r_int("start_index");
         int finish_index = arch.r_int("finish_index");
         if (finish_index <= 0) {

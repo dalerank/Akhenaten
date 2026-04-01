@@ -1113,8 +1113,8 @@ void ui::eouter_panel::draw(UiFlags flags) {
 void ui::eouter_panel::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
 
-    pcstr type = arch.r_string("type");
-    assert(!strcmp(type, "outer_panel"));
+    xstring type = arch.r_string("type");
+    assert(type == "outer_panel");
 }
 
 void ui::einner_panel::draw(UiFlags flags) {
@@ -1124,8 +1124,8 @@ void ui::einner_panel::draw(UiFlags flags) {
 void ui::einner_panel::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
 
-    pcstr type = arch.r_string("type");
-    assert(!strcmp(type, "inner_panel"));
+    xstring type = arch.r_string("type");
+    assert(type == "inner_panel");
 }
 
 void ui::widget::draw(UiFlags flags) {
@@ -1277,8 +1277,8 @@ void ui::eimg::draw(UiFlags flags) {
 void ui::eimg::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
 
-    pcstr type = arch.r_string("type");
-    assert(!strcmp(type, "image"));
+    xstring type = arch.r_string("type");
+    assert(type == "image");
     img_desc.pack = arch.r_int("pack");
     img_desc.id = arch.r_int("id");
     img_desc.offset = arch.r_int("offset");
@@ -1306,8 +1306,8 @@ void ui::ebackground::draw(UiFlags flags) {
 void ui::ebackground::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
 
-    pcstr type = arch.r_string("type");
-    assert(!strcmp(type, "background"));
+    xstring type = arch.r_string("type");
+    assert(type == "background");
     scale = arch.r_float("scale", 1.f);
     img_desc.pack = arch.r_int("pack");
     img_desc.id = arch.r_int("id");
@@ -1425,8 +1425,8 @@ void ui::eresource_icon::text(pcstr v) {
 void ui::eresource_icon::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
 
-    pcstr type = arch.r_string("type");
-    assert(!strcmp(type, "resource_icon"));
+    xstring type = arch.r_string("type");
+    assert(type == "resource_icon");
     res = arch.r_type<e_resource>("resource");
     prop = arch.r_string("prop");
 }
@@ -1488,14 +1488,14 @@ void ui::elabel::load(archive arch, element* parent, items& elems) {
     _tooltip = arch.r_string("tooltip");
     arch.r("text_margin", _text_margin);
 
-    pcstr talign = arch.r_string("align");
+    xstring talign = arch.r_string("align");
     bool multiline = arch.r_bool("multiline");
     bool rich = arch.r_bool("rich");
     bool scroll = arch.r_bool("scroll", true);
-    bool aligncenter = strcmp("center", talign) == 0;
-    bool alignleft = strcmp("left", talign) == 0;
-    bool alignycenter = strcmp("ycenter", talign) == 0;
-    bool alignxcenter = strcmp("xcenter", talign) == 0;
+    bool aligncenter = (talign == "center");
+    bool alignleft = (talign == "left");
+    bool alignycenter = (talign == "ycenter");
+    bool alignxcenter = (talign == "xcenter");
     _flags = (aligncenter ? UiFlags_AlignCentered : UiFlags_None)
              | (alignycenter ? UiFlags_AlignYCentered : UiFlags_None)
              | (alignxcenter ? UiFlags_AlignXCentered : UiFlags_None) | (alignleft ? UiFlags_AlignLeft : UiFlags_None)
@@ -1523,8 +1523,8 @@ void ui::elabel::width(int v) {
 void ui::eimage_button::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
 
-    pcstr type = arch.r_string("type");
-    assert(!strcmp(type, "image_button"));
+    xstring type = arch.r_string("type");
+    assert(type == "image_button");
 
     scale = arch.r_float("scale", 1.f);
     param1 = arch.r_int("param1");
@@ -1541,10 +1541,10 @@ void ui::eimage_button::load(archive arch, element* parent, items& elems) {
     set_ref(ONCLICK, arch.r_function("onclick"));
     set_event(ONCLICK_EVENT, arch.r_string(ONCLICK_EVENT.c_str()));
 
-    pcstr name_icon_texture = arch.r_string("icon_texture");
-    if (name_icon_texture && *name_icon_texture) {
+    xstring name_icon_texture = arch.r_string("icon_texture");
+    if (!name_icon_texture.empty()) {
         vec2i tmp_size;
-        icon_texture = load_icon_texture(name_icon_texture, tmp_size);
+        icon_texture = load_icon_texture(name_icon_texture.c_str(), tmp_size);
     }
 }
 
@@ -1640,8 +1640,8 @@ void ui::eimage_button::image(const animation_t& d) {
 void ui::etext::load(archive arch, element* parent, items& elems) {
     elabel::load(arch, parent, elems);
 
-    pcstr type = arch.r_string("type");
-    assert(!strcmp(type, "text"));
+    xstring type = arch.r_string("type");
+    assert(type == "text");
 }
 
 void ui::etext::reset_scroll() {
@@ -1657,8 +1657,8 @@ void ui::escrollbar::draw(UiFlags flags) {
 void ui::escrollbar::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
 
-    pcstr type = arch.r_string("type");
-    assert(!strcmp(type, "scrollbar"));
+    xstring type = arch.r_string("type");
+    assert(type == "scrollbar");
 
     scrollbar.pos = pos;
     scrollbar.height = size.y;
@@ -1841,8 +1841,8 @@ void ui::escrollable_list::draw(UiFlags flags) {
 void ui::escrollable_list::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
 
-    pcstr type = arch.r_string("type");
-    assert(!strcmp(type, "scrollable_list"));
+    xstring type = arch.r_string("type");
+    assert(type == "scrollable_list");
 
     _js_render_item_ref = arch.r_function("onrender_item");
     _js_onclick_item_ref = arch.r_function("onclick_item");
@@ -1962,8 +1962,8 @@ ui::emenu_header::~emenu_header() {
 void ui::emenu_header::load(archive arch, element* parent, items& elems) {
     element::load(arch, parent, elems);
 
-    pcstr type = arch.r_string("type");
-    assert(!strcmp(type, "menu_header"));
+    xstring type = arch.r_string("type");
+    assert(type == "menu_header");
 
     _font = arch.r_type<e_font>("font", FONT_NORMAL_BLACK_ON_LIGHT);
     _tooltip = arch.r_string("tooltip");
@@ -1992,8 +1992,8 @@ void ui::emenu_header::load_items(archive arch, xstring section, element::items&
     impl.items.clear();
 
     arch.r_objects(section, [&](pcstr key, archive elem) {
-        pcstr type = elem.r_string("type");
-        assert(!strcmp(type, "menu_item"));
+        xstring type = elem.r_string("type");
+        assert(type == "menu_item");
 
         _onclick_js = elem.r_function("onclick");
         _textfn_js = elem.r_function("textfn");
@@ -2155,8 +2155,8 @@ void ui::egeneric_button::js_rcall() {
 void ui::egeneric_button::load(archive arch, element* parent, items& elems) {
     elabel::load(arch, parent, elems);
 
-    pcstr mode_str = arch.r_string("mode");
-    if (mode_str && !strcmp(mode_str, "large")) {
+    xstring mode_str = arch.r_string("mode");
+    if (mode_str == "large") {
         mode = 1;
     }
     _tooltip = arch.r_string("tooltip");
@@ -2195,8 +2195,8 @@ void ui::echeckbox::draw(UiFlags flags) {
 void ui::echeckbox::load(archive arch, element* parent, items& elems) {
     egeneric_button::load(arch, parent, elems);
 
-    pcstr type = arch.r_string("type");
-    assert(!strcmp(type, "checkbox"));
+    xstring type = arch.r_string("type");
+    assert(type == "checkbox");
 
     _checked = arch.r_bool("checked", false);
     _checked_text = arch.r_string("checked_text", "x");

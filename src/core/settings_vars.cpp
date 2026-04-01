@@ -297,7 +297,7 @@ void globals_settings_t::load_global(pcstr name) {
 	_initialized = true;
 	_variantsDirty = false;
 
-	g_config_arch.r_objects(name, [&] (pcstr key, archive arch) {
+	g_config_arch.r_objects(name, [&] (xstring key, archive arch) {
 		auto value = arch.to_variant();
 		switch (value.index()) {
 		case archive::e_variant_type::vt_none:

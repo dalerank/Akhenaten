@@ -45,8 +45,8 @@ static struct {
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_city_sounds) {
     g_config_arch.r_array("city_sounds", [] (archive arch) {
         const int channel = arch.r_int("c");
-        const char *path = arch.r_string("p");
-        g_sound.update_channel(channel, path);
+        xstring path = arch.r_string("p");
+        g_sound.update_channel(channel, path.c_str());
     });
 }
 

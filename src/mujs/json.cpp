@@ -29,7 +29,6 @@ static void jsonexpect(js_State *J, int t)
 static void jsonvalue(js_State *J)
 {
 	int i;
-	const char *name;
 
 	switch (J->lookahead) {
 	case TK_STRING:
@@ -48,9 +47,11 @@ static void jsonvalue(js_State *J)
 		if (jsonaccept(J, '}'))
 			return;
 		do {
-			if (J->lookahead != TK_STRING)
-				js_syntaxerror(J, "JSON: unexpected token: %s (expected string)", jsY_tokenstring(J->lookahead));
-			name = J->text;
+            if (J->lookahead != TK_STRING) {
+                js_syntaxerror(J, "JSON: unexpected token: %s (expected string)", jsY_tokenstring(J->lookahead));
+            }
+
+			auto name = J->text;
 			jsonnext(J);
 			jsonexpect(J, ':');
 			jsonvalue(J);
@@ -94,7 +95,7 @@ static void jsonvalue(js_State *J)
 
 static void JSON_parse(js_State *J)
 {
-	const char *source = js_tostring(J, 1);
+    const char* source = js_strnode_cstr(js_tostring(J, 1));
 	jsY_initlex(J, "JSON", source);
 	jsonnext(J);
 	jsonvalue(J);
@@ -165,12 +166,12 @@ static void fmtobject(js_State *J, js_Buffer **sb, js_Object *obj, const char *g
 		save = (*sb)->n;
 		if (n) js_putc(J, sb, ',');
 		if (gap) fmtindent(J, sb, gap, level + 1);
-		fmtstr(J, sb, ref->name);
+		fmtstr(J, sb, js_strnode_cstr(ref->name));
 		js_putc(J, sb, ':');
 		if (gap)
 			js_putc(J, sb, ' ');
 		js_pushvalue(J, ref->value);
-		if (!fmtvalue(J, sb, ref->name, gap, level + 1))
+		if (!fmtvalue(J, sb, js_strnode_cstr(ref->name), gap, level + 1))
 			(*sb)->n = save;
 		else
 			++n;
@@ -192,14 +193,16 @@ static void fmtarray(js_State *J, js_Buffer **sb, const char *gap, int level)
 		if (k) js_putc(J, sb, ',');
 		if (gap) fmtindent(J, sb, gap, level + 1);
 		js_itoa(buf, k);
-		J->getproperty(-1, buf);
-		if (!fmtvalue(J, sb, js_intern(J, buf), gap, level + 1))
+		J->getproperty(-1, js_intern(buf));
+		if (!fmtvalue(J, sb, buf, gap, level + 1))
 			js_puts(J, sb, "null");
 		js_pop(J, 1);
 	}
 	if (gap && n) fmtindent(J, sb, gap, level);
 	js_putc(J, sb, ']');
 }
+
+static js_StringNode propert_toJson = js_intern("toJSON");
 
 static int fmtvalue(js_State *J, js_Buffer **sb, const char *key, const char *gap, int level)
 {
@@ -208,10 +211,10 @@ static int fmtvalue(js_State *J, js_Buffer **sb, const char *key, const char *ga
 		js_throw(J);
 	}
 	if (J->isobject(-1)) {
-		if (J->hasproperty(-1, "toJSON")) {
+        if (J->hasproperty(-1, propert_toJson)) {
 			if (J->iscallable(-1)) {
 				js_copy(J, -2);
-				J->pushliteral(key);
+				J->pushliteral(js_intern(key));
 				J->call(1);
 				js_rot2pop1(J);
 			} else {
@@ -227,7 +230,7 @@ static int fmtvalue(js_State *J, js_Buffer **sb, const char *key, const char *ga
 		js_Object *obj = J->toobject(-1);
 		switch (obj->type) {
 		case JS_CNUMBER: fmtnum(J, sb, obj->u.number); break;
-		case JS_CSTRING: fmtstr(J, sb, obj->u.s.string); break;
+		case JS_CSTRING: fmtstr(J, sb, js_strnode_cstr(obj->u.s.string)); break;
 		case JS_CBOOLEAN: js_puts(J, sb, obj->u.boolean ? "true" : "false"); break;
 		case JS_CARRAY: fmtarray(J, sb, gap, level); break;
 		default: fmtobject(J, sb, obj, gap, level); break;
@@ -238,7 +241,7 @@ static int fmtvalue(js_State *J, js_Buffer **sb, const char *key, const char *ga
 	else if (js_isnumber(J, -1))
 		fmtnum(J, sb, js_tonumber(J, -1));
 	else if (js_isstring(J, -1))
-		fmtstr(J, sb, js_tostring(J, -1));
+        fmtstr(J, sb, js_strnode_cstr(js_tostring(J, -1)));
 	else if (js_isnull(J, -1))
 		js_puts(J, sb, "null");
 	else
@@ -264,7 +267,7 @@ static void JSON_stringify(js_State *J)
 		buf[n] = 0;
 		if (n > 0) gap = buf;
 	} else if (js_isstring(J, 3)) {
-		s = js_tostring(J, 3);
+        s = js_strnode_cstr(js_tostring(J, 3));
 		n = strlen(s);
 		if (n > 10) n = 10;
 		memcpy(buf, s, n);
@@ -295,8 +298,8 @@ void jsB_initjson(js_State *J)
 {
 	js_pushobject(J, jsV_newobject(J, JS_CJSON, J->Object_prototype));
 	{
-		jsB_propf(J, "JSON.parse", JSON_parse, 2);
-		jsB_propf(J, "JSON.stringify", JSON_stringify, 3);
+		jsB_propf(J, js_intern("JSON.parse"), JSON_parse, 2);
+		jsB_propf(J, js_intern("JSON.stringify"), JSON_stringify, 3);
 	}
 	js_defglobal(J, "JSON", JS_DONTENUM);
 }

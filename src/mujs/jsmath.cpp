@@ -134,33 +134,33 @@ void jsB_initmath(js_State *J)
 {
 	js_pushobject(J, jsV_newobject(J, JS_CMATH, J->Object_prototype));
 	{
-		jsB_propn(J, "E", 2.7182818284590452354);
-		jsB_propn(J, "LN10", 2.302585092994046);
-		jsB_propn(J, "LN2", 0.6931471805599453);
-		jsB_propn(J, "LOG2E", 1.4426950408889634);
-		jsB_propn(J, "LOG10E", 0.4342944819032518);
-		jsB_propn(J, "PI", 3.1415926535897932);
-		jsB_propn(J, "SQRT1_2", 0.7071067811865476);
-		jsB_propn(J, "SQRT2", 1.4142135623730951);
+		jsB_propn(J, js_intern("E"), 2.7182818284590452354);
+		jsB_propn(J, js_intern("LN10"), 2.302585092994046);
+		jsB_propn(J, js_intern("LN2"), 0.6931471805599453);
+		jsB_propn(J, js_intern("LOG2E"), 1.4426950408889634);
+		jsB_propn(J, js_intern("LOG10E"), 0.4342944819032518);
+		jsB_propn(J, js_intern("PI"), 3.1415926535897932);
+		jsB_propn(J, js_intern("SQRT1_2"), 0.7071067811865476);
+		jsB_propn(J, js_intern("SQRT2"), 1.4142135623730951);
 
-		jsB_propf(J, "Math.abs", Math_abs, 1);
-		jsB_propf(J, "Math.acos", Math_acos, 1);
-		jsB_propf(J, "Math.asin", Math_asin, 1);
-		jsB_propf(J, "Math.atan", Math_atan, 1);
-		jsB_propf(J, "Math.atan2", Math_atan2, 2);
-		jsB_propf(J, "Math.ceil", Math_ceil, 1);
-		jsB_propf(J, "Math.cos", Math_cos, 1);
-		jsB_propf(J, "Math.exp", Math_exp, 1);
-		jsB_propf(J, "Math.floor", Math_floor, 1);
-		jsB_propf(J, "Math.log", Math_log, 1);
-		jsB_propf(J, "Math.max", Math_max, 0); /* 2 */
-		jsB_propf(J, "Math.min", Math_min, 0); /* 2 */
-		jsB_propf(J, "Math.pow", Math_pow, 2);
-		jsB_propf(J, "Math.random", Math_random, 0);
-		jsB_propf(J, "Math.round", Math_round, 1);
-		jsB_propf(J, "Math.sin", Math_sin, 1);
-		jsB_propf(J, "Math.sqrt", Math_sqrt, 1);
-		jsB_propf(J, "Math.tan", Math_tan, 1);
+		jsB_propf(J, js_intern("Math.abs"), Math_abs, 1);
+		jsB_propf(J, js_intern("Math.acos"), Math_acos, 1);
+		jsB_propf(J, js_intern("Math.asin"), Math_asin, 1);
+		jsB_propf(J, js_intern("Math.atan"), Math_atan, 1);
+		jsB_propf(J, js_intern("Math.atan2"), Math_atan2, 2);
+		jsB_propf(J, js_intern("Math.ceil"), Math_ceil, 1);
+		jsB_propf(J, js_intern("Math.cos"), Math_cos, 1);
+		jsB_propf(J, js_intern("Math.exp"), Math_exp, 1);
+		jsB_propf(J, js_intern("Math.floor"), Math_floor, 1);
+		jsB_propf(J, js_intern("Math.log"), Math_log, 1);
+		jsB_propf(J, js_intern("Math.max"), Math_max, 0); /* 2 */
+		jsB_propf(J, js_intern("Math.min"), Math_min, 0); /* 2 */
+		jsB_propf(J, js_intern("Math.pow"), Math_pow, 2);
+		jsB_propf(J, js_intern("Math.random"), Math_random, 0);
+		jsB_propf(J, js_intern("Math.round"), Math_round, 1);
+		jsB_propf(J, js_intern("Math.sin"), Math_sin, 1);
+		jsB_propf(J, js_intern("Math.sqrt"), Math_sqrt, 1);
+		jsB_propf(J, js_intern("Math.tan"), Math_tan, 1);
 	}
 	js_defglobal(J, "Math", JS_DONTENUM);
 }

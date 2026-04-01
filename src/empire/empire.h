@@ -38,7 +38,7 @@ public:
     void update_month();
 
     empire_city *city(int city_id);
-    empire_city *city(pcstr name);
+    empire_city *city(xstring name);
 
     xspan<empire_city> get_cities() { return make_span(cities); }
     xspan<trade_route> get_routes() { return make_span(trade_routes.routes); }

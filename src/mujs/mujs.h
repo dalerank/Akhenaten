@@ -24,6 +24,7 @@
 #endif
 #endif
 
+#include "jsstring.h"
 
 struct js_State;
 
@@ -121,21 +122,21 @@ void js_eval(js_State *J);
 /** Dump current JS call stack (name, file, line) to stdout. Use when id/undefined to find caller. */
 void js_stacktrace(js_State *J);
 
-const char *js_ref(js_State *J);
+js_StringNode js_ref(js_State *J);
 void js_unref(js_State *J, const char *ref);
 
-void js_getregistry(js_State *J, const char *name);
-void js_setregistry(js_State *J, const char *name);
-void js_delregistry(js_State *J, const char *name);
+void js_getregistry(js_State* J, const js_StringNode name);
+void js_setregistry(js_State* J, const js_StringNode name);
+void js_delregistry(js_State* J, const js_StringNode name);
 
 void js_getglobal(js_State *J, const char *name);
 void js_setglobal(js_State *J, const char *name);
 void js_defglobal(js_State *J, const char *name, int atts);
 
-void js_setproperty(js_State *J, int idx, const char *name);
-void js_defproperty(js_State *J, int idx, const char *name, int atts);
-void js_delproperty(js_State *J, int idx, const char *name);
-void js_defaccessor(js_State *J, int idx, const char *name, int atts);
+void js_setproperty(js_State* J, int idx, const js_StringNode name);
+void js_defproperty(js_State *J, int idx, const js_StringNode name, int atts);
+void js_delproperty(js_State* J, int idx, const js_StringNode name);
+void js_defaccessor(js_State* J, int idx, const js_StringNode name, int atts);
 
 void js_setdumping(js_State *J, void (*dumpfun)(js_State *, const char *));
 void js_dumpobject_ex(js_State *J, int idx);
@@ -152,8 +153,8 @@ void js_pushglobal(js_State *J);
 void js_pushundefined(js_State *J);
 
 /* Function modifiers API */
-int js_hasmodifier(js_State *J, int idx, const char *key);
-const char *js_getmodifier(js_State *J, int idx, const char *key);
+int js_hasmodifier(js_State* J, int idx, const js_StringNode key);
+js_StringNode js_getmodifier(js_State* J, int idx, const js_StringNode key);
 void js_pushnull(js_State *J);
 void js_pushboolean(js_State *J, int v);
 void js_pushnumber(js_State *J, double v);
@@ -171,7 +172,7 @@ void js_newuserdatax(js_State *J, const char *tag, void *data, js_HasProperty ha
 void js_newregexp(js_State *J, const char *pattern, int flags);
 
 void js_pushiterator(js_State *J, int idx, int own);
-const char *js_nextiterator(js_State *J, int idx);
+const js_StringNode js_nextiterator(js_State *J, int idx);
 
 int js_isdefined(js_State *J, int idx);
 int js_isundefined(js_State *J, int idx);
@@ -189,12 +190,12 @@ void *js_frame_alloc(js_State *J, int size);
 void js_frame_free(js_State *J, void *ptr);
 
 /* Object modifiers */
-int js_hasobject_modifier(js_State *J, int idx, const char *key);
-const char *js_getobject_modifier(js_State *J, int idx, const char *key);
+int js_hasobject_modifier(js_State* J, int idx, const js_StringNode key);
+js_StringNode js_getobject_modifier(js_State* J, int idx, const js_StringNode key);
 
 int js_toboolean(js_State *J, int idx);
 double js_tonumber(js_State *J, int idx);
-const char *js_tostring(js_State *J, int idx);
+js_StringNode js_tostring(js_State *J, int idx);
 void *js_touserdata(js_State *J, int idx, const char *tag);
 
 int js_tointeger(js_State *J, int idx);

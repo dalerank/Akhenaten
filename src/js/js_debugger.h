@@ -92,7 +92,7 @@ private:
     hvector<MujsBreakpoint, 16> breakpoints_;
 
     // Object expansion: ref_id >= 1000 -> (parent_ref, property_name)
-    std::map<int, std::pair<int, cstring>> object_ref_map_;
+    std::map<int, std::pair<int, js_StringNode>> object_ref_map_;
     int next_variable_ref_ = 1000;
 
     int seq_ = 1;

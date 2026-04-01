@@ -88,10 +88,9 @@ declare_console_command_p(save_empire_routes) {
 
 void empire_t::load_mission_metadata(const mission_id_t &missionid) {
     g_config_arch.r_section(missionid, [] (archive arch) {
-        auto &data = g_empire;
-        arch.r_array("cities", [&data] (archive city_arch) {
-            pcstr name = city_arch.r_string("name");
-            auto city = data.city(name);
+        arch.r_array("cities", [] (archive city_arch) {
+            xstring name = city_arch.r_string("name");
+            auto city = g_empire.city(name);
 
             if (!city) {
                 return;
@@ -139,10 +138,10 @@ empire_city* empire_t::city(int city_id) {
         return nullptr;
 }
 
-empire_city *empire_t::city(pcstr name) {
+empire_city *empire_t::city(xstring name) {
     for (auto &city : cities) {
         pcstr city_name = (pcstr)lang_get_string(195, city.name_id);
-        if (stricmp(city_name, name) == 0) {
+        if (name == city_name) {
             return &city;
         }
     }

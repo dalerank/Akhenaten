@@ -1,6 +1,8 @@
 #ifndef js_parse_h
 #define js_parse_h
 
+#include "jsstring.h"
+
 enum js_AstType
 {
 	AST_LIST,
@@ -128,8 +130,8 @@ struct js_JumpList
 
 struct js_AstModifier
 {
-	const char *key;
-	const char *value;
+	js_StringNode key;
+	js_StringNode value;
 	js_AstModifier *next;
 };
 
@@ -139,7 +141,7 @@ struct js_Ast
 	int line;
 	js_Ast *parent, *a, *b, *c, *d;
 	double number;
-	const char *string;
+	js_StringNode string;
 	js_JumpList *jumps; /* list of break/continue jumps to patch */
 	int casejump; /* for switch case clauses */
 	js_AstModifier *modifiers; /* function modifiers/attributes */

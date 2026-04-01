@@ -368,8 +368,8 @@ void font_atlas_regenerate() {
             return;
         }
 
-        pcstr symbols = arch.r_string("symbols");
-        if (!symbols || !*symbols) {
+        xstring symbols = arch.r_string("symbols");
+        if (symbols.empty()) {
             return;
         }
 
@@ -377,7 +377,7 @@ void font_atlas_regenerate() {
         symbols_font = arch.r_string("font");
 
         svector<bstring32, 1024> data_str;
-        string_to_array_t(data_str, symbols, ',');
+        string_to_array_t(data_str, symbols.c_str(), ',');
 
         svector<uint64_t, 1024> data;
         for (const auto& x: data_str) {

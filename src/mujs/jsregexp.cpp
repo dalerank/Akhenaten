@@ -26,6 +26,9 @@ void js_newregexp(js_State *J, const char *pattern, int flags) {
     js_pushobject(J, obj);
 }
 
+static js_StringNode property_input = js_intern("input");
+static js_StringNode property_index = js_intern("index");
+
 void js_RegExp_prototype_exec(js_State *J, js_Regexp *re, const char *text) {
     int i;
     int opts;
@@ -47,9 +50,9 @@ void js_RegExp_prototype_exec(js_State *J, js_Regexp *re, const char *text) {
     if (!js_regexec((Reprog *)re->prog, text, &m, opts)) {
         js_newarray(J);
         J->pushstring(text);
-        js_setproperty(J, -2, "input");
+        js_setproperty(J, -2, property_input);
         js_pushnumber(J, js_utfptrtoidx(text, m.sub[0].sp));
-        js_setproperty(J, -2, "index");
+        js_setproperty(J, -2, property_index);
         for (i = 0; i < m.nsub; ++i) {
             js_pushlstring(J, m.sub[i].sp, m.sub[i].ep - m.sub[i].sp);
             js_setindex(J, -2, i);
@@ -72,7 +75,7 @@ static void Rp_test(js_State *J) {
     Resub m;
 
     re = js_toregexp(J, 0);
-    text = js_tostring(J, 1);
+    text = js_strnode_cstr(js_tostring(J, 1));
 
     opts = 0;
     if (re->flags & JS_REGEXP_G) {
@@ -115,12 +118,12 @@ static void jsB_new_RegExp(js_State *J) {
         pattern = "";
         flags = 0;
     } else {
-        pattern = js_tostring(J, 1);
+        pattern = js_strnode_cstr(js_tostring(J, 1));
         flags = 0;
     }
 
     if (js_isdefined(J, 2)) {
-        const char *s = js_tostring(J, 2);
+        const char* s = js_strnode_cstr(js_tostring(J, 2));
         int g = 0, i = 0, m = 0;
         while (*s) {
             if (*s == 'g') ++g;
@@ -171,15 +174,15 @@ static void Rp_toString(js_State *J) {
 }
 
 static void Rp_exec(js_State *J) {
-    js_RegExp_prototype_exec(J, js_toregexp(J, 0), js_tostring(J, 1));
+    js_RegExp_prototype_exec(J, js_toregexp(J, 0), js_strnode_cstr(js_tostring(J, 1)));
 }
 
 void jsB_initregexp(js_State *J) {
     js_pushobject(J, J->RegExp_prototype);
     {
-        jsB_propf(J, "RegExp.prototype.toString", Rp_toString, 0);
-        jsB_propf(J, "RegExp.prototype.test", Rp_test, 0);
-        jsB_propf(J, "RegExp.prototype.exec", Rp_exec, 0);
+        jsB_propf(J, js_intern("RegExp.prototype.toString"), Rp_toString, 0);
+        jsB_propf(J, js_intern("RegExp.prototype.test"), Rp_test, 0);
+        jsB_propf(J, js_intern("RegExp.prototype.exec"), Rp_exec, 0);
     }
     js_newcconstructor(J, jsB_RegExp, jsB_new_RegExp, "RegExp", 1);
     js_defglobal(J, "RegExp", JS_DONTENUM);

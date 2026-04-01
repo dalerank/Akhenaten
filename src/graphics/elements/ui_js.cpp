@@ -28,6 +28,24 @@
 
 #include <cstring>
 
+xstring js_toxstring(js_State* J, int idx) {
+    if (!js_isstring(J, idx)) {
+        return {}; 
+    }
+
+    js_StringNode id = js_tostring(J, 1);
+    xstring result;
+    result._set(id);
+    return result;
+}
+
+xstring js_xref(js_State* J) {
+    js_StringNode new_ref = js_ref(J);
+    xstring new_ref_str;
+    new_ref_str._set(new_ref);
+    return new_ref_str;
+}
+
 void __ui_draw_image(int imgid, vec2i pos) {
     ui::eimage(imgid, pos);
 }
@@ -209,16 +227,22 @@ ui::element* __ui_get_element(xstring element_id) {
 }
 
 // In MuJS: index 0 = this, index 1 = first argument.
+static js_StringNode property_id = js_intern("id");
+static js_StringNode property_undefined = js_intern("undefined");
+
 ui::element* GET_ELEM(js_State* J) {
-    J->getproperty(0, "id");
-    pcstr id = js_isstring(J, -1) ? js_tostring(J, -1) : nullptr;
+    J->getproperty(0, property_id);
+    js_StringNode id = js_isstring(J, -1) ? js_tostring(J, -1) : nullptr;
     js_pop(J, 1);
-    if (!id || strcmp(id, "undefined") == 0) {
+    if (!id || id == property_undefined) {
         logs::error("UI element proxy: id is undefined");
         js_stacktrace(J);
         return nullptr;
     }
-    return __ui_get_element(id);
+
+    xstring id_str;
+    id_str._set(id);
+    return __ui_get_element(id_str);
 }
 
 void ui_proxy_get_text(js_State* J) {
@@ -228,7 +252,7 @@ void ui_proxy_get_text(js_State* J) {
 void ui_proxy_set_text(js_State* J) {
     auto elem = GET_ELEM(J);
     if (elem) {
-        elem->text(js_tostring(J, 1));
+        elem->text(js_toxstring(J, 1).c_str());
     }
     J->pushundefined();
 }
@@ -301,7 +325,7 @@ void ui_proxy_set_selected(js_State* J) {
 void ui_proxy_set_tooltip(js_State* J) {
     auto elem = GET_ELEM(J);
     if (elem) {
-        elem->tooltip(xstring(js_tostring(J, 1)));
+        elem->tooltip(js_toxstring(J, 1));
     }
     J->pushundefined();
 }
@@ -325,8 +349,7 @@ void ui_proxy_set_onclick(js_State* J) {
     }
 
     js_copy(J, 1);
-    pcstr new_ref = js_ref(J);
-    elem->set_ref(ui::element::ONCLICK, new_ref ? xstring(new_ref) : xstring());
+    elem->set_ref(ui::element::ONCLICK, js_xref(J));
     J->pushundefined();
 }
 void ui_proxy_set_ondraw(js_State* J) {
@@ -351,8 +374,7 @@ void ui_proxy_set_ondraw(js_State* J) {
     }
 
     js_copy(J, 1);
-    pcstr new_ref = js_ref(J);
-    elem->set_ref(ui::element::ONDRAW, new_ref ? xstring(new_ref) : xstring());
+    elem->set_ref(ui::element::ONDRAW, js_xref(J));
     elem->ondraw(nullptr);
     J->pushundefined();
 }
@@ -376,8 +398,7 @@ void ui_proxy_set_textfn(js_State* J) {
     }
 
     js_copy(J, 1);
-    pcstr new_ref = js_ref(J);
-    elem->set_ref(ui::element::TEXTFN, new_ref ? xstring(new_ref) : xstring());
+    elem->set_ref(ui::element::TEXTFN, js_xref(J));
     J->pushundefined();
 }
 void ui_proxy_set_checkedfn(js_State* J) {
@@ -400,8 +421,7 @@ void ui_proxy_set_checkedfn(js_State* J) {
     }
 
     js_copy(J, 1);
-    pcstr new_ref = js_ref(J);
-    elem->set_ref(ui::element::CHECKEDFN, new_ref ? xstring(new_ref) : xstring());
+    elem->set_ref(ui::element::CHECKEDFN, js_xref(J));
     J->pushundefined();
 }
 void ui_proxy_get_noop_render_item(js_State* J) {
@@ -414,9 +434,8 @@ void ui_proxy_get_value(js_State* J) {
 }
 void ui_proxy_set_value(js_State* J) {
     auto elem = GET_ELEM(J);
-    pcstr v = js_tostring(J, 1);
     if (elem) {
-        elem->set_value(v);
+        elem->set_value(js_toxstring(J, 1).c_str());
     }
     J->pushundefined();
 }
@@ -425,8 +444,9 @@ void ui_proxy_add_item(js_State* J) {
     ui::element* elem = GET_ELEM(J);
     if (elem) {
         auto* list = elem->dcast_scrollable_list();
-        if (list)
-            list->add_item(js_isstring(J, 1) ? js_tostring(J, 1) : "");
+        if (list) {
+            list->add_item(js_toxstring(J, 1).c_str());
+        }
     }
     J->pushundefined();
 }
@@ -445,8 +465,7 @@ void ui_proxy_select_item(js_State* J) {
     ui::element* elem = GET_ELEM(J);
     auto list = elem ? elem->dcast_scrollable_list() : nullptr;
     if (list) {
-        pcstr text = js_isstring(J, 1) ? js_tostring(J, 1) : "";
-        list->select_item(text);
+        list->select_item(js_toxstring(J, 1).c_str());
     }
     J->pushundefined();
 }
@@ -476,9 +495,9 @@ void ui_proxy_change_file_path(js_State* J) {
     if (elem) {
         auto* list = elem->dcast_scrollable_list();
         if (list) {
-            pcstr d = js_isstring(J, 1) ? js_tostring(J, 1) : "";
-            pcstr e = js_isstring(J, 2) ? js_tostring(J, 2) : "";
-            list->change_file_path(xstring(d), xstring(e));
+            xstring d = js_toxstring(J, 1);
+            xstring e = js_toxstring(J, 2);
+            list->change_file_path(d, e);
         }
     }
     J->pushundefined();
@@ -489,9 +508,9 @@ void ui_proxy_append_files_with_extension(js_State* J) {
     if (elem) {
         auto* list = elem->dcast_scrollable_list();
         if (list) {
-            pcstr d = js_isstring(J, 1) ? js_tostring(J, 1) : "";
-            pcstr e = js_isstring(J, 2) ? js_tostring(J, 2) : "";
-            list->append_files_with_extension(d, e);
+            xstring d = js_toxstring(J, 1);
+            xstring e = js_toxstring(J, 2);
+            list->append_files_with_extension(d.c_str(), e.c_str());
         }
     }
     J->pushundefined();
@@ -569,7 +588,7 @@ void js_push_props(js_State* J, ui::widget* w, pcstr element_id) {
         if (it != g_ui_proxy_props.end()) {
             js_newcfunction(J, it->second.getter, "", 0);
             js_newcfunction(J, it->second.setter, "", 1);
-            js_defaccessor(J, -3, prop_name.c_str(), 0);
+            js_defaccessor(J, -3, (js_StringNode)(prop_name._get()), 0);
         }
     }
 }
@@ -581,7 +600,7 @@ void js_push_funcs(js_State* J, ui::widget* w, pcstr element_id) {
         auto it = g_ui_proxy_funcs.find(func_name);
         if (it != g_ui_proxy_funcs.end()) {
             js_newcfunction(J, it->second.fn, it->first.c_str(), it->second.nargs);
-            js_setproperty(J, -2, func_name.c_str());
+            js_setproperty(J, -2, js_intern(func_name.c_str()));
         }
     }
 }

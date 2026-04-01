@@ -17,9 +17,9 @@ JS_NORETURN void js_typeerror_detailed(js_State *J, const char *value_type, cons
 void jsB_initjson(js_State *J);
 void jsB_initdate(js_State *J);
 
-void jsB_propf(js_State *J, const char *name, js_CFunction cfun, int n);
-void jsB_propn(js_State *J, const char *name, double number);
-void jsB_props(js_State *J, const char *name, const char *string);
+void jsB_propf(js_State* J, const js_StringNode name, js_CFunction cfun, int n);
+void jsB_propn(js_State* J, const js_StringNode name, double number);
+void jsB_props(js_State *J, const js_StringNode name, const char *string);
 
 typedef struct js_Buffer { int n, m; char s[64]; } js_Buffer;
 

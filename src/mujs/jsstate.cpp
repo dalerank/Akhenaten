@@ -6,6 +6,7 @@
 #include "jsbuiltin.h"
 
 #include <assert.h>
+#include <new>
 
 static void *js_defaultalloc(void *actx, void *ptr, int size)
 {
@@ -244,6 +245,7 @@ js_State *js_newstate(js_Alloc alloc, void *actx, int flags)
 		return NULL;
 
 	memset(J, 0, sizeof(*J));
+	new (&J->text) js_StringNode();
 	J->actx = actx;
 	J->alloc = alloc;
 	J->frame_actx = actx;
