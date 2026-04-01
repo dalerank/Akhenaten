@@ -33,6 +33,7 @@
 #if defined(GAME_PLATFORM_LINUX)
 #include <linux/limits.h>
 #elif defined(GAME_PLATFORM_MACOSX)
+#include <malloc/malloc.h>
 #include <sys/syslimits.h>
 #endif
 
