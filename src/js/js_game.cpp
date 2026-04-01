@@ -35,6 +35,7 @@
 #include "mujs/jsi.h"
 #include "mujs/jsvalue.h"
 #include "mujs/jscompile.h"
+#include "mujs/jsstring.h"
 #include "graphics/elements/ui.h"
 #include "graphics/elements/ui_js.h"
 #include "window/autoconfig_window.h"
@@ -50,7 +51,7 @@ void js_log_info_native(js_State *J) {
     if (js_isundefined(J, 1)) {
         logs::info("log() Try to print undefined object", 0, 0);
     } else {
-        logs::info("%s", js_tostring(J, 1));
+        logs::info("%s", js_strnode_cstr(js_tostring(J, 1)));
     }
     J->pushundefined();
 }
@@ -59,7 +60,7 @@ void js_log_warn_native(js_State *J) {
     if (js_isundefined(J, 1)) {
         logs::info("warning() Try to print undefined object", 0, 0);
     } else {
-        logs::info("WARN: %s", js_tostring(J, 1));
+        logs::info("WARN: %s", js_strnode_cstr(js_tostring(J, 1)));
     }
     J->pushundefined();
 }
@@ -170,8 +171,7 @@ static void js_create_element_proxy(js_State *J, ui::widget* w, pcstr element_id
 
     js_newobject(J);
     J->pushstring(element_id);
-    
-    js_setproperty(J, -2, property_tid);
+    js_setproperty(J, -2, property_id);
     js_push_props(J, w, element_id);
     js_push_funcs(J, w, element_id);
 
@@ -328,7 +328,7 @@ void js_register_game_handlers(xstring missionid) {
 
                 if (func && func->modifiers && !!prop->name) {
                     if (g_args.is_log_js_handlers()) {
-                        logs::info("JS: Function '%s' has modifiers:", prop->name);
+                        logs::info("JS: Function '%s' has modifiers:", js_strnode_cstr(prop->name));
                     }
                     function_count++;
 
@@ -388,7 +388,7 @@ void js_register_game_handlers(xstring missionid) {
                                         const xstring value = !!mod_value ? mod_value : prop_name;
                                         e->callback(J, prop_name.c_str(), value.c_str());
                                         if (g_args.is_log_js_handlers()) {
-                                            logs::info("JS: Modifier '%s' -> '%s' (name=%s)", mod->key, value, prop->name);
+                                            logs::info("JS: Modifier '%s' -> '%s' (name=%s)", js_strnode_cstr(mod->key), value.c_str(), js_strnode_cstr(prop->name));
                                         }
                                         break;
                                     }
@@ -535,7 +535,7 @@ void js_call_function(xstring js_ref) {
         js_pushnull(J);  // 'this' context
         int result = J->pcall(0);
         if (result != 0) {
-            logs::error("JS onclick callback error: %s", js_tostring(J, -1));
+            logs::error("JS onclick callback error: %s", js_strnode_cstr(js_tostring(J, -1)));
             js_pop(J, 1);
         }
     } else {
@@ -557,7 +557,7 @@ void js_call_function_bool(xstring js_ref, bool param) {
         js_pushboolean(J, param);
         int result = J->pcall(1);
         if (result != 0) {
-            logs::error("JS dialog callback error: %s", js_tostring(J, -1));
+            logs::error("JS dialog callback error: %s", js_strnode_cstr(js_tostring(J, -1)));
             js_pop(J, 1);
         }
     } else {
@@ -581,7 +581,7 @@ bvariant js_call_function(xstring js_ref, int param1, int param2) {
         js_pushnumber(J, (double)param2);
         int result = J->pcall(2);
         if (result != 0) {
-            logs::error("JS textfn callback error: %s", js_tostring(J, -1));
+            logs::error("JS textfn callback error: %s", js_strnode_cstr(js_tostring(J, -1)));
             js_pop(J, 1);
             return bvariant();
         }
@@ -613,7 +613,7 @@ bvariant js_call_function(xstring js_ref, const bvariant_map &params) {
         js_push_bvariant_map_object(J, params);
         int result = J->pcall(1);
         if (result != 0) {
-            logs::error("JS callback error (bvariant_map): %s", js_tostring(J, -1));
+            logs::error("JS callback error (bvariant_map): %s", js_strnode_cstr(js_tostring(J, -1)));
             js_pop(J, 1);
             return bvariant();
         }

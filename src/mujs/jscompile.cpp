@@ -2,7 +2,6 @@
 #include "jsparse.h"
 #include "jscompile.h"
 
-#include <atomic>
 #include <cstddef>
 #include <new>
 #include <utility>
@@ -40,10 +39,7 @@ void jsC_error(js_State* J, js_Ast* node, const char* fmt, ...) {
 
 static js_Function* newfun(js_State* J, js_Ast* node, js_Ast* name, js_Ast* params, js_Ast* body, int script) {
     js_Function* F = (js_Function*)js_malloc(J, sizeof *F);
-    memset(F, 0, offsetof(js_Function, gcmark));
-    new (&F->gcmark) std::atomic<uint32_t>(0);
-    new (&F->name) js_StringNode();
-    new (&F->filename) js_StringNode();
+    memset(F, 0, sizeof js_Function);
     F->gcnext = J->gcfun;
     J->gcfun = F;
     ++J->gccounter;
@@ -51,7 +47,7 @@ static js_Function* newfun(js_State* J, js_Ast* node, js_Ast* name, js_Ast* para
     F->filename = js_intern(J->filename);
     F->line = name ? name->line : params ? params->line : body ? body->line : 1;
     F->script = script;
-    F->name = name ? name->string : js_StringNode();
+    F->name = name ? name->string : nullptr;
 
     /* Copy modifiers from AST to function */
     F->modifiers = NULL;
@@ -355,7 +351,7 @@ static js_Ast* new_ast_node(js_State* J, enum js_AstType type, js_Ast* a, js_Ast
     node->c = c;
     node->d = d;
     node->number = 0;
-    new (&node->string) js_StringNode();
+    node->string = nullptr;
     node->jumps = NULL;
     node->casejump = 0;
     node->modifiers = NULL;

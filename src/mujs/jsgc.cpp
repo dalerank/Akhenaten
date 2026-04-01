@@ -4,13 +4,17 @@
 #include "jsrun.h"
 
 #include "regexp.h"
+#include "core/interlocked.h"
 #include "core/profiler.h"
 
-#include <atomic>
 #include <cstddef>
 
-static inline uint32_t gcmark_load(const std::atomic<uint32_t> &a) {
-    return a.load(std::memory_order_relaxed);
+static inline uint32_t gcmark_load(volatile const uint32_t &slot) {
+    return slot;
+}
+
+static inline void gcmark_store(volatile uint32_t *slot, uint32_t mark) {
+    threading::xchg(slot, mark);
 }
 
 /* Forward declarations */
@@ -21,7 +25,7 @@ static void gc_markfunction(js_State *J, uint32_t mark, js_Function *fun);
 
 /*
  * Mark graph: if gcmark already equals `mark`, return immediately (second path into the same
- * object does not re-walk children). std::atomic keeps memory accesses defined for future MT mark.
+ * object does not re-walk children). gcmark is volatile uint32_t; stores use threading::xchg.
  */
 static void gc_markproperty(js_State *J, uint32_t mark, js_Property *node) {
     OZZY_PROFILER_FUNCTION();
@@ -29,7 +33,7 @@ static void gc_markproperty(js_State *J, uint32_t mark, js_Property *node) {
 
     while (node) {
         if (node->value.type == JS_TMEMSTR && gcmark_load(node->value.u.memstr->gcmark) != mark)
-            node->value.u.memstr->gcmark.store(mark, std::memory_order_relaxed);
+            gcmark_store(&node->value.u.memstr->gcmark, mark);
 
         if (node->value.type == JS_TOBJECT && node->value.u.object)
             gc_markobject(J, mark, node->value.u.object);
@@ -54,7 +58,7 @@ static void gc_markobject(js_State *J, uint32_t mark, js_Object *obj) {
     if (gcmark_load(obj->gcmark) == mark) {
         return;
     }
-    obj->gcmark.store(mark, std::memory_order_relaxed);
+    gcmark_store(&obj->gcmark, mark);
 
     if (obj->head)
         gc_markproperty(J, mark, obj->head);
@@ -78,9 +82,10 @@ static void gc_markenvironment(js_State *J, uint32_t mark, js_Environment *env) 
         if (gcmark_load(env->gcmark) == mark) {
             break;
         }
-        env->gcmark.store(mark, std::memory_order_relaxed);
-        if (env->variables)
+        gcmark_store(&env->gcmark, mark);
+        if (env->variables) {
             gc_markobject(J, mark, env->variables);
+        }
         env = env->outer;
     }
 }
@@ -89,13 +94,20 @@ static void gc_markfunction(js_State *J, uint32_t mark, js_Function *fun) {
     OZZY_PROFILER_FUNCTION();
     (void)J;
 
-    if (!fun) return;
-    if (gcmark_load(fun->gcmark) == mark) return;
-    fun->gcmark.store(mark, std::memory_order_relaxed);
+    if (!fun) {
+        return;
+    }
+
+    if (gcmark_load(fun->gcmark) == mark) {
+        return;
+    }
+
+    gcmark_store(&fun->gcmark, mark);
 
     for (int i = 0; i < fun->funlen; ++i) {
-        if (fun->funtab[i])
+        if (fun->funtab[i]) {
             gc_markfunction(J, mark, fun->funtab[i]);
+        }
     }
 }
 
@@ -105,11 +117,13 @@ static void gc_markstack(js_State *J, uint32_t mark) {
     js_Value *v = J->stack;
     int n = J->top;
     while (n--) {
-        if (v->type == JS_TMEMSTR && gcmark_load(v->u.memstr->gcmark) != mark)
-            v->u.memstr->gcmark.store(mark, std::memory_order_relaxed);
+        if (v->type == JS_TMEMSTR && gcmark_load(v->u.memstr->gcmark) != mark) {
+            gcmark_store(&v->u.memstr->gcmark, mark);
+        }
 
-        if (v->type == JS_TOBJECT && v->u.object)
+        if (v->type == JS_TOBJECT && v->u.object) {
             gc_markobject(J, mark, v->u.object);
+        }
 
         ++v;
     }
@@ -122,8 +136,8 @@ static void jsG_freeenvironment(js_State *J, js_Environment *env) {
 static void jsG_freemodifiers(js_State *J, js_FunctionModifier *mod) {
     while (mod) {
         js_FunctionModifier *next = mod->next;
-        mod->key.~js_StringNode();
-        mod->value.~js_StringNode();
+        mod->key = nullptr;
+        mod->value = nullptr;
         js_free(J, mod);
         mod = next;
     }
@@ -131,8 +145,8 @@ static void jsG_freemodifiers(js_State *J, js_FunctionModifier *mod) {
 
 static void jsG_freefunction(js_State *J, js_Function *fun) {
     jsG_freemodifiers(J, fun->modifiers);
-    fun->name.~js_StringNode();
-    fun->filename.~js_StringNode();
+    fun->name = nullptr;
+    fun->filename = nullptr;
     js_free(J, fun->funtab);
     js_free(J, fun->numtab);
     js_free(J, fun->strtab);
@@ -144,7 +158,7 @@ static void jsG_freefunction(js_State *J, js_Function *fun) {
 static void jsG_freeproperty(js_State *J, js_Property *node) {
     while (node) {
         js_Property *next = node->next;
-        node->name.~js_StringNode();
+        node->name = nullptr;
         js_free(J, node);
         node = next;
     }
@@ -317,7 +331,7 @@ void js_freestate(js_State *J) {
         nextstr = str->gcnext, js_free(J, str);
 
     js_free(J, J->lexbuf.text);
-    J->text.~js_StringNode();
+    J->text = nullptr;
     J->alloc(J->actx, J->stack, 0);
     J->alloc(J->actx, J, 0);
 }

@@ -630,7 +630,7 @@ void js_vm_load_module(js_State *J) {
 }
 
 void js_game_panic(js_State *J) {
-    logs::info("JSE !!! Uncaught exception: %s", js_tostring(J, -1));
+    logs::info("JSE !!! Uncaught exception: %s", js_strnode_cstr(js_tostring(J, -1)));
 }
 
 int js_game_import(js_State *J, pcstr filename) {

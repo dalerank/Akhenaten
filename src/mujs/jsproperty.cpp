@@ -1,7 +1,6 @@
 #include "jsi.h"
 #include "jsvalue.h"
 
-#include <atomic>
 #include <cstddef>
 #include <new>
 
@@ -27,7 +26,7 @@
 */
 
 static js_Property sentinel = {
-    js_StringNode(),
+    nullptr,
     &sentinel, &sentinel,
     NULL, NULL,
     0, 0,
@@ -39,7 +38,7 @@ static js_Property* newproperty(js_State* J, js_Object* obj, const js_StringNode
     OZZY_PROFILER_FUNCTION();
 
     js_Property *node = (js_Property *)js_malloc(J, sizeof * node);
-    new (&node->name) js_StringNode();
+    node->name = nullptr;
     node->name = name;
     node->left = node->right = &sentinel;
     node->prevp = NULL;
@@ -74,7 +73,7 @@ js_Property *js_Property::lookup(js_StringNode name) {
     return nullptr;
 }
 
-/** AA-tree lookup, then head/next list (kept in sync on insert; tree walk alone can miss nodes). */
+/** AA-tree lookup, then head/next list if tree ever desyncs (insert/delete must match lookup strcmp order). */
 static js_Property *property_lookup_on_object(js_Object *obj, js_StringNode name) {
     if (!obj || !name) {
         return nullptr;
@@ -116,7 +115,8 @@ static js_Property *split(js_Property *node) {
 static js_Property* insert(js_State* J, js_Object* obj, js_Property* node, const js_StringNode name,
   js_Property** result) {
     if (node != &sentinel) {
-        int c = strcmp(js_strnode_cstr(node->name), js_strnode_cstr(name));
+        /* Same order as js_Property::lookup: strcmp(inserted_key, node_key) */
+        int c = strcmp(js_strnode_cstr(name), js_strnode_cstr(node->name));
 
         if (c < 0)
             node->left = insert(J, obj, node->left, name, result);
@@ -138,7 +138,7 @@ static void freeproperty(js_State *J, js_Object *obj, js_Property *node) {
     else
         obj->tailp = node->prevp;
     *node->prevp = node->next;
-    node->name.~js_StringNode();
+    node->name = nullptr;
     js_free(J, node);
     --obj->count;
 }
@@ -147,7 +147,7 @@ js_Property* prop_delete(js_State* J, js_Object* obj, js_Property* node, const j
     js_Property *temp, *succ;
 
     if (node != &sentinel) {
-        int c = strcmp(js_strnode_cstr(node->name), js_strnode_cstr(name));
+        int c = strcmp(js_strnode_cstr(name), js_strnode_cstr(node->name));
         if (c < 0) {
             node->left = prop_delete(J, obj, node->left, name);
         } else if (c > 0) {
@@ -191,8 +191,7 @@ js_Object *jsV_newobject(js_State *J, enum js_Class type, js_Object *prototype) 
     OZZY_PROFILER_FUNCTION();
 
     js_Object *obj = (js_Object *)js_malloc(J, sizeof * obj);
-    memset(obj, 0, offsetof(js_Object, gcmark));
-    new (&obj->gcmark) std::atomic<uint32_t>(0);
+    memset(obj, 0, sizeof js_Object);
     obj->gcnext = J->gcobj;
     J->gcobj = obj;
     ++J->gccounter;
@@ -205,7 +204,7 @@ js_Object *jsV_newobject(js_State *J, enum js_Class type, js_Object *prototype) 
     obj->extensible = 1;
 
     if (type == JS_CSTRING || type == JS_CERROR) {
-        new (&obj->u.s.string) js_StringNode();
+        obj->u.s.string = nullptr;
     }
 
     return obj;

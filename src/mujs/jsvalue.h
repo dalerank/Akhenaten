@@ -3,7 +3,6 @@
 
 #include "jsstring.h"
 
-#include <atomic>
 #include <stdint.h>
 
 typedef struct js_Property js_Property;
@@ -75,7 +74,7 @@ struct js_Value {
 
 struct js_String {
     js_String *gcnext;
-    std::atomic<uint32_t> gcmark;
+    volatile uint32_t gcmark;
     char p[1];
 };
 
@@ -133,7 +132,7 @@ struct js_Object {
     } u;
     js_Object *gcnext;
     js_FunctionModifier *modifiers; /* object modifiers/attributes */
-    std::atomic<uint32_t> gcmark;
+    volatile uint32_t gcmark;
 
     ~js_Object() {
     }
