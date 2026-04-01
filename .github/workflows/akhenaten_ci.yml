@@ -23,39 +23,47 @@ jobs:
 
   content:
     needs: clang-format
-    if: github.event_name == 'push'
+    if: always() && github.event_name == 'push'
     uses: ./.github/workflows/akhenaten_content.yml
     secrets: inherit
 
   build-android:
     needs: clang-format
+    if: always() && (github.event_name == 'push' || needs.clang-format.result == 'success')
     uses: ./.github/workflows/akhenaten_android.yml
 
   build-bazzite:
     needs: clang-format
+    if: always() && (github.event_name == 'push' || needs.clang-format.result == 'success')
     uses: ./.github/workflows/akhenaten_bazzite.yml
     
   build-emscripten:
     needs: clang-format
+    if: always() && (github.event_name == 'push' || needs.clang-format.result == 'success')
     uses: ./.github/workflows/akhenaten_emscripten.yml
     secrets: inherit
 
   build-flatpak:
     needs: clang-format
+    if: always() && (github.event_name == 'push' || needs.clang-format.result == 'success')
     uses: ./.github/workflows/akhenaten_flatpak.yml
 
   build-linux:
     needs: clang-format
+    if: always() && (github.event_name == 'push' || needs.clang-format.result == 'success')
     uses: ./.github/workflows/akhenaten_linux.yml   
 
   build-mac_arm:
     needs: clang-format
+    if: always() && (github.event_name == 'push' || needs.clang-format.result == 'success')
     uses: ./.github/workflows/akhenaten_mac_arm.yml
     
   build-mac_x64:
     needs: clang-format
+    if: always() && (github.event_name == 'push' || needs.clang-format.result == 'success')
     uses: ./.github/workflows/akhenaten_mac_x64.yml
 
   build-windows:
     needs: clang-format
+    if: always() && (github.event_name == 'push' || needs.clang-format.result == 'success')
     uses: ./.github/workflows/akhenaten_windows.yml
