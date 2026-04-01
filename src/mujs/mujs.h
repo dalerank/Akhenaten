@@ -56,6 +56,8 @@ js_State *js_newstate(js_Alloc alloc, void *actx, int flags);
 void js_setcontext(js_State *J, void *uctx);
 void *js_getcontext(js_State *J);
 void js_set_framealloc(js_State *J, js_Alloc frame_alloc, void *frame_actx);
+/* Global: when enable != 0, property AA-tree miss scans the object's enumeration list (slow). */
+void js_set_property_list_lookup_fallback(int enable);
 js_Panic js_atpanic(js_State *J, js_Panic panic);
 void js_freestate(js_State *J);
 

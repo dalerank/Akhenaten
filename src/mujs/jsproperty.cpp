@@ -9,7 +9,8 @@
 #include <cstring>
 
 /*
-    Use an AA-tree to quickly look up properties in objects:
+    Use an AA-tree to quickly look up properties in objects.
+    Keys are js_StringNode (interned xstring_value*); tree order is by pointer address (js_stringnode_cmp), not strcmp.
 
     The level of every leaf node is one.
     The level of every left child is one less than its parent.
@@ -24,6 +25,13 @@
     skew() fixes left horizontal links.
     split() fixes consecutive right horizontal links.
 */
+
+static int g_property_list_lookup_fallback = 0;
+
+void js_set_property_list_lookup_fallback(int enable)
+{
+    g_property_list_lookup_fallback = enable ? 1 : 0;
+}
 
 static js_Property sentinel = {
     nullptr,
@@ -57,10 +65,9 @@ js_Property *js_Property::lookup(js_StringNode name) {
     if (!name) {
         return nullptr;
     }
-    const char *want = js_strnode_cstr(name);
     js_Property *node = this;
     while (node != &sentinel) {
-        int c = strcmp(want, js_strnode_cstr(node->name));
+        int c = js_stringnode_cmp(name, node->name);
         if (c == 0) {
             return node;
         }
@@ -73,7 +80,7 @@ js_Property *js_Property::lookup(js_StringNode name) {
     return nullptr;
 }
 
-/** AA-tree lookup, then head/next list if tree ever desyncs (insert/delete must match lookup strcmp order). */
+/** AA-tree lookup; optional head/next list scan when js_set_property_list_lookup_fallback(1). */
 static js_Property *property_lookup_on_object(js_Object *obj, js_StringNode name) {
     if (!obj || !name) {
         return nullptr;
@@ -82,10 +89,15 @@ static js_Property *property_lookup_on_object(js_Object *obj, js_StringNode name
     if (ref) {
         return ref;
     }
-    const char *want = js_strnode_cstr(name);
-    for (js_Property *p = obj->head; p; p = p->next) {
-        if (p->name == name || (want && want[0] && !strcmp(js_strnode_cstr(p->name), want))) {
-            return p;
+    // head/next list scan when js_set_property_list_lookup_fallback(1).
+    // debug
+    if (g_property_list_lookup_fallback) {
+        const char *want = js_strnode_cstr(name);
+        for (js_Property *p = obj->head; p; p = p->next) {
+            if (p->name == name || (want && want[0] && !strcmp(js_strnode_cstr(p->name), want))) {
+                verify_no_crash(false && "property list lookup fallback");
+                return p;
+            }
         }
     }
     return nullptr;
@@ -115,8 +127,7 @@ static js_Property *split(js_Property *node) {
 static js_Property* insert(js_State* J, js_Object* obj, js_Property* node, const js_StringNode name,
   js_Property** result) {
     if (node != &sentinel) {
-        /* Same order as js_Property::lookup: strcmp(inserted_key, node_key) */
-        int c = strcmp(js_strnode_cstr(name), js_strnode_cstr(node->name));
+        int c = js_stringnode_cmp(name, node->name);
 
         if (c < 0)
             node->left = insert(J, obj, node->left, name, result);
@@ -147,7 +158,7 @@ js_Property* prop_delete(js_State* J, js_Object* obj, js_Property* node, const j
     js_Property *temp, *succ;
 
     if (node != &sentinel) {
-        int c = strcmp(js_strnode_cstr(name), js_strnode_cstr(node->name));
+        int c = js_stringnode_cmp(name, node->name);
         if (c < 0) {
             node->left = prop_delete(J, obj, node->left, name);
         } else if (c > 0) {
