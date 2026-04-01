@@ -44,6 +44,10 @@ jobs:
     needs: clang-format
     uses: ./.github/workflows/akhenaten_flatpak.yml
 
+  build-linux:
+    needs: clang-format
+    uses: ./.github/workflows/akhenaten_linux.yml   
+
   build-mac_arm:
     needs: clang-format
     uses: ./.github/workflows/akhenaten_mac_arm.yml
