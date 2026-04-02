@@ -4,6 +4,7 @@
 #include "js/js_game.h"
 #include "graphics/elements/ui_js.h"
 #include "mujs/jsi.h"
+#include "mujs/jsvalue.h"
 #include "widget/widget_sidebar.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/window.h"
@@ -26,6 +27,7 @@
 #include "core/log.h"
 #include "core/flat_map.h"
 #include "game/game.h"
+#include "graphics/image.h"
 
 #include <cstring>
 
@@ -231,7 +233,7 @@ ui::element* __ui_get_element(xstring element_id) {
 static js_StringNode property_id = js_intern("id");
 static js_StringNode property_undefined = js_intern("undefined");
 
-ui::element* GET_ELEM(js_State* J) {
+ui::element* ui::GET_ELEM(js_State* J) {
     J->getproperty(0, property_id);
     js_StringNode id = js_isstring(J, -1) ? js_tostring(J, -1) : nullptr;
     js_pop(J, 1);
@@ -246,91 +248,107 @@ ui::element* GET_ELEM(js_State* J) {
     return __ui_get_element(id_str);
 }
 
-void ui_proxy_get_text(js_State* J) {
+void ui::proxy_get_text(js_State* J) {
     auto elem = GET_ELEM(J);
     J->pushstring(elem ? elem->text().c_str() : "");
 }
-void ui_proxy_set_text(js_State* J) {
+void ui::proxy_set_text(js_State* J) {
     auto elem = GET_ELEM(J);
     if (elem) {
         elem->text(js_toxstring(J, 1).c_str());
     }
     J->pushundefined();
 }
-void ui_proxy_get_enabled(js_State* J) {
+void ui::proxy_get_enabled(js_State* J) {
     auto elem = GET_ELEM(J);
     js_pushboolean(J, elem ? elem->enabled : false);
 }
-void ui_proxy_set_enabled(js_State* J) {
+void ui::proxy_set_enabled(js_State* J) {
     auto elem = GET_ELEM(J);
     if (elem) {
         elem->set_enabled(js_toboolean(J, 1));
     }
     J->pushundefined();
 }
-void ui_proxy_get_readonly(js_State* J) {
+void ui::proxy_get_readonly(js_State* J) {
     auto elem = GET_ELEM(J);
     js_pushboolean(J, elem ? elem->readonly : false);
 }
-void ui_proxy_set_readonly(js_State* J) {
+void ui::proxy_set_readonly(js_State* J) {
     auto elem = GET_ELEM(J);
     if (elem) {
         elem->readonly = js_toboolean(J, 1);
     }
     J->pushundefined();
 }
-void ui_proxy_get_font(js_State* J) {
+void ui::proxy_get_font(js_State* J) {
     auto elem = GET_ELEM(J);
     js_pushnumber(J, elem ? elem->font() : FONT_INVALID);
 }
-void ui_proxy_set_font(js_State* J) {
+void ui::proxy_set_font(js_State* J) {
     auto elem = GET_ELEM(J);
     if (elem) {
         elem->font((int)js_tonumber(J, 1));
     }
     J->pushundefined();
 }
-void ui_proxy_get_text_color(js_State* J) {
+
+void ui::proxy_get_text_color(js_State* J) {
     auto elem = GET_ELEM(J);
     js_pushnumber(J, elem ? elem->text_color() : COLOR_NULL);
 }
-void ui_proxy_set_text_color(js_State* J) {
+void ui::proxy_set_text_color(js_State* J) {
     auto elem = GET_ELEM(J);
     if (elem) {
         elem->text_color((color)(unsigned int)js_tonumber(J, 1));
     }
     J->pushundefined();
 }
-void ui_proxy_get_noop(js_State* J) {
-    (void)J;
-    J->pushundefined();
-}
-void ui_proxy_set_image(js_State* J) {
+
+void ui::proxy_set_image(js_State* J) {
     auto elem = GET_ELEM(J);
     if (elem) {
         elem->image((int)js_tonumber(J, 1));
     }
     J->pushundefined();
 }
-void ui_proxy_get_selected(js_State* J) {
+void ui::proxy_get_image_tid(js_State* J) {
+    auto elem = GET_ELEM(J);
+    js_pushnumber(J, elem ? elem->image().tid() : -1);
+}
+void ui::proxy_set_image_tid(js_State* J) {
+    auto elem = GET_ELEM(J);
+    if (elem) {
+        const int id = (int)js_tonumber(J, 1);
+        const image_t *img = image_get(id);
+        if (img) {
+            elem->image(img->desc());
+        }
+    }
+    J->pushundefined();
+}
+void ui::proxy_get_selected(js_State* J) {
     auto elem = GET_ELEM(J);
     js_pushboolean(J, elem ? elem->selected() : false);
 }
-void ui_proxy_set_selected(js_State* J) {
+
+void ui::proxy_set_selected(js_State* J) {
     auto elem = GET_ELEM(J);
     if (elem) {
         elem->select(js_toboolean(J, 1));
     }
     J->pushundefined();
 }
-void ui_proxy_set_tooltip(js_State* J) {
+
+void ui::proxy_set_tooltip(js_State* J) {
     auto elem = GET_ELEM(J);
     if (elem) {
         elem->tooltip(js_toxstring(J, 1));
     }
     J->pushundefined();
 }
-void ui_proxy_set_onclick(js_State* J) {
+
+void ui::proxy_set_onclick(js_State* J) {
     auto elem = GET_ELEM(J);
     if (!elem) {
         J->pushundefined();
@@ -353,7 +371,7 @@ void ui_proxy_set_onclick(js_State* J) {
     elem->set_ref(ui::element::ONCLICK, js_xref(J));
     J->pushundefined();
 }
-void ui_proxy_set_ondraw(js_State* J) {
+void ui::proxy_set_ondraw(js_State* J) {
     auto elem = GET_ELEM(J);
     if (!elem) {
         J->pushundefined();
@@ -379,7 +397,7 @@ void ui_proxy_set_ondraw(js_State* J) {
     elem->ondraw(nullptr);
     J->pushundefined();
 }
-void ui_proxy_set_textfn(js_State* J) {
+void ui::proxy_set_textfn(js_State* J) {
     auto elem = GET_ELEM(J);
     if (!elem) {
         J->pushundefined();
@@ -402,7 +420,26 @@ void ui_proxy_set_textfn(js_State* J) {
     elem->set_ref(ui::element::TEXTFN, js_xref(J));
     J->pushundefined();
 }
-void ui_proxy_set_checkedfn(js_State* J) {
+
+void ui::proxy_get_value(js_State* J) {
+    auto elem = GET_ELEM(J);
+    J->pushstring(elem ? elem->get_value() : "");
+}
+
+void ui::proxy_set_value(js_State* J) {
+    auto elem = GET_ELEM(J);
+    if (elem) {
+        elem->set_value(js_toxstring(J, 1).c_str());
+    }
+    J->pushundefined();
+}
+
+void ui::proxy_get_noop(js_State* J) {
+    (void)J;
+    J->pushundefined();
+}
+
+void ui::proxy_set_checkedfn(js_State* J) {
     auto elem = GET_ELEM(J);
     if (!elem) {
         J->pushundefined();
@@ -425,185 +462,29 @@ void ui_proxy_set_checkedfn(js_State* J) {
     elem->set_ref(ui::element::CHECKEDFN, js_xref(J));
     J->pushundefined();
 }
-void ui_proxy_get_noop_render_item(js_State* J) {
-    (void)J;
-    J->pushundefined();
-}
-void ui_proxy_get_value(js_State* J) {
-    auto elem = GET_ELEM(J);
-    J->pushstring(elem ? elem->get_value() : "");
-}
-void ui_proxy_set_value(js_State* J) {
-    auto elem = GET_ELEM(J);
-    if (elem) {
-        elem->set_value(js_toxstring(J, 1).c_str());
+
+static flat_map<xstring, js_Object *, 32> g_ui_element_proto_by_kind;
+
+void js_ui_register_element_proto(const xstring &kind, js_Object *proto) {
+    if (!proto) {
+        return;
     }
-    J->pushundefined();
+    g_ui_element_proto_by_kind.insert(std::make_pair(kind, proto));
 }
 
-void ui_proxy_add_item(js_State* J) {
-    ui::element* elem = GET_ELEM(J);
-    if (elem) {
-        auto* list = elem->dcast_scrollable_list();
-        if (list) {
-            list->add_item(js_toxstring(J, 1).c_str());
-        }
+js_Object *js_ui_element_proto_for_kind(const xstring &kind) {
+    auto it = g_ui_element_proto_by_kind.find(kind);
+    if (it != g_ui_element_proto_by_kind.end()) {
+        return it->second;
     }
-    J->pushundefined();
-}
 
-void ui_proxy_clear(js_State* J) {
-    ui::element* elem = GET_ELEM(J);
-    if (elem) {
-        auto* list = elem->dcast_scrollable_list();
-        if (list)
-            list->clear();
+    auto def = g_ui_element_proto_by_kind.find(ui::element::skind());
+    if (def != g_ui_element_proto_by_kind.end()) {
+        return def->second;
     }
-    J->pushundefined();
-}
 
-void ui_proxy_select_item(js_State* J) {
-    ui::element* elem = GET_ELEM(J);
-    auto list = elem ? elem->dcast_scrollable_list() : nullptr;
-    if (list) {
-        list->select_item(js_toxstring(J, 1).c_str());
-    }
-    J->pushundefined();
-}
-
-void ui_proxy_select_entry(js_State* J) {
-    ui::element* elem = GET_ELEM(J);
-    if (elem) {
-        auto* list = elem->dcast_scrollable_list();
-        if (list)
-            list->select_entry(js_tointeger(J, 1));
-    }
-    J->pushundefined();
-}
-
-void ui_proxy_refresh_file_finder(js_State* J) {
-    ui::element* elem = GET_ELEM(J);
-    if (elem) {
-        auto* list = elem->dcast_scrollable_list();
-        if (list)
-            list->refresh_file_finder();
-    }
-    J->pushundefined();
-}
-
-void ui_proxy_change_file_path(js_State* J) {
-    ui::element* elem = GET_ELEM(J);
-    if (elem) {
-        auto* list = elem->dcast_scrollable_list();
-        if (list) {
-            xstring d = js_toxstring(J, 1);
-            xstring e = js_toxstring(J, 2);
-            list->change_file_path(d, e);
-        }
-    }
-    J->pushundefined();
-}
-
-void ui_proxy_append_files_with_extension(js_State* J) {
-    ui::element* elem = GET_ELEM(J);
-    if (elem) {
-        auto* list = elem->dcast_scrollable_list();
-        if (list) {
-            xstring d = js_toxstring(J, 1);
-            xstring e = js_toxstring(J, 2);
-            list->append_files_with_extension(d.c_str(), e.c_str());
-        }
-    }
-    J->pushundefined();
-}
-
-void ui_proxy_scroll_to_selected(js_State* J) {
-    ui::element* elem = GET_ELEM(J);
-    if (elem) {
-        auto* list = elem->dcast_scrollable_list();
-        if (list) {
-            list->scroll_to_selected();
-        }
-    }
-    J->pushundefined();
-}
-
-void ui_proxy_get_selected_text(js_State* J) {
-    ui::element* elem = GET_ELEM(J);
-    int syntax = js_tointeger(J, 1);
-    auto list = elem ? elem->dcast_scrollable_list() : nullptr;
-    xstring text = list ? list->selected_entry_text(syntax).c_str() : "";
-    J->pushstring(text.c_str());
-}
-
-void ui_proxy_get_items_count(js_State* J) {
-    ui::element* elem = GET_ELEM(J);
-    auto* list = elem ? elem->dcast_scrollable_list() : nullptr;
-    int items_count = list ? list->items_count() : 0;
-    js_pushnumber(J, items_count);
-}
-
-struct ui_proxy_prop {
-    js_CFunction getter;
-    js_CFunction setter;
-};
-static const flat_map<xstring, ui_proxy_prop, 16> g_ui_proxy_props = {
-  {"text", {ui_proxy_get_text, ui_proxy_set_text}},
-  {"enabled", {ui_proxy_get_enabled, ui_proxy_set_enabled}},
-  {"readonly", {ui_proxy_get_readonly, ui_proxy_set_readonly}},
-  {"font", {ui_proxy_get_font, ui_proxy_set_font}},
-  {"text_color", {ui_proxy_get_text_color, ui_proxy_set_text_color}},
-  {"image", {ui_proxy_get_noop, ui_proxy_set_image}},
-  {"selected", {ui_proxy_get_selected, ui_proxy_set_selected}},
-  {"tooltip", {ui_proxy_get_noop, ui_proxy_set_tooltip}},
-  {"onclick", {nullptr, ui_proxy_set_onclick}},
-  {"ondraw", {nullptr, ui_proxy_set_ondraw}},
-  {"textfn", {nullptr, ui_proxy_set_textfn}},
-  {"checked", {ui_proxy_get_selected, ui_proxy_set_selected}},
-  {"checkedfn", {nullptr, ui_proxy_set_checkedfn}},
-  {"items_count", {ui_proxy_get_items_count, nullptr}},
-  {"value", {ui_proxy_get_value, ui_proxy_set_value}},
-};
-
-struct ui_proxy_func {
-    js_CFunction fn;
-    int nargs;
-};
-static const flat_map<xstring, ui_proxy_func, 16> g_ui_proxy_funcs = {
-  {"add_item", {ui_proxy_add_item, 1}},
-  {"clear", {ui_proxy_clear, 0}},
-  {"select_item", {ui_proxy_select_item, 1}},
-  {"select_index", {ui_proxy_select_entry, 1}},
-  {"refresh_file_finder", {ui_proxy_refresh_file_finder, 0}},
-  {"change_file_path", {ui_proxy_change_file_path, 2}},
-  {"append_files_with_extension", {ui_proxy_append_files_with_extension, 2}},
-  {"scroll_to_selected", {ui_proxy_scroll_to_selected, 0}},
-  {"selected_text", {ui_proxy_get_selected_text, 1}},
-};
-
-void js_push_props(js_State* J, ui::widget* w, pcstr element_id) {
-    const auto& elem = (*w)[element_id];
-    auto props = elem.prop_names();
-    for (const xstring& prop_name : props) {
-        auto it = g_ui_proxy_props.find(prop_name);
-        if (it != g_ui_proxy_props.end()) {
-            js_newcfunction(J, it->second.getter, "", 0);
-            js_newcfunction(J, it->second.setter, "", 1);
-            js_defaccessor(J, -3, (js_StringNode)(prop_name._get()), 0);
-        }
-    }
-}
-
-void js_push_funcs(js_State* J, ui::widget* w, pcstr element_id) {
-    const auto& elem = (*w)[element_id];
-    auto funcs = elem.func_names();
-    for (const xstring& func_name : funcs) {
-        auto it = g_ui_proxy_funcs.find(func_name);
-        if (it != g_ui_proxy_funcs.end()) {
-            js_newcfunction(J, it->second.fn, it->first.c_str(), it->second.nargs);
-            js_setproperty(J, -2, js_intern(func_name.c_str()));
-        }
-    }
+    verify_no_crash(false && "UI element prototype not found");
+    return nullptr;
 }
 
 int __ui_building_menu_items(int type) {
@@ -621,7 +502,9 @@ ANK_FUNCTION_1(__ui_window_message_dialog_show)
     js_setglobal(J, #name);
 
 void js_register_ui_objects(js_State* J) {
-    js_register_ui_element(J);
+    for (UiElementProtoRegIterator *s = UiElementProtoRegIterator::tail; s; s = s->next) {
+        s->func(J);
+    }
 
     _R(UiFlags_None)
     _R(UiFlags_Darkened)
