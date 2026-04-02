@@ -4,6 +4,7 @@
 #include <memory>
 #include <functional>
 
+#include "core/custom_span.hpp"
 #include "core/archive.h"
 #include "core/variant.h"
 #include "core/cstring.h"
@@ -483,6 +484,9 @@ namespace ui {
         virtual xspan<xstring> prop_names() const;
         virtual xspan<xstring> func_names() const { return {}; }
 
+        static const xstring skind() { return "UIElement"; }
+        virtual xstring kind() const { return element::skind(); }
+
         pcstr text_from_key(pcstr key);
 
         inline void operator=(pcstr t) { text(t); }
@@ -561,6 +565,9 @@ namespace ui {
         virtual void image(const animation_t& image) override;
         virtual void image(int image) override;
         virtual image_desc image() const override { return img_desc; }
+
+        static const xstring skind() { return "UIImage"; }
+        virtual xstring kind() const override { return eimg::skind(); }
     };
 
     struct ebackground : public element {
@@ -594,6 +601,8 @@ namespace ui {
         virtual pcstr get_value() const override;
         virtual void set_value(pcstr utf8) override;
         virtual xspan<xstring> prop_names() const override;
+        static const xstring skind() { return "UITextInput"; }
+        virtual xstring kind() const override { return einput::skind(); }
         virtual einput* dcast_einput() override { return this; }
     };
 
@@ -649,6 +658,9 @@ namespace ui {
         virtual const xstring& format() const override { return _format; }
         virtual const xstring& text() const override { return _text; }
         virtual void width(int) override;
+
+        static const xstring skind() { return "UILabel"; }
+        virtual xstring kind() const override { return elabel::skind(); }
     };
 
     struct etext : public elabel {
@@ -704,6 +716,9 @@ namespace ui {
         virtual void load(archive elem, element* parent, items& elems) override;
         virtual ~escrollable_list();
 
+        static const xstring skind() { return "UIScrollableList"; }
+        virtual xstring kind() const override { return escrollable_list::skind(); }
+
         virtual xspan<xstring> func_names() const override;
         virtual xspan<xstring> prop_names() const override;
         virtual void clear() override;
@@ -730,6 +745,7 @@ namespace ui {
 
         scrollable_list* get_panel() { return panel.get(); }
         const scrollable_list* get_panel() const { return panel.get(); }
+
     };
 
     struct emenu_header_item_proxy : public element {
@@ -818,12 +834,18 @@ namespace ui {
             _srfunc = func;
             return *this;
         }
+
+        static const xstring skind() { return "UIButton"; }
+        virtual xstring kind() const override { return egeneric_button::skind(); }
     };
 
     struct echeckbox : public egeneric_button {
         bool _checked = false;
         xstring _checked_text = "X";
         xstring _unchecked_text = "";
+
+        static const xstring skind() { return "UICheckbox"; }
+        virtual xstring kind() const override { return echeckbox::skind(); }
 
         virtual void draw(UiFlags flags) override;
         virtual void load(archive arch, element* parent, items& elems) override;
@@ -897,6 +919,9 @@ namespace ui {
         virtual void image(int v) override { img_desc.offset = v; }
 
         virtual eimage_button* dcast_image_button() override { return this; }
+
+        static const xstring skind() { return "UIImageButton"; }
+        virtual xstring kind() const override { return eimage_button::skind(); }
     };
 
     struct widget {

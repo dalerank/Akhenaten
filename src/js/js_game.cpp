@@ -47,8 +47,6 @@
 using event_handlers = hvector<xstring, 16>;
 std::unordered_map<xstring, event_handlers> event_type_handlers;
 
-js_Object *js_ui_element_prototype();
-
 void js_log_info_native(js_State *J) {
     if (js_isundefined(J, 1)) {
         logs::info("log() Try to print undefined object", 0, 0);
@@ -170,13 +168,13 @@ bool js_has_event_handlers(const xstring &event_name) {
 static void js_create_element_proxy(js_State *J, ui::widget* w, pcstr element_id) {
     OZZY_PROFILER_FUNCTION();
 
-    js_Object *elem_proto = js_ui_element_prototype();
-    verify_no_crash (elem_proto);
-    js_pushobject(J, jsV_newobject(J, JS_COBJECT, elem_proto));
+    ui::element &el = (*w)[element_id];
+    js_Object *type_proto = js_ui_element_proto_for_kind(el.kind());
+    verify_no_crash(type_proto);
+
+    js_pushobject(J, jsV_newobject(J, JS_COBJECT, type_proto));
     J->pushstring(element_id);
     js_setproperty(J, -2, property_id);
-    js_push_props(J, w, element_id);
-    js_push_funcs(J, w, element_id);
 
     js_setproperty(J, -2, js_intern(element_id));  // event_obj at -2, proxy at -1
 }
