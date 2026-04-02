@@ -175,7 +175,6 @@ static void js_create_element_proxy(js_State *J, ui::widget* w, pcstr element_id
     js_pushobject(J, jsV_newobject(J, JS_COBJECT, type_proto));
     J->pushstring(element_id);
     js_setproperty(J, -2, property_id);
-
     js_setproperty(J, -2, js_intern(element_id));  // event_obj at -2, proxy at -1
 }
 
