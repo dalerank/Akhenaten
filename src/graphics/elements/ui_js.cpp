@@ -2,6 +2,7 @@
 
 #include "ui.h"
 #include "js/js_game.h"
+#include "graphics/elements/ui_js.h"
 #include "mujs/jsi.h"
 #include "widget/widget_sidebar.h"
 #include "graphics/elements/generic_button.h"
@@ -30,7 +31,7 @@
 
 xstring js_toxstring(js_State* J, int idx) {
     if (!js_isstring(J, idx)) {
-        return {}; 
+        return {};
     }
 
     js_StringNode id = js_tostring(J, 1);
@@ -618,7 +619,10 @@ ANK_FUNCTION_1(__ui_window_message_dialog_show)
 #define _R(name)            \
     js_newnumber(J, name);  \
     js_setglobal(J, #name);
+
 void js_register_ui_objects(js_State* J) {
+    js_register_ui_element(J);
+
     _R(UiFlags_None)
     _R(UiFlags_Darkened)
     _R(UiFlags_Grayscale)

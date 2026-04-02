@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string_view>
+#include "core/bstring.h"
 
 namespace detail {
     template <size_t...Idxs>
