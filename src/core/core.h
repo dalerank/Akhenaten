@@ -34,7 +34,7 @@ struct FuncLinkedList {
 #define NO_COPY_OR_ASSIGNMENT(classname) \
 private: \
 	classname( const classname& other ) = delete; \
-	classname& operator=( const classname& other ) = delete; 
+	classname& operator=( const classname& other ) = delete;
 
 struct no_copy_assignment {
     no_copy_assignment(const no_copy_assignment &other) = delete;

@@ -466,10 +466,12 @@ void ui::proxy_set_checkedfn(js_State* J) {
 static flat_map<xstring, js_Object *, 32> g_ui_element_proto_by_kind;
 
 void js_ui_register_element_proto(const xstring &kind, js_Object *proto) {
+    verify_no_crash(proto);
     if (!proto) {
         return;
     }
-    g_ui_element_proto_by_kind.insert(std::make_pair(kind, proto));
+
+    g_ui_element_proto_by_kind[kind] = proto;
 }
 
 js_Object *js_ui_element_proto_for_kind(const xstring &kind) {
@@ -502,6 +504,8 @@ ANK_FUNCTION_1(__ui_window_message_dialog_show)
     js_setglobal(J, #name);
 
 void js_register_ui_objects(js_State* J) {
+    g_ui_element_proto_by_kind.clear();
+
     for (UiElementProtoRegIterator *s = UiElementProtoRegIterator::tail; s; s = s->next) {
         s->func(J);
     }
