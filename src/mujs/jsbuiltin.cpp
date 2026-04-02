@@ -186,6 +186,7 @@ void jsB_init(js_State* J) {
     J->Function_prototype = jsV_newobject(J, JS_CCFUNCTION, J->Object_prototype);
     J->Boolean_prototype = jsV_newobject(J, JS_CBOOLEAN, J->Object_prototype);
     J->Number_prototype = jsV_newobject(J, JS_CNUMBER, J->Object_prototype);
+    J->Vec2i_prototype = jsV_newobject(J, JS_CVEC2I, J->Object_prototype);
     J->String_prototype = jsV_newobject(J, JS_CSTRING, J->Object_prototype);
     J->RegExp_prototype = jsV_newobject(J, JS_COBJECT, J->Object_prototype);
     J->Date_prototype = jsV_newobject(J, JS_CDATE, J->Object_prototype);
@@ -205,6 +206,7 @@ void jsB_init(js_State* J) {
     jsB_initfunction(J);
     jsB_initboolean(J);
     jsB_initnumber(J);
+    jsB_initvec2i(J);
     jsB_initstring(J);
     jsB_initregexp(J);
     jsB_initdate(J);

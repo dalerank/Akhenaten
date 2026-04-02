@@ -27,6 +27,8 @@
 */
 
 static int g_property_list_lookup_fallback = 0;
+static js_StringNode property_x = js_intern("x");
+static js_StringNode property_y = js_intern("y");
 
 void js_set_property_list_lookup_fallback(int enable)
 {
@@ -286,6 +288,9 @@ static int itshadow(js_State* J, js_Object* top, js_Object* bot, const js_String
             if (js_isarrayindex(J, js_strnode_cstr(name), &k) && k < top->u.s.length)
                 return 1;
         }
+        if (top->type == JS_CVEC2I && (name == property_x || name == property_y)) {
+            return 1;
+        }
         top = top->prototype;
     }
     return 0;
@@ -324,6 +329,16 @@ static void itwalk(js_State *J, js_Object *io, js_Object *top, int own) {
                 if (!itshadow(J, top, obj, bufp)) {
                     ITADD(bufp);
                 }
+            }
+        }
+
+        if (obj->type == JS_CVEC2I) {
+            if (!itshadow(J, top, obj, property_x)) {
+                ITADD(property_x);
+            }
+
+            if (!itshadow(J, top, obj, property_y)) {
+                ITADD(property_y);
             }
         }
 

@@ -22,7 +22,7 @@ AllowShortFunctionsOnASingleLine: InlineOnly
 AllowShortLoopsOnASingleLine: false
 AlwaysBreakTemplateDeclarations: Yes
 BinPackArguments: true
-BinPackParameters: BinPack
+BinPackParameters: true
 BreakBeforeBinaryOperators: All
 BreakBeforeBraces: Attach
 BreakBeforeTernaryOperators: true

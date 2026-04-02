@@ -143,6 +143,7 @@ struct js_State
 	js_Object *Function_prototype;
 	js_Object *Boolean_prototype;
 	js_Object *Number_prototype;
+	js_Object *Vec2i_prototype;
 	js_Object *String_prototype;
 	js_Object *RegExp_prototype;
 	js_Object *Date_prototype;

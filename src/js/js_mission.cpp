@@ -50,15 +50,8 @@ static void js_mission_var_getter(js_State *J) {
         js_pushnumber(J, std::get<float>(value));
         break;
     case setting_vec2i:
-    {
-        const vec2i &v = std::get<vec2i>(value);
-        js_newobject(J);
-        js_pushnumber(J, v.x);
-        js_setproperty(J, -2, property_x);
-        js_pushnumber(J, v.y);
-        js_setproperty(J, -2, property_y);
+        js_helpers::js_push_value<vec2i>(J, std::get<vec2i>(value));
         break;
-    }
     case setting_string:
         J->pushstring(std::get<xstring>(value).c_str());
         break;

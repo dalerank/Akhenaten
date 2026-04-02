@@ -864,6 +864,7 @@ void js_dumpvalue(js_State *J, js_Value v)
 		case JS_CCFUNCTION: LPRINTFMT("[CFunction %p]", v.u.object->u.c.function); break;
 		case JS_CBOOLEAN: LPRINTFMT("[Boolean %d]", v.u.object->u.boolean); break;
 		case JS_CNUMBER: LPRINTFMT("%g", v.u.object->u.number); break;
+		case JS_CVEC2I: LPRINTFMT("Vec2i(%d,%d)", v.u.object->u.vec2.x, v.u.object->u.vec2.y); break;
 		case JS_CSTRING: LPRINTFMT("[String'%s']", js_strnode_cstr(v.u.object->u.s.string)); break;
 		case JS_CERROR: LPRINTFMT("[Error %s]", js_strnode_cstr(v.u.object->u.s.string)); break;
 		case JS_CITERATOR: LPRINTFMT("[Iterator %p]", v.u.object); break;
