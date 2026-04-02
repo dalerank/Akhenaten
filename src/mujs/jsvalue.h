@@ -36,6 +36,7 @@ enum js_Class {
     JS_CERROR,
     JS_CBOOLEAN,
     JS_CNUMBER,
+    JS_CVEC2I, /* integer 2D point in u.vec2; virtual x/y like RegExp slots */
     JS_CSTRING,
     JS_CREGEXP,
     JS_CDATE,
@@ -129,6 +130,9 @@ struct js_Object {
             void *ptr;
             js_CPtrType ptype;
         } p;
+        struct {
+            int x, y;
+        } vec2;
     } u;
     js_Object *gcnext;
     js_FunctionModifier *modifiers; /* object modifiers/attributes */
@@ -184,6 +188,7 @@ double jsV_stringtonumber(js_State *J, const char *string);
 
 /* jsproperty.c */
 js_Object *jsV_newobject(js_State *J, enum js_Class type, js_Object *prototype);
+js_Object *jsV_newvec2i(js_State *J, int x, int y);
 js_Property* jsV_getpropertyx(js_State* J, js_Object* obj, const js_StringNode name, int* own);
 js_Property* jsV_setproperty(js_State* J, js_Object* obj, const js_StringNode name);
 void jsV_delproperty(js_State* J, js_Object* obj, const js_StringNode name);

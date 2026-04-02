@@ -406,6 +406,13 @@ static js_Object* jsV_newnumber(js_State* J, double v) {
     return obj;
 }
 
+js_Object* jsV_newvec2i(js_State* J, int x, int y) {
+    js_Object* obj = jsV_newobject(J, JS_CVEC2I, J->Vec2i_prototype);
+    obj->u.vec2.x = x;
+    obj->u.vec2.y = y;
+    return obj;
+}
+
 static js_Object* jsV_newstring(js_State* J, const char* v) {
     js_Object* obj = jsV_newobject(J, JS_CSTRING, J->String_prototype);
     obj->u.s.string = js_intern(v); /* TODO: js_String */
@@ -455,6 +462,10 @@ void js_newboolean(js_State* J, int v) {
 
 void js_newnumber(js_State* J, double v) {
     js_pushobject(J, jsV_newnumber(J, v));
+}
+
+void js_newvec2i(js_State* J, int x, int y) {
+    js_pushobject(J, jsV_newvec2i(J, x, y));
 }
 
 void js_newstring(js_State* J, const char* v) {

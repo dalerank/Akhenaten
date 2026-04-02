@@ -230,6 +230,13 @@ static int fmtvalue(js_State *J, js_Buffer **sb, const char *key, const char *ga
 		js_Object *obj = J->toobject(-1);
 		switch (obj->type) {
 		case JS_CNUMBER: fmtnum(J, sb, obj->u.number); break;
+		case JS_CVEC2I:
+			js_puts(J, sb, "{\"x\":");
+			fmtnum(J, sb, obj->u.vec2.x);
+			js_puts(J, sb, ",\"y\":");
+			fmtnum(J, sb, obj->u.vec2.y);
+			js_puts(J, sb, "}");
+			break;
 		case JS_CSTRING: fmtstr(J, sb, js_strnode_cstr(obj->u.s.string)); break;
 		case JS_CBOOLEAN: js_puts(J, sb, obj->u.boolean ? "true" : "false"); break;
 		case JS_CARRAY: fmtarray(J, sb, gap, level); break;

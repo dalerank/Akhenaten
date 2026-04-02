@@ -30,6 +30,7 @@ static void Op_toString(js_State *J)
 	case JS_CERROR: J->pushliteral(js_intern("[object Error]")); break;
 	case JS_CBOOLEAN: J->pushliteral(js_intern("[object Boolean]")); break;
 	case JS_CNUMBER: J->pushliteral(js_intern("[object Number]")); break;
+	case JS_CVEC2I: J->pushliteral(js_intern("[object Vec2i]")); break;
 	case JS_CSTRING: J->pushliteral(js_intern("[object String]")); break;
 	case JS_CREGEXP: J->pushliteral(js_intern("[object RegExp]")); break;
 	case JS_CDATE: J->pushliteral(js_intern("[object Date]")); break;
@@ -54,10 +55,17 @@ static void Op_valueOf(js_State *J)
 	js_copy(J, 0);
 }
 
+static js_StringNode op_prop_vec2_x = js_intern("x");
+static js_StringNode op_prop_vec2_y = js_intern("y");
+
 static void Op_hasOwnProperty(js_State *J)
 {
 	js_Object *self = J->toobject(0);
 	auto name = js_tostring(J, 1);
+	if (self->type == JS_CVEC2I && (name == op_prop_vec2_x || name == op_prop_vec2_y)) {
+		js_pushboolean(J, 1);
+		return;
+	}
 	js_Property *ref = J->vget_ownproperty(self, name);
 	js_pushboolean(J, ref != NULL);
 }
@@ -82,6 +90,10 @@ static void Op_propertyIsEnumerable(js_State *J)
 {
 	js_Object *self = J->toobject(0);
 	auto name = js_tostring(J, 1);
+	if (self->type == JS_CVEC2I && (name == op_prop_vec2_x || name == op_prop_vec2_y)) {
+		js_pushboolean(J, 1);
+		return;
+	}
 	js_Property *ref = J->vget_ownproperty(self, name);
 	js_pushboolean(J, ref && !(ref->atts & JS_DONTENUM));
 }
@@ -120,6 +132,21 @@ static void O_getOwnPropertyDescriptor(js_State *J)
 	}
 
 	obj = J->toobject(1);
+	{
+		js_StringNode key = js_tostring(J, 2);
+		if (obj->type == JS_CVEC2I && (key == op_prop_vec2_x || key == op_prop_vec2_y)) {
+			js_newobject(J);
+			js_pushnumber(J, key == op_prop_vec2_x ? obj->u.vec2.x : obj->u.vec2.y);
+			js_setproperty(J, -2, property_value);
+			js_pushboolean(J, 1);
+			js_setproperty(J, -2, property_writable);
+			js_pushboolean(J, 1);
+			js_setproperty(J, -2, property_enumerable);
+			js_pushboolean(J, 0);
+			js_setproperty(J, -2, property_configurable);
+			return;
+		}
+	}
 	ref = obj->vgetproperty(js_tostring(J, 2));
 	if (!ref)
 		J->pushundefined();
@@ -192,6 +219,13 @@ static void O_getOwnPropertyNames(js_State *J)
         J->pushliteral(property_multiline);
 		js_setindex(J, -2, i++);
         J->pushliteral(property_lastIndex);
+		js_setindex(J, -2, i++);
+	}
+
+	if (obj->type == JS_CVEC2I) {
+        J->pushliteral(op_prop_vec2_x);
+		js_setindex(J, -2, i++);
+        J->pushliteral(op_prop_vec2_y);
 		js_setindex(J, -2, i++);
 	}
 }
@@ -329,6 +363,13 @@ static void O_keys(js_State *J)
 			J->pushliteral(ref->name);
 			js_setindex(J, -2, i++);
 		}
+	}
+
+	if (obj->type == JS_CVEC2I) {
+		J->pushliteral(op_prop_vec2_x);
+		js_setindex(J, -2, i++);
+		J->pushliteral(op_prop_vec2_y);
+		js_setindex(J, -2, i++);
 	}
 
 	if (obj->type == JS_CSTRING) {

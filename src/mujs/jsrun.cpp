@@ -28,6 +28,8 @@ static js_StringNode property_global = js_intern("global");
 static js_StringNode property_ignoreCase = js_intern("ignoreCase");
 static js_StringNode property_multiline = js_intern("multiline");
 static js_StringNode property_lastIndex = js_intern("lastIndex");
+static js_StringNode property_vec2_x = js_intern("x");
+static js_StringNode property_vec2_y = js_intern("y");
 static js_StringNode property_callee = js_intern("callee");
 static js_StringNode property_arguments = js_intern("arguments");
 static js_StringNode property_prototype = js_intern("prototype");
@@ -192,7 +194,14 @@ int js_isundefined(js_State *J, int idx) { return stackidx(J, idx)->type == JS_T
 int js_isnull(js_State *J, int idx) { return stackidx(J, idx)->type == JS_TNULL; }
 int js_isboolean(js_State *J, int idx) { return stackidx(J, idx)->type == JS_TBOOLEAN; }
 int js_isnumber(js_State *J, int idx) { return stackidx(J, idx)->type == JS_TNUMBER; }
-int js_iscnumber(js_State *J, int idx) { return stackidx(J, idx)->type == JS_CNUMBER; }
+int js_iscnumber(js_State *J, int idx) {
+    js_Value *v = stackidx(J, idx);
+    return v->type == JS_TOBJECT && v->u.object->type == JS_CNUMBER;
+}
+int js_iscvec2i(js_State *J, int idx) {
+    js_Value *v = stackidx(J, idx);
+    return v->type == JS_TOBJECT && v->u.object->type == JS_CVEC2I;
+}
 int js_isstring(js_State *J, int idx) { enum js_Type t = (js_Type)stackidx(J, idx)->type; return t == JS_TSHRSTR || t == JS_TLITSTR || t == JS_TMEMSTR; }
 int js_isprimitive(js_State *J, int idx) { return stackidx(J, idx)->type != JS_TOBJECT; }
 int js_State::isobject(int idx) { return stackidx(this, idx)->type == JS_TOBJECT; }
@@ -553,6 +562,17 @@ int js_State::hasproperty(js_Object *obj, js_StringNode name) {
         }
         break;
 
+    case JS_CVEC2I:
+        if (name == property_vec2_x) {
+            js_pushnumber(J, obj->u.vec2.x);
+            return 1;
+        }
+        if (name == property_vec2_y) {
+            js_pushnumber(J, obj->u.vec2.y);
+            return 1;
+        }
+        break;
+
     case JS_CUSERDATA:
         if (obj->u.user.has && obj->u.user.has(J, obj->u.user.data, js_strnode_cstr(name))) {
             return 1;
@@ -653,6 +673,15 @@ static void jsR_setproperty(js_State* J, js_Object* obj, const js_StringNode nam
             obj->u.r.last = jsV_tointeger(J, value);
             return;
         }
+    } else if (obj->type == JS_CVEC2I) {
+        if (name == property_vec2_x) {
+            obj->u.vec2.x = jsV_tointeger(J, value);
+            return;
+        }
+        if (name == property_vec2_y) {
+            obj->u.vec2.y = jsV_tointeger(J, value);
+            return;
+        }
     }
 
     else if (obj->type == JS_CUSERDATA) {
@@ -713,9 +742,23 @@ static void jsR_defproperty(js_State* J, js_Object* obj, const js_StringNode nam
         if (name == property_ignoreCase) goto readonly;
         if (name == property_multiline) goto readonly;
         if (name == property_lastIndex) goto readonly;
-    } else if (obj->type == JS_CUSERDATA) {
-        if (obj->u.user.put && obj->u.user.put(J, obj->u.user.data, js_strnode_cstr(name)))
+    } else if (obj->type == JS_CVEC2I) {
+        if (name == property_vec2_x || name == property_vec2_y) {
+            if (getter || setter)
+                js_typeerror(J, "'%s' cannot have accessor on vec2i", js_strnode_cstr(name));
+
+            if (value) {
+                if (name == property_vec2_x)
+                    obj->u.vec2.x = jsV_tointeger(J, value);
+                else
+                    obj->u.vec2.y = jsV_tointeger(J, value);
+            }
             return;
+        }
+    } else if (obj->type == JS_CUSERDATA) {
+        if (obj->u.user.put && obj->u.user.put(J, obj->u.user.data, js_strnode_cstr(name))) {
+            return;
+        }
     }
 
     ref = jsV_setproperty(J, obj, name);
@@ -776,6 +819,9 @@ int js_State::rdelproperty(js_Object *obj, const js_StringNode name) {
         if (name == property_ignoreCase) return dontconf();
         if (name == property_multiline) return dontconf();
         if (name == property_lastIndex) return dontconf();
+    } else if (obj->type == JS_CVEC2I) {
+        if (name == property_vec2_x || name == property_vec2_y)
+            return dontconf();
     } else if (obj->type == JS_CUSERDATA) {
         if (obj->u.user.rdelete && obj->u.user.rdelete(this, obj->u.user.data, js_strnode_cstr(name)))
             return 1;

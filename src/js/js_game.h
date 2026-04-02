@@ -5,6 +5,7 @@
 #include "js/js_constants.h"
 #include "js/js_struct.h"
 #include "mujs/jsi.h"
+#include "mujs/jsvalue.h"
 #include "core/bstring.h"
 #include "core/core.h"
 #include "core/typename.h"
@@ -108,6 +109,10 @@ namespace js_helpers {
     template<>
     inline vec2i js_to_value<vec2i>(js_State *J, int idx) {
         vec2i result;
+        if (J->isobject(idx) && !js_isarray(J, idx) && J->toobject(idx)->type == JS_CVEC2I) {
+            js_Object *o = J->toobject(idx);
+            return vec2i(o->u.vec2.x, o->u.vec2.y);
+        }
         if (J->isobject(idx) && !js_isarray(J, idx)) {
             J->getproperty(idx, property_x);
             result.x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0;
@@ -159,6 +164,9 @@ namespace js_helpers {
             } else {
                 return bvariant((float)num);
             }
+        } else if (js_iscvec2i(J, idx)) {
+            js_Object *o = J->toobject(idx);
+            return bvariant(vec2i(o->u.vec2.x, o->u.vec2.y));
         } else if (J->isobject(idx) && !js_isarray(J, idx)) {
             // Check if it's a vec2i-like object with x and y properties
             J->getproperty(idx, property_x);
@@ -228,20 +236,12 @@ namespace js_helpers {
 
     template<>
     inline void js_push_value<vec2i>(js_State *J, vec2i value) {
-        js_newobject(J);
-        js_pushnumber(J, value.x);
-        js_setproperty(J, -2, property_x);
-        js_pushnumber(J, value.y);
-        js_setproperty(J, -2, property_y);
+        js_newvec2i(J, value.x, value.y);
     }
 
     template<>
     inline void js_push_value<tile2i>(js_State *J, tile2i value) {
-        js_newobject(J);
-        js_pushnumber(J, value.x());
-        js_setproperty(J, -2, property_x);
-        js_pushnumber(J, value.y());
-        js_setproperty(J, -2, property_y);
+        js_newvec2i(J, value.x(), value.y());
     }
 
     template<>
@@ -288,22 +288,14 @@ namespace js_helpers {
             break;
         case bvariant::etype_vec2i:
         {
-            js_newobject(J);
             const vec2i pos = val.as_vec2i();
-            js_pushnumber(J, pos.x);
-            js_setproperty(J, -2, property_x);
-            js_pushnumber(J, pos.y);
-            js_setproperty(J, -2, property_y);
+            js_push_value<vec2i>(J, pos);
             break;
         }
         case bvariant::etype_tile2i:
         {
-            js_newobject(J);
             const tile2i pos = val.as_tile2i();
-            js_pushnumber(J, pos.x());
-            js_setproperty(J, -2, property_x);
-            js_pushnumber(J, pos.y());
-            js_setproperty(J, -2, property_y);
+            js_push_value<tile2i>(J, pos);
             break;
         }
         case bvariant::etype_grid_area:

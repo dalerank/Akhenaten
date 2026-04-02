@@ -166,6 +166,8 @@ void js_newobject(js_State *J);
 void js_newarray(js_State *J);
 void js_newboolean(js_State *J, int v);
 void js_newnumber(js_State *J, double v);
+void js_newvec2i(js_State *J, int x, int y);
+int js_iscvec2i(js_State *J, int idx);
 void js_newstring(js_State *J, const char *v);
 void js_newcfunction(js_State *J, js_CFunction fun, const char *name, int length);
 void js_newcconstructor(js_State *J, js_CFunction fun, js_CFunction con, const char *name, int length);
