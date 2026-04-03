@@ -40,6 +40,6 @@ void jsB_initboolean(js_State *J)
 		jsB_propf(J, js_intern("Boolean.prototype.toString"), Bp_toString, 0);
 		jsB_propf(J, js_intern("Boolean.prototype.valueOf"), Bp_valueOf, 0);
 	}
-	js_newcconstructor(J, jsB_Boolean, jsB_new_Boolean, "Boolean", 1);
-	js_defglobal(J, "Boolean", JS_DONTENUM);
+    js_newcconstructor(J, jsB_Boolean, jsB_new_Boolean, js_intern("Boolean"), 1);
+    js_defglobal(J, js_intern("Boolean"), JS_DONTENUM);
 }

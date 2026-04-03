@@ -162,5 +162,5 @@ void jsB_initmath(js_State *J)
 		jsB_propf(J, js_intern("Math.sqrt"), Math_sqrt, 1);
 		jsB_propf(J, js_intern("Math.tan"), Math_tan, 1);
 	}
-	js_defglobal(J, "Math", JS_DONTENUM);
+    js_defglobal(J, js_intern("Math"), JS_DONTENUM);
 }

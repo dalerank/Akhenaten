@@ -898,8 +898,8 @@ void js_setglobal(js_State *J, const char *name) {
     js_pop(J, 1);
 }
 
-void js_defglobal(js_State *J, const char *name, int atts) {
-    jsR_defproperty(J, J->G, js_intern(name), atts, stackidx(J, -1), NULL, NULL);
+void js_defglobal(js_State *J, const js_StringNode name, int atts) {
+    jsR_defproperty(J, J->G, name, atts, stackidx(J, -1), NULL, NULL);
     js_pop(J, 1);
 }
 
@@ -1192,7 +1192,7 @@ void js_State::call(int n) {
         jsR_callscript(J, n, obj->u.f.function, obj->u.f.scope);
         --tracetop;
     } else if (obj->type == JS_CCFUNCTION) {
-        pushtrace(obj->u.c.name, "native", 0);
+        pushtrace(js_strnode_cstr(obj->u.c.name), "native", 0);
         jsR_callcfunction(J, n, obj->u.c.length, obj->u.c.function);
         --tracetop;
     }
@@ -1222,7 +1222,7 @@ void js_State::construct(int n) {
         }
         bot = top - n - 1;
 
-        pushtrace(obj->u.c.name, "native", 0);
+        pushtrace(js_strnode_cstr(obj->u.c.name), "native", 0);
         jsR_callcfunction(J, n, obj->u.c.length, obj->u.c.constructor);
         --tracetop;
 

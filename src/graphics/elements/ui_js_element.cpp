@@ -12,8 +12,8 @@ static void jsB_UIElement_construct(js_State *J) {
 }
 
 static void def_accessor(js_State *J, js_CFunction get, js_CFunction set, const char *name) {
-    js_newcfunction(J, get ? get : ui::proxy_get_noop, "", 0);
-    js_newcfunction(J, set, "", 1);
+    js_newcfunction(J, get ? get : ui::proxy_get_noop, js_intern(""), 0);
+    js_newcfunction(J, set, js_intern(""), 1);
     js_defaccessor(J, -3, js_intern(name), 0);
 }
 
@@ -34,8 +34,8 @@ void js_register_ui_element(js_State *J) {
     def_accessor(J, nullptr, ui::proxy_set_onclick, "onclick");
     def_accessor(J, nullptr, ui::proxy_set_ondraw, "ondraw");
 
-    js_newcconstructor(J, jsB_UIElement_call, jsB_UIElement_construct, ui::element::skind().c_str(), 0);
-    js_defglobal(J, ui::element::skind().c_str(), JS_DONTENUM);
+    js_newcconstructor(J, jsB_UIElement_call, jsB_UIElement_construct, (js_StringNode)ui::element::skind()._get(), 0);
+    js_defglobal(J, (js_StringNode)ui::element::skind()._get(), JS_DONTENUM);
 
     js_ui_register_element_proto(ui::element::skind(), proto);
 }

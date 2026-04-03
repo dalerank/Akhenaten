@@ -184,6 +184,6 @@ void jsB_initregexp(js_State *J) {
         jsB_propf(J, js_intern("RegExp.prototype.test"), Rp_test, 0);
         jsB_propf(J, js_intern("RegExp.prototype.exec"), Rp_exec, 0);
     }
-    js_newcconstructor(J, jsB_RegExp, jsB_new_RegExp, "RegExp", 1);
-    js_defglobal(J, "RegExp", JS_DONTENUM);
+    js_newcconstructor(J, jsB_RegExp, jsB_new_RegExp, js_intern("RegExp"), 1);
+    js_defglobal(J, js_intern("RegExp"), JS_DONTENUM);
 }

@@ -97,7 +97,7 @@ void jsB_initnumber(js_State *J)
 		jsB_propf(J, js_intern("Number.prototype.toExponential"), Np_toExponential, 1);
 		jsB_propf(J, js_intern("Number.prototype.toPrecision"), Np_toPrecision, 1);
 	}
-	js_newcconstructor(J, jsB_Number, jsB_new_Number, "Number", 0); /* 1 */
+    js_newcconstructor(J, jsB_Number, jsB_new_Number, js_intern("Number"), 0); /* 1 */
 	{
 		jsB_propn(J, js_intern("MAX_VALUE"), 1.7976931348623157e+308);
 		jsB_propn(J, js_intern("MIN_VALUE"), 5e-324);
@@ -105,5 +105,5 @@ void jsB_initnumber(js_State *J)
 		jsB_propn(J, js_intern("NEGATIVE_INFINITY"), -INFINITY);
 		jsB_propn(J, js_intern("POSITIVE_INFINITY"), INFINITY);
 	}
-	js_defglobal(J, "Number", JS_DONTENUM);
+    js_defglobal(J, js_intern("Number"), JS_DONTENUM);
 }

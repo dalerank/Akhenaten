@@ -126,11 +126,11 @@ void js_register_mission_vars(const settings_vars_t &vars) {
         bstring128 getter_name("get_", name.c_str());
         bstring128 setter_name("set_", name.c_str());
 
-        js_newcfunction(J, js_mission_var_getter, getter_name.c_str(), 0);
+        js_newcfunction(J, js_mission_var_getter, js_intern(getter_name.c_str()), 0);
         J->pushstring(name.c_str());
         js_setproperty(J, -2, property_varname);
 
-        js_newcfunction(J, js_mission_var_setter, setter_name.c_str(), 1);
+        js_newcfunction(J, js_mission_var_setter, js_intern(setter_name.c_str()), 1);
         J->pushstring(name.c_str());
         js_setproperty(J, -2, property_varname);
 
