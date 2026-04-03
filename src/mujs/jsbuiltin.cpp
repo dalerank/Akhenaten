@@ -4,7 +4,7 @@
 #include "jsvalue.h"
 #include "jsbuiltin.h"
 
-static void jsB_globalf(js_State* J, const char* name, js_CFunction cfun, int n) {
+static void jsB_globalf(js_State* J, const js_StringNode name, js_CFunction cfun, int n) {
     js_newcfunction(J, cfun, name, n);
     js_defglobal(J, name, JS_DONTENUM);
 }
@@ -13,7 +13,7 @@ void jsB_propf(js_State* J, const js_StringNode name, js_CFunction cfun, int n) 
     pcstr name_str = js_strnode_cstr(name);
     const char* pname = strrchr(name_str, '.');
     pname = pname ? pname + 1 : name_str;
-    js_newcfunction(J, cfun, name_str, n);
+    js_newcfunction(J, cfun, js_intern(name_str), n);
     js_defproperty(J, -2, js_intern(pname), JS_DONTENUM);
 }
 
@@ -216,21 +216,21 @@ void jsB_init(js_State* J) {
 
     /* Initialize the global object */
     js_pushnumber(J, NAN);
-    js_defglobal(J, "NaN", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
+    js_defglobal(J, js_intern("NaN"), JS_READONLY | JS_DONTENUM | JS_DONTCONF);
 
     js_pushnumber(J, INFINITY);
-    js_defglobal(J, "Infinity", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
+    js_defglobal(J, js_intern("Infinity"), JS_READONLY | JS_DONTENUM | JS_DONTCONF);
 
     J->pushundefined();
-    js_defglobal(J, "undefined", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
+    js_defglobal(J, js_intern("undefined"), JS_READONLY | JS_DONTENUM | JS_DONTCONF);
 
-    jsB_globalf(J, "parseInt", jsB_parseInt, 1);
-    jsB_globalf(J, "parseFloat", jsB_parseFloat, 1);
-    jsB_globalf(J, "isNaN", jsB_isNaN, 1);
-    jsB_globalf(J, "isFinite", jsB_isFinite, 1);
+    jsB_globalf(J, js_intern("parseInt"), jsB_parseInt, 1);
+    jsB_globalf(J, js_intern("parseFloat"), jsB_parseFloat, 1);
+    jsB_globalf(J, js_intern("isNaN"), jsB_isNaN, 1);
+    jsB_globalf(J, js_intern("isFinite"), jsB_isFinite, 1);
 
-    jsB_globalf(J, "decodeURI", jsB_decodeURI, 1);
-    jsB_globalf(J, "decodeURIComponent", jsB_decodeURIComponent, 1);
-    jsB_globalf(J, "encodeURI", jsB_encodeURI, 1);
-    jsB_globalf(J, "encodeURIComponent", jsB_encodeURIComponent, 1);
+    jsB_globalf(J, js_intern("decodeURI"), jsB_decodeURI, 1);
+    jsB_globalf(J, js_intern("decodeURIComponent"), jsB_decodeURIComponent, 1);
+    jsB_globalf(J, js_intern("encodeURI"), jsB_encodeURI, 1);
+    jsB_globalf(J, js_intern("encodeURIComponent"), jsB_encodeURIComponent, 1);
 }

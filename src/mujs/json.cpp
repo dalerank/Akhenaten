@@ -308,5 +308,5 @@ void jsB_initjson(js_State *J)
 		jsB_propf(J, js_intern("JSON.parse"), JSON_parse, 2);
 		jsB_propf(J, js_intern("JSON.stringify"), JSON_stringify, 3);
 	}
-	js_defglobal(J, "JSON", JS_DONTENUM);
+    js_defglobal(J, js_intern("JSON"), JS_DONTENUM);
 }

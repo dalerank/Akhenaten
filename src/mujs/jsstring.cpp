@@ -694,9 +694,9 @@ void jsB_initstring(js_State *J)
 		/* ES5 */
         jsB_propf(J, js_intern("String.prototype.trim"), Sp_trim, 0);
 	}
-	js_newcconstructor(J, jsB_String, jsB_new_String, "String", 0); /* 1 */
+    js_newcconstructor(J, jsB_String, jsB_new_String, js_intern("String"), 0); /* 1 */
 	{
         jsB_propf(J, js_intern("String.fromCharCode"), S_fromCharCode, 0); /* 1 */
 	}
-	js_defglobal(J, "String", JS_DONTENUM);
+    js_defglobal(J, js_intern("String"), JS_DONTENUM);
 }

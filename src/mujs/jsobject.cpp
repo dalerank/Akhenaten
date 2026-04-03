@@ -495,7 +495,7 @@ void jsB_initobject(js_State *J)
 		jsB_propf(J, js_intern("Object.prototype.isPrototypeOf"), Op_isPrototypeOf, 1);
 		jsB_propf(J, js_intern("Object.prototype.propertyIsEnumerable"), Op_propertyIsEnumerable, 1);
 	}
-	js_newcconstructor(J, jsB_Object, jsB_new_Object, "Object", 1);
+    js_newcconstructor(J, jsB_Object, jsB_new_Object, js_intern("Object"), 1);
 	{
 		/* ES5 */
 		jsB_propf(J, js_intern("Object.getPrototypeOf"), O_getPrototypeOf, 1);
@@ -512,5 +512,5 @@ void jsB_initobject(js_State *J)
 		jsB_propf(J, js_intern("Object.isExtensible"), O_isExtensible, 1);
 		jsB_propf(J, js_intern("Object.keys"), O_keys, 1);
 	}
-	js_defglobal(J, "Object", JS_DONTENUM);
+    js_defglobal(J, js_intern("Object"), JS_DONTENUM);
 }

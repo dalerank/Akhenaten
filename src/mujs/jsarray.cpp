@@ -700,10 +700,10 @@ void jsB_initarray(js_State *J) {
         jsB_propf(J, js_intern("Array.prototype.reduce"), Ap_reduce, 1);
         jsB_propf(J, js_intern("Array.prototype.reduceRight"), Ap_reduceRight, 1);
     }
-    js_newcconstructor(J, jsB_new_Array, jsB_new_Array, "Array", 0); /* 1 */
+    js_newcconstructor(J, jsB_new_Array, jsB_new_Array, js_intern("Array"), 0); /* 1 */
     {
         /* ES5 */
         jsB_propf(J, js_intern("Array.isArray"), A_isArray, 1);
     }
-    js_defglobal(J, "Array", JS_DONTENUM);
+    js_defglobal(J, js_intern("Array"), JS_DONTENUM);
 }

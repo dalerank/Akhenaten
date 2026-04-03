@@ -719,7 +719,7 @@ void jsB_initdate(js_State *J) {
         jsB_propf(J, js_intern("Date.prototype.toISOString"), Dp_toISOString, 0);
         jsB_propf(J, js_intern("Date.prototype.toJSON"), Dp_toJSON, 1);
     }
-    js_newcconstructor(J, jsB_Date, jsB_new_Date, "Date", 0); /* 1 */
+    js_newcconstructor(J, jsB_Date, jsB_new_Date, js_intern("Date"), 0); /* 1 */
     {
         jsB_propf(J, js_intern("Date.parse"), D_parse, 1);
         jsB_propf(J, js_intern("Date.UTC"), D_UTC, 7);
@@ -727,5 +727,5 @@ void jsB_initdate(js_State *J) {
         /* ES5 */
         jsB_propf(J, js_intern("Date.now"), D_now, 0);
     }
-    js_defglobal(J, "Date", JS_DONTENUM);
+    js_defglobal(J, js_intern("Date"), JS_DONTENUM);
 }

@@ -496,7 +496,7 @@ void js_newscript(js_State* J, js_Function* fun, js_Environment* scope) {
     js_pushobject(J, obj);
 }
 
-void js_newcfunction(js_State* J, js_CFunction cfun, const char* name, int length) {
+void js_newcfunction(js_State* J, js_CFunction cfun, const js_StringNode name, int length) {
     js_Object* obj = jsV_newobject(J, JS_CCFUNCTION, J->Function_prototype);
     obj->u.c.name = name;
     obj->u.c.function = cfun;
@@ -516,7 +516,7 @@ void js_newcfunction(js_State* J, js_CFunction cfun, const char* name, int lengt
 }
 
 /* prototype -- constructor */
-void js_newcconstructor(js_State* J, js_CFunction cfun, js_CFunction ccon, const char* name, int length) {
+void js_newcconstructor(js_State* J, js_CFunction cfun, js_CFunction ccon, const js_StringNode name, int length) {
     js_Object* obj = jsV_newobject(J, JS_CCFUNCTION, J->Function_prototype);
     obj->u.c.name = name;
     obj->u.c.function = cfun;

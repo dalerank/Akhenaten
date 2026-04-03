@@ -47,9 +47,9 @@ void js_setdebughook(js_State *J, js_DebugHook hook, void *udata);
 
 /* Bound globals: register C pointers so they appear in global scope (like C functions).
    Script reads/writes the name and MuJS reads/writes *ptr. For bool use void* (bool* in C++, int* in C). */
-void js_register_bound_int(js_State *J, const char *name, int *ptr);
-void js_register_bound_bool(js_State *J, const char *name, void *ptr);
-void js_register_bound_float(js_State *J, const char *name, float *ptr);
+void js_register_bound_int(js_State *J, const js_StringNode name, int *ptr);
+void js_register_bound_bool(js_State* J, const js_StringNode name, void* ptr);
+void js_register_bound_float(js_State* J, const js_StringNode name, float* ptr);
 
 /* Basic functions */
 js_State *js_newstate(js_Alloc alloc, void *actx, int flags);
@@ -133,7 +133,7 @@ void js_delregistry(js_State* J, const js_StringNode name);
 
 void js_getglobal(js_State *J, const char *name);
 void js_setglobal(js_State *J, const char *name);
-void js_defglobal(js_State *J, const char *name, int atts);
+void js_defglobal(js_State *J, const js_StringNode name, int atts);
 
 void js_setproperty(js_State* J, int idx, const js_StringNode name);
 void js_defproperty(js_State *J, int idx, const js_StringNode name, int atts);
@@ -169,8 +169,8 @@ void js_newnumber(js_State *J, double v);
 void js_newvec2i(js_State *J, int x, int y);
 int js_iscvec2i(js_State *J, int idx);
 void js_newstring(js_State *J, const char *v);
-void js_newcfunction(js_State *J, js_CFunction fun, const char *name, int length);
-void js_newcconstructor(js_State *J, js_CFunction fun, js_CFunction con, const char *name, int length);
+void js_newcfunction(js_State* J, js_CFunction fun, const js_StringNode name, int length);
+void js_newcconstructor(js_State* J, js_CFunction fun, js_CFunction con, const js_StringNode name, int length);
 void js_newuserdata(js_State *J, const char *tag, void *data, js_Finalize finalize);
 void js_newuserdatax(js_State *J, const char *tag, void *data, js_HasProperty has, js_Put put, js_Delete delet, js_Finalize finalize);
 void js_newregexp(js_State *J, const char *pattern, int flags);

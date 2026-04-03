@@ -484,7 +484,7 @@ struct js_function_traits<R(C:: *)(Args...) const> : js_function_traits<R(C:: *)
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##fname);                                          \
     void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) {   \
         js_getglobal(J, #fname); bool exists = J->iscallable(-1); js_pop(J, 1);                                 \
-        if (!exists) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 0); }             \
+        if (!exists) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 0); }  \
     } void permanent_js2cpp_callback_##fname(js_State *J) {                                                     \
         constexpr bool is_void = (std::is_void_v<js_function_traits<decltype(&func)>::return_type>);            \
         js_helpers::js_invoke_and_push<is_void>(J, [&]() { return func(); });                                   \
@@ -495,17 +495,17 @@ struct js_function_traits<R(C:: *)(Args...) const> : js_function_traits<R(C:: *)
 
 /** Register a C int* as a global JS variable (JS_CPTR). Scripts read/write it directly. */
 #define ANK_BOUND_INT(js_name, cptr) \
-    static void ANK_CONFIG_CC1(ank_bound_int_reg_, __LINE__)(js_State* J) { js_register_bound_int(J, #js_name, &(cptr)); } \
+    static void ANK_CONFIG_CC1(ank_bound_int_reg_, __LINE__)(js_State * J) { js_register_bound_int(J, js_intern(#js_name), &(cptr)); } \
     ANK_DECLARE_JSFUNCTION_ITERATOR(ANK_CONFIG_CC1(ank_bound_int_reg_, __LINE__));
 
 /** Register a C bool* as a global JS variable (JS_CPTR). */
 #define ANK_BOUND_BOOL(js_name, cptr) \
-    static void ANK_CONFIG_CC1(ank_bound_bool_reg_, __LINE__)(js_State* J) { js_register_bound_bool(J, #js_name, &(cptr)); } \
+    static void ANK_CONFIG_CC1(ank_bound_bool_reg_, __LINE__)(js_State * J) { js_register_bound_bool(J, js_intern(#js_name), &(cptr)); } \
     ANK_DECLARE_JSFUNCTION_ITERATOR(ANK_CONFIG_CC1(ank_bound_bool_reg_, __LINE__));
 
 /** Register a C float* as a global JS variable (JS_CPTR). */
 #define ANK_BOUND_FLOAT(js_name, cptr) \
-    static void ANK_CONFIG_CC1(ank_bound_float_reg_, __LINE__)(js_State* J) { js_register_bound_float(J, #js_name, &(cptr)); } \
+    static void ANK_CONFIG_CC1(ank_bound_float_reg_, __LINE__)(js_State* J) { js_register_bound_float(J, js_intern(#js_name), &(cptr)); } \
     ANK_DECLARE_JSFUNCTION_ITERATOR(ANK_CONFIG_CC1(ank_bound_float_reg_, __LINE__));
 
 // Template function version of ANK_FUNCTION_1

@@ -36,6 +36,6 @@ void jsB_initvec2i(js_State *J)
 		jsB_propf(J, js_intern("Vec2i.prototype.toString"), Vp_toString, 0);
 		jsB_propf(J, js_intern("Vec2i.prototype.toLocaleString"), Vp_toString, 0);
 	}
-	js_newcconstructor(J, jsB_Vec2i, jsB_new_Vec2i, "Vec2i", 2);
-	js_defglobal(J, "Vec2i", JS_DONTENUM);
+	js_newcconstructor(J, jsB_Vec2i, jsB_new_Vec2i, js_intern("Vec2i"), 2);
+    js_defglobal(J, js_intern("Vec2i"), JS_DONTENUM);
 }
