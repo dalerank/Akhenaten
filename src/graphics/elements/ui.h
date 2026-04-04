@@ -548,6 +548,7 @@ namespace ui {
         static const xstring ONDRAW_EVENT;
         static const xstring ONCLICK_EVENT;
         static const xstring ONDOUBLECLICK_EVENT;
+        static const xstring ONINPUT_EVENT;
         static const xstring EMPTY_JS_REF;
     };
 
@@ -586,8 +587,8 @@ namespace ui {
 
     struct einput : public element {
         input_box _box;
-        uint8_t _buffer[MAX_PLAYER_NAME] = {0};
-        uint8_t _last_buffer[MAX_PLAYER_NAME] = {0};
+        bstring128 _buffer;
+        bstring128 _last_buffer;
         bool _started = false;
         int _allow_punctuation = 1;
 

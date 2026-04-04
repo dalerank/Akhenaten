@@ -44,6 +44,7 @@ namespace ui {
     const xstring element::ONDRAW_EVENT{"ondraw_event"};
     const xstring element::ONCLICK_EVENT{"onclick_event"};
     const xstring element::ONDOUBLECLICK_EVENT{"ondoubleclick_event"};
+    const xstring element::ONINPUT_EVENT{"oninput_event"};
     const xstring element::EMPTY_JS_REF{};
 
     tooltip_context tooltipctx;
@@ -1354,6 +1355,7 @@ void ui::einput::load(archive arch, element* parent, items& elems) {
     _box.max_length = arch.r_int("max_length", MAX_PLAYER_NAME - 1);
     _allow_punctuation = arch.r_int("allow_punctuation", 1);
     set_ref(ONINPUT, arch.r_function("oninput"));
+    set_event(ONINPUT_EVENT, arch.r_string(ONINPUT_EVENT.c_str()));
 }
 
 void ui::einput::draw(UiFlags flags) {
@@ -1366,16 +1368,21 @@ void ui::einput::draw(UiFlags flags) {
         input_box_start(&_box, _buffer, _box.max_length, _allow_punctuation);
         _started = true;
         g_state.active_input = this;
-        memcpy(_last_buffer, _buffer, sizeof(_buffer));
+        _last_buffer = _buffer;
     }
 
     g_state.input_boxes.push_back(&_box);
     input_box_draw(&_box);
 
-    if (!js_ref(ONINPUT).empty() && memcmp(_buffer, _last_buffer, sizeof(_buffer)) != 0) {
-        memcpy(_last_buffer, _buffer, sizeof(_buffer));
+    if (_buffer != _last_buffer) {
+        _last_buffer = _buffer;
         xstring value(get_value());
-        js_call_function(js_ref(ONINPUT), bvariant_map{{"value", bvariant_map_val(value.c_str())}});
+        xstring oninput_event = event_name(ONINPUT_EVENT);
+        if (!oninput_event.empty()) {
+            dispatch_autoconfig_es_event(get_current_widget(), oninput_event.c_str(), bvariant_map{{"value", value}});
+        } else if (!js_ref(ONINPUT).empty()) {
+            js_call_function(js_ref(ONINPUT), bvariant_map{{"value", value}});
+        }
     }
 }
 
@@ -1389,7 +1396,7 @@ void ui::einput::set_value(pcstr utf8) {
     encoding_from_utf8(utf8 ? utf8 : "", _buffer, MAX_PLAYER_NAME);
     if (_started) {
         input_box_refresh_text(&_box);
-        memcpy(_last_buffer, _buffer, sizeof(_last_buffer));
+        _last_buffer = _buffer;
     }
 }
 
