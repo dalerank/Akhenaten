@@ -1666,10 +1666,12 @@ void ui::escrollable_list::on_dblclick_item(const scrollable_list::entry_data* e
     if (!entry) {
         return;
     }
-    if (!_ondoubleclick_event.empty()) {
+
+    xstring ondblclick_event = event_name(ONDOUBLECLICK_EVENT);
+    if (!ondblclick_event.empty()) {
         bvariant_map::scoped m;
         (*m)["text"] = bvariant(entry->text);
-        dispatch_autoconfig_es_event(get_current_widget(), _ondoubleclick_event.c_str(), *m);
+        dispatch_autoconfig_es_event(get_current_widget(), ondblclick_event.c_str(), *m);
         return;
     }
     if (!_js_ondoubleclick_item_ref.empty()) {
@@ -1708,7 +1710,8 @@ void ui::escrollable_list::ensure_panel() {
                                         e_font font) { this->on_render_item(index, flags, entry, pos, font); });
     }
 
-    if (_ondoubleclick_item_cb || !_js_ondoubleclick_item_ref.empty() || !_ondoubleclick_event.empty()) {
+    xstring ondblclick_event = event_name(ONDOUBLECLICK_EVENT);
+    if (_ondoubleclick_item_cb || !_js_ondoubleclick_item_ref.empty() || !ondblclick_event.empty()) {
         panel->set_onclick_dbl_entry([&](const scrollable_list::entry_data* entry) { this->on_dblclick_item(entry); });
     }
 
@@ -1826,7 +1829,6 @@ void ui::escrollable_list::load(archive arch, element* parent, items& elems) {
     _js_ondoubleclick_item_ref = arch.r_function("ondoubleclick_item");
     set_event(ONCLICK_EVENT, arch.r_string(ONCLICK_EVENT.c_str()));
     set_event(ONDOUBLECLICK_EVENT, arch.r_string(ONDOUBLECLICK_EVENT.c_str()));
-    _ondoubleclick_event = event_name(ONDOUBLECLICK_EVENT);
 
     params.files_dir = arch.r_string("dir");
     params.file_ext = arch.r_string("file_ext");

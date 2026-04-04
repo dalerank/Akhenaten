@@ -704,7 +704,6 @@ namespace ui {
         xstring _js_render_item_ref;
         xstring _js_onclick_item_ref;
         xstring _js_ondoubleclick_item_ref;
-        xstring _ondoubleclick_event;
 
         virtual void draw(UiFlags flags) override;
 
