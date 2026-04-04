@@ -151,6 +151,7 @@ public:
     uint8_t formation_at_rest;
     bool is_main_drawn;
     bool is_cart_drawn;
+    volatile bool mt_render_worker;
     uint8_t min_max_seen;
     uint8_t movement_ticks_watchdog;
     short leading_figure_id;

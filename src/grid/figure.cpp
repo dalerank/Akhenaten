@@ -45,7 +45,7 @@ void map_figure_sort_by_y() {
         }
 
         f->main_cached_pos = draw_pos;
-
+        f->mt_render_worker = false;
         f->main_cached_pos = f->adjust_pixel_offset(f->main_cached_pos);
         f->main_sort_pixel = f->main_cached_pos - f->crowd_pixel_offset() - vec2i(29, 15 + 8);
         f->is_main_drawn = false;
