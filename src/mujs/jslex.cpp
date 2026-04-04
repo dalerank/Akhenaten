@@ -72,38 +72,48 @@ const char *jsY_tokenstring(int token)
 	return "<unknown>";
 }
 
-static const char *keywords[] = {
-	"break", "case", "catch", "continue", "debugger", "default", "delete",
-	"do", "else", "emit", "false", "finally", "for", "function", "if", "import", "in",
-	"instanceof", "new", "null", "return", "switch", "this", "throw",
-	"true", "try", "typeof", "var", "void", "while", "with"
+static const js_StringNode keywords[] = {
+	js_intern("break"), 
+	js_intern("case"), 
+	js_intern("catch"), 
+	js_intern("continue"), 
+	js_intern("debugger"), 
+	js_intern("default"), 
+	js_intern("delete"),
+	js_intern("do"), 
+	js_intern("else"), 
+	js_intern("emit"), 
+	js_intern("false"), 
+	js_intern("finally"), 
+	js_intern("for"), 
+	js_intern("function"), 
+	js_intern("if"), 
+	js_intern("import"), 
+	js_intern("in"),
+	js_intern("instanceof"), 
+	js_intern("new"),
+	js_intern("null"), 
+	js_intern("return"), 
+	js_intern("switch"), 
+	js_intern("this"), 
+	js_intern("throw"),
+	js_intern("true"), 
+	js_intern("try"), 
+	js_intern("typeof"), 
+	js_intern("var"), 
+	js_intern("void"), 
+	js_intern("while"), 
+	js_intern("with")
 };
 
-int jsY_findword(const char *s, const char **list, int num)
+static int jsY_findkeyword(js_State *J, const js_StringNode s)
 {
-	int l = 0;
-	int r = num - 1;
-	while (l <= r) {
-		int m = (l + r) >> 1;
-		int c = strcmp(s, list[m]);
-		if (c < 0)
-			r = m - 1;
-		else if (c > 0)
-			l = m + 1;
-		else
-			return m;
-	}
-	return -1;
-}
-
-static int jsY_findkeyword(js_State *J, const char *s)
-{
-	int i = jsY_findword(s, keywords, nelem(keywords));
+	int i = jsY_findword(s, keywords);
 	if (i >= 0) {
-		J->text = js_StringNode(keywords[i]);
+		J->text = keywords[i];
 		return TK_BREAK + i; /* first keyword + i */
 	}
-	J->text = js_intern(s);
+	J->text = s;
 	return TK_IDENTIFIER;
 }
 
@@ -699,7 +709,7 @@ static int jsY_lexx(js_State *J)
 
 			textend(J);
 
-			return jsY_findkeyword(J, J->lexbuf.text);
+			return jsY_findkeyword(J, js_intern(J->lexbuf.text));
 		}
 
 		if (J->lexchar >= 0x20 && J->lexchar <= 0x7E)

@@ -74,7 +74,18 @@ int jsY_ishex(int c);
 int jsY_tohex(int c);
 
 const char *jsY_tokenstring(int token);
-int jsY_findword(const char *s, const char **list, int num);
+
+template<typename Arr>
+int jsY_findword(const js_StringNode s, const Arr& list) {
+    int i = 0;
+    for (auto n : list) {
+        if (s == n) {
+            return i;
+        }
+        ++i;
+    }
+    return -1;
+}
 
 void jsY_initlex(js_State *J, const char *filename, const char *source);
 int jsY_lex(js_State *J);

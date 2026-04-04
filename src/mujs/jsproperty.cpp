@@ -204,7 +204,7 @@ js_Object *jsV_newobject(js_State *J, enum js_Class type, js_Object *prototype) 
     OZZY_PROFILER_FUNCTION();
 
     js_Object *obj = (js_Object *)js_malloc(J, sizeof * obj);
-    memset(obj, 0, sizeof js_Object);
+    memset(obj, 0, sizeof(js_Object));
     obj->gcnext = J->gcobj;
     J->gcobj = obj;
     ++J->gccounter;
