@@ -5,19 +5,17 @@
 #include "building/building_house.h"
 
 struct city_overlay_religion : public city_overlay_t<OVERLAY_RELIGION> {
-    virtual int get_column_height(const building *b) const override;
-    virtual xstring get_tooltip_for_building(tooltip_context *c, const building *b) override;
+    virtual int get_column_height(const building* b) const override;
+    virtual xstring get_tooltip_for_building(tooltip_context* c, const building* b) override;
 };
 
-template<e_overlay TYPE>
+template <e_overlay TYPE>
 struct city_overlay_religion_god : public city_overlay_t<TYPE> {
     e_god _god;
 
-    inline city_overlay_religion_god(e_god god) {
-        _god = god;
-    }
+    inline city_overlay_religion_god(e_god god) { _god = god; }
 
-    virtual int get_column_height(const building *b) const override {
+    virtual int get_column_height(const building* b) const override {
         auto house = ((building*)b)->dcast_house();
 
         if (!house || !house->house_population()) {
@@ -25,13 +23,26 @@ struct city_overlay_religion_god : public city_overlay_t<TYPE> {
         }
 
         int value = 0;
-        auto &housed = house->runtime_data();
+        auto& housed = house->runtime_data();
         switch (_god) {
-        case GOD_OSIRIS: value = housed.temple_osiris; break;
-        case GOD_RA: value = housed.temple_ra; break;
-        case GOD_PTAH: value = housed.temple_ptah; break;
-        case GOD_SETH: value = housed.temple_seth; break;
-        case GOD_BAST: value = housed.temple_bast; break;
+        case GOD_OSIRIS:
+            value = housed.temple_osiris;
+            break;
+        case GOD_RA:
+            value = housed.temple_ra;
+            break;
+        case GOD_PTAH:
+            value = housed.temple_ptah;
+            break;
+        case GOD_SETH:
+            value = housed.temple_seth;
+            break;
+        case GOD_BAST:
+            value = housed.temple_bast;
+            break;
+        default:
+            verify_no_crash(false);
+            break;
         }
 
         return value / 10;
