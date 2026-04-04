@@ -13,9 +13,9 @@ static void jsB_UIScrollableList_construct(js_State *J) {
 
 void ui_proxy_get_selected_text(js_State* J) {
     ui::element* elem = ui::GET_ELEM(J);
-    int syntax = js_tointeger(J, 1);
-    auto list = elem ? elem->dcast_scrollable_list() : nullptr;
-    xstring text = list ? list->selected_entry_text(syntax).c_str() : "";
+    const int syntax = js_tointeger(J, 1);
+    auto* list = elem ? elem->dcast_scrollable_list() : nullptr;
+    const xstring text = list ? list->selected_entry_text(syntax) : xstring();
     J->pushstring(text.c_str());
 }
 

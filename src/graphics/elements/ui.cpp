@@ -1540,6 +1540,7 @@ void ui::eimage_button::load(archive arch, element* parent, items& elems) {
     _tooltip = arch.r_string("tooltip");
     set_ref(ONCLICK, arch.r_function("onclick"));
     set_event(ONCLICK_EVENT, arch.r_string(ONCLICK_EVENT.c_str()));
+    _onclick_event = event_name(ONCLICK_EVENT);
 
     xstring name_icon_texture = arch.r_string("icon_texture");
     if (!name_icon_texture.empty()) {
@@ -1849,6 +1850,8 @@ void ui::escrollable_list::load(archive arch, element* parent, items& elems) {
     _js_ondoubleclick_item_ref = arch.r_function("ondoubleclick_item");
     set_event(ONCLICK_EVENT, arch.r_string(ONCLICK_EVENT.c_str()));
     set_event(ONDOUBLECLICK_EVENT, arch.r_string(ONDOUBLECLICK_EVENT.c_str()));
+    _onclick_event = event_name(ONCLICK_EVENT);
+    _ondoubleclick_event = event_name(ONDOUBLECLICK_EVENT);
 
     params.files_dir = arch.r_string("dir");
     params.file_ext = arch.r_string("file_ext");
@@ -2167,6 +2170,7 @@ void ui::egeneric_button::load(archive arch, element* parent, items& elems) {
     set_ref(ONRCLICK, arch.r_function("onrclick"));
     set_ref(TEXTFN, arch.r_function("textfn"));
     set_event(ONCLICK_EVENT, arch.r_string(ONCLICK_EVENT));
+    _onclick_event = event_name(ONCLICK_EVENT);
     param1 = arch.r_int("param1");
     param2 = arch.r_int("param2");
 }
