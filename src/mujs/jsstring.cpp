@@ -66,7 +66,7 @@ static void jsB_new_String(js_State *J)
 
 static void jsB_String(js_State *J)
 {
-    J->pushstring(js_gettop(J) > 1 ? js_strnode_cstr(js_tostring(J, 1)) : "");
+    J->pushstring(js_gettop(J) > 1 ? js_tostring(J, 1) : js_intern(""));
 }
 
 static void Sp_toString(js_State *J)

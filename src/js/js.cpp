@@ -332,8 +332,8 @@ static void copy_js_value_text(js_State *J, js_Value *v, char *out, size_t outsz
     }
     switch (v->type) {
     case JS_TMEMSTR:
-        if (v->u.memstr && v->u.memstr->p) {
-            snprintf(out, outsz, "%s", v->u.memstr->p);
+        if (v->u.memstr) {
+            snprintf(out, outsz, "%s", js_strnode_cstr(v->u.memstr));
         }
         return;
     case JS_TLITSTR:

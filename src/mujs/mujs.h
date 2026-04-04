@@ -160,7 +160,8 @@ js_StringNode js_getmodifier(js_State* J, int idx, const js_StringNode key);
 void js_pushnull(js_State *J);
 void js_pushboolean(js_State *J, int v);
 void js_pushnumber(js_State *J, double v);
-void js_pushlstring(js_State *J, const char *v, int n);
+void js_pushlstring(js_State* J, const js_StringNode v);
+void js_pushlstring(js_State* J, const char* v, int n);
 
 void js_newobject(js_State *J);
 void js_newarray(js_State *J);

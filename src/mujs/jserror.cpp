@@ -292,7 +292,7 @@ static int jsB_ErrorX(js_State *J, js_Object *prototype)
   int top = js_gettop(J);
   js_pushobject(J, jsV_newobject(J, JS_CERROR, prototype));
   if (top > 1) {
-    J->pushstring(js_strnode_cstr(js_tostring(J, 1)));
+    J->pushstring(js_tostring(J, 1));
     js_setproperty(J, -2, property_message);
   }
   jsB_stacktrace(J, 1);

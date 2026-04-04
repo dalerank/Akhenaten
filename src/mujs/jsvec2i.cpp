@@ -20,8 +20,10 @@ static void Vp_toString(js_State *J)
 {
 	js_Object *self = J->toobject(0);
 	char buf[48];
-	if (self->type != JS_CVEC2I)
+	if (self->type != JS_CVEC2I) {
 		js_typeerror(J, "not a vec2i");
+	}
+
 	snprintf(buf, sizeof buf, "Vec2i(%d,%d)", self->u.vec2.x, self->u.vec2.y);
 	J->pushstring(buf);
 }
