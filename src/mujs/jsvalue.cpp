@@ -146,7 +146,7 @@ int jsV_toboolean(js_State* J, js_Value* v) {
     switch (v->type) {
     default:
     case JS_TSHRSTR:
-        return v->u.shrstr->value.empty() != 0;
+        return !v->u.shrstr->value.empty();
     case JS_TUNDEFINED:
         return 0;
     case JS_TNULL:
@@ -156,9 +156,9 @@ int jsV_toboolean(js_State* J, js_Value* v) {
     case JS_TNUMBER:
         return v->u.number != 0 && !isnan(v->u.number);
     case JS_TLITSTR:
-        return v->u.litstr->value.empty() != 0;
+        return !v->u.litstr->value.empty();
     case JS_TMEMSTR:
-        return v->u.memstr->value.empty() != 0;
+        return !v->u.memstr->value.empty();
     case JS_TOBJECT: {
         js_Object* obj = v->u.object;
         if (obj->type == JS_CPTR) {

@@ -248,8 +248,9 @@ void *js_frame_alloc(js_State *J, int size) {
     js_Alloc frame_alloc = J->frame_alloc ? J->frame_alloc : J->alloc;
     void *frame_actx = J->frame_actx ? J->frame_actx : J->actx;
     void *ptr = frame_alloc(frame_actx, NULL, size);
-    if (!ptr)
+    if (!ptr) {
         js_outofmemory(J);
+    }
     return ptr;
 }
 
