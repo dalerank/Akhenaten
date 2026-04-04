@@ -275,7 +275,7 @@ void widget_sub_menu_show() {
         "window_top_menu",
         [] (int flags) { top_menu_widget.sub_menu_draw_background(flags); },
         [] (int flags) { top_menu_widget.sub_menu_draw_foreground(flags); },
-        [](const mouse* m, const hotkeys* h) { widget_top_menu_handle_input(m, h); },
+        [] (const mouse* m, const hotkeys* h) { widget_top_menu_handle_input(m, h); },
     };
     top_menu_widget.sub_menu_init();
     window_show(&window);
