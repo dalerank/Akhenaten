@@ -193,7 +193,7 @@ vfs::path content_path(pcstr path) {
 
 vfs::path vfs::path::resolve() {
     pcstr filepath = data();
-    
+
     // Check if the path is absolute
     bool is_absolute_path = false;
     if (platform.is_windows()) {
@@ -201,12 +201,12 @@ vfs::path vfs::path::resolve() {
     } else {
         is_absolute_path = (*filepath) == '/';
     }
-    
+
     // For absolute paths, return as-is (normalized)
     if (is_absolute_path) {
         return filepath;
     }
-    
+
     // If not found in extdata, try base content_path
     vfs::path corrected_filename = content_path(filepath);
     bool exists_in_content = std::filesystem::exists(corrected_filename.c_str());

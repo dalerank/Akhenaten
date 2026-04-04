@@ -404,12 +404,12 @@ namespace Perfmon
                 }
                 else
                 {
-                    valueColor = ImColor::HSV(std::fmodf((float)(_lastNanoProfilerColorIndex++ % 100) * 0.15f, 1.0f), 0.65f, 0.9f);
+                    valueColor = ImColor::HSV(fmodf((float)(_lastNanoProfilerColorIndex++ % 100) * 0.15f, 1.0f), 0.65f, 0.9f);
                     _nanoProfilerColors[sample.name] = valueColor;
                 }
 
-                float sampleY1 = std::floor(cpos.y + graphHeight - (float)capValue - y);
-                float sampleY2 = std::floor(cpos.y + graphHeight - y);
+                float sampleY1 = floorf(cpos.y + graphHeight - (float)capValue - y);
+                float sampleY2 = floorf(cpos.y + graphHeight - y);
 
                 wnd->DrawList->AddRectFilled(
                     ImVec2((float)x, sampleY1),
@@ -419,8 +419,8 @@ namespace Perfmon
 
                 if (isDetailed)
                 {
-                    float labelY = std::floor(cpos.y + graphHeight - j * labelHeight);
-                    float labelY2 = std::floor(labelY - labelHeight);
+                    float labelY = floorf(cpos.y + graphHeight - j * labelHeight);
+                    float labelY2 = floorf(labelY - labelHeight);
 
                     float labelX = cpos.x + graphWidth + sampleGap - sampleBorder;
                     float labelX2 = cpos.x + graphWidth + sampleGap;
