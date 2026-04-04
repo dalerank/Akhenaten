@@ -139,17 +139,6 @@ function file_dialog_load_try_load(basename) {
     return 0
 }
 
-function file_dialog_load_on_filename_input(p) {
-    file_dialog_load_set_show_filename(p.value)
-}
-
-function file_dialog_load_apply_list_selection(p) {
-    if (!p || !p.text)
-        return
-
-    file_dialog_load_set_show_filename(p.text)
-}
-
 function file_dialog_load_handle_load(window) {
     var name = file_dialog_load.show_filename
     var selected_with_ext = (window && window.files) ? window.files.selected_text(1) : ""
@@ -188,7 +177,7 @@ file_dialog_load {
         title: text({ pos: [0, 14], size: [px(24), 22], align: "center", font: FONT_LARGE_BLACK_ON_LIGHT, text: "" })
 
         filename: input({ pos: [16, 44], size: [20, 2], font: FONT_NORMAL_WHITE_ON_DARK, max_length: 63, allow_punctuation: 1
-                          oninput: file_dialog_load_on_filename_input })
+                          oninput_event: "on_filename_input" })
 
         files: scrollable_list({ pos: [16, 76], size: [20, 13], view_items: 12
                                  use_file_finder: true
@@ -208,15 +197,20 @@ file_dialog_load {
     }
 }
 
+[es=(file_dialog_load, on_filename_input)]
+function file_dialog_load_es_on_filename_input(ev) {
+    file_dialog_load_set_show_filename(ev.value)
+}
+
 [es=(file_dialog_load, on_select_file)]
-function file_dialog_load_es_on_select_file(window) {
-    file_dialog_load_apply_list_selection(window)
+function file_dialog_load_es_on_select_file(ev) {
+    file_dialog_load_set_show_filename(ev.text)
 }
 
 [es=(file_dialog_load, on_double_click_file)]
-function file_dialog_load_es_on_double_click_file(window) {
-    file_dialog_load_apply_list_selection(window)
-    file_dialog_load_handle_load(window)
+function file_dialog_load_es_on_double_click_file(ev) {
+    file_dialog_load_set_show_filename(ev.text)
+    file_dialog_load_handle_load(ev)
 }
 
 [es=(file_dialog_load, on_ok)]
