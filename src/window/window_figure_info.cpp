@@ -30,9 +30,6 @@ struct figure_small_image {
     figure_small_image(int figure_id) {
         painter ctx = game.painter();
 
-        //tile2i camera_tile = city_view_get_camera_mappoint();
-        //int grid_offset = figure_get(figure_id)->tile.grid_offset();
-        
         g_screen_city.draw_for_figure(ctx, figure_id);
         const vec2i coord = figure_get(figure_id)->main_cached_pos;
 
@@ -48,8 +45,6 @@ struct figure_small_image {
 
 struct figures_data_t {
     svector<figure_small_image, 7> figure_images;
-    int focus_button_id;
-    object_info* context_for_callback;
 };
 
 figures_data_t g_figures_data;
@@ -66,14 +61,7 @@ void figure_info_window::prepare_figures(object_info &c) {
     for (const auto &id: c.nfigure.ids) {
         data.figure_images.emplace_back(id);
     }
-    //        if (config_get(CONFIG_UI_ZOOM))
-    //            graphics_set_active_canvas(CANVAS_CITY);
-    //
-    //        for (int i = 0; i < c->figure.count; i++) {
-    //            draw_figure_in_city(c->figure.figure_ids[i], &coord);
-    //            graphics_save_to_buffer(coord.x - 25, coord.y - 45, 48, 48, data.figure_images[i]);
-    //        }
-    //        graphics_set_active_canvas(CANVAS_UI);
+
     painter ctx = game.painter();
     g_screen_city.draw(ctx);
 }
@@ -118,7 +106,7 @@ void figure_info_window::window_info_background(object_info &c) {
 
     e_overlay foverlay = f->dcast()->get_overlay();
     ui["show_overlay"].enabled = (foverlay != OVERLAY_NONE);
-    ui["show_overlay"] = (g_city.overlay_is(foverlay) ? "V" : "v");    
+    ui["show_overlay"] = (g_city.overlay_is(foverlay) ? "V" : "v");
 }
 
 int figure_info_window::window_info_handle_mouse(const mouse *m, object_info &c) {

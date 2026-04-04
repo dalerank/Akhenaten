@@ -368,6 +368,10 @@ namespace ui {
             break;
         }
 
+        case cmd_t::saved_texture:
+            graphics_draw_from_texture(cmd.image_id, cmd.pos, cmd.size);
+            break;
+
         default:
             break;
         }
@@ -1554,6 +1558,7 @@ void ui::eimage_button::draw(UiFlags gflags) {
     pcstr pid = id.c_str();
 
     vec2i tsize;
+    bool selection_border_deferred = false;
     if (img_desc.id || img_desc.offset) {
         int img_id = image_id_from_group(img_desc.pack, img_desc.id);
         const image_t* img_ptr = image_get(img_id + img_desc.offset);
@@ -1563,8 +1568,20 @@ void ui::eimage_button::draw(UiFlags gflags) {
 
         btn = &ui::img_button(img_desc, pos, tsize, offsets, flags);
     } else if (texture_id > 0) {
-        graphics_draw_from_texture(texture_id, doffset + pos, size);
+        push(cmd_t::saved_texture, Pos{doffset + pos}, Size{size}, ImageId{texture_id});
         tsize = size;
+        if (_selected) {
+            switch (border) {
+            case 1:
+                push(cmd_t::button_border, Pos{doffset + pos - vec2i{4, 4}}, Size{tsize + vec2i{8, 8}},
+                  ImgFlagsTag{ImgFlag_Alpha});
+                break;
+            case 2:
+                push(cmd_t::draw_rect, Pos{doffset + pos}, Size{size}, TextColor{0xff000000});
+                break;
+            }
+            selection_border_deferred = true;
+        }
         btn = &ui::img_button({0, 0}, pos, size, offsets, flags);
     } else if (icon_texture) {
         painter ctx = game.painter();
@@ -1576,7 +1593,7 @@ void ui::eimage_button::draw(UiFlags gflags) {
         return;
     }
 
-    if (_selected) {
+    if (_selected && !selection_border_deferred) {
         switch (border) {
         case 1:
             button_border_draw(doffset + pos - vec2i{4, 4}, tsize + vec2i{8, 8}, true);

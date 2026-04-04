@@ -125,6 +125,7 @@ namespace ui {
             cursor_block,
             cursor_capture,
             cursor_consume,
+            saved_texture,
         };
 
         e_type type = none;
