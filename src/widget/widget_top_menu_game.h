@@ -10,7 +10,7 @@ struct tooltip_context;
 
 void widget_top_menu_clear_state();
 void widget_top_menu_draw();
-void widget_top_menu_handle_input(const mouse* m, const hotkeys* h);
+int widget_top_menu_handle_input(const mouse* m, const hotkeys* h);
 
 struct top_menu_widget_t : autoconfig_window {
     int offset_rotate;

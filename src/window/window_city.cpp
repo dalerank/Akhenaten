@@ -189,8 +189,10 @@ void window_city_handle_input(const mouse* m, const hotkeys* h) {
     window_city_handle_hotkeys(h);
 
     if (!g_city_planner.in_progress) {
-        widget_top_menu_handle_input(m, h);
-        widget_sidebar_city_handle_mouse(m);
+        int top_menu_handled = widget_top_menu_handle_input(m, h);
+        if (!top_menu_handled) {
+            widget_sidebar_city_handle_mouse(m);
+        }
     }
 
     g_screen_city.handle_input(m, h);

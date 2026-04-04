@@ -275,7 +275,7 @@ void widget_sub_menu_show() {
         "window_top_menu",
         [] (int flags) { top_menu_widget.sub_menu_draw_background(flags); },
         [] (int flags) { top_menu_widget.sub_menu_draw_foreground(flags); },
-        widget_top_menu_handle_input
+        [](const mouse* m, const hotkeys* h) { widget_top_menu_handle_input(m, h); },
     };
     top_menu_widget.sub_menu_init();
     window_show(&window);
@@ -344,21 +344,21 @@ bool top_menu_widget_t::handle_input_submenu(const mouse* m, const hotkeys* h) {
 }
 
 int top_menu_widget_t::ui_handle_mouse(const mouse *m) {
-    autoconfig_window::ui_handle_mouse(m);
+    int handled = autoconfig_window::ui_handle_mouse(m);
 
     xstring menu_id = bar_handle_mouse(m);
     if (!!menu_id && m->left.went_up) {
         open_sub_menu = menu_id;
         widget_sub_menu_show();
-        return 0;
+        return 1;
     }
 
-    return 0;
+    return handled;
 }
 
-void widget_top_menu_handle_input(const mouse* m, const hotkeys* h) {
+int widget_top_menu_handle_input(const mouse* m, const hotkeys* h) {
     if (g_screen_city.capture_input) {
-        return;
+        return 0;
     }
 
     int button_id = 0;
@@ -371,7 +371,11 @@ void widget_top_menu_handle_input(const mouse* m, const hotkeys* h) {
         orientation_button_state = 0;
     }
 
-    if (button_id) { /**/ }
-    else if (!!top_menu_widget.open_sub_menu) { top_menu_widget.handle_input_submenu(m, h); }
-    else { top_menu_widget.ui_handle_mouse(m); }
+    if (button_id) {
+        return handled ? 1 : 0;
+    }
+    if (!!top_menu_widget.open_sub_menu) {
+        return top_menu_widget.handle_input_submenu(m, h) ? 1 : 0;
+    }
+    return top_menu_widget.ui_handle_mouse(m);
 }
