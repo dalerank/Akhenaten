@@ -458,6 +458,8 @@ void figure_cartpusher::before_poof() {
 void figure_cartpusher::figure_action() {
     OZZY_PROFILER_FUNCTION();
 
+    base.use_cart = true;
+
     // Yield to cartpushers with a higher ID sharing the same tile to reduce visual overlap
     if (!!game_features::gameplay_change_cartpushers_yield_by_id) {
         int check_id = map_figure_id_get(tile());
@@ -479,8 +481,6 @@ void figure_cartpusher::figure_action() {
 
     building* b = home();
     int road_network_id = map_road_network_get(tile());
-
-    base.use_cart = true;
     switch (action_state()) {
     case ACTION_8_RECALCULATE:
     case ACTION_20_CARTPUSHER_INITIAL:

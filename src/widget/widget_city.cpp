@@ -50,6 +50,8 @@
 #include "input/mouse.h"
 #include "core/profiler.h"
 
+#include <algorithm>
+
 screen_city_t g_screen_city;
 
 void set_city_clip_rectangle(painter &ctx) {
@@ -205,9 +207,24 @@ void screen_city_t::draw_postrender_building_effects(vec2i pixel, tile2i tile, p
     }
 }
 
-void screen_city_t::draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool force) {
+void screen_city_t::draw_figures(vec2i pixel, tile2i tile, painter &ctx, [[maybe_unused]] bool force) {
     OZZY_PROFILER_FUNCTION();
     auto figures = map_figures_in_row(tile);
+
+    static constexpr int k_figure_pair_x_pad = 48;
+    const int row_x0 = pixel.x - TILE_WIDTH_PIXELS;
+    const int row_x1 = pixel.x + TILE_WIDTH_PIXELS;
+    const auto figure_x_overlaps_tile_band = [row_x0, row_x1](const figure *fig) {
+        int lo = fig->main_cached_pos.x;
+        int hi = lo;
+        if (fig->has_cart()) {
+            lo = std::min(lo, fig->cart_cached_pos.x);
+            hi = std::max(hi, fig->cart_cached_pos.x);
+            lo -= k_figure_pair_x_pad;
+            hi += k_figure_pair_x_pad;
+        }
+        return hi >= row_x0 && lo <= row_x1;
+    };
 
     for (const auto &f : figures) {
         const figure_static_params &params = figure_static_params::get(f.f->type);
@@ -215,30 +232,25 @@ void screen_city_t::draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool fo
             continue; // Skip figures that render on flat tiles
         }
 
-        const bool should_draw_main = !f.f->is_main_drawn;
-        const bool should_draw_cart = (f.draw_cart && !f.f->is_cart_drawn);
-        if (!should_draw_main && !should_draw_cart && !force) {
-            continue;
-        }
+        const bool allow_main = !selected_figure_id || f.f->id == selected_figure_id;
+        const int highlight = (f.f->formation_id > 0) && (f.f->formation_id == highlighted_formation);
 
-        if (should_draw_main) { // draw main
-            if (f.f->main_cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f.f->main_cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
+        if (!f.draw_cart) {
+            if (!figure_x_overlaps_tile_band(f.f)) {
                 continue;
             }
-
-            if (!selected_figure_id) {
-                int highlight = (f.f->formation_id > 0) && (f.f->formation_id == highlighted_formation);
+            if (!allow_main) {
+                continue;
+            }
+            f.f->draw(ctx, highlight);
+        } else {
+            if (allow_main && figure_x_overlaps_tile_band(f.f)) {
                 f.f->draw(ctx, highlight);
-            } else if (f.f->id == selected_figure_id) {
-                f.f->draw(ctx, 0);
             }
-        }
 
-        if (should_draw_cart) { // draw cart
-            if (f.f->cart_cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f.f->cart_cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
+            if (!figure_x_overlaps_tile_band(f.f)) {
                 continue;
             }
-
             f.f->draw_cart_sprite(ctx, f.f->cart_cached_pos, 0);
         }
     }
@@ -258,7 +270,7 @@ void screen_city_t::draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx)
             continue;
         }
 
-        if (f.f->is_main_drawn) {
+        if (f.f->is_main_drawn != 0) {
             continue;
         }
 

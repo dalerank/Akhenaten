@@ -29,6 +29,7 @@
 #include "building/construction/build_planner.h"
 #include "js/js_game.h"
 #include "core/pool.h"
+#include "core/interlocked.h"
 
 #include <string.h>
 #include <map>
@@ -712,6 +713,10 @@ void figure::draw_main_sprite(painter &ctx, vec2i pixel, int highlight) {
 void figure::draw(painter &ctx, int highlight) {
     OZZY_PROFILER_FUNCTION();
     if (!is_visible()) {
+        return;
+    }
+
+    if (threading::xchg(&mt_render_worker, true)) {
         return;
     }
 
