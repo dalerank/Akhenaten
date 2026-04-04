@@ -35,7 +35,7 @@
 #include <malloc.h>
 #elif defined(GAME_PLATFORM_MACOSX)
 #include <sys/syslimits.h>
-#include <malloc.h>
+#include <malloc/malloc.h>
 #elif defined(GAME_PLATFORM_ANDROID)
 #include <malloc.h>
 #endif
@@ -70,11 +70,11 @@ namespace
         if (!ptr) {
             return 0;
         }
-#if defined(_WIN32)
+#if defined(GAME_PLATFORM_WIN)
         return _msize(ptr);
-#elif defined(__APPLE__)
+#elif defined(GAME_PLATFORM_MACOSX)
         return malloc_size(ptr);
-#elif (defined(__GLIBC__) && defined(__linux__)) || defined(__ANDROID__)
+#elif defined(GAME_PLATFORM_LINUX) || defined(GAME_PLATFORM_ANDROID)
         return malloc_usable_size(ptr);
 #else
         return 0;
