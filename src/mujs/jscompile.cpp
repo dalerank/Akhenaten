@@ -39,7 +39,7 @@ void jsC_error(js_State* J, js_Ast* node, const char* fmt, ...) {
 
 static js_Function* newfun(js_State* J, js_Ast* node, js_Ast* name, js_Ast* params, js_Ast* body, int script) {
     js_Function* F = (js_Function*)js_malloc(J, sizeof *F);
-    memset(F, 0, sizeof js_Function);
+    memset(F, 0, sizeof(js_Function));
     F->gcnext = J->gcfun;
     J->gcfun = F;
     ++J->gccounter;
