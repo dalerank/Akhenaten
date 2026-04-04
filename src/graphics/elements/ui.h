@@ -704,7 +704,6 @@ namespace ui {
         xstring _js_render_item_ref;
         xstring _js_onclick_item_ref;
         xstring _js_ondoubleclick_item_ref;
-        xstring _onclick_event;
         xstring _ondoubleclick_event;
 
         virtual void draw(UiFlags flags) override;
@@ -796,7 +795,6 @@ namespace ui {
         int param2 = 0;
         button_onclick_cb _func, _rfunc;
         button_onclick_simple_cb _sfunc, _srfunc;
-        xstring _onclick_event;
         xstring _tooltip;
         uint8_t _border;
         bool _hbody;
@@ -882,7 +880,6 @@ namespace ui {
 
         button_onclick_cb _func, _rfunc;
         button_onclick_simple_cb _sfunc, _srfunc;
-        xstring _onclick_event;
 
         virtual void load(archive elem, element* parent, items& elems) override;
         virtual void select(bool v) override { _selected = v; }

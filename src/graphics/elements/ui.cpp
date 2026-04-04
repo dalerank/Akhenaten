@@ -1529,7 +1529,6 @@ void ui::eimage_button::load(archive arch, element* parent, items& elems) {
     _tooltip = arch.r_string("tooltip");
     set_ref(ONCLICK, arch.r_function("onclick"));
     set_event(ONCLICK_EVENT, arch.r_string(ONCLICK_EVENT.c_str()));
-    _onclick_event = event_name(ONCLICK_EVENT);
 
     xstring name_icon_texture = arch.r_string("icon_texture");
     if (!name_icon_texture.empty()) {
@@ -1595,10 +1594,11 @@ void ui::eimage_button::draw(UiFlags gflags) {
         return;
     }
 
-    if (!_onclick_event.empty()) {
-        btn->onclick([this](int, int) {
+    xstring onclick_event = event_name(ONCLICK_EVENT);
+    if (!onclick_event.empty()) {
+        btn->onclick([onclick_event](int, int) {
             bvariant_map::scoped s;
-            dispatch_autoconfig_es_event(get_current_widget(), _onclick_event, *s);
+            dispatch_autoconfig_es_event(get_current_widget(), onclick_event, *s);
         });
     } else if (!js_ref(ONCLICK).empty()) {
         const xstring js_onclick = js_ref(ONCLICK);
@@ -1712,15 +1712,16 @@ void ui::escrollable_list::ensure_panel() {
         panel->set_onclick_dbl_entry([&](const scrollable_list::entry_data* entry) { this->on_dblclick_item(entry); });
     }
 
-    if (_onclick_ex_cb || !_js_onclick_item_ref.empty() || !_onclick_event.empty()) {
-        panel->set_onclick_entry([this](scrollable_list::entry_data* e) {
+    xstring onclick_event = event_name(ONCLICK_EVENT);
+    if (_onclick_ex_cb || !_js_onclick_item_ref.empty() || !onclick_event.empty()) {
+        panel->set_onclick_entry([this, onclick_event](scrollable_list::entry_data* e) {
             if (!e) {
                 return;
             }
-            if (!_onclick_event.empty()) {
+            if (!onclick_event.empty()) {
                 bvariant_map::scoped m;
                 (*m)["text"] = bvariant(e->text);
-                dispatch_autoconfig_es_event(get_current_widget(), _onclick_event.c_str(), *m);
+                dispatch_autoconfig_es_event(get_current_widget(), onclick_event.c_str(), *m);
                 return;
             }
             if (!_js_onclick_item_ref.empty()) {
@@ -1825,7 +1826,6 @@ void ui::escrollable_list::load(archive arch, element* parent, items& elems) {
     _js_ondoubleclick_item_ref = arch.r_function("ondoubleclick_item");
     set_event(ONCLICK_EVENT, arch.r_string(ONCLICK_EVENT.c_str()));
     set_event(ONDOUBLECLICK_EVENT, arch.r_string(ONDOUBLECLICK_EVENT.c_str()));
-    _onclick_event = event_name(ONCLICK_EVENT);
     _ondoubleclick_event = event_name(ONDOUBLECLICK_EVENT);
 
     params.files_dir = arch.r_string("dir");
@@ -2084,11 +2084,11 @@ void ui::egeneric_button::draw(UiFlags gflags) {
 
     const bool clickable = !darkened && !readonly;
 
-    // Set up click handler: ES sub-event, then JS onclick ref, then C++ callbacks
-    if (clickable && !_onclick_event.empty()) {
-        btn->onclick([this] {
+    xstring onclick_event = event_name(ONCLICK_EVENT);
+    if (clickable && !onclick_event.empty()) {
+        btn->onclick([this, onclick_event] {
             bvariant_map::scoped s;
-            dispatch_autoconfig_es_event(get_current_widget(), _onclick_event.c_str(), *s);
+            dispatch_autoconfig_es_event(get_current_widget(), onclick_event.c_str(), *s);
         });
     } else if (clickable && !js_ref(ONCLICK).empty()) {
         btn->onclick([this] { this->js_call(); });
@@ -2098,13 +2098,9 @@ void ui::egeneric_button::draw(UiFlags gflags) {
         btn->onrclick([this] { this->js_rcall(); });
     }
 
-    if (clickable && _func && js_ref(ONCLICK).empty() && _onclick_event.empty()) {
+    if (clickable && _func && js_ref(ONCLICK).empty() && onclick_event.empty()) {
         btn->onclick(_func);
     }
-    if (clickable && _sfunc && js_ref(ONCLICK).empty() && _onclick_event.empty()) {
-        btn->onclick(_sfunc);
-    }
-
     if (clickable && _rfunc && js_ref(ONRCLICK).empty()) {
         btn->onrclick(_rfunc);
     }
@@ -2145,7 +2141,6 @@ void ui::egeneric_button::load(archive arch, element* parent, items& elems) {
     set_ref(ONRCLICK, arch.r_function("onrclick"));
     set_ref(TEXTFN, arch.r_function("textfn"));
     set_event(ONCLICK_EVENT, arch.r_string(ONCLICK_EVENT));
-    _onclick_event = event_name(ONCLICK_EVENT);
     param1 = arch.r_int("param1");
     param2 = arch.r_int("param2");
 }
