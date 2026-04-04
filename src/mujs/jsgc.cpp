@@ -32,9 +32,6 @@ static void gc_markproperty(js_State *J, uint32_t mark, js_Property *node) {
     (void)J;
 
     while (node) {
-        if (node->value.type == JS_TMEMSTR && gcmark_load(node->value.u.memstr->gcmark) != mark)
-            gcmark_store(&node->value.u.memstr->gcmark, mark);
-
         if (node->value.type == JS_TOBJECT && node->value.u.object)
             gc_markobject(J, mark, node->value.u.object);
 
@@ -117,10 +114,6 @@ static void gc_markstack(js_State *J, uint32_t mark) {
     js_Value *v = J->stack;
     int n = J->top;
     while (n--) {
-        if (v->type == JS_TMEMSTR && gcmark_load(v->u.memstr->gcmark) != mark) {
-            gcmark_store(&v->u.memstr->gcmark, mark);
-        }
-
         if (v->type == JS_TOBJECT && v->u.object) {
             gc_markobject(J, mark, v->u.object);
         }
@@ -291,24 +284,6 @@ void js_State::gc(int report) {
         }
     }
 
-    {
-        OZZY_PROFILER_SECTION(_, "Strings")
-
-        js_String *str, *nextstr, **prevnextstr;
-        prevnextstr = &gcstr;
-        for (str = gcstr; str; str = nextstr) {
-            nextstr = str->gcnext;
-            if (gcmark_load(str->gcmark) != mark) {
-                *prevnextstr = nextstr;
-                js_free(this, str);
-                ++gstr;
-            } else {
-                prevnextstr = &str->gcnext;
-            }
-            ++nstr;
-        }
-    }
-
     if (report) {
         printf("garbage collected: %d/%d envs, %d/%d funs, %d/%d objs, %d/%d strs\n",
             genv, nenv, gfun, nfun, gobj, nobj, gstr, nstr);
@@ -327,8 +302,6 @@ void js_freestate(js_State *J) {
         nextfun = fun->gcnext, jsG_freefunction(J, fun);
     for (obj = J->gcobj; obj; obj = nextobj)
         nextobj = obj->gcnext, jsG_freeobject(J, obj);
-    for (str = J->gcstr; str; str = nextstr)
-        nextstr = str->gcnext, js_free(J, str);
 
     js_free(J, J->lexbuf.text);
     J->text = nullptr;

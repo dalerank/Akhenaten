@@ -18,7 +18,7 @@ static js_StringNode property_atobject = js_intern("[object]");
 inline pcstr JSV_TOSTRING(js_Value* v) {
     return v->type == JS_TSHRSTR   ? js_strnode_cstr(v->u.shrstr)
            : v->type == JS_TLITSTR ? js_strnode_cstr(v->u.litstr)
-           : v->type == JS_TMEMSTR ? v->u.memstr->p
+           : v->type == JS_TMEMSTR ? js_strnode_cstr(v->u.memstr)
                                    : "";
 }
 
@@ -158,7 +158,7 @@ int jsV_toboolean(js_State* J, js_Value* v) {
     case JS_TLITSTR:
         return v->u.litstr->value.empty() != 0;
     case JS_TMEMSTR:
-        return v->u.memstr->p[0] != 0;
+        return v->u.memstr->value.empty() != 0;
     case JS_TOBJECT: {
         js_Object* obj = v->u.object;
         if (obj->type == JS_CPTR) {
@@ -276,7 +276,7 @@ double jsV_tonumber(js_State* J, js_Value* v) {
     case JS_TLITSTR:
         return jsV_stringtonumber(J, js_strnode_cstr(v->u.litstr));
     case JS_TMEMSTR:
-        return jsV_stringtonumber(J, v->u.memstr->p);
+        return jsV_stringtonumber(J, js_strnode_cstr(v->u.memstr));
     case JS_TOBJECT: {
         js_Object* obj = v->u.object;
         if (obj->type == JS_CPTR) {
@@ -381,7 +381,7 @@ const js_StringNode jsV_tostring(js_State* J, js_Value* v) {
     case JS_TLITSTR:
         return v->u.litstr;
     case JS_TMEMSTR:
-        return js_intern(v->u.memstr->p);
+        return v->u.memstr;
     case JS_TNUMBER:
         /* js_StringNode is an interned pointer; do not reuse JS_TSHRSTR without assigning it. */
         p = jsV_numbertostring(J, buf, v->u.number);
@@ -413,6 +413,13 @@ js_Object* jsV_newvec2i(js_State* J, int x, int y) {
     return obj;
 }
 
+static js_Object* jsV_newstring(js_State* J, const js_StringNode v) {
+    js_Object* obj = jsV_newobject(J, JS_CSTRING, J->String_prototype);
+    obj->u.s.string = v; /* TODO: js_String */
+    obj->u.s.length = utflen(js_strnode_cstr(v));
+    return obj;
+}
+
 static js_Object* jsV_newstring(js_State* J, const char* v) {
     js_Object* obj = jsV_newobject(J, JS_CSTRING, J->String_prototype);
     obj->u.s.string = js_intern(v); /* TODO: js_String */
@@ -428,7 +435,7 @@ js_Object* js_State::toobject(js_Value* v) {
     switch (v->type) {
     default:
     case JS_TSHRSTR:
-        return jsV_newstring(J, js_strnode_cstr(v->u.shrstr));
+        return jsV_newstring(J, v->u.shrstr);
     case JS_TUNDEFINED:
         js_typeerror_detailed(J, "undefined", "object");
     case JS_TNULL:
@@ -438,9 +445,9 @@ js_Object* js_State::toobject(js_Value* v) {
     case JS_TNUMBER:
         return jsV_newnumber(J, v->u.number);
     case JS_TLITSTR:
-        return jsV_newstring(J, js_strnode_cstr(v->u.litstr));
+        return jsV_newstring(J, v->u.litstr);
     case JS_TMEMSTR:
-        return jsV_newstring(J, v->u.memstr->p);
+        return jsV_newstring(J, v->u.memstr);
     case JS_TOBJECT:
         return v->u.object;
     }

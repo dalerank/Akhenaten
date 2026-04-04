@@ -205,6 +205,7 @@ struct js_State
 
 	void pushundefined();
 	void pushstring(pcstr v);
+    void pushstring(const js_StringNode v);
 
 	void getproperty(js_Object* obj, const js_StringNode name);
     void getproperty(int idx, const js_StringNode name) { getproperty(toobject(idx), name); }

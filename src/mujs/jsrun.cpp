@@ -75,17 +75,17 @@ void js_frame_free(js_State *J, void *ptr) {
     frame_alloc(frame_actx, ptr, 0);
 }
 
-js_String *jsV_newmemstring(js_State *J, const char *s, int n) {
+js_StringNode jsV_newmemstring(js_State *J, const char *s, int n) {
     OZZY_PROFILER_FUNCTION();
 
-    js_String *v = (js_String*)js_malloc(J, soffsetof(js_String, p) + n + 1);
-    v->gcmark = 0;
-    memcpy(v->p, s, n);
-    v->p[n] = 0;
-    v->gcnext = J->gcstr;
-    J->gcstr = v;
-    ++J->gccounter;
-    return v;
+    char *v = (char*)js_frame_alloc(J, n + 1);
+    if (n > 0 && s) {
+        memcpy(v, s, (size_t)n);
+    }
+    v[n] = 0;
+    js_StringNode r = js_intern(v);
+    js_frame_free(J, v);
+    return r;
 }
 
 #define CHECKSTACK(n) if (TOP + n >= JS_STACKSIZE) J->stackoverflow()
@@ -135,10 +135,26 @@ void js_State::pushstring(pcstr v) {
     ++top;
 }
 
+void js_State::pushstring(const js_StringNode v) {
+    OZZY_PROFILER_FUNCTION();
+
+    JCHECKSTACK(1);
+    stack[top].type = JS_TMEMSTR;
+    stack[top].u.memstr = v;
+    ++top;
+}
+
+void js_pushlstring(js_State* J, const js_StringNode v) {
+    CHECKSTACK(1);
+    STACK[TOP].type = JS_TMEMSTR;
+    STACK[TOP].u.memstr = v;
+    ++TOP;
+}
+
 void js_pushlstring(js_State *J, const char *v, int n) {
     CHECKSTACK(1);
     STACK[TOP].type = JS_TMEMSTR;
-    STACK[TOP].u.memstr = jsV_newmemstring(J, v, n);
+    STACK[TOP].u.memstr = js_intern(v);
     ++TOP;
 }
 

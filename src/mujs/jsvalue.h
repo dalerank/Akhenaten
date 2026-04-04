@@ -66,17 +66,11 @@ struct js_Value {
         double number;
         js_StringNode shrstr;
         js_StringNode litstr;
-        js_String *memstr;
+        js_StringNode memstr;
         js_Object *object;
     } u;
     char pad[7]; /* extra storage for shrstr */
     char type; /* type tag and zero terminator for shrstr */
-};
-
-struct js_String {
-    js_String *gcnext;
-    volatile uint32_t gcmark;
-    char p[1];
 };
 
 struct js_Regexp {
@@ -163,7 +157,7 @@ struct js_Iterator {
 };
 
 /* jsrun.c */
-js_String *jsV_newmemstring(js_State *J, const char *s, int n);
+js_StringNode jsV_newmemstring(js_State *J, const char *s, int n);
 js_Value *js_tovalue(js_State *J, int idx);
 void js_toprimitive(js_State *J, int idx, int hint);
 void js_pushvalue(js_State *J, js_Value v);

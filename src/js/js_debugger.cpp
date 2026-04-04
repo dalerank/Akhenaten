@@ -454,8 +454,9 @@ static cstring js_value_display(js_State *J, const js_Value *v) {
     case JS_TSHRSTR:
         return json_jstr(cstring("\"") + js_strnode_cstr(v->u.shrstr) + "\"");
     case JS_TLITSTR:
-        return json_jstr(cstring("\"") + (!!v->u.litstr ? js_strnode_cstr(v->u.litstr) : "") + "\"");
-    case JS_TMEMSTR:    return json_jstr(cstring("\"") + (v->u.memstr ? v->u.memstr->p : "") + "\"");
+        return json_jstr(cstring("\"") + js_strnode_cstr(v->u.litstr) + "\"");
+    case JS_TMEMSTR:
+        return json_jstr(cstring("\"") + js_strnode_cstr(v->u.memstr) + "\"");
     case JS_TOBJECT:
         if (!v->u.object) return json_jstr("null");
         switch (v->u.object->type) {
