@@ -147,5 +147,4 @@ extern Arguments g_args;
             } \
         } \
         return std::nullopt; \
-    } \
-    ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(ANK_CONFIG_CC1(handle_, __LINE__), arg_format, description)
+    } ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(ANK_CONFIG_CC1(handle_, __LINE__), arg_format, description)
