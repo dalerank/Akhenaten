@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/core.h"
+#include "core/profiler.h"
 #include "core/typename.h"
 #include "core/custom_span.hpp"
 #include "graphics/elements/ui.h"
