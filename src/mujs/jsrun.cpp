@@ -537,6 +537,9 @@ int js_State::hasproperty(js_Object *obj, js_StringNode name) {
 
     auto J = this;
     switch (obj->type) {
+    default:
+        break;
+
     case JS_CARRAY:
         if (name == property_length) {
             js_pushnumber(J, obj->u.a.length);
@@ -732,7 +735,7 @@ static void jsR_setproperty(js_State* J, js_Object* obj, const js_StringNode nam
 
 readonly:
     if (J->strict)
-        js_typeerror(J, "'%s' is read-only", name);
+        js_typeerror(J, "'%s' is read-only", js_strnode_cstr(name));
 }
 
 static void jsR_defproperty(js_State* J, js_Object* obj, const js_StringNode name,
@@ -784,19 +787,19 @@ static void jsR_defproperty(js_State* J, js_Object* obj, const js_StringNode nam
             if (!(ref->atts & JS_READONLY))
                 ref->value = *value;
             else if (J->strict)
-                js_typeerror(J, "'%s' is read-only", name);
+                js_typeerror(J, "'%s' is read-only", js_strnode_cstr(name));
         }
         if (getter) {
             if (!(ref->atts & JS_DONTCONF))
                 ref->getter = getter;
             else if (J->strict)
-                js_typeerror(J, "'%s' is non-configurable", name);
+                js_typeerror(J, "'%s' is non-configurable", js_strnode_cstr(name));
         }
         if (setter) {
             if (!(ref->atts & JS_DONTCONF))
                 ref->setter = setter;
             else if (J->strict)
-                js_typeerror(J, "'%s' is non-configurable", name);
+                js_typeerror(J, "'%s' is non-configurable", js_strnode_cstr(name));
         }
         ref->atts |= atts;
     }
@@ -805,7 +808,7 @@ static void jsR_defproperty(js_State* J, js_Object* obj, const js_StringNode nam
 
 readonly:
     if (J->strict)
-        js_typeerror(J, "'%s' is read-only or non-configurable", name);
+        js_typeerror(J, "'%s' is read-only or non-configurable", js_strnode_cstr(name));
 }
 
 int js_State::rdelproperty(js_Object *obj, const js_StringNode name) {
@@ -814,7 +817,7 @@ int js_State::rdelproperty(js_Object *obj, const js_StringNode name) {
 
     auto dontconf = [&] () {
         if (strict) {
-            js_typeerror(this, "'%s' is non-configurable", name);
+            js_typeerror(this, "'%s' is non-configurable", js_strnode_cstr(name));
         }
         return 0;
     };
@@ -965,7 +968,7 @@ const js_StringNode js_nextiterator(js_State *J, int idx) {
 
 js_Environment *jsR_newenvironment(js_State *J, js_Object *vars, js_Environment *outer) {
     js_Environment *E = (js_Environment*)js_malloc(J, sizeof * E);
-    memset(E, 0, sizeof js_Environment);
+    memset(E, 0, sizeof(js_Environment));
     E->gcmark = 0;
     E->gcnext = J->gcenv;
     J->gcenv = E;
@@ -1526,7 +1529,7 @@ void js_State::r_run(js_Function *F) {
         case OP_GETVAR:
             str = ST[*pc++];
             if (!js_hasvar(J, str))
-                js_referenceerror(J, "'%s' is not defined", str);
+                js_referenceerror(J, "'%s' is not defined", js_strnode_cstr(str));
             break;
 
         case OP_HASVAR:
