@@ -1,5 +1,10 @@
 #pragma once
 
+#include "mujs.h"
+
+#include <cstddef>
+#include <cstring>
+
 void jsB_init(js_State *J);
 void jsB_initobject(js_State *J);
 void jsB_initarray(js_State *J);
@@ -27,14 +32,19 @@ typedef struct js_Buffer { int n, m; char s[64]; } js_Buffer;
 static void js_putc(js_State *J, js_Buffer **sbp, int c)
 {
 	js_Buffer *sb = *sbp;
+	const int hsize = static_cast<int>(offsetof(js_Buffer, s));
 	if (!sb) {
-		sb = (js_Buffer*)js_malloc(J, sizeof *sb);
+		sb = static_cast<js_Buffer*>(js_frame_alloc(J, static_cast<int>(sizeof(js_Buffer))));
 		sb->n = 0;
-		sb->m = sizeof sb->s;
+		sb->m = static_cast<int>(sizeof(sb->s));
 		*sbp = sb;
 	} else if (sb->n == sb->m) {
-		sb = (js_Buffer*)js_realloc(J, sb, (sb->m *= 2) + soffsetof(js_Buffer, s));
-		*sbp = sb;
+		const int old_m = sb->m;
+		sb->m *= 2;
+		js_Buffer *nb = static_cast<js_Buffer*>(js_frame_alloc(J, hsize + sb->m));
+		memcpy(nb, sb, static_cast<size_t>(hsize + old_m));
+		*sbp = nb;
+		sb = nb;
 	}
 	sb->s[sb->n++] = c;
 }

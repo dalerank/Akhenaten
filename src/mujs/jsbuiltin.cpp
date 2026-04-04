@@ -113,12 +113,10 @@ static void Encode(js_State* J, const char* str, const char* unescaped) {
     js_putc(J, &sb, 0);
 
     if (js_try(J)) {
-        js_free(J, sb);
         js_throw(J);
     }
     J->pushstring(sb ? sb->s : "");
     js_endtry(J);
-    js_free(J, sb);
 }
 
 static void Decode(js_State* J, const char* str, const char* reserved) {
@@ -149,12 +147,10 @@ static void Decode(js_State* J, const char* str, const char* reserved) {
     js_putc(J, &sb, 0);
 
     if (js_try(J)) {
-        js_free(J, sb);
         js_throw(J);
     }
     J->pushstring(sb ? sb->s : "");
     js_endtry(J);
-    js_free(J, sb);
 }
 
 #define URIRESERVED  ";/?:@&=+$,"

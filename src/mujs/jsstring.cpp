@@ -480,12 +480,10 @@ end:
 	js_putc(J, &sb, 0);
 
 	if (js_try(J)) {
-		js_free(J, sb);
 		js_throw(J);
 	}
 	J->pushstring(sb ? sb->s : "");
 	js_endtry(J);
-	js_free(J, sb);
 }
 
 static void Sp_replace_string(js_State *J)
@@ -540,12 +538,10 @@ static void Sp_replace_string(js_State *J)
 	}
 
 	if (js_try(J)) {
-		js_free(J, sb);
 		js_throw(J);
 	}
 	J->pushstring(sb ? sb->s : "");
 	js_endtry(J);
-	js_free(J, sb);
 }
 
 static void Sp_replace(js_State *J)
