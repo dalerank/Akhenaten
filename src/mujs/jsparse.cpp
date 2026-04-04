@@ -162,35 +162,34 @@ static void jsP_semicolon(js_State* J) {
 
 /* Literals */
 
-static const char* futurewords[] = {
-  "class",
-  "const",
-  "enum",
-  "export",
-  "extends",
-  "super",
+static const js_StringNode futurewords[] = {
+  js_intern("class"),
+  js_intern("const"),
+  js_intern("enum"),
+  js_intern("export"),
+  js_intern("extends"),
+  js_intern("super"),
 };
 
-static const char* strictfuturewords[] = {
-  "implements",
-  "interface",
-  "let",
-  "package",
-  "private",
-  "protected",
-  "public",
-  "static",
-  "yield",
+static const js_StringNode strictfuturewords[] = {
+  js_intern("implements"),
+  js_intern("interface"),
+  js_intern("let"),
+  js_intern("package"),
+  js_intern("private"),
+  js_intern("protected"),
+  js_intern("public"),
+  js_intern("static"),
+  js_intern("yield"),
 };
 
 static void checkfutureword(js_State* J, const js_StringNode s) {
-    pcstr str = js_strnode_cstr(s);
-    if (jsY_findword(str, futurewords, nelem(futurewords)) >= 0) {
-        jsP_error(J, "'%s' is a future reserved word", s);
+    if (jsY_findword(s, futurewords) >= 0) {
+        jsP_error(J, "'%s' is a future reserved word", js_strnode_cstr(s));
     }
 
-    if (J->strict && jsY_findword(str, strictfuturewords, nelem(strictfuturewords)) >= 0) {
-        jsP_error(J, "'%s' is a strict mode future reserved word", s);
+    if (J->strict && jsY_findword(s, strictfuturewords) >= 0) {
+        jsP_error(J, "'%s' is a strict mode future reserved word", js_strnode_cstr(s));
     }
 }
 
