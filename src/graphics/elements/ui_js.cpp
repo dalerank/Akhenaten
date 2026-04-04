@@ -1,6 +1,7 @@
 #include "js/js.h"
 
 #include "ui.h"
+#include "core/profiler.h"
 #include "js/js_game.h"
 #include "graphics/elements/ui_js.h"
 #include "mujs/jsi.h"
@@ -23,7 +24,6 @@
 #include "window/popup_dialog.h"
 #include "city/city_message.h"
 #include "city/city_building_menu_ctrl.h"
-#include "core/profiler.h"
 #include "core/log.h"
 #include "core/flat_map.h"
 #include "game/game.h"
@@ -36,7 +36,7 @@ xstring js_toxstring(js_State* J, int idx) {
         return {};
     }
 
-    js_StringNode id = js_tostring(J, 1);
+    js_StringNode id = js_tostring(J, idx);
     xstring result;
     result._set(id);
     return result;
