@@ -32,8 +32,12 @@
 
 #if defined(GAME_PLATFORM_LINUX)
 #include <linux/limits.h>
+#include <malloc.h>
 #elif defined(GAME_PLATFORM_MACOSX)
 #include <sys/syslimits.h>
+#include <malloc.h>
+#elif defined(GAME_PLATFORM_ANDROID)
+#include <malloc.h>
 #endif
 
 struct {
@@ -70,7 +74,7 @@ namespace
         return _msize(ptr);
 #elif defined(__APPLE__)
         return malloc_size(ptr);
-#elif defined(__linux__) || defined(__ANDROID__)
+#elif (defined(__GLIBC__) && defined(__linux__)) || defined(__ANDROID__)
         return malloc_usable_size(ptr);
 #else
         return 0;
