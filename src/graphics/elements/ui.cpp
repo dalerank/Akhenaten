@@ -970,12 +970,6 @@ scrollbar_t& ui::scrollbar(scrollbar_t& scr, vec2i pos, int& value, vec2i size) 
     return scr;
 }
 
-xstring ui_element_props[] = {"text", "enabled", "readonly", "font", "text_color", "image", "selected", "tooltip",
-  "onclick", "textfn", "ondraw", "ondraw_event"};
-xspan<xstring> ui::element::prop_names() const {
-    return make_span(ui_element_props);
-}
-
 ui::element::~element() {
     _js_refs.clear();
 }
@@ -1334,11 +1328,6 @@ void ui::eborder::draw(UiFlags flags) {
         graphics_draw_rect(offset + pos, size, colori);
         break;
     }
-}
-
-static xstring ui_einput_value_props[] = {"value"};
-xspan<xstring> ui::einput::prop_names() const {
-    return make_span(ui_einput_value_props);
 }
 
 void ui::einput::stop_input() {
@@ -1812,20 +1801,6 @@ ui::escrollable_list::~escrollable_list() {
     // panel will be automatically destroyed by unique_ptr
 }
 
-
-xstring escrollable_list_funcs[] = {"add_item", "clear", "select_item", "select_index", "refresh_file_finder",
-  "change_file_path", "append_files_with_extension", "scroll_to_selected", "selected_text"};
-xspan<xstring> ui::escrollable_list::func_names() const {
-    return escrollable_list_funcs;
-}
-
-xstring escrollable_list_props[]
-  = {"text", "enabled", "readonly", "font", "text_color", "selected", "tooltip", "items_count"};
-xspan<xstring> ui::escrollable_list::prop_names() const {
-    return escrollable_list_props;
-}
-
-
 void ui::escrollable_list::draw(UiFlags flags) {
     ensure_panel();
 
@@ -2173,12 +2148,6 @@ void ui::egeneric_button::load(archive arch, element* parent, items& elems) {
     _onclick_event = event_name(ONCLICK_EVENT);
     param1 = arch.r_int("param1");
     param2 = arch.r_int("param2");
-}
-
-static xstring ui_echeckbox_props[] = {"text", "enabled", "readonly", "font", "text_color", "selected", "tooltip",
-  "onclick", "textfn", "checked", "checkedfn"};
-xspan<xstring> ui::echeckbox::prop_names() const {
-    return make_span(ui_echeckbox_props);
 }
 
 void ui::echeckbox::draw(UiFlags flags) {

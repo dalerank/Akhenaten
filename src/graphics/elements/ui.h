@@ -481,9 +481,6 @@ namespace ui {
         virtual pcstr get_value() const { return ""; }
         virtual void set_value(pcstr) {}
 
-        virtual xspan<xstring> prop_names() const;
-        virtual xspan<xstring> func_names() const { return {}; }
-
         static const xstring skind() { return "UIElement"; }
         virtual xstring kind() const { return element::skind(); }
 
@@ -600,7 +597,6 @@ namespace ui {
         virtual void load(archive elem, element* parent, items& elems) override;
         virtual pcstr get_value() const override;
         virtual void set_value(pcstr utf8) override;
-        virtual xspan<xstring> prop_names() const override;
         static const xstring skind() { return "UITextInput"; }
         virtual xstring kind() const override { return einput::skind(); }
         virtual einput* dcast_einput() override { return this; }
@@ -719,8 +715,6 @@ namespace ui {
         static const xstring skind() { return "UIScrollableList"; }
         virtual xstring kind() const override { return escrollable_list::skind(); }
 
-        virtual xspan<xstring> func_names() const override;
-        virtual xspan<xstring> prop_names() const override;
         virtual void clear() override;
 
         void add_item(pcstr item);
@@ -851,7 +845,6 @@ namespace ui {
         virtual void load(archive arch, element* parent, items& elems) override;
         virtual void select(bool v) override { _checked = v; }
         virtual bool selected() const override { return _checked; }
-        virtual xspan<xstring> prop_names() const override;
     };
 
     struct earrow_button : public element {
