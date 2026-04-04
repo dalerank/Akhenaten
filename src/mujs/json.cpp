@@ -289,12 +289,10 @@ static void JSON_stringify(js_State *J)
 		if (fmtvalue(J, &sb, "", gap, 0)) {
 			js_putc(J, &sb, 0);
 			if (js_try(J)) {
-				js_free(J, sb);
 				js_throw(J);
 			}
 			J->pushstring(sb ? sb->s : "");
 			js_endtry(J);
-			js_free(J, sb);
 		}
 	} else {
 		J->pushundefined();

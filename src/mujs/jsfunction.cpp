@@ -28,7 +28,6 @@ static void jsB_Function(js_State *J)
 	body = js_isdefined(J, top - 1) ? js_tostring(J, top - 1)->value.c_str() : "";
 
 	if (js_try(J)) {
-		js_free(J, sb);
 		jsP_freeparse(J);
 		js_throw(J);
 	}
@@ -37,7 +36,6 @@ static void jsB_Function(js_State *J)
 	fun = jsC_compilefunction(J, parse);
 
 	js_endtry(J);
-	js_free(J, sb);
 	jsP_freeparse(J);
 
 	js_newfunction(J, fun, J->GE);
