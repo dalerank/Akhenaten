@@ -63,6 +63,10 @@ function resolve_list_secondary_ext(pending_type) {
     return pending_type === FILE_TYPE_SCENARIO ? "" : "svx"
 }
 
+function has_text(v) {
+    return v !== null && v !== undefined && ("" + v) !== ""
+}
+
 function strip_suffix_lower(name, ext) {
     if (!name || !ext || ext.length === 0)
         return name
@@ -116,12 +120,11 @@ function file_dialog_load_try_load(basename) {
     var ext1 = resolve_list_primary_ext(pending)
     var ext2 = resolve_list_secondary_ext(pending)
 
-    var full = file_dialog_load_fullpath(basename + "." + ext1)
-    if (!game.file_exists(full) && ext2 && ext2.length > 0)
-        full = file_dialog_load_fullpath(basename + "." + ext2)
-
-    if (!game.file_exists(full))
+    // First, try exactly what user selected/typed (may already include extension).
+    var full = file_dialog_load_fullpath(basename)
+    if (!game.file_exists(full)) {
         return 1
+    }
 
     if (pending === FILE_TYPE_SAVED_GAME) {
         if (!game.load_savegame(normalize_savegame_path_for_load(full)))
@@ -137,12 +140,12 @@ function file_dialog_load_try_load(basename) {
         return 2
     }
 
-    __set_last_loaded_utf8(pending, basename)
+    __set_last_loaded_utf8(pending, strip_extension(file_dialog_load_basename_from_list_entry(basename)))
     return 0
 }
 
 function file_dialog_load_on_filename_input(p) {
-    file_dialog_load.show_filename = (p && p.value) ? p.value : ""
+    file_dialog_load.show_filename = file_dialog_load_basename_from_list_entry(p.value)
     file_dialog_load.error_flash_start_ms = 0
 }
 
@@ -156,10 +159,18 @@ function file_dialog_load_apply_list_selection(p) {
 
 function file_dialog_load_handle_load(window) {
     var name = file_dialog_load.show_filename
-    if (!name || name.length === 0)
+    var selected_with_ext = (window && window.files) ? window.files.selected_text(1) : ""
+    var source_name = has_text(selected_with_ext) ? ("" + selected_with_ext) : name
+    if (!has_text(source_name))
         return
 
-    var r = file_dialog_load_try_load(name)
+    var normalized = strip_extension(file_dialog_load_basename_from_list_entry(source_name))
+    if (normalized !== file_dialog_load.show_filename) {
+        file_dialog_load.show_filename = normalized
+        file_dialog_load.show_filename_applied = ""
+    }
+
+    var r = file_dialog_load_try_load(source_name)
     if (r !== 0) {
         file_dialog_load.error_flash_title_id = (r === 2) ? 7 : 2
         file_dialog_load.error_flash_start_ms = __game_time_millis()
