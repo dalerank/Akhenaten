@@ -55,12 +55,9 @@ function resolve_files_dir(pending_type) {
     return "Save/" + game.dynasty_name + "/"
 }
 
-function resolve_list_primary_ext(pending_type) {
-    return pending_type === FILE_TYPE_SCENARIO ? "map" : "sav"
-}
-
-function resolve_list_secondary_ext(pending_type) {
-    return pending_type === FILE_TYPE_SCENARIO ? "" : "svx"
+// Extensions listed by change_file_path (first) then append_files_with_extension (rest).
+function file_dialog_load_list_extensions(pending_type) {
+    return pending_type === FILE_TYPE_SCENARIO ? ["map"] : ["sav", "svx"]
 }
 
 function has_text(v) {
@@ -71,8 +68,7 @@ function strip_suffix_lower(name, ext) {
     if (!name || !ext || ext.length === 0)
         return name
 
-    var dot = "."
-    var suffix = dot + ext
+    var suffix = "." + ext
     var n = name.length
     var m = suffix.length
     if (n <= m)
@@ -88,28 +84,32 @@ function file_dialog_load_fullpath(relative) {
     if (!relative || relative.length === 0)
         return ""
 
-    var head = relative.length >= 5 ? relative.substring(0, 5) : ""
-    var headLower = head.toLowerCase()
-    if (headLower === "save/" || headLower === "save\\" || headLower === "maps/" || headLower === "maps\\")
-        return relative
+    var r = "" + relative
+    var head = r.substring(0, 5).toLowerCase()
+    if (head === "save/" || head === "save\\" || head === "maps/" || head === "maps\\")
+        return r
 
     if (file_dialog_load.pending_type === FILE_TYPE_SCENARIO)
-        return "Maps/" + relative
+        return "Maps/" + r
 
-    return "Save/" + game.dynasty_name + "/" + relative
+    return "Save/" + game.dynasty_name + "/" + r
 }
 
 function file_dialog_load_basename_from_list_entry(name) {
     if (!name || name.length === 0)
         return ""
 
-    var e1 = resolve_list_primary_ext(file_dialog_load.pending_type)
-    var e2 = resolve_list_secondary_ext(file_dialog_load.pending_type)
-    var base = strip_suffix_lower(name, e1)
-    if (e2 && e2.length > 0)
-        base = strip_suffix_lower(base, e2)
+    var exts = file_dialog_load_list_extensions(file_dialog_load.pending_type)
+    var base = name
+    for (var i = 0; i < exts.length; i++)
+        base = strip_suffix_lower(base, exts[i])
 
     return base
+}
+
+function file_dialog_load_set_show_filename(from_user) {
+    file_dialog_load.show_filename = file_dialog_load_basename_from_list_entry(from_user)
+    file_dialog_load.error_flash_start_ms = 0
 }
 
 function file_dialog_load_try_load(basename) {
@@ -117,14 +117,9 @@ function file_dialog_load_try_load(basename) {
         return 1
 
     var pending = file_dialog_load.pending_type
-    var ext1 = resolve_list_primary_ext(pending)
-    var ext2 = resolve_list_secondary_ext(pending)
-
-    // First, try exactly what user selected/typed (may already include extension).
     var full = file_dialog_load_fullpath(basename)
-    if (!game.file_exists(full)) {
+    if (!game.file_exists(full))
         return 1
-    }
 
     if (pending === FILE_TYPE_SAVED_GAME) {
         if (!game.load_savegame(normalize_savegame_path_for_load(full)))
@@ -140,21 +135,19 @@ function file_dialog_load_try_load(basename) {
         return 2
     }
 
-    __set_last_loaded_utf8(pending, strip_extension(file_dialog_load_basename_from_list_entry(basename)))
+    __set_last_loaded_utf8(pending, file_dialog_load_basename_from_list_entry(basename))
     return 0
 }
 
 function file_dialog_load_on_filename_input(p) {
-    file_dialog_load.show_filename = file_dialog_load_basename_from_list_entry(p.value)
-    file_dialog_load.error_flash_start_ms = 0
+    file_dialog_load_set_show_filename(p.value)
 }
 
 function file_dialog_load_apply_list_selection(p) {
     if (!p || !p.text)
         return
 
-    file_dialog_load.show_filename = file_dialog_load_basename_from_list_entry(p.text)
-    file_dialog_load.error_flash_start_ms = 0
+    file_dialog_load_set_show_filename(p.text)
 }
 
 function file_dialog_load_handle_load(window) {
@@ -164,7 +157,7 @@ function file_dialog_load_handle_load(window) {
     if (!has_text(source_name))
         return
 
-    var normalized = strip_extension(file_dialog_load_basename_from_list_entry(source_name))
+    var normalized = file_dialog_load_basename_from_list_entry(source_name)
     if (normalized !== file_dialog_load.show_filename) {
         file_dialog_load.show_filename = normalized
         file_dialog_load.show_filename_applied = ""
@@ -257,12 +250,11 @@ function file_dialog_load_on_init(window) {
     window.hint.text = __loc(43, 5)
 
     var dir = resolve_files_dir(window.file_type)
-    var ext1 = resolve_list_primary_ext(window.file_type)
-    var ext2 = resolve_list_secondary_ext(window.file_type)
+    var exts = file_dialog_load_list_extensions(window.file_type)
 
-    window.files.change_file_path(dir, ext1)
-    if (ext2 && ext2.length > 0)
-        window.files.append_files_with_extension(dir, ext2)
+    window.files.change_file_path(dir, exts[0])
+    for (var i = 1; i < exts.length; i++)
+        window.files.append_files_with_extension(dir, exts[i])
 
     var initial = resolve_initial_basename(window.file_type)
     file_dialog_load.show_filename = initial

@@ -202,7 +202,8 @@ int scrollable_list::input_handle(const mouse* m) {
             entry_data click_item;
             if (left_click_ex_callback || double_click_ex_callback) {
                 if (ui_params.use_file_finder) {
-                    click_item.text = file_finder && file_finder->files ? file_finder->files[global_row] : xstring();
+                    click_item.text = (file_finder && file_finder->files) ? get_entry_text_by_idx(global_row, FILE_NO_EXT)
+                                                                          : xstring();
                     click_item.user_data = 0;
                 } else if (global_row < (int)manual_entry_list.size()) {
                     click_item = manual_entry_list[global_row];
