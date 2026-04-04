@@ -152,6 +152,16 @@ render_command_t& generic_sub(painter& ctx, const Args&... args) {
 
 using render_command_vec = std::vector<render_command_t>;
 using render_command_block = hvector<render_command_vec, 32>;
+
+/// Resize per-worker buffers and clear contents; inner vector capacity is kept across frames.
+void prepare_parallel_render_blocks(size_t num_blocks);
+
+render_command_block& parallel_block_commands();
+render_command_block& parallel_block_subcommands();
+
+render_command_vec& parallel_block_commands(int blk);
+render_command_vec& parallel_block_subcommands(int blk);
+
 /// Merge per-block buffers into g_render_commands/g_render_subcommands (fixes subcommand indices). Call from main thread after workers finish.
 void merge_block_commands_into_global(const render_command_block& block_commands,
                                       const render_command_block & block_subcommands);

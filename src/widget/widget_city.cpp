@@ -356,19 +356,16 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
             return static_cast<int>(blk * block_size + (blk < remainder ? blk : remainder));
         };
 
-        ImageDraw::render_command_block block_commands;
-        block_commands.resize(num_blocks);
-        ImageDraw::render_command_block block_subcommands;
-        block_subcommands.resize(num_blocks);
+        ImageDraw::prepare_parallel_render_blocks(num_blocks);
         hvector<std::future<void>, 32> futures;
 
         for (size_t blk = 0; blk < num_blocks; blk++) {
             const int y_start = block_start(blk);
             const int y_end = block_start(blk + 1);
-            futures.push_back(game.mt.submit_task([this, &ctx, y_start, y_end, &block_commands, &block_subcommands, blk]() {
+            futures.push_back(game.mt.submit_task([this, &ctx, y_start, y_end, blk]() {
                 painter worker_ctx = ctx;
-                worker_ctx.command_buffer = &block_commands[blk];
-                worker_ctx.subcommand_buffer = &block_subcommands[blk];
+                worker_ctx.command_buffer = &ImageDraw::parallel_block_commands(blk);
+                worker_ctx.subcommand_buffer = &ImageDraw::parallel_block_subcommands(blk);
                 city_view_foreach_valid_map_tile_rows(worker_ctx, y_start, y_end,
                     [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_flat(pixel, tile, ctx); },
                     [this](vec2i pixel, tile2i tile, painter& ctx) { draw_figures_on_flat_tiles(pixel, tile, ctx); },
@@ -383,7 +380,8 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
         for (auto &f : futures) {
             f.wait();
         }
-        ImageDraw::merge_block_commands_into_global(block_commands, block_subcommands);
+        ImageDraw::merge_block_commands_into_global(ImageDraw::parallel_block_commands(),
+            ImageDraw::parallel_block_subcommands());
     }
 
     ImageDraw::apply_render_commands(ctx, "draw_flat");
@@ -410,19 +408,16 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
             return static_cast<int>(blk * block_size + (blk < remainder ? blk : remainder));
         };
 
-        ImageDraw::render_command_block block_commands;
-        block_commands.resize(num_blocks);
-        ImageDraw::render_command_block block_subcommands;
-        block_subcommands.resize(num_blocks);
+        ImageDraw::prepare_parallel_render_blocks(num_blocks);
         hvector<std::future<void>, 32> futures;
 
         for (size_t blk = 0; blk < num_blocks; blk++) {
             const int y_start = block_start(blk);
             const int y_end = block_start(blk + 1);
-            futures.push_back(game.mt.submit_task([this, &ctx, y_start, y_end, &block_commands, &block_subcommands, blk]() {
+            futures.push_back(game.mt.submit_task([this, &ctx, y_start, y_end, blk]() {
                 painter worker_ctx = ctx;
-                worker_ctx.command_buffer = &block_commands[blk];
-                worker_ctx.subcommand_buffer = &block_subcommands[blk];
+                worker_ctx.command_buffer = &ImageDraw::parallel_block_commands()[blk];
+                worker_ctx.subcommand_buffer = &ImageDraw::parallel_block_subcommands()[blk];
                 city_view_foreach_valid_map_tile_rows(worker_ctx, y_start, y_end,
                     [this] (vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_nonterrain_height(pixel, tile, ctx); },
                     [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_ornaments_and_animations_height(pixel, tile, ctx); },
@@ -434,7 +429,8 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
         for (auto &f : futures) {
             f.wait();
         }
-        ImageDraw::merge_block_commands_into_global(block_commands, block_subcommands);
+        ImageDraw::merge_block_commands_into_global(ImageDraw::parallel_block_commands(),
+            ImageDraw::parallel_block_subcommands());
     }
 
     // Apply all render commands from phase 4

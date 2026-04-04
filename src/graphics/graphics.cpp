@@ -16,6 +16,8 @@ ImageDraw::render_command_vec g_render_commands;
 ImageDraw::render_command_vec g_render_draw_temp_commands;
 ImageDraw::render_command_vec g_render_subcommands;
 ImageDraw::render_command_vec g_render_debug_commands;
+ImageDraw::render_command_block g_parallel_block_commands;
+ImageDraw::render_command_block g_parallel_block_subcommands;
 
 void graphics_draw_line(vec2i start, vec2i end, color color) {
     g_render.draw_line(start, end, color);
@@ -116,6 +118,31 @@ void ImageDraw::execute_render_command(painter& ctx, const render_command_t& com
             execute_render_command(ctx, *subcommand);
         }
     }
+}
+
+void ImageDraw::prepare_parallel_render_blocks(size_t num_blocks) {
+    g_parallel_block_commands.resize(num_blocks);
+    g_parallel_block_subcommands.resize(num_blocks);
+    for (size_t i = 0; i < num_blocks; ++i) {
+        g_parallel_block_commands[i].clear();
+        g_parallel_block_subcommands[i].clear();
+    }
+}
+
+ImageDraw::render_command_block& ImageDraw::parallel_block_commands() {
+    return g_parallel_block_commands;
+}
+
+ImageDraw::render_command_block& ImageDraw::parallel_block_subcommands() {
+    return g_parallel_block_subcommands;
+}
+
+ImageDraw::render_command_vec& ImageDraw::parallel_block_commands(int blk) {
+    return g_parallel_block_commands[blk];
+}
+
+ImageDraw::render_command_vec& ImageDraw::parallel_block_subcommands(int blk) {
+    return g_parallel_block_subcommands[blk];
 }
 
 void ImageDraw::merge_block_commands_into_global(const render_command_block& block_commands, const render_command_block & block_subcommands) {
