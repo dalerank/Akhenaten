@@ -13,61 +13,70 @@ trade_resource_settings_window {
 
         could_import     : text_center({pos[46, 92], size[px(10), 30], font : FONT_NORMAL_BLACK_ON_LIGHT})
         import_status    : button({
-            onclick_event: "cycle_trade_import"
+            onclick      : resource_settings_cycle_trade_import
             pos[32, 92], size[px(16), 30], align:"left"
             ui {
-                import_dec   : arrowdown({pos[px(16) - 51, 3]})
-                import_inc   : arrowup({pos[px(16) - 28, 3]})
+                import_dec   : arrowdown({pos[px(16) - 51, 3], onclick: resource_settings_amount_import_dec})
+                import_inc   : arrowup({pos[px(16) - 28, 3], onclick: resource_settings_amount_import_inc})
             }
         })
 
         could_export     : text_center({pos[98 + 216, 101], size[px(8), -1], font : FONT_NORMAL_BLACK_ON_LIGHT})
         export_status    : button({pos[px(36)/2, 92], size[px(16), 30], align:"left"
+            onclick: resource_settings_cycle_trade_export
             ui {
-                export_dec   : arrowdown({pos[px(16) - 51, 3]})
-                export_inc   : arrowup({pos[px(16) - 28, 3]})
+                export_dec   : arrowdown({pos[px(16) - 51, 3], onclick: resource_settings_trading_amount_export_dec})
+                export_inc   : arrowup({pos[px(16) - 28, 3], onclick: resource_settings_amount_export_inc})
             }
         })
 
-        toggle_industry  : button({margin:{centerx:-200}, pos:[-1, 130], size:[400, 30], onclick_event: "toggle_industry"})
-        stockpile_industry: button({margin:{centerx:-200}, pos:[-1, 168], size:[400, 50], split:true})
+        toggle_industry  : button({margin{centerx:-200}, pos[-1, 130], size[400, 30], onclick: resource_setting_stoggle_industry})
+        stockpile_industry: button({margin{centerx:-200}, pos[-1, 168], size[400, 50], split:true, onclick: resource_settings_toggle_stockpiled})
 
-        button_close     : close_button({})
-        button_help      : help_button({})
+        button_close     : close_button({onclick: window_go_back})
+        button_help      : help_button({onclick: show_window_by_id("message_game_concept_industry")})
     }
 }
 
-[es=(trade_resource_settings_window, cycle_trade_import)]
-function trade_resource_settings_window_on_cycle_trade_import(ev) {
+function resource_settings_cycle_trade_import(ev) {
     city.resources.cycle_trade_import(trade_resource_settings_window.resource)
 }
 
-[es=(trade_resource_settings_window, toggle_industry)]
-function trade_resource_settings_window_on_toggle_industry(ev) {
+function resource_setting_stoggle_industry(ev) {
     emit event_toggle_industry_mothballed{ resource: trade_resource_settings_window.resource }
+}
+
+function resource_settings_amount_import_dec(ev) {
+    city.resources.change_trading_amount(trade_resource_settings_window.resource, -100)
+}
+
+function resource_settings_amount_import_inc(ev) {
+    city.resources.change_trading_amount(trade_resource_settings_window.resource, 100)
+}
+
+function resource_settings_cycle_trade_export(ev) {
+    city.resources.cycle_trade_export(trade_resource_settings_window.resource)
+}
+
+function resource_settings_trading_amount_export_dec(ev) {
+    city.resources.change_trading_amount(trade_resource_settings_window.resource, -100)
+}
+
+function resource_settings_amount_export_inc(ev) {
+    city.resources.change_trading_amount(trade_resource_settings_window.resource, 100)
+}
+
+function resource_settings_toggle_stockpiled(ev) {
+    city.resources.toggle_stockpiled(trade_resource_settings_window.resource)
 }
 
 [es=(trade_resource_settings_window, init)]
 function trade_resource_settings_window_on_init(window) {
     trade_resource_settings_window.resource = window.resource
 
-    var r = window.resource
+    window.icon.image = window.resource
+    window.title.text = city.resources.get_name(window.resource)
 
-    window.icon.image = r
-    window.title.text = city.resources.get_name(r)
-
-    var stored = city.yards_stored(r)
-    window.production_store.text = String(stored) + " " + __loc(8, 10) + " " + __loc(54, 15)
-
-    window.import_dec.onclick = function() { city.resources.change_trading_amount(r, -100) }
-    window.import_inc.onclick = function() { city.resources.change_trading_amount(r, 100) }
-
-    window.export_status.onclick = function() { city.resources.cycle_trade_export(r) }
-    window.export_dec.onclick = function() { city.resources.change_trading_amount(r, -100) }
-    window.export_inc.onclick = function() { city.resources.change_trading_amount(r, 100) }
-
-    window.stockpile_industry.onclick = function() { city.resources.toggle_stockpiled(r) }
-
-    window.button_help.onclick = function() { ui.window_message_dialog_show("message_game_concept_industry") }
-    window.button_close.onclick = function() { window_go_back() }
+    var stored = city.yards_stored(window.resource)
+    window.production_store.text = fmt("${stored} ${unit} ${stored_in_city}", { stored: stored, unit: __loc(8, 10), stored_in_city: __loc(54, 15)})
 }

@@ -31,8 +31,6 @@
 
 #include <stack>
 
-#pragma optimize("", off)
-
 using namespace ui::opt;
 
 namespace ui {
@@ -1976,7 +1974,7 @@ void ui::egeneric_button::draw(UiFlags gflags) {
 
     xstring onclick_event = event_name(ONCLICK_EVENT);
     if (clickable && !onclick_event.empty()) {
-        btn->onclick([this, onclick_event] {
+        btn->onclick([onclick_event] {
             dispatch_autoconfig_es_event(get_current_widget(), onclick_event, {});
         });
     } else if (clickable && !js_ref(ONCLICK).empty()) {
