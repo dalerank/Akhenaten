@@ -35,6 +35,8 @@ using namespace ui::opt;
 
 namespace ui {
 
+void reset_ui_command_queue();
+
     const xstring element::ONCLICK{"onclick"};
     const xstring element::ONRCLICK{"onrclick"};
     const xstring element::TEXTFN{"textfn"};
@@ -224,12 +226,6 @@ namespace ui {
     image_desc resource_icons;
     image_desc advisor_icons;
 
-    hvector<cmd_t, 256> g_ui_commands;
-
-    void push_cmd(cmd_t&& cmd) {
-        g_ui_commands.push_back(std::move(cmd));
-    }
-
     bool push_widget(widget* w) {
         if (get_current_widget() == w) {
             return false;
@@ -244,138 +240,6 @@ namespace ui {
         }
     }
 
-    void execute_ui_command(painter& ctx, const cmd_t& cmd) {
-        switch (cmd.type) {
-        case cmd_t::image:
-            ctx.img_generic(cmd.image_id, cmd.pos, cmd.mask, cmd.scale, cmd.img_flags);
-            break;
-
-        case cmd_t::fill_rect:
-            ctx.fill_rect(cmd.pos, cmd.size, cmd.clr);
-            break;
-
-        case cmd_t::draw_rect:
-            ctx.draw_rect(cmd.pos, cmd.size, cmd.clr);
-            break;
-
-        case cmd_t::h_line:
-            graphics_draw_horizontal_line(cmd.pos, cmd.box_width, cmd.clr);
-            break;
-
-        case cmd_t::v_line:
-            graphics_draw_vertical_line(cmd.pos, cmd.box_width, cmd.clr);
-            break;
-
-        case cmd_t::panel_outer:
-            outer_panel_draw(cmd.pos, cmd.size.x, cmd.size.y);
-            break;
-
-        case cmd_t::panel_inner:
-            inner_panel_draw(cmd.pos, cmd.size);
-            break;
-
-        case cmd_t::text:
-            if (!!(cmd.flags & UiFlags_LabelMultiline)) {
-                text_draw_multiline(cmd.str.c_str(), cmd.pos, cmd.box_width, cmd.font, 0);
-            } else {
-                lang_text_draw(cmd.str.c_str(), cmd.pos, cmd.font, cmd.box_width);
-            }
-            break;
-
-        case cmd_t::text_centered:
-            text_draw_centered(cmd.str.c_str(), cmd.pos.x, cmd.pos.y, cmd.box_width, cmd.font, cmd.clr);
-            break;
-
-        case cmd_t::text_multiline:
-            text_draw_multiline(cmd.str.c_str(), cmd.pos, cmd.box_width, cmd.font, cmd.clr);
-            break;
-
-        case cmd_t::text_colored:
-            if (cmd.box_width > 0) {
-                text_draw_centered(cmd.str.c_str(), cmd.pos.x, cmd.pos.y, cmd.box_width, cmd.font, cmd.clr);
-            } else if (text_cursor_capture_active()) {
-                text_draw((const uint8_t*)cmd.str.c_str(), cmd.pos.x, cmd.pos.y + 3, cmd.font, cmd.clr);
-            } else {
-                lang_text_draw_colored(cmd.str.c_str(), cmd.pos.x, cmd.pos.y, cmd.font, cmd.clr);
-            }
-            break;
-
-        case cmd_t::text_rich: {
-            rich_text_t rich_text;
-            rich_text.set_fonts(cmd.font, FONT_NORMAL_YELLOW);
-            const bool centered = !!(cmd.flags & UiFlags_AlignCentered);
-            rich_text.draw(cmd.str.c_str(), cmd.pos, cmd.box_width, cmd.size.y, false, centered);
-            break;
-        }
-
-        case cmd_t::clip_set:
-            graphics_set_clip_rectangle(cmd.pos, cmd.size);
-            break;
-
-        case cmd_t::clip_reset:
-            graphics_reset_clip_rectangle();
-            break;
-
-        case cmd_t::button_border:
-            button_border_draw(cmd.pos, cmd.size, cmd.img_flags != 0);
-            break;
-
-        case cmd_t::small_panel:
-            small_panel_draw_colored(cmd.pos, cmd.box_width, cmd.image_id, cmd.mask);
-            break;
-
-        case cmd_t::shade_rect:
-            graphics_shade_rect(cmd.pos, cmd.size, cmd.image_id);
-            break;
-
-        case cmd_t::large_label: {
-            large_label_draw(cmd.pos.x, cmd.pos.y, cmd.box_width, cmd.image_id);
-            const int letter_height = font_definition_for(cmd.font)->line_height;
-            text_draw_centered((uint8_t*)cmd.str.c_str(), cmd.pos.x + 1, cmd.pos.y + (cmd.size.y - letter_height) / 2,
-              cmd.size.x, cmd.font, 0);
-            break;
-        }
-
-        case cmd_t::rich_draw:
-            if (cmd.rt) {
-                cmd.rt->draw(cmd.str.c_str(), cmd.pos, cmd.box_width, cmd.size.y, false);
-                if (!(cmd.flags & UiFlags_NoScroll)) {
-                    cmd.rt->draw_scrollbar(vec2i{-16, 0});
-                }
-            }
-            break;
-
-        case cmd_t::cursor_capture:
-            text_capture_cursor(cmd.pos.x, cmd.pos.y, cmd.box_width);
-            break;
-
-        case cmd_t::cursor_consume:
-            text_cursor_consume_capture();
-            break;
-
-        case cmd_t::cursor_insert: {
-            const vec2i c = cmd.pos + vec2i{text_cursor_x_offset(), text_cursor_y_offset()};
-            graphics_draw_horizontal_line(vec2i{c.x - 3, c.x + 1}, c.y - 3, COLOR_WHITE);
-            graphics_draw_vertical_line(vec2i{c.x - 1, c.y - 3}, c.y + 13, COLOR_WHITE);
-            graphics_draw_horizontal_line(vec2i{c.x - 3, c.x + 1}, c.y + 14, COLOR_WHITE);
-            text_cursor_consume_capture();
-            break;
-        }
-        case cmd_t::cursor_block: {
-            const int w = cmd.box_width > 0 ? cmd.box_width : text_cursor_width();
-            graphics_fill_rect(cmd.pos + vec2i{text_cursor_x_offset(), 14}, vec2i{w, 2}, COLOR_WHITE);
-            text_cursor_consume_capture();
-            break;
-        }
-
-        case cmd_t::saved_texture:
-            graphics_draw_from_texture(cmd.image_id, cmd.pos, cmd.size);
-            break;
-
-        default:
-            break;
-        }
-    }
 } // namespace ui
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_ui_options) {
@@ -514,20 +378,12 @@ void ui::begin_frame() {
     assert(g_state.buttons.size() < 1000);
     // assert(g_state._offset.size() == 0);
     g_state.reset();
-    g_ui_commands.clear();
+    reset_ui_command_queue();
     tooltipctx.set(0, "");
 }
 
 
 void ui::end_frame() {
-}
-
-void ui::flush_commands() {
-    painter ctx = game.painter();
-    for (size_t i = 0; i < g_ui_commands.size(); ++i) {
-        execute_ui_command(ctx, g_ui_commands[i]);
-    }
-    g_ui_commands.clear();
 }
 
 void ui::end_widget() {
@@ -578,8 +434,6 @@ bool ui::handle_mouse(const mouse* m) {
 void ui::clear_active_elements() {
     g_state.buttons.clear();
     g_state.scrollbars.clear();
-    // Underlying windows register scroll lists / inputs during draw; they must not
-    // remain in the hit-test list for the window drawn on top (see window_draw_underlying_window).
     g_state.scrollable_lists.clear();
     g_state.input_boxes.clear();
     stop_active_input();
@@ -621,12 +475,13 @@ generic_button& ui::link(pcstr label, vec2i pos, vec2i size, e_font font, UiFlag
     auto& gbutton = g_state.buttons.back().g_button;
     int focused = is_button_hover(gbutton, offset);
 
-    text_draw_centered((uint8_t*)label, offset.x + pos.x + 1, offset.y + pos.y, size.x,
-      focused ? FONT_NORMAL_YELLOW : font, 0);
+    push(cmd_t::text_centered, Pos{offset + pos}, BoxWidth{size.x}, Font{focused ? FONT_NORMAL_YELLOW : font},
+      Caption{label});
 
     if (!!cb) {
         gbutton.onclick(cb);
     }
+
     return gbutton;
 }
 
@@ -960,7 +815,7 @@ arrow_button& ui::arw_button(vec2i pos, bool down, bool tiny, UiFlags_ flags) {
     const bool darkened = !!(flags & UiFlags_Darkened);
 
     if (darkened) {
-        graphics_shade_rect(pos, vec2i{size, size}, 0x80);
+        push(cmd_t::shade_rect, Pos{offset + pos}, Size{vec2i{size, size}}, ImageId{0x80});
     }
 
     return abutton;
@@ -1040,7 +895,7 @@ const xstring& ui::element::js_ref(const xstring& key) const {
 }
 
 void ui::element::set_event(const xstring& key, const xstring& ref) {
-    _events[key] = ref;    
+    _events[key] = ref;
 }
 
 
@@ -1326,11 +1181,11 @@ void ui::eborder::draw(UiFlags flags) {
     switch (border) {
     default: // fallthrought
     case 0:
-        button_border_draw(offset + pos, size, false);
+        push(cmd_t::button_border, Pos{offset + pos}, Size{size}, ImgFlagsTag{false ? ImgFlag_Alpha : ImgFlag_None});
         break;
 
     case 1:
-        graphics_draw_rect(offset + pos, size, colori);
+        push(cmd_t::draw_rect, Pos{offset + pos}, Size{size}, TextColor{colori});
         break;
     }
 }
@@ -1405,7 +1260,7 @@ void ui::einput::set_value(pcstr utf8) {
 }
 
 void ui::eresource_icon::draw(UiFlags flags) {
-    ui::eimage(resource_icons + res, pos);
+    push(cmd_t::image, Pos{pos}, ImageId{resource_icons.tid() + res});
 }
 
 int image_id_resource_icon(int resource) {
@@ -1584,9 +1439,14 @@ void ui::eimage_button::draw(UiFlags gflags) {
         }
         btn = &ui::img_button({0, 0}, pos, size, offsets, flags);
     } else if (icon_texture) {
-        painter ctx = game.painter();
-        ctx.draw((SDL_Texture*)icon_texture, pos, {0, 0}, size, 0xffffffff, scale, scale, 0, ImgFlag_Alpha);
-        btn = &ui::img_button({0, 0}, pos, size, offsets, UiFlags_None);
+        int icon_draw_flags = ImgFlag_Alpha;
+        if (!!(darkened & UiFlags_Grayscale)) {
+            icon_draw_flags |= ImgFlag_Grayscale;
+        }
+        push(cmd_t::texture_icon, Pos{doffset + pos}, Size{size}, Mask{COLOR_MASK_NONE}, Scale{scale},
+             ImgFlagsTag{(ImgFlag_)icon_draw_flags}, SdlTexture{icon_texture});
+        tsize = size;
+        btn = &ui::img_button({0, 0}, pos, size, offsets, flags);
     }
 
     if (!btn) {
@@ -1596,17 +1456,18 @@ void ui::eimage_button::draw(UiFlags gflags) {
     if (_selected && !selection_border_deferred) {
         switch (border) {
         case 1:
-            button_border_draw(doffset + pos - vec2i{4, 4}, tsize + vec2i{8, 8}, true);
+            push(cmd_t::button_border, Pos{doffset + pos - vec2i{4, 4}}, Size{tsize + vec2i{8, 8}},
+                 ImgFlagsTag{ImgFlag_Alpha});
             break;
 
         case 2:
-            graphics_draw_rect(pos, size, 0xff000000);
+            push(cmd_t::draw_rect, Pos{doffset + pos}, Size{size}, TextColor{0xff000000});
             break;
         }
     }
 
     if (!!(darkened & UiFlags_Darkened)) {
-        graphics_shade_rect(doffset + pos, tsize, 0x80);
+        push(cmd_t::shade_rect, Pos{doffset + pos}, Size{tsize}, ImageId{0x80});
         return;
     }
 
