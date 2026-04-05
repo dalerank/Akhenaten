@@ -128,10 +128,9 @@ void js_pushnumber(js_State *J, double v) {
 void js_State::pushstring(pcstr v) {
     OZZY_PROFILER_FUNCTION();
 
-    int n = strlen(v);
     JCHECKSTACK(1);
     stack[top].type = JS_TMEMSTR;
-    stack[top].u.memstr = jsV_newmemstring(this, v, n);
+    stack[top].u.memstr = js_intern(v);
     ++top;
 }
 
@@ -154,7 +153,7 @@ void js_pushlstring(js_State* J, const js_StringNode v) {
 void js_pushlstring(js_State *J, const char *v, int n) {
     CHECKSTACK(1);
     STACK[TOP].type = JS_TMEMSTR;
-    STACK[TOP].u.memstr = js_intern(v);
+    STACK[TOP].u.memstr = jsV_newmemstring(J, v, n);
     ++TOP;
 }
 
@@ -1041,7 +1040,7 @@ int js_State::delvar(const js_StringNode name) {
                 if (strict) {
                     js_typeerror(this, "'%s' is non-configurable", js_strnode_cstr(name));
                 }
-                
+
                 return 0;
             }
             jsV_delproperty(this, pE->variables, name);
