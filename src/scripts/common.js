@@ -31,15 +31,19 @@ function _eformat(message, locals) {
                     }
                     return String(result);
                 } catch (e) {
+                    __log_warning_native('[format error: ' + e + ' in ${' + expr + '}]');
                     return '[error: ' + e + ' in ${' + expr + '}]';
                 }
             });
         } catch (e) {
+            __log_warning_native('[format error: ' + e + ']');
             message = '[format error: ' + e + ']';
         }
     }
     return message;
 }
+
+fmt = _eformat
 
 function log_info(message, locals) {
     __log_info_native(_eformat(message, locals));

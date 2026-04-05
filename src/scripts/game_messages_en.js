@@ -3,7 +3,7 @@ log_info("akhenaten: messages config started")
 game_messages_en {
     message_potter_history {
         id: 1,
-        
+
         size [30, 28]
         title { text: "Potter" }
         advisor: ADVISOR_TRADE
@@ -14,7 +14,7 @@ game_messages_en {
 
     message_bazaar_history {
         id: 2,
-        
+
         size [30, 28]
         title { text: "Bazaar" }
         content {
@@ -24,7 +24,7 @@ game_messages_en {
 
     message_building_granary {
         id: 3,
-        
+
         size [30, 28]
         title { text: "Granary" }
         content {
@@ -34,7 +34,7 @@ game_messages_en {
 
     message_building_storage_yard {
         id: 4,
-        
+
         size [30, 28]
         title { text: "Storage Yard" }
         content {
@@ -44,7 +44,7 @@ game_messages_en {
 
     message_granary_history_2 {
         id: 5
-        
+
         size [30, 20]
         title { text: "Granary" }
         content {
