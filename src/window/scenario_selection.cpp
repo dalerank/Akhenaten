@@ -8,7 +8,9 @@
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
+#include "graphics/elements/ui.h"
 #include "graphics/image_groups.h"
+#include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -58,6 +60,15 @@ struct window_scenario_selection_t {
 };
 
 window_scenario_selection_t g_window_scenario_selection;
+
+// scrollable_list queues draw commands with ui:: offset; flush runs after the dialog viewport is reset,
+// so positions must be absolute screen coords (dialog origin + list position inside the 640x480 layout).
+static void scenario_scroll_list_draw(scrollable_list* panel) {
+    const vec2i origin = screen_dialog_offset() + panel->ui_params.pos;
+    ui::begin_widget(origin);
+    panel->draw();
+    ui::end_widget();
+}
 
 #define CSEL_X 20
 #define CSEL_Y 261
@@ -420,7 +431,7 @@ static void draw_background(int) {
     }
     graphics_set_to_dialog();
     if (data.dialog != MAP_SELECTION_CAMPAIGN) {
-        data.panel->draw();
+        scenario_scroll_list_draw(data.panel);
         draw_side_panel_info();
     }
     graphics_reset_dialog();
@@ -433,7 +444,7 @@ static void draw_foreground(int) {
     switch (data.dialog) {
     case MAP_SELECTION_CUSTOM:
     case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
-        data.panel->draw();
+        scenario_scroll_list_draw(data.panel);
         if (data.dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST && data.panel->get_selected_entry_idx() != -1) {
             // show scores / goals button
             int i = data.scores_or_goals;
