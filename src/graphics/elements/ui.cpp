@@ -31,6 +31,8 @@
 
 #include <stack>
 
+#pragma optimize("", off)
+
 using namespace ui::opt;
 
 namespace ui {
@@ -1260,7 +1262,8 @@ void ui::einput::set_value(pcstr utf8) {
 }
 
 void ui::eresource_icon::draw(UiFlags flags) {
-    push(cmd_t::image, Pos{pos}, ImageId{resource_icons.tid() + res});
+    const vec2i offset = g_state.offset();
+    push(cmd_t::image, Pos{offset + pos}, ImageId{resource_icons.tid() + res});
 }
 
 int image_id_resource_icon(int resource) {
@@ -1974,8 +1977,7 @@ void ui::egeneric_button::draw(UiFlags gflags) {
     xstring onclick_event = event_name(ONCLICK_EVENT);
     if (clickable && !onclick_event.empty()) {
         btn->onclick([this, onclick_event] {
-            bvariant_map::scoped s;
-            dispatch_autoconfig_es_event(get_current_widget(), onclick_event.c_str(), *s);
+            dispatch_autoconfig_es_event(get_current_widget(), onclick_event, {});
         });
     } else if (clickable && !js_ref(ONCLICK).empty()) {
         btn->onclick([this] { this->js_call(); });

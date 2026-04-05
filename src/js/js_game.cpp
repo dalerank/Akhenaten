@@ -419,6 +419,8 @@ void js_register_entity_systems() {
         return;
     }
 
+    g_config_arch = {J};
+
     js_Property *prop = J->G->head;
     int window_count = 0;
 

@@ -76,6 +76,10 @@ city {
         get_name : __city_resource_name
         id_by_name : __city_resource_id_by_name
         set_produce : __city_resource_set_produce
+        cycle_trade_import : __city_resource_cycle_trade_import
+        cycle_trade_export : __city_resource_cycle_trade_export
+        change_trading_amount : __city_resource_change_trading_amount
+        toggle_stockpiled : __city_resource_toggle_stockpiled
     }
 
     gods {

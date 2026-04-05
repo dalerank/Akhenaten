@@ -41,6 +41,7 @@ import ui_file_dialog_load
 import ui_overlay_menu
 import ui_market_buyer_window
 import ui_widgets
+import ui_resource_settings_window
 import ui_police_station_window
 import ui_message_dialog
 import ui_display_options_window
