@@ -23,6 +23,7 @@
 #include "widget/debug_console.h"
 
 #include "js/js_debugger.h"
+#include "js/js_self_tests.h"
 
 #include <filesystem>
 #include <new>
@@ -764,6 +765,8 @@ void js_reset_vm_state() {
     js_setdebughook(vm.J, [](js_State *J, const char *file, int line, void *) {
         g_mujs_debugger.on_line(J, file, line);
     }, nullptr);
+
+    mujs_run_self_tests(vm.J);
 }
 
 void js_vm_frame_begin() {
