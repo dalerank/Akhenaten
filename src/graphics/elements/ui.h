@@ -97,6 +97,9 @@ namespace ui {
         struct RichTextPtr {
             rich_text_t* value;
         };
+        struct SdlTexture {
+            void* value;
+        };
     } // namespace opt
 
     struct cmd_t {
@@ -126,6 +129,7 @@ namespace ui {
             cursor_capture,
             cursor_consume,
             saved_texture,
+            texture_icon,
         };
 
         e_type type = none;
@@ -141,6 +145,7 @@ namespace ui {
         cstring str{frameAlloc()};
         int box_width = 0;
         rich_text_t* rt = nullptr;
+        void* sdl_texture = nullptr;
 
         cmd_t() = default;
         explicit cmd_t(e_type t) : type(t) {}
@@ -168,6 +173,7 @@ namespace ui {
         void set_one(const ui::opt::Caption& x) { str = x.value; }
         void set_one(const ui::opt::BoxWidth& x) { box_width = x.value; }
         void set_one(const ui::opt::RichTextPtr& x) { rt = x.value; }
+        void set_one(const ui::opt::SdlTexture& x) { sdl_texture = x.value; }
     };
 
     struct img_button_offsets {
@@ -580,7 +586,7 @@ namespace ui {
 
     struct eborder : public element {
         int border;
-        int colori;
+        color colori;
 
         virtual void load(archive elem, element* parent, items& elems) override;
         virtual void draw(UiFlags flags) override;
