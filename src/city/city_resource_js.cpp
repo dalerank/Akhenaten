@@ -89,3 +89,27 @@ bool __city_resource_can_export(int resource, bool check) {
     return h.can_export(check);
 }
 ANK_FUNCTION_2(__city_resource_can_export)
+
+void __city_resource_cycle_trade_import(int resource) {
+    city_resource_handle h{ (e_resource)resource };
+    h.cycle_trade_import();
+}
+ANK_FUNCTION_1(__city_resource_cycle_trade_import)
+
+void __city_resource_cycle_trade_export(int resource) {
+    city_resource_handle h{ (e_resource)resource };
+    h.cycle_trade_export();
+}
+ANK_FUNCTION_1(__city_resource_cycle_trade_export)
+
+void __city_resource_change_trading_amount(int resource, int delta) {
+    city_resource_handle h{ (e_resource)resource };
+    h.change_trading_amount(delta);
+}
+ANK_FUNCTION_2(__city_resource_change_trading_amount)
+
+void __city_resource_toggle_stockpiled(int resource) {
+    city_resource_handle h{ (e_resource)resource };
+    h.toggle_stockpiled();
+}
+ANK_FUNCTION_1(__city_resource_toggle_stockpiled)

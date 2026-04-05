@@ -8,14 +8,22 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/elements/ui.h"
+#include "graphics/elements/ui_js.h"
 #include "graphics/image_groups.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
+#include "js/js_struct.h"
 #include "scenario/scenario.h"
 #include "window/message_dialog.h"
 #include "game/game.h"
+
+struct trade_resource_settings_window_init {
+    vec2i pos;
+    int resource;
+};
+ANK_REGISTER_STRUCT_WRITER(trade_resource_settings_window_init, pos, resource);
 
 struct trade_resource_settings_window : autoconfig_window_t<trade_resource_settings_window> {
     city_resource_handle resource;
@@ -36,28 +44,11 @@ struct trade_resource_settings_window : autoconfig_window_t<trade_resource_setti
 trade_resource_settings_window trade_resource_settings_w;
 
 void trade_resource_settings_window::init() {
-    ui["icon"].image(resource.resource);
-    ui["title"] = ui::resource_name(resource.resource);
-
-    ui["import_status"].onclick([this] { resource.cycle_trade_import(); });
-    ui["import_dec"].onclick([this] { resource.change_trading_amount(-100); });
-    ui["import_inc"].onclick([this] { resource.change_trading_amount(100); });
-
-    ui["export_status"].onclick([this] { resource.cycle_trade_export(); });
-    ui["export_dec"].onclick([this] { resource.change_trading_amount(-100); });
-    ui["export_inc"].onclick([this] { resource.change_trading_amount(100); });
-
-    ui["toggle_industry"].onclick([this] { 
-        events::emit(event_toggle_industry_mothballed{ resource.resource });
-    });
-
-    ui["stockpile_industry"].onclick([this] { resource.toggle_stockpiled(); });
-
-    ui["button_help"].onclick([] { window_message_dialog_show("message_game_concept_industry", -1, 0); });
-    ui["button_close"].onclick([] { window_go_back(); });
-
-    const int stored = resource.yards_stored();
-    ui["production_store"].text_var("%u %s %s", stored, ui::str(8, 10), ui::str(54, 15));
+    ui.begin_widget(pos);
+    ui.event(trade_resource_settings_window_init{ pos, (int)resource.resource }, get_section(), "init");
+    window_message_setup_help_id(help_id);
+    _is_inited = true;
+    ui.end_widget();
 }
 
 int trade_resource_settings_window::draw_background(UiFlags flags) {
@@ -186,9 +177,9 @@ void trade_resource_settings_window::draw_foreground(UiFlags flags) {
 }
 
 int trade_resource_settings_window::ui_handle_mouse(const mouse* m) {
-    ui::begin_widget(ui.pos);
+    ui.begin_widget(ui.pos);
     bool button_id = ui::handle_mouse(m);
-    ui::end_widget();
+    ui.end_widget();
 
     const hotkeys *h = hotkey_state();
     if (input_go_back_requested(m, h)) {

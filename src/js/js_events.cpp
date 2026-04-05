@@ -12,6 +12,7 @@
 #include "city/victory.h"
 #include "city/city_animals.h"
 #include "city/city_population.h"
+#include "city/city_resource.h"
 #include "building/building_palace.h"
 #include "content/mods.h"
 #include "game/game.h"
@@ -52,6 +53,7 @@ ANK_SCRIPT_EVENT(event_building_place_checks, bid)
 ANK_SCRIPT_EVENT(event_finance_change_wages, value)
 ANK_SCRIPT_EVENT(event_finance_request, type, deben)
 ANK_SCRIPT_EVENT(event_mods_info_updated, count)
+ANK_SCRIPT_EVENT(event_toggle_industry_mothballed, resource)
 
 int js_emit_script_event(pcstr event_name, const bvariant_map &args) {
     auto it = g_script_emit_handlers.find(event_name);

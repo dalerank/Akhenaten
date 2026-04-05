@@ -118,40 +118,6 @@ info_window_vacant_lot = {
     }
 }
 
-trade_resource_settings_window = {
-    pos : [(sw(0) - px(36)) / 2, (sh(0) - px(15)) / 2],
-    ui : {
-        background       : outer_panel({size: [36, 15]}),
-        icon             : resource_icon({pos: [16, 18] }),
-        title            : text_center({pos: [0, 16], size: [px(36), -1], font : FONT_LARGE_BLACK_ON_LIGHT}),
-
-        production_state : text_center({pos: [48, 42], size: [px(8), -1], font : FONT_NORMAL_BLACK_ON_LIGHT}),
-        production_store : text_center({pos: [48, 62], size: [px(8), -1], font : FONT_NORMAL_BLACK_ON_LIGHT}),
-
-        could_import     : text_center({pos: [46, 92], size: [px(10), 30], font : FONT_NORMAL_BLACK_ON_LIGHT}),
-        import_status    : button({pos:[32, 92], size:[px(16), 30], align:"left",
-            ui : {
-                import_dec   : arrowdown({pos:[px(16) - 51, 3]}),
-                import_inc   : arrowup({pos:[px(16) - 28, 3]}),
-            }
-        }),
-
-        could_export     : text_center({pos: [98 + 216, 101], size: [px(8), -1], font : FONT_NORMAL_BLACK_ON_LIGHT}),
-        export_status    : button({pos:[px(36)/2, 92], size:[px(16), 30], align:"left",
-            ui : {
-                export_dec   : arrowdown({pos:[px(16) - 51, 3]}),
-                export_inc   : arrowup({pos:[px(16) - 28, 3]}),
-            }
-        }),
-
-        toggle_industry  : button({margin:{centerx:-200}, pos:[-1, 130], size:[400, 30]}),
-        stockpile_industry: button({margin:{centerx:-200}, pos:[-1, 168], size:[400, 50], split:true}),
-
-        button_close     : close_button({}),
-        button_help      : help_button({}),
-    }
-}
-
 empty_info_window = {
     ui : {
         //background : { type : "outer_panel",  pos: [48, 48], size: [34, 20]},
