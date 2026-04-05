@@ -3,6 +3,8 @@ log_info("akhenaten: records window started")
 [es=window]
 records_window {
     pos [(sw(0) - px(40))/2, (sh(0) - px(30))/2]
+    allow_rmb_goback : true
+
     ui {
         background_image : background({pack:PACK_UNLOADED, id:9})
         background       : outer_panel({size[40, 30]})
