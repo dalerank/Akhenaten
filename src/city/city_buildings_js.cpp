@@ -19,6 +19,11 @@ int __city_count_industry_active(int resource) {
 }
 ANK_FUNCTION_1(__city_count_industry_active)
 
+int __city_count_industry_total(int resource) {
+    return g_city.buildings.count_industry_total((e_resource)resource);
+}
+ANK_FUNCTION_1(__city_count_industry_total)
+
 void __city_show_warning(pcstr id) {
     events::emit(event_construction_warning{ id });
 }

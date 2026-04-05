@@ -705,14 +705,15 @@ void *js_alloc_wrapper(void *actx, void *ptr, int size) {
 
 void *js_frame_alloc_wrapper(void *actx, void *ptr, int size) {
     if (size == 0) {
-        // Free all blocks in arena (arena-style deallocation)
-        // monotonic_buffer_resource::release() releases all allocated memory
-        vm.frame_alloc_ctx.release();
+        /* Monotonic arena: individual frees are no-ops; whole buffer is reset in
+         * js_vm_frame_begin / js_reset_vm_state. Do not allocate here — that would
+         * waste arena space on every js_frame_free (e.g. each jsV_newmemstring). */
+        (void)actx;
+        (void)ptr;
         return nullptr;
     }
 
     if (!ptr) {
-        // New allocation using monotonic_buffer_resource
         size_t alloc_size = static_cast<size_t>(size);
         return vm.frame_alloc_ctx.allocate(alloc_size, alignof(std::max_align_t));
     }

@@ -29,8 +29,8 @@ struct trade_resource_settings_window : autoconfig_window_t<trade_resource_setti
     city_resource_handle resource;
 
     virtual int draw_background(UiFlags flags) override;
-    virtual void draw_foreground(UiFlags flags) override;
     virtual int handle_mouse(const mouse *m) override { return 0; }
+    virtual void draw_foreground(UiFlags flags) override {}
     virtual int get_tooltip_text() override { return 0; }
     virtual int ui_handle_mouse(const mouse *m) override;
     virtual void init() override;
@@ -54,37 +54,7 @@ void trade_resource_settings_window::init() {
 int trade_resource_settings_window::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
 
-    window_draw_underlying_window(UiFlags_Readonly);
-
-    bstring128 production_state;
-    if (resource.can_produce()) {
-        int total_buildings = resource.industry_total();
-        int active_buildings = resource.industry_active();
-        if (resource.industry_total() <= 0) {
-            production_state = ui::str(54, 7);
-        } else if (resource.is_mothballed()) {
-            production_state.printf("%u %s", total_buildings, ui::str(54, 10 + (total_buildings > 1)));
-        } else if (total_buildings == active_buildings) {
-            // not mothballed, all working
-            production_state.printf("%u %s", total_buildings, ui::str(54, 8 + (total_buildings > 1)));
-        } else {
-            // not mothballed, some working
-            int not_works = total_buildings - active_buildings;
-            production_state.printf("%u %s, %u %s", active_buildings, ui::str(54, 12), not_works, ui::str(54, 13 + (not_works > 0)));
-        }
-    } else {
-        // we cannot produce this good
-        production_state = ui::str(54, 25);
-    }
-
-    ui["production_state"] = production_state;
-
-    return 0;
-}
-
-void trade_resource_settings_window::draw_foreground(UiFlags flags) {
     ui.begin_widget(ui.pos);
-    ui.draw();
 
     city_resource_handle hresource{ resource };
     bool can_import = hresource.can_import(true);
@@ -174,6 +144,8 @@ void trade_resource_settings_window::draw_foreground(UiFlags flags) {
     ui["stockpile_industry"] = stockpiled_str;
 
     ui.end_widget();
+
+    return 0;
 }
 
 int trade_resource_settings_window::ui_handle_mouse(const mouse* m) {
@@ -192,8 +164,8 @@ int trade_resource_settings_window::ui_handle_mouse(const mouse* m) {
 void window_resource_settings_show(e_resource resource) {
     static window_type window = {
         "window_resource_settings",
-        [] (int) { trade_resource_settings_w.draw_background(0); },
-        [] (int) { trade_resource_settings_w.draw_foreground(0); },
+        [] (int flags) { trade_resource_settings_w.draw_background(flags); },
+        [] (int flags) { trade_resource_settings_w.ui_draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { trade_resource_settings_w.ui_handle_mouse(m); }
     };
 

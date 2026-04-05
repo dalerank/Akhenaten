@@ -2,6 +2,7 @@ log_info("akhenaten: ui resource settings window started")
 
 trade_resource_settings_window {
     resource : null
+    draw_underlying: true
     pos [(sw(0) - px(36)) / 2, (sh(0) - px(15)) / 2]
     ui {
         background       : outer_panel({size [36, 15]})
@@ -70,9 +71,29 @@ function resource_settings_toggle_stockpiled(ev) {
     city.resources.toggle_stockpiled(trade_resource_settings_window.resource)
 }
 
+function resource_settings_production_state_text(resource_id) {
+    if (!city.resources.can_produce(resource_id)) {
+        return __loc(54, 25)
+    }
+    var total = city.count_total_industry(resource_id)
+    var active = city.count_active_industry(resource_id)
+    if (total <= 0) {
+        return __loc(54, 7)
+    }
+    if (__city_resource_is_mothballed(resource_id)) {
+        return "" + total + " " + __loc(54, 10 + (total > 1 ? 1 : 0))
+    }
+    if (total === active) {
+        return "" + total + " " + __loc(54, 8 + (total > 1 ? 1 : 0))
+    }
+    var not_works = total - active
+    return "" + active + " " + __loc(54, 12) + ", " + not_works + " " + __loc(54, 13 + (not_works > 0 ? 1 : 0))
+}
+
 [es=(trade_resource_settings_window, init)]
 function trade_resource_settings_window_on_init(window) {
     trade_resource_settings_window.resource = window.resource
+    window.production_state.text = resource_settings_production_state_text(trade_resource_settings_window.resource)
 
     window.icon.image = window.resource
     window.title.text = city.resources.get_name(window.resource)
