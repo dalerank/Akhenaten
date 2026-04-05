@@ -100,6 +100,7 @@ city {
     count_active_buildings : __city_count_active_buildings
     count_total_buildings : __city_count_total_buildings
     count_active_industry : __city_count_industry_active
+    count_total_industry : __city_count_industry_total
     set_advisor_available : __city_set_advisor_available
     rank_title : __city_rank_title
     rank_salary : __city_rank_salary
@@ -121,6 +122,7 @@ function city_resource_view(resource_id) {
         @trade_status { get: function() { return __city_resource_trade_status(resource_id) } }
         @yards_stored { get: function() { return __city_yards_stored(resource_id) } }
         @count_active_industry { get: function() { return __city_count_industry_active(resource_id) } }
+        @count_total_industry { get: function() { return __city_count_industry_total(resource_id) } }
         @mothballed { get: function() { return __city_resource_is_mothballed(resource_id) } }
         @is_stockpiled { get: function() { return __city_resource_is_stockpiled(resource_id) } }
         @price_buy { get: function() { return __trade_price_buy(resource_id) } }
