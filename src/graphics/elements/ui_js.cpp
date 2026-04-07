@@ -15,7 +15,6 @@
 #include "window/message_dialog_new.h"
 #include "window/window_advisors.h"
 #include "window/window_labor_priority.h"
-#include "window/resource_settings.h"
 #include "window/trade_opened.h"
 #include "window/autoconfig_window.h"
 #include "window/window_empire.h"
@@ -161,11 +160,6 @@ void __ui_element_max_value(pcstr id, int v) {
     (*w)[id].max_value(v);
 }
 ANK_FUNCTION_2(__ui_element_max_value)
-
-void __window_resource_settings_show(int resource) {
-    window_resource_settings_show((e_resource)resource);
-}
-ANK_FUNCTION_1(__window_resource_settings_show)
 
 int __trade_price_buy(int resource) {
     return trade_price_buy((e_resource)resource);

@@ -1,8 +1,11 @@
 log_info("akhenaten: ui resource settings window started")
 
+[es=window]
 trade_resource_settings_window {
     resource : null
     draw_underlying: true
+    allow_rmb_goback: true
+
     pos [(sw(0) - px(36)) / 2, (sh(0) - px(15)) / 2]
     ui {
         background       : outer_panel({size [36, 15]})
@@ -37,6 +40,11 @@ trade_resource_settings_window {
         button_close     : close_button({onclick: window_go_back})
         button_help      : help_button({onclick: show_window_by_id("message_game_concept_industry")})
     }
+}
+
+function show_trade_resource_settings_window(resource) {
+    trade_resource_settings_window.resource = resource
+    emit event_show_window{ id:"trade_resource_settings_window" }
 }
 
 function resource_settings_cycle_trade_import(ev) {
@@ -92,13 +100,16 @@ function resource_settings_production_state_text(resource_id) {
 
 [es=(trade_resource_settings_window, init)]
 function trade_resource_settings_window_on_init(window) {
-    trade_resource_settings_window.resource = window.resource
-    window.production_state.text = resource_settings_production_state_text(trade_resource_settings_window.resource)
+    if (window.resource !== undefined && window.resource !== null) {
+        trade_resource_settings_window.resource = window.resource
+    }
+    var rid = trade_resource_settings_window.resource
+    window.production_state.text = resource_settings_production_state_text(rid)
 
-    window.icon.image = window.resource
-    window.title.text = city.resources.get_name(window.resource)
+    window.icon.image = rid
+    window.title.text = city.resources.get_name(rid)
 
-    var stored = city.yards_stored(window.resource)
+    var stored = city.yards_stored(rid)
     window.production_store.text = fmt("${stored} ${unit} ${stored_in_city}", { stored: stored, unit: __loc(8, 10), stored_in_city: __loc(54, 15)})
 }
 
@@ -108,6 +119,7 @@ function trade_resource_settings_window_draw_background(window) {
     if (rid === null || rid === undefined) {
         return
     }
+
     var res = city_resource_view(rid)
     var can_import = res.can_import
     var can_export = res.can_export

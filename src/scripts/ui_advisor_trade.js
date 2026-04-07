@@ -8,7 +8,7 @@ function advisor_trade_list_on_click_item(p) {
     if (res === RESOURCE_NONE) {
         return
     }
-    __window_resource_settings_show(res)
+    show_trade_resource_settings_window(res)
 }
 
 function advisor_trade_render_row(res, px, py) {
