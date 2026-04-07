@@ -705,9 +705,6 @@ void *js_alloc_wrapper(void *actx, void *ptr, int size) {
 
 void *js_frame_alloc_wrapper(void *actx, void *ptr, int size) {
     if (size == 0) {
-        /* Monotonic arena: individual frees are no-ops; whole buffer is reset in
-         * js_vm_frame_begin / js_reset_vm_state. Do not allocate here — that would
-         * waste arena space on every js_frame_free (e.g. each jsV_newmemstring). */
         (void)actx;
         (void)ptr;
         return nullptr;

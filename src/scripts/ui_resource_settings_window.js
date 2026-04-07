@@ -101,3 +101,77 @@ function trade_resource_settings_window_on_init(window) {
     var stored = city.yards_stored(window.resource)
     window.production_store.text = fmt("${stored} ${unit} ${stored_in_city}", { stored: stored, unit: __loc(8, 10), stored_in_city: __loc(54, 15)})
 }
+
+[es=(trade_resource_settings_window, draw_background)]
+function trade_resource_settings_window_draw_background(window) {
+    var rid = trade_resource_settings_window.resource
+    if (rid === null || rid === undefined) {
+        return
+    }
+    var res = city_resource_view(rid)
+    var can_import = res.can_import
+    var can_export = res.can_export
+    var could_import = res.could_import
+    var trade_status = res.trade_status
+    var trading_amount = 0
+    if (trade_status === TRADE_STATUS_EXPORT || trade_status === TRADE_STATUS_IMPORT) {
+        trading_amount = res.stack_proper_quantity(res.trading_amount)
+    }
+
+    window.import_dec.enabled = false
+    window.import_inc.enabled = false
+    window.could_import.enabled = false
+    window.import_status.enabled = false
+    if (!can_import) {
+        window.could_import.text = could_import ? __loc(54, 34) : __loc(54, 41)
+        window.could_import.enabled = true
+    } else {
+        window.import_status.enabled = true
+        switch (trade_status) {
+        default:
+            window.import_status.text = __loc(54, 39)
+            break
+        case TRADE_STATUS_IMPORT_AS_NEEDED:
+            window.import_status.text = __loc(54, 43)
+            break
+        case TRADE_STATUS_IMPORT:
+            window.import_status.text = __loc(54, 19) + " " + trading_amount
+            window.import_dec.enabled = true
+            window.import_inc.enabled = true
+            break
+        }
+    }
+
+    window.could_export.enabled = false
+    window.export_dec.enabled = false
+    window.export_inc.enabled = false
+    window.export_status.enabled = false
+    if (!can_export) {
+        window.could_export.text = could_import ? __loc(54, 35) : __loc(54, 42)
+        window.could_export.enabled = true
+    } else {
+        window.export_status.enabled = true
+        switch (trade_status) {
+        default:
+            window.export_status.text = __loc(54, 40)
+            break
+        case TRADE_STATUS_EXPORT_SURPLUS:
+            window.export_status.text = __loc(54, 44)
+            break
+        case TRADE_STATUS_EXPORT:
+            window.export_status.text = __loc(54, 20) + " " + trading_amount
+            window.export_dec.enabled = true
+            window.export_inc.enabled = true
+            break
+        }
+    }
+
+    window.toggle_industry.enabled = (res.count_total_industry > 0)
+    window.toggle_industry.text = res.mothballed ? __loc(54, 17) : __loc(54, 16)
+
+    if (res.is_stockpiled) {
+        window.stockpile_industry.text = __loc(54, 26) + "\n" + __loc(54, 27)
+    } else {
+        window.stockpile_industry.text = __loc(54, 28) + "\n" + __loc(54, 29)
+    }
+}

@@ -1,23 +1,13 @@
 #include "resource_settings.h"
 
-#include "city/city_resource.h"
-#include "city/city.h"
-#include "core/calc.h"
 #include "city/city_resource_handle.h"
-#include "empire/empire.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
 #include "graphics/elements/ui.h"
-#include "graphics/elements/ui_js.h"
-#include "graphics/image_groups.h"
-#include "graphics/screen.h"
-#include "graphics/text.h"
 #include "graphics/window.h"
-#include "input/input.h"
+#include "js/js_game.h"
 #include "js/js_struct.h"
-#include "scenario/scenario.h"
+#include "graphics/elements/ui_js.h"
+#include "window/autoconfig_window.h"
 #include "window/message_dialog.h"
-#include "game/game.h"
 
 struct trade_resource_settings_window_init {
     vec2i pos;
@@ -28,11 +18,9 @@ ANK_REGISTER_STRUCT_WRITER(trade_resource_settings_window_init, pos, resource);
 struct trade_resource_settings_window : autoconfig_window_t<trade_resource_settings_window> {
     city_resource_handle resource;
 
-    virtual int draw_background(UiFlags flags) override;
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual void draw_foreground(UiFlags flags) override {}
     virtual int get_tooltip_text() override { return 0; }
-    virtual int ui_handle_mouse(const mouse *m) override;
     virtual void init() override;
 
     void init(e_resource r) {
@@ -49,116 +37,6 @@ void trade_resource_settings_window::init() {
     window_message_setup_help_id(help_id);
     _is_inited = true;
     ui.end_widget();
-}
-
-int trade_resource_settings_window::draw_background(UiFlags flags) {
-    autoconfig_window::draw_background(flags);
-
-    ui.begin_widget(ui.pos);
-
-    city_resource_handle hresource{ resource };
-    bool can_import = hresource.can_import(true);
-    bool can_export = hresource.can_export(true);
-    bool could_import = hresource.can_import(false);
-    bool could_export = hresource.can_export(false);
-
-    int trade_status = hresource.trade_status();
-    int trading_amount = 0;
-    if (trade_status == TRADE_STATUS_EXPORT || trade_status == TRADE_STATUS_IMPORT) {
-        trading_amount = resource.stack_proper_quantity(hresource.trading_amount());
-    }
-
-    // import
-    ui["import_dec"].enabled = false;
-    ui["import_inc"].enabled = false;
-    ui["could_import"].enabled = false;
-    ui["import_status"].enabled = false;
-    if (!can_import) {
-        pcstr could_import_str = could_import
-                                        ? ui::str(54, 34)  // open trade route to import
-                                        : ui::str(54, 41); // no sellers
-        ui["could_import"] = could_import_str;
-        ui["could_import"].enabled = true;
-    } else {
-        bstring256 text;
-        ui["import_status"].enabled = true;
-        switch (trade_status) {
-        default:
-            ui["import_status"] = ui::str(54, 39);
-            break;
-
-        case TRADE_STATUS_IMPORT_AS_NEEDED:
-            ui["import_status"] = ui::str(54, 43);
-            break;
-
-        case TRADE_STATUS_IMPORT:
-            text.printf("%s %u", ui::str(54, 19), trading_amount);
-            ui["import_status"] = text;
-            ui["import_dec"].enabled = true;
-            ui["import_inc"].enabled = true;
-            break;
-        }
-    }
-
-    // export
-    ui["could_export"].enabled = false;
-    ui["export_dec"].enabled = false;
-    ui["export_inc"].enabled = false;
-    ui["export_status"].enabled = false;
-    if (!can_export) {
-        pcstr could_export_str = could_import
-                                    ? ui::str(54, 35)  // open trade route to export
-                                    : ui::str(54, 42); // no sellers
-        ui["could_export"] = could_export_str;
-        ui["could_export"].enabled = true;
-    } else {
-        bstring256 text;
-        ui["export_status"].enabled = true;
-        switch (trade_status) {
-        default:
-            ui["export_status"] = ui::str(54, 40);
-            break;
-
-        case TRADE_STATUS_EXPORT_SURPLUS:
-            ui["export_status"] = ui::str(54, 44);
-            break;
-
-        case TRADE_STATUS_EXPORT:
-            text.printf("%s %u", ui::str(54, 20), trading_amount);
-            ui["export_status"] = text;
-            ui["export_dec"].enabled = true;
-            ui["export_inc"].enabled = true;
-            break;
-        }
-    }
-
-    ui["toggle_industry"].enabled = (hresource.industry_total() > 0);
-    ui["toggle_industry"] = hresource.is_mothballed() ? ui::str(54, 17) : ui::str(54, 16);
-
-    bstring1024 stockpiled_str;
-    if (hresource.is_stockpiled()) {
-        stockpiled_str.printf("%s\n%s", ui::str(54, 26), ui::str(54, 27));
-    } else {
-        stockpiled_str.printf("%s\n%s", ui::str(54, 28), ui::str(54, 29));
-    }
-    ui["stockpile_industry"] = stockpiled_str;
-
-    ui.end_widget();
-
-    return 0;
-}
-
-int trade_resource_settings_window::ui_handle_mouse(const mouse* m) {
-    ui.begin_widget(ui.pos);
-    bool button_id = ui::handle_mouse(m);
-    ui.end_widget();
-
-    const hotkeys *h = hotkey_state();
-    if (input_go_back_requested(m, h)) {
-        window_go_back();
-    }
-
-    return button_id;
 }
 
 void window_resource_settings_show(e_resource resource) {
