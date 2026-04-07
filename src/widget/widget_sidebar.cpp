@@ -227,8 +227,22 @@ void ui::sidebar_window_collapsed_t::ui_draw_foreground(UiFlags flags) {
 
     ui.pos.x = x_offset;
 
-    ui.begin_widget(ui.pos);
-    ui.draw();
+    {
+        OZZY_PROFILER_SECTION(_, "sidebar_window_draw")
+        ui.begin_widget(pos);
+        ui.event(sidebar_window_draw{ pos, sidebar_window_expanded.opened_menu });
+        ui.end_widget();
+    }
+
+    if (!window_build_menu_selected()) {
+        sidebar_window_expanded.opened_menu = 0;
+    }
+
+    const bool is_disabled = !(g_window_manager.window_is("window_city") || g_window_manager.window_is("window_build_menu"));
+    const UiFlags wflags = is_disabled ? UiFlags_Darkened : UiFlags_None;
+
+    ui.begin_widget(pos);
+    ui.draw(wflags);
     ui.end_widget();
 
     int relief_y_offset = SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT;
@@ -271,14 +285,24 @@ void widget_sidebar_city_draw_foreground() {
     if (!collapsed) {
         sidebar_window_expanded.ui_draw_foreground(UiFlags_None);
     }
-    
-    // extra bar spacing on the right over all sidebar
+
+    // extra bar spacing on the right over all sidebar (match expanded vs collapsed art/offset)
     int sw = screen_width();
-    int s_num = ceil((float)(screen_height() - sidebar_window_expanded.extra_block_size.y) / (float)sidebar_window_expanded.extra_block_size.y) + 1;
-    for (int i = s_num; i > 0; --i) {
-        ui::eimage(sidebar_window_expanded.extra_block, { sw + sidebar_window_expanded.extra_block_x, i * sidebar_window_expanded.extra_block_size.y - 32 });
+    if (collapsed) {
+        const auto& eb = sidebar_window_collapsed;
+        int s_num = ceil((float)(screen_height() - eb.extra_block_size.y) / (float)eb.extra_block_size.y) + 1;
+        for (int i = s_num; i > 0; --i) {
+            ui::eimage(eb.extra_block, { sw + eb.extra_block_x, i * eb.extra_block_size.y - 32 });
+        }
+        ui::eimage(eb.extra_block, { sw + eb.extra_block_x, 0 });
+    } else {
+        const auto& eb = sidebar_window_expanded;
+        int s_num = ceil((float)(screen_height() - eb.extra_block_size.y) / (float)eb.extra_block_size.y) + 1;
+        for (int i = s_num; i > 0; --i) {
+            ui::eimage(eb.extra_block, { sw + eb.extra_block_x, i * eb.extra_block_size.y - 32 });
+        }
+        ui::eimage(eb.extra_block, { sw + eb.extra_block_x, 0 });
     }
-    ui::eimage(sidebar_window_expanded.extra_block, { sw + sidebar_window_expanded.extra_block_x, 0 });
 
     if (collapsed) {
         sidebar_window_collapsed.ui_draw_foreground(UiFlags_None);
