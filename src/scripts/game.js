@@ -20,6 +20,7 @@ game {
     @session_last_loaded_mission { get: __game_session_last_loaded_mission }
     @dynasty_name { get: __game_get_player_name, set: __game_set_player_name }
     @pending_load_type { }
+    @pending_save_type { }
 
     screen {
         @w { get: __game_screen_width }
@@ -40,8 +41,10 @@ game {
 
     file_exists: __game_file_exists
     load_savegame: __game_load_savegame
+    write_savegame: __game_write_savegame
     get_last_loaded_file: __game_get_last_loaded_file
     editor_load_scenario: __game_editor_load_scenario
+    editor_write_scenario: __game_editor_write_scenario
 }
 
 scenario {
