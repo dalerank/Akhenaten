@@ -187,7 +187,7 @@ city.get_battalion_by_index = function(index) {
 city.get_granary = function(building_id) {
     return {
         id: building_id
-        @tile { get: function() { return __building_tile(this.id) } }
+        @tile { get: __building_tile }
         total_stored: function() { return __granary_get_total_stored(this.id) }
         amount: function(resource) { return __granary_get_amount(this.id, resource) }
         is_accepting: function(resource) { return __granary_is_accepting(this.id, resource) }
@@ -231,8 +231,8 @@ city.get_house = function(building_id) {
         __property_getter: function(property) { return __house_get_property(this.id, property) }
 
         id: building_id
-        @tile { get: function() { return __building_tile(this.id) } }
-        @meta_text_id { get: function() { return __building_meta_text_id(this.id) } }
+        @tile { get: __building_tile }
+        @meta_text_id { get: __building_meta_text_id }
         @population { }
         @tax_coverage { }
         @tax_income_or_storage { }
@@ -276,8 +276,8 @@ city.get_bazaar = function(building_id) {
     var building = city.get_building(building_id)
     return {
         id: building_id
-        @meta_text_id { get: function() { return __building_meta_text_id(this.id) } }
-        @tile { get: function() { return __building_tile(this.id) } }
+        @meta_text_id { get: __building_meta_text_id }
+        @tile { get: __building_tile }
 
         resource_amount: function(resource_type) { return __bazaar_resource_amount(this.id, resource_type) }
         idx_amount: function(index) { return __bazaar_idx_amount(this.id, index) }

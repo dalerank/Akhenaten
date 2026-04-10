@@ -31,6 +31,6 @@ function building_architect_post_spawn_figure(ev) {
 [es=(building_architect_post, update_graphic)]
 function building_architect_post_update_graphic(ev) {
     var building = city.get_building(ev.bid)
-    var animkey = building.can_play_animation() ? "work" : "none"
+    var animkey = building.can_play_animation ? "work" : "none"
     building.set_animation(animkey)
 }
