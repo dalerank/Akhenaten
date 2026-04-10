@@ -90,7 +90,7 @@ bazaar_orders_window {
     }
 }
 
-[es=bazaar_info_window_init]
+[es=(bazaar_info_window, init)]
 function bazaar_info_window_init(window) {
     var bazaar = city.get_bazaar(window.bid)
     var meta_text_id = bazaar.meta_text_id
@@ -109,7 +109,7 @@ function bazaar_info_window_init(window) {
     }
 }
 
-[es=bazaar_info_window_init]
+[es=(bazaar_info_window, init)]
 function bazaar_info_window_init_warning_text(window) {
     var bazaar = city.get_bazaar(window.bid)
     var meta_text_id = bazaar.meta_text_id
@@ -135,7 +135,7 @@ function bazaar_info_window_init_warning_text(window) {
     window.warning_text.text = warning_text
 }
 
-[es=bazaar_info_window_init]
+[es=(bazaar_info_window, init)]
 function bazaar_info_window_draw_foods(window) {
     var bazaar = city.get_bazaar(window.bid)
 
@@ -152,7 +152,7 @@ function bazaar_info_window_draw_foods(window) {
     draw_food(bazaar, 3, window.food3_icon, window.food3_text)
 }
 
-[es=bazaar_info_window_init]
+[es=(bazaar_info_window, init)]
 function bazaar_info_window_draw_goods(window) {
     var bazaar = city.get_bazaar(window.bid)
 
