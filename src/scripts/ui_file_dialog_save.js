@@ -25,32 +25,27 @@ function file_dialog_save_set_show_filename(from_user) {
     file_dialog_save.show_filename = file_dialog_save_basename_from_list_entry(from_user)
 }
 
-function file_dialog_save_handle_commit(ev) {
-    var name = file_dialog_save.show_filename
-    var selected_with_ext = (ev && ev.files) ? ev.files.selected_text(1) : ""
+function file_dialog_save_source_for_commit(ev) {
+    var selected = (ev && ev.files) ? ("" + ev.files.selected_text(1)) : ""
     var live = (ev && ev.filename) ? ("" + ev.filename.value).trim() : ""
+    var selBase = has_text(selected) ? file_dialog_save_basename_from_list_entry(selected) : ""
+    var liveBase = has_text(live) ? file_dialog_save_basename_from_list_entry(live) : ""
 
-    var sel_base = has_text(selected_with_ext)
-        ? file_dialog_save_basename_from_list_entry("" + selected_with_ext)
-        : ""
-    var live_base = has_text(live) ? file_dialog_save_basename_from_list_entry(live) : ""
+    if (has_text(liveBase) && has_text(selBase) && liveBase !== selBase)
+        return live
+    if (has_text(selected))
+        return selected
+    if (has_text(live))
+        return live
+    return file_dialog_save.show_filename
+}
 
-    var source_name = ""
-    if (has_text(live_base) && has_text(sel_base) && live_base !== sel_base)
-        source_name = live
-    else if (has_text(selected_with_ext))
-        source_name = "" + selected_with_ext
-    else if (has_text(live))
-        source_name = live
-    else
-        source_name = name
-
+function file_dialog_save_handle_commit(ev) {
+    var source_name = file_dialog_save_source_for_commit(ev)
     if (!has_text(source_name))
         return
     var normalized = file_dialog_save_basename_from_list_entry(source_name)
-    var ext = __file_dialog_save_get_files_ext_utf8()
-    log_info("file_dialog_save: source_name=\"" + source_name + "\" normalized=\"" + normalized + "\" ui_ext=\"" + ext + "\" show_filename=\"" + name + "\"")
-    __file_dialog_save_commit(normalized)
+     __file_dialog_save_commit(normalized)
 }
 
 function file_dialog_save_on_cancel() {
