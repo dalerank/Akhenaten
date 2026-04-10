@@ -142,6 +142,11 @@ void __ui_draw_label_ex(pcstr text, vec2i pos, int font, int flags, int box_widt
 }
 ANK_FUNCTION_5(__ui_draw_label_ex)
 
+void __ui_label_year(int year, vec2i pos, int font) {
+    ui::label_year(year, pos, (e_font)font);
+}
+ANK_FUNCTION_3(__ui_label_year)
+
 void __ui_draw_resource_icon(vec2i pos, int resource) {
     ui::icon(pos, (e_resource)resource);
 }

@@ -64,6 +64,14 @@ ui.label_ex = function(text, pos, font, flags, box_width) {
     __ui_draw_label_ex(text, pos, font, flags, box_width || 0)
 }
 
+ui.label_year = function(year, pos, font) {
+    if (pos == null) {
+        return
+    }
+
+    __ui_label_year(year, pos, font)
+}
+
 ui.resource_icon = function(pos, resource) {
     if (!pos) {
         return

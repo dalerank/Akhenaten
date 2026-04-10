@@ -705,6 +705,12 @@ int ui::label_percent(int amount, vec2i pos, e_font font) {
     return text_draw_percentage(amount, offset.x + pos.x, offset.y + pos.y, font);
 }
 
+int ui::label_year(int year, vec2i pos, e_font font) {
+    const vec2i offset = g_state.offset();
+    push(cmd_t::lang_text_year, Pos{offset + pos}, Font{font}, opt::Year{year});
+    return 0;
+}
+
 int ui::label_colored(textid tx, vec2i pos, e_font font, color color, int box_width) {
     const vec2i offset = g_state.offset();
     pcstr str = lang_get_string(tx);
