@@ -2,6 +2,7 @@
 
 #include "core/hvector.h"
 #include "game/game.h"
+#include "graphics/elements/lang_text.h"
 #include "graphics/font.h"
 
 namespace ui {
@@ -52,6 +53,10 @@ void execute_ui_command(painter& ctx, const ui::cmd_t& cmd) {
 
     case cmd_t::text_multiline:
         text_draw_multiline(cmd.str.c_str(), cmd.pos, cmd.box_width, cmd.font, cmd.clr);
+        break;
+
+    case cmd_t::lang_text_year:
+        lang_text_draw_year(cmd.year, cmd.pos.x, cmd.pos.y, cmd.font);
         break;
 
     case cmd_t::text_colored:

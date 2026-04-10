@@ -94,6 +94,9 @@ namespace ui {
         struct BoxWidth {
             int value;
         };
+        struct Year {
+            int value;
+        };
         struct RichTextPtr {
             rich_text_t* value;
         };
@@ -130,12 +133,14 @@ namespace ui {
             cursor_consume,
             saved_texture,
             texture_icon,
+            lang_text_year,
         };
 
         e_type type = none;
         vec2i pos;
         vec2i size;
         int image_id = 0;
+        int year = 0;
         color mask = COLOR_MASK_NONE;
         float scale = 1.f;
         e_font font = FONT_INVALID;
@@ -172,6 +177,7 @@ namespace ui {
         void set_one(const ui::opt::ImgFlagsTag& x) { img_flags = x.value; }
         void set_one(const ui::opt::Caption& x) { str = x.value; }
         void set_one(const ui::opt::BoxWidth& x) { box_width = x.value; }
+        void set_one(const ui::opt::Year& x) { year = x.value; }
         void set_one(const ui::opt::RichTextPtr& x) { rt = x.value; }
         void set_one(const ui::opt::SdlTexture& x) { sdl_texture = x.value; }
     };
@@ -217,6 +223,7 @@ namespace ui {
     int label_amount(int group, int number, int amount, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT,
       pcstr postfix = "");
     int label_percent(int amount, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
+    int label_year(int year, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
     int label_colored(textid tx, vec2i pos, e_font font, color color, int box_width = 0);
     int label_colored(pcstr tx, vec2i pos, e_font font, color color, int box_width = 0);
     const image_t* eimage(int imgid, vec2i pos);

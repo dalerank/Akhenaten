@@ -15,19 +15,16 @@ function message_list_window_on_render_item(p) {
         typeOff = 4
     }
     var msgIcon = get_image({ pack: PACK_GENERAL, id: 90, offset: (read ? 15 : 14) + typeOff })
-    ui.draw_texture([rowX, rowY], msgIcon.tid)
+    ui.image(msgIcon, [rowX, rowY])
     var month = __city_message_month(idx)
     var year = __city_message_year(idx)
-    __lang_text_draw_group_number(25, month, rowX + 42, rowY, font)
-    __lang_text_draw_year_js(year, rowX + 76, rowY, font)
+    ui.label(__loc(25, month), [rowX + 42, rowY], font)
+    ui.label_year(year, [rowX + 76, rowY], font)
     if (__city_message_eventmsg_body_id(idx) != -1) {
         var titleId = __city_message_eventmsg_title_id(idx)
-        var evTitle = __scenario_event_msg_text(titleId, 0)
-        __text_draw_utf8(evTitle, rowX + 190, rowY, font, 0)
+        ui.label(__scenario_event_msg_text(titleId, 0), [rowX + 190, rowY], font)
     } else {
-        var mmId = __city_message_mm_text_id(idx)
-        var title = __lang_message_title_text(mmId)
-        __text_draw_utf8(title, rowX + 190, rowY, font, 0)
+        ui.label(__lang_message_title_text(__city_message_mm_text_id(idx)), [rowX + 190, rowY], font)
     }
 }
 
