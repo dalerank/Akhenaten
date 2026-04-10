@@ -723,7 +723,7 @@ namespace ui {
 
         virtual void clear() override;
 
-        void add_item(pcstr item);
+        void add_item(pcstr item, uintptr_t user_data = 0);
         void select_item(pcstr item);
         void select_entry(int index);
         void refresh_file_finder();

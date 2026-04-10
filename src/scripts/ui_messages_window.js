@@ -1,14 +1,70 @@
 log_info("akhenaten: messages window started")
 
+function message_list_window_on_render_item(p) {
+    var idx = p.user_data
+    var rowX = p.x
+    var rowY = p.y
+    var font = p.flags ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK
+    var read = __city_message_is_read(idx)
+    var cat = __city_message_lang_category(idx)
+    var typeOff = 0
+    if (cat == 1) {
+        typeOff = 2
+    }
+    if (cat == 4) {
+        typeOff = 4
+    }
+    var msgIcon = get_image({ pack: PACK_GENERAL, id: 90, offset: (read ? 15 : 14) + typeOff })
+    ui.draw_texture([rowX, rowY], msgIcon.tid)
+    var month = __city_message_month(idx)
+    var year = __city_message_year(idx)
+    __lang_text_draw_group_number(25, month, rowX + 42, rowY, font)
+    __lang_text_draw_year_js(year, rowX + 76, rowY, font)
+    if (__city_message_eventmsg_body_id(idx) != -1) {
+        var titleId = __city_message_eventmsg_title_id(idx)
+        var evTitle = __scenario_event_msg_text(titleId, 0)
+        __text_draw_utf8(evTitle, rowX + 190, rowY, font, 0)
+    } else {
+        var mmId = __city_message_mm_text_id(idx)
+        var title = __lang_message_title_text(mmId)
+        __text_draw_utf8(title, rowX + 190, rowY, font, 0)
+    }
+}
+
+function message_list_window_on_click_item(p) {
+    if (!p) {
+        return
+    }
+    __message_list_window_open_entry(p.user_data)
+}
+
+[es=(message_list_window, init)]
+function message_list_window_on_init(window) {
+    __city_message_sort_and_compact()
+    var n = __city_message_count()
+    window.messages_list.clear()
+    for (var i = 0; i < n; i++) {
+        window.messages_list.add_item("", i)
+    }
+}
+
 message_list_window {
     pos: [(sw(0) - px(30))/2, (sh(0) - px(22))/2]
     read_icon : {pack:PACK_GENERAL, id:90, offset:14}
     help_id: "message_game_control_messages"
+    draw_underlying: true
+    allow_rmb_goback: true
+
     ui {
         background    : outer_panel({size:[30, 22]})
         title         : header({pos[10, 10], size[px(30), 20], text[63, 0], align:"center"})
-        
-        messages_list : scrollable_list({pos[16, 42], size[26, 16], view_items:15, draw_scrollbar_always:true })
+
+        messages_list : scrollable_list({pos[16, 42]
+                                         size:[26, 16]
+                                         view_items:15
+                                         draw_scrollbar_always:true
+                                         onrender_item: message_list_window_on_render_item
+                                         onclick_item: message_list_window_on_click_item })
 
         message_icon  : dummy({pos[0, 0]})
         message_row   : dummy({pos[0, 0], size[px(13), 20]})
@@ -19,7 +75,7 @@ message_list_window {
 
         help_text     : text({margin{left:50, bottom:-45}, size[16 * 26 - 100, -1], text[63, 4], font:FONT_NORMAL_BLACK_ON_LIGHT, multiline:true, wrap:16 * 26 - 100})
         empty_text    : text({margin{left:32, centery:-20}, size[16 * 26 - 48, -1], text[63, 1], enabled:false, font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:16 * 26 - 48})
-        
+
         btnhelp       : help_button({})
         btnclose      : close_button({tooltip:"#exit_this_panel"})
     }

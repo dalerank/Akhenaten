@@ -35,7 +35,11 @@ static void ui_proxy_add_item(js_State* J) {
     if (elem) {
         auto* list = elem->dcast_scrollable_list();
         if (list) {
-            list->add_item(js_toxstring(J, 1).c_str());
+            uintptr_t user_data = 0;
+            if (js_gettop(J) >= 2 && !js_isundefined(J, 2)) {
+                user_data = (uintptr_t)js_tointeger(J, 2);
+            }
+            list->add_item(js_toxstring(J, 1).c_str(), user_data);
         }
     }
     J->pushundefined();

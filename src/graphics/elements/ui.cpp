@@ -1572,8 +1572,9 @@ void ui::escrollable_list::on_render_item(int index, int flags, const scrollable
         const scrollable_list_ui_params& up = panel->ui_params;
         js_call_function(_js_render_item_ref,
           {{"index", (int32_t)index}, {"flags", (int32_t)flags}, {"hover", (flags & 2) != 0},
-            {"select", (flags & 1) != 0}, {"text", entry.text}, {"x", (int32_t)pos.x}, {"y", (int32_t)pos.y},
-            {"sizex", (int32_t)up.buttons_size_x}, {"sizey", (int32_t)up.buttons_size_y}, {"font", (int32_t)font}});
+            {"select", (flags & 1) != 0}, {"text", entry.text}, {"user_data", (int32_t)entry.user_data},
+            {"x", (int32_t)pos.x}, {"y", (int32_t)pos.y}, {"sizex", (int32_t)up.buttons_size_x},
+            {"sizey", (int32_t)up.buttons_size_y}, {"font", (int32_t)font}});
         return;
     }
 
@@ -1610,19 +1611,25 @@ void ui::escrollable_list::ensure_panel() {
             if (!onclick_event.empty()) {
                 bvariant_map::scoped m;
                 (*m)["text"] = bvariant(e->text);
+                (*m)["user_data"] = bvariant((int32_t)e->user_data);
                 dispatch_autoconfig_es_event(get_current_widget(), onclick_event.c_str(), *m);
                 return;
             }
             if (!_js_onclick_item_ref.empty()) {
-                js_call_function(_js_onclick_item_ref, {{"text", e->text}});
+                js_call_function(_js_onclick_item_ref,
+                    {{"text", e->text}, {"user_data", (int32_t)e->user_data}});
+                return;
+            }
+            if (_onclick_ex_cb) {
+                _onclick_ex_cb(e);
             }
         });
     }
 }
 
-void ui::escrollable_list::add_item(pcstr item) {
+void ui::escrollable_list::add_item(pcstr item, uintptr_t user_data) {
     ensure_panel();
-    panel->add_entry(item);
+    panel->add_entry(item, user_data);
 }
 
 void ui::escrollable_list::select_item(pcstr item) {
