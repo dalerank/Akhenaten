@@ -8,6 +8,7 @@
 
 #include <filesystem>
 #include <algorithm>
+#include <cstring>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -181,45 +182,54 @@ bool file_has_extension(pcstr filename, pcstr extension) {
     return string_compare_case_insensitive(last_c, extension) == 0;
 }
 
-void file_change_extension(char *filename, pcstr new_extension) {
-    char c;
-    do {
-        c = *filename;
-        filename++;
-    } while (c != '.' && c);
+namespace {
 
-    if (c == '.') {
-        filename[0] = new_extension[0];
-        filename[1] = new_extension[1];
-        filename[2] = new_extension[2];
-        filename[3] = 0;
+pcstr find_last_dot(pcstr s) {
+    pcstr last = nullptr;
+    for (pcstr p = s; *p; ++p) {
+        if (*p == '.') {
+            last = p;
+        }
     }
+    return last;
+}
+
+} // namespace
+
+void file_change_extension(char *filename, pcstr new_extension) {
+    if (!filename || !new_extension || !*new_extension) {
+        return;
+    }
+    char *dot = (char *)find_last_dot(filename);
+    if (!dot) {
+        return;
+    }
+    char *w = dot + 1;
+    while (*new_extension) {
+        *w++ = *new_extension++;
+    }
+    *w = 0;
 }
 
 void file_append_extension(char *filename, pcstr extension) {
-    char c;
-    do {
-        c = *filename;
-        filename++;
-    } while (c);
-    filename--;
-    filename[0] = '.';
-    filename[1] = extension[0];
-    filename[2] = extension[1];
-    filename[3] = extension[2];
-    filename[4] = 0;
+    if (!filename || !extension || !*extension) {
+        return;
+    }
+    char *end = filename + ::strlen(filename);
+    *end++ = '.';
+    while (*extension) {
+        *end++ = *extension++;
+    }
+    *end = 0;
 }
 
-void file_remove_extension(char * filename) {
-    uint8_t c;
-    do {
-        c = *filename;
-        filename++;
-    } while (c != '.' && c);
-
-    if (c == '.') {
-        filename--;
-        *filename = 0;
+void file_remove_extension(char *filename) {
+    if (!filename) {
+        return;
+    }
+    char *dot = (char *)find_last_dot(filename);
+    if (dot) {
+        *dot = 0;
     }
 }
 
@@ -252,11 +262,11 @@ bool mount_pack(pcstr filename) {
     const auto it = std::find_if(g_mounted_archives.begin(), g_mounted_archives.end(), [filename] (const ZipArchive *arch) {
         return arch->filepath() == filename;
     });
-        
+
     if (it != g_mounted_archives.end()) {
         return true;
     }
-  
+
     auto newzip = new ZipArchive(filename);
     if (!newzip->isValid()) {
         delete newzip;

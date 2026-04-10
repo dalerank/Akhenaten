@@ -11,6 +11,7 @@
 #include "window/editor/window_editor.h"
 #include "js/js_game.h"
 #include "core/bstring.h"
+#include "core/log.h"
 
 #include <cstdio>
 #include <cstring>
@@ -62,22 +63,16 @@ void __file_dialog_save_commit(pcstr base_name_utf8) {
     file_type type = g_file_dialog_save_pending_type;
     file_type_data *file_data = file_data_for_pending_type();
 
-    bstring256 filename(base_name_utf8, ".", saved_game_data.extension);
+    bstring256 filename(base_name_utf8, ".", saved_game_data_expanded.extension);
+
     vfs::path full = fullpath_saves(filename);
 
     if (type == FILE_TYPE_SAVED_GAME) {
-        if (vfs::file_has_extension(full.c_str(), saved_game_data.extension)) {
-            vfs::file_change_extension(full.data(), saved_game_data_expanded.extension);
-        }
-
-        if (!vfs::file_has_extension(full.c_str(), saved_game_data_expanded.extension)) {
-            vfs::file_append_extension(full.data(), saved_game_data_expanded.extension);
-        }
-
         GamestateIO::write_savegame(full.c_str());
         window_city_show();
     } else if (type == FILE_TYPE_SCENARIO) {
-        if (!vfs::file_has_extension(full.c_str(), map_file_data.extension)) {
+        const bool has_map = vfs::file_has_extension(full.c_str(), map_file_data.extension);
+        if (!has_map) {
             vfs::file_append_extension(full.data(), map_file_data.extension);
         }
 
@@ -85,6 +80,5 @@ void __file_dialog_save_commit(pcstr base_name_utf8) {
         window_editor_map_show();
     }
 
-    strncpy(file_data->last_loaded_file, base_name_utf8, MAX_FILE_NAME - 1);
-    file_data->last_loaded_file[MAX_FILE_NAME - 1] = '\0';
+    file_data->last_loaded_file = base_name_utf8;
 } ANK_FUNCTION_1(__file_dialog_save_commit)
