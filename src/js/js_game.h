@@ -508,6 +508,38 @@ struct js_function_traits<R(C:: *)(Args...) const> : js_function_traits<R(C:: *)
     static void ANK_CONFIG_CC1(ank_bound_float_reg_, __LINE__)(js_State* J) { js_register_bound_float(J, js_intern(#js_name), &(cptr)); } \
     ANK_DECLARE_JSFUNCTION_ITERATOR(ANK_CONFIG_CC1(ank_bound_float_reg_, __LINE__));
 
+// Template function version of ANK_FUNCTION_RAW
+// This template function handles the callback logic (extracted from macro)
+template <auto Func>
+inline void ank_function_raw_callback_impl(js_State* J) {
+    // std::decay_t converts function types to function pointer types
+    using func_ptr_type = std::decay_t<decltype(Func)>;
+    using traits = js_function_traits<func_ptr_type>;
+    using return_type = typename traits::return_type;
+
+    constexpr bool is_void = std::is_void_v<return_type>;
+    js_helpers::js_invoke_and_push<is_void>(J, [&]() { return Func(J); });
+}
+
+// Template function to register callback with 1 parameter
+template <auto Func>
+inline void ank_register_callback_raw(js_State* J, pcstr name) {
+    auto callback_impl = [](js_State* J) { ank_function_raw_callback_impl<Func>(J); };
+    js_getglobal(J, name);
+    bool exists = J->iscallable(-1);
+    js_pop(J, 1);
+    if (!exists) {
+        REGISTER_GLOBAL_FUNCTION(J, callback_impl, name, 1);
+    }
+}
+
+#define ANK_FUNCTION_RAW(func)                                        \
+    ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##func); \
+    inline void register_js2cpp_callback_##func(js_State* J) {        \
+        OZZY_PROFILER_FUNCTION();                                     \
+        ank_register_callback_raw<&func>(J, #func);                   \
+    }
+
 // Template function version of ANK_FUNCTION_1
 // This template function handles the callback logic (extracted from macro)
 template<auto Func>

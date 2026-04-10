@@ -50,6 +50,6 @@ function building_pottery_on_place_checks(ev) {
 [es=(building_pottery, update_graphic)]
 function building_pottery_on_update_graphic(ev) {
     var building = city.get_building(ev.bid)
-    var animkey = building.can_play_animation() ? "work" : "none"
+    var animkey = building.can_play_animation ? "work" : "none"
     building.set_animation(animkey)
 }

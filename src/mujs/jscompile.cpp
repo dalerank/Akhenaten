@@ -456,9 +456,82 @@ static js_Ast* create_property_setter_ast(js_State* J, js_Ast* prop_node, js_Str
     return fun_ast;
 }
 
-js_StringNode property_property = js_intern("property");
-js_StringNode property_get = js_intern("get");
-js_StringNode property_set = js_intern("set");
+static js_StringNode property_property = js_intern("property");
+static js_StringNode property_get = js_intern("get");
+static js_StringNode property_set = js_intern("set");
+static js_StringNode property_defineProperty = js_intern("defineProperty");
+static js_StringNode property_Object = js_intern("Object");
+static js_StringNode property_prototype_str = js_intern("prototype");
+static js_StringNode property_enumerable = js_intern("enumerable");
+static js_StringNode property_configurable = js_intern("configurable");
+
+/*
+ * X.property.name = { get: ... }  ->  Object.defineProperty(X.prototype, "name",
+ *     { enumerable: true, configurable: true, ... })
+ */
+static js_Ast* merge_descriptor_with_defaults(js_State* J, js_Ast* rhs_obj, int line) {
+    if (rhs_obj->type != EXP_OBJECT)
+        return rhs_obj;
+    js_Ast* props = rhs_obj->a;
+    if (!find_object_property(props, property_enumerable)) {
+        js_Ast* en = new_ast_node(J, EXP_PROP_VAL,
+            new_str_ast_node(J, AST_IDENTIFIER, property_enumerable, line),
+            new_ast_node(J, EXP_TRUE, 0, 0, 0, 0, line), 0, 0, line);
+        props = new_ast_node(J, AST_LIST, en, props, 0, 0, line);
+    }
+    if (!find_object_property(props, property_configurable)) {
+        js_Ast* cf = new_ast_node(J, EXP_PROP_VAL,
+            new_str_ast_node(J, AST_IDENTIFIER, property_configurable, line),
+            new_ast_node(J, EXP_TRUE, 0, 0, 0, 0, line), 0, 0, line);
+        props = new_ast_node(J, AST_LIST, cf, props, 0, 0, line);
+    }
+    return new_ast_node(J, EXP_OBJECT, props, 0, 0, 0, line);
+}
+
+static js_Ast* build_proto_define_property_call(js_State* J, js_Ast* base_expr, js_StringNode prop_name, js_Ast* rhs_obj, int line) {
+    js_Ast* merged = merge_descriptor_with_defaults(J, rhs_obj, line);
+
+    js_Ast* obj_ident = new_str_ast_node(J, EXP_IDENTIFIER, property_Object, line);
+    js_Ast* dp_ident = new_str_ast_node(J, AST_IDENTIFIER, property_defineProperty, line);
+    js_Ast* callee = new_ast_node(J, EXP_MEMBER, obj_ident, dp_ident, 0, 0, line);
+
+    js_Ast* proto_tail = new_str_ast_node(J, AST_IDENTIFIER, property_prototype_str, line);
+    js_Ast* arg_proto = new_ast_node(J, EXP_MEMBER, base_expr, proto_tail, 0, 0, line);
+
+    js_Ast* arg_name = new_str_ast_node(J, EXP_STRING, std::move(prop_name), line);
+
+    js_Ast* arglist = new_ast_node(J, AST_LIST, arg_proto,
+        new_ast_node(J, AST_LIST, arg_name, new_ast_node(J, AST_LIST, merged, 0, 0, 0, line), 0, 0, line), 0, 0, line);
+
+    return new_ast_node(J, EXP_CALL, callee, arglist, 0, 0, line);
+}
+
+static int try_proto_property_define(JF, js_Ast* lhs, js_Ast* rhs, js_Ast** out) {
+    *out = NULL;
+    if (rhs->type != EXP_OBJECT)
+        return 0;
+    if (lhs->type != EXP_MEMBER)
+        return 0;
+    if (lhs->a->type != EXP_MEMBER)
+        return 0;
+    js_Ast* inner = lhs->a;
+    if ((inner->b->type != AST_IDENTIFIER && inner->b->type != EXP_STRING) || inner->b->string != property_property)
+        return 0;
+
+    js_StringNode pname;
+    js_Ast* name_sym = lhs->b;
+    if (name_sym->type == AST_IDENTIFIER || name_sym->type == EXP_STRING)
+        pname = name_sym->string;
+    else if (name_sym->type == EXP_NUMBER) {
+        char num_buf[64];
+        snprintf(num_buf, sizeof num_buf, "%g", name_sym->number);
+        pname = js_intern(num_buf);
+    } else
+        return 0;
+
+    *out = build_proto_define_property_call(J, inner->a, pname, rhs, lhs->line);
+    return 1;
+}
 
 static void cobject(JF, js_Ast* list) {
     js_Ast* head = list;
@@ -665,6 +738,12 @@ static int cargs(JF, js_Ast* list) {
 static void cassign(JF, js_Ast* exp) {
     js_Ast* lhs = exp->a;
     js_Ast* rhs = exp->b;
+    js_Ast* synthetic = NULL;
+
+    if (try_proto_property_define(J, F, lhs, rhs, &synthetic)) {
+        cexp(J, F, synthetic);
+        return;
+    }
     switch (lhs->type) {
     case EXP_IDENTIFIER:
         cexp(J, F, rhs);

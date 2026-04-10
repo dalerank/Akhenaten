@@ -4,4 +4,4 @@
 #define REGISTER_FUNCTION(J,func,name,params) js_newcfunction(J, func, js_intern(name), params); js_setproperty(J, -2, name);
 #define REGISTER_GLOBAL_OBJECT(J,name) js_setglobal(J, #name);
 #define REGISTER_GLOBAL_FUNCTION(J,func,name,params) js_newcfunction(J, func, js_intern(name), params); js_setglobal(J, name);
-#define REGISTER_GLOBAL_CONSTANT(J, name) js_newnumber(J, name); js_setglobal(J, #name);
+#define REGISTER_GLOBAL_CONSTANT(J,name) js_newnumber(J, name); js_setglobal(J, #name);
