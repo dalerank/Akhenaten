@@ -203,8 +203,7 @@ static void button_ok_cancel(int is_ok, int param2) {
         data.panel->clamp_scrollbar_position();
     }
 
-    strncpy(data.file_data->last_loaded_file, get_chosen_filename(), MAX_FILE_NAME - 1);
-    data.file_data->last_loaded_file[MAX_FILE_NAME - 1] = '\0';
+    data.file_data->last_loaded_file = get_chosen_filename();
 }
 
 static void button_select_file(int index, int param2) {

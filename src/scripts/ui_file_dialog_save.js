@@ -1,5 +1,9 @@
 log_info("akhenaten: file dialog save (script UI) started")
 
+function has_text(v) {
+    return v !== null && v !== undefined && ("" + v) !== ""
+}
+
 function file_dialog_save_basename_from_list_entry(name) {
     if (!name || name.length === 0)
         return ""
@@ -17,31 +21,40 @@ function file_dialog_save_basename_from_list_entry(name) {
     return name.substring(0, n - m)
 }
 
-function file_dialog_save_on_select(p) {
-    if (!p || !p.text)
-        return
-
-    file_dialog_save.show_filename = file_dialog_save_basename_from_list_entry(p.text)
+function file_dialog_save_set_show_filename(from_user) {
+    file_dialog_save.show_filename = file_dialog_save_basename_from_list_entry(from_user)
 }
 
-function file_dialog_save_on_double_click(p) {
-    file_dialog_save_on_select(p)
-    file_dialog_save_on_ok()
-}
-
-function file_dialog_save_on_ok() {
+function file_dialog_save_handle_commit(ev) {
     var name = file_dialog_save.show_filename
-    if (!name || name.length === 0)
+    var selected_with_ext = (ev && ev.files) ? ev.files.selected_text(1) : ""
+    var live = (ev && ev.filename) ? ("" + ev.filename.value).trim() : ""
+
+    var sel_base = has_text(selected_with_ext)
+        ? file_dialog_save_basename_from_list_entry("" + selected_with_ext)
+        : ""
+    var live_base = has_text(live) ? file_dialog_save_basename_from_list_entry(live) : ""
+
+    var source_name = ""
+    if (has_text(live_base) && has_text(sel_base) && live_base !== sel_base)
+        source_name = live
+    else if (has_text(selected_with_ext))
+        source_name = "" + selected_with_ext
+    else if (has_text(live))
+        source_name = live
+    else
+        source_name = name
+
+    if (!has_text(source_name))
         return
-    __file_dialog_save_commit(name)
+    var normalized = file_dialog_save_basename_from_list_entry(source_name)
+    var ext = __file_dialog_save_get_files_ext_utf8()
+    log_info("file_dialog_save: source_name=\"" + source_name + "\" normalized=\"" + normalized + "\" ui_ext=\"" + ext + "\" show_filename=\"" + name + "\"")
+    __file_dialog_save_commit(normalized)
 }
 
 function file_dialog_save_on_cancel() {
     window_go_back()
-}
-
-function file_dialog_save_on_filename_input(p) {
-    file_dialog_save.show_filename = (p && p.value) ? p.value : ""
 }
 
 [es=window]
@@ -59,7 +72,7 @@ file_dialog_save {
         title: text({ pos: [0, 14], size: [px(24), 22], align: "center", font: FONT_LARGE_BLACK_ON_LIGHT, text: "" })
 
         filename: input({ pos: [16, 44], size: [20, 2], font: FONT_NORMAL_WHITE_ON_DARK, max_length: 63, allow_punctuation: 1
-                          oninput: file_dialog_save_on_filename_input })
+                          oninput_event: "on_filename_input" })
 
         files: scrollable_list({ pos: [16, 76], size: [20, 13], view_items: 12
                                  use_file_finder: true
@@ -69,14 +82,35 @@ file_dialog_save {
                                  font_asleep: FONT_NORMAL_BLACK_ON_DARK
                                  font_focus: FONT_NORMAL_YELLOW
                                  font_selected: FONT_NORMAL_WHITE_ON_DARK
-                                 onclick_item: file_dialog_save_on_select
-                                 ondoubleclick_item: file_dialog_save_on_double_click })
+                                 onclick_event: "on_select_file"
+                                 ondoubleclick_event: "on_double_click_file" })
 
         hint: text({ margin{centerx:-80, bottom:-35}, align: "center", font: FONT_NORMAL_BLACK_ON_LIGHT, text: "" })
 
-        btn_ok: ok_button({ margin{centerx:0, bottom:-40}, onclick: file_dialog_save_on_ok })
+        btn_ok: ok_button({ margin{centerx:0, bottom:-40}, onclick_event: "on_ok" })
         btn_cancel: cancel_button({ margin{centerx:50, bottom:-40}, onclick: file_dialog_save_on_cancel })
     }
+}
+
+[es=(file_dialog_save, on_filename_input)]
+function file_dialog_save_es_on_filename_input(ev) {
+    file_dialog_save_set_show_filename(ev.value)
+}
+
+[es=(file_dialog_save, on_select_file)]
+function file_dialog_save_es_on_select_file(ev) {
+    file_dialog_save_set_show_filename(ev.text)
+}
+
+[es=(file_dialog_save, on_double_click_file)]
+function file_dialog_save_es_on_double_click_file(ev) {
+    file_dialog_save_set_show_filename(ev.text)
+    file_dialog_save_handle_commit(ev)
+}
+
+[es=(file_dialog_save, on_ok)]
+function file_dialog_save_es_on_ok(ev) {
+    file_dialog_save_handle_commit(ev)
 }
 
 [es=(file_dialog_save, ui_draw_foreground)]
