@@ -13,6 +13,7 @@ import animal_herds
 import gods
 import city
 import building_prototype
+import bazaar_prototype
 import city_finance
 import images
 import city_sounds
