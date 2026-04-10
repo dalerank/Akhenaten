@@ -81,7 +81,7 @@ void ui::sidebar_window_expanded_t::subscribe_events() {
         image_desc img = ev.img;
         if (img.id == 0 && img.pack == 0) {
             img = def_image;
-        } 
+        }
 
         ui["build_image"].image(img);
     });
@@ -94,11 +94,11 @@ void ui::sidebar_window_expanded_t::init_ui() {
     });
 
     ui["show_messages"].onclick([] {
-        ui::message_list_window::show([] {});
+        ui::message_list_window::show(window_city_show);
     });
 
     ui["show_briefing"].readonly = !(g_scenario.mode() == e_scenario_normal || g_scenario.mode() == e_scenario_selected);
-    ui["show_briefing"].onclick([] { 
+    ui["show_briefing"].onclick([] {
         mission_briefing_window::mission_review();
     });
 

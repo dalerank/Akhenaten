@@ -5,6 +5,7 @@
 #include "city/city.h"
 #include "city/city_labor.h"
 #include "city/city_message.h"
+#include "io/gamefiles/lang.h"
 #include "city/city_building_menu_ctrl.h"
 
 pcstr __city_rank_title(int rank) { return lang_get_string(52, rank + 4); }
@@ -68,6 +69,35 @@ int __city_rating_monument() { return g_city.ratings.monument; } ANK_FUNCTION(__
 
 tile2i __city_message_next_problem_area_grid_offset() { return tile2i(city_message_next_problem_area_grid_offset()); } ANK_FUNCTION(__city_message_next_problem_area_grid_offset)
 
+void __city_message_sort_and_compact() { city_message_sort_and_compact(); }
+ANK_FUNCTION(__city_message_sort_and_compact)
+
+int __city_message_count() { return city_message_count(); }
+ANK_FUNCTION(__city_message_count)
+
+int __city_message_month(int message_index) { return city_message_get(message_index).month; }
+ANK_FUNCTION_1(__city_message_month)
+
+int __city_message_year(int message_index) { return city_message_get(message_index).year; }
+ANK_FUNCTION_1(__city_message_year)
+
+bool __city_message_is_read(int message_index) { return city_message_get(message_index).is_read; }
+ANK_FUNCTION_1(__city_message_is_read)
+
+int __city_message_eventmsg_body_id(int message_index) { return city_message_get(message_index).eventmsg_body_id; }
+ANK_FUNCTION_1(__city_message_eventmsg_body_id)
+
+int __city_message_eventmsg_title_id(int message_index) { return city_message_get(message_index).eventmsg_title_id; }
+ANK_FUNCTION_1(__city_message_eventmsg_title_id)
+
+int __city_message_mm_text_id(int message_index) { return city_message_get(message_index).MM_text_id; }
+ANK_FUNCTION_1(__city_message_mm_text_id)
+
+int __city_message_lang_category(int message_index) {
+    const int mm_id = city_message_get_text_id(message_index);
+    return (int)lang_get_message(mm_id).message_type;
+}
+ANK_FUNCTION_1(__city_message_lang_category)
 
 void js_register_city_objects(js_State *J) {
 }

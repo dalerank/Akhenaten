@@ -10,6 +10,7 @@
 #include "sound/sound_walker.h"
 
 #include "overlays/city_overlay.h"
+#include "graphics/image.h"
 #include "graphics/image_desc.h"
 #include "figure/figure.h"
 #include "io/gamefiles/lang.h"

@@ -3,6 +3,8 @@
 #include "core/profiler.h"
 #include "js/js_game.h"
 #include "graphics/elements/lang_text.h"
+#include "graphics/font.h"
+#include "graphics/text.h"
 #include "game/game_config.h"
 #include "window/plain_message_dialog.h"
 
@@ -51,3 +53,25 @@ bool __game_language_set_current(xstring lang) {
     return true;
 }
 ANK_FUNCTION_1(__game_language_set_current)
+
+void __lang_text_draw_group_number(int group, int number, int x, int y, int font) {
+    lang_text_draw(group, number, x, y, (e_font)font);
+}
+ANK_FUNCTION_5(__lang_text_draw_group_number)
+
+void __lang_text_draw_year_js(int year, int x, int y, int font) {
+    lang_text_draw_year(year, x, y, (e_font)font);
+}
+ANK_FUNCTION_4(__lang_text_draw_year_js)
+
+void __text_draw_utf8(pcstr text, int x, int y, int font, unsigned int c) {
+    text_draw(text, x, y, (e_font)font, (color)c);
+}
+ANK_FUNCTION_5(__text_draw_utf8)
+
+xstring __lang_message_title_text(int mm_text_id) {
+    const xstring mm_msg = lang_get_message_id((uint16_t)mm_text_id);
+    const lang_message &model_msg = lang_get_message(mm_msg);
+    return model_msg.title.text;
+}
+ANK_FUNCTION_1(__lang_message_title_text)
