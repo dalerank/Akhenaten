@@ -273,18 +273,7 @@ city.get_house = function(building_id) {
 }
 
 city.get_bazaar = function(building_id) {
-    var building = city.get_building(building_id)
-    return {
-        id: building_id
-        @meta_text_id { get: __building_meta_text_id }
-        @tile { get: __building_tile }
-
-        resource_amount: function(resource_type) { return __bazaar_resource_amount(this.id, resource_type) }
-        idx_amount: function(index) { return __bazaar_idx_amount(this.id, index) }
-        idx_accepted: function(index) { return __bazaar_idx_accepted(this.id, index) }
-        res_accepted: function(resource_type) { return __bazaar_res_accepted(this.id, resource_type) }
-        get_figure: function(slot) { return city.get_figure(__building_get_figure_id(this.id, slot)) }
-    }
+    return new Bazaar(building_id)
 }
 
 city.create_good_request = function(obj) {
