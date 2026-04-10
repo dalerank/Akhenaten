@@ -363,40 +363,7 @@ city.get_building_params = function(building_id) {
 }
 
 city.get_building = function(building_id) {
-    return {
-        id: building_id
-        __property_getter: function(property) { return __building_get_property(this.id, property) }
-
-        add_fire_damage: function(damage) { __building_add_fire_damage(this.id, damage) }
-        add_collapse_damage: function(damage) { __building_add_collapse_damage(this.id, damage) }
-        add_structure_damage: function(damage) { __building_add_structure_damage(this.id, damage) }
-        has_figure: function(index) { return __building_has_figure(this.id, index) }
-        stored_resource: function(resource) { return __building_stored_resource(this.id, resource) }
-        get_figure: function(index) { return city.get_figure(__building_get_figure_id(this.id, index)) }
-        mothball_toggle: function() { __building_mothball_toggle(this.id) }
-        can_play_animation: function() { return __building_can_play_animation(this.id) }
-        set_animation: function(animkey) { __building_set_animation(this.id, animkey) }
-        common_spawn_roamer: function(figure_type, min_houses_coverage, action) { __building_common_spawn_roamer(this.id, figure_type, min_houses_coverage, action) }
-
-        @des_influence_value { get: function() { return __building_des_influence_value(this.id) } }
-        @des_influence_step_size { get: function() { return __building_des_influence_step_size(this.id) } }
-        @des_influence_range: { get: function() { return __building_des_influence_range(this.id) } }
-        @tile { get: function() { return __building_tile(this.id) } }
-        @type { }
-        @num_workers { }
-        @max_workers { }
-        @has_road_access { }
-        @overlay { get: function() { return __building_get_overlay(this.id) } }
-        @state { get: function() { return __building_get_state(this.id) } }
-        @valid { get: function() { return __building_is_valid(this.id) } }
-        @worker_percentage { get: function() { return calc_percentage(this.num_workers, this.max_workers) } }
-        @meta_text_id { get: function() { return __building_meta_text_id(this.id) } }
-        @collapse_risk { }
-        @fire_risk { }
-        @structure_damage { }
-
-        @params { get: function() { return city.building_get_params(this.id) } }
-    }
+    return new Building(building_id)
 }
 
 city.create_distant_battle = function(obj) {

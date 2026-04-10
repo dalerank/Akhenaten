@@ -8,11 +8,11 @@
 #include "building/building_bazaar.h"
 #include "grid/grid.h"
 #include "core/log.h"
+#include "game/game_events.h"
 #include "city/object_info.h"
 #include "window/window_info.h"
 #include "building/building.h"
 #include "core/profiler.h"
-#include "game/game_events.h"
 
 int __city_count_industry_active(int resource) {
     return g_city.buildings.count_industry_active((e_resource)resource);
@@ -28,6 +28,11 @@ void __city_show_warning(pcstr id) {
     events::emit(event_construction_warning{ id });
 }
 ANK_FUNCTION_1(__city_show_warning)
+
+int __map_rubble_building_type_at_grid(int grid_offset) {
+    return map_rubble_building_type(grid_offset);
+}
+ANK_FUNCTION_1(__map_rubble_building_type_at_grid)
 
 bool __city_resource_can_produce(int resource) {
     return g_city.can_produce_resource((e_resource)resource);
@@ -114,53 +119,14 @@ bvariant __map_grid_get_area(tile2i tile, int size, int radius) {
 }
 ANK_FUNCTION_3(__map_grid_get_area)
 
-bool __building_is_valid(int bid) {
-    building* b = building_get(bid);
-    return b && b->is_valid();
-}
-ANK_FUNCTION_1(__building_is_valid)
-
-int __building_des_influence_value(int bid) {
-    building* b = building_get(bid);
-    return b ? (int)b->des_influence.value : 0;
-}
-ANK_FUNCTION_1(__building_des_influence_value)
-
-int __building_des_influence_step_size(int bid) {
-    building* b = building_get(bid);
-    return b ? b->des_influence.step_size : 0;
-}
-ANK_FUNCTION_1(__building_des_influence_step_size)
-
-int __building_des_influence_range(int bid) {
-    building* b = building_get(bid);
-    return b ? b->des_influence.range : 0;
-}
-ANK_FUNCTION_1(__building_des_influence_range)
-
-int __building_stored_resource(int bid, int resource) { return building_get(bid)->stored_amount((e_resource)resource); }
-ANK_FUNCTION_2(__building_stored_resource)
-
-int __building_get_overlay(int bid) { return building_get(bid)->get_overlay(); }
-ANK_FUNCTION_1(__building_get_overlay)
-
 int __city_get_object_info_building_id() { return common_info_window::get_object_info().bid;}
 ANK_FUNCTION(__city_get_object_info_building_id)
 
 int __city_get_object_info_group() { return common_info_window::get_object_info().group_id; }
 ANK_FUNCTION(__city_get_object_info_group)
 
-int __building_get_worker_percentage(int bid) { return building_get(bid)->worker_percentage();}
-ANK_FUNCTION_1(__building_get_worker_percentage)
-
 int __building_get_num_workers(int bid) { return building_get(bid)->num_workers;}
 ANK_FUNCTION_1(__building_get_num_workers)
-
-bool __building_has_figure(int bid, int index) { return building_get(bid)->has_figure(index); }
-ANK_FUNCTION_2(__building_has_figure)
-
-int __building_get_figure_id(int bid, int index) { return building_get(bid)->get_figure(index)->id; }
-ANK_FUNCTION_2(__building_get_figure_id)
 
 int __bazaar_idx_amount(int bid, int index) { auto b = building_get(bid)->dcast_bazaar(); return b ? b->get_idx_amount(index) : 0; }
 ANK_FUNCTION_2(__bazaar_idx_amount)
@@ -176,26 +142,6 @@ ANK_FUNCTION_2(__bazaar_resource_amount)
 
 int __city_get_random_building_id_by_type(int type) { return building_id_random((e_building_type)type); }
 ANK_FUNCTION_1(__city_get_random_building_id_by_type)
-
-int __building_get_state(int bid) { return (int)building_get(bid)->state; }
-ANK_FUNCTION_1(__building_get_state)
-
-int __building_mothball_toggle(int bid) {
-    building* b = building_get(bid);
-    return b->max_workers ? b->mothball_toggle() : 0;
-}
-ANK_FUNCTION_1(__building_mothball_toggle)
-
-bool __building_can_play_animation(int bid) { return building_get(bid)->dcast()->can_play_animation(); }
-ANK_FUNCTION_1(__building_can_play_animation)
-
-void __building_set_animation(int bid, pcstr animkey) { building_get(bid)->dcast()->set_animation(animkey); }
-ANK_FUNCTION_2(__building_set_animation)
-
-bool __building_common_spawn_roamer(int bid, int figure_type, int min_houses_coverage, int action) {
-    return building_get(bid)->dcast()->common_spawn_roamer((e_figure_type)figure_type, min_houses_coverage, (e_figure_action)action);
-}
-ANK_FUNCTION_4(__building_common_spawn_roamer)
 
 bool __city_resource_is_mothballed(int resource) {
     return g_city.resource.is_mothballed((e_resource)resource);
