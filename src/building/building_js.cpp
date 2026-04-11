@@ -125,21 +125,25 @@ void __building_meta_text_id(js_State *J) {
     js_helpers::js_push_value<int>(J, building_get(bid)->params().meta.text_id);
 }
 
-void __building_add_fire_damage(int bid, int damage) {
+void __building_add_fire_damage(js_State *J) {
+    const int bid = building_this_id(J);
+    const int damage = js_helpers::js_to_value<int>(J, 1);
     building *b = building_get(bid);
     if (b->is_valid()) {
         b->force_damage(e_damage_fire, damage);
     }
+    js_helpers::js_push_void(J);
 }
-ANK_FUNCTION_2(__building_add_fire_damage)
 
-void __building_add_collapse_damage(int bid, int damage) {
+void __building_add_collapse_damage(js_State *J) {
+    const int bid = building_this_id(J);
+    const int damage = js_helpers::js_to_value<int>(J, 1);
     building *b = building_get(bid);
     if (b->is_valid()) {
         b->force_damage(e_damage_collapse, damage);
     }
+    js_helpers::js_push_void(J);
 }
-ANK_FUNCTION_2(__building_add_collapse_damage)
 
 void __building_add_structure_damage(js_State* J) {
     const int bid = building_this_id(J);
@@ -148,12 +152,6 @@ void __building_add_structure_damage(js_State* J) {
     b->force_damage(e_damage_enemy, damage);
     js_helpers::js_push_void(J);
 }
-
-int __map_rubble_building_type(int bid) {
-    building *b = building_get(bid);
-    return b ? map_rubble_building_type(b->tile.grid_offset()) : 0;
-}
-ANK_FUNCTION_1(__map_rubble_building_type)
 
 tile2i __building_tile(int bid) {
     building* b = building_get(bid);
@@ -212,6 +210,8 @@ void js_register_building(js_State *J) {
     jsB_propf(J, js_intern("Building.prototype.has_figure"), __building_has_figure, 1);
     jsB_propf(J, js_intern("Building.prototype.mothball_toggle"), __building_mothball_toggle, 0);
     jsB_propf(J, js_intern("Building.prototype.add_structure_damage"), __building_add_structure_damage, 1);
+    jsB_propf(J, js_intern("Building.prototype.add_fire_damage"), __building_add_fire_damage, 1);
+    jsB_propf(J, js_intern("Building.prototype.add_collapse_damage"), __building_add_collapse_damage, 1);
     jsB_propf(J, js_intern("Building.prototype.stored_resource"), __building_stored_resource, 1);
     jsB_propf(J, js_intern("Building.prototype.set_animation"), __building_set_animation, 1);
     jsB_propf(J, js_intern("Building.prototype.common_spawn_roamer"), __building_common_spawn_roamer, 3);
@@ -220,4 +220,8 @@ void js_register_building(js_State *J) {
 
     js_newcconstructor(J, jsB_new_Building, jsB_new_Building, js_intern("Building"), 1);
     js_defglobal(J, js_intern("Building"), JS_DONTENUM);
+}
+
+js_Object *js_get_building_prototype(void) {
+    return g_building_proto;
 }

@@ -33,6 +33,12 @@ int __map_rubble_building_type_at_grid(int grid_offset) {
 }
 ANK_FUNCTION_1(__map_rubble_building_type_at_grid)
 
+int __map_rubble_building_type(int bid) {
+    building *b = building_get(bid);
+    return b ? map_rubble_building_type(b->tile.grid_offset()) : 0;
+}
+ANK_FUNCTION_1(__map_rubble_building_type)
+
 bool __city_resource_can_produce(int resource) {
     return g_city.can_produce_resource((e_resource)resource);
 }

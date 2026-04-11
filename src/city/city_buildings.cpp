@@ -308,7 +308,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
 
         iob->bind(BIND_SIGNATURE_INT16, &b->storage.data()[2].value);
         iob->bind(BIND_SIGNATURE_INT16, &b->storage.data()[3].value);
-        
+
         iob->bind(BIND_SIGNATURE_TILE2I, b->road_access);
 
         iob->bind(BIND_SIGNATURE_UINT16, &b->figure_ids[0]);

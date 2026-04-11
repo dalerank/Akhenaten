@@ -78,7 +78,7 @@ function house_foodtypes_available(house) {
 function house_determine_worst_desirability_building(house) {
     log_info("house_determine_worst_desirability_building")
     var house_id = house.id
-    __house_set_worst_desirability_building_id(house_id, 0)
+    house.worst_desirability_building_id = 0
     var myLevel = house.level
     if (!myLevel)
         return
@@ -96,7 +96,7 @@ function house_determine_worst_desirability_building(house) {
             if (!building.valid || building.id === house_id)
                 continue
 
-            var otherLevel = __house_level(building_id)
+            var otherLevel = building.level
             if (otherLevel > 0 && otherLevel === myLevel)
                 continue
 
@@ -117,7 +117,7 @@ function house_determine_worst_desirability_building(house) {
             }
         }
     }
-    __house_set_worst_desirability_building_id(house_id, lowest_building_id)
+    house.worst_desirability_building_id = lowest_building_id
 }
 
 function house_determine_evolve_text(house) {
