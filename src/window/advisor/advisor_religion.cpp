@@ -14,7 +14,7 @@
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "game/game.h"
-#include "window/hold_festival.h"
+#include "window/autoconfig_window.h"
 
 ui::advisor_religion_window g_advisor_religion_window;
 
@@ -116,7 +116,7 @@ int ui::advisor_religion_window::draw_background(UiFlags flags) {
             }
 
             if (!g_city.festival.is_planned()) {
-                ui::hold_festival_window::show(true);
+                autoconfig_window::show("hold_festival_window");
             }
         });
         ui["festival_advice"] = ui::str(58, 18 + g_city.festival.get_advice());

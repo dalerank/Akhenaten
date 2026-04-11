@@ -1366,7 +1366,16 @@ void ui::elabel::load(archive arch, element* parent, items& elems) {
 }
 
 void ui::elabel::text(pcstr v) {
-    _text = lang_text_from_key(v);
+    if (!v) {
+        _text = "";
+        return;
+    }
+    if (strstr(v, "${")) {
+        ui_scope_property holder;
+        _text = ui::sformat<1024>(&holder, v).c_str();
+    } else {
+        _text = lang_text_from_key(v);
+    }
 }
 
 void ui::elabel::text_color(color v) {

@@ -38,3 +38,8 @@ void __city_festival_select_size(int size) {
     g_city.festival.select_size((e_festival_type)size);
 }
 ANK_FUNCTION_1(__city_festival_select_size)
+
+void __city_festival_schedule() {
+    g_city.festival.schedule();
+}
+ANK_FUNCTION(__city_festival_schedule)
