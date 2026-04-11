@@ -2,17 +2,10 @@
 
 #include "core/profiler.h"
 #include "city/city.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/elements/generic_button.h"
-#include "graphics/elements/image_button.h"
-#include "graphics/elements/lang_text.h"
-#include "graphics/elements/panel.h"
 #include "graphics/window.h"
 #include "input/input.h"
 #include "window/window_city.h"
 #include "widget/widget_sidebar.h"
-#include "graphics/elements/ui_scope_property.h"
 #include "game/game.h"
 #include "js/js_game.h"
 
@@ -26,11 +19,6 @@ void __hold_festival_window_show(bool bg, js_helpers::js_function_ref cb) {
     });
 }
 ANK_FUNCTION_2(__hold_festival_window_show)
-
-void __hold_festival_select_size(int size) {
-    g_hold_festival_window.select_size(size);
-}
-ANK_FUNCTION_1(__hold_festival_select_size)
 
 void __hold_festival_window_ok() {
     if (!g_city.finance.is_out_of_money()) {
@@ -58,110 +46,12 @@ void ui::hold_festival_window::close() {
     window_go_back();
 }
 
-void ui::hold_festival_window::select_size(int size) {
-    if (g_city.finance.is_out_of_money()) {
-        return;
-    }
-
-    if (g_city.festival.select_size(e_festival_type(size))) {
-    }
-}
-
-int ui::hold_festival_window::draw_background(UiFlags flags) {
-    autoconfig_window::draw_background(flags);
-
-    ui_scope_property scope;
-    ui.format_all(&scope);
-
-    if (!background) {
-        game.animation = false;
-        window_city_draw_panels();
-        window_city_draw();
-        widget_sidebar_city_draw_foreground();
-    }
-
-    for (e_god god = GOD_OSIRIS; god < MAX_GODS; ++god) {
-        bstring32 god_id; god_id.printf("god%d", god);
-        if (g_city.religion.is_god_known(god) == GOD_STATUS_UNKNOWN) {
-            ui[god_id].select(false);
-            continue;
-        }
-
-        ui[god_id].select(god == g_city.festival.selected_god);
-    }
-
-    ui["festival_type"] = ui::str(58, 30 + g_city.festival.selected_size);
-
-    return 0;
-}
-
-int ui::hold_festival_window::ui_handle_mouse(const mouse *m) {
-    autoconfig_window::ui_handle_mouse(m);
-
-    const hotkeys *h = hotkey_state();
-    if (input_go_back_requested(m, h)) {
-        if (callback) {
-            callback();
-        }
-
-        window_go_back();
-    }
-
-    return 0;
-}
-
-void ui::hold_festival_window::init() {
-    autoconfig_window::init();
-}
-
-void ui::hold_festival_window::get_tooltip(tooltip_context* c) {
-    //if (!focus_image_button_id && (!focus_button_id || focus_button_id > 5))
-    //    return;
-    return;
-
-    //c->type = TOOLTIP_BUTTON;
-    //// image buttons
-    //switch (focus_image_button_id) {
-    //case 1:
-    //    c->text_id = 1;
-    //    break;
-    //case 2:
-    //    c->text_id = 2;
-    //    break;
-    //case 3:
-    //    c->text_id = 113;
-    //    break;
-    //case 4:
-    //    c->text_id = 114;
-    //    break;
-    //}
-    //// gods
-    //switch (focus_button_id) {
-    //case 1:
-    //    c->text_id = 115;
-    //    break;
-    //case 2:
-    //    c->text_id = 116;
-    //    break;
-    //case 3:
-    //    c->text_id = 117;
-    //    break;
-    //case 4:
-    //    c->text_id = 118;
-    //    break;
-    //case 5:
-    //    c->text_id = 119;
-    //    break;
-    //}
-}
-
 void ui::hold_festival_window::show(bool bg, std::function<void()> cb) {
     static window_type window = {
         "window_hold_festival",
         [] (int flags) { g_hold_festival_window.draw_background(flags); },
         [] (int flags) { g_hold_festival_window.ui_draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { g_hold_festival_window.ui_handle_mouse(m); },
-        [] (tooltip_context *c) { g_hold_festival_window.get_tooltip(c); } 
     };
 
     g_hold_festival_window.callback = cb;

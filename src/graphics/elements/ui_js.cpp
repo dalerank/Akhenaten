@@ -27,6 +27,7 @@
 #include "core/flat_map.h"
 #include "game/game.h"
 #include "graphics/image.h"
+#include "graphics/elements/ui_scope_property.h"
 
 #include <cstring>
 
