@@ -56,7 +56,7 @@ void ui::advisor_religion_window::draw_god_row(e_god god, int y_offset, e_buildi
 
     if (is_known == GOD_STATUS_UNKNOWN) {
         return;
-    } 
+    }
 
     bstring32 bcount = "-";
     if (scenario_building_allowed(complex)) {

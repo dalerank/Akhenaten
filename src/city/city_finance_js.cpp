@@ -42,3 +42,8 @@ std::optional<bvariant> __city_get_taxes_property(pcstr property) {
 }
 ANK_FUNCTION_1(__city_get_taxes_property)
 
+bool __city_finance_is_out_of_money() {
+    return g_city.finance.is_out_of_money();
+}
+ANK_FUNCTION(__city_finance_is_out_of_money)
+

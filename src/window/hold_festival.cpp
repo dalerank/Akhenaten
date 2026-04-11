@@ -1,19 +1,15 @@
 #include "hold_festival.h"
 
-#include "city/constants.h"
 #include "core/profiler.h"
 #include "city/city.h"
-#include "game/resource.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
-#include "graphics/image_groups.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "window/message_dialog.h"
 #include "window/window_city.h"
 #include "widget/widget_sidebar.h"
 #include "graphics/elements/ui_scope_property.h"
@@ -30,6 +26,29 @@ void __hold_festival_window_show(bool bg, js_helpers::js_function_ref cb) {
     });
 }
 ANK_FUNCTION_2(__hold_festival_window_show)
+
+void __hold_festival_select_size(int size) {
+    g_hold_festival_window.select_size(size);
+}
+ANK_FUNCTION_1(__hold_festival_select_size)
+
+void __hold_festival_window_ok() {
+    if (!g_city.finance.is_out_of_money()) {
+        g_city.festival.schedule();
+    }
+    g_hold_festival_window.close();
+}
+ANK_FUNCTION(__hold_festival_window_ok)
+
+void __hold_festival_window_cancel() {
+    g_hold_festival_window.close();
+}
+ANK_FUNCTION(__hold_festival_window_cancel)
+
+bool __hold_festival_window_has_background() {
+    return g_hold_festival_window.background;
+}
+ANK_FUNCTION(__hold_festival_window_has_background)
 
 void ui::hold_festival_window::close() {
     if (callback) {
@@ -93,66 +112,6 @@ int ui::hold_festival_window::ui_handle_mouse(const mouse *m) {
 
 void ui::hold_festival_window::init() {
     autoconfig_window::init();
-
-    // If the currently selected god is not known, select the first available god
-    if (g_city.religion.is_god_known(g_city.festival.selected_god) == GOD_STATUS_UNKNOWN) {
-        for (e_god god = GOD_OSIRIS; god < MAX_GODS; ++god) {
-            if (g_city.religion.is_god_known(god) != GOD_STATUS_UNKNOWN) {
-                g_city.festival.select_god(god);
-                break;
-            }
-        }
-    }
-
-    ui["background_image"].enabled = background;
-
-    int resource_image_deben = image_id_from_group(PACK_GENERAL, 103) + 18;
-    const bool is_out_of_money = g_city.finance.is_out_of_money();
-    ui["small_festival"].text_var("%s %u @I%u", ui::str(58, 31), g_city.festival.small_cost, resource_image_deben);
-    ui["small_festival"].darkened = is_out_of_money;
-    ui["small_festival"].onclick([this] {
-        select_size(FESTIVAL_SMALL);
-    });
-
-    ui["middle_festival"].text_var("%s %u @I%u", ui::str(58, 32), g_city.festival.large_cost, resource_image_deben);
-    ui["middle_festival"].darkened = is_out_of_money;
-    ui["middle_festival"].onclick([this] {
-       select_size(FESTIVAL_LARGE);
-    });
-
-    int resource_image_beer = image_id_resource_icon(RESOURCE_BEER);
-    ui["large_festival"].darkened = is_out_of_money || g_city.festival.not_enough_alcohol;
-    ui["large_festival"].text_var("%s %u @I%u %u  @I%u", ui::str(58, 32), g_city.festival.grand_cost, resource_image_deben, g_city.festival.grand_alcohol, resource_image_beer);
-    ui["large_festival"].onclick([this] {
-        select_size(FESTIVAL_GRAND);
-    });
-
-    ui["button_ok"].onclick([this] {
-        if (!g_city.finance.is_out_of_money()) {
-            g_city.festival.schedule();
-        }
-        close();
-    });
-
-    ui["button_cancel"].onclick([this] {
-        close();
-    });
-
-    ui["button_help"].onclick([] {
-        window_message_dialog_show("message_overseer_temples", -1, 0);
-    });
-
-    for (e_god god = GOD_OSIRIS; god < MAX_GODS; ++god) {
-        bstring32 god_id; god_id.printf("god%d", god);
-        if (g_city.religion.is_god_known(god) == GOD_STATUS_UNKNOWN) {
-            ui[god_id].darkened = UiFlags_Grayscale;
-            ui[god_id].readonly = true;
-        }
-
-        ui[god_id].onclick([god] {
-            g_city.festival.select_god(god);
-        });
-    }
 }
 
 void ui::hold_festival_window::get_tooltip(tooltip_context* c) {
