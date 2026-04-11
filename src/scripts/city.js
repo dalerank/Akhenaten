@@ -227,49 +227,7 @@ city.get_grid_area = function(tile, size, radius) {
 }
 
 city.get_house = function(building_id) {
-    return {
-        __property_getter: function(property) { return __house_get_property(this.id, property) }
-
-        id: building_id
-        @tile { get: __building_tile }
-        @meta_text_id { get: __building_meta_text_id }
-        @population { }
-        @tax_coverage { }
-        @tax_income_or_storage { }
-        @population_room { get: function() { return __house_population_room(this.id) } }
-        @house_happiness { }
-        @current_desirability { }
-        @has_water_access { }
-        @has_well_access { }
-        @water_supply { }
-        @entertainment { }
-        @bazaar_access { }
-        @education { }
-        @school { }
-        @library { }
-        @magistrate { }
-        @num_gods { }
-        @dentist { }
-        @health { }
-        @mortuary { }
-        @physician { }
-        @worst_desirability_building_id { }
-        @fancy_bazaar_access { }
-        @no_space_to_expand { }
-        @level { get: function() { return __house_level(this.id) } }
-        @model { get: function() { return city.get_house_model(this.level) } }
-        @evolve_text { set: function(text) { __house_set_evolve_text(this.id, text) } }
-        @des_influence_value { get: function() { return __building_des_influence_value(this.id) } }
-        @des_influence_step_size { get: function() { return __building_des_influence_step_size(this.id) } }
-        @des_influence_range: { get: function() { return __building_des_influence_range(this.id) } }
-        @valid { get: function() { return __building_is_valid(this.id) } }
-        @is_vacant_lot { get: function() { return __house_is_vacant_lot(this.id) } }
-
-        food: function(index) { return __house_get_food(this.id, index) }
-        inv: function(index) { return __house_get_inventory(this.id, index) }
-        add_fire_damage: function(damage) { __building_add_fire_damage(this.id, damage) }
-        add_collapse_damage: function(damage) { __building_add_collapse_damage(this.id, damage) }
-    }
+    return new House(building_id)
 }
 
 city.get_bazaar = function(building_id) {

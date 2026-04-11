@@ -13,6 +13,19 @@ Building.property.worker_percentage = { get: function() { return this.__worker_p
 Building.property.meta_text_id = { get: function() { return this.__meta_text_id() } }
 Building.property.can_play_animation = { get: function() { return this.__can_play_animation() } }
 
+Building.property.structure_damage = { }
+Building.property.collapse_risk = { }
+Building.property.fire_risk = { }
+Building.property.fire_duration = { }
+Building.property.health_proof = { }
+Building.property.fire_proof = { }
+Building.property.damage_proof = { }
+Building.property.formation_id = { }
+Building.property.has_plague = { }
+Building.property.desirability = { }
+Building.property.is_adjacent_to_water = { }
+Building.property.storage_id = { }
+Building.property.show_on_problem_overlay = { }
+Building.property.deben_storage = { }
+
 Building.prototype.get_figure = function(index) { return city.get_figure(__building_get_figure_id(this.id, index)) }
-Building.prototype.add_fire_damage = function(damage) { __building_add_fire_damage(this.id, damage) }
-Building.prototype.add_collapse_damage = function(damage) { __building_add_collapse_damage(this.id, damage) }

@@ -468,6 +468,7 @@ static js_StringNode property_configurable = js_intern("configurable");
 /*
  * X.property.name = { get: ... }  ->  Object.defineProperty(X.prototype, "name",
  *     { enumerable: true, configurable: true, ... })
+ * X.property.name = { }  ->  same with get calling this.__property_getter("name") (empty descriptor)
  */
 static js_Ast* merge_descriptor_with_defaults(js_State* J, js_Ast* rhs_obj, int line) {
     if (rhs_obj->type != EXP_OBJECT)
@@ -520,14 +521,25 @@ static int try_proto_property_define(JF, js_Ast* lhs, js_Ast* rhs, js_Ast** out)
 
     js_StringNode pname;
     js_Ast* name_sym = lhs->b;
-    if (name_sym->type == AST_IDENTIFIER || name_sym->type == EXP_STRING)
+    if (name_sym->type == AST_IDENTIFIER || name_sym->type == EXP_STRING) {
         pname = name_sym->string;
-    else if (name_sym->type == EXP_NUMBER) {
+    }else if (name_sym->type == EXP_NUMBER) {
         char num_buf[64];
         snprintf(num_buf, sizeof num_buf, "%g", name_sym->number);
         pname = js_intern(num_buf);
     } else
         return 0;
+
+    /* Empty { }: synthesize get: function() { return this.__property_getter ? ... : undefined } */
+    if (rhs->a == NULL) {
+        js_Ast* getter_fun = create_property_getter_ast(J, lhs, pname);
+        js_Ast* get_entry = new_ast_node(J, EXP_PROP_VAL,
+            new_str_ast_node(J, AST_IDENTIFIER, property_get, lhs->line),
+            getter_fun, 0, 0, lhs->line);
+        /* EXP_OBJECT.a must be an AST_LIST of property nodes (same shape as merge_descriptor_with_defaults). */
+        js_Ast* prop_list = new_ast_node(J, AST_LIST, get_entry, NULL, 0, 0, lhs->line);
+        rhs = new_ast_node(J, EXP_OBJECT, prop_list, NULL, NULL, NULL, lhs->line);
+    }
 
     *out = build_proto_define_property_call(J, inner->a, pname, rhs, lhs->line);
     return 1;

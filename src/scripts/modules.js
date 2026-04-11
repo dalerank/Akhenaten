@@ -18,6 +18,7 @@ import city_finance
 import images
 import city_sounds
 import buildings
+import building_house
 import building_mastaba
 import building_pyramid
 import building_farm
