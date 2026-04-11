@@ -1,6 +1,7 @@
 #include "hold_festival.h"
 
 #include "city/constants.h"
+#include "core/profiler.h"
 #include "city/city.h"
 #include "game/resource.h"
 #include "graphics/graphics.h"
@@ -17,13 +18,23 @@
 #include "widget/widget_sidebar.h"
 #include "graphics/elements/ui_scope_property.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
 ui::hold_festival_window g_hold_festival_window;
+
+void __hold_festival_window_show(bool bg, js_helpers::js_function_ref cb) {
+    ui::hold_festival_window::show(bg, [cb] {
+        if (!cb.empty()) {
+            js_call_function(cb.ref);
+        }
+    });
+}
+ANK_FUNCTION_2(__hold_festival_window_show)
 
 void ui::hold_festival_window::close() {
     if (callback) {
         callback();
-    } 
+    }
 
     window_go_back();
 }
@@ -72,8 +83,8 @@ int ui::hold_festival_window::ui_handle_mouse(const mouse *m) {
     if (input_go_back_requested(m, h)) {
         if (callback) {
             callback();
-        } 
-        
+        }
+
         window_go_back();
     }
 
