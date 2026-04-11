@@ -12,7 +12,6 @@
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "window/hold_festival.h"
 #include "game/game.h"
 
 ui::advisor_entertainment_window g_advisor_entertainment_window;

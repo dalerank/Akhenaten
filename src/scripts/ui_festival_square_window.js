@@ -45,7 +45,7 @@ function festival_square_info_window_init(window) {
         if (__city_festival_is_planned()) {
             return
         }
-        __hold_festival_window_show(false, function() {
+        hold_festival_window.show(false, function() {
             festival_square_info_update_festival_state(window)
         })
     }

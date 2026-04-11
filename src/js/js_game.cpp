@@ -67,13 +67,18 @@ void js_log_warn_native(js_State *J) {
 }
 
 void js_loc_native(js_State *J) {
-    int p1 = js_tointeger(J, 1);
-    int p2 = js_tointeger(J, 2);
-    verify_no_crash(p1 >= 0 && p2 >= 0);
-
-    pcstr result = lang_get_string(p1, p2);
-
-    J->pushstring(result);
+    if (js_isstring(J, 1)) {
+        const js_StringNode key_node = js_tostring(J, 1);
+        const xstring key = js_strnode_cstr(key_node);
+        const xstring resolved = lang_xtext_from_key(key);
+        J->pushstring(resolved.c_str());
+    } else {
+        int p1 = js_tointeger(J, 1);
+        int p2 = js_tointeger(J, 2);
+        verify_no_crash(p1 >= 0 && p2 >= 0);
+        pcstr result = lang_get_string(p1, p2);
+        J->pushstring(result);
+    }
 }
 
 void js_game_load_text(js_State *J) {

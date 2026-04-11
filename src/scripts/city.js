@@ -10,9 +10,11 @@ city {
         @grand_cost { }
         @grand_alcohol { }
         @not_enough_alcohol { }
+        @is_planned { }
 
         select_god: __city_festival_select_god
         select_size: __city_festival_select_size
+        schedule: __city_festival_schedule
     }
 
     @population { get: __city_population }

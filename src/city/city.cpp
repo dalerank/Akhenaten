@@ -1439,7 +1439,6 @@ bvariant city_get_property(const xstring &domain, const xstring &name) {
         { tags().rating, "winning_prosperity", [] (const xstring&) { return bvariant(winning_prosperity()); }},
         { tags().rating, "winning_monuments", [] (const xstring&) { return bvariant(winning_monuments()); }},
         { tags().rating, "winning_kingdom", [] (const xstring&) { return bvariant(winning_kingdom()); }},
-        { tags().city, "festival_selected_god_name", [] (const xstring&) { return bvariant(lang_xtext_from_key(g_city.festival.selected_god_name())); }},
     };
 
     for (const auto &prop : cproperties) {
