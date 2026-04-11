@@ -159,7 +159,7 @@ function bazaar_info_window_draw_goods(window) {
     function draw_good(bazaar, resource, index, icon, text) {
         icon.image = resource
         text.font = bazaar.idx_accepted(index) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW
-        text.text = bazaar.resource_amount(resource)
+        text.text = " " + bazaar.resource_amount(resource)
     }
 
     draw_good(bazaar, RESOURCE_POTTERY, 4, window.good0_icon, window.good0_text)
