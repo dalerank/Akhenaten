@@ -53,6 +53,7 @@ struct city_festival_t {
 };
 ANK_CONFIG_PROPERTY(city_festival_t,
     selected_god,
+    selected_size,
     small_cost,
     large_cost,
     grand_cost,
