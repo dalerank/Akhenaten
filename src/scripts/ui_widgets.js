@@ -508,22 +508,6 @@ dock_orders_window = {
     }
 }
 
-festival_square_info_window = {
-    ui : {
-        background      : outer_panel({pos: [0, 0], size: [29, 16]}),
-        title           : text({text: "#festival_square_info_title", pos: [0, 10], size: [px(29), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        warning         : text({pos: [32, 36], wrap:px(26), text:"${text.1}", font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-        workers_panel   : inner_panel({ pos : [16, 96], size: [27, 7] }),
-        fest_months_last: text({pos:[32, 112], size: [px(25), 20], text:"${city.months_since_festival} ${8.5} ${58.15}", font:FONT_NORMAL_WHITE_ON_DARK, align:"center"}),
-        hold_festival   : button({pos:[60, 134], size:[px(22), 25], font:FONT_NORMAL_WHITE_ON_DARK, text:"${58.16}"}),
-        planed_festival : text({pos: [102, 134], font : FONT_NORMAL_BLACK_ON_DARK, align:"center" }),
-        festival_advice : text({pos: [36, 164], wrap:400, font : FONT_NORMAL_WHITE_ON_DARK, multiline:true }),
-
-        button_help     : help_button({}),
-        button_close    : close_button({}),
-    }
-}
-
 info_window_tower = {
     ui : baseui(building_info_window, {
 
