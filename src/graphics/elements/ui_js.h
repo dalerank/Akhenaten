@@ -37,6 +37,8 @@ namespace ui {
     void proxy_set_enabled(js_State* J);
     void proxy_get_readonly(js_State* J);
     void proxy_set_readonly(js_State* J);
+    void proxy_get_darkened(js_State* J);
+    void proxy_set_darkened(js_State* J);
     void proxy_get_font(js_State* J);
     void proxy_set_font(js_State* J);
     void proxy_get_text_color(js_State* J);

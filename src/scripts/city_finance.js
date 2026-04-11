@@ -68,4 +68,5 @@ city.finance = {
 
     @treasury { get: __city_finance_get_treasury }
     @tax_percentage { set: __city_finance_set_tax_percentage }
+    @is_out_of_money { get: __city_finance_is_out_of_money }
 }

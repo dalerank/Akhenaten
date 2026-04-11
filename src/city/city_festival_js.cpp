@@ -28,3 +28,13 @@ int __city_festival_get_advice() {
     return g_city.festival.get_advice();
 }
 ANK_FUNCTION(__city_festival_get_advice)
+
+void __city_festival_select_god(int god) {
+    g_city.festival.select_god((e_god)god);
+}
+ANK_FUNCTION_1(__city_festival_select_god)
+
+void __city_festival_select_size(int size) {
+    g_city.festival.select_size((e_festival_type)size);
+}
+ANK_FUNCTION_1(__city_festival_select_size)

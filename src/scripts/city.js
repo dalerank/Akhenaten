@@ -4,6 +4,14 @@ city {
     festival {
         __property_getter: __city_get_festival_property
         @selected_god { }
+        @small_cost { }
+        @large_cost { }
+        @grand_cost { }
+        @grand_alcohol { }
+        @not_enough_alcohol { }
+
+        select_god: __city_festival_select_god
+        select_size: __city_festival_select_size
     }
 
     @population { get: __city_population }

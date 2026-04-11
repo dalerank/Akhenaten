@@ -280,6 +280,21 @@ void ui::proxy_set_readonly(js_State* J) {
     }
     J->pushundefined();
 }
+void ui::proxy_get_darkened(js_State* J) {
+    auto elem = GET_ELEM(J);
+    js_pushnumber(J, elem ? elem->darkened : 0);
+}
+void ui::proxy_set_darkened(js_State* J) {
+    auto elem = GET_ELEM(J);
+    if (elem) {
+        if (js_isboolean(J, 1)) {
+            elem->darkened = js_toboolean(J, 1) ? 1 : 0;
+        } else {
+            elem->darkened = (uint8_t)js_tointeger(J, 1);
+        }
+    }
+    J->pushundefined();
+}
 void ui::proxy_get_font(js_State* J) {
     auto elem = GET_ELEM(J);
     js_pushnumber(J, elem ? elem->font() : FONT_INVALID);
@@ -497,6 +512,11 @@ void __ui_window_message_dialog_show(pcstr template_name) {
     window_message_dialog_show(template_name, -1, nullptr);
 }
 ANK_FUNCTION_1(__ui_window_message_dialog_show)
+
+int __image_id_resource_icon_int(int resource) {
+    return image_id_resource_icon((e_resource)resource);
+}
+ANK_FUNCTION_1(__image_id_resource_icon_int)
 
 #define _R(name)            \
     js_newnumber(J, name);  \

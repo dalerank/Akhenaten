@@ -29,7 +29,7 @@ struct city_festival_t {
 
     e_god selected_god;
     e_festival_type selected_size;
-    
+
     uint16_t small_cost;
     uint16_t large_cost;
     uint16_t grand_cost;
@@ -52,5 +52,10 @@ struct city_festival_t {
     int get_advice();
 };
 ANK_CONFIG_PROPERTY(city_festival_t,
-    selected_god)
+    selected_god,
+    small_cost,
+    large_cost,
+    grand_cost,
+    grand_alcohol,
+    not_enough_alcohol)
 

@@ -26,3 +26,48 @@ hold_festival_window {
         button_help     : image_button({margin{left:14, bottom:-40}, size[27, 27], pack:PACK_GENERAL, id:134, offset:0 })
     }
 }
+
+[es=(hold_festival_window, init)]
+function hold_festival_window_init(window) {
+    window.background_image.enabled = __hold_festival_window_has_background()
+
+    if (!city.gods.is_known(city.festival.selected_god)) {
+        for (var god = 0; god < 5; god++) {
+            if (city.gods.is_known(god)) {
+                city.festival.select_god(god)
+                break
+            }
+        }
+    }
+
+    var deben_tid = get_image({ pack: PACK_GENERAL, id: 103, offset: 18 }).tid
+    var beer_tid = __image_id_resource_icon_int(RESOURCE_BEER)
+    var broke = city.finance.is_out_of_money
+
+    window.small_festival.text = __loc(58, 31) + " " + city.festival.small_cost + " @I" + deben_tid
+    window.small_festival.darkened = broke
+    window.small_festival.onclick = function() { city.festival.select_size(1) }
+
+    window.middle_festival.text = __loc(58, 32) + " " + city.festival.large_cost + " @I" + deben_tid
+    window.middle_festival.darkened = broke
+    window.middle_festival.onclick = function() { city.festival.select_size(2) }
+
+    window.large_festival.text = __loc(58, 32) + " " + city.festival.grand_cost + " @I" + deben_tid + " " + city.festival.grand_alcohol + "  @I" + beer_tid
+    window.large_festival.darkened = broke || city.festival.not_enough_alcohol
+    window.large_festival.onclick = function() { city.festival.select_size(3) }
+
+    window.button_ok.onclick = function() { __hold_festival_window_ok() }
+    window.button_cancel.onclick = function() { __hold_festival_window_cancel() }
+    window.button_help.onclick = function() { ui.window_message_dialog_show("message_overseer_temples") }
+
+    for (var god = 0; god < 5; god++) {
+        var btn = window["god" + god]
+        if (!city.gods.is_known(god)) {
+            btn.darkened = UiFlags_Grayscale
+            btn.readonly = true
+        }
+        ;(function(g, b) {
+            b.onclick = function() { city.festival.select_god(g) }
+        })(god, btn)
+    }
+}
