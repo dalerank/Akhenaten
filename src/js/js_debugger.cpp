@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <numeric>
 #include <sstream>
+#include <vector>
 
 #ifdef _WIN32
 #pragma comment(lib, "ws2_32.lib")
@@ -442,10 +443,6 @@ void MujsDebugger::send_stopped_event(pcstr reason, pcstr file, int line) {
 // (called from server thread; game thread is blocked on cv_.wait — safe)
 // ─────────────────────────────────────────────────────────────────────────────
 
-// MuJS "lightweight" functions keep parameters and `var` locals in stack slots
-// STACK[BOT+i] with names in F->vartab; J->E stays the lexical outer scope (often
-// global). Listing J->E->variables for "Local" would therefore show globals.
-
 static js_Function *dbg_current_function(js_State *J) {
     if (!J || J->bot < 1) {
         return nullptr;
@@ -509,6 +506,19 @@ static const char *js_value_type(const js_Value *v) {
     }
 }
 
+namespace {
+
+bool dbg_prop_name_seen(const std::vector<js_StringNode> &seen, js_StringNode name) {
+    for (js_StringNode s : seen) {
+        if (s == name) {
+            return true;
+        }
+    }
+    return false;
+}
+
+} // namespace
+
 cstring MujsDebugger::build_evaluate_response(const cstring &expression, int /*frame_id*/) {
     if (!J_ || !J_->E) {
         return "{\"result\":\"\",\"variablesReference\":0}";
@@ -546,7 +556,7 @@ cstring MujsDebugger::build_evaluate_response(const cstring &expression, int /*f
     if (dbg_use_stack_locals(J_, cur)) {
         for (int i = 0; i < cur->varlen; ++i) {
             if (cur->vartab[i] == name_node) {
-                v = &J_->stack[J_->bot + i];
+                v = &J_->stack[J_->bot + i + 1];
                 parent_ref = 1;
                 break;
             }
@@ -684,7 +694,7 @@ js_Object *MujsDebugger::get_object_for_ref(int var_ref) {
                 if (F->vartab[i] != name) {
                     continue;
                 }
-                const js_Value *slot = &J_->stack[J_->bot + i];
+                const js_Value *slot = &J_->stack[J_->bot + i + 1];
                 if (static_cast<js_Type>(slot->type) == JS_TOBJECT && slot->u.object) {
                     return slot->u.object;
                 }
@@ -727,7 +737,7 @@ cstring MujsDebugger::build_variables_json(int var_ref) {
                 }
                 first = false;
 
-                const js_Value *v = &J_->stack[J_->bot + i];
+                const js_Value *v = &J_->stack[J_->bot + i + 1];
                 int ref = 0;
                 if (static_cast<js_Type>(v->type) == JS_TOBJECT && v->u.object) {
                     ref = next_variable_ref_++;
@@ -788,30 +798,53 @@ cstring MujsDebugger::build_variables_json(int var_ref) {
 
     cstring list = "[";
     bool first = true;
-    for (js_Property *p = obj->head; p; p = p->next) {
-        if (!p->name) {
-            continue;
+    std::vector<js_StringNode> seen;
+    seen.reserve(32);
+
+    // Flatten own + prototype chain (shadowing: first wins). Resolve values via getproperty
+    // so accessors (e.g. UI pos/size) match script semantics; save/restore stack top so the
+    // paused VM frame is not left with extra temps.
+    auto emit_property = [&](js_StringNode nm) {
+        if (!nm || dbg_prop_name_seen(seen, nm)) {
+            return;
         }
+        seen.push_back(nm);
+
+        int saved_top = J_->top;
+        J_->getproperty(obj, nm);
+        js_Value vcopy = *js_tovalue(J_, -1);
+        J_->top = saved_top;
 
         if (!first) {
             list += ",";
         }
         first = false;
 
-        const js_Value *v = &p->value;
         int ref = 0;
-        if (static_cast<js_Type>(v->type) == JS_TOBJECT && v->u.object) {
+        if (static_cast<js_Type>(vcopy.type) == JS_TOBJECT && vcopy.u.object) {
             ref = next_variable_ref_++;
-            object_ref_map_[ref] = { var_ref, p->name };
+            object_ref_map_[ref] = { var_ref, nm };
         }
 
-        cstring value_display = js_value_display(J_, v);
+        cstring value_display = js_value_display(J_, &vcopy);
         list += json_from_bvariant_map({
-            { "name", js_strnode_cstr(p->name) },
-            { "type", js_value_type(v) },
+            { "name", js_strnode_cstr(nm) },
+            { "type", js_value_type(&vcopy) },
             { "variablesReference", ref }
         }, "value", value_display);
+    };
+
+    for (js_Property *p = obj->head; p; p = p->next) {
+        emit_property(p->name);
     }
+
+    int proto_depth = 0;
+    for (js_Object *proto = obj->prototype; proto && proto_depth < 64; proto = proto->prototype, ++proto_depth) {
+        for (js_Property *p = proto->head; p; p = p->next) {
+            emit_property(p->name);
+        }
+    }
+
     list += "]";
     return "{\"variables\":" + list + "}";
 }
