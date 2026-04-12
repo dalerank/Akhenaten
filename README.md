@@ -272,6 +272,15 @@ Akhenaten supports modding through the `--mods` parameter, which allows you to s
 
 The `--mixed` parameter enables hot-reloading of JavaScript scripts from disk, which is useful for development and testing. The `--unpack_scripts` parameter extracts embedded scripts to the user directory for inspection or modification.
 
+### Debugging embedded JavaScript (Visual Studio Code)
+
+Akhenaten runs gameplay scripts in an embedded **mujs** VM. You can start a **Debug Adapter Protocol (DAP)** server from the in-game console, then **attach** from **Visual Studio Code** or **Cursor**, set breakpoints in `.js` files, inspect locals, and step through script execution (the native C++ game loop is debugged separately).
+
+- Start the adapter (default port **4711**): in-game console command `js_debugger start` (see `js_debugger status|stop|verbose` in `src/js/js.cpp`).
+- In VS Code, use an **attach** configuration for type **`mujs`** pointing at `localhost` and the same port.
+
+A detailed walkthrough, including limitations of **Evaluate**/watch and tips for breakpoints, is in **[DEBUGGER_VSCODE.md](DEBUGGER_VSCODE.md)**.
+
 ## Contributing
 
 We welcome contributions! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to the project.
