@@ -7,6 +7,7 @@
 #include "window/file_dialog.h"
 #include "window/scenario_selection.h"
 #include "game/game.h"
+#include "game/resource.h"
 #include "game/mission.h"
 #include "overlays/city_overlay.h"
 #include "building/building.h"
@@ -46,6 +47,7 @@ void js_register_game_constants(js_State *J) {
 
     // coz it is eqaul to RESOURCE_MAX
     _R(RESOURCE_DEBEN)
+    _R(RESOURCE_TROOPS)
     _R(LABOR_CATEGORY_NONE)
     _R(LABOR_CATEGORY_SIZE)
     _R(LABOR_CATEGORY_CULTURE)

@@ -54,3 +54,98 @@ advisor_imperial_window {
         bot_text     : text_center({pos[504, 230], size[100, 20], font:FONT_NORMAL_BLACK_ON_LIGHT})
     }
 }
+
+function imperial_visible_request_view(index) {
+    var v = new ScenarioRequest(index)
+    if (!v.valid) {
+        return null
+    }
+    v.resource = city_resource_view(v.resource_id)
+    return v
+}
+
+[es=advisor_imperial_window_draw]
+function advisor_imperial_window_draw(window) {
+    log_info("advisor_imperial_window_draw")
+    var br = window.button_request
+    var brp = br.pos
+    var sz = br.size
+    var icon_off = window.button_request_icon.pos
+    var amt_off = window.button_request_amount.pos
+    var months_off = window.button_request_months.pos
+    var saved_off = window.button_request_saved.pos
+    var allow_off = window.button_request_allow.pos
+    var startReqIdx = 0
+    var showDistant = empire.has_distant_battle && empire.dispatched_army.state === 0
+
+    if (showDistant) {
+        var rp = { x: brp.x, y: brp.y }
+        var clicked = ui.button({
+            text: "",
+            pos: rp,
+            size: sz,
+            font: FONT_NORMAL_WHITE_ON_DARK
+        })
+        if (clicked) {
+            __imperial_dispatch_distant_battle()
+        }
+
+        ui.resource_icon([rp.x + icon_off.x, rp.y + icon_off.y], RESOURCE_TROOPS)
+
+        var cityLine = __loc(52, 72) + " " + __loc(21, __imperial_distant_battle_city_name_id())
+        ui.label(cityLine, [rp.x + amt_off.x, rp.y + amt_off.y], FONT_NORMAL_WHITE_ON_DARK)
+
+        var es = __distant_battle_enemy_strength()
+        var sid = 75
+        if (es < 46) { sid = 73 }
+        else if (es < 89) { sid = 74 }
+        var monthsLeft = empire.active_battle.months_until_battle
+        var strengthLine = __loc(52, sid) + " " + __loc(8, 4) + " " + monthsLeft
+        ui.label(strengthLine, [rp.x + saved_off.x, rp.y + saved_off.y], FONT_NORMAL_WHITE_ON_DARK)
+
+        startReqIdx = 1
+    }
+
+    var totalVis = __imperial_visible_request_count()
+    var numReq = totalVis
+    if (numReq > 5) { numReq = 5 }
+
+    window.no_requests.enabled = (numReq + startReqIdx <= 0)
+
+    for (var index = startReqIdx; index < numReq; index++) {
+        var rq = imperial_visible_request_view(index)
+        var rp = { x: brp.x, y: brp.y + index * sz.y }
+        var rowClicked = ui.button({ text: "", pos: rp, size: sz, font: FONT_NORMAL_WHITE_ON_DARK })
+        if (rowClicked) {
+            rq.handle()
+        }
+
+        ui.resource_icon([rp.x + icon_off.x, rp.y + icon_off.y], rq.resource)
+
+        var quat = rq.resource.stack_proper_quantity(rq.amount_total)
+        var amountLine = String(quat) + " " + __loc(23, rq.resource_id)
+        ui.label(amountLine, [rp.x + amt_off.x, rp.y + amt_off.y], FONT_NORMAL_WHITE_ON_DARK)
+
+        var monthLine = __loc(8, 4) + " " + rq.months + " " + __loc(12, 2)
+        ui.label(monthLine, [rp.x + months_off.x, rp.y + months_off.y], FONT_NORMAL_WHITE_ON_DARK)
+
+        var savedLine
+        var allowStr
+        var allowFont
+        if (rq.resource_id === RESOURCE_DEBEN) {
+            var treasury = city.finance.treasury
+            savedLine = String(treasury) + " " + __loc(52, 44)
+            allowStr = (treasury < rq.raw_amount) ? __loc(52, 48) : __loc(52, 47)
+            allowFont = FONT_NORMAL_WHITE_ON_DARK
+        } else {
+            var in_yards = rq.resource.yards_stored
+            var cityStored = rq.resource.stack_proper_quantity(in_yards)
+            savedLine = String(cityStored) + " " + __loc(52, 43)
+            allowStr = (cityStored < rq.amount_total) ? __loc(52, 48) : __loc(52, 47)
+            allowFont = (cityStored < rq.amount_total) ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_YELLOW
+        }
+
+        ui.label(savedLine, [rp.x + saved_off.x, rp.y + saved_off.y], FONT_NORMAL_WHITE_ON_DARK)
+        ui.label(allowStr, [rp.x + allow_off.x, rp.y + allow_off.y], allowFont)
+    }
+}

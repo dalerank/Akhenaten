@@ -57,6 +57,16 @@ function console_command_collapse_random_buildings(args) {
 	}
 }
 
+[console_command=test_request_pottery]
+function console_command_request_status(args) {
+	var amount = parseInt((args && args[0]) || "0", 10)
+	if (amount <= 0) {
+		amount = 0
+	}
+
+	city.create_good_request({ tag_id: 1, resource: RESOURCE_POTTERY, amount: amount, months_initial: 12 })
+}
+
 /** off/on or 0/1 sets explicitly; no or other arg toggles current */
 function console_tri_state_on_off(args, current) {
 	var v = args && args[0]

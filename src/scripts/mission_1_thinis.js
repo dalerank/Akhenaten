@@ -74,7 +74,7 @@ function mission1_on_start(ev) {
 function mission1_check_gold_mined(ev) {
     if (mission.gold_mined_handled) {
         return
-    } 
+    }
 
     if (city.finance.this_year.income.gold_delivered < mission.gold_mined) {
         return
