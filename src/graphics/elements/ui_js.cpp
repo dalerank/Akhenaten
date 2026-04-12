@@ -42,6 +42,10 @@ xstring js_toxstring(js_State* J, int idx) {
     return result;
 }
 
+vec2i js_tovec2i(js_State *J, int idx) {
+    return js_helpers::js_to_value<vec2i>(J, idx);
+}
+
 xstring js_xref(js_State* J) {
     js_StringNode new_ref = js_ref(J);
     xstring new_ref_str;
@@ -259,6 +263,35 @@ void ui::proxy_set_text(js_State* J) {
     }
     J->pushundefined();
 }
+
+void ui::proxy_get_pos(js_State* J) {
+    auto elem = GET_ELEM(J);
+    const vec2i pos = elem ? elem->pos : vec2i{0, 0};
+    js_newvec2i(J, pos.x, pos.y);
+}
+
+void ui::proxy_set_pos(js_State* J) {
+    auto elem = GET_ELEM(J);
+    if (elem) {
+        elem->pos = js_tovec2i(J, 1);
+    }
+    J->pushundefined();
+}
+
+void ui::proxy_get_size(js_State* J) {
+    auto elem = GET_ELEM(J);
+    const vec2i sz = elem ? elem->pxsize() : vec2i{0, 0};
+    js_newvec2i(J, sz.x, sz.y);
+}
+
+void ui::proxy_set_size(js_State* J) {
+    auto elem = GET_ELEM(J);
+    if (elem) {
+        elem->size = js_tovec2i(J, 1);
+    }
+    J->pushundefined();
+}
+
 void ui::proxy_get_enabled(js_State* J) {
     auto elem = GET_ELEM(J);
     js_pushboolean(J, elem ? elem->enabled : false);

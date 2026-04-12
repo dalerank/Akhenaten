@@ -665,7 +665,6 @@ cstring MujsDebugger::build_variables_json(int var_ref) {
         if (var_ref == 2) {
             while (env->outer) env = env->outer;
         }
-
         obj = env->variables;
     } else if (var_ref >= 1000) {
         obj = get_object_for_ref(var_ref);
@@ -696,7 +695,7 @@ cstring MujsDebugger::build_variables_json(int var_ref) {
 
         cstring value_display = js_value_display(J_, v);
         list += json_from_bvariant_map({
-            { "name", p->name },
+            { "name", js_strnode_cstr(p->name) },
             { "type", js_value_type(v) },
             { "variablesReference", ref }
         }, "value", value_display);

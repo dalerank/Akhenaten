@@ -33,6 +33,10 @@ namespace ui {
     void proxy_get_noop(js_State* J);
     void proxy_get_text(js_State* J);
     void proxy_set_text(js_State* J);
+    void proxy_get_pos(js_State* J);
+    void proxy_set_pos(js_State* J);
+    void proxy_get_size(js_State* J);
+    void proxy_set_size(js_State* J);
     void proxy_get_enabled(js_State* J);
     void proxy_set_enabled(js_State* J);
     void proxy_get_readonly(js_State* J);

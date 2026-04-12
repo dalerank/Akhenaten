@@ -23,6 +23,8 @@ void js_register_ui_element_input(js_State *J) {
     js_Object* proto = jsV_newobject(J, JS_COBJECT, J->Object_prototype);
     js_pushobject(J, proto);
     def_accessor(J, ui::proxy_get_value, ui::proxy_set_value, "value");
+    def_accessor(J, ui::proxy_get_pos, ui::proxy_set_pos, "pos");
+    def_accessor(J, ui::proxy_get_size, ui::proxy_set_size, "size");
     def_accessor(J, ui::proxy_get_enabled, ui::proxy_set_enabled, "enabled");
     def_accessor(J, ui::proxy_get_readonly, ui::proxy_set_readonly, "readonly");
 

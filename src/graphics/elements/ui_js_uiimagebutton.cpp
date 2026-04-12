@@ -23,6 +23,8 @@ void js_register_ui_element_image_button(js_State *J) {
 
     js_pushobject(J, proto);
     def_accessor(J, ui::proxy_get_text, ui::proxy_set_text, "text");
+    def_accessor(J, ui::proxy_get_pos, ui::proxy_set_pos, "pos");
+    def_accessor(J, ui::proxy_get_size, ui::proxy_set_size, "size");
     def_accessor(J, ui::proxy_get_enabled, ui::proxy_set_enabled, "enabled");
     def_accessor(J, ui::proxy_get_readonly, ui::proxy_set_readonly, "readonly");
     def_accessor(J, ui::proxy_get_darkened, ui::proxy_set_darkened, "darkened");

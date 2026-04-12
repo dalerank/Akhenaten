@@ -13,7 +13,7 @@ mission8 { // Selima
 	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
-		has_animals : true		
+		has_animals : true
 	    hide_nilometer : true
 	    marshland_grow : default_marshland_grow
 	    tree_grow : default_tree_grow
@@ -82,7 +82,7 @@ mission8 { // Selima
 			max_traders : 1
 			trade_limits : default_trade_limits
             // sell chickpeas, pottery, papyrus
-            // buys bricks, barley, beer, jewelry 
+            // buys bricks, barley, beer, jewelry
 		}
 
         {

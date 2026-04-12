@@ -3,7 +3,7 @@ log_info("akhenaten: mission 7 abydos started")
 mission7 { // Abydos
 	start_message : "message_soldiers_and_forts"
 	env {
-		has_animals : true		
+		has_animals : true
 		marshland_grow : default_marshland_grow
 	    tree_grow : default_tree_grow
 	}

@@ -3,7 +3,7 @@ log_info("akhenaten: mission 4 started")
 mission4 {
 	start_message : "message_trade_on_the_water"
 	env {
-		has_animals : true		
+		has_animals : true
 		marshland_grow : default_marshland_grow
 	    tree_grow : default_tree_grow
 	}
@@ -117,9 +117,9 @@ function mission4_handle_spacious_apartment() {
 
     mission.spacious_apartment_built = true
     mission.last_action_time = game.absolute_day
-	
+
     city.set_advisor_available(ADVISOR_EDUCATION, 1)
-	
+
 	city.use_building(BUILDING_REED_GATHERER, true)
 	city.use_building(BUILDING_PAPYRUS_WORKSHOP, true)
 	city.use_building(BUILDING_SCRIBAL_SCHOOL, true)
@@ -154,7 +154,7 @@ function mission4_handle_papyrus(ev) {
 
 	city.set_advisor_available(ADVISOR_TRADE, 1)
     city.use_building(BUILDING_DOCK, true)
-	
+
 	ui.popup_message("message_tutorial_trade_with_other_cities")
 }
 

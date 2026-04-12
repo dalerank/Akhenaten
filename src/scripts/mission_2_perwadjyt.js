@@ -54,7 +54,7 @@ function mission2_update_goal(ev) {
 	if (!mission.pottery_step2_stored_handled) {
 		city.set_goal_tooltip("#mission2_pottery_step2")
 		return
-	}	
+	}
 }
 
 [event=event_mission_start, mission=mission2]
@@ -62,7 +62,7 @@ function mission2_on_start(ev) {
 	for (var i = 0; i <= ADVISOR_DIPLOMACY; i++) {
 		city.set_advisor_available(i, 0)
 	}
-	
+
 	if (mission.figs_stored_handled) {
 		city.use_building(BUILDING_CLAY_PIT, true)
 		city.use_building(BUILDING_POTTERY_WORKSHOP, true)

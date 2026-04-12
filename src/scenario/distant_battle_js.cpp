@@ -66,6 +66,14 @@ void __distant_battle_cheat_setup_test(int enemy_strength, int city_id) {
 }
 ANK_FUNCTION_2(__distant_battle_cheat_setup_test)
 
+int __distant_battle_enemy_strength() {
+    if (!g_distant_battle.has_distant_battle()) {
+        return 0;
+    }
+    return g_distant_battle.enemy_strength();
+}
+ANK_FUNCTION(__distant_battle_enemy_strength)
+
 std::optional<bvariant> __game_get_active_battle_property(pcstr property) {
     return archive_helper::get(g_distant_battle.battle, property, true);
 }

@@ -3,7 +3,7 @@ log_info("akhenaten: mission 3 started")
 mission3 {
 	start_message : "message_developing_culture"
 	env {
-		has_animals : true		
+		has_animals : true
 		marshland_grow : default_marshland_grow
 	    tree_grow : default_tree_grow
 	}

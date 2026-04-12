@@ -158,5 +158,19 @@ vec2i __empire_trade_route_point(int route_id, int index) {
 }
 ANK_FUNCTION_2(__empire_trade_route_point)
 
+void __imperial_dispatch_distant_battle() {
+    g_formations.dispatch_batalions_to_distant_battle();
+}
+ANK_FUNCTION(__imperial_dispatch_distant_battle)
+
+int __imperial_distant_battle_city_name_id() {
+    if (!g_distant_battle.has_distant_battle()) {
+        return 0;
+    }
+    const empire_city *c = g_empire.city(g_distant_battle.battle.city);
+    return c ? c->name_id : 0;
+}
+ANK_FUNCTION(__imperial_distant_battle_city_name_id)
+
 void js_register_empire_objects(js_State *J) {
 }
