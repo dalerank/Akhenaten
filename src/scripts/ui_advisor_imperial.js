@@ -47,7 +47,7 @@ advisor_imperial_window {
         money_lost   : label({pos[272, 374], text:"0 debens lost this year throught theft" })
         no_requests  : label({margin{ centerx:-100, centery:-10}, text:"${52.21}", font:FONT_NORMAL_WHITE_ON_DARK })
 
-        salary_rank  : button({pos[70, 392], size[500, 24], tooltip[68, 97], textfn:salary_rank_text, font:FONT_NORMAL_WHITE_ON_DARK })
+        salary_rank  : button({pos[70, 392], size[500, 24], tooltip[68, 97], textfn:salary_rank_text, font:FONT_NORMAL_WHITE_ON_DARK, onclick: show_window_by_id("set_salary_window") })
 
         big_text     : text_center({pos[60, 295], size[400, 20], font:FONT_NORMAL_BLACK_ON_LIGHT})
         top_text     : text_center({pos[504, 130], size[100, 20], font:FONT_NORMAL_BLACK_ON_LIGHT})
