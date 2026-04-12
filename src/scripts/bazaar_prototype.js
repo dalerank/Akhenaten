@@ -12,3 +12,4 @@ Bazaar.prototype.idx_amount = function(index) { return __bazaar_idx_amount(this.
 Bazaar.prototype.idx_accepted = function(index) { return __bazaar_idx_accepted(this.id, index) }
 Bazaar.prototype.res_accepted = function(resource_type) { return __bazaar_res_accepted(this.id, resource_type) }
 Bazaar.prototype.unaccept_all_goods = function() { __bazaar_unaccept_all_goods(this.id) }
+Bazaar.prototype.toggle_res_accepted = function(resource_type) { __bazaar_toggle_res_accepted(this.id, resource_type) }

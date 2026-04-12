@@ -126,7 +126,7 @@ void building_bazaar::toggle_idx_accepted(uint8_t idx) {
 }
 
 void building_bazaar::unaccept_all_goods() {
-    runtime_data().market_goods.set_one();
+    runtime_data().market_goods.set_zero();
 }
 
 building *building_bazaar::get_storage_destination() {

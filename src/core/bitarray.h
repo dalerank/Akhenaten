@@ -17,7 +17,7 @@ struct bitarray_base {
     static const uint32_t size_of_int = sizeof(uint32_t) * 8;
 
     inline self_type &set_one() { memset(ptr(), 0xff, size_in_bytes()); return self(); }
-    inline self_type &set_zero() { memzero(ptr(), size_in_bytes()); return self(); }
+    inline self_type &set_zero() { memset(ptr(), 0x00, size_in_bytes()); return self(); }
 
     inline self_type &assign(const self_type &o) { memcpy(ptr(), o.ptr(), this->size_in_bytes()); return self(); }
 

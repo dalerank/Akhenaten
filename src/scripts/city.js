@@ -77,6 +77,7 @@ city {
 
     resources {
         @available { get: __city_resources_available }
+        @available_market { get: __city_resources_available_market_goods }
 
         can_produce : __city_resource_can_produce
         can_import : __city_resource_can_import

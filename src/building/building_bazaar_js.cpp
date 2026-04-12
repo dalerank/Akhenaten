@@ -35,3 +35,11 @@ void __bazaar_unaccept_all_goods(int bid) {
     }
 }
 ANK_FUNCTION_1(__bazaar_unaccept_all_goods)
+
+void __bazaar_toggle_res_accepted(int bid, int resource) {
+    auto b = building_get(bid)->dcast_bazaar();
+    if (b) {
+        b->toggle_res_accepted((e_resource)resource);
+    }
+}
+ANK_FUNCTION_2(__bazaar_toggle_res_accepted)
