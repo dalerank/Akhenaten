@@ -645,7 +645,7 @@ window_popup_dialog_ok {
 }
 
 minimap_window {
-    draw_size [73, 111]    
+    draw_size [73, 111]
 
     terrain_water {pack:PACK_GENERAL, id:142},
     terrain_shrub {pack:PACK_GENERAL, id:143},
@@ -692,36 +692,4 @@ info_window_education = {
                                                         }
                                                     }),
     })
-}
-
-function salary_rank_text(rank, _) {
-    return city.rank_title(rank) + ": " + city.rank_salary(rank) + " ${6.0}";
-}
-
-set_salary_window {
-    pos [(sw(0) - px(24))/2, (sh(0) - px(25))/2]
-
-    ui {
-        background_image : background({pack:PACK_UNLOADED, id:11})
-        background       : outer_panel({size[24, 25]})
-        resource_icon    : resource_icon({pos[16, 16], resource:RESOURCE_DEBEN})
-        title            : text_center({pos[48, 16], size[px(24) - 64, 20], text[52, 15], font: FONT_LARGE_BLACK_ON_LIGHT})
-        inner_panel      : inner_panel({pos[16, 48], size[22, 15]
-            ui {
-                salary_rank_0   : button({textfn: salary_rank_text, param1:0, font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 5], size [px(22) - 64, 20]})
-                salary_rank_1   : button({textfn: salary_rank_text, param1:1, font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 25], size [px(22) - 64, 20]})
-                salary_rank_2   : button({textfn: salary_rank_text, param1:2, font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 45], size [px(22) - 64, 20]})
-                salary_rank_3   : button({textfn: salary_rank_text, param1:3, font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 65], size [px(22) - 64, 20]})
-                salary_rank_4   : button({textfn: salary_rank_text, param1:4, font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 85], size [px(22) - 64, 20]})
-                salary_rank_5   : button({textfn: salary_rank_text, param1:5, font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 105], size [px(22) - 64, 20]})
-                salary_rank_6   : button({textfn: salary_rank_text, param1:6, font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 125], size [px(22) - 64, 20]})
-                salary_rank_7   : button({textfn: salary_rank_text, param1:7, font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 145], size [px(22) - 64, 20]})
-                salary_rank_8   : button({textfn: salary_rank_text, param1:8, font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 165], size [px(22) - 64, 20]})
-                salary_rank_9   : button({textfn: salary_rank_text, param1:9, font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 185], size [px(22) - 64, 20]})
-                salary_rank_10  : button({textfn: salary_rank_text, param1:10, font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 205], size [px(22) - 64, 20]})
-            }
-        })
-        explanation_text : text({pos[16, 304], size[px(22), -1], wrap:px(22), font: FONT_NORMAL_BLACK_ON_LIGHT, multiline:true})
-        btn_cancel       : button({margin{centerx: -80, bottom: -40}, size[160, 20], text[13, 4], font: FONT_NORMAL_BLACK_ON_LIGHT})
-    }
 }

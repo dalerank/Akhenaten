@@ -18,6 +18,8 @@ city {
     }
 
     @population { get: __city_population }
+    @player_rank { get: __city_player_rank }
+    @mission_has_won { get: __city_mission_has_won }
     @rating_kingdom { get: __city_rating_kingdom }
     @num_forts { get: __formation_get_num_forts }
     @current_overlay { get: __city_get_current_overlay, set: __city_set_current_overlay }
@@ -118,6 +120,7 @@ city {
     set_advisor_available : __city_set_advisor_available
     rank_title : __city_rank_title
     rank_salary : __city_rank_salary
+    apply_salary_rank : __city_kingdome_apply_salary_rank
     start_foreign_army_invasion : __city_start_foreign_army_invasion
     camera_go_to : __city_camera_go_to
     allowed_foods : __city_allowed_foods

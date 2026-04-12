@@ -29,6 +29,15 @@ ANK_FUNCTION(__city_population)
 int __city_player_rank() { return g_city.kingdome.player_rank; }
 ANK_FUNCTION(__city_player_rank)
 
+void __city_kingdome_apply_salary_rank(int rank) {
+    g_city.kingdome.set_salary_rank(rank);
+    g_city.kingdome.update_explanation();
+}
+ANK_FUNCTION_1(__city_kingdome_apply_salary_rank)
+
+bool __city_mission_has_won() { return g_city.victory_state.has_won(); }
+ANK_FUNCTION(__city_mission_has_won)
+
 pcstr __city_player_name() { return (pcstr)city_player_name; }
 ANK_FUNCTION(__city_player_name)
 

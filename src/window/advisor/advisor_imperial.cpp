@@ -21,10 +21,10 @@
 #include "window/window_empire.h"
 #include "window/window_gift_to_kingdome.h"
 #include "window/popup_dialog.h"
-#include "window/set_salary.h"
 #include "graphics/screen.h"
 #include "scenario/distant_battle.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
 ui::advisor_imperial_window g_advisor_imperial_window;
 
@@ -43,23 +43,23 @@ int ui::advisor_imperial_window::get_request_status(int index) {
 
     if (request.resource == RESOURCE_DEBEN && g_city.finance.treasury <= request.amount) {
         return STATUS_NOT_ENOUGH_RESOURCES;
-    } 
-    
+    }
+
     if (request.resource == RESOURCE_TROOPS
-         && g_distant_battle.battle.months_until_battle > 0 
+         && g_distant_battle.battle.months_until_battle > 0
          && !g_distant_battle.battle.egyptian_months_to_travel_forth) {
 
         if (g_city.military.total_batalions <= 0) {
             return STATUS_NO_LEGIONS_AVAILABLE;
-        } 
-        
+        }
+
         if (g_city.military.kingdome_service_batalions <= 0) {
             return STATUS_NO_LEGIONS_SELECTED;
-        } 
-            
+        }
+
         return STATUS_CONFIRM_SEND_LEGIONS;
-    } 
-    
+    }
+
     int stored_in_city = g_city.resource.stored(request.resource);
     if (stored_in_city < request.resource_amount()) {
         return STATUS_NOT_ENOUGH_RESOURCES;
@@ -72,13 +72,7 @@ void ui::advisor_imperial_window::draw_foreground(UiFlags flags) {
 }
 
 int ui::advisor_imperial_window::draw_background(UiFlags flags) {
-    autoconfig_window::draw_background(flags);
-
-    ui["salary_rank"].onclick([] { 
-        set_salary_window::show(window_advisors_show, true); 
-    });
-
-    return 0;
+    return autoconfig_window::draw_background(flags);
 }
 
 void ui::advisor_imperial_window::handle_request(int index) {
@@ -142,7 +136,7 @@ void ui::advisor_imperial_window::ui_draw_foreground(UiFlags flags) {
         int strength_text_id = 75;
         int enemy_strength = g_distant_battle.enemy_strength();
         if (enemy_strength < 46) { strength_text_id = 73;}
-        else if (enemy_strength < 89) { strength_text_id = 74; } 
+        else if (enemy_strength < 89) { strength_text_id = 74; }
 
         bstring128 distant_strenght_text;
         distant_strenght_text.printf("%s %s %d", ui::str(52, strength_text_id), ui::str(8, 4), g_distant_battle.battle.months_until_battle);

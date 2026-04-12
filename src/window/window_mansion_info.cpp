@@ -5,8 +5,7 @@
 #include "building/building_type.h"
 #include "city/object_info.h"
 #include "graphics/elements/ui.h"
-#include "window/set_salary.h"
-#include <algorithm>
+#include "window/autoconfig_window.h"
 
 struct info_window_mansion : public building_info_window_t<info_window_mansion> {
     virtual void init(object_info &c) override;
@@ -37,9 +36,7 @@ void info_window_mansion::init(object_info &c) {
     }
 
     ui["change_salary"].readonly = g_city.victory_state.has_won();
-    ui["change_salary"].onclick([] {
-        set_salary_window::show(nullptr, false);
-    });
+    ui["change_salary"].onclick([] { autoconfig_window::show("set_salary_window"); });
 }
 
 void info_window_mansion::window_info_background(object_info &c) {

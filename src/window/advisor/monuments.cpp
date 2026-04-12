@@ -21,7 +21,6 @@
 #include "window/window_empire.h"
 #include "window/window_gift_to_kingdome.h"
 #include "window/popup_dialog.h"
-#include "window/set_salary.h"
 #include "game/game.h"
 
 #define ADVISOR_HEIGHT 27
