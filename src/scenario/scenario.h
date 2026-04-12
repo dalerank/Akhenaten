@@ -55,9 +55,9 @@ struct scenario_data_buffers {
     buffer* monuments = nullptr;
 };
 
-enum e_climate { 
-    CLIMATE_CENTRAL = 0, 
-    CLIMATE_NORTHERN = 1, 
+enum e_climate {
+    CLIMATE_CENTRAL = 0,
+    CLIMATE_NORTHERN = 1,
     CLIMATE_DESERT = 2
 };
 

@@ -268,7 +268,7 @@ void kingdome_relation_t::send_gift(int gift_size) {
     personal_savings -= cost;
 }
 
-int kingdome_relation_t::salary_for_rank(int rank) { 
+int kingdome_relation_t::salary_for_rank(int rank) {
     return params().salary_ranks[rank];
 }
 

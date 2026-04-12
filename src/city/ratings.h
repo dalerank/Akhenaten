@@ -54,3 +54,5 @@ struct city_ratings_t {
     void update_monument_rating();
 };
 ANK_CONFIG_STRUCT(city_ratings_t::point, coverage, points)
+
+ANK_CONFIG_PROPERTY(city_ratings_t, culture, prosperity, monument)
