@@ -519,6 +519,14 @@ int __image_id_resource_icon_int(int resource) {
 }
 ANK_FUNCTION_1(__image_id_resource_icon_int)
 
+void __ui_set_window_pos(pcstr window_id, vec2i pos) {
+    auto w = autoconfig_window::find(window_id);
+    if (w) {
+        w->pos = pos;
+    }
+}
+ANK_FUNCTION_2(__ui_set_window_pos)
+
 #define _R(name)            \
     js_newnumber(J, name);  \
     js_setglobal(J, #name);

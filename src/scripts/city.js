@@ -65,9 +65,11 @@ city {
     }
 
     object_info {
-        @building_id { get: __city_get_object_info_building_id }
-        @bid { get: __city_get_object_info_building_id }
-        @group { get: __city_get_object_info_group }
+        __property_getter: __city_get_object_info_property
+        @building_id { }
+        @bid { }
+        @group { }
+        @offset { }
     }
 
     warnings {

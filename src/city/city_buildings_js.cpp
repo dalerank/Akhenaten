@@ -13,6 +13,8 @@
 #include "building/building.h"
 #include "core/profiler.h"
 
+#include <optional>
+
 int __city_count_industry_active(int resource) {
     return g_city.buildings.count_industry_active((e_resource)resource);
 }
@@ -124,11 +126,11 @@ bvariant __map_grid_get_area(tile2i tile, int size, int radius) {
 }
 ANK_FUNCTION_3(__map_grid_get_area)
 
-int __city_get_object_info_building_id() { return common_info_window::get_object_info().bid;}
-ANK_FUNCTION(__city_get_object_info_building_id)
-
-int __city_get_object_info_group() { return common_info_window::get_object_info().group_id; }
-ANK_FUNCTION(__city_get_object_info_group)
+std::optional<bvariant> __city_get_object_info_property(pcstr property) {
+    const object_info& o = common_info_window::get_object_info();
+    return archive_helper::get(o, property, true);
+}
+ANK_FUNCTION_1(__city_get_object_info_property)
 
 int __city_get_random_building_id_by_type(int type) { return building_id_random((e_building_type)type); }
 ANK_FUNCTION_1(__city_get_random_building_id_by_type)

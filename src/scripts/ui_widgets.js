@@ -700,7 +700,7 @@ function salary_rank_text(rank, _) {
 
 set_salary_window {
     pos [(sw(0) - px(24))/2, (sh(0) - px(25))/2]
-    
+
     ui {
         background_image : background({pack:PACK_UNLOADED, id:11})
         background       : outer_panel({size[24, 25]})

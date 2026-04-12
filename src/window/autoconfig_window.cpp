@@ -153,6 +153,7 @@ void autoconfig_window::show(xstring section) {
         return;
     }
     autoconfig_window* w = it->second;
+
     window_type s_script_window_type = {
        section,
        [section] (int flags) { auto *w = get_window_current(section); if (w) w->draw_background(flags); },
@@ -161,6 +162,14 @@ void autoconfig_window::show(xstring section) {
     };
     w->init();
     window_show(&s_script_window_type);
+}
+
+autoconfig_window* autoconfig_window::find(xstring section) {
+    auto it = autoconfig_registry().find(section);
+    if (it == autoconfig_registry().end()) {
+        return nullptr;
+    }
+    return it->second;
 }
 
 void autoconfig_window::unregister_section(xstring section) {

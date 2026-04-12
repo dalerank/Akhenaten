@@ -77,7 +77,6 @@ function bazaar_info_window_init(window) {
     var meta_text_id = bazaar.meta_text_id
     var reason = { group: 0, id: 0 }
 
-
     if (bazaar.has_road_access == false) {
         reason = { group: 69, id: 25 }
     } else if (bazaar.num_workers <= 0) {
