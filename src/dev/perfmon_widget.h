@@ -88,6 +88,7 @@ namespace Perfmon
         PerfStatus _overallStatus = PerfStatus::Good;
         std::vector<Metric> _metrics;
         std::vector<EntityCountMetric> _entityCounters;
+        std::unordered_map<const char*, int> _samplesMap;
         float _timeSinceLastEntitiesCount = 0.0f;
         float _entitiesCountUpdateInterval = 0.3f;
         std::vector<NanoProfileFrame> _nanoProfilerSamplesHistory;
