@@ -42,8 +42,7 @@ function scenario_request_compute_status(rq) {
     return rq.event_id
 }
 
-ScenarioRequest.prototype.handle = function () {
-    var rq = this
+function scenario_request_handle(rq) {
     var index = rq.index
     if (!rq.valid) {
         return
@@ -179,7 +178,7 @@ function advisor_imperial_window_draw(window) {
         var rp = { x: brp.x, y: brp.y + index * sz.y }
         var rowClicked = ui.button({ text: "", pos: rp, size: sz, font: FONT_NORMAL_WHITE_ON_DARK })
         if (rowClicked) {
-            rq.handle()
+            scenario_request_handle(rq)
         }
 
         ui.resource_icon([rp.x + icon_off.x, rp.y + icon_off.y], rq.resource)
