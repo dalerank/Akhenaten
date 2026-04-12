@@ -22,7 +22,6 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "window/advisor/advisor_chief.h"
-#include "window/advisor/advisor_education.h"
 #include "window/advisor/advisor_entertainment.h"
 #include "window/advisor/advisor_financial.h"
 #include "window/advisor/advisor_health.h"
@@ -90,7 +89,7 @@ struct window_advisors : public ui::widget {
         nullptr, // ADVISOR_TRADE: from js_window_registry
         ui::advisor_population_window::instance(),
         ui::advisor_health_window::instance(),
-        ui::advisor_education_window::instance(),
+        nullptr, // ADVISOR_EDUCATION: from js_window_registry (ui_advisor_education.js)
         ui::advisor_entertainment_window::instance(),
         ui::advisor_religion_window::instance(),
         ui::advisor_financial_window::instance(),

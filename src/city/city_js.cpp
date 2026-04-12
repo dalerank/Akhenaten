@@ -108,5 +108,20 @@ int __city_message_lang_category(int message_index) {
 }
 ANK_FUNCTION_1(__city_message_lang_category)
 
+std::optional<bvariant> __city_get_coverage_property(pcstr property) {
+    return archive_helper::get(g_city.coverage, property, true);
+}
+ANK_FUNCTION_1(__city_get_coverage_property)
+
+std::optional<bvariant> __city_get_house_demands_property(pcstr property) {
+    return archive_helper::get(g_city.houses, property, true);
+}
+ANK_FUNCTION_1(__city_get_house_demands_property)
+
+std::optional<bvariant> __city_get_house_demands_requiring_property(pcstr property) {
+    return archive_helper::get(g_city.houses.requiring, property, true);
+}
+ANK_FUNCTION_1(__city_get_house_demands_requiring_property)
+
 void js_register_city_objects(js_State *J) {
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include "core/archive.h"
 
 class buffer;
 
@@ -22,6 +22,9 @@ struct city_coverage_t {
     void load(buffer *buf);
     void update();
 };
+
+ANK_CONFIG_PROPERTY(city_coverage_t,
+    booth, bandstand, pavilion, senet_house, physician, dentist, apothecary, mortuary, school, academy, library, oracle)
 
 struct city_average_coverage_t {
     int32_t average_entertainment;

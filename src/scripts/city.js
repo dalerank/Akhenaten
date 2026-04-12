@@ -53,6 +53,41 @@ city {
         @kingdom { get: __city_rating_kingdom }
     }
 
+    coverage {
+        __property_getter: __city_get_coverage_property
+        @booth {}
+        @bandstand {}
+        @pavilion {}
+        @senet_house {}
+        @physician {}
+        @dentist {}
+        @apothecary {}
+        @mortuary {}
+        @school {}
+        @academy {}
+        @library {}
+        @oracle {}
+    }
+
+    houses {
+        __property_getter: __city_get_house_demands_property
+        @health {}
+        @religion {}
+        @education {}
+        @entertainment {}
+
+        requiring {
+            __property_getter: __city_get_house_demands_requiring_property
+            @school {}
+            @library {}
+            @dentist {}
+            @physician {}
+            @water_supply {}
+            @magistrate {}
+            @religion {}
+        }
+    }
+
     taxes {
         __property_getter: __city_get_taxes_property
         @percentage_taxed_people { }

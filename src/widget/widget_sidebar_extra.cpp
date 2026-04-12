@@ -228,6 +228,6 @@ void sidebar_window_extra::draw_foreground(UiFlags flags) {
     draw_objective("prosperity", 53, 2, prosperity);
     draw_objective("monument", 53, 3, monument);
     draw_objective("kingdom", 53, 4, kingdom);
-    
+
     ui.end_widget();
 }
