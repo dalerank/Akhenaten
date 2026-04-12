@@ -98,3 +98,5 @@ struct object_info {
     }
 };
 ANK_CONFIG_STRUCT(object_info, forbidden_figure_types)
+
+ANK_CONFIG_PROPERTY(object_info, bid, group_id, offset)

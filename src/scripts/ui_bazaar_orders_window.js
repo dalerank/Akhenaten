@@ -66,6 +66,8 @@ bazaar_orders_window {
 
 [es=(bazaar_orders_window, init)]
 function bazaar_orders_window_init(window) {
+    ui.set_window_pos("bazaar_orders_window", city.object_info.offset)
+
     window.goods_list.clear()
     for (var name in city.resources.available_market) {
         var resId = city.resources.available_market[name]
