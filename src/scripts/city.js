@@ -48,9 +48,10 @@ city {
     }
 
     rating {
-        @culture { get: __city_rating_culture }
-        @prosperity { get: __city_rating_prosperity }
-        @monument { get: __city_rating_monument }
+        __property_getter: __city_get_rating_property
+        @culture {}
+        @prosperity {}
+        @monument {}
         @kingdom { get: __city_rating_kingdom }
     }
 
@@ -162,7 +163,7 @@ city {
     count_active_industry : __city_count_industry_active
     count_total_industry : __city_count_industry_total
     set_advisor_available : __city_set_advisor_available
-    rank_title : __city_rank_title
+    rank_title : function(rank) { return __loc(52, rank + 4) }
     rank_salary : __city_rank_salary
     apply_salary_rank : __city_kingdome_apply_salary_rank
     start_foreign_army_invasion : __city_start_foreign_army_invasion

@@ -10,9 +10,6 @@
 #include "scenario/criteria.h"
 #include "scenario/scenario.h"
 
-pcstr __city_rank_title(int rank) { return lang_get_string(52, rank + 4); }
-ANK_FUNCTION_1(__city_rank_title)
-
 int __city_rank_salary(int rank) { return g_city.kingdome.salary_for_rank(rank); }
 ANK_FUNCTION_1(__city_rank_salary)
 
@@ -62,9 +59,15 @@ ANK_FUNCTION_2(__city_get_battalion_property)
 std::optional<bvariant> __city_get_labor_property(pcstr property) { return archive_helper::get(g_city.labor, property, true); }
 ANK_FUNCTION_1(__city_get_labor_property)
 
+std::optional<bvariant> __city_get_rating_property(pcstr property) {
+    return archive_helper::get(g_city.ratings, property, true);
+}
+ANK_FUNCTION_1(__city_get_rating_property)
+
 std::optional<bvariant> __city_get_labor_category_property(int index, pcstr property) {
-    if (index < 0 || index >= LABOR_CATEGORY_SIZE)
+    if (index < 0 || index >= LABOR_CATEGORY_SIZE) {
         return {};
+    }
     return archive_helper::get(g_city.labor.categories[index], property, true);
 }
 ANK_FUNCTION_2(__city_get_labor_category_property)
@@ -73,10 +76,6 @@ void __city_camera_go_to(tile2i tile) { camera_go_to_mappoint(tile); } ANK_FUNCT
 
 e_resource __city_allowed_foods(int index) { return g_city.allowed_foods(index); }
 ANK_FUNCTION_1(__city_allowed_foods)
-
-int __city_rating_culture() { return g_city.ratings.culture; } ANK_FUNCTION(__city_rating_culture)
-int __city_rating_prosperity() { return g_city.ratings.prosperity; } ANK_FUNCTION(__city_rating_prosperity)
-int __city_rating_monument() { return g_city.ratings.monument; } ANK_FUNCTION(__city_rating_monument)
 
 int __city_workers_diff() {
     return g_city.labor.workers_unemployed - g_city.labor.workers_needed;
