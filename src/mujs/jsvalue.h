@@ -22,7 +22,6 @@ enum js_Type {
     JS_TNULL,
     JS_TBOOLEAN,
     JS_TNUMBER,
-    JS_TLITSTR,
     JS_TOBJECT,
 };
 
@@ -64,7 +63,6 @@ struct js_Value {
         int boolean;
         double number;
         js_StringNode shrstr;
-        js_StringNode litstr;
         js_Object *object;
     } u;
     char pad[7]; /* extra storage for shrstr */
