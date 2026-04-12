@@ -335,9 +335,6 @@ static void copy_js_value_text(js_State *J, js_Value *v, char *out, size_t outsz
         return;
     }
     switch (v->type) {
-    case JS_TLITSTR:
-        snprintf(out, outsz, "%s", js_strnode_cstr(v->u.litstr));
-        return;
     case JS_TSHRSTR:
         snprintf(out, outsz, "%s", js_strnode_cstr(v->u.shrstr));
         return;

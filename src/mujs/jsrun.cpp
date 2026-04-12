@@ -37,15 +37,15 @@ static js_StringNode property_prototype = js_intern("prototype");
 void js_State::stackoverflow() {
     OZZY_PROFILER_FUNCTION();
 
-    stack[top].type = JS_TLITSTR;
-    stack[top].u.litstr = property_stack_overflow;
+    stack[top].type = JS_TSHRSTR;
+    stack[top].u.shrstr = property_stack_overflow;
     ++top;
     js_throw(this);
 }
 
 void js_outofmemory(js_State *J) {
-    STACK[TOP].type = JS_TLITSTR;
-    STACK[TOP].u.litstr = property_out_ofmemory;
+    STACK[TOP].type = JS_TSHRSTR;
+    STACK[TOP].u.shrstr = property_out_ofmemory;
     ++TOP;
     js_throw(J);
 }
@@ -159,8 +159,8 @@ void js_pushlstring(js_State *J, const char *v, int n) {
 
 void js_State::pushliteral(js_StringNode v) {
     JCHECKSTACK(1);
-    stack[top].type = JS_TLITSTR;
-    stack[top].u.litstr = v;
+    stack[top].type = JS_TSHRSTR;
+    stack[top].u.shrstr = v;
     ++top;
 }
 
@@ -217,7 +217,7 @@ int js_iscvec2i(js_State *J, int idx) {
     js_Value *v = stackidx(J, idx);
     return v->type == JS_TOBJECT && v->u.object->type == JS_CVEC2I;
 }
-int js_isstring(js_State *J, int idx) { enum js_Type t = (js_Type)stackidx(J, idx)->type; return t == JS_TSHRSTR || t == JS_TLITSTR; }
+int js_isstring(js_State *J, int idx) { enum js_Type t = (js_Type)stackidx(J, idx)->type; return t == JS_TSHRSTR; }
 int js_isprimitive(js_State *J, int idx) { return stackidx(J, idx)->type != JS_TOBJECT; }
 int js_State::isobject(int idx) { return stackidx(this, idx)->type == JS_TOBJECT; }
 int js_iscoercible(js_State *J, int idx) { js_Value *v = stackidx(J, idx); return v->type != JS_TUNDEFINED && v->type != JS_TNULL; }
@@ -326,8 +326,6 @@ static const js_StringNode js_typeof(js_State* J, int idx) {
         return obj_boolean;
     case JS_TNUMBER:
         return obj_number;
-    case JS_TLITSTR:
-        return obj_string;
     case JS_TOBJECT:
         if (v->u.object->type == JS_CFUNCTION || v->u.object->type == JS_CCFUNCTION)
             return obj_function;
