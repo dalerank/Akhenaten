@@ -87,6 +87,10 @@ void __ui_border(vec2i pos, vec2i size, int type, unsigned int c, int flags) {
     ui::border(pos, size, type, (color)c, (UiFlags)flags);
 }
 ANK_FUNCTION_5(__ui_border);
+void __ui_button_border(vec2i pos, vec2i size, bool focused) {
+    ui::button_border(pos, size, focused);
+}
+ANK_FUNCTION_3(__ui_button_border);
 void __ui_label_colored(pcstr text, vec2i pos, int font, unsigned int c) {
     ui::label_colored(text, pos, (e_font)font, (color)c);
 }

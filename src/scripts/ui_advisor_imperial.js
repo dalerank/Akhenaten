@@ -72,6 +72,64 @@ function scenario_request_handle(rq) {
     })
 }
 
+function imperial_requests_on_click_item(p) {
+    if (p.text === "distant") {
+        __imperial_dispatch_distant_battle()
+        return
+    }
+    var rq = imperial_visible_request_view(p.user_data)
+    scenario_request_handle(rq)
+}
+
+function imperial_requests_on_render_item(p) {
+    var px = p.x
+    var py = p.y
+    if (p.text === "distant") {
+        ui.resource_icon([px + 7, py + 7], RESOURCE_TROOPS)
+        var cityLine = __loc(52, 72) + " " + __loc(21, __imperial_distant_battle_city_name_id())
+        ui.label(cityLine, [px + 30, py + 7], FONT_NORMAL_WHITE_ON_DARK)
+        var es = __distant_battle_enemy_strength()
+        var sid = 75
+        if (es < 46) { sid = 73 }
+        else if (es < 89) { sid = 74 }
+        var monthsLeft = empire.active_battle.months_until_battle
+        var strengthLine = __loc(52, sid) + " " + __loc(8, 4) + " " + monthsLeft
+        ui.label(strengthLine, [px + 30, py + 25], FONT_NORMAL_WHITE_ON_DARK)
+    } else {
+        var rq = imperial_visible_request_view(p.user_data)
+        if (!rq) {
+            return
+        }
+        ui.resource_icon([px + 7, py + 7], rq.resource)
+        var quat = rq.resource.stack_proper_quantity(rq.amount_total)
+        var amountLine = String(quat) + " " + __loc(23, rq.resource_id)
+        ui.label(amountLine, [px + 30, py + 7], FONT_NORMAL_WHITE_ON_DARK)
+        var monthLine = __loc(8, 4) + " " + rq.months + " " + __loc(12, 2)
+        ui.label(monthLine, [px + 310, py + 7], FONT_NORMAL_WHITE_ON_DARK)
+        var savedLine
+        var allowStr
+        var allowFont
+        if (rq.resource_id === RESOURCE_DEBEN) {
+            var treasury = city.finance.treasury
+            savedLine = String(treasury) + " " + __loc(52, 44)
+            allowStr = (treasury < rq.raw_amount) ? __loc(52, 48) : __loc(52, 47)
+            allowFont = FONT_NORMAL_WHITE_ON_DARK
+        } else {
+            var in_yards = rq.resource.yards_stored
+            var cityStored = rq.resource.stack_proper_quantity(in_yards)
+            savedLine = String(cityStored) + " " + __loc(52, 43)
+            allowStr = (cityStored < rq.amount_total) ? __loc(52, 48) : __loc(52, 47)
+            allowFont = (cityStored < rq.amount_total) ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_YELLOW
+        }
+        ui.label(savedLine, [px + 30, py + 25], FONT_NORMAL_WHITE_ON_DARK)
+        ui.label(allowStr, [px + 310, py + 25], allowFont)
+    }
+
+    if (p.hover) {
+        ui.button_border({ x: px + 2, y: py + 2 }, { x: p.sizex - 4, y: p.sizey - 4 }, false)
+    }
+}
+
 [es=advisor_window]
 advisor_imperial_window {
     advisor: ADVISOR_IMPERIAL
@@ -83,14 +141,19 @@ advisor_imperial_window {
         rating_advice : multiline({pos[60, 64], size[px(36), 20], wrap:px(35), font:FONT_NORMAL_BLACK_ON_LIGHT, textfn:rating_advice_text})
         inner_panel  : inner_panel({pos[32, 110], size[36, 13] })
 
-        button_request : dummy({pos[38, 116], size[562, 45],
-            ui {
-                button_request_icon   : dummy({pos[7, 7]})
-                button_request_amount : dummy({pos[30, 7], font: FONT_NORMAL_WHITE_ON_DARK})
-                button_request_months : dummy({pos[310, 7], font: FONT_NORMAL_WHITE_ON_DARK})
-                button_request_saved  : dummy({pos[30, 25], font: FONT_NORMAL_WHITE_ON_DARK})
-                button_request_allow  : dummy({pos[310, 25], font: FONT_NORMAL_WHITE_ON_DARK})
-            }
+        requests_list : scrollable_list({
+            pos[38, 116]
+            size[35, 14]
+            view_items: 5
+            buttons_size_y: 45
+            buttons_margin_x: 0
+            buttons_margin_y: 0
+            text_padding_x: 0
+            text_padding_y: 0
+            draw_scrollbar_always: false
+            draw_paneling: false
+            onrender_item: imperial_requests_on_render_item
+            onclick_item: imperial_requests_on_click_item
         })
 
         bottom_panel : inner_panel({pos[64, 324], size[32, 6] })
@@ -128,85 +191,21 @@ function imperial_visible_request_view(index) {
 
 [es=(advisor_imperial_window, ui_draw_foreground)]
 function advisor_imperial_window_draw(window) {
-    var br = window.button_request
-    var brp = br.pos
-    var sz = br.size
-    var icon_off = window.button_request_icon.pos
-    var amt_off = window.button_request_amount.pos
-    var months_off = window.button_request_months.pos
-    var saved_off = window.button_request_saved.pos
-    var allow_off = window.button_request_allow.pos
-    var startReqIdx = 0
-    var showDistant = empire.has_distant_battle && empire.dispatched_army.state === 0
-
-    if (showDistant) {
-        var rp = { x: brp.x, y: brp.y }
-        var clicked = ui.button({
-            text: "",
-            pos: rp,
-            size: sz,
-            font: FONT_NORMAL_WHITE_ON_DARK
-        })
-        if (clicked) {
-            __imperial_dispatch_distant_battle()
-        }
-
-        ui.resource_icon([rp.x + icon_off.x, rp.y + icon_off.y], RESOURCE_TROOPS)
-
-        var cityLine = __loc(52, 72) + " " + __loc(21, __imperial_distant_battle_city_name_id())
-        ui.label(cityLine, [rp.x + amt_off.x, rp.y + amt_off.y], FONT_NORMAL_WHITE_ON_DARK)
-
-        var es = __distant_battle_enemy_strength()
-        var sid = 75
-        if (es < 46) { sid = 73 }
-        else if (es < 89) { sid = 74 }
-        var monthsLeft = empire.active_battle.months_until_battle
-        var strengthLine = __loc(52, sid) + " " + __loc(8, 4) + " " + monthsLeft
-        ui.label(strengthLine, [rp.x + saved_off.x, rp.y + saved_off.y], FONT_NORMAL_WHITE_ON_DARK)
-
-        startReqIdx = 1
-    }
-
     var totalVis = __imperial_visible_request_count()
-    var numReq = totalVis
-    if (numReq > 5) { numReq = 5 }
+    var showDistant = empire.has_distant_battle && empire.dispatched_army.state === 0
+    var startReqIdx = showDistant ? 1 : 0
+    var rowCount = (showDistant ? 1 : 0) + Math.max(0, totalVis - startReqIdx)
 
-    window.no_requests.enabled = (numReq + startReqIdx <= 0)
+    window.no_requests.enabled = (rowCount <= 0)
 
-    for (var index = startReqIdx; index < numReq; index++) {
-        var rq = imperial_visible_request_view(index)
-        var rp = { x: brp.x, y: brp.y + index * sz.y }
-        var rowClicked = ui.button({ text: "", pos: rp, size: sz, font: FONT_NORMAL_WHITE_ON_DARK })
-        if (rowClicked) {
-            scenario_request_handle(rq)
+    var list = window.requests_list
+    if (list.items_count !== rowCount) {
+        list.clear()
+        if (showDistant) {
+            list.add_item("distant", 0)
         }
-
-        ui.resource_icon([rp.x + icon_off.x, rp.y + icon_off.y], rq.resource)
-
-        var quat = rq.resource.stack_proper_quantity(rq.amount_total)
-        var amountLine = String(quat) + " " + __loc(23, rq.resource_id)
-        ui.label(amountLine, [rp.x + amt_off.x, rp.y + amt_off.y], FONT_NORMAL_WHITE_ON_DARK)
-
-        var monthLine = __loc(8, 4) + " " + rq.months + " " + __loc(12, 2)
-        ui.label(monthLine, [rp.x + months_off.x, rp.y + months_off.y], FONT_NORMAL_WHITE_ON_DARK)
-
-        var savedLine
-        var allowStr
-        var allowFont
-        if (rq.resource_id === RESOURCE_DEBEN) {
-            var treasury = city.finance.treasury
-            savedLine = String(treasury) + " " + __loc(52, 44)
-            allowStr = (treasury < rq.raw_amount) ? __loc(52, 48) : __loc(52, 47)
-            allowFont = FONT_NORMAL_WHITE_ON_DARK
-        } else {
-            var in_yards = rq.resource.yards_stored
-            var cityStored = rq.resource.stack_proper_quantity(in_yards)
-            savedLine = String(cityStored) + " " + __loc(52, 43)
-            allowStr = (cityStored < rq.amount_total) ? __loc(52, 48) : __loc(52, 47)
-            allowFont = (cityStored < rq.amount_total) ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_YELLOW
+        for (var ix = startReqIdx; ix < totalVis; ix++) {
+            list.add_item("request", ix)
         }
-
-        ui.label(savedLine, [rp.x + saved_off.x, rp.y + saved_off.y], FONT_NORMAL_WHITE_ON_DARK)
-        ui.label(allowStr, [rp.x + allow_off.x, rp.y + allow_off.y], allowFont)
     }
 }
