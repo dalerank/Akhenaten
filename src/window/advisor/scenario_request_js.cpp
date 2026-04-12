@@ -1,27 +1,17 @@
-#include "advisor_imperial.h"
-
-#include "empire/empire.h"
-#include "empire/empire_city.h"
-#include "figure/formation.h"
 #include "js/js_game.h"
+
+#include "core/profiler.h"
 #include "mujs/jsbuiltin.h"
 #include "mujs/jsvalue.h"
 #include "mujs/mujs.h"
 #include "city/city.h"
-#include "city/military.h"
-#include "window/popup_dialog.h"
-#include "scenario/distant_battle.h"
 #include "scenario/request.h"
 
 #include <cstdio>
 
-extern ui::advisor_imperial_window g_advisor_imperial_window;
+static scenario_request dummy_request;
 
-namespace {
-
-scenario_request dummy_request;
-
-scenario_request& imperial_request_at(int index) {
+static scenario_request& imperial_request_at(int index) {
     auto v = scenario_get_visible_requests();
     if (index < 0 || index >= static_cast<int>(v.size())) {
         return dummy_request;
@@ -73,84 +63,9 @@ static void scenario_request_get_months(js_State* J) {
     js_pushnumber(J, r.months_to_comply);
 }
 
-enum E_STATUS {
-    STATUS_NOT_ENOUGH_RESOURCES = -1,
-    STATUS_CONFIRM_SEND_LEGIONS = -2,
-    STATUS_NO_LEGIONS_SELECTED = -3,
-    STATUS_NO_LEGIONS_AVAILABLE = -4,
-};
-
-int scenario_request_get_status(int index) {
-    scenario_request& request = scenario_request_get_visible(index);
-    if (!request.is_valid()) {
-        return -1;
-    }
-
-    if (request.resource == RESOURCE_DEBEN && g_city.finance.treasury <= request.amount) {
-        return STATUS_NOT_ENOUGH_RESOURCES;
-    }
-
-    if (request.resource == RESOURCE_TROOPS && g_distant_battle.battle.months_until_battle > 0
-        && !g_distant_battle.battle.egyptian_months_to_travel_forth) {
-        if (g_city.military.total_batalions <= 0) {
-            return STATUS_NO_LEGIONS_AVAILABLE;
-        }
-
-        if (g_city.military.kingdome_service_batalions <= 0) {
-            return STATUS_NO_LEGIONS_SELECTED;
-        }
-
-        return STATUS_CONFIRM_SEND_LEGIONS;
-    }
-
-    int stored_in_city = g_city.resource.stored(request.resource);
-    if (stored_in_city < request.resource_amount()) {
-        return STATUS_NOT_ENOUGH_RESOURCES;
-    }
-
-    return request.event_id;
-}
-
-void scenario_request_handle(int index) {
-    int status = scenario_request_get_status(index);
-    if (status < 0) {
-        return;
-    }
-
-    g_city.military.clear_kingdome_service_batalions();
-    switch (status) {
-    case STATUS_NO_LEGIONS_AVAILABLE:
-        popup_dialog::show_ok("#popup_dialog_no_legions_available");
-        break;
-
-    case STATUS_NO_LEGIONS_SELECTED:
-        popup_dialog::show_ok("#popup_dialog_no_legions_selected");
-        break;
-
-    case STATUS_CONFIRM_SEND_LEGIONS:
-        popup_dialog::show_ok("#popup_dialog_send_troops");
-        break;
-
-    case STATUS_NOT_ENOUGH_RESOURCES:
-        popup_dialog::show_ok("#popup_dialog_not_enough_goods");
-        break;
-
-    default:
-        popup_dialog::show_yesno("#popup_dialog_send_goods",
-          [selected_request_id = index] { scenario_request_dispatch(selected_request_id); });
-        break;
-    }
-}
-
-static void scenario_request_proto_handle(js_State* J) {
-    const int index = scenario_request_this_index(J);
-    auto& r = imperial_request_at(index);
-    if (!r.is_valid()) {
-        js_helpers::js_push_void(J);
-        return;
-    }
-    scenario_request_handle(index);
-    js_helpers::js_push_void(J);
+static void scenario_request_get_event_id(js_State* J) {
+    const auto& r = imperial_request_at(scenario_request_this_index(J));
+    js_pushnumber(J, r.event_id);
 }
 
 static void scenario_request_proto_toString(js_State *J) {
@@ -167,7 +82,10 @@ static void jsB_new_ScenarioRequest(js_State *J) {
     js_setproperty(J, -2, js_intern("index"));
 }
 
-} // namespace
+void __scenario_request_dispatch(int index) {
+    scenario_request_dispatch(index);
+}
+ANK_FUNCTION_1(__scenario_request_dispatch)
 
 void js_register_imperial_visible_request(js_State *J) {
     g_imperial_visible_request_proto = jsV_newobject(J, JS_COBJECT, J->Object_prototype);
@@ -178,8 +96,8 @@ void js_register_imperial_visible_request(js_State *J) {
     def_readonly_prop(J, scenario_request_get_raw_amount, "raw_amount");
     def_readonly_prop(J, scenario_request_get_amount_total, "amount_total");
     def_readonly_prop(J, scenario_request_get_months, "months");
+    def_readonly_prop(J, scenario_request_get_event_id, "event_id");
 
-    jsB_propf(J, js_intern("ScenarioRequest.prototype.handle"), scenario_request_proto_handle, 0);
     jsB_propf(J, js_intern("ScenarioRequest.prototype.toString"), scenario_request_proto_toString, 0);
 
     js_newcconstructor(J, jsB_new_ScenarioRequest, jsB_new_ScenarioRequest, js_intern("ScenarioRequest"), 1);
@@ -190,4 +108,3 @@ int __imperial_visible_request_count() {
     return static_cast<int>(scenario_get_visible_requests().size());
 }
 ANK_FUNCTION(__imperial_visible_request_count)
-

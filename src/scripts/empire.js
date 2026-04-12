@@ -32,8 +32,9 @@ empire {
     active_battle {
         __property_getter: function(property) { return __game_get_active_battle_property(property) }
         @egyptian_months_to_travel_back { }
+        @egyptian_months_to_travel_forth { }
         @kingdome_army_is_traveling_forth { }
-        @months_until_distant_battle { }
+        @months_until_battle { }
         @city { }
 
         @path_length { get: function() { return __distant_battle_army_path_length() } }
