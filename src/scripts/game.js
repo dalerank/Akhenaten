@@ -50,6 +50,7 @@ game {
 scenario {
     has_animals: __scenario_has_animals
     flotsam_enabled: __scenario_flotsam_enabled
+    is_open_play: __scenario_is_open_play
 }
 
 game_features {

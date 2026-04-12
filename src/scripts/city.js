@@ -18,6 +18,7 @@ city {
     }
 
     @population { get: __city_population }
+    @workers_diff { get: __city_workers_diff }
     @player_rank { get: __city_player_rank }
     @mission_has_won { get: __city_mission_has_won }
     @rating_kingdom { get: __city_rating_kingdom }
@@ -51,6 +52,14 @@ city {
         @prosperity { get: __city_rating_prosperity }
         @monument { get: __city_rating_monument }
         @kingdom { get: __city_rating_kingdom }
+    }
+
+    winning {
+        @culture { get: __city_winning_culture }
+        @prosperity { get: __city_winning_prosperity }
+        @monument { get: __city_winning_monuments }
+        @kingdom { get: __city_winning_kingdom }
+        @population { get: __city_winning_population }
     }
 
     coverage {

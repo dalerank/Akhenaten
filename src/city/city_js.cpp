@@ -7,6 +7,8 @@
 #include "city/city_message.h"
 #include "io/gamefiles/lang.h"
 #include "city/city_building_menu_ctrl.h"
+#include "scenario/criteria.h"
+#include "scenario/scenario.h"
 
 pcstr __city_rank_title(int rank) { return lang_get_string(52, rank + 4); }
 ANK_FUNCTION_1(__city_rank_title)
@@ -75,6 +77,25 @@ ANK_FUNCTION_1(__city_allowed_foods)
 int __city_rating_culture() { return g_city.ratings.culture; } ANK_FUNCTION(__city_rating_culture)
 int __city_rating_prosperity() { return g_city.ratings.prosperity; } ANK_FUNCTION(__city_rating_prosperity)
 int __city_rating_monument() { return g_city.ratings.monument; } ANK_FUNCTION(__city_rating_monument)
+
+int __city_workers_diff() {
+    return g_city.labor.workers_unemployed - g_city.labor.workers_needed;
+}
+ANK_FUNCTION(__city_workers_diff)
+
+int __scenario_is_open_play() { return scenario_is_open_play(); }
+ANK_FUNCTION(__scenario_is_open_play)
+
+int __city_winning_culture() { return winning_culture(); }
+ANK_FUNCTION(__city_winning_culture)
+int __city_winning_prosperity() { return winning_prosperity(); }
+ANK_FUNCTION(__city_winning_prosperity)
+int __city_winning_monuments() { return winning_monuments(); }
+ANK_FUNCTION(__city_winning_monuments)
+int __city_winning_kingdom() { return winning_kingdom(); }
+ANK_FUNCTION(__city_winning_kingdom)
+int __city_winning_population() { return winning_population(); }
+ANK_FUNCTION(__city_winning_population)
 
 tile2i __city_message_next_problem_area_grid_offset() { return tile2i(city_message_next_problem_area_grid_offset()); } ANK_FUNCTION(__city_message_next_problem_area_grid_offset)
 
