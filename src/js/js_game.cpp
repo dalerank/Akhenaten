@@ -244,14 +244,9 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
                 js_pushnull(J);
                 break;
 
-            case bvariant::etype_vec2i:
-                js_newobject(J);
-                {
+            case bvariant::etype_vec2i: {
                     const vec2i pos = val.as_vec2i();
-                    js_pushnumber(J, pos.x);
-                    js_setproperty(J, -2, js_helpers::property_x);
-                    js_pushnumber(J, pos.y);
-                    js_setproperty(J, -2, js_helpers::property_y);
+                    js_newvec2i(J, pos.x, pos.y);                    
                 }
                 break;
             case bvariant::etype_none:
