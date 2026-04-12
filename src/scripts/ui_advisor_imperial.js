@@ -12,7 +12,70 @@ function salary_rank_text() {
     return __loc(52, player.salary_rank + 4) + " " + player.salary_amount + " " + __loc(52, 3);
 }
 
+var SCENARIO_REQ_NOT_ENOUGH = -1
+var SCENARIO_REQ_CONFIRM_LEGIONS = -2
+var SCENARIO_REQ_NO_LEGIONS_SELECTED = -3
+var SCENARIO_REQ_NO_LEGIONS_AVAILABLE = -4
+
+function scenario_request_compute_status(rq) {
+    if (!rq.valid) {
+        return SCENARIO_REQ_NOT_ENOUGH
+    }
+    var rid = rq.resource_id
+    if (rid === RESOURCE_DEBEN && city.finance.treasury <= rq.raw_amount) {
+        return SCENARIO_REQ_NOT_ENOUGH
+    }
+    var ab = empire.active_battle
+    if (rid === RESOURCE_TROOPS && ab.months_until_battle > 0 && !ab.egyptian_months_to_travel_forth) {
+        if (city.military.total_batalions <= 0) {
+            return SCENARIO_REQ_NO_LEGIONS_AVAILABLE
+        }
+        if (city.military.kingdome_service_batalions <= 0) {
+            return SCENARIO_REQ_NO_LEGIONS_SELECTED
+        }
+        return SCENARIO_REQ_CONFIRM_LEGIONS
+    }
+    var stored_in_city = rq.resource.city_stored
+    if (stored_in_city < rq.amount_total) {
+        return SCENARIO_REQ_NOT_ENOUGH
+    }
+    return rq.event_id
+}
+
+ScenarioRequest.prototype.handle = function () {
+    var rq = this
+    var index = rq.index
+    if (!rq.valid) {
+        return
+    }
+    __city_military_clear_kingdome_service()
+    var s = scenario_request_compute_status(rq)
+    if (s === SCENARIO_REQ_NO_LEGIONS_AVAILABLE) {
+        ui.show_ok("#popup_dialog_no_legions_available")
+        return
+    }
+    if (s === SCENARIO_REQ_NO_LEGIONS_SELECTED) {
+        ui.show_ok("#popup_dialog_no_legions_selected")
+        return
+    }
+    if (s === SCENARIO_REQ_CONFIRM_LEGIONS) {
+        ui.show_ok("#popup_dialog_send_troops")
+        return
+    }
+    if (s === SCENARIO_REQ_NOT_ENOUGH) {
+        ui.show_ok("#popup_dialog_not_enough_goods")
+        return
+    }
+    ui.show_yesno("#popup_dialog_send_goods", function (yes) {
+        if (yes) {
+            __scenario_request_dispatch(index)
+        }
+    })
+}
+
+[es=advisor_window]
 advisor_imperial_window {
+    advisor: ADVISOR_IMPERIAL
     ui {
         background   : outer_panel({size[40, 27]})
         advisor_icon : image({pack:PACK_GENERAL, id:128, offset:2, pos[10, 10] })
@@ -64,9 +127,8 @@ function imperial_visible_request_view(index) {
     return v
 }
 
-[es=advisor_imperial_window_draw]
+[es=(advisor_imperial_window, ui_draw_foreground)]
 function advisor_imperial_window_draw(window) {
-    log_info("advisor_imperial_window_draw")
     var br = window.button_request
     var brp = br.pos
     var sz = br.size

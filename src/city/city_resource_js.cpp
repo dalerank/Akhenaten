@@ -14,6 +14,11 @@ int __city_yards_stored(int resource) {
 }
 ANK_FUNCTION_1(__city_yards_stored)
 
+int __city_resource_stored(int resource) {
+    return g_city.resource.stored((e_resource)resource);
+}
+ANK_FUNCTION_1(__city_resource_stored)
+
 void __cheat_add_resource(int resource, int amount) {
     city_resource_add_items((e_resource)resource, amount);
     city_resource_was_added_warning((e_resource)resource);
