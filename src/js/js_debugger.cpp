@@ -478,8 +478,6 @@ static cstring js_value_display(js_State *J, const js_Value *v) {
         return json_jstr(cstring("\"") + js_strnode_cstr(v->u.shrstr) + "\"");
     case JS_TLITSTR:
         return json_jstr(cstring("\"") + js_strnode_cstr(v->u.litstr) + "\"");
-    case JS_TMEMSTR:
-        return json_jstr(cstring("\"") + js_strnode_cstr(v->u.memstr) + "\"");
     case JS_TOBJECT:
         if (!v->u.object) return json_jstr("null");
         switch (v->u.object->type) {
@@ -503,9 +501,10 @@ static const char *js_value_type(const js_Value *v) {
     case JS_TNULL:      return "null";
     case JS_TBOOLEAN:   return "boolean";
     case JS_TNUMBER:    return "number";
+
     case JS_TSHRSTR:
     case JS_TLITSTR:
-    case JS_TMEMSTR:    return "string";
+                        return "string";
     case JS_TOBJECT:
         if (v->u.object && v->u.object->type == JS_CVEC2I) {
             return "Vec2i";

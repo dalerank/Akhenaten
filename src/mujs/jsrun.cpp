@@ -75,7 +75,7 @@ void js_frame_free(js_State *J, void *ptr) {
     frame_alloc(frame_actx, ptr, 0);
 }
 
-js_StringNode jsV_newmemstring(js_State *J, const char *s, int n) {
+js_StringNode jsV_newstring(js_State* J, const char* s, int n) {
     OZZY_PROFILER_FUNCTION();
 
     char *v = (char*)js_frame_alloc(J, n + 1);
@@ -129,8 +129,8 @@ void js_State::pushstring(pcstr v) {
     OZZY_PROFILER_FUNCTION();
 
     JCHECKSTACK(1);
-    stack[top].type = JS_TMEMSTR;
-    stack[top].u.memstr = js_intern(v);
+    stack[top].type = JS_TSHRSTR;
+    stack[top].u.shrstr = js_intern(v);
     ++top;
 }
 
@@ -138,22 +138,22 @@ void js_State::pushstring(const js_StringNode v) {
     OZZY_PROFILER_FUNCTION();
 
     JCHECKSTACK(1);
-    stack[top].type = JS_TMEMSTR;
-    stack[top].u.memstr = v;
+    stack[top].type = JS_TSHRSTR;
+    stack[top].u.shrstr = v;
     ++top;
 }
 
 void js_pushlstring(js_State* J, const js_StringNode v) {
     CHECKSTACK(1);
-    STACK[TOP].type = JS_TMEMSTR;
-    STACK[TOP].u.memstr = v;
+    STACK[TOP].type = JS_TSHRSTR;
+    STACK[TOP].u.shrstr = v;
     ++TOP;
 }
 
 void js_pushlstring(js_State *J, const char *v, int n) {
     CHECKSTACK(1);
-    STACK[TOP].type = JS_TMEMSTR;
-    STACK[TOP].u.memstr = jsV_newmemstring(J, v, n);
+    STACK[TOP].type = JS_TSHRSTR;
+    STACK[TOP].u.shrstr = jsV_newstring(J, v, n);
     ++TOP;
 }
 
@@ -217,7 +217,7 @@ int js_iscvec2i(js_State *J, int idx) {
     js_Value *v = stackidx(J, idx);
     return v->type == JS_TOBJECT && v->u.object->type == JS_CVEC2I;
 }
-int js_isstring(js_State *J, int idx) { enum js_Type t = (js_Type)stackidx(J, idx)->type; return t == JS_TSHRSTR || t == JS_TLITSTR || t == JS_TMEMSTR; }
+int js_isstring(js_State *J, int idx) { enum js_Type t = (js_Type)stackidx(J, idx)->type; return t == JS_TSHRSTR || t == JS_TLITSTR; }
 int js_isprimitive(js_State *J, int idx) { return stackidx(J, idx)->type != JS_TOBJECT; }
 int js_State::isobject(int idx) { return stackidx(this, idx)->type == JS_TOBJECT; }
 int js_iscoercible(js_State *J, int idx) { js_Value *v = stackidx(J, idx); return v->type != JS_TUNDEFINED && v->type != JS_TNULL; }
@@ -327,8 +327,6 @@ static const js_StringNode js_typeof(js_State* J, int idx) {
     case JS_TNUMBER:
         return obj_number;
     case JS_TLITSTR:
-        return obj_string;
-    case JS_TMEMSTR:
         return obj_string;
     case JS_TOBJECT:
         if (v->u.object->type == JS_CFUNCTION || v->u.object->type == JS_CCFUNCTION)

@@ -14,11 +14,10 @@ static js_StringNode property_toString = js_intern("toString");
 static js_StringNode property_valueOf = js_intern("valueOf");
 static js_StringNode property_atobject = js_intern("[object]");
 
-#define JSV_ISSTRING(v) (v->type == JS_TSHRSTR || v->type == JS_TMEMSTR || v->type == JS_TLITSTR)
+#define JSV_ISSTRING(v) (v->type == JS_TSHRSTR || v->type == JS_TLITSTR)
 inline pcstr JSV_TOSTRING(js_Value* v) {
     return v->type == JS_TSHRSTR   ? js_strnode_cstr(v->u.shrstr)
            : v->type == JS_TLITSTR ? js_strnode_cstr(v->u.litstr)
-           : v->type == JS_TMEMSTR ? js_strnode_cstr(v->u.memstr)
                                    : "";
 }
 
@@ -157,8 +156,6 @@ int jsV_toboolean(js_State* J, js_Value* v) {
         return v->u.number != 0 && !isnan(v->u.number);
     case JS_TLITSTR:
         return !v->u.litstr->value.empty();
-    case JS_TMEMSTR:
-        return !v->u.memstr->value.empty();
     case JS_TOBJECT: {
         js_Object* obj = v->u.object;
         if (obj->type == JS_CPTR) {
@@ -275,8 +272,6 @@ double jsV_tonumber(js_State* J, js_Value* v) {
         return v->u.number;
     case JS_TLITSTR:
         return jsV_stringtonumber(J, js_strnode_cstr(v->u.litstr));
-    case JS_TMEMSTR:
-        return jsV_stringtonumber(J, js_strnode_cstr(v->u.memstr));
     case JS_TOBJECT: {
         js_Object* obj = v->u.object;
         if (obj->type == JS_CPTR) {
@@ -380,8 +375,6 @@ const js_StringNode jsV_tostring(js_State* J, js_Value* v) {
         return v->u.boolean ? property_true : property_false;
     case JS_TLITSTR:
         return v->u.litstr;
-    case JS_TMEMSTR:
-        return v->u.memstr;
     case JS_TNUMBER:
         /* js_StringNode is an interned pointer; do not reuse JS_TSHRSTR without assigning it. */
         p = jsV_numbertostring(J, buf, v->u.number);
@@ -446,8 +439,6 @@ js_Object* js_State::toobject(js_Value* v) {
         return jsV_newnumber(J, v->u.number);
     case JS_TLITSTR:
         return jsV_newstring(J, v->u.litstr);
-    case JS_TMEMSTR:
-        return jsV_newstring(J, v->u.memstr);
     case JS_TOBJECT:
         return v->u.object;
     }
