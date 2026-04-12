@@ -831,7 +831,6 @@ void js_dumpvalue(js_State *J, js_Value v)
 	case JS_TNUMBER: LPRINTFMT("%.9g", v.u.number); break;
 	case JS_TSHRSTR: LPRINTFMT("'%s'", js_strnode_cstr(v.u.shrstr)); break;
 	case JS_TLITSTR: LPRINTFMT("'%s'", js_strnode_cstr(v.u.litstr)); break;
-	case JS_TMEMSTR: LPRINTFMT("'%s'", js_strnode_cstr(v.u.memstr)); break;
 	case JS_TOBJECT:
 		if (v.u.object == J->G) {
 			LPRINTF("[Global]");

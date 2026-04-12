@@ -23,7 +23,6 @@ enum js_Type {
     JS_TBOOLEAN,
     JS_TNUMBER,
     JS_TLITSTR,
-    JS_TMEMSTR,
     JS_TOBJECT,
 };
 
@@ -66,7 +65,6 @@ struct js_Value {
         double number;
         js_StringNode shrstr;
         js_StringNode litstr;
-        js_StringNode memstr;
         js_Object *object;
     } u;
     char pad[7]; /* extra storage for shrstr */
@@ -157,7 +155,7 @@ struct js_Iterator {
 };
 
 /* jsrun.c */
-js_StringNode jsV_newmemstring(js_State *J, const char *s, int n);
+js_StringNode jsV_newstring(js_State *J, const char *s, int n);
 js_Value *js_tovalue(js_State *J, int idx);
 void js_toprimitive(js_State *J, int idx, int hint);
 void js_pushvalue(js_State *J, js_Value v);

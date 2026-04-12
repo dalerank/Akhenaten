@@ -326,7 +326,6 @@ bool js_vm_have_error() {
     return vm.have_error;
 }
 
-/** Copy primitive / string storage without relying on ToString (TMEMSTR from pushstring is common on Error#message). */
 static void copy_js_value_text(js_State *J, js_Value *v, char *out, size_t outsz) {
     if (!out || !outsz) {
         return;
@@ -336,11 +335,6 @@ static void copy_js_value_text(js_State *J, js_Value *v, char *out, size_t outsz
         return;
     }
     switch (v->type) {
-    case JS_TMEMSTR:
-        if (v->u.memstr) {
-            snprintf(out, outsz, "%s", js_strnode_cstr(v->u.memstr));
-        }
-        return;
     case JS_TLITSTR:
         snprintf(out, outsz, "%s", js_strnode_cstr(v->u.litstr));
         return;
