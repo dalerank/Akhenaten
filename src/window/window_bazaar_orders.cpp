@@ -26,15 +26,6 @@ ANK_FUNCTION(__window_bazaar_orders_show);
 
 void bazaar_orders_window::init(object_info &c) {
     c.ui = this;
-    building *b = c.building_get();
-    ui["accept_none"].onclick([building_id = b->id] {
-        building_bazaar *b = ::building_get(building_id)->dcast_bazaar();
-        b->unaccept_all_goods();
-    });
-
-    ui["button_close"].onclick([grid_offset = c.grid_offset] {
-        events::emit(event_show_tile_info{ tile2i(grid_offset), /*avoid_mouse*/true, SOURCE_LOCATION });
-    });
 }
 
 void bazaar_orders_window::window_info_foreground(object_info &c) {
@@ -69,7 +60,7 @@ void bazaar_orders_window::window_info_foreground(object_info &c) {
 
         row_y += item_row.size.y;
     }
-    
+
     ui.end_widget();
 }
 

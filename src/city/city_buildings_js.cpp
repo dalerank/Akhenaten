@@ -6,6 +6,7 @@
 #include "empire/empire.h"
 #include "building/building_house.h"
 #include "grid/grid.h"
+#include "core/core.h"
 #include "core/log.h"
 #include "game/game_events.h"
 #include "city/object_info.h"
