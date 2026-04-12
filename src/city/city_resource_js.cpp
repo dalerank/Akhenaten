@@ -66,6 +66,17 @@ bvariant_map __city_resources_available() {
 }
 ANK_FUNCTION(__city_resources_available)
 
+bvariant_map __city_resources_available_market_goods() {
+    city_resource_determine_available();
+    bvariant_map out;
+    const auto &av = g_city.resource.available_market_goods();
+    for (const auto &r : av) {
+        out[resource_name(r.type)] = (int32_t)r.type;
+    }
+    return out;
+}
+ANK_FUNCTION(__city_resources_available_market_goods)
+
 bool __city_resource_is_stockpiled(int resource) {
     city_resource_handle h{ (e_resource)resource };
     return h.is_stockpiled();
