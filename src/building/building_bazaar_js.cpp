@@ -27,3 +27,11 @@ int __bazaar_resource_amount(int bid, e_resource resource) {
     return b ? b->get_resource_amount(resource) : 0;
 }
 ANK_FUNCTION_2(__bazaar_resource_amount)
+
+void __bazaar_unaccept_all_goods(int bid) {
+    auto b = building_get(bid)->dcast_bazaar();
+    if (b) {
+        b->unaccept_all_goods();
+    }
+}
+ANK_FUNCTION_1(__bazaar_unaccept_all_goods)
