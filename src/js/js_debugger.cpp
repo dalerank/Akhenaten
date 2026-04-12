@@ -1,6 +1,7 @@
 #include "js_debugger.h"
 
 #include "mujs/jsi.h"       // js_State internals
+#include "mujs/jscompile.h" // js_Function (lightweight locals live on stack, not J->E)
 #include "mujs/jsvalue.h"   // js_Value, js_Object, js_Property, js_Environment
 #include "mujs/jsrun.h"     // js_Environment
 
@@ -441,6 +442,28 @@ void MujsDebugger::send_stopped_event(pcstr reason, pcstr file, int line) {
 // (called from server thread; game thread is blocked on cv_.wait — safe)
 // ─────────────────────────────────────────────────────────────────────────────
 
+// MuJS "lightweight" functions keep parameters and `var` locals in stack slots
+// STACK[BOT+i] with names in F->vartab; J->E stays the lexical outer scope (often
+// global). Listing J->E->variables for "Local" would therefore show globals.
+
+static js_Function *dbg_current_function(js_State *J) {
+    if (!J || J->bot < 1) {
+        return nullptr;
+    }
+    js_Value *clo = &J->stack[J->bot - 1];
+    if (static_cast<js_Type>(clo->type) != JS_TOBJECT || !clo->u.object) {
+        return nullptr;
+    }
+    if (clo->u.object->type != JS_CFUNCTION) {
+        return nullptr;
+    }
+    return clo->u.object->u.f.function;
+}
+
+static bool dbg_use_stack_locals(js_State *J, js_Function *F) {
+    return F && F->lightweight && !F->script && J && J->bot > 0;
+}
+
 // Convert a js_Value to a human-readable JSON string (the "value" DAP field).
 static cstring js_value_display(js_State *J, const js_Value *v) {
     char buf[64];
@@ -463,6 +486,11 @@ static cstring js_value_display(js_State *J, const js_Value *v) {
         case JS_CARRAY:    return json_jstr("[...]");
         case JS_CFUNCTION:
         case JS_CCFUNCTION:return json_jstr("[Function]");
+        case JS_CVEC2I: {
+            char b[48];
+            snprintf(b, sizeof(b), "Vec2i(%d,%d)", v->u.object->u.vec2.x, v->u.object->u.vec2.y);
+            return json_jstr(b);
+        }
         default:           return json_jstr("{...}");
         }
     default: return json_jstr("<unknown>");
@@ -478,7 +506,11 @@ static const char *js_value_type(const js_Value *v) {
     case JS_TSHRSTR:
     case JS_TLITSTR:
     case JS_TMEMSTR:    return "string";
-    case JS_TOBJECT:    return "object";
+    case JS_TOBJECT:
+        if (v->u.object && v->u.object->type == JS_CVEC2I) {
+            return "Vec2i";
+        }
+        return "object";
     default:            return "unknown";
     }
 }
@@ -511,30 +543,45 @@ cstring MujsDebugger::build_evaluate_response(const cstring &expression, int /*f
     }
 
     const char *name = expr.c_str();
-    js_Property *prop = nullptr;
+    js_StringNode name_node = js_intern(name);
+
+    const js_Value *v = nullptr;
     int parent_ref = 0;
 
-    js_Environment *env = J_->E;
-
-    js_StringNode name_node = js_intern(name);
-    prop = env->variables->vgetproperty(name_node);
-    if (prop) {
-        parent_ref = 1;
-    } else {
-        while (env->outer) {
-            env = env->outer;
+    js_Function *cur = dbg_current_function(J_);
+    if (dbg_use_stack_locals(J_, cur)) {
+        for (int i = 0; i < cur->varlen; ++i) {
+            if (cur->vartab[i] == name_node) {
+                v = &J_->stack[J_->bot + i];
+                parent_ref = 1;
+                break;
+            }
         }
+    }
+
+    if (!v) {
+        js_Property *prop = nullptr;
+        js_Environment *env = J_->E;
+
         prop = env->variables->vgetproperty(name_node);
         if (prop) {
-            parent_ref = 2;
+            parent_ref = 1;
+        } else {
+            while (env->outer) {
+                env = env->outer;
+            }
+            prop = env->variables->vgetproperty(name_node);
+            if (prop) {
+                parent_ref = 2;
+            }
         }
-    }
 
-    if (!prop) {
-        return "{\"result\":" + json_jstr("undefined") + ",\"variablesReference\":0}";
-    }
+        if (!prop) {
+            return "{\"result\":" + json_jstr("undefined") + ",\"variablesReference\":0}";
+        }
 
-    const js_Value *v = &prop->value;
+        v = &prop->value;
+    }
     int ref = 0;
     if (static_cast<js_Type>(v->type) == JS_TOBJECT && v->u.object) {
         ref = next_variable_ref_++;
@@ -590,8 +637,8 @@ cstring MujsDebugger::build_stack_trace_json(int levels) {
 }
 
 // variablesReference encoding:
-//   1 = Local  (J_->E)
-//   2 = Global (walk up to J_->GE)
+//   1 = Local  (stack slots for lightweight functions, else J_->E->variables)
+//   2 = Global (outermost environment object)
 cstring MujsDebugger::build_scopes_json(int /*frame_id*/) {
     cstring local = json_from_bvariant_map({
         { "name", "Local" },
@@ -636,6 +683,22 @@ js_Object *MujsDebugger::get_object_for_ref(int var_ref) {
     int parent_ref = it->second.first;
     const js_StringNode name = it->second.second;
 
+    if (parent_ref == 1) {
+        js_Function *F = dbg_current_function(J_);
+        if (dbg_use_stack_locals(J_, F)) {
+            for (int i = 0; i < F->varlen; ++i) {
+                if (F->vartab[i] != name) {
+                    continue;
+                }
+                const js_Value *slot = &J_->stack[J_->bot + i];
+                if (static_cast<js_Type>(slot->type) == JS_TOBJECT && slot->u.object) {
+                    return slot->u.object;
+                }
+                return nullptr;
+            }
+        }
+    }
+
     js_Object *parent = get_object_for_ref(parent_ref);
     if (!parent) {
         return nullptr;
@@ -652,6 +715,41 @@ js_Object *MujsDebugger::get_object_for_ref(int var_ref) {
 cstring MujsDebugger::build_variables_json(int var_ref) {
     if (!J_) {
         return "{\"variables\":[]}";
+    }
+
+    if (var_ref == 1) {
+        js_Function *F = dbg_current_function(J_);
+        if (dbg_use_stack_locals(J_, F)) {
+            cstring list = "[";
+            bool first = true;
+            for (int i = 0; i < F->varlen; ++i) {
+                js_StringNode nm = F->vartab[i];
+                if (!nm) {
+                    continue;
+                }
+
+                if (!first) {
+                    list += ",";
+                }
+                first = false;
+
+                const js_Value *v = &J_->stack[J_->bot + i];
+                int ref = 0;
+                if (static_cast<js_Type>(v->type) == JS_TOBJECT && v->u.object) {
+                    ref = next_variable_ref_++;
+                    object_ref_map_[ref] = { 1, nm };
+                }
+
+                cstring value_display = js_value_display(J_, v);
+                list += json_from_bvariant_map({
+                    { "name", js_strnode_cstr(nm) },
+                    { "type", js_value_type(v) },
+                    { "variablesReference", ref }
+                }, "value", value_display);
+            }
+            list += "]";
+            return "{\"variables\":" + list + "}";
+        }
     }
 
     js_Object *obj = nullptr;
@@ -672,6 +770,26 @@ cstring MujsDebugger::build_variables_json(int var_ref) {
 
     if (!obj) {
         return "{\"variables\":[]}";
+    }
+
+    if (obj->type == JS_CVEC2I) {
+        char nb[32];
+        cstring list = "[";
+        snprintf(nb, sizeof(nb), "%d", obj->u.vec2.x);
+        list += json_from_bvariant_map({
+            { "name", "x" },
+            { "type", "number" },
+            { "variablesReference", 0 }
+        }, "value", json_jstr(nb));
+        list += ",";
+        snprintf(nb, sizeof(nb), "%d", obj->u.vec2.y);
+        list += json_from_bvariant_map({
+            { "name", "y" },
+            { "type", "number" },
+            { "variablesReference", 0 }
+        }, "value", json_jstr(nb));
+        list += "]";
+        return "{\"variables\":" + list + "}";
     }
 
     cstring list = "[";
