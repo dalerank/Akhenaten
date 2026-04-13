@@ -10,7 +10,7 @@ advisor_ratings_window = {
 				goal_culture  : text({pos: [0, 42], size:[120, 20], align:"center", font : FONT_NORMAL_BLACK_ON_LIGHT }),
 			}
 		}),
-		
+
 		base_culture  : text({pos: [110, 213], align:"center", font : FONT_LARGE_BLACK_ON_LIGHT }),
 
 		rating_prosperity : button({pos:[200, 276], align:"xcenter", size:[120, 60], tooltip:[68, 105],
@@ -27,7 +27,7 @@ advisor_ratings_window = {
 				goal_monument : text({pos: [0, 42], size:[120, 20], align:"center", font : FONT_NORMAL_BLACK_ON_LIGHT }),
 			}
 		}),
-		
+
 		base_monument : text({pos: [350, 213], align:"center", font : FONT_LARGE_BLACK_ON_LIGHT }),
 
 		rating_kingdom: button({pos:[440, 276], align:"xcenter", size:[120, 60], tooltip:[68, 107],
@@ -36,9 +36,9 @@ advisor_ratings_window = {
 				goal_kingdom  : text({pos: [0, 42], size:[120, 20], align:"center", font : FONT_NORMAL_BLACK_ON_LIGHT }),
 			}
 		}),
-		
+
 		base_kingdom  : text({pos: [470, 213], align:"center", font : FONT_LARGE_BLACK_ON_LIGHT }),
-		
+
 		inner_panel 	: inner_panel({pos:[40, 340], size:[35, 5] }),
 		advice_header : text({pos: [68, 344], font : FONT_NORMAL_WHITE_ON_DARK }),
 		advice_text 	: text({pos: [68, 368], wrap:520, font : FONT_NORMAL_WHITE_ON_DARK, multiline:true }),

@@ -46,6 +46,7 @@ struct god_state {
 
     const static_params_t &static_params() const;
 };
+ANK_CONFIG_PROPERTY(god_state, is_known, mood, wrath_bolts, happy_ankhs, months_since_festival)
 
 class city_god {
 public:
