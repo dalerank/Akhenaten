@@ -31,7 +31,6 @@
 #include "window/advisor/monuments.h"
 #include "window/advisor/advisor_population.h"
 #include "window/advisor/advisor_ratings.h"
-#include "window/advisor/advisor_religion.h"
 #include "window/window_city.h"
 #include "window/message_dialog.h"
 #include "game/game_events.h"
@@ -91,7 +90,7 @@ struct window_advisors : public ui::widget {
         ui::advisor_health_window::instance(),
         nullptr, // ADVISOR_EDUCATION: from js_window_registry (ui_advisor_education.js)
         ui::advisor_entertainment_window::instance(),
-        ui::advisor_religion_window::instance(),
+        nullptr, // ADVISOR_RELIGION: from js_window_registry (ui_advisor_religion.js)
         ui::advisor_financial_window::instance(),
         ui::advisor_chief_window::instance(),
         ui::advisor_monuments_window::instance(),

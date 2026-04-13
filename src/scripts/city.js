@@ -10,6 +10,7 @@ city {
         @grand_cost { }
         @grand_alcohol { }
         @not_enough_alcohol { }
+        @months_since_festival { }
         @is_planned { }
 
         select_god: __city_festival_select_god
@@ -147,6 +148,22 @@ city {
         get_name : __city_god_name
         is_known : __city_god_is_known
         set_known : __city_god_set_known
+
+        at: function(index) {
+            return {
+                __property_getter: function(property) { return __city_get_god_property(index, property) }
+                @is_known {}
+                @mood {}
+                @wrath_bolts {}
+                @happy_ankhs {}
+                @months_since_festival {}
+                @status {}
+                @mood {}
+                @happy_anks {}
+            }
+        }
+
+        least_happy: __city_religion_least_happy_god
     }
 
     use_building: __city_use_building

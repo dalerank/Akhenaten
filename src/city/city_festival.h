@@ -58,5 +58,6 @@ ANK_CONFIG_PROPERTY(city_festival_t,
     large_cost,
     grand_cost,
     grand_alcohol,
-    not_enough_alcohol)
+    not_enough_alcohol,
+    months_since_festival)
 

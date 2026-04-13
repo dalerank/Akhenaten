@@ -21,6 +21,7 @@ game {
     @dynasty_name { get: __game_get_player_name, set: __game_set_player_name }
     @pending_load_type { }
     @pending_save_type { }
+    @gods_enabled { get: __game_gods_enabled }
 
     screen {
         @w { get: __game_screen_width }
@@ -51,6 +52,7 @@ scenario {
     has_animals: __scenario_has_animals
     flotsam_enabled: __scenario_flotsam_enabled
     is_open_play: __scenario_is_open_play
+    building_allowed: __scenario_building_allowed
 }
 
 game_features {
