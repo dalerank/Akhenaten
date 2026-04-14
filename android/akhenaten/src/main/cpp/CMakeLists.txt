@@ -1,30 +1,30 @@
 cmake_minimum_required(VERSION 3.18.1)
 
-# Устанавливаем ANDROID_STL ДО project() для правильной инициализации toolchain
-# Это обеспечивает символы __cxa_guard_acquire и др. для инициализации C++
-# Используем c++_static чтобы соответствовать статически собранным зависимостям (SDL2, SDL2_mixer и др.)
+# Set ANDROID_STL before project() so the toolchain initializes correctly.
+# This provides __cxa_guard_acquire and related symbols for C++ static initialization.
+# Use c++_static to match statically linked dependencies (SDL2, SDL2_mixer, etc.).
 if(ANDROID)
     set(ANDROID_STL "c++_static" CACHE STRING "" FORCE)
 endif()
 
 project(akhenaten)
 
-# Подключаем CMakeRC для создания заголовков cmrc/cmrc.hpp
+# CMakeRC: generate cmrc/cmrc.hpp headers.
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../cmake")
 include("${CMAKE_MODULE_PATH}/CMakeRC.cmake")
 
-# Используем готовые prebuilt библиотеки
+# Prebuilt third-party libraries.
 set(PREBUILT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../../prebuilt")
 set(PREBUILT_LIB_DIR "${PREBUILT_DIR}/${ANDROID_ABI}/lib")
 set(PREBUILT_INCLUDE_DIR "${PREBUILT_DIR}/${ANDROID_ABI}/include")
 
-# Корневая директория исходников
+# Root of engine sources.
 set(SRC_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../src")
 
-# ImGui исходники (скачаны через Gradle)
+# ImGui sources (fetched by Gradle).
 set(DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
 
-# Автоматический поиск исходных файлов (как в основном CMakeLists.txt)
+# Source file glob (same layout as the top-level CMakeLists.txt).
 file(GLOB PLATFORM_FILES ${SRC_ROOT}/platform/*.cpp)
 file(GLOB ANDROID_FILES ${SRC_ROOT}/platform/android/*.cpp)
 file(GLOB CONFIG_FILES ${SRC_ROOT}/config/*.cpp)
@@ -73,7 +73,7 @@ file(GLOB BZIP_FILES ${SRC_ROOT}/bzip/*.c)
 file(GLOB LAME_FILES ${SRC_ROOT}/lame/libmp3lame/*.c)
 file(GLOB MUJS_FILES ${SRC_ROOT}/mujs/*.c)
 
-# ImGui файлы (скачаны через Gradle)
+# ImGui sources (fetched by Gradle).
 set(IMGUI_FILES "")
 if(EXISTS "${DEPS_ROOT}/imgui-src/imgui.cpp")
     list(APPEND IMGUI_FILES
@@ -87,10 +87,9 @@ if(EXISTS "${DEPS_ROOT}/imgui-src/imgui.cpp")
     )
 endif()
 
-# Используем готовые prebuilt библиотеки из prebuilt/ директории
-# Библиотеки должны быть собраны заранее и размещены в android/prebuilt/${ANDROID_ABI}/
+# Prebuilt libs live under prebuilt/; build and place them under android/prebuilt/${ANDROID_ABI}/ first.
 
-# Объединяем все исходные файлы
+# All translation units for the shared library.
 set(SOURCE_FILES
     ${PLATFORM_FILES}
     ${ANDROID_FILES}
@@ -142,7 +141,7 @@ set(SOURCE_FILES
     ${IMGUI_FILES}
 )
 
-# Создаем библиотеку ресурсов (CMRC)
+# Embedded resources (CMRC).
 set(PROJECT_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../")
 set(SCRIPTS_FOLDER "${PROJECT_ROOT}/src/scripts")
 file(GLOB SCRIPT_FILES ${SCRIPTS_FOLDER}/*.js)
@@ -154,7 +153,7 @@ cmrc_add_resource_library(
     NAMESPACE akhenaten
 )
 
-# Добавляем ресурсы с указанием базовой директории (WHENCE)
+# Register resources with base path (WHENCE).
 cmrc_add_resources(
     resources
     WHENCE ${PROJECT_ROOT}
@@ -163,10 +162,10 @@ cmrc_add_resources(
     ${RES_FOLDER}/patreon_48.png
 )
 
-# Создаем библиотеку
+# Shared library target.
 add_library(akhenaten SHARED ${SOURCE_FILES})
 
-# Включаемые директории
+# Include directories.
 target_include_directories(akhenaten PRIVATE
     ${SRC_ROOT}
     ${SRC_ROOT}/mujs
@@ -185,16 +184,20 @@ target_include_directories(akhenaten PRIVATE
     ${CMRC_INCLUDE_DIR}
 )
 
-# Флаги компиляции
+# Preprocessor / compile definitions.
+string(TIMESTAMP GAME_BUILD_DATE "%Y-%m-%d" UTC)
+string(TIMESTAMP GAME_BUILD_TIME "%H:%M:%S" UTC)
 target_compile_definitions(akhenaten PRIVATE
     ANDROID_BUILD=ON
     GAME_BUILD_NUMBER=0
+    "GAME_BUILD_DATE=\"${GAME_BUILD_DATE}\""
+    "GAME_BUILD_TIME=\"${GAME_BUILD_TIME}\""
     HAVE_MEMCPY=1
     STDC_HEADERS=1
-    HAVE_MPGLIB=1       
+    HAVE_MPGLIB=1
 )
 
-# Флаги только для C++ файлов
+# Compiler options (C++ only).
 target_compile_options(akhenaten PRIVATE
     $<$<COMPILE_LANGUAGE:CXX>:-std=c++17>
     $<$<COMPILE_LANGUAGE:CXX>:-Wno-format-security>
@@ -202,7 +205,7 @@ target_compile_options(akhenaten PRIVATE
     $<$<COMPILE_LANGUAGE:CXX>:-Wno-absolute-value>
 )
 
-# Связываем готовые prebuilt библиотеки
+# Link prebuilt and system libraries.
 target_link_libraries(akhenaten
     akhenaten::rc
     ${PREBUILT_LIB_DIR}/libSDL2-static.a

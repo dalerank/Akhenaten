@@ -7,3 +7,11 @@
 #ifndef GAME_BUILD_NUMBER
 #define GAME_BUILD_NUMBER 0xff
 #endif // GAME_BUILD_NUMBER
+
+#ifndef GAME_BUILD_DATE
+#define GAME_BUILD_DATE "?"
+#endif
+
+#ifndef GAME_BUILD_TIME
+#define GAME_BUILD_TIME "?"
+#endif

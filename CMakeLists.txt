@@ -795,6 +795,13 @@ endif()
 add_definitions(-DGAME_BUILD_NUMBER=${GAME_BUILD_NUMBER})
 message("GAME_BUILD_NUMBER now is ${GAME_BUILD_NUMBER}")
 
+string(TIMESTAMP GAME_BUILD_DATE "%Y-%m-%d" UTC)
+string(TIMESTAMP GAME_BUILD_TIME "%H:%M:%S" UTC)
+message(STATUS "GAME_BUILD_DATE is ${GAME_BUILD_DATE}")
+message(STATUS "GAME_BUILD_TIME is ${GAME_BUILD_TIME}")
+add_compile_definitions("GAME_BUILD_DATE=\"${GAME_BUILD_DATE}\"")
+add_compile_definitions("GAME_BUILD_TIME=\"${GAME_BUILD_TIME}\"")
+
 set(BUILD_INFO_DIR "${CMAKE_BINARY_DIR}")
 file(MAKE_DIRECTORY "${BUILD_INFO_DIR}")
 file(WRITE
