@@ -30,28 +30,54 @@ jobs:
         wget https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_windows/master/windows_build.zip
         wget https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac_arm/master/macos_build.zip
         unzip windows_build.zip -d artifacts
+    - name: Verify itch build archives
+      run: |
+        set -euo pipefail
+        for z in windows_build.zip linux_build.zip macos_build.zip; do
+          test -f "$z" || { echo "missing: $z"; exit 1; }
+          test -s "$z" || { echo "empty: $z"; exit 1; }
+          ls -lh "$z"
+        done
     - uses: actions/upload-artifact@v6
       with:
         name: linux_windows_build
         path: artifacts
-    - uses: KikimoraGames/itch-publish@v0.0.3
-      with:
-        butlerApiKey: ${{ secrets.ITCHIO }}
-        gameData: windows_build.zip
-        itchUsername: dalerank
-        itchGameId: akhenaten
-        buildChannel: windows
-    - uses: KikimoraGames/itch-publish@v0.0.3
-      with:
-        butlerApiKey: ${{ secrets.ITCHIO }}
-        gameData: linux_build.zip
-        itchUsername: dalerank
-        itchGameId: akhenaten
-        buildChannel: linux
-    - uses: KikimoraGames/itch-publish@v0.0.3
-      with:
-        butlerApiKey: ${{ secrets.ITCHIO }}
-        gameData: macos_build.zip
-        itchUsername: dalerank
-        itchGameId: akhenaten
-        buildChannel: mac
+    - name: Preflight broth + install butler
+      run: |
+        set -euo pipefail
+        broth_url="https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default"
+        code=$(curl -sS -o /dev/null -w "%{http_code}" -L "$broth_url")
+        case "$code" in 2[0-9][0-9]) echo "broth OK (HTTP $code)";; *) echo "unexpected HTTP $code from broth"; exit 1;; esac
+        curl -fsSL -o /tmp/butler.zip "$broth_url"
+        mkdir -p "$HOME/.local/butler"
+        unzip -q /tmp/butler.zip -d "$HOME/.local/butler"
+        chmod +x "$HOME/.local/butler/butler"
+        echo "$HOME/.local/butler" >> "$GITHUB_PATH"
+        butler version
+    - name: Push Windows build to itch.io
+      env:
+        BUTLER_API_KEY: ${{ secrets.ITCHIO }}
+      run: butler push windows_build.zip dalerank/akhenaten:windows
+    - name: Push Linux build to itch.io
+      env:
+        BUTLER_API_KEY: ${{ secrets.ITCHIO }}
+      run: butler push linux_build.zip dalerank/akhenaten:linux
+    - name: Push macOS build to itch.io
+      env:
+        BUTLER_API_KEY: ${{ secrets.ITCHIO }}
+      run: butler push macos_build.zip dalerank/akhenaten:mac
+    - name: Verify itch.io uploads (Wharf API + butler status)
+      env:
+        BUTLER_API_KEY: ${{ secrets.ITCHIO }}
+      run: |
+        set -euo pipefail
+        for ch in windows linux mac; do
+          echo "::group::Wharf latest ($ch)"
+          curl -fsSL "https://itch.io/api/1/x/wharf/latest?target=dalerank%2Fakhenaten&channel_name=${ch}" | python3 -m json.tool
+          echo "::endgroup::"
+        done
+        for ch in windows linux mac; do
+          echo "::group::butler status ($ch)"
+          butler status "dalerank/akhenaten:${ch}"
+          echo "::endgroup::"
+        done
