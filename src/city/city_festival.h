@@ -49,7 +49,6 @@ struct city_festival_t {
     void execute_festival();
     void update();
     void calculate_costs();
-    int get_advice();
 };
 ANK_CONFIG_PROPERTY(city_festival_t,
     selected_god,
