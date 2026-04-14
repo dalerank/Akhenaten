@@ -194,7 +194,7 @@ void city_festival_t::update() {
     if (!is_planned()) {
         return;
     }
-    
+
     planned.months_to_go--;
     if (planned.months_to_go <= 0) {
         planned.months_to_go = 0;
@@ -217,22 +217,3 @@ void city_festival_t::calculate_costs() {
         }
     }
 }
-
-int city_festival_t::get_advice() {
-    if (months_since_festival <= 1)
-        return 0;
-    else if (months_since_festival <= 6)
-        return 1;
-    else if (months_since_festival <= 12)
-        return 2;
-    else if (months_since_festival <= 18)
-        return 3;
-    else if (months_since_festival <= 24)
-        return 4;
-    else if (months_since_festival <= 30)
-        return 5;
-    else {
-        return 6;
-    }
-}
-

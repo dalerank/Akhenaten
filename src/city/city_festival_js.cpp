@@ -1,5 +1,7 @@
 #include "city/city_festival.h"
 
+#include <cstring>
+
 #include "city/city.h"
 #include "core/profiler.h"
 #include "js/js_game.h"
@@ -23,11 +25,6 @@ int __city_festival_selected_size() {
     return (int)g_city.festival.selected_size;
 }
 ANK_FUNCTION(__city_festival_selected_size)
-
-int __city_festival_get_advice() {
-    return g_city.festival.get_advice();
-}
-ANK_FUNCTION(__city_festival_get_advice)
 
 void __city_festival_select_god(int god) {
     g_city.festival.select_god((e_god)god);
