@@ -464,6 +464,7 @@ int __game_screen_width() { return screen_width(); } ANK_FUNCTION(__game_screen_
 int __game_screen_height() { return screen_height(); } ANK_FUNCTION(__game_screen_height)
 int __game_absolute_day() { return game.simtime.absolute_day(true); } ANK_FUNCTION(__game_absolute_day)
 int __game_simtime_month() { return game.simtime.month; } ANK_FUNCTION(__game_simtime_month)
+int __game_simtime_year() { return game.simtime.year; } ANK_FUNCTION(__game_simtime_year)
 int __game_frame() { return game.frame; } ANK_FUNCTION(__game_frame)
 int __game_time_millis() { return (int)time_get_millis(); } ANK_FUNCTION(__game_time_millis)
 bool __game_session_active() { return game.session.active; } ANK_FUNCTION(__game_session_active)

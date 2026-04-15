@@ -15,6 +15,8 @@ import city
 import building_prototype
 import bazaar_prototype
 import city_finance
+import city_ratings
+import city_monuments
 import images
 import city_sounds
 import buildings

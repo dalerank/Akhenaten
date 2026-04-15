@@ -5,6 +5,7 @@ game {
 
     @monthly_autosave { set: __game_set_monthly_autosave }
     @absolute_day { get: __game_absolute_day }
+    @simtime_year { get: __game_simtime_year }
     @version { get: __game_version }
     @difficulty { get: __game_difficulty }
     @tooltips_mode { get: __game_tooltips_mode, set: __game_set_tooltips_mode }
@@ -53,6 +54,7 @@ scenario {
     flotsam_enabled: __scenario_flotsam_enabled
     is_open_play: __scenario_is_open_play
     building_allowed: __scenario_building_allowed
+    @start_year { get: __scenario_start_year }
 }
 
 game_features {

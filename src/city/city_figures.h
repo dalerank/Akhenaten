@@ -30,7 +30,7 @@ struct city_figures_t {
     int total_invading_enemies() const;
 };
 ANK_CONFIG_PROPERTY(city_figures_t,
-    enemies, kingdome_soldiers)
+    enemies, kingdome_soldiers, rioters)
 
 void figure_clear_all();
 

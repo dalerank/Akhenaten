@@ -43,6 +43,7 @@ city {
         __property_getter: __city_get_figures_property
         @enemies { }
         @kingdome_soldiers { }
+        @rioters { }
 
         remove_figures: __city_remove_figures
     }
@@ -61,12 +62,24 @@ city {
         }
     }
 
-    rating {
-        __property_getter: __city_get_rating_property
-        @culture {}
-        @prosperity {}
-        @monument {}
-        @kingdom { get: __city_rating_kingdom }
+    entertainment {
+        __property_getter: __city_get_entertainment_property
+        @senet_house_plays { }
+    }
+
+    population_stats {
+        __property_getter: __city_get_population_property
+        @current { }
+        @people_in_shanties { }
+        @people_in_manors { }
+    }
+
+    avg_coverage {
+        __property_getter: __city_get_avg_coverage_property
+        @average_entertainment {}
+        @average_religion {}
+        @average_education {}
+        @average_health {}
     }
 
     winning {

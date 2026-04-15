@@ -37,22 +37,17 @@ struct city_ratings_t {
     int32_t monument_num_rioters;
     int32_t monument_riot_cause;
 
-    int32_t selected;
     int32_t culture_explanation;
     int32_t prosperity_explanation;
-    int32_t monument_explanation;
 
-    int selected_explanation();
     void reduce_prosperity_after_bailout();
     void monument_building_destroyed(e_building_type type);
     void monument_record_criminal();
     void monument_record_rioter();
 
-    void update_culture_explanation();
-    void update_monument_explanation();
     void update_culture_rating();
-    void update_monument_rating();
 };
 ANK_CONFIG_STRUCT(city_ratings_t::point, coverage, points)
 
-ANK_CONFIG_PROPERTY(city_ratings_t, culture, prosperity, monument)
+ANK_CONFIG_PROPERTY(city_ratings_t, culture, prosperity, monument, culture_explanation,
+                    prosperity_explanation, prosperity_max, prosperity_treasury_last_year)
