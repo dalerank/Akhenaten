@@ -151,10 +151,6 @@ bool city_t::has_made_money() {
     return (treasury_this_year > treasury_last_year);
 }
 
-void city_t::ratings_update_explanations() {
-    kingdome.update_explanation();
-}
-
 void city_t::ratings_update(bool is_yearly_update) {
     ratings.update_culture_rating();
     calculate_max_prosperity();
@@ -1026,11 +1022,11 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.entertainment);
     iob->bind(BIND_SIGNATURE_INT32, &data.figures.rioters);
     iob->bind____skip(20);
-    iob->bind____skip(4); //(BIND_SIGNATURE_INT32, &data.ratings.selected);
+    iob->bind____skip(4); // (BIND_SIGNATURE_INT32, &data.ratings.selected);
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.culture_explanation);
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.prosperity_explanation);
-    iob->bind____skip(4); //bind(BIND_SIGNATURE_INT32, &data.ratings.monument_explanation);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.kingdome.kingdom_explanation);
+    iob->bind____skip(4); // bind(BIND_SIGNATURE_INT32, &data.ratings.monument_explanation);
+    iob->bind____skip(1); // bind(BIND_SIGNATURE_UINT8, &data.kingdome.kingdom_explanation);
     iob->bind____skip(3);
     iob->bind____skip(8);
     iob->bind(BIND_SIGNATURE_UINT8, &data.kingdome.player_rank);

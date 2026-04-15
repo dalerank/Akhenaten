@@ -165,8 +165,6 @@ void window_advisors::init() {
     g_city.resource.calculate_food_stocks_and_supply_wheat();
     g_formations.calculate_figures();
 
-    g_city.ratings_update_explanations();
-
     set_advisor_window();
 
     for (auto &btn: btns) {

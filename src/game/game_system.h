@@ -9,7 +9,7 @@ struct game_system {
     void emit(const bstring64& esname_str);
 
     template <typename T>
-    inline void emit(const T& ev, xstring esname_str) {
+    inline void emit(const T& ev, const bstring64& esname_str) {
         OZZY_PROFILER_SECTION(_, esname_str.c_str());
 
         bvariant_map::scoped js_j;

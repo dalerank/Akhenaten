@@ -75,7 +75,6 @@ struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
     uint8_t player_name_adversary[32];
     uint8_t player_name[32];
     uint8_t campaign_player_name[32]; /**< Temp storage for carrying over player name to next campaign mission */
-    int8_t kingdom_explanation;
     int8_t kingdom_milestone_penalty;
     int8_t kingdom_ignored_request_penalty;
 
@@ -139,17 +138,20 @@ struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
 
     static const static_params &params();
 };
+ANK_CONFIG_PROPERTY(kingdome_relation_t, salary_rank, player_rank, kingdom_change, kingdom_salary_penalty,
+                    kingdom_milestone_penalty, kingdom_ignored_request_penalty)
+
 ANK_CONFIG_STRUCT(kingdome_relation_t::static_params,
-                  gift_rules, 
-                  salary_ranks, 
-                  gift_relation_change_first, 
-                  gift_relation_change_second, 
-                  gift_relation_change_third, 
-                  gift_relation_change_last, 
-                  months_since_gift_locker, 
-                  tribute_not_paid_years_penalty, 
-                  player_salary_above_king_penalty, 
-                  player_salary_less_king_promotion, 
-                  first_debt_penalty, 
-                  second_debt_penalty, 
+                  gift_rules,
+                  salary_ranks,
+                  gift_relation_change_first,
+                  gift_relation_change_second,
+                  gift_relation_change_third,
+                  gift_relation_change_last,
+                  months_since_gift_locker,
+                  tribute_not_paid_years_penalty,
+                  player_salary_above_king_penalty,
+                  player_salary_less_king_promotion,
+                  first_debt_penalty,
+                  second_debt_penalty,
                   last_debt_rating_cap)

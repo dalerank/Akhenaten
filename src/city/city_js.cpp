@@ -43,9 +43,13 @@ ANK_FUNCTION(__city_player_rank)
 
 void __city_kingdome_apply_salary_rank(int rank) {
     g_city.kingdome.set_salary_rank(rank);
-    g_city.kingdome.update_explanation();
 }
 ANK_FUNCTION_1(__city_kingdome_apply_salary_rank)
+
+std::optional<bvariant> __city_get_kingdome_property(pcstr property) {
+    return archive_helper::get(g_city.kingdome, property, true);
+}
+ANK_FUNCTION_1(__city_get_kingdome_property)
 
 bool __city_mission_has_won() { return g_city.victory_state.has_won(); }
 ANK_FUNCTION(__city_mission_has_won)
@@ -123,9 +127,6 @@ int __city_winning_kingdom() { return winning_kingdom(); }
 ANK_FUNCTION(__city_winning_kingdom)
 int __city_winning_population() { return winning_population(); }
 ANK_FUNCTION(__city_winning_population)
-
-int __city_kingdom_rating_explanation() { return g_city.kingdome.kingdom_explanation; }
-ANK_FUNCTION(__city_kingdom_rating_explanation)
 
 tile2i __city_message_next_problem_area_grid_offset() { return tile2i(city_message_next_problem_area_grid_offset()); } ANK_FUNCTION(__city_message_next_problem_area_grid_offset)
 

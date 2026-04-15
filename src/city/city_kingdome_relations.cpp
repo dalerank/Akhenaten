@@ -440,49 +440,6 @@ void kingdome_relation_t::change(int amount) {
     rating = calc_bound(rating + amount, 0, rating_cap);
 }
 
-void kingdome_relation_t::update_explanation() {
-    kingdom_salary_penalty = 0;
-    int salary_delta = g_city.kingdome.salary_rank - g_city.kingdome.player_rank;
-    if (g_city.kingdome.player_rank != 0) {
-        if (salary_delta > 0) {
-            kingdom_salary_penalty = salary_delta + 1;
-        }
-
-    } else if (salary_delta > 0) {
-        kingdom_salary_penalty = salary_delta;
-    }
-
-    if (kingdom_salary_penalty >= 8)
-        kingdom_explanation = 1;
-    else if (g_city.finance.tribute_not_paid_total_years >= 3)
-        kingdom_explanation = 2;
-    else if (kingdom_ignored_request_penalty >= 5)
-        kingdom_explanation = 3;
-    else if (kingdom_salary_penalty >= 5)
-        kingdom_explanation = 4;
-    else if (g_city.finance.tribute_not_paid_total_years >= 2)
-        kingdom_explanation = 5;
-    else if (kingdom_ignored_request_penalty >= 3)
-        kingdom_explanation = 6;
-    else if (kingdom_salary_penalty >= 3)
-        kingdom_explanation = 7;
-    else if (g_city.finance.tribute_not_paid_last_year)
-        kingdom_explanation = 8;
-    else if (kingdom_salary_penalty >= 2)
-        kingdom_explanation = 9;
-    else if (kingdom_milestone_penalty)
-        kingdom_explanation = 10;
-    else if (kingdom_salary_penalty)
-        kingdom_explanation = 11;
-    else if (kingdom_change == e_rating_rising) { // rising
-        kingdom_explanation = 12;
-    } else if (kingdom_change == e_rating_stalling) { // the same
-        kingdom_explanation = 13;
-    } else {
-        kingdom_explanation = 0;
-    }
-}
-
 void kingdome_relation_t::init() {
     rating_cap = 100;
     reset_gifts();

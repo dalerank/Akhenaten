@@ -196,7 +196,6 @@ struct city_t {
     bool has_made_money();
     void update_prosperity_rating();
     void calculate_max_prosperity();
-    void ratings_update_explanations();
     void ratings_update(bool is_yearly_update);
 
     bool determine_granary_get_foods(resource_list &foods, int road_network);
