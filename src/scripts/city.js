@@ -72,6 +72,8 @@ city {
         @current { }
         @people_in_shanties { }
         @people_in_manors { }
+        monthly_count: __city_population_monthly_count
+        at_month: __city_population_at_month
     }
 
     avg_coverage {
