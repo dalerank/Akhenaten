@@ -53,6 +53,8 @@ jobs:
         unzip -q /tmp/butler.zip -d "$HOME/.local/butler"
         chmod +x "$HOME/.local/butler/butler"
         echo "$HOME/.local/butler" >> "$GITHUB_PATH"
+        # GITHUB_PATH only affects later steps; extend PATH for this step.
+        export PATH="$HOME/.local/butler:$PATH"
         butler version
     - name: Push Windows build to itch.io
       env:
