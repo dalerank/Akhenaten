@@ -46,36 +46,32 @@ function advisor_ratings_refresh_row(window, id, name, value, openPlay, goal) {
 function advisor_ratings_select_culture(window) {
 	advisor_ratings_window.selected = SELECTED_RATING_CULTURE
 	var expl = city.rating.get_culture_explanation()
-	var cult = city.rating.culture
 	window.advice_header.text = __loc(53, 1)
-	window.advice_text.text = (cult <= 90) ? __loc(53, 9 + expl) : __loc(53, 50)
+	window.advice_text.text = (city.rating.culture <= 90) ? __loc(53, 9 + expl) : __loc(53, 50)
 }
 
 [es=(advisor_ratings_window, select_prosperity)]
 function advisor_ratings_select_prosperity(window) {
 	advisor_ratings_window.selected = SELECTED_RATING_PROSPERITY
 	var expl = city.rating.get_prosperity_explanation()
-	var pros = city.rating.prosperity
 	window.advice_header.text = __loc(53, 2)
-	window.advice_text.text = (pros <= 90) ? __loc(53, 16 + expl) : __loc(53, 51)
+	window.advice_text.text = (city.rating.prosperity <= 90) ? __loc(53, 16 + expl) : __loc(53, 51)
 }
 
 [es=(advisor_ratings_window, select_monument)]
 function advisor_ratings_select_monument(window) {
 	advisor_ratings_window.selected = SELECTED_RATING_MONUMENT
 	var expl = city.rating.get_monument_explanation()
-	var monu = city.rating.monument
 	window.advice_header.text = __loc(53, 3)
-	window.advice_text.text = (monu <= 90) ? __loc(53, 41 + expl) : __loc(53, 52)
+	window.advice_text.text = (city.rating.monument <= 90) ? __loc(53, 41 + expl) : __loc(53, 52)
 }
 
 [es=(advisor_ratings_window, select_kingdom)]
 function advisor_ratings_select_kingdom(window) {
 	advisor_ratings_window.selected = SELECTED_RATING_KINGDOM
 	var expl = city.rating.get_kingdom_explanation()
-	var king = city.rating.kingdom
 	window.advice_header.text = __loc(53, 4)
-	window.advice_text.text = (king <= 90) ? __loc(53, 27 + expl) : __loc(53, 53)
+	window.advice_text.text = (city.rating.kingdom <= 90) ? __loc(53, 27 + expl) : __loc(53, 53)
 }
 
 [es=advisor_window]

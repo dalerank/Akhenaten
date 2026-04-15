@@ -151,3 +151,53 @@ city.rating.get_prosperity_explanation = function() {
 	return reason
 }
 
+city.rating.get_kingdom_explanation = function() {
+	var salary_delta = city.kingdome.salary_rank - city.kingdome.player_rank
+	var kingdom_salary_penalty = 0
+	if (city.kingdome.player_rank != 0) {
+		if (salary_delta > 0) {
+			kingdom_salary_penalty = salary_delta + 1
+		}
+	} else if (salary_delta > 0) {
+        kingdom_salary_penalty = salary_delta
+    }
+
+	var tribute_years = city.finance.tribute_not_paid_total_years
+	var ign = city.kingdome.kingdom_ignored_request_penalty
+	var mile = city.kingdome.kingdom_milestone_penalty
+	var kchange = city.kingdome.kingdom_change
+
+	var kingdom_explanation = 0
+	if (kingdom_salary_penalty >= 8) {
+		kingdom_explanation = 1
+	} else if (tribute_years >= 3) {
+		kingdom_explanation = 2
+	} else if (ign >= 5) {
+		kingdom_explanation = 3
+	} else if (kingdom_salary_penalty >= 5) {
+		kingdom_explanation = 4
+	} else if (tribute_years >= 2) {
+		kingdom_explanation = 5
+	} else if (ign >= 3) {
+		kingdom_explanation = 6
+	} else if (kingdom_salary_penalty >= 3) {
+		kingdom_explanation = 7
+	} else if (city.finance.tribute_not_paid_last_year) {
+		kingdom_explanation = 8
+	} else if (kingdom_salary_penalty >= 2) {
+		kingdom_explanation = 9
+	} else if (mile) {
+		kingdom_explanation = 10
+	} else if (kingdom_salary_penalty) {
+		kingdom_explanation = 11
+	} else if (city.kingdome.kingdom_change == 2) {
+		kingdom_explanation = 12
+	} else if (city.kingdome.kingdom_change == 1) {
+		kingdom_explanation = 13
+	} else {
+		kingdom_explanation = 0
+	}
+
+    return kingdom_explanation
+}
+

@@ -142,4 +142,4 @@ struct city_finance_t {
 };
 ANK_CONFIG_PROPERTY(city_finance_t,
     treasury, tax_percentage, wages_kingdome,
-    tribute_not_paid_last_year, wage_rate_paid_last_year)
+    tribute_not_paid_last_year, tribute_not_paid_total_years, wage_rate_paid_last_year)
