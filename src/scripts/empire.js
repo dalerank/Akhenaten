@@ -28,6 +28,7 @@ empire_traders {
 }
 
 empire {
+    @luxury_goods_traded_sum { get: __empire_luxury_goods_traded_sum }
     @has_distant_battle { get: __empire_has_distant_battle }
     active_battle {
         __property_getter: function(property) { return __game_get_active_battle_property(property) }

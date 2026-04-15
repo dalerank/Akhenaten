@@ -5,6 +5,7 @@
 #include "empire/empire_object.h"
 #include "empire/empire_traders.h"
 #include "city/city.h"
+#include "game/resource.h"
 #include "scenario/distant_battle.h"
 #include "core/profiler.h"
 #include "js/js_game.h"
@@ -78,6 +79,15 @@ int __empire_trade_route_traded(int city_id, int resource) {
     return city->get_route().traded((e_resource)resource);
 }
 ANK_FUNCTION_2(__empire_trade_route_traded)
+
+int __empire_luxury_goods_traded_sum() {
+    int sum = 0;
+    for (const auto &route : g_empire.get_routes()) {
+        sum += route.traded(RESOURCE_LUXURY_GOODS);
+    }
+    return sum;
+}
+ANK_FUNCTION(__empire_luxury_goods_traded_sum)
 
 int __empire_map_selected_city() {
     return g_empire_map.selected_city;

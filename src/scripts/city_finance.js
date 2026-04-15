@@ -69,4 +69,10 @@ city.finance = {
     @treasury { get: __city_finance_get_treasury }
     @tax_percentage { set: __city_finance_set_tax_percentage }
     @is_out_of_money { get: __city_finance_is_out_of_money }
+    @has_made_money {
+        get: function() {
+            var treasury_this_year = city.finance.last_year.expenses.construction + city.finance.treasury
+            return treasury_this_year > city.rating.prosperity_treasury_last_year
+        }
+    }
 }

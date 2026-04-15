@@ -18,3 +18,8 @@ bool __scenario_building_allowed(int btype) {
     return scenario_building_allowed((e_building_type)btype);
 }
 ANK_FUNCTION_1(__scenario_building_allowed)
+
+int __scenario_start_year() {
+    return g_scenario.start_year;
+}
+ANK_FUNCTION(__scenario_start_year)

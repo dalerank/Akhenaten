@@ -15,7 +15,7 @@
 #include "city/city_animals.h"
 #include "city/military.h"
 #include "city/city_resource.h"
-#include "city/city_resource.h"
+#include "city/city_monuments.h"
 #include "city/city_fishing_points.h"
 #include "city/map.h"
 #include "city/coverage.h"
@@ -63,6 +63,8 @@ struct city_t {
 
     city_religion_t religion;
     city_entertainment_t entertainment;
+
+    city_monuments_t monuments;
 
     city_festival_t festival;
     city_coverage_t coverage;
@@ -191,7 +193,6 @@ struct city_t {
     bool figures_has_security_breach();
     void figures_generate_criminals();
 
-    void update_prosperity_explanation();
     bool has_made_money();
     void update_prosperity_rating();
     void calculate_max_prosperity();

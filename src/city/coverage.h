@@ -35,3 +35,5 @@ struct city_average_coverage_t {
     void update();
     int calc_average_entertainment();
 };
+
+ANK_CONFIG_PROPERTY(city_average_coverage_t, average_entertainment, average_religion, average_education, average_health)

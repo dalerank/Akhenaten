@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include "core/archive.h"
 
 struct city_entertainment_t {
     int32_t booth_shows;
@@ -20,3 +20,5 @@ struct city_entertainment_t {
     int show_message_pavilion();
     int show_message_senet_house();
 };
+
+ANK_CONFIG_PROPERTY(city_entertainment_t, senet_house_plays)

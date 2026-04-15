@@ -3,12 +3,22 @@
 #include "io/gamefiles/lang.h"
 #include "core/profiler.h"
 #include "city/city.h"
+#include "city/entertainment.h"
 #include "city/city_labor.h"
 #include "city/city_message.h"
 #include "io/gamefiles/lang.h"
 #include "city/city_building_menu_ctrl.h"
 #include "scenario/criteria.h"
 #include "scenario/scenario.h"
+
+void __city_ratings_apply_monument_yearly(int new_monument, int new_years_of_monument, int monument_explanation_reason) {
+    g_city.ratings.monument = new_monument;
+    g_city.ratings.monument_years_of_monument = new_years_of_monument;
+    g_city.ratings.monument_num_criminals = 0;
+    g_city.ratings.monument_num_rioters = 0;
+    g_city.ratings.monument_destroyed_buildings = 0;
+}
+ANK_FUNCTION_3(__city_ratings_apply_monument_yearly)
 
 int __city_rank_salary(int rank) { return g_city.kingdome.salary_for_rank(rank); }
 ANK_FUNCTION_1(__city_rank_salary)
@@ -67,6 +77,21 @@ std::optional<bvariant> __city_get_rating_property(pcstr property) {
 }
 ANK_FUNCTION_1(__city_get_rating_property)
 
+std::optional<bvariant> __city_get_avg_coverage_property(pcstr property) {
+    return archive_helper::get(g_city.avg_coverage, property, true);
+}
+ANK_FUNCTION_1(__city_get_avg_coverage_property)
+
+std::optional<bvariant> __city_get_population_property(pcstr property) {
+    return archive_helper::get(g_city.population, property, true);
+}
+ANK_FUNCTION_1(__city_get_population_property)
+
+std::optional<bvariant> __city_get_entertainment_property(pcstr property) {
+    return archive_helper::get(g_city.entertainment, property, true);
+}
+ANK_FUNCTION_1(__city_get_entertainment_property)
+
 std::optional<bvariant> __city_get_labor_category_property(int index, pcstr property) {
     if (index < 0 || index >= LABOR_CATEGORY_SIZE) {
         return {};
@@ -98,6 +123,9 @@ int __city_winning_kingdom() { return winning_kingdom(); }
 ANK_FUNCTION(__city_winning_kingdom)
 int __city_winning_population() { return winning_population(); }
 ANK_FUNCTION(__city_winning_population)
+
+int __city_kingdom_rating_explanation() { return g_city.kingdome.kingdom_explanation; }
+ANK_FUNCTION(__city_kingdom_rating_explanation)
 
 tile2i __city_message_next_problem_area_grid_offset() { return tile2i(city_message_next_problem_area_grid_offset()); } ANK_FUNCTION(__city_message_next_problem_area_grid_offset)
 

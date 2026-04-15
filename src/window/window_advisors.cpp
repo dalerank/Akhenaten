@@ -29,7 +29,6 @@
 #include "window/advisor/advisor_military.h"
 #include "window/advisor/monuments.h"
 #include "window/advisor/advisor_population.h"
-#include "window/advisor/advisor_ratings.h"
 #include "window/window_city.h"
 #include "window/message_dialog.h"
 #include "game/game_events.h"
@@ -83,7 +82,7 @@ struct window_advisors : public ui::widget {
         nullptr, // ADVISOR_LABOR: from js_window_registry
         ui::advisor_military_window::instance(),
         nullptr, // ADVISOR_IMPERIAL: from js_window_registry (ui_advisor_imperial.js)
-        ui::advisor_ratings_window::instance(),
+        nullptr, // ADVISOR_RATINGS: from js_window_registry (ui_advisor_ratings.js)
         nullptr, // ADVISOR_TRADE: from js_window_registry
         ui::advisor_population_window::instance(),
         nullptr, // ADVISOR_HEALTH: from js_window_registry (ui_advisor_health.js)

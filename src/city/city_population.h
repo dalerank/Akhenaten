@@ -91,6 +91,8 @@ struct city_population_t {
     int at_month(int max_months, int month);
 };
 
+ANK_CONFIG_PROPERTY(city_population_t, current, people_in_shanties, people_in_manors)
+
 void city_population_clear_capacity();
 void city_population_add_capacity(int people_in_house, int max_people);
 
