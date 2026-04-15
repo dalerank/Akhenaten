@@ -24,7 +24,6 @@
 #include "window/advisor/advisor_chief.h"
 #include "window/advisor/advisor_entertainment.h"
 #include "window/advisor/advisor_financial.h"
-#include "window/advisor/advisor_health.h"
 #include "window/advisor/housing.h"
 #include "window/js_window_registry.h"
 #include "window/advisor/advisor_military.h"
@@ -87,7 +86,7 @@ struct window_advisors : public ui::widget {
         ui::advisor_ratings_window::instance(),
         nullptr, // ADVISOR_TRADE: from js_window_registry
         ui::advisor_population_window::instance(),
-        ui::advisor_health_window::instance(),
+        nullptr, // ADVISOR_HEALTH: from js_window_registry (ui_advisor_health.js)
         nullptr, // ADVISOR_EDUCATION: from js_window_registry (ui_advisor_education.js)
         ui::advisor_entertainment_window::instance(),
         nullptr, // ADVISOR_RELIGION: from js_window_registry (ui_advisor_religion.js)
