@@ -91,6 +91,16 @@ std::optional<bvariant> __city_get_population_property(pcstr property) {
 }
 ANK_FUNCTION_1(__city_get_population_property)
 
+int __city_population_monthly_count() {
+    return g_city.population.monthly.count;
+}
+ANK_FUNCTION(__city_population_monthly_count)
+
+int __city_population_at_month(int max_months, int month) {
+    return g_city.population.at_month(max_months, month);
+}
+ANK_FUNCTION_2(__city_population_at_month)
+
 std::optional<bvariant> __city_get_entertainment_property(pcstr property) {
     return archive_helper::get(g_city.entertainment, property, true);
 }
