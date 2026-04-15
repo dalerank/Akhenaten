@@ -31,6 +31,7 @@ city {
     }
 
     @population { get: __city_population }
+    @health_rating { get: __city_health_rating }
     @workers_diff { get: __city_workers_diff }
     @player_rank { get: __city_player_rank }
     @mission_has_won { get: __city_mission_has_won }
