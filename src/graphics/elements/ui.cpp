@@ -841,29 +841,19 @@ ui::element::~element() {
 }
 
 void ui::element::invoke_draw_callbacks(UiFlags flags) {
-    const vec2i sp = screen_pos();
-    const vec2i psz = pxsize();
     const xstring& js = js_ref(ONDRAW);
     if (!js.empty()) {
         bvariant_map::scoped m;
-        (*m)["x"] = (int32_t)sp.x;
-        (*m)["y"] = (int32_t)sp.y;
-        (*m)["sizex"] = (int32_t)psz.x;
-        (*m)["sizey"] = (int32_t)psz.y;
         (*m)["flags"] = (int32_t)flags;
-        (*m)["id"] = bvariant(id.c_str());
+        (*m)["active_id"] = bvariant(id.c_str());
         js_call_function(js, *m);
     }
 
     const xstring& ondraw_event = event_name(ONDRAW_EVENT);
     if (!ondraw_event.empty()) {
         bvariant_map::scoped m;
-        (*m)["x"] = (int32_t)sp.x;
-        (*m)["y"] = (int32_t)sp.y;
-        (*m)["sizex"] = (int32_t)psz.x;
-        (*m)["sizey"] = (int32_t)psz.y;
         (*m)["flags"] = (int32_t)flags;
-        (*m)["id"] = bvariant(id.c_str());
+        (*m)["active_id"] = bvariant(id.c_str());
         dispatch_autoconfig_es_event(get_current_widget(), ondraw_event, *m);
     }
 
@@ -962,11 +952,11 @@ void ui::element::update_pos(const margini& r) {
 }
 
 vec2i ui::element::screen_pos() const {
-    const vec2i offset = g_state.offset();
-    return offset + pos;
+    return scr_pos;
 }
 
 void ui::eouter_panel::draw(UiFlags flags) {
+    scr_pos = pos + ui::current_offset();
     ui::panel(pos, size, UiFlags_PanelOuter);
 }
 
@@ -978,6 +968,7 @@ void ui::eouter_panel::load(archive arch, element* parent, items& elems) {
 }
 
 void ui::einner_panel::draw(UiFlags flags) {
+    scr_pos = pos + ui::current_offset();
     ui::panel(pos, size, UiFlags_PanelInner);
 }
 
@@ -990,6 +981,7 @@ void ui::einner_panel::load(archive arch, element* parent, items& elems) {
 
 void ui::widget::draw(UiFlags flags) {
     vec2i bsize = ui["background"].pxsize();
+
     for (auto& e : elements) {
         if (!e->enabled) {
             continue;
@@ -1116,6 +1108,7 @@ void ui::widget::line(bool hline, vec2i npos, int size, color c) {
 }
 
 void ui::eimg::draw(UiFlags flags) {
+    scr_pos = pos + ui::current_offset();
     if (isometric) {
         const vec2i offset = g_state.offset();
         painter ctx = game.painter();
@@ -1160,6 +1153,7 @@ void ui::eimg::image(int image) {
 
 void ui::ebackground::draw(UiFlags flags) {
     painter ctx = game.painter();
+    scr_pos = pos;
     ImageDraw::img_background(ctx, img_desc.tid(), 1.f, pos);
 }
 
@@ -1183,15 +1177,15 @@ void ui::eborder::load(archive arch, element* parent, items& elems) {
 }
 
 void ui::eborder::draw(UiFlags flags) {
-    const vec2i offset = g_state.offset();
+    scr_pos = pos + g_state.offset();
     switch (border) {
     default: // fallthrought
     case 0:
-        push(cmd_t::button_border, Pos{offset + pos}, Size{size}, ImgFlagsTag{false ? ImgFlag_Alpha : ImgFlag_None});
+        push(cmd_t::button_border, Pos{scr_pos}, Size{size}, ImgFlagsTag{false ? ImgFlag_Alpha : ImgFlag_None});
         break;
 
     case 1:
-        push(cmd_t::draw_rect, Pos{offset + pos}, Size{size}, TextColor{colori});
+        push(cmd_t::draw_rect, Pos{scr_pos}, Size{size}, TextColor{colori});
         break;
     }
 }
@@ -1224,10 +1218,9 @@ void ui::einput::load(archive arch, element* parent, items& elems) {
 }
 
 void ui::einput::draw(UiFlags flags) {
-    const vec2i offset = g_state.offset();
-    const vec2i screen_pos = offset + pos;
-    _box.x = screen_pos.x - screen_dialog_offset_x();
-    _box.y = screen_pos.y - screen_dialog_offset_y();
+    scr_pos = g_state.offset() + pos;
+    _box.x = scr_pos.x - screen_dialog_offset_x();
+    _box.y = scr_pos.y - screen_dialog_offset_y();
     _box.text = _buffer;
     if (!_started) {
         input_box_start(&_box, _buffer, _box.max_length, _allow_punctuation);
@@ -1266,8 +1259,8 @@ void ui::einput::set_value(pcstr utf8) {
 }
 
 void ui::eresource_icon::draw(UiFlags flags) {
-    const vec2i offset = g_state.offset();
-    push(cmd_t::image, Pos{offset + pos}, ImageId{resource_icons.tid() + res});
+    scr_pos = g_state.offset() + pos;
+    push(cmd_t::image, Pos{scr_pos}, ImageId{resource_icons.tid() + res});
 }
 
 int image_id_resource_icon(int resource) {
@@ -1295,6 +1288,7 @@ void ui::eresource_icon::load(archive arch, element* parent, items& elems) {
 
 void ui::elabel::draw(UiFlags flags) {
     const vec2i offset = g_state.offset();
+    scr_pos = g_state.offset() + pos;
 
     if (!js_ref(TEXTFN).empty()) {
         bvariant dyn = js_call_function(js_ref(TEXTFN), 0, 0);
@@ -1303,7 +1297,7 @@ void ui::elabel::draw(UiFlags flags) {
     }
 
     if (_body.x > 0) {
-        push(cmd_t::small_panel, Pos{offset + pos}, BoxWidth{_body.x}, ImageId{_body.y}, Mask{0xffffffffu});
+        push(cmd_t::small_panel, Pos{scr_pos}, BoxWidth{_body.x}, ImageId{_body.y}, Mask{0xffffffffu});
     }
 
     auto dpos = pos + ((_body.x > 0) ? vec2i{8, 4} : vec2i{0, 0});
@@ -1420,7 +1414,7 @@ void ui::eimage_button::load(archive arch, element* parent, items& elems) {
 }
 
 void ui::eimage_button::draw(UiFlags gflags) {
-    const vec2i doffset = g_state.offset();
+    scr_pos = g_state.offset() + pos;
     UiFlags flags = gflags | (_selected ? UiFlags_Selected : UiFlags_None);
     flags |= (readonly ? UiFlags_Readonly : UiFlags_None);
     flags |= (!!(darkened & UiFlags_Grayscale) ? UiFlags_Grayscale : UiFlags_None);
@@ -1439,16 +1433,16 @@ void ui::eimage_button::draw(UiFlags gflags) {
 
         btn = &ui::img_button(img_desc, pos, tsize, offsets, flags);
     } else if (texture_id > 0) {
-        push(cmd_t::saved_texture, Pos{doffset + pos}, Size{size}, ImageId{texture_id});
+        push(cmd_t::saved_texture, Pos{scr_pos}, Size{size}, ImageId{texture_id});
         tsize = size;
         if (_selected) {
             switch (border) {
             case 1:
-                push(cmd_t::button_border, Pos{doffset + pos - vec2i{4, 4}}, Size{tsize + vec2i{8, 8}},
+                push(cmd_t::button_border, Pos{scr_pos - vec2i{4, 4}}, Size{tsize + vec2i{8, 8}},
                   ImgFlagsTag{ImgFlag_Alpha});
                 break;
             case 2:
-                push(cmd_t::draw_rect, Pos{doffset + pos}, Size{size}, TextColor{0xff000000});
+                push(cmd_t::draw_rect, Pos{scr_pos}, Size{size}, TextColor{0xff000000});
                 break;
             }
             selection_border_deferred = true;
@@ -1459,7 +1453,7 @@ void ui::eimage_button::draw(UiFlags gflags) {
         if (!!(darkened & UiFlags_Grayscale)) {
             icon_draw_flags |= ImgFlag_Grayscale;
         }
-        push(cmd_t::texture_icon, Pos{doffset + pos}, Size{size}, Mask{COLOR_MASK_NONE}, Scale{scale},
+        push(cmd_t::texture_icon, Pos{scr_pos}, Size{size}, Mask{COLOR_MASK_NONE}, Scale{scale},
              ImgFlagsTag{(ImgFlag_)icon_draw_flags}, SdlTexture{icon_texture});
         tsize = size;
         btn = &ui::img_button({0, 0}, pos, size, offsets, flags);
@@ -1472,18 +1466,18 @@ void ui::eimage_button::draw(UiFlags gflags) {
     if (_selected && !selection_border_deferred) {
         switch (border) {
         case 1:
-            push(cmd_t::button_border, Pos{doffset + pos - vec2i{4, 4}}, Size{tsize + vec2i{8, 8}},
+            push(cmd_t::button_border, Pos{scr_pos - vec2i{4, 4}}, Size{tsize + vec2i{8, 8}},
                  ImgFlagsTag{ImgFlag_Alpha});
             break;
 
         case 2:
-            push(cmd_t::draw_rect, Pos{doffset + pos}, Size{size}, TextColor{0xff000000});
+            push(cmd_t::draw_rect, Pos{scr_pos}, Size{size}, TextColor{0xff000000});
             break;
         }
     }
 
     if (!!(darkened & UiFlags_Darkened)) {
-        push(cmd_t::shade_rect, Pos{doffset + pos}, Size{tsize}, ImageId{0x80});
+        push(cmd_t::shade_rect, Pos{scr_pos}, Size{tsize}, ImageId{0x80});
         return;
     }
 
@@ -1542,6 +1536,7 @@ void ui::etext::reset_scroll() {
 }
 
 void ui::escrollbar::draw(UiFlags flags) {
+    scr_pos = g_state.offset() + pos;
     ui::scrollbar(this->scrollbar, pos, this->scrollbar.scroll_position);
 }
 
@@ -1586,10 +1581,17 @@ void ui::escrollable_list::on_render_item(int index, int flags, const scrollable
         ensure_panel();
         const scrollable_list_ui_params& up = panel->ui_params;
         js_call_function(_js_render_item_ref,
-          {{"index", (int32_t)index}, {"flags", (int32_t)flags}, {"hover", (flags & 2) != 0},
-            {"select", (flags & 1) != 0}, {"text", entry.text}, {"user_data", (int32_t)entry.user_data},
-            {"x", (int32_t)pos.x}, {"y", (int32_t)pos.y}, {"sizex", (int32_t)up.buttons_size_x},
-            {"sizey", (int32_t)up.buttons_size_y}, {"font", (int32_t)font}});
+          { {"index", (int32_t)index},
+            {"flags", (int32_t)flags},
+            {"hover", (flags & 2) != 0},
+            {"select", (flags & 1) != 0},
+            {"text", entry.text},
+            {"user_data", (int32_t)entry.user_data},
+            {"x", (int32_t)pos.x},
+            {"y", (int32_t)pos.y},
+            {"sizex", (int32_t)up.buttons_size_x},
+            {"sizey", (int32_t)up.buttons_size_y},
+            {"font", (int32_t)font}});
         return;
     }
 
@@ -1716,10 +1718,10 @@ ui::escrollable_list::~escrollable_list() {
 void ui::escrollable_list::draw(UiFlags flags) {
     ensure_panel();
 
-    vec2i screen_pos = this->screen_pos();
-    panel->ui_params.pos = screen_pos;
+    scr_pos = g_state.offset() + pos;
+    panel->ui_params.pos = scr_pos;
 
-    begin_widget(screen_pos);
+    begin_widget(scr_pos);
     panel->draw();
     end_widget();
 
@@ -1770,8 +1772,7 @@ std::shared_ptr<ui::etext> ui::etext::acquire() {
 }
 
 void ui::etext::draw(UiFlags flags) {
-    const vec2i offset = g_state.offset();
-
+    scr_pos = g_state.offset() + pos;
     if (!js_ref(TEXTFN).empty()) {
         bvariant dyn = js_call_function(js_ref(TEXTFN), 0, 0);
         ui_scope_property holder;
@@ -1785,21 +1786,21 @@ void ui::etext::draw(UiFlags flags) {
             additionaly = ((size.y - symbolh) * 0.5f);
         }
         if (_shadow_color) {
-            push(cmd_t::text_centered, Pos{offset + pos + vec2i(1, additionaly)}, BoxWidth{size.x}, Font{_font},
+            push(cmd_t::text_centered, Pos{scr_pos + vec2i(1, additionaly)}, BoxWidth{size.x}, Font{_font},
               TextColor{_shadow_color}, Caption{_text.c_str()});
         }
-        push(cmd_t::text_centered, Pos{offset + pos + vec2i{0, additionaly}}, BoxWidth{size.x}, Font{_font},
+        push(cmd_t::text_centered, Pos{scr_pos + vec2i{0, additionaly}}, BoxWidth{size.x}, Font{_font},
           TextColor{_color}, Caption{_text.c_str()});
     } else if (!!(_flags & UiFlags_LabelMultiline)) {
-        push(cmd_t::text_multiline, Pos{offset + pos}, BoxWidth{_wrap}, Font{_font}, TextColor{_color},
+        push(cmd_t::text_multiline, Pos{scr_pos}, BoxWidth{_wrap}, Font{_font}, TextColor{_color},
           Caption{_text.c_str()});
     } else if (!!(_flags & UiFlags_AlignYCentered)) {
         const int symbolh = font_definition_for(_font)->line_height;
         if (_shadow_color) {
-            push(cmd_t::text_colored, Pos{offset + pos + vec2i{1, (size.y - symbolh) / 2}}, Font{_font},
+            push(cmd_t::text_colored, Pos{scr_pos + vec2i{1, (size.y - symbolh) / 2}}, Font{_font},
               TextColor{_shadow_color}, Caption{_text.c_str()});
         }
-        push(cmd_t::text_colored, Pos{offset + pos + vec2i{0, (size.y - symbolh) / 2}}, Font{_font}, TextColor{_color},
+        push(cmd_t::text_colored, Pos{scr_pos + vec2i{0, (size.y - symbolh) / 2}}, Font{_font}, TextColor{_color},
           Caption{_text.c_str()});
     } else if (!!(_flags & UiFlags_Rich)) {
         const int symbolh = font_definition_for(_font)->line_height;
@@ -1814,17 +1815,17 @@ void ui::etext::draw(UiFlags flags) {
 
         rich_text->set_fonts(_font, _font_link);
         rich_text->set_margin(_text_margin);
-        rich_text->init(_text.c_str(), offset + pos, size.x / 16, size.y / 16, /*adjust_width_on_no_scroll*/ true);
+        rich_text->init(_text.c_str(), scr_pos, size.x / 16, size.y / 16, /*adjust_width_on_no_scroll*/ true);
 
         if (!(_flags & UiFlags_NoScroll)) {
             g_state.scrollbars.push_back(rich_text->scrollbar());
         }
 
         if (_clip_area) {
-            push(cmd_t::clip_set, Pos{offset + pos}, Size{pxsize()});
+            push(cmd_t::clip_set, Pos{scr_pos}, Size{pxsize()});
         }
 
-        push(cmd_t::rich_draw, RichTextPtr{rich_text.get()}, Caption{_text.c_str()}, Pos{offset + pos}, BoxWidth{rwrap},
+        push(cmd_t::rich_draw, RichTextPtr{rich_text.get()}, Caption{_text.c_str()}, Pos{scr_pos}, BoxWidth{rwrap},
           Size{vec2i(0, maxlines)}, Flags{_flags & UiFlags_NoScroll});
 
         if (_clip_area) {
@@ -1832,10 +1833,10 @@ void ui::etext::draw(UiFlags flags) {
         }
     } else {
         if (_shadow_color) {
-            push(cmd_t::text_colored, Pos{offset + pos + vec2i{1, 0}}, Font{_font}, TextColor{_shadow_color},
+            push(cmd_t::text_colored, Pos{scr_pos + vec2i{1, 0}}, Font{_font}, TextColor{_shadow_color},
               Caption{_text.c_str()});
         }
-        push(cmd_t::text_colored, Pos{offset + pos}, Font{_font}, TextColor{_color}, Caption{_text.c_str()});
+        push(cmd_t::text_colored, Pos{scr_pos}, Font{_font}, TextColor{_color}, Caption{_text.c_str()});
     }
 
     invoke_draw_callbacks(flags);
@@ -1915,6 +1916,7 @@ void ui::emenu_header::load_items(archive arch, xstring section, element::items&
 }
 
 void ui::emenu_header::draw(UiFlags flags) {
+    scr_pos = g_state.offset() + pos;
     if (impl._textfn) {
         impl.text = impl._textfn();
     } else if (!!_text_format) {
@@ -1957,6 +1959,7 @@ void ui::earrow_button::js_call() {
 }
 
 void ui::earrow_button::draw(UiFlags flags) {
+    scr_pos = g_state.offset() + pos;
     auto& btn = ui::arw_button(pos, down, tiny);
 
     // Set up click handler - prefer JS callback if available, otherwise use C++ callback
@@ -1975,6 +1978,7 @@ void ui::egeneric_button::draw(UiFlags gflags) {
                     | (readonly ? UiFlags_Readonly : UiFlags_None);
 
     bstring256 button_text = _text.c_str();
+    scr_pos = g_state.offset() + pos;
     if (!js_ref(TEXTFN).empty()) {
         bvariant dyn = js_call_function(js_ref(TEXTFN), param1, param2);
         ui_scope_property holder;
@@ -2021,6 +2025,8 @@ void ui::egeneric_button::draw(UiFlags gflags) {
     if (clickable && is_button_hover(*btn, offset)) {
         ui::set_tooltip(_tooltip);
     }
+
+    invoke_draw_callbacks(gflags);
 }
 
 void ui::egeneric_button::js_call() {
@@ -2055,6 +2061,7 @@ void ui::egeneric_button::load(archive arch, element* parent, items& elems) {
 }
 
 void ui::echeckbox::draw(UiFlags flags) {
+    scr_pos = g_state.offset() + pos;
     if (!js_ref(CHECKEDFN).empty()) {
         _checked = js_call_function(js_ref(CHECKEDFN), param1, param2).to_bool();
     }

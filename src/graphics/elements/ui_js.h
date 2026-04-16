@@ -30,10 +30,11 @@ namespace ui {
 
     element* GET_ELEM(js_State* J);
 
-    void proxy_get_noop(js_State* J);
+    void proxy_noop(js_State* J);
     void proxy_get_text(js_State* J);
     void proxy_set_text(js_State* J);
     void proxy_get_pos(js_State* J);
+    void proxy_get_screen_pos(js_State* J);
     void proxy_set_pos(js_State* J);
     void proxy_get_size(js_State* J);
     void proxy_set_size(js_State* J);

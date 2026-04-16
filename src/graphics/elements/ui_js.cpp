@@ -274,6 +274,12 @@ void ui::proxy_get_pos(js_State* J) {
     js_newvec2i(J, pos.x, pos.y);
 }
 
+void ui::proxy_get_screen_pos(js_State* J) {
+    auto elem = GET_ELEM(J);
+    const vec2i pos = elem ? elem->screen_pos() : vec2i{0, 0};
+    js_newvec2i(J, pos.x, pos.y);
+}
+
 void ui::proxy_set_pos(js_State* J) {
     auto elem = GET_ELEM(J);
     if (elem) {
@@ -486,7 +492,7 @@ void ui::proxy_set_value(js_State* J) {
     J->pushundefined();
 }
 
-void ui::proxy_get_noop(js_State* J) {
+void ui::proxy_noop(js_State* J) {
     (void)J;
     J->pushundefined();
 }

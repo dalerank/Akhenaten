@@ -238,7 +238,8 @@ function empire_window_on_init(window) {
 }
 
 [es=(empire_window, draw_city_want_sell_items)]
-function empire_window_es_draw_city_want_sell_items(ev) {
+function empire_window_es_draw_city_want_sell_items(window) {
+    var elm = window[window.active_id]
     var cityId = empire_window.selected_city
     var itemStepX = 110
     var itemStepY = 0
@@ -252,14 +253,15 @@ function empire_window_es_draw_city_want_sell_items(ev) {
         }
         var tradeMax = city.trade_route_limit(r)
         tradeMax = city.stack_proper_quantity(r, tradeMax)
-        var pos = { x: ev.x + itemStepX * sellIndex, y: ev.y + itemStepY * sellIndex }
+        var pos = { x: elm.screen_pos.x + itemStepX * sellIndex, y: elm.screen_pos.y + itemStepY * sellIndex }
         empire_window_draw_trade_resource_row(pos, ev.flags, r, -1, tradeMax, rowFont)
         sellIndex++
     }
  }
 
 [es=(empire_window, draw_city_want_buy_items)]
-function empire_window_es_draw_city_want_buy_items(ev) {
+function empire_window_es_draw_city_want_buy_items(window) {
+    var elm = window[window.active_id]
     var cityId = empire_window.selected_city
     var itemStepX = 110
     var itemStepY = 0
@@ -273,22 +275,22 @@ function empire_window_es_draw_city_want_buy_items(ev) {
         }
         var tradeMax = city.trade_route_limit(r)
         tradeMax = city.stack_proper_quantity(r, tradeMax)
-        var pos = { x: ev.x + itemStepX * buyIndex, y: ev.y + itemStepY * buyIndex }
+        var pos = { x: elm.screen_pos.sx + itemStepX * buyIndex, y: elm.screen_pos.y + itemStepY * buyIndex }
         empire_window_draw_trade_resource_row(pos, ev.flags, r, -1, tradeMax, rowFont)
         buyIndex++
     }
  }
 
 [es=(empire_window, draw_city_sell_items)]
-function empire_window_es_draw_city_sell_items(ev) {
+function empire_window_es_draw_city_sell_items(window) {
     var cityId = empire_window.selected_city
     var itemW = 120
     var itemH = 20
     var rowFont = FONT_SMALL_PLAIN
     var index = 0
-    var e_offset_x = ev.x
-    var e_offset_y = ev.y
-    var panelW = ev.sizex
+    var elm = window[window.active_id]
+    var panelW = elm.size.x
+    var e_offset_y = elm.screen_pos.sy
 
     var city = empire.get_city(cityId)
     for (var r = RESOURCE_GRAIN; r <= RESOURCE_MARBLE; r++) {
@@ -302,7 +304,7 @@ function empire_window_es_draw_city_sell_items(ev) {
         tradeMax = city.stack_proper_quantity(r, tradeMax)
 
         var local_x = itemW * index
-        var pos = { x: e_offset_x + local_x, y: e_offset_y }
+        var pos = { x: elm.screen_pos.x + local_x, y: e_offset_y }
         empire_window_draw_trade_resource_row(pos, ev.flags, r, tradeNow, tradeMax, rowFont)
         index++
 
@@ -320,9 +322,9 @@ function empire_window_es_draw_city_buy_items(ev) {
     var itemH = 20
     var rowFont = FONT_SMALL_PLAIN
     var index = 0
-    var e_offset_x = ev.x
-    var e_offset_y = ev.y
-    var panelW = ev.sizex
+    var elm = window[window.active_id]
+    var panelW = elm.size.x
+    var e_offset_y = elm.screen_pos.y
 
     var city = empire.get_city(cityId)
     for (var r = RESOURCE_GRAIN; r <= RESOURCE_MARBLE; r++) {
@@ -338,7 +340,7 @@ function empire_window_es_draw_city_buy_items(ev) {
         tradeMax = city.stack_proper_quantity(r, tradeMax)
 
         var local_x = itemW * index
-        var pos = { x: e_offset_x + local_x, y: e_offset_y }
+        var pos = { x: elm.screen_pos.x + local_x, y: e_offset_y }
         empire_window_draw_trade_resource_row(pos, ev.flags, r, tradeNow, tradeMax, rowFont)
         index++
 
