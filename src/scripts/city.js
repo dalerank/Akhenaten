@@ -74,6 +74,8 @@ city {
         @people_in_manors { }
         monthly_count: __city_population_monthly_count
         at_month: __city_population_at_month
+        at_age: __city_population_at_age
+        at_level: __city_population_at_level
     }
 
     avg_coverage {

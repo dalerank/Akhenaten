@@ -119,7 +119,7 @@ void ui_proxy_get_items_count(js_State* J) {
 }
 
 static void def_accessor(js_State *J, js_CFunction get, js_CFunction set, const char *name) {
-    js_newcfunction(J, get ? get : ui::proxy_get_noop, js_intern(""), 0);
+    js_newcfunction(J, get ? get : ui::proxy_noop, js_intern(""), 0);
     js_newcfunction(J, set, js_intern(""), 1);
     js_defaccessor(J, -3, js_intern(name), 0);
 }
@@ -136,13 +136,14 @@ void js_register_ui_element_scrollable_list(js_State *J) {
     js_pushobject(J, proto);
     def_accessor(J, ui::proxy_get_text, ui::proxy_set_text, "text");
     def_accessor(J, ui::proxy_get_pos, ui::proxy_set_pos, "pos");
+    def_accessor(J, ui::proxy_get_screen_pos, ui::proxy_noop, "screen_pos");
     def_accessor(J, ui::proxy_get_size, ui::proxy_set_size, "size");
     def_accessor(J, ui::proxy_get_enabled, ui::proxy_set_enabled, "enabled");
     def_accessor(J, ui::proxy_get_readonly, ui::proxy_set_readonly, "readonly");
     def_accessor(J, ui::proxy_get_font, ui::proxy_set_font, "font");
     def_accessor(J, ui::proxy_get_text_color, ui::proxy_set_text_color, "text_color");
     def_accessor(J, ui::proxy_get_selected, ui::proxy_set_selected, "selected");
-    def_accessor(J, ui::proxy_get_noop, ui::proxy_set_tooltip, "tooltip");
+    def_accessor(J, ui::proxy_noop, ui::proxy_set_tooltip, "tooltip");
     def_accessor(J, ui_proxy_get_items_count, nullptr, "items_count");
 
     def_function(J, ui_proxy_add_item, "add_item", 1);

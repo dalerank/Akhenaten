@@ -1,5 +1,6 @@
 #include "js/js_game.h"
 
+#include "building/building_type.h"
 #include "io/gamefiles/lang.h"
 #include "core/profiler.h"
 #include "city/city.h"
@@ -100,6 +101,22 @@ int __city_population_at_month(int max_months, int month) {
     return g_city.population.at_month(max_months, month);
 }
 ANK_FUNCTION_2(__city_population_at_month)
+
+int __city_population_at_age(int index) {
+    if (index < 0 || index >= 100) {
+        return 0;
+    }
+    return g_city.population.at_age[index];
+}
+ANK_FUNCTION_1(__city_population_at_age)
+
+int __city_population_at_level(int index) {
+    if (index < 0 || index >= HOUSE_LEVEL_MAX) {
+        return 0;
+    }
+    return g_city.population.at_level[index];
+}
+ANK_FUNCTION_1(__city_population_at_level)
 
 std::optional<bvariant> __city_get_entertainment_property(pcstr property) {
     return archive_helper::get(g_city.entertainment, property, true);
