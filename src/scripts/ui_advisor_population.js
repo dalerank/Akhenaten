@@ -20,27 +20,6 @@ function advisor_population_clamp(v, lo, hi) {
 	return Math.max(lo, Math.min(hi, v))
 }
 
-var advisor_population_last_decade_log = ""
-
-// Sums city.population_stats.at_age(0..99) into 10-year buckets (0-9 … 90-99).
-function advisor_population_decade_totals_text() {
-	var lines = []
-	var total = 0
-	var d
-	var k
-	for (d = 0; d < 10; d++) {
-		var s = 0
-		var base = d * 10
-		for (k = 0; k < 10; k++) {
-			s += city.population_stats.at_age(base + k)
-		}
-		total += s
-		lines.push(String(base) + "-" + String(base + 9) + ": " + String(s))
-	}
-	lines.push("sum: " + String(total))
-	return lines.join("\n")
-}
-
 function advisor_population_history_y_axis(max_value) {
 	if (max_value <= 100) { return [100, -1] }
 	if (max_value <= 200) { return [200, 0] }
@@ -177,7 +156,7 @@ function advisor_population_draw_history_graph(elm, title_elm) {
         y_axis_label_w : 60
         y_axis_height  : 200
         x_axis_offset  : {x: -10, y: 240}
-        x_axis_width   : 170
+        x_axis_width   : 400
         plot_offset    : {x: -5, y: 20}
     }
 	var bx = elm.pos.x
@@ -342,12 +321,27 @@ function advisor_population_draw_society_graph_button(elm, title_elm) {
 
 	var bx = elm.pos.x
 	var by = elm.pos.y
+	var pad = 4
+	var gw = advisor_population_clamp(elm.size.x - pad * 2, 1, 10000)
+	var graphH = advisor_population_clamp(elm.size.y - 10, 8, 512)
 	y_shift += 2
+	var max_bar = 0
+	for (i = 0; i < HOUSE_LEVEL_MAX; i++) {
+		var t = city.population_stats.at_level(i) >> y_shift
+		if (t > max_bar) {
+			max_bar = t
+		}
+	}
 	for (i = 0; i < HOUSE_LEVEL_MAX; i++) {
 		var val2 = city.population_stats.at_level(i) >> y_shift
-		if (val2 > 0) {
-			ui.fill_rect([bx + 5 * i + 4, by + 50 - val2], [4, val2 + 1], COLOR_RED)
+		if (val2 <= 0) {
+			continue
 		}
+		var h = max_bar > 0 ? Math.max(1, ((val2 * graphH) / max_bar) | 0) : 1
+		var x0 = bx + pad + (((i * gw) / HOUSE_LEVEL_MAX) | 0)
+		var x1 = bx + pad + ((((i + 1) * gw) / HOUSE_LEVEL_MAX) | 0)
+		var bw = Math.max(1, x1 - x0)
+		ui.fill_rect([x0, by + graphH - h + 4], [bw, h], COLOR_RED)
 	}
 }
 
@@ -364,28 +358,56 @@ function advisor_population_draw_society_graph(elm, title_elm) {
 	var y_max = ypx[0]
 	var y_shift = ypx[1]
 
-	var gs = advisor_population_society_history
+	// Match census/history layout (scaled with HISTORY_REF_*).
+	var gh = {
+		y_axis_offset  : { x: -66, y: 0 }
+		y_axis_label_w : 60
+		y_axis_height  : 200
+		x_axis_offset  : { x: -20, y: 245 }
+		x_axis_width   : 400
+		plot_offset    : { x: -5, y: 20 }
+	}
 	var bx = elm.pos.x
 	var by = elm.pos.y
-	var bpos = elm.pos
-	var yo = gs.y_axis_offset
-	var y_axis_base = [bx + yo[0], by + yo[1]]
+	var lw = elm.size.x > 8 ? elm.size.x : HISTORY_REF_W
+	var lh = elm.size.y > 8 ? elm.size.y : HISTORY_REF_H
+	var yo = gh.y_axis_offset
+	var axisH = Math.max(32, ((gh.y_axis_height * lh) / HISTORY_REF_H) | 0)
+	if (axisH > lh - 4) {
+		axisH = lh - 4
+	}
+	var yo0s = ((yo.x * lw) / HISTORY_REF_W) | 0
+	var y_axis_base = { x: bx + yo0s, y: by + yo.y }
 
 	title_elm.text = __loc(55, 8)
-	ui.label_ex(String(y_max), y_axis_base, FONT_SMALL_PLAIN, UiFlags_AlignCentered, gs.y_axis_label_w)
-	ui.label_ex(String((y_max / 2) | 0), [y_axis_base[0], y_axis_base[1] + (gs.y_axis_height / 2 | 0)], FONT_SMALL_PLAIN, UiFlags_AlignCentered, gs.y_axis_label_w)
-	ui.label_ex("0", [y_axis_base[0], y_axis_base[1] + gs.y_axis_height], FONT_SMALL_PLAIN, UiFlags_AlignCentered, gs.y_axis_label_w)
-	ui.label_ex(__loc(55, 9), advisor_population_v2_add(bpos, gs.x_axis_offset[0], gs.x_axis_offset[1]), FONT_SMALL_PLAIN, 0, 0)
-	ui.label_ex(__loc(55, 10), advisor_population_v2_add(bpos, gs.x_axis_offset[0] + gs.x_axis_width, gs.x_axis_offset[1]), FONT_SMALL_PLAIN, 0, 0)
+	ui.label_ex(String(y_max), y_axis_base, FONT_SMALL_PLAIN, UiFlags_AlignCentered, gh.y_axis_label_w)
+	ui.label_ex(String((y_max / 2) | 0), { x: y_axis_base.x, y: y_axis_base.y + (axisH / 2 | 0) }, FONT_SMALL_PLAIN, UiFlags_AlignCentered, gh.y_axis_label_w)
+	ui.label_ex("0", { x: y_axis_base.x, y: y_axis_base.y + axisH }, FONT_SMALL_PLAIN, UiFlags_AlignCentered, gh.y_axis_label_w)
 
-	ui.set_clip_rectangle([0, 0], [640, by + 200])
-	var imgBar = get_image({ pack: PACK_GENERAL, id: 157, offset: 0 })
-	for (i = 0; i < HOUSE_LEVEL_MAX; i++) {
+	var xAxisDy = ((gh.x_axis_offset.y * lh) / HISTORY_REF_H) | 0
+	var xAxisDxL = ((gh.x_axis_offset.x * lw) / HISTORY_REF_W) | 0
+	var xAxisDxR = (((gh.x_axis_offset.x + gh.x_axis_width) * lw) / HISTORY_REF_W) | 0
+	ui.label_ex(__loc(55, 9), advisor_population_v2_add(elm.pos, xAxisDxL, xAxisDy), FONT_SMALL_PLAIN, 0, 0)
+	ui.label_ex(__loc(55, 10), advisor_population_v2_add(elm.pos, xAxisDxR, xAxisDy), FONT_SMALL_PLAIN, 0, 0)
+
+	ui.set_clip_rectangle([bx, by], [lw, lh])
+	var plotPad = 8
+	var gw = Math.max(1, lw - plotPad * 2)
+	var n = HOUSE_LEVEL_MAX
+	for (i = 0; i < n; i++) {
 		var pop = city.population_stats.at_level(i)
 		var val = (y_shift === -1) ? (2 * pop) : (pop >> y_shift)
-		if (val > 0) {
-			ui.image(imgBar, [bx + 20 * i, by + 200 - val])
+		if (val <= 0) {
+			continue
 		}
+		var barH = Math.min(axisH, val | 0)
+		if (barH <= 0) {
+			continue
+		}
+		var x0 = bx + plotPad + (((i * gw) / n) | 0)
+		var x1 = bx + plotPad + ((((i + 1) * gw) / n) | 0)
+		var bw = Math.max(1, x1 - x0)
+		ui.fill_rect([x0 + gh.plot_offset.x, by + axisH - barH + gh.plot_offset.y], [bw, barH], COLOR_RED)
 	}
 	ui.reset_clip_rectangle()
 }
@@ -431,19 +453,9 @@ function advisor_population_es_ondraw_bot(window) {
 	advisor_population_draw_graph_button(elm, row[2], window.bot_text)
 }
 
-advisor_population_society_history = {
-	y_axis_offset  : [-56, 0]
-	y_axis_label_w : 60
-	y_axis_height  : 200
-
-	x_axis_offset  : [-20, 215]
-	x_axis_width   : 170
-}
-
 [es=(advisor_population_window, init)]
 function advisor_population_es_ondraw_decade_log(window) {
-	var t = advisor_population_decade_totals_text()
-    log_info("advisor population census by decade:\n" + t)
+	window.population.text = __loc("#TR_ADVISOR_TOTAL_POPULATION") + " "+ String(city.population)
 }
 
 [es=(advisor_population_window, draw_background)]
@@ -481,7 +493,7 @@ advisor_population_window = {
 		advisor_icon : image({pack:PACK_GENERAL, id:128, offset:5, pos:[10, 10] })
 		title        : label({font : FONT_LARGE_BLACK_ON_LIGHT, pos:[60, 17]})
 		bgimage      : image({pack : PACK_UNLOADED, id:21, offset:14, pos:[56, 60]})
-		population   : label({font : FONT_NORMAL_BLACK_ON_DARK, text:"${TR_ADVISOR_TOTAL_POPULATION} ${city.population}", pos:[450, 25]})
+		population   : label({font : FONT_NORMAL_BLACK_ON_DARK, pos:[450, 25]})
 		housing      : text_center({font : FONT_NORMAL_BLACK_ON_DARK, pos:[545, 315]})
 
 		housing_button : button({pos:[540, 260], size:[64, 50], tooltip:[68, 106]
