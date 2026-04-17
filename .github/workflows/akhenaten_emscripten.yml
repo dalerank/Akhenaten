@@ -42,6 +42,9 @@ jobs:
         repository: dalerank/akhenaten-ems
         ref: refs/heads/main
         token: ${{ secrets.GITHUB_TOKEN }}
+        # Avoid persisting GITHUB_TOKEN in git config; otherwise pushes to another
+        # repo (JamesIves → dalerank.github.io) authenticate as github-actions[bot] and get 403.
+        persist-credentials: false
     - uses: actions/download-artifact@v4
       with:
         name: emscripten_build
