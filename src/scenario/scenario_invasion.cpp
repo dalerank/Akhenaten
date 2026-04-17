@@ -227,7 +227,12 @@ tile2i scenario_start_invasion_impl(invasion_opts_t opts) {
             auto &lands = g_scenario.invasion_points_land;
             svector<tile2i, 8> points;
             std::copy_if(lands.begin(), lands.end(), std::back_inserter(points), [] (auto &p) { return p.valid(); });
-            invasion_tile = points.at(rand() % points.size());
+            if (points.empty()) {
+                logs::warn("scenario_invasion: no valid land invasion points, falling back to map exit");
+                invasion_tile = tile2i::invalid;
+            } else {
+                invasion_tile = points.at(rand() % points.size());
+            }
         } else {
             invasion_tile = opts.invasion_point;
         }
