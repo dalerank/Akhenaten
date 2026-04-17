@@ -23,3 +23,8 @@ int __scenario_start_year() {
     return g_scenario.start_year;
 }
 ANK_FUNCTION(__scenario_start_year)
+
+int __scenario_kingdom_supplies_grain() {
+    return g_scenario.kingdom_supplies_grain ? 1 : 0;
+}
+ANK_FUNCTION(__scenario_kingdom_supplies_grain)

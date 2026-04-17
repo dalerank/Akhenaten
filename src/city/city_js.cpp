@@ -138,6 +138,51 @@ int __city_population_yearly_deaths() {
 }
 ANK_FUNCTION(__city_population_yearly_deaths)
 
+int __city_resource_operating_granaries() {
+    return city_resource_operating_granaries();
+}
+ANK_FUNCTION(__city_resource_operating_granaries)
+
+int __city_resource_food_supply_months() {
+    return city_resource_food_supply_months();
+}
+ANK_FUNCTION(__city_resource_food_supply_months)
+
+int __city_resource_food_types_available_num() {
+    return g_city.resource.food_types_available_num();
+}
+ANK_FUNCTION(__city_resource_food_types_available_num)
+
+int __city_resource_granary_total_stored() {
+    return g_city.resource.granary_total_stored;
+}
+ANK_FUNCTION(__city_resource_granary_total_stored)
+
+int __city_resource_food_needed_per_month() {
+    return g_city.resource.food_needed_per_month;
+}
+ANK_FUNCTION(__city_resource_food_needed_per_month)
+
+int __city_migration_newcomers() {
+    return g_city.migration.newcomers;
+}
+ANK_FUNCTION(__city_migration_newcomers)
+
+int __city_migration_percentage() {
+    return g_city.migration.percentage;
+}
+ANK_FUNCTION(__city_migration_percentage)
+
+int __city_migration_no_room_for_immigrants() {
+    return g_city.migration.no_room_for_immigrants() ? 1 : 0;
+}
+ANK_FUNCTION(__city_migration_no_room_for_immigrants)
+
+int __city_migration_problems_cause() {
+    return g_city.migration.problems_cause();
+}
+ANK_FUNCTION(__city_migration_problems_cause)
+
 std::optional<bvariant> __city_get_entertainment_property(pcstr property) {
     return archive_helper::get(g_city.entertainment, property, true);
 }

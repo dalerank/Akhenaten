@@ -477,7 +477,63 @@ function advisor_population_window_draw_background(window) {
 	}
 }
 
-// Same behavior as removed city_population_percent_in_workforce() (calc.h calc_percentage).
+function advisor_population_print_history_info(window) {
+	var w = window
+	if (scenario.kingdom_supplies_grain()) {
+		w.text1.text = __loc(55, 11)
+	} else {
+		var text = __loc(8, 6) + " " + String(__city_resource_operating_granaries())
+		var months = __city_resource_food_supply_months()
+		if (months > 0) {
+			text += __loc(55, 12) + " " + __loc(8, 4) + " " + String(months)
+		} else {
+			var gst = __city_resource_granary_total_stored()
+			var need = __city_resource_food_needed_per_month()
+			if (gst > (need >> 1)) {
+				text += __loc(55, 13)
+			} else if (gst > 0) {
+				text += __loc(55, 15)
+			} else {
+				text += __loc(55, 14)
+			}
+		}
+		w.text1.text = text
+	}
+
+	w.text2.text = __loc(55, 16) + " " + String(__city_resource_food_types_available_num())
+
+	var newcomers = __city_migration_newcomers()
+	if (newcomers >= 5) {
+		w.text3.text = __loc(55, 24) + " " + String(newcomers) + " " + __loc(55, 17)
+	} else if (__city_migration_no_room_for_immigrants()) {
+		w.text3.text = __loc(55, 24) + " " + __loc(55, 19)
+	} else if (__city_migration_percentage() < 80) {
+		var t = __loc(55, 25)
+		var cause = __city_migration_problems_cause()
+		var tid = 0
+		if (cause === 0) {
+			tid = 20
+		} else if (cause === 1) {
+			tid = 21
+		} else if (cause === 2) {
+			tid = 22
+		} else if (cause === 3) {
+			tid = 23
+		} else if (cause === 4) {
+			tid = 31
+		} else if (cause === 5) {
+			tid = 32
+		}
+		if (tid) {
+			t += __loc(55, tid)
+		}
+		w.text3.text = t
+	} else {
+		var tail = __loc(55, newcomers === 1 ? 18 : 17)
+		w.text3.text = __loc(55, 24) + ", " + String(newcomers) + tail
+	}
+}
+
 function advisor_population_percent_in_workforce_value() {
 	var cur = city.population_stats.current
 	if (!cur) {
@@ -509,12 +565,13 @@ function advisor_population_print_society_info(window) {
 [es=(advisor_population_window, ui_draw_foreground)]
 function advisor_population_window_ui_draw_foreground(window) {
 	var row = advisor_population_graph_layout[advisor_population_window.graph_order]
-	if (row[3] === GRAPH_CENSUS) {
+	var k = row[3]
+	if (k === GRAPH_CENSUS) {
 		advisor_population_print_census_info(window)
-	} else if (row[3] === GRAPH_SOCIETY) {
+	} else if (k === GRAPH_SOCIETY) {
 		advisor_population_print_society_info(window)
 	} else {
-		__advisor_population_print_info(row[3])
+		advisor_population_print_history_info(window)
 	}
 }
 
