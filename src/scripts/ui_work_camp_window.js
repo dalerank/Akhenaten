@@ -35,6 +35,6 @@ function info_window_work_camp_warning_text(window) {
     }
     window.warning_text.text = warning_text
 
-    var workers_desc = approximate_value(b.worker_percentage / 100.0, [8, 7, 6, 5, 4])
+    var workers_desc = Math.approximate_value(b.worker_percentage / 100.0, [8, 7, 6, 5, 4])
     window.workers_desc.text = __loc(179, workers_desc)
 }

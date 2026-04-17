@@ -22,7 +22,7 @@ function info_window_architect_post_init(window) {
         reason = { group: meta_text_id, id: 9 }
     } else {
         reason.group = meta_text_id
-        reason.id = approximate_value(b.worker_percentage / 100.0, [8, 7, 6, 5, 4])
+        reason.id = Math.approximate_value(b.worker_percentage / 100.0, [8, 7, 6, 5, 4])
     }
 
     if (reason.group) {

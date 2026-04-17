@@ -99,17 +99,15 @@ var trade_city_want_buy = {}
 var empire_window = {}
 var empire_images_remap = []
 
-function approximate_value(v, arr) {
+Math.approximate_value = function(v, arr) {
     var index = Math.max(0, Math.min(Math.floor(v * arr.length), arr.length - 1));
     return arr[index];
 }
 
-function calc_percentage(value, total) {
+Math.calc_percentage = function(value, total) {
     if (total) {
-        var value_times_100 = 100 * value;
-        return Math.floor(value_times_100 / total);
+        return (100 * value / total) | 0;
     }
-
     return 0;
 }
 

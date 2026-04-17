@@ -36,7 +36,7 @@ function info_window_raw_material_common_init(window) {
     } else if (b.num_workers <= 0) {
         reason.id = 5
     } else {
-        reason.id = approximate_value(b.worker_percentage / 100.0, [9, 8, 7, 6])
+        reason.id = Math.approximate_value(b.worker_percentage / 100.0, [9, 8, 7, 6])
     }
 
     var wdesc = window.workers_desc || (window.inner_panel && window.inner_panel.workers_desc)

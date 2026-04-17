@@ -29,7 +29,7 @@ function info_window_police_station_on_init(window) {
     }
     window.warning_text.text = warning_text
 
-    var workers_desc = approximate_value(b.worker_percentage / 100.0, [8, 7, 6, 5, 4])
+    var workers_desc = Math.approximate_value(b.worker_percentage / 100.0, [8, 7, 6, 5, 4])
     window.workers_desc.text = __loc(b.meta_text_id, workers_desc)
 
     var weapon_amount = b.stored_resource(RESOURCE_WEAPONS)

@@ -26,7 +26,7 @@ function info_window_hunting_lodge_on_init(window) {
 
     window.warning_text.text = __loc(reason.group, reason.id)
 
-    var workers_desc = approximate_value(b.worker_percentage / 100.0, [10, 9, 8, 7, 6])
+    var workers_desc = Math.approximate_value(b.worker_percentage / 100.0, [10, 9, 8, 7, 6])
     window.workers_desc.text = __loc(b.meta_text_id, workers_desc)
 
     var meat_stored = b.stored_resource(RESOURCE_GAMEMEAT)
