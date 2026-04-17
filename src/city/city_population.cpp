@@ -378,17 +378,6 @@ int city_population_t::get_people_of_working_age() {
     return std::accumulate(at_age.begin() + start_age, at_age.begin() + end_age, 0);
 }
 
-int city_population_percent_in_workforce(void) {
-    if (!city_data.population.current)
-        return 0;
-
-    if (!!game_features::gameplay_change_fixed_workers) {
-        return 38;
-    }
-
-    return calc_percentage(city_data.labor.workers_available, city_data.population.current);
-}
-
 int city_population_t::get_people_aged_between(int min, int max) {
     return std::accumulate(at_age.begin() + min, at_age.begin() + max, 0);
 }
@@ -623,18 +612,3 @@ int city_population_yearly_births() {
     return city_data.population.yearly_births;
 }
 
-int city_population_t::percentage_in_shanties() {
-    if (!current) {
-        return 0;
-    }
-
-    return calc_percentage(people_in_shanties, city_data.population.current);
-}
-
-int city_population_t::percentage_in_manors() {
-    if (!current) {
-        return 0;
-    }
-
-    return calc_percentage(people_in_manors, current);
-}

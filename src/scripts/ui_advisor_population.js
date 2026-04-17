@@ -477,10 +477,45 @@ function advisor_population_window_draw_background(window) {
 	}
 }
 
+// Same behavior as removed city_population_percent_in_workforce() (calc.h calc_percentage).
+function advisor_population_percent_in_workforce_value() {
+	var cur = city.population_stats.current
+	if (!cur) {
+		return 0
+	}
+	if (game_features.get("gameplay_change_fixed_workers")) {
+		return 38
+	}
+	var wa = city.labor.workers_available
+	return (100 * wa / cur) | 0
+}
+
+function advisor_population_print_census_info(window) {
+	var ps = city.population_stats
+	window.text1.text = __loc("#TR_ADVISOR_AVERAGE_AGE") + " " + String(ps.average_age())
+	window.text2.text = __loc("#TR_ADVISOR_PERCENT_IN_WORKFORCE") + " " + String(advisor_population_percent_in_workforce_value())
+	window.text3.text = __loc("#TR_ADVISOR_BIRTHS_LAST_YEAR") + " " + String(ps.yearly_births())
+	window.text4.text = __loc("#TR_ADVISOR_DEATHS_LAST_YEAR") + " " + String(ps.yearly_deaths())
+}
+
+function advisor_population_print_society_info(window) {
+	var houses = city.total_housing_buildings()
+	window.text1.text = __loc("#TR_ADVISOR_HOUSING_PROSPERITY_RATING") + " " + String(city.rating.prosperity_max)
+	window.text2.text = __loc("#TR_ADVISOR_PERCENTAGE_IN_MANORS") + " " + String(Math.calc_percentage(city.population_stats.people_in_manors, city.population_stats.current))
+	window.text3.text = __loc("#TR_ADVISOR_PERCENTAGE_IN_SHANTIES") + " " + String(Math.calc_percentage(city.population_stats.people_in_shanties, city.population_stats.current))
+	window.text4.text = __loc("#TR_ADVISOR_AVERAGE_TAX") + " " + String(Math.floor(city.taxes.estimated_income / houses))
+}
+
 [es=(advisor_population_window, ui_draw_foreground)]
 function advisor_population_window_ui_draw_foreground(window) {
 	var row = advisor_population_graph_layout[advisor_population_window.graph_order]
-	__advisor_population_print_info(row[3])
+	if (row[3] === GRAPH_CENSUS) {
+		advisor_population_print_census_info(window)
+	} else if (row[3] === GRAPH_SOCIETY) {
+		advisor_population_print_society_info(window)
+	} else {
+		__advisor_population_print_info(row[3])
+	}
 }
 
 [es=advisor_window]
@@ -496,10 +531,16 @@ advisor_population_window = {
 		population   : label({font : FONT_NORMAL_BLACK_ON_DARK, pos:[450, 25]})
 		housing      : text_center({font : FONT_NORMAL_BLACK_ON_DARK, pos:[545, 315]})
 
-		housing_button : button({pos:[540, 260], size:[64, 50], tooltip:[68, 106]
-			ui: {
-				tx   : image({pos: [3, 18], pack: PACK_GENERAL, id: 29, isometric:true })
-			}
+		housing_button : image_button({
+			pos: [540, 260],
+			size: [64, 50],
+			pack: PACK_GENERAL,
+			id: 29,
+			offset: 0,
+			offset_focused: 0,
+			offset_pressed: 0,
+			offset_disabled: 0,
+			tooltip: [68, 106],
 		}),
 
 		top_text     : text({pos:[503, 44], font:FONT_NORMAL_BLACK_ON_DARK})

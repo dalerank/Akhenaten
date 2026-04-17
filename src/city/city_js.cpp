@@ -118,6 +118,26 @@ int __city_population_at_level(int index) {
 }
 ANK_FUNCTION_1(__city_population_at_level)
 
+int __city_total_housing_buildings() {
+    return calculate_total_housing_buildings();
+}
+ANK_FUNCTION(__city_total_housing_buildings)
+
+int __city_population_average_age() {
+    return g_city.population.average_age();
+}
+ANK_FUNCTION(__city_population_average_age)
+
+int __city_population_yearly_births() {
+    return city_population_yearly_births();
+}
+ANK_FUNCTION(__city_population_yearly_births)
+
+int __city_population_yearly_deaths() {
+    return city_population_yearly_deaths();
+}
+ANK_FUNCTION(__city_population_yearly_deaths)
+
 std::optional<bvariant> __city_get_entertainment_property(pcstr property) {
     return archive_helper::get(g_city.entertainment, property, true);
 }

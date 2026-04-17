@@ -40,7 +40,7 @@ struct city_labor_t {
     const labor_category* category(int category);
     static void set_category(e_building_type type, int category);
 };
-ANK_CONFIG_PROPERTY(city_labor_t, unemployment_percentage)
+ANK_CONFIG_PROPERTY(city_labor_t, unemployment_percentage, workers_available)
 
 e_labor_category category_for_building(building* b);
 
