@@ -8,6 +8,10 @@ import ui_figure_info
 import ui_hold_festival_window
 import ui_festival_square_window
 import ui_advisor_entertainment
+import ui_advisor_population_common
+import ui_advisor_population_graph_history
+import ui_advisor_population_graph_census
+import ui_advisor_population_graph_society
 import ui_advisor_population
 import ui_send_gift_window
 import ui_advisor_trade
