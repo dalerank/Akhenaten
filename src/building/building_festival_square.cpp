@@ -37,7 +37,9 @@ void building_festival_square::preview::ghost_preview(build_planner &planer, pai
         bool is_exist = g_city.buildings.count_total(BUILDING_FESTIVAL_SQUARE);
         int color_mask = is_exist ? COLOR_MASK_RED : COLOR_MASK_GREEN;
         for (int i = 0; i < params.building_size * params.building_size; i++) {
-            ctx.img_isometric(square_id + i, pixel + vec2i{ ((i % params.building_size) - (i / params.building_size)) * 30, ((i % params.building_size) + (i / params.building_size)) * 15 }, color_mask);
+            const int x = ((i % params.building_size) - (i / params.building_size)) * 30;
+            const int y = ((i % params.building_size) + (i / params.building_size)) * 15;
+            ctx.img_isometric(square_id + i, pixel + vec2i{ x, y }, color_mask, 1.f, ImgFlag_None);
         }
     }
 }

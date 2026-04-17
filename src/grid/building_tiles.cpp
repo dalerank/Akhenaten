@@ -48,7 +48,7 @@ static void adjust_to_absolute_xy(tile2i tile, int size) {
 }
 static void set_crop_tile(painter &ctx, int building_id, int x, int y, int dx, int dy, int crop_image_id, int growth) {
     int grid_offset = MAP_OFFSET(x + dx, y + dy);
-    ctx.img_isometric(crop_image_id + (growth < 4 ? growth : 4), vec2i{MAP_X(grid_offset), MAP_Y(grid_offset)});
+    ctx.img_isometric(crop_image_id + (growth < 4 ? growth : 4), vec2i{MAP_X(grid_offset), MAP_Y(grid_offset)}, COLOR_MASK_NONE, 1.f, ImgFlag_None);
 }
 
 void map_building_tiles_add(int building_id, tile2i tile, int size, int image_id, int terrain) {

@@ -15,6 +15,10 @@ void execute_ui_command(painter& ctx, const ui::cmd_t& cmd) {
         ctx.img_generic(cmd.image_id, cmd.pos, cmd.mask, cmd.scale, cmd.img_flags);
         break;
 
+    case cmd_t::image_isometric:
+        ctx.img_isometric(cmd.image_id, cmd.pos, cmd.mask, cmd.scale, cmd.img_flags);
+        break;
+
     case cmd_t::fill_rect:
         ctx.fill_rect(cmd.pos, cmd.size, cmd.clr);
         break;

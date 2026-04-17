@@ -183,10 +183,6 @@ const image_t *painter::img_generic(const image_t *img, vec2i p, color color_mas
     return img;
 }
 
-const image_t* painter::img_isometric(int image_id, vec2i pixel, color color_mask, float scale) {
-    return img_generic(image_id, pixel, color_mask, scale);
-}
-
 const image_t *painter::isometric_from_drawtile(int image_id, vec2i pos, color color_mask, ImgFlags flags) {
     OZZY_PROFILER_FUNCTION();
 
@@ -218,8 +214,10 @@ const image_t *painter::isometric_from_drawtile_top(int image_id, vec2i pos, col
     return img_top;
 }
 
-const image_t *painter::img_isometric(int image_id, vec2i p, color color_mask, float scale, ImgFlags flags) {
-    isometric_from_drawtile(image_id, p, color_mask, flags);
+const image_t* painter::img_isometric(int image_id, vec2i p, color color_mask, float scale, ImgFlags flags) {
+    const image_t* img = image_get(image_id);
+    const int ydiff = img->isometric_size() * HALF_TILE_HEIGHT_PIXELS;
+    isometric_from_drawtile(image_id, p + vec2i{0, ydiff}, color_mask, flags);
     return isometric_from_drawtile_top(image_id, p, color_mask, flags);
 }
 

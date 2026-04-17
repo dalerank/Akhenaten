@@ -54,6 +54,7 @@ enum UiFlags_ {
     UiFlags_PanelSmall = 1 << 17,
     UiFlags_PanelOuter = 1 << 18,
     UiFlags_ThinBorder = 1 << 19,
+    UiFlags_Composite = 1 << 20,
 };
 using UiFlags = int;
 
@@ -109,6 +110,7 @@ namespace ui {
         enum e_type : uint8_t {
             none = 0,
             image,
+            image_isometric,
             fill_rect,
             draw_rect,
             h_line,
@@ -890,6 +892,7 @@ namespace ui {
         img_button_offsets offsets;
         bool _selected = false;
         uint8_t border = 0;
+        uint8_t composite = 0;
         int texture_id = -1;
         xstring _tooltip;
 
