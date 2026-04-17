@@ -27,6 +27,6 @@ function info_window_water_lift_init(window) {
     }
     window.warning_text.text = warning_text
 
-    var workers_desc = approximate_value(b.worker_percentage / 100.0, [4, 5, 6, 7])
+    var workers_desc = Math.approximate_value(b.worker_percentage / 100.0, [4, 5, 6, 7])
     window.workers_desc.text = __loc(b.meta_text_id, workers_desc)
 }

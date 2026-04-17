@@ -18,7 +18,7 @@ function info_window_water_supply_warning_text(window) {
     if (b.has_road_access == false) {
         reason = { group:69, id:25 }
     } else {
-        workers.id = approximate_value(b.worker_percentage / 100.0, [7, 5, 4, 3, 2])
+        workers.id = Math.approximate_value(b.worker_percentage / 100.0, [7, 5, 4, 3, 2])
     }
 
     window.warning_text.text = __loc(reason.group, reason.id)

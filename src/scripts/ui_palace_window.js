@@ -31,7 +31,7 @@ function palace_info_window_init_workers_desc(window) {
     } else if (palace.num_workers <= 0) {
         reason.id = 10
     } else {
-        reason.id = approximate_value(palace.worker_percentage / 100.0, [9, 8, 7, 6, 5])
+        reason.id = Math.approximate_value(palace.worker_percentage / 100.0, [9, 8, 7, 6, 5])
     }
 
     log_info("akhenaten: palace_info_window_init_workers_desc: " + reason.group + " " + reason.id)
