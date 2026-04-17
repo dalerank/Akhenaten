@@ -1,26 +1,17 @@
 name: Akhenaten clang-format check
 
 on:
-  workflow_call:
-    inputs:
-      base_branch:
-        required: true
-        type: string
-      pull_request_number:
-        required: false
-        type: string
-      event_name:
-        required: true
-        type: string
-      event_before:
-        required: false
-        type: string
-      head_sha:
-        required: false
-        type: string
+  push:
+    branches: [ "master" ]
+  pull_request_target:
+    branches: [ "master" ]
+
+permissions:
+  pull-requests: write
+  contents: read
 
 jobs:
-  build:
+  clang-format:
     name: run on linux
     runs-on: ubuntu-latest
     steps:
@@ -36,18 +27,24 @@ jobs:
         sudo ln -sf /usr/bin/clang-format-20 /usr/bin/clang-format
     - name: check-format
       id: check-formatting
+      env:
+        EVENT_NAME: ${{ github.event_name }}
+        BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
+        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        EVENT_BEFORE: ${{ github.event.before }}
       run: |
-          if [[ "${{ inputs.event_name }}" == pull_request* ]]; then
-            git fetch origin ${{ inputs.base_branch }}
-            base_ref="origin/${{ inputs.base_branch }}"
-            head_ref="${{ inputs.head_sha }}"
+          BASE_BRANCH="${BASE_BRANCH:-master}"
+          if [[ "$EVENT_NAME" == pull_request* ]]; then
+            git fetch origin "$BASE_BRANCH"
+            base_ref="origin/${BASE_BRANCH}"
+            head_ref="$HEAD_SHA"
             if [ -z "$head_ref" ]; then
               echo "head_sha is empty for PR event"
               exit 1
             fi
           else
-            if [ -n "${{ inputs.event_before }}" ] && git rev-parse --verify --quiet "${{ inputs.event_before }}" >/dev/null; then
-              base_ref="${{ inputs.event_before }}"
+            if [ -n "$EVENT_BEFORE" ] && git rev-parse --verify --quiet "$EVENT_BEFORE" >/dev/null; then
+              base_ref="$EVENT_BEFORE"
               head_ref="HEAD"
             else
               base_ref="HEAD^1"
@@ -70,7 +67,7 @@ jobs:
               exit 1
           fi
     - name: post-comment-on-pull-request
-      if: failure() && inputs.pull_request_number != ''
+      if: failure() && github.event_name == 'pull_request_target'
       uses: actions/github-script@v8
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -89,7 +86,7 @@ jobs:
           const body = template
             .replace(/{{CONTRIBUTING_URL}}/g, contributingUrl)
             .replace(/{{DIFF}}/g, diff);
-          const prNumber = ${{ inputs.pull_request_number }};
+          const prNumber = ${{ github.event.pull_request.number }};
           await github.rest.issues.createComment({
             owner: context.repo.owner,
             repo: context.repo.repo,

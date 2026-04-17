@@ -1,7 +1,8 @@
 name: Akhenaten Build Content
 
 on:
-  workflow_call:
+  push:
+    branches: [ "master" ]
 
 jobs:
   build:
@@ -27,8 +28,8 @@ jobs:
         cmake --build ./build
         cp ./build/akhenaten ./artifacts/akhenaten.linux
         zip -r linux_build.zip ./artifacts
-        wget https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_windows/master/windows_build.zip
-        wget https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac_arm/master/macos_build.zip
+        wget -O windows_build.zip "https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_windows/master/windows_build.zip"
+        wget -O macos_build.zip "https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac_arm/master/macos_arm_build.zip"
         unzip windows_build.zip -d artifacts
     - name: Verify itch build archives
       run: |
