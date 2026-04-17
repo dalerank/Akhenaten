@@ -648,8 +648,12 @@ image_button& ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_b
             image_id += offsets.data[3];
         }
 
-        push(cmd_t::image, Pos{state_offset + pos}, ImageId{image_id}, Mask{COLOR_WHITE}, Scale{1.0f},
-          ImgFlagsTag{grayscaled ? ImgFlag_Grayscale : ImgFlag_None});
+        if (!!(flags & UiFlags_Composite)) {
+            push(cmd_t::image_isometric, Pos{state_offset + pos}, ImageId{image_id}, Mask{COLOR_MASK_NONE});
+        } else {
+            push(cmd_t::image, Pos{state_offset + pos}, ImageId{image_id}, Mask{COLOR_WHITE}, Scale{1.0f},
+              ImgFlagsTag{grayscaled ? ImgFlag_Grayscale : ImgFlag_None});
+        }
     }
 
     return ibutton;
@@ -1110,9 +1114,7 @@ void ui::widget::line(bool hline, vec2i npos, int size, color c) {
 void ui::eimg::draw(UiFlags flags) {
     scr_pos = pos + ui::current_offset();
     if (isometric) {
-        const vec2i offset = g_state.offset();
-        painter ctx = game.painter();
-        ctx.img_isometric(img_desc.tid(), offset + pos, COLOR_MASK_NONE);
+        push(cmd_t::image_isometric, Pos{scr_pos}, ImageId{img_desc.tid()}, Mask{COLOR_MASK_NONE});
     } else {
         vec2i rpos = pos;
         if (centering.x > -1000 || centering.y > -1000) {
@@ -1392,6 +1394,7 @@ void ui::eimage_button::load(archive arch, element* parent, items& elems) {
     assert(type == "image_button");
 
     scale = arch.r_float("scale", 1.f);
+    composite = arch.r_bool("composite", false);
     param1 = arch.r_int("param1");
     param2 = arch.r_int("param2");
     img_desc.pack = arch.r_int("pack");
@@ -1418,52 +1421,39 @@ void ui::eimage_button::draw(UiFlags gflags) {
     UiFlags flags = gflags | (_selected ? UiFlags_Selected : UiFlags_None);
     flags |= (readonly ? UiFlags_Readonly : UiFlags_None);
     flags |= (!!(darkened & UiFlags_Grayscale) ? UiFlags_Grayscale : UiFlags_None);
+    flags |= (composite ? UiFlags_Composite : UiFlags_None);
 
-    image_button* btn = nullptr;
-    pcstr pid = id.c_str();
-
-    vec2i tsize;
-    bool selection_border_deferred = false;
+    vec2i tsize = size;
     if (img_desc.id || img_desc.offset) {
-        int img_id = image_id_from_group(img_desc.pack, img_desc.id);
+        const int img_id = image_id_from_group(img_desc.pack, img_desc.id);
         const image_t* img_ptr = image_get(img_id + img_desc.offset);
-
         tsize.x = size.x > 0 ? size.x : img_ptr->width;
         tsize.y = size.y > 0 ? size.y : img_ptr->height;
+    }
 
+    image_button* btn = nullptr;
+    if (img_desc.id || img_desc.offset) {
         btn = &ui::img_button(img_desc, pos, tsize, offsets, flags);
     } else if (texture_id > 0) {
+        btn = &ui::img_button({0, 0}, pos, size, offsets, flags);
         push(cmd_t::saved_texture, Pos{scr_pos}, Size{size}, ImageId{texture_id});
         tsize = size;
-        if (_selected) {
-            switch (border) {
-            case 1:
-                push(cmd_t::button_border, Pos{scr_pos - vec2i{4, 4}}, Size{tsize + vec2i{8, 8}},
-                  ImgFlagsTag{ImgFlag_Alpha});
-                break;
-            case 2:
-                push(cmd_t::draw_rect, Pos{scr_pos}, Size{size}, TextColor{0xff000000});
-                break;
-            }
-            selection_border_deferred = true;
-        }
-        btn = &ui::img_button({0, 0}, pos, size, offsets, flags);
     } else if (icon_texture) {
         int icon_draw_flags = ImgFlag_Alpha;
         if (!!(darkened & UiFlags_Grayscale)) {
             icon_draw_flags |= ImgFlag_Grayscale;
         }
+        btn = &ui::img_button({0, 0}, pos, size, offsets, flags);
         push(cmd_t::texture_icon, Pos{scr_pos}, Size{size}, Mask{COLOR_MASK_NONE}, Scale{scale},
              ImgFlagsTag{(ImgFlag_)icon_draw_flags}, SdlTexture{icon_texture});
         tsize = size;
-        btn = &ui::img_button({0, 0}, pos, size, offsets, flags);
     }
 
     if (!btn) {
         return;
     }
 
-    if (_selected && !selection_border_deferred) {
+    if (_selected) {
         switch (border) {
         case 1:
             push(cmd_t::button_border, Pos{scr_pos - vec2i{4, 4}}, Size{tsize + vec2i{8, 8}},
@@ -1474,6 +1464,20 @@ void ui::eimage_button::draw(UiFlags gflags) {
             push(cmd_t::draw_rect, Pos{scr_pos}, Size{size}, TextColor{0xff000000});
             break;
         }
+    }
+
+    if (border == 3) {
+        image_button probe{};
+        probe.x = pos.x;
+        probe.y = pos.y;
+        probe.width = tsize.x + 4;
+        probe.height = tsize.y + 4;
+        const vec2i off = g_state.offset();
+        const bool bd = !!(flags & UiFlags_Darkened);
+        const bool gy = !!(flags & UiFlags_Grayscale);
+        const bool hov = !(bd || gy) && is_button_hover(probe, off);
+        push(cmd_t::button_border, Pos{off + pos}, Size{tsize},
+             ImgFlagsTag{(hov && !bd && !readonly) ? ImgFlag_Alpha : ImgFlag_None});
     }
 
     if (!!(darkened & UiFlags_Darkened)) {

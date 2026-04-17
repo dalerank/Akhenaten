@@ -80,7 +80,9 @@ void building_bandstand::preview::ghost_preview(build_planner &planer, painter &
     } else { // can place (theoretically)
         int square_id = params.first_img(animkeys().square);
         for (int i = 0; i < params.building_size * params.building_size; i++) {
-            ctx.img_isometric(square_id + i, pixel + vec2i{ ((i % params.building_size) - (i / params.building_size)) * 30, ((i % params.building_size) + (i / params.building_size)) * 15 }, COLOR_MASK_GREEN);
+            const int x = ((i % params.building_size) - (i / params.building_size)) * 30;
+            const int y = ((i % params.building_size) + (i / params.building_size)) * 15;
+            ctx.img_isometric(square_id + i, pixel + vec2i{ x, y }, COLOR_MASK_GREEN, 1.f, ImgFlag_None);
         }
 
         switch (orientation / 2) {

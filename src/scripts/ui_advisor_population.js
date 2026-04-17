@@ -104,15 +104,12 @@ advisor_population_window = {
 		housing      : text_center({font : FONT_NORMAL_BLACK_ON_DARK, pos:[545, 315]})
 
 		housing_button : image_button({
-			pos: [540, 260],
-			size: [64, 50],
-			pack: PACK_GENERAL,
-			id: 29,
-			offset: 0,
-			offset_focused: 0,
-			offset_pressed: 0,
-			offset_disabled: 0,
-			tooltip: [68, 106],
+			pos: [545, 260]
+			pack: PACK_GENERAL, id: 29
+			composite: true
+			border: 3
+			tooltip: [68, 106]
+			onclick: advisor_population_on_housing_button,
 		}),
 
 		top_text     : text({pos:[503, 44], font:FONT_NORMAL_BLACK_ON_DARK})
