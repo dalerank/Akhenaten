@@ -76,6 +76,9 @@ city {
         at_month: __city_population_at_month
         at_age: __city_population_at_age
         at_level: __city_population_at_level
+        average_age: __city_population_average_age
+        yearly_births: __city_population_yearly_births
+        yearly_deaths: __city_population_yearly_deaths
     }
 
     avg_coverage {
@@ -207,6 +210,7 @@ city {
     building_is_tax_collector : __city_building_is_tax_collector
     count_active_buildings : __city_count_active_buildings
     count_total_buildings : __city_count_total_buildings
+    total_housing_buildings : __city_total_housing_buildings
     count_active_industry : __city_count_industry_active
     count_total_industry : __city_count_industry_total
     set_advisor_available : __city_set_advisor_available

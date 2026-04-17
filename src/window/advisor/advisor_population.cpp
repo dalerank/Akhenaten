@@ -2,8 +2,6 @@
 
 #include "city/city.h"
 #include "city/city_migration.h"
-#include "city/city_population.h"
-#include "city/ratings.h"
 #include "city/city_resource.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/text.h"
@@ -13,25 +11,6 @@
 #include "js/js_game.h"
 
 namespace advisor_population {
-
-void print_society_info(ui::widget& w) {
-    int avg_tax_per_house = 0;
-    if (calculate_total_housing_buildings() > 0) {
-        avg_tax_per_house = g_city.taxes.estimated_income / calculate_total_housing_buildings();
-    }
-
-    w["text1"].text_var("%s %d", "#TR_ADVISOR_HOUSING_PROSPERITY_RATING", g_city.ratings.prosperity_max);
-    w["text2"].text_var("%s %d", "#TR_ADVISOR_PERCENTAGE_IN_MANORS", g_city.population.percentage_in_manors());
-    w["text3"].text_var("%s %d", "#TR_ADVISOR_PERCENTAGE_IN_SHANTIES", g_city.population.percentage_in_shanties());
-    w["text4"].text_var("%s %d", "#TR_ADVISOR_AVERAGE_TAX", avg_tax_per_house);
-}
-
-void print_census_info(ui::widget& w) {
-    w["text1"].text_var("%s %d", "#TR_ADVISOR_AVERAGE_AGE", g_city.population.average_age());
-    w["text2"].text_var("%s %u", "#TR_ADVISOR_PERCENT_IN_WORKFORCE", city_population_percent_in_workforce());
-    w["text3"].text_var("%s %u", "#TR_ADVISOR_BIRTHS_LAST_YEAR", city_population_yearly_births());
-    w["text4"].text_var("%s %u", "#TR_ADVISOR_DEATHS_LAST_YEAR", city_population_yearly_deaths());
-}
 
 void print_history_info(ui::widget& w) {
     if (g_scenario.kingdom_supplies_grain) {
@@ -98,12 +77,6 @@ void __advisor_population_print_info(int kind) {
     switch (kind) {
     case 0:
         advisor_population::print_history_info(*w);
-        break;
-    case 1:
-        advisor_population::print_census_info(*w);
-        break;
-    case 2:
-        advisor_population::print_society_info(*w);
         break;
     default:
         break;

@@ -69,8 +69,6 @@ struct city_population_t {
     void remove_for_troop_request(int num_people);
     void record_monthly();
     void update_day();
-    int percentage_in_shanties();
-    int percentage_in_manors();
     int get_people_in_age_decennium(int decennium);
 
     int add_to_houses(int num_people);
@@ -115,5 +113,3 @@ int* calculate_houses_demanding_goods(int* housing_type_counts);
 int city_population_yearly_deaths();
 
 int city_population_yearly_births();
-
-int city_population_percent_in_workforce();
