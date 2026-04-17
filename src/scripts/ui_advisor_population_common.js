@@ -31,26 +31,61 @@ function advisor_population_history_y_axis(max_value) {
 var HISTORY_REF_W = 456
 var HISTORY_REF_H = 220
 
+var advisor_population_info_icon_img = null
+function advisor_population_get_info_icon_img() {
+	if (!advisor_population_info_icon_img) {
+		advisor_population_info_icon_img = get_image({ pack: PACK_GENERAL, id: 158 })
+	}
+	return advisor_population_info_icon_img
+}
+
+function advisor_population_info_lines_on_render_item(p) {
+	var ix = p.user_data
+	var lines = advisor_population_window._info_panel_lines
+	if (lines === undefined || ix === undefined || lines[ix] === undefined) {
+		return
+	}
+	var img = advisor_population_get_info_icon_img()
+	ui.image(img, { x: p.x + 8, y: p.y + 2 })
+	ui.label_ex(lines[ix], [p.x + 35, p.y], FONT_NORMAL_WHITE_ON_DARK, UiFlags_AlignYCentered, px(32))
+	if (p.hover) {
+		ui.border({ x: p.x + 4, y: p.y - 2 }, { x: p.sizex - 8, y: p.sizey + 2 }, 0, COLOR_TOOLTIP_BORDER, UiFlags_None)
+	}
+}
+
+function advisor_population_info_panel_fill_list(window, lines) {
+	advisor_population_window._info_panel_lines = lines
+	var list = window.info_lines_list
+	list.clear()
+	for (var i = 0; i < lines.length; i++) {
+		list.add_item("", i)
+	}
+}
+
 function advisor_population_print_census_info(window) {
 	var ps = city.population_stats
-	window.text1.text = __loc("#TR_ADVISOR_AVERAGE_AGE") + " " + String(ps.average_age())
-	window.text2.text = __loc("#TR_ADVISOR_PERCENT_IN_WORKFORCE") + " " + String(advisor_population_percent_in_workforce_value())
-	window.text3.text = __loc("#TR_ADVISOR_BIRTHS_LAST_YEAR") + " " + String(ps.yearly_births())
-	window.text4.text = __loc("#TR_ADVISOR_DEATHS_LAST_YEAR") + " " + String(ps.yearly_deaths())
+	advisor_population_info_panel_fill_list(window, [
+		__loc("#TR_ADVISOR_AVERAGE_AGE") + " " + String(ps.average_age()),
+		__loc("#TR_ADVISOR_PERCENT_IN_WORKFORCE") + " " + String(advisor_population_percent_in_workforce_value()),
+		__loc("#TR_ADVISOR_BIRTHS_LAST_YEAR") + " " + String(ps.yearly_births()),
+		__loc("#TR_ADVISOR_DEATHS_LAST_YEAR") + " " + String(ps.yearly_deaths()),
+	])
 }
 
 function advisor_population_print_society_info(window) {
 	var houses = city.total_housing_buildings()
-	window.text1.text = __loc("#TR_ADVISOR_HOUSING_PROSPERITY_RATING") + " " + String(city.rating.prosperity_max)
-	window.text2.text = __loc("#TR_ADVISOR_PERCENTAGE_IN_MANORS") + " " + String(Math.calc_percentage(city.population_stats.people_in_manors, city.population_stats.current))
-	window.text3.text = __loc("#TR_ADVISOR_PERCENTAGE_IN_SHANTIES") + " " + String(Math.calc_percentage(city.population_stats.people_in_shanties, city.population_stats.current))
-	window.text4.text = __loc("#TR_ADVISOR_AVERAGE_TAX") + " " + String(Math.floor(city.taxes.estimated_income / houses))
+	advisor_population_info_panel_fill_list(window, [
+		__loc("#TR_ADVISOR_HOUSING_PROSPERITY_RATING") + " " + String(city.rating.prosperity_max),
+		__loc("#TR_ADVISOR_PERCENTAGE_IN_MANORS") + " " + String(Math.calc_percentage(city.population_stats.people_in_manors, city.population_stats.current)),
+		__loc("#TR_ADVISOR_PERCENTAGE_IN_SHANTIES") + " " + String(Math.calc_percentage(city.population_stats.people_in_shanties, city.population_stats.current)),
+		__loc("#TR_ADVISOR_AVERAGE_TAX") + " " + String(Math.floor(city.taxes.estimated_income / houses)),
+	])
 }
 
 function advisor_population_print_history_info(window) {
-	var w = window
+	var line1
 	if (scenario.kingdom_supplies_grain()) {
-		w.text1.text = __loc(55, 11)
+		line1 = __loc(55, 11)
 	} else {
 		var text = __loc(8, 6) + " " + String(__city_resource_operating_granaries())
 		var months = __city_resource_food_supply_months()
@@ -67,16 +102,17 @@ function advisor_population_print_history_info(window) {
 				text += __loc(55, 14)
 			}
 		}
-		w.text1.text = text
+		line1 = text
 	}
 
-	w.text2.text = __loc(55, 16) + " " + String(__city_resource_food_types_available_num())
+	var line2 = __loc(55, 16) + " " + String(__city_resource_food_types_available_num())
 
+	var line3
 	var newcomers = __city_migration_newcomers()
 	if (newcomers >= 5) {
-		w.text3.text = __loc(55, 24) + " " + String(newcomers) + " " + __loc(55, 17)
+		line3 = __loc(55, 24) + " " + String(newcomers) + " " + __loc(55, 17)
 	} else if (__city_migration_no_room_for_immigrants()) {
-		w.text3.text = __loc(55, 24) + " " + __loc(55, 19)
+		line3 = __loc(55, 24) + " " + __loc(55, 19)
 	} else if (__city_migration_percentage() < 80) {
 		var t = __loc(55, 25)
 		var cause = __city_migration_problems_cause()
@@ -97,9 +133,11 @@ function advisor_population_print_history_info(window) {
 		if (tid) {
 			t += __loc(55, tid)
 		}
-		w.text3.text = t
+		line3 = t
 	} else {
 		var tail = __loc(55, newcomers === 1 ? 18 : 17)
-		w.text3.text = __loc(55, 24) + ", " + String(newcomers) + tail
+		line3 = __loc(55, 24) + ", " + String(newcomers) + tail
 	}
+
+	advisor_population_info_panel_fill_list(window, [line1, line2, line3])
 }
