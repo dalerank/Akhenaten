@@ -135,7 +135,6 @@ struct city_finance_t {
     int lower_wages_kingdome();
     void process_stolen(int stolen);
     void update_interest();
-    void change_tax(int value);
 
     void process_request(event_finance_request request);
     void calculate_totals();

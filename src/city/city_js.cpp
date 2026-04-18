@@ -89,6 +89,11 @@ std::optional<bvariant> __city_get_avg_coverage_property(pcstr property) {
 }
 ANK_FUNCTION_1(__city_get_avg_coverage_property)
 
+std::optional<bvariant> __city_get_sentiment_property(pcstr property) {
+    return archive_helper::get(g_city.sentiment, property, true);
+}
+ANK_FUNCTION_1(__city_get_sentiment_property)
+
 std::optional<bvariant> __city_get_population_property(pcstr property) {
     return archive_helper::get(g_city.population, property, true);
 }
