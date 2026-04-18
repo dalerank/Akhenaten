@@ -22,9 +22,14 @@
 #include "scenario/scenario_invasion.h"
 #include "scenario/scenario.h"
 #include "game/game.h"
+#include "graphics/elements/ui_js.h"
 #include "io/gamefiles/lang.h"
+#include "js/js_struct.h"
 
 ui::advisor_chief_window g_advisor_chief_window;
+
+struct advisor_chief_window_fg { vec2i pos; };
+ANK_REGISTER_STRUCT_WRITER(advisor_chief_window_fg, pos);
 
 static void draw_title(int y, int text_id) {
     painter ctx = game.painter();
@@ -34,17 +39,6 @@ static void draw_title(int y, int text_id) {
 
 int ui::advisor_chief_window::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
-
-    // sentiment
-    {
-        const int sentiment = g_city.sentiment.value;
-        std::pair<int, int> sentiment_status;
-        if (sentiment <= 0) { sentiment_status = {20, FONT_NORMAL_YELLOW}; } 
-        else if (sentiment >= 100) { sentiment_status = {31, FONT_NORMAL_BLACK_ON_DARK}; }
-        else { sentiment_status = {32 + sentiment / 10, FONT_NORMAL_BLACK_ON_DARK}; }
-        ui["sentiment_info"].text((pcstr)lang_get_string(61, sentiment_status.first));
-        ui["sentiment_info"].font(sentiment_status.second);
-    }
 
     // migration
     {
@@ -91,7 +85,6 @@ int ui::advisor_chief_window::draw_background(UiFlags flags) {
             workers_status = {84, FONT_NORMAL_BLACK_ON_DARK};
             ui["workers_info"].text((pcstr)lang_get_string(61, workers_status.first));
         }
-       
         ui["workers_info"].font(workers_status.second);
     }
 
@@ -259,6 +252,7 @@ int ui::advisor_chief_window::draw_background(UiFlags flags) {
 void ui::advisor_chief_window::ui_draw_foreground(UiFlags flags) {
     ui.begin_widget(pos);
     ui.draw();
+    ui.event(advisor_chief_window_fg{ pos }, get_section(), "ui_draw_foreground");
 
     int y_line = 306;
     int text_b = 20;
