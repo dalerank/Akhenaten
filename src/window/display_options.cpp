@@ -79,7 +79,7 @@ void ui::display_options_window::init(close_callback close_cb) {
 }
 
 void ui::display_options_window::ui_draw_foreground(UiFlags flags) {
-    ui.begin_widget(pos);    
+    ui.begin_widget(pos);
     ui.draw();
     ui.end_widget();
 }

@@ -66,6 +66,13 @@ void window_building_draw_native_crops(object_info* c) {
 
 void building_info_window::window_info_foreground(object_info &c) {
     common_info_window::window_info_foreground(c);
+    ui_draw_foreground(c);
+}
+
+void building_info_window::ui_draw_foreground(object_info& c) {
+    ui.begin_widget(c.offset);
+    ui.event(building_info_window_draw{c.offset, c.bid}, get_section(), __func__);
+    ui.end_widget();
 }
 
 void window_building_draw_mission_post(object_info* c) {

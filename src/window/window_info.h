@@ -13,10 +13,10 @@ struct event_update_tile_info { bool avoid_mouse; };
 
 struct common_info_window : public ui::widget {
     virtual pcstr section() const { return ""; }
-    virtual bool check(object_info &c) { return false; }
+    virtual bool check(object_info& c) { return false; }
     virtual vec2i bgsize() const;
-    virtual void window_info_background(object_info &c) { update_buttons(c); }
-    virtual void window_info_foreground(object_info &c);
+    virtual void window_info_background(object_info& c) { update_buttons(c); }
+    virtual void window_info_foreground(object_info& c);
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) { return 0; }
     virtual textid get_tooltip(object_info &c) { return {0, 0}; }
     virtual void update_buttons(object_info &c);

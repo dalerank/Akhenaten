@@ -1,11 +1,54 @@
 log_info("akhenaten: ui festival square window started")
 
-function festival_square_info_update_festival_state(window) {
-    var festivalTextIffs = [0, 10, 20, 31]
+[es=building_info_window]
+festival_square_info_window {
+    related_buildings [BUILDING_FESTIVAL_SQUARE]
+    needs_sync : true
+    ui {
+        background      : outer_panel({pos[0, 0], size[29, 16]})
+        title           : text({text: "#festival_square_info_title", pos[0, 10], size[px(29), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
+        warning         : text({pos[32, 36], wrap:px(26), text:"${text.1}", font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
+        workers_panel   : inner_panel({ pos[16, 96], size[27, 7] })
 
+        fest_months_last: text({pos[32, 112], size[px(25), 20], text:"${city.months_since_festival} ${8.5} ${58.15}", font:FONT_NORMAL_WHITE_ON_DARK, align:"center"}),
+        hold_festival   : button({pos[60, 134], size:[px(22), 25], font:FONT_NORMAL_WHITE_ON_DARK, text:"${58.16}", onclick: festival_square_info_window_hold_festival}),
+        planed_festival : text({pos[102, 134], font : FONT_NORMAL_BLACK_ON_DARK, align:"center" })
+        festival_advice : text({pos[36, 164], wrap:400, font : FONT_NORMAL_WHITE_ON_DARK, multiline:true })
+
+        button_help     : help_button({})
+        button_close    : close_button({})
+    }
+}
+
+function festival_square_info_window_hold_festival() {
+    if (city.festival.is_planned) {
+        return
+    }
+
+    hold_festival_window.show(false, function() {
+        log_info("akhenaten: festival square info window hold festival callback")
+        festival_square_info_window.needs_sync = true
+    })
+}
+
+[es=(festival_square_info_window, init)]
+function festival_square_info_window_init(window) {
+    festival_square_info_window.needs_sync = true
+}
+
+[es=(festival_square_info_window, ui_draw_foreground)]
+function festival_square_info_window_ui_draw_foreground(window) {
+    log_info("akhenaten: festival square info window ui draw foreground")
+    if (!festival_square_info_window.needs_sync) {
+        return
+    }
+
+    festival_square_info_window.needs_sync = false
+
+    var festivalTextIffs = [0, 10, 20, 31]
     if (city.festival.is_planned) {
         var size = city.festival.selected_size
-        var monthsLeft = city.festival.months_till_next()
+        var monthsLeft = __city_festival.months_till_next
         var plannedMonth = (__game_simtime_month() + monthsLeft) % 12
         var baseIdx = (size >= 0 && size < festivalTextIffs.length) ? festivalTextIffs[size] : festivalTextIffs[festivalTextIffs.length - 1]
 
@@ -19,46 +62,4 @@ function festival_square_info_update_festival_state(window) {
     window.hold_festival.enabled = true
     window.hold_festival.text = __loc(58, 16)
     window.festival_advice.text = __loc(58, 18 + city.festival.get_advice())
-}
-
-[es=building_info_window]
-festival_square_info_window {
-    related_buildings [BUILDING_FESTIVAL_SQUARE]
-    needs_sync : true
-    ui {
-        background      : outer_panel({pos[0, 0], size[29, 16]}),
-        title           : text({text: "#festival_square_info_title", pos[0, 10], size[px(29), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        warning         : text({pos[32, 36], wrap:px(26), text:"${text.1}", font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-        workers_panel   : inner_panel({ pos[16, 96], size[27, 7] }),
-        fest_months_last: text({pos[32, 112], size[px(25), 20], text:"${city.months_since_festival} ${8.5} ${58.15}", font:FONT_NORMAL_WHITE_ON_DARK, align:"center"}),
-        hold_festival   : button({pos[60, 134], size:[px(22), 25], font:FONT_NORMAL_WHITE_ON_DARK, text:"${58.16}", onclick: festival_square_info_window_hold_festival}),
-        planed_festival : text({pos[102, 134], font : FONT_NORMAL_BLACK_ON_DARK, align:"center" }),
-        festival_advice : text({pos[36, 164], wrap:400, font : FONT_NORMAL_WHITE_ON_DARK, multiline:true }),
-
-        button_help     : help_button({}),
-        button_close    : close_button({}),
-    }
-}
-
-function festival_square_info_window_hold_festival() {
-    if (city.festival.is_planned) {
-        return
-    }
-
-    hold_festival_window.show(false, function() {
-        festival_square_info_window.needs_sync = true
-    })
-}
-
-[es=(festival_square_info_window, init)]
-function festival_square_info_window_init(window) {
-    festival_square_info_window.needs_sync = true
-}
-
-[es=(festival_square_info_window, ui_draw_foreground)]
-function festival_square_info_window_ui_draw_foreground(window) {
-    if (festival_square_info_window.needs_sync) {
-        festival_square_info_update_festival_state(window)
-        festival_square_info_window.needs_sync = false
-    }
 }
