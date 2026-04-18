@@ -5,6 +5,8 @@
 #include "jsbuiltin.h"
 #include "utf.h"
 
+#include <cstdint>
+
 #include "core/profiler.h"
 
 static js_StringNode property_length = js_intern("length");
@@ -112,6 +114,10 @@ void jsV_toprimitive(js_State* J, js_Value* v, int preferred) {
             v->type = JS_TNUMBER;
             v->u.number = (double)*(float*)p;
             return;
+        case JS_PTR_INT8:
+            v->type = JS_TNUMBER;
+            v->u.number = *(int8_t*)p;
+            return;
         default:
             return;
         }
@@ -164,6 +170,8 @@ int jsV_toboolean(js_State* J, js_Value* v) {
                 return *(bool*)p != 0;
             case JS_PTR_FLOAT:
                 return *(float*)p != 0;
+            case JS_PTR_INT8:
+                return *(int8_t*)p != 0;
             default:
                 return 1;
             }
@@ -278,6 +286,8 @@ double jsV_tonumber(js_State* J, js_Value* v) {
                 return *(bool*)p ? 1 : 0;
             case JS_PTR_FLOAT:
                 return (double)*(float*)p;
+            case JS_PTR_INT8:
+                return *(int8_t*)p;
             default:
                 return 0;
             }

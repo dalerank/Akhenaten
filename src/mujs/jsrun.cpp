@@ -1,6 +1,7 @@
 #include "jsi.h"
 
 #include <new>
+#include <cstdint>
 #include <cstring>
 
 #include "jscompile.h"
@@ -607,7 +608,8 @@ int js_State::hasproperty(js_Object *obj, js_StringNode name) {
             switch (o->u.p.ptype) {
             case JS_PTR_INT:   js_pushnumber(J, *(int*)p); break;
             case JS_PTR_BOOL:  js_pushboolean(J, *(bool*)p); break;
-            case JS_PTR_FLOAT: js_pushnumber(J, (double)*(float*)p); break;
+            case JS_PTR_FLOAT: js_pushnumber(J, *(float*)p); break;
+            case JS_PTR_INT8:  js_pushnumber(J, *(int8_t*)p); break;
             default: js_pushvalue(J, ref->value); break;
             }
         } else {
@@ -640,6 +642,7 @@ static void jsR_setproperty(js_State* J, js_Object* obj, const js_StringNode nam
         case JS_PTR_INT:   *(int*)p = js_tointeger(J, -1); break;
         case JS_PTR_BOOL:  *(bool*)p = js_toboolean(J, -1) != 0; break;
         case JS_PTR_FLOAT: *(float*)p = (float)js_tonumber(J, -1); break;
+        case JS_PTR_INT8: *(int8_t*)p = (int8_t)js_tointeger(J, -1); break;
         default: break;
         }
         js_pop(J, 1);

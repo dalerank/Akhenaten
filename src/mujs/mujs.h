@@ -26,6 +26,8 @@
 
 #include "jsstring.h"
 
+#include <cstdint>
+
 struct js_State;
 
 typedef void *(*js_Alloc)(void *memctx, void *ptr, int size);
@@ -50,6 +52,13 @@ void js_setdebughook(js_State *J, js_DebugHook hook, void *udata);
 void js_register_bound_int(js_State *J, const js_StringNode name, int *ptr);
 void js_register_bound_bool(js_State* J, const js_StringNode name, void* ptr);
 void js_register_bound_float(js_State* J, const js_StringNode name, float* ptr);
+void js_register_bound_int8(js_State *J, const js_StringNode name, std::int8_t *ptr);
+
+/** Same as js_register_bound_* but attach CPTR as a property of the object left on stack at -2 (value pushed on -1). */
+void js_register_bound_int_property(js_State *J, const js_StringNode name, int *ptr);
+void js_register_bound_bool_property(js_State *J, const js_StringNode name, void *ptr);
+void js_register_bound_float_property(js_State *J, const js_StringNode name, float *ptr);
+void js_register_bound_int8_property(js_State *J, const js_StringNode name, std::int8_t *ptr);
 
 /* Basic functions */
 js_State *js_newstate(js_Alloc alloc, void *actx, int flags);

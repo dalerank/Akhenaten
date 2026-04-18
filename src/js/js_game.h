@@ -4,6 +4,7 @@
 
 #include "js/js_constants.h"
 #include "js/js_struct.h"
+#include "js/js_global_object.h"
 #include "mujs/jsi.h"
 #include "mujs/jsvalue.h"
 #include "core/bstring.h"
@@ -498,6 +499,11 @@ struct js_function_traits<R(C:: *)(Args...) const> : js_function_traits<R(C:: *)
     static void ANK_CONFIG_CC1(ank_bound_int_reg_, __LINE__)(js_State * J) { js_register_bound_int(J, js_intern(#js_name), &(cptr)); } \
     ANK_DECLARE_JSFUNCTION_ITERATOR(ANK_CONFIG_CC1(ank_bound_int_reg_, __LINE__));
 
+/** Register a C int8_t* as a global JS variable (JS_CPTR); writes clamp to [-128,127]. */
+#define ANK_BOUND_INT8(js_name, cptr) \
+    static void ANK_CONFIG_CC1(ank_bound_int8_reg_, __LINE__)(js_State * J) { js_register_bound_int8(J, js_intern(#js_name), &(cptr)); } \
+    ANK_DECLARE_JSFUNCTION_ITERATOR(ANK_CONFIG_CC1(ank_bound_int8_reg_, __LINE__));
+
 /** Register a C bool* as a global JS variable (JS_CPTR). */
 #define ANK_BOUND_BOOL(js_name, cptr) \
     static void ANK_CONFIG_CC1(ank_bound_bool_reg_, __LINE__)(js_State * J) { js_register_bound_bool(J, js_intern(#js_name), &(cptr)); } \
@@ -507,6 +513,22 @@ struct js_function_traits<R(C:: *)(Args...) const> : js_function_traits<R(C:: *)
 #define ANK_BOUND_FLOAT(js_name, cptr) \
     static void ANK_CONFIG_CC1(ank_bound_float_reg_, __LINE__)(js_State* J) { js_register_bound_float(J, js_intern(#js_name), &(cptr)); } \
     ANK_DECLARE_JSFUNCTION_ITERATOR(ANK_CONFIG_CC1(ank_bound_float_reg_, __LINE__));
+
+/** Register a global JS object (JsName) whose listed fields bind as JS_CPTR ints (same storage as ANK_BOUND_INT).
+ *  Fields must map to int-sized storage (enums, int8_t, etc. via (int*) cast in implementation). */
+#define ANK_GLOBAL_OBJECT(ContainerExpr, JsName, ...)                                                               \
+    static void ank_register_global_obj_##JsName(js_State *J) {                                                     \
+        js_getglobal(J, #JsName);                                                                                   \
+        const bool already_registered = J->isobject(-1);                                                            \
+        js_pop(J, 1);                                                                                               \
+        if (already_registered) return;                                                                             \
+        js_newobject(J);                        /* stack: [obj]      */                                             \
+        js_dup(J);                              /* stack: [obj, obj] */                                             \
+        js_defglobal(J, js_intern(#JsName), 0); /* stores top, pops  → stack: [obj] */                              \
+        ANK_GLOBAL_OBJ_PASTE(ContainerExpr, __VA_ARGS__);  /* attaches CPTR props to [obj] */                       \
+        js_pop(J, 1);                           /* stack: []         */                                             \
+    }                                                                                                               \
+    ANK_DECLARE_JSFUNCTION_ITERATOR(ank_register_global_obj_##JsName);
 
 // Template function version of ANK_FUNCTION_RAW
 // This template function handles the callback logic (extracted from macro)
