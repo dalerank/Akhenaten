@@ -334,13 +334,21 @@ void figure_docker::figure_action() {
     base.use_cart = true;
     if (b->state != BUILDING_STATE_VALID) {
         poof();
+        return;
     }
 
     if (b->type != BUILDING_DOCK && b->type != BUILDING_FISHING_WHARF) {
         poof();
+        return;
     }
 
-    auto &dock = b->dcast_dock()->runtime_data();
+    building_dock* dock_b = b->dcast_dock();
+    if (!dock_b) {
+        poof();
+        return;
+    }
+
+    auto& dock = dock_b->runtime_data();
     if (dock.num_ships) {
         dock.num_ships--;
     }
@@ -562,10 +570,15 @@ void figure_docker::on_destroy() {
         return;
     }
 
-    auto &dock = home()->dcast_dock()->runtime_data();
+    auto dock = home()->dcast_dock();
+    if (!dock) {
+        return;
+    }
+
+    auto& rt = dock->runtime_data();
     for (int i = 0; i < 3; i++) {
-        if (dock.docker_ids[i] == id()) {
-            dock.docker_ids[i] = 0;
+        if (rt.docker_ids[i] == id()) {
+            rt.docker_ids[i] = 0;
         }
     }
 }
