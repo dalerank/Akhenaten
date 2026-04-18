@@ -250,6 +250,24 @@ function advisor_chief_window_update_religion(window) {
 	window.religion_info.font = font
 }
 
+function advisor_chief_window_update_finance(window) {
+	var treasury = city.finance.treasury
+	var balance_last_year = city.finance.last_year.balance
+	if (treasury > balance_last_year) {
+		window.finance_info.text = __loc(61, 152) + " " + (treasury - balance_last_year)
+		window.finance_info.font = FONT_NORMAL_BLACK_ON_DARK
+	} else if (treasury < balance_last_year) {
+		window.finance_info.text = __loc(61, 154) + " " + (balance_last_year - treasury)
+		window.finance_info.font = FONT_NORMAL_YELLOW
+	} else if (city.taxes.percentage_taxed_people < 75) {
+		window.finance_info.text = __loc(61, 151)
+		window.finance_info.font = FONT_NORMAL_BLACK_ON_DARK
+	} else {
+		window.finance_info.text = __loc(61, 153)
+		window.finance_info.font = FONT_NORMAL_BLACK_ON_DARK
+	}
+}
+
 [es=(advisor_chief_window, ui_draw_foreground)]
 function advisor_chief_window_ui_draw_foreground(window) {
 	advisor_chief_window_update_sentiment(window)
@@ -259,4 +277,5 @@ function advisor_chief_window_ui_draw_foreground(window) {
 	advisor_chief_window_update_foodconsumption(window)
 	advisor_chief_window_update_health(window)
 	advisor_chief_window_update_religion(window)
+	advisor_chief_window_update_finance(window)
 }
