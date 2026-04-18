@@ -223,6 +223,27 @@ function advisor_chief_window_update_foodconsumption(window) {
 	window.foodconsumption_info.font = font
 }
 
+function advisor_chief_window_update_religion(window) {
+	var r = city.houses.religion
+	var text_id
+	var font
+	if (r === 1) {
+		text_id = 46
+		font = FONT_NORMAL_YELLOW
+	} else if (r === 2) {
+		text_id = 47
+		font = FONT_NORMAL_YELLOW
+	} else if (r === 3) {
+		text_id = 48
+		font = FONT_NORMAL_YELLOW
+	} else {
+		text_id = 49
+		font = FONT_NORMAL_BLACK_ON_DARK
+	}
+	window.religion_info.text = __loc(61, text_id)
+	window.religion_info.font = font
+}
+
 [es=(advisor_chief_window, ui_draw_foreground)]
 function advisor_chief_window_ui_draw_foreground(window) {
 	advisor_chief_window_update_sentiment(window)
@@ -230,4 +251,5 @@ function advisor_chief_window_ui_draw_foreground(window) {
 	advisor_chief_window_update_workers(window)
 	advisor_chief_window_update_foodstocks(window)
 	advisor_chief_window_update_foodconsumption(window)
+	advisor_chief_window_update_religion(window)
 }
