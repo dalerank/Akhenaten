@@ -2,6 +2,8 @@ log_info("akhenaten: ui advisor chief started")
 
 advisor_chief_window = {
 	ui : {
+		background : dummy({ pos:[0, 0] }),
+
 		outer_panel : { type : "outer_panel", pos:[0, 0], size:[40, 27] },
 		advisor_icon : { type : "image", pack:PACK_GENERAL, id:128, offset:11, pos:[10, 10] },
 		header_label : { type : "label", font : FONT_LARGE_BLACK_ON_LIGHT, text:"#chief_overseer",	pos:[60, 17]},
@@ -68,4 +70,28 @@ advisor_chief_window = {
 		nilometr_info : { type : "label", pos:[185, 286], font:FONT_NORMAL_BLACK_ON_LIGHT, wrap:400},
 		nilometr_info2 : { type : "label", pos:[185, 306], font:FONT_NORMAL_BLACK_ON_LIGHT, wrap:400},
 	}
+}
+
+function advisor_chief_window_update_sentiment(window) {
+	log_info("advisor_chief_window_update_sentiment")
+	var sentiment = city.sentiment.value
+	var text_id
+	var font
+	if (sentiment <= 0) {
+		text_id = 20
+		font = FONT_NORMAL_YELLOW
+	} else if (sentiment >= 100) {
+		text_id = 31
+		font = FONT_NORMAL_BLACK_ON_DARK
+	} else {
+		text_id = 32 + ((sentiment / 10) | 0)
+		font = FONT_NORMAL_BLACK_ON_DARK
+	}
+	window.sentiment_info.text = __loc(61, text_id)
+	window.sentiment_info.font = font
+}
+
+[es=(advisor_chief_window, init)]
+function advisor_chief_window_on_init(window) {
+	advisor_chief_window_update_sentiment(window)
 }
