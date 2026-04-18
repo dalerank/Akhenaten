@@ -4,7 +4,6 @@
 #include "scenario/request.h"
 
 #include "city/city.h"
-#include "city/city_finance.h"
 #include "city/military.h"
 #include "scenario/distant_battle.h"
 #include "city/city_population.h"
@@ -35,34 +34,6 @@ static void draw_title(int y, int text_id) {
 
 int ui::advisor_chief_window::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
-
-    // crime
-    {
-        std::pair<bstring256, int> crime_status;
-        const int criminals = g_city.sentiment.criminals;
-        if (criminals > 10) {
-            crime_status = {bstring256().printf("%s %d %s", (pcstr)lang_get_string(61, 159),
-                                                         g_city.finance.this_year.expenses.stolen,
-                                                         (pcstr)lang_get_string(61, 164)), FONT_NORMAL_YELLOW};
-        } else if (criminals > 7) {
-            crime_status = {bstring256().printf("%s %d %s", (pcstr)lang_get_string(61, 160),
-                                                         g_city.finance.this_year.expenses.stolen,
-                                                         (pcstr)lang_get_string(61, 164)), FONT_NORMAL_YELLOW};
-        } else if (criminals > 5) {
-            crime_status = {bstring256().printf("%s %d %s", (pcstr)lang_get_string(61, 161),
-                                                         g_city.finance.this_year.expenses.stolen,
-                                                         (pcstr)lang_get_string(61, 164)), FONT_NORMAL_YELLOW};
-        } else if (criminals > 2) {
-            crime_status = {bstring256().printf("%s %d %s", (pcstr)lang_get_string(61, 162),
-                                                         g_city.finance.this_year.expenses.stolen,
-                                                         (pcstr)lang_get_string(61, 164)), FONT_NORMAL_BLACK_ON_DARK};
-        } else {
-            crime_status = {bstring256().printf("%s", (pcstr)lang_get_string(61, 163)), FONT_NORMAL_BLACK_ON_DARK};
-        }
-
-        ui["crime_info"].text_var("%s", crime_status.first.c_str());
-        ui["crime_info"].font(crime_status.second);
-    }
 
     // military
     {

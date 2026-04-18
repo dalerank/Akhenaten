@@ -268,6 +268,31 @@ function advisor_chief_window_update_finance(window) {
 	}
 }
 
+function advisor_chief_window_update_crime(window) {
+	var criminals = city.sentiment.criminals
+	var stolen = city.finance.this_year.expenses.stolen
+	var text
+	var font
+	if (criminals > 10) {
+		text = __loc(61, 159) + " " + stolen + " " + __loc(61, 164)
+		font = FONT_NORMAL_YELLOW
+	} else if (criminals > 7) {
+		text = __loc(61, 160) + " " + stolen + " " + __loc(61, 164)
+		font = FONT_NORMAL_YELLOW
+	} else if (criminals > 5) {
+		text = __loc(61, 161) + " " + stolen + " " + __loc(61, 164)
+		font = FONT_NORMAL_YELLOW
+	} else if (criminals > 2) {
+		text = __loc(61, 162) + " " + stolen + " " + __loc(61, 164)
+		font = FONT_NORMAL_BLACK_ON_DARK
+	} else {
+		text = __loc(61, 163)
+		font = FONT_NORMAL_BLACK_ON_DARK
+	}
+	window.crime_info.text = text
+	window.crime_info.font = font
+}
+
 [es=(advisor_chief_window, ui_draw_foreground)]
 function advisor_chief_window_ui_draw_foreground(window) {
 	advisor_chief_window_update_sentiment(window)
@@ -278,4 +303,5 @@ function advisor_chief_window_ui_draw_foreground(window) {
 	advisor_chief_window_update_health(window)
 	advisor_chief_window_update_religion(window)
 	advisor_chief_window_update_finance(window)
+	advisor_chief_window_update_crime(window)
 }
