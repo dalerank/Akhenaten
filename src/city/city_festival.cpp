@@ -95,9 +95,9 @@ void city_festival_t::execute_festival() {
         case BUILDING_TEMPLE_COMPLEX_BAST:
         case BUILDING_JUGGLER_SCHOOL:
         case BUILDING_CONSERVATORY:
-        case BUILDING_DANCE_SCHOOL: { 
+        case BUILDING_DANCE_SCHOOL: {
                 figure* f = b->create_figure_generic(FIGURE_FESTIVAL_GUY, (e_figure_action)ACTION_10_FESTIVAL_GUY_CREATED, BUILDING_SLOT_PRIEST, DIR_4_BOTTOM_LEFT);
-                
+
                 tile2i tile_on_square = square_pos.shifted(rand() % square->size, rand() % square->size);
                 f->tile = b->road_access;
                 f->set_home(b);
@@ -143,11 +143,11 @@ void city_festival_t::execute_festival() {
         case FESTIVAL_SMALL:
             g_city.change_happiness(1);
             break;
-        
+
         case FESTIVAL_LARGE:
             g_city.change_happiness(2);
             break;
-        
+
         case FESTIVAL_GRAND:
             g_city.change_happiness(3);
             break;
