@@ -44,22 +44,6 @@ int ui::advisor_chief_window::draw_background(UiFlags flags) {
         ui["health_info"].font(health_rate >= 40 ? FONT_NORMAL_BLACK_ON_DARK : FONT_NORMAL_YELLOW);
     }
 
-    // religion
-    {
-        // todo
-        //    house_demands *demands = city_houses_demands();
-        //    if (demands->religion == 1)
-        //        lang_text_draw(61, 46, X_OFFSET, y_line, FONT_NORMAL_RED);
-        //    else if (demands->religion == 2)
-        //        lang_text_draw(61, 47, X_OFFSET, y_line, FONT_NORMAL_RED);
-        //    else if (demands->religion == 3)
-        //        lang_text_draw(61, 48, X_OFFSET, y_line, FONT_NORMAL_RED);
-        //    else
-        //        lang_text_draw(61, 49, X_OFFSET, y_line, FONT_NORMAL_GREEN);
-        ui["religion_info"].text((pcstr)lang_get_string(61, 125));
-        ui["religion_info"].font(FONT_NORMAL_BLACK_ON_DARK);
-    }
-
     // finance
     {
         const int treasury = g_city.finance.treasury;
