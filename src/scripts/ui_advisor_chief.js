@@ -191,10 +191,43 @@ function advisor_chief_window_update_foodstocks(window) {
 	}
 }
 
+function advisor_chief_window_update_foodconsumption(window) {
+	var text_id
+	var font
+	if (scenario.kingdom_supplies_grain()) {
+		text_id = 26
+		font = FONT_NORMAL_BLACK_ON_DARK
+	} else {
+		var pct = city.resources.food_percentage_produced
+		if (pct > 150) {
+			text_id = 13
+			font = FONT_NORMAL_BLACK_ON_DARK
+		} else if (pct > 105) {
+			text_id = 14
+			font = FONT_NORMAL_BLACK_ON_DARK
+		} else if (pct > 95) {
+			text_id = 15
+			font = FONT_NORMAL_BLACK_ON_DARK
+		} else if (pct > 75) {
+			text_id = 16
+			font = FONT_NORMAL_YELLOW
+		} else if (pct > 30) {
+			text_id = 17
+			font = FONT_NORMAL_YELLOW
+		} else {
+			text_id = 18
+			font = FONT_NORMAL_YELLOW
+		}
+	}
+	window.foodconsumption_info.text = __loc(61, text_id)
+	window.foodconsumption_info.font = font
+}
+
 [es=(advisor_chief_window, ui_draw_foreground)]
 function advisor_chief_window_ui_draw_foreground(window) {
 	advisor_chief_window_update_sentiment(window)
 	advisor_chief_window_update_migration(window)
 	advisor_chief_window_update_workers(window)
 	advisor_chief_window_update_foodstocks(window)
+	advisor_chief_window_update_foodconsumption(window)
 }

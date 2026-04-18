@@ -9,7 +9,6 @@
 #include "city/military.h"
 #include "scenario/distant_battle.h"
 #include "city/city_population.h"
-#include "city/city_resource.h"
 #include "core/calc.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -37,26 +36,6 @@ static void draw_title(int y, int text_id) {
 
 int ui::advisor_chief_window::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
-
-    // foodconsumption
-    {
-        std::pair<int, int> foodcomsuption_status;
-        if (g_scenario.kingdom_supplies_grain) {
-            foodcomsuption_status = {26, FONT_NORMAL_BLACK_ON_DARK};
-        } else {
-            int pct = g_city.resource.food_percentage_produced();
-            if (pct > 150) { foodcomsuption_status = {13, FONT_NORMAL_BLACK_ON_DARK}; }
-            else if (pct > 105) { foodcomsuption_status = {14, FONT_NORMAL_BLACK_ON_DARK}; }
-            else if (pct > 95) { foodcomsuption_status = {15, FONT_NORMAL_BLACK_ON_DARK}; }
-            else if (pct > 75) { foodcomsuption_status = {16, FONT_NORMAL_YELLOW}; }
-            else if (pct > 30) { foodcomsuption_status = {17, FONT_NORMAL_YELLOW}; }
-            else if (pct > 0) { foodcomsuption_status = {18, FONT_NORMAL_YELLOW}; }
-            else { foodcomsuption_status = {18, FONT_NORMAL_YELLOW}; }
-        }
-
-        ui["foodconsumption_info"].text((pcstr)lang_get_string(61, foodcomsuption_status.first));
-        ui["foodconsumption_info"].font(foodcomsuption_status.second);
-    }
 
     // health
     {

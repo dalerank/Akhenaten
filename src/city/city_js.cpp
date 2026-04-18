@@ -206,6 +206,16 @@ int __city_resource_food_needed_per_month() {
 }
 ANK_FUNCTION(__city_resource_food_needed_per_month)
 
+int __city_resource_food_produced_last_month() {
+    return g_city.resource.food_produced_last_month();
+}
+ANK_FUNCTION(__city_resource_food_produced_last_month)
+
+int __city_resource_food_consumed_last_month() {
+    return g_city.resource.food_consumed_last_month();
+}
+ANK_FUNCTION(__city_resource_food_consumed_last_month)
+
 int __city_migration_newcomers() {
     return g_city.migration.newcomers;
 }
