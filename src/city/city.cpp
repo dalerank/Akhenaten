@@ -311,7 +311,7 @@ void city_t::update_tick(int simtick) {
         g_malaria_risk.update();
         break;
     case 38:
-        building_update_desirability();        
+        building_update_desirability();
         break;
     case 39:
         house_process_evolve();
@@ -355,7 +355,7 @@ bool city_t::generate_trader_from(empire_city &city) {
     for (const auto &r: resource_list::all) {
         if (city.buys_resource[r.type] || city.sells_resource[r.type]) {
             const int trade_limit = trade_route.limit(r.type);
-            max_trade_limit = std::max(max_trade_limit, trade_limit);            
+            max_trade_limit = std::max(max_trade_limit, trade_limit);
         }
     }
 

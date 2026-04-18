@@ -295,5 +295,10 @@ std::optional<bvariant> __city_get_house_demands_requiring_property(pcstr proper
 }
 ANK_FUNCTION_1(__city_get_house_demands_requiring_property)
 
+std::optional<bvariant> __city_get_house_demands_missing_property(pcstr property) {
+    return archive_helper::get(g_city.houses.missing, property, true);
+}
+ANK_FUNCTION_1(__city_get_house_demands_missing_property)
+
 void js_register_city_objects(js_State *J) {
 }

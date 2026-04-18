@@ -52,5 +52,6 @@ struct house_demands {
 };
 
 ANK_CONFIG_PROPERTY(house_demands_requiring, school, library, dentist, physician, water_supply, magistrate, religion)
+ANK_CONFIG_PROPERTY(house_demands_missing, entertainment, more_entertainment)
 ANK_CONFIG_PROPERTY(house_demands, health, religion, education, entertainment)
 
