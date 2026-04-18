@@ -254,7 +254,7 @@ function empire_window_es_draw_city_want_sell_items(window) {
         var tradeMax = city.trade_route_limit(r)
         tradeMax = city.stack_proper_quantity(r, tradeMax)
         var pos = { x: elm.screen_pos.x + itemStepX * sellIndex, y: elm.screen_pos.y + itemStepY * sellIndex }
-        empire_window_draw_trade_resource_row(pos, ev.flags, r, -1, tradeMax, rowFont)
+        empire_window_draw_trade_resource_row(pos, window.flags, r, -1, tradeMax, rowFont)
         sellIndex++
     }
  }
@@ -276,7 +276,7 @@ function empire_window_es_draw_city_want_buy_items(window) {
         var tradeMax = city.trade_route_limit(r)
         tradeMax = city.stack_proper_quantity(r, tradeMax)
         var pos = { x: elm.screen_pos.sx + itemStepX * buyIndex, y: elm.screen_pos.y + itemStepY * buyIndex }
-        empire_window_draw_trade_resource_row(pos, ev.flags, r, -1, tradeMax, rowFont)
+        empire_window_draw_trade_resource_row(pos, window.flags, r, -1, tradeMax, rowFont)
         buyIndex++
     }
  }
@@ -305,7 +305,7 @@ function empire_window_es_draw_city_sell_items(window) {
 
         var local_x = itemW * index
         var pos = { x: elm.screen_pos.x + local_x, y: e_offset_y }
-        empire_window_draw_trade_resource_row(pos, ev.flags, r, tradeNow, tradeMax, rowFont)
+        empire_window_draw_trade_resource_row(pos, window.flags, r, tradeNow, tradeMax, rowFont)
         index++
 
         if (local_x > panelW) {
@@ -316,7 +316,7 @@ function empire_window_es_draw_city_sell_items(window) {
  }
 
 [es=(empire_window, draw_city_buy_items)]
-function empire_window_es_draw_city_buy_items(ev) {
+function empire_window_es_draw_city_buy_items(window) {
     var cityId = empire_window.selected_city
     var itemW = 120
     var itemH = 20
@@ -341,7 +341,7 @@ function empire_window_es_draw_city_buy_items(ev) {
 
         var local_x = itemW * index
         var pos = { x: elm.screen_pos.x + local_x, y: e_offset_y }
-        empire_window_draw_trade_resource_row(pos, ev.flags, r, tradeNow, tradeMax, rowFont)
+        empire_window_draw_trade_resource_row(pos, window.flags, r, tradeNow, tradeMax, rowFont)
         index++
 
         if (local_x > panelW) {
