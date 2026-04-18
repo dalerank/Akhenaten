@@ -1,6 +1,5 @@
 #include "advisor_chief.h"
 
-#include "city/city_floods.h"
 #include "city/city.h"
 #include "city/city_population.h"
 #include "core/calc.h"
@@ -29,30 +28,6 @@ static void draw_title(int y, int text_id) {
 
 int ui::advisor_chief_window::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
-
-    // nilometr
-    {
-        std::pair<int, int> nilometr_status;
-        int flood_quality = g_floods.expected_quality();
-        if (flood_quality == 100) { nilometr_status = {197, FONT_NORMAL_BLACK_ON_DARK}; }
-        else if (flood_quality > 75) { nilometr_status = {196, FONT_NORMAL_BLACK_ON_DARK}; }
-        else if (flood_quality > 50) { nilometr_status = {195, FONT_NORMAL_BLACK_ON_DARK}; }
-        else if (flood_quality > 25) { nilometr_status = {194, FONT_NORMAL_BLACK_ON_DARK}; }
-        else if (flood_quality > 0) { nilometr_status = {193, FONT_NORMAL_YELLOW}; }
-        else { nilometr_status = {192 + flood_quality, FONT_NORMAL_YELLOW}; }
-
-        ui["nilometr_info"].text((pcstr)lang_get_string(61, nilometr_status.first));
-        ui["nilometr_info"].font(nilometr_status.second);
-
-        if (flood_quality > 0) {
-            int flood_month = g_floods.expected_month();
-            ui["nilometr_info2"].text((pcstr)lang_get_string(61, 204 + flood_month));
-            ui["nilometr_info2"].font(FONT_NORMAL_BLACK_ON_DARK);
-        } else {
-            ui["nilometr_info2"].text("");
-        }
-    }
-
     return 0;
 }
 
