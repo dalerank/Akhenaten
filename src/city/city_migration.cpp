@@ -13,8 +13,7 @@ svector<unemployment_step_t, 16> ANK_VARIABLE(migration_unemployment_percentage)
 std::unordered_map<xstring, int> g_migration_cap_reasons;
 std::unordered_map<xstring, std::pair<int, int>> g_migration_unemployment_cap_reasons;
 
-using e_no_immigration_reason_tokens = token_holder<e_no_immigration_reason, NO_IMMIGRATION_LOW_WAGES, NO_IMMIGRATION_MAX>;
-e_no_immigration_reason_tokens  ANK_CONFIG_ENUM(no_immigration_reason_tokens);
+e_no_immigration_reason_tokens_t ANK_CONFIG_ENUM(no_immigration_reason_tokens);
 
 void city_migration_t::nobles_leave_city(int num_people) {
     nobles_leave_city_this_year += num_people;

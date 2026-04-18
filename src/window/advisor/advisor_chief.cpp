@@ -38,23 +38,6 @@ static void draw_title(int y, int text_id) {
 int ui::advisor_chief_window::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
 
-    // foodstocks
-    {
-        std::pair<int, int> foodstocks_status;
-        if (g_scenario.kingdom_supplies_grain) {
-            foodstocks_status = {26, FONT_NORMAL_BLACK_ON_DARK};
-            ui["foodstocks_info"].text((pcstr)lang_get_string(61, foodstocks_status.first));
-        } else if (city_resource_food_supply_months() > 0) {
-            foodstocks_status = {98, FONT_NORMAL_BLACK_ON_DARK};
-            ui["foodstocks_info"].text_var("%s %d", (pcstr)lang_get_string(61, foodstocks_status.first));
-        } else {
-            foodstocks_status = {95, FONT_NORMAL_YELLOW};
-            ui["foodstocks_info"].text((pcstr)lang_get_string(61, foodstocks_status.first));
-        }
-
-        ui["foodstocks_info"].font(foodstocks_status.second);
-    }
-
     // foodconsumption
     {
         std::pair<int, int> foodcomsuption_status;

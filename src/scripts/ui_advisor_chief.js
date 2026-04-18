@@ -175,9 +175,26 @@ function advisor_chief_window_update_workers(window) {
 	window.workers_info.font = font
 }
 
+function advisor_chief_window_update_foodstocks(window) {
+	if (scenario.kingdom_supplies_grain()) {
+		window.foodstocks_info.text = __loc(61, 26)
+		window.foodstocks_info.font = FONT_NORMAL_BLACK_ON_DARK
+	} else {
+		var months = __city_resource_food_supply_months()
+		if (months > 0) {
+			window.foodstocks_info.text = __loc(61, 98) + " " + months
+			window.foodstocks_info.font = FONT_NORMAL_BLACK_ON_DARK
+		} else {
+			window.foodstocks_info.text = __loc(61, 95)
+			window.foodstocks_info.font = FONT_NORMAL_YELLOW
+		}
+	}
+}
+
 [es=(advisor_chief_window, ui_draw_foreground)]
 function advisor_chief_window_ui_draw_foreground(window) {
 	advisor_chief_window_update_sentiment(window)
 	advisor_chief_window_update_migration(window)
 	advisor_chief_window_update_workers(window)
+	advisor_chief_window_update_foodstocks(window)
 }

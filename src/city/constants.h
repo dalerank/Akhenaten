@@ -49,6 +49,7 @@ enum e_no_immigration_reason : uint8_t {
 
     NO_IMMIGRATION_MAX
 };
+using e_no_immigration_reason_tokens_t = token_holder<e_no_immigration_reason, NO_IMMIGRATION_LOW_WAGES, NO_IMMIGRATION_MAX>;
 
 enum e_trade_status : uint8_t {
     TRADE_STATUS_NONE = 0,
