@@ -44,16 +44,6 @@ void city_finance_t::init() {
         calculate_totals();
     });
 
-    events::subscribe([this] (event_finance_change_tax ev) {
-        change_tax(tax_percentage + ev.value);
-    });
-}
-
-void city_finance_t::change_tax(int value) {
-    tax_percentage = calc_bound(value, 0, 25);
-
-    update_estimate_taxes();
-    calculate_totals();
 }
 
 void city_finance_t::change_wages(int amount) {

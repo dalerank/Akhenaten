@@ -126,6 +126,11 @@ city {
         @total_batalions { }
     }
 
+    sentiment {
+        __property_getter: __city_get_sentiment_property
+        @value { }
+    }
+
     object_info {
         __property_getter: __city_get_object_info_property
         @building_id { }

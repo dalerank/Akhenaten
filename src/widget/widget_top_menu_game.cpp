@@ -23,7 +23,6 @@
 #include "io/gamestate/boilerplate.h"
 #include "building/construction/build_planner.h"
 #include "game/system.h"
-#include "window/display_options.h"
 #include "window/window_city.h"
 #include "window/difficulty_options.h"
 #include "window/autoconfig_window.h"

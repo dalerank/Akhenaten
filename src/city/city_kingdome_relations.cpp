@@ -55,7 +55,7 @@ void kingdome_relation_t::load_scenario(int rank, int load_type ) {
     player_rank = rank;
     int salary_rank = rank;
     const bool custom_scenario = g_scenario.mode() != e_scenario_normal;
-    
+
     if (custom_scenario) {
         personal_savings = 0;
         player_rank = scenario_property_player_rank();

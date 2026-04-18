@@ -111,6 +111,11 @@ function advisor_financial_window_update_expenses(window) {
     line_y = draw_row(__loc(60, 18), line_y, last_year.net_in_out, this_year.net_in_out)
 }
 
+[es=(advisor_financial_window, init)]
+function advisor_financial_window_on_init(window) {
+    __city_finance_calculate_totals()
+}
+
 [es=(advisor_financial_window, ui_draw_foreground)]
 function advisor_financial_window_on_draw(window) {
     advisor_financial_window_update(window)

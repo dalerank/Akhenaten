@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/archive.h"
 #include <cstdint>
 
 struct city_sentiment_t {
@@ -37,3 +38,4 @@ struct city_sentiment_t {
 
     void reset_protesters_criminals();
 };
+ANK_CONFIG_PROPERTY(city_sentiment_t, value)
