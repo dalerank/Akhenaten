@@ -323,6 +323,27 @@ function advisor_chief_window_update_military(window) {
 	window.military_info.font = font
 }
 
+function advisor_chief_window_update_kingdom(window) {
+	var requests = __scenario_requests_active_count()
+	var text_id
+	var font
+	if (requests === 0) {
+		text_id = 187
+		font = FONT_NORMAL_BLACK_ON_DARK
+	} else if (requests === 1) {
+		text_id = 186
+		font = FONT_NORMAL_WHITE_ON_DARK
+	} else if (requests === 2) {
+		text_id = 185
+		font = FONT_NORMAL_YELLOW
+	} else {
+		text_id = 184
+		font = FONT_NORMAL_YELLOW
+	}
+	window.kingdom_info.text = __loc(61, text_id)
+	window.kingdom_info.font = font
+}
+
 [es=(advisor_chief_window, ui_draw_foreground)]
 function advisor_chief_window_ui_draw_foreground(window) {
 	advisor_chief_window_update_sentiment(window)
@@ -335,4 +356,5 @@ function advisor_chief_window_ui_draw_foreground(window) {
 	advisor_chief_window_update_finance(window)
 	advisor_chief_window_update_crime(window)
 	advisor_chief_window_update_military(window)
+	advisor_chief_window_update_kingdom(window)
 }

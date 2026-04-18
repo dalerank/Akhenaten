@@ -1,8 +1,6 @@
 #include "advisor_chief.h"
 
 #include "city/city_floods.h"
-#include "scenario/request.h"
-
 #include "city/city.h"
 #include "city/city_population.h"
 #include "core/calc.h"
@@ -31,19 +29,6 @@ static void draw_title(int y, int text_id) {
 
 int ui::advisor_chief_window::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
-
-    // kingdom
-    {
-        std::pair<int, int> kingdom_status;
-        int requests = scenario_requests_active_count();
-        if (requests == 0) { kingdom_status = {187, FONT_NORMAL_BLACK_ON_DARK}; }
-        else if (requests == 1) { kingdom_status = {186, FONT_NORMAL_WHITE_ON_DARK}; }
-        else if (requests == 2) { kingdom_status = {185, FONT_NORMAL_YELLOW}; }
-        else { kingdom_status = {184, FONT_NORMAL_YELLOW}; }
-
-        ui["kingdom_info"].text((pcstr)lang_get_string(61, kingdom_status.first));
-        ui["kingdom_info"].font(kingdom_status.second);
-    }
 
     // nilometr
     {

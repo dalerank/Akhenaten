@@ -13,6 +13,7 @@
 #include "scenario/scenario.h"
 #include "scenario/scenario_invasion.h"
 #include "scenario/distant_battle.h"
+#include "scenario/request.h"
 
 #include "city/city_population.h"
 
@@ -252,6 +253,11 @@ int __distant_battle_months_until_battle() {
     return g_distant_battle.battle.months_until_battle;
 }
 ANK_FUNCTION(__distant_battle_months_until_battle)
+
+int __scenario_requests_active_count() {
+    return scenario_requests_active_count();
+}
+ANK_FUNCTION(__scenario_requests_active_count)
 
 std::optional<bvariant> __city_get_entertainment_property(pcstr property) {
     return archive_helper::get(g_city.entertainment, property, true);
