@@ -13,6 +13,7 @@ import ui_advisor_population_graph_history
 import ui_advisor_population_graph_census
 import ui_advisor_population_graph_society
 import ui_advisor_population
+import ui_advisor_housing
 import ui_send_gift_window
 import ui_advisor_trade
 import ui_figure_trader_window

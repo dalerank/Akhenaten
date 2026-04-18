@@ -173,7 +173,9 @@ localization_en = [
   {key:"#TR_ADVISOR_RESIDENCES_DEMANDING_POTTERY", text:"Residences demanding pottery"}
   {key:"#TR_ADVISOR_RESIDENCES_DEMANDING_FURNITURE", text:"Residences demanding furniture"}
   {key:"#TR_ADVISOR_RESIDENCES_DEMANDING_OIL", text:"Residences demanding oil"}
+  {key:"#TR_ADVISOR_RESIDENCES_DEMANDING_LINEN", text:"Residences demanding linen"}
   {key:"#TR_ADVISOR_RESIDENCES_DEMANDING_WINE", text:"Residences demanding wine"}
+  {key:"#TR_ADVISOR_RESIDENCES_DEMANDING_BEER", text:"Residences demanding beer"}
   {key:"#TR_ADVISOR_TOTAL_NUM_HOUSES", text:"Total residences:"}
   {key:"#TR_ADVISOR_AVAILABLE_HOUSING_CAPACITY", text:"Available capacity:"}
   {key:"#TR_ADVISOR_TOTAL_HOUSING_CAPACITY", text:"Total capacity:"}

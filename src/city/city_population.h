@@ -33,6 +33,8 @@ struct city_population_t {
     } monthly;
     std::array<uint16_t, 100> at_age;
     std::array<uint16_t, HOUSE_LEVEL_MAX> at_level;
+    std::array<uint16_t, HOUSE_LEVEL_MAX> housing_type_counts;
+    std::array<uint16_t, 4> houses_demanding_goods;
 
     int32_t yearly_update_requested;
     int32_t yearly_births;
@@ -84,6 +86,8 @@ struct city_population_t {
     int get_people_aged_between(int min, int max);
     void calculate_educational_age();
     void yearly_calculate_births();
+    void houses_demanding_goods_fill_from();
+    void housing_type_counts_update();
 
     void yearly_advance_ages_and_calculate_deaths();
     int at_month(int max_months, int month);
@@ -102,13 +106,7 @@ int city_population_open_housing_capacity();
 
 int calculate_total_housing_buildings();
 
-int city_population_open_housing_capacity();
-
 int city_population_total_housing_capacity();
-
-int* calculate_number_of_each_housing_type();
-
-int* calculate_houses_demanding_goods(int* housing_type_counts);
 
 int city_population_yearly_deaths();
 

@@ -24,7 +24,6 @@
 #include "window/advisor/advisor_chief.h"
 #include "window/advisor/advisor_entertainment.h"
 #include "window/advisor/advisor_financial.h"
-#include "window/advisor/housing.h"
 #include "window/js_window_registry.h"
 #include "window/advisor/advisor_military.h"
 #include "window/advisor/monuments.h"
@@ -97,7 +96,7 @@ struct window_advisors : public ui::widget {
         nullptr,
         nullptr,
         nullptr,
-        ui::advisor_housing_window::instance()
+        nullptr // ADVISOR_HOUSING: ui_advisor_housing.js (js_window_registry)
     };
 
     void init();

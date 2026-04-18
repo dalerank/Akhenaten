@@ -123,6 +123,7 @@ void game_t::update_tick(int simtick) {
         return;
     }
 
+    g_city.population.housing_type_counts_update();
     random_generate_next();
     game_undo_reduce_time_available();
 
