@@ -14,6 +14,7 @@ struct js_building_info_window : public building_info_window {
     xstring window_name;
 
     virtual pcstr section() const override { return window_name.c_str(); }
+    virtual xstring get_section() const override { return window_name.c_str(); }
     virtual void init(object_info &c) override;
 };
 
