@@ -12,6 +12,8 @@
 #include "scenario/criteria.h"
 #include "scenario/scenario.h"
 
+#include "city/city_population.h"
+
 void __city_ratings_apply_monument_yearly(int new_monument, int new_years_of_monument, int monument_explanation_reason) {
     g_city.ratings.monument = new_monument;
     g_city.ratings.monument_years_of_monument = new_years_of_monument;
@@ -122,6 +124,32 @@ int __city_total_housing_buildings() {
     return calculate_total_housing_buildings();
 }
 ANK_FUNCTION(__city_total_housing_buildings)
+
+int __city_housing_type_count_at(int index) {
+    if (index < 0 || index > 19) {
+        return 0;
+    }
+    return g_city.population.housing_type_counts[index];
+}
+ANK_FUNCTION_1(__city_housing_type_count_at)
+
+int __city_houses_demanding_goods_at(int index) {
+    if (index < 0 || index > 3) {
+        return 0;
+    }
+    return g_city.population.houses_demanding_goods[index];
+}
+ANK_FUNCTION_1(__city_houses_demanding_goods_at)
+
+int __city_open_housing_capacity() {
+    return city_population_open_housing_capacity();
+}
+ANK_FUNCTION(__city_open_housing_capacity)
+
+int __city_total_housing_capacity() {
+    return city_population_total_housing_capacity();
+}
+ANK_FUNCTION(__city_total_housing_capacity)
 
 int __city_population_average_age() {
     return g_city.population.average_age();

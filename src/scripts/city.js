@@ -211,6 +211,10 @@ city {
     count_active_buildings : __city_count_active_buildings
     count_total_buildings : __city_count_total_buildings
     total_housing_buildings : __city_total_housing_buildings
+    housing_type_count_at : __city_housing_type_count_at
+    houses_demanding_goods_at : __city_houses_demanding_goods_at
+    open_housing_capacity : __city_open_housing_capacity
+    total_housing_capacity : __city_total_housing_capacity
     count_active_industry : __city_count_industry_active
     count_total_industry : __city_count_industry_total
     set_advisor_available : __city_set_advisor_available

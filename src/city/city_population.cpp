@@ -14,6 +14,7 @@
 #include "js/js_game.h"
 #include "dev/debug.h"
 
+#include <cstring>
 #include <numeric>
 #include <algorithm>
 #include <array>
@@ -482,12 +483,33 @@ int calculate_total_housing_buildings(void) {
     return total;
 }
 
-int* calculate_number_of_each_housing_type(void) {
-    static int housing_type_counts[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+void city_population_t::houses_demanding_goods_fill_from() {
+    for (int i = 0; i <= 3; i++) {
+        houses_demanding_goods[i] = 0;
+    }
 
     for (int i = 0; i <= 19; i++) {
-        housing_type_counts[i] = 0;
+        const auto &model = building_house::get_model(i);
+        if (model.pottery) {
+            houses_demanding_goods[0] += housing_type_counts[i];
+        }
+
+        if (model.jewelry) {
+            houses_demanding_goods[1] += housing_type_counts[i];
+        }
+
+        if (model.linen) {
+            houses_demanding_goods[2] += housing_type_counts[i];
+        }
+
+        if (model.beer) {
+            houses_demanding_goods[3] += housing_type_counts[i];
+        }
     }
+}
+
+void city_population_t::housing_type_counts_update() {
+    housing_type_counts.fill(0);
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         auto house = building_get(i)->dcast_house();
@@ -506,32 +528,7 @@ int* calculate_number_of_each_housing_type(void) {
         }
     }
 
-    return housing_type_counts;
-}
-
-int* calculate_houses_demanding_goods(int* housing_type_counts) {
-    static int houses_demanding_goods[4] = {0, 0, 0, 0};
-
-    for (int i = 0; i <= 3; i++) {
-        houses_demanding_goods[i] = 0;
-    }
-
-    for (int i = 0; i <= 19; i++) {
-        const auto &model = building_house::get_model(i);
-        if (model.pottery)
-            houses_demanding_goods[0] += housing_type_counts[i];
-
-        if (model.jewelry)
-            houses_demanding_goods[1] += housing_type_counts[i];
-
-        if (model.linen)
-            houses_demanding_goods[2] += housing_type_counts[i];
-
-        if (model.beer)
-            houses_demanding_goods[3] += housing_type_counts[i];
-    }
-
-    return houses_demanding_goods;
+    houses_demanding_goods_fill_from();
 }
 
 static int calculate_people_per_house_type(void) {
