@@ -15,6 +15,7 @@ city {
         @enemies { }
         @kingdome_soldiers { }
         @rioters { }
+        @soldiers { }
 
         remove_figures: __city_remove_figures
     }

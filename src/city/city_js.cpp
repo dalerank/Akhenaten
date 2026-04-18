@@ -11,6 +11,8 @@
 #include "city/city_building_menu_ctrl.h"
 #include "scenario/criteria.h"
 #include "scenario/scenario.h"
+#include "scenario/scenario_invasion.h"
+#include "scenario/distant_battle.h"
 
 #include "city/city_population.h"
 
@@ -235,6 +237,21 @@ int __city_migration_problems_cause() {
     return g_city.migration.problems_cause();
 }
 ANK_FUNCTION(__city_migration_problems_cause)
+
+int __scenario_invasion_exists_upcoming() {
+    return scenario_invasion_exists_upcoming() ? 1 : 0;
+}
+ANK_FUNCTION(__scenario_invasion_exists_upcoming)
+
+int __distant_battle_kingdome_army_is_traveling() {
+    return g_distant_battle.kingdome_army_is_traveling();
+}
+ANK_FUNCTION(__distant_battle_kingdome_army_is_traveling)
+
+int __distant_battle_months_until_battle() {
+    return g_distant_battle.battle.months_until_battle;
+}
+ANK_FUNCTION(__distant_battle_months_until_battle)
 
 std::optional<bvariant> __city_get_entertainment_property(pcstr property) {
     return archive_helper::get(g_city.entertainment, property, true);
