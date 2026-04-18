@@ -36,25 +36,6 @@ static void draw_title(int y, int text_id) {
 int ui::advisor_chief_window::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
 
-    // finance
-    {
-        const int treasury = g_city.finance.treasury;
-        int balance_last_year = g_city.finance.last_year.balance;
-        if (treasury > balance_last_year) { // assets have rison by ...
-            ui["finance_info"].text_var("%s %d", (pcstr)lang_get_string(61, 152), treasury - balance_last_year);
-            ui["finance_info"].font(FONT_NORMAL_BLACK_ON_DARK);
-        } else if (treasury < balance_last_year) { // assets have fallen by ...
-            ui["finance_info"].text_var("%s %d", (pcstr)lang_get_string(61, 154), balance_last_year - treasury);
-            ui["finance_info"].font(FONT_NORMAL_YELLOW);
-        } else if (g_city.taxes.percentage_taxed_people < 75) { // not collecting many taxes!
-            ui["finance_info"].text((pcstr)lang_get_string(61, 151));
-            ui["finance_info"].font(FONT_NORMAL_BLACK_ON_DARK);
-        } else { // doing about as well as last year
-            ui["finance_info"].text((pcstr)lang_get_string(61, 153));
-            ui["finance_info"].font(FONT_NORMAL_BLACK_ON_DARK);
-        }
-    }
-
     // crime
     {
         std::pair<bstring256, int> crime_status;
