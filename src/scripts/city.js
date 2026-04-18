@@ -132,6 +132,7 @@ city {
     sentiment {
         __property_getter: __city_get_sentiment_property
         @value { }
+        @criminals { }
     }
 
     migration {

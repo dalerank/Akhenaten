@@ -38,4 +38,4 @@ struct city_sentiment_t {
 
     void reset_protesters_criminals();
 };
-ANK_CONFIG_PROPERTY(city_sentiment_t, value)
+ANK_CONFIG_PROPERTY(city_sentiment_t, value, criminals)
