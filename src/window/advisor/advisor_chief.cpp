@@ -6,7 +6,6 @@
 #include "city/city.h"
 #include "city/city_finance.h"
 #include "city/city_health.h"
-#include "city/city_labor.h"
 #include "city/military.h"
 #include "scenario/distant_battle.h"
 #include "city/city_population.h"
@@ -38,31 +37,6 @@ static void draw_title(int y, int text_id) {
 
 int ui::advisor_chief_window::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
-
-    // workers
-    {
-        int pct_unemployment = g_city.labor.unemployment_percentage;
-        int needed_workers = g_city.labor.workers_needed;
-        std::pair<int, int> workers_status;
-        if (pct_unemployment > 0) {
-            if (pct_unemployment > 10) { workers_status = {76, FONT_NORMAL_YELLOW}; }
-            else if (pct_unemployment > 5) { workers_status = {77, FONT_NORMAL_YELLOW}; }
-            else if (pct_unemployment > 2) { workers_status = {78, FONT_NORMAL_YELLOW}; }
-            else { workers_status = {79, FONT_NORMAL_BLACK_ON_DARK}; }
-            int unemployed_num = g_city.labor.workers_unemployed - needed_workers;
-            ui["workers_info"].text_var("%s %d(%d)", (pcstr)lang_get_string(61, workers_status.first), pct_unemployment, unemployed_num);
-        } else if (needed_workers > 0) {
-            if (needed_workers > 75) { workers_status = {80, FONT_NORMAL_YELLOW}; }
-            else if (needed_workers > 50) { workers_status = {81, FONT_NORMAL_YELLOW }; }
-            else if (needed_workers > 25) { workers_status = {82, FONT_NORMAL_YELLOW}; }
-            else { workers_status = {83, FONT_NORMAL_BLACK_ON_DARK}; }
-            ui["workers_info"].text_var("%s %d", (pcstr)lang_get_string(61, workers_status.first), needed_workers);
-        } else {
-            workers_status = {84, FONT_NORMAL_BLACK_ON_DARK};
-            ui["workers_info"].text((pcstr)lang_get_string(61, workers_status.first));
-        }
-        ui["workers_info"].font(workers_status.second);
-    }
 
     // foodstocks
     {

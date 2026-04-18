@@ -22,6 +22,9 @@ city {
     labor {
         __property_getter: __city_get_labor_property
         @unemployment_percentage { }
+        @workers_available { }
+        @workers_needed { }
+        @workers_unemployed { }
 
         get_category: function(index) {
             return {

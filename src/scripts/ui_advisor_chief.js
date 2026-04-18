@@ -129,8 +129,55 @@ function advisor_chief_window_update_migration(window) {
 	window.migration_info.font = font
 }
 
+function advisor_chief_window_update_workers(window) {
+	var lab = city.labor
+	var pct_unemployment = lab.unemployment_percentage
+	var needed_workers = lab.workers_needed
+	var workers_unemployed = lab.workers_unemployed
+	var text_id
+	var font
+	if (pct_unemployment > 0) {
+		if (pct_unemployment > 10) {
+			text_id = 76
+			font = FONT_NORMAL_YELLOW
+		} else if (pct_unemployment > 5) {
+			text_id = 77
+			font = FONT_NORMAL_YELLOW
+		} else if (pct_unemployment > 2) {
+			text_id = 78
+			font = FONT_NORMAL_YELLOW
+		} else {
+			text_id = 79
+			font = FONT_NORMAL_BLACK_ON_DARK
+		}
+		var unemployed_num = workers_unemployed - needed_workers
+		window.workers_info.text = __loc(61, text_id) + " " + pct_unemployment + "(" + unemployed_num + ")"
+	} else if (needed_workers > 0) {
+		if (needed_workers > 75) {
+			text_id = 80
+			font = FONT_NORMAL_YELLOW
+		} else if (needed_workers > 50) {
+			text_id = 81
+			font = FONT_NORMAL_YELLOW
+		} else if (needed_workers > 25) {
+			text_id = 82
+			font = FONT_NORMAL_YELLOW
+		} else {
+			text_id = 83
+			font = FONT_NORMAL_BLACK_ON_DARK
+		}
+		window.workers_info.text = __loc(61, text_id) + " " + needed_workers
+	} else {
+		text_id = 84
+		font = FONT_NORMAL_BLACK_ON_DARK
+		window.workers_info.text = __loc(61, text_id)
+	}
+	window.workers_info.font = font
+}
+
 [es=(advisor_chief_window, ui_draw_foreground)]
 function advisor_chief_window_ui_draw_foreground(window) {
 	advisor_chief_window_update_sentiment(window)
 	advisor_chief_window_update_migration(window)
+	advisor_chief_window_update_workers(window)
 }
