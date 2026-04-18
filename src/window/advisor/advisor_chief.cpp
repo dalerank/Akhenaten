@@ -7,7 +7,6 @@
 #include "city/city_finance.h"
 #include "city/city_health.h"
 #include "city/city_labor.h"
-#include "city/city_migration.h"
 #include "city/military.h"
 #include "scenario/distant_battle.h"
 #include "city/city_population.h"
@@ -39,29 +38,6 @@ static void draw_title(int y, int text_id) {
 
 int ui::advisor_chief_window::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
-
-    // migration
-    {
-        std::pair<int, int> migration_status;
-        if (g_city.figures.total_invading_enemies() > 3) { migration_status = {43, FONT_NORMAL_BLACK_ON_DARK}; } 
-        else if (g_city.migration.newcomers >= 5) { migration_status = {44, FONT_NORMAL_BLACK_ON_DARK}; }
-        else if (g_city.migration.no_room_for_immigrants()) { migration_status = {45, FONT_NORMAL_YELLOW}; }
-        else if (g_city.migration.percentage >= 80) { migration_status = {44, FONT_NORMAL_BLACK_ON_DARK}; } 
-        else {
-            migration_status = {43, FONT_NORMAL_BLACK_ON_DARK};
-            switch (g_city.migration.problems_cause()) {
-            case NO_IMMIGRATION_LOW_WAGES: migration_status.first = 46; break;
-            case NO_IMMIGRATION_NO_JOBS: migration_status.first = 47; break;
-            case NO_IMMIGRATION_NO_FOOD: migration_status.first = 48; break;
-            case NO_IMMIGRATION_HIGH_TAXES: migration_status.first = 49; break;
-            case NO_IMMIGRATION_MANY_TENTS: migration_status.first = 50; break;
-            case NO_IMMIGRATION_LOW_MOOD: migration_status.first = 51; break;
-            default: migration_status.first = 59; break;
-            }
-        }
-        ui["migration_info"].text((pcstr)lang_get_string(61, migration_status.first));
-        ui["migration_info"].font(migration_status.second);
-    }
 
     // workers
     {

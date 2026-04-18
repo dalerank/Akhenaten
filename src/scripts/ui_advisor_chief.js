@@ -73,7 +73,6 @@ advisor_chief_window = {
 }
 
 function advisor_chief_window_update_sentiment(window) {
-	log_info("advisor_chief_window_update_sentiment")
 	var sentiment = city.sentiment.value
 	var text_id
 	var font
@@ -91,7 +90,47 @@ function advisor_chief_window_update_sentiment(window) {
 	window.sentiment_info.font = font
 }
 
-[es=(advisor_chief_window, init)]
-function advisor_chief_window_on_init(window) {
+function advisor_chief_window_update_migration(window) {
+	var invaders = __city_figures_total_invading_enemies()
+
+	var newcomers = city.migration.newcomers
+	var pct = city.migration.percentage
+	var cause = city.migration.no_immigration_cause
+
+	var text_id
+	var font
+	if (invaders > 3) {
+		text_id = 43
+		font = FONT_NORMAL_BLACK_ON_DARK
+	} else if (newcomers >= 5) {
+		text_id = 44
+		font = FONT_NORMAL_BLACK_ON_DARK
+	} else if (__city_migration_no_room_for_immigrants()) {
+		text_id = 45
+		font = FONT_NORMAL_YELLOW
+	} else if (pct >= 80) {
+		text_id = 44
+		font = FONT_NORMAL_BLACK_ON_DARK
+	} else {
+		text_id = 43
+		font = FONT_NORMAL_BLACK_ON_DARK
+		switch (cause) {
+			case NO_IMMIGRATION_LOW_WAGES: text_id = 46; break
+			case NO_IMMIGRATION_NO_JOBS: text_id = 47; break
+			case NO_IMMIGRATION_NO_FOOD: text_id = 48; break
+			case NO_IMMIGRATION_HIGH_TAXES: text_id = 49; break
+			case NO_IMMIGRATION_MANY_TENTS: text_id = 50; break
+			case NO_IMMIGRATION_LOW_MOOD: text_id = 51; break
+			default: text_id = 59; break
+		}
+	}
+
+	window.migration_info.text = __loc(61, text_id)
+	window.migration_info.font = font
+}
+
+[es=(advisor_chief_window, ui_draw_foreground)]
+function advisor_chief_window_ui_draw_foreground(window) {
 	advisor_chief_window_update_sentiment(window)
+	advisor_chief_window_update_migration(window)
 }

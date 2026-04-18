@@ -94,6 +94,16 @@ std::optional<bvariant> __city_get_sentiment_property(pcstr property) {
 }
 ANK_FUNCTION_1(__city_get_sentiment_property)
 
+std::optional<bvariant> __city_get_migration_property(pcstr property) {
+    return archive_helper::get(g_city.migration, property, true);
+}
+ANK_FUNCTION_1(__city_get_migration_property)
+
+int __city_figures_total_invading_enemies() {
+    return g_city.figures.total_invading_enemies();
+}
+ANK_FUNCTION(__city_figures_total_invading_enemies)
+
 std::optional<bvariant> __city_get_population_property(pcstr property) {
     return archive_helper::get(g_city.population, property, true);
 }

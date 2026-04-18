@@ -45,7 +45,9 @@ enum e_no_immigration_reason : uint8_t {
     NO_IMMIGRATION_NO_FOOD = 2,
     NO_IMMIGRATION_HIGH_TAXES = 3,
     NO_IMMIGRATION_MANY_TENTS = 4,
-    NO_IMMIGRATION_LOW_MOOD = 5
+    NO_IMMIGRATION_LOW_MOOD = 5,
+
+    NO_IMMIGRATION_MAX
 };
 
 enum e_trade_status : uint8_t {

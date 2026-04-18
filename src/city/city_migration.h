@@ -61,7 +61,7 @@ struct city_migration_t {
     const std::unordered_map<xstring, int> &get_migration_caps();
 
     city_migration_defaults_t& current_params();
-    
+
     void determine_reason();
     int no_room_for_immigrants();
 
@@ -72,3 +72,4 @@ struct city_migration_t {
     using condition = std::function<void(city_migration_t &)>;
     void add_condition(condition);
 };
+ANK_CONFIG_PROPERTY(city_migration_t, newcomers, percentage, no_immigration_cause)
