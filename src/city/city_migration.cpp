@@ -13,6 +13,9 @@ svector<unemployment_step_t, 16> ANK_VARIABLE(migration_unemployment_percentage)
 std::unordered_map<xstring, int> g_migration_cap_reasons;
 std::unordered_map<xstring, std::pair<int, int>> g_migration_unemployment_cap_reasons;
 
+using e_no_immigration_reason_tokens = token_holder<e_no_immigration_reason, NO_IMMIGRATION_LOW_WAGES, NO_IMMIGRATION_MAX>;
+e_no_immigration_reason_tokens  ANK_CONFIG_ENUM(no_immigration_reason_tokens);
+
 void city_migration_t::nobles_leave_city(int num_people) {
     nobles_leave_city_this_year += num_people;
 }
@@ -22,7 +25,7 @@ void city_migration_t::update_status() {
 
     const auto &sentiment = g_city.sentiment;
     auto sent_it = std::find_if(migration_sentiment_influence.begin(), migration_sentiment_influence.end(), [sentiment = sentiment.value] (const auto& t) {
-        return sentiment > t.s; 
+        return sentiment > t.s;
     });
 
     const int8_t unemployment_percentage = g_city.labor.unemployment_percentage;
@@ -144,7 +147,7 @@ void city_migration_t::create_migrants() {
             immigration_queue_size += immigration_amount_per_batch;
         }
     }
-    
+
     if (emigration_amount_per_batch > 0) {
         if (emigration_amount_per_batch >= params.max_emigration_amount_per_batch) {
             create_emigrants(emigration_amount_per_batch);

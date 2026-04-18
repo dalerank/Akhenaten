@@ -131,6 +131,13 @@ city {
         @value { }
     }
 
+    migration {
+        __property_getter: __city_get_migration_property
+        @newcomers { }
+        @percentage { }
+        @no_immigration_cause { }
+    }
+
     object_info {
         __property_getter: __city_get_object_info_property
         @building_id { }
