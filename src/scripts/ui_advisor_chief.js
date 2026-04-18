@@ -293,6 +293,36 @@ function advisor_chief_window_update_crime(window) {
 	window.crime_info.font = font
 }
 
+function advisor_chief_window_update_military(window) {
+	var fig = city.figures
+	var text_id
+	var font
+	if (fig.kingdome_soldiers) {
+		text_id = 170
+		font = FONT_NORMAL_YELLOW
+	} else if (fig.enemies) {
+		text_id = 170
+		font = FONT_NORMAL_YELLOW
+	} else if (__scenario_invasion_exists_upcoming()) {
+		text_id = 170
+		font = FONT_NORMAL_YELLOW
+	} else if (__distant_battle_kingdome_army_is_traveling()) {
+		text_id = 170
+		font = FONT_NORMAL_BLACK_ON_DARK
+	} else if (__distant_battle_months_until_battle() > 0) {
+		text_id = 170
+		font = FONT_NORMAL_YELLOW
+	} else if (fig.soldiers > 0) {
+		text_id = 177
+		font = FONT_NORMAL_BLACK_ON_DARK
+	} else {
+		text_id = 171
+		font = FONT_NORMAL_BLACK_ON_DARK
+	}
+	window.military_info.text = __loc(61, text_id)
+	window.military_info.font = font
+}
+
 [es=(advisor_chief_window, ui_draw_foreground)]
 function advisor_chief_window_ui_draw_foreground(window) {
 	advisor_chief_window_update_sentiment(window)
@@ -304,4 +334,5 @@ function advisor_chief_window_ui_draw_foreground(window) {
 	advisor_chief_window_update_religion(window)
 	advisor_chief_window_update_finance(window)
 	advisor_chief_window_update_crime(window)
+	advisor_chief_window_update_military(window)
 }
