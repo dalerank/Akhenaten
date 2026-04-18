@@ -3,11 +3,11 @@ log_info("akhenaten: ui top menu config started")
 function top_menu_autosave_options_text(p1, p2) { return __loc(19, game.monthly_autosave ? 51 : 52) }
 function top_menu_autosave_options_toggle(p1, p2) { game.monthly_autosave = !game.monthly_autosave }
 
-function top_menu_tooltip_text(p1, p2) { return __loc(3, game.tooltips_mode + 2) }
-function top_menu_tooltip_toggle(p1, p2) { game.tooltips_mode = (game.tooltips_mode + 1) % 3 }
+function top_menu_tooltip_text(p1, p2) { return __loc(3, __game_settings.tooltips_mode + 2) }
+function top_menu_tooltip_toggle(p1, p2) { __game_settings.tooltips_mode = (__game_settings.tooltips_mode + 1) % 3 }
 
-function top_menu_warnings_text(p1, p2) { return __loc(3, game.warnings ? 6 : 5) }
-function top_menu_warnings_toggle(p1, p2) { game.warnings = !game.warnings }
+function top_menu_warnings_text(p1, p2) { return __loc(3, __game_settings.warnings ? 6 : 5) }
+function top_menu_warnings_toggle(p1, p2) { __game_settings.warnings = !__game_settings.warnings }
 
 function top_menu_cities_old_text(p1, p2) { return __loc(2, game_features.gameui_empire_city_old_names ? 7 : 8) }
 function top_menu_cities_old_toggle(p1, p2) { game_features.gameui_empire_city_old_names = !game_features.gameui_empire_city_old_names }
@@ -34,10 +34,19 @@ function top_menu_debug_buildings_toggle(p1, p2) {
 function top_menu_date_explanation(p1, p2) { ui.window_message_dialog_show("message_game_control_date_display", -1) }
 function top_menu_population_explanation(p1, p2) { ui.window_message_dialog_show("message_game_control_population_display", -1) }
 function top_menu_funds_explanation(p1, p2) { ui.window_message_dialog_show("message_game_control_money_display_window", -1) }
+
 function widget_top_menu_show_speed_options(p1, p2) {
 	widget_top_menu_clear_state()
 	window_go_back()
 	window_speed_options_show()
+}
+
+function top_menu_show_window_by_id(window_id) {
+	return function() {
+		widget_top_menu_clear_state()
+		window_go_back()
+		emit event_show_window{ id:window_id }
+	}
 }
 
 top_menu_widget {
@@ -67,7 +76,7 @@ top_menu_widget {
 	}
 
 	options {
-		display_options	: menu_item({text {group:2, id:1}, onclick: __widget_top_menu_display_options })
+		display_options	: menu_item({text {group:2, id:1}, onclick: top_menu_show_window_by_id("display_options_window") })
 		sound_options  	: menu_item({text {group:2, id:2}, onclick: __widget_top_menu_sound_options })
 		speed_options  	: menu_item({text {group:2, id:3}, onclick: widget_top_menu_show_speed_options })
 		difficulty_options: menu_item({ text {group:2, id:6}, onclick: __widget_top_menu_difficulty_options })

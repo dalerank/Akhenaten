@@ -188,10 +188,10 @@ localization_de = [
   {key:"#TR_ADVISOR_BIRTHS_LAST_YEAR", text:"Geburten im letzten Jahr:"}
   {key:"#TR_ADVISOR_DEATHS_LAST_YEAR", text:"Todesfälle im letzten Jahr:"}
   {key:"#TR_ADVISOR_TOTAL_POPULATION", text:"Einwohner insgesamt"}
-  
+
   {key: "#main_menu_mods", text:"Mods"}
   {key: "#mission2_store_figs", text:"Baut eine Kornkammer und füllt sie mit Feigen"}
-  
+
   {key: "#message_population_title", text:"Bevölkerungsmeilenstein"}
   {key: "#message_population_100", text:"100 Menschen sind in Euer Dorf gezogen"}
   {key: "#message_population_500", text:"Eure aufstrebende Stadt beherbergt nun fünfhundert Einwohner"}
@@ -203,14 +203,16 @@ localization_de = [
   {key: "#message_population_15000", text:"Wenige Städte können mit Eurer mithalten, die nun fünfzehntausend Bürger beherbergt."}
   {key: "#message_population_20000", text:"Andere Gouverneure und Nomarchen sind beeindruckt, dass Eure Stadt zwanzigtausend Menschen beherbergt!"}
   {key: "#message_population_25000", text:"Die wenigen Einwanderer, die Eure Stadt vor so vielen Jahren gründeten, hätten nie gedacht, dass sie auf fünfundzwanzigtausend Menschen anschwellen würde!"}
-  
+
   {key: "#mission0_goal_create_housing", text:"Erschafft ein Wohngebiet und beobachtet, wie Einwanderer ankommen" }
   {key: "#mission0_goal_build_granary", text:"Baut eine Kornkammer, die Jäger mit Wild füllen können" }
   {key: "#mission1_goal_build_mines", text:"Schürft etwas Gold für die Schatzkammer des Palastes" }
   {key: "#mission1_goal_build_temples", text:"Baut einige Tempel und Schreine für Bastet" }
   {key: "#mission1_goal_build_entertainment", text:"Baut Buden und Jongleurschulen, um die Stadtkultur zu erhöhen" }
-  
+
   {key: "#exit_this_panel", text:"Dieses Fenster verlassen"}
+
+  {key: "#display_options_title", text:"Anzeigeoptionen"}
 
   {key: "#popup_dialog_quit", group:5, id:0 }
   {key: "#popup_dialog_open_trade", group:5, id:2 }

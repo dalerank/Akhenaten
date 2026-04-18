@@ -8,6 +8,7 @@ struct event_app_toggle_fullscreen { int value; };
 struct event_app_screenshot { int value; };
 struct event_app_city_screenshot { int value; };
 struct event_request_exit { int value; };
+struct event_display_options_apply_resolution { int w; int h; };
 
 enum e_user_event {
     USER_EVENT_QUIT,
