@@ -39,6 +39,8 @@ hold_festival_window.show = function(with_background, on_close_cb) {
 function hold_festival_window_init(window) {
     window.background_image.enabled = false
 
+    city.festival.calculate_costs()
+
     var deben_tid = get_image({ pack: PACK_GENERAL, id: 103, offset: 18 }).tid
     var beer_tid = __image_id_resource_icon_int(RESOURCE_BEER)
     var is_out_of_money = city.finance.is_out_of_money
