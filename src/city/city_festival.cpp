@@ -1,5 +1,7 @@
 #include "city_festival.h"
 
+#include <algorithm>
+
 #include "building/building_type.h"
 #include "building/building_storage_yard.h"
 #include "buildings.h"
@@ -31,42 +33,21 @@ void city_festival_t::select_god(e_god god_id) {
     selected_god = god_id;
 }
 
-bool city_festival_t::select_size(e_festival_type size) {
-    if (size == FESTIVAL_GRAND && not_enough_alcohol) {
-        return false;
-    }
-
+void city_festival_t::select_size(e_festival_type size) {
     selected_size = size;
-    return true;
 }
 
-void city_festival_t::schedule() {
-    planned.god = selected_god;
-    planned.size = selected_size;
+void city_festival_t::schedule(e_god god, e_festival_type festival_size, int months_until_festival, int festival_cost, int beer_to_remove) {
+    planned.god = god;
+    planned.size = festival_size;
+    planned.months_to_go = static_cast<int8_t>(std::clamp(months_until_festival, -128, 127));
 
-    int cost;
-    const int population = g_city.population.current;
-    switch (selected_size) {
-    case FESTIVAL_SMALL:
-        planned.months_to_go = small_min_months + population / 1000 + 1;
-        cost = small_cost;
-        break;
-
-    case FESTIVAL_LARGE:
-        planned.months_to_go = middle_min_months + population / 1500 + 1;
-        cost = large_cost;
-        break;
-
-    case FESTIVAL_GRAND:
-        planned.months_to_go = grand_min_minths + population / 2000 + 1;
-        cost = grand_cost;
-    }
-
-    events::emit(event_finance_request{ efinance_request_festival, cost });
+    events::emit(event_finance_request{ efinance_request_festival, festival_cost });
     events::emit(event_festival_hold{ planned.god, planned.size });
 
-    if (selected_size == FESTIVAL_GRAND) {
-        events::emit(event_storageyards_remove_resource{ RESOURCE_BEER, grand_alcohol });
+    if (festival_size == FESTIVAL_GRAND && beer_to_remove > 0) {
+        const uint16_t amount = static_cast<uint16_t>(std::clamp(beer_to_remove, 0, 65535));
+        events::emit(event_storageyards_remove_resource{ RESOURCE_BEER, amount });
     }
 }
 
@@ -199,21 +180,5 @@ void city_festival_t::update() {
     if (planned.months_to_go <= 0) {
         planned.months_to_go = 0;
         execute_festival();
-    }
-}
-
-void city_festival_t::calculate_costs() {
-    int population = g_city.population.current;
-    small_cost = population / 20 + 10;
-    large_cost = population / 10 + 20;
-    grand_cost = population / 5 + 40;
-    grand_alcohol = population / 50 + 1;
-    not_enough_alcohol = false;
-
-    if (g_city.resource.yards_stored(RESOURCE_BEER) < grand_alcohol) {
-        not_enough_alcohol = true;
-        if (selected_size == FESTIVAL_GRAND) {
-            selected_size = FESTIVAL_LARGE;
-        }
     }
 }

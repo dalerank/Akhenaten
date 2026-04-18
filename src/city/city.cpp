@@ -337,7 +337,6 @@ void city_t::update_tick(int simtick) {
         break;
     case 49:
         avg_coverage.update();
-        festival.calculate_costs();
         break;
     case 50:
         building_update_malaria_risk();
@@ -1113,16 +1112,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &data.festival.planned.god);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_UINT16, &data.festival.small_cost); // 23 --> 22 ??????
-    iob->bind____skip(2);
-    iob->bind(BIND_SIGNATURE_UINT16, &data.festival.large_cost); // 46 --> 45
-    iob->bind____skip(2);
-    iob->bind(BIND_SIGNATURE_UINT16, &data.festival.grand_cost); // 93 --> 90
-    iob->bind____skip(2);
-    iob->bind(BIND_SIGNATURE_UINT16, &data.festival.grand_alcohol);
-    iob->bind____skip(2);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.not_enough_alcohol);
-    iob->bind____skip(3);
+    iob->bind____skip(20); // legacy: small/large/grand/grand_alcohol/not_enough_alcohol (scripts + runtime recompute)
     iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_religion);
     iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_education);
     iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_health);

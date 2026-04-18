@@ -21,20 +21,8 @@ struct city_festival_t {
         e_festival_type size;
     } planned;
 
-    enum {
-        small_min_months = 1,
-        middle_min_months = 2,
-        grand_min_minths = 3,
-    };
-
     e_god selected_god;
     e_festival_type selected_size;
-
-    uint16_t small_cost;
-    uint16_t large_cost;
-    uint16_t grand_cost;
-    uint16_t grand_alcohol;
-    bool not_enough_alcohol;
 
     int8_t months_since_festival;
     int8_t first_festival_effect_months;
@@ -44,19 +32,13 @@ struct city_festival_t {
     int months_till_next();
     xstring selected_god_name();
     void select_god(e_god god_id);
-    bool select_size(e_festival_type size);
-    void schedule();
+    void select_size(e_festival_type size);
+    void schedule(e_god god, e_festival_type festival_size, int months_until_festival, int festival_cost, int beer_to_remove);
     void execute_festival();
     void update();
-    void calculate_costs();
 };
 ANK_CONFIG_PROPERTY(city_festival_t,
     selected_god,
     selected_size,
-    small_cost,
-    large_cost,
-    grand_cost,
-    grand_alcohol,
-    not_enough_alcohol,
     months_since_festival)
 
