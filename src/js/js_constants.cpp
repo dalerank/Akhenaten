@@ -19,6 +19,7 @@
 #include "city/constants.h"
 #include "city/city_kingdome_relations.h"
 #include "sound/sound_city.h"
+#include "game/gods.h"
 
 using e_advisor_tokens_t = token_holder<e_advisor, ADVISOR_NONE, ADVISOR_MAX>;
 e_advisor_tokens_t ANK_CONFIG_ENUM(e_advisor_tokens);
@@ -38,6 +39,7 @@ void js_register_game_constants(js_State *J) {
     _R(MAP_SELECTION_CAMPAIGN)
     _R(MAP_SELECTION_CUSTOM)
     _R(SCENARIO_NUBT)
+    _R(GOD_UNKNOWN)
 
     // repeated for alias id
     _R(SOUND_CHANNEL_CITY_HOUSE_SLUM)

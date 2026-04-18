@@ -75,7 +75,6 @@ void city_t::init() {
     population.monthly.next_index = 0;
     population.monthly.count = 0;
     festival.months_since_festival = 1;
-    festival.selected_size = FESTIVAL_SMALL;
     g_distant_battle.clear();
     religion.reset();
     buildings.init();
@@ -124,7 +123,7 @@ void city_t::update_month(simulation_time_t simtime) {
     update_allowed_foods();
 
     population.record_monthly();
-    festival.update();
+    festival.advance_month();
     buildings.update_month();
 
     if (can_produce_resource(RESOURCE_FISH)) {
@@ -1102,15 +1101,15 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(4);
     iob->bind____skip(4);
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.selected_god);
+    iob->bind____skip(1); // bind(BIND_SIGNATURE_UINT8, &data.festival.selected_god);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.selected_size); // ????
+    iob->bind____skip(1); // bind(BIND_SIGNATURE_UINT8, &data.festival.selected_size); // ????
     iob->bind____skip(6);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.planned.size);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.planned_size);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_INT8, &data.festival.planned.months_to_go);
+    iob->bind(BIND_SIGNATURE_INT8, &data.festival.months_till_next);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.planned.god);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.planned_god);
     iob->bind____skip(3);
     iob->bind____skip(20); // legacy: small/large/grand/grand_alcohol/not_enough_alcohol (scripts + runtime recompute)
     iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_religion);

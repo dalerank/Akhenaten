@@ -60,12 +60,19 @@ function hold_festival_window_init(window) {
 
 [es=(hold_festival_window, init)]
 function hold_festival_window_setup_god_buttons(window) {
+    var first_known_god = -1
     for (var god = 0; god < 5; god++) {
         var btn = window["god" + god]
         if (!city.gods.is_known(god)) {
             btn.darkened = UiFlags_Grayscale
             btn.readonly = true
+        } else if (first_known_god < 0) {
+            first_known_god = god
         }
+    }
+
+    if (first_known_god >= 0 && city.festival.selected_god == GOD_UNKNOWN) {
+        city.festival.selected_god = first_known_god
     }
 }
 
@@ -82,31 +89,31 @@ function hold_festival_window_festival_schedule_ok(ev) {
 
 [es=(hold_festival_window, festival_select_god_0)]
 function hold_festival_window_festival_select_god_0(ev) {
-    city.festival.select_god(0)
+    city.festival.selected_god = GOD_OSIRIS
     hold_festival_window.needs_sync = true
 }
 
 [es=(hold_festival_window, festival_select_god_1)]
 function hold_festival_window_festival_select_god_1(ev) {
-    city.festival.select_god(1)
+    city.festival.selected_god = GOD_RA
     hold_festival_window.needs_sync = true
 }
 
 [es=(hold_festival_window, festival_select_god_2)]
 function hold_festival_window_festival_select_god_2(ev) {
-    city.festival.select_god(2)
+    city.festival.selected_god = GOD_PTAH
     hold_festival_window.needs_sync = true
 }
 
 [es=(hold_festival_window, festival_select_god_3)]
 function hold_festival_window_festival_select_god_3(ev) {
-    city.festival.select_god(3)
+    city.festival.selected_god = GOD_SETH
     hold_festival_window.needs_sync = true
 }
 
 [es=(hold_festival_window, festival_select_god_4)]
 function hold_festival_window_festival_select_god_4(ev) {
-    city.festival.select_god(4)
+    city.festival.selected_god = GOD_BAST
     hold_festival_window.needs_sync = true
 }
 
@@ -133,6 +140,7 @@ function hold_festival_window_draw_background(window) {
     if (!hold_festival_window.needs_sync) {
         return
     }
+
     for (var god = 0; god < 5; god++) {
         var btn = window["god" + god]
         if (!city.gods.is_known(god)) {
@@ -142,8 +150,7 @@ function hold_festival_window_draw_background(window) {
         btn.selected = (god === city.festival.selected_god)
     }
 
-    var short_name = city.gods.get_name(city.festival.selected_god)
-    window.title.text = "${loc.hold_festival_to} " + __loc("#" + short_name.toLowerCase())
+    window.title.text = "${loc.hold_festival_to} " + __loc(city.festival.selected_god_loc_key())
     window.festival_type.text = __loc(58, 30 + city.festival.selected_size)
     hold_festival_window.needs_sync = false
 }

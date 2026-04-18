@@ -42,13 +42,14 @@ enum js_Class {
     JS_CJSON,
     JS_CITERATOR,
     JS_CUSERDATA,
-    JS_CPTR, /* bound C pointer (int/bool/float), get/set via *ptr */
+    JS_CPTR, /* bound C pointer (int/int8/bool/float), get/set via *ptr */
 };
 
 enum js_CPtrType {
     JS_PTR_INT,
     JS_PTR_BOOL,
-    JS_PTR_FLOAT
+    JS_PTR_FLOAT,
+    JS_PTR_INT8
 };
 
 /*

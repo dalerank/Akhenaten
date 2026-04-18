@@ -8,6 +8,8 @@
 #include "building/building_storage_yard.h"
 #include "city/city_migration.h"
 #include "city/city_health.h"
+#include "city/city_festival.h"
+#include "city/city_resource.h"
 #include "scenario/scenario.h"
 #include "city/victory.h"
 #include "city/city_animals.h"
@@ -52,6 +54,8 @@ ANK_SCRIPT_EVENT(event_show_advisor, advisor)
 ANK_SCRIPT_EVENT(event_building_place_checks, bid)
 ANK_SCRIPT_EVENT(event_finance_change_wages, value)
 ANK_SCRIPT_EVENT(event_finance_request, type, deben)
+ANK_SCRIPT_EVENT(event_festival_hold, god, type)
+ANK_SCRIPT_EVENT(event_storageyards_remove_resource, resource, amount)
 ANK_SCRIPT_EVENT(event_mods_info_updated, count)
 ANK_SCRIPT_EVENT(event_toggle_industry_mothballed, resource)
 

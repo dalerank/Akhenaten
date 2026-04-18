@@ -7,49 +7,16 @@
 #include "buildings.h"
 #include "city/constants.h"
 #include "city/city.h"
-#include "city/city_finance.h"
-#include "game/game_events.h"
 #include "city/city_message.h"
 #include "core/random.h"
 #include "figure/figure.h"
 #include "game/game_config.h"
 #include "figuretype/festival_guy.h"
 #include "graphics/image_groups.h"
+#include "core/tokenum.h"
 
-bool city_festival_t::is_planned() {
-    return planned.size != FESTIVAL_NONE;
-}
-
-int city_festival_t::months_till_next() {
-    return planned.months_to_go;
-}
-
-xstring city_festival_t::selected_god_name() {
-    auto key = (e_god_short)g_city.festival.selected_god;
-    return bstring16("#god_", e_god_short_tokens.name(key)).c_str();
-}
-
-void city_festival_t::select_god(e_god god_id) {
-    selected_god = god_id;
-}
-
-void city_festival_t::select_size(e_festival_type size) {
-    selected_size = size;
-}
-
-void city_festival_t::schedule(e_god god, e_festival_type festival_size, int months_until_festival, int festival_cost, int beer_to_remove) {
-    planned.god = god;
-    planned.size = festival_size;
-    planned.months_to_go = static_cast<int8_t>(std::clamp(months_until_festival, -128, 127));
-
-    events::emit(event_finance_request{ efinance_request_festival, festival_cost });
-    events::emit(event_festival_hold{ planned.god, planned.size });
-
-    if (festival_size == FESTIVAL_GRAND && beer_to_remove > 0) {
-        const uint16_t amount = static_cast<uint16_t>(std::clamp(beer_to_remove, 0, 65535));
-        events::emit(event_storageyards_remove_resource{ RESOURCE_BEER, amount });
-    }
-}
+using e_festival_type_tokens = token_holder<e_festival_type, FESTIVAL_NONE, FESTIVAL_MAX>;
+e_festival_type_tokens ANK_CONFIG_ENUM(festival_type_tokens);
 
 void city_festival_t::execute_festival() {
     tile2i square_pos = city_building_get_festival_square_position();
@@ -95,7 +62,7 @@ void city_festival_t::execute_festival() {
 
     if (first_festival_effect_months <= 0) {
         first_festival_effect_months = 12;
-        switch (planned.size) {
+        switch (planned_size) {
         case FESTIVAL_SMALL:
             g_city.change_happiness(7);
             break;
@@ -108,7 +75,7 @@ void city_festival_t::execute_festival() {
         }
     } else if (second_festival_effect_months <= 0) {
         second_festival_effect_months = 12;
-        switch (planned.size) {
+        switch (planned_size) {
         case FESTIVAL_SMALL:
             g_city.change_happiness(2);
             break;
@@ -120,7 +87,7 @@ void city_festival_t::execute_festival() {
             break;
         }
     } else {
-        switch (planned.size) {
+        switch (planned_size) {
         case FESTIVAL_SMALL:
             g_city.change_happiness(1);
             break;
@@ -137,8 +104,8 @@ void city_festival_t::execute_festival() {
 
     months_since_festival = 1;
 
-    g_city.religion.gods[planned.god].months_since_festival = 0;
-    switch (planned.size) {
+    g_city.religion.gods[planned_god].months_since_festival = 0;
+    switch (planned_size) {
     case FESTIVAL_SMALL:
         messages::popup("message_common_festival", 0, 0);
         break;
@@ -151,17 +118,17 @@ void city_festival_t::execute_festival() {
         messages::popup("message_grand_festival", 0, 0);
 
         if (!!game_features::gameplay_change_grandfestival) {
-            g_city.religion.gods[planned.god].blessing_done = 0;
+            g_city.religion.gods[planned_god].blessing_done = 0;
         }
 
         break;
     }
 
-    planned.size = FESTIVAL_NONE;
-    planned.months_to_go = 0;
+    planned_size = FESTIVAL_NONE;
+    months_till_next= 0;
 }
 
-void city_festival_t::update() {
+void city_festival_t::advance_month() {
     months_since_festival = std::min<uint8_t>(months_since_festival+1, 60);
 
     if (first_festival_effect_months > 0) {
@@ -172,13 +139,13 @@ void city_festival_t::update() {
         --second_festival_effect_months;
     }
 
-    if (!is_planned()) {
+    if (planned_size == FESTIVAL_NONE) {
         return;
     }
 
-    planned.months_to_go--;
-    if (planned.months_to_go <= 0) {
-        planned.months_to_go = 0;
+    months_till_next--;
+    if (months_till_next <= 0) {
+        months_till_next = 0;
         execute_festival();
     }
 }

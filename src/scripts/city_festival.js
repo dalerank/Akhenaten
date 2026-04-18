@@ -1,7 +1,33 @@
 log_info("akhenaten: city festival started")
 
-function city_festival_get_advice() {
-    var m = city.festival.months_since_festival
+// global object __city_festival
+city.festival = /*extend(__city_festival, */ {
+	// native
+	// months_since_festival
+	// planned_god
+	// planned_size
+	// months_till_next
+
+    selected_god : GOD_UNKNOWN
+    selected_size : FESTIVAL_NONE
+
+
+    @is_planned : { get:function() { return __city_festival.planned_size != 0 } },
+
+    small_cost: 0,
+    large_cost: 0,
+    grand_cost: 0,
+    grand_alcohol: 0,
+    not_enough_alcohol: false,
+}
+
+// Loc key #god_<name> (matches C++ e_god_short + "#god_")
+city.festival.selected_god_loc_key = function() {
+    return "#god_" + city.gods.get_name(city.festival.selected_god).toLowerCase()
+}
+
+city.festival.get_advice = function() {
+    var m = __city_festival.months_since_festival
     if (m <= 1) return 0
     if (m <= 6) return 1
     if (m <= 12) return 2
@@ -9,24 +35,6 @@ function city_festival_get_advice() {
     if (m <= 24) return 4
     if (m <= 30) return 5
     return 6
-}
-
-city.festival = {
-    __property_getter: __city_get_festival_property
-    @selected_god { }
-    @selected_size { }
-    @months_since_festival { }
-    @is_planned { get: __city_festival_is_planned }
-
-    small_cost: 0
-    large_cost: 0
-    grand_cost: 0
-    grand_alcohol: 0
-    not_enough_alcohol: false
-
-    get_advice: city_festival_get_advice
-    select_god: __city_festival_select_god
-    months_till_next: __city_festival_months_till_next
 }
 
 city.festival.calculate_costs = function() {
@@ -39,7 +47,7 @@ city.festival.calculate_costs = function() {
     city.festival.not_enough_alcohol = city.yards_stored(RESOURCE_BEER) < city.festival.grand_alcohol
 
     if (city.festival.not_enough_alcohol && city.festival.selected_size === 3) {
-        __city_festival_select_size(2)
+        city.festival.selected_size = 2
     }
 }
 
@@ -48,13 +56,14 @@ city.festival.select_size = function(size) {
     if (size === 3 && city.festival.not_enough_alcohol) {
         return false
     }
-    __city_festival_select_size(size)
+    city.festival.selected_size = size
     return true
 }
 
 city.festival.schedule = function() {
 	city.festival.calculate_costs()
 	var population = city.population
+	var god = city.festival.selected_god
 	var size = city.festival.selected_size
 	var cost = 0
 	var months = 0
@@ -69,5 +78,14 @@ city.festival.schedule = function() {
 		months = 3 + Math.floor(population / 2000) + 1
 	}
 	var beer = (size === 3) ? city.festival.grand_alcohol : 0
-	__city_festival_schedule(city.festival.selected_god, city.festival.selected_size, months, cost, beer)
+
+	__city_festival.planned_god = god
+	__city_festival.planned_size = size
+	__city_festival.months_till_next = months
+
+	emit event_finance_request{ type: efinance_request_festival, deben: cost }
+	emit event_festival_hold{ god: god, type: size }
+	if (size === 3 && beer > 0) {
+		emit event_storageyards_remove_resource{ resource: RESOURCE_BEER, amount: beer }
+	}
 }

@@ -6,6 +6,7 @@
 #include "jsbuiltin.h"
 
 #include <assert.h>
+#include <cstdint>
 #include <new>
 
 static void* js_defaultalloc(void* actx, void* ptr, int size) {
@@ -206,6 +207,46 @@ void js_register_bound_float(js_State* J, const js_StringNode name, float* ptr) 
     obj->u.p.ptype = JS_PTR_FLOAT;
     js_pushobject(J, obj);
     js_defglobal(J, name, 0);
+}
+
+void js_register_bound_int8(js_State *J, const js_StringNode name, std::int8_t *ptr) {
+    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
+    obj->u.p.ptr = ptr;
+    obj->u.p.ptype = JS_PTR_INT8;
+    js_pushobject(J, obj);
+    js_defglobal(J, name, 0);
+}
+
+void js_register_bound_int_property(js_State *J, const js_StringNode name, int *ptr) {
+    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
+    obj->u.p.ptr = ptr;
+    obj->u.p.ptype = JS_PTR_INT;
+    js_pushobject(J, obj);
+    js_setproperty(J, -2, name);
+}
+
+void js_register_bound_bool_property(js_State *J, const js_StringNode name, void *ptr) {
+    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
+    obj->u.p.ptr = ptr;
+    obj->u.p.ptype = JS_PTR_BOOL;
+    js_pushobject(J, obj);
+    js_setproperty(J, -2, name);
+}
+
+void js_register_bound_float_property(js_State *J, const js_StringNode name, float *ptr) {
+    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
+    obj->u.p.ptr = ptr;
+    obj->u.p.ptype = JS_PTR_FLOAT;
+    js_pushobject(J, obj);
+    js_setproperty(J, -2, name);
+}
+
+void js_register_bound_int8_property(js_State *J, const js_StringNode name, std::int8_t *ptr) {
+    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
+    obj->u.p.ptr = ptr;
+    obj->u.p.ptype = JS_PTR_INT8;
+    js_pushobject(J, obj);
+    js_setproperty(J, -2, name);
 }
 
 void js_set_framealloc(js_State* J, js_Alloc frame_alloc, void* frame_actx) {
