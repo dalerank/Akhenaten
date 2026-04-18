@@ -8,8 +8,6 @@ game {
     @simtime_year { get: __game_simtime_year }
     @version { get: __game_version }
     @difficulty { get: __game_difficulty }
-    @tooltips_mode { get: __game_tooltips_mode, set: __game_set_tooltips_mode }
-    @warnings { get: __game_warnings, set: __game_set_warnings }
     @debug_properties { get: __game_debug_properties }
     @writing_video { get: __game_writing_video }
     @debug_render_mode { get: __game_debug_render_mode, set: __game_set_debug_render_mode }

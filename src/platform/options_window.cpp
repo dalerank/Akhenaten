@@ -21,7 +21,7 @@ void show_options_window(Arguments& args) {
 #else
     auto const window_flags = SDL_WINDOW_RESIZABLE;
 #endif
-    
+
     SDL_Window* platform_window = SDL_CreateWindow("Akhenaten: configuration", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
 
     SDL_Renderer* renderer = SDL_CreateRenderer(platform_window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);

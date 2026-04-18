@@ -1561,7 +1561,6 @@ localization_base_de = [
     { group:41, id:234, text: "Mittleres königliches Grab" }
     { group:41, id:235, text: "Großes königliches Grab" }
     { group:41, id:236, text: "Prächtiges königliches Grab" }
-    { group:42, id:0, text: "Anzeigeoptionen" }
     { group:42, id:1, text: "Vollbild" }
     { group:42, id:2, text: "Fenster-Modus" }
     { group:42, id:3, text: "640 x 480 Auflösung" }

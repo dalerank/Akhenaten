@@ -114,19 +114,19 @@ renderer_filter_t g_renderer_filter;
 bool platform_render_any_filter_active() {
     auto &data = g_renderer_filter;
 
-    return data.bilaterial_active || data.grayscale_active || 
-           data.brightness_active || data.contrast_active || 
-           data.saturation_active || data.exposure_active || 
-           data.hue_active || data.colorInvert_active || 
-           data.posterize_active || data.gaussianBlur_active || 
-           data.boxBlur_active || data.beautyFace_active || 
-           data.blusher_active || data.boxDifference_active || 
-           data.boxMonoBlur_active || data.cannyEdgeDetection_active || 
-           data.crosshatch_active || data.emboss_active || 
-           data.faceReshape_active || data.glassSphere_active || 
-           data.halftone_active || data.lipstick_active || 
-           data.nonMaximumSuppression_active || data.pixellation_active || 
-           data.rgb_active || data.smoothToon_active || data.toon_active || 
+    return data.bilaterial_active || data.grayscale_active ||
+           data.brightness_active || data.contrast_active ||
+           data.saturation_active || data.exposure_active ||
+           data.hue_active || data.colorInvert_active ||
+           data.posterize_active || data.gaussianBlur_active ||
+           data.boxBlur_active || data.beautyFace_active ||
+           data.blusher_active || data.boxDifference_active ||
+           data.boxMonoBlur_active || data.cannyEdgeDetection_active ||
+           data.crosshatch_active || data.emboss_active ||
+           data.faceReshape_active || data.glassSphere_active ||
+           data.halftone_active || data.lipstick_active ||
+           data.nonMaximumSuppression_active || data.pixellation_active ||
+           data.rgb_active || data.smoothToon_active || data.toon_active ||
            data.weakPixelInclusion_active || data.whiteBalance_active;
 }
 
@@ -148,11 +148,11 @@ void platform_render_init_filters() {
     gpupixel::GPUPixelContext::initOpengl();
 
     data.sourceImage = gpupixel::SourceImage::create_from_memory(0, 0, 4, nullptr);
-    
+
     // Initialize all filters
     data.bilaterial = gpupixel::BilateralFilter::create();
     data.grayscale = gpupixel::GrayscaleFilter::create();
-    
+
     gpupixel::GPUPixelContext::getInstance()->runSync([&] {
         data.brightness = gpupixel::BrightnessFilter::Create();
         data.contrast = gpupixel::ContrastFilter::Create();

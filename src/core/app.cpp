@@ -18,6 +18,13 @@ void ANK_PERMANENT_CALLBACK(event_request_exit, ev) {
     app_post_event(USER_EVENT_QUIT);
 }
 
+ANK_SCRIPT_EVENT(event_display_options_apply_resolution, w, h)
+void ANK_PERMANENT_CALLBACK(event_display_options_apply_resolution, ev) {
+    app_window_resize({ev.w, ev.h});
+}
+
+ANK_SCRIPT_EVENT(event_app_toggle_fullscreen, value)
+
 void app_window_resize(const vec2i& wsize) {
     static int s_width;
     static int s_height;

@@ -213,6 +213,7 @@ localization_en = [
   {key: "#mission1_goal_build_entertainment", text:"Build Booths and Juggler Schools to raise city Culture" }
 
   {key: "#exit_this_panel", text:"Exit this panel"}
+  {key: "#display_options_title", text:"Display options"}
   {key: "#popup_dialog_quit", group:5, id:0 }
   {key: "#popup_dialog_open_trade", group:5, id:2 }
   {key: "#popup_dialog_send_goods", group:5, id:7 }

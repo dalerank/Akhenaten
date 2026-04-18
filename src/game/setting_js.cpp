@@ -7,6 +7,38 @@
 #include "game/system.h"
 #include "core/profiler.h"
 
+void ank_global_obj_bind_field(js_State *J, js_StringNode name, e_tooltip_mode *ptr) {
+    js_register_bound_int_property(J, name, reinterpret_cast<int *>(ptr));
+}
+
+void ank_global_obj_bind_field(js_State *J, js_StringNode name, vec2i *ptr) {
+    js_newobject(J);
+    ank_global_obj_bind_field(J, js_intern("x"), &ptr->x);
+    ank_global_obj_bind_field(J, js_intern("y"), &ptr->y);
+    js_setproperty(J, -2, name);
+}
+
+void ank_global_obj_bind_field(js_State *J, js_StringNode name, sound_settings *ptr) {
+    js_newobject(J);
+    ank_global_obj_bind_field(J, js_intern("enabled"), &ptr->enabled);
+    ank_global_obj_bind_field(J, js_intern("volume"), &ptr->volume);
+    js_setproperty(J, -2, name);
+}
+
+ANK_GLOBAL_OBJECT(g_settings, __game_settings,
+    display_size,
+    sound_effects,
+    sound_music,
+    sound_speech,
+    sound_city,
+    tooltips_mode,
+    warnings,
+    gods_enabled,
+    victory_video,
+    popup_messages,
+    pyramid_speedup,
+    last_advisor);
+
 int __game_difficulty() { return game_difficulty(); }
 ANK_FUNCTION(__game_difficulty)
 
@@ -22,18 +54,6 @@ ANK_FUNCTION(__game_is_fullscreen_only)
 void __game_set_monthly_autosave(bool v) { game.monthly_autosave = v; }
 ANK_FUNCTION_1(__game_set_monthly_autosave)
 
-int __game_tooltips_mode() { return g_settings.tooltips_mode; }
-ANK_FUNCTION(__game_tooltips_mode)
-
-void __game_set_tooltips_mode(int v) { g_settings.tooltips_mode = (e_tooltip_mode)v; }
-ANK_FUNCTION_1(__game_set_tooltips_mode)
-
-bool __game_warnings() { return g_settings.warnings; }
-ANK_FUNCTION(__game_warnings)
-
-void __game_set_warnings(bool v) { g_settings.warnings = v; }
-ANK_FUNCTION_1(__game_set_warnings)
-
 bool __game_debug_properties() { return game.debug_properties; }
 ANK_FUNCTION(__game_debug_properties)
 
@@ -48,3 +68,26 @@ ANK_FUNCTION(__game_debug_render_mode)
 
 void __game_set_debug_render_mode(int mode) { set_debug_render_mode((e_debug_render)mode); }
 ANK_FUNCTION_1(__game_set_debug_render_mode)
+
+int display_options_video_modes_count() { return (int)get_video_modes().size(); }
+ANK_FUNCTION(display_options_video_modes_count)
+
+pcstr display_options_video_get_mode(int index) {
+    static thread_local bstring128 buf;
+    const auto modes = get_video_modes();
+    if (index < 0 || index >= (int)modes.size()) {
+        buf.clear();
+        return "";
+    }
+    buf = modes[index].str.c_str();
+    return buf.c_str();
+}
+ANK_FUNCTION_1(display_options_video_get_mode)
+
+bool __display_options_is_fullscreen() { return g_settings.is_fullscreen(e_setting_none); }
+ANK_FUNCTION(__display_options_is_fullscreen)
+
+xstring __display_options_video_driver_caption() {
+    return get_video_driver();
+}
+ANK_FUNCTION(__display_options_video_driver_caption)

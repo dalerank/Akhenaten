@@ -1560,7 +1560,6 @@ localization_base_en = [
     { group:41, id:234, text: "Medium Royal Burial Tomb" }
     { group:41, id:235, text: "Large Royal Burial Tomb" }
     { group:41, id:236, text: "Grand Royal Burial Tomb" }
-    { group:42, id:0, text: "Display options" }
     { group:42, id:1, text: "Full screen" }
     { group:42, id:2, text: "Windowed screen" }
     { group:42, id:3, text: "640 x 480 resolution" }

@@ -10,7 +10,6 @@
 #include "graphics/window.h"
 #include "scenario/editor_map.h"
 #include "scenario/scenario.h"
-#include "window/display_options.h"
 #include "window/editor/empire.h"
 #include "window/editor/window_editor.h"
 #include "window/file_dialog.h"
@@ -25,7 +24,7 @@ static void menu_file_load_map(int param);
 static void menu_file_save_map(int param);
 static void menu_file_exit_editor(int param);
 
-static void menu_options_display(int param);
+
 static void menu_options_sound(int param);
 static void menu_options_speed(int param);
 
@@ -46,7 +45,7 @@ static menu_item menu_file[] = {
 };
 
 static menu_item menu_options[] = {
-  {2, 1, menu_options_display, 0},
+  //{2, 1, menu_options_display, 0},
   {2, 2, menu_options_sound, 0},
   {2, 3, menu_options_speed, 0},
 };
@@ -200,12 +199,6 @@ static void menu_file_exit_editor(int param) {
             window_editor_map_show();
         }
     });
-}
-
-static void menu_options_display(int param) {
-    clear_state();
-    window_editor_map_show();
-    ui::display_options_window::show(window_editor_map_show);
 }
 
 static void menu_options_sound(int param) {
