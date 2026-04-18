@@ -344,6 +344,40 @@ function advisor_chief_window_update_kingdom(window) {
 	window.kingdom_info.font = font
 }
 
+function advisor_chief_window_update_nilometr(window) {
+	var flood_quality = __city_floods_expected_quality()
+	var text_id
+	var font
+	if (flood_quality === 100) {
+		text_id = 197
+		font = FONT_NORMAL_BLACK_ON_DARK
+	} else if (flood_quality > 75) {
+		text_id = 196
+		font = FONT_NORMAL_BLACK_ON_DARK
+	} else if (flood_quality > 50) {
+		text_id = 195
+		font = FONT_NORMAL_BLACK_ON_DARK
+	} else if (flood_quality > 25) {
+		text_id = 194
+		font = FONT_NORMAL_BLACK_ON_DARK
+	} else if (flood_quality > 0) {
+		text_id = 193
+		font = FONT_NORMAL_YELLOW
+	} else {
+		text_id = 192 + flood_quality
+		font = FONT_NORMAL_YELLOW
+	}
+	window.nilometr_info.text = __loc(61, text_id)
+	window.nilometr_info.font = font
+	if (flood_quality > 0) {
+		var flood_month = __city_floods_expected_month()
+		window.nilometr_info2.text = __loc(61, 204 + flood_month)
+		window.nilometr_info2.font = FONT_NORMAL_BLACK_ON_DARK
+	} else {
+		window.nilometr_info2.text = ""
+	}
+}
+
 [es=(advisor_chief_window, ui_draw_foreground)]
 function advisor_chief_window_ui_draw_foreground(window) {
 	advisor_chief_window_update_sentiment(window)
@@ -357,4 +391,5 @@ function advisor_chief_window_ui_draw_foreground(window) {
 	advisor_chief_window_update_crime(window)
 	advisor_chief_window_update_military(window)
 	advisor_chief_window_update_kingdom(window)
+	advisor_chief_window_update_nilometr(window)
 }
