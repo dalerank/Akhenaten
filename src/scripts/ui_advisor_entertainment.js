@@ -25,37 +25,50 @@ function advisor_entertainment_coverage_text(coverage) {
 	return __loc(57, 8 + ((coverage / 10) | 0))
 }
 
-function advisor_entertainment_fill_row(window, rowType, prefix, venueType, shows, coverage, entertainCoeff) {
-	var enabled = scenario.building_allowed(venueType)
-	var font = enabled ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_YELLOW
-	var base = prefix + "_"
-	var total = window[base + "total"]
-	var active = window[base + "active"]
-	var showsW = window[base + "shows"]
-	var care = window[base + "care"]
-	var cvg = window[base + "cvg"]
+function advisor_entertainment_row_descriptor(row) {
+	var ent = city.entertainment
+	var cov = city.coverage
+	switch (row) {
+		case 0:
+			return { rowType: 0, venue: BUILDING_BOOTH, shows: ent.booth_shows, coverage: cov.booth, coeff: 400 }
+		case 1:
+			return { rowType: 1, venue: BUILDING_BANDSTAND, shows: ent.bandstand_shows, coverage: cov.bandstand, coeff: 700 }
+		case 2:
+			return { rowType: 2, venue: BUILDING_PAVILLION, shows: ent.pavilion_shows, coverage: cov.pavilion, coeff: 1200 }
+		case 3:
+			return { rowType: 3, venue: BUILDING_SENET_HOUSE, shows: ent.senet_house_plays, coverage: cov.senet_house, coeff: 0 }
+		case 4:
+			return { rowType: 9, venue: BUILDING_ZOO, shows: 0, coverage: 0, coeff: 0 }
+		default:
+			return null
+	}
+}
 
-	total.font = font
-	active.font = font
-	showsW.font = font
-	care.font = font
-	cvg.font = font
-
-	if (!enabled) {
-		total.text = __loc(58, 47 + rowType)
-		active.text = __loc(58, 51)
-		showsW.text = __loc(58, 51)
-		care.text = __loc(58, 51)
-		cvg.text = __loc(57, 7)
+function advisor_entertainment_venues_list_on_render_item(p) {
+	var d = advisor_entertainment_row_descriptor(p.user_data)
+	if (!d) {
 		return
 	}
 
-	var actCount = city.count_active_buildings(venueType)
-	total.text = __loc(58, 47 + rowType)
-	active.text = String(actCount)
-	showsW.text = String(shows)
-	care.text = (entertainCoeff * actCount) + " " + __loc(58, 5)
-	cvg.text = advisor_entertainment_coverage_text(coverage)
+	var enabled = scenario.building_allowed(d.venue)
+	var font = enabled ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_YELLOW
+	var na = __loc(58, 51)
+
+	if (!enabled) {
+		ui.label(__loc(58, 47 + d.rowType), [p.x + 10, p.y], font)
+		ui.label(na, [p.x + 180, p.y], font)
+		ui.label(na, [p.x + 260, p.y], font)
+		ui.label(na, [p.x + 310, p.y], font)
+		ui.label(__loc(57, 7), [p.x + 460, p.y], font)
+		return
+	}
+
+	var actCount = city.count_active_buildings(d.venue)
+	ui.label(__loc(58, 47 + d.rowType), [p.x + 10, p.y], font)
+	ui.label(String(actCount), [p.x + 180, p.y], font)
+	ui.label(String(d.shows), [p.x + 260, p.y], font)
+	ui.label((d.coeff * actCount) + " " + __loc(58, 5), [p.x + 310, p.y], font)
+	ui.label(advisor_entertainment_coverage_text(d.coverage), [p.x + 460, p.y], font)
 }
 
 [es=advisor_window]
@@ -72,52 +85,32 @@ advisor_entertainment_window {
 		can_entertain : text({text:[58, 3], pos:[340, 56], font:FONT_NORMAL_BLACK_ON_LIGHT}),
 		city_coverage : text({text:[58, 4], pos:[470, 56], font:FONT_NORMAL_BLACK_ON_LIGHT}),
 
-		advice        : multiline({ margin:{left:30, bottom:-110}, size:[px(38), 208], wrap:512, font:FONT_NORMAL_BLACK_ON_LIGHT }),
-
-		inner_panel   : inner_panel({pos:[32, 70], size:[36, 8],
-			ui : {
-				booth_total       : text({pos:[10,  5]}),
-				booth_active      : text_center({pos:[150, 5], size:[50, 20]}),
-				booth_shows       : text_center({pos:[250, 5], size:[50, 20]}),
-				booth_care        : text_center({pos:[310, 5], size:[50, 20]}),
-				booth_cvg         : text_center({pos:[440, 5], size:[100, 20]}),
-
-				bandstand_total   : text({pos:[10,  30]}),
-				bandstand_active  : text_center({pos:[150, 30], size:[50, 20]}),
-				bandstand_shows   : text_center({pos:[250, 30], size:[50, 20]}),
-				bandstand_care    : text_center({pos:[310, 30], size:[50, 20]}),
-				bandstand_cvg     : text_center({pos:[440, 30], size:[100, 20]}),
-
-				pavilion_total    : text({pos:[10,  55]}),
-				pavilion_active   : text_center({pos:[150, 55], size:[50, 20]}),
-				pavilion_shows    : text_center({pos:[250, 55], size:[50, 20]}),
-				pavilion_care     : text_center({pos:[310, 55], size:[50, 20]}),
-				pavilion_cvg      : text_center({pos:[440, 55], size:[100, 20]}),
-
-				senet_house_total : text({pos:[10,  80]}),
-				senet_house_active: text_center({pos:[150, 80], size:[50, 20]}),
-				senet_house_shows : text_center({pos:[250, 80], size:[50, 20]}),
-				senet_house_care  : text_center({pos:[310, 80], size:[50, 20]}),
-				senet_house_cvg   : text_center({pos:[440, 80], size:[100, 20]}),
-
-				zoo_total         : text({pos:[10,  105]}),
-				zoo_active        : text_center({pos:[150, 105], size:[50, 20]}),
-				zoo_shows         : text_center({pos:[250, 105], size:[50, 20]}),
-				zoo_care          : text_center({pos:[310, 105], size:[50, 20]}),
-				zoo_cvg           : text_center({pos:[440, 105], size:[100, 20]}),
-			}
+		venues_list   : scrollable_list({
+			pos: [32, 70]
+			size: [36, 9]
+			view_items: 5
+			buttons_size_y: 25
+			buttons_margin_x: 0
+			buttons_margin_y: 10
+			text_padding_x: 0
+			text_padding_y: 0
+			draw_scrollbar_always: false
+			draw_paneling: true
+			onrender_item: advisor_entertainment_venues_list_on_render_item
 		}),
+
+		advice        : multiline({ margin:{left:30, bottom:-90}, size:[px(38), 208], wrap:512, font:FONT_NORMAL_BLACK_ON_LIGHT }),
 	}
 }
 
-[es=(advisor_entertainment_window, ui_draw_foreground)]
-function advisor_entertainment_window_ui_draw_foreground(window) {
-	var ent = city.entertainment
-	advisor_entertainment_fill_row(window, 0, "booth", BUILDING_BOOTH, ent.booth_shows, city.coverage.booth, 400)
-	advisor_entertainment_fill_row(window, 1, "bandstand", BUILDING_BANDSTAND, ent.bandstand_shows, city.coverage.bandstand, 700)
-	advisor_entertainment_fill_row(window, 2, "pavilion", BUILDING_PAVILLION, ent.pavilion_shows, city.coverage.pavilion, 1200)
-	advisor_entertainment_fill_row(window, 3, "senet_house", BUILDING_SENET_HOUSE, ent.senet_house_plays, city.coverage.senet_house, 0)
-	advisor_entertainment_fill_row(window, 9, "zoo", BUILDING_ZOO, 0, 0, 0)
+[es=(advisor_entertainment_window, init)]
+function advisor_entertainment_window_init(window) {
+	var list = window.venues_list
+	list.clear()
+	var i
+	for (i = 0; i < 5; i++) {
+		list.add_item("venue", i)
+	}
 
 	window.advice.text = __loc(58, 7 + advisor_entertainment_advice_index())
 }
