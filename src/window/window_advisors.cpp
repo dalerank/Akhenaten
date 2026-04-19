@@ -21,7 +21,6 @@
 #include "graphics/image_groups.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "window/advisor/advisor_chief.h"
 #include "window/js_window_registry.h"
 #include "window/advisor/advisor_military.h"
 #include "window/advisor/monuments.h"
@@ -86,7 +85,7 @@ struct window_advisors : public ui::widget {
         nullptr, // ADVISOR_ENTERTAINMENT: ui_advisor_entertainment.js (js_window_registry)
         nullptr, // ADVISOR_RELIGION: from js_window_registry (ui_advisor_religion.js)
         nullptr, // ADVISOR_FINANCIAL: from js_window_registry (ui_advisor_finance.js)
-        ui::advisor_chief_window::instance(),
+        nullptr, // ADVISOR_CHIEF: ui_advisor_chief.js (js_window_registry)
         ui::advisor_monuments_window::instance(),
         // sub-advisors begin here
         nullptr,
