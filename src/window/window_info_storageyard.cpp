@@ -90,7 +90,7 @@ void info_window_storageyard::init(object_info &c) {
         }
     }
 
-    ui["orders"].onclick([&c] {
+    ui["orders"].onclick([&c](int, int) {
         c.storage_show_special_orders = 1;
     });
 }
