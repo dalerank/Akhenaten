@@ -2022,6 +2022,9 @@ void ui::egeneric_button::draw(UiFlags gflags) {
     if (clickable && _func && js_ref(ONCLICK).empty() && onclick_event.empty()) {
         btn->onclick(_func);
     }
+    if (clickable && _sfunc && js_ref(ONCLICK).empty() && onclick_event.empty()) {
+        btn->onclick(_sfunc);
+    }
     if (clickable && _rfunc && js_ref(ONRCLICK).empty()) {
         btn->onrclick(_rfunc);
     }
