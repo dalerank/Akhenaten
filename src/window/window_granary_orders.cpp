@@ -74,15 +74,15 @@ void granary_orders_window::init(object_info &c) {
     auto granary = c.building_get()->dcast_granary();
     backup_storage_settings(storage_id);
 
-    ui["empty_all"].onclick([storage_id] {
+    ui["empty_all"].onclick([storage_id](int, int) {
         building_storage_toggle_empty_all(storage_id);
     });
 
-    ui["accept_none"].onclick([storage_id] {
+    ui["accept_none"].onclick([storage_id](int, int) {
         building_storage_accept_none(storage_id);
     });
 
-    ui["button_close"].onclick([&c] {
+    ui["button_close"].onclick([&c](int, int) {
         events::emit(event_show_tile_info{ tile2i(c.grid_offset), /*avoid_mouse*/true, SOURCE_LOCATION });
     });
 }
