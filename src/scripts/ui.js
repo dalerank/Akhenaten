@@ -26,7 +26,6 @@ import ui_granary_info
 import ui_records_window
 import ui_bazaar_orders_window
 import ui_bazaar_window
-import ui_storage_yard_orders_window
 import ui_advisor_chief
 import ui_mission_briefing_window
 import ui_empire_window
@@ -49,6 +48,8 @@ import ui_file_dialog_load
 import ui_overlay_menu
 import ui_market_buyer_window
 import ui_widgets
+import ui_storage_yard_info_window
+import ui_storage_yard_orders_window
 import ui_popup_dialog
 import ui_set_salary_window
 import ui_resource_settings_window

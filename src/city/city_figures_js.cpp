@@ -1,5 +1,8 @@
 #include "city/city.h"
 
+#include "figure/figure.h"
+#include "game/resource.h"
+
 #include "js/js_game.h"
 #include "core/profiler.h"
 
@@ -22,3 +25,21 @@ ANK_FUNCTION_1(__figure_get_action_state)
 
 int __figure_get_destination_building_id(int fid) { return figure_get(fid)->destination_building_id; }
 ANK_FUNCTION_1(__figure_get_destination_building_id)
+
+int __figure_get_state(int fid) {
+    if (!fid) {
+        return 0;
+    }
+    figure *f = figure_get(fid);
+    return f ? (int)f->state : 0;
+}
+ANK_FUNCTION_1(__figure_get_state)
+
+int __figure_get_resource(int fid) {
+    if (!fid) {
+        return (int)RESOURCE_NONE;
+    }
+    figure *f = figure_get(fid);
+    return f ? (int)f->get_resource() : (int)RESOURCE_NONE;
+}
+ANK_FUNCTION_1(__figure_get_resource)
