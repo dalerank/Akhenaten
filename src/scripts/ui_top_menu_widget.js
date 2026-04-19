@@ -19,6 +19,21 @@ function top_menu_open_advisor(advisor, p2) {
 }
 
 function top_menu_show_console(p1, p2) { window_show_cheat_console(true) }
+
+function top_menu_js_debugger_text(p1, p2) {
+	return __js_debugger_is_running()
+		? "JS debugger ON"
+		: "JS debugger OFF"
+}
+
+function top_menu_js_debugger_toggle(p1, p2) {
+	widget_top_menu_clear_state()
+	window_go_back()
+	if (__js_debugger_is_running())
+		__js_debugger_stop()
+	else
+		__js_debugger_start(4711)
+}
 function top_menu_make_fullscreenshot(p1, p2) { game.make_screenshot(1) }
 function top_menu_make_screenshot(p1, p2) { game.make_screenshot(0) }
 function top_menu_debug_properties_text(p1, p2) { return game.debug_properties ? "Properties ON" : "Properties OFF" }
@@ -129,6 +144,9 @@ top_menu_widget {
 			                         onclick: game.toggle_video_writing })
 
 		show_console    : menu_item({text: "Cheat console", onclick: top_menu_show_console })
+
+		js_debugger     : menu_item({textfn: top_menu_js_debugger_text
+									 onclick: top_menu_js_debugger_toggle })
 	}
 
 	debug_render {

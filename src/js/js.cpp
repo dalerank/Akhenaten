@@ -189,19 +189,19 @@ static void js_vm_dump_stack(js_State *J) {
     logs::info("!!! ==================================================");
     logs::info("!!! Stack Dump (size: %d):", stack_size);
     logs::info("!!! ==================================================");
-    
+
     if (stack_size == 0) {
         logs::info("!!!   <empty stack>");
         logs::info("!!! ==================================================");
         return;
     }
-    
+
     int items_to_show = stack_size < 10 ? stack_size : 10;
-    
+
     for (int i = 0; i < items_to_show; i++) {
         int idx = i - stack_size; // Convert to negative index
         bstring256 value_desc;
-        
+
         if (js_isundefined(J, idx)) {
             value_desc = "undefined";
         } else if (js_isnull(J, idx)) {
@@ -226,10 +226,10 @@ static void js_vm_dump_stack(js_State *J) {
                 // Try to get some info about the object
                 int prop_count = 0;
                 bstring256 props_preview;
-                
+
                 // Save stack state
                 int save_top = js_gettop(J);
-                
+
                 // Try to iterate first few properties
                 js_pushiterator(J, idx, 0);
                 js_StringNode prop_name;
@@ -634,8 +634,42 @@ int js_game_import(js_State *J, pcstr filename) {
     return 0;
 }
 
+static void js_native_debugger_is_running(js_State *J) {
+    js_pushboolean(J, g_mujs_debugger.is_running());
+}
+
+static void js_native_debugger_port(js_State *J) {
+    js_pushnumber(J, (double)g_mujs_debugger.port());
+}
+
+static void js_native_debugger_start(js_State *J) {
+    int port = 4711;
+    if (js_gettop(J) >= 1 && js_isnumber(J, 1)) {
+        port = (int)js_tonumber(J, 1);
+    }
+    if (g_mujs_debugger.is_running()) {
+        js_pushboolean(J, false);
+        return;
+    }
+    g_mujs_debugger.start(J, port);
+    js_pushboolean(J, true);
+}
+
+static void js_native_debugger_stop(js_State *J) {
+    if (!g_mujs_debugger.is_running()) {
+        js_pushboolean(J, false);
+        return;
+    }
+    g_mujs_debugger.stop();
+    js_pushboolean(J, true);
+}
+
 void js_register_vm_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_vm_load_module, "include", 1);
+    REGISTER_GLOBAL_FUNCTION(J, js_native_debugger_is_running, "__js_debugger_is_running", 0);
+    REGISTER_GLOBAL_FUNCTION(J, js_native_debugger_port, "__js_debugger_port", 0);
+    REGISTER_GLOBAL_FUNCTION(J, js_native_debugger_start, "__js_debugger_start", 1);
+    REGISTER_GLOBAL_FUNCTION(J, js_native_debugger_stop, "__js_debugger_stop", 0);
 }
 
 #if defined(TRACY_MEMORY_ENABLE)
