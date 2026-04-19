@@ -13,8 +13,8 @@ advisor_chief_window {
 		chief_report_list : scrollable_list({
 			pos: [26, 66]
 			size: [35, 21]
-			view_items: 5
-			buttons_size_y: 58
+			view_items: 16
+			buttons_size_y: 20
 			buttons_margin_y: 8
 			buttons_margin_x: 0
 			text_padding_x: 0
@@ -62,56 +62,47 @@ function advisor_chief_wrap_lines(text, maxChars) {
 	return lines
 }
 
+function advisor_chief_report_body_max_chars() {
+	var wrapPx = 31 * 16 - 2
+	return Math.max(24, (wrapPx / 7) | 0)
+}
+
+function advisor_chief_push_wrapped_section_rows(bodyText, sectionTitle, font) {
+	advisor_chief_window._chief_report_rows.push({
+		title: sectionTitle
+		body: ""
+		font: font
+		bullet: true
+	})
+
+	var lines = advisor_chief_wrap_lines(bodyText, advisor_chief_report_body_max_chars())
+	var li
+	for (li = 0; li < lines.length; li++) {
+		advisor_chief_window._chief_report_rows.push({
+			title: ""
+			body: lines[li]
+			font: font
+			bullet: false
+		})
+	}
+}
+
 function advisor_chief_report_on_render_item(p) {
-	var ix = p.user_data
 	var rows = advisor_chief_window._chief_report_rows
 
-	var row = rows[ix]
-	var img = advisor_chief_get_report_icon_img()
-	ui.image(img, { x: p.x + 8, y: p.y + 4 })
+	var row = rows[p.user_data]
 
 	var wrapPx = Math.max(120, p.sizex - 42)
 	var maxChars = Math.max(24, (wrapPx / 7) | 0)
 
-	ui.label_ex(row.title, [p.x + 35, p.y + 3], FONT_NORMAL_WHITE_ON_DARK, UiFlags_None, wrapPx)
-
-	var y = p.y + 19
-	var font = row.font
-
-	var bodyLines = advisor_chief_wrap_lines(row.body, maxChars)
-	var i
-	for (i = 0; i < bodyLines.length; i++) {
-		var prefix = (i === 0) ? "\u2022 " : "  "
-		ui.label_ex(prefix + bodyLines[i], [p.x + 35, y], font, UiFlags_None, wrapPx)
-		y += 14
+	if (row.title && row.title.length) {
+		var img = get_image({ pack: PACK_GENERAL, id: 158 })
+		ui.image(img, [p.x + 8, p.y + 4])
+		ui.label(row.title, [p.x + 35, p.y + 3], FONT_NORMAL_WHITE_ON_DARK, UiFlags_None)
 	}
 
-	if (row.body2 && row.body2.length) {
-		var extra = advisor_chief_wrap_lines(row.body2, maxChars)
-		for (i = 0; i < extra.length; i++) {
-			ui.label_ex("  " + extra[i], [p.x + 35, y], row.body2_font !== undefined ? row.body2_font : font, UiFlags_None, wrapPx)
-			y += 14
-		}
-	}
-
-	if (p.hover) {
-		ui.border({ x: p.x + 4, y: p.y + 2 }, { x: p.sizex - 8, y: p.sizey - 4 }, 0, COLOR_TOOLTIP_BORDER, UiFlags_None)
-	}
-}
-
-function advisor_chief_window_ensure_report_list(window) {
-	var list = window.chief_report_list
-	var n = advisor_chief_window._chief_report_row_count
-	if (!n) {
-		return
-	}
-	if (window._chief_report_list_items === n) {
-		return
-	}
-	window._chief_report_list_items = n
-	list.clear()
-	for (var i = 0; i < n; i++) {
-		list.add_item("", i)
+	if (row.body && row.body.length) {
+		ui.label(row.body, [p.x + 35, p.y + 3], row.font, UiFlags_None, wrapPx)
 	}
 }
 
@@ -129,7 +120,7 @@ function advisor_chief_window_update_sentiment(window) {
 		text_id = 32 + ((sentiment / 10) | 0)
 		font = FONT_NORMAL_BLACK_ON_DARK
 	}
-	return { title: __loc("#chief_adv_sentiment"), body: __loc(61, text_id), font: font }
+	advisor_chief_push_wrapped_section_rows(__loc(61, text_id), __loc("#chief_adv_sentiment"), font)
 }
 
 function advisor_chief_window_update_migration(window) {
@@ -165,7 +156,8 @@ function advisor_chief_window_update_migration(window) {
 			default: text_id = 59; break
 		}
 	}
-	return { title: __loc("#chief_adv_migration"), body: __loc(61, text_id), font: font }
+
+	advisor_chief_push_wrapped_section_rows(__loc(61, text_id), __loc("#chief_adv_migration"), font)
 }
 
 function advisor_chief_window_update_workers(window) {
@@ -211,7 +203,7 @@ function advisor_chief_window_update_workers(window) {
 		text = __loc(61, 84)
 		font = FONT_NORMAL_BLACK_ON_DARK
 	}
-	return { title: __loc("#chief_adv_workers"), body: text, font: font }
+	advisor_chief_push_wrapped_section_rows(text, __loc("#chief_adv_workers"), font)
 }
 
 function advisor_chief_window_update_housing(window) {
@@ -225,7 +217,7 @@ function advisor_chief_window_update_housing(window) {
 		text = __loc("#TR_ADVISOR_HOUSING_ROOM") + " " + String(cap)
 		font = FONT_NORMAL_BLACK_ON_DARK
 	}
-	return { title: __loc("#TR_HEADER_HOUSING"), body: text, font: font }
+	advisor_chief_push_wrapped_section_rows(text, __loc("#TR_HEADER_HOUSING"), font)
 }
 
 /** Group 61 ids 39–42 are not education in this fork; texts use Overseer of Learning strings (group 57). */
@@ -246,11 +238,7 @@ function advisor_chief_window_update_education(window) {
 		tid57 = 25
 		font = FONT_NORMAL_BLACK_ON_DARK
 	}
-	return {
-		title: __loc(14, 5),
-		body: __loc(57, tid57),
-		font: font
-	}
+	advisor_chief_push_wrapped_section_rows(__loc(57, tid57), __loc(14, 5), font)
 }
 
 /** Group 61 ids 43–45 are not entertainment here; uses Overseer of Diversions strings (group 58). */
@@ -268,11 +256,7 @@ function advisor_chief_window_update_entertainment(window) {
 		tid58 = (city.avg_coverage.average_entertainment === 0) ? 7 : 8
 		font = FONT_NORMAL_BLACK_ON_DARK
 	}
-	return {
-		title: __loc(14, 3),
-		body: __loc(58, tid58),
-		font: font
-	}
+	advisor_chief_push_wrapped_section_rows(__loc(58, tid58), __loc(14, 3), font)
 }
 
 function advisor_chief_window_update_foodstocks(window) {
@@ -291,7 +275,7 @@ function advisor_chief_window_update_foodstocks(window) {
 			font = FONT_NORMAL_YELLOW
 		}
 	}
-	return { title: __loc("#chief_adv_foodstocks"), body: text, font: font }
+	advisor_chief_push_wrapped_section_rows(text, __loc("#chief_adv_foodstocks"), font)
 }
 
 function advisor_chief_window_update_foodconsumption(window) {
@@ -322,17 +306,13 @@ function advisor_chief_window_update_foodconsumption(window) {
 			font = FONT_NORMAL_YELLOW
 		}
 	}
-	return { title: __loc("#chief_adv_foodconsumption"), body: __loc(61, text_id), font: font }
+	advisor_chief_push_wrapped_section_rows(__loc(61, text_id), __loc("#chief_adv_foodconsumption"), font)
 }
 
 function advisor_chief_window_update_health(window) {
 	var health_rate = city.health_rating
 	var font = (health_rate >= 40) ? FONT_NORMAL_BLACK_ON_DARK : FONT_NORMAL_YELLOW
-	return {
-		title: __loc("#chief_adv_health"),
-		body: __loc(61, 103 + ((health_rate / 10) | 0)),
-		font: font
-	}
+	advisor_chief_push_wrapped_section_rows(__loc(61, 103 + ((health_rate / 10) | 0)), __loc("#chief_adv_health"), font)
 }
 
 function advisor_chief_window_update_religion(window) {
@@ -352,7 +332,7 @@ function advisor_chief_window_update_religion(window) {
 		text_id = 49
 		font = FONT_NORMAL_BLACK_ON_DARK
 	}
-	return { title: __loc("#chief_adv_religion"), body: __loc(61, text_id), font: font }
+	advisor_chief_push_wrapped_section_rows(__loc(61, text_id), __loc("#chief_adv_religion"), font)
 }
 
 function advisor_chief_window_update_finance(window) {
@@ -373,7 +353,7 @@ function advisor_chief_window_update_finance(window) {
 		text = __loc(61, 153)
 		font = FONT_NORMAL_BLACK_ON_DARK
 	}
-	return { title: __loc("#chief_adv_finance"), body: text, font: font }
+	advisor_chief_push_wrapped_section_rows(text, __loc("#chief_adv_finance"), font)
 }
 
 function advisor_chief_window_update_crime(window) {
@@ -397,7 +377,7 @@ function advisor_chief_window_update_crime(window) {
 		text = __loc(61, 163)
 		font = FONT_NORMAL_BLACK_ON_DARK
 	}
-	return { title: __loc("#chief_adv_crime"), body: text, font: font }
+	advisor_chief_push_wrapped_section_rows(text, __loc("#chief_adv_crime"), font)
 }
 
 function advisor_chief_window_update_military(window) {
@@ -426,7 +406,7 @@ function advisor_chief_window_update_military(window) {
 		text_id = 171
 		font = FONT_NORMAL_BLACK_ON_DARK
 	}
-	return { title: __loc("#chief_adv_military"), body: __loc(61, text_id), font: font }
+	advisor_chief_push_wrapped_section_rows(__loc(61, text_id), __loc("#chief_adv_military"), font)
 }
 
 function advisor_chief_window_update_kingdom(window) {
@@ -446,7 +426,7 @@ function advisor_chief_window_update_kingdom(window) {
 		text_id = 184
 		font = FONT_NORMAL_YELLOW
 	}
-	return { title: __loc("#chief_adv_kingdom"), body: __loc(61, text_id), font: font }
+	advisor_chief_push_wrapped_section_rows(__loc(61, text_id), __loc("#chief_adv_kingdom"), font)
 }
 
 function advisor_chief_window_update_nilometr(window) {
@@ -473,40 +453,35 @@ function advisor_chief_window_update_nilometr(window) {
 		font = FONT_NORMAL_YELLOW
 	}
 
-	var row = {
-		title: __loc("#chief_adv_nilometr"),
-		body: __loc(61, text_id),
-		font: font,
-		body2: "",
-		body2_font: FONT_NORMAL_BLACK_ON_DARK
-	}
+	var text = __loc(61, text_id)
 	if (flood_quality > 0) {
-		var flood_month = __city_floods_expected_month()
-		row.body2 = __loc(61, 204 + flood_month)
+		text += " " + __loc(61, 204 + __city_floods_expected_month())
 	}
-	return row
+	advisor_chief_push_wrapped_section_rows(text, __loc("#chief_adv_nilometr"), font)
 }
 
 function advisor_chief_window_fill_report_rows(window) {
-	advisor_chief_window._chief_report_rows = [
-		advisor_chief_window_update_sentiment(window),
-		advisor_chief_window_update_migration(window),
-		advisor_chief_window_update_workers(window),
-		advisor_chief_window_update_housing(window),
-		advisor_chief_window_update_education(window),
-		advisor_chief_window_update_entertainment(window),
-		advisor_chief_window_update_foodstocks(window),
-		advisor_chief_window_update_foodconsumption(window),
-		advisor_chief_window_update_health(window),
-		advisor_chief_window_update_religion(window),
-		advisor_chief_window_update_finance(window),
-		advisor_chief_window_update_crime(window),
-		advisor_chief_window_update_military(window),
-		advisor_chief_window_update_kingdom(window),
-		advisor_chief_window_update_nilometr(window),
-	]
-	advisor_chief_window._chief_report_row_count = advisor_chief_window._chief_report_rows.length
-	advisor_chief_window_ensure_report_list(window)
+	advisor_chief_window._chief_report_rows = []
+	advisor_chief_window_update_sentiment(window)
+	advisor_chief_window_update_migration(window)
+	advisor_chief_window_update_workers(window)
+	advisor_chief_window_update_housing(window)
+	advisor_chief_window_update_education(window)
+	advisor_chief_window_update_entertainment(window)
+	advisor_chief_window_update_foodstocks(window)
+	advisor_chief_window_update_foodconsumption(window)
+	advisor_chief_window_update_health(window)
+	advisor_chief_window_update_religion(window)
+	advisor_chief_window_update_finance(window)
+	advisor_chief_window_update_crime(window)
+	advisor_chief_window_update_military(window)
+	advisor_chief_window_update_kingdom(window)
+	advisor_chief_window_update_nilometr(window)
+
+	window.chief_report_list.clear()
+	for (var i = 0; i < advisor_chief_window._chief_report_rows.length; i++) {
+		window.chief_report_list.add_item("", i)
+	}
 }
 
 [es=(advisor_chief_window, init)]
