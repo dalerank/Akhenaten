@@ -14,6 +14,7 @@ import gods
 import city
 import building_prototype
 import bazaar_prototype
+import storage_yard_prototype
 import city_finance
 import city_ratings
 import city_festival
