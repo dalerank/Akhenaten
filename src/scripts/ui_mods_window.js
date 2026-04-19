@@ -33,8 +33,10 @@ function mods_window_on_render_item(p) {
 }
 
 function mods_unpack_scripts() {
-    var vpath = __mods_unpack_scripts()
-    ui.show_ok("#scripts_unpacked_to " + vpath);
+    var msg = __mods_unpack_scripts()
+    if (msg) {
+        ui.show_ok(msg, "Scripts unpacked")
+    }
 }
 
 [es=window]
@@ -54,7 +56,7 @@ mods_window {
         unpack_scripts : large_button({ size[156, 25]
                                         text:"Unpack scripts"
                                         margin{right:-156, top:20}
-                                        onclick: __mods_unpack_scripts
+                                        onclick: mods_unpack_scripts
                                       })
 
         refresh_mods : large_button({ size[156, 25]
