@@ -612,7 +612,7 @@ info_window_storageyard = {
         cartstate_img : resource_icon({pos:[32, 260] }),
         cartstate_desc: text({pos: [72, 260], wrap:px(27), font : FONT_NORMAL_BLACK_ON_DARK, multiline:true }),
 
-        orders        : button({margin:{left:100, bottom:-40}, size:[270, 24], text:"${99.2}"}),
+        orders        : button({margin:{left:100, bottom:-40}, size:[270, 24], text:"${99.2}", onclick: show_window_by_id("storage_yard_orders_window") }),
         button_help   : help_button({}),
         button_close  : close_button({}),
         mothball      : button({margin:{right:-90, bottom:-40}, size:[23, 23], textfn:building_info_window_text_mothball, onclick: building_info_window_toggle_mothball }),
