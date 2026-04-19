@@ -575,11 +575,11 @@ info_window_storageyard = {
     ui : {
         background    : outer_panel({size: [29, 21] }),
         title         : text({pos: [0, 12], size: [px(27), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-   
+
         warning_text  : text({pos: [22, 36], wrap:px(28), text:"${text.1}", font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
         storing       : text({ pos: [24, 90], text:"${loc.granary_storing} ${building.total_stored} ${loc.granary_units}", font : FONT_NORMAL_BLACK_ON_LIGHT }),
         free_space    : text({ pos: [220, 90], text:"${loc.granary_space_for} ${building.free_space} ${loc.granary_units}", font : FONT_NORMAL_BLACK_ON_LIGHT }),
-   
+
         stored_items  : dummy({pos:[0, 110],
         ui : {
                 good0_icon : resource_icon({pos: [32, 0] }),
@@ -588,14 +588,14 @@ info_window_storageyard = {
                 good1_text : text({pos: [194, 4], font: FONT_NORMAL_BLACK_ON_LIGHT }),
                 good2_icon : resource_icon({pos: [292, 0] }),
                 good2_text : text({pos: [314, 4], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-            
+
                 good3_icon : resource_icon({pos: [32, 30] }),
                 good3_text : text({pos: [54, 34], font: FONT_NORMAL_BLACK_ON_LIGHT }),
                 good4_icon : resource_icon({pos: [172, 30] }),
                 good4_text : text({pos: [194, 34], font: FONT_NORMAL_BLACK_ON_LIGHT }),
                 good5_icon : resource_icon({pos: [292, 30] }),
                 good5_text : text({pos: [314, 34], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-            
+
                 good6_icon : resource_icon({pos: [32, 60] }),
                 good6_text : text({pos: [54, 64], font: FONT_NORMAL_BLACK_ON_LIGHT }),
                 good7_icon : resource_icon({pos: [172, 60] }),
@@ -618,29 +618,6 @@ info_window_storageyard = {
         mothball      : button({margin:{right:-90, bottom:-40}, size:[23, 23], textfn:building_info_window_text_mothball, onclick: building_info_window_toggle_mothball }),
 
         first_advisor : image_button({margin:{left:40, bottom:-40}, size:[28, 28], pack:PACK_GENERAL, id:106 }),
-    }
-}
-
-window_popup_dialog_yesno = {
-    pos: [(sw(0) - px(30))/2, (sh(0) - px(10))/2],
-    ui : {
-        background : outer_panel({size: [30, 10] }),
-        header     : text({pos:[0, 30], size:[px(30), 20], font: FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        text       : text({pos:[0, 60], size:[px(30), 20], font: FONT_NORMAL_BLACK_ON_LIGHT, align:"center"}),
-        btn_yes    : image_button({margin:{centerx:-60, bottom:-60}, size:[39, 26], pack:PACK_GENERAL, id:96 }),
-        btn_no     : image_button({margin:{centerx:20, bottom:-60}, size:[39, 26], pack:PACK_GENERAL, id:96, offset:4 }),
-        label_tip  : text({margin:{left:20, bottom:-40}, font: FONT_NORMAL_BLACK_ON_LIGHT, align:"center"}),
-    }
-}
-
-window_popup_dialog_ok {
-    pos [(sw(0) - px(30))/2, (sh(0) - px(10))/2],
-    ui {
-        background : outer_panel({size[30, 10] }),
-        header     : text({pos[0, 30], size[px(30), 20], font: FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        text       : text({pos[0, 60], size[px(30), 20], font: FONT_NORMAL_BLACK_ON_LIGHT, align:"center"}),
-        btn_yes    : image_button({margin{centerx:-20, bottom:-60}, size[39, 26], pack:PACK_GENERAL, id:96 }),
-        label_tip  : text({margin{left:20, bottom:-40}, font: FONT_NORMAL_BLACK_ON_LIGHT, align:"center"}),
     }
 }
 
