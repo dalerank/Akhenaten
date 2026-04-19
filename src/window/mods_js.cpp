@@ -28,4 +28,3 @@ void __mods_download_info_async(pcstr mod_id) { mods_download_info_async(); } AN
 void __mods_toggle(pcstr mod_id) { mods_toggle(mod_id); } ANK_FUNCTION_1(__mods_toggle)
 void __mods_remount() { mods_remount(); } ANK_FUNCTION(__mods_remount)
 bool __mods_inupdate() { return g_mods.inupdate; } ANK_FUNCTION(__mods_inupdate)
-

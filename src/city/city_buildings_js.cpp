@@ -11,6 +11,7 @@
 #include "city/object_info.h"
 #include "window/window_info.h"
 #include "building/building.h"
+#include "window/building/distribution.h"
 #include "core/profiler.h"
 
 #include <optional>
@@ -139,3 +140,8 @@ bool __city_resource_is_mothballed(int resource) {
     return g_city.resource.is_mothballed((e_resource)resource);
 }
 ANK_FUNCTION_1(__city_resource_is_mothballed)
+
+void window_building_distribution_set_bid(int bid) {
+    g_window_building_distribution.bid = bid;
+}
+ANK_FUNCTION_1(window_building_distribution_set_bid)
