@@ -128,10 +128,10 @@ void __ui_dialog_show_yesno(pcstr text, js_helpers::js_function_ref cb_yes, js_h
 }
 ANK_FUNCTION_3(__ui_dialog_show_yesno)
 
-void __ui_dialog_show_ok(pcstr text) {
-    popup_dialog::show_ok(text, [] {});
+void __ui_dialog_show_ok(pcstr text, pcstr title) {
+    popup_dialog::show_ok(title, text, [] {});
 }
-ANK_FUNCTION_1(__ui_dialog_show_ok)
+ANK_FUNCTION_2(__ui_dialog_show_ok)
 
 bool __ui_window_is(pcstr window_id) {
     return g_window_manager.window_is(window_id);

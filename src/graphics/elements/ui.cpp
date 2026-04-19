@@ -1783,7 +1783,14 @@ void ui::etext::draw(UiFlags flags) {
         _text = ui::sformat<1024>(&holder, dyn.to_str().c_str());
     }
 
-    if (!!(_flags & UiFlags_AlignCentered)) {
+    if (!!(_flags & UiFlags_LabelMultiline)) {
+        int boxw = _wrap > 0 ? _wrap : size.x;
+        if (boxw <= 0) {
+            boxw = 9999;
+        }
+        push(cmd_t::text_multiline, Pos{scr_pos}, BoxWidth{boxw}, Font{_font}, TextColor{_color},
+          Caption{_text.c_str()});
+    } else if (!!(_flags & UiFlags_AlignCentered)) {
         int additionaly = 0;
         if (pxsize().y > 0) {
             const int symbolh = font_definition_for(_font)->line_height;
@@ -1795,9 +1802,6 @@ void ui::etext::draw(UiFlags flags) {
         }
         push(cmd_t::text_centered, Pos{scr_pos + vec2i{0, additionaly}}, BoxWidth{size.x}, Font{_font},
           TextColor{_color}, Caption{_text.c_str()});
-    } else if (!!(_flags & UiFlags_LabelMultiline)) {
-        push(cmd_t::text_multiline, Pos{scr_pos}, BoxWidth{_wrap}, Font{_font}, TextColor{_color},
-          Caption{_text.c_str()});
     } else if (!!(_flags & UiFlags_AlignYCentered)) {
         const int symbolh = font_definition_for(_font)->line_height;
         if (_shadow_color) {
