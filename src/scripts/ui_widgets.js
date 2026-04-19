@@ -377,14 +377,6 @@ info_window_mansion {
     }
 }
 
-info_window_courthouse = {
-    ui : baseui(building_info_window, { 
-        background    : outer_panel({size: [29, 17]}),
-        vaults_hold   : text({pos: [44, 54], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        state         : text({margin:{left:20, bottom: -80} , font: FONT_NORMAL_BLACK_ON_DARK}),
-    })
-}
-
 info_window_entertainment {
     related_buildings [BUILDING_JUGGLER_SCHOOL, BUILDING_CONSERVATORY, BUILDING_DANCE_SCHOOL]
     ui {
