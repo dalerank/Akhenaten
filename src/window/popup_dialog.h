@@ -101,7 +101,7 @@ struct popup_dialog : public ui::widget {
     static void show_yesno(Text text, window_popup_dialog_callback close_func) {
         show(text, e_popup_btns_yesno, close_func);
     }
-    
+
     template<typename Text>
     static void show_yesno(Text loc_id, window_yes_dialog_callback close_func) {
         show(loc_id, e_popup_btns_yesno, [=] (bool accepted) {
