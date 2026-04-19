@@ -78,7 +78,7 @@ void granary_info_window::init(object_info &c) {
     const uint8_t laborers = granary->max_workers();
     ui["workers_text"].text_var("%u %s (%d %s", granary->num_workers(), ui::str(8, 12), laborers, ui::str(69, 0));
 
-    ui["orders"].onclick([&c] {
+    ui["orders"].onclick([&c](int, int) {
         window_granary_orders_show(c);
     });
 }

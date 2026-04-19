@@ -48,7 +48,7 @@ void dock_info_window::init(object_info &c) {
 
     ui["workers_desc"] = reason;
 
-    ui["orders"].onclick([&c] {
+    ui["orders"].onclick([&c](int, int) {
         c.ui = &dock_orders_infow;
         c.ui->init(c);
     });
@@ -58,12 +58,12 @@ void dock_orders_window::init(object_info &c) {
     building_info_window::init(c);
 
     building *b = c.building_get();
-    ui["accept_none"].onclick([building_id = b->id] {
+    ui["accept_none"].onclick([building_id = b->id](int, int) {
         building_dock *b = ::building_get(building_id)->dcast_dock();
         b->unaccept_all_goods();
     });
 
-    ui["button_close"].onclick([grid_offset = c.grid_offset] {
+    ui["button_close"].onclick([grid_offset = c.grid_offset](int, int) {
         events::emit(event_show_tile_info{ tile2i(grid_offset), /*avoid_mouse*/true, SOURCE_LOCATION });
     });
 }

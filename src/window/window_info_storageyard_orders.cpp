@@ -37,11 +37,11 @@ void info_window_storageyard_orders::draw_background(object_info *c) {
     int storage_id = storage->storage_id();
     ui["empty_all"] = storage->is_empty_all() ? ui::str(99, 5) : ui::str(99, 4);
 
-    ui["empty_all"].onclick([storage_id] {
+    ui["empty_all"].onclick([storage_id](int, int) {
         building_storage_toggle_empty_all(storage_id);
     });
 
-    ui["accept_none"].onclick([storage_id] {
+    ui["accept_none"].onclick([storage_id](int, int) {
         building_storage_accept_none(storage_id);
     });
 }
