@@ -369,6 +369,10 @@ city.get_bazaar = function(building_id) {
     return new Bazaar(building_id)
 }
 
+city.get_storage_yard = function(building_id) {
+    return new StorageYard(building_id)
+}
+
 city.create_good_request = function(obj) {
     __city_create_good_request(obj)
     return {
