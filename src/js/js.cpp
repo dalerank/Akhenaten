@@ -769,6 +769,7 @@ void js_reset_vm_state() {
     js_register_building(vm.J);
     js_register_imperial_visible_request(vm.J);
     js_register_house(vm.J);
+    js_register_storage_yard(vm.J);
     js_register_ui_objects(vm.J);
     //js_register_mouse_functions(vm.J);
     //js_register_hotkey_functions(vm.J);

@@ -11,8 +11,8 @@ info_window_storageyard {
         title         : text({pos: [0, 12], size: [px(27), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
 
         warning_text  : text({pos: [22, 36], wrap:px(28), text:"${text.1}", font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-        storing       : text({ pos: [24, 90], text:"${loc.granary_storing} ${building.total_stored} ${loc.granary_units}", font : FONT_NORMAL_BLACK_ON_LIGHT }),
-        free_space    : text({ pos: [220, 90], text:"${loc.granary_space_for} ${building.free_space} ${loc.granary_units}", font : FONT_NORMAL_BLACK_ON_LIGHT }),
+        storing       : text({ pos: [24, 95], text:"${loc.granary_storing} ${building.total_stored} ${loc.granary_units}", font : FONT_NORMAL_BLACK_ON_LIGHT }),
+        free_space    : text({ pos: [220, 95], text:"${loc.granary_space_for} ${building.free_space} ${loc.granary_units}", font : FONT_NORMAL_BLACK_ON_LIGHT }),
 
         stored_items  : dummy({pos:[0, 110],
                         ui : {
@@ -58,7 +58,7 @@ info_window_storageyard {
 
 [es=(info_window_storageyard, init)]
 function info_window_storageyard_on_init(window) {
-    var b = city.get_building(window.bid)
+    var b = city.get_storage_yard(window.bid)
 
     var slot
     for (slot = 0; slot < 9; slot++) {
@@ -89,18 +89,16 @@ function storage_yard_info_on_init_workers_info(window) {
     var fig = b.get_figure(BUILDING_SLOT_SERVICE)
 
     if (fig.id && fig.state == STORAGE_YARD_FIGURE_STATE_ALIVE) {
-        ev.cartstate_img.image = fig.resource
-        ev.cartstate_desc.text = __loc(grp, 17)
+        window.cartstate_img.image = fig.resource
+        window.cartstate_desc.text = __loc(grp, 17)
     } else if (b.num_workers > 0) {
-        ev.cartstate_img.image = RESOURCE_NONE
-        ev.cartstate_desc.text = __loc(grp, 15)
+        window.cartstate_img.image = RESOURCE_NONE
+        window.cartstate_desc.text = __loc(grp, 15)
     }
 }
-
 
 [es=(info_window_storageyard, open_orders_window)]
 function info_window_storageyard_on_open_orders_window(window) {
     window_building_distribution_set_bid(window.bid)
     emit event_show_window{ id:"storage_yard_orders_window" }
 }
-

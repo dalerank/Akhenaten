@@ -87,15 +87,9 @@ void clear_es_modal_window() {
 }
 ANK_REGISTER_ES_ITERATOR(modal_window, register_es_modal_window, clear_es_modal_window);
 
-struct building_info_window_init { vec2i pos; building_id bid; };
-ANK_REGISTER_STRUCT_WRITER(building_info_window_init, pos, bid)
-
 void js_building_info_window::init(object_info &c) {
-    building_info_window::init(c);
-
     verify_no_crash(!window_name.empty());
-
-    ui.event(building_info_window_init{ pos, c.bid }, window_name.c_str(), __func__);
+    building_info_window::init(c);
 }
 
 js_window_registry &js_window_registry::instance() {

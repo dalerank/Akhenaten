@@ -92,12 +92,12 @@ int building_storage_yard::get_space_info() const {
 
     if (empty_spaces > 0) {
         return STORAGEYARD_ROOM;
-    } 
-    
+    }
+
     if (total_amounts < 3200) {
         return STORAGEYARD_SOME_ROOM;
-    } 
-    
+    }
+
     return STORAGEYARD_FULL;
 }
 
@@ -112,6 +112,10 @@ int building_storage_yard::amount(e_resource resource) const {
         space = space->next_room();
     }
     return total;
+}
+
+int building_storage_yard::stored_amount(e_resource resource) const {
+    return amount(resource);
 }
 
 int building_storage_yard::total_stored() const {
@@ -187,11 +191,11 @@ int building_storage_yard::add_resource(e_resource resource, int amount, bool fo
         space->stored_first().value += unloading_amount;
         space_on_tile -= unloading_amount;
         events::emit(event_stats_append_resource{resource, unloading_amount});
-        
+
         if (space_on_tile == 0) {
             look_for_space = true;
         }
-        
+
         space->set_image(resource);
         amount_last_turn = amount_left;
         amount_left -= unloading_amount;
@@ -231,7 +235,7 @@ int building_storage_yard::remove_resource(e_resource resource, int amount) {
     return amount;
 }
 
-void building_storage_yard::remove_resource_curse(int amount) {  
+void building_storage_yard::remove_resource_curse(int amount) {
     building_storage_room* space = room();
     while(space && amount > 0) {
         if (space->stored_first().value <= 0) {
@@ -861,6 +865,11 @@ void building_storage_yard::on_create(int orientation) {
     if (!!game_features::gameplay_change_warehouses_dont_accept) {
         building_storage_accept_none(base.storage_id);
     }
+}
+
+void building_storage_yard::on_post_load() {
+    building_impl::on_post_load();
+    map_image_set(tile(), base_img());
 }
 
 building* building_storage_yard::add_storageyard_space(int x, int y, building* prev) {

@@ -55,12 +55,12 @@ function storage_yard_orders_window_empty_all_text() {
 
 function storage_yard_orders_list_on_click_item(p) {
     if (!p || p.user_data === undefined || !current_storage_yard) { return }
-    current_storage_yard.cycle_resource_state(p.user_data, false)
+    current_storage_yard.resource_state(p.user_data, false)
 }
 
 function storage_yard_orders_list_on_dblclick_item(p) {
     if (!p || p.user_data === undefined || !current_storage_yard) { return }
-    current_storage_yard.cycle_resource_state(p.user_data, true)
+    current_storage_yard.resource_state(p.user_data, true)
 }
 
 function storage_yard_orders_list_on_render_item(p) {
@@ -72,16 +72,20 @@ function storage_yard_orders_list_on_render_item(p) {
 
     var state = current_storage_yard.resource_state(resId)
     if (state == STORAGE_STATE_PHARAOH_ACCEPT || state == STORAGE_STATE_PHARAOH_GET) {
-        __storage_yard_draw_arw_button(p.x + p.sizex - 60, p.y + 2, false, current_storage_yard.storage_id, resId, true)
-        __storage_yard_draw_arw_button(p.x + p.sizex - 40, p.y + 2, true,  current_storage_yard.storage_id, resId, false)
+        if (ui.arw_button([p.x + p.sizex - 60, p.y + 2], false, true)) {
+            current_storage_yard.increase_decrease_resource_state(resId, true)
+        }
+        if (ui.arw_button([p.x + p.sizex - 40, p.y + 2], true, true)) {
+            current_storage_yard.increase_decrease_resource_state(resId, false)
+        }
     }
 
     var instr = storage_yard_order_instruction(current_storage_yard, resId)
     ui.label_ex(instr.text, [p.x + p.sizex - 280, p.y], instr.font, UiFlags_AlignYCentered, 220)
 
-    if (p.hover) {
-        ui.border({x: p.x + 4, y: p.y - 2}, {x: p.sizex - 8, y: p.sizey + 2}, 0, COLOR_TOOLTIP_BORDER, UiFlags_None)
-    }
+    //if (p.hover) {
+    //    ui.border({x: p.x + 4, y: p.y - 2}, {x: p.sizex - 8, y: p.sizey + 2}, 0, COLOR_TOOLTIP_BORDER, UiFlags_None)
+    //}
 }
 
 [es=modal_window]
