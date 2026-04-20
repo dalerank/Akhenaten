@@ -12,6 +12,7 @@ public:
     virtual building_storage_room *dcast_storage_room() override { return this; }
 
     virtual void on_create(int orientation) override;
+    virtual void on_post_load() override;
     virtual void spawn_figure() override { /*nothing*/ }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_STORAGE_YARD; }
     virtual bool can_play_animation() const override { return false; }

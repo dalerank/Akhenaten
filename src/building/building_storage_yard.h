@@ -48,6 +48,7 @@ public:
     };
 
     virtual void on_create(int orientation) override;
+    virtual void on_post_load() override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_place_checks() override;
     virtual void spawn_figure() override;
@@ -55,7 +56,7 @@ public:
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_STORAGE_YARD; }
 
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
-    
+
     building_storage_room *room() { return next()->dcast_storage_room(); }
     const building_storage_room *room() const { return ((building_impl*)this)->next()->dcast_storage_room(); }
 
@@ -69,6 +70,7 @@ public:
     virtual int add_resource(e_resource resource, int amount, bool force) override;
 
     virtual bool is_getting(e_resource resource) override;
+    virtual int stored_amount(e_resource resource) const override;
 
     int freespace(e_resource resource);
     int16_t stored_full_amount() const { return base.storage.sum();  }

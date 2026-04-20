@@ -16,6 +16,11 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_storage_room);
 void building_storage_room::on_create(int orientation) {
 }
 
+void building_storage_room::on_post_load() {
+    building_impl::on_post_load();
+    update_image();
+}
+
 void building_storage_room::update_image() {
     set_image(base.stored_first().type);
 }
