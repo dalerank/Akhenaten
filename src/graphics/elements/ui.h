@@ -742,6 +742,8 @@ namespace ui {
         void scroll_to_selected();
         xstring selected_entry_text(int filename_syntax = 0) const;
         int items_count() const;
+        int view_items() const;
+        void view_items(int value);
         void onclick_item(onclick_callback lmb) { _onclick_cb = lmb; }
         void onclick_ex_item(onclick_ex_callback lmb) { _onclick_ex_cb = lmb; }
         void onclick_double_item(onclick_double_ex_callback lmb) { _ondoubleclick_item_cb = lmb; }

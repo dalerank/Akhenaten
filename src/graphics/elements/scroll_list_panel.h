@@ -84,6 +84,8 @@ public:
     void refresh_scrollbar();
     void clamp_scrollbar_position();
     void scroll_to_entry(int entry_idx);
+    void set_view_items(int view_items);
+    int view_items() const { return ui_params.view_items; }
 
     void draw();
     int input_handle(const mouse* m);
@@ -122,4 +124,5 @@ private:
     custom_text_render_func custom_text_render;
 
     bool WAS_DRAWN = false; // for frame-ordered caching logic purposes
+    void rebuild_buttons_geometry();
 };

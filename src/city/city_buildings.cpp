@@ -371,17 +371,17 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT8, &b->input.resource);
         iob->bind(BIND_SIGNATURE_INT8, &b->input.resource_second);
         iob->bind(BIND_SIGNATURE_INT64, b->flags.data_ptr());
-        iob->bind(BIND_SIGNATURE_INT8, &b->storage.data()[0].type);
-        iob->bind(BIND_SIGNATURE_UINT16, &b->figure_ids[0]);
+        iob->bind(BIND_SIGNATURE_INT8, &b->storage.at(0).type);
+        iob->bind(BIND_SIGNATURE_UINT16, &b->storage.at(0).value);
         iob->bind____skip(1);
-        iob->bind(BIND_SIGNATURE_INT8, &b->storage.data()[1].type);
-        iob->bind(BIND_SIGNATURE_INT16, &b->storage.data()[1].value);
+        iob->bind(BIND_SIGNATURE_INT8, &b->storage.at(1).type);
+        iob->bind(BIND_SIGNATURE_INT16, &b->storage.at(1).value);
         iob->bind____skip(1);
-        iob->bind(BIND_SIGNATURE_INT8, &b->storage.data()[2].type);
-        iob->bind(BIND_SIGNATURE_INT16, &b->storage.data()[2].value);
+        iob->bind(BIND_SIGNATURE_INT8, &b->storage.at(2).type);
+        iob->bind(BIND_SIGNATURE_INT16, &b->storage.at(2).value);
         iob->bind____skip(1);
-        iob->bind(BIND_SIGNATURE_INT8, &b->storage.data()[3].type);
-        iob->bind(BIND_SIGNATURE_INT16, &b->storage.data()[3].value);
+        iob->bind(BIND_SIGNATURE_INT8, &b->storage.at(3).type);
+        iob->bind(BIND_SIGNATURE_INT16, &b->storage.at(3).value);
         iob->bind____skip(1);
 
         // 31 additional bytes

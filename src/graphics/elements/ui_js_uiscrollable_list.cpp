@@ -118,6 +118,21 @@ void ui_proxy_get_items_count(js_State* J) {
     js_pushnumber(J, items_count);
 }
 
+static void ui_proxy_get_view_items(js_State* J) {
+    ui::element* elem = ui::GET_ELEM(J);
+    auto* list = elem ? elem->dcast_scrollable_list() : nullptr;
+    js_pushnumber(J, list ? list->view_items() : 0);
+}
+
+static void ui_proxy_set_view_items(js_State* J) {
+    ui::element* elem = ui::GET_ELEM(J);
+    auto* list = elem ? elem->dcast_scrollable_list() : nullptr;
+    if (list) {
+        list->view_items(js_tointeger(J, 1));
+    }
+    J->pushundefined();
+}
+
 static void def_accessor(js_State *J, js_CFunction get, js_CFunction set, const char *name) {
     js_newcfunction(J, get ? get : ui::proxy_noop, js_intern(""), 0);
     js_newcfunction(J, set, js_intern(""), 1);
@@ -145,6 +160,7 @@ void js_register_ui_element_scrollable_list(js_State *J) {
     def_accessor(J, ui::proxy_get_selected, ui::proxy_set_selected, "selected");
     def_accessor(J, ui::proxy_noop, ui::proxy_set_tooltip, "tooltip");
     def_accessor(J, ui_proxy_get_items_count, nullptr, "items_count");
+    def_accessor(J, ui_proxy_get_view_items, ui_proxy_set_view_items, "view_items");
 
     def_function(J, ui_proxy_add_item, "add_item", 1);
     def_function(J, ui_proxy_clear, "clear", 0);

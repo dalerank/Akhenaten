@@ -9,6 +9,8 @@
 #include "window/window_city.h"
 #include "window/popup_dialog.h"
 
+e_storage_state_tokens_t ANK_CONFIG_ENUM(storage_state_tokens);
+
 constexpr int MAX_STORAGES = 200;
 
 struct city_storage_t {
@@ -54,7 +56,7 @@ int building_storage_create(int building_type) {
 
             // default settings for Pharaoh
             for (int r = 0; r < 36; r++) {
-                g_storages[i].storage.resource_state[r] = STORAGE_STATE_PHARAOH_REFUSE;
+                g_storages[i].storage.resource_state[r] = STORAGE_STATE_REFUSE;
                 g_storages[i].storage.resource_max_accept[r] = 3200;
                 g_storages[i].storage.resource_max_get[r] = 3200;
             }
@@ -65,16 +67,16 @@ int building_storage_create(int building_type) {
                 case BUILDING_STORAGE_YARD:
                 case BUILDING_STORAGE_ROOM:
                     if (resource < 9)
-                        g_storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_REFUSE;
+                        g_storages[i].storage.resource_state[resource] = STORAGE_STATE_REFUSE;
                     else
-                        g_storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_ACCEPT;
+                        g_storages[i].storage.resource_state[resource] = STORAGE_STATE_ACCEPT;
                     break;
 
                 case BUILDING_GRANARY:
                     if (resource < 9)
-                        g_storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_ACCEPT;
+                        g_storages[i].storage.resource_state[resource] = STORAGE_STATE_ACCEPT;
                     else
-                        g_storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_REFUSE;
+                        g_storages[i].storage.resource_state[resource] = STORAGE_STATE_REFUSE;
                     break;
                 }
             }
@@ -145,30 +147,30 @@ void building_storage_toggle_empty_all(int storage_id) {
 
     auto &storage = g_storages[storage_id].storage;
     for (auto &state : storage.resource_state) {
-        state = STORAGE_STATE_PHARAOH_EMPTY;
+        state = STORAGE_STATE_EMPTY;
     }
 }
 
 void building_storage_cycle_resource_state(int storage_id, int resource_id, bool backwards) {
     int state = g_storages[storage_id].storage.resource_state[resource_id];
     if (!backwards) {
-        if (state == STORAGE_STATE_PHARAOH_ACCEPT)
-            state = STORAGE_STATE_PHARAOH_GET;
-        else if (state == STORAGE_STATE_PHARAOH_GET)
-            state = STORAGE_STATE_PHARAOH_EMPTY;
-        else if (state == STORAGE_STATE_PHARAOH_EMPTY)
-            state = STORAGE_STATE_PHARAOH_REFUSE;
+        if (state == STORAGE_STATE_ACCEPT)
+            state = STORAGE_STATE_GET;
+        else if (state == STORAGE_STATE_GET)
+            state = STORAGE_STATE_EMPTY;
+        else if (state == STORAGE_STATE_EMPTY)
+            state = STORAGE_STATE_REFUSE;
         else
-            state = STORAGE_STATE_PHARAOH_ACCEPT;
+            state = STORAGE_STATE_ACCEPT;
     } else {
-        if (state == STORAGE_STATE_PHARAOH_ACCEPT)
-            state = STORAGE_STATE_PHARAOH_REFUSE;
-        else if (state == STORAGE_STATE_PHARAOH_REFUSE)
-            state = STORAGE_STATE_PHARAOH_EMPTY;
-        else if (state == STORAGE_STATE_PHARAOH_EMPTY)
-            state = STORAGE_STATE_PHARAOH_GET;
+        if (state == STORAGE_STATE_ACCEPT)
+            state = STORAGE_STATE_REFUSE;
+        else if (state == STORAGE_STATE_REFUSE)
+            state = STORAGE_STATE_EMPTY;
+        else if (state == STORAGE_STATE_EMPTY)
+            state = STORAGE_STATE_GET;
         else
-            state = STORAGE_STATE_PHARAOH_ACCEPT;
+            state = STORAGE_STATE_ACCEPT;
     }
 
     g_storages[storage_id].storage.resource_state[resource_id] = state;
@@ -192,7 +194,7 @@ bool building_storage::get_permission(int p) {
 
 void building_storage_increase_decrease_resource_state(int storage_id, int resource_id, bool increase) {
     int state = g_storages[storage_id].storage.resource_state[resource_id];
-    if (state == STORAGE_STATE_PHARAOH_ACCEPT) {
+    if (state == STORAGE_STATE_ACCEPT) {
         int max_accept = g_storages[storage_id].storage.resource_max_accept[resource_id];
         if (increase) {
             if (max_accept == 2400)
@@ -210,7 +212,7 @@ void building_storage_increase_decrease_resource_state(int storage_id, int resou
                 max_accept = 800;
         }
         g_storages[storage_id].storage.resource_max_accept[resource_id] = max_accept;
-    } else if (state == STORAGE_STATE_PHARAOH_GET) {
+    } else if (state == STORAGE_STATE_GET) {
         int max_get = g_storages[storage_id].storage.resource_max_get[resource_id];
         if (increase) {
             if (max_get == 2400)
@@ -235,7 +237,7 @@ void building_storage_increase_decrease_resource_state(int storage_id, int resou
 void building_storage_accept_none(int storage_id) {
     auto &storage = g_storages[storage_id].storage;
     for (auto &state: storage.resource_state) {
-        state = STORAGE_STATE_PHARAOH_REFUSE;
+        state = STORAGE_STATE_REFUSE;
     }
 }
 
@@ -278,20 +280,20 @@ bool building_storage::is_empty_all() const {
 
 bool building_storage::is_gettable(e_resource resource) {
     const storage_t *s = storage();
-    return (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET);
+    return (s->resource_state[resource] == STORAGE_STATE_GET);
 }
 
 bool building_storage::is_emptying(e_resource resource) {
     const storage_t *s = storage();
-    return (s->resource_state[resource] == STORAGE_STATE_PHARAOH_EMPTY);
+    return (s->resource_state[resource] == STORAGE_STATE_EMPTY);
 }
 
 int building_storage::accepting_amount(e_resource resource) {
     const storage_t* s = storage();
 
     switch (s->resource_state[resource]) {
-    case STORAGE_STATE_PHARAOH_ACCEPT: return s->resource_max_accept[resource];
-    case STORAGE_STATE_PHARAOH_GET: return s->resource_max_get[resource];
+    case STORAGE_STATE_ACCEPT: return s->resource_max_accept[resource];
+    case STORAGE_STATE_GET: return s->resource_max_get[resource];
     default: return 0;
     }
 }

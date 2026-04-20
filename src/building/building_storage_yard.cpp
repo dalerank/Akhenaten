@@ -267,7 +267,7 @@ bool building_storage_yard::is_accepting(e_resource resource) {
     const storage_t* s = storage();
 
     int amount = this->amount(resource);
-    bool accepting = (s->resource_state[resource] == STORAGE_STATE_PHARAOH_ACCEPT);
+    bool accepting = (s->resource_state[resource] == STORAGE_STATE_ACCEPT);
     bool fool_storage = (s->resource_max_accept[resource] == FULL_WAREHOUSE);
     bool threeq_storage = (s->resource_max_accept[resource] >= THREEQ_WAREHOUSE && amount < THREEQ_WAREHOUSE);
     bool half_storage = (s->resource_max_accept[resource] >= HALF_WAREHOUSE && amount < HALF_WAREHOUSE);
@@ -279,10 +279,10 @@ bool building_storage_yard::is_accepting(e_resource resource) {
 bool building_storage_yard::is_getting(e_resource resource) {
     const storage_t* s = storage();
     int amount = this->amount(resource);
-    if ((s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] == FULL_WAREHOUSE)
-        || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] >= THREEQ_WAREHOUSE && amount < THREEQ_WAREHOUSE / 100)
-        || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] >= HALF_WAREHOUSE && amount < HALF_WAREHOUSE / 100)
-        || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] >= QUARTER_WAREHOUSE && amount < QUARTER_WAREHOUSE / 100)) {
+    if ((s->resource_state[resource] == STORAGE_STATE_GET && s->resource_max_get[resource] == FULL_WAREHOUSE)
+        || (s->resource_state[resource] == STORAGE_STATE_GET && s->resource_max_get[resource] >= THREEQ_WAREHOUSE && amount < THREEQ_WAREHOUSE / 100)
+        || (s->resource_state[resource] == STORAGE_STATE_GET && s->resource_max_get[resource] >= HALF_WAREHOUSE && amount < HALF_WAREHOUSE / 100)
+        || (s->resource_state[resource] == STORAGE_STATE_GET && s->resource_max_get[resource] >= QUARTER_WAREHOUSE && amount < QUARTER_WAREHOUSE / 100)) {
         return true;
     } else {
         return false;
