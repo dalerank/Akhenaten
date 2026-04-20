@@ -1,11 +1,5 @@
 log_info("akhenaten: ui storage yard orders window started")
 
-var STORAGE_YARD_ORDERS_BASE_PANEL_BLOCKS_X = 29
-var STORAGE_YARD_ORDERS_BASE_PANEL_BLOCKS_Y = 17
-var STORAGE_YARD_ORDERS_BASE_LIST_BLOCKS_X = 27
-var STORAGE_YARD_ORDERS_BASE_LIST_BLOCKS_Y = 11
-var STORAGE_YARD_ORDERS_BASE_VIEW_ITEMS = 8
-
 function storage_yard_order_instruction(storage, resource) {
     var state = storage.resource_state(resource)
     if (state == STORAGE_STATE_ACCEPT) {
@@ -117,23 +111,28 @@ function storage_yard_orders_window_init(window) {
         window.goods_list.add_item(name, resId)
     }
 
+    var base = {
+        panel_blocks: {x: 29, y: 18},
+        list_blocks: {x: 27, y: 11},
+        view_items: 8,
+        info_panel_blocks_y: 21
+    }
+
     var itemsCount = window.goods_list.items_count
-    var blocksPerItem = STORAGE_YARD_ORDERS_BASE_LIST_BLOCKS_Y / STORAGE_YARD_ORDERS_BASE_VIEW_ITEMS
+    var blocksPerItem = base.list_blocks.y / base.view_items
     var screenBlocksY = Math.floor((sh(0) - px(2)) / 16)
-    var maxPanelBlocksY = Math.max(STORAGE_YARD_ORDERS_BASE_PANEL_BLOCKS_Y, screenBlocksY)
-    var maxListBlocksY = STORAGE_YARD_ORDERS_BASE_LIST_BLOCKS_Y + (maxPanelBlocksY - STORAGE_YARD_ORDERS_BASE_PANEL_BLOCKS_Y)
+    var maxPanelBlocksY = Math.max(base.panel_blocks.y, screenBlocksY)
+    var maxListBlocksY = base.list_blocks.y + (maxPanelBlocksY - base.panel_blocks.y)
     var maxViewItems = Math.max(1, Math.floor(maxListBlocksY / blocksPerItem))
     var targetViewItems = Math.max(1, Math.min(itemsCount, maxViewItems))
-    var targetListBlocksY = Math.max(STORAGE_YARD_ORDERS_BASE_LIST_BLOCKS_Y, Math.ceil(targetViewItems * blocksPerItem))
-    var targetPanelBlocksY = STORAGE_YARD_ORDERS_BASE_PANEL_BLOCKS_Y + (targetListBlocksY - STORAGE_YARD_ORDERS_BASE_LIST_BLOCKS_Y)
+    var targetListBlocksY = Math.max(base.list_blocks.y, Math.ceil(targetViewItems * blocksPerItem))
+    var targetPanelBlocksY = base.panel_blocks.y + (targetListBlocksY - base.list_blocks.y)
 
     window.goods_list.view_items = targetViewItems
-    window.goods_list.size = [STORAGE_YARD_ORDERS_BASE_LIST_BLOCKS_X, targetListBlocksY]
-    window.background.size = [STORAGE_YARD_ORDERS_BASE_PANEL_BLOCKS_X, targetPanelBlocksY]
+    window.goods_list.size = [base.list_blocks.x, targetListBlocksY]
+    window.background.size = [base.panel_blocks.x, targetPanelBlocksY]
 
     var offsetx = city.object_info.offset.x
-    var offsety = city.object_info.offset.y
-    offsety += window.size.y
-    offsety -= targetPanelBlocksY
+    var offsety = city.object_info.offset.y + px(base.info_panel_blocks_y - targetPanelBlocksY)
     ui.set_window_pos("storage_yard_orders_window", {x: offsetx, y: offsety})
 }
