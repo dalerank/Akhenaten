@@ -10,6 +10,7 @@
 #include <cstring>
 #include <functional>
 
+#include <algorithm>
 #include <cassert>
 
 void scrollable_list::select(const char* button_text) {
@@ -151,12 +152,47 @@ void scrollable_list::refresh_scrollbar() {
 }
 
 void scrollable_list::clamp_scrollbar_position() {
+    if (_items_count <= 0) {
+        scrollbar.scroll_position = 0;
+        return;
+    }
+
     while (scrollbar.scroll_position + ui_params.view_items >= _items_count) {
         --scrollbar.scroll_position;
     }
 
     if (scrollbar.scroll_position < 0)
         scrollbar.scroll_position = 0;
+}
+
+void scrollable_list::rebuild_buttons_geometry() {
+    for (int i = 0; i < MAX_BUTTONS_IN_SCROLLABLE_LIST; ++i) {
+        int button_pos_x = ui_params.buttons_margin_x;
+        int button_pos_y = ui_params.buttons_size_y * i + ui_params.buttons_margin_y;
+        list_buttons[i].x = button_pos_x;
+        list_buttons[i].y = button_pos_y;
+        list_buttons[i].width = ui_params.buttons_size_x;
+        list_buttons[i].height = ui_params.buttons_size_y;
+        list_buttons[i].left_click_handler = button_none; // Fired manually after external input handling.
+        list_buttons[i].right_click_handler = button_none;
+        list_buttons[i].parameter1 = i;
+        list_buttons[i].parameter2 = i;
+    }
+}
+
+void scrollable_list::set_view_items(int view_items) {
+    const int clamped_view_items = std::max(1, std::min(view_items, MAX_BUTTONS_IN_SCROLLABLE_LIST));
+    if ((int)ui_params.view_items == clamped_view_items) {
+        return;
+    }
+
+    ui_params.view_items = (uint8_t)clamped_view_items;
+    rebuild_buttons_geometry();
+    refresh_scrollbar();
+    clamp_scrollbar_position();
+    if (focus_button_id > clamped_view_items) {
+        unfocus();
+    }
 }
 
 void scrollable_list::scroll_to_entry(int entry_idx) {
@@ -320,6 +356,7 @@ scrollable_list::scrollable_list(onclick_callback lmb,
                                  scrollable_list_ui_params params) {
     // gather the UI params
     ui_params = params;
+    ui_params.view_items = (uint8_t)std::max(1, std::min((int)ui_params.view_items, MAX_BUTTONS_IN_SCROLLABLE_LIST));
     if (ui_params.buttons_size_x == -1) {
         ui_params.buttons_size_x = ui_params.blocks_x * DEFAULT_BLOCK_SIZE - ui_params.buttons_margin_x - 2;
     }
@@ -335,18 +372,7 @@ scrollable_list::scrollable_list(onclick_callback lmb,
     double_click_callback = dmb;
     focus_change_callback = fcc;
 
-    for (int i = 0; i < ui_params.view_items; ++i) {
-        int button_pos_x = ui_params.buttons_margin_x;
-        int button_pos_y = ui_params.buttons_size_y * i + ui_params.buttons_margin_y;
-        list_buttons[i].x = button_pos_x;
-        list_buttons[i].y = button_pos_y;
-        list_buttons[i].width = ui_params.buttons_size_x;
-        list_buttons[i].height = ui_params.buttons_size_y;
-        list_buttons[i].left_click_handler = button_none; // These are fired manually after intercepting the mouse state along
-        list_buttons[i].right_click_handler = button_none; // with the button id returned by the external input handlers.
-        list_buttons[i].parameter1 = i;
-        list_buttons[i].parameter2 = i;
-    }
+    rebuild_buttons_geometry();
 
     // init scrollbar
     scrollbar.thin = ui_params.thin_scrollbar;

@@ -53,10 +53,10 @@ int building_granary::amount(e_resource resource) const {
 bool building_granary::is_accepting(e_resource resource) {
     const storage_t* s = storage();
     int amount = this->amount(resource);
-    if ((s->resource_state[resource] == STORAGE_STATE_PHARAOH_ACCEPT && s->resource_max_accept[resource] == FULL_GRANARY)
-        || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_ACCEPT && s->resource_max_accept[resource] >= THREEQUARTERS_GRANARY && amount < THREEQUARTERS_GRANARY)
-        || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_ACCEPT && s->resource_max_accept[resource] >= HALF_GRANARY && amount < HALF_GRANARY)
-        || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_ACCEPT && s->resource_max_accept[resource] >= QUARTER_GRANARY && amount < QUARTER_GRANARY)) {
+    if ((s->resource_state[resource] == STORAGE_STATE_ACCEPT && s->resource_max_accept[resource] == FULL_GRANARY)
+        || (s->resource_state[resource] == STORAGE_STATE_ACCEPT && s->resource_max_accept[resource] >= THREEQUARTERS_GRANARY && amount < THREEQUARTERS_GRANARY)
+        || (s->resource_state[resource] == STORAGE_STATE_ACCEPT && s->resource_max_accept[resource] >= HALF_GRANARY && amount < HALF_GRANARY)
+        || (s->resource_state[resource] == STORAGE_STATE_ACCEPT && s->resource_max_accept[resource] >= QUARTER_GRANARY && amount < QUARTER_GRANARY)) {
         return true;
     } else {
         return false;
@@ -66,10 +66,10 @@ bool building_granary::is_accepting(e_resource resource) {
 bool building_granary::is_getting(e_resource resource) {
     const storage_t* s = storage();
     int amount = this->amount(resource);
-    if ((s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] == FULL_GRANARY)
-        || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] >= THREEQUARTERS_GRANARY && amount < THREEQUARTERS_GRANARY)
-        || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] >= HALF_GRANARY && amount < HALF_GRANARY)
-        || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] >= QUARTER_GRANARY && amount < QUARTER_GRANARY)) {
+    if ((s->resource_state[resource] == STORAGE_STATE_GET && s->resource_max_get[resource] == FULL_GRANARY)
+        || (s->resource_state[resource] == STORAGE_STATE_GET && s->resource_max_get[resource] >= THREEQUARTERS_GRANARY && amount < THREEQUARTERS_GRANARY)
+        || (s->resource_state[resource] == STORAGE_STATE_GET && s->resource_max_get[resource] >= HALF_GRANARY && amount < HALF_GRANARY)
+        || (s->resource_state[resource] == STORAGE_STATE_GET && s->resource_max_get[resource] >= QUARTER_GRANARY && amount < QUARTER_GRANARY)) {
         return true; 
     } else {
         return false;

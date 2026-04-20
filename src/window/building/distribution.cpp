@@ -168,7 +168,7 @@ std::pair<bstring64, e_font> window_dock_get_order_instruction(int instr_kind, e
 
 std::pair<bstring64, e_font> window_building_get_order_instruction(int instr_kind, const storage_t &storage, e_resource resource) {
     switch (storage.resource_state[resource]) {
-    case STORAGE_STATE_PHARAOH_ACCEPT: {
+    case STORAGE_STATE_ACCEPT: {
         int max_accept = storage.resource_max_accept[resource];
         bstring64 text;
         text.printf("%d", max_accept);
@@ -187,10 +187,10 @@ std::pair<bstring64, e_font> window_building_get_order_instruction(int instr_kin
         return { full_text, FONT_NORMAL_WHITE_ON_DARK };
     }
 
-    case STORAGE_STATE_PHARAOH_REFUSE:
+    case STORAGE_STATE_REFUSE:
         return { ui::str(99, 8), FONT_NORMAL_BLACK_ON_DARK };
 
-    case STORAGE_STATE_PHARAOH_GET: {
+    case STORAGE_STATE_GET: {
         int max_get = storage.resource_max_get[resource];
         bstring64 text;
         text.printf("%d", max_get);
@@ -207,7 +207,7 @@ std::pair<bstring64, e_font> window_building_get_order_instruction(int instr_kin
         full_text.printf("%s %s %s", ui::str(99, 19), text.c_str(), adv_text);
         return { full_text, FONT_NORMAL_YELLOW };
     }
-    case STORAGE_STATE_PHARAOH_EMPTY:
+    case STORAGE_STATE_EMPTY:
         return { ui::str(99, 21), FONT_NORMAL_BLACK_ON_DARK };
     }
 
@@ -221,7 +221,7 @@ void window_building_draw_order_instruction(int instr_kind, const storage_t* sto
 
     if (storage != nullptr) {
         switch (storage->resource_state[resource]) {
-        case STORAGE_STATE_PHARAOH_ACCEPT: {
+        case STORAGE_STATE_ACCEPT: {
             int width = lang_text_draw(99, 18, pos.x, pos.y, font_yes);
             int max_accept = storage->resource_max_accept[resource];
             if (max_accept == 3200)
@@ -238,11 +238,11 @@ void window_building_draw_order_instruction(int instr_kind, const storage_t* sto
                 lang_text_draw(99, 29, pos.x + width, pos.y, font_yes);
             break;
         }
-        case STORAGE_STATE_PHARAOH_REFUSE:
+        case STORAGE_STATE_REFUSE:
             lang_text_draw(99, 8, pos.x, pos.y, font_nope);
             break;
 
-        case STORAGE_STATE_PHARAOH_GET: {
+        case STORAGE_STATE_GET: {
             int width = lang_text_draw(99, 19, pos.x, pos.y, font_get);
             int max_get = storage->resource_max_get[resource];
             if (max_get == 3200)
@@ -259,7 +259,7 @@ void window_building_draw_order_instruction(int instr_kind, const storage_t* sto
                 lang_text_draw(99, 29, pos.x + width, pos.y, font_get);
             break;
         }
-        case STORAGE_STATE_PHARAOH_EMPTY:
+        case STORAGE_STATE_EMPTY:
             lang_text_draw(99, 21, pos.x, pos.y, font_nope);
             break;
         }

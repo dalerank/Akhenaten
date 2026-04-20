@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "game/resource.h"
+#include "core/tokenum.h"
 
 constexpr int UNITS_PER_LOAD = 100;
 
@@ -10,11 +11,14 @@ enum e_building_storage {
 };
 
 enum e_storage_state {
-    STORAGE_STATE_PHARAOH_ACCEPT = 0,
-    STORAGE_STATE_PHARAOH_REFUSE = 1,
-    STORAGE_STATE_PHARAOH_GET = 2,
-    STORAGE_STATE_PHARAOH_EMPTY = 3,
+    STORAGE_STATE_ACCEPT = 0,
+    STORAGE_STATE_REFUSE = 1,
+    STORAGE_STATE_GET = 2,
+    STORAGE_STATE_EMPTY = 3,
+
+    STORAGE_STATE_MAX
 };
+using e_storage_state_tokens_t = token_holder<e_storage_state, STORAGE_STATE_ACCEPT, STORAGE_STATE_MAX>;
 
 enum e_bazaar_order {
     BAZAAR_ORDER_STATE_DONT_BUY = 0,

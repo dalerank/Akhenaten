@@ -29,6 +29,7 @@
 #include "input/mouse.h"
 #include "graphics/screen.h"
 
+#include <algorithm>
 #include <stack>
 
 using namespace ui::opt;
@@ -1700,6 +1701,18 @@ int ui::escrollable_list::items_count() const {
     return panel ? panel->items_count() : 0;
 }
 
+int ui::escrollable_list::view_items() const {
+    return panel ? panel->view_items() : params.view_items;
+}
+
+void ui::escrollable_list::view_items(int value) {
+    const int clamped_value = std::max(1, std::min(value, MAX_BUTTONS_IN_SCROLLABLE_LIST));
+    params.view_items = clamped_value;
+    if (panel) {
+        panel->set_view_items(clamped_value);
+    }
+}
+
 void ui::escrollable_list::refill() {
     if (!panel) {
         return;
@@ -1723,6 +1736,9 @@ void ui::escrollable_list::draw(UiFlags flags) {
     ensure_panel();
 
     scr_pos = g_state.offset() + pos;
+    panel->ui_params.blocks_x = size.x;
+    panel->ui_params.blocks_y = size.y;
+    panel->set_view_items(params.view_items);
     panel->ui_params.pos = scr_pos;
 
     begin_widget(scr_pos);

@@ -51,7 +51,7 @@ void granary_orders_window::window_info_foreground(object_info &c) {
 
         // arrows
         int state = granary->storage()->resource_state[r.type];
-        if (state == STORAGE_STATE_PHARAOH_ACCEPT || state == STORAGE_STATE_PHARAOH_GET) {
+        if (state == STORAGE_STATE_ACCEPT || state == STORAGE_STATE_GET) {
             ui.arw_button(items_area.pos + vec2i{ item_arrows_column.pos.x, line_y }, true, true)
                 .onclick([storage_id, resource = r.type] {
                     building_storage_increase_decrease_resource_state(storage_id, resource, true);

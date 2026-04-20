@@ -1,15 +1,14 @@
 log_info("akhenaten: ui storage yard orders window started")
 
-var STORAGE_STATE_PHARAOH_ACCEPT = 0
-var STORAGE_STATE_PHARAOH_REFUSE = 1
-var STORAGE_STATE_PHARAOH_GET    = 2
-var STORAGE_STATE_PHARAOH_EMPTY  = 3
-
-var current_storage_yard = null
+var STORAGE_YARD_ORDERS_BASE_PANEL_BLOCKS_X = 29
+var STORAGE_YARD_ORDERS_BASE_PANEL_BLOCKS_Y = 17
+var STORAGE_YARD_ORDERS_BASE_LIST_BLOCKS_X = 27
+var STORAGE_YARD_ORDERS_BASE_LIST_BLOCKS_Y = 11
+var STORAGE_YARD_ORDERS_BASE_VIEW_ITEMS = 8
 
 function storage_yard_order_instruction(storage, resource) {
     var state = storage.resource_state(resource)
-    if (state == STORAGE_STATE_PHARAOH_ACCEPT) {
+    if (state == STORAGE_STATE_ACCEPT) {
         var max_accept = storage.resource_max_accept(resource)
         var label = String(max_accept)
         if (max_accept == 3200) { label = __loc(99, 28) }
@@ -20,10 +19,10 @@ function storage_yard_order_instruction(storage, resource) {
         if (max_accept == 2400 || max_accept == 1600 || max_accept == 800) { adv = __loc(99, 29) }
         return { text: __loc(99, 18) + " " + label + " " + adv, font: FONT_NORMAL_WHITE_ON_DARK }
     }
-    if (state == STORAGE_STATE_PHARAOH_REFUSE) {
+    if (state == STORAGE_STATE_REFUSE) {
         return { text: __loc(99, 8), font: FONT_NORMAL_BLACK_ON_DARK }
     }
-    if (state == STORAGE_STATE_PHARAOH_GET) {
+    if (state == STORAGE_STATE_GET) {
         var max_get = storage.resource_max_get(resource)
         var label = String(max_get)
         if (max_get == 3200) { label = __loc(99, 31) }
@@ -34,58 +33,35 @@ function storage_yard_order_instruction(storage, resource) {
         if (max_get == 2400 || max_get == 1600 || max_get == 800) { adv = __loc(99, 29) }
         return { text: __loc(99, 19) + " " + label + " " + adv, font: FONT_NORMAL_YELLOW }
     }
-    if (state == STORAGE_STATE_PHARAOH_EMPTY) {
+    if (state == STORAGE_STATE_EMPTY) {
         return { text: __loc(99, 21), font: FONT_NORMAL_BLACK_ON_DARK }
     }
     return { text: "unknown_storage", font: FONT_NORMAL_BLACK_ON_DARK }
 }
 
-function storage_yard_orders_window_accept_none() {
-    if (current_storage_yard) { current_storage_yard.accept_none() }
-}
-
-function storage_yard_orders_window_toggle_empty_all() {
-    if (current_storage_yard) { current_storage_yard.toggle_empty_all() }
-}
-
-function storage_yard_orders_window_empty_all_text() {
-    if (!current_storage_yard) { return "" }
-    return current_storage_yard.is_empty_all() ? __loc(99, 5) : __loc(99, 4)
-}
-
 function storage_yard_orders_list_on_click_item(p) {
-    if (!p || p.user_data === undefined || !current_storage_yard) { return }
-    current_storage_yard.resource_state(p.user_data, false)
-}
-
-function storage_yard_orders_list_on_dblclick_item(p) {
-    if (!p || p.user_data === undefined || !current_storage_yard) { return }
-    current_storage_yard.resource_state(p.user_data, true)
+    storage_yard_orders_window.storage_yard.cycle_resource_state(p.user_data)
 }
 
 function storage_yard_orders_list_on_render_item(p) {
     var resId = p.user_data
-    if (resId === undefined || resId === RESOURCE_NONE || !current_storage_yard) { return }
+    if (resId === undefined || resId === RESOURCE_NONE || !storage_yard_orders_window.storage_yard) { return }
 
     ui.resource_icon([p.x + 25, p.y + 2], resId)
     ui.label_ex(__loc(23, resId), [p.x + 85, p.y], FONT_NORMAL_WHITE_ON_DARK, UiFlags_AlignYCentered, 150)
 
-    var state = current_storage_yard.resource_state(resId)
-    if (state == STORAGE_STATE_PHARAOH_ACCEPT || state == STORAGE_STATE_PHARAOH_GET) {
+    var state = storage_yard_orders_window.storage_yard.resource_state(resId)
+    if (state == STORAGE_STATE_ACCEPT || state == STORAGE_STATE_GET) {
         if (ui.arw_button([p.x + p.sizex - 60, p.y + 2], false, true)) {
-            current_storage_yard.increase_decrease_resource_state(resId, true)
+            storage_yard_orders_window.storage_yard.increase_decrease_resource_state(resId, true)
         }
         if (ui.arw_button([p.x + p.sizex - 40, p.y + 2], true, true)) {
-            current_storage_yard.increase_decrease_resource_state(resId, false)
+            storage_yard_orders_window.storage_yard.increase_decrease_resource_state(resId, false)
         }
     }
 
-    var instr = storage_yard_order_instruction(current_storage_yard, resId)
+    var instr = storage_yard_order_instruction(storage_yard_orders_window.storage_yard, resId)
     ui.label_ex(instr.text, [p.x + p.sizex - 280, p.y], instr.font, UiFlags_AlignYCentered, 220)
-
-    //if (p.hover) {
-    //    ui.border({x: p.x + 4, y: p.y - 2}, {x: p.sizex - 8, y: p.sizey + 2}, 0, COLOR_TOOLTIP_BORDER, UiFlags_None)
-    //}
 }
 
 [es=modal_window]
@@ -93,6 +69,7 @@ storage_yard_orders_window {
     pos: [(sw(0) - px(29)) / 2, (sh(0) - px(17)) / 2]
     draw_underlying: true
     allow_rmb_goback: true
+    storage_yard: null
 
     ui {
         background   : outer_panel({size[29, 17]}),
@@ -110,10 +87,20 @@ storage_yard_orders_window {
             draw_paneling: true
             onrender_item: storage_yard_orders_list_on_render_item
             onclick_item: storage_yard_orders_list_on_click_item
-            ondoubleclick_item: storage_yard_orders_list_on_dblclick_item
         })
-        empty_all    : button({pos[80, -1], size[300, 24], textfn: storage_yard_orders_window_empty_all_text, margin{bottom:-64}, onclick: storage_yard_orders_window_toggle_empty_all })
-        accept_none  : button({pos[80, -1], size[300, 24], text:{group:99, id:7}, margin{bottom:-38}, onclick: storage_yard_orders_window_accept_none })
+        empty_all    : button({pos[80, -1]
+                               size[300, 24]
+                               margin{bottom:-64}
+                               textfn: function() { return storage_yard_orders_window.storage_yard.is_empty_all() ? __loc(99, 5) : __loc(99, 4) }
+                               onclick: function() { storage_yard_orders_window.storage_yard.toggle_empty_all() }
+                              })
+
+        accept_none  : button({pos[80, -1]
+                               size[300, 24]
+                               margin{bottom:-38}
+                               text:{group:99, id:7}
+                               onclick: function() { storage_yard_orders_window.storage_yard.accept_none() }
+                              })
 
         button_help   : help_button({})
         button_close  : close_button({ onclick: window_go_back })
@@ -122,13 +109,31 @@ storage_yard_orders_window {
 
 [es=(storage_yard_orders_window, init)]
 function storage_yard_orders_window_init(window) {
-    ui.set_window_pos("storage_yard_orders_window", city.object_info.offset)
-
-    current_storage_yard = city.get_storage_yard(city.object_info.building_id)
+    storage_yard_orders_window.storage_yard = city.get_storage_yard(window.bid)
 
     window.goods_list.clear()
     for (var name in city.resources.available) {
         var resId = city.resources.available[name]
         window.goods_list.add_item(name, resId)
     }
+
+    var itemsCount = window.goods_list.items_count
+    var blocksPerItem = STORAGE_YARD_ORDERS_BASE_LIST_BLOCKS_Y / STORAGE_YARD_ORDERS_BASE_VIEW_ITEMS
+    var screenBlocksY = Math.floor((sh(0) - px(2)) / 16)
+    var maxPanelBlocksY = Math.max(STORAGE_YARD_ORDERS_BASE_PANEL_BLOCKS_Y, screenBlocksY)
+    var maxListBlocksY = STORAGE_YARD_ORDERS_BASE_LIST_BLOCKS_Y + (maxPanelBlocksY - STORAGE_YARD_ORDERS_BASE_PANEL_BLOCKS_Y)
+    var maxViewItems = Math.max(1, Math.floor(maxListBlocksY / blocksPerItem))
+    var targetViewItems = Math.max(1, Math.min(itemsCount, maxViewItems))
+    var targetListBlocksY = Math.max(STORAGE_YARD_ORDERS_BASE_LIST_BLOCKS_Y, Math.ceil(targetViewItems * blocksPerItem))
+    var targetPanelBlocksY = STORAGE_YARD_ORDERS_BASE_PANEL_BLOCKS_Y + (targetListBlocksY - STORAGE_YARD_ORDERS_BASE_LIST_BLOCKS_Y)
+
+    window.goods_list.view_items = targetViewItems
+    window.goods_list.size = [STORAGE_YARD_ORDERS_BASE_LIST_BLOCKS_X, targetListBlocksY]
+    window.background.size = [STORAGE_YARD_ORDERS_BASE_PANEL_BLOCKS_X, targetPanelBlocksY]
+
+    var offsetx = city.object_info.offset.x
+    var offsety = city.object_info.offset.y
+    offsety += window.size.y
+    offsety -= targetPanelBlocksY
+    ui.set_window_pos("storage_yard_orders_window", {x: offsetx, y: offsety})
 }
