@@ -41,6 +41,7 @@ import ui_house_window
 import ui_advisor_labor
 import ui_advisor_military
 import ui_advisor_ratings
+import ui_advisor_monuments
 import ui_labor_priority_window
 import ui_window_features
 import ui_file_dialog_save

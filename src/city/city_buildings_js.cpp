@@ -11,10 +11,96 @@
 #include "city/object_info.h"
 #include "window/window_info.h"
 #include "building/building.h"
+#include "building/monuments.h"
 #include "window/building/distribution.h"
+#include "city_buildings.h"
+#include "game/resource.h"
 #include "core/profiler.h"
+#include "core/svector.h"
 
+#include <algorithm>
 #include <optional>
+
+static svector<building_id, 512> g_city_monuments_advisor_cache;
+
+static void city_monuments_advisor_cache_fill() {
+    g_city_monuments_advisor_cache.clear();
+    for (auto &b : city_buildings()) {
+        if (!b.is_valid() || !b.is_monument()) {
+            continue;
+        }
+        if (&b != b.main()) {
+            continue;
+        }
+        g_city_monuments_advisor_cache.push_back(b.id);
+    }
+}
+
+int __city_monuments_list_refresh() {
+    city_monuments_advisor_cache_fill();
+    return (int)g_city_monuments_advisor_cache.size();
+}
+ANK_FUNCTION(__city_monuments_list_refresh)
+
+int __city_monuments_list_count() {
+    return (int)g_city_monuments_advisor_cache.size();
+}
+ANK_FUNCTION(__city_monuments_list_count)
+
+int __city_monuments_list_id_at(int index) {
+    if (index < 0 || index >= (int)g_city_monuments_advisor_cache.size()) {
+        return 0;
+    }
+    return g_city_monuments_advisor_cache[index];
+}
+ANK_FUNCTION_1(__city_monuments_list_id_at)
+
+int __building_monument_phase_code(int bid) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid() || !b->is_monument()) {
+        return -99;
+    }
+    building_monument *m = b->main()->dcast_monument();
+    if (!m) {
+        return -99;
+    }
+    return m->runtime_data().phase;
+}
+ANK_FUNCTION_1(__building_monument_phase_code)
+
+int __building_monument_phases_total(int bid) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid() || !b->is_monument()) {
+        return 0;
+    }
+    building_monument *m = b->main()->dcast_monument();
+    return m ? m->phases() : 0;
+}
+ANK_FUNCTION_1(__building_monument_phases_total)
+
+int __building_monument_material_pct_min(int bid) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid() || !b->is_monument()) {
+        return 0;
+    }
+    building_monument *m = b->main()->dcast_monument();
+    if (!m || m->runtime_data().phase == MONUMENT_FINISHED) {
+        return 100;
+    }
+    auto &d = m->runtime_data();
+    int min_pct = 100;
+    bool any = false;
+    for (int ri = (int)RESOURCES_MIN; ri <= (int)RESOURCES_MAX; ++ri) {
+        const auto r = (e_resource)ri;
+        if (m->needs_resource(r) <= 0) {
+            continue;
+        }
+        any = true;
+        min_pct = std::min(min_pct, (int)d.resources_pct[r]);
+    }
+    return any ? min_pct : 100;
+}
+ANK_FUNCTION_1(__building_monument_material_pct_min)
 
 int __city_count_industry_active(int resource) {
     return g_city.buildings.count_industry_active((e_resource)resource);
