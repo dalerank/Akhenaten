@@ -2155,6 +2155,7 @@ localization_base_en = [
     { group:53, id:66, text: "The amazing Prosperity of this city is the talk of Egypt!" }
     { group:53, id:67, text: "This city has the most magnificent Monuments in all Egypt!" }
     { group:53, id:68, text: "Your Kingdom is the best rated in all Egypt!" }
+    { group:53, id:69, text: "There are no monuments in this city yet." }
     { group:54, id:0, text: "Overseer of Commerce" }
     { group:54, id:1, text: "click on an item to trade, stockpile, or change industry status" }
     { group:54, id:2, text: "Show prices" }

@@ -2,6 +2,7 @@
 
 #include "grid/building.h"
 #include "grid/road_access.h"
+#include "core/bstring.h"
 #include "core/profiler.h"
 #include "figure/figure.h"
 #include "js/js_game.h"
@@ -158,6 +159,15 @@ tile2i __building_tile(int bid) {
     return b->tile;
 }
 ANK_FUNCTION_1(__building_tile)
+
+xstring __building_display_name(int bid) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return {};
+    }
+    return b->cls_name();
+}
+ANK_FUNCTION_1(__building_display_name)
 
 void __building_tile_j(js_State *J) {
     const int bid = building_this_id(J);
