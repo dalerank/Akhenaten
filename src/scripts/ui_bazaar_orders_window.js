@@ -2,14 +2,14 @@ log_info("akhenaten: ui bazaar orders window started")
 
 function bazaar_orders_window_accept_none() {
     log_info("akhenaten: bazaar_orders_window_accept_none")
-    city.get_bazaar(city.object_info.building_id).unaccept_all_goods()
+    city.get_bazaar(city.object_info.bid).unaccept_all_goods()
 }
 
 function bazaar_orders_list_on_click_item(p) {
     if (!p || p.user_data === undefined) {
         return
     }
-    city.get_bazaar(city.object_info.building_id).toggle_res_accepted(p.user_data)
+    city.get_bazaar(city.object_info.bid).toggle_res_accepted(p.user_data)
 }
 
 function bazaar_orders_list_on_render_item(p) {
@@ -17,7 +17,7 @@ function bazaar_orders_list_on_render_item(p) {
     if (resId === undefined || resId === RESOURCE_NONE) {
         return
     }
-    var bazaar = city.get_bazaar(city.object_info.building_id)
+    var bazaar = city.get_bazaar(city.object_info.bid)
 
     ui.resource_icon([p.x + 25, p.y + 2], resId)
     ui.resource_icon([p.x + 25 + px(23), p.y + 2], resId)

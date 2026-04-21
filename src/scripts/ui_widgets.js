@@ -177,22 +177,22 @@ function building_info_window_on_init(window) {
 }
 
 function building_info_window_toggle_overlay() {
-    var b = city.get_building(city.object_info.building_id)
+    var b = city.get_building(city.object_info.bid)
     city.current_overlay = (city.current_overlay == b.overlay) ? OVERLAY_NONE : b.overlay
 }
 
 function building_info_window_text_mothball(window) {
-    var b = city.get_building(city.object_info.building_id)
+    var b = city.get_building(city.object_info.bid)
     return (b.state == 1 ? "x" : "")
 }
 
 function building_info_window_text_overlay(window) {
-    var b = city.get_building(city.object_info.building_id)
+    var b = city.get_building(city.object_info.bid)
     return (city.overlay == b.overlay ? "V" : "v")
 }
 
 function building_info_window_toggle_mothball() {
-    var b = city.get_building(city.object_info.building_id)
+    var b = city.get_building(city.object_info.bid)
     if (b.max_workers) {
         b.mothball_toggle()
     }

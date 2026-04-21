@@ -1,12 +1,12 @@
 log_info("akhenaten: ui workshops info window started")
 
 function workshop_info_window_text_mothball() {
-    var b = city.get_building(city.object_info.building_id)
+    var b = city.get_building(city.object_info.bid)
     return (b.state == 1 ? "x" : "")
 }
 
 function workshop_info_window_toggle_mothball() {
-    var b = city.get_building(city.object_info.building_id)
+    var b = city.get_building(city.object_info.bid)
     if (b.max_workers) {
         b.mothball_toggle()
     }
