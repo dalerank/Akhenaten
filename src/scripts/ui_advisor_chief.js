@@ -3,7 +3,8 @@ log_info("akhenaten: ui advisor chief started")
 [es=advisor_window]
 advisor_chief_window {
 	advisor: ADVISOR_CHIEF
-	ui {
+	allow_rmb_goback : true
+	ui : baseui(advisor_window_base, {
 		background : dummy({ pos:[0, 0] })
 
 		outer_panel : { type : "outer_panel", pos:[0, 0], size:[40, 27] }
@@ -23,7 +24,7 @@ advisor_chief_window {
 			draw_paneling: true
 			onrender_item: advisor_chief_report_on_render_item
 		})
-	}
+	})
 }
 
 /** Rough word-wrap for overlay fonts (~7 px per Latin character). */
@@ -487,4 +488,5 @@ function advisor_chief_window_fill_report_rows(window) {
 [es=(advisor_chief_window, init)]
 function advisor_chief_window_on_init(window) {
 	advisor_chief_window_fill_report_rows(window)
+	advisors_toolbar_refresh(window)
 }

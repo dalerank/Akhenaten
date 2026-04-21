@@ -17,7 +17,7 @@ info_window_palace {
         warning_desc  : text({pos[32, 66], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
         text_visit    : text({pos[90, 252], font: FONT_NORMAL_BLACK_ON_LIGHT, text:"#visit_rating_advisor" })
         visit_advisor : image_button({pos[52, 246], size[28, 28], pack:PACK_GENERAL, id:106,
-                                      onclick: function() { __window_advisors_show_advisor(ADVISOR_RATINGS) } })
+                                      onclick: function() { window_advisors_show_advisor(ADVISOR_RATINGS) } })
     })
 }
 

@@ -44,10 +44,12 @@ function advisor_population_on_init(window) {
 	advisor_population_window._info_text_graph_order = -1
     window.title.text = __loc(55, advisor_population_window.graph_order)
 	window.housing.text = "#TR_HEADER_HOUSING"
+
+	advisors_toolbar_refresh(window)
 }
 
 function advisor_population_on_housing_button() {
-	ui.show_advisor(ADVISOR_HOUSING)
+	window_advisors_show_advisor(ADVISOR_HOUSING)
 }
 
 function advisor_population_on_next_graph() {
@@ -94,8 +96,9 @@ function advisor_population_window_ui_draw_foreground(window) {
 advisor_population_window = {
 	advisor: ADVISOR_POPULATION
 	graph_order: 0
+	allow_rmb_goback : true
 
-	ui: {
+	ui: baseui(advisor_window_base, {
 		background   : outer_panel({size:[40, 27] })
 		advisor_icon : image({pack:PACK_GENERAL, id:128, offset:5, pos:[10, 10] })
 		title        : label({font : FONT_LARGE_BLACK_ON_LIGHT, pos:[60, 17]})
@@ -134,5 +137,5 @@ advisor_population_window = {
                         draw_paneling: true
                         onrender_item: advisor_population_info_lines_on_render_item
                     })
-	}
+	})
 }

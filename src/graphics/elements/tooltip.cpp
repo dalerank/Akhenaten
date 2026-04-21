@@ -10,6 +10,7 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "window/window_advisors.h"
 #include "grid/grid.h"
 #include "io/gamefiles/lang.h"
 #include "scenario/criteria.h"
@@ -58,10 +59,7 @@ void tooltip_context::draw_tooltip_impl() {
     int height = 16 * lines + 10;
     int x, y;
     if (mpos.x < screen_dialog_offset_x() + width + 100) {
-        if (g_window_manager.window_is("window_advisors"))
-            x = mpos.x + 50;
-        else
-            x = mpos.x + 20;
+        x = mpos.x + 20;
     } else {
         x = mpos.x - width - 20;
     }

@@ -1,7 +1,7 @@
 log_info("akhenaten: ui advisor housing started")
 
 function advisor_housing_on_graphs_button() {
-	ui.show_advisor(ADVISOR_POPULATION)
+	window_advisors_show_advisor(ADVISOR_POPULATION)
 }
 
 [es=(advisor_housing_window, ondraw_housing_chart)]
@@ -83,12 +83,15 @@ function advisor_housing_window_show_total(window) {
 	window.goods_demanding_1_value.text = String(city.houses_demanding_goods_at(1))
 	window.goods_demanding_2_value.text = String(city.houses_demanding_goods_at(2))
 	window.goods_demanding_3_value.text = String(city.houses_demanding_goods_at(3))
+
+	advisors_toolbar_refresh(window)
 }
 
 [es=advisor_window]
 advisor_housing_window {
 	advisor: ADVISOR_HOUSING
-	ui {
+	allow_rmb_goback : true
+	ui : baseui(advisor_window_base, {
 		background       : outer_panel({size:[40, 27]})
 		advisor_icon     : image({pack:PACK_GENERAL, id:128, offset:5, pos:[10, 10]})
 		title            : label({font: FONT_LARGE_BLACK_ON_LIGHT, text:"#TR_ADVISOR_ADVISOR_HEADER_HOUSING", pos:[60, 12]})
@@ -125,5 +128,5 @@ advisor_housing_window {
 		goods_demanding_3_icon : resource_icon({ pos: [34, 397], resource: RESOURCE_BEER })
 		goods_demanding_3_text : label({ font: FONT_NORMAL_BLACK_ON_LIGHT, text: "#TR_ADVISOR_RESIDENCES_DEMANDING_BEER", pos: [60, 400] })
 		goods_demanding_3_value : label({ font: FONT_NORMAL_BLACK_ON_LIGHT, pos: [320, 400] })
-	}
+	})
 }

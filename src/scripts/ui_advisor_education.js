@@ -46,7 +46,8 @@ function education_advice_index() {
 [es=advisor_window]
 advisor_education_window {
     advisor: ADVISOR_EDUCATION
-    ui {
+    allow_rmb_goback : true
+    ui : baseui(advisor_window_base, {
         background   : outer_panel({size:[40, 19]})
         advisor_icon : image({pack:PACK_GENERAL, id:128, offset:7, pos:[10, 10] })
         title        : header({pos:[60, 17], text:[57, 0]})
@@ -82,7 +83,7 @@ advisor_education_window {
         })
 
         education_advice : multiline({pos:[30, 250], size:[px(37), 0], font: FONT_NORMAL_BLACK_ON_LIGHT })
-    }
+    })
 }
 
 [es=(advisor_education_window, init)]
@@ -107,4 +108,6 @@ function advisor_education_window_init(window) {
     window.libraries_covg.text = (100 * libraryAct) + " " + __loc(57, 7)
 
     window.education_advice.text = __loc(57, 22 + education_advice_index())
+
+    advisors_toolbar_refresh(window)
 }

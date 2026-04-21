@@ -15,7 +15,7 @@ function top_menu_cities_old_toggle(p1, p2) { game_features.gameui_empire_city_o
 function top_menu_open_advisor(advisor, p2) {
 	widget_top_menu_clear_state()
 	window_go_back()
-	window_advisors_show_advisor(advisor)
+	emit event_show_window{ id:advisor }
 }
 
 function top_menu_show_console(p1, p2) { window_show_cheat_console(true) }

@@ -231,7 +231,7 @@ function empire_window_confirm_open_trade() {
 function empire_window_on_init(window) {
     window.button_help.onclick = function() { ui.window_message_dialog_show("message_world_map") }
     window.button_close.onclick = function() { ui.window_city_show() }
-    window.button_advisor.onclick = function() { ui.show_advisor(ADVISOR_TRADE) }
+    window.button_advisor.onclick = function() { window_advisors_show_advisor(ADVISOR_TRADE) }
     window.button_open_trade.onclick = function() {
         ui.show_yesno("#popup_dialog_open_trade", empire_window_confirm_open_trade )
     }

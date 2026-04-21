@@ -33,7 +33,8 @@ function monuments_advisor_on_click_item(p) {
 [es=advisor_window]
 advisor_monuments_window {
     advisor: ADVISOR_MONUMENTS
-    ui {
+    allow_rmb_goback : true
+    ui : baseui(advisor_window_base, {
         background    : outer_panel({size[40, 27]})
         advisor_icon  : image({pack:PACK_GENERAL, id:128, offset:12, pos[10, 10] })
         title         : text({pos[60, 12], text{group:4, id:13}, font:FONT_LARGE_BLACK_ON_LIGHT })
@@ -56,7 +57,12 @@ advisor_monuments_window {
         })
 
         no_monuments : label({margin{ centerx:-100, centery:-40}, text:"${53.69}", font:FONT_NORMAL_WHITE_ON_DARK })
-    }
+    })
+}
+
+[es=(advisor_monuments_window, init)]
+function advisor_monuments_window_init(window) {
+    advisors_toolbar_refresh(window)
 }
 
 [es=(advisor_monuments_window, ui_draw_foreground)]

@@ -337,7 +337,7 @@ void common_info_window::update_buttons(object_info &c) {
         first_advisor->img_desc.offset = (c.go_to_advisor.left_a - 1) * 3;
         first_advisor->pos.y = bgsize.y - 40;
         first_advisor->onclick([&c] {
-            window_advisors_show_advisor(c.go_to_advisor.first);
+            events::emit(event_show_advisor{(e_advisor)c.go_to_advisor.first});
         });
     }
 
@@ -351,7 +351,7 @@ void common_info_window::update_buttons(object_info &c) {
         second_advisor->img_desc.offset = (c.go_to_advisor.left_a - 1) * 3;
         second_advisor->pos.y = bgsize.y - 40;
         second_advisor->onclick([&c] {
-            window_advisors_show_advisor(c.go_to_advisor.left_a);
+            events::emit(event_show_advisor{(e_advisor)c.go_to_advisor.left_a});
         });
     }
 
@@ -365,7 +365,7 @@ void common_info_window::update_buttons(object_info &c) {
         third_advisor->img_desc.offset = (c.go_to_advisor.left_b - 1) * 3;
         third_advisor->pos.y = bgsize.y - 40;
         third_advisor->onclick([&c] {
-            window_advisors_show_advisor(c.go_to_advisor.left_b);
+            events::emit(event_show_advisor{(e_advisor)c.go_to_advisor.left_b});
         });
     }
 }

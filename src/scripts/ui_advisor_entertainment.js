@@ -74,7 +74,8 @@ function advisor_entertainment_venues_list_on_render_item(p) {
 [es=advisor_window]
 advisor_entertainment_window {
 	advisor: ADVISOR_ENTERTAINMENT
-	ui {
+	allow_rmb_goback : true
+	ui : baseui(advisor_window_base, {
 		background    : outer_panel({size:[40, 20] })
 		title         : text({pos: [60, 12], text:[58, 0], font : FONT_LARGE_BLACK_ON_LIGHT })
 		advisor_icon  : image({pack:PACK_GENERAL, id:128, offset:8, pos:[10, 10] }),
@@ -100,7 +101,7 @@ advisor_entertainment_window {
 		}),
 
 		advice        : multiline({ margin:{left:30, bottom:-90}, size:[px(38), 208], wrap:512, font:FONT_NORMAL_BLACK_ON_LIGHT }),
-	}
+	})
 }
 
 [es=(advisor_entertainment_window, init)]
@@ -113,4 +114,6 @@ function advisor_entertainment_window_init(window) {
 	}
 
 	window.advice.text = __loc(58, 7 + advisor_entertainment_advice_index())
+
+	advisors_toolbar_refresh(window)
 }

@@ -7,6 +7,7 @@
 #include "graphics/elements/ui_js.h"
 #include "core/log.h"
 #include "city/constants.h"
+#include <cstring>
 
 hvector<std::unique_ptr<js_building_info_window>, 32> building_windows;
 hvector<std::unique_ptr<js_advisor_window>, 16> advisor_windows;

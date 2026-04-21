@@ -28,7 +28,6 @@ ui.button_border = __ui_button_border
 ui.label_colored = __ui_label_colored
 ui.draw_texture = __ui_draw_texture
 ui.window_is = __ui_window_is
-ui.show_advisor = __ui_window_advisors_show_advisor
 ui.resource_icon_flags = __ui_draw_resource_icon_flags
 ui.set_window_pos = __ui_set_window_pos
 

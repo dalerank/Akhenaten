@@ -1,5 +1,6 @@
 #include "settings.h"
 
+#include "city/constants.h"
 #include "js/js_game.h"
 #include "game/game.h"
 #include "platform/renderer.h"

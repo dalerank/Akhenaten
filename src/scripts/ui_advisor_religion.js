@@ -102,7 +102,8 @@ function advisor_religion_gods_list_on_render_item(p) {
 advisor_religion_window = {
 	advisor: ADVISOR_RELIGION
 	needs_sync : true
-	ui : {
+	allow_rmb_goback : true
+	ui : baseui(advisor_window_base, {
 		background : outer_panel({size:[40, 27] }),
 		title : text({pos: [60, 12], text: {group:59, id:0}, font : FONT_LARGE_BLACK_ON_LIGHT }),
 		advisor_icon : image({pack:PACK_GENERAL, id:128, offset:9, pos:[10, 10] }),
@@ -140,7 +141,7 @@ advisor_religion_window = {
 		planed_festival : { type : "text", pos: [102, 284 + 68], font : FONT_NORMAL_BLACK_ON_DARK, align:"center" },
 		hold_festival_btn : { type:"generic_button", pos:[102, 278 + 68], size:[300, 24], onclick: advisor_religion_window_hold_festival },
 		festival_advice : { type : "text", pos: [56, 305 + 68], wrap:400, font : FONT_NORMAL_WHITE_ON_DARK, multiline:true },
-	}
+	})
 }
 
 function advisor_religion_window_hold_festival() {
@@ -161,6 +162,7 @@ function advisor_religion_window_init(window) {
 	if (!game.gods_enabled) {
 		window.nogods_text.enabled = true
 		window.gods_list.clear()
+		advisors_toolbar_refresh(window)
 		return
 	}
 
@@ -173,6 +175,8 @@ function advisor_religion_window_init(window) {
 	__city_religion_calculate_least_happy_god()
 
 	advisor_religion_window.needs_sync = true
+
+	advisors_toolbar_refresh(window)
 }
 
 [es=(advisor_religion_window, draw_background)]

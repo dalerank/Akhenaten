@@ -3,7 +3,8 @@ log_info("akhenaten: ui advisor military started")
 [es=advisor_window]
 advisor_military_window {
     advisor: ADVISOR_MILITARY
-    ui {
+    allow_rmb_goback : true
+    ui : baseui(advisor_window_base, {
         background   : outer_panel({size[40, 27]})
 
         title        : text({pos[60, 12], text{group:51, id:0}, font : FONT_LARGE_BLACK_ON_LIGHT })
@@ -32,7 +33,7 @@ advisor_military_window {
                                    forts_text  : text({pos[30, 50], font:FONT_NORMAL_BLACK_ON_LIGHT})
                                }
                              })
-    }
+    })
 }
 
 function get_figure_type_str(figure_type) {
@@ -60,6 +61,8 @@ function advisor_military_window_init(window) {
     var total_soldiers_str = __loc(8, 46) + " " + city.military.total_soldiers
     var total_batalions_str =  city.military.total_batalions + " Companies"
     window.forts_text.text = total_soldiers_str + " in " + total_batalions_str
+
+    advisors_toolbar_refresh(window)
 }
 
 [es=(advisor_military_window, ui_draw_foreground)]

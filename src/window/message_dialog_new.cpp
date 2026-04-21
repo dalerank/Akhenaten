@@ -397,13 +397,12 @@ void ui::message_dialog_base::button_help() {
 
 void ui::message_dialog_base::button_advisor(int advisor) {
     cleanup();
-    if (!window_advisors_show_advisor((e_advisor)advisor))
-        window_city_show();
+    events::emit(event_show_advisor{ (e_advisor)advisor });
 }
 
 void ui::message_dialog_base::show(xstring text_id, int message_id, void (*background_callback)(void)) {
     init_data(text_id, message_id, background_callback);
-    
+
     static window_type instance = {
         "window_message_dialog",
         [] (int flags) { g_message_dialog_instance->draw_background(flags); },

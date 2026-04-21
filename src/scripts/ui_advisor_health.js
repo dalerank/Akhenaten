@@ -21,7 +21,8 @@ function advisor_health_advice_index() {
 [es=advisor_window]
 advisor_health_window {
 	advisor: ADVISOR_HEALTH
-	ui {
+	allow_rmb_goback : true
+	ui : baseui(advisor_window_base, {
 		background   : outer_panel({size:[40, 18]})
 		advisor_icon : image({pack:PACK_GENERAL, id:128, offset:6, pos:[10, 10] })
 		title        : header({pos:[60, 17], text:{group:56, id:0}})
@@ -58,7 +59,7 @@ advisor_health_window {
 		})
 
 		health_advice : multiline({pos:[60, 218], size:[520, 90], wrap:500, font: FONT_NORMAL_BLACK_ON_LIGHT })
-	}
+	})
 }
 
 [es=(advisor_health_window, init)]
@@ -94,4 +95,6 @@ function advisor_health_window_init(window) {
 	window.mortuary_covg.text = __loc(57, ((cov.mortuary / 10) | 0) + 11)
 
 	window.health_advice.text = __loc(56, 6 + advisor_health_advice_index())
+
+	advisors_toolbar_refresh(window)
 }

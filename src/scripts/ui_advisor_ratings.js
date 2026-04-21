@@ -78,7 +78,8 @@ function advisor_ratings_select_kingdom(window) {
 advisor_ratings_window {
 	advisor: ADVISOR_RATINGS
 	selected: SELECTED_RATING_CULTURE
-	ui {
+	allow_rmb_goback : true
+	ui : baseui(advisor_window_base, {
 		background       : outer_panel({size:[40, 27]})
 		background_image : image({pack:PACK_UNLOADED, id:2, pos:[60, 38]})
 		rating_culture: button({pos:[80, 276], align:"xcenter", size:[120, 60], tooltip:[68, 104], onclick_event: "select_culture",
@@ -119,7 +120,7 @@ advisor_ratings_window {
 		advisor_icon  : image({pack:PACK_GENERAL, id:128, offset:3, pos:[10, 10]}),
 		header_label  : label({font: FONT_LARGE_BLACK_ON_LIGHT, text:{group:53, id:0}, pos:[60, 17]}),
 		population_label : label({pos:[300, 20], font: FONT_NORMAL_BLACK_ON_LIGHT}),
-	}
+	})
 }
 
 [es=(advisor_ratings_window, init)]
@@ -138,6 +139,8 @@ function advisor_ratings_window_init(window) {
 	advisor_ratings_refresh_row(window, 1, "prosperity", city.rating.prosperity, openPlay, city.winning.prosperity)
 	advisor_ratings_refresh_row(window, 2, "monument", city.rating.monument, openPlay, city.winning.monument)
 	advisor_ratings_refresh_row(window, 3, "kingdom", city.rating.kingdom, openPlay, city.winning.kingdom)
+
+	advisors_toolbar_refresh(window)
 }
 
 [es=(advisor_ratings_window, draw_background)]

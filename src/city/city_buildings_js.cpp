@@ -164,6 +164,11 @@ void __city_set_advisor_available(int advisor, int available) {
 }
 ANK_FUNCTION_2(__city_set_advisor_available)
 
+int __city_is_advisor_available(int advisor) {
+    return (int)g_city.is_advisor_available((e_advisor)advisor);
+}
+ANK_FUNCTION_1(__city_is_advisor_available)
+
 bool __city_building_is_tax_collector(int bid) {
     building *b = building_get(bid);
     return !!b->dcast_tax_collector();

@@ -3,7 +3,8 @@ log_info("akhenaten: ui advisor financial started")
 [es=advisor_window]
 advisor_financial_window {
     advisor: ADVISOR_FINANCIAL
-    ui {
+    allow_rmb_goback : true
+    ui : baseui(advisor_window_base, {
         background   : outer_panel({size[40, 27]})
         advisor_icon : image({pack:PACK_GENERAL, id:128, offset:10, pos[10, 10] })
         title        : header({pos[60, 17], text[60, 0]})
@@ -28,7 +29,7 @@ advisor_financial_window {
 
         incomes_base  : text({pos[10, 150]})
         expenses_base  : text({pos[10, 240]})
-    }
+    })
 }
 
 function advisor_financial_window_inc_tax() { city.finance.tax_percentage = city.finance.tax_percentage + 1 }
@@ -114,6 +115,7 @@ function advisor_financial_window_update_expenses(window) {
 [es=(advisor_financial_window, init)]
 function advisor_financial_window_on_init(window) {
     __city_finance_calculate_totals()
+    advisors_toolbar_refresh(window)
 }
 
 [es=(advisor_financial_window, ui_draw_foreground)]

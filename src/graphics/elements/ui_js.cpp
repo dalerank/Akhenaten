@@ -152,10 +152,7 @@ bool __ui_window_is(pcstr window_id) {
     return g_window_manager.window_is(window_id);
 }
 ANK_FUNCTION_1(__ui_window_is)
-void __ui_window_advisors_show_advisor(int advisor) {
-    window_advisors_show_advisor((e_advisor)advisor);
-}
-ANK_FUNCTION_1(__ui_window_advisors_show_advisor)
+
 void __ui_draw_label(pcstr text, vec2i pos, int font) {
     ui::label(text, pos, (e_font)font);
 }

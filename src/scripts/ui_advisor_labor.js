@@ -3,7 +3,8 @@ log_info("akhenaten: ui advisor labor started")
 [es=advisor_window]
 advisor_labors_window {
     advisor: ADVISOR_LABOR
-    ui {
+    allow_rmb_goback : true
+    ui : baseui(advisor_window_base, {
         background      : outer_panel({size[40, 27]})
 
         title           : text({pos[60, 12], text{group:50, id:0}, font : FONT_LARGE_BLACK_ON_LIGHT })
@@ -35,7 +36,7 @@ advisor_labors_window {
         wages_title     : text({text{group:50, id:14}, pos[70, 359], font:FONT_NORMAL_WHITE_ON_DARK})
         wages_value     : text({pos[230, 359], text:"${finance.wages}  ${50.15}  ${50.18} ${finance.wages_kingdome})", font:FONT_NORMAL_WHITE_ON_DARK})
         wages_estimated : text({pos[264, 395], text:"${50.19} ${finance.estimated_wages}", font:FONT_NORMAL_BLACK_ON_LIGHT})
-    }
+    })
 }
 
 function advisor_labors_window_dec_wages() {
@@ -51,6 +52,11 @@ function labor_category_name(cat) {
         return "Culture"
 
     return __loc(50, cat + 1)
+}
+
+[es=(advisor_labors_window, init)]
+function advisor_labors_window_init(window) {
+    advisors_toolbar_refresh(window)
 }
 
 [es=(advisor_labors_window, ui_draw_foreground)]

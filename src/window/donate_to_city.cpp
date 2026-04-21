@@ -102,7 +102,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     if (arrow_buttons_handle_mouse(m_dialog, arrow_buttons, 2, &data.focus_arrow_button_id))
         return;
     if (input_go_back_requested(m, h))
-        window_advisors_show();
+        window_go_back();
 }
 
 static void button_set_amount(int amount_id, int param2) {
@@ -145,8 +145,8 @@ static void arrow_button_amount(int is_down, int param2) {
 void window_donate_to_city_show(void) {
     static window_type window = {
         "window_donate_to_city",
-        draw_background, 
-        draw_foreground, 
+        draw_background,
+        draw_foreground,
         handle_input
     };
     g_city.kingdome.init_donation_amount();

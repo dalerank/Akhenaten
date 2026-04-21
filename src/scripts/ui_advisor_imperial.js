@@ -133,7 +133,8 @@ function imperial_requests_on_render_item(p) {
 [es=advisor_window]
 advisor_imperial_window {
     advisor: ADVISOR_IMPERIAL
-    ui {
+    allow_rmb_goback : true
+    ui : baseui(advisor_window_base, {
         background   : outer_panel({size[40, 27]})
         advisor_icon : image({pack:PACK_GENERAL, id:128, offset:2, pos[10, 10] })
         header_label : header({pos[60, 17], text:"Political overseer for ${player.name}"})
@@ -177,7 +178,7 @@ advisor_imperial_window {
         big_text     : text_center({pos[60, 295], size[400, 20], font:FONT_NORMAL_BLACK_ON_LIGHT})
         top_text     : text_center({pos[504, 130], size[100, 20], font:FONT_NORMAL_BLACK_ON_LIGHT})
         bot_text     : text_center({pos[504, 230], size[100, 20], font:FONT_NORMAL_BLACK_ON_LIGHT})
-    }
+    })
 }
 
 function imperial_visible_request_view(index) {
@@ -187,6 +188,11 @@ function imperial_visible_request_view(index) {
     }
     v.resource = city_resource_view(v.resource_id)
     return v
+}
+
+[es=(advisor_imperial_window, init)]
+function advisor_imperial_window_on_init(window) {
+    advisors_toolbar_refresh(window)
 }
 
 [es=(advisor_imperial_window, ui_draw_foreground)]
