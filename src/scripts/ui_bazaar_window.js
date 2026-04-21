@@ -2,22 +2,22 @@ log_info("akhenaten: ui bazaar window started")
 
 function bazaar_info_window_toggle_overlay() {
     log_info("building_info_window_toggle_overlay")
-    var b = city.get_building(city.object_info.building_id)
+    var b = city.get_building(city.object_info.bid)
     city.current_overlay = (city.current_overlay == b.overlay) ? OVERLAY_NONE : b.overlay
 }
 
 function bazaar_info_window_text_overlay(window) {
-    var b = city.get_building(city.object_info.building_id)
+    var b = city.get_building(city.object_info.bid)
     return (city.overlay == b.overlay ? "V" : "v")
 }
 
 function bazaar_info_window_text_mothball() {
-    var b = city.get_building(city.object_info.building_id)
+    var b = city.get_building(city.object_info.bid)
     return (b.state == 1 ? "x" : "")
 }
 
 function bazaar_info_window_toggle_mothball() {
-    var b = city.get_building(city.object_info.building_id)
+    var b = city.get_building(city.object_info.bid)
     if (b.max_workers) {
         b.mothball_toggle()
     }
