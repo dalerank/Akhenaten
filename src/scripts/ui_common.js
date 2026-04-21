@@ -38,8 +38,8 @@ function show_window_by_id(window_id) {
 	}
 }
 
-ui.arw_button = function(pos, down, tiny) {
-    return __ui_draw_arw_button(pos, down, tiny)
+ui.arw_button = function(pos, down, tiny, allow_repeat) {
+    return __ui_draw_arw_button(pos, down, tiny, allow_repeat)
 }
 
 ui.button = function(config) {

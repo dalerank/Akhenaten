@@ -33,12 +33,13 @@ struct arrow_button {
 
 void arrow_buttons_draw(arrow_button* buttons, int num_buttons, bool tiny = false, vec2i base_offset = {0, 0});
 int get_arrow_button(const mouse *m, arrow_button *buttons, int num_buttons);
-int arrow_buttons_handle_mouse(const mouse* m, arrow_button* buttons, int num_buttons, int* focus_button_id);
+int arrow_buttons_handle_mouse(const mouse* m, arrow_button* buttons, int num_buttons, int* focus_button_id,
+                               bool allow_repeat = true);
 
 template<class T>
 bool arrow_buttons_handle_mouse(const mouse *m, T &buttons, int &focus_button_id) {
-    return buttons.size() > 0 
-        ? arrow_buttons_handle_mouse(m, &buttons.front(), (int)buttons.size(), &focus_button_id)
+    return buttons.size() > 0
+        ? arrow_buttons_handle_mouse(m, &buttons.front(), (int)buttons.size(), &focus_button_id, true)
         : 0;
 }
 

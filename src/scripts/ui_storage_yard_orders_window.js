@@ -6,12 +6,8 @@ function storage_yard_order_instruction(storage, resource) {
         var max_accept = storage.resource_max_accept(resource)
         var label = String(max_accept)
         if (max_accept == 3200) { label = __loc(99, 28) }
-        else if (max_accept == 2400) { label = __loc(99, 27) }
-        else if (max_accept == 1600) { label = __loc(99, 26) }
-        else if (max_accept == 800)  { label = __loc(99, 25) }
-        var adv = ""
-        if (max_accept == 2400 || max_accept == 1600 || max_accept == 800) { adv = __loc(99, 29) }
-        return { text: __loc(99, 18) + " " + label + " " + adv, font: FONT_NORMAL_WHITE_ON_DARK }
+        else { label = String(max_accept) }
+        return { text: __loc(99, 18) + " " + label, font: FONT_NORMAL_WHITE_ON_DARK }
     }
     if (state == STORAGE_STATE_REFUSE) {
         return { text: __loc(99, 8), font: FONT_NORMAL_BLACK_ON_DARK }
@@ -20,12 +16,8 @@ function storage_yard_order_instruction(storage, resource) {
         var max_get = storage.resource_max_get(resource)
         var label = String(max_get)
         if (max_get == 3200) { label = __loc(99, 31) }
-        else if (max_get == 2400) { label = __loc(99, 27) }
-        else if (max_get == 1600) { label = __loc(99, 26) }
-        else if (max_get == 800)  { label = __loc(99, 25) }
-        var adv = ""
-        if (max_get == 2400 || max_get == 1600 || max_get == 800) { adv = __loc(99, 29) }
-        return { text: __loc(99, 19) + " " + label + " " + adv, font: FONT_NORMAL_YELLOW }
+        else { label = String(max_get) }
+        return { text: __loc(99, 19) + " " + label, font: FONT_NORMAL_YELLOW }
     }
     if (state == STORAGE_STATE_EMPTY) {
         return { text: __loc(99, 21), font: FONT_NORMAL_BLACK_ON_DARK }
@@ -39,23 +31,30 @@ function storage_yard_orders_list_on_click_item(p) {
 
 function storage_yard_orders_list_on_render_item(p) {
     var resId = p.user_data
-    if (resId === undefined || resId === RESOURCE_NONE || !storage_yard_orders_window.storage_yard) { return }
+    if (resId == RESOURCE_NONE || !storage_yard_orders_window.storage_yard)
+        return
 
     ui.resource_icon([p.x + 25, p.y + 2], resId)
-    ui.label_ex(__loc(23, resId), [p.x + 85, p.y], FONT_NORMAL_WHITE_ON_DARK, UiFlags_AlignYCentered, 150)
+    ui.label_ex(__loc(23, resId), [p.x + 65, p.y], FONT_NORMAL_WHITE_ON_DARK, UiFlags_AlignYCentered, 150)
 
     var state = storage_yard_orders_window.storage_yard.resource_state(resId)
     if (state == STORAGE_STATE_ACCEPT || state == STORAGE_STATE_GET) {
-        if (ui.arw_button([p.x + p.sizex - 60, p.y + 2], false, true)) {
-            storage_yard_orders_window.storage_yard.increase_decrease_resource_state(resId, true)
-        }
-        if (ui.arw_button([p.x + p.sizex - 40, p.y + 2], true, true)) {
+        if (ui.arw_button([p.x + 340, p.y + 2], false, true, false)) {
             storage_yard_orders_window.storage_yard.increase_decrease_resource_state(resId, false)
+        }
+
+        if (ui.arw_button([p.x + 360, p.y + 2], true, true, false)) {
+            storage_yard_orders_window.storage_yard.increase_decrease_resource_state(resId, true)
         }
     }
 
     var instr = storage_yard_order_instruction(storage_yard_orders_window.storage_yard, resId)
-    ui.label_ex(instr.text, [p.x + p.sizex - 280, p.y], instr.font, UiFlags_AlignYCentered, 220)
+    ui.label_ex(instr.text, [p.x + 180, p.y], instr.font, UiFlags_AlignYCentered, 220)
+    ui.resource_icon([p.x + 25 + px(23), p.y + 2], resId)
+
+    if (p.hover) {
+        ui.border({x: p.x + 4, y: p.y - 2}, {x: p.sizex - 8, y: p.sizey + 2}, 0, COLOR_TOOLTIP_BORDER, UiFlags_None)
+    }
 }
 
 [es=modal_window]
@@ -103,7 +102,7 @@ storage_yard_orders_window {
 
 [es=(storage_yard_orders_window, init)]
 function storage_yard_orders_window_init(window) {
-    storage_yard_orders_window.storage_yard = city.get_storage_yard(window.bid)
+    storage_yard_orders_window.storage_yard = city.get_storage_yard(city.object_info.bid)
 
     window.goods_list.clear()
     for (var name in city.resources.available) {

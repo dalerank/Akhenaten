@@ -61,7 +61,8 @@ int get_arrow_button(const mouse* m, arrow_button* buttons, int num_buttons) {
     return 0;
 }
 
-int arrow_buttons_handle_mouse(const mouse* m, arrow_button* buttons, int num_buttons, int* focus_button_id) {
+int arrow_buttons_handle_mouse(const mouse* m, arrow_button* buttons, int num_buttons, int* focus_button_id,
+                               bool allow_repeat) {
     static time_millis last_time = 0;
 
     time_millis curr_time = time_get_millis();
@@ -107,7 +108,7 @@ int arrow_buttons_handle_mouse(const mouse* m, arrow_button* buttons, int num_bu
         return button_id;
     }
 
-    if (m->left.is_down) {
+    if (allow_repeat && m->left.is_down) {
         btn->pressed = BUTTON_PRESSED_FRAMES;
         if (should_repeat) {
             btn->repeats++;
@@ -127,8 +128,9 @@ int arrow_buttons_handle_mouse(const mouse* m, arrow_button* buttons, int num_bu
             if (btn->_onclick_void) {
                 btn->_onclick_void();
             }
+            return button_id;
         }
-        return button_id;
+        return 0;
     }
     return 0;
 }
