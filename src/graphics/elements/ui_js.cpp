@@ -117,7 +117,7 @@ bool __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags, pc
 }
 ANK_FUNCTION_6(__ui_draw_button);
 
-bool __ui_draw_arw_button(vec2i pos, bool down, bool tiny) {
+bool __ui_draw_arw_button(vec2i pos, bool down, bool tiny, bool allow_repeat) {
     const bool is_underlying = g_window_manager.underlying_windows_redrawing > 0;
     const UiFlags_ flags = is_underlying ? UiFlags_Readonly : UiFlags_None;
     arrow_button &btn = ui::arw_button(pos, down, tiny, flags);
@@ -125,10 +125,10 @@ bool __ui_draw_arw_button(vec2i pos, bool down, bool tiny) {
         return false;
     }
     int focus = 0;
-    const int clicked = arrow_buttons_handle_mouse(&mouse::ref(), &btn, 1, &focus);
+    const int clicked = arrow_buttons_handle_mouse(&mouse::ref(), &btn, 1, &focus, allow_repeat);
     return clicked != 0;
 }
-ANK_FUNCTION_3(__ui_draw_arw_button);
+ANK_FUNCTION_4(__ui_draw_arw_button);
 
 void __ui_dialog_show_yesno(pcstr text, js_helpers::js_function_ref cb_yes, js_helpers::js_function_ref cb_no) {
     xstring yes_ref = cb_yes.ref;

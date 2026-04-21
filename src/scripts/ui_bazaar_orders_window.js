@@ -6,9 +6,6 @@ function bazaar_orders_window_accept_none() {
 }
 
 function bazaar_orders_list_on_click_item(p) {
-    if (!p || p.user_data === undefined) {
-        return
-    }
     city.get_bazaar(city.object_info.bid).toggle_res_accepted(p.user_data)
 }
 

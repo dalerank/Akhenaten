@@ -28,12 +28,9 @@ static void storage_yard_proto_is_empty_all(js_State *J) {
 
 static void storage_yard_proto_resource_state(js_State *J) {
     building_storage_yard *b = storage_yard_this(J);
-    if (b) {
-        const int resource_id = js_helpers::js_to_value<int>(J, 1);
-        const int increase = js_helpers::js_to_value<bool>(J, 2);
-        building_storage_cycle_resource_state(b->storage_id(), resource_id, increase);
-    }
-    js_helpers::js_push_void(J);
+    const int resource_id = js_helpers::js_to_value<int>(J, 1);
+    const storage_t* s = b ? building_storage_get(b->storage_id()) : nullptr;
+    js_helpers::js_push_value(J, s ? s->resource_state[resource_id] : 0);
 }
 
 static void storage_yard_proto_resource_max_accept(js_State *J) {
@@ -67,8 +64,9 @@ static void storage_yard_proto_accept_none(js_State *J) {
 static void storage_yard_proto_cycle_resource_state(js_State *J) {
     building_storage_yard *b = storage_yard_this(J);
     const int resource_id = js_helpers::js_to_value<int>(J, 1);
+    const int increase = js_helpers::js_to_value<bool>(J, 2);
     const storage_t *s = b ? building_storage_get(b->storage_id()) : nullptr;
-    js_helpers::js_push_value(J, s ? s->resource_state[resource_id] : 0);
+    building_storage_cycle_resource_state(b ? b->storage_id() : 0, resource_id, increase);
 }
 
 static void storage_yard_proto_increase_decrease_resource_state(js_State *J) {
@@ -107,8 +105,7 @@ void js_register_storage_yard(js_State *J) {
     jsB_propf(J, js_intern("StorageYard.prototype.toggle_empty_all"), storage_yard_proto_toggle_empty_all, 0);
     jsB_propf(J, js_intern("StorageYard.prototype.accept_none"), storage_yard_proto_accept_none, 0);
     jsB_propf(J, js_intern("StorageYard.prototype.cycle_resource_state"), storage_yard_proto_cycle_resource_state, 1);
-    jsB_propf(J, js_intern("StorageYard.prototype.increase_decrease_resource_state"),
-        storage_yard_proto_increase_decrease_resource_state, 2);
+    jsB_propf(J, js_intern("StorageYard.prototype.increase_decrease_resource_state"), storage_yard_proto_increase_decrease_resource_state, 2);
     jsB_propf(J, js_intern("StorageYard.prototype.toString"), storage_yard_proto_toString, 0);
 
     js_newcconstructor(J, jsB_new_StorageYard, jsB_new_StorageYard, js_intern("StorageYard"), 1);
