@@ -2,27 +2,20 @@ log_info("akhenaten: ui storage yard orders window started")
 
 function storage_yard_order_instruction(storage, resource) {
     var state = storage.resource_state(resource)
-    if (state == STORAGE_STATE_ACCEPT) {
-        var max_accept = storage.resource_max_accept(resource)
-        var label = String(max_accept)
-        if (max_accept == 3200) { label = __loc(99, 28) }
-        else { label = String(max_accept) }
-        return { text: __loc(99, 18) + " " + label, font: FONT_NORMAL_WHITE_ON_DARK }
+
+    function amount_label(amount, loc_full_id) {
+        return (amount == 3200) ? __loc(99, loc_full_id) : String(amount)
     }
-    if (state == STORAGE_STATE_REFUSE) {
-        return { text: __loc(99, 8), font: FONT_NORMAL_BLACK_ON_DARK }
+
+    var max_accept = storage.resource_max_accept(resource)
+    var max_get = storage.resource_max_get(resource)
+    switch (state) {
+    case STORAGE_STATE_ACCEPT:  return { text: __loc(99, 18) + " " + amount_label(max_accept, 28), font: FONT_NORMAL_WHITE_ON_DARK }
+    case STORAGE_STATE_REFUSE:  return { text: __loc(99, 8), font: FONT_NORMAL_BLACK_ON_DARK }
+    case STORAGE_STATE_GET:     return { text: __loc(99, 19) + " " + amount_label(max_get, 31), font: FONT_NORMAL_YELLOW }
+    case STORAGE_STATE_EMPTY:   return { text: __loc(99, 21), font: FONT_NORMAL_BLACK_ON_DARK }
+    default:                    return { text: "unknown_storage", font: FONT_NORMAL_BLACK_ON_DARK }
     }
-    if (state == STORAGE_STATE_GET) {
-        var max_get = storage.resource_max_get(resource)
-        var label = String(max_get)
-        if (max_get == 3200) { label = __loc(99, 31) }
-        else { label = String(max_get) }
-        return { text: __loc(99, 19) + " " + label, font: FONT_NORMAL_YELLOW }
-    }
-    if (state == STORAGE_STATE_EMPTY) {
-        return { text: __loc(99, 21), font: FONT_NORMAL_BLACK_ON_DARK }
-    }
-    return { text: "unknown_storage", font: FONT_NORMAL_BLACK_ON_DARK }
 }
 
 function storage_yard_orders_list_on_click_item(p) {
@@ -31,24 +24,25 @@ function storage_yard_orders_list_on_click_item(p) {
 
 function storage_yard_orders_list_on_render_item(p) {
     var resId = p.user_data
-    if (resId == RESOURCE_NONE || !storage_yard_orders_window.storage_yard)
+    var storage = storage_yard_orders_window.storage_yard
+    if (resId == RESOURCE_NONE || !storage)
         return
 
     ui.resource_icon([p.x + 25, p.y + 2], resId)
     ui.label_ex(__loc(23, resId), [p.x + 65, p.y], FONT_NORMAL_WHITE_ON_DARK, UiFlags_AlignYCentered, 150)
 
-    var state = storage_yard_orders_window.storage_yard.resource_state(resId)
+    var state = storage.resource_state(resId)
     if (state == STORAGE_STATE_ACCEPT || state == STORAGE_STATE_GET) {
         if (ui.arw_button([p.x + 340, p.y + 2], false, true, false)) {
-            storage_yard_orders_window.storage_yard.increase_decrease_resource_state(resId, false)
+            storage.increase_decrease_resource_state(resId, false)
         }
 
         if (ui.arw_button([p.x + 360, p.y + 2], true, true, false)) {
-            storage_yard_orders_window.storage_yard.increase_decrease_resource_state(resId, true)
+            storage.increase_decrease_resource_state(resId, true)
         }
     }
 
-    var instr = storage_yard_order_instruction(storage_yard_orders_window.storage_yard, resId)
+    var instr = storage_yard_order_instruction(storage, resId)
     ui.label_ex(instr.text, [p.x + 180, p.y], instr.font, UiFlags_AlignYCentered, 220)
     ui.resource_icon([p.x + 25 + px(23), p.y + 2], resId)
 
