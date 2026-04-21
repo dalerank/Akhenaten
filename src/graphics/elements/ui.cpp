@@ -684,8 +684,10 @@ int ui::label(pcstr label, vec2i pos, e_font font, UiFlags flags, int box_width)
           Caption{label ? label : ""});
         return box_width;
     } else if (!!(flags & UiFlags_LabelMultiline)) {
-        // keep immediate: returns line count, complex to measure ahead of time
-        return text_draw_multiline(label, offset + pos, box_width, font, 0);
+        push(cmd_t::text_multiline, Pos{offset + pos}, BoxWidth{box_width}, Font{font}, TextColor{0},
+          Caption{label ? label : ""});
+        // Height is only known at flush; same as elabel multiline and ui::text_multiline.
+        return 0;
     } else if (!!(flags & UiFlags_Rich)) {
         rich_text_t rich_text;
         rich_text.set_fonts(font, FONT_NORMAL_YELLOW);

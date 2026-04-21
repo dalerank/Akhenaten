@@ -22,7 +22,6 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "window/js_window_registry.h"
-#include "window/advisor/advisor_military.h"
 #include "window/advisor/monuments.h"
 #include "window/window_city.h"
 #include "window/message_dialog.h"
@@ -75,7 +74,7 @@ struct window_advisors : public ui::widget {
     autoconfig_window * sub_advisors[20] = {
         nullptr,
         nullptr, // ADVISOR_LABOR: from js_window_registry
-        ui::advisor_military_window::instance(),
+        nullptr, // ADVISOR_MILITARY: ui_advisor_military.js (js_window_registry)
         nullptr, // ADVISOR_IMPERIAL: from js_window_registry (ui_advisor_imperial.js)
         nullptr, // ADVISOR_RATINGS: from js_window_registry (ui_advisor_ratings.js)
         nullptr, // ADVISOR_TRADE: from js_window_registry

@@ -1,6 +1,8 @@
 log_info("akhenaten: ui advisor military started")
 
+[es=advisor_window]
 advisor_military_window {
+    advisor: ADVISOR_MILITARY
     ui {
         background   : outer_panel({size[40, 27]})
 
@@ -40,7 +42,7 @@ function get_figure_type_str(figure_type) {
     return ""
 }
 
-[event=advisor_military_window_init]
+[es=(advisor_military_window, init)]
 function advisor_military_window_init(window) {
     var enemy_text_id = 8
     if (city.figures.enemies) { enemy_text_id = 10 }
@@ -60,7 +62,7 @@ function advisor_military_window_init(window) {
     window.forts_text.text = total_soldiers_str + " in " + total_batalions_str
 }
 
-[event=advisor_military_window_draw]
+[es=(advisor_military_window, ui_draw_foreground)]
 function advisor_military_window_draw(window) {
     if (city.num_forts > 0) {
         var exp_image = get_image("pharaoh_general/paneling_00537")
@@ -109,6 +111,6 @@ function advisor_military_window_draw(window) {
             ui.image(kingdom_service, vec2i(547, 86 + 44 * i ));
         }
     } else {
-        ui.label_ex(__loc(51, 16), vec2i(64, 200), FONT_NORMAL_BLACK_ON_DARK, UiFlags_AlignCentered, 0)
+        ui.label_ex(__loc(51, 16), vec2i(64, 200), FONT_NORMAL_BLACK_ON_DARK, UiFlags_LabelMultiline, px(32))
     }
 }
