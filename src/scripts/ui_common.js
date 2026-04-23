@@ -118,10 +118,29 @@ function baseui(base, ext) {
 }
 
 function extend(base, ext) {
-	var newobj = {};
+    var newobj = {};
 
-    for (var key in base) { newobj[key] = base[key] }
-    for (var key in ext) { newobj[key] = ext[key]}
+    for (var key in base) {
+        var bdesc = Object.getOwnPropertyDescriptor(base, key);
+        if (bdesc && (bdesc.get || bdesc.set)) {
+            Object.defineProperty(newobj, key, bdesc);
+        } else {
+            newobj[key] = base[key];
+        }
+    }
+
+    if (ext == null) return newobj;
+
+    var keys = Object.keys(ext);
+    for (var i = 0; i < keys.length; i++) {
+        var k = keys[i];
+        var desc = Object.getOwnPropertyDescriptor(ext, k);
+        if (desc && (desc.get || desc.set)) {
+            Object.defineProperty(newobj, k, desc);
+        } else {
+            newobj[k] = desc ? desc.value : ext[k];
+        }
+    }
 
     return newobj;
 }

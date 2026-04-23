@@ -5,34 +5,39 @@ advisor_military_window {
     advisor: ADVISOR_MILITARY
     allow_rmb_goback : true
     ui : baseui(advisor_window_base, {
-        background   : outer_panel({size[40, 27]})
+        advisor_area            : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+            ui : {
+                background   : outer_panel({size[40, 27]})
 
-        title        : text({pos[60, 12], text{group:51, id:0}, font : FONT_LARGE_BLACK_ON_LIGHT })
-        advisor_icon : image({pack:PACK_GENERAL, id:128, offset:1, pos[10, 10] })
+                title        : text({pos[60, 12], text{group:51, id:0}, font : FONT_LARGE_BLACK_ON_LIGHT })
+                advisor_icon : image({pack:PACK_GENERAL, id:128, offset:1, pos[10, 10] })
 
-        h1_1         : text({text{group:51, id:1}, pos[384, 43], font:FONT_SMALL_PLAIN})
-        h1_2         : text({text{group:51, id:2}, pos[384, 58], font:FONT_SMALL_PLAIN})
-        h2_1         : text({text{group:51, id:3}, pos[454, 43], font:FONT_SMALL_PLAIN})
-        h2_2         : text({text{group:51, id:4}, pos[454, 58], font:FONT_SMALL_PLAIN})
-        h3_1         : text({text{group:51, id:5}, pos[534, 43], font:FONT_SMALL_PLAIN})
-        h3_2         : text({text{group:51, id:6}, pos[534, 58], font:FONT_SMALL_PLAIN})
-        h4_morale    : text({text{group:138, id:36}, pos[234, 58], font:FONT_SMALL_PLAIN})
-        h5_1         : text({text{group:51, id:17}, pos[304, 43], font:FONT_SMALL_PLAIN})
-        h5_2         : text({text{group:51, id:18}, pos[304, 58], font:FONT_SMALL_PLAIN})
+                h1_1         : text({text{group:51, id:1}, pos[384, 43], font:FONT_SMALL_PLAIN})
+                h1_2         : text({text{group:51, id:2}, pos[384, 58], font:FONT_SMALL_PLAIN})
+                h2_1         : text({text{group:51, id:3}, pos[454, 43], font:FONT_SMALL_PLAIN})
+                h2_2         : text({text{group:51, id:4}, pos[454, 58], font:FONT_SMALL_PLAIN})
+                h3_1         : text({text{group:51, id:5}, pos[534, 43], font:FONT_SMALL_PLAIN})
+                h3_2         : text({text{group:51, id:6}, pos[534, 58], font:FONT_SMALL_PLAIN})
+                h4_morale    : text({text{group:138, id:36}, pos[234, 58], font:FONT_SMALL_PLAIN})
+                h5_1         : text({text{group:51, id:17}, pos[304, 43], font:FONT_SMALL_PLAIN})
+                h5_2         : text({text{group:51, id:18}, pos[304, 58], font:FONT_SMALL_PLAIN})
 
-        inner_panel  : inner_panel({pos[32, 70], size[36, 17]})
-        forts_area   : dummy({ margin{left:30, bottom:-90}
-                               ui {
-                                   imgb1       : image({path:"pharaoh_general/paneling_00047", pos[0, 10]})
-                                   enemy_text  : text({pos[30, 10], font:FONT_NORMAL_BLACK_ON_LIGHT})
+                inner_panel  : inner_panel({pos[32, 70], size[36, 17]})
+                nothing_text : text({text:"", pos[42, 70 + px(16) / 2], size[px(36), -1], multiline:true, font:FONT_NORMAL_BLACK_ON_LIGHT })
+                forts_area   : dummy({ margin{left:30, bottom:-90}
+                                        ui {
+                                            imgb1       : image({path:"pharaoh_general/paneling_00047", pos[0, 10]})
+                                            enemy_text  : text({pos[30, 10], font:FONT_NORMAL_BLACK_ON_LIGHT})
 
-                                   imgb2       : image({path:"pharaoh_general/paneling_00047", pos[0, 30]})
-                                   distant_text: text({pos[30, 30], font:FONT_NORMAL_BLACK_ON_LIGHT})
+                                            imgb2       : image({path:"pharaoh_general/paneling_00047", pos[0, 30]})
+                                            distant_text: text({pos[30, 30], font:FONT_NORMAL_BLACK_ON_LIGHT})
 
-                                   imgb3       : image({path:"pharaoh_general/paneling_00047", pos[0, 50]})
-                                   forts_text  : text({pos[30, 50], font:FONT_NORMAL_BLACK_ON_LIGHT})
-                               }
-                             })
+                                            imgb3       : image({path:"pharaoh_general/paneling_00047", pos[0, 50]})
+                                            forts_text  : text({pos[30, 50], font:FONT_NORMAL_BLACK_ON_LIGHT})
+                                        }
+                                    })
+            }
+        })
     })
 }
 
@@ -61,6 +66,13 @@ function advisor_military_window_init(window) {
     var total_soldiers_str = __loc(8, 46) + " " + city.military.total_soldiers
     var total_batalions_str =  city.military.total_batalions + " Companies"
     window.forts_text.text = total_soldiers_str + " in " + total_batalions_str
+
+    if (city.num_forts > 0) {
+        window.nothing_text.enabled = false
+    } else {
+        window.nothing_text.enabled = true
+        window.nothing_text.text = __loc(51, 16)
+    }
 
     advisors_toolbar_refresh(window)
 }
@@ -113,7 +125,5 @@ function advisor_military_window_draw(window) {
             }
             ui.image(kingdom_service, vec2i(547, 86 + 44 * i ));
         }
-    } else {
-        ui.label_ex(__loc(51, 16), vec2i(64, 200), FONT_NORMAL_BLACK_ON_DARK, UiFlags_LabelMultiline, px(32))
     }
 }
