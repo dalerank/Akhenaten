@@ -135,49 +135,54 @@ advisor_imperial_window {
     advisor: ADVISOR_IMPERIAL
     allow_rmb_goback : true
     ui : baseui(advisor_window_base, {
-        background   : outer_panel({size[40, 27]})
-        advisor_icon : image({pack:PACK_GENERAL, id:128, offset:2, pos[10, 10] })
-        header_label : header({pos[60, 17], text:"Political overseer for ${player.name}"})
-        rating_label : label({pos[60, 42], text:"${52.0} ${rating.kingdom}", font:FONT_NORMAL_BLACK_ON_LIGHT})
-        rating_advice : multiline({pos[60, 64], size[px(36), 20], wrap:px(35), font:FONT_NORMAL_BLACK_ON_LIGHT, textfn:rating_advice_text})
-        inner_panel  : inner_panel({pos[32, 110], size[36, 13] })
+        advisor_area         : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+            ui : {
+                background   : outer_panel({size[40, 27]})
+                advisor_icon : image({pack:PACK_GENERAL, id:128, offset:2, pos[10, 10] })
+                header_label : header({pos[60, 17]})
+                rating_label : label({pos[60, 42], font:FONT_NORMAL_BLACK_ON_LIGHT})
+                rating_advice : multiline({pos[60, 64], size[px(36), 20], wrap:px(35), font:FONT_NORMAL_BLACK_ON_LIGHT, textfn:rating_advice_text})
+                inner_panel  : inner_panel({pos[32, 110], size[36, 13] })
 
-        requests_list : scrollable_list({
-            pos[38, 116]
-            size[35, 14]
-            view_items: 5
-            buttons_size_y: 45
-            buttons_margin_x: 0
-            buttons_margin_y: 0
-            text_padding_x: 0
-            text_padding_y: 0
-            draw_scrollbar_always: false
-            draw_paneling: false
-            onrender_item: imperial_requests_on_render_item
-            onclick_item: imperial_requests_on_click_item
+                requests_list : scrollable_list({
+                    pos[38, 116]
+                    size[35, 14]
+                    view_items: 5
+                    buttons_size_y: 45
+                    buttons_margin_x: 0
+                    buttons_margin_y: 0
+                    text_padding_x: 0
+                    text_padding_y: 0
+                    draw_scrollbar_always: false
+                    draw_paneling: false
+                    onrender_item: imperial_requests_on_render_item
+                    onclick_item: imperial_requests_on_click_item
+                })
+
+                bottom_panel : inner_panel({pos[64, 324], size[32, 6] })
+                player_rank  : header({pos[72, 332], textfn:player_rank_text})
+
+                donate_to_city : button({pos[320, 330], size[250, 20]
+                                         text{group:52, id:2}, tooltip:"${68.96}", font:FONT_NORMAL_WHITE_ON_DARK
+                                         onclick: window_donate_to_city_show
+                                        })
+
+                send_gift    : button({pos[320, 352], size[250, 20]
+                                       text{group:52, id:49}, tooltip:"${68.133}", font:FONT_NORMAL_WHITE_ON_DARK,
+                                       onclick: window_gift_to_kingdome_show
+                                      })
+
+                personal_savings : label({pos[72, 374], text:"${52.1} ${city.personal_savings} ${6.0}" })
+                money_lost   : label({pos[272, 374], text:"0 debens lost this year throught theft" })
+                no_requests  : label({margin{ centerx:-100, centery:-10}, text:"${52.21}", font:FONT_NORMAL_WHITE_ON_DARK })
+
+                salary_rank  : button({pos[70, 392], size[500, 24], tooltip[68, 97], textfn:salary_rank_text, font:FONT_NORMAL_WHITE_ON_DARK, onclick: show_window_by_id("set_salary_window") })
+
+                big_text     : text_center({pos[60, 295], size[400, 20], font:FONT_NORMAL_BLACK_ON_LIGHT})
+                top_text     : text_center({pos[504, 130], size[100, 20], font:FONT_NORMAL_BLACK_ON_LIGHT})
+                bot_text     : text_center({pos[504, 230], size[100, 20], font:FONT_NORMAL_BLACK_ON_LIGHT})
+            }
         })
-
-        bottom_panel : inner_panel({pos[64, 324], size[32, 6] })
-        player_rank  : header({pos[72, 332], textfn:player_rank_text})
-
-        donate_to_city : button({pos[320, 330], size[250, 20]
-                                 text{group:52, id:2}, tooltip:"${68.96}", font:FONT_NORMAL_WHITE_ON_DARK
-                                 onclick: window_donate_to_city_show
-                                })
-
-        send_gift    : button({pos[320, 352], size[250, 20]
-                               text{group:52, id:49}, tooltip:"${68.133}", font:FONT_NORMAL_WHITE_ON_DARK,
-                               onclick: window_gift_to_kingdome_show })
-
-        personal_savings : label({pos[72, 374], text:"${52.1} ${city.personal_savings} ${6.0}" })
-        money_lost   : label({pos[272, 374], text:"0 debens lost this year throught theft" })
-        no_requests  : label({margin{ centerx:-100, centery:-10}, text:"${52.21}", font:FONT_NORMAL_WHITE_ON_DARK })
-
-        salary_rank  : button({pos[70, 392], size[500, 24], tooltip[68, 97], textfn:salary_rank_text, font:FONT_NORMAL_WHITE_ON_DARK, onclick: show_window_by_id("set_salary_window") })
-
-        big_text     : text_center({pos[60, 295], size[400, 20], font:FONT_NORMAL_BLACK_ON_LIGHT})
-        top_text     : text_center({pos[504, 130], size[100, 20], font:FONT_NORMAL_BLACK_ON_LIGHT})
-        bot_text     : text_center({pos[504, 230], size[100, 20], font:FONT_NORMAL_BLACK_ON_LIGHT})
     })
 }
 
@@ -193,6 +198,8 @@ function imperial_visible_request_view(index) {
 [es=(advisor_imperial_window, init)]
 function advisor_imperial_window_on_init(window) {
     advisors_toolbar_refresh(window)
+    window.header_label.text = "Political overseer for " + game.dynasty_name
+    window.rating_label.text = __loc(52, 0) + " " + city.rating_kingdom
 }
 
 [es=(advisor_imperial_window, ui_draw_foreground)]
