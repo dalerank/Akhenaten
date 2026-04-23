@@ -139,6 +139,3 @@ struct city_finance_t {
     void process_request(event_finance_request request);
     void calculate_totals();
 };
-ANK_CONFIG_PROPERTY(city_finance_t,
-    treasury, tax_percentage, wages_kingdome,
-    tribute_not_paid_last_year, tribute_not_paid_total_years, wage_rate_paid_last_year)

@@ -80,9 +80,6 @@ std::optional<bvariant> __city_get_battalion_property(int fid, pcstr property) {
 }
 ANK_FUNCTION_2(__city_get_battalion_property)
 
-std::optional<bvariant> __city_get_labor_property(pcstr property) { return archive_helper::get(g_city.labor, property, true); }
-ANK_FUNCTION_1(__city_get_labor_property)
-
 std::optional<bvariant> __city_get_rating_property(pcstr property) {
     return archive_helper::get(g_city.ratings, property, true);
 }

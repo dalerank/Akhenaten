@@ -45,6 +45,7 @@ function education_advice_index() {
 
 [es=advisor_window]
 advisor_education_window {
+    pos [(sw(0) - px(40)) / 2, (sh(0) - px(27)) / 2]
     advisor: ADVISOR_EDUCATION
     allow_rmb_goback : true
     ui : baseui(advisor_window_base, {

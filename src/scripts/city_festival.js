@@ -1,7 +1,6 @@
 log_info("akhenaten: city festival started")
 
-// global object __city_festival
-city.festival = /*extend(__city_festival, */ {
+city.festival = extend(__city_festival, {
 	// native
 	// months_since_festival
 	// planned_god
@@ -19,7 +18,7 @@ city.festival = /*extend(__city_festival, */ {
     grand_cost: 0,
     grand_alcohol: 0,
     not_enough_alcohol: false,
-}
+})
 
 // Loc key #god_<name> (matches C++ e_god_short + "#god_")
 city.festival.selected_god_loc_key = function() {

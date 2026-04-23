@@ -1,3 +1,18 @@
+function extend(target, props) {
+    if (props == null) return target
+    var keys = Object.keys(props)
+    for (var i = 0; i < keys.length; i++) {
+        var k = keys[i]
+        var desc = Object.getOwnPropertyDescriptor(props, k)
+        if (desc && (desc.get || desc.set)) {
+            Object.defineProperty(target, k, desc)
+        } else {
+            target[k] = desc ? desc.value : props[k]
+        }
+    }
+    return target
+}
+
 function _format() {
     var formatted = arguments[0]
     for (var arg in arguments) {
@@ -14,6 +29,11 @@ function _eformat(message, locals) {
         try {
             message = message.replace(/\$\{([^}]+)\}/g, function(match, expr) {
                 try {
+                    // short notation ${group.id} → __loc(group, id)
+                    var locShorthand = /^(\d+)\.(\d+)$/.exec(expr);
+                    if (locShorthand) {
+                        expr = '__loc(' + locShorthand[1] + ', ' + locShorthand[2] + ')';
+                    }
                     var result;
                     if (locals && typeof locals === 'object') {
                         with (locals) {

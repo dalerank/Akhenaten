@@ -20,23 +20,6 @@ city {
         remove_figures: __city_remove_figures
     }
 
-    labor {
-        __property_getter: __city_get_labor_property
-        @unemployment_percentage { }
-        @workers_available { }
-        @workers_needed { }
-        @workers_unemployed { }
-
-        get_category: function(index) {
-            return {
-                __property_getter: function(property) { return __city_get_labor_category_property(index, property) }
-                @workers_needed { }
-                @workers_allocated { }
-                @priority { }
-            }
-        }
-    }
-
     entertainment {
         __property_getter: __city_get_entertainment_property
         @booth_shows { }

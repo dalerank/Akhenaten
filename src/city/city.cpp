@@ -682,19 +682,19 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < 2400; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &data.population.monthly.values[i]);
     }
-    
+
     iob->bind(BIND_SIGNATURE_INT32, &data.population.monthly.next_index);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.monthly.count);
-    
+
     for (int i = 0; i < 100; i++) {
         iob->bind(BIND_SIGNATURE_UINT16, &data.population.at_age[i]);
     }
-    
+
     for (int i = 0; i < 20; i++) {
         iob->bind(BIND_SIGNATURE_UINT16, &data.population.at_level[i]);
         iob->bind____skip(2);
     }
-    
+
     iob->bind(BIND_SIGNATURE_INT32, &data.population.yearly_births);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.yearly_deaths);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.lost_removal);
@@ -1408,13 +1408,8 @@ bvariant city_get_property(const xstring &domain, const xstring &name) {
         { tags().player, "salary_amount", [] (const xstring&) { return bvariant(g_city.kingdome.salary_amount); }},
         { tags().city, "months_since_festival", [] (const xstring&) { return bvariant(g_city.festival.months_since_festival); }},
         { tags().finance, "estimated_wages", [] (const xstring &) { return bvariant(g_city.finance.estimated_wages); }},
-        { tags().finance, "wages", [] (const xstring &) { return bvariant(g_city.finance.wages); }},
-        { tags().finance, "wages_kingdome", [] (const xstring &) { return bvariant(g_city.finance.wages_kingdome); }},
-        { tags().city, "workers_employed", [] (const xstring&) { return bvariant(g_city.labor.workers_employed); }},
-        { tags().city, "workers_unemployed", [] (const xstring&) { return bvariant(g_city.labor.workers_unemployed); }},
         { tags().city, "workers_needed", [] (const xstring&) { return bvariant(g_city.labor.workers_needed); }},
         { tags().city, "workers_diff", [] (const xstring&) { return bvariant(g_city.labor.workers_unemployed - g_city.labor.workers_needed); }},
-        { tags().city, "unemployment_percentage", [] (const xstring&) { return bvariant(g_city.labor.unemployment_percentage); }},
         { tags().city, "months_since_gift", [] (const xstring&) { return bvariant(g_city.kingdome.months_since_gift); }},
         { tags().rating, "winning_culture", [] (const xstring&) { return bvariant(winning_culture()); }},
         { tags().rating, "winning_prosperity", [] (const xstring&) { return bvariant(winning_prosperity()); }},

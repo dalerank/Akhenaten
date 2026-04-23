@@ -89,6 +89,7 @@ function advisor_housing_window_show_total(window) {
 
 [es=advisor_window]
 advisor_housing_window {
+	pos [(sw(0) - px(40)) / 2, (sh(0) - px(27)) / 2]
 	advisor: ADVISOR_HOUSING
 	allow_rmb_goback : true
 	ui : baseui(advisor_window_base, {

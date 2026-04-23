@@ -49,11 +49,6 @@ void __city_finance_calculate_totals() {
 }
 ANK_FUNCTION(__city_finance_calculate_totals)
 
-std::optional<bvariant> __city_get_finance_property(pcstr property) {
-    return archive_helper::get(g_city.finance, property, true);
-}
-ANK_FUNCTION_1(__city_get_finance_property)
-
 std::optional<bvariant> __city_get_taxes_property(pcstr property) {
     return archive_helper::get(g_city.taxes, property, true);
 }

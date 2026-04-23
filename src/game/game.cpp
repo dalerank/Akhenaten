@@ -472,12 +472,12 @@ void game_t::decrease_game_speed() {
     }
 }
 
-void game_t::increase_scroll_speed() { 
-    scroll_speed = calc_bound(scroll_speed + 10, 0, 100); 
+void game_t::increase_scroll_speed() {
+    scroll_speed = calc_bound(scroll_speed + 10, 0, 100);
 }
 
-void game_t::decrease_scroll_speed() { 
-    scroll_speed = calc_bound(scroll_speed - 10, 0, 100); 
+void game_t::decrease_scroll_speed() {
+    scroll_speed = calc_bound(scroll_speed - 10, 0, 100);
 }
 
 void game_t::before_start_simulation() {

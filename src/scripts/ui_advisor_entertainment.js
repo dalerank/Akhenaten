@@ -73,6 +73,7 @@ function advisor_entertainment_venues_list_on_render_item(p) {
 
 [es=advisor_window]
 advisor_entertainment_window {
+	pos [(sw(0) - px(40)) / 2, (sh(0) - px(27)) / 2]
 	advisor: ADVISOR_ENTERTAINMENT
 	allow_rmb_goback : true
 	ui : baseui(advisor_window_base, {

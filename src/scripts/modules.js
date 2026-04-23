@@ -18,6 +18,7 @@ import city_finance
 import city_ratings
 import city_festival
 import city_monuments
+import city_labor
 import images
 import city_sounds
 import buildings

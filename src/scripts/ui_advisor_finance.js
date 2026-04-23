@@ -2,6 +2,7 @@ log_info("akhenaten: ui advisor financial started")
 
 [es=advisor_window]
 advisor_financial_window {
+    pos [(sw(0) - px(40)) / 2, (sh(0) - px(27)) / 2]
     advisor: ADVISOR_FINANCIAL
     allow_rmb_goback : true
     ui : baseui(advisor_window_base, {

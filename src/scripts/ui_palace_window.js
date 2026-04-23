@@ -34,6 +34,5 @@ function palace_info_window_init_workers_desc(window) {
         reason.id = Math.approximate_value(palace.worker_percentage / 100.0, [9, 8, 7, 6, 5])
     }
 
-    log_info("akhenaten: palace_info_window_init_workers_desc: " + reason.group + " " + reason.id)
     window.workers_desc.text = __loc(reason.group, reason.id)
 }

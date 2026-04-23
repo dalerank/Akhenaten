@@ -2,6 +2,8 @@ log_info("akhenaten: ui advisor chief started")
 
 [es=advisor_window]
 advisor_chief_window {
+	pos [(sw(0) - px(40)) / 2, (sh(0) - px(27)) / 2]
+
 	advisor: ADVISOR_CHIEF
 	allow_rmb_goback : true
 	ui : baseui(advisor_window_base, {
@@ -27,7 +29,6 @@ advisor_chief_window {
 	})
 }
 
-/** Rough word-wrap for overlay fonts (~7 px per Latin character). */
 function advisor_chief_wrap_lines(text, maxChars) {
 	var lines = []
 	if (!text) {
