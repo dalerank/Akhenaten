@@ -93,6 +93,7 @@ namespace game_features {
     game_feature gameopt_last_save_filename{ "gameopt_last_save_filename", "", "" };
     game_feature gameopt_enabled_mods{ "gameopt_enabled_mods", "", "" };
     game_feature gameopt_last_game_version{ "gameopt_last_game_version", "", "" };
+    game_feature gameopt_scroll_speed{ "gameopt_scroll_speed", "", 70.0f };
     game_feature gameplay_brewery_requires_water{ "gameplay_brewery_requires_water", "#TR_CONFIG_BREWERY_REQUIRES_WATER", true };
     game_feature gameplay_conservatory_helps_dance_school{ "gameplay_conservatory_helps_dance_school", "#TR_CONFIG_CONSERVATORY_HELPS_DANCE_SCHOOL", true };
     game_feature gameplay_jewels_workshops_culture_bonus{ "gameplay_jewels_workshops_culture_bonus", "#TR_CONFIG_JEWELS_WORKSHOPS_CULTURE_BONUS", true };
@@ -129,6 +130,10 @@ xstring game_features::game_feature::to_string() const {
 
 float game_features::game_feature::to_float() const {
     return _settings.get_float(name);
+}
+
+int game_features::game_feature::to_int() const {
+    return _settings.get_int(name);
 }
 
 void game_features::game_feature::set(bool value) {

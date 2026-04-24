@@ -350,10 +350,9 @@ bool game_t::check_valid() {
     logs::switch_output(vfs::platform_file_manager_get_base_path());
     locale_determine_language();
 
-    scroll_speed = 70;
-
     g_settings.load(); // c3.inf
     game_features::load();   // akhenaten.conf
+    scroll_speed = game_features::gameopt_scroll_speed.to_int();
     game_hotkeys::load();    // hotkeys.conf
     g_scenario.init();
     random_init();
@@ -474,10 +473,12 @@ void game_t::decrease_game_speed() {
 
 void game_t::increase_scroll_speed() {
     scroll_speed = calc_bound(scroll_speed + 10, 0, 100);
+    game_features::gameopt_scroll_speed.set((int)scroll_speed);
 }
 
 void game_t::decrease_scroll_speed() {
     scroll_speed = calc_bound(scroll_speed - 10, 0, 100);
+    game_features::gameopt_scroll_speed.set((int)scroll_speed);
 }
 
 void game_t::before_start_simulation() {
