@@ -3,6 +3,7 @@
 #include "core/string.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"
+#include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/image_groups.h"
 #include "graphics/text.h"
@@ -42,11 +43,11 @@ static void draw_background(int) {
     graphics_set_to_dialog();
     outer_panel_draw(vec2i{168, 128}, 19, 9);
 
-    text_draw_centered("#TR_HOTKEY_EDIT_TITLE", 176, 144, 296, FONT_LARGE_BLACK_ON_LIGHT, 0);
+    text_draw_centered((const uint8_t *)lang_text_from_key("#TR_HOTKEY_EDIT_TITLE"), 176, 144, 296, FONT_LARGE_BLACK_ON_LIGHT, 0);
 
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
         generic_button* btn = &bottom_buttons[i];
-        text_draw_centered((const uint8_t*)bottom_button_texts[i], btn->x, btn->y + 6, btn->width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+        text_draw_centered((const uint8_t *)lang_text_from_key(bottom_button_texts[i]), btn->x, btn->y + 6, btn->width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     }
 
     graphics_reset_dialog();
