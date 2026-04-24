@@ -89,45 +89,48 @@ function advisor_housing_window_show_total(window) {
 
 [es=advisor_window]
 advisor_housing_window {
-	pos [(sw(0) - px(40)) / 2, (sh(0) - px(27)) / 2]
 	advisor: ADVISOR_HOUSING
 	allow_rmb_goback : true
 	ui : baseui(advisor_window_base, {
-		background       : outer_panel({size:[40, 27]})
-		advisor_icon     : image({pack:PACK_GENERAL, id:128, offset:5, pos:[10, 10]})
-		title            : label({font: FONT_LARGE_BLACK_ON_LIGHT, text:"#TR_ADVISOR_ADVISOR_HEADER_HOUSING", pos:[60, 12]})
-		total_population : label({font: FONT_NORMAL_BLACK_ON_LIGHT, pos:[450, 25]})
-		inner_panel      : inner_panel({pos:[65, 70], size:[28, 13]})
-		housing_graph    : label({pos:[75, 75], size:[395, 195], ondraw_event: "ondraw_housing_chart"})
+		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+            ui : {
+				background       : outer_panel({size:[40, 27]})
+				advisor_icon     : image({pack:PACK_GENERAL, id:128, offset:5, pos:[10, 10]})
+				title            : label({font: FONT_LARGE_BLACK_ON_LIGHT, text:"#TR_ADVISOR_ADVISOR_HEADER_HOUSING", pos:[60, 12]})
+				total_population : label({font: FONT_NORMAL_BLACK_ON_LIGHT, pos:[450, 25]})
+				inner_panel      : inner_panel({pos:[65, 70], size:[28, 13]})
+				housing_graph    : label({pos:[75, 75], size:[395, 195], ondraw_event: "ondraw_housing_chart"})
 
-		graphs_caption   : text_center({font: FONT_NORMAL_BLACK_ON_LIGHT, text:"#TR_ADVISOR_BUTTON_GRAPHS", pos:[545, 315]})
-		graphs_btn       : image_button({
-								pos: [545, 260]
-								pack: PACK_GENERAL, id: 29
-								composite: true
-								border: 3
-								tooltip: [68, 106]
-								onclick: advisor_housing_on_graphs_button,
-							}),
+				graphs_caption   : text_center({font: FONT_NORMAL_BLACK_ON_LIGHT, text:"#TR_ADVISOR_BUTTON_GRAPHS", pos:[545, 315]})
+				graphs_btn       : image_button({
+										pos: [545, 260]
+										pack: PACK_GENERAL, id: 29
+										composite: true
+										border: 3
+										tooltip: [68, 106]
+										onclick: advisor_housing_on_graphs_button,
+									}),
 
-		stat_total_label : label({ font: FONT_NORMAL_BLACK_ON_DARK, text: "#TR_ADVISOR_TOTAL_NUM_HOUSES", pos: [370, 354] })
-		stat_total_value : label({ font: FONT_NORMAL_WHITE_ON_DARK, pos: [550, 354] })
-		stat_avail_label : label({ font: FONT_NORMAL_BLACK_ON_DARK, text: "#TR_ADVISOR_AVAILABLE_HOUSING_CAPACITY", pos: [370, 377] })
-		stat_avail_value : label({ font: FONT_NORMAL_WHITE_ON_DARK, pos: [550, 377] })
-		stat_cap_label   : label({ font: FONT_NORMAL_BLACK_ON_DARK, text: "#TR_ADVISOR_TOTAL_HOUSING_CAPACITY", pos: [370, 400] })
-		stat_cap_value   : label({ font: FONT_NORMAL_WHITE_ON_DARK, pos: [550, 400] })
+				stat_total_label : label({ font: FONT_NORMAL_BLACK_ON_DARK, text: "#TR_ADVISOR_TOTAL_NUM_HOUSES", pos: [370, 354] })
+				stat_total_value : label({ font: FONT_NORMAL_WHITE_ON_DARK, pos: [550, 354] })
+				stat_avail_label : label({ font: FONT_NORMAL_BLACK_ON_DARK, text: "#TR_ADVISOR_AVAILABLE_HOUSING_CAPACITY", pos: [370, 377] })
+				stat_avail_value : label({ font: FONT_NORMAL_WHITE_ON_DARK, pos: [550, 377] })
+				stat_cap_label   : label({ font: FONT_NORMAL_BLACK_ON_DARK, text: "#TR_ADVISOR_TOTAL_HOUSING_CAPACITY", pos: [370, 400] })
+				stat_cap_value   : label({ font: FONT_NORMAL_WHITE_ON_DARK, pos: [550, 400] })
 
-		goods_demanding_0_icon : resource_icon({ pos: [34, 328], resource: RESOURCE_POTTERY })
-		goods_demanding_0_text : label({ font: FONT_NORMAL_BLACK_ON_LIGHT, text: "#TR_ADVISOR_RESIDENCES_DEMANDING_POTTERY", pos: [60, 331] })
-		goods_demanding_0_value : label({ font: FONT_NORMAL_BLACK_ON_LIGHT, pos: [320, 331] })
-		goods_demanding_1_icon : resource_icon({ pos: [34, 351], resource: RESOURCE_LUXURY_GOODS })
-		goods_demanding_1_text : label({ font: FONT_NORMAL_BLACK_ON_LIGHT, text: "#TR_ADVISOR_RESIDENCES_DEMANDING_FURNITURE", pos: [60, 354] })
-		goods_demanding_1_value : label({ font: FONT_NORMAL_BLACK_ON_LIGHT, pos: [320, 354] })
-		goods_demanding_2_icon : resource_icon({ pos: [34, 374], resource: RESOURCE_MEAT })
-		goods_demanding_2_text : label({ font: FONT_NORMAL_BLACK_ON_LIGHT, text: "#TR_ADVISOR_RESIDENCES_DEMANDING_LINEN", pos: [60, 377] })
-		goods_demanding_2_value : label({ font: FONT_NORMAL_BLACK_ON_LIGHT, pos: [320, 377] })
-		goods_demanding_3_icon : resource_icon({ pos: [34, 397], resource: RESOURCE_BEER })
-		goods_demanding_3_text : label({ font: FONT_NORMAL_BLACK_ON_LIGHT, text: "#TR_ADVISOR_RESIDENCES_DEMANDING_BEER", pos: [60, 400] })
-		goods_demanding_3_value : label({ font: FONT_NORMAL_BLACK_ON_LIGHT, pos: [320, 400] })
+				goods_demanding_0_icon : resource_icon({ pos: [34, 328], resource: RESOURCE_POTTERY })
+				goods_demanding_0_text : label({ font: FONT_NORMAL_BLACK_ON_LIGHT, text: "#TR_ADVISOR_RESIDENCES_DEMANDING_POTTERY", pos: [60, 331] })
+				goods_demanding_0_value : label({ font: FONT_NORMAL_BLACK_ON_LIGHT, pos: [320, 331] })
+				goods_demanding_1_icon : resource_icon({ pos: [34, 351], resource: RESOURCE_LUXURY_GOODS })
+				goods_demanding_1_text : label({ font: FONT_NORMAL_BLACK_ON_LIGHT, text: "#TR_ADVISOR_RESIDENCES_DEMANDING_FURNITURE", pos: [60, 354] })
+				goods_demanding_1_value : label({ font: FONT_NORMAL_BLACK_ON_LIGHT, pos: [320, 354] })
+				goods_demanding_2_icon : resource_icon({ pos: [34, 374], resource: RESOURCE_MEAT })
+				goods_demanding_2_text : label({ font: FONT_NORMAL_BLACK_ON_LIGHT, text: "#TR_ADVISOR_RESIDENCES_DEMANDING_LINEN", pos: [60, 377] })
+				goods_demanding_2_value : label({ font: FONT_NORMAL_BLACK_ON_LIGHT, pos: [320, 377] })
+				goods_demanding_3_icon : resource_icon({ pos: [34, 397], resource: RESOURCE_BEER })
+				goods_demanding_3_text : label({ font: FONT_NORMAL_BLACK_ON_LIGHT, text: "#TR_ADVISOR_RESIDENCES_DEMANDING_BEER", pos: [60, 400] })
+				goods_demanding_3_value : label({ font: FONT_NORMAL_BLACK_ON_LIGHT, pos: [320, 400] })
+			}
+		})
 	})
 }

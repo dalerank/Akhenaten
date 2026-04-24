@@ -99,43 +99,47 @@ advisor_population_window = {
 	allow_rmb_goback : true
 
 	ui: baseui(advisor_window_base, {
-		background   : outer_panel({size:[40, 27] })
-		advisor_icon : image({pack:PACK_GENERAL, id:128, offset:5, pos:[10, 10] })
-		title        : label({font : FONT_LARGE_BLACK_ON_LIGHT, pos:[60, 17]})
-		bgimage      : image({pack : PACK_UNLOADED, id:21, offset:14, pos:[56, 60]})
-		population   : label({font : FONT_NORMAL_BLACK_ON_DARK, pos:[450, 25]})
-		housing      : text_center({font : FONT_NORMAL_BLACK_ON_DARK, pos:[545, 315]})
+		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+            ui : {
+				background   : outer_panel({size:[40, 27] })
+				advisor_icon : image({pack:PACK_GENERAL, id:128, offset:5, pos:[10, 10] })
+				title        : label({font : FONT_LARGE_BLACK_ON_LIGHT, pos:[60, 17]})
+				bgimage      : image({pack : PACK_UNLOADED, id:21, offset:14, pos:[56, 60]})
+				population   : label({font : FONT_NORMAL_BLACK_ON_DARK, pos:[450, 25]})
+				housing      : text_center({font : FONT_NORMAL_BLACK_ON_DARK, pos:[545, 315]})
 
-		housing_button : image_button({
-			pos: [545, 260]
-			pack: PACK_GENERAL, id: 29
-			composite: true
-			border: 3
-			tooltip: [68, 106]
-			onclick: advisor_population_on_housing_button,
-		}),
+				housing_button : image_button({
+					pos: [545, 260]
+					pack: PACK_GENERAL, id: 29
+					composite: true
+					border: 3
+					tooltip: [68, 106]
+					onclick: advisor_population_on_housing_button,
+				}),
 
-		top_text     : text({pos:[503, 44], font:FONT_NORMAL_BLACK_ON_DARK})
-		next_graph   : button({pos:[503, 61], size:[104, 55], tooltip:[68, 106], ondraw_event: "ondraw_top", onclick: advisor_population_on_next_graph }),
+				top_text     : text({pos:[503, 44], font:FONT_NORMAL_BLACK_ON_DARK})
+				next_graph   : button({pos:[503, 61], size:[104, 55], tooltip:[68, 106], ondraw_event: "ondraw_top", onclick: advisor_population_on_next_graph }),
 
-		bot_text     : text({pos:[503, 144], font:FONT_NORMAL_BLACK_ON_DARK}),
-		prev_graph   : button({pos:[503, 161], size:[104, 55], tooltip:[68, 106], ondraw_event: "ondraw_bottom", onclick: advisor_population_on_prev_graph }),
+				bot_text     : text({pos:[503, 144], font:FONT_NORMAL_BLACK_ON_DARK}),
+				prev_graph   : button({pos:[503, 161], size:[104, 55], tooltip:[68, 106], ondraw_event: "ondraw_bottom", onclick: advisor_population_on_prev_graph }),
 
-		big_text     : label({font : FONT_NORMAL_BLACK_ON_DARK, pos:[60, 44]}),
-		big_graph_tx : label({pos:[65, 65], size:[395, 195], ondraw_event: "ondraw_big"}),
+				big_text     : label({font : FONT_NORMAL_BLACK_ON_DARK, pos:[60, 44]}),
+				big_graph_tx : label({pos:[65, 65], size:[395, 195], ondraw_event: "ondraw_big"}),
 
-        info_lines_list : scrollable_list({
-                        pos: [48, 336]
-                        size: [34, 5]
-                        view_items: 4
-                        buttons_size_y: 18
-                        buttons_margin_x: 0
-                        buttons_margin_y: 4
-                        text_padding_x: 0
-                        text_padding_y: 0
-                        draw_scrollbar_always: false
-                        draw_paneling: true
-                        onrender_item: advisor_population_info_lines_on_render_item
-                    })
+				info_lines_list : scrollable_list({
+								pos: [48, 336]
+								size: [34, 5]
+								view_items: 4
+								buttons_size_y: 18
+								buttons_margin_x: 0
+								buttons_margin_y: 4
+								text_padding_x: 0
+								text_padding_y: 0
+								draw_scrollbar_always: false
+								draw_paneling: true
+								onrender_item: advisor_population_info_lines_on_render_item
+							})
+			}
+		})
 	})
 }
