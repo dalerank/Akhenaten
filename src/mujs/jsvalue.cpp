@@ -118,6 +118,14 @@ void jsV_toprimitive(js_State* J, js_Value* v, int preferred) {
             v->type = JS_TNUMBER;
             v->u.number = *(int8_t*)p;
             return;
+        case JS_PTR_UINT8:
+            v->type = JS_TNUMBER;
+            v->u.number = *(uint8_t*)p;
+            return;
+        case JS_PTR_UINT16:
+            v->type = JS_TNUMBER;
+            v->u.number = *(uint16_t*)p;
+            return;
         default:
             return;
         }
@@ -172,6 +180,10 @@ int jsV_toboolean(js_State* J, js_Value* v) {
                 return *(float*)p != 0;
             case JS_PTR_INT8:
                 return *(int8_t*)p != 0;
+            case JS_PTR_UINT8:
+                return *(uint8_t*)p != 0;
+            case JS_PTR_UINT16:
+                return *(uint16_t*)p != 0;
             default:
                 return 1;
             }
@@ -288,6 +300,10 @@ double jsV_tonumber(js_State* J, js_Value* v) {
                 return (double)*(float*)p;
             case JS_PTR_INT8:
                 return *(int8_t*)p;
+            case JS_PTR_UINT8:
+                return *(uint8_t*)p;
+            case JS_PTR_UINT16:
+                return *(uint16_t*)p;
             default:
                 return 0;
             }

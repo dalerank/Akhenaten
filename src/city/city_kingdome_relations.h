@@ -6,7 +6,7 @@
 #include "city/constants.h"
 #include "core/archive.h"
 
-enum e_gift { 
+enum e_gift {
     GIFT_MODEST = 0,
     GIFT_GENEROUS = 1,
     GIFT_LAVISH = 2,

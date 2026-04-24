@@ -217,6 +217,22 @@ void js_register_bound_int8(js_State *J, const js_StringNode name, std::int8_t *
     js_defglobal(J, name, 0);
 }
 
+void js_register_bound_uint8(js_State *J, const js_StringNode name, std::uint8_t *ptr) {
+    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
+    obj->u.p.ptr = ptr;
+    obj->u.p.ptype = JS_PTR_UINT8;
+    js_pushobject(J, obj);
+    js_defglobal(J, name, 0);
+}
+
+void js_register_bound_uint16(js_State *J, const js_StringNode name, std::uint16_t *ptr) {
+    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
+    obj->u.p.ptr = ptr;
+    obj->u.p.ptype = JS_PTR_UINT16;
+    js_pushobject(J, obj);
+    js_defglobal(J, name, 0);
+}
+
 void js_register_bound_int_property(js_State *J, const js_StringNode name, int *ptr) {
     js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
     obj->u.p.ptr = ptr;
@@ -245,6 +261,22 @@ void js_register_bound_int8_property(js_State *J, const js_StringNode name, std:
     js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
     obj->u.p.ptr = ptr;
     obj->u.p.ptype = JS_PTR_INT8;
+    js_pushobject(J, obj);
+    js_setproperty(J, -2, name);
+}
+
+void js_register_bound_uint8_property(js_State *J, const js_StringNode name, std::uint8_t *ptr) {
+    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
+    obj->u.p.ptr = ptr;
+    obj->u.p.ptype = JS_PTR_UINT8;
+    js_pushobject(J, obj);
+    js_setproperty(J, -2, name);
+}
+
+void js_register_bound_uint16_property(js_State *J, const js_StringNode name, std::uint16_t *ptr) {
+    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
+    obj->u.p.ptr = ptr;
+    obj->u.p.ptype = JS_PTR_UINT16;
     js_pushobject(J, obj);
     js_setproperty(J, -2, name);
 }

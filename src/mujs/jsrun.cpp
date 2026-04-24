@@ -610,6 +610,8 @@ int js_State::hasproperty(js_Object *obj, js_StringNode name) {
             case JS_PTR_BOOL:  js_pushboolean(J, *(bool*)p); break;
             case JS_PTR_FLOAT: js_pushnumber(J, *(float*)p); break;
             case JS_PTR_INT8:  js_pushnumber(J, *(int8_t*)p); break;
+            case JS_PTR_UINT8:  js_pushnumber(J, *(uint8_t*)p); break;
+            case JS_PTR_UINT16: js_pushnumber(J, *(uint16_t*)p); break;
             default: js_pushvalue(J, ref->value); break;
             }
         } else {
@@ -642,7 +644,9 @@ static void jsR_setproperty(js_State* J, js_Object* obj, const js_StringNode nam
         case JS_PTR_INT:   *(int*)p = js_tointeger(J, -1); break;
         case JS_PTR_BOOL:  *(bool*)p = js_toboolean(J, -1) != 0; break;
         case JS_PTR_FLOAT: *(float*)p = (float)js_tonumber(J, -1); break;
-        case JS_PTR_INT8: *(int8_t*)p = (int8_t)js_tointeger(J, -1); break;
+        case JS_PTR_INT8:  *(int8_t*)p = (int8_t)js_tointeger(J, -1); break;
+        case JS_PTR_UINT8:  *(uint8_t*)p = (uint8_t)js_tointeger(J, -1); break;
+        case JS_PTR_UINT16: *(uint16_t*)p = (uint16_t)js_tointeger(J, -1); break;
         default: break;
         }
         js_pop(J, 1);

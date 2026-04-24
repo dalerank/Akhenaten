@@ -12,6 +12,7 @@ import game_messages_en
 import animal_herds
 import gods
 import city
+import city_kingdome
 import building_prototype
 import bazaar_prototype
 import city_finance

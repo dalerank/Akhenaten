@@ -53,11 +53,6 @@ void __city_kingdome_apply_salary_rank(int rank) {
 }
 ANK_FUNCTION_1(__city_kingdome_apply_salary_rank)
 
-std::optional<bvariant> __city_get_kingdome_property(pcstr property) {
-    return archive_helper::get(g_city.kingdome, property, true);
-}
-ANK_FUNCTION_1(__city_get_kingdome_property)
-
 bool __city_mission_has_won() { return g_city.victory_state.has_won(); }
 ANK_FUNCTION(__city_mission_has_won)
 

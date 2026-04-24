@@ -210,17 +210,6 @@ city {
     rank_title : function(rank) { return __loc(52, rank + 4) }
     rank_salary : __city_rank_salary
 
-    kingdome {
-        __property_getter: __city_get_kingdome_property
-        @salary_rank { }
-        @player_rank { }
-        @kingdom_change { }
-        @kingdom_salary_penalty { }
-        @kingdom_milestone_penalty { }
-        @kingdom_ignored_request_penalty { }
-        @kingdom_explanation { }
-    }
-
     apply_salary_rank : __city_kingdome_apply_salary_rank
     start_foreign_army_invasion : __city_start_foreign_army_invasion
     camera_go_to : __city_camera_go_to
