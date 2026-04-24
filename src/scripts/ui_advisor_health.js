@@ -18,82 +18,97 @@ function advisor_health_advice_index() {
 	return 7
 }
 
+var ADVISOR_HEALTH_FACILITIES = [
+	{ id: "physician", building: BUILDING_PHYSICIAN, nameLoc8: 25 },
+	{ id: "dentist", building: BUILDING_DENTIST, nameLoc8: 27 },
+	{ id: "apothecary", building: BUILDING_APOTHECARY, nameLoc8: 29 },
+	{ id: "mortuary", building: BUILDING_MORTUARY, nameLoc8: 31 }
+]
+
+function advisor_health_facility_row(key) {
+	for (var i = 0; i < ADVISOR_HEALTH_FACILITIES.length; i++) {
+		if (ADVISOR_HEALTH_FACILITIES[i].id === key) {
+			return ADVISOR_HEALTH_FACILITIES[i]
+		}
+	}
+	return null
+}
+
+function advisor_health_facilities_on_render_item(p) {
+	var key = p.text
+	if (!key) {
+		return
+	}
+	var row = advisor_health_facility_row(key)
+	if (!row) {
+		return
+	}
+	var font = FONT_NORMAL_BLACK_ON_DARK
+	var btype = row.building
+	var act = city.count_active_buildings(btype)
+	var covPct10 = city.coverage[row.id]
+	var totalStr = city.count_total_buildings(btype) + " " + __loc(8, row.nameLoc8)
+	var careStr = (1000 * act) + " " + __loc(56, 6)
+	var covgStr = __loc(57, ((covPct10 / 10) | 0) + 11)
+	var py = p.y
+	var flagsCell = UiFlags_AlignYCentered | UiFlags_AlignCentered
+	ui.label_ex(totalStr, {x: p.x + 15, y: py}, font, UiFlags_AlignYCentered, 125)
+	ui.label_ex(String(act), [p.x + 160, py], font, flagsCell, 40)
+	ui.label_ex(careStr, [p.x + 290, py], font, flagsCell, 40)
+	ui.label_ex(covgStr, [p.x + 440, py], font, flagsCell, 60)
+	if (p.hover) {
+		ui.border({ x: p.x + 4, y: p.y - 2 }, { x: p.sizex - 8, y: p.sizey + 2 }, 0, COLOR_TOOLTIP_BORDER, UiFlags_None)
+	}
+}
+
 [es=advisor_window]
 advisor_health_window {
-	pos [(sw(0) - px(40)) / 2, (sh(0) - px(27)) / 2]
 	advisor: ADVISOR_HEALTH
 	allow_rmb_goback : true
 	ui : baseui(advisor_window_base, {
-		background   : outer_panel({size:[40, 18]})
-		advisor_icon : image({pack:PACK_GENERAL, id:128, offset:6, pos:[10, 10] })
-		title        : header({pos:[60, 17], text:{group:56, id:0}})
-		city_health  : multiline({pos:[60, 46], size:[520, 90], wrap:500, font: FONT_NORMAL_BLACK_ON_LIGHT})
+		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+            ui : {
+				background   : outer_panel({size:[40, 18]})
+				advisor_icon : image({pack:PACK_GENERAL, id:128, offset:6, pos:[10, 10] })
+				title        : header({pos:[60, 17], text:{group:56, id:0}})
+				city_health  : multiline({pos:[60, 46], size:[520, 90], wrap:500, font: FONT_NORMAL_BLACK_ON_LIGHT})
 
-		working      : label({text:[56, 3], pos:[180, 94], font:FONT_SMALL_PLAIN})
-		care_for     : label({text:[56, 4], pos:[290, 94], font:FONT_SMALL_PLAIN})
-		city_coverage: text_center({text:[56, 5], pos:[440, 94], size:[160, 20], font:FONT_SMALL_PLAIN})
+				working      : label({text:[56, 3], pos:[180, 94], font:FONT_SMALL_PLAIN})
+				care_for     : label({text:[56, 4], pos:[290, 94], font:FONT_SMALL_PLAIN})
+				city_coverage: text_center({text:[56, 5], pos:[440, 94], size:[160, 20], font:FONT_SMALL_PLAIN})
 
-		inner_panel  : inner_panel({
-			pos:[32, 108]
-			size:[36, 6]
-			ui : {
-				physicians_total : label({pos:[15, 8], font:FONT_NORMAL_BLACK_ON_DARK})
-				physicians_active: text_center({pos:[160, 8], size:[40, 20], font:FONT_NORMAL_BLACK_ON_DARK})
-				physicians_care  : text_center({pos:[290, 8], size:[40, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK})
-				physicians_covg  : text_center({pos:[440, 8], size:[60, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK})
+				facilities_list : scrollable_list({
+					pos:[32, 108]
+					size:[36, 6]
+					view_items:4
+					buttons_size_y:20
+					buttons_margin_x:0
+					buttons_margin_y:10
+					text_padding_x:0
+					text_padding_y:0
+					draw_scrollbar_always:false
+					draw_paneling:true
+					onrender_item: advisor_health_facilities_on_render_item
+				})
 
-				dentist_total    : label({pos:[15, 28], font:FONT_NORMAL_BLACK_ON_DARK})
-				dentist_active   : text_center({pos:[160, 28], size:[40, 20], font:FONT_NORMAL_BLACK_ON_DARK})
-				dentist_care     : text_center({pos:[290, 28], size:[40, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK})
-				dentist_covg     : text_center({pos:[440, 28], size:[60, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK})
-
-				apothecary_total : label({pos:[15, 46], font:FONT_NORMAL_BLACK_ON_DARK})
-				apothecary_active: text_center({pos:[160, 46], size:[40, 20], font:FONT_NORMAL_BLACK_ON_DARK})
-				apothecary_care  : text_center({pos:[290, 46], size:[40, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK})
-				apothecary_covg  : text_center({pos:[440, 46], size:[60, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK})
-
-				mortuary_total   : label({pos:[15, 66], font:FONT_NORMAL_BLACK_ON_DARK})
-				mortuary_active  : text_center({pos:[160, 66], size:[40, 20], font:FONT_NORMAL_BLACK_ON_DARK})
-				mortuary_care    : text_center({pos:[290, 66], size:[40, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK})
-				mortuary_covg    : text_center({pos:[440, 66], size:[60, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK})
+				health_advice : multiline({pos:[60, 218], size:[520, 90], wrap:500, font: FONT_NORMAL_BLACK_ON_LIGHT })
 			}
 		})
-
-		health_advice : multiline({pos:[60, 218], size:[520, 90], wrap:500, font: FONT_NORMAL_BLACK_ON_LIGHT })
 	})
 }
 
 [es=(advisor_health_window, init)]
 function advisor_health_window_init(window) {
-	var cov = city.coverage
 	var pop = city.population
 	var hr = city.health_rating
 
 	window.city_health.text = (pop >= 200) ? __loc(56, ((hr / 10) | 0) + 16) : __loc(56, 15)
 
-	var apoAct = city.count_active_buildings(BUILDING_APOTHECARY)
-	window.apothecary_total.text = city.count_total_buildings(BUILDING_APOTHECARY) + " " + __loc(8, 29)
-	window.apothecary_active.text = String(apoAct)
-	window.apothecary_care.text = (1000 * apoAct) + " " + __loc(56, 6)
-	window.apothecary_covg.text = __loc(57, ((cov.apothecary / 10) | 0) + 11)
-
-	var denAct = city.count_active_buildings(BUILDING_DENTIST)
-	window.dentist_total.text = city.count_total_buildings(BUILDING_DENTIST) + " " + __loc(8, 27)
-	window.dentist_active.text = String(denAct)
-	window.dentist_care.text = (1000 * denAct) + " " + __loc(56, 6)
-	window.dentist_covg.text = __loc(57, ((cov.dentist / 10) | 0) + 11)
-
-	var phyAct = city.count_active_buildings(BUILDING_PHYSICIAN)
-	window.physicians_total.text = city.count_total_buildings(BUILDING_PHYSICIAN) + " " + __loc(8, 25)
-	window.physicians_active.text = String(phyAct)
-	window.physicians_care.text = (1000 * phyAct) + " " + __loc(56, 6)
-	window.physicians_covg.text = __loc(57, ((cov.physician / 10) | 0) + 11)
-
-	var morAct = city.count_active_buildings(BUILDING_MORTUARY)
-	window.mortuary_total.text = city.count_total_buildings(BUILDING_MORTUARY) + " " + __loc(8, 31)
-	window.mortuary_active.text = String(morAct)
-	window.mortuary_care.text = (1000 * morAct) + " " + __loc(56, 6)
-	window.mortuary_covg.text = __loc(57, ((cov.mortuary / 10) | 0) + 11)
+	var list = window.facilities_list
+	list.clear()
+	for (var i = 0; i < ADVISOR_HEALTH_FACILITIES.length; i++) {
+		list.add_item(ADVISOR_HEALTH_FACILITIES[i].id)
+	}
 
 	window.health_advice.text = __loc(56, 6 + advisor_health_advice_index())
 

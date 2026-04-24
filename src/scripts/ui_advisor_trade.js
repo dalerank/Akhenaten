@@ -101,7 +101,7 @@ advisor_trade_window {
                     view_items:15
                     buttons_size_y:22
                     buttons_margin_x:0
-                    buttons_margin_y:0
+                    buttons_margin_y:10
                     text_padding_x:0
                     text_padding_y:5
                     draw_scrollbar_always:true
