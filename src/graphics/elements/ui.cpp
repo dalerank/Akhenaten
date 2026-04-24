@@ -30,7 +30,10 @@
 #include "graphics/screen.h"
 
 #include <algorithm>
+#include <cstring>
 #include <stack>
+#include <string>
+#include <unordered_set>
 
 using namespace ui::opt;
 
@@ -68,12 +71,14 @@ void reset_ui_command_queue();
         arrow_button a_button;
 
         bool handle_mouse(const mouse* m, vec2i offset) {
+            (void)offset;
             int tmp_btn;
             switch (type) {
             case generic:
-                return !!generic_buttons_handle_mouse(m, offset, &g_button, 1, &tmp_btn, nullptr);
+                // g_button x/y are stored in screen space (see ui::button / ui::img_button).
+                return !!generic_buttons_handle_mouse(m, vec2i{0, 0}, &g_button, 1, &tmp_btn, nullptr);
             case image:
-                return !!image_buttons_handle_mouse(m, offset, &i_button, 1, &tmp_btn);
+                return !!image_buttons_handle_mouse(m, vec2i{0, 0}, &i_button, 1, &tmp_btn);
             case arrow:
                 return !!arrow_buttons_handle_mouse(m, &a_button, 1, &tmp_btn);
             default:
@@ -461,7 +466,7 @@ pcstr ui::resource_name(e_resource r) {
 
 int ui::button_hover(const mouse* m) {
     for (auto& btn : g_state.buttons) {
-        if (is_button_hover(btn, g_state.offset())) {
+        if (is_button_hover(btn, vec2i{0, 0})) {
             return (std::distance(&g_state.buttons.front(), &btn) + 1);
         }
     }
@@ -472,9 +477,10 @@ int ui::button_hover(const mouse* m) {
 generic_button& ui::link(pcstr label, vec2i pos, vec2i size, e_font font, UiFlags flags, button_onclick_cb cb) {
     const vec2i offset = g_state.offset();
 
-    g_state.buttons.push_back(generic_button{pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
+    g_state.buttons.push_back(
+        generic_button{offset.x + pos.x, offset.y + pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
     auto& gbutton = g_state.buttons.back().g_button;
-    int focused = is_button_hover(gbutton, offset);
+    int focused = is_button_hover(gbutton, vec2i{0, 0});
 
     push(cmd_t::text_centered, Pos{offset + pos}, BoxWidth{size.x}, Font{focused ? FONT_NORMAL_YELLOW : font},
       Caption{label});
@@ -514,9 +520,10 @@ generic_button& ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
 
     const vec2i offset = g_state.offset();
 
-    g_state.buttons.push_back(generic_button{pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
+    g_state.buttons.push_back(
+        generic_button{offset.x + pos.x, offset.y + pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
     generic_button& gbutton = g_state.buttons.back().g_button;
-    gbutton.hovered = (is_button_hover(gbutton, offset) || selected) && !readonly;
+    gbutton.hovered = (is_button_hover(gbutton, vec2i{0, 0}) || selected) && !readonly;
     gbutton.clip = graphics_clip_rectangle();
 
     if (small_panel) {
@@ -599,9 +606,10 @@ generic_button& ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
 generic_button& ui::large_button(pcstr label, vec2i pos, vec2i size, e_font font) {
     const vec2i offset = g_state.offset();
 
-    g_state.buttons.push_back(generic_button{pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
+    g_state.buttons.push_back(
+        generic_button{offset.x + pos.x, offset.y + pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
     auto& gbutton = g_state.buttons.back().g_button;
-    int focused = is_button_hover(gbutton, offset);
+    int focused = is_button_hover(gbutton, vec2i{0, 0});
 
     push(cmd_t::large_label, Pos{offset + pos}, Size{size}, BoxWidth{size.x / 16}, ImageId{focused ? 1 : 0}, Font{font},
       Caption{label});
@@ -621,14 +629,14 @@ image_button& ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_b
     const vec2i state_offset = g_state.offset();
     const mouse& m = mouse::get();
 
-    g_state.buttons.push_back(image_button{pos.x, pos.y, size.x + 4, size.y + 4, IB_NORMAL, (uint32_t)desc.pack,
-      (uint32_t)desc.id, offsets.data[0], button_none, button_none, 0, 0, true});
+    g_state.buttons.push_back(image_button{state_offset.x + pos.x, state_offset.y + pos.y, size.x + 4, size.y + 4, IB_NORMAL,
+      (uint32_t)desc.pack, (uint32_t)desc.id, offsets.data[0], button_none, button_none, 0, 0, true});
     auto& ibutton = g_state.buttons.back().i_button;
 
     const bool grayscaled = !!(flags & UiFlags_Grayscale);
     const bool darkened = !!(flags & UiFlags_Darkened);
     const bool force_pressed = !!(flags & UiFlags_Selected);
-    ibutton.hovered = !(darkened || grayscaled) && is_button_hover(ibutton, state_offset);
+    ibutton.hovered = !(darkened || grayscaled) && is_button_hover(ibutton, vec2i{0, 0});
     ibutton.pressed = (ibutton.hovered && m.left.is_down);
     ibutton.enabled = !(flags & UiFlags_Readonly);
 
@@ -1978,6 +1986,7 @@ void ui::earrow_button::load(archive arch, element* parent, items& elems) {
     tiny = arch.r_bool("tiny");
     down = arch.r_bool("down");
     set_ref(ONCLICK, arch.r_function("onclick"));
+    set_event(ONCLICK_EVENT, arch.r_string(ONCLICK_EVENT.c_str()));
 }
 
 void ui::earrow_button::js_call() {
@@ -1988,8 +1997,14 @@ void ui::earrow_button::draw(UiFlags flags) {
     scr_pos = g_state.offset() + pos;
     auto& btn = ui::arw_button(pos, down, tiny);
 
-    // Set up click handler - prefer JS callback if available, otherwise use C++ callback
-    if (!js_ref(ONCLICK).empty()) {
+    const bool clickable = !darkened && !readonly;
+    xstring onclick_event = event_name(ONCLICK_EVENT);
+    if (clickable && !onclick_event.empty()) {
+        btn.onclick([onclick_event] {
+            auto* w = get_current_widget();
+            dispatch_autoconfig_es_event(w, onclick_event, {});
+        });
+    } else if (clickable && !js_ref(ONCLICK).empty()) {
         btn.onclick([this] { this->js_call(); });
     } else if (_func || _sfunc) {
         btn.onclick(_func);
@@ -2050,8 +2065,7 @@ void ui::egeneric_button::draw(UiFlags gflags) {
         btn->onrclick(_srfunc);
     }
 
-    const vec2i offset = g_state.offset();
-    if (clickable && is_button_hover(*btn, offset)) {
+    if (clickable && is_button_hover(*btn, vec2i{0, 0})) {
         ui::set_tooltip(_tooltip);
     }
 

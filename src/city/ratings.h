@@ -4,14 +4,6 @@
 #include "building/building_type.h"
 #include "core/archive.h"
 
-enum e_selected_rating {
-    e_selected_rating_none = 0,
-    e_selected_rating_culture = 1,
-    e_selected_rating_prosperity = 2,
-    e_selected_rating_monument = 3,
-    e_selected_rating_kingdom = 4
-};
-
 struct city_ratings_t {
     struct point {
         uint8_t coverage;

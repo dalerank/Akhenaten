@@ -2025,7 +2025,6 @@ localization_base_en = [
     { group:52, id:18, text: "Give money" }
     { group:52, id:19, text: "All" }
     { group:52, id:20, text: "Current requests" }
-    { group:52, id:21, text: "There are no requests outstanding at the moment." }
     { group:52, id:22, text: "Popular opinion would consign your remains to the jackals." }
     { group:52, id:23, text: "You are popular among jugglers, who use you in their comedies." }
     { group:52, id:24, text: "It is widely believed that your very presence causes malaria." }

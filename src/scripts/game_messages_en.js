@@ -54,7 +54,7 @@ game_messages_en {
 
     message_storage_yard_history {
         id: 6
-        
+
         size [30, 20]
         image { id: 79, pos [15, 15] }
         title { text: "Storage Yard", pos [125, 15] }
@@ -66,7 +66,7 @@ game_messages_en {
 
     message_keyboard_commands {
         id: 7
-        
+
         size [30, 28]
         title { text: "Keyboard Commands" }
         subtitle { text: "Game Controls" }

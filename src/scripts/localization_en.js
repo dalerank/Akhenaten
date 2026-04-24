@@ -1114,7 +1114,7 @@ localization_en = [
   { key: "#bandstand_low", text: "This house has not been passed by a musician for a while. It will soon lose musician access" }
 
   { key: "#goods_are_finished", text: "My supplies sold like hot cakes! I'm going back to the Bazaar for more." }
-  { key: "#we_are_selling_goods", text: "I do my best to give the people what they want." }    
+  { key: "#we_are_selling_goods", text: "I do my best to give the people what they want." }
 
   { key: "#scriber_dicease_can_start", text: "People are sick. My medical papyri tell me that the illness could soon escalate to plague!" }
   { key: "#scriber_no_food_in_city", text: "I'm famished. It's hard to lift my scrolls on an empty stomach." }
@@ -1125,8 +1125,8 @@ localization_en = [
   { key: "#scriber_much_unemployments", text: "There are a lot of umemployed in the city. At least they have plenty of time to read." }
   { key: "#scriber_low_entertainment", text: "Sometimes my eyes like to rest on something other than hieroglyphs. I want to see a show!" }
   { key: "#scriber_city_is_ok", text: "This city is comparable to others I've read about." }
-  { key: "#scriber_city_is_amazing", text: "This city is the best that history has ever known!" } 
-  
+  { key: "#scriber_city_is_amazing", text: "This city is the best that history has ever known!" }
+
   { key: "#dentist_concerned_about_plague", text: "People are so concerned about catching the plague that they're neglecting their teeth." }
   { key: "#dentist_no_food_in_city", text: "I've had so little to eat lately...what a sad waste of perfect teeth." }
   { key: "#dentist_defenses_are_weak", text: "The city's defenses are full of gaps. Our enemies could have their way with us." }
@@ -1136,7 +1136,7 @@ localization_en = [
   { key: "#dentist_much_unemployments", text: "I've never seen so many people out of work before!" }
   { key: "#dentist_low_entertainment", text: "I'm bored! I guess I'll brush my teeth again." }
   { key: "#dentist_city_is_ok", text: "This city is okay. Only a few cavities!" }
-  { key: "#dentist_city_is_amazing", text: "This city has the brightest smile in all of Egypt." }    
+  { key: "#dentist_city_is_amazing", text: "This city has the brightest smile in all of Egypt." }
 
   { key: "#magistrate_i_hope_we_are_ready", text: "Health conditions in this city are criminal. Plague is the punishment that fits the crime." }
   { key: "#magistrate_no_food_in_city", text: "I'm so hungry, a good meal will buy you any verdict you want." }
@@ -1193,4 +1193,5 @@ localization_en = [
   { key: "#top_menu_file_tooltip", text: "Load, save, new game and exit" }
 
   { key: "#sidebar_speed_header", text: "Speed" }
+  { key: "#no_requests", text: "There are no requests outstanding at the moment." }
 ]

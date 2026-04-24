@@ -99,7 +99,6 @@ void __ui_label_colored(pcstr text, vec2i pos, int font, unsigned int c) {
 ANK_FUNCTION_4(__ui_label_colored);
 
 bool __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags, pcstr tooltip) {
-    const vec2i offset = ui::current_offset();
     const bool is_underlying = g_window_manager.underlying_windows_redrawing > 0;
     flags |= is_underlying ? UiFlags_Readonly : UiFlags_None;
     auto& btn = ui::button(text, pos, size, fonts_vec{(e_font)font}, (UiFlags)flags);
@@ -112,7 +111,7 @@ bool __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags, pc
     }
 
     int lmb_click = 0;
-    generic_buttons_handle_mouse(&mouse::ref(), offset, &btn, 1, nullptr, &lmb_click);
+    generic_buttons_handle_mouse(&mouse::ref(), vec2i{0, 0}, &btn, 1, nullptr, &lmb_click);
     return !!lmb_click;
 }
 ANK_FUNCTION_6(__ui_draw_button);
