@@ -9,6 +9,7 @@
 #include "graphics/elements/panel.h"
 #include "graphics/elements/scrollbar.h"
 #include "graphics/image_groups.h"
+#include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "graphics/view/view.h"
@@ -24,6 +25,10 @@
 
 #define NUM_VISIBLE_OPTIONS 14
 #define NUM_BOTTOM_BUTTONS 3
+
+static inline const uint8_t *tr(pcstr key) {
+    return (const uint8_t *)lang_text_from_key(key);
+}
 
 static void on_scroll(void);
 
@@ -177,10 +182,7 @@ static void init(void (*close_callback)(void)) {
     g_hotkey_window_scrollbar.init(0, std::size(hotkey_widgets) - NUM_VISIBLE_OPTIONS);
 
     for (int i = 0; i < HOTKEY_MAX_ITEMS; i++) {
-        hotkey_mapping empty("", KEY_NONE, KEY_MOD_NONE, (e_hotkey_action)i);
-
-        const hotkey_mapping* mapping = game_hotkeys::hotkey_for_action((e_hotkey_action)i);
-        data.mappings[i] = mapping ? *mapping : empty;
+        data.mappings[i] = *game_hotkeys::hotkey_for_action((e_hotkey_action)i);
     }
 }
 
@@ -193,10 +195,10 @@ static void draw_background(int) {
     graphics_set_to_dialog();
     outer_panel_draw(vec2i{0, 0}, 40, 30);
 
-    text_draw_centered("#TR_HOTKEY_TITLE", 16, 16, 608, FONT_LARGE_BLACK_ON_LIGHT, 0);
+    text_draw_centered(tr("#TR_HOTKEY_TITLE"), 16, 16, 608, FONT_LARGE_BLACK_ON_LIGHT, 0);
 
-    text_draw_centered("#TR_HOTKEY_LABEL", HOTKEY_X_OFFSET_1, 55, HOTKEY_BTN_WIDTH, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-    text_draw_centered("#TR_HOTKEY_ALTERNATIVE_LABEL", HOTKEY_X_OFFSET_2, 55, HOTKEY_BTN_WIDTH, FONT_NORMAL_BLACK_ON_LIGHT,0);
+    text_draw_centered(tr("#TR_HOTKEY_LABEL"), HOTKEY_X_OFFSET_1, 55, HOTKEY_BTN_WIDTH, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+    text_draw_centered(tr("#TR_HOTKEY_ALTERNATIVE_LABEL"), HOTKEY_X_OFFSET_2, 55, HOTKEY_BTN_WIDTH, FONT_NORMAL_BLACK_ON_LIGHT,0);
 
     inner_panel_draw({ 20, 72 }, { 35, 22 });
     int y_base = 80;
@@ -204,10 +206,10 @@ static void draw_background(int) {
         hotkey_widget* widget = &hotkey_widgets[i + g_hotkey_window_scrollbar.scroll_position];
         int text_offset = y_base + 6 + 24 * i;
         if (widget->action == HOTKEY_HEADER) {
-            text_draw(widget->name_translation, 32, text_offset, FONT_NORMAL_WHITE_ON_DARK, 0);
+            text_draw(tr(widget->name_translation), 32, text_offset, FONT_NORMAL_WHITE_ON_DARK, 0);
         } else {
             if (strlen(widget->name_translation) > 0) {
-                text_draw(widget->name_translation, 32, text_offset, FONT_NORMAL_BLACK_ON_DARK, 0);
+                text_draw(tr(widget->name_translation), 32, text_offset, FONT_NORMAL_BLACK_ON_DARK, 0);
             } else {
                 lang_text_draw(widget->name_text_group, widget->name_text_id, 32, text_offset, FONT_NORMAL_BLACK_ON_DARK);
             }
@@ -230,7 +232,7 @@ static void draw_background(int) {
     }
 
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
-        text_draw_centered((const uint8_t *)bottom_button_texts[i],
+        text_draw_centered(tr(bottom_button_texts[i]),
                            bottom_buttons[i].x,
                            bottom_buttons[i].y + 9,
                            bottom_buttons[i].width,
@@ -245,7 +247,7 @@ static void draw_foreground(int) {
     auto& data = g_hotkeys_window_data;
     graphics_set_to_dialog();
 
-    scrollbar_draw(vec2i{0, 0}, &g_hotkey_window_scrollbar);
+    scrollbar_draw(vec2i{screen_dialog_offset_x(), screen_dialog_offset_y()}, &g_hotkey_window_scrollbar);
 
     for (int i = 0; i < NUM_VISIBLE_OPTIONS; i++) {
         hotkey_widget* widget = &hotkey_widgets[i + g_hotkey_window_scrollbar.scroll_position];
@@ -270,7 +272,8 @@ static void draw_foreground(int) {
 static void handle_input(const mouse* m, const hotkeys* h) {
     auto& data = g_hotkeys_window_data;
     const mouse* m_dialog = mouse_in_dialog(m);
-    if (scrollbar_handle_mouse(&g_hotkey_window_scrollbar, m_dialog)) {
+    g_hotkey_window_scrollbar.offset = {screen_dialog_offset_x(), screen_dialog_offset_y()};
+    if (scrollbar_handle_mouse(&g_hotkey_window_scrollbar, m)) {
         return;
     }
 

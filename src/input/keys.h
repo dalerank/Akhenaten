@@ -110,7 +110,7 @@ enum e_key_mode {
     KEY_MOD_GUI = 8,
 };
 
-const char* key_combination_name(int key, int modifiers);
+const char* key_combination_name(e_key key, e_key_mode modifiers);
 
 bool key_combination_from_name(pcstr name, e_key &key, e_key_mode &modifiers);
 

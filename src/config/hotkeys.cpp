@@ -183,21 +183,29 @@ void game_hotkeys::install() {
 }
 
 void game_hotkeys::save() {
-    //auto &data = g_config_hotkeys_data;
-    //vfs::path fs_file = vfs::content_path(INI_FILENAME);
-    //
-    //hotkey_install_mapping(data.mappings, data.num_mappings);
-    //FILE* fp = vfs::file_open_os(fs_file, "wt");
-    //if (!fp) {
-    //    logs::error("Unable to write hotkey configuration file %s", INI_FILENAME);
-    //    return;
-    //}
-    //
-    //for (int i = 0; i < data.num_mappings; i++) {
-    //    const char* key_name = key_combination_name(data.mappings[i].key, data.mappings[i].modifiers);
-    //    fprintf(fp, "%s=%s\n", ini_keys[data.mappings[i].action], key_name);
-    //}
-    //vfs::file_close(fp);
+    vfs::path fs_file = vfs::content_path(CONF_HOTKEYS);
+    FILE *fp = vfs::file_open_os(fs_file, "wt");
+    if (!fp) {
+        logs::error("Unable to write hotkey configuration file %s", CONF_HOTKEYS);
+        return;
+    }
+
+    fprintf(fp, "var game_hotkeys = {\n");
+    for (int i = 0; i < HOTKEY_MAX_ITEMS; ++i) {
+        const hotkey_mapping &m = _hotkeys[i];
+        if (m.name.empty() || m.name == "unknown") {
+            continue;
+        }
+
+        char primary[100];
+        strncpy(primary, key_combination_name(m.state.key, m.state.modifiers), sizeof(primary) - 1);
+        primary[sizeof(primary) - 1] = 0;
+        pcstr alt = key_combination_name(m.alt.key, m.alt.modifiers);
+
+        fprintf(fp, "  %s: [\"%s\", \"%s\"],\n", m.name.c_str(), primary, alt);
+    }
+    fprintf(fp, "}\n");
+    vfs::file_close(fp);
 }
 
 hotkey_mapping::hotkey_mapping(pcstr n, e_key k, e_key_mode m, e_hotkey_action a, e_key k1, e_key_mode m1) : name(n), action(a) {
