@@ -61,7 +61,7 @@ function labor_category_name(cat) {
 
 [es=(advisor_labors_window, init)]
 function advisor_labors_window_init(window) {
-    advisors_toolbar_refresh(window)
+    advisors_toolbar_refresh(window, ADVISOR_LABOR)
 
     window.employed.text = _eformat( "${l.workers_employed} ${50.12} ${l.workers_unemployed} ${50.13} ${l.unemployment_percentage}", { l : city.labor })
 }

@@ -45,7 +45,7 @@ function advisor_population_on_init(window) {
     window.title.text = __loc(55, advisor_population_window.graph_order)
 	window.housing.text = "#TR_HEADER_HOUSING"
 
-	advisors_toolbar_refresh(window)
+	advisors_toolbar_refresh(window, ADVISOR_POPULATION)
 }
 
 function advisor_population_on_housing_button() {

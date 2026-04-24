@@ -35,34 +35,38 @@ advisor_monuments_window {
     advisor: ADVISOR_MONUMENTS
     allow_rmb_goback : true
     ui : baseui(advisor_window_base, {
-        background    : outer_panel({size[40, 27]})
-        advisor_icon  : image({pack:PACK_GENERAL, id:128, offset:12, pos[10, 10] })
-        title         : text({pos[60, 12], text{group:4, id:13}, font:FONT_LARGE_BLACK_ON_LIGHT })
-        rating_line   : label({pos[60, 42], text:"${148.2} ${city.rating.monument}", font:FONT_NORMAL_BLACK_ON_LIGHT})
-        inner_panel   : inner_panel({pos[32, 70], size[36, 17]})
+        advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+			ui : {
+                background    : outer_panel({size[40, 27]})
+                advisor_icon  : image({pack:PACK_GENERAL, id:128, offset:12, pos[10, 10] })
+                title         : text({pos[60, 12], text{group:4, id:13}, font:FONT_LARGE_BLACK_ON_LIGHT })
+                rating_line   : label({pos[60, 42], text:"${148.2} ${city.rating.monument}", font:FONT_NORMAL_BLACK_ON_LIGHT})
+                inner_panel   : inner_panel({pos[32, 70], size[36, 17]})
 
-        monuments_list : scrollable_list({
-            pos[38, 76]
-            size[35, 16]
-            view_items: 6
-            buttons_size_y: 45
-            buttons_margin_x: 0
-            buttons_margin_y: 0
-            text_padding_x: 0
-            text_padding_y: 0
-            draw_scrollbar_always: false
-            draw_paneling: false
-            onrender_item: monuments_advisor_on_render_item
-            onclick_item: monuments_advisor_on_click_item
+                monuments_list : scrollable_list({
+                    pos[38, 76]
+                    size[35, 16]
+                    view_items: 6
+                    buttons_size_y: 45
+                    buttons_margin_x: 0
+                    buttons_margin_y: 0
+                    text_padding_x: 0
+                    text_padding_y: 0
+                    draw_scrollbar_always: false
+                    draw_paneling: false
+                    onrender_item: monuments_advisor_on_render_item
+                    onclick_item: monuments_advisor_on_click_item
+                })
+
+                no_monuments : label({margin{ centerx:-100, centery:-40}, text:"${53.69}", font:FONT_NORMAL_WHITE_ON_DARK })
+            }
         })
-
-        no_monuments : label({margin{ centerx:-100, centery:-40}, text:"${53.69}", font:FONT_NORMAL_WHITE_ON_DARK })
     })
 }
 
 [es=(advisor_monuments_window, init)]
 function advisor_monuments_window_init(window) {
-    advisors_toolbar_refresh(window)
+    advisors_toolbar_refresh(window, ADVISOR_MONUMENTS)
 }
 
 [es=(advisor_monuments_window, ui_draw_foreground)]

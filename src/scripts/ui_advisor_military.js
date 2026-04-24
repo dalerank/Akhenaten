@@ -74,7 +74,7 @@ function advisor_military_window_init(window) {
         window.nothing_text.text = __loc(51, 16)
     }
 
-    advisors_toolbar_refresh(window)
+    advisors_toolbar_refresh(window, ADVISOR_MILITARY)
 }
 
 [es=(advisor_military_window, ui_draw_foreground)]

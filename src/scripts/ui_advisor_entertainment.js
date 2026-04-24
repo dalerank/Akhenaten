@@ -119,5 +119,5 @@ function advisor_entertainment_window_init(window) {
 
 	window.advice.text = __loc(58, 7 + advisor_entertainment_advice_index())
 
-	advisors_toolbar_refresh(window)
+	advisors_toolbar_refresh(window, ADVISOR_ENTERTAINMENT)
 }

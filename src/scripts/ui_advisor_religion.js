@@ -166,7 +166,7 @@ function advisor_religion_window_init(window) {
 	if (!game.gods_enabled) {
 		window.nogods_text.enabled = true
 		window.gods_list.clear()
-		advisors_toolbar_refresh(window)
+		advisors_toolbar_refresh(window, ADVISOR_RELIGION)
 		return
 	}
 
@@ -180,7 +180,7 @@ function advisor_religion_window_init(window) {
 
 	advisor_religion_window.needs_sync = true
 
-	advisors_toolbar_refresh(window)
+	advisors_toolbar_refresh(window, ADVISOR_RELIGION)
 }
 
 [es=(advisor_religion_window, draw_background)]

@@ -134,5 +134,5 @@ function advisor_education_window_init(window) {
 		list.add_item(ADVISOR_EDUCATION_FACILITIES[i].id)
 	}
 
-	advisors_toolbar_refresh(window)
+	advisors_toolbar_refresh(window, ADVISOR_EDUCATION)
 }

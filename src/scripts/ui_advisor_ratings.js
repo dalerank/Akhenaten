@@ -145,5 +145,5 @@ function advisor_ratings_window_init(window) {
 	window.rating_monument.text = __loc(53, 3)
 	window.rating_kingdom.text = __loc(53, 4)
 
-	advisors_toolbar_refresh(window)
+	advisors_toolbar_refresh(window, ADVISOR_RATINGS)
 }

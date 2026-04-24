@@ -20,8 +20,8 @@ advisor_financial_window {
 
                         tax_payers : text({margin:{left:10, top:60}, font:FONT_NORMAL_WHITE_ON_DARK})
 
-                        dec_tax    : arrowdown({margin{left:170, top:25}, tiny:false, onclick:advisor_financial_window_dec_tax})
-                        inc_tax    : arrowup({margin{left:195, top:25}, tiny:false, onclick:advisor_financial_window_inc_tax})
+                        dec_tax    : arrowdown({margin:{left:170, top:25}, tiny:false, onclick:advisor_financial_window_dec_tax})
+                        inc_tax    : arrowup({margin:{left:195, top:25}, tiny:false, onclick:advisor_financial_window_inc_tax})
                     }
                 })
 
@@ -119,7 +119,7 @@ function advisor_financial_window_update_expenses(window) {
 [es=(advisor_financial_window, init)]
 function advisor_financial_window_on_init(window) {
     __city_finance_calculate_totals()
-    advisors_toolbar_refresh(window)
+    advisors_toolbar_refresh(window, ADVISOR_FINANCIAL)
 }
 
 [es=(advisor_financial_window, ui_draw_foreground)]

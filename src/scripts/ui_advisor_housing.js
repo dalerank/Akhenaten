@@ -84,7 +84,7 @@ function advisor_housing_window_show_total(window) {
 	window.goods_demanding_2_value.text = String(city.houses_demanding_goods_at(2))
 	window.goods_demanding_3_value.text = String(city.houses_demanding_goods_at(3))
 
-	advisors_toolbar_refresh(window)
+	advisors_toolbar_refresh(window, ADVISOR_HOUSING)
 }
 
 [es=advisor_window]

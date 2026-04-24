@@ -2,29 +2,31 @@ log_info("akhenaten: ui advisor chief started")
 
 [es=advisor_window]
 advisor_chief_window {
-	pos [(sw(0) - px(40)) / 2, (sh(0) - px(27)) / 2]
-
 	advisor: ADVISOR_CHIEF
 	allow_rmb_goback : true
 	ui : baseui(advisor_window_base, {
-		background : dummy({ pos:[0, 0] })
+		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+			ui : {
+				background : dummy({ pos:[0, 0] })
 
-		outer_panel : { type : "outer_panel", pos:[0, 0], size:[40, 27] }
-		advisor_icon : { type : "image", pack:PACK_GENERAL, id:128, offset:11, pos:[10, 10] }
-		header_label : { type : "label", font : FONT_LARGE_BLACK_ON_LIGHT, text:"#chief_overseer",	pos:[60, 17]}
+				outer_panel : { type : "outer_panel", pos:[0, 0], size:[40, 27] }
+				advisor_icon : { type : "image", pack:PACK_GENERAL, id:128, offset:11, pos:[10, 10] }
+				header_label : { type : "label", font : FONT_LARGE_BLACK_ON_LIGHT, text:"#chief_overseer",	pos:[60, 17]}
 
-		chief_report_list : scrollable_list({
-			pos: [26, 66]
-			size: [35, 21]
-			view_items: 16
-			buttons_size_y: 20
-			buttons_margin_y: 8
-			buttons_margin_x: 0
-			text_padding_x: 0
-			text_padding_y: 0
-			draw_scrollbar_always: false
-			draw_paneling: true
-			onrender_item: advisor_chief_report_on_render_item
+				chief_report_list : scrollable_list({
+					pos: [26, 66]
+					size: [35, 21]
+					view_items: 16
+					buttons_size_y: 20
+					buttons_margin_y: 8
+					buttons_margin_x: 0
+					text_padding_x: 0
+					text_padding_y: 0
+					draw_scrollbar_always: false
+					draw_paneling: true
+					onrender_item: advisor_chief_report_on_render_item
+				})
+			}
 		})
 	})
 }
@@ -489,5 +491,5 @@ function advisor_chief_window_fill_report_rows(window) {
 [es=(advisor_chief_window, init)]
 function advisor_chief_window_on_init(window) {
 	advisor_chief_window_fill_report_rows(window)
-	advisors_toolbar_refresh(window)
+	advisors_toolbar_refresh(window, ADVISOR_CHIEF)
 }

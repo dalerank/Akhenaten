@@ -1008,19 +1008,18 @@ void ui::widget::draw(UiFlags flags) {
         if (!e->parent_id.empty()) {
             const auto& parent = ui[e->parent_id];
             const vec2i ebsize = parent.pxsize();
-            const vec2i top_offset = g_state._offset.empty() ? vec2i{0, 0} : g_state._offset.top();
-            poffset = top_offset + parent.pos;
+            // Parent must appear earlier in `elements` so scr_pos was set this frame (same as layout chain).
+            poffset = parent.screen_pos();
             use_poffset = true;
             current_margin = {0, 0, ebsize.x, ebsize.y};
         }
 
         e->update_pos(current_margin);
+
         if (use_poffset) {
             g_state._offset.push(poffset);
         }
-
         e->draw(flags);
-
         if (use_poffset) {
             g_state._offset.pop();
         }

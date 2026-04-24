@@ -112,5 +112,5 @@ function advisor_health_window_init(window) {
 
 	window.health_advice.text = __loc(56, 6 + advisor_health_advice_index())
 
-	advisors_toolbar_refresh(window)
+	advisors_toolbar_refresh(window, ADVISOR_HEALTH)
 }

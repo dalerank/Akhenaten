@@ -63,7 +63,6 @@ function show_advisor_window(advisor) {
     }
 }
 
-/** Было в window_advisors_show_checked (C++): выбор доступного советника и открытие панели или предупреждение. */
 function window_advisors_show_checked() {
     var avail = 0
     var last = __game_settings.last_advisor
@@ -86,22 +85,22 @@ function window_advisors_show_checked() {
     }
 }
 
-function advisors_toolbar_refresh(window) {
-    var cur = __game_settings.last_advisor
+function advisors_toolbar_refresh(window, advisor) {
+    __game_settings.last_advisor = advisor
 
-    window.labor_btn.selected = (ADVISOR_LABOR == cur)
-    window.military_btn.selected = (ADVISOR_MILITARY == cur)
-    window.imperial_btn.selected = (ADVISOR_IMPERIAL == cur)
-    window.ratings_btn.selected = (ADVISOR_RATINGS == cur)
-    window.trade_btn.selected = (ADVISOR_TRADE == cur)
-    window.population_btn.selected = (ADVISOR_POPULATION == cur)
-    window.health_btn.selected = (ADVISOR_HEALTH == cur)
-    window.education_btn.selected = (ADVISOR_EDUCATION == cur)
-    window.entertainment_btn.selected = (ADVISOR_ENTERTAINMENT == cur)
-    window.religion_btn.selected = (ADVISOR_RELIGION == cur)
-    window.financial_btn.selected = (ADVISOR_FINANCIAL == cur)
-    window.chief_btn.selected = (ADVISOR_CHIEF == cur)
-    window.monuments_btn.selected = (ADVISOR_MONUMENTS == cur)
+    window.labor_btn.selected = (ADVISOR_LABOR == advisor)
+    window.military_btn.selected = (ADVISOR_MILITARY == advisor)
+    window.imperial_btn.selected = (ADVISOR_IMPERIAL == advisor)
+    window.ratings_btn.selected = (ADVISOR_RATINGS == advisor)
+    window.trade_btn.selected = (ADVISOR_TRADE == advisor)
+    window.population_btn.selected = (ADVISOR_POPULATION == advisor)
+    window.health_btn.selected = (ADVISOR_HEALTH == advisor)
+    window.education_btn.selected = (ADVISOR_EDUCATION == advisor)
+    window.entertainment_btn.selected = (ADVISOR_ENTERTAINMENT == advisor)
+    window.religion_btn.selected = (ADVISOR_RELIGION == advisor)
+    window.financial_btn.selected = (ADVISOR_FINANCIAL == advisor)
+    window.chief_btn.selected = (ADVISOR_CHIEF == advisor)
+    window.monuments_btn.selected = (ADVISOR_MONUMENTS == advisor)
 
     window.labor_btn.readonly = !city.is_advisor_available(ADVISOR_LABOR)
     window.military_btn.readonly = !city.is_advisor_available(ADVISOR_MILITARY)

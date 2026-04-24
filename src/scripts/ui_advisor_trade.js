@@ -122,5 +122,5 @@ function advisor_trade_window_init(window) {
     for (var name in city.resources.available) {
         window.resources_list.add_item(name)
     }
-    advisors_toolbar_refresh(window)
+    advisors_toolbar_refresh(window, ADVISOR_TRADE)
 }
