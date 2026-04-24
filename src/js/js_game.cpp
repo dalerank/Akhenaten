@@ -20,6 +20,7 @@
 #include "core/app.h"
 #include "game/file_editor.h"
 #include "game/game.h"
+#include "game/game_config.h"
 #include "game/mission.h"
 #include "game/game_events.h"
 #include "game/settings.h"
@@ -476,7 +477,7 @@ void __game_decrease_game_speed() { game.decrease_game_speed(); } ANK_FUNCTION(_
 void __game_increase_scroll_speed() { game.increase_scroll_speed(); } ANK_FUNCTION(__game_increase_scroll_speed)
 void __game_decrease_scroll_speed() { game.decrease_scroll_speed(); } ANK_FUNCTION(__game_decrease_scroll_speed)
 void __game_set_game_speed(int v) { game.game_speed = v; } ANK_FUNCTION_1(__game_set_game_speed)
-void __game_set_scroll_speed(int v) { game.scroll_speed = v; } ANK_FUNCTION_1(__game_set_scroll_speed)
+void __game_set_scroll_speed(int v) { game.scroll_speed = v; game_features::gameopt_scroll_speed.set(v); } ANK_FUNCTION_1(__game_set_scroll_speed)
 void __game_set_player_name(pcstr name) { g_settings.set_player_name_utf8(name); } ANK_FUNCTION_1(__game_set_player_name)
 pcstr __game_get_player_name() { return g_settings.player_name_utf8.empty() ? g_settings.player_name.c_str() : g_settings.player_name_utf8.c_str(); } ANK_FUNCTION(__game_get_player_name)
 bool __game_load_savegame(pcstr filename) { return GamestateIO::load_savegame(filename); } ANK_FUNCTION_1(__game_load_savegame)

@@ -671,7 +671,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.health.value);
     iob->bind(BIND_SIGNATURE_INT32, &data.health.num_mortuary_workers);
     iob->bind(BIND_SIGNATURE_UINT16, &game_speed());
-    iob->bind(BIND_SIGNATURE_UINT16, &game_scroll_speed());
+    static uint16_t unused_scroll_speed_slot = 0;
+    iob->bind(BIND_SIGNATURE_UINT16, &unused_scroll_speed_slot);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.current);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.last_year);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.school_age);

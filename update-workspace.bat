@@ -8,6 +8,9 @@ if "%1"=="" (
 )
 
 cmake -DCMAKE_BUILD_TYPE=%build_type% ../
-start akhenaten.sln %debug_flag% .
+if exist akhenaten.slnx (
+  start akhenaten.slnx %debug_flag% .
+) else (
+  start akhenaten.sln %debug_flag% .
+)
 cd ..
-

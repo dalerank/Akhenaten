@@ -10,7 +10,7 @@
 #include <cstring>
 
 hvector<std::unique_ptr<js_building_info_window>, 32> building_windows;
-hvector<std::unique_ptr<js_advisor_window>, 16> advisor_windows;
+hvector<std::unique_ptr<js_advisor_window>, ADVISOR_MAX> advisor_windows;
 hvector<std::unique_ptr<js_common_window>, 32> common_windows;
 hvector<std::unique_ptr<js_common_modal_window>, 32> modal_windows;
 
@@ -42,6 +42,10 @@ void register_es_advisor_window(pcstr name) {
 
     logs::info("JS Window Registry: Registering advisor window '%s' for advisor %d", name, (int)adv);
 
+    if (advisor_windows.size() < ADVISOR_MAX) {
+        advisor_windows.resize(ADVISOR_MAX);
+    }
+
     auto window = std::make_unique<js_advisor_window>(name);
     advisor_windows[adv] = std::move(window);
 }
@@ -49,7 +53,9 @@ void register_es_advisor_window(pcstr name) {
 void clear_es_advisor_window() {
     logs::info("JS Window Registry: Clearing %d registered advisor windows", (int)advisor_windows.size());
     for (auto &w : advisor_windows) {
-        verify_no_crash(w);
+        if (!w) {
+            continue;
+        }
         autoconfig_window::unregister_section(w->get_section());
     }
     advisor_windows.clear();

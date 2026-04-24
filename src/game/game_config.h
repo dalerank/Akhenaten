@@ -16,6 +16,7 @@ namespace game_features {
         bool to_bool() const;
         xstring to_string() const;
         float to_float() const;
+        int to_int() const;
         inline bool operator!() const { return !to_bool(); }
         void set(bool value);
         void set(float value);
@@ -111,6 +112,7 @@ namespace game_features {
     extern game_feature gameopt_last_save_filename;
     extern game_feature gameopt_enabled_mods;
     extern game_feature gameopt_last_game_version;
+    extern game_feature gameopt_scroll_speed;
     extern game_feature gameplay_change_hasanimals;
     extern game_feature gameplay_brewery_requires_water;
     extern game_feature gameplay_conservatory_helps_dance_school;
