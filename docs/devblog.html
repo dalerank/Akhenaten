@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Devblog — Akhenaten</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="devblog.html" class="active">Devblog</a></li>
+        <li><a href="screenshots.html">Screenshots</a></li>
+        <li><a href="downloads.html">Downloads</a></li>
+        <li><a href="contact.html">Join us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-content">
+    <h1>Devblog</h1>
+
+    <article class="post">
+      <div class="post-meta"><time>January 12, 2026</time></div>
+      <h2>Changes in Akhenaten for 2025</h2>
+      <p>A comprehensive changelog covering major work done in 2025:</p>
+      <ul>
+        <li><strong>Architecture refactoring</strong> — migration of logic from C++ to JavaScript configs for buildings and figures</li>
+        <li><strong>Building/figure class refactoring</strong> — extraction of <code>runtime_data</code> into specialized classes</li>
+        <li><strong>Enemy &amp; invasion system</strong> — new enemy types (barbarian, hittite, kushite, etc.), battalion system, distant battle, siege events</li>
+        <li><strong>Language support</strong> — German and Spanish added, Unicode font improvements</li>
+        <li><strong>New buildings</strong> — Carpenter Guild, Stonemasons Guild, Tower Gatehouse, irrigation canals, gardens</li>
+        <li><strong>Resource depletion</strong> — quarries, copper mines, gems now deplete; save/load of resource state</li>
+        <li><strong>UI/UX</strong> — trade caravan info windows, mod manager, event history, political overseer</li>
+        <li><strong>Graphics</strong> — deferred rendering with Y-sorting, cloud system, texture caching</li>
+        <li><strong>Mod support</strong> — download mods from GitHub, texture loading from modpacks</li>
+        <li><strong>Technical</strong> — builds for Bazzite Linux, macOS ARM/x86, Android, Emscripten/WASM</li>
+        <li><strong>Empire system</strong> — redesigned trade routes, handles instead of raw numbers</li>
+        <li><strong>Dev tools</strong> — sprite viewer, console commands, font generation, debug rendering</li>
+      </ul>
+    </article>
+
+    <article class="post">
+      <div class="post-meta"><time>May 26, 2025</time></div>
+      <h2>Game++. Cooking Vectors (Part 2)</h2>
+      <p>
+        Discusses <strong><code>hybrid_vector</code></strong> — a <code>static_vector</code> that falls back to heap allocation when exceeding a threshold.
+        Draws a parallel to <strong>SSO (Short String Optimization)</strong>.
+        Covers when <code>hybrid_vector</code> helps vs. when it doesn't (e.g., large element sizes, no reasonable small N).
+        Notes that C++17's <code>std::pmr::monotonic_buffer_resource</code> can emulate this pattern.
+      </p>
+    </article>
+
+    <article class="post">
+      <div class="post-meta"><time>May 21, 2025</time></div>
+      <h2>Game++. Cooking Vectors (Part 1)</h2>
+      <p>Explores performance tradeoffs of <code>std::vector</code> in game dev:</p>
+      <ul>
+        <li><strong>Allocation costs</strong> — resize copies, fragmentation on consoles, wasted capacity</li>
+        <li><strong><code>std::array</code></strong> — faster but fixed-size; can blow the stack (PS4→Switch porting anecdote with 480KB stack limit)</li>
+        <li><strong><code>static_vector</code></strong> — stack-allocated vector with fixed max size; absent from C++ standard even in C++26</li>
+        <li>Links to the project's own implementation at <code>src/core/svector.h</code></li>
+      </ul>
+    </article>
+
+    <article class="post">
+      <div class="post-meta"><time>May 9, 2025</time></div>
+      <h2>Game++. String Interning</h2>
+      <p>Covers string interning (string pools) as a game engine optimization:</p>
+      <ul>
+        <li>Compiler-level interning works on PlayStation (Clang/GCC) but "on Xbox, this trick won't work"</li>
+        <li>Fragile optimization — breaks with <code>char[]</code> or <code>std::string</code> copies</li>
+        <li>Custom <code>xstring</code> class using CRC hashes enables pointer-based comparison (30% animation perf boost cited)</li>
+        <li>Used to ship Sims Mobile on iPhone 4S when it originally targeted iPhone 6</li>
+        <li>Implementation at <a href="https://github.com/dalerank/Akhenaten/blob/master/src/core/xstring.h" target="_blank"><code>src/core/xstring.h</code></a></li>
+      </ul>
+    </article>
+
+    <article class="post">
+      <div class="post-meta"><time>April 17, 2025</time></div>
+      <h2>Should Players Be Hand-Held?</h2>
+      <p>A game design essay analyzing level design techniques from Witcher 3, Zelda, and Metro Exodus:</p>
+      <ul>
+        <li><strong>Landmarks/Weenies</strong> — term coined by Walt Disney; always visible orientation points</li>
+        <li><strong>Golden path</strong> — natural story progression via environmental cues</li>
+        <li><strong>Breadcrumbs</strong> — light, color, glowing mushrooms guiding players</li>
+        <li><strong>Walls</strong> — critique of invisible walls; preference for natural barriers</li>
+        <li><strong>Affordance</strong> — interactive elements should look like what they do</li>
+        <li><strong>Visual shapes</strong> — round=fragile, square=solid, triangle=dangerous</li>
+        <li><strong>Leading lines</strong> — composition technique from painting directing player gaze</li>
+      </ul>
+    </article>
+
+    <article class="post">
+      <div class="post-meta"><time>March 19, 2025</time></div>
+      <h2>Working on Walls Logic</h2>
+      <p>New logic for walls — buildings now connect and render properly. Includes a GIF demo of the updated wall system in action.</p>
+    </article>
+
+    <article class="post">
+      <div class="post-meta"><time>February 18, 2025</time></div>
+      <h2>Temple Complex</h2>
+      <p>Screenshot gallery showing temple complex buildings added to the game — multiple new structures extending the religious building set.</p>
+      <img src="https://images.squarespace-cdn.com/content/v1/6772b235ebf597598f38b456/ee46c262-b48d-4d22-829f-9a40936dbadc/7619b9a98144960438410d0e71d398f2.png" alt="Temple Complex" class="post-image" loading="lazy" />
+    </article>
+
+    <article class="post">
+      <div class="post-meta"><time>February 6, 2025</time></div>
+      <h2>Works in Browser</h2>
+      <p>
+        Credits <strong>@ololoken</strong> for getting the game running in-browser via <strong>Emscripten/WASM</strong>.
+        Try it at <a href="https://dalerank.github.io/Akhenaten" target="_blank">dalerank.github.io/Akhenaten</a>.
+      </p>
+      <img src="https://images.squarespace-cdn.com/content/v1/6772b235ebf597598f38b456/f50830b1-659c-47d4-a0bb-d2593ce0932f/wasm.png" alt="WASM build in browser" class="post-image" loading="lazy" />
+    </article>
+
+    <article class="post">
+      <div class="post-meta"><time>January 10, 2025</time></div>
+      <h2>Sprite Tool Added</h2>
+      <p>A new sprite viewer tool for inspecting runtime animations by selecting items from a list. Useful for verifying animations during development.</p>
+    </article>
+
+    <article class="post">
+      <div class="post-meta"><time>January 7, 2025</time></div>
+      <h2>Base Class for Hyena Animal</h2>
+      <p>
+        Added a base class for hyenas: "It's not very functional yet, but it's another step toward restoring the game."
+        See <a href="https://github.com/dalerank/Akhenaten/blob/master/src/figures/figure_hyena.h" target="_blank"><code>figure_hyena.h</code></a> on GitHub.
+      </p>
+    </article>
+
+    <article class="post">
+      <div class="post-meta"><time>May 28, 2019</time></div>
+      <h2>The Story of Original Pharaoh Game</h2>
+      <p>A history of Pharaoh (1999) by Impressions Games:</p>
+      <ul>
+        <li>Development began fall 1997; Caesar 3 engine was the foundation</li>
+        <li><strong>Simon Bradbury</strong> (engine/code lead) left mid-development to found Firefly Studios</li>
+        <li><strong>Chris Beatrice</strong> took over as lead; chose Ancient Egypt setting over "Caesar in space"</li>
+        <li><strong>Haidi Mann</strong> led art using "ping-pong texturing" — 3D models redrawn as 2D tiles</li>
+        <li>Game sold <strong>1.7 million copies</strong> at $45 each on a sub-$2M budget</li>
+        <li>Rights passed through multiple owners; Dotemu released Pharaoh: A New Era remake</li>
+        <li>Dalerank took over the open-source recreation after the original author abandoned it</li>
+      </ul>
+    </article>
+
+    <article class="post">
+      <div class="post-meta"><time>May 28, 2019</time></div>
+      <h2>How to Build a Mastaba</h2>
+      <p>Technical deep-dive into recreating the mastaba monument system:</p>
+      <ul>
+        <li>Original used composite building rendering in a single pass — extremely complex</li>
+        <li>New approach breaks mastaba into independent isometric parts (slanted wall, entrance, solid wall)</li>
+        <li>Covers the <strong>.sg3/.555 texture format</strong> (Sierra Graphics V3): uncompressed, compressed (RLE), and isometric packing</li>
+        <li>Construction has 8 stages: 2 site levelings + 6 stone-laying phases, requiring 400 stones per segment</li>
+        <li>Monuments acted as dynamic warehouses — resources appeared only when physically delivered</li>
+      </ul>
+    </article>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>

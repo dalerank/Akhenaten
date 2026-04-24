@@ -1,6 +1,6 @@
 # Akhenaten [![Github Actions](x64/workflows/Akhenaten%20Build%20Windows/badge.svg)](https://github.com/dalerank/Akhenaten/actions)
 
-[![Website](https://github.com/user-attachments/assets/6fd1fee4-dfa9-4fdb-9067-f3eaf611d3f3)](https://akhenatengame.squarespace.com/)
+[![Website](https://github.com/user-attachments/assets/6fd1fee4-dfa9-4fdb-9067-f3eaf611d3f3)](https://dalerank.github.io/Akhenaten/)
 [![Discord](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263684745-bcca8b70-13c4-48d8-8e91-4b0be8a440e6.png)](https://discord.gg/HS4njmBvpb)
 [![Download](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685010-cd624917-786d-487b-89c0-298bc694f3f2.png)](https://dalerank.itch.io/Akhenaten)
 [![Windows](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685266-d429392e-a91e-4233-b496-3863e50af5f6.png)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_windows/master/windows_build.zip)
@@ -293,7 +293,7 @@ See [CHANGELOG_2025.md](CHANGELOG_2025.md) or [CHANGELOG_2025_EN.md](CHANGELOG_2
 
 - **Issues**: Report bugs or request features on [GitHub Issues](https://github.com/dalerank/Akhenaten/issues)
 - **Discord**: Join our [Discord community](https://discord.gg/HS4njmBvpb)
-- **Website**: Visit [akhenatengame.squarespace.com](https://akhenatengame.squarespace.com/)
+- **Website**: Visit [dalerank.github.io/Akhenaten](https://dalerank.github.io/Akhenaten/)
 
 ![Alt](https://repobeats.axiom.co/api/embed/99a27c096522f0ed847ec37c6495d79552aeb13e.svg "Repobeats analytics image")
 

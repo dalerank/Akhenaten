@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Akhenaten</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="about.html" class="active">About</a></li>
+        <li><a href="devblog.html">Devblog</a></li>
+        <li><a href="screenshots.html">Screenshots</a></li>
+        <li><a href="downloads.html">Downloads</a></li>
+        <li><a href="contact.html">Join us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-content">
+    <h1>About</h1>
+
+    <div class="about-grid">
+      <div class="about-text">
+        <h2>Who we are</h2>
+        <p>
+          Akhenaten is a community-driven effort to make the 1999 game <strong>Pharaoh</strong> compatible with modern systems.
+          It features a redesigned engine with support for loading original save games and playing campaign missions.
+        </p>
+        <p>
+          The project is a fork of <em>Augustus</em>, aimed at supporting Pharaoh, with a new renderer, scripts, and game mechanics.
+          It's an ongoing project that welcomes contributors.
+        </p>
+
+        <h2>History</h2>
+        <p>
+          Pharaoh (1999) was developed by Impressions Games. Development began in fall 1997, using the Caesar 3 engine as a foundation.
+          The game sold 1.7 million copies at $45 each on a sub-$2M budget.
+        </p>
+        <p>
+          Rights passed through multiple owners; Dotemu later released Pharaoh: A New Era remake.
+          Dalerank took over the open-source recreation after the original author abandoned it.
+        </p>
+
+        <h2>Technical</h2>
+        <ul>
+          <li>New deferred renderer with Y-sorting</li>
+          <li>C++ core with JavaScript configs for buildings and figures</li>
+          <li>Mod support — download mods from GitHub, load textures from modpacks</li>
+          <li>Builds for Windows, macOS (ARM/x86), Linux, Android, WebAssembly</li>
+          <li>Original .sg3/.555 texture format support</li>
+        </ul>
+
+        <a href="https://github.com/dalerank/Akhenaten" class="btn btn-primary" target="_blank">View on GitHub</a>
+      </div>
+      <div class="about-image">
+        <img src="https://images.squarespace-cdn.com/content/v1/6772b235ebf597598f38b456/bb0d5e95-93fc-48fd-829b-7c7766fcd8fd/Pharaoh_OSS.png" alt="Akhenaten game screenshot" />
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>
