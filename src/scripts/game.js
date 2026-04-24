@@ -64,6 +64,14 @@ game_features {
     @gameui_empire_city_old_names {}
     @gameopt_last_save_filename {  }
     @gameopt_last_player {  }
+    @gameopt_sound_effects_enabled {}
+    @gameopt_sound_effects_volume {}
+    @gameopt_sound_music_enabled {}
+    @gameopt_sound_music_volume {}
+    @gameopt_sound_speech_enabled {}
+    @gameopt_sound_speech_volume {}
+    @gameopt_sound_city_enabled {}
+    @gameopt_sound_city_volume {}
     @count { get: __game_features_count }
 }
 

@@ -4,7 +4,9 @@
 #include "city/constants.h"
 #include "core/buffer.h"
 #include "core/calc.h"
+#include "game/game_config.h"
 #include "game/game_environment.h"
+#include "js/js_game.h"
 #include "core/string.h"
 #include "io/io.h"
 
@@ -13,6 +15,7 @@
 #define INF_SIZE 564
 
 game_settings g_settings;
+const e_sound_type_tokens_t ANK_CONFIG_ENUM(e_sound_type_tokens);
 
 game_settings::game_settings() {
     inf_file = new buffer(INF_SIZE);
@@ -26,15 +29,6 @@ void game_settings::load_default_settings() {
     fullscreen = true;
     cli_fullscreen = false;
     display_size = {800, 600};
-
-    sound_effects.enabled = true;
-    sound_effects.volume = 100;
-    sound_music.enabled = true;
-    sound_music.volume = 80;
-    sound_speech.enabled = true;
-    sound_speech.volume = 100;
-    sound_city.enabled = true;
-    sound_city.volume = 100;
 
     difficulty.set(DIFFICULTY_HARD);
     tooltips_mode = e_tooltip_mode_full;
@@ -53,9 +47,9 @@ void game_settings::load_settings(buffer* buf) {
     buf->skip(4);
     fullscreen = buf->read_i32();
     buf->skip(3);
-    sound_effects.enabled = buf->read_u8();
-    sound_music.enabled = buf->read_u8();
-    sound_speech.enabled = buf->read_u8();
+    buf->read_u8();
+    buf->read_u8();
+    buf->read_u8();
     buf->skip(6);
     buf->skip(4);
     int tmp = buf->read_i32();
@@ -69,14 +63,14 @@ void game_settings::load_settings(buffer* buf) {
     buf->skip(4); // int personal_savings_last_mission;
     buf->skip(4); // int current_mission_id;
     buf->skip(4); // int is_custom_scenario;
-    sound_city.enabled = buf->read_u8();
+    buf->read_u8();
     warnings = buf->read_u8();
     tmp = buf->read_u8();
     buf->skip(1); // unsigned char autoclear_enabled;
-    sound_effects.volume = buf->read_i32();
-    sound_music.volume = buf->read_i32();
-    sound_speech.volume = buf->read_i32();
-    sound_city.volume = buf->read_i32();
+    buf->read_i32();
+    buf->read_i32();
+    buf->read_i32();
+    buf->read_i32();
     buf->skip(8); // ram
     display_size.x = buf->read_i32();
     display_size.y = buf->read_i32();
@@ -118,9 +112,9 @@ void game_settings::save() {
     buf->skip(4);
     buf->write_i32(fullscreen);
     buf->skip(3);
-    buf->write_u8(sound_effects.enabled);
-    buf->write_u8(sound_music.enabled);
-    buf->write_u8(sound_speech.enabled);
+    buf->write_u8(false);
+    buf->write_u8(false);
+    buf->write_u8(false);
     buf->skip(6);
     buf->skip(4);
     buf->write_i32(0);
@@ -133,14 +127,14 @@ void game_settings::save() {
     buf->skip(4); // int personal_savings_last_mission;
     buf->skip(4); // int current_mission_id;
     buf->skip(4); // int is_custom_scenario;
-    buf->write_u8(sound_city.enabled);
+    buf->write_u8(false);
     buf->write_u8(warnings);
     buf->write_u8(0);
     buf->skip(1); // unsigned char autoclear_enabled;
-    buf->write_i32(sound_effects.volume);
-    buf->write_i32(sound_music.volume);
-    buf->write_i32(sound_speech.volume);
-    buf->write_i32(sound_city.volume);
+    buf->write_i32(0);
+    buf->write_i32(0);
+    buf->write_i32(0);
+    buf->write_i32(0);
     buf->skip(8); // ram
     buf->write_i32(display_size.x);
     buf->write_i32(display_size.y);
@@ -154,22 +148,6 @@ void game_settings::save() {
     buf->write_i32(gods_enabled);
 
     io_write_buffer_to_file("pharaoh.inf", inf_file, INF_SIZE);
-}
-
-sound_settings* game_settings::get_sound(int type) {
-    auto& data = g_settings;
-    switch (type) {
-    case SOUND_MUSIC:
-        return &data.sound_music;
-    case SOUND_EFFECTS:
-        return &data.sound_effects;
-    case SOUND_SPEECH:
-        return &data.sound_speech;
-    case SOUND_CITY:
-        return &data.sound_city;
-    default:
-        return 0;
-    }
 }
 
 void game_settings::set_player_name(const uint8_t* name) {

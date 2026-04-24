@@ -4,7 +4,8 @@
 #include "city/city_population.h"
 #include "content/vfs.h"
 #include "core/profiler.h"
-#include "game/settings.h"
+#include "game/game_config.h"
+#include "core/calc.h"
 #include "content/dir.h"
 #include "sound/sound.h"
 #include "js/js_game.h"
@@ -54,7 +55,7 @@ void sound_manager_t::play_track(const xstring track) {
         return;
     }
 
-    int volume = g_settings.get_sound(SOUND_MUSIC)->volume;
+    int volume = calc_bound(game_features::gameopt_sound_music_volume.to_int(), 0, 100);
 
     volume = volume * 0.4;
     vfs::path corrected_filename = it->file.c_str();
@@ -68,13 +69,13 @@ void sound_manager_t::play_track(const xstring track) {
 }
 
 void sound_manager_t::play_intro() {
-    if (g_settings.get_sound(SOUND_MUSIC)->enabled) {
+    if (!!game_features::gameopt_sound_music_enabled) {
         play_track(music.menu_track);
     }
 }
 
 void sound_manager_t::play_editor() {
-    if (g_settings.get_sound(SOUND_MUSIC)->enabled) {
+    if (!!game_features::gameopt_sound_music_enabled) {
         play_track("city_0");
     }
 }
@@ -86,7 +87,7 @@ void sound_manager_t::music_update(bool force) {
         return;
     }
 
-    if (!g_settings.get_sound(SOUND_MUSIC)->enabled) {
+    if (!game_features::gameopt_sound_music_enabled) {
         return;
     }
 

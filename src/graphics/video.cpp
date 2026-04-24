@@ -7,6 +7,7 @@
 #include "content/vfs.h"
 #include "io/gamefiles/smacker.h"
 #include "platform/renderer.h"
+#include "game/game_config.h"
 #include "screen.h"
 #include "sound/sound.h"
 #include "sound/music.h"
@@ -67,7 +68,7 @@ static int load_smk(const char* filename) {
     data.video.micros_per_frame = micros_per_frame;
 
     data.audio.has_audio = 0;
-    if (g_settings.get_sound(SOUND_EFFECTS)->enabled) {
+    if (!!game_features::gameopt_sound_effects_enabled) {
         int has_track, channels, bitdepth, rate;
         smacker_get_audio_info(data.s, 0, &has_track, &channels, &bitdepth, &rate);
         if (has_track) {

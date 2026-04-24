@@ -30,7 +30,6 @@
 #include "window/main_menu.h"
 #include "window/popup_dialog.h"
 #include "window/speed_options.h"
-#include "window/sound_options.h"
 #include "widget/widget_sidebar.h"
 #include "widget/widget_city.h"
 #include "window/console.h"

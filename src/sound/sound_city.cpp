@@ -1,5 +1,7 @@
 #include "sound_city.h"
 
+#include "game/game_config.h"
+
 #include "building/building_house.h"
 #include "city/city.h"
 #include "game/settings.h"
@@ -174,7 +176,7 @@ void sound_city_decay_views(void) {
 }
 
 static void sound_city_play_channel(int channel, int direction) {
-    if (!g_settings.get_sound(SOUND_CITY)->enabled) {
+    if (!game_features::gameopt_sound_city_enabled.to_bool()) {
         return;
     }
 
@@ -204,7 +206,7 @@ static void sound_city_play_channel(int channel, int direction) {
         break;
     }
 
-    g_sound.play_channel_panned(channel, g_settings.get_sound(SOUND_CITY)->volume, left_pan, right_pan);
+    g_sound.play_channel_panned(channel, game_features::gameopt_sound_city_volume.to_int(), left_pan, right_pan);
 }
 
 void sound_city_play() {

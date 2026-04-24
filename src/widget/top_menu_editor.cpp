@@ -16,7 +16,7 @@
 #include "window/message_dialog.h"
 #include "window/popup_dialog.h"
 #include "window/select_list.h"
-#include "window/sound_options.h"
+#include "window/autoconfig_window.h"
 #include "window/speed_options.h"
 
 static void menu_file_new_map(int param);
@@ -204,7 +204,7 @@ static void menu_file_exit_editor(int param) {
 static void menu_options_sound(int param) {
     clear_state();
     window_editor_map_show();
-    window_sound_options_show(window_editor_map_show);
+    autoconfig_window::show("sound_options_window");
 }
 
 static void menu_options_speed(int param) {

@@ -94,6 +94,14 @@ namespace game_features {
     game_feature gameopt_enabled_mods{ "gameopt_enabled_mods", "", "" };
     game_feature gameopt_last_game_version{ "gameopt_last_game_version", "", "" };
     game_feature gameopt_scroll_speed{ "gameopt_scroll_speed", "", 70.0f };
+    game_feature gameopt_sound_effects_enabled{ "gameopt_sound_effects_enabled", "", true };
+    game_feature gameopt_sound_effects_volume{ "gameopt_sound_effects_volume", "", 80.0f };
+    game_feature gameopt_sound_music_enabled{ "gameopt_sound_music_enabled", "", true };
+    game_feature gameopt_sound_music_volume{ "gameopt_sound_music_volume", "", 80.0f };
+    game_feature gameopt_sound_speech_enabled{ "gameopt_sound_speech_enabled", "", true };
+    game_feature gameopt_sound_speech_volume{ "gameopt_sound_speech_volume", "", 100.0f };
+    game_feature gameopt_sound_city_enabled{ "gameopt_sound_city_enabled", "", true };
+    game_feature gameopt_sound_city_volume{ "gameopt_sound_city_volume", "", 100.0f };
     game_feature gameplay_brewery_requires_water{ "gameplay_brewery_requires_water", "#TR_CONFIG_BREWERY_REQUIRES_WATER", true };
     game_feature gameplay_conservatory_helps_dance_school{ "gameplay_conservatory_helps_dance_school", "#TR_CONFIG_CONSERVATORY_HELPS_DANCE_SCHOOL", true };
     game_feature gameplay_jewels_workshops_culture_bonus{ "gameplay_jewels_workshops_culture_bonus", "#TR_CONFIG_JEWELS_WORKSHOPS_CULTURE_BONUS", true };

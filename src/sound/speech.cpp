@@ -1,6 +1,7 @@
 #include "sound.h"
 
 #include "core/log.h"
+#include "game/game_config.h"
 #include "game/settings.h"
 #include "content/dir.h"
 #include "content/vfs.h"
@@ -20,7 +21,7 @@ vfs::path sound_manager_t::speech_filename(xstring filename) {
 }
 
 bool sound_manager_t::speech_file_exist(xstring filename, vfs::path& fs_path) {
-    if (!g_settings.get_sound(SOUND_SPEECH)->enabled) {
+    if (!game_features::gameopt_sound_speech_enabled) {
         return false;
     }
 
@@ -51,7 +52,7 @@ bool sound_manager_t::speech_play_file(xstring filename, int volume) {
     }
 
     stop_channel(SOUND_CHANNEL_SPEECH);
-    play_file_on_channel(fs_path, SOUND_CHANNEL_SPEECH, g_settings.get_sound(SOUND_SPEECH)->volume);
+    play_file_on_channel(fs_path, SOUND_CHANNEL_SPEECH, game_features::gameopt_sound_speech_volume.to_int());
     return true;
 }
 

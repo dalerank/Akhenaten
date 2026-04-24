@@ -92,7 +92,7 @@ top_menu_widget {
 
 	options {
 		display_options	: menu_item({text {group:2, id:1}, onclick: top_menu_show_window_by_id("display_options_window") })
-		sound_options  	: menu_item({text {group:2, id:2}, onclick: __widget_top_menu_sound_options })
+		sound_options  	: menu_item({text {group:2, id:2}, onclick: top_menu_show_window_by_id("sound_options_window") })
 		speed_options  	: menu_item({text {group:2, id:3}, onclick: widget_top_menu_show_speed_options })
 		difficulty_options: menu_item({ text {group:2, id:6}, onclick: __widget_top_menu_difficulty_options })
 

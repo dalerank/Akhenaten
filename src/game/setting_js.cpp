@@ -19,19 +19,8 @@ void ank_global_obj_bind_field(js_State *J, js_StringNode name, vec2i *ptr) {
     js_setproperty(J, -2, name);
 }
 
-void ank_global_obj_bind_field(js_State *J, js_StringNode name, sound_settings *ptr) {
-    js_newobject(J);
-    ank_global_obj_bind_field(J, js_intern("enabled"), &ptr->enabled);
-    ank_global_obj_bind_field(J, js_intern("volume"), &ptr->volume);
-    js_setproperty(J, -2, name);
-}
-
 ANK_GLOBAL_OBJECT(g_settings, __game_settings,
     display_size,
-    sound_effects,
-    sound_music,
-    sound_speech,
-    sound_city,
     tooltips_mode,
     warnings,
     gods_enabled,

@@ -7,7 +7,6 @@
 #include "window/file_dialog_delete.h"
 #include "window/main_menu.h"
 #include "window/autoconfig_window.h"
-#include "window/sound_options.h"
 #include "window/speed_options.h"
 #include "window/hotkey_config.h"
 #include "window/difficulty_options.h"
@@ -106,13 +105,6 @@ pcstr __widget_top_menu_exit_game(int, int) {
     return "";
 }
 ANK_FUNCTION_2(__widget_top_menu_exit_game)
-
-pcstr __widget_top_menu_sound_options(int, int) {
-    widget_top_menu_clear_state();
-    window_sound_options_show(window_city_show);
-    return "";
-}
-ANK_FUNCTION_2(__widget_top_menu_sound_options)
 
 pcstr __widget_top_menu_difficulty_options(int, int) {
     widget_top_menu_clear_state();

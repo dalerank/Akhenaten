@@ -57,6 +57,22 @@ void __game_feature_set(xstring feature_name, bvariant value) {
             break;
         }
         case setting_string: feature->set(value.as_str()); break;
+        case setting_float: {
+            float f = 0.f;
+            if (value.is_float()) {
+                f = value.as_float();
+            } else if (value.is_int32()) {
+                f = (float)value.as_int32();
+            } else if (value.is_uint32()) {
+                f = (float)value.as_uint32();
+            } else {
+                f = value.float_or_def(0.f);
+            }
+            feature->set(f);
+            break;
+        }
+        default:
+            break;
         }
     }
 }

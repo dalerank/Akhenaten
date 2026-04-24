@@ -6,6 +6,8 @@
 #include "sound/channel.h"
 #include "content/file_formats.h"
 #include "core/log.h"
+#include "core/calc.h"
+#include "game/game_config.h"
 #include "game/settings.h"
 #include "platform/platform.h"
 #include "platform/vita/vita.h"
@@ -92,10 +94,12 @@ void sound_manager_t::init() {
     allocate_channels();
     load_formats();
 
-    set_volume(SOUND_CHANNEL_CITY_MIN, SOUND_CHANNEL_CITY_MAX, g_settings.get_sound(SOUND_CITY)->volume);
-    set_volume(SOUND_CHANNEL_EFFECTS_MIN, SOUND_CHANNEL_EFFECTS_MAX, g_settings.get_sound(SOUND_EFFECTS)->volume);
-    music_set_volume(g_settings.get_sound(SOUND_MUSIC)->volume);
-    speech_set_volume(g_settings.get_sound(SOUND_SPEECH)->volume);
+    set_volume(SOUND_CHANNEL_CITY_MIN, SOUND_CHANNEL_CITY_MAX,
+        calc_bound(game_features::gameopt_sound_city_volume.to_int(), 0, 100));
+    set_volume(SOUND_CHANNEL_EFFECTS_MIN, SOUND_CHANNEL_EFFECTS_MAX,
+        calc_bound(game_features::gameopt_sound_effects_volume.to_int(), 0, 100));
+    music_set_volume(calc_bound(game_features::gameopt_sound_music_volume.to_int(), 0, 100));
+    speech_set_volume(calc_bound(game_features::gameopt_sound_speech_volume.to_int(), 0, 100));
 }
 
 void sound_manager_t::set_volume(int b, int e, int percentage) {
@@ -671,7 +675,8 @@ void sound_manager_t::write_custom_music_data(void* audio_data, int len) {
     if (!mix_buffer)
         return;
     memset(mix_buffer, (_music_player->format == AUDIO_U8) ? 128 : 0, len);
-    SDL_MixAudioFormat(mix_buffer, (uint8_t*)audio_data, _music_player->format, len, percentage_to_volume(g_settings.get_sound(SOUND_EFFECTS)->volume));
+    SDL_MixAudioFormat(mix_buffer, (uint8_t*)audio_data, _music_player->format, len,
+        percentage_to_volume(calc_bound(game_features::gameopt_sound_effects_volume.to_int(), 0, 100)));
 
     put_custom_audio_stream(mix_buffer, len);
     free(mix_buffer);
@@ -701,7 +706,7 @@ void sound_manager_t::update_channel(int channel, vfs::path filename) {
 }
 
 void sound_manager_t::play_effect(int effect) {
-    if (!g_settings.get_sound(SOUND_EFFECTS)->enabled) {
+    if (!game_features::gameopt_sound_effects_enabled.to_bool()) {
         return;
     }
 
@@ -709,5 +714,5 @@ void sound_manager_t::play_effect(int effect) {
         return;
     }
 
-    play_channel(effect, g_settings.get_sound(SOUND_EFFECTS)->volume);
+    play_channel(effect, calc_bound(game_features::gameopt_sound_effects_volume.to_int(), 0, 100));
 }

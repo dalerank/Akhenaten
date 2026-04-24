@@ -1,9 +1,11 @@
 #pragma once
 
 #include <stdint.h>
+#include "core/tokenum.h"
 #include "core/bstring.h"
 #include "core/vec2i.h"
 #include "core/calc.h"
+#include "game/game_config.h"
 
 class buffer;
 
@@ -31,20 +33,19 @@ enum e_difficulty {
 uint8_t game_difficulty();
 
 enum e_sound_type {
+    SOUND_NONE = 0,
     SOUND_MUSIC = 1,
     SOUND_SPEECH = 2,
     SOUND_EFFECTS = 3,
     SOUND_CITY = 4,
+
+    SOUND_COUNT
 };
+using e_sound_type_tokens_t = token_holder<e_sound_type, SOUND_NONE, SOUND_COUNT>;
 
 enum {
     CITIES_OLD_NAMES = 0,
     CITIES_NEW_NAMES = 1
-};
-
-struct sound_settings {
-    bool enabled;
-    int volume;
 };
 
 struct game_settings {
@@ -52,11 +53,6 @@ struct game_settings {
     static constexpr uint8_t MAX_DIFFICULTY_LEVEL = 4;
     // display settings
     vec2i display_size;
-    // sound settings
-    sound_settings sound_effects;
-    sound_settings sound_music;
-    sound_settings sound_speech;
-    sound_settings sound_city;
 
     e_tooltip_mode tooltips_mode;
     bool warnings;
@@ -94,28 +90,43 @@ struct game_settings {
 
     void set_cli_fullscreen(bool v) { cli_fullscreen = v; }
     void set_fullscreen(bool v) { fullscreen = v; }
-    bool sound_is_enabled(int type) { return get_sound(type)->enabled; }
-    sound_settings *get_sound(int type);
-
-    void toggle_sound_enabled(int type) {
-        auto sound = get_sound(type);
-        sound->enabled = sound->enabled ? 0 : 1;
-    }
-
-    void increase_sound_volume(int type) {
-        auto sound = get_sound(type);
-        sound->volume = calc_bound(sound->volume + 1, 0, 100);
-    }
-
-    void decrease_sound_volume(int type) {
-        auto* sound = get_sound(type);
-        sound->volume = calc_bound(sound->volume - 1, 0, 100);
+    bool sound_is_enabled(int type) {
+        if (type == SOUND_MUSIC) {
+            return game_features::gameopt_sound_music_enabled.to_bool();
+        }
+        if (type == SOUND_EFFECTS) {
+            return game_features::gameopt_sound_effects_enabled.to_bool();
+        }
+        if (type == SOUND_SPEECH) {
+            return game_features::gameopt_sound_speech_enabled.to_bool();
+        }
+        if (type == SOUND_CITY) {
+            return game_features::gameopt_sound_city_enabled.to_bool();
+        }
+        return false;
     }
 
     void reset_sound(int type, int enabled, int volume) {
-        auto* sound = get_sound(type);
-        sound->enabled = enabled;
-        sound->volume = calc_bound(volume, 0, 100);
+        if (type == SOUND_MUSIC) {
+            game_features::gameopt_sound_music_enabled.set(!!enabled);
+            game_features::gameopt_sound_music_volume.set((float)calc_bound(volume, 0, 100));
+            return;
+        }
+        if (type == SOUND_EFFECTS) {
+            game_features::gameopt_sound_effects_enabled.set(!!enabled);
+            game_features::gameopt_sound_effects_volume.set((float)calc_bound(volume, 0, 100));
+            return;
+        }
+        if (type == SOUND_SPEECH) {
+            game_features::gameopt_sound_speech_enabled.set(!!enabled);
+            game_features::gameopt_sound_speech_volume.set((float)calc_bound(volume, 0, 100));
+            return;
+        }
+        if (type == SOUND_CITY) {
+            game_features::gameopt_sound_city_enabled.set(!!enabled);
+            game_features::gameopt_sound_city_volume.set((float)calc_bound(volume, 0, 100));
+            return;
+        }
     }
 
     void toggle_warnings() { warnings = !warnings; }

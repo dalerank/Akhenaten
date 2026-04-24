@@ -113,6 +113,14 @@ namespace game_features {
     extern game_feature gameopt_enabled_mods;
     extern game_feature gameopt_last_game_version;
     extern game_feature gameopt_scroll_speed;
+    extern game_feature gameopt_sound_effects_enabled;
+    extern game_feature gameopt_sound_effects_volume;
+    extern game_feature gameopt_sound_music_enabled;
+    extern game_feature gameopt_sound_music_volume;
+    extern game_feature gameopt_sound_speech_enabled;
+    extern game_feature gameopt_sound_speech_volume;
+    extern game_feature gameopt_sound_city_enabled;
+    extern game_feature gameopt_sound_city_volume;
     extern game_feature gameplay_change_hasanimals;
     extern game_feature gameplay_brewery_requires_water;
     extern game_feature gameplay_conservatory_helps_dance_school;
