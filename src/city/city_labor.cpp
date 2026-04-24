@@ -51,7 +51,7 @@ static int category_for_int_arr[300] = {
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 290
 };
 
-static int category_for_int_arr_ph[303] = {
+static int category_for_int_arr_ph[BUILDING_MAX] = {
   // houses
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 10
@@ -263,7 +263,7 @@ constexpr building_type_category category_alias_default[] = {
 };
 
 static bool category_alias_inited = false;
-static e_labor_category category_alias[255];
+static e_labor_category category_alias[BUILDING_MAX];
 
 e_labor_category category_for_building(building* b) {
     if (map_terrain_is(b->tile, TERRAIN_FLOODPLAIN) && b->is_farm()) {
