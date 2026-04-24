@@ -1,6 +1,5 @@
 log_info("akhenaten: ui advisor ratings started")
 
-
 function advisor_ratings_draw_column(basePos, value, openPlay, goal) {
 	var enabled = !openPlay && goal
 	var hasReached = !enabled || value >= goal
@@ -35,24 +34,29 @@ function advisor_ratings_draw_button_values(elm, value, goal) {
 	ui.label_ex(String(enabled ? goal : 0) + " " + __loc(53, 5), [elm.pos.x, elm.pos.y + 42], FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, elm.size.x)
 }
 
+function advisor_ratings_draw_rating_button(elm, value, goal) {
+	advisor_ratings_draw_button_values(elm, value, goal)
+	advisor_ratings_draw_column({x: elm.pos.x + 30, y: elm.pos.y - 63}, value, scenario.is_open_play, goal)
+}
+
 [es=(advisor_ratings_window, ondraw_culture_button)]
 function advisor_ratings_ondraw_culture_button(window) {
-	advisor_ratings_draw_button_values(window.rating_culture, city.rating.culture, city.winning.culture)
+	advisor_ratings_draw_rating_button(window.rating_culture, city.rating.culture, city.winning.culture)
 }
 
 [es=(advisor_ratings_window, ondraw_prosperity_button)]
 function advisor_ratings_ondraw_prosperity_button(window) {
-	advisor_ratings_draw_button_values(window.rating_prosperity, city.rating.prosperity, city.winning.prosperity)
+	advisor_ratings_draw_rating_button(window.rating_prosperity, city.rating.prosperity, city.winning.prosperity)
 }
 
 [es=(advisor_ratings_window, ondraw_monument_button)]
 function advisor_ratings_ondraw_monument_button(window) {
-	advisor_ratings_draw_button_values(window.rating_monument, city.rating.monument, city.winning.monument)
+	advisor_ratings_draw_rating_button(window.rating_monument, city.rating.monument, city.winning.monument)
 }
 
 [es=(advisor_ratings_window, ondraw_kingdom_button)]
 function advisor_ratings_ondraw_kingdom_button(window) {
-	advisor_ratings_draw_button_values(window.rating_kingdom, city.rating.kingdom, city.winning.kingdom)
+	advisor_ratings_draw_rating_button(window.rating_kingdom, city.rating.kingdom, city.winning.kingdom)
 }
 
 function advisor_ratings_select_button(window, button) {
@@ -106,16 +110,12 @@ advisor_ratings_window {
 				background_image : image({pack:PACK_UNLOADED, id:2, pos:[60, 38]})
 
 				rating_culture   : button({pos:[80, 276], align:"xcenter", size:[120, 60], tooltip:[68, 104], onclick_event: "select_culture", ondraw_event: "ondraw_culture_button"}),
-				base_culture     : text({pos:[110, 213], align:"center", font: FONT_LARGE_BLACK_ON_LIGHT}),
 
 				rating_prosperity: button({pos:[200, 276], align:"xcenter", size:[120, 60], tooltip:[68, 105], onclick_event: "select_prosperity", ondraw_event: "ondraw_prosperity_button"}),
-				base_prosperity  : text({pos:[230, 213], align:"center", font: FONT_LARGE_BLACK_ON_LIGHT}),
 
 				rating_monument  : button({pos:[320, 276], align:"xcenter", size:[120, 60], tooltip:[68, 106], onclick_event: "select_monument", ondraw_event: "ondraw_monument_button"}),
-				base_monument    : text({pos:[350, 213], align:"center", font: FONT_LARGE_BLACK_ON_LIGHT}),
 
 				rating_kingdom   : button({pos:[440, 276], align:"xcenter", size:[120, 60], tooltip:[68, 107], onclick_event: "select_kingdom", ondraw_event: "ondraw_kingdom_button"}),
-				base_kingdom     : text({pos:[470, 213], align:"center", font: FONT_LARGE_BLACK_ON_LIGHT}),
 
 				inner_panel      : inner_panel({pos:[40, 340], size:[35, 5]}),
 				advice_header    : text({pos:[68, 344], font: FONT_NORMAL_WHITE_ON_DARK}),
@@ -130,8 +130,7 @@ advisor_ratings_window {
 
 [es=(advisor_ratings_window, init)]
 function advisor_ratings_window_init(window) {
-	__advisor_ratings_geo_log_done = false
-    advisor_ratings_select_culture(window)
+	advisor_ratings_select_culture(window)
 
 	var winPop = city.winning.population
 	var openPlay = scenario.is_open_play
@@ -147,13 +146,4 @@ function advisor_ratings_window_init(window) {
 	window.rating_kingdom.text = __loc(53, 4)
 
 	advisors_toolbar_refresh(window)
-}
-
-[es=(advisor_ratings_window, ui_draw_foreground)]
-function advisor_ratings_window_ui_draw_foreground(window) {
-	var openPlay = scenario.is_open_play
-	advisor_ratings_draw_column(window.base_culture.screen_pos, city.rating.culture, openPlay, city.winning.culture)
-	advisor_ratings_draw_column(window.base_prosperity.screen_pos, city.rating.prosperity, openPlay, city.winning.prosperity)
-	advisor_ratings_draw_column(window.base_monument.screen_pos, city.rating.monument, openPlay, city.winning.monument)
-	advisor_ratings_draw_column(window.base_kingdom.screen_pos, city.rating.kingdom, openPlay, city.winning.kingdom)
 }
