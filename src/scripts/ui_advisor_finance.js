@@ -6,30 +6,34 @@ advisor_financial_window {
     advisor: ADVISOR_FINANCIAL
     allow_rmb_goback : true
     ui : baseui(advisor_window_base, {
-        background   : outer_panel({size[40, 27]})
-        advisor_icon : image({pack:PACK_GENERAL, id:128, offset:10, pos[10, 10] })
-        title        : header({pos[60, 17], text[60, 0]})
+        advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+            ui : {
+                background   : outer_panel({size[40, 27]})
+                advisor_icon : image({pack:PACK_GENERAL, id:128, offset:10, pos[10, 10] })
+                title        : header({pos[60, 17], text[60, 0]})
 
-        inner_panel  : inner_panel({pos{x:64, y:48}, size[34, 5]
-	        ui {
-	            treasury   : text({pos[6, 10]})
+                inner_panel  : inner_panel({pos{x:64, y:48}, size[34, 5]
+                    ui {
+                        treasury   : text({pos[6, 10]})
 
-	            tax_header : text({text[60, 1], pos[70, 30], font:FONT_NORMAL_WHITE_ON_DARK})
-	            tax_value  : text({pos[240, 30], font:FONT_NORMAL_WHITE_ON_DARK})
+                        tax_header : text({text[60, 1], pos[70, 30], font:FONT_NORMAL_WHITE_ON_DARK})
+                        tax_value  : text({pos[240, 30], font:FONT_NORMAL_WHITE_ON_DARK})
 
-	            tax_payers : text({pos[10, 60], font:FONT_NORMAL_WHITE_ON_DARK})
+                        tax_payers : text({pos[10, 60], font:FONT_NORMAL_WHITE_ON_DARK})
 
-                dec_tax    : arrowdown({margin{left:170, top:25}, tiny:false, onclick:advisor_financial_window_dec_tax})
-	            inc_tax    : arrowup({margin{left:195, top:25}, tiny:false, onclick:advisor_financial_window_inc_tax})
-	        }
-	    })
+                        dec_tax    : arrowdown({margin{left:170, top:25}, tiny:false, onclick:advisor_financial_window_dec_tax})
+                        inc_tax    : arrowup({margin{left:195, top:25}, tiny:false, onclick:advisor_financial_window_inc_tax})
+                    }
+                })
 
-        // table headers
-    	last_year       : text({text[60, 6], pos[270, 133], font:FONT_NORMAL_BLACK_ON_LIGHT})
-        this_year     : text({text[60, 7], pos[400, 133], font:FONT_NORMAL_BLACK_ON_LIGHT})
+                // table headers
+                last_year       : text({text[60, 6], pos[270, 133], font:FONT_NORMAL_BLACK_ON_LIGHT})
+                this_year     : text({text[60, 7], pos[400, 133], font:FONT_NORMAL_BLACK_ON_LIGHT})
 
-        incomes_base  : text({pos[10, 150]})
-        expenses_base  : text({pos[10, 240]})
+                incomes_base  : text({pos[10, 150]})
+                expenses_base  : text({pos[10, 240]})
+            }
+        })
     })
 }
 

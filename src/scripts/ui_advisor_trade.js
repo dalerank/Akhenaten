@@ -88,27 +88,31 @@ advisor_trade_window {
     advisor: ADVISOR_TRADE
     allow_rmb_goback : true
     ui : baseui(advisor_window_base, {
-        background   : outer_panel({size[40, 27]})
-        advisor_icon : image({pack:PACK_GENERAL, id:128, offset:4, pos:[10, 10]})
-        header_label : label({font : FONT_LARGE_BLACK_ON_LIGHT, text:"#trade_overseer", pos:[60, 17]})
-        hint_label   : label({font : FONT_NORMAL_BLACK_ON_DARK, text:"#trade_overseer_hint", pos:[60, 40]})
+        advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+            ui : {
+                background   : outer_panel({size[40, 27]})
+                advisor_icon : image({pack:PACK_GENERAL, id:128, offset:4, pos:[10, 10]})
+                header_label : label({font : FONT_LARGE_BLACK_ON_LIGHT, text:"#trade_overseer", pos:[60, 17]})
+                hint_label   : label({font : FONT_NORMAL_BLACK_ON_DARK, text:"#trade_overseer_hint", pos:[60, 40]})
 
-        resources_list : scrollable_list({
-            pos:[17, 60]
-            size:[36, 21]
-            view_items:15
-            buttons_size_y:22
-            buttons_margin_x:0
-            buttons_margin_y:0
-            text_padding_x:0
-            text_padding_y:5
-            draw_scrollbar_always:true
-            onrender_item: advisor_trade_list_on_render_item
-            onclick_item: advisor_trade_list_on_click_item
+                resources_list : scrollable_list({
+                    pos:[17, 60]
+                    size:[36, 21]
+                    view_items:15
+                    buttons_size_y:22
+                    buttons_margin_x:0
+                    buttons_margin_y:0
+                    text_padding_x:0
+                    text_padding_y:5
+                    draw_scrollbar_always:true
+                    onrender_item: advisor_trade_list_on_render_item
+                    onclick_item: advisor_trade_list_on_click_item
+                })
+
+                goto_empire  : button({pos:[48, 396], size:[200, 24], text:"#trade_overseer_goto_empire", tooltip:"#trade_overseer_goto_empire_hint", onclick: __window_empire_show })
+                show_prices  : button({pos:[368, 396], size:[200, 24], text:"#trade_overseer_prices", tooltip:"#trade_overseer_prices_hint", onclick: show_window_by_id("trade_prices_window") })
+            }
         })
-
-        goto_empire  : button({pos:[48, 396], size:[200, 24], text:"#trade_overseer_goto_empire", tooltip:"#trade_overseer_goto_empire_hint", onclick: __window_empire_show })
-        show_prices  : button({pos:[368, 396], size:[200, 24], text:"#trade_overseer_prices", tooltip:"#trade_overseer_prices_hint", onclick: show_window_by_id("trade_prices_window") })
     })
 }
 
