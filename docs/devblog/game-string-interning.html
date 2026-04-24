@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game++. String Interning — Akhenaten</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../devblog.html" class="active">Devblog</a></li>
+        <li><a href="../screenshots.html">Screenshots</a></li>
+        <li><a href="../downloads.html">Downloads</a></li>
+        <li><a href="../contact.html">Join us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-content post-page">
+    <div class="post-meta"><time>May 9, 2025</time> — <a href="../devblog.html">← Devblog</a></div>
+    <h1>Game++. String Interning</h1>
+
+    <p>
+      <strong>String interning</strong> (also called a "string pool") is an optimization technique where only a single copy of each unique string is stored in memory. It's one of the most useful optimizations in game engines, alongside SWAR, SIMD strings, immutable strings, StrHash, and Rope strings.
+    </p>
+
+    <h2>The Core Problem</h2>
+    <p>
+      When the same string literal (e.g., <code>"black"</code>) appears multiple times in code, whether duplicate copies exist in RAM depends on the compiler and vendor. Clang (Sony) and GCC can merge identical literals so only one copy is loaded. However, this is <strong>not guaranteed by the standard</strong> — it's a compiler extension. On Xbox, for instance, two identical literals may have different addresses.
+    </p>
+
+    <h2>How Interning Breaks</h2>
+    <p>The optimization is fragile:</p>
+    <ul>
+      <li><strong><code>const char*</code></strong> — may share one copy (compiler-dependent)</li>
+      <li><strong><code>char[]</code></strong> — creates separate RAM copies per variable</li>
+      <li><strong><code>std::string</code></strong> — constructor copies the literal</li>
+    </ul>
+    <p>
+      In managed languages like C# or Java, "string interning happens at runtime" via the VM. In C++, there's no runtime to do this automatically — it only happens at compile time, or must be implemented manually.
+    </p>
+
+    <h2>String Comparison Pitfalls</h2>
+    <p>
+      Using <code>==</code> on <code>char*</code> compares <strong>addresses</strong>, not content. If the compiler merged the literals, it works by coincidence. If not, it silently fails. The author reports catching <strong>six bugs in 2024</strong> from pointer-based string comparisons. The correct approach is <code>strcmp()</code>, which compares character by character.
+    </p>
+
+    <h2>Memory Fragmentation</h2>
+    <p>
+      From experience with Unity, string data accounted for 3–6% of a debug build's memory footprint, with ~3% from fragmentation alone. Average string sizes of 14–40 bytes left many small unusable gaps. On a 1 GB iPhone 5S, this meant 30–60 MB of wasted "free memory" — significant enough to warrant optimization.
+    </p>
+    <p>
+      In release builds, actual string data can be stripped, leaving only hashes (4 bytes each). This reduces that 6% footprint to under 1%, and adds a layer of protection against resource tampering.
+    </p>
+
+    <h2>The xstring Implementation</h2>
+    <p>The solution is a lookup table mapping hash IDs to strings:</p>
+    <pre><code>namespace utils {
+  struct xstrings { eastl::hash_map&lt; uint32_t, std::string &gt; _interns; };
+  namespace strings {
+    uint32_t Intern( xstrings &amp;strs, const char *str );
+    const char* GetString( xstrings &amp;strs, uint32_t id );
+    bool LoadFromDisk( xstrings &amp;strs, const char *path );
+  }
+}</code></pre>
+    <p>
+      The <code>xstring_value</code> struct stores CRC, reference count, length, and the string data. The <code>xstring</code> class itself is essentially a POD <code>int32_t</code>, so all comparisons reduce to integer comparisons.
+    </p>
+    <p>Full implementation: <a href="https://github.com/dalerank/Akhenaten/blob/master/src/core/xstring.h" target="_blank"><code>src/core/xstring.h</code></a></p>
+
+    <h2>Real-World Impact</h2>
+    <p>
+      The author describes integrating this into <strong>Unity 4</strong>, where it was combined with other optimizations to run <em>Sims Mobile</em> on the iPhone 4S — a device the overseas team considered impossible to target. String interning alone provided "a performance boost of nearly 30% for animations."
+    </p>
+
+    <h2>Typical Usage Pattern</h2>
+    <pre><code>struct time_tag {
+    float12 time;
+    xstring tag;
+};
+
+void ai_unit::on_event(const time_tag &amp;tt) {
+    if (tt.tag == events().aim_walk) {
+        ai_start_walk(tt);
+    } else if (tt.tag == events().aim_turn) {
+        ai_start_turn(tt);
+    }
+    ai_unit_base::on_event(tt);
+}</code></pre>
+
+    <h2>Further Reading</h2>
+    <ul>
+      <li><a href="https://github.com/foonathan/string_id" target="_blank">foonathan/string_id</a> — C++ library for unique string identifiers via interning</li>
+      <li><a href="https://alexpolt.github.io/intern.html" target="_blank">Understanding String Interning</a> — detailed explanation of interning trade-offs</li>
+      <li><a href="https://github.com/RipcordSoftware/libstringintern" target="_blank">libstringintern</a> — C++ library for string interning and memory management</li>
+    </ul>
+
+    <div class="post-nav">
+      <a href="game-cooking-vectors-part-1.html">← Previous: Game++. Cooking vectors (part 1)</a>
+      <a href="should-players-be-hand-held.html">Next: Should players be hand-held? →</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>
