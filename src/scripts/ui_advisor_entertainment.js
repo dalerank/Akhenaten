@@ -73,35 +73,38 @@ function advisor_entertainment_venues_list_on_render_item(p) {
 
 [es=advisor_window]
 advisor_entertainment_window {
-	pos [(sw(0) - px(40)) / 2, (sh(0) - px(27)) / 2]
 	advisor: ADVISOR_ENTERTAINMENT
 	allow_rmb_goback : true
 	ui : baseui(advisor_window_base, {
-		background    : outer_panel({size:[40, 20] })
-		title         : text({pos: [60, 12], text:[58, 0], font : FONT_LARGE_BLACK_ON_LIGHT })
-		advisor_icon  : image({pack:PACK_GENERAL, id:128, offset:8, pos:[10, 10] }),
+		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+			ui : {
+				background    : outer_panel({size:[40, 20] })
+				title         : text({pos: [60, 12], text:[58, 0], font : FONT_LARGE_BLACK_ON_LIGHT })
+				advisor_icon  : image({pack:PACK_GENERAL, id:128, offset:8, pos:[10, 10] }),
 
-		working       : text({text:[58, 1], pos:[180, 42], font:FONT_NORMAL_BLACK_ON_LIGHT}),
-		stages        : text({text:[58, 55], pos:[180, 56], font:FONT_NORMAL_BLACK_ON_LIGHT}),
-		shows         : text({text:[58, 2], pos:[280, 56], font:FONT_NORMAL_BLACK_ON_LIGHT}),
-		can_entertain : text({text:[58, 3], pos:[340, 56], font:FONT_NORMAL_BLACK_ON_LIGHT}),
-		city_coverage : text({text:[58, 4], pos:[470, 56], font:FONT_NORMAL_BLACK_ON_LIGHT}),
+				working       : text({text:[58, 1], pos:[180, 42], font:FONT_NORMAL_BLACK_ON_LIGHT}),
+				stages        : text({text:[58, 55], pos:[180, 56], font:FONT_NORMAL_BLACK_ON_LIGHT}),
+				shows         : text({text:[58, 2], pos:[280, 56], font:FONT_NORMAL_BLACK_ON_LIGHT}),
+				can_entertain : text({text:[58, 3], pos:[340, 56], font:FONT_NORMAL_BLACK_ON_LIGHT}),
+				city_coverage : text({text:[58, 4], pos:[470, 56], font:FONT_NORMAL_BLACK_ON_LIGHT}),
 
-		venues_list   : scrollable_list({
-			pos: [32, 70]
-			size: [36, 9]
-			view_items: 5
-			buttons_size_y: 25
-			buttons_margin_x: 0
-			buttons_margin_y: 10
-			text_padding_x: 0
-			text_padding_y: 0
-			draw_scrollbar_always: false
-			draw_paneling: true
-			onrender_item: advisor_entertainment_venues_list_on_render_item
-		}),
+				venues_list   : scrollable_list({
+					pos: [32, 70]
+					size: [36, 9]
+					view_items: 5
+					buttons_size_y: 25
+					buttons_margin_x: 0
+					buttons_margin_y: 10
+					text_padding_x: 0
+					text_padding_y: 0
+					draw_scrollbar_always: false
+					draw_paneling: true
+					onrender_item: advisor_entertainment_venues_list_on_render_item
+				}),
 
-		advice        : multiline({ margin:{left:30, bottom:-90}, size:[px(38), 208], wrap:512, font:FONT_NORMAL_BLACK_ON_LIGHT }),
+				advice        : multiline({ pos[30, 230], size:[px(37), 208], wrap:512, font:FONT_NORMAL_BLACK_ON_LIGHT }),
+			}
+		})
 	})
 }
 
