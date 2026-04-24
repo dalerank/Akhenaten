@@ -104,43 +104,47 @@ advisor_religion_window = {
 	needs_sync : true
 	allow_rmb_goback : true
 	ui : baseui(advisor_window_base, {
-		background : outer_panel({size:[40, 27] }),
-		title : text({pos: [60, 12], text: {group:59, id:0}, font : FONT_LARGE_BLACK_ON_LIGHT }),
-		advisor_icon : image({pack:PACK_GENERAL, id:128, offset:9, pos:[10, 10] }),
-		nogods_text : text({pos: [60, 256], text: {group:59, id:43}, wrap:520, font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+			ui : {
+				background : outer_panel({size:[40, 27] }),
+				title : text({pos: [60, 12], text: {group:59, id:0}, font : FONT_LARGE_BLACK_ON_LIGHT }),
+				advisor_icon : image({pack:PACK_GENERAL, id:128, offset:9, pos:[10, 10] }),
+				nogods_text : text({pos: [60, 256], text: {group:59, id:43}, wrap:520, font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
 
-		temple_header: { type : "text", pos: [180, 32], text: {group:59, id:5}, font : FONT_NORMAL_BLACK_ON_LIGHT },
-		complex_header: { type : "text", pos: [170, 46], text: {group:59, id:2}, font : FONT_NORMAL_BLACK_ON_LIGHT },
-		tempe_header: { type : "text", pos: [250, 46], text: {group:59, id:1}, font : FONT_NORMAL_BLACK_ON_LIGHT },
-		shrine_header: { type : "text", pos: [320, 46], text: {group:28, id:150}, font : FONT_NORMAL_BLACK_ON_LIGHT },
-		months_header: { type : "text", pos: [390, 18], text: {group:59, id:6}, font : FONT_NORMAL_BLACK_ON_LIGHT },
-		since_header: { type : "text", pos: [400, 32], text: {group:59, id:8}, font : FONT_NORMAL_BLACK_ON_LIGHT },
-		fest_header: { type : "text", pos: [390, 46], text: {group:59, id:7}, font : FONT_NORMAL_BLACK_ON_LIGHT },
-		mood_header: { type : "text", pos: [460, 46], text: {group:59, id:3}, font : FONT_NORMAL_BLACK_ON_LIGHT },
+				temple_header: { type : "text", pos: [180, 32], text: {group:59, id:5}, font : FONT_NORMAL_BLACK_ON_LIGHT },
+				complex_header: { type : "text", pos: [170, 46], text: {group:59, id:2}, font : FONT_NORMAL_BLACK_ON_LIGHT },
+				tempe_header: { type : "text", pos: [250, 46], text: {group:59, id:1}, font : FONT_NORMAL_BLACK_ON_LIGHT },
+				shrine_header: { type : "text", pos: [320, 46], text: {group:28, id:150}, font : FONT_NORMAL_BLACK_ON_LIGHT },
+				months_header: { type : "text", pos: [390, 18], text: {group:59, id:6}, font : FONT_NORMAL_BLACK_ON_LIGHT },
+				since_header: { type : "text", pos: [400, 32], text: {group:59, id:8}, font : FONT_NORMAL_BLACK_ON_LIGHT },
+				fest_header: { type : "text", pos: [390, 46], text: {group:59, id:7}, font : FONT_NORMAL_BLACK_ON_LIGHT },
+				mood_header: { type : "text", pos: [460, 46], text: {group:59, id:3}, font : FONT_NORMAL_BLACK_ON_LIGHT },
 
-		inner_panel : { type : "inner_panel", pos:[32, 60], size:[36, 13] },
+				inner_panel : { type : "inner_panel", pos:[32, 60], size:[36, 13] },
 
-		gods_list : scrollable_list({
-			pos: [38, 66]
-			size: [35, 13]
-			view_items: 5
-			buttons_size_y: 40
-			buttons_margin_x: 0
-			buttons_margin_y: 0
-			text_padding_x: 0
-			text_padding_y: 0
-			draw_scrollbar_always: false
-			draw_paneling: false
-			onrender_item: advisor_religion_gods_list_on_render_item
+				gods_list : scrollable_list({
+					pos: [38, 66]
+					size: [35, 13]
+					view_items: 5
+					buttons_size_y: 40
+					buttons_margin_x: 0
+					buttons_margin_y: 0
+					text_padding_x: 0
+					text_padding_y: 0
+					draw_scrollbar_always: false
+					draw_paneling: false
+					onrender_item: advisor_religion_gods_list_on_render_item
+				})
+
+				advice_text : { type : "text", pos: [60, 273], wrap:512, font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+				fest_inner_panel : { type : "inner_panel", pos:[48, 252 + 68], size:[34, 6] },
+				fest_icon : { type : "image", pack:PACK_UNLOADED, id:21, offset:15, pos:[460, 255 + 68] },
+				fest_months_last : { type : "label", pos:[112, 328], font:FONT_NORMAL_WHITE_ON_DARK},
+				planed_festival : { type : "text", pos: [102, 284 + 68], font : FONT_NORMAL_BLACK_ON_DARK, align:"center" },
+				hold_festival_btn : { type:"generic_button", pos:[102, 278 + 68], size:[300, 24], onclick: advisor_religion_window_hold_festival },
+				festival_advice : { type : "text", pos: [56, 305 + 68], wrap:400, font : FONT_NORMAL_WHITE_ON_DARK, multiline:true },
+			}
 		})
-
-		advice_text : { type : "text", pos: [60, 273], wrap:512, font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
-		fest_inner_panel : { type : "inner_panel", pos:[48, 252 + 68], size:[34, 6] },
-		fest_icon : { type : "image", pack:PACK_UNLOADED, id:21, offset:15, pos:[460, 255 + 68] },
-		fest_months_last : { type : "label", pos:[112, 328], font:FONT_NORMAL_WHITE_ON_DARK},
-		planed_festival : { type : "text", pos: [102, 284 + 68], font : FONT_NORMAL_BLACK_ON_DARK, align:"center" },
-		hold_festival_btn : { type:"generic_button", pos:[102, 278 + 68], size:[300, 24], onclick: advisor_religion_window_hold_festival },
-		festival_advice : { type : "text", pos: [56, 305 + 68], wrap:400, font : FONT_NORMAL_WHITE_ON_DARK, multiline:true },
 	})
 }
 

@@ -2,24 +2,23 @@ log_info("akhenaten: ui advisor financial started")
 
 [es=advisor_window]
 advisor_financial_window {
-    pos [(sw(0) - px(40)) / 2, (sh(0) - px(27)) / 2]
     advisor: ADVISOR_FINANCIAL
     allow_rmb_goback : true
     ui : baseui(advisor_window_base, {
-        advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+        advisor_area               : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
             ui : {
-                background   : outer_panel({size[40, 27]})
-                advisor_icon : image({pack:PACK_GENERAL, id:128, offset:10, pos[10, 10] })
-                title        : header({pos[60, 17], text[60, 0]})
+                background         : outer_panel({size[40, 27]})
+                advisor_icon       : image({pack:PACK_GENERAL, id:128, offset:10, pos[10, 10] })
+                title              : header({pos[60, 17], text[60, 0]})
 
-                inner_panel  : inner_panel({pos{x:64, y:48}, size[34, 5]
+                inner_panel        : inner_panel({margin:{left:64, top:48}, size[34, 5]
                     ui {
-                        treasury   : text({pos[6, 10]})
+                        treasury   : text({margin:{left:6, top:10}})
 
-                        tax_header : text({text[60, 1], pos[70, 30], font:FONT_NORMAL_WHITE_ON_DARK})
-                        tax_value  : text({pos[240, 30], font:FONT_NORMAL_WHITE_ON_DARK})
+                        tax_header : text({text[60, 1], margin:{left:70, top:30}, font:FONT_NORMAL_WHITE_ON_DARK})
+                        tax_value  : text({margin:{left:240, top:30}, font:FONT_NORMAL_WHITE_ON_DARK})
 
-                        tax_payers : text({pos[10, 60], font:FONT_NORMAL_WHITE_ON_DARK})
+                        tax_payers : text({margin:{left:10, top:60}, font:FONT_NORMAL_WHITE_ON_DARK})
 
                         dec_tax    : arrowdown({margin{left:170, top:25}, tiny:false, onclick:advisor_financial_window_dec_tax})
                         inc_tax    : arrowup({margin{left:195, top:25}, tiny:false, onclick:advisor_financial_window_inc_tax})
@@ -27,11 +26,11 @@ advisor_financial_window {
                 })
 
                 // table headers
-                last_year       : text({text[60, 6], pos[270, 133], font:FONT_NORMAL_BLACK_ON_LIGHT})
-                this_year     : text({text[60, 7], pos[400, 133], font:FONT_NORMAL_BLACK_ON_LIGHT})
+                last_year          : text({text[60, 6], pos[270, 133], font:FONT_NORMAL_BLACK_ON_LIGHT})
+                this_year          : text({text[60, 7], pos[400, 133], font:FONT_NORMAL_BLACK_ON_LIGHT})
 
-                incomes_base  : text({pos[10, 150]})
-                expenses_base  : text({pos[10, 240]})
+                incomes_base       : text({margin:{left:10, top:150}})
+                expenses_base      : text({margin:{left:10, top:240}})
             }
         })
     })
@@ -55,12 +54,12 @@ function advisor_financial_window_update_incomes(window) {
     var last_year = city.finance.last_year
     var this_year = city.finance.this_year
 
-    var line_y = 150
-    var row_text_x = 80
-    var row_last_year_x = 290
-    var row_this_year_x = 430
-    var line_start_x = 280
-    var line_size_x = 250
+    var line_y = window.incomes_base.screen_pos.y + 10
+    var row_text_x = window.incomes_base.screen_pos.x + 80
+    var row_last_year_x = window.incomes_base.screen_pos.x + 290
+    var row_this_year_x = window.incomes_base.screen_pos.x + 430
+    var line_start_x = window.incomes_base.screen_pos.x + 50
+    var line_size_x = 550
 
     function draw_row(text, y, value_last_year, value_this_year) {
         ui.label(text, vec2i(row_text_x, y), FONT_NORMAL_BLACK_ON_LIGHT)
@@ -85,12 +84,12 @@ function advisor_financial_window_update_expenses(window) {
     var last_year = city.finance.last_year
     var this_year = city.finance.this_year
 
-    var line_y = 240
-    var row_text_x = 80
-    var row_last_year_x = 290
-    var row_this_year_x = 430
-    var line_start_x = 280
-    var line_size_x = 250
+    var line_y = window.expenses_base.screen_pos.y + 5
+    var row_text_x = window.expenses_base.screen_pos.x + 80
+    var row_last_year_x = window.expenses_base.screen_pos.x + 290
+    var row_this_year_x = window.expenses_base.screen_pos.x + 430
+    var line_start_x = window.expenses_base.screen_pos.x + 50
+    var line_size_x = 550
 
     function draw_row(text, y, value_last_year, value_this_year) {
         ui.label(text, vec2i(row_text_x, y), FONT_NORMAL_BLACK_ON_LIGHT)
