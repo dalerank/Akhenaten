@@ -27,8 +27,110 @@
     <img src="../images/hyena.gif" alt="Hyena animation" class="post-image" loading="lazy" />
 
     <p>
-      Added a base class for hyenas: "It's not very functional yet, but it's another step toward restoring the game."
-      See <a href="https://github.com/dalerank/Akhenaten/blob/master/src/figuretype/figure_hyena.h" target="_blank"><code>figure_hyena.h</code></a> on GitHub.
+      Added a base class for hyenas as part of restoring the animal AI system from the original Pharaoh. This initial implementation (January 7, 2025) laid the groundwork for complex pack hunting behavior that would be added later.
+    </p>
+
+    <h2>Architecture Refactoring</h2>
+    <p>
+      The hyena implementation began by extracting 137 lines of hyena-specific code from the monolithic <code>figure_animal.cpp</code> into a dedicated <code>figure_hyena</code> class. This followed the same pattern as other figure refactorings — moving from global functions to object-oriented classes.
+    </p>
+    <p>
+      The refactoring removed the old <code>figure::hyena_action()</code> method and <code>figure_combat_get_target_for_hyena()</code> global function, replacing them with class-based implementations. The new <code>figure_hyena.h</code> header defined a 16-line class interface with four key methods:
+    </p>
+    <ul>
+      <li><code>on_create()</code> — initialization when a hyena spawns</li>
+      <li><code>figure_action()</code> — main AI logic called every frame</li>
+      <li><code>on_destroy()</code> — cleanup when the hyena dies or despawns</li>
+      <li><code>update_animation()</code> — sprite selection based on current state</li>
+    </ul>
+
+    <h2>Animation System</h2>
+    <p>
+      Hyenas use four animation sets defined in <code>figures.js</code>:
+    </p>
+    <pre><code>figure figure_hyena = {
+    animations : {
+        walk : { pack:PACK_SPR_MAIN, id:161, max_frames:12 },
+        death : { pack:PACK_SPR_MAIN, id:162, max_frames:8, duration:3, loop:false },
+        eating : { pack:PACK_SPR_MAIN, id:163, max_frames:7 },
+        idle : { pack:PACK_SPR_MAIN, id:164, max_frames:8 },
+    },
+    terrain_usage : TERRAIN_USAGE_ANIMAL,
+}</code></pre>
+    <p>
+      The <code>update_animation()</code> method selects sprites based on action state: corpse (death animation), attacking (eating animation), resting (idle animation), or moving (walk animation). Each animation is directional — 8 directions × frame count.
+    </p>
+
+    <h2>Basic AI States</h2>
+    <p>
+      The initial implementation supported three action states:
+    </p>
+    <ul>
+      <li><strong>FIGURE_ACTION_196_HERD_ANIMAL_AT_REST</strong> — hyena waits for 400 ticks, then moves to a new position within the formation</li>
+      <li><strong>FIGURE_ACTION_197_HERD_ANIMAL_MOVING</strong> — hyena walks to its destination using pathfinding</li>
+      <li><strong>FIGURE_ACTION_199_WOLF_ATTACKING</strong> — hyena searches for targets within 6 tiles and pursues them</li>
+    </ul>
+    <p>
+      The formation system positions hyenas using <code>formation_layout_position_x/y(FORMATION_HERD, index)</code>, allowing multiple hyenas to move as a coordinated group. Each hyena has an <code>index_in_formation</code> that determines its offset from the formation center.
+    </p>
+
+    <h2>Target Selection</h2>
+    <p>
+      The <code>figure_combat_get_target_for_hyena()</code> function scans all figures on the map, filtering out:
+    </p>
+    <ul>
+      <li>Non-interactive figures (explosions, flags, arrows, etc.)</li>
+      <li>Enemy units and other herd animals</li>
+      <li>Soldiers at rest (to avoid attacking military units)</li>
+    </ul>
+    <p>
+      Distance is calculated using <code>calc_maximum_distance()</code>, and figures already targeted by another hyena have their distance doubled to encourage spreading attacks across multiple targets. This prevents all hyenas from converging on a single victim.
+    </p>
+
+    <h2>Hyena Strength Grid (January 10, 2026)</h2>
+    <p>
+      A year later, the system was enhanced with a spatial grid tracking hyena presence. The new <code>src/grid/hyena_strength.cpp</code> (94 lines) maintains a map-wide grid where each tile stores the number of nearby hyenas. This enables:
+    </p>
+    <ul>
+      <li>Danger zones — areas with high hyena concentration</li>
+      <li>AI avoidance — citizens can detect and avoid hyena packs</li>
+      <li>Debug visualization — developers can see hyena density overlays</li>
+    </ul>
+    <p>
+      The grid updates every frame as hyenas move, incrementing/decrementing tile values. The city figures system tracks total hyena count via <code>city_figures.hyenas</code>, exposed to JavaScript for mission scripting.
+    </p>
+
+    <h2>Hunting Behavior (January 11, 2026)</h2>
+    <p>
+      The most significant enhancement came with the hunting system. The file was renamed from <code>figure_hyena.cpp</code> to <code>animal_hyena.cpp</code> and expanded from 137 to 325 lines. Key additions:
+    </p>
+    <ul>
+      <li><strong>Ostrich hunting</strong> — hyenas now specifically target ostriches as prey</li>
+      <li><strong>Pack feeding</strong> — when a hyena kills prey, up to 4 other hyenas from the same formation are attracted to the kill site</li>
+      <li><strong>New action states</strong>:
+        <ul>
+          <li><code>ACTION_22_HYENA_RUN_TO_CARRION</code> — movement to carrion</li>
+          <li><code>ACTION_23_HYENA_EAT_OTHER_FOOD</code> — pack feeding behavior</li>
+        </ul>
+      </li>
+    </ul>
+    <p>
+      The pack feeding system uses formation membership to identify nearby hyenas. When a kill occurs, the successful hunter broadcasts to other hyenas in the formation, and they pathfind to the carrion location. This creates realistic pack behavior where multiple hyenas converge on a single kill.
+    </p>
+
+    <h2>Gameplay Integration</h2>
+    <p>
+      A new gameplay flag <code>gameplay_hyenas_block</code> allows missions to enable/disable hyena spawning. The Saqqara mission (mission 10) uses this to add hyenas as environmental hazards. The city animals system tracks hyena population via <code>city_animals.hyenas</code>, which can be queried from mission scripts.
+    </p>
+
+    <h2>Technical Details</h2>
+    <p>
+      Hyenas inherit from <code>figure_impl</code> and use the standard figure action system. Movement uses <code>move_ticks(2)</code> for speed control — hyenas move at 2 tiles per tick, making them faster than most citizens but slower than cavalry. Pathfinding uses the standard <code>route_remove()</code> and direction system, with special handling for <code>DIR_FIGURE_REROUTE</code> when paths become blocked.
+    </p>
+
+    <h2>Result</h2>
+    <p>
+      The hyena system demonstrates the engine's capability for complex animal AI. What started as a basic class extraction evolved into a sophisticated pack hunting system with spatial awareness, coordinated behavior, and realistic feeding mechanics. The implementation serves as a template for other predator animals that may be added in the future.
     </p>
 
     <div class="post-nav">
