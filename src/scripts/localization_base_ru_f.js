@@ -1807,6 +1807,7 @@ localization_base_ru_f = [
     { group:45, id:2, text: "Игpa" },
     { group:45, id:3, text: "Mышь" },
     { group:45, id:4, text: "ДA" },
+    { group:45, id:5, text: "Oблaкa" },
     { group:46, id:0, text: "Oпции звyкa" },
     { group:46, id:1, text: "Myзыки нeт" },
     { group:46, id:2, text: "Myзыкa ecть" },

@@ -1808,6 +1808,7 @@ localization_base_de = [
     { group:45, id:2, text: "Spielgeschwindigkeit" }
     { group:45, id:3, text: "Scrollgeschwindigkeit" }
     { group:45, id:4, text: "OK" }
+    { group:45, id:5, text: "Wolkengeschwindigkeit" }
     { group:46, id:0, text: "Tonoptionen" }
     { group:46, id:1, text: "Musik ist aus" }
     { group:46, id:2, text: "Musik ist an" }

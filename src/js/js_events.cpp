@@ -62,6 +62,7 @@ ANK_SCRIPT_EVENT(event_mods_info_updated, count)
 ANK_SCRIPT_EVENT(event_toggle_industry_mothballed, resource)
 ANK_SCRIPT_EVENT(event_change_gamespeed, increase)
 ANK_SCRIPT_EVENT(event_change_scroll_speed, increase)
+ANK_SCRIPT_EVENT(event_change_clouds_speed, increase)
 
 int js_emit_script_event(pcstr event_name, const bvariant_map &args) {
     auto it = g_script_emit_handlers.find(event_name);

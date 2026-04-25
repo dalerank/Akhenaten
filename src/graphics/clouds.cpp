@@ -10,6 +10,7 @@
 #include "platform/renderer.h"
 #include "js/js_game.h"
 #include "dev/debug.h"
+#include "core/calc.h"
 
 #include <cmath>
 
@@ -23,8 +24,6 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_clouds_config) {
 }
 
 constexpr float PI = 3.14159265358979323846;
-
-declare_console_ref_float(cloud_speed, g_clouds.clouds_speed)
 
 static int random_from_min_to_range(int min, int range)
 {
@@ -232,7 +231,8 @@ void clouds_t::draw(painter &ctx, const vec2i min_pos, const vec2i offset, const
     if (pause_frames) {
         pause_frames--;
     } else {
-        cloud_speed = clouds_speed * static_cast<float>(game_features::gameopt_game_speed.to_int()) / 100;
+        const float clouds_mult = static_cast<float>(calc_bound(game_features::gameopt_clouds_speed.to_int(), 0, 100)) / 100.f;
+        cloud_speed = clouds_mult * static_cast<float>(game_features::gameopt_game_speed.to_int()) / 100;
     }
 
     for (auto &cloud : clouds) {

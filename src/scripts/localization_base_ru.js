@@ -1807,6 +1807,7 @@ localization_base_ru = [
     { group:45, id:2, text: "Скорость игры" }
     { group:45, id:3, text: "Скорость прокрутки" }
     { group:45, id:4, text: "ОК" }
+    { group:45, id:5, text: "Скорость облаков" }
     { group:46, id:0, text: "Настройки звука" }
     { group:46, id:1, text: "Музыка выключена" }
     { group:46, id:2, text: "Музыка включена" }

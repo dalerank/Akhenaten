@@ -62,7 +62,7 @@ void config_show_camera_properties(bool header) {
 
         vec2i offset = { coord.x % TILE_WIDTH_PIXELS, coord.y % TILE_HEIGHT_PIXELS };
         game_debug_show_property("offset", offset, true);
-        
+
         tile2i point = screen_to_tile(screen);
         game_debug_show_property("point", point);
         game_debug_show_property("grid_offset", point.grid_offset(), true);

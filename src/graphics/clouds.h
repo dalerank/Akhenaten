@@ -19,8 +19,6 @@
  * - Configurable parameters for cloud count, size, speed, and creation timing
  */
 
-constexpr float CLOUDS_SPEED_DEFAULT = .3;
-
 /**
  * @brief Cloud lifecycle status
  */
@@ -110,7 +108,6 @@ struct clouds_t {
 
     int movement_timeout = 0;                        ///< Frames until next cloud spawn
     int pause_frames = 0;                            ///< Remaining pause frames
-    float clouds_speed = CLOUDS_SPEED_DEFAULT;       ///< Current global cloud speed multiplier
 
     void init_cloud_images();
     bool cloud_intersects(const cloud_t &cloud);

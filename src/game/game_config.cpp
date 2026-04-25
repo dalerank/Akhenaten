@@ -94,6 +94,7 @@ namespace game_features {
     game_feature gameopt_enabled_mods{ "gameopt_enabled_mods", "", "" };
     game_feature gameopt_last_game_version{ "gameopt_last_game_version", "", "" };
     game_feature gameopt_scroll_speed{ "gameopt_scroll_speed", "", 70.0f };
+    game_feature gameopt_clouds_speed{ "gameopt_clouds_speed", "", 30.0f };
     game_feature gameopt_game_speed{ "gameopt_game_speed", "", 80.0f };
     game_feature gameopt_sound_effects_enabled{ "gameopt_sound_effects_enabled", "", true };
     game_feature gameopt_sound_effects_volume{ "gameopt_sound_effects_volume", "", 80.0f };
