@@ -30,11 +30,11 @@ struct sidebar_window_extra : public autoconfig_window_t<sidebar_window_extra> {
         widget::archive_load(arch);
 
         ui["dec_speed"].onclick([] {
-            events::emit(event_change_gamespeed{ HOTKEY_DECREASE_GAME_SPEED });
+            events::emit(event_change_gamespeed{ false });
         });
 
         ui["inc_speed"].onclick([] {
-            events::emit(event_change_gamespeed{ HOTKEY_INCREASE_GAME_SPEED });
+            events::emit(event_change_gamespeed{ true });
         });
     }
 };

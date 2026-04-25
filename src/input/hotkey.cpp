@@ -42,10 +42,10 @@ hotkey_data_t g_hotkey_data;
 
 static void add_definition(const hotkey_mapping& mapping, bool alt) {
     auto& data = g_hotkey_data;
-   
+
     e_key key = alt ? mapping.alt.key : mapping.state.key;
     e_key_mode modifiers = alt ? mapping.alt.modifiers : mapping.state.modifiers;
-    
+
     if (key == KEY_NONE) {
         return;
     }
@@ -61,7 +61,7 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
         def->callback = [action = mapping.action] { events::emit(event_toggle_pause{ action }); };
         break;
 
-    case HOTKEY_TOGGLE_OVERLAY:      
+    case HOTKEY_TOGGLE_OVERLAY:
         def->callback = [action = mapping.action] { events::emit(event_toggle_overlay{ action }); };
         break;
 
@@ -71,7 +71,7 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
 
     case HOTKEY_INCREASE_GAME_SPEED:
     case HOTKEY_DECREASE_GAME_SPEED:
-        def->callback = [action = mapping.action] { events::emit(event_change_gamespeed{ action }); };
+        def->callback = [action = mapping.action] { events::emit(event_change_gamespeed{ action == HOTKEY_INCREASE_GAME_SPEED }); };
         def->repeatable = 1;
         break;
 

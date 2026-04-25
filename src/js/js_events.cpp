@@ -3,6 +3,7 @@
 #include "city/city_finance.h"
 #include "js/js_events.h"
 
+#include "input/hotkey.h"
 #include "game/mission.h"
 #include "building/building_granary.h"
 #include "building/building_storage_yard.h"
@@ -59,6 +60,7 @@ ANK_SCRIPT_EVENT(event_festival_hold, god, type)
 ANK_SCRIPT_EVENT(event_storageyards_remove_resource, resource, amount)
 ANK_SCRIPT_EVENT(event_mods_info_updated, count)
 ANK_SCRIPT_EVENT(event_toggle_industry_mothballed, resource)
+ANK_SCRIPT_EVENT(event_change_gamespeed, increase)
 
 int js_emit_script_event(pcstr event_name, const bvariant_map &args) {
     auto it = g_script_emit_handlers.find(event_name);

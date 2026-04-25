@@ -17,6 +17,7 @@
 #include "core/profiler.h"
 #include "core/calc.h"
 #include "game/difficulty.h"
+#include "game/game.h"
 #include "scenario/scenario.h"
 #include "empire/empire_city.h"
 #include "empire/empire.h"
@@ -648,8 +649,6 @@ void city_t::houses_reset_demands() {
     houses.requiring.religion = 0;
 }
 
-uint16_t &game_speed();
-uint16_t &game_scroll_speed();
 bool &game_monthly_autosave();
 
 io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
@@ -670,9 +669,9 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.health.target_value);
     iob->bind(BIND_SIGNATURE_INT32, &data.health.value);
     iob->bind(BIND_SIGNATURE_INT32, &data.health.num_mortuary_workers);
-    iob->bind(BIND_SIGNATURE_UINT16, &game_speed());
-    static uint16_t unused_scroll_speed_slot = 0;
-    iob->bind(BIND_SIGNATURE_UINT16, &unused_scroll_speed_slot);
+    int tmp = 0;
+    iob->bind(BIND_SIGNATURE_UINT16, &tmp);
+    iob->bind(BIND_SIGNATURE_UINT16, &tmp);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.current);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.last_year);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.school_age);
@@ -763,7 +762,6 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT16, &data.resource.stored_in_storages[i + 1]);
     }
 
-    int tmp;
     for (int i = 0; i < RESOURCES_MAX; i++) {
         iob->bind(BIND_SIGNATURE_UINT8, &data.resource.trade_status[i + 1]);
         iob->bind(BIND_SIGNATURE_UINT8, &tmp);

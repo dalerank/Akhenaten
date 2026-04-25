@@ -50,12 +50,6 @@ function top_menu_date_explanation(p1, p2) { ui.window_message_dialog_show("mess
 function top_menu_population_explanation(p1, p2) { ui.window_message_dialog_show("message_game_control_population_display", -1) }
 function top_menu_funds_explanation(p1, p2) { ui.window_message_dialog_show("message_game_control_money_display_window", -1) }
 
-function widget_top_menu_show_speed_options(p1, p2) {
-	widget_top_menu_clear_state()
-	window_go_back()
-	window_speed_options_show()
-}
-
 function top_menu_show_window_by_id(window_id) {
 	return function() {
 		widget_top_menu_clear_state()
@@ -93,7 +87,7 @@ top_menu_widget {
 	options {
 		display_options	: menu_item({text {group:2, id:1}, onclick: top_menu_show_window_by_id("display_options_window") })
 		sound_options  	: menu_item({text {group:2, id:2}, onclick: top_menu_show_window_by_id("sound_options_window") })
-		speed_options  	: menu_item({text {group:2, id:3}, onclick: widget_top_menu_show_speed_options })
+		speed_options  	: menu_item({text {group:2, id:3}, onclick: top_menu_show_window_by_id("speed_options_window") })
 		difficulty_options: menu_item({ text {group:2, id:6}, onclick: __widget_top_menu_difficulty_options })
 
 		cities_options  : menu_item({textfn: top_menu_cities_old_text

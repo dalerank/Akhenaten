@@ -1,6 +1,30 @@
 log_info("akhenaten: ui speed options window started")
 
+function speed_options_on_cancel() {
+    var w = speed_options_window
+    game_features.gameopt_game_speed = w.original_game_speed
+    game.scroll_speed = w.original_scroll_speed
+    game_features.gameopt_scroll_speed = w.original_scroll_speed
+    window_go_back()
+}
+
+[es=(speed_options_window, init)]
+function speed_options_window_es_init(window) {
+    var w = speed_options_window
+    w.original_game_speed = Math.round(game_features.gameopt_game_speed)
+    w.original_scroll_speed = game.scroll_speed
+}
+
+[es=(speed_options_window, ui_draw_foreground)]
+function speed_options_window_es_draw(window) {
+    window.game_speed_value.text = Math.round(game_features.gameopt_game_speed) + "%"
+    window.scroll_speed_value.text = game.scroll_speed + "%"
+}
+
+[es=modal_window]
 speed_options_window {
+    allow_rmb_goback : true
+    draw_underlying : true
     pos [(sw(0) - px(20))/2, (sh(0) - px(14))/2]
 
     original_game_speed : 0
@@ -13,39 +37,16 @@ speed_options_window {
         game_speed_label   : text({text[45, 2], pos[32, 66], font: FONT_SMALL_PLAIN})
         game_speed_value   : text({pos[248, 66], font: FONT_SMALL_PLAIN})
 
-        arrow_game_down    : arrowdown({pos[192, 60], tiny:false, onclick: __game_decrease_game_speed })
-        arrow_game_up      : arrowup({pos[216, 60], tiny:false, onclick: __game_increase_game_speed })
+        arrow_game_down    : arrowdown({pos[192, 60], tiny:false, allow_repeat: true, onclick: function() { emit event_change_gamespeed{ increase: false } } })
+        arrow_game_up      : arrowup({pos[216, 60], tiny:false, allow_repeat: true, onclick: function() { emit event_change_gamespeed{ increase: true } } })
 
         scroll_speed_label : text({text[45, 3], pos[32, 102], font: FONT_SMALL_PLAIN})
         scroll_speed_value : text({pos[248, 102], font: FONT_SMALL_PLAIN})
 
-        arrow_scroll_down  : arrowdown({pos[192, 96], tiny:false, onclick: __game_decrease_scroll_speed})
-        arrow_scroll_up    : arrowup({pos[216, 96], tiny:false, onclick: __game_increase_scroll_speed})
+        arrow_scroll_down  : arrowdown({pos[192, 96], tiny:false, allow_repeat: true, onclick: __game_decrease_scroll_speed })
+        arrow_scroll_up    : arrowup({pos[216, 96], tiny:false, allow_repeat: true, onclick: __game_increase_scroll_speed })
 
-        btn_ok             : button({margin{centerx: -96, bottom: -34}, size[192, 24], text[45, 4], font: FONT_NORMAL_BLACK_ON_DARK, onclick: window_go_back})
-        btn_cancel         : button({margin{centerx: -96, bottom: -60}, size[192, 24], text[45, 1], font: FONT_NORMAL_BLACK_ON_DARK, onclick: speed_options_window_oncancel})
+        btnok              : ok_button({margin{left:px(20)/2 - 40, bottom:-40}, onclick: window_go_back })
+        btncancel          : cancel_button({margin{left:px(20)/2 + 20, bottom:-40}, onclick: speed_options_on_cancel })
     }
-}
-
-[event=speed_options_window_cancel]
-function speed_options_window_oncancel(p1, p2) {
-    log_info("akhenaten: speed options window oncancel")
-    game.game_speed = speed_options_window.original_game_speed
-    game.scroll_speed = speed_options_window.original_scroll_speed
-    log_info("akhenaten: speed options window init ${original_game_speed} ${original_scroll_speed}", speed_options_window)
-    window_go_back()
-}
-
-[event=speed_options_window_draw]
-function speed_options_window_update(window) {
-    window.game_speed_value.text = game.game_speed + "%"
-    window.scroll_speed_value.text = game.scroll_speed + "%"
-}
-
-[event=speed_options_window_init]
-function speed_options_window_init(window) {
-    log_info("akhenaten: speed options window init")
-    speed_options_window.original_game_speed = game.game_speed
-    speed_options_window.original_scroll_speed = game.scroll_speed
-    log_info("akhenaten: speed options window init ${original_game_speed} ${original_scroll_speed}", speed_options_window)
 }

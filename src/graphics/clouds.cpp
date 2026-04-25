@@ -232,7 +232,7 @@ void clouds_t::draw(painter &ctx, const vec2i min_pos, const vec2i offset, const
     if (pause_frames) {
         pause_frames--;
     } else {
-        cloud_speed = clouds_speed * static_cast<float>(game.game_speed) / 100;
+        cloud_speed = clouds_speed * static_cast<float>(game_features::gameopt_game_speed.to_int()) / 100;
     }
 
     for (auto &cloud : clouds) {

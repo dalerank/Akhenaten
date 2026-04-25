@@ -7,7 +7,7 @@
 struct event_hotkey_overlay { int value; };
 struct event_toggle_overlay { int value; };
 struct event_toggle_pause { int value; };
-struct event_change_gamespeed { int value; };
+struct event_change_gamespeed { bool increase; };
 struct event_rotate_map { int value; };
 struct event_rotate_map_reset { int value; };
 struct event_save_city { int value; };

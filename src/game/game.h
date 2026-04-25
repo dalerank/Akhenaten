@@ -58,7 +58,6 @@ struct game_t {
     bool debug_console = false;
     bool debug_properties = false;
     bool debug_perfmon = false;
-    uint16_t game_speed;
     uint32_t frame = 0;
     uint16_t last_frame_tick = 0;
     color *frame_pixels = nullptr;
@@ -110,9 +109,6 @@ struct game_t {
     void before_start_simulation();
     void handle_input_frame();
 
-    void increase_game_speed();
-    void decrease_game_speed();
-
     void increase_scroll_speed();
     void decrease_scroll_speed();
 
@@ -129,6 +125,6 @@ struct game_t {
     ::painter painter();
 };
 ANK_CONFIG_PROPERTY(game_t,
-    game_speed, scroll_speed, monthly_autosave, pending_load_type, pending_save_type)
+    scroll_speed, monthly_autosave, pending_load_type, pending_save_type)
 
 extern game_t game;

@@ -7,7 +7,6 @@
 #include "window/file_dialog_delete.h"
 #include "window/main_menu.h"
 #include "window/autoconfig_window.h"
-#include "window/speed_options.h"
 #include "window/hotkey_config.h"
 #include "window/difficulty_options.h"
 #include "window/message_dialog_new.h"
@@ -157,6 +156,3 @@ pcstr __widget_top_menu_toggle_debug_properties(int, int) {
     return "";
 }
 ANK_FUNCTION_2(__widget_top_menu_toggle_debug_properties)
-
-void window_speed_options_show() { speed_options_window::show(window_city_show); }
-ANK_FUNCTION(window_speed_options_show)

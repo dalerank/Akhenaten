@@ -17,7 +17,6 @@
 #include "window/popup_dialog.h"
 #include "window/select_list.h"
 #include "window/autoconfig_window.h"
-#include "window/speed_options.h"
 
 static void menu_file_new_map(int param);
 static void menu_file_load_map(int param);
@@ -210,7 +209,7 @@ static void menu_options_sound(int param) {
 static void menu_options_speed(int param) {
     clear_state();
     window_editor_map_show();
-    speed_options_window::show(window_editor_map_show);
+    autoconfig_window::show("speed_options_window");
 }
 
 static void menu_help_help(int param) {

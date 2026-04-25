@@ -46,7 +46,7 @@ function sidebar_extra_objective_row(headerEl, currentEl, headerGroup, headerId,
 
 [es=(sidebar_window_extra, ui_draw_foreground)]
 function sidebar_window_extra_ui_draw_foreground(window) {
-    window.speed_current.text = game.game_speed + "%"
+    window.speed_current.text = Math.round(game_features.gameopt_game_speed) + "%"
     window.unemp_current.text = city.labor.unemployment_percentage + "% (" + city.workers_diff + ")"
 
     sidebar_extra_objective_row(window.population_header, window.population_current, 53, 6, city.population, city.winning.population)

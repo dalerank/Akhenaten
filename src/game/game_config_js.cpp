@@ -1,5 +1,7 @@
 #include "game_config.h"
 
+#include "game/game.h"
+#include "core/calc.h"
 #include "js/js_game.h"
 #include "core/profiler.h"
 
