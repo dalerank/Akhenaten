@@ -27,6 +27,7 @@ public:
     void init();
     void shutdown();
     void init_channels();
+    void begin_frame();
     inline xspan<channel_t> channels() { return make_span<channel_t>(_channels.data(), _channels.size()); }
     bool speech_play_file(xstring filename, int volume);
     bool speech_file_exist(xstring filename, vfs::path &fs_path);
@@ -35,14 +36,12 @@ public:
     void play_channel(int channel, int volume_pct);
     void play_channel_panned(int channel, int volume_pct, int left_pct, int right_pct);
     void speech_stop();
-    void speech_set_volume(int percentage);
     void update_channel(int channel, vfs::path filename);
     void use_default_music_player();
     void use_custom_music_player(int bitdepth, int num_channels, int rate, void *audio_data, int len);
     void write_custom_music_data(void *audio_data, int len);
     bool play_music(pcstr filename, int volume_pct);
     void stop_music();
-    void music_set_volume(int volume_pct);
     bool is_audio_stream_active();
     void set_volume(int b, int e, int percentage);
     void music_update(bool forces);

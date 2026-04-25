@@ -447,7 +447,7 @@ void game_t::time_init(int year) {
     simtime.init(year);
 }
 
-void game_t::sound_frame_begin() {
+void game_t::city_sounds_frame_begin() {
     OZZY_PROFILER_FUNCTION();
     if (g_window_manager.window_is("window_city") || g_window_manager.window_is("window_city_military") || g_window_manager.window_is("window_sliding_sidebar")) {
         sound_city_play();

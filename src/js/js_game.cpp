@@ -24,7 +24,6 @@
 #include "game/mission.h"
 #include "game/game_events.h"
 #include "game/settings.h"
-#include "game/sound_js.h"
 #include "game/player.h"
 #include "scenario/scenario.h"
 #include "core/encoding.h"
@@ -503,10 +502,6 @@ std::optional<bvariant> __game_get_property(pcstr property) {
     return archive_helper::get(game, property, true);
 }
 ANK_FUNCTION_1(__game_get_property)
-
-void js_register_game_objects(js_State *J) {
-    register_sound_js_object(J);
-}
 
 void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_log_info_native, "__log_info_native", 1);

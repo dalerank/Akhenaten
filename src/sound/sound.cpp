@@ -81,10 +81,6 @@ static int percentage_to_volume(int percentage) {
     return percentage * SDL_MIX_MAXVOLUME / 100;
 }
 
-void sound_manager_t::speech_set_volume(int percentage) {
-    set_channel_volume(SOUND_CHANNEL_SPEECH, percentage);
-}
-
 void sound_manager_t::init() {
     if (!_music_player) {
         _music_player = new music_player_t();
@@ -93,13 +89,6 @@ void sound_manager_t::init() {
     open();
     allocate_channels();
     load_formats();
-
-    set_volume(SOUND_CHANNEL_CITY_MIN, SOUND_CHANNEL_CITY_MAX,
-        calc_bound(game_features::gameopt_sound_city_volume.to_int(), 0, 100));
-    set_volume(SOUND_CHANNEL_EFFECTS_MIN, SOUND_CHANNEL_EFFECTS_MAX,
-        calc_bound(game_features::gameopt_sound_effects_volume.to_int(), 0, 100));
-    music_set_volume(calc_bound(game_features::gameopt_sound_music_volume.to_int(), 0, 100));
-    speech_set_volume(calc_bound(game_features::gameopt_sound_speech_volume.to_int(), 0, 100));
 }
 
 void sound_manager_t::set_volume(int b, int e, int percentage) {
@@ -135,7 +124,7 @@ vfs::reader sound_manager_t::load_cached_chunk(vfs::path filename) {
         vfs::file_change_extension(converted_wav.data(), "wav");
         need_converting = !vfs::file_exists(converted_wav);
     }
-    
+
     if (need_converting) {
         lame_helper helper;
         it.first->second = helper.decode(filename);
@@ -172,7 +161,7 @@ void* sound_manager_t::load_chunk(pcstr filename) {
         //verify_no_crash(false && "unsupported format");
         //return Mix_LoadWAV_RW(SDL_RWFromFile(filename, "rb"), 1);
 #endif
-    } 
+    }
 
     return NULL;
 }
@@ -187,6 +176,24 @@ bool sound_manager_t::load_channel(sound_manager_t::channel_t* channel) {
 
 void sound_manager_t::channel_finished_cb(int channel) {
     g_sound._channels[channel].playing = false;
+}
+
+void sound_manager_t::begin_frame() {
+    if (!_music_player) {
+        return;
+    }
+
+    const auto city_volume = calc_bound(game_features::gameopt_sound_city_volume.to_int(), 0, 100);
+    set_volume(SOUND_CHANNEL_CITY_MIN, SOUND_CHANNEL_CITY_MAX, city_volume);
+
+    const auto effects_volume = calc_bound(game_features::gameopt_sound_effects_volume.to_int(), 0, 100);
+    set_volume(SOUND_CHANNEL_EFFECTS_MIN, SOUND_CHANNEL_EFFECTS_MAX, effects_volume);
+
+    const auto music_volume = calc_bound(game_features::gameopt_sound_music_volume.to_int(), 0, 100);
+    Mix_VolumeMusic(music_volume);
+
+    const auto speech_volume = calc_bound(game_features::gameopt_sound_speech_volume.to_int(), 0, 100);
+    set_channel_volume(SOUND_CHANNEL_SPEECH, speech_volume);
 }
 
 void sound_manager_t::init_channels() {
@@ -344,10 +351,6 @@ bool sound_manager_t::is_channel_playing(int channel) {
     return _channels[channel].chunk && Mix_Playing(channel);
 }
 
-void sound_manager_t::music_set_volume(int volume_pct) {
-    Mix_VolumeMusic(percentage_to_volume(volume_pct));
-}
-
 void sound_manager_t::set_channel_panning(int channel, int left, int right) {
     Mix_SetPanning(channel, left, right);
 }
@@ -403,7 +406,7 @@ bool sound_manager_t::play_music(pcstr filename, int volume_pct) {
             _music_player->music = nullptr;
             logs::warn("Error playing music file '%s'. Reason: %s", filename, Mix_GetError());
         } else {
-            music_set_volume(volume_pct);
+            Mix_VolumeMusic(volume_pct);
         }
     }
     return !!_music_player->music;
@@ -419,7 +422,7 @@ void sound_manager_t::play_file_on_channel(pcstr filename, int channel, int volu
     if (!_channels[channel].chunk) {
         return;
     }
-    
+
     set_channel_volume(channel, volume_pct);
     Mix_PlayChannelTimed(channel, (Mix_Chunk*)_channels[channel].chunk, 0, -1);
 }

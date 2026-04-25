@@ -517,6 +517,103 @@ footer a:hover {
   margin-top: 1rem;
 }
 
+/* ── Post page ── */
+.post-page h2 {
+  font-size: 1.4rem;
+  color: var(--gold);
+  margin: 2rem 0 0.75rem;
+}
+
+.post-page h3 {
+  font-size: 1.1rem;
+  color: var(--accent);
+  margin: 1.5rem 0 0.5rem;
+}
+
+.post-page p {
+  margin-bottom: 1rem;
+}
+
+.post-page ul,
+.post-page ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.post-page li {
+  margin-bottom: 0.4rem;
+}
+
+.post-page pre {
+  background: rgba(201,168,76,0.06);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 3px;
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.85em;
+  line-height: 1.6;
+}
+
+.post-page code {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.88em;
+  background: rgba(201,168,76,0.1);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 2px;
+  padding: 0.1em 0.35em;
+  color: var(--gold);
+}
+
+.post-page pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  color: var(--text);
+}
+
+.post-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.9rem;
+  gap: 1rem;
+}
+
+.post-nav a {
+  color: var(--text-muted);
+}
+
+.post-nav a:hover {
+  color: var(--gold);
+}
+
+.post h2 a {
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.post h2 a:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.post .read-more {
+  display: inline-block;
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--gold);
+  letter-spacing: 0.02em;
+}
+
+.post .read-more:hover {
+  color: var(--accent);
+}
+
 /* ── Responsive ── */
 @media (max-width: 900px) {
   .hero {

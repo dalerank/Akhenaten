@@ -762,7 +762,7 @@ void js_reset_vm_state() {
 
     js_register_vm_functions(vm.J);
     js_register_game_functions(vm.J);
-    js_register_game_objects(vm.J);
+    js_register_sound_object(vm.J);
     js_register_mission_objects(vm.J);
     js_register_empire_objects(vm.J);
     js_register_city_objects(vm.J);

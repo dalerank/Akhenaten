@@ -106,7 +106,7 @@ struct game_t {
 
     void time_init(int year);
 
-    void sound_frame_begin();
+    void city_sounds_frame_begin();
     void before_start_simulation();
     void handle_input_frame();
 

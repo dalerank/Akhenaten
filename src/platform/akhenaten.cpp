@@ -28,6 +28,7 @@
 #include "window/autoconfig_window.h"
 #include "graphics/imagepak_holder.h"
 #include "game/mission.h"
+#include "sound/sound.h"
 #include "scenario/scenario.h"
 #include "core/cstring.h"
 #include "renderer.h"
@@ -314,9 +315,14 @@ static void run_and_draw() {
         Uint32 time_between_run_and_draw = SDL_GetTicks();
 
         {
+            NANO_PROFILE_SCOPE("_SoundUpdate");
+            g_sound.begin_frame();
+        }
+
+        {
             NANO_PROFILE_SCOPE("_GameDraw");
-            game.frame_begin();
-            game.sound_frame_begin();
+            game.frame_begin();         
+            game.city_sounds_frame_begin();
             game.handle_input_frame();
         }
         Uint32 time_after_draw = SDL_GetTicks();
