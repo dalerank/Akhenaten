@@ -27,49 +27,46 @@ function sound_options_on_cancel() {
     window_go_back()
 }
 
-function sound_options_toggle(type) {
-    if (type == SOUND_MUSIC) {
-        game_features.gameopt_sound_music_enabled = !game_features.gameopt_sound_music_enabled
-        if (game_features.gameopt_sound_music_enabled) {
-            __game_sound.music_update(1)
-        } else {
-            __game_sound.music_stop()
-        }
-        return
-    }
-    if (type == SOUND_SPEECH) {
-        game_features.gameopt_sound_speech_enabled = !game_features.gameopt_sound_speech_enabled
-        if (!game_features.gameopt_sound_speech_enabled) {
-            __game_sound.speech_stop()
-        }
-        return
-    }
-    if (type == SOUND_EFFECTS) {
-        game_features.gameopt_sound_effects_enabled = !game_features.gameopt_sound_effects_enabled
-        return
-    }
-    if (type == SOUND_CITY) {
-        game_features.gameopt_sound_city_enabled = !game_features.gameopt_sound_city_enabled
-        return
+function sound_options_toggle_music() {
+    game_features.gameopt_sound_music_enabled = !game_features.gameopt_sound_music_enabled
+    if (game_features.gameopt_sound_music_enabled) {
+        __game_sound.music_update(1)
+    } else {
+        __game_sound.music_stop()
     }
 }
 
-function sound_options_effects_step(type, delta) {
+function sound_options_toggle_speech() {
+    game_features.gameopt_sound_speech_enabled = !game_features.gameopt_sound_speech_enabled
+    if (!game_features.gameopt_sound_speech_enabled) {
+        __game_sound.speech_stop()
+    }
+}
+
+function sound_options_toggle_effects() {
+    game_features.gameopt_sound_effects_enabled = !game_features.gameopt_sound_effects_enabled
+}
+
+function sound_options_toggle_city() {
+    game_features.gameopt_sound_city_enabled = !game_features.gameopt_sound_city_enabled
+}
+
+function sound_options_effects_step(delta) {
     var v = game_features.gameopt_sound_effects_volume + delta
     game_features.gameopt_sound_effects_volume = v
 }
 
-function sound_options_music_step(type, delta) {
+function sound_options_music_step(delta) {
     var v = game_features.gameopt_sound_music_volume + delta
     game_features.gameopt_sound_music_volume = v
 }
 
-function sound_options_speech_step(type, delta) {
+function sound_options_speech_step(delta) {
     var v = game_features.gameopt_sound_speech_volume + delta
     game_features.gameopt_sound_speech_volume = v
 }
 
-function sound_options_city_step(type, delta) {
+function sound_options_city_step(delta) {
     var v = game_features.gameopt_sound_city_volume + delta
     game_features.gameopt_sound_city_volume = v
 }
@@ -118,40 +115,40 @@ sound_options_window {
         background         : outer_panel({size[24, 18]})
         title              : header({pos[10, 10], size[px(24), 20], text[46, 0], align:"center"})
 
-        arrow_music_down   : arrowdown({pos[264, 68], tiny:false
-                                        onclick: function() { sound_options_music_step(SOUND_MUSIC, -1) } })
-        arrow_music_up     : arrowup({pos[288, 68], tiny:false
-                                        onclick: function() { sound_options_music_step(SOUND_MUSIC, 1) } })
+        arrow_music_down   : arrowdown({pos[264, 68], tiny:false, allow_repeat: true
+                                        onclick: function() { sound_options_music_step(-1) } })
+        arrow_music_up     : arrowup({pos[288, 68], tiny:false, allow_repeat: true
+                                        onclick: function() { sound_options_music_step(1) } })
 
         arrow_speech_down  : arrowdown({pos[264, 98], tiny:false
-                                        onclick: function() { sound_options_speech_step(SOUND_SPEECH, -1) } })
+                                        onclick: function() { sound_options_speech_step(-1) } })
         arrow_speech_up    : arrowup({pos[288, 98], tiny:false
-                                         onclick: function() { sound_options_speech_step(SOUND_SPEECH, 1) } })
+                                         onclick: function() { sound_options_speech_step(1) } })
 
         arrow_effects_down : arrowdown({pos[264, 128], tiny:false
-                                         onclick: function() { sound_options_effects_step(SOUND_EFFECTS, -1) } })
+                                         onclick: function() { sound_options_effects_step(-1) } })
         arrow_effects_up   : arrowup({pos[288, 128], tiny:false
-                                        onclick: function() { sound_options_effects_step(SOUND_EFFECTS, 1) } })
+                                        onclick: function() { sound_options_effects_step(1) } })
 
         arrow_city_down    : arrowdown({pos[264, 158], tiny:false
-                                        onclick: function() { sound_options_city_step(SOUND_CITY, -1) } })
+                                        onclick: function() { sound_options_city_step(-1) } })
         arrow_city_up      : arrowup({pos[288, 158], tiny:false
-                                        onclick: function() { sound_options_city_step(SOUND_CITY, 1) } })
+                                        onclick: function() { sound_options_city_step(1) } })
 
         lbl_quiet          : text({pos[16, 48], text[46, 10], font: FONT_SMALL_PLAIN})
         lbl_loud           : text({pos[280, 48], text[46, 11], font: FONT_SMALL_PLAIN})
 
         btn_music          : button({pos[16,68], size[224, 20], font: FONT_NORMAL_BLACK_ON_DARK
-                                     onclick: function() { sound_options_toggle(SOUND_MUSIC) } })
+                                     onclick: function() { sound_options_toggle_music() } })
         music_pct          : text({pos[326, 72], font: FONT_SMALL_PLAIN})
         btn_speech         : button({pos[16, 98], size[224, 20], font: FONT_NORMAL_BLACK_ON_DARK
-                                     onclick: function() { sound_options_toggle(SOUND_SPEECH) } })
+                                     onclick: function() { sound_options_toggle_speech() } })
         speech_pct         : text({pos[326, 102], font: FONT_SMALL_PLAIN})
         btn_effects        : button({pos[16, 128], size[224, 20], font: FONT_NORMAL_BLACK_ON_DARK
-                                     onclick: function() { sound_options_toggle(SOUND_EFFECTS) } })
+                                     onclick: function() { sound_options_toggle_effects() } })
         effects_pct        : text({pos[326, 132], font: FONT_SMALL_PLAIN})
         btn_city           : button({pos[16, 158], size[224, 20], font: FONT_NORMAL_BLACK_ON_DARK
-                                     onclick: function() { sound_options_toggle(SOUND_CITY) } })
+                                     onclick: function() { sound_options_toggle_city() } })
         city_pct           : text({pos[326, 162], font: FONT_SMALL_PLAIN})
 
         btnok              : ok_button({margin{left:px(24)/2 - 40, bottom:-40}, onclick: window_go_back })

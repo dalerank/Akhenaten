@@ -818,23 +818,24 @@ void ui::icon(vec2i pos, e_advisor adv) {
     push(cmd_t::image, Pos{offset + pos}, ImageId{advisor_icons.tid() + (adv - 1)});
 }
 
-arrow_button& ui::arw_button(vec2i pos, bool down, bool tiny, UiFlags_ flags) {
+arrow_button& ui::arw_button(vec2i pos, bool down, bool tiny, UiFlags_ flags, int* external_repeats) {
     const vec2i offset = g_state.offset();
     const mouse& m = mouse::get();
 
     int size = tiny ? 17 : 24;
     g_state.buttons.push_back(arrow_button{offset.x + pos.x, offset.y + pos.y, -1, size, button_none, 0, 0});
     auto& abutton = g_state.buttons.back().a_button;
+    abutton.allow_repeat = !!(flags & UiFlags_AllowRepeat);
+    abutton.repeats_ptr = external_repeats;
 
-    const bool hovered
-      = !(flags & UiFlags_Darkened) && (is_button_hover(abutton, {0, 0}) || !!(flags & UiFlags_Selected));
-    abutton.pressed = hovered && m.left.is_down;
-    abutton.state = (hovered ? (abutton.pressed ? 2 : 1) : 0);
+    const bool hovered = !(flags & UiFlags_Darkened) && (is_button_hover(abutton, {0, 0}) || !!(flags & UiFlags_Selected));
+    const bool down_visual = hovered && m.left.is_down;
+    abutton.state = (hovered ? (down_visual ? 2 : 1) : 0);
     abutton.state |= (down ? 0x10 : 0);
 
     arrow_buttons_draw(abutton, tiny);
-    const bool darkened = !!(flags & UiFlags_Darkened);
 
+    const bool darkened = !!(flags & UiFlags_Darkened);
     if (darkened) {
         push(cmd_t::shade_rect, Pos{offset + pos}, Size{vec2i{size, size}}, ImageId{0x80});
     }
@@ -1984,6 +1985,7 @@ void ui::earrow_button::load(archive arch, element* parent, items& elems) {
 
     tiny = arch.r_bool("tiny");
     down = arch.r_bool("down");
+    allow_repeat = arch.r_bool("allow_repeat", true);
     set_ref(ONCLICK, arch.r_function("onclick"));
     set_event(ONCLICK_EVENT, arch.r_string(ONCLICK_EVENT.c_str()));
 }
@@ -1994,7 +1996,9 @@ void ui::earrow_button::js_call() {
 
 void ui::earrow_button::draw(UiFlags flags) {
     scr_pos = g_state.offset() + pos;
-    auto& btn = ui::arw_button(pos, down, tiny);
+    const UiFlags_ arw_flags = (UiFlags_)(
+        ((int)flags & ~(int)UiFlags_AllowRepeat) | (allow_repeat ? (int)UiFlags_AllowRepeat : 0));
+    auto& btn = ui::arw_button(pos, down, tiny, arw_flags, &repeats);
 
     const bool clickable = !darkened && !readonly;
     xstring onclick_event = event_name(ONCLICK_EVENT);

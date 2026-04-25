@@ -118,13 +118,14 @@ ANK_FUNCTION_6(__ui_draw_button);
 
 bool __ui_draw_arw_button(vec2i pos, bool down, bool tiny, bool allow_repeat) {
     const bool is_underlying = g_window_manager.underlying_windows_redrawing > 0;
-    const UiFlags_ flags = is_underlying ? UiFlags_Readonly : UiFlags_None;
-    arrow_button &btn = ui::arw_button(pos, down, tiny, flags);
+    int flags = is_underlying ? UiFlags_Readonly : UiFlags_None;
+    flags |= allow_repeat ? UiFlags_AllowRepeat : UiFlags_None;
+    arrow_button& btn = ui::arw_button(pos, down, tiny, (UiFlags_)flags);
     if (is_underlying) {
         return false;
     }
     int focus = 0;
-    const int clicked = arrow_buttons_handle_mouse(&mouse::ref(), &btn, 1, &focus, allow_repeat);
+    const int clicked = arrow_buttons_handle_mouse(&mouse::ref(), &btn, 1, &focus);
     return clicked != 0;
 }
 ANK_FUNCTION_4(__ui_draw_arw_button);

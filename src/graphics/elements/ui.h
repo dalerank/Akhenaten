@@ -55,6 +55,7 @@ enum UiFlags_ {
     UiFlags_PanelOuter = 1 << 18,
     UiFlags_ThinBorder = 1 << 19,
     UiFlags_Composite = 1 << 20,
+    UiFlags_AllowRepeat = 1 << 21,
 };
 using UiFlags = int;
 
@@ -253,7 +254,7 @@ namespace ui {
       UiFlags flags = UiFlags_None);
     image_button& imgok_button(vec2i pos, button_onclick_cb cb);
     image_button& imgcancel_button(vec2i pos, button_onclick_cb cb);
-    arrow_button& arw_button(vec2i pos, bool down, bool tiny = false, UiFlags_ flags = UiFlags_None);
+    arrow_button& arw_button(vec2i pos, bool down, bool tiny = false, UiFlags_ flags = UiFlags_AllowRepeat, int* external_repeats = nullptr);
     scrollbar_t& scrollbar(scrollbar_t& scrollbar, vec2i pos, int& value, vec2i size = {-1, -1});
     void fill_rect(vec2i offset, vec2i size, color c);
     void draw_rect(vec2i pos, vec2i size, color c);
@@ -867,6 +868,9 @@ namespace ui {
     struct earrow_button : public element {
         bool down;
         bool tiny;
+        bool allow_repeat = true;
+        /// Step index for hold-to-repeat; passed to arw_button (survives between frames).
+        int repeats = 0;
 
         button_onclick_cb _func;
         button_onclick_simple_cb _sfunc;
