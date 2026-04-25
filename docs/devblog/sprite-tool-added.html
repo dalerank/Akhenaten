@@ -25,9 +25,105 @@
     <h1>Sprite tool added</h1>
 
     <p>
-      A new sprite viewer tool for inspecting runtime animations. Select any item from the list to see how its animation works in runtime — useful for verifying animations during development.
+      A new developer tool for inspecting game sprites and animations in real-time. The sprite tool provides a visual interface for browsing texture packs, viewing individual sprites, and testing animations — essential for debugging graphics issues and verifying asset loading.
     </p>
     <img src="../images/sprites.gif" alt="Sprite tool demo" class="post-image" loading="lazy" />
+
+    <h2>Initial Implementation</h2>
+    <p>
+      The sprite tool was developed over three days in January 2025, starting with basic infrastructure (January 8) and rapidly expanding with features. The initial commit created <code>src/dev/sprite_tool.cpp</code> with 64 lines of ImGui-based UI code that displayed image pack names and animation entries in a tree view.
+    </p>
+    <p>
+      The tool integrates with the existing <code>imagepak_holder</code> system, iterating through <code>g_image_data->common</code> to enumerate all loaded texture packs. Each pack exposes a <code>names()</code> list containing animation identifiers like <code>"walk_n"</code>, <code>"work"</code>, <code>"base"</code>, etc.
+    </p>
+
+    <h2>Core Features</h2>
+    <p>
+      The sprite tool window displays a two-column table with expandable tree nodes:
+    </p>
+    <ul>
+      <li><strong>Pack browser</strong> — lists all loaded image packs (PACK_GENERAL, PACK_TERRAIN, PACK_TEMPLE_RA, etc.)</li>
+      <li><strong>Animation list</strong> — shows named animations within each pack</li>
+      <li><strong>Sprite preview</strong> — renders the selected sprite at actual size</li>
+      <li><strong>Pack metadata</strong> — displays pack ID, index, and entry count</li>
+    </ul>
+
+    <h2>Progressive Enhancements</h2>
+    <p>
+      Three rapid iterations (January 9-10) added critical functionality:
+    </p>
+    <ul>
+      <li><strong>Pack name display</strong> (commit 79d7776d5) — shows human-readable pack names instead of just IDs</li>
+      <li><strong>Resource investigation</strong> (commit b1b7b9c4c) — expanded the tool to ease investigating game resources, adding 29 lines of new code</li>
+      <li><strong>Walk animation support</strong> (commit 6874a6bf8) — added playback controls for multi-frame walk animations, the most complex addition at 33 new lines</li>
+    </ul>
+
+    <h2>Walk Animation System</h2>
+    <p>
+      The walk animation feature required special handling because character movement sprites consist of 8-12 frames per direction (north, east, south, west). The tool now:
+    </p>
+    <ul>
+      <li>Detects animation frame counts from sprite metadata</li>
+      <li>Provides playback controls (play/pause, frame stepping)</li>
+      <li>Displays current frame number and total frame count</li>
+      <li>Loops animations automatically for continuous preview</li>
+    </ul>
+    <p>
+      This required adding a new <code>sprite_frame_count()</code> helper to <code>src/graphics/image.h</code> to query frame metadata from the image system.
+    </p>
+
+    <h2>Use Cases</h2>
+    <p>
+      The sprite tool proved immediately useful for several development tasks:
+    </p>
+    <ul>
+      <li><strong>Asset verification</strong> — confirming that texture packs load correctly after config changes</li>
+      <li><strong>Animation debugging</strong> — identifying broken or misaligned animation frames</li>
+      <li><strong>Sprite ID lookup</strong> — finding the correct image ID for hardcoded references</li>
+      <li><strong>Pack organization</strong> — understanding which sprites belong to which packs</li>
+    </ul>
+
+    <h2>Technical Implementation</h2>
+    <p>
+      The tool uses ImGui's table and tree node APIs for the UI structure:
+    </p>
+    <pre><code>if (ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
+    for (const auto &imgpak : g_image_data->common) {
+        if (imgpak.name.empty()) continue;
+
+        bool pack_open = ImGui::TreeNodeEx(imgpak.name, ImGuiTreeNodeFlags_DefaultOpen);
+        if (pack_open) {
+            // Display animations and sprites
+            ImGui::TreePop();
+        }
+    }
+    ImGui::EndTable();
+}</code></pre>
+    <p>
+      The tool is registered with the debug console system via <code>ANK_REGISTER_PROPS_ITERATOR(dev_sprite_tool)</code>, making it accessible through the in-game developer menu. A checkbox toggle controls visibility: <code>ImGui::Checkbox("Sprites", &_debug_sprites_open)</code>.
+    </p>
+
+    <h2>Integration with Debug Console</h2>
+    <p>
+      The sprite tool follows the same pattern as other debug tools in the engine. It's invoked from <code>src/platform/akhenaten.cpp</code> and integrates with the <code>widget/debug_console.h</code> system. The two-phase rendering (header checkbox, then content window) allows the tool to be toggled on/off without losing state.
+    </p>
+
+    <h2>Future Enhancements</h2>
+    <p>
+      Later commits (not part of the initial January 10 release) added even more features:
+    </p>
+    <ul>
+      <li>Isometric texture rendering support</li>
+      <li>Figure animation preview</li>
+      <li>Texture path copying to clipboard</li>
+      <li>Support for short paks and big images</li>
+      <li>Entry count and section length display</li>
+    </ul>
+
+    <h2>Result</h2>
+    <p>
+      The sprite tool significantly improved the development workflow for graphics-related tasks. What previously required manual inspection of <code>.sg3</code> files or trial-and-error with image IDs can now be done visually in seconds. The tool remains one of the most frequently used debug utilities during active development.
+    </p>
 
     <div class="post-nav">
       <a href="works-in-browser.html">← Previous: Works in browser</a>
