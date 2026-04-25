@@ -86,6 +86,7 @@ mission7 { // Abydos
 
 	vars {
 		pharaoh_beer_requested : false
+		pharaoh_bricks_gift_sent : false
 	}
 }
 
@@ -109,4 +110,22 @@ function mission7_pharaoh_request_beer(ev) {
 	mission.pharaoh_beer_requested = true
 	var request = city.create_good_request({ tag_id: 1, resource: RESOURCE_BEER, amount: 9, months_initial: 12 })
 	request.execute()
+}
+
+[es=event_advance_month, mission=mission7]
+function mission7_pharaoh_bricks_gift(ev) {
+	if (mission.pharaoh_bricks_gift_sent) {
+		return
+	}
+
+	if (ev.years_since_start < 3) {
+		return
+	}
+	if (ev.years_since_start == 3 && ev.month < 4) {
+		return
+	}
+
+	mission.pharaoh_bricks_gift_sent = true
+	var gift = city.create_pharaoh_gift({ tag_id: 2, resource: RESOURCE_BRICKS, amount: 21 })
+	gift.execute()
 }

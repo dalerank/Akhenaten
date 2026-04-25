@@ -12,6 +12,12 @@ void ANK_FUNCTION_UNIFIED(__city_create_good_request)(const bvariant_map &args) 
     );
 }
 
+void ANK_FUNCTION_UNIFIED(__city_create_pharaoh_gift)(const bvariant_map &args) {
+    g_scenario.events.create_pharaoh_gift(
+        args.n("tag_id"), (e_resource)args.n("resource"), args.n("amount")
+    );
+}
+
 void ANK_FUNCTION_UNIFIED(__city_event_create_foreign_army_attack_warning)(const bvariant_map &args) {
     g_scenario.events.create_foreign_army_attack_warning(args.n("tag_id"), args.n("sender_faction"));
 }
