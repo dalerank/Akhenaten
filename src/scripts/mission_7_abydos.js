@@ -90,10 +90,6 @@ mission7 { // Abydos
 	}
 }
 
-// Values mirror the original Pharaoh mission1.pak data for Abedju (Abydos).
-// Additional events from the legacy binary (city request for fish, gift of
-// bricks, invasions, demand/reputation changes) are not migrated here.
-
 [es=event_advance_month, mission=mission7]
 function mission7_pharaoh_request_beer(ev) {
 	if (mission.pharaoh_beer_requested) {
