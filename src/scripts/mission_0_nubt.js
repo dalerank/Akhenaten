@@ -3,7 +3,7 @@ log_info("akhenaten: mission 0 nubt started")
 mission0 { // Nubt
 	start_message : "message_housing_and_roads"
 	env {
-		has_animals : true		
+		has_animals : true
 	    gods_least_mood : 50
 	    marshland_grow : default_marshland_grow
 	    tree_grow : default_tree_grow

@@ -3,7 +3,7 @@ log_info("akhenaten: mission 2 started")
 mission2 {
 	start_message : "message_farming_along_the_nile"
 	env {
-		has_animals : true		
+		has_animals : true
 	    gods_least_mood : 50
 		marshland_grow : default_marshland_grow
 	    tree_grow : default_tree_grow

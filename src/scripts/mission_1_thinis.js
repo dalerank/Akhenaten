@@ -3,7 +3,7 @@ log_info("akhenaten: mission 1 started")
 mission1 {
 	start_message : "message_gold_and_crime"
 	env {
-		has_animals : true		
+		has_animals : true
 	    gods_least_mood : 50
 	    marshland_grow : default_marshland_grow
 	    tree_grow : default_tree_grow
