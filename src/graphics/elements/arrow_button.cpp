@@ -2,20 +2,16 @@
 
 #include "graphics/elements/ui.h"
 
-#include "js/js_game.h"
-
+#include <cassert>
+// Bitmask: 1 = do fire this repeat step (keyboard-style acceleration on hold).
 static const int REPEATS[] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1,
                               0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0};
 
-static const time_millis REPEAT_MILLIS = 30;
-static const unsigned int BUTTON_PRESSED_FRAMES = 3;
+static constexpr time_millis kRepeatStepMs = 30;
+static constexpr int kPressVisualFrames = 3;
 
-static int& repeat_storage(arrow_button* btn) {
-    if (btn->repeats_ptr) {
-        return *btn->repeats_ptr;
-    }
-    return btn->repeats;
-}
+// ---------------------------------------------------------------------------
+// config / image bundle
 
 struct arrow_button_images_t {
     image_desc arrow_button_tiny_down;
@@ -36,6 +32,65 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_arrowbutton_options) {
     g_config_arch.r("uioptions", g_arrow_button_images);
     assert(g_arrow_button_images.arrow_button_tiny_down.valid() && "Incorrect image desc loaded");
 }
+
+// ---------------------------------------------------------------------------
+// small helpers (mouse, repeat store, click dispatch)
+
+static int& repeat_of(arrow_button* btn) {
+    if (btn->repeats_ptr) {
+        return *btn->repeats_ptr;
+    }
+    return btn->repeats;
+}
+
+static void call_handlers(arrow_button* b) {
+    if (b->click_handler) {
+        b->click_handler(b->parameter1, b->parameter2);
+    }
+    if (b->_onclick) {
+        b->_onclick(b->parameter1, b->parameter2);
+    }
+    if (b->_onclick_void) {
+        b->_onclick_void();
+    }
+}
+
+static void update_press_state_and_repeats(const mouse* m, int hovered, arrow_button* buttons, int num) {
+    const bool lmb = m->left.is_down;
+
+    if (m->left.went_up || !lmb) {
+        if (num == 1) {
+            repeat_of(&buttons[0]) = 0;
+        }
+    }
+
+    if (num > 1) {
+        for (int i = 0; i < num; i++) {
+            arrow_button* b = &buttons[i];
+            const bool hold_on_this = b->allow_repeat && hovered == i + 1 && lmb;
+            if (b->pressed) {
+                b->pressed--;
+                if (b->pressed == 0 && !hold_on_this) {
+                    repeat_of(b) = 0;
+                }
+            } else {
+                if (!hold_on_this) {
+                    repeat_of(b) = 0;
+                }
+            }
+        }
+    } else if (num == 1) {
+        if (buttons[0].pressed) {
+            buttons[0].pressed--;
+        }
+        if (!hovered) {
+            repeat_of(&buttons[0]) = 0;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// public API
 
 void arrow_buttons_draw(arrow_button* buttons, int num_buttons, bool tiny, vec2i base_offset) {
     for (int i = 0; i < num_buttons; i++) {
@@ -70,115 +125,62 @@ int get_arrow_button(const mouse* m, arrow_button* buttons, int num_buttons) {
 }
 
 int arrow_buttons_handle_mouse(const mouse* m, arrow_button* buttons, int num_buttons, int* focus_button_id) {
-    static time_millis last_time = 0;
+    const int hovered = get_arrow_button(m, buttons, num_buttons);
+    update_press_state_and_repeats(m, hovered, buttons, num_buttons);
 
-    const int hovered_id = get_arrow_button(m, buttons, num_buttons);
-    const bool lmb_held = m->left.is_down;
-
-    if (m->left.went_up || !lmb_held) {
-        if (num_buttons == 1) {
-            repeat_storage(&buttons[0]) = 0;
-        }
-    }
-
-    if (num_buttons > 1) {
-        for (int i = 0; i < num_buttons; i++) {
-            arrow_button* btn = &buttons[i];
-            const bool hold_same_button = btn->allow_repeat && hovered_id == i + 1 && lmb_held;
-            if (btn->pressed) {
-                btn->pressed--;
-                if (!btn->pressed) {
-                    if (!hold_same_button) {
-                        repeat_storage(btn) = 0;
-                    }
-                }
-            } else {
-                if (!hold_same_button) {
-                    repeat_storage(btn) = 0;
-                }
-            }
-        }
-    } else if (num_buttons == 1) {
-        if (buttons[0].pressed) {
-            buttons[0].pressed--;
-        }
-        if (!hovered_id) {
-            repeat_storage(&buttons[0]) = 0;
-        }
-    }
-    int button_id = hovered_id;
     if (focus_button_id) {
-        *focus_button_id = button_id;
+        *focus_button_id = hovered;
     }
-
-    if (!button_id) {
+    if (!hovered) {
         return 0;
     }
 
-    time_millis curr_time = time_get_millis();
+    arrow_button* btn = &buttons[hovered - 1];
+    const bool lmb_held = m->left.is_down;
+
+    static time_millis s_repeat_last = 0;
     int should_repeat = 0;
-    if (curr_time - last_time >= REPEAT_MILLIS) {
-        should_repeat = 1;
-        last_time = curr_time;
+    {
+        const time_millis t = time_get_millis();
+        if (t - s_repeat_last >= kRepeatStepMs) {
+            should_repeat = 1;
+            s_repeat_last = t;
+        }
     }
 
-    arrow_button* btn = &buttons[button_id - 1];
     if (btn->allow_repeat && m->left.went_down) {
-        btn->pressed = BUTTON_PRESSED_FRAMES;
-        repeat_storage(btn) = 0;
-        if (btn->click_handler) {
-            btn->click_handler(btn->parameter1, btn->parameter2);
-        }
-        if (btn->_onclick) {
-            btn->_onclick(btn->parameter1, btn->parameter2);
-        }
-        if (btn->_onclick_void) {
-            btn->_onclick_void();
-        }
-        return button_id;
+        btn->pressed = kPressVisualFrames;
+        repeat_of(btn) = 0;
+        call_handlers(btn);
+        return hovered;
     }
 
     if (m->left.went_up) {
-        btn->pressed = BUTTON_PRESSED_FRAMES;
-        repeat_storage(btn) = 0;
+        btn->pressed = kPressVisualFrames;
+        repeat_of(btn) = 0;
         if (!btn->allow_repeat) {
-            if (btn->click_handler) {
-                btn->click_handler(btn->parameter1, btn->parameter2);
-            }
-            if (btn->_onclick) {
-                btn->_onclick(btn->parameter1, btn->parameter2);
-            }
-            if (btn->_onclick_void) {
-                btn->_onclick_void();
-            }
+            call_handlers(btn);
         }
-        return button_id;
+        return hovered;
     }
 
     if (btn->allow_repeat && lmb_held) {
-        btn->pressed = BUTTON_PRESSED_FRAMES;
-        if (should_repeat) {
-            int& rep = repeat_storage(btn);
-            rep++;
-            if (rep < 48) {
-                if (!REPEATS[rep]) {
-                    return 0;
-                }
-            } else {
-                rep = 47;
-            }
-            if (btn->click_handler) {
-                btn->click_handler(btn->parameter1, btn->parameter2);
-            }
-            if (btn->_onclick) {
-                btn->_onclick(btn->parameter1, btn->parameter2);
-            }
-            if (btn->_onclick_void) {
-                btn->_onclick_void();
-            }
-            return button_id;
+        btn->pressed = kPressVisualFrames;
+        if (!should_repeat) {
+            return 0;
         }
-        return 0;
+        int& rep = repeat_of(btn);
+        rep++;
+        if (rep < 48) {
+            if (!REPEATS[rep]) {
+                return 0;
+            }
+        } else {
+            rep = 47;
+        }
+        call_handlers(btn);
+        return hovered;
     }
+
     return 0;
 }
