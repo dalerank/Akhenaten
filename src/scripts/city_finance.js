@@ -56,7 +56,10 @@ function make_finance_expenses(current) {
 }
 
 city.finance = extend(__city_finance, {
-    @tax_percentage { set: city_finance_apply_tax_percentage }
+    @tax_percentage {
+        get: __city_finance_get_tax_percentage
+        set: city_finance_apply_tax_percentage
+    }
     @is_out_of_money { get: __city_finance_is_out_of_money }
 
     @has_made_money {

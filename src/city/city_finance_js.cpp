@@ -58,3 +58,8 @@ bool __city_finance_is_out_of_money() {
     return g_city.finance.is_out_of_money();
 }
 ANK_FUNCTION(__city_finance_is_out_of_money)
+
+int __city_finance_get_tax_percentage() {
+    return g_city.finance.tax_percentage;
+}
+ANK_FUNCTION(__city_finance_get_tax_percentage)

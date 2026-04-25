@@ -3,7 +3,7 @@ log_info("akhenaten: game started")
 game {
     __property_getter: function(property) { return __game_get_property(property) }
 
-    @monthly_autosave { set: __game_set_monthly_autosave }
+    @monthly_autosave { get: __game_get_monthly_autosave, set: __game_set_monthly_autosave }
     @absolute_day { get: __game_absolute_day }
     @simtime_year { get: __game_simtime_year }
     @version { get: __game_version }
