@@ -277,6 +277,69 @@ footer a:hover {
   color: var(--gold);
 }
 
+/* ── Contributors page ── */
+.contributors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0 3rem;
+}
+
+.contributor {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem;
+  transition: all 0.2s;
+}
+
+.contributor:hover {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+}
+
+.contributor h3 {
+  color: var(--gold);
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.commit-count {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+  font-family: monospace;
+}
+
+.contributor p:last-child {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.contributors-list {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.8;
+  margin-top: 1rem;
+}
+
+.contributor.inactive {
+  opacity: 0.6;
+}
+
+.inactive-badge {
+  display: inline-block;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  margin-top: 0.5rem;
+  font-family: monospace;
+}
+
 /* ── Inner pages ── */
 .page-content {
   max-width: 860px;
