@@ -85,28 +85,28 @@ mission7 { // Abydos
 	]
 
 	vars {
-		pharaoh_pottery_requested : false
+		pharaoh_beer_requested : false
 	}
 }
 
-// TODO: invasion (BC 2670 m2) and pharaoh_gift (BC 2670 m8) from the original
-// Abydos scenario are not ported yet — invasion lacks an enemy spec in the
-// legacy data, and there is no JS API for pharaoh_gift events.
+// Values mirror the original Pharaoh mission1.pak data for Abedju (Abydos).
+// Additional events from the legacy binary (city request for fish, gift of
+// bricks, invasions, demand/reputation changes) are not migrated here.
 
 [es=event_advance_month, mission=mission7]
-function mission7_pharaoh_request_pottery(ev) {
-	if (mission.pharaoh_pottery_requested) {
+function mission7_pharaoh_request_beer(ev) {
+	if (mission.pharaoh_beer_requested) {
 		return
 	}
 
-	if (ev.year < -2684) {
+	if (ev.years_since_start < 2) {
 		return
 	}
-	if (ev.year == -2684 && ev.month < 1) {
+	if (ev.years_since_start == 2 && ev.month < 2) {
 		return
 	}
 
-	mission.pharaoh_pottery_requested = true
-	var request = city.create_good_request({ tag_id: 1, resource: RESOURCE_POTTERY, amount: 1400, months_initial: 9 })
+	mission.pharaoh_beer_requested = true
+	var request = city.create_good_request({ tag_id: 1, resource: RESOURCE_BEER, amount: 900, months_initial: 12 })
 	request.execute()
 }
