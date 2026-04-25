@@ -42,23 +42,6 @@ mission6 = { // Behdet
 		kingdom    {enabled : true, goal : 45 }
 	}
 
-	enable_scenario_events : false
-	events [
-		{
-			time { year : 2684, month : 1 }
-			resource : "pottery",
-			amount { value : 1400 }
-			deadline : 9
-		}
-
-		{
-			time { year : 2683, month : 1 }
-			resource : "beer",
-			amount { value : 1100 }
-			deadline : 12
-		}
-	]
-
 	cities [
 		{
 			name : "Byblos"
@@ -103,4 +86,45 @@ mission6 = { // Behdet
 			pos [640, 480]
 		}
 	]
+
+	vars {
+		pharaoh_pottery_requested : false
+		pharaoh_beer_requested : false
+	}
+}
+
+[es=event_advance_month, mission=mission6]
+function mission6_pharaoh_request_pottery(ev) {
+	if (mission.pharaoh_pottery_requested) {
+		return
+	}
+
+	if (ev.year < -2684) {
+		return
+	}
+	if (ev.year == -2684 && ev.month < 1) {
+		return
+	}
+
+	mission.pharaoh_pottery_requested = true
+	var request = city.create_good_request({ tag_id: 1, resource: RESOURCE_POTTERY, amount: 1400, months_initial: 9 })
+	request.execute()
+}
+
+[es=event_advance_month, mission=mission6]
+function mission6_pharaoh_request_beer(ev) {
+	if (mission.pharaoh_beer_requested) {
+		return
+	}
+
+	if (ev.year < -2683) {
+		return
+	}
+	if (ev.year == -2683 && ev.month < 1) {
+		return
+	}
+
+	mission.pharaoh_beer_requested = true
+	var request = city.create_good_request({ tag_id: 2, resource: RESOURCE_BEER, amount: 1100, months_initial: 12 })
+	request.execute()
 }
