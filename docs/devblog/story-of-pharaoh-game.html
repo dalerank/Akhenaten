@@ -31,59 +31,89 @@
 
     <h2>Development history</h2>
     <p>
-      Development began fall 1997, about a year before Caesar 3 shipped. After two years of work, many planned mechanics (dynamic trading, labor markets, weather, dynamic map changes) were still unfinished — some made it into the Cleopatra expansion, others only appeared in later series entries.
+      Development began fall 1997, about a year before Caesar 3 shipped. After two years of work, many planned mechanics (dynamic trading, labor markets, weather, dynamic map changes) were still unfinished — some made it into the Cleopatra expansion, others only appeared in later series entries. Even the setting itself was not fully defined, and some animations were still in draft form, while others were borrowed and redrawn from Caesar.
     </p>
     <img src="../images/pharaoh-dev-history-2.png" alt="Pharaoh development timeline" class="post-image" loading="lazy" />
     <p>
-      After Caesar 3's release, company founder <strong>David Lester</strong> departed and <strong>Chris Beatrice</strong> (lead designer, self-described artist) took over. Rather than iterate on Rome with 3D, the team chose Ancient Egypt as a more ambitious setting. A "Caesar in space" concept was quickly rejected.
+      After Caesar 3's release, company founder <strong>David Lester</strong> departed and <strong>Chris Beatrice</strong> (lead designer, self-described artist) took over. "Remember, I'm an artist," Chris told his colleagues, "I was never a game designer or a CEO." In 1998, Caesar 3 was at the peak of its popularity, but instead of revisiting Ancient Rome with deeper mechanics and the beginning trend for 3D games, Chris and his team decided to change the setting to something more ambitious. A "Caesar in space" concept was quickly rejected, but the idea of Ancient Egypt/Greece/India sparked tremendous interest from the European marketing team.
     </p>
     <p>
-      <strong>Simon Bradbury left</strong> due to disagreements over management and deadline pressure, founding <strong>Firefly Studios</strong>. His departure significantly impacted progress — he had been the primary programmer and knowledge holder for the engine. Simon noted: "they 'ad to bring in five more folks just to do me bleedin' job."
+      There was still a year to go before the expected release, but due to disagreements and Simon's dissatisfaction with the management and the intense pressure to meet deadlines, <strong>Simon Bradbury left</strong> the studio and founded his own (Firefly Studios), where he continues to create games to this day.
+    </p>
+    <p>
+      <strong>S.B.</strong> — "Chris was always pushing the damn team, trying to come up with some bloody new stuff, and the idea of just sticking with a successful game was like nonsense heresy — no one did it that way, and it didn't dirty well help the work either."
+    </p>
+    <p>
+      Simon's departure had a very negative impact on the game's progress; some mechanics had to be postponed for the expansion pack. In fact, he was responsible for most of the programming work on the engine and was the main source of knowledge about game, engine and inside mechanics. Simon's name was not mentioned in the game credits — they probably just forgot.
+    </p>
+    <p>
+      <strong>S.B.</strong> — "Blimey, they 'ad to bring in five more folks just to do me bleedin' job. Never thought I was worth all this bother."
     </p>
     <img src="../images/pharaoh-dev-history-3.png" alt="Simon Bradbury quote about Pharaoh development" class="post-image" loading="lazy" />
 
     <h2>Team size</h2>
     <p>
-      Before Pharaoh, only <strong>three people</strong> worked on the engine: Bradbury, Gabe Farris, and Mike Jigenrich. The team grew to ~10 for Pharaoh's development.
+      Before 1999, only <strong>three people</strong> were working on the Caesar/Pharaoh engine: Simon Bradbury (Render/Code), Gabe Farris (GD/Code), and Mike Jigenrich (Code). About a year before the release of Pharaoh, a team of around 10 people was already working on the Pharaoh game code.
     </p>
 
     <h2>Technical details</h2>
     <p>
-      The game featured complex social simulation chains. The education system involved a multi-step process: reed collection, papyrus production, teacher hiring, and wealth-gated school attendance.
+      As an example of how complex the social system was implemented in the game, Chris recalls a chain of events related to the educational system:
     </p>
     <p>
-      NPCs actually traveled between destinations instead of wandering aimlessly. Active objects per frame were reduced from 5,000 (Caesar) to 2,000 (Pharaoh) to maintain performance, all within 32MB RAM.
+      <strong>C.B.</strong> — "So, there's this man go to collecting reeds, then those reeds get turned into papyrus. The teacher comes along and takes the papyrus, then the school hires the teacher, who starts educating the kids. Now, the houses need to be of a wealthy for the kids to go to school."
+    </p>
+    <p>
+      Unlike previous games, in Pharaoh, the NPCs actually move between destinations instead of aimlessly wandering around. When the population reaches thousands, things get incredibly complex, so in order to maintain a steady fps rate, the number of active objects per frame was reduced from 5,000 in Caesar to 2,000 in Pharaoh. According to Simon's words, even in Caesar, there were significant challenges with implementing the core logic within the limited resources of the processor and memory — the game had to run on just 32MB RAM.
+    </p>
+    <p>
+      <strong>S.B.</strong> — "One of the big challenges with city-building games is that there are so many characters moving around that you can't spend too many cycles or memory on each individual character, but the map is constantly changing. Floodplains are not the only things that change. The player can build a new road, destroy a road section after a destination has been calculated, or leave a wandering character stranded without a way back. So, we used simplified simulation for objects on the same tile. One NPC would perform the main action, and copies of the instructions were given to the others."
     </p>
     <img src="../images/pharaoh-dev-history-4.png" alt="Pharaoh education and economy systems" class="post-image" loading="lazy" />
 
     <h2>Art direction</h2>
     <p>
-      <strong>Heidi Mann</strong> led the art team, using a technique she called <strong>"ping-pong texturing"</strong> — objects modeled in 3D, then manually redrawn by artists onto a 2D tile grid for a high-quality, painterly look.
+      <strong>Heidi Mann</strong> was lead of the game's graphics, and she had previously worked on Caesar 2/3. As the lead artist on the project, she was responsible for creating the overall visual style of the game. Despite the game being set on a 2D grid, "Pharaoh" had amazing 3D graphics. The game's objects were first assembled in a 3D package, then a grid of tiles was placed over them, and artists manually redrew and applied to the original textures, giving the whole game a high-quality and picturesque appearance. Later, Heidi would refer to this technique as <strong>"ping-pong texturing"</strong> in one of her interviews. Technically, Heidi was the lead artist, but roles within the team were relatively fluid — she worked on animations, while Chris, for example, handled everything for the ostriches, from code to textures.
     </p>
     <img src="../images/pharaoh-dev-history-5.png" alt="Ping-pong texturing technique" class="post-image" loading="lazy" />
 
     <h2>Monuments</h2>
     <p>
-      Monuments (pyramids, etc.) transformed the gameplay by giving players a massive, visible goal. Building them required accumulating materials, labor, and establishing guilds of skilled workers.
+      According to the game's fans, the addition of monuments in Pharaoh transformed the game into the best city-building game of its time. Unlike Caesar and other city-building games before it, it was challenging to give players a main goal. There were general goals like "more population," "happy citizens," "full warehouses," and others, but they still didn't provide a tangible objective. However, when your city is functioning strong, and you have the resources to build a massive, truly enormous monument that takes up half the screen (1024×768) and grows before your eyes — for a 2D game of that era, having something so huge on the screen was truly astonishing.
     </p>
     <img src="../images/pharaoh-dev-history-6.png" alt="Pharaoh monuments and pyramids" class="post-image" loading="lazy" />
     <p>
-      Nile flooding added seasonal food production challenges, and the religion system was streamlined compared to Caesar III with fewer gods per scenario.
+      Like in ancient Egypt, these epic structures become the focal point of the society. To build a pyramid from bricks, for instance, players must not only accumulate a vast amount of materials and labor but also establish guilds of carpenters, stonemasons, and bricklayers to form a skilled workforce. It's a complex and challenging task that requires careful planning and management. The game captures the essence of the monumental efforts and resources needed to construct such grand structures in the ancient world.
+    </p>
+    <p>
+      The ancient Egyptian atmosphere brings a whole lot of interesting new features to the game. Regular flooding of the Nile river demands that the city produces or imports enough food to endure the flood season. A poor flooding can lead to lousy irrigation and food shortages, making the satisfaction of the god of flooding, Osiris, a vital task. The religion system in "Pharaoh" hasn't seen much improvement compared to "Caesar III," but appeasing the gods is now a less prioritized task. There are fewer gods in each scenario, making the process less knotty. These changes enrich the gameplay experience, allowing players to focus on other crucial aspects of developing their city and empire.
     </p>
 
     <h2>Sales</h2>
     <p>
-      Producer <strong>Greg Sheppard</strong> recalled the team was "still fixing critical bugs in that area just days before the game went gold." Sales exceeded <strong>1.7 million copies at $45 each</strong> within five years of the 1999 release, on a budget under $2M. Pharaoh accounted for over a third of all series sales.
+      Producer <strong>Greg Sheppard</strong> recalled how the team worked tirelessly to fine-tune the construction mechanics until the very last moment: "We were just about to hit the deadline, and the pressure was intense. The game was going to be much bigger than Caesar III, so we needed a robust engine to handle the load. Building the pyramids block by block was a technical marvel on its own. We were still fixing critical bugs in that area just days before the game went gold. It was a nerve-wracking experience, but seeing it all come together was truly rewarding. We put our hearts and souls into Pharaoh, and I'm immensely proud of what we achieved."
+    </p>
+    <p>
+      While next games from the company only added new gameplay elements without fundamentally changing the core of the game, Pharaoh took a different approach by polishing the visual design and core components based on Caesar's engine. For me, Pharaoh remains the most playable and visually stunning game in the series, perhaps because it has a touch of mystique, a lot of manual arts, and parts the developers' souls — call it what you wish. Just take a look at Heidi's cover art; it captures the essence of the game beautifully. Pharaoh truly stands out as a labor of love and a testament to the dedication of its creators.
+    </p>
+    <p>
+      The game sales exceeded <strong>1.7 million copies</strong>, each priced at <strong>$45</strong>, within five years since its release in 1999. This remarkable achievement is even more impressive considering the budget for the game was less than $2M. Pharaoh's success accounted for over a third of all sales in the series, making it a significant commercial hit.
     </p>
     <img src="../images/pharaoh-dev-history-7.png" alt="Pharaoh sales and launch" class="post-image" loading="lazy" />
 
     <h2>Rights &amp; legacy</h2>
-    <ul>
-      <li>Rights to the Caesar/Pharaoh engine, mechanics, and settings ended up with <strong>Activision</strong>; game rights stayed with <strong>Tilted Mill Entertainment</strong> (Chris Beatrice's studio), which went bankrupt in 2013</li>
-      <li>In 2018, <strong>Dotemu</strong> acquired music and asset rights from CerebralFix</li>
-      <li>Dotemu and <strong>Triskell Interactive</strong> released <strong>"Pharaoh: A New Era"</strong> as a remake</li>
-      <li>After discovering the Ozymandias project (an effort to recreate the Pharaoh engine, similar to open-source Caesar III recreations) and the original author abandoning it, dalerank took over — which is what Akhenaten is</li>
-    </ul>
+    <p>
+      After a series of ownership changes, the rights to the game development, settings, mechanics, and engine of the Caesar and Pharaoh series ended up with <strong>Activision</strong>, though not the rights to the games themselves. The rights to the games (Caesar/Pharaoh) remained with <strong>Tilted Mill Entertainment</strong>, led by Chris Beatrice. However, in 2013, the studio filed for bankruptcy and closed down, and Chris shifted his focus to developing mobile games.
+    </p>
+    <p>
+      In 2018, the rights to the music and assets of Caesar and Pharaoh were acquired by <strong>Dotemu</strong> from the New Zealand-based company CerebralFix. The current ownership status of these rights remains unknown. Dotemu and <strong>Triskell Interactive</strong> released a remake of the game called <strong>"Pharaoh: A New Era"</strong>.
+    </p>
+    <p>
+      Two years ago, I stumbled upon the Ozymandias project, which aims to recreate the Pharaoh engine, just like it was done for Caesar. During that time, I mostly assisted the project with advice, sometimes with code, and occasionally delved into complex mechanics. However, recently, the original author abandoned it, and I've decided to continue the development on my own — which is what Akhenaten is.
+    </p>
+    <p>
+      Welcome, together much interesting revive ancient pyramids!
+    </p>
     <img src="../images/pharaoh-dev-history-8.png" alt="Akhenaten project history" class="post-image" loading="lazy" />
 
     <div class="post-nav">
