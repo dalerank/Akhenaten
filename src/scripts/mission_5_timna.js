@@ -28,6 +28,13 @@ mission5 { // Timna
 
 					BUILDING_MORTUARY, BUILDING_STONEMASONS_GUILD, BUILDING_CARPENTERS_GUILD
 				]
+
+	win_criteria {
+		population {enabled : true, goal : 2000 }
+		prosperity {enabled : true, goal : 15 }
+		kingdom    {enabled : true, goal : 70 }
+	}
+
 	stages {
 		tutorial_irrigation { buildings: [BUILDING_WATER_LIFT, BUILDING_IRRIGATION_DITCH, ] }
 		tutorial_guilds { buildings: [BUILDING_STORAGE_YARD, BUILDING_TAX_COLLECTOR, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL] }

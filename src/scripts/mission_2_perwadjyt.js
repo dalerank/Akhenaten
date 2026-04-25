@@ -19,6 +19,12 @@ mission2 {
 				BUILDING_TEMPLE_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_FESTIVAL_SQUARE
 			  ]
 
+	win_criteria {
+		population    {enabled : true, goal : 600 }
+		housing_count {enabled : true, goal : 10 }
+		housing_level {enabled : true, goal : 6 }
+	}
+
 	vars {
 		figs_stored : 800
 		pottery_step1_stored : 100

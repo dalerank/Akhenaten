@@ -26,6 +26,14 @@ mission4 {
 					BUILDING_BULLFIGHT_SCHOOL, BUILDING_MUD_GATEHOUSE, BUILDING_TOWER_GATEHOUSE, BUILDING_MUD_TOWER,
 				]
 
+	win_criteria {
+		population {enabled : true, goal : 1500 }
+		culture    {enabled : true, goal : 15 }
+		prosperity {enabled : true, goal : 20 }
+		monuments  {enabled : true, goal : 9 }
+		kingdom    {enabled : true, goal : 40 }
+	}
+
 	cities [
 		{
 			name : "Nekhen"

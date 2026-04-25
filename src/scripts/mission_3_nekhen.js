@@ -22,6 +22,12 @@ mission3 {
 					BUILDING_BREWERY_WORKSHOP
 				]
 
+	win_criteria {
+		population    {enabled : true, goal : 1000 }
+		housing_count {enabled : true, goal : 10 }
+		housing_level {enabled : true, goal : 8 }
+	}
+
 	vars {
 		beer_stored : 300
 		victory_last_action_delay : 3

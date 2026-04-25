@@ -50,7 +50,7 @@ game {
 scenario {
     has_animals: __scenario_has_animals
     flotsam_enabled: __scenario_flotsam_enabled
-    is_open_play: __scenario_is_open_play
+    @is_open_play { get: __scenario_is_open_play }
     building_allowed: __scenario_building_allowed
     kingdom_supplies_grain: __scenario_kingdom_supplies_grain
     @start_year { get: __scenario_start_year }

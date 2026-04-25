@@ -21,6 +21,11 @@ mission0 { // Nubt
 		BUILDING_HOUSE_VACANT_LOT, BUILDING_CLEAR_LAND, BUILDING_ROAD
 	]
 
+	win_criteria {
+		housing_count {enabled : true, goal : 6 }
+		housing_level {enabled : true, goal : 2 }
+	}
+
 	vars {
 		granary_open_population : 150
 		population_cap_firstfire : 0
