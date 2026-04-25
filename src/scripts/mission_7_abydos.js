@@ -107,6 +107,6 @@ function mission7_pharaoh_request_beer(ev) {
 	}
 
 	mission.pharaoh_beer_requested = true
-	var request = city.create_good_request({ tag_id: 1, resource: RESOURCE_BEER, amount: 900, months_initial: 12 })
+	var request = city.create_good_request({ tag_id: 1, resource: RESOURCE_BEER, amount: 9, months_initial: 12 })
 	request.execute()
 }
