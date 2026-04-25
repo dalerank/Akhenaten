@@ -155,8 +155,7 @@ int scroll_in_progress(void) {
 }
 
 static int get_scroll_speed_factor() {
-    uint16_t &game_scroll_speed();
-    return calc_bound((100 - game_scroll_speed()) / 10, 0, 10);
+    return calc_bound((100 - game_features::gameopt_scroll_speed.to_int()) / 10, 0, 10);
 }
 
 int scroll_is_smooth(void) {

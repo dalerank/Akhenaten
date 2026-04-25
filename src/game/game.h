@@ -50,7 +50,6 @@ struct game_t {
         MAX_ANIM_TIMERS = 51
     };
 
-    uint16_t scroll_speed;
     bool monthly_autosave;
     bool paused = false;
     bool save_debug_texture = false;
@@ -109,9 +108,6 @@ struct game_t {
     void before_start_simulation();
     void handle_input_frame();
 
-    void increase_scroll_speed();
-    void decrease_scroll_speed();
-
     void reload_language();
     void add_frame_end_event(serial_event_t ev);
     void execute_frame_end_events();
@@ -125,6 +121,6 @@ struct game_t {
     ::painter painter();
 };
 ANK_CONFIG_PROPERTY(game_t,
-    scroll_speed, monthly_autosave, pending_load_type, pending_save_type)
+    monthly_autosave, pending_load_type, pending_save_type)
 
 extern game_t game;
