@@ -27,6 +27,7 @@
     <p>
       <strong>String interning</strong> (also called a "string pool") is an optimization technique where only a single copy of each unique string is stored in memory. It's one of the most useful optimizations in game engines, alongside SWAR, SIMD strings, immutable strings, StrHash, and Rope strings.
     </p>
+    <img src="../images/string-interning-01.png" alt="String interning overview" class="post-image" loading="lazy" />
 
     <h2>The Core Problem</h2>
     <p>
@@ -71,6 +72,8 @@
       The <code>xstring_value</code> struct stores CRC, reference count, length, and the string data. The <code>xstring</code> class itself is essentially a POD <code>int32_t</code>, so all comparisons reduce to integer comparisons.
     </p>
     <p>Full implementation: <a href="https://github.com/dalerank/Akhenaten/blob/master/src/core/xstring.h" target="_blank"><code>src/core/xstring.h</code></a></p>
+    <img src="../images/string-interning-02.png" alt="xstring implementation diagram" class="post-image" loading="lazy" />
+    <img src="../images/string-interning-03.png" alt="xstring usage example" class="post-image" loading="lazy" />
 
     <h2>Real-World Impact</h2>
     <p>

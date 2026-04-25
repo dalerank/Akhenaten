@@ -24,6 +24,8 @@
     <div class="post-meta"><time>May 28, 2019</time> — <a href="../devblog.html">← Devblog</a></div>
     <h1>How to build a mastaba</h1>
 
+    <img src="../images/mastaba-hero.png" alt="Mastaba monument in Pharaoh" class="post-image" loading="lazy" />
+
     <p>
       The 1999 game Pharaoh introduced step-by-step monument construction requiring various resources — a significant innovation over Caesar III, which only used coins. The game's remarkable "balance, a balance perfected down to the smallest detail."
     </p>
@@ -32,6 +34,7 @@
     <p>
       House levels depend on land attractiveness and goods availability. Each level requires new resource types, including services like temples and pharmacies. Through careful balancing, "one market can support a maximum of 4 mansions at the highest level."
     </p>
+    <img src="../images/mastaba-housing.png" alt="Housing and economy system" class="post-image" loading="lazy" />
 
     <h2>Original Rendering Approach</h2>
     <p>
@@ -42,6 +45,9 @@
     <p>
       Instead, the mastaba is decomposed into component parts — <strong>slanted wall</strong>, <strong>entrance</strong>, and <strong>solid wall</strong> — each rendered as an independent building following standard isometric rules. This eliminated overdraw complexity but required recalculating rotation for each part type based on map and mastaba orientation.
     </p>
+    <img src="../images/mastaba-construction-1.png" alt="Mastaba at start of construction" class="post-image" loading="lazy" />
+    <img src="../images/mastaba-construction-2.png" alt="Completed mastaba" class="post-image" loading="lazy" />
+    <img src="../images/mastaba-animation.gif" alt="Component-based mastaba rendering" class="post-image" loading="lazy" />
 
     <h2>Texture Format (.sg3 / .555)</h2>
     <p>Textures use the <strong>Sierra Graphics V3</strong> format (developed 1988 by Sierra Entertainment). The <code>.555</code> files store texture data in three compression modes:</p>
@@ -50,21 +56,30 @@
       <li><strong>Compressed</strong> — transparent pixels encoded with run-length encoding</li>
       <li><strong>Isometric</strong> — split into a rhomboid "base" part (uncompressed) and an "upper" part (compressed), with transparent diamond corners excluded to reduce size</li>
     </ul>
+    <img src="../images/mastaba-texture-parts.png" alt="Texture segments breakdown" class="post-image" loading="lazy" />
+    <img src="../images/mastaba-isometric-tiles.png" alt="Isometric tile pixel packing diagram" class="post-image" loading="lazy" />
+    <img src="../images/mastaba-texture-assembled.png" alt="Assembled mastaba textures" class="post-image" loading="lazy" />
 
     <h2>Construction Process</h2>
     <p>
       Building is divided into <strong>8 stages</strong>: two site levelings and six stone-laying phases. Each segment requires <strong>400 stones</strong> delivered from a warehouse. Edge textures line the perimeter while internal tiles use seamless stone textures.
     </p>
+    <img src="../images/mastaba-site.png" alt="Construction site with bricklayers" class="post-image" loading="lazy" />
+    <img src="../images/mastaba-animations.png" alt="Monument construction animations" class="post-image" loading="lazy" />
 
     <h2>Rendering Bug Fixes</h2>
     <p>
       The new approach caused rendering order issues. The fix splits textures into base and upper parts — bases render first (eliminating character overlap), then upper parts overlay to properly occlude characters behind the building.
     </p>
+    <img src="../images/mastaba-render-fix.png" alt="Rendering fix with base and upper texture split" class="post-image" loading="lazy" />
+    <img src="../images/mastaba-near-complete.png" alt="Near-completed mastaba construction" class="post-image" loading="lazy" />
+    <img src="../images/mastaba-rotation.gif" alt="City orientation rotation" class="post-image" loading="lazy" />
 
     <h2>Dynamic Resource Model</h2>
     <p>
       Monuments function essentially as warehouses with delivery rules. Resources only appear on-site when physically carried there, adding simulation complexity but also enabling save/load exploits where "reloading the save could allow you to get that item again."
     </p>
+    <img src="../images/mastaba-warehouse.png" alt="Dynamic resource and warehouse model" class="post-image" loading="lazy" />
 
     <h2>Mastaba Sizing</h2>
     <p>

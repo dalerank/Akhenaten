@@ -45,6 +45,8 @@
 
     <h2>Memory Layout</h2>
     <p>One-shot composition with contiguous memory arrays offers the best cache locality and performance. However, a <code>std::vector</code> of <code>std::vector</code> does NOT produce contiguous memory — it creates a two-level structure similar to <code>std::deque</code>, which "almost guarantees CPU cache misses."</p>
+    <img src="../images/vectors-memory-layout-1.png" alt="Contiguous memory layout diagram" class="post-image" loading="lazy" />
+    <img src="../images/vectors-memory-layout-2.png" alt="Vector-of-vectors cascading memory layout diagram" class="post-image" loading="lazy" />
 
     <h2>Allocation Costs</h2>
     <ul>
@@ -62,6 +64,7 @@
 std::array vec = { 0 };
 int vec_size = 0;</code></pre>
     <p>Benchmark: <a href="https://quick-bench.com/q/ScPhKA9CEtFcZp4DLLgTVBhFVfU" target="_blank">quick-bench.com</a></p>
+    <img src="../images/vectors-benchmark.png" alt="std::vector vs std::array benchmark results" class="post-image" loading="lazy" />
 
     <h3>PS4 to Switch Porting Story</h3>
     <p>
