@@ -47,27 +47,6 @@ mission7 { // Abydos
 		kingdom    {enabled : true, goal : 60 }
 	}
 
-	enable_scenario_events : false
-	events [
-		{
-			type: EVENT_TYPE_REQUEST
-			time { year : 2684, month : 1 }
-			resource : RESOURCE_POTTERY
-			amount { value : 1400 }
-			deadline : 9
-		}
-
-		{
-			type: EVENT_TYPE_INVASION
-			time { year : 2670, month : 2 }
-		}
-
-		{
-			type: "pharaoh_gift" //EVENT_TYPE_INVASION,
-			time { year : 2670, month : 8 }
-		}
-	]
-
 	cities [
 		{
 			name : "Byblos"
@@ -104,4 +83,30 @@ mission7 { // Abydos
 			pos [640, 480]
 		}
 	]
+
+	vars {
+		pharaoh_pottery_requested : false
+	}
+}
+
+// TODO: invasion (BC 2670 m2) and pharaoh_gift (BC 2670 m8) from the original
+// Abydos scenario are not ported yet — invasion lacks an enemy spec in the
+// legacy data, and there is no JS API for pharaoh_gift events.
+
+[es=event_advance_month, mission=mission7]
+function mission7_pharaoh_request_pottery(ev) {
+	if (mission.pharaoh_pottery_requested) {
+		return
+	}
+
+	if (ev.year < -2684) {
+		return
+	}
+	if (ev.year == -2684 && ev.month < 1) {
+		return
+	}
+
+	mission.pharaoh_pottery_requested = true
+	var request = city.create_good_request({ tag_id: 1, resource: RESOURCE_POTTERY, amount: 1400, months_initial: 9 })
+	request.execute()
 }
