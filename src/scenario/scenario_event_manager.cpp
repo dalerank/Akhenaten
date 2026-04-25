@@ -15,6 +15,7 @@
 #include "request.h"
 #include "js/js_game.h"
 #include "city/city.h"
+#include "city/city_resource.h"
 #include "dev/debug.h"
 #include "scenario/distant_battle.h"
 #include "graphics/elements/lang_text.h"
@@ -136,6 +137,22 @@ void event_manager_t::create_good_request(int tag, e_resource r, int amount, int
     request.event_id = event_id;
     //process_event(event_id, false, -1);
     //process_active_request(event_id);
+    g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
+}
+
+void event_manager_t::create_pharaoh_gift(int tag, e_resource r, int amount) {
+    auto& event = g_scenario_events.event_list.emplace_back();
+    int event_id = g_scenario_events.event_list.size() - 1;
+    memset(&event, 0, sizeof(event_ph_t));
+    event.type = EVENT_TYPE_GIFT_FROM_PHARAOH;
+    event.time.year = game.simtime.years_since_start();
+    event.time.month = game.simtime.month;
+    event.item.value = r;
+    event.sender_faction = 1;
+    event.amount.value = amount;
+    event.tag_id = tag;
+    event.location_fields = { -1, -1, -1, -1 };
+    event.event_id = event_id;
     g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
 }
 
@@ -560,6 +577,9 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         break;
 
     case EVENT_TYPE_GIFT_FROM_PHARAOH:
+        if (event.item.value != RESOURCE_NONE && event.amount.value > 0) {
+            events::emit(event_storageyards_add_resource{ (e_resource)event.item.value, event.amount.value * 100 });
+        }
         city_message_post_full(true, "message_template_general", &event, caller_event_id,
             PHRASE_rating_change_title_I, PHRASE_rating_change_initial_announcement_I, PHRASE_rating_change_reason_I_A,
             id, 0);
