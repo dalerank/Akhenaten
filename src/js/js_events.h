@@ -16,7 +16,23 @@ namespace js_emit_detail {
 
     template<>
     inline bool val_or_def<bool>(const bvariant_map &args, pcstr name) {
-        return args.bool_or_def(name, false);
+        const auto &v = args.value(name);
+        if (v.is_bool()) {
+            return v.as_bool();
+        }
+        if (v.is_int32()) {
+            return v.as_int32() != 0;
+        }
+        if (v.is_uint32()) {
+            return v.as_uint32() != 0;
+        }
+        if (v.is_u16()) {
+            return v.as_u16() != 0;
+        }
+        if (v.is_float()) {
+            return v.as_float() != 0.f;
+        }
+        return false;
     }
 
     template<>

@@ -71,7 +71,6 @@ declare_console_command_p(nextyear) {
     game.advance_year();
 }
 
-uint16_t &game_scroll_speed() { return game.scroll_speed; }
 bool &game_monthly_autosave() { return game.monthly_autosave; }
 
 namespace {
@@ -351,7 +350,7 @@ bool game_t::check_valid() {
 
     g_settings.load(); // c3.inf
     game_features::load();   // akhenaten.conf
-    scroll_speed = game_features::gameopt_scroll_speed.to_int();
+    
     const auto game_speed = (int)calc_bound(game_features::gameopt_game_speed.to_int(), 10, 1000);
     game_features::gameopt_game_speed.set( game_speed );
     game_hotkeys::load();    // hotkeys.conf
@@ -453,16 +452,6 @@ void game_t::city_sounds_frame_begin() {
     if (g_window_manager.window_is("window_city") || g_window_manager.window_is("window_city_military") || g_window_manager.window_is("window_sliding_sidebar")) {
         sound_city_play();
     }
-}
-
-void game_t::increase_scroll_speed() {
-    scroll_speed = calc_bound(scroll_speed + 10, 0, 100);
-    game_features::gameopt_scroll_speed.set((int)scroll_speed);
-}
-
-void game_t::decrease_scroll_speed() {
-    scroll_speed = calc_bound(scroll_speed - 10, 0, 100);
-    game_features::gameopt_scroll_speed.set((int)scroll_speed);
 }
 
 void game_t::before_start_simulation() {

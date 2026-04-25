@@ -112,6 +112,7 @@ building_bricklayers_guild = {
   building_size : 2
   cost: [ 20, 40, 80, 120, 200 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
+  laborers:[10], fire_risk:[2], damage_risk: [2]
   max_workers : 1
   flags {
     is_guild: true

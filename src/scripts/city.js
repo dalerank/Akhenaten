@@ -2,6 +2,7 @@ log_info("akhenaten: city.js started")
 
 city {
     @population { get: __city_population }
+    @personal_savings { get: function() { return __city_kingdome.personal_savings } }
     @health_rating { get: __city_health_rating }
     @workers_diff { get: __city_workers_diff }
     @player_rank { get: __city_player_rank }
@@ -348,6 +349,14 @@ city.get_storage_yard = function(building_id) {
 
 city.create_good_request = function(obj) {
     __city_create_good_request(obj)
+    return {
+        tag_id: obj.tag_id
+        execute: function() { __city_request_execute(this.tag_id) }
+    }
+}
+
+city.create_pharaoh_gift = function(obj) {
+    __city_create_pharaoh_gift(obj)
     return {
         tag_id: obj.tag_id
         execute: function() { __city_request_execute(this.tag_id) }

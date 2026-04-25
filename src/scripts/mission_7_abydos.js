@@ -47,27 +47,6 @@ mission7 { // Abydos
 		kingdom    {enabled : true, goal : 60 }
 	}
 
-	enable_scenario_events : false
-	events [
-		{
-			type: EVENT_TYPE_REQUEST
-			time { year : 2684, month : 1 }
-			resource : RESOURCE_POTTERY
-			amount { value : 1400 }
-			deadline : 9
-		}
-
-		{
-			type: EVENT_TYPE_INVASION
-			time { year : 2670, month : 2 }
-		}
-
-		{
-			type: "pharaoh_gift" //EVENT_TYPE_INVASION,
-			time { year : 2670, month : 8 }
-		}
-	]
-
 	cities [
 		{
 			name : "Byblos"
@@ -104,4 +83,45 @@ mission7 { // Abydos
 			pos [640, 480]
 		}
 	]
+
+	vars {
+		pharaoh_beer_requested : false
+		pharaoh_bricks_gift_sent : false
+	}
+}
+
+[es=event_advance_month, mission=mission7]
+function mission7_pharaoh_request_beer(ev) {
+	if (mission.pharaoh_beer_requested) {
+		return
+	}
+
+	if (ev.years_since_start < 2) {
+		return
+	}
+	if (ev.years_since_start == 2 && ev.month < 2) {
+		return
+	}
+
+	mission.pharaoh_beer_requested = true
+	var request = city.create_good_request({ tag_id: 1, resource: RESOURCE_BEER, amount: 9, months_initial: 12 })
+	request.execute()
+}
+
+[es=event_advance_month, mission=mission7]
+function mission7_pharaoh_bricks_gift(ev) {
+	if (mission.pharaoh_bricks_gift_sent) {
+		return
+	}
+
+	if (ev.years_since_start < 3) {
+		return
+	}
+	if (ev.years_since_start == 3 && ev.month < 4) {
+		return
+	}
+
+	mission.pharaoh_bricks_gift_sent = true
+	var gift = city.create_pharaoh_gift({ tag_id: 2, resource: RESOURCE_BRICKS, amount: 21 })
+	gift.execute()
 }

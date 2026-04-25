@@ -11,7 +11,6 @@ game {
     @debug_properties { get: __game_debug_properties }
     @writing_video { get: __game_writing_video }
     @debug_render_mode { get: __game_debug_render_mode, set: __game_set_debug_render_mode }
-    @scroll_speed { get: __game_get_scroll_speed, set: __game_set_scroll_speed }
     @last_autosave { get: __game_get_last_autosave }
     @session_active { get: __game_session_active }
     @session_last_loaded_kind { get: __game_session_last_loaded_kind }
@@ -72,6 +71,7 @@ game_features {
     @gameopt_sound_city_enabled {}
     @gameopt_sound_city_volume {}
     @gameopt_game_speed {}
+    @gameopt_scroll_speed {}
     @count { get: __game_features_count }
 }
 
@@ -80,6 +80,23 @@ game_features.text = __game_feature_text
 game_features.get = __game_feature_get
 game_features.set = __game_feature_set
 game_features.count = __game_features_count
+
+function calc_bound_scroll_speed(v, lo, hi) {
+    if (v < lo) { return lo }
+    if (v > hi) { return hi }
+    return v
+}
+
+[es=event_change_scroll_speed]
+function event_change_scroll_speed_handler(ev) {
+    var s = Math.round(game_features.gameopt_scroll_speed)
+    if (ev.increase) {
+        s = calc_bound_scroll_speed(s + 10, 0, 100)
+    } else {
+        s = calc_bound_scroll_speed(s - 10, 0, 100)
+    }
+    game_features.gameopt_scroll_speed = s
+}
 
 [es=event_change_gamespeed]
 function event_change_gamespeed_handler(ev) {

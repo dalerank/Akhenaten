@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sound Settings Window — Akhenaten</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../devblog.html" class="active">Devblog</a></li>
+        <li><a href="../screenshots.html">Screenshots</a></li>
+        <li><a href="../downloads.html">Downloads</a></li>
+        <li><a href="../contact.html">Join us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-content post-page">
+    <div class="post-meta"><time>April 25, 2026</time> — <a href="../devblog.html">← Devblog</a></div>
+    <h1>Sound Settings Window</h1>
+
+    <img src="../images/sound-settings.png" alt="Sound settings window" class="post-image" loading="lazy" />
+
+    <p>
+      Redesigned the sound options window with proper volume controls for all audio channels. The new implementation migrates sound settings to JavaScript configuration and improves the binding between UI controls and the audio system.
+    </p>
+
+    <h2>What Changed</h2>
+    <p>
+      The sound settings window now features individual sliders for five audio channels:
+    </p>
+    <ul>
+      <li><strong>Music</strong> — background music tracks</li>
+      <li><strong>Speech</strong> — character voices and narration</li>
+      <li><strong>Effects</strong> — UI sounds and action feedback</li>
+      <li><strong>Ambient</strong> — environmental sounds</li>
+      <li><strong>City</strong> — city-specific ambient audio</li>
+    </ul>
+
+    <h2>Technical Implementation</h2>
+    <p>
+      The redesign involved moving sound options logic to JavaScript (<code>ui_sound_options_window.js</code>) and refactoring the C++ sound system bindings. This follows the ongoing pattern of migrating UI logic from C++ to JS configs, making the codebase more maintainable and modular.
+    </p>
+    <p>
+      Key changes include:
+    </p>
+    <ul>
+      <li>New <code>ui_sound_options_window.js</code> script with 160+ lines handling the UI logic</li>
+      <li>Refactored <code>sound.cpp</code> to expose proper volume control APIs</li>
+      <li>Added <code>sound_js.cpp</code> for JavaScript bindings (40 lines)</li>
+      <li>Improved slider controls with real-time audio feedback</li>
+    </ul>
+
+    <h2>Related Work</h2>
+    <p>
+      This continues the architectural improvements from earlier commits that moved game speed controls and other UI elements to JavaScript. The sound system also received updates for mod support and proper ambient sound lifecycle management.
+    </p>
+
+    <div class="post-nav">
+      <span></span>
+      <span></span>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>
