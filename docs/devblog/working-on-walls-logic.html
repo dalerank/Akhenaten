@@ -24,8 +24,62 @@
     <div class="post-meta"><time>March 19, 2025</time> — <a href="../devblog.html">← Devblog</a></div>
     <h1>Working on walls logic</h1>
 
-    <p>New logic for walls — buildings now connect and render properly.</p>
+    <p>
+      Major refactoring of the wall building system completed over several days, culminating in restored wall rendering and connection logic. The changes involved moving scattered wall code into a unified class structure and fixing image ID resolution.
+    </p>
     <img src="../images/walls.gif" alt="Wall system demo" class="post-image" loading="lazy" />
+
+    <h2>Architecture Refactoring</h2>
+    <p>
+      The first step (March 16) moved all wall building logic from the global <code>src/grid/tiles.cpp</code> into the <code>building_mud_wall</code> class. This migration consolidated over 300 lines of scattered wall-handling code into a single, maintainable location:
+    </p>
+    <ul>
+      <li><code>update_all_walls()</code> — iterates over the entire map and updates wall tiles</li>
+      <li><code>update_area_walls()</code> — updates walls in a specific region after construction or demolition</li>
+      <li><code>get_gatehouse_position()</code> — determines wall orientation relative to adjacent gatehouses</li>
+      <li><code>set_wall_gatehouse_image_manually()</code> — handles edge cases where automatic detection fails</li>
+      <li><code>set_image()</code> — core function that assigns the correct sprite to each wall tile based on neighbors</li>
+    </ul>
+    <p>
+      This refactoring touched 19 files and removed 363 lines of duplicated logic while adding 393 lines of clean, class-based code. The wall system now follows the same architectural pattern as other building types in the engine.
+    </p>
+
+    <h2>Image ID Resolution Fix</h2>
+    <p>
+      The critical fix (March 19) addressed how wall sprites are loaded. Previously, the code used a hardcoded <code>GROUP_BUILDING_WALL</code> constant that pointed to the wrong texture pack. The fix changed three key functions to use <code>current_params().anim[animkeys().base].first_img()</code> instead — pulling the correct base image ID from the building's configuration data:
+    </p>
+    <pre><code>// Before (broken):
+map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_WALL) + image_offset);
+
+// After (working):
+const int id = current_params().anim[animkeys().base].first_img();
+map_image_set(grid_offset, id + image_offset);</code></pre>
+    <p>
+      This change ensures walls load their sprites from the correct <code>.sg3</code> texture archive defined in the building's JavaScript configuration, rather than a hardcoded fallback. The obsolete <code>GROUP_BUILDING_WALL</code> macro was commented out to prevent future confusion.
+    </p>
+
+    <h2>Gatehouse Integration</h2>
+    <p>
+      The final piece simplified <code>map_image_context_get_wall_gatehouse()</code> to properly handle wall segments adjacent to tower gatehouses. Walls now correctly detect when they connect to a gatehouse entrance and adjust their sprite orientation accordingly — visible in the animation as walls seamlessly connect to gate structures.
+    </p>
+
+    <h2>Technical Details</h2>
+    <p>
+      The wall rendering system uses a context-based approach where each tile examines its eight neighbors to determine the correct sprite variant. The <code>terrain_image</code> structure returned by <code>map_image_context_get_wall()</code> contains:
+    </p>
+    <ul>
+      <li><code>group_offset</code> — which wall orientation set to use (straight, corner, T-junction, etc.)</li>
+      <li><code>item_offset</code> — specific rotation within that set</li>
+      <li><code>is_valid</code> — whether the context produced a valid result</li>
+    </ul>
+    <p>
+      When a wall tile is adjacent to a gatehouse, the system falls back to <code>set_wall_gatehouse_image_manually()</code>, which uses directional logic to determine the correct sprite based on the gatehouse's orientation (top-right, top-left, bottom-left, or bottom-right).
+    </p>
+
+    <h2>Result</h2>
+    <p>
+      Walls now render correctly with proper connections between segments and gatehouses. The refactoring also makes future wall-related features (like stone walls or damaged wall states) much easier to implement, since all logic is centralized in the <code>building_mud_wall</code> class rather than scattered across the codebase.
+    </p>
 
     <div class="post-nav">
       <a href="should-players-be-hand-held.html">← Previous: Should players be hand-held?</a>
