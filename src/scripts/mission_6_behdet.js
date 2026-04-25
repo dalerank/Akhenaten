@@ -93,16 +93,20 @@ mission6 = { // Behdet
 	}
 }
 
+// Values mirror the original Pharaoh mission1.pak data for Behdet.
+// Additional events from the legacy binary (other requests, gift of bricks,
+// invasions, demand/reputation changes) are not migrated here.
+
 [es=event_advance_month, mission=mission6]
 function mission6_pharaoh_request_pottery(ev) {
 	if (mission.pharaoh_pottery_requested) {
 		return
 	}
 
-	if (ev.year < -2684) {
+	if (ev.years_since_start < 1) {
 		return
 	}
-	if (ev.year == -2684 && ev.month < 1) {
+	if (ev.years_since_start == 1 && ev.month < 7) {
 		return
 	}
 
@@ -117,10 +121,7 @@ function mission6_pharaoh_request_beer(ev) {
 		return
 	}
 
-	if (ev.year < -2683) {
-		return
-	}
-	if (ev.year == -2683 && ev.month < 1) {
+	if (ev.years_since_start < 2) {
 		return
 	}
 
