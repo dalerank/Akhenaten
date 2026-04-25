@@ -39,6 +39,14 @@ mission7 { // Abydos
 					BUILDING_PAVILLION, BUILDING_DANCE_SCHOOL, BUILDING_SENET_HOUSE
 				]
 
+	win_criteria {
+		population {enabled : true, goal : 2500 }
+		culture    {enabled : true, goal : 25 }
+		prosperity {enabled : true, goal : 25 }
+		monuments  {enabled : true, goal : 17 }
+		kingdom    {enabled : true, goal : 60 }
+	}
+
 	enable_scenario_events : false
 	events [
 		{

@@ -20,6 +20,11 @@ mission1 {
 					BUILDING_GOLD_MINE, BUILDING_VILLAGE_PALACE, BUILDING_HUNTING_LODGE,
 				]
 
+	win_criteria {
+		housing_count {enabled : true, goal : 10 }
+		housing_level {enabled : true, goal : 5 }
+	}
+
 	vars {
 		gold_mined : 500
 		victory_last_action_delay : 4

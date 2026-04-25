@@ -34,6 +34,14 @@ mission6 = { // Behdet
 					BUILDING_FESTIVAL_SQUARE, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL, BUILDING_BANDSTAND, BUILDING_CONSERVATORY, BUILDING_PAVILLION, BUILDING_DANCE_SCHOOL,
 				]
 
+	win_criteria {
+		population {enabled : true, goal : 2500 }
+		culture    {enabled : true, goal : 15 }
+		prosperity {enabled : true, goal : 20 }
+		monuments  {enabled : true, goal : 11 }
+		kingdom    {enabled : true, goal : 45 }
+	}
+
 	enable_scenario_events : false
 	events [
 		{
