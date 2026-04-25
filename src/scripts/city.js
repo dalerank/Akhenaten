@@ -354,6 +354,14 @@ city.create_good_request = function(obj) {
     }
 }
 
+city.create_pharaoh_gift = function(obj) {
+    __city_create_pharaoh_gift(obj)
+    return {
+        tag_id: obj.tag_id
+        execute: function() { __city_request_execute(this.tag_id) }
+    }
+}
+
 city.create_trade_city_under_siege = function(tag_id, months_initial) {
     __city_event_create_trade_city_under_siege(tag_id, months_initial)
     return {
