@@ -423,6 +423,8 @@ localization_ru_f = [
 
     // group 153
     { key:"#difficulty_settings", text: "Настройки сложности" }
+    { key:"#difficulty_row_difficulty", text: "Сложность" }
+    { key:"#difficulty_row_gods", text: "Эффекты богов" }
     { key:"#difficulty_right_click_to_continue", text: "Правый клик для продолжения" }
 
     { key:"#difficulty_very_easy", text: "Очень легко" }

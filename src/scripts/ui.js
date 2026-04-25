@@ -59,6 +59,7 @@ import ui_message_dialog
 import ui_display_options_window
 import ui_sound_options_window
 import ui_speed_options_window
+import ui_difficulty_options_window
 import ui_work_camp_window
 import ui_water_lift_window
 import ui_scribal_school_window

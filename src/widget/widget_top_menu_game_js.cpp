@@ -8,7 +8,6 @@
 #include "window/main_menu.h"
 #include "window/autoconfig_window.h"
 #include "window/hotkey_config.h"
-#include "window/difficulty_options.h"
 #include "window/message_dialog_new.h"
 #include "city/city.h"
 #include "building/construction/build_planner.h"
@@ -104,13 +103,6 @@ pcstr __widget_top_menu_exit_game(int, int) {
     return "";
 }
 ANK_FUNCTION_2(__widget_top_menu_exit_game)
-
-pcstr __widget_top_menu_difficulty_options(int, int) {
-    widget_top_menu_clear_state();
-    window_difficulty_options_show(window_city_show);
-    return "";
-}
-ANK_FUNCTION_2(__widget_top_menu_difficulty_options)
 
 pcstr __widget_top_menu_hotkeys_options(int, int) {
     window_hotkey_config_show([] {});

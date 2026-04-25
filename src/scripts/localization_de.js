@@ -1149,6 +1149,8 @@ localization_de = [
 
   // group 153
   { key: "#difficulty_settings", text: "Schwierigkeitseinstellungen" }
+  { key: "#difficulty_row_difficulty", text: "Schwierigkeit" }
+  { key: "#difficulty_row_gods", text: "Göttereffekte" }
   { key: "#difficulty_right_click_to_continue", text: "Rechtsklick zum Fortfahren" }
 
   { key: "#difficulty_very_easy", text: "Sehr leicht" }

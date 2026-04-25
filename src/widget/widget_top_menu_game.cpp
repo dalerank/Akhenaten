@@ -24,7 +24,6 @@
 #include "building/construction/build_planner.h"
 #include "game/system.h"
 #include "window/window_city.h"
-#include "window/difficulty_options.h"
 #include "window/autoconfig_window.h"
 #include "window/hotkey_config.h"
 #include "window/main_menu.h"

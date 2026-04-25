@@ -1170,6 +1170,8 @@ localization_en = [
 
   // group 153
   { key: "#difficulty_settings", text: "Difficulty settings" }
+  { key: "#difficulty_row_difficulty", text: "Difficulty" }
+  { key: "#difficulty_row_gods", text: "Gods effects" }
   { key: "#difficulty_right_click_to_continue", text: "Right click to continue" }
 
   { key: "#difficulty_very_easy", text: "Very easy" }

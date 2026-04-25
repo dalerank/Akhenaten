@@ -88,7 +88,7 @@ top_menu_widget {
 		display_options	: menu_item({text {group:2, id:1}, onclick: top_menu_show_window_by_id("display_options_window") })
 		sound_options  	: menu_item({text {group:2, id:2}, onclick: top_menu_show_window_by_id("sound_options_window") })
 		speed_options  	: menu_item({text {group:2, id:3}, onclick: top_menu_show_window_by_id("speed_options_window") })
-		difficulty_options: menu_item({ text {group:2, id:6}, onclick: __widget_top_menu_difficulty_options })
+		difficulty_options: menu_item({ text {group:2, id:6}, onclick: top_menu_show_window_by_id("difficulty_options_window") })
 
 		cities_options  : menu_item({textfn: top_menu_cities_old_text
 									 onclick: top_menu_cities_old_toggle })
