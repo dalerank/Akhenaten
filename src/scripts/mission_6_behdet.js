@@ -90,6 +90,7 @@ mission6 = { // Behdet
 	vars {
 		pharaoh_pottery_requested : false
 		pharaoh_beer_requested : false
+		pharaoh_bricks_gift_sent : false
 	}
 }
 
@@ -128,4 +129,19 @@ function mission6_pharaoh_request_beer(ev) {
 	mission.pharaoh_beer_requested = true
 	var request = city.create_good_request({ tag_id: 2, resource: RESOURCE_BEER, amount: 11, months_initial: 12 })
 	request.execute()
+}
+
+[es=event_advance_month, mission=mission6]
+function mission6_pharaoh_bricks_gift(ev) {
+	if (mission.pharaoh_bricks_gift_sent) {
+		return
+	}
+
+	if (ev.years_since_start < 1) {
+		return
+	}
+
+	mission.pharaoh_bricks_gift_sent = true
+	var gift = city.create_pharaoh_gift({ tag_id: 3, resource: RESOURCE_BRICKS, amount: 28 })
+	gift.execute()
 }
