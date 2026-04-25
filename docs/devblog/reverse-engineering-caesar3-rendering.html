@@ -34,20 +34,24 @@
     <p>
       If you know what a tile is, you can skip this section. A tile is a fixed-size image formed so that when drawn next to other tiles, it creates a continuous image without "seams." Here's an example of grass textures from Caesar III:
     </p>
-    <img src="../images/caesar3-rendering-23.png" alt="Grass tile 1" class="post-image" loading="lazy" />
-    <img src="../images/caesar3-rendering-20.png" alt="Grass tile 2" class="post-image" loading="lazy" />
-    <img src="../images/caesar3-rendering-25.png" alt="Grass tile 3" class="post-image" loading="lazy" />
-    <img src="../images/caesar3-rendering-2.png" alt="Grass tile 4" class="post-image" loading="lazy" />
-    <img src="../images/caesar3-rendering-6.png" alt="Grass tile 5" class="post-image" loading="lazy" />
-    <img src="../images/caesar3-rendering-16.png" alt="Grass tile 6" class="post-image" loading="lazy" />
-    <img src="../images/caesar3-rendering-9.png" alt="Grass tile 7" class="post-image" loading="lazy" />
-    <img src="../images/caesar3-rendering-4.png" alt="Grass tile 8" class="post-image" loading="lazy" />
+    <p style="line-height: 0;">
+      <img src="../images/caesar3-rendering-23.png" alt="Grass tile 1" style="image-rendering: pixelated; image-rendering: crisp-edges;" />
+      <img src="../images/caesar3-rendering-20.png" alt="Grass tile 2" style="image-rendering: pixelated; image-rendering: crisp-edges;" />
+      <img src="../images/caesar3-rendering-25.png" alt="Grass tile 3" style="image-rendering: pixelated; image-rendering: crisp-edges;" />
+      <img src="../images/caesar3-rendering-2.png" alt="Grass tile 4" style="image-rendering: pixelated; image-rendering: crisp-edges;" />
+      <img src="../images/caesar3-rendering-6.png" alt="Grass tile 5" style="image-rendering: pixelated; image-rendering: crisp-edges;" />
+      <img src="../images/caesar3-rendering-16.png" alt="Grass tile 6" style="image-rendering: pixelated; image-rendering: crisp-edges;" />
+      <img src="../images/caesar3-rendering-9.png" alt="Grass tile 7" style="image-rendering: pixelated; image-rendering: crisp-edges;" />
+      <img src="../images/caesar3-rendering-4.png" alt="Grass tile 8" style="image-rendering: pixelated; image-rendering: crisp-edges;" />
+    </p>
 
     <p>
       If you arrange them side by side in a certain order and add some tree textures, you get a certain area of land. And if you add another type of tile to this picturesque scene, for example, with a road image, you can already create a primitive map.
     </p>
-    <img src="../images/caesar3-rendering-1.png" alt="Terrain example" class="post-image" loading="lazy" />
-    <img src="../images/caesar3-rendering-12.png" alt="Map with roads" class="post-image" loading="lazy" />
+    <p>
+      <img src="../images/caesar3-rendering-1.png" alt="Terrain example" style="image-rendering: pixelated; image-rendering: crisp-edges;" />
+      <img src="../images/caesar3-rendering-12.png" alt="Map with roads" style="image-rendering: pixelated; image-rendering: crisp-edges;" />
+    </p>
 
     <h2>Isometric Perspective</h2>
     <p>
@@ -56,8 +60,9 @@
     <p>
       In the early stages of the remake development, one unpleasant effect occurred: the textures in the game were created without transparency, and displaying them on the screen without additional processing led to the following result:
     </p>
-    <img src="../images/caesar3-rendering-5.png" alt="Rendering without transparency" class="post-image" loading="lazy" />
-
+    <p>
+      <img src="../images/caesar3-rendering-5.png" alt="Rendering without transparency" style="image-rendering: pixelated; image-rendering: crisp-edges;" />
+    </p>
     <p>
       The solution to this situation is as follows: either use a mask, for example, the color of the leftmost pixel is accepted as transparent, or add an alpha channel to the textures. The first option was used in the original game, the second is used in the remake: textures are prepared at the resource loading stage.
     </p>
@@ -133,24 +138,28 @@ for( i=1; i &lt; map_size; i++ )
       <li>A moving object can be in different parts of a tile and is drawn after displaying the main tile image, which can cause display artifacts, for example: a chariot rides over gates. This is bypassed by drawing additional sprites that will be shown after rendering moving objects.</li>
     </ol>
 
-    <img src="../images/caesar3-rendering-21.png" alt="Gate base texture" class="post-image" loading="lazy" />
-    <span> + </span>
-    <img src="../images/caesar3-rendering-3.png" alt="Gate overlay texture" class="post-image" loading="lazy" />
-    <span> = </span>
-    <img src="../images/caesar3-rendering-11.png" alt="Complete gate rendering" class="post-image" loading="lazy" />
+    <p style="line-height: 0;">
+      <img src="../images/caesar3-rendering-21.png" alt="Gate base texture" style="image-rendering: pixelated; image-rendering: crisp-edges;" />
+      <span> + </span>
+      <img src="../images/caesar3-rendering-3.png" alt="Gate overlay texture" style="image-rendering: pixelated; image-rendering: crisp-edges;" />
+      <span> = </span>
+      <img src="../images/caesar3-rendering-11.png" alt="Complete gate rendering" style="image-rendering: pixelated; image-rendering: crisp-edges;" />
+    </p>
 
     <ol start="3">
       <li>Animation can go beyond the main image size; here you should consider such a feature that it (animation) can go up and to the right, but not down and to the left, otherwise it will be covered by the following tiles.</li>
       <li>For the most part, the game uses square objects, but there are also extended ones; to simplify the rendering algorithm, they are broken into smaller (square) parts, for example, a hippodrome.</li>
     </ol>
 
-    <img src="../images/caesar3-rendering-7.png" alt="Hippodrome full texture" class="post-image" loading="lazy" />
-    <span> = </span>
-    <img src="../images/caesar3-rendering-14.png" alt="Hippodrome part 1" class="post-image" loading="lazy" />
-    <span> + </span>
-    <img src="../images/caesar3-rendering-24.png" alt="Hippodrome part 2" class="post-image" loading="lazy" />
-    <span> + </span>
-    <img src="../images/caesar3-rendering-17.png" alt="Hippodrome part 3" class="post-image" loading="lazy" />
+    <p style="line-height: 0;">
+      <img src="../images/caesar3-rendering-7.png" alt="Hippodrome full texture" style="image-rendering: pixelated; image-rendering: crisp-edges;" />
+      <span> = </span>
+      <img src="../images/caesar3-rendering-14.png" alt="Hippodrome part 1" style="image-rendering: pixelated; image-rendering: crisp-edges;" />
+      <span> + </span>
+      <img src="../images/caesar3-rendering-24.png" alt="Hippodrome part 2" style="image-rendering: pixelated; image-rendering: crisp-edges;" />
+      <span> + </span>
+      <img src="../images/caesar3-rendering-17.png" alt="Hippodrome part 3" style="image-rendering: pixelated; image-rendering: crisp-edges;" />
+    </p>
 
     <h2>Rendering Passes</h2>
     <ol>
