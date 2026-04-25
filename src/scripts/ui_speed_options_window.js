@@ -3,7 +3,6 @@ log_info("akhenaten: ui speed options window started")
 function speed_options_on_cancel() {
     var w = speed_options_window
     game_features.gameopt_game_speed = w.original_game_speed
-    game.scroll_speed = w.original_scroll_speed
     game_features.gameopt_scroll_speed = w.original_scroll_speed
     window_go_back()
 }
@@ -12,13 +11,13 @@ function speed_options_on_cancel() {
 function speed_options_window_es_init(window) {
     var w = speed_options_window
     w.original_game_speed = Math.round(game_features.gameopt_game_speed)
-    w.original_scroll_speed = game.scroll_speed
+    w.original_scroll_speed = Math.round(game_features.gameopt_scroll_speed)
 }
 
 [es=(speed_options_window, ui_draw_foreground)]
 function speed_options_window_es_draw(window) {
     window.game_speed_value.text = Math.round(game_features.gameopt_game_speed) + "%"
-    window.scroll_speed_value.text = game.scroll_speed + "%"
+    window.scroll_speed_value.text = Math.round(game_features.gameopt_scroll_speed) + "%"
 }
 
 [es=modal_window]
@@ -43,8 +42,8 @@ speed_options_window {
         scroll_speed_label : text({text[45, 3], pos[32, 102], font: FONT_SMALL_PLAIN})
         scroll_speed_value : text({pos[248, 102], font: FONT_SMALL_PLAIN})
 
-        arrow_scroll_down  : arrowdown({pos[192, 96], tiny:false, allow_repeat: true, onclick: __game_decrease_scroll_speed })
-        arrow_scroll_up    : arrowup({pos[216, 96], tiny:false, allow_repeat: true, onclick: __game_increase_scroll_speed })
+        arrow_scroll_down  : arrowdown({pos[192, 96], tiny:false, allow_repeat: true, onclick: function() { emit event_change_scroll_speed{ increase: false } } })
+        arrow_scroll_up    : arrowup({pos[216, 96], tiny:false, allow_repeat: true, onclick: function() { emit event_change_scroll_speed{ increase: true } } })
 
         btnok              : ok_button({margin{left:px(20)/2 - 40, bottom:-40}, onclick: window_go_back })
         btncancel          : cancel_button({margin{left:px(20)/2 + 20, bottom:-40}, onclick: speed_options_on_cancel })
