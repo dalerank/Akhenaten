@@ -41,8 +41,14 @@ ANK_FUNCTION(__game_increase_difficulty)
 bool __game_is_fullscreen_only() { return g_render.is_fullscreen_only(); }
 ANK_FUNCTION(__game_is_fullscreen_only)
 
+bool __game_get_monthly_autosave() { return game.monthly_autosave; }
+ANK_FUNCTION(__game_get_monthly_autosave)
+
 void __game_set_monthly_autosave(bool v) { game.monthly_autosave = v; }
 ANK_FUNCTION_1(__game_set_monthly_autosave)
+
+int __game_get_scroll_speed() { return game.scroll_speed; }
+ANK_FUNCTION(__game_get_scroll_speed)
 
 bool __game_debug_properties() { return game.debug_properties; }
 ANK_FUNCTION(__game_debug_properties)
