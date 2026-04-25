@@ -2,6 +2,7 @@ log_info("akhenaten: city.js started")
 
 city {
     @population { get: __city_population }
+    @personal_savings { get: function() { return __city_kingdome.personal_savings } }
     @health_rating { get: __city_health_rating }
     @workers_diff { get: __city_workers_diff }
     @player_rank { get: __city_player_rank }
