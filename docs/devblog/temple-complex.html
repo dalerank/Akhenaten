@@ -24,11 +24,99 @@
     <div class="post-meta"><time>February 18, 2025</time> — <a href="../devblog.html">← Devblog</a></div>
     <h1>Temple complex</h1>
 
-    <p>Screenshot gallery showing temple complex buildings added to the game — multiple new structures extending the religious building set.</p>
+    <p>
+      Temple complexes are now fully functional after a major refactoring effort spanning nearly two years. These massive religious structures — the largest buildings in Pharaoh — required extensive architectural changes to work properly in the Akhenaten engine.
+    </p>
     <img src="../images/temple-complex-1.png" alt="Temple Complex view 1" class="post-image" loading="lazy" />
     <img src="../images/temple-complex-2.png" alt="Temple Complex view 2" class="post-image" loading="lazy" />
     <img src="../images/temple-complex-3.png" alt="Temple Complex view 3" class="post-image" loading="lazy" />
     <img src="../images/temple-complex-4.png" alt="Temple Complex view 4" class="post-image" loading="lazy" />
+
+    <h2>Architecture Migration</h2>
+    <p>
+      The first major step (February 2024) created a dedicated <code>building_temple</code> class, extracting temple-specific logic from the monolithic common building class. This established the foundation for proper object-oriented handling of religious structures. Over 100 lines of scattered temple code were consolidated into a single maintainable class hierarchy.
+    </p>
+
+    <h2>Configuration System Migration</h2>
+    <p>
+      Temple complexes were among the first buildings migrated from hardcoded C++ to JavaScript configuration files. This involved moving:
+    </p>
+    <ul>
+      <li>Image pack definitions — texture loading moved from <code>GROUP_BUILDING_*</code> macros to config-based <code>imagepack</code> entries</li>
+      <li>Animation offsets — each god's temple (Ra, Ptah, Seth, Bast) has unique sprite positions that were previously hardcoded</li>
+      <li>Orientation variants — temple complexes render differently based on map rotation (north/east/south/west views)</li>
+    </ul>
+    <p>
+      The migration touched over 30 commits, with texture packs for Ra, Ptah, Seth, and Bast temples each requiring separate configuration work. Animation position fixes were particularly tricky — Seth temple's work animation offset was wrong, Bast temple had broken animations, and Ra temple needed correct positioning data.
+    </p>
+
+    <h2>Preview and Placement Logic</h2>
+    <p>
+      Temple complexes are multi-tile structures with complex placement rules. The refactoring (February 2025) moved preview logic from the global planner into specialized <code>building_temple_complex</code> methods:
+    </p>
+    <ul>
+      <li><code>can_place()</code> — validates terrain, checks for existing temples, ensures proper spacing</li>
+      <li><code>on_place_checks()</code> — handles post-placement initialization</li>
+      <li><code>update_map_orientation()</code> — adjusts sprite rendering based on city rotation</li>
+    </ul>
+    <p>
+      The altar preview system required special handling to show the future position of the altar component before construction begins. This involved creating a <code>building_temple_complex.h</code> header with 54 lines of new class definitions.
+    </p>
+
+    <h2>Upgrade System</h2>
+    <p>
+      Temple complexes support two upgrade types: <strong>altar</strong> and <strong>oracle</strong>. Each upgrade changes the building's appearance and functionality. The upgrade system (January 2026) required:
+    </p>
+    <ul>
+      <li><code>building_temple_complex_upgrade</code> base class for shared upgrade logic</li>
+      <li><code>building_temple_complex_altar</code> and <code>building_temple_complex_oracle</code> subclasses</li>
+      <li><code>attach_temple_upgrade()</code> function moved from build planner to the upgrade class itself</li>
+      <li>Proper handling of <code>runtime_data().temple_complex_upgrades</code> bitfield</li>
+    </ul>
+    <p>
+      The image rendering fix (January 6, 2026) was critical — upgraded temples now correctly switch between "base" and "fancy" sprite variants depending on which upgrades are installed. The oracle upgrade uses different sprites for north/south vs. east/west orientations, requiring orientation-specific logic in <code>update_map_orientation()</code>.
+    </p>
+
+    <h2>Runtime Data Refactoring</h2>
+    <p>
+      Temple complexes store dynamic state in <code>runtime_data</code> structures. The March 2025 refactoring extracted temple-specific runtime data from the common building class into <code>building_temple_complex</code>:
+    </p>
+    <pre><code>struct temple_complex_runtime_data {
+    uint8_t temple_complex_upgrades;  // bitfield: altar | oracle
+    tile2i *decorative_tiles;         // statue/tile positions
+    int variant;                      // orientation variant
+};</code></pre>
+    <p>
+      This change touched 20 files and added 281 lines while removing 145 lines of duplicated logic. Monuments, statues, and work camps received similar treatment in the same commit.
+    </p>
+
+    <h2>UI and Information Windows</h2>
+    <p>
+      Temple complex info windows were migrated from hardcoded C++ to JavaScript-based UI scripts. The <code>window_info_background</code> function was renamed to <code>init</code> following the new UI convention. Coverage calculations for temple religious influence were corrected to properly account for temple complex size and upgrade status.
+    </p>
+
+    <h2>Gameplay Features</h2>
+    <p>
+      A new gameplay flag <code>gameplay_change_multiple_temple_complexes</code> allows missions to enable or disable multiple temple complexes per city. The unique building limit system now properly handles temple complexes alongside castles and mansions. The religion advisor window displays active/total temple counts.
+    </p>
+
+    <h2>Technical Details</h2>
+    <p>
+      Temple complexes consist of three main components:
+    </p>
+    <ul>
+      <li><strong>Main building</strong> — the central temple structure, 5×5 tiles</li>
+      <li><strong>Altar</strong> — 3×3 upgrade component, can be "fancy" (upgraded) or "base" (standard)</li>
+      <li><strong>Oracle</strong> — 3×3 upgrade component with orientation-dependent sprites</li>
+    </ul>
+    <p>
+      The rendering order matters: decorative tiles render first, then the main building, then upgrades. Each component calls <code>map_building_tiles_add()</code> with its own image ID calculated from config-based animation keys like <code>"main_n"</code>, <code>"fancy_e"</code>, etc.
+    </p>
+
+    <h2>Result</h2>
+    <p>
+      Temple complexes now work correctly with proper sprite rendering, upgrade handling, and multi-orientation support. The refactoring makes future religious building features (like additional upgrade types or new god temples) much easier to implement, since all logic follows a consistent class-based architecture rather than scattered global functions.
+    </p>
 
     <div class="post-nav">
       <a href="working-on-walls-logic.html">← Previous: Working on walls logic</a>
