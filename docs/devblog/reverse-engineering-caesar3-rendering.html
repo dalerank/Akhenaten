@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reverse-engineering Caesar III: City Rendering — Akhenaten</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../devblog.html" class="active">Devblog</a></li>
+        <li><a href="../screenshots.html">Screenshots</a></li>
+        <li><a href="../downloads.html">Downloads</a></li>
+        <li><a href="../contact.html">Join us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-content post-page">
+    <div class="post-meta"><time>May 15, 2014</time> — <a href="../devblog.html">← Devblog</a></div>
+    <h1>Reverse-engineering Caesar III: City Rendering (Part 2)</h1>
+
+    <img src="../images/caesar3-rendering-10.jpg" alt="Caesar III city rendering" class="post-image" loading="lazy" />
+
+    <p>
+      I hope the previous post about reverse-engineering Caesar III, which described the algorithm for extracting textures from the original game's resources, was well received. In this article, I will describe the map format, the algorithm for selecting and ordering tiles for rendering, and the formation of the final texture.
+    </p>
+
+    <h2>Tiles</h2>
+    <p>
+      If you know what a tile is, you can skip this section. A tile is a fixed-size image formed so that when drawn next to other tiles, it creates a continuous image without "seams." Here's an example of grass textures from Caesar III:
+    </p>
+    <img src="../images/caesar3-rendering-23.png" alt="Grass tile 1" class="post-image" loading="lazy" />
+    <img src="../images/caesar3-rendering-20.png" alt="Grass tile 2" class="post-image" loading="lazy" />
+    <img src="../images/caesar3-rendering-25.png" alt="Grass tile 3" class="post-image" loading="lazy" />
+    <img src="../images/caesar3-rendering-2.png" alt="Grass tile 4" class="post-image" loading="lazy" />
+    <img src="../images/caesar3-rendering-6.png" alt="Grass tile 5" class="post-image" loading="lazy" />
+    <img src="../images/caesar3-rendering-16.png" alt="Grass tile 6" class="post-image" loading="lazy" />
+    <img src="../images/caesar3-rendering-9.png" alt="Grass tile 7" class="post-image" loading="lazy" />
+    <img src="../images/caesar3-rendering-4.png" alt="Grass tile 8" class="post-image" loading="lazy" />
+
+    <p>
+      If you arrange them side by side in a certain order and add some tree textures, you get a certain area of land. And if you add another type of tile to this picturesque scene, for example, with a road image, you can already create a primitive map.
+    </p>
+    <img src="../images/caesar3-rendering-1.png" alt="Terrain example" class="post-image" loading="lazy" />
+    <img src="../images/caesar3-rendering-12.png" alt="Map with roads" class="post-image" loading="lazy" />
+
+    <h2>Isometric Perspective</h2>
+    <p>
+      You've probably noticed that the presented images are not square, but diamond-shaped. This is done to give the image a sense of volume (depth). Such a tile looks turned with one corner towards the viewer and as if going into the depth, the two-dimensional picture acquired a third dimension. To create the effect of volume, the width should be about half the length. The tile base in Caesar III is 58×30 pixels, this is the minimum tile size that the game engine operates with.
+    </p>
+    <p>
+      In the early stages of the remake development, one unpleasant effect occurred: the textures in the game were created without transparency, and displaying them on the screen without additional processing led to the following result:
+    </p>
+    <img src="../images/caesar3-rendering-5.png" alt="Rendering without transparency" class="post-image" loading="lazy" />
+
+    <p>
+      The solution to this situation is as follows: either use a mask, for example, the color of the leftmost pixel is accepted as transparent, or add an alpha channel to the textures. The first option was used in the original game, the second is used in the remake: textures are prepared at the resource loading stage.
+    </p>
+
+    <h2>Map Format</h2>
+    <p>
+      A map is an array that defines the position of tiles on a layer and their parameters. In the simplest case, a map is an M×N matrix, where each element contains an identifier (number) from a conditional "tile palette." Tiles don't necessarily have sequential numbers; tile numbers are divided into several intervals and named spaces. For example, tiles of earth, trees, water, faults, and grass have indices from land1a_00001 to land1a_00303. Caesar III allows the use of square maps ranging from 30×30 to 160×160 tiles. A tile is positioned on the map so that its upper boundary is "north."
+    </p>
+    <img src="../images/caesar3-rendering-18.jpg" alt="Map orientation" class="post-image" loading="lazy" />
+
+    <h2>Rendering Order</h2>
+    <p>
+      To draw tiles on the screen, you need to consider the distance to them. If you simply draw tiles in the order they are placed on the map, you get gibberish, as some tiles were drawn at the wrong time.
+    </p>
+    <img src="../images/caesar3-rendering-8.png" alt="Incorrect rendering order" class="post-image" loading="lazy" />
+
+    <p>
+      The following image shows the sequence in which tiles should be drawn:
+    </p>
+    <img src="../images/caesar3-rendering-19.jpg" alt="Correct rendering order diagram" class="post-image" loading="lazy" />
+
+    <p>
+      1. The first figure shows the order of rendering tiles on a 2D map to create a depth effect.<br/>
+      2. The second figure shows the order of rendering tiles on a 2.5D map, considering that the higher the tile is located, the earlier it should be rendered.
+    </p>
+    <img src="../images/caesar3-rendering-22.png" alt="Rendered terrain example" class="post-image" loading="lazy" />
+
+    <p>
+      This image is formed from the following tiles, rendered in the correct order:
+    </p>
+    <img src="../images/caesar3-rendering-15.png" alt="Individual tiles breakdown" class="post-image" loading="lazy" />
+
+    <h2>Rendering Algorithm</h2>
+    <p>
+      In general, the code for generating tile indices for rendering will be as follows:
+    </p>
+    <pre><code>// Form the upper part of the rendering "diamond"
+tilemap map;  // surface map
+tilearray tiles;  // rendering order
+for( j=0; y &lt; map_size; j++ )
+{
+   for( t=0; t &lt;= j; t++ )
+    {
+       tiles.append( map[ t , map_size - 1 - ( j - t )  ];
+   }
+}
+
+// Form the lower part of the rendering "diamond"
+for( i=1; i &lt; map_size; i++ )
+{
+   for( int t=0; t &lt; map_size-i; t++ )
+   {
+        tiles.append( map[ i + t, t ] );
+   }
+}</code></pre>
+
+    <h2>Drawing the City</h2>
+    <p>
+      Additional conditions that arise when rendering a city:
+    </p>
+    <ol>
+      <li>The map contains not only static tiles of land, grass, and buildings, but also moving objects (people, animals, animations)</li>
+      <li>There are objects that can be passed through (arch, gates, barn)</li>
+      <li>Additional animation of tiles and objects</li>
+      <li>Non-square objects</li>
+    </ol>
+
+    <p>
+      These conditions complicate the rendering process and create additional rendering rules:
+    </p>
+    <ol>
+      <li>The movement of characters on an isometric map doesn't happen just like that. The map is turned "into depth" and its absolute size vertically doesn't match the size horizontally. Therefore, any walking object should move "up" accordingly; in the simplest case, two steps to the side equals one step into depth.</li>
+      <li>A moving object can be in different parts of a tile and is drawn after displaying the main tile image, which can cause display artifacts, for example: a chariot rides over gates. This is bypassed by drawing additional sprites that will be shown after rendering moving objects.</li>
+    </ol>
+
+    <img src="../images/caesar3-rendering-21.png" alt="Gate base texture" class="post-image" loading="lazy" />
+    <span> + </span>
+    <img src="../images/caesar3-rendering-3.png" alt="Gate overlay texture" class="post-image" loading="lazy" />
+    <span> = </span>
+    <img src="../images/caesar3-rendering-11.png" alt="Complete gate rendering" class="post-image" loading="lazy" />
+
+    <ol start="3">
+      <li>Animation can go beyond the main image size; here you should consider such a feature that it (animation) can go up and to the right, but not down and to the left, otherwise it will be covered by the following tiles.</li>
+      <li>For the most part, the game uses square objects, but there are also extended ones; to simplify the rendering algorithm, they are broken into smaller (square) parts, for example, a hippodrome.</li>
+    </ol>
+
+    <img src="../images/caesar3-rendering-7.png" alt="Hippodrome full texture" class="post-image" loading="lazy" />
+    <span> = </span>
+    <img src="../images/caesar3-rendering-14.png" alt="Hippodrome part 1" class="post-image" loading="lazy" />
+    <span> + </span>
+    <img src="../images/caesar3-rendering-24.png" alt="Hippodrome part 2" class="post-image" loading="lazy" />
+    <span> + </span>
+    <img src="../images/caesar3-rendering-17.png" alt="Hippodrome part 3" class="post-image" loading="lazy" />
+
+    <h2>Rendering Passes</h2>
+    <ol>
+      <li>In the first pass, "flat" tiles and moving objects on them are drawn</li>
+      <li>In the second pass, tiles whose images can extend beyond the tile base are drawn</li>
+      <li>Additional animation is drawn for tiles that have such a flag</li>
+    </ol>
+    <p>
+      <em>Anticipating possible questions: This algorithm was restored from the original game, as far as I could understand it; it may be changed in later versions. Advice on organizing the rendering cycle is welcome.</em>
+    </p>
+
+    <h2>Caesar III Map File Format</h2>
+    <p>
+      Directly related to the objects that will be displayed in the city, the first five data blocks in the *.map file. We read from the beginning of the file, reading data one after another without gaps:
+    </p>
+    <ul>
+      <li><strong>short tile_id[26244]</strong> — contains element identifiers, each identifier corresponds to its texture. For example, the group of identifiers 246-548 corresponds to textures land1a_00001-land1a_00303, these are textures of earth, trees, etc., which were described above.</li>
+      <li><strong>byte edge_data[26244]</strong> — the array contains information about the size of the object for which the texture was selected in the tile_id array</li>
+      <li><strong>short terrain_info[26244]</strong> — the array contains surface characteristics for a specific tile: earth, water, road, wall, etc. (<a href="http://pecunia.nerdcamp.net/projects/citybuilding/caesar3-terrain" target="_blank">full information on these flags</a>)</li>
+      <li><strong>byte minimap_info[26244]</strong> — basic information for building a minimap, also participates in some calculations during the game, acting as a kind of "random numbers" array.</li>
+      <li><strong>byte height_info[26244]</strong> — this array describes the height of the tile above the surface: 0 for ground, 1 for 15 pixels, 2 for 30 pixels, etc.</li>
+    </ul>
+
+    <h2>Practical Application</h2>
+    <p>
+      More detailed information about Caesar III and the progress of the remake development can be found in our <a href="https://bitbucket.org/dalerank/caesaria/wiki/Home" target="_blank">wiki on bitbucket.org</a>.
+    </p>
+    <p>
+      Special thanks to <a href="http://caesar.biancavanschaik.nl/" target="_blank">Bianca van Schaik</a> for help in writing the article and providing materials.
+    </p>
+    <p>
+      And finally, a small test screenshot: Etruscan spearmen are rampaging in the city of fountains:
+    </p>
+    <img src="../images/caesar3-rendering-13.jpg" alt="Etruscan spearmen in the city" class="post-image" loading="lazy" />
+
+    <div class="post-nav">
+      <span></span>
+      <span></span>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>
