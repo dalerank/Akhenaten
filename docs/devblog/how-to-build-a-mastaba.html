@@ -27,57 +27,98 @@
     <img src="../images/mastaba-hero.png" alt="Mastaba monument in Pharaoh" class="post-image" loading="lazy" />
 
     <p>
-      The 1999 game Pharaoh introduced step-by-step monument construction requiring various resources — a significant innovation over Caesar III, which only used coins. The game's remarkable "balance, a balance perfected down to the smallest detail."
+      The game "Pharaoh," released back in 1999, was one of the first games to offer step-by-step building of structures, which also required various resources. Off the top of my head, I can recall the Settlers series, Majesty, and perhaps a couple more. After "Caesar III," where the primary resource for building was coins, this was truly astonishing and innovative. It was a particular pleasure to watch the city come to life during the construction of monuments. I remember just building the minimum necessary infrastructure for a monument and simply observing as architects complained about the lack of materials, slaves ran back and forth between farms and construction sites, and traders periodically sold bricks. The rest of the city, of course, lived its own life. You could even forget about certain parts of the city for a while, and the game would continue. This is when you realize why the game remains one of the best city-building games: the distinguishing feature of the series is its "balance," a balance perfected down to the smallest detail.
+    </p>
+    <p>
+      Revisiting this part of the game, I can't stop marveling at how it was all implemented on those hardware resources, which were, I must note, very limited. Not everyone had 64MB of RAM back then. One of the innovations of the monuments was that they were composite buildings; individual parts could be replaced with others, which essentially allowed for creating buildings with different appearances from the same set of textures. Nowadays, it seems like this approach is present in every game, but in '99, only a few games could boast such a mechanic.
+    </p>
+    <p>
+      At first, I tried to reconstruct the original drawing algorithm but quickly realized that not only could I not handle so many 'if' statements, but the compiler couldn't either. So, I had to improvise.
     </p>
 
     <h2>Housing &amp; Economy System</h2>
     <p>
-      House levels depend on land attractiveness and goods availability. Each level requires new resource types, including services like temples and pharmacies. Through careful balancing, "one market can support a maximum of 4 mansions at the highest level."
+      In the original game, players gain access to the first monument in the fifth mission of the story campaign, when the map of Egypt and traders become available. The construction of a mastaba is closely tied to teaching the basic rules of trading. Compared to the previous installment of the series, city modeling didn't change significantly. The primary condition for the development of houses remains the same: it depends on the attractiveness of the surrounding land and the availability of goods from the nearest market. If you have residents, you can develop production, build new resource-gathering buildings, and so on.
+    </p>
+    <p>
+      The number of people in houses depends on the current level of the house, and each level requires a new type of "resource" for maintenance. Moreover, these resources don't necessarily have to be products or goods; accessibility to temples and services like pharmacies is also required to maintain the house's level. While a single market can suffice for the initial levels of houses covering several dozen homes, it becomes noticeable after the mid-game that the number of buildings a market can support is carefully balanced. Even though reviews never explicitly mentioned it, players figured out that one market can support a maximum of 4 mansions at the highest level. Interestingly, even if their working areas overlap, having two markets doesn't support more than that number.
+    </p>
+    <p>
+      The hierarchy of needs itself remained unchanged from the previous game in the series. It fit so well with the entire setting of the series that it remained unchanged up to "Emperor: Rise of the Kingdom."
     </p>
     <img src="../images/mastaba-housing.png" alt="Housing and economy system" class="post-image" loading="lazy" />
 
     <h2>Original Rendering Approach</h2>
     <p>
-      The original game drew the entire mastaba in a single rendering pass, caching images and handling overdraw of overlapping residents/buildings. Attempting to reverse-engineer this from the binary revealed it was excessively complex.
+      I had to tinker with the algorithm for building the mastaba. At first, I tried to restore the original one, but in the end, I gave up and made it simpler. The original algorithm draws the entire mastaba in one pass on the screen, caching identical images and redrawing residents and buildings that are overlapped by the monument during rendering. It turns out to be unnecessarily complex (don't ask how I managed to restore it from the binary, I definitely gained a couple of gray hairs).
+    </p>
+    <p>
+      But then I looked at the resulting code and realized that a month would pass, and all of this would be forgotten because it's too complex. So I started digging through the internet in search of something simpler to understand. The solution came together after reading an article which describes quite well the principles of rendering composite buildings in isometric view. This eventually led to breaking down the mastaba into its component parts and drawing them based on the general rules of isometric perspective.
     </p>
 
     <h2>New Rendering Approach</h2>
     <p>
-      Instead, the mastaba is decomposed into component parts — <strong>slanted wall</strong>, <strong>entrance</strong>, and <strong>solid wall</strong> — each rendered as an independent building following standard isometric rules. This eliminated overdraw complexity but required recalculating rotation for each part type based on map and mastaba orientation.
+      On one hand, this greatly simplified the rendering logic and completely eliminated the need for overdraw of overlapping parts because each part is considered an independent building and is drawn based on general rules. On the other hand, now the mastaba consists of three types of buildings: <strong>slanted wall</strong>, <strong>entrance</strong>, and <strong>solid wall</strong>. The peculiarity of this implementation is the necessity to recalculate the rotation for each type depending on the map's rotation and the rotation of the mastaba itself.
     </p>
     <img src="../images/mastaba-construction-1.png" alt="Mastaba at start of construction" class="post-image" loading="lazy" />
     <img src="../images/mastaba-construction-2.png" alt="Completed mastaba" class="post-image" loading="lazy" />
     <img src="../images/mastaba-animation.gif" alt="Component-based mastaba rendering" class="post-image" loading="lazy" />
 
     <h2>Texture Format (.sg3 / .555)</h2>
-    <p>Textures use the <strong>Sierra Graphics V3</strong> format (developed 1988 by Sierra Entertainment). The <code>.555</code> files store texture data in three compression modes:</p>
+    <p>
+      The textures for the mastaba parts are divided into segments of the same size, from which the entire building is assembled. The size of the mastaba can vary from 2×3 to any reasonable size for a specific map, with the one in the pictures above being 2×5. In the resources, this data is split into two files: <code>mastaba.sg3</code> (the description) and <code>.555</code> files (texture data).
+    </p>
+    <p>
+      <strong>Sierra Graphics V3</strong> format was developed by Sierra Entertainment employees in 1988 and used in most studio games, but not well-known outside the studio. It provides good results when packing textures with RGB data in 16-bit. All pixels with a value of <code>0xf81f</code> are interpreted as transparent, this is done with the expectation of subsequent RLE packing, which can compress such sequences of identical pixels into a couple of bytes.
+    </p>
+    <p>
+      Most images are located in the <code>.555</code> file with the same name as the <code>.sg3</code> file. This was done with the idea of possible patches, to have the ability to provide users with partial changes. The internet was not particularly fast back then, so saving even 0.5MB, which the sg3 file occupies, was a significant argument for such an architecture.
+    </p>
+    <p>The graphic data can be packed in various ways in the <code>.555</code> files, depending on the type of texture:</p>
     <ul>
-      <li><strong>Uncompressed</strong> — stored as raw pixel rows</li>
-      <li><strong>Compressed</strong> — transparent pixels encoded with run-length encoding</li>
-      <li><strong>Isometric</strong> — split into a rhomboid "base" part (uncompressed) and an "upper" part (compressed), with transparent diamond corners excluded to reduce size</li>
+      <li><strong>Uncompressed</strong> — such images are stored "as is" by rows, from top to bottom, left to right in each row. Thus, if the image has dimensions of 20×30 pixels, it means that the data for this image consists of 20 × 30 = 600 unsigned 16-bit integers representing the colors of each pixel.</li>
+      <li><strong>Compressed</strong> — transparent pixels for these images are encoded using run-length encoding. This format has remained since Caesar II and was used less and less over time.</li>
+      <li><strong>Isometric</strong> — textures with a width divisible by 30 pixels and consist of two parts:
+        <ul>
+          <li><strong>"Base" part</strong>: rhomboid base of the tile, stored in uncompressed form because there should be no transparent pixels. The dimensions of the base texture are determined by the game: Caesar 3, Pharaoh, Zeus use tiles of size 58×30.</li>
+          <li><strong>"Upper" part</strong>: the remaining pixels that are not part of the base, and since they can contain transparent areas, they are stored in compressed form.</li>
+        </ul>
+      </li>
     </ul>
+    <p>
+      But that's not all — if you look at an isometric tile, you will notice that half of the space is not used, these are transparent pixels and they can be excluded from the encoding by simply skipping these areas. Thus, only significant pixels are recorded, and the texture size becomes even smaller. For example, with such a packing algorithm, a texture of size 10×6 out of 60 pixels is packed into 36.
+    </p>
     <img src="../images/mastaba-texture-parts.png" alt="Texture segments breakdown" class="post-image" loading="lazy" />
     <img src="../images/mastaba-isometric-tiles.png" alt="Isometric tile pixel packing diagram" class="post-image" loading="lazy" />
     <img src="../images/mastaba-texture-assembled.png" alt="Assembled mastaba textures" class="post-image" loading="lazy" />
 
     <h2>Construction Process</h2>
     <p>
-      Building is divided into <strong>8 stages</strong>: two site levelings and six stone-laying phases. Each segment requires <strong>400 stones</strong> delivered from a warehouse. Edge textures line the perimeter while internal tiles use seamless stone textures.
+      The construction process is divided into <strong>8 parts</strong>: two site levelings and 6 stages of laying stones. To build a mastaba, stone is needed, and for laying one segment, <strong>400 stones</strong> are required, which must be delivered from the warehouse to the construction site. After that, the bricklayers begin laying the stones.
+    </p>
+    <p>
+      The calculation of the required texture turned out to be quite simple; edge textures are used along the edges of the site, while the internal tiles are filled with seamless stone tiles.
     </p>
     <img src="../images/mastaba-site.png" alt="Construction site with bricklayers" class="post-image" loading="lazy" />
+    <p>
+      For animating the monument construction process in the game, separate types of buildings and inhabitants with corresponding sets of animations were added, which was quite bold for games of that time and resource-intensive. The number of animations doubled compared to the previous game in the series, and the texture volume increased accordingly.
+    </p>
     <img src="../images/mastaba-animations.png" alt="Monument construction animations" class="post-image" loading="lazy" />
 
     <h2>Rendering Bug Fixes</h2>
     <p>
-      The new approach caused rendering order issues. The fix splits textures into base and upper parts — bases render first (eliminating character overlap), then upper parts overlay to properly occlude characters behind the building.
+      Due to the new approach to rendering the mastaba, incorrect rendering of individual parts occurred. I had to add a bit more to the renderer to teach the engine to render the top parts of textures. For this, the original texture is divided into two parts: the base and the upper part. Then, when overlaid on top of each other, they will form a cohesive texture, free from rendering order errors in isometric view. All bases can be rendered in the first pass, eliminating overlap with the figures of inhabitants, and then overlay the upper part to hide the inhabitants who ended up behind the building. As a result, we get a normal view of the buildings.
     </p>
     <img src="../images/mastaba-render-fix.png" alt="Rendering fix with base and upper texture split" class="post-image" loading="lazy" />
+    <p>
+      A little bit of magic with C++, wait for a few in-game years, and the construction is completed. Almost... I still need to tweak the texture indices a bit when changing the city's orientation.
+    </p>
     <img src="../images/mastaba-near-complete.png" alt="Near-completed mastaba construction" class="post-image" loading="lazy" />
     <img src="../images/mastaba-rotation.gif" alt="City orientation rotation" class="post-image" loading="lazy" />
 
     <h2>Dynamic Resource Model</h2>
     <p>
-      Monuments function essentially as warehouses with delivery rules. Resources only appear on-site when physically carried there, adding simulation complexity but also enabling save/load exploits where "reloading the save could allow you to get that item again."
+      Also in Pharaoh, specifically for monuments, a dynamic resource model appeared (as far as I understood from the available source code) — the monument was essentially a warehouse, with set rules for goods. If in Caesar the space for resources was reserved at the warehouse immediately, here the bricks appeared on the construction site only when they were physically delivered on a stretcher. On one hand, this allowed players to abuse the game with save-loads; for example, if you catch the moment when the porter unloads the goods, reloading the save could allow you to get that item again. On the other hand, it added new connections to the simulation and made it more complex.
     </p>
     <img src="../images/mastaba-warehouse.png" alt="Dynamic resource and warehouse model" class="post-image" loading="lazy" />
 
