@@ -111,7 +111,7 @@ function mission6_pharaoh_request_pottery(ev) {
 	}
 
 	mission.pharaoh_pottery_requested = true
-	var request = city.create_good_request({ tag_id: 1, resource: RESOURCE_POTTERY, amount: 1400, months_initial: 9 })
+	var request = city.create_good_request({ tag_id: 1, resource: RESOURCE_POTTERY, amount: 14, months_initial: 9 })
 	request.execute()
 }
 
@@ -126,6 +126,6 @@ function mission6_pharaoh_request_beer(ev) {
 	}
 
 	mission.pharaoh_beer_requested = true
-	var request = city.create_good_request({ tag_id: 2, resource: RESOURCE_BEER, amount: 1100, months_initial: 12 })
+	var request = city.create_good_request({ tag_id: 2, resource: RESOURCE_BEER, amount: 11, months_initial: 12 })
 	request.execute()
 }
