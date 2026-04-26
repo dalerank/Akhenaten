@@ -20,7 +20,7 @@ scenario_data_t g_scenario;
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_scenario_load_meta_data) {
     mission_id_t missionid(g_scenario.settings.campaign_scenario_id);
 
-    g_scenario.load_metadata(missionid);
+    g_scenario.load_metadata(missionid, /*is_new_mission*/ true);
     js_register_mission_vars(g_scenario.vars);
 }
 
@@ -70,7 +70,7 @@ int scenario_data_t::house_tax_multiplier(int v) const {
     return difficulty.house_tax_multiplier(v);
 }
 
-void scenario_data_t::load_metadata(const mission_id_t &missionid) {
+void scenario_data_t::load_metadata(const mission_id_t &missionid, bool is_new_mission) {
     g_config_arch.r_section(missionid, [this] (archive arch) {
         arch.r(meta);
         arch.r("env", env);
@@ -98,7 +98,9 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid) {
         vars.insert(newvars);
     });
 
-    events.load_mission_metadata(missionid);
+    if (is_new_mission) {
+        events.load_mission_metadata(missionid);
+    }
 }
 
 void scenario_data_t::bind_data(io_buffer *iob, size_t version, size_t size) {
