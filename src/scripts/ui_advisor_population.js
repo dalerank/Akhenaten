@@ -97,6 +97,7 @@ advisor_population_window = {
 	advisor: ADVISOR_POPULATION
 	graph_order: 0
 	allow_rmb_goback : true
+	help_id: "message_overseer_granaries"
 
 	ui: baseui(advisor_window_base, {
 		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]

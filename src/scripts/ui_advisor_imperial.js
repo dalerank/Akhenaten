@@ -134,6 +134,7 @@ function imperial_requests_on_render_item(p) {
 advisor_imperial_window {
     advisor: ADVISOR_IMPERIAL
     allow_rmb_goback : true
+    help_id: "message_overseer_political"
     ui : baseui(advisor_window_base, {
         advisor_area         : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
             ui : {

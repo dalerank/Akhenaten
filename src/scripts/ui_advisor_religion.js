@@ -103,6 +103,7 @@ advisor_religion_window = {
 	advisor: ADVISOR_RELIGION
 	needs_sync : true
 	allow_rmb_goback : true
+	help_id: "message_overseer_temples"
 	ui : baseui(advisor_window_base, {
 		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
 			ui : {

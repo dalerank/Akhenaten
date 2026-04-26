@@ -101,9 +101,10 @@ function advisor_ratings_select_kingdom(window) {
 
 [es=advisor_window]
 advisor_ratings_window {
-	advisor: ADVISOR_RATINGS
-	allow_rmb_goback : true
-	ui : baseui(advisor_window_base, {
+    advisor: ADVISOR_RATINGS
+    allow_rmb_goback : true
+    help_id: "message_overseer_ratings"
+    ui : baseui(advisor_window_base, {
 		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
             ui : {
 				background       : outer_panel({size:[40, 27]})

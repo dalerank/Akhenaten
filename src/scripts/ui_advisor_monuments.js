@@ -34,6 +34,7 @@ function monuments_advisor_on_click_item(p) {
 advisor_monuments_window {
     advisor: ADVISOR_MONUMENTS
     allow_rmb_goback : true
+    help_id: "message_overseer_monuments"
     ui : baseui(advisor_window_base, {
         advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
 			ui : {

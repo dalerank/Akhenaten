@@ -57,11 +57,19 @@ function message_list_window_refresh_rows(window) {
     }
 }
 
+function message_list_window_delete_at(message_index) {
+    if (message_index < 0 || message_index >= __city_message_count()) {
+        return
+    }
+    __city_messages.current_message_id = message_index
+    __city_message_delete(message_index)
+}
+
 function message_list_window_on_rightclick_item(p) {
     if (!p) {
         return
     }
-    __city_message_delete_at(p.user_data)
+    message_list_window_delete_at(p.user_data)
     if (message_list_window_ref) {
         message_list_window_refresh_rows(message_list_window_ref)
     }

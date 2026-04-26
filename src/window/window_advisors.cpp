@@ -10,39 +10,13 @@
 #include "figure/formation.h"
 #include "game/settings.h"
 #include "graphics/window.h"
-#include "io/gamefiles/lang.h"
 #include "window/autoconfig_window.h"
 #include "window/js_window_registry.h"
-#include "window/message_dialog.h"
-#include "window/message_dialog_new.h"
 #include "game/game.h"
 #include "core/log.h"
 #include "js/js.h"
 #include "js/js_game.h"
 #include "mujs/mujs.h"
-
-static const int ADVISOR_TO_MESSAGE_TEXT[] = {
-    MESSAGE_DIALOG_ABOUT,
-    MESSAGE_DIALOG_ADVISOR_LABOR,
-    MESSAGE_DIALOG_ADVISOR_MILITARY,
-    MESSAGE_DIALOG_ADVISOR_IMPERIAL,
-    MESSAGE_DIALOG_ADVISOR_RATINGS,
-    MESSAGE_DIALOG_ADVISOR_TRADE,
-    MESSAGE_DIALOG_ADVISOR_POPULATION,
-    MESSAGE_DIALOG_ADVISOR_HEALTH,
-    MESSAGE_DIALOG_ADVISOR_EDUCATION,
-    MESSAGE_DIALOG_ADVISOR_ENTERTAINMENT,
-    MESSAGE_DIALOG_ADVISOR_RELIGION,
-    MESSAGE_DIALOG_ADVISOR_FINANCIAL,
-    MESSAGE_DIALOG_ADVISOR_CHIEF,
-    MESSAGE_DIALOG_ABOUT,
-    MESSAGE_DIALOG_ABOUT,
-    MESSAGE_DIALOG_ABOUT,
-    MESSAGE_DIALOG_ABOUT,
-    MESSAGE_DIALOG_ABOUT,
-    MESSAGE_DIALOG_ABOUT,
-    MESSAGE_DIALOG_ADVISOR_POPULATION,
-};
 
 static pcstr advisor_autoconfig_section(e_advisor a) {
     switch (a) {
@@ -81,17 +55,6 @@ void window_advisors_prepare_opening() {
     g_formations.calculate_figures();
 }
 
-void window_advisors_show_help_for_advisor(int advisor) {
-    const size_t n = sizeof(ADVISOR_TO_MESSAGE_TEXT) / sizeof(ADVISOR_TO_MESSAGE_TEXT[0]);
-    if (advisor < 0 || (size_t)advisor >= n) {
-        return;
-    }
-
-    const int text_id = ADVISOR_TO_MESSAGE_TEXT[advisor];
-    const xstring mm_text = lang_get_message_id(text_id);
-    window_message_dialog_show(mm_text, -1, nullptr);
-}
-
 void window_advisors_show() {
     window_advisors_prepare_opening();
 
@@ -104,4 +67,3 @@ void window_advisors_show() {
 }
 
 ANK_FUNCTION(window_advisors_prepare_opening)
-ANK_FUNCTION_1(window_advisors_show_help_for_advisor)

@@ -323,19 +323,10 @@ int __city_message_lang_category(int message_index) {
 }
 ANK_FUNCTION_1(__city_message_lang_category)
 
-void __city_message_delete_at(int message_index) {
-    if (message_index < 0 || message_index >= city_message_count()) {
-        return;
-    }
-    city_message_set_current(message_index);
+void __city_message_delete(int message_index) {
     city_message_delete(message_index);
 }
-ANK_FUNCTION_1(__city_message_delete_at)
-
-int __city_message_set_current(int message_index) {
-    return city_message_set_current(message_index);
-}
-ANK_FUNCTION_1(__city_message_set_current)
+ANK_FUNCTION_1(__city_message_delete)
 
 void __city_message_mark_read(int message_index) {
     city_message_mark_read(message_index);

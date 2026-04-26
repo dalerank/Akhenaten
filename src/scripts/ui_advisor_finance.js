@@ -4,6 +4,7 @@ log_info("akhenaten: ui advisor financial started")
 advisor_financial_window {
     advisor: ADVISOR_FINANCIAL
     allow_rmb_goback : true
+    help_id: "message_overseer_treasury"
     ui : baseui(advisor_window_base, {
         advisor_area               : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
             ui : {

@@ -196,7 +196,7 @@ void ui::sidebar_window_collapsed_t::expand() {
 
 void ui::sidebar_window_collapsed_t::archive_load(archive arch) {
     autoconfig_window::archive_load(arch);
-    
+
     if (game.session.active) {
         init();
     }

@@ -302,7 +302,7 @@ void city_message_post_with_message_delay(e_mesage_category category, int use_po
     }
 }
 
-void city_message_process_queue(void) {
+void city_message_process_queue() {
     auto& data = g_message_manager;
     if (data.consecutive_message_delay > 0) {
         data.consecutive_message_delay--;
@@ -405,11 +405,6 @@ bool city_message_mark_population_shown(int population) {
 const city_message& city_message_get(int message_id) {
     const auto& data = g_message_manager;
     return data.messages[message_id];
-}
-
-int city_message_set_current(int message_id) {
-    auto& data = g_message_manager;
-    return data.current_message_id = message_id;
 }
 
 void city_message_mark_read(int message_id) {

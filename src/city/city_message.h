@@ -193,7 +193,7 @@ void city_message_post_full(bool use_popup, xstring template_id, const event_ph_
 city_message &city_message_post_with_popup_delay(e_mesage_category category, bool use_popup, xstring message, int param1, short param2);
 void city_message_post_with_message_delay(e_mesage_category category, int use_popup, xstring message_type, int delay);
 
-void city_message_process_queue(void);
+void city_message_process_queue();
 void city_message_sort_and_compact(void);
 
 int city_message_get_text_id(int message_id);
@@ -207,7 +207,6 @@ bool city_message_mark_population_shown(int population);
 
 const city_message& city_message_get(int message_id);
 
-int city_message_set_current(int message_id);
 void city_message_mark_read(int message_id);
 void city_message_delete(int message_id);
 int city_message_count(void);

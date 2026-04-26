@@ -50,7 +50,7 @@ static void draw_foreground(int) {
     if (g_city.victory_state.state == e_victory_state_won) {
         large_label_draw(80, 240, 30, focus_button_id == 1);
         const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
-        
+
         if (current_scenario < 10 || is_custom_map)
             lang_text_draw_centered(62, 3, 80, 246, 480, FONT_NORMAL_BLACK_ON_DARK);
         else {
