@@ -44,7 +44,7 @@ function advisor_religion_gods_list_on_render_item(p) {
 	var row = p.user_data
 	var g = gods[row]
 	var gs = city.gods.at(g.type)
-	var st = gs.status
+	var st = gs.is_known
 	var font = (st === 0) ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_YELLOW
 	var lx = p.x
 	var ly = p.y
@@ -77,7 +77,7 @@ function advisor_religion_gods_list_on_render_item(p) {
 	ui.label(activeTemples + " (" + totalTemples + ")", [lx + 227, ly], font)
 	ui.label(String(city.count_active_buildings(g.shrine_type)), [lx + 292, ly], font)
 	ui.label(String(gs.months_since_festival), [lx + 352, ly], font)
-	ui.label(__loc(59, 20 + ((gs.happiness / 10) | 0)), [lx + 422, ly], font)
+	ui.label(__loc(59, 20 + ((gs.mood / 10) | 0)), [lx + 422, ly], font)
 
 	var imgs = advisor_religion_get_bolt_angel_images()
 	var boltY = ly - 3
@@ -87,7 +87,7 @@ function advisor_religion_gods_list_on_render_item(p) {
 	for (i = 0; i < ((wrath / 20) | 0); i++) {
 		ui.image(imgs.bolt, { x: boltX + i * 10, y: boltY })
 	}
-	var happy = gs.happy_angels
+	var happy = gs.happy_ankhs
 	var j = 0
 	for (j = 0; j < ((happy / 20) | 0); j++) {
 		ui.image(imgs.angel, { x: boltX + j * 10, y: boltY })
