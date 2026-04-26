@@ -273,7 +273,7 @@ function empire_window_es_draw_city_want_buy_items(window) {
         }
         var tradeMax = city.trade_route_limit(r)
         tradeMax = city.stack_proper_quantity(r, tradeMax)
-        var pos = { x: elm.screen_pos.sx + itemStepX * buyIndex, y: elm.screen_pos.y + itemStepY * buyIndex }
+        var pos = { x: elm.screen_pos.x + itemStepX * buyIndex, y: elm.screen_pos.y + itemStepY * buyIndex }
         empire_window_draw_trade_resource_row(pos, window.flags, r, -1, tradeMax, rowFont)
         buyIndex++
     }
@@ -288,7 +288,7 @@ function empire_window_es_draw_city_sell_items(window) {
     var index = 0
     var elm = window[window.active_id]
     var panelW = elm.size.x
-    var e_offset_y = elm.screen_pos.sy
+    var e_offset_y = elm.screen_pos.y
 
     var city = empire.get_city(cityId)
     for (var r = RESOURCE_GRAIN; r <= RESOURCE_MARBLE; r++) {
