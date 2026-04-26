@@ -977,7 +977,7 @@ void screen_city_t::handle_touch_scroll(const touch_t * t, bool fore_capture_inp
 
     int was_click = touch_was_click(get_latest_touch());
     if (t->has_started || was_click) {
-        scroll_drag_start(1);
+        scroll_drag_start(scroll_drag_source::touch);
         return;
     }
 
@@ -1185,7 +1185,7 @@ void screen_city_t::handle_mouse(const mouse* m) {
         if (handle_legion_click(current_tile)) {
             return;
         }
-        
+
         g_city_planner.construction_start(current_tile);
 
         build_move(current_tile);
@@ -1197,8 +1197,9 @@ void screen_city_t::handle_mouse(const mouse* m) {
         build_end();
     }
 
-    if (m->middle.went_down && input_coords_in_city(m->x, m->y) && !g_city_planner.build_type) {
-        scroll_drag_start(0);
+    if (!!game_features::gameopt_middle_mouse_camera_pan
+        && m->middle.went_down && input_coords_in_city(m->x, m->y) && !g_city_planner.build_type) {
+        scroll_drag_start(scroll_drag_source::middle_mouse_pan);
     }
 
     bool action_in_warnings = false;

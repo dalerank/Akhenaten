@@ -9,6 +9,7 @@ struct event_toggle_overlay { int value; };
 struct event_toggle_pause { int value; };
 struct event_change_gamespeed { bool increase; };
 struct event_change_scroll_speed { bool increase; };
+struct event_change_middle_mouse_pan_speed { bool increase; };
 struct event_change_clouds_speed { bool increase; };
 struct event_rotate_map { int value; };
 struct event_rotate_map_reset { int value; };

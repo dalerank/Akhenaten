@@ -235,7 +235,7 @@ int empire_window::ui_handle_mouse(const mouse* m) {
         if (!is_outside_map(t->current_point.x, t->current_point.y)) {
             if (t->has_started) {
                 is_scrolling = 1;
-                scroll_drag_start(1);
+                scroll_drag_start(scroll_drag_source::touch);
             }
         }
 

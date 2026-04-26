@@ -130,7 +130,7 @@ static void handle_touch_scroll(const touch_t * t) {
 
     int was_click = touch_was_click(get_latest_touch());
     if (t->has_started || was_click) {
-        scroll_drag_start(1);
+        scroll_drag_start(scroll_drag_source::touch);
         return;
     }
 
@@ -280,7 +280,7 @@ void widget_map_editor_handle_input(const mouse* m, const hotkeys* h) {
         handle_touch();
     } else {
         if (m->right.went_down && input_coords_in_map(m->x, m->y) && !editor_tool_is_active())
-            scroll_drag_start(0);
+            scroll_drag_start(scroll_drag_source::mouse);
 
         if (m->right.went_up) {
             if (!editor_tool_is_active()) {

@@ -1808,6 +1808,8 @@ localization_base_en = [
     { group:45, id:3, text: "Scroll speed" }
     { group:45, id:4, text: "OK" }
     { group:45, id:5, text: "Cloud speed" }
+    { group:45, id:6, text: "Pan camera with middle mouse" }
+    { group:45, id:7, text: "Middle mouse pan speed" }
     { group:46, id:0, text: "Sound options" }
     { group:46, id:1, text: "Music is off" }
     { group:46, id:2, text: "Music is on" }

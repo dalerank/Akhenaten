@@ -113,6 +113,8 @@ namespace game_features {
     extern game_feature gameopt_enabled_mods;
     extern game_feature gameopt_last_game_version;
     extern game_feature gameopt_scroll_speed;
+    extern game_feature gameopt_middle_mouse_camera_pan;
+    extern game_feature gameopt_middle_mouse_pan_speed;
     extern game_feature gameopt_clouds_speed;
     extern game_feature gameopt_game_speed;
     extern game_feature gameopt_sound_effects_enabled;

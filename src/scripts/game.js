@@ -72,6 +72,8 @@ game_features {
     @gameopt_sound_city_volume {}
     @gameopt_game_speed {}
     @gameopt_scroll_speed {}
+    @gameopt_middle_mouse_camera_pan {}
+    @gameopt_middle_mouse_pan_speed {}
     @gameopt_clouds_speed {}
     @count { get: __game_features_count }
 }
@@ -97,6 +99,17 @@ function event_change_scroll_speed_handler(ev) {
         s = calc_bound_scroll_speed(s - 10, 0, 100)
     }
     game_features.gameopt_scroll_speed = s
+}
+
+[es=event_change_middle_mouse_pan_speed]
+function event_change_middle_mouse_pan_speed_handler(ev) {
+    var s = Math.round(game_features.gameopt_middle_mouse_pan_speed)
+    if (ev.increase) {
+        s = calc_bound_scroll_speed(s + 10, 0, 100)
+    } else {
+        s = calc_bound_scroll_speed(s - 10, 0, 100)
+    }
+    game_features.gameopt_middle_mouse_pan_speed = s
 }
 
 [es=event_change_clouds_speed]

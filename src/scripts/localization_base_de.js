@@ -1809,6 +1809,8 @@ localization_base_de = [
     { group:45, id:3, text: "Scrollgeschwindigkeit" }
     { group:45, id:4, text: "OK" }
     { group:45, id:5, text: "Wolkengeschwindigkeit" }
+    { group:45, id:6, text: "Kamera mit mittlerer Maustaste verschieben" }
+    { group:45, id:7, text: "Pan-Geschwindigkeit (Mittelmaus)" }
     { group:46, id:0, text: "Tonoptionen" }
     { group:46, id:1, text: "Musik ist aus" }
     { group:46, id:2, text: "Musik ist an" }
