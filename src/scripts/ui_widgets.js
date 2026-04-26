@@ -415,39 +415,6 @@ health_info_window = {
     })
 }
 
-taxcollector_info_window = {
-    ui : {
-        background    : outer_panel({size: [29, 17]}),
-        title         : text({pos: [0, 12], size: [px(29), 20], text:"${text.0}", font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        deben_icon    : resource_icon({pos: [16, 46], resource:RESOURCE_GOLD}),
-        tax_level     : label({pos:[px(29) / 2 + 40, 46], text:"${60.1} ${city.tax_percentage}%", font : FONT_NORMAL_BLACK_ON_LIGHT }),
-        dec_tax       : arrowdown({pos:[px(29) / 2 + 170, 38]}),
-        inc_tax       : arrowup({pos:[px(29) / 2 + 193, 38]}),
-        money_text    : text({pos: [44, 44], wrap:px(26), font : FONT_NORMAL_BLACK_ON_LIGHT }),
-        warning_text  : text({pos: [28, 66], font : FONT_NORMAL_BLACK_ON_LIGHT }),
-        building_desc : text({pos: [28, 86], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-        inner_panel   : inner_panel({pos : [16, 136], size: [27, 5] }),
-        workers_img   : image({pack:PACK_GENERAL, id:134, offset:14, pos:[30, 146] }),
-        workers_text  : text({pos: [55, 150], text:"${building.num_workers} ${8.12} (${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK }),
-        workers_desc  : text({pos: [55, 165], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
-        first_advisor : image_button({pos:[42, -1], size:[28, 28], pack:PACK_GENERAL, id:106 }),
-        show_overlay  : button({
-                                margin:{right:-64, bottom:-40}, size:[23, 23]
-                                textfn:building_info_window_text_overlay
-                                onclick: building_info_window_toggle_overlay
-                               })
-
-        mothball      : button({
-                                margin:{right:-90, bottom:-40}, size:[23, 23]
-                                textfn:building_info_window_text_mothball
-                                onclick: building_info_window_toggle_mothball
-                               })
-
-        button_help   : help_button({}),
-        button_close  : close_button({}),
-    }
-}
-
 dock_info_window = {
     ui : baseui(building_info_window, {
         background   : outer_panel({size: [29, 16]}),

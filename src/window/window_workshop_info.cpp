@@ -19,7 +19,7 @@ struct workshop_info_window : public building_info_window_t<workshop_info_window
         if (!b->is_workshop()) {
             return;
         }
-    
+
         window_building_play_sound(&c, b->get_sound());
 
         textid trouble_text{ c.group_id, 0 };
@@ -41,7 +41,7 @@ struct brickworks_info_window : public building_info_window_t<brickworks_info_wi
         if (!b->is_workshop()) {
             return;
         }
-    
+
         window_building_play_sound(&c, b->get_sound());
 
         textid trouble_text{ c.group_id, 0 };
