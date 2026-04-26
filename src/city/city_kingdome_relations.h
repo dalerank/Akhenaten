@@ -89,20 +89,14 @@ struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
     } invasion;
 
     void load_scenario(int rank, int load_type);
-    void init_donation_amount();
     const kingdome_gift *get_gift(int size);
     int can_send_gift(int size);
     void send_gift(int gift_size);
-    int salary_for_rank(int rank);
-    void set_salary_rank(int rank);
     void update_debt_state();
     void process_invasion();
     void update();
     void update_gifts();
     int get_gift_cost(int size);
-    void set_donation_amount(int amount);
-    void change_donation_amount(int change);
-    void donate_savings_to_city();
     void mark_soldier_killed();
     void force_attack(int size);
     void reset_gifts();

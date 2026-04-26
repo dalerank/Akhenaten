@@ -164,7 +164,7 @@ advisor_imperial_window {
 
                 donate_to_city : button({pos[320, 330], size[250, 20]
                                          text{group:52, id:2}, tooltip:"${68.96}", font:FONT_NORMAL_WHITE_ON_DARK
-                                         onclick: window_donate_to_city_show
+                                         onclick: show_window_by_id("donate_to_city_window")
                                         })
 
                 send_gift    : button({pos[320, 352], size[250, 20]

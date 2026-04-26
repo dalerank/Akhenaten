@@ -27,9 +27,6 @@ void __city_ratings_apply_monument_yearly(int new_monument, int new_years_of_mon
 }
 ANK_FUNCTION_3(__city_ratings_apply_monument_yearly)
 
-int __city_rank_salary(int rank) { return g_city.kingdome.salary_for_rank(rank); }
-ANK_FUNCTION_1(__city_rank_salary)
-
 int __city_rating_kingdom() { return g_city.kingdome.rating; }
 ANK_FUNCTION(__city_rating_kingdom)
 
@@ -47,11 +44,6 @@ ANK_FUNCTION(__city_health_rating)
 
 int __city_player_rank() { return g_city.kingdome.player_rank; }
 ANK_FUNCTION(__city_player_rank)
-
-void __city_kingdome_apply_salary_rank(int rank) {
-    g_city.kingdome.set_salary_rank(rank);
-}
-ANK_FUNCTION_1(__city_kingdome_apply_salary_rank)
 
 bool __city_mission_has_won() { return g_city.victory_state.has_won(); }
 ANK_FUNCTION(__city_mission_has_won)

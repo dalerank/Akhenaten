@@ -206,9 +206,18 @@ city {
     set_advisor_available : __city_set_advisor_available
     is_advisor_available : __city_is_advisor_available
     rank_title : function(rank) { return __loc(52, rank + 4) }
-    rank_salary : __city_rank_salary
+    rank_salary : function(rank) {
+        var r = kingdome_relation.salary_ranks
+        if (!r || rank < 0 || rank >= r.length) {
+            return 0
+        }
+        return r[rank]
+    }
 
-    apply_salary_rank : __city_kingdome_apply_salary_rank
+    apply_salary_rank : function(rank) {
+        city.kingdome.salary_rank = rank
+        city.kingdome.salary_amount = city.rank_salary(rank)
+    }
     start_foreign_army_invasion : __city_start_foreign_army_invasion
     camera_go_to : __city_camera_go_to
     allowed_foods : __city_allowed_foods

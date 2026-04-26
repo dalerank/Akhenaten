@@ -11,9 +11,12 @@ void ank_global_obj_bind_field(js_State *J, js_StringNode name, e_rating_change 
 
 ANK_GLOBAL_OBJECT(g_city.kingdome, __city_kingdome,
     salary_rank,
+    salary_amount,
     player_rank,
     kingdom_change,
     kingdom_salary_penalty,
     kingdom_milestone_penalty,
     kingdom_ignored_request_penalty,
-    personal_savings);
+    personal_savings,
+    donate_amount);
+

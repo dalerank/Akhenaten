@@ -53,6 +53,7 @@ import ui_storage_yard_info_window
 import ui_storage_yard_orders_window
 import ui_popup_dialog
 import ui_set_salary_window
+import ui_donate_to_city_window
 import ui_resource_settings_window
 import ui_police_station_window
 import ui_message_dialog

@@ -64,7 +64,8 @@ void kingdome_relation_t::load_scenario(int rank, int load_type ) {
 
     salary_rank = std::clamp(salary_rank, 0, 10);
 
-    set_salary_rank(salary_rank);
+    this->salary_rank = (uint8_t)salary_rank;
+    this->salary_amount = (uint8_t)params().salary_ranks[salary_rank];
 }
 
 void kingdome_relation_t::update_debt_state() {
@@ -268,35 +269,8 @@ void kingdome_relation_t::send_gift(int gift_size) {
     personal_savings -= cost;
 }
 
-int kingdome_relation_t::salary_for_rank(int rank) {
-    return params().salary_ranks[rank];
-}
-
-void kingdome_relation_t::set_salary_rank(int rank) {
-    salary_rank = rank;
-    salary_amount = params().salary_ranks[rank];
-}
-
-void kingdome_relation_t::init_donation_amount() {
-    donate_amount = calc_bound(donate_amount, 0, personal_savings);
-}
-
 const kingdome_gift *kingdome_relation_t::get_gift(int size) {
     return &gifts[size];
-}
-
-void kingdome_relation_t::set_donation_amount(int amount) {
-    donate_amount = calc_bound(amount, 0, personal_savings);
-}
-
-void kingdome_relation_t::change_donation_amount(int change) {
-    g_city.kingdome.set_donation_amount(donate_amount + change);
-}
-
-void kingdome_relation_t::donate_savings_to_city() {
-    events::emit(event_finance_donation{ donate_amount });
-    personal_savings -= donate_amount;
-    g_city.finance.calculate_totals();
 }
 
 void kingdome_relation_t::mark_soldier_killed() {
@@ -337,7 +311,7 @@ void kingdome_relation_t::advance_month() {
 
 void kingdome_relation_t::advance_year() {
     advance_month();
-    
+
     kingdom_salary_penalty = 0;
     kingdom_milestone_penalty = 0;
     kingdom_ignored_request_penalty = 0;
