@@ -9,12 +9,10 @@
 
 #include <cstdio>
 
-static scenario_request dummy_request;
-
-static scenario_request& imperial_request_at(int index) {
+static scenario_request imperial_request_at(int index) {
     auto v = scenario_get_visible_requests();
     if (index < 0 || index >= static_cast<int>(v.size())) {
-        return dummy_request;
+        return {};
     }
     return v[index];
 }
@@ -39,32 +37,32 @@ static void def_readonly_prop(js_State *J, js_CFunction get, const char *name) {
 }
 
 static void scenario_request_get_valid(js_State* J) {
-    const auto& r = imperial_request_at(scenario_request_this_index(J));
+    const auto r = imperial_request_at(scenario_request_this_index(J));
     js_pushboolean(J, r.is_valid() ? 1 : 0);
 }
 
 static void scenario_request_get_resource_id(js_State* J) {
-    const auto& r = imperial_request_at(scenario_request_this_index(J));
+    const auto r = imperial_request_at(scenario_request_this_index(J));
     js_pushnumber(J, static_cast<int>(r.resource));
 }
 
 static void scenario_request_get_raw_amount(js_State* J) {
-    const auto& r = imperial_request_at(scenario_request_this_index(J));
+    const auto r = imperial_request_at(scenario_request_this_index(J));
     js_pushnumber(J, r.amount);
 }
 
 static void scenario_request_get_amount_total(js_State* J) {
-    const auto& r = imperial_request_at(scenario_request_this_index(J));
+    const auto r = imperial_request_at(scenario_request_this_index(J));
     js_pushnumber(J, r.resource_amount());
 }
 
 static void scenario_request_get_months(js_State* J) {
-    const auto& r = imperial_request_at(scenario_request_this_index(J));
+    const auto r = imperial_request_at(scenario_request_this_index(J));
     js_pushnumber(J, r.months_to_comply);
 }
 
 static void scenario_request_get_event_id(js_State* J) {
-    const auto& r = imperial_request_at(scenario_request_this_index(J));
+    const auto r = imperial_request_at(scenario_request_this_index(J));
     js_pushnumber(J, r.event_id);
 }
 
