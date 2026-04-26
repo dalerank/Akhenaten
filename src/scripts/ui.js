@@ -28,6 +28,7 @@ import ui_bazaar_orders_window
 import ui_bazaar_window
 import ui_advisor_chief
 import ui_mission_briefing_window
+import ui_trade_opened_window
 import ui_empire_window
 import ui_advisor_education
 import ui_advisor_imperial

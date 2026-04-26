@@ -16,9 +16,9 @@ function donate_to_city_window_init(window) {
 
 [es=modal_window]
 donate_to_city_window {
+    pos [(sw(0) - px(32)) / 2, (sh(0) - px(10)) / 2]
     allow_rmb_goback : true
     draw_underlying : true
-    pos [(sw(0) - px(32)) / 2, (sh(0) - px(10)) / 2]
 
     ui {
         background_image : background({pack:PACK_UNLOADED, id:11})

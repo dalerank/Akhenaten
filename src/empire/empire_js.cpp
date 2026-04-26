@@ -115,6 +115,12 @@ bool __empire_city_is_sieged(int city_index) {
 }
 ANK_FUNCTION_1(__empire_city_is_sieged)
 
+bool __empire_city_is_sea_trade(int city_index) {
+    const empire_city* city = g_empire.city(city_index);
+    return city && city->in_use && city->is_sea_trade;
+}
+ANK_FUNCTION_1(__empire_city_is_sea_trade)
+
 int __empire_city_cost_to_open(int city_index) {
     const empire_city* city = g_empire.city(city_index);
     return (city && city->in_use) ? city->cost_to_open : 0;

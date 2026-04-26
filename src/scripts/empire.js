@@ -95,6 +95,7 @@ empire.get_city = function(city_id) {
             set: function(open) { __empire_city_set_open(this.city_id, open) }
         }
         @is_sieged { get: function() { return __empire_city_is_sieged(this.city_id) } }
+        @is_sea_trade { get: function() { return __empire_city_is_sea_trade(this.city_id) } }
         @cost_to_open { get: function() { return __empire_city_cost_to_open(this.city_id) } }
 
         city_buys_resource : function(resource) { return __empire_city_buys_resource(this.city_id, resource) }

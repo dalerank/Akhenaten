@@ -388,7 +388,6 @@ void ui::begin_frame() {
     tooltipctx.set(0, "");
 }
 
-
 void ui::end_frame() {
 }
 

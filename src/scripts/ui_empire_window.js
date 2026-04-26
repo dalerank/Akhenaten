@@ -215,16 +215,14 @@ function empire_window_draw_object_info_other(ev) {
 }
 
 function empire_window_confirm_open_trade() {
-    var cityId = empire_window.selected_city
-    var city = empire.get_city(cityId)
+    var city = empire.get_city(empire_window.selected_city)
     if (!city || city.is_sieged) {
         return
     }
 
-    emit event_finance_request{ type: efinance_request_construction, deben: city.cost_to_open }
     city.is_open = true
-
-    __window_trade_opened_show(cityId)
+    emit event_finance_request{ type: efinance_request_construction, deben: city.cost_to_open }
+    emit event_show_window{ id: "trade_opened_window" }
 }
 
 [es=(empire_window, init)]
