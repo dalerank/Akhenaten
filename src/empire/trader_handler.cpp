@@ -117,7 +117,7 @@ e_resource empire_trader_handle::get_sell_resource(building* b, empire_city_hand
     // add to existing bay with room
     building_storage_room* space = warehouse->room();
     while (space) {
-        if (space->stored_amount(resource_to_import) > 0) {
+        if (space->stored_amount(resource_to_import) > 0 && space->stored_amount(resource_to_import) < 400) {
             space->add_import(resource_to_import);
             city_trade_next_caravan_import_resource();
             return resource_to_import;
