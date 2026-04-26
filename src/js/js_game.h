@@ -865,6 +865,8 @@ inline void ank_register_callback_unified(js_State *J, pcstr name) {
 void js_register_game_functions(js_State *J);
 void js_register_sound_object(js_State* J);
 void js_register_empire_objects(js_State *J);
+void js_register_empire_city_map_proto(js_State* J);
+void js_register_empire_city_proto(js_State* J);
 void js_register_mission_objects(js_State *J);
 void js_register_city_objects(js_State *J);
 void js_register_building(js_State *J);

@@ -44,42 +44,6 @@ int __empire_map_selected_empire_object_id() {
 }
 ANK_FUNCTION(__empire_map_selected_empire_object_id)
 
-bool __empire_city_buys_resource(int city_index, int resource) {
-    const empire_city* city = g_empire.city(city_index);
-    if (!city || !city->in_use) {
-        return false;
-    }
-    return city->buys_resource[(e_resource)resource];
-}
-ANK_FUNCTION_2(__empire_city_buys_resource)
-
-bool __empire_city_sells_resource(int city_index, int resource) {
-    const empire_city* city = g_empire.city(city_index);
-    if (!city || !city->in_use) {
-        return false;
-    }
-    return city->sells_resource[(e_resource)resource];
-}
-ANK_FUNCTION_2(__empire_city_sells_resource)
-
-int __empire_trade_route_limit(int city_id, int resource) {
-    const empire_city* city = g_empire.city(city_id);
-    if (!city) {
-        return 0;
-    }
-    return city->get_route().limit((e_resource)resource);
-}
-ANK_FUNCTION_2(__empire_trade_route_limit)
-
-int __empire_trade_route_traded(int city_id, int resource) {
-    const empire_city* city = g_empire.city(city_id);
-    if (!city) {
-        return 0;
-    }
-    return city->get_route().traded((e_resource)resource);
-}
-ANK_FUNCTION_2(__empire_trade_route_traded)
-
 int __empire_luxury_goods_traded_sum() {
     int sum = 0;
     for (const auto &route : g_empire.get_routes()) {
@@ -93,47 +57,6 @@ int __empire_map_selected_city() {
     return g_empire_map.selected_city;
 }
 ANK_FUNCTION(__empire_map_selected_city)
-
-int __empire_city_type(int city_index) {
-    const empire_city* city = g_empire.city(city_index);
-    if (!city || !city->in_use) {
-        return -1;
-    }
-    return (int)city->type;
-}
-ANK_FUNCTION_1(__empire_city_type)
-
-bool __empire_city_is_open(int city_index) {
-    const empire_city* city = g_empire.city(city_index);
-    return city && city->in_use && city->is_open;
-}
-ANK_FUNCTION_1(__empire_city_is_open)
-
-bool __empire_city_is_sieged(int city_index) {
-    const empire_city* city = g_empire.city(city_index);
-    return city && city->in_use && city->is_sieged();
-}
-ANK_FUNCTION_1(__empire_city_is_sieged)
-
-bool __empire_city_is_sea_trade(int city_index) {
-    const empire_city* city = g_empire.city(city_index);
-    return city && city->in_use && city->is_sea_trade;
-}
-ANK_FUNCTION_1(__empire_city_is_sea_trade)
-
-int __empire_city_cost_to_open(int city_index) {
-    const empire_city* city = g_empire.city(city_index);
-    return (city && city->in_use) ? city->cost_to_open : 0;
-}
-ANK_FUNCTION_1(__empire_city_cost_to_open)
-
-void __empire_city_set_open(int city_index, int is_open) {
-    empire_city* city = g_empire.city(city_index);
-    if (city && city->in_use) {
-        city->is_open = is_open != 0;
-    }
-}
-ANK_FUNCTION_2(__empire_city_set_open)
 
 std::optional<bvariant> __empire_trader_get_property(int index, pcstr property) {
     if (index < 0 || index >= g_empire_traders.traders.size()) {
@@ -189,4 +112,6 @@ int __imperial_distant_battle_city_name_id() {
 ANK_FUNCTION(__imperial_distant_battle_city_name_id)
 
 void js_register_empire_objects(js_State *J) {
+    js_register_empire_city_map_proto(J);
+    js_register_empire_city_proto(J);
 }

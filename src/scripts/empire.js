@@ -62,13 +62,7 @@ empire {
 }
 
 empire.get_city_object = function(city_id) {
-    return {
-        city_id: city_id
-        __property_getter: function(property) { return __empire_get_city_object_property(this.city_id, property) }
-        @id {}
-        @pos {}
-        @type {}
-    }
+    return new EmpireCityObject(city_id)
 }
 
 empire.get_trader = function(index) {
@@ -85,23 +79,5 @@ empire.get_trader = function(index) {
 }
 
 empire.get_city = function(city_id) {
-    return {
-        city_id: city_id
-
-        @empire_object { get: function() { return empire.get_city_object(this.city_id) } }
-        @type { get: function() { return __empire_city_type(this.city_id) } }
-        @is_open {
-            get: function() { return __empire_city_is_open(this.city_id) }
-            set: function(open) { __empire_city_set_open(this.city_id, open) }
-        }
-        @is_sieged { get: function() { return __empire_city_is_sieged(this.city_id) } }
-        @is_sea_trade { get: function() { return __empire_city_is_sea_trade(this.city_id) } }
-        @cost_to_open { get: function() { return __empire_city_cost_to_open(this.city_id) } }
-
-        city_buys_resource : function(resource) { return __empire_city_buys_resource(this.city_id, resource) }
-        city_sells_resource : function(resource) { return __empire_city_sells_resource(this.city_id, resource) }
-        trade_route_limit : function(resource) { return __empire_trade_route_limit(this.city_id, resource) }
-        trade_route_traded : function(resource) { return __empire_trade_route_traded(this.city_id, resource) }
-        stack_proper_quantity : function(resource, quantity) { return __city_resource_stack_proper_quantity(resource, quantity) }
-    }
+    return new EmpireCity(city_id)
 }
