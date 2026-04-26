@@ -67,7 +67,7 @@ advisor_health_window {
 	allow_rmb_goback : true
 	help_id: "message_overseer_public_health"
 	ui : baseui(advisor_window_base, {
-		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2], size:[px(40), px(18)]
             ui : {
 				background   : outer_panel({size:[40, 18]})
 				advisor_icon : image({pack:PACK_GENERAL, id:128, offset:6, pos:[10, 10] })
@@ -93,6 +93,7 @@ advisor_health_window {
 				})
 
 				health_advice : multiline({pos:[60, 218], size:[520, 90], wrap:500, font: FONT_NORMAL_BLACK_ON_LIGHT })
+				button_help   : help_button({})
 			}
 		})
 	})

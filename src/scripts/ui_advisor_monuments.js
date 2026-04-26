@@ -36,7 +36,7 @@ advisor_monuments_window {
     allow_rmb_goback : true
     help_id: "message_overseer_monuments"
     ui : baseui(advisor_window_base, {
-        advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+        advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2], size:[px(40), px(27)]
 			ui : {
                 background    : outer_panel({size[40, 27]})
                 advisor_icon  : image({pack:PACK_GENERAL, id:128, offset:12, pos[10, 10] })
@@ -60,6 +60,8 @@ advisor_monuments_window {
                 })
 
                 no_monuments : label({margin{ centerx:-100, centery:-40}, text:"${53.69}", font:FONT_NORMAL_WHITE_ON_DARK })
+
+                button_help   : help_button({})
             }
         })
     })

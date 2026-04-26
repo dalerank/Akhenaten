@@ -136,7 +136,7 @@ advisor_imperial_window {
     allow_rmb_goback : true
     help_id: "message_overseer_political"
     ui : baseui(advisor_window_base, {
-        advisor_area         : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+        advisor_area         : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2], size:[px(40), px(27)]
             ui : {
                 background   : outer_panel({size[40, 27]})
                 advisor_icon : image({pack:PACK_GENERAL, id:128, offset:2, pos[10, 10] })
@@ -184,6 +184,8 @@ advisor_imperial_window {
                 big_text     : text_center({pos[60, 295], size[400, 20], font:FONT_NORMAL_BLACK_ON_LIGHT})
                 top_text     : text_center({pos[504, 130], size[100, 20], font:FONT_NORMAL_BLACK_ON_LIGHT})
                 bot_text     : text_center({pos[504, 230], size[100, 20], font:FONT_NORMAL_BLACK_ON_LIGHT})
+
+                button_help   : help_button({})
             }
         })
     })

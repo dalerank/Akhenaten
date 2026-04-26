@@ -89,7 +89,7 @@ advisor_trade_window {
     allow_rmb_goback : true
     help_id: "message_overseer_commerce"
     ui : baseui(advisor_window_base, {
-        advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+        advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2], size:[px(40), px(27)]
             ui : {
                 background   : outer_panel({size[40, 27]})
                 advisor_icon : image({pack:PACK_GENERAL, id:128, offset:4, pos:[10, 10]})
@@ -112,6 +112,8 @@ advisor_trade_window {
 
                 goto_empire  : button({pos:[48, 396], size:[200, 24], text:"#trade_overseer_goto_empire", tooltip:"#trade_overseer_goto_empire_hint", onclick: __window_empire_show })
                 show_prices  : button({pos:[368, 396], size:[200, 24], text:"#trade_overseer_prices", tooltip:"#trade_overseer_prices_hint", onclick: show_window_by_id("trade_prices_window") })
+
+                button_help   : help_button({})
             }
         })
     })

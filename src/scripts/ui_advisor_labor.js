@@ -6,7 +6,7 @@ advisor_labors_window {
     allow_rmb_goback : true
     help_id: "message_overseer_workers"
     ui : baseui(advisor_window_base, {
-        advisor_area            : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+        advisor_area            : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2], size:[px(40), px(27)]
             ui : {
                 background      : outer_panel({size[40, 27]})
 
@@ -40,6 +40,8 @@ advisor_labors_window {
                                           font:FONT_NORMAL_WHITE_ON_DARK
                                           textfn:function() { return _eformat( "${finance.wages}  ${50.15}  ${50.18} ${finance.wages_kingdome}", { finance : city.finance }) }
                                        })
+
+                button_help    : help_button({})
             }
         })
     })
@@ -64,7 +66,7 @@ function labor_category_name(cat) {
 function advisor_labors_window_init(window) {
     advisors_toolbar_refresh(window, ADVISOR_LABOR)
 
-    window.employed.text = _eformat( "${l.workers_employed} ${50.12} ${l.workers_unemployed} ${50.13} ${l.unemployment_percentage}", { l : city.labor })
+    window.employed.text = _eformat( "${l.workers_employed} ${50.12} ${l.workers_unemployed} ${50.13} ${l.unemployment_percentage} %)", { l : city.labor })
 }
 
 [es=(advisor_labors_window, ui_draw_foreground)]

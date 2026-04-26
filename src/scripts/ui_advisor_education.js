@@ -92,7 +92,7 @@ advisor_education_window {
 	allow_rmb_goback : true
 	help_id: "message_overseer_learning"
 	ui : baseui(advisor_window_base, {
-		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2], size:[px(40), px(19)]
 			ui : {
 				background   : outer_panel({size:[40, 19]})
 				advisor_icon : image({pack:PACK_GENERAL, id:128, offset:7, pos:[10, 10] })
@@ -121,6 +121,7 @@ advisor_education_window {
 				})
 
 				education_advice : multiline({pos:[30, 250], size:[px(37), 0], font: FONT_NORMAL_BLACK_ON_LIGHT })
+				button_help   : help_button({})
 			}
 		})
 	})

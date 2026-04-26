@@ -105,7 +105,7 @@ advisor_religion_window = {
 	allow_rmb_goback : true
 	help_id: "message_overseer_temples"
 	ui : baseui(advisor_window_base, {
-		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2], size:[px(40), px(27)]
 			ui : {
 				background : outer_panel({size:[40, 27] }),
 				title : text({pos: [60, 12], text: {group:59, id:0}, font : FONT_LARGE_BLACK_ON_LIGHT }),
@@ -144,6 +144,8 @@ advisor_religion_window = {
 				planed_festival : { type : "text", pos: [102, 284 + 68], font : FONT_NORMAL_BLACK_ON_DARK, align:"center" },
 				hold_festival_btn : { type:"generic_button", pos:[102, 278 + 68], size:[300, 24], onclick: advisor_religion_window_hold_festival },
 				festival_advice : { type : "text", pos: [56, 305 + 68], wrap:400, font : FONT_NORMAL_WHITE_ON_DARK, multiline:true },
+
+				button_help   : help_button({})
 			}
 		})
 	})

@@ -100,7 +100,7 @@ advisor_population_window = {
 	help_id: "message_overseer_granaries"
 
 	ui: baseui(advisor_window_base, {
-		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2], size:[px(40), px(27)]
             ui : {
 				background   : outer_panel({size:[40, 27] })
 				advisor_icon : image({pack:PACK_GENERAL, id:128, offset:5, pos:[10, 10] })
@@ -140,6 +140,8 @@ advisor_population_window = {
 								draw_paneling: true
 								onrender_item: advisor_population_info_lines_on_render_item
 							})
+
+				button_help   : help_button({})
 			}
 		})
 	})

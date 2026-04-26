@@ -6,7 +6,7 @@ advisor_chief_window {
 	allow_rmb_goback : true
 	help_id: "message_chief_overseer"
 	ui : baseui(advisor_window_base, {
-		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2], size:[px(40), px(27)]
 			ui : {
 				background : dummy({ pos:[0, 0] })
 
@@ -27,6 +27,8 @@ advisor_chief_window {
 					draw_paneling: true
 					onrender_item: advisor_chief_report_on_render_item
 				})
+
+				button_help   : help_button({}),
 			}
 		})
 	})

@@ -93,7 +93,7 @@ advisor_housing_window {
 	allow_rmb_goback : true
 	help_id: "message_housing_and_desirability"
 	ui : baseui(advisor_window_base, {
-		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2], size:[px(40), px(27)]
             ui : {
 				background       : outer_panel({size:[40, 27]})
 				advisor_icon     : image({pack:PACK_GENERAL, id:128, offset:5, pos:[10, 10]})
@@ -131,6 +131,8 @@ advisor_housing_window {
 				goods_demanding_3_icon : resource_icon({ pos: [34, 397], resource: RESOURCE_BEER })
 				goods_demanding_3_text : label({ font: FONT_NORMAL_BLACK_ON_LIGHT, text: "#TR_ADVISOR_RESIDENCES_DEMANDING_BEER", pos: [60, 400] })
 				goods_demanding_3_value : label({ font: FONT_NORMAL_BLACK_ON_LIGHT, pos: [320, 400] })
+
+				button_help   : help_button({})
 			}
 		})
 	})

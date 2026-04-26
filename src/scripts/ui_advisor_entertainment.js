@@ -77,7 +77,7 @@ advisor_entertainment_window {
 	allow_rmb_goback : true
 	help_id: "message_overseer_diversions"
 	ui : baseui(advisor_window_base, {
-		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+		advisor_area             : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2], size:[px(40), px(20)]
 			ui : {
 				background    : outer_panel({size:[40, 20] })
 				title         : text({pos: [60, 12], text:[58, 0], font : FONT_LARGE_BLACK_ON_LIGHT })
@@ -103,7 +103,8 @@ advisor_entertainment_window {
 					onrender_item: advisor_entertainment_venues_list_on_render_item
 				}),
 
-				advice        : multiline({ pos[30, 230], size:[px(37), 208], wrap:512, font:FONT_NORMAL_BLACK_ON_LIGHT }),
+				advice        : multiline({ pos[30, 230], size:[px(37), 208], wrap:512, font:FONT_NORMAL_BLACK_ON_LIGHT })
+				button_help   : help_button({})
 			}
 		})
 	})

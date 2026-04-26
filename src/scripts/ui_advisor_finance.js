@@ -6,7 +6,7 @@ advisor_financial_window {
     allow_rmb_goback : true
     help_id: "message_overseer_treasury"
     ui : baseui(advisor_window_base, {
-        advisor_area               : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+        advisor_area               : dummy({ pos [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2], size:[px(40), px(27)]
             ui : {
                 background         : outer_panel({size[40, 27]})
                 advisor_icon       : image({pack:PACK_GENERAL, id:128, offset:10, pos[10, 10] })
@@ -32,6 +32,8 @@ advisor_financial_window {
 
                 incomes_base       : text({margin:{left:10, top:150}})
                 expenses_base      : text({margin:{left:10, top:240}})
+
+                button_help   : help_button({})
             }
         })
     })
