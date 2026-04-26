@@ -28,6 +28,7 @@
 #include "core/encoding.h"
 #include "input/mouse.h"
 #include "graphics/screen.h"
+#include "window/message_dialog.h"
 
 #include <algorithm>
 #include <cstring>
@@ -194,6 +195,7 @@ void reset_ui_command_queue();
         std::stack<vec2i> _offset;
         hvector<universal_button, 32> buttons;
         hvector<scrollbar_t*, 4> scrollbars;
+        hvector<rich_text_t*, 8> rich_text_targets;
         hvector<scrollable_list*, 4> scrollable_lists;
         hvector<input_box*, 4> input_boxes;
         einput* active_input = nullptr;
@@ -208,6 +210,7 @@ void reset_ui_command_queue();
             }
             buttons.clear();
             scrollbars.clear();
+            rich_text_targets.clear();
             scrollable_lists.clear();
             input_boxes.clear();
         }
@@ -427,6 +430,18 @@ bool ui::handle_mouse(const mouse* m) {
         handle |= !!scrollbar_handle_mouse(g_state.scrollbars[i], m);
     }
 
+    for (int i = (int)g_state.rich_text_targets.size() - 1; i >= 0 && !handle; --i) {
+        rich_text_t* rt = g_state.rich_text_targets[i];
+        const int link_id = rt->get_clicked_link(m);
+        if (link_id >= 0) {
+            const xstring next_id = lang_get_message_id(link_id);
+            if (!next_id.empty() && next_id != "unknow_message") {
+                window_message_dialog_show(next_id.c_str(), -1, nullptr);
+                handle = true;
+            }
+        }
+    }
+
     for (int i = g_state.scrollable_lists.size() - 1; i >= 0 && !handle; --i) {
         auto panel = g_state.scrollable_lists[i];
         handle |= !!panel->input_handle(m);
@@ -443,6 +458,7 @@ bool ui::handle_mouse(const mouse* m) {
 void ui::clear_active_elements() {
     g_state.buttons.clear();
     g_state.scrollbars.clear();
+    g_state.rich_text_targets.clear();
     g_state.scrollable_lists.clear();
     g_state.input_boxes.clear();
     stop_active_input();
@@ -1868,6 +1884,7 @@ void ui::etext::draw(UiFlags flags) {
         if (!(_flags & UiFlags_NoScroll)) {
             g_state.scrollbars.push_back(rich_text->scrollbar());
         }
+        g_state.rich_text_targets.push_back(rich_text.get());
 
         if (_clip_area) {
             push(cmd_t::clip_set, Pos{scr_pos}, Size{pxsize()});

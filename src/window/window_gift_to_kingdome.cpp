@@ -61,7 +61,7 @@ void ui::gift_to_kingdome_window::init() {
 
     const bool can_send_lavish_gift = g_city.kingdome.can_send_gift(GIFT_LAVISH);
     const auto *lavish_gift = g_city.kingdome.get_gift(GIFT_LAVISH);
-    ui["link_lavish"] = can_send_lavish_gift 
+    ui["link_lavish"] = can_send_lavish_gift
                             ? bstring128().printf("%s (%d db)", ui::str(52, 59 + lavish_gift->id), lavish_gift->cost)
                             : bstring128(ui::str(52, 48));
     ui["link_lavish"].onclick([this] { select_link(GIFT_LAVISH); });
