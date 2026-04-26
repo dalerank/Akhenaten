@@ -70,13 +70,18 @@ void building_storage_room::add_import(e_resource resource) {
 }
 
 void building_storage_room::remove_export(e_resource resource) {
-    consume_resource(resource, 100);
+    if (base.stored_first().type != resource || base.stored_first().value <= 0) {
+        return;
+    }
+
+    int amount = std::min<int>(100, base.stored_first().value);
+    base.stored_first().value -= amount;
     if (base.stored_first().value <= 0) {
         base.stored_first().type = RESOURCE_NONE;
     }
 
     int price = trade_price_sell(resource);
-    events::emit(event_stats_remove_resource{ resource, 100 });
+    events::emit(event_stats_remove_resource{ resource, amount });
     events::emit(event_finance_request{ efinance_request_export, price });
 
     set_image(base.stored_first().type);
