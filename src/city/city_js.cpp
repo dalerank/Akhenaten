@@ -323,6 +323,15 @@ int __city_message_lang_category(int message_index) {
 }
 ANK_FUNCTION_1(__city_message_lang_category)
 
+void __city_message_delete_at(int message_index) {
+    if (message_index < 0 || message_index >= city_message_count()) {
+        return;
+    }
+    city_message_set_current(message_index);
+    city_message_delete(message_index);
+}
+ANK_FUNCTION_1(__city_message_delete_at)
+
 std::optional<bvariant> __city_get_coverage_property(pcstr property) {
     return archive_helper::get(g_city.coverage, property, true);
 }

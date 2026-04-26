@@ -103,12 +103,6 @@ static void empire_city_proto_trade_route_traded(js_State* J) {
     js_helpers::js_push_value(J, city ? city->get_route().traded((e_resource)res) : 0);
 }
 
-static void empire_city_proto_stack_proper_quantity(js_State* J) {
-    const int res = js_helpers::js_to_value<int>(J, 1);
-    const int qty = js_helpers::js_to_value<int>(J, 2);
-    js_helpers::js_push_value(J, __city_resource_stack_proper_quantity(res, qty));
-}
-
 static void empire_city_proto_toString(js_State* J) {
     char buf[64];
     snprintf(buf, sizeof buf, "EmpireCity(%d)", empire_city_this_id(J));
@@ -142,7 +136,6 @@ void js_register_empire_city_proto(js_State* J) {
     jsB_propf(J, js_intern("EmpireCity.prototype.city_sells_resource"), empire_city_proto_city_sells_resource, 1);
     jsB_propf(J, js_intern("EmpireCity.prototype.trade_route_limit"), empire_city_proto_trade_route_limit, 1);
     jsB_propf(J, js_intern("EmpireCity.prototype.trade_route_traded"), empire_city_proto_trade_route_traded, 1);
-    jsB_propf(J, js_intern("EmpireCity.prototype.stack_proper_quantity"), empire_city_proto_stack_proper_quantity, 2);
     jsB_propf(J, js_intern("EmpireCity.prototype.toString"), empire_city_proto_toString, 0);
 
     js_newcconstructor(J, jsB_new_EmpireCity, jsB_new_EmpireCity, js_intern("EmpireCity"), 1);

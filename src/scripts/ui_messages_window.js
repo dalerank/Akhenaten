@@ -35,14 +35,31 @@ function message_list_window_on_click_item(p) {
     __message_list_window_open_entry(p.user_data)
 }
 
-[es=(message_list_window, init)]
-function message_list_window_on_init(window) {
+var message_list_window_ref = null
+
+function message_list_window_refresh_rows(window) {
     __city_message_sort_and_compact()
     var n = __city_message_count()
     window.messages_list.clear()
     for (var i = 0; i < n; i++) {
         window.messages_list.add_item("", i)
     }
+}
+
+function message_list_window_on_rightclick_item(p) {
+    if (!p) {
+        return
+    }
+    __city_message_delete_at(p.user_data)
+    if (message_list_window_ref) {
+        message_list_window_refresh_rows(message_list_window_ref)
+    }
+}
+
+[es=(message_list_window, init)]
+function message_list_window_on_init(window) {
+    message_list_window_ref = window
+    message_list_window_refresh_rows(window)
 }
 
 message_list_window {
@@ -61,7 +78,8 @@ message_list_window {
                                          view_items:15
                                          draw_scrollbar_always:true
                                          onrender_item: message_list_window_on_render_item
-                                         onclick_item: message_list_window_on_click_item })
+                                         onclick_item: message_list_window_on_click_item
+                                         onrightclick_item: message_list_window_on_rightclick_item })
 
         message_icon  : dummy({pos[0, 0]})
         message_row   : dummy({pos[0, 0], size[px(13), 20]})
@@ -73,7 +91,7 @@ message_list_window {
         help_text     : text({margin{left:50, bottom:-45}, size[16 * 26 - 100, -1], text[63, 4], font:FONT_NORMAL_BLACK_ON_LIGHT, multiline:true, wrap:16 * 26 - 100})
         empty_text    : text({margin{left:32, centery:-20}, size[16 * 26 - 48, -1], text[63, 1], enabled:false, font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:16 * 26 - 48})
 
-        btnhelp       : help_button({})
-        btnclose      : close_button({tooltip:"#exit_this_panel"})
+        btnhelp       : help_button({tooltip:"#message_game_control_messages", onclick: function() { window_message_dialog_show("message_dialog_messages") } })
+        btnclose      : close_button({tooltip:"#exit_this_panel", onclick: window_go_back })
     }
 }

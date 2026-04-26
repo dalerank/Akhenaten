@@ -51,6 +51,10 @@ void reset_ui_command_queue();
     const xstring element::ONCLICK_EVENT{"onclick_event"};
     const xstring element::ONDOUBLECLICK_EVENT{"ondoubleclick_event"};
     const xstring element::ONINPUT_EVENT{"oninput_event"};
+    const xstring element::ONRENDER_ITEM{"onrender_item"};
+    const xstring element::ONCLICK_ITEM{"onclick_item"};
+    const xstring element::ONRIGHTCLICK_ITEM{"onrightclick_item"};
+    const xstring element::ONDOUBLECLICK_ITEM{"ondoubleclick_item"};
     const xstring element::EMPTY_JS_REF{};
 
     tooltip_context tooltipctx;
@@ -1584,17 +1588,17 @@ void ui::escrollable_list::on_dblclick_item(const scrollable_list::entry_data* e
         dispatch_autoconfig_es_event(get_current_widget(), ondblclick_event.c_str(), *m);
         return;
     }
-    if (!_js_ondoubleclick_item_ref.empty()) {
-        js_call_function(_js_ondoubleclick_item_ref, {{"text", entry->text}});
+    if (!js_ref(ONDOUBLECLICK_ITEM).empty()) {
+        js_call_function(js_ref(ONDOUBLECLICK_ITEM), {{"text", entry->text}});
     }
 }
 
 void ui::escrollable_list::on_render_item(int index, int flags, const scrollable_list::entry_data& entry, vec2i pos,
   e_font font) {
-    if (!_js_render_item_ref.empty()) {
+    if (!js_ref(ONRENDER_ITEM).empty()) {
         ensure_panel();
         const scrollable_list_ui_params& up = panel->ui_params;
-        js_call_function(_js_render_item_ref,
+        js_call_function(js_ref(ONRENDER_ITEM),
           { {"index", (int32_t)index},
             {"flags", (int32_t)flags},
             {"hover", (flags & 2) != 0},
@@ -1623,18 +1627,18 @@ void ui::escrollable_list::ensure_panel() {
     refill();
 
     panel->set_onclick_entry(_onclick_cb);
-    if (_custom_render_cb || !_js_render_item_ref.empty()) {
+    if (_custom_render_cb || !js_ref(ONRENDER_ITEM).empty()) {
         panel->set_custom_render_func([&](int index, int flags, const scrollable_list::entry_data& entry, vec2i pos,
                                         e_font font) { this->on_render_item(index, flags, entry, pos, font); });
     }
 
     xstring ondblclick_event = event_name(ONDOUBLECLICK_EVENT);
-    if (_ondoubleclick_item_cb || !_js_ondoubleclick_item_ref.empty() || !ondblclick_event.empty()) {
+    if (_ondoubleclick_item_cb || !js_ref(ONDOUBLECLICK_ITEM).empty() || !ondblclick_event.empty()) {
         panel->set_onclick_dbl_entry([&](const scrollable_list::entry_data* entry) { this->on_dblclick_item(entry); });
     }
 
     xstring onclick_event = event_name(ONCLICK_EVENT);
-    if (_onclick_ex_cb || !_js_onclick_item_ref.empty() || !onclick_event.empty()) {
+    if (_onclick_ex_cb || !js_ref(ONCLICK_ITEM).empty() || !onclick_event.empty()) {
         panel->set_onclick_entry([this, onclick_event](scrollable_list::entry_data* e) {
             if (!e) {
                 return;
@@ -1646,14 +1650,24 @@ void ui::escrollable_list::ensure_panel() {
                 dispatch_autoconfig_es_event(get_current_widget(), onclick_event.c_str(), *m);
                 return;
             }
-            if (!_js_onclick_item_ref.empty()) {
-                js_call_function(_js_onclick_item_ref,
+            if (!js_ref(ONCLICK_ITEM).empty()) {
+                js_call_function(js_ref(ONCLICK_ITEM),
                     {{"text", e->text}, {"user_data", (int32_t)e->user_data}});
                 return;
             }
             if (_onclick_ex_cb) {
                 _onclick_ex_cb(e);
             }
+        });
+    }
+
+    if (!js_ref(ONRIGHTCLICK_ITEM).empty()) {
+        panel->set_onrightclick_entry([this](scrollable_list::entry_data* e) {
+            if (!e) {
+                return;
+            }
+            js_call_function(js_ref(ONRIGHTCLICK_ITEM),
+                {{"text", e->text}, {"user_data", (int32_t)e->user_data}});
         });
     }
 }
@@ -1763,9 +1777,10 @@ void ui::escrollable_list::load(archive arch, element* parent, items& elems) {
     xstring type = arch.r_string("type");
     assert(type == "scrollable_list");
 
-    _js_render_item_ref = arch.r_function("onrender_item");
-    _js_onclick_item_ref = arch.r_function("onclick_item");
-    _js_ondoubleclick_item_ref = arch.r_function("ondoubleclick_item");
+    set_ref(ONRENDER_ITEM, arch.r_function("onrender_item"));
+    set_ref(ONCLICK_ITEM, arch.r_function("onclick_item"));
+    set_ref(ONRIGHTCLICK_ITEM, arch.r_function("onrightclick_item"));
+    set_ref(ONDOUBLECLICK_ITEM, arch.r_function("ondoubleclick_item"));
     set_event(ONCLICK_EVENT, arch.r_string(ONCLICK_EVENT.c_str()));
     set_event(ONDOUBLECLICK_EVENT, arch.r_string(ONDOUBLECLICK_EVENT.c_str()));
 

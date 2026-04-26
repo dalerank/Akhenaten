@@ -71,6 +71,7 @@ import invasions
 import enemies
 import sentiment
 import empire
+import empire_city_prototype
 import console_commands
 import malaria_risk
 import player

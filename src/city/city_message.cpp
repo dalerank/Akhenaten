@@ -393,10 +393,10 @@ bool city_message_mark_population_shown(int population) {
     case 2000: lastv = data.population_shown.pop2000; data.population_shown.pop2000 = true; return lastv;
     case 3000: lastv = data.population_shown.pop3000; data.population_shown.pop3000 = true; return lastv;
     case 5000: lastv = data.population_shown.pop5000; data.population_shown.pop5000 = true; return lastv;
-    case 10000: lastv = data.population_shown.pop10000; data.population_shown.pop10000 = true; return lastv; 
+    case 10000: lastv = data.population_shown.pop10000; data.population_shown.pop10000 = true; return lastv;
     case 15000: lastv = data.population_shown.pop15000; data.population_shown.pop15000 = true; return lastv;
-    case 20000: lastv = data.population_shown.pop20000; data.population_shown.pop20000 = true; return lastv; 
-    case 25000: lastv = data.population_shown.pop25000; data.population_shown.pop25000 = true; return lastv; 
+    case 20000: lastv = data.population_shown.pop20000; data.population_shown.pop20000 = true; return lastv;
+    case 25000: lastv = data.population_shown.pop25000; data.population_shown.pop25000 = true; return lastv;
     default:
         return false;
     }

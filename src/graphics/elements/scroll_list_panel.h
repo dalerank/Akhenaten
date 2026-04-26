@@ -101,6 +101,7 @@ public:
     void set_onclick_entry(onclick_callback lmb) { left_click_callback = lmb; }
     void set_onclick_entry(onclick_ex_callback lmb) { left_click_ex_callback = lmb; }
     void set_onclick_dbl_entry(onclick_double_ex_callback lmb) { double_click_ex_callback = lmb; }
+    void set_onrightclick_entry(onclick_ex_callback rmb) { right_click_ex_callback = std::move(rmb); }
 
 private:
     generic_button list_buttons[MAX_BUTTONS_IN_SCROLLABLE_LIST] = {};
@@ -110,6 +111,7 @@ private:
 
     onclick_callback left_click_callback;
     onclick_ex_callback left_click_ex_callback;
+    onclick_ex_callback right_click_ex_callback;
     onclick_callback right_click_callback;
     onclick_callback double_click_callback;
     onclick_double_ex_callback double_click_ex_callback;

@@ -263,7 +263,21 @@ int scrollable_list::input_handle(const mouse* m) {
             }
 
         } else if (m->right.went_up) {
-            right_click_callback(button->parameter1, button->parameter2);
+            entry_data click_item;
+            if (ui_params.use_file_finder) {
+                click_item.text = (file_finder && file_finder->files) ? get_entry_text_by_idx(global_row, FILE_NO_EXT)
+                                                                      : xstring();
+                click_item.user_data = 0;
+            } else if (global_row < (int)manual_entry_list.size()) {
+                click_item = manual_entry_list[global_row];
+            } else {
+                click_item = {};
+            }
+            if (right_click_ex_callback) {
+                right_click_ex_callback(&click_item);
+            } else if (right_click_callback) {
+                right_click_callback(button->parameter1, button->parameter2);
+            }
         }
 
         // focus change callback

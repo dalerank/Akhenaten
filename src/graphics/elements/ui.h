@@ -567,6 +567,10 @@ namespace ui {
         static const xstring ONCLICK_EVENT;
         static const xstring ONDOUBLECLICK_EVENT;
         static const xstring ONINPUT_EVENT;
+        static const xstring ONRENDER_ITEM;
+        static const xstring ONCLICK_ITEM;
+        static const xstring ONRIGHTCLICK_ITEM;
+        static const xstring ONDOUBLECLICK_ITEM;
         static const xstring EMPTY_JS_REF;
     };
 
@@ -720,10 +724,6 @@ namespace ui {
         onclick_ex_callback _onclick_ex_cb;
         onclick_double_ex_callback _ondoubleclick_item_cb;
         custom_text_render_func _custom_render_cb;
-        xstring _js_render_item_ref;
-        xstring _js_onclick_item_ref;
-        xstring _js_ondoubleclick_item_ref;
-
         virtual void draw(UiFlags flags) override;
 
         virtual void load(archive elem, element* parent, items& elems) override;

@@ -94,7 +94,7 @@ void ui::sidebar_window_expanded_t::init_ui() {
     });
 
     ui["show_messages"].onclick([] {
-        ui::message_list_window::show(window_city_show);
+        ui::message_list_window::show();
     });
 
     ui["show_briefing"].readonly = !(g_scenario.mode() == e_scenario_normal || g_scenario.mode() == e_scenario_selected);
