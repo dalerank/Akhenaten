@@ -179,9 +179,6 @@ city {
                 @wrath_bolts {}
                 @happy_ankhs {}
                 @months_since_festival {}
-                @status {}
-                @mood {}
-                @happy_anks {}
             }
         }
 
