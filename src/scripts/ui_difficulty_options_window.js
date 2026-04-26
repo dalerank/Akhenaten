@@ -28,15 +28,13 @@ difficulty_options_window {
         background       : outer_panel({size[24, 12]})
         title            : header({pos[0, 16], size[px(24), 20], text:"#difficulty_settings", align:"center"})
 
-        difficulty_label : text({text:"#difficulty_row_difficulty", pos[32, 50], font: FONT_SMALL_PLAIN})
-        arrow_diff_down  : arrowdown({pos[168, 44], tiny:false, allow_repeat: true, onclick: __game_decrease_difficulty })
-        arrow_diff_up    : arrowup({pos[192, 44], tiny:false, allow_repeat: true, onclick: __game_increase_difficulty })
-        difficulty_value : text({pos[248, 50], font: FONT_SMALL_PLAIN})
+        arrow_diff_down  : arrowdown({pos[240, 54], tiny:false, allow_repeat: true, onclick: __game_decrease_difficulty })
+        arrow_diff_up    : arrowup({pos[264, 54], tiny:false, allow_repeat: true, onclick: __game_increase_difficulty })
+        difficulty_value : text({pos[22, 62], size[244, 20], font: FONT_NORMAL_BLACK_ON_LIGHT, align:"center"})
 
-        gods_label       : text({text:"#difficulty_row_gods", pos[32, 84], font: FONT_SMALL_PLAIN})
-        btn_gods         : button({pos[168, 76], size[50, 22], font: FONT_NORMAL_BLACK_ON_DARK
-                                   onclick_event: "toggle_gods"})
+        btn_gods         : button({pos[238, 102], size[50, 22], font: FONT_NORMAL_BLACK_ON_DARK, onclick_event: "toggle_gods"})
+        gods_value       : text({pos[22, 110], size[244, 20], text:"#difficulty_row_gods", font: FONT_NORMAL_BLACK_ON_LIGHT, align:"center"})
 
-        footer           : text({pos[0, 166], size[px(24), 40], text[153, 8], font: FONT_NORMAL_BLACK_ON_LIGHT, align:"center"})
+        footer           : text({pos[0, 156], size[px(24), 20], text:"#difficulty_right_click_to_continue", font: FONT_NORMAL_BLACK_ON_LIGHT, align:"center"})
     }
 }
