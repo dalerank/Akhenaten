@@ -28,11 +28,22 @@ function message_list_window_on_render_item(p) {
     }
 }
 
+function message_list_window_open_entry(index) {
+    var id = __city_message_set_current(index)
+    if (id >= __city_message_count()) {
+        return
+    }
+    var mmTextId = __city_message_mm_text_id(id)
+    var mmMsg = __lang_get_message_id(mmTextId)
+    __city_message_mark_read(id)
+    __ui_window_message_dialog_show_city_message(mmMsg, id, __city_message_year(id), __city_message_month(id), __city_message_param1(id), __city_message_param2(id), mmTextId)
+}
+
 function message_list_window_on_click_item(p) {
     if (!p) {
         return
     }
-    __message_list_window_open_entry(p.user_data)
+    message_list_window_open_entry(p.user_data)
 }
 
 var message_list_window_ref = null
@@ -62,6 +73,7 @@ function message_list_window_on_init(window) {
     message_list_window_refresh_rows(window)
 }
 
+[es=modal_window]
 message_list_window {
     pos: [(sw(0) - px(30))/2, (sh(0) - px(22))/2]
     read_icon : {pack:PACK_GENERAL, id:90, offset:14}

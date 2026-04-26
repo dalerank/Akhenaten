@@ -26,7 +26,7 @@
 #include "window/window_city.h"
 #include "window/window_empire.h"
 #include "window/message_dialog.h"
-#include "window/message_list.h"
+#include "window/autoconfig_window.h"
 #include "window/window_mission_briefing.h"
 #include "window/overlay_menu.h"
 #include "widget/widget_top_menu_game.h"
@@ -94,7 +94,7 @@ void ui::sidebar_window_expanded_t::init_ui() {
     });
 
     ui["show_messages"].onclick([] {
-        ui::message_list_window::show();
+        autoconfig_window::show("message_list_window");
     });
 
     ui["show_briefing"].readonly = !(g_scenario.mode() == e_scenario_normal || g_scenario.mode() == e_scenario_selected);

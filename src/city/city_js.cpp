@@ -332,6 +332,26 @@ void __city_message_delete_at(int message_index) {
 }
 ANK_FUNCTION_1(__city_message_delete_at)
 
+int __city_message_set_current(int message_index) {
+    return city_message_set_current(message_index);
+}
+ANK_FUNCTION_1(__city_message_set_current)
+
+void __city_message_mark_read(int message_index) {
+    city_message_mark_read(message_index);
+}
+ANK_FUNCTION_1(__city_message_mark_read)
+
+int __city_message_param1(int message_index) {
+    return city_message_get(message_index).param1;
+}
+ANK_FUNCTION_1(__city_message_param1)
+
+int __city_message_param2(int message_index) {
+    return city_message_get(message_index).param2;
+}
+ANK_FUNCTION_1(__city_message_param2)
+
 std::optional<bvariant> __city_get_coverage_property(pcstr property) {
     return archive_helper::get(g_city.coverage, property, true);
 }

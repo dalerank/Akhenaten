@@ -150,7 +150,7 @@ struct message_manager_t {
     uint8_t reserved_6;
     uint8_t reserved_7;
 
-    union {
+    union population_shown_u {
         uint16_t popmiles;
         uint16_t pop100 : 1;
         uint16_t pop500 : 1;

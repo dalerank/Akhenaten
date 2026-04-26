@@ -169,7 +169,7 @@ void city_message_post_full(bool use_popup, xstring template_id, const event_ph_
     msg->sender_faction = event->sender_faction;
 
     msg->req_resource = event->item.value;
-    msg->req_amount = event->amount.value; 
+    msg->req_amount = event->amount.value;
     if (msg->req_amount < 100) {
         msg->req_amount *= 100;
     }
@@ -255,7 +255,7 @@ city_message &message_manager_t::post_common(bool use_popup, xstring mm_text, in
 
     if (use_popup && g_window_manager.window_is("window_city")) {
         show_message_popup(id);
-    } else if (use_popup) { 
+    } else if (use_popup) {
         // add to queue to be processed when player returns to city
         enqueue_message(msg.sequence);
     } else if (should_play_sound) {

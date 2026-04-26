@@ -59,3 +59,8 @@ xstring __lang_message_title_text(int mm_text_id) {
     return model_msg.title.text;
 }
 ANK_FUNCTION_1(__lang_message_title_text)
+
+xstring __lang_get_message_id(int mm_text_id) {
+    return lang_get_message_id(mm_text_id);
+}
+ANK_FUNCTION_1(__lang_get_message_id)
