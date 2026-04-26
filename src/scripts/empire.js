@@ -17,6 +17,22 @@ function console_command_distant_battle_test(args) {
 	log_info("distant_battle_test: city_id=ы" + cityId + " strength=" + strength)
 }
 
+Object.defineProperty(EmpireCity.prototype, "empire_object", {
+    get: function() {
+        return new EmpireCityObject(this.id)
+    },
+    enumerable: true,
+    configurable: true
+})
+
+Object.defineProperty(EmpireCity.prototype, "is_sieged", {
+    get: function() {
+        return this.months_under_siege > 0
+    },
+    enumerable: true,
+    configurable: true
+})
+
 empire_city_options {
     text_group_old_names : 195
     text_group_new_names : 21

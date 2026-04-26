@@ -250,7 +250,7 @@ function empire_window_es_draw_city_want_sell_items(window) {
             continue
         }
         var tradeMax = city.trade_route_limit(r)
-        tradeMax = city.stack_proper_quantity(r, tradeMax)
+        tradeMax = __city_resource_stack_proper_quantity(r, tradeMax)
         var pos = { x: elm.screen_pos.x + itemStepX * sellIndex, y: elm.screen_pos.y + itemStepY * sellIndex }
         empire_window_draw_trade_resource_row(pos, window.flags, r, -1, tradeMax, rowFont)
         sellIndex++
@@ -272,7 +272,7 @@ function empire_window_es_draw_city_want_buy_items(window) {
             continue
         }
         var tradeMax = city.trade_route_limit(r)
-        tradeMax = city.stack_proper_quantity(r, tradeMax)
+        tradeMax = __city_resource_stack_proper_quantity(r, tradeMax)
         var pos = { x: elm.screen_pos.x + itemStepX * buyIndex, y: elm.screen_pos.y + itemStepY * buyIndex }
         empire_window_draw_trade_resource_row(pos, window.flags, r, -1, tradeMax, rowFont)
         buyIndex++
@@ -298,8 +298,8 @@ function empire_window_es_draw_city_sell_items(window) {
         var tradeMax = city.trade_route_limit(r)
         var traded = city.trade_route_traded(r)
         var tradeNow = tradeMax < traded ? tradeMax : traded
-        tradeNow = city.stack_proper_quantity(r, tradeNow)
-        tradeMax = city.stack_proper_quantity(r, tradeMax)
+        tradeNow = __city_resource_stack_proper_quantity(r, tradeNow)
+        tradeMax = __city_resource_stack_proper_quantity(r, tradeMax)
 
         var local_x = itemW * index
         var pos = { x: elm.screen_pos.x + local_x, y: e_offset_y }
@@ -334,8 +334,8 @@ function empire_window_es_draw_city_buy_items(window) {
         var traded = city.trade_route_traded(r)
         var tradeNow = tradeMax < traded ? tradeMax : traded
 
-        tradeNow = city.stack_proper_quantity(r, tradeNow)
-        tradeMax = city.stack_proper_quantity(r, tradeMax)
+        tradeNow = __city_resource_stack_proper_quantity(r, tradeNow)
+        tradeMax = __city_resource_stack_proper_quantity(r, tradeMax)
 
         var local_x = itemW * index
         var pos = { x: elm.screen_pos.x + local_x, y: e_offset_y }

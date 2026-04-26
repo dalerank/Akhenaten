@@ -126,6 +126,10 @@ void jsV_toprimitive(js_State* J, js_Value* v, int preferred) {
             v->type = JS_TNUMBER;
             v->u.number = *(uint16_t*)p;
             return;
+        case JS_PTR_INT16:
+            v->type = JS_TNUMBER;
+            v->u.number = *(int16_t*)p;
+            return;
         default:
             return;
         }
@@ -184,6 +188,8 @@ int jsV_toboolean(js_State* J, js_Value* v) {
                 return *(uint8_t*)p != 0;
             case JS_PTR_UINT16:
                 return *(uint16_t*)p != 0;
+            case JS_PTR_INT16:
+                return *(int16_t*)p != 0;
             default:
                 return 1;
             }
@@ -304,6 +310,8 @@ double jsV_tonumber(js_State* J, js_Value* v) {
                 return *(uint8_t*)p;
             case JS_PTR_UINT16:
                 return *(uint16_t*)p;
+            case JS_PTR_INT16:
+                return *(int16_t*)p;
             default:
                 return 0;
             }
@@ -718,4 +726,8 @@ int js_strictequal(js_State* J) {
     if (x->type == JS_TOBJECT)
         return x->u.object == y->u.object;
     return 0;
+}
+
+void *jsV_get_cobj_ptr(js_Object *receiver) {
+    return receiver ? receiver->cobj_ptr : nullptr;
 }

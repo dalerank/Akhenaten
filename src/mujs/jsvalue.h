@@ -3,6 +3,7 @@
 
 #include "jsstring.h"
 
+#include <stddef.h>
 #include <stdint.h>
 
 typedef struct js_Property js_Property;
@@ -43,6 +44,7 @@ enum js_Class {
     JS_CITERATOR,
     JS_CUSERDATA,
     JS_CPTR, /* bound C pointer (int/int8/bool/float), get/set via *ptr */
+    JS_CPTROFF, /* (char*)receiver->cobj_ptr + off; read yields undefined if cobj_ptr null; write no-op */
 };
 
 enum js_CPtrType {
@@ -51,7 +53,8 @@ enum js_CPtrType {
     JS_PTR_FLOAT,
     JS_PTR_INT8,
     JS_PTR_UINT8,
-    JS_PTR_UINT16
+    JS_PTR_UINT16,
+    JS_PTR_INT16
 };
 
 /*
@@ -86,6 +89,7 @@ struct js_Object {
     js_Property *head, **tailp; /* for enumeration */
     int count; /* number of properties, for array sparseness check */
     js_Object *prototype;
+    void *cobj_ptr; /* native base for JS_CPTROFF on this object; nullptr if unused */
     union {
         int boolean;
         double number;
@@ -123,6 +127,10 @@ struct js_Object {
             void *ptr;
             js_CPtrType ptype;
         } p;
+        struct {
+            size_t off;
+            js_CPtrType ptype;
+        } poff;
         struct {
             int x, y;
         } vec2;
@@ -190,6 +198,8 @@ js_Object *jsV_newiterator(js_State *J, js_Object *obj, int own);
 const js_StringNode jsV_nextiterator(js_State* J, js_Object* iter);
 
 void jsV_resizearray(js_State *J, js_Object *obj, int newlen);
+
+void *jsV_get_cobj_ptr(js_Object *receiver);
 
 /* jsdump.c */
 void js_dumpobject(js_State *J, js_Object *obj);

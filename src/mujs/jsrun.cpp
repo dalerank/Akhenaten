@@ -176,13 +176,6 @@ void js_pushglobal(js_State *J) {
     js_pushobject(J, J->G);
 }
 
-void js_pushundefinedthis(js_State *J) {
-    if (J->strict)
-        J->pushundefined();
-    else
-        js_pushobject(J, J->G);
-}
-
 void js_currentfunction(js_State *J) {
     CHECKSTACK(1);
     STACK[TOP] = STACK[BOT - 1];
@@ -601,18 +594,38 @@ int js_State::hasproperty(js_Object *obj, js_StringNode name) {
             js_pushobject(J, ref->getter);
             js_pushobject(J, obj);
             J->call(0);
-        } else if (ref->value.type == JS_TOBJECT && ref->value.u.object->type == JS_CPTR) {
-            /* Bound C pointer: push current *ptr so script sees number/bool */
+        } else if (ref->value.type == JS_TOBJECT) {
             js_Object *o = ref->value.u.object;
-            void *p = o->u.p.ptr;
-            switch (o->u.p.ptype) {
-            case JS_PTR_INT:   js_pushnumber(J, *(int*)p); break;
-            case JS_PTR_BOOL:  js_pushboolean(J, *(bool*)p); break;
-            case JS_PTR_FLOAT: js_pushnumber(J, *(float*)p); break;
-            case JS_PTR_INT8:  js_pushnumber(J, *(int8_t*)p); break;
-            case JS_PTR_UINT8:  js_pushnumber(J, *(uint8_t*)p); break;
-            case JS_PTR_UINT16: js_pushnumber(J, *(uint16_t*)p); break;
-            default: js_pushvalue(J, ref->value); break;
+            void *p = nullptr;
+            js_CPtrType ptype = JS_PTR_INT;
+            if (o->type == JS_CPTR) {
+                p = o->u.p.ptr;
+                ptype = o->u.p.ptype;
+            } else if (o->type == JS_CPTROFF) {
+                void *base = jsV_get_cobj_ptr(obj);
+                if (!base) {
+                    J->pushundefined();
+                    return 1;
+                }
+                p = (char *)base + o->u.poff.off;
+                ptype = o->u.poff.ptype;
+            } else {
+                js_pushvalue(J, ref->value);
+                return 1;
+            }
+            if (!p) {
+                J->pushundefined();
+                return 1;
+            }
+            switch (ptype) {
+            case JS_PTR_INT:   js_pushnumber(J, *(int *)p); break;
+            case JS_PTR_BOOL:  js_pushboolean(J, *(bool *)p != 0); break;
+            case JS_PTR_FLOAT: js_pushnumber(J, *(float *)p); break;
+            case JS_PTR_INT8:  js_pushnumber(J, *(int8_t *)p); break;
+            case JS_PTR_UINT8:  js_pushnumber(J, *(uint8_t *)p); break;
+            case JS_PTR_UINT16: js_pushnumber(J, *(uint16_t *)p); break;
+            case JS_PTR_INT16:  js_pushnumber(J, *(int16_t *)p); break;
+            default: J->pushundefined(); break;
             }
         } else {
             js_pushvalue(J, ref->value);
@@ -635,22 +648,40 @@ static void jsR_setproperty(js_State* J, js_Object* obj, const js_StringNode nam
     int k;
     int own;
 
-    /* If property exists and is JS_CPTR, write to *ptr and keep the cell */
+    /* If property exists and is JS_CPTR / JS_CPTROFF, write to *ptr and keep the cell */
     ref = jsV_getpropertyx(J, obj, name, &own);
-    if (ref && ref->value.type == JS_TOBJECT && ref->value.u.object->type == JS_CPTR) {
+    if (ref && ref->value.type == JS_TOBJECT) {
         js_Object *o = ref->value.u.object;
-        void *p = o->u.p.ptr;
-        switch (o->u.p.ptype) {
-        case JS_PTR_INT:   *(int*)p = js_tointeger(J, -1); break;
-        case JS_PTR_BOOL:  *(bool*)p = js_toboolean(J, -1) != 0; break;
-        case JS_PTR_FLOAT: *(float*)p = (float)js_tonumber(J, -1); break;
-        case JS_PTR_INT8:  *(int8_t*)p = (int8_t)js_tointeger(J, -1); break;
-        case JS_PTR_UINT8:  *(uint8_t*)p = (uint8_t)js_tointeger(J, -1); break;
-        case JS_PTR_UINT16: *(uint16_t*)p = (uint16_t)js_tointeger(J, -1); break;
-        default: break;
+        if (o->type == JS_CPTR || o->type == JS_CPTROFF) {
+            void *p = nullptr;
+            js_CPtrType ptype = JS_PTR_INT;
+            if (o->type == JS_CPTR) {
+                p = o->u.p.ptr;
+                ptype = o->u.p.ptype;
+            } else {
+                void *base = jsV_get_cobj_ptr(obj);
+                if (!base) {
+                    js_pop(J, 1);
+                    return;
+                }
+                p = (char *)base + o->u.poff.off;
+                ptype = o->u.poff.ptype;
+            }
+            if (p) {
+                switch (ptype) {
+                case JS_PTR_INT:   *(int *)p = js_tointeger(J, -1); break;
+                case JS_PTR_BOOL:  *(bool *)p = js_toboolean(J, -1) != 0; break;
+                case JS_PTR_FLOAT: *(float *)p = (float)js_tonumber(J, -1); break;
+                case JS_PTR_INT8:  *(int8_t *)p = (int8_t)js_tointeger(J, -1); break;
+                case JS_PTR_UINT8:  *(uint8_t *)p = (uint8_t)js_tointeger(J, -1); break;
+                case JS_PTR_UINT16: *(uint16_t *)p = (uint16_t)js_tointeger(J, -1); break;
+                case JS_PTR_INT16:  *(int16_t *)p = (int16_t)js_tointeger(J, -1); break;
+                default: break;
+                }
+            }
+            js_pop(J, 1);
+            return;
         }
-        js_pop(J, 1);
-        return;
     }
 
     if (obj->type == JS_CARRAY) {

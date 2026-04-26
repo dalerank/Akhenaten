@@ -47,6 +47,9 @@ static void Op_toString(js_State *J)
 	case JS_CPTR:
         J->pushliteral(js_intern("[object Bound]"));
 		break;
+	case JS_CPTROFF:
+        J->pushliteral(js_intern("[object BoundOffset]"));
+		break;
 	}
 }
 

@@ -872,6 +872,9 @@ void js_dumpvalue(js_State *J, js_Value v)
 		case JS_CPTR:
 			LPRINTFMT("[Bound %p]", v.u.object->u.p.ptr);
 			break;
+		case JS_CPTROFF:
+			LPRINTFMT("[BoundOff off=%zu]", v.u.object->u.poff.off);
+			break;
 		default: LPRINTFMT("[Object %p]", v.u.object); break;
 		}
 		break;

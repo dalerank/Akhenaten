@@ -26,6 +26,7 @@
 
 #include "jsstring.h"
 
+#include <cstddef>
 #include <cstdint>
 
 struct js_State;
@@ -52,17 +53,29 @@ void js_setdebughook(js_State *J, js_DebugHook hook, void *udata);
 void js_register_bound_int(js_State *J, const js_StringNode name, int *ptr);
 void js_register_bound_bool(js_State* J, const js_StringNode name, void* ptr);
 void js_register_bound_float(js_State* J, const js_StringNode name, float* ptr);
-void js_register_bound_int8(js_State *J, const js_StringNode name, std::int8_t *ptr);
-void js_register_bound_uint8(js_State *J, const js_StringNode name, std::uint8_t *ptr);
-void js_register_bound_uint16(js_State *J, const js_StringNode name, std::uint16_t *ptr);
+void js_register_bound_int8(js_State *J, const js_StringNode name, int8_t *ptr);
+void js_register_bound_uint8(js_State *J, const js_StringNode name, uint8_t *ptr);
+void js_register_bound_uint16(js_State *J, const js_StringNode name, uint16_t *ptr);
+void js_register_bound_int16(js_State *J, const js_StringNode name, int16_t *ptr);
 
 /** Same as js_register_bound_* but attach CPTR as a property of the object left on stack at -2 (value pushed on -1). */
 void js_register_bound_int_property(js_State *J, const js_StringNode name, int *ptr);
 void js_register_bound_bool_property(js_State *J, const js_StringNode name, void *ptr);
 void js_register_bound_float_property(js_State *J, const js_StringNode name, float *ptr);
-void js_register_bound_int8_property(js_State *J, const js_StringNode name, std::int8_t *ptr);
-void js_register_bound_uint8_property(js_State *J, const js_StringNode name, std::uint8_t *ptr);
-void js_register_bound_uint16_property(js_State *J, const js_StringNode name, std::uint16_t *ptr);
+void js_register_bound_int8_property(js_State *J, const js_StringNode name, int8_t *ptr);
+void js_register_bound_uint8_property(js_State *J, const js_StringNode name, uint8_t *ptr);
+void js_register_bound_uint16_property(js_State *J, const js_StringNode name, uint16_t *ptr);
+void js_register_bound_int16_property(js_State *J, const js_StringNode name, int16_t *ptr);
+
+/** Stack: native object at -1; sets its cobj_ptr for JS_CPTROFF prototype fields. */
+void js_register_cobj_ptr_property(js_State *J, void *cpp_object);
+void js_register_bound_int_offset_property(js_State *J, const js_StringNode name, size_t byte_offset);
+void js_register_bound_bool_offset_property(js_State *J, const js_StringNode name, size_t byte_offset);
+void js_register_bound_float_offset_property(js_State *J, const js_StringNode name, size_t byte_offset);
+void js_register_bound_int8_offset_property(js_State *J, const js_StringNode name, size_t byte_offset);
+void js_register_bound_uint8_offset_property(js_State *J, const js_StringNode name, size_t byte_offset);
+void js_register_bound_uint16_offset_property(js_State *J, const js_StringNode name, size_t byte_offset);
+void js_register_bound_int16_offset_property(js_State *J, const js_StringNode name, size_t byte_offset);
 
 /* Basic functions */
 js_State *js_newstate(js_Alloc alloc, void *actx, int flags);
@@ -165,7 +178,7 @@ void js_delindex(js_State *J, int idx, int i);
 
 void js_currentfunction(js_State *J);
 void js_pushglobal(js_State *J);
-void js_pushundefined(js_State *J);
+
 
 /* Function modifiers API */
 int js_hasmodifier(js_State* J, int idx, const js_StringNode key);
