@@ -20,15 +20,14 @@ static int empire_city_this_id(js_State* J) {
     return id;
 }
 
-static int empire_city_map_this_id(js_State* J) {
-    J->getproperty(J->toobject(0), js_intern("id"));
-    const int id = (int)js_tointeger(J, -1);
-    js_pop(J, 1);
-    return id;
+/** nullptr if id invalid or city not in use */
+static empire_city* empire_city_this_active(js_State* J) {
+    empire_city* city = g_empire.city(empire_city_this_id(J));
+    return (city && city->in_use) ? city : nullptr;
 }
 
 static void empire_city_map_proto___property_getter(js_State* J) {
-    const int cid = empire_city_map_this_id(J);
+    const int cid = empire_city_this_id(J);
     pcstr prop = js_strnode_cstr(js_tostring(J, 1));
     const empire_city* city = g_empire.city(cid);
     if (!city) {
@@ -45,21 +44,25 @@ static void empire_city_map_proto___property_getter(js_State* J) {
 }
 
 static void empire_city_map_proto_toString(js_State* J) {
-    const int id = empire_city_map_this_id(J);
+    const int id = empire_city_this_id(J);
     char buf[64];
     snprintf(buf, sizeof buf, "EmpireCityMap(%d)", id);
     J->pushstring(buf);
 }
 
-static void jsB_new_EmpireCityMap(js_State* J) {
-    int id = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
-    const empire_city* c = g_empire.city(id);
+static void js_push_empire_city_wrapper(js_State* J, int id, js_Object* proto) {
+    empire_city* c = g_empire.city(id);
     if (!c || !c->in_use) {
         id = 0;
     }
-    js_pushobject(J, jsV_newobject(J, JS_COBJECT, g_empire_city_map_proto));
+    js_pushobject(J, jsV_newobject(J, JS_COBJECT, proto));
     js_pushnumber(J, (double)id);
     js_setproperty(J, -2, js_intern("id"));
+}
+
+static void jsB_new_EmpireCityMap(js_State* J) {
+    const int id = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
+    js_push_empire_city_wrapper(J, id, g_empire_city_map_proto);
 }
 
 static void empire_city_proto_get_empire_object(js_State* J) {
@@ -79,79 +82,59 @@ static void empire_city_proto_noop_set(js_State* J) {
 }
 
 static void empire_city_proto_get_type(js_State* J) {
-    const int cid = empire_city_this_id(J);
-    const empire_city* city = g_empire.city(cid);
-    const bool city_ok = city && city->in_use;
-    js_helpers::js_push_value(J, (int)(city_ok ? city->type : -1));
+    const empire_city* city = empire_city_this_active(J);
+    js_helpers::js_push_value(J, (int)(city ? city->type : -1));
 }
 
 static void empire_city_proto_get_is_open(js_State* J) {
-    const int cid = empire_city_this_id(J);
-    const empire_city* city = g_empire.city(cid);
-    const bool city_ok = city && city->in_use && city->is_open;
-    js_helpers::js_push_value(J, city_ok);
+    const empire_city* city = empire_city_this_active(J);
+    js_helpers::js_push_value(J, (bool)(city && city->is_open));
 }
 
 static void empire_city_proto_set_is_open(js_State* J) {
-    const int cid = empire_city_this_id(J);
     const int open = js_helpers::js_to_value<int>(J, 1);
-    empire_city* city = g_empire.city(cid);
-    if (city && city->in_use) {
+    if (empire_city* city = empire_city_this_active(J)) {
         city->is_open = open != 0;
     }
 }
 
 static void empire_city_proto_get_is_sieged(js_State* J) {
-    const int cid = empire_city_this_id(J);
-    const empire_city* city = g_empire.city(cid);
-    const bool city_ok = city && city->in_use && city->is_sieged();
-    js_helpers::js_push_value(J, city_ok);
+    const empire_city* city = empire_city_this_active(J);
+    js_helpers::js_push_value(J, (bool)(city && city->is_sieged()));
 }
 
 static void empire_city_proto_get_is_sea_trade(js_State* J) {
-    const int cid = empire_city_this_id(J);
-    const empire_city* city = g_empire.city(cid);
-    const bool city_ok = city && city->in_use && city->is_sea_trade;
-    js_helpers::js_push_value(J, city_ok);
+    const empire_city* city = empire_city_this_active(J);
+    js_helpers::js_push_value(J, (bool)(city && city->is_sea_trade));
 }
 
 static void empire_city_proto_get_cost_to_open(js_State* J) {
-    const int cid = empire_city_this_id(J);
-    const empire_city* city = g_empire.city(cid);
-    const bool city_ok = city && city->in_use;
-    js_helpers::js_push_value(J, city_ok ? city->cost_to_open : 0);
+    const empire_city* city = empire_city_this_active(J);
+    js_helpers::js_push_value(J, city ? city->cost_to_open : 0);
 }
 
 static void empire_city_proto_city_buys_resource(js_State* J) {
-    const int cid = empire_city_this_id(J);
     const int res = js_helpers::js_to_value<int>(J, 1);
-    const empire_city* city = g_empire.city(cid);
-    const bool city_ok = city && city->in_use;
-    js_helpers::js_push_value(J, city_ok ? city->buys_resource[(e_resource)res] : false);
+    const empire_city* city = empire_city_this_active(J);
+    js_helpers::js_push_value(J, city ? city->buys_resource[(e_resource)res] : false);
 }
 
 static void empire_city_proto_city_sells_resource(js_State* J) {
-    const int cid = empire_city_this_id(J);
     const int res = js_helpers::js_to_value<int>(J, 1);
-    const empire_city* city = g_empire.city(cid);
-    const bool city_ok = city && city->in_use;
-    js_helpers::js_push_value(J, city_ok ? city->sells_resource[(e_resource)res] : false);
+    const empire_city* city = empire_city_this_active(J);
+    js_helpers::js_push_value(J, city ? city->sells_resource[(e_resource)res] : false);
 }
 
 static void empire_city_proto_trade_route_limit(js_State* J) {
-    const int cid = empire_city_this_id(J);
     const int res = js_helpers::js_to_value<int>(J, 1);
-    const empire_city* city = g_empire.city(cid);
-    const bool city_ok = city && city->in_use;
-    js_helpers::js_push_value(J, city_ok ? city->get_route().limit((e_resource)res) : 0);
+    const empire_city* city = empire_city_this_active(J);
+    js_helpers::js_push_value(J, city ? city->get_route().limit((e_resource)res) : 0);
 }
 
 static void empire_city_proto_trade_route_traded(js_State* J) {
-    const int cid = empire_city_this_id(J);
     const int res = js_helpers::js_to_value<int>(J, 1);
-    const empire_city* city = g_empire.city(cid);
-    const bool city_ok = city && city->in_use;
-    js_helpers::js_push_value(J, city_ok ? city->get_route().traded((e_resource)res) : 0);
+    const empire_city* city = empire_city_this_active(J);
+    js_helpers::js_push_value(J, city ? city->get_route().traded((e_resource)res) : 0);
 }
 
 static void empire_city_proto_stack_proper_quantity(js_State* J) {
@@ -167,14 +150,8 @@ static void empire_city_proto_toString(js_State* J) {
 }
 
 static void jsB_new_EmpireCity(js_State* J) {
-    int id = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
-    const empire_city* c = g_empire.city(id);
-    if (!c || !c->in_use) {
-        id = 0;
-    }
-    js_pushobject(J, jsV_newobject(J, JS_COBJECT, g_empire_city_proto));
-    js_pushnumber(J, (double)id);
-    js_setproperty(J, -2, js_intern("id"));
+    const int id = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
+    js_push_empire_city_wrapper(J, id, g_empire_city_proto);
 }
 
 static void def_accessor(js_State* J, js_CFunction get, js_CFunction set, const char* name) {
@@ -198,6 +175,7 @@ void js_register_empire_city_proto(js_State* J) {
 
     def_accessor(J, empire_city_proto_get_empire_object, empire_city_proto_noop_set, "empire_object");
     def_accessor(J, empire_city_proto_get_type, empire_city_proto_noop_set, "type");
+    def_accessor(J, empire_city_proto_get_is_open, empire_city_proto_set_is_open, "is_open");
     def_accessor(J, empire_city_proto_get_is_open, empire_city_proto_set_is_open, "is_open");
     def_accessor(J, empire_city_proto_get_is_sieged, empire_city_proto_noop_set, "is_sieged");
     def_accessor(J, empire_city_proto_get_is_sea_trade, empire_city_proto_noop_set, "is_sea_trade");
