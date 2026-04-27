@@ -1,51 +1,123 @@
 log_info("akhenaten: sidebar extra started")
 
-sidebar_window_extra {
-  ui {
-    background        : inner_panel({pos[0, 480], size[10, 19]})
+var SIDEBAR_EXTRA_DISPLAY_NONE = 0
+var SIDEBAR_EXTRA_DISPLAY_GAME_SPEED = 1
+var SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT = 2
+var SIDEBAR_EXTRA_DISPLAY_RATINGS = 4
+var SIDEBAR_EXTRA_DISPLAY_ALL = 7
 
-    speed_header      : text({pos[11, 485], text:"${loc.sidebar_speed_header}", font:FONT_NORMAL_WHITE_ON_DARK})
-    speed_current     : text({pos[65, 480 + 28], font:FONT_NORMAL_WHITE_ON_DARK})
-    dec_speed         : arrowdown({pos[11, 470 + 30], tiny:false})
-    inc_speed         : arrowup({pos[35, 470 + 30], tiny:false})
-
-    unemp_header      : text({pos[11, 480 + 50], text:[68, 135], font:FONT_NORMAL_WHITE_ON_DARK})
-    unemp_current     : text({pos[11, 480 + 70], font:FONT_NORMAL_WHITE_ON_DARK})
-
-    population_header : text({pos[11, 480 + 90], font:FONT_NORMAL_WHITE_ON_DARK})
-    population_current: text({pos[11, 480 + 110]})
-
-    culture_header    : text({pos[11, 480 + 130], font:FONT_NORMAL_WHITE_ON_DARK})
-    culture_current   : text({pos[11, 480 + 150]})
-
-    prosperity_header : text({pos[11, 480 + 170], font:FONT_NORMAL_WHITE_ON_DARK})
-    prosperity_current: text({pos[11, 480 + 190]})
-
-    monument_header   : text({pos[11, 480 + 210], font:FONT_NORMAL_WHITE_ON_DARK})
-    monument_current  : text({pos[11, 480 + 230]})
-
-    kingdom_header    : text({pos[11, 480 + 250], font:FONT_NORMAL_WHITE_ON_DARK})
-    kingdom_current   : text({pos[11, 480 + 270]})
-  }
-}
-
-function sidebar_extra_mission_target(winningRaw) {
-    if (scenario.is_open_play) {
-        return 0
-    }
-    return winningRaw
-}
+var EXTRA_INFO_HEIGHT_GAME_SPEED = 64
+var EXTRA_INFO_HEIGHT_UNEMPLOYMENT = 48
+var EXTRA_INFO_HEIGHT_RATINGS = 176
 
 function sidebar_extra_objective_row(headerEl, currentEl, headerGroup, headerId, current, targetRaw) {
-    var t = sidebar_extra_mission_target(targetRaw)
+    var t = targetRaw
+    if (scenario.is_open_play) {
+        t = 0
+    }
     headerEl.text = __loc(headerGroup, headerId)
     var met = (t <= 0) || (current >= t)
     currentEl.font = met ? FONT_NORMAL_BLACK_ON_DARK : FONT_NORMAL_YELLOW
     currentEl.text = current + " (" + t + ")"
 }
 
-[es=(sidebar_window_extra, ui_draw_foreground)]
+function sidebar_extra_calculate_displayable_info(isCollapsed, sidebarInfoOn, infoRequested, availableHeight) {
+    if (isCollapsed || !sidebarInfoOn || infoRequested === SIDEBAR_EXTRA_DISPLAY_NONE) {
+        return SIDEBAR_EXTRA_DISPLAY_NONE
+    }
+
+    var result = SIDEBAR_EXTRA_DISPLAY_NONE
+    var ah = availableHeight
+
+    if (ah >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
+        if (infoRequested & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) {
+            ah -= EXTRA_INFO_HEIGHT_GAME_SPEED
+            result |= SIDEBAR_EXTRA_DISPLAY_GAME_SPEED
+        }
+    } else {
+        return result
+    }
+
+    if (ah >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
+        if (infoRequested & SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT) {
+            ah -= EXTRA_INFO_HEIGHT_UNEMPLOYMENT
+            result |= SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT
+        }
+    } else {
+        return result
+    }
+
+    if (ah >= EXTRA_INFO_HEIGHT_RATINGS) {
+        if (infoRequested & SIDEBAR_EXTRA_DISPLAY_RATINGS) {
+            result |= SIDEBAR_EXTRA_DISPLAY_RATINGS
+        }
+    }
+    return result
+}
+
+function sidebar_extra_apply_visibility(window, mask) {
+    var showSpeed = (mask & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) !== 0
+    var showUnemp = (mask & SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT) !== 0
+    var showRatings = (mask & SIDEBAR_EXTRA_DISPLAY_RATINGS) !== 0
+
+    window.dec_speed.enabled = showSpeed
+    window.inc_speed.enabled = showSpeed
+    window.speed_header.enabled = showSpeed
+    window.speed_current.enabled = showSpeed
+
+    window.unemp_header.enabled = showUnemp
+    window.unemp_current.enabled = showUnemp
+
+    window.population_header.enabled = showRatings
+    window.population_current.enabled = showRatings
+    window.culture_header.enabled = showRatings
+    window.culture_current.enabled = showRatings
+    window.prosperity_header.enabled = showRatings
+    window.prosperity_current.enabled = showRatings
+    window.monument_header.enabled = showRatings
+    window.monument_current.enabled = showRatings
+    window.kingdom_header.enabled = showRatings
+    window.kingdom_current.enabled = showRatings
+
+    window.extra_background.enabled = mask !== SIDEBAR_EXTRA_DISPLAY_NONE
+}
+
+function sidebar_extra_embed_height_px(collapsed, mask) {
+    if (collapsed) {
+        return 0
+    }
+    if (mask === SIDEBAR_EXTRA_DISPLAY_NONE) {
+        return 0
+    }
+    var h = 0
+    if (mask & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) {
+        h += EXTRA_INFO_HEIGHT_GAME_SPEED
+    }
+    if (mask & SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT) {
+        h += EXTRA_INFO_HEIGHT_UNEMPLOYMENT
+    }
+    if (mask & SIDEBAR_EXTRA_DISPLAY_RATINGS) {
+        h += EXTRA_INFO_HEIGHT_RATINGS
+    }
+    return h
+}
+
+[es=(sidebar_window_expanded, ui_draw_extra)]
 function sidebar_window_extra_ui_draw_foreground(window) {
+    var sidebarOn = !!game_features.gameui_sidebar_info
+    var collapsed = window.opened_menu !== 0
+
+    var fullHeight = 0
+    if (!collapsed && sidebarOn) {
+        fullHeight = EXTRA_INFO_HEIGHT_GAME_SPEED + EXTRA_INFO_HEIGHT_UNEMPLOYMENT + EXTRA_INFO_HEIGHT_RATINGS
+    }
+
+    var availableBelow = game.screen.h - window.pos.y - fullHeight
+    var mask = sidebar_extra_calculate_displayable_info(collapsed, sidebarOn, SIDEBAR_EXTRA_DISPLAY_ALL, availableBelow)
+
+    sidebar_extra_apply_visibility(window, mask)
+    window.extra_background.size.y = sidebar_extra_embed_height_px(collapsed, mask)
+
     window.speed_current.text = Math.round(game_features.gameopt_game_speed) + "%"
     window.unemp_current.text = city.labor.unemployment_percentage + "% (" + city.workers_diff + ")"
 

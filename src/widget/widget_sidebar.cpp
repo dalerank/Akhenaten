@@ -21,7 +21,6 @@
 #include "widget/widget_city.h"
 #include "widget/widget_minimap.h"
 #include "widget/sidebar/common.h"
-#include "widget/widget_sidebar_extra.h"
 #include "window/window_build_menu.h"
 #include "window/window_city.h"
 #include "window/window_empire.h"
@@ -39,12 +38,6 @@
 
 #define MINIMAP_Y_OFFSET 59
 
-struct btnid {
-    pcstr id;
-    e_building_type type;
-};
-
-
 struct sidebar_window_draw { vec2i pos; int opened_menu; };
 ANK_REGISTER_STRUCT_WRITER(sidebar_window_draw, pos, opened_menu);
 
@@ -52,14 +45,6 @@ ui::sidebar_window_expanded_t ANK_VARIABLE(sidebar_window_expanded);
 ui::sidebar_window_collapsed_t ANK_VARIABLE(sidebar_window_collapsed);
 
 ui::sidebar_window g_sidebar;
-
-void ui::sidebar_window_expanded_t::draw_sidebar_extra(vec2i offset) {
-    OZZY_PROFILER_FUNCTION();
-
-    int extra_height = sidebar_extra_draw(offset);
-    int relief_y_offset = SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT + extra_height;
-    sidebar_common_draw_relief({ x_offset, relief_y_offset }, relief_block);
-}
 
 void ui::sidebar_window_expanded_t::archive_load(archive arch) {
     autoconfig_window::archive_load(arch);
@@ -124,13 +109,24 @@ void ui::sidebar_window_expanded_t::expand() {
     g_sound.play_effect(SOUND_EFFECT_SIDEBAR);
 }
 
+void ui::sidebar_window_expanded_t::ui_draw_relief(UiFlags flags) {
+    int relief_y_offset = SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT;
+    sidebar_common_draw_relief({ x_offset, relief_y_offset }, relief_block);
+}
+
+void ui::sidebar_window_expanded_t::ui_draw_extra(UiFlags flags) {
+    ui.begin_widget(pos);
+    ui.event(sidebar_window_draw{ pos, opened_menu }, get_section(), __func__);
+    ui.end_widget();
+}
+
 void ui::sidebar_window_expanded_t::ui_draw_foreground(UiFlags flags) {
     OZZY_PROFILER_FUNCTION();
 
     {
         OZZY_PROFILER_SECTION(_, "sidebar_window_draw")
         ui.begin_widget(pos);
-        ui.event(sidebar_window_draw{ pos, opened_menu });
+        ui.event(sidebar_window_draw{ pos, opened_menu }, get_section(), __func__);
         ui.end_widget();
     }
 
@@ -155,7 +151,6 @@ void ui::sidebar_window_expanded_t::ui_draw_foreground(UiFlags flags) {
     widget_minimap_draw({ x_offset + 12, MINIMAP_Y_OFFSET }, 0);
 
     ui.draw(wflags);
-    ui.end_widget();
 
     int messages = city_message_count();
 
@@ -171,7 +166,11 @@ void ui::sidebar_window_expanded_t::ui_draw_foreground(UiFlags flags) {
 
     ui["show_overlays"] = overlay_text;
 
-    draw_sidebar_extra(ui.pos);
+    ui.end_widget();
+
+    ui_draw_extra(flags);
+    ui_draw_relief(flags);
+
     draw_debug_ui(10, 30);
 }
 
@@ -230,7 +229,7 @@ void ui::sidebar_window_collapsed_t::ui_draw_foreground(UiFlags flags) {
     {
         OZZY_PROFILER_SECTION(_, "sidebar_window_draw")
         ui.begin_widget(pos);
-        ui.event(sidebar_window_draw{ pos, sidebar_window_expanded.opened_menu });
+        ui.event(sidebar_window_draw{ pos, sidebar_window_expanded.opened_menu }, get_section(), __func__);
         ui.end_widget();
     }
 
