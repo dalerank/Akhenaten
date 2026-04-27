@@ -72,13 +72,13 @@ void building_mine_copper::spawn_figure() {
     }
 
     common_spawn_labor_seeker(current_params().min_houses_coverage);
-    
+
     // Check if production is finished and add resources to storage
     auto &d = runtime_data();
     if (d.progress >= d.progress_max) {
         production_finished();
     }
-            
+
     figure* fcart = base.common_spawn_goods_output_cartpusher();
     if (fcart) {
         events::emit(event_produced_resources{ base.output.resource, fcart->get_carrying_amount() });

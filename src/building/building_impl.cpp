@@ -124,7 +124,7 @@ tile2i building_impl::tile() const { return base.tile; }
 
 int building_impl::ready_production() const {
     const auto &p = current_params();
-    if (!!game_features::gameplay_rebalance_pottery_output && !p.production_rate_dcy.value.empty()) {
+    if (!!game_features::gameplay_rebalance_workshop_output && !p.production_rate_dcy.value.empty()) {
         return p.production_rate_dcy.get();
     }
     return p.production_rate;

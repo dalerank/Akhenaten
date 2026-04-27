@@ -106,7 +106,7 @@ void building_industry::update_production() {
     if (base.curse_days_left) {
         base.curse_days_left--;
         return;
-    } 
+    }
 
     if (base.blessing_days_left > 0) {
         base.blessing_days_left--;

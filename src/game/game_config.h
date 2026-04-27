@@ -132,7 +132,7 @@ namespace game_features {
     extern game_feature gameui_overlay_show_gray_buildings;
     extern game_feature gameplay_prevent_delete_near_burning_ruins;
     extern game_feature gameplay_change_cartpushers_yield_by_id;
-    extern game_feature gameplay_rebalance_pottery_output;
+    extern game_feature gameplay_rebalance_workshop_output;
 
     xspan<game_feature*> all();
     game_feature* find(const xstring& name);
