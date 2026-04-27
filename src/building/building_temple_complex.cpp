@@ -566,18 +566,30 @@ void building_temple_complex::update_count() const {
 }
 
 void building_temple_complex::on_destroy() {
-    if (!is_main()) {
-        return;
-    }
-
-    // remove decorative elements (statues, tiles, etc.) using saved list
     auto &tiles = *runtime_data().decorative_tiles;
-    verify_no_crash(!tiles.empty());
-    for (auto &t : tiles) {
-        tile2i tile_pos(t);
-        map_terrain_remove(t, TERRAIN_BUILDING);
-        map_tiles_update_region_empty_land(true, tile_pos, tile_pos.shifted(1, 1));
+    if (is_main() && !tiles.empty()) {
+        // Per-tile reset matches what map_building_tiles_remove() does for a
+        // building's footprint — without it the decorative sprites stay drawn
+        // and the cursor-to-building grid keeps stale ids on those tiles.
+        for (auto &t : tiles) {
+            map_building_tile_clear_at(t, /*building_type*/ 0);
+        }
+
+        tile2i first(tiles[0]);
+        int xmin = first.x(), xmax = xmin;
+        int ymin = first.y(), ymax = ymin;
+        for (auto &t : tiles) {
+            tile2i tp(t);
+            xmin = std::min(xmin, tp.x());
+            xmax = std::max(xmax, tp.x());
+            ymin = std::min(ymin, tp.y());
+            ymax = std::max(ymax, tp.y());
+        }
+        map_tiles_update_region_empty_land(true,
+            tile2i(xmin - 2, ymin - 2),
+            tile2i(xmax + 2, ymax + 2));
     }
 
     get_decorative_tiles_pool().destroy(runtime_data().decorative_tiles);
+    runtime_data().decorative_tiles = nullptr;
 }
