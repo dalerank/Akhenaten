@@ -9,6 +9,10 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_festival_guy);
 
 void figure_festival_guy::update_animation() {
     building* temple = home();
+    if (!temple->is_valid()) {
+        return;
+    }
+
     xstring animkey = {};
     switch (temple->type) {
     case BUILDING_TEMPLE_OSIRIS:
@@ -47,7 +51,7 @@ void figure_festival_guy::update_animation() {
         break;
 
     default:
-        assert(false);
+        return;
     }
 
     image_set_animation(animkey);

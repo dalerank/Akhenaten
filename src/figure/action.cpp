@@ -209,7 +209,9 @@ void figure::action_perform() {
             {
                 auto *impl = dcast();
                 impl->figure_action();
-                impl->update_animation();
+                if (state != FIGURE_STATE_DEAD) {
+                    impl->update_animation();
+                }
             }
             break;
         }

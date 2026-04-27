@@ -35,7 +35,7 @@ sound_key figure_priest::phrase_key() const {
     case BUILDING_TEMPLE_BAST: case BUILDING_TEMPLE_COMPLEX_BAST: god = GOD_BAST;  god_prefix = "bast"; break;
 
     default:
-        assert(false);
+        return {};
     }
 
     svector<sound_key, 10> keys;
@@ -175,14 +175,16 @@ e_overlay figure_priest::get_overlay() const {
     case BUILDING_SHRINE_BAST: case BUILDING_TEMPLE_BAST: case BUILDING_TEMPLE_COMPLEX_BAST: return OVERLAY_RELIGION_BAST;
 
     default:
-        assert(false);
+        return OVERLAY_NONE;
     }
-
-    return OVERLAY_NONE;
 }
 
 void figure_priest::update_animation() {
     building* temple = home();
+    if (!temple->is_valid()) {
+        return;
+    }
+
     xstring animkey = {};
     switch (temple->type) {
     case BUILDING_TEMPLE_OSIRIS:
@@ -211,7 +213,7 @@ void figure_priest::update_animation() {
         break;
 
     default:
-        assert(false);
+        return;
     }
 
     image_set_animation(animkey);
