@@ -4,6 +4,7 @@
 #include "grid/golden.h"
 #include "grid/grid.h"
 #include "game/game_config.h"
+#include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mine_gold);
 
