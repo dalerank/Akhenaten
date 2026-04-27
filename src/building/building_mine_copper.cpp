@@ -3,7 +3,6 @@
 #include "building/building.h"
 #include "construction/build_planner.h"
 #include "game/game_config.h"
-#include "city/city_finance.h"
 #include "city/city_resource.h"
 #include "game/game_events.h"
 #include "figure/figure.h"
@@ -48,20 +47,12 @@ void building_mine_copper::update_production() {
     if (best_resource <= 0) {
         return;
     }
-    
+
     building_industry::update_production();
     int delta_progress = d.progress - current_progress;
-    
+
     if (delta_progress > 0) {
         map_copper_deplete(best_tile, delta_progress);
-    }
-}
-
-void building_mine_copper::on_before_collapse() {
-    building_mine::on_before_collapse();
-
-    if (!!game_features::gameplay_change_random_mine_or_pit_collapses_take_money) {
-        events::emit(event_finance_request{ efinance_request_disasters, 250 });
     }
 }
 

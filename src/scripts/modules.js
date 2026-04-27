@@ -40,6 +40,9 @@ import building_entertainment
 import building_firehouse
 import building_hunting_lodge
 import building_pottery
+import building_mine_copper
+import building_mine_gold
+import building_mine_gems
 import building_granary
 import building_health
 import building_architect_post

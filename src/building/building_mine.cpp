@@ -9,7 +9,7 @@ void building_mine::on_create(int orientation) {
 }
 
 void building_mine::update_graphic() {
-    const xstring &animkey = can_play_animation() 
+    const xstring &animkey = can_play_animation()
                                 ? animkeys().work
                                 : animkeys().none;
 

@@ -76,6 +76,7 @@ game_features {
     @gameopt_middle_mouse_camera_pan {}
     @gameopt_middle_mouse_pan_speed {}
     @gameopt_clouds_speed {}
+    @gameplay_change_random_mine_or_pit_collapses_take_money {}
     @count { get: __game_features_count }
 }
 

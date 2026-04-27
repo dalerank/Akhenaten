@@ -13,7 +13,6 @@ public:
 
     virtual int produce_uptick_per_day() const override;
     virtual void update_production() override;
-    virtual void on_before_collapse() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
 };
 ANK_CONFIG_STRUCT(building_mine_gems::static_params, production_divider)

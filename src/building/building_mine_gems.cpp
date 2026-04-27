@@ -4,9 +4,6 @@
 #include "grid/gems.h"
 #include "grid/grid.h"
 #include "game/game_config.h"
-#include "city/city_finance.h"
-#include "game/game_events.h"
-#include "js/js_game.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/animation.h"
@@ -20,10 +17,10 @@ int building_mine_gems::produce_uptick_per_day() const {
     if (base.num_workers <= 0) {
         return 0;
     }
-    
+
     const auto &params = current_params();
     int divider = std::max<int>(1, params.production_divider);
-    
+
     int production = base.num_workers / divider;
     return std::max<int>(1, production);
 }
@@ -53,14 +50,6 @@ void building_mine_gems::update_production() {
 
     if (delta_progress > 0) {
         map_gems_deplete(best_tile, delta_progress);
-    }
-}
-
-void building_mine_gems::on_before_collapse() {
-    building_mine::on_before_collapse();
-
-    if (!!game_features::gameplay_change_random_mine_or_pit_collapses_take_money) {
-        events::emit(event_finance_request{ efinance_request_disasters, 250 });
     }
 }
 
