@@ -17,7 +17,6 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "graphics/view/view.h"
-#include "scenario/scenario.h"
 #include "widget/widget_city.h"
 #include "widget/widget_minimap.h"
 #include "widget/sidebar/common.h"
@@ -26,7 +25,6 @@
 #include "window/window_empire.h"
 #include "window/message_dialog.h"
 #include "window/autoconfig_window.h"
-#include "window/window_mission_briefing.h"
 #include "window/overlay_menu.h"
 #include "widget/widget_top_menu_game.h"
 #include "sound/sound.h"
@@ -57,7 +55,6 @@ void ui::sidebar_window_expanded_t::archive_load(archive arch) {
 void ui::sidebar_window_expanded_t::init() {
     extra_block_size = image_get(extra_block)->size();
 
-    init_ui();
     subscribe_events();
 }
 
@@ -70,24 +67,6 @@ void ui::sidebar_window_expanded_t::subscribe_events() {
 
         ui["build_image"].image(img);
     });
-}
-
-void ui::sidebar_window_expanded_t::init_ui() {
-    ui["build_image"].image(def_image);
-    ui["undo_btn"].onclick([] {
-        game_undo_perform();
-    });
-
-    ui["show_messages"].onclick([] {
-        autoconfig_window::show("message_list_window");
-    });
-
-    ui["show_briefing"].readonly = !(g_scenario.mode() == e_scenario_normal || g_scenario.mode() == e_scenario_selected);
-    ui["show_briefing"].onclick([] {
-        mission_briefing_window::mission_review();
-    });
-
-    ui["collapse"].onclick([this] { collapse(); });
 }
 
 void ui::sidebar_window_expanded_t::collapse() {
@@ -277,6 +256,10 @@ int widget_sidebar_set_type(int id) {
     return sidebar_window_expanded.opened_menu = id;
 }
 
+void widget_sidebar_expanded_collapse() {
+    sidebar_window_expanded.collapse();
+}
+
 void widget_sidebar_city_draw_foreground() {
     OZZY_PROFILER_FUNCTION();
 
@@ -328,8 +311,6 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
         if (widget_minimap_handle_mouse(m)) {
             return true;
         }
-
-        //int x_offset = sidebar_common_get_x_offset_expanded();
     }
     return 0;
 }

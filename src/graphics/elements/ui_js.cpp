@@ -22,6 +22,9 @@
 #include "window/popup_dialog.h"
 #include "city/city_message.h"
 #include "city/city_building_menu_ctrl.h"
+#include "game/undo.h"
+#include "scenario/scenario.h"
+#include "window/window_mission_briefing.h"
 #include "core/log.h"
 #include "core/flat_map.h"
 #include "game/game.h"
@@ -236,6 +239,27 @@ int __ui_widget_sidebar_city_offset_x() {
     return widget_sidebar_city_offset_x();
 }
 ANK_FUNCTION(__ui_widget_sidebar_city_offset_x)
+
+void __ui_game_undo_perform() {
+    game_undo_perform();
+}
+ANK_FUNCTION(__ui_game_undo_perform)
+
+void __ui_mission_briefing_review() {
+    ui::mission_briefing_window::mission_review();
+}
+ANK_FUNCTION(__ui_mission_briefing_review)
+
+void __ui_sidebar_expanded_collapse() {
+    widget_sidebar_expanded_collapse();
+}
+ANK_FUNCTION(__ui_sidebar_expanded_collapse)
+
+bool __ui_scenario_mission_briefing_button_enabled() {
+    const auto m = g_scenario.mode();
+    return m == e_scenario_normal || m == e_scenario_selected;
+}
+ANK_FUNCTION(__ui_scenario_mission_briefing_button_enabled)
 
 ui::element* __ui_get_element(xstring element_id) {
     OZZY_PROFILER_SECTION(_, bstring128("ui:get_elem+", element_id.c_str()).c_str())

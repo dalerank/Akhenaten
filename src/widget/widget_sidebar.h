@@ -50,7 +50,6 @@ struct sidebar_window_expanded_t : public autoconfig_window {
     virtual void archive_load(archive arch) override;
     virtual void init() override;
 
-    void init_ui();
     void subscribe_events();
 
     void expand();
@@ -114,6 +113,7 @@ int widget_sidebar_city_offset_max();
 int widget_sidebar_city_collapsed_max();
 int widget_sidebar_city_expanded_max();
 int widget_sidebar_set_type(int id);
+void widget_sidebar_expanded_collapse();
 
 void widget_sidebar_city_draw_foreground();
 void widget_sidebar_city_draw_foreground_military();

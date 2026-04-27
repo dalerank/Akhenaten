@@ -89,14 +89,14 @@ sidebar_window_expanded {
     ui {
         // 68-xx tooltips for buttons
         background        : image({pos[0, 30], pack:PACK_GENERAL, id:121})
-        build_image       : image({pos[11, 211]})
+        build_image       : image({pos[11, 211], pack:PACK_GENERAL, id:117, offset:1})
 
         show_overlays     : link({
                                pos[4, 30], size[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW
                                onclick: ui.window_overlay_menu_show
                                onrclick: window_city_overlays_right_click
                             })
-        collapse          : image_button({pos[128, 30], pack:PACK_GENERAL, id:110, offset:7, tooltip:[68, 10]})
+        collapse          : image_button({pos[128, 30], pack:PACK_GENERAL, id:110, offset:7, tooltip:[68, 10], onclick: __ui_sidebar_expanded_collapse})
 
         show_advisors     : advisor_button({pos[16, 173], pack:PACK_GENERAL, id:136, offset:64, tooltip:[68, 41], onclick: window_advisors_show_checked })
         show_empire       : image_button({pos[90, 173], pack:PACK_GENERAL, id:136, offset:68, tooltip:[68, 42], onclick: window_empire_show_checked })
@@ -153,14 +153,14 @@ sidebar_window_expanded {
                                onclick: window_build_menu_build_security
                             })
 
-        show_messages     : image_button({pos[46, 434], pack:PACK_GENERAL, id:136, offset:52, tooltip:[68,33]})
+        show_messages     : image_button({pos[46, 434], pack:PACK_GENERAL, id:136, offset:52, tooltip:[68,33], onclick: window_show_by_id("message_list_window")})
         goto_problem      : image_button({
                                pos[86, 434], pack:PACK_GENERAL, id:136, offset:56, tooltip:[68,34]
                                onclick: window_city_show_problem_area
                             })
-        show_briefing     : image_button({pos[116, 434], pack:PACK_GENERAL, id:136, offset:60, tooltip:[68,35]})
+        show_briefing     : image_button({pos[116, 434], pack:PACK_GENERAL, id:136, offset:60, tooltip:[68,35], onclick: __ui_mission_briefing_review})
         num_messages      : text({pos[52, 450], shadow:0xff000000, font:FONT_NORMAL_BLACK_ON_DARK, color:0xffffffff })
-        undo_btn          : image_button({pos[9, 434], pack:PACK_GENERAL, id:136, offset:48, tooltip:[68,32]})
+        undo_btn          : image_button({pos[9, 434], pack:PACK_GENERAL, id:136, offset:48, tooltip:[68,32], onclick: __ui_game_undo_perform })
 
         extra_background  : inner_panel({pos[0, 480], size[10, 19]})
 
@@ -190,6 +190,8 @@ sidebar_window_expanded {
 }
 
 function sidebar_window_draw_background(window) {
+    window.show_briefing.readonly = !ui.scenario_mission_briefing_button_enabled()
+
     window.build_house.readonly = false
     window.build_house.selected = (BUILDING_MENU_VACANT_HOUSE == window.opened_menu)
 
