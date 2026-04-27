@@ -17,15 +17,12 @@
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_senet_house);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_bullfight_school);
 
 void building_senet_house::on_place_checks() {
     construction_warnings warnings;
 
-    const bool has_senet_master = (g_city.buildings.count_active(BUILDING_BULLFIGHT_SCHOOL) > 0);
     const bool is_import_beer = (city_resource_beer.trade_status() == TRADE_STATUS_IMPORT);
 
-    warnings.add_if(!has_senet_master, "#build_senet_master");
     warnings.add_if(city_resource_beer.yards_stored() <= 0, "#need_beer");
     warnings.add_if(city_resource_beer.industry_active() <= 0, "#need_brewery");
     warnings.add_if(!city_resource_beer.can_produce(), "#build_brewery");
@@ -82,26 +79,6 @@ bool building_senet_house::draw_ornaments_and_animations_height(painter &ctx, ve
     int amount = ceil((float)base.stored_amount(RESOURCE_BEER) / 100.0) - 1;
     if (amount >= 0) {
         const auto &ranim = anim(animkeys().beer);
-        vec2i pos = ranim.pos;
-        for (int i = 0; i < amount; ++i) {
-            auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
-            command.image_id = ranim.first_img();
-            command.pixel = point + pos;
-            command.mask = color_mask;
-
-            pos += {5, -5};
-        }
-    }
-
-    return true;
-}
-
-bool building_bullfight_school::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    building_impl::draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
-
-    int amount = ceil((float)base.stored_amount(RESOURCE_STRAW) / 100.0) - 1;
-    if (amount >= 0) {
-        const auto &ranim = anim(animkeys().straw);
         vec2i pos = ranim.pos;
         for (int i = 0; i < amount; ++i) {
             auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
