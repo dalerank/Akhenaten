@@ -25,6 +25,7 @@ struct building_static_params {
     uint8_t building_size;
     uint8_t min_houses_coverage;
     uint16_t production_rate;
+    uint16_dcy production_rate_dcy;
     xstring info_title_id;
     uint16_dcy cost;
     building_desirability_t desirability;
@@ -67,7 +68,7 @@ ANK_CONFIG_STRUCT(building_static_params,
     build_menu_text, info_sound, cost, desirability, crime,
     output_resource_second_rate, building_size, info_title_id, progress_max, overlay, sound_channel,
     max_service, max_storage_amount,
-    meta_id, meta, production_rate, min_houses_coverage)
+    meta_id, meta, production_rate, production_rate_dcy, min_houses_coverage)
 
 ANK_CONFIG_PROPERTY(building_static_params,
     labor_category, fire_proof, damage_proof,
@@ -75,4 +76,4 @@ ANK_CONFIG_PROPERTY(building_static_params,
     build_menu_text, info_sound, cost,
     output_resource_second_rate, building_size, info_title_id, progress_max, overlay, sound_channel,
     max_service, max_storage_amount,
-    meta_id, production_rate, min_houses_coverage)
+    meta_id, production_rate, production_rate_dcy, min_houses_coverage)

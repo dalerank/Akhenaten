@@ -21,6 +21,7 @@
 #include "sound/sound.h"
 #include "js/js_game.h"
 #include "js/js_struct.h"
+#include "game/game_config.h"
 
 struct building_ev { building_id bid; };
 ANK_REGISTER_STRUCT_WRITER(building_ev, bid)
@@ -120,6 +121,14 @@ const figure *building_impl::get_figure(int slot) const { return base.get_figure
 building_id building_impl::id() const { return base.id; }
 
 tile2i building_impl::tile() const { return base.tile; }
+
+int building_impl::ready_production() const {
+    const auto &p = current_params();
+    if (!!game_features::gameplay_rebalance_pottery_output && !p.production_rate_dcy.value.empty()) {
+        return p.production_rate_dcy.get();
+    }
+    return p.production_rate;
+}
 
 int building_impl::tilex() const { return base.tile.x(); }
 

@@ -17,6 +17,7 @@ building_pottery {
     }
 
     production_rate : 20
+    production_rate_dcy : [100, 80, 70, 60, 50]
     labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
     building_size : 2
     meta { help_id:1, text_id:126 }
