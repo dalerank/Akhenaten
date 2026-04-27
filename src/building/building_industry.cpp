@@ -95,12 +95,6 @@ void building_industry::update_production() {
     auto &d = runtime_data();
     // d.has_raw_materials = false;
 
-    // Harvester buildings (reed gatherer, wood cutter) produce via gatherer
-    // figures returning home, not via the industry progress tick.
-    if (base.is_harverster()) {
-        return;
-    }
-
     if (g_city.resource.is_mothballed(base.output.resource)) {
         return;
     }
@@ -204,11 +198,6 @@ void building_industry::update_count() const {
 
 void building_industry::update_day() {
     building_impl::update_day();
-
-    if (base.is_harverster()) {
-        return;
-    }
-
     const auto &d = runtime_data();
 
     verify_no_crash(d.progress_max > 100);
