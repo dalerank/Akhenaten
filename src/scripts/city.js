@@ -357,7 +357,17 @@ city.create_good_request = function(obj) {
     __city_create_good_request(obj)
     return {
         tag_id: obj.tag_id
+        set_completed_action_tag: function(slave_tag) { __city_request_set_completed_action(this.tag_id, slave_tag) }
+        set_refusal_action_tag: function(slave_tag) { __city_request_set_refusal_action(this.tag_id, slave_tag) }
+        set_too_late_action_tag: function(slave_tag) { __city_request_set_too_late_action(this.tag_id, slave_tag) }
         execute: function() { __city_request_execute(this.tag_id) }
+    }
+}
+
+city.create_chain_event = function(obj) {
+    __city_create_chain_event(obj)
+    return {
+        tag_id: obj.tag_id
     }
 }
 

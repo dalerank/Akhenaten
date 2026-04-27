@@ -62,6 +62,25 @@ void __city_request_set_param(int tag, pcstr name, int param1) {
 }
 ANK_FUNCTION_3(__city_request_set_param)
 
+void ANK_FUNCTION_UNIFIED(__city_create_chain_event)(const bvariant_map &args) {
+    g_scenario.events.create_chain_event(args.n("tag_id"), (e_event_type)args.n("type"), args.n("amount"));
+}
+
+void __city_request_set_completed_action(int master_tag, int slave_tag) {
+    g_scenario.events.set_request_completed_action(master_tag, slave_tag);
+}
+ANK_FUNCTION_2(__city_request_set_completed_action)
+
+void __city_request_set_refusal_action(int master_tag, int slave_tag) {
+    g_scenario.events.set_request_refusal_action(master_tag, slave_tag);
+}
+ANK_FUNCTION_2(__city_request_set_refusal_action)
+
+void __city_request_set_too_late_action(int master_tag, int slave_tag) {
+    g_scenario.events.set_request_too_late_action(master_tag, slave_tag);
+}
+ANK_FUNCTION_2(__city_request_set_too_late_action)
+
 void ANK_FUNCTION_UNIFIED(__city_start_foreign_army_invasion)(const bvariant_map &args) {
     invasion_opts_t opts;
     opts.mode = ATTACK_TYPE_ENEMIES;

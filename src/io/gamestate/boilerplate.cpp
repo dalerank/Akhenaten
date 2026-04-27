@@ -192,12 +192,13 @@ static void post_load() {
     g_scenario.set_campaign_rank(mission_rank);
 
     // Clear mission variables when starting a new mission (not when loading from save)
-    if (game.session.last_loaded == e_session_mission) {
+    bool is_new_mission = (game.session.last_loaded == e_session_mission);
+    if (is_new_mission) {
         g_scenario.vars.clear();
     }
 
     mission_id_t missionid(scenario_id);
-    g_scenario.load_metadata(missionid);
+    g_scenario.load_metadata(missionid, is_new_mission);
     js_register_mission_vars(g_scenario.vars);
     g_empire.load_mission_metadata(missionid);
     js_register_game_handlers(missionid.value());

@@ -64,6 +64,9 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
         }
         event.event_state = e_event_state_received;
         event.is_active = false;
+        if (event.on_completed_action >= 0) {
+            g_scenario.events.process_event(event.on_completed_action, true, EVENT_ACTION_COMPLETED, event.event_id);
+        }
         break;
 
     case e_event_state_finished_late:
@@ -72,6 +75,9 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
         g_city.kingdome.increase_success_request(1);
         event.event_state = e_event_state_received;
         event.is_active = false;
+        if (event.on_too_late_action >= 0) {
+            g_scenario.events.process_event(event.on_too_late_action, true, EVENT_ACTION_TOOLATE, event.event_id);
+        }
         break;
 
     case e_event_state_initial:
@@ -79,7 +85,7 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
         // go to show message
 
     case e_event_state_in_progress:
-        if (!event.can_comply_dialog_shown && g_city.resource.stored(request.resource) >= request.amount) {
+        if (!event.can_comply_dialog_shown && g_city.resource.stored(request.resource) >= request.resource_amount()) {
             event.can_comply_dialog_shown = true;
             city_message &message = g_message_manager.post_common(true, "message_storage_yards_ready_to_fulfill_request", event.event_id, 0, GOD_UNKNOWN, 0);
             message.req_amount = request.resource_amount();
@@ -134,6 +140,9 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
             event.event_state = e_event_state_failed;
             event.is_active = false;
             next_action = EVENT_ACTION_REFUSED;
+            if (event.on_refusal_action >= 0) {
+                g_scenario.events.process_event(event.on_refusal_action, true, EVENT_ACTION_REFUSED, event.event_id);
+            }
         }
         break;
     }

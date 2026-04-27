@@ -222,6 +222,53 @@ void event_manager_t::win_distant_battle(int tag, pcstr city, vec2i pos) {
     g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
 }
 
+void event_manager_t::create_chain_event(int tag, e_event_type type, int amount) {
+    auto& event = g_scenario_events.event_list.emplace_back();
+    int event_id = g_scenario_events.event_list.size() - 1;
+    memset(&event, 0, sizeof(event_ph_t));
+    event.type = type;
+    event.amount.value = amount;
+    event.tag_id = tag;
+    event.event_trigger_type = EVENT_TRIGGER_ONLY_VIA_EVENT;
+    event.event_id = event_id;
+    event.location_fields = { -1, -1, -1, -1 };
+    event.on_completed_action = -1;
+    event.on_refusal_action = -1;
+    event.on_too_late_action = -1;
+    event.on_defeat_action = -1;
+    g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
+}
+
+static event_ph_t *find_event_by_tag(int tag) {
+    auto it = std::find_if(g_scenario_events.event_list.begin(), g_scenario_events.event_list.end(),
+                           [tag] (auto &p) { return p.tag_id == tag; });
+    return (it == g_scenario_events.event_list.end()) ? nullptr : &*it;
+}
+
+void event_manager_t::set_request_completed_action(int master_tag, int slave_tag) {
+    event_ph_t *master = find_event_by_tag(master_tag);
+    event_ph_t *slave = find_event_by_tag(slave_tag);
+    if (master && slave) {
+        master->on_completed_action = slave->event_id;
+    }
+}
+
+void event_manager_t::set_request_refusal_action(int master_tag, int slave_tag) {
+    event_ph_t *master = find_event_by_tag(master_tag);
+    event_ph_t *slave = find_event_by_tag(slave_tag);
+    if (master && slave) {
+        master->on_refusal_action = slave->event_id;
+    }
+}
+
+void event_manager_t::set_request_too_late_action(int master_tag, int slave_tag) {
+    event_ph_t *master = find_event_by_tag(master_tag);
+    event_ph_t *slave = find_event_by_tag(slave_tag);
+    if (master && slave) {
+        master->on_too_late_action = slave->event_id;
+    }
+}
+
 void event_manager_t::execute_event(int tag) {
     auto it = std::find_if(g_scenario_events.event_list.begin(), g_scenario_events.event_list.end(), [tag] (auto &p) { return p.tag_id == tag; });
 
@@ -477,8 +524,12 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
     }
 
     // check if the trigger time has come, if not return.
-    // for ACTIVE EVENTS (requests?): ignore specific time of the year IF quest is active
-    const bool should_handle = !event.is_active && event.date() == game.simtime.date();
+    // for ACTIVE EVENTS (requests?): ignore specific time of the year IF quest is active.
+    // ACTIVATED_8/12 are children spawned by chain propagation — their date copies the master's
+    // creation date which is in the past, so fire immediately instead of waiting for date match.
+    const bool activated_child = event.event_trigger_type == EVENT_TRIGGER_ACTIVATED_8
+                              || event.event_trigger_type == EVENT_TRIGGER_ACTIVATED_12;
+    const bool should_handle = !event.is_active && (activated_child || event.date() == game.simtime.date());
     if (!(should_handle)) {
         return;
     }
@@ -494,6 +545,13 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         // TODO
         break;
 
+    case EVENT_TYPE_REPUTATION_INCREASE:
+        g_city.kingdome.change(event.amount.value);
+        city_message_post_full(true, "message_template_general", &event, caller_event_id,
+                               PHRASE_rating_change_title_I, PHRASE_rating_change_initial_announcement_I, PHRASE_rating_change_reason_I_A,
+                               id, 0);
+        break;
+
     case EVENT_TYPE_SEA_TRADE_PROBLEM:
     case EVENT_TYPE_LAND_TRADE_PROBLEM:
     case EVENT_TYPE_WAGE_INCREASE:
@@ -505,7 +563,6 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
     case EVENT_TYPE_DEMAND_DECREASE:
     case EVENT_TYPE_PRICE_INCREASE:
     case EVENT_TYPE_PRICE_DECREASE:
-    case EVENT_TYPE_REPUTATION_INCREASE:
         city_message_post_full(true, "message_template_general", &event, caller_event_id,
                                PHRASE_rating_change_title_I, PHRASE_rating_change_initial_announcement_I, PHRASE_rating_change_reason_I_A,
                                id, 0);
@@ -537,6 +594,12 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         break;
 
     case EVENT_TYPE_REPUTATION_DECREASE:
+        g_city.kingdome.change(-event.amount.value);
+        city_message_post_full(true, "message_template_general", &event, caller_event_id,
+                               PHRASE_rating_change_title_I, PHRASE_rating_change_initial_announcement_I, PHRASE_rating_change_reason_I_A,
+                               id, 0);
+        break;
+
     case EVENT_TYPE_CITY_STATUS_CHANGE:
         break;
 
@@ -606,7 +669,9 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
     }
 
     // disable if already done
-    if (event.event_trigger_type == EVENT_TRIGGER_ONCE) {
+    if (event.event_trigger_type == EVENT_TRIGGER_ONCE
+     || event.event_trigger_type == EVENT_TRIGGER_ACTIVATED_8
+     || event.event_trigger_type == EVENT_TRIGGER_ACTIVATED_12) {
         event.event_trigger_type = EVENT_TRIGGER_ALREADY_FIRED;
     }
 }

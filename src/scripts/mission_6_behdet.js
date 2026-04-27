@@ -89,7 +89,9 @@ mission6 = { // Behdet
 
 	vars {
 		pharaoh_pottery_requested : false
+		pharaoh_fish_requested : false
 		pharaoh_beer_requested : false
+		pharaoh_beer_late_requested : false
 		pharaoh_bricks_gift_sent : false
 	}
 }
@@ -109,6 +111,10 @@ function mission6_pharaoh_request_pottery(ev) {
 
 	mission.pharaoh_pottery_requested = true
 	var request = city.create_good_request({ tag_id: 1, resource: RESOURCE_POTTERY, amount: 14, months_initial: 9 })
+	city.create_chain_event({ tag_id: 101, type: EVENT_TYPE_REPUTATION_INCREASE, amount: 6 })
+	city.create_chain_event({ tag_id: 102, type: EVENT_TYPE_REPUTATION_DECREASE, amount: 6 })
+	request.set_completed_action_tag(101)
+	request.set_refusal_action_tag(102)
 	request.execute()
 }
 
@@ -124,6 +130,51 @@ function mission6_pharaoh_request_beer(ev) {
 
 	mission.pharaoh_beer_requested = true
 	var request = city.create_good_request({ tag_id: 2, resource: RESOURCE_BEER, amount: 11, months_initial: 12 })
+	city.create_chain_event({ tag_id: 201, type: EVENT_TYPE_REPUTATION_INCREASE, amount: 12 })
+	city.create_chain_event({ tag_id: 202, type: EVENT_TYPE_REPUTATION_DECREASE, amount: 3 })
+	request.set_completed_action_tag(201)
+	request.set_refusal_action_tag(202)
+	request.execute()
+}
+
+[es=event_advance_month, mission=mission6]
+function mission6_pharaoh_request_fish(ev) {
+	if (mission.pharaoh_fish_requested) {
+		return
+	}
+
+	if (ev.years_since_start < 3) {
+		return
+	}
+	if (ev.years_since_start == 3 && ev.month < 3) {
+		return
+	}
+
+	mission.pharaoh_fish_requested = true
+	var request = city.create_good_request({ tag_id: 4, resource: RESOURCE_FISH, amount: 13, months_initial: 12 })
+	city.create_chain_event({ tag_id: 401, type: EVENT_TYPE_REPUTATION_INCREASE, amount: 7 })
+	city.create_chain_event({ tag_id: 402, type: EVENT_TYPE_REPUTATION_DECREASE, amount: 10 })
+	request.set_completed_action_tag(401)
+	request.set_refusal_action_tag(402)
+	request.execute()
+}
+
+[es=event_advance_month, mission=mission6]
+function mission6_pharaoh_request_beer_late(ev) {
+	if (mission.pharaoh_beer_late_requested) {
+		return
+	}
+
+	if (ev.years_since_start < 17) {
+		return
+	}
+
+	mission.pharaoh_beer_late_requested = true
+	var request = city.create_good_request({ tag_id: 5, resource: RESOURCE_BEER, amount: 21, months_initial: 16 })
+	city.create_chain_event({ tag_id: 501, type: EVENT_TYPE_REPUTATION_INCREASE, amount: 12 })
+	city.create_chain_event({ tag_id: 502, type: EVENT_TYPE_REPUTATION_DECREASE, amount: 7 })
+	request.set_completed_action_tag(501)
+	request.set_refusal_action_tag(502)
 	request.execute()
 }
 
