@@ -102,6 +102,7 @@ localization_en = [
   {key:"#TR_CONFIG_OVERLAY_SHOW_GRAY_BUILDINGS", text:"Show gray buildings on overlays when they are not displayed"}
   {key:"#TR_CONFIG_BREWERY_REQUIRES_WATER", text:"Brewery requires water access"}
   {key:"#TR_CONFIG_CARTPUSHERS_YIELD_BY_ID", text:"Cartpushers yield goods by worker ID"}
+  {key:"#TR_CONFIG_REBALANCE_POTTERY_OUTPUT", text:"Workshop output scales with difficulty (pottery, bricks, brewery, papyrus, chariot, lamp, paint)"}
   {key:"#TR_CONFIG_PREVENT_DELETE_NEAR_BURNING_RUINS", text:"Prevent deleting buildings near burning ruins"}
   {key:"#TR_CONFIG_HEADER_SCENARIO_CHANGES", text:"Change scenarios"}
   {key:"#TR_CONFIG_HEADER_RESOURCES", text:"Change resources"}

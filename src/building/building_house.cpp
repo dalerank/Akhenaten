@@ -7,6 +7,7 @@
 #include "core/object_property.h"
 #include "core/custom_span.hpp"
 #include "city/city_labor.h"
+#include "game/difficulty.h"
 #include "game/resource.h"
 #include "game/tutorial.h"
 #include "graphics/image.h"
@@ -269,7 +270,8 @@ resource_list building_house::consume_food_weekly() {
     auto &d = runtime_data();
 
     int food_types = model().food_types;
-    uint16_t amount_per_type = calc_adjust_with_percentage<short>(d.population, model().food_consumption_percentage);
+    const int adjusted_pct = difficulty_adjust_food_consumption(model().food_consumption_percentage);
+    uint16_t amount_per_type = calc_adjust_with_percentage<short>(d.population, adjusted_pct);
     if (food_types > 1) {
         amount_per_type /= food_types;
     }
@@ -501,6 +503,10 @@ void building_house::merge_impl() {
 
 void building_house::merge() {
     if (is_merged()) {
+        return;
+    }
+
+    if (base.size > 1) {
         return;
     }
 
@@ -1441,7 +1447,6 @@ bool building_house_common_residence::evolve(house_demands* demands) {
         return false;
     }
 
-    merge();
     e_house_progress status = check_requirements(demands);
     if (has_devolve_delay(status)) {
         return false;
