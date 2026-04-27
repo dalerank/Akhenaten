@@ -54,3 +54,10 @@ int difficulty_adjust_wolf_attack(int attack) {
 int difficulty_multiply_risk(int risk_delta) {
     return int(g_difficulty_data[g_settings.difficulty()].risk_multiplier * risk_delta);
 }
+
+int difficulty_adjust_food_consumption(int pct) {
+    // % reduction per difficulty (VE, E, N, H, VH); result rounded down to nearest 5.
+    static const int reductions[] = { 40, 35, 30, 25, 15 };
+    const int reduced = pct * (100 - reductions[g_settings.difficulty()]) / 100;
+    return (reduced / 5) * 5;
+}

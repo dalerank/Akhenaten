@@ -58,7 +58,7 @@ public:
     virtual int animation_speed(int speed) const { return speed; }
     virtual int get_fire_risk(int value) const { return value; }
     virtual textid get_tooltip() const { return { 0, 0 }; }
-    virtual int ready_production() const { return current_params().production_rate; }
+    virtual int ready_production() const;
     virtual void draw_normal_anim(painter &ctx, vec2i point, tile2i tile, color mask);
     virtual void draw_normal_anim(painter &ctx, const animation_context &ranim, vec2i point, tile2i tile, color mask);
     virtual void draw_tooltip(tooltip_context *c) const;;

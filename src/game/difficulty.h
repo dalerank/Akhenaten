@@ -12,6 +12,8 @@ int difficulty_adjust_wolf_attack(int attack);
 
 int difficulty_multiply_risk(int risk_delta);
 
+int difficulty_adjust_food_consumption(int pct);
+
 template<typename T>
 struct value_dcy {
     svector<T, 5> value;

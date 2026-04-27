@@ -18,6 +18,7 @@ building_brewery {
   water_amount_for_production : 50
   progress_max : 400,
   production_rate : 50,
+  production_rate_dcy : [100, 80, 70, 60, 50],
   meta { help_id:96, text_id:122 }
   info_sound : "Wavs/brewery.wav"
   building_size : 2
@@ -125,6 +126,7 @@ building_papyrus_maker = {
     resource : RESOURCE_PAPYRUS
   }
   production_rate : 50,
+  production_rate_dcy : [100, 80, 70, 60, 50],
   building_size : 2,
   meta : { help_id:1, text_id:190 }
   info_sound : "Wavs/paper.wav"
@@ -155,6 +157,7 @@ building_bricks_workshop = {
   }
   progress_max : 400,
   production_rate : 20,
+  production_rate_dcy : [100, 80, 70, 60, 50],
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   building_size : 2,
   meta : { help_id:1, text_id:180 }
@@ -184,6 +187,7 @@ building_chariots_workshop = {
     resource : RESOURCE_CHARIOTS
   }
   production_rate : 20,
+  production_rate_dcy : [100, 80, 70, 60, 50],
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   building_size : 2,
   cost: [ 50, 100, 150, 300, 500 ]
@@ -211,6 +215,7 @@ building_lamp_workshop {
     resource : RESOURCE_LAMPS
   }
   production_rate : 20
+  production_rate_dcy : [100, 80, 70, 60, 50]
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   building_size : 2
   cost [ 20, 30, 50, 100, 150 ]
@@ -241,6 +246,7 @@ building_paint_workshop {
   }
 
   production_rate : 20
+  production_rate_dcy : [100, 80, 70, 60, 50]
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   building_size : 2
   cost [ 20, 30, 50, 100, 150 ]
