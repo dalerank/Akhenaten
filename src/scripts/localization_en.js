@@ -232,6 +232,16 @@ localization_en = [
   {key: "#popup_dialog_delete_dynasty", group:5, id:90 }
   {key: "#popup_dialog_no_dynasty", group:5, id:94 }
   {key: "#replay_mission", group:1, id:2 }
+  {key: "#ui_gift_to_kingdome_window_title", text:"Give to the people of Egypt"}
+  {key: "#ui_unable_to_fulfill_request", text:"Unable to fulfill request"}
+  {key: "#ui_gift_time_since_last", text:"Time since last gift"}
+  {key: "#ui_gift_label_modest", text:"Modest:"}
+  {key: "#ui_gift_label_generous", text:"Generous:"}
+  {key: "#ui_gift_label_lavish", text:"Lavish:"}
+  {key: "#ui_gift_dispatch_modest", text:"Dispatch modest gift"}
+  {key: "#ui_gift_dispatch_generous", text:"Dispatch generous gift"}
+  {key: "#ui_gift_dispatch_lavish", text:"Dispatch lavish gift"}
+  {key: "#ui_gift_cannot_afford_savings", text:"You do not have enough personal savings to make a gift to Egypt. Try paying yourself a bigger salary!"}
   {key: "#granary_info_title", group:98, id:0 }
   {key: "#granary_no_road_access", group:69, id:25 }
   {key: "#granary_kingdom_supplies_grain", group:98, id:4 }

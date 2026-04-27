@@ -6,20 +6,6 @@
 #include "city/constants.h"
 #include "core/archive.h"
 
-enum e_gift {
-    GIFT_MODEST = 0,
-    GIFT_GENEROUS = 1,
-    GIFT_LAVISH = 2,
-    GIFT_ROYAL = 3,
-    GIFT_KINGDOM = 4,
-    GIFT_KINGDOM_ROYAL = 5,
-    GIFT_KINGDOM_LAVISH = 6,
-    GIFT_KINGDOM_GENEROUS = 7,
-    GIFT_KINGDOM_MODEST = 8,
-    GIFT_COUNT,
-};
-extern const token_holder<e_gift, GIFT_MODEST, GIFT_COUNT> e_gift_tokens;
-
 enum e_debt_state {
     e_debt_none = 0,
     e_debt_one_time = 1,
@@ -28,34 +14,10 @@ enum e_debt_state {
     e_debt_not_allowed = 4,
 };
 
-struct kingdome_gift {
-    int id;
-    int cost;
-};
-
 struct event_send_gift_to_kingdome { int gift_size; };
-
-struct gift_rule {
-    e_gift id;
-    float rate;
-    float minimum;
-};
-
-template<>
-struct stable_array_max_elements<gift_rule> {
-    enum { max_elements = GIFT_COUNT };
-};
-
-template<>
-struct std::hash<gift_rule> {
-    [[nodiscard]] size_t operator()(const gift_rule &d) const noexcept {
-        return d.id;
-    }
-};
-ANK_CONFIG_STRUCT(gift_rule, id, rate, minimum)
+struct event_kingdome_update_gifts { int personal_savings; };
 
 struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
-    kingdome_gift gifts[GIFT_COUNT];
     int32_t months_since_gift;
     int32_t gift_overdose_penalty;
 
@@ -89,17 +51,11 @@ struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
     } invasion;
 
     void load_scenario(int rank, int load_type);
-    const kingdome_gift *get_gift(int size);
-    int can_send_gift(int size);
-    void send_gift(int gift_size);
     void update_debt_state();
     void process_invasion();
     void update();
-    void update_gifts();
-    int get_gift_cost(int size);
     void mark_soldier_killed();
     void force_attack(int size);
-    void reset_gifts();
     void advance_month();
     void advance_year();
 
@@ -115,7 +71,6 @@ struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
     void reset();
 
     struct static_params {
-        stable_array<gift_rule> gift_rules;
         svector<int, 16> salary_ranks;
         svector<uint8_t, 4> gift_relation_change_first;
         svector<uint8_t, 4> gift_relation_change_second;
@@ -136,7 +91,6 @@ ANK_CONFIG_PROPERTY(kingdome_relation_t, salary_rank, player_rank, kingdom_chang
                     kingdom_milestone_penalty, kingdom_ignored_request_penalty)
 
 ANK_CONFIG_STRUCT(kingdome_relation_t::static_params,
-                  gift_rules,
                   salary_ranks,
                   gift_relation_change_first,
                   gift_relation_change_second,

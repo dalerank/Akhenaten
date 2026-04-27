@@ -1,5 +1,7 @@
 function extend(target, props) {
-    if (props == null) return target
+    if (props == null) {
+        return target
+    }
     var keys = Object.keys(props)
     for (var i = 0; i < keys.length; i++) {
         var k = keys[i]

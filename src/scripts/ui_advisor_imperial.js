@@ -112,13 +112,13 @@ function imperial_requests_on_render_item(p) {
         if (rq.resource_id === RESOURCE_DEBEN) {
             var treasury = city.finance.treasury
             savedLine = String(treasury) + " " + __loc(52, 44)
-            allowStr = (treasury < rq.raw_amount) ? __loc(52, 48) : __loc(52, 47)
+            allowStr = (treasury < rq.raw_amount) ? __loc("#ui_unable_to_fulfill_request") : __loc(52, 47)
             allowFont = FONT_NORMAL_WHITE_ON_DARK
         } else {
             var in_yards = rq.resource.yards_stored
             var cityStored = rq.resource.stack_proper_quantity(in_yards)
             savedLine = String(cityStored) + " " + __loc(52, 43)
-            allowStr = (cityStored < rq.amount_total) ? __loc(52, 48) : __loc(52, 47)
+            allowStr = (cityStored < rq.amount_total) ? __loc("#ui_unable_to_fulfill_request") : __loc(52, 47)
             allowFont = (cityStored < rq.amount_total) ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_YELLOW
         }
         ui.label(savedLine, [px + 30, py + 25], FONT_NORMAL_WHITE_ON_DARK)
@@ -170,14 +170,14 @@ advisor_imperial_window {
 
                 send_gift    : button({pos[320, 352], size[250, 20]
                                        text{group:52, id:49}, tooltip:"${68.133}", font:FONT_NORMAL_WHITE_ON_DARK,
-                                       onclick: window_gift_to_kingdome_show
+                                       onclick: show_window_by_id("gift_to_kingdome_window")
                                       })
 
                 personal_savings : label({pos[72, 374]
                                           textfn:function() { return _eformat( "${52.1} ${city.personal_savings} ${6.0}", { city : city }) }
                                          })
-                money_lost   : label({pos[272, 374], text:"0 debens lost this year throught theft" })
-                no_requests  : label({margin{ left:40, centery:200}, text:"#no_requests", font:FONT_NORMAL_WHITE_ON_DARK })
+                money_lost   : label({pos[272, 374], textfn: function() { return "0 " + __loc(52, 79) } })
+                no_requests  : label({margin{ left:40, centery:0}, text:"#no_requests", font:FONT_NORMAL_WHITE_ON_DARK })
 
                 salary_rank  : button({pos[70, 392], size[500, 24], tooltip[68, 97], textfn:salary_rank_text, font:FONT_NORMAL_WHITE_ON_DARK, onclick: show_window_by_id("set_salary_window") })
 

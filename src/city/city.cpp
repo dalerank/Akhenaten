@@ -1134,12 +1134,12 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.gift_overdose_penalty);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_4488);
 
-    iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.gifts[GIFT_MODEST].id);
-    iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.gifts[GIFT_GENEROUS].id);
-    iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.gifts[GIFT_LAVISH].id);
-    iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.gifts[GIFT_MODEST].cost);
-    iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.gifts[GIFT_GENEROUS].cost);
-    iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.gifts[GIFT_LAVISH].cost);
+    iob->bind____skip(4); // iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.gifts[GIFT_MODEST].id);
+    iob->bind____skip(4); // iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.gifts[GIFT_GENEROUS].id);
+    iob->bind____skip(4); // iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.gifts[GIFT_LAVISH].id);
+    iob->bind____skip(4); // iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.gifts[GIFT_MODEST].cost);
+    iob->bind____skip(4); // iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.gifts[GIFT_GENEROUS].cost);
+    iob->bind____skip(4); // iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.gifts[GIFT_LAVISH].cost);
     iob->bind(BIND_SIGNATURE_INT8, &data.kingdome.kingdom_salary_penalty);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT8, &data.kingdome.kingdom_milestone_penalty);
@@ -1406,7 +1406,6 @@ bvariant city_get_property(const xstring &domain, const xstring &name) {
         { tags().finance, "estimated_wages", [] (const xstring &) { return bvariant(g_city.finance.estimated_wages); }},
         { tags().city, "workers_needed", [] (const xstring&) { return bvariant(g_city.labor.workers_needed); }},
         { tags().city, "workers_diff", [] (const xstring&) { return bvariant(g_city.labor.workers_unemployed - g_city.labor.workers_needed); }},
-        { tags().city, "months_since_gift", [] (const xstring&) { return bvariant(g_city.kingdome.months_since_gift); }},
         { tags().rating, "winning_culture", [] (const xstring&) { return bvariant(winning_culture()); }},
         { tags().rating, "winning_prosperity", [] (const xstring&) { return bvariant(winning_prosperity()); }},
         { tags().rating, "winning_monuments", [] (const xstring&) { return bvariant(winning_monuments()); }},

@@ -37,12 +37,12 @@ void config_show_kingdome_properties(bool header) {
     game_debug_show_property("kingdom_milestone_penalty", kingdome.kingdom_milestone_penalty);
     game_debug_show_property("kingdom_ignored_request_penalty", kingdome.kingdom_ignored_request_penalty);
 
-    game_debug_show_property("gift_modest_id", kingdome.gifts[GIFT_MODEST].id);
-    game_debug_show_property("gift_modest_cost", kingdome.gifts[GIFT_MODEST].cost);
-    game_debug_show_property("gift_generous_id", kingdome.gifts[GIFT_GENEROUS].id);
-    game_debug_show_property("gift_generous_cost", kingdome.gifts[GIFT_GENEROUS].cost);
-    game_debug_show_property("gift_lavish_id", kingdome.gifts[GIFT_LAVISH].id);
-    game_debug_show_property("gift_lavish_cost", kingdome.gifts[GIFT_LAVISH].cost);
+    // game_debug_show_property("gift_modest_id", kingdome.gifts[GIFT_MODEST].id);
+    // game_debug_show_property("gift_modest_cost", kingdome.gifts[GIFT_MODEST].cost);
+    // game_debug_show_property("gift_generous_id", kingdome.gifts[GIFT_GENEROUS].id);
+    // game_debug_show_property("gift_generous_cost", kingdome.gifts[GIFT_GENEROUS].cost);
+    // game_debug_show_property("gift_lavish_id", kingdome.gifts[GIFT_LAVISH].id);
+    // game_debug_show_property("gift_lavish_cost", kingdome.gifts[GIFT_LAVISH].cost);
 
     game_debug_show_property("invasion.count", kingdome.invasion.count);
     game_debug_show_property("invasion.size", kingdome.invasion.size);

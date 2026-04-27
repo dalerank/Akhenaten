@@ -18,5 +18,9 @@ ANK_GLOBAL_OBJECT(g_city.kingdome, __city_kingdome,
     kingdom_milestone_penalty,
     kingdom_ignored_request_penalty,
     personal_savings,
-    donate_amount);
+    donate_amount,
+    months_since_gift,
+    gift_overdose_penalty,
+    rating,
+    rating_cap);
 

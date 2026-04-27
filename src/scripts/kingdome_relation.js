@@ -13,22 +13,4 @@ kingdome_relation {
 	first_debt_penalty : -5
 	second_debt_penalty : -10
 	last_debt_rating_cap : 10
-
-	gift_rules [
-		{
-			id : GIFT_MODEST
-			rate : 8
-			minimum : 20
-		}
-		{
-			id : GIFT_GENEROUS
-			rate : 4
-			minimum : 50
-		}
-		{
-			id : GIFT_LAVISH
-			rate : 2
-			minimum : 100
-		}
-	]
 }

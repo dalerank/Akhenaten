@@ -115,6 +115,16 @@ localization_ru = [
     { key:"#TR_BUILDING_ROADBLOCK", text:"Дорожный блок"}
     { key:"#TR_BUILDING_ROADBLOCK_DESC", text:"Блокирует проход бесцельно бродящим ходокам"}
     { key:"#display_options_title", text:"Настройки дисплея"}
+    { key:"#ui_gift_to_kingdome_window_title", text:"Отдать народу Египта"}
+    { key:"#ui_unable_to_fulfill_request", text:"Невозможно выполнить запрос"}
+    { key:"#ui_gift_time_since_last", text:"Время с последнего подарка"}
+    { key:"#ui_gift_label_modest", text:"Скромный:"}
+    { key:"#ui_gift_label_generous", text:"Щедрый:"}
+    { key:"#ui_gift_label_lavish", text:"Роскошный:"}
+    { key:"#ui_gift_dispatch_modest", text:"Отправить скромный подарок"}
+    { key:"#ui_gift_dispatch_generous", text:"Отправить щедрый подарок"}
+    { key:"#ui_gift_dispatch_lavish", text:"Отправить роскошный подарок"}
+    { key:"#ui_gift_cannot_afford_savings", text:"У вас недостаточно личных сбережений, чтобы сделать подарок Египту. Попробуйте платить себе большую зарплату!"}
 	{ key:"#TR_CONFIG_HEADER_LANGUAGES", lang:"en", text: "Язык игры"}
 
     {key: "#mission2_store_figs", text:"Постройте зернохранилище и заполните его инжиром"}

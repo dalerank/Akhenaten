@@ -29,14 +29,18 @@ function message_list_window_on_render_item(p) {
 }
 
 function message_list_window_open_entry(index) {
-    var id = __city_message_set_current(index)
-    if (id >= __city_message_count()) {
+    __city_messages.current_message_id = index
+    if (index >= __city_message_count()) {
         return
     }
-    var mmTextId = __city_message_mm_text_id(id)
+    var mmTextId = __city_message_mm_text_id(index)
     var mmMsg = __lang_get_message_id(mmTextId)
-    __city_message_mark_read(id)
-    __ui_window_message_dialog_show_city_message(mmMsg, id, __city_message_year(id), __city_message_month(id), __city_message_param1(id), __city_message_param2(id), mmTextId)
+    __city_message_mark_read(index)
+    var year = __city_message_year(index)
+    var month = __city_message_month(index)
+    var param1 = __city_message_param1(index)
+    var param2 = __city_message_param2(index)
+    __ui_window_message_dialog_show_city_message(mmMsg, index, year, month, param1, param2, mmTextId)
 }
 
 function message_list_window_on_click_item(p) {

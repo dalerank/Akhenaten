@@ -14,6 +14,7 @@
 #include "scenario/scenario.h"
 #include "city/victory.h"
 #include "city/city_animals.h"
+#include "city/city_kingdome_relations.h"
 #include "city/city_population.h"
 #include "city/city_resource.h"
 #include "building/building_palace.h"
@@ -65,6 +66,8 @@ ANK_SCRIPT_EVENT(event_change_gamespeed, increase)
 ANK_SCRIPT_EVENT(event_change_scroll_speed, increase)
 ANK_SCRIPT_EVENT(event_change_middle_mouse_pan_speed, increase)
 ANK_SCRIPT_EVENT(event_change_clouds_speed, increase)
+ANK_SCRIPT_EVENT(event_send_gift_to_kingdome, gift_size)
+ANK_SCRIPT_EVENT(event_kingdome_update_gifts, personal_savings)
 
 int js_emit_script_event(pcstr event_name, const bvariant_map &args) {
     auto it = g_script_emit_handlers.find(event_name);

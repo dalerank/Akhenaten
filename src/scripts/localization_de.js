@@ -229,6 +229,16 @@ localization_de = [
   {key: "#popup_dialog_delete_dynasty", group:5, id:90 }
   {key: "#popup_dialog_no_dynasty", group:5, id:94 }
   {key: "#replay_mission", group:1, id:2 }
+  {key: "#ui_gift_to_kingdome_window_title", text:"Dem Volk Ägyptens geben"}
+  {key: "#ui_unable_to_fulfill_request", text:"Anfrage kann nicht erfüllt werden"}
+  {key: "#ui_gift_time_since_last", text:"Zeit seit letztem Geschenk"}
+  {key: "#ui_gift_label_modest", text:"Bescheiden:"}
+  {key: "#ui_gift_label_generous", text:"Großzügig:"}
+  {key: "#ui_gift_label_lavish", text:"Verschwenderisch:"}
+  {key: "#ui_gift_dispatch_modest", text:"Bescheidenes Geschenk senden"}
+  {key: "#ui_gift_dispatch_generous", text:"Großzügiges Geschenk senden"}
+  {key: "#ui_gift_dispatch_lavish", text:"Verschwenderisches Geschenk senden"}
+  {key: "#ui_gift_cannot_afford_savings", text:"Ihr habt nicht genug persönliche Ersparnisse, um ein Geschenk an Ägypten zu machen. Versucht, Euch ein größeres Gehalt zu zahlen!"}
   {key: "#granary_info_title", group:98, id:0 }
   {key: "#granary_no_road_access", group:69, id:25 }
   {key: "#granary_kingdom_supplies_grain", group:98, id:4 }

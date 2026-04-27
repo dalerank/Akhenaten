@@ -2056,9 +2056,7 @@ localization_base_de = [
     { group:52, id:45, text: "Personen" }
     { group:52, id:46, text: "Waffen" }
     { group:52, id:47, text: "Klickt hier, um Anfrage zu versenden" }
-    { group:52, id:48, text: "Anfrage kann nicht erfüllt werden" }
     { group:52, id:49, text: "Ein Geschenk senden" }
-    { group:52, id:50, text: "Zeit seit letztem Geschenk" }
     { group:52, id:51, text: "Eine babylonische Tafel" }
     { group:52, id:52, text: "Persische Teppiche" }
     { group:52, id:53, text: "Antike Schnitzereien" }
@@ -2071,14 +2069,6 @@ localization_base_de = [
     { group:52, id:60, text: "Eine Truhe voll Saphire" }
     { group:52, id:61, text: "Ein goldener Streitwagen" }
     { group:52, id:62, text: "Ein libanesisches Zedernschiff" }
-    { group:52, id:63, text: "Bescheiden:" }
-    { group:52, id:64, text: "Großzügig:" }
-    { group:52, id:65, text: "Verschwenderisch:" }
-    { group:52, id:66, text: "Bescheidenes Geschenk senden" }
-    { group:52, id:67, text: "Großzügiges Geschenk senden" }
-    { group:52, id:68, text: "Verschwenderisches Geschenk senden" }
-    { group:52, id:69, text: "Dem Volk Ägyptens geben" }
-    { group:52, id:70, text: "Ihr habt nicht genug persönliche Ersparnisse, um ein Geschenk an Ägypten zu machen. Versucht, Euch ein größeres Gehalt zu zahlen!" }
     { group:52, id:71, text: "Warnung: Euch selbst ein Gehalt zu zahlen, das über Eurem aktuellen Rang liegt, wird niemanden beeindrucken." }
     { group:52, id:72, text: "Truppen zum Schutz entsenden nach" }
     { group:52, id:73, text: "Eine kleine Streitmacht wird angreifen in" }

@@ -2054,9 +2054,7 @@ localization_base_en = [
     { group:52, id:45, text: "people" }
     { group:52, id:46, text: "Weapons" }
     { group:52, id:47, text: "Click here to dispatch request" }
-    { group:52, id:48, text: "Unable to fulfill request" }
     { group:52, id:49, text: "Send a gift" }
-    { group:52, id:50, text: "Time since last gift" }
     { group:52, id:51, text: "A Babylonian tablet" }
     { group:52, id:52, text: "Persian carpets" }
     { group:52, id:53, text: "Ancient carvings" }
@@ -2069,14 +2067,6 @@ localization_base_en = [
     { group:52, id:60, text: "A chest of sapphires" }
     { group:52, id:61, text: "A golden chariot" }
     { group:52, id:62, text: "A Lebanese cedar ship" }
-    { group:52, id:63, text: "Modest:" }
-    { group:52, id:64, text: "Generous:" }
-    { group:52, id:65, text: "Lavish:" }
-    { group:52, id:66, text: "Dispatch modest gift" }
-    { group:52, id:67, text: "Dispatch generous gift" }
-    { group:52, id:68, text: "Dispatch lavish gift" }
-    { group:52, id:69, text: "Give to the people of Egypt" }
-    { group:52, id:70, text: "You do not have enough personal savings to make a gift to Egypt. Try paying yourself a bigger salary!" }
     { group:52, id:71, text: "Warning: Paying yourself a salary greater than your current rank will not impress anyone." }
     { group:52, id:72, text: "Dispatch troops to protect" }
     { group:52, id:73, text: "A small force will attack in" }

@@ -16,14 +16,12 @@
 #include "game/game.h"
 #include "scenario/criteria.h"
 #include "game/game_config.h"
-#include "js/js_game.h"
 
 #include "dev/debug.h"
 #include <iostream>
 
 static int cheated_invasion = 0;
 
-const token_holder<e_gift, GIFT_MODEST, GIFT_COUNT> ANK_CONFIG_ENUM(e_gift_tokens);
 kingdome_relation_t::static_params ANK_VARIABLE(kingdome_relation);
 
 declare_console_command_p(updatekingdome) {
@@ -206,71 +204,7 @@ void kingdome_relation_t::process_invasion() {
 void kingdome_relation_t::update() {
     OZZY_PROFILER_FUNCTION();
     update_debt_state();
-    reset_gifts();
-    update_gifts();
-}
-
-void kingdome_relation_t::update_gifts() {
-    gifts[GIFT_MODEST].cost = get_gift_cost(GIFT_MODEST);
-    gifts[GIFT_GENEROUS].cost = get_gift_cost(GIFT_GENEROUS);
-    gifts[GIFT_LAVISH].cost = get_gift_cost(GIFT_LAVISH);
-}
-
-int kingdome_relation_t::get_gift_cost(int size) {
-    auto it = std::find_if(params().gift_rules.begin(), params().gift_rules.end(),
-        [&] (const auto &rule) { return rule.id == size; });
-
-    if (it != params().gift_rules.end()) {
-        return int(personal_savings / it->rate + it->minimum);
-    }
-
-    // Default gift cost calculation
-    switch (size) {
-    case GIFT_MODEST: return (personal_savings / 8 + 20);
-    case GIFT_GENEROUS: return (personal_savings / 4 + 50);
-    case GIFT_LAVISH: return (personal_savings / 2 + 100);
-    default: return 100;
-    }
-}
-
-int kingdome_relation_t::can_send_gift(int size) {
-    return gifts[size].cost <= personal_savings;
-}
-
-void kingdome_relation_t::send_gift(int gift_size) {
-    if (gift_size < GIFT_MODEST || gift_size > GIFT_LAVISH)
-        return;
-
-    int cost = gifts[gift_size].cost;
-    if (cost > personal_savings) {
-        return;
-    }
-
-    if (gift_overdose_penalty <= 0) {
-        gift_overdose_penalty = 1;
-        change(params().gift_relation_change_first[gift_size]);
-    } else if (gift_overdose_penalty == 1) {
-        gift_overdose_penalty = 2;
-        change(params().gift_relation_change_second[gift_size]);
-    } else if (gift_overdose_penalty == 2) {
-        gift_overdose_penalty = 3;
-        change(params().gift_relation_change_third[gift_size]);
-    } else if (gift_overdose_penalty == 3) {
-        gift_overdose_penalty = 4;
-        change(params().gift_relation_change_last[gift_size]);
-    }
-
-    months_since_gift = 0;
-    // rotate gift type
-    gifts[gift_size].id++;
-    if (gifts[gift_size].id >= 4)
-        gifts[gift_size].id = 0;
-
-    personal_savings -= cost;
-}
-
-const kingdome_gift *kingdome_relation_t::get_gift(int size) {
-    return &gifts[size];
+    events::emit(event_kingdome_update_gifts{ (int)personal_savings });
 }
 
 void kingdome_relation_t::mark_soldier_killed() {
@@ -287,12 +221,6 @@ void kingdome_relation_t::force_attack(int size) {
         invasion.size = size;
         invasion.soldiers_killed = 0;
     }
-}
-
-void kingdome_relation_t::reset_gifts() {
-    gifts[GIFT_MODEST].cost = 0;
-    gifts[GIFT_GENEROUS].cost = 0;
-    gifts[GIFT_LAVISH].cost = 0;
 }
 
 void kingdome_relation_t::advance_month() {
@@ -416,11 +344,6 @@ void kingdome_relation_t::change(int amount) {
 
 void kingdome_relation_t::init() {
     rating_cap = 100;
-    reset_gifts();
-
-    events::subscribe([this] (event_send_gift_to_kingdome ev) {
-        send_gift(ev.gift_size);
-    });
 }
 
 void kingdome_relation_t::on_post_load() {

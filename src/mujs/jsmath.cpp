@@ -130,6 +130,14 @@ static void Math_min(js_State *J)
 	js_pushnumber(J, x);
 }
 
+static void Math_clamp(js_State *J)
+{
+	double x = js_tonumber(J, 1);
+	double min = js_tonumber(J, 2);
+	double max = js_tonumber(J, 3);
+	js_pushnumber(J, std::clamp(x, min, max));
+}
+
 void jsB_initmath(js_State *J)
 {
 	js_pushobject(J, jsV_newobject(J, JS_CMATH, J->Object_prototype));
@@ -161,6 +169,7 @@ void jsB_initmath(js_State *J)
 		jsB_propf(J, js_intern("Math.sin"), Math_sin, 1);
 		jsB_propf(J, js_intern("Math.sqrt"), Math_sqrt, 1);
 		jsB_propf(J, js_intern("Math.tan"), Math_tan, 1);
+		jsB_propf(J, js_intern("Math.clamp"), Math_clamp, 2);
 	}
     js_defglobal(J, js_intern("Math"), JS_DONTENUM);
 }
