@@ -153,7 +153,7 @@ sidebar_window_expanded {
                                onclick: window_build_menu_build_security
                             })
 
-        show_messages     : image_button({pos[46, 434], pack:PACK_GENERAL, id:136, offset:52, tooltip:[68,33], onclick: window_show_by_id("message_list_window")})
+        show_messages     : image_button({pos[46, 434], pack:PACK_GENERAL, id:136, offset:52, tooltip:[68,33], onclick: show_window_by_id("message_list_window")})
         goto_problem      : image_button({
                                pos[86, 434], pack:PACK_GENERAL, id:136, offset:56, tooltip:[68,34]
                                onclick: window_city_show_problem_area
@@ -191,6 +191,14 @@ sidebar_window_expanded {
 
 function sidebar_window_draw_background(window) {
     window.show_briefing.readonly = !ui.scenario_mission_briefing_button_enabled()
+
+    var messages = __city_message_count()
+    window.show_messages.readonly = (messages <= 0)
+    window.num_messages.text = (messages > 0) ? ("" + messages) : ""
+
+    window.undo_btn.readonly = !__ui_game_can_undo()
+    window.goto_problem.readonly = !__city_message_problem_area_count()
+    window.show_overlays.text = ui.sidebar_overlay_link_text()
 
     window.build_house.readonly = false
     window.build_house.selected = (BUILDING_MENU_VACANT_HOUSE == window.opened_menu)

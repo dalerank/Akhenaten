@@ -299,6 +299,9 @@ ANK_FUNCTION(__city_message_sort_and_compact)
 int __city_message_count() { return city_message_count(); }
 ANK_FUNCTION(__city_message_count)
 
+int __city_message_problem_area_count() { return city_message_problem_area_count(); }
+ANK_FUNCTION(__city_message_problem_area_count)
+
 int __city_message_month(int message_index) { return city_message_get(message_index).month; }
 ANK_FUNCTION_1(__city_message_month)
 

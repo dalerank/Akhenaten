@@ -2,17 +2,11 @@
 #include "dev/debug.h"
 
 #include "city/city_building_menu_ctrl.h"
-#include "overlays/city_overlay.h"
-#include "city/city.h"
-#include "city/city_message.h"
 #include "core/profiler.h"
 #include "game/state.h"
-#include "game/undo.h"
-#include "io/gamefiles/lang.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/image_button.h"
-#include "graphics/elements/lang_text.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -130,20 +124,6 @@ void ui::sidebar_window_expanded_t::ui_draw_foreground(UiFlags flags) {
     widget_minimap_draw({ x_offset + 12, MINIMAP_Y_OFFSET }, 0);
 
     ui.draw(wflags);
-
-    int messages = city_message_count();
-
-    ui["show_messages"].readonly = (messages <= 0);
-    ui["num_messages"] = messages > 0 ? bstring32(messages) : bstring32();
-
-    ui["undo_btn"].readonly = !game_can_undo();
-    ui["goto_problem"].readonly = !city_message_problem_area_count();
-
-    xstring overlay_text = g_city.overlay()
-                            ? g_city.overlay()->title()
-                            : ui::str(6, 4);
-
-    ui["show_overlays"] = overlay_text;
 
     ui.end_widget();
 

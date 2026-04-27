@@ -91,7 +91,7 @@ message_list_window {
     read_icon : {pack:PACK_GENERAL, id:90, offset:14}
     help_id: "message_game_control_messages"
     draw_underlying: true
-    allow_rmb_goback: true
+    allow_rmb_goback: false
 
     ui {
         background    : outer_panel({size:[30, 22]})

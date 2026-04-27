@@ -7,6 +7,8 @@
 #include "mujs/jsi.h"
 #include "mujs/jsvalue.h"
 #include "widget/widget_sidebar.h"
+#include "city/city.h"
+#include "overlays/city_overlay.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/window.h"
 #include "window/window_city.h"
@@ -260,6 +262,22 @@ bool __ui_scenario_mission_briefing_button_enabled() {
     return m == e_scenario_normal || m == e_scenario_selected;
 }
 ANK_FUNCTION(__ui_scenario_mission_briefing_button_enabled)
+
+bool __ui_game_can_undo() {
+    return game_can_undo() != 0;
+}
+ANK_FUNCTION(__ui_game_can_undo)
+
+pcstr __ui_sidebar_overlay_link_text() {
+    static xstring storage;
+    if (const city_overlay *o = g_city.overlay()) {
+        storage = o->title();
+    } else {
+        storage = ui::str(6, 4);
+    }
+    return storage.c_str();
+}
+ANK_FUNCTION(__ui_sidebar_overlay_link_text)
 
 ui::element* __ui_get_element(xstring element_id) {
     OZZY_PROFILER_SECTION(_, bstring128("ui:get_elem+", element_id.c_str()).c_str())
