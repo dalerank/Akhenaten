@@ -17,13 +17,3 @@ public:
     virtual void update_graphic() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
 };
-
-
-class building_bullfight_school : public building_entertainment {
-public:
-    BUILDING_METAINFO(BUILDING_BULLFIGHT_SCHOOL, building_bullfight_school, building_entertainment)
-
-    //virtual void on_place_checks() override;
-    //virtual void on_destroy() override;
-    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
-};
