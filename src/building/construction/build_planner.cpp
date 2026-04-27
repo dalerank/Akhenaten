@@ -387,10 +387,9 @@ void build_planner::set_graphics_row(int row, xspan<int> image_ids, int def) {
         tile_graphics_array[row][i] = (image_id > 0 ? image_id : def);
 
         // set sizes automatically as default
-        int tile_size = 0;
         if (image_ids[i] > 0) {
             auto img = image_get(image_ids[i]);
-            set_tile_size(row, i, img->isometric_size());
+            set_tile_size(row, i, img ? img->isometric_size() : 1);
         } else {
             set_tile_size(row, i, 1); // default size is 1
         }
