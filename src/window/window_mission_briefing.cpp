@@ -33,6 +33,8 @@ void __game_mission_branch_start(int scenario_id) {
 ANK_FUNCTION_1(__game_mission_branch_start)
 
 void ui::mission_briefing_window::init() {
+    autoconfig_window::init();
+
     ui["dec_difficulty"].enabled = !is_review;
     ui["inc_difficulty"].enabled = !is_review;
 

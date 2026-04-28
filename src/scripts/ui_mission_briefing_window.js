@@ -48,7 +48,6 @@ mission_briefing_window {
 [es=(mission_briefing_window, init)]
 function mission_briefing_window_on_init(window) {
     var is_review = __mission_briefing_is_review
-    /* Scenario of the fork screen (game_show_mission_choice), not __mission_briefing_scenario_id (branch target). */
     var fork_scenario_id = game.mission_choice_open_scenario_id
     var src = mission_choice_config_root(fork_scenario_id)
     var has_choice = !is_review && fork_scenario_id > 0 && !!src && !!src.choice && src.choice.length > 0
