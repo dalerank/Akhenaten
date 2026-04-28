@@ -4078,7 +4078,6 @@ localization_base_en = [
     { group:143, id:0, text: "Accept goods" }
     { group:143, id:1, text: "Refuse goods" }
     { group:143, id:2, text: "Request food" }
-    { group:144, id:0, text: "Click on a city to govern " }
     { group:144, id:1, text: "I" }
     { group:144, id:2, text: "Blank" }
     { group:144, id:3, text: "Blank" }

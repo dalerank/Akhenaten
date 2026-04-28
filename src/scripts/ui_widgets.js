@@ -62,22 +62,6 @@ window_mission_lost = {
     }
 }
 
-mission_choice_window = {
-    pos: [(sw(0) - 1024)/2, (sh(0) - 768)/2],
-    ui : {
-        background       : image({pack:PACK_UNLOADED, id:12 }),
-        image1                   : image({}),
-        image2                   : image({}),
-        title                        : text({pos:[204, 548], font : FONT_LARGE_BLACK_ON_LIGHT }),
-        mission_name         : text({pos:[214, 580], size:[px(32), 20], wrap:px(32), text:"${144.0}"}),
-
-        point0                   : image_button({}),
-        point1                   : image_button({}),
-        point2                   : image_button({}),
-        point3                   : image_button({}),
-    }
-}
-
 roadblock_info_window = {
     ui : {
         background      : outer_panel({size: [29, 17]}),

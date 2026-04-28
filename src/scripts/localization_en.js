@@ -243,6 +243,7 @@ localization_en = [
   {key: "#ui_gift_dispatch_generous", text:"Dispatch generous gift"}
   {key: "#ui_gift_dispatch_lavish", text:"Dispatch lavish gift"}
   {key: "#ui_gift_cannot_afford_savings", text:"You do not have enough personal savings to make a gift to Egypt. Try paying yourself a bigger salary!"}
+  {key: "#ui_mission_choice_prompt", text:"Click on a city to govern "}
   {key: "#granary_info_title", group:98, id:0 }
   {key: "#granary_no_road_access", group:69, id:25 }
   {key: "#granary_kingdom_supplies_grain", group:98, id:4 }

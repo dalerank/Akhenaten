@@ -4083,7 +4083,6 @@ localization_base_de = [
     { group:143, id:0, text: "Waren akzeptieren" }
     { group:143, id:1, text: "Waren ablehnen" }
     { group:143, id:2, text: "Nahrung anfordern" }
-    { group:144, id:0, text: "Klickt auf eine Stadt, um sie zu regieren " }
     { group:144, id:1, text: "I" }
     { group:144, id:2, text: "Leer" }
     { group:144, id:3, text: "Leer" }

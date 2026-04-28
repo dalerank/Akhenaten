@@ -1,9 +1,11 @@
 log_info("akhenaten: game started")
 
-game {
-    __property_getter: function(property) { return __game_get_property(property) }
+game = extend(__game, {
+    // -> monthly_autosave
+    // -> pending_load_type
+    // -> pending_save_type
+    // -> mission_choice_open_scenario_id
 
-    @monthly_autosave { get: __game_get_monthly_autosave, set: __game_set_monthly_autosave }
     @absolute_day { get: __game_absolute_day }
     @simtime_year { get: __game_simtime_year }
     @version { get: __game_version }
@@ -16,8 +18,6 @@ game {
     @session_last_loaded_kind { get: __game_session_last_loaded_kind }
     @session_last_loaded_mission { get: __game_session_last_loaded_mission }
     @dynasty_name { get: __game_get_player_name, set: __game_set_player_name }
-    @pending_load_type { }
-    @pending_save_type { }
     @gods_enabled { get: __game_gods_enabled }
 
     screen {
@@ -43,7 +43,7 @@ game {
     get_last_loaded_file: __game_get_last_loaded_file
     editor_load_scenario: __game_editor_load_scenario
     editor_write_scenario: __game_editor_write_scenario
-}
+})
 
 scenario {
     has_animals: __scenario_has_animals

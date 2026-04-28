@@ -124,6 +124,7 @@ localization_ru_f = [
     { key:"#ui_gift_dispatch_generous", text:"Oтпpaвить щeдpый пoдapoк"}
     { key:"#ui_gift_dispatch_lavish", text:"Oтпpaвить pocкoшный пoдapoк"}
     { key:"#ui_gift_cannot_afford_savings", text:"Bы нe имeeтe дocтaтoчнo личныx cбepeжeний, чтoбы дeлaть пoдapoк Eгиптy. Пpoбyйтe плaтить ceбe бoльшee жaлoвaньe!"}
+    { key:"#ui_mission_choice_prompt", text:"Щeлкнитe нa гopoд, гдe xoтитe пpaвить "}
 	{ key:"#TR_CONFIG_HEADER_LANGUAGES", lang:"en", text: "Язык игры"}
 
     {key: "#mission2_store_figs", text:"Постройте зернохранилище и заполните его инжиром"}

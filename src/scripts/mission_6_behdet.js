@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 6 behdet started")
 
-mission6 = { // Behdet
+mission6 { // Behdet
 	start_message : "message_soldiers_and_forts"
 	player_rank : 1
 	next_mission : 8
@@ -66,14 +66,15 @@ mission6 = { // Behdet
 	]
 
 	choice_background {pack:PACK_UNLOADED, id:12}
-	choice_image1 {pack:PACK_UNLOADED, id:13, offset:0}
+	choice_image1 {pack:PACK_UNLOADED, id:13}
 	choice_image1_pos [192, 144]
 	choice_title [144, 19]
+
 	choice [
 		{
 			name : "Abydos"
 			id : 6
-			image {pack:PACK_UNLOADED, id:20, offset:0}
+			image {pack:PACK_UNLOADED, id:20}
 			tooltip [144, 20]
 			pos [620, 420]
 		}

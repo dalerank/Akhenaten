@@ -8,6 +8,7 @@
 #include "sound/sound_mission.h"
 #include "sound/sound_building.h"
 #include "sound/sound_walker.h"
+#include "sound/sound.h"
 
 #include "overlays/city_overlay.h"
 #include "graphics/image.h"
@@ -30,6 +31,7 @@
 #include "game/game_environment.h"
 #include "city/city_finance.h"
 #include "io/gamestate/boilerplate.h"
+#include "window/main_menu.h"
 #include "core/profiler.h"
 #include "core/system_time.h"
 #include "js.h"
@@ -479,6 +481,9 @@ bool __game_write_savegame(pcstr filename_short) { return GamestateIO::write_sav
 bool __game_editor_load_scenario(pcstr path) { return game_file_editor_load_scenario(path) != 0; } ANK_FUNCTION_1(__game_editor_load_scenario)
 bool __game_editor_write_scenario(pcstr path) { return game_file_editor_write_scenario(path) != 0; } ANK_FUNCTION_1(__game_editor_write_scenario)
 void __game_load_mission(int scenario_id, int start_immediately) { GamestateIO::load_mission(scenario_id, !!start_immediately); } ANK_FUNCTION_2(__game_load_mission)
+bool __game_mission_is_valid(int scenario_id) { const mission_step_t *s = get_scenario_step_data(scenario_id); return s && s->campaign_id >= 0; } ANK_FUNCTION_1(__game_mission_is_valid)
+void __game_show_main_menu() { main_menu_screen::show(/*restart_music*/true); } ANK_FUNCTION(__game_show_main_menu)
+void __game_speech_stop() { g_sound.speech_stop(); } ANK_FUNCTION(__game_speech_stop)
 bool __game_file_exists(pcstr path) { return path && *path && vfs::file_exists(path); } ANK_FUNCTION_1(__game_file_exists)
 pcstr __game_get_last_autosave() { const char* p = player_get_last_autosave(); return p ? p : ""; } ANK_FUNCTION(__game_get_last_autosave)
 void __game_load_player_data(pcstr name) { player_data_load((const uint8_t*)name); } ANK_FUNCTION_1(__game_load_player_data)
@@ -491,11 +496,6 @@ void __game_player_data_new(pcstr name_utf8) {
     encoding_from_utf8(name_utf8 ? name_utf8 : "", internal, MAX_PLAYER_NAME);
     player_data_new(internal);
 } ANK_FUNCTION_1(__game_player_data_new)
-
-std::optional<bvariant> __game_get_property(pcstr property) {
-    return archive_helper::get(game, property, true);
-}
-ANK_FUNCTION_1(__game_get_property)
 
 void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_log_info_native, "__log_info_native", 1);

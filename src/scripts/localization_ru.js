@@ -125,6 +125,7 @@ localization_ru = [
     { key:"#ui_gift_dispatch_generous", text:"Отправить щедрый подарок"}
     { key:"#ui_gift_dispatch_lavish", text:"Отправить роскошный подарок"}
     { key:"#ui_gift_cannot_afford_savings", text:"У вас недостаточно личных сбережений, чтобы сделать подарок Египту. Попробуйте платить себе большую зарплату!"}
+    { key:"#ui_mission_choice_prompt", text:"Кликните на город для управления "}
 	{ key:"#TR_CONFIG_HEADER_LANGUAGES", lang:"en", text: "Язык игры"}
 
     {key: "#mission2_store_figs", text:"Постройте зернохранилище и заполните его инжиром"}

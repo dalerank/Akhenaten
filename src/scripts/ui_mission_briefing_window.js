@@ -13,7 +13,7 @@ mission_briefing_window {
         subtitle         : text({pos[32, 78], font : FONT_NORMAL_BLACK_ON_LIGHT })
         objectives_panel : inner_panel({pos[32, 96], size{w:36, h:6} })
         objectives_label : label({text{group:62, id:10}, pos{x:48, y:104},    font : FONT_NORMAL_WHITE_ON_DARK })
-        
+
         goal_0           : label({pos[32  + 16, 90  + 32], body{w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false })
         goal_1           : label({pos[288 + 16, 90  + 32], body{w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false })
         goal_2           : label({pos[32  + 16, 112 + 32], body{w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false })
@@ -21,7 +21,7 @@ mission_briefing_window {
         goal_4           : label({pos[32  + 16, 134 + 32], body{w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false })
         goal_5           : label({pos[288 + 16, 134 + 32], body{w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false })
         goal_immediate   : label({pos[32 + 16,  136 + 32], body{w:31, h:1}, font : FONT_NORMAL_YELLOW, enabled: false })
-        
+
         description_panel: inner_panel({pos{x:32, y:200}, size{w:33, h:14} })
         description_text : text({
             pos[40, 200]
@@ -31,16 +31,32 @@ mission_briefing_window {
             font : FONT_NORMAL_WHITE_ON_DARK
             font_link:FONT_NORMAL_YELLOW
             rich : true
-            clip_area : true 
+            clip_area : true
         })
-        
+
         difficulty_label : label({pos[105, 433], size[80, 14], font : FONT_NORMAL_BLACK_ON_LIGHT, textfn: get_difficulty_label })
-        back             : image_button({pos[26, 428], size[31, 20], pack:PACK_GENERAL, id:90, offset:8})
+        back             : image_button({pos[26, 428], size[31, 20], pack:PACK_GENERAL, id:90, offset:8, enabled: false})
 
         dec_difficulty   : image_button({pos[65, 428], size[17, 17], pack:PACK_GENERAL, id:212, offset:3, onclick: __game_decrease_difficulty })
         inc_difficulty   : image_button({pos[65 + 18, 428], size[17, 17], pack:PACK_GENERAL, id:212, offset:0, onclick: __game_increase_difficulty })
 
         tocity_label     : label({text{group:62, id:7}, margin{right:-140, bottom:0}, font : FONT_NORMAL_BLACK_ON_LIGHT })
         start_mission    : next_button({ margin{right:-40, bottom:-3} })
+    }
+}
+
+[es=(mission_briefing_window, init)]
+function mission_briefing_window_on_init(window) {
+    var is_review = __mission_briefing_is_review
+    /* Scenario of the fork screen (game_show_mission_choice), not __mission_briefing_scenario_id (branch target). */
+    var fork_scenario_id = game.mission_choice_open_scenario_id
+    var src = mission_choice_config_root(fork_scenario_id)
+    var has_choice = !is_review && fork_scenario_id > 0 && !!src && !!src.choice && src.choice.length > 0
+    window.back.enabled = has_choice
+    if (has_choice) {
+        window.back.onclick = function() {
+            __game_speech_stop()
+            game_show_mission_choice(fork_scenario_id)
+        }
     }
 }

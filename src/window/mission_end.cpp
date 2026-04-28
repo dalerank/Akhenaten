@@ -8,6 +8,7 @@
 #include "game/mission.h"
 #include "game/settings.h"
 #include "game/state.h"
+#include "game/game.h"
 #include "game/undo.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"
@@ -21,8 +22,9 @@
 #include "sound/sound.h"
 #include "window/intermezzo.h"
 #include "window/main_menu.h"
-#include "window/mission_next.h"
 #include "window/victory_video.h"
+#include "window/autoconfig_window.h"
+#include "js/js.h"
 #include "building/construction/build_planner.h"
 #include "io/gamestate/boilerplate.h"
 #include "window/window_city.h"
@@ -89,7 +91,9 @@ void ui::window_mission_won::advance_to_next_mission() {
         if (!next_mission) {
             next_mission = g_scenario.campaign_scenario_id() + 1;
         }
-        ui::mission_choice_window::show(next_mission);
+
+        game.mission_choice_open_scenario_id = next_mission;
+        autoconfig_window::show( "mission_choice_window" );
     }
 }
 
@@ -114,12 +118,12 @@ autoconfig_window &ui::window_mission_end::getui() {
 static void show_end_dialog(void) {
     window_type window = {
         "window_mission_end",
-        [] (int flags) {  
+        [] (int flags) {
             auto &ui = g_mission_end.getui();
             ui.format_all(&g_city);
             ui.draw_background(flags);
         },
-        [] (int flags) { 
+        [] (int flags) {
             window_draw_underlying_window(UiFlags_None);
 
             auto &ui = g_mission_end.getui();

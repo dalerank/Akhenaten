@@ -30,6 +30,10 @@ inline void ank_global_obj_bind_field(js_State *J, js_StringNode name, uint16_t 
     js_register_bound_uint16_property(J, name, ptr);
 }
 
+inline void ank_global_obj_bind_field(js_State *J, js_StringNode name, int16_t *ptr) {
+    js_register_bound_int16_property(J, name, ptr);
+}
+
 template<typename T>
 void ank_global_obj_bind_field(js_State *J, js_StringNode name, T *ptr) = delete;
 

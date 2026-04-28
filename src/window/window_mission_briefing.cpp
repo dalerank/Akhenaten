@@ -18,29 +18,26 @@
 #include "sound/sound.h"
 #include "window/window_city.h"
 #include "window/intermezzo.h"
-#include "window/mission_next.h"
 #include "game/settings.h"
 #include "city/city.h"
+#include "js/js_game.h"
 
 ui::mission_briefing_window g_mission_briefing;
 
-void ui::mission_briefing_window::init() {
-    mission_has_choice = game_mission_has_choice(scenario_id);
+ANK_BOUND_INT(__mission_briefing_scenario_id, g_mission_briefing.scenario_id)
+ANK_BOUND_BOOL(__mission_briefing_is_review, g_mission_briefing.is_review)
 
-    ui["back"].enabled = !is_review && mission_has_choice;
+void __game_mission_branch_start(int scenario_id) {
+    ui::mission_briefing_window::mission_start(scenario_id);
+}
+ANK_FUNCTION_1(__game_mission_branch_start)
+
+void ui::mission_briefing_window::init() {
     ui["dec_difficulty"].enabled = !is_review;
     ui["inc_difficulty"].enabled = !is_review;
 
-    // load map!
     if (!g_mission_briefing.campaign_mission_loaded) {
         g_mission_briefing.campaign_mission_loaded = 1;
-    }
-
-    if (!g_mission_briefing.is_review) {
-        ui["back"].onclick([sid = scenario_id] {
-            g_sound.speech_stop();
-            ui::mission_choice_window::show(sid);
-        });
     }
 
     ui["start_mission"].onclick([this] {
@@ -54,7 +51,7 @@ void ui::mission_briefing_window::init() {
         g_city.mission.start_message_shown = true;
     });
 
-    int text_id = 200 + scenario_id; 
+    int text_id = 200 + scenario_id;
     const lang_message& msg = lang_get_message(text_id);
 
     ui["title"] = msg.title.text;
@@ -106,7 +103,7 @@ void window_mission_briefing_show_impl() {
         [] (int flags) { g_mission_briefing.ui_draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { g_mission_briefing.ui_handle_mouse(m); }
     };
-    
+
     events::emit(event_update_mission_goal{ g_mission_briefing.scenario_id });
     g_mission_briefing.init();
     window_show(&window);

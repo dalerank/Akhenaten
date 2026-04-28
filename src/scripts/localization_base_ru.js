@@ -4051,7 +4051,6 @@ localization_base_ru = [
     { group:143, id:0, text: "Принять товары" }
     { group:143, id:1, text: "Отказать в товарах" }
     { group:143, id:2, text: "Запросить еду" }
-    { group:144, id:0, text: "Кликните на город для управления " }
     { group:144, id:1, text: "I" }
     { group:144, id:2, text: "Пусто" }
     { group:144, id:3, text: "Пусто" }

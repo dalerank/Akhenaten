@@ -239,6 +239,7 @@ localization_de = [
   {key: "#ui_gift_dispatch_generous", text:"Großzügiges Geschenk senden"}
   {key: "#ui_gift_dispatch_lavish", text:"Verschwenderisches Geschenk senden"}
   {key: "#ui_gift_cannot_afford_savings", text:"Ihr habt nicht genug persönliche Ersparnisse, um ein Geschenk an Ägypten zu machen. Versucht, Euch ein größeres Gehalt zu zahlen!"}
+  {key: "#ui_mission_choice_prompt", text:"Klickt auf eine Stadt, um sie zu regieren "}
   {key: "#granary_info_title", group:98, id:0 }
   {key: "#granary_no_road_access", group:69, id:25 }
   {key: "#granary_kingdom_supplies_grain", group:98, id:4 }

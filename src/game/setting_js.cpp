@@ -29,6 +29,12 @@ ANK_GLOBAL_OBJECT(g_settings, __game_settings,
     pyramid_speedup,
     last_advisor);
 
+ANK_GLOBAL_OBJECT(game, __game,
+    monthly_autosave,
+    pending_load_type,
+    pending_save_type,
+    mission_choice_open_scenario_id);
+
 int __game_difficulty() { return game_difficulty(); }
 ANK_FUNCTION(__game_difficulty)
 
@@ -40,12 +46,6 @@ ANK_FUNCTION(__game_increase_difficulty)
 
 bool __game_is_fullscreen_only() { return g_render.is_fullscreen_only(); }
 ANK_FUNCTION(__game_is_fullscreen_only)
-
-bool __game_get_monthly_autosave() { return game.monthly_autosave; }
-ANK_FUNCTION(__game_get_monthly_autosave)
-
-void __game_set_monthly_autosave(bool v) { game.monthly_autosave = v; }
-ANK_FUNCTION_1(__game_set_monthly_autosave)
 
 bool __game_debug_properties() { return game.debug_properties; }
 ANK_FUNCTION(__game_debug_properties)
