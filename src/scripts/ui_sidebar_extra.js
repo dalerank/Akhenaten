@@ -105,7 +105,7 @@ function sidebar_extra_embed_height_px(collapsed, mask) {
 [es=(sidebar_window_expanded, ui_draw_extra)]
 function sidebar_window_extra_ui_draw_foreground(window) {
     var sidebarOn = !!game_features.gameui_sidebar_info
-    var collapsed = window.opened_menu !== 0
+    var collapsed = false
 
     var fullHeight = 0
     if (!collapsed && sidebarOn) {
