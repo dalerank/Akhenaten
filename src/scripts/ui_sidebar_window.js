@@ -190,16 +190,6 @@ sidebar_window_expanded {
 }
 
 function sidebar_window_draw_background(window) {
-    window.show_briefing.readonly = !ui.scenario_mission_briefing_button_enabled()
-
-    var messages = __city_message_count()
-    window.show_messages.readonly = (messages <= 0)
-    window.num_messages.text = (messages > 0) ? ("" + messages) : ""
-
-    window.undo_btn.readonly = !__ui_game_can_undo()
-    window.goto_problem.readonly = !__city_message_problem_area_count()
-    window.show_overlays.text = ui.sidebar_overlay_link_text()
-
     window.build_house.readonly = false
     window.build_house.selected = (BUILDING_MENU_VACANT_HOUSE == window.opened_menu)
 
@@ -239,12 +229,21 @@ function sidebar_window_draw_background(window) {
 
 [es=(sidebar_window_expanded, ui_draw_foreground)]
 function window_build_menu_on_draw(window) {
-    sidebar_window_draw_background(window);
+    sidebar_window_draw_background(window)
+
+    window.show_briefing.readonly = !ui.scenario_mission_briefing_button_enabled()
+    var messages = __city_message_count()
+    window.show_messages.readonly = (messages <= 0)
+    window.num_messages.text = (messages > 0) ? ("" + messages) : ""
+
+    window.undo_btn.readonly = !__ui_game_can_undo()
+    window.goto_problem.readonly = !__city_message_problem_area_count()
+    window.show_overlays.text = ui.sidebar_overlay_link_text()
 }
 
 [es=(sidebar_window_collapsed, ui_draw_foreground)]
 function window_build_menu_on_draw_foreground(window) {
-    sidebar_window_draw_background(window);
+    sidebar_window_draw_background(window)
 }
 
 function window_city_show_problem_area() {
