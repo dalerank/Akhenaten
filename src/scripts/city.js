@@ -58,6 +58,12 @@ city {
         @monument { get: __city_winning_monuments }
         @kingdom { get: __city_winning_kingdom }
         @population { get: __city_winning_population }
+        @housing { get: __city_winning_housing }
+        @houselevel { get: __city_winning_houselevel }
+    }
+
+    mission {
+        start_message_shown: __city_mission_start_message_shown
     }
 
     coverage {

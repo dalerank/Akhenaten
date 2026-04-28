@@ -1,25 +1,11 @@
 #include "window_mission_briefing.h"
 
-#include "game/mission.h"
 #include "game/game_events.h"
-#include "graphics/graphics.h"
-#include "graphics/elements/image_button.h"
-#include "graphics/elements/lang_text.h"
-#include "graphics/elements/panel.h"
-#include "graphics/elements/rich_text.h"
-#include "graphics/image_groups.h"
-#include "graphics/text.h"
 #include "graphics/window.h"
-#include "io/gamefiles/lang.h"
-#include "io/gamestate/boilerplate.h"
-#include "scenario/criteria.h"
 #include "scenario/scenario.h"
-#include "sound/music.h"
-#include "sound/sound.h"
-#include "window/window_city.h"
 #include "window/intermezzo.h"
-#include "game/settings.h"
-#include "city/city.h"
+#include "core/profiler.h"
+#include "game/mission.h"
 #include "js/js_game.h"
 
 ui::mission_briefing_window g_mission_briefing;
@@ -35,50 +21,9 @@ ANK_FUNCTION_1(__game_mission_branch_start)
 void ui::mission_briefing_window::init() {
     autoconfig_window::init();
 
-    ui["dec_difficulty"].enabled = !is_review;
-    ui["inc_difficulty"].enabled = !is_review;
-
     if (!g_mission_briefing.campaign_mission_loaded) {
         g_mission_briefing.campaign_mission_loaded = 1;
     }
-
-    ui["start_mission"].onclick([this] {
-        if (!is_review) {
-            GamestateIO::load_mission(scenario_id, true);
-        }
-
-        g_sound.speech_stop();
-        g_sound.music_update(/*force*/true);
-        window_city_show();
-        g_city.mission.start_message_shown = true;
-    });
-
-    int text_id = 200 + scenario_id;
-    const lang_message& msg = lang_get_message(text_id);
-
-    ui["title"] = msg.title.text;
-    ui["subtitle"] = msg.subtitle.text;
-
-    const pcstr widgets[] = { "goal_0", "goal_1", "goal_2", "goal_3", "goal_4", "goal_5" };
-    auto goal_label = widgets;
-
-    auto setup_goal = [&] (int group, int tid, bool enabled, int value) {
-        ui[*goal_label].enabled = enabled;
-        if (enabled) {
-            ui[*goal_label++].text_var("%s: %u", ui::str(group, tid), value);
-        }
-    };
-
-    setup_goal(62, 11, winning_population() > 0, winning_population());
-    setup_goal(29, 20 + winning_houselevel(), winning_housing() > 0, winning_housing());
-    setup_goal(62, 12, winning_culture() > 0, winning_culture());
-    setup_goal(62, 13, winning_prosperity() > 0, winning_prosperity());
-    setup_goal(62, 14, winning_monuments() > 0, winning_monuments());
-    setup_goal(62, 15, winning_kingdom() > 0, winning_kingdom());
-
-    update_goals_list(g_scenario.goal_tooltip);
-
-    ui["description_text"] = msg.content.text;
 }
 
 void ui::mission_briefing_window::update_goals_list(const xstring& goal) {

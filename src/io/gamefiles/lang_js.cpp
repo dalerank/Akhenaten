@@ -60,6 +60,20 @@ xstring __lang_message_title_text(int mm_text_id) {
 }
 ANK_FUNCTION_1(__lang_message_title_text)
 
+xstring __lang_message_subtitle_text(int mm_text_id) {
+    const xstring mm_msg = lang_get_message_id((uint16_t)mm_text_id);
+    const lang_message &model_msg = lang_get_message(mm_msg);
+    return model_msg.subtitle.text;
+}
+ANK_FUNCTION_1(__lang_message_subtitle_text)
+
+xstring __lang_message_content_text(int mm_text_id) {
+    const xstring mm_msg = lang_get_message_id((uint16_t)mm_text_id);
+    const lang_message &model_msg = lang_get_message(mm_msg);
+    return model_msg.content.text;
+}
+ANK_FUNCTION_1(__lang_message_content_text)
+
 xstring __lang_get_message_id(int mm_text_id) {
     return lang_get_message_id(mm_text_id);
 }

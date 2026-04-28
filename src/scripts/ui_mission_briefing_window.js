@@ -41,13 +41,57 @@ mission_briefing_window {
         inc_difficulty   : image_button({pos[65 + 18, 428], size[17, 17], pack:PACK_GENERAL, id:212, offset:0, onclick: __game_increase_difficulty })
 
         tocity_label     : label({text{group:62, id:7}, margin{right:-140, bottom:0}, font : FONT_NORMAL_BLACK_ON_LIGHT })
-        start_mission    : next_button({ margin{right:-40, bottom:-3} })
+        start_mission    : next_button({ margin{right:-40, bottom:-3}, onclick_event: "start_mission" })
     }
+}
+
+[es=(mission_briefing_window, start_mission)]
+function mission_briefing_window_on_draw_foreground(window) {
+    var is_review = __mission_briefing_is_review
+    var scenario_id = __mission_briefing_scenario_id
+
+    if (!is_review) {
+        __game_load_mission(scenario_id, 1)
+    }
+    __game_sound.speech_stop()
+    __game_sound.music_update(1)
+    ui.window_city_show()
+
+    city.mission.start_message_shown = true
 }
 
 [es=(mission_briefing_window, init)]
 function mission_briefing_window_on_init(window) {
     var is_review = __mission_briefing_is_review
+    var scenario_id = __mission_briefing_scenario_id
+    var text_id = 200 + scenario_id
+
+    window.dec_difficulty.enabled = !is_review
+    window.inc_difficulty.enabled = !is_review
+
+    window.title.text = __lang_message_title_text(text_id)
+    window.subtitle.text = __lang_message_subtitle_text(text_id)
+    window.description_text.text = __lang_message_content_text(text_id)
+
+    var goals = ["goal_0", "goal_1", "goal_2", "goal_3", "goal_4", "goal_5"]
+    var gi = 0
+    function setup_goal(group, tid, value) {
+        var el = window[goals[gi]]
+        var enabled = (value > 0)
+        el.enabled = enabled
+        if (enabled) {
+            el.text = __loc(group, tid) + ": " + value
+            gi++
+        }
+    }
+
+    setup_goal(62, 11, city.winning.population)
+    setup_goal(29, 20 + city.winning.houselevel, city.winning.housing)
+    setup_goal(62, 12, city.winning.culture)
+    setup_goal(62, 13, city.winning.prosperity)
+    setup_goal(62, 14, city.winning.monument)
+    setup_goal(62, 15, city.winning.kingdom)
+
     var fork_scenario_id = game.mission_choice_open_scenario_id
     var src = mission_choice_config_root(fork_scenario_id)
     var has_choice = !is_review && fork_scenario_id > 0 && !!src && !!src.choice && src.choice.length > 0
