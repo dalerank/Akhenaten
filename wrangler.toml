@@ -1,0 +1,26 @@
+# Cloudflare Workers config for the bug-report function.
+# Required by wrangler — defines the worker name, entry file, and env vars.
+#
+# Deploy steps (assuming you've run `npm install`):
+#   1. npm run login                   (one-time browser auth)
+#   2. npm run secret:github           (paste your GitHub PAT)
+#   3. npm run deploy                  (publishes the worker)
+#
+# After step 3, wrangler prints a URL like
+#   https://akhenaten-bug-report.<your-subdomain>.workers.dev
+# Paste that URL into the ENDPOINT constant in docs/reportbug.html.
+#
+# To run the worker locally with hot reload:
+#   npm run dev
+# Then point ENDPOINT at http://localhost:8787 (the default dev port).
+
+name = "akhenaten-bug-report"
+main = "api/report-bug.js"
+compatibility_date = "2025-01-15"
+
+# Plain (non-secret) env vars. Override per-environment if you need to.
+# Use the docs origin you actually serve from. For local testing against
+# `python -m http.server 8000`, change this to "http://localhost:8000"
+# (or set it via `wrangler deploy --var ALLOWED_ORIGIN:...`).
+[vars]
+ALLOWED_ORIGIN = "https://dalerank.github.io"

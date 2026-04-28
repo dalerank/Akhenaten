@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Report a bug — Akhenaten</title>
+  <link rel="stylesheet" href="style.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.5.1/github-markdown-dark.min.css"
+  />
+  <style>
+    .report-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .field label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+    }
+
+    .field input,
+    .field textarea {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: var(--text);
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.95rem;
+      padding: 0.65rem 0.8rem;
+      line-height: 1.5;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(201, 168, 76, 0.25);
+    }
+
+    .field textarea {
+      min-height: 320px;
+      resize: vertical;
+    }
+
+    .honeypot {
+      position: absolute;
+      left: -10000px;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+
+    .form-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    #status {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      min-height: 1.4em;
+    }
+
+    #status.error {
+      color: #d97a4a;
+    }
+
+    #status.success {
+      color: var(--gold);
+    }
+
+    .preview-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .preview-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .markdown-body {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.5rem;
+      height: 320px;
+      min-height: 120px;
+      overflow: auto;
+      resize: vertical;
+      color: var(--text);
+      color-scheme: dark;
+    }
+
+    .markdown-body:empty::before {
+      content: 'Preview will appear here as you type.';
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .cheatsheet {
+      margin-top: 3rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .cheatsheet > summary {
+      cursor: pointer;
+      color: var(--gold);
+      font-size: 1.05rem;
+      letter-spacing: 0.03em;
+      list-style: none;
+    }
+
+    .cheatsheet > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .cheatsheet > summary::before {
+      content: '▸ ';
+      color: var(--text-muted);
+    }
+
+    .cheatsheet[open] > summary::before {
+      content: '▾ ';
+    }
+
+    .cheatsheet-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem 2rem;
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 700px) {
+      .cheatsheet-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .cheatsheet-grid h3 {
+      color: var(--accent);
+      font-size: 0.95rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.5rem;
+    }
+
+    .cheatsheet-grid pre {
+      background: rgba(201, 168, 76, 0.06);
+      border: 1px solid rgba(201, 168, 76, 0.15);
+      border-radius: 3px;
+      padding: 0.75rem 1rem;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.85em;
+      line-height: 1.6;
+      color: var(--text);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .privacy-note {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="devblog.html">Devblog</a></li>
+        <li><a href="screenshots.html">Screenshots</a></li>
+        <li><a href="downloads.html">Downloads</a></li>
+        <li><a href="contributors.html">Contributors</a></li>
+        <li><a href="contact.html">Join us</a></li>
+        <li><a href="reportbug.html" class="active">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-content">
+    <h1>Report a bug</h1>
+    <p class="section-intro">
+      Found a problem in Akhenaten? Fill out the form below and your report will
+      be posted as an issue on
+      <a href="https://github.com/dalerank/Akhenaten/issues" target="_blank">github.com/dalerank/Akhenaten</a>.
+      Use Markdown to format your description &mdash; the live preview below
+      shows exactly how it will render on GitHub. Spam reports are filtered out
+      automatically.
+    </p>
+
+    <form id="bug-form" class="report-form" novalidate>
+        <div class="field">
+          <label for="title">Title</label>
+          <input
+            id="title"
+            name="title"
+            type="text"
+            required
+            maxlength="120"
+            placeholder="Short summary of the bug"
+          />
+        </div>
+
+        <div class="field">
+          <label for="body">Description (Markdown)</label>
+          <textarea
+            id="body"
+            name="body"
+            required
+            minlength="20"
+            maxlength="8000"
+            placeholder="Steps to reproduce, expected vs. actual behaviour, OS, version, screenshots..."
+          ></textarea>
+        </div>
+
+        <div class="field">
+          <label for="name">Your name <span style="color:var(--text-muted)">(optional)</span></label>
+          <input id="name" name="name" type="text" maxlength="80" />
+        </div>
+
+        <div class="field">
+          <label for="email">Your email <span style="color:var(--text-muted)">(optional, for follow-up)</span></label>
+          <input id="email" name="email" type="email" maxlength="200" />
+          <p class="privacy-note">Your email is included in the issue body so maintainers can reach out. Leave blank to stay anonymous.</p>
+        </div>
+
+        <div class="preview-wrap">
+          <div class="preview-label">Preview</div>
+          <div id="preview" class="markdown-body"></div>
+        </div>
+
+        <!-- Honeypot: real users never fill this in -->
+        <div class="honeypot" aria-hidden="true">
+          <label for="website">Website</label>
+          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="submit-btn">Submit report</button>
+          <div id="status" role="status" aria-live="polite"></div>
+        </div>
+      </form>
+
+    <details class="cheatsheet">
+      <summary>Markdown cheatsheet</summary>
+      <div class="cheatsheet-grid">
+        <div>
+          <h3>Headings</h3>
+<pre># Heading 1
+## Heading 2
+### Heading 3</pre>
+        </div>
+
+        <div>
+          <h3>Emphasis</h3>
+<pre>**bold**  *italic*  ~~strikethrough~~</pre>
+        </div>
+
+        <div>
+          <h3>Lists</h3>
+<pre>- bullet
+- another bullet
+  - nested
+
+1. first
+2. second</pre>
+        </div>
+
+        <div>
+          <h3>Task lists</h3>
+<pre>- [x] done
+- [ ] not done</pre>
+        </div>
+
+        <div>
+          <h3>Inline &amp; fenced code</h3>
+<pre>Use `inline code` like this.
+
+```cpp
+int main() {
+    return 0;
+}
+```</pre>
+        </div>
+
+        <div>
+          <h3>Links &amp; images</h3>
+<pre>[link text](https://example.com)
+![alt text](https://example.com/img.png)</pre>
+        </div>
+
+        <div>
+          <h3>Blockquotes</h3>
+<pre>&gt; A blockquote
+&gt; spans multiple lines.</pre>
+        </div>
+
+        <div>
+          <h3>Tables</h3>
+<pre>| Column A | Column B |
+| -------- | -------- |
+| value 1  | value 2  |
+| value 3  | value 4  |</pre>
+        </div>
+
+        <div>
+          <h3>Horizontal rule</h3>
+<pre>---</pre>
+        </div>
+
+        <div>
+          <h3>Auto-links</h3>
+<pre>https://github.com/dalerank/Akhenaten
+
+Issue refs: #123
+Mentions:   @username</pre>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.11/dist/purify.min.js"></script>
+  <script>
+    // TODO: set after deploying the serverless function (see api/report-bug.js)
+    const ENDPOINT = '';
+
+    // Used by the spam filter — bots usually submit within milliseconds.
+    const loadedAt = Date.now();
+
+    marked.setOptions({ gfm: true, breaks: true });
+
+    const bodyEl = document.getElementById('body');
+    const previewEl = document.getElementById('preview');
+    const statusEl = document.getElementById('status');
+    const submitBtn = document.getElementById('submit-btn');
+    const form = document.getElementById('bug-form');
+
+    let renderTimer = null;
+    function renderPreview() {
+      const md = bodyEl.value;
+      if (!md) {
+        previewEl.innerHTML = '';
+        return;
+      }
+      const html = marked.parse(md);
+      previewEl.innerHTML = DOMPurify.sanitize(html);
+    }
+
+    bodyEl.addEventListener('input', () => {
+      clearTimeout(renderTimer);
+      renderTimer = setTimeout(renderPreview, 150);
+    });
+
+    function setStatus(message, kind) {
+      statusEl.textContent = message;
+      statusEl.className = kind || '';
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const data = {
+        title: document.getElementById('title').value.trim(),
+        body: bodyEl.value,
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        website: document.getElementById('website').value,
+        loadedAt: loadedAt,
+      };
+
+      if (!data.title) {
+        setStatus('Please enter a title.', 'error');
+        return;
+      }
+      if (data.body.trim().length < 20) {
+        setStatus('Please write at least 20 characters describing the bug.', 'error');
+        return;
+      }
+      if (!ENDPOINT) {
+        setStatus('Bug-report endpoint is not configured yet. Please open an issue on GitHub directly.', 'error');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      setStatus('Submitting…');
+
+      try {
+        const response = await fetch(ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        const payload = await response.json().catch(() => ({}));
+
+        if (response.ok && payload.ok && payload.url) {
+          statusEl.innerHTML =
+            'Reported! <a href="' + payload.url + '" target="_blank">View on GitHub →</a>';
+          statusEl.className = 'success';
+          form.reset();
+          previewEl.innerHTML = '';
+        } else {
+          const msg = payload.error || ('Submission failed (' + response.status + ').');
+          setStatus(msg, 'error');
+        }
+      } catch (err) {
+        setStatus('Network error: ' + err.message, 'error');
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
