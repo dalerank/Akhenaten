@@ -224,7 +224,7 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
         js_newobject(J);
 
         // First pass: add regular properties and collect UI element IDs
-        hvector<bstring64, 32> ui_element_ids;
+        hvector<bstring64, 64> ui_element_ids;
         for (const auto &kv : object) {
             const xstring &key = kv.first;
             const bvariant &val = kv.second;
