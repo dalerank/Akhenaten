@@ -177,10 +177,10 @@ function top_menu_widget_background_draw(window) {
 		return
     }
 
-	var want_sidebar_offset = top_menu_widget.sidebar_offset;
-	var block_width = block_img.width;
-	var screen_width = game.screen.w;
-	var current_sidebar_offset = ui.sidebar.offset_x;
+	var want_sidebar_offset = top_menu_widget.sidebar_offset
+	var block_width = block_img.width
+	var screen_width = screen.width
+	var current_sidebar_offset = ui.sidebar.offset_x
 
     for (var x = -(screen_width - current_sidebar_offset); x < screen_width; x += (block_width - want_sidebar_offset)) {
         ui.draw_texture({ x: x, y: 0 }, block_img.tid)

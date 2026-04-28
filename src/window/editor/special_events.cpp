@@ -151,7 +151,7 @@ static void button_earthquake_severity(int param1, int param2) {
 
 static void button_earthquake_year(int param1, int param2) {
     window_numeric_input_show(
-      screen_dialog_offset_x() + 190, screen_dialog_offset_y() + 100, 3, 999, scenario_editor_earthquake_set_year);
+      g_screen.dialog_offset.x + 190, g_screen.dialog_offset.y + 100, 3, 999, scenario_editor_earthquake_set_year);
 }
 
 static void button_gladiator_toggle(int param1, int param2) {
@@ -159,8 +159,8 @@ static void button_gladiator_toggle(int param1, int param2) {
 }
 
 static void button_gladiator_year(int param1, int param2) {
-    window_numeric_input_show(screen_dialog_offset_x() + 190,
-                              screen_dialog_offset_y() + 100,
+    window_numeric_input_show(g_screen.dialog_offset.x + 190,
+                              g_screen.dialog_offset.y + 100,
                               3,
                               999,
                               scenario_editor_gladiator_revolt_set_year);
@@ -172,7 +172,7 @@ static void button_emperor_toggle(int param1, int param2) {
 
 static void button_emperor_year(int param1, int param2) {
     window_numeric_input_show(
-      screen_dialog_offset_x() + 190, screen_dialog_offset_y() + 100, 3, 999, scenario_editor_emperor_change_set_year);
+      g_screen.dialog_offset.x + 190, g_screen.dialog_offset.y + 100, 3, 999, scenario_editor_emperor_change_set_year);
 }
 
 static void button_sea_trade_toggle(int param1, int param2) {

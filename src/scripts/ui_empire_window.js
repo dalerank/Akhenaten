@@ -110,8 +110,8 @@ function empire_window_screen_bounds() {
     var bottom_extra = 20
     var ew = map_img ? (map_img.width + f.x) : (1200 + 32)
     var eh = map_img ? (map_img.height + f.y + bottom_extra) : (1600 + 136 + 20)
-    var sw = game.screen.w
-    var sh = game.screen.h
+    var sw = screen.width
+    var sh = screen.height
     var min_x = sw <= ew ? 0 : ((sw - ew) / 2) | 0
     var max_x = sw <= ew ? sw : min_x + ew
     var min_y = sh <= eh ? 0 : ((sh - eh) / 2) | 0

@@ -2,13 +2,19 @@
 
 #include "core/vec2i.h"
 
-void screen_set_resolution(int width, int height);
+struct screen_t {
+    int width;
+    int height;
+    vec2i dialog_offset;
 
-int screen_width();
-int screen_height();
-vec2i screen_size();
+    vec2i size() const { return {width, height}; }
+    void set_resolution(int width, int height);
+};
 
-int screen_dialog_offset_x();
-int screen_dialog_offset_y();
+extern screen_t g_screen;
 
-inline vec2i screen_dialog_offset() { return {screen_dialog_offset_x(), screen_dialog_offset_y()}; }
+inline int screen_width() { return g_screen.width; }
+inline int screen_height() { return g_screen.height; }
+
+inline int screen_dialog_offset_x() { return g_screen.dialog_offset.x; }
+inline int screen_dialog_offset_y() { return g_screen.dialog_offset.y; }

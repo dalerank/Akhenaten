@@ -94,7 +94,7 @@ static void set_year(int value) {
 }
 
 static void button_year(int param1, int param2) {
-    window_numeric_input_show(screen_dialog_offset_x() + 100, screen_dialog_offset_y() + 50, 3, 999, set_year);
+    window_numeric_input_show(g_screen.dialog_offset.x + 100, g_screen.dialog_offset.y + 50, 3, 999, set_year);
 }
 
 static void set_amount(int value) {
@@ -109,7 +109,7 @@ static void button_amount(int param1, int param2) {
         max_digits = 5;
     }
     window_numeric_input_show(
-      screen_dialog_offset_x() + 190, screen_dialog_offset_y() + 50, max_digits, max_amount, set_amount);
+      g_screen.dialog_offset.x + 190, g_screen.dialog_offset.y + 50, max_digits, max_amount, set_amount);
 }
 
 static void set_resource(int resource) {
@@ -119,7 +119,7 @@ static void set_resource(int resource) {
 }
 
 static void button_resource(int param1, int param2) {
-    window_select_list_show(screen_dialog_offset_x() + 210, screen_dialog_offset_y() + 40, 23, 17, set_resource);
+    window_select_list_show(g_screen.dialog_offset.x + 210, g_screen.dialog_offset.y + 40, 23, 17, set_resource);
 }
 
 static void set_deadline_years(int value) {
@@ -128,7 +128,7 @@ static void set_deadline_years(int value) {
 
 static void button_deadline_years(int param1, int param2) {
     window_numeric_input_show(
-      screen_dialog_offset_x() + 220, screen_dialog_offset_y() + 100, 3, 999, set_deadline_years);
+      g_screen.dialog_offset.x + 220, g_screen.dialog_offset.y + 100, 3, 999, set_deadline_years);
 }
 
 static void set_kingdom(int value) {
@@ -136,7 +136,7 @@ static void set_kingdom(int value) {
 }
 
 static void button_kingdom(int param1, int param2) {
-    window_numeric_input_show(screen_dialog_offset_x() + 260, screen_dialog_offset_y() + 100, 3, 100, set_kingdom);
+    window_numeric_input_show(g_screen.dialog_offset.x + 260, g_screen.dialog_offset.y + 100, 3, 100, set_kingdom);
 }
 
 static void button_delete(int param1, int param2) {

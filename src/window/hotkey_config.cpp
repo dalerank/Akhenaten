@@ -247,7 +247,7 @@ static void draw_foreground(int) {
     auto& data = g_hotkeys_window_data;
     graphics_set_to_dialog();
 
-    scrollbar_draw(vec2i{screen_dialog_offset_x(), screen_dialog_offset_y()}, &g_hotkey_window_scrollbar);
+    scrollbar_draw(vec2i{g_screen.dialog_offset.x, g_screen.dialog_offset.y}, &g_hotkey_window_scrollbar);
 
     for (int i = 0; i < NUM_VISIBLE_OPTIONS; i++) {
         hotkey_widget* widget = &hotkey_widgets[i + g_hotkey_window_scrollbar.scroll_position];
@@ -272,7 +272,7 @@ static void draw_foreground(int) {
 static void handle_input(const mouse* m, const hotkeys* h) {
     auto& data = g_hotkeys_window_data;
     const mouse* m_dialog = mouse_in_dialog(m);
-    g_hotkey_window_scrollbar.offset = {screen_dialog_offset_x(), screen_dialog_offset_y()};
+    g_hotkey_window_scrollbar.offset = {g_screen.dialog_offset.x, g_screen.dialog_offset.y};
     if (scrollbar_handle_mouse(&g_hotkey_window_scrollbar, m)) {
         return;
     }

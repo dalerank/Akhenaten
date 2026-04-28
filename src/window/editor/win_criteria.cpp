@@ -162,7 +162,7 @@ static void button_rating_value(int rating, int param2) {
     default:
         return;
     }
-    window_numeric_input_show(screen_dialog_offset_x() + 280, screen_dialog_offset_y() + 100, 3, 100, callback);
+    window_numeric_input_show(g_screen.dialog_offset.x + 280, g_screen.dialog_offset.y + 100, 3, 100, callback);
 }
 
 static void button_time_limit_toggle(int param1, int param2) {
@@ -171,7 +171,7 @@ static void button_time_limit_toggle(int param1, int param2) {
 
 static void button_time_limit_years(int param1, int param2) {
     window_numeric_input_show(
-      screen_dialog_offset_x() + 280, screen_dialog_offset_y() + 200, 3, 999, scenario_editor_set_time_limit);
+      g_screen.dialog_offset.x + 280, g_screen.dialog_offset.y + 200, 3, 999, scenario_editor_set_time_limit);
 }
 
 static void button_survival_toggle(int param1, int param2) {
@@ -180,7 +180,7 @@ static void button_survival_toggle(int param1, int param2) {
 
 static void button_survival_years(int param1, int param2) {
     window_numeric_input_show(
-      screen_dialog_offset_x() + 280, screen_dialog_offset_y() + 200, 3, 999, scenario_editor_set_survival_time);
+      g_screen.dialog_offset.x + 280, g_screen.dialog_offset.y + 200, 3, 999, scenario_editor_set_survival_time);
 }
 
 static void button_population_toggle(int param1, int param2) {
@@ -189,7 +189,7 @@ static void button_population_toggle(int param1, int param2) {
 
 static void button_population_value(int param1, int param2) {
     window_numeric_input_show(
-      screen_dialog_offset_x() + 280, screen_dialog_offset_y() + 200, 5, 99999, scenario_editor_set_population);
+      g_screen.dialog_offset.x + 280, g_screen.dialog_offset.y + 200, 5, 99999, scenario_editor_set_population);
 }
 
 static void button_open_play_toggle(int param1, int param2) {

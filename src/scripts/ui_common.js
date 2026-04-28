@@ -106,8 +106,8 @@ ui.show_yesno = __ui_dialog_show_yesno
 ui.show_ok = __ui_dialog_show_ok
 
 function px(i) { return i * 16 }
-function sw(v) { return game.screen.w + v}
-function sh(v) { return game.screen.h + v}
+function sw(v) { return screen.width + v}
+function sh(v) { return screen.height + v}
 function mbutton(i) { return [sw(0) / 2 - 128, sh(0) / 2 - 100 + 40 * i] }
 
 function baseui(base, ext) {

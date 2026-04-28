@@ -136,8 +136,8 @@ function building_palace_show_tooltip(ev) {
 
     if (ev.my < 200) {
         pos.y = ev.my + 10
-    } else if (ev.my + height - 32 > game.screen.h) {
-        pos.y = game.screen.h - height
+    } else if (ev.my + height - 32 > screen.height) {
+        pos.y = screen.height - height
     } else {
         pos.y = ev.my - 32
     }

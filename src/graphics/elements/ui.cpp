@@ -1251,8 +1251,8 @@ void ui::einput::load(archive arch, element* parent, items& elems) {
 
 void ui::einput::draw(UiFlags flags) {
     scr_pos = g_state.offset() + pos;
-    _box.x = scr_pos.x - screen_dialog_offset_x();
-    _box.y = scr_pos.y - screen_dialog_offset_y();
+    _box.x = scr_pos.x - g_screen.dialog_offset.x;
+    _box.y = scr_pos.y - g_screen.dialog_offset.y;
     _box.text = _buffer;
     if (!_started) {
         input_box_start(&_box, _buffer, _box.max_length, _allow_punctuation);

@@ -109,7 +109,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 static void button_rank(int param1, int param2) {
-    window_select_list_show(screen_dialog_offset_x() + 40, screen_dialog_offset_y() + 56, 32, 10, scenario_editor_set_player_rank);
+    window_select_list_show(g_screen.dialog_offset.x + 40, g_screen.dialog_offset.y + 56, 32, 10, scenario_editor_set_player_rank);
 }
 
 static void button_start_year(int param1, int param2) {
@@ -118,12 +118,12 @@ static void button_start_year(int param1, int param2) {
 
 static void button_initial_funds(int param1, int param2) {
     window_numeric_input_show(
-      screen_dialog_offset_x() + 120, screen_dialog_offset_y() + 56, 5, 99999, scenario_editor_set_initial_funds);
+      g_screen.dialog_offset.x + 120, g_screen.dialog_offset.y + 56, 5, 99999, scenario_editor_set_initial_funds);
 }
 
 static void button_rescue_loan(int param1, int param2) {
     window_numeric_input_show(
-      screen_dialog_offset_x() + 120, screen_dialog_offset_y() + 56, 5, 99999, scenario_editor_set_rescue_loan);
+      g_screen.dialog_offset.x + 120, g_screen.dialog_offset.y + 56, 5, 99999, scenario_editor_set_rescue_loan);
 }
 
 static void button_wheat(int param1, int param2) {
@@ -142,7 +142,7 @@ static void set_milestone_year(int value) {
 static void button_milestone(int milestone_pct, int param2) {
     dialog_milestone_pct = milestone_pct;
     window_numeric_input_show(
-      screen_dialog_offset_x() + 120, screen_dialog_offset_y() + 210, 3, 999, set_milestone_year);
+      g_screen.dialog_offset.x + 120, g_screen.dialog_offset.y + 210, 3, 999, set_milestone_year);
 }
 
 void window_editor_starting_conditions_show(void) {

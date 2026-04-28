@@ -64,7 +64,7 @@ window_scenario_selection_t g_window_scenario_selection;
 // scrollable_list queues draw commands with ui:: offset; flush runs after the dialog viewport is reset,
 // so positions must be absolute screen coords (dialog origin + list position inside the 640x480 layout).
 static void scenario_scroll_list_draw(scrollable_list* panel) {
-    const vec2i origin = screen_dialog_offset() + panel->ui_params.pos;
+    const vec2i origin = g_screen.dialog_offset + panel->ui_params.pos;
     ui::begin_widget(origin);
     panel->draw();
     ui::end_widget();

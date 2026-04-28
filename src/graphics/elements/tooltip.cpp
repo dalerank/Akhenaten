@@ -58,7 +58,7 @@ void tooltip_context::draw_tooltip_impl() {
 
     int height = 16 * lines + 10;
     int x, y;
-    if (mpos.x < screen_dialog_offset_x() + width + 100) {
+    if (mpos.x < g_screen.dialog_offset.x + width + 100) {
         x = mpos.x + 20;
     } else {
         x = mpos.x - width - 20;
@@ -80,7 +80,7 @@ void tooltip_context::draw_tooltip_impl() {
     //    break;
     //default:
     {
-        if (mpos.y < screen_dialog_offset_y() + 200)
+        if (mpos.y < g_screen.dialog_offset.y + 200)
             y = mpos.y + 40;
         else
             y = mpos.y - 62;

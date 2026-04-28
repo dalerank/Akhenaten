@@ -44,7 +44,7 @@ static int is_mouse_inside_input(const mouse* m, const input_box* box) {
 }
 
 void input_box_draw(const input_box* box) {
-    const vec2i base = screen_dialog_offset();
+    const vec2i base = g_screen.dialog_offset;
     const int text_x = box->x + 16;
     const int text_y = box->y + 10;
 

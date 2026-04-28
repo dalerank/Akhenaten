@@ -20,12 +20,6 @@ game = extend(__game, {
     @dynasty_name { get: __game_get_player_name, set: __game_set_player_name }
     @gods_enabled { get: __game_gods_enabled }
 
-    screen {
-        @w { get: __game_screen_width }
-        @h { get: __game_screen_height }
-        @is_fullscreen_only { get: __game_is_fullscreen_only }
-    }
-
     toggle_writing_video: __game_toggle_writing_video
     make_screenshot: __game_make_screenshot
 
@@ -43,6 +37,10 @@ game = extend(__game, {
     get_last_loaded_file: __game_get_last_loaded_file
     editor_load_scenario: __game_editor_load_scenario
     editor_write_scenario: __game_editor_write_scenario
+})
+
+screen = extend(__screen, {
+    @is_fullscreen_only { get: __game_is_fullscreen_only }
 })
 
 scenario {

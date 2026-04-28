@@ -67,7 +67,7 @@ static void set_year(int value) {
 }
 
 static void button_year(int param1, int param2) {
-    window_numeric_input_show(screen_dialog_offset_x() + 140, screen_dialog_offset_y() + 80, 4, 9999, set_year);
+    window_numeric_input_show(g_screen.dialog_offset.x + 140, g_screen.dialog_offset.y + 80, 4, 9999, set_year);
 }
 
 void window_editor_start_year_show(void) {

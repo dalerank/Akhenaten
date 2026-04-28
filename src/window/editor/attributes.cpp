@@ -190,7 +190,7 @@ static void set_enemy(int enemy) {
 
 static void button_enemy(int param1, int param2) {
     stop(1);
-    window_select_list_show(screen_dialog_offset_x() + 12, screen_dialog_offset_y() + 40, 37, 20, set_enemy);
+    window_select_list_show(g_screen.dialog_offset.x + 12, g_screen.dialog_offset.y + 40, 37, 20, set_enemy);
 }
 
 static void button_invasions(int param1, int param2) {

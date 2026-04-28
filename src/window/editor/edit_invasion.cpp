@@ -96,7 +96,7 @@ static void set_year(int value) {
 }
 
 static void button_year(int param1, int param2) {
-    window_numeric_input_show(screen_dialog_offset_x() + 100, screen_dialog_offset_y() + 50, 3, 999, set_year);
+    window_numeric_input_show(g_screen.dialog_offset.x + 100, g_screen.dialog_offset.y + 50, 3, 999, set_year);
 }
 
 static void set_amount(int value) {
@@ -104,7 +104,7 @@ static void set_amount(int value) {
 }
 
 static void button_amount(int param1, int param2) {
-    window_numeric_input_show(screen_dialog_offset_x() + 60, screen_dialog_offset_y() + 50, 3, 200, set_amount);
+    window_numeric_input_show(g_screen.dialog_offset.x + 60, g_screen.dialog_offset.y + 50, 3, 200, set_amount);
 }
 
 static void set_type(int value) {
@@ -112,7 +112,7 @@ static void set_type(int value) {
 }
 
 static void button_type(int param1, int param2) {
-    window_select_list_show(screen_dialog_offset_x() + 100, screen_dialog_offset_y() + 120, 34, 4, set_type);
+    window_select_list_show(g_screen.dialog_offset.x + 100, g_screen.dialog_offset.y + 120, 34, 4, set_type);
 }
 
 static void set_from(int value) {
@@ -121,7 +121,7 @@ static void set_from(int value) {
 
 static void button_from(int param1, int param2) {
     if (data.invasion.type != INVASION_TYPE_DISTANT_BATTLE)
-        window_select_list_show(screen_dialog_offset_x() + 330, screen_dialog_offset_y() + 50, 35, 9, set_from);
+        window_select_list_show(g_screen.dialog_offset.x + 330, g_screen.dialog_offset.y + 50, 35, 9, set_from);
 }
 
 static void set_attack(int value) {
@@ -130,7 +130,7 @@ static void set_attack(int value) {
 
 static void button_attack(int param1, int param2) {
     if (data.invasion.type != INVASION_TYPE_DISTANT_BATTLE)
-        window_select_list_show(screen_dialog_offset_x() + 120, screen_dialog_offset_y() + 120, 36, 5, set_attack);
+        window_select_list_show(g_screen.dialog_offset.x + 120, g_screen.dialog_offset.y + 120, 36, 5, set_attack);
 }
 
 static void button_delete(int param1, int param2) {

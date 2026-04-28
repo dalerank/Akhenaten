@@ -124,7 +124,7 @@ static void set_year(int value) {
 }
 
 static void button_year(int param1, int param2) {
-    window_numeric_input_show(screen_dialog_offset_x() + 100, screen_dialog_offset_y() + 50, 3, 999, set_year);
+    window_numeric_input_show(g_screen.dialog_offset.x + 100, g_screen.dialog_offset.y + 50, 3, 999, set_year);
 }
 
 static void set_resource(int value) {
@@ -132,7 +132,7 @@ static void set_resource(int value) {
 }
 
 static void button_resource(int param1, int param2) {
-    window_select_list_show(screen_dialog_offset_x() + 320, screen_dialog_offset_y() + 40, 23, 16, set_resource);
+    window_select_list_show(g_screen.dialog_offset.x + 320, g_screen.dialog_offset.y + 40, 23, 16, set_resource);
 }
 
 static void set_route_id(int index) {
@@ -140,7 +140,7 @@ static void set_route_id(int index) {
 }
 
 static void button_route(int param1, int param2) {
-    window_select_list_show_text(screen_dialog_offset_x() + 200, screen_dialog_offset_y() + 50, make_span(data.route_names), set_route_id);
+    window_select_list_show_text(g_screen.dialog_offset.x + 200, g_screen.dialog_offset.y + 50, make_span(data.route_names), set_route_id);
 }
 
 static void button_toggle_rise(int param1, int param2) {

@@ -221,7 +221,7 @@ static void show_saved_notice(const char *filename) {
 }
 
 static void create_window_screenshot() {
-    if (!image_create(screen_size(), 0, 1)) {
+    if (!image_create(g_screen.size(), 0, 1)) {
         logs::error("Unable to create memory for screenshot");
         return;
     }

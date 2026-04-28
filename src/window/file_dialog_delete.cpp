@@ -152,7 +152,7 @@ static void draw_foreground(int) {
     auto& data = g_file_dialog_delete;
 
     data.panel->ui_params.pos = list_pos;
-    ui::begin_widget(screen_dialog_offset());
+    ui::begin_widget(g_screen.dialog_offset);
     ui::panel(vec2i{128, 40}, vec2i{24, 21}, UiFlags_PanelOuter);
     if (data.message_not_exist_start_time
         && time_get_millis() - data.message_not_exist_start_time < NOT_EXIST_MESSAGE_TIMEOUT) {

@@ -37,6 +37,9 @@ inline void ank_global_obj_bind_field(js_State *J, js_StringNode name, int16_t *
 template<typename T>
 void ank_global_obj_bind_field(js_State *J, js_StringNode name, T *ptr) = delete;
 
+struct vec2i;
+void ank_global_obj_bind_field(js_State *J, js_StringNode name, vec2i *ptr);
+
 /** Paste helpers for ANK_GLOBAL_OBJECT (generated from archive.h ANK_CONFIG_STRUCT_PASTE pattern). */
 #define ANK_GLOBAL_OBJ_BIND(C, F) ank_global_obj_bind_field(J, js_intern(#F), &(C).F);
 

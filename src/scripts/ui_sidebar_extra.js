@@ -112,7 +112,7 @@ function sidebar_window_extra_ui_draw_foreground(window) {
         fullHeight = EXTRA_INFO_HEIGHT_GAME_SPEED + EXTRA_INFO_HEIGHT_UNEMPLOYMENT + EXTRA_INFO_HEIGHT_RATINGS
     }
 
-    var availableBelow = game.screen.h - window.pos.y - fullHeight
+    var availableBelow = screen.height - window.pos.y - fullHeight
     var mask = sidebar_extra_calculate_displayable_info(collapsed, sidebarOn, SIDEBAR_EXTRA_DISPLAY_ALL, availableBelow)
 
     sidebar_extra_apply_visibility(window, mask)

@@ -7,6 +7,7 @@
 #include "dev/debug.h"
 #include "game/system.h"
 #include "core/profiler.h"
+#include "graphics/screen.h"
 
 void ank_global_obj_bind_field(js_State *J, js_StringNode name, e_tooltip_mode *ptr) {
     js_register_bound_int_property(J, name, reinterpret_cast<int *>(ptr));
@@ -34,6 +35,11 @@ ANK_GLOBAL_OBJECT(game, __game,
     pending_load_type,
     pending_save_type,
     mission_choice_open_scenario_id);
+
+ANK_GLOBAL_OBJECT(g_screen, __screen,
+    width,
+    height,
+    dialog_offset);
 
 int __game_difficulty() { return game_difficulty(); }
 ANK_FUNCTION(__game_difficulty)
