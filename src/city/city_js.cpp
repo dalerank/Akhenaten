@@ -280,21 +280,6 @@ ANK_FUNCTION(__city_workers_diff)
 int __scenario_is_open_play() { return scenario_is_open_play(); }
 ANK_FUNCTION(__scenario_is_open_play)
 
-int __city_winning_culture() { return winning_culture(); }
-ANK_FUNCTION(__city_winning_culture)
-int __city_winning_prosperity() { return winning_prosperity(); }
-ANK_FUNCTION(__city_winning_prosperity)
-int __city_winning_monuments() { return winning_monuments(); }
-ANK_FUNCTION(__city_winning_monuments)
-int __city_winning_kingdom() { return winning_kingdom(); }
-ANK_FUNCTION(__city_winning_kingdom)
-int __city_winning_population() { return winning_population(); }
-ANK_FUNCTION(__city_winning_population)
-int __city_winning_housing() { return winning_housing(); }
-ANK_FUNCTION(__city_winning_housing)
-int __city_winning_houselevel() { return winning_houselevel(); }
-ANK_FUNCTION(__city_winning_houselevel)
-
 ANK_BOUND_BOOL(__city_mission_start_message_shown, g_city.mission.start_message_shown)
 
 tile2i __city_message_next_problem_area_grid_offset() { return tile2i(city_message_next_problem_area_grid_offset()); } ANK_FUNCTION(__city_message_next_problem_area_grid_offset)

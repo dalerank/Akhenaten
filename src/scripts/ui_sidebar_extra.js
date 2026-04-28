@@ -121,9 +121,9 @@ function sidebar_window_extra_ui_draw_foreground(window) {
     window.speed_current.text = Math.round(game_features.gameopt_game_speed) + "%"
     window.unemp_current.text = city.labor.unemployment_percentage + "% (" + city.workers_diff + ")"
 
-    sidebar_extra_objective_row(window.population_header, window.population_current, 53, 6, city.population, city.winning.population)
-    sidebar_extra_objective_row(window.culture_header, window.culture_current, 53, 1, city.rating.culture, city.winning.culture)
-    sidebar_extra_objective_row(window.prosperity_header, window.prosperity_current, 53, 2, city.rating.prosperity, city.winning.prosperity)
-    sidebar_extra_objective_row(window.monument_header, window.monument_current, 53, 3, city.rating.monument, city.winning.monument)
-    sidebar_extra_objective_row(window.kingdom_header, window.kingdom_current, 53, 4, city.rating.kingdom, city.winning.kingdom)
+    sidebar_extra_objective_row(window.population_header, window.population_current, 53, 6, city.population, city.winning.population.goal)
+    sidebar_extra_objective_row(window.culture_header, window.culture_current, 53, 1, city.rating.culture, city.winning.culture.goal)
+    sidebar_extra_objective_row(window.prosperity_header, window.prosperity_current, 53, 2, city.rating.prosperity, city.winning.prosperity.goal)
+    sidebar_extra_objective_row(window.monument_header, window.monument_current, 53, 3, city.rating.monument, city.winning.monuments.goal)
+    sidebar_extra_objective_row(window.kingdom_header, window.kingdom_current, 53, 4, city.rating.kingdom, city.winning.kingdom.goal)
 }

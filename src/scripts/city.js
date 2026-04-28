@@ -52,16 +52,6 @@ city {
         @average_health {}
     }
 
-    winning {
-        @culture { get: __city_winning_culture }
-        @prosperity { get: __city_winning_prosperity }
-        @monument { get: __city_winning_monuments }
-        @kingdom { get: __city_winning_kingdom }
-        @population { get: __city_winning_population }
-        @housing { get: __city_winning_housing }
-        @houselevel { get: __city_winning_houselevel }
-    }
-
     mission {
         start_message_shown: __city_mission_start_message_shown
     }
@@ -286,6 +276,16 @@ city.resources.henna = city_resource_view(RESOURCE_HENNA)
 city.resources.paint = city_resource_view(RESOURCE_PAINT)
 city.resources.lamps = city_resource_view(RESOURCE_LAMPS)
 city.resources.marble = city_resource_view(RESOURCE_MARBLE)
+
+city.winning = extend(__win_criteria, {
+    // => culture [goal, enabled]
+    // => prosperity [goal, enabled]
+    // => monument [goal, enabled]
+    // => kingdom [goal, enabled]
+    // => population [goal, enabled]
+    // => housing_count [goal, enabled]
+    // => housing_level [goal, enabled]
+})
 
 city.get_battalion_by_index = function(index) {
     return {

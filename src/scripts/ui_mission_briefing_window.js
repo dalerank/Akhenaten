@@ -85,12 +85,12 @@ function mission_briefing_window_on_init(window) {
         }
     }
 
-    setup_goal(62, 11, city.winning.population)
-    setup_goal(29, 20 + city.winning.houselevel, city.winning.housing)
-    setup_goal(62, 12, city.winning.culture)
-    setup_goal(62, 13, city.winning.prosperity)
-    setup_goal(62, 14, city.winning.monument)
-    setup_goal(62, 15, city.winning.kingdom)
+    setup_goal(62, 11, city.winning.population.goal)
+    setup_goal(29, 20 + city.winning.housing_level.goal, city.winning.housing_count.goal)
+    setup_goal(62, 12, city.winning.culture.goal)
+    setup_goal(62, 13, city.winning.prosperity.goal)
+    setup_goal(62, 14, city.winning.monuments.goal)
+    setup_goal(62, 15, city.winning.kingdom.goal)
 
     var fork_scenario_id = game.mission_choice_open_scenario_id
     var src = mission_choice_config_root(fork_scenario_id)

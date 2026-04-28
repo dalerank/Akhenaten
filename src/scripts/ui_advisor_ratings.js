@@ -41,22 +41,22 @@ function advisor_ratings_draw_rating_button(elm, value, goal) {
 
 [es=(advisor_ratings_window, ondraw_culture_button)]
 function advisor_ratings_ondraw_culture_button(window) {
-	advisor_ratings_draw_rating_button(window.rating_culture, city.rating.culture, city.winning.culture)
+	advisor_ratings_draw_rating_button(window.rating_culture, city.rating.culture, city.winning.culture.goal)
 }
 
 [es=(advisor_ratings_window, ondraw_prosperity_button)]
 function advisor_ratings_ondraw_prosperity_button(window) {
-	advisor_ratings_draw_rating_button(window.rating_prosperity, city.rating.prosperity, city.winning.prosperity)
+	advisor_ratings_draw_rating_button(window.rating_prosperity, city.rating.prosperity, city.winning.prosperity.goal)
 }
 
 [es=(advisor_ratings_window, ondraw_monument_button)]
 function advisor_ratings_ondraw_monument_button(window) {
-	advisor_ratings_draw_rating_button(window.rating_monument, city.rating.monument, city.winning.monument)
+	advisor_ratings_draw_rating_button(window.rating_monument, city.rating.monument, city.winning.monuments.goal)
 }
 
 [es=(advisor_ratings_window, ondraw_kingdom_button)]
 function advisor_ratings_ondraw_kingdom_button(window) {
-	advisor_ratings_draw_rating_button(window.rating_kingdom, city.rating.kingdom, city.winning.kingdom)
+	advisor_ratings_draw_rating_button(window.rating_kingdom, city.rating.kingdom, city.winning.kingdom.goal)
 }
 
 function advisor_ratings_select_button(window, button) {
@@ -135,11 +135,9 @@ advisor_ratings_window {
 function advisor_ratings_window_init(window) {
 	advisor_ratings_select_culture(window)
 
-	var winPop = city.winning.population
-	var openPlay = scenario.is_open_play
 	var caption = __loc(53, 7)
-	if (winPop && !openPlay) {
-		caption = __loc(53, 6) + String(winPop)
+	if (city.winning.population.enabled && !scenario.is_open_play) {
+		caption = __loc(53, 6) + String(city.winning.population.goal)
 	}
 	window.population_label.text = caption
 

@@ -1403,13 +1403,8 @@ bvariant city_get_property(const xstring &domain, const xstring &name) {
         //{ tags().player, "rank_name", [] (const xstring&) { return bvariant(ui::str(52, g_city.kingdome.salary_rank + 4)); }},
         //{ tags().player, "salary_amount", [] (const xstring&) { return bvariant(g_city.kingdome.salary_amount); }},
         { tags().city, "months_since_festival", [] (const xstring&) { return bvariant(g_city.festival.months_since_festival); }},
-        { tags().finance, "estimated_wages", [] (const xstring &) { return bvariant(g_city.finance.estimated_wages); }},
         { tags().city, "workers_needed", [] (const xstring&) { return bvariant(g_city.labor.workers_needed); }},
         { tags().city, "workers_diff", [] (const xstring&) { return bvariant(g_city.labor.workers_unemployed - g_city.labor.workers_needed); }},
-        { tags().rating, "winning_culture", [] (const xstring&) { return bvariant(winning_culture()); }},
-        { tags().rating, "winning_prosperity", [] (const xstring&) { return bvariant(winning_prosperity()); }},
-        { tags().rating, "winning_monuments", [] (const xstring&) { return bvariant(winning_monuments()); }},
-        { tags().rating, "winning_kingdom", [] (const xstring&) { return bvariant(winning_kingdom()); }},
     };
 
     for (const auto &prop : cproperties) {

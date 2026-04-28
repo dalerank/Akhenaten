@@ -1,9 +1,35 @@
 #include "criteria.h"
 
 #include "io/io_buffer.h"
+#include "js/js_game.h"
+#include "js/js_global_object.h"
 #include "scenario/scenario.h"
 
 static int max_game_year;
+
+void ank_global_obj_bind_field(js_State *J, js_StringNode name, win_criteria_t *ptr) {
+    js_newobject(J);
+    ank_global_obj_bind_field(J, js_intern("enabled"), &ptr->enabled);
+    ank_global_obj_bind_field(J, js_intern("goal"), &ptr->goal);
+    js_setproperty(J, -2, name);
+}
+
+void ank_global_obj_bind_field(js_State *J, js_StringNode name, scenario_data_t::win_criteria_time_t *ptr) {
+    js_newobject(J);
+    ank_global_obj_bind_field(J, js_intern("enabled"), &ptr->enabled);
+    ank_global_obj_bind_field(J, js_intern("years"), &ptr->years);
+    js_setproperty(J, -2, name);
+}
+
+ANK_GLOBAL_OBJECT(g_scenario.win_criteria, __win_criteria,
+    population,
+    culture,
+    prosperity,
+    monuments,
+    kingdom,
+    housing_count,
+    housing_level,
+    next_mission);
 
 int scenario_criteria_time_limit_enabled() {
     return g_scenario.win_criteria.time_limit.enabled;

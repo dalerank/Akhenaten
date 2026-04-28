@@ -143,6 +143,11 @@ struct scenario_data_t {
 
     int player_faction;
 
+    struct win_criteria_time_t {
+        int enabled;
+        int years;
+    };
+
     struct win_criterias_t {
         win_criteria_t population;
         win_criteria_t culture;
@@ -151,14 +156,8 @@ struct scenario_data_t {
         win_criteria_t kingdom;
         win_criteria_t housing_count;
         win_criteria_t housing_level;
-        struct {
-            int enabled;
-            int years;
-        } time_limit;
-        struct {
-            int enabled;
-            int years;
-        } survival_time;
+        win_criteria_time_t time_limit;
+        win_criteria_time_t survival_time;
         int milestone25_year;
         int milestone50_year;
         int milestone75_year;

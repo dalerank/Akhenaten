@@ -90,21 +90,6 @@ struct game_settings {
 
     void set_cli_fullscreen(bool v) { cli_fullscreen = v; }
     void set_fullscreen(bool v) { fullscreen = v; }
-    bool sound_is_enabled(int type) {
-        if (type == SOUND_MUSIC) {
-            return game_features::gameopt_sound_music_enabled.to_bool();
-        }
-        if (type == SOUND_EFFECTS) {
-            return game_features::gameopt_sound_effects_enabled.to_bool();
-        }
-        if (type == SOUND_SPEECH) {
-            return game_features::gameopt_sound_speech_enabled.to_bool();
-        }
-        if (type == SOUND_CITY) {
-            return game_features::gameopt_sound_city_enabled.to_bool();
-        }
-        return false;
-    }
 
     void reset_sound(int type, int enabled, int volume) {
         if (type == SOUND_MUSIC) {
