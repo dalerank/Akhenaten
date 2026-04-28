@@ -17,6 +17,10 @@ public:
     virtual bool can_play_animation() const override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    // Output is deposited by gatherer figures returning home — skip the
+    // progress-driven industry tick so production isn't double-counted.
+    virtual void update_production() override {}
+    virtual void update_day() override { building_impl::update_day(); }
 
     bool can_spawn_gatherer(int max_gatherers_per_building, int carry_per_person);
 };
