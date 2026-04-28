@@ -278,7 +278,7 @@ struct bvariant_map_val {
 
 struct bvariant_map {
     using PairT = std::pair<xstring, bvariant>;
-    using ValuesT = hvector<PairT, 32>;
+    using ValuesT = hvector<PairT, 64>;
 
     bvariant_map() = default;
 
