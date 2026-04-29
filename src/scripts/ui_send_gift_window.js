@@ -55,30 +55,30 @@ function gift_to_kingdome_window_init(window) {
     log_info("akhenaten: cant_send_gifts.enabled = " + window.cant_send_gifts.enabled)
     window.send_gift.readonly = !can_send
     window.send_gift.darkened = !can_send
-    window.send_gift.onclick = gift_to_kingdome_window_on_send_gift
 
     gift_to_kingdome_apply_link_state(window)
 }
 
 [es=(gift_to_kingdome_window, link_modest)]
-function gift_to_kingdome_window_on_link_modest(ev) {
+function gift_to_kingdome_window_on_link_modest(window) {
     city.kingdome.selected_size = gift_type.MODEST
     gift_to_kingdome_apply_link_state(window)
 }
 
 [es=(gift_to_kingdome_window, link_generous)]
-function gift_to_kingdome_window_on_link_generous(ev) {
+function gift_to_kingdome_window_on_link_generous(window) {
     city.kingdome.selected_size = gift_type.GENEROUS
     gift_to_kingdome_apply_link_state(window)
 }
 
 [es=(gift_to_kingdome_window, link_lavish)]
-function gift_to_kingdome_window_on_link_lavish(ev) {
+function gift_to_kingdome_window_on_link_lavish(window) {
     city.kingdome.selected_size = gift_type.LAVISH
     gift_to_kingdome_apply_link_state(window)
 }
 
-function gift_to_kingdome_window_on_send_gift(ev) {
+[es=(gift_to_kingdome_window, send_gift)]
+function gift_to_kingdome_window_on_send_gift(window) {
     if (!city.kingdome.can_send_gift(city.kingdome.selected_size))
         return
 
