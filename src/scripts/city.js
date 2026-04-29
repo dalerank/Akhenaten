@@ -182,7 +182,7 @@ city {
     }
 
     use_building: __city_use_building
-    set_goal_tooltip: __scenario_set_goal_tooltip
+    @goal_tooltip { get: __scenario_get_goal_tooltip, set: __scenario_set_goal_tooltip }
     set_victory_reason : city_set_victory_reason
     remove_animals : __city_remove_animals
     add_animals_point : __city_add_animals_point

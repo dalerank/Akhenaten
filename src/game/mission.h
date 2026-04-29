@@ -7,6 +7,8 @@
 
 struct event_update_mission_goal { int mid; };
 
+struct event_mission_briefing_show_after_load { int scenario_id; };
+
 struct mission_step_t;
 
 struct mission_id_t {

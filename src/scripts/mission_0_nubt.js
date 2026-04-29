@@ -115,11 +115,11 @@ function mission0_handle_fire_event(ev) {
 [event=event_update_mission_goal, mission=mission0]
 function mission0_update_goal(ev) {
 	if (mission.tutorial_granary_opened) {
-		city.set_goal_tooltip("#mission0_goal_build_granary")
+		city.goal_tooltip = "#mission0_goal_build_granary"
 		return
 	}
 
-	city.set_goal_tooltip("#mission0_goal_create_housing")
+	city.goal_tooltip = "#mission0_goal_create_housing"
 }
 
 [event=event_fire_damage, mission=mission0]

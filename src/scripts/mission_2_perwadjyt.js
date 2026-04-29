@@ -48,17 +48,17 @@ function mission2_handle_population_cap(ev) {
 [event=event_update_mission_goal, mission=mission2]
 function mission2_update_goal(ev) {
 	if (!mission.figs_stored_handled) {
-		city.set_goal_tooltip("#mission2_store_figs")
+		city.goal_tooltip = "#mission2_store_figs"
 		return
 	}
 
 	if (!mission.pottery_step1_stored_handled) {
-		city.set_goal_tooltip("#mission2_pottery_step1")
+		city.goal_tooltip = "#mission2_pottery_step1"
 		return
 	}
 
 	if (!mission.pottery_step2_stored_handled) {
-		city.set_goal_tooltip("#mission2_pottery_step2")
+		city.goal_tooltip = "#mission2_pottery_step2"
 		return
 	}
 }

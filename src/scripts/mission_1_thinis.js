@@ -41,16 +41,16 @@ mission1 {
 [event=event_update_mission_goal, mission=mission1]
 function mission1_update_goal(ev) {
 	if (!mission.gold_mined_handled) {
-		city.set_goal_tooltip("#mission1_goal_build_temples")
+		city.goal_tooltip = "#mission1_goal_build_temples"
 		return
 	}
 
 	if (!mission.temples_built) {
-		city.set_goal_tooltip("#mission1_goal_build_entertainment")
+		city.goal_tooltip = "#mission1_goal_build_entertainment"
 		return
 	}
 
-	city.set_goal_tooltip("#mission1_goal_build_mines")
+	city.goal_tooltip = "#mission1_goal_build_mines"
 }
 
 [event=event_mission_start, mission=mission1]

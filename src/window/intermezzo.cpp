@@ -2,6 +2,7 @@
 
 #include "content/vfs.h"
 #include "core/log.h"
+#include "core/profiler.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/screen.h"
@@ -12,6 +13,8 @@
 #include "sound/sound_mission.h"
 #include "platform/renderer.h"
 #include "game/game.h"
+#include "window/autoconfig_window.h"
+#include "js/js_game.h"
 
 #include <map>
 
@@ -93,3 +96,12 @@ void window_intermezzo_show(int mission_id, intermezzo_type type, std::function<
     init(mission_id, type, callback);
     window_show(&window);
 }
+
+static void mission_briefing_after_intermezzo() {
+    autoconfig_window::show("mission_briefing_window");
+}
+
+void __game_mission_briefing_intermezzo(int scenario_id) {
+    window_intermezzo_show(scenario_id, INTERMEZZO_MISSION_BRIEFING, mission_briefing_after_intermezzo);
+}
+ANK_FUNCTION_1(__game_mission_briefing_intermezzo)

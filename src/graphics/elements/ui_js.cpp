@@ -26,7 +26,6 @@
 #include "city/city_building_menu_ctrl.h"
 #include "game/undo.h"
 #include "scenario/scenario.h"
-#include "window/window_mission_briefing.h"
 #include "core/log.h"
 #include "core/flat_map.h"
 #include "game/game.h"
@@ -246,11 +245,6 @@ void __ui_game_undo_perform() {
     game_undo_perform();
 }
 ANK_FUNCTION(__ui_game_undo_perform)
-
-void __ui_mission_briefing_review() {
-    ui::mission_briefing_window::mission_review();
-}
-ANK_FUNCTION(__ui_mission_briefing_review)
 
 void __ui_sidebar_expanded_collapse() {
     widget_sidebar_expanded_collapse();

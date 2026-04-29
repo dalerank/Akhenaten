@@ -9,6 +9,11 @@ void __scenario_set_goal_tooltip(xstring text) {
 }
 ANK_FUNCTION_1(__scenario_set_goal_tooltip)
 
+xstring __scenario_get_goal_tooltip() {
+    return g_scenario.goal_tooltip;
+}
+ANK_FUNCTION(__scenario_get_goal_tooltip)
+
 xstring __scenario_event_msg_text(int title_id, int index) {
     return g_scenario.events.msg_text(title_id, index);
 }
@@ -28,3 +33,8 @@ int __scenario_kingdom_supplies_grain() {
     return g_scenario.kingdom_supplies_grain ? 1 : 0;
 }
 ANK_FUNCTION(__scenario_kingdom_supplies_grain)
+
+int __scenario_campaign_scenario_id() {
+    return g_scenario.campaign_scenario_id();
+}
+ANK_FUNCTION(__scenario_campaign_scenario_id)

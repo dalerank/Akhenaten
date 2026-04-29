@@ -66,17 +66,17 @@ mission4 {
 [event=event_update_mission_goal, mission=mission4]
 function mission4_update_goal(ev) {
 	if (!mission.spacious_apartment_built) {
-		city.set_goal_tooltip("#tutorial_goal_education")
+		city.goal_tooltip = "#tutorial_goal_education"
 		return
 	}
 
 	if (!mission.papyrus_made_handled) {
-		city.set_goal_tooltip("#tutorial_goal_scribal_school")
+		city.goal_tooltip = "#tutorial_goal_scribal_school"
 		return
 	}
 
 	if (!mission.bricks_bought_handled) {
-		city.set_goal_tooltip("#tutorial_goal_import_bricks")
+		city.goal_tooltip = "#tutorial_goal_import_bricks"
 		return
 	}
 }
@@ -132,7 +132,7 @@ function mission4_handle_spacious_apartment() {
 	city.use_building(BUILDING_PAPYRUS_WORKSHOP, true)
 	city.use_building(BUILDING_SCRIBAL_SCHOOL, true)
 
-	city.set_goal_tooltip("#tutorial_goal_scribal_school")
+	city.goal_tooltip = "#tutorial_goal_scribal_school"
     ui.popup_message("message_tutorial_education")
 }
 

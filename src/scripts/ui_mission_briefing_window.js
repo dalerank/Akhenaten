@@ -5,8 +5,11 @@ function get_difficulty_label() {
     return "${loc.difficulty_" + difficulty_levels[game.difficulty] + "}"
 }
 
+[es=window]
 mission_briefing_window {
     pos [(sw(0) - px(38))/2, (sh(0) - px(27))/2],
+    draw_underlying: true
+
     ui {
         background       : outer_panel({pos[16, 32], size{w:38, h:27} })
         title            : text({pos[32, 48], font : FONT_LARGE_BLACK_ON_LIGHT })
@@ -45,10 +48,18 @@ mission_briefing_window {
     }
 }
 
+[event=event_mission_briefing_show_after_load]
+function mission_briefing_on_show_after_load(ev) {
+    game.mission_briefing_scenario_id = ev.scenario_id
+    game.mission_briefing_is_review = false
+    emit event_update_mission_goal{ mid: ev.scenario_id }
+    __game_mission_briefing_intermezzo(ev.scenario_id)
+}
+
 [es=(mission_briefing_window, start_mission)]
-function mission_briefing_window_on_draw_foreground(window) {
-    var is_review = __mission_briefing_is_review
-    var scenario_id = __mission_briefing_scenario_id
+function mission_briefing_window_on_start_mission(window) {
+    var is_review = game.mission_briefing_is_review
+    var scenario_id = game.mission_briefing_scenario_id
 
     if (!is_review) {
         __game_load_mission(scenario_id, 1)
@@ -62,12 +73,15 @@ function mission_briefing_window_on_draw_foreground(window) {
 
 [es=(mission_briefing_window, init)]
 function mission_briefing_window_on_init(window) {
-    var is_review = __mission_briefing_is_review
-    var scenario_id = __mission_briefing_scenario_id
+    var scenario_id = game.mission_briefing_scenario_id
+    var is_review = game.mission_briefing_is_review
     var text_id = 200 + scenario_id
 
     window.dec_difficulty.enabled = !is_review
     window.inc_difficulty.enabled = !is_review
+
+    window.goal_immediate.enabled = !!city.goal_tooltip
+    window.goal_immediate.text = city.goal_tooltip
 
     window.title.text = __lang_message_title_text(text_id)
     window.subtitle.text = __lang_message_subtitle_text(text_id)
@@ -102,4 +116,19 @@ function mission_briefing_window_on_init(window) {
             game_show_mission_choice(fork_scenario_id)
         }
     }
+}
+
+__game_mission_branch_start = function (scenario_id) {
+    game.mission_briefing_scenario_id = scenario_id
+    game.mission_briefing_is_review = false
+    emit event_update_mission_goal{ mid: scenario_id }
+    __game_mission_briefing_intermezzo(scenario_id)
+}
+
+function __ui_mission_briefing_review() {
+    var sid = scenario.campaign_scenario_id
+    game.mission_briefing_scenario_id = sid
+    game.mission_briefing_is_review = true
+    emit event_update_mission_goal{ mid: scenario_id }
+    __game_mission_briefing_intermezzo(sid)
 }

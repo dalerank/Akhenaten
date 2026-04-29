@@ -72,7 +72,7 @@
 #include "widget/widget_top_menu_game.h"
 #include "window/window_city.h"
 #include "window/file_dialog.h"
-#include "window/window_mission_briefing.h"
+#include "game/game_events.h"
 #include "empire/empire.h"
 #include "city/city_warnings.h"
 #include "empire/empire_traders.h"
@@ -808,14 +808,6 @@ void GamestateIO::start_loaded_file() {
     map_tree_update_all_tiles();
     map_building_update_all_tiles();
 
-    if (game.session.last_loaded == e_session_mission) {
-        int scenario_id = g_scenario.campaign_scenario_id();
-        ui::mission_briefing_window::mission_start(scenario_id);
-    } else {
-        game.paused = false;
-        window_city_show();
-    }
-
     autoconfig_window::before_mission_start();
     events::emit(event_mission_start{ g_scenario.settings.campaign_scenario_id });
 
@@ -823,6 +815,14 @@ void GamestateIO::start_loaded_file() {
     game.before_start_simulation();
     game.session.active = true;
     g_sound.music_update(true);
+
+    const bool show_briefing = (game.session.last_loaded == e_session_mission);
+    if (show_briefing) {
+        events::emit(event_mission_briefing_show_after_load{ g_scenario.campaign_scenario_id() });
+    } else {
+        game.paused = false;
+        window_city_show();
+    }
     game.session.last_loaded = e_session_none;
 }
 

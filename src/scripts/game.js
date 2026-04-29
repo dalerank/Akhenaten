@@ -6,6 +6,9 @@ game = extend(__game, {
     // -> pending_save_type
     // -> mission_choice_open_scenario_id
 
+    mission_briefing_scenario_id : 0
+    mission_briefing_is_review : false
+
     @absolute_day { get: __game_absolute_day }
     @simtime_year { get: __game_simtime_year }
     @version { get: __game_version }
@@ -50,6 +53,7 @@ scenario {
     building_allowed: __scenario_building_allowed
     kingdom_supplies_grain: __scenario_kingdom_supplies_grain
     @start_year { get: __scenario_start_year }
+    @campaign_scenario_id { get: __scenario_campaign_scenario_id }
 }
 
 game_features {

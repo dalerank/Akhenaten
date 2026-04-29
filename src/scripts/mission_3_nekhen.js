@@ -42,17 +42,17 @@ mission3 {
 [event=event_update_mission_goal, mission=mission3]
 function mission3_update_goal(ev) {
 	if (!mission.modest_houses_reached) {
-		city.set_goal_tooltip("#reach_modest_houses_number")
+		city.goal_tooltip = "#reach_modest_houses_number"
 		return
 	}
 
 	if (!mission.beer_stored_handled) {
-		city.set_goal_tooltip("#mission3_brew_beer")
+		city.goal_tooltip = "#mission3_brew_beer"
 		return
 	}
 
 	if (!mission.tax_collector_built) {
-		city.set_goal_tooltip("#build_tax_collector")
+		city.goal_tooltip = "#build_tax_collector"
 		return
 	}
 }
