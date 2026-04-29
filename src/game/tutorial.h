@@ -19,7 +19,7 @@ struct tutorial_t {
     using tutorial_list = svector<tutorial_t *, 16>;
 
     tutorial_t();
-    
+
     virtual int missionid() const = 0;
     virtual void init() {}
     virtual void reset() {}

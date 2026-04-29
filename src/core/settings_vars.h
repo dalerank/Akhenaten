@@ -16,7 +16,7 @@ enum setting_variant_type {
     setting_vec2i,
     setting_string,
 	setting_none,
-};;
+};
 
 using setting_variant = std::variant<bool, float, vec2i, xstring>;
 class settings_vars_t {

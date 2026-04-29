@@ -31,7 +31,6 @@ void game_settings::load_default_settings() {
     display_size = {800, 600};
 
     difficulty.set(DIFFICULTY_HARD);
-    tooltips_mode = e_tooltip_mode_full;
     warnings = true;
     gods_enabled = true;
     victory_video = false;
@@ -58,7 +57,7 @@ void game_settings::load_settings(buffer* buf) {
     last_advisor = buf->read_i32();
     //last_advisor = ADVISOR_TRADE; // debug
     buf->skip(4);                      // int save_game_mission_id;
-    tooltips_mode = (e_tooltip_mode)buf->read_i32();
+    buf->read_i32();
     buf->skip(4); // int starting_kingdom;
     buf->skip(4); // int personal_savings_last_mission;
     buf->skip(4); // int current_mission_id;
@@ -122,7 +121,7 @@ void game_settings::save() {
     buf->skip(16);
     buf->write_i32(last_advisor);
     buf->skip(4); // int save_game_mission_id;
-    buf->write_i32(tooltips_mode);
+    buf->write_i32(0);
     buf->skip(4); // int starting_kingdom;
     buf->skip(4); // int personal_savings_last_mission;
     buf->skip(4); // int current_mission_id;

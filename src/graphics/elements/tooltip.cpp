@@ -184,7 +184,7 @@ bool tooltip_context::should_draw_tooltip() {
         return false;
     }
 
-    if (!high_priority && g_settings.tooltips_mode != e_tooltip_mode_full) {
+    if (!high_priority && game_features::gameopt_tooltips_mode.to_int() != e_tooltip_mode_full) {
         reset_timer();
         return false;
     }
@@ -205,7 +205,7 @@ void tooltip_handle(const mouse* m, inplace_function<void(tooltip_context*)> fun
 
     context.mpos = *m;
     context.text = "";
-    if (g_settings.tooltips_mode && func) {
+    if (game_features::gameopt_tooltips_mode.to_int() && func) {
         func(&context);
     }
 

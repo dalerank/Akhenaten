@@ -9,10 +9,6 @@
 #include "core/profiler.h"
 #include "graphics/screen.h"
 
-void ank_global_obj_bind_field(js_State *J, js_StringNode name, e_tooltip_mode *ptr) {
-    js_register_bound_int_property(J, name, reinterpret_cast<int *>(ptr));
-}
-
 void ank_global_obj_bind_field(js_State *J, js_StringNode name, vec2i *ptr) {
     js_newobject(J);
     ank_global_obj_bind_field(J, js_intern("x"), &ptr->x);
@@ -22,7 +18,6 @@ void ank_global_obj_bind_field(js_State *J, js_StringNode name, vec2i *ptr) {
 
 ANK_GLOBAL_OBJECT(g_settings, __game_settings,
     display_size,
-    tooltips_mode,
     warnings,
     gods_enabled,
     victory_video,

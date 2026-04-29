@@ -1278,18 +1278,18 @@ xstring screen_city_t::get_overlay_tooltip(tooltip_context *c, tile2i tile) {
 
 static const figure* get_figure_at_mouse(vec2i mouse_pos) {
     tile2i tile = g_screen_city.update_city_view_coords(mouse_pos);
-    
+
     if (!tile.valid()) {
         return figure_get(0);
     }
-    
+
     vec2i center_pos = lookup_tile_to_pixel(tile) + vec2i{ HALF_TILE_WIDTH_PIXELS, HALF_TILE_HEIGHT_PIXELS };
     const int radius = 30;
-    
+
     grid_tiles tiles = map_grid_get_tiles(tile.shifted(-1, -1), tile.shifted(1, 1));
     figure* closest_figure = figure_get(0);
     float closest_dist_sq = radius * radius;
-    
+
     for (const auto &t : tiles) {
         int figure_id = map_figure_id_get(t);
         while (figure_id > 0) {
@@ -1304,12 +1304,12 @@ static const figure* get_figure_at_mouse(vec2i mouse_pos) {
             figure_id = (figure_id != f->next_figure) ? f->next_figure : 0;
         }
     }
-    
+
     return closest_figure;
 }
 
 void screen_city_t::draw_tooltip(tooltip_context* c) {
-    if (g_settings.tooltips_mode == e_tooltip_mode_none) {
+    if (game_features::gameopt_tooltips_mode.to_int() == e_tooltip_mode_none) {
         return;
     }
 

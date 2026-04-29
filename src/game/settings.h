@@ -54,7 +54,6 @@ struct game_settings {
     // display settings
     vec2i display_size;
 
-    e_tooltip_mode tooltips_mode;
     bool warnings;
     bool gods_enabled;
     bool victory_video;

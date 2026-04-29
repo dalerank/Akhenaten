@@ -134,6 +134,7 @@ namespace game_features {
     extern game_feature gameplay_change_cartpushers_yield_by_id;
     extern game_feature gameplay_rebalance_workshop_output;
     extern game_feature gameopt_monthly_autosave;
+    extern game_feature gameopt_tooltips_mode;
 
     xspan<game_feature*> all();
     game_feature* find(const xstring& name);
