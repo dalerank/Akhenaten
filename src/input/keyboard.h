@@ -14,6 +14,7 @@ void keyboard_start_capture_numeric(void (*callback)(int));
 void keyboard_stop_capture_numeric(void);
 
 int keyboard_input_is_accepted(void);
+int keyboard_is_capturing(void);
 int keyboard_is_insert(void);
 int keyboard_cursor_position(void);
 int keyboard_offset_start(void);

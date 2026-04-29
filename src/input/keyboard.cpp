@@ -162,6 +162,10 @@ int keyboard_input_is_accepted(void) {
     }
 }
 
+int keyboard_is_capturing(void) {
+    return g_input_keyboard_data.capture;
+}
+
 int keyboard_is_insert(void) {
     auto &data = g_input_keyboard_data;
     return data.insert;

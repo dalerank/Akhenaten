@@ -376,6 +376,14 @@ void platform_handle_key_down(SDL_KeyboardEvent* event) {
     }
     e_key key = (e_key)platform.get_key_from_scancode(event->keysym.scancode);
     e_key_mode mod = get_modifier(event->keysym.mod);
+
+    // when a text field is capturing input, suppress global hotkeys so typing
+    // characters like digits or '-' doesn't trigger advisor/menu shortcuts.
+    // Escape is allowed through so dialogs can still be cancelled.
+    if (keyboard_is_capturing() && key != KEY_ESCAPE) {
+        return;
+    }
+
     hotkey_key_pressed(key, mod, event->repeat);
 
     // handle cheats: special case since they ARE layout dependent
