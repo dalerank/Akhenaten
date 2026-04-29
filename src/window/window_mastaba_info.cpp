@@ -84,12 +84,24 @@ void info_window_mastaba::init(object_info &c) {
         progress_str.printf("%d / %d    %d%%", (int)d.phase, mastaba->phases(), min_pct);
         ui["progress_text"] = progress_str;
 
-        // bricks delivered / needed for current phase
-        int bricks_needed = mastaba->needs_resource(RESOURCE_BRICKS);
-        int bricks_delivered = bricks_needed * d.resources_pct[RESOURCE_BRICKS] / 100;
-        bstring64 bricks_str;
-        bricks_str.printf("%d / %d", bricks_delivered, bricks_needed);
-        ui["bricks_text"] = bricks_str;
+        // resource counts (delivered / needed) for current phase — mastaba uses
+        // bricks in phase 2+ and clay as a second material in phases 3-7. Hide
+        // the icon entirely when the current phase does not need that resource.
+        auto fill_resource_slot = [&](e_resource r, pcstr icon_key, pcstr text_key) {
+            int needed = mastaba->needs_resource(r);
+            if (needed <= 0) {
+                ui[text_key] = "";
+                ui[icon_key].set_enabled(false);
+                return;
+            }
+            ui[icon_key].set_enabled(true);
+            int delivered = std::min(needed * d.resources_pct[r] / 100, needed);
+            bstring64 s;
+            s.printf("%d / %d", delivered, needed);
+            ui[text_key] = s;
+        };
+        fill_resource_slot(RESOURCE_BRICKS, "bricks_icon", "bricks_text");
+        fill_resource_slot(RESOURCE_CLAY, "clay_icon", "clay_text");
 
         // workers slots
         bstring32 workers_str;
@@ -99,6 +111,9 @@ void info_window_mastaba::init(object_info &c) {
         ui["warning_text"] = textid{ 178, 41 };
         ui["progress_text"] = "";
         ui["bricks_text"] = "";
+        ui["clay_text"] = "";
         ui["workers_text"] = "";
+        ui["bricks_icon"].set_enabled(false);
+        ui["clay_icon"].set_enabled(false);
     }
 }
