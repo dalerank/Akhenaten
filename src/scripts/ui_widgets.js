@@ -262,8 +262,13 @@ info_window_mastaba = {
     ui : {
         background    : outer_panel({size: [29, 18]}),
         title         : text({pos: [0, 16], text:"${building.name}", size: [px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        subtitle      : text({pos: [32, 46], text:"${140.1}", size: [px(27), -1], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-        warning_text  : text({pos: [32, 86], size:[px(27), -1], wrap:px(27), multiline:true, font : FONT_NORMAL_BLACK_ON_LIGHT }),
+        subtitle      : text({pos: [32, 46], text:"${text.12}", size: [px(27), -1], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+        progress_text : text({pos: [32, 66], size:[px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+        warning_text  : text({pos: [32, 96], size:[px(27), -1], wrap:px(27), multiline:true, font : FONT_NORMAL_BLACK_ON_LIGHT }),
+        bricks_icon   : resource_icon({pos: [32, 220], resource: RESOURCE_BRICKS }),
+        bricks_text   : text({pos: [70, 224], size:[px(15), 20], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+        workers_img   : image({pack:PACK_GENERAL, id:134, offset:14, pos:[260, 220] }),
+        workers_text  : text({pos: [290, 224], size:[px(10), 20], font : FONT_NORMAL_BLACK_ON_LIGHT }),
     }
 }
 

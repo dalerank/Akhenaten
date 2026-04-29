@@ -25,7 +25,7 @@ building_small_stepped_pyramid {
     info_title_id [198, 18]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:375, text_id:120 }
+    meta { help_id:375, text_id:178 }
     init_tiles [8, 8]
 
     flags {
@@ -82,7 +82,7 @@ building_small_stepped_pyramid {
     info_title_id [198, 18]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:375, text_id:120 }
+    meta { help_id:375, text_id:178 }
     init_tiles [12, 12]
 
     enter_offset : [2, 12]

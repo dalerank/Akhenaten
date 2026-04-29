@@ -63,7 +63,42 @@ void info_window_mastaba::init(object_info &c) {
         }
 
         ui["warning_text"] = reason;
+
+        // Phase X / Y    Z%  — same status line the monument advisor shows
+        // (data already exposed via __building_monument_phase_code/phases_total/material_pct_min).
+        int min_pct = 100;
+        bool any_resource = false;
+        for (int ri = (int)RESOURCES_MIN; ri <= (int)RESOURCES_MAX; ++ri) {
+            auto r = (e_resource)ri;
+            if (mastaba->needs_resource(r) <= 0) {
+                continue;
+            }
+            any_resource = true;
+            min_pct = std::min(min_pct, (int)d.resources_pct[r]);
+        }
+        if (!any_resource) {
+            min_pct = 100;
+        }
+
+        bstring64 progress_str;
+        progress_str.printf("%d / %d    %d%%", (int)d.phase, mastaba->phases(), min_pct);
+        ui["progress_text"] = progress_str;
+
+        // bricks delivered / needed for current phase
+        int bricks_needed = mastaba->needs_resource(RESOURCE_BRICKS);
+        int bricks_delivered = bricks_needed * d.resources_pct[RESOURCE_BRICKS] / 100;
+        bstring64 bricks_str;
+        bricks_str.printf("%d / %d", bricks_delivered, bricks_needed);
+        ui["bricks_text"] = bricks_str;
+
+        // workers slots
+        bstring32 workers_str;
+        workers_str.printf("%d / %d", workers_num, (int)d.workers.size());
+        ui["workers_text"] = workers_str;
     } else {
         ui["warning_text"] = textid{ 178, 41 };
+        ui["progress_text"] = "";
+        ui["bricks_text"] = "";
+        ui["workers_text"] = "";
     }
 }
