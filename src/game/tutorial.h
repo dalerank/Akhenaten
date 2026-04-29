@@ -24,7 +24,6 @@ struct tutorial_t {
     virtual void init() {}
     virtual void reset() {}
     virtual void update_step(xstring s) {}
-    virtual xstring goal_text();
 
     static tutorial_list &list();
 };
@@ -44,7 +43,6 @@ struct tutorial_flags_t {
     } pharaoh;
 
     void update_starting_message();
-    xstring get_immediate_goal_text();
     void on_crime();
 };
 

@@ -49,7 +49,6 @@ ANK_SCRIPT_EVENT(event_advance_month, year, month, mday, abdday, years_since_sta
 ANK_SCRIPT_EVENT(event_building_create, bid)
 ANK_SCRIPT_EVENT(event_city_disease, absday)
 ANK_SCRIPT_EVENT(event_warehouse_filled, bid)
-ANK_SCRIPT_EVENT(event_update_mission_goal, mid)
 ANK_SCRIPT_EVENT(event_mission_briefing_show_after_load, scenario_id)
 ANK_SCRIPT_EVENT(event_register_mission_animals, mid)
 ANK_SCRIPT_EVENT(event_finance_changed, value)

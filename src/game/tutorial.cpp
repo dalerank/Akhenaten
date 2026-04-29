@@ -40,10 +40,6 @@ tutorial_t::tutorial_t() {
     list().push_back(this);
 }
 
-xstring tutorial_t::goal_text() {
-    return g_scenario.goal_tooltip; 
-}
-
 tutorial_t::tutorial_list &tutorial_t::list() {
     static tutorial_list list;
     return list;
@@ -110,21 +106,6 @@ void tutorial_map_update(int tut) {
     } else if (tut == 2) {
         g_scenario.env.has_animals = true;
     }
-}
-
-xstring tutorial_flags_t::get_immediate_goal_text() {
-    for (auto tut : tutorial_t::list()) {
-        const int missionid = tut->missionid();
-        if (g_scenario.is_scenario_id(missionid)) {
-            return tut->goal_text();
-        }
-    }
-
-    if (!!g_scenario.goal_tooltip) {
-        return g_scenario.goal_tooltip;
-    }
-
-    return "#unknown_tutoral_goal";
 }
 
 void tutorial_flags_t::on_crime() {

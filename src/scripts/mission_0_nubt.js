@@ -73,6 +73,7 @@ function mission0_on_start(ev) {
 	}
 
 	migration.set_population_cap("first_mission_population_cap", mission.population_cap)
+	city.goal_tooltip = mission0_get_goal_tooltip
 }
 
 [event=event_register_mission_animals, mission=mission0]
@@ -112,14 +113,12 @@ function mission0_handle_fire_event(ev) {
 	house.add_fire_damage(2000)
 }
 
-[event=event_update_mission_goal, mission=mission0]
-function mission0_update_goal(ev) {
+function mission0_get_goal_tooltip() {
 	if (mission.tutorial_granary_opened) {
-		city.goal_tooltip = "#mission0_goal_build_granary"
-		return
+		return "#mission0_goal_build_granary"
 	}
 
-	city.goal_tooltip = "#mission0_goal_create_housing"
+	return "#mission0_goal_create_housing"
 }
 
 [event=event_fire_damage, mission=mission0]

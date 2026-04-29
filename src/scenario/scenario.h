@@ -227,7 +227,6 @@ struct scenario_data_t {
     bool allowed_buildings[BUILDING_MAX] = { 0 };
     resource_allow_vec init_resources;
     settings_vars_t vars;
-    xstring goal_tooltip;
 
     struct {
         int hut;

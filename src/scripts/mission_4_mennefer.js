@@ -63,22 +63,20 @@ mission4 {
 	}
 }
 
-[event=event_update_mission_goal, mission=mission4]
-function mission4_update_goal(ev) {
+function mission4_update_goal() {
 	if (!mission.spacious_apartment_built) {
-		city.goal_tooltip = "#tutorial_goal_education"
-		return
+		return "#tutorial_goal_education"
 	}
 
 	if (!mission.papyrus_made_handled) {
-		city.goal_tooltip = "#tutorial_goal_scribal_school"
-		return
+		return "#tutorial_goal_scribal_school"
 	}
 
 	if (!mission.bricks_bought_handled) {
-		city.goal_tooltip = "#tutorial_goal_import_bricks"
-		return
+		return "#tutorial_goal_import_bricks"
 	}
+
+	return ""
 }
 
 [event=event_mission_start, mission=mission4]
@@ -132,8 +130,8 @@ function mission4_handle_spacious_apartment() {
 	city.use_building(BUILDING_PAPYRUS_WORKSHOP, true)
 	city.use_building(BUILDING_SCRIBAL_SCHOOL, true)
 
-	city.goal_tooltip = "#tutorial_goal_scribal_school"
     ui.popup_message("message_tutorial_education")
+	city.goal_tooltip = mission4_get_goal_tooltip
 }
 
 [event=event_update_victory_state, mission=mission4]

@@ -52,7 +52,6 @@ mission_briefing_window {
 function mission_briefing_on_show_after_load(ev) {
     game.mission_briefing_scenario_id = ev.scenario_id
     game.mission_briefing_is_review = false
-    emit event_update_mission_goal{ mid: ev.scenario_id }
     __game_mission_briefing_intermezzo(ev.scenario_id)
 }
 
@@ -80,8 +79,9 @@ function mission_briefing_window_on_init(window) {
     window.dec_difficulty.enabled = !is_review
     window.inc_difficulty.enabled = !is_review
 
-    window.goal_immediate.enabled = !!city.goal_tooltip
-    window.goal_immediate.text = city.goal_tooltip
+    var goal_tooltip_text = city.goal_tooltip()
+    window.goal_immediate.enabled = !!goal_tooltip_text
+    window.goal_immediate.text = goal_tooltip_text
 
     window.title.text = __lang_message_title_text(text_id)
     window.subtitle.text = __lang_message_subtitle_text(text_id)
@@ -121,7 +121,6 @@ function mission_briefing_window_on_init(window) {
 __game_mission_branch_start = function (scenario_id) {
     game.mission_briefing_scenario_id = scenario_id
     game.mission_briefing_is_review = false
-    emit event_update_mission_goal{ mid: scenario_id }
     __game_mission_briefing_intermezzo(scenario_id)
 }
 
@@ -129,6 +128,5 @@ function __ui_mission_briefing_review() {
     var sid = scenario.campaign_scenario_id
     game.mission_briefing_scenario_id = sid
     game.mission_briefing_is_review = true
-    emit event_update_mission_goal{ mid: scenario_id }
     __game_mission_briefing_intermezzo(sid)
 }

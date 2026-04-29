@@ -38,19 +38,16 @@ mission1 {
 	}
 }
 
-[event=event_update_mission_goal, mission=mission1]
-function mission1_update_goal(ev) {
+function mission1_get_goal_tooltip() {
 	if (!mission.gold_mined_handled) {
-		city.goal_tooltip = "#mission1_goal_build_temples"
-		return
+		return "#mission1_goal_build_temples"
 	}
 
 	if (!mission.temples_built) {
-		city.goal_tooltip = "#mission1_goal_build_entertainment"
-		return
+		return "#mission1_goal_build_entertainment"
 	}
 
-	city.goal_tooltip = "#mission1_goal_build_mines"
+	return "#mission1_goal_build_mines"
 }
 
 [event=event_mission_start, mission=mission1]
@@ -73,6 +70,7 @@ function mission1_on_start(ev) {
 	}
 
     city.set_advisor_available(ADVISOR_POPULATION, 1)
+	city.goal_tooltip = mission1_get_goal_tooltip
 }
 
 [event=event_advance_day, mission=mission1]

@@ -45,22 +45,20 @@ function mission2_handle_population_cap(ev) {
     migration.set_population_cap("pottery_not_produced_population_cap", max_pop)
 }
 
-[event=event_update_mission_goal, mission=mission2]
 function mission2_update_goal(ev) {
 	if (!mission.figs_stored_handled) {
-		city.goal_tooltip = "#mission2_store_figs"
-		return
+		return "#mission2_store_figs"
 	}
 
 	if (!mission.pottery_step1_stored_handled) {
-		city.goal_tooltip = "#mission2_pottery_step1"
-		return
+		return "#mission2_pottery_step1"
 	}
 
 	if (!mission.pottery_step2_stored_handled) {
-		city.goal_tooltip = "#mission2_pottery_step2"
-		return
+		return "#mission2_pottery_step2"
 	}
+
+	return ""
 }
 
 [event=event_mission_start, mission=mission2]
@@ -95,6 +93,7 @@ function mission2_on_start(ev) {
 	city.set_advisor_available(ADVISOR_POPULATION, 1)
 	city.set_advisor_available(ADVISOR_ENTERTAINMENT, 1)
 	city.set_advisor_available(ADVISOR_RELIGION, 1)
+	city.goal_tooltip = mission2_get_goal_tooltip
 }
 
 [event=event_granary_resource_added, mission=mission2]

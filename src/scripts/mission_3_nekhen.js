@@ -39,22 +39,20 @@ mission3 {
 	}
 }
 
-[event=event_update_mission_goal, mission=mission3]
-function mission3_update_goal(ev) {
+function mission3_update_goal() {
 	if (!mission.modest_houses_reached) {
-		city.goal_tooltip = "#reach_modest_houses_number"
-		return
+		return "#reach_modest_houses_number"
 	}
 
 	if (!mission.beer_stored_handled) {
-		city.goal_tooltip = "#mission3_brew_beer"
-		return
+		return "#mission3_brew_beer"
 	}
 
 	if (!mission.tax_collector_built) {
-		city.goal_tooltip = "#build_tax_collector"
-		return
+		return "#build_tax_collector"
 	}
+
+	return ""
 }
 
 [event=event_mission_start, mission=mission3]
@@ -73,6 +71,7 @@ function mission3_on_start(ev) {
 	city.set_advisor_available(ADVISOR_ENTERTAINMENT, 1)
 	city.set_advisor_available(ADVISOR_RELIGION, 1)
 	city.set_advisor_available(ADVISOR_FINANCIAL, 1)
+	city.goal_tooltip = mission3_get_goal_tooltip
 }
 
 [event=event_warehouse_filled, mission=mission3]
