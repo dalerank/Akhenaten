@@ -167,7 +167,7 @@ top_menu_widget {
 [es=top_menu_widget_init]
 function top_menu_widget_open_submenu(window) {
 	window.new_game.enabled = !game_features.gameui_hide_new_game_top_menu
-	window.display_options.enabled = !game.screen.is_fullscreen_only
+	window.display_options.enabled = !screen.is_fullscreen_only
 }
 
 [es=top_menu_widget_background_draw]
