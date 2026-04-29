@@ -54,9 +54,6 @@ struct game_settings {
     // display settings
     vec2i display_size;
 
-    bool victory_video;
-    // pharaoh settings
-    int popup_messages;
     bool pyramid_speedup;
     // persistent game state
     int last_advisor;
@@ -114,7 +111,6 @@ struct game_settings {
     void toggle_pyramid_speedup() { pyramid_speedup = !pyramid_speedup; }
     void toggle_popup_messages(int flag) { popup_messages ^= flag; }
 
-    bool show_victory_video() { victory_video = !victory_video; return victory_video; }
     void set_player_name(const uint8_t* player_name);
     void set_player_name_utf8(pcstr name_utf8);
 

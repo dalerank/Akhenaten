@@ -31,7 +31,6 @@ void game_settings::load_default_settings() {
     display_size = {800, 600};
 
     difficulty.set(DIFFICULTY_HARD);
-    victory_video = false;
     last_advisor = ADVISOR_NONE;
 
     popup_messages = 0;
@@ -77,7 +76,7 @@ void game_settings::load_settings(buffer* buf) {
     for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
         personal_savings[i] = buf->read_i32();
     }
-    victory_video = buf->read_i32();
+    buf->read_i32(); // victory_video - moved to game_features::gameopt_victory_video
 
     assert(!buf->at_end());
     e_difficulty difficulty_value = (e_difficulty)buf->read_i32();
@@ -139,7 +138,7 @@ void game_settings::save() {
     for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
         buf->write_i32(personal_savings[i]);
     }
-    buf->write_i32(victory_video);
+    buf->write_i32(false); // victory_video - moved to game_features::gameopt_victory_video
     buf->write_u8(difficulty());
     buf->skip(3);
     buf->write_i32(false); // gods_enabled - moved to game_features::gameopt_gods_enabled

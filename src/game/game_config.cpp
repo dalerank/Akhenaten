@@ -117,6 +117,7 @@ namespace game_features {
     game_feature gameopt_tooltips_mode{ "gameopt_tooltips_mode", "", 2.0f };
     game_feature gameopt_warnings{ "gameopt_warnings", "", true };
     game_feature gameopt_gods_enabled{ "gameopt_gods_enabled", "", true };
+    game_feature gameopt_victory_video{ "gameopt_victory_video", "", false };
 
     xspan<game_feature*> all() {
         return { _features.data(), _features.size() };

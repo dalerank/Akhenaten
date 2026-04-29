@@ -6,6 +6,7 @@
 #include "city/ratings.h"
 #include "city/victory.h"
 #include "game/mission.h"
+#include "game/game_config.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/game.h"
@@ -161,7 +162,8 @@ void ui::window_mission_won::show() {
         return;
     } 
     
-    if (g_settings.show_victory_video()) {
+    game_features::gameopt_victory_video.set(!game_features::gameopt_victory_video.to_bool());
+    if (game_features::gameopt_victory_video.to_bool()) {
         window_victory_video_show("smk/victory_balcony.smk", 400, 292, window_mission_show_intermezzo);
         return;
     }
