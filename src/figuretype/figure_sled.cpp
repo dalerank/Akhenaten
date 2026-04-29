@@ -93,7 +93,7 @@ void figure_sled_puller::figure_action() {
             advance_action(ACTION_51_SLED_PULLER_DELIVERING_RESOURCE);
             auto monument = destination()->dcast_monument();
             assert(monument);
-            if (!monument) {
+            if (monument) {
                 base.destination_tile = monument->center_point();
             }
         }
