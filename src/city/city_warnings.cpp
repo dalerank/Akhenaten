@@ -13,7 +13,7 @@
 #include "grid/road_access.h"
 #include "grid/terrain.h"
 #include "scenario/scenario.h"
-#include "game/settings.h"
+#include "game/game_config.h"
 #include "graphics/window.h"
 #include "game/game.h"
 #include "core/profiler.h"
@@ -33,7 +33,7 @@ window_warnings::warning* window_warnings::new_warning() {
     if (warnings.size() > max_items) {
         warnings.erase(warnings.begin());
     }
-        
+
     warnings.push_back({});
     return &warnings.back();
 }
@@ -90,7 +90,7 @@ void window_warnings::on_mission_start() {
 }
 
 void window_warnings::show_custom(pcstr text) {
-    if (!g_settings.warnings) {
+    if (!game_features::gameopt_warnings) {
         return;
     }
 

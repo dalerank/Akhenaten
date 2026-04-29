@@ -135,6 +135,7 @@ namespace game_features {
     extern game_feature gameplay_rebalance_workshop_output;
     extern game_feature gameopt_monthly_autosave;
     extern game_feature gameopt_tooltips_mode;
+    extern game_feature gameopt_warnings;
 
     xspan<game_feature*> all();
     game_feature* find(const xstring& name);

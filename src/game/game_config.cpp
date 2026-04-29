@@ -115,6 +115,7 @@ namespace game_features {
     game_feature gameplay_rebalance_workshop_output{ "gameplay_rebalance_workshop_output", "#TR_CONFIG_REBALANCE_WORKSHOP_OUTPUT", true };
     game_feature gameopt_monthly_autosave{ "gameopt_monthly_autosave", "", true };
     game_feature gameopt_tooltips_mode{ "gameopt_tooltips_mode", "", 2.0f };
+    game_feature gameopt_warnings{ "gameopt_warnings", "", true };
 
     xspan<game_feature*> all() {
         return { _features.data(), _features.size() };

@@ -31,7 +31,6 @@ void game_settings::load_default_settings() {
     display_size = {800, 600};
 
     difficulty.set(DIFFICULTY_HARD);
-    warnings = true;
     gods_enabled = true;
     victory_video = false;
     last_advisor = ADVISOR_NONE;
@@ -63,7 +62,7 @@ void game_settings::load_settings(buffer* buf) {
     buf->skip(4); // int current_mission_id;
     buf->skip(4); // int is_custom_scenario;
     buf->read_u8();
-    warnings = buf->read_u8();
+    buf->read_u8(); // warnings - moved to game_features::gameopt_warnings
     tmp = buf->read_u8();
     buf->skip(1); // unsigned char autoclear_enabled;
     buf->read_i32();
@@ -127,7 +126,7 @@ void game_settings::save() {
     buf->skip(4); // int current_mission_id;
     buf->skip(4); // int is_custom_scenario;
     buf->write_u8(false);
-    buf->write_u8(warnings);
+    buf->write_u8(false); // warnings - moved to game_features::gameopt_warnings
     buf->write_u8(0);
     buf->skip(1); // unsigned char autoclear_enabled;
     buf->write_i32(0);
