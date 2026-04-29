@@ -186,6 +186,17 @@
       color: var(--text-muted);
       margin-top: 0.25rem;
     }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--gold);
+      color: var(--text);
+    }
   </style>
 </head>
 <body>
@@ -207,12 +218,8 @@
   <main class="page-content">
     <h1>Report a bug</h1>
     <p class="section-intro">
-      Found a problem in Akhenaten? Fill out the form below and your report will
-      be posted as an issue on
-      <a href="https://github.com/dalerank/Akhenaten/issues" target="_blank">github.com/dalerank/Akhenaten</a>.
-      Use Markdown to format your description &mdash; the live preview below
-      shows exactly how it will render on GitHub. Spam reports are filtered out
-      automatically.
+      Found a problem in Akhenaten? Fill out the form below. Use Markdown to format your description &mdash; the live preview below
+      shows exactly how it will render on GitHub.
     </p>
 
     <form id="bug-form" class="report-form" novalidate>
@@ -263,7 +270,8 @@
         </div>
 
         <div class="form-actions">
-          <button type="submit" class="btn btn-primary" id="submit-btn">Submit report</button>
+          <button type="submit" class="btn btn-primary" id="submit-btn">Submit (I have GitHub account)</button>
+          <button type="button" class="btn btn-secondary" id="pipedream-btn">Submit (no GitHub account)</button>
           <div id="status" role="status" aria-live="polite"></div>
         </div>
       </form>
@@ -354,10 +362,9 @@ Mentions:   @username</pre>
   <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.11/dist/purify.min.js"></script>
   <script>
-    // TODO: set after deploying the serverless function (see api/report-bug.js)
-    const ENDPOINT = '';
+    const PIPEDREAM_ENDPOINT = 'https://c8b67431cd9028f6198998cf5c57aa01.m.pipedream.net';
+    const GITHUB_NEW_ISSUE = 'https://github.com/dalerank/Akhenaten/issues/new';
 
-    // Used by the spam filter — bots usually submit within milliseconds.
     const loadedAt = Date.now();
 
     marked.setOptions({ gfm: true, breaks: true });
@@ -366,6 +373,7 @@ Mentions:   @username</pre>
     const previewEl = document.getElementById('preview');
     const statusEl = document.getElementById('status');
     const submitBtn = document.getElementById('submit-btn');
+    const pipedreamBtn = document.getElementById('pipedream-btn');
     const form = document.getElementById('bug-form');
 
     let renderTimer = null;
@@ -389,56 +397,72 @@ Mentions:   @username</pre>
       statusEl.className = kind || '';
     }
 
-    form.addEventListener('submit', async (event) => {
+    function validate() {
+      const title = document.getElementById('title').value.trim();
+      const body = bodyEl.value.trim();
+      if (!title) { setStatus('Please enter a title.', 'error'); return null; }
+      if (body.length < 20) { setStatus('Please write at least 20 characters describing the bug.', 'error'); return null; }
+      return { title, body };
+    }
+
+    form.addEventListener('submit', (event) => {
       event.preventDefault();
+      const fields = validate();
+      if (!fields) return;
+
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+
+      let bodyText = fields.body;
+      if (name || email) {
+        bodyText += '\n\n---\n';
+        if (name) bodyText += `**Reported by:** ${name}\n`;
+        if (email) bodyText += `**Email:** ${email}\n`;
+      }
+
+      const params = new URLSearchParams({ title: fields.title, body: bodyText });
+      window.open(GITHUB_NEW_ISSUE + '?' + params.toString(), '_blank');
+    });
+
+    pipedreamBtn.addEventListener('click', async () => {
+      const fields = validate();
+      if (!fields) return;
+
+      const website = document.getElementById('website').value;
+      if (website) return;
+      if (Date.now() - loadedAt < 3000) { setStatus('Submission too fast, please try again.', 'error'); return; }
+
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
 
       const data = {
-        title: document.getElementById('title').value.trim(),
-        body: bodyEl.value,
-        name: document.getElementById('name').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        website: document.getElementById('website').value,
-        loadedAt: loadedAt,
+        title: fields.title,
+        body: fields.body,
+        name,
+        email,
       };
 
-      if (!data.title) {
-        setStatus('Please enter a title.', 'error');
-        return;
-      }
-      if (data.body.trim().length < 20) {
-        setStatus('Please write at least 20 characters describing the bug.', 'error');
-        return;
-      }
-      if (!ENDPOINT) {
-        setStatus('Bug-report endpoint is not configured yet. Please open an issue on GitHub directly.', 'error');
-        return;
-      }
-
-      submitBtn.disabled = true;
-      setStatus('Submitting…');
+      pipedreamBtn.disabled = true;
+      setStatus('Submitting...');
 
       try {
-        const response = await fetch(ENDPOINT, {
+        const response = await fetch(PIPEDREAM_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
         });
-        const payload = await response.json().catch(() => ({}));
 
-        if (response.ok && payload.ok && payload.url) {
-          statusEl.innerHTML =
-            'Reported! <a href="' + payload.url + '" target="_blank">View on GitHub →</a>';
-          statusEl.className = 'success';
+        if (response.ok) {
+          setStatus('Report submitted! The team will review it shortly.', 'success');
           form.reset();
           previewEl.innerHTML = '';
         } else {
-          const msg = payload.error || ('Submission failed (' + response.status + ').');
-          setStatus(msg, 'error');
+          setStatus('Submission failed (' + response.status + ').', 'error');
         }
       } catch (err) {
         setStatus('Network error: ' + err.message, 'error');
       } finally {
-        submitBtn.disabled = false;
+        pipedreamBtn.disabled = false;
       }
     });
   </script>
