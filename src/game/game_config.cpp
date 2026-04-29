@@ -113,6 +113,7 @@ namespace game_features {
     game_feature gameplay_prevent_delete_near_burning_ruins{ "gameplay_prevent_delete_near_burning_ruins", "#TR_CONFIG_PREVENT_DELETE_NEAR_BURNING_RUINS", true };
     game_feature gameplay_change_cartpushers_yield_by_id{ "gameplay_change_cartpushers_yield_by_id", "#TR_CONFIG_CARTPUSHERS_YIELD_BY_ID", true };
     game_feature gameplay_rebalance_workshop_output{ "gameplay_rebalance_workshop_output", "#TR_CONFIG_REBALANCE_WORKSHOP_OUTPUT", true };
+    game_feature gameopt_monthly_autosave{ "gameopt_monthly_autosave", "", true };
 
     xspan<game_feature*> all() {
         return { _features.data(), _features.size() };

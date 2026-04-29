@@ -71,7 +71,6 @@ declare_console_command_p(nextyear) {
     game.advance_year();
 }
 
-bool &game_monthly_autosave() { return game.monthly_autosave; }
 
 namespace {
     static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700};
@@ -185,7 +184,7 @@ void game_t::advance_month() {
         advance_year();
     }
 
-    if (monthly_autosave) {
+    if (game_features::gameopt_monthly_autosave.to_bool()) {
         bstring256 autosave_file("autosave_month.", saved_game_data_expanded.extension);
         GamestateIO::write_savegame(autosave_file);
     }

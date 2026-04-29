@@ -18,6 +18,7 @@
 #include "core/calc.h"
 #include "game/difficulty.h"
 #include "game/game.h"
+#include "game/game_config.h"
 #include "scenario/scenario.h"
 #include "empire/empire_city.h"
 #include "empire/empire.h"
@@ -649,8 +650,6 @@ void city_t::houses_reset_demands() {
     houses.requiring.religion = 0;
 }
 
-bool &game_monthly_autosave();
-
 io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     auto &data = g_city;
     iob->bind(BIND_SIGNATURE_RAW, &data.unused.other_player, 18904);
@@ -700,7 +699,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.population.lost_removal);
     iob->bind(BIND_SIGNATURE_UINT8, &data.migration.immigration_amount_per_batch);
     iob->bind(BIND_SIGNATURE_UINT8, &data.migration.immigration_amount_per_batch);
-    iob->bind(BIND_SIGNATURE_UINT8, &game_monthly_autosave());
+    iob->bind____skip(1);
     iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_UINT8, &data.migration.emigration_amount_per_batch);
     iob->bind____skip(3);

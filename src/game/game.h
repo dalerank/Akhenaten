@@ -50,7 +50,6 @@ struct game_t {
         MAX_ANIM_TIMERS = 51
     };
 
-    bool monthly_autosave;
     bool paused = false;
     bool save_debug_texture = false;
     bool animation = false;

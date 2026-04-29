@@ -1,7 +1,7 @@
 log_info("akhenaten: ui top menu config started")
 
-function top_menu_autosave_options_text(p1, p2) { return __loc(19, game.monthly_autosave ? 51 : 52) }
-function top_menu_autosave_options_toggle(p1, p2) { game.monthly_autosave = !game.monthly_autosave }
+function top_menu_autosave_options_text(p1, p2) { return __loc(19, game_features.gameopt_monthly_autosave ? 51 : 52) }
+function top_menu_autosave_options_toggle(p1, p2) { game_features.gameopt_monthly_autosave = !game_features.gameopt_monthly_autosave }
 
 function top_menu_tooltip_text(p1, p2) { return __loc(3, __game_settings.tooltips_mode + 2) }
 function top_menu_tooltip_toggle(p1, p2) { __game_settings.tooltips_mode = (__game_settings.tooltips_mode + 1) % 3 }

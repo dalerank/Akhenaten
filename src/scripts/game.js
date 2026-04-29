@@ -1,7 +1,6 @@
 log_info("akhenaten: game started")
 
 game = extend(__game, {
-    // -> monthly_autosave
     // -> pending_load_type
     // -> pending_save_type
     // -> mission_choice_open_scenario_id

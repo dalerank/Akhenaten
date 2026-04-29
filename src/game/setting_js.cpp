@@ -31,7 +31,6 @@ ANK_GLOBAL_OBJECT(g_settings, __game_settings,
     last_advisor);
 
 ANK_GLOBAL_OBJECT(game, __game,
-    monthly_autosave,
     pending_load_type,
     pending_save_type,
     mission_choice_open_scenario_id);
