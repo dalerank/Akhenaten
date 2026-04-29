@@ -63,7 +63,57 @@ void info_window_mastaba::init(object_info &c) {
         }
 
         ui["warning_text"] = reason;
+
+        // Phase X / Y    Z%  — same status line the monument advisor shows
+        // (data already exposed via __building_monument_phase_code/phases_total/material_pct_min).
+        int min_pct = 100;
+        bool any_resource = false;
+        for (int ri = (int)RESOURCES_MIN; ri <= (int)RESOURCES_MAX; ++ri) {
+            auto r = (e_resource)ri;
+            if (mastaba->needs_resource(r) <= 0) {
+                continue;
+            }
+            any_resource = true;
+            min_pct = std::min(min_pct, (int)d.resources_pct[r]);
+        }
+        if (!any_resource) {
+            min_pct = 100;
+        }
+
+        bstring64 progress_str;
+        progress_str.printf("%d / %d    %d%%", (int)d.phase, mastaba->phases(), min_pct);
+        ui["progress_text"] = progress_str;
+
+        // resource counts (delivered / needed) for current phase — mastaba uses
+        // bricks in phase 2+ and clay as a second material in phases 3-7. Hide
+        // the icon entirely when the current phase does not need that resource.
+        auto fill_resource_slot = [&](e_resource r, pcstr icon_key, pcstr text_key) {
+            int needed = mastaba->needs_resource(r);
+            if (needed <= 0) {
+                ui[text_key] = "";
+                ui[icon_key].set_enabled(false);
+                return;
+            }
+            ui[icon_key].set_enabled(true);
+            int delivered = std::min(needed * d.resources_pct[r] / 100, needed);
+            bstring64 s;
+            s.printf("%d / %d", delivered, needed);
+            ui[text_key] = s;
+        };
+        fill_resource_slot(RESOURCE_BRICKS, "bricks_icon", "bricks_text");
+        fill_resource_slot(RESOURCE_CLAY, "clay_icon", "clay_text");
+
+        // workers slots
+        bstring32 workers_str;
+        workers_str.printf("%d / %d", workers_num, (int)d.workers.size());
+        ui["workers_text"] = workers_str;
     } else {
         ui["warning_text"] = textid{ 178, 41 };
+        ui["progress_text"] = "";
+        ui["bricks_text"] = "";
+        ui["clay_text"] = "";
+        ui["workers_text"] = "";
+        ui["bricks_icon"].set_enabled(false);
+        ui["clay_icon"].set_enabled(false);
     }
 }
