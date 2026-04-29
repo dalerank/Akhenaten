@@ -15,6 +15,7 @@
 #include "figure/formation_batalion.h"
 #include "city_floods.h"
 #include "game/settings.h"
+#include "game/game_config.h"
 #include "game/tutorial.h"
 #include "grid/routing/routing_terrain.h"
 #include "ratings.h"
@@ -858,7 +859,7 @@ void city_religion_t::update() {
     calc_coverage();
     calculate_gods_mood_targets();
 
-    if (!g_settings.gods_enabled) {
+    if (!game_features::gameopt_gods_enabled) {
         return;
     }
 

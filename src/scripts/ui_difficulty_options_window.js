@@ -3,8 +3,8 @@ log_info("akhenaten: ui difficulty options window started")
 
 [es=(difficulty_options_window, toggle_gods)]
 function difficulty_options_toggle_gods(window) {
-    __game_settings.gods_enabled = !__game_settings.gods_enabled
-    window.btn_gods.text = __game_settings.gods_enabled ? "ON" : "OFF"
+    game_features.gameopt_gods_enabled = !game_features.gameopt_gods_enabled
+    window.btn_gods.text = game_features.gameopt_gods_enabled ? "ON" : "OFF"
 }
 
 [es=(difficulty_options_window, ui_draw_foreground)]
@@ -15,7 +15,7 @@ function difficulty_options_window_es_draw(window) {
 
 [es=(difficulty_options_window, init)]
 function difficulty_options_window_es_draw_background(window) {
-    window.btn_gods.text = __game_settings.gods_enabled ? "ON" : "OFF"
+    window.btn_gods.text = game_features.gameopt_gods_enabled ? "ON" : "OFF"
 }
 
 [es=modal_window]

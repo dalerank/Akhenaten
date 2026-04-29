@@ -63,6 +63,8 @@ game_features {
     @gameui_empire_city_old_names {}
     @gameopt_monthly_autosave {}
     @gameopt_tooltips_mode {}
+    @gameopt_warnings {}
+    @gameopt_gods_enabled {}
     @gameopt_last_save_filename {  }
     @gameopt_last_player {  }
     @gameopt_sound_effects_enabled {}

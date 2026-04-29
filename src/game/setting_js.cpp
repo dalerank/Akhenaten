@@ -18,7 +18,6 @@ void ank_global_obj_bind_field(js_State *J, js_StringNode name, vec2i *ptr) {
 
 ANK_GLOBAL_OBJECT(g_settings, __game_settings,
     display_size,
-    gods_enabled,
     victory_video,
     popup_messages,
     pyramid_speedup,

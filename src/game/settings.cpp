@@ -31,7 +31,6 @@ void game_settings::load_default_settings() {
     display_size = {800, 600};
 
     difficulty.set(DIFFICULTY_HARD);
-    gods_enabled = true;
     victory_video = false;
     last_advisor = ADVISOR_NONE;
 
@@ -83,7 +82,7 @@ void game_settings::load_settings(buffer* buf) {
     assert(!buf->at_end());
     e_difficulty difficulty_value = (e_difficulty)buf->read_i32();
     difficulty.set(difficulty_value);
-    gods_enabled = buf->read_i32();
+    buf->read_i32(); // gods_enabled - moved to game_features::gameopt_gods_enabled
 }
 
 void game_settings::load() {
@@ -143,7 +142,7 @@ void game_settings::save() {
     buf->write_i32(victory_video);
     buf->write_u8(difficulty());
     buf->skip(3);
-    buf->write_i32(gods_enabled);
+    buf->write_i32(false); // gods_enabled - moved to game_features::gameopt_gods_enabled
 
     io_write_buffer_to_file("pharaoh.inf", inf_file, INF_SIZE);
 }

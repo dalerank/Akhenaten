@@ -54,7 +54,6 @@ struct game_settings {
     // display settings
     vec2i display_size;
 
-    bool gods_enabled;
     bool victory_video;
     // pharaoh settings
     int popup_messages;
@@ -114,7 +113,6 @@ struct game_settings {
 
     void toggle_pyramid_speedup() { pyramid_speedup = !pyramid_speedup; }
     void toggle_popup_messages(int flag) { popup_messages ^= flag; }
-    void toggle_gods_enabled() { gods_enabled = !gods_enabled; }
 
     bool show_victory_video() { victory_video = !victory_video; return victory_video; }
     void set_player_name(const uint8_t* player_name);
