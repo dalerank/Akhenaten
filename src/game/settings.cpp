@@ -33,8 +33,6 @@ void game_settings::load_default_settings() {
     difficulty.set(DIFFICULTY_HARD);
     last_advisor = ADVISOR_NONE;
 
-    popup_messages = 0;
-
     clear_personal_savings();
 }
 

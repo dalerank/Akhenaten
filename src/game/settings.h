@@ -107,8 +107,6 @@ struct game_settings {
         }
     }
 
-    void toggle_popup_messages(int flag) { popup_messages ^= flag; }
-
     void set_player_name(const uint8_t* player_name);
     void set_player_name_utf8(pcstr name_utf8);
 
