@@ -72,7 +72,7 @@ pcstr display_options_video_get_mode(int index) {
 }
 ANK_FUNCTION_1(display_options_video_get_mode)
 
-bool __display_options_is_fullscreen() { return g_settings.is_fullscreen(e_setting_none); }
+bool __display_options_is_fullscreen() { return game.is_fullscreen(false); }
 ANK_FUNCTION(__display_options_is_fullscreen)
 
 xstring __display_options_video_driver_caption() {

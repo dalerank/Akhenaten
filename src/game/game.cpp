@@ -485,3 +485,11 @@ void game_t::exit() {
     game_features::save();
     g_sound.shutdown();
 }
+
+bool game_t::is_fullscreen(bool check_cli) const {
+    return game_features::gameopt_fullscreen.to_bool() && (check_cli ? cli_fullscreen : true);
+}
+
+void game_t::set_fullscreen(bool v) {
+    game_features::gameopt_fullscreen.set(v);
+}

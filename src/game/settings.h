@@ -17,12 +17,6 @@ enum e_tooltip_mode {
 };
 using etooltip_flag = uint32_t;
 
-enum e_setting_flag {
-    e_setting_none = 0,
-    e_setting_cli = 1,
-};
-using esetting_flag = uint32_t;
-
 enum e_difficulty {
     DIFFICULTY_VERY_EASY = 0,
     DIFFICULTY_EASY = 1,
@@ -79,11 +73,6 @@ struct game_settings {
     void load_default_settings();
     void load();
     void save();
-    inline bool is_fullscreen(esetting_flag opt = e_setting_cli) { return fullscreen && ((opt == e_setting_cli) ? cli_fullscreen : true); }
-
-    void set_cli_fullscreen(bool v) { cli_fullscreen = v; }
-    void set_fullscreen(bool v) { fullscreen = v; }
-
     void reset_sound(int type, int enabled, int volume) {
         if (type == SOUND_MUSIC) {
             game_features::gameopt_sound_music_enabled.set(!!enabled);
@@ -117,9 +106,6 @@ struct game_settings {
 
 private:
     void load_settings(buffer *buf);
-
-    bool fullscreen;
-    bool cli_fullscreen;
 };
 
 extern game_settings g_settings;

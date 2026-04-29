@@ -51,7 +51,12 @@ struct game_t {
     };
 
     bool paused = false;
+    bool cli_fullscreen = false;
     bool save_debug_texture = false;
+
+    bool is_fullscreen(bool check_cli = true) const;
+    void set_fullscreen(bool v);
+    void set_cli_fullscreen(bool v) { cli_fullscreen = v; }
     bool animation = false;
     bool debug_console = false;
     bool debug_properties = false;

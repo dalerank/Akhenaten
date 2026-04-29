@@ -6,6 +6,7 @@
 #include "core/calc.h"
 #include "game/game_config.h"
 #include "game/game_environment.h"
+#include "game/game.h"
 #include "js/js_game.h"
 #include "core/string.h"
 #include "io/io.h"
@@ -26,8 +27,6 @@ uint8_t game_difficulty() {
 }
 
 void game_settings::load_default_settings() {
-    fullscreen = true;
-    cli_fullscreen = false;
     display_size = {800, 600};
 
     difficulty.set(DIFFICULTY_HARD);
@@ -38,7 +37,7 @@ void game_settings::load_default_settings() {
 
 void game_settings::load_settings(buffer* buf) {
     buf->skip(4);
-    fullscreen = buf->read_i32();
+    buf->read_i32(); // fullscreen - moved to game_features::gameopt_fullscreen
     buf->skip(3);
     buf->read_u8();
     buf->read_u8();
@@ -103,7 +102,7 @@ void game_settings::save() {
     buf->reset_offset();
 
     buf->skip(4);
-    buf->write_i32(fullscreen);
+    buf->write_i32(false); // fullscreen - moved to game_features::gameopt_fullscreen
     buf->skip(3);
     buf->write_u8(false);
     buf->write_u8(false);
@@ -159,3 +158,5 @@ void game_settings::clear_personal_savings() {
         personal_savings[i] = 0;
     }
 }
+
+
