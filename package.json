@@ -1,0 +1,16 @@
+{
+  "name": "akhenaten-bug-report",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker that receives bug reports from the Akhenaten docs site and opens GitHub issues.",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "login": "wrangler login",
+    "secret:github": "wrangler secret put GITHUB_TOKEN",
+    "tail": "wrangler tail"
+  },
+  "devDependencies": {
+    "wrangler": "^3.90.0"
+  }
+}
