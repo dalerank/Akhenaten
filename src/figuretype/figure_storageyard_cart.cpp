@@ -60,13 +60,23 @@ void figure_storageyard_cart::do_retrieve(int action_done) {
     }
 
     building* dest = destination();
+    if (!dest->is_valid()) {
+        advance_action(action_done);
+        return;
+    }
+
     const bool is_storage = building_type_any_of(dest->type, { BUILDING_GRANARY, BUILDING_STORAGE_YARD, BUILDING_STORAGE_ROOM });
     if (!is_storage) {
         advance_action(action_done);
+        return;
     }
 
     building_storage *home_storage = home()->dcast_storage();
     building_storage *dest_storage = dest->dcast_storage();
+    if (!home_storage || !dest_storage) {
+        advance_action(action_done);
+        return;
+    }
 
     if (base.collecting_item_id == RESOURCE_NONE) {
         auto loads = acquire_resource_for_getting_deliveryman(destination(), home());
@@ -96,6 +106,11 @@ void figure_storageyard_cart::do_retrieve(int action_done) {
 void figure_storageyard_cart::figure_action() {
     OZZY_PROFILER_FUNCTION();
     int road_network_id = map_road_network_get(tile());
+
+    if (!home()->is_valid()) {
+        poof();
+        return;
+    }
 
     base.use_cart = true;
     switch (action_state()) {
