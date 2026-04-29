@@ -49,7 +49,7 @@ void figure_trader_info_window::init(object_info &c) {
             int amount = trader.bought_resources(r);
             if (amount > 0) {
                 int image_id = image_id_resource_icon(r);
-                bought_items.append_fmt(" @I%u& %u", image_id, amount);
+                bought_items.append_fmt(" @I%u& %u  ", image_id, amount);
             }
         }
         ui["buy_text"] = bought_items;
@@ -60,7 +60,7 @@ void figure_trader_info_window::init(object_info &c) {
             int amount = trader.sold_resources(r);
             if (amount > 0) {
                 int image_id = image_id_resource_icon(r);
-                sold_items.append_fmt(" @I%u& %u", image_id, amount);
+                sold_items.append_fmt(" @I%u& %u  ", image_id, amount);
             }
         }
         ui["sell_text"] = sold_items;
@@ -73,7 +73,7 @@ void figure_trader_info_window::init(object_info &c) {
         for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
             if (city.buys_resource(r)) {
                 int image_id = image_id_resource_icon(r);
-                buy_items.append_fmt("@I%u& ", image_id);
+                buy_items.append_fmt("@I%u&   ", image_id);
             }
         }
         ui["buy_text"] = buy_items;
@@ -83,7 +83,7 @@ void figure_trader_info_window::init(object_info &c) {
         for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
             if (city.sells_resource(r)) {
                 int image_id = image_id_resource_icon(r);
-                sell_items.append_fmt("@I%u& ", image_id);
+                sell_items.append_fmt("@I%u&   ", image_id);
             }
         }
         ui["sell_text"] = sell_items;

@@ -14,10 +14,10 @@ figure_trader_info_window {
         capacity: text({ pos[92, 130], text: "${loc.trader_capacity} ${figure.capacity}", font: FONT_NORMAL_BLACK_ON_DARK })
 
         buy: text({ pos[92, 150], text: "${loc.trader_bought}", font: FONT_NORMAL_BLACK_ON_DARK })
-        buy_text: text({ pos[150, 150], rich: true, scroll: false })
+        buy_text: text({ pos[150, 150], font: FONT_NORMAL_BLACK_ON_DARK, rich: true, scroll: false })
 
         sell: text({ pos[92, 170], text: "${loc.trader_sold}", font: FONT_NORMAL_BLACK_ON_DARK })
-        sell_text: text({ pos[150, 170], rich: true, scroll: false })
+        sell_text: text({ pos[150, 170], font: FONT_NORMAL_BLACK_ON_DARK, rich: true, scroll: false })
 
         phrase: text({ pos[90, 200], font: FONT_NORMAL_BLACK_ON_DARK, wrap: px(21), multiline: true, scroll: false })
 

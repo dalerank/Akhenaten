@@ -163,11 +163,17 @@ static uint32_t utf8_decode(const uint8_t* str, int* out_bytes) {
 
 const font_definition* font_definition_for(e_font font) {
     auto& data = g_font_data;
+    if (font < 0 || font >= FONT_TYPES_MAX) {
+        font = FONT_NORMAL_BLACK_ON_LIGHT;
+    }
     return &data.font_definitions[font];
 }
 
 font_definition *font_definition_ref(e_font font) {
     auto &data = g_font_data;
+    if (font < 0 || font >= FONT_TYPES_MAX) {
+        font = FONT_NORMAL_BLACK_ON_LIGHT;
+    }
     return &data.font_definitions[font];
 }
 
