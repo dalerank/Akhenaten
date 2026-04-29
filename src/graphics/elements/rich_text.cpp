@@ -265,11 +265,13 @@ void rich_text_t::draw_line(painter &ctx, pcstr str, int x, int y, color clr, bo
                     }
 
                     const image_t* img = image_letter(glyph.imagid);
-                    if (!measure_only) {
-                        int height = def->image_y_offset((const uint8_t *)str, img->height, def->line_height);
-                        ctx.img_letter(img, def->font, glyph.imagid, x, y - height - glyph.bearing.y, clr);
+                    if (img) {
+                        if (!measure_only) {
+                            int height = def->image_y_offset((const uint8_t *)str, img->height, def->line_height);
+                            ctx.img_letter(img, def->font, glyph.imagid, x, y - height - glyph.bearing.y, clr);
+                        }
+                        x += img->width + def->letter_spacing;
                     }
-                    x += img->width + def->letter_spacing;
                 }
             }
 
