@@ -34,7 +34,6 @@ void game_settings::load_default_settings() {
     last_advisor = ADVISOR_NONE;
 
     popup_messages = 0;
-    pyramid_speedup = false;
 
     clear_personal_savings();
 }

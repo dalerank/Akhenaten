@@ -66,6 +66,7 @@ game_features {
     @gameopt_warnings {}
     @gameopt_gods_enabled {}
     @gameopt_victory_video {}
+    @gameopt_pyramid_speedup {}
     @gameopt_last_save_filename {  }
     @gameopt_last_player {  }
     @gameopt_sound_effects_enabled {}

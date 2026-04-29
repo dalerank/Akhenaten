@@ -18,7 +18,6 @@ void ank_global_obj_bind_field(js_State *J, js_StringNode name, vec2i *ptr) {
 
 ANK_GLOBAL_OBJECT(g_settings, __game_settings,
     display_size,
-    pyramid_speedup,
     last_advisor);
 
 ANK_GLOBAL_OBJECT(game, __game,

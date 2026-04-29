@@ -138,6 +138,7 @@ namespace game_features {
     extern game_feature gameopt_warnings;
     extern game_feature gameopt_gods_enabled;
     extern game_feature gameopt_victory_video;
+    extern game_feature gameopt_pyramid_speedup;
 
     xspan<game_feature*> all();
     game_feature* find(const xstring& name);

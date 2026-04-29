@@ -54,7 +54,6 @@ struct game_settings {
     // display settings
     vec2i display_size;
 
-    bool pyramid_speedup;
     // persistent game state
     int last_advisor;
     bstring32 player_name;
@@ -108,7 +107,6 @@ struct game_settings {
         }
     }
 
-    void toggle_pyramid_speedup() { pyramid_speedup = !pyramid_speedup; }
     void toggle_popup_messages(int flag) { popup_messages ^= flag; }
 
     void set_player_name(const uint8_t* player_name);
