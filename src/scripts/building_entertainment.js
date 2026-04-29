@@ -73,77 +73,77 @@ building_juggler_school {
     preview_dir_6 : { stand:[-90, 45], stand_b:[30, 15], stand_e:[0, 0], booth:[-30, 75], stand_b_img : 2, stand_e_img : 2 },
     preview_dir_7 : { stand:[-30, 15], stand_b:[-60, 60], stand_e:[-90, 45], booth:[60, 30], stand_b_img : 2, stand_e_img : 2 },
 
-    place_dir_0 : [
+    place_dir_0 : { items: [
       {type: BUILDING_GARDENS, offset:[1, 2]},
       {type: BUILDING_GARDENS, offset:[3, 2]},
       {type: BUILDING_PAVILLION, offset:[0, 0]},
       {type: BUILDING_BANDSTAND, offset:[3, 0], main:true},
       {type: BUILDING_BANDSTAND, offset:[3, 1], main:false},
       {type: BUILDING_BOOTH, offset:[0, 2], main:false}
-    ],
+    ]},
 
-    place_dir_1 : [
+    place_dir_1 : { items: [
       {type: BUILDING_GARDENS, offset:[2, 2]},
       {type: BUILDING_GARDENS, offset:[0, 2]},
       {type: BUILDING_PAVILLION, offset:[2, 0]},
       {type: BUILDING_BANDSTAND, offset:[0, 0], main:true},
       {type: BUILDING_BANDSTAND, offset:[0, 1], main:false},
       {type: BUILDING_BOOTH, offset:[3, 2], main:false}
-    ],
+    ]},
 
-    place_dir_2 : [
+    place_dir_2 : { items: [
       {type: BUILDING_GARDENS, offset:[3, 0]},
       {type: BUILDING_GARDENS, offset:[3, 3]},
       {type: BUILDING_PAVILLION, offset:[1, 0]},
       {type: BUILDING_BANDSTAND, offset:[1, 3], main:true},
       {type: BUILDING_BANDSTAND, offset:[2, 3], main:false},
       {type: BUILDING_BOOTH, offset:[3, 1], main:false}
-    ],
+    ]},
 
-    place_dir_3 : [
+    place_dir_3 : { items: [
       {type: BUILDING_GARDENS, offset:[3, 3]},
       {type: BUILDING_GARDENS, offset:[1, 0]},
       {type: BUILDING_PAVILLION, offset:[1, 2]},
       {type: BUILDING_BANDSTAND, offset:[2, 0], main:true},
       {type: BUILDING_BANDSTAND, offset:[3, 0], main:false},
       {type: BUILDING_BOOTH, offset:[3, 2], main:false}
-    ],
+    ]},
 
-    place_dir_4 : [
+    place_dir_4 : { items: [
       {type: BUILDING_GARDENS, offset:[3, 3]},
       {type: BUILDING_GARDENS, offset:[0, 3]},
       {type: BUILDING_PAVILLION, offset:[2, 1]},
       {type: BUILDING_BANDSTAND, offset:[0, 1], main:true},
       {type: BUILDING_BANDSTAND, offset:[0, 2], main:false},
       {type: BUILDING_BOOTH, offset:[2, 3], main:false}
-    ],
+    ]},
 
-    place_dir_5 : [
+    place_dir_5 : { items: [
       {type: BUILDING_GARDENS, offset:[1, 3]},
       {type: BUILDING_GARDENS, offset:[3, 3]},
       {type: BUILDING_PAVILLION, offset:[0, 1]},
       {type: BUILDING_BANDSTAND, offset:[3, 1], main:true},
       {type: BUILDING_BANDSTAND, offset:[3, 2], main:false},
       {type: BUILDING_BOOTH, offset:[0, 3], main:false}
-    ],
+    ]},
 
-    place_dir_6 : [
+    place_dir_6 : { items: [
       {type: BUILDING_GARDENS, offset:[2, 0]},
       {type: BUILDING_GARDENS, offset:[2, 2]},
       {type: BUILDING_PAVILLION, offset:[0, 2]},
       {type: BUILDING_BANDSTAND, offset:[0, 0], main:false},
       {type: BUILDING_BANDSTAND, offset:[1, 0], main:true},
       {type: BUILDING_BOOTH, offset:[2, 3], main:false}
-    ],
+    ]},
 
-    place_dir_7 : [
+    place_dir_7 : { items: [
       {type: BUILDING_GARDENS, offset:[0, 3]},
       {type: BUILDING_GARDENS, offset:[2, 1]},
       {type: BUILDING_PAVILLION, offset:[0, 0]},
       {type: BUILDING_BANDSTAND, offset:[1, 3], main:false},
       {type: BUILDING_BANDSTAND, offset:[2, 3], main:true},
       {type: BUILDING_BOOTH, offset:[2, 0], main:false}
-    ]
+    ]}
 
     min_houses_coverage : 100
     meta { help_id: 73, text_id: 74 }
