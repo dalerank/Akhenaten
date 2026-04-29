@@ -23,28 +23,28 @@ empire_window {
 
     ui {
         background           : dummy({size[sw(0), sh(0)]})
-        city_name            : header({pos[0, -1], margin{bottom:-120}, size[sw(0), 20], align:"center"})
-        button_help          : help_button({margin{centerx:575, bottom:-120}})
-        button_close         : close_button({margin{centerx:575, bottom:-40}})
-        button_advisor       : advisor_button({margin{centerx:-595, bottom:-120}})
+        city_name            : header({pos[0, 0], size[100, 20], align:"center"})
+        button_help          : help_button({pos[0, 0]})
+        button_close         : close_button({pos[0, 0]})
+        button_advisor       : advisor_button({pos[0, 0]})
 
-        button_open_trade    : button({margin{centerx:-220, bottom:-40}, size:[440, 20]})
-        info_tooltip         : text({margin{centerx:-200, bottom:-60}, size:[400, 20], font:FONT_NORMAL_BLACK_ON_LIGHT, align:"center"})
+        button_open_trade    : button({pos[0, 0], size:[440, 20]})
+        info_tooltip         : text({pos[0, 0], size:[400, 20], font:FONT_NORMAL_BLACK_ON_LIGHT, align:"center"})
 
-        city_sell_title      : text({text[47, 11], margin{centerx:250, bottom:-120}, font: FONT_NORMAL_BLACK_ON_LIGHT })
-        city_sell_items      : dummy({pos[0, 100], size[200, 0], margin{centerx:100, bottom:-90}, ondraw_event: "draw_city_sell_items"})
+        city_sell_title      : text({text[47, 11], pos[0, 0], font: FONT_NORMAL_BLACK_ON_LIGHT })
+        city_sell_items      : dummy({pos[0, 0], size[200, 0], ondraw_event: "draw_city_sell_items"})
         city_sell_item       : dummy({size[120, 20], font:FONT_SMALL_PLAIN})
 
-        city_buy_title       : text({text[47, 10], margin{centerx:-300, bottom:-120}, font: FONT_NORMAL_BLACK_ON_LIGHT })
-        city_buy_items       : dummy({pos[0, 0], size[200, 0], margin{centerx:-430, bottom:-90}, ondraw_event: "draw_city_buy_items"})
+        city_buy_title       : text({text[47, 10], pos[0, 0], font: FONT_NORMAL_BLACK_ON_LIGHT })
+        city_buy_items       : dummy({pos[0, 0], size[200, 0], ondraw_event: "draw_city_buy_items"})
         city_buy_item        : dummy({size[120, 20], font:FONT_SMALL_PLAIN})
 
-        city_want_sell_title : text({text[47, 5], margin{centerx:-220, bottom:-90}, font: FONT_NORMAL_BLACK_ON_LIGHT })
-        city_want_sell_items : dummy({pos[0, 100], margin{centerx:-170, bottom:-90}, ondraw_event: "draw_city_want_sell_items"})
+        city_want_sell_title : text({text[47, 5], pos[0, 0], font: FONT_NORMAL_BLACK_ON_LIGHT })
+        city_want_sell_items : dummy({pos[0, 0], ondraw_event: "draw_city_want_sell_items"})
         city_want_sell_item  : dummy({size[110, 0], font:FONT_SMALL_PLAIN})
 
-        city_want_buy_title  : text({text[47, 4], margin{centerx:-220, bottom:-70}, font: FONT_NORMAL_BLACK_ON_LIGHT })
-        city_want_buy_items  : dummy({pos[0, 0], margin{centerx:-170, bottom:-70}, ondraw_event: "draw_city_want_buy_items"})
+        city_want_buy_title  : text({text[47, 4], pos[0, 0], font: FONT_NORMAL_BLACK_ON_LIGHT })
+        city_want_buy_items  : dummy({pos[0, 0], ondraw_event: "draw_city_want_buy_items"})
         city_want_buy_item   : dummy({size[110, 0], font:FONT_SMALL_PLAIN})
     }
 
@@ -105,18 +105,55 @@ function empire_window_draw_trade_resource_row(offset, flags, resource, tradeNow
 }
 
 function empire_window_screen_bounds() {
-    var map_img = get_image(empire_window.image)
-    var f = empire_window.finish_pos
-    var bottom_extra = 20
-    var ew = map_img ? (map_img.width + f.x) : (1200 + 32)
-    var eh = map_img ? (map_img.height + f.y + bottom_extra) : (1600 + 136 + 20)
-    var sw = screen.width
-    var sh = screen.height
-    var min_x = sw <= ew ? 0 : ((sw - ew) / 2) | 0
-    var max_x = sw <= ew ? sw : min_x + ew
-    var min_y = sh <= eh ? 0 : ((sh - eh) / 2) | 0
-    var max_y = sh <= eh ? sh : min_y + eh
-    return { min_pos: {x: min_x, y: min_y}, max_pos: {x: max_x, y: max_y} }
+    return { min_pos: {x: 0, y: 0}, max_pos: {x: screen.width, y: screen.height} }
+}
+
+function empire_window_map_scale() {
+    var sb = empire_window.screen_bounds
+    var viewport_w = Math.max(1, (sb.max_pos.x - sb.min_pos.x) - empire_window.finish_pos.x)
+    var viewport_h = Math.max(1, (sb.max_pos.y - sb.min_pos.y) - empire_window.finish_pos.y)
+    return Math.max(viewport_w / 1200, viewport_h / 1600)
+}
+
+function empire_window_map_point(draw_offset, pos) {
+    var s = empire_window_map_scale()
+    return {
+        x: draw_offset.x + Math.round(pos.x * s),
+        y: draw_offset.y + Math.round(pos.y * s)
+    }
+}
+
+function empire_window_layout_ui(window) {
+    var sb = empire_window.screen_bounds
+    var centerX = ((sb.min_pos.x + sb.max_pos.x) / 2) | 0
+    var width = sb.max_pos.x - sb.min_pos.x
+    var infoTop = sb.max_pos.y - 121
+    var openTradeTop = sb.max_pos.y - 40
+    var infoTooltipTop = sb.max_pos.y - 60
+    var sellItemsTop = sb.max_pos.y + 10
+    var buyItemsTop = sb.max_pos.y - 90
+
+    window.city_name.pos = { x: sb.min_pos.x, y: infoTop - 1 }
+    window.city_name.size = { x: width, y: 20 }
+
+    window.button_help.pos = { x: sb.max_pos.x - 40, y: infoTop }
+    window.button_close.pos = { x: sb.max_pos.x - 40, y: openTradeTop }
+    window.button_advisor.pos = { x: sb.min_pos.x + 5, y: infoTop }
+
+    window.button_open_trade.pos = { x: centerX - 220, y: openTradeTop }
+    window.info_tooltip.pos = { x: centerX - 200, y: infoTooltipTop }
+
+    window.city_sell_title.pos = { x: centerX + 250, y: infoTop }
+    window.city_sell_items.pos = { x: centerX + 100, y: sellItemsTop }
+
+    window.city_buy_title.pos = { x: centerX - 300, y: infoTop }
+    window.city_buy_items.pos = { x: centerX - 430, y: buyItemsTop }
+
+    window.city_want_sell_title.pos = { x: centerX - 220, y: buyItemsTop }
+    window.city_want_sell_items.pos = { x: centerX - 170, y: sellItemsTop }
+
+    window.city_want_buy_title.pos = { x: centerX - 220, y: buyItemsTop + 20 }
+    window.city_want_buy_items.pos = { x: centerX - 170, y: buyItemsTop + 20 }
 }
 
 function empire_window_clear_city_trade_ui(w) {
@@ -350,9 +387,9 @@ function empire_window_es_draw_city_buy_items(window) {
  }
 
 /** Sprites along one segment (spacing matches former C++ trade route / distant battle path). */
-function empire_window_route_segment_sprites(d, img, px, py, p2x, p2y) {
-    var dx = p2x - px
-    var dy = p2y - py
+function empire_window_route_segment_sprites(img, p1, p2) {
+    var dx = p2.x - p1.x
+    var dy = p2.y - p1.y
     var len = 0.2 * Math.sqrt(dx * dx + dy * dy)
     if (len <= 0) {
         return
@@ -362,8 +399,8 @@ function empire_window_route_segment_sprites(d, img, px, py, p2x, p2y) {
     var progress = 1.0
     while (progress < len) {
         ui.image(img, {
-            x: d.x + px + ((scaled_x * progress) | 0),
-            y: d.y + py + ((scaled_y * progress) | 0)
+            x: p1.x + ((scaled_x * progress) | 0),
+            y: p1.y + ((scaled_y * progress) | 0)
         })
         progress += 1.0
     }
@@ -397,19 +434,16 @@ function empire_window_draw_trade_route(ev) {
     if (!img) {
         return
     }
-    var d = vec2i(ev.draw_offset)
     for (var i = 0; i < n; i++) {
         var p = empire.trade_route_point(route_id, i)
-        var px = p.x
-        var py = p.y
-        var sx = d.x + px
-        var sy = d.y + py
-        ui.image(img, { x: sx, y: sy })
+        var sp = empire_window_map_point(ev.draw_offset, p)
+        ui.image(img, sp)
         if (i < n - 1) {
             var p2 = empire.trade_route_point(route_id, i + 1)
-            empire_window_route_segment_sprites(d, img, px, py, p2.x, p2.y)
+            var sp2 = empire_window_map_point(ev.draw_offset, p2)
+            empire_window_route_segment_sprites(img, sp, sp2)
             if (empire.route_debug_points) {
-                ui.fill_rect({ x: sx - 4, y: sy - 4 }, { x: 8, y: 8 }, COLOR_BLACK)
+                ui.fill_rect({ x: sp.x - 4, y: sp.y - 4 }, { x: 8, y: 8 }, COLOR_BLACK)
             }
         }
     }
@@ -424,10 +458,7 @@ function empire_window_draw_trader(ev) {
         return
     }
 
-    var map_pos = vec2i(empire_window.screen_bounds.min_pos).add(empire_window.start_pos)
-    var map_offset = empire_window.adjust_scroll(map_pos)
-
-    ui.image(img, vec2i(map_offset).add(t.current_position))
+    ui.image(img, empire_window_map_point(ev.draw_offset, t.current_position))
 }
 
 [es=(empire_window, draw_map, EMPIRE_OBJECT_DISTANT_BATTLE_ROUTE)]
@@ -446,19 +477,16 @@ function empire_window_draw_distant_battle_path(ev) {
         return
     }
 
-    var d = vec2i(ev.draw_offset)
     for (var i = 0; i < n; i++) {
         var p = empire.active_battle.path_point(i)
-        var px = p.x
-        var py = p.y
-        var sx = d.x + px
-        var sy = d.y + py
-        ui.image(img, { x: sx, y: sy })
+        var sp = empire_window_map_point(ev.draw_offset, p)
+        ui.image(img, sp)
         if (i < n - 1) {
             var p2 = empire.active_battle.path_point(i + 1)
-            empire_window_route_segment_sprites(d, img, px, py, p2.x, p2.y)
+            var sp2 = empire_window_map_point(ev.draw_offset, p2)
+            empire_window_route_segment_sprites(img, sp, sp2)
             if (empire.route_debug_points) {
-                ui.fill_rect({ x: sx - 4, y: sy - 4 }, { x: 8, y: 8 }, COLOR_BLACK)
+                ui.fill_rect({ x: sp.x - 4, y: sp.y - 4 }, { x: 8, y: 8 }, COLOR_BLACK)
             }
         }
     }
@@ -480,8 +508,7 @@ function empire_window_draw_distant_battle_icon(window) {
         return
     }
 
-    var battle_icon_pos = vec2i(window.draw_offset)
-                            .add(ecity.empire_object.pos)
+    var battle_icon_pos = vec2i(empire_window_map_point(window.draw_offset, ecity.empire_object.pos))
                             .add({x:-battle_icon.width / 2, y:-battle_icon.height / 2})
 
     ui.image(battle_icon, battle_icon_pos)
@@ -498,8 +525,7 @@ function empire_window_draw_dispatched_army_icon(window) {
         return
     }
 
-    var army_icon_pos = vec2i(window.draw_offset)
-                            .add(empire.dispatched_army.pos)
+    var army_icon_pos = vec2i(empire_window_map_point(window.draw_offset, empire.dispatched_army.pos))
                             .add({x:-army_icon.width / 2, y:-army_icon.height / 2})
 
     ui.image(army_icon, army_icon_pos)
@@ -510,6 +536,7 @@ function empire_window_draw_background(window) {
     var bounds = empire_window_screen_bounds()
     empire_window.screen_bounds = bounds
     __empire_window_set_map_bounds(bounds.min_pos.x, bounds.min_pos.y, bounds.max_pos.x, bounds.max_pos.y)
+    empire_window_layout_ui(window)
 }
 
 [es=(empire_window, draw_paneling)]

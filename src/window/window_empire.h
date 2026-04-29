@@ -44,6 +44,13 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     void draw_trade_route(const empire_city *city, int object_index, bool force);
     void draw_object_tooltip();
     void draw_tooltip(tooltip_context *c);
+    vec2i map_clip_origin() const;
+    vec2i map_area_size_pixels() const;
+    vec2i map_viewport_size() const;
+    vec2i map_base_origin() const;
+    vec2i map_draw_origin() const;
+    float map_scale() const;
+    vec2i map_to_screen(vec2i map_pos) const;
 };
 
 

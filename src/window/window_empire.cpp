@@ -35,8 +35,11 @@
 #include "js/js_game.h"
 #include "graphics/elements/ui_js.h"
 #include "dev/debug.h"
+#include <cmath>
 
 uint16_t empire_images_remap[32000] = {0};
+
+static const vec2i EMPIRE_MAP_SIZE_PX{1200, 1600};
 
 using empire_object_tokens_t = token_holder<e_empire_object, EMPIRE_OBJECT_ORNAMENT, EMPIRE_OBJECT_COUNT>;
 const empire_object_tokens_t ANK_CONFIG_ENUM(empire_object_tokens);
@@ -214,11 +217,20 @@ void empire_window::determine_selected_object(const mouse* m) {
         return;
     }
 
-    g_empire_map.select_object(vec2i{m->x, m->y} - min_pos - vec2i{16, 16});
+    const vec2i origin = map_base_origin();
+    const float scale = map_scale();
+    const vec2i map_pos{
+        std::max(0, (int)std::lround((m->x - origin.x) / std::max(0.001f, scale))),
+        std::max(0, (int)std::lround((m->y - origin.y) / std::max(0.001f, scale)))
+    };
+
+    g_empire_map.select_object(map_pos);
 }
 
 bool empire_window::is_outside_map(int x, int y) {
-    return (x < min_pos.x + 16 || x >= max_pos.x - 16 || y < min_pos.y + 16 || y >= max_pos.y - 120);
+    const vec2i origin = map_clip_origin();
+    const vec2i size = map_area_size_pixels();
+    return x < origin.x || x >= origin.x + size.x || y < origin.y || y >= origin.y + size.y;
 }
 
 int empire_window::ui_handle_mouse(const mouse* m) {
@@ -227,7 +239,16 @@ int empire_window::ui_handle_mouse(const mouse* m) {
     vec2i position;
     last_mouse_pos = {m->x, m->y};
     if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE)) {
-        g_empire_map.scroll_map(position);
+        const float scale = map_scale();
+        g_empire_map.scroll_map({
+            (int)std::lround(position.x / std::max(0.001f, scale)),
+            (int)std::lround(position.y / std::max(0.001f, scale))
+        });
+    }
+
+    if (!!game_features::gameopt_middle_mouse_camera_pan
+        && m->middle.went_down && !is_outside_map(m->x, m->y)) {
+        scroll_drag_start(scroll_drag_source::middle_mouse_pan);
     }
 
     if (m->is_touch) {
@@ -264,6 +285,10 @@ int empire_window::ui_handle_mouse(const mouse* m) {
         return 0;
     }
 
+    if (m->middle.went_up) {
+        scroll_drag_end();
+    }
+
     ui.begin_widget({0, 0});
     ui.handle_mouse(m);
     ui.end_widget();
@@ -290,12 +315,24 @@ void empire_window::draw_empire_object(int object_index, const empire_object& ob
     }
 
     image_id = image_id_remap(image_id);
-    const vec2i draw_pos = draw_offset + pos;
+    const float scale = map_scale();
+    const vec2i draw_pos = map_to_screen(pos);
 
     if (obj.type == EMPIRE_OBJECT_CITY) {
-        const image_t* img = ui::eimage(image_id, draw_pos);
+        painter ctx = game.painter();
+        const image_t* img = image_get(image_id);
+        if (!img) {
+            return;
+        }
+        sprite spr;
+        spr.img = img;
+        ctx.draw(spr, draw_pos, COLOR_MASK_NONE, scale, scale);
         int empire_city_id = g_empire.get_city_for_object(object_index);
         const empire_city* city = g_empire.city(empire_city_id);
+        const vec2i scaled_img_size{
+            std::max(1, (int)std::lround(img->width * scale)),
+            std::max(1, (int)std::lround(img->height * scale))
+        };
 
         // draw siege icon if city is under siege
         if (city && city->is_sieged()) {
@@ -304,7 +341,7 @@ void empire_window::draw_empire_object(int object_index, const empire_object& ob
                 const image_t* siege_icon = image_get(siege_icon_desc);
                 if (siege_icon) {
                     vec2i siege_icon_pos
-                      = draw_pos + vec2i{img->width / 2 - siege_icon->width / 2, -siege_icon->height - 5};
+                      = draw_pos + vec2i{scaled_img_size.x / 2 - siege_icon->width / 2, -siege_icon->height - 5};
                     ui::eimage(siege_icon_desc, siege_icon_pos);
                 }
             }
@@ -314,7 +351,7 @@ void empire_window::draw_empire_object(int object_index, const empire_object& ob
         draw_trade_route(city, object_index, false);
 
         const int letter_height = font_definition_for(FONT_SMALL_PLAIN)->line_height;
-        vec2i text_pos = draw_offset + pos + vec2i{img->width, (img->height - letter_height) / 2};
+        vec2i text_pos = draw_pos + vec2i{scaled_img_size.x, (scaled_img_size.y - letter_height) / 2};
 
         tooltip_text = city->name_str;
 
@@ -341,7 +378,7 @@ void empire_window::draw_empire_object(int object_index, const empire_object& ob
 
     } else if (obj.type == EMPIRE_OBJECT_TEXT) {
         const full_empire_object* full = g_empire.get_full_object(object_index);
-        vec2i text_pos = draw_offset + pos;
+        vec2i text_pos = map_to_screen(pos);
 
         tooltip_text = ui::str(196, full->city_name_id);
         ui::label_colored(tooltip_text, text_pos - vec2i{5, 0}, FONT_SMALL_PLAIN, COLOR_FONT_SHITTY_BROWN, 100);
@@ -374,35 +411,70 @@ void empire_window::draw_empire_object(int object_index, const empire_object& ob
     }
 
     {
-        const image_t* img = ui::eimage(image_id, draw_pos);
-        if (last_mouse_pos.x > draw_pos.x && last_mouse_pos.y > draw_pos.y && last_mouse_pos.x < draw_pos.x + img->width
-            && last_mouse_pos.y < draw_pos.y + img->height) {
+        painter ctx = game.painter();
+        const image_t* img = image_get(image_id);
+        if (!img) {
+            return;
+        }
+        sprite spr;
+        spr.img = img;
+        ctx.draw(spr, draw_pos, COLOR_MASK_NONE, scale, scale);
+        const vec2i scaled_img_size{
+            std::max(1, (int)std::lround(img->width * scale)),
+            std::max(1, (int)std::lround(img->height * scale))
+        };
+        if (last_mouse_pos.x > draw_pos.x && last_mouse_pos.y > draw_pos.y && last_mouse_pos.x < draw_pos.x + scaled_img_size.x
+            && last_mouse_pos.y < draw_pos.y + scaled_img_size.y) {
             hovered_object_tooltip = tooltip_text;
         }
 
         if (img && img->animation.speed_id) {
             int new_animation = g_empire.update_animation(object_index, obj, image_id);
-            ui::eimage(image_id + new_animation, draw_pos + img->animation.sprite_offset);
+            const image_t* anim_img = image_get(image_id + new_animation);
+            if (anim_img) {
+                const vec2i anim_offset{
+                    (int)std::lround(img->animation.sprite_offset.x * scale),
+                    (int)std::lround(img->animation.sprite_offset.y * scale)
+                };
+                sprite spr_anim;
+                spr_anim.img = anim_img;
+                ctx.draw(spr_anim, draw_pos + anim_offset, COLOR_MASK_NONE, scale, scale);
+            }
         }
     }
 }
 
 void empire_window::draw_map() {
-    graphics_set_clip_rectangle(min_pos + start_pos, vec2i{max_pos - min_pos} - finish_pos);
+    const vec2i clip_origin = map_clip_origin();
+    const vec2i pixel_view = map_area_size_pixels();
+    const vec2i map_view = map_viewport_size();
+    const float scale = map_scale();
 
-    g_empire_map.set_viewport(max_pos - min_pos - finish_pos);
+    graphics_set_clip_rectangle(clip_origin, pixel_view);
 
-    draw_offset = min_pos + start_pos;
-    draw_offset = g_empire_map.adjust_scroll(draw_offset);
+    g_empire_map.set_viewport(map_view);
+
+    draw_offset = map_draw_origin();
     hovered_object_tooltip = "";
     deffer_city_route_id = -1;
 
-    ui::eimage(image, draw_offset);
+    painter ctx = game.painter();
+    if (const image_t* map_img = image_get(image)) {
+        sprite spr;
+        spr.img = map_img;
+        ctx.draw(spr, draw_offset, COLOR_MASK_NONE, scale, scale);
+    }
 
     g_empire.foreach_object(
       [this](int object_index, const empire_object& obj) { draw_empire_object(object_index, obj); });
 
-    scenario_invasion_foreach_warning([&](vec2i pos, int image_id) { ui::eimage(image_id, draw_offset + pos); });
+    scenario_invasion_foreach_warning([&](vec2i pos, int image_id) {
+        if (const image_t* warning_img = image_get(image_id)) {
+            sprite spr;
+            spr.img = warning_img;
+            ctx.draw(spr, map_to_screen(pos), COLOR_MASK_NONE, scale, scale);
+        }
+    });
 
     for (auto& trader : g_empire_traders.traders) {
         if (!trader.is_active) {
@@ -522,3 +594,61 @@ void __empire_window_set_map_bounds(int min_x, int min_y, int max_x, int max_y) 
     g_empire_window.max_pos = {max_x, max_y};
 }
 ANK_FUNCTION_4(__empire_window_set_map_bounds)
+
+vec2i empire_window::map_clip_origin() const {
+    return min_pos + start_pos;
+}
+
+vec2i empire_window::map_area_size_pixels() const {
+    return {
+        std::max(1, max_pos.x - min_pos.x - finish_pos.x),
+        std::max(1, max_pos.y - min_pos.y - finish_pos.y)
+    };
+}
+
+float empire_window::map_scale() const {
+    const vec2i size = map_area_size_pixels();
+    const float scale_x = size.x / static_cast<float>(EMPIRE_MAP_SIZE_PX.x);
+    const float scale_y = size.y / static_cast<float>(EMPIRE_MAP_SIZE_PX.y);
+    return std::max(scale_x, scale_y);
+}
+
+vec2i empire_window::map_viewport_size() const {
+    const vec2i pixel_size = map_area_size_pixels();
+    const float scale = map_scale();
+    return {
+        std::min(EMPIRE_MAP_SIZE_PX.x, std::max(1, (int)std::lround(pixel_size.x / std::max(0.001f, scale)))),
+        std::min(EMPIRE_MAP_SIZE_PX.y, std::max(1, (int)std::lround(pixel_size.y / std::max(0.001f, scale))))
+    };
+}
+
+vec2i empire_window::map_draw_origin() const {
+    const vec2i scroll = g_empire_map.get_scroll();
+    const float scale = map_scale();
+    return map_base_origin() - vec2i{
+        (int)std::lround(scroll.x * scale),
+        (int)std::lround(scroll.y * scale)
+    };
+}
+
+vec2i empire_window::map_base_origin() const {
+    const vec2i clip_origin = map_clip_origin();
+    const vec2i clip_size = map_area_size_pixels();
+    const float scale = map_scale();
+    const vec2i scaled_map_size{
+        std::max(1, (int)std::lround(EMPIRE_MAP_SIZE_PX.x * scale)),
+        std::max(1, (int)std::lround(EMPIRE_MAP_SIZE_PX.y * scale))
+    };
+    return clip_origin + vec2i{
+        std::max(0, (clip_size.x - scaled_map_size.x) / 2),
+        std::max(0, (clip_size.y - scaled_map_size.y) / 2)
+    };
+}
+
+vec2i empire_window::map_to_screen(vec2i map_pos) const {
+    const float scale = map_scale();
+    return map_draw_origin() + vec2i{
+        (int)std::lround(map_pos.x * scale),
+        (int)std::lround(map_pos.y * scale)
+    };
+}
