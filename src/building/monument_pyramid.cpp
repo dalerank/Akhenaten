@@ -1095,8 +1095,8 @@ void building_stepped_pyramid::update_month() {
 
     auto &monumentd = runtime_data();
     for (uint16_t &w_id : monumentd.workers) {
-        auto worker = figure_get<figure_worker>(w_id);
-        if (!worker || worker->is_alive() || worker->destination() != &base) {
+        figure* f = figure_get(w_id);
+        if (!f || !f->is_alive() || f->destination() != &base) {
             w_id = 0;
         }
     }
