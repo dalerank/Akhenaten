@@ -88,7 +88,7 @@ function advisor_ratings_select_monument(window) {
 	var expl = city.rating.get_monument_explanation()
 	advisor_ratings_select_button(window, window.rating_monument)
 	window.advice_header.text = __loc(53, 3)
-	window.advice_text.text = (city.rating.monument <= 90) ? __loc(53, 41 + expl) : __loc(53, 52)
+	window.advice_text.text = (city.rating.monument <= 90) ? __loc(53, 55 + expl) : __loc(53, 67)
 }
 
 [es=(advisor_ratings_window, select_kingdom)]
