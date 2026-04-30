@@ -71,6 +71,7 @@ function advisor_labors_window_init(window) {
 
 [es=(advisor_labors_window, ui_draw_foreground)]
 function advisor_labors_window_draw(window) {
+    advisor_window_reflow(window)
     var item_pos = {x:40, y:25}
     var items_area = window.items_area.screen_pos
     var item_image = {x:40, y:4}

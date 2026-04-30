@@ -591,8 +591,19 @@ namespace ui {
     };
 
     struct ebackground : public element {
+        enum class draw_mode : uint8_t {
+            original = 0,
+            contain,
+            cover,
+        };
+
         image_desc img_desc;
         float scale = 1.f;
+        draw_mode mode = draw_mode::original;
+        bool backdrop_cover_blur = false;
+        int backdrop_blur_radius = 3;
+        uint8_t backdrop_blur_alpha = 0x16;
+        uint8_t backdrop_shade_alpha = 0x2c;
 
         virtual void draw(UiFlags flags) override;
         virtual void load(archive elem, element* parent, items& elems) override;

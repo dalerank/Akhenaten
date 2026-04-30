@@ -29,11 +29,14 @@
 #include "input/mouse.h"
 #include "graphics/screen.h"
 #include "window/message_dialog.h"
+#include "platform/renderer.h"
 
 #include <algorithm>
+#include <cmath>
 #include <cstring>
 #include <stack>
 #include <string>
+#include <unordered_map>
 #include <unordered_set>
 
 using namespace ui::opt;
@@ -1183,10 +1186,237 @@ void ui::eimg::image(int image) {
     img_desc.offset = image;
 }
 
+namespace {
+struct background_draw_layout {
+    vec2i pos;
+    float scale = 1.f;
+};
+
+struct blurred_background_cache_entry {
+    SDL_Texture* texture = nullptr;
+    vec2i size = {0, 0};
+};
+
+uint64_t blurred_background_cache_key(const image_t* img, int radius, vec2i target_size) {
+    uint64_t key = (uint64_t)(uintptr_t)img;
+    key ^= ((uint64_t)(uint16_t)radius << 48);
+    key ^= ((uint64_t)(uint16_t)target_size.x << 16);
+    key ^= (uint64_t)(uint16_t)target_size.y;
+    return key;
+}
+
+std::vector<float> gaussian_kernel(int radius) {
+    std::vector<float> kernel(radius * 2 + 1, 0.0f);
+    if (radius <= 0) {
+        kernel[0] = 1.0f;
+        return kernel;
+    }
+
+    const float sigma = std::max(1.0f, radius / 2.5f);
+    const float two_sigma_sq = 2.0f * sigma * sigma;
+    float total = 0.0f;
+    for (int i = -radius; i <= radius; ++i) {
+        const float value = std::exp(-(float)(i * i) / two_sigma_sq);
+        kernel[i + radius] = value;
+        total += value;
+    }
+
+    for (float& value : kernel) {
+        value /= total;
+    }
+    return kernel;
+}
+
+void blur_pass_horizontal(const std::vector<color>& src, std::vector<color>& dst, int width, int height,
+  const std::vector<float>& kernel, int radius) {
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            float a = 0.0f, r = 0.0f, g = 0.0f, b = 0.0f;
+            for (int k = -radius; k <= radius; ++k) {
+                const int sx = std::clamp(x + k, 0, width - 1);
+                const color c = src[y * width + sx];
+                const float w = kernel[k + radius];
+                a += w * COLOR_COMPONENT(c, COLOR_BITSHIFT_ALPHA);
+                r += w * COLOR_COMPONENT(c, COLOR_BITSHIFT_RED);
+                g += w * COLOR_COMPONENT(c, COLOR_BITSHIFT_GREEN);
+                b += w * COLOR_COMPONENT(c, COLOR_BITSHIFT_BLUE);
+            }
+
+            dst[y * width + x] = ((color)std::clamp((int)std::lround(a), 0, 255) << COLOR_BITSHIFT_ALPHA)
+              | ((color)std::clamp((int)std::lround(r), 0, 255) << COLOR_BITSHIFT_RED)
+              | ((color)std::clamp((int)std::lround(g), 0, 255) << COLOR_BITSHIFT_GREEN)
+              | ((color)std::clamp((int)std::lround(b), 0, 255) << COLOR_BITSHIFT_BLUE);
+        }
+    }
+}
+
+void blur_pass_vertical(const std::vector<color>& src, std::vector<color>& dst, int width, int height,
+  const std::vector<float>& kernel, int radius) {
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            float a = 0.0f, r = 0.0f, g = 0.0f, b = 0.0f;
+            for (int k = -radius; k <= radius; ++k) {
+                const int sy = std::clamp(y + k, 0, height - 1);
+                const color c = src[sy * width + x];
+                const float w = kernel[k + radius];
+                a += w * COLOR_COMPONENT(c, COLOR_BITSHIFT_ALPHA);
+                r += w * COLOR_COMPONENT(c, COLOR_BITSHIFT_RED);
+                g += w * COLOR_COMPONENT(c, COLOR_BITSHIFT_GREEN);
+                b += w * COLOR_COMPONENT(c, COLOR_BITSHIFT_BLUE);
+            }
+
+            dst[y * width + x] = ((color)std::clamp((int)std::lround(a), 0, 255) << COLOR_BITSHIFT_ALPHA)
+              | ((color)std::clamp((int)std::lround(r), 0, 255) << COLOR_BITSHIFT_RED)
+              | ((color)std::clamp((int)std::lround(g), 0, 255) << COLOR_BITSHIFT_GREEN)
+              | ((color)std::clamp((int)std::lround(b), 0, 255) << COLOR_BITSHIFT_BLUE);
+        }
+    }
+}
+
+SDL_Texture* get_blurred_background_texture(painter& ctx, const image_t* img, int radius, vec2i target_size,
+  vec2i target_pos, const background_draw_layout& cover_layout, vec2i& out_size) {
+    static std::unordered_map<uint64_t, blurred_background_cache_entry> cache;
+
+    out_size = target_size;
+    if (!img || radius <= 0) {
+        return nullptr;
+    }
+
+    const uint64_t key = blurred_background_cache_key(img, radius, target_size);
+    auto found = cache.find(key);
+    if (found != cache.end() && found->second.texture) {
+        out_size = found->second.size;
+        return found->second.texture;
+    }
+
+    ctx.draw_image(img, cover_layout.pos, COLOR_MASK_NONE, cover_layout.scale);
+
+    std::vector<color> source(target_size.x * target_size.y);
+    if (source.empty()) {
+        return nullptr;
+    }
+
+    if (!g_render.save_screen_buffer(ctx, source.data(), target_pos.x, target_pos.y, target_size.x, target_size.y,
+          target_size.x)) {
+        return nullptr;
+    }
+
+    std::vector<color> temp(source.size());
+    std::vector<color> blurred(source.size());
+    const std::vector<float> kernel = gaussian_kernel(radius);
+    blur_pass_horizontal(source, temp, target_size.x, target_size.y, kernel, radius);
+    blur_pass_vertical(temp, blurred, target_size.x, target_size.y, kernel, radius);
+
+    SDL_Texture* texture = g_render.create_texture_from_buffer(blurred.data(), target_size.x, target_size.y);
+    if (!texture) {
+        return nullptr;
+    }
+
+    cache[key] = {texture, target_size};
+    return texture;
+}
+
+vec2i background_target_size(const ui::ebackground& bg) {
+    vec2i target = bg.pxsize();
+    if (target.x <= 0) {
+        target.x = screen_width();
+    }
+    if (target.y <= 0) {
+        target.y = screen_height();
+    }
+    return target;
+}
+
+background_draw_layout background_calc_layout(const ui::ebackground& bg, const image_t* img, vec2i target_pos,
+  vec2i target_size, ui::ebackground::draw_mode mode) {
+    background_draw_layout layout;
+    if (!img) {
+        layout.pos = target_pos;
+        layout.scale = bg.scale;
+        return layout;
+    }
+
+    const float base_scale = bg.scale > 0.f ? bg.scale : 1.f;
+    const float base_width = img->width * base_scale;
+    const float base_height = img->height * base_scale;
+    const float scale_x = target_size.x / std::max(1.f, base_width);
+    const float scale_y = target_size.y / std::max(1.f, base_height);
+
+    float mode_scale = 1.f;
+    switch (mode) {
+    case ui::ebackground::draw_mode::cover:
+        mode_scale = std::max(scale_x, scale_y);
+        break;
+    case ui::ebackground::draw_mode::contain:
+        mode_scale = std::min(scale_x, scale_y);
+        break;
+    case ui::ebackground::draw_mode::original:
+    default:
+        mode_scale = 1.f;
+        break;
+    }
+
+    layout.scale = base_scale * mode_scale;
+    const int draw_width = (int)(img->width * layout.scale);
+    const int draw_height = (int)(img->height * layout.scale);
+    layout.pos = target_pos + vec2i{(target_size.x - draw_width) / 2, (target_size.y - draw_height) / 2};
+    return layout;
+}
+
+void draw_cover_blurred_backdrop(painter& ctx, const ui::ebackground& bg, const image_t* img, vec2i target_pos,
+  vec2i target_size) {
+    if (!img) {
+        return;
+    }
+
+    const background_draw_layout cover = background_calc_layout(bg, img, target_pos, target_size,
+      ui::ebackground::draw_mode::cover);
+    vec2i blurred_size;
+    SDL_Texture* blurred = get_blurred_background_texture(ctx, img, std::max(1, bg.backdrop_blur_radius), target_size,
+      target_pos, cover, blurred_size);
+    if (!blurred) {
+        return;
+    }
+
+    const color focus_mask = ((color)bg.backdrop_blur_alpha << COLOR_BITSHIFT_ALPHA) | 0x00ffffff;
+    ctx.draw(blurred, target_pos, {0, 0}, blurred_size, focus_mask, 1.f, 1.f, 0, ImgFlag_None, true);
+
+    if (bg.backdrop_shade_alpha > 0) {
+        const color shade = ((color)bg.backdrop_shade_alpha << COLOR_BITSHIFT_ALPHA);
+        graphics_fill_rect(target_pos, target_size, shade);
+    }
+}
+} // namespace
+
 void ui::ebackground::draw(UiFlags flags) {
     painter ctx = game.painter();
+    const image_t* img = image_get(img_desc.tid());
+    if (!img) {
+        return;
+    }
+
     scr_pos = pos;
-    ImageDraw::img_background(ctx, img_desc.tid(), 1.f, pos);
+
+    if (mode == draw_mode::original) {
+        if (backdrop_cover_blur) {
+            const vec2i target_pos = g_state.offset() + pos;
+            const vec2i target_size = background_target_size(*this);
+            draw_cover_blurred_backdrop(ctx, *this, img, target_pos, target_size);
+        }
+
+        ImageDraw::img_background(ctx, img_desc.tid(), scale, pos);
+        return;
+    }
+
+    scr_pos = g_state.offset() + pos;
+    const vec2i target_size = background_target_size(*this);
+
+    if (backdrop_cover_blur && mode != draw_mode::cover) {
+        draw_cover_blurred_backdrop(ctx, *this, img, scr_pos, target_size);
+    }
+
+    const background_draw_layout layout = background_calc_layout(*this, img, scr_pos, target_size, mode);
+    ctx.draw_image(img, layout.pos, COLOR_MASK_NONE, layout.scale);
 }
 
 void ui::ebackground::load(archive arch, element* parent, items& elems) {
@@ -1199,6 +1429,20 @@ void ui::ebackground::load(archive arch, element* parent, items& elems) {
     img_desc.id = arch.r_int("id");
     img_desc.offset = arch.r_int("offset");
     img_desc.path = arch.r_string("path");
+    const xstring mode_str = arch.r_string("mode");
+    const bool cover = arch.r_bool("cover", false);
+    const bool contain = arch.r_bool("contain", false);
+    if (mode_str == "cover" || cover) {
+        mode = draw_mode::cover;
+    } else if (mode_str == "contain" || contain) {
+        mode = draw_mode::contain;
+    } else {
+        mode = draw_mode::original;
+    }
+    backdrop_cover_blur = arch.r_bool("backdrop_cover_blur", false);
+    backdrop_blur_radius = arch.r_int("backdrop_blur_radius", 3);
+    backdrop_blur_alpha = (uint8_t)arch.r_int("backdrop_blur_alpha", 0x16);
+    backdrop_shade_alpha = (uint8_t)arch.r_int("backdrop_shade_alpha", 0x2c);
 }
 
 void ui::eborder::load(archive arch, element* parent, items& elems) {

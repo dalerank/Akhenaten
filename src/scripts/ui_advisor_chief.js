@@ -496,3 +496,8 @@ function advisor_chief_window_on_init(window) {
 	advisor_chief_window_fill_report_rows(window)
 	advisors_toolbar_refresh(window, ADVISOR_CHIEF)
 }
+
+[es=(advisor_chief_window, ui_draw_foreground)]
+function advisor_chief_window_reflow(window) {
+	advisor_window_reflow(window)
+}

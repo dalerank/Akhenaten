@@ -82,6 +82,7 @@ function advisor_military_window_init(window) {
 
 [es=(advisor_military_window, ui_draw_foreground)]
 function advisor_military_window_draw(window) {
+    advisor_window_reflow(window)
     if (city.num_forts > 0) {
         var exp_image = get_image("pharaoh_general/paneling_00537")
         var goto_legion_image = get_image("pharaoh_general/paneling_00531")

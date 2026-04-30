@@ -186,6 +186,11 @@ function advisor_religion_window_init(window) {
 	advisors_toolbar_refresh(window, ADVISOR_RELIGION)
 }
 
+[es=(advisor_religion_window, ui_draw_foreground)]
+function advisor_religion_window_reflow(window) {
+	advisor_window_reflow(window)
+}
+
 [es=(advisor_religion_window, draw_background)]
 function advisor_religion_window_draw_background(window) {
 	if (!advisor_religion_window.needs_sync) {

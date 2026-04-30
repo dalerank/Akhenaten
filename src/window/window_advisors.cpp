@@ -38,6 +38,38 @@ static pcstr advisor_autoconfig_section(e_advisor a) {
     }
 }
 
+static bool advisor_window_can_show(e_advisor advisor) {
+    pcstr section = advisor_autoconfig_section(advisor);
+    return section && g_city.is_advisor_available(advisor) == AVAILABLE && autoconfig_window::find(section);
+}
+
+static e_advisor advisor_window_fallback() {
+    static const e_advisor supported[] = {
+        ADVISOR_LABOR,
+        ADVISOR_MILITARY,
+        ADVISOR_IMPERIAL,
+        ADVISOR_RATINGS,
+        ADVISOR_TRADE,
+        ADVISOR_POPULATION,
+        ADVISOR_HEALTH,
+        ADVISOR_EDUCATION,
+        ADVISOR_ENTERTAINMENT,
+        ADVISOR_RELIGION,
+        ADVISOR_FINANCIAL,
+        ADVISOR_CHIEF,
+        ADVISOR_MONUMENTS,
+        ADVISOR_HOUSING,
+    };
+
+    for (e_advisor advisor : supported) {
+        if (advisor_window_can_show(advisor)) {
+            return advisor;
+        }
+    }
+
+    return ADVISOR_NONE;
+}
+
 void window_advisors_prepare_opening() {
     g_city.labor.allocate_workers();
 
@@ -58,8 +90,14 @@ void window_advisors_prepare_opening() {
 void window_advisors_show() {
     window_advisors_prepare_opening();
 
-    pcstr section = advisor_autoconfig_section((e_advisor)g_settings.last_advisor);
-    if (!section) {
+    e_advisor advisor = (e_advisor)g_settings.last_advisor;
+    if (!advisor_window_can_show(advisor)) {
+        advisor = advisor_window_fallback();
+        g_settings.last_advisor = advisor;
+    }
+
+    pcstr section = advisor_autoconfig_section(advisor);
+    if (!section || !autoconfig_window::find(section)) {
         return;
     }
 

@@ -127,3 +127,8 @@ function advisor_trade_window_init(window) {
     }
     advisors_toolbar_refresh(window, ADVISOR_TRADE)
 }
+
+[es=(advisor_trade_window, ui_draw_foreground)]
+function advisor_trade_window_reflow(window) {
+    advisor_window_reflow(window)
+}
