@@ -138,7 +138,7 @@ function empire_window_layout_ui(window) {
 
     window.button_help.pos = { x: sb.max_pos.x - 40, y: infoTop }
     window.button_close.pos = { x: sb.max_pos.x - 40, y: openTradeTop }
-    window.button_advisor.pos = { x: sb.min_pos.x + 5, y: infoTop }
+    window.button_advisor.pos = { x: sb.min_pos.x + 16, y: infoTop }
 
     window.button_open_trade.pos = { x: centerX - 220, y: openTradeTop }
     window.info_tooltip.pos = { x: centerX - 200, y: infoTooltipTop }

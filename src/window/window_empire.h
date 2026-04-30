@@ -16,6 +16,8 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     vec2i min_pos, max_pos;
     vec2i draw_offset;
     vec2i last_mouse_pos;
+    float scroll_remainder_x = 0.f;
+    float scroll_remainder_y = 0.f;
     int is_scrolling;
     int finished_scroll;
     const int sell_res_group = 47;

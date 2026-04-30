@@ -41,6 +41,14 @@ uint16_t empire_images_remap[32000] = {0};
 
 static const vec2i EMPIRE_MAP_SIZE_PX{1200, 1600};
 
+static int consume_scroll_remainder(float& remainder) {
+    const int step = (remainder >= 0.f)
+      ? (int)std::floor(remainder)
+      : (int)std::ceil(remainder);
+    remainder -= step;
+    return step;
+}
+
 using empire_object_tokens_t = token_holder<e_empire_object, EMPIRE_OBJECT_ORNAMENT, EMPIRE_OBJECT_COUNT>;
 const empire_object_tokens_t ANK_CONFIG_ENUM(empire_object_tokens);
 
@@ -118,6 +126,8 @@ ANK_REGISTER_STRUCT_WRITER(empire_window_object_info_enemy_army, distant_battle_
 void empire_window::init() {
     int selected_object = g_empire_map.selected_object();
     g_empire_map.selected_city = selected_object ? g_empire.get_city_for_object(selected_object - 1) : 0;
+    scroll_remainder_x = 0.f;
+    scroll_remainder_y = 0.f;
 
     ui.begin_widget(pos);
     ui.event(empire_window_init_event{pos}, get_section(), "init");
@@ -241,10 +251,15 @@ int empire_window::ui_handle_mouse(const mouse* m) {
     last_mouse_pos = {m->x, m->y};
     if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE)) {
         const float scale = map_scale();
-        g_empire_map.scroll_map({
-            (int)std::lround(position.x / std::max(0.001f, scale)),
-            (int)std::lround(position.y / std::max(0.001f, scale))
-        });
+        scroll_remainder_x += position.x / std::max(0.001f, scale);
+        scroll_remainder_y += position.y / std::max(0.001f, scale);
+        const vec2i map_delta{
+            consume_scroll_remainder(scroll_remainder_x),
+            consume_scroll_remainder(scroll_remainder_y)
+        };
+        if (map_delta.x || map_delta.y) {
+            g_empire_map.scroll_map(map_delta);
+        }
     }
 
     if (!!game_features::gameopt_middle_mouse_camera_pan
@@ -377,6 +392,27 @@ void empire_window::draw_empire_object(int object_index, const empire_object& ob
             vec2i siege_text_pos = text_pos + vec2i{0, letter_height + 2};
             ui::label_colored("under siege", siege_text_pos, FONT_SMALL_PLAIN, COLOR_FONT_RED, obj.width);
         }
+
+        if (last_mouse_pos.x > draw_pos.x && last_mouse_pos.y > draw_pos.y
+            && last_mouse_pos.x < draw_pos.x + scaled_img_size.x
+            && last_mouse_pos.y < draw_pos.y + scaled_img_size.y) {
+            hovered_object_tooltip = tooltip_text;
+        }
+
+        if (img->animation.speed_id) {
+            int new_animation = g_empire.update_animation(object_index, obj, image_id);
+            const image_t* anim_img = image_get(image_id + new_animation);
+            if (anim_img) {
+                const vec2i anim_offset{
+                    (int)std::lround(img->animation.sprite_offset.x * scale),
+                    (int)std::lround(img->animation.sprite_offset.y * scale)
+                };
+                sprite spr_anim;
+                spr_anim.img = anim_img;
+                ctx.draw(spr_anim, draw_pos + anim_offset, COLOR_MASK_NONE, scale, scale);
+            }
+        }
+        return;
 
     } else if (obj.type == EMPIRE_OBJECT_TEXT) {
         const full_empire_object* full = g_empire.get_full_object(object_index);

@@ -29,8 +29,8 @@ const static int EMPIRE_DATA_SIZE[2] = {12800, 15200};
 const char SCENARIO_FILE[2][2][100] = {{"c32.emp", "c3.emp"}, {"", "Pharaoh2.emp"}};
 
 void empire_map_t::check_scroll_boundaries() {
-    int max_x = EMPIRE_SIZE.x - viewport_width;
-    int max_y = EMPIRE_SIZE.y - viewport_height + 20;
+    int max_x = std::max(0, EMPIRE_SIZE.x - viewport_width);
+    int max_y = std::max(0, EMPIRE_SIZE.y - viewport_height);
 
     scroll_x = calc_bound(scroll_x, 0, max_x);
     scroll_y = calc_bound(scroll_y, 0, max_y);
