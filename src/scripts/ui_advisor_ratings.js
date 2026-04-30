@@ -72,7 +72,7 @@ function advisor_ratings_select_culture(window) {
 	var expl = city.rating.get_culture_explanation()
 	window.advice_header.text = __loc(53, 1)
 	advisor_ratings_select_button(window, window.rating_culture)
-	window.advice_text.text = (city.rating.culture <= 90) ? __loc(53, 9 + expl) : __loc(53, 50)
+	window.advice_text.text = (city.rating.culture <= 90) ? __loc(53, 9 + expl) : __loc(53, 65)
 }
 
 [es=(advisor_ratings_window, select_prosperity)]
@@ -80,7 +80,7 @@ function advisor_ratings_select_prosperity(window) {
 	var expl = city.rating.get_prosperity_explanation()
 	advisor_ratings_select_button(window, window.rating_prosperity)
 	window.advice_header.text = __loc(53, 2)
-	window.advice_text.text = (city.rating.prosperity <= 90) ? __loc(53, 16 + expl) : __loc(53, 51)
+	window.advice_text.text = (city.rating.prosperity <= 90) ? __loc(53, 23 + expl) : __loc(53, 66)
 }
 
 [es=(advisor_ratings_window, select_monument)]
@@ -96,7 +96,7 @@ function advisor_ratings_select_kingdom(window) {
 	var expl = city.rating.get_kingdom_explanation()
 	advisor_ratings_select_button(window, window.rating_kingdom)
 	window.advice_header.text = __loc(53, 4)
-	window.advice_text.text = (city.rating.kingdom <= 90) ? __loc(53, 27 + expl) : __loc(53, 53)
+	window.advice_text.text = (city.rating.kingdom <= 90) ? __loc(53, 32 + expl) : __loc(53, 68)
 }
 
 [es=advisor_window]
