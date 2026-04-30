@@ -39,7 +39,7 @@ mission3 {
 	}
 }
 
-function mission3_update_goal() {
+function mission3_get_goal_tooltip() {
 	if (!mission.modest_houses_reached) {
 		return "#reach_modest_houses_number"
 	}
