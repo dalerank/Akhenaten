@@ -1,7 +1,10 @@
 log_info("akhenaten: city_monuments.js started")
 
-[es=(city_monuments, advance_year)]
-function city_update_yearly_monument_rating() {
+[es=event_advance_month]
+function city_update_yearly_monument_rating(ev) {
+	if (ev.month != 0) {
+		return
+	}
 	var y = city.rating.monument_years_of_monument
 	var ncr = city.rating.monument_num_criminals
 	var nri = city.rating.monument_num_rioters
@@ -38,5 +41,6 @@ function city_update_yearly_monument_rating() {
 		new_m = monument_ratings_cap
 	}
 
+	var expl = city.rating.get_monument_explanation()
 	__city_ratings_apply_monument_yearly(new_m, new_years, expl)
 }
