@@ -78,9 +78,10 @@ struct empire_window_draw_trade_route {
 ANK_REGISTER_STRUCT_WRITER(empire_window_draw_trade_route, draw_offset, route_id, effect);
 
 struct empire_window_draw_trader {
+    vec2i draw_offset;
     int index;
 };
-ANK_REGISTER_STRUCT_WRITER(empire_window_draw_trader, index);
+ANK_REGISTER_STRUCT_WRITER(empire_window_draw_trader, draw_offset, index);
 
 struct empire_window_init_event {
     vec2i pos;
@@ -281,6 +282,7 @@ int empire_window::ui_handle_mouse(const mouse* m) {
             return 0;
         }
     } else if (input_go_back_requested(m, h)) {
+        scroll_drag_end();
         window_city_show();
         return 0;
     }
@@ -480,7 +482,7 @@ void empire_window::draw_map() {
         if (!trader.is_active) {
             continue;
         }
-        ui.event(empire_window_draw_trader{trader.id}, get_section(), __func__,
+        ui.event(empire_window_draw_trader{draw_offset, trader.id}, get_section(), __func__,
           empire_object_tokens.name(EMPIRE_OBJECT_TRADER));
     }
 

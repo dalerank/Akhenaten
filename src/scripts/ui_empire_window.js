@@ -130,7 +130,7 @@ function empire_window_layout_ui(window) {
     var infoTop = sb.max_pos.y - 121
     var openTradeTop = sb.max_pos.y - 40
     var infoTooltipTop = sb.max_pos.y - 60
-    var sellItemsTop = sb.max_pos.y + 10
+    var sellItemsTop = sb.max_pos.y - 90
     var buyItemsTop = sb.max_pos.y - 90
 
     window.city_name.pos = { x: sb.min_pos.x, y: infoTop - 1 }
