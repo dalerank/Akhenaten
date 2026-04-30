@@ -529,7 +529,7 @@ bool building_monument::need_bricklayers() {
         works_bricklayers += (f && f->type == FIGURE_BRICKLAYER) ? 1 : 0;
     }
 
-    return (phase >= 2 && phase <= 5 && works_bricklayers < needs_bricklayers(d.phase));
+    return (needs_resource(RESOURCE_BRICKS, phase) > 0 && works_bricklayers < needs_bricklayers(phase));
 }
 
 bool building_monument::is_unfinished() const {
