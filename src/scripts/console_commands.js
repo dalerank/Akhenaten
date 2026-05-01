@@ -67,6 +67,24 @@ function console_command_request_status(args) {
 	city.create_good_request({ tag_id: 1, resource: RESOURCE_POTTERY, amount: amount, months_initial: 12 })
 }
 
+[console_command=migration_status]
+function console_command_migration_status(args) {
+	log_info("immigration_duration: " + __city_get_migration_property("immigration_duration"))
+	log_info("emigration_duration: " + __city_get_migration_property("emigration_duration"))
+	log_info("immigration_queue_size: " + __city_get_migration_property("immigration_queue_size"))
+	log_info("emigration_queue_size: " + __city_get_migration_property("emigration_queue_size"))
+	log_info("percentage: " + __city_get_migration_property("percentage")
+			+ " (sentiment " + __city_get_migration_property("percentage_by_sentiment")
+			+ " + unemployment " + __city_get_migration_property("percentage_by_unemployments") + ")")
+	log_info("population_cap: " + __city_get_migration_property("population_cap"))
+	log_info("migration_cap (pop hit): " + __city_get_migration_property("migration_cap"))
+	log_info("invading_cap (war): " + __city_get_migration_property("invading_cap"))
+	log_info("no_immigration_cause: " + __city_get_migration_property("no_immigration_cause"))
+	log_info("sentiment: " + __city_get_sentiment_property("value")
+			+ ", low_mood_cause: " + __city_get_sentiment_property("low_mood_cause"))
+	log_info("no_room_for_immigrants: " + __city_migration_no_room_for_immigrants())
+}
+
 /** off/on or 0/1 sets explicitly; no or other arg toggles current */
 function console_tri_state_on_off(args, current) {
 	var v = args && args[0]

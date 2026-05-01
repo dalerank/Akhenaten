@@ -3,6 +3,7 @@
 #include "city/city.h"
 #include "city/city_message.h"
 #include "core/calc.h"
+#include "dev/debug.h"
 #include "game/game_events.h"
 #include "js/js_game.h"
 
@@ -219,4 +220,30 @@ int city_migration_t::no_room_for_immigrants() {
 
 void city_migration_t::add_condition(condition cond) {
     g_migration_conditions.push_back(cond);
+}
+
+declare_console_command_p(reset_immigration) {
+    auto &m = g_city.migration;
+    m.immigration_duration = 0;
+    m.emigration_duration = 0;
+    m.immigration_queue_size = 0;
+    m.emigration_queue_size = 0;
+    m.immigration_amount_per_batch = 0;
+    m.emigration_amount_per_batch = 0;
+    m.percentage = 0;
+    m.percentage_by_sentiment = 0;
+    m.percentage_by_unemployments = 0;
+    m.no_immigration_cause = 0;
+    m.migration_cap = false;
+    m.invading_cap = false;
+    m.population_cap = 0;
+    m.refused_immigrants_today = 0;
+
+    g_migration_cap_reasons.clear();
+    g_migration_unemployment_cap_reasons.clear();
+
+    os << "Immigration runtime state cleared. "
+       << "Sentiment=" << g_city.sentiment.value
+       << ", room_in_houses=" << g_city.population.room_in_houses
+       << " - next update_status() tick will recompute fresh." << std::endl;
 }

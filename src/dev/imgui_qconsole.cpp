@@ -82,13 +82,36 @@ namespace dev {
         ImGui::Begin(title, &p_open, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
         ImGui::SetWindowFontScale(fontScale);
 
+        bool copy_to_clipboard = ImGui::SmallButton("Copy");
+        ImGui::SameLine();
+        if (ImGui::SmallButton("Clear")) {
+            clear();
+        }
+        ImGui::Separator();
+
         // Reserve enough left-over height for 1 separator + 1 input text
         const float footer_height_to_reserve = ImGui::GetStyle().ItemSpacing.y + ImGui::GetFrameHeightWithSpacing();
         ImGui::BeginChild("ScrollingRegion", ImVec2(0, -footer_height_to_reserve), false, ImGuiWindowFlags_HorizontalScrollbar);
 
+        if (ImGui::BeginPopupContextWindow()) {
+            if (ImGui::MenuItem("Copy")) {
+                copy_to_clipboard = true;
+            }
+            if (ImGui::MenuItem("Clear")) {
+                clear();
+            }
+            ImGui::EndPopup();
+        }
+
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1)); // Tighten spacing
 
+        if (copy_to_clipboard) {
+            ImGui::LogToClipboard();
+        }
         os.render();
+        if (copy_to_clipboard) {
+            ImGui::LogFinish();
+        }
 
         if (prevLineCount < os.strb.getLines().size()) {
             os.shouldScrollToBottom = true;

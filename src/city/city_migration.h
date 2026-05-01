@@ -72,4 +72,8 @@ struct city_migration_t {
     using condition = std::function<void(city_migration_t &)>;
     void add_condition(condition);
 };
-ANK_CONFIG_PROPERTY(city_migration_t, newcomers, percentage, no_immigration_cause)
+ANK_CONFIG_PROPERTY(city_migration_t, newcomers, percentage, no_immigration_cause,
+    immigration_duration, emigration_duration,
+    immigration_queue_size, emigration_queue_size,
+    percentage_by_sentiment, percentage_by_unemployments,
+    population_cap, migration_cap, invading_cap)
