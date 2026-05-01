@@ -210,10 +210,7 @@ city {
         return r[rank]
     }
 
-    apply_salary_rank : function(rank) {
-        city.kingdome.salary_rank = rank
-        city.kingdome.salary_amount = city.rank_salary(rank)
-    }
+    apply_salary_rank : __city_apply_salary_rank
     start_foreign_army_invasion : __city_start_foreign_army_invasion
     camera_go_to : __city_camera_go_to
     allowed_foods : __city_allowed_foods
