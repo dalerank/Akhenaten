@@ -4,6 +4,7 @@
 #include "scenario/scenario_event_manager.h"
 #include "content/vfs.h"
 #include "core/encoding.h"
+#include "core/log.h"
 #include "core/string.h"
 #include "city/city_religion.h"
 #include "figure/formation.h"
@@ -151,6 +152,11 @@ void city_message_post_full(bool use_popup, xstring template_id, const event_ph_
         return;
     }
 
+    if (lang_get_message_uid(template_id) == 0) {
+        logs::info("city_message_post_full: unknown message id '%s' - popup suppressed", template_id.c_str());
+        return;
+    }
+
     data.total_messages++;
     data.current_message_id = id;
 
@@ -220,6 +226,12 @@ void city_message_post_full(bool use_popup, xstring template_id, const event_ph_
 city_message &message_manager_t::post_common(bool use_popup, xstring mm_text, int param1, int param2, int god, int bg_img) {
     int id = new_message_id();
     if (id < 0) {
+        static city_message dummy;
+        return dummy;
+    }
+
+    if (lang_get_message_uid(mm_text) == 0) {
+        logs::info("messages::popup: unknown message id '%s' - popup suppressed", mm_text.c_str());
         static city_message dummy;
         return dummy;
     }

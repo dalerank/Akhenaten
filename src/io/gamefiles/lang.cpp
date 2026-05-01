@@ -75,12 +75,6 @@ const lang_message& lang_get_message(int id) {
         }
     }
 
-    for (const auto &it : game_messages) {
-        if (it.second.id == 10) { // message_table_of_contents - default message
-            return it.second;
-        }
-    }
-
     static lang_message dummy{};
     return dummy;
 }

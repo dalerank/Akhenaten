@@ -16,6 +16,7 @@
 #include "graphics/window.h"
 #include "graphics/screenshot.h"
 #include "io/gamestate/boilerplate.h"
+#include "core/log.h"
 #include "core/profiler.h"
 #include "game/game.h"
 
@@ -117,6 +118,7 @@ pcstr __widget_top_menu_features(int, int) {
 ANK_FUNCTION_2(__widget_top_menu_features)
 
 pcstr __widget_top_menu_show_help(int, int) {
+    logs::info("__widget_top_menu_show_help invoked");
     widget_top_menu_clear_state();
     window_go_back();
     window_message_dialog_show("message_dialog_help", -1, window_city_draw_all);
