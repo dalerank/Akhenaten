@@ -7,6 +7,7 @@ game = extend(__game, {
 
     mission_briefing_scenario_id : 0
     mission_briefing_is_review : false
+    mission_briefing_loaded_already : false
 
     @absolute_day { get: __game_absolute_day }
     @simtime_year { get: __game_simtime_year }
