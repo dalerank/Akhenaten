@@ -52,19 +52,11 @@ mission_briefing_window {
 function mission_briefing_on_show_after_load(ev) {
     game.mission_briefing_scenario_id = ev.scenario_id
     game.mission_briefing_is_review = false
-    game.mission_briefing_loaded_already = true
     __game_mission_briefing_intermezzo(ev.scenario_id)
 }
 
 [es=(mission_briefing_window, start_mission)]
 function mission_briefing_window_on_start_mission(window) {
-    var is_review = game.mission_briefing_is_review
-    var loaded_already = game.mission_briefing_loaded_already
-    var scenario_id = game.mission_briefing_scenario_id
-
-    if (!is_review && !loaded_already) {
-        __game_load_mission(scenario_id, 1)
-    }
     __game_sound.speech_stop()
     __game_sound.music_update(1)
     ui.window_city_show()
@@ -123,14 +115,12 @@ function mission_briefing_window_on_init(window) {
 __game_mission_branch_start = function (scenario_id) {
     game.mission_briefing_scenario_id = scenario_id
     game.mission_briefing_is_review = false
-    game.mission_briefing_loaded_already = false
-    __game_mission_briefing_intermezzo(scenario_id)
+    __game_load_mission(scenario_id, 1)
 }
 
 function __ui_mission_briefing_review() {
     var sid = scenario.campaign_scenario_id
     game.mission_briefing_scenario_id = sid
     game.mission_briefing_is_review = true
-    game.mission_briefing_loaded_already = true
     __game_mission_briefing_intermezzo(sid)
 }
