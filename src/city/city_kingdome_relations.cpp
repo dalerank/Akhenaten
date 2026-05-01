@@ -127,7 +127,7 @@ void kingdome_relation_t::update_debt_state() {
             months_in_debt = 0;
 
             if (!g_city.figures.kingdome_soldiers) {
-                rating_cap = params().last_debt_rating_cap;
+                rating = std::min<uint8_t>(rating, params().last_debt_rating_cap);
             }
         }
         break;
@@ -348,6 +348,9 @@ void kingdome_relation_t::init() {
 
 void kingdome_relation_t::on_post_load() {
     if (rating_cap == 0) { rating_cap = 100; }
+    if (rating_cap < 100) {
+        rating_cap = 100;
+    }
 }
 
 void kingdome_relation_t::reset() {
