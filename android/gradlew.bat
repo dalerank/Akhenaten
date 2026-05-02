@@ -32,6 +32,30 @@ set APP_HOME=%DIRNAME%
 @rem Resolve any "." and ".." in APP_HOME to make it shorter.
 for %%i in ("%APP_HOME%") do set APP_HOME=%%~fi
 
+set LOCAL_PROPERTIES=%APP_HOME%\local.properties
+set SDK_ROOT=
+
+if exist "%LOCAL_PROPERTIES%" (
+  for /f "usebackq tokens=1,* delims==" %%A in ("%LOCAL_PROPERTIES%") do (
+    if "%%A"=="sdk.dir" (
+      set SDK_ROOT=%%B
+    )
+  )
+)
+
+if defined SDK_ROOT (
+  set SDK_ROOT=%SDK_ROOT:\\=\%
+  set SDK_ROOT=%SDK_ROOT\:=:%
+)
+
+if not defined SDK_ROOT if defined ANDROID_SDK_ROOT set SDK_ROOT=%ANDROID_SDK_ROOT%
+if not defined SDK_ROOT if defined ANDROID_HOME set SDK_ROOT=%ANDROID_HOME%
+if not defined SDK_ROOT if exist "%LOCALAPPDATA%\Android\Sdk" set SDK_ROOT=%LOCALAPPDATA%\Android\Sdk
+
+if defined SDK_ROOT if exist "%SDK_ROOT%" (
+  > "%LOCAL_PROPERTIES%" echo sdk.dir=%SDK_ROOT%
+)
+
 @rem Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
 set DEFAULT_JVM_OPTS="-Xmx64m" "-Xms64m"
 

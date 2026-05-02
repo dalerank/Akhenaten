@@ -58,10 +58,8 @@
 #include <emscripten/emscripten.h>
 #endif
 
-#ifndef GAME_PLATFORM_ANDROID
 #include "dev/perfmon.h"
 #include "dev/perfmon_nanoprofiler.h"
-#endif
 
 #if defined(_WIN32)
 
