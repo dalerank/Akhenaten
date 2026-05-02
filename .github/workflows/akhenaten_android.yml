@@ -1,10 +1,10 @@
 name: Akhenaten Build Android
 
+# Auto-triggers temporarily disabled — Android build is currently broken.
+# Re-enable push/pull_request once the build is fixed; meanwhile it can
+# still be run manually from the Actions tab via workflow_dispatch.
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  workflow_dispatch:
 
 jobs:
   build:
