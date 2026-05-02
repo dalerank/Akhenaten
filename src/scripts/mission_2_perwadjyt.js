@@ -45,7 +45,7 @@ function mission2_handle_population_cap(ev) {
     migration.set_population_cap("pottery_not_produced_population_cap", max_pop)
 }
 
-function mission2_update_goal(ev) {
+function mission2_get_goal_tooltip() {
 	if (!mission.figs_stored_handled) {
 		return "#mission2_store_figs"
 	}
