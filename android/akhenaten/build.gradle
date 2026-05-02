@@ -27,6 +27,7 @@ ext.dependencyRepos = [
 
 // Директория для исходников зависимостей
 def depsDir = new File(projectDir, "src/main/cpp/_deps")
+def sdlAndroidJavaDir = new File(depsDir, "SDL2-src/android-project/app/src/main/java")
 // Директория для prebuilt библиотек
 def prebuiltDir = new File(projectDir.parent, "prebuilt")
 
@@ -541,6 +542,7 @@ android {
         }
         sourceSets {
             main.res.srcDirs += '../../res/android'
+            main.java.srcDirs += sdlAndroidJavaDir.absolutePath
             if (file('../../res/packed_assets').exists()) {
                 println 'Using packed assets'
                 main.assets.srcDirs += '../../res/packed_assets'
@@ -635,6 +637,13 @@ task downloadImguiSource {
 // Убеждаемся, что зависимости готовы перед сборкой CMake
 afterEvaluate {
     def libraries = ['zlib', 'SDL2', 'SDL2_mixer', 'freetype', 'harfbuzz', 'libpng']
+
+    tasks.matching {
+        def name = it.name
+        name.startsWith("javaPreCompile") || name.endsWith("JavaWithJavac")
+    }.configureEach { task ->
+        task.dependsOn downloadDependenciesSources
+    }
     
     tasks.matching { 
         def name = it.name
