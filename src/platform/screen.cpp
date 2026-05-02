@@ -84,12 +84,12 @@ void platform_screen_t::set_scale_percentage(int new_scale, int pixel_width, int
 
 #if defined(GAME_PLATFORM_ANDROID)
 static void set_scale_for_screen(int pixel_width, int pixel_height) {
-    set_scale_percentage(android_get_screen_density() * 100, pixel_width, pixel_height);
-    // config_set(CONFIG_SCREEN_CURSOR_SCALE, scale_percentage);
-    if (window) {
-        // system_init_cursors(scale_percentage);
+    g_sdl_screen.set_scale_percentage(android_get_screen_density() * 100, pixel_width, pixel_height);
+    // config_set(CONFIG_SCREEN_CURSOR_SCALE, g_sdl_screen.scale_percentage);
+    if (g_sdl_screen.window) {
+        // system_init_cursors(g_sdl_screen.scale_percentage);
     }
-    logs::info("Auto-setting scale to %i", scale_percentage);
+    logs::info("Auto-setting scale to %i", g_sdl_screen.scale_percentage);
 }
 #endif
 
