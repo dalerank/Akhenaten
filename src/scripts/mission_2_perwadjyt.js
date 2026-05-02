@@ -81,7 +81,8 @@ function mission2_on_start(ev) {
 		city.use_building(BUILDING_LARGE_STATUE, true)
 		city.use_building(BUILDING_GARDENS, true)
 		city.use_building(BUILDING_PLAZA, true)
-		city.use_building(BUILDING_MENU_WATER_CROSSINGS, true)
+		city.use_building(BUILDING_LOW_BRIDGE, true)
+		city.use_building(BUILDING_FERRY, true)
 	}
 
 	if (mission.disease_handled) {
@@ -160,7 +161,8 @@ function mission2_warehouse_pottery_2_check(ev) {
 	city.use_building(BUILDING_LARGE_STATUE, true)
 	city.use_building(BUILDING_GARDENS, true)
 	city.use_building(BUILDING_PLAZA, true)
-	city.use_building(BUILDING_MENU_WATER_CROSSINGS, true)
+	city.use_building(BUILDING_LOW_BRIDGE, true)
+	city.use_building(BUILDING_FERRY, true)
 
 	ui.popup_message("message_tutorial_municipal_structures")
 }
