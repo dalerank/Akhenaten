@@ -226,5 +226,5 @@ target_link_libraries(akhenaten
     GLESv2
     GLESv1_CM
     OpenSLES
-    c++
+    c++_static
 )
