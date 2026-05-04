@@ -93,8 +93,7 @@ void ui::window_mission_won::advance_to_next_mission() {
             next_mission = g_scenario.campaign_scenario_id() + 1;
         }
 
-        game.mission_choice_open_scenario_id = next_mission;
-        autoconfig_window::show( "mission_choice_window" );
+        js_vm_exec_function_args("game_show_mission_choice", "i", next_mission);
     }
 }
 

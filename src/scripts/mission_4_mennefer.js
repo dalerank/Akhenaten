@@ -63,7 +63,7 @@ mission4 {
 	}
 }
 
-function mission4_update_goal() {
+function mission4_get_goal_tooltip() {
 	if (!mission.spacious_apartment_built) {
 		return "#tutorial_goal_education"
 	}
