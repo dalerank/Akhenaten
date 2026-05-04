@@ -11,7 +11,7 @@
 #include <string.h>
 
 static volatile int has_directory;
-static vfs::path path;
+static bstring1024 selected_path;
 
 static const char *get_pharaoh_path()
 {
@@ -23,17 +23,24 @@ static const char *get_pharaoh_path()
 
     jobject result = handler.env->CallStaticObjectMethod(handler.nclass, handler.method, handler.activity);
     const char *temp_path = handler.env->GetStringUTFChars((jstring) result, NULL);
-    path = temp_path;
+    selected_path = temp_path;
     handler.env->ReleaseStringUTFChars((jstring) result, temp_path);
     handler.env->DeleteLocalRef(result);
 
     jni_destroy_function_handler(&handler);
 
-    return !path.empty() ? path.c_str() : nullptr;
+    return !selected_path.empty() ? selected_path.c_str() : nullptr;
 }
 
 const char *android_show_pharaoh_path_dialog(int again)
 {
+    if (!again) {
+        const char *selected = get_pharaoh_path();
+        if (selected && *selected) {
+            return selected;
+        }
+    }
+
     jni_function_handler handler;
     if (jni_get_method_handler(CLASS_AKHENATEN_ACTIVITY, "showDirectorySelection", "(Z)V", &handler)) {
         handler.env->CallVoidMethod(handler.activity, handler.method, again ? JNI_TRUE : JNI_FALSE);
@@ -46,7 +53,8 @@ const char *android_show_pharaoh_path_dialog(int again)
         SDL_WaitEventTimeout(NULL, 2000);
     }
 
-    return get_pharaoh_path();
+    const char *selected = get_pharaoh_path();
+    return selected ? selected : "";
 }
 
 float android_get_screen_density()
@@ -58,6 +66,39 @@ float android_get_screen_density()
     }
     jni_destroy_function_handler(&handler);
     return result;
+}
+
+void android_clear_startup_log()
+{
+    jni_function_handler handler;
+    if (jni_get_method_handler(CLASS_AKHENATEN_ACTIVITY, "clearStartupLog", "()V", &handler)) {
+        handler.env->CallVoidMethod(handler.activity, handler.method);
+    }
+    jni_destroy_function_handler(&handler);
+}
+
+void android_append_startup_log(const char *message)
+{
+    if (!message) {
+        return;
+    }
+
+    jni_function_handler handler;
+    if (jni_get_method_handler(CLASS_AKHENATEN_ACTIVITY, "appendStartupLog", "(Ljava/lang/String;)V", &handler)) {
+        jstring jmessage = handler.env->NewStringUTF(message);
+        handler.env->CallVoidMethod(handler.activity, handler.method, jmessage);
+        handler.env->DeleteLocalRef(jmessage);
+    }
+    jni_destroy_function_handler(&handler);
+}
+
+void android_set_startup_log_visible(int visible)
+{
+    jni_function_handler handler;
+    if (jni_get_method_handler(CLASS_AKHENATEN_ACTIVITY, "setStartupLogVisible", "(Z)V", &handler)) {
+        handler.env->CallVoidMethod(handler.activity, handler.method, visible ? JNI_TRUE : JNI_FALSE);
+    }
+    jni_destroy_function_handler(&handler);
 }
 
 int android_get_file_descriptor(const char *filename, const char *mode)

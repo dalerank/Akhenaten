@@ -53,7 +53,8 @@ if not defined SDK_ROOT if defined ANDROID_HOME set SDK_ROOT=%ANDROID_HOME%
 if not defined SDK_ROOT if exist "%LOCALAPPDATA%\Android\Sdk" set SDK_ROOT=%LOCALAPPDATA%\Android\Sdk
 
 if defined SDK_ROOT if exist "%SDK_ROOT%" (
-  > "%LOCAL_PROPERTIES%" echo sdk.dir=%SDK_ROOT%
+  set SDK_ROOT_NORMALIZED=%SDK_ROOT:\=/%
+  > "%LOCAL_PROPERTIES%" echo sdk.dir=%SDK_ROOT_NORMALIZED%
 )
 
 @rem Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.

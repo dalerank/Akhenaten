@@ -71,7 +71,13 @@ file(GLOB SCRIPTS_FILES ${SRC_ROOT}/scripts/*.cpp)
 file(GLOB LZMA_FILES ${SRC_ROOT}/lzma/*.c)
 file(GLOB BZIP_FILES ${SRC_ROOT}/bzip/*.c)
 file(GLOB LAME_FILES ${SRC_ROOT}/lame/libmp3lame/*.c)
-file(GLOB MUJS_FILES ${SRC_ROOT}/mujs/*.c)
+file(GLOB MUJS_FILES ${SRC_ROOT}/mujs/*.cpp)
+
+if(ANDROID)
+    list(FILTER DEV_FILES EXCLUDE REGEX ".*/perfmon\\.cpp$")
+    list(FILTER DEV_FILES EXCLUDE REGEX ".*/perfmon_nanoprofiler\\.cpp$")
+    list(FILTER DEV_FILES EXCLUDE REGEX ".*/perfmon_widget\\.cpp$")
+endif()
 
 # ImGui sources (fetched by Gradle).
 set(IMGUI_FILES "")
@@ -220,5 +226,5 @@ target_link_libraries(akhenaten
     GLESv2
     GLESv1_CM
     OpenSLES
-    c++
+    c++_static
 )
