@@ -94,7 +94,28 @@ def getCmakePath() {
     }
     
     def os = System.getProperty('os.name').toLowerCase()
+    def homeDir = System.getProperty('user.home')
     if (os.contains('windows')) {
+        def sdkCmakeRoots = [
+            "${System.getenv('ANDROID_SDK_ROOT')}\\cmake",
+            "${System.getenv('ANDROID_HOME')}\\cmake",
+            "${System.getenv('LOCALAPPDATA')}\\Android\\Sdk\\cmake",
+            "${System.getenv('ProgramFiles')}\\Android\\Sdk\\cmake",
+            "${homeDir}\\AppData\\Local\\Android\\Sdk\\cmake"
+        ]
+        for (def root : sdkCmakeRoots) {
+            if (root != null && !root.contains('null')) {
+                def cmakeDir = new File(root)
+                if (cmakeDir.exists()) {
+                    def versions = cmakeDir.listFiles()?.findAll { it.isDirectory() }?.sort { a, b -> b.name <=> a.name }
+                    def cmakeExe = versions?.collect { new File(it, "bin/cmake.exe") }?.find { it.exists() }
+                    if (cmakeExe != null) {
+                        return cmakeExe.absolutePath
+                    }
+                }
+            }
+        }
+
         def paths = [
             'C:\\Program Files\\CMake\\bin\\cmake.exe',
             'C:\\Program Files (x86)\\CMake\\bin\\cmake.exe'
@@ -218,11 +239,17 @@ def createBuildLibraryTask(libName, abi) {
                 "-DANDROID_STL=c++_static",
                 "-DCMAKE_BUILD_TYPE=Release",
                 "-DCMAKE_INSTALL_PREFIX=${installDir.absolutePath}",
+                "-Wno-deprecated",
                 // Явно указываем линковку с libc++ для библиотек, использующих C++
                 "-DCMAKE_CXX_FLAGS=-static-libstdc++",
                 "-DCMAKE_EXE_LINKER_FLAGS=-static-libstdc++",
                 "-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++"
             ]
+
+            def ninjaExe = new File(new File(cmakePath).parentFile, "ninja.exe")
+            if (ninjaExe.exists()) {
+                cmakeConfigureArgs.add("-DCMAKE_MAKE_PROGRAM=${ninjaExe.absolutePath}")
+            }
             
             // Специфичные настройки для каждой библиотеки
             if (libName == "zlib") {
@@ -525,14 +552,14 @@ task getVersion {
 }
 
 android {
-    compileSdkVersion 33
-    buildToolsVersion "34.0.0"
+    compileSdkVersion 35
+    buildToolsVersion "35.0.0"
     ndkVersion "27.2.12479018"
 
     defaultConfig {
         applicationId "com.github.dalerank.akhenaten"
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 35
 
         versionName getVersion.versionName
         versionCode getVersion.versionCode

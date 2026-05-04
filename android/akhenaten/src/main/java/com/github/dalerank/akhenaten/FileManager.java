@@ -1,19 +1,22 @@
 package com.github.dalerank.akhenaten;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
+import android.content.UriPermission;
 
-import java.io.File;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class FileManager {
+    private static final String PREFS_NAME = "akhenaten_prefs";
+    private static final String PREF_BASE_URI = "base_uri";
     private static Uri baseUri = Uri.EMPTY;
     private static final HashMap<Uri, HashMap<String, FileInfo>> directoryStructureCache = new HashMap<>();
 
@@ -52,19 +55,10 @@ public class FileManager {
 
     @SuppressWarnings("unused")
     public static String getPharaohPath(AkhenatenMainActivity activity) {
-        String decodedPath = decodeUrl(baseUri.toString());
-        baseUri = Uri.parse(decodedPath);
-
-        //try {
-        //    String[] split = baseUri.toString().split(":");
-        //    String absPath = Environment.getExternalStorageDirectory().toString();
-        //    String absDirName = absPath + File.separator + split[2];
-        //    return absDirName;
-        //}  catch (Exception e) {
-        //    Log.e("akhenaten", "Error in getPharaohPath: " + e);
-        //}
-
-        return baseUri.toString();
+        if (baseUri == Uri.EMPTY) {
+            restoreBaseUri(activity);
+        }
+        return baseUri == Uri.EMPTY ? "" : baseUri.toString();
     }
 
     @SuppressWarnings("unused")
@@ -77,8 +71,79 @@ public class FileManager {
         directoryStructureCache.clear();
     }
 
+    static boolean hasBaseUri() {
+        return baseUri != Uri.EMPTY;
+    }
+
+    static boolean hasAccessibleBaseUri(Context context) {
+        if (baseUri == Uri.EMPTY) {
+            restoreBaseUri(context);
+        }
+        return isUriAccessible(context, baseUri);
+    }
+
+    static Uri getBaseUri(Context context) {
+        if (baseUri == Uri.EMPTY) {
+            restoreBaseUri(context);
+        }
+        return baseUri;
+    }
+
+    static String getDisplayName(Context context) {
+        Uri uri = getBaseUri(context);
+        if (uri == null || Uri.EMPTY.equals(uri)) {
+            return "";
+        }
+
+        try {
+            String treeId = DocumentsContract.getTreeDocumentId(uri);
+            int separator = treeId.lastIndexOf(':');
+            if (separator >= 0 && separator + 1 < treeId.length()) {
+                return treeId.substring(separator + 1);
+            }
+            return treeId;
+        } catch (Exception e) {
+            Log.w("akhenaten", "Unable to resolve display name for stored URI", e);
+            return uri.toString();
+        }
+    }
+
+    static void restoreBaseUri(Context context) {
+        try {
+            String uri = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).getString(PREF_BASE_URI, "");
+            if (uri != null && !uri.isEmpty()) {
+                Uri restoredUri = Uri.parse(uri);
+                if (isUriAccessible(context, restoredUri)) {
+                    setBaseUri(restoredUri);
+                } else {
+                    setBaseUri(Uri.EMPTY);
+                    persistBaseUri(context, Uri.EMPTY);
+                }
+            }
+        } catch (Exception e) {
+            Log.e("akhenaten", "Error in restoreBaseUri: " + e);
+            baseUri = Uri.EMPTY;
+        }
+    }
+
+    private static void persistBaseUri(Context context, Uri uri) {
+        try {
+            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                    .edit()
+                    .putString(PREF_BASE_URI, uri == Uri.EMPTY ? "" : uri.toString())
+                    .apply();
+        } catch (Exception e) {
+            Log.e("akhenaten", "Error in persistBaseUri: " + e);
+        }
+    }
+
     static int setBaseUri(Uri newUri) {
         try {
+            if (newUri == null || Uri.EMPTY.equals(newUri)) {
+                baseUri = Uri.EMPTY;
+                FileInfo.base = null;
+                return 0;
+            }
             baseUri = newUri;
             FileInfo.base = new FileInfo(DocumentsContract.getTreeDocumentId(newUri), null,
                     DocumentsContract.Document.MIME_TYPE_DIR, 0, Uri.EMPTY);
@@ -86,6 +151,49 @@ public class FileManager {
         } catch (Exception e) {
             Log.e("akhenaten", "Error in setBaseUri: " + e);
             return 0;
+        }
+    }
+
+    static int setBaseUri(Context context, Uri newUri) {
+        int result = setBaseUri(newUri);
+        persistBaseUri(context, result != 0 ? newUri : Uri.EMPTY);
+        return result;
+    }
+
+    private static boolean isUriAccessible(Context context, Uri uri) {
+        if (context == null || uri == null || Uri.EMPTY.equals(uri)) {
+            return false;
+        }
+
+        try {
+            List<UriPermission> permissions = context.getContentResolver().getPersistedUriPermissions();
+            boolean hasPermission = false;
+            for (UriPermission permission : permissions) {
+                if (uri.equals(permission.getUri()) && permission.isReadPermission()) {
+                    hasPermission = true;
+                    break;
+                }
+            }
+
+            if (!hasPermission) {
+                return false;
+            }
+
+            Uri documentUri = DocumentsContract.buildDocumentUriUsingTree(uri, DocumentsContract.getTreeDocumentId(uri));
+            Cursor cursor = context.getContentResolver().query(
+                    documentUri,
+                    new String[] { DocumentsContract.Document.COLUMN_DOCUMENT_ID },
+                    null,
+                    null,
+                    null);
+            if (cursor == null) {
+                return false;
+            }
+            cursor.close();
+            return true;
+        } catch (Exception e) {
+            Log.w("akhenaten", "Stored base URI is no longer accessible", e);
+            return false;
         }
     }
 
@@ -122,6 +230,34 @@ public class FileManager {
         return result;
     }
 
+    private static String normalizeRelativePath(String filePath) {
+        if (filePath == null) {
+            return "";
+        }
+
+        String normalized = filePath.replace('\\', '/');
+        if (baseUri != Uri.EMPTY) {
+            String base = baseUri.toString();
+            if (normalized.startsWith(base)) {
+                normalized = normalized.substring(base.length());
+            }
+        }
+
+        while (normalized.startsWith("/")) {
+            normalized = normalized.substring(1);
+        }
+
+        if (normalized.startsWith("./")) {
+            normalized = normalized.substring(2);
+        }
+
+        if (normalized.equals(".")) {
+            return "";
+        }
+
+        return normalized;
+    }
+
     private static FileInfo findFile(Activity activity, FileInfo folder, String fileName) {
         return getDirectoryContents(activity, folder).get(fileName.toLowerCase());
     }
@@ -143,7 +279,12 @@ public class FileManager {
             if (baseUri == Uri.EMPTY) {
                 return null;
             }
-            String[] filePart = filePath.split("(\\|/)");
+            String normalizedPath = normalizeRelativePath(filePath);
+            if (normalizedPath.isEmpty()) {
+                return FileInfo.base;
+            }
+
+            String[] filePart = normalizedPath.split("[\\\\/]");
             FileInfo dirInfo = getDirectoryFromPath(activity, filePart);
             if (dirInfo == null) {
                 return null;
@@ -163,9 +304,10 @@ public class FileManager {
             return new FileInfo[0];
         }
         FileInfo lookupDir = FileInfo.base;
-        if (!dir.equals(".")) {
-            dir += "/.";
-            lookupDir = getDirectoryFromPath(activity, dir.split("[\\\\/]"));
+        String normalizedDir = normalizeRelativePath(dir);
+        if (!normalizedDir.isEmpty()) {
+            normalizedDir += "/.";
+            lookupDir = getDirectoryFromPath(activity, normalizedDir.split("[\\\\/]"));
             if (lookupDir == null) {
                 return new FileInfo[0];
             }
@@ -213,9 +355,7 @@ public class FileManager {
             if (baseUri == Uri.EMPTY) {
                 return 0;
             }
-            if (filePath.startsWith("./")) {
-                filePath = filePath.substring(2);
-            }
+            filePath = normalizeRelativePath(filePath);
             String internalMode = "";
             boolean isWrite = false;
             // Either "r" or "w"

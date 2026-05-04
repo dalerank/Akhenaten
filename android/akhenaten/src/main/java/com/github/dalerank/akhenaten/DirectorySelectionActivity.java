@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
@@ -32,6 +33,11 @@ public class DirectorySelectionActivity extends AppCompatActivity {
                                     | Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
                                     | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
 
+                    Uri initialUri = FileManager.getBaseUri(context);
+                    if (initialUri != null && !Uri.EMPTY.equals(initialUri) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, initialUri);
+                    }
+
                     intent.putExtra("android.content.extra.SHOW_ADVANCED", true);
                     intent.putExtra("android.content.extra.FANCY", true);
                     intent.putExtra("android.content.extra.SHOW_FILESIZE", true);
@@ -41,15 +47,20 @@ public class DirectorySelectionActivity extends AppCompatActivity {
             uri -> {
                 if (uri != null) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        getContentResolver().takePersistableUriPermission(uri, RW_FLAGS_PERMISSION);
+                        try {
+                            getContentResolver().takePersistableUriPermission(uri, RW_FLAGS_PERMISSION);
+                        } catch (SecurityException ignored) {
+                        }
                     }
                     Intent result = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                     result.addCategory(Intent.CATEGORY_OPENABLE);
                     result.setType("*/*");
                     result.setData(uri);
                     setResult(RESULT_OK, result);
-                    finish();
+                } else {
+                    setResult(RESULT_CANCELED);
                 }
+                finish();
             });
 
     @Override

@@ -171,6 +171,10 @@ static bool pre_init(const xstring& custom_data_dir) {
 }
 
 static void setup() {
+#if defined(GAME_PLATFORM_ANDROID)
+    android_clear_startup_log();
+    android_append_startup_log("Startup: setup()");
+#endif
     platform.init_timers();
 
     logs::info("Akhenaten version %s", get_version().c_str());
@@ -186,7 +190,7 @@ static void setup() {
 #endif
 
 #if defined(GAME_PLATFORM_ANDROID)
-    g_args.set_data_directory(SDL_AndroidGetExternalStoragePath());
+    g_args.set_data_directory("");
 #endif
 
     // Show configuration window if --config flag is set or config file doesn't exist
@@ -200,9 +204,20 @@ static void setup() {
     // pre-init engine: assert game directory, pref files, etc.
     g_application.setup();
 #if defined(GAME_PLATFORM_ANDROID)
-    bool again = false;
+    android_append_startup_log("Startup: asking for data folder");
+    pcstr initial_user_dir = android_show_pharaoh_path_dialog(false);
+    if (!initial_user_dir || !*initial_user_dir) {
+        android_append_startup_log("Startup: no folder selected");
+        exit(-2);
+    }
+    android_append_startup_log("Startup: folder selected");
+    g_args.set_data_directory(initial_user_dir);
+    bool again = true;
 #endif // GAME_PLATFORM_ANDROID
     while (!pre_init(g_args.get_data_directory())) {
+#if defined(GAME_PLATFORM_ANDROID)
+        android_append_startup_log("Startup: folder validation failed");
+#endif
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Warning",
           "Akhenaten requires the original files from Pharaoh to run.\n"
 #if defined(GAME_PLATFORM_ANDROID)
@@ -232,6 +247,11 @@ static void setup() {
         }
         again = true;
         pcstr user_dir = android_show_pharaoh_path_dialog(again);
+        if (!user_dir || !*user_dir) {
+            android_append_startup_log("Startup: no folder selected after retry");
+            exit(-2);
+        }
+        android_append_startup_log("Startup: retry folder selected");
         g_args.set_data_directory(user_dir);
 #endif
         if (support_window_options) {
@@ -262,18 +282,33 @@ static void setup() {
     js_vm_add_scripts_folder(g_args.get_scripts_directory().c_str()); // setup script engine user folder
     js_vm_add_scripts_folder(vfs::SCRIPTS_FOLDER);                    // setup script engine additional folder
 
+#if defined(GAME_PLATFORM_ANDROID)
+    android_append_startup_log("Startup: js_vm_setup");
+#endif
     js_vm_setup();
+#if defined(GAME_PLATFORM_ANDROID)
+    android_append_startup_log("Startup: js_vm_sync");
+#endif
     js_vm_sync({});
 
     // init game!
     time_set_millis(SDL_GetTicks());
     game_opts opts = g_args.use_sound() ? game_opt_sound : game_opt_none;
+#if defined(GAME_PLATFORM_ANDROID)
+    android_append_startup_log("Startup: game_init");
+#endif
 
     if (!game_init(opts)) {
+#if defined(GAME_PLATFORM_ANDROID)
+        android_append_startup_log("Startup: game_init failed");
+#endif
         logs::info("Exiting: game init failed");
         exit(2);
     }
 
+#if defined(GAME_PLATFORM_ANDROID)
+    android_append_startup_log("Startup: config refresh");
+#endif
     config::refresh(js_vm_state());
 
     if (platform.is_emscripten()) {
@@ -566,10 +601,19 @@ int main(int argc, char** argv) {
 
     game_imgui_overlay_init();
     g_application.subscribe_events();
+#if defined(GAME_PLATFORM_ANDROID)
+    android_append_startup_log("Startup: language reload");
+#endif
     lang_reload_localized_files();
     lang_reload_localized_tables();
 
+#if defined(GAME_PLATFORM_ANDROID)
+    android_append_startup_log("Startup: first frame");
+#endif
     run_and_draw();
+#if defined(GAME_PLATFORM_ANDROID)
+    android_append_startup_log("Startup: first frame done");
+#endif
 
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(main_loop, 0, 1);
