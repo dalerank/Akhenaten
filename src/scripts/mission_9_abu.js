@@ -1,7 +1,7 @@
 log_info("akhenaten: mission 9 abu started")
 
 mission9 = { // Abu
-	start_message : 0, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
+	start_message : "", //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	env {
 		has_animals : true
 		marshland_grow : default_marshland_grow
