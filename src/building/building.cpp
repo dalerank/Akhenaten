@@ -14,7 +14,7 @@
 #include "figure/formation_batalion.h"
 #include "game/resource.h"
 #include "game/undo.h"
-#include "game/settings.h"
+#include "game/game.h"
 #include "graphics/view/view.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
@@ -130,7 +130,7 @@ void building::setup_static_flags() {
 
 desirability_t::influence_t building_desirability_t::to_influence() const {
     desirability_t::influence_t inf;
-    e_difficulty diff = g_settings.difficulty();
+    e_difficulty diff = game.difficulty();
     auto approach_diff = [&] (auto &arr) { if (arr.empty()) return (int)0; return (int)arr[std::min<int>(diff, arr.size() - 1)]; };
 
     inf.size = 0;
@@ -144,7 +144,7 @@ desirability_t::influence_t building_desirability_t::to_influence() const {
 
 crime_t::influence_t building_crime_t::to_influence() const {
     crime_t::influence_t inf;
-    e_difficulty diff = g_settings.difficulty();
+    e_difficulty diff = game.difficulty();
     auto approach_diff = [&] (auto &arr) { if (arr.empty()) return (int)0; return (int)arr[std::min<int>(diff, arr.size() - 1)]; };
 
     inf.size = 0;

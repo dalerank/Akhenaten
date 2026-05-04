@@ -16,20 +16,14 @@
 #define INF_SIZE 564
 
 game_settings g_settings;
-const e_sound_type_tokens_t ANK_CONFIG_ENUM(e_sound_type_tokens);
 
 game_settings::game_settings() {
     inf_file = new buffer(INF_SIZE);
 }
 
-uint8_t game_difficulty() {
-    return g_settings.difficulty();
-}
-
 void game_settings::load_default_settings() {
     display_size = {800, 600};
 
-    difficulty.set(DIFFICULTY_HARD);
     last_advisor = ADVISOR_NONE;
 
     clear_personal_savings();
@@ -75,8 +69,7 @@ void game_settings::load_settings(buffer* buf) {
     buf->read_i32(); // victory_video - moved to game_features::gameopt_victory_video
 
     assert(!buf->at_end());
-    e_difficulty difficulty_value = (e_difficulty)buf->read_i32();
-    difficulty.set(difficulty_value);
+    buf->read_i32();
     buf->read_i32(); // gods_enabled - moved to game_features::gameopt_gods_enabled
 }
 
@@ -135,7 +128,7 @@ void game_settings::save() {
         buf->write_i32(personal_savings[i]);
     }
     buf->write_i32(false); // victory_video - moved to game_features::gameopt_victory_video
-    buf->write_u8(difficulty());
+    buf->write_u8(0);
     buf->skip(3);
     buf->write_i32(false); // gods_enabled - moved to game_features::gameopt_gods_enabled
 

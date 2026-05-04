@@ -5,9 +5,8 @@
 #include "core/custom_span.hpp"
 #include "core/profiler.h"
 #include "city/city_warnings.h"
-#include "city/city.h"
 #include "game/game_events.h"
-#include "game/settings.h"
+#include "game/game.h"
 #include "city/city_population.h"
 #include "grid/building.h"
 #include "grid/tiles.h"
@@ -272,7 +271,7 @@ void building_update_state(void) {
 }
 
 io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
-    e_difficulty diff = g_settings.difficulty();
+    e_difficulty diff = game.difficulty();
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         //        building_state_load_from_buffer(buf, &all_buildings[i]);
         auto b = &g_all_buildings[i];

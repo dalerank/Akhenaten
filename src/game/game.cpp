@@ -70,7 +70,7 @@ declare_console_command_p(nextyear) {
     game.simtime.advance_year();
     game.advance_year();
 }
-
+const e_sound_type_tokens_t ANK_CONFIG_ENUM(e_sound_type_tokens);
 
 namespace {
     static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700};
@@ -492,4 +492,16 @@ bool game_t::is_fullscreen(bool check_cli) const {
 
 void game_t::set_fullscreen(bool v) {
     game_features::gameopt_fullscreen.set(v);
+}
+
+uint8_t game_difficulty() {
+    return game.difficulty.get();
+}
+
+void game_t::difficulty_t::set(e_difficulty v) {
+    game_features::gameopt_difficulty.set( std::clamp<e_difficulty>(v, DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD) );
+}
+
+e_difficulty game_t::difficulty_t::get() const {
+    return (e_difficulty)game_features::gameopt_difficulty.to_int();
 }

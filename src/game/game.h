@@ -11,9 +11,17 @@
 #include "core/inplace_function.h"
 #include "core/hvector.h"
 
+enum e_difficulty {
+    DIFFICULTY_VERY_EASY = 0,
+    DIFFICULTY_EASY = 1,
+    DIFFICULTY_NORMAL = 2,
+    DIFFICULTY_HARD = 3,
+    DIFFICULTY_VERY_HARD = 4
+};
+
 enum game_option {
-    game_opt_none = 0,
-    game_opt_sound = 1,
+    game_opt_none = 0 << 0,
+    game_opt_sound = 1 << 1,
 };
 
 using game_opts = uint32_t;
@@ -25,6 +33,7 @@ bool game_init_editor();
 void game_reload_language();
 
 void game_exit_editor();
+uint8_t game_difficulty();
 
 struct fps_data_t {
     int frame_count;
@@ -81,6 +90,15 @@ struct game_t {
 
     fps_data_t fps = {0, 0, 0};
     animation_timer animation_timers[MAX_ANIM_TIMERS];
+
+    struct difficulty_t {
+        void increase() { set((e_difficulty)(get() + 1)); }
+        void decrease() { set((e_difficulty)(get() - 1)); }
+
+        inline e_difficulty operator()() const { return (e_difficulty)get(); }
+        void set(e_difficulty v);
+        e_difficulty get() const;
+    } difficulty;
 
     void animation_timers_init();
     void animation_timers_update();

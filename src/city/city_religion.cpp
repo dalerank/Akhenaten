@@ -39,7 +39,7 @@
 e_god_tokens_t ANK_CONFIG_ENUM(e_god_tokens);
 e_god_short_tokens_t e_god_short_tokens;
 
-e_god find_god_id_from_short_name(const std::string& god_name) {    
+e_god find_god_id_from_short_name(const std::string& god_name) {
     for (const auto& it: e_god_short_tokens.values) {
         if (god_name == it.name) {
             return (e_god)it.id;
@@ -778,7 +778,7 @@ void city_religion_t::update_mood(e_god randm_god) {
     }
 
     // update anger/happiness/bolt icons/etc.
-    const int difficulty = g_settings.difficulty();
+    const int difficulty = game.difficulty();
     if (is_god_known(randm_god) != GOD_STATUS_UNKNOWN) { // OG code checks "randm_god < MAX_GODS" which is redundant.
         god_state* god = &gods[randm_god];
         if (god->mood > 50)

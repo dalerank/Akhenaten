@@ -33,10 +33,14 @@ ANK_GLOBAL_OBJECT(g_screen, __screen,
 int __game_difficulty() { return game_difficulty(); }
 ANK_FUNCTION(__game_difficulty)
 
-void __game_decrease_difficulty() { g_settings.difficulty.decrease(); }
+void __game_decrease_difficulty() {
+    game.difficulty.decrease();
+}
 ANK_FUNCTION(__game_decrease_difficulty)
 
-void __game_increase_difficulty() { g_settings.difficulty.increase(); }
+void __game_increase_difficulty() {
+    game.difficulty.increase();
+}
 ANK_FUNCTION(__game_increase_difficulty)
 
 bool __game_is_fullscreen_only() { return g_render.is_fullscreen_only(); }
