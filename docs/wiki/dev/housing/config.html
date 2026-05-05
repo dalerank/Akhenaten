@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Config Format — Housing System — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../../about.html">About</a></li>
+        <li><a href="../../../../devblog.html">Devblog</a></li>
+        <li><a href="../../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../../contact.html">Join us</a></li>
+        <li><a href="../../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="../index.html">← Developer Docs</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Housing System</div>
+        <ul>
+          <li><a href="index.html">Key Files</a></li>
+          <li><a href="classes.html">Class Hierarchy</a></li>
+          <li><a href="evolution.html">Evolution Algorithm</a></li>
+          <li><a href="services.html">Service Coverage</a></li>
+          <li><a href="config.html" class="active">Config Format</a></li>
+          <li><a href="adding-tier.html">Adding a Tier</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#file-structure">File structure</a></li>
+          <li><a href="#annotated">Annotated example</a></li>
+          <li><a href="#difficulty">Difficulty indexing</a></li>
+          <li><a href="#model-fields">model{} field reference</a></li>
+          <li><a href="#outer-fields">Outer field reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb"><a href="../../../index.html">Wiki</a> / <a href="../index.html">Developer Docs</a> / <a href="index.html">Housing System</a> / Config Format</div>
+      <h1>Config Format — <code>houses.js</code></h1>
+      <p class="section-intro">Complete annotated reference for the housing config file at <code>src/scripts/houses.js</code>.</p>
+
+      <h2 id="file-structure">File Structure</h2>
+      <p><code>houses.js</code> is a JavaScript file executed by the embedded MuJS VM at startup. It calls <code>building_config.add()</code> once per housing tier, passing a config object. The 20 calls appear in tier order (Crude Hut first, Palatial Estate last).</p>
+      <pre class="wiki-code">
+// src/scripts/houses.js  (structure overview)
+
+building_config.add({
+    type: "BUILDING_HOUSE_CRUDE_HUT",
+    // ... (outer fields)
+    model: {
+        // ... (per-difficulty arrays, 5 elements each)
+    }
+});
+
+building_config.add({
+    type: "BUILDING_HOUSE_STURDY_HUT",
+    // ...
+});
+
+// ... 18 more entries
+</pre>
+
+      <h2 id="annotated">Annotated Example</h2>
+      <p>The example below is based on Ordinary Cottage (tier 6) and covers every field present in the config.</p>
+      <pre class="wiki-code">
+building_config.add({
+  type: "BUILDING_HOUSE_ORDINARY_COTTAGE",
+
+  // ── Visuals ──────────────────────────────────────────────────────
+  animations: {
+    base: { pack: 18, id: 5, offset: 10 },      // spritesheet location
+    preview: { pack: 18, id: 5, offset: 0 },    // shown while placing
+    house: { pack: 18, id: 5, offset: 10 },     // in-game sprite
+    minimap: { pack: 18, id: 5, offset: 0 }     // minimap dot sprite
+  },
+  variants: {
+    // animation variant sets for different merge states
+    single: { ... },   // 1×1 unmerged
+    merged: { ... }    // 2×2 merged
+  },
+
+  // ── Placement ─────────────────────────────────────────────────────
+  building_size: 1,     // base footprint in tiles (always 1 here; size
+                        // grows via merge/expand, not config)
+  can_merge: true,      // allows 4 adjacent same-tier plots to merge
+                        // into one 2×2 block; false for manors/estates
+
+  // ── Neighbourhood influence ───────────────────────────────────────
+  desirability: {
+    value:     -1,      // base desirability contribution to neighbours
+    step:       1,      // change per tile of distance
+    step_size:  1,      // apply step every N tiles
+    range:      2       // maximum influence radius (tiles)
+  },
+
+  // ── Crime ─────────────────────────────────────────────────────────
+  crime: {
+    base:  5,           // base crime-generation value
+    value: 0            // additional scaling factor
+  },
+
+  // ── Per-difficulty model ───────────────────────────────────────────
+  // All arrays have 5 elements: [Very Easy, Easy, Normal, Hard, Very Hard]
+  model: {
+
+    // Desirability thresholds
+    devolve_desirability: [-20, -15, -10,  -5,   0],
+    evolve_desirability:  [ -5,   0,   5,  10,  15],
+
+    // Population
+    max_people:           [ 18,  17,  15,  13,  10],
+    // (per tile; multiply by footprint area for total)
+
+    // Tax
+    tax_multiplier:       [  9,   8,   8,   7,   7],
+    prosperity:           [  5,   5,   5,   5,   5],
+    // prosperity points added to city score each year this house exists
+
+    // Food
+    food_types:           [  1,   1,   1,   1,   1],
+    // number of distinct food types required
+
+    // Services — all boolean (0 or 1)
+    water:                [  1,   1,   1,   1,   1],
+    // 1 = Water Supply required (not just well)
+    religion:             [  0,   0,   0,   0,   1],
+    // number of gods required (0–5)
+    education:            [  0,   0,   0,   0,   0],
+    // education level required (0–3)
+    physician:            [  0,   0,   0,   0,   0],
+    dentist:              [  0,   0,   0,   0,   0],
+    health:               [  0,   0,   0,   0,   0],
+
+    // Entertainment threshold (0–100)
+    entertainment:        [  0,   0,  10,  15,  20],
+    // Entertainment type divisors (higher = harder to reach threshold)
+    entertainment_juggler_divider:  [ 4, 4, 4, 5, 5],
+    entertainment_musician_divider: [ 3, 3, 3, 4, 4],
+    entertainment_dancer_divider:   [ 3, 3, 3, 3, 3],
+    entertainment_senet_divider:    [ 2, 2, 2, 2, 2],
+
+    // Goods (0 = not required, 1 = required)
+    pottery:  [0, 0, 0, 0, 0],
+    beer:     [0, 0, 0, 0, 0],
+    linen:    [0, 0, 0, 0, 0],
+    jewelry:  [0, 0, 0, 0, 0],
+
+    // Risk values (0–100; higher = more frequent incidents)
+    fire_risk:    [15, 16, 18, 20, 22],
+    // NOTE: fire_risk peaks at Ordinary Cottage, then decreases at higher tiers
+    damage_risk:  [ 5,  5,  5,  5,  5],
+    disease_risk: [ 8,  8,  8,  8,  8],
+    malaria_risk: [ 5,  5,  5,  5,  5],
+    crime_risk:   [12, 12, 12, 12, 12],
+
+    // Food / goods consumption rates
+    food_consumption_percentage: [100, 100, 100, 100, 100],
+    // % of max_people / month consumed as food
+    food_storage_multiplier: [3, 3, 3, 3, 3],
+    // house stores up to (multiplier × monthly consumption)
+
+    // Devolution stability
+    devolve_delay: [2, 2, 3, 3, 4],
+    // months of consecutive unmet requirements before devolution applies
+
+    unreachable_ticks_devolve_threshold:    [12, 10, 8, 6, 4],
+    // ticks with no walker access before forced devolution
+    unreachable_ticks_block_evolve_threshold: [4, 4, 4, 4, 4],
+    // ticks with no walker access that block evolution (even if other needs met)
+
+    days_without_food_devolve_threshold: [30, 28, 25, 20, 15]
+    // days without food delivery before devolution
+  }
+});
+</pre>
+
+      <h2 id="difficulty">Difficulty Indexing</h2>
+      <p>Every array in <code>model{}</code> has exactly 5 elements, indexed by the current difficulty setting at runtime:</p>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Index</th><th>Difficulty</th><th>Effect on housing</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>Very Easy</td><td>Lowest desirability thresholds, most forgiving food/service requirements.</td></tr>
+            <tr><td>1</td><td>Easy</td><td>Slightly tighter than Very Easy.</td></tr>
+            <tr><td>2</td><td>Normal</td><td>Baseline. Values in the player-facing wiki are shown for this index.</td></tr>
+            <tr><td>3</td><td>Hard</td><td>Higher entertainment and desirability thresholds.</td></tr>
+            <tr><td>4</td><td>Very Hard</td><td>Strictest requirements, highest risks.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>In C++ the difficulty index is read via <code>game_settings().difficulty</code> and passed into every <code>model.field[difficulty]</code> lookup inside <code>check_requirements()</code>.</p>
+
+      <h2 id="model-fields">model{} Field Reference</h2>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>evolve_desirability</code></td><td><code>int[5]</code></td><td>Minimum desirability to evolve to the next tier.</td></tr>
+            <tr><td><code>devolve_desirability</code></td><td><code>int[5]</code></td><td>Desirability below which devolution is triggered.</td></tr>
+            <tr><td><code>max_people</code></td><td><code>int[5]</code></td><td>Maximum residents per tile. Multiply by footprint area for total.</td></tr>
+            <tr><td><code>tax_multiplier</code></td><td><code>int[5]</code></td><td>Scales the base tax rate for this tier.</td></tr>
+            <tr><td><code>prosperity</code></td><td><code>int[5]</code></td><td>Prosperity points contributed to the city score annually.</td></tr>
+            <tr><td><code>food_types</code></td><td><code>int[5]</code></td><td>Number of distinct food types required (1 or 2 in base game).</td></tr>
+            <tr><td><code>water</code></td><td><code>int[5]</code></td><td>0 = well acceptable, 1 = Water Supply building required.</td></tr>
+            <tr><td><code>religion</code></td><td><code>int[5]</code></td><td>Number of distinct gods required (0–5).</td></tr>
+            <tr><td><code>education</code></td><td><code>int[5]</code></td><td>Education score required (0–3).</td></tr>
+            <tr><td><code>health</code></td><td><code>int[5]</code></td><td>Health score required (0–2).</td></tr>
+            <tr><td><code>physician</code></td><td><code>int[5]</code></td><td>1 = physician walker coverage required.</td></tr>
+            <tr><td><code>dentist</code></td><td><code>int[5]</code></td><td>1 = dentist walker coverage required.</td></tr>
+            <tr><td><code>entertainment</code></td><td><code>int[5]</code></td><td>Entertainment score threshold (0–100).</td></tr>
+            <tr><td><code>entertainment_juggler_divider</code></td><td><code>int[5]</code></td><td>Juggler contribution divisor. Higher = less score from jugglers.</td></tr>
+            <tr><td><code>entertainment_musician_divider</code></td><td><code>int[5]</code></td><td>Musician contribution divisor.</td></tr>
+            <tr><td><code>entertainment_dancer_divider</code></td><td><code>int[5]</code></td><td>Dancer contribution divisor.</td></tr>
+            <tr><td><code>entertainment_senet_divider</code></td><td><code>int[5]</code></td><td>Senet player contribution divisor.</td></tr>
+            <tr><td><code>pottery</code></td><td><code>int[5]</code></td><td>1 = pottery required in inventory.</td></tr>
+            <tr><td><code>beer</code></td><td><code>int[5]</code></td><td>1 = beer required.</td></tr>
+            <tr><td><code>linen</code></td><td><code>int[5]</code></td><td>1 = linen required.</td></tr>
+            <tr><td><code>jewelry</code></td><td><code>int[5]</code></td><td>1 = jewelry required (luxury good).</td></tr>
+            <tr><td><code>fire_risk</code></td><td><code>int[5]</code></td><td>Monthly probability of a fire starting (0–100). Peaks at tier 6, then falls.</td></tr>
+            <tr><td><code>damage_risk</code></td><td><code>int[5]</code></td><td>Monthly probability of structural damage.</td></tr>
+            <tr><td><code>disease_risk</code></td><td><code>int[5]</code></td><td>Monthly probability of a disease outbreak.</td></tr>
+            <tr><td><code>malaria_risk</code></td><td><code>int[5]</code></td><td>Monthly probability of malaria — higher near floodplains.</td></tr>
+            <tr><td><code>crime_risk</code></td><td><code>int[5]</code></td><td>Monthly probability of criminal activity spawning.</td></tr>
+            <tr><td><code>food_consumption_percentage</code></td><td><code>int[5]</code></td><td>Fraction of max population worth of food consumed per month (%).</td></tr>
+            <tr><td><code>food_storage_multiplier</code></td><td><code>int[5]</code></td><td>How many months of food stock the house holds.</td></tr>
+            <tr><td><code>devolve_delay</code></td><td><code>int[5]</code></td><td>Months of consecutive failed requirements before devolution applies.</td></tr>
+            <tr><td><code>unreachable_ticks_devolve_threshold</code></td><td><code>int[5]</code></td><td>Ticks with no road-walker access before forced devolution.</td></tr>
+            <tr><td><code>unreachable_ticks_block_evolve_threshold</code></td><td><code>int[5]</code></td><td>Ticks with no road-walker access that block evolution.</td></tr>
+            <tr><td><code>days_without_food_devolve_threshold</code></td><td><code>int[5]</code></td><td>Days without food delivery before devolution triggers.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="outer-fields">Outer Field Reference</h2>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>type</code></td><td>Building type enum name. Must match exactly the enum value in <code>building_type.h</code>.</td></tr>
+            <tr><td><code>animations</code></td><td>Sprite sheet references for each view state.</td></tr>
+            <tr><td><code>variants</code></td><td>Animation variant sets for single and merged states.</td></tr>
+            <tr><td><code>building_size</code></td><td>Base footprint (always 1 for housing; size grows via merge/expand at runtime).</td></tr>
+            <tr><td><code>can_merge</code></td><td><code>true</code> for tiers 1–14 (those that merge into 2×2). <code>false</code> for manors and estates, which only expand via <code>expand_to_*()</code>.</td></tr>
+            <tr><td><code>desirability.value</code></td><td>Base contribution to neighbouring tiles' desirability. Negative for low tiers, positive for high tiers.</td></tr>
+            <tr><td><code>desirability.step</code></td><td>How much the contribution changes per tile of distance.</td></tr>
+            <tr><td><code>desirability.step_size</code></td><td>Apply the step every N tiles of distance.</td></tr>
+            <tr><td><code>desirability.range</code></td><td>Maximum radius of influence in tiles.</td></tr>
+            <tr><td><code>crime.base</code></td><td>Base crime rate added to the neighbourhood crime overlay.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>

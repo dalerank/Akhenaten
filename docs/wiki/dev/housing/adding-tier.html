@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adding a Tier — Housing System — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../../about.html">About</a></li>
+        <li><a href="../../../../devblog.html">Devblog</a></li>
+        <li><a href="../../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../../contact.html">Join us</a></li>
+        <li><a href="../../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="../index.html">← Developer Docs</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Housing System</div>
+        <ul>
+          <li><a href="index.html">Key Files</a></li>
+          <li><a href="classes.html">Class Hierarchy</a></li>
+          <li><a href="evolution.html">Evolution Algorithm</a></li>
+          <li><a href="services.html">Service Coverage</a></li>
+          <li><a href="config.html">Config Format</a></li>
+          <li><a href="adding-tier.html" class="active">Adding a Tier</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#modify-vs-add">Modify vs. add</a></li>
+          <li><a href="#step1">1. houses.js config</a></li>
+          <li><a href="#step2">2. building_type.h enum</a></li>
+          <li><a href="#step3">3. C++ class</a></li>
+          <li><a href="#step4">4. METAINFO macro</a></li>
+          <li><a href="#step5">5. evolve() implementation</a></li>
+          <li><a href="#step6">6. Wire up neighbours</a></li>
+          <li><a href="#checklist">Checklist</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb"><a href="../../../index.html">Wiki</a> / <a href="../index.html">Developer Docs</a> / <a href="index.html">Housing System</a> / Adding a Tier</div>
+      <h1>Adding a Tier</h1>
+      <p class="section-intro">Step-by-step guide for adding a new housing tier or modifying an existing one.</p>
+
+      <h2 id="modify-vs-add">Modify vs. Add</h2>
+      <p>Most balance changes — thresholds, risk values, population — require only editing <code>houses.js</code>. No recompile is needed if the engine is run in hot-reload mode (<code>--dev</code> flag). The C++ layer only needs touching when you add a genuinely new tier that didn't exist before.</p>
+
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Change type</th><th>Files to edit</th><th>Recompile needed?</th></tr></thead>
+          <tbody>
+            <tr><td>Adjust a threshold, risk, or population value</td><td><code>houses.js</code> only</td><td>No (hot-reload)</td></tr>
+            <tr><td>Change goods or service requirements</td><td><code>houses.js</code> only</td><td>No</td></tr>
+            <tr><td>Change animations / sprites</td><td><code>houses.js</code> only</td><td>No</td></tr>
+            <tr><td>Add a new tier between two existing tiers</td><td><code>houses.js</code> + <code>building_type.h</code> + new C++ class</td><td>Yes</td></tr>
+            <tr><td>Rename a tier (display name)</td><td><code>houses.js</code> + localisation strings</td><td>No</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="step1">Step 1 — Add a config block in <code>houses.js</code></h2>
+      <p>Insert a new <code>building_config.add({...})</code> call at the correct position in the file (tier order matters for evolution chain lookup). Copy the nearest existing tier as a template and adjust all values. See the <a href="config.html">Config Format</a> page for a full field reference.</p>
+      <pre class="wiki-code">
+// src/scripts/houses.js
+
+building_config.add({
+  type: "BUILDING_HOUSE_MY_NEW_TIER",   // must match enum name exactly
+
+  animations: {
+    base:    { pack: 18, id: 5, offset: 42 },
+    preview: { pack: 18, id: 5, offset: 42 },
+    house:   { pack: 18, id: 5, offset: 42 },
+    minimap: { pack: 18, id: 5, offset: 0  }
+  },
+
+  building_size: 1,
+  can_merge: true,
+
+  desirability: { value: 0, step: 1, step_size: 1, range: 2 },
+  crime: { base: 5, value: 0 },
+
+  model: {
+    devolve_desirability: [-5,  0,  5, 10, 15],
+    evolve_desirability:  [ 5, 10, 15, 20, 25],
+    max_people:           [17, 16, 14, 12,  9],
+    // ... all other required fields
+  }
+});
+</pre>
+
+      <h2 id="step2">Step 2 — Add the enum value in <code>building_type.h</code></h2>
+      <p>Find the housing block in the enum and insert the new value in the correct tier position. The enum values for housing run sequentially — the numeric order determines the evolution chain, so placement matters.</p>
+      <pre class="wiki-code">
+// src/building/building_type.h
+
+enum e_building_type {
+    // ...
+    BUILDING_HOUSE_ORDINARY_COTTAGE,
+    BUILDING_HOUSE_MY_NEW_TIER,        // ← insert here
+    BUILDING_HOUSE_MODEST_HOMESTEAD,
+    // ...
+};
+</pre>
+      <p>After this change, recompile. All existing save files will still load — the engine handles missing building types gracefully — but houses that were previously at tiers above your insertion point may map to the shifted enum value. Test with a fresh scenario after adding a new tier.</p>
+
+      <h2 id="step3">Step 3 — Create the C++ class</h2>
+      <p>Add a struct in <code>building_house.h</code>. Housing tier classes are intentionally minimal — everything interesting lives in the base class or is data-driven from config.</p>
+      <pre class="wiki-code">
+// src/building/building_house.h
+
+struct building_house_my_new_tier : building_house {
+    BUILDING_METAINFO(BUILDING_HOUSE_MY_NEW_TIER,
+                      building_house_my_new_tier,
+                      building_house)
+
+    virtual void evolve(house_demands* demands) override;
+};
+</pre>
+
+      <h2 id="step4">Step 4 — Register with METAINFO</h2>
+      <p>The <code>BUILDING_METAINFO</code> macro (defined in <code>building_impl.h</code>) does three things:</p>
+      <ul class="wiki-list">
+        <li>Registers the class in the building factory so it can be instantiated by type ID.</li>
+        <li>Enables type-safe downcasting via <code>dcast&lt;building_house_my_new_tier&gt;()</code>.</li>
+        <li>Wires up static param lookup so <code>building_house_my_new_tier::params()</code> returns the config loaded from <code>houses.js</code>.</li>
+      </ul>
+      <p>No additional registration calls are needed — the macro handles everything through static initialisation.</p>
+
+      <h2 id="step5">Step 5 — Implement <code>evolve()</code></h2>
+      <p>Add the implementation in <code>building_house.cpp</code>. The standard pattern is identical for all tiers — just change the target type names for the transitions.</p>
+      <pre class="wiki-code">
+// src/building/building_house.cpp
+
+void building_house_my_new_tier::evolve(house_demands* demands) {
+    if (base.house_population == 0) return;
+
+    // Attempt merge (only relevant if can_merge == true in config)
+    if (merge()) return;
+
+    e_house_progress result = check_requirements(demands);
+
+    if (result == HOUSE_DECAY &amp;&amp; !has_devolve_delay()) return;
+
+    if (result == HOUSE_EVOLVE) {
+        change_to(BUILDING_HOUSE_MODEST_HOMESTEAD); // next tier up
+    } else if (result == HOUSE_DECAY) {
+        change_to(BUILDING_HOUSE_ORDINARY_COTTAGE); // one tier down
+    }
+}
+</pre>
+      <p>If your new tier crosses a size boundary (e.g. 2×2 → 3×3), use <code>expand_to_manor()</code> instead of <code>change_to()</code> for the evolve path, and <code>devolve_to_fancy_residence()</code> for the decay path.</p>
+
+      <h2 id="step6">Step 6 — Update neighbouring tiers</h2>
+      <p>The tiers on either side of your new tier need to point to it as their evolution target or devolution fallback:</p>
+      <pre class="wiki-code">
+// The tier just below yours — update its EVOLVE case:
+void building_house_ordinary_cottage::evolve(house_demands* demands) {
+    // ...
+    if (result == HOUSE_EVOLVE)
+        change_to(BUILDING_HOUSE_MY_NEW_TIER);  // was BUILDING_HOUSE_MODEST_HOMESTEAD
+    // ...
+}
+
+// The tier just above yours — update its DECAY case:
+void building_house_modest_homestead::evolve(house_demands* demands) {
+    // ...
+    if (result == HOUSE_DECAY)
+        change_to(BUILDING_HOUSE_MY_NEW_TIER);  // was BUILDING_HOUSE_ORDINARY_COTTAGE
+    // ...
+}
+</pre>
+
+      <h2 id="checklist">Checklist</h2>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Done?</th><th>Task</th></tr></thead>
+          <tbody>
+            <tr><td>☐</td><td><code>houses.js</code> — new <code>building_config.add()</code> block with all model fields filled in</td></tr>
+            <tr><td>☐</td><td><code>building_type.h</code> — enum value added in the correct position</td></tr>
+            <tr><td>☐</td><td><code>building_house.h</code> — struct with <code>BUILDING_METAINFO</code> and <code>evolve()</code> declaration</td></tr>
+            <tr><td>☐</td><td><code>building_house.cpp</code> — <code>evolve()</code> implementation with correct up/down targets</td></tr>
+            <tr><td>☐</td><td>Lower neighbour tier's <code>evolve()</code> updated to point up to new tier</td></tr>
+            <tr><td>☐</td><td>Upper neighbour tier's <code>evolve()</code> updated to devolve down to new tier</td></tr>
+            <tr><td>☐</td><td>Compiles without errors (<code>static_assert</code> will fail if <code>runtime_data_t</code> exceeds 186 bytes)</td></tr>
+            <tr><td>☐</td><td>Tested in-game: houses evolve up to new tier and devolve correctly when a service is removed</td></tr>
+            <tr><td>☐</td><td>Player-facing wiki table in <code>docs/wiki/player/buildings/housing.html</code> updated with the new row</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>

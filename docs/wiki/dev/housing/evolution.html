@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evolution Algorithm — Housing System — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../../about.html">About</a></li>
+        <li><a href="../../../../devblog.html">Devblog</a></li>
+        <li><a href="../../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../../contact.html">Join us</a></li>
+        <li><a href="../../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="../index.html">← Developer Docs</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Housing System</div>
+        <ul>
+          <li><a href="index.html">Key Files</a></li>
+          <li><a href="classes.html">Class Hierarchy</a></li>
+          <li><a href="evolution.html" class="active">Evolution Algorithm</a></li>
+          <li><a href="services.html">Service Coverage</a></li>
+          <li><a href="config.html">Config Format</a></li>
+          <li><a href="adding-tier.html">Adding a Tier</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#progress-enum">e_house_progress</a></li>
+          <li><a href="#evolve-flow">evolve() flow</a></li>
+          <li><a href="#requirements">check_requirements()</a></li>
+          <li><a href="#devolve-delay">Devolve delay</a></li>
+          <li><a href="#size-transitions">Size transitions</a></li>
+          <li><a href="#devolution">Devolution &amp; split</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb"><a href="../../../index.html">Wiki</a> / <a href="../index.html">Developer Docs</a> / <a href="index.html">Housing System</a> / Evolution Algorithm</div>
+      <h1>Evolution Algorithm</h1>
+      <p class="section-intro">How a house decides to evolve, stay the same, or devolve on each monthly tick.</p>
+
+      <h2 id="progress-enum"><code>e_house_progress</code></h2>
+      <p>Every call to <code>check_requirements()</code> returns one of three values:</p>
+      <pre class="wiki-code">
+enum e_house_progress {
+    HOUSE_DECAY  = -1,   // requirements not met — devolve
+    HOUSE_NONE   =  0,   // all requirements met but evolve threshold not reached
+    HOUSE_EVOLVE =  1,   // all requirements met and evolve threshold reached
+};
+</pre>
+
+      <h2 id="evolve-flow"><code>evolve()</code> Flow</h2>
+      <p>Called once per house per monthly update, dispatched from <code>city::house_process_evolve()</code>. The virtual <code>evolve()</code> in each tier class follows this pattern:</p>
+      <pre class="wiki-code">
+void building_house_ordinary_cottage::evolve(house_demands* demands) {
+    // 1. Guard: no population → nothing to do
+    if (base.house_population == 0) return;
+
+    // 2. Try to merge 1×1 plots into a 2×2 block
+    //    (only applicable to tiers 1–10)
+    if (merge()) return;  // if merge happened, stop — type already changed
+
+    // 3. Check requirements and get evolution signal
+    e_house_progress result = check_requirements(demands);
+
+    // 4. Apply devolve delay (anti-thrash protection)
+    if (result == HOUSE_DECAY) {
+        if (!has_devolve_delay()) return;  // wait for delay to expire
+    }
+
+    // 5. Apply the transition
+    switch (result) {
+        case HOUSE_EVOLVE:
+            change_to(BUILDING_HOUSE_MODEST_HOMESTEAD);
+            break;
+        case HOUSE_DECAY:
+            change_to(BUILDING_HOUSE_ROUGH_COTTAGE);
+            break;
+        case HOUSE_NONE:
+            break;  // no change
+    }
+}
+</pre>
+
+      <h2 id="requirements"><code>check_requirements()</code></h2>
+      <p>Compares the house's current state against the <code>model_house_t</code> thresholds for the <em>next tier</em> (for evolve) and the <em>current tier</em> (for devolve).</p>
+
+      <h3>Desirability check</h3>
+      <pre class="wiki-code">
+int desirability = map_desirability_get(base.tile);
+
+if (desirability &lt; model.devolve_desirability[difficulty])
+    return HOUSE_DECAY;
+
+if (desirability &lt; model.evolve_desirability[difficulty])
+    return HOUSE_NONE;  // desirability met for staying, but not evolving
+</pre>
+
+      <h3>Services &amp; goods check</h3>
+      <p><code>has_required_goods_and_services(for_upgrade, demands)</code> validates in order:</p>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Check</th><th>Field tested</th><th>Threshold source</th></tr></thead>
+          <tbody>
+            <tr><td>Water</td><td><code>base.has_water_access</code> / <code>has_well_access</code></td><td>Tier-specific: tier 5+ requires Water Supply, not just Well.</td></tr>
+            <tr><td>Food variety</td><td><code>runtime_data.foods[]</code> non-empty count</td><td><code>model.food_types[difficulty]</code></td></tr>
+            <tr><td>Entertainment</td><td><code>runtime_data.entertainment</code></td><td><code>model.entertainment[difficulty]</code></td></tr>
+            <tr><td>Education</td><td><code>runtime_data.education</code></td><td><code>model.education[difficulty]</code> (0–3)</td></tr>
+            <tr><td>Religion</td><td><code>runtime_data.num_gods</code></td><td><code>model.religion[difficulty]</code> (0–5)</td></tr>
+            <tr><td>Health</td><td><code>runtime_data.health</code></td><td><code>model.health[difficulty]</code> (0–2)</td></tr>
+            <tr><td>Dentist</td><td><code>runtime_data.dentist</code></td><td><code>model.dentist[difficulty]</code> (bool)</td></tr>
+            <tr><td>Physician</td><td><code>runtime_data.physician</code></td><td><code>model.physician[difficulty]</code> (bool)</td></tr>
+            <tr><td>Pottery</td><td><code>runtime_data.inventory[GOOD_POTTERY]</code></td><td><code>model.pottery[difficulty]</code></td></tr>
+            <tr><td>Beer</td><td><code>runtime_data.inventory[GOOD_BEER]</code></td><td><code>model.beer[difficulty]</code></td></tr>
+            <tr><td>Linen</td><td><code>runtime_data.inventory[GOOD_LINEN]</code></td><td><code>model.linen[difficulty]</code></td></tr>
+            <tr><td>Jewelry</td><td><code>runtime_data.inventory[GOOD_JEWELRY]</code></td><td><code>model.jewelry[difficulty]</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Any unmet requirement adds a demand entry to the <code>house_demands*</code> accumulator. The city advisor UI reads this accumulator to display the "your people need more schools / temples / ..." messages.</p>
+      <p>If all checks pass: returns <code>HOUSE_EVOLVE</code>.<br>
+         If any check fails: returns <code>HOUSE_DECAY</code> and records the demand.</p>
+
+      <h2 id="devolve-delay">Devolve Delay</h2>
+      <p>To prevent a single missed service walker from instantly downgrading a house, devolution is buffered by a configurable delay counter:</p>
+      <pre class="wiki-code">
+// runtime_data.devolve_delay counts down from model.devolve_delay
+// (typically 2–6 ticks depending on tier)
+bool building_house::has_devolve_delay() {
+    if (runtime_data.devolve_delay &gt; 0) {
+        runtime_data.devolve_delay--;
+        return false;   // not yet — wait for countdown
+    }
+    runtime_data.devolve_delay = model.devolve_delay;
+    return true;        // delay expired — apply devolution
+}
+</pre>
+      <p>When requirements are met again before the delay expires the counter resets, and no devolution occurs. This means a house can tolerate brief service gaps (e.g. a walker taking a long path) without degrading.</p>
+
+      <h2 id="size-transitions">Size Transitions</h2>
+      <p>Housing footprint grows at specific tier boundaries. This is separate from the tier number — footprint changes require their own transition methods.</p>
+
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Transition</th><th>Tiers involved</th><th>Method</th></tr></thead>
+          <tbody>
+            <tr><td>1×1 → 2×2 merge</td><td>Tiers 1–10 (any tier below Residence)</td><td><code>merge()</code> — requires 4 adjacent identical-tier 1×1 plots</td></tr>
+            <tr><td>2×2 → 3×3 expand</td><td>Tier 14 Fancy Residence → Tier 15 Common Manor</td><td><code>expand_to_manor()</code></td></tr>
+            <tr><td>3×3 → 4×4 expand</td><td>Tier 18 Stately Manor → Tier 19 Modest Estate</td><td><code>expand_to_estate()</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p><code>merge()</code> scans the three adjacent tiles (right, bottom, bottom-right). All four plots must be the same building type and all unoccupied by any non-house structure. When merge succeeds the call returns immediately — the house type has already changed and the current <code>evolve()</code> call should not proceed further.</p>
+
+      <h2 id="devolution">Devolution &amp; Split</h2>
+      <p>When a large house devolves it cannot simply move one step down the tier list — it must also shrink its footprint. Two dedicated devolution paths handle this:</p>
+      <pre class="wiki-code">
+// Manor (3×3) devolution — called from tier 15–18 evolve() on HOUSE_DECAY
+void building_house::devolve_to_fancy_residence() {
+    // split the 3×3 footprint into multiple 2×2 Fancy Residence blocks
+    split(BUILDING_HOUSE_FANCY_RESIDENCE);
+}
+
+// Estate (4×4) devolution — called from tier 19–20 evolve() on HOUSE_DECAY
+void building_house::devolve_to_stately_manor() {
+    // split the 4×4 footprint into multiple 3×3 Stately Manor blocks
+    split(BUILDING_HOUSE_STATELY_MANOR);
+}
+</pre>
+      <p><code>split(new_type)</code> places new building instances at the sub-tile positions the original footprint occupied and removes the original. Population is redistributed proportionally across the new buildings.</p>
+
+      <p>For 2×2 houses devolving back to 1×1, the merge is simply undone: the four 1×1 Crude Hut plots are restored individually in place of the merged block.</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>

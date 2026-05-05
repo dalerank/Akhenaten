@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Service Coverage — Housing System — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../../about.html">About</a></li>
+        <li><a href="../../../../devblog.html">Devblog</a></li>
+        <li><a href="../../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../../contact.html">Join us</a></li>
+        <li><a href="../../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="../index.html">← Developer Docs</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Housing System</div>
+        <ul>
+          <li><a href="index.html">Key Files</a></li>
+          <li><a href="classes.html">Class Hierarchy</a></li>
+          <li><a href="evolution.html">Evolution Algorithm</a></li>
+          <li><a href="services.html" class="active">Service Coverage</a></li>
+          <li><a href="config.html">Config Format</a></li>
+          <li><a href="adding-tier.html">Adding a Tier</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#pipeline">Pipeline overview</a></li>
+          <li><a href="#walker-registration">Walker registration</a></li>
+          <li><a href="#decay">Monthly decay</a></li>
+          <li><a href="#aggregates">Aggregate computation</a></li>
+          <li><a href="#entertainment">Entertainment</a></li>
+          <li><a href="#education">Education</a></li>
+          <li><a href="#religion">Religion</a></li>
+          <li><a href="#health">Health</a></li>
+          <li><a href="#water">Water</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb"><a href="../../../index.html">Wiki</a> / <a href="../index.html">Developer Docs</a> / <a href="index.html">Housing System</a> / Service Coverage</div>
+      <h1>Service Coverage</h1>
+      <p class="section-intro">How figures register services with houses, how scores decay, and how raw flags are aggregated into the values that the evolution check reads.</p>
+
+      <h2 id="pipeline">Pipeline Overview</h2>
+      <pre class="wiki-code">
+[Figure walks road]
+  │  figure::provide_service() called each step
+  │  finds nearby houses via dcast_house()
+  │  sets service flag on runtime_data (e.g. housed.school = MAX_COVERAGE)
+  ▼
+[End of month — city_houses.cpp]
+  │  house_service_calculate_culture_aggregates()
+  │    reads raw flags → writes aggregate scores
+  │    (entertainment, education, health, num_gods)
+  ▼
+[house->evolve() called]
+  │  check_requirements() reads aggregate scores
+  │  compares against model thresholds
+  ▼
+[decay_services() called]
+     decrements all service flags by 1
+     (flags reach 0 = service absent next month unless renewed)
+</pre>
+
+      <h2 id="walker-registration">Walker Registration</h2>
+      <p>Service figures inherit from <code>figure_service_walker</code> (or a similar base). During their movement tick they call <code>provide_service()</code>, which scans the tiles within range and stamps the relevant flag on each house found:</p>
+      <pre class="wiki-code">
+// Example: scribal school teacher (src/figure/service.cpp)
+void figure_teacher::provide_service() {
+    int range = 2;  // tiles
+    for each tile within range of current position:
+        building* b = map_building_at(tile);
+        if (auto* house = b->dcast_house()) {
+            house->runtime_data().school = MAX_COVERAGE;
+            // MAX_COVERAGE is typically 4 — decay takes 4 months
+            // to reach 0, giving walkers time to re-visit
+        }
+}
+</pre>
+      <p>The flag value <code>MAX_COVERAGE</code> is not a boolean — it is a counter. <code>decay_services()</code> decrements it each month. A house covered last month still has a positive flag this month, giving the walker a grace window before the flag drops to zero and coverage is lost.</p>
+
+      <h2 id="decay">Monthly Decay</h2>
+      <pre class="wiki-code">
+// building_house.cpp
+void building_house::decay_services() {
+    auto&amp; d = runtime_data();
+    // each flag: if > 0, decrement
+    if (d.school)             d.school--;
+    if (d.library)            d.library--;
+    if (d.academy)            d.academy--;
+    if (d.physician)          d.physician--;
+    if (d.dentist)            d.dentist--;
+    if (d.apothecary)         d.apothecary--;
+    if (d.mortuary)           d.mortuary--;
+    if (d.magistrate)         d.magistrate--;
+    if (d.booth_juggler)      d.booth_juggler--;
+    if (d.bandstand_juggler)  d.bandstand_juggler--;
+    if (d.bandstand_musician) d.bandstand_musician--;
+    if (d.pavillion_musician) d.pavillion_musician--;
+    if (d.pavillion_dancer)   d.pavillion_dancer--;
+    if (d.senet_player)       d.senet_player--;
+    if (d.bullfighter)        d.bullfighter--;
+    // shrine_access and bazaar_access are set by proximity checks,
+    // not by walker flags — they do not decay
+}
+</pre>
+
+      <h2 id="aggregates">Aggregate Computation</h2>
+      <p>Raw service flags are not read directly by the evolution check. Once per month, before <code>evolve()</code> is called, <code>house_service_calculate_culture_aggregates()</code> translates flags into the four aggregate scores that the model thresholds compare against.</p>
+
+      <h2 id="entertainment">Entertainment Score</h2>
+      <p>Entertainment is a weighted sum of the four performer types. Each type contributes a share of the house's score based on a per-tier divisor from config:</p>
+      <pre class="wiki-code">
+// city_houses.cpp
+int entertainment = 0;
+if (d.booth_juggler)      entertainment += (d.booth_juggler      * 10) / model.entertainment_juggler_divider;
+if (d.bandstand_juggler)  entertainment += (d.bandstand_juggler  * 10) / model.entertainment_juggler_divider;
+if (d.bandstand_musician) entertainment += (d.bandstand_musician * 10) / model.entertainment_musician_divider;
+if (d.pavillion_musician) entertainment += (d.pavillion_musician * 10) / model.entertainment_musician_divider;
+if (d.pavillion_dancer)   entertainment += (d.pavillion_dancer   * 10) / model.entertainment_dancer_divider;
+if (d.senet_player)       entertainment += (d.senet_player       * 10) / model.entertainment_senet_divider;
+if (d.bullfighter)        entertainment += (d.bullfighter        * 10) / model.entertainment_dancer_divider;
+
+d.entertainment = std::clamp(entertainment, 0, 100);
+</pre>
+      <p>The divisors are defined per housing tier in <code>houses.js</code>. Higher-tier housing requires more diverse entertainment to reach the same score, meaning a single juggler booth is not sufficient past a certain point.</p>
+
+      <h2 id="education">Education Score</h2>
+      <p>Education uses a stepped model rather than a continuous score:</p>
+      <pre class="wiki-code">
+// city_houses.cpp
+int education = 0;
+if (d.school || d.library)
+    education = 1;
+if (d.school &amp;&amp; d.library)
+    education = 2;
+if (d.school &amp;&amp; d.library &amp;&amp; d.academy)
+    education = 3;
+
+d.education = education;
+</pre>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Score</th><th>Condition</th><th>Required for</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>No school or library coverage</td><td>Tiers 1–10</td></tr>
+            <tr><td>1</td><td>School OR library</td><td>Tier 11 (Common Residence)</td></tr>
+            <tr><td>2</td><td>School AND library</td><td>Tier 17 (Elegant Manor)</td></tr>
+            <tr><td>3</td><td>School AND library AND academy</td><td>Not required by any tier in base game</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="religion">Religion Score</h2>
+      <p>Religion counts the number of distinct gods whose temple walkers have visited the house within the last few months:</p>
+      <pre class="wiki-code">
+// city_houses.cpp
+int num_gods = 0;
+if (d.temple_osiris) num_gods++;
+if (d.temple_ra)     num_gods++;
+if (d.temple_ptah)   num_gods++;
+if (d.temple_seth)   num_gods++;
+if (d.temple_bast)   num_gods++;
+
+// Shrine provides minimal coverage when no temple is present
+if (d.shrine_access &amp;&amp; num_gods == 0)
+    num_gods = 1;
+
+d.num_gods = num_gods;
+</pre>
+      <p>Each of the five gods (Osiris, Ra, Ptah, Seth, Bast) contributes independently. High-tier housing requires access to multiple gods — typically 2 gods for Fancy Residence, 3 for Elegant Manor. The player must build temples to all required gods and ensure walker paths cover the housing area.</p>
+
+      <h2 id="health">Health Score</h2>
+      <pre class="wiki-code">
+// city_houses.cpp
+int health = 0;
+if (d.apothecary) health++;
+if (d.physician)  health++;
+d.health = health;   // 0, 1, or 2
+</pre>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Score</th><th>Condition</th><th>Required from</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>No health coverage</td><td>—</td></tr>
+            <tr><td>1</td><td>Apothecary or Physician</td><td>Tier 8 (Spacious Homestead)</td></tr>
+            <tr><td>2</td><td>Both Apothecary and Physician</td><td>Not required directly — Dentist is the gating service at higher tiers</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Note: the <strong>Dentist</strong> is tracked via a separate boolean flag (<code>d.dentist</code>) and is checked independently from the health aggregate — it is not folded into the health score.</p>
+
+      <h2 id="water">Water Supply</h2>
+      <p>Water is not an aggregated score but a direct grid property plus a proximity check:</p>
+      <pre class="wiki-code">
+// Water access levels:
+// 0 — no water
+// 1 — well within range  (base.has_well_access)
+// 2 — water supply building within range (base.has_water_access)
+
+// Tiers 1–4 accept level 1 (well)
+// Tiers 5–20 require level 2 (water supply)
+</pre>
+      <p>The distinction between <em>well</em> and <em>water supply</em> is enforced per-tier in <code>has_required_goods_and_services()</code>. Placing a well next to a tier-5+ house will not satisfy the water requirement — only a proper Water Supply building qualifies.</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>

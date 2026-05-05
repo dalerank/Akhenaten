@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Class Hierarchy — Housing System — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../../about.html">About</a></li>
+        <li><a href="../../../../devblog.html">Devblog</a></li>
+        <li><a href="../../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../../contact.html">Join us</a></li>
+        <li><a href="../../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="../index.html">← Developer Docs</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Housing System</div>
+        <ul>
+          <li><a href="index.html">Key Files</a></li>
+          <li><a href="classes.html" class="active">Class Hierarchy</a></li>
+          <li><a href="evolution.html">Evolution Algorithm</a></li>
+          <li><a href="services.html">Service Coverage</a></li>
+          <li><a href="config.html">Config Format</a></li>
+          <li><a href="adding-tier.html">Adding a Tier</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#hierarchy">Hierarchy</a></li>
+          <li><a href="#base-class">Base Class</a></li>
+          <li><a href="#runtime-data">runtime_data_t</a></li>
+          <li><a href="#tier-classes">Tier Classes</a></li>
+          <li><a href="#downcast">Downcasting</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb"><a href="../../../index.html">Wiki</a> / <a href="../index.html">Developer Docs</a> / <a href="index.html">Housing System</a> / Class Hierarchy</div>
+      <h1>Class Hierarchy</h1>
+      <p class="section-intro">How the 20 housing tier classes are organised, what the base class owns, and what lives in runtime_data_t.</p>
+
+      <h2 id="hierarchy">Hierarchy</h2>
+      <pre class="wiki-code">
+building_impl                          (src/building/building_impl.h)
+  └─ building_house                    (src/building/building_house.h)
+       ├─ building_house_crude_hut          tier  1
+       ├─ building_house_sturdy_hut         tier  2
+       ├─ building_house_meager_shanty      tier  3
+       ├─ building_house_common_shanty      tier  4
+       ├─ building_house_rough_cottage      tier  5
+       ├─ building_house_ordinary_cottage   tier  6
+       ├─ building_house_modest_homestead   tier  7
+       ├─ building_house_spacious_homestead tier  8
+       ├─ building_house_modest_apartment   tier  9
+       ├─ building_house_spacious_apartment tier 10
+       ├─ building_house_common_residence   tier 11  ← labor stops here
+       ├─ building_house_spacious_residence tier 12
+       ├─ building_house_elegant_residence  tier 13
+       ├─ building_house_fancy_residence    tier 14
+       ├─ building_house_common_manor       tier 15  ← 3×3 footprint
+       ├─ building_house_spacious_manor     tier 16
+       ├─ building_house_elegant_manor      tier 17
+       ├─ building_house_stately_manor      tier 18
+       ├─ building_house_modest_estate      tier 19  ← 4×4 footprint
+       └─ building_house_palatial_estate    tier 20
+</pre>
+
+      <h2 id="base-class">Base Class — <code>building_house</code></h2>
+      <p>The base class owns the shared interface and helpers used by all tier classes. It does not implement evolution itself — that is delegated to each tier via the virtual <code>evolve()</code> method.</p>
+
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead>
+            <tr><th>Method</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>virtual evolve(house_demands*)</code></td><td>Called monthly. Checks merge eligibility, runs requirements check, applies tier change. Each of the 20 tier classes overrides this.</td></tr>
+            <tr><td><code>check_requirements(house_demands*)</code></td><td>Returns <code>e_house_progress</code> (EVOLVE / NONE / DECAY). Compares current service state against model thresholds.</td></tr>
+            <tr><td><code>has_required_goods_and_services(int for_upgrade, house_demands*)</code></td><td>Validates water, food, entertainment, education, religion, health, and all goods (pottery / beer / linen / jewelry). Sets demand flags for any unmet requirement.</td></tr>
+            <tr><td><code>check_evolve_desirability()</code></td><td>Reads desirability from the grid, compares to <code>model.evolve_desirability</code> and <code>model.devolve_desirability</code>.</td></tr>
+            <tr><td><code>merge() / merge_impl()</code></td><td>Attempts to merge a 1×1 plot into a 2×2 block with three adjacent matching tiles. Returns true if merge succeeded.</td></tr>
+            <tr><td><code>split(int new_type)</code></td><td>Undoes a merge, placing four 1×1 plots in place of one large footprint.</td></tr>
+            <tr><td><code>decay_services()</code></td><td>Called monthly. Decrements all service counters so that coverage must be renewed each month.</td></tr>
+            <tr><td><code>consume_food_weekly() / consume_goods_weekly()</code></td><td>Deducts food and goods from <code>runtime_data.foods[]</code> and <code>runtime_data.inventory[]</code>.</td></tr>
+            <tr><td><code>dcast_house()</code></td><td>Convenience downcast shorthand (see <a href="#downcast">Downcasting</a>).</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="runtime-data"><code>runtime_data_t</code></h2>
+      <p>Each house instance carries a 186-byte <code>runtime_data_t</code> buffer (enforced by <code>static_assert</code>). All fields are declared in <code>building_house.h</code>.</p>
+
+      <h3>Population &amp; food</h3>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><code>population</code></td><td><code>u16</code></td><td>Current occupants.</td></tr>
+            <tr><td><code>highest_population</code></td><td><code>u16</code></td><td>Peak population recorded (used for prosperity score).</td></tr>
+            <tr><td><code>days_without_food</code></td><td><code>u8</code></td><td>Counter incremented each week food is absent. Triggers devolution after <code>model.days_without_food_devolve_threshold</code>.</td></tr>
+            <tr><td><code>foods[8]</code></td><td><code>u8[]</code></td><td>Stock of each food type delivered by the bazaar.</td></tr>
+            <tr><td><code>inventory[8]</code></td><td><code>u8[]</code></td><td>Stock of manufactured goods (pottery, beer, linen, jewelry).</td></tr>
+            <tr><td><code>hsize</code></td><td><code>u8</code></td><td>Tile width: 1, 2, 3, or 4.</td></tr>
+            <tr><td><code>is_merged</code></td><td><code>bool</code></td><td>True when four 1×1 plots have merged into one block.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Service flags (set by walkers each month)</h3>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Field</th><th>Source figure</th></tr></thead>
+          <tbody>
+            <tr><td><code>bazaar_access</code></td><td>Bazaar buyer</td></tr>
+            <tr><td><code>fancy_bazaar_access</code></td><td>Bazaar buyer (high-tier route)</td></tr>
+            <tr><td><code>school</code></td><td>Scribal School teacher</td></tr>
+            <tr><td><code>library</code></td><td>Library librarian</td></tr>
+            <tr><td><code>academy</code></td><td>Academy teacher</td></tr>
+            <tr><td><code>physician</code></td><td>Physician</td></tr>
+            <tr><td><code>dentist</code></td><td>Dentist</td></tr>
+            <tr><td><code>apothecary</code></td><td>Apothecary</td></tr>
+            <tr><td><code>mortuary</code></td><td>Mortuary embalmer</td></tr>
+            <tr><td><code>magistrate</code></td><td>Courthouse magistrate</td></tr>
+            <tr><td><code>shrine_access</code></td><td>Shrine proximity</td></tr>
+            <tr><td><code>booth_juggler</code></td><td>Juggler booth entertainer</td></tr>
+            <tr><td><code>bandstand_juggler / bandstand_musician</code></td><td>Bandstand walkers</td></tr>
+            <tr><td><code>pavillion_musician / pavillion_dancer</code></td><td>Pavilion walkers</td></tr>
+            <tr><td><code>senet_player</code></td><td>Senet house player</td></tr>
+            <tr><td><code>bullfighter</code></td><td>Bull pen fighter</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Aggregated service scores (computed monthly)</h3>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Field</th><th>Range</th><th>Computed from</th></tr></thead>
+          <tbody>
+            <tr><td><code>entertainment</code></td><td>0–100</td><td>Weighted sum of juggler / musician / dancer / senet coverage; see <a href="services.html">Service Coverage</a>.</td></tr>
+            <tr><td><code>education</code></td><td>0–3</td><td>school=1, school+library=2, school+library+academy=3.</td></tr>
+            <tr><td><code>health</code></td><td>0–2</td><td>+1 apothecary, +1 physician.</td></tr>
+            <tr><td><code>num_gods</code></td><td>0–5</td><td>Count of distinct gods with temple walker coverage. Shrine counts as 1 if no temple present.</td></tr>
+            <tr><td><code>water_supply</code></td><td>0–2</td><td>0=none, 1=well, 2=water supply building.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Tax &amp; economy</h3>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><code>tax_collector_id</code></td><td>ID of the tax collector figure last visiting this house.</td></tr>
+            <tr><td><code>tax_income_or_storage</code></td><td>Accumulated tax since last collection.</td></tr>
+            <tr><td><code>tax_coverage</code></td><td>Boolean — whether a tax collector reached this house this year.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Devolution &amp; stability</h3>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><code>devolve_delay</code></td><td>Countdown before a triggered devolution is actually applied. Prevents single-tick fluctuations from instantly downgrading a house.</td></tr>
+            <tr><td><code>unreachable_ticks</code></td><td>Incremented each tick that no road-walker can reach the house. Triggers devolution at <code>model.unreachable_ticks_devolve_threshold</code>.</td></tr>
+            <tr><td><code>no_space_to_expand</code></td><td>Set when merge or size-upgrade is blocked by adjacent obstacles.</td></tr>
+            <tr><td><code>house_happiness</code></td><td>General satisfaction score used for crime and prosperity calculations.</td></tr>
+            <tr><td><code>criminal_active</code></td><td>Flag set when a criminal has spawned from this house.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="tier-classes">Tier Classes</h2>
+      <p>Each of the 20 tier classes follows the same pattern:</p>
+      <pre class="wiki-code">
+// building_house.h
+struct building_house_ordinary_cottage : building_house {
+    BUILDING_METAINFO(BUILDING_HOUSE_ORDINARY_COTTAGE,
+                      building_house_ordinary_cottage,
+                      building_house)
+
+    virtual void evolve(house_demands* demands) override;
+    // inherits all other methods from building_house
+};
+</pre>
+      <p>The <code>BUILDING_METAINFO</code> macro handles factory registration, type-safe casting, and static param lookup. Beyond <code>evolve()</code>, most tier classes add no new methods — all variation is driven by the model thresholds loaded from config.</p>
+
+      <h2 id="downcast">Downcasting</h2>
+      <p>Use <code>dcast&lt;T&gt;()</code> or the convenience shorthand. Never use <code>static_cast</code>.</p>
+      <pre class="wiki-code">
+building* b = ...;
+
+// check and downcast to any housing tier
+building_house* h = b->dcast_house();          // nullptr if not a house
+
+// downcast to a specific tier
+auto* hut = b->dcast&lt;building_house_crude_hut&gt;();  // nullptr if wrong tier
+
+// safe pattern in an update loop
+if (auto* house = b->dcast_house()) {
+    // safe to call any building_house method
+    house->decay_services();
+}
+</pre>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>
