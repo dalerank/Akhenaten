@@ -8,6 +8,7 @@
 #include "building/building_farm.h"
 #include "building/building_entertainment.h"
 #include "building/building_temple_complex.h"
+#include "core/log.h"
 #include "grid/canals.h"
 #include "grid/bridge.h"
 #include "grid/building.h"
@@ -188,6 +189,58 @@ void map_building_tiles_remove(int building_id, tile2i tile) {
             map_building_tile_clear_at(grid_offset, building_id ? b->type : 0);
         }
     }
+
+    // Defensive sweep: walk the area around b->tile (persisted reliably via
+    // iob_buildings) and clear any tile that still claims this building_id.
+    // The targeted clear above keys off type-specific anchors like the
+    // entertainment building's booth_corner_grid_offset — if that field is
+    // stale from an older save (we've seen bandstands from previous builds
+    // leave their textures + TERRAIN_BUILDING behind on demolition), the
+    // anchor points elsewhere and the real footprint is never cleared. Going
+    // by the building_grid itself catches that case for any building type.
+    if (building_id) {
+        int sx = b->tile.x();
+        int sy = b->tile.y();
+        int span = (size > b->size ? size : b->size) + 2; // +1 either side
+        int leaks = 0;
+        int leak_min_x = 0, leak_min_y = 0, leak_max_x = 0, leak_max_y = 0;
+        for (int dy = -1; dy < span; dy++) {
+            for (int dx = -1; dx < span; dx++) {
+                tile2i t(sx + dx, sy + dy);
+                if (!map_grid_is_inside(t, 1)) {
+                    continue;
+                }
+                int grid_offset = t.grid_offset();
+                if (map_building_at(grid_offset) != building_id) {
+                    continue;
+                }
+                if (leaks == 0) {
+                    leak_min_x = leak_max_x = t.x();
+                    leak_min_y = leak_max_y = t.y();
+                } else {
+                    if (t.x() < leak_min_x) leak_min_x = t.x();
+                    if (t.x() > leak_max_x) leak_max_x = t.x();
+                    if (t.y() < leak_min_y) leak_min_y = t.y();
+                    if (t.y() > leak_max_y) leak_max_y = t.y();
+                }
+                leaks++;
+                map_building_tile_clear_at(grid_offset, b->type);
+            }
+        }
+        if (leaks) {
+            logs::info("map_building_tiles_remove fallback cleared %d tile(s) for "
+                       "building id=%d type=%d at b->tile=(%d,%d) anchor=(%d,%d) "
+                       "leaks=(%d,%d)..(%d,%d)",
+                       leaks, building_id, (int)b->type, sx, sy, x, y,
+                       leak_min_x, leak_min_y, leak_max_x, leak_max_y);
+            // Make sure the surface-update region covers the fallback tiles.
+            if (leak_min_x < x) x = leak_min_x;
+            if (leak_min_y < y) y = leak_min_y;
+            if (leak_max_x >= x + size) size = leak_max_x - x + 1;
+            if (leak_max_y >= y + size) size = leak_max_y - y + 1;
+        }
+    }
+
     map_tiles_update_region_empty_land(true, tile2i(x - 2, y - 2), tile2i(x + size + 2, y + size + 2));
     map_tiles_update_region_meadow(x - 2, y - 2, x + size + 2, y + size + 2);
     map_tiles_update_region_rubble(x, y, x + size, y + size);

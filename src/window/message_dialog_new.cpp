@@ -39,6 +39,7 @@
 #include "js/js_game.h"
 #include "game/game.h"
 #include "message_dialog.h"
+#include "core/log.h"
 #include "core/string.h"
 #include "city/military.h"
 
@@ -387,6 +388,7 @@ void ui::message_dialog_base::button_close() {
 }
 
 void ui::message_dialog_base::button_help() {
+    logs::info("message_dialog_base::button_help invoked, help_id='%s'", help_id.empty() ? "<empty>" : help_id.c_str());
     button_close();
     if (!help_id.empty()) {
         g_message_dialog_instance->show(help_id, -1, background_callback);
@@ -502,6 +504,10 @@ void window_message_setup_help_id(xstring helpid) {
 }
 
 void window_show_help() {
+    logs::info("window_show_help invoked, help_id='%s'",
+        (g_message_dialog_instance && !g_message_dialog_instance->help_id.empty())
+            ? g_message_dialog_instance->help_id.c_str()
+            : "<none>");
     auto &data = g_window_manager;
     auto &current_window = data.window_queue[data.queue_index];
     if (g_message_dialog_instance && !g_message_dialog_instance->help_id.empty()) {

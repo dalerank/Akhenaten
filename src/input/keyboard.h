@@ -4,31 +4,69 @@
 
 #include <stdint.h>
 
-void keyboard_start_capture(uint8_t* text, int max_length, int allow_punctuation, int box_width, e_font font);
-void keyboard_refresh(void);
-void keyboard_resume_capture(void);
-void keyboard_pause_capture(void);
-void keyboard_stop_capture(void);
+struct keyboard_t {
+    bool insert;
+    int capture;
+    bool accepted;
 
-void keyboard_start_capture_numeric(void (*callback)(int));
-void keyboard_stop_capture_numeric(void);
+    int capture_numeric;
+    void (*capture_numeric_callback)(int);
 
-int keyboard_input_is_accepted(void);
-int keyboard_is_capturing(void);
-int keyboard_is_insert(void);
-int keyboard_cursor_position(void);
-int keyboard_offset_start(void);
-int keyboard_offset_end(void);
+    uint8_t* text;
+    int cursor_position;
+    int length;
+    int max_length;
+    int allow_punctuation;
 
-void keyboard_return(void);
+    int viewport_start;
+    int viewport_end;
+    int viewport_cursor_position;
 
-void keyboard_backspace(void);
-void keyboard_delete(void);
-void keyboard_insert(void);
+    int box_width;
+    e_font font;
+    int multiline;
 
-void keyboard_left(void);
-void keyboard_right(void);
-void keyboard_home(void);
-void keyboard_end(void);
+    void start_capture(uint8_t* text, int max_length, int allow_punctuation, int box_width, e_font font, int multiline = 0);
+    void refresh();
+    void resume_capture();
+    void pause_capture();
+    void stop_capture();
+    void start_capture_numeric(void (*callback)(int));
+    void stop_capture_numeric();
 
-void keyboard_text(const char* text_utf8);
+    bool input_is_accepted();
+    bool is_capturing();
+    bool is_capturing_buffer(const uint8_t* text);
+    bool is_insert();
+    int  get_cursor_position();
+    int get_cursor_abs_offset();
+    int get_offset_start();
+    int get_offset_end();
+
+    void move_right(const uint8_t* start, uint8_t* end);
+    void move_left(uint8_t* start, const uint8_t* end);
+    void move_cursor_left();
+    void move_cursor_right();
+    void insert_char(const uint8_t* value, int bytes);
+    void press_return();
+    void press_backspace();
+    void press_delete(); 
+    void press_insert();
+    void press_left();
+    void press_right();
+    void press_home();
+    void press_end();
+    int press_character(uint8_t* text);
+    void remove_current_char();
+    void add_char(const uint8_t* value, int bytes);
+    void set_text(const char* text_utf8);
+
+    void set_viewport_to_start();
+    void set_viewport_to_end();
+    void include_cursor_in_viewport();
+    void update_viewport(int has_changed);
+
+    int get_current_char_bytes();
+};
+
+extern keyboard_t g_keyboard;

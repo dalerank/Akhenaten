@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Developer Docs — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../about.html">About</a></li>
+        <li><a href="../../devblog.html">Devblog</a></li>
+        <li><a href="../index.html" class="active">Wiki</a></li>
+        <li><a href="../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../downloads.html">Downloads</a></li>
+        <li><a href="../../contributors.html">Contributors</a></li>
+        <li><a href="../../contact.html">Join us</a></li>
+        <li><a href="../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="../index.html">← Wiki</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Developer Docs</div>
+        <ul>
+          <li><a href="index.html" class="active">Overview</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Architecture</div>
+        <ul>
+          <li><a href="architecture/overview.html">Overview</a></li>
+          <li><a href="architecture/buildings.html">Building System</a></li>
+          <li><a href="architecture/figures.html">Figure System</a></li>
+          <li><a href="architecture/city.html">City Simulation</a></li>
+          <li><a href="architecture/grid.html">Grid &amp; Pathfinding</a></li>
+          <li><a href="architecture/ui.html">UI &amp; Rendering</a></li>
+          <li><a href="architecture/io.html">Save &amp; Load</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Guides</div>
+        <ul>
+          <li><a href="guides/building.html">Adding a Building</a></li>
+          <li><a href="guides/figure.html">Adding a Figure</a></li>
+          <li><a href="guides/config-format.html">Config File Format</a></li>
+          <li><a href="guides/modding.html">Modding Guide</a></li>
+          <li><a href="guides/js-scripting.html">JS Scripting</a></li>
+          <li><a href="guides/build.html">Build Instructions</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Housing System</div>
+        <ul>
+          <li><a href="housing/index.html">Key Files</a></li>
+          <li><a href="housing/classes.html">Class Hierarchy</a></li>
+          <li><a href="housing/evolution.html">Evolution Algorithm</a></li>
+          <li><a href="housing/services.html">Service Coverage</a></li>
+          <li><a href="housing/config.html">Config Format</a></li>
+          <li><a href="housing/adding-tier.html">Adding a Tier</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb"><a href="../index.html">Wiki</a> / Developer Docs</div>
+      <h1>Developer Docs</h1>
+      <p class="section-intro">Engine internals, configuration system, and contribution guides for Akhenaten.</p>
+
+      <div class="wiki-index-grid">
+
+        <a href="architecture/overview.html" class="wiki-index-card">
+          <h3>Architecture Overview</h3>
+          <p>High-level module map — buildings, figures, city simulation, grid, rendering, save/load, and how they connect.</p>
+        </a>
+
+        <a href="guides/config-format.html" class="wiki-index-card">
+          <h3>Config File Format</h3>
+          <p>The JavaScript DSL used to define all buildings, figures, gods, and mechanics. Syntax reference with examples.</p>
+        </a>
+
+        <a href="guides/building.html" class="wiki-index-card">
+          <h3>Adding a Building</h3>
+          <p>Step-by-step: creating a new building type from enum to C++ class to JS config and animations.</p>
+        </a>
+
+        <a href="guides/figure.html" class="wiki-index-card">
+          <h3>Adding a Figure</h3>
+          <p>How to implement a new unit type — AI state machine, static params, runtime data, and registration.</p>
+        </a>
+
+        <a href="guides/modding.html" class="wiki-index-card">
+          <h3>Modding Guide</h3>
+          <p>Creating mods with <code>.sgx</code> archives, overriding building configs, adding custom assets and scripts.</p>
+        </a>
+
+        <a href="guides/js-scripting.html" class="wiki-index-card">
+          <h3>JS Scripting</h3>
+          <p>The MuJS scripting system — available APIs, hot-reload workflow, and debugging with VS Code DAP.</p>
+        </a>
+
+        <a href="guides/build.html" class="wiki-index-card">
+          <h3>Build Instructions</h3>
+          <p>Building from source on Windows (Visual Studio), Linux, macOS, and Android. CMake presets reference.</p>
+        </a>
+
+        <a href="architecture/buildings.html" class="wiki-index-card">
+          <h3>Building System</h3>
+          <p>Deep dive into <code>building</code>, <code>building_impl</code>, static params, runtime data, and the METAINFO pattern.</p>
+        </a>
+
+        <a href="housing/index.html" class="wiki-index-card">
+          <h3>Housing System</h3>
+          <p>Class hierarchy, evolution algorithm, service coverage pipeline, <code>houses.js</code> config reference, and a guide for adding a new tier.</p>
+        </a>
+
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>

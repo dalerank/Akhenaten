@@ -39,7 +39,7 @@
 e_god_tokens_t ANK_CONFIG_ENUM(e_god_tokens);
 e_god_short_tokens_t e_god_short_tokens;
 
-e_god find_god_id_from_short_name(const std::string& god_name) {    
+e_god find_god_id_from_short_name(const std::string& god_name) {
     for (const auto& it: e_god_short_tokens.values) {
         if (god_name == it.name) {
             return (e_god)it.id;
@@ -174,11 +174,19 @@ void city_religion_t::calc_coverage() {
         return;
     }
 
-    coverage[GOD_OSIRIS] = std::min(calc_percentage(pop, god_coverage_total(GOD_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_TEMPLE_OSIRIS, BUILDING_TEMPLE_COMPLEX_OSIRIS)), 100);
-    coverage[GOD_RA] = std::min(calc_percentage(pop, god_coverage_total(GOD_RA, BUILDING_SHRINE_RA, BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA)), 100);
-    coverage[GOD_PTAH] = std::min(calc_percentage(pop, god_coverage_total(GOD_PTAH, BUILDING_SHRINE_PTAH, BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH)), 100);
-    coverage[GOD_SETH] = std::min(calc_percentage(pop, god_coverage_total(GOD_SETH, BUILDING_SHRINE_SETH, BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH)), 100);
-    coverage[GOD_BAST] = std::min(calc_percentage(pop, god_coverage_total(GOD_BAST, BUILDING_SHRINE_BAST, BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST)), 100);
+    auto god_coverage_pct = [this, pop](e_god g, e_building_type s, e_building_type t, e_building_type c) {
+        return std::min(calc_percentage(god_coverage_total(g, s, t, c), pop), 100);
+    };
+
+    coverage[GOD_OSIRIS]
+      = god_coverage_pct(GOD_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_TEMPLE_OSIRIS, BUILDING_TEMPLE_COMPLEX_OSIRIS);
+    coverage[GOD_RA] = god_coverage_pct(GOD_RA, BUILDING_SHRINE_RA, BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA);
+    coverage[GOD_PTAH]
+      = god_coverage_pct(GOD_PTAH, BUILDING_SHRINE_PTAH, BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH);
+    coverage[GOD_SETH]
+      = god_coverage_pct(GOD_SETH, BUILDING_SHRINE_SETH, BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH);
+    coverage[GOD_BAST]
+      = god_coverage_pct(GOD_BAST, BUILDING_SHRINE_BAST, BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST);
 
     int result = coverage[GOD_OSIRIS] + coverage[GOD_RA]
                         + coverage[GOD_PTAH] + coverage[GOD_SETH]
@@ -770,7 +778,7 @@ void city_religion_t::update_mood(e_god randm_god) {
     }
 
     // update anger/happiness/bolt icons/etc.
-    const int difficulty = g_settings.difficulty();
+    const int difficulty = game.difficulty();
     if (is_god_known(randm_god) != GOD_STATUS_UNKNOWN) { // OG code checks "randm_god < MAX_GODS" which is redundant.
         god_state* god = &gods[randm_god];
         if (god->mood > 50)

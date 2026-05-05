@@ -6,6 +6,7 @@
 #include "core/calc.h"
 #include "game/game_config.h"
 #include "game/game_environment.h"
+#include "game/game.h"
 #include "js/js_game.h"
 #include "core/string.h"
 #include "io/io.h"
@@ -15,22 +16,14 @@
 #define INF_SIZE 564
 
 game_settings g_settings;
-const e_sound_type_tokens_t ANK_CONFIG_ENUM(e_sound_type_tokens);
 
 game_settings::game_settings() {
     inf_file = new buffer(INF_SIZE);
 }
 
-uint8_t game_difficulty() {
-    return g_settings.difficulty();
-}
-
 void game_settings::load_default_settings() {
-    fullscreen = true;
-    cli_fullscreen = false;
     display_size = {800, 600};
 
-    difficulty.set(DIFFICULTY_HARD);
     last_advisor = ADVISOR_NONE;
 
     clear_personal_savings();
@@ -38,7 +31,7 @@ void game_settings::load_default_settings() {
 
 void game_settings::load_settings(buffer* buf) {
     buf->skip(4);
-    fullscreen = buf->read_i32();
+    buf->read_i32(); // fullscreen - moved to game_features::gameopt_fullscreen
     buf->skip(3);
     buf->read_u8();
     buf->read_u8();
@@ -76,8 +69,7 @@ void game_settings::load_settings(buffer* buf) {
     buf->read_i32(); // victory_video - moved to game_features::gameopt_victory_video
 
     assert(!buf->at_end());
-    e_difficulty difficulty_value = (e_difficulty)buf->read_i32();
-    difficulty.set(difficulty_value);
+    buf->read_i32();
     buf->read_i32(); // gods_enabled - moved to game_features::gameopt_gods_enabled
 }
 
@@ -103,7 +95,7 @@ void game_settings::save() {
     buf->reset_offset();
 
     buf->skip(4);
-    buf->write_i32(fullscreen);
+    buf->write_i32(false); // fullscreen - moved to game_features::gameopt_fullscreen
     buf->skip(3);
     buf->write_u8(false);
     buf->write_u8(false);
@@ -136,7 +128,7 @@ void game_settings::save() {
         buf->write_i32(personal_savings[i]);
     }
     buf->write_i32(false); // victory_video - moved to game_features::gameopt_victory_video
-    buf->write_u8(difficulty());
+    buf->write_u8(0);
     buf->skip(3);
     buf->write_i32(false); // gods_enabled - moved to game_features::gameopt_gods_enabled
 
@@ -159,3 +151,5 @@ void game_settings::clear_personal_savings() {
         personal_savings[i] = 0;
     }
 }
+
+

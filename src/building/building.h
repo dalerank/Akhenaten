@@ -445,7 +445,7 @@ private:
 };
 ANK_CONFIG_PROPERTY(building, has_road_access, num_workers, max_workers, type,
     collapse_risk, fire_risk, structure_damage,
-    current_desirability, has_water_access, has_well_access)
+    current_desirability, has_water_access, has_well_access, curse_days_left)
 
 #define BUILDING_METAINFO(type, clsid, base_class)                                                      \
     clsid(building &b) : base_class(b) {}                                                               \

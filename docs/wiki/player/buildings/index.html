@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Buildings — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .bld-table th:nth-child(3),
+    .bld-table td:nth-child(3) { text-align: center; }
+    .bld-table th:nth-child(4),
+    .bld-table td:nth-child(4) { text-align: center; }
+    .bld-table th:nth-child(5),
+    .bld-table td:nth-child(5) { text-align: center; }
+    .bld-table th:nth-child(2),
+    .bld-table td:nth-child(2) { text-align: right; white-space: nowrap; }
+    .des-pos { color: #7ec87e; }
+    .des-neg { color: #d07070; }
+    .des-zero { color: var(--text-muted); }
+    .prod-arrow { color: var(--gold); margin: 0 0.2rem; }
+    .bld-note { font-size: 0.75rem; color: var(--text-muted); }
+    .cat-section { margin-top: 2.5rem; }
+    .cat-section h2 { font-size: 1.1rem; }
+    .cat-desc { color: var(--text-muted); font-size: 0.85rem; margin: 0.4rem 0 0.75rem; }
+    .tag-cleo {
+      font-size: 0.68rem; font-family: 'Consolas', monospace;
+      background: rgba(138,171,220,0.1); border: 1px solid rgba(138,171,220,0.3);
+      color: #8aabdc; border-radius: 2px; padding: 0.05rem 0.35rem;
+      vertical-align: middle; margin-left: 0.3rem; white-space: nowrap;
+    }
+    .tag-mil {
+      font-size: 0.68rem; font-family: 'Consolas', monospace;
+      background: rgba(200,100,100,0.1); border: 1px solid rgba(200,100,100,0.25);
+      color: #d07070; border-radius: 2px; padding: 0.05rem 0.35rem;
+      vertical-align: middle; margin-left: 0.3rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="../index.html">← Player Guide</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Buildings</div>
+        <ul>
+          <li><a href="index.html" class="active">All Buildings</a></li>
+          <li><a href="housing.html">Housing</a></li>
+          <li><a href="food.html">Food Production</a></li>
+          <li><a href="industry.html">Industry</a></li>
+          <li><a href="religion.html">Religion</a></li>
+          <li><a href="education.html">Education</a></li>
+          <li><a href="entertainment.html">Entertainment</a></li>
+          <li><a href="health.html">Health</a></li>
+          <li><a href="military.html">Military</a></li>
+          <li><a href="monuments.html">Monuments</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#food">Food Production</a></li>
+          <li><a href="#distribution">Distribution</a></li>
+          <li><a href="#raw">Raw Materials</a></li>
+          <li><a href="#workshops">Workshops</a></li>
+          <li><a href="#guilds">Construction Guilds</a></li>
+          <li><a href="#religion">Religion</a></li>
+          <li><a href="#education">Education</a></li>
+          <li><a href="#entertainment">Entertainment</a></li>
+          <li><a href="#health">Health &amp; Water</a></li>
+          <li><a href="#admin">Administration</a></li>
+          <li><a href="#beautification">Beautification</a></li>
+          <li><a href="#military">Military</a></li>
+          <li><a href="#monuments">Monuments</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb"><a href="../../index.html">Wiki</a> / <a href="../index.html">Player Guide</a> / Buildings</div>
+      <h1>All Buildings</h1>
+      <p class="section-intro">Complete reference for every building in Pharaoh and the Cleopatra expansion. Costs are for Normal difficulty. Desirability values are the base effect at the building itself; influence decreases with distance according to each building's step and range parameters.</p>
+
+      <div class="wiki-infobox">
+        <h4>Reading the tables</h4>
+        <dl>
+          <dt>Cost</dt><dd>Deben at Normal difficulty · multiply by ~0.5 / ~1.3 / ~1.7 for Easy / Hard / Very Hard</dd>
+          <dt>Workers</dt><dd>Employees needed for full operation · 0 = no staff required</dd>
+          <dt>Size</dt><dd>Footprint in tiles (N×N)</dd>
+          <dt>Des.</dt><dd><span class="des-pos">+n</span> positive, <span class="des-neg">−n</span> negative desirability at the building tile</dd>
+          <dt>Production</dt><dd>Input resource <span class="prod-arrow">→</span> output resource</dd>
+        </dl>
+      </div>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <div class="cat-section" id="food">
+        <h2>Food Production</h2>
+        <p class="cat-desc">Farms, hunting, fishing, and animal husbandry. All food buildings are undesirable — keep them away from housing you want to evolve. Data source: <code>src/scripts/building_farm.js</code>, <code>building_hunting_lodge.js</code>.</p>
+        <div class="wiki-table-wrap">
+          <table class="wiki-table bld-table">
+            <thead><tr><th>Building</th><th>Cost</th><th>Workers</th><th>Size</th><th>Des.</th><th>Production</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Grain Farm</td><td>15</td><td>10</td><td>3×3</td><td class="des-neg">−2</td><td class="bld-note">→ grain</td><td class="bld-note">Floodplain only; idle during inundation</td></tr>
+              <tr><td>Lettuce Farm</td><td>15</td><td>10</td><td>3×3</td><td class="des-neg">−2</td><td class="bld-note">→ lettuce</td><td class="bld-note">Floodplain only</td></tr>
+              <tr><td>Pomegranates Farm</td><td>15</td><td>10</td><td>3×3</td><td class="des-neg">−2</td><td class="bld-note">→ pomegranates</td><td class="bld-note">Floodplain only</td></tr>
+              <tr><td>Chickpeas Farm</td><td>15</td><td>10</td><td>3×3</td><td class="des-neg">−2</td><td class="bld-note">→ chickpeas</td><td class="bld-note">Floodplain only</td></tr>
+              <tr><td>Figs Farm</td><td>15</td><td>10</td><td>3×3</td><td class="des-neg">−2</td><td class="bld-note">→ figs</td><td class="bld-note">Floodplain only</td></tr>
+              <tr><td>Barley Farm</td><td>15</td><td>10</td><td>3×3</td><td class="des-neg">−2</td><td class="bld-note">→ barley</td><td class="bld-note">Floodplain only; barley needed for beer</td></tr>
+              <tr><td>Flax Farm</td><td>15</td><td>10</td><td>3×3</td><td class="des-neg">−2</td><td class="bld-note">→ flax</td><td class="bld-note">Floodplain only; flax needed for linen</td></tr>
+              <tr><td>Barley Meadow Farm</td><td>15</td><td>10</td><td>3×3</td><td class="des-neg">−2</td><td class="bld-note">→ barley</td><td class="bld-note">Meadow (irrigated) land; requires Water Lift</td></tr>
+              <tr><td>Flax Meadow Farm</td><td>15</td><td>10</td><td>3×3</td><td class="des-neg">−2</td><td class="bld-note">→ flax</td><td class="bld-note">Meadow land; requires Water Lift</td></tr>
+              <tr><td>Grain Meadow Farm</td><td>15</td><td>10</td><td>3×3</td><td class="des-neg">−2</td><td class="bld-note">→ grain</td><td class="bld-note">Year-round production</td></tr>
+              <tr><td>Lettuce Meadow Farm</td><td>15</td><td>10</td><td>3×3</td><td class="des-neg">−2</td><td class="bld-note">→ lettuce</td><td class="bld-note">Year-round production</td></tr>
+              <tr><td>Pomegranates Meadow</td><td>15</td><td>10</td><td>3×3</td><td class="des-neg">−2</td><td class="bld-note">→ pomegranates</td><td class="bld-note">Year-round production</td></tr>
+              <tr><td>Chickpeas Meadow</td><td>15</td><td>10</td><td>3×3</td><td class="des-neg">−2</td><td class="bld-note">→ chickpeas</td><td class="bld-note">Year-round production</td></tr>
+              <tr><td>Henna Meadow Farm</td><td>15</td><td>10</td><td>3×3</td><td class="des-neg">−2</td><td class="bld-note">→ henna</td><td class="bld-note">Year-round production</td></tr>
+              <tr><td>Figs Meadow Farm</td><td>15</td><td>10</td><td>3×3</td><td class="des-neg">−2</td><td class="bld-note">→ figs</td><td class="bld-note">Year-round production</td></tr>
+              <tr><td><a href="hunting-lodge.html">Hunting Lodge</a></td><td>25</td><td>6</td><td>2×2</td><td class="des-neg">−4</td><td class="bld-note">→ game meat</td><td class="bld-note">Hunters need nearby prey (ostriches, deer)</td></tr>
+              <tr><td>Fishing Wharf</td><td>100</td><td>6</td><td>2×2</td><td class="des-neg">−4</td><td class="bld-note">→ fish</td><td class="bld-note">Must be placed at water edge</td></tr>
+              <tr><td>Cattle Ranch</td><td>30</td><td>12</td><td>3×3</td><td class="des-neg">−4</td><td class="bld-note">straw → meat</td><td class="bld-note">Needs straw supply; produces beef</td></tr>
+              <tr><td>Water Lift</td><td>25</td><td>8</td><td>2×2</td><td class="des-neg">−3</td><td>—</td><td class="bld-note">Raises Nile water to irrigate meadow farmland</td></tr>
+              <tr><td>Irrigation Ditch</td><td>7</td><td>0</td><td>1×1</td><td class="des-zero">0</td><td>—</td><td class="bld-note">Draggable; channels water to meadow tiles</td></tr>
+              <tr><td>Work Camp</td><td>40</td><td>20</td><td>2×2</td><td class="des-neg">−3</td><td>—</td><td class="bld-note">Provides unskilled labour for monument construction</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <div class="cat-section" id="distribution">
+        <h2>Food &amp; Goods Distribution</h2>
+        <p class="cat-desc">Move food from farms to citizens and goods to buyers. Data source: <code>building_granary.js</code>, <code>buildings.js</code>.</p>
+        <div class="wiki-table-wrap">
+          <table class="wiki-table bld-table">
+            <thead><tr><th>Building</th><th>Cost</th><th>Workers</th><th>Size</th><th>Des.</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Granary</td><td>100</td><td>20</td><td>4×4</td><td class="des-neg">−8</td><td class="bld-note">Stores up to 3 200 units of food; workers carry food to bazaars</td></tr>
+              <tr><td>Bazaar</td><td>30</td><td>5</td><td>2×2</td><td class="des-neg">−2</td><td class="bld-note">Distributes food and goods to nearby housing</td></tr>
+              <tr><td>Storage Yard</td><td>50</td><td>6</td><td>3×3</td><td class="des-neg">−5</td><td class="bld-note">Stores non-food goods and raw materials</td></tr>
+              <tr><td>Dock</td><td>70</td><td>12</td><td>3×3</td><td class="des-neg">−12</td><td class="bld-note">Sea/river trade; must be placed at water edge; unlocks trade advisor</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <div class="cat-section" id="raw">
+        <h2>Raw Materials</h2>
+        <p class="cat-desc">Extraction buildings harvest natural resources from the map. They must be placed on the correct terrain type. All are strongly undesirable. Data source: <code>buildings.js</code>.</p>
+        <div class="wiki-table-wrap">
+          <table class="wiki-table bld-table">
+            <thead><tr><th>Building</th><th>Cost</th><th>Workers</th><th>Size</th><th>Des.</th><th>Output</th><th>Terrain requirement</th></tr></thead>
+            <tbody>
+              <tr><td>Clay Pit</td><td>30</td><td>8</td><td>2×2</td><td class="des-neg">−3</td><td class="bld-note">clay</td><td class="bld-note">Clay deposits (shown on resource overlay)</td></tr>
+              <tr><td>Reed Gatherer</td><td>40</td><td>8</td><td>2×2</td><td class="des-neg">−2</td><td class="bld-note">reeds</td><td class="bld-note">Marshland / reeds terrain</td></tr>
+              <tr><td>Wood Cutters</td><td>40</td><td>8</td><td>2×2</td><td class="des-neg">−4</td><td class="bld-note">timber</td><td class="bld-note">Forest tiles</td></tr>
+              <tr><td>Gold Mine</td><td>150</td><td>12</td><td>2×2</td><td class="des-neg">−16</td><td class="bld-note">gold</td><td class="bld-note">Gold ore deposits; generates city income directly</td></tr>
+              <tr><td>Copper Mine</td><td>100</td><td>10</td><td>2×2</td><td class="des-neg">−12</td><td class="bld-note">copper</td><td class="bld-note">Copper deposits; needed for weapons</td></tr>
+              <tr><td>Gemstone Mine</td><td>100</td><td>8</td><td>2×2</td><td class="des-neg">−12</td><td class="bld-note">gems</td><td class="bld-note">Gemstone deposits; needed for jewellery</td></tr>
+              <tr><td>Stone Quarry</td><td>50</td><td>12</td><td>2×2</td><td class="des-neg">−6</td><td class="bld-note">stone</td><td class="bld-note">Stone terrain; used in monuments</td></tr>
+              <tr><td>Limestone Quarry</td><td>50</td><td>12</td><td>2×2</td><td class="des-neg">−6</td><td class="bld-note">limestone</td><td class="bld-note">Limestone terrain; used in pyramid casing</td></tr>
+              <tr><td>Sandstone Quarry</td><td>50</td><td>12</td><td>2×2</td><td class="des-neg">−6</td><td class="bld-note">sandstone</td><td class="bld-note">Sandstone terrain; used in obelisks &amp; temples</td></tr>
+              <tr><td>Granite Quarry</td><td>80</td><td>12</td><td>2×2</td><td class="des-neg">−6</td><td class="bld-note">granite</td><td class="bld-note">Granite terrain; harder to find, used in large monuments</td></tr>
+              <tr><td>Marble Quarry</td><td>50</td><td>12</td><td>2×2</td><td class="des-neg">−6</td><td class="bld-note">marble</td><td class="bld-note">Marble deposits; used in Ptolemaic monuments <span class="tag-cleo">Cleo</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <div class="cat-section" id="workshops">
+        <h2>Industry Workshops</h2>
+        <p class="cat-desc">Process raw materials into finished goods. All workshops are 2×2. Goods are stored in Storage Yards and distributed by Bazaars. Data source: <code>building_workshop.js</code>, <code>building_pottery.js</code>.</p>
+        <div class="wiki-table-wrap">
+          <table class="wiki-table bld-table">
+            <thead><tr><th>Building</th><th>Cost</th><th>Workers</th><th>Size</th><th>Des.</th><th>Production</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Pottery Workshop</td><td>30</td><td>12</td><td>2×2</td><td class="des-neg">−4</td><td class="bld-note">clay <span class="prod-arrow">→</span> pottery</td><td class="bld-note">Pottery improves housing evolution</td></tr>
+              <tr><td>Brewery Workshop</td><td>50</td><td>12</td><td>2×2</td><td class="des-neg">−5</td><td class="bld-note">barley <span class="prod-arrow">→</span> beer</td><td class="bld-note">Beer required by Senet House and high-tier housing</td></tr>
+              <tr><td>Weaver Workshop</td><td>50</td><td>12</td><td>2×2</td><td class="des-neg">−3</td><td class="bld-note">flax <span class="prod-arrow">→</span> linen</td><td class="bld-note">Linen used by Mortuary; also improves housing</td></tr>
+              <tr><td>Papyrus Maker</td><td>50</td><td>12</td><td>2×2</td><td class="des-neg">−4</td><td class="bld-note">reeds <span class="prod-arrow">→</span> papyrus</td><td class="bld-note">Papyrus needed by all education buildings</td></tr>
+              <tr><td>Bricks Workshop</td><td>30</td><td>12</td><td>2×2</td><td class="des-neg">−4</td><td class="bld-note">clay <span class="prod-arrow">→</span> bricks</td><td class="bld-note">Bricks used in brick monuments and city walls</td></tr>
+              <tr><td>Jewels Workshop</td><td>50</td><td>12</td><td>2×2</td><td class="des-neg">−2</td><td class="bld-note">gems <span class="prod-arrow">→</span> luxury goods</td><td class="bld-note">Luxury goods improve housing to highest tiers</td></tr>
+              <tr><td>Weaponsmith</td><td>80</td><td>12</td><td>2×2</td><td class="des-neg">−3</td><td class="bld-note">copper <span class="prod-arrow">→</span> weapons</td><td class="bld-note">Weapons supply infantry and archer forts</td></tr>
+              <tr><td>Chariot Workshop</td><td>150</td><td>30</td><td>2×2</td><td class="des-neg">−6</td><td class="bld-note">timber <span class="prod-arrow">→</span> chariots</td><td class="bld-note">Chariots supply charioteer fort</td></tr>
+              <tr><td>Lamp Workshop</td><td>50</td><td>12</td><td>2×2</td><td class="des-neg">−4</td><td class="bld-note">oil <span class="prod-arrow">→</span> lamps</td><td class="bld-note"><span class="tag-cleo">Cleo</span> Needed for Royal Burial Tomb construction</td></tr>
+              <tr><td>Paint Workshop</td><td>50</td><td>12</td><td>2×2</td><td class="des-neg">−4</td><td class="bld-note">oil <span class="prod-arrow">→</span> paint</td><td class="bld-note"><span class="tag-cleo">Cleo</span> Needed for decorating Royal Burial Tombs</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <div class="cat-section" id="guilds">
+        <h2>Construction Guilds</h2>
+        <p class="cat-desc">Guilds supply skilled craftsmen to monument construction sites. Each guild type unlocks a specific monument material. They do not produce goods but must be present and staffed for construction to proceed. Data source: <code>buildings.js</code>.</p>
+        <div class="wiki-table-wrap">
+          <table class="wiki-table bld-table">
+            <thead><tr><th>Building</th><th>Cost</th><th>Workers</th><th>Size</th><th>Des.</th><th>Enables</th></tr></thead>
+            <tbody>
+              <tr><td>Carpenters Guild</td><td>30</td><td>8</td><td>2×2</td><td class="des-neg">−6</td><td class="bld-note">Wood-frame construction; small mastabas</td></tr>
+              <tr><td>Bricklayers Guild</td><td>80</td><td>10</td><td>2×2</td><td class="des-neg">−6</td><td class="bld-note">Brick monuments (brick pyramids, mastabas)</td></tr>
+              <tr><td>Stonemasons Guild</td><td>80</td><td>12</td><td>2×2</td><td class="des-neg">−6</td><td class="bld-note">Stone and limestone monuments</td></tr>
+              <tr><td>Artisans Guild</td><td>—</td><td>—</td><td>2×2</td><td class="des-neg">−6</td><td class="bld-note">Fine carving; required for highest-grade monuments <span class="tag-cleo">Cleo</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <div class="cat-section" id="religion">
+        <h2>Religion</h2>
+        <p class="cat-desc">Temples and shrines keep the five gods satisfied. Each god can bless or curse the city. The Festival Square is required to hold city festivals. Data source: <code>building_shrine.js</code>, <code>building_temple.js</code>, <code>buildings.js</code>.</p>
+        <div class="wiki-table-wrap">
+          <table class="wiki-table bld-table">
+            <thead><tr><th>Building</th><th>Cost</th><th>Workers</th><th>Size</th><th>Des.</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Shrine (Osiris / Ra / Ptah / Seth / Bast)</td><td>50</td><td>0</td><td>1×1</td><td class="des-pos">+4</td><td class="bld-note">One per god; small coverage radius</td></tr>
+              <tr><td>Temple (Osiris / Ra / Ptah / Seth / Bast)</td><td>80</td><td>8</td><td>3×3</td><td class="des-pos">+6</td><td class="bld-note">Broader coverage; priests hold ceremonies</td></tr>
+              <tr><td>Temple Complex (×5 variants)</td><td>—</td><td>—</td><td>large</td><td class="des-pos">high</td><td class="bld-note">Major monument; unlocks add-on altars &amp; oracles</td></tr>
+              <tr><td>Festival Square</td><td>500</td><td>0</td><td>5×5</td><td class="des-pos">+16</td><td class="bld-note">Required for city festivals; must be placed with open space</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <div class="cat-section" id="education">
+        <h2>Education</h2>
+        <p class="cat-desc">Schools and libraries require a papyrus supply (Papyrus Maker → Storage Yard → delivered). They improve housing evolution and city Culture rating. Data source: <code>building_education.js</code>.</p>
+        <div class="wiki-table-wrap">
+          <table class="wiki-table bld-table">
+            <thead><tr><th>Building</th><th>Cost</th><th>Workers</th><th>Size</th><th>Des.</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Scribal School</td><td>—</td><td>10</td><td>2×2</td><td class="des-pos">+4</td><td class="bld-note">Consumes papyrus; educates children; needed for housing evolution beyond mid-tier</td></tr>
+              <tr><td>Library</td><td>200</td><td>20</td><td>3×3</td><td class="des-pos">+8</td><td class="bld-note">Consumes papyrus; broader coverage than Scribal School</td></tr>
+              <tr><td>Academy</td><td>300</td><td>20</td><td>2×2</td><td class="des-neg">−3</td><td class="bld-note">Highest education tier; required by top-tier housing and Culture rating</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <div class="cat-section" id="entertainment">
+        <h2>Entertainment</h2>
+        <p class="cat-desc">Two kinds of building: <strong>venues</strong> (where citizens go) and <strong>training schools</strong> (produce entertainers who walk to venues). Venues contribute to housing evolution and the Culture rating. A Pavilion is a composite structure that includes a Booth, two Bandstands, and two Garden tiles. Data source: <code>building_entertainment.js</code>, <code>buildings.js</code>.</p>
+        <h3 style="font-size:0.9rem;margin-top:1rem;color:var(--text-muted)">Venues</h3>
+        <div class="wiki-table-wrap">
+          <table class="wiki-table bld-table">
+            <thead><tr><th>Building</th><th>Cost</th><th>Workers</th><th>Size</th><th>Des.</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Booth</td><td>40</td><td>8</td><td>2×2</td><td class="des-pos">+2</td><td class="bld-note">Smallest venue; jugglers entertain nearby houses</td></tr>
+              <tr><td>Bandstand</td><td>100</td><td>12</td><td>3×3</td><td class="des-pos">+4</td><td class="bld-note">Musicians and jugglers; broader coverage than Booth</td></tr>
+              <tr><td>Pavilion</td><td>300</td><td>20</td><td>4×4</td><td class="des-pos">+6</td><td class="bld-note">Largest venue complex; includes booth, bandstand, and gardens in one placement</td></tr>
+              <tr><td>Senet House</td><td>500</td><td>25</td><td>4×4</td><td class="des-neg">−6</td><td class="bld-note">Consumes beer; entertains wealthy citizens; raises crime</td></tr>
+              <tr><td>Zoo</td><td>300</td><td>20</td><td>3×3</td><td class="des-neg">−6</td><td class="bld-note"><span class="tag-cleo">Cleo</span> Exotic animals; required for Ptolemaic-era housing evolution</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3 style="font-size:0.9rem;margin-top:1.25rem;color:var(--text-muted)">Training Schools</h3>
+        <div class="wiki-table-wrap">
+          <table class="wiki-table bld-table">
+            <thead><tr><th>Building</th><th>Cost</th><th>Workers</th><th>Size</th><th>Des.</th><th>Trains</th></tr></thead>
+            <tbody>
+              <tr><td>Juggler School</td><td>50</td><td>5</td><td>2×2</td><td class="des-neg">−3</td><td class="bld-note">Jugglers for Booth and Bandstand</td></tr>
+              <tr><td>Dancer School</td><td>100</td><td>10</td><td>4×4</td><td class="des-neg">−3</td><td class="bld-note">Dancers for Bandstand and Pavilion</td></tr>
+              <tr><td>Conservatory</td><td>90</td><td>8</td><td>3×3</td><td class="des-neg">−3</td><td class="bld-note">Musicians for Bandstand and Pavilion</td></tr>
+              <tr><td>Bullfight School</td><td>100</td><td>15</td><td>2×2</td><td class="des-neg">−3</td><td class="bld-note">Bullfighters; trains for arena events</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <div class="cat-section" id="health">
+        <h2>Health &amp; Water</h2>
+        <p class="cat-desc">Prevent disease and malaria. Water access is a prerequisite for housing evolution; health buildings improve the overall health rating. Data source: <code>building_health.js</code>, <code>buildings.js</code>.</p>
+        <div class="wiki-table-wrap">
+          <table class="wiki-table bld-table">
+            <thead><tr><th>Building</th><th>Cost</th><th>Workers</th><th>Size</th><th>Des.</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Well</td><td>5</td><td>0</td><td>1×1</td><td class="des-pos">+1</td><td class="bld-note">Basic water; must be placed on grassy (wet) ground; no staff needed</td></tr>
+              <tr><td>Water Supply</td><td>40</td><td>5</td><td>2×2</td><td class="des-pos">+4</td><td class="bld-note">Clean water via water carrier; required for housing past cottage tier</td></tr>
+              <tr><td>Apothecary</td><td>15</td><td>5</td><td>1×1</td><td class="des-pos">+1</td><td class="bld-note">Reduces malaria risk; walker covers nearby streets</td></tr>
+              <tr><td>Physician</td><td>30</td><td>8</td><td>2×2</td><td class="des-pos">+2</td><td class="bld-note">Reduces disease risk; required for mid-to-high housing</td></tr>
+              <tr><td>Dentist</td><td>30</td><td>2</td><td>1×1</td><td class="des-pos">+2</td><td class="bld-note">Improves health rating; small coverage</td></tr>
+              <tr><td>Mortuary</td><td>50</td><td>8</td><td>2×2</td><td class="des-neg">−3</td><td class="bld-note">Consumes linen; embalms the dead; required for Culture rating</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <div class="cat-section" id="admin">
+        <h2>Administration</h2>
+        <p class="cat-desc">Government infrastructure: fire control, structural maintenance, policing, taxation, and civic palaces. Palaces and mansions are the governor's personal residence — their size and desirability reflect player rank. Data source: <code>building_firehouse.js</code>, <code>building_architect_post.js</code>, <code>building_palace.js</code>, <code>building_mansion.js</code>, <code>buildings.js</code>.</p>
+        <div class="wiki-table-wrap">
+          <table class="wiki-table bld-table">
+            <thead><tr><th>Building</th><th>Cost</th><th>Workers</th><th>Size</th><th>Des.</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Firehouse</td><td>25</td><td>6</td><td>1×1</td><td class="des-neg">−2</td><td class="bld-note">Fire marshals patrol and extinguish fires</td></tr>
+              <tr><td>Architect's Post</td><td>25</td><td>5</td><td>1×1</td><td class="des-neg">−2</td><td class="bld-note">Architects patrol and repair damaged buildings</td></tr>
+              <tr><td>Police Station</td><td>25</td><td>6</td><td>1×1</td><td class="des-neg">−2</td><td class="bld-note">Reduces crime; required near Senet Houses</td></tr>
+              <tr><td>Tax Collector</td><td>40</td><td>6</td><td>2×2</td><td class="des-pos">+3</td><td class="bld-note">Collects taxes from houses in patrol range</td></tr>
+              <tr><td>Tax Collector (upgraded)</td><td>40</td><td>8</td><td>2×2</td><td class="des-pos">+3</td><td class="bld-note">Extended patrol range and collection efficiency</td></tr>
+              <tr><td>Courthouse</td><td>100</td><td>10</td><td>3×3</td><td class="des-pos">+8</td><td class="bld-note">Reduces crime; required for Prosperity rating</td></tr>
+              <tr><td>Roadblock</td><td>5</td><td>0</td><td>1×1</td><td class="des-zero">0</td><td class="bld-note">Blocks roaming walkers; lets goal-directed walkers pass</td></tr>
+              <tr><td>Ferry</td><td>30</td><td>5</td><td>2×2</td><td class="des-neg">−5</td><td class="bld-note">River crossing for walkers; placed at both banks</td></tr>
+              <tr><td>Low Bridge</td><td>—</td><td>0</td><td>—</td><td class="des-zero">0</td><td class="bld-note">Fixed crossing for walkers over shallow water</td></tr>
+              <tr><td>Village Palace</td><td>300</td><td>20</td><td>4×4</td><td class="des-pos">+8</td><td class="bld-note">Governor's residence (rank 0–1); unlocks tax &amp; some advisors</td></tr>
+              <tr><td>Town Palace</td><td>400</td><td>30</td><td>5×5</td><td class="des-pos">+8</td><td class="bld-note">Governor's residence (rank 2–3)</td></tr>
+              <tr><td>City Palace</td><td>500</td><td>—</td><td>6×6</td><td class="des-pos">+8</td><td class="bld-note">Governor's residence (rank 4+)</td></tr>
+              <tr><td>Personal Mansion</td><td>100</td><td>0</td><td>3×3</td><td class="des-pos">+12</td><td class="bld-note">Optional luxury residence; no staff</td></tr>
+              <tr><td>Family Mansion</td><td>150</td><td>0</td><td>4×4</td><td class="des-pos">+12</td><td class="bld-note">Larger family residence</td></tr>
+              <tr><td>Dynasty Mansion</td><td>150</td><td>0</td><td>4×4</td><td class="des-pos">+20</td><td class="bld-note">Very high desirability; large area of influence</td></tr>
+              <tr><td>Governor's Compound</td><td>300</td><td>0</td><td>4×4</td><td class="des-pos">+28</td><td class="bld-note">Highest desirability of any building</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <div class="cat-section" id="beautification">
+        <h2>Beautification</h2>
+        <p class="cat-desc">Raise desirability of surrounding tiles to allow housing to evolve to higher tiers. Data source: <code>buildings.js</code>, <code>building_statue.js</code>.</p>
+        <div class="wiki-table-wrap">
+          <table class="wiki-table bld-table">
+            <thead><tr><th>Building</th><th>Cost</th><th>Workers</th><th>Size</th><th>Des.</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Garden</td><td>10</td><td>0</td><td>1×1</td><td class="des-pos">+3</td><td class="bld-note">Draggable; place in or around housing clusters</td></tr>
+              <tr><td>Plaza</td><td>10</td><td>0</td><td>1×1</td><td class="des-pos">+4</td><td class="bld-note">Draggable; placed on paved road tiles</td></tr>
+              <tr><td>Small Statue</td><td>8</td><td>0</td><td>1×1</td><td class="des-pos">+3</td><td class="bld-note">Cheap; radius 3</td></tr>
+              <tr><td>Medium Statue</td><td>24</td><td>0</td><td>2×2</td><td class="des-pos">+10</td><td class="bld-note">Good mid-tier desirability boost; radius 4</td></tr>
+              <tr><td>Large Statue</td><td>60</td><td>0</td><td>3×3</td><td class="des-pos">+14</td><td class="bld-note">Strong boost; radius 5</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <div class="cat-section" id="military">
+        <h2>Military</h2>
+        <p class="cat-desc">Forts, weapons production, fortifications, and naval buildings. Military structures are strongly undesirable — site them away from residential areas. Data source: <code>building_fort.js</code>, <code>buildings.js</code>.</p>
+        <h3 style="font-size:0.9rem;margin-top:1rem;color:var(--text-muted)">Forts &amp; Training</h3>
+        <div class="wiki-table-wrap">
+          <table class="wiki-table bld-table">
+            <thead><tr><th>Building</th><th>Cost</th><th>Workers</th><th>Size</th><th>Des.</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Fort — Infantry</td><td>500</td><td>—</td><td>3×3</td><td class="des-neg">−20</td><td class="bld-note">Houses 16 infantry soldiers; requires weapons supply</td></tr>
+              <tr><td>Fort — Archers</td><td>500</td><td>—</td><td>3×3</td><td class="des-neg">−20</td><td class="bld-note">Houses 16 archers; requires weapons supply</td></tr>
+              <tr><td>Fort — Charioteers</td><td>900</td><td>—</td><td>3×3</td><td class="des-neg">−20</td><td class="bld-note">Houses 16 chariots; requires chariot supply</td></tr>
+              <tr><td>Recruiter</td><td>100</td><td>10</td><td>3×3</td><td class="des-neg">−6</td><td class="bld-note">Registers workers into military labour pool</td></tr>
+              <tr><td>Military Academy</td><td>500</td><td>25</td><td>4×4</td><td class="des-pos">+8</td><td class="bld-note">Improves combat effectiveness of all forts</td></tr>
+              <tr><td>Military Academy (advanced)</td><td>1 000</td><td>30</td><td>4×4</td><td class="des-pos">+8</td><td class="bld-note">Further combat bonuses</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3 style="font-size:0.9rem;margin-top:1.25rem;color:var(--text-muted)">Naval</h3>
+        <div class="wiki-table-wrap">
+          <table class="wiki-table bld-table">
+            <thead><tr><th>Building</th><th>Cost</th><th>Workers</th><th>Size</th><th>Des.</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Shipyard</td><td>150</td><td>20</td><td>3×3</td><td class="des-neg">−12</td><td class="bld-note">Builds warships; needs timber supply</td></tr>
+              <tr><td>Warship Wharf</td><td>200</td><td>15</td><td>3×3</td><td class="des-neg">−4</td><td class="bld-note">Docks and dispatches warships; water edge</td></tr>
+              <tr><td>Transport Wharf</td><td>100</td><td>5</td><td>2×2</td><td class="des-neg">−8</td><td class="bld-note">Moves troops across water; water edge</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3 style="font-size:0.9rem;margin-top:1.25rem;color:var(--text-muted)">Walls, Towers &amp; Gatehouses</h3>
+        <div class="wiki-table-wrap">
+          <table class="wiki-table bld-table">
+            <thead><tr><th>Building</th><th>Cost</th><th>Workers</th><th>Size</th><th>Des.</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Mud Wall</td><td>25</td><td>0</td><td>1×1</td><td class="des-neg">−3</td><td class="bld-note">Draggable; cheapest defensive perimeter</td></tr>
+              <tr><td>Brick Wall</td><td>25</td><td>0</td><td>1×1</td><td class="des-neg">−3</td><td class="bld-note">Draggable; requires brick supply to build</td></tr>
+              <tr><td>Mud Tower</td><td>100</td><td>6</td><td>2×2</td><td class="des-neg">−8</td><td class="bld-note">Basic tower for mud wall sections</td></tr>
+              <tr><td>Clay Tower</td><td>100</td><td>20</td><td>2×2</td><td class="des-neg">−6</td><td class="bld-note">Improved range over mud tower</td></tr>
+              <tr><td>Brick Tower</td><td>150</td><td>20</td><td>2×2</td><td class="des-pos">+16</td><td class="bld-note">Strongest tower; surprisingly high desirability</td></tr>
+              <tr><td>Mud Gatehouse</td><td>100</td><td>3</td><td>1×1</td><td class="des-neg">−6</td><td class="bld-note">Opens and closes gate for mud wall</td></tr>
+              <tr><td>Clay Gatehouse</td><td>150</td><td>9</td><td>1×1</td><td class="des-neg">−5</td><td class="bld-note">Gate for clay/brick wall sections</td></tr>
+              <tr><td>Brick Gatehouse</td><td>150</td><td>9</td><td>1×1</td><td class="des-neg">−7</td><td class="bld-note">Sturdy gate for brick wall</td></tr>
+              <tr><td>Tower Gatehouse</td><td>400</td><td>6</td><td>2×2</td><td class="des-pos">+4</td><td class="bld-note">Large gatehouse with integrated tower</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <div class="cat-section" id="monuments">
+        <h2>Monuments</h2>
+        <p class="cat-desc">Large multi-phase construction projects that contribute to the Monuments rating. Each monument requires specific guilds, materials, and Work Camps. See the dedicated <a href="monuments.html">Monuments page</a> for full construction requirements and phased build sequences. The Cleopatra expansion adds three unique monuments.</p>
+        <div class="wiki-table-wrap">
+          <table class="wiki-table bld-table">
+            <thead><tr><th>Monument</th><th>Material</th><th>Guild</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Small Mastaba</td><td class="bld-note">Bricks</td><td class="bld-note">Bricklayers</td><td class="bld-note">First monument type; introduced in mission 4</td></tr>
+              <tr><td>Medium Mastaba</td><td class="bld-note">Bricks</td><td class="bld-note">Bricklayers</td><td class="bld-note">Larger, more phases</td></tr>
+              <tr><td>Small Royal Tomb</td><td class="bld-note">Stone</td><td class="bld-note">Stonemasons</td><td class="bld-note"></td></tr>
+              <tr><td>Medium Royal Tomb</td><td class="bld-note">Stone</td><td class="bld-note">Stonemasons</td><td class="bld-note"></td></tr>
+              <tr><td>Small Stepped Pyramid</td><td class="bld-note">Stone</td><td class="bld-note">Stonemasons</td><td class="bld-note">First pyramid type</td></tr>
+              <tr><td>Medium Stepped Pyramid</td><td class="bld-note">Stone</td><td class="bld-note">Stonemasons</td><td class="bld-note"></td></tr>
+              <tr><td>Large Stepped Pyramid</td><td class="bld-note">Stone</td><td class="bld-note">Stonemasons</td><td class="bld-note"></td></tr>
+              <tr><td>Large Royal Tomb</td><td class="bld-note">Stone + Granite</td><td class="bld-note">Stonemasons</td><td class="bld-note"></td></tr>
+              <tr><td>Grand Royal Tomb</td><td class="bld-note">Stone + Granite</td><td class="bld-note">Stonemasons + Artisans</td><td class="bld-note">Largest tomb type</td></tr>
+              <tr><td>True Pyramid</td><td class="bld-note">Limestone + Granite</td><td class="bld-note">Stonemasons</td><td class="bld-note">Smooth-sided pyramid; capstone required</td></tr>
+              <tr><td>Sphinx</td><td class="bld-note">Limestone</td><td class="bld-note">Stonemasons</td><td class="bld-note">Single-phase; placed on desert terrain</td></tr>
+              <tr><td>Mausoleum</td><td class="bld-note">Sandstone</td><td class="bld-note">Stonemasons</td><td class="bld-note">Above-ground burial; medium size</td></tr>
+              <tr><td>Royal Burial Tomb</td><td class="bld-note">Stone + lamps + paint</td><td class="bld-note">Artisans</td><td class="bld-note"><span class="tag-cleo">Cleo</span> Cut into cliff face; needs Lamp &amp; Paint workshops</td></tr>
+              <tr><td>Abu Simbel</td><td class="bld-note">Sandstone</td><td class="bld-note">Stonemasons + Artisans</td><td class="bld-note"><span class="tag-cleo">Cleo</span> Placed on cliff; four colossal statues</td></tr>
+              <tr><td>Great Library of Alexandria</td><td class="bld-note">Marble + Timber</td><td class="bld-note">Artisans</td><td class="bld-note"><span class="tag-cleo">Cleo</span> Requires papyrus supply; large multi-phase build</td></tr>
+              <tr><td>Pharos Lighthouse</td><td class="bld-note">Marble</td><td class="bld-note">Artisans</td><td class="bld-note"><span class="tag-cleo">Cleo</span> Three-tier structure on Pharos Island</td></tr>
+              <tr><td>Caesareum</td><td class="bld-note">Marble + Sandstone</td><td class="bld-note">Artisans</td><td class="bld-note"><span class="tag-cleo">Cleo</span> Temple complex with two obelisks</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="wiki-table-footnotes" style="margin-top:2rem">
+        <p><strong>Cost</strong> values are the Normal-difficulty index (position 2) of the 5-element difficulty array in each building's JS config. Source files: <code>src/scripts/buildings.js</code> and the per-category files in the same directory.</p>
+        <p><strong>—</strong> in a numeric field means the value is not yet defined in the JS scripts (building config is incomplete or inherited from a C++ default).</p>
+        <p><strong>Housing</strong> is documented separately on the <a href="housing.html">Housing page</a>.</p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>

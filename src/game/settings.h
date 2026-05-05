@@ -17,37 +17,6 @@ enum e_tooltip_mode {
 };
 using etooltip_flag = uint32_t;
 
-enum e_setting_flag {
-    e_setting_none = 0,
-    e_setting_cli = 1,
-};
-using esetting_flag = uint32_t;
-
-enum e_difficulty {
-    DIFFICULTY_VERY_EASY = 0,
-    DIFFICULTY_EASY = 1,
-    DIFFICULTY_NORMAL = 2,
-    DIFFICULTY_HARD = 3,
-    DIFFICULTY_VERY_HARD = 4
-};
-uint8_t game_difficulty();
-
-enum e_sound_type {
-    SOUND_NONE = 0,
-    SOUND_MUSIC = 1,
-    SOUND_SPEECH = 2,
-    SOUND_EFFECTS = 3,
-    SOUND_CITY = 4,
-
-    SOUND_COUNT
-};
-using e_sound_type_tokens_t = token_holder<e_sound_type, SOUND_NONE, SOUND_COUNT>;
-
-enum {
-    CITIES_OLD_NAMES = 0,
-    CITIES_NEW_NAMES = 1
-};
-
 struct game_settings {
     static constexpr uint8_t MAX_PERSONAL_SAVINGS = 100;
     static constexpr uint8_t MAX_DIFFICULTY_LEVEL = 4;
@@ -63,49 +32,11 @@ struct game_settings {
     // file data
     buffer *inf_file = nullptr;
 
-    struct difficulty_t {
-        void increase() { _state = std::clamp<e_difficulty>((e_difficulty)(_state + 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD); }
-        void decrease() { _state = std::clamp<e_difficulty>((e_difficulty)(_state - 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD); }
-
-        inline e_difficulty operator()() const { return _state; }
-        void set(e_difficulty v) { _state = std::clamp<e_difficulty>(v, DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD); }
-
-    private:
-        e_difficulty _state;
-    } difficulty;
-
     game_settings();
 
     void load_default_settings();
     void load();
     void save();
-    inline bool is_fullscreen(esetting_flag opt = e_setting_cli) { return fullscreen && ((opt == e_setting_cli) ? cli_fullscreen : true); }
-
-    void set_cli_fullscreen(bool v) { cli_fullscreen = v; }
-    void set_fullscreen(bool v) { fullscreen = v; }
-
-    void reset_sound(int type, int enabled, int volume) {
-        if (type == SOUND_MUSIC) {
-            game_features::gameopt_sound_music_enabled.set(!!enabled);
-            game_features::gameopt_sound_music_volume.set((float)calc_bound(volume, 0, 100));
-            return;
-        }
-        if (type == SOUND_EFFECTS) {
-            game_features::gameopt_sound_effects_enabled.set(!!enabled);
-            game_features::gameopt_sound_effects_volume.set((float)calc_bound(volume, 0, 100));
-            return;
-        }
-        if (type == SOUND_SPEECH) {
-            game_features::gameopt_sound_speech_enabled.set(!!enabled);
-            game_features::gameopt_sound_speech_volume.set((float)calc_bound(volume, 0, 100));
-            return;
-        }
-        if (type == SOUND_CITY) {
-            game_features::gameopt_sound_city_enabled.set(!!enabled);
-            game_features::gameopt_sound_city_volume.set((float)calc_bound(volume, 0, 100));
-            return;
-        }
-    }
 
     void set_player_name(const uint8_t* player_name);
     void set_player_name_utf8(pcstr name_utf8);
@@ -117,9 +48,6 @@ struct game_settings {
 
 private:
     void load_settings(buffer *buf);
-
-    bool fullscreen;
-    bool cli_fullscreen;
 };
 
 extern game_settings g_settings;

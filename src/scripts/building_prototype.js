@@ -10,7 +10,9 @@ Building.property.overlay = { get: function() { return this.__overlay() } }
 Building.property.state = { get: function() { return this.__state() } }
 Building.property.valid = { get: function() { return this.__valid() } }
 Building.property.worker_percentage = { get: function() { return this.__worker_percentage() } }
+Building.property.output_resource_id = { get: function() { return this.__output_resource_id() } }
 Building.property.meta_text_id = { get: function() { return this.__meta_text_id() } }
+Building.property.curse_days_left = { }
 Building.property.can_play_animation = { get: function() { return this.__can_play_animation() } }
 
 Building.property.structure_damage = { }

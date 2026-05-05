@@ -73,6 +73,11 @@ void __building_get_worker_percentage(js_State *J) {
     js_helpers::js_push_value(J, building_get(bid)->worker_percentage());
 }
 
+void __building_get_output_resource_id(js_State *J) {
+    const int bid = building_this_id(J);
+    js_helpers::js_push_value(J, (int)building_get(bid)->output.resource);
+}
+
 void __building_has_figure(js_State *J) {
     const int bid = building_this_id(J);
     const int index = js_helpers::js_to_value<int>(J, 1);
@@ -210,6 +215,7 @@ void js_register_building(js_State *J) {
     jsB_propf(J, js_intern("Building.prototype.__meta_text_id"), __building_meta_text_id, 0);
     jsB_propf(J, js_intern("Building.prototype.__state"), __building_get_state, 0);
     jsB_propf(J, js_intern("Building.prototype.__worker_percentage"), __building_get_worker_percentage, 0);
+    jsB_propf(J, js_intern("Building.prototype.__output_resource_id"), __building_get_output_resource_id, 0);
     jsB_propf(J, js_intern("Building.prototype.__overlay"), __building_get_overlay, 0);
     jsB_propf(J, js_intern("Building.prototype.__des_influence_value"), __building_des_influence_value_j, 0);
     jsB_propf(J, js_intern("Building.prototype.__des_influence_step_size"), __building_des_influence_step_size_j, 0);

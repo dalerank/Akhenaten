@@ -2,6 +2,7 @@
 
 #include "core/archive.h"
 #include "game/settings.h"
+#include "game/game.h"
 #include "game/game_events.h"
 #include "game/game_events_history.h"
 #include "platform/screen.h"
@@ -41,7 +42,7 @@ void app_window_resize(const vec2i& wsize) {
 
 void app_fullscreen(bool fullscreen) {
     app_post_event(fullscreen ? USER_EVENT_FULLSCREEN : USER_EVENT_WINDOWED);
-    g_settings.set_fullscreen(fullscreen);
+    game.set_fullscreen(fullscreen);
     if (!fullscreen) {
         app_window_resize({1200, 800});
     }
@@ -72,7 +73,7 @@ void application_t::subscribe_events() {
     });
 
     events::subscribe_permanent([] (event_app_toggle_fullscreen ev) {
-        app_fullscreen(!g_settings.is_fullscreen(e_setting_none));
+        app_fullscreen(!game.is_fullscreen(false));
     });
 
     events::subscribe_permanent([] (event_app_screenshot ev) {

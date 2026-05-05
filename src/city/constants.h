@@ -86,3 +86,14 @@ enum e_rating_change : uint8_t {
     e_rating_stalling,
     e_rating_rising
 };
+
+enum e_sound_type {
+    SOUND_NONE = 0,
+    SOUND_MUSIC = 1,
+    SOUND_SPEECH = 2,
+    SOUND_EFFECTS = 3,
+    SOUND_CITY = 4,
+
+    SOUND_COUNT
+};
+using e_sound_type_tokens_t = token_holder<e_sound_type, SOUND_NONE, SOUND_COUNT>;

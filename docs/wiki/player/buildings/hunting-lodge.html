@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hunting Lodge — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .bld-header-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      margin-bottom: 2rem;
+    }
+    .bld-header-right {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .bld-image-wrap {
+      text-align: center;
+    }
+    .bld-image-wrap img {
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      image-rendering: pixelated;
+    }
+    .bld-image-wrap figcaption {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+    .bld-infobox {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.9rem 1.1rem;
+    }
+    .bld-infobox h4 {
+      margin: 0 0 0.6rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--gold);
+    }
+    .bld-infobox dl {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.2rem 1rem;
+      margin: 0;
+    }
+    .bld-infobox dt { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; padding-top: 0.1rem; }
+    .bld-infobox dd { margin: 0; font-size: 0.85rem; color: var(--text); }
+    .bld-infobox .sep { grid-column: 1/-1; border: none; border-top: 1px solid var(--border); margin: 0.4rem 0; }
+    .bld-stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .bld-stat { text-align: center; }
+    .bld-stat .val { font-size: 1.3rem; font-weight: 700; color: var(--gold); display: block; }
+    .bld-stat .lbl { font-size: 0.7rem; color: var(--text-muted); }
+    .risk-med { color: #d09050; }
+    .risk-none { color: var(--text-muted); }
+    .des-neg { color: #d07070; }
+    .chain-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.8rem 1.1rem;
+      margin: 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-size: 0.88rem;
+      flex-wrap: wrap;
+    }
+    .chain-box .step {
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 3px;
+      padding: 0.3rem 0.7rem;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .chain-box .arrow { color: var(--gold); font-size: 1.1rem; }
+    /* developer spoilers (same as nubt.html) */
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .kw  { color: #c9a84c; } .num { color: #9ecbff; } .str { color: #7ec87e; } .cmt { color: #5a5650; font-style: italic; } .fn { color: #8aabdc; } .ev { color: #d0a0e0; }
+    .file-ref { display: inline-block; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .msg-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+    .msg-table th, .msg-table td { padding: 0.3rem 0.6rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+    .msg-table th { color: var(--text-muted); font-weight: normal; }
+    .bld-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .bld-nav a { color: var(--gold); }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">← All Buildings</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Food Production</div>
+        <ul>
+          <li><a href="hunting-lodge.html" class="active">Hunting Lodge</a></li>
+          <li><a href="fishing-wharf.html">Fishing Wharf</a></li>
+          <li><a href="cattle-ranch.html">Cattle Ranch</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#mechanics">Mechanics</a></li>
+          <li><a href="#placement">Placement</a></li>
+          <li><a href="#tips">Tips</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Buildings</a> /
+        Hunting Lodge
+      </div>
+
+      <h1>Hunting Lodge</h1>
+
+      <div class="bld-header-grid">
+        <figure class="bld-image-wrap">
+          <img src="hunting-lodge.webp" alt="Hunting Lodge in-game sprite" width="122" height="116" />
+          <figcaption>In-game sprite</figcaption>
+        </figure>
+        <div class="bld-header-right">
+          <div>
+            <p>The <strong>Hunting Lodge</strong> sends hunters into the wilderness to kill wild prey — ostriches, antelope, and waterfowl — and returns the carcasses as game meat stored in the lodge until a cartpusher delivers the load to a <a href="granary.html">Granary</a>.</p>
+            <p>It is one of the first food production buildings available in the campaign, unlocked in mission 0 (Nubt) once the city population reaches 150. Hunting is reliable early-game food but is limited by herd size — it cannot sustain a large city alone.</p>
+            <p>Game meat is one of two animal foods (the other being <a href="cattle-ranch.html">ranch meat</a>). It does not require any input resource, only proximity to prey animals on the map.</p>
+          </div>
+          <div class="bld-infobox">
+            <h4>Stats</h4>
+            <div class="bld-stat-row" style="margin-bottom:0.9rem">
+              <div class="bld-stat"><span class="val">2×2</span><span class="lbl">Size</span></div>
+              <div class="bld-stat"><span class="val">6</span><span class="lbl">Workers</span></div>
+              <div class="bld-stat"><span class="val des-neg">−4</span><span class="lbl">Desirability</span></div>
+            </div>
+            <hr class="sep" />
+            <dl>
+              <dt>Cost (Normal)</dt>
+              <dd>25 Db</dd>
+              <dt>Cost by difficulty</dt>
+              <dd style="font-size:0.78rem;color:var(--text-muted)">
+                VE 5 · Easy 10 · <strong style="color:var(--text)">Normal 25</strong> · Hard 40 · VH 60
+              </dd>
+              <dt>Output</dt>
+              <dd>Game meat</dd>
+              <dt>Labor category</dt>
+              <dd>Food Production</dd>
+              <dt>Fire risk</dt>
+              <dd class="risk-med">Medium (5)</dd>
+              <dt>Damage risk</dt>
+              <dd>Low (2)</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Food chain ─────────────────────────────────────── -->
+      <div class="chain-box">
+        <span class="step">Prey herd (map)</span>
+        <span class="arrow">→</span>
+        <span class="step">Hunter (walker)</span>
+        <span class="arrow">→</span>
+        <span class="step"><strong>Hunting Lodge</strong> (stores up to 500 units)</span>
+        <span class="arrow">→</span>
+        <span class="step">Cartpusher</span>
+        <span class="arrow">→</span>
+        <span class="step">Granary</span>
+        <span class="arrow">→</span>
+        <span class="step">Bazaar buyer</span>
+        <span class="arrow">→</span>
+        <span class="step">Housing</span>
+      </div>
+
+      <!-- ─── Overview ──────────────────────────────────────── -->
+      <h2 id="overview">Overview</h2>
+      <p>In ancient Egypt, hunting was both a food source for ordinary people and a prestige sport for the elite. The Pharaoh and noblemen hunted from chariots in the desert, pursuing lions, wild cattle, and oryx. Ostriches were hunted for their feathers and eggs as well as meat. Egypt's marshlands teemed with waterfowl, and papyrus thickets sheltered hippopotamuses, crocodiles, and countless bird species. Wall paintings in New Kingdom tombs frequently depict hunting scenes, suggesting the activity carried strong cultural and symbolic weight beyond mere subsistence.</p>
+      <p>In the game, the Hunting Lodge abstracts this into a reliable but bounded food source. Each herd supports roughly 2 000 people at full capacity — enough for small and mid-sized cities but insufficient on its own for large populations.</p>
+
+      <!-- ─── Mechanics ─────────────────────────────────────── -->
+      <h2 id="mechanics">Mechanics</h2>
+      <p>A fully staffed lodge dispatches three hunters simultaneously. Hunters walk from the lodge, locate the nearest prey herd, kill an animal, and carry the carcass back. Each successful trip yields 100 units of game meat, deposited directly in the lodge's internal store (max 500 units).</p>
+
+      <p>Hunter dispatch rate depends on staffing level:</p>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Staffing</th><th>Dispatch interval</th><th>Approx. output</th></tr></thead>
+          <tbody>
+            <tr><td>100 %</td><td>Every game tick</td><td>Maximum throughput</td></tr>
+            <tr><td>75 %</td><td>Every 5 ticks</td><td>~⅓ of maximum</td></tr>
+            <tr><td>50 %</td><td>Every 10 ticks</td><td>~¼ of maximum</td></tr>
+            <tr><td>25 %</td><td>Every 15 ticks</td><td>~⅙ of maximum</td></tr>
+            <tr><td>&lt; 25 %</td><td>Every 30 ticks</td><td>Minimal</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Once the lodge's 500-unit storage is full, hunters stop going out until a cartpusher clears the stock. If every nearby Granary is also full, the cartpusher has nowhere to go and hunting stalls completely — always ensure Granary space is available.</p>
+
+      <h3>Prey herds</h3>
+      <p>Prey animals are placed on the map by the mission script at fixed positions and roam within a defined radius. Their total population is finite: each herd can support roughly 2 000 citizens at full lodges. Killing prey at a high rate does not replenish the herd faster — overhunting will simply reduce the available population over time.</p>
+      <p>A Temple Complex dedicated to <strong>Osiris</strong> increases herd size. The <strong>Altar of Min</strong> add-on further boosts it. Conversely, <strong>Bast</strong>'s Temple Complex can reduce how much food citizens need, making the same herd support more people effectively.</p>
+
+      <h3>Trade value</h3>
+      <p>Game meat sells for <strong>34 Db per 100 units</strong>. This is among the higher food trade values, but hunting volume is too low to make it a reliable export. It is better consumed locally.</p>
+
+      <!-- ─── Placement ─────────────────────────────────────── -->
+      <h2 id="placement">Placement</h2>
+      <p>Place the lodge as close to the prey herd as possible. Hunters walk on foot — a long trip means fewer hunts per unit of time and slower food throughput. Use the <strong>Animals overlay</strong> to see the herd's roam zone and place the lodge at the edge of it or inside it.</p>
+      <p>The lodge is undesirable (−4 at the building tile, fading over 4 tiles). Keep it away from housing you want to evolve beyond Sturdy Hut. Clustering it with other undesirable food buildings (Granary, Bazaar) on the city's outskirts is a clean layout strategy.</p>
+      <p>Road access is mandatory — hunters and cartpushers both need a connected road network to reach the lodge and the Granary.</p>
+
+      <!-- ─── Tips ──────────────────────────────────────────── -->
+      <h2 id="tips">Tips</h2>
+      <ul>
+        <li>Two lodges are usually sufficient for a small city of 300–600. One lodge per ~700–800 citizens at full staffing is a reasonable rule of thumb.</li>
+        <li>If hunters are idle (standing at the lodge and not walking out), either the herd is depleted or the lodge storage is full. Check the Granary — it may need more space or a Special Orders instruction to accept game meat.</li>
+        <li>On maps where the herd is far from any sensible city location, consider supplementing with a <a href="fishing-wharf.html">Fishing Wharf</a> or importing grain instead of relying on hunting.</li>
+        <li>In the early campaign missions (0–3), hunting is the primary food source. Prioritise placing the lodge before worrying about housing desirability.</li>
+        <li>Fire risk is medium (5). An <a href="firehouse.html">Firehouse</a> patrol route should cover the lodge, especially once it is surrounded by other wooden structures.</li>
+      </ul>
+
+      <!-- ─── Developer reference ──────────────────────────── -->
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">All paths relative to the repository root.</p>
+
+        <details>
+          <summary>Building config — <code>src/scripts/building_hunting_lodge.js</code></summary>
+          <div class="details-body">
+            <p>The entire building definition lives in one file: <span class="file-ref">src/scripts/building_hunting_lodge.js</span></p>
+            <pre><code><span class="kw">building_hunting_lodge</span> {
+  <span class="kw">labor_category</span> : LABOR_CATEGORY_FOOD_PRODUCTION
+  <span class="kw">output</span> { resource : RESOURCE_GAMEMEAT }
+
+  <span class="kw">building_size</span>  : <span class="num">2</span>
+  <span class="kw">min_houses_coverage</span> : <span class="num">100</span>   <span class="cmt">// needs 100% of nearby houses to be in range to be "active"</span>
+  <span class="kw">cost</span> [ <span class="num">5</span>, <span class="num">10</span>, <span class="num">25</span>, <span class="num">40</span>, <span class="num">60</span> ]  <span class="cmt">// VeryEasy … VeryHard</span>
+  <span class="kw">desirability</span> { value[<span class="num">-4</span>], step[<span class="num">1</span>], step_size[<span class="num">2</span>], range[<span class="num">4</span>] }
+  <span class="kw">laborers</span> [<span class="num">6</span>]
+  <span class="kw">fire_risk</span>   [<span class="num">5</span>]   <span class="cmt">// 0=none, 1=low … 10=extreme</span>
+  <span class="kw">damage_risk</span> [<span class="num">2</span>]
+
+  <span class="cmt">// Hunter dispatch interval by staffing tier (in game ticks)</span>
+  <span class="kw">spawn_delay_100_percent</span> : <span class="num">1</span>
+  <span class="kw">spawn_delay_75_percent</span>  : <span class="num">5</span>
+  <span class="kw">spawn_delay_50_percent</span>  : <span class="num">10</span>
+  <span class="kw">spawn_delay_25_percent</span>  : <span class="num">15</span>
+  <span class="kw">spawn_delay_default</span>     : <span class="num">30</span>  <span class="cmt">// < 25% staffing</span>
+
+  <span class="kw">flags</span> { is_food: <span class="num">true</span> }
+}</code></pre>
+            <p>To tune food output, adjust <code>spawn_delay_*</code> values — lower = faster hunter dispatch. To change placement cost per difficulty, edit the <code>cost</code> array (index 0 = Very Easy, 4 = Very Hard).</p>
+            <p>The <code>desirability</code> gradient: starts at −4 at the building, increases by 2 every tile (step_size), over a radius of 4 tiles. At 4 tiles out, the effect reaches 0.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Prey placement — <code>src/scripts/mission_*.js</code></summary>
+          <div class="details-body">
+            <p>Prey animals are not hardcoded to the building — they are placed by each mission's script via <code>event_register_mission_animals</code>. Example from mission 0 (Nubt):</p>
+            <pre><code><span class="cmt">// src/scripts/mission_0_nubt.js — line 80</span>
+[<span class="kw">event</span>=<span class="ev">event_register_mission_animals</span>, <span class="kw">mission</span>=mission0]
+<span class="fn">function</span> mission0_register_animals(ev) {
+    city.remove_animals()
+    city.add_animals_point(
+        <span class="num">0</span>,          <span class="cmt">// group index</span>
+        <span class="num">40</span>, <span class="num">60</span>,     <span class="cmt">// map coordinates (x, y)</span>
+        FIGURE_OSTRICH,
+        <span class="num">4</span>           <span class="cmt">// count</span>
+    )
+    city.set_animals_area(<span class="num">0</span>, <span class="num">16</span>)  <span class="cmt">// roam radius in tiles</span>
+}</code></pre>
+            <p>To move the ostrich herd, change the <code>x, y</code> coordinates. To adjust herd size, change the count. To change the roam zone, change the radius. Each mission that uses hunting lodges has its own <code>event_register_mission_animals</code> handler.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Game messages — <code>src/scripts/game_messages_en.js</code></summary>
+          <div class="details-body">
+            <table class="msg-table">
+              <thead><tr><th>Key</th><th>Line</th><th>When shown</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><code>message_building_hunting_lodge</code></td>
+                  <td>4053</td>
+                  <td>Building info panel (right-click on lodge). Contains the full in-game description including food chain explanation and game meat trade value.</td>
+                </tr>
+                <tr>
+                  <td><code>message_tutorial_food_or_famine</code> (ID 239)</td>
+                  <td>3047</td>
+                  <td>Tutorial popup in mission 0 when population reaches 150 — introduces Hunting Lodge, Granary, and Bazaar together.</td>
+                </tr>
+              </tbody>
+            </table>
+            <p style="margin-top:0.6rem">The building's <code>meta</code> field in the script (<code>help_id:90, text_id:154</code>) maps to these message IDs. <code>text_id</code> is the in-game building name string; <code>help_id</code> points to the extended help panel.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Graphic animation — how the building displays stored meat</summary>
+          <div class="details-body">
+            <p>The building has a dedicated <code>gamemeat</code> animation layer defined in the script:</p>
+            <pre><code><span class="kw">animations</span> {
+    <span class="kw">preview</span>  { pack:PACK_GENERAL, id:<span class="num">176</span> }
+    <span class="kw">base</span>     { pack:PACK_GENERAL, id:<span class="num">176</span> }
+    <span class="kw">work</span>     { pos:[<span class="num">20</span>, <span class="num">-15</span>], pack:PACK_GENERAL, id:<span class="num">176</span>,
+               offset:<span class="num">1</span>, max_frames:<span class="num">18</span>, duration:<span class="num">3</span> }
+    <span class="kw">gamemeat</span> { pos:[<span class="num">61</span>, <span class="num">14</span>], pack:PACK_GENERAL, id:<span class="num">205</span> }
+}</code></pre>
+            <p>The <code>gamemeat</code> layer (sprite pack GENERAL id 205) is drawn at position (61, 14) relative to the building tile and represents the pile of carcasses visible when the lodge has stored food. The <code>work</code> animation (frames 1–18 of sprite 176) shows the hunter doing target practice in the yard when the lodge is active.</p>
+            <p>The graphic update is controlled by the JS event handler at the end of the script:</p>
+            <pre><code>[<span class="kw">es</span>=(building_hunting_lodge, update_graphic)]
+<span class="fn">function</span> building_hunting_lodge_on_update_graphic(ev) {
+    var building = city.get_building(ev.bid)
+    var animkey = building.can_play_animation ? <span class="str">"work"</span> : <span class="str">"none"</span>
+    building.set_animation(animkey)
+}</code></pre>
+            <p><code>can_play_animation</code> is true when the building is staffed and active. An empty or understaffed lodge shows the static <code>base</code> frame.</p>
+          </div>
+        </details>
+
+      </div><!-- .dev-section -->
+
+      <div class="bld-nav">
+        <a href="index.html">← All Buildings</a>
+        <span style="color:var(--text-muted)">Food Production</span>
+        <a href="cattle-ranch.html">Cattle Ranch →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>

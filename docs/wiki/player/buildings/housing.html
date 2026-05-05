@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Housing — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="../index.html">← Player Guide</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Buildings</div>
+        <ul>
+          <li><a href="index.html">All Buildings</a></li>
+          <li><a href="housing.html" class="active">Housing</a></li>
+          <li><a href="food.html">Food Production</a></li>
+          <li><a href="industry.html">Industry</a></li>
+          <li><a href="religion.html">Religion</a></li>
+          <li><a href="education.html">Education</a></li>
+          <li><a href="entertainment.html">Entertainment</a></li>
+          <li><a href="health.html">Health</a></li>
+          <li><a href="military.html">Military</a></li>
+          <li><a href="monuments.html">Monuments</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#mechanics">How it works</a></li>
+          <li><a href="#risks">Risks</a></li>
+          <li><a href="#labor-note">Labor &amp; Tax</a></li>
+          <li><a href="#levels">All Housing Levels</a></li>
+          <li><a href="#tips">Tips</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb"><a href="../../index.html">Wiki</a> / <a href="../index.html">Player Guide</a> / <a href="index.html">Buildings</a> / Housing</div>
+      <h1>Housing</h1>
+
+      <h2 id="overview">Overview</h2>
+
+      <p>Housing is the backbone of every Egyptian city. Without a growing population there are no workers for farms and quarries, no tax base to fund monuments, and no prosperity score to satisfy the Pharaoh's requests. Every house begins as a simple <strong>vacant plot</strong> placed by the player; immigrants walk in from the edge of the map as soon as a valid road connection exists, and the plot immediately becomes a Crude Hut. From that point forward, evolution is entirely automatic — the city rewards houses that have reliable access to food, water, goods, and civic services by upgrading them, and punishes neglect by downgrading them.</p>
+
+      <p>Pharaoh tracks <strong>20 distinct housing tiers</strong>, from the Crude Hut to the Palatial Estate. The path upward brings tangible benefits at each step: higher tiers pack more residents into the same footprint, produce significantly more tax revenue per house, reduce vulnerability to fire and crime, and push up the desirability of the surrounding neighbourhood. The largest residences — manors and estates — generate so much tax income that in a fully mature city the treasury can comfortably outpace export revenue from trade alone.</p>
+
+      <h2 id="mechanics">How It Works</h2>
+
+      <p>A vacant plot becomes occupied the moment it has road access within two tiles. Immigrants enter from the <strong>kingdom road entry point</strong> at the map edge. Once occupied, the house is evaluated at regular intervals against the requirements for the next tier above it. If all conditions are met it upgrades; if any required service lapses it eventually downgrades.</p>
+
+      <p>Three factors control every tier transition:</p>
+
+      <ul class="wiki-list">
+        <li><strong>Desirability</strong> — a numerical score accumulated from surrounding buildings. Gardens, plazas, temples, and well-maintained residences raise it; farms, workshops, raw industry, and ruins lower it. Each tier has a minimum desirability to evolve and a lower threshold below which the house devolves.</li>
+        <li><strong>Services</strong> — workers from service buildings (temples, bazaars, physicians, schools, courthouses, etc.) must physically walk past the house on the road network. Coverage is not guaranteed by proximity alone; a service building on the other side of a block that no walker ever traverses counts for nothing. The walker must come within two tiles of the house.</li>
+        <li><strong>Goods &amp; food</strong> — delivered by <strong>bazaar</strong> buyers who collect from granaries and storage yards. The chain is: granary or storage yard → bazaar → house. Bazaar coverage is required from tier 3 (Meager Shanty) onward. Each successive tier of higher housing demands an additional category of manufactured goods: pottery, then beer, then linen, and finally jewelry at the top.</li>
+      </ul>
+
+      <p>Houses on 1×1 plots automatically <strong>merge</strong> into 2×2 blocks when four same-tier plots occupy adjacent squares. Merged blocks hold considerably more residents per tile. Merging cannot be forced early — it happens only when the conditions for the next tier are already satisfied.</p>
+
+      <h2 id="risks">Risks</h2>
+
+      <p>All houses carry ongoing risk from fire, crime, disease, and malaria. In general these risks diminish as housing evolves upward — but <strong>fire is the exception</strong>: risk actually climbs from a Crude Hut all the way through Ordinary Cottage (tier 6) before falling steeply at higher tiers. Dense clusters of low- and mid-tier housing should always sit close to a fire station.</p>
+
+      <p>Very low-tier houses are also a net negative for their neighbourhood: they drag down the desirability of surrounding plots, making it harder for neighbouring houses to evolve. As houses advance the picture reverses — high-tier residences become a positive desirability influence, reinforcing their own neighbourhood.</p>
+
+      <p>A house that loses any single required service or drops below the desirability threshold will <strong>devolve</strong> after a short grace period. Devolution can cascade quickly: a Palatial Estate stripped of its water supply can fall all the way back to a Crude Hut within a very short time if the problem is not fixed. Stable housing depends on uninterrupted walker coverage, not merely having the right buildings nearby.</p>
+
+      <h2 id="labor-note">Labor and Tax</h2>
+
+      <p>Houses at tiers 1–10 (Crude Hut through Spacious Apartment) are the primary source of <strong>workers</strong> for your city. Labor seekers dispatched by farms, workshops, and civic buildings walk the road network and draw from any house they pass within two tiles of — and once a labor link is established, the building has access to the city's entire worker pool, not just the nearby residents.</p>
+
+      <p>At tier 11 (Common Residence) and beyond, houses <strong>stop supplying workers</strong> and instead generate scribes and produce substantially higher tax revenue. In a prosperous city, taxes from a well-stocked noble quarter can comfortably exceed all trade income. The tradeoff is real, however: building too many 3×3 manors and 4×4 estates without maintaining a sufficient base of worker-producing housing causes severe labor shortages across the whole city.</p>
+
+      <h2 id="levels">All Housing Levels</h2>
+
+      <p class="section-intro">All values sourced from <code>src/scripts/houses.js</code>. Desirability and entertainment thresholds are for Normal difficulty.</p>
+
+      <div class="wiki-table-wrap">
+        <table class="wiki-table housing-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Level</th>
+              <th>Footprint</th>
+              <th>Max pop.</th>
+              <th>Desirability<br><span class="th-sub">to evolve</span></th>
+              <th>Food</th>
+              <th>Water</th>
+              <th>Religion</th>
+              <th>Health</th>
+              <th>Education</th>
+              <th>Entertainment<br><span class="th-sub">pts (Normal)</span></th>
+              <th>Goods</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="housing-tier-huts">
+              <td>1</td>
+              <td class="housing-name">Crude Hut</td>
+              <td>1×1</td>
+              <td>5</td>
+              <td>−10</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+            <tr class="housing-tier-huts">
+              <td>2</td>
+              <td class="housing-name">Sturdy Hut</td>
+              <td>1×1</td>
+              <td>7</td>
+              <td>−5</td>
+              <td>—</td>
+              <td>Well</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+            <tr class="housing-tier-shanties">
+              <td>3</td>
+              <td class="housing-name">Meager Shanty</td>
+              <td>1×1 / 2×2</td>
+              <td>9 / 36</td>
+              <td>0</td>
+              <td>1 type</td>
+              <td>Well</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+            <tr class="housing-tier-shanties">
+              <td>4</td>
+              <td class="housing-name">Common Shanty</td>
+              <td>1×1 / 2×2</td>
+              <td>11 / 44</td>
+              <td>4</td>
+              <td>1 type</td>
+              <td>Well</td>
+              <td>1 god</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+            <tr class="housing-tier-cottages">
+              <td>5</td>
+              <td class="housing-name">Rough Cottage</td>
+              <td>1×1 / 2×2</td>
+              <td>13 / 52</td>
+              <td>8</td>
+              <td>1 type</td>
+              <td>Supply only</td>
+              <td>1 god</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+            <tr class="housing-tier-cottages">
+              <td>6</td>
+              <td class="housing-name">Ordinary Cottage</td>
+              <td>1×1 / 2×2</td>
+              <td>15 / 60</td>
+              <td>12</td>
+              <td>1 type</td>
+              <td>Supply only</td>
+              <td>1 god</td>
+              <td>—</td>
+              <td>—</td>
+              <td>10</td>
+              <td>—</td>
+            </tr>
+            <tr class="housing-tier-homesteads">
+              <td>7</td>
+              <td class="housing-name">Modest Homestead</td>
+              <td>1×1 / 2×2</td>
+              <td>16 / 64</td>
+              <td>16</td>
+              <td>1 type</td>
+              <td>Supply only</td>
+              <td>1 god</td>
+              <td>—</td>
+              <td>—</td>
+              <td>13</td>
+              <td>Pottery</td>
+            </tr>
+            <tr class="housing-tier-homesteads">
+              <td>8</td>
+              <td class="housing-name">Spacious Homestead</td>
+              <td>1×1 / 2×2</td>
+              <td>17 / 68</td>
+              <td>20</td>
+              <td>1 type</td>
+              <td>Supply only</td>
+              <td>1 god</td>
+              <td>Physician</td>
+              <td>—</td>
+              <td>16</td>
+              <td>Pottery</td>
+            </tr>
+            <tr class="housing-tier-apartments">
+              <td>9</td>
+              <td class="housing-name">Modest Apartment</td>
+              <td>1×1 / 2×2</td>
+              <td>18 / 72</td>
+              <td>25</td>
+              <td>1 type</td>
+              <td>Supply only</td>
+              <td>1 god</td>
+              <td>Mortuary</td>
+              <td>—</td>
+              <td>20</td>
+              <td>Pottery, Beer</td>
+            </tr>
+            <tr class="housing-tier-apartments">
+              <td>10</td>
+              <td class="housing-name">Spacious Apartment</td>
+              <td>1×1 / 2×2</td>
+              <td>19 / 76</td>
+              <td>32</td>
+              <td>1 type</td>
+              <td>Supply only</td>
+              <td>1 god</td>
+              <td>Physician + Mortuary</td>
+              <td>—</td>
+              <td>25</td>
+              <td>Pottery, Beer</td>
+            </tr>
+            <tr class="housing-tier-residences">
+              <td>11</td>
+              <td class="housing-name">Common Residence ★</td>
+              <td>2×2</td>
+              <td>80</td>
+              <td>40</td>
+              <td>1 type</td>
+              <td>Supply only</td>
+              <td>1 god</td>
+              <td>Physician + Mortuary</td>
+              <td>Scribal School</td>
+              <td>30</td>
+              <td>Pottery, Beer</td>
+            </tr>
+            <tr class="housing-tier-residences">
+              <td>12</td>
+              <td class="housing-name">Spacious Residence</td>
+              <td>2×2</td>
+              <td>84</td>
+              <td>48</td>
+              <td>2 types</td>
+              <td>Supply only</td>
+              <td>1 god</td>
+              <td>Dentist + Physician + Mortuary</td>
+              <td>Scribal School</td>
+              <td>35</td>
+              <td>Pottery, Beer</td>
+            </tr>
+            <tr class="housing-tier-residences">
+              <td>13</td>
+              <td class="housing-name">Elegant Residence</td>
+              <td>2×2</td>
+              <td>88</td>
+              <td>53</td>
+              <td>2 types</td>
+              <td>Supply only</td>
+              <td>1 god</td>
+              <td>Dentist + Physician + Mortuary</td>
+              <td>Scribal School</td>
+              <td>40</td>
+              <td>Pottery, Beer, Linen</td>
+            </tr>
+            <tr class="housing-tier-residences">
+              <td>14</td>
+              <td class="housing-name">Fancy Residence</td>
+              <td>2×2</td>
+              <td>92</td>
+              <td>58</td>
+              <td>2 types</td>
+              <td>Supply only</td>
+              <td>2 gods</td>
+              <td>Dentist + Physician + Mortuary</td>
+              <td>Scribal School</td>
+              <td>45</td>
+              <td>Pottery, Beer, Linen</td>
+            </tr>
+            <tr class="housing-tier-manors">
+              <td>15</td>
+              <td class="housing-name">Common Manor ★★</td>
+              <td>3×3</td>
+              <td>100</td>
+              <td>63</td>
+              <td>2 types</td>
+              <td>Supply only</td>
+              <td>2 gods</td>
+              <td>Dentist + Physician + Mortuary</td>
+              <td>Scribal School</td>
+              <td>50</td>
+              <td>Pottery, Beer, Linen, Jewelry</td>
+            </tr>
+            <tr class="housing-tier-manors">
+              <td>16</td>
+              <td class="housing-name">Spacious Manor</td>
+              <td>3×3</td>
+              <td>108</td>
+              <td>68</td>
+              <td>2 types</td>
+              <td>Supply only</td>
+              <td>2 gods</td>
+              <td>Dentist + Physician + Mortuary ×2</td>
+              <td>Scribal School</td>
+              <td>55</td>
+              <td>Pottery, Beer, Linen, Jewelry</td>
+            </tr>
+            <tr class="housing-tier-manors">
+              <td>17</td>
+              <td class="housing-name">Elegant Manor</td>
+              <td>3×3</td>
+              <td>116</td>
+              <td>74</td>
+              <td>2 types</td>
+              <td>Supply only</td>
+              <td>3 gods</td>
+              <td>Dentist + Physician + Mortuary ×2</td>
+              <td>Library</td>
+              <td>60</td>
+              <td>Pottery, Beer, Linen, Jewelry</td>
+            </tr>
+            <tr class="housing-tier-manors">
+              <td>18</td>
+              <td class="housing-name">Stately Manor</td>
+              <td>3×3</td>
+              <td>124</td>
+              <td>80</td>
+              <td>2 types</td>
+              <td>Supply only</td>
+              <td>3 gods</td>
+              <td>Dentist + Physician + Mortuary ×2</td>
+              <td>Library</td>
+              <td>70</td>
+              <td>Pottery, Beer, Linen, Jewelry</td>
+            </tr>
+            <tr class="housing-tier-estates">
+              <td>19</td>
+              <td class="housing-name">Modest Estate ★★★</td>
+              <td>4×4</td>
+              <td>184</td>
+              <td>90</td>
+              <td>2 types</td>
+              <td>Supply only</td>
+              <td>3 gods</td>
+              <td>Dentist + Physician + Mortuary ×2</td>
+              <td>Library</td>
+              <td>80</td>
+              <td>Pottery, Beer, Linen, Jewelry ×2</td>
+            </tr>
+            <tr class="housing-tier-estates">
+              <td>20</td>
+              <td class="housing-name">Palatial Estate</td>
+              <td>4×4</td>
+              <td>200</td>
+              <td>100</td>
+              <td>2–3 types</td>
+              <td>Supply only</td>
+              <td>3 gods</td>
+              <td>Dentist + Physician + Mortuary ×2</td>
+              <td>Library</td>
+              <td>90</td>
+              <td>Pottery, Beer, Linen, Jewelry ×2</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="wiki-table-notes">
+        <p><strong>★</strong> Common Residence and above no longer supply workers to the city's labor pool.</p>
+        <p><strong>★★</strong> Common Manor and above occupy a fixed footprint and do not merge from smaller plots.</p>
+        <p><strong>★★★</strong> Modest Estate requires 2 units of Jewelry (two different luxury goods deliveries).</p>
+        <p><strong>Supply only</strong> — a Water Supply building is required; a Well is no longer sufficient.</p>
+        <p><strong>Desirability to evolve</strong> — the tile desirability required for the house to advance to the next tier. Values shown for Normal difficulty.</p>
+        <p><strong>Entertainment points</strong> — cumulative score from entertainment walkers (jugglers, musicians, dancers, senet players). Required points scale with difficulty.</p>
+      </div>
+
+      <h2 id="tips">Tips</h2>
+
+      <ul class="wiki-list">
+        <li><strong>Road access first.</strong> All service delivery depends on walkers following roads. Houses more than two tiles from a road receive no services and will not evolve past Crude Hut.</li>
+        <li><strong>Separate workers from nobles.</strong> Keep a district of Homesteads and Apartments near industrial areas to maintain your labor supply. Build Residences and Manors away from industry in high-desirability zones.</li>
+        <li><strong>Fire hazard spike.</strong> Fire risk peaks at Ordinary Cottage (tier 6). Build fire stations before pushing housing past tier 3 in dense districts.</li>
+        <li><strong>Desirability planning.</strong> Push housing above tier 10 requires desirability 32+. Surround residential blocks with gardens, statues, and temples — and keep farms, workshops, and docks well away.</li>
+        <li><strong>Water Supply upgrade.</strong> Well access is only acceptable through tier 4. Rough Cottage (tier 5) and above require a Water Supply building — plan your water infrastructure before aiming for higher tiers.</li>
+        <li><strong>Bazaar chain.</strong> Food and goods reach houses through bazaars. A single bazaar covers a limited area; ensure granaries and storage yards are well stocked and not too far from the bazaar.</li>
+      </ul>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>

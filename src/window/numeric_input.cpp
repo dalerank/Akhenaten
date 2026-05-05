@@ -54,11 +54,11 @@ static void init(int x, int y, int max_digits, int max_value, void (*callback)(i
     data.num_digits = 0;
     data.value = 0;
     data.focus_button_id = 0;
-    keyboard_start_capture_numeric(input_number);
+    g_keyboard.start_capture_numeric(input_number);
 }
 
 static void close(void) {
-    keyboard_stop_capture_numeric();
+    g_keyboard.stop_capture_numeric();
     window_go_back();
 }
 

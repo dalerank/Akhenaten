@@ -30,7 +30,7 @@ public:
     virtual void on_place(int orientation, int variant);
     virtual void on_place_update_tiles(int orientation, int variant);
     virtual void on_place_checks();
-    virtual void on_destroy() {}
+    virtual void on_destroy();
     virtual void on_before_collapse();
     virtual void on_before_flooded() {}
     virtual void on_undo() {}

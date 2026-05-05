@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Housing System — Developer Docs — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../../about.html">About</a></li>
+        <li><a href="../../../../devblog.html">Devblog</a></li>
+        <li><a href="../../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../../contact.html">Join us</a></li>
+        <li><a href="../../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="../index.html">← Developer Docs</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Housing System</div>
+        <ul>
+          <li><a href="index.html" class="active">Key Files</a></li>
+          <li><a href="classes.html">Class Hierarchy</a></li>
+          <li><a href="evolution.html">Evolution Algorithm</a></li>
+          <li><a href="services.html">Service Coverage</a></li>
+          <li><a href="config.html">Config Format</a></li>
+          <li><a href="adding-tier.html">Adding a Tier</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb"><a href="../../../index.html">Wiki</a> / <a href="../index.html">Developer Docs</a> / Housing System</div>
+      <h1>Housing System</h1>
+      <p class="section-intro">Architecture overview and key file map for the housing subsystem.</p>
+
+      <h2>Overview</h2>
+      <p>The housing subsystem handles all 20 tiers of residential buildings — from Crude Hut to Palatial Estate. It spans four distinct layers that need to stay in sync:</p>
+      <ul class="wiki-list">
+        <li><strong>Config layer</strong> (<code>src/scripts/houses.js</code>) — defines all per-tier thresholds, risk values, and goods requirements for every difficulty level.</li>
+        <li><strong>Data layer</strong> (<code>building_house.h</code>, <code>building_house_model.h</code>) — C++ structs that mirror the config and the per-instance runtime state.</li>
+        <li><strong>Logic layer</strong> (<code>building_house.cpp</code>) — 20 tier classes, each implementing evolution, devolution, merge, and split logic.</li>
+        <li><strong>Integration layer</strong> (<code>city/city_houses.cpp</code>, <code>figure/service.cpp</code>) — connects walkers to houses, aggregates service scores, drives the monthly update cycle.</li>
+      </ul>
+
+      <h2>Key Files</h2>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead>
+            <tr>
+              <th>File</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>src/building/building_house.h</code></td>
+              <td>Base class <code>building_house</code>, <code>runtime_data_t</code> definition, 20 tier class declarations.</td>
+            </tr>
+            <tr>
+              <td><code>src/building/building_house.cpp</code></td>
+              <td>Evolution logic for all 20 tiers — <code>evolve()</code>, <code>check_requirements()</code>, <code>merge()</code>, <code>split()</code>, <code>decay_services()</code>, food/goods consumption.</td>
+            </tr>
+            <tr>
+              <td><code>src/building/building_house_model.h</code></td>
+              <td><code>model_house_t</code> struct — the C++ mirror of a single <code>model{}</code> block from <code>houses.js</code>. All thresholds, divisors, risk values.</td>
+            </tr>
+            <tr>
+              <td><code>src/building/building_house_demands.h</code></td>
+              <td><code>house_demands</code> — per-update accumulator tracking which services/goods are being demanded by houses that cannot yet evolve.</td>
+            </tr>
+            <tr>
+              <td><code>src/city/city_houses.cpp</code></td>
+              <td>Monthly housing update driver: calls <code>evolve()</code> on every house, runs <code>house_service_calculate_culture_aggregates()</code>, updates city-wide prosperity and population counts.</td>
+            </tr>
+            <tr>
+              <td><code>src/figure/service.cpp</code></td>
+              <td>Service walker callbacks — how figures of type Teacher, Priest, Physician, etc. register their presence with nearby houses.</td>
+            </tr>
+            <tr>
+              <td><code>src/scripts/houses.js</code></td>
+              <td>Canonical source of truth for all housing data. Every threshold, multiplier, and risk value lives here. Changes here affect gameplay immediately without a recompile.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Data Flow</h2>
+      <p>The housing update runs once per month (game time). The sequence is:</p>
+      <pre class="wiki-code">
+city::house_process_evolve()          ← monthly driver in city_houses.cpp
+  │
+  ├─ house_service_calculate_culture_aggregates()
+  │    for each house:
+  │      entertainment = weighted sum of juggler/musician/dancer/senet coverage
+  │      education     = 0..3 based on school / library / academy flags
+  │      health        = 0..2 based on apothecary / physician flags
+  │      num_gods      = count of distinct temples with walker coverage
+  │
+  └─ for each house:
+       house->evolve(&demands)         ← virtual, implemented per tier
+         │
+         ├─ merge()                    ← attempt 1×1 → 2×2 merge
+         ├─ check_requirements()       ← compare state vs model thresholds
+         │    → e_house_progress:  EVOLVE / NONE / DECAY
+         └─ change_to() / expand_to_*() / split()
+</pre>
+
+      <h2>Subsystem Pages</h2>
+      <div class="wiki-nav-cards">
+        <a href="classes.html" class="wiki-nav-card">
+          <div class="wiki-nav-card-text">
+            <strong>Class Hierarchy</strong>
+            <span>Base class, 20 tier classes, runtime_data_t fields.</span>
+          </div>
+        </a>
+        <a href="evolution.html" class="wiki-nav-card">
+          <div class="wiki-nav-card-text">
+            <strong>Evolution Algorithm</strong>
+            <span>How houses decide to evolve, stay, or devolve each month.</span>
+          </div>
+        </a>
+        <a href="services.html" class="wiki-nav-card">
+          <div class="wiki-nav-card-text">
+            <strong>Service Coverage</strong>
+            <span>Walker registration, decay, and aggregate computation.</span>
+          </div>
+        </a>
+        <a href="config.html" class="wiki-nav-card">
+          <div class="wiki-nav-card-text">
+            <strong>Config Format</strong>
+            <span>Annotated houses.js schema — every field explained.</span>
+          </div>
+        </a>
+        <a href="adding-tier.html" class="wiki-nav-card">
+          <div class="wiki-nav-card-text">
+            <strong>Adding a Tier</strong>
+            <span>Step-by-step guide for adding or modifying a housing tier.</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>

@@ -3,6 +3,7 @@
 #include "core/calc.h"
 #include "core/log.h"
 #include "game/settings.h"
+#include "game/game.h"
 #include "game/system.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/menu.h"
@@ -258,7 +259,7 @@ void platform_screen_move(int x, int y) {
 }
 
 void platform_screen_t::move(int x, int y) {
-    if (!g_settings.is_fullscreen()) {
+    if (!game.is_fullscreen()) {
         pos.x = x;
         pos.y = y;
         centered = 0;
@@ -300,7 +301,7 @@ void platform_screen_t::set_fullscreen() {
         }
     }
 
-    g_settings.set_fullscreen(1);
+    game.set_fullscreen(true);
     g_settings.display_size = {mode.w, mode.h};
 }
 
@@ -325,7 +326,7 @@ void platform_screen_t::set_windowed() {
     if (SDL_GetWindowGrab(window) == SDL_TRUE) {
         SDL_SetWindowGrab(window, SDL_FALSE);
     }
-    g_settings.set_fullscreen(false);
+    game.set_fullscreen(false);
     g_settings.display_size = {pixel_width, pixel_height};
 }
 
@@ -340,7 +341,7 @@ void platform_screen_t::set_window_size(int logical_width, int logical_height) {
     int pixel_width = scale_logical_to_pixels(logical_width);
     int pixel_height = scale_logical_to_pixels(logical_height);
     int display = SDL_GetWindowDisplayIndex(window);
-    if (g_settings.is_fullscreen()) {
+    if (game.is_fullscreen()) {
         SDL_SetWindowFullscreen(window, 0);
     } else {
         SDL_GetWindowPosition(window, &pos.x, &pos.y);
@@ -356,7 +357,7 @@ void platform_screen_t::set_window_size(int logical_width, int logical_height) {
     if (SDL_GetWindowGrab(window) == SDL_TRUE) {
         SDL_SetWindowGrab(window, SDL_FALSE);
     }
-    g_settings.set_fullscreen(0);
+    game.set_fullscreen(false);
     g_settings.display_size = {pixel_width, pixel_height};
 }
 
@@ -372,7 +373,7 @@ void platform_screen_t::recreate_texture() {
     // On Windows, if ctrl + alt + del is pressed during fullscreen, the rendering context may be lost for a few frames
     // after restoring the window, preventing the texture from being recreated. This forces an attempt to recreate the
     // texture every frame to bypass that issue.
-    if (g_settings.is_fullscreen() && platform_renderer_lost_render_texture()) {
+    if (game.is_fullscreen() && platform_renderer_lost_render_texture()) {
         SDL_DisplayMode mode;
         SDL_GetWindowDisplayMode(window, &mode);
         g_screen.set_resolution(scale_pixels_to_logical(mode.w), scale_pixels_to_logical(mode.h));

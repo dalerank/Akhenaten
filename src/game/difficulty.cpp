@@ -1,7 +1,7 @@
 #include "difficulty.h"
 
 #include "core/calc.h"
-#include "game/settings.h"
+#include "game/game.h"
 
 #include <array>
 
@@ -27,19 +27,19 @@ static const difficulty_data_t g_difficulty_data[] = {
 };
 
 int difficulty_starting_kingdom(void) {
-    return g_difficulty_data[g_settings.difficulty()].starting_kingdom;
+    return g_difficulty_data[game.difficulty()].starting_kingdom;
 }
 
 int difficulty_sentiment(void) {
-    return g_difficulty_data[g_settings.difficulty()].sentiment;
+    return g_difficulty_data[game.difficulty()].sentiment;
 }
 
 int difficulty_adjust_enemies(int enemies) {
-    return calc_adjust_with_percentage(enemies, g_difficulty_data[g_settings.difficulty()].enemies);
+    return calc_adjust_with_percentage(enemies, g_difficulty_data[game.difficulty()].enemies);
 }
 
 int difficulty_adjust_wolf_attack(int attack) {
-    switch (g_settings.difficulty()) {
+    switch (game.difficulty()) {
     case DIFFICULTY_VERY_EASY:
         return 2;
     case DIFFICULTY_EASY:
@@ -52,12 +52,12 @@ int difficulty_adjust_wolf_attack(int attack) {
 }
 
 int difficulty_multiply_risk(int risk_delta) {
-    return int(g_difficulty_data[g_settings.difficulty()].risk_multiplier * risk_delta);
+    return int(g_difficulty_data[game.difficulty()].risk_multiplier * risk_delta);
 }
 
 int difficulty_adjust_food_consumption(int pct) {
     // % reduction per difficulty (VE, E, N, H, VH); result rounded down to nearest 5.
     static const int reductions[] = { 40, 35, 30, 25, 15 };
-    const int reduced = pct * (100 - reductions[g_settings.difficulty()]) / 100;
+    const int reduced = pct * (100 - reductions[game.difficulty()]) / 100;
     return (reduced / 5) * 5;
 }

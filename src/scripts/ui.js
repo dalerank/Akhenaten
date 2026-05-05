@@ -77,6 +77,7 @@ import ui_health_info_window
 import ui_tax_collector_window
 import ui_burning_ruin_window
 import ui_hunting_lodge_window
+import ui_farm_info_window
 import ui_courthouse_window
 import ui_statue_window
 import ui_window_city
@@ -87,3 +88,4 @@ import ui_new_career
 import ui_records_window
 import ui_trade_prices_window
 import ui_sidebar_extra
+import ui_report_bug_window

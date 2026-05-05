@@ -1,5 +1,4 @@
 #include "building_dance_school.h"
-#include "building_dance_school.h"
 
 #include "building/building.h"
 #include "building/building_conservatory.h"

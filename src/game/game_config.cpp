@@ -119,6 +119,8 @@ namespace game_features {
     game_feature gameopt_gods_enabled{ "gameopt_gods_enabled", "", true };
     game_feature gameopt_victory_video{ "gameopt_victory_video", "", false };
     game_feature gameopt_pyramid_speedup{ "gameopt_pyramid_speedup", "", false };
+    game_feature gameopt_fullscreen{ "gameopt_fullscreen", "", true };
+    game_feature gameopt_difficulty{ "gameopt_difficulty", "", 2.0f };
 
     xspan<game_feature*> all() {
         return { _features.data(), _features.size() };

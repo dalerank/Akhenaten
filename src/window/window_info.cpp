@@ -43,6 +43,7 @@
 #include "window/message_dialog.h"
 #include "widget/widget_sidebar.h"
 #include "io/gamefiles/lang.h"
+#include "core/log.h"
 #include "dev/debug.h"
 #include "js/js_game.h"
 
@@ -310,6 +311,7 @@ object_info &common_info_window::get_object_info() {
 void common_info_window::update_buttons(object_info &c) {
     vec2i bgsize = ui["background"].pxsize();
     ui["button_help"].onclick([&c] {
+        logs::info("window_info button_help invoked, help_id=%d", c.help_id);
         if (c.help_id > 0) {
             const xstring help_id = lang_get_message_id(c.help_id);
             window_message_dialog_show(help_id, -1, window_city_draw_all);

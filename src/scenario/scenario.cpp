@@ -9,6 +9,7 @@
 #include "farao_change.h"
 #include "scenario_event_manager.h"
 #include "game/difficulty.h"
+#include "game/game.h"
 #include "game/settings.h"
 #include "game/mission.h"
 #include "dev/debug.h"
@@ -44,7 +45,7 @@ void scenario_data_t::init_mission() {
 }
 
 int scenario_data_t::startup_funds() const {
-    const int funds = meta.initial_funds[g_settings.difficulty()];
+    const int funds = meta.initial_funds[game.difficulty()];
     if (funds > 0) {
         return funds;
     }
@@ -53,7 +54,7 @@ int scenario_data_t::startup_funds() const {
 }
 
 int scenario_data_t::rescue_loan() const {
-    const int loan = meta.rescue_loans[g_settings.difficulty()];
+    const int loan = meta.rescue_loans[game.difficulty()];
     if (loan > 0) {
         return loan;
     }
@@ -62,7 +63,7 @@ int scenario_data_t::rescue_loan() const {
 }
 
 int scenario_data_t::house_tax_multiplier(int v) const {
-    const int multiplier = meta.house_tax_multipliers[g_settings.difficulty()];
+    const int multiplier = meta.house_tax_multipliers[game.difficulty()];
     if (multiplier > 0) {
         return calc_adjust_with_percentage<int>(v, multiplier);
     }

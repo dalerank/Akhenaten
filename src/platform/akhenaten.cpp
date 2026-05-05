@@ -266,7 +266,7 @@ static void setup() {
         exit(-2);
     }
 
-    g_settings.set_cli_fullscreen(g_args.is_fullscreen());
+    game.set_cli_fullscreen(g_args.is_fullscreen());
     if (g_args.has_window_pos()) {
         const auto& pos = g_args.get_window_pos();
         platform_screen_move(pos.x, pos.y);

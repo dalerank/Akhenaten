@@ -45,7 +45,7 @@ function mission2_handle_population_cap(ev) {
     migration.set_population_cap("pottery_not_produced_population_cap", max_pop)
 }
 
-function mission2_update_goal(ev) {
+function mission2_get_goal_tooltip() {
 	if (!mission.figs_stored_handled) {
 		return "#mission2_store_figs"
 	}
@@ -81,7 +81,8 @@ function mission2_on_start(ev) {
 		city.use_building(BUILDING_LARGE_STATUE, true)
 		city.use_building(BUILDING_GARDENS, true)
 		city.use_building(BUILDING_PLAZA, true)
-		city.use_building(BUILDING_MENU_WATER_CROSSINGS, true)
+		city.use_building(BUILDING_LOW_BRIDGE, true)
+		city.use_building(BUILDING_FERRY, true)
 	}
 
 	if (mission.disease_handled) {
@@ -160,7 +161,8 @@ function mission2_warehouse_pottery_2_check(ev) {
 	city.use_building(BUILDING_LARGE_STATUE, true)
 	city.use_building(BUILDING_GARDENS, true)
 	city.use_building(BUILDING_PLAZA, true)
-	city.use_building(BUILDING_MENU_WATER_CROSSINGS, true)
+	city.use_building(BUILDING_LOW_BRIDGE, true)
+	city.use_building(BUILDING_FERRY, true)
 
 	ui.popup_message("message_tutorial_municipal_structures")
 }
