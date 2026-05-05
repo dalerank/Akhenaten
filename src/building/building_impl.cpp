@@ -56,6 +56,10 @@ void building_impl::on_before_collapse() {
     es(__func__);
 }
 
+void building_impl::on_destroy() {
+    es(__func__);
+}
+
 void building_impl::on_place_checks() {
     // check road access
     switch (type()) {
