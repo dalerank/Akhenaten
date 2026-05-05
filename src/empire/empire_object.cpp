@@ -132,6 +132,7 @@ void empire_t::init_cities() {
         city->trader_figure_ids[1] = 0;
         city->trader_figure_ids[2] = 0;
         city->empire_object_id = i;
+        city->max_traders = 1;
     }
 }
 
