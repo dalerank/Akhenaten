@@ -321,35 +321,35 @@ void platform_handle_key_down(SDL_KeyboardEvent* event) {
     case SDLK_KP_ENTER:
         // only send enter if no modifier is also down
         if ((event->keysym.mod & (KMOD_CTRL | KMOD_ALT | KMOD_GUI)) == 0)
-            keyboard_return();
+            g_keyboard.press_return();
 
         break;
     case SDLK_BACKSPACE:
-        keyboard_backspace();
+        g_keyboard.press_backspace();
         break;
     case SDLK_DELETE:
-        keyboard_delete();
+        g_keyboard.press_delete();
         break;
     case SDLK_INSERT:
-        keyboard_insert();
+        g_keyboard.press_insert();
         break;
     case SDLK_LEFT:
-        keyboard_left();
+        g_keyboard.press_left();
         break;
     case SDLK_RIGHT:
-        keyboard_right();
+        g_keyboard.press_right();
         break;
     case SDLK_UP:
-        keyboard_left();
+        g_keyboard.press_left();
         break;
     case SDLK_DOWN:
-        keyboard_right();
+        g_keyboard.press_right();
         break;
     case SDLK_HOME:
-        keyboard_home();
+        g_keyboard.press_home();
         break;
     case SDLK_END:
-        keyboard_end();
+        g_keyboard.press_end();
         break;
     case SDLK_AC_BACK:
 #if !defined(GAME_PLATFORM_ANDROID)
@@ -380,7 +380,7 @@ void platform_handle_key_down(SDL_KeyboardEvent* event) {
     // when a text field is capturing input, suppress global hotkeys so typing
     // characters like digits or '-' doesn't trigger advisor/menu shortcuts.
     // Escape is allowed through so dialogs can still be cancelled.
-    if (keyboard_is_capturing() && key != KEY_ESCAPE) {
+    if (g_keyboard.is_capturing() && key != KEY_ESCAPE) {
         return;
     }
 
@@ -403,16 +403,18 @@ void platform_handle_key_up(SDL_KeyboardEvent* event) {
         return;
     }
 #endif
+
     if (game.debug_console) {
         return;
     }
+
     e_key key = (e_key)platform.get_key_from_scancode(event->keysym.scancode);
     int mod = get_modifier(event->keysym.mod);
     hotkey_key_released(key, mod);
 }
 
 void platform_handle_text(SDL_TextInputEvent* event) {
-    keyboard_text(event->text);
+    g_keyboard.set_text(event->text);
 }
 
 e_key system_keyboard_key_for_symbol(pcstr name) {

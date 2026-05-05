@@ -5,78 +5,51 @@
 #include "game/system.h"
 #include "graphics/text.h"
 
-struct input_keyboard_data_t {
-    int insert;
-    int capture;
-    bool accepted;
-
-    int capture_numeric;
-    void (*capture_numeric_callback)(int);
-
-    uint8_t* text;
-    int cursor_position;
-    int length;
-    int max_length;
-    int allow_punctuation;
-
-    int viewport_start;
-    int viewport_end;
-    int viewport_cursor_position;
-
-    int box_width;
-    e_font font;
-    int multiline;
-};
-
-input_keyboard_data_t g_input_keyboard_data;
+keyboard_t g_keyboard;
 
 static int get_char_bytes(const uint8_t* str) {
     return str[0] >= 0x80 && encoding_is_multibyte() ? 2 : 1;
 }
 
-static int get_current_char_bytes(void) {
-    auto &data = g_input_keyboard_data;
-    return get_char_bytes(&data.text[data.cursor_position]);
+int keyboard_t::get_current_char_bytes() {
+    return get_char_bytes(&text[cursor_position]);
 }
 
-static void set_viewport_to_start(void) {
-    auto &data = g_input_keyboard_data;
-    data.viewport_start = 0;
-    data.viewport_end = text_get_max_length_for_width(data.text, data.length, data.font, data.box_width, 0);
+void keyboard_t::set_viewport_to_start() {
+    viewport_start = 0;
+    viewport_end = text_get_max_length_for_width(text, length, font, box_width, 0);
 }
 
-static void set_viewport_to_end(void) {
-    auto &data = g_input_keyboard_data;
-    data.viewport_end = data.length;
-    int maxlen = text_get_max_length_for_width(data.text, data.length, data.font, data.box_width, 1);
-    data.viewport_start = data.length - maxlen;
+void keyboard_t::set_viewport_to_end() {
+    viewport_end = length;
+    int maxlen = text_get_max_length_for_width(text, length, font, box_width, 1);
+    viewport_start = length - maxlen;
 }
 
-static void include_cursor_in_viewport(void) {
+void keyboard_t::include_cursor_in_viewport() {
     // first check if we can keep the viewport
-    auto &data = g_input_keyboard_data;
-    int new_start = data.viewport_start;
-    int new_end = text_get_max_length_for_width(data.text, data.length - new_start, data.font, data.box_width, 0);
-    if (data.cursor_position >= new_start && data.cursor_position < new_end && new_start + new_end < data.length)
+    int new_start = viewport_start;
+    int new_end = text_get_max_length_for_width(text, length - new_start, font, box_width, 0);
+    if (cursor_position >= new_start && cursor_position < new_end && new_start + new_end < length)
         return;
-    if (data.cursor_position <= data.viewport_cursor_position) {
+    if (cursor_position <= viewport_cursor_position) {
         // move toward start
         int maxlen = text_get_max_length_for_width(
-          data.text + data.cursor_position, data.length - data.cursor_position, data.font, data.box_width, 0);
-        if (data.cursor_position + maxlen < data.length) {
-            data.viewport_start = data.cursor_position;
-            data.viewport_end = data.cursor_position + maxlen;
+          text + cursor_position, length - cursor_position, font, box_width, 0);
+        if (cursor_position + maxlen < length) {
+            viewport_start = cursor_position;
+            viewport_end = cursor_position + maxlen;
         } else {
             // all remaining text fits: set to end
             set_viewport_to_end();
         }
     } else {
         // move toward end
-        int viewport_length = data.cursor_position + get_current_char_bytes();
-        int maxlen = text_get_max_length_for_width(data.text, viewport_length, data.font, data.box_width, 1);
+        int viewport_length = cursor_position + get_current_char_bytes();
+        int maxlen = text_get_max_length_for_width(text, viewport_length, font, box_width, 1);
         if (maxlen < viewport_length) {
-            data.viewport_start = viewport_length - maxlen;
-            data.viewport_end = viewport_length;
+            viewport_start = viewport_length - maxlen;
+            viewport_end = viewport_length;
         } else {
             // all remaining text fits: set to start
             set_viewport_to_start();
@@ -84,128 +57,114 @@ static void include_cursor_in_viewport(void) {
     }
 }
 
-static void update_viewport(int has_changed) {
-    auto &data = g_input_keyboard_data;
-    if (data.multiline) {
-        data.viewport_start = 0;
-        data.viewport_end = data.length;
-        data.viewport_cursor_position = data.cursor_position;
+void keyboard_t::update_viewport(int has_changed) {
+    if (multiline) {
+        viewport_start = 0;
+        viewport_end = length;
+        viewport_cursor_position = cursor_position;
         return;
     }
-    int is_within_viewport = data.cursor_position >= data.viewport_start && data.cursor_position < data.viewport_end;
+    int is_within_viewport = cursor_position >= viewport_start && cursor_position < viewport_end;
     if (!has_changed && is_within_viewport) {
         // no update necessary
-    } else if (data.cursor_position == 0)
+    } else if (cursor_position == 0)
         set_viewport_to_start();
-    else if (data.cursor_position == data.length)
+    else if (cursor_position == length)
         set_viewport_to_end();
     else
         include_cursor_in_viewport();
-    data.viewport_cursor_position = data.cursor_position;
+
+    viewport_cursor_position = cursor_position;
 }
 
-void keyboard_start_capture(
-  uint8_t* text, int max_length, int allow_punctuation, int box_width, e_font font, int multiline) {
-    auto &data = g_input_keyboard_data;
-    data.capture = 1;
-    data.text = text;
-    data.length = string_length(text);
-    data.cursor_position = data.length;
-    data.max_length = max_length;
-    data.allow_punctuation = allow_punctuation;
-    data.accepted = 0;
-    data.box_width = box_width;
-    data.font = font;
-    data.multiline = multiline;
+void keyboard_t::start_capture(uint8_t* text, int max_length, int allow_punct, int box_width, e_font font, int ml) {
+    capture = 1;
+    this->text = text;
+    length = string_length(this->text);
+    cursor_position = length;
+    this->max_length = max_length;
+    allow_punctuation = allow_punct;
+    accepted = 0;
+    this->box_width = box_width;
+    this->font = font;
+    multiline = ml;
     update_viewport(1);
 }
 
-void keyboard_refresh(void) {
-    auto &data = g_input_keyboard_data;
-    data.length = string_length(data.text);
-    data.cursor_position = data.length;
+void keyboard_t::refresh(void) {
+    length = string_length(text);
+    cursor_position = length;
     update_viewport(1);
 }
 
-void keyboard_resume_capture(void) {
-    auto &data = g_input_keyboard_data;
-    data.capture = 1;
+void keyboard_t::resume_capture(void) {
+    capture = 1;
 }
 
-void keyboard_pause_capture(void) {
-    auto &data = g_input_keyboard_data;
-    data.capture = 0;
+void keyboard_t::pause_capture(void) {
+    capture = 0;
     system_keyboard_hide();
 }
 
-void keyboard_stop_capture(void) {
-    auto &data = g_input_keyboard_data;
-    data.capture = 0;
-    data.text = 0;
-    data.cursor_position = 0;
-    data.length = 0;
-    data.max_length = 0;
-    data.accepted = 0;
-    data.multiline = 0;
+void keyboard_t::stop_capture(void) {
+    capture = 0;
+    text = 0;
+    cursor_position = 0;
+    length = 0;
+    max_length = 0;
+    accepted = 0;
+    multiline = 0;
     system_keyboard_hide();
 }
 
-void keyboard_start_capture_numeric(void (*callback)(int)) {
-    auto &data = g_input_keyboard_data;
-    data.capture_numeric = 1;
-    data.capture_numeric_callback = callback;
+void keyboard_t::start_capture_numeric(void (*callback)(int)) {
+    capture_numeric = 1;
+    capture_numeric_callback = callback;
 }
 
-void keyboard_stop_capture_numeric(void) {
-    auto &data = g_input_keyboard_data;
-    data.capture_numeric = 0;
-    data.capture_numeric_callback = 0;
+void keyboard_t::stop_capture_numeric(void) {
+    capture_numeric = 0;
+    capture_numeric_callback = 0;
 }
 
-int keyboard_input_is_accepted(void) {
-    auto &data = g_input_keyboard_data;
-    if (data.accepted) {
-        data.accepted = 0;
+bool keyboard_t::input_is_accepted(void) {
+    if (accepted) {
+        accepted = 0;
         return 1;
     } else {
         return 0;
     }
 }
 
-int keyboard_is_capturing(void) {
-    return g_input_keyboard_data.capture;
+bool keyboard_t::is_capturing(void) {
+    return capture;
 }
 
-int keyboard_is_capturing_buffer(const uint8_t* text) {
-    auto& data = g_input_keyboard_data;
-    return data.capture && data.text == text;
+bool keyboard_t::is_capturing_buffer(const uint8_t* text) {
+    return capture && text == text;
 }
 
-int keyboard_is_insert(void) {
-    auto &data = g_input_keyboard_data;
-    return data.insert;
+bool keyboard_t::is_insert(void) {
+    return insert;
 }
 
-int keyboard_cursor_position(void) {
-    auto &data = g_input_keyboard_data;
-    return data.cursor_position - data.viewport_start;
+int keyboard_t::get_cursor_position(void) {
+    return cursor_position - viewport_start;
 }
 
-int keyboard_cursor_abs_offset(void) {
-    return g_input_keyboard_data.cursor_position;
+int keyboard_t::get_cursor_abs_offset(void) {
+    return cursor_position;
 }
 
-int keyboard_offset_start(void) {
-    auto &data = g_input_keyboard_data;
-    return data.viewport_start;
+int keyboard_t::get_offset_start(void) {
+    return viewport_start;
 }
 
-int keyboard_offset_end(void) {
-    auto &data = g_input_keyboard_data;
-    return data.viewport_end;
+int keyboard_t::get_offset_end(void) {
+    return viewport_end;
 }
 
-static void move_right(const uint8_t* start, uint8_t* end) {
+void keyboard_t::move_right(const uint8_t* start, uint8_t* end) {
     end[1] = 0;
     while (end > start) {
         end--;
@@ -213,19 +172,20 @@ static void move_right(const uint8_t* start, uint8_t* end) {
     }
 }
 
-static void insert_char(const uint8_t* value, int bytes) {
-    auto& data = g_input_keyboard_data;
-    if (data.length + bytes == data.max_length)
+void keyboard_t::insert_char(const uint8_t* value, int bytes) {
+    if (length + bytes == max_length) {
         return;
-    for (int i = 0; i < bytes; i++) {
-        move_right(&data.text[data.cursor_position], &data.text[data.length]);
-        data.text[data.cursor_position] = value[i];
-        data.cursor_position++;
     }
-    data.length += bytes;
+
+    for (int i = 0; i < bytes; i++) {
+        move_right(&text[cursor_position], &text[length]);
+        text[cursor_position] = value[i];
+        cursor_position++;
+    }
+    length += bytes;
 }
 
-static void move_left(uint8_t* start, const uint8_t* end) {
+void keyboard_t::move_left(uint8_t* start, const uint8_t* end) {
     while (start < end) {
         start[0] = start[1];
         start++;
@@ -233,123 +193,109 @@ static void move_left(uint8_t* start, const uint8_t* end) {
     *start = 0;
 }
 
-static void remove_current_char(void) {
-    auto& data = g_input_keyboard_data;
+void keyboard_t::remove_current_char() {
     int bytes = get_current_char_bytes();
     for (int i = 0; i < bytes; i++) {
-        move_left(&data.text[data.cursor_position], &data.text[data.length]);
+        move_left(&text[cursor_position], &text[length]);
     }
-    data.length -= bytes;
+    length -= bytes;
 }
 
-static void add_char(const uint8_t* value, int bytes) {
-    auto& data = g_input_keyboard_data;
-    if (data.insert)
+void keyboard_t::add_char(const uint8_t* value, int bytes) {
+    if (insert)
         insert_char(value, bytes);
     else {
-        if (data.cursor_position < data.length)
+        if (cursor_position < length)
             remove_current_char();
 
         insert_char(value, bytes);
     }
 }
  
-
-void keyboard_return() {
-    auto &data = g_input_keyboard_data;
-    if (data.capture && data.multiline) {
+void keyboard_t::press_return() {
+    if (capture && multiline) {
         uint8_t nl = '\n';
         add_char(&nl, 1);
         update_viewport(1);
     } else {
-        data.accepted = 1;
+        accepted = 1;
     }
 }
 
-static void move_cursor_left(void) {
-    auto &data = g_input_keyboard_data;
+void keyboard_t::move_cursor_left() {
     if (encoding_is_multibyte()) {
         int i = 0;
         int bytes = 0;
-        while (i + bytes < data.cursor_position) {
+        while (i + bytes < cursor_position) {
             i += bytes;
-            bytes = data.text[i] >= 0x80 ? 2 : 1;
+            bytes = text[i] >= 0x80 ? 2 : 1;
         }
-        data.cursor_position = i;
+        cursor_position = i;
     } else {
-        data.cursor_position--;
+        cursor_position--;
     }
 }
 
-static void move_cursor_right(void) {
-    auto &data = g_input_keyboard_data;
-    data.cursor_position += get_current_char_bytes();
+void keyboard_t::move_cursor_right() {
+    cursor_position += get_current_char_bytes();
 }
 
-void keyboard_backspace(void) {
-    auto &data = g_input_keyboard_data;
-    if (data.capture && data.cursor_position > 0) {
+void keyboard_t::press_backspace() {
+    if (capture && cursor_position > 0) {
         move_cursor_left();
         remove_current_char();
         update_viewport(1);
     }
 }
 
-void keyboard_delete(void) {
-    auto &data = g_input_keyboard_data;
-    if (data.capture && data.cursor_position < data.length) {
+void keyboard_t::press_delete() {
+    if (capture && cursor_position < length) {
         remove_current_char();
         update_viewport(1);
     }
 }
 
-void keyboard_insert(void) {
-    auto &data = g_input_keyboard_data;
-    data.insert ^= 1;
+void keyboard_t::press_insert() {
+    insert = !insert;
 }
 
-void keyboard_left(void) {
-    auto &data = g_input_keyboard_data;
-    if (data.capture) {
-        if (data.cursor_position > 0) {
+void keyboard_t::press_left() {
+    if (capture) {
+        if (cursor_position > 0) {
             move_cursor_left();
             update_viewport(0);
         }
     }
 }
 
-void keyboard_right(void) {
-    auto &data = g_input_keyboard_data;
-    if (data.capture) {
-        if (data.cursor_position < data.length) {
+void keyboard_t::press_right() {
+    if (capture) {
+        if (cursor_position < length) {
             move_cursor_right();
             update_viewport(0);
         }
     }
 }
 
-void keyboard_home(void) {
-    auto &data = g_input_keyboard_data;
-    if (data.capture) {
-        data.cursor_position = 0;
+void keyboard_t::press_home() {
+    if (capture) {
+        cursor_position = 0;
         update_viewport(0);
     }
 }
 
-void keyboard_end(void) {
-    auto &data = g_input_keyboard_data;
-    if (data.capture) {
-        data.cursor_position = data.length;
+void keyboard_t::press_end() {
+    if (capture) {
+        cursor_position = length;
         update_viewport(0);
     }
 }
 
-static int keyboard_character(uint8_t* text) {
-    auto &data = g_input_keyboard_data;
+int keyboard_t::press_character(uint8_t* text) {
     uint8_t c = text[0];
 
     int add = 0;
-    if (c == '\n' && data.multiline)
+    if (c == '\n' && multiline)
         add = 1;
     else if (c == ' ' || c == '-')
         add = 1;
@@ -360,7 +306,7 @@ static int keyboard_character(uint8_t* text) {
     else if (c >= 'A' && c <= 'Z')
         add = 1;
     else if (c == ',' || c == '.' || c == '?' || c == '!')
-        add = data.allow_punctuation;
+        add = allow_punctuation;
     else if (c >= 0x80) { // do not check non-ascii for valid characters
         add = 1;
     }
@@ -373,16 +319,15 @@ static int keyboard_character(uint8_t* text) {
     return bytes;
 }
 
-void keyboard_text(const char* text_utf8) {
-    auto &data = g_input_keyboard_data;
-    if (data.capture_numeric) {
+void keyboard_t::set_text(pcstr text_utf8) {
+    if (capture_numeric) {
         char c = text_utf8[0];
         if (c >= '0' && c <= '9')
-            data.capture_numeric_callback(c - '0');
+            capture_numeric_callback(c - '0');
 
         return;
     }
-    if (!data.capture)
+    if (!capture)
         return;
 
     uint8_t internal_char[100];
@@ -390,6 +335,6 @@ void keyboard_text(const char* text_utf8) {
 
     int index = 0;
     while (internal_char[index]) {
-        index += keyboard_character(&internal_char[index]);
+        index += press_character(&internal_char[index]);
     }
 }

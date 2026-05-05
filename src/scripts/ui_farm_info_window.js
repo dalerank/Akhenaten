@@ -1,5 +1,28 @@
 log_info("akhenaten: ui farm info window started")
 
+[es=building_info_window]
+info_window_farm {
+    related_buildings [
+        BUILDING_GRAIN_FARM, BUILDING_GRAIN_MEADOW_FARM,
+        BUILDING_LETTUCE_FARM, BUILDING_LETTUCE_MEADOW_FARM,
+        BUILDING_CHICKPEAS_FARM, BUILDING_CHICKPEAS_MEADOW_FARM,
+        BUILDING_POMEGRANATES_FARM, BUILDING_POMEGRANATES_MEADOW_FARM,
+        BUILDING_BARLEY_FARM, BUILDING_BARLEY_MEADOW_FARM,
+        BUILDING_FLAX_FARM, BUILDING_FLAX_MEADOW_FARM,
+        BUILDING_HENNA_FARM, BUILDING_HENNA_MEADOW_FARM,
+        BUILDING_FIGS_FARM, BUILDING_FIGS_MEADOW_FARM
+    ]
+    ui : baseui(building_info_window, {
+        background    : outer_panel({size: [29, 18]}),
+        resource      : resource_icon({ pos:[10, 10], prop:"${building.output_resource}" }),
+        workers_desc  : text({ pos: [70, 116], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(23) }),
+        farm_desc     : text({ pos: [32, 40], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(26), multiline:true }),
+        farm_state    : text({ pos: [32, 186], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true }),
+        flood_info    : text({ pos: [32, 206], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+        progress_desc : text({ pos: [32, 226], text:"${text.2} ${farm.progress}% ${text.3} ${text.12} ${farm.fertility}% ${text.13}", font: FONT_NORMAL_BLACK_ON_LIGHT }),
+    })
+}
+
 [es=(info_window_farm, init)]
 function info_window_farm_on_init(window) {
     var b = city.get_building(window.bid)
