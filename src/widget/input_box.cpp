@@ -1,18 +1,20 @@
 #include "input_box.h"
 
+#include "core/encoding.h"
 #include "game/system.h"
 #include "graphics/elements/ui.h"
+#include "input/keyboard.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
-#include "input/keyboard.h"
 
 using namespace ui::opt;
 
 void input_box_start(input_box* box, uint8_t* text, int length, int allow_punctuation) {
     box->text = text;
     box->max_length = length;
+    box->allow_punctuation = allow_punctuation;
     int text_width = (box->width_blocks - 2) * INPUT_BOX_BLOCK_SIZE;
-    keyboard_start_capture(text, length, allow_punctuation, text_width, box->font);
+    keyboard_start_capture(text, length, allow_punctuation, text_width, box->font, box->multiline);
     system_keyboard_set_input_rect(box->x, box->y, box->width_blocks * INPUT_BOX_BLOCK_SIZE, box->height_blocks * INPUT_BOX_BLOCK_SIZE);
 }
 
@@ -47,12 +49,25 @@ void input_box_draw(const input_box* box) {
     const vec2i base = g_screen.dialog_offset;
     const int text_x = box->x + 16;
     const int text_y = box->y + 10;
+    const vec2i panel_px = {box->width_blocks * INPUT_BOX_BLOCK_SIZE, box->height_blocks * INPUT_BOX_BLOCK_SIZE};
 
-    ui::cursor_capture(keyboard_cursor_position(), keyboard_offset_start(), keyboard_offset_end());
     ui::push(ui::cmd_t::panel_inner, Pos{base + vec2i{box->x, box->y}}, Size{vec2i{box->width_blocks, box->height_blocks}});
-    ui::push(ui::cmd_t::text_colored, Pos{base + vec2i{text_x, text_y - 3}}, Font{box->font}, TextColor{0}, BoxWidth{0}, Caption{(pcstr)box->text});
-    text_draw_cursor(text_x, text_y + 1, keyboard_is_insert(), base + vec2i{text_x, text_y + 1});
-    ui::cursor_consume();
+
+    if (box->multiline) {
+        const int box_width_px = (box->width_blocks - 2) * INPUT_BOX_BLOCK_SIZE;
+        char utf8_buf[8192];
+        encoding_to_utf8(box->text, utf8_buf, (int)sizeof(utf8_buf), encoding_system_uses_decomposed());
+        ui::push(ui::cmd_t::clip_set, Pos{base + vec2i{box->x, box->y}}, Size{panel_px});
+        ui::push(ui::cmd_t::text_multiline, Pos{base + vec2i{text_x, text_y - 3}}, BoxWidth{box_width_px}, Font{box->font},
+          TextColor{0}, Caption{utf8_buf});
+        ui::push(ui::cmd_t::clip_reset);
+    } else {
+        ui::cursor_capture(keyboard_cursor_position(), keyboard_offset_start(), keyboard_offset_end());
+        ui::push(ui::cmd_t::text_colored, Pos{base + vec2i{text_x, text_y - 3}}, Font{box->font}, TextColor{0}, BoxWidth{0},
+          Caption{(pcstr)box->text});
+        text_draw_cursor(text_x, text_y + 1, keyboard_is_insert(), base + vec2i{text_x, text_y + 1});
+        ui::cursor_consume();
+    }
 }
 
 int input_box_handle_mouse(const mouse* m, const input_box* box) {
@@ -60,9 +75,16 @@ int input_box_handle_mouse(const mouse* m, const input_box* box) {
         return 0;
 
     int selected = is_mouse_inside_input(m, box);
-    if (selected)
+    if (selected) {
+        const int text_width = (box->width_blocks - 2) * INPUT_BOX_BLOCK_SIZE;
+        keyboard_stop_capture();
+        keyboard_start_capture(
+          box->text, box->max_length, box->allow_punctuation, text_width, box->font, box->multiline);
+        if (box->host_input) {
+            ui::set_active_text_input(static_cast<ui::einput*>(box->host_input));
+        }
         system_keyboard_show(box->text, box->max_length);
-    else {
+    } else {
         system_keyboard_hide();
     }
     return selected;

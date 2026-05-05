@@ -13,6 +13,10 @@ typedef struct {
     int height_blocks;
     e_font font;
     int max_length;
+    int multiline;
+    int allow_punctuation;
+    /** Owning ui::einput* while focused (for keyboard routing). */
+    void* host_input;
     // private vars
     uint8_t* text;
 } input_box;

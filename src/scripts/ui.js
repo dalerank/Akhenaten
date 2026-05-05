@@ -87,3 +87,4 @@ import ui_new_career
 import ui_records_window
 import ui_trade_prices_window
 import ui_sidebar_extra
+import ui_report_bug_window

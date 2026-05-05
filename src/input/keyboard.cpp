@@ -25,6 +25,7 @@ struct input_keyboard_data_t {
 
     int box_width;
     e_font font;
+    int multiline;
 };
 
 input_keyboard_data_t g_input_keyboard_data;
@@ -85,6 +86,12 @@ static void include_cursor_in_viewport(void) {
 
 static void update_viewport(int has_changed) {
     auto &data = g_input_keyboard_data;
+    if (data.multiline) {
+        data.viewport_start = 0;
+        data.viewport_end = data.length;
+        data.viewport_cursor_position = data.cursor_position;
+        return;
+    }
     int is_within_viewport = data.cursor_position >= data.viewport_start && data.cursor_position < data.viewport_end;
     if (!has_changed && is_within_viewport) {
         // no update necessary
@@ -97,7 +104,8 @@ static void update_viewport(int has_changed) {
     data.viewport_cursor_position = data.cursor_position;
 }
 
-void keyboard_start_capture(uint8_t* text, int max_length, int allow_punctuation, int box_width, e_font font) {
+void keyboard_start_capture(
+  uint8_t* text, int max_length, int allow_punctuation, int box_width, e_font font, int multiline) {
     auto &data = g_input_keyboard_data;
     data.capture = 1;
     data.text = text;
@@ -108,6 +116,7 @@ void keyboard_start_capture(uint8_t* text, int max_length, int allow_punctuation
     data.accepted = 0;
     data.box_width = box_width;
     data.font = font;
+    data.multiline = multiline;
     update_viewport(1);
 }
 
@@ -137,6 +146,7 @@ void keyboard_stop_capture(void) {
     data.length = 0;
     data.max_length = 0;
     data.accepted = 0;
+    data.multiline = 0;
     system_keyboard_hide();
 }
 
@@ -186,9 +196,24 @@ int keyboard_offset_end(void) {
     return data.viewport_end;
 }
 
-void keyboard_return(void) {
-    auto &data = g_input_keyboard_data;
-    data.accepted = 1;
+static void move_right(const uint8_t* start, uint8_t* end) {
+    end[1] = 0;
+    while (end > start) {
+        end--;
+        end[1] = end[0];
+    }
+}
+
+static void insert_char(const uint8_t* value, int bytes) {
+    auto& data = g_input_keyboard_data;
+    if (data.length + bytes == data.max_length)
+        return;
+    for (int i = 0; i < bytes; i++) {
+        move_right(&data.text[data.cursor_position], &data.text[data.length]);
+        data.text[data.cursor_position] = value[i];
+        data.cursor_position++;
+    }
+    data.length += bytes;
 }
 
 static void move_left(uint8_t* start, const uint8_t* end) {
@@ -199,11 +224,36 @@ static void move_left(uint8_t* start, const uint8_t* end) {
     *start = 0;
 }
 
-static void move_right(const uint8_t* start, uint8_t* end) {
-    end[1] = 0;
-    while (end > start) {
-        end--;
-        end[1] = end[0];
+static void remove_current_char(void) {
+    auto& data = g_input_keyboard_data;
+    int bytes = get_current_char_bytes();
+    for (int i = 0; i < bytes; i++) {
+        move_left(&data.text[data.cursor_position], &data.text[data.length]);
+    }
+    data.length -= bytes;
+}
+
+static void add_char(const uint8_t* value, int bytes) {
+    auto& data = g_input_keyboard_data;
+    if (data.insert)
+        insert_char(value, bytes);
+    else {
+        if (data.cursor_position < data.length)
+            remove_current_char();
+
+        insert_char(value, bytes);
+    }
+}
+ 
+
+void keyboard_return() {
+    auto &data = g_input_keyboard_data;
+    if (data.capture && data.multiline) {
+        uint8_t nl = '\n';
+        add_char(&nl, 1);
+        update_viewport(1);
+    } else {
+        data.accepted = 1;
     }
 }
 
@@ -225,39 +275,6 @@ static void move_cursor_left(void) {
 static void move_cursor_right(void) {
     auto &data = g_input_keyboard_data;
     data.cursor_position += get_current_char_bytes();
-}
-
-static void insert_char(const uint8_t* value, int bytes) {
-    auto &data = g_input_keyboard_data;
-    if (data.length + bytes == data.max_length)
-        return;
-    for (int i = 0; i < bytes; i++) {
-        move_right(&data.text[data.cursor_position], &data.text[data.length]);
-        data.text[data.cursor_position] = value[i];
-        data.cursor_position++;
-    }
-    data.length += bytes;
-}
-
-static void remove_current_char(void) {
-    auto &data = g_input_keyboard_data;
-    int bytes = get_current_char_bytes();
-    for (int i = 0; i < bytes; i++) {
-        move_left(&data.text[data.cursor_position], &data.text[data.length]);
-    }
-    data.length -= bytes;
-}
-
-static void add_char(const uint8_t* value, int bytes) {
-    auto &data = g_input_keyboard_data;
-    if (data.insert)
-        insert_char(value, bytes);
-    else {
-        if (data.cursor_position < data.length)
-            remove_current_char();
-
-        insert_char(value, bytes);
-    }
 }
 
 void keyboard_backspace(void) {
@@ -323,7 +340,9 @@ static int keyboard_character(uint8_t* text) {
     uint8_t c = text[0];
 
     int add = 0;
-    if (c == ' ' || c == '-')
+    if (c == '\n' && data.multiline)
+        add = 1;
+    else if (c == ' ' || c == '-')
         add = 1;
     else if (c >= '0' && c <= '9')
         add = 1;

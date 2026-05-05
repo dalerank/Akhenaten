@@ -61,6 +61,8 @@ using UiFlags = int;
 
 namespace ui {
 
+    struct einput;
+
     namespace opt {
         struct Pos {
             vec2i value;
@@ -210,6 +212,7 @@ namespace ui {
     bool handle_mouse(const mouse* m);
     void clear_active_elements();
     void stop_active_input();
+    void set_active_text_input(einput* w);
 
     int label(int group, int number, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags flags = UiFlags_None,
       int box_width = 0);
@@ -391,8 +394,6 @@ namespace ui {
         format(r, o, fmt);
         return r;
     }
-
-    struct einput;
 
     struct margini {
         static constexpr int nomargin = -99999;
@@ -609,10 +610,12 @@ namespace ui {
 
     struct einput : public element {
         input_box _box;
-        bstring128 _buffer;
-        bstring128 _last_buffer;
+        bstring<8192> _buffer;
+        bstring<8192> _last_buffer;
+        mutable xstring _value_utf8_cache;
         bool _started = false;
         int _allow_punctuation = 1;
+        bool _multiline = false;
 
         void stop_input();
 

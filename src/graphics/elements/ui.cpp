@@ -471,6 +471,10 @@ void ui::stop_active_input() {
     }
 }
 
+void ui::set_active_text_input(einput* w) {
+    g_state.active_input = w;
+}
+
 pcstr ui::str(int group, int id) {
     return (pcstr)lang_get_string(group, id);
 }
@@ -1243,8 +1247,17 @@ void ui::einput::load(archive arch, element* parent, items& elems) {
     }
     _box.width_blocks = size.x;
     _box.height_blocks = size.y;
-    _box.max_length = arch.r_int("max_length", MAX_PLAYER_NAME - 1);
+    _multiline = arch.r_bool("multiline", false);
+    int max_len = arch.r_int("max_length", MAX_PLAYER_NAME - 1);
+    constexpr int input_cap = 8192;
+    if (max_len > input_cap - 2) {
+        max_len = input_cap - 2;
+    }
+    _box.max_length = max_len;
+    _box.multiline = _multiline ? 1 : 0;
     _allow_punctuation = arch.r_int("allow_punctuation", 1);
+    _box.allow_punctuation = _allow_punctuation;
+    _box.host_input = nullptr;
     set_ref(ONINPUT, arch.r_function("oninput"));
     set_event(ONINPUT_EVENT, arch.r_string(ONINPUT_EVENT.c_str()));
 }
@@ -1253,9 +1266,12 @@ void ui::einput::draw(UiFlags flags) {
     scr_pos = g_state.offset() + pos;
     _box.x = scr_pos.x - g_screen.dialog_offset.x;
     _box.y = scr_pos.y - g_screen.dialog_offset.y;
-    _box.text = _buffer;
+    _box.multiline = _multiline ? 1 : 0;
+    _box.allow_punctuation = _allow_punctuation;
+    _box.host_input = this;
+    _box.text = (uint8_t*)_buffer.data();
     if (!_started) {
-        input_box_start(&_box, _buffer, _box.max_length, _allow_punctuation);
+        input_box_start(&_box, (uint8_t*)_buffer.data(), _box.max_length, _allow_punctuation);
         _started = true;
         g_state.active_input = this;
         _last_buffer = _buffer;
@@ -1277,13 +1293,15 @@ void ui::einput::draw(UiFlags flags) {
 }
 
 pcstr ui::einput::get_value() const {
-    static char utf8_buf[MAX_PLAYER_NAME * 4];
-    encoding_to_utf8(_buffer, utf8_buf, (int)sizeof(utf8_buf), encoding_system_uses_decomposed());
-    return utf8_buf;
+    char utf8_buf[8192 * 4];
+    encoding_to_utf8((const uint8_t*)_buffer.c_str(), utf8_buf, (int)sizeof(utf8_buf), encoding_system_uses_decomposed());
+    auto* self = const_cast<einput*>(this);
+    self->_value_utf8_cache = utf8_buf;
+    return self->_value_utf8_cache.c_str();
 }
 
 void ui::einput::set_value(pcstr utf8) {
-    encoding_from_utf8(utf8 ? utf8 : "", _buffer, MAX_PLAYER_NAME);
+    encoding_from_utf8(utf8 ? utf8 : "", (uint8_t*)_buffer.data(), (int)bstring<8192>::capacity);
     if (_started) {
         input_box_refresh_text(&_box);
         _last_buffer = _buffer;
@@ -1430,6 +1448,7 @@ void ui::eimage_button::load(archive arch, element* parent, items& elems) {
     img_desc.pack = arch.r_int("pack");
     img_desc.id = arch.r_int("id");
     img_desc.offset = arch.r_int("offset");
+    img_desc.path = arch.r_string("path");
     border = arch.r_int("border");
     offsets.data[0] = img_desc.offset;
     offsets.data[1] = arch.r_int("offset_focused", 1);
@@ -1453,16 +1472,22 @@ void ui::eimage_button::draw(UiFlags gflags) {
     flags |= (!!(darkened & UiFlags_Grayscale) ? UiFlags_Grayscale : UiFlags_None);
     flags |= (composite ? UiFlags_Composite : UiFlags_None);
 
+    const int resolved_image_id = img_desc.tid();
+    if (!img_desc.path.empty() && resolved_image_id >= 0) {
+        offsets.data[0] = img_desc.offset;
+    }
+
     vec2i tsize = size;
-    if (img_desc.id || img_desc.offset) {
-        const int img_id = image_id_from_group(img_desc.pack, img_desc.id);
-        const image_t* img_ptr = image_get(img_id + img_desc.offset);
-        tsize.x = size.x > 0 ? size.x : img_ptr->width;
-        tsize.y = size.y > 0 ? size.y : img_ptr->height;
+    if (resolved_image_id >= 0) {
+        const image_t* img_ptr = image_get(resolved_image_id);
+        if (img_ptr) {
+            tsize.x = size.x > 0 ? size.x : img_ptr->width;
+            tsize.y = size.y > 0 ? size.y : img_ptr->height;
+        }
     }
 
     image_button* btn = nullptr;
-    if (img_desc.id || img_desc.offset) {
+    if (resolved_image_id >= 0) {
         btn = &ui::img_button(img_desc, pos, tsize, offsets, flags);
     } else if (texture_id > 0) {
         btn = &ui::img_button({0, 0}, pos, size, offsets, flags);

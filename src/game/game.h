@@ -51,6 +51,7 @@ enum e_session_type {
 class MovieWriter;
 struct event_game_mission_pre_load {};
 struct event_game_scripts_was_reloaded {};
+struct event_report_bug_result { int ok; xstring url; xstring error; };
 
 struct game_t {
     using serial_event_t = inplace_function<void()>;

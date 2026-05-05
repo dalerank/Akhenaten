@@ -265,3 +265,5 @@ using bstring128 = bstring<128>;
 using bstring256 = bstring<256>;
 using bstring512 = bstring<512>;
 using bstring1024 = bstring<1024>;
+using bstring2048 = bstring<2048>;
+using bstring8192 = bstring<8192>;
