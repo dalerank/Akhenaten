@@ -17,7 +17,7 @@ report_bug_window {
         lbl_body: text({ pos:[16, 95], font:FONT_NORMAL_WHITE_ON_DARK, text:"Description" })
         bug_body: input({ pos:[16, 116], size:[30, 10], font:FONT_NORMAL_WHITE_ON_DARK, max_length:2000, multiline:true })
 
-        status: text({ margin:{centerx:0, bottom:-60}, align:"center", font:FONT_NORMAL_WHITE_ON_DARK, text:"" })
+        status: text({ margin:{bottom:-67}, size:[px(32), 22], align:"center", font:FONT_NORMAL_WHITE_ON_DARK, text:"" })
 
         lb_submit: label({ margin:{centerx:-70, bottom:-35}, text:"Submit?"})
         btn_submit: ok_button({ margin:{centerx:0, bottom:-40}, text:"", onclick_event:"on_submit" })

@@ -191,6 +191,10 @@ int keyboard_cursor_position(void) {
     return data.cursor_position - data.viewport_start;
 }
 
+int keyboard_cursor_abs_offset(void) {
+    return g_input_keyboard_data.cursor_position;
+}
+
 int keyboard_offset_start(void) {
     auto &data = g_input_keyboard_data;
     return data.viewport_start;

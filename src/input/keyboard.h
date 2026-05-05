@@ -19,6 +19,8 @@ int keyboard_is_capturing();
 int keyboard_is_capturing_buffer(const uint8_t* text);
 int keyboard_is_insert();
 int keyboard_cursor_position();
+
+int keyboard_cursor_abs_offset();
 int keyboard_offset_start();
 int keyboard_offset_end();
 

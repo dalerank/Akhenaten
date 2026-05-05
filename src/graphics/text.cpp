@@ -59,6 +59,8 @@ bool text_cursor_capture_active(void) {
 }
 void text_cursor_consume_capture(void) {
     input_cursor.capture = 0;
+    input_cursor.x_offset = 0;
+    input_cursor.y_offset = 0;
 }
 int text_cursor_x_offset(void) {
     return input_cursor.x_offset;
@@ -478,8 +480,8 @@ void text_draw_label_and_number_centered(const char* label, int value, const cha
     text_draw_centered(str, x_offset, y_offset, box_width, font, color);
 }
 
-static bool multiline_take_next_line(
-  pcstr* io_str, int* io_has_more, pcstr full_start, int box_width, e_font font, int* out_begin_idx, int* out_end_idx, int* io_guard) {
+static bool multiline_take_next_line(pcstr* io_str, int* io_has_more, pcstr full_start, int box_width, e_font font, int* out_begin_idx,
+  int* out_end_idx, int* out_visual_begin_idx, int* io_guard) {
     if (!*io_has_more) {
         return false;
     }
@@ -496,6 +498,7 @@ static bool multiline_take_next_line(
     int current_width = 0;
     int line_index = 0;
     int has_more = *io_has_more;
+    bool visual_begin_set = false;
 
     while (has_more) {
         int word_num_chars;
@@ -508,6 +511,11 @@ static bool multiline_take_next_line(
         while (line_index == 0 && *str && (unsigned char)*str <= ' ') {
             str++;
             word_num_chars--;
+        }
+
+        if (!visual_begin_set) {
+            *out_visual_begin_idx = (int)(str - full_start);
+            visual_begin_set = true;
         }
 
         for (int i = 0; i < word_num_chars; i++) {
@@ -533,6 +541,9 @@ static bool multiline_take_next_line(
     *io_has_more = has_more;
     *out_begin_idx = (int)(line_byte_begin - full_start);
     *out_end_idx = (int)(str - full_start);
+    if (!visual_begin_set) {
+        *out_visual_begin_idx = *out_begin_idx;
+    }
     return true;
 }
 
@@ -550,12 +561,14 @@ int text_draw_multiline(xstring strkey, vec2i offset, int box_width, e_font font
     while (has_more_characters) {
         int begin_idx;
         int end_idx;
+        int visual_begin_idx;
         if (!multiline_take_next_line(
-              &str, &has_more_characters, full_start, box_width, font, &begin_idx, &end_idx, &guard)) {
+              &str, &has_more_characters, full_start, box_width, font, &begin_idx, &end_idx, &visual_begin_idx, &guard)) {
             break;
         }
         (void)begin_idx;
         (void)end_idx;
+        (void)visual_begin_idx;
         text_draw(tmp_line, offset.x, y, font, color);
         y += line_height + 5;
     }
@@ -595,27 +608,38 @@ bool text_multiline_cursor_screen_pos(pcstr utf8_full, int cursor_utf8_byte, vec
     int line_idx = 0;
 
     while (has_more_characters) {
-        const pcstr line_byte_begin = str;
         int begin_idx;
         int end_idx;
+        int visual_begin_idx;
         if (!multiline_take_next_line(
-              &str, &has_more_characters, full_start, box_width, font, &begin_idx, &end_idx, &guard)) {
+              &str, &has_more_characters, full_start, box_width, font, &begin_idx, &end_idx, &visual_begin_idx, &guard)) {
             break;
         }
+
+        const pcstr line_byte_begin = full_start + begin_idx;
+        const pcstr visual_begin = full_start + visual_begin_idx;
 
         last_end.x = text_offset_screen.x + text_get_width(tmp_line, font);
         last_end.y = text_offset_screen.y + line_idx * line_spacing + caret_y_adjust;
 
         if (cursor_utf8_byte >= begin_idx && cursor_utf8_byte <= end_idx) {
-            int prefix_len = cursor_utf8_byte - begin_idx;
+            uint8_t slice[8192];
+            int prefix_len;
+            pcstr slice_src;
+            if (cursor_utf8_byte < visual_begin_idx) {
+                prefix_len = cursor_utf8_byte - begin_idx;
+                slice_src = line_byte_begin;
+            } else {
+                prefix_len = cursor_utf8_byte - visual_begin_idx;
+                slice_src = visual_begin;
+            }
             if (prefix_len < 0) {
                 prefix_len = 0;
             }
-            uint8_t slice[8192];
             if (prefix_len >= (int)sizeof(slice)) {
                 prefix_len = (int)sizeof(slice) - 1;
             }
-            memcpy(slice, line_byte_begin, prefix_len);
+            memcpy(slice, slice_src, prefix_len);
             slice[prefix_len] = 0;
             out_screen->x = text_offset_screen.x + text_get_width(slice, font);
             out_screen->y = text_offset_screen.y + line_idx * line_spacing + caret_y_adjust;

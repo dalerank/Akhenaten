@@ -69,7 +69,7 @@ void input_box_draw(const input_box* box) {
         const int caret_here = keyboard_is_capturing_buffer(box->text);
         if (caret_here) {
             uint8_t prefix_internal[8192];
-            int ci = keyboard_cursor_position();
+            int ci = keyboard_cursor_abs_offset();
             const int text_len = string_length(box->text);
             if (ci > text_len) {
                 ci = text_len;
