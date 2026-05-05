@@ -1117,3 +1117,132 @@ footer a:hover {
     padding: 2rem 1rem 3rem;
   }
 }
+
+/* ── Wiki Tables ── */
+.wiki-table-wrap {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+.wiki-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.wiki-table th {
+  background: var(--bg-card2);
+  color: var(--gold);
+  font-weight: 600;
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+
+.wiki-table td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.wiki-table tr:last-child td {
+  border-bottom: none;
+}
+
+.wiki-table tbody tr:hover td {
+  background: rgba(201, 168, 76, 0.05);
+}
+
+/* Housing tier row groups */
+.housing-tier-huts td:first-child        { border-left: 3px solid #6b5a3e; }
+.housing-tier-shanties td:first-child    { border-left: 3px solid #7a6545; }
+.housing-tier-cottages td:first-child    { border-left: 3px solid #8c7a52; }
+.housing-tier-homesteads td:first-child  { border-left: 3px solid #a08a5e; }
+.housing-tier-apartments td:first-child  { border-left: 3px solid #b09060; }
+.housing-tier-residences td:first-child  { border-left: 3px solid #c9a84c; }
+.housing-tier-manors td:first-child      { border-left: 3px solid #d4b865; }
+.housing-tier-estates td:first-child     { border-left: 3px solid #e8cf80; }
+
+.housing-tier-huts       { background: rgba(107, 90, 62,  0.12); }
+.housing-tier-shanties   { background: rgba(122, 101, 69, 0.12); }
+.housing-tier-cottages   { background: rgba(140, 122, 82, 0.12); }
+.housing-tier-homesteads { background: rgba(160, 138, 94, 0.12); }
+.housing-tier-apartments { background: rgba(176, 144, 96, 0.12); }
+.housing-tier-residences { background: rgba(201, 168, 76, 0.15); }
+.housing-tier-manors     { background: rgba(212, 184, 101, 0.15); }
+.housing-tier-estates    { background: rgba(232, 207, 128, 0.18); }
+
+/* Small footnote text below tables */
+.wiki-table-footnotes {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+  line-height: 1.6;
+}
+
+.wiki-table-footnotes p {
+  margin-bottom: 0.2rem;
+}
+
+/* Stat pill badges used in tables */
+.stat-yes  { color: #7ec87e; font-weight: 600; }
+.stat-no   { color: var(--text-muted); }
+.stat-gold { color: var(--gold); font-weight: 600; }
+
+/* ── Wiki Info Boxes ── */
+.wiki-infobox {
+  float: right;
+  margin: 0 0 1.5rem 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  min-width: 220px;
+  max-width: 280px;
+  font-size: 0.875rem;
+}
+
+.wiki-infobox h4 {
+  color: var(--gold);
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.4rem;
+}
+
+.wiki-infobox dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.3rem 0.75rem;
+}
+
+.wiki-infobox dt {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.wiki-infobox dd {
+  color: var(--text);
+}
+
+@media (max-width: 768px) {
+  .wiki-table {
+    font-size: 0.8rem;
+  }
+
+  .wiki-table th,
+  .wiki-table td {
+    padding: 0.4rem 0.5rem;
+  }
+
+  .wiki-infobox {
+    float: none;
+    margin: 0 0 1.5rem 0;
+    max-width: 100%;
+  }
+}
