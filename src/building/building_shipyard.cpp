@@ -167,7 +167,7 @@ bool building_shipyard::add_resource(e_resource resource, int amount) {
 template<typename T>
 int approach_progress(int pct_workers, const T &thresholds) {
     auto it = std::lower_bound(thresholds.begin(), thresholds.end(), pct_workers, [] (const auto &pair, int value) { return pair.first <= value; });
-    int delta = (it != thresholds.end()) ? std::prev(it)->second : 0;
+    int delta = (it != thresholds.begin()) ? std::prev(it)->second : 0;
     return delta;
 }
 
