@@ -176,6 +176,11 @@ int keyboard_is_capturing(void) {
     return g_input_keyboard_data.capture;
 }
 
+int keyboard_is_capturing_buffer(const uint8_t* text) {
+    auto& data = g_input_keyboard_data;
+    return data.capture && data.text == text;
+}
+
 int keyboard_is_insert(void) {
     auto &data = g_input_keyboard_data;
     return data.insert;

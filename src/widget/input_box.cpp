@@ -1,7 +1,10 @@
 #include "input_box.h"
 
 #include "core/encoding.h"
+#include "core/string.h"
 #include "game/system.h"
+
+#include <cstring>
 #include "graphics/elements/ui.h"
 #include "input/keyboard.h"
 #include "graphics/screen.h"
@@ -57,16 +60,41 @@ void input_box_draw(const input_box* box) {
         const int box_width_px = (box->width_blocks - 2) * INPUT_BOX_BLOCK_SIZE;
         char utf8_buf[8192];
         encoding_to_utf8(box->text, utf8_buf, (int)sizeof(utf8_buf), encoding_system_uses_decomposed());
+        const vec2i text_origin = base + vec2i{text_x, text_y - 3};
         ui::push(ui::cmd_t::clip_set, Pos{base + vec2i{box->x, box->y}}, Size{panel_px});
-        ui::push(ui::cmd_t::text_multiline, Pos{base + vec2i{text_x, text_y - 3}}, BoxWidth{box_width_px}, Font{box->font},
-          TextColor{0}, Caption{utf8_buf});
+        ui::push(ui::cmd_t::text_multiline, Pos{text_origin}, BoxWidth{box_width_px}, Font{box->font}, TextColor{0},
+          Caption{utf8_buf});
         ui::push(ui::cmd_t::clip_reset);
+
+        const int caret_here = keyboard_is_capturing_buffer(box->text);
+        if (caret_here) {
+            uint8_t prefix_internal[8192];
+            int ci = keyboard_cursor_position();
+            const int text_len = string_length(box->text);
+            if (ci > text_len) {
+                ci = text_len;
+            }
+            memcpy(prefix_internal, box->text, ci);
+            prefix_internal[ci] = 0;
+            char prefix_utf8[8192];
+            encoding_to_utf8(prefix_internal, prefix_utf8, (int)sizeof(prefix_utf8), encoding_system_uses_decomposed());
+            const int cursor_utf8_byte = (int)strlen(prefix_utf8);
+
+            vec2i caret_screen;
+            text_multiline_cursor_screen_pos(utf8_buf, cursor_utf8_byte, text_origin, box_width_px, box->font, &caret_screen);
+            text_draw_cursor(0, 0, keyboard_is_insert(), caret_screen);
+        }
     } else {
-        ui::cursor_capture(keyboard_cursor_position(), keyboard_offset_start(), keyboard_offset_end());
+        const int caret_here = keyboard_is_capturing_buffer(box->text);
+        if (caret_here) {
+            ui::cursor_capture(keyboard_cursor_position(), keyboard_offset_start(), keyboard_offset_end());
+        }
         ui::push(ui::cmd_t::text_colored, Pos{base + vec2i{text_x, text_y - 3}}, Font{box->font}, TextColor{0}, BoxWidth{0},
           Caption{(pcstr)box->text});
-        text_draw_cursor(text_x, text_y + 1, keyboard_is_insert(), base + vec2i{text_x, text_y + 1});
-        ui::cursor_consume();
+        if (caret_here) {
+            text_draw_cursor(text_x, text_y + 1, keyboard_is_insert(), base + vec2i{text_x, text_y + 1});
+            ui::cursor_consume();
+        }
     }
 }
 
