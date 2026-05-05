@@ -18,6 +18,7 @@
 #include "city/city_warnings.h"
 #include "game/game_events.h"
 #include "js/js_game.h"
+#include "scenario/scenario.h"
 #include <algorithm>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_fishing_boat);
@@ -196,53 +197,12 @@ void figure_fishing_boat::figure_action() {
         base.move_ticks(1);
         base.height_adjusted_ticks = 0;
         if (direction() == DIR_FIGURE_NONE) {
-            grid_area area = map_grid_get_area(tile(), 1, 1);
-            tile2i another_boat_tile = area.find_if([this] (const tile2i &tt) {
-                bool has_figure = map_has_figure_types_at(tt, make_array(FIGURE_FISHING_BOAT));
-                return (has_figure && map_figure_id_get(tt) != id());
-            });
-
-            if (another_boat_tile.valid()) {
-                base.wait_ticks = 999;
-                advance_action(ACTION_196_FISHING_BOAT_RANDOM_FPOINT);
-                runtime_data().fishing_point_check_attempts = 0;
-                return;
-            }
-
-            auto &rdata = runtime_data();
-            const int MAX_CHECK_ATTEMPTS = 3;
-            
-            if (rdata.fishing_point_check_attempts < MAX_CHECK_ATTEMPTS) {
-                water_dest result = map_water_find_alternative_fishing_boat_tile(base);
-                if (result.found) {
-                    grid_area alt_area = map_grid_get_area(result.tile, 1, 1);
-                    tile2i alt_another_boat = alt_area.find_if([this] (const tile2i &tt) {
-                        bool has_figure = map_has_figure_types_at(tt, make_array(FIGURE_FISHING_BOAT));
-                        return (has_figure && map_figure_id_get(tt) != id());
-                    });
-                    
-                    if (!alt_another_boat.valid()) {
-                        rdata.fishing_point_check_attempts++;
-                        route_remove();
-                        base.destination_tile = result.tile;
-                    } else {
-                        rdata.fishing_point_check_attempts = MAX_CHECK_ATTEMPTS;
-                        advance_action(ACTION_192_FISHING_BOAT_FISHING);
-                        base.direction = base.previous_tile_direction;
-                        base.wait_ticks = 0;
-                    }
-                } else {
-                    rdata.fishing_point_check_attempts = MAX_CHECK_ATTEMPTS;
-                    advance_action(ACTION_192_FISHING_BOAT_FISHING);
-                    base.direction = base.previous_tile_direction;
-                    base.wait_ticks = 0;
-                }
-            } else {
-                rdata.fishing_point_check_attempts = 0;
-                advance_action(ACTION_192_FISHING_BOAT_FISHING);
-                base.direction = base.previous_tile_direction;
-                base.wait_ticks = 0;
-            }
+            // Reached the sticky fishing spot. Commit unconditionally — collisions
+            // with other boats are tolerated; both can fish on/near the same tile.
+            runtime_data().fishing_point_check_attempts = 0;
+            advance_action(ACTION_192_FISHING_BOAT_FISHING);
+            base.direction = base.previous_tile_direction;
+            base.wait_ticks = 0;
         } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
             runtime_data().fishing_point_check_attempts = 0;
             advance_action(ACTION_193_FISHING_BOAT_GOING_TO_WHARF);
@@ -323,7 +283,26 @@ void figure_fishing_boat::figure_action() {
                 base.wait_ticks++;
                 if (base.wait_ticks >= max_wait_ticks) {
                     base.wait_ticks = 0;
-                    tile2i fish_tile = g_city.fishing_points.closest_fishing_point(tile(), true);
+
+                    auto &rd = runtime_data();
+                    tile2i fish_tile = rd.preferred_fishing_tile;
+
+                    bool sticky_valid = false;
+                    if (fish_tile.valid()) {
+                        for (int i = 0; i < MAX_FISH_POINTS; i++) {
+                            const tile2i &p = g_scenario.fishing_points[i];
+                            if (p.valid() && p == fish_tile) {
+                                sticky_valid = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!sticky_valid) {
+                        fish_tile = g_city.fishing_points.closest_fishing_point(tile(), false);
+                        rd.preferred_fishing_tile = fish_tile;
+                    }
+
                     if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
                         wharf->runtime_data().no_fishing_points_warning_shown = 0;
                         runtime_data().fishing_point_check_attempts = 0;

@@ -47,7 +47,6 @@ struct water_dest {
 
 shore_orientation map_shore_determine_orientation(tile2i tile, int size, bool adjust_xy, bool adjacent = false, int shore_terrain = TERRAIN_WATER);
 
-water_dest map_water_find_alternative_fishing_boat_tile(figure &boat);
 water_dest map_water_find_shipwreck_tile(figure &wreck);
 void map_water_rebuild_shores();
 bool map_water_can_spawn_boat(tile2i tile, int size, tile2i &boat_tile);
