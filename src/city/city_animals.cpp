@@ -374,6 +374,13 @@ void city_animals_t::remove_all() {
             }
         }
     }
+
+    // create_herd() figure_create's animals and sets f->formation_id but never
+    // slots them into formation::figures[], so valid_figures() above misses
+    // them. Sweep by figure type to actually clear the world.
+    figure_valid_do([] (figure &f) {
+        f.poof();
+    }, make_array(FIGURE_CROCODILE, FIGURE_OSTRICH, FIGURE_ANTELOPE, FIGURE_HYENA, FIGURE_BIRDS));
 }
 
 void city_animals_t::update() {

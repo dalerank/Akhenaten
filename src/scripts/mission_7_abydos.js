@@ -90,6 +90,20 @@ mission7 { // Abydos
 	}
 }
 
+[event=event_register_mission_animals, mission=mission7]
+function mission7_register_animals(ev) {
+	// Abedju has no native fauna; suppress crocodiles/hyenas spawned via create_herds
+	// during fresh mission start (before any save exists).
+	city.remove_animals()
+}
+
+[event=event_mission_start, mission=mission7]
+function mission7_on_start(ev) {
+	// event_register_mission_animals only fires inside create_herds, which is
+	// skipped on save loads. Re-clear here so a saved game also stays clean.
+	city.remove_animals()
+}
+
 [es=event_advance_month, mission=mission7]
 function mission7_pharaoh_request_beer(ev) {
 	if (mission.pharaoh_beer_requested) {
