@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nubt — A Village is Born — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .mission-header-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      margin-bottom: 2rem;
+    }
+    .mission-map-wrap {
+      flex-shrink: 0;
+      text-align: center;
+    }
+    .mission-map-wrap img {
+      width: 168px;
+      height: 168px;
+      image-rendering: pixelated;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      display: block;
+    }
+    .mission-map-wrap figcaption {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+    .mission-infobox {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.9rem 1.1rem;
+    }
+    .mission-infobox dl {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.25rem 1rem;
+      margin: 0;
+    }
+    .mission-infobox dt {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      white-space: nowrap;
+      padding-top: 0.1rem;
+    }
+    .mission-infobox dd {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+    .mission-infobox .funds-row {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .mission-infobox .funds-row span {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .mission-infobox .funds-row span strong {
+      color: var(--text);
+    }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+    details {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+    summary {
+      padding: 0.7rem 1rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text);
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      user-select: none;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::before {
+      content: "▶";
+      font-size: 0.6rem;
+      color: var(--gold);
+      transition: transform 0.15s;
+      flex-shrink: 0;
+    }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body {
+      padding: 1rem 1.1rem;
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+    .details-body pre {
+      background: #0a0905;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 0.75rem 1rem;
+      overflow-x: auto;
+      font-size: 0.78rem;
+      line-height: 1.55;
+      margin: 0.6rem 0;
+    }
+    .details-body pre code { color: #c8c0a8; }
+    .details-body .kw  { color: #c9a84c; }   /* keyword / field name */
+    .details-body .num { color: #9ecbff; }   /* number */
+    .details-body .str { color: #7ec87e; }   /* string */
+    .details-body .cmt { color: #5a5650; font-style: italic; }
+    .details-body .fn  { color: #8aabdc; }   /* function name */
+    .details-body .ev  { color: #d0a0e0; }   /* event name */
+    .file-ref {
+      display: inline-block;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.78rem;
+      background: rgba(201,168,76,0.07);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 2px;
+      padding: 0.05rem 0.45rem;
+      color: var(--gold);
+      margin: 0 0.1rem;
+    }
+    .msg-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+    .msg-table th, .msg-table td { padding: 0.3rem 0.6rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+    .msg-table th { color: var(--text-muted); font-weight: normal; }
+    .msg-table code { font-size: 0.75rem; }
+    .event-list { list-style: none; padding: 0; margin: 0; }
+    .event-list li { display: grid; grid-template-columns: 1fr auto; gap: 0.5rem 1rem; padding: 0.35rem 0; border-bottom: 1px solid var(--border); align-items: baseline; }
+    .event-list li:last-child { border-bottom: none; }
+    .event-list .ev-name { font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78rem; color: #d0a0e0; }
+    .event-list .ev-fn   { font-family: 'Consolas', 'Courier New', monospace; font-size: 0.75rem; color: #8aabdc; }
+    .event-list .ev-line { font-size: 0.72rem; color: var(--text-muted); text-align: right; white-space: nowrap; }
+    .event-list .ev-desc { grid-column: 1 / -1; color: var(--text-muted); font-size: 0.8rem; padding-bottom: 0.2rem; }
+    .mission-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+    .mission-nav a {
+      color: var(--gold);
+    }
+    .mission-nav .nav-prev::before { content: "← "; }
+    .mission-nav .nav-next::after  { content: " →"; }
+    .tutorial-step {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 0.6rem;
+      align-items: baseline;
+    }
+    .tutorial-step .step-tag {
+      flex-shrink: 0;
+      font-size: 0.7rem;
+      font-family: 'Consolas', 'Courier New', monospace;
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.25);
+      color: var(--gold);
+      border-radius: 2px;
+      padding: 0.1rem 0.4rem;
+      white-space: nowrap;
+    }
+    .game-quote {
+      background: var(--surface);
+      border-left: 3px solid var(--gold);
+      padding: 0.9rem 1.1rem;
+      margin: 1rem 0;
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      border-radius: 0 3px 3px 0;
+    }
+    .game-quote p { margin: 0 0 0.6rem; }
+    .game-quote p:last-child { margin-bottom: 0; }
+    .objectives-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.75rem 0;
+    }
+    .objectives-list li {
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+      padding: 0.3rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    .objectives-list li:last-child { border-bottom: none; }
+    .obj-label {
+      font-weight: 600;
+      color: var(--text);
+      min-width: 8rem;
+    }
+    .obj-value { color: var(--text-muted); }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">← All Missions</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Pre-Dynasty</div>
+        <ul>
+          <li><a href="nubt.html" class="active">0 · Nubt</a></li>
+          <li><a href="thinis.html">1 · Thinis</a></li>
+          <li><a href="perwadjyt.html">2 · Perwadjyt</a></li>
+          <li><a href="nekhen.html">3 · Nekhen</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#briefing">Briefing</a></li>
+          <li><a href="#objectives">Objectives</a></li>
+          <li><a href="#tutorial">Tutorial sequence</a></li>
+          <li><a href="#strategy">Strategy</a></li>
+          <li><a href="#buildings">Available buildings</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Missions</a> /
+        Nubt
+      </div>
+
+      <h1>Nubt <span style="color:var(--text-muted);font-weight:normal;font-size:0.65em">— A Village is Born</span></h1>
+
+      <div class="mission-header-grid">
+        <figure class="mission-map-wrap">
+          <img src="nubt-map.webp" alt="Nubt mission map overview" />
+          <figcaption>Map overview · Pre-Dynasty</figcaption>
+        </figure>
+        <div class="mission-infobox">
+          <dl>
+            <dt>Mission</dt>
+            <dd>0 of 38 — first mission of the campaign</dd>
+            <dt>Era</dt>
+            <dd>Pre-Dynasty · ~5000 BC</dd>
+            <dt>Classical name</dt>
+            <dd>Naqada</dd>
+            <dt>Starting funds</dt>
+            <dd>
+              <div class="funds-row">
+                <span><strong>Very Easy</strong> 7 500 Db</span>
+                <span><strong>Easy</strong> 5 000 Db</span>
+                <span><strong>Normal</strong> 3 750 Db</span>
+                <span><strong>Hard</strong> 2 500 Db</span>
+                <span><strong>Very Hard</strong> 2 000 Db</span>
+              </div>
+            </dd>
+            <dt>Religion</dt>
+            <dd>Disabled</dd>
+            <dt>Trade</dt>
+            <dd>None</dd>
+            <dt>Next mission</dt>
+            <dd><a href="thinis.html">Thinis — The Dawn of Civilization</a></dd>
+            <dt>Status</dt>
+            <dd><span class="mission-badge badge-impl">Implemented</span> <span class="mission-badge badge-tutorial">Tutorial</span></dd>
+          </dl>
+        </div>
+      </div>
+
+      <!-- ─── Briefing ─────────────────────────────────────── -->
+      <h2 id="briefing">Briefing</h2>
+      <p>The game opens with this historical introduction, read aloud by the narrator at the start of the campaign:</p>
+      <div class="game-quote">
+        <p>Welcome to ancient Egypt, land of the Pharaohs! Here you'll participate in the history of one of the greatest civilizations the world has ever seen, in an epic story that spans more than fifteen centuries and two dozen generations. You must lead one family, generation by generation, from its earliest beginnings in Egyptian pre-history, through the dawn of civilization — to the establishment of a unique and powerful empire — and beyond.</p>
+        <p>Our story begins more than five thousand years ago, along the banks of the Nile river, in an area known as Nubt. Here a small confederacy of clans struggles to eke out an existence in the harsh environment. With you at its head, your family leads this small settlement.</p>
+      </div>
+      <p>Nubt (modern Naqada, Upper Egypt) was one of the most significant pre-dynastic settlements on the Nile. Excavated by Flinders Petrie in 1894–95, the site gave its name to the Naqada culture — a series of cultural phases spanning roughly 4400–3000 BC that trace the emergence of the social complexity and craft specialisation that would culminate in the First Dynasty.</p>
+
+      <!-- ─── Objectives ────────────────────────────────────── -->
+      <h2 id="objectives">Objectives</h2>
+      <ul class="objectives-list">
+        <li>
+          <span class="obj-label">Housing count</span>
+          <span class="obj-value">6 occupied plots</span>
+        </li>
+        <li>
+          <span class="obj-label">Housing level</span>
+          <span class="obj-value">All six must reach Sturdy Hut (level 2) or higher</span>
+        </li>
+      </ul>
+      <p>Sturdy Huts require food access via a Bazaar. Both conditions must be met simultaneously — six occupied plots, all at level 2 or above. The win screen is suppressed (<code>hide_won_screen: true</code>); the game advances directly to the next mission.</p>
+
+      <!-- ─── Tutorial sequence ─────────────────────────────── -->
+      <h2 id="tutorial">Tutorial sequence</h2>
+      <p>Nubt is a phased tutorial. Buildings are unlocked progressively as the city reaches each milestone. At mission start only three building types are available; the rest unlock through gameplay events.</p>
+
+      <div class="tutorial-step">
+        <span class="step-tag">Start</span>
+        <span>Only <strong>Vacant Lots</strong>, <strong>Clear Land</strong>, and <strong>Roads</strong> are available. The first tutorial message explains road layout and immigrant pathfinding.</span>
+      </div>
+      <div class="tutorial-step">
+        <span class="step-tag">Pop 120</span>
+        <span>A fire breaks out in a random house. <strong>Firehouse</strong> unlocks. Tutorial message explains fire marshals and the fire risk overlay.</span>
+      </div>
+      <div class="tutorial-step">
+        <span class="step-tag">Pop 150</span>
+        <span><strong>Hunting Lodge</strong>, <strong>Granary</strong>, and <strong>Bazaar</strong> unlock. Tutorial message on food distribution appears. Population Advisor becomes available.</span>
+      </div>
+      <div class="tutorial-step">
+        <span class="step-tag">Collapse</span>
+        <span>When any building collapses from lack of maintenance, <strong>Architect's Post</strong> unlocks. Tutorial message on structural risk overlay.</span>
+      </div>
+      <div class="tutorial-step">
+        <span class="step-tag">400 meat</span>
+        <span>When a Granary accumulates 400 units of game meat, <strong>Water Supply</strong> unlocks. Tutorial message on clean water and housing evolution to Meager Shanty.</span>
+      </div>
+
+      <!-- ─── Strategy ──────────────────────────────────────── -->
+      <h2 id="strategy">Strategy</h2>
+      <p>This is the simplest mission in the campaign — it exists to introduce the interface, not to challenge the player. The map is open and flat with a pack of ostriches in the south-east quadrant. There are no trade partners, no military threats, no religion requirements, and no taxation.</p>
+
+      <h3>Phase 1 — Getting settlers</h3>
+      <p>Place five or six Vacant Lots anywhere connected to the kingdom road via roads. Immigrants arrive quickly. Leave room around each lot for future service buildings. The population cap is 250 for this mission, so do not worry about over-building.</p>
+
+      <h3>Phase 2 — Food and fire</h3>
+      <p>Once population reaches 120, a house will catch fire. The Firehouse panel appears; build one near your housing cluster. Shortly after, at 150 citizens, the food chain unlocks. The ostriches are positioned at roughly (40, 60) on the map — place two Hunting Lodges within walking distance, a Granary to receive the meat, and a Bazaar to distribute it to housing. Bazaars reduce nearby desirability, so keep them on the edge of your housing block rather than in the centre.</p>
+
+      <h3>Phase 3 — Water and evolution</h3>
+      <p>Once the Granary holds 400 units of game meat the Water Supply unlocks. Build one on grassy ground (visible underground water) and it will dispatch water carriers to nearby houses. With food from the Bazaar and water from the Water Supply in reach, Sturdy Huts will evolve to Meager Shanties — satisfying the housing level objective. Six plots at level 2 or above finishes the mission.</p>
+
+      <h3>Tips</h3>
+      <ul>
+        <li>Hunting Lodges, Bazaars, and Granaries are all undesirable. Keep them away from housing to avoid blocking evolution.</li>
+        <li>An Architect's Post can collapse a building by accident (before you build one, a building deteriorates). This is intentional — it triggers the Architect tutorial.</li>
+        <li>There is no need to build more than six housing lots. Extra plots waste time waiting for more immigrants.</li>
+        <li>On Normal difficulty you start with 3 750 Db; all required buildings cost well under 1 000 Db total, so funds are never a concern.</li>
+      </ul>
+
+      <!-- ─── Buildings ─────────────────────────────────────── -->
+      <h2 id="buildings">Available buildings</h2>
+      <p>Buildings are unlocked progressively through tutorial events. Final unlocked state:</p>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead>
+            <tr><th>Building</th><th>Unlocked by</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Vacant Lot · Clear Land · Road</td><td>Mission start</td></tr>
+            <tr><td>Firehouse</td><td>Fire event (pop ≥ 120)</td></tr>
+            <tr><td>Hunting Lodge · Granary · Bazaar</td><td>Population reaches 150</td></tr>
+            <tr><td>Architect's Post</td><td>First building collapse</td></tr>
+            <tr><td>Water Supply</td><td>Granary holds 400 game meat</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ─── Developer reference ──────────────────────────── -->
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">Collapsed sections below show exactly where each part of this mission lives in the source tree. All paths are relative to the repository root.</p>
+
+        <details>
+          <summary>Mission script — <code>src/scripts/mission_0_nubt.js</code></summary>
+          <div class="details-body">
+            <p>The entire mission — configuration block, variables, and all event handlers — lives in one file:</p>
+            <p><span class="file-ref">src/scripts/mission_0_nubt.js</span></p>
+            <p>This file is imported by <span class="file-ref">src/scripts/missions.js</span> which loads all 38 campaign scripts. The <code>mission0 { … }</code> block at the top of the file is the static configuration parsed at startup:</p>
+            <pre><code><span class="cmt">// lines 3 – 45  (mission_0_nubt.js)</span>
+<span class="kw">mission0</span> {
+  <span class="kw">start_message</span> : <span class="str">"message_housing_and_roads"</span>   <span class="cmt">// first popup (ID 249)</span>
+  <span class="kw">env</span> {
+    <span class="kw">has_animals</span>       : <span class="num">true</span>
+    <span class="kw">gods_least_mood</span>   : <span class="num">50</span>
+    <span class="kw">marshland_grow</span>    : default_marshland_grow
+    <span class="kw">tree_grow</span>         : default_tree_grow
+    <span class="kw">hide_nilometer</span>    : <span class="num">true</span>        <span class="cmt">// hides flood meter</span>
+  }
+  <span class="kw">religion_enabled</span>  : <span class="num">false</span>
+  <span class="kw">hide_won_screen</span>   : <span class="num">true</span>         <span class="cmt">// skip victory screen, go straight to next mission</span>
+  <span class="kw">player_rank</span>       : <span class="num">0</span>
+
+  <span class="kw">initial_funds</span>  [<span class="num">7500</span>, <span class="num">5000</span>, <span class="num">3750</span>, <span class="num">2500</span>, <span class="num">2000</span>]  <span class="cmt">// Very Easy … Very Hard</span>
+  <span class="kw">rescue_loans</span>   [<span class="num">7500</span>, <span class="num">5000</span>, <span class="num">3750</span>, <span class="num">2500</span>, <span class="num">2000</span>]
+
+  <span class="kw">buildings</span> [                        <span class="cmt">// only these are available at start</span>
+    BUILDING_HOUSE_VACANT_LOT,
+    BUILDING_CLEAR_LAND,
+    BUILDING_ROAD
+  ]
+
+  <span class="kw">win_criteria</span> {
+    <span class="kw">housing_count</span> { enabled : <span class="num">true</span>, goal : <span class="num">6</span> }
+    <span class="kw">housing_level</span> { enabled : <span class="num">true</span>, goal : <span class="num">2</span> }  <span class="cmt">// level 2 = Sturdy Hut</span>
+  }
+
+  <span class="kw">vars</span> {
+    <span class="kw">granary_open_population</span>          : <span class="num">150</span>
+    <span class="kw">population_cap_firstfire</span>         : <span class="num">0</span>
+    <span class="kw">granary_meat_stored</span>              : <span class="num">400</span>
+    <span class="kw">victory_last_action_delay</span>        : <span class="num">4</span>
+    <span class="kw">population_to_start_fire_event</span>   : <span class="num">120</span>
+    <span class="kw">population_cap</span>                   : <span class="num">250</span>
+    <span class="cmt">// boolean flags persist across saves (resume mid-tutorial)</span>
+    tutorial_fire_handled      : <span class="num">false</span>
+    tutorial_collapsed_handled : <span class="num">false</span>
+    tutorial_firehouse_built   : <span class="num">false</span>
+    tutorial_granary_opened    : <span class="num">false</span>
+    tutorial_gamemeat_stored   : <span class="num">false</span>
+    granary_built              : <span class="num">false</span>
+    last_action_time           : <span class="num">0</span>
+  }
+}</code></pre>
+            <p>To change difficulty starting money, edit the <code>initial_funds</code> array (index 0 = Very Easy, 4 = Very Hard). To adjust the population thresholds that trigger tutorial steps, edit the corresponding <code>vars</code> entries.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Event handlers — all functions in <code>mission_0_nubt.js</code></summary>
+          <div class="details-body">
+            <p>Each function is bound to a game event via an attribute annotation on the line above it. Handlers are called by the scripting engine whenever that event fires, but only when <code>mission=mission0</code> is active.</p>
+            <ul class="event-list">
+              <li>
+                <span class="ev-name">event_mission_start</span>
+                <span class="ev-line">line 48</span>
+                <span class="ev-desc">Restores mid-tutorial state on load/restart — re-unlocks any buildings whose tutorial step was already completed, so resuming a save never leaves the player without previously earned buildings.</span>
+                <span class="ev-fn">mission0_on_start</span>
+                <span></span>
+              </li>
+              <li>
+                <span class="ev-name">event_register_mission_animals</span>
+                <span class="ev-line">line 80</span>
+                <span class="ev-desc">Clears default animal spawns and places 4 ostriches at map position (40, 60) with a roam radius of 16 tiles. Edit here to move or change the prey type.</span>
+                <span class="ev-fn">mission0_register_animals</span>
+                <span></span>
+              </li>
+              <li>
+                <span class="ev-name">event_advance_week</span>
+                <span class="ev-line">line 103</span>
+                <span class="ev-desc">Polls weekly once population ≥ 120. Adds 2 000 fire damage to a random house to trigger the fire tutorial. Runs only once (guard on <code>tutorial_fire_handled</code>).</span>
+                <span class="ev-fn">mission0_handle_fire_event</span>
+                <span></span>
+              </li>
+              <li>
+                <span class="ev-name">event_fire_damage</span>
+                <span class="ev-line">line 125</span>
+                <span class="ev-desc">Responds to the fire; unlocks <code>BUILDING_FIREHOUSE</code> and shows <code>message_fire_in_the_village</code> (ID 252). Sets <code>tutorial_fire_handled = true</code>.</span>
+                <span class="ev-fn">mission0_handle_fire</span>
+                <span></span>
+              </li>
+              <li>
+                <span class="ev-name">event_collase_damage</span>
+                <span class="ev-line">line 138</span>
+                <span class="ev-desc">Unlocks <code>BUILDING_ARCHITECT_POST</code> and shows collapse tutorial message (ID 253) the first time any building collapses. Note: the event name has a typo in the engine (<code>collase</code> not <code>collapse</code>).</span>
+                <span class="ev-fn">mission0_handle_collapse</span>
+                <span></span>
+              </li>
+              <li>
+                <span class="ev-name">event_population_changed</span>
+                <span class="ev-line">line 151</span>
+                <span class="ev-desc">Triggers at population ≥ 150 (configurable via <code>granary_open_population</code>). Unlocks Hunting Lodge, Granary, and Bazaar; shows food tutorial (message ID 239); makes Population Advisor available.</span>
+                <span class="ev-fn">mission0_handle_population_for_granary</span>
+                <span></span>
+              </li>
+              <li>
+                <span class="ev-name">event_advance_day · build granary</span>
+                <span class="ev-line">line 171</span>
+                <span class="ev-desc">Watches daily for the first Granary to be placed. When found, enables the Population Advisor panel.</span>
+                <span class="ev-fn">mission0_on_build_granary</span>
+                <span></span>
+              </li>
+              <li>
+                <span class="ev-name">event_granary_resource_added</span>
+                <span class="ev-line">line 188</span>
+                <span class="ev-desc">Fires when food is added to any Granary. Once game meat in a single granary reaches 400 units (configurable via <code>granary_meat_stored</code>), unlocks <code>BUILDING_WATER_SUPPLY</code> and shows clean water tutorial (message ID 255).</span>
+                <span class="ev-fn">mission0_on_filled_granary</span>
+                <span></span>
+              </li>
+              <li>
+                <span class="ev-name">event_update_victory_state</span>
+                <span class="ev-line">line 208</span>
+                <span class="ev-desc">Called each tick to compute whether the win conditions are met. All four tutorial flags plus a cooldown since the last tutorial action must be true before victory is granted. Change <code>victory_last_action_delay</code> to shorten or lengthen the delay.</span>
+                <span class="ev-fn">mission0_handle_victory_state</span>
+                <span></span>
+              </li>
+              <li>
+                <span class="ev-name">event_migration_update</span>
+                <span class="ev-line">line 219</span>
+                <span class="ev-desc">Caps unemployment swing at ±10 percentage points, preventing the early city from stalling on a bad immigration roll.</span>
+                <span class="ev-fn">mission0_handle_population_cap</span>
+                <span></span>
+              </li>
+            </ul>
+          </div>
+        </details>
+
+        <details>
+          <summary>Game messages — <code>src/scripts/game_messages_en.js</code></summary>
+          <div class="details-body">
+            <p>All popup dialogs and the opening history panel are defined in <span class="file-ref">src/scripts/game_messages_en.js</span>. Each entry has a numeric ID used by the C++ engine to look up translated strings. To edit text, find the entry by name and change the <code>text:</code> field inside <code>content { … }</code>.</p>
+            <table class="msg-table">
+              <thead><tr><th>Key</th><th>ID</th><th>Line</th><th>When shown</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><code>message_history_nubt</code></td>
+                  <td>200</td>
+                  <td>2429</td>
+                  <td>History briefing shown before mission starts (narrator text)</td>
+                </tr>
+                <tr>
+                  <td><code>message_housing_and_roads</code></td>
+                  <td>249</td>
+                  <td>3167</td>
+                  <td><code>start_message</code> — first popup on mission load, explains roads and immigration</td>
+                </tr>
+                <tr>
+                  <td><code>message_fire_in_the_village</code></td>
+                  <td>252</td>
+                  <td>3196</td>
+                  <td>Shown by <code>mission0_handle_fire</code> when first fire occurs</td>
+                </tr>
+                <tr>
+                  <td><code>message_tutorial_collapsed_building</code></td>
+                  <td>253</td>
+                  <td>3204</td>
+                  <td>Shown by <code>mission0_handle_collapse</code> on first collapse</td>
+                </tr>
+                <tr>
+                  <td><code>message_tutorial_food_or_famine</code></td>
+                  <td>239</td>
+                  <td>3047</td>
+                  <td>Shown by <code>mission0_handle_population_for_granary</code> at pop 150</td>
+                </tr>
+                <tr>
+                  <td><code>message_tutorial_clean_water</code></td>
+                  <td>255</td>
+                  <td>3222</td>
+                  <td>Shown by <code>mission0_on_filled_granary</code> when granary holds 400 meat</td>
+                </tr>
+              </tbody>
+            </table>
+            <p style="margin-top:0.75rem">The classical-name variant of the history message (Naqada instead of Nubt) is a separate entry at line 4712, shown when the player enables classical city names in options.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Save file and map data</summary>
+          <div class="details-body">
+            <p>The original Pharaoh save file that provides the map layout, terrain, and starting positions for Nubt is:</p>
+            <p><span class="file-ref">bin_x64/Missions/mission_00.sav</span></p>
+            <p>This binary file is loaded by the engine before the JS script runs. It encodes the tile map, Nile course, predefined animal spawn zones (overridden by <code>event_register_mission_animals</code> in the script), and the kingdom road entry point. To replace the map entirely, swap the <code>.sav</code> file; the JS script will still apply on top of it.</p>
+            <p>The scripting system is loaded from <span class="file-ref">src/scripts/missions.js</span>, which imports <code>mission_0_nubt.js</code> by path. If you rename or move the file, update the import there.</p>
+          </div>
+        </details>
+
+      </div><!-- .dev-section -->
+
+      <div class="mission-nav">
+        <span class="nav-prev" style="color:var(--text-muted)">— (first mission)</span>
+        <a href="thinis.html" class="nav-next">1 · Thinis — The Dawn of Civilization</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>

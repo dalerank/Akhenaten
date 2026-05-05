@@ -1193,6 +1193,69 @@ footer a:hover {
 .stat-no   { color: var(--text-muted); }
 .stat-gold { color: var(--gold); font-weight: 600; }
 
+/* ── Mission badges ── */
+.mission-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 2px;
+  font-family: 'Consolas', 'Courier New', monospace;
+  letter-spacing: 0.03em;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.badge-tutorial {
+  background: rgba(126, 200, 126, 0.12);
+  border: 1px solid rgba(126, 200, 126, 0.35);
+  color: #7ec87e;
+}
+
+.badge-choice {
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  color: var(--gold);
+}
+
+.badge-impl {
+  background: rgba(138, 171, 220, 0.1);
+  border: 1px solid rgba(138, 171, 220, 0.35);
+  color: #8aabdc;
+}
+
+/* Mission table: city name column */
+.mission-city {
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Era section divider inside wiki-content */
+.era-section {
+  margin-top: 2.5rem;
+}
+
+.era-section:first-of-type {
+  margin-top: 1.5rem;
+}
+
+/* Goals cell compact layout */
+.goals-cell {
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+.goals-cell span {
+  display: inline-block;
+  margin-right: 0.4rem;
+  color: var(--text);
+}
+
+.goals-cell strong {
+  color: var(--text-muted);
+  font-weight: normal;
+}
+
 /* ── Wiki Info Boxes ── */
 .wiki-infobox {
   float: right;

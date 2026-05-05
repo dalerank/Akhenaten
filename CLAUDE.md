@@ -76,6 +76,15 @@ CI will reject PRs that fail formatting checks.
 
 Do not add `Co-Authored-By: Claude` or any Claude/Anthropic attribution to commit messages.
 
+## Documentation
+
+The wiki lives in `docs/wiki/`. When editing mission scripts or their data, update the corresponding wiki page:
+
+- **Mission scripts** (`src/scripts/mission_N_*.js`) — if you change win criteria, starting funds, tutorial thresholds, event logic, or available buildings, update `docs/wiki/player/missions/<cityname>.html`.  
+  The Developer Reference section on each mission page lists exact file paths, line numbers, and message IDs — keep those in sync.
+- **Mission index** (`docs/wiki/player/missions/index.html`) — if missions are added, reordered, or their objectives change, update the corresponding table row.
+- **Game messages** (`src/scripts/game_messages_en.js`) — message IDs referenced in mission pages are listed in the Developer Reference spoiler on each mission page; update them if IDs or line numbers shift.
+
 ## Project Rules (from CONTRIBUTING.md)
 
 - Goal: exact reimplementation of original Pharaoh logic with savegame compatibility
