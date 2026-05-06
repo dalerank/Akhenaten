@@ -139,6 +139,7 @@
           <li><a href="#mechanics">Mechanics</a></li>
           <li><a href="#placement">Placement</a></li>
           <li><a href="#tips">Tips</a></li>
+          <li><a href="#original">Original game</a></li>
           <li><a href="#dev">Developer reference</a></li>
         </ul>
       </div>
@@ -232,7 +233,7 @@
           </tbody>
         </table>
       </div>
-      <p>Once the lodge's 500-unit storage is full, hunters stop going out until a cartpusher clears the stock. If every nearby <a href="granary.html">Granary</a> is also full, the cartpusher has nowhere to go and hunting stalls completely — always ensure Granary space is available.</p>
+      <p>Once the lodge's 500-unit storage is full, hunters stop going out until a cartpusher clears the stock. If every nearby <a href="granary.html">Granary</a> is also full, the cartpusher has nowhere to go and hunting stalls completely — always ensure <a href="granary.html">Granary</a> space is available.</p>
 
       <h3>Prey herds</h3>
       <p>Prey animals are placed on the map by the mission script at fixed positions and roam within a defined radius. Their total population is finite: each herd can support roughly 2 000 citizens at full lodges. Killing prey at a high rate does not replenish the herd faster — overhunting will simply reduce the available population over time.</p>
@@ -244,7 +245,7 @@
       <!-- ─── Placement ─────────────────────────────────────── -->
       <h2 id="placement">Placement</h2>
       <p>Place the lodge as close to the prey herd as possible. Hunters walk on foot — a long trip means fewer hunts per unit of time and slower food throughput. Use the <strong>Animals overlay</strong> to see the herd's roam zone and place the lodge at the edge of it or inside it.</p>
-      <p>The lodge is undesirable (−4 at the building tile, fading over 4 tiles). Keep it away from housing you want to evolve beyond Sturdy Hut. Clustering it with other undesirable food buildings (Granary, <a href="bazaar.html">Bazaar</a>) on the city's outskirts is a clean layout strategy.</p>
+      <p>The lodge is undesirable (−4 at the building tile, fading over 4 tiles). Keep it away from housing you want to evolve beyond Sturdy Hut. Clustering it with other undesirable food buildings (<a href="granary.html">Granary</a>, <a href="bazaar.html">Bazaar</a>) on the city's outskirts is a clean layout strategy.</p>
       <p>Road access is mandatory — hunters and cartpushers both need a connected road network to reach the lodge and the <a href="granary.html">Granary</a>.</p>
 
       <!-- ─── Tips ──────────────────────────────────────────── -->
@@ -256,6 +257,31 @@
         <li>In the early campaign missions (0–3), hunting is the primary food source. Prioritise placing the lodge before worrying about housing desirability.</li>
         <li>Fire risk is medium (5). An <a href="firehouse.html">Firehouse</a> patrol route should cover the lodge, especially once it is surrounded by other wooden structures.</li>
       </ul>
+
+      <!-- ─── Original game screenshots ──────────────────────── -->
+      <h2 id="original">In the original game</h2>
+      <p style="font-size:0.88rem;color:var(--text-muted)">Screenshots from <em>Cleopatra: Queen of the Nile</em> (Impressions Games, 2000).</p>
+      <div style="display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start;margin:1rem 0 0.75rem">
+        <figure style="margin:0;text-align:center">
+          <img src="Cleo_HuntingLodgeRC.webp" alt="Hunting Lodge right-click info window from the original game" width="300" height="229"
+               style="border:1px solid var(--border);border-radius:3px;display:block;image-rendering:pixelated" />
+          <figcaption style="font-size:0.72rem;color:var(--text-muted);margin-top:0.4rem">
+            Right-click panel — game meat stock, employment status, hunter activity
+          </figcaption>
+        </figure>
+      </div>
+      <div style="display:flex;gap:1.25rem;flex-wrap:wrap;align-items:flex-start;margin-bottom:1.5rem">
+        <figure style="margin:0;text-align:center">
+          <img src="Cleo_HunterPort.webp" alt="Hunter walker portrait" width="110" height="79"
+               style="border:1px solid var(--border);border-radius:3px;display:block;image-rendering:pixelated" />
+          <figcaption style="font-size:0.72rem;color:var(--text-muted);margin-top:0.4rem">Hunter</figcaption>
+        </figure>
+        <figure style="margin:0;text-align:center">
+          <img src="Cleo_PreyPort.webp" alt="Prey animal portraits — ostrich, antelope, waterfowl" width="165" height="79"
+               style="border:1px solid var(--border);border-radius:3px;display:block;image-rendering:pixelated" />
+          <figcaption style="font-size:0.72rem;color:var(--text-muted);margin-top:0.4rem">Prey — Ostrich · Antelope · Waterfowl</figcaption>
+        </figure>
+      </div>
 
       <!-- ─── Developer reference ──────────────────────────── -->
       <div class="dev-section">
