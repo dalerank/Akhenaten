@@ -664,8 +664,7 @@ figure_magistrate {
 
 	category: figure_category_citizen
 	max_damage: 10
-	info_help_id:182
-    info_text_id:210
+	meta { help_id: 182, text_id: 210 }
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length : 800
 }
@@ -1517,12 +1516,12 @@ figure_warship {
 		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_WARSHIP }
 	}
 
-	orders {
-		goto_wharf { id: 1, text: 9 }
+	orders_info {
+		goto_wharf { id: 1, text: 17 }
 		engage_nearby { id: 2, text: 11 }
-		hold_position { id: 3, text: 13 }
-		seek_and_destroy { id: 4, text: 15 }
-		repair { id: 5, text: 17 }
+		hold_position { id: 3, text: 9 }
+		seek_and_destroy { id: 4, text: 13 }
+		repair { id: 5, text: 15 }
 	}
 
 	sounds {
@@ -1539,8 +1538,7 @@ figure_warship {
 	missile_attack_value : 6
 	missile_delay : 200
 
-	info_help_id: 84,
-  info_text_id: 184,
+	meta { help_id: 84, text_id: 184 }
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 

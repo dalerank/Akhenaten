@@ -55,7 +55,7 @@ water_dest map_water_get_closest_working_warship_wharf(figure &boat) {
             mindist = curdist;
             dock_tile = water_tiles.point_a;
         }
-    }, BUILDING_TRANSPORT_WHARF);
+    }, BUILDING_WARSHIP_WHARF);
 
     if (!wharf) {
         return { false, 0 };
@@ -80,6 +80,15 @@ void figure_warship::before_poof() {
 
 void figure_warship::figure_action() {
     building* b = home();
+
+    // Newly-spawned warships have home = shipyard, not a wharf. Let
+    // figure_action_common() drive the spawn -> wharf transition; the
+    // destroyed-wharf recovery below only applies once a wharf is the home.
+    if (action_state() == ACTION_205_WARSHIP_CREATED) {
+        figure_action_common();
+        return;
+    }
+
     building_warship_wharf *wharf = b->dcast_warship_wharf();
     
     // Check if wharf is destroyed or invalid
@@ -185,6 +194,7 @@ void figure_warship::update_animation() {
     case ACTION_205_WARSHIP_CREATED: anim_key = "idle"; break;
     case ACTION_209_WARSHIP_ON_PATROL: anim_key = "idle"; break;
     case ACTION_203_WARSHIP_MOORED: anim_key = "idle"; break;
+    case ACTION_211_WARSHIP_IDLE_AT_TILE: anim_key = "idle"; break;
     }
 
     image_set_animation(anim_key);
@@ -238,7 +248,9 @@ void figure_warship::figure_action_common() {
             water_dest result = map_water_get_wharf_for_new_warship(base);
             if (result.bid && result.found) {
                 b->remove_figure_by_id(id()); // remove from original building
-                set_home(result.bid);
+                building *new_home = building_get(result.bid);
+                set_home(new_home->id);
+                new_home->set_figure(BUILDING_SLOT_BOAT, &base);
                 advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
                 base.destination_tile = result.tile;
                 base.source_tile = result.tile;
@@ -323,5 +335,52 @@ void figure_warship::figure_action_common() {
             }
         }
     } break;
+
+    case ACTION_210_WARSHIP_GOING_TO_TILE:
+        base.move_ticks(1);
+        base.height_adjusted_ticks = 0;
+        if (direction() == DIR_FIGURE_NONE) {
+            advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
+            base.source_tile = base.destination_tile;
+            base.wait_ticks = 0;
+        } else if (direction() == DIR_FIGURE_REROUTE) {
+            route_remove();
+        } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+            advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
+            base.source_tile = base.tile;
+        }
+        break;
+
+    case ACTION_211_WARSHIP_IDLE_AT_TILE:
+        // idle indefinitely; player must issue another order to move
+        break;
     }
+}
+
+void figure_warship::move_to_tile(tile2i dest) {
+    runtime_data().active_order = e_order_move_to_tile;
+    base.destination_tile = dest;
+    advance_action(ACTION_210_WARSHIP_GOING_TO_TILE);
+    route_remove();
+}
+
+void figure_warship::move_to_wharf(int wharf_building_id, tile2i dock_tile) {
+    building *new_home = building_get(wharf_building_id);
+    if (!new_home || !new_home->is_valid()) {
+        return;
+    }
+
+    building *old_home = home();
+    if (old_home && old_home->id != wharf_building_id) {
+        old_home->remove_figure_by_id(id());
+    }
+
+    set_home(wharf_building_id);
+    new_home->set_figure(BUILDING_SLOT_BOAT, &base);
+
+    runtime_data().active_order = e_order_goto_wharf;
+    base.destination_tile = dock_tile;
+    base.source_tile = dock_tile;
+    advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
+    route_remove();
 }

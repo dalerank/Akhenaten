@@ -371,7 +371,7 @@ const cursor* input_cursor_data(cursor_shape cursor_id, cursor_scale scale) {
 }
 
 void input_cursor_update(xstring window) {
-    if (window == "window_city_military") {
+    if (window == "window_city_military" || window == "window_city_warship") {
         system_set_cursor(CURSOR_SWORD);
     } else if (window == "window_city" && g_city_planner.build_type == BUILDING_CLEAR_LAND) {
         system_set_cursor(CURSOR_SHOVEL);

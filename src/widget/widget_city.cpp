@@ -39,6 +39,12 @@
 #include "window/window_building_info.h"
 #include "window/window_city.h"
 #include "window/window_city_military.h"
+#include "window/window_city_warship.h"
+#include "figuretype/figure_war_ship.h"
+#include "building/building_warship_wharf.h"
+#include "grid/figure.h"
+#include "grid/water.h"
+#include "grid/building.h"
 #include "game/game.h"
 #include "core/threading.h"
 #include "overlays/city_overlay.h"
@@ -142,7 +148,7 @@ void update_tile_coords(vec2i pixel, tile2i tile, painter &ctx) {
 void screen_city_t::update_clouds(painter &ctx) {
     OZZY_PROFILER_FUNCTION();
 
-    if (game.paused || (!g_window_manager.window_is("window_city") && !g_window_manager.window_is("window_city_military"))) {
+    if (game.paused || (!g_window_manager.window_is("window_city") && !g_window_manager.window_is("window_city_military") && !g_window_manager.window_is("window_city_warship"))) {
         g_clouds.pause();
     }
 
@@ -1003,7 +1009,7 @@ void screen_city_t::handle_first_touch(tile2i tile) {
     e_building_type type = g_city_planner.build_type;
 
     if (touch_was_click(first)) {
-        if (handle_cancel_construction_button(first) || handle_legion_click(tile)) {
+        if (handle_cancel_construction_button(first) || handle_legion_click(tile) || handle_warship_click(tile)) {
             return;
         }
 
@@ -1170,6 +1176,111 @@ void screen_city_t::handle_input_military(const mouse *m, const hotkeys *h, int 
     }
 }
 
+bool screen_city_t::handle_warship_click(tile2i tile) {
+    if (!tile.valid()) {
+        return false;
+    }
+
+    int figure_id = map_figure_id_get(tile);
+    while (figure_id > 0) {
+        figure *f = ::figure_get(figure_id);
+        if (f->state == FIGURE_STATE_ALIVE && smart_cast<figure_warship>(f)) {
+            window_city_warship_show(figure_id);
+            return true;
+        }
+        figure_id = (figure_id != f->next_figure) ? f->next_figure : 0;
+    }
+    return false;
+}
+
+void screen_city_t::warship_map_click(int warship_figure_id, tile2i tile) {
+    if (!tile.valid()) {
+        window_city_show();
+        return;
+    }
+
+    figure *f = ::figure_get(warship_figure_id);
+    if (!f || f->state != FIGURE_STATE_ALIVE) {
+        window_city_show();
+        return;
+    }
+
+    figure_warship *w = smart_cast<figure_warship>(f);
+    if (!w) {
+        window_city_show();
+        return;
+    }
+
+    // If the click landed on a warship wharf, route there to moor.
+    int bid = map_building_at(tile);
+    if (bid > 0) {
+        building *b = ::building_get(bid);
+        if (b && b->is_valid()) {
+            building_warship_wharf *wharf = b->dcast_warship_wharf();
+            if (wharf) {
+                tile2i dock = wharf->get_water_access_tiles().point_a;
+                if (dock.valid()) {
+                    w->move_to_wharf(wharf->id(), dock);
+                    window_city_show();
+                    return;
+                }
+            }
+        }
+    }
+
+    if (!map_water_is_point_inside(tile)) {
+        window_city_show();
+        return;
+    }
+
+    w->move_to_tile(tile);
+    window_city_show();
+}
+
+void screen_city_t::handle_input_warship(const mouse *m, const hotkeys *h, int warship_figure_id) {
+    current_tile = update_city_view_coords(*m);
+
+    if (!city_view_is_sidebar_collapsed() && widget_minimap_handle_mouse(m)) {
+        return;
+    }
+
+    if (m->is_touch) {
+        const touch_t *t = get_earliest_touch();
+        if (!t->in_use) {
+            return;
+        }
+
+        handle_touch_scroll(t, true);
+    }
+
+    scroll_map(m);
+
+    if (m->right.went_up || h->escape_pressed) {
+        capture_input = false;
+        g_warning_manager.clear_all();
+        window_city_show();
+        return;
+    }
+
+    figure *f = ::figure_get(warship_figure_id);
+    if (!f || f->state != FIGURE_STATE_ALIVE || !smart_cast<figure_warship>(f)) {
+        capture_input = false;
+        window_city_show();
+        return;
+    }
+
+    current_tile = update_city_view_coords(*m);
+
+    const bool m_left_down = (!m->is_touch && m->left.went_down);
+    const auto *early_touch = get_earliest_touch();
+    const bool m_has_touch = (m->is_touch && m->left.went_up && touch_was_click(early_touch));
+
+    if (m_left_down || m_has_touch) {
+        const tile2i tile = current_tile;
+        warship_map_click(warship_figure_id, tile);
+    }
+}
+
 void screen_city_t::handle_mouse(const mouse* m) {
     current_tile = update_city_view_coords(*m);
 
@@ -1182,7 +1293,7 @@ void screen_city_t::handle_mouse(const mouse* m) {
 
     g_city_planner.draw_as_constructing = false;
     if (m->left.went_down) {
-        if (handle_legion_click(current_tile)) {
+        if (handle_legion_click(current_tile) || handle_warship_click(current_tile)) {
             return;
         }
 

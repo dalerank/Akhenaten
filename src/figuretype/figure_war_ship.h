@@ -10,6 +10,8 @@ enum e_warship_action {
     ACTION_207_WARSHIP_GOING_TO_WHARF = 207,
     ACTION_208_WARSHIP_GOING_TO_RANDOM = 208,
     ACTION_209_WARSHIP_ON_PATROL = 209,
+    ACTION_210_WARSHIP_GOING_TO_TILE = 210,
+    ACTION_211_WARSHIP_IDLE_AT_TILE = 211,
 };
 
 class figure_warship : public figure_impl {
@@ -21,6 +23,7 @@ public:
         e_order_hold_position,
         e_order_seek_and_destroy,
         e_order_repair,
+        e_order_move_to_tile,
         e_order_max,
     };
 
@@ -54,6 +57,9 @@ public:
 
     void figure_action_goto_wharf();
     void figure_action_common();
+
+    void move_to_tile(tile2i dest);
+    void move_to_wharf(int wharf_building_id, tile2i dock_tile);
 };
 ANK_CONFIG_STRUCT(figure_warship::order_t, id, text)
 ANK_CONFIG_STRUCT(figure_warship::static_params, orders_info)

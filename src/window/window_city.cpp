@@ -142,7 +142,7 @@ void window_city_draw_foreground(int) {
     widget_sidebar_city_draw_foreground();
     widget_top_menu_draw();
 
-    if (g_window_manager.window_is("window_city") || g_window_manager.window_is("window_city_military")) {
+    if (g_window_manager.window_is("window_city") || g_window_manager.window_is("window_city_military") || g_window_manager.window_is("window_city_warship")) {
         window_city_draw_paused_and_time_left();
         draw_cancel_construction();
     }
