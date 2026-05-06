@@ -373,7 +373,7 @@ static void run_and_draw() {
 
             const bool main_windows
               = (g_window_manager.window_is("window_city") || g_window_manager.window_is("window_city_military")
-                 || g_window_manager.window_is("window_sliding_sidebar"));
+                 || g_window_manager.window_is("window_city_warship") || g_window_manager.window_is("window_sliding_sidebar"));
             if (!!game_features::gameui_draw_fps && main_windows) {
                 int y_offset = screen_height() - 24;
                 int y_offset_text = y_offset + 5;

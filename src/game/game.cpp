@@ -303,6 +303,7 @@ static int get_elapsed_ticks() {
     pcstr meaning_windows[] = {
         "window_city",
         "window_city_military",
+        "window_city_warship",
         "window_sliding_sidebar",
         "window_overlay_menu",
         "window_build_menu",
@@ -448,7 +449,7 @@ void game_t::time_init(int year) {
 
 void game_t::city_sounds_frame_begin() {
     OZZY_PROFILER_FUNCTION();
-    if (g_window_manager.window_is("window_city") || g_window_manager.window_is("window_city_military") || g_window_manager.window_is("window_sliding_sidebar")) {
+    if (g_window_manager.window_is("window_city") || g_window_manager.window_is("window_city_military") || g_window_manager.window_is("window_city_warship") || g_window_manager.window_is("window_sliding_sidebar")) {
         sound_city_play();
     }
 }

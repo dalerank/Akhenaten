@@ -119,9 +119,9 @@ figure_warship_info_window = {
         background       : outer_panel({size: [29, 23]}),
         name             : text_center({pos: [16, 16], size: [px(27), 20], text:"${figure.class_name}", font : FONT_LARGE_BLACK_ON_DARK }),
         hullstrength_lb  : text({pos: [102, 58], text:"${184.2}" }),
-        hullstrength_val : text({pos: [202, 58], text:"" }),
+        hullstrength_val : text({pos: [232, 58], text:"" }),
         crewfatique_lb   : text({pos: [102, 88], text:"${184.27}" }),
-        crewfatique_val  : text({pos: [202, 88], text:"" }),
+        crewfatique_val  : text({pos: [232, 88], text:"" }),
 
         hold_position    : image_button({param1:3, param2:9, pos:[87 * 0 + 16, 134], pack:PACK_UNLOADED, id:37, offset:0 + 0, offset_pressed:0, offset_focused:0, border:true }),
         engage_nearby    : image_button({param1:2, param2:11, pos:[87 * 1 + 16, 134], pack:PACK_UNLOADED, id:37, offset:0 + 1, offset_pressed:0, offset_focused:0, border:true }),
