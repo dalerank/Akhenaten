@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reverse-engineering Caesar III: Game Logic (Part 3) — Akhenaten</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    .spoiler { background: #1a1810; border: 1px solid #3a3020; border-radius: 4px; margin: 1em 0; }
+    .spoiler summary { padding: .5em 1em; cursor: pointer; color: var(--gold); font-weight: bold; }
+    .spoiler summary::marker { color: var(--gold); }
+    .spoiler .spoiler-body { padding: .25em 1em 1em; }
+    table { border-collapse: collapse; margin: 1em 0; }
+    th, td { border: 1px solid #3a3020; padding: .35em .75em; }
+    th { background: #1a1810; color: var(--gold); }
+    tr:nth-child(even) td { background: #100e08; }
+    .formula { font-style: italic; margin: .5em 0 .5em 1.5em; }
+    .habr-img { max-width: 100%; margin: .75em 0; display: block; }
+    .img-row { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; margin: .75em 0; }
+    .img-row img { max-height: 120px; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../devblog.html" class="active">Devblog</a></li>
+        <li><a href="../wiki/index.html">Wiki</a></li>
+        <li><a href="../screenshots.html">Screenshots</a></li>
+        <li><a href="../downloads.html">Downloads</a></li>
+        <li><a href="../contributors.html">Contributors</a></li>
+        <li><a href="../contact.html">Join us</a></li>
+        <li><a href="../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-content post-page">
+    <div class="post-meta"><time>May 29, 2014</time> — <a href="../devblog.html">← Devblog</a></div>
+    <h1>Reverse-engineering Caesar III: Game Logic (Part 3)</h1>
+
+    <p>
+      The algorithms for extracting Caesar III© textures and rendering the city have already been covered — now for the "sweetest" part that has been drawing ancient Roman architects back for over 15 years: the game logic. Using various analysis approaches, I present the results of this small investigation. I apologise in advance for the length — some songs can't be shortened. At the end there are a few words about the fate of the source code recovered from the original game's executable.
+    </p>
+
+    <p>
+      <em>This is a translation of the original article published on <a href="https://habr.com/ru/articles/224931/" rel="noopener">Habr</a>.</em>
+    </p>
+
+    <h2>A Brief History</h2>
+    <p>
+      The game is written in C and available for Windows and Mac. The official release was in October 1998. For Windows it was most likely compiled with Visual Studio 97 — VS6 hadn't gained popularity yet. In 1999 the game was updated to version 1.0.0.3, already built with Visual Studio 6, which became the most widespread version. Later, patch 1.1 (c3 1.0.1.0) was released for English-language copies.
+    </p>
+
+    <details class="spoiler">
+      <summary>Build metadata (v1.0.0.3)</summary>
+      <div class="spoiler-body">
+<pre>Date compiled: Fri, September 3, 1999, 7:31:17 AM
+Linker version: 6.0
+Machine type:   Intel 386 or later
+PE format:      PE32
+Subsystem:      Windows GUI
+Min OS:         Windows 95 (4.0)
+File version:   0.0</pre>
+      </div>
+    </details>
+
+    <p>
+      Game fans have also modded the executables to run at higher resolutions. The game uses the graphics engine from Caesar II — there are screenshots of an intermediate (possibly debug) build where elements of the old UI are still visible.
+    </p>
+
+    <div class="img-row">
+      <img src="https://habrastorage.org/r/w780/getpro/habr/post_images/29e/65a/575/29e65a575f20b1a331def8db332077a4.jpg" alt="Caesar III UI overview" class="habr-img" style="max-width:480px;" />
+    </div>
+
+    <h2>A Closer Look</h2>
+    <p>
+      Many variables in the game are hardcoded as "magic numbers." The code examples here are taken from the <a href="https://github.com/AntonBaracuda/opencaesar3/tree/master/c3_rev" rel="noopener">c3_rev</a> catalogue — the sources compile and run in debug mode, so you can step through the logic. Maintenance was apparently done by a fellow Russian speaker who brought the recovered sources to a working state.
+    </p>
+    <p>
+      One curiosity: Russian localizers patched the binary, replacing <code>c3.eng</code> with <code>c3.rus</code>, accidentally breaking compatibility with later patches.
+    </p>
+
+    <details class="spoiler">
+      <summary>Recovered main() function</summary>
+      <div class="spoiler-body">
+<pre><code>int main(int argc, char* argv[])
+{
+  int result;           // eax@2
+  signed int v5;        // [sp+4Ch] [bp-20h]@7
+  struct tagMSG Msg;    // [sp+50h] [bp-1Ch]@21
+
+  HINSTANCE hInstance = GetModuleHandle(0);
+
+  byte_6606BC = 0;
+  if ( fun_loadSettings() )
+  {
+    if ( fun_readLanguageTextFiles("c3.eng", "c3_mm.eng") )
+    {
+      fun_loadDefaultNames();
+      fun_logDebugMessage("OK :Game text loaded.", 0, 0);
+      if ( fun_setupMainWindow(hInstance) )
+      { /* ... */ }
+      /* ... */
+    }
+  }
+}</code></pre>
+      </div>
+    </details>
+
+    <h2>Text Resources / Localisation</h2>
+    <p>
+      Most of the game's text — except mission text data — lives in <code>C3.eng</code> and <code>C3_mm.eng</code>. <code>C3.eng</code> holds building descriptions, events, residents, and so on. It consists of a 28-byte header followed by an 8,000-byte index table. Each index entry stores the byte offset of a null-terminated string. To retrieve the title of the Education Advisor window (<code>TITLE_ADVISOR_EDUCATION = 16</code>), read the 16th index entry and follow its offset.
+    </p>
+
+    <details class="spoiler">
+      <summary>C3.eng header and index-entry structs</summary>
+      <div class="spoiler-body">
+<pre><code>struct C3EngHeader
+{
+    char tag[16];    // file description string
+    int  numGroups;  // number of string groups
+    int  numStrings; // total string count
+    int  unknown;
+};
+
+struct C3EngIndexEntry
+{
+    int offset; // byte offset to the string
+    int inUse;
+};</code></pre>
+      </div>
+    </details>
+
+    <h2>User Interface</h2>
+    <p>
+      All UI element sizes except buttons are hardcoded, which is why you can't drag info windows or help panels around. The background of a window is drawn first; then its controls are drawn on top.
+    </p>
+    <p>
+      Buttons have a fixed height and are rendered using three textures: the left cap, a repeating middle fill, and a right cap. Windows are drawn in a similar pattern: specialised edge textures frame the border, and a seamless tile fills the centre.
+    </p>
+
+    <details class="spoiler">
+      <summary>Scrollbar click handler (file-open dialog)</summary>
+      <div class="spoiler-body">
+<pre><code>int fun_dialogFile_handleScrollbarClick()
+{
+  signed int result;
+  int v1, v2, v3;
+
+  if ( filelist_numFiles > 12 )
+  {
+    if ( mouse_isLeftClick )
+    {
+      v2 = filelist_numFiles - 12;
+      if ( mouseclick_x >= screen_640x480_x + 464 )
+      if ( mouseclick_x <= screen_640x480_x + 496 )
+      if ( mouseclick_y >= screen_640x480_y + 145 )
+      if ( mouseclick_y <= screen_640x480_y + 300 )
+      {
+        v3 = mouseclick_y - (screen_640x480_y + 145);
+        if ( v3 > 130 ) v3 = 130;
+        v1 = fun_getPercentage(v3, 130);
+        filelist_scrollPosition = fun_adjustWithPercentage(v2, v1);
+        window_redrawRequest = 1;
+        result = 1;
+      } else result = 0;
+    } else result = 0;
+  } else result = 0;
+  return result;
+}</code></pre>
+      </div>
+    </details>
+
+    <h2>Small Cogs in a Large Machine</h2>
+    <p>
+      The game is built from a large number of subsystems — water availability, building maintenance, education, entertainment, and more. Each subsystem, when examined closely, turns out to be very simple and can be described in a few paragraphs. Their combined operation produces engaging gameplay with good balance.
+    </p>
+    <p>
+      Notably, the subsystems hardly interact with each other: the position of a theatre does not affect the neighbouring school or market; doctors know nothing about the actors walking past. Houses are the common meeting point — they accumulate the effects of all subsystems, and as more become available, the house level rises. House level in concrete terms means tax income and the number of available workers.
+    </p>
+
+    <h2>Walker Routes</h2>
+    <img src="https://habrastorage.org/r/w780/getpro/habr/post_images/02f/5f4/df8/02f5f4df859dc5a271e6863393ff1660.png" alt="Walker route planning" class="habr-img" />
+    <p>
+      Different walker types use different routing logic. A prefect (or engineer) walks the path A1 → A2 → A1 — even if A2 is right next to the prefect's building — and then returns to base. A barber, by contrast, completes the full circuit to point B2.
+    </p>
+    <p>
+      Service walkers move exclusively on roads (as well as bridges, gates, granaries, the northern tiles of storage yards, gardens, and fort grounds). Enemies and wild animals cannot pass through gates. Merchants and mega-carriers can travel off-road but prefer roads when possible. Regular carriers cannot pass through gardens or fort grounds.
+    </p>
+    <p>
+      A route is calculated before the walker leaves the building. Starting from the exit tile, the game builds a map of all reachable road paths. Each candidate path is scored by walking it tile-by-tile and asking nearby buildings whether they need the walker's service. The path with the highest total need score is selected.
+    </p>
+    <img src="https://habrastorage.org/r/w780/getpro/habr/post_images/f93/1c6/9ba/f931c69ba03c4d58a0c0abbae70af48d.png" alt="Route scoring diagram" class="habr-img" />
+    <p>
+      For example, a prefect heads toward the area with the highest fire risk — but the algorithm favours large districts over small isolated ones even if the small district's peak risk is higher, because the total score of a large area exceeds the peak of a small one. This applies to all service workers since the route-importance algorithm is unified across all service types.
+    </p>
+    <p>
+      The bazaar trader is an exception: route selection accounts for the goods currently stocked in the market. The diagram below shows the possible routes a trader might take; each intersection multiplies the number of paths to evaluate. The white route wins because it sells the most goods. When the trader reaches the end of that route: if she has goods left, she retraces it; if not, she finds the shortest path back to the market.
+    </p>
+    <img src="https://habrastorage.org/r/w780/getpro/habr/post_images/210/01a/f31/21001af314990a0c5d28dc8cb5669dc9.jpg" alt="Bazaar trader route" class="habr-img" />
+
+    <h3>Maximum route lengths (long / short, in tiles)</h3>
+    <table>
+      <tr><th>Walker type</th><th>Long / Short</th></tr>
+      <tr><td>Prefect, Engineer</td><td>52 / 43</td></tr>
+      <tr><td>Actor, Gladiator, Lion Tamer, Tax Collector</td><td>43 / 35</td></tr>
+      <tr><td>Priest, Doctor, Surgeon, Teacher, Trader, Bathkeeper, Barber</td><td>35 / 26</td></tr>
+    </table>
+    <p>
+      The switch between long and short routes happens under different conditions for different walkers — not all have been fully reversed. The trader, for instance, switches to the long route when a granary is placed next to the market.
+    </p>
+    <p>
+      Buildings have a separate exit point that may not coincide with the entrance. Priority for spawning is shifted downward; priority for entry is shifted upward — the path between entry and exit can be very long.
+    </p>
+
+    <h2>House Evolution</h2>
+    <p>
+      Houses below the Insula level occupy a single tile. Two adjacent single-tile houses of the same level can merge into a 2×2 house of the same level, with an additional condition: the first three bits of the pseudorandom value in <code>byte minimap_info[26244]</code> (also used during minimap generation) must match for both tiles. This means merging was not possible on every tile in the city.
+    </p>
+    <p>
+      When a house reaches a level whose next upgrade requires more space, it expands by capturing adjacent tiles. Valid neighbours are: empty land, a garden, a lower-level house, or a same-level house. Expansion can happen in four directions (N, W, S, E).
+    </p>
+
+    <table>
+      <tr><th>Transition</th><th>Size change</th></tr>
+      <tr><td>Medium Insula → Large Insula</td><td>1×1 → 2×2</td></tr>
+      <tr><td>Medium Villa → Large Villa</td><td>2×2 → 3×3</td></tr>
+      <tr><td>Medium Palace → Large Palace</td><td>3×3 → 4×4</td></tr>
+    </table>
+
+    <h2>City Population</h2>
+    <p>
+      Population is tracked by age from 0 to 99. Each house stores a <code>char peoples[100]</code> array: the index is the age and the value is the number of residents at that age. At the start of each year the array shifts by one position, removing the oldest residents and opening a slot for newborns. Two functions then calculate the probability of new births in a house and the natural death rate from old age.
+    </p>
+
+    <details class="spoiler">
+      <summary>Population game-tick function (excerpt)</summary>
+      <div class="spoiler-body">
+<pre><code>void fun_gametick_population()
+{
+  /* ... */
+  cityinfo_happiness_immigrationAmount[4517 * ciid] = 0;
+  cityinfo_happiness_emigrationValue[4517 * ciid]   = 0;
+  if ( cityinfo_populationYearlyBirthsDeathsCalculationNeeded[4517 * ciid] )
+  {
+    fun_populationAdvanceAgesOneYear();
+    fun_populationBirths();
+    fun_updatePopulationAfterBirthsDeaths(ciid);
+  }
+  fun_calculateNumberOfWorkers();
+  /* ... */
+}</code></pre>
+      </div>
+    </details>
+
+    <h2>Service and Resource Consumption</h2>
+    <p>
+      Houses consume both resources (food, pottery, oil, furniture, wine) and services (religion, healthcare, education, etc.).
+    </p>
+    <ul>
+      <li><strong>Food</strong>: consumed once per month at 0.5 units per resident.</li>
+      <li><strong>Other resources</strong> (pottery, oil, furniture, wine): 1 unit per house, twice per month, regardless of resident count.</li>
+      <li><strong>Services</strong>: 1 unit consumed per game day; maximum 100 units of any service stored.</li>
+    </ul>
+    <p>
+      Resource storage capacity scales with house level — larger houses can hold more of each resource type. A house buys enough goods from a trader to last the next six months.
+    </p>
+
+    <h2>Religion</h2>
+    <p>
+      There are five gods: Ceres, Neptune, Mars, Mercury, and Venus. The mood calculation algorithm is the same for all of them. Coverage is counted by population, not territory — so all temples can be placed anywhere on the map without affecting the gods' moods directly. Temple placement does affect which houses the priests reach, however.
+    </p>
+    <p>Coverage formula:</p>
+    <p class="formula">base_value = 100 × (500 × oracles + 750 × working_small_temples + 1500 × working_large_temples) / population</p>
+    <p>"Working" means at least one employee is assigned.</p>
+
+    <p>Additional mood factors:</p>
+    <ul>
+      <li><strong>Festival factor</strong> = 12 − max(40, months_since_last_festival_for_this_god)</li>
+      <li><strong>Temple bonus</strong> = +50 to the god with the most temples; if tied, nobody gets it.</li>
+      <li><strong>Disrespect penalty</strong> = −25 to the god with the fewest temples; if tied, nobody gets it.</li>
+    </ul>
+    <p><strong>Note:</strong> Venus does not participate in bonus distribution. This is likely a bug.</p>
+    <p class="formula">Final mood = base_value + festival_factor + temple_bonus + disrespect_penalty</p>
+
+    <h3>Minimum mood floor by city population</h3>
+    <table>
+      <tr><th>Population</th><th>Minimum mood</th></tr>
+      <tr><td>0 – 99</td><td>50</td></tr>
+      <tr><td>100 – 199</td><td>40</td></tr>
+      <tr><td>200 – 299</td><td>40</td></tr>
+      <tr><td>300 – 399</td><td>30</td></tr>
+      <tr><td>400 – 499</td><td>20</td></tr>
+      <tr><td>500 – 599</td><td>10</td></tr>
+      <tr><td>600+</td><td>0</td></tr>
+    </table>
+
+    <h3>God wrath mechanics</h3>
+    <p>
+      Each game day (25 ticks), each god's current mood moves one unit toward its true mood. Additionally, a random god index 0–6 is drawn; indices 0–4 map to the five gods. If the selected god's mood is below thresholds, wrath points accumulate:
+    </p>
+    <ul>
+      <li>mood &lt; 9 → +5 wrath points</li>
+      <li>mood 10–19 → +2 wrath points</li>
+      <li>mood 20–39 → +1 wrath point</li>
+      <li>mood ≥ 50 → wrath points reset to 0</li>
+      <li>Maximum wrath: 50 points</li>
+    </ul>
+
+    <details class="spoiler">
+      <summary>Monthly divine event logic (900 ticks)</summary>
+      <div class="spoiler-body">
+<pre><code>if ( god_id == [5, 6, 7] )
+{
+  // find the god with the most wrath points,
+  // or mood < 40, or a random god if none qualify
+  current_god = find_least_happy_god();
+
+  if ( current_god )
+  {
+    if ( current_god.mood > 100 && current_god.blessingDone == 0 )
+    {
+      current_god.doBlessing();
+      current_god.mood       = 50;
+      current_god.blessingDone = 1;
+    }
+
+    if ( current_god.wrathPoints > 20 && current_god.smallCurseDone == 0 )
+    {
+      current_god.doSmallCurse();
+      current_god.smallCurseDone = 1;
+      current_god.wrathPoints    = 0;
+      current_god.mood          -= 12;
+    }
+
+    if ( current_god.wrathPoints == 50 && current_god.lastFestival > 3_months )
+    {
+      current_god.doWrath();
+      current_god.wrathPoints = 0;
+      current_god.mood       -= 30;
+    }
+  }
+}</code></pre>
+      </div>
+    </details>
+
+    <p>
+      For example: suppose we have angered Mars and do nothing to fix it. Current mood = 100, true mood = 0. Each day current mood drops by 1. A game month is 16 days, so at that rate Mars will act in approximately 100/16 ≈ 6 in-game months — though the "sacred RNG" may intervene before then.
+    </p>
+
+    <h2>Festivals and City Mood</h2>
+    <img src="https://habrastorage.org/r/w780/getpro/habr/post_images/f03/018/76e/f0301876ed5699380b9accdb65b19478.png" alt="Festival screen" class="habr-img" />
+    <p>
+      Three festival sizes are available: Small, Medium, and Large. Each is dedicated to one god and improves that god's mood. Festival costs scale with population:
+    </p>
+
+    <table>
+      <tr><th>Type</th><th>Cost (denarii)</th><th>Wine required</th><th>Prep time</th></tr>
+      <tr><td>Small</td><td>population / 20 + 10</td><td>—</td><td>2 months</td></tr>
+      <tr><td>Medium</td><td>population / 10 + 20</td><td>—</td><td>3 months</td></tr>
+      <tr><td>Large</td><td>population / 5 + 40</td><td>population / 500 + 1</td><td>4 months</td></tr>
+    </table>
+
+    <p>
+      Beyond the god-specific mood boost, festivals also improve citizen happiness. Only the first two festivals within any 12-month window contribute to city mood — further festivals have no effect:
+    </p>
+
+    <table>
+      <tr><th>Type</th><th>1st festival</th><th>2nd festival</th></tr>
+      <tr><td>Small</td><td>+7</td><td>+2</td></tr>
+      <tr><td>Medium</td><td>+9</td><td>+3</td></tr>
+      <tr><td>Large</td><td>+12</td><td>+5</td></tr>
+    </table>
+
+    <h2>Finances</h2>
+    <p>
+      The maximum debt a city can carry while still being allowed to build is <strong>−5,000 denarii</strong>. This is checked on every financial action.
+    </p>
+
+    <details class="spoiler">
+      <summary>Debt check during road placement</summary>
+      <div class="spoiler-body">
+<pre><code>void fun_drawBuildingGhostRoad()
+{
+  /* ... */
+  if ( cityinfo_treasury[4517 * ciid] <= -5000 )
+    cannotBuild = 1;
+  if ( cannotBuild )
+  {
+    sub_4D0B70(graphic_fire_almost, v2, v1 - iso_tile_half_height, (ColorMask)-1949);
+  }
+  /* ... */
+}</code></pre>
+      </div>
+    </details>
+
+    <p>
+      The annual wage shown in the Labor Advisor (e.g. "30") is actually 10× the real value in denarii — it displays 30 but pays 3 denarii per year. This is done because all financial calculations are in integers.
+    </p>
+    <p>Monthly wage payment formula:</p>
+    <p class="formula">wage_paid = (workers_at_month_end × worker_wage) / 10 / 12</p>
+    <p>
+      This sum leaves the city treasury and disappears (unlike, say, Tropico, where money flows into residents' pockets).
+    </p>
+    <p>
+      If the treasury is negative, the city pays 10% annual interest to Rome, deducted monthly:
+    </p>
+    <p class="formula">monthly_interest = (−treasury) × 10 / 100 / 12</p>
+    <p>
+      When debt first reaches 5,000, Rome offers a loan (mission-dependent, typically 10,000 denarii). A second loan is possible, but it is tracked as debt.
+    </p>
+
+    <h2>Taxes</h2>
+    <p>
+      Each month, every house generates a tax based on house level and resident count. The tax collector gathers it when she passes by; uncollected taxes expire at the end of the year. The base tax rate is set in <code>c3_model.txt</code>; the difficulty modifier scales the final amount:
+    </p>
+
+    <table>
+      <tr><th>Difficulty</th><th>Tax multiplier</th></tr>
+      <tr><td>Very Easy</td><td>300%</td></tr>
+      <tr><td>Easy</td><td>200%</td></tr>
+      <tr><td>Normal</td><td>150%</td></tr>
+      <tr><td>Hard</td><td>100%</td></tr>
+      <tr><td>Very Hard</td><td>75%</td></tr>
+    </table>
+
+    <p>Final tax formula:</p>
+    <p class="formula">TotalTax = (tax_base / 2) × city_tax_rate / (12 × 100)</p>
+
+    <h2>Imperial Tribute</h2>
+    <p>
+      At the end of each year, 25% of the city's annual profit is sent to Rome. If the city is in debt, no tribute is paid — but Emperor favor decreases. Minimum tribute amounts are defined by population:
+    </p>
+
+    <table>
+      <tr><th>Population</th><th>No profit / With profit</th></tr>
+      <tr><td>0 – 500</td><td>0 / 50</td></tr>
+      <tr><td>501 – 1,000</td><td>0 / 150</td></tr>
+      <tr><td>1,001 – 2,000</td><td>100 / 225</td></tr>
+      <tr><td>2,001 – 3,000</td><td>200 / 300</td></tr>
+      <tr><td>3,001 – 5,000</td><td>200 / 400</td></tr>
+      <tr><td>5,000+</td><td>200 / 500</td></tr>
+    </table>
+
+    <p>
+      Profit here is the difference between income (donations, exports) and expenses (construction, imports, debt interest, governor salary, wages, other).
+    </p>
+
+    <h2>Emperor Favor</h2>
+    <img src="https://habrastorage.org/r/w780/getpro/habr/post_images/361/97c/688/36197c688d596c755ae69b9243c45a66.jpg" alt="Emperor favor screen" class="habr-img" />
+    <p>
+      Emperor favor is primarily driven by city profitability and fulfilling (or ignoring) imperial requests. Gifts significantly boost favor, but with diminishing returns — all gifts given in the past 12 months are counted:
+    </p>
+
+    <table>
+      <tr><th>Gift #</th><th>Modest</th><th>Generous</th><th>Lavish</th></tr>
+      <tr><td>1st</td><td>+3</td><td>+5</td><td>+10</td></tr>
+      <tr><td>2nd</td><td>+1</td><td>+3</td><td>+5</td></tr>
+      <tr><td>3rd</td><td>0</td><td>+1</td><td>+3</td></tr>
+      <tr><td>4th</td><td>0</td><td>0</td><td>+1</td></tr>
+      <tr><td>5th+</td><td>0</td><td>0</td><td>0</td></tr>
+    </table>
+
+    <p>
+      Fulfilling requests on time gives the full favor bonus; completing them late yields half. Ignoring a request costs 8 favor: −3 when the deadline is missed, −5 more after 24 months of continued inaction.
+    </p>
+
+    <p>Annual favor update (applied at year start):</p>
+    <ul>
+      <li><strong>Base change</strong>: −2</li>
+      <li><strong>Tribute</strong>: +1 if paid successfully; −3 / −5 / −8 for skipping 1 / 2 / more than 2 consecutive years</li>
+      <li><strong>Governor salary</strong>: +1 if salary is below rank level; −1 for each rank level above your current status</li>
+      <li><strong>Mission events</strong>: mission-dependent, e.g. +5 for reaching 1,000 residents</li>
+    </ul>
+
+    <h2>Culture Rating</h2>
+    <img src="https://habrastorage.org/r/w780/getpro/habr/post_images/1b7/18d/cab/1b718dcabcbed9a506863c6957a8f970.jpg" alt="Culture advisor" class="habr-img" />
+    <p>
+      The Culture rating is a composite score reflecting city attractiveness. It comprises theater, temple, school, academy, and library coverage. A culture rating above 30 indirectly signals that affluent citizens are present.
+    </p>
+    <p class="formula">Culture = theaters + temples + schools + academies + libraries</p>
+
+    <h3>Theater coverage → culture points (max 25)</h3>
+    <p class="formula">theater_coverage = 500 × working_theaters / population</p>
+    <table>
+      <tr><th>Coverage</th><th>Points</th></tr>
+      <tr><td>0 – 30%</td><td>0</td></tr>
+      <tr><td>31 – 50%</td><td>3</td></tr>
+      <tr><td>51 – 70%</td><td>8</td></tr>
+      <tr><td>71 – 85%</td><td>12</td></tr>
+      <tr><td>86 – 99%</td><td>18</td></tr>
+      <tr><td>100%+</td><td>25</td></tr>
+    </table>
+
+    <h3>Temple coverage → culture points (max 30)</h3>
+    <p class="formula">temple_coverage = 150 × small_temples + 300 × large_temples + 500 × oracles</p>
+    <table>
+      <tr><th>Coverage</th><th>Points</th></tr>
+      <tr><td>0 – 30%</td><td>0</td></tr>
+      <tr><td>31 – 50%</td><td>3</td></tr>
+      <tr><td>51 – 70%</td><td>9</td></tr>
+      <tr><td>71 – 85%</td><td>14</td></tr>
+      <tr><td>86 – 99%</td><td>22</td></tr>
+      <tr><td>100%+</td><td>30</td></tr>
+    </table>
+
+    <h3>Education coverage → culture points</h3>
+    <p>Schools serve children (75 pupils each, max 15 pts); academies serve students (100 each, max 10 pts); libraries serve all residents (800 each, max 20 pts).</p>
+    <table>
+      <tr><th>Coverage</th><th>Schools</th><th>Academies</th><th>Libraries</th></tr>
+      <tr><td>0 – 30%</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td>31 – 50%</td><td>1</td><td>1</td><td>2</td></tr>
+      <tr><td>51 – 70%</td><td>4</td><td>2</td><td>4</td></tr>
+      <tr><td>71 – 85%</td><td>6</td><td>4</td><td>8</td></tr>
+      <tr><td>86 – 99%</td><td>10</td><td>7</td><td>14</td></tr>
+      <tr><td>100%+</td><td>15</td><td>10</td><td>20</td></tr>
+    </table>
+
+    <h2>Resources and Production</h2>
+    <p>
+      Resources are the backbone of the economy. Some require processing, creating simple production chains (e.g. iron mine → weapons workshop). All resources are inexhaustible except fishing spots, which have a finite fish supply.
+    </p>
+    <p>
+      Wheat is the first resource the game introduces. In central provinces wheat farms are more efficient than other farms, but this advantage disappears in northern or desert regions. Farms are placed on fertile soil (shown on the map as yellow seedlings) and deliver their harvest to a granary or storage yard.
+    </p>
+    <p>
+      Farms, extraction buildings, and workshops all follow the same production tick logic. Every 25 ticks (one game day), production progress is updated:
+    </p>
+
+    <details class="spoiler">
+      <summary>Daily production progress formula</summary>
+      <div class="spoiler-body">
+<pre><code>// productionRate  — carts of goods per year at 100% staffing
+// numberWorkers   — current worker count
+// maximumWorkers  — maximum workers for this building
+// 12 * 16         — months/year × game days/month
+
+progress += 100 * (productionRate * numberWorkers) / (12 * 16 * maximumWorkers);</code></pre>
+      </div>
+    </details>
+
+    <p>
+      When progress reaches 100, a carrier is spawned to deliver the goods to the nearest storage facility. If no space is available, the production halts until the carrier is freed. If a new batch completes while the carrier is still busy, production stops until the carrier returns.
+    </p>
+
+    <h2>Storage and Distribution</h2>
+    <p>
+      Two types of storage participate in the supply chain: <strong>granaries</strong> store food only and are where bazaar traders collect goods; <strong>storage yards</strong> hold any resource type and sell to visiting merchants.
+    </p>
+    <p>
+      Both facility types stop accepting deliveries when staffed at less than 50% capacity. Neither actively fetches goods by default — except when the special <em>Get Goods</em> order is active, which causes the facility to pull goods from other storage facilities. This mechanism allows players to create cross-district supply chains.
+    </p>
+    <p>
+      The combination of resource extraction, processing, and distribution ended up quite well designed. A small number of resource types avoids overwhelming the player with micromanagement, while automation of routine decisions (storage assignment, routing) leaves the governor room for strategic planning.
+    </p>
+
+    <h2>Closing Thoughts</h2>
+    <p>
+      This article leaves two large topics untouched: inter-city trade and military mechanics — both are substantial enough to deserve their own write-ups, and the research there is incomplete.
+    </p>
+    <p>
+      I should note that dedicated fans of the game could certainly add many details I missed or overlooked while recovering the original sources. My goal was to build a solid understanding of the game's balance — so carefully polished by the original authors — before risking introducing regressions in the remake.
+    </p>
+    <p>
+      As for the recovered source code: I personally ran out of patience to clean it up, but <a href="https://github.com/AntonBaracuda/opencaesar3/tree/master/c3_rev" rel="noopener">AntonBaracuda</a> completed this genuinely difficult work. At that address you will find the sources with partially separated structures and functions — it all compiles, runs, and can be stepped through in a debugger up to the early startup functions.
+    </p>
+
+    <h2>Links</h2>
+    <ul>
+      <li><a href="http://caesar-iii.ru/" rel="noopener">Russian-language Caesar III fan community</a></li>
+      <li><a href="http://caesar3.heavengames.com/" rel="noopener">HeavenGames Caesar III — extensive English-language resource</a></li>
+      <li><a href="https://github.com/AntonBaracuda/opencaesar3/tree/master/c3_rev" rel="noopener">Recovered original game source code (compiles, does not yet fully run)</a></li>
+      <li><a href="https://bitbucket.org/dalerank/caesaria/wiki/Home" rel="noopener">CaesarIA — open-source C++/SDL remake (Windows, Linux, Mac, Haiku, Android)</a></li>
+    </ul>
+  </main>
+</body>
+</html>

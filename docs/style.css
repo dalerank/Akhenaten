@@ -580,6 +580,21 @@ footer a:hover {
   margin-top: 1rem;
 }
 
+.post-preview {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  display: block;
+  margin: .75rem 0;
+}
+
+.post-page img {
+  max-width: 100%;
+  height: auto;
+}
+
 /* ── Post page ── */
 .post-page h2 {
   font-size: 1.4rem;
