@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bazaar — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .bld-header-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      margin-bottom: 2rem;
+    }
+    .bld-header-right {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .bld-image-wrap {
+      text-align: center;
+    }
+    .bld-image-wrap img {
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      image-rendering: pixelated;
+    }
+    .bld-image-wrap figcaption {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+    .bld-sprites {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-end;
+    }
+    .bld-infobox {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.9rem 1.1rem;
+    }
+    .bld-infobox h4 {
+      margin: 0 0 0.6rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--gold);
+    }
+    .bld-infobox dl {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.2rem 1rem;
+      margin: 0;
+    }
+    .bld-infobox dt { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; padding-top: 0.1rem; }
+    .bld-infobox dd { margin: 0; font-size: 0.85rem; color: var(--text); }
+    .bld-infobox .sep { grid-column: 1/-1; border: none; border-top: 1px solid var(--border); margin: 0.4rem 0; }
+    .bld-stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .bld-stat { text-align: center; }
+    .bld-stat .val { font-size: 1.3rem; font-weight: 700; color: var(--gold); display: block; }
+    .bld-stat .lbl { font-size: 0.7rem; color: var(--text-muted); }
+    .risk-low  { color: #8aabdc; }
+    .risk-med  { color: #d09050; }
+    .des-neg { color: #d07070; }
+    .chain-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.8rem 1.1rem;
+      margin: 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-size: 0.88rem;
+      flex-wrap: wrap;
+    }
+    .chain-box .step {
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 3px;
+      padding: 0.3rem 0.7rem;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .chain-box .step.hub {
+      background: rgba(201,168,76,0.18);
+      border-color: rgba(201,168,76,0.5);
+      font-weight: 700;
+      color: var(--gold);
+    }
+    .chain-box .arrow { color: var(--gold); font-size: 1.1rem; }
+    .chain-sources {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    /* walker portraits strip */
+    .walker-strip {
+      display: flex;
+      gap: 1.5rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+    .walker-card {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.6rem 0.9rem;
+    }
+    .walker-card img { image-rendering: pixelated; border: 1px solid var(--border); border-radius: 2px; }
+    .walker-card-info { font-size: 0.82rem; }
+    .walker-card-info strong { display: block; color: var(--gold); margin-bottom: 0.15rem; }
+    .walker-card-info span { color: var(--text-muted); }
+    /* inventory grid */
+    .inv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin: 0.75rem 0;
+    }
+    .inv-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.83rem;
+    }
+    .inv-box .inv-title { color: var(--gold); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
+    .inv-box ul { margin: 0; padding-left: 1.1rem; color: var(--text-muted); line-height: 1.8; }
+    /* developer spoilers */
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .kw { color: #c9a84c; } .num { color: #9ecbff; } .str { color: #7ec87e; } .cmt { color: #5a5650; font-style: italic; } .fn { color: #8aabdc; } .ev { color: #d0a0e0; } .ty { color: #d0a0e0; }
+    .file-ref { display: inline-block; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .msg-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+    .msg-table th, .msg-table td { padding: 0.3rem 0.6rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+    .msg-table th { color: var(--text-muted); font-weight: normal; }
+    .bld-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .bld-nav a { color: var(--gold); }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">← All Buildings</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Distribution</div>
+        <ul>
+          <li><a href="granary.html">Granary</a></li>
+          <li><a href="storage-yard.html">Storage Yard</a></li>
+          <li><a href="bazaar.html" class="active">Bazaar</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#mechanics">Mechanics</a></li>
+          <li><a href="#inventory">Inventory</a></li>
+          <li><a href="#special-orders">Special Orders</a></li>
+          <li><a href="#upgrade">Upgrade</a></li>
+          <li><a href="#placement">Placement</a></li>
+          <li><a href="#tips">Tips</a></li>
+          <li><a href="#original">Original game</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Buildings</a> /
+        Bazaar
+      </div>
+
+      <h1>Bazaar</h1>
+
+      <div class="bld-header-grid">
+        <figure class="bld-image-wrap">
+          <div class="bld-sprites">
+            <div>
+              <img src="Cleo_Bazaar1.webp" alt="Standard Bazaar in-game sprite" width="118" height="76" />
+              <figcaption>Standard</figcaption>
+            </div>
+            <div>
+              <img src="Cleo_Bazaar2.webp" alt="Upgraded Bazaar in-game sprite" width="118" height="82" />
+              <figcaption>Upgraded</figcaption>
+            </div>
+          </div>
+        </figure>
+        <div class="bld-header-right">
+          <div>
+            <p>The <strong>Bazaar</strong> is the final link in the food and goods distribution chain. It sends buyers to collect food from <a href="granary.html">Granaries</a> and goods from <a href="storage-yard.html">Storage Yards</a>, then dispatches traders to roam nearby streets and supply whatever housing needs to evolve or avoid devolving.</p>
+            <p>Without a Bazaar within walking range, housing cannot receive food or goods regardless of how many Granaries and Storage Yards are nearby. Every residential cluster needs at least one Bazaar.</p>
+            <p>At high neighbourhood desirability (≥ 30) the Bazaar upgrades its appearance — one of its open-air stalls is replaced by a small enclosed building — and begins sending out two traders simultaneously instead of one.</p>
+          </div>
+          <div class="bld-infobox">
+            <h4>Stats</h4>
+            <div class="bld-stat-row" style="margin-bottom:0.9rem">
+              <div class="bld-stat"><span class="val">2×2</span><span class="lbl">Size</span></div>
+              <div class="bld-stat"><span class="val">5</span><span class="lbl">Workers</span></div>
+              <div class="bld-stat"><span class="val des-neg">−2</span><span class="lbl">Desirability</span></div>
+            </div>
+            <hr class="sep" />
+            <dl>
+              <dt>Cost (Normal)</dt>
+              <dd>30 Db</dd>
+              <dt>Cost by difficulty</dt>
+              <dd style="font-size:0.78rem;color:var(--text-muted)">
+                VE 8 · Easy 15 · <strong style="color:var(--text)">Normal 30</strong> · Hard 50 · VH 100
+              </dd>
+              <dt>Inventory</dt>
+              <dd>4 food types + 4 goods</dd>
+              <dt>Search radius</dt>
+              <dd>40 tiles</dd>
+              <dt>Labor category</dt>
+              <dd>Infrastructure</dd>
+              <dt>Fire risk</dt>
+              <dd class="risk-med">Medium (4)</dd>
+              <dt>Damage risk</dt>
+              <dd class="risk-low">Low (2)</dd>
+              <dt>Overlay</dt>
+              <dd>Bazaar Access</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Supply chain ───────────────────────────────────── -->
+      <div class="chain-box">
+        <div class="chain-sources">
+          <span class="step" style="font-size:0.8rem"><a href="granary.html" style="color:inherit">Granary</a> (food)</span>
+          <span class="step" style="font-size:0.8rem"><a href="storage-yard.html" style="color:inherit">Storage Yard</a> (goods)</span>
+        </div>
+        <span class="arrow">→</span>
+        <span class="step">Buyer (destination walker)</span>
+        <span class="arrow">→</span>
+        <span class="step hub">Bazaar</span>
+        <span class="arrow">→</span>
+        <span class="step">Trader (roaming walker)</span>
+        <span class="arrow">→</span>
+        <span class="step">Housing</span>
+      </div>
+
+      <!-- ─── Overview ──────────────────────────────────────── -->
+      <h2 id="overview">Overview</h2>
+      <p>Ancient Egyptian markets ranged from small neighbourhood stalls to busy trading centres on the Nile banks. Goods changed hands through barter — money as we know it did not exist in pharaonic Egypt — and market women were a common sight carrying baskets of bread, fish, and vegetables. Wall paintings and papyrus records document lively scenes of exchange, with traders haggling and tax collectors recording transactions.</p>
+      <p>In the game the Bazaar abstracts this into a two-stage operation: first, specialised buyers fetch bulk supplies from storage buildings, then traders disperse through the streets supplying individual houses with whatever they need at that moment.</p>
+
+      <!-- ─── Mechanics ─────────────────────────────────────── -->
+      <h2 id="mechanics">Mechanics</h2>
+
+      <h3>Two buyers, two supply chains</h3>
+      <p>Each Bazaar employs <strong>two buyers</strong> that work independently:</p>
+      <ul>
+        <li><strong>Food buyer</strong> — travels exclusively to <a href="granary.html">Granaries</a>. She cannot collect food from a Storage Yard, even if food is stored there.</li>
+        <li><strong>Goods buyer</strong> — travels exclusively to <a href="storage-yard.html">Storage Yards</a>. She collects non-food commodities such as pottery, linen, beer, and luxury goods.</li>
+      </ul>
+      <p>Each buyer is a <em>destination walker</em>: she walks directly to a specific Granary or Storage Yard, loads up, and returns. A string of helpers carries the load back when the haul is large. She deals with at most three supply sources in her range — if you expect her to visit more, she will not go.</p>
+      <p>Both buyers share the same 40-tile search radius measured from the Bazaar's northern tile. A Granary or Storage Yard beyond 40 tiles is invisible to the buyers regardless of road connectivity.</p>
+
+      <h3>Bazaar trader</h3>
+      <p>The <strong>trader</strong> is a <em>roaming walker</em>: she has no fixed destination and chooses randomly at each intersection. As she passes within two tiles of housing, she supplies whatever that house needs from her current stock. She also notes unmet demands and reports them back to the buyer.</p>
+      <p>Priority is always to prevent devolution first — a house in danger of losing a tier gets resupplied before a house that wants to upgrade. Once basic needs are met, the trader supplies goods for evolution.</p>
+      <p>Because the trader chooses randomly at intersections, road layout strongly affects coverage. A long, straight road from the Bazaar gives good linear coverage. A grid gives unpredictable coverage. Use <strong>Roadblocks</strong> to steer traders away from streets you do not want served.</p>
+
+      <h3>Walkers</h3>
+      <div class="walker-strip">
+        <div class="walker-card">
+          <img src="Cleo_BazaarBuyerPort.webp" alt="Bazaar Buyer portrait" width="55" height="79" />
+          <div class="walker-card-info">
+            <strong>Bazaar Buyer</strong>
+            <span>Destination walker<br>Fetches food from Granaries</span>
+          </div>
+        </div>
+        <div class="walker-card">
+          <img src="Cleo_DeliveryBoyPort.webp" alt="Delivery Boy portrait" width="55" height="79" />
+          <div class="walker-card-info">
+            <strong>Delivery Boy</strong>
+            <span>Destination walker<br>Carries loaded goods back to the Bazaar</span>
+          </div>
+        </div>
+        <div class="walker-card">
+          <img src="Cleo_BazaarTraderPort.webp" alt="Bazaar Trader portrait" width="55" height="79" />
+          <div class="walker-card-info">
+            <strong>Bazaar Trader</strong>
+            <span>Roaming walker<br>Distributes goods to nearby housing</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Inventory ─────────────────────────────────────── -->
+      <h2 id="inventory">Inventory</h2>
+      <p>The Bazaar can hold up to <strong>4 food types</strong> and <strong>4 goods types</strong> simultaneously. Right-clicking shows current stock in two rows — food icons on top, goods icons below. Items shown in yellow are stocked but toggled off in Special Orders (the buyer will not replenish them).</p>
+
+      <div class="inv-grid">
+        <div class="inv-box">
+          <div class="inv-title">Food slots (from Granaries)</div>
+          <ul>
+            <li>Up to 4 food types</li>
+            <li>Determined by the city's available food resources</li>
+            <li>Buyer restocks when a slot falls below threshold</li>
+          </ul>
+        </div>
+        <div class="inv-box">
+          <div class="inv-title">Goods slots (from Storage Yards)</div>
+          <ul>
+            <li>Pottery</li>
+            <li>Luxury goods</li>
+            <li>Linen</li>
+            <li>Beer</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── Special Orders ─────────────────────────────────── -->
+      <h2 id="special-orders">Special Orders</h2>
+      <p>Right-click the Bazaar and press <strong>Special Orders</strong> to toggle each commodity on or off. A toggled-off commodity is shown in yellow in the info panel — the Bazaar keeps whatever stock it has but the buyer will not go out to replenish it.</p>
+      <p>This is useful for:</p>
+      <ul>
+        <li><strong>Specialising Bazaars.</strong> Give one Bazaar grain and pottery, another beer and linen. Housing blocks served by both stay well-supplied without either Bazaar competing for the same goods.</li>
+        <li><strong>Preventing unwanted evolution.</strong> Suppress luxury goods in a housing block you want to keep at a lower tier to avoid population surges.</li>
+        <li><strong>Stockpiling for trade.</strong> Turning off a commodity at the Bazaar keeps it in the Storage Yard where it can be exported instead of consumed.</li>
+      </ul>
+
+      <!-- ─── Upgrade ───────────────────────────────────────── -->
+      <h2 id="upgrade">Upgrade</h2>
+      <p>When the desirability of the Bazaar's tile reaches <strong>30 or above</strong>, the building automatically upgrades its appearance — one of the open-air stalls becomes a small enclosed structure. The upgraded Bazaar sends out <strong>two traders simultaneously</strong> instead of one, effectively doubling neighbourhood coverage.</p>
+      <p>The upgrade triggers automatically and costs nothing. It reverts if desirability drops back below the threshold. Placing Gardens, Statues, or other desirable buildings nearby is the easiest way to push a Bazaar over the threshold.</p>
+
+      <!-- ─── Placement ─────────────────────────────────────── -->
+      <h2 id="placement">Placement</h2>
+      <p>Place the Bazaar <strong>within 40 tiles</strong> of at least one <a href="granary.html">Granary</a> and one <a href="storage-yard.html">Storage Yard</a>. Beyond 40 tiles the buyers simply cannot reach them.</p>
+      <p>Place the Bazaar <strong>close to housing</strong>. The trader is a roaming walker — the farther she has to travel before reaching houses, the less efficiently she distributes. Ideally the Bazaar sits at the entrance to or inside the housing block it serves.</p>
+      <p>The Bazaar has mild negative desirability (−2 at the tile, fading to neutral within 3 tiles). Because it needs to be close to housing anyway, offset the penalty with a few Gardens or Statues nearby. A high-desirability location also earns the Bazaar an upgrade and its second trader.</p>
+      <p>Road access is mandatory — all three walkers travel on roads.</p>
+
+      <!-- ─── Tips ──────────────────────────────────────────── -->
+      <h2 id="tips">Tips</h2>
+      <ul>
+        <li>If a Bazaar's trader is not reaching certain houses, check the road layout. The trader will avoid dead-ends after the first visit and may never return to a side street. Try connecting it to a loop road so the trader can always find a path onward.</li>
+        <li>A single Bazaar typically serves around 400–600 citizens adequately. Add a second Bazaar when housing demand outpaces supply, not when housing is first built.</li>
+        <li>If the food buyer is idle (standing at the Bazaar), either the Granary is over 40 tiles away, the Granary is empty, or the relevant food type is toggled off in Special Orders.</li>
+        <li>Fire risk is medium (4). An <a href="firehouse.html">Firehouse</a> patrol should cover the Bazaar — market stalls burn quickly.</li>
+        <li>To push a Bazaar past desirability 30 for the free second trader: place two small Gardens adjacent to it. Gardens give +5 to +10 desirability each, often enough to cross the threshold.</li>
+        <li>Use the <strong>Bazaar Access overlay</strong> (toggle button in the info panel, or via the Overlays menu) to see exactly which tiles the trader covers. Uncovered tiles appear dark.</li>
+      </ul>
+
+      <!-- ─── Original game screenshots ──────────────────────── -->
+      <h2 id="original">In the original game</h2>
+      <p style="font-size:0.88rem;color:var(--text-muted)">Screenshots from <em>Cleopatra: Queen of the Nile</em> (Impressions Games, 2000).</p>
+      <div style="display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start;margin:1rem 0 1.5rem">
+        <figure style="margin:0;text-align:center">
+          <img src="Cleo_BazaarRC.webp" alt="Bazaar right-click info window from the original game" width="300" height="163"
+               style="border:1px solid var(--border);border-radius:3px;display:block;image-rendering:pixelated" />
+          <figcaption style="font-size:0.72rem;color:var(--text-muted);margin-top:0.4rem">
+            Right-click panel — food and goods stock, employment status, walker activity
+          </figcaption>
+        </figure>
+        <figure style="margin:0;text-align:center">
+          <img src="Cleo_BazaarSO.webp" alt="Bazaar Special Orders window from the original game" width="300" height="183"
+               style="border:1px solid var(--border);border-radius:3px;display:block;image-rendering:pixelated" />
+          <figcaption style="font-size:0.72rem;color:var(--text-muted);margin-top:0.4rem">
+            Special Orders panel — Buy / Don't Buy toggle per commodity
+          </figcaption>
+        </figure>
+      </div>
+
+      <!-- ─── Developer reference ──────────────────────────── -->
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">All paths relative to the repository root.</p>
+
+        <details>
+          <summary>Building config — <code>src/scripts/buildings.js</code></summary>
+          <div class="details-body">
+            <p>The Bazaar definition is inside <span class="file-ref">src/scripts/buildings.js</span> at the <code>building_bazaar</code> block (line 234).</p>
+            <pre><code><span class="kw">building_bazaar</span> {
+  <span class="kw">animations</span> {
+    <span class="kw">base</span>        { pack:PACK_GENERAL, id:<span class="num">22</span> }          <span class="cmt">// standard appearance</span>
+    <span class="kw">fancy</span>       { pack:PACK_GENERAL, id:<span class="num">45</span> }          <span class="cmt">// upgraded appearance (des ≥ 30)</span>
+    <span class="kw">base_work</span>   { pack:PACK_GENERAL, id:<span class="num">22</span>, offset:<span class="num">0</span> }
+    <span class="kw">fancy_work</span>  { pack:PACK_GENERAL, id:<span class="num">45</span>, offset:<span class="num">0</span> }
+  }
+
+  <span class="kw">building_size</span>               : <span class="num">2</span>
+  <span class="kw">meta</span>                        { help_id: <span class="num">2</span>, text_id: <span class="num">97</span> }
+  <span class="kw">cost</span>                        [ <span class="num">8</span>, <span class="num">15</span>, <span class="num">30</span>, <span class="num">50</span>, <span class="num">100</span> ]  <span class="cmt">// VE … VH</span>
+  <span class="kw">laborers</span>                    [<span class="num">5</span>]
+  <span class="kw">fire_risk</span>                   [<span class="num">4</span>]
+  <span class="kw">damage_risk</span>                 [<span class="num">2</span>]
+  <span class="kw">desirability</span>                { value[<span class="num">-2</span>], step[<span class="num">1</span>], step_size[<span class="num">1</span>], range[<span class="num">6</span>] }
+
+  <span class="kw">max_search_distance</span>         : <span class="num">40</span>   <span class="cmt">// tiles buyer will travel</span>
+  <span class="kw">fancy_treshold_desirability</span> : <span class="num">30</span>   <span class="cmt">// upgrade threshold (note: typo in original)</span>
+  <span class="kw">min_houses_coverage</span>         : <span class="num">50</span>
+  <span class="kw">minimal_pick_food_amount</span>    : <span class="num">100</span>  <span class="cmt">// min units per food pickup trip</span>
+
+  <span class="cmt">// Restock thresholds: buyer fetches food when stock drops below these levels</span>
+  <span class="kw">pick_food_below</span> [<span class="num">600</span>, <span class="num">400</span>, <span class="num">200</span>, <span class="num">100</span>]
+  <span class="kw">pick_good_below</span> [<span class="num">150</span>, <span class="num">100</span>, <span class="num">50</span>,  <span class="num">25</span>]
+
+  <span class="kw">overlay</span>     : OVERLAY_BAZAAR_ACCESS
+  <span class="kw">flags</span> { is_food: <span class="kw">true</span> }
+}</code></pre>
+            <p>To change the buyer's maximum travel distance, edit <code>max_search_distance</code>. To adjust the upgrade threshold, edit <code>fancy_treshold_desirability</code>. The <code>pick_food_below</code> array controls at what stock level (per slot) the food buyer makes a new trip — lower values mean less frequent restocking.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>C++ implementation — <code>src/building/building_bazaar.h / .cpp</code></summary>
+          <div class="details-body">
+            <p><span class="file-ref">src/building/building_bazaar.h</span> declares <code>building_bazaar</code> (inherits <code>building_impl</code>). Key runtime data:</p>
+            <pre><code><span class="kw">struct</span> runtime_data_t {
+    resource_value inventory[<span class="num">8</span>];   <span class="cmt">// slots 0–3 food, 4–7 goods</span>
+    <span class="ty">short</span> pottery_demand;
+    <span class="ty">short</span> luxurygoods_demand;
+    <span class="ty">short</span> linen_demand;
+    <span class="ty">short</span> beer_demand;
+    <span class="ty">short</span> fetch_inventory_id;
+    sbitarray16 market_goods;       <span class="cmt">// bitmask of toggled-on goods</span>
+};</code></pre>
+            <p>Key methods:</p>
+            <ul style="font-size:0.82rem;line-height:1.9;padding-left:1.2rem">
+              <li><code>spawn_figure()</code> — spawns buyer and trader walkers based on stock and staffing</li>
+              <li><code>update_graphic()</code> — switches between <code>base</code> / <code>fancy</code> animation based on current desirability</li>
+              <li><code>idx_accepted(index)</code> — returns true if slot <em>index</em> is toggled on in Special Orders</li>
+              <li><code>toggle_idx_accepted(index)</code> — flips the Buy/Don't Buy state for a slot</li>
+              <li><code>get_storage_destination()</code> — returns the Granary or Storage Yard the buyer should walk to</li>
+              <li><code>max_food_stock() / max_goods_stock()</code> — maximum inventory per category</li>
+            </ul>
+            <p>JavaScript bindings in <span class="file-ref">src/building/building_bazaar_js.cpp</span> expose bazaar state to mission scripts (e.g. checking if the bazaar is active).</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Info window — <code>src/scripts/ui_bazaar_window.js</code></summary>
+          <div class="details-body">
+            <p>The right-click panel is defined in <span class="file-ref">src/scripts/ui_bazaar_window.js</span> as a <code>bazaar_info_window</code> bound to both <code>BUILDING_BAZAAR</code> and <code>BUILDING_BAZAAR_UP</code> (the upgraded variant). Window size: <strong>29×17 tiles</strong>.</p>
+            <pre><code><span class="kw">bazaar_info_window</span> {
+    related_buildings [BUILDING_BAZAAR, BUILDING_BAZAAR_UP]
+    ui {
+        background   : outer_panel({size[<span class="num">29</span>, <span class="num">17</span>]})
+        title        : text({font: FONT_LARGE_BLACK_ON_LIGHT, align:<span class="str">"center"</span>})
+        warning_text : text({pos[<span class="num">32</span>, <span class="num">36</span>], wrap:px(<span class="num">27</span>), multiline:<span class="kw">true</span>})
+
+        food0_icon   : resource_icon({pos[<span class="num">32</span>,  <span class="num">85</span>]})    <span class="cmt">// food row y=85</span>
+        food1_icon   : resource_icon({pos[<span class="num">142</span>, <span class="num">85</span>]})
+        food2_icon   : resource_icon({pos[<span class="num">252</span>, <span class="num">85</span>]})
+        food3_icon   : resource_icon({pos[<span class="num">362</span>, <span class="num">85</span>]})
+        good0_icon   : resource_icon({pos[<span class="num">32</span>,  <span class="num">110</span>]})   <span class="cmt">// goods row y=110</span>
+        good1_icon   : resource_icon({pos[<span class="num">142</span>, <span class="num">110</span>]})
+        good2_icon   : resource_icon({pos[<span class="num">252</span>, <span class="num">110</span>]})
+        good3_icon   : resource_icon({pos[<span class="num">362</span>, <span class="num">110</span>]})
+
+        workers_panel: inner_panel({pos[<span class="num">16</span>, <span class="num">136</span>], size[<span class="num">27</span>, <span class="num">4</span>]})
+        orders       : button({text:<span class="str">"${98.5}"</span>, onclick: show_window_by_id(<span class="str">"bazaar_orders_window"</span>)})
+    }
+}</code></pre>
+            <p>The <code>warning_text</code> field shows the current walker status: both active, buyer only, trader only, or "no goods stocked." Text strings come from the building's <code>meta_text_id</code> (97) — text group 97 in the localisation file, entries 1, 4, 10, 11, 12.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Game messages — <code>src/scripts/game_messages_en.js</code></summary>
+          <div class="details-body">
+            <table class="msg-table">
+              <thead><tr><th>Key</th><th>ID</th><th>Line</th><th>When shown</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><code>message_bazaar_history</code></td>
+                  <td>2</td>
+                  <td>15</td>
+                  <td>Help panel linked from the <code>[?]</code> button in the info window (<code>help_id: 2</code>). Covers buyer/trader mechanics, Special Orders, road planning, and desirability.</td>
+                </tr>
+              </tbody>
+            </table>
+            <p style="margin-top:0.6rem">Building name string: text group <strong>97</strong>, entry <strong>0</strong> (<code>text_id: 97</code>). Walker status strings are in group 97 entries 1–12. To change the in-game building name, update the localisation file at text ID 97.</p>
+          </div>
+        </details>
+
+      </div><!-- .dev-section -->
+
+      <div class="bld-nav">
+        <a href="granary.html">← Granary</a>
+        <span style="color:var(--text-muted)">Distribution</span>
+        <a href="storage-yard.html">Storage Yard →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>
