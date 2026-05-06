@@ -21,10 +21,7 @@
 #include "sound/sound_city.h"
 #include "game/gods.h"
 
-using e_advisor_tokens_t = token_holder<e_advisor, ADVISOR_NONE, ADVISOR_MAX>;
 e_advisor_tokens_t ANK_CONFIG_ENUM(e_advisor_tokens);
-
-using e_trade_status_tokens_t = token_holder<e_trade_status, TRADE_STATUS_NONE, TRADE_STATUS_MAX>;
 e_trade_status_tokens_t ANK_CONFIG_ENUM(e_trade_status_tokens);
 
 js_State *js_vm_state();

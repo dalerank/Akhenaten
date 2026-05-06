@@ -224,8 +224,10 @@ struct token_holder {
     static constexpr uint32_t N = static_cast<uint32_t>(end) - static_cast<uint32_t>(begin);
     using tokens = std::array<token, N+1>; // because have {0, 0} in last element
 
+    constexpr token end_token() const { return make_name<enum_type, end>(); }
+
     template<typename e_enum_type, e_enum_type enum_value>
-    constexpr token make_name() {
+    constexpr token make_name() const {
         return { enum_name<e_enum_type, enum_value>().name(), enum_value };
     }
 

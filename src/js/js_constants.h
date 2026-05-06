@@ -13,6 +13,6 @@ bool js_register_tokens(const T &tokens) {
     for (const auto &btype : tokens.values) {
         js_register_token(btype.id, btype.name);
     }
-
+    js_register_token(tokens.end_token().id, tokens.end_token().name);
     return true;
 }

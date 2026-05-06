@@ -29,6 +29,7 @@ enum e_advisor : uint8_t {
     ADVISOR_DIPLOMACY = 22,
     ADVISOR_MAX
 };
+using e_advisor_tokens_t = token_holder<e_advisor, ADVISOR_NONE, ADVISOR_MAX>;
 
 enum e_low_mood_reason : uint8_t {
     LOW_MOOD_NONE = 0,
@@ -60,6 +61,7 @@ enum e_trade_status : uint8_t {
 
     TRADE_STATUS_MAX
 };
+using e_trade_status_tokens_t = token_holder<e_trade_status, TRADE_STATUS_NONE, TRADE_STATUS_MAX>;
 
 enum e_availability : int8_t {
     NOT_AVAILABLE_YET = -1,
