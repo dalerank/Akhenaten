@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Firehouse — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .bld-header-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      margin-bottom: 2rem;
+    }
+    .bld-header-right { display: flex; flex-direction: column; gap: 1rem; }
+    .bld-image-wrap { text-align: center; }
+    .bld-image-wrap img { display: block; border: 1px solid var(--border); border-radius: 3px; image-rendering: pixelated; }
+    .bld-image-wrap figcaption { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.35rem; }
+    .bld-infobox { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.9rem 1.1rem; }
+    .bld-infobox h4 { margin: 0 0 0.6rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold); }
+    .bld-infobox dl { display: grid; grid-template-columns: auto 1fr; gap: 0.2rem 1rem; margin: 0; }
+    .bld-infobox dt { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; padding-top: 0.1rem; }
+    .bld-infobox dd { margin: 0; font-size: 0.85rem; color: var(--text); }
+    .bld-infobox .sep { grid-column: 1/-1; border: none; border-top: 1px solid var(--border); margin: 0.4rem 0; }
+    .bld-stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .bld-stat { text-align: center; }
+    .bld-stat .val { font-size: 1.3rem; font-weight: 700; color: var(--gold); display: block; }
+    .bld-stat .lbl { font-size: 0.7rem; color: var(--text-muted); }
+    .risk-none { color: var(--text-muted); }
+    .des-neg { color: #d07070; }
+    .chain-box {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+      padding: 0.8rem 1.1rem; margin: 1rem 0; display: flex; align-items: center;
+      gap: 0.7rem; font-size: 0.88rem; flex-wrap: wrap;
+    }
+    .chain-box .step { background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.25); border-radius: 3px; padding: 0.3rem 0.7rem; color: var(--text); white-space: nowrap; }
+    .chain-box .step.hub { background: rgba(201,168,76,0.18); border-color: rgba(201,168,76,0.5); font-weight: 700; color: var(--gold); }
+    .chain-box .arrow { color: var(--gold); font-size: 1.1rem; }
+    .walker-card { display: inline-flex; align-items: center; gap: 0.75rem; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.6rem 0.9rem; margin: 0.75rem 0; }
+    .walker-card img { image-rendering: pixelated; border: 1px solid var(--border); border-radius: 2px; }
+    .walker-card-info { font-size: 0.82rem; }
+    .walker-card-info strong { display: block; color: var(--gold); margin-bottom: 0.15rem; }
+    .walker-card-info span { color: var(--text-muted); }
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .kw { color: #c9a84c; } .num { color: #9ecbff; } .str { color: #7ec87e; } .cmt { color: #5a5650; font-style: italic; } .fn { color: #8aabdc; } .ev { color: #d0a0e0; }
+    .file-ref { display: inline-block; font-family: 'Consolas','Courier New',monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .msg-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+    .msg-table th, .msg-table td { padding: 0.3rem 0.6rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+    .msg-table th { color: var(--text-muted); font-weight: normal; }
+    .bld-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .bld-nav a { color: var(--gold); }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+    .orig-screenshots { display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-start; margin: 1rem 0; }
+    .orig-screenshots figure { margin: 0; }
+    .orig-screenshots figcaption { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.3rem; text-align: center; }
+    .orig-screenshots img { display: block; border: 1px solid var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">← All Buildings</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Municipal</div>
+        <ul>
+          <li><a href="firehouse.html" class="active">Firehouse</a></li>
+          <li><a href="architect-post.html">Architect's Post</a></li>
+          <li><a href="police-station.html">Police Station</a></li>
+          <li><a href="courthouse.html">Courthouse</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#mechanics">Mechanics</a></li>
+          <li><a href="#fire-spread">Fire spread</a></li>
+          <li><a href="#placement">Placement</a></li>
+          <li><a href="#tips">Tips</a></li>
+          <li><a href="#original">Original game</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Buildings</a> /
+        Firehouse
+      </div>
+
+      <h1>Firehouse</h1>
+
+      <div class="bld-header-grid">
+        <figure class="bld-image-wrap">
+          <img src="Cleo_Firehouse.webp" alt="Firehouse building sprite" width="58" height="61" />
+          <figcaption>Firehouse</figcaption>
+        </figure>
+        <div class="bld-header-right">
+          <div>
+            <p>The <strong>Firehouse</strong> is the city's primary defence against fire. It dispatches roaming <strong>Fire Marshals</strong> who patrol the road network and reduce the fire risk of every building they pass. Should a fire break out nearby, the Fire Marshal immediately abandons his patrol and rushes to extinguish the flames.</p>
+            <p>Fire is one of the most destructive hazards in the game — it spreads rapidly to adjacent buildings and can consume whole city blocks if left unchecked. Industrial buildings and poorly-staffed housing are the most vulnerable; certain buildings such as scribal schools and libraries increase their fire risk especially quickly.</p>
+            <p>Ironically, Firehouses themselves are susceptible to fire, though this is never a practical problem as long as the building is properly staffed. Citizens are somewhat reluctant to live next to one — the Firehouse carries a minor negative desirability effect.</p>
+          </div>
+          <div class="bld-infobox">
+            <h4>Stats</h4>
+            <div class="bld-stat-row" style="margin-bottom:0.9rem">
+              <div class="bld-stat"><span class="val">1×1</span><span class="lbl">Size</span></div>
+              <div class="bld-stat"><span class="val">6</span><span class="lbl">Workers</span></div>
+              <div class="bld-stat"><span class="val des-neg">−2</span><span class="lbl">Desirability</span></div>
+            </div>
+            <hr class="sep" />
+            <dl>
+              <dt>Cost (Normal)</dt>
+              <dd>25 Db</dd>
+              <dt>Cost by difficulty</dt>
+              <dd style="font-size:0.78rem;color:var(--text-muted)">
+                VE 6 · Easy 12 · <strong style="color:var(--text)">Normal 25</strong> · Hard 40 · VH 60
+              </dd>
+              <dt>Labor category</dt>
+              <dd>Infrastructure</dd>
+              <dt>Fire risk</dt>
+              <dd class="risk-none">None (fireproof)</dd>
+              <dt>Damage risk</dt>
+              <dd>Low</dd>
+              <dt>Overlay</dt>
+              <dd>Fire <kbd>F</kbd></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Service flow ───────────────────────────────────── -->
+      <div class="chain-box">
+        <span class="step hub">Firehouse</span>
+        <span class="arrow">→</span>
+        <span class="step">Fire Marshal (roaming walker)</span>
+        <span class="arrow">→</span>
+        <span class="step">Reduces fire risk of passed buildings</span>
+        <span class="arrow">→</span>
+        <span class="step">Responds to fires within range</span>
+      </div>
+
+      <!-- ─── Overview ──────────────────────────────────────── -->
+      <h2 id="overview">Overview</h2>
+      <p>Fire was an ever-present danger in ancient urban settlements built from wood, reed matting, and dried mud brick. Dense residential districts — where cooking fires and oil lamps were in constant use — could ignite quickly and burn for hours. Egyptian cities, like their Roman counterparts, maintained organised fire-watch services to patrol the streets and respond to outbreaks before they spread.</p>
+      <p>In the game, the Firehouse models this as a roaming service: Fire Marshals walk circuits through the street network, passively lowering risk as they go. The building itself animates when staffed, showing activity inside. The <strong>Fire overlay</strong> (hotkey <kbd>F</kbd>) is the most useful tool for planning Firehouse placement — it highlights dangerous buildings in red and shows the active patrol routes.</p>
+
+      <!-- ─── Mechanics ─────────────────────────────────────── -->
+      <h2 id="mechanics">Mechanics</h2>
+
+      <h3>Fire Marshal</h3>
+      <p>The Firehouse sends out one <strong>Fire Marshal</strong>, a roaming walker who travels along the road network. Every building he passes has its fire risk reduced. The route is recalculated at each departure, favouring areas with the highest accumulated fire risk — so the marshal naturally gravitates toward the most dangerous parts of his coverage zone.</p>
+
+      <div class="walker-card">
+        <img src="Cleo_FireMarshalPort.webp" alt="Fire Marshal portrait" width="55" height="79" />
+        <div class="walker-card-info">
+          <strong>Fire Marshal</strong>
+          <span>Roaming walker · Range 43 tiles · Re-spawns every 4 days<br>Speed 54.4 tiles/month · ~53 tiles sporadic range</span>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:0.5rem;align-items:center;margin:0.5rem 0 0.75rem;">
+        <img src="Cleo_FireMarshal1.webp" alt="Fire Marshal walking" width="37" height="37" style="image-rendering:pixelated;border:1px solid var(--border);border-radius:2px;" />
+        <img src="Cleo_FireMarshal2.webp" alt="Fire Marshal walking" width="39" height="37" style="image-rendering:pixelated;border:1px solid var(--border);border-radius:2px;" />
+        <span style="font-size:0.78rem;color:var(--text-muted);margin-left:0.25rem;">Walker animations</span>
+      </div>
+
+      <ul>
+        <li><strong>Reliable range</strong>: 43 tiles. Buildings within this radius are consistently serviced on every patrol.</li>
+        <li><strong>Sporadic range</strong>: ~53 tiles. The marshal occasionally wanders further but coverage is unreliable at this distance.</li>
+        <li><strong>Re-spawn delay</strong>: 4 days. A new marshal departs 4 days after the previous one returns.</li>
+        <li><strong>Fire response</strong>: if a fire breaks out within the marshal's roaming area, he immediately diverts to fight it. The further away the fire, the more it may spread before he arrives.</li>
+      </ul>
+
+      <p>The Fire Marshal is restricted to roads and cannot cut across empty terrain. Like all roaming walkers, he moves only on roads, bridges, gates, and adjacent passable tiles. Plan your road network to ensure his patrol naturally covers the most vulnerable buildings.</p>
+
+      <!-- ─── Fire spread ─────────────────────────────────────── -->
+      <h2 id="fire-spread">Fire Spread</h2>
+      <p>Fire does not simply destroy one building — it spreads. A burning structure can ignite its neighbours on subsequent ticks, potentially consuming entire blocks. The risk of spreading depends on:</p>
+      <ul>
+        <li><strong>Density</strong>: tightly packed buildings with no gaps between them spread fire more easily.</li>
+        <li><strong>Building type</strong>: industrial buildings (Potters, Breweries), run-down housing, and certain civic buildings accumulate fire risk faster than others.</li>
+        <li><strong>Staffing</strong>: understaffed buildings have elevated fire risk. A fully-staffed Firehouse itself carries zero fire risk.</li>
+      </ul>
+      <p>Open spaces — plazas, gardens, roads — act as natural firebreaks and can slow or stop the spread of flames. Placing occasional gaps in dense residential zones is a useful defensive measure.</p>
+
+      <!-- ─── Placement ─────────────────────────────────────── -->
+      <h2 id="placement">Placement</h2>
+      <p>The Firehouse needs only a <strong>road connection</strong> to operate — it can be placed anywhere with road access. Placement strategy should be driven by the <strong>Fire overlay</strong> (<kbd>F</kbd>), which colour-codes every building by current risk level:</p>
+      <ul>
+        <li>Prioritise coverage of industrial districts — Potters, Breweries, and similar workshops are the most fire-prone.</li>
+        <li>Ensure the marshal's 43-tile patrol arc reaches all buildings you want covered. On a typical grid, one Firehouse covers a corridor roughly 20 tiles wide and 43 tiles long.</li>
+        <li>In very dense housing blocks, or districts where several high-risk buildings cluster together, a second Firehouse may be needed because the marshal covers less ground per pass through densely built areas.</li>
+        <li>Keep the Firehouse itself away from the heart of a residential block — the −2 desirability effect is small but affects its immediate neighbours.</li>
+      </ul>
+
+      <!-- ─── Tips ──────────────────────────────────────────── -->
+      <h2 id="tips">Tips</h2>
+      <ul>
+        <li>Open the <strong>Fire overlay</strong> (<kbd>F</kbd>) regularly, especially after adding new buildings or industrial zones. The overlay shows which areas are accumulating risk before a fire actually starts.</li>
+        <li>A Firehouse at <strong>50% staffing or below</strong> still dispatches a marshal, but his patrol range and frequency degrade. Keep labour supply adequate.</li>
+        <li>If a fire breaks out far from any Firehouse, it may have time to spread to two or three buildings before the marshal arrives. A second Firehouse in a large industrial district reduces response time significantly.</li>
+        <li>Libraries and scribal schools elevate the fire risk of nearby housing quickly. Place a Firehouse within range of any education cluster.</li>
+        <li>Road connectivity matters: a meandering road layout forces the marshal to travel longer distances before reaching high-risk areas. Straight access roads from the Firehouse to the industrial zone give faster response.</li>
+      </ul>
+
+      <!-- ─── Original game ─────────────────────────────────── -->
+      <h2 id="original">In the original game</h2>
+      <div class="orig-screenshots">
+        <figure>
+          <img src="Cleo_FirehouseRC.webp" alt="Firehouse right-click info window" width="300" height="229" />
+          <figcaption>Right-click info window</figcaption>
+        </figure>
+      </div>
+
+      <!-- ─── Developer reference ───────────────────────────── -->
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+
+        <details>
+          <summary>JS config — <span class="file-ref">building_firehouse.js</span></summary>
+          <div class="details-body">
+<pre><span class="kw">building_firehouse</span> {
+    <span class="kw">animations</span> {
+        _pack { pack:<span class="str">PACK_GENERAL</span> }
+        preview { id:<span class="num">78</span> }
+        base    { id:<span class="num">78</span> }
+        work    { pos [<span class="num">25</span>, <span class="num">-30</span>], id:<span class="num">78</span>, offset:<span class="num">1</span>, max_frames:<span class="num">11</span> }
+    }
+
+    labor_category      : <span class="str">LABOR_CATEGORY_INFRASTRUCTURE</span>
+    min_houses_coverage : <span class="num">50</span>
+    meta { help_id: <span class="num">355</span>, text_id: <span class="num">164</span> }
+    info_sound  : <span class="str">"Wavs/prefecture.wav"</span>
+    building_size : <span class="num">1</span>
+    cost        [ <span class="num">6</span>, <span class="num">12</span>, <span class="num">25</span>, <span class="num">40</span>, <span class="num">60</span> ]
+    desirability { value[<span class="num">-2</span>], step[<span class="num">1</span>], step_size[<span class="num">1</span>], range[<span class="num">2</span>] }
+    laborers    [<span class="num">6</span>]
+    fire_risk   [<span class="num">0</span>]
+    damage_risk [<span class="num">2</span>]
+    flags {
+        is_infrastructure: <span class="kw">true</span>
+    }
+}</pre>
+          </div>
+        </details>
+
+        <details>
+          <summary>C++ — <span class="file-ref">building_firehouse.h</span> / <span class="file-ref">building_firehouse.cpp</span></summary>
+          <div class="details-body">
+            <p>Runtime state tracked per firehouse instance:</p>
+<pre><span class="kw">struct</span> <span class="fn">runtime_data_t</span> {
+    <span class="kw">int</span> buildings_served_this_month;
+    <span class="kw">int</span> buildings_served_this_year;
+    <span class="kw">int</span> total_buildings_served;
+    <span class="kw">int</span> months_active;
+};</pre>
+            <p>Key methods:</p>
+            <ul>
+              <li><code>spawn_figure()</code> — spawns the Fire Marshal via <code>common_spawn_roamer(FIGURE_FIREMAN, min_houses_coverage, ACTION_70_FIREMAN_CREATED)</code></li>
+              <li><code>update_month()</code> — accumulates buildings served; increments <code>months_active</code> if at least one building was served</li>
+              <li><code>update_year()</code> — resets <code>buildings_served_this_year</code></li>
+              <li><code>get_overlay()</code> → <code>OVERLAY_FIRE</code></li>
+              <li><code>animation_speed()</code> → 4</li>
+            </ul>
+            <p>Debug console commands: <code>fire_no</code> (zero all fire risk), <code>fire_start [n]</code> (ignite n random buildings).</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Fire Marshal figure — <span class="file-ref">figures.js</span> / <span class="file-ref">figure_fireman.cpp</span></summary>
+          <div class="details-body">
+<pre><span class="kw">figure_fireman</span> {
+    big_image { pack:<span class="str">PACK_UNLOADED</span>, id:<span class="num">25</span>, offset:<span class="str">FIGURE_FIREMAN</span> }
+
+    <span class="cmt">// Situation phrases (group 242)</span>
+    fireman_fighting_fire              { sound:<span class="str">"fireman_e01.wav"</span>, group:<span class="num">242</span>, text:<span class="num">0</span> }
+    fireman_going_to_fire              { sound:<span class="str">"fireman_e02.wav"</span>, group:<span class="num">242</span>, text:<span class="num">1</span> }
+    fireman_fighting_fire_also         { sound:<span class="str">"fireman_e03.WAV"</span>, group:<span class="num">242</span>, text:<span class="num">2</span> }
+    fireman_desease_can_start          { sound:<span class="str">"fireman_g01.WAV"</span>, group:<span class="num">242</span>, text:<span class="num">3</span> }
+    fireman_no_food_in_city            { sound:<span class="str">"fireman_g02.WAV"</span>, group:<span class="num">242</span>, text:<span class="num">4</span> }
+    fireman_city_not_safety            { sound:<span class="str">"fireman_g03.WAV"</span>, group:<span class="num">242</span>, text:<span class="num">5</span> }
+    fireman_need_workers               { sound:<span class="str">"fireman_g04.WAV"</span>, group:<span class="num">242</span>, text:<span class="num">6</span> }
+    fireman_hight_fire_level           { sound:<span class="str">"fireman_g06.WAV"</span>, group:<span class="num">242</span>, text:<span class="num">7</span> }
+    fireman_gods_are_angry             { sound:<span class="str">"fireman_g05.WAV"</span>, group:<span class="num">242</span>, text:<span class="num">8</span> }
+    fireman_need_more_workers          { sound:<span class="str">"fireman_g07.WAV"</span>, group:<span class="num">242</span>, text:<span class="num">9</span> }
+    fireman_low_entertainment          { sound:<span class="str">"fireman_g08.WAV"</span>, group:<span class="num">242</span>, text:<span class="num">10</span> }
+    fireman_gods_are_pleasures         { sound:<span class="str">"fireman_g09.WAV"</span>, group:<span class="num">242</span>, text:<span class="num">11</span> }
+    fireman_city_is_amazing            { sound:<span class="str">"fireman_g10.wav"</span>, group:<span class="num">242</span>, text:<span class="num">12</span> }
+}</pre>
+          </div>
+        </details>
+
+        <details>
+          <summary>Game message — <span class="file-ref">game_messages_en.js</span></summary>
+          <div class="details-body">
+            <table class="msg-table">
+              <tr><th>Field</th><th>Value</th></tr>
+              <tr><td>ID</td><td>355</td></tr>
+              <tr><td>Size</td><td>30 × 20</td></tr>
+              <tr><td>Title</td><td>Firehouse</td></tr>
+            </table>
+            <p style="margin-top:0.75rem;font-size:0.82rem;color:var(--text-muted)">Some buildings in the city can catch fire. Likely candidates include run-down housing and industrial buildings, like Potters. If you do nothing to stop it, fire can spread through the city, destroying whole sections at one time. To prevent this, build Firehouses near buildings that are likely to catch fire. Fire marshals from Firehouses roam the city and reduce a building's risk of catching fire as they pass by. Should a fire break out, nearby fire marshals proceed to the scene to extinguish the flames. The fire overlay is a helpful guide to fire prevention.</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="bld-nav">
+        <span></span>
+        <a href="index.html">All Buildings →</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
