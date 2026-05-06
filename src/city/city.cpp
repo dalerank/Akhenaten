@@ -379,7 +379,10 @@ bool city_t::generate_trader_from(empire_city &city) {
         trades_in_city += city.trader_figure_ids[i] != 0 ? 1 : 0;
     }
 
-    verify_no_crash(city.max_traders > 0);
+    if (city.max_traders == 0) {
+        return false;
+    }
+
     if (trades_in_city >= city.max_traders) {
         return false;
     }
@@ -397,7 +400,7 @@ bool city_t::generate_trader_from(empire_city &city) {
         const bool has_river_entry = scenario_map_has_river_entry();
         const bool can_sea_trade = !city_trade_has_sea_trade_problems();
         if (has_doks && has_river_entry && can_sea_trade) {
-            g_empire_traders.create_trader(city.route_id, -1);            
+            g_empire_traders.create_trader(city.route_id, -1);
             return true;
         }
     } else {
