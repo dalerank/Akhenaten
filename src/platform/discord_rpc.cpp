@@ -136,8 +136,8 @@ bool discord_rpc_t::impl::is_connected() const {
     return fd >= 0;
 }
 
-bool discord_rpc_t::impl::raw_write(const void* buf, uint32_t len) {
-    const char* ptr = (const char*)buf;
+bool discord_rpc_t::impl::raw_write(pcstr buf, uint32_t len) {
+    const char* ptr = buf;
     uint32_t remaining = len;
     while (remaining > 0) {
         ssize_t n = write(fd, ptr, remaining);
