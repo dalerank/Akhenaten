@@ -20,6 +20,15 @@ function advisor_autoconfig_section(advisor) {
     }
 }
 
+function window_advisors_show() {
+    window_advisors_prepare_opening()
+    var section = advisor_autoconfig_section(game.last_advisor)
+    if (!section) {
+        return
+    }
+    window_show_by_id(section)
+}
+
 function window_advisors_show_advisor(advisor) {
     var avail = city.is_advisor_available(advisor)
     if (avail === 0 || avail === -1) {
@@ -65,13 +74,13 @@ function show_advisor_window(advisor) {
 
 function window_advisors_show_checked() {
     var avail = 0
-    var last = __game_settings.last_advisor
+    var last = game.last_advisor
     if (city.is_advisor_available(last)) {
         avail = 1
     } else {
         for (var adv = ADVISOR_NONE + 1; adv < ADVISOR_MAX; adv++) {
             if (city.is_advisor_available(adv)) {
-                __game_settings.last_advisor = adv
+                game.last_advisor = adv
                 avail = 1
                 break
             }
@@ -86,7 +95,7 @@ function window_advisors_show_checked() {
 }
 
 function advisors_toolbar_refresh(window, advisor) {
-    __game_settings.last_advisor = advisor
+    game.last_advisor = advisor
 
     window.labor_btn.selected = (ADVISOR_LABOR == advisor)
     window.military_btn.selected = (ADVISOR_MILITARY == advisor)
@@ -126,7 +135,7 @@ function on_event_show_advisor_hotkey(ev) {
         return
     }
 
-    if (__game_settings.last_advisor === ev.advisor) {
+    if (game.last_advisor === ev.advisor) {
         ui.window_city_show()
     } else {
         window_advisors_show_advisor(ev.advisor)

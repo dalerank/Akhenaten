@@ -24,7 +24,6 @@ struct game_settings {
     vec2i display_size;
 
     // persistent game state
-    int last_advisor;
     bstring32 player_name;
     bstring32 player_name_utf8;
     // personal savings

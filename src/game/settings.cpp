@@ -24,8 +24,6 @@ game_settings::game_settings() {
 void game_settings::load_default_settings() {
     display_size = {800, 600};
 
-    last_advisor = ADVISOR_NONE;
-
     clear_personal_savings();
 }
 
@@ -38,11 +36,10 @@ void game_settings::load_settings(buffer* buf) {
     buf->read_u8();
     buf->skip(6);
     buf->skip(4);
-    int tmp = buf->read_i32();
+    buf->read_i32();
     buf->read_raw(player_name.data(), player_name.capacity);
     buf->skip(16);
-    last_advisor = buf->read_i32();
-    //last_advisor = ADVISOR_TRADE; // debug
+    buf->read_i32();
     buf->skip(4);                      // int save_game_mission_id;
     buf->read_i32();
     buf->skip(4); // int starting_kingdom;
@@ -51,7 +48,7 @@ void game_settings::load_settings(buffer* buf) {
     buf->skip(4); // int is_custom_scenario;
     buf->read_u8();
     buf->read_u8(); // warnings - moved to game_features::gameopt_warnings
-    tmp = buf->read_u8();
+    buf->read_u8();
     buf->skip(1); // unsigned char autoclear_enabled;
     buf->read_i32();
     buf->read_i32();
@@ -105,7 +102,7 @@ void game_settings::save() {
     buf->write_i32(0);
     buf->write_raw(player_name.data(), player_name.capacity);
     buf->skip(16);
-    buf->write_i32(last_advisor);
+    buf->write_i32(0);
     buf->skip(4); // int save_game_mission_id;
     buf->write_i32(0);
     buf->skip(4); // int starting_kingdom;

@@ -39,6 +39,7 @@ game = extend(__game, {
     get_last_loaded_file: __game_get_last_loaded_file
     editor_load_scenario: __game_editor_load_scenario
     editor_write_scenario: __game_editor_write_scenario
+    last_advisor: ADVISOR_NONE
 })
 
 screen = extend(__screen, {
