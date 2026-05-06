@@ -42,7 +42,7 @@ bool sound_manager_t::speech_file_exist(xstring filename, vfs::path& fs_path) {
         return false;
     }
 
-    return std::filesystem::exists(fs_path.c_str());
+    return vfs::file_exists(fs_path.c_str());
 }
 
 bool sound_manager_t::speech_play_file(xstring filename, int volume) {

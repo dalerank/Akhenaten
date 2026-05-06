@@ -1,6 +1,9 @@
 #include "lame_helper.h"
 
 #include <memory>
+#include <algorithm>
+#include <vector>
+#include <cstring>
 
 #include "core/log.h"
 
@@ -47,102 +50,113 @@ void lame_helper::write_wave_header(FILE * const fp, int pcmbytes, int freq, int
 }
 
 vfs::reader lame_helper::decode(const char* mp3_in) {
-	int read, i, samples;
-	long wavsize = 0; // use to count the number of mp3 byte read, this is used to write the length of the wave file
-	long cumulative_read = 0;
-
-	short int pcm_l[PCM_SIZE], pcm_r[PCM_SIZE];
-	unsigned char mp3_buffer[MP3_SIZE];
-
-	FILE* mp3 = fopen(mp3_in, "rb");
-	if(mp3 == NULL) {
-		logs::info("FATAL ERROR: file '%s' can't be open for read. Aborting!\n", mp3_in);
-		return vfs::reader();
-	}
-
-	fseek(mp3, 0, SEEK_END);
-    long MP3_total_size = ftell(mp3);
-    fseek(mp3, 0, SEEK_SET);
-
-	vfs::path pcm_out = mp3_in;
-	vfs::file_change_extension(pcm_out.data(), "wav");
-
-	FILE* pcm = fopen(pcm_out, "wb");
-	if(pcm == NULL)	{
-		logs::info("FATAL ERROR: file '%s' can't be open for write. Aborting!\n", pcm_out.c_str());
-		return vfs::reader();
-	}
-
-	
-	lame_t lame = lame_init();
-	lame_set_decode_only(lame, 1);
-	if(lame_init_params(lame) == -1) {
-		logs::info("FATAL ERROR: parameters failed to initialize properly in lame. Aborting!\n", pcm_out.c_str());
-		return vfs::reader();
-	}
-
-	hip_t hip = hip_decode_init();
-	
-	mp3data_struct mp3data;
-	memset(&mp3data, 0, sizeof(mp3data));
-	
-	int nChannels = -1;
-	int nSampleRate = -1;
-	int mp3_len;
-
-	while((read = fread(mp3_buffer, sizeof(char), MP3_SIZE, mp3)) > 0) {
-		mp3_len = read;
-		cumulative_read += read * sizeof(char);
-		do {
-			samples = hip_decode1_headers(hip, mp3_buffer, mp3_len, pcm_l, pcm_r, &mp3data);
-			wavsize += samples;
-
-			if(mp3data.header_parsed == 1) { 
-				if(nChannels < 0) {//reading for the first time
-					//Write the header
-					write_wave_header(pcm, 0x7FFFFFFF, mp3data.samplerate, mp3data.stereo, 16); //unknown size, so write maximum 32 bit signed value
-				}
-				nChannels = mp3data.stereo;
-				nSampleRate = mp3data.samplerate;
-			}
-
-			if(samples > 0 && mp3data.header_parsed != 1) {
-				logs::info("WARNING: lame decode error occured!");
-				break;
-			}
-
-			if(samples > 0) {
-				for(i = 0 ; i < samples; i++) {
-					fwrite((char*)&pcm_l[i], sizeof(char), sizeof(pcm_l[i]), pcm);
-					if(nChannels == 2) {
-						fwrite((char*)&pcm_r[i], sizeof(char), sizeof(pcm_r[i]), pcm);
-					}
-				}
-			}
-			mp3_len = 0;
-
-		} while(samples>0);
-	}
-
-	i = (16 / 8) * mp3data.stereo;
-    if (wavsize <= 0) {
-       wavsize = 0;
-    } else if (wavsize > 0xFFFFFFD0 / i)  {
-        wavsize = 0xFFFFFFD0;
-    } else {
-        wavsize *= i;
+    vfs::reader mp3 = vfs::file_open(mp3_in, "rb");
+    if (!mp3) {
+        logs::info("FATAL ERROR: file '%s' can't be opened for read. Aborting!", mp3_in);
+        return vfs::reader();
     }
-	
-	if (!fseek(pcm, 0l, SEEK_SET)) { //seek back and adjust length
-		write_wave_header(pcm, (int)wavsize, mp3data.samplerate, mp3data.stereo, 16);
-	} else {
-		logs::info("WARNING: can't seek back to adjust length in wave header!");
-	}
 
-	hip_decode_exit(hip);
-	lame_close(lame);
-	fclose(mp3);
-	fclose(pcm);
+    short int pcm_l[PCM_SIZE], pcm_r[PCM_SIZE];
+    unsigned char mp3_buffer[MP3_SIZE];
+    std::vector<uint8_t> pcm_data;
 
-	return vfs::file_open(pcm_out);
+    lame_t lame = lame_init();
+    lame_set_decode_only(lame, 1);
+    if (lame_init_params(lame) == -1) {
+        logs::info("FATAL ERROR: parameters failed to initialize properly in lame. Aborting!");
+        lame_close(lame);
+        return vfs::reader();
+    }
+
+    hip_t hip = hip_decode_init();
+    mp3data_struct mp3data;
+    memset(&mp3data, 0, sizeof(mp3data));
+
+    int channels = 0;
+    int sample_rate = 0;
+    size_t offset = 0;
+
+    while (offset < (size_t)mp3->size()) {
+        const size_t chunk_size = std::min<size_t>(MP3_SIZE, (size_t)mp3->size() - offset);
+        memcpy(mp3_buffer, (const uint8_t*)mp3->data() + offset, chunk_size);
+        offset += chunk_size;
+
+        int mp3_len = (int)chunk_size;
+        int samples = 0;
+        do {
+            samples = hip_decode1_headers(hip, mp3_buffer, mp3_len, pcm_l, pcm_r, &mp3data);
+
+            if (mp3data.header_parsed == 1) {
+                channels = mp3data.stereo;
+                sample_rate = mp3data.samplerate;
+            }
+
+            if (samples > 0 && mp3data.header_parsed != 1) {
+                logs::info("WARNING: lame decode error occurred while decoding '%s'", mp3_in);
+                break;
+            }
+
+            if (samples > 0) {
+                const size_t frame_bytes = sizeof(short int) * (channels == 2 ? 2 : 1);
+                const size_t old_size = pcm_data.size();
+                pcm_data.resize(old_size + samples * frame_bytes);
+
+                uint8_t* out = pcm_data.data() + old_size;
+                for (int i = 0; i < samples; ++i) {
+                    memcpy(out, &pcm_l[i], sizeof(short int));
+                    out += sizeof(short int);
+                    if (channels == 2) {
+                        memcpy(out, &pcm_r[i], sizeof(short int));
+                        out += sizeof(short int);
+                    }
+                }
+            }
+
+            mp3_len = 0;
+        } while (samples > 0);
+    }
+
+    hip_decode_exit(hip);
+    lame_close(lame);
+
+    if (channels <= 0 || sample_rate <= 0) {
+        logs::info("FATAL ERROR: unable to decode '%s' into PCM data", mp3_in);
+        return vfs::reader();
+    }
+
+    const int pcm_bytes = (int)pcm_data.size();
+    const int total_bytes = pcm_bytes + 44;
+    uint8_t* wav_data = (uint8_t*)malloc(total_bytes);
+    if (!wav_data) {
+        return vfs::reader();
+    }
+
+    auto write_u16 = [] (uint8_t* dst, int val) {
+        dst[0] = (uint8_t)(val & 0xff);
+        dst[1] = (uint8_t)((val >> 8) & 0xff);
+    };
+    auto write_u32 = [] (uint8_t* dst, int val) {
+        dst[0] = (uint8_t)(val & 0xff);
+        dst[1] = (uint8_t)((val >> 8) & 0xff);
+        dst[2] = (uint8_t)((val >> 16) & 0xff);
+        dst[3] = (uint8_t)((val >> 24) & 0xff);
+    };
+
+    memcpy(wav_data + 0, "RIFF", 4);
+    write_u32(wav_data + 4, pcm_bytes + 44 - 8);
+    memcpy(wav_data + 8, "WAVEfmt ", 8);
+    write_u32(wav_data + 16, 16);
+    write_u16(wav_data + 20, 1);
+    write_u16(wav_data + 22, channels);
+    write_u32(wav_data + 24, sample_rate);
+    write_u32(wav_data + 28, sample_rate * channels * 2);
+    write_u16(wav_data + 32, channels * 2);
+    write_u16(wav_data + 34, 16);
+    memcpy(wav_data + 36, "data", 4);
+    write_u32(wav_data + 40, pcm_bytes);
+    if (pcm_bytes > 0) {
+        memcpy(wav_data + 44, pcm_data.data(), pcm_bytes);
+    }
+
+    return std::make_shared<vfs::data_reader>(mp3_in, wav_data, total_bytes);
 }
