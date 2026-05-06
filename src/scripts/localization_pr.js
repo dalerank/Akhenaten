@@ -89,4 +89,6 @@ localization_pr = [
      { key: "#TR_HOTKEY_SET_BOOKMARK_4", text:"Definir marcador 4"},
      { key: "#TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO", text:"Mostrar informações de batalha"},
      { key: "#TR_HOTKEY_EDIT_TITLE", text:"Nova tecla de atalho"}
+     { key: "#mansion_protected_by_police", text:"Protegido pela polícia"}
+     { key: "#mansion_not_protected_theft", text:"Sem proteção — ladrões podem roubar as poupanças"}
 ]

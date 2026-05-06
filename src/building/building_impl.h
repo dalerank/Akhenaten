@@ -70,6 +70,7 @@ public:
     virtual void set_water_access_tiles(const water_access_tiles &tiles) {}
     virtual void start_production() {}
     virtual void debug_draw_properties() {}
+    virtual bool is_protected_by_police() const { return false; }
 
     virtual void remove_worker(figure_id fid) {}
     virtual void add_workers(figure_id fid) {}

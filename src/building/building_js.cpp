@@ -1,5 +1,6 @@
 #include "building.h"
 
+#include "building_mansion.h"
 #include "grid/building.h"
 #include "grid/road_access.h"
 #include "core/bstring.h"
@@ -25,6 +26,15 @@ bool __building_is_valid(int bid) {
     return building_get(bid)->is_valid();
 }
 ANK_FUNCTION_1(__building_is_valid)
+
+bool __building_is_protected_by_police(int bid) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return false;
+    }
+    return b->dcast()->is_protected_by_police();
+}
+ANK_FUNCTION_1(__building_is_protected_by_police)
 
 int __building_des_influence_value(int bid) {
     return (int)building_get(bid)->des_influence.value;

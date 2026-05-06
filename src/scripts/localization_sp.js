@@ -88,4 +88,6 @@ localization_sp = [
      {key:"#TR_HOTKEY_SET_BOOKMARK_4", text:"Definir atajo de mapa 4"},
      {key:"#TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO", text:"Activar información de batalla"},
      {key:"#TR_HOTKEY_EDIT_TITLE", text:"Presiona nueva tecla"}
+     {key:"#mansion_protected_by_police", text:"Protegido por la policía"}
+     {key:"#mansion_not_protected_theft", text:"Sin protección: los ladrones pueden robar los ahorros"}
 ]

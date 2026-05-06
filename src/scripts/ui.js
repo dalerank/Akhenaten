@@ -68,6 +68,7 @@ import ui_water_lift_window
 import ui_scribal_school_window
 import ui_infrastructure_window
 import ui_palace_window
+import ui_mansion_window
 import ui_water_supply_window
 import ui_temple_info_window
 import ui_shrine_info_window

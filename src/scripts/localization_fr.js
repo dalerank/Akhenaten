@@ -145,4 +145,6 @@ localization_fr = [
   { key:"#TR_ADVISOR_BIRTHS_LAST_YEAR", text:"Naissances l'an dernier :"},
   { key:"#TR_ADVISOR_DEATHS_LAST_YEAR", text:"Morts l'an dernier :"},
   { key:"#TR_ADVISOR_TOTAL_POPULATION", text:"résidents total"}
+  { key:"#mansion_protected_by_police", text:"Protégé par la police"}
+  { key:"#mansion_not_protected_theft", text:"Non protégé — des voleurs peuvent dérober vos économies"}
 ]

@@ -22,7 +22,7 @@ public:
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
     
-    bool is_protected_by_police() const;
+    virtual bool is_protected_by_police() const override;
     static void check_theft_from_mansions();
 
     static bool exist_in_city();

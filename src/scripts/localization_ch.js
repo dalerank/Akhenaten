@@ -90,4 +90,6 @@ localization_ch = [
      { key:"#TR_HOTKEY_SET_BOOKMARK_4", text:"設定視角標簽 4"},
      { key:"#TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO", text:"戰鬥資訊切換"},
      { key:"#TR_HOTKEY_EDIT_TITLE", text:"按下新熱鍵"}
+     { key:"#mansion_protected_by_police", text:"有警察保護"}
+     { key:"#mansion_not_protected_theft", text:"未受保護——盜賊可能竊取積蓄"}
 ]

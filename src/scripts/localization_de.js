@@ -466,6 +466,8 @@ localization_de = [
   {key: "#tax_collector_robbed", group:19, id:190}
   {key: "#courthouse_robbed", group:19, id:191}
   {key: "#mansion_destroyed", group:19, id:192}
+  {key: "#mansion_protected_by_police", text:"Geschützt durch die Polizei"}
+  {key: "#mansion_not_protected_theft", text:"Nicht geschützt – Diebe können Ersparnisse stehlen"}
   {key: "#palace_destroyed", group:19, id:193}
   {key: "#tax_collector_destroyed", group:19, id:194}
   {key: "#courthouse_destroyed", group:19, id:195}

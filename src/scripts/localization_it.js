@@ -90,4 +90,6 @@ localization_it = [
      {key:"#TR_HOTKEY_SET_BOOKMARK_4", text:"Fissa il segnaposto 4"},
      {key:"#TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO", text:"Informazioni sulla battaglia"},
      {key:"#TR_HOTKEY_EDIT_TITLE", text:"Premi un nuovo tasto"}
+     {key:"#mansion_protected_by_police", text:"Protetto dalla polizia"}
+     {key:"#mansion_not_protected_theft", text:"Non protetto — i ladri possono rubare i risparmi"}
 ]

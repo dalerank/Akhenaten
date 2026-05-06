@@ -89,5 +89,7 @@ localization_ci = [
      { key:"#TR_HOTKEY_SET_BOOKMARK_3", text:"设定视角标签 3"},
      { key:"#TR_HOTKEY_SET_BOOKMARK_4", text:"设定视角标签 4"},
      { key:"#TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO", text:"战斗信息切换"},
-     { key:"#TR_HOTKEY_EDIT_TITLE", text:"按下新热键"}
+     { key:"#TR_HOTKEY_EDIT_TITLE", text:"按下新热键"},
+     { key:"#mansion_protected_by_police", text:"有警察保护"},
+     { key:"#mansion_not_protected_theft", text:"未受保护——盗贼可能窃取积蓄"}
 ]

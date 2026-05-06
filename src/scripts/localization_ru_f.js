@@ -459,4 +459,7 @@ localization_ru_f = [
     { key: "#top_menu_file_tooltip", text: "Загрузить, сохранить, начать новую игру и выйти" }
 
     { key: "#sidebar_speed_header", text: "Скорость" }
+
+    { key: "#mansion_protected_by_police", text: "Охраняется полицией" }
+    { key: "#mansion_not_protected_theft", text: "Нет защиты — воры могут украсть сбережения" }
 ]

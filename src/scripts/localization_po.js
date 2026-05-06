@@ -112,4 +112,6 @@ localization_po = [
  { key:"#TR_ADVISOR_BIRTHS_LAST_YEAR", text:"Narodzin w zeszłym roku:"},
  { key:"#TR_ADVISOR_DEATHS_LAST_YEAR", text:"Śmierci w zeszłym roku:"},
  { key:"#TR_ADVISOR_TOTAL_POPULATION", text:"Razem mieszkańców"}
+ { key:"#mansion_protected_by_police", text:"Chronione przez policję"}
+ { key:"#mansion_not_protected_theft", text:"Bez ochrony — złodzieje mogą ukraść oszczędności"}
 ]

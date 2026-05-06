@@ -87,4 +87,6 @@ localization_en = [
      { key:"#TR_HOTKEY_SET_BOOKMARK_4", text:"4지점 설정"},
      { key:"#TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO", text:"전투 정보 전환"},
      { key:"#TR_HOTKEY_EDIT_TITLE", text:"새 단축키 입력"}
+     { key:"#mansion_protected_by_police", text:"경찰이 보호함"}
+     { key:"#mansion_not_protected_theft", text:"미보호 — 도둑이 저축을 훔칠 수 있음"}
 ]
