@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Granary — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .bld-header-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      margin-bottom: 2rem;
+    }
+    .bld-header-right {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .bld-image-wrap {
+      text-align: center;
+    }
+    .bld-image-wrap img {
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      image-rendering: pixelated;
+    }
+    .bld-image-wrap figcaption {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+    .bld-infobox {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.9rem 1.1rem;
+    }
+    .bld-infobox h4 {
+      margin: 0 0 0.6rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--gold);
+    }
+    .bld-infobox dl {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.2rem 1rem;
+      margin: 0;
+    }
+    .bld-infobox dt { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; padding-top: 0.1rem; }
+    .bld-infobox dd { margin: 0; font-size: 0.85rem; color: var(--text); }
+    .bld-infobox .sep { grid-column: 1/-1; border: none; border-top: 1px solid var(--border); margin: 0.4rem 0; }
+    .bld-stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .bld-stat { text-align: center; }
+    .bld-stat .val { font-size: 1.3rem; font-weight: 700; color: var(--gold); display: block; }
+    .bld-stat .lbl { font-size: 0.7rem; color: var(--text-muted); }
+    .risk-none { color: var(--text-muted); }
+    .risk-low  { color: #8aabdc; }
+    .risk-med  { color: #d09050; }
+    .des-neg { color: #d07070; }
+    .chain-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.8rem 1.1rem;
+      margin: 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-size: 0.88rem;
+      flex-wrap: wrap;
+    }
+    .chain-box .step {
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 3px;
+      padding: 0.3rem 0.7rem;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .chain-box .step.hub {
+      background: rgba(201,168,76,0.18);
+      border-color: rgba(201,168,76,0.5);
+      font-weight: 700;
+      color: var(--gold);
+    }
+    .chain-box .arrow { color: var(--gold); font-size: 1.1rem; }
+    .chain-sources {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .staffing-table { width: 100%; border-collapse: collapse; margin: 0.6rem 0; }
+    .staffing-table th, .staffing-table td { padding: 0.3rem 0.6rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
+    .staffing-table th { color: var(--text-muted); font-weight: normal; }
+    .ok  { color: #7ec87e; }
+    .no  { color: #d07070; }
+    /* special orders list */
+    .orders-list { list-style: none; padding: 0; margin: 0.5rem 0; }
+    .orders-list li { padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.88rem; line-height: 1.5; }
+    .orders-list li:last-child { border: none; }
+    .orders-list .order-name { font-weight: 600; color: var(--gold); display: block; margin-bottom: 0.15rem; }
+    /* developer spoilers */
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .kw  { color: #c9a84c; } .num { color: #9ecbff; } .str { color: #7ec87e; } .cmt { color: #5a5650; font-style: italic; } .fn { color: #8aabdc; } .ev { color: #d0a0e0; } .ty { color: #d0a0e0; }
+    .file-ref { display: inline-block; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .msg-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+    .msg-table th, .msg-table td { padding: 0.3rem 0.6rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+    .msg-table th { color: var(--text-muted); font-weight: normal; }
+    .bld-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .bld-nav a { color: var(--gold); }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">← All Buildings</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Distribution</div>
+        <ul>
+          <li><a href="granary.html" class="active">Granary</a></li>
+          <li><a href="storage-yard.html">Storage Yard</a></li>
+          <li><a href="bazaar.html">Bazaar</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Food Production</div>
+        <ul>
+          <li><a href="hunting-lodge.html">Hunting Lodge</a></li>
+          <li><a href="fishing-wharf.html">Fishing Wharf</a></li>
+          <li><a href="cattle-ranch.html">Cattle Ranch</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#mechanics">Mechanics</a></li>
+          <li><a href="#special-orders">Special Orders</a></li>
+          <li><a href="#placement">Placement</a></li>
+          <li><a href="#tips">Tips</a></li>
+          <li><a href="#original">Original game</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Buildings</a> /
+        Granary
+      </div>
+
+      <h1>Granary</h1>
+
+      <div class="bld-header-grid">
+        <figure class="bld-image-wrap">
+          <img src="granary.webp" alt="Granary in-game sprite" width="238" height="161" />
+          <figcaption>In-game sprite</figcaption>
+        </figure>
+        <div class="bld-header-right">
+          <div>
+            <p>The <strong>Granary</strong> is the central depot for all locally produced food. Delivery workers from farms, wharves, ranches, and hunting lodges bring food here, and <a href="bazaar.html">Bazaar</a> buyers collect it for distribution to the city's neighbourhoods.</p>
+            <p>A Granary can hold up to <strong>3 200 units</strong> of food across up to <strong>four different food types</strong>. The fill level is visible at a glance from the round holes on the building's roof — the higher the piles, the more food in store. Right-clicking opens a detailed breakdown by food type.</p>
+            <p>Imported food traded through the empire always goes to a <a href="storage-yard.html">Storage Yard</a>, never directly to a Granary. Bazaar buyers can collect it from there instead.</p>
+          </div>
+          <div class="bld-infobox">
+            <h4>Stats</h4>
+            <div class="bld-stat-row" style="margin-bottom:0.9rem">
+              <div class="bld-stat"><span class="val">4×4</span><span class="lbl">Size</span></div>
+              <div class="bld-stat"><span class="val">20</span><span class="lbl">Workers</span></div>
+              <div class="bld-stat"><span class="val des-neg">−8</span><span class="lbl">Desirability</span></div>
+            </div>
+            <hr class="sep" />
+            <dl>
+              <dt>Cost (Normal)</dt>
+              <dd>100 Db</dd>
+              <dt>Cost by difficulty</dt>
+              <dd style="font-size:0.78rem;color:var(--text-muted)">
+                VE 50 · Easy 70 · <strong style="color:var(--text)">Normal 100</strong> · Hard 200 · VH 300
+              </dd>
+              <dt>Storage</dt>
+              <dd>3 200 units · 4 food types</dd>
+              <dt>Labor category</dt>
+              <dd>Infrastructure</dd>
+              <dt>Fire risk</dt>
+              <dd class="risk-none">None (0)</dd>
+              <dt>Damage risk</dt>
+              <dd class="risk-med">Medium (5)</dd>
+              <dt>Overlay</dt>
+              <dd>Food Stocks</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Food chain ─────────────────────────────────────── -->
+      <div class="chain-box">
+        <div class="chain-sources">
+          <span class="step" style="font-size:0.8rem">Farms / Wharves</span>
+          <span class="step" style="font-size:0.8rem"><a href="hunting-lodge.html" style="color:inherit">Hunting Lodges</a> / Ranches</span>
+        </div>
+        <span class="arrow">→</span>
+        <span class="step">Delivery cart</span>
+        <span class="arrow">→</span>
+        <span class="step hub">Granary (3 200 units)</span>
+        <span class="arrow">→</span>
+        <span class="step">Bazaar buyer</span>
+        <span class="arrow">→</span>
+        <span class="step">Housing</span>
+      </div>
+
+      <!-- ─── Overview ──────────────────────────────────────── -->
+      <h2 id="overview">Overview</h2>
+      <p>Grain storage was a cornerstone of Egyptian civilisation. Because the annual Nile flood made farming impossible for months at a time, large reserves had to be built up during the harvest season to feed the population through the inundation. Government-run granaries fed soldiers, construction crews, and state workers; wealthier households kept private stores; and specialised granaries held seed grain separate from food stocks, made visually distinct so they would not be accidentally consumed.</p>
+      <p>The granary form evolved over time. Archaic-period examples were cone-shaped with domed tops. By the Middle Kingdom — the era depicted in the game — the standard granary was a rectangular compound with a flat roof and a row of round filling holes, exactly as modelled in-game. Clay models of granaries found in Middle Kingdom tombs are among the most detailed surviving records of the building's layout.</p>
+
+      <!-- ─── Mechanics ─────────────────────────────────────── -->
+      <h2 id="mechanics">Mechanics</h2>
+
+      <h3>Storage</h3>
+      <p>Each Granary holds a maximum of <strong>3 200 units</strong> total, divided between up to four food types. A fully stocked single-food granary therefore holds 3 200 units of that food. If a granary already holds four food types, it will refuse deliveries of any fifth type even if space remains.</p>
+      <p>Storage is tracked in loads of <strong>100 units</strong> each. The eight fill-hole sprites on the building roof each represent 400 units — one sprite fills as the granary passes each 400-unit threshold.</p>
+
+      <h3>Staffing thresholds</h3>
+      <p>Three separate staffing thresholds control what a Granary can do. Understaffing disables functions in steps:</p>
+      <table class="staffing-table">
+        <thead>
+          <tr><th>Staffing</th><th>Cart pushers active</th><th>Accepts new deliveries</th><th>Get Up To orders</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>&lt; 50 %</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+          <tr><td>50 – 74 %</td><td class="ok">Yes</td><td class="no">No</td><td class="no">No</td></tr>
+          <tr><td>75 – 99 %</td><td class="ok">Yes</td><td class="ok">Yes</td><td class="no">No</td></tr>
+          <tr><td>100 %</td><td class="ok">Yes</td><td class="ok">Yes</td><td class="ok">Yes</td></tr>
+        </tbody>
+      </table>
+      <p>A granary below 75 % staffing will not accept food from incoming delivery workers, even if it has space. At below 50 % its cart pushers are completely idle — it cannot redistribute food to other granaries or fulfil Get Up To orders.</p>
+
+      <h3>Bazaar range</h3>
+      <p>Bazaar buyers collect food only from granaries within <strong>40 tiles</strong>. A granary placed beyond this distance from a Bazaar is effectively cut off from supplying that market, regardless of road connectivity. Keep at least one Granary within 40 tiles of each Bazaar.</p>
+
+      <h3>Imported food</h3>
+      <p>Food obtained through trade (imported via the empire map) is always routed to a <a href="storage-yard.html">Storage Yard</a>, never to a Granary. Bazaar buyers can then collect it from the Storage Yard. If you want to ensure locally produced food stays in Granaries for citizens while imported food is kept separate for export, there is no special action needed — the routing is automatic.</p>
+
+      <!-- ─── Special Orders ─────────────────────────────────── -->
+      <h2 id="special-orders">Special Orders</h2>
+      <p>Right-click a Granary and press <strong>Special Orders</strong> to control how each food type is handled. Each food type can be set independently:</p>
+
+      <ul class="orders-list">
+        <li>
+          <span class="order-name">Accept All / Fill to ¼ · ½ · ¾</span>
+          Accept All allows unlimited intake of the food. Fill limits intake to a quarter, half, or three-quarters of the Granary's total capacity — useful for ensuring space remains for a second or third food type.
+        </li>
+        <li>
+          <span class="order-name">Don't Accept</span>
+          The Granary stops taking new deliveries of this food but keeps whatever it already holds. Bazaar buyers and redistribution carts from other granaries can still draw down the existing stock. Use this to steer delivery workers to a farther granary, or to hold food you intend to export without having it consumed locally.
+        </li>
+        <li>
+          <span class="order-name">Get Up To ¼ · ½ · ¾ · Full</span>
+          The Granary's cart pusher actively searches other Granaries and Storage Yards for this food until the specified level is reached. Requires <strong>100 % staffing</strong>. Use this to keep a distribution Granary near a dense neighbourhood topped up even when food producers are far away.
+        </li>
+        <li>
+          <span class="order-name">Empty Food</span>
+          Cart pushers redistribute all stock of this food to other Granaries or Storage Yards that will accept it. The Granary also stops accepting new deliveries of the food while emptying. Useful before demolishing a Granary or when reassigning food routing across the city.
+        </li>
+      </ul>
+
+      <!-- ─── Placement ─────────────────────────────────────── -->
+      <h2 id="placement">Placement</h2>
+      <p>Granaries need <strong>road access</strong> — both delivery carts from food producers and Bazaar buyers travel on roads. A Granary without road access is unreachable and receives no deliveries.</p>
+      <p>Keep each Granary within <strong>40 tiles</strong> of at least one Bazaar. If you have multiple Bazaars, consider placing a Granary centrally accessible to all of them, or build one Granary per cluster of Bazaars.</p>
+      <p>Granaries are heavily undesirable (−8 at the building tile). Place them away from housing you want to evolve past basic tiers, or cluster them on the city's outskirts alongside other undesirable infrastructure such as <a href="hunting-lodge.html">Hunting Lodges</a> and Storage Yards.</p>
+      <p>Placing a Granary close to food producers — farms, wharves, hunting lodges — shortens the delivery walk. If a delivery worker has to travel so far that the producer finishes a second load before the cart returns, the producer sits idle. Short delivery walks maximise food throughput.</p>
+
+      <!-- ─── Tips ──────────────────────────────────────────── -->
+      <h2 id="tips">Tips</h2>
+      <ul>
+        <li>When food deliveries stall, check staffing first. A Granary below 75 % will refuse new food even with plenty of space.</li>
+        <li>If your city eats multiple food types, use Fill orders to divide a single Granary's 3 200 units evenly — for example, Fill ½ for grain and Fill ½ for fish keeps both types available rather than one crowding the other out.</li>
+        <li>Use Don't Accept on a Granary near food producers you intend to export — this lets you send production to a Storage Yard for trade while a separate city-side Granary handles citizen consumption.</li>
+        <li>Build two smaller Granary clusters rather than one large one if your city is spread out — it shortens both delivery and Bazaar walks, improving food distribution speed.</li>
+        <li>Granaries have no fire risk (fire_risk 0), so they don't need a Firehouse patrol. Save patrol coverage for higher-risk neighbours.</li>
+        <li>The Overseer of the Granaries (keyboard shortcut <kbd>5</kbd>) shows all Granaries, their fill levels, and staffing at a glance — use it when diagnosing food distribution problems.</li>
+      </ul>
+
+      <!-- ─── Original game screenshots ──────────────────────── -->
+      <h2 id="original">In the original game</h2>
+      <p style="font-size:0.88rem;color:var(--text-muted)">Screenshots from <em>Cleopatra: Queen of the Nile</em> (Impressions Games, 2000), the expansion to Pharaoh that Akhenaten targets.</p>
+      <div style="display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start;margin:1rem 0 1.5rem">
+        <figure style="margin:0;text-align:center">
+          <img src="Cleo_GranaryRC.webp" alt="Granary right-click info window from the original game" width="300" height="183"
+               style="border:1px solid var(--border);border-radius:3px;display:block;image-rendering:pixelated" />
+          <figcaption style="font-size:0.72rem;color:var(--text-muted);margin-top:0.4rem">
+            Right-click panel — food stocks by type, employment, walker status
+          </figcaption>
+        </figure>
+        <figure style="margin:0;text-align:center">
+          <img src="Cleo_GranarySO.webp" alt="Granary Special Orders window from the original game" width="300" height="128"
+               style="border:1px solid var(--border);border-radius:3px;display:block;image-rendering:pixelated" />
+          <figcaption style="font-size:0.72rem;color:var(--text-muted);margin-top:0.4rem">
+            Special Orders panel — per-food accept / fill / get / empty controls
+          </figcaption>
+        </figure>
+      </div>
+
+      <!-- ─── Developer reference ──────────────────────────── -->
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">All paths relative to the repository root.</p>
+
+        <details>
+          <summary>Building config — <code>src/scripts/building_granary.js</code></summary>
+          <div class="details-body">
+            <p>The building definition and placement check live in <span class="file-ref">src/scripts/building_granary.js</span>.</p>
+            <pre><code><span class="kw">building_granary</span> {
+  <span class="kw">labor_category</span>  : LABOR_CATEGORY_INFRASTRUCTURE
+  <span class="kw">meta</span>            { help_id: <span class="num">3</span>, text_id: <span class="num">98</span> }
+  <span class="kw">building_size</span>   : <span class="num">4</span>           <span class="cmt">// 4×4 tiles</span>
+
+  <span class="kw">cost</span> [ <span class="num">50</span>, <span class="num">70</span>, <span class="num">100</span>, <span class="num">200</span>, <span class="num">300</span> ]   <span class="cmt">// VeryEasy … VeryHard</span>
+  <span class="kw">laborers</span>        [<span class="num">20</span>]
+  <span class="kw">fire_risk</span>       [<span class="num">0</span>]            <span class="cmt">// no fire risk</span>
+  <span class="kw">damage_risk</span>     [<span class="num">5</span>]
+  <span class="kw">desirability</span>    { value[<span class="num">-8</span>], step[<span class="num">1</span>], step_size[<span class="num">-2</span>], range[<span class="num">4</span>] }
+
+  <span class="kw">max_capacty_stored</span>              : <span class="num">3200</span>
+  <span class="kw">allow_food_types</span>                : <span class="num">4</span>
+  <span class="kw">min_workers_percent_for_tasks</span>   : <span class="num">50</span>   <span class="cmt">// cart pushers active above this</span>
+  <span class="kw">min_workers_percent_for_accepting</span>: <span class="num">75</span>  <span class="cmt">// accepts deliveries above this</span>
+  <span class="kw">min_workers_percent_for_getting</span>  : <span class="num">100</span> <span class="cmt">// Get Up To orders honored at 100% only</span>
+
+  <span class="kw">begin_spot_pos</span>    [<span class="num">110</span>, <span class="num">-74</span>]
+  <span class="kw">res_image_offsets</span> [[<span class="num">0</span>,<span class="num">0</span>],[<span class="num">16</span>,<span class="num">9</span>],[<span class="num">35</span>,<span class="num">18</span>],[<span class="num">51</span>,<span class="num">26</span>],
+                     [<span class="num">-16</span>,<span class="num">7</span>],[<span class="num">1</span>,<span class="num">16</span>],[<span class="num">20</span>,<span class="num">26</span>],[<span class="num">37</span>,<span class="num">35</span>]]   <span class="cmt">// 8 fill-hole positions</span>
+
+  <span class="kw">sound_channel</span>   : SOUND_CHANNEL_CITY_GRANARY
+  <span class="kw">overlay</span>         : OVERLAY_FOOD_STOCKS
+  <span class="kw">flags</span> { is_food: <span class="kw">true</span> }
+}
+
+<span class="cmt">// Placement warning: shown if no Bazaar exists in the city yet</span>
+[<span class="kw">es</span>=(<span class="ev">building_granary</span>, <span class="ev">on_place_checks</span>)]
+<span class="fn">function</span> building_granary_on_place_checks(ev) {
+    <span class="kw">var</span> has_bazaar = city.count_active_buildings(BUILDING_BAZAAR) > <span class="num">0</span>
+    city.warnings.show_if_not(has_bazaar, <span class="str">"#build_bazaars_to_distribute_food"</span>)
+}</code></pre>
+            <p>To adjust storage capacity, change <code>max_capacty_stored</code> (note: typo in the original — <em>capacty</em>). To allow more food types simultaneously, raise <code>allow_food_types</code>. The <code>res_image_offsets</code> array defines the pixel positions of the 8 fill-hole overlays drawn on top of the base sprite.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>C++ implementation — <code>src/building/building_granary.h / .cpp</code></summary>
+          <div class="details-body">
+            <p><span class="file-ref">src/building/building_granary.h</span> declares the <code>building_granary</code> class (inherits <code>building_storage</code>). Key constants in <span class="file-ref">src/building/building_granary.cpp</span>:</p>
+            <pre><code><span class="kw">constexpr</span> <span class="ty">int</span> ONE_LOAD           = <span class="num">100</span>;   <span class="cmt">// units per delivery load</span>
+<span class="kw">constexpr</span> <span class="ty">int</span> FULL_GRANARY        = <span class="num">3200</span>;
+<span class="kw">constexpr</span> <span class="ty">int</span> THREEQUARTERS_GRANARY= <span class="num">2400</span>;
+<span class="kw">constexpr</span> <span class="ty">int</span> HALF_GRANARY         = <span class="num">1600</span>;
+<span class="kw">constexpr</span> <span class="ty">int</span> QUARTER_GRANARY      = <span class="num">800</span>;
+<span class="kw">constexpr</span> <span class="ty">int</span> CURSE_LOADS          = <span class="num">16</span>;   <span class="cmt">// loads removed by a curse</span></code></pre>
+            <p>Key methods:</p>
+            <ul style="font-size:0.82rem;line-height:1.8;padding-left:1.2rem">
+              <li><code>is_accepting(resource)</code> — checks Special Orders + staffing threshold (75 %)</li>
+              <li><code>is_getting(resource)</code> — true if the Get Up To order is active and staffing ≥ 100 %</li>
+              <li><code>add_resource / remove_resource</code> — emits <code>event_granary_resource_added / _removed</code></li>
+              <li><code>determine_worker_task()</code> — returns GETTING or EMPTYING based on current orders, or NONE</li>
+              <li><code>bless()</code> — called by a god blessing; fills the granary with food</li>
+              <li><code>building_granary_for_storing()</code> — free function; 2-pass search: Accept-mode granaries first, then Get-mode</li>
+            </ul>
+            <p>JavaScript bindings (<span class="file-ref">src/building/building_granary_js.cpp</span>) expose:</p>
+            <pre><code><span class="fn">__granary_get_amount</span>(bid, resource)   <span class="cmt">// units of a specific food</span>
+<span class="fn">__granary_get_total_stored</span>(bid)        <span class="cmt">// total units across all foods</span>
+<span class="fn">__granary_is_accepting</span>(bid, resource)  <span class="cmt">// current accept state</span></code></pre>
+          </div>
+        </details>
+
+        <details>
+          <summary>Game messages — <code>src/scripts/game_messages_en.js</code></summary>
+          <div class="details-body">
+            <table class="msg-table">
+              <thead><tr><th>Key</th><th>ID</th><th>Line</th><th>When shown</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><code>message_building_granary</code></td>
+                  <td>3</td>
+                  <td>25</td>
+                  <td>Building info panel (right-click on Granary). Full description covering food delivery, Bazaar interaction, Special Orders, and desirability note.</td>
+                </tr>
+                <tr>
+                  <td><code>message_granary_history_2</code></td>
+                  <td>5</td>
+                  <td>45</td>
+                  <td>History panel linked from the help button. Covers Archaic → Middle Kingdom granary evolution and government-run storage.</td>
+                </tr>
+              </tbody>
+            </table>
+            <p style="margin-top:0.6rem">The <code>meta { help_id: 3, text_id: 98 }</code> field in the building script maps <code>help_id</code> → <code>message_building_granary</code> (the extended help panel) and <code>text_id</code> → the in-game building name string.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Fill-hole rendering — <code>res_image_offsets</code></summary>
+          <div class="details-body">
+            <p>The 8 round fill-hole sprites are drawn on top of the base building sprite at the pixel offsets listed in <code>res_image_offsets</code> (relative to <code>begin_spot_pos [110, -74]</code>):</p>
+            <pre><code><span class="cmt">// 8 fill-hole pixel offsets from begin_spot_pos</span>
+res_image_offsets [[<span class="num">0</span>,<span class="num">0</span>], [<span class="num">16</span>,<span class="num">9</span>], [<span class="num">35</span>,<span class="num">18</span>], [<span class="num">51</span>,<span class="num">26</span>],
+                   [<span class="num">-16</span>,<span class="num">7</span>], [<span class="num">1</span>,<span class="num">16</span>], [<span class="num">20</span>,<span class="num">26</span>], [<span class="num">37</span>,<span class="num">35</span>]]</code></pre>
+            <p>Each offset corresponds to one of the 8 storage sections (one per 400 units). The sprite drawn at each position changes based on how full that section is — from empty pit to overflowing pile. The <code>draw_stores()</code> method in <span class="file-ref">building_granary.cpp</span> iterates the 8 offsets and selects the appropriate sprite frame for each section's fill level.</p>
+            <p>The base building animation uses <code>pack:PACK_GENERAL, id:99</code>; the working ambient animation is <code>pack:PACK_SPR_AMBIENT, id:47</code> (23 frames).</p>
+          </div>
+        </details>
+
+      </div><!-- .dev-section -->
+
+      <div class="bld-nav">
+        <a href="index.html">← All Buildings</a>
+        <span style="color:var(--text-muted)">Distribution</span>
+        <a href="storage-yard.html">Storage Yard →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>
