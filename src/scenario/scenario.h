@@ -20,6 +20,12 @@
 
 struct event_mission_start { int id; };
 
+/** Emitted at end of GamestateIO post_load() after city/on_post_load (save, mission pak, map). */
+struct event_level_post_load {
+    int session_kind; ///< e_session_type (game/game.h), stored as int for JS bindings
+    int scenario_id;
+};
+
 struct scenario_data_buffers {
     buffer* mission_index = nullptr;
     buffer* map_name = nullptr;

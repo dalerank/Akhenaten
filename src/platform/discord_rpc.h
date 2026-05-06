@@ -8,14 +8,13 @@
 
 struct discord_rpc_t {
     discord_rpc_t();
-    ~discord_rpc_t();
 
     discord_rpc_t(const discord_rpc_t&) = delete;
     discord_rpc_t& operator=(const discord_rpc_t&) = delete;
     discord_rpc_t(discord_rpc_t&&) = delete;
     discord_rpc_t& operator=(discord_rpc_t&&) = delete;
 
-    void init(const char* app_id);
+    void init(pcstr app_id);
     void shutdown();
     void tick();
     void set_activity(const xstring& details, const xstring& state);

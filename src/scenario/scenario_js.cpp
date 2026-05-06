@@ -28,3 +28,9 @@ int __scenario_campaign_scenario_id() {
     return g_scenario.campaign_scenario_id();
 }
 ANK_FUNCTION(__scenario_campaign_scenario_id)
+
+xstring __scenario_scenario_name() {
+    pcstr n = (pcstr)g_scenario.scenario_name;
+    return (n && n[0]) ? xstring(n) : xstring();
+}
+ANK_FUNCTION(__scenario_scenario_name)

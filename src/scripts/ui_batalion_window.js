@@ -10,7 +10,7 @@ batalion_info_window {
         describe      : text({pos[30, 140], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(28) }),
 
         soldiers_lb   : text({ pos[100, 60], text:"${138.23}", font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        soldiers_num  : text({ pos[290, 60], font: FONT_NORMAL_BLACK_ON_LIGHT }),     
+        soldiers_num  : text({ pos[290, 60], font: FONT_NORMAL_BLACK_ON_LIGHT }),
 
         health_lb     : text({ pos[100, 80], text:"${138.24}", font: FONT_NORMAL_BLACK_ON_LIGHT }),
         health_num    : text({ pos[290, 80], font: FONT_NORMAL_BLACK_ON_LIGHT }),

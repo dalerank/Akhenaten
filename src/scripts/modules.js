@@ -6,6 +6,7 @@ include(":hotkeys.conf")
 import common
 import camera
 import game
+import discord_presence
 import math
 import rating_points
 import game_messages_en

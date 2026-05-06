@@ -77,9 +77,14 @@ function mission_briefing_window_on_init(window) {
     window.goal_immediate.enabled = !!goal_tooltip_text
     window.goal_immediate.text = goal_tooltip_text
 
-    window.title.text = __lang_message_title_text(text_id)
+    var city_title = __lang_message_title_text(text_id)
+    window.title.text = city_title
     window.subtitle.text = __lang_message_subtitle_text(text_id)
     window.description_text.text = __lang_message_content_text(text_id)
+
+    if (!is_review) {
+        __discord_rpc_set_activity(city_title, "")
+    }
 
     var goals = ["goal_0", "goal_1", "goal_2", "goal_3", "goal_4", "goal_5"]
     var gi = 0
