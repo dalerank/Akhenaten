@@ -107,6 +107,13 @@ void city_fishing_points_t::clear() {
 void city_fishing_points_t::update_month(int points_num) {
     clear();
 
+    // Periodic monthly call (default arg) — keep existing positions and just
+    // re-spawn the figure entities. Re-rolling teleported spots and broke trips.
+    if (points_num < 0) {
+        create();
+        return;
+    }
+
     int num_fishing_spots = 0;
     for (int i = 0; i < MAX_FISH_POINTS; i++) {
         if (g_scenario.fishing_points[i].x() > 0)

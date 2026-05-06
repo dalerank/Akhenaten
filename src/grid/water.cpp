@@ -265,24 +265,6 @@ shore_orientation map_shore_determine_orientation(tile2i tile, int size, bool ad
     return {false, 0};
 }
 
-water_dest map_water_find_alternative_fishing_boat_tile(figure &boat) {
-    if (map_figure_id_get(boat.tile) == boat.id) {
-        return {false};
-    }
-
-    grid_area area = map_grid_get_area(boat.tile, 1, 1);
-
-    svector<tile2i, 16> tiles;
-    area.for_each([&] (tile2i tt) {
-        if (!map_has_figure_at(tt) && map_terrain_is(tt, TERRAIN_WATER)) {
-            tiles.push_back(tt);
-        }
-    });
-
-    tile2i result = tiles.empty() ? tile2i::invalid : tiles[rand() % tiles.size()];
-    return { result.valid(), 0, result };
-}
-
 water_dest map_water_find_shipwreck_tile(figure &wreck) {
     if (map_terrain_is(wreck.tile, TERRAIN_WATER) && map_figure_id_get(wreck.tile) == wreck.id) {
         return {false};

@@ -29,6 +29,7 @@ public:
     struct runtime_data_t {
         bool had_home;
         uint8_t fishing_point_check_attempts;
+        tile2i preferred_fishing_tile;
     } FIGURE_RUNTIME_DATA_T;
 
     virtual void on_create() override;
