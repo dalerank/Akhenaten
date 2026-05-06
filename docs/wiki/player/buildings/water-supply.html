@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Water Supply — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .bld-header-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      margin-bottom: 2rem;
+    }
+    .bld-header-right { display: flex; flex-direction: column; gap: 1rem; }
+    .bld-image-wrap { text-align: center; }
+    .bld-image-wrap img { display: block; border: 1px solid var(--border); border-radius: 3px; image-rendering: pixelated; }
+    .bld-image-wrap figcaption { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.35rem; }
+    .bld-infobox { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.9rem 1.1rem; }
+    .bld-infobox h4 { margin: 0 0 0.6rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold); }
+    .bld-infobox dl { display: grid; grid-template-columns: auto 1fr; gap: 0.2rem 1rem; margin: 0; }
+    .bld-infobox dt { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; padding-top: 0.1rem; }
+    .bld-infobox dd { margin: 0; font-size: 0.85rem; color: var(--text); }
+    .bld-infobox .sep { grid-column: 1/-1; border: none; border-top: 1px solid var(--border); margin: 0.4rem 0; }
+    .bld-stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .bld-stat { text-align: center; }
+    .bld-stat .val { font-size: 1.3rem; font-weight: 700; color: var(--gold); display: block; }
+    .bld-stat .lbl { font-size: 0.7rem; color: var(--text-muted); }
+    .risk-none { color: var(--text-muted); }
+    .des-pos { color: #7ec87e; }
+    .chain-box {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+      padding: 0.8rem 1.1rem; margin: 1rem 0; display: flex; align-items: center;
+      gap: 0.7rem; font-size: 0.88rem; flex-wrap: wrap;
+    }
+    .chain-box .step { background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.25); border-radius: 3px; padding: 0.3rem 0.7rem; color: var(--text); white-space: nowrap; }
+    .chain-box .step.hub { background: rgba(201,168,76,0.18); border-color: rgba(201,168,76,0.5); font-weight: 700; color: var(--gold); }
+    .chain-box .arrow { color: var(--gold); font-size: 1.1rem; }
+    .walker-card { display: inline-flex; align-items: center; gap: 0.75rem; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.6rem 0.9rem; margin: 0.75rem 0; }
+    .walker-card img { image-rendering: pixelated; border: 1px solid var(--border); border-radius: 2px; }
+    .walker-card-info { font-size: 0.82rem; }
+    .walker-card-info strong { display: block; color: var(--gold); margin-bottom: 0.15rem; }
+    .walker-card-info span { color: var(--text-muted); }
+    .compare-table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; font-size: 0.85rem; }
+    .compare-table th, .compare-table td { padding: 0.35rem 0.7rem; text-align: left; border-bottom: 1px solid var(--border); }
+    .compare-table th { color: var(--text-muted); font-weight: normal; }
+    .compare-table td:first-child { color: var(--text-muted); white-space: nowrap; }
+    .ok { color: #7ec87e; } .no { color: #d07070; }
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .kw { color: #c9a84c; } .num { color: #9ecbff; } .str { color: #7ec87e; } .cmt { color: #5a5650; font-style: italic; } .fn { color: #8aabdc; } .ev { color: #d0a0e0; }
+    .file-ref { display: inline-block; font-family: 'Consolas','Courier New',monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .msg-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+    .msg-table th, .msg-table td { padding: 0.3rem 0.6rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+    .msg-table th { color: var(--text-muted); font-weight: normal; }
+    .bld-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .bld-nav a { color: var(--gold); }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">← All Buildings</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Health &amp; Water</div>
+        <ul>
+          <li><a href="water-supply.html" class="active">Water Supply</a></li>
+          <li><a href="well.html">Well</a></li>
+          <li><a href="physician.html">Physician</a></li>
+          <li><a href="apothecary.html">Apothecary</a></li>
+          <li><a href="dentist.html">Dentist</a></li>
+          <li><a href="mortuary.html">Mortuary</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#mechanics">Mechanics</a></li>
+          <li><a href="#upgrade">Upgrade</a></li>
+          <li><a href="#vs-well">vs. Well</a></li>
+          <li><a href="#placement">Placement</a></li>
+          <li><a href="#tips">Tips</a></li>
+          <li><a href="#original">Original game</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Buildings</a> /
+        Water Supply
+      </div>
+
+      <h1>Water Supply</h1>
+
+      <div class="bld-header-grid">
+        <figure class="bld-image-wrap">
+          <img src="Cleo_WaterSupply.webp" alt="Water Supply sprites — standard (left) and upgraded (right)" width="236" height="77" />
+          <figcaption>Standard (left) · Upgraded (right)</figcaption>
+        </figure>
+        <div class="bld-header-right">
+          <div>
+            <p>The <strong>Water Supply</strong> distributes clean drinking water to nearby housing by sending out roaming water carriers. It is one of the earliest demands housing makes — Crude Huts upgrade to Sturdy Huts only with water access, and all subsequent housing tiers require it.</p>
+            <p>Unlike a <a href="well.html">Well</a>, the Water Supply actively dispatches workers who walk through the neighbourhood supplying every house they pass. This lets a single building cover a much larger area, reach housing deep on dry land, and support housing evolution all the way to the top tiers.</p>
+            <p>The Water Supply must be placed on <strong>grassland</strong>, which indicates the presence of underground water. It cannot be built on desert or bare rock. Citizens find it pleasant to live near — it is one of the few service buildings with a <em>positive</em> desirability effect.</p>
+          </div>
+          <div class="bld-infobox">
+            <h4>Stats</h4>
+            <div class="bld-stat-row" style="margin-bottom:0.9rem">
+              <div class="bld-stat"><span class="val">2×2</span><span class="lbl">Size</span></div>
+              <div class="bld-stat"><span class="val">5</span><span class="lbl">Workers</span></div>
+              <div class="bld-stat"><span class="val des-pos">+4</span><span class="lbl">Desirability</span></div>
+            </div>
+            <hr class="sep" />
+            <dl>
+              <dt>Cost (Normal)</dt>
+              <dd>40 Db</dd>
+              <dt>Cost by difficulty</dt>
+              <dd style="font-size:0.78rem;color:var(--text-muted)">
+                VE 10 · Easy 20 · <strong style="color:var(--text)">Normal 40</strong> · Hard 80 · VH 140
+              </dd>
+              <dt>Requirement</dt>
+              <dd>Groundwater (grassland tile)</dd>
+              <dt>Labor category</dt>
+              <dd>Water &amp; Health</dd>
+              <dt>Fire risk</dt>
+              <dd class="risk-none">None (fireproof)</dd>
+              <dt>Damage risk</dt>
+              <dd class="risk-none">None</dd>
+              <dt>Overlay</dt>
+              <dd>Water</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Service flow ───────────────────────────────────── -->
+      <div class="chain-box">
+        <span class="step hub">Water Supply</span>
+        <span class="arrow">→</span>
+        <span class="step">Water Carrier (roaming walker)</span>
+        <span class="arrow">→</span>
+        <span class="step">Housing (within ~26 tiles)</span>
+      </div>
+
+      <!-- ─── Overview ──────────────────────────────────────── -->
+      <h2 id="overview">Overview</h2>
+      <p>Access to clean water was a constant preoccupation of ancient Egyptian cities. The Nile provided water for agriculture and transport, but drinking water for urban populations had to come from wells and underground sources tapped along the floodplain. Sand inevitably contaminated open containers, and the proximity of humans and animals to water sources created persistent disease risks. The management of water supplies — who had access, how it was distributed, and who maintained the infrastructure — was the responsibility of local administration.</p>
+      <p>In the game, the Water Supply abstracts a network of storage pools, channels, and distribution workers into a single building that sends carriers through the streets. The ornate pillared variant that appears at high desirability reflects the real practice of embellishing civic water infrastructure in prosperous districts — wealthier neighbourhoods in Egyptian cities often had more elaborate and well-maintained facilities.</p>
+
+      <!-- ─── Mechanics ─────────────────────────────────────── -->
+      <h2 id="mechanics">Mechanics</h2>
+
+      <h3>Water Carrier</h3>
+      <p>The Water Supply spawns a <strong>Water Carrier</strong>, a roaming walker who wanders through the surrounding street network. Any house he passes within two tiles receives water service, resetting that house's water timer.</p>
+
+      <div class="walker-card">
+        <img src="Cleo_WaterCarrierPort.webp" alt="Water Carrier portrait" width="55" height="79" />
+        <div class="walker-card-info">
+          <strong>Water Carrier</strong>
+          <span>Roaming walker · Range ~26 tiles · Coverage 160 days<br>Re-spawns every 16 days · Speed 54 tiles/month</span>
+        </div>
+      </div>
+
+      <p>Key coverage numbers:</p>
+      <ul>
+        <li><strong>Reliable range</strong>: ~26 tiles from the Water Supply. Houses within this radius will be serviced consistently on every walker pass.</li>
+        <li><strong>Extended range</strong>: up to ~34 tiles sporadically — the carrier occasionally wanders further but cannot be relied upon at that distance.</li>
+        <li><strong>Coverage duration</strong>: 160 days per visit, plus a 32-day grace period. A house begins to lose water service and risks devolving only after 192 days without a carrier passing.</li>
+        <li><strong>Respawn interval</strong>: a new carrier sets out every 16 days. With normal staffing there is almost always one carrier active or about to launch.</li>
+      </ul>
+      <p>The Water Carrier is a roaming walker and does not follow a fixed route — he chooses randomly at each intersection. Road layout and Roadblocks control which streets he walks through. A dead-end street off the main road will be visited rarely; a loop road will be covered reliably.</p>
+
+      <h3>Staffing effect</h3>
+      <p>Understaffed Water Supplies send carriers less frequently and with reduced effectiveness. The info panel shows five staffing quality states (text group 108, entries 2–7). At zero workers the building is completely inactive and no carrier is dispatched.</p>
+
+      <h3>Groundwater requirement</h3>
+      <p>The Water Supply can only be placed on tiles with <strong>underground water</strong>, indicated in-game by green grassland. Desert tiles, bare rock, and floodplain do not qualify. Use the Water overlay (hotkey <kbd>W</kbd>) to see which areas have groundwater and which houses currently have water access.</p>
+
+      <!-- ─── Upgrade ───────────────────────────────────────── -->
+      <h2 id="upgrade">Upgrade</h2>
+      <p>When the desirability of the tile reaches a threshold, the Water Supply automatically upgrades its appearance: an open basin is replaced by a pillared pool structure. The upgraded building dispatches <strong>water carriers more frequently</strong>, increasing coverage density in the neighbourhood.</p>
+      <p>Because the Water Supply itself has a positive desirability (+4 at the tile, fading to 0 over 4 tiles), a cluster of Gardens or Statues nearby can push it over the upgrade threshold without much effort. The upgrade is cosmetic as well as functional — the pillared variant is a visible sign of a well-developed neighbourhood.</p>
+
+      <!-- ─── vs Well ───────────────────────────────────────── -->
+      <h2 id="vs-well">Water Supply vs. Well</h2>
+      <p>Both buildings provide water, but they serve different stages of the game:</p>
+      <table class="compare-table">
+        <thead><tr><th></th><th>Water Supply</th><th>Well</th></tr></thead>
+        <tbody>
+          <tr><td>Size</td><td>2×2</td><td>1×1</td></tr>
+          <tr><td>Workers</td><td>5</td><td>0</td></tr>
+          <tr><td>Cost (Normal)</td><td>40 Db</td><td>5 Db</td></tr>
+          <tr><td>Road access required</td><td class="no">Yes</td><td class="ok">No</td></tr>
+          <tr><td>Groundwater required</td><td class="no">Yes</td><td class="no">Yes</td></tr>
+          <tr><td>Coverage mechanism</td><td>Roaming walker</td><td>Static radius</td></tr>
+          <tr><td>Effective range</td><td>~26 tiles</td><td>Small fixed radius</td></tr>
+          <tr><td>Supports Common Shanty+</td><td class="ok">Yes</td><td class="no">No</td></tr>
+          <tr><td>Upgrades appearance</td><td class="ok">Yes</td><td class="ok">Yes</td></tr>
+          <tr><td>Desirability</td><td class="des-pos">+4 (positive)</td><td>+1 (slight)</td></tr>
+        </tbody>
+      </table>
+      <p>Wells are useful in the very early game or as gap-fillers for isolated housing on grassland. As soon as housing needs to evolve past Common Shanty, a Water Supply is required.</p>
+
+      <!-- ─── Placement ─────────────────────────────────────── -->
+      <h2 id="placement">Placement</h2>
+      <p>Place the Water Supply on a <strong>grassland tile</strong> within the housing cluster it will serve. Because the carrier is a roaming walker, the building works best when placed at the entrance to or inside the road network it needs to cover. A Water Supply placed on a dead-end road at the edge of the city will have a carrier who wanders away from housing rather than through it.</p>
+      <p>Unlike most service buildings, the Water Supply is <strong>desirable</strong> — you can place it directly adjacent to housing without harming evolution. Combining it with Gardens or a small park area near the housing entrance is both functionally sound and raises the local desirability enough to trigger the upgrade.</p>
+      <p>Road access is mandatory. The carrier spawns from the building and uses the road network exclusively. A Water Supply without a road connection is fully non-functional even if staffed.</p>
+      <p>Each Water Supply reliably covers a radius of about 26 tiles. For large housing blocks, plan one Water Supply per 26-tile section, staggered so their carriers' paths overlap slightly to avoid coverage gaps.</p>
+
+      <!-- ─── Tips ──────────────────────────────────────────── -->
+      <h2 id="tips">Tips</h2>
+      <ul>
+        <li>The Water Supply unlocks in mission 0 (Nubt) as soon as a <a href="granary.html">Granary</a> accumulates 400 units of game meat. It is the third tutorial building after Hunting Lodge and Granary.</li>
+        <li>If water carriers are not reaching certain houses, check road connectivity and consider adding a Roadblock to redirect the carrier into the uncovered area.</li>
+        <li>The Water overlay (<kbd>W</kbd>) shows coverage in real time. Blue tiles have water access; tan tiles do not. Use it to identify gaps before housing starts devolving.</li>
+        <li>Water Supplies are fireproof — no Firehouse patrol is needed. This frees up patrol coverage for higher-risk buildings nearby.</li>
+        <li>To get the upgrade quickly: place a Garden on each of the four tiles adjacent to the Water Supply. The building's own +4 plus Garden bonuses typically clears the desirability threshold within a few tiles.</li>
+        <li>On maps where grassland is scarce, plan Water Supply positions early before filling the area with housing. A Water Supply tile committed to housing cannot be reclaimed without demolition.</li>
+      </ul>
+
+      <!-- ─── Original game screenshots ──────────────────────── -->
+      <h2 id="original">In the original game</h2>
+      <p style="font-size:0.88rem;color:var(--text-muted)">Screenshot from <em>Cleopatra: Queen of the Nile</em> (Impressions Games, 2000).</p>
+      <div style="display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start;margin:1rem 0 1.5rem">
+        <figure style="margin:0;text-align:center">
+          <img src="Cleo_WaterSupplyRC.webp" alt="Water Supply right-click info window from the original game" width="300" height="162"
+               style="border:1px solid var(--border);border-radius:3px;display:block;image-rendering:pixelated" />
+          <figcaption style="font-size:0.72rem;color:var(--text-muted);margin-top:0.4rem">
+            Right-click panel — worker status and walker activity
+          </figcaption>
+        </figure>
+      </div>
+
+      <!-- ─── Developer reference ──────────────────────────── -->
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">All paths relative to the repository root.</p>
+
+        <details>
+          <summary>Building config — <code>src/scripts/buildings.js</code></summary>
+          <div class="details-body">
+            <p>The Water Supply definition is in <span class="file-ref">src/scripts/buildings.js</span> at the <code>building_water_supply</code> block (line 288).</p>
+            <pre><code><span class="kw">building_water_supply</span> {
+  <span class="kw">animations</span> {
+    <span class="kw">base</span>       { pack:PACK_GENERAL, id:<span class="num">69</span>, offset:<span class="num">0</span> }        <span class="cmt">// standard appearance</span>
+    <span class="kw">base_work</span>  { pos[<span class="num">42</span>, <span class="num">10</span>], pack:PACK_GENERAL, id:<span class="num">69</span>, offset:<span class="num">1</span>, max_frames:<span class="num">1</span> }
+    <span class="kw">fancy</span>      { pack:PACK_GENERAL, id:<span class="num">69</span>, offset:<span class="num">2</span> }        <span class="cmt">// pillared / upgraded appearance</span>
+    <span class="kw">fancy_work</span> { pos[<span class="num">10</span>, <span class="num">0</span>], pack:PACK_GENERAL, id:<span class="num">69</span>, offset:<span class="num">3</span>, max_frames:<span class="num">1</span> }
+  }
+
+  <span class="kw">building_size</span>   : <span class="num">2</span>
+  <span class="kw">meta</span>            { help_id: <span class="num">61</span>, text_id: <span class="num">108</span> }
+  <span class="kw">labor_category</span> : LABOR_CATEGORY_WATER_HEALTH
+  <span class="kw">fire_proof</span>      : <span class="kw">true</span>
+
+  <span class="kw">cost</span>            [ <span class="num">10</span>, <span class="num">20</span>, <span class="num">40</span>, <span class="num">80</span>, <span class="num">140</span> ]  <span class="cmt">// VE … VH</span>
+  <span class="kw">laborers</span>        [<span class="num">5</span>]
+  <span class="kw">fire_risk</span>       [<span class="num">0</span>]
+  <span class="kw">damage_risk</span>     [<span class="num">0</span>]
+  <span class="kw">desirability</span>    { value[<span class="num">4</span>], step[<span class="num">1</span>], step_size[<span class="num">-1</span>], range[<span class="num">4</span>] }
+  <span class="cmt">// +4 at tile 0 → +3 at 1 tile → +2 at 2 → +1 at 3 → 0 at 4+</span>
+
+  <span class="kw">needs</span> { groundwater : <span class="kw">true</span> }    <span class="cmt">// grassland only; no desert placement</span>
+  <span class="kw">min_houses_coverage</span> : <span class="num">50</span>
+}</code></pre>
+            <p>To adjust the desirability bonus, change <code>value</code> and <code>step_size</code>. Note that <code>step_size[-1]</code> means the bonus decreases by 1 per tile outward from the building. The upgrade threshold (desirability at which the fancy sprite activates) is controlled in C++ — see <span class="file-ref">src/building/building_water_supply.cpp</span>.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>C++ implementation — <code>src/building/building_water_supply.h / .cpp</code></summary>
+          <div class="details-body">
+            <p><span class="file-ref">src/building/building_water_supply.h</span> declares <code>building_water_supply</code> (inherits <code>building_impl</code>).</p>
+            <ul style="font-size:0.82rem;line-height:1.9;padding-left:1.2rem">
+              <li><code>spawn_figure()</code> — creates the Water Carrier figure; respects staffing percentage</li>
+              <li><code>update_month()</code> — monthly tick; checks groundwater, manages figure lifecycle</li>
+              <li><code>update_graphic()</code> — switches between <code>base</code> and <code>fancy</code> animations based on local desirability</li>
+              <li><code>get_overlay()</code> — returns <code>OVERLAY_WATER</code>; the building is highlighted by the Water overlay</li>
+              <li><code>on_place_checks()</code> — validates groundwater under placement tile; shows warning if absent</li>
+            </ul>
+            <p>Water carrier figure logic lives in <span class="file-ref">src/figuretype/figure_water_carrier.cpp</span>. Coverage is tracked per-house in <span class="file-ref">src/grid/water_supply.cpp</span> and <span class="file-ref">src/city/city_water_supply.cpp</span>.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Info window — <code>src/scripts/ui_water_supply_window.js</code></summary>
+          <div class="details-body">
+            <p>The info window inherits the base <code>building_info_window</code> layout and adds a <code>workers_desc</code> field and a <code>warning_text</code>. The warning text is resolved from text group <strong>108</strong> (the building's <code>meta_text_id</code>):</p>
+            <pre><code>[<span class="kw">es</span>=<span class="ev">building_info_window</span>]
+<span class="kw">info_window_water_supply</span> {
+    related_buildings [BUILDING_WATER_SUPPLY]
+    ui : baseui(building_info_window, {
+        workers_desc : text({ pos[<span class="num">70</span>, <span class="num">144</span>], font: FONT_NORMAL_BLACK_ON_DARK,
+                              wrap:px(<span class="num">24</span>), multiline:<span class="kw">true</span> })
+        warning_text : text({ pos[<span class="num">32</span>, <span class="num">46</span>], wrap:px(<span class="num">26</span>),
+                              font: FONT_NORMAL_BLACK_ON_LIGHT, multiline:<span class="kw">true</span> })
+    })
+}
+
+<span class="cmt">// Staffing % mapped to 5 quality descriptors (entries 7, 5, 4, 3, 2 of text group 108)</span>
+workers.id = Math.approximate_value(b.worker_percentage / <span class="num">100.0</span>, [<span class="num">7</span>, <span class="num">5</span>, <span class="num">4</span>, <span class="num">3</span>, <span class="num">2</span>])</code></pre>
+            <p>The <code>warning_text</code> defaults to entry 1 of group 108 ("the building is operating normally"). If road access is missing, it falls back to group 69 entry 25 (the generic no-road-access message).</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Game messages — <code>src/scripts/game_messages_en.js</code></summary>
+          <div class="details-body">
+            <table class="msg-table">
+              <thead><tr><th>Key</th><th>ID</th><th>Line</th><th>When shown</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><code>message_building_water_supply</code></td>
+                  <td>61</td>
+                  <td>755</td>
+                  <td>Help panel (<code>help_id: 61</code>). Covers water carrier mechanics, groundwater requirement, overlay, upgrade condition, and desirability. References the history entry via link ID 156.</td>
+                </tr>
+              </tbody>
+            </table>
+            <p style="margin-top:0.6rem">Building name string: text group <strong>108</strong>, entry <strong>0</strong> (<code>text_id: 108</code>). Worker quality strings are entries 2–7 of group 108. The Water overlay hotkey (<kbd>W</kbd>) is also documented in the keyboard commands message (ID 7).</p>
+          </div>
+        </details>
+
+      </div><!-- .dev-section -->
+
+      <div class="bld-nav">
+        <a href="index.html">← All Buildings</a>
+        <span style="color:var(--text-muted)">Health &amp; Water</span>
+        <a href="well.html">Well →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>

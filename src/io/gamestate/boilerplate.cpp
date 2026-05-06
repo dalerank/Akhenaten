@@ -67,6 +67,7 @@
 #include "scenario/scenario_invasion.h"
 #include "scenario/price_change.h"
 #include "scenario/request.h"
+#include "scenario/scenario.h"
 #include "sound/sound_city.h"
 #include "sound/sound.h"
 #include "widget/widget_top_menu_game.h"
@@ -280,6 +281,10 @@ static void post_load() {
     // city sounds
     sound_city_init();
     map_tiles_gardens_update_all();
+
+    events::emit(event_level_post_load{
+        static_cast<int>(game.session.last_loaded),
+        g_scenario.settings.campaign_scenario_id});
 }
 
 // set up list of io_buffer chunks in correct order for specific file format read/write operations
