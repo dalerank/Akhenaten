@@ -19,7 +19,7 @@ namespace debug {
 #define verify_no_crash(expr) { if (!(expr)) { ::debug::critical(__FILE__, __LINE__, #expr); } } ::debug::dummy_func()
 #define verify_no_crash_var(expr, ...) { if (!(expr)) { ::debug::critical(__FILE__, __LINE__, __VA_ARGS__); } } ::debug::dummy_func()
 
-template<typename Func>
+template<typename Func, typename Tag>
 struct FuncLinkedList {
     FuncLinkedList(Func cb) : func(cb) {
         next = tail;

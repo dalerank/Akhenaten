@@ -3,17 +3,17 @@
 #include "graphics/elements/tooltip.h"
 #include "input/hotkey.h"
 #include "input/mouse.h"
-#include "core/inplace_function.h"
+#include "core/xfunction.h"
 
 #include <array>
 
 struct window_type {
     xstring id;
-    inplace_function <void(int)> draw_background;
-    inplace_function <void(int)> draw_foreground;
-    inplace_function <void(const mouse*, const hotkeys*)> handle_input;
-    inplace_function <void(tooltip_context*)> draw_tooltip;
-    inplace_function <void()> draw_refresh;
+    xfunction <void(int)> draw_background;
+    xfunction <void(int)> draw_foreground;
+    xfunction <void(const mouse*, const hotkeys*)> handle_input;
+    xfunction <void(tooltip_context*)> draw_tooltip;
+    xfunction <void()> draw_refresh;
 };
 
 struct windows_manager_t {

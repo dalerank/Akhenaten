@@ -1,5 +1,5 @@
 /******************************************************************************
-Based on SG14 inplace_function proposal:
+Based on SG14 xfunction proposal:
 https://github.com/WG21-SG14/SG14
 
 Adapted for Akhenaten project.
@@ -7,7 +7,7 @@ Provides std::function-like interface with internal buffer (no heap allocation).
 
 Usage example:
     // Basic usage with lambda
-    core::inplace_function<void(int, int), 64> callback;
+    core::xfunction<void(int, int), 64> callback;
     callback = [](int x, int y) { };
     callback(10, 20);
 
@@ -39,19 +39,19 @@ MIT license compatible.
 
 // Forward declaration
 template<typename Signature, std::size_t Capacity = 64>
-class inplace_function;
+class xfunction;
 
 //*************************************************************************
-/// inplace_function - function wrapper with internal storage
-/// 
+/// xfunction - function wrapper with internal storage
+///
 /// Similar to std::function but uses internal buffer instead of heap allocation.
 /// If the callable object is larger than Capacity, compilation will fail.
-/// 
+///
 /// @tparam Signature Function signature (e.g., void(int, int))
 /// @tparam Capacity Size of internal buffer in bytes (default: 64)
 //*************************************************************************
 template<typename Return, typename... Args, std::size_t Capacity>
-class inplace_function<Return(Args...), Capacity> {
+class xfunction<Return(Args...), Capacity> {
 public:
     using return_type = Return;
     using argument_types = type_list<Args...>;
@@ -59,7 +59,7 @@ public:
     //*************************************************************************
     /// Default constructor - creates empty function
     //*************************************************************************
-    constexpr inplace_function() noexcept
+    constexpr xfunction() noexcept
         : invoker_(nullptr)
         , manager_(nullptr) {
     }
@@ -69,16 +69,16 @@ public:
     //*************************************************************************
     template<typename Functor,
         typename = std::enable_if_t<
-        !std::is_same_v<std::decay_t<Functor>, inplace_function> &&
+        !std::is_same_v<std::decay_t<Functor>, xfunction> &&
         std::is_invocable_r_v<Return, Functor, Args...>
         >>
-        inplace_function(Functor &&functor) noexcept(
+        xfunction(Functor &&functor) noexcept(
         std::is_nothrow_copy_constructible_v<std::decay_t<Functor>> ||
         std::is_nothrow_move_constructible_v<std::decay_t<Functor>>
         ) {
         using functor_type = std::decay_t<Functor>;
         static_assert(sizeof(functor_type) <= Capacity,
-            "Functor is too large for inplace_function buffer");
+            "Functor is too large for xfunction buffer");
         static_assert(alignof(functor_type) <= alignof(storage_type),
             "Functor alignment requirement exceeds buffer alignment");
 
@@ -90,7 +90,7 @@ public:
     //*************************************************************************
     /// Copy constructor
     //*************************************************************************
-    inplace_function(const inplace_function &other) {
+    xfunction(const xfunction &other) {
         if (other) {
             other.manager_(operation::copy, other.storage_, storage_);
             invoker_ = other.invoker_;
@@ -104,7 +104,7 @@ public:
     //*************************************************************************
     /// Move constructor
     //*************************************************************************
-    inplace_function(inplace_function &&other) noexcept {
+    xfunction(xfunction &&other) noexcept {
         if (other) {
             other.manager_(operation::move, other.storage_, storage_);
             invoker_ = other.invoker_;
@@ -120,7 +120,7 @@ public:
     //*************************************************************************
     /// Destructor
     //*************************************************************************
-    ~inplace_function() {
+    ~xfunction() {
         if (manager_) {
             manager_(operation::destroy, storage_, nullptr);
         }
@@ -129,7 +129,7 @@ public:
     //*************************************************************************
     /// Copy assignment
     //*************************************************************************
-    inplace_function &operator=(const inplace_function &other) {
+    xfunction &operator=(const xfunction &other) {
         if (this != &other) {
             if (manager_) {
                 manager_(operation::destroy, storage_, nullptr);
@@ -149,7 +149,7 @@ public:
     //*************************************************************************
     /// Move assignment
     //*************************************************************************
-    inplace_function &operator=(inplace_function &&other) noexcept {
+    xfunction &operator=(xfunction &&other) noexcept {
         if (this != &other) {
             if (manager_) {
                 manager_(operation::destroy, storage_, nullptr);
@@ -172,18 +172,18 @@ public:
     /// Assignment from callable object
     //*************************************************************************
     template<typename Functor>
-    inplace_function &operator=(Functor &&functor) {
+    xfunction &operator=(Functor &&functor) {
         if (manager_) {
             manager_(operation::destroy, storage_, nullptr);
         }
-        new (this) inplace_function(std::forward<Functor>(functor));
+        new (this) xfunction(std::forward<Functor>(functor));
         return *this;
     }
 
     //*************************************************************************
     /// Assignment from nullptr (clears the function)
     //*************************************************************************
-    inplace_function &operator=(std::nullptr_t) noexcept {
+    xfunction &operator=(std::nullptr_t) noexcept {
         if (manager_) {
             manager_(operation::destroy, storage_, nullptr);
             invoker_ = nullptr;
@@ -193,9 +193,9 @@ public:
     }
 
     //*************************************************************************
-    /// Swap two inplace_functions
+    /// Swap two xfunctions
     //*************************************************************************
-    void swap(inplace_function &other) noexcept {
+    void swap(xfunction &other) noexcept {
         if (this == &other) {
             return;
         }
@@ -309,11 +309,11 @@ private:
 };
 
 //*************************************************************************
-/// Swap function for inplace_function
+/// Swap function for xfunction
 //*************************************************************************
 template<typename Signature, std::size_t Capacity>
-void swap(inplace_function<Signature, Capacity> &lhs,
-    inplace_function<Signature, Capacity> &rhs) noexcept {
+void swap(xfunction<Signature, Capacity> &lhs,
+    xfunction<Signature, Capacity> &rhs) noexcept {
     lhs.swap(rhs);
 }
 
@@ -321,21 +321,21 @@ void swap(inplace_function<Signature, Capacity> &lhs,
 /// Comparison operators
 //*************************************************************************
 template<typename Signature, std::size_t Capacity>
-bool operator==(const inplace_function<Signature, Capacity> &f, std::nullptr_t) noexcept {
+bool operator==(const xfunction<Signature, Capacity> &f, std::nullptr_t) noexcept {
     return !f;
 }
 
 template<typename Signature, std::size_t Capacity>
-bool operator==(std::nullptr_t, const inplace_function<Signature, Capacity> &f) noexcept {
+bool operator==(std::nullptr_t, const xfunction<Signature, Capacity> &f) noexcept {
     return !f;
 }
 
 template<typename Signature, std::size_t Capacity>
-bool operator!=(const inplace_function<Signature, Capacity> &f, std::nullptr_t) noexcept {
+bool operator!=(const xfunction<Signature, Capacity> &f, std::nullptr_t) noexcept {
     return static_cast<bool>(f);
 }
 
 template<typename Signature, std::size_t Capacity>
-bool operator!=(std::nullptr_t, const inplace_function<Signature, Capacity> &f) noexcept {
+bool operator!=(std::nullptr_t, const xfunction<Signature, Capacity> &f) noexcept {
     return static_cast<bool>(f);
 }

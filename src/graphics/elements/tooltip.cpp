@@ -196,7 +196,7 @@ bool tooltip_context::should_draw_tooltip() {
     return true;
 }
 
-void tooltip_handle(const mouse* m, inplace_function<void(tooltip_context*)> func) {
+void tooltip_handle(const mouse* m, xfunction<void(tooltip_context*)> func) {
     static tooltip_context context;
     if (m->is_touch && !m->left.is_down) {
         context.reset_timer();

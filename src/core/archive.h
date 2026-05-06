@@ -858,12 +858,13 @@ namespace config {
     void refresh(archive);
     archive load(pcstr filename);
 
+    struct ConfigTag {};
     using config_iterator_function_cb = void();
-    using ArchiveIterator = FuncLinkedList<config_iterator_function_cb *>;
+    using ArchiveIterator = FuncLinkedList<config_iterator_function_cb *, ConfigTag>;
 
     struct type_enum {};
     using config_iterator_enum_function_cb = void(type_enum);
-    using EnumIterator = FuncLinkedList<config_iterator_enum_function_cb *>;
+    using EnumIterator = FuncLinkedList<config_iterator_enum_function_cb *, ConfigTag>;
 
 } // end namespace config
 

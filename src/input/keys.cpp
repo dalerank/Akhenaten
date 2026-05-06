@@ -2,6 +2,7 @@
 
 #include "core/encoding.h"
 #include "game/system.h"
+#include "input/keyboard.h"
 #include "graphics/font.h"
 
 #include <string.h>
@@ -114,24 +115,24 @@ const uint8_t* key_combination_display_name(int key, int modifiers) {
 
     result[0] = 0;
     if (modifiers & KEY_MOD_CTRL) {
-        strcat(result, system_keyboard_key_modifier_name(KEY_MOD_CTRL));
+        strcat(result, keyboard_t::key_modifier_name(KEY_MOD_CTRL));
         strcat(result, " ");
     }
     if (modifiers & KEY_MOD_ALT) {
-        strcat(result, system_keyboard_key_modifier_name(KEY_MOD_ALT));
+        strcat(result, keyboard_t::key_modifier_name(KEY_MOD_ALT));
         strcat(result, " ");
     }
     if (modifiers & KEY_MOD_GUI) {
-        strcat(result, system_keyboard_key_modifier_name(KEY_MOD_GUI));
+        strcat(result, keyboard_t::key_modifier_name(KEY_MOD_GUI));
         strcat(result, " ");
     }
     if (modifiers & KEY_MOD_SHIFT) {
-        strcat(result, system_keyboard_key_modifier_name(KEY_MOD_SHIFT));
+        strcat(result, keyboard_t::key_modifier_name(KEY_MOD_SHIFT));
         strcat(result, " ");
     }
 
     // Modifiers are easy, now for key name...
-    const char* key_name = system_keyboard_key_name(key);
+    const char* key_name = keyboard_t::key_name(key);
     if ((key_name[0] & 0x80) == 0) {
         // Special cases where we know the key is not displayable using the internal font
         switch (key_name[0]) {

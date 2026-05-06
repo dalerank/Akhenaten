@@ -2,6 +2,7 @@
 
 #include "game/system.h"
 #include "input/hotkey.h"
+#include "input/keyboard.h"
 #include "content/vfs.h"
 #include "core/log.h"
 #include "js/js_game.h"
@@ -109,7 +110,7 @@ void game_hotkeys::set_mapping(bool alt, e_key key, e_key_mode modifiers, e_hotk
 }
 
 void game_hotkeys::set_layout_mapping(pcstr name, e_key default_key, e_key_mode modifiers, e_hotkey_action action) {
-    e_key key = system_keyboard_key_for_symbol(name);
+    e_key key = keyboard_t::key_for_symbol(name);
     if (key == KEY_NONE) {
         logs::info("No key found on layout for: %s", name);
         key = default_key;

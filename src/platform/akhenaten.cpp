@@ -17,7 +17,6 @@
 #include "platform/arguments.h"
 #include "platform/cursor.h"
 #include "content/content.h"
-#include "platform/keyboard_input.h"
 #include "platform/platform.h"
 #include "platform/prefs.h"
 #include "platform/screen.h"
@@ -202,7 +201,7 @@ static void setup() {
     }
 
     // pre-init engine: assert game directory, pref files, etc.
-    g_application.setup();
+    g_app.setup();
 #if defined(GAME_PLATFORM_ANDROID)
     android_append_startup_log("Startup: asking for data folder");
     pcstr initial_user_dir = android_show_pharaoh_path_dialog(false);
@@ -479,14 +478,11 @@ static void handle_event(SDL_Event* event, bool& active, bool& quit) {
         break;
 #endif
     case SDL_KEYDOWN:
-        platform_handle_key_down(&event->key);
-        break;
     case SDL_KEYUP:
-        platform_handle_key_up(&event->key);
-        break;
     case SDL_TEXTINPUT:
-        platform_handle_text(&event->text);
+        g_app.handle_keyboard_event(event);
         break;
+
     case SDL_MOUSEMOTION:
         if (event->motion.which != SDL_TOUCH_MOUSEID && !SDL_GetRelativeMouseMode()) {
             mouse::ref().set_position({event->motion.x, event->motion.y});
@@ -549,6 +545,7 @@ static void main_loop() {
     platform_per_frame_callback();
 #endif
     /* Process event queue */
+
 #ifdef __vita__
     while (vita_poll_event(&event)) {
 #elif defined(__SWITCH__)
@@ -558,15 +555,15 @@ static void main_loop() {
 #endif
         bool handled_imgui = game_imgui_overlay_handle_event(&event);
         if (!handled_imgui) {
-            handle_event(&event, g_application.active, g_application.quit);
+            handle_event(&event, g_app.active, g_app.quit);
         }
     }
 
-    if (g_application.quit) {
+    if (g_app.quit) {
         return;
     }
 
-    if (g_application.active) {
+    if (g_app.active) {
         run_and_draw();
     } else {
         SDL_WaitEvent(NULL);
@@ -591,6 +588,8 @@ int main(int argc, char** argv) {
 
     logs::initialize();
 
+    g_app.register_modules();
+
     setup();
 
     if (g_args.should_unpack_scripts()) {
@@ -600,7 +599,7 @@ int main(int argc, char** argv) {
     g_mouse.init();
 
     game_imgui_overlay_init();
-    g_application.subscribe_events();
+    g_app.subscribe_events();
 #if defined(GAME_PLATFORM_ANDROID)
     android_append_startup_log("Startup: language reload");
 #endif
@@ -620,14 +619,14 @@ int main(int argc, char** argv) {
 #elif defined(GAME_PLATFORM_WIN)
     LONG CALLBACK debug_sehgilter(PEXCEPTION_POINTERS pExceptionPointers);
     __try {
-        while (!g_application.quit) {
+        while (!g_app.quit) {
             main_loop();
         }
     } __except (debug_sehgilter(GetExceptionInformation())) {
         return 0;
     }
 #else
-    while (!g_application.quit) {
+    while (!g_app.quit) {
         main_loop();
     }
 #endif

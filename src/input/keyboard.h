@@ -1,6 +1,7 @@
 #pragma once
 
 #include "graphics/font.h"
+#include "input/keys.h"
 
 #include <stdint.h>
 
@@ -36,7 +37,7 @@ struct keyboard_t {
 
     bool input_is_accepted();
     bool is_capturing();
-    bool is_capturing_buffer(const uint8_t* text);
+    bool is_capturing_buffer(const uint8_t* buf);
     bool is_insert();
     int  get_cursor_position();
     int get_cursor_abs_offset();
@@ -59,12 +60,18 @@ struct keyboard_t {
     int press_character(uint8_t* text);
     void remove_current_char();
     void add_char(const uint8_t* value, int bytes);
-    void set_text(const char* text_utf8);
+    void set_text(pcstr text_utf8);
 
     void set_viewport_to_start();
     void set_viewport_to_end();
     void include_cursor_in_viewport();
     void update_viewport(int has_changed);
+
+    static pcstr key_name(int key);
+    static e_key key_for_symbol(pcstr name);
+    static int get_key_from_scancode(int scancode);
+    static pcstr key_modifier_name(int modifier);
+    static uint32_t get_scancode_from_key(int key);
 
     int get_current_char_bytes();
 };

@@ -121,7 +121,6 @@ struct platform_t {
 #endif
 	}
 
-	int get_key_from_scancode(int scancode);
 	bool file_manager_should_case_correct_file();
 };
 

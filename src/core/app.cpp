@@ -10,9 +10,10 @@
 #include "core/log.h"
 #include "js/js_events.h"
 #include "js/js_game.h"
+
 #include <SDL.h>
 
-application_t g_application;
+application_t g_app;
 
 ANK_SCRIPT_EVENT(event_request_exit, value)
 void ANK_PERMANENT_CALLBACK(event_request_exit, ev) {
@@ -65,6 +66,22 @@ void app_terminate(const char* message) noexcept {
 void application_t::setup() {
     game_name = "Akhenaten";
     logs::info("Engine set to %s", game_name.c_str());
+}
+
+void application_t::register_modules() {
+    for (application::ModuleIterator* m = application::ModuleIterator::tail; m; m = m->next) {
+        m->func();
+    }
+}
+
+void application_t::register_keyboard_event_handler(event_handler_cb cb) {
+    keyboard_event_handlers.push_back(cb);
+}
+
+void application_t::handle_keyboard_event(SDL_Event* event) {
+    for (auto& handler : keyboard_event_handlers) {
+        handler(event);
+    }
 }
 
 void application_t::subscribe_events() {

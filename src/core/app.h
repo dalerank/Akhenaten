@@ -2,6 +2,8 @@
 
 #include "core/vec2i.h"
 #include "core/xstring.h"
+#include "core/xfunction.h"
+#include "core/hvector.h"
 
 struct event_app_center_screen { int value; };
 struct event_app_toggle_fullscreen { int value; };
@@ -9,6 +11,7 @@ struct event_app_screenshot { int value; };
 struct event_app_city_screenshot { int value; };
 struct event_request_exit { int value; };
 struct event_display_options_apply_resolution { int w; int h; };
+union SDL_Event;
 
 enum e_user_event {
     USER_EVENT_QUIT,
@@ -29,9 +32,30 @@ struct application_t {
 
     xstring game_name;
 
+    using event_handler_cb = xfunction<void(SDL_Event*)>;
+    hvector<event_handler_cb, 32> keyboard_event_handlers;
+
     void setup();
 
     void subscribe_events();
+    void register_modules();
+
+
+    void register_keyboard_event_handler(event_handler_cb);
+
+    void handle_keyboard_event(SDL_Event* event);
 };
 
-extern application_t g_application;
+extern application_t g_app;
+
+namespace application {
+
+    struct AppTag {};
+    using module_iterator_function_cb = void();
+    using ModuleIterator = FuncLinkedList<module_iterator_function_cb*, AppTag>;
+
+} // end namespace application
+
+#define ANK_REGISTER_APPLICATION_MODULE(func) func(); \
+    namespace application {int ANK_CONFIG_PULL_VAR_NAME(func) = 1;} \
+    static application::ModuleIterator ANK_CONFIG_CC1(module_handler, __LINE__)(func); void func() 

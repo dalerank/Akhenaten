@@ -4,7 +4,7 @@
 #include "input/mouse.h"
 #include "core/xstring.h"
 #include "core/system_time.h"
-#include "core/inplace_function.h"
+#include "core/xfunction.h"
 
 enum {
     IB_BUILD = 2,
@@ -34,8 +34,8 @@ struct image_button {
     time_millis pressed_since;
     xstring _tooltip;
 
-    using onclick_cb = inplace_function<void(int, int)>;
-    using onclick_void = inplace_function<void()>;
+    using onclick_cb = xfunction<void(int, int)>;
+    using onclick_void = xfunction<void()>;
 
     onclick_cb _onclick, _onrclick;
     onclick_void _onclick_void, _onrclick_void;

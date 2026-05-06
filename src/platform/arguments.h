@@ -28,8 +28,9 @@ namespace arguments {
     };
     
     using argument_handler_cb = std::optional<argument_result>(int argc, char** argv, int current_index);
-    using ArgumentHandler = FuncLinkedList<argument_handler_cb*>;
-    using ArgumentInfo = FuncLinkedList<argument_info*>;
+    struct ArgumentHandlerTag {};
+    using ArgumentHandler = FuncLinkedList<argument_handler_cb*, ArgumentHandlerTag>;
+    using ArgumentInfo = FuncLinkedList<argument_info*, ArgumentHandlerTag>;
 
     /// Load configuration from the file (if exists)
     /// @return true if configuration fil was found and loaded, false otherwise

@@ -413,7 +413,7 @@ namespace js_helpers {
 namespace config {
 
     using jsfunc_iterator_function_cb = void(js_State *);
-    using FunctionIterator = FuncLinkedList<jsfunc_iterator_function_cb *>;
+    using FunctionIterator = FuncLinkedList<jsfunc_iterator_function_cb *, ConfigTag>;
 
     struct ESIteratorEntry {
         xstring es_type;

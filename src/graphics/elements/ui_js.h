@@ -11,7 +11,8 @@
 struct js_Object;
 struct js_State;
 
-using UiElementProtoRegIterator = FuncLinkedList<void (*)(js_State *)>;
+struct UiElementTag {};
+using UiElementProtoRegIterator = FuncLinkedList<void (*)(js_State *), UiElementTag>;
 
 /** Link `void func(js_State *J)` into UI MuJS registration (same idea as ANK_REGISTER_PROPS_ITERATOR). */
 #define ANK_REGISTER_UI_ELEMENT_PROTO(func) \

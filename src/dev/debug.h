@@ -174,7 +174,8 @@ inline std::istream& operator>>(std::istream& is, bstring128& arg) {
 namespace debug {
 
 using debug_iterator_function_cb = void(bool);
-using PropertiesIterator = FuncLinkedList<debug_iterator_function_cb*>;
+struct DebugModelTag {};
+using PropertiesIterator = FuncLinkedList<debug_iterator_function_cb*, DebugModelTag>;
 
 } // end namespace debug
 

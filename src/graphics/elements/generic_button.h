@@ -4,7 +4,7 @@
 #include "input/mouse.h"
 #include "graphics/text.h"
 #include "graphics/elements/button.h"
-#include "core/inplace_function.h"
+#include "core/xfunction.h"
 
 #include <vector>
 #include <functional>
@@ -19,8 +19,8 @@ struct generic_button {
     int parameter1 = 0;
     int parameter2 = 0;
 
-    using onclick_cb = inplace_function<void(int, int)>;
-    using onclick_void = inplace_function<void()>;
+    using onclick_cb = xfunction<void(int, int)>;
+    using onclick_void = xfunction<void()>;
     onclick_cb _onclick;
     onclick_void _onclick_void;
     onclick_cb _onrclick;
@@ -34,10 +34,10 @@ struct generic_button {
 
     generic_button &onclick(onclick_cb f) { _onclick = f; return *this; }
     generic_button &onclick(onclick_void f) { _onclick_void = f; return *this; }
-    
+
     generic_button &onrclick(onclick_cb f) { _onrclick = f; return *this; }
     generic_button &onrclick(onclick_void f) { _onrclick_void = f; return *this; }
-   
+
     generic_button &tooltip(textid t);
     generic_button &tooltip(const xstring &t);
     generic_button &tooltip(const std::initializer_list<int> &t);
@@ -55,5 +55,5 @@ template<class T>
 inline int generic_buttons_handle_mouse(const mouse *m, vec2i pos, const T &buttons, int &focus_button_id) {
     return buttons.size() > 0
                 ? generic_buttons_handle_mouse(m, pos, &buttons.front(), (int)buttons.size(), &focus_button_id, nullptr)
-                : 0; 
+                : 0;
 }

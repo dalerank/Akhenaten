@@ -191,8 +191,8 @@ namespace ui {
         int data[4] = {0, 1, 2, 3};
     };
 
-    using button_onclick_cb = inplace_function<void(int, int)>;
-    using button_onclick_simple_cb = inplace_function<void()>;
+    using button_onclick_cb = xfunction<void(int, int)>;
+    using button_onclick_simple_cb = xfunction<void()>;
 
     const tooltip_context& get_tooltip();
     void set_tooltip(const xstring& text);

@@ -5,15 +5,17 @@
 #include "building_static_params.h"
 #include "building_planer_renderer.h"
 #include "building_fwd.h"
+
 class building_impl;
 
 namespace buildings {
 
-    typedef building_impl *(*create_building_function_cb)(e_building_type, building &);
-    typedef void (*load_building_static_params_cb)();
+    using create_building_function_cb = building_impl*(e_building_type, building&);
+    using load_building_static_params_cb = void();
 
-    using BuildingCtorIterator = FuncLinkedList<create_building_function_cb>;
-    using BuildingParamIterator = FuncLinkedList<load_building_static_params_cb>;
+    struct BuildingModelTag {};
+    using BuildingCtorIterator = FuncLinkedList<create_building_function_cb*, BuildingModelTag>;
+    using BuildingParamIterator = FuncLinkedList<load_building_static_params_cb*, BuildingModelTag>;
 
     template<typename T>
     struct model_t {

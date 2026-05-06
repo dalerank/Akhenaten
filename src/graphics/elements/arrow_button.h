@@ -21,8 +21,8 @@ struct arrow_button {
     int* repeats_ptr = nullptr;
     xstring _tooltip;
 
-    using onclick_cb = inplace_function<void(int, int)>;
-    using onclick_simple_cb = inplace_function<void()>;
+    using onclick_cb = xfunction<void(int, int)>;
+    using onclick_simple_cb = xfunction<void()>;
     onclick_cb _onclick;
     onclick_simple_cb _onclick_void;
 

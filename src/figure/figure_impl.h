@@ -206,11 +206,12 @@ GENERATE_SMART_CAST_FIGURE(bricklayer)
 namespace figures {
 
 figure_impl *create(e_figure_type, figure&);
-typedef figure_impl* (*create_figure_function_cb)(e_figure_type, figure&);
-typedef void (*load_figure_static_params_cb)();
+using create_figure_function_cb = figure_impl* (e_figure_type, figure&);
+using load_figure_static_params_cb = void();
 
-using FigureCtorIterator = FuncLinkedList<create_figure_function_cb>;
-using FigureStaticParamIterator = FuncLinkedList<load_figure_static_params_cb>;
+struct FigureModelTag {};
+using FigureCtorIterator = FuncLinkedList<create_figure_function_cb*, FigureModelTag>;
+using FigureStaticParamIterator = FuncLinkedList<load_figure_static_params_cb*, FigureModelTag>;
 
 template<typename T>
 struct model_t {

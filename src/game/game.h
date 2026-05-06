@@ -8,7 +8,7 @@
 #include "game/simulation_time.h"
 #include "game/game_events.h"
 #include "core/system_time.h"
-#include "core/inplace_function.h"
+#include "core/xfunction.h"
 #include "core/hvector.h"
 
 enum e_difficulty {
@@ -54,7 +54,7 @@ struct event_game_scripts_was_reloaded {};
 struct event_report_bug_result { int ok; xstring url; xstring error; };
 
 struct game_t {
-    using serial_event_t = inplace_function<void()>;
+    using serial_event_t = xfunction<void()>;
 
     enum {
         MAX_ANIM_TIMERS = 51
