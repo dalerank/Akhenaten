@@ -95,6 +95,10 @@ int platform_file_manager_list_directory_contents(pcstr dir, int type, pcstr ext
         return LIST_ERROR;
     }
 
+#if defined(GAME_PLATFORM_ANDROID)
+    return android_get_directory_contents(dir ? dir : "", type, extension ? extension : "", callback);
+#endif
+
     path save_dir(platform_file_manager_get_base_path(), "/", dir);
     dir = save_dir.c_str();
     dir_name current_dir;
@@ -167,7 +171,7 @@ int platform_file_manager_set_base_path(pcstr path) {
         logs::error("set_base_path: path was not set. Akhenaten will probably crash.");
         return 0;
     }
-    return (android_set_base_path(path) == 0);
+    return android_set_base_path(path) != 0;
 #else
     return true;
 #endif

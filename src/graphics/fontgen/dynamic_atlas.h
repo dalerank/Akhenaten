@@ -26,7 +26,7 @@ namespace DynamicFont {
     class Atlas {
     public:
         Atlas(const std::string &fontPath, int fontSize, const Charset &, RenderMode, int padding, bool fit, uint8_t *colors, bool bold, int shadowOffset = 0);
-        Atlas(span_const<uint8_t> fontData, int fontSize, const Charset &, RenderMode, int padding, bool fit, bool bold, int shadowOffset = 0);
+        Atlas(span_const<uint8_t> fontData, int fontSize, const Charset &, RenderMode, int padding, bool fit, uint8_t *colors, bool bold, int shadowOffset = 0);
 
         class FreeTypeGlyph;
         class Bitmap;

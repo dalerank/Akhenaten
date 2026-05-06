@@ -14,6 +14,10 @@
 #include <sstream>
 #include <memory>
 
+#if defined(GAME_PLATFORM_ANDROID)
+#include "platform/android/android.h"
+#endif
+
 #if defined( __EMSCRIPTEN__ )
 #include <emscripten.h>
 EM_ASYNC_JS(void, __sync_em_fs, (), {
@@ -37,6 +41,47 @@ FILE * file_open_os(pcstr filename, pcstr mode) {
 
 std::vector<ZipArchive*> g_mounted_archives;
 
+#if defined(GAME_PLATFORM_ANDROID)
+namespace {
+    reader read_file_stream(path path, FILE *f, bool null_terminate) {
+        std::string buffer;
+        char chunk[8192];
+
+        while (true) {
+            const size_t read = fread(chunk, 1, sizeof(chunk), f);
+            if (read > 0) {
+                buffer.append(chunk, read);
+            }
+
+            if (read < sizeof(chunk)) {
+                break;
+            }
+        }
+
+        const bool failed = ferror(f) != 0;
+        fclose(f);
+        if (failed) {
+            return reader();
+        }
+
+        const size_t extra = null_terminate ? 1 : 0;
+        void *mem = malloc(buffer.size() + extra);
+        if (!mem && (buffer.size() + extra) > 0) {
+            return reader();
+        }
+
+        if (!buffer.empty()) {
+            memcpy(mem, buffer.data(), buffer.size());
+        }
+        if (null_terminate) {
+            ((char *)mem)[buffer.size()] = 0;
+        }
+
+        return std::make_shared<data_reader>(path.c_str(), mem, static_cast<int>(buffer.size()));
+    }
+}
+#endif
+
 template<typename ... Args>
 void log_io(pcstr fmt, Args ... args) {
     if (!g_verbose_log) {
@@ -52,7 +97,21 @@ namespace detail {
             return false;
         }
 
+#if defined(GAME_PLATFORM_ANDROID)
+        if (std::filesystem::exists(fspath.c_str())) {
+            return true;
+        }
+
+        FILE *fp = file_open_os(fspath.c_str(), "rb");
+        if (!fp) {
+            return false;
+        }
+
+        fclose(fp);
+        return true;
+#else
         return std::filesystem::exists(fspath.c_str());
+#endif
     }
 }
 
@@ -127,6 +186,15 @@ reader file_open(path path, pcstr mode) {
     } 
 
     if (is_text_file) { // text mode
+#if defined(GAME_PLATFORM_ANDROID)
+        FILE *f = file_open_os(path.c_str(), mode);
+        if (f) {
+            log_io("[text] loaded from %s", path.c_str());
+            return read_file_stream(path, f, true);
+        }
+
+        return reader();
+#else
         std::ifstream file(path.c_str());
         if (file.is_open()) {
             log_io("[text] loaded from %s", path.c_str());
@@ -140,11 +208,15 @@ reader file_open(path path, pcstr mode) {
         }
 
         return reader();
+#endif
     }
 
     FILE *f = file_open_os(path.c_str(), mode);
     if (f) {
         log_io("[binr] file_open %s", path.c_str());
+#if defined(GAME_PLATFORM_ANDROID)
+        return read_file_stream(path, f, false);
+#else
         fseek(f, 0, SEEK_END);
         uint32_t size = ftell(f);
         fseek(f, 0, SEEK_SET);
@@ -152,6 +224,7 @@ reader file_open(path path, pcstr mode) {
         fread(mem, 1, size, f);
         fclose(f);
         return std::make_shared<data_reader>(path.c_str(), mem, size);
+#endif
     }
 
     return reader();
@@ -279,10 +352,17 @@ bool mount_pack(pcstr filename) {
 }
 
 void create_folders(pcstr path) {
+#if defined(GAME_PLATFORM_ANDROID)
+    if (path && *path) {
+        ::android_create_directories(path);
+    }
+    return;
+#else
     std::error_code err;
     if (!std::filesystem::create_directories(path, err) && !std::filesystem::exists(path)) {
         logs::info(err.message().c_str());
     }
+#endif
 }
 
 void sync_em_fs() {
@@ -294,8 +374,12 @@ void sync_em_fs() {
 }
 
 void remove_folder(path folder_path) {
+#if defined(GAME_PLATFORM_ANDROID)
+    ::android_remove_directory(folder_path.c_str());
+#else
     folder_path = content_path(folder_path);
     std::filesystem::remove_all(folder_path.c_str());
+#endif
     sync_em_fs();
 }
 

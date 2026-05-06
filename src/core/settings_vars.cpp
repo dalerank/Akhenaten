@@ -375,7 +375,7 @@ void globals_settings_t::sync_global(pcstr filename, pcstr name) {
 		return;
 	}
 
-	vfs::path fs_file = vfs::content_path(filename);
+	vfs::path fs_file = vfs::path(filename).resolve();
 	FILE *fp = vfs::file_open_os(fs_file, "wt");
 	if (!fp) {
 		logs::error("Unable to write settings file %s", fs_file.c_str());

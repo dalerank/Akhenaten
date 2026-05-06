@@ -8,7 +8,6 @@ import camera
 import game
 import math
 import rating_points
-import game_messages_en
 import animal_herds
 import gods
 import city
@@ -54,9 +53,6 @@ import imagepaks
 import missions
 import figures
 import localization
-import localization_base_en
-import localization_en
-import eventmsg_en
 import building_menu
 import desirability
 import kingdome_relation

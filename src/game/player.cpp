@@ -129,9 +129,31 @@ const char* player_get_last_autosave() {
     return data.last_autosave_path;
 }
 
+namespace {
+    void player_set_fallback_last_autosave(pcstr player_name) {
+        auto& data = player_data();
+        data.last_autosave_path.clear();
+
+        if (!player_name || !*player_name) {
+            return;
+        }
+
+        const vfs::path autosave_svx("Save/", player_name, "/autosave_replay.svx");
+        if (vfs::file_exists(autosave_svx.c_str())) {
+            data.last_autosave_path = autosave_svx.c_str();
+            return;
+        }
+
+        const vfs::path autosave_sav("Save/", player_name, "/autosave_replay.sav");
+        if (vfs::file_exists(autosave_sav.c_str())) {
+            data.last_autosave_path = autosave_sav.c_str();
+        }
+    }
+}
+
 bool player_data_prepare_savegame(const char* filename_short) {
     vfs::path savefile = fullpath_saves(filename_short);
-    bstring256 folders = vfs::content_path(fullpath_saves(""));
+    bstring256 folders = fullpath_saves("");
 
     vfs::create_folders(folders);
     // write file (serialize applies content_path internally; do not pass pre-resolved path)
@@ -182,6 +204,7 @@ static void load_unused_dat_chunk(buffer* buf, int index) {
 
 void player_data_load(const uint8_t* player_name) {
     auto& data = player_data();
+    data.last_autosave_path.clear();
     // <player>.dat
     data.dat_file->clear();
     data.dat_file->reset_offset();
@@ -189,6 +212,7 @@ void player_data_load(const uint8_t* player_name) {
     vfs::path fs_family_save = family_save.resolve();
     int size = io_read_file_into_buffer(fs_family_save, NOT_LOCALIZED, data.dat_file, DAT_FILE_SIZE);
     if (!size) {
+        player_set_fallback_last_autosave((const char*)player_name);
         return;
     }
 
@@ -205,9 +229,12 @@ void player_data_load(const uint8_t* player_name) {
     bstring64 raw_autosave_path;
     data.dat_file->read_raw(raw_autosave_path.data(), raw_autosave_path.capacity); // path to last autosave_replay.sav file
 
-    data.last_autosave_path.clear();
     if (!fs_family_save.empty()) {
         data.last_autosave_path = raw_autosave_path;
+    }
+
+    if (data.last_autosave_path.empty() || !vfs::file_exists(data.last_autosave_path.c_str())) {
+        player_set_fallback_last_autosave((const char*)player_name);
     }
 
     data.unk00 = data.dat_file->read_i32();  // unknown 32-bit field (0)

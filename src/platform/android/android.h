@@ -13,6 +13,8 @@ int android_get_file_descriptor(const char *filename, const char *mode);
 int android_set_base_path(const char *path);
 int android_get_directory_contents(const char *dir, int type, const char *extension, int (*callback)(const char *));
 int android_remove_file(const char *filename);
+int android_create_directories(const char *path);
+int android_remove_directory(const char *path);
 
 void *android_open_asset(const char *asset, const char *mode);
 

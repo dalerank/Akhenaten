@@ -33,7 +33,7 @@ empire_t g_empire;
 
 declare_console_command_p(save_empire_routes) {
     const int MAX_ROUTE_OBJECTS = 50;
-    vfs::path fs_file = vfs::content_path("empire_routes.js");
+    vfs::path fs_file = vfs::path("empire_routes.js").resolve();
     FILE* fp = vfs::file_open_os(fs_file, "wt");
     if (!fp) {
         logs::error("Unable to empire_routes file %s", fs_file.c_str());

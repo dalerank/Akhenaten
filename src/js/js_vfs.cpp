@@ -13,20 +13,30 @@ namespace vfs {
 
     constexpr pcstr internal_scripts_path = "src/scripts/";
 
+    namespace {
+        std::pair<void *, uint32_t> open_embedded_file(pcstr prefix, pcstr path) {
+            if (!path || !*path) {
+                return { nullptr, 0 };
+            }
+
+            auto fs = cmrc::akhenaten::get_filesystem();
+
+            bstring256 fs_path(prefix, (*path == ':') ? (path + 1) : path);
+            if (!fs.exists(fs_path.c_str())) {
+                return { nullptr, 0 };
+            }
+
+            auto fd1 = fs.open(fs_path.c_str());
+            return { (void *)fd1.begin(), (uint32_t)fd1.size() };
+        }
+    }
+
     std::pair<void *, uint32_t> internal_file_open(pcstr path) {
-        if (!path || !*path) {
-            return { nullptr, 0 };
-        }
+        return open_embedded_file(internal_scripts_path, path);
+    }
 
-        auto fs = cmrc::akhenaten::get_filesystem();
-
-        bstring256 fs_path(internal_scripts_path, (*path == ':') ? (path + 1) : path);
-        if (!fs.exists(fs_path.c_str())) {
-            return { nullptr, 0 };
-        }
-
-        auto fd1 = fs.open(fs_path.c_str());
-        return { (void *)fd1.begin(), (uint32_t)fd1.size() };
+    std::pair<void *, uint32_t> internal_resource_open(pcstr path) {
+        return open_embedded_file("", path);
     }
 
     // Helper function to unpack a directory recursively
