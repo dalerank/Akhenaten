@@ -19,8 +19,9 @@ function player_selection_btn_delete() {
         return
     }
 
+    var dynasty_name = game.dynasty_name
     ui.show_yesno("#popup_dialog_delete_dynasty", function() {
-        __game_delete_player(game.dynasty_name)
+        __game_delete_player(dynasty_name)
         window_player_selection.need_refresh_list = true
     })
 }

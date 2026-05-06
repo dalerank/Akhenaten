@@ -167,8 +167,15 @@ void player_data_new(const uint8_t* player_name) {
 }
 
 void player_data_delete(const uint8_t* player_name) {
+    if (!player_name || !*player_name) {
+        return;
+    }
+
     vfs::path folder_path(vfs::SAVE_FOLDER, "/", (const char*)player_name);
     vfs::remove_folder(folder_path);
+
+    vfs::path legacy_dat("Save/", (const char*)player_name, ".dat");
+    vfs::file_remove(legacy_dat.c_str());
 }
 
 static void load_unused_dat_chunk(buffer* buf, int index) {

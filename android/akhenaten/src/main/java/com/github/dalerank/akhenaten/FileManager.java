@@ -453,7 +453,13 @@ public class FileManager {
     @SuppressWarnings("unused")
     public static boolean deleteDirectory(AkhenatenMainActivity activity, String dirPath) {
         try {
-            FileInfo dirInfo = getFileFromPath(activity, dirPath);
+            String normalizedPath = normalizeRelativePath(dirPath);
+            if (normalizedPath.isEmpty() || normalizedPath.equalsIgnoreCase("Save")) {
+                Log.w("akhenaten", "Refusing to delete protected directory: " + normalizedPath);
+                return false;
+            }
+
+            FileInfo dirInfo = getFileFromPath(activity, normalizedPath);
             if (dirInfo == null || !dirInfo.isDirectory()) {
                 return false;
             }
