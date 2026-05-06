@@ -80,6 +80,12 @@ function mission_choice_resolve_text(v) {
     return ""
 }
 
+function mission_choice_branch_start(scenario_id) {
+    game.mission_briefing_scenario_id = scenario_id
+    game.mission_briefing_is_review = false
+    __game_load_mission(scenario_id, 1)
+}
+
 [es=window]
 mission_choice_window {
     pos [(sw(0) - 1024)/2, (sh(0) - 768)/2]
@@ -132,7 +138,7 @@ function mission_choice_window_on_init(window) {
         btn.tooltip = mission_choice_resolve_text(pt.tooltip)
         ;(function (point_btn, scenarioId) {
             point_btn.onclick = function () {
-                __game_mission_branch_start(scenarioId)
+                mission_choice_branch_start(scenarioId)
             }
         })(btn, pt.id)
     }

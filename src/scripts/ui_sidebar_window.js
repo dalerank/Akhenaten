@@ -158,7 +158,7 @@ sidebar_window_expanded {
                                pos[86, 434], pack:PACK_GENERAL, id:136, offset:56, tooltip:[68,34]
                                onclick: window_city_show_problem_area
                             })
-        show_briefing     : image_button({pos[116, 434], pack:PACK_GENERAL, id:136, offset:60, tooltip:[68,35], onclick: __ui_mission_briefing_review})
+        show_briefing     : image_button({pos[116, 434], pack:PACK_GENERAL, id:136, offset:60, tooltip:[68,35], onclick: sidebar_window_on_mission_briefing_review})
         num_messages      : text({pos[52, 450], shadow:0xff000000, font:FONT_NORMAL_BLACK_ON_DARK, color:0xffffffff })
         undo_btn          : image_button({pos[9, 434], pack:PACK_GENERAL, id:136, offset:48, tooltip:[68,32], onclick: __ui_game_undo_perform })
 
@@ -189,6 +189,13 @@ sidebar_window_expanded {
 
         report_bug        : image_button({pos[114, 480 + 258], path:"pharaoh_general/interface_00086", tooltip:"Report bug", onclick: show_window_by_id("report_bug_window")})
     }
+}
+
+function sidebar_window_on_mission_briefing_review() {
+    var sid = scenario.campaign_scenario_id
+    game.mission_briefing_scenario_id = sid
+    game.mission_briefing_is_review = true
+    __game_mission_briefing_intermezzo(sid)
 }
 
 function sidebar_window_draw_background(window) {

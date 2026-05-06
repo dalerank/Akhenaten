@@ -111,16 +111,3 @@ function mission_briefing_window_on_init(window) {
         }
     }
 }
-
-__game_mission_branch_start = function (scenario_id) {
-    game.mission_briefing_scenario_id = scenario_id
-    game.mission_briefing_is_review = false
-    __game_load_mission(scenario_id, 1)
-}
-
-function __ui_mission_briefing_review() {
-    var sid = scenario.campaign_scenario_id
-    game.mission_briefing_scenario_id = sid
-    game.mission_briefing_is_review = true
-    __game_mission_briefing_intermezzo(sid)
-}
