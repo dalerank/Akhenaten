@@ -15,6 +15,7 @@ import city
 import city_kingdome
 import building_prototype
 import bazaar_prototype
+import entertainment_prototype
 import city_finance
 import city_ratings
 import city_festival

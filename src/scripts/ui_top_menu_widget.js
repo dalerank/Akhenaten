@@ -6,8 +6,8 @@ function top_menu_autosave_options_toggle(p1, p2) { game_features.gameopt_monthl
 function top_menu_tooltip_text(p1, p2) { return __loc(3, game_features.gameopt_tooltips_mode + 2) }
 function top_menu_tooltip_toggle(p1, p2) { game_features.gameopt_tooltips_mode = (game_features.gameopt_tooltips_mode + 1) % 3 }
 
-function top_menu_warnings_text(p1, p2) { return __loc(3, __game_settings.warnings ? 6 : 5) }
-function top_menu_warnings_toggle(p1, p2) { __game_settings.warnings = !__game_settings.warnings }
+function top_menu_warnings_text(p1, p2) { return __loc(3, game_features.gameopt_warnings ? 6 : 5) }
+function top_menu_warnings_toggle(p1, p2) { game_features.gameopt_warnings = !game_features.gameopt_warnings }
 
 function top_menu_cities_old_text(p1, p2) { return __loc(2, game_features.gameui_empire_city_old_names ? 7 : 8) }
 function top_menu_cities_old_toggle(p1, p2) { game_features.gameui_empire_city_old_names = !game_features.gameui_empire_city_old_names }

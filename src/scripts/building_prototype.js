@@ -15,6 +15,10 @@ Building.property.meta_text_id = { get: function() { return this.__meta_text_id(
 Building.property.curse_days_left = { }
 Building.property.can_play_animation = { get: function() { return this.__can_play_animation() } }
 
+Building.property.has_road_access = { }
+Building.property.num_workers = { }
+Building.property.max_workers = { }
+Building.property.type = { }
 Building.property.structure_damage = { }
 Building.property.collapse_risk = { }
 Building.property.fire_risk = { }

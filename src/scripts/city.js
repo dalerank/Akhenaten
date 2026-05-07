@@ -355,6 +355,10 @@ city.get_bazaar = function(building_id) {
     return new Bazaar(building_id)
 }
 
+city.get_entertainment_building = function(building_id) {
+    return new EntertainmentBuilding(building_id)
+}
+
 city.get_storage_yard = function(building_id) {
     return new StorageYard(building_id)
 }

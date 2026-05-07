@@ -31,8 +31,8 @@ function display_options_window_init(window) {
     for (var i = 0; i < n; i++) {
         window.resolutions.add_item(display_options_video_get_mode(i))
     }
-    var cur = __game_settings.display_size.x + " x " + __game_settings.display_size.y
-    window.resolutions.select_item(cur)
+    var cur_size = game_features.gameopt_display_size.x + " x " + game_features.gameopt_display_size.y
+    window.resolutions.select_item(cur_size)
 
     window.videodriver.text = __display_options_video_driver_caption()
     window.btnfullscreen.text = __loc(42, __display_options_is_fullscreen() ? 2 : 1)

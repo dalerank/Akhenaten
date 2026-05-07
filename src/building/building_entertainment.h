@@ -30,3 +30,6 @@ public:
     int bandstand_main_img_offset(int orientation);
     int bandstand_add_img_offset(int orientation);
 };
+
+ANK_CONFIG_PROPERTY(building_entertainment::runtime_data_t,
+    num_shows, juggler_visited, musician_visited, dancer_visited, play_index)
