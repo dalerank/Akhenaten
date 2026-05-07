@@ -446,6 +446,7 @@ ANK_FUNCTION(__discord_rpc_clear_activity)
 
 #else // defined(GAME_PLATFORM_ANDROID) || defined(GAME_PLATFORM_BROWSER)
 
+#include "core/profiler.h"
 #include "js/js_game.h"
 
 void __discord_rpc_set_activity(xstring details, xstring state) {} ANK_FUNCTION_2(__discord_rpc_set_activity)

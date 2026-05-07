@@ -92,7 +92,11 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done, int actio
                     int total_depositable = std::min<int>(carrying, accepting);
                     
                     if (total_depositable <= 0) {
-                        advance_action(ACTION_8_RECALCULATE);
+                        if (warehouseman) {
+                            advance_action(ACTION_8_RECALCULATE);
+                        } else {
+                            determine_deliveryman_destination();
+                        }
                         return;
                     }
 
@@ -100,7 +104,11 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done, int actio
                     if (amount != -1) {
                         dump_resource(amount_single_turn);
                     } else {
-                        advance_action(action_fail);
+                        if (warehouseman) {
+                            advance_action(action_fail);
+                        } else {
+                            determine_deliveryman_destination();
+                        }
                         return;
                     }
                 }
@@ -266,6 +274,11 @@ void figure_cartpusher::determine_deliveryman_destination() {
 
     // no one will accept
     base.min_max_seen = understaffed_storages ? 2 : 1;
+    if (++base.routing_try_reroute_counter > 5) {
+        // Give up after repeated failures — return home so the workshop can dispatch a fresh cart.
+        base.routing_try_reroute_counter = 0;
+        return advance_action(ACTION_27_CARTPUSHER_RETURNING);
+    }
     advance_action(ACTION_8_RECALCULATE);
 }
 
@@ -441,6 +454,10 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
 }
 
 void figure_cartpusher::figure_before_action() {
+    if (action_state() != ACTION_8_RECALCULATE && action_state() != ACTION_20_CARTPUSHER_INITIAL) {
+        base.routing_try_reroute_counter = 0;
+    }
+
     if (has_destination()) {
         return;
     }
