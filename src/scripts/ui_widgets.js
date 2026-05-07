@@ -259,20 +259,6 @@ info_window_mastaba = {
     }
 }
 
-info_window_booth = {
-    ui : baseui(building_info_window, {
-        background   : outer_panel({pos: [0, 0], size: [29, 16]}),
-        play_text    : text({pos: [32, 162], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
-        inner_panel  : inner_panel({pos : [16, 110], size: [27, 6],
-                                        ui : {
-                                            workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
-                                            workers_text : text({pos: [50, 16], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK}),
-                                            workers_desc : text({pos: [50, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
-                                        }
-                                  }),
-    })
-}
-
 info_window_fishing_wharf = {
     ui : baseui(building_info_window, {
         resource_img : { type : "resource_icon", pos: [32, 186] },
