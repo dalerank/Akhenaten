@@ -184,7 +184,7 @@ void game_hotkeys::install() {
 }
 
 void game_hotkeys::save() {
-    vfs::path fs_file = vfs::content_path(CONF_HOTKEYS);
+    vfs::path fs_file = vfs::path(CONF_HOTKEYS).resolve();
     FILE *fp = vfs::file_open_os(fs_file, "wt");
     if (!fp) {
         logs::error("Unable to write hotkey configuration file %s", CONF_HOTKEYS);

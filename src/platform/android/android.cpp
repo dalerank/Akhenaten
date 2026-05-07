@@ -212,6 +212,40 @@ int android_remove_file(const char *filename)
     return result;
 }
 
+int android_create_directories(const char *path)
+{
+    int result = 0;
+    jni_function_handler handler;
+    if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "createDirectories",
+        "(L" CLASS_AKHENATEN_ACTIVITY ";Ljava/lang/String;)Z", &handler)) {
+        jni_destroy_function_handler(&handler);
+        return 0;
+    }
+    jstring jpath = handler.env->NewStringUTF(path ? path : "");
+    result = (int) handler.env->CallStaticBooleanMethod(handler.nclass, handler.method, handler.activity, jpath);
+    handler.env->DeleteLocalRef(jpath);
+    jni_destroy_function_handler(&handler);
+
+    return result;
+}
+
+int android_remove_directory(const char *path)
+{
+    int result = 0;
+    jni_function_handler handler;
+    if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "deleteDirectory",
+        "(L" CLASS_AKHENATEN_ACTIVITY ";Ljava/lang/String;)Z", &handler)) {
+        jni_destroy_function_handler(&handler);
+        return 0;
+    }
+    jstring jpath = handler.env->NewStringUTF(path ? path : "");
+    result = (int) handler.env->CallStaticBooleanMethod(handler.nclass, handler.method, handler.activity, jpath);
+    handler.env->DeleteLocalRef(jpath);
+    jni_destroy_function_handler(&handler);
+
+    return result;
+}
+
 extern "C" JNIEXPORT void JNICALL Java_com_github_dalerank_akhenaten_AkhenatenMainActivity_gotDirectory(JNIEnv *env, jobject thiz)
 {
     has_directory = 1;

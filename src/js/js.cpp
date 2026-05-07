@@ -17,6 +17,7 @@
 #include "platform/platform.h"
 #include "core/interlocked.h"
 #include "core/variant.h"
+#include "core/bstring.h"
 #include "content/mods.h"
 #include "scenario/scenario.h"
 #include "game/mission.h"
@@ -25,11 +26,16 @@
 #include "js/js_debugger.h"
 #include "js/js_self_tests.h"
 
+#if defined(GAME_PLATFORM_ANDROID)
+#include "platform/android/android.h"
+#endif
+
 #include <filesystem>
 #include <new>
 #include <cstdlib>
 #include <cstring>
 #include <memory_resource>
+#include <unordered_set>
 
 #if defined(GAME_PLATFORM_LINUX)
 #include <linux/limits.h>
@@ -45,6 +51,8 @@ struct {
     const size_t FRAME_ALLOC_BUFFER_SIZE = 64 * 1024;
     svector<vfs::path, 4> scripts_folders;
     hvector<vfs::path, 16> files2load;
+    std::unordered_set<std::string> queued_files;
+    std::unordered_set<std::string> loaded_files;
     int have_error;
     bstring256 error_str;
     js_State *J;
@@ -435,60 +443,122 @@ int js_vm_load_file_and_exec(pcstr path) {
         return 0;
     }
 
+#if defined(GAME_PLATFORM_ANDROID)
+    const bool prefer_internal_script = (*path == ':');
+#else
+    const bool prefer_internal_script = false;
+#endif
+
+#if defined(GAME_PLATFORM_ANDROID)
+    auto startup_log = [] (pcstr stage, pcstr detail) {
+        bstring1024 msg;
+        msg.printf("Startup: %s %s", stage, detail ? detail : "");
+        android_append_startup_log(msg.c_str());
+    };
+#endif
+
     pcstr npath = (*path == ':') ? (path + 1) : path;
 
-    auto r = mods_find_script(npath, true);
-    if (!!r.reader) {
-        const uint32_t fsize = r.reader->size();
-        std::string data = (char *)r.reader->data();
+    if (!prefer_internal_script) {
+        auto r = mods_find_script(npath, true);
+        if (!!r.reader) {
+#if defined(GAME_PLATFORM_ANDROID)
+            startup_log("js open", r.path.c_str());
+#endif
+            const uint32_t fsize = r.reader->size();
+            std::string data = (char *)r.reader->data();
 
-        int error = js_ploadstring(vm.J, r.path.c_str(), data.c_str());
-        if (error) {
-            js_vm_log_script_parse_or_compile_failure(vm.J, r.path.c_str());
-            return 0;
-        }
-
-        js_getglobal(vm.J, "");
-        int ok = js_vm_trypcall(vm.J, 0);
-        if (!ok) {
-            logs::info("Fatal error on call base after load %s", r.path.c_str());
-            if (vm.error_str.len() > 0) {
-                logs::info("Error details: %s", vm.error_str.c_str());
-            } else if (js_gettop(vm.J) > 0) {
-                auto error_msg = js_tostring(vm.J, -1);
-                if (!error_msg->value.empty()) {
-                    logs::info("Error details: %s", error_msg->value.c_str());
-                }
+#if defined(GAME_PLATFORM_ANDROID)
+            startup_log("js parse", r.path.c_str());
+#endif
+            int error = js_ploadstring(vm.J, r.path.c_str(), data.c_str());
+            if (error) {
+                js_vm_log_script_parse_or_compile_failure(vm.J, r.path.c_str());
+#if defined(GAME_PLATFORM_ANDROID)
+                startup_log("js parse failed", r.path.c_str());
+#endif
+                return 0;
             }
-            return 0;
+
+#if defined(GAME_PLATFORM_ANDROID)
+            startup_log("js exec", r.path.c_str());
+#endif
+            js_getglobal(vm.J, "");
+            int ok = js_vm_trypcall(vm.J, 0);
+            if (!ok) {
+                logs::info("Fatal error on call base after load %s", r.path.c_str());
+                if (vm.error_str.len() > 0) {
+                    logs::info("Error details: %s", vm.error_str.c_str());
+                } else if (js_gettop(vm.J) > 0) {
+                    auto error_msg = js_tostring(vm.J, -1);
+                    if (!error_msg->value.empty()) {
+                        logs::info("Error details: %s", error_msg->value.c_str());
+                    }
+                }
+#if defined(GAME_PLATFORM_ANDROID)
+                startup_log("js exec failed", r.path.c_str());
+#endif
+                return 0;
+            }
+#if defined(GAME_PLATFORM_ANDROID)
+            startup_log("js done", r.path.c_str());
+#endif
+            return 1;
         }
-        return 1;
     }
 
     vfs::path rpath = path;
-    if (!vm.scripts_folders.empty()) {
-        rpath = js_vm_get_absolute_path(npath);
+    vfs::reader reader;
+
+    if (prefer_internal_script) {
+        reader = vfs::file_open(path, "rt");
+        if (reader) {
+            rpath = path;
+        }
     }
 
-    vfs::reader reader = vfs::file_open(rpath, "rt");
+    if (!vm.scripts_folders.empty()) {
+        if (!reader) {
+            rpath = js_vm_get_absolute_path(npath);
+        }
+    }
+
+#if defined(GAME_PLATFORM_ANDROID)
+    startup_log("js open", rpath.c_str());
+#endif
     if (!reader) {
+        reader = vfs::file_open(rpath, "rt");
+    }
+    if (!reader && !prefer_internal_script) {
         reader = vfs::file_open(path, "rt");
     }
 
     if (!reader) {
         logs::info("!!! Cant find script at %s", rpath.c_str());
+#if defined(GAME_PLATFORM_ANDROID)
+        startup_log("js open failed", rpath.c_str());
+#endif
         return 0;
     }
 
     const uint32_t fsize = reader->size();
     std::string data = (char *)reader->data();
 
+#if defined(GAME_PLATFORM_ANDROID)
+    startup_log("js parse", rpath.c_str());
+#endif
     int error = js_ploadstring(vm.J, rpath, data.c_str());
     if (error) {
         js_vm_log_script_parse_or_compile_failure(vm.J, rpath.c_str());
+#if defined(GAME_PLATFORM_ANDROID)
+        startup_log("js parse failed", rpath.c_str());
+#endif
         return 0;
     }
 
+#if defined(GAME_PLATFORM_ANDROID)
+    startup_log("js exec", rpath.c_str());
+#endif
     js_getglobal(vm.J, "");
     int ok = js_vm_trypcall(vm.J, 0);
     if (!ok) {
@@ -502,8 +572,14 @@ int js_vm_load_file_and_exec(pcstr path) {
             }
         }
         //js_pop(internal_J, 1);
+#if defined(GAME_PLATFORM_ANDROID)
+        startup_log("js exec failed", rpath.c_str());
+#endif
         return 0;
     }
+#if defined(GAME_PLATFORM_ANDROID)
+    startup_log("js done", rpath.c_str());
+#endif
     return 1;
 }
 
@@ -519,6 +595,34 @@ void js_vm_shutdown() {
     vm.J = nullptr;
 }
 
+namespace {
+    std::string js_vm_file_key(pcstr path) {
+        return path ? std::string(path) : std::string();
+    }
+
+    void js_vm_queue_file(pcstr path, bool allow_reload = false) {
+        if (!path || !*path) {
+            return;
+        }
+
+        const std::string key = js_vm_file_key(path);
+        if (key.empty()) {
+            return;
+        }
+
+        if (vm.queued_files.find(key) != vm.queued_files.end()) {
+            return;
+        }
+
+        if (!allow_reload && vm.loaded_files.find(key) != vm.loaded_files.end()) {
+            return;
+        }
+
+        vm.files2load.push_back(vfs::path(path));
+        vm.queued_files.insert(key);
+    }
+}
+
 bool js_vm_sync(const xstring &mission_id) {
     if (vm.files2load.empty()) {
         return false;
@@ -530,11 +634,22 @@ bool js_vm_sync(const xstring &mission_id) {
 
     // Iterate by index so newly appended imports (from js_game_import) are also processed
     for (int i = 0; i < (int)vm.files2load.size(); i++) {
+        const std::string key = js_vm_file_key(vm.files2load[i].c_str());
+        vm.queued_files.erase(key);
         logs::info("JS: script reloaded %s", vm.files2load[i].c_str());
+#if defined(GAME_PLATFORM_ANDROID)
+        bstring1024 startup_message;
+        startup_message.printf("Startup: js_vm_sync %d/%d %s", i + 1, vm.files2load.size(), vm.files2load[i].c_str());
+        android_append_startup_log(startup_message.c_str());
+#endif
         js_vm_load_file_and_exec(vm.files2load[i]);
+        if (!key.empty()) {
+            vm.loaded_files.insert(key);
+        }
     }
 
     vm.files2load.clear();
+    vm.queued_files.clear();
 
     js_register_game_handlers(mission_id);
     js_register_entity_systems();
@@ -546,7 +661,7 @@ bool js_vm_sync(const xstring &mission_id) {
 }
 
 void js_vm_reload_file(pcstr path) {
-    vm.files2load.push_back(vfs::path(path));
+    js_vm_queue_file(path, true);
 }
 
 int js_vm_exec_function_args(pcstr funcname, const char *szTypes, ...) {
@@ -622,7 +737,7 @@ int js_vm_exec_function(pcstr funcname) {
 void js_vm_load_module(js_State *J) {
     auto scriptName = js_tostring(J, 1);
 
-    vm.files2load.push_back(vfs::path(scriptName->value.c_str()));
+    js_vm_queue_file(scriptName->value.c_str());
 }
 
 void js_game_panic(js_State *J) {
@@ -630,7 +745,8 @@ void js_game_panic(js_State *J) {
 }
 
 int js_game_import(js_State *J, pcstr filename) {
-    vm.files2load.push_back(vfs::path(":", filename, ".js"));
+    bstring256 import_path(":", filename, ".js");
+    js_vm_queue_file(import_path.c_str());
     return 0;
 }
 
@@ -751,6 +867,8 @@ void js_reset_vm_state() {
     }
 
     vm.files2load.clear();
+    vm.queued_files.clear();
+    vm.loaded_files.clear();
     vm.have_error = 0;
     vm.frame_alloc_ctx.release();
 
@@ -834,10 +952,12 @@ vfs::path js_vm_get_absolute_path(vfs::path path) {
                 continue;
             }
             buffer = resolved;
+#elif defined(GAME_PLATFORM_ANDROID)
+            buffer = conpath;
 #endif
             buffer.replace('\\', '/');
 
-            if (!std::filesystem::exists(buffer.c_str())) {
+            if (!vfs::file_exists(buffer.c_str())) {
                 continue;
             }
 
@@ -846,7 +966,7 @@ vfs::path js_vm_get_absolute_path(vfs::path path) {
     }
 
     buffer = vfs::content_path(path);
-    if (std::filesystem::exists(buffer.c_str())) {
+    if (vfs::file_exists(buffer.c_str())) {
         return buffer;
     }
 
@@ -863,9 +983,13 @@ void js_vm_setup() {
     js_reset_vm_state();
 
     vfs::path abspath = js_vm_get_absolute_path("");
+#if defined(GAME_PLATFORM_ANDROID)
+    logs::info("JS: skipping script directory watcher on Android for %s", abspath.c_str());
+#else
     vfs::path modules_file(abspath, "/modules.js");
-    bool scripts_folder_exists = std::filesystem::exists(modules_file.c_str());
+    bool scripts_folder_exists = vfs::file_exists(modules_file.c_str());
     if (scripts_folder_exists) {
         js_vm_notifier_watch_directory_init(abspath);
     }
+#endif
 }

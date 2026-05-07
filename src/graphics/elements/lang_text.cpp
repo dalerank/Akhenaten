@@ -9,8 +9,17 @@
 #include "core/log.h"
 #include "game/game_config.h"
 #include "game/game.h"
+#include "content/vfs.h"
+
+#if defined(GAME_PLATFORM_ANDROID)
+#include "platform/android/android.h"
+#endif
 
 #include <unordered_set>
+#include <string>
+#include <algorithm>
+#include <cstdlib>
+#include <cstring>
 
 struct loc_base_textid {
     size_t id;
@@ -77,12 +86,130 @@ std::unordered_set<loc_message> g_event_messages;
 
 game_languages_vec ANK_VARIABLE(game_languages);
 
+#if defined(GAME_PLATFORM_ANDROID)
+namespace {
+    bool g_android_loaded_localization_base_en_direct = false;
+
+    const char *skip_ws(const char *p, const char *end) {
+        while (p < end && (*p == ' ' || *p == '\t' || *p == '\r' || *p == '\n')) {
+            ++p;
+        }
+        return p;
+    }
+
+    bool read_int_field(const char *begin, const char *end, const char *name, int &value) {
+        const std::string key = std::string(name) + ":";
+        const char *pos = std::search(begin, end, key.begin(), key.end());
+        if (pos == end) {
+            return false;
+        }
+
+        pos += key.size();
+        pos = skip_ws(pos, end);
+        char *parse_end = nullptr;
+        value = static_cast<int>(std::strtol(pos, &parse_end, 10));
+        return parse_end && parse_end > pos;
+    }
+
+    bool read_string_field(const char *begin, const char *end, const char *name, std::string &value) {
+        const std::string key = std::string(name) + ":";
+        const char *pos = std::search(begin, end, key.begin(), key.end());
+        if (pos == end) {
+            return false;
+        }
+
+        pos += key.size();
+        pos = skip_ws(pos, end);
+        if (pos >= end || *pos != '"') {
+            return false;
+        }
+
+        ++pos;
+        value.clear();
+        while (pos < end) {
+            const char ch = *pos++;
+            if (ch == '\\') {
+                if (pos >= end) {
+                    break;
+                }
+                const char esc = *pos++;
+                switch (esc) {
+                case 'n': value.push_back('\n'); break;
+                case 'r': value.push_back('\r'); break;
+                case 't': value.push_back('\t'); break;
+                case '\\': value.push_back('\\'); break;
+                case '"': value.push_back('"'); break;
+                default: value.push_back(esc); break;
+                }
+                continue;
+            }
+
+            if (ch == '"') {
+                return true;
+            }
+
+            value.push_back(ch);
+        }
+
+        return false;
+    }
+
+    bool android_load_localization_base_en_direct(pcstr path) {
+        auto reader = vfs::file_open(path, "rt");
+        if (!reader) {
+            return false;
+        }
+
+        const char *data = static_cast<const char *>(reader->data());
+        if (!data) {
+            return false;
+        }
+
+        std::unordered_set<loc_base_textid> loaded;
+        const char *cursor = data;
+        while ((cursor = strchr(cursor, '{')) != nullptr) {
+            const char *object_end = strchr(cursor, '}');
+            if (!object_end) {
+                break;
+            }
+
+            int group = 0;
+            int id = 0;
+            std::string text;
+            const bool ok = read_int_field(cursor, object_end, "group", group)
+                && read_int_field(cursor, object_end, "id", id)
+                && read_string_field(cursor, object_end, "text", text);
+            if (ok) {
+                loc_base_textid item(group, id);
+                item.text = text.c_str();
+                loaded.insert(item);
+            }
+
+            cursor = object_end + 1;
+        }
+
+        if (loaded.empty()) {
+            return false;
+        }
+
+        g_localization_base = std::move(loaded);
+        g_android_loaded_localization_base_en_direct = true;
+        android_append_startup_log("Startup: localization base direct load done");
+        return true;
+    }
+}
+#endif
+
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_localization) {
     g_localization.clear();
     lang_reload_localized_tables();
 }
 
 bool lang_reload_localized_files() {
+#if defined(GAME_PLATFORM_ANDROID)
+    g_android_loaded_localization_base_en_direct = false;
+    android_append_startup_log("Startup: localized files reload begin");
+#endif
     // Ensure localization.js is loaded if game_languages is empty
     if (game_languages.empty()) {
         logs::info("game_languages is empty, attempting to load localization.js");
@@ -104,7 +231,16 @@ bool lang_reload_localized_files() {
     }
     {
         vfs::path lang_base_file(":", localization_base_table.c_str(), ".js");
-        const bool lang_base_file_loaded = js_vm_load_file_and_exec(lang_base_file.c_str());
+        bool lang_base_file_loaded = false;
+#if defined(GAME_PLATFORM_ANDROID)
+        if (localization_base_table == "localization_base_en" && android_load_localization_base_en_direct(lang_base_file.c_str())) {
+            logs::info("Loaded localization base directly on Android: %s", lang_base_file.c_str());
+            lang_base_file_loaded = true;
+        } else
+#endif
+        {
+            lang_base_file_loaded = js_vm_load_file_and_exec(lang_base_file.c_str());
+        }
         if (!lang_base_file_loaded && localization_base_table == "localization_base_en") {
             logs::error("Failed to load localization base file: %s", lang_base_file.c_str());
             return false;
@@ -156,6 +292,9 @@ bool lang_reload_localized_files() {
         lang_reload_game_messages(game_message_table);
     }
 
+#if defined(GAME_PLATFORM_ANDROID)
+    android_append_startup_log("Startup: localized files reload done");
+#endif
     return true;
 }
 
@@ -169,7 +308,15 @@ bool lang_reload_localized_tables() {
         return false;
     }
 
+#if defined(GAME_PLATFORM_ANDROID)
+    const bool use_direct_localization_base_en =
+        g_android_loaded_localization_base_en_direct && localization_base_table == "localization_base_en";
+    if (!use_direct_localization_base_en) {
+        g_localization_base.clear();
+    }
+#else
     g_localization_base.clear();
+#endif
     g_localization.clear();
     g_event_messages.clear();
 
@@ -182,13 +329,29 @@ bool lang_reload_localized_tables() {
         g_localization_base.insert(item);
     };
 
-    g_config_arch.r_array(localization_base_table.c_str(), loc_base_item_read);
+    if (
+#if defined(GAME_PLATFORM_ANDROID)
+        !use_direct_localization_base_en
+#else
+        true
+#endif
+    ) {
+        g_config_arch.r_array(localization_base_table.c_str(), loc_base_item_read);
+    }
 
     g_config_arch.r(localization_table.c_str(), g_localization);
     g_config_arch.r(message_table.c_str(), g_event_messages);
 
     // restore the default localization (english), for values without translates
-    g_config_arch.r_array("localization_base_en", loc_base_item_read);
+    if (
+#if defined(GAME_PLATFORM_ANDROID)
+        !use_direct_localization_base_en
+#else
+        true
+#endif
+    ) {
+        g_config_arch.r_array("localization_base_en", loc_base_item_read);
+    }
 
     g_config_arch.r_array("localization_en", [&] (archive arch) {
         localization_table::mapped_type itemv;

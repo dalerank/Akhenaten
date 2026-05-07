@@ -274,12 +274,17 @@ static void setup() {
                                                                  // otherwise it fails on Nintendo Switch
     image_data_init();                                           // image paks structures init
 
+    vfs::path scripts_base_path(vfs::SCRIPTS_FOLDER);
+#if !defined(GAME_PLATFORM_ANDROID)
     pcstr base_path = vfs::platform_file_manager_get_base_path();
-    vfs::path scripts_base_path(base_path, vfs::SCRIPTS_FOLDER);
+    scripts_base_path = vfs::path(base_path, "/", vfs::SCRIPTS_FOLDER);
+#endif
     js_vm_add_scripts_folder(scripts_base_path); // setup script engine data scripts folder
 
     js_vm_add_scripts_folder(g_args.get_scripts_directory().c_str()); // setup script engine user folder
+#if !defined(GAME_PLATFORM_ANDROID)
     js_vm_add_scripts_folder(vfs::SCRIPTS_FOLDER);                    // setup script engine additional folder
+#endif
 
 #if defined(GAME_PLATFORM_ANDROID)
     android_append_startup_log("Startup: js_vm_setup");
@@ -612,6 +617,7 @@ int main(int argc, char** argv) {
     run_and_draw();
 #if defined(GAME_PLATFORM_ANDROID)
     android_append_startup_log("Startup: first frame done");
+    android_set_startup_log_visible(0);
 #endif
 
 #ifdef __EMSCRIPTEN__

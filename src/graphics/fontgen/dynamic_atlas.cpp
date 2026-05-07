@@ -530,9 +530,15 @@ namespace DynamicFont {
         InitializeAtlas(charset, mode, padding, fit, bold, shadowOffset);
     }
 
-    Atlas::Atlas(span_const<uint8_t> fontData, int fontSize, const Charset &charset, RenderMode mode, int padding, bool fit, bool bold, int shadowOffset)
+    Atlas::Atlas(span_const<uint8_t> fontData, int fontSize, const Charset &charset, RenderMode mode, int padding, bool fit, uint8_t *colors, bool bold, int shadowOffset)
         : m_Font(std::make_shared<Font>(fontData)), m_Glyphs(m_Font), m_ShadowOffset(shadowOffset) {
         m_Font->SetSize(Pixels{ fontSize });
+        if (colors) {
+            m_Color[0] = colors[0];
+            m_Color[1] = colors[1];
+            m_Color[2] = colors[2];
+            m_Color[3] = colors[3];
+        }
         InitializeAtlas(charset, mode, padding, fit, bold, shadowOffset);
     }
 

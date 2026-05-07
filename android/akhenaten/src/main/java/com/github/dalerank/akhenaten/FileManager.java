@@ -10,6 +10,7 @@ import android.content.UriPermission;
 
 import android.util.Log;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -251,6 +252,10 @@ public class FileManager {
             normalized = normalized.substring(2);
         }
 
+        while (normalized.endsWith("/")) {
+            normalized = normalized.substring(0, normalized.length() - 1);
+        }
+
         if (normalized.equals(".")) {
             return "";
         }
@@ -266,6 +271,9 @@ public class FileManager {
         FileInfo currentDir = FileInfo.base;
 
         for (int i = 0; i < path.length - 1; ++i) {
+            if (path[i] == null || path[i].isEmpty() || ".".equals(path[i])) {
+                continue;
+            }
             currentDir = findFile(activity, currentDir, path[i]);
             if (currentDir == null || !currentDir.isDirectory()) {
                 return null;
@@ -345,6 +353,119 @@ public class FileManager {
             return DocumentsContract.deleteDocument(activity.getContentResolver(), fileInfo.getUri());
         } catch (Exception e) {
             Log.e("akhenaten", "Error in deleteFile: " + e);
+            return false;
+        }
+    }
+
+    private static FileInfo ensureDirectoryPath(AkhenatenMainActivity activity, String dirPath) {
+        if (baseUri == Uri.EMPTY) {
+            return null;
+        }
+
+        String normalizedPath = normalizeRelativePath(dirPath);
+        if (normalizedPath.isEmpty()) {
+            return FileInfo.base;
+        }
+
+        String[] parts = normalizedPath.split("[\\\\/]");
+        FileInfo currentDir = FileInfo.base;
+        for (String rawPart : parts) {
+            if (rawPart == null || rawPart.isEmpty() || ".".equals(rawPart)) {
+                continue;
+            }
+
+            FileInfo nextDir = findFile(activity, currentDir, rawPart);
+            if (nextDir == null) {
+                Uri createdDirUri;
+                try {
+                    createdDirUri = DocumentsContract.createDocument(
+                            activity.getContentResolver(),
+                            currentDir.getUri(),
+                            DocumentsContract.Document.MIME_TYPE_DIR,
+                            rawPart);
+                } catch (FileNotFoundException e) {
+                    Log.e("akhenaten", "Error creating directory: " + rawPart, e);
+                    return null;
+                }
+                if (createdDirUri == null) {
+                    return null;
+                }
+
+                nextDir = new FileInfo(
+                        DocumentsContract.getDocumentId(createdDirUri),
+                        rawPart,
+                        DocumentsContract.Document.MIME_TYPE_DIR,
+                        System.currentTimeMillis(),
+                        currentDir.getUri());
+
+                HashMap<String, FileInfo> dirCache = directoryStructureCache.get(currentDir.getUri());
+                if (dirCache != null) {
+                    dirCache.put(rawPart.toLowerCase(), nextDir);
+                }
+            }
+
+            if (!nextDir.isDirectory()) {
+                return null;
+            }
+            currentDir = nextDir;
+        }
+
+        return currentDir;
+    }
+
+    @SuppressWarnings("unused")
+    public static boolean createDirectories(AkhenatenMainActivity activity, String dirPath) {
+        try {
+            return ensureDirectoryPath(activity, dirPath) != null;
+        } catch (Exception e) {
+            Log.e("akhenaten", "Error in createDirectories: " + e);
+            return false;
+        }
+    }
+
+    private static boolean deleteDocumentRecursively(Activity activity, FileInfo fileInfo) {
+        if (fileInfo == null) {
+            return false;
+        }
+
+        try {
+            if (fileInfo.isDirectory()) {
+                HashMap<String, FileInfo> children = new HashMap<>(getDirectoryContents(activity, fileInfo));
+                for (FileInfo child : children.values()) {
+                    if (!deleteDocumentRecursively(activity, child)) {
+                        return false;
+                    }
+                }
+            }
+
+            HashMap<String, FileInfo> dirList = directoryStructureCache.get(fileInfo.getParentUri());
+            if (dirList != null && fileInfo.getName() != null) {
+                dirList.remove(fileInfo.getName().toLowerCase());
+            }
+            directoryStructureCache.remove(fileInfo.getUri());
+            return DocumentsContract.deleteDocument(activity.getContentResolver(), fileInfo.getUri());
+        } catch (Exception e) {
+            Log.e("akhenaten", "Error in deleteDocumentRecursively: " + e);
+            return false;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public static boolean deleteDirectory(AkhenatenMainActivity activity, String dirPath) {
+        try {
+            String normalizedPath = normalizeRelativePath(dirPath);
+            if (normalizedPath.isEmpty() || normalizedPath.equalsIgnoreCase("Save")) {
+                Log.w("akhenaten", "Refusing to delete protected directory: " + normalizedPath);
+                return false;
+            }
+
+            FileInfo dirInfo = getFileFromPath(activity, normalizedPath);
+            if (dirInfo == null || !dirInfo.isDirectory()) {
+                return false;
+            }
+            return deleteDocumentRecursively(activity, dirInfo);
+        } catch (Exception e) {
+            Log.e("akhenaten", "Error in deleteDirectory: " + e);
             return false;
         }
     }

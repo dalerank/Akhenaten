@@ -55,6 +55,7 @@ FILE *platform_file_manager_open_file(pcstr filename, pcstr mode);
 bool platform_file_manager_remove_file(const char *filename);
 
 std::pair<void*, uint32_t> internal_file_open(pcstr path);
+std::pair<void*, uint32_t> internal_resource_open(pcstr path);
 xstring platform_unpack_scripts();
 
 } // vfs

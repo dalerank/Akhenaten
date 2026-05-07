@@ -164,6 +164,7 @@ cmrc_add_resources(
     resources
     WHENCE ${PROJECT_ROOT}
     ${SCRIPT_FILES}
+    ${PROJECT_ROOT}/data/neucha.ttf
     ${RES_FOLDER}/akhenaten_72.png
     ${RES_FOLDER}/patreon_48.png
 )

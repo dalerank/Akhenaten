@@ -706,7 +706,7 @@ void config::refresh(archive arch) {
 }
 
 archive config::load(pcstr filename) {
-    vfs::path fspath = vfs::content_path(filename);
+    vfs::path fspath = vfs::path(filename).resolve();
     js_vm_load_file_and_exec(fspath);
     return {js_vm_state()};
 }

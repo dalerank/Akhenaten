@@ -192,6 +192,7 @@ vfs::path content_path(pcstr path) {
 }
 
 vfs::path vfs::path::resolve() {
+#ifndef GAME_PLATFORM_ANDROID
     pcstr filepath = data();
 
     // Check if the path is absolute
@@ -224,6 +225,16 @@ vfs::path vfs::path::resolve() {
     // If file not found anywhere, return base path as fallback
     // This allows proper error handling in calling code
     return corrected_filename;
+#else
+    pcstr filepath = data();
+    vfs::path corrected_filename = content_path(filepath);
+    // Native absolute paths still pass through directly on Android.
+    if (!corrected_filename.empty() && corrected_filename.data()[0] == '/') {
+        return corrected_filename;
+    }
+    // SAF-backed paths stay relative and are resolved by the Java bridge.
+    return filepath;
+#endif
 }
 
 const dir_listing *dir_append_files_with_extension(pcstr dir, pcstr extension) {

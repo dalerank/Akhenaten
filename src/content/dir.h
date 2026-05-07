@@ -38,7 +38,10 @@ struct path : public bstring256 {
 
         for (; *c != 0; ++c) {
             if (*c == '/' && *mptr == '/') {
-                continue;
+                const bool keep_uri_separator = (mptr > data() && *(mptr - 1) == ':');
+                if (!keep_uri_separator) {
+                    continue;
+                }
             }
 
             ++mptr;

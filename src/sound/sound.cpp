@@ -66,6 +66,7 @@ struct music_player_t {
     int cur_read;
     int cur_write;
     Mix_Music* music;
+    vfs::reader current_music_data;
 
     std::map<std::string, vfs::reader> cached_chunks;
 };
@@ -79,6 +80,38 @@ sound_manager_t g_sound;
 
 static int percentage_to_volume(int percentage) {
     return percentage * SDL_MIX_MAXVOLUME / 100;
+}
+
+namespace {
+Mix_MusicType get_music_type(pcstr filename) {
+    if (vfs::file_has_extension(filename, "mp3")) {
+        return MUS_MP3;
+    }
+    if (vfs::file_has_extension(filename, "wav")) {
+        return MUS_WAV;
+    }
+    if (vfs::file_has_extension(filename, "ogg")) {
+        return MUS_OGG;
+    }
+    return MUS_NONE;
+}
+
+vfs::reader load_music_data(pcstr filename, Mix_MusicType& music_type) {
+    music_type = get_music_type(filename);
+
+#if defined(GAME_PLATFORM_ANDROID)
+    if (music_type == MUS_MP3) {
+        lame_helper helper;
+        vfs::reader decoded = helper.decode(filename);
+        if (decoded) {
+            music_type = MUS_WAV;
+            return decoded;
+        }
+    }
+#endif
+
+    return vfs::file_open(filename, "rb");
+}
 }
 
 void sound_manager_t::init() {
@@ -395,15 +428,25 @@ bool sound_manager_t::play_music(pcstr filename, int volume_pct) {
         return 0;
 
     SDL_RWops* sdl_music = SDL_RWFromMem(vita_music_data.buffer, vita_music_data.size);
-    data.music = Mix_LoadMUSType_RW(sdl_music, vfs::file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
+    _music_player->music = Mix_LoadMUSType_RW(sdl_music, vfs::file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
 #else
-    _music_player->music = Mix_LoadMUS(filename);
+    Mix_MusicType music_type = MUS_NONE;
+    _music_player->current_music_data = load_music_data(filename, music_type);
+    if (_music_player->current_music_data) {
+        SDL_RWops* sdl_music = SDL_RWFromConstMem(_music_player->current_music_data->data(), _music_player->current_music_data->size());
+        _music_player->music = Mix_LoadMUSType_RW(sdl_music, music_type, SDL_TRUE);
+    } else {
+        _music_player->music = nullptr;
+    }
 #endif
     if (!_music_player->music) {
+        _music_player->current_music_data.reset();
         logs::warn("Error opening music file '%s'. Reason: %s", filename, Mix_GetError());
     } else {
         if (Mix_PlayMusic(_music_player->music, -1) == -1) {
+            Mix_FreeMusic(_music_player->music);
             _music_player->music = nullptr;
+            _music_player->current_music_data.reset();
             logs::warn("Error playing music file '%s'. Reason: %s", filename, Mix_GetError());
         } else {
             Mix_VolumeMusic(volume_pct);
@@ -480,6 +523,7 @@ void sound_manager_t::stop_music() {
     Mix_HaltMusic();
     Mix_FreeMusic(_music_player->music);
     _music_player->music = nullptr;
+    _music_player->current_music_data.reset();
 }
 
 void sound_manager_t::stop_channel(int channel) {
