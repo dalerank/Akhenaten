@@ -89,6 +89,14 @@ enum e_rating_change : uint8_t {
     e_rating_rising
 };
 
+enum e_tooltip_mode {
+    e_tooltip_mode_none = 0,
+    e_tooltip_mode_some = 1,
+    e_tooltip_mode_full = 2,
+    e_tooltip_count,
+};
+using etooltip_flag = uint32_t;
+
 enum e_sound_type {
     SOUND_NONE = 0,
     SOUND_MUSIC = 1,

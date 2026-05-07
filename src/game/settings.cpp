@@ -22,8 +22,6 @@ game_settings::game_settings() {
 }
 
 void game_settings::load_default_settings() {
-    display_size = {800, 600};
-
     clear_personal_savings();
 }
 
@@ -55,9 +53,8 @@ void game_settings::load_settings(buffer* buf) {
     buf->read_i32();
     buf->read_i32();
     buf->skip(8); // ram
-    display_size.x = buf->read_i32();
-    display_size.y = buf->read_i32();
-    display_size = {0, 0};
+    buf->read_i32();
+    buf->read_i32();
 
     buf->skip(8); // int max_confirmed_resolution;
     for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
@@ -80,11 +77,6 @@ void game_settings::load() {
     }
 
     load_settings(inf_file);
-
-    if (display_size.x + display_size.y < 500) {
-        // most likely migration from Caesar 3
-        display_size = {800, 600};
-    }
 }
 
 void game_settings::save() {
@@ -118,8 +110,8 @@ void game_settings::save() {
     buf->write_i32(0);
     buf->write_i32(0);
     buf->skip(8); // ram
-    buf->write_i32(display_size.x);
-    buf->write_i32(display_size.y);
+    buf->write_i32(0);
+    buf->write_i32(0);
     buf->skip(8); // int max_confirmed_resolution;
     for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
         buf->write_i32(personal_savings[i]);

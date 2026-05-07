@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/vec2i.h"
 #include "core/xstring.h"
 #include "core/settings_vars.h"
 #include "core/typename.h"
@@ -17,10 +18,12 @@ namespace game_features {
         xstring to_string() const;
         float to_float() const;
         int to_int() const;
+        vec2i to_vec2i() const;
         inline bool operator!() const { return !to_bool(); }
         void set(bool value);
         void set(float value);
         void set(int value);
+        void set(vec2i value);
         void set(const xstring &value);
         void set(pcstr value);
         setting_variant_type type() const;
@@ -141,6 +144,7 @@ namespace game_features {
     extern game_feature gameopt_pyramid_speedup;
     extern game_feature gameopt_fullscreen;
     extern game_feature gameopt_difficulty;
+    extern game_feature gameopt_display_size;
 
     xspan<game_feature*> all();
     game_feature* find(const xstring& name);

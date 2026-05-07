@@ -2,6 +2,9 @@
 
 #include "content/vfs.h"
 #include "core/log.h"
+#include "core/vec2i.h"
+
+#include <variant>
 #include "core/svector.h"
 #include "js/js_game.h"
 #include "dev/debug.h"
@@ -121,6 +124,7 @@ namespace game_features {
     game_feature gameopt_pyramid_speedup{ "gameopt_pyramid_speedup", "", false };
     game_feature gameopt_fullscreen{ "gameopt_fullscreen", "", true };
     game_feature gameopt_difficulty{ "gameopt_difficulty", "", 2.0f };
+    game_feature gameopt_display_size{"gameopt_display_size", "", vec2i(1280, 800)};
 
     xspan<game_feature*> all() {
         return { _features.data(), _features.size() };
@@ -157,6 +161,17 @@ int game_features::game_feature::to_int() const {
     return _settings.get_int(name);
 }
 
+vec2i game_features::game_feature::to_vec2i() const {
+    const setting_variant v = _settings.get(name, defaultv);
+    if (std::holds_alternative<vec2i>(v)) {
+        return std::get<vec2i>(v);
+    }
+    if (std::holds_alternative<vec2i>(defaultv)) {
+        return std::get<vec2i>(defaultv);
+    }
+    return {};
+}
+
 void game_features::game_feature::set(bool value) {
     _settings.set_bool(name, value);
 }
@@ -176,6 +191,10 @@ void game_features::game_feature::set(const xstring &value) {
 
 void game_features::game_feature::set(pcstr value) {
     _settings.set_string(name, value);
+}
+
+void game_features::game_feature::set(vec2i value) {
+    _settings.set(name, setting_variant(value));
 }
 
 setting_variant_type game_features::game_feature::type() const {

@@ -144,7 +144,7 @@ int platform_screen_t::create(const xstring& title, const xstring& renderer, boo
         SDL_GetDesktopDisplayMode(0, &mode);
         wsize = {mode.w, mode.h};
     } else {
-        wsize = g_settings.display_size;
+        wsize = game_features::gameopt_display_size.to_vec2i();
         wsize.x = std::max<int>(wsize.x, screen_size.x);
         wsize.y = std::max<int>(wsize.y, screen_size.y);
 
@@ -235,7 +235,7 @@ bool platform_screen_t::resize(int pixel_width, int pixel_height, int save) {
     int logical_height = scale_pixels_to_logical(pixel_height);
 
     if (save) {
-        g_settings.display_size = {logical_width, logical_height};
+        game_features::gameopt_display_size.set({logical_width, logical_height});
     }
 
     if (platform_renderer_create_render_texture(logical_width, logical_height)) {
@@ -302,7 +302,7 @@ void platform_screen_t::set_fullscreen() {
     }
 
     game.set_fullscreen(true);
-    g_settings.display_size = {mode.w, mode.h};
+    game_features::gameopt_display_size.set({mode.w, mode.h});
 }
 
 void platform_screen_set_windowed() {
@@ -313,7 +313,7 @@ void platform_screen_t::set_windowed() {
     if (g_render.is_fullscreen_only()) {
         return;
     }
-    auto wsize = g_settings.display_size;
+    auto wsize = game_features::gameopt_display_size.to_vec2i();
     int pixel_width = scale_logical_to_pixels(wsize.x);
     int pixel_height = scale_logical_to_pixels(wsize.y);
     int display = SDL_GetWindowDisplayIndex(window);
@@ -327,7 +327,7 @@ void platform_screen_t::set_windowed() {
         SDL_SetWindowGrab(window, SDL_FALSE);
     }
     game.set_fullscreen(false);
-    g_settings.display_size = {pixel_width, pixel_height};
+    game_features::gameopt_display_size.set({pixel_width, pixel_height});
 }
 
 void platform_screen_set_window_size(int logical_width, int logical_height) {
@@ -358,7 +358,7 @@ void platform_screen_t::set_window_size(int logical_width, int logical_height) {
         SDL_SetWindowGrab(window, SDL_FALSE);
     }
     game.set_fullscreen(false);
-    g_settings.display_size = {pixel_width, pixel_height};
+    game_features::gameopt_display_size.set({pixel_width, pixel_height});
 }
 
 void platform_screen_center_window() {

@@ -9,19 +9,8 @@
 
 class buffer;
 
-enum e_tooltip_mode {
-    e_tooltip_mode_none = 0,
-    e_tooltip_mode_some = 1,
-    e_tooltip_mode_full = 2,
-    e_tooltip_count,
-};
-using etooltip_flag = uint32_t;
-
 struct game_settings {
     static constexpr uint8_t MAX_PERSONAL_SAVINGS = 100;
-    static constexpr uint8_t MAX_DIFFICULTY_LEVEL = 4;
-    // display settings
-    vec2i display_size;
 
     // persistent game state
     bstring32 player_name;

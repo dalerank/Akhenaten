@@ -55,11 +55,11 @@ void info_window_bandstand::init(object_info &c) {
     const auto &d = band->runtime_data();
 
     textid reason{ c.group_id, 1 };
-    if (!band->has_road_access()) { reason = { 69, 25 }; } 
-    else if (band->num_workers() <= 0) { reason.id = 6; } 
+    if (!band->has_road_access()) { reason = { 69, 25 }; }
+    else if (band->num_workers() <= 0) { reason.id = 6; }
     else if (!d.num_shows) { reason.id = 2; }
-    else if (d.num_shows == 2) { reason.id = 3; } 
-    else if (d.juggler_visited) { reason.id = 5; } 
+    else if (d.num_shows == 2) { reason.id = 3; }
+    else if (d.juggler_visited) { reason.id = 5; }
     else if (d.musician_visited) { reason.id = 4; }
 
     ui["warning_text"] = ui::str(reason);
@@ -69,7 +69,7 @@ void info_window_bandstand::init(object_info &c) {
     } else {
         ui["play_text"] = ui::str(c.group_id, 9);
     }
-  
+
     if (d.musician_visited > 0) {
         ui["play2_text"].text_var("%s %s %d\n%s", ui::str(c.group_id, 8), ui::str(8, 44), d.musician_visited, ui::str(72, 7 + d.play_index));
     } else {
@@ -88,7 +88,7 @@ void info_window_booth::init(object_info &c) {
     const auto &d = band->runtime_data();
 
     textid reason{ c.group_id, 1 };
-    if (!band->has_road_access()) { reason = {69, 25}; } 
+    if (!band->has_road_access()) { reason = {69, 25}; }
     else if (band->num_workers() <= 0) { reason.id = 4; }
     else if (!d.num_shows) { reason.id = 2; }
     else if (d.juggler_visited) { reason.id = 3; }

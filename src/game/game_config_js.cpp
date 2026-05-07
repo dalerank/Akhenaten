@@ -12,6 +12,8 @@ std::optional<bvariant> __game_feature_get(xstring feature_name) {
         case setting_bool: return bvariant(feature->to_bool());
         case setting_string: return bvariant(feature->to_string());
         case setting_float: return bvariant(feature->to_float());
+        case setting_vec2i: return bvariant(feature->to_vec2i());
+        default: break;
         }
     }
     return std::nullopt;
@@ -73,6 +75,11 @@ void __game_feature_set(xstring feature_name, bvariant value) {
             feature->set(f);
             break;
         }
+        case setting_vec2i:
+            if (value.is_vec2i()) {
+                feature->set(value.as_vec2i());
+            }
+            break;
         default:
             break;
         }
