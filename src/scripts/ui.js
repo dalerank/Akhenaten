@@ -79,6 +79,7 @@ import ui_tax_collector_window
 import ui_burning_ruin_window
 import ui_hunting_lodge_window
 import ui_pavilion_window
+import ui_bandstand_window
 import ui_booth_window
 import ui_farm_info_window
 import ui_courthouse_window
