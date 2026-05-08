@@ -218,7 +218,7 @@ void building_curse_farms(int big_curse) {
 void building_workshop_add_raw_material(building* b, int amount, e_resource res) {
     if (b->id > 0 && b->is_workshop() && b->need_resource(res)) {
         if (b->input.resource == res || b->input.resource_second == res) {
-            b->store_resource(b->input.resource, amount);
+            b->store_resource(res, amount);
         } else {
             verify_no_crash(false);
         }

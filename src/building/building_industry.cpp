@@ -95,6 +95,10 @@ void building_industry::update_production() {
     auto &d = runtime_data();
     // d.has_raw_materials = false;
 
+    if (d.progress == 0) {
+        return;
+    }
+
     if (g_city.resource.is_mothballed(base.output.resource)) {
         return;
     }

@@ -251,9 +251,9 @@ const auto& get_properties() {
         { tags().building, tags().output_resource, [] (building &b, const xstring &) { return bvariant(resource_name(b.output.resource)); }},
         { tags().building, tags().second_output_resource, [] (building &b, const xstring &) { return bvariant(resource_name(b.output.resource_second)); }},
         { tags().building, tags().first_material, [] (building &b, const xstring &) { return bvariant(resource_name(b.input.resource)); }},
-        { tags().building, tags().first_material_stored, [] (building &b, const xstring &) { return bvariant(b.stored_first().value); }},
+        { tags().building, tags().first_material_stored, [] (building &b, const xstring &) { return bvariant(b.stored_amount(b.input.resource)); }},
         { tags().building, tags().second_material, [] (building &b, const xstring &) { return bvariant(resource_name(b.input.resource_second)); }},
-        { tags().building, tags().second_material_stored, [] (building &b, const xstring &) { return bvariant(b.stored_second().value); }},
+        { tags().building, tags().second_material_stored, [] (building &b, const xstring &) { return bvariant(b.stored_amount(b.input.resource_second)); }},
         { tags().farm, tags().fertility, [] (building &b, const xstring &) { return bvariant(map_get_fertility_for_farm(b.tile.grid_offset())); }},
     };
     return bproperties;
