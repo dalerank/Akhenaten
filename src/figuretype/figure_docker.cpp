@@ -101,13 +101,50 @@ building_dest figure_docker::get_closest_warehouse_for_import(tile2i pos, empire
         return importable[r] && (!dock_filter || dock->is_trade_accepted(r));
     };
 
-    e_resource resource = city_trade_next_docker_import_resource();
-    for (e_resource i = RESOURCES_MIN; i < RESOURCES_MAX && !allowed(resource); ++i) {
-        resource = city_trade_next_docker_import_resource();
+    // If the dock's ship has per-good budgets populated, pick from those (preserves per-visit
+    // proportional split). Otherwise fall back to the legacy global round-robin.
+    figure_trade_ship* ship = nullptr;
+    if (dock && dock->runtime_data().trade_ship) {
+        ship = figure_get<figure_trade_ship>(dock->runtime_data().trade_ship);
     }
 
-    if (!allowed(resource)) {
-        return { 0, tile2i::invalid };
+    bool budgets_populated = false;
+    if (ship) {
+        for (const auto& slot : ship->runtime_data().import_budgets) {
+            if (slot.resource != 0) {
+                budgets_populated = true;
+                break;
+            }
+        }
+    }
+
+    e_resource resource = RESOURCE_NONE;
+    if (budgets_populated) {
+        for (const auto& slot : ship->runtime_data().import_budgets) {
+            if (slot.resource == 0 || slot.remaining_chunks == 0) {
+                continue;
+            }
+            const e_resource r = (e_resource)slot.resource;
+            if (allowed(r)) {
+                resource = r;
+                break;
+            }
+        }
+
+        if (resource == RESOURCE_NONE) {
+            // Budgets exist but all exhausted/blocked — do not trade more this visit.
+            return { 0, tile2i::invalid };
+        }
+    } else {
+        // Legacy / no-budget path: use the global round-robin.
+        resource = city_trade_next_docker_import_resource();
+        for (e_resource i = RESOURCES_MIN; i < RESOURCES_MAX && !allowed(resource); ++i) {
+            resource = city_trade_next_docker_import_resource();
+        }
+
+        if (!allowed(resource)) {
+            return { 0, tile2i::invalid };
+        }
     }
 
     int min_distance = 10000;
@@ -505,6 +542,7 @@ void figure_docker::figure_action() {
                 if (ship) {
                     ship->dump_resource(100);
                     ship->runtime_data().failed_dock_attempts = 0;
+                    ship->consume_import_budget(base.resource_id);
                 }
                 base.wait_ticks = 0;
                 trader().record_sold_resource(base.resource_id);
