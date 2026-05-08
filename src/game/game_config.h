@@ -145,6 +145,7 @@ namespace game_features {
     extern game_feature gameopt_fullscreen;
     extern game_feature gameopt_difficulty;
     extern game_feature gameopt_display_size;
+    extern game_feature gameopt_disable_victory;
 
     xspan<game_feature*> all();
     game_feature* find(const xstring& name);

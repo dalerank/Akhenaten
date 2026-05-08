@@ -209,6 +209,10 @@ void city_t::victory_check() {
         victory_state.state = e_victory_state_lost;
     }
 
+    if (game_features::gameopt_disable_victory.to_bool()) {
+        return;
+    }
+
     if (victory_state.state != e_victory_state_none) {
         g_city_planner.reset();
         if (victory_state.state == e_victory_state_lost) {

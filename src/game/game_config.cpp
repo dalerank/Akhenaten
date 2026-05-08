@@ -125,6 +125,7 @@ namespace game_features {
     game_feature gameopt_fullscreen{ "gameopt_fullscreen", "", true };
     game_feature gameopt_difficulty{ "gameopt_difficulty", "", 2.0f };
     game_feature gameopt_display_size{"gameopt_display_size", "", vec2i(1280, 800)};
+    game_feature gameopt_disable_victory{ "gameopt_disable_victory", "", false };
 
     xspan<game_feature*> all() {
         return { _features.data(), _features.size() };
