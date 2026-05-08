@@ -30,7 +30,6 @@ declare_console_command_p(startflood) {
 }
 
 void floods_t::init() {
-    flood_progress = 0;
     unk01 = 0;
     state = FLOOD_STATE_FARMABLE;
     floodplain_width = 0;
@@ -326,9 +325,4 @@ io_buffer* iob_floodplain_settings = new io_buffer([](io_buffer* iob, size_t ver
     iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_UINT8, &data.quality_last);
     iob->bind____skip(3);
-
-    data.flood_progress = 30;
-    data.unk00 = 0;
-    data.state = FLOOD_STATE_FARMABLE;
-    data.floodplain_width = 10;
 });
