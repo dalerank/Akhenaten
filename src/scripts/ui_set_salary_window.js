@@ -48,8 +48,18 @@ set_salary_window {
     }
 }
 
-[es=(set_salary_window, init)]
-function set_salary_window_init(window) {
+[es=modal_window]
+set_salary_window_mansion {
+    pos [(sw(0) - px(24))/2, (sh(0) - px(25))/2]
+    allow_rmb_goback: true
+    draw_underlying: true
+
+    ui : baseui(set_salary_window, {
+        background_image : dummy({})
+    })
+}
+
+function set_salary_window_fill_lists_and_text(window) {
     window.salary_ranks.clear()
     window.salary_ranks.readonly = city.mission_has_won
     var rank
@@ -66,4 +76,22 @@ function set_salary_window_init(window) {
     } else {
         window.explanation_text.text = __loc(52, 77)
     }
+}
+
+[es=(set_salary_window, init)]
+function set_salary_window_init(window) {
+    set_salary_window_fill_lists_and_text(window)
+}
+
+[es=(set_salary_window_mansion, init)]
+function set_salary_window_mansion_init(window) {
+    var mansion_bg_w = px(29)
+    var ox = city.object_info.offset.x + mansion_bg_w / 2 - 200
+    var oy = city.object_info.offset.y
+    var ww = px(24)
+    var wh = px(25)
+    ox = Math.max(0, Math.min(ox, screen.width - ww))
+    oy = Math.max(0, Math.min(oy, screen.height - wh))
+    ui.set_window_pos("set_salary_window_mansion", {x: ox, y: oy})
+    set_salary_window_fill_lists_and_text(window)
 }

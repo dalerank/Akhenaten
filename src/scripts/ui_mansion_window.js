@@ -8,7 +8,7 @@ info_window_mansion {
         background    : outer_panel({size[29, 20]}),
 
         title       : text({pos[0, 16], text:"${building.name}", size[px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        change_salary : button({textfn:change_salary_button_text, onclick:show_window_by_id("set_salary_window"), margin{centerx:-200, top:70}, size[400, 30], font: FONT_NORMAL_BLACK_ON_DARK }),
+        change_salary : button({textfn:change_salary_button_text, onclick:show_window_by_id("set_salary_window_mansion"), margin{centerx:-200, top:70}, size[400, 30], font: FONT_NORMAL_BLACK_ON_DARK }),
 
         resource_img  : resource_icon({pos[16, 44], resource:RESOURCE_GOLD}),
         savings_hold  : text({pos[44, 44], text:"${text.2} ${building.tax_income_or_storage} Db", font: FONT_NORMAL_BLACK_ON_LIGHT }),
@@ -34,6 +34,6 @@ function info_window_mansion_on_init(window) {
     } else {
         window.warning_text.text = ""
     }
-    //window.protection_info.text = b.is_protected_by_police ? __loc("#mansion_protected_by_police") : __loc("#mansion_not_protected_theft")
+    //write window.protection_info.text = b.is_protected_by_police ? __loc("#mansion_protected_by_police") : __loc("#mansion_not_protected_theft")
     window.change_salary.readonly = city.mission_has_won
 }
