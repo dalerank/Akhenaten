@@ -23,6 +23,10 @@ import city_festival
 import city_monuments
 import city_labor
 import images
+import game_messages_en
+import localization_base_en
+import localization_en
+import eventmsg_en
 import city_sounds
 import buildings
 import building_house
