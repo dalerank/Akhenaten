@@ -11,6 +11,20 @@
 
 namespace {
 
+static uint8_t mujs_self_test_u8_a;
+static uint8_t mujs_self_test_u8_b;
+
+/** Registers globals.__mujs_self_test_cptr with CPTR u8_a / u8_b (mirrors city.kingdome bound fields). */
+static void mujs_self_test_register_cptr_holder(js_State *J)
+{
+    mujs_self_test_u8_a = 0;
+    mujs_self_test_u8_b = 0;
+    js_newobject(J);
+    js_register_bound_uint8_property(J, js_intern("u8_a"), &mujs_self_test_u8_a);
+    js_register_bound_uint8_property(J, js_intern("u8_b"), &mujs_self_test_u8_b);
+    js_setglobal(J, "__mujs_self_test_cptr");
+}
+
 /** One regexp check: first match, capture group @a cap must equal @a expected (byte-wise). */
 static bool mujs_self_test_regexp(pcstr id, pcstr pattern, pcstr subject, int cap, pcstr expected)
 {
@@ -61,8 +75,15 @@ static bool mujs_self_test_js(js_State *J, pcstr id, pcstr source)
 
 void mujs_run_self_tests(js_State *J)
 {
+    mujs_self_test_register_cptr_holder(J);
+
     mujs_self_test_regexp("negated_brace_cap1", R"(\$\{([^}]+)\})", "${stored} more", 1, "stored");
     mujs_self_test_regexp("negated_brace_cap1_twice_prefix", R"(\$\{([^}]+)\})", "${a} ${b} x", 1, "a");
     mujs_self_test_js(J, "regexp_replace_capture", "(function(){ return '${z}'.replace(/\\$\\{([^}]+)\\}/, function(m, g) { return g; }) === 'z'; })()");
     mujs_self_test_js(J, "regexp_replace_global_capture", "(function(){ return '${a} ${b}'.replace(/\\$\\{([^}]+)\\}/g, function(m, g) { return g; }) === 'a b'; })()");
+    /* Two consecutive OP_SETPROP_S writes on one object; stack must stay two-deep until rot2pop1 (kingdome salary_rank + salary_amount). */
+    mujs_self_test_js(J, "c_uint8_sequential_member_assign",
+        "(function(){ function two_writes(){ __mujs_self_test_cptr.u8_a = 7; var x = 42; "
+        "__mujs_self_test_cptr.u8_b = x; } two_writes(); "
+        "return __mujs_self_test_cptr.u8_a === 7 && __mujs_self_test_cptr.u8_b === 42; })()");
 }

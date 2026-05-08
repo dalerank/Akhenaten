@@ -34,6 +34,6 @@ function info_window_mansion_on_init(window) {
     } else {
         window.warning_text.text = ""
     }
-    window.protection_info.text = b.is_protected_by_police ? __loc("#mansion_protected_by_police") : __loc("#mansion_not_protected_theft")
+    //window.protection_info.text = b.is_protected_by_police ? __loc("#mansion_protected_by_police") : __loc("#mansion_not_protected_theft")
     window.change_salary.readonly = city.mission_has_won
 }

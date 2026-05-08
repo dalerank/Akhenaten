@@ -661,7 +661,6 @@ static void jsR_setproperty(js_State* J, js_Object* obj, const js_StringNode nam
             } else {
                 void *base = jsV_get_cobj_ptr(obj);
                 if (!base) {
-                    js_pop(J, 1);
                     return;
                 }
                 p = (char *)base + o->u.poff.off;
@@ -679,7 +678,6 @@ static void jsR_setproperty(js_State* J, js_Object* obj, const js_StringNode nam
                 default: break;
                 }
             }
-            js_pop(J, 1);
             return;
         }
     }
