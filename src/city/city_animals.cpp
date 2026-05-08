@@ -395,7 +395,7 @@ void city_animals_t::update() {
             update_herd_formation(m);
         }
     }
-    
+
     // Update hyena strength grid
     map_hyena_strength_update();
 }

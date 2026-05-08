@@ -10,8 +10,10 @@ struct event_mission_briefing_show_after_load { int scenario_id; };
 struct mission_step_t;
 
 struct mission_id_t {
+    int _id;
     xstring _data;
     inline mission_id_t(int id) {
+        _id = id;
         _data.printf("mission%d", id);
     }
 
