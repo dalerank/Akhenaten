@@ -382,9 +382,9 @@ public:
     }
 
     inline bool is_not_zero() const {
-        bool result = 0;
-        for (uint32_t i = 0; i < ints; ++i) {
-            result |= _data[i];
+        bool result = false;
+        for (uint32_t i = 0; i < ints && !result        ; ++i) {
+            result |= !!_data[i];
         }
         return (result);
     }
