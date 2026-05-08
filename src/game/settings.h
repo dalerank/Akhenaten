@@ -10,13 +10,9 @@
 class buffer;
 
 struct game_settings {
-    static constexpr uint8_t MAX_PERSONAL_SAVINGS = 100;
-
     // persistent game state
     bstring32 player_name;
     bstring32 player_name_utf8;
-    // personal savings
-    int personal_savings[MAX_PERSONAL_SAVINGS] = {0};
     // file data
     buffer *inf_file = nullptr;
 
@@ -28,11 +24,6 @@ struct game_settings {
 
     void set_player_name(const uint8_t* player_name);
     void set_player_name_utf8(pcstr name_utf8);
-
-    int personal_savings_for_mission(int mission_id) { return personal_savings[mission_id]; }
-    void set_personal_savings_for_mission(int mission_id, int savings) { personal_savings[mission_id] = savings; }
-
-    void clear_personal_savings(void);
 
 private:
     void load_settings(buffer *buf);

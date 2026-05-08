@@ -15,15 +15,17 @@
 
 #define INF_SIZE 564
 
+namespace {
+constexpr int INF_PERSONAL_SAVINGS_SLOTS = 100;
+}
+
 game_settings g_settings;
 
 game_settings::game_settings() {
     inf_file = new buffer(INF_SIZE);
 }
 
-void game_settings::load_default_settings() {
-    clear_personal_savings();
-}
+void game_settings::load_default_settings() {}
 
 void game_settings::load_settings(buffer* buf) {
     buf->skip(4);
@@ -57,8 +59,8 @@ void game_settings::load_settings(buffer* buf) {
     buf->read_i32();
 
     buf->skip(8); // int max_confirmed_resolution;
-    for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
-        personal_savings[i] = buf->read_i32();
+    for (int i = 0; i < INF_PERSONAL_SAVINGS_SLOTS; i++) {
+        buf->read_i32(); // legacy personal_savings[i] from original inf layout
     }
     buf->read_i32(); // victory_video - moved to game_features::gameopt_victory_video
 
@@ -113,8 +115,8 @@ void game_settings::save() {
     buf->write_i32(0);
     buf->write_i32(0);
     buf->skip(8); // int max_confirmed_resolution;
-    for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
-        buf->write_i32(personal_savings[i]);
+    for (int i = 0; i < INF_PERSONAL_SAVINGS_SLOTS; i++) {
+        buf->write_i32(0); // legacy slots — unused
     }
     buf->write_i32(false); // victory_video - moved to game_features::gameopt_victory_video
     buf->write_u8(0);
@@ -134,11 +136,4 @@ void game_settings::set_player_name_utf8(pcstr name_utf8) {
     encoding_from_utf8(name_utf8 ? name_utf8 : "", encoded, MAX_PLAYER_NAME);
     set_player_name(encoded);
 }
-
-void game_settings::clear_personal_savings() {
-    for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
-        personal_savings[i] = 0;
-    }
-}
-
 
