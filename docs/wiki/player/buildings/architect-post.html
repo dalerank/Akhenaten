@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Architect's Post — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .bld-header-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      margin-bottom: 2rem;
+    }
+    .bld-header-right { display: flex; flex-direction: column; gap: 1rem; }
+    .bld-image-wrap { text-align: center; }
+    .bld-image-wrap img { display: block; border: 1px solid var(--border); border-radius: 3px; image-rendering: pixelated; }
+    .bld-image-wrap figcaption { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.35rem; }
+    .bld-infobox { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.9rem 1.1rem; }
+    .bld-infobox h4 { margin: 0 0 0.6rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold); }
+    .bld-infobox dl { display: grid; grid-template-columns: auto 1fr; gap: 0.2rem 1rem; margin: 0; }
+    .bld-infobox dt { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; padding-top: 0.1rem; }
+    .bld-infobox dd { margin: 0; font-size: 0.85rem; color: var(--text); }
+    .bld-infobox .sep { grid-column: 1/-1; border: none; border-top: 1px solid var(--border); margin: 0.4rem 0; }
+    .bld-stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .bld-stat { text-align: center; }
+    .bld-stat .val { font-size: 1.3rem; font-weight: 700; color: var(--gold); display: block; }
+    .bld-stat .lbl { font-size: 0.7rem; color: var(--text-muted); }
+    .risk-none { color: var(--text-muted); }
+    .chain-box {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+      padding: 0.8rem 1.1rem; margin: 1rem 0; display: flex; align-items: center;
+      gap: 0.7rem; font-size: 0.88rem; flex-wrap: wrap;
+    }
+    .chain-box .step { background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.25); border-radius: 3px; padding: 0.3rem 0.7rem; color: var(--text); white-space: nowrap; }
+    .chain-box .step.hub { background: rgba(201,168,76,0.18); border-color: rgba(201,168,76,0.5); font-weight: 700; color: var(--gold); }
+    .chain-box .arrow { color: var(--gold); font-size: 1.1rem; }
+    .walker-card { display: inline-flex; align-items: center; gap: 0.75rem; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.6rem 0.9rem; margin: 0.75rem 0; }
+    .walker-card img { image-rendering: pixelated; border: 1px solid var(--border); border-radius: 2px; }
+    .walker-card-info { font-size: 0.82rem; }
+    .walker-card-info strong { display: block; color: var(--gold); margin-bottom: 0.15rem; }
+    .walker-card-info span { color: var(--text-muted); }
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .kw { color: #c9a84c; } .num { color: #9ecbff; } .str { color: #7ec87e; } .cmt { color: #5a5650; font-style: italic; } .fn { color: #8aabdc; } .ev { color: #d0a0e0; }
+    .file-ref { display: inline-block; font-family: 'Consolas','Courier New',monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .msg-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+    .msg-table th, .msg-table td { padding: 0.3rem 0.6rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+    .msg-table th { color: var(--text-muted); font-weight: normal; }
+    .bld-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .bld-nav a { color: var(--gold); }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+    .orig-screenshots { display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-start; margin: 1rem 0; }
+    .orig-screenshots figure { margin: 0; }
+    .orig-screenshots figcaption { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.3rem; text-align: center; }
+    .orig-screenshots img { display: block; border: 1px solid var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">← All Buildings</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Municipal</div>
+        <ul>
+          <li><a href="firehouse.html">Firehouse</a></li>
+          <li><a href="architect-post.html" class="active">Architect's Post</a></li>
+          <li><a href="police-station.html">Police Station</a></li>
+          <li><a href="courthouse.html">Courthouse</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#mechanics">Mechanics</a></li>
+          <li><a href="#collapse">Collapse risk</a></li>
+          <li><a href="#placement">Placement</a></li>
+          <li><a href="#tips">Tips</a></li>
+          <li><a href="#original">Original game</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Buildings</a> /
+        Architect's Post
+      </div>
+
+      <h1>Architect's Post</h1>
+
+      <div class="bld-header-grid">
+        <figure class="bld-image-wrap">
+          <img src="Cleo_ArchPost.webp" alt="Architect's Post building sprite" />
+          <figcaption>Architect's Post</figcaption>
+        </figure>
+        <div class="bld-header-right">
+          <div>
+            <p>The <strong>Architect's Post</strong> is the city's defence against structural collapse. It dispatches roaming <strong>Architects</strong> who patrol the road network and reduce the collapse risk of every building they pass. Without regular architect visits, buildings gradually accumulate structural damage until they collapse.</p>
+            <p>Collapse does not spread the way fire does — a collapsing building does not trigger its neighbours. However, a single collapse destroys the building entirely and can cause temporary unemployment and service gaps. Large buildings such as temples and monuments are especially prone to structural decay and benefit greatly from architect coverage.</p>
+            <p>The Architect's Post has neutral desirability and can be placed anywhere in the city without affecting the housing evolution of nearby plots.</p>
+          </div>
+          <div class="bld-infobox">
+            <h4>Stats</h4>
+            <div class="bld-stat-row" style="margin-bottom:0.9rem">
+              <div class="bld-stat"><span class="val">1×1</span><span class="lbl">Size</span></div>
+              <div class="bld-stat"><span class="val">5</span><span class="lbl">Workers</span></div>
+              <div class="bld-stat"><span class="val" style="color:var(--text-muted)">±0</span><span class="lbl">Desirability</span></div>
+            </div>
+            <hr class="sep" />
+            <dl>
+              <dt>Cost (Normal)</dt>
+              <dd>25 Db</dd>
+              <dt>Cost by difficulty</dt>
+              <dd style="font-size:0.78rem;color:var(--text-muted)">
+                VE 6 · Easy 12 · <strong style="color:var(--text)">Normal 25</strong> · Hard 40 · VH 60
+              </dd>
+              <dt>Labor category</dt>
+              <dd>Infrastructure</dd>
+              <dt>Fire risk</dt>
+              <dd>Low</dd>
+              <dt>Damage risk</dt>
+              <dd class="risk-none">None</dd>
+              <dt>Overlay</dt>
+              <dd>Damage <kbd>D</kbd></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Service flow ───────────────────────────────────── -->
+      <div class="chain-box">
+        <span class="step hub">Architect's Post</span>
+        <span class="arrow">→</span>
+        <span class="step">Architect (roaming walker)</span>
+        <span class="arrow">→</span>
+        <span class="step">Reduces collapse risk of passed buildings</span>
+      </div>
+
+      <!-- ─── Overview ──────────────────────────────────────── -->
+      <h2 id="overview">Overview</h2>
+      <p>In ancient cities of mud brick and timber, structural maintenance was a constant concern. Buildings slowly deteriorated without upkeep, and a collapse in a dense neighbourhood could disrupt the supply chains and services that depended on that structure. Organised maintenance crews — analogous to today's building inspectors — were a practical necessity of urban management.</p>
+      <p>In the game, the Architect's Post models this as a roaming service building. Architects walk circuits through the street network, reducing the collapse risk of every building they pass. The <strong>Damage overlay</strong> (hotkey <kbd>D</kbd>) is the primary tool for planning Architect's Post placement — it colour-codes buildings by accumulated structural risk and shows which areas need coverage.</p>
+
+      <!-- ─── Mechanics ─────────────────────────────────────── -->
+      <h2 id="mechanics">Mechanics</h2>
+
+      <h3>Architect</h3>
+      <p>The Architect's Post sends out one <strong>Architect</strong>, a roaming walker who travels along the road network. Every building he passes has its collapse risk reduced. The further a building is from regular architect visits, the more its structural risk accumulates over time.</p>
+
+      <div class="walker-card">
+        <img src="Cleo_ArchitechPort.webp" alt="Architect portrait" width="55" height="79" />
+        <div class="walker-card-info">
+          <strong>Architect</strong>
+          <span>Roaming walker · Range 43 tiles · Re-spawns every 4 days<br>Speed 54.4 tiles/month · ~53 tiles sporadic range</span>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:0.5rem;align-items:center;margin:0.5rem 0 0.75rem;">
+        <img src="Cleo_Architech.webp" alt="Architect walking" width="19" height="31" style="image-rendering:pixelated;border:1px solid var(--border);border-radius:2px;" />
+        <span style="font-size:0.78rem;color:var(--text-muted);margin-left:0.25rem;">Walker animation</span>
+      </div>
+
+      <ul>
+        <li><strong>Reliable range</strong>: 43 tiles. Buildings within this radius are consistently serviced on every patrol.</li>
+        <li><strong>Sporadic range</strong>: ~53 tiles. The architect occasionally wanders further but coverage is unreliable at this distance.</li>
+        <li><strong>Re-spawn delay</strong>: 4 days. A new architect departs 4 days after the previous one returns.</li>
+        <li><strong>Service area</strong>: when passing a building, the architect reduces its collapse risk within a small radius around his current tile. High-risk buildings are targeted with greater effect.</li>
+      </ul>
+
+      <p>The Architect is restricted to roads and cannot cut across empty terrain. Plan your road network so his patrol naturally reaches all vulnerable structures in the coverage zone.</p>
+
+      <!-- ─── Collapse mechanics ────────────────────────────── -->
+      <h2 id="collapse">Collapse risk</h2>
+      <p>All buildings accumulate structural decay over time. The rate depends on the building type — large public buildings such as temples, courthouses, and monuments decay faster than small residential plots. If collapse risk reaches the maximum threshold and no architect has visited recently, the building collapses and is removed from the map.</p>
+      <ul>
+        <li><strong>Collapse is not contagious</strong>: unlike fire, a collapsing building does not damage its neighbours. Each building's risk is tracked independently.</li>
+        <li><strong>Large buildings decay faster</strong>: due to walker mechanics, an architect passes a large building on both entry and exit of its footprint, providing double coverage per pass — but the absolute decay rate of large buildings is also higher, so they still need frequent visits.</li>
+        <li><strong>Staffing matters</strong>: an understaffed Architect's Post sends architects less frequently, leaving longer gaps between patrols. Maintain adequate labour supply.</li>
+        <li><strong>The Architect's Post itself</strong> has no collapse risk — architects maintain their own building in passing.</li>
+      </ul>
+
+      <!-- ─── Placement ─────────────────────────────────────── -->
+      <h2 id="placement">Placement</h2>
+      <p>The Architect's Post needs only a <strong>road connection</strong> to operate and has no desirability effect, so it can be placed anywhere convenient. Use the <strong>Damage overlay</strong> (<kbd>D</kbd>) to guide placement:</p>
+      <ul>
+        <li>Prioritise coverage of large civic buildings — temples, palaces, and monument sites accumulate risk fastest and suffer the most if they collapse.</li>
+        <li>One Architect's Post reliably covers a corridor of roughly 43 tiles along the patrol road. On a grid layout this typically covers an entire city district.</li>
+        <li>Industrial zones with many buildings clustered together may need a second post to ensure every structure receives visits before risk reaches critical levels.</li>
+        <li>Place the Architect's Post on or near the main road spine so the architect's patrol naturally fans out into side streets.</li>
+      </ul>
+
+      <!-- ─── Tips ──────────────────────────────────────────── -->
+      <h2 id="tips">Tips</h2>
+      <ul>
+        <li>Open the <strong>Damage overlay</strong> (<kbd>D</kbd>) after placing new large buildings. Temples and courthouses start accumulating risk immediately — an Architect's Post should be nearby before they're built, not after.</li>
+        <li>The Architect's Post is unlocked from the start of mission 1 (Thinis) — unlike the Firehouse in Nubt, it does not require a tutorial event.</li>
+        <li>A single well-placed post often covers an entire small city. Only add a second post when the overlay shows persistent red buildings that the first architect cannot reach in time.</li>
+        <li>Road dead-ends force the architect to retrace his steps, halving effective range in that direction. Avoid dead-end branches in areas with high-risk buildings.</li>
+        <li>Monument construction sites are immune to collapse while under construction. Once complete, they begin accumulating decay — ensure architect coverage is in place by the time the monument finishes.</li>
+      </ul>
+
+      <!-- ─── Original game ─────────────────────────────────── -->
+      <h2 id="original">In the original game</h2>
+      <div class="orig-screenshots">
+        <figure>
+          <img src="Cleo_ArchPostRC.webp" alt="Architect's Post right-click info window" width="300" height="164" />
+          <figcaption>Right-click info window</figcaption>
+        </figure>
+      </div>
+
+      <!-- ─── Developer reference ───────────────────────────── -->
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+
+        <details>
+          <summary>JS config — <span class="file-ref">building_architect_post.js</span></summary>
+          <div class="details-body">
+<pre><span class="kw">building_architect_post</span> {
+    <span class="kw">animations</span> {
+        _pack { pack:<span class="str">PACK_GENERAL</span> }
+        preview { id:<span class="num">81</span> }
+        base    { id:<span class="num">81</span> }
+        work    { pos [<span class="num">20</span>, <span class="num">-35</span>], id:<span class="num">81</span>, offset:<span class="num">1</span>, max_frames:<span class="num">11</span> }
+    }
+
+    labor_category      : <span class="str">LABOR_CATEGORY_INFRASTRUCTURE</span>
+    overlay             : <span class="str">OVERLAY_DAMAGE</span>
+    sound_channel       : <span class="str">SOUND_CHANNEL_CITY_ENGINEERS_POST</span>
+    min_houses_coverage : <span class="num">50</span>
+    building_size       : <span class="num">1</span>
+    meta { help_id: <span class="num">81</span>, text_id: <span class="num">104</span> }
+    info_sound          : <span class="str">"Wavs/eng.wav"</span>
+    cost        [ <span class="num">6</span>, <span class="num">12</span>, <span class="num">25</span>, <span class="num">40</span>, <span class="num">60</span> ]
+    laborers    [<span class="num">5</span>]
+    fire_risk   [<span class="num">2</span>]
+    damage_risk [<span class="num">0</span>]
+    flags {
+        is_infrastructure: <span class="kw">true</span>
+    }
+}</pre>
+            <p>The spawn handler in the same file calls <code>common_spawn_roamer(FIGURE_ARCHITECT, min_houses_coverage, ACTION_1_ENGINEER_CREATED)</code>. Animation key switches between <code>"work"</code> (staffed) and <code>"none"</code> (idle/unstaffed) via <code>building.can_play_animation</code>.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>C++ — <span class="file-ref">building_architect_post.h</span> / <span class="file-ref">building_architect_post.cpp</span></summary>
+          <div class="details-body">
+            <p>The C++ class is minimal — all logic lives in the JS script and the figure implementation. The only override is drawing:</p>
+<pre><span class="kw">class</span> <span class="fn">building_architect_post</span> : <span class="kw">public</span> building_impl {
+    BUILDING_METAINFO(BUILDING_ARCHITECT_POST, building_architect_post, building_impl)
+    <span class="kw">virtual</span> building_architect_post *<span class="fn">dcast_architect_post</span>() <span class="kw">override</span> { <span class="kw">return</span> <span class="kw">this</span>; }
+    <span class="kw">virtual</span> <span class="kw">bool</span> <span class="fn">draw_ornaments_and_animations_height</span>(
+        painter &amp;ctx, vec2i point, tile2i tile, color color_mask) <span class="kw">override</span>;
+};</pre>
+            <p><code>draw_ornaments_and_animations_height()</code> calls <code>draw_normal_anim()</code> and returns <code>true</code> — no extra ornament logic.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Architect figure — <span class="file-ref">figures.js</span> / <span class="file-ref">figure_architector.cpp</span></summary>
+          <div class="details-body">
+<pre><span class="kw">figure_architector</span> {
+    <span class="kw">animations</span> {
+        _pack      { pack:<span class="str">PACK_SPR_MAIN</span> }
+        walk       { id:<span class="num">4</span>,  max_frames:<span class="num">12</span> }
+        death      { id:<span class="num">5</span>,  max_frames:<span class="num">8</span>, loop:<span class="kw">false</span> }
+        work_ground { id:<span class="num">49</span>, max_frames:<span class="num">6</span> }
+        work_stand  { id:<span class="num">50</span>, max_frames:<span class="num">6</span> }
+        big_image  { pack:<span class="str">PACK_UNLOADED</span>, id:<span class="num">25</span>, offset:<span class="str">FIGURE_ARCHITECT</span> }
+    }
+    <span class="kw">sounds</span> {
+        engineer_extreme_damage_level  { sound:<span class="str">"engineer_e01.wav"</span> }
+        engineer_i_am_works            { sound:<span class="str">"engineer_e02.wav"</span> }
+        engineer_high_damage_level     { sound:<span class="str">"engineer_g01.wav"</span> }
+        engineer_no_food_in_city       { sound:<span class="str">"engineer_g02.wav"</span> }
+        engineer_city_not_safety       { sound:<span class="str">"engineer_g03.wav"</span> }
+        engineer_need_more_workers     { sound:<span class="str">"engineer_g04.wav"</span> }
+        engineer_gods_are_angry        { sound:<span class="str">"engineer_g05.wav"</span> }
+        engineer_city_has_bad_reputation { sound:<span class="str">"engineer_g06.wav"</span> }
+        engineer_city_is_good          { sound:<span class="str">"engineer_g07.wav"</span> }
+        engineer_low_entertainment     { sound:<span class="str">"engineer_g08.wav"</span> }
+        engineer_city_is_bad           { sound:<span class="str">"engineer_g09.wav"</span> }
+        engineer_city_is_amazing       { sound:<span class="str">"engineer_g10.wav"</span> }
+    }
+    category         : figure_category_citizen
+    max_damage       : <span class="num">20</span>
+    terrain_usage    : <span class="str">TERRAIN_USAGE_ROADS</span>
+    max_roam_length  : <span class="num">640</span>
+    max_service_buildings : <span class="num">100</span>
+    permission       : epermission_maintenance
+}</pre>
+            <p><code>provide_service()</code> in <span class="file-ref">figure_architector.cpp</span> iterates a grid area around the architect's current tile and reduces <code>collapse_risk</code> on every building found — either completely (<code>risk_reduction ≥ 100</code>) or as a percentage. <code>phrase_key()</code> picks a situation sound based on city state (damage levels, sentiment, food, labour).</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Game message — <span class="file-ref">game_messages_en.js</span></summary>
+          <div class="details-body">
+            <table class="msg-table">
+              <tr><th>Field</th><th>Value</th></tr>
+              <tr><td>ID</td><td>81</td></tr>
+              <tr><td>Title</td><td>Architect's Post</td></tr>
+            </table>
+            <p style="margin-top:0.75rem;font-size:0.82rem;color:var(--text-muted)">Many buildings in the city are susceptible to collapse if not tended to by architects. Unlike fire, a collapsed building won't cause neighboring buildings to collapse too. Nevertheless, collapse is a real risk that can be prevented by placing Architect's Posts nearby and keeping them well staffed. Architects from Architect's Posts roam the city and reduce a building's risk of collapse as they pass by. The damage overlay is a helpful guide to collapse prevention.</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="bld-nav">
+        <a href="firehouse.html">← Firehouse</a>
+        <a href="index.html">All Buildings →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>
