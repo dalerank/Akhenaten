@@ -23,6 +23,7 @@ public:
 
     virtual void on_create() override {}
     virtual void on_destroy() override;
+    virtual void figure_before_action() override;
     virtual void figure_action() override;
     virtual sound_key phrase_key() const override;
     virtual void update_animation() override;

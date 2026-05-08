@@ -288,7 +288,6 @@ bool figure_docker::deliver_import_resource(building* b) {
         return false;
     }
 
-    ship->dump_resource(100);
     set_destination(result.bid);
     base.wait_ticks = 0;
     advance_action(ACTION_133_DOCKER_IMPORT_QUEUE);
@@ -326,6 +325,12 @@ bool figure_docker::fetch_export_resource(building* b) {
     base.destination_tile = result.tile;
     base.resource_id = resource;
     return true;
+}
+
+void figure_docker::figure_before_action() {
+    if (action_state() == ACTION_132_DOCKER_IDLING) {
+        base.routing_try_reroute_counter = 0;
+    }
 }
 
 void figure_docker::figure_action() {
@@ -366,6 +371,20 @@ void figure_docker::figure_action() {
 
     base.terrain_usage = TERRAIN_USAGE_ROADS;
     switch (action_state()) {
+    case ACTION_8_RECALCULATE:
+        // Without this case a routing failure leaves the docker non-idle, so the moored ship's failed_dock_attempts never advances.
+        if (++base.routing_try_reroute_counter > 5) {
+            base.routing_try_reroute_counter = 0;
+            base.poof();
+            return;
+        }
+        load_resource(RESOURCE_NONE, 0);
+        base.cart_image_id = 0;
+        base.wait_ticks = 0;
+        set_destination(home(), home()->tile);
+        advance_action(ACTION_138_DOCKER_IMPORT_RETURNING);
+        break;
+
     case ACTION_132_DOCKER_IDLING:
         base.resource_id = RESOURCE_NONE;
         base.cart_image_id = 0;
@@ -472,6 +491,10 @@ void figure_docker::figure_action() {
             auto trade_city = ship ? ship->empire_city() : empire_city_handle{};
 
             if (try_import_resource(destination(), base.resource_id, trade_city)) {
+                if (ship) {
+                    ship->dump_resource(100);
+                    ship->runtime_data().failed_dock_attempts = 0;
+                }
                 base.wait_ticks = 0;
                 trader().record_sold_resource(base.resource_id);
                 advance_action(ACTION_138_DOCKER_IMPORT_RETURNING);
@@ -495,6 +518,12 @@ void figure_docker::figure_action() {
             base.wait_ticks = 0;
             const bool can_export = try_export_resource(destination(), base.resource_id, trade_city);
             if (can_export) {
+                if (dock.trade_ship) {
+                    auto ship = figure_get<figure_trade_ship>(dock.trade_ship);
+                    if (ship) {
+                        ship->runtime_data().failed_dock_attempts = 0;
+                    }
+                }
                 int amount = trader().record_bought_resource(base.resource_id);
                 load_resource(base.resource_id, amount);
                 set_destination(home(), home()->tile);
@@ -562,7 +591,7 @@ void figure_docker::update_animation() {
 }
 
 void figure_docker::poof() {
-
+    figure_carrier::poof();
 }
 
 void figure_docker::on_destroy() {
