@@ -33,12 +33,25 @@ public:
         uint16_t max_capacity;
     } FIGURE_STATIC_DATA_T;
 
+    // Per-visit per-good import cap. Up to 8 active import goods per route — more than
+    // any realistic Pharaoh route. Transient: recomputed each ship arrival, no save semantics.
+    static constexpr int VISIT_BUDGET_SLOTS = 8;
+    struct visit_budget_slot {
+        uint8_t resource;          // e_resource value, 0 = empty slot
+        uint8_t remaining_chunks;  // remaining 100-unit deliveries this visit
+    };
+
     struct runtime_data_t {
         empire_trader_handle trader;
         empire_city_handle empire_city;
         uint8_t failed_dock_attempts;
         uint16_t amount_bought;
+        visit_budget_slot import_budgets[VISIT_BUDGET_SLOTS];
     } FIGURE_RUNTIME_DATA_T;
+
+    void populate_import_budgets();
+    int import_budget_remaining(e_resource r) const;
+    void consume_import_budget(e_resource r);
 
     virtual void on_create() override;
     virtual void on_destroy() override;

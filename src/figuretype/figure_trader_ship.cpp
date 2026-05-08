@@ -22,6 +22,10 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_trade_ship);
 
+// Days a moored/anchored ship will tolerate idle dockers before giving up the visit.
+// Bumped from 10 to 25 so a temporarily-blocked dock doesn't truncate a trade run.
+constexpr uint8_t TRADE_SHIP_IDLE_DAYS_MAX = 25;
+
 void ANK_PERMANENT_CALLBACK(event_trade_ship_arrival, ev) {
     tile2i river_entry = scenario_map_river_entry();
 
@@ -44,6 +48,7 @@ void ANK_PERMANENT_CALLBACK(event_trade_ship_arrival, ev) {
     ship->base.allow_move_type = EMOVE_DEEPWATER;
     ship->base.wait_ticks = 10;
     ship->runtime_data().trader = empire_trader_handle{ ev.tid };
+    ship->populate_import_budgets();
 
     emp_city->trader_figure_ids[empire_trader_index] = ship->id();
 }
@@ -102,13 +107,81 @@ bool figure_trade_ship::done_trading() {
     building* b = destination();
     auto& d = runtime_data();
     if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_DOCK && b->num_workers > 0) {
-        if (d.failed_dock_attempts >= 10) {
-            d.failed_dock_attempts = 11;
+        if (d.failed_dock_attempts >= TRADE_SHIP_IDLE_DAYS_MAX) {
+            d.failed_dock_attempts = TRADE_SHIP_IDLE_DAYS_MAX + 1;
             return true;
         }
         return false;
     }
     return true;
+}
+
+void figure_trade_ship::populate_import_budgets() {
+    auto& d = runtime_data();
+    for (auto& slot : d.import_budgets) {
+        slot.resource = 0;
+        slot.remaining_chunks = 0;
+    }
+
+    auto* emp_city = g_empire.city(d.empire_city.handle);
+    if (!emp_city) {
+        return;
+    }
+
+    const resource_list importable = g_empire.importable_resources_from_city(d.empire_city.handle);
+    auto& route = emp_city->get_route();
+
+    // Total weight = sum of per-resource yearly trade limits across all importable goods.
+    int total_weight = 0;
+    for (const auto& r : resource_list::all) {
+        if (importable[r.type]) {
+            total_weight += route.limit(r.type);
+        }
+    }
+
+    if (total_weight <= 0) {
+        return;
+    }
+
+    const int total_chunks = max_capacity() / 100;  // 1200 / 100 = 12
+    int slot_idx = 0;
+    for (const auto& r : resource_list::all) {
+        if (slot_idx >= VISIT_BUDGET_SLOTS) {
+            break;
+        }
+        if (!importable[r.type]) {
+            continue;
+        }
+        const int weight = route.limit(r.type);
+        // Proportional share, floored to a whole 100-unit chunk.
+        const int chunks = (weight * total_chunks) / total_weight;
+        if (chunks <= 0) {
+            continue;
+        }
+        d.import_budgets[slot_idx].resource = (uint8_t)r.type;
+        d.import_budgets[slot_idx].remaining_chunks = (uint8_t)std::min(chunks, 255);
+        slot_idx++;
+    }
+}
+
+int figure_trade_ship::import_budget_remaining(e_resource r) const {
+    const auto& d = runtime_data();
+    for (const auto& slot : d.import_budgets) {
+        if (slot.resource == (uint8_t)r) {
+            return slot.remaining_chunks;
+        }
+    }
+    return 0;
+}
+
+void figure_trade_ship::consume_import_budget(e_resource r) {
+    auto& d = runtime_data();
+    for (auto& slot : d.import_budgets) {
+        if (slot.resource == (uint8_t)r && slot.remaining_chunks > 0) {
+            slot.remaining_chunks--;
+            return;
+        }
+    }
 }
 
 void figure_trade_ship::on_create() {
@@ -233,7 +306,7 @@ void figure_trade_ship::figure_action() {
                 base.destination_tile = free_dock.tile;
             }
 
-            if (d.failed_dock_attempts >= 10) {
+            if (d.failed_dock_attempts >= TRADE_SHIP_IDLE_DAYS_MAX) {
                 advance_action(ACTION_115_TRADE_SHIP_LEAVING, scenario_map_river_exit());
             }
             base.wait_ticks = 0;
@@ -324,8 +397,10 @@ void figure_trade_ship::poof() {
 }
 
 void figure_trade_ship::update_day() {
-    const bool on_raid = action_state(ACTION_114_TRADE_SHIP_ANCHORED, ACTION_112_TRADE_SHIP_MOORED);
-    if (!on_raid) {
+    // Only count idle days while moored at a dock. Queued ships (ACTION_114) wait
+    // indefinitely behind ships that are still trading — they should never time out
+    // just for sitting in line.
+    if (!action_state(ACTION_112_TRADE_SHIP_MOORED)) {
         return;
     }
 

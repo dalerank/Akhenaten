@@ -4,6 +4,8 @@
 #include "empire/empire_city.h"
 #include "empire/trader_handler.h"
 
+class building_dock;
+
 enum e_docker_action {
     ACTION_132_DOCKER_IDLING = 132,
     ACTION_133_DOCKER_IMPORT_QUEUE = 133,
@@ -23,6 +25,7 @@ public:
 
     virtual void on_create() override {}
     virtual void on_destroy() override;
+    virtual void figure_before_action() override;
     virtual void figure_action() override;
     virtual sound_key phrase_key() const override;
     virtual void update_animation() override;
@@ -38,6 +41,6 @@ public:
     bool fetch_export_resource(building* dock);
     bool try_import_resource(building *b, e_resource resource, empire_city_handle city_id);
     bool try_export_resource(building *b, e_resource resource, empire_city_handle city_id);
-    building_dest get_closest_warehouse_for_import(tile2i pos, empire_city_handle city, int distance_from_entry, int road_network_id, e_resource &import_resource);
-    building_dest get_closest_warehouse_for_export(tile2i pos, empire_city_handle city, int distance_from_entry, int road_network_id, e_resource &export_resource);
+    building_dest get_closest_warehouse_for_import(tile2i pos, empire_city_handle city, int distance_from_entry, int road_network_id, building_dock *dock, e_resource &import_resource);
+    building_dest get_closest_warehouse_for_export(tile2i pos, empire_city_handle city, int distance_from_entry, int road_network_id, building_dock *dock, e_resource &export_resource);
 };
