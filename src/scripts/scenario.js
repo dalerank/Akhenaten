@@ -1,0 +1,11 @@
+log_info("akhenaten: scenario started")
+
+scenario = extend(__scenario, {
+    has_animals: __scenario_has_animals
+    flotsam_enabled: __scenario_flotsam_enabled
+    building_allowed: __scenario_building_allowed
+    // => is_open_play
+    // => kingdom_supplies_grain
+    // => start_year
+    // => campaign_scenario_id
+})

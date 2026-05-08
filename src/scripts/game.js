@@ -7,6 +7,7 @@ game = extend(__game, {
 
     mission_briefing_scenario_id : 0
     mission_briefing_is_review : false
+    campaign_carry_personal_savings : 0
 
     @absolute_day { get: __game_absolute_day }
     @simtime_year { get: __game_simtime_year }
@@ -45,16 +46,6 @@ game = extend(__game, {
 screen = extend(__screen, {
     @is_fullscreen_only { get: __game_is_fullscreen_only }
 })
-
-scenario {
-    has_animals: __scenario_has_animals
-    flotsam_enabled: __scenario_flotsam_enabled
-    @is_open_play { get: __scenario_is_open_play }
-    building_allowed: __scenario_building_allowed
-    kingdom_supplies_grain: __scenario_kingdom_supplies_grain
-    @start_year { get: __scenario_start_year }
-    @campaign_scenario_id { get: __scenario_campaign_scenario_id }
-}
 
 game_features {
     __property_getter: function(property) { return __game_feature_get(property) }
@@ -158,4 +149,10 @@ function event_change_gamespeed_handler(ev) {
         }
     }
     game_features.gameopt_game_speed = s
+}
+
+
+[es=event_mission_won]
+function game_on_event_mission_won(ev) {
+    game.campaign_carry_personal_savings = city.kingdome.personal_savings
 }

@@ -84,7 +84,7 @@ function advisor_population_print_society_info(window) {
 
 function advisor_population_print_history_info(window) {
 	var line1
-	if (scenario.kingdom_supplies_grain()) {
+	if (scenario.kingdom_supplies_grain) {
 		line1 = __loc(55, 11)
 	} else {
 		var text = __loc(8, 6) + " " + String(__city_resource_operating_granaries())

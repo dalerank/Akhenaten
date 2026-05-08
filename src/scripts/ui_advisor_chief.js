@@ -269,7 +269,7 @@ function advisor_chief_window_update_entertainment(window) {
 function advisor_chief_window_update_foodstocks(window) {
 	var text
 	var font
-	if (scenario.kingdom_supplies_grain()) {
+	if (scenario.kingdom_supplies_grain) {
 		text = __loc(61, 26)
 		font = FONT_NORMAL_BLACK_ON_DARK
 	} else {
@@ -288,7 +288,7 @@ function advisor_chief_window_update_foodstocks(window) {
 function advisor_chief_window_update_foodconsumption(window) {
 	var text_id
 	var font
-	if (scenario.kingdom_supplies_grain()) {
+	if (scenario.kingdom_supplies_grain) {
 		text_id = 26
 		font = FONT_NORMAL_BLACK_ON_DARK
 	} else {
