@@ -17,6 +17,7 @@
 #include "game/game_config.h"
 
 #include "dev/debug.h"
+#include <algorithm>
 #include <iostream>
 
 static int cheated_invasion = 0;
@@ -128,7 +129,9 @@ void kingdome_relation_t::update_debt_state() {
             months_in_debt = 0;
 
             if (!g_city.figures.kingdome_soldiers) {
-                rating_cap = params().last_debt_rating_cap;
+                const uint8_t debt_ceiling =
+                    (uint8_t)std::clamp((int)params().last_debt_rating_cap, 0, 100);
+                rating = std::min(rating, debt_ceiling);
             }
         }
         break;
@@ -348,7 +351,9 @@ void kingdome_relation_t::init() {
 }
 
 void kingdome_relation_t::on_post_load() {
-    if (rating_cap == 0) { rating_cap = 100; }
+    if (rating_cap == 0) {
+        rating_cap = 100;
+    }
 }
 
 void kingdome_relation_t::reset() {
