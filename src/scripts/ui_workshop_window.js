@@ -59,12 +59,6 @@ bricklayers_guild_info_window = {
     })
 }
 
-carpenters_guild_info_window = {
-    ui : baseui(workshop_info_window, {
-
-    })
-}
-
 stonemason_guild_info_window = {
     ui : baseui(workshop_info_window, {
 
