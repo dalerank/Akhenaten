@@ -262,14 +262,22 @@ bool building_dock::accepts_ship(int ship_id) {
     }
 
     empire_city_handle city = ship->empire_city();
-    const resource_list resources = g_city.resource.available();
-    for (const resource_value r: resources) {
-        if (is_trade_accepted(r.type) && (city.sells_resource(r.type) || city.buys_resource(r.type))) {
-            return true;
+    const resource_list importable = g_empire.importable_resources_from_city(city.handle);
+    const resource_list exportable = g_empire.exportable_resources_from_city(city.handle);
+
+    bool any_match = false;
+    for (const auto &r : resource_list::all) {
+        const bool active = importable[r.type] || exportable[r.type];
+        if (!active) {
+            continue;
         }
+        if (!is_trade_accepted(r.type)) {
+            return false;
+        }
+        any_match = true;
     }
 
-    return false;
+    return any_match;
 }
 
 void building_dock::highlight_waypoints() {
@@ -328,7 +336,6 @@ building_dest map_get_free_destination_dock(int ship_id) {
     }
 
     const auto &docks = g_city.buildings.track_buildings(BUILDING_DOCK);
-    building_dock* better_dock = nullptr;
     for (const auto &bid: docks) {
         building_dock *dock = ::building_get(bid)->dcast_dock();
         if (!dock || !dock->num_workers()) {
@@ -336,25 +343,19 @@ building_dest map_get_free_destination_dock(int ship_id) {
         }
 
         if (!dock->accepts_ship(ship_id)) {
-            better_dock = nullptr;
             continue;
         }
 
-        better_dock = dock;
         auto &d = dock->runtime_data();
-        if (!d.trade_ship || d.trade_ship == ship_id) {
-            break;
+        if (d.trade_ship && d.trade_ship != ship_id) {
+            continue;
         }
+
+        d.trade_ship = ship_id;
+        return { dock->id(), dock->moor_tile() };
     }
 
-    // BUG: when 10 docks in city, always takes last one... regardless of whether it is free
-    if (!better_dock) {
-        return { 0, tile2i::invalid };
-    }
-
-    tile2i moor_tile = better_dock->moor_tile();
-    better_dock->runtime_data().trade_ship = ship_id;
-    return {better_dock->id(), moor_tile };
+    return { 0, tile2i::invalid };
 }
 
 building_dest map_get_queue_destination_dock(int ship_id) {
