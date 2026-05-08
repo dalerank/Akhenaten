@@ -9,6 +9,7 @@
 #include "scenario/scenario.h"
 #include "game/mission.h"
 #include "city/victory.h"
+#include "game/game_config.h"
 #include "scenario/criteria.h"
 
 ANK_REGISTER_PROPS_ITERATOR(config_show_tutorial_properties);
@@ -74,6 +75,17 @@ void config_show_tutorial_properties(bool header) {
         game_debug_show_property("victory_state", state_text);
         game_debug_show_property("force_win", g_city.victory_state.force_win);
         game_debug_show_property("force_lost", g_city.victory_state.force_lost);
+        {
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::TextUnformatted("disable_victory");
+            ImGui::TableNextColumn();
+            bool v = game_features::gameopt_disable_victory.to_bool();
+            if (ImGui::Checkbox("##disable_victory", &v)) {
+                game_features::gameopt_disable_victory.set(v);
+                game_features::save();
+            }
+        }
 
         if (winning_population() > 0) {
             bstring64 label;
