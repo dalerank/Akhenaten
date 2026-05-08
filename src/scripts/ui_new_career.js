@@ -19,19 +19,14 @@ function new_career_on_input(params) {
 
 function new_career_btn_ok() {
     var name = window_new_career.player_name_value
-    log_info("akhenaten: new_career_btn_ok name_raw=[" + name + "] len=" + name.length)
     if (!name || name === "") {
-        log_info("akhenaten: new_career_btn_ok aborted (empty name)")
         ui.show_ok("#popup_dialog_no_player_name")
         return
     }
     game.dynasty_name = name
-    log_info("akhenaten: new_career_btn_ok after set dynasty_name=[" + game.dynasty_name + "]")
     __game_player_data_new(name)
-    log_info("akhenaten: new_career_btn_ok after __game_player_data_new dynasty_name=[" + game.dynasty_name + "]")
     window_go_back()
     window_show_by_id("window_player_selection")
-    log_info("akhenaten: new_career_btn_ok done (back to player_selection)")
 }
 
 [es=(window_new_career, init)]
@@ -41,5 +36,4 @@ function window_new_career_on_init(window) {
 
     window.player_name.value = game.dynasty_name || "My Dynasty"
     window_new_career.player_name_value = window.player_name.value
-    log_info("akhenaten: window_new_career_on_init player_name_value=[" + window_new_career.player_name_value + "] dynasty_get=[" + game.dynasty_name + "]")
 }

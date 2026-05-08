@@ -208,23 +208,18 @@ vfs::path vfs::path::resolve() {
         return filepath;
     }
 
-    // If not found in extdata, try base content_path
-    vfs::path corrected_filename = content_path(filepath);
-    bool exists_in_content = std::filesystem::exists(corrected_filename.c_str());
-    if (exists_in_content) {
-        return corrected_filename;
+    vfs::path from_content = content_path(filepath);
+    if (std::filesystem::exists(from_content.c_str())) {
+        return from_content;
     }
 
-    corrected_filename = vfs::path("./", filepath);
-    bool exists_in_pwd = std::filesystem::exists(corrected_filename.c_str());
-    if (exists_in_pwd) {
-        corrected_filename = std::filesystem::absolute(corrected_filename.c_str()).string().c_str();
-        return corrected_filename;
+    vfs::path from_pwd = vfs::path("./", filepath);
+    if (std::filesystem::exists(from_pwd.c_str())) {
+        return std::filesystem::absolute(from_pwd.c_str()).string().c_str();
     }
 
-    // If file not found anywhere, return base path as fallback
-    // This allows proper error handling in calling code
-    return corrected_filename;
+    // Not found anywhere (new file) — return game-dir path so writes go to the right place.
+    return from_content;
 #else
     pcstr filepath = data();
     vfs::path corrected_filename = content_path(filepath);

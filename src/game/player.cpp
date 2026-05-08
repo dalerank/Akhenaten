@@ -157,18 +157,13 @@ bool player_data_prepare_savegame(const char* filename_short) {
     vfs::path folders = vfs::content_path(fullpath_saves("").c_str());
 
     vfs::create_folders(folders);
-    logs::info("player_data_prepare_savegame folders='%s' savefile='%s'", folders.c_str(), savefile.c_str());
     // write file (serialize applies content_path internally; do not pass pre-resolved path)
-    const bool ok = FILEIO.serialize(savefile, 0, FILE_FORMAT_SAVE_FILE, latest_save_version, [] (e_file_format file_format, const int file_version) {
+    return FILEIO.serialize(savefile, 0, FILE_FORMAT_SAVE_FILE, latest_save_version, [] (e_file_format file_format, const int file_version) {
         FILEIO.push_chunk(4, false, "family_index", 0);
     });
-    logs::info("player_data_prepare_savegame serialize family.sav -> %s", ok ? "ok" : "FAILED");
-    return ok;
 }
 
 void player_data_new(const uint8_t* player_name) {
-    logs::info("player_data_new (creates Save/<gameopt_player_name>/family.sav), player_name_arg='%s'",
-        player_name && *player_name ? (const char*)player_name : "");
     player_data_prepare_savegame("family.sav");
 }
 
