@@ -52,9 +52,8 @@ pcstr __widget_top_menu_replay_map(int, int) {
             GamestateIO::load_savegame("autosave_replay.svx");
             window_city_show();
         } else {
-            int scenario_id = g_scenario.campaign_scenario_id();
             widget_top_menu_clear_state();
-            GamestateIO::load_mission(scenario_id, true);
+            GamestateIO::load_mission(g_scenario.campaign_scenario_id, true);
         }
     });
 

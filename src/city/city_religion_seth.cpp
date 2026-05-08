@@ -32,7 +32,7 @@ bool god_seth_t::formation_legion_curse() {
 
 int god_seth_t::invasion_start_from_seth() {
     auto &data = g_invasions;
-    int mission = g_scenario.campaign_scenario_id();
+    int mission = g_scenario.campaign_scenario_id;
     if (mission < 0 || mission > 19) {
         return 0;
     }

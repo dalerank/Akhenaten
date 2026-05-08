@@ -12,7 +12,6 @@
 #include "game/difficulty.h"
 #include "scenario/scenario_invasion.h"
 #include "scenario/scenario.h"
-#include "game/settings.h"
 #include "game/game.h"
 #include "scenario/criteria.h"
 #include "game/game_config.h"
@@ -47,9 +46,9 @@ declare_console_command_p(addsavings) {
     g_city.kingdome.personal_savings += amount;
 }
 
-void kingdome_relation_t::load_scenario(int rank, int load_type ) {
+void kingdome_relation_t::load_scenario(int rank, int load_type) {
     rating = g_scenario.starting_kingdom();
-    personal_savings = scenario_starting_personal_savings();
+    personal_savings = 0;
     player_rank = rank;
     int salary_rank = rank;
     const bool custom_scenario = g_scenario.mode() != e_scenario_normal;
@@ -224,7 +223,7 @@ void kingdome_relation_t::force_attack(int size) {
 }
 
 void kingdome_relation_t::advance_month() {
-    if (scenario_is_open_play()) {
+    if (g_scenario.is_open_play) {
         rating = 50;
         return;
     }

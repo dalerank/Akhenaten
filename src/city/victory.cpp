@@ -190,7 +190,7 @@ void victory_state_t::determine_state() {
 }
 
 void city_t::victory_check() {
-    if (scenario_is_open_play()) {
+    if (g_scenario.is_open_play) {
         return;
     }
 

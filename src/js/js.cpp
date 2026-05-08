@@ -101,8 +101,7 @@ void js_reset_vm_state();
 declare_console_command_p(reload_scripts){
     os << "Reloading JavaScript VM from scratch..." << std::endl;
 
-    int scenario_id = g_scenario.campaign_scenario_id();
-    mission_id_t missionid(scenario_id);
+    mission_id_t missionid(g_scenario.campaign_scenario_id);
 
     js_vm_setup();
 

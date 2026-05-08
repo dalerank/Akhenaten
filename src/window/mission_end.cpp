@@ -7,7 +7,6 @@
 #include "city/victory.h"
 #include "game/mission.h"
 #include "game/game_config.h"
-#include "game/settings.h"
 #include "game/state.h"
 #include "game/game.h"
 #include "game/undo.h"
@@ -18,6 +17,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
+#include "game/game_events.h"
 #include "scenario/scenario.h"
 #include "sound/music.h"
 #include "sound/sound.h"
@@ -43,9 +43,8 @@ void ui::window_mission_lost::init() {
             GamestateIO::load_savegame("autosave_replay.sav");
             window_city_show();
         } else {
-            int scenario_id = g_scenario.campaign_scenario_id();
             widget_top_menu_clear_state();
-            GamestateIO::load_mission(scenario_id, true);
+            GamestateIO::load_mission(g_scenario.campaign_scenario_id, true);
         }
     });
 }
@@ -64,13 +63,27 @@ int ui::window_mission_won::ui_handle_mouse(const mouse *m) {
 
 void ui::window_mission_won::init() {
     const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
-    ui["subtitle"] = is_custom_map ? textid{ 147, 20 } : textid{ 147, (uint8_t)g_scenario.campaign_scenario_id() };
+    ui["subtitle"] = is_custom_map ? textid{ 147, 20 } : textid{ 147, (uint8_t)g_scenario.campaign_scenario_id };
 }
 
 void ui::window_mission_won::advance_to_next_mission() {
     const int next_mission_rank = g_scenario.settings.campaign_mission_rank + 1;
 
-    g_settings.set_personal_savings_for_mission(next_mission_rank, g_city.kingdome.personal_savings);
+    const int completed_scenario_id = g_scenario.campaign_scenario_id;
+    const int savings = static_cast<int>(g_city.kingdome.personal_savings);
+    const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
+
+    int next_scenario_id = -1;
+    if (!is_custom_map && next_mission_rank < 11) {
+        next_scenario_id = g_scenario.win_criteria.next_mission;
+        if (!next_scenario_id) {
+            next_scenario_id = completed_scenario_id + 1;
+        }
+    }
+
+    events::emit(event_mission_won{ completed_scenario_id, next_scenario_id });
+    events::process();
+
     g_scenario.set_campaign_rank(next_mission_rank);
     city_save_campaign_player_name();
 
@@ -79,21 +92,14 @@ void ui::window_mission_won::advance_to_next_mission() {
     game_undo_disable();
     g_city.reset_overlay();
 
-    const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
     if (g_scenario.settings.campaign_mission_rank >= 11 || is_custom_map) {
         main_menu_screen::show(/*restart_music*/true);
         if (!is_custom_map) {
-            g_settings.clear_personal_savings();
             g_scenario.init();
             g_scenario.set_campaign_rank(2);
         }
     } else {
-        int next_mission = g_scenario.win_criteria.next_mission;
-        if (!next_mission) {
-            next_mission = g_scenario.campaign_scenario_id() + 1;
-        }
-
-        js_vm_exec_function_args("game_show_mission_choice", "i", next_mission);
+        js_vm_exec_function_args("game_show_mission_choice", "i", next_scenario_id);
     }
 }
 
@@ -142,8 +148,7 @@ static void show_end_dialog(void) {
 }
 
 void window_mission_show_intermezzo() {
-    int scenario_id = g_scenario.campaign_scenario_id();
-    window_intermezzo_show(scenario_id, INTERMEZZO_WON, show_end_dialog);
+    window_intermezzo_show(g_scenario.campaign_scenario_id, INTERMEZZO_WON, show_end_dialog);
 }
 
 void ui::window_mission_won::show() {
@@ -171,6 +176,6 @@ void ui::window_mission_won::show() {
 }
 
 void window_mission_end_show_fired() {
-    int scenario_id = g_scenario.campaign_scenario_id();
+    const int scenario_id = g_scenario.campaign_scenario_id;
     window_intermezzo_show(scenario_id, INTERMEZZO_FIRED, show_end_dialog);
 }

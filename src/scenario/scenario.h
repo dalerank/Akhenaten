@@ -20,6 +20,11 @@
 
 struct event_mission_start { int id; };
 
+struct event_mission_won {
+    int scenario_id;
+    int next_scenario_id;
+};
+
 /** Emitted at end of GamestateIO post_load() after city/on_post_load (save, mission pak, map). */
 struct event_level_post_load {
     int session_kind; ///< e_session_type (game/game.h), stored as int for JS bindings
@@ -240,11 +245,10 @@ struct scenario_data_t {
         int crops;
     } native_images;
 
-    struct { // used to be stored in the settings file
+    int campaign_scenario_id;
+    struct {
         int campaign_mission_rank;
-        int campaign_scenario_id;
         int starting_kingdom;
-        int starting_personal_savings;
         e_scenario_mode scmode;
     } settings;
 
@@ -294,10 +298,7 @@ struct scenario_data_t {
     void load_metadata(const mission_id_t &missionid, bool is_new_mission);
     void bind_data(io_buffer *iob, size_t version, size_t size);
     void init();
-    void init_mission();
     void set_campaign_rank(int rank);
-    int campaign_scenario_id();
-    void set_campaign_scenario(int scenario_id);
     int is_before_mission(int mission);
 
     int starting_kingdom() {
@@ -321,11 +322,8 @@ ANK_CONFIG_STRUCT(scenario_data_t::win_criterias_t, population, culture, prosper
 
 extern scenario_data_t g_scenario;
 
-int scenario_starting_personal_savings();
-
 void scenario_set_name(const uint8_t* name);
 
-int scenario_is_open_play();
 
 int scenario_open_play_id();
 

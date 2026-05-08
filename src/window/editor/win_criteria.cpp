@@ -65,7 +65,7 @@ static void draw_foreground(int) {
     lang_text_draw(44, 48, 26, 42, FONT_LARGE_BLACK_ON_LIGHT);
     lang_text_draw_centered(13, 3, 16, 424, 608, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    int is_open_play = scenario_is_open_play();
+    const bool is_open_play = g_scenario.is_open_play;
     // advanced feature: open play
     lang_text_draw(44, 107, 66, 101, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(316, 92, 80, 30, focus_button_id == 15);

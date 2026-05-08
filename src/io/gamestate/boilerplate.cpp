@@ -139,7 +139,7 @@ const int GamestateIO::read_file_version(const char* filename, int offset) {
 
 static void pre_load() { // do we NEED this...?
     OZZY_PROFILER_FUNCTION();
-    g_scenario.set_campaign_scenario(-1);
+    g_scenario.campaign_scenario_id = -1;
     grid_xx::init_all_grids();
 
     // clear data
@@ -188,8 +188,8 @@ static void post_load() {
     // scenario settings
     scenario_set_name(g_scenario.scenario_name);
     city_set_player_name(g_settings.player_name);
-    int scenario_id = g_scenario.campaign_scenario_id();
-    int mission_rank = get_scenario_mission_rank(scenario_id);
+    mission_id_t missionid(g_scenario.campaign_scenario_id);
+    int mission_rank = get_scenario_mission_rank(missionid._id);
     g_scenario.set_campaign_rank(mission_rank);
 
     // Clear mission variables when starting a new mission (not when loading from save)
@@ -198,7 +198,6 @@ static void post_load() {
         g_scenario.vars.clear();
     }
 
-    mission_id_t missionid(scenario_id);
     g_scenario.load_metadata(missionid, is_new_mission);
     js_register_mission_vars(g_scenario.vars);
     g_empire.load_mission_metadata(missionid);
@@ -250,7 +249,7 @@ static void post_load() {
         game_features::gameopt_game_speed.set( 80 );
         g_city.init_campaign_mission();
         g_city.init_mission_resources(g_scenario.init_resources);
-        g_city.kingdome.load_scenario(g_scenario.settings.campaign_scenario_id, game.session.last_loaded);
+        g_city.kingdome.load_scenario(g_scenario.campaign_scenario_id, game.session.last_loaded);
         g_building_menu_ctrl.setup_mission();
         is_tutorial_mmission = tutorial_init(/*clear_all*/true, false);
         break;
@@ -263,7 +262,7 @@ static void post_load() {
     case e_session_custom_map:
         g_city.init_custom_map();
         g_city.init_mission_resources(g_scenario.init_resources);
-        g_city.kingdome.load_scenario(g_scenario.settings.campaign_scenario_id, game.session.last_loaded);
+        g_city.kingdome.load_scenario(g_scenario.campaign_scenario_id, game.session.last_loaded);
         g_building_menu_ctrl.setup_mission();
         is_tutorial_mmission = tutorial_init(/*clear_all*/true, true);
         break;
@@ -284,7 +283,7 @@ static void post_load() {
 
     events::emit(event_level_post_load{
         static_cast<int>(game.session.last_loaded),
-        g_scenario.settings.campaign_scenario_id});
+        g_scenario.campaign_scenario_id});
 }
 
 // set up list of io_buffer chunks in correct order for specific file format read/write operations
@@ -670,7 +669,7 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
 
     game.session.last_loaded = e_session_mission;
     game.session.last_loaded_mission = MISSION_PACK_FILE;
-    g_scenario.set_campaign_scenario(scenario_id);
+    g_scenario.campaign_scenario_id = scenario_id;
     post_load();
 
     g_empire.fix_trade_routes();
@@ -814,7 +813,7 @@ void GamestateIO::start_loaded_file() {
     map_building_update_all_tiles();
 
     autoconfig_window::before_mission_start();
-    events::emit(event_mission_start{ g_scenario.settings.campaign_scenario_id });
+    events::emit(event_mission_start{ g_scenario.campaign_scenario_id });
 
     g_city.before_start_simulation();
     game.before_start_simulation();
@@ -823,7 +822,7 @@ void GamestateIO::start_loaded_file() {
 
     const bool show_briefing = (game.session.last_loaded == e_session_mission);
     if (show_briefing) {
-        events::emit(event_mission_briefing_show_after_load{ g_scenario.campaign_scenario_id() });
+        events::emit(event_mission_briefing_show_after_load{ g_scenario.campaign_scenario_id });
     } else {
         game.paused = false;
         window_city_show();

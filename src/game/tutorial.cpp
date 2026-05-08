@@ -75,7 +75,7 @@ bool tutorial_init(bool clear_all_flags, bool custom) {
         return false;
     }
 
-    int scenario_id = g_scenario.campaign_scenario_id();
+    const int scenario_id = g_scenario.campaign_scenario_id;
     memset_if(5 < scenario_id, 1, g_tutorials_flags.tutorial_6);
 
     for (auto t : tutorial_t::list()) {
@@ -137,7 +137,7 @@ void tutorial_flags_t::update_starting_message() {
     }
 
     if (g_scenario.is_scenario_id(7) && !g_tutorials_flags.pharaoh.tut7_start) {
-        if (g_scenario.campaign_scenario_id() == 6)
+        if (g_scenario.campaign_scenario_id == 6)
             messages::popup("message_trade_on_the_water", 0, 0);
         else
             messages::popup("message_at_the_waters_edge", 0, 0);

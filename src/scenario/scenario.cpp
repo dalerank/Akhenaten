@@ -10,7 +10,6 @@
 #include "scenario_event_manager.h"
 #include "game/difficulty.h"
 #include "game/game.h"
-#include "game/settings.h"
 #include "game/mission.h"
 #include "dev/debug.h"
 
@@ -19,29 +18,21 @@
 scenario_data_t g_scenario;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_scenario_load_meta_data) {
-    mission_id_t missionid(g_scenario.settings.campaign_scenario_id);
+    mission_id_t missionid(g_scenario.campaign_scenario_id);
 
     g_scenario.load_metadata(missionid, /*is_new_mission*/ true);
     js_register_mission_vars(g_scenario.vars);
 }
 
 void scenario_data_t::init() {
-    settings.campaign_scenario_id = 0;
+    campaign_scenario_id = 0;
     settings.campaign_mission_rank = 0;
     settings.scmode = e_scenario_normal;
     settings.starting_kingdom = difficulty_starting_kingdom();
-    settings.starting_personal_savings = 0;
 }
 
 void scenario_data_t::distant_battle_set_enemy_travel_months(int value) {
     empire.distant_battle_enemy_travel_months = value;
-}
-
-void scenario_data_t::init_mission() {
-    settings.starting_kingdom = difficulty_starting_kingdom();
-    settings.starting_personal_savings = g_settings.personal_savings_for_mission(settings.campaign_mission_rank);
-
-    vars.clear();
 }
 
 int scenario_data_t::startup_funds() const {
@@ -141,7 +132,7 @@ int scenario_building_image_native_crops() {
 
 // fancy lambdas! probably gonna create many problems down the road. :3
 io_buffer* iob_scenario_mission_id = new io_buffer([](io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_INT8, &g_scenario.settings.campaign_scenario_id);
+    iob->bind(BIND_SIGNATURE_INT8, &g_scenario.campaign_scenario_id);
 });
 
 e_scenario_mode scenario_data_t::mode() {
@@ -152,14 +143,6 @@ void scenario_data_t::set_campaign_rank(int rank) {
     settings.campaign_mission_rank = rank;
 }
 
-int scenario_data_t::campaign_scenario_id() {
-    return settings.campaign_scenario_id;
-}
-
-void scenario_data_t::set_campaign_scenario(int scenario_id) {
-    settings.campaign_scenario_id = scenario_id;
-}
-
 bool scenario_data_t::is_scenario_id(xspan<int> missions) {
     const bool is_custom_map = settings.scmode != e_scenario_normal;
     if (is_custom_map) {
@@ -167,7 +150,7 @@ bool scenario_data_t::is_scenario_id(xspan<int> missions) {
     }
 
     for (const int rank : missions) {
-        if (g_scenario.settings.campaign_scenario_id == rank - 1) {
+        if (g_scenario.campaign_scenario_id == rank - 1) {
             return true;
         }
     }
@@ -180,17 +163,10 @@ int scenario_data_t::is_before_mission(int mission) {
     return !is_custom_map && settings.campaign_mission_rank < mission;
 }
 
-int scenario_starting_personal_savings() {
-    return g_scenario.settings.starting_personal_savings;
-}
-
 void scenario_set_name(const uint8_t* name) {
     string_copy(name, g_scenario.scenario_name, MAX_SCENARIO_NAME);
 }
 
-int scenario_is_open_play() {
-    return g_scenario.is_open_play;
-}
 int scenario_open_play_id() {
     return g_scenario.open_play_scenario_id;
 }
@@ -414,12 +390,12 @@ io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version)
 
 io_buffer* iob_scenario_carry_settings = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario.settings.starting_kingdom);
-    iob->bind(BIND_SIGNATURE_INT32, &g_scenario.settings.starting_personal_savings);
+    iob->bind____skip(4); // legacy starting_personal_savings (mission scripts set kingdome savings)
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario.settings.campaign_mission_rank);
 });
 
-io_buffer* iob_scenario_is_custom = new io_buffer([](io_buffer* iob, size_t version) { 
-    iob->bind(BIND_SIGNATURE_UINT8, &g_scenario.settings.scmode); 
+io_buffer* iob_scenario_is_custom = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_UINT8, &g_scenario.settings.scmode);
     iob->bind____skip(3);
 });
 

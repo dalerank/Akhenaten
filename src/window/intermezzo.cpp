@@ -63,12 +63,12 @@ static void draw_background(int) {
     vec2i offset = vec2i{screen_width() - 1024, screen_height() - 768} / 2;
 
     // draw background by mission
-    int mission = g_scenario.campaign_scenario_id();
+    int campaign_scenario_id = g_scenario.campaign_scenario_id;
     int image_base = image_id_from_group(GROUP_INTERMEZZO_BACKGROUND);
     painter ctx = game.painter();
     const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
     if (g_intermezzo_data.type == INTERMEZZO_MISSION_BRIEFING) {
-        ctx.img_generic(is_custom_map ? image_base + 1 : image_base + 1 + (mission >= 20), offset);
+        ctx.img_generic(is_custom_map ? image_base + 1 : image_base + 1 + (campaign_scenario_id >= 20), offset);
 
     } else if (g_intermezzo_data.type == INTERMEZZO_FIRED) {
         ctx.img_generic(image_base, offset);

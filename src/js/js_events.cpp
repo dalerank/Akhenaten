@@ -39,6 +39,7 @@ void js_register_script_emit_handler(pcstr event_name, js_script_emit_handler ha
 ANK_SCRIPT_EVENT(event_population_changed, value)
 ANK_SCRIPT_EVENT(event_fire_damage, bid)
 ANK_SCRIPT_EVENT(event_mission_start, id)
+ANK_SCRIPT_EVENT(event_mission_won, scenario_id, next_scenario_id)
 ANK_SCRIPT_EVENT(event_level_post_load, session_kind, scenario_id)
 ANK_SCRIPT_EVENT(event_collase_damage, bid)
 ANK_SCRIPT_EVENT(event_granary_resource_added, bid, r, amount)

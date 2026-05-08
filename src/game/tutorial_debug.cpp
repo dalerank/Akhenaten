@@ -22,16 +22,16 @@ void config_show_tutorial_properties(bool header) {
     if (tutorial_open) {
         ImGui::BeginTable("Tutorial", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
 
-        const auto &flags = g_tutorials_flags;               
-        
+        const auto &flags = g_tutorials_flags;
+
         // Tutorial 6 flags
         game_debug_show_property("tut6 started", flags.tutorial_6.started);
-        
+
         // Pharaoh tutorial flags
         game_debug_show_property("pharaoh:crime", flags.pharaoh.crime);
         game_debug_show_property("pharaoh:tut7_start", flags.pharaoh.tut7_start);
         game_debug_show_property("pharaoh:tut8_start", flags.pharaoh.tut8_start);
-        
+
         // Pharaoh flags array (show first 10 for brevity)
         for (int i = 0; i < 10; i++) {
             if (flags.pharaoh.flags[i]) {
@@ -49,11 +49,11 @@ void config_show_tutorial_properties(bool header) {
     if (mission_open) {
         ImGui::BeginTable("MissionInfo", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
 
-        game_debug_show_property("scenario_id", g_scenario.settings.campaign_scenario_id);
-        game_debug_show_property("campaign_id", get_scenario_campaign_id(g_scenario.settings.campaign_scenario_id));
+        game_debug_show_property("scenario_id", g_scenario.campaign_scenario_id);
+        game_debug_show_property("campaign_id", get_scenario_campaign_id(g_scenario.campaign_scenario_id));
         game_debug_show_property("mission_rank", g_scenario.settings.campaign_mission_rank);
         game_debug_show_property("starting_kingdom", g_scenario.settings.starting_kingdom);
-        game_debug_show_property("starting_savings", g_scenario.settings.starting_personal_savings);
+        game_debug_show_property("personal_savings", g_city.kingdome.personal_savings);
         game_debug_show_property("scenario_mode", (int)g_scenario.settings.scmode);
         game_debug_show_property("is_custom", g_scenario.mode() != e_scenario_normal);
 

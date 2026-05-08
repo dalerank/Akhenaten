@@ -488,7 +488,7 @@ bool __game_file_exists(pcstr path) { return path && *path && vfs::file_exists(p
 pcstr __game_get_last_autosave() { const char* p = player_get_last_autosave(); return p ? p : ""; } ANK_FUNCTION(__game_get_last_autosave)
 void __game_load_player_data(pcstr name) { player_data_load((const uint8_t*)name); } ANK_FUNCTION_1(__game_load_player_data)
 void __game_delete_player(pcstr name) { player_data_delete((const uint8_t*)name); } ANK_FUNCTION_1(__game_delete_player)
-void __game_clear_personal_savings() { g_settings.clear_personal_savings(); } ANK_FUNCTION(__game_clear_personal_savings)
+void __game_clear_personal_savings() { js_vm_exec_function("game_clear_campaign_carry"); } ANK_FUNCTION(__game_clear_personal_savings)
 bool __game_gods_enabled() { return game_features::gameopt_gods_enabled.to_bool(); } ANK_FUNCTION(__game_gods_enabled)
 void __scenario_init() { g_scenario.init(); } ANK_FUNCTION(__scenario_init)
 void __game_player_data_new(pcstr name_utf8) {

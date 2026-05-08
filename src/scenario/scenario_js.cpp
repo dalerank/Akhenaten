@@ -4,6 +4,14 @@
 #include "js/js_game.h"
 #include "core/profiler.h"
 
+ANK_GLOBAL_OBJECT(g_scenario, __scenario,
+    start_year,
+    kingdom_supplies_grain,
+    campaign_scenario_id,
+    is_open_play
+    );
+
+
 xstring __scenario_event_msg_text(int title_id, int index) {
     return g_scenario.events.msg_text(title_id, index);
 }
@@ -13,21 +21,6 @@ bool __scenario_building_allowed(int btype) {
     return scenario_building_allowed((e_building_type)btype);
 }
 ANK_FUNCTION_1(__scenario_building_allowed)
-
-int __scenario_start_year() {
-    return g_scenario.start_year;
-}
-ANK_FUNCTION(__scenario_start_year)
-
-int __scenario_kingdom_supplies_grain() {
-    return g_scenario.kingdom_supplies_grain ? 1 : 0;
-}
-ANK_FUNCTION(__scenario_kingdom_supplies_grain)
-
-int __scenario_campaign_scenario_id() {
-    return g_scenario.campaign_scenario_id();
-}
-ANK_FUNCTION(__scenario_campaign_scenario_id)
 
 xstring __scenario_scenario_name() {
     pcstr n = (pcstr)g_scenario.scenario_name;

@@ -97,7 +97,7 @@ static void init(e_map_selection_dialog_type dialog_type, int sub_dialog_selecto
     data.dialog = dialog_type;
     data.campaign_sub_dialog = sub_dialog_selector;
     data.scores_or_goals = 0;
-    g_scenario.set_campaign_scenario(-1);
+    g_scenario.campaign_scenario_id = -1;
 
     if (!data.panel) {
         ui_params.view_items = MAX_SCENARIOS;
@@ -270,7 +270,7 @@ static void draw_scenario_info() {
     // scenario objectives
     lang_text_draw_centered(44, 127, INFO_X, line_y, INFO_W, FONT_NORMAL_WHITE_ON_DARK);
     line_y += LINE_H;
-    if (scenario_is_open_play()) {
+    if (g_scenario.is_open_play) {
         lang_text_draw_multiline(145, 0, vec2i{INFO_X, line_y}, INFO_W, FONT_NORMAL_BLACK_ON_DARK);
     } else {
         if (winning_culture() > 0)
@@ -389,11 +389,11 @@ static void draw_side_panel_info() {
             return;
         }
 
-        int scenario_id = g_scenario.campaign_scenario_id();
+        const int campaign_scenario_id = g_scenario.campaign_scenario_id;
 
         // scenario name
         bstring<300> name;
-        string_copy(game_mission_get_name(scenario_id), name, 300);
+        string_copy(game_mission_get_name(campaign_scenario_id), name, 300);
         int i = index_of_string(name, string_from_ascii("("), 300);
         if (i > 0)
             name[i - 1] = '\0';
@@ -406,7 +406,7 @@ static void draw_side_panel_info() {
         lang_text_draw_year(g_scenario.start_year, INFO_X, YEAR_Y, FONT_NORMAL_BLACK_ON_DARK);
 
         if (data.scores_or_goals == 0)
-            draw_scores(scenario_id);
+            draw_scores(campaign_scenario_id);
         else
             draw_scenario_info();
         break;
@@ -494,7 +494,7 @@ static void button_select_item(int index, int param2) {
 }
 
 static void button_start_scenario(int param1, int param2) {
-    if (g_scenario.campaign_scenario_id() == -1) {
+    if (g_scenario.campaign_scenario_id == -1) {
         return;
     }
 

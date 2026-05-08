@@ -195,7 +195,7 @@ void ui::message_dialog_base::eventmsg_template_combine(pcstr template_ptr, T& b
     }
 
     text_tag_substitution tags[] = {
-      {"[greeting]", (pcstr)lang_get_string(32, 11 + g_scenario.settings.campaign_scenario_id)},
+      {"[greeting]", (pcstr)lang_get_string(32, 11 + g_scenario.campaign_scenario_id)},
       {"[player_name]", (pcstr)city_player_name()},
       {"[reason_phrase]", phrase_text.c_str()},
       {"[city_name]", (pcstr)lang_get_string(195, city_name_id)},
