@@ -5,7 +5,6 @@
 #include "overlays/city_overlay.h"
 #include "game/state.h"
 #include "game/system.h"
-#include "game/settings.h"
 #include "graphics/screenshot.h"
 #include "graphics/video.h"
 #include "graphics/window.h"

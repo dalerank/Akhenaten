@@ -16,7 +16,6 @@
 #include "core/string.h"
 #include "figure/formation_batalion.h"
 #include "game/cheats.h"
-#include "game/settings.h"
 #include "game/state.h"
 #include "graphics/text.h"
 #include "graphics/window.h"

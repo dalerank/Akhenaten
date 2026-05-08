@@ -28,7 +28,7 @@
 #include "window/window_city.h"
 #include "window/editor/window_editor.h"
 #include "window/autoconfig_window.h"
-#include "game/settings.h"
+#include "game/game_config.h"
 #include "io/manager.h"
 
 static const time_millis NOT_EXIST_MESSAGE_TIMEOUT = 500;
@@ -131,15 +131,15 @@ static void init(file_type type) {
     data.message_not_exist_start_time = 0;
 
     // populate file list
-    char folder_name[MAX_FILE_NAME] = "Save/";
-    strcat(folder_name, (pcstr)g_settings.player_name);
-    strcat(folder_name, "/");
+    vfs::path folder_name;
+    folder_name.printf("Save/%s/", game_features::gameopt_player_name.to_string().c_str());
+
     if (type == FILE_TYPE_SCENARIO) {
         data.panel->change_file_path("Maps/", map_file_data.extension);
     } else {
         // For DELETE, show both .sav and .svx files
-        data.panel->change_file_path(folder_name, data.file_data->extension);
-        data.panel->append_files_with_extension(folder_name, saved_game_data_expanded.extension);
+        data.panel->change_file_path(folder_name.c_str(), data.file_data->extension);
+        data.panel->append_files_with_extension(folder_name.c_str(), saved_game_data_expanded.extension);
     }
 
     set_chosen_filename(data.file_data->last_loaded_file);

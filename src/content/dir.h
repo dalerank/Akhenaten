@@ -73,7 +73,7 @@ struct path : public bstring256 {
         return *this;
     }
 
-    path &operator=(const xstring &str) {
+    path &operator=(xstring str) {
         clear();
         append(str.c_str());
         unify();
@@ -110,8 +110,8 @@ constexpr pcstr content_audio = "AUDIO/";
  * @param extension Extension of the files to find
  * @return Directory listing
  */
-const dir_listing *dir_find_files_with_extension(pcstr dir, const xstring& extension);
-const dir_listing *dir_append_files_with_extension(pcstr dir, pcstr extension);
+const dir_listing *dir_find_files_with_extension(xstring dir, xstring extension);
+const dir_listing *dir_append_files_with_extension(xstring dir, xstring extension);
 
 /**
  * Finds all subdirectories

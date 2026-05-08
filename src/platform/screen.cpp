@@ -2,7 +2,6 @@
 
 #include "core/calc.h"
 #include "core/log.h"
-#include "game/settings.h"
 #include "game/game.h"
 #include "game/system.h"
 #include "graphics/graphics.h"

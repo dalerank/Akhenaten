@@ -8,7 +8,6 @@
 #include "core/log.h"
 #include "core/calc.h"
 #include "game/game_config.h"
-#include "game/settings.h"
 #include "platform/platform.h"
 #include "platform/vita/vita.h"
 #include "game/game.h"

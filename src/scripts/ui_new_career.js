@@ -8,13 +8,9 @@ window_new_career {
         background : outer_panel({size[24, 8]})
         title      : text_center({pos[0, 12], size[px(24), 20], font:FONT_LARGE_BLACK_ON_LIGHT, text[31, 0]})
         player_name: input({margin{left:32, top:48}, size[20, 2], font:FONT_NORMAL_WHITE_ON_DARK, max_length:31, allow_punctuation:1, oninput: new_career_on_input})
-        btn_back   : button({margin{left:31, top:89}, size[px(9), 26], text[12, 0], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: new_career_btn_back})
+        btn_back   : button({margin{left:31, top:89}, size[px(9), 26], text[12, 0], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: window_go_back})
         btn_ok     : button({margin{centerx:16, top:89}, size[px(9), 26], text[13, 5], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: new_career_btn_ok})
     }
-}
-
-function new_career_btn_back() {
-    window_go_back()
 }
 
 function new_career_on_input(params) {
@@ -23,21 +19,27 @@ function new_career_on_input(params) {
 
 function new_career_btn_ok() {
     var name = window_new_career.player_name_value
+    log_info("akhenaten: new_career_btn_ok name_raw=[" + name + "] len=" + name.length)
     if (!name || name === "") {
+        log_info("akhenaten: new_career_btn_ok aborted (empty name)")
         ui.show_ok("#popup_dialog_no_player_name")
         return
     }
     game.dynasty_name = name
+    log_info("akhenaten: new_career_btn_ok after set dynasty_name=[" + game.dynasty_name + "]")
     __game_player_data_new(name)
+    log_info("akhenaten: new_career_btn_ok after __game_player_data_new dynasty_name=[" + game.dynasty_name + "]")
     window_go_back()
     window_show_by_id("window_player_selection")
+    log_info("akhenaten: new_career_btn_ok done (back to player_selection)")
 }
 
 [es=(window_new_career, init)]
 function window_new_career_on_init(window) {
     __scenario_init()
-    g_city.kingdome.campaign_carry_personal_savings = 0
+    city.kingdome.campaign_carry_personal_savings = 0
 
     window.player_name.value = game.dynasty_name || "My Dynasty"
     window_new_career.player_name_value = window.player_name.value
+    log_info("akhenaten: window_new_career_on_init player_name_value=[" + window_new_career.player_name_value + "] dynasty_get=[" + game.dynasty_name + "]")
 }

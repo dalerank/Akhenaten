@@ -24,7 +24,6 @@
 #include "game/game_config.h"
 #include "game/mission.h"
 #include "game/game_events.h"
-#include "game/settings.h"
 #include "game/player.h"
 #include "scenario/scenario.h"
 #include "core/encoding.h"
@@ -475,8 +474,6 @@ bool __game_session_active() { return game.session.active; } ANK_FUNCTION(__game
 int __game_session_last_loaded_kind() { return (int)game.session.last_loaded; } ANK_FUNCTION(__game_session_last_loaded_kind)
 xstring __game_session_last_loaded_mission() { return game.session.last_loaded_mission.empty() ? "" : game.session.last_loaded_mission; } ANK_FUNCTION(__game_session_last_loaded_mission)
 xstring __game_version() { return get_version(); } ANK_FUNCTION(__game_version)
-void __game_set_player_name(pcstr name) { g_settings.set_player_name_utf8(name); } ANK_FUNCTION_1(__game_set_player_name)
-pcstr __game_get_player_name() { return g_settings.player_name_utf8.empty() ? g_settings.player_name.c_str() : g_settings.player_name_utf8.c_str(); } ANK_FUNCTION(__game_get_player_name)
 bool __game_load_savegame(pcstr filename) { return GamestateIO::load_savegame(filename); } ANK_FUNCTION_1(__game_load_savegame)
 bool __game_write_savegame(pcstr filename_short) { return GamestateIO::write_savegame(filename_short); } ANK_FUNCTION_1(__game_write_savegame)
 bool __game_editor_load_scenario(pcstr path) { return game_file_editor_load_scenario(path) != 0; } ANK_FUNCTION_1(__game_editor_load_scenario)

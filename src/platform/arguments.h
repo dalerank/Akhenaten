@@ -1,7 +1,6 @@
 #pragma once
 
 #include "content/vfs.h"
-#include "game/settings.h"
 #include "core/core.h"
 #include "core/variant.h"
 #include <optional>
@@ -13,20 +12,20 @@ namespace arguments {
         xstring name;
         bvariant value;
         int consumed_args;
-        
+
         argument_result() : consumed_args(1) {}
-        argument_result(const xstring& n, const bvariant& v, int consumed = 1) 
+        argument_result(const xstring& n, const bvariant& v, int consumed = 1)
             : name(n), value(v), consumed_args(consumed) {}
     };
-    
+
     struct argument_info {
-        xstring arg_name;      // имя аргумента (например, "--window")
-        xstring description;   // описание аргумента
-        
-        argument_info(const xstring& name, const xstring& desc) 
+        xstring arg_name;
+        xstring description;
+
+        argument_info(const xstring& name, const xstring& desc)
             : arg_name(name), description(desc) {}
     };
-    
+
     using argument_handler_cb = std::optional<argument_result>(int argc, char** argv, int current_index);
     struct ArgumentHandlerTag {};
     using ArgumentHandler = FuncLinkedList<argument_handler_cb*, ArgumentHandlerTag>;
@@ -38,7 +37,7 @@ namespace arguments {
 
     /// Store configuration to the file system
     void store(Arguments const &arguments);
-    
+
     /// Get all registered argument descriptions
     /// @return vector of pairs (argument_name, description)
     std::vector<std::pair<xstring, xstring>> get_argument_descriptions();
@@ -84,17 +83,17 @@ public:
     [[nodiscard]] bool should_show_config_window() const { return is("config", false); }
     [[nodiscard]] bool config_file_exists() const { return is("config_file_exists", false); }
     [[nodiscard]] bool should_unpack_scripts() const { return is("unpack_scripts", false); }
-    
+
     [[nodiscard]] const xstring& get_language() const { return get_str("language"); }
     [[nodiscard]] const xstring& get_scripts_directory() const { return get_str("scripts_directory"); }
-    [[nodiscard]] const xstring& get_mods_directory() const { return get_str("mods_directory"); }    
+    [[nodiscard]] const xstring& get_mods_directory() const { return get_str("mods_directory"); }
     [[nodiscard]] const xstring& get_custom_font() const { return get_str("custom_font"); }
 
     void set_custom_font(pcstr value);
 
     /// Thread count for mt/mtrpc pools. 0 = use hardware_concurrency().
     [[nodiscard]] unsigned int get_thread_count() const;
-    
+
     void parse(int argc, char **argv);
 
     bool is(const xstring &name, bool def) const;
@@ -104,7 +103,7 @@ public:
     [[nodiscard]] const bvariant& get_arg(const xstring& name) const;
 
     [[nodiscard]] const xstring& get_str(const xstring &name) const;
-    
+
     /// Check if a custom argument exists
     [[nodiscard]] bool has_arg(const xstring& name) const;
 

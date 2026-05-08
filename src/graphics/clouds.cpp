@@ -3,7 +3,6 @@
 #include "game/game_config.h"
 #include "core/random.h"
 #include "core/speed.h"
-#include "game/settings.h"
 #include "graphics/color.h"
 #include "graphics/image.h"
 #include "game/game.h"

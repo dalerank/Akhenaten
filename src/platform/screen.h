@@ -1,8 +1,7 @@
 #pragma once
 
 #include "platform/platform.h"
-#include "game/settings.h"
-
+#include "core/vec2i.h"
 #include <cstdint>
 
 class xstring;

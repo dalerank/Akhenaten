@@ -19,7 +19,10 @@ game = extend(__game, {
     @session_active { get: __game_session_active }
     @session_last_loaded_kind { get: __game_session_last_loaded_kind }
     @session_last_loaded_mission { get: __game_session_last_loaded_mission }
-    @dynasty_name { get: __game_get_player_name, set: __game_set_player_name }
+    @dynasty_name {
+        get: function() { return game_features.gameopt_player_name },
+        set: function(name) { game_features.gameopt_player_name = name }
+    }
     @gods_enabled { get: __game_gods_enabled }
 
     toggle_writing_video: __game_toggle_writing_video
@@ -61,6 +64,7 @@ game_features {
     @gameopt_fullscreen {}
     @gameopt_last_save_filename {  }
     @gameopt_last_player {  }
+    @gameopt_player_name {  }
     @gameopt_sound_effects_enabled {}
     @gameopt_sound_effects_volume {}
     @gameopt_sound_music_enabled {}

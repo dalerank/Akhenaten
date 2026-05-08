@@ -4,7 +4,6 @@
 
 #include "building/building_house.h"
 #include "city/city.h"
-#include "game/settings.h"
 #include "core/profiler.h"
 #include "grid/terrain.h"
 #include "io/io_buffer.h"

@@ -1,6 +1,5 @@
 #include "platform/touch.h"
 
-#include "game/settings.h"
 #include "graphics/screen.h"
 #include "input/touch.h"
 

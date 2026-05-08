@@ -13,7 +13,6 @@
 #include "grid/natives.h"
 #include "editor/editor.h"
 #include "game/file_editor.h"
-#include "game/settings.h"
 #include "game/state.h"
 #include "game/tutorial.h"
 #include "graphics/font.h"
@@ -348,7 +347,6 @@ bool game_t::check_valid() {
     logs::switch_output(vfs::platform_file_manager_get_base_path());
     locale_determine_language();
 
-    g_settings.load(); // c3.inf
     game_features::load();   // akhenaten.conf
     
     const auto game_speed = (int)calc_bound(game_features::gameopt_game_speed.to_int(), 10, 1000);
@@ -482,7 +480,6 @@ void game_t::handle_input_frame() {
 
 void game_t::exit() {
     video_shutdown();
-    g_settings.save();
     game_features::save();
     g_sound.shutdown();
 }

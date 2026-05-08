@@ -9,7 +9,6 @@
 #include "city/city_warnings.h"
 #include "core/profiler.h"
 #include "dev/debug.h"
-#include "game/settings.h"
 #include "game/state.h"
 #include "game/game.h"
 #include "figure/formation.h"

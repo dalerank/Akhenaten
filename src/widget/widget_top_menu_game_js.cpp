@@ -12,7 +12,6 @@
 #include "city/city.h"
 #include "building/construction/build_planner.h"
 #include "game/undo.h"
-#include "game/settings.h"
 #include "graphics/window.h"
 #include "graphics/screenshot.h"
 #include "io/gamestate/boilerplate.h"

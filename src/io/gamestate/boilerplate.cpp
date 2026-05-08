@@ -22,7 +22,6 @@
 #include "figure/route.h"
 #include "empire/trader_handler.h"
 #include "game/mission.h"
-#include "game/settings.h"
 #include "game/state.h"
 #include "game/tutorial.h"
 #include "game/undo.h"
@@ -109,7 +108,7 @@ vfs::path fullpath_saves(vfs::path filename) {
         return vfs::path(filename);
     }
 
-    return vfs::path(vfs::SAVE_FOLDER, "/", g_settings.player_name.c_str(), "/", filename);
+    return vfs::path(vfs::SAVE_FOLDER, "/", game_features::gameopt_player_name.to_string().c_str(), "/", filename);
 }
 
 void fullpath_maps(char* full, const char* filename) {
@@ -187,7 +186,7 @@ static void pre_load() { // do we NEED this...?
 static void post_load() {
     // scenario settings
     scenario_set_name(g_scenario.scenario_name);
-    city_set_player_name(g_settings.player_name);
+    city_set_player_name(game_features::gameopt_player_name.to_string());
     mission_id_t missionid(g_scenario.campaign_scenario_id);
     int mission_rank = get_scenario_mission_rank(missionid._id);
     g_scenario.set_campaign_rank(mission_rank);
@@ -638,7 +637,7 @@ bool GamestateIO::write_savegame(pcstr filename_short) {
     if (save_ok) {
         //vfs::path fs_path = vfs::content_path(full);
         game_features::gameopt_last_save_filename = full.c_str();
-        game_features::gameopt_last_player = g_settings.player_name.c_str();
+        game_features::gameopt_last_player = game_features::gameopt_player_name.to_string();
         game_features::save();
     }
 

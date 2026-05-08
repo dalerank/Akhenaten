@@ -10,6 +10,7 @@ function player_selection_on_double_click(entry) {
 }
 
 function player_selection_btn_new() {
+    log_info("akhenaten: player_selection_btn_new open new career dynasty_was=[" + game.dynasty_name + "]")
     window_show_by_id("window_new_career")
 }
 
@@ -27,6 +28,7 @@ function player_selection_btn_delete() {
 }
 
 function player_selection_proceed() {
+    log_info("akhenaten: player_selection_proceed dynasty_name=[" + game.dynasty_name + "]")
     if (game.dynasty_name == "") {
         ui.show_ok("#popup_dialog_no_dynasty")
         return
@@ -72,8 +74,9 @@ window_player_selection {
 
 function update_player_list(window) {
     window.player_list.refresh_file_finder()
-    if (game.dynasty_name !== "") {
-        window.player_list.select_item(game.dynasty_name)
+    var prev_dynasty = game.dynasty_name
+    if (prev_dynasty !== "") {
+        window.player_list.select_item(prev_dynasty)
     }
 
     if (window.player_list.items_count == 1) {
@@ -82,8 +85,18 @@ function update_player_list(window) {
         if (name !== "") {
             game.dynasty_name = name
         }
+        log_info("akhenaten: update_player_list items_count=1 prev=[" + prev_dynasty + "] -> dynasty=[" + game.dynasty_name + "] selected_text=[" + name + "]")
+    } else if (window.player_list.items_count > 1) {
+        var sel = window.player_list.selected_text(0)
+        var matched = prev_dynasty !== "" && sel !== "" &&
+            sel.toLowerCase() === prev_dynasty.toLowerCase()
+        if (!matched) {
+            game.dynasty_name = ""
+        }
+        log_info("akhenaten: update_player_list items_count=" + window.player_list.items_count + " prev=[" + prev_dynasty + "] sel=[" + sel + "] matched=" + matched + " -> dynasty=[" + game.dynasty_name + "]")
     } else {
         game.dynasty_name = ""
+        log_info("akhenaten: update_player_list items_count=0 prev=[" + prev_dynasty + "] cleared dynasty")
     }
     window_player_selection.need_refresh_list = false
 }
@@ -102,5 +115,6 @@ function window_player_selection_on_restore(window) {
 
 [es=(window_player_selection, init)]
 function window_player_selection_on_init(window) {
+   log_info("akhenaten: window_player_selection_on_init dynasty_name=[" + game.dynasty_name + "]")
    window_player_selection.need_refresh_list = true
 }

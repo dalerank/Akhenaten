@@ -1372,9 +1372,9 @@ const uint8_t* city_player_name() {
     return g_city.kingdome.player_name;
 }
 
-void city_set_player_name(const uint8_t* name) {
+void city_set_player_name(xstring name) {
     auto &data = g_city;
-    string_copy(name, data.kingdome.player_name, MAX_PLAYER_NAME);
+    string_copy((const uint8_t*)name.c_str(), data.kingdome.player_name, MAX_PLAYER_NAME);
 }
 void city_save_campaign_player_name() {
     auto &data = g_city;
@@ -1392,7 +1392,7 @@ struct cproperty {
     std::function<bvariant(const xstring &)> handler;
 };
 
-bvariant city_get_property(const xstring &domain, const xstring &name) {
+bvariant city_get_property(xstring domain, xstring name) {
     static cproperty cproperties[] = {
         { tags().city, "population", [] (const xstring&) { return bvariant(g_city.population.current); }},
         { tags().city, "population_kids", [] (const xstring&) { return bvariant(g_city.population.school_age); }},
@@ -1422,7 +1422,7 @@ bvariant city_get_property(const xstring &domain, const xstring &name) {
     return bvariant();
 }
 
-bvariant city_t::get_property(const xstring &domain, const xstring &name) const {
+bvariant city_t::get_property(xstring domain, xstring name) const {
     return city_get_property(domain, name);
 }
 

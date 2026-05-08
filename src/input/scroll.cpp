@@ -3,7 +3,6 @@
 #include "core/calc.h"
 #include "core/direction.h"
 #include "core/speed.h"
-#include "game/settings.h"
 #include "game/system.h"
 #include "graphics/screen.h"
 #include "input/touch.h"

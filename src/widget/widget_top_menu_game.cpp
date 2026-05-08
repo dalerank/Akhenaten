@@ -14,7 +14,6 @@
 #include "game/game_events.h"
 #include "core/core_utility.h"
 #include "game/game_config.h"
-#include "game/settings.h"
 #include "game/cheats.h"
 #include "game/state.h"
 #include "game/undo.h"

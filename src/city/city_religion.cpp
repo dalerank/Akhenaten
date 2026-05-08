@@ -14,7 +14,6 @@
 #include "core/random.h"
 #include "figure/formation_batalion.h"
 #include "city_floods.h"
-#include "game/settings.h"
 #include "game/game_config.h"
 #include "game/tutorial.h"
 #include "grid/routing/routing_terrain.h"

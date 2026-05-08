@@ -2,7 +2,6 @@
 
 #include "core/log.h"
 #include "game/game_config.h"
-#include "game/settings.h"
 #include "content/dir.h"
 #include "content/vfs.h"
 #include "sound/channel.h"

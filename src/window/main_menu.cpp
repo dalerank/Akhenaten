@@ -10,7 +10,6 @@
 #include "graphics/screen.h"
 #include "graphics/image.h"
 #include "game/game.h"
-#include "game/settings.h"
 #include "game/game_config.h"
 #include "core/app.h"
 #include "window/popup_dialog.h"

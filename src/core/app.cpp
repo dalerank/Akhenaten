@@ -1,7 +1,6 @@
 #include "app.h"
 
 #include "core/archive.h"
-#include "game/settings.h"
 #include "game/game.h"
 #include "game/game_events.h"
 #include "game/game_events_history.h"

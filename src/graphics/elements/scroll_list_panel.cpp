@@ -120,14 +120,14 @@ void scrollable_list::add_entry(xstring entry_text, uintptr_t user_data) {
     refresh_scrollbar();
 }
 
-void scrollable_list::change_file_path(const xstring& dir, const xstring& ext) {
+void scrollable_list::change_file_path(xstring dir, xstring ext) {
     ui_params.files_dir = dir;
     ui_params.file_ext = ext;
     refresh_file_finder();
 }
 
-void scrollable_list::append_files_with_extension(pcstr dir, pcstr extension) {
-    file_finder = vfs::dir_append_files_with_extension(dir, extension);
+void scrollable_list::append_files_with_extension(xstring dir, xstring extension) {
+    file_finder = vfs::dir_append_files_with_extension(dir.c_str(), extension.c_str());
     _items_count = file_finder->num_files;
     refresh_scrollbar();
 }

@@ -220,15 +220,15 @@ struct city_t {
     e_availability is_advisor_available(e_advisor advisor) const;
     void set_advisor_available(e_advisor advisor, e_availability available);
 
-    bvariant get_property(const xstring &domain, const xstring &name) const;
+    bvariant get_property(xstring domain, xstring name) const;
     void on_post_load();
     void trade_update();
 };
 
 const uint8_t* city_player_name();
-void city_set_player_name(const uint8_t* name);
+void city_set_player_name(xstring name);
 void city_save_campaign_player_name();
 void city_restore_campaign_player_name();
-bvariant city_get_property(const xstring &domain, const xstring &name);
+bvariant city_get_property(xstring domain, xstring name);
 
 extern city_t g_city;
