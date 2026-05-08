@@ -22,6 +22,10 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_trade_ship);
 
+// Days a moored ship will tolerate idle dockers before giving up the visit.
+// Bumped from 10 to 25 so a temporarily-blocked dock doesn't truncate a trade run.
+constexpr uint8_t TRADE_SHIP_IDLE_DAYS_MAX = 25;
+
 void ANK_PERMANENT_CALLBACK(event_trade_ship_arrival, ev) {
     tile2i river_entry = scenario_map_river_entry();
 
@@ -102,8 +106,8 @@ bool figure_trade_ship::done_trading() {
     building* b = destination();
     auto& d = runtime_data();
     if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_DOCK && b->num_workers > 0) {
-        if (d.failed_dock_attempts >= 10) {
-            d.failed_dock_attempts = 11;
+        if (d.failed_dock_attempts >= TRADE_SHIP_IDLE_DAYS_MAX) {
+            d.failed_dock_attempts = TRADE_SHIP_IDLE_DAYS_MAX + 1;
             return true;
         }
         return false;
@@ -233,7 +237,7 @@ void figure_trade_ship::figure_action() {
                 base.destination_tile = free_dock.tile;
             }
 
-            if (d.failed_dock_attempts >= 10) {
+            if (d.failed_dock_attempts >= TRADE_SHIP_IDLE_DAYS_MAX) {
                 advance_action(ACTION_115_TRADE_SHIP_LEAVING, scenario_map_river_exit());
             }
             base.wait_ticks = 0;
@@ -324,8 +328,10 @@ void figure_trade_ship::poof() {
 }
 
 void figure_trade_ship::update_day() {
-    const bool on_raid = action_state(ACTION_114_TRADE_SHIP_ANCHORED, ACTION_112_TRADE_SHIP_MOORED);
-    if (!on_raid) {
+    // Only count idle days while moored at a dock. Queued ships (ACTION_114) wait
+    // indefinitely behind ships that are still trading - they should never time out
+    // just for sitting in line.
+    if (!action_state(ACTION_112_TRADE_SHIP_MOORED)) {
         return;
     }
 
