@@ -92,15 +92,21 @@ bool figure_docker::try_export_resource(building* b, e_resource resource, empire
     return 0;
 }
 
-building_dest figure_docker::get_closest_warehouse_for_import(tile2i pos, empire_city_handle city, int distance_from_entry, int road_network_id, e_resource& import_resource) {
+building_dest figure_docker::get_closest_warehouse_for_import(tile2i pos, empire_city_handle city, int distance_from_entry, int road_network_id, building_dock *dock, e_resource& import_resource) {
     const resource_list importable = g_empire.importable_resources_from_city(city.handle);
 
+    // Treat an unconfigured dock (all-zero trading_goods, e.g. legacy saves) as accept-all so the filter doesn't strand trade.
+    const bool dock_filter = dock && dock->runtime_data().trading_goods.is_not_zero();
+    auto allowed = [&](e_resource r) {
+        return importable[r] && (!dock_filter || dock->is_trade_accepted(r));
+    };
+
     e_resource resource = city_trade_next_docker_import_resource();
-    for (e_resource i = RESOURCES_MIN; i < RESOURCES_MAX && !importable[resource]; ++i) {
+    for (e_resource i = RESOURCES_MIN; i < RESOURCES_MAX && !allowed(resource); ++i) {
         resource = city_trade_next_docker_import_resource();
     }
 
-    if (!importable[resource]) {
+    if (!allowed(resource)) {
         return { 0, tile2i::invalid };
     }
 
@@ -177,15 +183,20 @@ building_dest figure_docker::get_closest_warehouse_for_import(tile2i pos, empire
     return { min_building_id, warehouse_tile };
 }
 
-building_dest figure_docker::get_closest_warehouse_for_export(tile2i pos, empire_city_handle city, int distance_from_entry, int road_network_id, e_resource &export_resource) {
+building_dest figure_docker::get_closest_warehouse_for_export(tile2i pos, empire_city_handle city, int distance_from_entry, int road_network_id, building_dock *dock, e_resource &export_resource) {
     const resource_list exportable = g_empire.exportable_resources_from_city(city.handle);
 
+    const bool dock_filter = dock && dock->runtime_data().trading_goods.is_not_zero();
+    auto allowed = [&](e_resource r) {
+        return exportable[r] && (!dock_filter || dock->is_trade_accepted(r));
+    };
+
     e_resource resource = city_trade_next_docker_export_resource();
-    for (int i = RESOURCES_MIN; i < RESOURCES_MAX && !exportable[resource]; i++) {
+    for (int i = RESOURCES_MIN; i < RESOURCES_MAX && !allowed(resource); i++) {
         resource = city_trade_next_docker_export_resource();
     }
 
-    if (!exportable[resource]) {
+    if (!allowed(resource)) {
         return { 0, tile2i::invalid };
     }
 
@@ -283,7 +294,7 @@ bool figure_docker::deliver_import_resource(building* b) {
 
     tile2i trade_center_tile = get_trade_center_location();
     e_resource resource;
-    auto result = get_closest_warehouse_for_import(trade_center_tile, ship->empire_city(), b->distance_from_entry, b->road_network_id, resource);
+    auto result = get_closest_warehouse_for_import(trade_center_tile, ship->empire_city(), b->distance_from_entry, b->road_network_id, dock, resource);
     if (!result.bid) {
         return false;
     }
@@ -312,7 +323,7 @@ bool figure_docker::fetch_export_resource(building* b) {
 
     tile2i trade_cener_tile = get_trade_center_location();
     e_resource resource;
-    auto result = get_closest_warehouse_for_export(trade_cener_tile, ship->empire_city(), b->distance_from_entry, b->road_network_id, resource);
+    auto result = get_closest_warehouse_for_export(trade_cener_tile, ship->empire_city(), b->distance_from_entry, b->road_network_id, dock, resource);
 
     if (!result.bid) {
         return false;
