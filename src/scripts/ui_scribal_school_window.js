@@ -37,5 +37,5 @@ function scribal_school_info_window_init(window) {
         reason.id = 3
     }
 
-    window.inner_panel.workers_desc.text = __loc(reason.group, reason.id)
+    window.workers_desc.text = __loc(reason.group, reason.id)
 }
