@@ -442,7 +442,7 @@ bool building::workshop_has_resources() {
     verify_no_crash(is_workshop());
     bool has_second_material = true;
     if (input.resource_second != RESOURCE_NONE) {
-        has_second_material = (stored_amount(input.resource_second) > 100);
+        has_second_material = (stored_amount(input.resource_second) >= 100);
     }
 
     bool hase_first_resource = (stored_amount(input.resource) >= 100);
