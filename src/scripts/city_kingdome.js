@@ -161,22 +161,6 @@ function kingdome_relation_on_update_gifts(ev) {
 
 [es=event_mission_start]
 function kingdome_relation_on_mission_start_gifts(ev) {
-    var kind = game.session_last_loaded_kind
-    if (kind === e_session_save) {
-        return
-    }
-    if (kind === e_session_custom_map) {
-        city.kingdome.personal_savings = 0
-        city.kingdome.reset_gifts()
-        city.kingdome.recompute_gift_costs(0)
-        return
-    }
-
-    if (kind !== e_session_mission) {
-        return
-    }
-
-    city.kingdome.personal_savings = game.campaign_carry_personal_savings
     city.kingdome.reset_gifts()
     city.kingdome.recompute_gift_costs(city.kingdome.personal_savings)
 }

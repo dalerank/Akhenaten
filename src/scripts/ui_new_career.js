@@ -35,8 +35,8 @@ function new_career_btn_ok() {
 
 [es=(window_new_career, init)]
 function window_new_career_on_init(window) {
-    __game_clear_personal_savings()
     __scenario_init()
+    g_city.kingdome.campaign_carry_personal_savings = 0
 
     window.player_name.value = game.dynasty_name || "My Dynasty"
     window_new_career.player_name_value = window.player_name.value

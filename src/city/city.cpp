@@ -1031,8 +1031,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.kingdome.player_rank);
     iob->bind____skip(3);
     iob->bind_u16(data.kingdome.personal_savings); // ok
-    iob->bind____skip(2);
-                                                                          //    for (int i = 0; i < 2; i++)
+    iob->bind_u16(data.kingdome.campaign_carry_personal_savings); // savings carried over to next mission
+    //    for (int i = 0; i < 2; i++)
     //        iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_4374[i]);
     //    iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.last_year.income.donated);
     //    iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.this_year.income.donated);

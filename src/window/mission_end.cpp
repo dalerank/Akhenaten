@@ -70,7 +70,7 @@ void ui::window_mission_won::advance_to_next_mission() {
     const int next_mission_rank = g_scenario.settings.campaign_mission_rank + 1;
 
     const int completed_scenario_id = g_scenario.campaign_scenario_id;
-    const int savings = static_cast<int>(g_city.kingdome.personal_savings);
+    const uint16_t savings = g_city.kingdome.personal_savings;
     const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
 
     int next_scenario_id = -1;
@@ -81,8 +81,14 @@ void ui::window_mission_won::advance_to_next_mission() {
         }
     }
 
+    // remember savings so the next campaign mission (or a replay) can restore them
+    if (!is_custom_map) {
+        g_city.kingdome.campaign_carry_personal_savings = savings;
+    }
+
     events::emit(event_mission_won{ completed_scenario_id, next_scenario_id });
     events::process();
+    // all events are processed at this point
 
     g_scenario.set_campaign_rank(next_mission_rank);
     city_save_campaign_player_name();

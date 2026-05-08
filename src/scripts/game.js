@@ -7,7 +7,6 @@ game = extend(__game, {
 
     mission_briefing_scenario_id : 0
     mission_briefing_is_review : false
-    campaign_carry_personal_savings : 0
 
     @absolute_day { get: __game_absolute_day }
     @simtime_year { get: __game_simtime_year }
@@ -149,10 +148,4 @@ function event_change_gamespeed_handler(ev) {
         }
     }
     game_features.gameopt_game_speed = s
-}
-
-
-[es=event_mission_won]
-function game_on_event_mission_won(ev) {
-    game.campaign_carry_personal_savings = city.kingdome.personal_savings
 }

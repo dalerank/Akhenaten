@@ -661,11 +661,17 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
         return false;
     }
 
+    // mission pack files do not store carry savings; preserve the current value
+    // across pre_load() (which memset()'s the whole city) and unserialize().
+    const uint16_t saved_carry = g_city.kingdome.campaign_carry_personal_savings;
+
     // read file
     pre_load();
     if (!FILEIO.unserialize(MISSION_PACK_FILE, offset, FILE_FORMAT_MISSION_PAK, GamestateIO::read_file_version, file_schema)) {
         return false;
     }
+
+    g_city.kingdome.campaign_carry_personal_savings = saved_carry;
 
     game.session.last_loaded = e_session_mission;
     game.session.last_loaded_mission = MISSION_PACK_FILE;

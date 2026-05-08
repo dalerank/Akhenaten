@@ -57,6 +57,8 @@ void kingdome_relation_t::load_scenario(int rank, int load_type) {
         personal_savings = 0;
         player_rank = scenario_property_player_rank();
         salary_rank = scenario_property_player_rank();
+    } else if (load_type == e_session_mission) {
+        personal_savings = campaign_carry_personal_savings;
     }
 
     salary_rank = std::clamp(salary_rank, 0, 10);
