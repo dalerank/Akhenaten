@@ -213,6 +213,12 @@ int __building_at(int x, int y) {
 }
 ANK_FUNCTION_2(__building_at)
 
+int __building_type(int bid) {
+    building *b = building_get(bid);
+    return (b && b->is_valid()) ? (int)b->type : 0;
+}
+ANK_FUNCTION_1(__building_type)
+
 bvariant __map_grid_get_area(tile2i tile, int size, int radius) {
     return bvariant(map_grid_get_area(tile2i(tile), size, radius));
 }

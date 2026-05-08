@@ -1,46 +1,66 @@
 log_info("akhenaten: city_monuments.js started")
 
+var MONUMENT_WEIGHTS = {}
+MONUMENT_WEIGHTS[BUILDING_PYRAMID]            = 80
+MONUMENT_WEIGHTS[BUILDING_SPHINX]             = 60
+MONUMENT_WEIGHTS[BUILDING_MAUSOLEUM]          = 30
+MONUMENT_WEIGHTS[BUILDING_ALEXANDRIA_LIBRARY] = 35
+MONUMENT_WEIGHTS[BUILDING_CAESAREUM]          = 35
+MONUMENT_WEIGHTS[BUILDING_PHAROS_LIGHTHOUSE]  = 60
+MONUMENT_WEIGHTS[BUILDING_SMALL_ROYAL_TOMB]   = 15
+MONUMENT_WEIGHTS[BUILDING_ABU_SIMBEL]         = 120
+MONUMENT_WEIGHTS[BUILDING_MEDIUM_ROYAL_TOMB]  = 30
+MONUMENT_WEIGHTS[BUILDING_LARGE_ROYAL_TOMB]   = 50
+MONUMENT_WEIGHTS[BUILDING_GRAND_ROYAL_TOMB]   = 80
+
+var MONUMENT_RATING_MULT = 6.32
+var MONUMENT_RATING_OFFSET = 0.5
+
 [es=event_advance_month]
-function city_update_yearly_monument_rating(ev) {
-	if (ev.month != 0) {
+function city_update_monthly_monument_rating(ev) {
+	var n = __city_monuments_list_refresh()
+	if (n == 0) {
+		__city_ratings_set_monument(0)
 		return
 	}
-	var y = city.rating.monument_years_of_monument
-	var ncr = city.rating.monument_num_criminals
-	var nri = city.rating.monument_num_rioters
-	var db = city.rating.monument_destroyed_buildings
-	var m = city.rating.monument
 
-	var change = y < 2 ? 2 : 5
-	if (ncr) {
-		change -= 1
-	}
-	if (nri) {
-		change -= 5
-	}
-	if (db) {
-		change -= db
-	}
+	var sum = 0
+	for (var i = 0; i < n; i++) {
+		var bid = __city_monuments_list_id_at(i)
+		if (!bid) {
+			continue
+		}
+		var bt = __building_type(bid)
+		var w = MONUMENT_WEIGHTS[bt]
+		if (!w) {
+			continue
+		}
+		var phase = __building_monument_phase_code(bid)
+		var phases = __building_monument_phases_total(bid)
+		var mat = __building_monument_material_pct_min(bid)
 
-	var new_years = (nri || db) ? 0 : (y + 1)
+		var progress = 0
+		if (phase == -1) {
+			progress = 100
+		} else if (phases > 0) {
+			progress = ((phase - 1) * 100 + mat) / phases
+			if (progress < 0) {
+				progress = 0
+			}
+			if (progress > 100) {
+				progress = 100
+			}
+		}
 
-	var city_pop = city.population
-	var max_pop_limit = city_pop < 4000 ? city_pop : 4000
-	var cap_part = (max_pop_limit / 1000) | 0
-	if (cap_part < 1) {
-		cap_part = 1
-	}
-	var monument_ratings_cap = cap_part * 25
-
-	var new_m = m + change
-	if (new_m < 0) {
-		new_m = 0
-	}
-
-	if (new_m > monument_ratings_cap) {
-		new_m = monument_ratings_cap
+		sum += (w * progress) / 100
 	}
 
-	var expl = city.rating.get_monument_explanation()
-	__city_ratings_apply_monument_yearly(new_m, new_years, expl)
+	var rating = MONUMENT_RATING_MULT * Math.sqrt(sum) + MONUMENT_RATING_OFFSET
+	if (rating < 0) {
+		rating = 0
+	}
+	if (rating > 100) {
+		rating = 100
+	}
+	__city_ratings_set_monument(rating | 0)
 }
