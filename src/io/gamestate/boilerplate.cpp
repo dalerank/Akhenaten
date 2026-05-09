@@ -629,6 +629,7 @@ bool GamestateIO::write_mission(const int scenario_id) {
 
 bool GamestateIO::write_savegame(pcstr filename_short) {
     vfs::path full = fullpath_saves(filename_short);
+    vfs::create_folders(vfs::content_path(fullpath_saves("").c_str()));
 
     // write file
     e_file_format format = get_format_from_file(filename_short);
