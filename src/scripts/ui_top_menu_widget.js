@@ -68,9 +68,9 @@ top_menu_widget {
 
 	headers {
 		file 			: menu_header({text: "${loc.top_menu_file}", tooltip: "${loc.top_menu_file_tooltip}" })
-		options			: menu_header({text {group:2, id:0}, tooltip[68, 52] })
-		help		   	: menu_header({text {group:3, id:0}, tooltip[68, 53] })
-		advisors  		: menu_header({text {group:4, id:0}, onclick: top_menu_open_advisor })
+		options			: menu_header({text: "${loc.top_menu_options}", tooltip: "${loc.top_menu_options_tooltip}" })
+		help		   	: menu_header({text: "${loc.top_menu_help}", tooltip: "${loc.top_menu_help_tooltip}" })
+		advisors  		: menu_header({text: "${loc.top_menu_overseers}", tooltip: "${loc.top_menu_overseers_tooltip}", onclick: top_menu_open_advisor })
 		debug		   	: menu_header({text: "Debug" })
 		debug_render  	: menu_header({text: "Render" })
 	}
