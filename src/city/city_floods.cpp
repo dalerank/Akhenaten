@@ -12,6 +12,7 @@
 #include "city_message.h"
 #include "dev/debug.h"
 #include "game/game.h"
+#include "game/game_config.h"
 
 #include <cmath>
 
@@ -216,6 +217,10 @@ void floods_t::update_next_flood_params() {
 
 void floods_t::post_flood_prediction_message() {
     if (g_scenario.env.hide_nilometer) {
+        return;
+    }
+
+    if (game_features::gameui_disable_nilometer_popups.to_bool()) {
         return;
     }
 
