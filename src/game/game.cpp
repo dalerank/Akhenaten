@@ -14,7 +14,6 @@
 #include "editor/editor.h"
 #include "game/file_editor.h"
 #include "game/state.h"
-#include "game/tutorial.h"
 #include "graphics/font.h"
 #include "graphics/image.h"
 #include "graphics/video.h"
@@ -123,7 +122,6 @@ void game_t::update_tick(int simtick) {
     random_generate_next();
     game_undo_reduce_time_available();
 
-    g_tutorials_flags.update_starting_message();
     g_floods.tick_update(false);
 
     g_city.buildings.update_tick(game.paused);

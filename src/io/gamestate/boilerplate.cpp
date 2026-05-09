@@ -23,7 +23,6 @@
 #include "empire/trader_handler.h"
 #include "game/mission.h"
 #include "game/state.h"
-#include "game/tutorial.h"
 #include "game/undo.h"
 #include "graphics/image.h"
 #include "grid/canals.h"
@@ -56,7 +55,6 @@
 #include "grid/clay.h"
 #include "grid/gems.h"
 #include "game/game.h"
-#include "content/vfs.h"
 #include "scenario/criteria.h"
 #include "scenario/demand_change.h"
 #include "scenario/distant_battle.h"
@@ -238,7 +236,6 @@ static void post_load() {
     trade_prices_reset();
 
     // city data special cases
-    bool is_tutorial_mmission = false;
     switch (game.session.last_loaded) {
     default:
         assert(false);
@@ -250,12 +247,10 @@ static void post_load() {
         g_city.init_mission_resources(g_scenario.init_resources);
         g_city.kingdome.load_scenario(g_scenario.campaign_scenario_id, game.session.last_loaded);
         g_building_menu_ctrl.setup_mission();
-        is_tutorial_mmission = tutorial_init(/*clear_all*/true, false);
         break;
 
     case e_session_save:
         g_building_menu_ctrl.setup_mission();
-        is_tutorial_mmission = tutorial_init(/*clear_all*/false, false);
         break;
 
     case e_session_custom_map:
@@ -263,14 +258,7 @@ static void post_load() {
         g_city.init_mission_resources(g_scenario.init_resources);
         g_city.kingdome.load_scenario(g_scenario.campaign_scenario_id, game.session.last_loaded);
         g_building_menu_ctrl.setup_mission();
-        is_tutorial_mmission = tutorial_init(/*clear_all*/true, true);
         break;
-    }
-
-    if (!is_tutorial_mmission) {
-        for (int adv = ADVISOR_NONE+1; adv < ADVISOR_MAX; ++adv) {
-            g_city.set_advisor_available((e_advisor)adv, AVAILABLE);
-        }
     }
 
     // city messages

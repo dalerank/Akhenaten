@@ -63,6 +63,8 @@ function mission2_get_goal_tooltip() {
 
 [event=event_mission_start, mission=mission2]
 function mission2_on_start(ev) {
+	city.set_empire_available(1)
+
 	for (var i = 0; i <= ADVISOR_DIPLOMACY; i++) {
 		city.set_advisor_available(i, 0)
 	}

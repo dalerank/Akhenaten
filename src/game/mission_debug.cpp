@@ -4,7 +4,6 @@
 #include "imgui.h"
 #include "imgui_internal.h"
 #include "city/city.h"
-#include "tutorial.h"
 #include "game/game.h"
 #include "scenario/scenario.h"
 #include "game/mission.h"
@@ -16,33 +15,6 @@ ANK_REGISTER_PROPS_ITERATOR(config_show_tutorial_properties);
 void config_show_tutorial_properties(bool header) {
     if (header) {
         return;
-    }
-
-    bool tutorial_open = ImGui::TreeNodeEx("Tutorial", ImGuiTreeNodeFlags_None, "Tutorial");
-    if (tutorial_open) {
-        ImGui::BeginTable("Tutorial", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
-
-        const auto &flags = g_tutorials_flags;
-
-        // Tutorial 6 flags
-        game_debug_show_property("tut6 started", flags.tutorial_6.started);
-
-        // Pharaoh tutorial flags
-        game_debug_show_property("pharaoh:crime", flags.pharaoh.crime);
-        game_debug_show_property("pharaoh:tut7_start", flags.pharaoh.tut7_start);
-        game_debug_show_property("pharaoh:tut8_start", flags.pharaoh.tut8_start);
-
-        // Pharaoh flags array (show first 10 for brevity)
-        for (int i = 0; i < 10; i++) {
-            if (flags.pharaoh.flags[i]) {
-                bstring64 label;
-                label.printf("pharaoh:flag[%d]", i);
-                game_debug_show_property(label.c_str(), flags.pharaoh.flags[i]);
-            }
-        }
-
-        ImGui::EndTable();
-        ImGui::TreePop();
     }
 
     bool mission_open = ImGui::TreeNodeEx("Mission Info", ImGuiTreeNodeFlags_None, "Mission Info");

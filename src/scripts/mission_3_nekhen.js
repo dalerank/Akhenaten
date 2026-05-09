@@ -57,6 +57,8 @@ function mission3_get_goal_tooltip() {
 
 [event=event_mission_start, mission=mission3]
 function mission3_on_start(ev) {
+	city.set_empire_available(1)
+
 	if (mission.tax_collector_built) {
 		city.use_building(BUILDING_TAX_COLLECTOR, true)
 		city.use_building(BUILDING_PERSONAL_MANSION, true)

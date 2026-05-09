@@ -200,6 +200,8 @@ city {
     count_total_industry : __city_count_industry_total
     set_advisor_available : __city_set_advisor_available
     is_advisor_available : __city_is_advisor_available
+    set_empire_available : __city_set_empire_available
+    is_empire_available : __city_is_empire_available
     rank_title : function(rank) { return __loc(52, rank + 4) }
     rank_salary : function(rank) {
         var r = kingdome_relation.salary_ranks

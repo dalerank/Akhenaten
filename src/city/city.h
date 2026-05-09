@@ -48,6 +48,7 @@ struct city_t {
     victory_state_t victory_state;
     city_maintenance_t maintenance;
     e_availability advisors[ADVISOR_MAX];
+    e_availability empire_screen = AVAILABLE;
 
     city_finance_t finance;
     city_resources_t resource;
@@ -219,6 +220,9 @@ struct city_t {
 
     e_availability is_advisor_available(e_advisor advisor) const;
     void set_advisor_available(e_advisor advisor, e_availability available);
+
+    e_availability is_empire_available() const { return empire_screen; }
+    void set_empire_available(e_availability available) { empire_screen = available; }
 
     bvariant get_property(xstring domain, xstring name) const;
     void on_post_load();

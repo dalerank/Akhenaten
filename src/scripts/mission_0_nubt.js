@@ -46,6 +46,8 @@ mission0 { // Nubt
 
 [event=event_mission_start, mission=mission0]
 function mission0_on_start(ev) {
+	city.set_empire_available(-1)
+
 	for (var i = 0; i <= ADVISOR_DIPLOMACY; i++) {
 		city.set_advisor_available(i, 0)
 	}

@@ -3,7 +3,6 @@
 #include "city/buildings.h"
 #include "city/city.h"
 #include "empire/empire.h"
-#include "game/tutorial.h"
 #include "game/game_config.h"
 #include "scenario/scenario.h"
 
@@ -324,20 +323,15 @@ void building_menu_ctrl_t::init() {
 }
 
 void building_menu_ctrl_t::update(const xstring stage_name) {
-    if (stage_name == tutorial_stage.disable_all) {
+    if (stage_name == "disable_all") {
         set_all(false);
     } else if (stage_name == "stage_normal") {
         for (int i = 0; i < BUILDING_MAX; i++) {
             enable_if_allowed((e_building_type)i);
         }
 
-        // enable monuments!
         building_menu_update_monuments();
-
-        // update temple complexes
         update_temple_complexes();
-
-        // disable resources that aren't available on map
         disable_resources();
     } else {
         verify_no_crash(false);

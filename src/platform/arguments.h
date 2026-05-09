@@ -83,6 +83,7 @@ public:
     [[nodiscard]] bool should_show_config_window() const { return is("config", false); }
     [[nodiscard]] bool config_file_exists() const { return is("config_file_exists", false); }
     [[nodiscard]] bool should_unpack_scripts() const { return is("unpack_scripts", false); }
+    [[nodiscard]] bool should_run_integral_tests() const { return is("integral_tests", false); }
 
     [[nodiscard]] const xstring& get_language() const { return get_str("language"); }
     [[nodiscard]] const xstring& get_scripts_directory() const { return get_str("scripts_directory"); }

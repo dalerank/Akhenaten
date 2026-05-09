@@ -81,6 +81,8 @@ function mission4_get_goal_tooltip() {
 
 [event=event_mission_start, mission=mission4]
 function mission4_on_start(ev) {
+	city.set_empire_available(1)
+
 	if (mission.papyrus_made_handled) {
 		city.set_advisor_available(ADVISOR_TRADE, 1)
 		city.use_building(BUILDING_DOCK, true)

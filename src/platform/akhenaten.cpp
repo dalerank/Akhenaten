@@ -15,6 +15,7 @@
 #include "io/gamefiles/lang.h"
 #include "game/game_config.h"
 #include "platform/arguments.h"
+#include "platform/integral_tests.h"
 #include "platform/cursor.h"
 #include "content/content.h"
 #include "platform/platform.h"

@@ -89,6 +89,7 @@ void city_t::init() {
     hotkeys_handler.init();
     g_debug.init();
     g_city_planner.init();
+    empire_screen = AVAILABLE;
     bookmarks.reset();
     common_info_window::register_handlers();
     kingdome.init();
