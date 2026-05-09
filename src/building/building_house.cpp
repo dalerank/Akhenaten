@@ -366,6 +366,10 @@ void building_house::add_population(int num_people) {
     }
 
     if (house_population() <= 0) {
+        // Split first so change_to doesn't leave a 1x1 image on a multi-tile footprint.
+        if (base.size > 1) {
+            change_to_vacant_lot();
+        }
         change_to(base, BUILDING_HOUSE_CRUDE_HUT);
     }
 
@@ -430,20 +434,28 @@ void building_house::change_to_vacant_lot() {
     d.population = 0;
     int vacant_lot_id = anim(animkeys().house).first_img();
 
-    if (!is_merged()) {
+    // size>1 covers both merged 1x1's and non-merged residences/manors/estates;
+    // is_merged is false on Common Residence and above.
+    if (base.size <= 1) {
         map_image_set(base.tile, vacant_lot_id);
         return;
     }
 
+    const int original_size = base.size;
     map_building_tiles_remove(base.id, base.tile);
     d.is_merged = 0;
     d.hsize = 1;
     base.size = 1;
     map_building_tiles_add(base.id, base.tile, 1, vacant_lot_id, TERRAIN_BUILDING);
 
-    building_house::create_vacant_lot(base.tile.shifted(1, 0), vacant_lot_id);
-    building_house::create_vacant_lot(base.tile.shifted(0, 1), vacant_lot_id);
-    building_house::create_vacant_lot(base.tile.shifted(1, 1), vacant_lot_id);
+    for (int dy = 0; dy < original_size; dy++) {
+        for (int dx = 0; dx < original_size; dx++) {
+            if (dx == 0 && dy == 0) {
+                continue;
+            }
+            building_house::create_vacant_lot(base.tile.shifted(dx, dy), vacant_lot_id);
+        }
+    }
 }
 
 bool building_house::is_vacant_lot() const {
