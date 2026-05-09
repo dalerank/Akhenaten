@@ -127,6 +127,7 @@ namespace game_features {
     game_feature gameopt_display_size{"gameopt_display_size", "", vec2i(1280, 800)};
     game_feature gameopt_disable_victory{ "gameopt_disable_victory", "", false };
     game_feature gameopt_player_name{"gameopt_player_name", "", ""};
+    game_feature gameplay_change_empire_map_runs_simulation{ "gameplay_change_empire_map_runs_simulation", "#TR_CONFIG_EMPIRE_MAP_RUNS_SIMULATION", false };
 
     xspan<game_feature*> all() {
         return { _features.data(), _features.size() };

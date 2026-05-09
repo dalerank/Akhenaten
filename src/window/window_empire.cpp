@@ -19,6 +19,7 @@
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/image_button.h"
+#include "graphics/elements/lang_text.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -561,6 +562,7 @@ void empire_window::ui_draw_foreground(UiFlags flags) {
     ui["button_close"].enabled = !!city;
     ui["button_advisor"].enabled = !!city;
     ui["city_name"] = city ? city->name_str : "";
+    ui["button_pause"].tooltip(lang_xtext_from_key(game.paused ? "#TR_BUTTON_RESUME" : "#TR_BUTTON_PAUSE"));
 
     const bool may_open_trade = city && !city->is_open && city->can_trade();
     ui["button_open_trade"].enabled = may_open_trade;
@@ -573,6 +575,32 @@ void empire_window::ui_draw_foreground(UiFlags flags) {
 
     ui.begin_widget({0, 0});
     ui.draw(flags);
+
+    {
+        auto& pause_btn = ui["button_pause"];
+        const vec2i p = pause_btn.screen_pos();
+        const vec2i sz = pause_btn.size;
+        if (game.paused) {
+            const int tri_h = 17;
+            const int tri_w = (tri_h + 1) / 2;
+            const int x0 = p.x + (sz.x - tri_w) / 2;
+            const int y0 = p.y + (sz.y - tri_h) / 2;
+            const int half = (tri_h - 1) / 2;
+            for (int r = 0; r < tri_h; r++) {
+                const int w = (r <= half) ? (r + 1) : (tri_h - r);
+                ui::fill_rect({x0, y0 + r}, {w, 1}, COLOR_BLACK);
+            }
+        } else {
+            const int bar_w = 4;
+            const int bar_h = 18;
+            const int gap = 6;
+            const int total_w = 2 * bar_w + gap;
+            const int x0 = p.x + (sz.x - total_w) / 2;
+            const int y0 = p.y + (sz.y - bar_h) / 2;
+            ui::fill_rect({x0, y0}, {bar_w, bar_h}, COLOR_BLACK);
+            ui::fill_rect({x0 + bar_w + gap, y0}, {bar_w, bar_h}, COLOR_BLACK);
+        }
+    }
 
     draw_object_info();
     draw_object_tooltip();

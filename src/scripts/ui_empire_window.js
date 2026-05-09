@@ -27,6 +27,7 @@ empire_window {
         button_help          : help_button({pos[0, 0]})
         button_close         : close_button({pos[0, 0]})
         button_advisor       : advisor_button({pos[0, 0]})
+        button_pause         : button({pos[0, 0], size:[32, 32]})
 
         button_open_trade    : button({pos[0, 0], size:[440, 20]})
         info_tooltip         : text({pos[0, 0], size:[400, 20], font:FONT_NORMAL_BLACK_ON_LIGHT, align:"center"})
@@ -139,6 +140,7 @@ function empire_window_layout_ui(window) {
     window.button_help.pos = { x: sb.max_pos.x - 40, y: infoTop }
     window.button_close.pos = { x: sb.max_pos.x - 40, y: openTradeTop }
     window.button_advisor.pos = { x: sb.min_pos.x + 16, y: infoTop }
+    window.button_pause.pos = { x: sb.max_pos.x - 48, y: infoTop - 2 }
 
     window.button_open_trade.pos = { x: centerX - 220, y: openTradeTop }
     window.info_tooltip.pos = { x: centerX - 200, y: infoTooltipTop }
@@ -267,6 +269,7 @@ function empire_window_on_init(window) {
     window.button_help.onclick = function() { ui.window_message_dialog_show("message_world_map") }
     window.button_close.onclick = function() { ui.window_city_show() }
     window.button_advisor.onclick = function() { window_advisors_show_advisor(ADVISOR_TRADE) }
+    window.button_pause.onclick = function() { emit event_toggle_pause{ value: 0 } }
     window.button_open_trade.onclick = function() {
         ui.show_yesno("#popup_dialog_open_trade", empire_window_confirm_open_trade )
     }
