@@ -38,6 +38,11 @@ struct empire_city {
     svector<uint16_t, 5> trade_limits;
     uint8_t max_traders;
     uint8_t months_under_siege;  // Track if city is under siege
+    // Per-city cadence overrides. 0 = use defaults (32-day sea / 4-day land entry,
+    // and the empire-wide ship_movement_delay range from empire.js).
+    uint8_t trader_entry_delay_override;
+    uint8_t ship_movement_delay_min;
+    uint8_t ship_movement_delay_max;
 
     void remove_trader(int figure_id);
     bool can_trade() const;
@@ -71,7 +76,7 @@ struct empire_city {
         return months_under_siege > 0;
     }
 };
-ANK_CONFIG_STRUCT(empire_city, is_sea_trade, max_traders, trade_limits)
+ANK_CONFIG_STRUCT(empire_city, is_sea_trade, max_traders, trade_limits, trader_entry_delay_override, ship_movement_delay_min, ship_movement_delay_max)
 
 struct empire_city_handle {
     uint8_t handle = 0;

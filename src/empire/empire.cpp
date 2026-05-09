@@ -473,8 +473,11 @@ io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) 
         for (int f = 0; f < 3; f++) {
             iob->bind(BIND_SIGNATURE_INT16, &city.trader_figure_ids[f]);
         }
-        
-        iob->bind____skip(10);
+
+        iob->bind_u8(city.trader_entry_delay_override);
+        iob->bind_u8(city.ship_movement_delay_min);
+        iob->bind_u8(city.ship_movement_delay_max);
+        iob->bind____skip(7);
 
         if (iob->is_read_access()) {
             city.check_attributes();

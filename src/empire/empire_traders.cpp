@@ -154,7 +154,18 @@ void empire_traders_manager::create_trader(int trade_route_id, int destination_c
     trader->state = empire_trader::estate_moving_to_destination;
     trader->is_ship = (route.route_type == 2);
 
-    const vec2i movement_delay_range = trader->is_ship ? ship_movement_delay : land_movement_delay;
+    vec2i movement_delay_range = trader->is_ship ? ship_movement_delay : land_movement_delay;
+    if (trader->is_ship) {
+        const int city_id = g_empire.get_city_for_trade_route(trade_route_id);
+        if (auto *emp_city = g_empire.city(city_id)) {
+            if (emp_city->ship_movement_delay_min != 0) {
+                movement_delay_range.x = emp_city->ship_movement_delay_min;
+            }
+            if (emp_city->ship_movement_delay_max != 0) {
+                movement_delay_range.y = emp_city->ship_movement_delay_max;
+            }
+        }
+    }
     trader->movement_delay_max = std::max<uint8_t>(movement_delay_range.x, rand() % (movement_delay_range.y));
 
     if (route.in_use && route.num_points > 0) {
