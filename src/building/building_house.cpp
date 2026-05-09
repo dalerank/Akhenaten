@@ -1455,7 +1455,8 @@ bool building_house_common_residence::evolve(house_demands* demands) {
     if (status == e_house_evolve) {
         change_to(base, BUILDING_HOUSE_SPACIOUS_RESIDENCE);
     } else if (status == e_house_decay) {
-        change_to(base, BUILDING_HOUSE_SPACIOUS_APARTMENT);
+        // 2x2 -> 1x1: split the footprint, otherwise 3 tiles render black.
+        split_size2(&base, BUILDING_HOUSE_SPACIOUS_APARTMENT);
     }
 
     return false;
