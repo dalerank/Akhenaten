@@ -1207,6 +1207,12 @@ localization_en = [
 
   { key: "#top_menu_file", text: "File" }
   { key: "#top_menu_file_tooltip", text: "Load, save, new game and exit" }
+  { key: "#top_menu_options", text: "Options" }
+  { key: "#top_menu_options_tooltip", text: "Display, sound, speed and difficulty options" }
+  { key: "#top_menu_overseers", text: "Overseers" }
+  { key: "#top_menu_overseers_tooltip", text: "Open advisors" }
+  { key: "#top_menu_help", text: "Help" }
+  { key: "#top_menu_help_tooltip", text: "Help, about, warnings, tooltip mode" }
 
   { key: "#sidebar_speed_header", text: "Speed" }
   { key: "#no_requests", text: "There are no requests outstanding at the moment." }
