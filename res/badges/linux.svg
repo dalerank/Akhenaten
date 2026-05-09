@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="182" height="46" viewBox="0 0 182 46">
+  <defs>
+    <linearGradient id="ga" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#1c1508"/>
+      <stop offset="100%" stop-color="#0e0c08"/>
+    </linearGradient>
+    <linearGradient id="gb" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#261c08"/>
+      <stop offset="100%" stop-color="#130f04"/>
+    </linearGradient>
+    <clipPath id="gc"><rect width="182" height="46" rx="5"/></clipPath>
+  </defs>
+  <g clip-path="url(#gc)">
+    <rect width="182" height="46" fill="url(#ga)"/>
+    <rect width="54" height="46" fill="url(#gb)"/>
+    <line x1="54" y1="7" x2="54" y2="39" stroke="#c9a84c" stroke-width="0.8" opacity="0.45"/>
+    
+    <ellipse cx="27" cy="31" rx="14" ry="13" fill="#c9a84c"/>
+    <ellipse cx="27" cy="32" rx="8.5" ry="9"  fill="#0e0c08"/>
+    <circle cx="27" cy="13" r="11" fill="#c9a84c"/>
+    <ellipse cx="27" cy="15" rx="7" ry="8" fill="#0e0c08"/>
+    <circle cx="23" cy="12" r="2.5" fill="#c9a84c"/>
+    <circle cx="31" cy="12" r="2.5" fill="#c9a84c"/>
+    <path d="M 24,20 L 27,24 L 30,20 Z" fill="#c9a84c"/>
+    <path d="M 13,27 C 8,25 8,38 13,39 Z" fill="#c9a84c"/>
+    <path d="M 41,27 C 46,25 46,38 41,39 Z" fill="#c9a84c"/>
+    <text x="118" y="27" text-anchor="middle"
+          font-family="'Segoe UI',system-ui,Arial,sans-serif"
+          font-size="13" font-weight="700" fill="#c9a84c" letter-spacing="1.2">LINUX</text>
+  </g>
+  <rect width="182" height="46" rx="5" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
+</svg>

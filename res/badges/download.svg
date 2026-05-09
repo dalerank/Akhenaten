@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="182" height="46" viewBox="0 0 182 46">
+  <defs>
+    <linearGradient id="ga" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#1c1508"/>
+      <stop offset="100%" stop-color="#0e0c08"/>
+    </linearGradient>
+    <linearGradient id="gb" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#261c08"/>
+      <stop offset="100%" stop-color="#130f04"/>
+    </linearGradient>
+    <clipPath id="gc"><rect width="182" height="46" rx="5"/></clipPath>
+  </defs>
+  <g clip-path="url(#gc)">
+    <rect width="182" height="46" fill="url(#ga)"/>
+    <rect width="54" height="46" fill="url(#gb)"/>
+    <line x1="54" y1="7" x2="54" y2="39" stroke="#c9a84c" stroke-width="0.8" opacity="0.45"/>
+    
+    <line x1="27" y1="5" x2="27" y2="30" stroke="#c9a84c" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M 15,20 L 27,33 L 39,20" stroke="#c9a84c" stroke-width="3.5" fill="none"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="9" y="35" width="36" height="8" rx="3" fill="#c9a84c"/>
+    <text x="118" y="22" text-anchor="middle"
+          font-family="'Segoe UI',system-ui,Arial,sans-serif"
+          font-size="13" font-weight="700" fill="#c9a84c" letter-spacing="1.2">DOWNLOAD</text>
+    <text x="118" y="37" text-anchor="middle"
+          font-family="'Segoe UI',system-ui,Arial,sans-serif"
+          font-size="9" fill="#c9a84c" opacity="0.6" letter-spacing="0.6">itch.io</text>
+  </g>
+  <rect width="182" height="46" rx="5" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
+</svg>

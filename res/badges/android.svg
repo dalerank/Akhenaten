@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="182" height="46" viewBox="0 0 182 46">
+  <defs>
+    <linearGradient id="ga" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#1c1508"/>
+      <stop offset="100%" stop-color="#0e0c08"/>
+    </linearGradient>
+    <linearGradient id="gb" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#261c08"/>
+      <stop offset="100%" stop-color="#130f04"/>
+    </linearGradient>
+    <clipPath id="gc"><rect width="182" height="46" rx="5"/></clipPath>
+  </defs>
+  <g clip-path="url(#gc)">
+    <rect width="182" height="46" fill="url(#ga)"/>
+    <rect width="54" height="46" fill="url(#gb)"/>
+    <line x1="54" y1="7" x2="54" y2="39" stroke="#c9a84c" stroke-width="0.8" opacity="0.45"/>
+    
+    <line x1="21" y1="9" x2="16" y2="3" stroke="#c9a84c" stroke-width="2.2" stroke-linecap="round"/>
+    <line x1="33" y1="9" x2="38" y2="3" stroke="#c9a84c" stroke-width="2.2" stroke-linecap="round"/>
+    <circle cx="16" cy="3" r="2" fill="#c9a84c"/>
+    <circle cx="38" cy="3" r="2" fill="#c9a84c"/>
+    <path d="M 13,20 A 14,11 0 0 1 41,20 Z" fill="#c9a84c"/>
+    <circle cx="22" cy="16" r="2.2" fill="#0e0c08"/>
+    <circle cx="32" cy="16" r="2.2" fill="#0e0c08"/>
+    <rect x="13" y="21" width="28" height="16" rx="3" fill="#c9a84c"/>
+    <rect x="6"  y="21" width="5"  height="13" rx="2.5" fill="#c9a84c"/>
+    <rect x="43" y="21" width="5"  height="13" rx="2.5" fill="#c9a84c"/>
+    <rect x="17" y="38" width="6"  height="7"  rx="3"   fill="#c9a84c"/>
+    <rect x="31" y="38" width="6"  height="7"  rx="3"   fill="#c9a84c"/>
+    <text x="118" y="27" text-anchor="middle"
+          font-family="'Segoe UI',system-ui,Arial,sans-serif"
+          font-size="13" font-weight="700" fill="#c9a84c" letter-spacing="1.2">ANDROID</text>
+  </g>
+  <rect width="182" height="46" rx="5" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
+</svg>

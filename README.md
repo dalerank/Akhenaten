@@ -1,14 +1,14 @@
 # Akhenaten [![Github Actions](x64/workflows/Akhenaten%20Build%20Windows/badge.svg)](https://github.com/dalerank/Akhenaten/actions)
 
-[![Website](https://github.com/user-attachments/assets/6fd1fee4-dfa9-4fdb-9067-f3eaf611d3f3)](https://dalerank.github.io/Akhenaten/)
-[![Discord](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263684745-bcca8b70-13c4-48d8-8e91-4b0be8a440e6.png)](https://discord.gg/HS4njmBvpb)
-[![Download](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685010-cd624917-786d-487b-89c0-298bc694f3f2.png)](https://dalerank.itch.io/Akhenaten)
-[![Windows](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685266-d429392e-a91e-4233-b496-3863e50af5f6.png)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_windows/master/windows_build.zip)
-[![Linux](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685605-8ce46564-04e7-45a7-afa4-0ffe32335dd8.png)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_linux/master/linux_build.zip)
-[![Mac/Arm](https://github.com/user-attachments/assets/8b16ea98-5ef4-4206-943e-8e8950fa4507)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac_arm/master/macos_build.zip)
-[![Mac/x86](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/263685850-a5f39f18-0220-411b-bb70-9bdbc9d48311.png)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac_x64/master/macos_build.zip)
-[![Android](https://github-production-user-asset-6210df.s3.amazonaws.com/918081/268461479-834ae5f0-f57d-4105-b499-869982383a87.png)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_android/master/apk.zip)
-[![Chrome-icon](https://github.com/user-attachments/assets/45074e6d-4f35-4773-9ae9-37935040425a)](https://dalerank.github.io/)
+[![Website](res/badges/website.svg)](https://dalerank.github.io/Akhenaten/)
+[![Discord](res/badges/discord.svg)](https://discord.gg/HS4njmBvpb)
+[![Download](res/badges/download.svg)](https://dalerank.itch.io/Akhenaten)
+[![Windows](res/badges/windows.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_windows/master/windows_build.zip)
+[![Linux](res/badges/linux.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_linux/master/linux_build.zip)
+[![Mac/Arm](res/badges/mac-arm.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac_arm/master/macos_build.zip)
+[![Mac/x64](res/badges/mac-x64.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac_x64/master/macos_build.zip)
+[![Android](res/badges/android.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_android/master/apk.zip)
+[![Web](res/badges/web.svg)](https://dalerank.github.io/)
 
 Akhenaten aims to make the original game Pharaoh compatible with modern systems with redesigned original engine.
 Unlike the original game, which was developed by Impressions Games, Akhenaten is a community-driven effort to keep the game alive and accessible.
@@ -46,7 +46,8 @@ from an unmodified game installation to run, in this case it needs _Pharaoh_ **a
 Note that you must have permission to write in the game data directory as the saves will be
 stored there; also, your game must be patched to last version (1.3 + Cleopatra) to run Akhenaten.
 
-[![Become a patron](https://github.com/user-attachments/assets/f8f97765-7dad-428b-a722-a26a2d3d39fb)](https://patreon.com/imspinner)[![Become a patron](https://github.com/user-attachments/assets/ed3eed16-0419-49ba-8a8c-53c1413c125b)](https://github.com/sponsors/dalerank)
+[![Patreon](res/badges/patreon.svg)](https://patreon.com/imspinner)
+[![Sponsor](res/badges/sponsor.svg)](https://github.com/sponsors/dalerank)
 
 
 ## Building Akhenaten from source
