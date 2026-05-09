@@ -392,7 +392,12 @@ bool city_t::generate_trader_from(empire_city &city) {
         return false;
     }
 
-    city.trader_entry_delay = city.is_sea_trade ? 30 : 4;
+    constexpr int sea_default_entry_delay = 30;  // 2 in-game months at 16 days/month
+    constexpr int land_default_entry_delay = 4;
+    const int default_entry_delay = city.is_sea_trade ? sea_default_entry_delay : land_default_entry_delay;
+    city.trader_entry_delay = city.trader_entry_delay_override != 0
+                                ? city.trader_entry_delay_override
+                                : default_entry_delay;
 
     if (city.is_sea_trade) {
         // generate ship
