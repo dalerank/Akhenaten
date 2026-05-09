@@ -10,12 +10,51 @@
 #include "io/manager.h"
 #include "city/city.h"
 #include "city_message.h"
+#include "core/log.h"
 #include "dev/debug.h"
 #include "game/game.h"
 
 #include <cmath>
+#include <cctype>
 
 floods_t g_floods;
+
+// Returns the cycle index for a calendar token (case-insensitive: JAN..DEC, MID_JAN..MID_DEC).
+// Falls back to numeric parsing if the token isn't a name. Returns -1 for empty input.
+static int parse_calendar_token(const std::string &arg) {
+    if (arg.empty()) {
+        return -1;
+    }
+
+    std::string up;
+    up.reserve(arg.size());
+    for (char c : arg) {
+        up.push_back((char)std::toupper((unsigned char)c));
+    }
+
+    static constexpr struct { const char *name; int cycle; } table[] = {
+        {"JAN", 0},   {"MID_JAN", 16},
+        {"FEB", 32},  {"MID_FEB", 48},
+        {"MAR", 64},  {"MID_MAR", 80},
+        {"APR", 96},  {"MID_APR", 112},
+        {"MAY", 128}, {"MID_MAY", 144},
+        {"JUN", 160}, {"MID_JUN", 176},
+        {"JUL", 192}, {"MID_JUL", 208},
+        {"AUG", 224}, {"MID_AUG", 240},
+        {"SEP", 256}, {"MID_SEP", 272},
+        {"OCT", 288}, {"MID_OCT", 304},
+        {"NOV", 320}, {"MID_NOV", 336},
+        {"DEC", 352}, {"MID_DEC", 368},
+    };
+
+    for (const auto &entry : table) {
+        if (up == entry.name) {
+            return entry.cycle;
+        }
+    }
+
+    return atoi(arg.c_str());
+}
 
 declare_console_command_p(startflood) {
     std::string args; is >> args;
@@ -29,7 +68,56 @@ declare_console_command_p(startflood) {
     }
 }
 
+declare_console_command_p(set_flood_start) {
+    std::string args; is >> args;
+    const int target_cycle = parse_calendar_token(args);
+    if (target_cycle < 0) {
+        return;
+    }
+    // start_cycle = floor(season * 1.05 + 14.5)  =>  season = ceil((target - 14.5) / 1.05)
+    const int season = std::clamp((int)std::ceil((target_cycle - 14.5f) / 1.05f), 0, 255);
+    g_floods.season_initial = season;
+    g_floods.season = season;
+}
+
+declare_console_command_p(set_flood_end) {
+    std::string args; is >> args;
+    const int target_cycle = parse_calendar_token(args);
+    if (target_cycle < 0) {
+        return;
+    }
+    const int duration = std::max(0, target_cycle - g_floods.start_cycle() - g_floods.floodplain_width * 2);
+    g_floods.duration_initial = duration;
+    g_floods.duration = duration;
+}
+
+declare_console_command_p(set_flood_reset) {
+    g_floods.season_initial = g_floods.season_default;
+    g_floods.season = g_floods.season_default;
+    g_floods.duration_initial = g_floods.duration_default;
+    g_floods.duration = g_floods.duration_default;
+}
+
+declare_console_command_p(flood_dump) {
+    const int start = g_floods.start_cycle();
+    const int end = g_floods.end_cycle();
+    const int width = g_floods.floodplain_width;
+    const float period_last = g_floods.period_length(false);
+    logs::info("[flood_dump] season=%d (init=%d default=%d)  duration=%d (init=%d default=%d)",
+               g_floods.season, g_floods.season_initial, g_floods.season_default,
+               g_floods.duration, g_floods.duration_initial, g_floods.duration_default);
+    logs::info("[flood_dump] floodplain_width=%d  start_cycle=%d  end_cycle=%d  total_flood=%d cycles",
+               width, start, end, end - start);
+    logs::info("[flood_dump] quality_current=%d  quality_last=%d  quality_next=%d  flooding_period=%.1f",
+               g_floods.quality_current, g_floods.quality_last, g_floods.quality_next, period_last);
+    logs::info("[flood_dump] state=%d  current_cycle=%d  flood_progress=%d/%d",
+               (int)g_floods.state, g_floods.current_cycle(),
+               g_floods.flood_progress, g_floods.flood_progress_target);
+}
+
 void floods_t::init() {
+    season_default = season_initial;
+    duration_default = duration_initial;
     unk01 = 0;
     state = FLOOD_STATE_FARMABLE;
     floodplain_width = 0;
