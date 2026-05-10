@@ -15,6 +15,8 @@ struct floods_t {
     int season_initial;
     int duration_initial;
     int quality_initial;
+    int season_default;
+    int duration_default;
     int season;
     int duration;
     int unk00; // 00
