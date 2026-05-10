@@ -379,6 +379,8 @@ void building_house::add_population(int num_people) {
     base.remove_figure(2);
 }
 
+static void split_size2(building* b, e_building_type new_type);
+
 void building_house::change_to(building &b, e_building_type new_type, bool force) {
     auto &d = *(building_house::runtime_data_t*)b.runtime_data;
 
@@ -386,6 +388,16 @@ void building_house::change_to(building &b, e_building_type new_type, bool force
     const int absolute_day = game.simtime.absolute_day(true);
     const bool can_update = (absolute_day - d.last_update_day < house_update_delay);
     if (!force && (house_update_delay > 0 && (new_type > b.type) && can_update)) {
+        return;
+    }
+
+    // Repair corrupted state: a 1x1 hut/cottage/apartment-tier type sitting on
+    // a 2x2 footprint without is_merged is invalid (older saves can carry this
+    // from a prior change_to that downgraded type without splitting). Split
+    // back into 4 individual tiles instead of repainting the bad state.
+    const bool target_is_1x1_tier = (new_type >= BUILDING_HOUSE_CRUDE_HUT && new_type <= BUILDING_HOUSE_SPACIOUS_APARTMENT);
+    if (target_is_1x1_tier && b.size == 2 && !d.is_merged) {
+        split_size2(&b, new_type);
         return;
     }
 
@@ -398,7 +410,7 @@ void building_house::change_to(building &b, e_building_type new_type, bool force
     const auto &house_params = get_house_params(new_type);
     if (house->is_merged()) {
         const size_t max_anims = house_params.variants_merged.data.size();
-        const size_t rand_anim = rand() % max_anims;        
+        const size_t rand_anim = rand() % max_anims;
         auto anim_it = house_params.variants_merged.data.begin();
         std::advance(anim_it, rand_anim);
         d.image_key = anim_it->first;
@@ -1203,10 +1215,20 @@ void building_house::on_destroy() {
 void building_house::on_post_load() {
     building_impl::on_post_load();
 
+    auto &d = runtime_data();
+
+    // Repair pre-fix corrupt state: a 1x1-tier type on a 2x2 non-merged
+    // footprint can persist from saves that hit the old Common Residence
+    // devolve bug. Split before re-binding tiles or hunting for the image_key.
+    const bool target_is_1x1_tier = (base.type >= BUILDING_HOUSE_CRUDE_HUT && base.type <= BUILDING_HOUSE_SPACIOUS_APARTMENT);
+    if (target_is_1x1_tier && base.size == 2 && !d.is_merged) {
+        split_size2(&base, base.type);
+        return;
+    }
+
     const int imgid = map_image_at(tile());
     map_building_tiles_add(id(), tile(), size(), imgid, TERRAIN_BUILDING);
 
-    auto &d = runtime_data();
     const auto &house_params = get_house_params(base.type);
     if (d.image_key.empty()) {
         const auto &variants = house_params.variants.data;
