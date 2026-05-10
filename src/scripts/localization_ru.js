@@ -458,6 +458,12 @@ localization_ru = [
 
     { key: "#top_menu_file", text: "Файл" }
     { key: "#top_menu_file_tooltip", text: "Загрузить, сохранить, начать новую игру и выйти" }
+    { key: "#top_menu_options", text: "Параметры" }
+    { key: "#top_menu_options_tooltip", text: "Настройки экрана, звука, скорости и сложности" }
+    { key: "#top_menu_help", text: "Помощь" }
+    { key: "#top_menu_help_tooltip", text: "Справка, подсказки и сведения об игре" }
+    { key: "#top_menu_overseers", text: "Советники" }
+    { key: "#top_menu_overseers_tooltip", text: "Обратиться к советникам о состоянии города" }
 
     { key: "#sidebar_speed_header", text: "Скорость" }
 
