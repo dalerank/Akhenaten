@@ -408,20 +408,25 @@ void building_house::change_to(building &b, e_building_type new_type, bool force
     int image_id = house_image_group<false>(house->house_level());
 
     const auto &house_params = get_house_params(new_type);
-    if (house->is_merged()) {
-        const size_t max_anims = house_params.variants_merged.data.size();
-        const size_t rand_anim = rand() % max_anims;
-        auto anim_it = house_params.variants_merged.data.begin();
-        std::advance(anim_it, rand_anim);
-        d.image_key = anim_it->first;
-        image_id = anim_it->second.first_img();
-    } else {
-        const size_t max_anims = house_params.variants.data.size();
-        const size_t rand_anim = rand() % max_anims;
-        auto anim_it = house_params.variants.data.begin();
-        std::advance(anim_it, rand_anim);
-        d.image_key = anim_it->first;
-        image_id = anim_it->second.first_img();
+    // Pick a random variant whose image actually exists. Some house tiers
+    // reference custom image packs (e.g. PACK_CUSTOM_HOUSE) that aren't
+    // always installed; missing packs make first_img() return garbage
+    // (0/1/65535), which then renders as a black/missing-texture tile.
+    // Probe up to N tries so the picker degrades gracefully.
+    const auto &variants_data = house->is_merged() ? house_params.variants_merged.data : house_params.variants.data;
+    if (!variants_data.empty()) {
+        const size_t n = variants_data.size();
+        const size_t start = rand() % n;
+        for (size_t i = 0; i < n; i++) {
+            auto anim_it = variants_data.begin();
+            std::advance(anim_it, (start + i) % n);
+            const int candidate = anim_it->second.first_img();
+            if (candidate > 0 || i == n - 1) {
+                d.image_key = anim_it->first;
+                image_id = candidate;
+                break;
+            }
+        }
     }
 
     map_building_tiles_add(b.id, b.tile, b.size, image_id, TERRAIN_BUILDING);
