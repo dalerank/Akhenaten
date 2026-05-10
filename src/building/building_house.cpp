@@ -908,8 +908,9 @@ bool building_house::can_expand(int num_tiles) {
 
             if (other_house->id() == id()) {
                 ok_tiles++;
-            } 
-            
+                continue;
+            }
+
             const bool may_expand = other_house->state() == BUILDING_STATE_VALID && other_house->runtime_data().hsize && other_house->house_level() <= house_level();
             ok_tiles += may_expand ? 1 : 0;
         }
