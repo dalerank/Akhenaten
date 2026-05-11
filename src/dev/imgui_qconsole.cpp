@@ -30,9 +30,54 @@ namespace dev {
 
 
     void IMGUIOstream::render() {
+        const ImGuiIO &io = ImGui::GetIO();
+        int line_idx = -1;
         for (const ConsoleBuf::Line &line : strb.getLines()) {
+            ++line_idx;
             if (!linePassFilter(line))
                 continue;
+
+            // Wrap each line in a Selectable for click-to-copy + multi-select.
+            // The Selectable provides hover highlight + click capture; the colored text is
+            // overlaid on top using TextColored after resetting the cursor.
+            const bool is_selected = selected_lines.count(line_idx) > 0;
+
+            ImVec2 line_start = ImGui::GetCursorPos();
+            ImGui::PushID(line_idx);
+            const bool clicked = ImGui::Selectable("##cl", is_selected, 0, ImVec2(0, ImGui::GetTextLineHeight()));
+            ImGui::PopID();
+
+            if (clicked) {
+                if (io.KeyShift && last_clicked_idx >= 0) {
+                    // Shift+Click: replace selection with a contiguous range from anchor to here.
+                    selected_lines.clear();
+                    const int lo = std::min(last_clicked_idx, line_idx);
+                    const int hi = std::max(last_clicked_idx, line_idx);
+                    for (int i = lo; i <= hi; ++i) {
+                        selected_lines.insert(i);
+                    }
+                } else if (io.KeyCtrl) {
+                    // Ctrl+Click: toggle this line in/out of the selection.
+                    if (is_selected) {
+                        selected_lines.erase(line_idx);
+                    } else {
+                        selected_lines.insert(line_idx);
+                    }
+                    last_clicked_idx = line_idx;
+                } else {
+                    // Plain click: replace selection with just this line.
+                    selected_lines.clear();
+                    selected_lines.insert(line_idx);
+                    last_clicked_idx = line_idx;
+                }
+
+                const std::string sel = getSelectionText();
+                if (!sel.empty()) {
+                    ImGui::SetClipboardText(sel.c_str());
+                }
+            }
+
+            ImGui::SetCursorPos(line_start);
 
             for (const ConsoleBuf::TextSequence &seq : line.sequences) {
                 if (seq.style.hasBackgroundColor) {
@@ -52,6 +97,34 @@ namespace dev {
         if ((autoScrollEnabled && shouldScrollToBottom) || (autoScrollEnabled && ImGui::GetScrollY() >= ImGui::GetScrollMaxY()))
             ImGui::SetScrollHereY(1.0f);
         shouldScrollToBottom = false;
+    }
+
+    std::string IMGUIOstream::getAllText() const {
+        std::string result;
+        for (const ConsoleBuf::Line &line : strb.getLines()) {
+            if (!linePassFilter(line))
+                continue;
+            for (const ConsoleBuf::TextSequence &seq : line.sequences) {
+                result += seq.text;
+            }
+            result += '\n';
+        }
+        return result;
+    }
+
+    std::string IMGUIOstream::getSelectionText() const {
+        std::string result;
+        const auto &lines = strb.getLines();
+        for (int idx : selected_lines) {
+            if (idx < 0 || idx >= (int)lines.size()) {
+                continue;
+            }
+            for (const ConsoleBuf::TextSequence &seq : lines[idx].sequences) {
+                result += seq.text;
+            }
+            result += '\n';
+        }
+        return result;
     }
 
     imgui_qconsole::imgui_qconsole() {
@@ -81,6 +154,19 @@ namespace dev {
 
         ImGui::Begin(title, &p_open, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
         ImGui::SetWindowFontScale(fontScale);
+
+        if (ImGui::SmallButton("Copy All")) {
+            const std::string all_text = os.getAllText();
+            if (!all_text.empty()) {
+                ImGui::SetClipboardText(all_text.c_str());
+            }
+        }
+        ImGui::SameLine();
+        if (ImGui::SmallButton("Clear")) {
+            os.Clear();
+        }
+        ImGui::SameLine();
+        ImGui::Checkbox("Auto-scroll", &os.autoScrollEnabled);
 
         // Reserve enough left-over height for 1 separator + 1 input text
         const float footer_height_to_reserve = ImGui::GetStyle().ItemSpacing.y + ImGui::GetFrameHeightWithSpacing();

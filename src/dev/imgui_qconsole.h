@@ -2,6 +2,7 @@
 
 #include <unordered_set>
 #include <algorithm>
+#include <set>
 #include <vector>
 
 //dependencies
@@ -205,7 +206,16 @@ class IMGUIOstream : public std::ostream
     bool autoScrollEnabled = true;
     bool shouldScrollToBottom = false;
 
-    inline void Clear() { strb.clear(); } ///< clear the output pane
+    /// Indices (into strb.getLines()) of currently selected lines for multi-select copy.
+    std::set<int> selected_lines;
+    /// Anchor index for shift+click range selection.
+    int last_clicked_idx = -1;
+
+    inline void Clear() {
+        strb.clear();
+        selected_lines.clear();
+        last_clicked_idx = -1;
+    } ///< clear the output pane
 
     inline IMGUIOstream() : std::ostream(&strb) {}
 
@@ -214,6 +224,12 @@ class IMGUIOstream : public std::ostream
 
     /// Renders the control in whatever the surrounding IMGUI context is.
     void render();
+
+    /// Returns all log lines (passing the current filter) as plain text, newline-separated.
+    std::string getAllText() const;
+
+    /// Returns currently-selected lines as plain text, newline-separated. Empty if no selection.
+    std::string getSelectionText() const;
     
     inline void applyDefaultStyle(){strb.applyDefaultStyle();}
     inline ConsoleBuf::FormattingParams& defaultStyle(){return strb.defaultStyle;}
