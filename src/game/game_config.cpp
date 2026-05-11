@@ -128,6 +128,7 @@ namespace game_features {
     game_feature gameopt_disable_victory{ "gameopt_disable_victory", "", false };
     game_feature gameopt_player_name{"gameopt_player_name", "", ""};
     game_feature gameplay_change_empire_map_runs_simulation{ "gameplay_change_empire_map_runs_simulation", "#TR_CONFIG_EMPIRE_MAP_RUNS_SIMULATION", false };
+    game_feature gameui_disable_nilometer_popups{ "gameui_disable_nilometer_popups", "#TR_CONFIG_DISABLE_NILOMETER_POPUPS", false };
 
     xspan<game_feature*> all() {
         return { _features.data(), _features.size() };

@@ -148,6 +148,7 @@ namespace game_features {
     extern game_feature gameopt_disable_victory;
     extern game_feature gameopt_player_name;
     extern game_feature gameplay_change_empire_map_runs_simulation;
+    extern game_feature gameui_disable_nilometer_popups;
 
     xspan<game_feature*> all();
     game_feature* find(const xstring& name);

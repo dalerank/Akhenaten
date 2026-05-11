@@ -366,6 +366,10 @@ void building_house::add_population(int num_people) {
     }
 
     if (house_population() <= 0) {
+        // Split first so change_to doesn't leave a 1x1 image on a multi-tile footprint.
+        if (base.size > 1) {
+            change_to_vacant_lot();
+        }
         change_to(base, BUILDING_HOUSE_CRUDE_HUT);
     }
 
@@ -374,6 +378,8 @@ void building_house::add_population(int num_people) {
     g_city.population.add(num_people);
     base.remove_figure(2);
 }
+
+static void split_size2(building* b, e_building_type new_type);
 
 void building_house::change_to(building &b, e_building_type new_type, bool force) {
     auto &d = *(building_house::runtime_data_t*)b.runtime_data;
@@ -385,6 +391,16 @@ void building_house::change_to(building &b, e_building_type new_type, bool force
         return;
     }
 
+    // Repair corrupted state: a 1x1 hut/cottage/apartment-tier type sitting on
+    // a 2x2 footprint without is_merged is invalid (older saves can carry this
+    // from a prior change_to that downgraded type without splitting). Split
+    // back into 4 individual tiles instead of repainting the bad state.
+    const bool target_is_1x1_tier = (new_type >= BUILDING_HOUSE_CRUDE_HUT && new_type <= BUILDING_HOUSE_SPACIOUS_APARTMENT);
+    if (target_is_1x1_tier && b.size == 2 && !d.is_merged) {
+        split_size2(&b, new_type);
+        return;
+    }
+
     b.clear_impl(); // clear old impl
     b.type = new_type;
 
@@ -392,20 +408,25 @@ void building_house::change_to(building &b, e_building_type new_type, bool force
     int image_id = house_image_group<false>(house->house_level());
 
     const auto &house_params = get_house_params(new_type);
-    if (house->is_merged()) {
-        const size_t max_anims = house_params.variants_merged.data.size();
-        const size_t rand_anim = rand() % max_anims;        
-        auto anim_it = house_params.variants_merged.data.begin();
-        std::advance(anim_it, rand_anim);
-        d.image_key = anim_it->first;
-        image_id = anim_it->second.first_img();
-    } else {
-        const size_t max_anims = house_params.variants.data.size();
-        const size_t rand_anim = rand() % max_anims;
-        auto anim_it = house_params.variants.data.begin();
-        std::advance(anim_it, rand_anim);
-        d.image_key = anim_it->first;
-        image_id = anim_it->second.first_img();
+    // Pick a random variant whose image actually exists. Some house tiers
+    // reference custom image packs (e.g. PACK_CUSTOM_HOUSE) that aren't
+    // always installed; missing packs make first_img() return garbage
+    // (0/1/65535), which then renders as a black/missing-texture tile.
+    // Probe up to N tries so the picker degrades gracefully.
+    const auto &variants_data = house->is_merged() ? house_params.variants_merged.data : house_params.variants.data;
+    if (!variants_data.empty()) {
+        const size_t n = variants_data.size();
+        const size_t start = rand() % n;
+        for (size_t i = 0; i < n; i++) {
+            auto anim_it = variants_data.begin();
+            std::advance(anim_it, (start + i) % n);
+            const int candidate = anim_it->second.first_img();
+            if (candidate > 0 || i == n - 1) {
+                d.image_key = anim_it->first;
+                image_id = candidate;
+                break;
+            }
+        }
     }
 
     map_building_tiles_add(b.id, b.tile, b.size, image_id, TERRAIN_BUILDING);
@@ -430,20 +451,28 @@ void building_house::change_to_vacant_lot() {
     d.population = 0;
     int vacant_lot_id = anim(animkeys().house).first_img();
 
-    if (!is_merged()) {
+    // size>1 covers both merged 1x1's and non-merged residences/manors/estates;
+    // is_merged is false on Common Residence and above.
+    if (base.size <= 1) {
         map_image_set(base.tile, vacant_lot_id);
         return;
     }
 
+    const int original_size = base.size;
     map_building_tiles_remove(base.id, base.tile);
     d.is_merged = 0;
     d.hsize = 1;
     base.size = 1;
     map_building_tiles_add(base.id, base.tile, 1, vacant_lot_id, TERRAIN_BUILDING);
 
-    building_house::create_vacant_lot(base.tile.shifted(1, 0), vacant_lot_id);
-    building_house::create_vacant_lot(base.tile.shifted(0, 1), vacant_lot_id);
-    building_house::create_vacant_lot(base.tile.shifted(1, 1), vacant_lot_id);
+    for (int dy = 0; dy < original_size; dy++) {
+        for (int dx = 0; dx < original_size; dx++) {
+            if (dx == 0 && dy == 0) {
+                continue;
+            }
+            building_house::create_vacant_lot(base.tile.shifted(dx, dy), vacant_lot_id);
+        }
+    }
 }
 
 bool building_house::is_vacant_lot() const {
@@ -879,8 +908,9 @@ bool building_house::can_expand(int num_tiles) {
 
             if (other_house->id() == id()) {
                 ok_tiles++;
-            } 
-            
+                continue;
+            }
+
             const bool may_expand = other_house->state() == BUILDING_STATE_VALID && other_house->runtime_data().hsize && other_house->house_level() <= house_level();
             ok_tiles += may_expand ? 1 : 0;
         }
@@ -1191,10 +1221,20 @@ void building_house::on_destroy() {
 void building_house::on_post_load() {
     building_impl::on_post_load();
 
+    auto &d = runtime_data();
+
+    // Repair pre-fix corrupt state: a 1x1-tier type on a 2x2 non-merged
+    // footprint can persist from saves that hit the old Common Residence
+    // devolve bug. Split before re-binding tiles or hunting for the image_key.
+    const bool target_is_1x1_tier = (base.type >= BUILDING_HOUSE_CRUDE_HUT && base.type <= BUILDING_HOUSE_SPACIOUS_APARTMENT);
+    if (target_is_1x1_tier && base.size == 2 && !d.is_merged) {
+        split_size2(&base, base.type);
+        return;
+    }
+
     const int imgid = map_image_at(tile());
     map_building_tiles_add(id(), tile(), size(), imgid, TERRAIN_BUILDING);
 
-    auto &d = runtime_data();
     const auto &house_params = get_house_params(base.type);
     if (d.image_key.empty()) {
         const auto &variants = house_params.variants.data;
@@ -1455,7 +1495,8 @@ bool building_house_common_residence::evolve(house_demands* demands) {
     if (status == e_house_evolve) {
         change_to(base, BUILDING_HOUSE_SPACIOUS_RESIDENCE);
     } else if (status == e_house_decay) {
-        change_to(base, BUILDING_HOUSE_SPACIOUS_APARTMENT);
+        // 2x2 -> 1x1: split the footprint, otherwise 3 tiles render black.
+        split_size2(&base, BUILDING_HOUSE_SPACIOUS_APARTMENT);
     }
 
     return false;

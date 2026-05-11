@@ -1185,6 +1185,12 @@ localization_de = [
 
   { key: "#top_menu_file", text: "Datei" }
   { key: "#top_menu_file_tooltip", text: "Neues Spiel, Laden, Speichern, Spiel beenden" }
+  { key: "#top_menu_options", text: "Optionen" }
+  { key: "#top_menu_options_tooltip", text: "Anzeige, Ton, Geschwindigkeit und Schwierigkeit" }
+  { key: "#top_menu_help", text: "Hilfe" }
+  { key: "#top_menu_help_tooltip", text: "Hilfe, Hinweise und Informationen zum Spiel" }
+  { key: "#top_menu_overseers", text: "Berater" }
+  { key: "#top_menu_overseers_tooltip", text: "Berater zum Zustand der Stadt befragen" }
 
   { key: "#sidebar_speed_header", text: "Geschwindigkeit" }
 ]
