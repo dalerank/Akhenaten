@@ -311,7 +311,9 @@ static int get_elapsed_ticks() {
     auto it = std::find_if(std::begin(meaning_windows), std::end(meaning_windows), [] (pcstr id) {
         return window_get_id() == id;
     });
-    if (it != std::end(meaning_windows)) {
+    const bool empire_map_runs_sim = game_features::gameplay_change_empire_map_runs_simulation.to_bool()
+        && window_get_id() == "window_empire";
+    if (it != std::end(meaning_windows) || empire_map_runs_sim) {
         game_speed_index = (100 - game_features::gameopt_game_speed.to_int()) / 10;
         if (game_speed_index >= 10) {
             return 0;

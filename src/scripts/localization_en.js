@@ -11,6 +11,8 @@ localization_en = [
   {key:"#TR_INVALID_LANGUAGE_MESSAGE", text:"The directory you selected does not contain a valid language pack. Please check the log for errors."}
   {key:"#TR_BUTTON_OK", text:"OK"}
   {key:"#TR_BUTTON_CANCEL", text:"Cancel"}
+  {key:"#TR_BUTTON_PAUSE", text:"Pause"}
+  {key:"#TR_BUTTON_RESUME", text:"Resume"}
   {key:"#TR_BUTTON_RESET_DEFAULTS", text:"Reset defaults"}
   {key:"#TR_BUTTON_CONFIGURE_HOTKEYS", text:"Configure hotkeys"}
   {key:"#TR_BUTTON_NEXT", text:"+"}
@@ -67,6 +69,7 @@ localization_en = [
   {key:"#TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS", text:"Houses don't expand into gardens"}
   {key:"#TR_CONFIG_FIX_IRRIGATION_RANGE", text:"Fix irrigation range"}
   {key:"#TR_CONFIG_FIX_FARM_PRODUCING", text:"Fix farm producing"}
+  {key:"#TR_CONFIG_EMPIRE_MAP_RUNS_SIMULATION", text:"Run city simulation while empire map is open"}
   {key:"#TR_CONFIG_CAMERA_KEEP_INERTIA", text:"Camera keep inertia"}
   {key:"#TR_CONFIG_UNDERSTAFFED_ACCEPT_GOODS", text:"Understaffed accept goods"}
   {key:"#TR_CONFIG_MULTIPLE_TEMPLE_COMPLEXES", text:"Multiple temple complexes"}
