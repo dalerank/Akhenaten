@@ -18,14 +18,8 @@
 
 #include "city/city_population.h"
 
-void __city_ratings_apply_monument_yearly(int new_monument, int new_years_of_monument, int monument_explanation_reason) {
-    g_city.ratings.monument = new_monument;
-    g_city.ratings.monument_years_of_monument = new_years_of_monument;
-    g_city.ratings.monument_num_criminals = 0;
-    g_city.ratings.monument_num_rioters = 0;
-    g_city.ratings.monument_destroyed_buildings = 0;
-}
-ANK_FUNCTION_3(__city_ratings_apply_monument_yearly)
+void __city_ratings_set_monument(int new_value) { g_city.ratings.monument = new_value; }
+ANK_FUNCTION_1(__city_ratings_set_monument)
 
 int __city_rating_kingdom() { return g_city.kingdome.rating; }
 ANK_FUNCTION(__city_rating_kingdom)
