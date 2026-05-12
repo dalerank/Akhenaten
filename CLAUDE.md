@@ -72,6 +72,10 @@ git clang-format --style=file --extensions cpp,cc,cxx,h,hpp
 ```
 CI will reject PRs that fail formatting checks.
 
+## Verification
+
+Before starting any task, state how you will verify the result.
+
 ## Git Commits
 
 Do not add `Co-Authored-By: Claude` or any Claude/Anthropic attribution to commit messages.
