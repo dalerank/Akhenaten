@@ -8,6 +8,15 @@ ui {
     }
 }
 
+imgui {
+    tree_node_ex: __imgui_tree_node_ex
+    tree_pop: __imgui_tree_pop
+    begin_table: __imgui_begin_table
+    end_table: __imgui_end_table
+    table_flags_debug_props: __imgui_table_flags_debug_props
+    property_input : __debug_props_show
+}
+
 ui.image = function(image, pos) {
     if (!image || !pos) {
         return

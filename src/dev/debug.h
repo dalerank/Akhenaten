@@ -17,6 +17,8 @@ extern int debug_range_2;
 extern int debug_range_3;
 extern int debug_range_4;
 
+struct event_draw_debug_properties{ int reserved; };
+
 enum e_debug_render {
     e_debug_render_none = 0,
     e_debug_render_building = 1,

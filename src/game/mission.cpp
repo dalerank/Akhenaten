@@ -97,13 +97,18 @@ int get_scenario_mission_rank(int scenario_id) {
 }
 
 int get_scenario_campaign_id(int scenario_id) {
-    if (scenario_id < SCENARIO_NULL || scenario_id >= SCENARIO_MAX)
+    if (scenario_id < SCENARIO_NULL || scenario_id >= SCENARIO_MAX) {
         return CAMPAIGN_NULL;
+    }
+
     auto step = get_scenario_step_data(scenario_id);
-    if (step != nullptr)
+    if (step != nullptr) {
         return step->campaign_id;
+    }
+
     return CAMPAIGN_NULL;
 }
+
 int get_first_mission_in_campaign(int campaign_id) {
     if (campaign_id < CAMPAIGN_PHARAOH_PREDYNASTIC || campaign_id >= CAMPAIGN_MAX)
         return SCENARIO_NULL;

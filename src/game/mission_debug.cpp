@@ -6,31 +6,15 @@
 #include "city/city.h"
 #include "game/game.h"
 #include "scenario/scenario.h"
-#include "game/mission.h"
+#include "js/js_events.h"
 #include "city/victory.h"
 #include "game/game_config.h"
 #include "scenario/criteria.h"
 
-ANK_REGISTER_PROPS_ITERATOR(config_show_tutorial_properties);
-void config_show_tutorial_properties(bool header) {
+ANK_REGISTER_PROPS_ITERATOR(config_show_mission_properties);
+void config_show_mission_properties(bool header) {
     if (header) {
         return;
-    }
-
-    bool mission_open = ImGui::TreeNodeEx("Mission Info", ImGuiTreeNodeFlags_None, "Mission Info");
-    if (mission_open) {
-        ImGui::BeginTable("MissionInfo", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
-
-        game_debug_show_property("scenario_id", g_scenario.campaign_scenario_id);
-        game_debug_show_property("campaign_id", get_scenario_campaign_id(g_scenario.campaign_scenario_id));
-        game_debug_show_property("mission_rank", g_scenario.settings.campaign_mission_rank);
-        game_debug_show_property("starting_kingdom", g_scenario.settings.starting_kingdom);
-        game_debug_show_property("personal_savings", g_city.kingdome.personal_savings);
-        game_debug_show_property("scenario_mode", (int)g_scenario.settings.scmode);
-        game_debug_show_property("is_custom", g_scenario.mode() != e_scenario_normal);
-
-        ImGui::EndTable();
-        ImGui::TreePop();
     }
 
     bool victory_open = ImGui::TreeNodeEx("Victory Status", ImGuiTreeNodeFlags_None, "Victory Status");

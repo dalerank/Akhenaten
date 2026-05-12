@@ -66,6 +66,7 @@ import kingdome_relation
 import floodplain
 import clouds
 import ui
+import mission_debug
 import houses
 import routing
 import economic

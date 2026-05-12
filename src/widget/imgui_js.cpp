@@ -2,6 +2,7 @@
 
 #if !defined(GAME_PLATFORM_ANDROID)
 
+#include "core/profiler.h"
 #include "imgui.h"
 
 bool __imgui_tree_node_ex(pcstr label) {

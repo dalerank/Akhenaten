@@ -51,6 +51,7 @@ enum e_session_type {
 class MovieWriter;
 struct event_game_mission_pre_load {};
 struct event_game_scripts_was_reloaded {};
+struct event_debug_properties_draw_mission_info { uint8_t reserved = 0; };
 struct event_report_bug_result { int ok; xstring url; xstring error; };
 
 struct game_t {

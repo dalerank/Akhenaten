@@ -7,6 +7,7 @@
 #include "game/mission.h"
 #include "building/building_granary.h"
 #include "building/building_storage_yard.h"
+#include "figuretype/figure_rioter.h"
 #include "city/city_migration.h"
 #include "city/city_health.h"
 #include "city/city_festival.h"
@@ -16,7 +17,7 @@
 #include "city/city_animals.h"
 #include "city/city_kingdome_relations.h"
 #include "city/city_population.h"
-#include "city/city_resource.h"
+#include "dev/debug.h"
 #include "building/building_palace.h"
 #include "content/mods.h"
 #include "game/game.h"
@@ -72,6 +73,8 @@ ANK_SCRIPT_EVENT(event_change_clouds_speed, increase)
 ANK_SCRIPT_EVENT(event_send_gift_to_kingdome, gift_size)
 ANK_SCRIPT_EVENT(event_kingdome_update_gifts, personal_savings)
 ANK_SCRIPT_EVENT(event_report_bug_result, ok, url, error)
+ANK_SCRIPT_EVENT(event_draw_debug_properties, reserved)
+ANK_SCRIPT_EVENT(event_rioter_created, id)
 
 int js_emit_script_event(pcstr event_name, const bvariant_map &args) {
     auto it = g_script_emit_handlers.find(event_name);

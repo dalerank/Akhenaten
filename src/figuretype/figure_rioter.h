@@ -10,6 +10,8 @@ enum e_rioter_action {
     ACTION_122_RIOTER_ATTACK = 124,
 };
 
+struct event_rioter_created { int id; };
+
 class figure_rioter : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_RIOTER, figure_rioter)

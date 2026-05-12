@@ -873,6 +873,7 @@ void js_register_building(js_State *J);
 void js_register_imperial_visible_request(js_State *J);
 void js_register_house(js_State *J);
 void js_register_storage_yard(js_State *J);
+void js_register_debug_props_functions(js_State* J);
 js_Object *js_get_building_prototype(void);
 void js_register_ui_objects(js_State *J);
 void js_register_mission_vars(const settings_vars_t &vars);

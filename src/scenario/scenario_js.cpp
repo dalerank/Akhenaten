@@ -11,6 +11,16 @@ ANK_GLOBAL_OBJECT(g_scenario, __scenario,
     is_open_play
     );
 
+ANK_GLOBAL_OBJECT(g_scenario.settings, __scenario_settings,
+    campaign_mission_rank,
+    starting_kingdom
+    );
+
+int __scenario_settings_scmode() {
+    return (int)g_scenario.settings.scmode;
+}
+ANK_FUNCTION(__scenario_settings_scmode)
+
 
 xstring __scenario_event_msg_text(int title_id, int index) {
     return g_scenario.events.msg_text(title_id, index);
@@ -27,3 +37,8 @@ xstring __scenario_scenario_name() {
     return (n && n[0]) ? xstring(n) : xstring();
 }
 ANK_FUNCTION(__scenario_scenario_name)
+
+bool __scenario_is_custom_mission() {
+    return g_scenario.mode() != e_scenario_normal;
+}
+ANK_FUNCTION(__scenario_is_custom_mission)

@@ -1,7 +1,12 @@
 #include "debug_console.h"
 
 #include "js/js_game.h"
+#include "js/js_struct.h"
 #include "mujs/mujs.h"
+#include "graphics/elements/ui_js.h"
+#include "game/game_events.h"
+
+ANK_REGISTER_STRUCT_WRITER(event_draw_debug_properties, reserved);
 
 static void __debug_props_show(js_State *J) {
     if (js_gettop(J) < 2) {
@@ -37,13 +42,15 @@ static void __debug_props_show(js_State *J) {
     }
 }
 
-void register_debug_props_show(js_State *J) {
-    js_getglobal(J, "__debug_props_show");
-    const bool exists = J->iscallable(-1);
-    js_pop(J, 1);
-    if (!exists) {
-        REGISTER_GLOBAL_FUNCTION(J, __debug_props_show, "__debug_props_show", 2);
-    }
+void js_register_debug_props_functions(js_State *J) {
+    REGISTER_GLOBAL_FUNCTION(J, __debug_props_show, "__debug_props_show", 2);
 }
 
-ANK_DECLARE_JSFUNCTION_ITERATOR(register_debug_props_show)
+ANK_REGISTER_PROPS_ITERATOR(draw_debug_properties_handler);
+void draw_debug_properties_handler(bool header) {
+    if (header) {
+        return;
+    }
+
+    ui::event(event_draw_debug_properties{});
+}

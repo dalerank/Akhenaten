@@ -5,7 +5,6 @@
 #include "game/resource.h"
 #include "grid/building.h"
 #include "grid/grid.h"
-#include "game/tutorial.h"
 #include "game/game_config.h"
 
 static int provide_missionary_coverage(int x, int y) {

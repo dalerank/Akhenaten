@@ -13,8 +13,6 @@
 #include "empire/trade_route.h"
 #include "empire/type.h"
 #include "scenario/distant_battle.h"
-
-#include "game/tutorial.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"

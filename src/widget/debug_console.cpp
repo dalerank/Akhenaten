@@ -118,7 +118,7 @@ void game_debug_show_property_value(pcstr field, const tile2i &v, bool disabled)
 
 void game_debug_show_property_value(pcstr field, const setting_variant &v, bool disabled) {
     ImGuiInputTextFlags_ flags = disabled ? ImGuiInputTextFlags_ReadOnly : ImGuiInputTextFlags_None;
-    
+
     switch (v.index()) {
     case setting_bool: {
             bool val = std::get<bool>(v);
@@ -197,7 +197,7 @@ void game_debug_show_property_t(pcstr field, const T &v, bool disabled = false) 
     }
 
     game_debug_show_property_value(field, v, disabled);
-    
+
     if (disabled) {
         ImGui::PopItemFlag();
     }
