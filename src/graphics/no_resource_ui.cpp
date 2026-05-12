@@ -1,14 +1,9 @@
 #include "no_resource_ui.h"
 
-#include "font.h"
 #include "graphics/color.h"
 #include "graphics/graphics.h"
 #include "graphics/screen.h"
 #include "graphics/painter.h"
-
-#include <algorithm>
-#include <cstring>
-
 void ui::no_resource::graphics_draw_background(painter& ctx, int image_id, float scale, vec2i offset) {
     (void)image_id;
     (void)scale;
@@ -21,4 +16,9 @@ void ui::no_resource::button_border_fill(vec2i pos, vec2i size, bool hovered) {
     const color fill = hovered ? COLOR_LIGHT_BLUE : 0xff505050;
     graphics_fill_rect(pos, size, fill);
     graphics_draw_rect(pos, size, COLOR_WHITE);
+}
+
+void ui::no_resource::large_label_fill(vec2i pos, int width_blocks, int type) {
+    const vec2i size{width_blocks * 16, 25};
+    button_border_fill(pos, size, type != 0);
 }

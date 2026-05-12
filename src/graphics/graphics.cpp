@@ -45,21 +45,19 @@ void graphics_shade_rect(vec2i start, vec2i size, int darkness) {
     g_render.fill_rect(start, size, alpha);
 }
 
-namespace ui {
-    void graphics_draw_background(painter& ctx, int image_id, float scale, vec2i offset) {
-        const image_t* img = image_get(image_id);
-        if (!img) {
-            return;
-        }
-
-        if (scale == -1) {
-            //        graphics_renderer()->draw_image(img, 0, 0, COLOR_MASK_NONE, scale, false); // todo?
-        } else {
-            ctx.draw_image(img, vec2i{(screen_width() - img->width) / 2, (screen_height() - img->height) / 2} + offset,
-              COLOR_MASK_NONE, scale);
-        }
+void ui::textured::graphics_draw_background(painter& ctx, int image_id, float scale, vec2i offset) {
+    const image_t* img = image_get(image_id);
+    if (!img) {
+        return;
     }
-} // namespace ui
+
+    if (scale == -1) {
+        //        graphics_renderer()->draw_image(img, 0, 0, COLOR_MASK_NONE, scale, false); // todo?
+    } else {
+        ctx.draw_image(img, vec2i{(screen_width() - img->width) / 2, (screen_height() - img->height) / 2} + offset,
+            COLOR_MASK_NONE, scale);
+    }
+}
 
 void ImageDraw::execute_render_command(painter& ctx, const render_command_t& command) {
     OZZY_PROFILER_FUNCTION();

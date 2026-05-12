@@ -22,7 +22,9 @@ bool is_button_hover(const T &button, vec2i context) {
 }
 
 namespace ui {
-    void button_border_draw(vec2i pos, vec2i size, bool has_focus);
+    namespace textured {
+        void button_border_draw(vec2i pos, vec2i size, bool has_focus);
+    }
 }
 
 extern void (*button_border_draw)(vec2i, vec2i, bool);

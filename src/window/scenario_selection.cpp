@@ -458,7 +458,7 @@ static void draw_foreground(int) {
         lang_text_draw_centered(294, 41, CSEL_X, CSEL_Y + 10 - CSEL_YGAP, CSEL_W, FONT_NORMAL_BLACK_ON_LIGHT);
         lang_text_draw_centered(294, 42, CSEL_X + CSEL_XGAP, CSEL_Y + 10 - CSEL_YGAP, CSEL_W, FONT_NORMAL_BLACK_ON_LIGHT);
         for (int i = 0; i < 9; ++i) {
-            large_label_draw(buttons_campaigns[i].x, buttons_campaigns[i].y, buttons_campaigns[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
+            large_label_draw({buttons_campaigns[i].x, buttons_campaigns[i].y}, buttons_campaigns[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
             lang_text_draw_centered(294, i * 4, buttons_campaigns[i].x, buttons_campaigns[i].y + 5, buttons_campaigns[i].width, FONT_NORMAL_BLACK_ON_LIGHT);
         }
         if (data.focus_button_id > 0)

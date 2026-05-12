@@ -32,7 +32,9 @@ void graphics_fill_rect(vec2i start, vec2i size, color color);
 void graphics_shade_rect(vec2i start, vec2i size, int darkness);
 
 namespace ui {
-    void graphics_draw_background(painter&, int image_id, float scale, vec2i offset);
+    namespace textured {
+        void graphics_draw_background(painter&, int image_id, float scale, vec2i offset);
+    }
 }
 
 int graphics_save_to_texture(int image_id, vec2i pos, vec2i size);

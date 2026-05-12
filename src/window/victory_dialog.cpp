@@ -48,7 +48,7 @@ static void draw_foreground(int) {
 
     const int current_scenario = g_scenario.settings.campaign_mission_rank;
     if (g_city.victory_state.state == e_victory_state_won) {
-        large_label_draw(80, 240, 30, focus_button_id == 1);
+        large_label_draw({80, 240}, 30, focus_button_id == 1);
         const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
 
         if (current_scenario < 10 || is_custom_map)
@@ -59,15 +59,15 @@ static void draw_foreground(int) {
 
         if (current_scenario >= 2 || is_custom_map) {
             // Continue for 2/5 years
-            large_label_draw(80, 272, 30, focus_button_id == 2);
+            large_label_draw({80, 272}, 30, focus_button_id == 2);
             lang_text_draw_centered(62, 4, 80, 278, 480, FONT_NORMAL_BLACK_ON_DARK);
 
-            large_label_draw(80, 304, 30, focus_button_id == 3);
+            large_label_draw({80, 304}, 30, focus_button_id == 3);
             lang_text_draw_centered(62, 5, 80, 310, 480, FONT_NORMAL_BLACK_ON_DARK);
         }
     } else {
         // lost
-        large_label_draw(80, 224, 30, focus_button_id == 1);
+        large_label_draw({80, 224}, 30, focus_button_id == 1);
         lang_text_draw_centered(62, 6, 80, 230, 480, FONT_NORMAL_BLACK_ON_DARK);
     }
     graphics_reset_dialog();

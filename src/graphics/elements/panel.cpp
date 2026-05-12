@@ -322,7 +322,7 @@ void small_panel_draw_colored(vec2i pos, int width_blocks, int type, uint32_t ma
     }
 }
 
-void large_label_draw(int x, int y, int width_blocks, int type) {
+void ui::textured::large_label_draw(vec2i pos, int width_blocks, int type) {
     painter ctx = game.painter();
     int image_base = image_id_from_group(GROUP_PANEL_BUTTON);
     for (int i = 0; i < width_blocks; i++) {
@@ -333,6 +333,6 @@ void large_label_draw(int x, int y, int width_blocks, int type) {
             image_id = 3 * type + 1;
         else
             image_id = 3 * type + 2;
-        ctx.img_generic(image_base + image_id, vec2i{x + 16 * i, y});
+        ctx.img_generic(image_base + image_id, vec2i{pos.x + 16 * i, pos.y});
     }
 }

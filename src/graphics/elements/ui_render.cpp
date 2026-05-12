@@ -102,7 +102,7 @@ void execute_ui_command(painter& ctx, const ui::cmd_t& cmd) {
         break;
 
     case cmd_t::large_label: {
-        large_label_draw(cmd.pos.x, cmd.pos.y, cmd.box_width, cmd.image_id);
+        large_label_draw(cmd.pos, cmd.box_width, cmd.image_id);
         const int letter_height = font_definition_for(cmd.font)->line_height;
         text_draw_centered((uint8_t*)cmd.str.c_str(), cmd.pos.x + 1, cmd.pos.y + (cmd.size.y - letter_height) / 2,
           cmd.size.x, cmd.font, 0);
