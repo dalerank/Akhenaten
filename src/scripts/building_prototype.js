@@ -14,6 +14,10 @@ Building.property.output_resource_id = { get: function() { return this.__output_
 Building.property.meta_text_id = { get: function() { return this.__meta_text_id() } }
 Building.property.curse_days_left = { }
 Building.property.can_play_animation = { get: function() { return this.__can_play_animation() } }
+Building.property.is_output_resourece_mothballed = { get: function() { return __city_resource_is_mothballed(this.output_resource_id) } }
+
+Building.property.stored_clay = { get: function() { return this.stored_resource(RESOURCE_CLAY) } }
+Building.property.stored_straw = { get: function() { return this.stored_resource(RESOURCE_STRAW) } }
 
 Building.property.has_road_access = { }
 Building.property.num_workers = { }
