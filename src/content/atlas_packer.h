@@ -4,13 +4,6 @@
 
 #include <vector>
 
-/**
- * This code is based on the japacker image packing library, however, unlike japacker (which is public domain),
- * this version of the japacker library is released under aGPL v3.0.
- *
- * If you want to use the japacker library, please check its original source at https://github.com/crudelios/japacker.
- */
-
 enum image_packer_fail_policy {
     IMAGE_PACKER_STOP = 0,
     IMAGE_PACKER_CONTINUE = 1,
@@ -102,7 +95,7 @@ struct image_packer {
  * @param image_width The new width of the destination image.
  * @param image_height The new height of the destination image.
  */
-void image_packer_resize_image(image_packer* packer, vec2i image_size);
+void image_packer_resize_image(image_packer& packer, vec2i image_size);
 
 /**
  * @brief Packs the rectangles into the destination image.
@@ -118,10 +111,10 @@ void image_packer_resize_image(image_packer* packer, vec2i image_size);
  * @param packer The image_packer struct to pack.
  * @return One of image_packer_error_type values on error, or the number of packed rects on success.
  */
-int image_packer_pack(image_packer* packer);
+int image_packer_pack(image_packer& packer);
 
 /**
  * @brief Frees the memory associated with an image_packer object.
  * @param packer The object to free.
  */
-void image_packer_reset(image_packer &packer);
+void image_packer_reset(image_packer& packer);

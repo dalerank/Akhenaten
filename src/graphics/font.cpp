@@ -7,10 +7,6 @@
 #include "platform/renderer.h"
 #include "content/atlas_packer.h"
 #include "content/vfs.h"
-#include "graphics/fontgen/dynamic_atlas.h"
-#include "graphics/fontgen/atlas_charset.h"
-#include "graphics/fontgen/dynamic_font.h"
-#include "window/popup_dialog.h"
 #include "game/game_config.h"
 #include "platform/arguments.h"
 #include "core/app.h"
@@ -20,70 +16,12 @@
 #include <set>
 #include <vector>
 
-const uint8_t ascii_5x7_glcd[96 * 5] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x5f, 0x00, 0x00, 0x00, 0x07, 0x00, 0x07, 0x00, 0x14, 0x7f, 0x14, 0x7f, 0x14,
-    0x24, 0x2a, 0x7f, 0x2a, 0x12, 0x23, 0x13, 0x08, 0x64, 0x62, 0x36, 0x49, 0x56, 0x20, 0x50, 0x00, 0x08, 0x07, 0x03, 0x00,
-    0x00, 0x1c, 0x22, 0x41, 0x00, 0x00, 0x41, 0x22, 0x1c, 0x00, 0x2a, 0x1c, 0x7f, 0x1c, 0x2a, 0x08, 0x08, 0x3e, 0x08, 0x08,
-    0x00, 0x80, 0x70, 0x30, 0x00, 0x08, 0x08, 0x08, 0x08, 0x08, 0x00, 0x00, 0x60, 0x60, 0x00, 0x20, 0x10, 0x08, 0x04, 0x02,
-    0x3e, 0x51, 0x49, 0x45, 0x3e, 0x00, 0x42, 0x7f, 0x40, 0x00, 0x72, 0x49, 0x49, 0x49, 0x46, 0x21, 0x41, 0x49, 0x4d, 0x33,
-    0x18, 0x14, 0x12, 0x7f, 0x10, 0x27, 0x45, 0x45, 0x45, 0x39, 0x3c, 0x4a, 0x49, 0x49, 0x31, 0x41, 0x21, 0x11, 0x09, 0x07,
-    0x36, 0x49, 0x49, 0x49, 0x36, 0x46, 0x49, 0x49, 0x29, 0x1e, 0x00, 0x00, 0x14, 0x00, 0x00, 0x00, 0x40, 0x34, 0x00, 0x00,
-    0x00, 0x08, 0x14, 0x22, 0x41, 0x14, 0x14, 0x14, 0x14, 0x14, 0x00, 0x41, 0x22, 0x14, 0x08, 0x02, 0x01, 0x59, 0x09, 0x06,
-    0x3e, 0x41, 0x5d, 0x59, 0x4e, 0x7c, 0x12, 0x11, 0x12, 0x7c, 0x7f, 0x49, 0x49, 0x49, 0x36, 0x3e, 0x41, 0x41, 0x41, 0x22,
-    0x7f, 0x41, 0x41, 0x41, 0x3e, 0x7f, 0x49, 0x49, 0x49, 0x41, 0x7f, 0x09, 0x09, 0x09, 0x01, 0x3e, 0x41, 0x41, 0x51, 0x73,
-    0x7f, 0x08, 0x08, 0x08, 0x7f, 0x00, 0x41, 0x7f, 0x41, 0x00, 0x20, 0x40, 0x41, 0x3f, 0x01, 0x7f, 0x08, 0x14, 0x22, 0x41,
-    0x7f, 0x40, 0x40, 0x40, 0x40, 0x7f, 0x02, 0x1c, 0x02, 0x7f, 0x7f, 0x04, 0x08, 0x10, 0x7f, 0x3e, 0x41, 0x41, 0x41, 0x3e,
-    0x7f, 0x09, 0x09, 0x09, 0x06, 0x3e, 0x41, 0x51, 0x21, 0x5e, 0x7f, 0x09, 0x19, 0x29, 0x46, 0x26, 0x49, 0x49, 0x49, 0x32,
-    0x03, 0x01, 0x7f, 0x01, 0x03, 0x3f, 0x40, 0x40, 0x40, 0x3f, 0x1f, 0x20, 0x40, 0x20, 0x1f, 0x3f, 0x40, 0x38, 0x40, 0x3f,
-    0x63, 0x14, 0x08, 0x14, 0x63, 0x03, 0x04, 0x78, 0x04, 0x03, 0x61, 0x59, 0x49, 0x4d, 0x43, 0x00, 0x7f, 0x41, 0x41, 0x41,
-    0x02, 0x04, 0x08, 0x10, 0x20, 0x00, 0x41, 0x41, 0x41, 0x7f, 0x04, 0x02, 0x01, 0x02, 0x04, 0x40, 0x40, 0x40, 0x40, 0x40,
-    0x00, 0x03, 0x07, 0x08, 0x00, 0x20, 0x54, 0x54, 0x78, 0x40, 0x7f, 0x28, 0x44, 0x44, 0x38, 0x38, 0x44, 0x44, 0x44, 0x28,
-    0x38, 0x44, 0x44, 0x28, 0x7f, 0x38, 0x54, 0x54, 0x54, 0x18, 0x00, 0x08, 0x7e, 0x09, 0x02, 0x18, 0xa4, 0xa4, 0x9c, 0x78,
-    0x7f, 0x08, 0x04, 0x04, 0x78, 0x00, 0x44, 0x7d, 0x40, 0x00, 0x20, 0x40, 0x40, 0x3d, 0x00, 0x7f, 0x10, 0x28, 0x44, 0x00,
-    0x00, 0x41, 0x7f, 0x40, 0x00, 0x7c, 0x04, 0x78, 0x04, 0x78, 0x7c, 0x08, 0x04, 0x04, 0x78, 0x38, 0x44, 0x44, 0x44, 0x38,
-    0xfc, 0x18, 0x24, 0x24, 0x18, 0x18, 0x24, 0x24, 0x18, 0xfc, 0x7c, 0x08, 0x04, 0x04, 0x08, 0x48, 0x54, 0x54, 0x54, 0x24,
-    0x04, 0x04, 0x3f, 0x44, 0x24, 0x3c, 0x40, 0x40, 0x20, 0x7c, 0x1c, 0x20, 0x40, 0x20, 0x1c, 0x3c, 0x40, 0x30, 0x40, 0x3c,
-    0x44, 0x28, 0x10, 0x28, 0x44, 0x4c, 0x90, 0x90, 0x90, 0x7c, 0x44, 0x64, 0x54, 0x4c, 0x44, 0x00, 0x08, 0x36, 0x41, 0x00,
-    0x00, 0x00, 0x77, 0x00, 0x00, 0x00, 0x41, 0x36, 0x08, 0x00, 0x02, 0x01, 0x02, 0x04, 0x02, 0x3c, 0x26, 0x23, 0x26, 0x3c,
-};
-
-image_packer font_packer;
-
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_external_fonts) {
     font_atlas_regenerate();
 }
 
-struct font_config {
-    e_font type;
-    uint32_t color;
-    bool bold;
-    int8_t shadow_offset;
-    uint8_t size;
-    uint8_t line_height;
-};
 ANK_CONFIG_STRUCT(font_config, type, size, bold, color, shadow_offset, line_height)
-
-template<>
-struct stable_array_max_elements<font_config> {
-    enum { max_elements = FONT_TYPES_MAX };
-};
-
-template<>
-struct std::hash<font_config> {
-    [[nodiscard]] size_t operator()(const font_config &f) const noexcept {
-        return f.type;
-    }
-};
-
-using font_configs_t = stable_array<font_config>;
 const e_font_tokens_t ANK_CONFIG_ENUM(e_font_tokens);
-
-using font_utf8_symbols_t = svector<uint32_t, 1024>;
-using fn_fill_font_packer_t = bool (*)(imagepak_handle,
-                                       const font_configs_t &,
-                                       const font_utf8_symbols_t &,
-                                       vfs::path,
-                                       int &);
 
 static int image_y_offset_none(const uint8_t *c, int image_height, int line_height);
 static int image_y_offset_default(const uint8_t *c, int image_height, int line_height);
@@ -280,346 +218,8 @@ const font_mbsybols_t &font_get_symbols() {
     return g_font_data.mbsymbols;
 }
 
-template<typename T>
-void add_symbols_to_font_packer(imagepak_handle font_pack, pcstr symbols_font, font_config fconfig, const T &utf8_symbols, int& cp_index) {
-    for (const auto &codepoint : utf8_symbols) {
-        DynamicFont::Charset charset;
-        charset.AddCodepoint(codepoint);
-
-        uint8_t colors[4] = {
-            uint8_t((fconfig.color >> 16) & 0xff),  // Red
-            uint8_t((fconfig.color >> 8) & 0xff),   // Green
-            uint8_t((fconfig.color >> 0) & 0xff),   // Blue
-            uint8_t((fconfig.color >> 24) & 0xff)   // Alpha
-        };
-        // padding=0, fit=true to create bitmaps with exact glyph dimensions (no extra space)
-        DynamicFont::Atlas atlas(symbols_font, fconfig.size, charset, DynamicFont::RenderMode::COLOR, 0, true, colors, fconfig.bold, fconfig.shadow_offset);
-
-        const auto &bitmap = atlas.GetBitmap();
-
-        // Create image for this symbol
-        image_t img;
-        img.pak_name = font_pack.handle->name;
-        img.sgx_index = cp_index;
-        img.data_length = -1;
-        img.uncompressed_length = -1;
-        img.unk00 = -1;
-        img.start_index = font_pack.handle->global_image_index_offset;
-        img.offset_mirror = 0;
-
-        uint32_t Rmask = 0x000000FF;
-        uint32_t Gmask = 0x0000FF00;
-        uint32_t Bmask = 0x00FF0000;
-        uint32_t Amask = 0xFF000000;
-
-        SDL_Surface *surface = SDL_CreateRGBSurface(SDL_SWSURFACE, bitmap.Width(), bitmap.Height(), 32, Rmask, Gmask, Bmask, Amask);
-        if (surface) {
-            size_t byteToCopy = bitmap.Width() * bitmap.Height() * 4;
-            memcpy(surface->pixels, bitmap.Data().data(), byteToCopy);
-        }
-
-        img.width = surface ? surface->w : 0;
-        img.height = surface ? surface->h : 0;
-        img.temp.surface = (void *)surface;
-        const auto &glyph = atlas.GetGlyphs().GetGlyphByIndex(0);
-        img.temp.bearing_x = glyph.bearingX;
-        img.temp.bearing_y = glyph.bearingY;
-        img.temp.symdeck = codepoint;
-        img.temp.font_type = fconfig.type;
-
-        img.unk03 = -1;
-        img.animation.num_sprites = -1;
-        img.animation.unk04 = -1;
-        img.animation.sprite_offset = { -1, -1 };
-        img.animation.unk05 = -1;
-        img.animation.unk06 = -1;
-        img.animation.unk07 = -1;
-        img.animation.unk08 = -1;
-        img.animation.unk09 = -1;
-        img.animation.can_reverse = false;
-        img.animation.unk10 = -1;
-        img.type = -1;
-        img.is_fully_compressed = false;
-        img.is_external = false;
-        img.has_isometric_top = false;
-        img.unk11 = -1;
-        img.unk12 = -1;
-        img.bmp.group_id = 0;
-        img.bmp.name = "custom_font";
-        img.bmp.entry_index = 0;
-        img.unk13 = -1;
-        img.animation.speed_id = 1;
-        img.unk14 = -1;
-        img.unk15 = -1;
-        img.unk16 = -1;
-        img.unk17 = -1;
-        img.unk18 = -1;
-        img.unk20 = -1;
-
-        image_packer_rect *rect = &font_packer.rects[cp_index];
-        rect->input.width = img.width;
-        rect->input.height = img.height;
-
-        font_pack.handle->images_array.push_back(img);
-        cp_index++;
-    }
-}
-
-template<typename TSymbols>
-void add_symbols_to_font_packer(imagepak_handle font_pack, span_const<uint8_t> font_data, font_config fconfig, const TSymbols &utf8_symbols, int& cp_index) {
-    for (const auto &codepoint : utf8_symbols) {
-        DynamicFont::Charset charset;
-        charset.AddCodepoint(codepoint);
-
-        uint8_t colors[4] = {
-            uint8_t((fconfig.color >> 16) & 0xff),
-            uint8_t((fconfig.color >> 8) & 0xff),
-            uint8_t((fconfig.color >> 0) & 0xff),
-            uint8_t((fconfig.color >> 24) & 0xff)
-        };
-        DynamicFont::Atlas atlas(font_data, fconfig.size, charset, DynamicFont::RenderMode::COLOR, 0, true, colors, fconfig.bold, fconfig.shadow_offset);
-
-        const auto &bitmap = atlas.GetBitmap();
-
-        image_t img;
-        img.pak_name = font_pack.handle->name;
-        img.sgx_index = cp_index;
-        img.data_length = -1;
-        img.uncompressed_length = -1;
-        img.unk00 = -1;
-        img.start_index = font_pack.handle->global_image_index_offset;
-        img.offset_mirror = 0;
-
-        uint32_t Rmask = 0x000000FF;
-        uint32_t Gmask = 0x0000FF00;
-        uint32_t Bmask = 0x00FF0000;
-        uint32_t Amask = 0xFF000000;
-
-        SDL_Surface *surface = SDL_CreateRGBSurface(SDL_SWSURFACE, bitmap.Width(), bitmap.Height(), 32, Rmask, Gmask, Bmask, Amask);
-        if (surface) {
-            size_t byteToCopy = bitmap.Width() * bitmap.Height() * 4;
-            memcpy(surface->pixels, bitmap.Data().data(), byteToCopy);
-        }
-
-        img.width = surface ? surface->w : 0;
-        img.height = surface ? surface->h : 0;
-        img.temp.surface = (void *)surface;
-        const auto &glyph = atlas.GetGlyphs().GetGlyphByIndex(0);
-        img.temp.bearing_x = glyph.bearingX;
-        img.temp.bearing_y = glyph.bearingY;
-        img.temp.symdeck = codepoint;
-        img.temp.font_type = fconfig.type;
-
-        img.unk03 = -1;
-        img.animation.num_sprites = -1;
-        img.animation.unk04 = -1;
-        img.animation.sprite_offset = { -1, -1 };
-        img.animation.unk05 = -1;
-        img.animation.unk06 = -1;
-        img.animation.unk07 = -1;
-        img.animation.unk08 = -1;
-        img.animation.unk09 = -1;
-        img.animation.can_reverse = false;
-        img.animation.unk10 = -1;
-        img.type = -1;
-        img.is_fully_compressed = false;
-        img.is_external = false;
-        img.has_isometric_top = false;
-        img.unk11 = -1;
-        img.unk12 = -1;
-        img.bmp.group_id = 0;
-        img.bmp.name = "custom_font";
-        img.bmp.entry_index = 0;
-        img.unk13 = -1;
-        img.animation.speed_id = 1;
-        img.unk14 = -1;
-        img.unk15 = -1;
-        img.unk16 = -1;
-        img.unk17 = -1;
-        img.unk18 = -1;
-        img.unk20 = -1;
-
-        image_packer_rect *rect = &font_packer.rects[cp_index];
-        rect->input.width = img.width;
-        rect->input.height = img.height;
-
-        font_pack.handle->images_array.push_back(img);
-        cp_index++;
-    }
-}
-
-template<typename TSymbols>
-static void add_glcd_symbols_to_font_packer(imagepak_handle font_pack, font_config fconfig, const TSymbols &utf8_symbols, int &cp_index) {
-    for (const auto codepoint : utf8_symbols) {
-        unsigned char draw_ch = '?';
-        if (codepoint >= 32u && codepoint <= 127u) {
-            draw_ch = static_cast<unsigned char>(codepoint);
-        }
-
-        const int scale = std::max(1, (int)fconfig.size / 7);
-        const int gw = 5 * scale;
-        const int gh = 7 * scale;
-
-        uint32_t Rmask = 0x000000FF;
-        uint32_t Gmask = 0x0000FF00;
-        uint32_t Bmask = 0x00FF0000;
-        uint32_t Amask = 0xFF000000;
-
-        SDL_Surface *surface = SDL_CreateRGBSurface(SDL_SWSURFACE, gw, gh, 32, Rmask, Gmask, Bmask, Amask);
-        const color fg_pix = fconfig.color;
-        if (surface) {
-            memset(surface->pixels, 0, (size_t)surface->h * (size_t)surface->pitch);
-            uint8_t *base = (uint8_t *)surface->pixels;
-            const uint8_t *colbits = &ascii_5x7_glcd[(draw_ch - 32) * 5];
-            for (int col = 0; col < 5; ++col) {
-                uint8_t line = colbits[col];
-                for (int bitrow = 0; bitrow < 7; ++bitrow, line >>= 1) {
-                    if (line & 1) {
-                        for (int dy = 0; dy < scale; ++dy) {
-                            for (int dx = 0; dx < scale; ++dx) {
-                                const int px = col * scale + dx;
-                                const int py = bitrow * scale + dy;
-                                auto *pixel = (uint32_t *)(base + py * surface->pitch + px * 4);
-                                *pixel = fg_pix;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        image_t img;
-        img.pak_name = font_pack.handle->name;
-        img.sgx_index = cp_index;
-        img.data_length = -1;
-        img.uncompressed_length = -1;
-        img.unk00 = -1;
-        img.start_index = font_pack.handle->global_image_index_offset;
-        img.offset_mirror = 0;
-
-        img.width = surface ? surface->w : 0;
-        img.height = surface ? surface->h : 0;
-        img.temp.surface = (void *)surface;
-        img.temp.bearing_x = 0;
-        img.temp.bearing_y = (int)fconfig.line_height - gh;
-        img.temp.symdeck = codepoint;
-        img.temp.font_type = fconfig.type;
-
-        img.unk03 = -1;
-        img.animation.num_sprites = -1;
-        img.animation.unk04 = -1;
-        img.animation.sprite_offset = { -1, -1 };
-        img.animation.unk05 = -1;
-        img.animation.unk06 = -1;
-        img.animation.unk07 = -1;
-        img.animation.unk08 = -1;
-        img.animation.unk09 = -1;
-        img.animation.can_reverse = false;
-        img.animation.unk10 = -1;
-        img.type = -1;
-        img.is_fully_compressed = false;
-        img.is_external = false;
-        img.has_isometric_top = false;
-        img.unk11 = -1;
-        img.unk12 = -1;
-        img.bmp.group_id = 0;
-        img.bmp.name = "custom_font";
-        img.bmp.entry_index = 0;
-        img.unk13 = -1;
-        img.animation.speed_id = 1;
-        img.unk14 = -1;
-        img.unk15 = -1;
-        img.unk16 = -1;
-        img.unk17 = -1;
-        img.unk18 = -1;
-        img.unk20 = -1;
-
-        image_packer_rect *rect = &font_packer.rects[cp_index];
-        rect->input.width = img.width;
-        rect->input.height = img.height;
-
-        font_pack.handle->images_array.push_back(img);
-        cp_index++;
-    }
-}
-
-static bool fill_font_packer_internal_only(imagepak_handle font_pack,
-                                           const font_configs_t &font_configs,
-                                           const font_utf8_symbols_t &utf8_symbols,
-                                           vfs::path /*symbols_font*/,
-                                           int &cp_index) {
-    for (const auto &fconfig : font_configs) {
-        add_glcd_symbols_to_font_packer(font_pack, fconfig, utf8_symbols, cp_index);
-        font_definition_ref(fconfig.type)->line_height = fconfig.line_height;
-    }
-    return true;
-}
-
-static bool fill_font_packer_android(imagepak_handle font_pack,
-                                     const font_configs_t &font_configs,
-                                     const font_utf8_symbols_t &utf8_symbols,
-                                     vfs::path symbols_font,
-                                     int &cp_index) {
-    std::vector<uint8_t> resolved_font_data;
-    {
-        const bool is_app_data_font = (symbols_font == "data/neucha.ttf");
-        if (is_app_data_font) {
-            auto data = vfs::internal_resource_open(symbols_font.c_str());
-            if (data.first && data.second > 0) {
-                const auto *font_bytes = static_cast<const uint8_t *>(data.first);
-                resolved_font_data.assign(font_bytes, font_bytes + data.second);
-            }
-        }
-
-        if (resolved_font_data.empty()) {
-            vfs::reader font_reader = vfs::file_open(symbols_font, "rb");
-            if (!font_reader) {
-                vfs::path fallback_font_path = symbols_font.resolve();
-                font_reader = vfs::file_open(fallback_font_path, "rb");
-            }
-
-            if (!font_reader) {
-                g_font_data.needs_regeneration = false;
-                bstring512 message_text;
-                message_text.printf("The specified font symbols file could not be opened:%s", symbols_font.c_str());
-                popup_dialog::show_ok("Data issue", message_text.c_str());
-                return false;
-            }
-
-            const auto *font_bytes = static_cast<const uint8_t *>(font_reader->data());
-            resolved_font_data.assign(font_bytes, font_bytes + font_reader->size());
-        }
-    }
-
-    for (const auto &fconfig : font_configs) {
-        add_symbols_to_font_packer(font_pack, make_span(resolved_font_data), fconfig, utf8_symbols, cp_index);
-        font_definition_ref(fconfig.type)->line_height = fconfig.line_height;
-    }
-    return true;
-}
-
-static bool fill_font_packer_pc(imagepak_handle font_pack,
-                                const font_configs_t &font_configs,
-                                const font_utf8_symbols_t &utf8_symbols,
-                                vfs::path symbols_font,
-                                int &cp_index) {
-    vfs::path resolved_font_path = symbols_font.resolve();
-    if (!vfs::file_exists(resolved_font_path)) {
-        g_font_data.needs_regeneration = false;
-        bstring512 message_text;
-        message_text.printf("The specified font symbols file does not exist:%s", resolved_font_path.c_str());
-        popup_dialog::show_ok("Data issue", message_text.c_str());
-        return false;
-    }
-
-    for (const auto &fconfig : font_configs) {
-        add_symbols_to_font_packer(font_pack, resolved_font_path.c_str(), fconfig, utf8_symbols, cp_index);
-        font_definition_ref(fconfig.type)->line_height = fconfig.line_height;
-    }
-    return true;
-}
-
 void font_atlas_regenerate() {
+    image_packer font_packer;
     auto &font_pack = g_image_data->pak_list[PACK_CUSTOM_FONT];
 
     if (!font_pack.handle) {
@@ -735,7 +335,8 @@ void font_atlas_regenerate() {
         symbols_font = g_args.get_custom_font().c_str();
     }
 
-    if (!g_font_data.fill_font_packer(font_pack, font_configs, utf8_symbols, symbols_font, cp_index)) {
+    if (!g_font_data.fill_font_packer(font_packer, font_pack, font_configs, utf8_symbols, symbols_font, cp_index)) {
+        g_font_data.needs_regeneration = false;
         return;
     }
 
@@ -744,7 +345,7 @@ void font_atlas_regenerate() {
     font_packer.options.reduce_image_size = 1;
     font_packer.options.sort_by = IMAGE_PACKER_SORT_BY_AREA;
 
-    image_packer_pack(&font_packer);
+    image_packer_pack(font_packer);
 
     // Create atlas pages
     font_pack.handle->atlas_pages.reserve(font_packer.result.pages_needed);
@@ -833,10 +434,10 @@ void ANK_REGISTER_APPLICATION_MODULE(font_module) {
     g_font_data.use_internal_only = g_args.no_resource();
 
     if (g_font_data.use_internal_only) {
-        g_font_data.fill_font_packer = &fill_font_packer_internal_only;
+        g_font_data.fill_font_packer = fill_font_packer_internal_only;
     } else if (platform.is_android()) {
-        g_font_data.fill_font_packer = &fill_font_packer_android;
+        g_font_data.fill_font_packer = fill_font_packer_android;
     } else {
-        g_font_data.fill_font_packer = &fill_font_packer_pc;
+        g_font_data.fill_font_packer = fill_font_packer_pc;
     }
 }

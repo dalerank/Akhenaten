@@ -2,26 +2,12 @@
 
 #include "core/encoding.h"
 #include "core/tokenum.h"
+#include "font_common.h"
 #include "content/dir.h"
 
 #include <stdint.h>
 #include <unordered_map>
 #include <array>
-
-enum e_font {
-    FONT_SMALL_PLAIN,
-    FONT_NORMAL_BLACK_ON_LIGHT,
-    FONT_NORMAL_WHITE_ON_DARK,
-    FONT_NORMAL_YELLOW, // Yellow font for Pharaoh
-    FONT_NORMAL_BLUE,   // Blue font for Pharaoh
-    FONT_LARGE_BLACK_ON_LIGHT,
-    FONT_LARGE_BLACK_ON_DARK,
-    FONT_SMALL_OUTLINED,
-    FONT_NORMAL_BLACK_ON_DARK,
-    FONT_SMALL_SHADED,
-    FONT_TYPES_MAX,
-    FONT_INVALID = 0xff
-};
 
 using e_font_tokens_t = token_holder<e_font, FONT_SMALL_PLAIN, FONT_TYPES_MAX>;
 extern const e_font_tokens_t e_font_tokens;
@@ -36,6 +22,9 @@ struct font_glyph {
 
 using multibyte_map_t = std::unordered_map<uint32_t, font_glyph>;
 using font_mbsybols_t = std::array<multibyte_map_t, FONT_TYPES_MAX>;
+
+struct image_packer;
+struct imagepak_handle;
 
 struct font_definition {
     e_font font;
@@ -80,15 +69,28 @@ bool font_can_display(const uint8_t* character);
 font_glyph font_letter_id(const font_definition* def, const uint8_t* str, int* num_bytes);
 bool font_has_letter(const font_definition *def, const uint8_t *str);
 void font_set_letter_id(e_font font, uint32_t character, int imgid, vec2i bearing);
-void font_use_internal_only(bool use_internal);
 
-/**
- * Selects the font-packer strategy based on the current state
- * (use_internal_only flag and compile-time platform). Called
- * automatically by font_use_internal_only() and lazily on first use,
- * but can also be invoked explicitly to force reconfiguration.
- */
-void font_configure_fill_packer();
+bool fill_font_packer_internal_only(image_packer& font_packer,
+                                    imagepak_handle font_pack,
+                                    const font_configs_t &font_configs,
+                                    const font_utf8_symbols_t &utf8_symbols,
+                                    vfs::path symbols_font,
+                                    int &cp_index);
+
+bool fill_font_packer_android(image_packer& font_packer,
+                              imagepak_handle font_pack,
+                              const font_configs_t &font_configs,
+                              const font_utf8_symbols_t &utf8_symbols,
+                              vfs::path symbols_font,
+                              int &cp_index);
+
+bool fill_font_packer_pc(image_packer& font_packer,
+                         imagepak_handle font_pack,
+                         const font_configs_t &font_configs,
+                         const font_utf8_symbols_t &utf8_symbols,
+                         vfs::path symbols_font,
+                         int &cp_index);
+
 
 void font_atlas_regenerate();
 void font_add_missing_glyph(uint32_t codepoint);

@@ -42,8 +42,8 @@ static void set_height_comparator(empty_area* area) {
     area->comparator = area->height;
 }
 
-static int sort_rects(image_packer* packer) {
-    internal_data_t* data = packer->internal_data;
+static int sort_rects(image_packer& packer) {
+    internal_data_t* data = packer.internal_data;
     data->sorted_rects.resize(data->num_rects);
 
     if (data->sorted_rects.empty()) {
@@ -51,12 +51,12 @@ static int sort_rects(image_packer* packer) {
     }
 
     for (unsigned int i = 0; i < data->num_rects; i++) {
-        data->sorted_rects[i] = &packer->rects[i];
+        data->sorted_rects[i] = &packer.rects[i];
     }
 
-    if (packer->options.rects_are_sorted != 1) {
+    if (packer.options.rects_are_sorted != 1) {
         int (*sort_by)(const void*, const void*);
-        switch (packer->options.sort_by) {
+        switch (packer.options.sort_by) {
         case IMAGE_PACKER_SORT_BY_AREA:
             sort_by = compare_rect_areas;
             data->empty_areas.set_comparator = set_area_comparator;
@@ -77,7 +77,7 @@ static int sort_rects(image_packer* packer) {
         }
 
         std::qsort(data->sorted_rects.data(), data->num_rects, sizeof(image_packer_rect*), sort_by);
-        packer->options.rects_are_sorted = 1;
+        packer.options.rects_are_sorted = 1;
     }
     return 1;
 }
@@ -281,73 +281,73 @@ static int pack_rect(internal_data_t* data, image_packer_rect* rect, int allow_r
     return 0;
 }
 
-static int create_last_image(image_packer* packer, unsigned int remaining_area) {
-    internal_data_t* data = packer->internal_data;
+static int create_last_image(image_packer& packer, unsigned int remaining_area) {
+    internal_data_t* data = packer.internal_data;
 
     float image_ratio = data->image_size.x / (float)data->image_size.y;
     unsigned int needed_width = (unsigned int)sqrt(remaining_area * image_ratio) + 1;
     unsigned int needed_height = (unsigned int)sqrt(remaining_area / image_ratio) + 1;
     unsigned int width_increase_step = needed_width / 64 + 1;
     unsigned int height_increase_step = needed_height / 64 + 1;
-    packer->result.last_image_width = needed_width;
-    packer->result.last_image_height = needed_height;
+    packer.result.last_image_width = needed_width;
+    packer.result.last_image_height = needed_height;
 
     int must_increase_size = 1;
     int total_images_packed = 0;
 
     while (must_increase_size) {
-        packer->result.last_image_width += width_increase_step;
-        packer->result.last_image_height += height_increase_step;
+        packer.result.last_image_width += width_increase_step;
+        packer.result.last_image_height += height_increase_step;
 
-        if (packer->result.last_image_width > data->image_size.x) {
-            packer->result.last_image_width = data->image_size.x;
+        if (packer.result.last_image_width > data->image_size.x) {
+            packer.result.last_image_width = data->image_size.x;
         }
-        if (packer->result.last_image_height > data->image_size.y) {
-            packer->result.last_image_height = data->image_size.y;
+        if (packer.result.last_image_height > data->image_size.y) {
+            packer.result.last_image_height = data->image_size.y;
         }
 
         int images_packed_in_loop = 0;
         int area_packed_in_loop = 0;
 
-        reset_empty_areas(data, vec2i{(int)packer->result.last_image_width, (int)packer->result.last_image_height});
+        reset_empty_areas(data, vec2i{(int)packer.result.last_image_width, (int)packer.result.last_image_height});
 
         int failed = 0;
 
         for (unsigned int i = 0; i < data->num_rects; i++) {
             image_packer_rect* rect = data->sorted_rects[i];
 
-            if (rect->output.packed && rect->output.image_index != packer->result.pages_needed) {
+            if (rect->output.packed && rect->output.image_index != packer.result.pages_needed) {
                 continue;
             }
-            if (!pack_rect(data, rect, packer->options.allow_rotation)) {
+            if (!pack_rect(data, rect, packer.options.allow_rotation)) {
                 failed = 1;
-                if (packer->result.last_image_width < data->image_size.x
-                    || packer->result.last_image_height < data->image_size.y) {
+                if (packer.result.last_image_width < data->image_size.x
+                    || packer.result.last_image_height < data->image_size.y) {
                     break;
                 }
             } else {
                 rect->output.packed = 1;
-                rect->output.image_index = packer->result.pages_needed;
+                rect->output.image_index = packer.result.pages_needed;
                 images_packed_in_loop++;
                 area_packed_in_loop += rect->input.width * rect->input.height;
             }
         }
 
         if (!failed) {
-            packer->result.pages_needed++;
+            packer.result.pages_needed++;
             total_images_packed += images_packed_in_loop;
             must_increase_size = 0;
-        } else if (packer->result.last_image_width == data->image_size.x
-                   && packer->result.last_image_height == data->image_size.y) {
-            packer->result.pages_needed++;
+        } else if (packer.result.last_image_width == data->image_size.x
+                   && packer.result.last_image_height == data->image_size.y) {
+            packer.result.pages_needed++;
             total_images_packed += images_packed_in_loop;
             remaining_area -= area_packed_in_loop;
             needed_width = (unsigned int)sqrt(remaining_area * image_ratio) + 1;
             needed_height = (unsigned int)sqrt(remaining_area / image_ratio) + 1;
             width_increase_step = needed_width / 64 + 1;
             height_increase_step = needed_height / 64 + 1;
-            packer->result.last_image_width = needed_width;
-            packer->result.last_image_height = needed_height;
+            packer.result.last_image_width = needed_width;
+            packer.result.last_image_height = needed_height;
         }
     }
     return total_images_packed;
@@ -376,19 +376,19 @@ int image_packer::init(unsigned int num_rectangles, vec2i image_size) {
     return IMAGE_PACKER_OK;
 }
 
-void image_packer_resize_image(image_packer* packer, vec2i image_size) {
-    internal_data_t* data = packer->internal_data;
+void image_packer_resize_image(image_packer& packer, vec2i image_size) {
+    internal_data_t* data = packer.internal_data;
     data->image_size = image_size;
 }
 
-int image_packer_pack(image_packer* packer) {
-    internal_data_t* data = packer->internal_data;
+int image_packer_pack(image_packer& packer) {
+    internal_data_t* data = packer.internal_data;
 
-    if (!data->num_rects || !data->image_size.x || !data->image_size.y || packer->rects.empty()
+    if (!data->num_rects || !data->image_size.x || !data->image_size.y || packer.rects.empty()
         || data->empty_areas.size != data->num_rects + 1) {
         return IMAGE_PACKER_ERROR_WRONG_PARAMETERS;
     }
-    if (packer->options.rects_are_sorted != 1 || data->sorted_rects.empty()) {
+    if (packer.options.rects_are_sorted != 1 || data->sorted_rects.empty()) {
         if (!sort_rects(packer)) {
             return IMAGE_PACKER_ERROR_NO_MEMORY;
         }
@@ -402,7 +402,7 @@ int image_packer_pack(image_packer* packer) {
         remaining_area += rect_area;
     }
 
-    unsigned int available_area = packer->options.reduce_image_size == 1 ? data->image_size.x * data->image_size.y : 0;
+    unsigned int available_area = packer.options.reduce_image_size == 1 ? data->image_size.x * data->image_size.y : 0;
 
     while (remaining_area > available_area) {
         reset_empty_areas(data, data->image_size);
@@ -416,37 +416,37 @@ int image_packer_pack(image_packer* packer) {
                 continue;
             }
             rect->output.packed = 0;
-            if (!pack_rect(data, rect, packer->options.allow_rotation)) {
-                if (packer->options.fail_policy == IMAGE_PACKER_CONTINUE) {
+            if (!pack_rect(data, rect, packer.options.allow_rotation)) {
+                if (packer.options.fail_policy == IMAGE_PACKER_CONTINUE) {
                     remaining_area -= rect->input.width * rect->input.height;
                     continue;
-                } else if (packer->options.fail_policy == IMAGE_PACKER_STOP) {
-                    packer->result.last_image_width = data->image_size.x;
-                    packer->result.last_image_height = data->image_size.y;
+                } else if (packer.options.fail_policy == IMAGE_PACKER_STOP) {
+                    packer.result.last_image_width = data->image_size.x;
+                    packer.result.last_image_height = data->image_size.y;
                     return i;
                 }
                 if (data->empty_areas.first->width == data->image_size.x
                     && data->empty_areas.first->height == data->image_size.y) {
-                    packer->result.pages_needed--;
-                    packer->result.last_image_width = data->image_size.x;
-                    packer->result.last_image_height = data->image_size.y;
+                    packer.result.pages_needed--;
+                    packer.result.last_image_width = data->image_size.x;
+                    packer.result.last_image_height = data->image_size.y;
                     return packed_rects;
                 }
             } else {
-                rect->output.image_index = packer->result.pages_needed;
+                rect->output.image_index = packer.result.pages_needed;
                 rect->output.packed = 1;
                 area_used_in_last_image += rect->input.width * rect->input.height;
                 packed_rects++;
             }
         }
         remaining_area -= area_used_in_last_image;
-        packer->result.pages_needed++;
+        packer.result.pages_needed++;
     }
 
-    packer->result.last_image_width = data->image_size.x;
-    packer->result.last_image_height = data->image_size.y;
+    packer.result.last_image_width = data->image_size.x;
+    packer.result.last_image_height = data->image_size.y;
 
-    if (packer->options.reduce_image_size == 1) {
+    if (packer.options.reduce_image_size == 1) {
         packed_rects += create_last_image(packer, remaining_area);
     }
 

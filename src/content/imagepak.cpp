@@ -621,7 +621,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
     packer.options.reduce_image_size = 1;
     packer.options.sort_by = IMAGE_PACKER_SORT_BY_AREA;
 
-    image_packer_pack(&packer);
+    image_packer_pack(packer);
     atlas_pages.reserve(packer.result.pages_needed);
     for (uint32_t i = 0; i < packer.result.pages_needed; ++i) {
         atlas_data_t atlas_data;
@@ -956,7 +956,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     }
 
     // repack and generate atlas pages
-    image_packer_pack(&packer);
+    image_packer_pack(packer);
     atlas_pages.reserve(packer.result.pages_needed);
     for (uint32_t i = 0; i < packer.result.pages_needed; ++i) {
         atlas_data_t atlas_data;
