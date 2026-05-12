@@ -113,6 +113,14 @@ mission6 { // Behdet
 	}
 }
 
+[event=event_mission_start, mission=mission6]
+function mission6_on_start(ev) {
+	city.set_empire_available(1)
+	for (var i = ADVISOR_NONE + 1; i <= ADVISOR_DIPLOMACY; i++) {
+		city.set_advisor_available(i, 1)
+	}
+}
+
 [es=event_advance_month, mission=mission6]
 function mission6_pharaoh_request_pottery(ev) {
 	if (mission.pharaoh_pottery_requested) {

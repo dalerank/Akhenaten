@@ -122,6 +122,14 @@ mission8 { // Selima
 	}
 }
 
+[event=event_mission_start, mission=mission8]
+function mission8_on_start(ev) {
+	city.set_empire_available(1)
+	for (var i = ADVISOR_NONE + 1; i <= ADVISOR_DIPLOMACY; i++) {
+		city.set_advisor_available(i, 1)
+	}
+}
+
 [event=event_register_mission_animals, mission=mission8]
 function mission8_register_animals(ev) {
 	city.remove_animals()

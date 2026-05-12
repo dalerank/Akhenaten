@@ -101,6 +101,10 @@ function mission7_register_animals(ev) {
 function mission7_on_start(ev) {
 	city.set_empire_available(1)
 
+	for (var i = ADVISOR_NONE + 1; i <= ADVISOR_DIPLOMACY; i++) {
+		city.set_advisor_available(i, 1)
+	}
+
 	// event_register_mission_animals only fires inside create_herds, which is
 	// skipped on save loads. Re-clear here so a saved game also stays clean.
 	city.remove_animals()
