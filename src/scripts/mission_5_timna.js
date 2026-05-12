@@ -89,3 +89,11 @@ mission5 { // Timna
 		}
 	]
 }
+
+[event=event_mission_start, mission=mission5]
+function mission5_on_start(ev) {
+	city.set_empire_available(1)
+	for (var i = ADVISOR_NONE + 1; i <= ADVISOR_DIPLOMACY; i++) {
+		city.set_advisor_available(i, 1)
+	}
+}
