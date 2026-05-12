@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mission Debug Panel Moves to JavaScript — Akhenaten</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../devblog.html" class="active">Devblog</a></li>
+        <li><a href="../wiki/index.html">Wiki</a></li>
+        <li><a href="../screenshots.html">Screenshots</a></li>
+        <li><a href="../downloads.html">Downloads</a></li>
+        <li><a href="../contributors.html">Contributors</a></li>
+        <li><a href="../contact.html">Join us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-content post-page">
+    <div class="post-meta"><time>May 12, 2026</time> — <a href="../devblog.html">← Devblog</a></div>
+    <h1>Mission Debug Panel Moves to JavaScript</h1>
+
+    <p>
+      One more piece of hardcoded C++ found its way into script territory. The "Mission Info" panel in the
+      developer debug overlay — which shows live mission state during playtesting — is now rendered entirely
+      from <code>mission_debug.js</code> rather than C++. It's a small change in terms of lines, but part of
+      a broader effort to make the engine's internals more accessible without recompiling.
+    </p>
+
+    <h2>What the Panel Shows</h2>
+    <p>
+      When you open the debug overlay during a mission, the Mission Info section displays a handful of
+      fields that are useful during development:
+    </p>
+    <ul>
+      <li><strong>scenario_id</strong> — which scenario file is currently loaded</li>
+      <li><strong>campaign_id</strong> — the campaign this scenario belongs to</li>
+      <li><strong>mission_rank</strong> — position in the campaign sequence</li>
+      <li><strong>starting_kingdom</strong> — kingdom rating the player starts with</li>
+      <li><strong>personal_savings</strong> — deben carried over from previous missions</li>
+      <li><strong>scenario_mode</strong> — campaign vs. custom mission</li>
+      <li><strong>is_custom</strong> — whether it's a user-made map</li>
+    </ul>
+    <p>
+      Previously all of this was drawn directly in C++. Now the script does it, calling into ImGui through
+      a thin binding layer.
+    </p>
+
+    <h2>How the Event Bridge Works</h2>
+    <p>
+      The tricky part was getting C++ and JavaScript to talk to each other at the right moment. The solution
+      follows the same pattern used elsewhere in the engine: C++ fires an event, JavaScript catches it.
+    </p>
+    <p>
+      On the C++ side, a new <code>ANK_REGISTER_PROPS_ITERATOR</code> registers
+      <code>draw_debug_properties_handler</code> as one of the functions that runs each frame when the debug
+      overlay is open. When it's time to draw, it emits <code>event_draw_debug_properties</code> into the
+      MuJS VM. On the JavaScript side, <code>mission_debug.js</code> listens for exactly that event:
+    </p>
+    <pre><code>[es=event_draw_debug_properties]
+function mission_debug_draw_properties_mission_info(ev) {
+    if (!imgui.tree_node_ex("Mission Info")) { return }
+
+    imgui.begin_table("MissionInfo", 2, imgui.table_flags_debug_props())
+    imgui.property_input("scenario_id",      scenario.campaign_scenario_id)
+    imgui.property_input("campaign_id",      __game_campaign_id_for_scenario(...))
+    imgui.property_input("mission_rank",     __scenario_settings.campaign_mission_rank)
+    imgui.property_input("personal_savings", city.kingdome.personal_savings)
+    // ...
+    imgui.end_table()
+    imgui.tree_pop()
+}</code></pre>
+    <p>
+      The ImGui calls themselves — <code>tree_node_ex</code>, <code>begin_table</code>,
+      <code>property_input</code>, etc. — are now part of the <code>imgui</code> object defined in
+      <code>ui_common.js</code>, each one backed by a C++ function registered in <code>imgui_js.cpp</code>.
+    </p>
+
+    <h2>What Stayed in C++</h2>
+    <p>
+      Not everything migrated. The Victory conditions panel and the Migration panel in the same overlay are
+      still drawn in C++. They involve more complex state that would need additional bindings to expose safely,
+      so they're staying put for now.
+    </p>
+
+    <h2>Why Bother?</h2>
+    <p>
+      Moving debug tooling to script might seem like a low priority, but it has a practical benefit: you can
+      edit <code>mission_debug.js</code> and reload it with <code>--mixed</code> without restarting the game.
+      If you want to add a new field to the debug panel — say, the current prosperity tick or a walker count —
+      it's a one-line addition in a text file, not a recompile. For anyone actively developing or modding
+      missions, that feedback loop matters.
+    </p>
+
+    <div class="post-nav">
+      <a href="mission-select-window-js.html">← Mission Selection: Script-Driven Windows</a>
+      <span></span>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>

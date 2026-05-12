@@ -27,6 +27,13 @@
     <h1>Devblog</h1>
 
     <article class="post">
+      <div class="post-meta"><time>May 12, 2026</time></div>
+      <h2><a href="devblog/mission-debug-panel-js.html">Mission Debug Panel Moves to JavaScript</a></h2>
+      <p>The Mission Info debug overlay — which shows live scenario state during playtesting — is now rendered from a script instead of hardcoded C++. ImGui bindings landed in <code>ui_common.js</code>, and C++ now fires an event that JavaScript catches to draw the panel. Editing the debug view no longer requires a recompile.</p>
+      <a href="devblog/mission-debug-panel-js.html" class="read-more">Read more →</a>
+    </article>
+
+    <article class="post">
       <div class="post-meta"><time>April 28, 2026</time></div>
       <h2><a href="devblog/mission-select-window-js.html">Mission Selection: Script-Driven Windows</a></h2>
       <img src="images/mission-select-window.png" alt="Mission selection window" class="post-preview" loading="lazy" />
