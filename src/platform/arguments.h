@@ -59,6 +59,7 @@ public:
     [[nodiscard]] bool is_logjsfiles() const { return is("logjsfiles", false); }
     [[nodiscard]] bool is_log_js_handlers() const { return is("log_js_handlers", false); }
     [[nodiscard]] bool is_log_resources() const { return is("log_resources", false); }
+    [[nodiscard]] bool is_discord_log() const { return is("discord_log", false); }
 
     [[nodiscard]] int get_display_scale_percentage() const;
     void set_display_scale_percentage(int value);

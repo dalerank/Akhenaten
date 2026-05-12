@@ -6,6 +6,9 @@
 #include "core/profiler.h"
 #include "core/app.h"
 #include "js/js_game.h"
+#include "platform/arguments.h"
+
+#define DISCORD_LOG(...) do { if (g_args.is_discord_log()) { logs::info(__VA_ARGS__); } } while (0)
 
 #include <cstdint>
 #include <cstring>
@@ -79,12 +82,12 @@ bool discord_rpc_t::impl::open_pipe() {
         swprintf(path, 48, L"\\\\.\\pipe\\discord-ipc-%d", i);
         HANDLE h = CreateFileW(path, GENERIC_READ | GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, 0, nullptr);
         if (h != INVALID_HANDLE_VALUE) {
-            logs::info("discord_rpc: opened pipe discord-ipc-%d", i);
+            DISCORD_LOG("discord_rpc: opened pipe discord-ipc-%d", i);
             pipe_handle = (void*)h;
             return true;
         }
     }
-    logs::info("discord_rpc: no discord-ipc-N pipe found (Discord not running?)");
+    DISCORD_LOG("discord_rpc: no discord-ipc-N pipe found (Discord not running?)");
     return false;
 }
 
@@ -126,7 +129,7 @@ void discord_rpc_t::impl::drain_incoming() {
             total += r;
         }
         payload[total < 1024 ? total : 1024] = 0;
-        logs::info("discord_rpc: incoming opcode=%u: %.512s", opcode, payload);
+        DISCORD_LOG("discord_rpc: incoming opcode=%u: %.512s", opcode, payload);
     }
 }
 
@@ -250,7 +253,7 @@ void discord_rpc_t::impl::json_escape(pcstr src, pstr dst, size_t dst_cap) {
 bool discord_rpc_t::impl::do_handshake() {
     char json[128];
     snprintf(json, sizeof(json), "{\"v\":1,\"client_id\":\"%s\"}", app_id);
-    logs::info("discord_rpc: handshake -> %s", json);
+    DISCORD_LOG("discord_rpc: handshake -> %s", json);
     if (!send_packet(0, json)) {
         logs::warn("discord_rpc: handshake write failed");
         return false;
@@ -264,7 +267,7 @@ bool discord_rpc_t::impl::do_handshake() {
 
     uint32_t opcode = (uint32_t)hdr[0] | ((uint32_t)hdr[1] << 8) | ((uint32_t)hdr[2] << 16) | ((uint32_t)hdr[3] << 24);
     uint32_t plen = (uint32_t)hdr[4] | ((uint32_t)hdr[5] << 8) | ((uint32_t)hdr[6] << 16) | ((uint32_t)hdr[7] << 24);
-    logs::info("discord_rpc: handshake response opcode=%u payload_len=%u", opcode, plen);
+    DISCORD_LOG("discord_rpc: handshake response opcode=%u payload_len=%u", opcode, plen);
     if (plen > 8192) {
         logs::warn("discord_rpc: handshake payload too large (%u), aborting", plen);
         return false;
@@ -282,7 +285,7 @@ bool discord_rpc_t::impl::do_handshake() {
         total += chunk;
     }
     ready_buf[total] = 0;
-    logs::info("discord_rpc: READY payload: %.256s", ready_buf);
+    DISCORD_LOG("discord_rpc: READY payload: %.256s", ready_buf);
     return true;
 }
 
@@ -322,7 +325,7 @@ void discord_rpc_t::impl::do_send_activity(const xstring& details, const xstring
       "\"nonce\":\"%u\"}",
       pid, esc_details, esc_state, (long long)start_timestamp, ++nonce);
 
-    logs::info("discord_rpc: SET_ACTIVITY details='%s' state='%s'", esc_details, esc_state);
+    DISCORD_LOG("discord_rpc: SET_ACTIVITY details='%s' state='%s'", esc_details, esc_state);
     if (!send_packet(1, json)) {
         logs::warn("discord_rpc: SET_ACTIVITY send failed, disconnecting");
         close_pipe();
@@ -336,10 +339,10 @@ void discord_rpc_t::impl::init(pcstr id) {
     logged_fail = false;
 
     if (!try_connect()) {
-        logs::info("discord_rpc: Discord not running, Rich Presence disabled");
+        DISCORD_LOG("discord_rpc: Discord not running, Rich Presence disabled");
         logged_fail = true;
     } else {
-        logs::info("discord_rpc: connected to Discord IPC");
+        DISCORD_LOG("discord_rpc: connected to Discord IPC");
         do_send_activity(xstring("Akhenaten"), xstring("In menus"));
     }
 }
@@ -360,7 +363,7 @@ void discord_rpc_t::impl::tick() {
         if (!try_connect()) {
             return;
         }
-        logs::info("discord_rpc: reconnected to Discord IPC");
+        DISCORD_LOG("discord_rpc: reconnected to Discord IPC");
         logged_fail = false;
         do_send_activity(
             pending_details.empty() ? xstring("Akhenaten") : pending_details,

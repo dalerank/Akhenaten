@@ -158,6 +158,7 @@ ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--config", "config", true, "always show conf
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--save_debug_texture", "save_debug_texture", true, "save debug textures to DEV_TESTING/tex/");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--unpack_scripts", "unpack_scripts", true, "unpack embedded scripts to user directory");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-resources", "log_resources", true, "log resource loading (textures, image packs, etc.)");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--discord-log", "discord_log", true, "enable Discord RPC verbose logging");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--integraltests", "integral_tests", true, "run built-in tests without game data and exit");
 
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--render", "renderer", "Option --render must be opengl,direct3d", "--render RENDERER", "use specific renderer");
