@@ -4,12 +4,12 @@ main_menu_screen {
 	ui {
 		background    : { type:"background", path:"pharaoh_unloaded/title_00001" }
 
-		continue_game : large_button({ pos:mbutton(0), size[256, 25], text[13, 5], onclick_event: "continue_game" })
+		continue_game : large_button({ pos:mbutton(0), size[256, 25], text[13, 5], onclick: main_menu_continue_game })
 		select_player : large_button({ pos:mbutton(1), size[256, 25], text[30, 0], onclick: show_window_by_id("window_player_selection") })
 		show_records  : large_button({ pos:mbutton(2), size[256, 25], text[30, 5], onclick: show_window_by_id("records_window") })
 		show_config   : large_button({ pos:mbutton(3), size[256, 25], text[2,  0], onclick: show_window_by_id("window_features") })
 		show_mods     : large_button({ pos:mbutton(4), size[256, 25], text:"#main_menu_mods", onclick: show_window_by_id("mods_window") })
-		quit_game     : large_button({ pos:mbutton(5), size[256, 25], text[30, 4], onclick_event: "quit_game" })
+		quit_game     : large_button({ pos:mbutton(5), size[256, 25], text[30, 4], onclick: main_menu_quit_game })
 
 		discord 	  : image_button({ pos[sw(-100), sh(-50)], size[48, 48], icon_texture:"!discord", scale:0.75
 							           	onclick: function() { __platform_open_url("https://discord.gg/HS4njmBvpb") }
@@ -32,7 +32,6 @@ main_menu_screen {
 	}
 }
 
-[es=(main_menu_screen, continue_game)]
 function main_menu_continue_game() {
 	var last_save = normalize_savegame_path_for_load(game_features.gameopt_last_save_filename)
     var last_player = game_features.gameopt_last_player
@@ -44,7 +43,6 @@ function main_menu_continue_game() {
     }
 }
 
-[es=(main_menu_screen, quit_game)]
 function main_menu_quit_game() {
     ui.show_yesno("#popup_dialog_quit", function() {
 		emit event_request_exit{ value: true }
