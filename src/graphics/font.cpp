@@ -13,6 +13,7 @@
 #include "window/popup_dialog.h"
 #include "game/game_config.h"
 #include "platform/arguments.h"
+#include "core/app.h"
 
 #include <algorithm>
 #include <cstring>
@@ -77,6 +78,13 @@ struct std::hash<font_config> {
 using font_configs_t = stable_array<font_config>;
 const e_font_tokens_t ANK_CONFIG_ENUM(e_font_tokens);
 
+using font_utf8_symbols_t = svector<uint32_t, 1024>;
+using fn_fill_font_packer_t = bool (*)(imagepak_handle,
+                                       const font_configs_t &,
+                                       const font_utf8_symbols_t &,
+                                       vfs::path,
+                                       int &);
+
 static int image_y_offset_none(const uint8_t *c, int image_height, int line_height);
 static int image_y_offset_default(const uint8_t *c, int image_height, int line_height);
 
@@ -131,6 +139,7 @@ struct font_data_t {
     bool use_utf_font = false;
     bool needs_regeneration = false;
     bool use_internal_only = false;
+    fn_fill_font_packer_t fill_font_packer = nullptr;
 };
 
 font_data_t g_font_data;
@@ -265,10 +274,6 @@ void font_set_letter_id(e_font font, uint32_t character, int imgid, vec2i bearin
     auto &data = g_font_data;
     auto &mbmap = data.mbsymbols[font];
     mbmap[character] = { character, imgid, bearing };
-}
-
-void font_use_internal_only(bool use_internal) {
-    g_font_data.use_internal_only = use_internal;
 }
 
 const font_mbsybols_t &font_get_symbols() {
@@ -538,6 +543,82 @@ static void add_glcd_symbols_to_font_packer(imagepak_handle font_pack, font_conf
     }
 }
 
+static bool fill_font_packer_internal_only(imagepak_handle font_pack,
+                                           const font_configs_t &font_configs,
+                                           const font_utf8_symbols_t &utf8_symbols,
+                                           vfs::path /*symbols_font*/,
+                                           int &cp_index) {
+    for (const auto &fconfig : font_configs) {
+        add_glcd_symbols_to_font_packer(font_pack, fconfig, utf8_symbols, cp_index);
+        font_definition_ref(fconfig.type)->line_height = fconfig.line_height;
+    }
+    return true;
+}
+
+static bool fill_font_packer_android(imagepak_handle font_pack,
+                                     const font_configs_t &font_configs,
+                                     const font_utf8_symbols_t &utf8_symbols,
+                                     vfs::path symbols_font,
+                                     int &cp_index) {
+    std::vector<uint8_t> resolved_font_data;
+    {
+        const bool is_app_data_font = (symbols_font == "data/neucha.ttf");
+        if (is_app_data_font) {
+            auto data = vfs::internal_resource_open(symbols_font.c_str());
+            if (data.first && data.second > 0) {
+                const auto *font_bytes = static_cast<const uint8_t *>(data.first);
+                resolved_font_data.assign(font_bytes, font_bytes + data.second);
+            }
+        }
+
+        if (resolved_font_data.empty()) {
+            vfs::reader font_reader = vfs::file_open(symbols_font, "rb");
+            if (!font_reader) {
+                vfs::path fallback_font_path = symbols_font.resolve();
+                font_reader = vfs::file_open(fallback_font_path, "rb");
+            }
+
+            if (!font_reader) {
+                g_font_data.needs_regeneration = false;
+                bstring512 message_text;
+                message_text.printf("The specified font symbols file could not be opened:%s", symbols_font.c_str());
+                popup_dialog::show_ok("Data issue", message_text.c_str());
+                return false;
+            }
+
+            const auto *font_bytes = static_cast<const uint8_t *>(font_reader->data());
+            resolved_font_data.assign(font_bytes, font_bytes + font_reader->size());
+        }
+    }
+
+    for (const auto &fconfig : font_configs) {
+        add_symbols_to_font_packer(font_pack, make_span(resolved_font_data), fconfig, utf8_symbols, cp_index);
+        font_definition_ref(fconfig.type)->line_height = fconfig.line_height;
+    }
+    return true;
+}
+
+static bool fill_font_packer_pc(imagepak_handle font_pack,
+                                const font_configs_t &font_configs,
+                                const font_utf8_symbols_t &utf8_symbols,
+                                vfs::path symbols_font,
+                                int &cp_index) {
+    vfs::path resolved_font_path = symbols_font.resolve();
+    if (!vfs::file_exists(resolved_font_path)) {
+        g_font_data.needs_regeneration = false;
+        bstring512 message_text;
+        message_text.printf("The specified font symbols file does not exist:%s", resolved_font_path.c_str());
+        popup_dialog::show_ok("Data issue", message_text.c_str());
+        return false;
+    }
+
+    for (const auto &fconfig : font_configs) {
+        add_symbols_to_font_packer(font_pack, resolved_font_path.c_str(), fconfig, utf8_symbols, cp_index);
+        font_definition_ref(fconfig.type)->line_height = fconfig.line_height;
+    }
+    return true;
+}
+
 void font_atlas_regenerate() {
     auto &font_pack = g_image_data->pak_list[PACK_CUSTOM_FONT];
 
@@ -654,63 +735,8 @@ void font_atlas_regenerate() {
         symbols_font = g_args.get_custom_font().c_str();
     }
 
-    if (g_font_data.use_internal_only) {
-        for (const auto &fconfig : font_configs) {
-            add_glcd_symbols_to_font_packer(font_pack, fconfig, utf8_symbols, cp_index);
-            font_definition_ref(fconfig.type)->line_height = fconfig.line_height;
-        }
-    } else {
-#if defined(GAME_PLATFORM_ANDROID)
-        std::vector<uint8_t> resolved_font_data;
-        {
-            const bool is_app_data_font = (symbols_font == "data/neucha.ttf");
-            if (is_app_data_font) {
-                auto data = vfs::internal_resource_open(symbols_font.c_str());
-                if (data.first && data.second > 0) {
-                    const auto *font_bytes = static_cast<const uint8_t *>(data.first);
-                    resolved_font_data.assign(font_bytes, font_bytes + data.second);
-                }
-            }
-
-            if (resolved_font_data.empty()) {
-                vfs::reader font_reader = vfs::file_open(symbols_font, "rb");
-                if (!font_reader) {
-                    vfs::path fallback_font_path = symbols_font.resolve();
-                    font_reader = vfs::file_open(fallback_font_path, "rb");
-                }
-
-                if (!font_reader) {
-                    g_font_data.needs_regeneration = false;
-                    bstring512 message_text;
-                    message_text.printf("The specified font symbols file could not be opened:%s", symbols_font.c_str());
-                    popup_dialog::show_ok("Data issue", message_text.c_str());
-                    return;
-                }
-
-                const auto *font_bytes = static_cast<const uint8_t *>(font_reader->data());
-                resolved_font_data.assign(font_bytes, font_bytes + font_reader->size());
-            }
-        }
-
-        for (const auto &fconfig : font_configs) {
-            add_symbols_to_font_packer(font_pack, make_span(resolved_font_data), fconfig, utf8_symbols, cp_index);
-            font_definition_ref(fconfig.type)->line_height = fconfig.line_height;
-        }
-#else
-        vfs::path resolved_font_path = symbols_font.resolve();
-        if (!vfs::file_exists(resolved_font_path)) {
-            g_font_data.needs_regeneration = false;
-            bstring512 message_text;
-            message_text.printf("The specified font symbols file does not exist:%s", resolved_font_path.c_str());
-            popup_dialog::show_ok("Data issue", message_text.c_str());
-            return;
-        }
-
-        for (const auto &fconfig : font_configs) {
-            add_symbols_to_font_packer(font_pack, resolved_font_path.c_str(), fconfig, utf8_symbols, cp_index);
-            font_definition_ref(fconfig.type)->line_height = fconfig.line_height;
-        }
-#endif
+    if (!g_font_data.fill_font_packer(font_pack, font_configs, utf8_symbols, symbols_font, cp_index)) {
+        return;
     }
 
     // Pack images into atlas
@@ -801,4 +827,16 @@ void font_add_missing_glyph(uint32_t codepoint) {
 
 bool font_need_regeneration() {
     return g_font_data.needs_regeneration;
+}
+
+void ANK_REGISTER_APPLICATION_MODULE(font_module) {
+    g_font_data.use_internal_only = g_args.no_resource();
+
+    if (g_font_data.use_internal_only) {
+        g_font_data.fill_font_packer = &fill_font_packer_internal_only;
+    } else if (platform.is_android()) {
+        g_font_data.fill_font_packer = &fill_font_packer_android;
+    } else {
+        g_font_data.fill_font_packer = &fill_font_packer_pc;
+    }
 }

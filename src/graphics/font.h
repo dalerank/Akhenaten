@@ -82,6 +82,14 @@ bool font_has_letter(const font_definition *def, const uint8_t *str);
 void font_set_letter_id(e_font font, uint32_t character, int imgid, vec2i bearing);
 void font_use_internal_only(bool use_internal);
 
+/**
+ * Selects the font-packer strategy based on the current state
+ * (use_internal_only flag and compile-time platform). Called
+ * automatically by font_use_internal_only() and lazily on first use,
+ * but can also be invoked explicitly to force reconfiguration.
+ */
+void font_configure_fill_packer();
+
 void font_atlas_regenerate();
 void font_add_missing_glyph(uint32_t codepoint);
 uint32_t base_color_for_font(e_font font);
