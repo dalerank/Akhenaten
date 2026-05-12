@@ -78,6 +78,7 @@ function advisor_population_percent_in_workforce_value() {
 
 [es=(advisor_population_window, ui_draw_foreground)]
 function advisor_population_window_ui_draw_foreground(window) {
+	advisor_window_reflow(window)
 	var go = advisor_population_window.graph_order
 	if (advisor_population_window._info_text_graph_order === go) {
 		return

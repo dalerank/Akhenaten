@@ -15,6 +15,7 @@
 #include "platform/renderer.h"
 #include "platform/switch/switch.h"
 #include "platform/vita/vita.h"
+#include "window/autoconfig_window.h"
 #include "resource/icons.h"
 
 #include "SDL.h"
@@ -239,6 +240,7 @@ bool platform_screen_t::resize(int pixel_width, int pixel_height, int save) {
 
     if (platform_renderer_create_render_texture(logical_width, logical_height)) {
         g_screen.set_resolution(logical_width, logical_height);
+        autoconfig_window::refresh_all();
         return true;
     }
 
