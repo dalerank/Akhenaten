@@ -14,7 +14,6 @@
 #include "city/city_resource.h"
 #include "core/string.h"
 #include "figure/figure.h"
-#include "game/tutorial.h"
 #include "graphics/color.h"
 #include "graphics/font.h"
 #include "graphics/text.h"

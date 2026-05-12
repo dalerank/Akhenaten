@@ -19,7 +19,6 @@
 #include "core/calc.h"
 #include "core/vec2i.h"
 #include "empire/trade_prices.h"
-#include "game/tutorial.h"
 #include "game/game.h"
 #include "game/undo.h"
 #include "graphics/image.h"

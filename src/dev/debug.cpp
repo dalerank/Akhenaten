@@ -60,7 +60,6 @@
 #include "sound/sound.h"
 #include "core/random.h"
 #include "figure/route.h"
-#include "game/tutorial.h"
 #include "grid/figure.h"
 #include "platform/renderer.h"
 #include "overlays/city_overlay.h"
@@ -921,13 +920,13 @@ void config_show_debug_render_properties(bool header) {
     }
 
     e_debug_render current_mode = debug_render_mode();
-    
+
     // Build array of mode names and their indices
     static pcstr mode_names[e_debug_render_size];
     static int mode_indices[e_debug_render_size];
     static int mode_count = 0;
     static bool initialized = false;
-    
+
     if (!initialized) {
         mode_count = 0;
         for (int i = e_debug_render_none + 1; i < e_debug_render_size; ++i) {

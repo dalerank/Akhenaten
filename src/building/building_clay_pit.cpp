@@ -45,7 +45,7 @@ void building_clay_pit::spawn_figure() {
     if (base.destroy_reason == e_destroy_flooded) {
         return;
     }
-    
+
     building_industry::spawn_figure();
 }
 
@@ -72,7 +72,7 @@ void building_clay_pit::update_production() {
     if (best_clay <= 0) {
         return;
     }
-    
+
     building_industry::update_production();
     int delta_progress = d.progress - current_progress;
     if (delta_progress > 0) {

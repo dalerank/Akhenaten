@@ -15,7 +15,6 @@
 #include "figure/formation_batalion.h"
 #include "city_floods.h"
 #include "game/game_config.h"
-#include "game/tutorial.h"
 #include "grid/routing/routing_terrain.h"
 #include "ratings.h"
 #include "scenario/scenario_invasion.h"

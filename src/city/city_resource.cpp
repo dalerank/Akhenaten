@@ -13,7 +13,6 @@
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "empire/empire.h"
-#include "game/tutorial.h"
 #include "grid/road_access.h"
 #include "scenario/scenario.h"
 #include "game/game_events.h"

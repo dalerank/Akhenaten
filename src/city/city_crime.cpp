@@ -1,7 +1,6 @@
 #include "city/city.h"
 
 #include "core/profiler.h"
-#include "city/city.h"
 #include "game/game_events.h"
 #include "city/city_message.h"
 #include "grid/road_access.h"
@@ -10,7 +9,6 @@
 #include "building/building_mansion.h"
 #include "figuretype/figure_rioter.h"
 #include "core/random.h"
-#include "game/tutorial.h"
 #include "building/destruction.h"
 
 static void generate_rioter(building* b) {
@@ -47,6 +45,7 @@ static void generate_rioter(building* b) {
         if (target_building_id) {
             f->destination_tile.set(x_target, y_target);
             f->set_destination(target_building_id);
+            events::emit(event_rioter_created{f->id});
         } else {
             f->poof();
         }
@@ -57,7 +56,7 @@ static void generate_rioter(building* b) {
 
     g_city.ratings.monument_record_rioter();
     g_city.change_happiness(20);
-    g_tutorials_flags.on_crime();
+
     city_message_apply_sound_interval(MESSAGE_CAT_RIOT);
     city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, false, "message_riot", b->type, road_tile.grid_offset());
 }

@@ -9,7 +9,6 @@
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "game/difficulty.h"
-#include "game/tutorial.h"
 #include "game/game.h"
 #include "game/game_config.h"
 #include "city/coverage.h"

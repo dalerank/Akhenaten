@@ -8,7 +8,6 @@
 #include "game/game_events.h"
 #include "core/calc.h"
 #include "game/difficulty.h"
-#include "game/tutorial.h"
 #include "game/game.h"
 #include "game/game_config.h"
 #include "core/random.h"

@@ -9,7 +9,6 @@
 #include "city/city_labor.h"
 #include "game/difficulty.h"
 #include "game/resource.h"
-#include "game/tutorial.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/graphics.h"
