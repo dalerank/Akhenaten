@@ -8,7 +8,7 @@
 void button_none(int param1, int param2) {
 }
 
-void button_border_draw(vec2i pos, vec2i size, bool has_focus) {
+void ui::button_border_draw(vec2i pos, vec2i size, bool has_focus) {
     painter ctx = game.painter();
     int width_blocks = size.x / 16;
     width_blocks += (size.x % 16) ? 1 : 0;

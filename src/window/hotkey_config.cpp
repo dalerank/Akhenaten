@@ -191,7 +191,7 @@ static void draw_background(int) {
     auto& data = g_hotkeys_window_data;
     g_render.clear_screen();
 
-    ImageDraw::img_background(ctx, image_id_from_group(PACK_UNLOADED, 8));
+    graphics_draw_background(ctx, image_id_from_group(PACK_UNLOADED, 8), 1.f, {0, 0});
     graphics_set_to_dialog();
     outer_panel_draw(vec2i{0, 0}, 40, 30);
 
@@ -253,18 +253,15 @@ static void draw_foreground(int) {
         hotkey_widget* widget = &hotkey_widgets[i + g_hotkey_window_scrollbar.scroll_position];
         if (widget->action != HOTKEY_HEADER) {
             generic_button* btn = &hotkey_buttons[2 * i];
-            button_border_draw(btn->x, btn->y, btn->width, btn->height, data.focus_button == 1 + 2 * i);
+            button_border_draw({btn->x, btn->y}, {btn->width, btn->height}, data.focus_button == 1 + 2 * i);
             btn++;
-            button_border_draw(btn->x, btn->y, btn->width, btn->height, data.focus_button == 2 + 2 * i);
+            button_border_draw({btn->x, btn->y}, {btn->width, btn->height}, data.focus_button == 2 + 2 * i);
         }
     }
 
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
-        button_border_draw(bottom_buttons[i].x,
-                           bottom_buttons[i].y,
-                           bottom_buttons[i].width,
-                           bottom_buttons[i].height,
-                           data.bottom_focus_button == i + 1);
+        auto& btn = bottom_buttons[i];
+        button_border_draw({btn.x, btn.y}, {btn.width, btn.height}, data.bottom_focus_button == i + 1);
     }
     graphics_reset_dialog();
 }

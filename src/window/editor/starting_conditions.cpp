@@ -51,31 +51,31 @@ static void draw_foreground(int) {
     lang_text_draw_centered(13, 3, 12, 448, 480, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 108, 32, 85, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw(262, 76, 200, 30, focus_button_id == 1);
+    button_border_draw({262, 76}, {200, 30}, focus_button_id == 1);
     lang_text_draw_centered(32, scenario_property_player_rank(), 262, 85, 200, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 89, 32, 125, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw(262, 116, 200, 30, focus_button_id == 2);
+    button_border_draw({262, 116}, {200, 30}, focus_button_id == 2);
     lang_text_draw_year(g_scenario.start_year, 330, 125, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 39, 32, 165, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw(262, 156, 200, 30, focus_button_id == 3);
+    button_border_draw({262, 156}, {200, 30}, focus_button_id == 3);
     text_draw_number_centered(g_scenario.finance.initial_funds, 262, 165, 200, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 68, 32, 205, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw(262, 196, 200, 30, focus_button_id == 4);
+    button_border_draw({262, 196}, {200, 30}, focus_button_id == 4);
     text_draw_number_centered(g_scenario.finance.rescue_loan, 262, 205, 200, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 43, 32, 245, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw(262, 236, 200, 30, focus_button_id == 5);
+    button_border_draw({262, 236}, {200, 30}, focus_button_id == 5);
     lang_text_draw_centered(18, g_scenario.kingdom_supplies_grain ? 1 : 0, 262, 245, 200, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 80, 32, 285, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw(262, 276, 200, 30, focus_button_id == 6);
+    button_border_draw({262, 276}, {200, 30}, focus_button_id == 6);
     lang_text_draw_centered(18, g_scenario.env.flotsam_enabled, 262, 285, 200, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 91, 32, 325, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw(262, 316, 200, 30, focus_button_id == 7);
+    button_border_draw({262, 316}, {200, 30}, focus_button_id == 7);
     int width = text_draw_number(scenario_editor_milestone_year(25), '+', " ", 297, 327, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw_year(g_scenario.start_year + scenario_editor_milestone_year(25),
                         307 + width,
@@ -83,7 +83,7 @@ static void draw_foreground(int) {
                         FONT_SMALL_PLAIN);
 
     lang_text_draw(44, 92, 32, 365, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw(262, 356, 200, 30, focus_button_id == 8);
+    button_border_draw({262, 356}, {200, 30}, focus_button_id == 8);
     width = text_draw_number(scenario_editor_milestone_year(50), '+', " ", 297, 367, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw_year(g_scenario.start_year + scenario_editor_milestone_year(50),
                         307 + width,
@@ -91,7 +91,7 @@ static void draw_foreground(int) {
                         FONT_SMALL_PLAIN);
 
     lang_text_draw(44, 93, 32, 405, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw(262, 396, 200, 30, focus_button_id == 9);
+    button_border_draw({262, 396}, {200, 30}, focus_button_id == 9);
     width = text_draw_number(scenario_editor_milestone_year(75), '+', " ", 297, 407, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw_year(g_scenario.start_year + scenario_editor_milestone_year(75),
                         307 + width,

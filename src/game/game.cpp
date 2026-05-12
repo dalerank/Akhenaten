@@ -23,6 +23,7 @@
 #include "config/hotkeys.h"
 #include "io/gamefiles/lang.h"
 #include "content/content.h"
+#include "platform/arguments.h"
 #include "mission.h"
 #include "figure/formation.h"
 #include "scenario/scenario_event_manager.h"
@@ -348,7 +349,7 @@ bool game_t::check_valid() {
     locale_determine_language();
 
     game_features::load();   // akhenaten.conf
-    
+
     const auto game_speed = (int)calc_bound(game_features::gameopt_game_speed.to_int(), 10, 1000);
     game_features::gameopt_game_speed.set( game_speed );
     game_hotkeys::load();    // hotkeys.conf
@@ -372,7 +373,7 @@ bool game_init(game_opts opts) {
         return false;
     }
 
-    if (!game_load_campaign_file()) {
+    if (!g_args.no_resource() && !game_load_campaign_file()) {
         logs::error("unable to load campaign data");
         return false;
     }

@@ -160,6 +160,7 @@ ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--unpack_scripts", "unpack_scripts", true, "
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-resources", "log_resources", true, "log resource loading (textures, image packs, etc.)");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--discord-log", "discord_log", true, "enable Discord RPC verbose logging");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--integraltests", "integral_tests", true, "run built-in tests without game data and exit");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--no-resource", "no_resource", true, "run without Pharaoh data files (skips campaign.txt; DATA_DIR is optional VFS base path)");
 
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--render", "renderer", "Option --render must be opengl,direct3d", "--render RENDERER", "use specific renderer");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--mods", "mods_directory", "Option --mods folder should exist", "--mods PATH", "set mods data directory path");
@@ -292,7 +293,7 @@ char const* Arguments::usage() {
 
         auto descriptions = arguments::get_argument_descriptions();
         // Sort by argument name for consistent output
-        std::sort(descriptions.begin(), descriptions.end(), 
+        std::sort(descriptions.begin(), descriptions.end(),
                   [](const auto& a, const auto& b) { return a.first < b.first; });
 
         for (const auto& desc : descriptions) {
@@ -301,7 +302,7 @@ char const* Arguments::usage() {
             help.append_fmt("          %s\n", desc.second.c_str());
             usage_text.append(help.c_str());
         }
-    
+
         usage_text += "\n"
                       "The last argument, if present, is interpreted as data directory of the Pharaoh installation";
     }
@@ -446,8 +447,8 @@ bool load(Arguments& arguments) {
     if (!input.is_open()) {
         logs::info("Configuration file was not found.");
         return false;
-    } 
-    
+    }
+
     std::string line;
     while (std::getline(input, line)) {
         auto pos = line.find('=');

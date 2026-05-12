@@ -66,7 +66,7 @@ static void draw_foreground(int) {
             x = 423;
             y = 82 + 20 * (i - 33);
         }
-        button_border_draw(x, y, 190, 18, focus_button_id == i);
+        button_border_draw({x, y}, {190, 18}, focus_button_id == i);
         if (scenario_editor_is_building_allowed(i))
             lang_text_draw_centered(67, i, x, y + 4, 190, FONT_NORMAL_BLACK_ON_LIGHT);
         else {

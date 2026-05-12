@@ -419,14 +419,14 @@ static void draw_background(int) {
     painter ctx = game.painter();
     switch (data.dialog) {
     case MAP_SELECTION_CCK_LEGACY:
-        ImageDraw::img_background(ctx, image_id_from_group(GROUP_MAP_SELECTION_CCK));
+        graphics_draw_background(ctx, image_id_from_group(GROUP_MAP_SELECTION_CCK), 1.f, {0, 0});
         break;
     case MAP_SELECTION_CUSTOM:
-        ImageDraw::img_background(ctx, image_id_from_group(GROUP_MAP_SELECTION_CUSTOM));
+        graphics_draw_background(ctx, image_id_from_group(GROUP_MAP_SELECTION_CUSTOM), 1.f, {0, 0});
         break;
     case MAP_SELECTION_CAMPAIGN:
     case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
-        ImageDraw::img_background(ctx, image_id_from_group(GROUP_MAP_SELECTION_HISTORY));
+        graphics_draw_background(ctx, image_id_from_group(GROUP_MAP_SELECTION_HISTORY), 1.f, {0, 0});
         break;
     }
     graphics_set_to_dialog();
@@ -448,8 +448,9 @@ static void draw_foreground(int) {
         if (data.dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST && data.panel->get_selected_entry_idx() != -1) {
             // show scores / goals button
             int i = data.scores_or_goals;
-            button_border_draw(button_scores_goals[i].x, button_scores_goals[i].y, button_scores_goals[i].width, button_scores_goals[i].height, data.focus_button_id == 1 ? 1 : 0);
-            lang_text_draw_centered(44, 221 - i, button_scores_goals[i].x, button_scores_goals[i].y + 10, button_scores_goals[i].width, FONT_NORMAL_BLACK_ON_DARK);
+            auto& btn = button_scores_goals[i];
+            button_border_draw({btn.x, btn.y}, {btn.width, btn.height}, data.focus_button_id == 1 ? 1 : 0);
+            lang_text_draw_centered(44, 221 - i, btn.x, btn.y + 10, btn.width, FONT_NORMAL_BLACK_ON_DARK);
         }
         break;
     case MAP_SELECTION_CAMPAIGN:

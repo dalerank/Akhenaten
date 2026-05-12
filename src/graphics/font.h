@@ -68,7 +68,7 @@ font_definition* font_definition_ref(e_font font);
  * @param character Character to check
  * @return Boolean true if this character can be drawn on the screen, false otherwise
  */
-int font_can_display(const uint8_t* character);
+bool font_can_display(const uint8_t* character);
 
 /**
  * Gets the letter ID for the specified character and font
@@ -80,6 +80,7 @@ int font_can_display(const uint8_t* character);
 font_glyph font_letter_id(const font_definition* def, const uint8_t* str, int* num_bytes);
 bool font_has_letter(const font_definition *def, const uint8_t *str);
 void font_set_letter_id(e_font font, uint32_t character, int imgid, vec2i bearing);
+void font_use_internal_only(bool use_internal);
 
 void font_atlas_regenerate();
 void font_add_missing_glyph(uint32_t codepoint);

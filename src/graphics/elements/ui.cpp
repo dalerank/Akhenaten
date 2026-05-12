@@ -1190,7 +1190,7 @@ void ui::eimg::image(int image) {
 void ui::ebackground::draw(UiFlags flags) {
     painter ctx = game.painter();
     scr_pos = pos;
-    ImageDraw::img_background(ctx, img_desc.tid(), 1.f, pos);
+    graphics_draw_background(ctx, img_desc.tid(), 1.f, pos);
 }
 
 void ui::ebackground::load(archive arch, element* parent, items& elems) {

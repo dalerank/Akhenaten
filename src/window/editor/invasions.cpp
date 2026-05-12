@@ -51,7 +51,7 @@ static void draw_foreground(int) {
             x = 320;
             y = 42 + 30 * (i - 10);
         }
-        button_border_draw(x, y, 290, 25, focus_button_id == i + 1);
+        button_border_draw({x, y}, {290, 25}, focus_button_id == i + 1);
         editor_invasion invasion;
         scenario_editor_invasion_get(i, &invasion);
         if (invasion.type) {

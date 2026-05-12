@@ -272,7 +272,7 @@ static void draw_panel_buttons(const empire_city* city) {
     }
     lang_text_draw(151, scenario_empire_id(), data.p_min.x + 220, data.p_max.y - 45, FONT_NORMAL_BLACK_ON_DARK);
 
-    button_border_draw(data.p_min.x + 104, data.p_max.y - 52, 100, 24, data.focus_button_id == 1);
+    button_border_draw({data.p_min.x + 104, data.p_max.y - 52}, {100, 24}, data.focus_button_id == 1 ? 1 : 0);
     lang_text_draw_centered(44, 7, data.p_min.x + 104, data.p_max.y - 45, 100, FONT_NORMAL_BLACK_ON_DARK);
 }
 

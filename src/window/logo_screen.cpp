@@ -18,7 +18,7 @@
 
 struct logo_screen : autoconfig_window_t<logo_screen> {
     virtual int handle_mouse(const mouse *m) override { return 0; }
-    
+
     virtual void draw_foreground(UiFlags flags) override;
     virtual void ui_draw_foreground(UiFlags flags) override {}
     virtual int get_tooltip_text() override { return 0; }
@@ -32,7 +32,7 @@ void logo_screen::draw_foreground(UiFlags) {
     g_render.clear_screen();
     painter ctx = game.painter();
 
-    ImageDraw::img_background(ctx, image_id_from_group(GROUP_LOGO));
+    graphics_draw_background(ctx, image_id_from_group(GROUP_LOGO), 1.f, {0, 0});
 
     static int logo_tick_count = 0;
     graphics_set_to_dialog();

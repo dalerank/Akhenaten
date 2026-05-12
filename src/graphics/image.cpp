@@ -75,7 +75,7 @@ bool image_load_paks() {
         const int pack_entries = imagepak::get_entries_num(imgpak.name);
         if (pack_entries > 0) {
             imgpak.entries_num = pack_entries;
-            imagepak::update_max_imgid(imgpak.index + imgpak.entries_num);  
+            imagepak::update_max_imgid(imgpak.index + imgpak.entries_num);
         }
 
         if (imgpak.delayed) {
@@ -89,7 +89,7 @@ bool image_load_paks() {
 
         if (g_args.is_log_resources()) {
             if (imgpak.handle) {
-                logs::info("VFS: Pack %d (%s) loaded - %d groups, %d entries", 
+                logs::info("VFS: Pack %d (%s) loaded - %d groups, %d entries",
                            pakidx, imgpak.name.c_str(), imgpak.handle->image_ids().size(), imgpak.entries_num);
             } else {
                 logs::warn("VFS: Pack %d (%s) failed to load", pakidx, imgpak.name.c_str());
@@ -141,6 +141,12 @@ static imagepak* pak_from_collection_id(int collection) {
     }
     
     if (imgpak.handle) {
+        // test mode, we not need resources, just check if pak can be loaded without crashing, so skip the check for
+        // groups and return handle directly
+        if (g_args.no_resource()) {
+            return imgpak.handle;
+        }
+
         // Check if pack loaded successfully (has at least one group)
         if (imgpak.handle->image_ids().size() == 0) {
             logs::error("pak_from_collection_id: pack %d (%s) loaded but has 0 groups - pack file may be missing or corrupted", 
@@ -157,6 +163,10 @@ int image_id_from_group(int collection, int group) {
     imagepak* pak = pak_from_collection_id(collection);
     if (pak == nullptr) {
         return -1;
+    }
+
+    if (g_args.no_resource()) {
+        return 0;
     }
 
     int result = pak->get_global_image_index(group);
@@ -283,13 +293,13 @@ const image_t* image_letter(int letter_id) {
     auto fontpak = data.pak_list[PACK_FONT].handle;
     if (letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
         return image_get(letter_id);
-    } 
-    
+    }
+
     if (letter_id < IMAGE_FONT_MULTIBYTE_OFFSET) {
         const int image_id = image_id_from_group(PACK_FONT, 1) + letter_id;
         return image_get(image_id);
-    } 
-    
+    }
+
     return nullptr;
 }
 

@@ -68,7 +68,7 @@ static void draw_foreground(int) {
             x = 320;
             y = 42 + 30 * (i - 10);
         }
-        button_border_draw(x, y, 290, 25, focus_button_id == i + 1);
+        button_border_draw({x, y}, {290, 25}, focus_button_id == i + 1);
         editor_demand_change demand_change;
         scenario_editor_demand_change_get(i, &demand_change);
         if (demand_change.year) {

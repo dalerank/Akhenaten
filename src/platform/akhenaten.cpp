@@ -35,6 +35,7 @@
 
 #include <SDL.h>
 
+#include <filesystem>
 #include <set>
 #include <platform/android/android.h>
 
@@ -216,18 +217,18 @@ static void setup() {
 #endif // GAME_PLATFORM_ANDROID
     while (!pre_init(g_args.get_data_directory())) {
 #if defined(GAME_PLATFORM_ANDROID)
-        android_append_startup_log("Startup: folder validation failed");
+            android_append_startup_log("Startup: folder validation failed");
 #endif
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Warning",
-          "Akhenaten requires the original files from Pharaoh to run.\n"
+            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Warning",
+              "Akhenaten requires the original files from Pharaoh to run.\n"
 #if defined(GAME_PLATFORM_ANDROID)
-          "Copy your entire Pharaoh folder to your Android device into folder"
-          "/sdcard0/Android/data/com.github.dalerank.akhenaten/files",
+              "Copy your entire Pharaoh folder to your Android device into folder"
+              "/sdcard0/Android/data/com.github.dalerank.akhenaten/files",
 #else
-          "Move the executable file to the directory containing an existing\n"
-          "Pharaoh installation, or run: akhenaten path/to/directory",
+              "Move the executable file to the directory containing an existing\n"
+              "Pharaoh installation, or run: akhenaten path/to/directory",
 #endif
-          nullptr);
+              nullptr);
 
 #if defined(GAME_PLATFORM_ANDROID)
         if (again) {

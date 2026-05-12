@@ -31,6 +31,10 @@ void graphics_fill_rect(vec2i start, vec2i size, color color);
 
 void graphics_shade_rect(vec2i start, vec2i size, int darkness);
 
+namespace ui {
+    void graphics_draw_background(painter&, int image_id, float scale, vec2i offset);
+}
+
 int graphics_save_to_texture(int image_id, vec2i pos, vec2i size);
 void graphics_clear_saved_texture(int image_id, color clr);
 void graphics_delete_saved_texture(int image_id);
@@ -94,8 +98,6 @@ namespace render_cmd {
 }
 
 namespace ImageDraw {
-
-void img_background(painter &ctx, int image_id, float scale = 1.0f, vec2i offset = {0, 0});
 
 void apply_render_commands(painter& ctx, std::string_view p);
 void execute_render_command(painter& ctx, const render_command_t& command);

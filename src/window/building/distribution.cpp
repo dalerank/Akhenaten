@@ -279,7 +279,7 @@ void window_building_draw_order_instruction(int instr_kind, const storage_t* sto
 void draw_accept_none_button(int x, int y, int focused) {
     //    return; // temp - todo: fix buttons
     uint8_t refuse_button_text[] = {'x', 0};
-    button_border_draw(x, y, 20, 20, focused ? 1 : 0);
+    button_border_draw({x, y}, {20, 20}, focused ? 1 : 0);
     text_draw_centered(refuse_button_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 }
 
@@ -291,7 +291,7 @@ void draw_permissions_buttons(int x, int y, int buttons) {
 
     building_storage *s = building_get(data.bid)->dcast_storage();
     for (int i = 0; i < buttons; i++) {
-        button_border_draw(x, y, 20, 20, data.permission_focus_button_id == i + 1 ? 1 : 0);
+        button_border_draw({x, y}, {20, 20}, data.permission_focus_button_id == i + 1 ? 1 : 0);
         if (s->get_permission(i)) {
             text_draw_centered(permission_button_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
         }

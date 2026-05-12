@@ -14,8 +14,37 @@
 #include "game/game_config.h"
 #include "platform/arguments.h"
 
+#include <algorithm>
+#include <cstring>
 #include <set>
 #include <vector>
+
+const uint8_t ascii_5x7_glcd[96 * 5] = {
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x5f, 0x00, 0x00, 0x00, 0x07, 0x00, 0x07, 0x00, 0x14, 0x7f, 0x14, 0x7f, 0x14,
+    0x24, 0x2a, 0x7f, 0x2a, 0x12, 0x23, 0x13, 0x08, 0x64, 0x62, 0x36, 0x49, 0x56, 0x20, 0x50, 0x00, 0x08, 0x07, 0x03, 0x00,
+    0x00, 0x1c, 0x22, 0x41, 0x00, 0x00, 0x41, 0x22, 0x1c, 0x00, 0x2a, 0x1c, 0x7f, 0x1c, 0x2a, 0x08, 0x08, 0x3e, 0x08, 0x08,
+    0x00, 0x80, 0x70, 0x30, 0x00, 0x08, 0x08, 0x08, 0x08, 0x08, 0x00, 0x00, 0x60, 0x60, 0x00, 0x20, 0x10, 0x08, 0x04, 0x02,
+    0x3e, 0x51, 0x49, 0x45, 0x3e, 0x00, 0x42, 0x7f, 0x40, 0x00, 0x72, 0x49, 0x49, 0x49, 0x46, 0x21, 0x41, 0x49, 0x4d, 0x33,
+    0x18, 0x14, 0x12, 0x7f, 0x10, 0x27, 0x45, 0x45, 0x45, 0x39, 0x3c, 0x4a, 0x49, 0x49, 0x31, 0x41, 0x21, 0x11, 0x09, 0x07,
+    0x36, 0x49, 0x49, 0x49, 0x36, 0x46, 0x49, 0x49, 0x29, 0x1e, 0x00, 0x00, 0x14, 0x00, 0x00, 0x00, 0x40, 0x34, 0x00, 0x00,
+    0x00, 0x08, 0x14, 0x22, 0x41, 0x14, 0x14, 0x14, 0x14, 0x14, 0x00, 0x41, 0x22, 0x14, 0x08, 0x02, 0x01, 0x59, 0x09, 0x06,
+    0x3e, 0x41, 0x5d, 0x59, 0x4e, 0x7c, 0x12, 0x11, 0x12, 0x7c, 0x7f, 0x49, 0x49, 0x49, 0x36, 0x3e, 0x41, 0x41, 0x41, 0x22,
+    0x7f, 0x41, 0x41, 0x41, 0x3e, 0x7f, 0x49, 0x49, 0x49, 0x41, 0x7f, 0x09, 0x09, 0x09, 0x01, 0x3e, 0x41, 0x41, 0x51, 0x73,
+    0x7f, 0x08, 0x08, 0x08, 0x7f, 0x00, 0x41, 0x7f, 0x41, 0x00, 0x20, 0x40, 0x41, 0x3f, 0x01, 0x7f, 0x08, 0x14, 0x22, 0x41,
+    0x7f, 0x40, 0x40, 0x40, 0x40, 0x7f, 0x02, 0x1c, 0x02, 0x7f, 0x7f, 0x04, 0x08, 0x10, 0x7f, 0x3e, 0x41, 0x41, 0x41, 0x3e,
+    0x7f, 0x09, 0x09, 0x09, 0x06, 0x3e, 0x41, 0x51, 0x21, 0x5e, 0x7f, 0x09, 0x19, 0x29, 0x46, 0x26, 0x49, 0x49, 0x49, 0x32,
+    0x03, 0x01, 0x7f, 0x01, 0x03, 0x3f, 0x40, 0x40, 0x40, 0x3f, 0x1f, 0x20, 0x40, 0x20, 0x1f, 0x3f, 0x40, 0x38, 0x40, 0x3f,
+    0x63, 0x14, 0x08, 0x14, 0x63, 0x03, 0x04, 0x78, 0x04, 0x03, 0x61, 0x59, 0x49, 0x4d, 0x43, 0x00, 0x7f, 0x41, 0x41, 0x41,
+    0x02, 0x04, 0x08, 0x10, 0x20, 0x00, 0x41, 0x41, 0x41, 0x7f, 0x04, 0x02, 0x01, 0x02, 0x04, 0x40, 0x40, 0x40, 0x40, 0x40,
+    0x00, 0x03, 0x07, 0x08, 0x00, 0x20, 0x54, 0x54, 0x78, 0x40, 0x7f, 0x28, 0x44, 0x44, 0x38, 0x38, 0x44, 0x44, 0x44, 0x28,
+    0x38, 0x44, 0x44, 0x28, 0x7f, 0x38, 0x54, 0x54, 0x54, 0x18, 0x00, 0x08, 0x7e, 0x09, 0x02, 0x18, 0xa4, 0xa4, 0x9c, 0x78,
+    0x7f, 0x08, 0x04, 0x04, 0x78, 0x00, 0x44, 0x7d, 0x40, 0x00, 0x20, 0x40, 0x40, 0x3d, 0x00, 0x7f, 0x10, 0x28, 0x44, 0x00,
+    0x00, 0x41, 0x7f, 0x40, 0x00, 0x7c, 0x04, 0x78, 0x04, 0x78, 0x7c, 0x08, 0x04, 0x04, 0x78, 0x38, 0x44, 0x44, 0x44, 0x38,
+    0xfc, 0x18, 0x24, 0x24, 0x18, 0x18, 0x24, 0x24, 0x18, 0xfc, 0x7c, 0x08, 0x04, 0x04, 0x08, 0x48, 0x54, 0x54, 0x54, 0x24,
+    0x04, 0x04, 0x3f, 0x44, 0x24, 0x3c, 0x40, 0x40, 0x20, 0x7c, 0x1c, 0x20, 0x40, 0x20, 0x1c, 0x3c, 0x40, 0x30, 0x40, 0x3c,
+    0x44, 0x28, 0x10, 0x28, 0x44, 0x4c, 0x90, 0x90, 0x90, 0x7c, 0x44, 0x64, 0x54, 0x4c, 0x44, 0x00, 0x08, 0x36, 0x41, 0x00,
+    0x00, 0x00, 0x77, 0x00, 0x00, 0x00, 0x41, 0x36, 0x08, 0x00, 0x02, 0x01, 0x02, 0x04, 0x02, 0x3c, 0x26, 0x23, 0x26, 0x3c,
+};
 
 image_packer font_packer;
 
@@ -46,7 +75,6 @@ struct std::hash<font_config> {
 };
 
 using font_configs_t = stable_array<font_config>;
-
 const e_font_tokens_t ANK_CONFIG_ENUM(e_font_tokens);
 
 static int image_y_offset_none(const uint8_t *c, int image_height, int line_height);
@@ -102,6 +130,7 @@ struct font_data_t {
     std::set<uint32_t> missing_glyphs;
     bool use_utf_font = false;
     bool needs_regeneration = false;
+    bool use_internal_only = false;
 };
 
 font_data_t g_font_data;
@@ -178,7 +207,7 @@ font_definition *font_definition_ref(e_font font) {
     return &data.font_definitions[font];
 }
 
-int font_can_display(const uint8_t* character) {
+bool font_can_display(const uint8_t* character) {
     auto& data = g_font_data;
     int dummy;
     const auto glyph = font_letter_id(&data.font_definitions[FONT_NORMAL_BLACK_ON_LIGHT], character, &dummy);
@@ -196,7 +225,17 @@ bool font_has_letter(const font_definition *def, const uint8_t *str) {
 
 font_glyph font_letter_id(const font_definition* def, const uint8_t* str, int* num_bytes) {
     auto& data = g_font_data;
-    if (*str >= 0x80 || data.use_utf_font) {
+
+    if (data.use_internal_only) {
+        const auto &mbmap = data.mbsymbols[def->font];
+        const uint32_t code = utf8_decode(str, num_bytes);
+        auto it = mbmap.find(code);
+        if (it != mbmap.end()) {
+            return it->second;
+        }
+
+        font_add_missing_glyph(code);
+    } else if (*str >= 0x80 || data.use_utf_font) {
         const auto &mbmap = data.mbsymbols[def->font];
         const uint32_t code = utf8_decode(str, num_bytes);
         auto it = mbmap.find(code);
@@ -206,34 +245,6 @@ font_glyph font_letter_id(const font_definition* def, const uint8_t* str, int* n
 
         // Add missing glyph for later regeneration
         font_add_missing_glyph(code);
-
-        //if (data.multibyte == MULTIBYTE_TRADITIONAL_CHINESE) {
-        //    int char_id = (str[0] & 0x7f) | ((str[1] & 0x7f) << 7);
-        //    if (char_id >= IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS) {
-        //        // lookup in table
-        //        int big5_encoded = str[0] << 8 | str[1];
-        //        char_id = encoding_trad_chinese_big5_to_image_id(big5_encoded);
-        //        if (char_id < 0 || char_id >= IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS)
-        //            return -1;
-        //    }
-        //    return IMAGE_FONT_MULTIBYTE_OFFSET + def->multibyte_image_offset + char_id;
-        //} else if (data.multibyte == MULTIBYTE_SIMPLIFIED_CHINESE) {
-        //    int char_id = (str[0] & 0x7f) | ((str[1] & 0x7f) << 7);
-        //    if (char_id >= IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS)
-        //        return -1;
-        //
-        //    return IMAGE_FONT_MULTIBYTE_OFFSET + def->multibyte_image_offset + char_id;
-        //} else if (data.multibyte == MULTIBYTE_KOREAN) {
-        //    int b0 = str[0] - 0xb0;
-        //    int b1 = str[1] - 0xa1;
-        //    int char_id = b0 * 94 + b1;
-        //    if (b0 < 0 || b1 < 0 || char_id < 0 || char_id >= IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS)
-        //        return -1;
-        //
-        //    return IMAGE_FONT_MULTIBYTE_OFFSET + def->multibyte_image_offset + char_id;
-        //} else {
-        //    return -1;
-        //}
     } else {
         *num_bytes = 1;
         if (!data.font_mapping[*str]) {
@@ -254,6 +265,10 @@ void font_set_letter_id(e_font font, uint32_t character, int imgid, vec2i bearin
     auto &data = g_font_data;
     auto &mbmap = data.mbsymbols[font];
     mbmap[character] = { character, imgid, bearing };
+}
+
+void font_use_internal_only(bool use_internal) {
+    g_font_data.use_internal_only = use_internal;
 }
 
 const font_mbsybols_t &font_get_symbols() {
@@ -428,6 +443,101 @@ void add_symbols_to_font_packer(imagepak_handle font_pack, span_const<uint8_t> f
     }
 }
 
+template<typename TSymbols>
+static void add_glcd_symbols_to_font_packer(imagepak_handle font_pack, font_config fconfig, const TSymbols &utf8_symbols, int &cp_index) {
+    for (const auto codepoint : utf8_symbols) {
+        unsigned char draw_ch = '?';
+        if (codepoint >= 32u && codepoint <= 127u) {
+            draw_ch = static_cast<unsigned char>(codepoint);
+        }
+
+        const int scale = std::max(1, (int)fconfig.size / 7);
+        const int gw = 5 * scale;
+        const int gh = 7 * scale;
+
+        uint32_t Rmask = 0x000000FF;
+        uint32_t Gmask = 0x0000FF00;
+        uint32_t Bmask = 0x00FF0000;
+        uint32_t Amask = 0xFF000000;
+
+        SDL_Surface *surface = SDL_CreateRGBSurface(SDL_SWSURFACE, gw, gh, 32, Rmask, Gmask, Bmask, Amask);
+        const color fg_pix = fconfig.color;
+        if (surface) {
+            memset(surface->pixels, 0, (size_t)surface->h * (size_t)surface->pitch);
+            uint8_t *base = (uint8_t *)surface->pixels;
+            const uint8_t *colbits = &ascii_5x7_glcd[(draw_ch - 32) * 5];
+            for (int col = 0; col < 5; ++col) {
+                uint8_t line = colbits[col];
+                for (int bitrow = 0; bitrow < 7; ++bitrow, line >>= 1) {
+                    if (line & 1) {
+                        for (int dy = 0; dy < scale; ++dy) {
+                            for (int dx = 0; dx < scale; ++dx) {
+                                const int px = col * scale + dx;
+                                const int py = bitrow * scale + dy;
+                                auto *pixel = (uint32_t *)(base + py * surface->pitch + px * 4);
+                                *pixel = fg_pix;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        image_t img;
+        img.pak_name = font_pack.handle->name;
+        img.sgx_index = cp_index;
+        img.data_length = -1;
+        img.uncompressed_length = -1;
+        img.unk00 = -1;
+        img.start_index = font_pack.handle->global_image_index_offset;
+        img.offset_mirror = 0;
+
+        img.width = surface ? surface->w : 0;
+        img.height = surface ? surface->h : 0;
+        img.temp.surface = (void *)surface;
+        img.temp.bearing_x = 0;
+        img.temp.bearing_y = (int)fconfig.line_height - gh;
+        img.temp.symdeck = codepoint;
+        img.temp.font_type = fconfig.type;
+
+        img.unk03 = -1;
+        img.animation.num_sprites = -1;
+        img.animation.unk04 = -1;
+        img.animation.sprite_offset = { -1, -1 };
+        img.animation.unk05 = -1;
+        img.animation.unk06 = -1;
+        img.animation.unk07 = -1;
+        img.animation.unk08 = -1;
+        img.animation.unk09 = -1;
+        img.animation.can_reverse = false;
+        img.animation.unk10 = -1;
+        img.type = -1;
+        img.is_fully_compressed = false;
+        img.is_external = false;
+        img.has_isometric_top = false;
+        img.unk11 = -1;
+        img.unk12 = -1;
+        img.bmp.group_id = 0;
+        img.bmp.name = "custom_font";
+        img.bmp.entry_index = 0;
+        img.unk13 = -1;
+        img.animation.speed_id = 1;
+        img.unk14 = -1;
+        img.unk15 = -1;
+        img.unk16 = -1;
+        img.unk17 = -1;
+        img.unk18 = -1;
+        img.unk20 = -1;
+
+        image_packer_rect *rect = &font_packer.rects[cp_index];
+        rect->input.width = img.width;
+        rect->input.height = img.height;
+
+        font_pack.handle->images_array.push_back(img);
+        cp_index++;
+    }
+}
+
 void font_atlas_regenerate() {
     auto &font_pack = g_image_data->pak_list[PACK_CUSTOM_FONT];
 
@@ -543,57 +653,65 @@ void font_atlas_regenerate() {
     if (!g_args.get_custom_font().empty()) {
         symbols_font = g_args.get_custom_font().c_str();
     }
+
+    if (g_font_data.use_internal_only) {
+        for (const auto &fconfig : font_configs) {
+            add_glcd_symbols_to_font_packer(font_pack, fconfig, utf8_symbols, cp_index);
+            font_definition_ref(fconfig.type)->line_height = fconfig.line_height;
+        }
+    } else {
 #if defined(GAME_PLATFORM_ANDROID)
-    std::vector<uint8_t> resolved_font_data;
-    {
-        const bool is_app_data_font = (symbols_font == "data/neucha.ttf");
-        if (is_app_data_font) {
-            auto data = vfs::internal_resource_open(symbols_font.c_str());
-            if (data.first && data.second > 0) {
-                const auto *font_bytes = static_cast<const uint8_t *>(data.first);
-                resolved_font_data.assign(font_bytes, font_bytes + data.second);
+        std::vector<uint8_t> resolved_font_data;
+        {
+            const bool is_app_data_font = (symbols_font == "data/neucha.ttf");
+            if (is_app_data_font) {
+                auto data = vfs::internal_resource_open(symbols_font.c_str());
+                if (data.first && data.second > 0) {
+                    const auto *font_bytes = static_cast<const uint8_t *>(data.first);
+                    resolved_font_data.assign(font_bytes, font_bytes + data.second);
+                }
+            }
+
+            if (resolved_font_data.empty()) {
+                vfs::reader font_reader = vfs::file_open(symbols_font, "rb");
+                if (!font_reader) {
+                    vfs::path fallback_font_path = symbols_font.resolve();
+                    font_reader = vfs::file_open(fallback_font_path, "rb");
+                }
+
+                if (!font_reader) {
+                    g_font_data.needs_regeneration = false;
+                    bstring512 message_text;
+                    message_text.printf("The specified font symbols file could not be opened:%s", symbols_font.c_str());
+                    popup_dialog::show_ok("Data issue", message_text.c_str());
+                    return;
+                }
+
+                const auto *font_bytes = static_cast<const uint8_t *>(font_reader->data());
+                resolved_font_data.assign(font_bytes, font_bytes + font_reader->size());
             }
         }
 
-        if (resolved_font_data.empty()) {
-            vfs::reader font_reader = vfs::file_open(symbols_font, "rb");
-            if (!font_reader) {
-                vfs::path fallback_font_path = symbols_font.resolve();
-                font_reader = vfs::file_open(fallback_font_path, "rb");
-            }
-
-            if (!font_reader) {
-                g_font_data.needs_regeneration = false;
-                bstring512 message_text;
-                message_text.printf("The specified font symbols file could not be opened:%s", symbols_font.c_str());
-                popup_dialog::show_ok("Data issue", message_text.c_str());
-                return;
-            }
-
-            const auto *font_bytes = static_cast<const uint8_t *>(font_reader->data());
-            resolved_font_data.assign(font_bytes, font_bytes + font_reader->size());
+        for (const auto &fconfig : font_configs) {
+            add_symbols_to_font_packer(font_pack, make_span(resolved_font_data), fconfig, utf8_symbols, cp_index);
+            font_definition_ref(fconfig.type)->line_height = fconfig.line_height;
         }
-    }
-
-    for (const auto &fconfig : font_configs) {
-        add_symbols_to_font_packer(font_pack, make_span(resolved_font_data), fconfig, utf8_symbols, cp_index);
-        font_definition_ref(fconfig.type)->line_height = fconfig.line_height;
-    }
 #else
-    vfs::path resolved_font_path = symbols_font.resolve();
-    if (!vfs::file_exists(resolved_font_path)) {
-        g_font_data.needs_regeneration = false;
-        bstring512 message_text;
-        message_text.printf("The specified font symbols file does not exist:%s", resolved_font_path.c_str());
-        popup_dialog::show_ok("Data issue", message_text.c_str());
-        return;
-    }
+        vfs::path resolved_font_path = symbols_font.resolve();
+        if (!vfs::file_exists(resolved_font_path)) {
+            g_font_data.needs_regeneration = false;
+            bstring512 message_text;
+            message_text.printf("The specified font symbols file does not exist:%s", resolved_font_path.c_str());
+            popup_dialog::show_ok("Data issue", message_text.c_str());
+            return;
+        }
 
-    for (const auto &fconfig : font_configs) {
-        add_symbols_to_font_packer(font_pack, resolved_font_path.c_str(), fconfig, utf8_symbols, cp_index);
-        font_definition_ref(fconfig.type)->line_height = fconfig.line_height;
-    }
+        for (const auto &fconfig : font_configs) {
+            add_symbols_to_font_packer(font_pack, resolved_font_path.c_str(), fconfig, utf8_symbols, cp_index);
+            font_definition_ref(fconfig.type)->line_height = fconfig.line_height;
+        }
 #endif
+    }
 
     // Pack images into atlas
     font_packer.options.fail_policy = IMAGE_PACKER_NEW_IMAGE;
