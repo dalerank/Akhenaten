@@ -45,8 +45,8 @@ building_academy {
   animations {
     _pack { pack:PACK_GENERAL }
     preview { id:44 }
-    base { id:4 }
-    work { pos [36, -4], id:4, offset:1, max_frames:18 }
+    base { id:44 }
+    work { pos [36, -4], id:44, offset:1, max_frames:18 }
   }
 
   overlay : OVERLAY_EDUCATION
