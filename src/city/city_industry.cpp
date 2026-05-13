@@ -203,16 +203,16 @@ void building_industry_update_wheat_production() {
 }
 
 void building_curse_farms(int big_curse) {
-    // TODO
-    //    for (int i = 1; i < MAX_BUILDINGS; i++) {
-    //        building *b = building_get(i);
-    //        if (b->state == BUILDING_STATE_VALID && b->output_resource_id && building_is_farm(b->type)) {
-    //            b->data.industry.progress = 0;
-    //            b->data.industry.blessing_days_left = 0;
-    //            b->data.industry.curse_days_left = big_curse ? 48 : 4;
-    //            update_farm_image(b);
-    //        }
-    //    }
+    buildings_valid_farms_do([big_curse](building &b) {
+        building_farm *farm = b.dcast_farm();
+        if (!farm) {
+            return;
+        }
+        farm->runtime_data().progress = 0;
+        b.blessing_days_left = 0;
+        b.curse_days_left = big_curse ? 48 : 4;
+        farm->update_tiles_image();
+    });
 }
 
 void building_workshop_add_raw_material(building* b, int amount, e_resource res) {

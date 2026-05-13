@@ -1,6 +1,7 @@
 #include "city_religion_osiris.h"
 
 #include "city/city.h"
+#include "city/city_industry.h"
 #include "city/city_message.h"
 #include "city_floods.h"
 #include "core/random.h"
@@ -24,7 +25,7 @@ bool god_osiris_t::create_shipwreck_flotsam() {
 
 
 void god_osiris_t::perform_locusts() {
-    // TODO: implement locusts
+    building_curse_farms(1);
     messages::popup("message_wrath_of_osiris_2", 0, 0);
 }
 
