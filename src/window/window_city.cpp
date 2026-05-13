@@ -1,11 +1,16 @@
 #include "window_city.h"
 
 #include "overlays/city_overlay.h"
+#include "building/building.h"
+#include "building/building_type.h"
 #include "building/construction/build_planner.h"
 #include "building/rotation.h"
+#include "city/city_buildings.h"
 #include "city/city_message.h"
 #include "game/game_events.h"
 #include "city/city.h"
+#include "grid/property.h"
+#include "grid/terrain.h"
 #include "city/city_warnings.h"
 #include "core/profiler.h"
 #include "dev/debug.h"
@@ -232,6 +237,39 @@ void window_city_init() {
 
     events::subscribe([] (event_toggle_legion ev) {
         cycle_legion();
+    });
+
+    events::subscribe([] (event_copy_build_from_cursor) {
+        tile2i tile = g_screen_city.current_tile;
+        if (!tile.valid()) {
+            return;
+        }
+
+        e_building_type type = BUILDING_NONE;
+        building *b = building_at(tile);
+        if (b && b->type != BUILDING_NONE && b->state != BUILDING_STATE_UNUSED) {
+            type = b->main()->type;
+            if (type >= BUILDING_HOUSE_CRUDE_HUT && type <= BUILDING_HOUSE_PALATIAL_ESTATE) {
+                type = BUILDING_HOUSE_VACANT_LOT;
+            }
+        } else {
+            int grid_offset = tile.grid_offset();
+            if (map_terrain_is(grid_offset, TERRAIN_GATEHOUSE)) {
+                type = BUILDING_MUD_GATEHOUSE;
+            } else if (map_terrain_is(grid_offset, TERRAIN_WALL)) {
+                type = BUILDING_MUD_WALL;
+            } else if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+                type = map_property_is_plaza_or_earthquake(tile) ? BUILDING_PLAZA : BUILDING_ROAD;
+            } else if (map_terrain_is(grid_offset, TERRAIN_GARDEN)) {
+                type = BUILDING_GARDENS;
+            } else if (map_terrain_is(grid_offset, TERRAIN_CANAL)) {
+                type = BUILDING_IRRIGATION_DITCH;
+            }
+        }
+
+        if (type != BUILDING_NONE) {
+            events::emit(event_city_building_mode{ type });
+        }
     });
 }
 
