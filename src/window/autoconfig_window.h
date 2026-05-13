@@ -3,6 +3,10 @@
 #include "core/xstring.h"
 #include "core/typename.h"
 #include "graphics/elements/ui.h"
+#include "js/js_struct.h"
+
+struct window_info{ vec2i pos; };
+ANK_REGISTER_STRUCT_WRITER(window_info, pos);
 
 struct autoconfig_window : public ui::widget {
     autoconfig_window(xstring s);

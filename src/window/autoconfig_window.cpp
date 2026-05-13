@@ -7,7 +7,6 @@
 #include "core/profiler.h"
 #include "graphics/elements/ui_js.h"
 #include "graphics/window.h"
-#include "js/js_struct.h"
 #include "js/js_events.h"
 #include "input/input.h"
 #include "input/mouse.h"
@@ -17,9 +16,6 @@
 
 using autoconfig_windows = std::unordered_map<xstring, autoconfig_window *>;
 autoconfig_windows* g_autoconfig_windows = nullptr;
-
-struct window_info{ vec2i pos; };
-ANK_REGISTER_STRUCT_WRITER(window_info, pos);
 
 struct event_show_window { xstring id; };
 ANK_SCRIPT_EVENT(event_show_window, id)

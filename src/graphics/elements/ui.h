@@ -250,7 +250,7 @@ namespace ui {
       UiFlags flags = UiFlags_None, button_onclick_cb cb = {});
     generic_button& link(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_WHITE_ON_DARK,
       UiFlags flags = UiFlags_None, button_onclick_cb cb = {});
-    generic_button& large_button(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
+    generic_button& large_button(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags flags = UiFlags_None);
     generic_button& button(uint32_t id);
     pcstr button_tooltip(uint32_t id);
     image_button& img_button(image_desc desc, vec2i pos, vec2i size, const img_button_offsets offsets = {},
