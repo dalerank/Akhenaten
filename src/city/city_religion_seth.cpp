@@ -11,6 +11,9 @@
 #include "game/game_events.h"
 #include "core/random.h"
 #include "figuretype/water.h"
+#include "building/building_fort.h"
+#include "grid/routing/routing_terrain.h"
+#include "game/undo.h"
 
 god_seth_t god_seth;
 
@@ -77,9 +80,31 @@ void god_seth_t::perform_hailstorm() {
 }
 
 bool god_seth_t::perform_fort_destruction() {
-    // TODO: implement fort destruction
-    //            formation_legion_curse();
-    return false;
+    building_fort *best_fort = nullptr;
+    int best_weight = 0;
+
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building_fort *fort = building_get(i)->dcast_fort();
+        if (!fort || !fort->is_valid()) {
+            continue;
+        }
+
+        formation *m = formation_get(fort->runtime_data().fid);
+        int weight = m ? (int)m->num_figures : 1;
+        if (weight > best_weight) {
+            best_weight = weight;
+            best_fort = fort;
+        }
+    }
+
+    if (!best_fort) {
+        return false;
+    }
+
+    game_undo_disable();
+    best_fort->base.destroy_by_collapse();
+    map_routing_update_land();
+    return true;
 }
 
 void god_seth_t::perform_minor_curse() {
