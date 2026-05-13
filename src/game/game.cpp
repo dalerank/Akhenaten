@@ -387,7 +387,12 @@ bool game_init(game_opts opts) {
     }
 
     game_state_init();
-    window_logo_show(MESSAGE_NONE);
+    if (g_args.no_logo()) {
+        g_sound.play_intro();
+        main_menu_screen::show(/*restart_music*/ false);
+    } else {
+        window_logo_show(MESSAGE_NONE);
+    }
 
     return true;
 }

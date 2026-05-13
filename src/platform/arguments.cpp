@@ -150,6 +150,7 @@ static int parse_decimal_as_percentage(const char *str) {
 
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--window", "window", true, "enable window mode");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nosound", "sound", false, "not use sound manager");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--no-logo", "no_logo", true, "skip logo screen; go straight to main menu");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--logjsfiles", "logjsfiles", true, "print logs which files open with js");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-js-handlers", "log_js_handlers", true, "print logs when JavaScript event handlers are registered");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nocrashdlg", "crashdlg", false, "do not show crash dialog");
