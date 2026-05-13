@@ -78,7 +78,7 @@ Before starting any task, state how you will verify the result.
 
 ## Git Commits
 
-Do not add `Co-Authored-By: Claude` or any Claude/Anthropic attribution to commit messages.
+Do not add `Co-Authored-By: Claude` or any Claude/Anthropic attribution to commit messages or pull request bodies. Do not include "Generated with Claude Code" or similar lines in PR descriptions.
 
 ## Documentation
 
