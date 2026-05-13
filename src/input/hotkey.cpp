@@ -236,6 +236,10 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
         def->callback = [] { events::emit(event_city_building_mode{ BUILDING_ROADBLOCK }); };
         break;
 
+    case HOTKEY_COPY_BUILD:
+        def->callback = [] { events::emit(event_copy_build_from_cursor{ 1 }); };
+        break;
+
     case HOTKEY_DEBUG_1_UP:
         def->callback = [action = mapping.action] { events::emit(event_debug_tile_change{ +1 }); };
         def->repeatable = 1;

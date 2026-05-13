@@ -162,6 +162,7 @@ localization_en = [
   {key:"#TR_HOTKEY_SHOW_OVERLAY_DAMAGE", text:"Damage overlay"}
   {key:"#TR_HOTKEY_SHOW_OVERLAY_CRIME", text:"Crime overlay"}
   {key:"#TR_HOTKEY_ROTATE_BUILDING", text:"Rotate building"}
+  {key:"#TR_HOTKEY_COPY_BUILD", text:"Copy build under cursor"}
   {key:"#TR_HOTKEY_SHOW_OVERLAY_PROBLEMS", text:"Problems overlay"}
   {key:"#TR_HOTKEY_GO_TO_BOOKMARK_1", text:"Go to bookmark 1"}
   {key:"#TR_HOTKEY_GO_TO_BOOKMARK_2", text:"Go to bookmark 2"}
