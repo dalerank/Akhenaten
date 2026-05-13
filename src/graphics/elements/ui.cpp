@@ -626,16 +626,21 @@ generic_button& ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
     return gbutton;
 }
 
-generic_button& ui::large_button(pcstr label, vec2i pos, vec2i size, e_font font) {
+generic_button& ui::large_button(pcstr label, vec2i pos, vec2i size, e_font font, UiFlags flags) {
     const vec2i offset = g_state.offset();
 
     g_state.buttons.push_back(
         generic_button{offset.x + pos.x, offset.y + pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
     auto& gbutton = g_state.buttons.back().g_button;
-    int focused = is_button_hover(gbutton, vec2i{0, 0});
+    const bool subdued = !!(flags & (UiFlags_Darkened | UiFlags_Readonly));
+    const int focused = subdued ? 0 : (is_button_hover(gbutton, vec2i{0, 0}) ? 1 : 0);
 
-    push(cmd_t::large_label, Pos{offset + pos}, Size{size}, BoxWidth{size.x / 16}, ImageId{focused ? 1 : 0}, Font{font},
+    push(cmd_t::large_label, Pos{offset + pos}, Size{size}, BoxWidth{size.x / 16}, ImageId{focused}, Font{font},
       Caption{label});
+
+    if (subdued) {
+        push(cmd_t::shade_rect, Pos{offset + pos}, Size{size}, ImageId{0x80});
+    }
 
     return gbutton;
 }
@@ -2091,9 +2096,17 @@ void ui::egeneric_button::draw(UiFlags gflags) {
         btn = &ui::button(button_text, pos, size, {_font, _font_hover}, flags);
         break;
 
-    case 1:
-        btn = &ui::large_button(button_text, pos, size, _font);
+    case 1: {
+        UiFlags lbflags = UiFlags_None;
+        if (darkened) {
+            lbflags |= UiFlags_Darkened;
+        }
+        if (readonly) {
+            lbflags |= UiFlags_Readonly;
+        }
+        btn = &ui::large_button(button_text, pos, size, _font, lbflags);
         break;
+    }
     }
 
     const bool clickable = !darkened && !readonly;

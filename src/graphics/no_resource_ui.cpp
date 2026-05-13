@@ -13,9 +13,27 @@ void ui::no_resource::graphics_draw_background(painter& ctx, int image_id, float
 }
 
 void ui::no_resource::button_border_fill(vec2i pos, vec2i size, bool hovered) {
+    painter ctx = game.painter();
     const color fill = hovered ? COLOR_LIGHT_BLUE : 0xff505050;
-    graphics_fill_rect(pos, size, fill);
-    graphics_draw_rect(pos, size, COLOR_WHITE);
+    ctx.fill_rect(pos, size, fill);
+
+    if (size.x <= 0 || size.y <= 0) {
+        return;
+    }
+
+    const vec2i end = pos + size - vec2i{1, 1};
+    const color hi = hovered ? COLOR_WHITE : COLOR_INSET_LIGHT;
+    const color lo = hovered ? COLOR_FONT_LIGHT_GRAY : COLOR_INSET_DARK;
+
+    graphics_draw_line(pos, vec2i{end.x, pos.y}, hi);
+    graphics_draw_line(pos, vec2i{pos.x, end.y}, hi);
+    graphics_draw_line(vec2i{end.x, pos.y}, end, lo);
+    graphics_draw_line(vec2i{pos.x, end.y}, end, lo);
+}
+
+void ui::no_resource::large_label_fill(int x, int y, int width_blocks, int type, vec2i pixel_size) {
+    const vec2i sz = (pixel_size.y > 0) ? pixel_size : vec2i{width_blocks * 16, 25};
+    button_border_fill({x, y}, sz, type != 0);
 }
 
 void ui::no_resource::large_label_fill(vec2i pos, int width_blocks, int type) {

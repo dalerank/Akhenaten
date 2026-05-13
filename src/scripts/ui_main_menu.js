@@ -32,6 +32,15 @@ main_menu_screen {
 	}
 }
 
+function main_menu_can_continue() {
+	var last_save = normalize_savegame_path_for_load(game_features.gameopt_last_save_filename)
+	var last_player = game_features.gameopt_last_player
+	if (!last_save || !last_player) {
+		return false
+	}
+	return __game_file_exists(last_save)
+}
+
 function main_menu_continue_game() {
 	var last_save = normalize_savegame_path_for_load(game_features.gameopt_last_save_filename)
     var last_player = game_features.gameopt_last_player
@@ -51,6 +60,7 @@ function main_menu_quit_game() {
 
 [es=(main_menu_screen, init)]
 function main_menu_on_init(window) {
+	window.continue_game.readonly = !main_menu_can_continue()
 }
 
 [es=event_totals_commits_loaded]
