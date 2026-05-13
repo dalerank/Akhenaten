@@ -23,4 +23,3 @@ namespace ui {
     }
 } // namespace ui
 
-extern void (*large_label_draw)(vec2i pos, int width_blocks, int type);
