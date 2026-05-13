@@ -113,9 +113,9 @@ void window_scenario_selection::setup_dialog(e_map_selection_dialog_type dialog_
     (*this)["btn_scores"].set_enabled(show_scores);
     (*this)["btn_goals"].set_enabled(show_scores);
 
-    (*this)["bg_cck"].set_enabled(dialog == MAP_SELECTION_CCK_LEGACY);
-    (*this)["bg_custom"].set_enabled(dialog == MAP_SELECTION_CUSTOM);
-    (*this)["bg_history"].set_enabled(dialog == MAP_SELECTION_CAMPAIGN || dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST);
+    (*this)["img_cck"].set_enabled(dialog == MAP_SELECTION_CCK_LEGACY);
+    (*this)["img_custom"].set_enabled(dialog == MAP_SELECTION_CUSTOM);
+    (*this)["img_history"].set_enabled(dialog == MAP_SELECTION_CAMPAIGN || dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST);
 
     sle->onclick_item([](int index, int p2) { g_window_scenario_selection.on_map_list_click(index, p2); });
     panel->set_onclick_entry([](int index, int p2) { g_window_scenario_selection.on_map_list_click(index, p2); });
@@ -158,13 +158,6 @@ void window_scenario_selection::update_widget_visibility_after_list_change() {
 
 void window_scenario_selection::init() {
     autoconfig_window::init();
-
-    for (int i = 0; i < 9; ++i) {
-        char buf[16];
-        snprintf(buf, sizeof buf, "camp_%d", i);
-        const int idx = i;
-        (*this)[buf].onclick([idx](int, int) { g_window_scenario_selection.select_campaign(idx); });
-    }
 
     (*this)["btn_start"].onclick([](int, int) {
         if (g_scenario.campaign_scenario_id == -1) {
@@ -440,7 +433,6 @@ void window_scenario_selection::ui_draw_foreground(UiFlags flags) {
         window_draw_underlying_window(UiFlags_Readonly);
     }
 
-    graphics_set_to_dialog();
     ui.begin_widget(pos);
     ui.draw(flags);
     ui.event(window_info{pos}, get_section(), __func__);
@@ -457,8 +449,6 @@ void window_scenario_selection::ui_draw_foreground(UiFlags flags) {
     painter ctx = game.painter();
     char txt[200];
     debug_text(ctx, txt, INFO_X, -120, 0, "", FILEIO.get_file_version(), COLOR_FONT_YELLOW);
-
-    graphics_reset_dialog();
 }
 
 int window_scenario_selection::ui_handle_mouse(const mouse* m) {
@@ -514,3 +504,8 @@ void window_scenario_selection_show(int dialog_type) {
     autoconfig_window::show("window_scenario_selection");
 }
 ANK_FUNCTION_1(window_scenario_selection_show)
+
+void window_scenario_selection_select_campaign(int campaign_index) {
+    g_window_scenario_selection.select_campaign(campaign_index);
+}
+ANK_FUNCTION_1(window_scenario_selection_select_campaign)

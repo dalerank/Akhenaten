@@ -37,3 +37,4 @@ struct window_scenario_selection : autoconfig_window_t<window_scenario_selection
 extern window_scenario_selection g_window_scenario_selection;
 
 void window_scenario_selection_show(int dialog_type);
+void window_scenario_selection_select_campaign(int campaign_index);
