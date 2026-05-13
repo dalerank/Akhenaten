@@ -9,23 +9,6 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_teacher)
 
-void figure_teacher::figure_action() {
-    switch (action_state()) {
-    case ACTION_125_ROAMER_ROAMING:
-        base.roam_length++;
-        if (base.roam_length >= base.max_roam_length) {
-            advance_action(ACTION_126_ROAMER_RETURNING);
-        }
-
-        break;
-
-    case ACTION_126_ROAMER_RETURNING:
-        ; // nothing here
-        break;
-
-    }
-}
-
 sound_key figure_teacher::phrase_key() const {
     svector<sound_key, 10> keys;
 

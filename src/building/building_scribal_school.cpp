@@ -54,31 +54,8 @@ bool building_scribal_school::add_resource(e_resource resource, int amount) {
 }
 
 void building_scribal_school::spawn_figure() {
-    check_labor_problem();
-    if (has_figure_of_type(BUILDING_SLOT_SERVICE, FIGURE_TEACHER)) {
-        return;
-    }
-
-    tile2i road = map_get_road_access_tile(tile(), size());
-    if (!road.valid()) {
-        return;
-    }
-
-    common_spawn_labor_seeker(current_params().min_houses_coverage);
-    int spawn_delay = figure_spawn_timer();
-    if (spawn_delay == -1) {
-        return;
-    }
-
-    base.figure_spawn_delay++;
-    if (base.figure_spawn_delay > spawn_delay) {
-        base.figure_spawn_delay = 0;
-
-        figure* f = figure_create(FIGURE_TEACHER, road, DIR_0_TOP_RIGHT);
-        f->action_state = ACTION_125_ROAMER_ROAMING;
-        f->set_home(id());
-        base.set_figure(BUILDING_SLOT_SERVICE, f->id);
-        f->init_roaming_from_building(0);
+    if (common_spawn_figure_trigger(current_params().min_houses_coverage, BUILDING_SLOT_SERVICE)) {
+        create_roaming_figure(FIGURE_TEACHER, (e_figure_action)ACTION_125_ROAMER_ROAMING, BUILDING_SLOT_SERVICE);
     }
 }
 
