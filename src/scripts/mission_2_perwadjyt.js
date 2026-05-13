@@ -190,7 +190,6 @@ function mission2_on_disease(ev) {
 [event=event_update_victory_state, mission=mission2]
 function mission2_handle_victory_state(ev) {
 	city.set_victory_reason("figs_stored_handled", mission.figs_stored_handled)
-	city.set_victory_reason("disease_handled", mission.disease_handled)
 	city.set_victory_reason("pottery_step1_stored_handled", mission.pottery_step1_stored_handled)
 	city.set_victory_reason("pottery_step2_stored_handled", mission.pottery_step2_stored_handled)
 
