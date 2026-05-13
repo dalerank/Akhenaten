@@ -10,6 +10,37 @@ enum e_map_selection_dialog_type {
     MAP_SELECTION_CAMPAIGN_UNUSED_BACKGROUND
 };
 
+/** Int fields bound to MuJS global `__scenario_selection_info` (read/write from scripts). */
+struct scenario_selection_info_js {
+    int visible{};
+    int is_open_play{};
+    int climate_id{};
+    int mapsize_id{};
+    int invasion_id{};
+    int culture{};
+    int prosperity{};
+    int monuments{};
+    int kingdom{};
+    int population{};
+    int housing{};
+    int house_level{};
+    int has_culture{};
+    int has_prosperity{};
+    int has_monuments{};
+    int has_kingdom{};
+    int has_population{};
+    int has_housing{};
+    int time_kind{};
+    int time_months{};
+    int mon0{};
+    int mon1{};
+    int mon2{};
+    /** 0 = high scores panel, 1 = mission goals (campaign single list). */
+    int scores_or_goals{};
+};
+
+extern scenario_selection_info_js g_scenario_selection_info;
+
 struct window_scenario_selection : autoconfig_window_t<window_scenario_selection> {
     virtual int handle_mouse(const mouse* m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }
@@ -22,15 +53,15 @@ struct window_scenario_selection : autoconfig_window_t<window_scenario_selection
     void setup_dialog(e_map_selection_dialog_type dialog_type, int sub_dialog_selector = -1);
     void select_campaign(int index);
     void on_map_list_click(int index, int param2);
-    void set_scores_or_goals(int v);
     void update_widget_visibility_after_list_change();
+
+    void dispatch_scenario_info_script();
 
     scrollable_list* map_list();
     ui::escrollable_list* map_list_element();
 
     e_map_selection_dialog_type dialog = MAP_SELECTION_CUSTOM;
     int campaign_sub_dialog = -1;
-    int scores_or_goals = 0;
     int campaign_hover = -1;
 };
 

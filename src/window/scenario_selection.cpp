@@ -31,6 +31,14 @@
 
 #define MAX_SCENARIOS 15
 
+/** Must match `window_scenario_selection` size in ui_scenario_selection.js. */
+static constexpr int SCENARIO_SELECTION_DIALOG_W = 1024;
+static constexpr int SCENARIO_SELECTION_DIALOG_H = 768;
+
+scenario_selection_info_js g_scenario_selection_info;
+
+ANK_GLOBAL_OBJECT(g_scenario_selection_info, __scenario_selection_info, visible, is_open_play, climate_id, mapsize_id, invasion_id, culture, prosperity, monuments, kingdom, population, housing, house_level, has_culture, has_prosperity, has_monuments, has_kingdom, has_population, has_housing, time_kind, time_months, mon0, mon1, mon2, scores_or_goals)
+
 window_scenario_selection g_window_scenario_selection;
 
 ui::escrollable_list* window_scenario_selection::map_list_element() {
@@ -49,7 +57,7 @@ scrollable_list* window_scenario_selection::map_list() {
 void window_scenario_selection::setup_dialog(e_map_selection_dialog_type dialog_type, int sub_dialog_selector) {
     dialog = dialog_type;
     campaign_sub_dialog = sub_dialog_selector;
-    scores_or_goals = 0;
+    g_scenario_selection_info.scores_or_goals = 0;
     campaign_hover = -1;
     g_scenario.campaign_scenario_id = -1;
 
@@ -145,15 +153,56 @@ void window_scenario_selection::on_map_list_click(int index, int param2) {
     update_widget_visibility_after_list_change();
 }
 
-void window_scenario_selection::set_scores_or_goals(int v) {
-    scores_or_goals = v;
-}
-
 void window_scenario_selection::update_widget_visibility_after_list_change() {
     scrollable_list* panel = map_list();
     const bool show_scores = dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST && panel && panel->get_selected_entry_idx() != -1;
     (*this)["btn_scores"].set_enabled(show_scores);
     (*this)["btn_goals"].set_enabled(show_scores);
+}
+
+void window_scenario_selection::dispatch_scenario_info_script() {
+    scenario_selection_info_js& s = g_scenario_selection_info;
+    scrollable_list* panel = map_list();
+    const bool have_sel = panel && panel->get_selected_entry_idx() != -1;
+    const bool want_goals = (dialog == MAP_SELECTION_CUSTOM)
+        || (dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST && g_scenario_selection_info.scores_or_goals == 1);
+    if (!have_sel || !want_goals) {
+        s.visible = 0;
+    } else {
+        s.visible = 1;
+        s.is_open_play = g_scenario.is_open_play ? 1 : 0;
+        s.climate_id = 77 + scenario_property_climate();
+        s.mapsize_id = 121 + (int)fmin(4, fmax(0, scenario_map_size() - 50) / 30);
+        s.invasion_id = 112 + scenario_invasion_count() / 2;
+        s.culture = winning_culture();
+        s.prosperity = winning_prosperity();
+        s.monuments = winning_monuments();
+        s.kingdom = winning_kingdom();
+        s.population = winning_population();
+        s.housing = winning_housing();
+        s.house_level = winning_houselevel();
+        s.has_culture = (winning_culture() > 0) ? 1 : 0;
+        s.has_prosperity = (winning_prosperity() > 0) ? 1 : 0;
+        s.has_monuments = (winning_monuments() > 0) ? 1 : 0;
+        s.has_kingdom = (winning_kingdom() > 0) ? 1 : 0;
+        s.has_population = (winning_population() > 0) ? 1 : 0;
+        s.has_housing = (winning_housing() > 0) ? 1 : 0;
+        if (scenario_criteria_survival_enabled()) {
+            s.time_kind = 1;
+            s.time_months = scenario_criteria_survival_years() * 12;
+        } else if (scenario_criteria_time_limit_enabled()) {
+            s.time_kind = 2;
+            s.time_months = scenario_criteria_time_limit_years() * 12;
+        } else {
+            s.time_kind = 0;
+            s.time_months = 0;
+        }
+        s.mon0 = scenario_property_monument(0);
+        s.mon1 = scenario_property_monument(1);
+        s.mon2 = scenario_property_monument(2);
+    }
+
+    ui::dispatch_autoconfig_es_event(this, "scenario_info", bvariant_map{});
 }
 
 void window_scenario_selection::init() {
@@ -165,9 +214,6 @@ void window_scenario_selection::init() {
         }
         GamestateIO::start_loaded_file();
     });
-
-    (*this)["btn_scores"].onclick([](int, int) { g_window_scenario_selection.set_scores_or_goals(0); });
-    (*this)["btn_goals"].onclick([](int, int) { g_window_scenario_selection.set_scores_or_goals(1); });
 }
 
 #define HEADER_Y 28
@@ -255,80 +301,6 @@ static void draw_scenario_thumbnail(int image_id) {
     }
 }
 
-static void draw_scenario_info() {
-    auto& data = g_window_scenario_selection;
-    scrollable_list* panel = data.map_list();
-    if (!panel || panel->get_selected_entry_idx() == -1)
-        return;
-
-    int line_y = INFO_Y - 17;
-    lang_text_draw_centered(44, 10, INFO_X, line_y, INFO_W, FONT_NORMAL_WHITE_ON_DARK);
-    line_y += LINE_H;
-    if (false) {
-        draw_info_line(44, 76, &line_y, 77 + scenario_property_climate(), 2, true);
-        draw_info_line(44, 120, &line_y, scenario_map_size(), 3, true);
-        draw_info_line(44, 111, &line_y, scenario_invasion_count(), 4, true);
-        draw_info_line(2, 6, &line_y, 0, 2, true);
-    } else {
-        lang_text_draw(44, 77 + scenario_property_climate(), INFO_X, line_y, FONT_NORMAL_BLACK_ON_DARK);
-        line_y += LINE_H;
-        lang_text_draw(44, 121 + fmin(4, fmax(0, scenario_map_size() - 50) / 30), INFO_X, line_y, FONT_NORMAL_BLACK_ON_DARK);
-        line_y += LINE_H;
-        lang_text_draw(44, 112 + scenario_invasion_count() / 2, INFO_X, line_y, FONT_NORMAL_BLACK_ON_DARK);
-        line_y += LINE_H;
-        lang_text_draw(2, 6, INFO_X, line_y, FONT_NORMAL_BLACK_ON_DARK);
-        line_y += LINE_H;
-    }
-
-    lang_text_draw_centered(44, 127, INFO_X, line_y, INFO_W, FONT_NORMAL_WHITE_ON_DARK);
-    line_y += LINE_H;
-    if (g_scenario.is_open_play) {
-        lang_text_draw_multiline(145, 0, vec2i{INFO_X, line_y}, INFO_W, FONT_NORMAL_BLACK_ON_DARK);
-    } else {
-        if (winning_culture() > 0)
-            draw_info_line(44, 129, &line_y, winning_culture(), 5);
-        if (winning_prosperity() > 0)
-            draw_info_line(44, 130, &line_y, winning_prosperity(), 5);
-        if (winning_monuments() > 0)
-            draw_info_line(44, 131, &line_y, winning_monuments(), 5);
-        if (winning_kingdom() > 0)
-            draw_info_line(44, 132, &line_y, winning_kingdom(), 5);
-        if (winning_population() > 0)
-            draw_info_line(44, 133, &line_y, winning_population(), 5);
-        if (winning_housing() > 0)
-            draw_info_line(29, 20 + winning_houselevel(), &line_y, winning_housing(), 5);
-
-        if (scenario_criteria_survival_enabled())
-            draw_info_line(44, 55, &line_y, scenario_criteria_survival_years() * 12, 0, true, FONT_NORMAL_YELLOW);
-        else if (scenario_criteria_time_limit_enabled())
-            draw_info_line(44, 54, &line_y, scenario_criteria_time_limit_years() * 12, 0, true, FONT_NORMAL_YELLOW);
-    }
-
-    line_y = 328;
-    if (true) {
-        int m = 0;
-        lang_text_draw_centered(41, 48, INFO_X, line_y, INFO_W, FONT_NORMAL_WHITE_ON_DARK);
-        line_y += LINE_H;
-        if (scenario_property_monument(0) > 0) {
-            lang_text_draw(198, scenario_property_monument(0), INFO_X, line_y, FONT_NORMAL_BLACK_ON_DARK);
-            line_y += LINE_H;
-            m++;
-        }
-        if (scenario_property_monument(1) > 0) {
-            lang_text_draw(198, scenario_property_monument(1), INFO_X, line_y, FONT_NORMAL_BLACK_ON_DARK);
-            line_y += LINE_H;
-            m++;
-        }
-        if (scenario_property_monument(2) > 0) {
-            lang_text_draw(198, scenario_property_monument(2), INFO_X, line_y, FONT_NORMAL_BLACK_ON_DARK);
-            line_y += LINE_H;
-            m++;
-        }
-        if (m == 0)
-            lang_text_draw(198, 0, INFO_X, line_y, FONT_NORMAL_BLACK_ON_DARK);
-    }
-}
-
 static void draw_scores(int scenario_id) {
     painter ctx = game.painter();
     int rank = get_scenario_mission_rank(scenario_id);
@@ -388,7 +360,6 @@ static void draw_side_panel_info() {
 
         lang_text_draw_year(g_scenario.start_year, INFO_X, YEAR_Y, FONT_NORMAL_BLACK_ON_DARK);
 
-        draw_scenario_info();
         break;
     }
     case MAP_SELECTION_CAMPAIGN_SINGLE_LIST: {
@@ -413,10 +384,8 @@ static void draw_side_panel_info() {
 
         lang_text_draw_year(g_scenario.start_year, INFO_X, YEAR_Y, FONT_NORMAL_BLACK_ON_DARK);
 
-        if (data.scores_or_goals == 0)
+        if (g_scenario_selection_info.scores_or_goals == 0)
             draw_scores(campaign_scenario_id);
-        else
-            draw_scenario_info();
         break;
     }
     default:
@@ -433,10 +402,8 @@ void window_scenario_selection::ui_draw_foreground(UiFlags flags) {
         window_draw_underlying_window(UiFlags_Readonly);
     }
 
-    ui.begin_widget(pos);
-    ui.draw(flags);
-    ui.event(window_info{pos}, get_section(), __func__);
-    ui.end_widget();
+    /* Same origin as autoconfig `pos` (1024x768); not g_screen.dialog_offset (640x480). */
+    graphics_in_dialog_with_size(SCENARIO_SELECTION_DIALOG_W, SCENARIO_SELECTION_DIALOG_H);
 
     if (dialog != MAP_SELECTION_CAMPAIGN) {
         draw_side_panel_info();
@@ -446,9 +413,17 @@ void window_scenario_selection::ui_draw_foreground(UiFlags flags) {
         draw_campaign_hover_side(campaign_hover);
     }
 
+    ui.begin_widget(pos);
+    dispatch_scenario_info_script();
+    ui.draw(flags);
+    ui.event(window_info{pos}, get_section(), __func__);
+    ui.end_widget();
+
     painter ctx = game.painter();
     char txt[200];
     debug_text(ctx, txt, INFO_X, -120, 0, "", FILEIO.get_file_version(), COLOR_FONT_YELLOW);
+
+    graphics_reset_dialog();
 }
 
 int window_scenario_selection::ui_handle_mouse(const mouse* m) {
@@ -470,21 +445,19 @@ int window_scenario_selection::ui_handle_mouse(const mouse* m) {
 
     if (dialog == MAP_SELECTION_CAMPAIGN) {
         campaign_hover = -1;
-        const mouse* md = mouse_in_dialog(m);
-        if (md) {
-            for (int i = 0; i < 9; ++i) {
-                char buf[16];
-                snprintf(buf, sizeof buf, "camp_%d", i);
-                ui::element& e = (*this)[buf];
-                if (!e.enabled) {
-                    continue;
-                }
-                vec2i sp = e.screen_pos();
-                vec2i sz = e.pxsize();
-                if (md->x >= sp.x && md->x < sp.x + sz.x && md->y >= sp.y && md->y < sp.y + sz.y) {
-                    campaign_hover = i;
-                    break;
-                }
+        /* `element::screen_pos()` is screen space; `mouse_in_dialog` uses 640x480 offset — do not mix. */
+        for (int i = 0; i < 9; ++i) {
+            char buf[16];
+            snprintf(buf, sizeof buf, "camp_%d", i);
+            ui::element& e = (*this)[buf];
+            if (!e.enabled) {
+                continue;
+            }
+            vec2i sp = e.screen_pos();
+            vec2i sz = e.pxsize();
+            if (m->x >= sp.x && m->x < sp.x + sz.x && m->y >= sp.y && m->y < sp.y + sz.y) {
+                campaign_hover = i;
+                break;
             }
         }
     } else {
