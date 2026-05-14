@@ -15,6 +15,31 @@ function window_scenario_selection_btn_start() {
     __game_start_loaded_file()
 }
 
+function window_scenario_selection_on_map_list_click(entry) {
+    if (__scenario_selection_info.main_bg_kind === 2) {
+        var base = __scenario_selection_info.campaign_first_mission
+        var row = entry.user_data | 0
+        __game_load_mission(base + row, 0)
+    }
+}
+
+[es=(window_scenario_selection, main_bg)]
+function window_scenario_selection_on_main_bg(ev) {
+    var k = __scenario_selection_info.main_bg_kind
+    ev.img_cck.enabled = (k === 1)
+    ev.img_history.enabled = (k === 2)
+    if (k === 1) {
+        ev.img_cck.pack = PACK_UNLOADED
+        ev.img_cck.id = 15
+        ev.img_cck.offset = 0
+    }
+    if (k === 2) {
+        ev.img_history.pack = PACK_UNLOADED
+        ev.img_history.id = 33
+        ev.img_history.offset = 0
+    }
+}
+
 function scenario_info_time_suffix(months) {
     if (months >= 24) {
         return String((months / 12) | 0) + __loc(298, 9)
@@ -119,6 +144,7 @@ window_scenario_selection {
             view_items:13
             scrollbar_margin_x:10
             draw_scrollbar_always:false
+            onclick_item: window_scenario_selection_on_map_list_click
         })
 
         btn_scores : large_button({ pos[540, 550], size[120, 30], text[44, 221], font:FONT_NORMAL_BLACK_ON_DARK, enabled:false, onclick: scenario_selection_btn_scores })

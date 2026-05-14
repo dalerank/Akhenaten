@@ -33,7 +33,7 @@
 
 scenario_selection_info_js g_scenario_selection_info;
 
-ANK_GLOBAL_OBJECT(g_scenario_selection_info, __scenario_selection_info, visible, is_open_play, climate_id, mapsize_id, invasion_id, culture, prosperity, monuments, kingdom, population, housing, house_level, has_culture, has_prosperity, has_monuments, has_kingdom, has_population, has_housing, time_kind, time_months, mon0, mon1, mon2, scores_or_goals, period_hover)
+ANK_GLOBAL_OBJECT(g_scenario_selection_info, __scenario_selection_info, visible, is_open_play, climate_id, mapsize_id, invasion_id, culture, prosperity, monuments, kingdom, population, housing, house_level, has_culture, has_prosperity, has_monuments, has_kingdom, has_population, has_housing, time_kind, time_months, mon0, mon1, mon2, scores_or_goals, period_hover, main_bg_kind, campaign_first_mission)
 
 window_scenario_selection g_window_scenario_selection;
 window_scenario_selection_campaign g_window_scenario_selection_campaign;
@@ -87,8 +87,9 @@ void window_scenario_selection::setup_dialog(e_map_selection_dialog_type dialog_
                 if (mission_data != nullptr && mission_data->scenario_id != -1) {
                     char name_utf8[MAX_FILE_NAME] = {0};
                     if (mission_data && mission_data->map_name) {
+                        const int row = panel->items_count();
                         encoding_to_utf8(mission_data->map_name, name_utf8, MAX_FILE_NAME, 0);
-                        panel->add_entry(name_utf8);
+                        panel->add_entry(name_utf8, (uintptr_t)row);
                     } else {
                         logs::error("Could not initialize SDL: %s", SDL_GetError());
                     }
@@ -109,27 +110,27 @@ void window_scenario_selection::setup_dialog(e_map_selection_dialog_type dialog_
     (*this)["btn_scores"].set_enabled(show_scores);
     (*this)["btn_goals"].set_enabled(show_scores);
 
-    (*this)["img_cck"].set_enabled(dialog == MAP_SELECTION_CCK_LEGACY);
-    (*this)["img_history"].set_enabled(dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST);
-
-    sle->onclick_item([](int index, int p2) { g_window_scenario_selection.on_map_list_click(index, p2); });
-    panel->set_onclick_entry([](int index, int p2) { g_window_scenario_selection.on_map_list_click(index, p2); });
-}
-
-void window_scenario_selection::on_map_list_click(int index, int param2) {
-    (void)param2;
-    scrollable_list* panel = map_list();
-    if (!panel || index < 0 || index >= panel->items_count()) {
-        return;
+    if (dialog == MAP_SELECTION_CCK_LEGACY) {
+        g_scenario_selection_info.main_bg_kind = 1;
+    } else if (dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST) {
+        g_scenario_selection_info.main_bg_kind = 2;
+    } else {
+        g_scenario_selection_info.main_bg_kind = 0;
     }
-    switch (dialog) {
-    case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
-        GamestateIO::load_mission(get_first_mission_in_campaign(campaign_sub_dialog) + panel->get_selected_entry_idx(), false);
-        break;
-    default:
-        break;
+
+    if (dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST) {
+        g_scenario_selection_info.campaign_first_mission = get_first_mission_in_campaign(campaign_sub_dialog);
+    } else {
+        g_scenario_selection_info.campaign_first_mission = -1;
     }
-    update_widget_visibility_after_list_change();
+
+    ui::dispatch_autoconfig_es_event(this, "main_bg", bvariant_map{});
+
+    panel->set_onclick_entry([](int index, int p2) {
+        (void)index;
+        (void)p2;
+        g_window_scenario_selection.update_widget_visibility_after_list_change();
+    });
 }
 
 void window_scenario_selection::update_widget_visibility_after_list_change() {

@@ -25,15 +25,22 @@ function window_scenario_selection_campaign_on_campaign_hover(ev) {
         ev.campaign_hover_body.enabled = false
         return
     }
+
+    if (window_scenario_selection_campaign.last_period_hover == h) {
+        return
+    }
+
+    window_scenario_selection_campaign.last_period_hover = h
     ev.campaign_hover_thumb.enabled = true
     ev.campaign_hover_subtitle.enabled = true
     ev.campaign_hover_body.enabled = true
-    ev.campaign_hover_thumb.offset = h
+    ev.campaign_hover_thumb.image = get_image({ pack:PACK_UNLOADED, id:28, offset:h }).tid
     ev.campaign_hover_subtitle.text = __loc(294, h * 4)
     ev.campaign_hover_body.text = __loc(294, h * 4 + 1)
 }
 
 window_scenario_selection_campaign {
+    last_period_hover : -1
     pos [(sw(0) - 1024) / 2, (sh(0) - 768) / 2]
     ui {
         background : outer_panel({ pos[0, 0], size[64, 48], enabled:false })

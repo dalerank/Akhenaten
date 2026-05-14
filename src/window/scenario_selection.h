@@ -39,6 +39,10 @@ struct scenario_selection_info_js {
     int scores_or_goals{};
     /** Campaign period picker hover: 0..8, or -1 (see `ui_scenario_selection_campaign.js`). */
     int period_hover = -1;
+    /** Fullscreen map-selection art: 0 = hide both, 1 = `img_cck`, 2 = `img_history` (see `ui_scenario_selection.js`). */
+    int main_bg_kind{};
+    /** First scenario id of the selected campaign period; used with list row `user_data` (see `ui_scenario_selection.js`). */
+    int campaign_first_mission{};
 };
 
 extern scenario_selection_info_js g_scenario_selection_info;
@@ -51,7 +55,6 @@ struct window_scenario_selection : autoconfig_window_t<window_scenario_selection
     virtual int ui_handle_mouse(const mouse* m) override;
 
     void setup_dialog(e_map_selection_dialog_type dialog_type, int sub_dialog_selector = -1);
-    void on_map_list_click(int index, int param2);
     void update_widget_visibility_after_list_change();
 
     void dispatch_scenario_info_script();
