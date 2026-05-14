@@ -118,106 +118,118 @@ building_dest figure_docker::get_closest_warehouse_for_import(tile2i pos, empire
         }
     }
 
-    e_resource resource = RESOURCE_NONE;
+    auto find_warehouse = [&](e_resource resource) -> building_dest {
+        int min_distance = 10000;
+        building_id min_building_id = 0;
+        buildings_valid_do([&] (building &b) {
+            building_storage_yard *warehouse = b.dcast_storage_yard();
+            if (!warehouse || !warehouse->is_valid()) {
+                return;
+            }
+
+            if (!warehouse->has_road_access() || warehouse->base.distance_from_entry <= 0) {
+                return;
+            }
+
+            if (warehouse->road_network() != road_network_id) {
+                return;
+            }
+
+            if (!warehouse->get_permission(BUILDING_STORAGE_PERMISSION_DOCK)) {
+                return;
+            }
+
+            if (warehouse->is_not_accepting(resource)) {
+                return;
+            }
+
+            if (warehouse->is_empty_all()) {
+                return;
+            }
+
+            int distance_penalty = 32;
+            building_storage_room *space = warehouse->room();
+            while (space) {
+                if (space->resource() == RESOURCE_NONE) {
+                    distance_penalty -= 8;
+                }
+
+                if (space->base.stored_amount(resource) < 400) {
+                    distance_penalty -= 4;
+                }
+
+                space = space->next_room();
+            }
+
+            if (distance_penalty < 32) {
+                int distance = calc_distance_with_penalty(warehouse->tile(), pos, distance_from_entry, warehouse->base.distance_from_entry);
+                // prefer emptier warehouse
+                distance += distance_penalty;
+                if (distance < min_distance) {
+                    min_distance = distance;
+                    min_building_id = b.id;
+                }
+            }
+        }, BUILDING_STORAGE_YARD);
+
+        if (!min_building_id) {
+            return { 0, tile2i::invalid };
+        }
+
+        building* minb = building_get(min_building_id);
+        tile2i warehouse_tile;
+        if (minb->has_road_access) {
+            warehouse_tile = minb->tile;
+            map_point_store_result(minb->tile, warehouse_tile);
+        } else {
+            warehouse_tile = map_get_road_access_tile(minb->tile, 3);
+            if (!warehouse_tile.valid()) {
+                return { 0, warehouse_tile };
+            }
+        }
+
+        return { min_building_id, warehouse_tile };
+    };
+
     if (budgets_populated) {
+        // Try each viable slot until one yields a warehouse. Earlier code stopped at the first
+        // allowed slot, so if its resource had no reachable warehouse the docker re-picked the
+        // same slot every tick (remaining_chunks only decrements on a *successful* delivery),
+        // stranding the ship until the idle-day cap fired.
         for (const auto& slot : ship->runtime_data().import_budgets) {
             if (slot.resource == 0 || slot.remaining_chunks == 0) {
                 continue;
             }
             const e_resource r = (e_resource)slot.resource;
-            if (allowed(r)) {
-                resource = r;
-                break;
+            if (!allowed(r)) {
+                continue;
+            }
+            building_dest result = find_warehouse(r);
+            if (result.bid) {
+                import_resource = r;
+                return result;
             }
         }
-
-        if (resource == RESOURCE_NONE) {
-            // Budgets exist but all exhausted/blocked — do not trade more this visit.
-            return { 0, tile2i::invalid };
-        }
-    } else {
-        // Legacy / no-budget path: use the global round-robin.
-        resource = city_trade_next_docker_import_resource();
-        for (e_resource i = RESOURCES_MIN; i < RESOURCES_MAX && !allowed(resource); ++i) {
-            resource = city_trade_next_docker_import_resource();
-        }
-
-        if (!allowed(resource)) {
-            return { 0, tile2i::invalid };
-        }
-    }
-
-    int min_distance = 10000;
-    building_id min_building_id = 0;
-    buildings_valid_do([&] (building &b) {
-        building_storage_yard *warehouse = b.dcast_storage_yard();
-        if (!warehouse || !warehouse->is_valid()) {
-            return;
-        }
-
-        if (!warehouse->has_road_access() || warehouse->base.distance_from_entry <= 0) {
-            return;
-        }
-
-        if (warehouse->road_network() != road_network_id) {
-            return;
-        }
-
-        if (!warehouse->get_permission(BUILDING_STORAGE_PERMISSION_DOCK)) {
-            return;
-        }
-
-        if (warehouse->is_not_accepting(resource)) {
-            return;
-        }
-
-        if (warehouse->is_empty_all()) {
-            return;
-        }
-
-        int distance_penalty = 32;
-        building_storage_room *space = warehouse->room();
-        while (space) {
-            if (space->resource() == RESOURCE_NONE) {
-                distance_penalty -= 8;
-            }
-
-            if (space->base.stored_amount(resource) < 400) {
-                distance_penalty -= 4;
-            }
-
-            space = space->next_room();
-        }
-
-        if (distance_penalty < 32) {
-            int distance = calc_distance_with_penalty(warehouse->tile(), pos, distance_from_entry, warehouse->base.distance_from_entry);
-            // prefer emptier warehouse
-            distance += distance_penalty;
-            if (distance < min_distance) {
-                min_distance = distance;
-                min_building_id = b.id;
-            }
-        }
-    }, BUILDING_STORAGE_YARD);
-
-    if (!min_building_id) {
         return { 0, tile2i::invalid };
     }
 
-    building* minb = building_get(min_building_id);
-    tile2i warehouse_tile;
-    if (minb->has_road_access) {
-        warehouse_tile = minb->tile;
-        map_point_store_result(minb->tile, warehouse_tile);
-    } else {
-        warehouse_tile = map_get_road_access_tile(minb->tile, 3);
-        if (!warehouse_tile.valid()) {
-            return { 0, warehouse_tile };
-        }
+    // Legacy / no-budget path: use the global round-robin (advances each call so successive
+    // idle ticks naturally cycle across resources).
+    e_resource resource = city_trade_next_docker_import_resource();
+    for (e_resource i = RESOURCES_MIN; i < RESOURCES_MAX && !allowed(resource); ++i) {
+        resource = city_trade_next_docker_import_resource();
     }
 
+    if (!allowed(resource)) {
+        return { 0, tile2i::invalid };
+    }
+
+    building_dest result = find_warehouse(resource);
+    if (!result.bid) {
+        return { 0, tile2i::invalid };
+    }
     import_resource = resource;
-    return { min_building_id, warehouse_tile };
+    return result;
 }
 
 building_dest figure_docker::get_closest_warehouse_for_export(tile2i pos, empire_city_handle city, int distance_from_entry, int road_network_id, building_dock *dock, e_resource &export_resource) {
