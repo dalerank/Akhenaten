@@ -8,6 +8,13 @@ function scenario_selection_btn_goals() {
     __scenario_selection_info.scores_or_goals = 1
 }
 
+function window_scenario_selection_btn_start() {
+    if (scenario.campaign_scenario_id === -1) {
+        return
+    }
+    __game_start_loaded_file()
+}
+
 function scenario_info_time_suffix(months) {
     if (months >= 24) {
         return String((months / 12) | 0) + __loc(298, 9)
@@ -101,7 +108,6 @@ window_scenario_selection {
 
         /* Fullscreen map-selection art in dialog coordinates (image, not background — matches buttons). */
         img_cck : image({ pos[0, 0], pack:PACK_UNLOADED, id:15, offset:0, enabled:false })
-        img_custom : image({ pos[0, 0], pack:PACK_UNLOADED, id:32, offset:0, enabled:false })
         img_history : image({ pos[0, 0], pack:PACK_UNLOADED, id:33, offset:0, enabled:false })
 
         scenario_map_list : scrollable_list({
@@ -118,7 +124,7 @@ window_scenario_selection {
         btn_scores : large_button({ pos[540, 550], size[120, 30], text[44, 221], font:FONT_NORMAL_BLACK_ON_DARK, enabled:false, onclick: scenario_selection_btn_scores })
         btn_goals : large_button({ pos[670, 550], size[120, 30], text[44, 220], font:FONT_NORMAL_BLACK_ON_DARK, enabled:false, onclick: scenario_selection_btn_goals })
 
-        btn_start : image_button({ margin{right:-235, bottom:-185}, pos[440, 550], size[27, 27], pack:PACK_GENERAL, id:193, offset:4 })
+        btn_start : image_button({ margin{right:-235, bottom:-185}, pos[440, 550], size[27, 27], pack:PACK_GENERAL, id:193, offset:4, onclick: window_scenario_selection_btn_start })
 
         /* Right panel scenario info (was draw_scenario_info in C++; fed by dispatch_scenario_info_script). */
         info_hdr_mission       : text_center({ pos[545, 203], size[265, 17], align:"center", text[44, 10], font:FONT_NORMAL_WHITE_ON_DARK, enabled:false })        

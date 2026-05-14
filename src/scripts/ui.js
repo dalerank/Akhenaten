@@ -91,6 +91,7 @@ import ui_architect_post_window
 import ui_dynasty_menu
 import ui_scenario_selection_campaign
 import ui_scenario_selection
+import ui_scenario_selection_custom
 import ui_player_selection
 import ui_new_career
 import ui_records_window

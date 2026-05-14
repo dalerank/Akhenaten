@@ -559,6 +559,8 @@ namespace ui {
         }
 
         static const xstring ONCLICK;
+        static const xstring ONHOVER;
+        static const xstring ONUNHOVER;
         static const xstring ONRCLICK;
         static const xstring TEXTFN;
         static const xstring CHECKEDFN;
@@ -566,6 +568,8 @@ namespace ui {
         static const xstring ONDRAW;
         static const xstring ONDRAW_EVENT;
         static const xstring ONCLICK_EVENT;
+        static const xstring ONHOVER_EVENT;
+        static const xstring ONUNHOVER_EVENT;
         static const xstring ONDOUBLECLICK_EVENT;
         static const xstring ONINPUT_EVENT;
         static const xstring ONRENDER_ITEM;
@@ -823,6 +827,7 @@ namespace ui {
         bool _hbody;
         bool _split;
         bool _selected = false;
+        bool _hover_prev = false;
 
         virtual void draw(UiFlags flags) override;
         virtual void load(archive arch, element* parent, items& elems) override;
@@ -874,6 +879,7 @@ namespace ui {
         bool allow_repeat = true;
         /// Step index for hold-to-repeat; passed to arw_button (survives between frames).
         int repeats = 0;
+        bool _hover_prev = false;
 
         button_onclick_cb _func;
         button_onclick_simple_cb _sfunc;
@@ -904,6 +910,7 @@ namespace ui {
         uint8_t composite = 0;
         int texture_id = -1;
         xstring _tooltip;
+        bool _hover_prev = false;
 
         button_onclick_cb _func, _rfunc;
         button_onclick_simple_cb _sfunc, _srfunc;

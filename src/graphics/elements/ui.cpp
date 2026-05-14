@@ -56,6 +56,10 @@ void reset_ui_command_queue();
     const xstring element::ONCLICK_ITEM{"onclick_item"};
     const xstring element::ONRIGHTCLICK_ITEM{"onrightclick_item"};
     const xstring element::ONDOUBLECLICK_ITEM{"ondoubleclick_item"};
+    const xstring element::ONHOVER{"onhover"};
+    const xstring element::ONUNHOVER{"onunhover"};
+    const xstring element::ONHOVER_EVENT{"onhover_event"};
+    const xstring element::ONUNHOVER_EVENT{"onunhover_event"};
     const xstring element::EMPTY_JS_REF{};
 
     tooltip_context tooltipctx;
@@ -66,6 +70,31 @@ void reset_ui_command_queue();
 
     void set_tooltip(const xstring& text) {
         tooltipctx.text = text;
+    }
+
+    void fire_ui_hover_edge(ui::element& el, const bool hover_now, bool& hover_prev) {
+        if (hover_now == hover_prev) {
+            return;
+        }
+        ui::widget* w = ui::get_current_widget();
+        if (hover_now) {
+            const xstring& ev = el.event_name(ui::element::ONHOVER_EVENT);
+            if (!ev.empty()) {
+                bvariant_map::scoped s;
+                ui::dispatch_autoconfig_es_event(w, ev, *s);
+            } else if (!el.js_ref(ui::element::ONHOVER).empty()) {
+                js_call_function(el.js_ref(ui::element::ONHOVER));
+            }
+        } else {
+            const xstring& ev = el.event_name(ui::element::ONUNHOVER_EVENT);
+            if (!ev.empty()) {
+                bvariant_map::scoped s;
+                ui::dispatch_autoconfig_es_event(w, ev, *s);
+            } else if (!el.js_ref(ui::element::ONUNHOVER).empty()) {
+                js_call_function(el.js_ref(ui::element::ONUNHOVER));
+            }
+        }
+        hover_prev = hover_now;
     }
 
     struct universal_button {
@@ -1460,7 +1489,11 @@ void ui::eimage_button::load(archive arch, element* parent, items& elems) {
     offsets.data[3] = arch.r_int("offset_disabled", 3);
     _tooltip = arch.r_string("tooltip");
     set_ref(ONCLICK, arch.r_function("onclick"));
+    set_ref(ONHOVER, arch.r_function("onhover"));
+    set_ref(ONUNHOVER, arch.r_function("onunhover"));
     set_event(ONCLICK_EVENT, arch.r_string(ONCLICK_EVENT.c_str()));
+    set_event(ONHOVER_EVENT, arch.r_string(ONHOVER_EVENT.c_str()));
+    set_event(ONUNHOVER_EVENT, arch.r_string(ONUNHOVER_EVENT.c_str()));
 
     xstring name_icon_texture = arch.r_string("icon_texture");
     if (!name_icon_texture.empty()) {
@@ -1509,6 +1542,7 @@ void ui::eimage_button::draw(UiFlags gflags) {
     }
 
     if (!btn) {
+        fire_ui_hover_edge(*this, false, _hover_prev);
         return;
     }
 
@@ -1541,14 +1575,17 @@ void ui::eimage_button::draw(UiFlags gflags) {
 
     if (!!(darkened & UiFlags_Darkened)) {
         push(cmd_t::shade_rect, Pos{scr_pos}, Size{tsize}, ImageId{0x80});
+        fire_ui_hover_edge(*this, false, _hover_prev);
         return;
     }
 
     if (!!(darkened & UiFlags_Grayscale)) {
+        fire_ui_hover_edge(*this, false, _hover_prev);
         return;
     }
 
     if (readonly) {
+        fire_ui_hover_edge(*this, false, _hover_prev);
         return;
     }
 
@@ -1579,6 +1616,8 @@ void ui::eimage_button::draw(UiFlags gflags) {
     if (!_tooltip.empty() && btn->hovered) {
         tooltipctx.set(0, _tooltip);
     }
+
+    fire_ui_hover_edge(*this, btn->hovered != 0, _hover_prev);
 }
 
 void ui::eimage_button::image(const animation_t& d) {
@@ -2047,7 +2086,11 @@ void ui::earrow_button::load(archive arch, element* parent, items& elems) {
     down = arch.r_bool("down");
     allow_repeat = arch.r_bool("allow_repeat", true);
     set_ref(ONCLICK, arch.r_function("onclick"));
+    set_ref(ONHOVER, arch.r_function("onhover"));
+    set_ref(ONUNHOVER, arch.r_function("onunhover"));
     set_event(ONCLICK_EVENT, arch.r_string(ONCLICK_EVENT.c_str()));
+    set_event(ONHOVER_EVENT, arch.r_string(ONHOVER_EVENT.c_str()));
+    set_event(ONUNHOVER_EVENT, arch.r_string(ONUNHOVER_EVENT.c_str()));
 }
 
 void ui::earrow_button::js_call() {
@@ -2073,6 +2116,9 @@ void ui::earrow_button::draw(UiFlags flags) {
         btn.onclick(_func);
         btn.onclick(_sfunc);
     }
+
+    const bool hover_now = clickable && ((btn.state & 3) != 0);
+    fire_ui_hover_edge(*this, hover_now, _hover_prev);
 }
 
 void ui::egeneric_button::draw(UiFlags gflags) {
@@ -2140,6 +2186,9 @@ void ui::egeneric_button::draw(UiFlags gflags) {
         ui::set_tooltip(_tooltip);
     }
 
+    const bool hover_now = clickable && is_button_hover(*btn, vec2i{0, 0});
+    fire_ui_hover_edge(*this, hover_now, _hover_prev);
+
     invoke_draw_callbacks(gflags);
 }
 
@@ -2168,8 +2217,12 @@ void ui::egeneric_button::load(archive arch, element* parent, items& elems) {
     _split = arch.r_bool("split", false);
     set_ref(ONCLICK, arch.r_function("onclick"));
     set_ref(ONRCLICK, arch.r_function("onrclick"));
+    set_ref(ONHOVER, arch.r_function("onhover"));
+    set_ref(ONUNHOVER, arch.r_function("onunhover"));
     set_ref(TEXTFN, arch.r_function("textfn"));
     set_event(ONCLICK_EVENT, arch.r_string(ONCLICK_EVENT));
+    set_event(ONHOVER_EVENT, arch.r_string(ONHOVER_EVENT));
+    set_event(ONUNHOVER_EVENT, arch.r_string(ONUNHOVER_EVENT));
     param1 = arch.r_int("param1");
     param2 = arch.r_int("param2");
 }

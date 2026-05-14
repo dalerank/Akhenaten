@@ -479,6 +479,7 @@ bool __game_write_savegame(pcstr filename_short) { return GamestateIO::write_sav
 bool __game_editor_load_scenario(pcstr path) { return game_file_editor_load_scenario(path) != 0; } ANK_FUNCTION_1(__game_editor_load_scenario)
 bool __game_editor_write_scenario(pcstr path) { return game_file_editor_write_scenario(path) != 0; } ANK_FUNCTION_1(__game_editor_write_scenario)
 void __game_load_mission(int scenario_id, int start_immediately) { GamestateIO::load_mission(scenario_id, !!start_immediately); } ANK_FUNCTION_2(__game_load_mission)
+void __game_start_loaded_file() { GamestateIO::start_loaded_file(); } ANK_FUNCTION(__game_start_loaded_file)
 bool __game_mission_is_valid(int scenario_id) { const mission_step_t *s = get_scenario_step_data(scenario_id); return s && s->campaign_id >= 0; } ANK_FUNCTION_1(__game_mission_is_valid)
 int __game_campaign_id_for_scenario(int scenario_id) { return get_scenario_campaign_id(scenario_id); } ANK_FUNCTION_1(__game_campaign_id_for_scenario)
 void __game_show_main_menu() { main_menu_screen::show(/*restart_music*/true); } ANK_FUNCTION(__game_show_main_menu)
