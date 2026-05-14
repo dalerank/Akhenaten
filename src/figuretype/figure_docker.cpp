@@ -21,55 +21,75 @@
 #include "grid/road_access.h"
 #include "figuretype/figure_trader_ship.h"
 #include "city/city_figures.h"
+#include "game/game_config.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_docker);
 
 std::array<vec2i, 8> ANK_VARIABLE(docker_cart_offsets); //= { {17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12} };
 
-bool figure_docker::try_import_resource(building* b, e_resource resource, empire_city_handle city) {
+namespace {
+    // Each add_import/remove_export call moves at most 100 units; the haul-amount lets a single docker trip make multiple such calls in succession.
+    constexpr int DOCKER_HAUL_CHUNK = 100;
+    int dock_haul_amount() {
+        return !!game_features::gameplay_change_dock_double_haul ? 2 * DOCKER_HAUL_CHUNK : DOCKER_HAUL_CHUNK;
+    }
+}
+
+int figure_docker::try_import_resource(building* b, e_resource resource, empire_city_handle city) {
     building_storage_yard *warehouse = b->dcast_storage_yard();
     if (!warehouse) {
-        return false;
+        return 0;
     }
 
     if (warehouse->is_not_accepting(resource)) {
-        return false;
+        return 0;
     }
 
     if (!warehouse->get_permission(BUILDING_STORAGE_PERMISSION_DOCK)) {
-        return false;
+        return 0;
     }
 
     auto &trade_route = city.get_route();
-    // try existing storage bay with the same resource
-    building_storage_room* space = warehouse->room();
-    while (space) {
-        if (space->stored_amount(resource) > 0 && space->stored_amount(resource) < 400) {
-            trade_route.increase_traded(resource, 100);
-            space->add_import(resource);
-            return true;
+    auto place_one_chunk = [&]() -> bool {
+        // try existing storage bay with the same resource
+        building_storage_room* space = warehouse->room();
+        while (space) {
+            if (space->stored_amount(resource) > 0 && space->stored_amount(resource) < 400) {
+                space->add_import(resource);
+                return true;
+            }
+            space = space->next_room();
         }
-        space = space->next_room();
-    }
-    // try unused storage bay
-    space = warehouse->room();
-    while (space) {
-        if (space->resource() == RESOURCE_NONE) {
-            trade_route.increase_traded(resource, 100);
-            space->add_import(resource);
-            return true;
+        // try unused storage bay
+        space = warehouse->room();
+        while (space) {
+            if (space->resource() == RESOURCE_NONE) {
+                space->add_import(resource);
+                return true;
+            }
+            space = space->next_room();
         }
-        space = space->next_room();
+        return false;
+    };
+
+    int delivered = 0;
+    const int target_chunks = dock_haul_amount() / DOCKER_HAUL_CHUNK;
+    for (int i = 0; i < target_chunks; i++) {
+        if (!place_one_chunk()) {
+            break;
+        }
+        trade_route.increase_traded(resource, DOCKER_HAUL_CHUNK);
+        delivered += DOCKER_HAUL_CHUNK;
     }
-    return false;
+    return delivered;
 }
 
 void figure_docker::set_cart_offset(int direction) const {
     base.cart_offset = docker_cart_offsets[direction];
 }
 
-bool figure_docker::try_export_resource(building* b, e_resource resource, empire_city_handle city) {
+int figure_docker::try_export_resource(building* b, e_resource resource, empire_city_handle city) {
     building_storage_yard *warehouse = b->dcast_storage_yard();
     if (!warehouse) {
         return 0;
@@ -79,17 +99,29 @@ bool figure_docker::try_export_resource(building* b, e_resource resource, empire
         return 0;
     }
 
-    building_storage_room* space = warehouse->room();
-    while (space) {
-        if (space->stored_amount(resource)) {
-            auto &trade_route = city.get_route();
-            trade_route.increase_traded(resource, 100);
-            space->remove_export(resource);
-            return 1;
+    auto take_one_chunk = [&]() -> bool {
+        building_storage_room* space = warehouse->room();
+        while (space) {
+            if (space->stored_amount(resource)) {
+                space->remove_export(resource);
+                return true;
+            }
+            space = space->next_room();
         }
-        space = space->next_room();
+        return false;
+    };
+
+    auto &trade_route = city.get_route();
+    int taken = 0;
+    const int target_chunks = dock_haul_amount() / DOCKER_HAUL_CHUNK;
+    for (int i = 0; i < target_chunks; i++) {
+        if (!take_one_chunk()) {
+            break;
+        }
+        trade_route.increase_traded(resource, DOCKER_HAUL_CHUNK);
+        taken += DOCKER_HAUL_CHUNK;
     }
-    return 0;
+    return taken;
 }
 
 building_dest figure_docker::get_closest_warehouse_for_import(tile2i pos, empire_city_handle city, int distance_from_entry, int road_network_id, building_dock *dock, e_resource& import_resource) {
@@ -118,106 +150,118 @@ building_dest figure_docker::get_closest_warehouse_for_import(tile2i pos, empire
         }
     }
 
-    e_resource resource = RESOURCE_NONE;
+    auto find_warehouse = [&](e_resource resource) -> building_dest {
+        int min_distance = 10000;
+        building_id min_building_id = 0;
+        buildings_valid_do([&] (building &b) {
+            building_storage_yard *warehouse = b.dcast_storage_yard();
+            if (!warehouse || !warehouse->is_valid()) {
+                return;
+            }
+
+            if (!warehouse->has_road_access() || warehouse->base.distance_from_entry <= 0) {
+                return;
+            }
+
+            if (warehouse->road_network() != road_network_id) {
+                return;
+            }
+
+            if (!warehouse->get_permission(BUILDING_STORAGE_PERMISSION_DOCK)) {
+                return;
+            }
+
+            if (warehouse->is_not_accepting(resource)) {
+                return;
+            }
+
+            if (warehouse->is_empty_all()) {
+                return;
+            }
+
+            int distance_penalty = 32;
+            building_storage_room *space = warehouse->room();
+            while (space) {
+                if (space->resource() == RESOURCE_NONE) {
+                    distance_penalty -= 8;
+                }
+
+                if (space->base.stored_amount(resource) < 400) {
+                    distance_penalty -= 4;
+                }
+
+                space = space->next_room();
+            }
+
+            if (distance_penalty < 32) {
+                int distance = calc_distance_with_penalty(warehouse->tile(), pos, distance_from_entry, warehouse->base.distance_from_entry);
+                // prefer emptier warehouse
+                distance += distance_penalty;
+                if (distance < min_distance) {
+                    min_distance = distance;
+                    min_building_id = b.id;
+                }
+            }
+        }, BUILDING_STORAGE_YARD);
+
+        if (!min_building_id) {
+            return { 0, tile2i::invalid };
+        }
+
+        building* minb = building_get(min_building_id);
+        tile2i warehouse_tile;
+        if (minb->has_road_access) {
+            warehouse_tile = minb->tile;
+            map_point_store_result(minb->tile, warehouse_tile);
+        } else {
+            warehouse_tile = map_get_road_access_tile(minb->tile, 3);
+            if (!warehouse_tile.valid()) {
+                return { 0, warehouse_tile };
+            }
+        }
+
+        return { min_building_id, warehouse_tile };
+    };
+
     if (budgets_populated) {
+        // Try each viable slot until one yields a warehouse. Earlier code stopped at the first
+        // allowed slot, so if its resource had no reachable warehouse the docker re-picked the
+        // same slot every tick (remaining_chunks only decrements on a *successful* delivery),
+        // stranding the ship until the idle-day cap fired.
         for (const auto& slot : ship->runtime_data().import_budgets) {
             if (slot.resource == 0 || slot.remaining_chunks == 0) {
                 continue;
             }
             const e_resource r = (e_resource)slot.resource;
-            if (allowed(r)) {
-                resource = r;
-                break;
+            if (!allowed(r)) {
+                continue;
+            }
+            building_dest result = find_warehouse(r);
+            if (result.bid) {
+                import_resource = r;
+                return result;
             }
         }
-
-        if (resource == RESOURCE_NONE) {
-            // Budgets exist but all exhausted/blocked — do not trade more this visit.
-            return { 0, tile2i::invalid };
-        }
-    } else {
-        // Legacy / no-budget path: use the global round-robin.
-        resource = city_trade_next_docker_import_resource();
-        for (e_resource i = RESOURCES_MIN; i < RESOURCES_MAX && !allowed(resource); ++i) {
-            resource = city_trade_next_docker_import_resource();
-        }
-
-        if (!allowed(resource)) {
-            return { 0, tile2i::invalid };
-        }
-    }
-
-    int min_distance = 10000;
-    building_id min_building_id = 0;
-    buildings_valid_do([&] (building &b) {
-        building_storage_yard *warehouse = b.dcast_storage_yard();
-        if (!warehouse || !warehouse->is_valid()) {
-            return;
-        }
-
-        if (!warehouse->has_road_access() || warehouse->base.distance_from_entry <= 0) {
-            return;
-        }
-
-        if (warehouse->road_network() != road_network_id) {
-            return;
-        }
-
-        if (!warehouse->get_permission(BUILDING_STORAGE_PERMISSION_DOCK)) {
-            return;
-        }
-
-        if (warehouse->is_not_accepting(resource)) {
-            return;
-        }
-
-        if (warehouse->is_empty_all()) {
-            return;
-        }
-
-        int distance_penalty = 32;
-        building_storage_room *space = warehouse->room();
-        while (space) {
-            if (space->resource() == RESOURCE_NONE) {
-                distance_penalty -= 8;
-            }
-
-            if (space->base.stored_amount(resource) < 400) {
-                distance_penalty -= 4;
-            }
-
-            space = space->next_room();
-        }
-
-        if (distance_penalty < 32) {
-            int distance = calc_distance_with_penalty(warehouse->tile(), pos, distance_from_entry, warehouse->base.distance_from_entry);
-            // prefer emptier warehouse
-            distance += distance_penalty;
-            if (distance < min_distance) {
-                min_distance = distance;
-                min_building_id = b.id;
-            }
-        }
-    }, BUILDING_STORAGE_YARD);
-
-    if (!min_building_id) {
         return { 0, tile2i::invalid };
     }
 
-    building* minb = building_get(min_building_id);
-    tile2i warehouse_tile;
-    if (minb->has_road_access) {
-        warehouse_tile = minb->tile;
-        map_point_store_result(minb->tile, warehouse_tile);
-    } else {
-        warehouse_tile = map_get_road_access_tile(minb->tile, 3);
-        if (!warehouse_tile.valid()) {
-            return { 0, warehouse_tile };
-        }
+    // Legacy / no-budget path: use the global round-robin (advances each call so successive
+    // idle ticks naturally cycle across resources).
+    e_resource resource = city_trade_next_docker_import_resource();
+    for (e_resource i = RESOURCES_MIN; i < RESOURCES_MAX && !allowed(resource); ++i) {
+        resource = city_trade_next_docker_import_resource();
     }
 
+    if (!allowed(resource)) {
+        return { 0, tile2i::invalid };
+    }
+
+    building_dest result = find_warehouse(resource);
+    if (!result.bid) {
+        return { 0, tile2i::invalid };
+    }
     import_resource = resource;
-    return { min_building_id, warehouse_tile };
+    return result;
 }
 
 building_dest figure_docker::get_closest_warehouse_for_export(tile2i pos, empire_city_handle city, int distance_from_entry, int road_network_id, building_dock *dock, e_resource &export_resource) {
@@ -341,7 +385,7 @@ bool figure_docker::deliver_import_resource(building* b) {
     advance_action(ACTION_133_DOCKER_IMPORT_QUEUE);
     base.destination_tile = result.tile;
     base.resource_id = resource;
-    base.resource_amount_full = 100;
+    base.resource_amount_full = dock_haul_amount();
     return true;
 }
 
@@ -366,7 +410,7 @@ bool figure_docker::fetch_export_resource(building* b) {
         return false;
     }
 
-    ship->runtime_data().amount_bought += 100;
+    ship->runtime_data().amount_bought += dock_haul_amount();
     set_destination(result.bid);
     advance_action(ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE);
     base.wait_ticks = 0;
@@ -538,14 +582,20 @@ void figure_docker::figure_action() {
             auto ship = figure_get<figure_trade_ship>(dock.trade_ship);
             auto trade_city = ship ? ship->empire_city() : empire_city_handle{};
 
-            if (try_import_resource(destination(), base.resource_id, trade_city)) {
+            const int delivered = try_import_resource(destination(), base.resource_id, trade_city);
+            if (delivered > 0) {
+                const int chunks = delivered / DOCKER_HAUL_CHUNK;
                 if (ship) {
-                    ship->dump_resource(100);
+                    ship->dump_resource(delivered);
                     ship->runtime_data().failed_dock_attempts = 0;
-                    ship->consume_import_budget(base.resource_id);
+                    for (int i = 0; i < chunks; i++) {
+                        ship->consume_import_budget(base.resource_id);
+                    }
                 }
                 base.wait_ticks = 0;
-                trader().record_sold_resource(base.resource_id);
+                for (int i = 0; i < chunks; i++) {
+                    trader().record_sold_resource(base.resource_id);
+                }
                 advance_action(ACTION_138_DOCKER_IMPORT_RETURNING);
                 load_resource(RESOURCE_NONE, 0);
                 set_destination(home(), home()->tile);
@@ -565,16 +615,27 @@ void figure_docker::figure_action() {
             auto trade_city = trader_city();
             advance_action(ACTION_138_DOCKER_IMPORT_RETURNING);
             base.wait_ticks = 0;
-            const bool can_export = try_export_resource(destination(), base.resource_id, trade_city);
-            if (can_export) {
-                if (dock.trade_ship) {
-                    auto ship = figure_get<figure_trade_ship>(dock.trade_ship);
-                    if (ship) {
-                        ship->runtime_data().failed_dock_attempts = 0;
-                    }
+            const int reserved = dock_haul_amount();
+            const int taken = try_export_resource(destination(), base.resource_id, trade_city);
+            // fetch_export_resource pre-reserved `reserved` units against the ship's
+            // amount_bought. Refund any shortfall so total_bought() doesn't drift upward each
+            // visit and eventually hit max_capacity(), which would stall all exports permanently.
+            auto ship = dock.trade_ship ? figure_get<figure_trade_ship>(dock.trade_ship) : nullptr;
+            const int refund = reserved - taken;
+            if (ship && refund > 0) {
+                auto &rd = ship->runtime_data();
+                rd.amount_bought = (rd.amount_bought >= refund) ? rd.amount_bought - refund : 0;
+            }
+            if (taken > 0) {
+                if (ship) {
+                    ship->runtime_data().failed_dock_attempts = 0;
                 }
-                int amount = trader().record_bought_resource(base.resource_id);
-                load_resource(base.resource_id, amount);
+                const int chunks = taken / DOCKER_HAUL_CHUNK;
+                int loaded = 0;
+                for (int i = 0; i < chunks; i++) {
+                    loaded += trader().record_bought_resource(base.resource_id);
+                }
+                load_resource(base.resource_id, loaded);
                 set_destination(home(), home()->tile);
                 advance_action(ACTION_137_DOCKER_EXPORT_RETURNING);
             } else {

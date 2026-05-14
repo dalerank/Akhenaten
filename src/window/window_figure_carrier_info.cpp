@@ -12,7 +12,9 @@
 struct figure_carrier_info_window : public figure_info_window_t<figure_carrier_info_window> {
     virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
-        return !!c.figure_get<figure_cartpusher>();
+        figure *f = c.figure_get();
+        if (!f) return false;
+        return f->type == FIGURE_CART_PUSHER || f->type == FIGURE_STORAGEYARD_CART || f->type == FIGURE_DOCKER;
     }
 };
 
@@ -21,9 +23,13 @@ figure_carrier_info_window figure_carrier_infow;
 void figure_carrier_info_window::init(object_info &c) {
     figure_info_window::init(c);
 
-    figure_cartpusher *f = c.figure_get<figure_cartpusher>();
-    
-    if (f->action_state() != ACTION_132_DOCKER_IDLING && f->base.resource_id) {
+    figure *raw = c.figure_get();
+    if (!raw) {
+        return;
+    }
+    figure_impl *f = raw->dcast();
+
+    if (f->action_state() != ACTION_132_DOCKER_IDLING && f->base.resource_id && f->base.resource_amount_full > 0) {
         int resource_img = image_id_resource_icon(f->base.resource_id);
         ui["items"].text_var("@I%u& %u %s %s", resource_img, f->base.resource_amount_full, ui::str(129, 20), ui::str(23, f->base.resource_id));
     }

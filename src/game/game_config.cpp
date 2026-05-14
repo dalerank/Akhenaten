@@ -49,6 +49,7 @@ namespace game_features {
     game_feature gameplay_change_immediate_delete{ "gameplay_change_immediate_delete", "#TR_CONFIG_IMMEDIATELY_DELETE_BUILDINGS", false };
     game_feature gameplay_change_getting_granaries_go_offroad{ "gameplay_change_getting_granaries_go_offroad", "#TR_CONFIG_GETTING_GRANARIES_GO_OFFROAD", false };
     game_feature gameplay_change_granaries_get_double{ "gameplay_change_granaries_get_double", "#TR_CONFIG_GRANARIES_GET_DOUBLE", false };
+    game_feature gameplay_change_dock_double_haul{ "gameplay_change_dock_double_haul", "#TR_CONFIG_DOCK_DOUBLE_HAUL", false };
     game_feature gameplay_change_tower_sentries_go_offroad{ "gameplay_change_tower_sentries_go_offroad", "#TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD", false };
     game_feature gameplay_change_farms_deliver_close{ "gameplay_change_farms_deliver_close", "#TR_CONFIG_FARMS_DELIVER_CLOSE", false };
     game_feature gameplay_change_only_deliver_to_accepting_granaries{ "gameplay_change_only_deliver_to_accepting_granaries", "#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", false };
