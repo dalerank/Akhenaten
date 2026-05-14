@@ -13,9 +13,19 @@ function dynasty_menu_btn_resume() {
     }
 }
 
-function dynasty_menu_btn_explore() { window_scenario_selection_show(MAP_SELECTION_CAMPAIGN) }
-function dynasty_menu_btn_load() { window_file_dialog_load_show(FILE_TYPE_SAVED_GAME) }
-function dynasty_menu_btn_custom() { window_scenario_selection_show(MAP_SELECTION_CUSTOM) }
+function dynasty_menu_btn_explore() {
+    __scenario_selection_info.period_hover = -1
+    window_show_by_id("window_scenario_selection_campaign")
+}
+
+function dynasty_menu_btn_load() { 
+    window_file_dialog_load_show(FILE_TYPE_SAVED_GAME) 
+}
+
+function dynasty_menu_btn_custom() {
+    scenario.scmode = e_scenario_custom_map
+    window_show_by_id("window_scenario_selection_custom")
+}
 
 [es=window]
 window_dinasty_menu {

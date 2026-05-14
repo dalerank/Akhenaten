@@ -246,10 +246,10 @@ struct scenario_data_t {
     } native_images;
 
     int campaign_scenario_id;
+    e_scenario_mode scmode;
     struct {
         int campaign_mission_rank;
         int starting_kingdom;
-        e_scenario_mode scmode;
     } settings;
 
     struct {
@@ -287,7 +287,6 @@ struct scenario_data_t {
 
     void update();
     e_scenario_mode mode();
-    void set_mode(e_scenario_mode m) { settings.scmode = m; }
 
     bool is_scenario_id(xspan<int> missions);
 

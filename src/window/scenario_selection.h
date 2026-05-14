@@ -12,6 +12,8 @@ enum e_map_selection_dialog_type {
 
 /** Int fields bound to MuJS global `__scenario_selection_info` (read/write from scripts). */
 struct scenario_selection_info_js {
+    /** `e_map_selection_dialog_type` (see `MAP_SELECTION_*` in MuJS constants). */
+    int dialog{};
     int visible{};
     int is_open_play{};
     int climate_id{};
@@ -43,6 +45,8 @@ struct scenario_selection_info_js {
     int main_bg_kind{};
     /** First scenario id of the selected campaign period; used with list row `user_data` (see `ui_scenario_selection.js`). */
     int campaign_first_mission{};
+    /** Campaign period index when `dialog` is `MAP_SELECTION_CAMPAIGN_SINGLE_LIST` (see `ui_scenario_selection_campaign.js`). */
+    int campaign_sub_dialog = -1;
 };
 
 extern scenario_selection_info_js g_scenario_selection_info;
@@ -51,15 +55,6 @@ struct window_scenario_selection : autoconfig_window_t<window_scenario_selection
     virtual int handle_mouse(const mouse* m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }
     virtual void draw_foreground(UiFlags flags) override {}
-
-    void setup_dialog(e_map_selection_dialog_type dialog_type, int sub_dialog_selector = -1);
-    void update_widget_visibility_after_list_change();
-
-    scrollable_list* map_list();
-    ui::escrollable_list* map_list_element();
-
-    e_map_selection_dialog_type dialog = MAP_SELECTION_CCK_LEGACY;
-    int campaign_sub_dialog = -1;
 };
 
 extern window_scenario_selection g_window_scenario_selection;
@@ -78,14 +73,6 @@ struct window_scenario_selection_custom : autoconfig_window_t<window_scenario_se
     virtual int handle_mouse(const mouse* m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }
     virtual void draw_foreground(UiFlags flags) override {}
-
-    void update_widget_visibility_after_list_change();
-
-    scrollable_list* map_list();
-    ui::escrollable_list* map_list_element();
 };
 
 extern window_scenario_selection_custom g_window_scenario_selection_custom;
-
-void window_scenario_selection_show(int dialog_type);
-void window_scenario_selection_select_campaign(int campaign_index);

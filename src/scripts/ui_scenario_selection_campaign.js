@@ -1,8 +1,21 @@
 log_info("akhenaten: scenario selection — campaign periods")
 
+[es=(window_scenario_selection_campaign, init)]
+function window_scenario_selection_campaign_on_init(ev) {
+    __scenario_selection_info.dialog = MAP_SELECTION_CAMPAIGN
+    __scenario_selection_info.campaign_first_mission = -1
+    __scenario_selection_info.campaign_sub_dialog = -1
+}
+
 function show_scenario_company(index) {
     return function() {
-        window_scenario_selection_select_campaign(index)
+        var wid = __game_window_get_id()
+        if (wid === "window_scenario_selection" || wid === "window_scenario_selection_custom") {
+            window_go_back()
+        }
+        __scenario_selection_info.dialog = MAP_SELECTION_CAMPAIGN_SINGLE_LIST
+        __scenario_selection_info.campaign_sub_dialog = index
+        window_show_by_id("window_scenario_selection")
     }
 }
 

@@ -27,6 +27,7 @@
 #include "game/player.h"
 #include "scenario/scenario.h"
 #include "core/encoding.h"
+#include "core/locale.h"
 #include "game/game_environment.h"
 #include "city/city.h"
 #include "city/city_finance.h"
@@ -41,6 +42,7 @@
 #include "mujs/jsvalue.h"
 #include "mujs/jscompile.h"
 #include "mujs/jsstring.h"
+#include "graphics/window.h"
 #include "graphics/elements/ui.h"
 #include "graphics/elements/ui_js.h"
 #include "window/autoconfig_window.h"
@@ -695,6 +697,16 @@ void __lang_text_draw_multiline(int group, int number, int x, int y, int box_wid
     lang_text_draw_multiline(group, number, vec2i{x, y}, box_width, (e_font)font);
 }
 ANK_FUNCTION_6(__lang_text_draw_multiline)
+
+int __game_locale_year_before_ad() {
+    return locale_year_before_ad() ? 1 : 0;
+}
+ANK_FUNCTION(__game_locale_year_before_ad)
+
+xstring __game_window_get_id() {
+    return window_get_id();
+}
+ANK_FUNCTION(__game_window_get_id)
 
 void window_show_by_id(pcstr section) { autoconfig_window::show(section); }
 ANK_FUNCTION_1(window_show_by_id)

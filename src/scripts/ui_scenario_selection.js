@@ -8,6 +8,41 @@ function scenario_selection_btn_goals() {
     __scenario_selection_info.scores_or_goals = 1
 }
 
+[es=(window_scenario_selection, init)]
+function window_scenario_selection_on_init(ev) {
+    var list = ev.scenario_map_list
+    var MAX_MANUAL_ENTRIES = 300
+    if (__scenario_selection_info.dialog === MAP_SELECTION_CAMPAIGN_SINGLE_LIST) {
+        __game_scenario_set_mode(e_scenario_normal)
+        list.set_use_file_finder(false)
+        list.clear()
+        var sub = __scenario_selection_info.campaign_sub_dialog
+        __scenario_selection_info.campaign_first_mission = __game_get_first_mission_in_campaign(sub)
+        if (sub !== -1) {
+            for (var i = 0; i < MAX_MANUAL_ENTRIES; i++) {
+                var sid = __game_campaign_mission_step_scenario_id(sub, i)
+                if (sid < 0) {
+                    continue
+                }
+                var name = __game_campaign_mission_step_map_name_utf8(sub, i)
+                if (!name || name.length === 0) {
+                    continue
+                }
+                var row = list.items_count
+                list.add_item(name, row)
+            }
+        }
+        __scenario_selection_info.main_bg_kind = 2
+        return
+    }
+    __scenario_selection_info.dialog = MAP_SELECTION_CCK_LEGACY
+    __scenario_selection_info.campaign_first_mission = -1
+    __scenario_selection_info.campaign_sub_dialog = -1
+    __game_scenario_set_mode(e_scenario_custom_map)
+    list.set_use_file_finder(true)
+    list.change_file_path("Maps/", "map")
+}
+
 function window_scenario_selection_btn_start() {
     if (scenario.campaign_scenario_id === -1) {
         return
@@ -16,28 +51,10 @@ function window_scenario_selection_btn_start() {
 }
 
 function window_scenario_selection_on_map_list_click(entry) {
-    if (__scenario_selection_info.main_bg_kind === 2) {
-        var base = __scenario_selection_info.campaign_first_mission
-        var row = entry.user_data | 0
-        __game_load_mission(base + row, 0)
-    }
-}
-
-[es=(window_scenario_selection, main_bg)]
-function window_scenario_selection_on_main_bg(ev) {
-    var k = __scenario_selection_info.main_bg_kind
-    ev.img_cck.enabled = (k === 1)
-    ev.img_history.enabled = (k === 2)
-    if (k === 1) {
-        ev.img_cck.pack = PACK_UNLOADED
-        ev.img_cck.id = 15
-        ev.img_cck.offset = 0
-    }
-    if (k === 2) {
-        ev.img_history.pack = PACK_UNLOADED
-        ev.img_history.id = 33
-        ev.img_history.offset = 0
-    }
+    var base = __scenario_selection_info.campaign_first_mission
+    var row = entry.user_data | 0
+    __game_load_mission(base + row, 0)
+    window_scenario_selection.selected_mission_index = base + row
 }
 
 function scenario_info_time_suffix(months) {
@@ -53,7 +70,7 @@ function scenario_info_goal_line(value, group, id) {
 
 function scenario_selection_format_start_year(y) {
     if (y >= 0) {
-        if (__game_locale_year_before_ad()) {
+        if (game.locale_year_before_ad) {
             return String(y) + " " + __loc(20, 1)
         }
         return __loc(20, 1) + " " + String(y)
@@ -82,27 +99,15 @@ function scenario_selection_scores_lines_beaten(sid) {
     return lines.join("\n")
 }
 
-function window_scenario_selection_refresh_campaign_side_panel(ev) {
-    if (!__game_scenario_selection_is_campaign_mission_pick()) {
-        ev.side_hdr_period.text = ""
-        ev.side_mission_title.text = ""
-        ev.side_subtitle.text = ""
-        ev.side_year.text = ""
-        ev.side_scores_intro.text = ""
-        ev.side_scores_body.text = ""
+[es=(window_scenario_selection, ui_draw_foreground)]
+function window_scenario_selection_on_ui_draw_foreground(ev) {
+    if (window_scenario_selection.selected_mission_index == window_scenario_selection.info_mission_index) {
         return
     }
-
-    var sub = __game_scenario_selection_campaign_sub_dialog()
+    window_scenario_selection.info_mission_index = window_scenario_selection.selected_mission_index
+    
+    var sub = __scenario_selection_info.campaign_sub_dialog
     ev.side_hdr_period.text = __loc(294, sub * 4)
-    if (!__game_window_scenario_selection_has_map_selection()) {
-        ev.side_mission_title.text = ""
-        ev.side_subtitle.text = ""
-        ev.side_year.text = ""
-        ev.side_scores_intro.text = ""
-        ev.side_scores_body.text = ""
-        return
-    }
     ev.side_mission_title.text = __game_scenario_selection_mission_title_trimmed()
     ev.side_subtitle.text = __game_scenario_subtitle_display_utf8()
     ev.side_year.text = scenario_selection_format_start_year(scenario.start_year)
@@ -126,25 +131,24 @@ function window_scenario_selection_refresh_campaign_side_panel(ev) {
 
 function scenario_selection_fill_campaign_scenario_info() {
     var s = __scenario_selection_info
-    var have = __game_window_scenario_selection_has_map_selection()
     var wantGoals = (s.scores_or_goals === 1)
-    if (!have || !wantGoals) {
+    if (!wantGoals) {
         s.visible = 0
         return
     }
     s.visible = 1
     s.is_open_play = scenario.is_open_play ? 1 : 0
-    s.climate_id = 77 + __game_scenario_property_climate()
-    var msz = __game_scenario_map_size()
+    s.climate_id = 77 + scenario.climate
+    var msz = scenario.map.width
     s.mapsize_id = 121 + ((Math.min(4, Math.max(0, msz - 50) / 30)) | 0)
     s.invasion_id = 112 + ((__game_scenario_invasion_count() / 2) | 0)
-    s.culture = __game_winning_culture()
-    s.prosperity = __game_winning_prosperity()
-    s.monuments = __game_winning_monuments()
-    s.kingdom = __game_winning_kingdom()
-    s.population = __game_winning_population()
-    s.housing = __game_winning_housing()
-    s.house_level = __game_winning_houselevel()
+    s.culture = scenario_win_criteria_goal(__win_criteria.culture)
+    s.prosperity = scenario_win_criteria_goal(__win_criteria.prosperity)
+    s.monuments = scenario_win_criteria_goal(__win_criteria.monuments)
+    s.kingdom = scenario_win_criteria_goal(__win_criteria.kingdom)
+    s.population = scenario_win_criteria_goal(__win_criteria.population)
+    s.housing = scenario_win_criteria_goal(__win_criteria.housing_count)
+    s.house_level = scenario_win_criteria_goal(__win_criteria.housing_level)
     s.has_culture = (s.culture > 0) ? 1 : 0
     s.has_prosperity = (s.prosperity > 0) ? 1 : 0
     s.has_monuments = (s.monuments > 0) ? 1 : 0
@@ -164,13 +168,6 @@ function scenario_selection_fill_campaign_scenario_info() {
     s.mon0 = __game_scenario_property_monument_slot(0)
     s.mon1 = __game_scenario_property_monument_slot(1)
     s.mon2 = __game_scenario_property_monument_slot(2)
-}
-
-[es=(window_scenario_selection, before_widget_draw)]
-function window_scenario_selection_before_widget_draw(ev) {
-    window_scenario_selection_refresh_campaign_side_panel(ev)
-    scenario_selection_fill_campaign_scenario_info()
-    __game_ui_dispatch_autoconfig_event("window_scenario_selection", "scenario_info")
 }
 
 function window_scenario_selection_set_scenario_info_visible(ev, on) {
@@ -251,6 +248,9 @@ function window_scenario_selection_on_scenario_info(ev) {
 window_scenario_selection {
     allow_rmb_goback : true
     pos [(sw(0) - 1024) / 2, (sh(0) - 768) / 2]
+    selected_mission_index : -1
+    info_mission_index : -1
+
     ui {
         background : dummy({ size[64, 48] })
 

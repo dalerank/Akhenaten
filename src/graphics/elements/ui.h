@@ -745,6 +745,7 @@ namespace ui {
         void select_item(pcstr item);
         void select_entry(int index);
         void refresh_file_finder();
+        void set_use_file_finder(bool use);
         void change_file_path(const xstring& dir, const xstring& ext);
         void append_files_with_extension(pcstr dir, pcstr ext);
         void scroll_to_selected();

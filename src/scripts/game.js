@@ -24,6 +24,7 @@ game = extend(__game, {
         set: function(name) { game_features.gameopt_player_name = name }
     }
     @gods_enabled { get: __game_gods_enabled }
+    @locale_year_before_ad { get: __game_locale_year_before_ad }
 
     toggle_writing_video: __game_toggle_writing_video
     make_screenshot: __game_make_screenshot

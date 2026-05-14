@@ -27,7 +27,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_scenario_load_meta_data) {
 void scenario_data_t::init() {
     campaign_scenario_id = 0;
     settings.campaign_mission_rank = 0;
-    settings.scmode = e_scenario_normal;
+    scmode = e_scenario_normal;
     settings.starting_kingdom = difficulty_starting_kingdom();
 }
 
@@ -136,7 +136,7 @@ io_buffer* iob_scenario_mission_id = new io_buffer([](io_buffer* iob, size_t ver
 });
 
 e_scenario_mode scenario_data_t::mode() {
-    return g_scenario.settings.scmode;
+    return scmode;
 }
 
 void scenario_data_t::set_campaign_rank(int rank) {
@@ -144,7 +144,7 @@ void scenario_data_t::set_campaign_rank(int rank) {
 }
 
 bool scenario_data_t::is_scenario_id(xspan<int> missions) {
-    const bool is_custom_map = settings.scmode != e_scenario_normal;
+    const bool is_custom_map = scmode != e_scenario_normal;
     if (is_custom_map) {
         return false;
     }
@@ -395,7 +395,7 @@ io_buffer* iob_scenario_carry_settings = new io_buffer([](io_buffer* iob, size_t
 });
 
 io_buffer* iob_scenario_is_custom = new io_buffer([](io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_UINT8, &g_scenario.settings.scmode);
+    iob->bind(BIND_SIGNATURE_UINT8, &g_scenario.scmode);
     iob->bind____skip(3);
 });
 

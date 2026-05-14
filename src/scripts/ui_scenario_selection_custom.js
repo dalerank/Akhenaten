@@ -2,10 +2,14 @@ log_info("akhenaten: scenario selection — custom maps")
 
 [es=(window_scenario_selection_custom, init)]
 function window_scenario_selection_custom_on_init(ev) {
+    __scenario_selection_info.dialog = MAP_SELECTION_CUSTOM
     __scenario_selection_info.scores_or_goals = 0
+    __scenario_selection_info.campaign_first_mission = -1
+    __scenario_selection_info.campaign_sub_dialog = -1
     scenario.campaign_scenario_id = -1
     ev.scenario_map_list.change_file_path("Maps/", "map")
     ev.scenario_map_list.refresh_file_finder()
+    window_scenario_selection_on_scenario_info(ev)
 }
 
 function window_scenario_selection_custom_on_map_list_click(p) {
@@ -41,17 +45,17 @@ function scenario_selection_fill_custom_scenario_info() {
     }
     s.visible = 1
     s.is_open_play = scenario.is_open_play ? 1 : 0
-    s.climate_id = 77 + __game_scenario_property_climate()
-    var msz = __game_scenario_map_size()
+    s.climate_id = 77 + scenario.climate
+    var msz = scenario.map.width
     s.mapsize_id = 121 + ((Math.min(4, Math.max(0, msz - 50) / 30)) | 0)
     s.invasion_id = 112 + ((__game_scenario_invasion_count() / 2) | 0)
-    s.culture = __game_winning_culture()
-    s.prosperity = __game_winning_prosperity()
-    s.monuments = __game_winning_monuments()
-    s.kingdom = __game_winning_kingdom()
-    s.population = __game_winning_population()
-    s.housing = __game_winning_housing()
-    s.house_level = __game_winning_houselevel()
+    s.culture = scenario_win_criteria_goal(__win_criteria.culture)
+    s.prosperity = scenario_win_criteria_goal(__win_criteria.prosperity)
+    s.monuments = scenario_win_criteria_goal(__win_criteria.monuments)
+    s.kingdom = scenario_win_criteria_goal(__win_criteria.kingdom)
+    s.population = scenario_win_criteria_goal(__win_criteria.population)
+    s.housing = scenario_win_criteria_goal(__win_criteria.housing_count)
+    s.house_level = scenario_win_criteria_goal(__win_criteria.housing_level)
     s.has_culture = (s.culture > 0) ? 1 : 0
     s.has_prosperity = (s.prosperity > 0) ? 1 : 0
     s.has_monuments = (s.monuments > 0) ? 1 : 0
@@ -73,16 +77,10 @@ function scenario_selection_fill_custom_scenario_info() {
     s.mon2 = __game_scenario_property_monument_slot(2)
 }
 
-[es=(window_scenario_selection_custom, before_widget_draw)]
-function window_scenario_selection_custom_before_widget_draw(ev) {
+[es=(window_scenario_selection_custom, ui_draw_foreground)]
+function window_scenario_selection_custom_on_ui_draw_foreground(ev) {
     window_scenario_selection_custom_refresh_side_panel(ev)
     scenario_selection_fill_custom_scenario_info()
-    __game_ui_dispatch_autoconfig_event("window_scenario_selection_custom", "scenario_info")
-}
-
-[es=(window_scenario_selection_custom, scenario_info)]
-function window_scenario_selection_custom_on_scenario_info(ev) {
-    window_scenario_selection_on_scenario_info(ev)
 }
 
 window_scenario_selection_custom {

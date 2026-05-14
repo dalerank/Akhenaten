@@ -85,6 +85,17 @@ static void ui_proxy_refresh_file_finder(js_State* J) {
     J->pushundefined();
 }
 
+static void ui_proxy_set_use_file_finder(js_State* J) {
+    ui::element* elem = ui::GET_ELEM(J);
+    if (elem) {
+        auto* list = elem->dcast_scrollable_list();
+        if (list) {
+            list->set_use_file_finder(js_toboolean(J, 1));
+        }
+    }
+    J->pushundefined();
+}
+
 static void ui_proxy_change_file_path(js_State* J) {
     ui::element* elem = ui::GET_ELEM(J);
     if (elem) {
@@ -167,6 +178,7 @@ void js_register_ui_element_scrollable_list(js_State *J) {
     def_function(J, ui_proxy_select_item, "select_item", 1);
     def_function(J, ui_proxy_select_entry, "select_index", 1);
     def_function(J, ui_proxy_refresh_file_finder, "refresh_file_finder", 0);
+    def_function(J, ui_proxy_set_use_file_finder, "set_use_file_finder", 1);
     def_function(J, ui_proxy_change_file_path, "change_file_path", 2);
     def_function(J, ui_proxy_append_files_with_extension, "append_files_with_extension", 2);
     def_function(J, ui_proxy_scroll_to_selected, "scroll_to_selected", 0);

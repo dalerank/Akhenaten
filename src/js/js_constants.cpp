@@ -13,6 +13,7 @@
 #include "building/building.h"
 #include "graphics/image_desc.h"
 #include "graphics/image_groups.h"
+#include "scenario/scenario.h"
 #include "scenario/scenario_event_manager.h"
 #include "graphics/font.h"
 #include "figure/figure.h"
@@ -33,8 +34,13 @@ void js_register_game_constants(js_State *J) {
     _R(e_session_mission)
     _R(e_session_save)
     _R(e_session_custom_map)
-    _R(MAP_SELECTION_CAMPAIGN)
+    _R(e_scenario_normal)
+    _R(e_scenario_custom_map)
+    _R(MAP_SELECTION_CCK_LEGACY)
     _R(MAP_SELECTION_CUSTOM)
+    _R(MAP_SELECTION_CAMPAIGN)
+    _R(MAP_SELECTION_CAMPAIGN_SINGLE_LIST)
+    _R(MAP_SELECTION_CAMPAIGN_UNUSED_BACKGROUND)
     _R(SCENARIO_NUBT)
     _R(GOD_UNKNOWN)
 

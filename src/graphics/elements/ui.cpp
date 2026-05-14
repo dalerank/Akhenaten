@@ -1779,6 +1779,13 @@ void ui::escrollable_list::refresh_file_finder() {
     }
 }
 
+void ui::escrollable_list::set_use_file_finder(bool use) {
+    params.use_file_finder = use;
+    if (panel) {
+        panel->set_file_finder_usage(use);
+    }
+}
+
 void ui::escrollable_list::change_file_path(const xstring& dir, const xstring& ext) {
     params.files_dir = dir;
     params.file_ext = ext;

@@ -112,10 +112,13 @@ int get_scenario_campaign_id(int scenario_id) {
 int get_first_mission_in_campaign(int campaign_id) {
     if (campaign_id < CAMPAIGN_PHARAOH_PREDYNASTIC || campaign_id >= CAMPAIGN_MAX)
         return SCENARIO_NULL;
+
     auto campaign = &g_mission_data.campaigns[campaign_id];
     auto step = &campaign->steps[0];
-    while (step->scenario_id == SCENARIO_NULL)
+    while (step->scenario_id == SCENARIO_NULL) {
         step = step->next_in_list;
+    }
+
     return step->scenario_id;
 }
 
@@ -134,29 +137,8 @@ bool game_mission_has_choice(int scenario_id) {
 
 bool game_campaign_unlocked(int campaign_id) {
     return game_scenario_unlocked(get_first_mission_in_campaign(campaign_id));
-    //    switch (campaign_id) {
-    //        // pharaoh
-    //        case CAMPAIGN_PHARAOH_ARCHAIC:
-    //            return game_scenario_unlocked(SCENARIO_NUBT);
-    //        case CAMPAIGN_PHARAOH_PREDYNASTIC:
-    //            return game_scenario_unlocked(SCENARIO_NEKHEN);
-    //        case CAMPAIGN_PHARAOH_OLD_KINGDOM:
-    //            return game_scenario_unlocked(SCENARIO_SELIMA_OASIS);
-    //        case CAMPAIGN_PHARAOH_MIDDLE_KINGDOM:
-    //            return game_scenario_unlocked(SCENARIO_THINIS_2);
-    //        case CAMPAIGN_PHARAOH_NEW_KINGDOM:
-    //            return game_scenario_unlocked(SCENARIO_KHMUN);
-    //            // cleopatra
-    //        case CAMPAIGN_CLEOPATRA_VALLEY_OF_THE_KINGS:
-    //            return game_scenario_unlocked(SCENARIO_VALLEY_THUTMOSE);
-    //        case CAMPAIGN_CLEOPATRA_RAMSES_II:
-    //            return game_scenario_unlocked(SCENARIO_SUMUR);
-    //        case CAMPAIGN_CLEOPATRA_ANCIENT_CONQUERORS:
-    //            return game_scenario_unlocked(SCENARIO_PI_YER);
-    //        case CAMPAIGN_CLEOPATRA_CLEOPATRAS_CAPITAL:
-    //            return game_scenario_unlocked(SCENARIO_ALEXANDRIA_1);
-    //    }
 }
+
 bool is_step_unlocked(const mission_step_t* step) {
     if (step->requirements[0] == nullptr)
         return true;
