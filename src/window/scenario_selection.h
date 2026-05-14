@@ -88,8 +88,6 @@ struct window_scenario_selection_custom : autoconfig_window_t<window_scenario_se
     virtual void ui_draw_foreground(UiFlags flags) override;
     virtual int ui_handle_mouse(const mouse* m) override;
 
-    void setup_custom_dialog();
-    void on_map_list_click(int index, int param2);
     void update_widget_visibility_after_list_change();
     void dispatch_scenario_info_script();
 

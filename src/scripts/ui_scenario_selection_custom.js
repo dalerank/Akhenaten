@@ -1,6 +1,24 @@
 log_info("akhenaten: scenario selection — custom maps")
 
-import ui_scenario_selection
+[es=(window_scenario_selection_custom, init)]
+function window_scenario_selection_custom_on_init(ev) {
+    __scenario_selection_info.scores_or_goals = 0
+    scenario.campaign_scenario_id = -1
+    ev.scenario_map_list.enabled = true
+    ev.scenario_map_list.change_file_path("Maps/", "map")
+    ev.scenario_map_list.refresh_file_finder()
+}
+
+function window_scenario_selection_custom_on_map_list_click(p) {
+    if (!p || p.text === "") {
+        return
+    }
+    /* Same row data as C++ `onclick_item` path: `text` is FILE_NO_EXT (basename without `.map`). */
+    var base = p.text
+    var n = base.length
+    var name = (n >= 4 && base.substring(n - 4).toLowerCase() === ".map") ? base : base + ".map"
+    __game_load_map(name, 0)
+}
 
 function window_scenario_selection_custom_btn_start() {
     if (__game_session_last_loaded_kind() !== e_session_custom_map) {
@@ -30,6 +48,7 @@ window_scenario_selection_custom {
             view_items:12
             scrollbar_margin_x:10
             draw_scrollbar_always:false
+            onclick_item: window_scenario_selection_custom_on_map_list_click
         })
 
         btn_start : image_button({ margin{right:-235, bottom:-185}, pos[440, 550], size[27, 27], pack:PACK_GENERAL, id:193, offset:4, onclick: window_scenario_selection_custom_btn_start })

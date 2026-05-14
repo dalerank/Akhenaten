@@ -251,25 +251,6 @@ static int draw_info_line(int base_group, int base_id, int* y, int value, int sp
     return width;
 }
 
-static void draw_scenario_thumbnail(e_map_selection_dialog_type layout, int image_id) {
-    painter ctx = game.painter();
-    switch (layout) {
-    case MAP_SELECTION_CCK_LEGACY:
-    case MAP_SELECTION_CUSTOM:
-        ctx.img_generic(image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, vec2i{78, 36});
-        break;
-    case MAP_SELECTION_CAMPAIGN:
-    case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
-        ctx.img_generic(image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, vec2i{78, 56});
-        break;
-    case MAP_SELECTION_CAMPAIGN_UNUSED_BACKGROUND:
-        ctx.img_generic(image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, vec2i{78, 60});
-        break;
-    default:
-        break;
-    }
-}
-
 static void draw_scores(int scenario_id) {
     painter ctx = game.painter();
     int rank = get_scenario_mission_rank(scenario_id);
@@ -303,7 +284,6 @@ static void draw_scores(int scenario_id) {
 static void draw_custom_side_panel_info() {
     window_scenario_selection_custom& data = g_window_scenario_selection_custom;
     scrollable_list* panel = data.map_list();
-    draw_scenario_thumbnail(MAP_SELECTION_CUSTOM, g_scenario.image_id);
 
     uint8_t scenario_name[MAX_FILE_NAME];
     if (panel) {
@@ -324,8 +304,6 @@ static void draw_side_panel_info() {
     scrollable_list* panel = data.map_list();
     switch (data.dialog) {
     case MAP_SELECTION_CAMPAIGN_SINGLE_LIST: {
-        draw_scenario_thumbnail(MAP_SELECTION_CAMPAIGN_SINGLE_LIST, data.campaign_sub_dialog);
-
         lang_text_draw_centered(294, data.campaign_sub_dialog * 4, INFO_X, HEADER_Y, INFO_W, FONT_NORMAL_BLACK_ON_LIGHT);
 
         if (!panel || panel->get_selected_entry_idx() == -1) {
@@ -365,41 +343,6 @@ scrollable_list* window_scenario_selection_custom::map_list() {
     }
     sl->ensure_panel();
     return sl->get_panel();
-}
-
-void window_scenario_selection_custom::setup_custom_dialog() {
-    g_scenario_selection_info.scores_or_goals = 0;
-    g_scenario.campaign_scenario_id = -1;
-
-    ui::escrollable_list* sle = map_list_element();
-    if (!sle) {
-        return;
-    }
-    sle->ensure_panel();
-    scrollable_list* panel = sle->get_panel();
-    if (!panel) {
-        return;
-    }
-
-    g_scenario.set_mode(e_scenario_custom_map);
-    panel->set_file_finder_usage(true);
-    sle->change_file_path("Maps/", "map");
-
-    (*this)["scenario_map_list"].set_enabled(true);
-
-    sle->onclick_item([](int index, int p2) { g_window_scenario_selection_custom.on_map_list_click(index, p2); });
-    panel->set_onclick_entry([](int index, int p2) { g_window_scenario_selection_custom.on_map_list_click(index, p2); });
-}
-
-void window_scenario_selection_custom::on_map_list_click(int index, int param2) {
-    (void)param2;
-    scrollable_list* panel = map_list();
-    if (!panel || index < 0 || index >= panel->items_count()) {
-        return;
-    }
-    xstring mapname = panel->get_selected_entry_text(FILE_WITH_EXT);
-    GamestateIO::load_map(mapname.c_str(), false);
-    update_widget_visibility_after_list_change();
 }
 
 void window_scenario_selection_custom::update_widget_visibility_after_list_change() {}
@@ -448,10 +391,6 @@ void window_scenario_selection_custom::dispatch_scenario_info_script() {
 }
 
 void window_scenario_selection_custom::ui_draw_foreground(UiFlags flags) {
-    if (draw_underlying) {
-        window_draw_underlying_window(UiFlags_Readonly);
-    }
-
     draw_custom_side_panel_info();
 
     ui.begin_widget(pos);
@@ -556,7 +495,7 @@ void window_scenario_selection_show(int dialog_type) {
         g_scenario_selection_info.period_hover = -1;
         autoconfig_window::show("window_scenario_selection_campaign");
     } else if (t == MAP_SELECTION_CUSTOM) {
-        g_window_scenario_selection_custom.setup_custom_dialog();
+        g_scenario.set_mode(e_scenario_custom_map);
         autoconfig_window::show("window_scenario_selection_custom");
     } else {
         g_window_scenario_selection.setup_dialog(t, -1);
