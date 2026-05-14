@@ -58,6 +58,7 @@ localization_en = [
   {key:"#TR_CONFIG_IMMEDIATELY_DELETE_BUILDINGS", text:"Immediately destroy buildings"}
   {key:"#TR_CONFIG_GETTING_GRANARIES_GO_OFFROAD", text:"Cart pushers from getting granaries can go offroad"}
   {key:"#TR_CONFIG_GRANARIES_GET_DOUBLE", text:"Double the capacity of cart pushers from getting granaries"}
+  {key:"#TR_CONFIG_DOCK_DOUBLE_HAUL", text:"Double the haul amount of dockers (200 per trip)"}
   {key:"#TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD", text:"Tower sentries don't need road access from barracks"}
   {key:"#TR_CONFIG_FARMS_DELIVER_CLOSE", text:"Farms and wharves deliver only to nearby granaries"}
   {key:"#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", text:"Food isn't delivered to getting granaries"}
