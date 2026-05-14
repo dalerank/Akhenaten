@@ -31,7 +31,7 @@
 
 #define MAX_SCENARIOS 15
 
-/** Must match `window_scenario_selection` size in ui_scenario_selection.js. */
+/** Must match scenario selection window `pos` in ui_scenario_selection*.js (1024x768). */
 static constexpr int SCENARIO_SELECTION_DIALOG_W = 1024;
 static constexpr int SCENARIO_SELECTION_DIALOG_H = 768;
 
@@ -40,6 +40,7 @@ scenario_selection_info_js g_scenario_selection_info;
 ANK_GLOBAL_OBJECT(g_scenario_selection_info, __scenario_selection_info, visible, is_open_play, climate_id, mapsize_id, invasion_id, culture, prosperity, monuments, kingdom, population, housing, house_level, has_culture, has_prosperity, has_monuments, has_kingdom, has_population, has_housing, time_kind, time_months, mon0, mon1, mon2, scores_or_goals)
 
 window_scenario_selection g_window_scenario_selection;
+window_scenario_selection_campaign g_window_scenario_selection_campaign;
 
 ui::escrollable_list* window_scenario_selection::map_list_element() {
     return (*this)["scenario_map_list"].dcast_scrollable_list();
@@ -58,7 +59,6 @@ void window_scenario_selection::setup_dialog(e_map_selection_dialog_type dialog_
     dialog = dialog_type;
     campaign_sub_dialog = sub_dialog_selector;
     g_scenario_selection_info.scores_or_goals = 0;
-    campaign_hover = -1;
     g_scenario.campaign_scenario_id = -1;
 
     ui::escrollable_list* sle = map_list_element();
@@ -78,7 +78,6 @@ void window_scenario_selection::setup_dialog(e_map_selection_dialog_type dialog_
         panel->set_file_finder_usage(true);
         sle->change_file_path("Maps/", "map");
         break;
-    case MAP_SELECTION_CAMPAIGN:
     case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
         g_scenario.set_mode(e_scenario_normal);
         panel->set_file_finder_usage(false);
@@ -109,13 +108,6 @@ void window_scenario_selection::setup_dialog(e_map_selection_dialog_type dialog_
 
     const bool show_list = (dialog == MAP_SELECTION_CUSTOM || dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST);
     (*this)["scenario_map_list"].set_enabled(show_list);
-    for (int i = 0; i < 9; ++i) {
-        char buf[16];
-        snprintf(buf, sizeof buf, "camp_%d", i);
-        (*this)[buf].set_enabled(dialog == MAP_SELECTION_CAMPAIGN);
-    }
-    (*this)["hdr_pharaoh"].set_enabled(dialog == MAP_SELECTION_CAMPAIGN);
-    (*this)["hdr_cleopatra"].set_enabled(dialog == MAP_SELECTION_CAMPAIGN);
 
     const bool show_scores = dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST && panel->get_selected_entry_idx() != -1;
     (*this)["btn_scores"].set_enabled(show_scores);
@@ -123,14 +115,10 @@ void window_scenario_selection::setup_dialog(e_map_selection_dialog_type dialog_
 
     (*this)["img_cck"].set_enabled(dialog == MAP_SELECTION_CCK_LEGACY);
     (*this)["img_custom"].set_enabled(dialog == MAP_SELECTION_CUSTOM);
-    (*this)["img_history"].set_enabled(dialog == MAP_SELECTION_CAMPAIGN || dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST);
+    (*this)["img_history"].set_enabled(dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST);
 
     sle->onclick_item([](int index, int p2) { g_window_scenario_selection.on_map_list_click(index, p2); });
     panel->set_onclick_entry([](int index, int p2) { g_window_scenario_selection.on_map_list_click(index, p2); });
-}
-
-void window_scenario_selection::select_campaign(int index) {
-    setup_dialog(MAP_SELECTION_CAMPAIGN_SINGLE_LIST, index);
 }
 
 void window_scenario_selection::on_map_list_click(int index, int param2) {
@@ -283,10 +271,9 @@ static int draw_info_line(int base_group, int base_id, int* y, int value, int sp
     return width;
 }
 
-static void draw_scenario_thumbnail(int image_id) {
+static void draw_scenario_thumbnail(e_map_selection_dialog_type layout, int image_id) {
     painter ctx = game.painter();
-    auto& data = g_window_scenario_selection;
-    switch (data.dialog) {
+    switch (layout) {
     case MAP_SELECTION_CCK_LEGACY:
     case MAP_SELECTION_CUSTOM:
         ctx.img_generic(image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, vec2i{78, 36});
@@ -297,6 +284,8 @@ static void draw_scenario_thumbnail(int image_id) {
         break;
     case MAP_SELECTION_CAMPAIGN_UNUSED_BACKGROUND:
         ctx.img_generic(image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, vec2i{78, 60});
+        break;
+    default:
         break;
     }
 }
@@ -332,7 +321,7 @@ static void draw_scores(int scenario_id) {
 }
 
 static void draw_campaign_hover_side(int campaign_idx) {
-    draw_scenario_thumbnail(campaign_idx);
+    draw_scenario_thumbnail(MAP_SELECTION_CAMPAIGN, campaign_idx);
     const int text_id_offset = 1;
     lang_text_draw_centered(294, campaign_idx * 4, INFO_X, SUBTITLE_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK);
     lang_text_draw_multiline(294, campaign_idx * 4 + text_id_offset, vec2i{INFO_X, INFO_Y}, INFO_W, FONT_NORMAL_BLACK_ON_DARK);
@@ -342,10 +331,8 @@ static void draw_side_panel_info() {
     auto& data = g_window_scenario_selection;
     scrollable_list* panel = data.map_list();
     switch (data.dialog) {
-    case MAP_SELECTION_CAMPAIGN:
-        break;
     case MAP_SELECTION_CUSTOM: {
-        draw_scenario_thumbnail(g_scenario.image_id);
+        draw_scenario_thumbnail(MAP_SELECTION_CUSTOM, g_scenario.image_id);
 
         uint8_t scenario_name[MAX_FILE_NAME];
         if (panel) {
@@ -363,7 +350,7 @@ static void draw_side_panel_info() {
         break;
     }
     case MAP_SELECTION_CAMPAIGN_SINGLE_LIST: {
-        draw_scenario_thumbnail(data.campaign_sub_dialog);
+        draw_scenario_thumbnail(MAP_SELECTION_CAMPAIGN_SINGLE_LIST, data.campaign_sub_dialog);
 
         lang_text_draw_centered(294, data.campaign_sub_dialog * 4, INFO_X, HEADER_Y, INFO_W, FONT_NORMAL_BLACK_ON_LIGHT);
 
@@ -405,13 +392,7 @@ void window_scenario_selection::ui_draw_foreground(UiFlags flags) {
     /* Same origin as autoconfig `pos` (1024x768); not g_screen.dialog_offset (640x480). */
     graphics_in_dialog_with_size(SCENARIO_SELECTION_DIALOG_W, SCENARIO_SELECTION_DIALOG_H);
 
-    if (dialog != MAP_SELECTION_CAMPAIGN) {
-        draw_side_panel_info();
-    }
-
-    if (dialog == MAP_SELECTION_CAMPAIGN && campaign_hover >= 0) {
-        draw_campaign_hover_side(campaign_hover);
-    }
+    draw_side_panel_info();
 
     ui.begin_widget(pos);
     dispatch_scenario_info_script();
@@ -432,36 +413,14 @@ int window_scenario_selection::ui_handle_mouse(const mouse* m) {
     if (input_go_back_requested(m, h)) {
         switch (dialog) {
         case MAP_SELECTION_CUSTOM:
-        case MAP_SELECTION_CAMPAIGN:
             window_go_back();
             return 1;
         case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
-            setup_dialog(MAP_SELECTION_CAMPAIGN, -1);
+            window_go_back();
             return 1;
         default:
             break;
         }
-    }
-
-    if (dialog == MAP_SELECTION_CAMPAIGN) {
-        campaign_hover = -1;
-        /* `element::screen_pos()` is screen space; `mouse_in_dialog` uses 640x480 offset — do not mix. */
-        for (int i = 0; i < 9; ++i) {
-            char buf[16];
-            snprintf(buf, sizeof buf, "camp_%d", i);
-            ui::element& e = (*this)[buf];
-            if (!e.enabled) {
-                continue;
-            }
-            vec2i sp = e.screen_pos();
-            vec2i sz = e.pxsize();
-            if (m->x >= sp.x && m->x < sp.x + sz.x && m->y >= sp.y && m->y < sp.y + sz.y) {
-                campaign_hover = i;
-                break;
-            }
-        }
-    } else {
-        campaign_hover = -1;
     }
 
     if (h->enter_pressed && g_scenario.campaign_scenario_id != -1) {
@@ -472,13 +431,79 @@ int window_scenario_selection::ui_handle_mouse(const mouse* m) {
     return autoconfig_window::ui_handle_mouse(m);
 }
 
+int window_scenario_selection_campaign::draw_background(UiFlags flags) {
+    return autoconfig_window::draw_background(flags);
+}
+
+void window_scenario_selection_campaign::ui_draw_foreground(UiFlags flags) {
+    if (draw_underlying) {
+        window_draw_underlying_window(UiFlags_Readonly);
+    }
+
+    graphics_in_dialog_with_size(SCENARIO_SELECTION_DIALOG_W, SCENARIO_SELECTION_DIALOG_H);
+
+    if (campaign_hover >= 0) {
+        draw_campaign_hover_side(campaign_hover);
+    }
+
+    ui.begin_widget(pos);
+    ui.draw(flags);
+    ui.event(window_info{pos}, get_section(), __func__);
+    ui.end_widget();
+
+    painter ctx = game.painter();
+    char txt[200];
+    debug_text(ctx, txt, INFO_X, -120, 0, "", FILEIO.get_file_version(), COLOR_FONT_YELLOW);
+
+    graphics_reset_dialog();
+}
+
+int window_scenario_selection_campaign::ui_handle_mouse(const mouse* m) {
+    const hotkeys* h = hotkey_state();
+
+    if (input_go_back_requested(m, h)) {
+        window_go_back();
+        return 1;
+    }
+
+    campaign_hover = -1;
+    for (int i = 0; i < 9; ++i) {
+        char buf[16];
+        snprintf(buf, sizeof buf, "camp_%d", i);
+        ui::element& e = (*this)[buf];
+        if (!e.enabled) {
+            continue;
+        }
+        vec2i sp = e.screen_pos();
+        vec2i sz = e.pxsize();
+        if (m->x >= sp.x && m->x < sp.x + sz.x && m->y >= sp.y && m->y < sp.y + sz.y) {
+            campaign_hover = i;
+            break;
+        }
+    }
+
+    return autoconfig_window::ui_handle_mouse(m);
+}
+
+void window_scenario_selection_campaign::init() {}
+
 void window_scenario_selection_show(int dialog_type) {
-    g_window_scenario_selection.setup_dialog((e_map_selection_dialog_type)dialog_type);
-    autoconfig_window::show("window_scenario_selection");
+    const auto t = (e_map_selection_dialog_type)dialog_type;
+    if (t == MAP_SELECTION_CAMPAIGN) {
+        g_window_scenario_selection_campaign.campaign_hover = -1;
+        autoconfig_window::show("window_scenario_selection_campaign");
+    } else {
+        g_window_scenario_selection.setup_dialog(t, -1);
+        autoconfig_window::show("window_scenario_selection");
+    }
 }
 ANK_FUNCTION_1(window_scenario_selection_show)
 
 void window_scenario_selection_select_campaign(int campaign_index) {
-    g_window_scenario_selection.select_campaign(campaign_index);
+    if (window_get_id() == "window_scenario_selection") {
+        window_go_back();
+    }
+    g_window_scenario_selection.setup_dialog(MAP_SELECTION_CAMPAIGN_SINGLE_LIST, campaign_index);
+    autoconfig_window::show("window_scenario_selection");
 }
 ANK_FUNCTION_1(window_scenario_selection_select_campaign)

@@ -51,7 +51,6 @@ struct window_scenario_selection : autoconfig_window_t<window_scenario_selection
     virtual void init() override;
 
     void setup_dialog(e_map_selection_dialog_type dialog_type, int sub_dialog_selector = -1);
-    void select_campaign(int index);
     void on_map_list_click(int index, int param2);
     void update_widget_visibility_after_list_change();
 
@@ -62,10 +61,24 @@ struct window_scenario_selection : autoconfig_window_t<window_scenario_selection
 
     e_map_selection_dialog_type dialog = MAP_SELECTION_CUSTOM;
     int campaign_sub_dialog = -1;
-    int campaign_hover = -1;
 };
 
 extern window_scenario_selection g_window_scenario_selection;
+
+/** Campaign period / company selection (stacked under `window_scenario_selection` when picking missions). */
+struct window_scenario_selection_campaign : autoconfig_window_t<window_scenario_selection_campaign> {
+    virtual int handle_mouse(const mouse* m) override { return 0; }
+    virtual int get_tooltip_text() override { return 0; }
+    virtual void draw_foreground(UiFlags flags) override {}
+    virtual int draw_background(UiFlags flags) override;
+    virtual void ui_draw_foreground(UiFlags flags) override;
+    virtual int ui_handle_mouse(const mouse* m) override;
+    virtual void init() override;
+
+    int campaign_hover = -1;
+};
+
+extern window_scenario_selection_campaign g_window_scenario_selection_campaign;
 
 void window_scenario_selection_show(int dialog_type);
 void window_scenario_selection_select_campaign(int campaign_index);

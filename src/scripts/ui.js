@@ -89,6 +89,7 @@ import ui_statue_window
 import ui_window_city
 import ui_architect_post_window
 import ui_dynasty_menu
+import ui_scenario_selection_campaign
 import ui_scenario_selection
 import ui_player_selection
 import ui_new_career
