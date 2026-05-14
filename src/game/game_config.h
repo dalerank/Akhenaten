@@ -68,6 +68,7 @@ namespace game_features {
     extern game_feature gameplay_change_immediate_delete;
     extern game_feature gameplay_change_getting_granaries_go_offroad;
     extern game_feature gameplay_change_granaries_get_double;
+    extern game_feature gameplay_change_dock_double_haul;
     extern game_feature gameplay_change_tower_sentries_go_offroad;
     extern game_feature gameplay_change_farms_deliver_close;
     extern game_feature gameplay_change_only_deliver_to_accepting_granaries;
