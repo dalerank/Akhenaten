@@ -4,7 +4,6 @@ log_info("akhenaten: scenario selection — custom maps")
 function window_scenario_selection_custom_on_init(ev) {
     __scenario_selection_info.scores_or_goals = 0
     scenario.campaign_scenario_id = -1
-    ev.scenario_map_list.enabled = true
     ev.scenario_map_list.change_file_path("Maps/", "map")
     ev.scenario_map_list.refresh_file_finder()
 }
@@ -13,7 +12,7 @@ function window_scenario_selection_custom_on_map_list_click(p) {
     if (!p || p.text === "") {
         return
     }
-    /* Same row data as C++ `onclick_item` path: `text` is FILE_NO_EXT (basename without `.map`). */
+
     var base = p.text
     var n = base.length
     var name = (n >= 4 && base.substring(n - 4).toLowerCase() === ".map") ? base : base + ".map"
@@ -27,16 +26,72 @@ function window_scenario_selection_custom_btn_start() {
     __game_start_loaded_file()
 }
 
+function window_scenario_selection_custom_refresh_side_panel(ev) {
+    var e = __game_window_scenario_selection_custom_has_map_selection()
+    ev.side_custom_title.text = e ? __game_scenario_selection_custom_selected_map_basename() : ""
+    ev.side_custom_subtitle.text = e ? __game_scenario_subtitle_display_utf8() : ""
+    ev.side_custom_year.text = e ? scenario_selection_format_start_year(scenario.start_year) : ""
+}
+
+function scenario_selection_fill_custom_scenario_info() {
+    var s = __scenario_selection_info
+    if (!__game_window_scenario_selection_custom_has_map_selection()) {
+        s.visible = 0
+        return
+    }
+    s.visible = 1
+    s.is_open_play = scenario.is_open_play ? 1 : 0
+    s.climate_id = 77 + __game_scenario_property_climate()
+    var msz = __game_scenario_map_size()
+    s.mapsize_id = 121 + ((Math.min(4, Math.max(0, msz - 50) / 30)) | 0)
+    s.invasion_id = 112 + ((__game_scenario_invasion_count() / 2) | 0)
+    s.culture = __game_winning_culture()
+    s.prosperity = __game_winning_prosperity()
+    s.monuments = __game_winning_monuments()
+    s.kingdom = __game_winning_kingdom()
+    s.population = __game_winning_population()
+    s.housing = __game_winning_housing()
+    s.house_level = __game_winning_houselevel()
+    s.has_culture = (s.culture > 0) ? 1 : 0
+    s.has_prosperity = (s.prosperity > 0) ? 1 : 0
+    s.has_monuments = (s.monuments > 0) ? 1 : 0
+    s.has_kingdom = (s.kingdom > 0) ? 1 : 0
+    s.has_population = (s.population > 0) ? 1 : 0
+    s.has_housing = (s.housing > 0) ? 1 : 0
+    if (__game_scenario_criteria_survival_enabled()) {
+        s.time_kind = 1
+        s.time_months = __game_scenario_criteria_survival_years() * 12
+    } else if (__game_scenario_criteria_time_limit_enabled()) {
+        s.time_kind = 2
+        s.time_months = __game_scenario_criteria_time_limit_years() * 12
+    } else {
+        s.time_kind = 0
+        s.time_months = 0
+    }
+    s.mon0 = __game_scenario_property_monument_slot(0)
+    s.mon1 = __game_scenario_property_monument_slot(1)
+    s.mon2 = __game_scenario_property_monument_slot(2)
+}
+
+[es=(window_scenario_selection_custom, before_widget_draw)]
+function window_scenario_selection_custom_before_widget_draw(ev) {
+    window_scenario_selection_custom_refresh_side_panel(ev)
+    scenario_selection_fill_custom_scenario_info()
+    __game_ui_dispatch_autoconfig_event("window_scenario_selection_custom", "scenario_info")
+}
+
 [es=(window_scenario_selection_custom, scenario_info)]
 function window_scenario_selection_custom_on_scenario_info(ev) {
     window_scenario_selection_on_scenario_info(ev)
 }
 
 window_scenario_selection_custom {
-    allow_go_back : true
+    allow_rmb_goback : true
     pos [(sw(0) - 1024) / 2, (sh(0) - 768) / 2]
     ui {
         background : dummy({ size[64, 48] })
+
+        debug_file_schema : text({ pos[345, -120], size[160, 20], text:"", font:FONT_NORMAL_YELLOW })
 
         img_custom : image({ pos[0, 0], pack:PACK_UNLOADED, id:32, offset:0, enabled:true })
 
@@ -54,17 +109,22 @@ window_scenario_selection_custom {
 
         btn_start : image_button({ margin{right:-235, bottom:-185}, pos[440, 550], size[27, 27], pack:PACK_GENERAL, id:193, offset:4, onclick: window_scenario_selection_custom_btn_start })
 
-        info_hdr_mission       : text_center({ pos[545, 203], size[265, 17], align:"center", text[44, 10], font:FONT_NORMAL_WHITE_ON_DARK, enabled:false })
-        info_line_climate      : text({ pos[545, 220], size[265, 17], font:FONT_NORMAL_BLACK_ON_DARK, enabled:false })
-        info_line_mapsize      : text({ pos[545, 237], size[265, 17], font:FONT_NORMAL_BLACK_ON_DARK, enabled:false })
-        info_line_invasion     : text({ pos[545, 254], size[265, 17], font:FONT_NORMAL_BLACK_ON_DARK, enabled:false })
-        info_line_start_region : text({ pos[545, 271], size[265, 17], text[2, 6], font:FONT_NORMAL_BLACK_ON_DARK, enabled:false })
+        /* Was draw_custom_side_panel_info in C++. */
+        side_custom_title : text_center({ pos[345, 28], size[265, 36], align:"center", text:"", font:FONT_LARGE_BLACK_ON_DARK, clip_area:true })
+        side_custom_subtitle : text_center({ pos[345, 88], size[265, 20], align:"center", text:"", font:FONT_NORMAL_WHITE_ON_DARK })
+        side_custom_year : text({ pos[345, 108], size[265, 17], text:"", font:FONT_NORMAL_BLACK_ON_DARK })
 
-        info_hdr_goals         : text_center({ pos[545, 288], size[265, 17], align:"center", text[44, 127], font:FONT_NORMAL_WHITE_ON_DARK, enabled:false })
-        info_goals_body        : text({ pos[545, 315], size[265, 100], wrap:px(16), font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true, enabled:false })
-        info_time_limit        : text({ pos[545, 415], size[265, 17], font:FONT_NORMAL_YELLOW, enabled:false })
+        info_hdr_mission       : text_center({ pos[545, 203], size[265, 17], align:"center", text[44, 10], font:FONT_NORMAL_WHITE_ON_DARK })
+        info_line_climate      : text({ pos[545, 220], size[265, 17], font:FONT_NORMAL_BLACK_ON_DARK })
+        info_line_mapsize      : text({ pos[545, 237], size[265, 17], font:FONT_NORMAL_BLACK_ON_DARK })
+        info_line_invasion     : text({ pos[545, 254], size[265, 17], font:FONT_NORMAL_BLACK_ON_DARK })
+        info_line_start_region : text({ pos[545, 271], size[265, 17], text[2, 6], font:FONT_NORMAL_BLACK_ON_DARK })
 
-        info_hdr_monuments     : text_center({ pos[545, 408], size[265, 17], align:"center", text[41, 48], font:FONT_NORMAL_WHITE_ON_DARK, enabled:false })
-        info_monuments_body    : text({ pos[545, 425], size[265, 51], wrap:px(16), font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true, enabled:false })
+        info_hdr_goals         : text_center({ pos[545, 288], size[265, 17], align:"center", text[44, 127], font:FONT_NORMAL_WHITE_ON_DARK })
+        info_goals_body        : text({ pos[545, 315], size[265, 100], wrap:px(16), font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
+        info_time_limit        : text({ pos[545, 415], size[265, 17], font:FONT_NORMAL_YELLOW })
+
+        info_hdr_monuments     : text_center({ pos[545, 408], size[265, 17], align:"center", text[41, 48], font:FONT_NORMAL_WHITE_ON_DARK })
+        info_monuments_body    : text({ pos[545, 425], size[265, 51], wrap:px(16), font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
     }
 }

@@ -3,12 +3,7 @@
 #include "core/encoding.h"
 #include "core/log.h"
 #include "core/profiler.h"
-#include "graphics/graphics.h"
-#include "graphics/elements/lang_text.h"
 #include "graphics/elements/ui.h"
-#include "graphics/image_groups.h"
-#include "graphics/screen.h"
-#include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
 #include "content/vfs.h"
@@ -19,13 +14,12 @@
 #include "scenario/map.h"
 #include "scenario/scenario.h"
 #include "window/autoconfig_window.h"
+#include "core/locale.h"
+#include "core/string.h"
 #include "game/game.h"
-#include "js/js_game.h"
-
-#include "dev/debug.h"
 #include "game/mission.h"
-#include "io/manager.h"
 #include "game/player.h"
+#include "js/js_game.h"
 #include <cmath>
 #include <cstdio>
 
@@ -140,197 +134,175 @@ void window_scenario_selection::update_widget_visibility_after_list_change() {
     (*this)["btn_goals"].set_enabled(show_scores);
 }
 
-void window_scenario_selection::dispatch_scenario_info_script() {
-    scenario_selection_info_js& s = g_scenario_selection_info;
-    scrollable_list* panel = map_list();
-    const bool have_sel = panel && panel->get_selected_entry_idx() != -1;
-    const bool want_goals = (dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST && g_scenario_selection_info.scores_or_goals == 1);
-    if (!have_sel || !want_goals) {
-        s.visible = 0;
-    } else {
-        s.visible = 1;
-        s.is_open_play = g_scenario.is_open_play ? 1 : 0;
-        s.climate_id = 77 + scenario_property_climate();
-        s.mapsize_id = 121 + (int)fmin(4, fmax(0, scenario_map_size() - 50) / 30);
-        s.invasion_id = 112 + scenario_invasion_count() / 2;
-        s.culture = winning_culture();
-        s.prosperity = winning_prosperity();
-        s.monuments = winning_monuments();
-        s.kingdom = winning_kingdom();
-        s.population = winning_population();
-        s.housing = winning_housing();
-        s.house_level = winning_houselevel();
-        s.has_culture = (winning_culture() > 0) ? 1 : 0;
-        s.has_prosperity = (winning_prosperity() > 0) ? 1 : 0;
-        s.has_monuments = (winning_monuments() > 0) ? 1 : 0;
-        s.has_kingdom = (winning_kingdom() > 0) ? 1 : 0;
-        s.has_population = (winning_population() > 0) ? 1 : 0;
-        s.has_housing = (winning_housing() > 0) ? 1 : 0;
-        if (scenario_criteria_survival_enabled()) {
-            s.time_kind = 1;
-            s.time_months = scenario_criteria_survival_years() * 12;
-        } else if (scenario_criteria_time_limit_enabled()) {
-            s.time_kind = 2;
-            s.time_months = scenario_criteria_time_limit_years() * 12;
-        } else {
-            s.time_kind = 0;
-            s.time_months = 0;
-        }
-        s.mon0 = scenario_property_monument(0);
-        s.mon1 = scenario_property_monument(1);
-        s.mon2 = scenario_property_monument(2);
+void __game_ui_dispatch_autoconfig_event(pcstr section, pcstr sub_event) {
+    autoconfig_window* w = autoconfig_window::find(section);
+    if (!w || !sub_event) {
+        return;
     }
-
-    ui::dispatch_autoconfig_es_event(this, "scenario_info", bvariant_map{});
+    ui::dispatch_autoconfig_es_event(w, xstring(sub_event), bvariant_map{});
 }
+ANK_FUNCTION_2(__game_ui_dispatch_autoconfig_event)
 
-#define HEADER_Y 28
-#define SUBTITLE_Y 88
-#define YEAR_Y 108
-#define INFO_X 345
-#define INFO_Y 140
-#define INFO_W 265
-#define SCORES_Y 250
-#define GOALS_BUTTON_Y 400
-
-#define LINE_H 17
-static int draw_info_line(int base_group, int base_id, int* y, int value, int special = -1, bool colon = false, e_font font = FONT_NORMAL_BLACK_ON_DARK) {
-    int width = 0;
-    if (special != 5) {
-        width += lang_text_draw(base_group, base_id, INFO_X, *y, font) - 5;
-        if (colon)
-            width += text_draw(string_from_ascii(":"), INFO_X + width, *y, font, 0);
-    }
-    switch (special) {
-    default:
-        width += text_draw_number(value, '@', "", INFO_X + width, *y, font);
-        break;
-    case 0:
-        if (value >= 24) {
-            width += text_draw_number(value / 12, '@', "", INFO_X + width, *y, font);
-            width += lang_text_draw(298, 9, INFO_X + width, *y, font);
-        } else {
-            width += text_draw_number(value, '@', "", INFO_X + width, *y, font);
-            width += lang_text_draw(148, 15, INFO_X + width, *y, font);
-        }
-        break;
-    case 1:
-        width += 5;
-        width += lang_text_draw(153, 1 + value, INFO_X + width, *y, font);
-        break;
-    case 2:
-        width += 5;
-        width += lang_text_draw(base_group, value, INFO_X + width, *y, font);
-        break;
-    case 3:
-        width += 5;
-        value = fmin(4, fmax(0, value - 50) / 30);
-        width += lang_text_draw(44, 121 + value, INFO_X + width, *y, font);
-        break;
-    case 4:
-        width += 5;
-        if (value <= 0)
-            value = 0;
-        else if (value <= 2)
-            value = 1;
-        else if (value <= 4)
-            value = 2;
-        else if (value <= 10)
-            value = 3;
-        else
-            value = 4;
-        width += lang_text_draw(44, 112 + value, INFO_X + width, *y, font);
-        break;
-    case 5:
-        width += text_draw_number(value, '@', " ", INFO_X + width, *y, font);
-        width += lang_text_draw(base_group, base_id, INFO_X + width, *y, font);
-        break;
-    }
-
-    *y += LINE_H;
-    return width;
+int __game_window_scenario_selection_has_map_selection() {
+    scrollable_list* panel = g_window_scenario_selection.map_list();
+    return panel && panel->get_selected_entry_idx() != -1 ? 1 : 0;
 }
+ANK_FUNCTION(__game_window_scenario_selection_has_map_selection)
 
-static void draw_scores(int scenario_id) {
-    painter ctx = game.painter();
-    int rank = get_scenario_mission_rank(scenario_id);
-    bool unlocked = game_scenario_unlocked(scenario_id);
-    bool beaten = game_scenario_beaten(scenario_id);
-    (void)rank;
-    (void)unlocked;
-    if (beaten) {
-        const player_record* record = player_get_scenario_record(scenario_id);
-        lang_text_draw_multiline(297, scenario_id, vec2i{INFO_X, INFO_Y}, INFO_W, FONT_NORMAL_BLACK_ON_DARK);
-
-        int line_y = SCORES_Y;
-        draw_info_line(298, 6, &line_y, record->completion_months, 0);
-        draw_info_line(298, 4, &line_y, record->final_population);
-        draw_info_line(298, 5, &line_y, record->final_funds);
-        draw_info_line(298, 0, &line_y, record->rating_culture);
-        draw_info_line(298, 1, &line_y, record->rating_prosperity);
-        draw_info_line(298, 3, &line_y, record->rating_kingdom);
-        draw_info_line(298, 7, &line_y, record->difficulty, 1);
-        draw_info_line(298, 8, &line_y, record->score, -1, false, FONT_NORMAL_WHITE_ON_DARK);
-    } else {
-        lang_text_draw_multiline(305, 0, vec2i{INFO_X, INFO_Y}, INFO_W, FONT_NORMAL_YELLOW);
-    }
-
-    char txt[200];
-    debug_text(ctx, txt, INFO_X, -100, 100, "rank", rank, COLOR_FONT_YELLOW);
-    debug_text(ctx, txt, INFO_X, -80, 100, "unlocked", unlocked, COLOR_FONT_YELLOW);
-    debug_text(ctx, txt, INFO_X, -60, 100, "beaten", beaten, COLOR_FONT_YELLOW);
+int __game_window_scenario_selection_custom_has_map_selection() {
+    scrollable_list* panel = g_window_scenario_selection_custom.map_list();
+    return panel && panel->get_selected_entry_idx() != -1 ? 1 : 0;
 }
+ANK_FUNCTION(__game_window_scenario_selection_custom_has_map_selection)
 
-static void draw_custom_side_panel_info() {
-    window_scenario_selection_custom& data = g_window_scenario_selection_custom;
-    scrollable_list* panel = data.map_list();
-
-    uint8_t scenario_name[MAX_FILE_NAME];
-    if (panel) {
-        encoding_from_utf8(panel->get_selected_entry_text(FILE_NO_EXT).c_str(), scenario_name, MAX_FILE_NAME);
-    } else {
-        scenario_name[0] = 0;
-    }
-    text_ellipsize(scenario_name, FONT_LARGE_BLACK_ON_DARK, INFO_W);
-    text_draw_centered(scenario_name, INFO_X, HEADER_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK, 0);
-
-    text_draw_centered(scenario_subtitle(), INFO_X, SUBTITLE_Y, INFO_W, FONT_NORMAL_WHITE_ON_DARK, 0);
-
-    lang_text_draw_year(g_scenario.start_year, INFO_X, YEAR_Y, FONT_NORMAL_BLACK_ON_DARK);
+int __game_scenario_selection_is_campaign_mission_pick() {
+    return g_window_scenario_selection.dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST ? 1 : 0;
 }
+ANK_FUNCTION(__game_scenario_selection_is_campaign_mission_pick)
 
-static void draw_side_panel_info() {
-    auto& data = g_window_scenario_selection;
-    scrollable_list* panel = data.map_list();
-    switch (data.dialog) {
-    case MAP_SELECTION_CAMPAIGN_SINGLE_LIST: {
-        lang_text_draw_centered(294, data.campaign_sub_dialog * 4, INFO_X, HEADER_Y, INFO_W, FONT_NORMAL_BLACK_ON_LIGHT);
-
-        if (!panel || panel->get_selected_entry_idx() == -1) {
-            return;
-        }
-
-        const int campaign_scenario_id = g_scenario.campaign_scenario_id;
-
-        bstring<300> name;
-        string_copy(game_mission_get_name(campaign_scenario_id), name, 300);
-        int i = index_of_string(name, string_from_ascii("("), 300);
-        if (i > 0)
-            name[i - 1] = '\0';
-        text_draw_centered(name.c_str(), INFO_X, 60, INFO_W, FONT_LARGE_BLACK_ON_DARK, 0);
-
-        text_draw_centered(scenario_subtitle(), INFO_X, SUBTITLE_Y, INFO_W, FONT_NORMAL_WHITE_ON_DARK, 0);
-
-        lang_text_draw_year(g_scenario.start_year, INFO_X, YEAR_Y, FONT_NORMAL_BLACK_ON_DARK);
-
-        if (g_scenario_selection_info.scores_or_goals == 0)
-            draw_scores(campaign_scenario_id);
-        break;
-    }
-    default:
-        break;
-    }
+int __game_scenario_selection_campaign_sub_dialog() {
+    return g_window_scenario_selection.campaign_sub_dialog;
 }
+ANK_FUNCTION(__game_scenario_selection_campaign_sub_dialog)
+
+xstring __game_scenario_selection_mission_title_trimmed() {
+    const int sid = g_scenario.campaign_scenario_id;
+    bstring<300> name;
+    string_copy(game_mission_get_name(sid), name, 300);
+    const int i = index_of_string(name.c_str(), string_from_ascii("("), 300);
+    if (i > 0) {
+        name[i - 1] = '\0';
+    }
+    char utf8[600];
+    encoding_to_utf8((const uint8_t*)name.c_str(), utf8, sizeof(utf8), 0);
+    return utf8;
+}
+ANK_FUNCTION(__game_scenario_selection_mission_title_trimmed)
+
+xstring __game_scenario_subtitle_display_utf8() {
+    char utf8[MAX_FILE_NAME * 4];
+    encoding_to_utf8(scenario_subtitle(), utf8, sizeof(utf8), 0);
+    return utf8;
+}
+ANK_FUNCTION(__game_scenario_subtitle_display_utf8)
+
+xstring __game_scenario_selection_custom_selected_map_basename() {
+    scrollable_list* panel = g_window_scenario_selection_custom.map_list();
+    if (!panel || panel->get_selected_entry_idx() == -1) {
+        return "";
+    }
+    return panel->get_selected_entry_text(FILE_NO_EXT).c_str();
+}
+ANK_FUNCTION(__game_scenario_selection_custom_selected_map_basename)
+
+int __game_locale_year_before_ad() {
+    return locale_year_before_ad() ? 1 : 0;
+}
+ANK_FUNCTION(__game_locale_year_before_ad)
+
+int __game_scenario_property_climate() {
+    return scenario_property_climate();
+}
+ANK_FUNCTION(__game_scenario_property_climate)
+
+int __game_scenario_map_size() {
+    return scenario_map_size();
+}
+ANK_FUNCTION(__game_scenario_map_size)
+
+int __game_scenario_invasion_count() {
+    return scenario_invasion_count();
+}
+ANK_FUNCTION(__game_scenario_invasion_count)
+
+int __game_winning_culture() {
+    return winning_culture();
+}
+ANK_FUNCTION(__game_winning_culture)
+int __game_winning_prosperity() {
+    return winning_prosperity();
+}
+ANK_FUNCTION(__game_winning_prosperity)
+int __game_winning_monuments() {
+    return winning_monuments();
+}
+ANK_FUNCTION(__game_winning_monuments)
+int __game_winning_kingdom() {
+    return winning_kingdom();
+}
+ANK_FUNCTION(__game_winning_kingdom)
+int __game_winning_population() {
+    return winning_population();
+}
+ANK_FUNCTION(__game_winning_population)
+int __game_winning_housing() {
+    return winning_housing();
+}
+ANK_FUNCTION(__game_winning_housing)
+int __game_winning_houselevel() {
+    return winning_houselevel();
+}
+ANK_FUNCTION(__game_winning_houselevel)
+
+int __game_scenario_criteria_survival_enabled() {
+    return scenario_criteria_survival_enabled();
+}
+ANK_FUNCTION(__game_scenario_criteria_survival_enabled)
+int __game_scenario_criteria_survival_years() {
+    return scenario_criteria_survival_years();
+}
+ANK_FUNCTION(__game_scenario_criteria_survival_years)
+int __game_scenario_criteria_time_limit_enabled() {
+    return scenario_criteria_time_limit_enabled();
+}
+ANK_FUNCTION(__game_scenario_criteria_time_limit_enabled)
+int __game_scenario_criteria_time_limit_years() {
+    return scenario_criteria_time_limit_years();
+}
+ANK_FUNCTION(__game_scenario_criteria_time_limit_years)
+
+int __game_scenario_property_monument_slot(int field) {
+    return scenario_property_monument(field);
+}
+ANK_FUNCTION_1(__game_scenario_property_monument_slot)
+
+int __game_mission_scenario_beaten(int scenario_id) {
+    return game_scenario_beaten(scenario_id) ? 1 : 0;
+}
+ANK_FUNCTION_1(__game_mission_scenario_beaten)
+
+int __game_player_scenario_record_completion_months(int scenario_id) {
+    return (int)player_get_scenario_record(scenario_id)->completion_months;
+}
+ANK_FUNCTION_1(__game_player_scenario_record_completion_months)
+int __game_player_scenario_record_final_population(int scenario_id) {
+    return (int)player_get_scenario_record(scenario_id)->final_population;
+}
+ANK_FUNCTION_1(__game_player_scenario_record_final_population)
+int __game_player_scenario_record_final_funds(int scenario_id) {
+    return (int)player_get_scenario_record(scenario_id)->final_funds;
+}
+ANK_FUNCTION_1(__game_player_scenario_record_final_funds)
+int __game_player_scenario_record_rating_culture(int scenario_id) {
+    return (int)player_get_scenario_record(scenario_id)->rating_culture;
+}
+ANK_FUNCTION_1(__game_player_scenario_record_rating_culture)
+int __game_player_scenario_record_rating_prosperity(int scenario_id) {
+    return (int)player_get_scenario_record(scenario_id)->rating_prosperity;
+}
+ANK_FUNCTION_1(__game_player_scenario_record_rating_prosperity)
+int __game_player_scenario_record_rating_kingdom(int scenario_id) {
+    return (int)player_get_scenario_record(scenario_id)->rating_kingdom;
+}
+ANK_FUNCTION_1(__game_player_scenario_record_rating_kingdom)
+int __game_player_scenario_record_difficulty(int scenario_id) {
+    return (int)player_get_scenario_record(scenario_id)->difficulty;
+}
+ANK_FUNCTION_1(__game_player_scenario_record_difficulty)
+int __game_player_scenario_record_score(int scenario_id) {
+    return (int)player_get_scenario_record(scenario_id)->score;
+}
+ANK_FUNCTION_1(__game_player_scenario_record_score)
 
 ui::escrollable_list* window_scenario_selection_custom::map_list_element() {
     return (*this)["scenario_map_list"].dcast_scrollable_list();
@@ -346,95 +318,6 @@ scrollable_list* window_scenario_selection_custom::map_list() {
 }
 
 void window_scenario_selection_custom::update_widget_visibility_after_list_change() {}
-
-void window_scenario_selection_custom::dispatch_scenario_info_script() {
-    scenario_selection_info_js& s = g_scenario_selection_info;
-    scrollable_list* panel = map_list();
-    const bool have_sel = panel && panel->get_selected_entry_idx() != -1;
-    if (!have_sel) {
-        s.visible = 0;
-    } else {
-        s.visible = 1;
-        s.is_open_play = g_scenario.is_open_play ? 1 : 0;
-        s.climate_id = 77 + scenario_property_climate();
-        s.mapsize_id = 121 + (int)fmin(4, fmax(0, scenario_map_size() - 50) / 30);
-        s.invasion_id = 112 + scenario_invasion_count() / 2;
-        s.culture = winning_culture();
-        s.prosperity = winning_prosperity();
-        s.monuments = winning_monuments();
-        s.kingdom = winning_kingdom();
-        s.population = winning_population();
-        s.housing = winning_housing();
-        s.house_level = winning_houselevel();
-        s.has_culture = (winning_culture() > 0) ? 1 : 0;
-        s.has_prosperity = (winning_prosperity() > 0) ? 1 : 0;
-        s.has_monuments = (winning_monuments() > 0) ? 1 : 0;
-        s.has_kingdom = (winning_kingdom() > 0) ? 1 : 0;
-        s.has_population = (winning_population() > 0) ? 1 : 0;
-        s.has_housing = (winning_housing() > 0) ? 1 : 0;
-        if (scenario_criteria_survival_enabled()) {
-            s.time_kind = 1;
-            s.time_months = scenario_criteria_survival_years() * 12;
-        } else if (scenario_criteria_time_limit_enabled()) {
-            s.time_kind = 2;
-            s.time_months = scenario_criteria_time_limit_years() * 12;
-        } else {
-            s.time_kind = 0;
-            s.time_months = 0;
-        }
-        s.mon0 = scenario_property_monument(0);
-        s.mon1 = scenario_property_monument(1);
-        s.mon2 = scenario_property_monument(2);
-    }
-
-    ui::dispatch_autoconfig_es_event(this, "scenario_info", bvariant_map{});
-}
-
-void window_scenario_selection_custom::ui_draw_foreground(UiFlags flags) {
-    draw_custom_side_panel_info();
-
-    ui.begin_widget(pos);
-    dispatch_scenario_info_script();
-    ui.draw(flags);
-    ui.event(window_info{pos}, get_section(), __func__);
-    ui.end_widget();
-
-    painter ctx = game.painter();
-    char txt[200];
-    debug_text(ctx, txt, INFO_X, -120, 0, "", FILEIO.get_file_version(), COLOR_FONT_YELLOW);
-}
-
-int window_scenario_selection_custom::ui_handle_mouse(const mouse* m) {
-    const hotkeys* h = hotkey_state();
-
-    if (input_go_back_requested(m, h)) {
-        window_go_back();
-        return 1;
-    }
-
-    if (h->enter_pressed && game.session.last_loaded == e_session_custom_map) {
-        GamestateIO::start_loaded_file();
-        return 1;
-    }
-
-    return autoconfig_window::ui_handle_mouse(m);
-}
-
-void window_scenario_selection::ui_draw_foreground(UiFlags flags) {
-    draw_side_panel_info();
-
-    ui.begin_widget(pos);
-    dispatch_scenario_info_script();
-    ui.draw(flags);
-    ui.event(window_info{pos}, get_section(), __func__);
-    ui.end_widget();
-
-    painter ctx = game.painter();
-    char txt[200];
-    debug_text(ctx, txt, INFO_X, -120, 0, "", FILEIO.get_file_version(), COLOR_FONT_YELLOW);
-}
-
-
 
 void window_scenario_selection_show(int dialog_type) {
     const auto t = (e_map_selection_dialog_type)dialog_type;

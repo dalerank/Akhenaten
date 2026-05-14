@@ -51,12 +51,9 @@ struct window_scenario_selection : autoconfig_window_t<window_scenario_selection
     virtual int handle_mouse(const mouse* m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }
     virtual void draw_foreground(UiFlags flags) override {}
-    virtual void ui_draw_foreground(UiFlags flags) override;
 
     void setup_dialog(e_map_selection_dialog_type dialog_type, int sub_dialog_selector = -1);
     void update_widget_visibility_after_list_change();
-
-    void dispatch_scenario_info_script();
 
     scrollable_list* map_list();
     ui::escrollable_list* map_list_element();
@@ -81,11 +78,8 @@ struct window_scenario_selection_custom : autoconfig_window_t<window_scenario_se
     virtual int handle_mouse(const mouse* m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }
     virtual void draw_foreground(UiFlags flags) override {}
-    virtual void ui_draw_foreground(UiFlags flags) override;
-    virtual int ui_handle_mouse(const mouse* m) override;
 
     void update_widget_visibility_after_list_change();
-    void dispatch_scenario_info_script();
 
     scrollable_list* map_list();
     ui::escrollable_list* map_list_element();
