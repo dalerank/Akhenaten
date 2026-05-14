@@ -578,12 +578,18 @@ void figure_docker::figure_action() {
             advance_action(ACTION_138_DOCKER_IMPORT_RETURNING);
             base.wait_ticks = 0;
             const bool can_export = try_export_resource(destination(), base.resource_id, trade_city);
+            // fetch_export_resource pre-reserves the full haul against the ship's
+            // amount_bought. If the pull fails (e.g. the bay emptied between pick and arrival),
+            // refund the reservation here so total_bought() doesn't drift upward each visit and
+            // eventually hit max_capacity(), which would stall all exports permanently.
+            auto ship = dock.trade_ship ? figure_get<figure_trade_ship>(dock.trade_ship) : nullptr;
+            if (!can_export && ship) {
+                auto &rd = ship->runtime_data();
+                rd.amount_bought = (rd.amount_bought >= 100) ? rd.amount_bought - 100 : 0;
+            }
             if (can_export) {
-                if (dock.trade_ship) {
-                    auto ship = figure_get<figure_trade_ship>(dock.trade_ship);
-                    if (ship) {
-                        ship->runtime_data().failed_dock_attempts = 0;
-                    }
+                if (ship) {
+                    ship->runtime_data().failed_dock_attempts = 0;
                 }
                 int amount = trader().record_bought_resource(base.resource_id);
                 load_resource(base.resource_id, amount);
