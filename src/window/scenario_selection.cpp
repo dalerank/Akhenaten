@@ -421,10 +421,6 @@ int window_scenario_selection_custom::ui_handle_mouse(const mouse* m) {
 }
 
 void window_scenario_selection::ui_draw_foreground(UiFlags flags) {
-    if (draw_underlying) {
-        window_draw_underlying_window(UiFlags_Readonly);
-    }
-
     draw_side_panel_info();
 
     ui.begin_widget(pos);
@@ -438,56 +434,7 @@ void window_scenario_selection::ui_draw_foreground(UiFlags flags) {
     debug_text(ctx, txt, INFO_X, -120, 0, "", FILEIO.get_file_version(), COLOR_FONT_YELLOW);
 }
 
-int window_scenario_selection::ui_handle_mouse(const mouse* m) {
-    const hotkeys* h = hotkey_state();
 
-    if (input_go_back_requested(m, h)) {
-        switch (dialog) {
-        case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
-            window_go_back();
-            return 1;
-        default:
-            break;
-        }
-    }
-
-    if (h->enter_pressed && g_scenario.campaign_scenario_id != -1) {
-        GamestateIO::start_loaded_file();
-        return 1;
-    }
-
-    return autoconfig_window::ui_handle_mouse(m);
-}
-
-int window_scenario_selection_campaign::draw_background(UiFlags flags) {
-    return autoconfig_window::draw_background(flags);
-}
-
-void window_scenario_selection_campaign::ui_draw_foreground(UiFlags flags) {
-    if (draw_underlying) {
-        window_draw_underlying_window(UiFlags_Readonly);
-    }
-
-    ui.begin_widget(pos);
-    ui.draw(flags);
-    ui.event(window_info{pos}, get_section(), __func__);
-    ui.end_widget();
-
-    painter ctx = game.painter();
-    char txt[200];
-    debug_text(ctx, txt, INFO_X, -120, 0, "", FILEIO.get_file_version(), COLOR_FONT_YELLOW);
-}
-
-int window_scenario_selection_campaign::ui_handle_mouse(const mouse* m) {
-    const hotkeys* h = hotkey_state();
-
-    if (input_go_back_requested(m, h)) {
-        window_go_back();
-        return 1;
-    }
-
-    return autoconfig_window::ui_handle_mouse(m);
-}
 
 void window_scenario_selection_show(int dialog_type) {
     const auto t = (e_map_selection_dialog_type)dialog_type;

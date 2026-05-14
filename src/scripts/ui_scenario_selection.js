@@ -126,12 +126,11 @@ function window_scenario_selection_on_scenario_info(ev) {
 }
 
 window_scenario_selection {
+    allow_go_back : true
     pos [(sw(0) - 1024) / 2, (sh(0) - 768) / 2]
     ui {
-        /* Layout root for widget margins; not drawn (same pattern as window_dinasty_menu outer_panel). */
-        background : outer_panel({ pos[0, 0], size[64, 48], enabled:false })
+        background : dummy({ size[64, 48] })
 
-        /* Fullscreen map-selection art in dialog coordinates (image, not background — matches buttons). */
         img_cck : image({ pos[0, 0], pack:PACK_UNLOADED, id:15, offset:0, enabled:false })
         img_history : image({ pos[0, 0], pack:PACK_UNLOADED, id:33, offset:0, enabled:false })
 

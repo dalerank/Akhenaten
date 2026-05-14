@@ -17,7 +17,7 @@ function campaign_period_unhover() {
 }
 
 [es=(window_scenario_selection_campaign, ui_draw_foreground)]
-function window_scenario_selection_campaign_on_campaign_hover(ev) {
+function window_scenario_selection_campaign_on_ui_draw_foreground(ev) {
     var h = __scenario_selection_info.period_hover
     if (h < 0) {
         ev.campaign_hover_thumb.enabled = false
@@ -41,9 +41,11 @@ function window_scenario_selection_campaign_on_campaign_hover(ev) {
 
 window_scenario_selection_campaign {
     last_period_hover : -1
+    allow_go_back : true
+
     pos [(sw(0) - 1024) / 2, (sh(0) - 768) / 2]
     ui {
-        background : outer_panel({ pos[0, 0], size[64, 48], enabled:false })
+        background : dummy({ size[64, 48] })
 
         img_history : image({ pos[0, 0], pack:PACK_UNLOADED, id:33, offset:0, enabled:true })
 

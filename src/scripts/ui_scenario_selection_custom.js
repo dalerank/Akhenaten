@@ -33,9 +33,10 @@ function window_scenario_selection_custom_on_scenario_info(ev) {
 }
 
 window_scenario_selection_custom {
+    allow_go_back : true
     pos [(sw(0) - 1024) / 2, (sh(0) - 768) / 2]
     ui {
-        background : outer_panel({ pos[0, 0], size[64, 48], enabled:false })
+        background : dummy({ size[64, 48] })
 
         img_custom : image({ pos[0, 0], pack:PACK_UNLOADED, id:32, offset:0, enabled:true })
 

@@ -52,7 +52,6 @@ struct window_scenario_selection : autoconfig_window_t<window_scenario_selection
     virtual int get_tooltip_text() override { return 0; }
     virtual void draw_foreground(UiFlags flags) override {}
     virtual void ui_draw_foreground(UiFlags flags) override;
-    virtual int ui_handle_mouse(const mouse* m) override;
 
     void setup_dialog(e_map_selection_dialog_type dialog_type, int sub_dialog_selector = -1);
     void update_widget_visibility_after_list_change();
@@ -73,9 +72,6 @@ struct window_scenario_selection_campaign : autoconfig_window_t<window_scenario_
     virtual int handle_mouse(const mouse* m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }
     virtual void draw_foreground(UiFlags flags) override {}
-    virtual int draw_background(UiFlags flags) override;
-    virtual void ui_draw_foreground(UiFlags flags) override;
-    virtual int ui_handle_mouse(const mouse* m) override;
 };
 
 extern window_scenario_selection_campaign g_window_scenario_selection_campaign;
