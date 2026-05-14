@@ -31,10 +31,6 @@
 
 #define MAX_SCENARIOS 15
 
-/** Must match scenario selection window `pos` in ui_scenario_selection*.js (1024x768). */
-static constexpr int SCENARIO_SELECTION_DIALOG_W = 1024;
-static constexpr int SCENARIO_SELECTION_DIALOG_H = 768;
-
 scenario_selection_info_js g_scenario_selection_info;
 
 ANK_GLOBAL_OBJECT(g_scenario_selection_info, __scenario_selection_info, visible, is_open_play, climate_id, mapsize_id, invasion_id, culture, prosperity, monuments, kingdom, population, housing, house_level, has_culture, has_prosperity, has_monuments, has_kingdom, has_population, has_housing, time_kind, time_months, mon0, mon1, mon2, scores_or_goals, period_hover)
@@ -303,13 +299,6 @@ static void draw_scores(int scenario_id) {
     debug_text(ctx, txt, INFO_X, -60, 100, "beaten", beaten, COLOR_FONT_YELLOW);
 }
 
-static void draw_campaign_hover_side(int campaign_idx) {
-    draw_scenario_thumbnail(MAP_SELECTION_CAMPAIGN, campaign_idx);
-    const int text_id_offset = 1;
-    lang_text_draw_centered(294, campaign_idx * 4, INFO_X, SUBTITLE_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK);
-    lang_text_draw_multiline(294, campaign_idx * 4 + text_id_offset, vec2i{INFO_X, INFO_Y}, INFO_W, FONT_NORMAL_BLACK_ON_DARK);
-}
-
 static void draw_custom_side_panel_info() {
     window_scenario_selection_custom& data = g_window_scenario_selection_custom;
     scrollable_list* panel = data.map_list();
@@ -462,8 +451,6 @@ void window_scenario_selection_custom::ui_draw_foreground(UiFlags flags) {
         window_draw_underlying_window(UiFlags_Readonly);
     }
 
-    graphics_in_dialog_with_size(SCENARIO_SELECTION_DIALOG_W, SCENARIO_SELECTION_DIALOG_H);
-
     draw_custom_side_panel_info();
 
     ui.begin_widget(pos);
@@ -475,8 +462,6 @@ void window_scenario_selection_custom::ui_draw_foreground(UiFlags flags) {
     painter ctx = game.painter();
     char txt[200];
     debug_text(ctx, txt, INFO_X, -120, 0, "", FILEIO.get_file_version(), COLOR_FONT_YELLOW);
-
-    graphics_reset_dialog();
 }
 
 int window_scenario_selection_custom::ui_handle_mouse(const mouse* m) {
@@ -495,17 +480,10 @@ int window_scenario_selection_custom::ui_handle_mouse(const mouse* m) {
     return autoconfig_window::ui_handle_mouse(m);
 }
 
-int window_scenario_selection::draw_background(UiFlags flags) {
-    return autoconfig_window::draw_background(flags);
-}
-
 void window_scenario_selection::ui_draw_foreground(UiFlags flags) {
     if (draw_underlying) {
         window_draw_underlying_window(UiFlags_Readonly);
     }
-
-    /* Same origin as autoconfig `pos` (1024x768); not g_screen.dialog_offset (640x480). */
-    graphics_in_dialog_with_size(SCENARIO_SELECTION_DIALOG_W, SCENARIO_SELECTION_DIALOG_H);
 
     draw_side_panel_info();
 
@@ -518,8 +496,6 @@ void window_scenario_selection::ui_draw_foreground(UiFlags flags) {
     painter ctx = game.painter();
     char txt[200];
     debug_text(ctx, txt, INFO_X, -120, 0, "", FILEIO.get_file_version(), COLOR_FONT_YELLOW);
-
-    graphics_reset_dialog();
 }
 
 int window_scenario_selection::ui_handle_mouse(const mouse* m) {
@@ -552,23 +528,14 @@ void window_scenario_selection_campaign::ui_draw_foreground(UiFlags flags) {
         window_draw_underlying_window(UiFlags_Readonly);
     }
 
-    graphics_in_dialog_with_size(SCENARIO_SELECTION_DIALOG_W, SCENARIO_SELECTION_DIALOG_H);
-
     ui.begin_widget(pos);
     ui.draw(flags);
-
-    if (g_scenario_selection_info.period_hover >= 0) {
-        draw_campaign_hover_side(g_scenario_selection_info.period_hover);
-    }
-
     ui.event(window_info{pos}, get_section(), __func__);
     ui.end_widget();
 
     painter ctx = game.painter();
     char txt[200];
     debug_text(ctx, txt, INFO_X, -120, 0, "", FILEIO.get_file_version(), COLOR_FONT_YELLOW);
-
-    graphics_reset_dialog();
 }
 
 int window_scenario_selection_campaign::ui_handle_mouse(const mouse* m) {
