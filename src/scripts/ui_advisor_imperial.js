@@ -174,7 +174,7 @@ advisor_imperial_window {
                                       })
 
                 personal_savings : label({pos[72, 374]
-                                          textfn:function() { return _eformat( "${52.1} ${city.personal_savings} ${6.0}", { city : city }) }
+                                          textfn:function() { return _eformat( "${52.1} ${city.kingdome.personal_savings} ${6.0}", { city : city }) }
                                          })
                 money_lost   : label({pos[272, 374], textfn: function() { return "0 " + __loc(52, 79) } })
                 no_requests  : label({margin{ left:40, centery:0}, text:"#no_requests", font:FONT_NORMAL_WHITE_ON_DARK })
