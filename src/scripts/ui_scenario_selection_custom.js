@@ -31,18 +31,14 @@ function window_scenario_selection_custom_btn_start() {
 }
 
 function window_scenario_selection_custom_refresh_side_panel(ev) {
-    var e = __game_window_scenario_selection_custom_has_map_selection()
-    ev.side_custom_title.text = e ? __game_scenario_selection_custom_selected_map_basename() : ""
+    var e = 0 // __game_window_scenario_selection_custom_has_map_selection()
+    //ev.side_custom_title.text = e ? __game_scenario_selection_custom_selected_map_basename() : ""
     ev.side_custom_subtitle.text = e ? __game_scenario_subtitle_display_utf8() : ""
     ev.side_custom_year.text = e ? scenario_selection_format_start_year(scenario.start_year) : ""
 }
 
 function scenario_selection_fill_custom_scenario_info() {
     var s = __scenario_selection_info
-    if (!__game_window_scenario_selection_custom_has_map_selection()) {
-        s.visible = 0
-        return
-    }
     s.visible = 1
     s.is_open_play = scenario.is_open_play ? 1 : 0
     s.climate_id = 77 + scenario.climate

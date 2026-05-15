@@ -12,8 +12,6 @@ function window_scenario_selection_update_toggle_buttons(ev) {
     }
     var goals_mode = __scenario_selection_info.scores_or_goals === 1
     var have_mission = window_scenario_selection.selected_mission_index >= 0
-    ev.btn_goals.enabled = goals_mode && have_mission
-    ev.btn_scores.enabled = !goals_mode && have_mission
 }
 
 function window_scenario_selection_update_mission_thumb(ev, offset) {
@@ -49,11 +47,6 @@ function window_scenario_selection_on_init(ev) {
         }
         __scenario_selection_info.main_bg_kind = 2
         __scenario_selection_info.scores_or_goals = 1
-        ev.img_cck.enabled = false
-        ev.img_history.enabled = true
-        ev.img_history.pack = PACK_UNLOADED
-        ev.img_history.id = 33
-        ev.img_history.offset = 0
         window_scenario_selection.selected_mission_index = -1
         window_scenario_selection_reset_mission_caches()
         window_scenario_selection_update_mission_thumb(ev, sub)
@@ -100,7 +93,7 @@ function scenario_info_goal_line(value, group, id) {
 }
 
 function scenario_info_housing_goal_line(value, group, id) {
-    return "@" + String(value) + " " + __loc(group, id)
+    return String(value) + " " + __loc(group, id)
 }
 
 function scenario_selection_format_start_year(y) {
@@ -287,13 +280,8 @@ function window_scenario_selection_apply_scenario_info(ev, s) {
 
 [es=(window_scenario_selection, show_scores)]
 function scenario_selection_btn_scores(ev) {
-    __scenario_selection_info.scores_or_goals = 1
-    window_scenario_selection_reset_mission_caches()
-}
-
-[es=(window_scenario_selection, show_goals)]
-function scenario_selection_btn_goals(ev) {
-    __scenario_selection_info.scores_or_goals = 0
+    __scenario_selection_info.scores_or_goals = !__scenario_selection_info.scores_or_goals
+    ev.btn_scores.text = __scenario_selection_info.scores_or_goals ? __loc(44, 220) : __loc(44, 221)
     window_scenario_selection_reset_mission_caches()
 }
 
@@ -321,7 +309,7 @@ function window_scenario_selection_on_update_goals(ev) {
     window_scenario_selection.goal_mission_index = window_scenario_selection.selected_mission_index
 
     scenario_selection_fill_campaign_scenario_info()
-    ev.debug_file_schema.text = String(__game_io_file_schema_version())
+    ev.debug_file_schema.text = "Fileschema: " + String(__game_io_file_schema_version())
     var s = __scenario_selection_info
     if (!s.visible) {
         return
@@ -339,51 +327,48 @@ window_scenario_selection {
     scores_mission_index : -1
 
     ui {
-        background : dummy({ size[64, 48] })
+        background             : dummy({ size[64, 48] })
+        img_background         : image({ pos[0, 0], pack:PACK_UNLOADED, id:33, offset:0 })
 
-        debug_file_schema : text({ pos[345, -120], size[160, 20], text:"", font:FONT_NORMAL_YELLOW })
+        debug_file_schema      : text({ pos[265, 170], size[160, 20], text:"", font:FONT_NORMAL_BLACK_ON_DARK })
+        img_scenario_thumb     : image({ pos[270, 200], pack:PACK_UNLOADED, id:28, offset:0, enabled:false })
 
-        img_cck : image({ pos[0, 0], pack:PACK_UNLOADED, id:15, offset:0 })
-        img_history : image({ pos[0, 0], pack:PACK_UNLOADED, id:33, offset:0 })
-        img_scenario_thumb : image({ pos[78, 56], pack:PACK_UNLOADED, id:28, offset:0, enabled:false })
-
-        scenario_map_list : scrollable_list({
-            pos[230, 380]
-            size[16, 13]
+        scenario_map_list      : scrollable_list({
+            pos[210, 360]
+            size[16, 15]
             dir:"Maps/"
             file_ext:"map"
             use_file_finder:true
-            view_items:13
+            view_items:14
             scrollbar_margin_x:10
             draw_scrollbar_always:false
             onclick_item: window_scenario_selection_on_map_list_click
         })
 
-        btn_scores : large_button({ pos[540, 550], size[120, 30], text[44, 221], font:FONT_NORMAL_BLACK_ON_DARK, onclick_event: "show_scores" })
-        btn_goals : large_button({ pos[670, 550], size[120, 30], text[44, 220], font:FONT_NORMAL_BLACK_ON_DARK, onclick_event: "show_goals" })
-        btn_start : image_button({ margin{right:-235, bottom:-185}, pos[440, 550], size[27, 27], pack:PACK_GENERAL, id:193, offset:4, onclick: window_scenario_selection_btn_start })
+        btn_scores             : large_button({ pos[550, 542], size[240, 30], text[44, 221], body:2, font:FONT_NORMAL_BLACK_ON_DARK, onclick_event: "show_scores" })
+        btn_start              : image_button({ pos[780, 582], size[27, 27], pack:PACK_GENERAL, id:193, offset:4, onclick: window_scenario_selection_btn_start })
 
         /* Left column (was native draw_side_panel_info in C++). */
-        side_hdr_period : text_center({ pos[345, 28], size[265, 20], align:"center", text:"", font:FONT_NORMAL_BLACK_ON_LIGHT })
-        side_mission_title : text_center({ pos[345, 60], size[265, 36], align:"center", text:"", font:FONT_LARGE_BLACK_ON_DARK, clip_area:true })
-        side_subtitle : text_center({ pos[345, 88], size[265, 20], align:"center", text:"", font:FONT_NORMAL_WHITE_ON_DARK })
-        side_year : text({ pos[345, 108], size[265, 17], text:"", font:FONT_NORMAL_BLACK_ON_DARK })
+        side_hdr_period        : text_center({ pos[545, 165], size[265, 20], align:"center", text:"", font:FONT_NORMAL_BLACK_ON_LIGHT })
+        side_mission_title     : text_center({ pos[545, 192], size[265, 36], align:"center", text:"", font:FONT_LARGE_BLACK_ON_DARK, clip_area:true })
+        side_subtitle          : text_center({ pos[545, 220], size[265, 20], align:"center", text:"", font:FONT_NORMAL_WHITE_ON_DARK })
+        side_year              : text_center({ pos[545, 245], size[265, 17], align:"center", text:"", font:FONT_NORMAL_BLACK_ON_DARK })
 
-        side_scores_intro : text({ pos[345, 140], size[265, 100], wrap:px(16), text:"", font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
-        side_scores_body : text({ pos[345, 250], size[265, 130], wrap:px(16), text:"", font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
+        side_scores_intro      : text({ pos[545, 280], size[265, 100], wrap:px(16), text:"", font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
+        side_scores_body       : text({ pos[545, 280], size[265, 130], wrap:px(16), text:"", font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
 
         /* Right panel scenario info. */
-        info_hdr_mission       : text_center({ pos[545, 203], size[265, 17], align:"center", text[44, 10], font:FONT_NORMAL_WHITE_ON_DARK })
-        info_line_climate      : text({ pos[545, 220], size[265, 17], font:FONT_NORMAL_BLACK_ON_DARK })
-        info_line_mapsize      : text({ pos[545, 237], size[265, 17], font:FONT_NORMAL_BLACK_ON_DARK })
-        info_line_invasion     : text({ pos[545, 254], size[265, 17], font:FONT_NORMAL_BLACK_ON_DARK })
-        info_line_start_region : text({ pos[545, 271], size[265, 17], text[2, 6], font:FONT_NORMAL_BLACK_ON_DARK })
+        info_hdr_mission       : text_center({ pos[545, 272], size[265, 17], align:"center", text[44, 10], font:FONT_NORMAL_WHITE_ON_DARK })
+        info_line_climate      : text({ pos[545, 292], size[265, 17], font:FONT_NORMAL_BLACK_ON_DARK })
+        info_line_mapsize      : text({ pos[545, 312], size[265, 17], font:FONT_NORMAL_BLACK_ON_DARK })
+        info_line_invasion     : text({ pos[545, 332], size[265, 17], font:FONT_NORMAL_BLACK_ON_DARK })
+        info_line_start_region : text({ pos[545, 352], size[265, 17], text[2, 6], font:FONT_NORMAL_BLACK_ON_DARK })
 
-        info_hdr_goals         : text_center({ pos[545, 288], size[265, 17], align:"center", text[44, 127], font:FONT_NORMAL_WHITE_ON_DARK })
-        info_goals_body        : text({ pos[545, 315], size[265, 100], wrap:px(16), font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
-        info_time_limit        : text({ pos[545, 415], size[265, 17], font:FONT_NORMAL_YELLOW })
+        info_hdr_goals         : text_center({ pos[545, 377], size[265, 17], align:"center", text[44, 127], font:FONT_NORMAL_WHITE_ON_DARK })
+        info_goals_body        : text({ pos[545, 404], size[265, 100], wrap:px(16), font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
+        info_time_limit        : text({ pos[545, 484], size[265, 17], font:FONT_NORMAL_YELLOW })
 
-        info_hdr_monuments     : text_center({ pos[545, 408], size[265, 17], align:"center", text[41, 48], font:FONT_NORMAL_WHITE_ON_DARK })
-        info_monuments_body    : text({ pos[545, 425], size[265, 51], wrap:px(16), font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
+        info_hdr_monuments     : text_center({ pos[545, 477], size[265, 17], align:"center", text[41, 48], font:FONT_NORMAL_WHITE_ON_DARK })
+        info_monuments_body    : text({ pos[545, 494], size[265, 51], wrap:px(16), font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
     }
 }
