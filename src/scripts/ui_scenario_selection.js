@@ -1,11 +1,26 @@
 log_info("akhenaten: scenario selection window")
 
-function scenario_selection_btn_scores() {
-    __scenario_selection_info.scores_or_goals = 0
+function window_scenario_selection_reset_mission_caches() {
+    window_scenario_selection.goal_mission_index = -1
+    window_scenario_selection.info_mission_index = -1
+    window_scenario_selection.scores_mission_index = -1
 }
 
-function scenario_selection_btn_goals() {
-    __scenario_selection_info.scores_or_goals = 1
+function window_scenario_selection_update_toggle_buttons(ev) {
+    if (__scenario_selection_info.dialog !== MAP_SELECTION_CAMPAIGN_SINGLE_LIST) {
+        return
+    }
+    var goals_mode = __scenario_selection_info.scores_or_goals === 1
+    var have_mission = window_scenario_selection.selected_mission_index >= 0
+    ev.btn_goals.enabled = goals_mode && have_mission
+    ev.btn_scores.enabled = !goals_mode && have_mission
+}
+
+function window_scenario_selection_update_mission_thumb(ev, offset) {
+    ev.img_scenario_thumb.enabled = true
+    ev.img_scenario_thumb.pack = PACK_UNLOADED
+    ev.img_scenario_thumb.id = 28
+    ev.img_scenario_thumb.offset = offset
 }
 
 [es=(window_scenario_selection, init)]
@@ -33,6 +48,21 @@ function window_scenario_selection_on_init(ev) {
             }
         }
         __scenario_selection_info.main_bg_kind = 2
+        __scenario_selection_info.scores_or_goals = 1
+        ev.img_cck.enabled = false
+        ev.img_history.enabled = true
+        ev.img_history.pack = PACK_UNLOADED
+        ev.img_history.id = 33
+        ev.img_history.offset = 0
+        window_scenario_selection.selected_mission_index = -1
+        window_scenario_selection_reset_mission_caches()
+        window_scenario_selection_update_mission_thumb(ev, sub)
+        if (list.items_count > 0) {
+            list.select_index(0)
+            var base = __scenario_selection_info.campaign_first_mission
+            __game_load_mission(base, 0)
+            window_scenario_selection.selected_mission_index = base
+        }
         return
     }
     __scenario_selection_info.dialog = MAP_SELECTION_CCK_LEGACY
@@ -55,6 +85,7 @@ function window_scenario_selection_on_map_list_click(entry) {
     var row = entry.user_data | 0
     __game_load_mission(base + row, 0)
     window_scenario_selection.selected_mission_index = base + row
+    window_scenario_selection_reset_mission_caches()
 }
 
 function scenario_info_time_suffix(months) {
@@ -65,7 +96,11 @@ function scenario_info_time_suffix(months) {
 }
 
 function scenario_info_goal_line(value, group, id) {
-    return String(value) + " " + __loc(group, id)
+    return __loc(group, id) + "@" + String(value)
+}
+
+function scenario_info_housing_goal_line(value, group, id) {
+    return "@" + String(value) + " " + __loc(group, id)
 }
 
 function scenario_selection_format_start_year(y) {
@@ -100,13 +135,17 @@ function scenario_selection_scores_lines_beaten(sid) {
 }
 
 [es=(window_scenario_selection, ui_draw_foreground)]
-function window_scenario_selection_on_ui_draw_foreground(ev) {
+function window_scenario_selection_on_update_header(ev) {
+    if (__scenario_selection_info.dialog !== MAP_SELECTION_CAMPAIGN_SINGLE_LIST) {
+        return
+    }
     if (window_scenario_selection.selected_mission_index == window_scenario_selection.info_mission_index) {
         return
     }
     window_scenario_selection.info_mission_index = window_scenario_selection.selected_mission_index
-    
+
     var sub = __scenario_selection_info.campaign_sub_dialog
+    window_scenario_selection_update_mission_thumb(ev, sub)
     ev.side_hdr_period.text = __loc(294, sub * 4)
     ev.side_mission_title.text = __game_scenario_selection_mission_title_trimmed()
     ev.side_subtitle.text = __game_scenario_subtitle_display_utf8()
@@ -116,11 +155,22 @@ function window_scenario_selection_on_ui_draw_foreground(ev) {
         ev.side_scores_body.text = ""
         return
     }
-    var sid = scenario.campaign_scenario_id
-    if (__game_mission_scenario_beaten(sid)) {
-        ev.side_scores_intro.text = __loc(297, sid)
+}
+
+[es=(window_scenario_selection, ui_draw_foreground)]
+function window_scenario_selection_on_update_scores(ev) {
+    if (__scenario_selection_info.scores_or_goals !== 0) {
+        return
+    }
+    if (window_scenario_selection.selected_mission_index == window_scenario_selection.scores_mission_index) {
+        return
+    }
+    window_scenario_selection.scores_mission_index = window_scenario_selection.selected_mission_index
+
+    if (__game_mission_scenario_beaten(scenario.campaign_scenario_id)) {
+        ev.side_scores_intro.text = __loc(297, scenario.campaign_scenario_id)
         ev.side_scores_intro.font = FONT_NORMAL_BLACK_ON_DARK
-        ev.side_scores_body.text = scenario_selection_scores_lines_beaten(sid)
+        ev.side_scores_body.text = scenario_selection_scores_lines_beaten(scenario.campaign_scenario_id)
         ev.side_scores_body.font = FONT_NORMAL_BLACK_ON_DARK
     } else {
         ev.side_scores_intro.text = __loc(305, 0)
@@ -131,8 +181,7 @@ function window_scenario_selection_on_ui_draw_foreground(ev) {
 
 function scenario_selection_fill_campaign_scenario_info() {
     var s = __scenario_selection_info
-    var wantGoals = (s.scores_or_goals === 1)
-    if (!wantGoals) {
+    if (window_scenario_selection.selected_mission_index < 0) {
         s.visible = 0
         return
     }
@@ -155,12 +204,12 @@ function scenario_selection_fill_campaign_scenario_info() {
     s.has_kingdom = (s.kingdom > 0) ? 1 : 0
     s.has_population = (s.population > 0) ? 1 : 0
     s.has_housing = (s.housing > 0) ? 1 : 0
-    if (__game_scenario_criteria_survival_enabled()) {
+    if (__win_criteria.survival_time.enabled) {
         s.time_kind = 1
-        s.time_months = __game_scenario_criteria_survival_years() * 12
-    } else if (__game_scenario_criteria_time_limit_enabled()) {
+        s.time_months = __win_criteria.survival_time.years * 12
+    } else if (__win_criteria.time_limit.enabled) {
         s.time_kind = 2
-        s.time_months = __game_scenario_criteria_time_limit_years() * 12
+        s.time_months = __win_criteria.time_limit.years * 12
     } else {
         s.time_kind = 0
         s.time_months = 0
@@ -181,23 +230,12 @@ function window_scenario_selection_set_scenario_info_visible(ev, on) {
     ev.info_time_limit.enabled = on
     ev.info_hdr_monuments.enabled = on
     ev.info_monuments_body.enabled = on
-    if (!on) {
-        ev.info_goals_body.text = ""
-        ev.info_time_limit.text = ""
-        ev.info_monuments_body.text = ""
-    }
+
+    ev.side_scores_intro.enabled = !on
+    ev.side_scores_body.enabled = !on
 }
 
-[es=(window_scenario_selection, scenario_info)]
-function window_scenario_selection_on_scenario_info(ev) {
-    ev.debug_file_schema.text = String(__game_io_file_schema_version())
-    var s = __scenario_selection_info
-    if (!s.visible) {
-        window_scenario_selection_set_scenario_info_visible(ev, false)
-        return
-    }
-    window_scenario_selection_set_scenario_info_visible(ev, true)
-
+function window_scenario_selection_apply_scenario_info(ev, s) {
     ev.info_line_climate.text = __loc(44, s.climate_id)
     ev.info_line_mapsize.text = __loc(44, s.mapsize_id)
     ev.info_line_invasion.text = __loc(44, s.invasion_id)
@@ -219,15 +257,17 @@ function window_scenario_selection_on_scenario_info(ev) {
             goal_lines.push(scenario_info_goal_line(s.population, 44, 133))
         if (s.has_housing) {
             var hid = 20 + s.house_level
-            goal_lines.push(scenario_info_goal_line(s.housing, 29, hid))
+            goal_lines.push(scenario_info_housing_goal_line(s.housing, 29, hid))
         }
     }
     ev.info_goals_body.text = goal_lines.join("\n")
 
     if (!s.is_open_play && s.time_kind == 1) {
         ev.info_time_limit.text = __loc(44, 55) + ":" + scenario_info_time_suffix(s.time_months)
+        ev.info_time_limit.enabled = true
     } else if (!s.is_open_play && s.time_kind == 2) {
         ev.info_time_limit.text = __loc(44, 54) + ":" + scenario_info_time_suffix(s.time_months)
+        ev.info_time_limit.enabled = true
     } else {
         ev.info_time_limit.text = ""
         ev.info_time_limit.enabled = false
@@ -245,11 +285,58 @@ function window_scenario_selection_on_scenario_info(ev) {
     ev.info_monuments_body.text = mon.join("\n")
 }
 
+[es=(window_scenario_selection, show_scores)]
+function scenario_selection_btn_scores(ev) {
+    __scenario_selection_info.scores_or_goals = 1
+    window_scenario_selection_reset_mission_caches()
+}
+
+[es=(window_scenario_selection, show_goals)]
+function scenario_selection_btn_goals(ev) {
+    __scenario_selection_info.scores_or_goals = 0
+    window_scenario_selection_reset_mission_caches()
+}
+
+[es=(window_scenario_selection, ui_draw_foreground)]
+function window_scenario_selection_on_update_ui_state(ev) {
+    if (__scenario_selection_info.dialog !== MAP_SELECTION_CAMPAIGN_SINGLE_LIST) {
+        return
+    }
+    var goals_mode = __scenario_selection_info.scores_or_goals === 1
+    window_scenario_selection_set_scenario_info_visible(ev, goals_mode)
+    window_scenario_selection_update_toggle_buttons(ev)
+}
+
+[es=(window_scenario_selection, ui_draw_foreground)]
+function window_scenario_selection_on_update_goals(ev) {
+    if (__scenario_selection_info.scores_or_goals !== 1) {
+        return
+    }
+    if (window_scenario_selection.selected_mission_index < 0) {
+        return
+    }
+    if (window_scenario_selection.selected_mission_index == window_scenario_selection.goal_mission_index) {
+        return
+    }
+    window_scenario_selection.goal_mission_index = window_scenario_selection.selected_mission_index
+
+    scenario_selection_fill_campaign_scenario_info()
+    ev.debug_file_schema.text = String(__game_io_file_schema_version())
+    var s = __scenario_selection_info
+    if (!s.visible) {
+        return
+    }
+
+    window_scenario_selection_apply_scenario_info(ev, s)
+}
+
 window_scenario_selection {
     allow_rmb_goback : true
     pos [(sw(0) - 1024) / 2, (sh(0) - 768) / 2]
     selected_mission_index : -1
     info_mission_index : -1
+    goal_mission_index : -1
+    scores_mission_index : -1
 
     ui {
         background : dummy({ size[64, 48] })
@@ -258,6 +345,7 @@ window_scenario_selection {
 
         img_cck : image({ pos[0, 0], pack:PACK_UNLOADED, id:15, offset:0 })
         img_history : image({ pos[0, 0], pack:PACK_UNLOADED, id:33, offset:0 })
+        img_scenario_thumb : image({ pos[78, 56], pack:PACK_UNLOADED, id:28, offset:0, enabled:false })
 
         scenario_map_list : scrollable_list({
             pos[230, 380]
@@ -271,8 +359,8 @@ window_scenario_selection {
             onclick_item: window_scenario_selection_on_map_list_click
         })
 
-        btn_scores : large_button({ pos[540, 550], size[120, 30], text[44, 221], font:FONT_NORMAL_BLACK_ON_DARK, onclick: scenario_selection_btn_scores })
-        btn_goals : large_button({ pos[670, 550], size[120, 30], text[44, 220], font:FONT_NORMAL_BLACK_ON_DARK, onclick: scenario_selection_btn_goals })
+        btn_scores : large_button({ pos[540, 550], size[120, 30], text[44, 221], font:FONT_NORMAL_BLACK_ON_DARK, onclick_event: "show_scores" })
+        btn_goals : large_button({ pos[670, 550], size[120, 30], text[44, 220], font:FONT_NORMAL_BLACK_ON_DARK, onclick_event: "show_goals" })
         btn_start : image_button({ margin{right:-235, bottom:-185}, pos[440, 550], size[27, 27], pack:PACK_GENERAL, id:193, offset:4, onclick: window_scenario_selection_btn_start })
 
         /* Left column (was native draw_side_panel_info in C++). */
@@ -280,6 +368,7 @@ window_scenario_selection {
         side_mission_title : text_center({ pos[345, 60], size[265, 36], align:"center", text:"", font:FONT_LARGE_BLACK_ON_DARK, clip_area:true })
         side_subtitle : text_center({ pos[345, 88], size[265, 20], align:"center", text:"", font:FONT_NORMAL_WHITE_ON_DARK })
         side_year : text({ pos[345, 108], size[265, 17], text:"", font:FONT_NORMAL_BLACK_ON_DARK })
+
         side_scores_intro : text({ pos[345, 140], size[265, 100], wrap:px(16), text:"", font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
         side_scores_body : text({ pos[345, 250], size[265, 130], wrap:px(16), text:"", font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
 

@@ -9,7 +9,6 @@
 #include "content/vfs.h"
 #include "io/gamestate/boilerplate.h"
 #include "message_dialog.h"
-#include "scenario/criteria.h"
 #include "scenario/scenario_invasion.h"
 #include "scenario/scenario.h"
 #include "window/autoconfig_window.h"
@@ -81,23 +80,6 @@ int __game_scenario_invasion_count() {
     return scenario_invasion_count();
 }
 ANK_FUNCTION(__game_scenario_invasion_count)
-
-int __game_scenario_criteria_survival_enabled() {
-    return scenario_criteria_survival_enabled();
-}
-ANK_FUNCTION(__game_scenario_criteria_survival_enabled)
-int __game_scenario_criteria_survival_years() {
-    return scenario_criteria_survival_years();
-}
-ANK_FUNCTION(__game_scenario_criteria_survival_years)
-int __game_scenario_criteria_time_limit_enabled() {
-    return scenario_criteria_time_limit_enabled();
-}
-ANK_FUNCTION(__game_scenario_criteria_time_limit_enabled)
-int __game_scenario_criteria_time_limit_years() {
-    return scenario_criteria_time_limit_years();
-}
-ANK_FUNCTION(__game_scenario_criteria_time_limit_years)
 
 int __game_scenario_property_monument_slot(int field) {
     return scenario_property_monument(field);

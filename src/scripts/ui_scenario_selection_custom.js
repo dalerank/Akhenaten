@@ -9,7 +9,6 @@ function window_scenario_selection_custom_on_init(ev) {
     scenario.campaign_scenario_id = -1
     ev.scenario_map_list.change_file_path("Maps/", "map")
     ev.scenario_map_list.refresh_file_finder()
-    window_scenario_selection_on_scenario_info(ev)
 }
 
 function window_scenario_selection_custom_on_map_list_click(p) {
@@ -21,6 +20,7 @@ function window_scenario_selection_custom_on_map_list_click(p) {
     var n = base.length
     var name = (n >= 4 && base.substring(n - 4).toLowerCase() === ".map") ? base : base + ".map"
     __game_load_map(name, 0)
+    window_scenario_selection_custom_refresh_info(window_scenario_selection_custom)
 }
 
 function window_scenario_selection_custom_btn_start() {
@@ -62,12 +62,12 @@ function scenario_selection_fill_custom_scenario_info() {
     s.has_kingdom = (s.kingdom > 0) ? 1 : 0
     s.has_population = (s.population > 0) ? 1 : 0
     s.has_housing = (s.housing > 0) ? 1 : 0
-    if (__game_scenario_criteria_survival_enabled()) {
+    if (__win_criteria.survival_time.enabled) {
         s.time_kind = 1
-        s.time_months = __game_scenario_criteria_survival_years() * 12
-    } else if (__game_scenario_criteria_time_limit_enabled()) {
+        s.time_months = __win_criteria.survival_time.years * 12
+    } else if (__win_criteria.time_limit.enabled) {
         s.time_kind = 2
-        s.time_months = __game_scenario_criteria_time_limit_years() * 12
+        s.time_months = __win_criteria.time_limit.years * 12
     } else {
         s.time_kind = 0
         s.time_months = 0
@@ -77,10 +77,21 @@ function scenario_selection_fill_custom_scenario_info() {
     s.mon2 = __game_scenario_property_monument_slot(2)
 }
 
-[es=(window_scenario_selection_custom, ui_draw_foreground)]
-function window_scenario_selection_custom_on_ui_draw_foreground(ev) {
+function window_scenario_selection_custom_refresh_info(ev) {
     window_scenario_selection_custom_refresh_side_panel(ev)
     scenario_selection_fill_custom_scenario_info()
+    var s = __scenario_selection_info
+    if (!s.visible) {
+        ev.img_scenario_thumb.enabled = false
+        return
+    }
+    window_scenario_selection_update_mission_thumb(ev, scenario.image_id)
+    window_scenario_selection_apply_scenario_info(ev, s)
+}
+
+[es=(window_scenario_selection_custom, ui_draw_foreground)]
+function window_scenario_selection_custom_on_ui_draw_foreground(ev) {
+    window_scenario_selection_custom_refresh_info(ev)
 }
 
 window_scenario_selection_custom {
@@ -92,6 +103,7 @@ window_scenario_selection_custom {
         debug_file_schema : text({ pos[345, -120], size[160, 20], text:"", font:FONT_NORMAL_YELLOW })
 
         img_custom : image({ pos[0, 0], pack:PACK_UNLOADED, id:32, offset:0, enabled:true })
+        img_scenario_thumb : image({ pos[78, 36], pack:PACK_UNLOADED, id:28, offset:0, enabled:false })
 
         scenario_map_list : scrollable_list({
             pos[230, 380]

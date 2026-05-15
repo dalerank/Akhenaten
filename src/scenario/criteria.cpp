@@ -29,7 +29,10 @@ ANK_GLOBAL_OBJECT(g_scenario.win_criteria, __win_criteria,
     kingdom,
     housing_count,
     housing_level,
-    next_mission);
+    next_mission,
+    time_limit,
+    survival_time
+    );
 
 int scenario_criteria_time_limit_enabled() {
     return g_scenario.win_criteria.time_limit.enabled;

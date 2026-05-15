@@ -9,6 +9,7 @@
 ANK_GLOBAL_OBJECT(g_scenario, __scenario,
     start_year,
     climate,
+    image_id,
     kingdom_supplies_grain,
     campaign_scenario_id,
     is_open_play

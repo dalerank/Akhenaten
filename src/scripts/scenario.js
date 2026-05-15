@@ -8,6 +8,7 @@ scenario = extend(__scenario, {
     // => is_open_play
     // => kingdom_supplies_grain
     // => climate
+    // => image_id
     // => start_year
     // => campaign_scenario_id
 })
