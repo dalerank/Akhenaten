@@ -20,7 +20,7 @@ from Pharaoh and play the initial campaign missions without major issues.
 
 For the original game, check out the page on [Steam](https://store.steampowered.com/app/564530/Pharaoh__Cleopatra/)
 or [GOG](https://www.gog.com/en/game/pharaoh_cleopatra).<br>
-For the official 2023 remaster called _Pharaoh: A New Era_ (a separate project from Akhenaten, though Akhenaten can work with it), check out the Steam page [here](https://store.steampowered.com/app/1351080/Pharaoh_A_New_Era/). Note: Don't try to use resources from the remaster, as they are not compatible with this project.
+For the official 2023 remake called _Pharaoh: A New Era_ (a separate project from Akhenaten), check out the Steam page [here](https://store.steampowered.com/app/1351080/Pharaoh_A_New_Era/). Note: Don't try to use resources from the remake, as they are not compatible with this project.
 
 ## Running the game
 
