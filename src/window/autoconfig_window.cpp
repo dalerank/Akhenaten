@@ -53,6 +53,31 @@ autoconfig_window::autoconfig_window(xstring s) {
     autoconfig_registry()[s] = this;
 }
 
+void autoconfig_window::enqueue_event(xstring sub_event, bvariant_map payload) {
+    pending_events_.push_back({ sub_event, std::move(payload) });
+}
+
+void autoconfig_window::fire_pending_events() {
+    constexpr int k_max_passes = 32;
+    int pass = 0;
+
+    while (!pending_events_.empty() && pass < k_max_passes) {
+        auto batch = std::move(pending_events_);
+        pending_events_.clear();
+
+        for (auto &e : batch) {
+            ui::dispatch_autoconfig_es_event(this, e.sub_event, e.payload);
+        }
+
+        ++pass;
+    }
+
+    if (!pending_events_.empty()) {
+        logs::error("flush_pending_es_events: too many deferred passes for '%s'", get_section().c_str());
+        pending_events_.clear();
+    }
+}
+
 void autoconfig_window::on_restore() {
     ui.begin_widget(pos);
     ui.event(window_info{ pos }, get_section(), __func__);
@@ -109,18 +134,20 @@ int autoconfig_window::draw_background(UiFlags flags) {
         init();
         _is_inited = true;
     }
+    
+    if (draw_underlying) {
+        window_draw_underlying_window(UiFlags_Readonly);
+    }
+
     ui.begin_widget(pos);
     ui.event(window_info{pos}, get_section(), __func__);
+    fire_pending_events();
     ui.end_widget();
     return 0;
 }
 
 void autoconfig_window::ui_draw_foreground(UiFlags flags) {
     OZZY_PROFILER_FUNCTION();
-
-    if (draw_underlying) {
-        window_draw_underlying_window(UiFlags_Readonly);
-    }
 
     ui.begin_widget(pos);
     ui.draw(flags);

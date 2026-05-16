@@ -349,8 +349,6 @@ int scenario_property_player_rank();
 
 const uint8_t* scenario_subtitle();
 
-void scenario_set_monument(int field, int m);
-
 bool scenario_building_allowed(e_building_type btype);
 void scenario_building_allow(e_building_type btype, bool allow);
 

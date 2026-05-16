@@ -36,11 +36,6 @@ int __scenario_settings_scmode() {
 }
 ANK_FUNCTION(__scenario_settings_scmode)
 
-void __game_scenario_set_mode(int mode) {
-    g_scenario.scmode = (e_scenario_mode)mode;
-}
-ANK_FUNCTION_1(__game_scenario_set_mode)
-
 xstring __scenario_event_msg_text(int title_id, int index) {
     return g_scenario.events.msg_text(title_id, index);
 }

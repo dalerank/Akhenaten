@@ -1,3 +1,4 @@
+#include "core/bstring.h"
 #include "game/game_events.h"
 #include "city/city_maintenance.h"
 #include "city/city_finance.h"
@@ -22,6 +23,7 @@
 #include "content/mods.h"
 #include "game/game.h"
 #include "js/js_game.h"
+#include "window/autoconfig_window.h"
 
 #include <cmath>
 #include <type_traits>
@@ -87,11 +89,27 @@ int js_emit_script_event(pcstr event_name, const bvariant_map &args) {
     return 0;
 }
 
+int js_game_emit_es(xstring es, xstring sub_event, bvariant_map args) {
+    autoconfig_window *w = autoconfig_window::find(es);
+    if (!w) {
+        logs::info("JS: emit window '%s' not found (ignored)", es.c_str());
+        return 0;
+    }
+
+    w->enqueue_event(sub_event, std::move(args));
+    return 0;
+}
+
 int js_game_emit(js_State *J, pcstr event_name) {
-    // js_game_emit is a js_Emit callback called directly from the VM loop
-    // without resetting BOT, so negative stack indices shift after js_pushiterator.
-    // Use an absolute BOT-relative index to pin the payload regardless of TOP changes.
     int payload_idx = js_gettop(J) - 1;
     bvariant_map args = js_helpers::js_object_to_bvariant_map(J, payload_idx);
-    return js_emit_script_event(event_name, args);
+
+    const char *dot = strchr(event_name, '.');
+    if (dot && dot != event_name && dot[1]) {
+        bstring128 es_name;
+        es_name.ncat(event_name, static_cast<size_t>(dot - event_name));
+        return js_game_emit_es(es_name.c_str(), xstring(dot + 1), std::move(args));
+    }
+
+    return js_emit_script_event(event_name, std::move(args));
 }

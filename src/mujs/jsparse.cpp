@@ -2,6 +2,7 @@
 #include "jslex.h"
 #include "jsparse.h"
 
+#include <cstring>
 #include <new>
 #include <utility>
 
@@ -877,15 +878,34 @@ static js_Ast* forstatement(js_State* J) {
     jsP_error(J, "unexpected token in for-statement: %s", jsY_tokenstring(J->lookahead));
 }
 
-/* emit EventName{ payload } */
+/* emit EventName{ payload } or emit system.sub_event{ payload } */
 static js_Ast* emitstatement(js_State* J) {
     js_Ast *event_node, *payload_props, *payload_object;
+    char event_buf[256];
 
     if (J->lookahead != TK_IDENTIFIER)
         jsP_error(J, "unexpected token: %s (expected event identifier)", jsY_tokenstring(J->lookahead));
 
-    event_node = jsP_newstrnode(J, AST_IDENTIFIER, J->text);
+    strncpy(event_buf, js_strnode_cstr(J->text), sizeof(event_buf) - 1);
+    event_buf[sizeof(event_buf) - 1] = '\0';
     jsP_next(J);
+
+    if (jsP_accept(J, '.')) {
+        if (J->lookahead != TK_IDENTIFIER)
+            jsP_error(J, "unexpected token: %s (expected sub-event name after '.')", jsY_tokenstring(J->lookahead));
+
+        const size_t prefix_len = strlen(event_buf);
+        const char *sub = js_strnode_cstr(J->text);
+        const size_t sub_len = strlen(sub);
+        if (prefix_len + 1 + sub_len >= sizeof(event_buf))
+            jsP_error(J, "emit event name too long");
+
+        event_buf[prefix_len] = '.';
+        memcpy(event_buf + prefix_len + 1, sub, sub_len + 1);
+        jsP_next(J);
+    }
+
+    event_node = jsP_newstrnode(J, AST_IDENTIFIER, js_intern(event_buf));
 
     jsP_expect(J, '{');
     payload_props = objectliteral(J);

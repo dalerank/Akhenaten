@@ -1,7 +1,9 @@
 #pragma once
 
+#include "core/variant.h"
 #include "core/xstring.h"
 #include "core/typename.h"
+#include "core/hvector.h"
 #include "graphics/elements/ui.h"
 #include "js/js_struct.h"
 
@@ -25,10 +27,19 @@ struct autoconfig_window : public ui::widget {
     virtual void archive_load(archive arch) override;
     virtual int ui_handle_mouse(const mouse *m);
 
+    void enqueue_event(xstring sub_event, bvariant_map payload);
+    void fire_pending_events();
+
     bool _is_inited = false;
     bool allow_rmb_goback = false;
     bool draw_underlying = false;
     xstring help_id;
+
+    struct deferred_event {
+        xstring sub_event;
+        bvariant_map payload;
+    };
+    hvector<deferred_event, 8> pending_events_;
 
     static void before_mission_start();
     static void refresh_all();
