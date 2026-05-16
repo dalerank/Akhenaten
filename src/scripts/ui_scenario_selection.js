@@ -40,7 +40,7 @@ function window_scenario_selection_on_init(ev) {
     list.set_use_file_finder(false)
     list.clear()
 
-    var sub = __scenario_selection_info.campaign_sub_dialog
+    var sub = window_scenario_selection.campaign_sub_dialog
     window_scenario_selection.campaign_first_mission = __game_get_first_mission_in_campaign(sub)
     if (sub !== -1) {
         for (var i = 0; i < MAX_MANUAL_ENTRIES; i++) {
@@ -68,6 +68,7 @@ function window_scenario_selection_on_init(ev) {
 
 [es=(window_scenario_selection, mission_changed)]
 function window_scenario_selection_on_mission_changed(ev) {
+    log_info("akhenaten: mission changed")
     ev.img_scenario_thumb.image = get_image({ pack:PACK_UNLOADED, id:28, offset:offset }).tid
 
     var sub = window_scenario_selection.campaign_sub_dialog
@@ -255,6 +256,7 @@ window_scenario_selection {
     allow_rmb_goback : true
     scores_or_goals : 1
     campaign_first_mission : -1
+    campaign_sub_dialog : -1
     pos [(sw(0) - 1024) / 2, (sh(0) - 768) / 2]
 
     ui {

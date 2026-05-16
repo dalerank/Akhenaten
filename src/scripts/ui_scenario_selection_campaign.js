@@ -2,36 +2,32 @@ log_info("akhenaten: scenario selection — campaign periods")
 
 [es=(window_scenario_selection_campaign, init)]
 function window_scenario_selection_campaign_on_init(ev) {
-    __scenario_selection_info.dialog = MAP_SELECTION_CAMPAIGN
-    __scenario_selection_info.campaign_first_mission = -1
-    __scenario_selection_info.campaign_sub_dialog = -1
+    window_scenario_selection.campaign_first_mission = -1
+    window_scenario_selection.campaign_sub_dialog = -1
 }
 
 function show_scenario_company(index) {
     return function() {
-        var wid = __game_window_get_id()
-        if (wid === "window_scenario_selection" || wid === "window_scenario_selection_custom") {
-            window_go_back()
-        }
-        __scenario_selection_info.dialog = MAP_SELECTION_CAMPAIGN_SINGLE_LIST
-        __scenario_selection_info.campaign_sub_dialog = index
+        window_scenario_selection.campaign_sub_dialog = index
         window_show_by_id("window_scenario_selection")
     }
 }
 
 function campaign_period_hover(index) {
     return function() {
-        __scenario_selection_info.period_hover = index
+        window_scenario_selection_campaign.period_hover = index        
+        emit window_scenario_selection_campaign.period_changed { index: index }
     }
 }
 
 function campaign_period_unhover() {
-    __scenario_selection_info.period_hover = -1
+    window_scenario_selection_campaign.period_hover = -1
+    emit window_scenario_selection_campaign.period_changed { index: -1 }
 }
 
-[es=(window_scenario_selection_campaign, ui_draw_foreground)]
-function window_scenario_selection_campaign_on_ui_draw_foreground(ev) {
-    var h = __scenario_selection_info.period_hover
+[es=(window_scenario_selection_campaign, period_changed)]
+function window_scenario_selection_campaign_on_period_changed(ev) {
+    var h = window_scenario_selection_campaign.period_hover
     if (h < 0) {
         ev.campaign_hover_thumb.image = -1
         ev.campaign_hover_subtitle.text = ""
@@ -39,18 +35,13 @@ function window_scenario_selection_campaign_on_ui_draw_foreground(ev) {
         return
     }
 
-    if (window_scenario_selection_campaign.last_period_hover == h) {
-        return
-    }
-
-    window_scenario_selection_campaign.last_period_hover = h
     ev.campaign_hover_thumb.image = get_image({ pack:PACK_UNLOADED, id:28, offset:h }).tid
     ev.campaign_hover_subtitle.text = __loc(294, h * 4)
     ev.campaign_hover_body.text = __loc(294, h * 4 + 1)
 }
 
 window_scenario_selection_campaign {
-    last_period_hover : -1
+    period_hover : -1
     allow_rmb_goback : true
 
     pos [(sw(0) - 1024) / 2, (sh(0) - 768) / 2]
