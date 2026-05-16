@@ -39,7 +39,7 @@ ANK_FUNCTION(__city_health_rating)
 int __city_player_rank() { return g_city.kingdome.player_rank; }
 ANK_FUNCTION(__city_player_rank)
 
-bool __city_mission_has_won() { return g_city.victory_state.has_won(); }
+bool __city_mission_has_won() { return g_scenario.victory_state.has_won(); }
 ANK_FUNCTION(__city_mission_has_won)
 
 pcstr __city_player_name() { return (pcstr)city_player_name; }

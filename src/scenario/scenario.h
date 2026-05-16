@@ -7,6 +7,7 @@
 #include "core/custom_span.hpp"
 #include "core/xstring.h"
 #include "scenario_event_manager.h"
+#include "scenario_victory.h"
 #include "grid/point.h"
 #include "scenario/types.h"
 #include "scenario/scenario_difficulty.h"
@@ -149,6 +150,7 @@ class io_buffer;
 struct scenario_data_t {
     uint8_t scenario_name[65];
     scenario_difficulty_t difficulty;
+    victory_state_t victory_state;
 
     int start_year;
     int climate;

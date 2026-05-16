@@ -12,7 +12,6 @@
 #include "city/city_building_menu_ctrl.h"
 #include "city/military.h"
 #include "city/city_resource.h"
-#include "city/victory.h"
 #include "core/bstring.h"
 #include "content/vfs.h"
 #include "empire/empire_map.h"
@@ -137,7 +136,7 @@ static void pre_load() { // do we NEED this...?
     grid_xx::init_all_grids();
 
     // clear data
-    g_city.victory_state.reset();
+    g_scenario.victory_state.reset();
     g_city.migration.reset();
     g_city_planner.reset();
     g_city.init();

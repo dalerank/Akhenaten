@@ -35,6 +35,12 @@ ANK_GLOBAL_OBJECT(g_scenario.monuments, __scenario_monuments,
     third
     );
 
+ANK_GLOBAL_OBJECT(g_scenario.victory_state, __scenario_victory,
+    state,
+    force_win,
+    force_lost
+    );
+
 xstring __scenario_event_msg_text(int title_id, int index) {
     return g_scenario.events.msg_text(title_id, index);
 }

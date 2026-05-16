@@ -8,7 +8,6 @@
 #include "graphics/elements/generic_button.h"
 #include "figuretype/figure_governor.h"
 #include "city/city.h"
-#include "city/victory.h"
 #include "city/buildings.h"
 #include "city/city_finance.h"
 #include "city/ratings.h"

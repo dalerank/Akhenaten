@@ -4,7 +4,6 @@
 #include "city/city_finance.h"
 #include "city/city_population.h"
 #include "city/ratings.h"
-#include "city/victory.h"
 #include "game/mission.h"
 #include "game/game_config.h"
 #include "game/state.h"
@@ -93,7 +92,7 @@ void ui::window_mission_won::advance_to_next_mission() {
     g_scenario.set_campaign_rank(next_mission_rank);
     city_save_campaign_player_name();
 
-    g_city.victory_state.stop_governing();
+    g_scenario.victory_state.stop_governing();
 
     game_undo_disable();
     g_city.reset_overlay();
@@ -112,7 +111,7 @@ void ui::window_mission_won::advance_to_next_mission() {
 autoconfig_window &ui::window_mission_end::getui() {
     autoconfig_window &mission_won = g_mission_won;
     autoconfig_window &mission_lost = g_mission_lost;
-    return (g_city.victory_state.state == e_victory_state_won) ? mission_won : mission_lost;
+    return (g_scenario.victory_state.state == e_victory_state_won) ? mission_won : mission_lost;
 }
 
 //static void button_fired(int param1, int param2) {

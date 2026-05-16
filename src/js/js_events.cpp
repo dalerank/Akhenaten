@@ -14,7 +14,6 @@
 #include "city/city_festival.h"
 #include "city/city_resource.h"
 #include "scenario/scenario.h"
-#include "city/victory.h"
 #include "city/city_animals.h"
 #include "city/city_kingdome_relations.h"
 #include "city/city_population.h"

@@ -1,7 +1,6 @@
 #include "victory_dialog.h"
 
 #include "city/city.h"
-#include "city/victory.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
@@ -47,7 +46,7 @@ static void draw_foreground(int) {
     graphics_set_to_dialog();
 
     const int current_scenario = g_scenario.settings.campaign_mission_rank;
-    if (g_city.victory_state.state == e_victory_state_won) {
+    if (g_scenario.victory_state.state == e_victory_state_won) {
         large_label_draw({80, 240}, 30, focus_button_id == 1);
         const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
 
@@ -90,9 +89,9 @@ static void button_accept(int param1, int param2) {
 }
 
 static void button_continue_governing(int months, int param2) {
-    g_city.victory_state.continue_governing(months);
+    g_scenario.victory_state.continue_governing(months);
     window_city_show();
-    g_city.victory_state.reset();
+    g_scenario.victory_state.reset();
     g_sound.music_update(/*force*/true);
 }
 

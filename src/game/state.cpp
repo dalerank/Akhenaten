@@ -9,7 +9,7 @@
 #include "game/game.h"
 
 void game_state_init() {
-    g_city.victory_state.reset();
+    g_scenario.victory_state.reset();
     g_city.migration.reset();
     map_ring_init();
 

@@ -7,7 +7,6 @@
 #include "game/game.h"
 #include "scenario/scenario.h"
 #include "js/js_events.h"
-#include "city/victory.h"
 #include "game/game_config.h"
 #include "scenario/criteria.h"
 
@@ -23,14 +22,14 @@ void config_show_mission_properties(bool header) {
 
         // Overall victory state
         const char* state_text = "None";
-        switch (g_city.victory_state.state) {
+        switch (g_scenario.victory_state.state) {
             case e_victory_state_won: state_text = "WON"; break;
             case e_victory_state_lost: state_text = "LOST"; break;
             case e_victory_state_none: state_text = "None"; break;
         }
         game_debug_show_property("victory_state", state_text);
-        game_debug_show_property("force_win", g_city.victory_state.force_win);
-        game_debug_show_property("force_lost", g_city.victory_state.force_lost);
+        game_debug_show_property("force_win", g_scenario.victory_state.force_win);
+        game_debug_show_property("force_lost", g_scenario.victory_state.force_lost);
         {
             ImGui::TableNextRow();
             ImGui::TableNextColumn();
@@ -80,8 +79,8 @@ void config_show_mission_properties(bool header) {
 
         if (winning_housing() > 0) {
             bstring64 label;
-            label.printf("housing[lvl %d]: %d / %d", winning_houselevel(), g_city.victory_state.houses_of_required_level(), winning_housing());
-            game_debug_show_property(label.c_str(), g_city.victory_state.is_housing_condition_met(), true);
+            label.printf("housing[lvl %d]: %d / %d", winning_houselevel(), g_scenario.victory_state.houses_of_required_level(), winning_housing());
+            game_debug_show_property(label.c_str(), g_scenario.victory_state.is_housing_condition_met(), true);
         }
 
         if (scenario_criteria_time_limit_enabled()) {

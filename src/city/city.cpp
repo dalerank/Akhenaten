@@ -122,7 +122,6 @@ void city_t::update_month(simulation_time_t simtime) {
     health.update_month();
     finance.advance_month();
     resource.advance_month();
-    victory_state.update_months_to_govern();
     update_allowed_foods();
 
     population.record_monthly();

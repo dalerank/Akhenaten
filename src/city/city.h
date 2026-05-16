@@ -21,7 +21,6 @@
 #include "city/coverage.h"
 #include "city/city_religion.h"
 #include "city/city_figures.h"
-#include "city/victory.h"
 #include "city/ratings.h"
 #include "grid/point.h"
 #include "city/city_trade.h"
@@ -45,7 +44,6 @@ struct city_t {
     kingdome_relation_t kingdome;
     city_military_t military;
     city_industry_t industry;
-    victory_state_t victory_state;
     city_maintenance_t maintenance;
     e_availability advisors[ADVISOR_MAX];
     e_availability empire_screen = AVAILABLE;

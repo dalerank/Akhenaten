@@ -1,4 +1,4 @@
-#include "victory.h"
+#include "scenario_victory.h"
 
 #include "building/building_house.h"
 #include "building/construction/build_planner.h"
@@ -19,11 +19,11 @@
 #include <iostream>
 
 declare_console_command_p(victory) {
-    g_city.victory_state.force_win = true;
+    g_scenario.victory_state.force_win = true;
 }
 
 declare_console_command_p(defeat) {
-    g_city.victory_state.force_lost = true;
+    g_scenario.victory_state.force_lost = true;
 }
 
 svector<victory_condition, 16> g_victory_conditions;
@@ -195,39 +195,39 @@ void city_t::victory_check() {
     }
 
     events::emit(event_update_victory_state{ g_city.population.current });
-    victory_state.determine_state();
+    g_scenario.victory_state.determine_state();
 
     if (mission.has_won) {
-        victory_state.state = mission.continue_months_left <= 0 ? e_victory_state_won : e_victory_state_none;
+        g_scenario.victory_state.state = mission.continue_months_left <= 0 ? e_victory_state_won : e_victory_state_none;
     }
 
-    if (victory_state.force_win) {
-        victory_state.state = e_victory_state_won;
+    if (g_scenario.victory_state.force_win) {
+        g_scenario.victory_state.state = e_victory_state_won;
     }
 
-    if (victory_state.force_lost) {
-        victory_state.state = e_victory_state_lost;
+    if (g_scenario.victory_state.force_lost) {
+        g_scenario.victory_state.state = e_victory_state_lost;
     }
 
     if (game_features::gameopt_disable_victory.to_bool()) {
         return;
     }
 
-    if (victory_state.state != e_victory_state_none) {
+    if (g_scenario.victory_state.state != e_victory_state_none) {
         g_city_planner.reset();
-        if (victory_state.state == e_victory_state_lost) {
+        if (g_scenario.victory_state.state == e_victory_state_lost) {
             if (mission.fired_message_shown)
                 window_mission_end_show_fired();
             else {
                 mission.fired_message_shown = 1;
                 messages::popup("message_mission_defeat", 0, 0);
             }
-            victory_state.force_win = 0;
-        } else if (victory_state.state == e_victory_state_won) {
+            g_scenario.victory_state.force_win = 0;
+        } else if (g_scenario.victory_state.state == e_victory_state_won) {
             g_sound.music_stop();
             if (mission.victory_message_shown) {
                 ui::window_mission_won::show();
-                victory_state.force_win = 0;
+                g_scenario.victory_state.force_win = 0;
             } else {
                 mission.victory_message_shown = 1;
                 window_victory_dialog_show();

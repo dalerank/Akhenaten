@@ -5,7 +5,6 @@
 #include "building/building_wall.h"
 #include "city/city.h"
 #include "city/city_message.h"
-#include "city/victory.h"
 #include "city/city_building_menu_ctrl.h"
 #include "empire/empire_map.h"
 #include "empire/empire_object.h"
@@ -51,7 +50,7 @@
 #include "empire/empire_traders.h"
 
 void game_file_editor_clear_data(void) {
-    g_city.victory_state.reset();
+    g_scenario.victory_state.reset();
     g_city.migration.reset();
     g_city_planner.reset();
     g_city.init();

@@ -8,7 +8,6 @@
 #include "city/city_finance.h"
 #include "city/city.h"
 #include "game/game_events.h"
-#include "city/victory.h"
 #include "city/city_warnings.h"
 #include "city/city_health.h"
 #include "city/city_resource.h"
