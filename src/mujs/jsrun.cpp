@@ -626,12 +626,7 @@ int js_State::hasproperty(js_Object *obj, js_StringNode name) {
             case JS_PTR_UINT8:  js_pushnumber(J, *(uint8_t *)p); break;
             case JS_PTR_UINT16: js_pushnumber(J, *(uint16_t *)p); break;
             case JS_PTR_INT16:  js_pushnumber(J, *(int16_t *)p); break;
-            case JS_PTR_XSTRING: {
-                xstring *xs = (xstring *)p;
-                pcstr s = xs->c_str();
-                J->pushstring(s ? s : "");
-                break;
-            }
+            case JS_PTR_XSTRING: J->pushstring((js_StringNode)p); break;
             default: J->pushundefined(); break;
             }
         } else {

@@ -51,6 +51,7 @@ import ui_labor_priority_window
 import ui_window_features
 import ui_file_dialog_save
 import ui_file_dialog_load
+import ui_file_dialog_delete
 import ui_overlay_menu
 import ui_market_buyer_window
 import ui_widgets

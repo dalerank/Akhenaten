@@ -3,6 +3,7 @@ log_info("akhenaten: game started")
 game = extend(__game, {
     // -> pending_load_type
     // -> pending_save_type
+    // -> pending_delete_type
     // -> mission_choice_open_scenario_id
     // -> paused
 
@@ -41,6 +42,8 @@ game = extend(__game, {
     file_exists: __game_file_exists
     load_savegame: __game_load_savegame
     write_savegame: __game_write_savegame
+    delete_savegame: __game_delete_savegame
+    delete_map: __game_delete_map
     get_last_loaded_file: __game_get_last_loaded_file
     editor_load_scenario: __game_editor_load_scenario
     editor_write_scenario: __game_editor_write_scenario

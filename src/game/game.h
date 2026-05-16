@@ -79,6 +79,7 @@ struct game_t {
     bool system_language_changed = false;
     uint8_t pending_load_type = 0;
     uint8_t pending_save_type = 0;
+    uint8_t pending_delete_type = 0;
     int mission_choice_open_scenario_id = 0;
 
     MovieWriter *mvwriter = nullptr;
