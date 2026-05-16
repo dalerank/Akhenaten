@@ -11,7 +11,7 @@
 #include "scenario/scenario.h"
 #include "sound/sound.h"
 #include "window/mission_end.h"
-#include "window/victory_dialog.h"
+#include "window/autoconfig_window.h"
 #include "js/js_game.h"
 #include "core/profiler.h"
 #include "dev/debug.h"
@@ -230,7 +230,7 @@ void city_t::victory_check() {
                 g_scenario.victory_state.force_win = 0;
             } else {
                 mission.victory_message_shown = 1;
-                window_victory_dialog_show();
+                autoconfig_window::show("window_victory_dialog");
             }
         }
     }

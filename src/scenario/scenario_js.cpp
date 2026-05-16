@@ -41,6 +41,16 @@ ANK_GLOBAL_OBJECT(g_scenario.victory_state, __scenario_victory,
     force_lost
     );
 
+void __scenario_victory_continue_governing(int months) {
+    g_scenario.victory_state.continue_governing(months);
+}
+ANK_FUNCTION_1(__scenario_victory_continue_governing)
+
+void __scenario_victory_reset() {
+    g_scenario.victory_state.reset();
+}
+ANK_FUNCTION(__scenario_victory_reset)
+
 xstring __scenario_event_msg_text(int title_id, int index) {
     return g_scenario.events.msg_text(title_id, index);
 }
