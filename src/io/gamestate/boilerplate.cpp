@@ -857,7 +857,7 @@ declare_console_command_p(save_map) {
     
     bool success = GamestateIO::write_map(filename.c_str());
     
-    os << success 
+    os << (success 
            ? "Map saved successfully!\n"
-           : "Error: Failed to save map.\n";
+           : "Error: Failed to save map.\n");
 }

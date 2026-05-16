@@ -1,37 +1,5 @@
 log_info("akhenaten: scenario selection window")
 
-__scenario_selection_info = {
-    dialog: MAP_SELECTION_CCK_LEGACY
-    visible: 0
-    is_open_play: 0
-    climate_id: 0
-    mapsize_id: 0
-    invasion_id: 0
-    culture: 0
-    prosperity: 0
-    monuments: 0
-    kingdom: 0
-    population: 0
-    housing: 0
-    house_level: 0
-    has_culture: 0
-    has_prosperity: 0
-    has_monuments: 0
-    has_kingdom: 0
-    has_population: 0
-    has_housing: 0
-    time_kind: 0
-    time_months: 0
-    mon0: 0
-    mon1: 0
-    mon2: 0
-    scores_or_goals: 0
-    period_hover: -1
-    main_bg_kind: 0
-    campaign_first_mission: -1
-    campaign_sub_dialog: -1
-}
-
 [es=(window_scenario_selection, init)]
 function window_scenario_selection_on_init(ev) {
     var list = ev.scenario_map_list
@@ -56,7 +24,7 @@ function window_scenario_selection_on_init(ev) {
             list.add_item(name, row)
         }
     }
-    window_scenario_selection.scores_or_goals = 1
+    window_scenario_selection.scores_or_goals = 0
     window_scenario_selection.selected_mission_index = -1
     if (list.items_count > 0) {
         list.select_index(0)
@@ -64,12 +32,13 @@ function window_scenario_selection_on_init(ev) {
         __game_load_mission(base, 0)
         window_scenario_selection.selected_mission_index = base
     }
+
+    emit window_scenario_selection.mission_changed { id: scenario.campaign_scenario_id }
 }
 
 [es=(window_scenario_selection, mission_changed)]
 function window_scenario_selection_on_mission_changed(ev) {
-    log_info("akhenaten: mission changed")
-    ev.img_scenario_thumb.image = get_image({ pack:PACK_UNLOADED, id:28, offset:offset }).tid
+    ev.img_scenario_thumb.image = get_image({ pack:PACK_UNLOADED, id:28, offset:scenario.campaign_scenario_id }).tid
 
     var sub = window_scenario_selection.campaign_sub_dialog
     ev.side_hdr_period.text = __loc(294, sub * 4)
@@ -80,8 +49,9 @@ function window_scenario_selection_on_mission_changed(ev) {
 
 [es=(window_scenario_selection, mission_changed)]
 function window_scenario_selection_on_update_scores(ev) {
-    if (__game_mission_scenario_beaten(scenario.campaign_scenario_id)) {
-        ev.side_scores_intro.text = __loc(297, scenario.campaign_scenario_id)
+    var sid = scenario.campaign_scenario_id
+    if (__game_mission_scenario_beaten(sid)) {
+        ev.side_scores_intro.text = __loc(297, sid)
         ev.side_scores_intro.font = FONT_NORMAL_BLACK_ON_DARK
 
         var lines = []
@@ -179,8 +149,8 @@ function window_scenario_selection_update_time_limit(ev) {
 
 [es=(window_scenario_selection, mission_changed)]
 function window_scenario_selection_update_climate(ev) {
-    ev.info_line_climate.text = __loc(44, scenario.climate)
-    ev.info_line_mapsize.text = __loc(44, scenario.map.width)
+    ev.info_line_climate.text = __loc(44, 77 + scenario.climate)
+    ev.info_line_mapsize.text = __loc(44, 121 + ((Math.min(4, Math.max(0, scenario.map.width - 50) / 30)) | 0))
 }
 
 [es=(window_scenario_selection, mission_changed)]
@@ -192,13 +162,13 @@ function window_scenario_selection_update_file_schema(ev) {
 function window_scenario_selection_update_monuments(ev) {
     var mon = []
     if (__scenario_monuments.first > 0)
-        mon.push(__loc(198, s.mon0))
+        mon.push(__loc(198, __scenario_monuments.first))
 
     if (__scenario_monuments.second > 0)
-        mon.push(__loc(198, s.mon1))
+        mon.push(__loc(198, __scenario_monuments.second))
 
     if (__scenario_monuments.third > 0)
-        mon.push(__loc(198, s.mon2))
+        mon.push(__loc(198, __scenario_monuments.third))
 
     if (mon.length == 0)
         mon.push(__loc(198, 0))
@@ -212,7 +182,7 @@ function window_scenario_selection_update_goals(ev) {
     ev.info_line_start_region.text = __loc(2, 6)
 
     var goal_lines = []
-    if (s.is_open_play) {
+    if (scenario.is_open_play) {
         goal_lines.push(__loc(145, 0))
     } else {
         if (scenario.culture_goal > 0)
@@ -264,7 +234,7 @@ window_scenario_selection {
         img_background         : image({ pos[0, 0], pack:PACK_UNLOADED, id:33, offset:0 })
 
         debug_file_schema      : text({ pos[265, 170], size[160, 20], text:"", font:FONT_NORMAL_BLACK_ON_DARK })
-        img_scenario_thumb     : image({ pos[270, 200], pack:PACK_UNLOADED, id:28, offset:0, enabled:false })
+        img_scenario_thumb     : image({ pos[270, 200], pack:PACK_UNLOADED, id:28, offset:0 })
 
         scenario_map_list      : scrollable_list({
             pos[210, 360]
