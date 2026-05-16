@@ -52,6 +52,7 @@ import building_mine_gems
 import building_granary
 import building_health
 import building_architect_post
+import building_courthouse
 import overlays
 import images
 import population
