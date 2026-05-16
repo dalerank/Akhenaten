@@ -7,7 +7,8 @@
 #include <vector>
 
 #define MAX_BUTTONS_IN_SCROLLABLE_LIST 50
-#define MAX_MANUAL_ENTRIES 300
+// must cover MAX_MESSAGES (1000): the messages window adds one entry per city message
+#define MAX_MANUAL_ENTRIES 1000
 
 struct scrollable_list_ui_params {
     vec2i pos = { 0, 0 };

@@ -115,6 +115,9 @@ void scrollable_list::clear_entry_list() {
 }
 
 void scrollable_list::add_entry(xstring entry_text, uintptr_t user_data) {
+    if (manual_entry_list.full()) {
+        return;
+    }
     manual_entry_list.push_back({ entry_text, user_data });
     _items_count++;
     refresh_scrollbar();
