@@ -28,7 +28,7 @@ custom_missions = [
 		mission_id: 128		
 	}
 	{
-		filaneme : "Bridges.map"
+		filename: "Bridges.map"
 		mission_id: 129
 	}
 ]

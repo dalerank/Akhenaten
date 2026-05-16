@@ -14,7 +14,7 @@ function dynasty_menu_btn_resume() {
 }
 
 function dynasty_menu_btn_explore() {
-    __scenario_selection_info.period_hover = -1
+    window_scenario_selection_campaign.period_hover = -1
     window_show_by_id("window_scenario_selection_campaign")
 }
 
