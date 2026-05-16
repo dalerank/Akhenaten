@@ -21,17 +21,6 @@ int __game_campaign_mission_step_scenario_id(int campaign_id, int step_index) {
 }
 ANK_FUNCTION_2(__game_campaign_mission_step_scenario_id)
 
-xstring __game_campaign_mission_step_map_name_utf8(int campaign_id, int step_index) {
-    const mission_step_t* mission_data = get_campaign_mission_step_data(campaign_id, step_index);
-    if (!mission_data || mission_data->scenario_id < 0 || !mission_data->map_name) {
-        return xstring();
-    }
-    char name_utf8[MAX_FILE_NAME] = {0};
-    encoding_to_utf8(mission_data->map_name, name_utf8, MAX_FILE_NAME, 0);
-    return xstring(name_utf8);
-}
-ANK_FUNCTION_2(__game_campaign_mission_step_map_name_utf8)
-
 xstring __game_scenario_subtitle_display_utf8() {
     char utf8[MAX_FILE_NAME * 4];
     encoding_to_utf8(scenario_subtitle(), utf8, sizeof(utf8), 0);

@@ -16,12 +16,8 @@ function window_scenario_selection_on_init(ev) {
             if (sid < 0) {
                 continue
             }
-            var name = __game_campaign_mission_step_map_name_utf8(sub, i)
-            if (!name || name.length === 0) {
-                continue
-            }
-            var row = list.items_count
-            list.add_item(name, row)
+            var config = get_mission_config(sid)
+            list.add_item(config.selection_title.length > 0 ? config.selection_title : "No title", list.items_count)
         }
     }
     window_scenario_selection.scores_or_goals = 0

@@ -2,6 +2,7 @@ log_info("akhenaten: mission 1 started")
 
 mission1 {
 	start_message : "message_gold_and_crime"
+	selection_title : "Thinis"
 	env {
 		has_animals : true
 	    gods_least_mood : 50
