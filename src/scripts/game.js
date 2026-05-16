@@ -4,6 +4,7 @@ game = extend(__game, {
     // -> pending_load_type
     // -> pending_save_type
     // -> mission_choice_open_scenario_id
+    // -> paused
 
     mission_briefing_scenario_id : 0
     mission_briefing_is_review : false
@@ -128,6 +129,11 @@ function event_change_clouds_speed_handler(ev) {
         s = calc_bound_scroll_speed(s - 10, 0, 100)
     }
     game_features.gameopt_clouds_speed = s
+}
+
+[es=event_toggle_pause]
+function event_toggle_pause_handler(ev) {
+    game.paused = !game.paused
 }
 
 [es=event_change_gamespeed]

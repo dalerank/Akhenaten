@@ -49,12 +49,11 @@
 #include "scenario/distant_battle.h"
 #include "scenario/empire.h"
 #include "empire/empire.h"
-#include "window/file_dialog.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/tiles.h"
 #include "content/mods.h"
 #include "undo.h"
-#include "platform/arguments.h"
+#include "window/file_dialog_common.h"
 
 #include "dev/debug.h"
 #include <iostream>
@@ -460,18 +459,6 @@ void game_t::city_sounds_frame_begin() {
 
 void game_t::before_start_simulation() {
     events::emit(event_advance_day::from_simtime(game.simtime));
-
-    events::subscribe([this] (event_toggle_pause) {
-        paused = !paused;
-    });
-
-    events::subscribe([] (event_save_city ev) {
-        window_file_dialog_save_show(FILE_TYPE_SAVED_GAME);
-    });
-
-    events::subscribe([] (event_load_city ev) {
-        window_file_dialog_load_show(FILE_TYPE_SAVED_GAME);
-    });
 }
 
 void game_t::handle_input_frame() {
