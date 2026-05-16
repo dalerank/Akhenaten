@@ -302,8 +302,8 @@ void scenario_editor_cycle_climate(void) {
 }
 
 void scenario_editor_update_subtitle(const char* new_description) {
-    if (!string_equals(g_scenario.subtitle, (const uint8_t*)new_description, 1)) {
-        string_copy((const uint8_t*)new_description, g_scenario.subtitle, MAX_SUBTITLE);
+    if (new_description && !g_scenario.subtitle.equal(new_description)) {
+        g_scenario.subtitle = new_description;
         g_scenario.is_saved = 0;
     }
 }

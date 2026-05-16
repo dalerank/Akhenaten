@@ -73,8 +73,8 @@ static void start(void) {
     if (data.is_paused)
         input_box_resume(&scenario_description_input);
     else {
-        data.subtitle = scenario_subtitle();
-        input_box_start(&scenario_description_input, data.subtitle, data.subtitle.capacity, 1);
+        data.subtitle = g_scenario.subtitle.c_str();
+        input_box_start(&scenario_description_input, (uint8_t *)data.subtitle.data(), MAX_SUBTITLE - 1, 1);
     }
 }
 
@@ -85,7 +85,7 @@ static void stop(int paused) {
         input_box_stop(&scenario_description_input);
     }
     data.is_paused = paused;
-    scenario_editor_update_subtitle((const char*)data.subtitle);
+    scenario_editor_update_subtitle(data.subtitle.c_str());
 }
 
 static void draw_background(int) {

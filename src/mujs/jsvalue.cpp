@@ -1,4 +1,6 @@
 #include "jsi.h"
+
+#include "core/xstring.h"
 #include "jslex.h"
 #include "jscompile.h"
 #include "jsvalue.h"
@@ -130,6 +132,12 @@ void jsV_toprimitive(js_State* J, js_Value* v, int preferred) {
             v->type = JS_TNUMBER;
             v->u.number = *(int16_t*)p;
             return;
+        case JS_PTR_XSTRING: {
+            J->pushstring((js_StringNode)p);
+            *v = *js_tovalue(J, -1);
+            js_pop(J, 1);
+            return;
+        }
         default:
             return;
         }
@@ -190,6 +198,11 @@ int jsV_toboolean(js_State* J, js_Value* v) {
                 return *(uint16_t*)p != 0;
             case JS_PTR_INT16:
                 return *(int16_t*)p != 0;
+            case JS_PTR_XSTRING: {
+                xstring *xs = (xstring*)p;
+                pcstr s = xs->c_str();
+                return s && s[0];
+            }
             default:
                 return 1;
             }
@@ -312,6 +325,11 @@ double jsV_tonumber(js_State* J, js_Value* v) {
                 return *(uint16_t*)p;
             case JS_PTR_INT16:
                 return *(int16_t*)p;
+            case JS_PTR_XSTRING: {
+                xstring *xs = (xstring*)p;
+                pcstr s = xs->c_str();
+                return s ? jsV_stringtonumber(J, s) : 0;
+            }
             default:
                 return 0;
             }

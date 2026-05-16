@@ -1,8 +1,11 @@
 #pragma once
 
 #include "core/buffer.h"
+#include "core/xstring.h"
 #include "grid/point.h"
 #include "grid/grid.h"
+
+#include <cstring>
 
 enum chunk_buffer_access_e {
     CHUNK_ACCESS_REVOKED,
@@ -25,6 +28,7 @@ enum bind_signature_e {
     BIND_SIGNATURE_UINT64,
 
     BIND_SIGNATURE_RAW,
+    BIND_SIGNATURE_XSTR,
 
     BIND_SIGNATURE_TILE2I,
     BIND_SIGNATURE_VEC2I,
@@ -76,15 +80,26 @@ public:
     // this will CHECK that the buffer is valid and RESET the buffer pointer
     bool validate();
 
-    template<uint8_t size>
-    void bind_xstr(xstring& s) {        
+    template<size_t max_len>
+    void bind_xstr(xstring &s) {
+        bind(BIND_SIGNATURE_XSTR, s, max_len);
+    }
+
+    void bind(bind_signature_e signature, xstring &s, size_t max_len) {
+        if (signature != BIND_SIGNATURE_XSTR || max_len == 0) {
+            return;
+        }
+        char *buf = (char *)alloca(max_len + 1);
+        memset(buf, 0, max_len + 1);
         if (is_read_access()) {
-            bstring<size + 1> data;
-            bind(BIND_SIGNATURE_RAW, &data, size);
-            data[size] = '\0';
-            s = data.c_str();
+            bind(BIND_SIGNATURE_RAW, buf, max_len);
+            buf[max_len] = '\0';
+            s = buf;
         } else {
-            bind(BIND_SIGNATURE_RAW, s.c_str(), size);
+            if (pcstr str = s.c_str()) {
+                strncpy(buf, str, max_len);
+            }
+            bind(BIND_SIGNATURE_RAW, buf, max_len);
         }
     }
 

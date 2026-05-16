@@ -54,7 +54,8 @@ enum js_CPtrType {
     JS_PTR_INT8,
     JS_PTR_UINT8,
     JS_PTR_UINT16,
-    JS_PTR_INT16
+    JS_PTR_INT16,
+    JS_PTR_XSTRING
 };
 
 /*

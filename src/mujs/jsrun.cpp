@@ -10,6 +10,7 @@
 #include "utf.h"
 
 #include "core/profiler.h"
+#include "core/xstring.h"
 
 #include <setjmp.h>
 
@@ -625,6 +626,12 @@ int js_State::hasproperty(js_Object *obj, js_StringNode name) {
             case JS_PTR_UINT8:  js_pushnumber(J, *(uint8_t *)p); break;
             case JS_PTR_UINT16: js_pushnumber(J, *(uint16_t *)p); break;
             case JS_PTR_INT16:  js_pushnumber(J, *(int16_t *)p); break;
+            case JS_PTR_XSTRING: {
+                xstring *xs = (xstring *)p;
+                pcstr s = xs->c_str();
+                J->pushstring(s ? s : "");
+                break;
+            }
             default: J->pushundefined(); break;
             }
         } else {
@@ -675,6 +682,15 @@ static void jsR_setproperty(js_State* J, js_Object* obj, const js_StringNode nam
                 case JS_PTR_UINT8:  *(uint8_t *)p = (uint8_t)js_tointeger(J, -1); break;
                 case JS_PTR_UINT16: *(uint16_t *)p = (uint16_t)js_tointeger(J, -1); break;
                 case JS_PTR_INT16:  *(int16_t *)p = (int16_t)js_tointeger(J, -1); break;
+                case JS_PTR_XSTRING: {
+                    xstring *xs = (xstring *)p;
+                    if (js_isstring(J, -1)) {
+                        xs->_set(js_tostring(J, -1));
+                    } else if (js_isundefined(J, -1) || js_isnull(J, -1)) {
+                        *xs = xstring();
+                    }
+                    break;
+                }
                 default: break;
                 }
             }

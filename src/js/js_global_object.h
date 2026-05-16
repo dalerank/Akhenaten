@@ -4,6 +4,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <type_traits>
 
 /** Binds &(obj).field to a JS CPTR property; anything else selects the deleted overload below. */
 inline void ank_global_obj_bind_field(js_State *J, js_StringNode name, int *ptr) {
@@ -34,8 +35,19 @@ inline void ank_global_obj_bind_field(js_State *J, js_StringNode name, int16_t *
     js_register_bound_int16_property(J, name, ptr);
 }
 
+inline void ank_global_obj_bind_field(js_State *J, js_StringNode name, xstring *ptr) {
+    js_register_bound_xstring_property(J, name, ptr);
+}
+
 template<typename T>
-void ank_global_obj_bind_field(js_State *J, js_StringNode name, T *ptr) = delete;
+inline typename std::enable_if<std::is_enum<T>::value, void>::type
+ank_global_obj_bind_field(js_State *J, js_StringNode name, T *ptr) {
+    js_register_bound_int_property(J, name, reinterpret_cast<int *>(ptr));
+}
+
+template<typename T>
+inline typename std::enable_if<!std::is_enum<T>::value, void>::type
+ank_global_obj_bind_field(js_State *J, js_StringNode name, T *ptr) = delete;
 
 struct vec2i;
 void ank_global_obj_bind_field(js_State *J, js_StringNode name, vec2i *ptr);

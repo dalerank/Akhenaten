@@ -67,6 +67,9 @@ void js_register_bound_uint8_property(js_State *J, const js_StringNode name, uin
 void js_register_bound_uint16_property(js_State *J, const js_StringNode name, uint16_t *ptr);
 void js_register_bound_int16_property(js_State *J, const js_StringNode name, int16_t *ptr);
 
+class xstring;
+void js_register_bound_xstring_property(js_State *J, const js_StringNode name, xstring *ptr);
+
 /** Stack: native object at -1; sets its cobj_ptr for JS_CPTROFF prototype fields. */
 void js_register_cobj_ptr_property(js_State *J, void *cpp_object);
 void js_register_bound_int_offset_property(js_State *J, const js_StringNode name, size_t byte_offset);

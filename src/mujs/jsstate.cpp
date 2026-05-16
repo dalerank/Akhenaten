@@ -5,6 +5,8 @@
 #include "jsrun.h"
 #include "jsbuiltin.h"
 
+#include "core/xstring.h"
+
 #include <assert.h>
 #include <cstdint>
 #include <new>
@@ -293,6 +295,14 @@ void js_register_bound_int16_property(js_State *J, const js_StringNode name, int
     js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
     obj->u.p.ptr = ptr;
     obj->u.p.ptype = JS_PTR_INT16;
+    js_pushobject(J, obj);
+    js_setproperty(J, -2, name);
+}
+
+void js_register_bound_xstring_property(js_State *J, const js_StringNode name, xstring *ptr) {
+    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
+    obj->u.p.ptr = ptr;
+    obj->u.p.ptype = JS_PTR_XSTRING;
     js_pushobject(J, obj);
     js_setproperty(J, -2, name);
 }
