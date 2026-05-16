@@ -22,10 +22,6 @@
 
 #define MAX_SCENARIOS 15
 
-scenario_selection_info_js g_scenario_selection_info;
-
-ANK_GLOBAL_OBJECT(g_scenario_selection_info, __scenario_selection_info, dialog, visible, is_open_play, climate_id, mapsize_id, invasion_id, culture, prosperity, monuments, kingdom, population, housing, house_level, has_culture, has_prosperity, has_monuments, has_kingdom, has_population, has_housing, time_kind, time_months, mon0, mon1, mon2, scores_or_goals, period_hover, main_bg_kind, campaign_first_mission, campaign_sub_dialog)
-
 window_scenario_selection g_window_scenario_selection;
 window_scenario_selection_campaign g_window_scenario_selection_campaign;
 window_scenario_selection_custom g_window_scenario_selection_custom;

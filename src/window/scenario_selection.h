@@ -10,47 +10,6 @@ enum e_map_selection_dialog_type {
     MAP_SELECTION_CAMPAIGN_UNUSED_BACKGROUND
 };
 
-/** Int fields bound to MuJS global `__scenario_selection_info` (read/write from scripts). */
-struct scenario_selection_info_js {
-    /** `e_map_selection_dialog_type` (see `MAP_SELECTION_*` in MuJS constants). */
-    int dialog{};
-    int visible{};
-    int is_open_play{};
-    int climate_id{};
-    int mapsize_id{};
-    int invasion_id{};
-    int culture{};
-    int prosperity{};
-    int monuments{};
-    int kingdom{};
-    int population{};
-    int housing{};
-    int house_level{};
-    int has_culture{};
-    int has_prosperity{};
-    int has_monuments{};
-    int has_kingdom{};
-    int has_population{};
-    int has_housing{};
-    int time_kind{};
-    int time_months{};
-    int mon0{};
-    int mon1{};
-    int mon2{};
-    /** 0 = high scores panel, 1 = mission goals (campaign single list). */
-    int scores_or_goals{};
-    /** Campaign period picker hover: 0..8, or -1 (see `ui_scenario_selection_campaign.js`). */
-    int period_hover = -1;
-    /** Fullscreen map-selection art: 0 = hide both, 1 = `img_cck`, 2 = `img_history` (see `ui_scenario_selection.js`). */
-    int main_bg_kind{};
-    /** First scenario id of the selected campaign period; used with list row `user_data` (see `ui_scenario_selection.js`). */
-    int campaign_first_mission{};
-    /** Campaign period index when `dialog` is `MAP_SELECTION_CAMPAIGN_SINGLE_LIST` (see `ui_scenario_selection_campaign.js`). */
-    int campaign_sub_dialog = -1;
-};
-
-extern scenario_selection_info_js g_scenario_selection_info;
-
 struct window_scenario_selection : autoconfig_window_t<window_scenario_selection> {
     virtual int handle_mouse(const mouse* m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }

@@ -1,5 +1,37 @@
 log_info("akhenaten: scenario selection window")
 
+__scenario_selection_info = {
+    dialog: MAP_SELECTION_CCK_LEGACY,
+    visible: 0,
+    is_open_play: 0,
+    climate_id: 0,
+    mapsize_id: 0,
+    invasion_id: 0,
+    culture: 0,
+    prosperity: 0,
+    monuments: 0,
+    kingdom: 0,
+    population: 0,
+    housing: 0,
+    house_level: 0,
+    has_culture: 0,
+    has_prosperity: 0,
+    has_monuments: 0,
+    has_kingdom: 0,
+    has_population: 0,
+    has_housing: 0,
+    time_kind: 0,
+    time_months: 0,
+    mon0: 0,
+    mon1: 0,
+    mon2: 0,
+    scores_or_goals: 0,
+    period_hover: -1,
+    main_bg_kind: 0,
+    campaign_first_mission: -1,
+    campaign_sub_dialog: -1
+}
+
 function window_scenario_selection_reset_mission_caches() {
     window_scenario_selection.goal_mission_index = -1
     window_scenario_selection.info_mission_index = -1
