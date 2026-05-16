@@ -481,8 +481,8 @@ void figure_docker::figure_action() {
         base.resource_id = RESOURCE_NONE;
         base.cart_image_id = 0;
         base.animctx.frame = 0;
-        if (!deliver_import_resource(b)) {
-            fetch_export_resource(b);
+        if (!deliver_import_resource(b) && !fetch_export_resource(b)) {
+            poof();
         }
         break;
 
