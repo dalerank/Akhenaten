@@ -2,7 +2,7 @@ log_info("akhenaten: mission 5 timna started")
 
 mission5 { // Timna
 	start_message : "message_history_military"
-
+	selection_title : "Timna"
 	env {
 		has_animals : true
 		marshland_grow : default_marshland_grow

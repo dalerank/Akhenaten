@@ -5,7 +5,6 @@
 #include "input/hotkey.h"
 #include "mujs/mujs.h"
 #include "window/file_dialog.h"
-#include "window/scenario_selection.h"
 #include "game/game.h"
 #include "game/resource.h"
 #include "game/mission.h"
@@ -36,11 +35,6 @@ void js_register_game_constants(js_State *J) {
     _R(e_session_custom_map)
     _R(e_scenario_normal)
     _R(e_scenario_custom_map)
-    _R(MAP_SELECTION_CCK_LEGACY)
-    _R(MAP_SELECTION_CUSTOM)
-    _R(MAP_SELECTION_CAMPAIGN)
-    _R(MAP_SELECTION_CAMPAIGN_SINGLE_LIST)
-    _R(MAP_SELECTION_CAMPAIGN_UNUSED_BACKGROUND)
     _R(SCENARIO_NUBT)
     _R(GOD_UNKNOWN)
 

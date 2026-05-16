@@ -110,12 +110,10 @@ vfs::path fullpath_saves(vfs::path filename) {
 }
 
 vfs::path fullpath_maps(vfs::path filename) {
-    vfs::path result = filename;
     if (strncasecmp(filename, "Maps/", 5) == 0 || strncasecmp(filename, "Maps\\", 5) == 0) {
         return filename;
     }
-    result.printf( "Maps/%s", filename );
-    return result;
+    return vfs::path( "Maps/", filename.c_str() );
 }
 
 static buffer* small_buffer = new buffer(4);

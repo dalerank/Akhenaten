@@ -314,7 +314,8 @@ io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version)
     iob->bind____skip(1); // used?
     iob->bind____skip(8);
 
-    iob->bind(BIND_SIGNATURE_UINT8, &g_scenario.monuments.monuments_set);
+    int tmp;
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     iob->bind(BIND_SIGNATURE_UINT8, &g_scenario.player_faction);
 
     // junk 4f

@@ -2,6 +2,7 @@ log_info("akhenaten: mission 8 selima started")
 
 mission8 { // Selima
 	start_message : "message_the_finer_things_tutorial"
+	selection_title : "Selima"
 	player_rank : 1
 	next_mission : 10
 	choice_background {pack:PACK_UNLOADED, id:12}

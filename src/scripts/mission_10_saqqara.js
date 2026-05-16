@@ -2,6 +2,7 @@ log_info("akhenaten: mission 10 saqqara started")
 
 mission10 { // Saqqara
 	start_message : "message_innovations"
+	selection_title : "Saqqara"
 	player_rank : 1
 	next_mission : 11
 	choice_background {pack:PACK_UNLOADED, id:12}

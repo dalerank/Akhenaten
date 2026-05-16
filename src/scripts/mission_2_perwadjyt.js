@@ -2,6 +2,7 @@ log_info("akhenaten: mission 2 started")
 
 mission2 {
 	start_message : "message_farming_along_the_nile"
+	selection_title : "Perwadjyt"
 	env {
 		has_animals : true
 	    gods_least_mood : 50

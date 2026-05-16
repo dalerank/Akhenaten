@@ -1,30 +1,11 @@
-#include "scenario_selection.h"
-
 #include "core/encoding.h"
-#include "core/log.h"
 #include "core/profiler.h"
-#include "graphics/elements/ui.h"
-#include "graphics/window.h"
-#include "input/input.h"
-#include "content/vfs.h"
-#include "io/gamestate/boilerplate.h"
-#include "message_dialog.h"
-#include "scenario/scenario_invasion.h"
-#include "scenario/scenario.h"
-#include "window/autoconfig_window.h"
-#include "core/string.h"
 #include "game/game.h"
 #include "game/mission.h"
 #include "game/player.h"
 #include "js/js_game.h"
-#include <cmath>
-#include <cstdio>
-
-#define MAX_SCENARIOS 15
-
-window_scenario_selection g_window_scenario_selection;
-window_scenario_selection_campaign g_window_scenario_selection_campaign;
-window_scenario_selection_custom g_window_scenario_selection_custom;
+#include "scenario/scenario.h"
+#include "scenario/scenario_invasion.h"
 
 int __game_get_first_mission_in_campaign(int campaign_id) {
     return get_first_mission_in_campaign(campaign_id);
@@ -50,20 +31,6 @@ xstring __game_campaign_mission_step_map_name_utf8(int campaign_id, int step_ind
     return xstring(name_utf8);
 }
 ANK_FUNCTION_2(__game_campaign_mission_step_map_name_utf8)
-
-xstring __game_scenario_selection_mission_title_trimmed() {
-    const int sid = g_scenario.campaign_scenario_id;
-    bstring<300> name;
-    string_copy(game_mission_get_name(sid), name, 300);
-    const int i = index_of_string(name.c_str(), string_from_ascii("("), 300);
-    if (i > 0) {
-        name[i - 1] = '\0';
-    }
-    char utf8[600];
-    encoding_to_utf8((const uint8_t*)name.c_str(), utf8, sizeof(utf8), 0);
-    return utf8;
-}
-ANK_FUNCTION(__game_scenario_selection_mission_title_trimmed)
 
 xstring __game_scenario_subtitle_display_utf8() {
     char utf8[MAX_FILE_NAME * 4];

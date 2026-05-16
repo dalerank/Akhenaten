@@ -268,7 +268,6 @@ struct scenario_data_t {
     } settings;
 
     struct {
-        int monuments_set;
         int first;
         int second;
         int third;

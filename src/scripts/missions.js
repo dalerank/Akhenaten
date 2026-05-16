@@ -42,7 +42,6 @@ function get_mission_config(scenario_id) {
     }
 }
 
-
 import mission_0_nubt
 import mission_1_thinis
 import mission_2_perwadjyt

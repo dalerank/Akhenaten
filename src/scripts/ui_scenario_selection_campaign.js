@@ -40,6 +40,7 @@ function window_scenario_selection_campaign_on_period_changed(ev) {
     ev.campaign_hover_body.text = __loc(294, h * 4 + 1)
 }
 
+[es=window]
 window_scenario_selection_campaign {
     period_hover : -1
     allow_rmb_goback : true

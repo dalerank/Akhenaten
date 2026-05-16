@@ -41,8 +41,9 @@ function window_scenario_selection_on_mission_changed(ev) {
     ev.img_scenario_thumb.image = get_image({ pack:PACK_UNLOADED, id:28, offset:scenario.campaign_scenario_id }).tid
 
     var sub = window_scenario_selection.campaign_sub_dialog
+    var config = get_mission_config(scenario.campaign_scenario_id)
     ev.side_hdr_period.text = __loc(294, sub * 4)
-    ev.side_mission_title.text = __game_scenario_selection_mission_title_trimmed()
+    ev.side_mission_title.text = config.selection_title
     ev.side_subtitle.text = __game_scenario_subtitle_display_utf8()
     ev.side_year.text = scenario_selection_format_start_year(scenario.start_year)
 }
@@ -222,6 +223,7 @@ function window_scenario_selection_on_map_list_click(entry) {
 }
 
 
+[es=window]
 window_scenario_selection {
     allow_rmb_goback : true
     scores_or_goals : 1
