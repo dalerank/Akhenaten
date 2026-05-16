@@ -23,6 +23,11 @@ mission3 {
 					BUILDING_BREWERY_WORKSHOP
 				]
 
+	sounds {
+		briefing : "Voice/Mission/203_mission.mp3"
+		victory : "Voice/Mission/203_victory.mp3"  
+	}
+
 	win_criteria {
 		population    {enabled : true, goal : 1000 }
 		housing_count {enabled : true, goal : 10 }

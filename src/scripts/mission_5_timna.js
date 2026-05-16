@@ -10,6 +10,11 @@ mission5 { // Timna
 		hide_nilometer : true
 	}
 
+	sounds {
+		briefing : "Voice/Mission/205_mission.mp3"
+		victory : "Voice/Mission/205_victory.mp3"  
+	}
+
 	player_rank : 1
 	initial_funds [7500, 5000, 3750, 2500, 2000]
 	rescue_loans [7500, 5000, 3750, 2500, 2000]

@@ -15,6 +15,7 @@ scenario = extend(__scenario, {
     // => image_id
     // => start_year
     // => campaign_scenario_id
+    // => subtitle
 
     @culture_goal: { get: function() { return scenario_win_criteria_goal(__win_criteria.culture); } }
     @prosperity_goal: { get: function() { return scenario_win_criteria_goal(__win_criteria.prosperity); } }

@@ -40,7 +40,7 @@ function window_scenario_selection_on_mission_changed(ev) {
     var config = get_mission_config(scenario.campaign_scenario_id)
     ev.side_hdr_period.text = __loc(294, sub * 4)
     ev.side_mission_title.text = config.selection_title
-    ev.side_subtitle.text = __game_scenario_subtitle_display_utf8()
+    ev.side_subtitle.text = scenario.subtitle
     ev.side_year.text = scenario_selection_format_start_year(scenario.start_year)
 }
 

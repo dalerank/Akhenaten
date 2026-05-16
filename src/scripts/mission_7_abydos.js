@@ -19,6 +19,11 @@ mission7 { // Abydos
 		flax: { type:RESOURCE_FLAX, allow:true},
 	}
 
+	sounds {
+		briefing : "Voice/Mission/207_mission.mp3"
+		victory : "Voice/Mission/207_victory.mp3"  
+	}
+
 	buildings [
 					BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
 					BUILDING_ROADBLOCK, BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE,

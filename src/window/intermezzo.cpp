@@ -10,7 +10,6 @@
 #include "scenario/scenario.h"
 #include "sound/music.h"
 #include "sound/sound.h"
-#include "sound/sound_mission.h"
 #include "platform/renderer.h"
 #include "game/game.h"
 #include "window/autoconfig_window.h"
@@ -42,7 +41,7 @@ static void init(int mission_id, intermezzo_type type, std::function<void()> cal
     if (g_intermezzo_data.type == INTERMEZZO_FIRED) {
         g_sound.speech_play_file(SOUND_FILE_LOSE, 255);
     } else if (!is_custom_map) {
-        auto conf = snd::get_mission_config(mission_id);
+        const auto& conf = g_scenario.sounds;
         if (conf.briefing.empty()) {
             logs::info("Intermezzo: can't found sound for mission %u", mission_id);
             return;
@@ -50,7 +49,7 @@ static void init(int mission_id, intermezzo_type type, std::function<void()> cal
 
         xstring file2play = conf.briefing;
         if (g_intermezzo_data.type == INTERMEZZO_WON) {
-            file2play = conf.won;
+            file2play = conf.victory;
         }
 
         g_sound.speech_play_file(file2play, 255);

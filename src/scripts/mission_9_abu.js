@@ -24,7 +24,12 @@ mission9 = { // Abu
 		flax: { type:RESOURCE_FLAX, allow:true},
 		lettuce: { type:RESOURCE_LETTUCE, allow:true},
 		chickpeas: { type:RESOURCE_CHICKPEAS, allow:true},
-	},
+	}
+
+	sounds {
+		briefing : "Voice/Mission/209_mission.mp3"
+		victory : "Voice/Mission/209_victory.mp3"  
+	}
 
 	buildings : [
 		         BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,

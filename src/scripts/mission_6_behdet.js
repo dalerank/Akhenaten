@@ -15,6 +15,11 @@ mission6 { // Behdet
 	    tree_grow : default_tree_grow
 	}
 
+	sounds {
+		briefing : "Voice/Mission/206_mission.mp3"
+		victory : "Voice/Mission/206_victory.mp3"  
+	}
+
 	buildings [
 					BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
 					BUILDING_ROADBLOCK, BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE,

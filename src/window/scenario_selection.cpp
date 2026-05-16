@@ -1,4 +1,3 @@
-#include "core/encoding.h"
 #include "core/profiler.h"
 #include "game/game.h"
 #include "game/mission.h"
@@ -20,13 +19,6 @@ int __game_campaign_mission_step_scenario_id(int campaign_id, int step_index) {
     return d->scenario_id;
 }
 ANK_FUNCTION_2(__game_campaign_mission_step_scenario_id)
-
-xstring __game_scenario_subtitle_display_utf8() {
-    char utf8[MAX_FILE_NAME * 4];
-    encoding_to_utf8(scenario_subtitle(), utf8, sizeof(utf8), 0);
-    return utf8;
-}
-ANK_FUNCTION(__game_scenario_subtitle_display_utf8)
 
 int __game_scenario_invasion_count() {
     return scenario_invasion_count();

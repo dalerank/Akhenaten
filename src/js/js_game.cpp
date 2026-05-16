@@ -5,7 +5,6 @@
 #include "core/settings_vars.h"
 #include "platform/arguments.h"
 
-#include "sound/sound_mission.h"
 #include "sound/sound_building.h"
 #include "sound/sound_walker.h"
 #include "sound/sound.h"

@@ -24,6 +24,11 @@ mission10 { // Saqqara
 	    tree_grow : default_tree_grow
 	}
 
+	sounds {
+		briefing : "Voice/Mission/210_mission.mp3"
+		victory : "Voice/Mission/210_victory.mp3"  
+	}
+
 	buildings [
                 BUILDING_HOUSE_VACANT_LOT, BUILDING_CLEAR_LAND, BUILDING_ROAD,
 				BUILDING_ROADBLOCK, BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION,

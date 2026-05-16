@@ -27,6 +27,11 @@ mission4 {
 					BUILDING_BULLFIGHT_SCHOOL, BUILDING_MUD_GATEHOUSE, BUILDING_TOWER_GATEHOUSE, BUILDING_MUD_TOWER,
 				]
 
+	sounds {
+		briefing : "Voice/Mission/204_mission.mp3"
+		victory : "Voice/Mission/204_victory.mp3"  
+	}
+
 	win_criteria {
 		population {enabled : true, goal : 1500 }
 		culture    {enabled : true, goal : 15 }

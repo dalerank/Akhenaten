@@ -159,8 +159,8 @@ struct scenario_data_t {
 
     int kingdom_supplies_grain;
     int image_id;
-    bstring64 subtitle;
-    bstring512 brief_description;
+    xstring subtitle;
+    xstring brief_description;
     e_enemy_type enemy_id;
     bool is_open_play;
     int open_play_scenario_id;
@@ -267,6 +267,11 @@ struct scenario_data_t {
         int starting_kingdom;
     } settings;
 
+    struct sounds_t {
+        xstring briefing;
+        xstring victory;
+    } sounds;
+
     struct {
         int first;
         int second;
@@ -331,6 +336,7 @@ struct scenario_data_t {
 };
 ANK_CONFIG_STRUCT(scenario_data_t::meta_t, start_message, hide_won_screen, initial_funds, rescue_loans, house_tax_multipliers)
 ANK_CONFIG_STRUCT(scenario_data_t::env_t, flotsam_enabled, has_animals, gods_least_mood, hide_nilometer, marshland_grow, tree_grow)
+ANK_CONFIG_STRUCT(scenario_data_t::sounds_t, briefing, victory)
 ANK_CONFIG_STRUCT(scenario_data_t::win_criterias_t, population, culture, prosperity, monuments, kingdom, housing_count, housing_level, next_mission)
 
 extern scenario_data_t g_scenario;
@@ -345,8 +351,6 @@ int scenario_property_climate();
 int scenario_property_enemy();
 
 int scenario_property_player_rank();
-
-const uint8_t* scenario_subtitle();
 
 bool scenario_building_allowed(e_building_type btype);
 void scenario_building_allow(e_building_type btype, bool allow);

@@ -19,6 +19,12 @@ mission2 {
 				BUILDING_FIGS_FARM, BUILDING_WORK_CAMP, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL, BUILDING_BAZAAR, BUILDING_GRANARY,
 				BUILDING_TEMPLE_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_FESTIVAL_SQUARE
 			  ]
+	
+	sounds {
+		briefing : "Voice/Mission/202_mission.mp3"
+		victory : "Voice/Mission/202_victory.mp3"  
+	}
+
 
 	win_criteria {
 		population    {enabled : true, goal : 600 }

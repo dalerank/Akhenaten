@@ -26,6 +26,11 @@ mission1 {
 		housing_level {enabled : true, goal : 5 }
 	}
 
+	sounds {
+		briefing : "Voice/Mission/201_mission.mp3"
+		victory : "Voice/Mission/201_victory.mp3"  
+	}
+
 	vars {
 		gold_mined : 500
 		victory_last_action_delay : 4

@@ -97,6 +97,7 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid, bool is_new_m
         arch.r("invasion_points_land", invasion_points_land);
         arch.r("invasion_points_sea", invasion_points_sea);
         arch.r("win_criteria", win_criteria);
+        arch.r("sounds", sounds);
 
         settings_vars_t newvars;
         arch.r("vars", newvars);
@@ -195,10 +196,6 @@ int scenario_property_player_rank() {
     return g_scenario.player_rank;
 }
 
-const uint8_t* scenario_subtitle() {
-    return g_scenario.subtitle;
-}
-
 io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT16, &g_scenario.start_year);
     iob->bind____skip(2);
@@ -219,8 +216,8 @@ io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version)
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario.map.height);
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario.map.start_offset);
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario.map.border_size);
-    iob->bind(BIND_SIGNATURE_RAW, &g_scenario.subtitle, MAX_SUBTITLE);
-    iob->bind(BIND_SIGNATURE_RAW, &g_scenario.brief_description, MAX_BRIEF_DESCRIPTION);
+    iob->bind(BIND_SIGNATURE_XSTR, g_scenario.subtitle, MAX_SUBTITLE);
+    iob->bind(BIND_SIGNATURE_XSTR, g_scenario.brief_description, MAX_BRIEF_DESCRIPTION);
 
     iob->bind(BIND_SIGNATURE_INT16, &g_scenario.image_id);
     iob->bind(BIND_SIGNATURE_INT16, &g_scenario.is_open_play);

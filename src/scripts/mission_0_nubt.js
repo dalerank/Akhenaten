@@ -22,6 +22,11 @@ mission0 { // Nubt
 		BUILDING_HOUSE_VACANT_LOT, BUILDING_CLEAR_LAND, BUILDING_ROAD
 	]
 
+	sounds {
+		briefing : "Voice/Mission/20o_mission.mp3"
+		victory : "Voice/Mission/200_victory.mp3"  
+	}
+
 	win_criteria {
 		housing_count {enabled : true, goal : 6 }
 		housing_level {enabled : true, goal : 2 }
