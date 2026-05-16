@@ -99,7 +99,7 @@
 #include <sys/stat.h>
 #endif
 
-static const char MISSION_PACK_FILE[] = "mission1.pak";
+static pcstr MISSION_PACK_FILE = "mission1.pak";
 
 vfs::path fullpath_saves(vfs::path filename) {
     if (strncasecmp(filename, "Save/", 5) == 0 || strncasecmp(filename, "Save\\", 5) == 0) {
@@ -714,7 +714,7 @@ bool GamestateIO::load_map(pcstr filename_short, bool start_immediately) {
     game.session.last_loaded = e_session_custom_map;
     game.session.last_loaded_mission = filename_short;
     // temp hack, custom map missions have no cities 
-    auto& cities = g_empire.get_cities();
+    auto cities = g_empire.get_cities();
     cities[0].in_use = true;
     // temp hack
     post_load();
