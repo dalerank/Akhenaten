@@ -27,6 +27,14 @@
     <h1>Devblog</h1>
 
     <article class="post">
+      <div class="post-meta"><time>May 16, 2026</time></div>
+      <h2><a href="devblog/scenario-selection-js.html">Scenario Selection Window Goes Script-Driven</a></h2>
+      <img src="images/scenario-selection-mission.png" alt="Scenario selection info panel" class="post-preview" loading="lazy" />
+      <p>The campaign and custom-map selection screen is now fully driven by JavaScript. Period picker, mission info panel, and custom map browser — all three views have been stripped of their C++ draw functions and rebuilt as script-configured widgets with hot-reload support.</p>
+      <a href="devblog/scenario-selection-js.html" class="read-more">Read more →</a>
+    </article>
+
+    <article class="post">
       <div class="post-meta"><time>May 12, 2026</time></div>
       <h2><a href="devblog/mission-debug-panel-js.html">Mission Debug Panel Moves to JavaScript</a></h2>
       <p>The Mission Info debug overlay — which shows live scenario state during playtesting — is now rendered from a script instead of hardcoded C++. ImGui bindings landed in <code>ui_common.js</code>, and C++ now fires an event that JavaScript catches to draw the panel. Editing the debug view no longer requires a recompile.</p>
