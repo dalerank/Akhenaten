@@ -78,6 +78,21 @@ struct win_criteria_t {
 };
 ANK_CONFIG_STRUCT(win_criteria_t, enabled, goal)
 
+struct custom_mission_config {
+    int mission_id;
+    xstring filename;
+    bool operator==(const custom_mission_config& other) const noexcept { return mission_id == other.mission_id; }
+    bool operator!=(const custom_mission_config& other) const noexcept { return mission_id != other.mission_id; }
+    bool operator<(const custom_mission_config& other) const noexcept { return mission_id < other.mission_id; }
+};
+ANK_CONFIG_STRUCT(custom_mission_config, mission_id, filename)
+
+template <>
+struct std::hash<custom_mission_config> {
+    std::size_t operator()(const custom_mission_config& k) const noexcept { return k.mission_id; }
+};
+int get_custom_mission_id(xstring name);
+
 struct map_data_t {
     int width = -1;
     int height = -1;
@@ -334,8 +349,6 @@ int scenario_property_player_rank();
 
 const uint8_t* scenario_subtitle();
 
-int scenario_property_monuments_is_enabled();
-int scenario_property_monument(int field);
 void scenario_set_monument(int field, int m);
 
 bool scenario_building_allowed(e_building_type btype);

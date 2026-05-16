@@ -713,6 +713,7 @@ bool GamestateIO::load_map(pcstr filename_short, bool start_immediately) {
 
     game.session.last_loaded = e_session_custom_map;
     game.session.last_loaded_mission = filename_short;
+    g_scenario.campaign_scenario_id = get_custom_mission_id(filename_short);
     // temp hack, custom map missions have no cities 
     auto cities = g_empire.get_cities();
     cities[0].in_use = true;

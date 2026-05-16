@@ -106,7 +106,7 @@ function mission_briefing_window_on_init(window) {
     setup_goal(62, 15, city.winning.kingdom.goal)
 
     var fork_scenario_id = game.mission_choice_open_scenario_id
-    var src = mission_choice_config_root(fork_scenario_id)
+    var src = get_mission_config(fork_scenario_id)
     var has_choice = !is_review && fork_scenario_id > 0 && !!src && !!src.choice && src.choice.length > 0
     window.back.enabled = has_choice
     if (has_choice) {

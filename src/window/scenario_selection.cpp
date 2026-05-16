@@ -81,11 +81,6 @@ int __game_scenario_invasion_count() {
 }
 ANK_FUNCTION(__game_scenario_invasion_count)
 
-int __game_scenario_property_monument_slot(int field) {
-    return scenario_property_monument(field);
-}
-ANK_FUNCTION_1(__game_scenario_property_monument_slot)
-
 int __game_mission_scenario_beaten(int scenario_id) {
     return game_scenario_beaten(scenario_id) ? 1 : 0;
 }

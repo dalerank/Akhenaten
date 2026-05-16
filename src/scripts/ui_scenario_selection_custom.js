@@ -9,6 +9,7 @@ function window_scenario_selection_custom_on_init(ev) {
     scenario.campaign_scenario_id = -1
     ev.scenario_map_list.change_file_path("Maps/", "map")
     ev.scenario_map_list.refresh_file_finder()
+    ev.side_mission_desc.enabled = false
 }
 
 function window_scenario_selection_custom_on_map_list_click(p) {
@@ -31,10 +32,12 @@ function window_scenario_selection_custom_btn_start() {
 }
 
 function window_scenario_selection_custom_refresh_side_panel(ev) {
+    var config = get_mission_config(scenario.campaign_scenario_id)
     var e = 0 // __game_window_scenario_selection_custom_has_map_selection()
-    //ev.side_mission_title.text = e ? __game_scenario_selection_custom_selected_map_basename() : ""
-    ev.side_subtitle.text = e ? __game_scenario_subtitle_display_utf8() : ""
-    ev.side_year.text = e ? scenario_selection_format_start_year(scenario.start_year) : ""
+    ev.side_mission_title.text = config.selection_title
+    ev.side_subtitle.text = config.selection_subtitle
+    ev.side_year.text = config.selection_year
+    ev.side_mission_desc.text = config.selection_text
 }
 
 function scenario_selection_fill_custom_scenario_info() {
@@ -68,17 +71,14 @@ function scenario_selection_fill_custom_scenario_info() {
         s.time_kind = 0
         s.time_months = 0
     }
-    s.mon0 = __game_scenario_property_monument_slot(0)
-    s.mon1 = __game_scenario_property_monument_slot(1)
-    s.mon2 = __game_scenario_property_monument_slot(2)
+    s.mon0 = __scenario_monuments.first
+    s.mon1 = __scenario_monuments.second
+    s.mon2 = __scenario_monuments.third
 }
 
 [es=(window_scenario_selection_custom, ui_draw_foreground)]
 function window_scenario_selection_custom_update_mission_thumb(ev) {
-    ev.img_scenario_thumb.enabled = true
-    ev.img_scenario_thumb.pack = PACK_UNLOADED
-    ev.img_scenario_thumb.id = 28
-    ev.img_scenario_thumb.offset = scenario.image_id
+    ev.img_scenario_thumb.image = get_image({ pack:PACK_UNLOADED, id:28, offset:scenario.image_id }).tid
 }
 
 function window_scenario_selection_custom_refresh_info(ev) {
@@ -91,6 +91,25 @@ function window_scenario_selection_custom_refresh_info(ev) {
 [es=(window_scenario_selection_custom, ui_draw_foreground)]
 function window_scenario_selection_custom_on_ui_draw_foreground(ev) {
     window_scenario_selection_custom_refresh_info(ev)
+}
+
+[es=(window_scenario_selection_custom, toggle_desc)]
+function window_scenario_selection_custom_toggle_desc(window) {
+    window.side_mission_desc.enabled = !window.side_mission_desc.enabled
+    var desc_enabled = window.side_mission_desc.enabled
+
+    window.info_hdr_mission.enabled = !desc_enabled
+    window.info_line_climate.enabled = !desc_enabled
+    window.info_line_mapsize.enabled = !desc_enabled
+    window.info_line_invasion.enabled = !desc_enabled
+    window.info_line_start_region.enabled = !desc_enabled
+
+    window.info_hdr_goals.enabled = !desc_enabled
+    window.info_goals_body.enabled = !desc_enabled
+    window.info_time_limit.enabled = !desc_enabled
+
+    window.info_hdr_monuments.enabled = !desc_enabled
+    window.info_monuments_body.enabled = !desc_enabled
 }
 
 window_scenario_selection_custom {
@@ -123,9 +142,12 @@ window_scenario_selection_custom {
 
         btn_start              : image_button({ pos[780, 582], size[27, 27], pack:PACK_GENERAL, id:193, offset:4, onclick: window_scenario_selection_custom_btn_start })
 
-        side_mission_title     : text_center({ pos[545, 152], size[265, 36], align:"center", text:"rrrrrr", font:FONT_LARGE_BLACK_ON_DARK, clip_area:true })
-        side_subtitle          : text_center({ pos[545, 170], size[265, 20], align:"center", text:"gggggggggg", font:FONT_NORMAL_WHITE_ON_DARK })
-        side_year              : text_center({ pos[545, 195], size[265, 17], align:"center", text:"yyyyyyyyyy", font:FONT_NORMAL_BLACK_ON_DARK })
+        side_mission_title     : text_center({ pos[545, 160], size[265, 36], align:"center", text:"title", font:FONT_LARGE_BLACK_ON_DARK, clip_area:true })
+        side_subtitle          : text_center({ pos[545, 190], size[265, 20], align:"center", text:"subtitle", font:FONT_NORMAL_WHITE_ON_DARK })
+        side_year              : text_center({ pos[545, 195], size[265, 17], align:"center", text:"year", font:FONT_NORMAL_BLACK_ON_DARK })
+        side_mission_desc      : text_center({ pos[545, 223], size[265, 20], multiline:true, text:"description", font:FONT_NORMAL_WHITE_ON_DARK })
+
+        btn_toggle_desc        : image_button({ pos[745, 525], size[62, 36], border:3, pack:PACK_GENERAL, id:136, offset:68, onclick_event: "toggle_desc" })
 
         info_hdr_mission       : text_center({ pos[545, 223], size[265, 17], align:"center", text[44, 10], font:FONT_NORMAL_WHITE_ON_DARK })
         info_line_climate      : text({ pos[545, 240], size[265, 17], font:FONT_NORMAL_BLACK_ON_DARK })

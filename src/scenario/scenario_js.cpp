@@ -25,6 +25,12 @@ ANK_GLOBAL_OBJECT(g_scenario.map, __scenario_map,
     height
     );
 
+ANK_GLOBAL_OBJECT(g_scenario.monuments, __scenario_monuments,
+    first,
+    second,
+    third
+    );
+
 int __scenario_settings_scmode() {
     return (int)g_scenario.scmode;
 }

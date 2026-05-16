@@ -39,7 +39,7 @@ function game_show_mission_choice(scenario_id) {
         __game_show_main_menu()
         return
     }
-    var src = mission_choice_config_root(scenario_id)
+    var src = get_mission_config(scenario_id)
     var nch = (src && src.choice) ? src.choice.length : 0
     if (!src || !src.choice || src.choice.length === 0) {
         log_info("mission_choice: no choice in config -> load_mission(" + scenario_id + ",1)")
@@ -48,20 +48,6 @@ function game_show_mission_choice(scenario_id) {
     }
     game.mission_choice_open_scenario_id = scenario_id
     emit event_show_window{ id:"mission_choice_window" }
-}
-
-function mission_choice_config_root(scenario_id) {
-    var name = "mission" + scenario_id
-    try {
-        var m = eval(name)
-        return m
-    } catch (e) {
-        return undefined
-    }
-}
-
-function mission_choice_mission_config_root() {
-    return mission_choice_config_root(game.mission_choice_open_scenario_id)
 }
 
 function mission_choice_resolve_text(v) {
@@ -106,7 +92,7 @@ mission_choice_window {
 [es=(mission_choice_window, init)]
 function mission_choice_window_on_init(window) {
     var open_id = game.mission_choice_open_scenario_id
-    var src = mission_choice_mission_config_root()
+    var src = get_mission_config(open_id)
     if (!src) {
         return
     }

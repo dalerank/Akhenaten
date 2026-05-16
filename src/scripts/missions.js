@@ -22,6 +22,27 @@ default_tree_grow {
 	random_min : 1
 }
 
+custom_missions = [
+	{
+		filename: "Alexandria.map"
+		mission_id: 128		
+	}
+	{
+		filaneme : "Bridges.map"
+		mission_id: 129
+	}
+]
+
+function get_mission_config(scenario_id) {
+    var name = "mission" + scenario_id
+    try {
+        return eval(name)
+    } catch (e) {
+        return undefined
+    }
+}
+
+
 import mission_0_nubt
 import mission_1_thinis
 import mission_2_perwadjyt
@@ -33,3 +54,5 @@ import mission_7_abydos
 import mission_8_selima
 import mission_9_abu
 import mission_10_saqqara
+import mission_128_alexandria
+import mission_129_bridges

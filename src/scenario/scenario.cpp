@@ -16,12 +16,25 @@
 #include "js/js_game.h"
 
 scenario_data_t g_scenario;
+std::unordered_set<custom_mission_config> ANK_VARIABLE(custom_missions);
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_scenario_load_meta_data) {
     mission_id_t missionid(g_scenario.campaign_scenario_id);
 
     g_scenario.load_metadata(missionid, /*is_new_mission*/ true);
     js_register_mission_vars(g_scenario.vars);
+}
+
+
+int get_custom_mission_id(xstring mission) {
+    for (const auto& m : custom_missions) {
+        if (m.filename == mission) {
+            return m.mission_id;
+        }
+    }
+
+    verify_no_crash(false && "no custom scenario config");
+    return -1;
 }
 
 void scenario_data_t::init() {
@@ -184,36 +197,6 @@ int scenario_property_player_rank() {
 
 const uint8_t* scenario_subtitle() {
     return g_scenario.subtitle;
-}
-
-int scenario_property_monuments_is_enabled(void) {
-    return (g_scenario.monuments.first > 0 || g_scenario.monuments.second > 0
-            || g_scenario.monuments.third > 0);
-}
-int scenario_property_monument(int field) {
-    switch (field) {
-    case 0:
-        return g_scenario.monuments.first;
-    case 1:
-        return g_scenario.monuments.second;
-    case 2:
-        return g_scenario.monuments.third;
-    }
-    return -1;
-}
-
-void scenario_set_monument(int field, int m) {
-    switch (field) {
-    case 0:
-        g_scenario.monuments.first = m;
-        break;
-    case 1:
-        g_scenario.monuments.second = m;
-        break;
-    case 2:
-        g_scenario.monuments.third = m;
-        break;
-    }
 }
 
 io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version) {

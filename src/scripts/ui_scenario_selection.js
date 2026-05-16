@@ -207,9 +207,9 @@ function scenario_selection_fill_campaign_scenario_info() {
         s.time_kind = 0
         s.time_months = 0
     }
-    s.mon0 = __game_scenario_property_monument_slot(0)
-    s.mon1 = __game_scenario_property_monument_slot(1)
-    s.mon2 = __game_scenario_property_monument_slot(2)
+    s.mon0 = __scenario_monuments.first
+    s.mon1 = __scenario_monuments.second
+    s.mon2 = __scenario_monuments.third
 }
 
 function window_scenario_selection_set_scenario_info_visible(ev, on) {
