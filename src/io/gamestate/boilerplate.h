@@ -22,7 +22,7 @@
 constexpr uint32_t latest_save_version = 170;
 
 vfs::path fullpath_saves(vfs::path filename);
-void fullpath_maps(char* full, const char* filename);
+vfs::path fullpath_maps(char* full, vfs::path filename);
 
 namespace GamestateIO {
 int get_campaign_scenario_offset(int scenario_id);

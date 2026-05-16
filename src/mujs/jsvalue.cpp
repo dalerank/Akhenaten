@@ -162,7 +162,7 @@ int jsV_toboolean(js_State* J, js_Value* v) {
     switch (v->type) {
     default:
     case JS_TSHRSTR:
-        return !v->u.shrstr->value.empty();
+        return v->u.shrstr && !v->u.shrstr->value.empty();
     case JS_TUNDEFINED:
         return 0;
     case JS_TNULL:

@@ -109,14 +109,13 @@ vfs::path fullpath_saves(vfs::path filename) {
     return vfs::path(vfs::SAVE_FOLDER, "/", game_features::gameopt_player_name.to_string().c_str(), "/", filename);
 }
 
-void fullpath_maps(char* full, const char* filename) {
-    strcpy(full, "");
+vfs::path fullpath_maps(vfs::path filename) {
+    vfs::path result = filename;
     if (strncasecmp(filename, "Maps/", 5) == 0 || strncasecmp(filename, "Maps\\", 5) == 0) {
-        strcat(full, filename);
-        return;
+        return filename;
     }
-    strcat(full, "Maps/");
-    strcat(full, filename);
+    result.printf( "Maps/%s", filename );
+    return result;
 }
 
 static buffer* small_buffer = new buffer(4);
@@ -633,9 +632,7 @@ bool GamestateIO::write_savegame(pcstr filename_short) {
 }
 
 bool GamestateIO::write_map(pcstr filename_short) {
-    // concatenate string
-    char full[MAX_FILE_NAME] = {0};
-    fullpath_maps(full, filename_short);
+    vfs::path full = fullpath_maps(filename_short);
 
     // write file
     return FILEIO.serialize(full, 0, FILE_FORMAT_MAP_FILE, 160, file_schema);
@@ -706,9 +703,7 @@ bool GamestateIO::load_savegame(pcstr filename_short, bool start_immediately) {
 
 bool GamestateIO::load_map(pcstr filename_short, bool start_immediately) {
     OZZY_PROFILER_FUNCTION();
-    // concatenate string
-    char full[MAX_FILE_NAME] = {0};
-    fullpath_maps(full, filename_short);
+    vfs::path full = fullpath_maps(filename_short);
 
     // read file
     pre_load();
@@ -718,6 +713,10 @@ bool GamestateIO::load_map(pcstr filename_short, bool start_immediately) {
 
     game.session.last_loaded = e_session_custom_map;
     game.session.last_loaded_mission = filename_short;
+    // temp hack, custom map missions have no cities 
+    auto& cities = g_empire.get_cities();
+    cities[0].in_use = true;
+    // temp hack
     post_load();
 
     // finish loading and start
@@ -829,19 +828,12 @@ bool GamestateIO::delete_mission(const int scenario_id) {
 }
 
 bool GamestateIO::delete_savegame(vfs::path filename_short) {
-    // concatenate string
     vfs::path full = fullpath_saves(filename_short);
-
-    // delete file
     return vfs::file_remove(full);
 }
 
 bool GamestateIO::delete_map(const char* filename_short) {
-    // concatenate string
-    char full[MAX_FILE_NAME];
-    fullpath_maps(full, filename_short);
-
-    // delete file
+    vfs::path full = fullpath_maps(filename_short);
     return vfs::file_remove(full);
 }
 
