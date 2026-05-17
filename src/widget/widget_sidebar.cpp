@@ -240,40 +240,33 @@ void widget_sidebar_expanded_collapse() {
     sidebar_window_expanded.collapse();
 }
 
-static void draw_sidebar_extra_blocks(image_desc block, int block_x, vec2i block_size, int screen_w) {
+static void draw_sidebar_extra_blocks(image_desc block, int anchor_x, vec2i block_size) {
     const int img_id = block.tid();
     if (!img_id || block_size.y <= 0) {
         return;
     }
 
-    const int x = screen_w + block_x;
     const int s_num = (int)ceil((float)(screen_height() - block_size.y) / (float)block_size.y) + 1;
     for (int i = s_num; i > 0; --i) {
-        ui::image_abs(img_id, { x, i * block_size.y - 32 });
+        ui::image_abs(img_id, { anchor_x, i * block_size.y - 32 });
     }
-    ui::image_abs(img_id, { x, 0 });
+    ui::image_abs(img_id, { anchor_x, 0 });
 }
 
 void widget_sidebar_city_draw_foreground() {
     OZZY_PROFILER_FUNCTION();
 
-    bool collapsed = city_view_is_sidebar_collapsed();
-    if (!collapsed) {
-        sidebar_window_expanded.ui_draw_foreground(UiFlags_None);
-    }
-
-    // Screen-space coords: ignore active ui::begin_widget offset (e.g. overlay menu).
+    const bool collapsed = city_view_is_sidebar_collapsed();
     const int sw = screen_width();
+
     if (collapsed) {
         const auto& eb = sidebar_window_collapsed;
-        draw_sidebar_extra_blocks(eb.extra_block, eb.extra_block_x, eb.extra_block_size, sw);
-    } else {
-        const auto& eb = sidebar_window_expanded;
-        draw_sidebar_extra_blocks(eb.extra_block, eb.extra_block_x, eb.extra_block_size, sw);
-    }
-
-    if (collapsed) {
+        draw_sidebar_extra_blocks(eb.extra_block, sw + eb.extra_block_x, eb.extra_block_size);
         sidebar_window_collapsed.ui_draw_foreground(UiFlags_None);
+    } else {
+        sidebar_window_expanded.ui_draw_foreground(UiFlags_None);
+        const auto& eb = sidebar_window_expanded;
+        draw_sidebar_extra_blocks(eb.extra_block, sw + eb.extra_block_x, eb.extra_block_size);
     }
 }
 

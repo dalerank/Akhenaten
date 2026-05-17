@@ -1,11 +1,11 @@
 log_info("akhenaten: sidebar window started")
 
 sidebar_window_collapsed {
-    extra_block {pack:PACK_GENERAL, id:121, offset:1}
+    extra_block {pack:PACK_GENERAL, id:121, offset:2}
     relief_block {pack:PACK_GENERAL, id:121, offset:5}
 
     expanded_offset_x  : 66
-    extra_block_x      : 0
+    extra_block_x      : -24
 
     slider {
         deceleration_offset_x     : 5
