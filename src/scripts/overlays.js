@@ -3,7 +3,7 @@ log_info("akhenaten: overlays started")
 overlays = [
   {
   	id:OVERLAY_RELIGION_OSIRIS
-  	caption:"Osiris"
+  	title: "#overlay_osiris"
   	walkers:[FIGURE_PRIEST]
   	buildings:[BUILDING_TEMPLE_OSIRIS, BUILDING_TEMPLE_COMPLEX_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_ROADBLOCK]
   	tooltip_base:0
@@ -14,7 +14,7 @@ overlays = [
 
   {
   	id:OVERLAY_RELIGION_RA
-  	caption:"Ra"
+  	title: "#overlay_ra"
   	walkers:[FIGURE_PRIEST]
   	buildings:[BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_SHRINE_RA, BUILDING_ROADBLOCK]
   	tooltip_base:0
@@ -25,7 +25,7 @@ overlays = [
 
   {
     id:OVERLAY_RELIGION_SETH
-    caption: "Seth"
+    title: "#overlay_seth"
     walkers:[FIGURE_PRIEST]
     buildings:[BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_SHRINE_SETH, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
@@ -34,7 +34,7 @@ overlays = [
 
   {
     id:OVERLAY_NATIVE
-    caption: "Native"
+    title: "#overlay_native"
     walkers:[FIGURE_INDIGENOUS_NATIVE, FIGURE_MISSIONARY]
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
@@ -43,7 +43,7 @@ overlays = [
 
   {
     id:OVERLAY_RELIGION_PTAH
-    caption: "Ptah"
+    title: "#overlay_ptah"
     walkers:[FIGURE_PRIEST]
     buildings:[BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_SHRINE_PTAH, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
@@ -52,7 +52,7 @@ overlays = [
 
   {
     id:OVERLAY_RELIGION_BAST
-    caption: "Bast"
+    title: "#overlay_bast"
     walkers:[FIGURE_PRIEST]
     buildings:[BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST, BUILDING_SHRINE_BAST, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
@@ -61,6 +61,7 @@ overlays = [
 
   {
     id:OVERLAY_WATER
+    title: "#overlay_menu_water"
     walkers:[FIGURE_WATER_CARRIER]
     buildings:[BUILDING_WELL, BUILDING_MENU_BEAUTIFICATION, BUILDING_WATER_LIFT, BUILDING_WATER_SUPPLY, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
@@ -69,7 +70,7 @@ overlays = [
 
   {
     id:OVERLAY_APOTHECARY
-    caption: "Apothecary"
+    title: "#overlay_apothecary"
     walkers:[FIGURE_HERBALIST]
     buildings:[BUILDING_APOTHECARY, BUILDING_ROADBLOCK],
     column_type: COLUMN_TYPE_POSITIVE
@@ -78,6 +79,7 @@ overlays = [
 
   {
     id:OVERLAY_RELIGION
+    title: "#overlay_menu_religion"
     walkers:[FIGURE_PRIEST]
     buildings:[ BUILDING_FESTIVAL_SQUARE,
                 BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_SHRINE_RA,
@@ -89,6 +91,7 @@ overlays = [
 
   {
     id:OVERLAY_BANDSTAND
+    title: "#overlay_bandstand"
     walkers:[FIGURE_PRIEST]
     buildings:[BUILDING_CONSERVATORY, BUILDING_BANDSTAND, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_POSITIVE
@@ -104,7 +107,7 @@ overlays = [
 
   {
     id:OVERLAY_BAZAAR_ACCESS
-    caption: "Bazaar access"
+    title: "#overlay_bazaar_access"
     walkers:[FIGURE_MARKET_BUYER, FIGURE_MARKET_TRADER]
     buildings:[BUILDING_BAZAAR, BUILDING_ROADBLOCK, BUILDING_GRANARY]
     column_type: COLUMN_TYPE_POSITIVE
@@ -121,7 +124,7 @@ overlays = [
 
   {
     id:OVERLAY_COUTHOUSE
-    caption: "Magistrate"
+    title: "#overlay_magistrate"
     walkers:[FIGURE_MAGISTRATE]
     buildings:[BUILDING_COURTHOUSE, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
@@ -130,6 +133,7 @@ overlays = [
 
   {
     id:OVERLAY_CRIME
+    title: "#overlay_crime"
     walkers:[FIGURE_CONSTABLE, FIGURE_PROTESTER, FIGURE_ROBBER, FIGURE_TOMB_ROBER]
     buildings:[BUILDING_POLICE_STATION, BUILDING_FESTIVAL_SQUARE, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
@@ -138,7 +142,7 @@ overlays = [
 
   {
     id:OVERLAY_PROBLEMS
-    caption: "Problems"
+    title: "#overlay_problems"
     walkers:[]
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
@@ -147,7 +151,7 @@ overlays = [
 
   {
     id:OVERLAY_ROUTING
-    caption: "Routing"
+    title: "#overlay_routing"
     walkers:[],
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
@@ -156,6 +160,7 @@ overlays = [
 
   {
     id:OVERLAY_DAMAGE
+    title: "#overlay_damage"
     walkers:[FIGURE_ARCHITECT]
     buildings:[BUILDING_ARCHITECT_POST, BUILDING_FESTIVAL_SQUARE, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
@@ -164,7 +169,7 @@ overlays = [
 
   {
     id:OVERLAY_DENTIST
-    caption: "Dentist"
+    title: "#overlay_dentist"
     walkers:[FIGURE_DENTIST]
     buildings:[BUILDING_DENTIST, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_POSITIVE
@@ -173,7 +178,7 @@ overlays = [
 
   {
     id:OVERLAY_FERTILITY
-    caption: "Fertility"
+    title: "#overlay_fertility"
     walkers:[]
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_POSITIVE
@@ -182,6 +187,7 @@ overlays = [
 
   {
     id:OVERLAY_LIBRARY
+    title: "#overlay_library"
     walkers:[FIGURE_LIBRARIAN]
     buildings:[BUILDING_LIBRARY, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
@@ -190,6 +196,7 @@ overlays = [
 
   {
     id:OVERLAY_ACADEMY
+    title: "#overlay_academy"
     walkers:[FIGURE_LIBRARIAN]
     buildings:[BUILDING_LIBRARY, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
@@ -198,6 +205,7 @@ overlays = [
 
   {
     id:OVERLAY_EDUCATION
+    title: "#overlay_education"
     walkers:[FIGURE_SCRIBER, FIGURE_LIBRARIAN, FIGURE_TEACHER]
     buildings:[BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY, BUILDING_ACADEMY, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
@@ -206,6 +214,7 @@ overlays = [
 
   {
     id:OVERLAY_ENTERTAINMENT
+    title: "#overlay_entertainment"
     walkers:[FIGURE_JUGGLER, FIGURE_MUSICIAN, FIGURE_DANCER, FIGURE_SENET_PLAYER, FIGURE_CHARIOR_RACER]
     buildings:[ BUILDING_JUGGLER_SCHOOL, BUILDING_BOOTH, BUILDING_CONSERVATORY,
                 BUILDING_BANDSTAND, BUILDING_DANCE_SCHOOL, BUILDING_PAVILLION,
@@ -217,6 +226,7 @@ overlays = [
 
   {
     id:OVERLAY_SENET_HOUSE
+    title: "#overlay_senet_house"
     walkers:[FIGURE_CHARIOR_RACER]
     buildings:[BUILDING_BULLFIGHT_SCHOOL, BUILDING_SENET_HOUSE, BUILDING_ROADBLOCK]
     column_type:COLUMN_TYPE_WATER_ACCESS
@@ -225,6 +235,7 @@ overlays = [
 
   {
     id:OVERLAY_FIRE
+    title: "#overlay_fire"
     walkers[FIGURE_FIREMAN]
     buildings[BUILDING_FIREHOUSE, BUILDING_BURNING_RUIN, BUILDING_FESTIVAL_SQUARE, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
@@ -245,7 +256,7 @@ overlays = [
 
   {
     id:OVERLAY_MALARIA_RISK
-    caption: "Malaria Risk"
+    title: "#overlay_malaria_risk"
     walkers:[FIGURE_HERBALIST]
     buildings:[BUILDING_APOTHECARY, BUILDING_WATER_SUPPLY, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
@@ -254,7 +265,7 @@ overlays = [
 
   {
     id:OVERLAY_HEALTH
-    caption: "Health"
+    title: "#overlay_health"
     walkers:[FIGURE_EMBALMER, FIGURE_HERBALIST, FIGURE_PHYSICIAN, FIGURE_DENTIST]
     buildings:[BUILDING_MORTUARY, BUILDING_APOTHECARY, BUILDING_PHYSICIAN, BUILDING_DENTIST, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
@@ -263,7 +274,7 @@ overlays = [
 
   {
     id:OVERLAY_LABOR
-    caption: "Labor"
+    title: "#overlay_labor"
     walkers:[]
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
@@ -272,6 +283,7 @@ overlays = [
 
   {
     id:OVERLAY_BOOTH
+    title: "#overlay_booth"
     walkers:[FIGURE_JUGGLER]
     buildings:[BUILDING_JUGGLER_SCHOOL, BUILDING_BOOTH, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_POSITIVE
@@ -280,7 +292,7 @@ overlays = [
 
   {
     id:OVERLAY_MORTUARY
-    caption:  "Mortuary"
+    title: "#overlay_mortuary"
     walkers:[FIGURE_EMBALMER]
     buildings:[BUILDING_MORTUARY, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_POSITIVE
@@ -289,7 +301,7 @@ overlays = [
 
   {
     id:OVERLAY_FOOD_STOCKS
-    caption: "Food stocks"
+    title: "#overlay_food_stocks"
     walkers:[FIGURE_EMBALMER]
     buildings:[BUILDING_BAZAAR, BUILDING_FISHING_WHARF, BUILDING_GRANARY, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_POSITIVE
@@ -306,6 +318,7 @@ overlays = [
 
   {
     id:OVERLAY_PAVILION
+    title: "#overlay_pavilion"
     walkers:[]
     buildings:[BUILDING_CONSERVATORY, BUILDING_DANCE_SCHOOL, BUILDING_PAVILLION, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
@@ -314,6 +327,7 @@ overlays = [
 
   {
     id:OVERLAY_PHYSICIAN
+    title: "#overlay_physician"
     walkers:[FIGURE_PHYSICIAN]
     buildings:[BUILDING_PHYSICIAN, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
@@ -322,6 +336,7 @@ overlays = [
 
   {
     id:OVERLAY_SCRIBAL_SCHOOL
+    title: "#overlay_scribal_school"
     walkers:[FIGURE_TEACHER]
     buildings:[BUILDING_SCRIBAL_SCHOOL, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
@@ -330,7 +345,7 @@ overlays = [
 
   {
     id:OVERLAY_DESIRABILITY
-    caption: "Desirability"
+    title: "#overlay_desirability"
     walkers:[]
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
@@ -339,7 +354,7 @@ overlays = [
 
   {
     id:OVERLAY_TAX_INCOME
-    caption: "Tax income"
+    title: "#overlay_tax_income"
     walkers:[FIGURE_TAX_COLLECTOR]
     buildings:[BUILDING_TAX_COLLECTOR, BUILDING_TAX_COLLECTOR_UPGRADED, BUILDING_VILLAGE_PALACE, BUILDING_TOWN_PALACE, BUILDING_CITY_PALACE, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
@@ -348,7 +363,7 @@ overlays = [
 
   {
     id:OVERLAY_LABOR_ACCESS
-    caption: "Labor access"
+    title: "#overlay_labor_access"
     walkers:[FIGURE_LABOR_SEEKER]
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
@@ -357,7 +372,7 @@ overlays = [
 
   {
     id:OVERLAY_CRIMINAL
-    caption: "Criminal"
+    title: "#overlay_criminal"
     walkers:[]
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS

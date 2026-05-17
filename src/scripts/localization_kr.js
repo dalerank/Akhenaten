@@ -89,4 +89,51 @@ localization_en = [
      { key:"#TR_HOTKEY_EDIT_TITLE", text:"새 단축키 입력"}
      { key:"#mansion_protected_by_police", text:"경찰이 보호함"}
      { key:"#mansion_not_protected_theft", text:"미보호 — 도둑이 저축을 훔칠 수 있음"}
+
+     { key: "#overlay_menu_normal", text: "일반" }
+     { key: "#overlay_menu_risks", text: "위험" }
+     { key: "#overlay_menu_water", text: "물" }
+     { key: "#overlay_menu_entertainment", text: "오락" }
+     { key: "#overlay_menu_religion", text: "종교" }
+     { key: "#overlay_menu_education", text: "교육" }
+     { key: "#overlay_menu_health", text: "보건" }
+     { key: "#overlay_menu_administration", text: "행정" }
+     { key: "#overlay_menu_food", text: "식량" }
+     { key: "#overlay_menu_other", text: "기타" }
+
+     { key: "#overlay_fire", text: "화재" }
+     { key: "#overlay_damage", text: "피해" }
+     { key: "#overlay_crime", text: "범죄" }
+     { key: "#overlay_entertainment", text: "오락" }
+     { key: "#overlay_booth", text: "저글러" }
+     { key: "#overlay_bandstand", text: "음악가" }
+     { key: "#overlay_pavilion", text: "무용수" }
+     { key: "#overlay_senet_house", text: "세넷 플레이어" }
+     { key: "#overlay_education", text: "교육" }
+     { key: "#overlay_scribal_school", text: "서기관 학교" }
+     { key: "#overlay_library", text: "도서관" }
+     { key: "#overlay_academy", text: "학원" }
+     { key: "#overlay_apothecary", text: "약방" }
+     { key: "#overlay_dentist", text: "치과" }
+     { key: "#overlay_physician", text: "의사" }
+     { key: "#overlay_mortuary", text: "장례식장" }
+     { key: "#overlay_tax_income", text: "세수입" }
+     { key: "#overlay_bazaar_access", text: "시장 접근" }
+     { key: "#overlay_desirability", text: "매력도" }
+     { key: "#overlay_fertility", text: "비옥도" }
+     { key: "#overlay_magistrate", text: "치안관" }
+     { key: "#overlay_food_stocks", text: "식량 비축" }
+     { key: "#overlay_labor", text: "노동" }
+     { key: "#overlay_labor_access", text: "노동 접근" }
+     { key: "#overlay_native", text: "원주민" }
+     { key: "#overlay_problems", text: "문제" }
+     { key: "#overlay_routing", text: "경로" }
+     { key: "#overlay_malaria_risk", text: "말라리아 위험" }
+     { key: "#overlay_health", text: "건강" }
+     { key: "#overlay_criminal", text: "범죄자" }
+     { key: "#overlay_osiris", text: "오시리스" }
+     { key: "#overlay_ra", text: "라" }
+     { key: "#overlay_ptah", text: "프타" }
+     { key: "#overlay_seth", text: "세트" }
+     { key: "#overlay_bast", text: "바스테트" }
 ]

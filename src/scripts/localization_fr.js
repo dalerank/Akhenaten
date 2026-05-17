@@ -147,4 +147,51 @@ localization_fr = [
   { key:"#TR_ADVISOR_TOTAL_POPULATION", text:"résidents total"}
   { key:"#mansion_protected_by_police", text:"Protégé par la police"}
   { key:"#mansion_not_protected_theft", text:"Non protégé — des voleurs peuvent dérober vos économies"}
+
+  { key: "#overlay_menu_normal", text: "Normal" }
+  { key: "#overlay_menu_risks", text: "Risques" }
+  { key: "#overlay_menu_water", text: "Eau" }
+  { key: "#overlay_menu_entertainment", text: "Divertissement" }
+  { key: "#overlay_menu_religion", text: "Religion" }
+  { key: "#overlay_menu_education", text: "Éducation" }
+  { key: "#overlay_menu_health", text: "Santé" }
+  { key: "#overlay_menu_administration", text: "Administration" }
+  { key: "#overlay_menu_food", text: "Nourriture" }
+  { key: "#overlay_menu_other", text: "Autre" }
+
+  { key: "#overlay_fire", text: "Feu" }
+  { key: "#overlay_damage", text: "Dégâts" }
+  { key: "#overlay_crime", text: "Criminalité" }
+  { key: "#overlay_entertainment", text: "Divertissement" }
+  { key: "#overlay_booth", text: "Jongleur" }
+  { key: "#overlay_bandstand", text: "Musicien" }
+  { key: "#overlay_pavilion", text: "Danseur" }
+  { key: "#overlay_senet_house", text: "Joueurs de senet" }
+  { key: "#overlay_education", text: "Éducation" }
+  { key: "#overlay_scribal_school", text: "Écoles de scribes" }
+  { key: "#overlay_library", text: "Bibliothèque" }
+  { key: "#overlay_academy", text: "Académie" }
+  { key: "#overlay_apothecary", text: "Apothicaire" }
+  { key: "#overlay_dentist", text: "Dentiste" }
+  { key: "#overlay_physician", text: "Médecin" }
+  { key: "#overlay_mortuary", text: "Mortuaire" }
+  { key: "#overlay_tax_income", text: "Revenus fiscaux" }
+  { key: "#overlay_bazaar_access", text: "Accès au bazar" }
+  { key: "#overlay_desirability", text: "Attractivité" }
+  { key: "#overlay_fertility", text: "Fertilité" }
+  { key: "#overlay_magistrate", text: "Magistrat" }
+  { key: "#overlay_food_stocks", text: "Réserves alimentaires" }
+  { key: "#overlay_labor", text: "Main-d'œuvre" }
+  { key: "#overlay_labor_access", text: "Accès à la main-d'œuvre" }
+  { key: "#overlay_native", text: "Natif" }
+  { key: "#overlay_problems", text: "Problèmes" }
+  { key: "#overlay_routing", text: "Itinéraires" }
+  { key: "#overlay_malaria_risk", text: "Risque de paludisme" }
+  { key: "#overlay_health", text: "Santé" }
+  { key: "#overlay_criminal", text: "Criminel" }
+  { key: "#overlay_osiris", text: "Osiris" }
+  { key: "#overlay_ra", text: "Râ" }
+  { key: "#overlay_ptah", text: "Ptah" }
+  { key: "#overlay_seth", text: "Seth" }
+  { key: "#overlay_bast", text: "Bastet" }
 ]

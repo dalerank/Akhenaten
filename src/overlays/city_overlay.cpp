@@ -13,6 +13,7 @@
 #include "widget/widget_city.h"
 #include "city/city_buildings.h"
 #include "io/gamefiles/lang.h"
+#include "graphics/elements/lang_text.h"
 #include "game/game_config.h"
 
 #include "game/game.h"
@@ -36,6 +37,10 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_city_overlays) {
         }
 
         arch.r(*overlay);
+        const xstring title_cfg = arch.r_string("title");
+        if (!title_cfg.empty()) {
+            overlay->title_text = title_cfg;
+        }
     });
 }
 
@@ -88,12 +93,11 @@ bool city_overlay::is_drawable_building_corner(tile2i tile, tile2i main, int siz
 }
 
 xstring city_overlay::title() const {
-    if (!caption.empty()) {
-        return caption;
+    if (!title_text.empty()) {
+        return lang_xtext_from_key(title_text);
     }
 
-    const_cast<city_overlay*>(this)->caption = (pcstr)lang_get_string(14, id);
-    return caption;
+    return lang_get_string(14, id);
 }
 
 const tooltips_t empty_tolltips{ "unknown_key", {} };

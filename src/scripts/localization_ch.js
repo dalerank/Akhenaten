@@ -92,4 +92,51 @@ localization_ch = [
      { key:"#TR_HOTKEY_EDIT_TITLE", text:"按下新熱鍵"}
      { key:"#mansion_protected_by_police", text:"有警察保護"}
      { key:"#mansion_not_protected_theft", text:"未受保護——盜賊可能竊取積蓄"}
+
+     { key: "#overlay_menu_normal", text: "普通" }
+     { key: "#overlay_menu_risks", text: "風險" }
+     { key: "#overlay_menu_water", text: "水" }
+     { key: "#overlay_menu_entertainment", text: "娛樂" }
+     { key: "#overlay_menu_religion", text: "宗教" }
+     { key: "#overlay_menu_education", text: "教育" }
+     { key: "#overlay_menu_health", text: "健康" }
+     { key: "#overlay_menu_administration", text: "管理" }
+     { key: "#overlay_menu_food", text: "食物" }
+     { key: "#overlay_menu_other", text: "其他" }
+
+     { key: "#overlay_fire", text: "火灾" }
+     { key: "#overlay_damage", text: "损坏" }
+     { key: "#overlay_crime", text: "犯罪" }
+     { key: "#overlay_entertainment", text: "娱乐" }
+     { key: "#overlay_booth", text: "杂耍" }
+     { key: "#overlay_bandstand", text: "乐师" }
+     { key: "#overlay_pavilion", text: "舞者" }
+     { key: "#overlay_senet_house", text: "塞尼特玩家" }
+     { key: "#overlay_education", text: "教育" }
+     { key: "#overlay_scribal_school", text: "文书学校" }
+     { key: "#overlay_library", text: "图书馆" }
+     { key: "#overlay_academy", text: "学院" }
+     { key: "#overlay_apothecary", text: "药房" }
+     { key: "#overlay_dentist", text: "牙医" }
+     { key: "#overlay_physician", text: "医生" }
+     { key: "#overlay_mortuary", text: "停尸房" }
+     { key: "#overlay_tax_income", text: "税收" }
+     { key: "#overlay_bazaar_access", text: "市集通行" }
+     { key: "#overlay_desirability", text: "吸引力" }
+     { key: "#overlay_fertility", text: "肥沃度" }
+     { key: "#overlay_magistrate", text: "治安官" }
+     { key: "#overlay_food_stocks", text: "食物储备" }
+     { key: "#overlay_labor", text: "劳动力" }
+     { key: "#overlay_labor_access", text: "劳动力通行" }
+     { key: "#overlay_native", text: "土著" }
+     { key: "#overlay_problems", text: "问题" }
+     { key: "#overlay_routing", text: "路线" }
+     { key: "#overlay_malaria_risk", text: "疟疾风险" }
+     { key: "#overlay_health", text: "健康" }
+     { key: "#overlay_criminal", text: "罪犯" }
+     { key: "#overlay_osiris", text: "奥西里斯" }
+     { key: "#overlay_ra", text: "拉" }
+     { key: "#overlay_ptah", text: "普塔" }
+     { key: "#overlay_seth", text: "赛特" }
+     { key: "#overlay_bast", text: "巴斯泰特" }
 ]

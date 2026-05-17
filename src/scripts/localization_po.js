@@ -114,4 +114,51 @@ localization_po = [
  { key:"#TR_ADVISOR_TOTAL_POPULATION", text:"Razem mieszkańców"}
  { key:"#mansion_protected_by_police", text:"Chronione przez policję"}
  { key:"#mansion_not_protected_theft", text:"Bez ochrony — złodzieje mogą ukraść oszczędności"}
+
+ { key: "#overlay_menu_normal", text: "Normalny" }
+ { key: "#overlay_menu_risks", text: "Zagrożenia" }
+ { key: "#overlay_menu_water", text: "Woda" }
+ { key: "#overlay_menu_entertainment", text: "Rozrywka" }
+ { key: "#overlay_menu_religion", text: "Religia" }
+ { key: "#overlay_menu_education", text: "Edukacja" }
+ { key: "#overlay_menu_health", text: "Zdrowie" }
+ { key: "#overlay_menu_administration", text: "Administracja" }
+ { key: "#overlay_menu_food", text: "Żywność" }
+ { key: "#overlay_menu_other", text: "Inne" }
+
+ { key: "#overlay_fire", text: "Pożar" }
+ { key: "#overlay_damage", text: "Szkody" }
+ { key: "#overlay_crime", text: "Przestępczość" }
+ { key: "#overlay_entertainment", text: "Rozrywka" }
+ { key: "#overlay_booth", text: "Żongler" }
+ { key: "#overlay_bandstand", text: "Muzyk" }
+ { key: "#overlay_pavilion", text: "Tancerz" }
+ { key: "#overlay_senet_house", text: "Gracze w senet" }
+ { key: "#overlay_education", text: "Edukacja" }
+ { key: "#overlay_scribal_school", text: "Szkoły pisarzy" }
+ { key: "#overlay_library", text: "Biblioteka" }
+ { key: "#overlay_academy", text: "Akademia" }
+ { key: "#overlay_apothecary", text: "Aptekarz" }
+ { key: "#overlay_dentist", text: "Dentysta" }
+ { key: "#overlay_physician", text: "Lekarz" }
+ { key: "#overlay_mortuary", text: "Kostnica" }
+ { key: "#overlay_tax_income", text: "Dochód podatkowy" }
+ { key: "#overlay_bazaar_access", text: "Dostęp do bazaru" }
+ { key: "#overlay_desirability", text: "Atrakcyjność" }
+ { key: "#overlay_fertility", text: "Żyzność" }
+ { key: "#overlay_magistrate", text: "Sędzia" }
+ { key: "#overlay_food_stocks", text: "Zapasy żywności" }
+ { key: "#overlay_labor", text: "Praca" }
+ { key: "#overlay_labor_access", text: "Dostęp do pracy" }
+ { key: "#overlay_native", text: "Rodzimy" }
+ { key: "#overlay_problems", text: "Problemy" }
+ { key: "#overlay_routing", text: "Trasy" }
+ { key: "#overlay_malaria_risk", text: "Ryzyko malarii" }
+ { key: "#overlay_health", text: "Zdrowie" }
+ { key: "#overlay_criminal", text: "Przestępca" }
+ { key: "#overlay_osiris", text: "Ozyrys" }
+ { key: "#overlay_ra", text: "Ra" }
+ { key: "#overlay_ptah", text: "Ptah" }
+ { key: "#overlay_seth", text: "Set" }
+ { key: "#overlay_bast", text: "Bastet" }
 ]

@@ -468,4 +468,51 @@ localization_ru_f = [
 
     { key: "#mansion_protected_by_police", text: "Охраняется полицией" }
     { key: "#mansion_not_protected_theft", text: "Нет защиты — воры могут украсть сбережения" }
+
+    { key: "#overlay_menu_normal", text: "Hopмa" }
+    { key: "#overlay_menu_risks", text: "Зoны pиcкa" }
+    { key: "#overlay_menu_water", text: "Boдa" }
+    { key: "#overlay_menu_entertainment", text: "Paзвлeчeния" }
+    { key: "#overlay_menu_religion", text: "Peлигия" }
+    { key: "#overlay_menu_education", text: "Oбpaзoвaниe" }
+    { key: "#overlay_menu_health", text: "Здpaвooxpaнeниe" }
+    { key: "#overlay_menu_administration", text: "Упpaвлeниe" }
+    { key: "#overlay_menu_food", text: "Еда" }
+    { key: "#overlay_menu_other", text: "Прочее" }
+
+    { key: "#overlay_fire", text: "Пожар" }
+    { key: "#overlay_damage", text: "Повреждения" }
+    { key: "#overlay_crime", text: "Преступность" }
+    { key: "#overlay_entertainment", text: "Развлечения" }
+    { key: "#overlay_booth", text: "Жонглёр" }
+    { key: "#overlay_bandstand", text: "Музыкант" }
+    { key: "#overlay_pavilion", text: "Танцор" }
+    { key: "#overlay_senet_house", text: "Игроки в сенет" }
+    { key: "#overlay_education", text: "Образование" }
+    { key: "#overlay_scribal_school", text: "Школы писцов" }
+    { key: "#overlay_library", text: "Библиотека" }
+    { key: "#overlay_academy", text: "Академия" }
+    { key: "#overlay_apothecary", text: "Аптекарь" }
+    { key: "#overlay_dentist", text: "Дантист" }
+    { key: "#overlay_physician", text: "Врач" }
+    { key: "#overlay_mortuary", text: "Морг" }
+    { key: "#overlay_tax_income", text: "Налоговый доход" }
+    { key: "#overlay_bazaar_access", text: "Доступ к базару" }
+    { key: "#overlay_desirability", text: "Привлекательность" }
+    { key: "#overlay_fertility", text: "Плодородие" }
+    { key: "#overlay_magistrate", text: "Судья" }
+    { key: "#overlay_food_stocks", text: "Запасы еды" }
+    { key: "#overlay_labor", text: "Труд" }
+    { key: "#overlay_labor_access", text: "Доступ к рабочей силе" }
+    { key: "#overlay_native", text: "Местный" }
+    { key: "#overlay_problems", text: "Проблемы" }
+    { key: "#overlay_routing", text: "Маршруты" }
+    { key: "#overlay_malaria_risk", text: "Риск малярии" }
+    { key: "#overlay_health", text: "Здоровье" }
+    { key: "#overlay_criminal", text: "Преступник" }
+    { key: "#overlay_osiris", text: "Осирис" }
+    { key: "#overlay_ra", text: "Ра" }
+    { key: "#overlay_ptah", text: "Птах" }
+    { key: "#overlay_seth", text: "Сет" }
+    { key: "#overlay_bast", text: "Баст" }
 ]

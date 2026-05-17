@@ -1222,4 +1222,52 @@ localization_en = [
 
   { key: "#sidebar_speed_header", text: "Speed" }
   { key: "#no_requests", text: "There are no requests outstanding at the moment." }
+
+  // overlay menu categories
+  { key: "#overlay_menu_normal", text: "Normal" }
+  { key: "#overlay_menu_risks", text: "Risks" }
+  { key: "#overlay_menu_water", text: "Water" }
+  { key: "#overlay_menu_entertainment", text: "Entertainment" }
+  { key: "#overlay_menu_religion", text: "Religion" }
+  { key: "#overlay_menu_education", text: "Education" }
+  { key: "#overlay_menu_health", text: "Health" }
+  { key: "#overlay_menu_administration", text: "Administration" }
+  { key: "#overlay_menu_food", text: "Food" }
+  { key: "#overlay_menu_other", text: "Other" }
+
+  { key: "#overlay_fire", text: "Fire" }
+  { key: "#overlay_damage", text: "Damage" }
+  { key: "#overlay_crime", text: "Crime" }
+  { key: "#overlay_entertainment", text: "Entertainment" }
+  { key: "#overlay_booth", text: "Booth" }
+  { key: "#overlay_bandstand", text: "Bandstand" }
+  { key: "#overlay_pavilion", text: "Pavilion" }
+  { key: "#overlay_senet_house", text: "Senet house" }
+  { key: "#overlay_education", text: "Education" }
+  { key: "#overlay_scribal_school", text: "Scribal school" }
+  { key: "#overlay_library", text: "Library" }
+  { key: "#overlay_academy", text: "Academy" }
+  { key: "#overlay_apothecary", text: "Apothecary" }
+  { key: "#overlay_dentist", text: "Dentist" }
+  { key: "#overlay_physician", text: "Physician" }
+  { key: "#overlay_mortuary", text: "Mortuary" }
+  { key: "#overlay_tax_income", text: "Tax income" }
+  { key: "#overlay_bazaar_access", text: "Bazaar access" }
+  { key: "#overlay_desirability", text: "Desirability" }
+  { key: "#overlay_fertility", text: "Fertility" }
+  { key: "#overlay_magistrate", text: "Magistrate" }
+  { key: "#overlay_food_stocks", text: "Food stocks" }
+  { key: "#overlay_labor", text: "Labor" }
+  { key: "#overlay_labor_access", text: "Labor access" }
+  { key: "#overlay_native", text: "Native" }
+  { key: "#overlay_problems", text: "Problems" }
+  { key: "#overlay_routing", text: "Routing" }
+  { key: "#overlay_malaria_risk", text: "Malaria risk" }
+  { key: "#overlay_health", text: "Health" }
+  { key: "#overlay_criminal", text: "Criminal" }
+  { key: "#overlay_osiris", text: "Osiris" }
+  { key: "#overlay_ra", text: "Ra" }
+  { key: "#overlay_ptah", text: "Ptah" }
+  { key: "#overlay_seth", text: "Seth" }
+  { key: "#overlay_bast", text: "Bast" }
 ]

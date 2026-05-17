@@ -1193,4 +1193,51 @@ localization_de = [
   { key: "#top_menu_overseers_tooltip", text: "Berater zum Zustand der Stadt befragen" }
 
   { key: "#sidebar_speed_header", text: "Geschwindigkeit" }
+
+  { key: "#overlay_menu_normal", text: "Normal" }
+  { key: "#overlay_menu_risks", text: "Risiken" }
+  { key: "#overlay_menu_water", text: "Wasser" }
+  { key: "#overlay_menu_entertainment", text: "Unterhaltung" }
+  { key: "#overlay_menu_religion", text: "Religion" }
+  { key: "#overlay_menu_education", text: "Bildung" }
+  { key: "#overlay_menu_health", text: "Gesundheit" }
+  { key: "#overlay_menu_administration", text: "Verwaltung" }
+  { key: "#overlay_menu_food", text: "Nahrung" }
+  { key: "#overlay_menu_other", text: "Sonstiges" }
+
+  { key: "#overlay_fire", text: "Feuer" }
+  { key: "#overlay_damage", text: "Schaden" }
+  { key: "#overlay_crime", text: "Verbrechen" }
+  { key: "#overlay_entertainment", text: "Unterhaltung" }
+  { key: "#overlay_booth", text: "Gaukler" }
+  { key: "#overlay_bandstand", text: "Musiker" }
+  { key: "#overlay_pavilion", text: "Tänzer" }
+  { key: "#overlay_senet_house", text: "Senet-Spieler" }
+  { key: "#overlay_education", text: "Bildung" }
+  { key: "#overlay_scribal_school", text: "Schreiberschulen" }
+  { key: "#overlay_library", text: "Bibliothek" }
+  { key: "#overlay_academy", text: "Akademie" }
+  { key: "#overlay_apothecary", text: "Apotheke" }
+  { key: "#overlay_dentist", text: "Zahnarzt" }
+  { key: "#overlay_physician", text: "Arzt" }
+  { key: "#overlay_mortuary", text: "Leichenhalle" }
+  { key: "#overlay_tax_income", text: "Steuereinkommen" }
+  { key: "#overlay_bazaar_access", text: "Basar-Zugang" }
+  { key: "#overlay_desirability", text: "Attraktivität" }
+  { key: "#overlay_fertility", text: "Fruchtbarkeit" }
+  { key: "#overlay_magistrate", text: "Richter" }
+  { key: "#overlay_food_stocks", text: "Lebensmittelvorräte" }
+  { key: "#overlay_labor", text: "Arbeit" }
+  { key: "#overlay_labor_access", text: "Arbeitszugang" }
+  { key: "#overlay_native", text: "Einheimisch" }
+  { key: "#overlay_problems", text: "Probleme" }
+  { key: "#overlay_routing", text: "Routen" }
+  { key: "#overlay_malaria_risk", text: "Malaria-Risiko" }
+  { key: "#overlay_health", text: "Gesundheit" }
+  { key: "#overlay_criminal", text: "Kriminell" }
+  { key: "#overlay_osiris", text: "Osiris" }
+  { key: "#overlay_ra", text: "Ra" }
+  { key: "#overlay_ptah", text: "Ptah" }
+  { key: "#overlay_seth", text: "Seth" }
+  { key: "#overlay_bast", text: "Bast" }
 ]

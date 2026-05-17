@@ -90,4 +90,51 @@ localization_sp = [
      {key:"#TR_HOTKEY_EDIT_TITLE", text:"Presiona nueva tecla"}
      {key:"#mansion_protected_by_police", text:"Protegido por la policía"}
      {key:"#mansion_not_protected_theft", text:"Sin protección: los ladrones pueden robar los ahorros"}
+
+     { key: "#overlay_menu_normal", text: "Normal" }
+     { key: "#overlay_menu_risks", text: "Riesgos" }
+     { key: "#overlay_menu_water", text: "Agua" }
+     { key: "#overlay_menu_entertainment", text: "Entretenimiento" }
+     { key: "#overlay_menu_religion", text: "Religión" }
+     { key: "#overlay_menu_education", text: "Educación" }
+     { key: "#overlay_menu_health", text: "Salud" }
+     { key: "#overlay_menu_administration", text: "Administración" }
+     { key: "#overlay_menu_food", text: "Comida" }
+     { key: "#overlay_menu_other", text: "Otro" }
+
+     { key: "#overlay_fire", text: "Fuego" }
+     { key: "#overlay_damage", text: "Daños" }
+     { key: "#overlay_crime", text: "Crimen" }
+     { key: "#overlay_entertainment", text: "Entretenimiento" }
+     { key: "#overlay_booth", text: "Malabarista" }
+     { key: "#overlay_bandstand", text: "Músico" }
+     { key: "#overlay_pavilion", text: "Bailarín" }
+     { key: "#overlay_senet_house", text: "Jugadores de senet" }
+     { key: "#overlay_education", text: "Educación" }
+     { key: "#overlay_scribal_school", text: "Escuelas de escribas" }
+     { key: "#overlay_library", text: "Biblioteca" }
+     { key: "#overlay_academy", text: "Academia" }
+     { key: "#overlay_apothecary", text: "Boticario" }
+     { key: "#overlay_dentist", text: "Dentista" }
+     { key: "#overlay_physician", text: "Médico" }
+     { key: "#overlay_mortuary", text: "Mortuorio" }
+     { key: "#overlay_tax_income", text: "Ingresos fiscales" }
+     { key: "#overlay_bazaar_access", text: "Acceso al bazar" }
+     { key: "#overlay_desirability", text: "Atractivo" }
+     { key: "#overlay_fertility", text: "Fertilidad" }
+     { key: "#overlay_magistrate", text: "Magistrado" }
+     { key: "#overlay_food_stocks", text: "Reservas de comida" }
+     { key: "#overlay_labor", text: "Trabajo" }
+     { key: "#overlay_labor_access", text: "Acceso laboral" }
+     { key: "#overlay_native", text: "Nativo" }
+     { key: "#overlay_problems", text: "Problemas" }
+     { key: "#overlay_routing", text: "Rutas" }
+     { key: "#overlay_malaria_risk", text: "Riesgo de malaria" }
+     { key: "#overlay_health", text: "Salud" }
+     { key: "#overlay_criminal", text: "Criminal" }
+     { key: "#overlay_osiris", text: "Osiris" }
+     { key: "#overlay_ra", text: "Ra" }
+     { key: "#overlay_ptah", text: "Ptah" }
+     { key: "#overlay_seth", text: "Seth" }
+     { key: "#overlay_bast", text: "Bastet" }
 ]

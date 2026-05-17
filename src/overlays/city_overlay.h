@@ -41,7 +41,7 @@ struct city_overlay {
     svector<building_tooltips_t, 10> building_tooltips;
     e_column_type column_type = COLUMN_TYPE_NONE;
     animation_t column_anim;
-    xstring caption;
+    xstring title_text;
 
     city_overlay(e_overlay t);
 
@@ -72,7 +72,7 @@ struct city_overlay {
     static city_overlay *get(e_overlay e);
     static overlay_list &overlays();
 };
-ANK_CONFIG_STRUCT(city_overlay, id, walkers, buildings, column_type, column_anim, caption, tooltips, building_tooltips)
+ANK_CONFIG_STRUCT(city_overlay, id, walkers, buildings, column_type, column_anim, tooltips, building_tooltips)
 
 template<e_overlay TYPE>
 struct city_overlay_t : public city_overlay {

@@ -92,4 +92,51 @@ localization_it = [
      {key:"#TR_HOTKEY_EDIT_TITLE", text:"Premi un nuovo tasto"}
      {key:"#mansion_protected_by_police", text:"Protetto dalla polizia"}
      {key:"#mansion_not_protected_theft", text:"Non protetto — i ladri possono rubare i risparmi"}
+
+     { key: "#overlay_menu_normal", text: "Normale" }
+     { key: "#overlay_menu_risks", text: "Rischi" }
+     { key: "#overlay_menu_water", text: "Acqua" }
+     { key: "#overlay_menu_entertainment", text: "Divertimento" }
+     { key: "#overlay_menu_religion", text: "Religione" }
+     { key: "#overlay_menu_education", text: "Istruzione" }
+     { key: "#overlay_menu_health", text: "Salute" }
+     { key: "#overlay_menu_administration", text: "Amministrazione" }
+     { key: "#overlay_menu_food", text: "Cibo" }
+     { key: "#overlay_menu_other", text: "Altro" }
+
+     { key: "#overlay_fire", text: "Fuoco" }
+     { key: "#overlay_damage", text: "Danni" }
+     { key: "#overlay_crime", text: "Criminalità" }
+     { key: "#overlay_entertainment", text: "Intrattenimento" }
+     { key: "#overlay_booth", text: "Giullare" }
+     { key: "#overlay_bandstand", text: "Musicista" }
+     { key: "#overlay_pavilion", text: "Danzatore" }
+     { key: "#overlay_senet_house", text: "Giocatori di senet" }
+     { key: "#overlay_education", text: "Istruzione" }
+     { key: "#overlay_scribal_school", text: "Scuole di scribi" }
+     { key: "#overlay_library", text: "Biblioteca" }
+     { key: "#overlay_academy", text: "Accademia" }
+     { key: "#overlay_apothecary", text: "Speziale" }
+     { key: "#overlay_dentist", text: "Dentista" }
+     { key: "#overlay_physician", text: "Medico" }
+     { key: "#overlay_mortuary", text: "Obitorio" }
+     { key: "#overlay_tax_income", text: "Entrate fiscali" }
+     { key: "#overlay_bazaar_access", text: "Accesso al bazar" }
+     { key: "#overlay_desirability", text: "Desiderabilità" }
+     { key: "#overlay_fertility", text: "Fertilità" }
+     { key: "#overlay_magistrate", text: "Magistrato" }
+     { key: "#overlay_food_stocks", text: "Scorte alimentari" }
+     { key: "#overlay_labor", text: "Lavoro" }
+     { key: "#overlay_labor_access", text: "Accesso al lavoro" }
+     { key: "#overlay_native", text: "Nativo" }
+     { key: "#overlay_problems", text: "Problemi" }
+     { key: "#overlay_routing", text: "Percorsi" }
+     { key: "#overlay_malaria_risk", text: "Rischio malaria" }
+     { key: "#overlay_health", text: "Salute" }
+     { key: "#overlay_criminal", text: "Criminale" }
+     { key: "#overlay_osiris", text: "Osiride" }
+     { key: "#overlay_ra", text: "Ra" }
+     { key: "#overlay_ptah", text: "Ptah" }
+     { key: "#overlay_seth", text: "Seth" }
+     { key: "#overlay_bast", text: "Bastet" }
 ]

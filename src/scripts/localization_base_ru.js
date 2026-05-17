@@ -306,14 +306,6 @@ localization_base_ru = [
     { group:13, id:6, text: "Недоступно в демо-версии!" }
     { group:13, id:7, text: "Кликните для начала" }
     { group:13, id:8, text: "Выберите египетское имя:" }
-    { group:14, id:0, text: "Обычный" }
-    { group:14, id:1, text: "Риски" }
-    { group:14, id:2, text: "Вода" }
-    { group:14, id:3, text: "Развлечения" }
-    { group:14, id:4, text: "Религия" }
-    { group:14, id:5, text: "Образование" }
-    { group:14, id:6, text: "Здоровье" }
-    { group:14, id:7, text: "Администрация" }
     { group:14, id:8, text: "Пожар" }
     { group:14, id:9, text: "Повреждения" }
     { group:14, id:10, text: "Преступность" }

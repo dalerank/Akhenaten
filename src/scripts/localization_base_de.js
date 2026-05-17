@@ -307,14 +307,6 @@ localization_base_de = [
     { group:13, id:6, text: "In der Demo nicht verfügbar!" }
     { group:13, id:7, text: "Klick zum Starten" }
     { group:13, id:8, text: "Wählt einen ägyptischen Namen:" }
-    { group:14, id:0, text: "Normal" }
-    { group:14, id:1, text: "Risiken" }
-    { group:14, id:2, text: "Wasser" }
-    { group:14, id:3, text: "Unterhaltung" }
-    { group:14, id:4, text: "Religion" }
-    { group:14, id:5, text: "Bildung" }
-    { group:14, id:6, text: "Gesundheit" }
-    { group:14, id:7, text: "Verwaltung" }
     { group:14, id:8, text: "Feuer" }
     { group:14, id:9, text: "Schaden" }
     { group:14, id:10, text: "Verbrechen" }
