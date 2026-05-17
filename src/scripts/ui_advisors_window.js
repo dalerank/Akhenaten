@@ -20,29 +20,80 @@ function advisor_autoconfig_section(advisor) {
     }
 }
 
+function advisor_window_supported_list() {
+    return [
+        ADVISOR_LABOR,
+        ADVISOR_MILITARY,
+        ADVISOR_IMPERIAL,
+        ADVISOR_RATINGS,
+        ADVISOR_TRADE,
+        ADVISOR_POPULATION,
+        ADVISOR_HEALTH,
+        ADVISOR_EDUCATION,
+        ADVISOR_ENTERTAINMENT,
+        ADVISOR_RELIGION,
+        ADVISOR_FINANCIAL,
+        ADVISOR_CHIEF,
+        ADVISOR_MONUMENTS,
+        ADVISOR_HOUSING
+    ]
+}
+
+function advisor_window_is_supported(advisor) {
+    return advisor_autoconfig_section(advisor) !== null
+}
+
+function advisor_window_is_available(advisor) {
+    return city.is_advisor_available(advisor) > 0
+}
+
 function window_advisors_show() {
     window_advisors_prepare_opening()
-    var section = advisor_autoconfig_section(game.last_advisor)
-    if (!section) {
-        return
+
+    var advisor = game.last_advisor
+    if (!advisor_window_is_supported(advisor) || !advisor_window_is_available(advisor)) {
+        var advisors = advisor_window_supported_list()
+        advisor = ADVISOR_NONE
+        for (var i = 0; i < advisors.length; i++) {
+            var candidate = advisors[i]
+            if (advisor_window_is_available(candidate)) {
+                advisor = candidate
+                break
+            }
+        }
+
+        if (advisor === ADVISOR_NONE) {
+            city.warnings.show("#not_available_in_this_assignment")
+            return 0
+        }
+
+        game.last_advisor = advisor
     }
+
+    var section = advisor_autoconfig_section(advisor)
+    if (!section) {
+        city.warnings.show("#not_available_in_this_assignment")
+        return 0
+    }
+
     window_show_by_id(section)
+    return 1
 }
 
 function window_advisors_show_advisor(advisor) {
+    if (!advisor_window_is_supported(advisor)) {
+        city.warnings.show("#not_available_in_this_assignment")
+        return 0
+    }
+
     var avail = city.is_advisor_available(advisor)
     if (avail === 0 || avail === -1) {
         city.warnings.show(avail === 0 ? "#not_available_in_this_assignment" : "#not_available_yet")
         return 0
     }
-    window_advisors_prepare_opening()
+
     game.last_advisor = advisor
-    var section = advisor_autoconfig_section(advisor)
-    if (!section) {
-        return 0
-    }
-    window_show_by_id(section)
-    return 1
+    return window_advisors_show()
 }
 
 advisor_window_base {
@@ -68,30 +119,17 @@ advisor_window_base {
 
 function show_advisor_window(advisor) {
     return function() {
+        if (!advisor_window_is_supported(advisor)) {
+            city.warnings.show("#not_available_in_this_assignment")
+            return 0
+        }
+
         window_advisors_show_advisor(advisor)
     }
 }
 
 function window_advisors_show_checked() {
-    var avail = 0
-    var last = game.last_advisor
-    if (city.is_advisor_available(last)) {
-        avail = 1
-    } else {
-        for (var adv = ADVISOR_NONE + 1; adv < ADVISOR_MAX; adv++) {
-            if (city.is_advisor_available(adv)) {
-                game.last_advisor = adv
-                avail = 1
-                break
-            }
-        }
-    }
-    if (avail === 1) {
-        window_advisors_show()
-    } else {
-        var text = (avail === 0) ? "#not_available_in_this_assignment" : "#not_available_yet"
-        city.warnings.show(text)
-    }
+    return window_advisors_show()
 }
 
 function advisors_toolbar_refresh(window, advisor) {
@@ -111,19 +149,19 @@ function advisors_toolbar_refresh(window, advisor) {
     window.chief_btn.selected = (ADVISOR_CHIEF == advisor)
     window.monuments_btn.selected = (ADVISOR_MONUMENTS == advisor)
 
-    window.labor_btn.readonly = !city.is_advisor_available(ADVISOR_LABOR)
-    window.military_btn.readonly = !city.is_advisor_available(ADVISOR_MILITARY)
-    window.imperial_btn.readonly = !city.is_advisor_available(ADVISOR_IMPERIAL)
-    window.ratings_btn.readonly = !city.is_advisor_available(ADVISOR_RATINGS)
-    window.trade_btn.readonly = !city.is_advisor_available(ADVISOR_TRADE)
-    window.population_btn.readonly = !city.is_advisor_available(ADVISOR_POPULATION)
-    window.health_btn.readonly = !city.is_advisor_available(ADVISOR_HEALTH)
-    window.education_btn.readonly = !city.is_advisor_available(ADVISOR_EDUCATION)
-    window.entertainment_btn.readonly = !city.is_advisor_available(ADVISOR_ENTERTAINMENT)
-    window.religion_btn.readonly = !city.is_advisor_available(ADVISOR_RELIGION)
-    window.financial_btn.readonly = !city.is_advisor_available(ADVISOR_FINANCIAL)
-    window.chief_btn.readonly = !city.is_advisor_available(ADVISOR_CHIEF)
-    window.monuments_btn.readonly = !city.is_advisor_available(ADVISOR_MONUMENTS)
+    window.labor_btn.readonly = !advisor_window_is_available(ADVISOR_LABOR)
+    window.military_btn.readonly = !advisor_window_is_available(ADVISOR_MILITARY)
+    window.imperial_btn.readonly = !advisor_window_is_available(ADVISOR_IMPERIAL)
+    window.ratings_btn.readonly = !advisor_window_is_available(ADVISOR_RATINGS)
+    window.trade_btn.readonly = !advisor_window_is_available(ADVISOR_TRADE)
+    window.population_btn.readonly = !advisor_window_is_available(ADVISOR_POPULATION)
+    window.health_btn.readonly = !advisor_window_is_available(ADVISOR_HEALTH)
+    window.education_btn.readonly = !advisor_window_is_available(ADVISOR_EDUCATION)
+    window.entertainment_btn.readonly = !advisor_window_is_available(ADVISOR_ENTERTAINMENT)
+    window.religion_btn.readonly = !advisor_window_is_available(ADVISOR_RELIGION)
+    window.financial_btn.readonly = !advisor_window_is_available(ADVISOR_FINANCIAL)
+    window.chief_btn.readonly = !advisor_window_is_available(ADVISOR_CHIEF)
+    window.monuments_btn.readonly = !advisor_window_is_available(ADVISOR_MONUMENTS)
 
     window.back_btn.enabled = true
 }
