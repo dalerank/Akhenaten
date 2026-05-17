@@ -26,6 +26,7 @@ struct autoconfig_window : public ui::widget {
 
     virtual void archive_load(archive arch) override;
     virtual int ui_handle_mouse(const mouse *m);
+    virtual void go_back();
 
     void enqueue_event(xstring sub_event, bvariant_map payload);
     void fire_pending_events();

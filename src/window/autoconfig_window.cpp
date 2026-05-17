@@ -94,6 +94,10 @@ void autoconfig_window::archive_load(archive arch) {
     draw_underlying = arch.r_bool("draw_underlying", false);
 }
 
+void autoconfig_window::go_back() {
+    ui.event(window_info{pos}, get_section(), __func__);
+}
+
 int autoconfig_window::ui_handle_mouse(const mouse *m) {
     ui.begin_widget(pos);
     bool handled = ui::handle_mouse(m);
@@ -109,7 +113,7 @@ int autoconfig_window::ui_handle_mouse(const mouse *m) {
 
     const hotkeys *h = hotkey_state();
     if (input_go_back_requested(m, h)) {
-        ui.event(window_info{ pos }, get_section(), "go_back");
+        go_back();
     }
 
     ui.end_widget();

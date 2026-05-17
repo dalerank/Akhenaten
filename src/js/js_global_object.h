@@ -50,6 +50,7 @@ inline typename std::enable_if<!std::is_enum<T>::value, void>::type
 ank_global_obj_bind_field(js_State *J, js_StringNode name, T *ptr) = delete;
 
 struct vec2i;
+
 void ank_global_obj_bind_field(js_State *J, js_StringNode name, vec2i *ptr);
 
 /** Paste helpers for ANK_GLOBAL_OBJECT (generated from archive.h ANK_CONFIG_STRUCT_PASTE pattern). */

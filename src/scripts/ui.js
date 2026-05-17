@@ -2,6 +2,7 @@ log_info("akhenaten: ui config started")
 
 import ui_common
 import ui_main_menu
+import ui_logo_screen
 import ui_advisors_window
 import ui_terrain_info
 import ui_figure_info

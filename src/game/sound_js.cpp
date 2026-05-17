@@ -23,6 +23,11 @@ static void js_sound_speech_stop(js_State *J) {
     J->pushundefined();
 }
 
+static void js_sound_play_intro(js_State *J) {
+    g_sound.play_intro();
+    J->pushundefined();
+}
+
 void js_register_sound_object(js_State* J) {
     js_getglobal(J, "__game_sound");
     if (J->isobject(-1)) {
@@ -36,5 +41,6 @@ void js_register_sound_object(js_State* J) {
     REGISTER_FUNCTION(J, js_sound_music_stop, "music_stop", 0);
     REGISTER_FUNCTION(J, js_sound_music_update, "music_update", 1);
     REGISTER_FUNCTION(J, js_sound_speech_stop, "speech_stop", 0);
+    REGISTER_FUNCTION(J, js_sound_play_intro, "play_intro", 0);
     js_setglobal(J, "__game_sound");
 }

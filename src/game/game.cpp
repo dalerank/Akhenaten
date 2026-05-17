@@ -32,7 +32,6 @@
 #include "sound/sound.h"
 #include "window/window_city.h"
 #include "window/editor/window_editor.h"
-#include "window/logo_screen.h"
 #include "window/main_menu.h"
 #include "graphics/view/view.h"
 #include "platform/renderer.h"
@@ -390,7 +389,9 @@ bool game_init(game_opts opts) {
         g_sound.play_intro();
         main_menu_screen::show(/*restart_music*/ false);
     } else {
-        window_logo_show(MESSAGE_NONE);
+        game.logo_show_patch_message = 0;
+        g_sound.play_intro();
+        autoconfig_window::show("window_logo");
     }
 
     return true;
