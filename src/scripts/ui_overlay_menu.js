@@ -231,6 +231,10 @@ function overlay_menu_widget_init(window) {
 
 [es=(overlay_menu_widget, ui_draw_foreground)]
 function overlay_menu_widget_ui_draw_foreground(window) {
+	__ui_window_city_draw_panels()
+	__ui_widget_sidebar_city_draw_foreground()
+	__ui_window_city_draw()
+
 	var x_offset = __ui_overlay_menu_viewport_offset_x()
 	var cat = window.category_item
 	var sub_img = window.submenu_image
