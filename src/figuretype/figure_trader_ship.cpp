@@ -2,6 +2,7 @@
 
 #include "figure/figure.h"
 #include "empire/trader_handler.h"
+#include "empire/empire_traders.h"
 #include "figure_shipwreck.h"
 #include "building/building_dock.h"
 #include "game/game.h"
@@ -191,6 +192,20 @@ void figure_trade_ship::on_create() {
 void figure_trade_ship::on_destroy() {
     figure_carrier::on_destroy();
     empire_city().remove_trader(id());
+
+    // Release the empire-side trader slot. complete_trade() only fires when state
+    // reaches estate_returning_home — if the ship dies via kill(), demolished dock,
+    // or any path that skips back_to_city(), is_active stays true forever and the
+    // route fills up to its 2-trader cap with ghosts.
+    auto& trader = g_empire_traders.traders[runtime_data().trader.handle];
+    trader.is_active = false;
+
+    // Release the dock slot. Otherwise the next ship is rejected by
+    // map_get_free_destination_dock (trade_ship != 0 with a dead figure id).
+    auto* dock = destination()->dcast_dock();
+    if (dock && dock->runtime_data().trade_ship == id()) {
+        dock->runtime_data().trade_ship = 0;
+    }
 }
 
 void figure_trade_ship::figure_action() {
@@ -243,6 +258,9 @@ void figure_trade_ship::figure_action() {
         }
 
         if (destination()->state != BUILDING_STATE_VALID) {
+            // Dock demolished mid-approach. Tell the empire-side trader to head home —
+            // otherwise it stays stuck in estate_moving_to_destination with is_active=true.
+            runtime_data().trader.back_to_city();
             advance_action(ACTION_115_TRADE_SHIP_LEAVING, scenario_map_river_exit());
             base.wait_ticks = 0;
         }
@@ -263,6 +281,7 @@ void figure_trade_ship::figure_action() {
             auto &dock = dst->dcast_dock()->runtime_data();
             dock.queued_docker_id = 0;
             dock.num_ships = 0;
+            dock.trade_ship = 0;
         }
 
         switch (destination()->orientation) {
