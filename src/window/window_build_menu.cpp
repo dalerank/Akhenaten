@@ -22,7 +22,6 @@
 #include "game/game.h"
 
 struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
-    virtual int draw_background(UiFlags flags) override;
     virtual void draw_foreground(UiFlags flags) override;
     virtual int ui_handle_mouse(const mouse *m) override;
     virtual int handle_mouse(const mouse *m) override { return 0; }
@@ -75,14 +74,6 @@ struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
 };
 
 build_menu_widget g_build_menuw;
-
-int build_menu_widget::draw_background(UiFlags flags) {
-    autoconfig_window::draw_background(flags);
-
-    window_city_draw_panels();
-
-    return 0;
-}
 
 xstring build_menu_widget::loc_title(e_building_type type, xstring def) {
     const auto &params = building_static_params::get(type);
