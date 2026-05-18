@@ -104,7 +104,7 @@ overlay_menu {
 				// OVERLAY_POTTERY
 				// OVERLAY_JEWELRY
 				// OVERLAY_LINEN
-				// OVERLAY_BEER
+				OVERLAY_BREWERY,
 	    	]
 	    }
 
