@@ -74,6 +74,7 @@ function advisor_monuments_window_init(window) {
 
 [es=(advisor_monuments_window, ui_draw_foreground)]
 function advisor_monuments_window_draw(window) {
+    advisor_window_reflow(window)
     var n = __city_monuments_list_refresh()
     window.no_monuments.enabled = (n <= 0)
 

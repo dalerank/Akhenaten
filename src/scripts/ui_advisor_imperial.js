@@ -209,6 +209,7 @@ function advisor_imperial_window_on_init(window) {
 
 [es=(advisor_imperial_window, ui_draw_foreground)]
 function advisor_imperial_window_draw(window) {
+    advisor_window_reflow(window)
     var totalVis = __imperial_visible_request_count()
     var showDistant = empire.has_distant_battle && empire.dispatched_army.state === 0
     var startReqIdx = showDistant ? 1 : 0

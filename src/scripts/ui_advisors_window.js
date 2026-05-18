@@ -45,9 +45,22 @@ function window_advisors_show_advisor(advisor) {
     return 1
 }
 
+var ADVISOR_BACKGROUND_MODE = "cover" // "cover", "contain", "original"
+var ADVISOR_BACKGROUND_BLURRED_BACKDROP = false
+
 advisor_window_base {
     ui {
-        advisors_backdrop : image({ pack:PACK_UNLOADED, id:11, pos:[sw(-1024)/2, sh(-768)/2] })
+        advisors_backdrop : background({
+            pack:PACK_UNLOADED,
+            id:11,
+            mode:ADVISOR_BACKGROUND_MODE,
+            backdrop_cover_blur:ADVISOR_BACKGROUND_BLURRED_BACKDROP,
+            backdrop_blur_radius:12,
+            backdrop_blur_alpha:255,
+            backdrop_shade_alpha:112,
+            fill_width:true,
+            fill_height:true
+        })
         advisors_strip    : image({ pack:PACK_GENERAL, id:160, pos:[sw(-640)/2, sh(400)/2] })
         labor_btn         : image_button({ pos:[sw(-640)/2 + 12, sh(418)/2], size:[33, 32], pack:PACK_GENERAL, id:159, offset:0, tooltip:[68, 71], onclick: show_advisor_window(ADVISOR_LABOR) })
         military_btn      : image_button({ pos:[sw(-640)/2 + 52, sh(418)/2], size:[39, 32], pack:PACK_GENERAL, id:159, offset:4, tooltip:[68, 72], onclick: show_advisor_window(ADVISOR_MILITARY) })
@@ -94,7 +107,46 @@ function window_advisors_show_checked() {
     }
 }
 
+function advisor_window_reflow(window) {
+    if (!window) {
+        return
+    }
+
+    var frameX = ((screen.width - px(40)) / 2) | 0
+    var frameY = ((screen.height - px(30)) / 2) | 0
+
+    if (window.advisor_area) {
+        window.advisor_area.pos = { x: frameX, y: frameY }
+    }
+
+    if (window.advisors_strip) {
+        window.advisors_strip.pos = { x: frameX, y: frameY + 440 }
+    }
+
+    function set_toolbar_pos(id, dx) {
+        if (window[id]) {
+            window[id].pos = { x: frameX + dx, y: frameY + 449 }
+        }
+    }
+
+    set_toolbar_pos("labor_btn", 12)
+    set_toolbar_pos("military_btn", 52)
+    set_toolbar_pos("imperial_btn", 96)
+    set_toolbar_pos("ratings_btn", 135)
+    set_toolbar_pos("trade_btn", 178)
+    set_toolbar_pos("population_btn", 229)
+    set_toolbar_pos("health_btn", 282)
+    set_toolbar_pos("education_btn", 322)
+    set_toolbar_pos("entertainment_btn", 363)
+    set_toolbar_pos("religion_btn", 406)
+    set_toolbar_pos("financial_btn", 445)
+    set_toolbar_pos("chief_btn", 490)
+    set_toolbar_pos("monuments_btn", 542)
+    set_toolbar_pos("back_btn", 588)
+}
+
 function advisors_toolbar_refresh(window, advisor) {
+    advisor_window_reflow(window)
     game.last_advisor = advisor
 
     window.labor_btn.selected = (ADVISOR_LABOR == advisor)

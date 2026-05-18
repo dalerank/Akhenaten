@@ -137,3 +137,8 @@ advisor_housing_window {
 		})
 	})
 }
+
+[es=(advisor_housing_window, ui_draw_foreground)]
+function advisor_housing_window_reflow(window) {
+	advisor_window_reflow(window)
+}

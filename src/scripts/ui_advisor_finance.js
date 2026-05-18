@@ -127,6 +127,7 @@ function advisor_financial_window_on_init(window) {
 
 [es=(advisor_financial_window, ui_draw_foreground)]
 function advisor_financial_window_on_draw(window) {
+    advisor_window_reflow(window)
     advisor_financial_window_update(window)
     advisor_financial_window_update_incomes(window)
     advisor_financial_window_update_expenses(window)

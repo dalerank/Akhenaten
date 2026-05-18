@@ -123,3 +123,8 @@ function advisor_entertainment_window_init(window) {
 
 	advisors_toolbar_refresh(window, ADVISOR_ENTERTAINMENT)
 }
+
+[es=(advisor_entertainment_window, ui_draw_foreground)]
+function advisor_entertainment_window_reflow(window) {
+	advisor_window_reflow(window)
+}
