@@ -13,9 +13,11 @@ bool god_bast_t::perform_houses_destruction() {
 }
 
 void god_bast_t::perform_major_curse() {
-    // destroy some of the best houses
-    perform_houses_destruction();
-    messages::popup("message_wrath_of_bast", 0, 0);
+    if (perform_houses_destruction()) {
+        messages::popup("message_wrath_of_bast", 0, 0);
+    } else {
+        messages::popup("message_wrath_of_bast_2", 0, 0);
+    }
 }
 
 void god_bast_t::perform_malaria_plague() {
@@ -29,7 +31,7 @@ void god_bast_t::perform_malaria_plague() {
 void god_bast_t::perform_minor_curse() {
     // plague
     perform_malaria_plague();
-    events::emit(event_message_god{ GOD_BAST, "message_bast_is_upset" });
+    events::emit(event_message_god{GOD_BAST, "message_bast_is_upset"});
 }
 
 void god_bast_t::perform_festival_for_other_gods() {
@@ -49,4 +51,3 @@ void god_bast_t::perform_minor_blessing() {
     // throws a festival for the other gods
     perform_festival_for_other_gods();
 }
-
