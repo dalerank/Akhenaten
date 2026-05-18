@@ -3834,10 +3834,10 @@ game_messages_en {
     message_wrath_of_bast_2 {
         id: 335,
         type: 2,
-        
+
         size [30, 20]
         title { text: "Wrath of Bast", }
-        content { text: "placeholder - report this to Ken if it appears" }
+        content { text: "Your city escaped the wrath of Bast -- the goddess sought to level your finest houses, but found no homes worthy of her fury this day. Be wary, nonetheless, of provoking the Goddess of the Home, for she is patient and her memory is long. Show Bast the respect she demands before she returns." }
     }
     message_wrath_of_ra_4 {
         id: 336,
