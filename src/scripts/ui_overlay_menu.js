@@ -142,10 +142,12 @@ function overlay_menu_point_in_rect(mx, my, x, y, w, h) {
 
 overlay_menu_widget {
 	pos [sw(0)-355, 40]
+	allow_rmb_goback: true
 	selected_menu: 0
 	selected_submenu: 0
 	keep_submenu_open: 0
 	ui {
+		background    : dummy({pos[0, 0], size[155, 200]})
 		submenu_image : image({pos[-17, 6], pack:PACK_GENERAL, id:158, enabled:false})
 		submenu_item  : dummy({pos[-185, 24], size[160, 20]}) 
 	}
@@ -180,6 +182,12 @@ overlay_menu_widget.open_submenu = function(index, keep_open) {
 [es=(overlay_menu_widget, init)]
 function overlay_menu_widget_init(window) {
 	overlay_menu_widget.close_submenu()
+}
+
+[es=(overlay_menu_widget, go_back)]
+function overlay_menu_widget_go_back(window) {
+	overlay_menu_widget.close_submenu()
+	window_go_back()
 }
 
 [es=(overlay_menu_widget, ui_draw_foreground)]

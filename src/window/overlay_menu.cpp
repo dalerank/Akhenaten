@@ -8,6 +8,7 @@ struct overlay_menu_widget : public autoconfig_window_t<overlay_menu_widget> {
     virtual void draw_foreground(UiFlags flags) override {}
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }
+    virtual bool is_modal() const override { return true; }
 };
 
 overlay_menu_widget g_overlay_menu_widget;
