@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overlay Menu Goes Script-Driven — Akhenaten</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../devblog.html" class="active">Devblog</a></li>
+        <li><a href="../wiki/index.html">Wiki</a></li>
+        <li><a href="../screenshots.html">Screenshots</a></li>
+        <li><a href="../downloads.html">Downloads</a></li>
+        <li><a href="../contributors.html">Contributors</a></li>
+        <li><a href="../contact.html">Join us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-content post-page">
+    <div class="post-meta"><time>May 18, 2026</time> — <a href="../devblog.html">← Devblog</a></div>
+    <h1>Overlay Menu Goes Script-Driven</h1>
+
+    <img src="../images/overlay-menu-js.png" alt="Overlay menu with categories and submenus" class="post-image" loading="lazy" />
+
+    <p>
+      The overlay menu — the dropdown that lets players switch between city views like Water, Health, Religion, and Food — has been fully migrated from C++ to JavaScript. This continues the ongoing effort to move UI logic out of the engine and into hot-reloadable scripts.
+    </p>
+
+    <h2>What Changed</h2>
+    <ul>
+      <li>Menu drawing, hover detection, and submenu expansion now live in <code>ui_overlay_menu.js</code></li>
+      <li>Category and overlay lists previously hardcoded in C++ structs (<code>overlay_submenu_t</code>, <code>overlay_menu_t</code>) are now defined in script — and removed from <code>overlay_menu.cpp</code></li>
+      <li>Overlay titles are resolved from <code>overlays.js</code> title keys (<code>#overlay_*</code>) in each localization file instead of the old <code>__city_overlay_title</code> string table; all supported languages updated</li>
+      <li>Menu is opened as a JS modal window via the event system and closed on Escape or right-click</li>
+      <li>Positioning uses <code>sw()</code>-based anchoring instead of a viewport-offset C++ binding; mouse hit-testing is now widget-relative</li>
+    </ul>
+
+    <h2>Before: C++ Config Structs</h2>
+    <p>
+      Previously the menu categories and their overlay lists were hardcoded in <code>overlay_menu.cpp</code> as static arrays of <code>overlay_submenu_t</code> structs. Adding a new overlay category or reordering entries required a recompile. Localization was tied to a fixed string table index, making it awkward to add languages.
+    </p>
+
+    <h2>After: JS Event Handlers</h2>
+    <p>
+      The menu is now a regular script-configured widget. Categories and their overlay IDs are plain JS arrays. Opening the menu fires an event; the script listens and renders the popup in place. The C++ side keeps only a thin window shell — no layout, no data, no state.
+    </p>
+    <pre><code>emit event_show_window{ id:"overlay_menu_window" }</code></pre>
+    <p>
+      Submenu state, hover tracking, and overlay selection all happen in script. The overlay title for the sidebar is loaded into <code>city_overlay.title_text</code> so existing C++ callers still work without changes.
+    </p>
+
+    <h2>Localization</h2>
+    <p>
+      All overlay names now use the <code>#overlay_*</code> key convention, consistent with the rest of the localization system. Category labels use <code>#overlay_menu_*</code> keys. All twelve language files have been updated, removing duplicate <code>group-14</code> entries that had accumulated over time.
+    </p>
+
+    <h2>Why This Matters</h2>
+    <p>
+      With the menu in script, modders can add custom overlay categories for new building types without touching engine code. The same hot-reload workflow that already works for building windows and mission screens now applies to the overlay switcher — edit the JS file, press F5 in-game, see the result.
+    </p>
+
+    <div class="post-nav">
+      <span></span>
+      <span></span>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>
