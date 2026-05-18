@@ -20,13 +20,16 @@
 #include "city/city_kingdome_relations.h"
 #include "sound/sound_city.h"
 #include "game/gods.h"
+#include "figuretype/figure_physician.h"
 
 e_advisor_tokens_t ANK_CONFIG_ENUM(e_advisor_tokens);
 e_trade_status_tokens_t ANK_CONFIG_ENUM(e_trade_status_tokens);
 
-js_State *js_vm_state();
-#define _R(name) js_pushnumber(J, name); js_setglobal(J, #name);
-void js_register_game_constants(js_State *J) {
+js_State* js_vm_state();
+#define _R(name)            \
+    js_pushnumber(J, name); \
+    js_setglobal(J, #name);
+void js_register_game_constants(js_State* J) {
     _R(FILE_TYPE_SAVED_GAME)
     _R(FILE_TYPE_SCENARIO)
     _R(e_session_none)
@@ -90,10 +93,11 @@ void js_register_game_constants(js_State *J) {
     _R(ACTION_10_ROAMER_GOING)
     _R(ACTION_125_ROAMER_ROAMING)
     _R(ACTION_126_ROAMER_RETURNING)
+    _R(ACTION_60_PHYSICIAN_CREATED)
 
     _R(MAX_BUILDINGS)
 
-    for (config::EnumIterator *s = config::EnumIterator::tail; s; s = s->next) {
+    for (config::EnumIterator* s = config::EnumIterator::tail; s; s = s->next) {
         s->func({});
     }
 }
@@ -103,9 +107,9 @@ void js_register_token(int id, pcstr name) {
         return; // skip empty names
     }
     auto J = js_vm_state();
-    js_pushnumber(J, id);  // Use js_pushnumber instead of js_newnumber to create primitive number
+    js_pushnumber(J, id); // Use js_pushnumber instead of js_newnumber to create primitive number
     js_setglobal(J, name);
 }
 
-void js_register_menu(js_State *J) {
+void js_register_menu(js_State* J) {
 }
