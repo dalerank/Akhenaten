@@ -34,3 +34,17 @@ function building_apothecary_update_graphic(ev) {
     var animkey = building.can_play_animation ? "work" : "none"
     building.set_animation(animkey)
 }
+
+
+[es=(building_physician, spawn_figure)]
+function building_physician_spawn_figure(ev) {
+    var building = city.get_building(ev.bid)
+    building.common_spawn_roamer(FIGURE_PHYSICIAN, building_physician.min_houses_coverage, ACTION_60_PHYSICIAN_CREATED)
+}
+
+[es=(building_physician, update_graphic)]
+function building_physician_update_graphic(ev) {
+    var building = city.get_building(ev.bid)
+    var animkey = building.can_play_animation ? "work" : "none"
+    building.set_animation(animkey)
+}
