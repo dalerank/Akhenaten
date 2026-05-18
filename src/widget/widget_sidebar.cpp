@@ -19,7 +19,6 @@
 #include "window/window_empire.h"
 #include "window/message_dialog.h"
 #include "window/autoconfig_window.h"
-#include "window/overlay_menu.h"
 #include "widget/widget_top_menu_game.h"
 #include "sound/sound.h"
 #include "game/game.h"

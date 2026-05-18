@@ -105,7 +105,6 @@ ui.line = function(hline, pos, size) {
 ui.window_city_show = __ui_window_city_show
 ui.window_editor_map_show = __ui_window_editor_map_show
 ui.window_message_dialog_show = __ui_window_message_dialog_show
-ui.window_overlay_menu_show = __ui_window_overlay_menu_show
 ui.window_build_menu_show = __ui_window_build_menu_show
 ui.sidebar_set_type = __ui_widget_sidebar_set_type
 ui.scenario_mission_briefing_button_enabled = __ui_scenario_mission_briefing_button_enabled

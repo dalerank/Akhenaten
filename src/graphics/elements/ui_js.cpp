@@ -101,6 +101,21 @@ void __ui_label_colored(pcstr text, vec2i pos, int font, unsigned int c) {
 }
 ANK_FUNCTION_4(__ui_label_colored);
 
+void __ui_window_city_draw_panels() {
+    window_city_draw_panels();
+}
+ANK_FUNCTION(__ui_window_city_draw_panels)
+
+void __ui_widget_sidebar_city_draw_foreground() {
+    widget_sidebar_city_draw_foreground();
+}
+ANK_FUNCTION(__ui_widget_sidebar_city_draw_foreground)
+
+void __ui_window_city_draw() {
+    window_city_draw();
+}
+ANK_FUNCTION(__ui_window_city_draw)
+
 bool __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags, pcstr tooltip) {
     const bool is_underlying = g_window_manager.underlying_windows_redrawing > 0;
     flags |= is_underlying ? UiFlags_Readonly : UiFlags_None;

@@ -140,6 +140,7 @@ function overlay_menu_point_in_rect(mx, my, x, y, w, h) {
 	return mx >= x && mx < x + w && my >= y && my < y + h
 }
 
+[es=modal_window]
 overlay_menu_widget {
 	pos [sw(0)-355, 40]
 	allow_rmb_goback: true
@@ -151,6 +152,10 @@ overlay_menu_widget {
 		submenu_image : image({pos[-17, 6], pack:PACK_GENERAL, id:158, enabled:false})
 		submenu_item  : dummy({pos[-185, 24], size[160, 20]}) 
 	}
+}
+
+overlay_menu_widget.show = function() {
+	emit event_show_window{ id:"overlay_menu_widget" }
 }
 
 overlay_menu_widget.button_menu_item = function(index) {

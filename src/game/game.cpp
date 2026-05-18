@@ -301,7 +301,7 @@ static int get_elapsed_ticks() {
         "window_city_military",
         "window_city_warship",
         "window_sliding_sidebar",
-        "window_overlay_menu",
+        "overlay_menu_widget",
         "window_build_menu",
         "window_editor_map"
     };

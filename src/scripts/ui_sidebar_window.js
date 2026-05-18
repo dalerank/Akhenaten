@@ -93,7 +93,7 @@ sidebar_window_expanded {
 
         show_overlays     : link({
                                pos[4, 30], size[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW
-                               onclick: ui.window_overlay_menu_show
+                               onclick: show_window_by_id("overlay_menu_widget")
                                onrclick: window_city_overlays_right_click
                             })
         collapse          : image_button({pos[128, 30], pack:PACK_GENERAL, id:110, offset:7, tooltip:[68, 10], onclick: __ui_sidebar_expanded_collapse})
