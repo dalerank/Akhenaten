@@ -47,6 +47,16 @@ enum e_place_action {
     CAN_NOT_BUT_GREEN = 2,
 };
 
+struct event_building_change_mode {
+    int16_t pack = 0;
+    int16_t id = 0;
+    int16_t offset = 0;
+};
+
+struct event_build_menu_submenu_changed {
+    int submenu = 0;
+};
+
 class build_planner {
     int tile_graphics_array[30][30] = {};
     int tile_sizes_array[30][30] = {};

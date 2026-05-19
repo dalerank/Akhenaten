@@ -6,6 +6,7 @@
 #include "graphics/elements/ui_js.h"
 #include "mujs/jsi.h"
 #include "mujs/jsvalue.h"
+#include "input/input.h"
 #include "widget/widget_sidebar.h"
 #include "city/city.h"
 #include "overlays/city_overlay.h"
@@ -13,7 +14,6 @@
 #include "graphics/window.h"
 #include "window/window_city.h"
 #include "window/editor/window_editor.h"
-#include "window/window_build_menu.h"
 #include "window/message_dialog_new.h"
 #include "window/window_advisors.h"
 #include "window/window_labor_priority.h"
@@ -110,6 +110,21 @@ void __ui_widget_sidebar_city_draw_foreground() {
     widget_sidebar_city_draw_foreground();
 }
 ANK_FUNCTION(__ui_widget_sidebar_city_draw_foreground)
+
+bool __ui_widget_handle_mouse() {
+    return ui::handle_mouse(&mouse::ref());
+}
+ANK_FUNCTION(__ui_widget_handle_mouse)
+
+bool __ui_widget_sidebar_city_handle_mouse_build_menu() {
+    return widget_sidebar_city_handle_mouse_build_menu(&mouse::ref());
+}
+ANK_FUNCTION(__ui_widget_sidebar_city_handle_mouse_build_menu)
+
+bool __ui_input_go_back_requested() {
+    return input_go_back_requested(&mouse::ref(), hotkey_state());
+}
+ANK_FUNCTION(__ui_input_go_back_requested)
 
 void __ui_window_city_draw() {
     window_city_draw();
@@ -243,10 +258,6 @@ void __ui_draw_texture(vec2i pos, int img_id) {
 }
 ANK_FUNCTION_2(__ui_draw_texture)
 
-void __ui_window_build_menu_show(int id) {
-    window_build_menu_show(id);
-}
-ANK_FUNCTION_1(__ui_window_build_menu_show)
 void __ui_widget_sidebar_set_type(int id) {
     widget_sidebar_set_type(id);
 }

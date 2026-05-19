@@ -14,7 +14,7 @@
 #include "widget/widget_city.h"
 #include "widget/widget_minimap.h"
 #include "widget/sidebar/common.h"
-#include "window/window_build_menu.h"
+#include "building/construction/build_planner.h"
 #include "window/window_city.h"
 #include "window/window_empire.h"
 #include "window/message_dialog.h"
@@ -53,12 +53,18 @@ void ui::sidebar_window_expanded_t::init() {
 
 void ui::sidebar_window_expanded_t::subscribe_events() {
     events::subscribe([this] (event_building_change_mode ev) {
-        image_desc img = ev.img;
+        image_desc img{ ev.pack, ev.id, ev.offset };
         if (img.id == 0 && img.pack == 0) {
             img = def_image;
         }
 
         ui["build_image"].image(img);
+    });
+
+    events::subscribe([this] (event_build_menu_submenu_changed ev) {
+        if (ev.submenu == 0) {
+            opened_menu = 0;
+        }
     });
 }
 
@@ -110,13 +116,9 @@ void ui::sidebar_window_expanded_t::ui_draw_foreground(UiFlags flags) {
         });
     }
 
-    if (!window_build_menu_selected()) {
-        opened_menu = 0;
-    }
-
     ui.pos.x = x_offset;
 
-    const bool is_disabled = !(g_window_manager.window_is("window_city") || g_window_manager.window_is("window_build_menu"));
+    const bool is_disabled = !(g_window_manager.window_is("window_city") || g_window_manager.window_is("build_menu_widget"));
     const UiFlags wflags = is_disabled ? UiFlags_Darkened : UiFlags_None;
 
     ui.begin_widget(pos);
@@ -191,11 +193,7 @@ void ui::sidebar_window_collapsed_t::ui_draw_foreground(UiFlags flags) {
         ui.end_widget();
     }
 
-    if (!window_build_menu_selected()) {
-        sidebar_window_expanded.opened_menu = 0;
-    }
-
-    const bool is_disabled = !(g_window_manager.window_is("window_city") || g_window_manager.window_is("window_build_menu"));
+    const bool is_disabled = !(g_window_manager.window_is("window_city") || g_window_manager.window_is("build_menu_widget"));
     const UiFlags wflags = is_disabled ? UiFlags_Darkened : UiFlags_None;
 
     ui.begin_widget(pos);

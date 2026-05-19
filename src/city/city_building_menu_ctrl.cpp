@@ -278,15 +278,14 @@ void building_menu_ctrl_t::update_temple_complexes() {
             if (temple_has_altar && temple_has_oracle) {
                 toggle_building(BUILDING_MENU_TEMPLE_COMPLEX, false);
             }
-        }    
+        }
 
-        // 
     } else {
         for (const e_building_type type : g_city.buildings.temple_complex_types()) {
             set_visible(type, true);
         }
 
-        building_static_params::for_each([this] (auto &bsp) { 
+        building_static_params::for_each([this] (auto &bsp) {
             if (bsp.needs.altar || bsp.needs.oracle) {
                 set_visible(bsp.type, false);
             }

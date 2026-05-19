@@ -5,6 +5,7 @@
 #include "js/js_events.h"
 
 #include "input/hotkey.h"
+#include "building/construction/build_planner.h"
 #include "game/mission.h"
 #include "building/building_granary.h"
 #include "building/building_storage_yard.h"
@@ -77,6 +78,9 @@ ANK_SCRIPT_EVENT(event_kingdome_update_gifts, personal_savings)
 ANK_SCRIPT_EVENT(event_report_bug_result, ok, url, error)
 ANK_SCRIPT_EVENT(event_draw_debug_properties, reserved)
 ANK_SCRIPT_EVENT(event_rioter_created, id)
+ANK_SCRIPT_EVENT(event_city_building_mode, value)
+ANK_SCRIPT_EVENT(event_building_change_mode, pack, id, offset)
+ANK_SCRIPT_EVENT(event_build_menu_submenu_changed, submenu)
 
 int js_emit_script_event(pcstr event_name, const bvariant_map &args) {
     auto it = g_script_emit_handlers.find(event_name);

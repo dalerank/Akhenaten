@@ -1,4 +1,5 @@
 #include "building.h"
+#include "building_static_params.h"
 
 #include "building_mansion.h"
 #include "grid/building.h"
@@ -12,6 +13,7 @@
 #include "mujs/jsbuiltin.h"
 
 #include <cstdio>
+#include <cstring>
 
 #include "game/game_events.h"
 
@@ -183,6 +185,18 @@ xstring __building_display_name(int bid) {
     return b->cls_name();
 }
 ANK_FUNCTION_1(__building_display_name)
+
+pcstr __building_static_text(int type, pcstr field) {
+    const auto &params = building_static_params::get((e_building_type)type);
+    if (!strcmp(field, "build_menu_text")) {
+        return params.build_menu_text.c_str();
+    }
+    if (!strcmp(field, "info_title_id")) {
+        return params.info_title_id.c_str();
+    }
+    return "";
+}
+ANK_FUNCTION_2(__building_static_text)
 
 void __building_tile_j(js_State *J) {
     const int bid = building_this_id(J);

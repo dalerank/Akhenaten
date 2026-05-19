@@ -302,7 +302,7 @@ static int get_elapsed_ticks() {
         "window_city_warship",
         "window_sliding_sidebar",
         "overlay_menu_widget",
-        "window_build_menu",
+        "build_menu_widget",
         "window_editor_map"
     };
     auto it = std::find_if(std::begin(meaning_windows), std::end(meaning_windows), [] (pcstr id) {
