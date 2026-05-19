@@ -34,8 +34,15 @@ build_menu_widget.init_menu = function(submenu) {
     build_menu_widget.set_submenu(submenu)
     emit event_city_building_mode{ value: BUILDING_NONE }
 
-    __ui_building_menu_update_temple_complexes()
-    build_menu_widget.select_submenu()
+    building_menu_ctrl.update_temple_complexes()
+
+    var submenu = build_menu_widget.selected_submenu
+    for (var i = 0; i < building_menu.length; i++) {
+        if (building_menu[i].id == submenu) {
+            var anim = building_menu[i].anim
+            emit event_building_change_mode{ pack: anim.pack, id: anim.id, offset: anim.offset }
+        }
+    }
 }
 
 build_menu_widget.show = function(submenu) {
@@ -57,7 +64,9 @@ function build_menu_widget_init(window) {
 
 [es=(build_menu_widget, go_back)]
 function build_menu_widget_go_back(window) {
-    build_menu_widget.go_back()
+    build_menu_widget.set_submenu(0)
+    emit event_city_building_mode{ value: BUILDING_NONE }
+    ui.window_city_show()
 }
 
 [event=event_build_menu_submenu_changed]
@@ -65,48 +74,17 @@ function build_menu_widget_on_submenu_changed(ev) {
     build_menu_widget.selected_submenu = ev.submenu
 }
 
-build_menu_widget.menu_image = function(submenu_id) {
-    for (var i = 0; i < building_menu.length; i++) {
-        if (building_menu[i].id == submenu_id) {
-            return building_menu[i].anim
-        }
-    }
-    return null
-}
-
-build_menu_widget.select_submenu = function() {
-    var submenu = build_menu_widget.selected_submenu
-    var id = submenu ? submenu : BUILDING_MENU_VACANT_HOUSE
-    var anim = build_menu_widget.menu_image(id)
-    if (anim) {
-        emit event_building_change_mode{ pack: anim.pack, id: anim.id, offset: anim.offset }
-    }
-}
-
-[es=(build_menu_widget, select_submenu)]
-function build_menu_widget_select_submenu(window) {
-    build_menu_widget.select_submenu()
-}
-
-build_menu_widget.go_back = function() {
-    build_menu_widget.set_submenu(0)
-    emit event_city_building_mode{ value: BUILDING_NONE }
-    ui.window_city_show()
-}
-
 [es=(build_menu_widget, ui_handle_mouse)]
 function build_menu_widget_ui_handle_mouse(window) {
     __ui_widget_sidebar_city_handle_mouse_build_menu()
 }
 
-build_menu_widget.is_all_button = function(type) {
-    var submenu = build_menu_widget.selected_submenu
-    return (type == BUILDING_MENU_TEMPLES && submenu == BUILDING_MENU_TEMPLES)
-        || (type == BUILDING_MENU_TEMPLE_COMPLEX && submenu == BUILDING_MENU_LARGE_TEMPLES)
-}
-
 build_menu_widget.item_label = function(type) {
-    if (build_menu_widget.is_all_button(type)) {
+    var submenu = build_menu_widget.selected_submenu
+    var is_all_button = (type == BUILDING_MENU_TEMPLES && submenu == BUILDING_MENU_TEMPLES)
+                        || (type == BUILDING_MENU_TEMPLE_COMPLEX && submenu == BUILDING_MENU_LARGE_TEMPLES)
+
+    if (is_all_button) {
         return __loc(52, 19)
     }
 
@@ -126,14 +104,14 @@ build_menu_widget.item_label = function(type) {
 build_menu_widget.button_menu_item = function(item) {
     __ui_screen_city_clear_current_tile()
     var submenu = build_menu_widget.selected_submenu
-    var type = __ui_building_menu_item_type(submenu, item)
+    var type = building_menu_ctrl.item_type(submenu, item)
     if (__ui_building_is_unique_built(type)) {
         return
     }
 
     emit event_city_building_mode{ value: type }
 
-    if (__ui_building_menu_is_submenu(type)) {
+    if (building_menu_ctrl.is_submenu(type)) {
         build_menu_widget.set_submenu(type)
         __ui_city_planner_reset()
     } else {
@@ -160,15 +138,15 @@ function build_menu_widget_ui_draw_foreground(window) {
     var btn_w_tot = 256 + build_menu_widget.btn_w_add
     var label_margin = btn_w_tot + build_menu_widget.btn_w_tot_margin
     var submenu = build_menu_widget.selected_submenu
-    var num_items = ui.building_menu_items(submenu)
+    var num_items = building_menu_ctrl.count_items(submenu)
     var y_offset = build_menu_widget.y_menu_offsets[num_items]
     var item = window.item
     var item_index = -1
 
     for (var i = 0; i < num_items; i++) {
-        item_index = __ui_building_menu_next_index(submenu, item_index)
-        var type = __ui_building_menu_item_type(submenu, item_index)
-        if (!__ui_building_menu_is_visible(type)) {
+        item_index = building_menu_ctrl.next_index(submenu, item_index)
+        var type = building_menu_ctrl.item_type(submenu, item_index)
+        if (!building_menu_ctrl.is_visible(type)) {
             continue
         }
 

@@ -9,7 +9,6 @@
 #include "city/city_labor.h"
 #include "city/city_message.h"
 #include "io/gamefiles/lang.h"
-#include "city/city_building_menu_ctrl.h"
 #include "scenario/criteria.h"
 #include "scenario/scenario.h"
 #include "scenario/scenario_invasion.h"
@@ -44,9 +43,6 @@ ANK_FUNCTION(__city_mission_has_won)
 
 pcstr __city_player_name() { return (pcstr)city_player_name; }
 ANK_FUNCTION(__city_player_name)
-
-void __city_use_building(int building_type, bool enabled) { g_building_menu_ctrl.toggle_building((e_building_type)building_type, enabled); }
-ANK_FUNCTION_2(__city_use_building)
 
 int __formation_get_num_forts() { return formation_get_num_forts(); }
 ANK_FUNCTION(__formation_get_num_forts)

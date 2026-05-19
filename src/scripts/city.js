@@ -180,7 +180,6 @@ city {
         least_happy: __city_religion_least_happy_god
     }
 
-    use_building: __city_use_building
     goal_tooltip: function() { return "" }
     set_victory_reason : city_set_victory_reason
     remove_animals : __city_remove_animals
@@ -287,6 +286,10 @@ city.winning = extend(__win_criteria, {
     // => housing_count [goal, enabled]
     // => housing_level [goal, enabled]
 })
+
+city.use_building = function() {
+    building_menu_ctrl.toggle_building
+}
 
 city.get_battalion_by_index = function(index) {
     return {

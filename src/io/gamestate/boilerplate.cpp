@@ -9,7 +9,6 @@
 #include "city/map.h"
 #include "city/city_message.h"
 #include "city/city_hotkeys_handler.h"
-#include "city/city_building_menu_ctrl.h"
 #include "city/military.h"
 #include "city/city_resource.h"
 #include "core/bstring.h"
@@ -242,18 +241,18 @@ static void post_load() {
         g_city.init_campaign_mission();
         g_city.init_mission_resources(g_scenario.init_resources);
         g_city.kingdome.load_scenario(g_scenario.campaign_scenario_id, game.session.last_loaded);
-        g_building_menu_ctrl.setup_mission();
+        events::emit(event_building_menu_update{ "stage_normal" });
         break;
 
     case e_session_save:
-        g_building_menu_ctrl.setup_mission();
+        events::emit(event_building_menu_update{ "stage_normal" });
         break;
 
     case e_session_custom_map:
         g_city.init_custom_map();
         g_city.init_mission_resources(g_scenario.init_resources);
         g_city.kingdome.load_scenario(g_scenario.campaign_scenario_id, game.session.last_loaded);
-        g_building_menu_ctrl.setup_mission();
+        events::emit(event_building_menu_update{ "stage_normal" });
         break;
     }
 

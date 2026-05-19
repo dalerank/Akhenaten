@@ -13,6 +13,7 @@
 #include "city/city_migration.h"
 #include "city/city_health.h"
 #include "city/city_festival.h"
+#include "city/city_religion.h"
 #include "city/city_resource.h"
 #include "scenario/scenario.h"
 #include "city/city_animals.h"
@@ -81,6 +82,9 @@ ANK_SCRIPT_EVENT(event_rioter_created, id)
 ANK_SCRIPT_EVENT(event_city_building_mode, value)
 ANK_SCRIPT_EVENT(event_building_change_mode, pack, id, offset)
 ANK_SCRIPT_EVENT(event_build_menu_submenu_changed, submenu)
+ANK_SCRIPT_EVENT(event_building_menu_update, stage)
+ANK_SCRIPT_EVENT(event_building_menu_changed, temp)
+ANK_SCRIPT_EVENT(event_religion_god_status_update, god, status)
 
 int js_emit_script_event(pcstr event_name, const bvariant_map &args) {
     auto it = g_script_emit_handlers.find(event_name);

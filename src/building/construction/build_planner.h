@@ -57,6 +57,9 @@ struct event_build_menu_submenu_changed {
     int submenu = 0;
 };
 
+struct event_building_menu_update { xstring stage; };
+struct event_building_menu_changed { bool temp; };
+
 class build_planner {
     int tile_graphics_array[30][30] = {};
     int tile_sizes_array[30][30] = {};

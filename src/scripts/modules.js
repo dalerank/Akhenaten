@@ -85,3 +85,4 @@ import malaria_risk
 import player
 import mods
 import empire_map
+import building_menu_ctrl

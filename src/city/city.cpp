@@ -44,7 +44,6 @@
 #include "graphics/view/lookup.h"
 #include "graphics/view/view.h"
 #include "graphics/elements/lang_text.h"
-#include "city/city_building_menu_ctrl.h"
 #include "empire/empire_traders.h"
 #include "scenario/criteria.h"
 #include "graphics/clouds.h"
@@ -93,7 +92,6 @@ void city_t::init() {
     bookmarks.reset();
     common_info_window::register_handlers();
     kingdome.init();
-    g_building_menu_ctrl.init();
 }
 
 void city_t::reload_objects() {

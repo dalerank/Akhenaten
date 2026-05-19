@@ -7,7 +7,6 @@
 
 #include "core/log.h"
 #include "scenario/scenario.h"
-#include "city/city_building_menu_ctrl.h"
 #include "city/city_message.h"
 #include "js/js_game.h"
 

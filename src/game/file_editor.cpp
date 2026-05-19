@@ -5,7 +5,7 @@
 #include "building/building_wall.h"
 #include "city/city.h"
 #include "city/city_message.h"
-#include "city/city_building_menu_ctrl.h"
+#include "game/game_events.h"
 #include "empire/empire_map.h"
 #include "empire/empire_object.h"
 #include "figure/enemy_army.h"
@@ -59,7 +59,7 @@ void game_file_editor_clear_data(void) {
     game_state_init();
     game.animation_timers_init();
     sound_city_init();
-    g_building_menu_ctrl.set_all(true);
+    events::emit(event_building_menu_update{ "enable_all" });
     building_clear_all();
     building_storage_clear_all();
     g_city.figures.init_figures();

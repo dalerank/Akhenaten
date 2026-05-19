@@ -23,7 +23,6 @@
 #include "game/resource.h"
 #include "window/popup_dialog.h"
 #include "city/city_message.h"
-#include "city/city_building_menu_ctrl.h"
 #include "game/undo.h"
 #include "scenario/scenario.h"
 #include "core/log.h"
@@ -609,11 +608,6 @@ js_Object *js_ui_element_proto_for_kind(const xstring &kind) {
     verify_no_crash(false && "UI element prototype not found");
     return nullptr;
 }
-
-int __ui_building_menu_items(int type) {
-    return g_building_menu_ctrl.count_items(type);
-}
-ANK_FUNCTION_1(__ui_building_menu_items)
 
 void __ui_window_message_dialog_show(pcstr template_name) {
     window_message_dialog_show(template_name, -1, nullptr);

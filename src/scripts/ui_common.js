@@ -108,7 +108,6 @@ ui.window_message_dialog_show = __ui_window_message_dialog_show
 ui.sidebar_set_type = __ui_widget_sidebar_set_type
 ui.scenario_mission_briefing_button_enabled = __ui_scenario_mission_briefing_button_enabled
 ui.sidebar_overlay_link_text = __ui_sidebar_overlay_link_text
-ui.building_menu_items = __ui_building_menu_items
 ui.show_yesno = __ui_dialog_show_yesno
 ui.show_ok = __ui_dialog_show_ok
 

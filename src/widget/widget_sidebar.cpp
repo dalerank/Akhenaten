@@ -1,7 +1,6 @@
 #include "widget_sidebar.h"
 #include "dev/debug.h"
 
-#include "city/city_building_menu_ctrl.h"
 #include "core/profiler.h"
 #include "game/state.h"
 #include "graphics/image.h"

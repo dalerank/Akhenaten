@@ -208,31 +208,31 @@ function sidebar_window_draw_background(window) {
     window.clear_land.readonly = false
     window.clear_land.selected = (BUILDING_MENU_CLEAR_LAND == window.opened_menu)
 
-    window.build_food.readonly = (ui.building_menu_items(BUILDING_MENU_FOOD) == 0)
+    window.build_food.readonly = (building_menu_ctrl.count_items(BUILDING_MENU_FOOD) == 0)
     window.build_food.selected = (BUILDING_MENU_FOOD == window.opened_menu)
 
-    window.build_industry.readonly = (ui.building_menu_items(BUILDING_MENU_INDUSTRY) == 0)
+    window.build_industry.readonly = (building_menu_ctrl.count_items(BUILDING_MENU_INDUSTRY) == 0)
     window.build_industry.selected = (BUILDING_MENU_INDUSTRY == window.opened_menu)
 
-    window.build_distribution.readonly = (ui.building_menu_items(BUILDING_MENU_DISTRIBUTION) == 0)
+    window.build_distribution.readonly = (building_menu_ctrl.count_items(BUILDING_MENU_DISTRIBUTION) == 0)
     window.build_distribution.selected = (BUILDING_MENU_DISTRIBUTION == window.opened_menu)
 
-    window.build_entertainment.readonly = (ui.building_menu_items(BUILDING_MENU_ENTERTAINMENT) == 0)
+    window.build_entertainment.readonly = (building_menu_ctrl.count_items(BUILDING_MENU_ENTERTAINMENT) == 0)
     window.build_entertainment.selected = (BUILDING_MENU_ENTERTAINMENT == window.opened_menu)
 
-    window.build_religion.readonly = (ui.building_menu_items(BUILDING_MENU_RELIGION) == 0)
+    window.build_religion.readonly = (building_menu_ctrl.count_items(BUILDING_MENU_RELIGION) == 0)
     window.build_religion.selected = (BUILDING_MENU_RELIGION == window.opened_menu)
 
-    window.build_education.readonly = (ui.building_menu_items(BUILDING_MENU_EDUCATION) == 0)
+    window.build_education.readonly = (building_menu_ctrl.count_items(BUILDING_MENU_EDUCATION) == 0)
     window.build_education.selected = (BUILDING_MENU_EDUCATION == window.opened_menu)
 
-    window.build_health.readonly = (ui.building_menu_items(BUILDING_MENU_HEALTH) == 0)
+    window.build_health.readonly = (building_menu_ctrl.count_items(BUILDING_MENU_HEALTH) == 0)
     window.build_health.selected = (BUILDING_MENU_HEALTH == window.opened_menu)
 
-    window.build_admin.readonly = (ui.building_menu_items(BUILDING_MENU_ADMINISTRATION) == 0)
+    window.build_admin.readonly = (building_menu_ctrl.count_items(BUILDING_MENU_ADMINISTRATION) == 0)
     window.build_admin.selected = (BUILDING_MENU_ADMINISTRATION == window.opened_menu)
 
-    window.build_security.readonly = (ui.building_menu_items(BUILDING_MENU_SECURITY) == 0)
+    window.build_security.readonly = (building_menu_ctrl.count_items(BUILDING_MENU_SECURITY) == 0)
     window.build_security.selected = (BUILDING_MENU_SECURITY == window.opened_menu)
 }
 
