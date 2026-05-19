@@ -141,7 +141,7 @@ building_menu_ctrl.disable_resources = function() {
 }
 
 building_menu_ctrl.enable_correct_palace_tier = function() {
-    var rank = __scenario_player_rank()
+    var rank = scenario.player_rank
     if (rank < 6) {
         building_menu_ctrl.use_building(BUILDING_TOWN_PALACE, false)
         building_menu_ctrl.use_building(BUILDING_CITY_PALACE, false)

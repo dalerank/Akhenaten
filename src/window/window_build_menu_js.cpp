@@ -61,10 +61,6 @@ void __scenario_building_allow(int type, bool enabled) {
 }
 ANK_FUNCTION_2(__scenario_building_allow)
 
-int __scenario_player_rank() {
-    return scenario_property_player_rank();
-}
-ANK_FUNCTION(__scenario_player_rank)
 
 bool __building_static_flag(int type, pcstr flag_name) {
     const auto &flags = building_static_params::get((e_building_type)type).flags;

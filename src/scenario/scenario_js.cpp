@@ -16,7 +16,8 @@ ANK_GLOBAL_OBJECT(g_scenario, __scenario,
     campaign_scenario_id,
     is_open_play,
     subtitle,
-    scmode
+    scmode,
+    player_rank
     );
 
 ANK_GLOBAL_OBJECT(g_scenario.settings, __scenario_settings,
