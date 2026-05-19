@@ -60,10 +60,7 @@ bool building_jewels_workshop::draw_ornaments_and_animations_height(painter &ctx
 }
 
 void building_jewels_workshop::update_graphic() {
-    const xstring &animkey = can_play_animation()
-                                ? animkeys().work
-                                : animkeys().none;
-    set_animation(animkey);
+    update_graphic_work_anim();
 }
 
 int building_jewels_workshop::count_nearby_workshops() const {

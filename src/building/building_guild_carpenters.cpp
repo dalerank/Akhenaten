@@ -121,8 +121,3 @@ void building_carpenters_guild::spawn_figure() {
     }
 }
 
-bool building_carpenters_guild::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    building_impl::draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
-
-    return true;
-}

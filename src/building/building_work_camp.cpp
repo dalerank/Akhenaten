@@ -73,12 +73,6 @@ void building_work_camp::spawn_figure() {
     dest->dcast()->add_workers(f->id);
 }
 
-bool building_work_camp::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    building_impl::draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
-
-    return true;
-}
-
 void building_work_camp::update_graphic() {
     update_graphic_work_anim();
 }
