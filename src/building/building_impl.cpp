@@ -84,6 +84,11 @@ void building_impl::update_graphic() {
     base.minimap_anim = anim("minimap");
 }
 
+void building_impl::update_graphic_work_anim() {
+    set_animation(can_play_animation() ? animkeys().work : animkeys().none);
+    building_impl::update_graphic();
+}
+
 void building_impl::remove_dead_figures() {
     for (int i = 0; i < base.max_figures; i++) {
         figure *f = this->get_figure(i);

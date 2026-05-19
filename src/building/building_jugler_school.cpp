@@ -20,10 +20,7 @@ void building_juggler_school::update_day() {
 }
 
 void building_juggler_school::update_graphic() {
-    const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
-    set_animation(animkey);
-
-    building_impl::update_graphic();
+    update_graphic_work_anim();
 }
 
 void building_juggler_school::spawn_figure() {

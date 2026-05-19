@@ -25,10 +25,7 @@ declare_console_command(addgranite, game_cheat_add_resource<RESOURCE_GRANITE>);
 declare_console_command(addsandstone, game_cheat_add_resource<RESOURCE_SANDSTONE>);
 
 void building_stonemason_guild::update_graphic() {
-    const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
-    set_animation(animkey);
-
-    building_impl::update_graphic();
+    update_graphic_work_anim();
 }
 
 void building_stonemason_guild::on_create(int orientation) {
