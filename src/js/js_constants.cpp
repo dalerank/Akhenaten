@@ -96,6 +96,7 @@ void js_register_game_constants(js_State* J) {
     _R(ACTION_60_PHYSICIAN_CREATED)
 
     _R(MAX_BUILDINGS)
+    _R(BUILDING_MAX)
 
     for (config::EnumIterator* s = config::EnumIterator::tail; s; s = s->next) {
         s->func({});

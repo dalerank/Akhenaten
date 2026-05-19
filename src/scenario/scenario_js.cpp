@@ -62,6 +62,11 @@ bool __scenario_building_allowed(int btype) {
 }
 ANK_FUNCTION_1(__scenario_building_allowed)
 
+void __scenario_building_allow(int type, bool enabled) {
+    scenario_building_allow((e_building_type)type, enabled);
+}
+ANK_FUNCTION_2(__scenario_building_allow)
+
 xstring __scenario_scenario_name() {
     pcstr n = (pcstr)g_scenario.scenario_name;
     return (n && n[0]) ? xstring(n) : xstring();

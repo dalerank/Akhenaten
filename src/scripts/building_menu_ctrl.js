@@ -39,37 +39,45 @@ building_menu_ctrl.is_enabled = function(type) {
 }
 
 building_menu_ctrl.use_building = function(type, en) {
+    if (en == undefined) {
+        en = true
+    }
     building_menu_ctrl.enabled[type] = en
     __scenario_building_allow(type, en)
 
     if (en && !building_menu_ctrl.is_submenu(type)) {
-        if (__building_static_flag(type, "is_farm"))
+        var cfg = get_building_config_by_id(type)
+        var flags = (cfg && cfg.flags) || {}
+
+        if (flags.is_farm)
             building_menu_ctrl.use_building(BUILDING_MENU_FARMS)
-        if (__building_static_flag(type, "is_extractor") || __building_static_flag(type, "is_harvester")) {
+
+        if (flags.is_extractor || flags.is_harvester) {
             building_menu_ctrl.use_building(BUILDING_MENU_RAW_MATERIALS)
             building_menu_ctrl.use_building(BUILDING_MENU_INDUSTRY)
         }
-        if (__building_static_flag(type, "is_workshop"))
+
+        if (flags.is_workshop)
             building_menu_ctrl.use_building(BUILDING_MENU_INDUSTRY)
-        if (__building_static_flag(type, "is_fort"))
+        if (flags.is_fort)
             building_menu_ctrl.use_building(BUILDING_MENU_FORTS)
-        if (__building_static_flag(type, "is_defense"))
+        if (flags.is_defense)
             building_menu_ctrl.use_building(BUILDING_MENU_DEFENSES)
-        if (__building_static_flag(type, "is_shrine"))
+        if (flags.is_shrine)
             building_menu_ctrl.use_building(BUILDING_MENU_SHRINES)
-        if (__building_static_flag(type, "is_temple"))
+        if (flags.is_temple)
             building_menu_ctrl.use_building(BUILDING_MENU_TEMPLES)
-        if (__building_static_flag(type, "is_temple_complex"))
+        if (flags.is_temple_complex)
             building_menu_ctrl.use_building(BUILDING_MENU_TEMPLE_COMPLEX)
-        if (__building_static_flag(type, "is_guild"))
+        if (flags.is_guild)
             building_menu_ctrl.use_building(BUILDING_MENU_CONSTURCTION_GUILDS)
-        if (__building_static_flag(type, "is_beautification"))
+        if (flags.is_beautification)
             building_menu_ctrl.use_building(BUILDING_MENU_BEAUTIFICATION)
-        if (__building_static_flag(type, "is_water_crossing"))
+        if (flags.is_water_crossing)
             building_menu_ctrl.use_building(BUILDING_MENU_WATER_CROSSINGS)
-        if (__building_static_flag(type, "is_monument"))
+        if (flags.is_monument)
             building_menu_ctrl.use_building(BUILDING_MENU_MONUMENTS)
-        if (__building_static_flag(type, "is_education"))
+        if (flags.is_education)
             building_menu_ctrl.use_building(BUILDING_MENU_EDUCATION)
     }
 }
@@ -195,8 +203,7 @@ building_menu_ctrl.update_temple_complexes = function() {
             building_menu_ctrl.set_visible(__city_temple_complex_type_at(i), true)
         }
 
-        var max_type = __building_type_max()
-        for (var t = 0; t < max_type; t++) {
+        for (var t = 0; t < BUILDING_MAX; t++) {
             var cfg = get_building_config_by_id(t)
             if (cfg && cfg.needs && (cfg.needs.altar || cfg.needs.oracle)) {
                 building_menu_ctrl.set_visible(t, false)
@@ -226,8 +233,7 @@ building_menu_ctrl.update = function(stage) {
         building_menu_ctrl.set_all(false)
     } else if (stage == "stage_normal") {
         building_menu_ctrl.set_all(false)
-        var max_type = __building_type_max()
-        for (var i = 0; i < max_type; i++) {
+        for (var i = 0; i < BUILDING_MAX; i++) {
             if (__scenario_building_allowed(i)) {
                 building_menu_ctrl.use_building(i, true)
             }
