@@ -320,7 +320,7 @@ static int get_elapsed_ticks() {
         }
     } else {
         return 0;
-    }    
+    }
 
     if (g_city_planner.in_progress) {
         return 0;

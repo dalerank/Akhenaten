@@ -16,7 +16,7 @@ default_tree_grow {
 custom_missions = [
 	{
 		filename: "Alexandria.map"
-		mission_id: 128		
+		mission_id: 128
 	}
 	{
 		filename: "Bridges.map"

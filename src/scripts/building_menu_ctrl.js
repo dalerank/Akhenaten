@@ -196,7 +196,8 @@ building_menu_ctrl.update_temple_complexes = function() {
 
         var max_type = __building_type_max()
         for (var t = 0; t < max_type; t++) {
-            if (__building_static_needs(t, "altar") || __building_static_needs(t, "oracle")) {
+            var cfg = get_building_config_by_id(t)
+            if (cfg && cfg.needs && (cfg.needs.altar || cfg.needs.oracle)) {
                 building_menu_ctrl.set_visible(t, false)
             }
         }

@@ -1,5 +1,17 @@
 log_info("akhenaten: building info started")
 
+function get_building_config(name) {
+    try {
+        return eval(name)
+    } catch (e) {
+        return undefined
+    }
+}
+
+function get_building_config_by_id(type) {
+    return get_building_config(__building_static_config_name(type))
+}
+
 build_planner_clear_land {
   planner_update_rule {
     is_draggable : true

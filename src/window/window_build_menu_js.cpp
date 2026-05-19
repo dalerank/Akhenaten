@@ -96,13 +96,10 @@ int __building_type_max() {
 }
 ANK_FUNCTION(__building_type_max)
 
-bool __building_static_needs(int type, pcstr field) {
-    const auto &needs = building_static_params::get((e_building_type)type).needs;
-    if (!strcmp(field, "altar"))  return needs.altar;
-    if (!strcmp(field, "oracle")) return needs.oracle;
-    return false;
+pcstr __building_static_config_name(int type) {
+    return building_static_params::get((e_building_type)type).name;
 }
-ANK_FUNCTION_2(__building_static_needs)
+ANK_FUNCTION_1(__building_static_config_name)
 
 bool __city_has_temple_complex() {
     return g_city.buildings.has_temple_complex();
