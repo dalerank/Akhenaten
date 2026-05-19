@@ -84,6 +84,7 @@ ANK_SCRIPT_EVENT(event_building_change_mode, pack, id, offset)
 ANK_SCRIPT_EVENT(event_build_menu_submenu_changed, submenu)
 ANK_SCRIPT_EVENT(event_building_menu_update, stage)
 ANK_SCRIPT_EVENT(event_building_menu_changed, temp)
+ANK_SCRIPT_EVENT(event_use_building, type, en)
 ANK_SCRIPT_EVENT(event_religion_god_status_update, god, status)
 
 int js_emit_script_event(pcstr event_name, const bvariant_map &args) {

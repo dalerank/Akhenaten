@@ -250,12 +250,17 @@ building_menu_ctrl.update = function(stage) {
     emit event_building_menu_changed{ temp: true }
 }
 
-[event=event_building_menu_update]
+[es=event_building_menu_update]
 function building_menu_ctrl_on_update(ev) {
     building_menu_ctrl.update(ev.stage)
 }
 
-[event=event_religion_god_status_update]
+[es=event_religion_god_status_update]
 function building_menu_ctrl_on_god_status(ev) {
     building_menu_ctrl.update_gods_available(ev.god, ev.status != 0)
+}
+
+[es=event_use_building]
+function building_menu_ctrl_on_use_building(ev) {
+    building_menu_ctrl.use_building(ev.type, ev.en)
 }

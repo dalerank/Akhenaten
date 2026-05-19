@@ -287,8 +287,8 @@ city.winning = extend(__win_criteria, {
     // => housing_level [goal, enabled]
 })
 
-city.use_building = function() {
-    building_menu_ctrl.toggle_building
+city.use_building = function(type, en) {
+    emit event_use_building{ type: type, en: en }
 }
 
 city.get_battalion_by_index = function(index) {
