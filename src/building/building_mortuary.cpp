@@ -77,10 +77,7 @@ bool building_mortuary::can_play_animation() const {
 }
 
 void building_mortuary::update_graphic() {
-    const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
-    set_animation(animkey);
-
-    building_impl::update_graphic();
+    update_graphic_work_anim();
 }
 
 bool building_mortuary::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

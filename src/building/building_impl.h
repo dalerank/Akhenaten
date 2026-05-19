@@ -165,6 +165,7 @@ public:
     void common_spawn_labor_seeker(int min_houses);
     bool common_spawn_figure_trigger(int min_houses, int slot = BUILDING_SLOT_SERVICE);
     bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action);
+    void update_graphic_work_anim();
     int max_workers() const;
     int pct_workers() const;
     int get_figure_id(int i) const;

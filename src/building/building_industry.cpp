@@ -71,10 +71,7 @@ bool building_industry::can_play_animation() const {
 }
 
 void building_industry::update_graphic() {
-    const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
-    set_animation(animkey);
-
-    building_impl::update_graphic();
+    update_graphic_work_anim();
 }
 
 void building_industry::production_finished() {

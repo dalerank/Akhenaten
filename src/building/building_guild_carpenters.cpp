@@ -16,10 +16,7 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_carpenters_guild);
 declare_console_command(add_timber, game_cheat_add_resource<RESOURCE_TIMBER>);
 
 void building_carpenters_guild::update_graphic() {
-    const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
-    set_animation(animkey);
-
-    building_impl::update_graphic();
+    update_graphic_work_anim();
 }
 
 void building_carpenters_guild::on_create(int orientation) {
