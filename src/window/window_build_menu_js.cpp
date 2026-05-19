@@ -56,41 +56,6 @@ int __ui_draw_build_menu_button(vec2i pos, vec2i size, int flags) {
 }
 ANK_FUNCTION_3(__ui_draw_build_menu_button)
 
-void __scenario_building_allow(int type, bool enabled) {
-    scenario_building_allow((e_building_type)type, enabled);
-}
-ANK_FUNCTION_2(__scenario_building_allow)
-
-
-bool __building_static_flag(int type, pcstr flag_name) {
-    const auto &flags = building_static_params::get((e_building_type)type).flags;
-    if (!strcmp(flag_name, "is_farm"))           return flags.is_farm;
-    if (!strcmp(flag_name, "is_fort"))           return flags.is_fort;
-    if (!strcmp(flag_name, "is_defense"))        return flags.is_defense;
-    if (!strcmp(flag_name, "is_shrine"))         return flags.is_shrine;
-    if (!strcmp(flag_name, "is_temple"))         return flags.is_temple;
-    if (!strcmp(flag_name, "is_temple_complex")) return flags.is_temple_complex;
-    if (!strcmp(flag_name, "is_guild"))          return flags.is_guild;
-    if (!strcmp(flag_name, "is_beautification")) return flags.is_beautification;
-    if (!strcmp(flag_name, "is_water_crossing")) return flags.is_water_crossing;
-    if (!strcmp(flag_name, "is_monument"))       return flags.is_monument;
-    if (!strcmp(flag_name, "is_education"))      return flags.is_education;
-    if (!strcmp(flag_name, "is_extractor"))      return flags.is_extractor;
-    if (!strcmp(flag_name, "is_harvester"))      return flags.is_harvester;
-    if (!strcmp(flag_name, "is_workshop"))       return flags.is_workshop;
-    return false;
-}
-ANK_FUNCTION_2(__building_static_flag)
-
-int __building_type_max() {
-    return BUILDING_MAX;
-}
-ANK_FUNCTION(__building_type_max)
-
-pcstr __building_static_config_name(int type) {
-    return building_static_params::get((e_building_type)type).name;
-}
-ANK_FUNCTION_1(__building_static_config_name)
 
 bool __city_has_temple_complex() {
     return g_city.buildings.has_temple_complex();

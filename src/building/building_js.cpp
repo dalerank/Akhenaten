@@ -209,6 +209,11 @@ void __building_tile_j(js_State *J) {
     js_helpers::js_push_value(J, b->tile);
 }
 
+pcstr __building_static_config_name(int type) {
+    return building_static_params::get((e_building_type)type).name;
+}
+ANK_FUNCTION_1(__building_static_config_name)
+
 bool __map_road_within_radius(tile2i tile, int size, int radius) {
     return map_closest_road_within_radius(tile, size, radius).valid();
 }
