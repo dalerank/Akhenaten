@@ -161,7 +161,7 @@ building_menu_ctrl.enable_correct_palace_tier = function() {
 }
 
 building_menu_ctrl.update_temple_complexes = function() {
-    if (__gameplay_multiple_temple_complexes()) {
+    if (game_features.gameplay_change_multiple_temple_complexes) {
         return
     }
 
@@ -174,16 +174,17 @@ building_menu_ctrl.update_temple_complexes = function() {
             building_menu_ctrl.set_visible(__city_temple_complex_type_at(i), false)
         }
 
-        var has_altar = __city_temple_complex_has_upgrade(complex_id, 1)
-        var altar_count = __city_temple_complex_allowed_altar_count(complex_id)
+        var complex = new BuildingTempleComplex(complex_id)
+        var has_altar = complex.has_upgrade(1)
+        var altar_count = complex.allowed_altar_count()
         for (var i = 0; i < altar_count; i++) {
-            building_menu_ctrl.set_visible(__city_temple_complex_allowed_altar_at(complex_id, i), !has_altar)
+            building_menu_ctrl.set_visible(complex.allowed_altar_at(i), !has_altar)
         }
 
-        var has_oracle = __city_temple_complex_has_upgrade(complex_id, 2)
-        var oracle_count = __city_temple_complex_allowed_oracle_count(complex_id)
+        var has_oracle = complex.has_upgrade(2)
+        var oracle_count = complex.allowed_oracle_count()
         for (var i = 0; i < oracle_count; i++) {
-            building_menu_ctrl.set_visible(__city_temple_complex_allowed_oracle_at(complex_id, i), !has_oracle)
+            building_menu_ctrl.set_visible(complex.allowed_oracle_at(i), !has_oracle)
         }
 
         if (has_altar && has_oracle) {

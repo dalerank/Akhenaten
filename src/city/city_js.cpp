@@ -344,5 +344,10 @@ std::optional<bvariant> __city_get_house_demands_missing_property(pcstr property
 }
 ANK_FUNCTION_1(__city_get_house_demands_missing_property)
 
+bool __city_can_produce_resource(int resource) {
+    return g_city.can_produce_resource((e_resource)resource);
+}
+ANK_FUNCTION_1(__city_can_produce_resource)
+
 void js_register_city_objects(js_State *J) {
 }

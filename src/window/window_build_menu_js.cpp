@@ -61,11 +61,6 @@ void __scenario_building_allow(int type, bool enabled) {
 }
 ANK_FUNCTION_2(__scenario_building_allow)
 
-bool __city_can_produce_resource(int resource) {
-    return g_city.can_produce_resource((e_resource)resource);
-}
-ANK_FUNCTION_1(__city_can_produce_resource)
-
 int __scenario_player_rank() {
     return scenario_property_player_rank();
 }
@@ -121,40 +116,3 @@ int __city_temple_complex_type_at(int idx) {
     return (idx >= 0 && idx < (int)types.size()) ? (int)types[idx] : 0;
 }
 ANK_FUNCTION_1(__city_temple_complex_type_at)
-
-bool __city_temple_complex_has_upgrade(int id, int upgrade) {
-    auto *b = building_get_ex<building_temple_complex>(id);
-    return b ? b->has_upgrade((e_temple_compex_upgrade)upgrade) : false;
-}
-ANK_FUNCTION_2(__city_temple_complex_has_upgrade)
-
-int __city_temple_complex_allowed_altar_count(int id) {
-    auto *b = building_get_ex<building_temple_complex>(id);
-    return b ? (int)b->base_params().allowed_altar.size() : 0;
-}
-ANK_FUNCTION_1(__city_temple_complex_allowed_altar_count)
-
-int __city_temple_complex_allowed_altar_at(int id, int idx) {
-    auto *b = building_get_ex<building_temple_complex>(id);
-    return (b && idx >= 0 && idx < (int)b->base_params().allowed_altar.size())
-        ? (int)b->base_params().allowed_altar[idx] : 0;
-}
-ANK_FUNCTION_2(__city_temple_complex_allowed_altar_at)
-
-int __city_temple_complex_allowed_oracle_count(int id) {
-    auto *b = building_get_ex<building_temple_complex>(id);
-    return b ? (int)b->base_params().allowed_oracle.size() : 0;
-}
-ANK_FUNCTION_1(__city_temple_complex_allowed_oracle_count)
-
-int __city_temple_complex_allowed_oracle_at(int id, int idx) {
-    auto *b = building_get_ex<building_temple_complex>(id);
-    return (b && idx >= 0 && idx < (int)b->base_params().allowed_oracle.size())
-        ? (int)b->base_params().allowed_oracle[idx] : 0;
-}
-ANK_FUNCTION_2(__city_temple_complex_allowed_oracle_at)
-
-bool __gameplay_multiple_temple_complexes() {
-    return !!game_features::gameplay_change_multiple_temple_complexes;
-}
-ANK_FUNCTION(__gameplay_multiple_temple_complexes)

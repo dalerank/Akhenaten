@@ -86,6 +86,7 @@ game_features {
     @gameopt_clouds_speed {}
     @gameplay_change_random_mine_or_pit_collapses_take_money {}
     @gameopt_display_size {}
+    @gameplay_change_multiple_temple_complexes {}
     @count { get: __game_features_count }
 }
 
