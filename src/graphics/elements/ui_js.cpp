@@ -125,7 +125,7 @@ void __ui_text_abs(pcstr text, vec2i pos, int font) {
 }
 ANK_FUNCTION_3(__ui_text_abs)
 
-bool __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags, pcstr tooltip) {
+int __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags, pcstr tooltip) {
     const bool is_underlying = g_window_manager.underlying_windows_redrawing > 0;
     flags |= is_underlying ? UiFlags_Readonly : UiFlags_None;
     auto& btn = ui::button(text, pos, size, fonts_vec{(e_font)font}, (UiFlags)flags);
@@ -134,12 +134,15 @@ bool __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags, pc
     }
 
     if (is_underlying) {
-        return false;
+        return 0;
     }
 
     int lmb_click = 0;
     generic_buttons_handle_mouse(&mouse::ref(), vec2i{0, 0}, &btn, 1, nullptr, &lmb_click);
-    return !!lmb_click;
+    if (lmb_click) {
+        return 1;
+    }
+    return btn.hovered ? 2 : 0;
 }
 ANK_FUNCTION_6(__ui_draw_button);
 
