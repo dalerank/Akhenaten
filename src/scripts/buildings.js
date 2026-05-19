@@ -12,6 +12,12 @@ function get_building_config_by_id(type) {
     return get_building_config(__building_static_config_name(type))
 }
 
+function building_is_unique_built(type) {
+    var cfg = get_building_config_by_id(type)
+    if (!cfg || !cfg.planner_update_rule || !cfg.planner_update_rule.unique_building) return false
+    return __city_count_total_buildings(type) > 0
+}
+
 build_planner_clear_land {
   planner_update_rule {
     is_draggable : true

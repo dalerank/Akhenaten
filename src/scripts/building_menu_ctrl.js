@@ -45,40 +45,28 @@ building_menu_ctrl.use_building = function(type, en) {
     building_menu_ctrl.enabled[type] = en
     __scenario_building_allow(type, en)
 
+    function show_category(type, en) {
+        if (en) building_menu_ctrl.use_building(type, true)
+    }
+
     if (en && !building_menu_ctrl.is_submenu(type)) {
         var cfg = get_building_config_by_id(type)
         var flags = (cfg && cfg.flags) || {}
 
-        if (flags.is_farm)
-            building_menu_ctrl.use_building(BUILDING_MENU_FARMS)
-
-        if (flags.is_extractor || flags.is_harvester) {
-            building_menu_ctrl.use_building(BUILDING_MENU_RAW_MATERIALS)
-            building_menu_ctrl.use_building(BUILDING_MENU_INDUSTRY)
-        }
-
-        if (flags.is_workshop)
-            building_menu_ctrl.use_building(BUILDING_MENU_INDUSTRY)
-        if (flags.is_fort)
-            building_menu_ctrl.use_building(BUILDING_MENU_FORTS)
-        if (flags.is_defense)
-            building_menu_ctrl.use_building(BUILDING_MENU_DEFENSES)
-        if (flags.is_shrine)
-            building_menu_ctrl.use_building(BUILDING_MENU_SHRINES)
-        if (flags.is_temple)
-            building_menu_ctrl.use_building(BUILDING_MENU_TEMPLES)
-        if (flags.is_temple_complex)
-            building_menu_ctrl.use_building(BUILDING_MENU_TEMPLE_COMPLEX)
-        if (flags.is_guild)
-            building_menu_ctrl.use_building(BUILDING_MENU_CONSTURCTION_GUILDS)
-        if (flags.is_beautification)
-            building_menu_ctrl.use_building(BUILDING_MENU_BEAUTIFICATION)
-        if (flags.is_water_crossing)
-            building_menu_ctrl.use_building(BUILDING_MENU_WATER_CROSSINGS)
-        if (flags.is_monument)
-            building_menu_ctrl.use_building(BUILDING_MENU_MONUMENTS)
-        if (flags.is_education)
-            building_menu_ctrl.use_building(BUILDING_MENU_EDUCATION)
+        var is_harvester = (flags.is_extractor || flags.is_harvester)
+        show_category(BUILDING_MENU_RAW_MATERIALS, is_harvester)
+        show_category(BUILDING_MENU_INDUSTRY, is_harvester || flags.is_workshop)
+        show_category(BUILDING_MENU_FARMS, flags.is_farm)
+        show_category(BUILDING_MENU_FORTS, flags.is_fort)
+        show_category(BUILDING_MENU_DEFENSES, flags.is_defense)
+        show_category(BUILDING_MENU_SHRINES, flags.is_shrine)
+        show_category(BUILDING_MENU_TEMPLES, flags.is_temple)
+        show_category(BUILDING_MENU_TEMPLE_COMPLEX, flags.is_temple_complex)
+        show_category(BUILDING_MENU_CONSTURCTION_GUILDS, flags.is_guild)
+        show_category(BUILDING_MENU_BEAUTIFICATION, flags.is_beautification)
+        show_category(BUILDING_MENU_WATER_CROSSINGS, flags.is_water_crossing)
+        show_category(BUILDING_MENU_MONUMENTS, flags.is_monument)
+        show_category(BUILDING_MENU_EDUCATION, flags.is_education)
     }
 }
 

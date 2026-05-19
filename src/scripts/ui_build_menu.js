@@ -105,7 +105,7 @@ build_menu_widget.button_menu_item = function(item) {
     __ui_screen_city_clear_current_tile()
     var submenu = build_menu_widget.selected_submenu
     var type = building_menu_ctrl.item_type(submenu, item)
-    if (__ui_building_is_unique_built(type)) {
+    if (building_is_unique_built(type)) {
         return
     }
 
@@ -159,7 +159,7 @@ function build_menu_widget_ui_draw_foreground(window) {
         var font = FONT_NORMAL_BLACK_ON_LIGHT
         var btn_flags = UiFlags_PanelSmall
 
-        if (__ui_building_is_unique_built(type)) {
+        if (building_is_unique_built(type)) {
             font = FONT_NORMAL_BLACK_ON_DARK
             btn_flags = btn_flags | UiFlags_Darkened
         }

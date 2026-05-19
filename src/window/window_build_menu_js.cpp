@@ -1,5 +1,4 @@
 #include "building/building.h"
-#include "building/building_static_params.h"
 #include "building/building_temple_complex.h"
 #include "building/construction/build_planner.h"
 #include "graphics/window.h"
@@ -26,14 +25,6 @@ void __ui_city_planner_reset() {
 }
 ANK_FUNCTION(__ui_city_planner_reset)
 
-bool __ui_building_is_unique_built(int type) {
-    const auto &params = building_static_params::get((e_building_type)type);
-    if (!params.planner_update_rule.unique_building) {
-        return false;
-    }
-    return g_city.buildings.count_total((e_building_type)type) > 0;
-}
-ANK_FUNCTION_1(__ui_building_is_unique_built)
 
 int __ui_draw_build_menu_button(vec2i pos, vec2i size, int flags) {
     const bool is_underlying = g_window_manager.underlying_windows_redrawing > 0;
