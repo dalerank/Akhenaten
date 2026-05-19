@@ -2,6 +2,8 @@ log_info("akhenaten: ui build menu started")
 
 [es=modal_window]
 build_menu_widget = {
+    allow_rmb_goback : true
+
     ui : {
         background : dummy({size:[155, 200]})
         item : dummy({size:[-1, 24]})
@@ -94,13 +96,7 @@ build_menu_widget.go_back = function() {
 
 [es=(build_menu_widget, ui_handle_mouse)]
 function build_menu_widget_ui_handle_mouse(window) {
-    if (__ui_widget_handle_mouse()) {
-        return
-    }
     __ui_widget_sidebar_city_handle_mouse_build_menu()
-    if (__ui_input_go_back_requested()) {
-        build_menu_widget.go_back()
-    }
 }
 
 build_menu_widget.is_all_button = function(type) {
@@ -201,7 +197,7 @@ function build_menu_widget_ui_draw_foreground(window) {
         __ui_draw_label_ex(label_str, [btn_pos.x + build_menu_widget.btn_text_w_offset.x, btn_pos.y + build_menu_widget.btn_text_w_offset.y],
             font, UiFlags_None, build_menu_widget.btn_text_w_size.x)
 
-        var cost = __ui_building_menu_cost(type)
+        var cost = (type == BUILDING_MENU_FORTS) ? 0 : __building_static_cost(type)
         if (cost > 0) {
             var cost_x = x_offset + build_menu_widget.btn_w_cost_offset - build_menu_widget.btn_w_tot_offset
             var cost_y = y_offset + build_menu_widget.btn_w_start_pos.y + build_menu_widget.btn_text_w_offset.y + item.size.y * i

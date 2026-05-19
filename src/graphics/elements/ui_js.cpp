@@ -111,25 +111,20 @@ void __ui_widget_sidebar_city_draw_foreground() {
 }
 ANK_FUNCTION(__ui_widget_sidebar_city_draw_foreground)
 
-bool __ui_widget_handle_mouse() {
-    return ui::handle_mouse(&mouse::ref());
-}
-ANK_FUNCTION(__ui_widget_handle_mouse)
-
 bool __ui_widget_sidebar_city_handle_mouse_build_menu() {
     return widget_sidebar_city_handle_mouse_build_menu(&mouse::ref());
 }
 ANK_FUNCTION(__ui_widget_sidebar_city_handle_mouse_build_menu)
 
-bool __ui_input_go_back_requested() {
-    return input_go_back_requested(&mouse::ref(), hotkey_state());
-}
-ANK_FUNCTION(__ui_input_go_back_requested)
-
 void __ui_window_city_draw() {
     window_city_draw();
 }
 ANK_FUNCTION(__ui_window_city_draw)
+
+void __ui_text_abs(pcstr text, vec2i pos, int font) {
+    ui::text_abs(text, pos, (e_font)font, 0);
+}
+ANK_FUNCTION_3(__ui_text_abs)
 
 bool __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags, pcstr tooltip) {
     const bool is_underlying = g_window_manager.underlying_windows_redrawing > 0;

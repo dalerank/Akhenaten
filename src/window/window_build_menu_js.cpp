@@ -54,14 +54,6 @@ bool __ui_building_is_unique_built(int type) {
 }
 ANK_FUNCTION_1(__ui_building_is_unique_built)
 
-int __ui_building_menu_cost(int type) {
-    if (type == BUILDING_MENU_FORTS) {
-        return 0;
-    }
-    return building_static_params::get((e_building_type)type).get_cost();
-}
-ANK_FUNCTION_1(__ui_building_menu_cost)
-
 int __ui_draw_build_menu_button(vec2i pos, vec2i size, int flags) {
     const bool is_underlying = g_window_manager.underlying_windows_redrawing > 0;
     flags |= is_underlying ? UiFlags_Readonly : UiFlags_None;
@@ -82,8 +74,3 @@ int __ui_draw_build_menu_button(vec2i pos, vec2i size, int flags) {
     return btn.hovered ? 2 : 0;
 }
 ANK_FUNCTION_3(__ui_draw_build_menu_button)
-
-void __ui_text_abs(pcstr text, vec2i pos, int font) {
-    ui::text_abs(text, pos, (e_font)font, 0);
-}
-ANK_FUNCTION_3(__ui_text_abs)

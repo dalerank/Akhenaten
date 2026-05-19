@@ -198,6 +198,11 @@ pcstr __building_static_text(int type, pcstr field) {
 }
 ANK_FUNCTION_2(__building_static_text)
 
+int __building_static_cost(int type) {
+    return building_static_params::get((e_building_type)type).get_cost();
+}
+ANK_FUNCTION_1(__building_static_cost)
+
 void __building_tile_j(js_State *J) {
     const int bid = building_this_id(J);
     building* b = building_get(bid);
