@@ -1017,9 +1017,7 @@ void building_storage_yard::spawn_figure() {
 }
 
 void building_storage_yard::update_graphic() {
-    const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
-
-    set_animation(animkey);
+    update_graphic_work_anim();
 }
 
 building_storage_yard *storage_yard_cast(building *b) {
