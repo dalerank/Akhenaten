@@ -139,9 +139,9 @@ localization_ch = [
      { key: "#overlay_ptah", text: "普塔" }
      { key: "#overlay_seth", text: "赛特" }
      { key: "#overlay_bast", text: "巴斯泰特" }
-     { key: "#TR_PALACE_TOOLTIP_UNEMPLOYMENT", text: "Unemployment" }
-     { key: "#TR_PALACE_TOOLTIP_CULTURE_RATING", text: "Culture rating" }
-     { key: "#TR_PALACE_TOOLTIP_PROSPERITY_RATING", text: "Prosperity rating" }
-     { key: "#TR_PALACE_TOOLTIP_MONUMENT_RATING", text: "Monument rating" }
-     { key: "#TR_PALACE_TOOLTIP_KINGDOM_RATING", text: "Kingdom rating" }
+     { key: "#TR_PALACE_TOOLTIP_UNEMPLOYMENT", text: "失業率" }
+     { key: "#TR_PALACE_TOOLTIP_CULTURE_RATING", text: "文化評分" }
+     { key: "#TR_PALACE_TOOLTIP_PROSPERITY_RATING", text: "繁榮評分" }
+     { key: "#TR_PALACE_TOOLTIP_MONUMENT_RATING", text: "紀念碑評分" }
+     { key: "#TR_PALACE_TOOLTIP_KINGDOM_RATING", text: "王國評分" }
 ]

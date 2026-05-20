@@ -136,9 +136,9 @@ localization_en = [
      { key: "#overlay_ptah", text: "프타" }
      { key: "#overlay_seth", text: "세트" }
      { key: "#overlay_bast", text: "바스테트" }
-     { key: "#TR_PALACE_TOOLTIP_UNEMPLOYMENT", text: "Unemployment" }
-     { key: "#TR_PALACE_TOOLTIP_CULTURE_RATING", text: "Culture rating" }
-     { key: "#TR_PALACE_TOOLTIP_PROSPERITY_RATING", text: "Prosperity rating" }
-     { key: "#TR_PALACE_TOOLTIP_MONUMENT_RATING", text: "Monument rating" }
-     { key: "#TR_PALACE_TOOLTIP_KINGDOM_RATING", text: "Kingdom rating" }
+     { key: "#TR_PALACE_TOOLTIP_UNEMPLOYMENT", text: "실업률" }
+     { key: "#TR_PALACE_TOOLTIP_CULTURE_RATING", text: "문화 평점" }
+     { key: "#TR_PALACE_TOOLTIP_PROSPERITY_RATING", text: "번영 평점" }
+     { key: "#TR_PALACE_TOOLTIP_MONUMENT_RATING", text: "기념비 평점" }
+     { key: "#TR_PALACE_TOOLTIP_KINGDOM_RATING", text: "왕국 평점" }
 ]

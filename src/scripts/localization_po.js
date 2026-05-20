@@ -161,9 +161,9 @@ localization_po = [
  { key: "#overlay_ptah", text: "Ptah" }
  { key: "#overlay_seth", text: "Set" }
  { key: "#overlay_bast", text: "Bastet" }
- { key: "#TR_PALACE_TOOLTIP_UNEMPLOYMENT", text: "Unemployment" }
- { key: "#TR_PALACE_TOOLTIP_CULTURE_RATING", text: "Culture rating" }
- { key: "#TR_PALACE_TOOLTIP_PROSPERITY_RATING", text: "Prosperity rating" }
- { key: "#TR_PALACE_TOOLTIP_MONUMENT_RATING", text: "Monument rating" }
- { key: "#TR_PALACE_TOOLTIP_KINGDOM_RATING", text: "Kingdom rating" }
+ { key: "#TR_PALACE_TOOLTIP_UNEMPLOYMENT", text: "Bezrobocie" }
+ { key: "#TR_PALACE_TOOLTIP_CULTURE_RATING", text: "Ocena kultury" }
+ { key: "#TR_PALACE_TOOLTIP_PROSPERITY_RATING", text: "Ocena dobrobytu" }
+ { key: "#TR_PALACE_TOOLTIP_MONUMENT_RATING", text: "Ocena monumentów" }
+ { key: "#TR_PALACE_TOOLTIP_KINGDOM_RATING", text: "Ocena królestwa" }
 ]
