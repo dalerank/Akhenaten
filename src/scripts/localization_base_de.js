@@ -3180,11 +3180,6 @@ localization_base_de = [
     { group:68, id:132, text: "Hier klicken, um zu dieser Problemstelle zu gehen" }
     { group:68, id:133, text: "Geschenk für Ägypten senden" }
     { group:68, id:134, text: "Hier klicken, um die Formation der Kompanie zu ändern" }
-    { group:68, id:135, text: "Arbeitslosigkeit" }
-    { group:68, id:136, text: "Kulturbewertung" }
-    { group:68, id:137, text: "Wohlstandsbewertung" }
-    { group:68, id:138, text: "Monumentbewertung" }
-    { group:68, id:139, text: "Königreichsbewertung" }
     { group:68, id:140, text: "Hier klicken, um Transportbefehle zu erteilen" }
     { group:68, id:141, text: "Hier klicken, um Kriegsschiffbefehle zu erteilen" }
     { group:68, id:142, text: "Steuersatz" }

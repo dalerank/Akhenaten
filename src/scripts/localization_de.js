@@ -1240,4 +1240,9 @@ localization_de = [
   { key: "#overlay_ptah", text: "Ptah" }
   { key: "#overlay_seth", text: "Seth" }
   { key: "#overlay_bast", text: "Bast" }
+  { key: "#TR_PALACE_TOOLTIP_UNEMPLOYMENT", text: "Arbeitslosigkeit" }
+  { key: "#TR_PALACE_TOOLTIP_CULTURE_RATING", text: "Kulturbewertung" }
+  { key: "#TR_PALACE_TOOLTIP_PROSPERITY_RATING", text: "Wohlstandsbewertung" }
+  { key: "#TR_PALACE_TOOLTIP_MONUMENT_RATING", text: "Monumentbewertung" }
+  { key: "#TR_PALACE_TOOLTIP_KINGDOM_RATING", text: "Königreichsbewertung" }
 ]

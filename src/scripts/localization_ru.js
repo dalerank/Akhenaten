@@ -570,4 +570,9 @@ localization_ru = [
     { key: "#overlay_ptah", text: "Птах" }
     { key: "#overlay_seth", text: "Сет" }
     { key: "#overlay_bast", text: "Баст" }
+    { key: "#TR_PALACE_TOOLTIP_UNEMPLOYMENT", text: "Безработица" }
+    { key: "#TR_PALACE_TOOLTIP_CULTURE_RATING", text: "Рейтинг культуры" }
+    { key: "#TR_PALACE_TOOLTIP_PROSPERITY_RATING", text: "Рейтинг процветания" }
+    { key: "#TR_PALACE_TOOLTIP_MONUMENT_RATING", text: "Рейтинг монумента" }
+    { key: "#TR_PALACE_TOOLTIP_KINGDOM_RATING", text: "Рейтинг королевства" }
 ]

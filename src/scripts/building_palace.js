@@ -92,27 +92,27 @@ building_city_palace {
 building_palace_base {
   tooltips [
     function() { return {
-      label:  __loc(68, 135)
+      label:  __loc("#TR_PALACE_TOOLTIP_UNEMPLOYMENT")
       value:  "" + city.labor.unemployment_percentage + "%"
     }}
 
     function() { return {
-      label:  __loc(68, 136)
+      label:  __loc("#TR_PALACE_TOOLTIP_CULTURE_RATING")
       value:  "" + city.rating.culture
     }}
 
     function() { return {
-      label:  __loc(68, 137)
+      label:  __loc("#TR_PALACE_TOOLTIP_PROSPERITY_RATING")
       value:  "" + city.rating.prosperity
     }}
 
     function() { return {
-      label:  __loc(68, 138)
+      label:  __loc("#TR_PALACE_TOOLTIP_MONUMENT_RATING")
       value:  "" + city.rating.monument
     }}
 
     function() { return {
-      label:  __loc(68, 139)
+      label:  __loc("#TR_PALACE_TOOLTIP_KINGDOM_RATING")
       value:  "" + city.rating.kingdom
     }}
   ]

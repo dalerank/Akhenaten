@@ -3175,11 +3175,6 @@ localization_base_en = [
     { group:68, id:132, text: "Click here to go to this trouble spot" }
     { group:68, id:133, text: "Send gift for Egypt" }
     { group:68, id:134, text: "Click here to change the company's formation" }
-    { group:68, id:135, text: "Unemployment" }
-    { group:68, id:136, text: "Culture rating" }
-    { group:68, id:137, text: "Prosperity rating" }
-    { group:68, id:138, text: "Monument rating" }
-    { group:68, id:139, text: "Kingdom rating" }
     { group:68, id:140, text: "Click here to give the transport orders" }
     { group:68, id:141, text: "Click here to give the warship orders" }
     { group:68, id:142, text: "Tax rate" }
