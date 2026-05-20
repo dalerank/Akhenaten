@@ -26,7 +26,9 @@ info_window_raw_material {
     })
 }
 
-function info_window_raw_material_common_init(window) {
+[es=(info_window_raw_material, init)]
+function info_window_raw_material_on_init(window) {
+    log_info("akhenaten: info_window_raw_material_on_init: window.bid = " + window.bid)
     var b = city.get_building(window.bid)
     var reason = { group: b.meta_text_id, id: 10 }
     log_info("akhenaten: info_window_raw_material_common_init: b.type = " + b.type)
@@ -41,10 +43,4 @@ function info_window_raw_material_common_init(window) {
 
     var wdesc = window.workers_desc || (window.inner_panel && window.inner_panel.workers_desc)
     if (wdesc) wdesc.text = __loc(reason.group, reason.id)
-}
-
-[es=(info_window_raw_material, init)]
-function info_window_raw_material_on_init(window) {
-    log_info("akhenaten: info_window_raw_material_on_init: window.bid = " + window.bid)
-    info_window_raw_material_common_init(window)
 }

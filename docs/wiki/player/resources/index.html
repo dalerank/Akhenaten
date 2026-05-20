@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resources — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .cat-section { margin-top: 2.5rem; }
+    .cat-section h2 { font-size: 1.1rem; }
+    .cat-desc { color: var(--text-muted); font-size: 0.85rem; margin: 0.4rem 0 0.75rem; }
+    .bld-note { font-size: 0.75rem; color: var(--text-muted); }
+    .res-table td:nth-child(3) { text-align: left; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="../index.html">&#8592; Player Guide</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Resources</div>
+        <ul>
+          <li><a href="index.html" class="active">All Resources</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Terrain Deposits</div>
+        <ul>
+          <li><a href="ore-deposit.html">Ore Deposit</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#terrain">Terrain Deposits</a></li>
+          <li><a href="#food">Food</a></li>
+          <li><a href="#raw">Raw Materials</a></li>
+          <li><a href="#goods">Manufactured Goods</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        Resources
+      </div>
+
+      <h1>Resources</h1>
+      <p>Resources in Pharaoh fall into four categories: terrain deposits fixed on the map, food goods, raw materials, and manufactured goods. Terrain deposits are the foundation of the extraction economy — no mine or quarry produces anything without them. Food and manufactured goods move through Storage Yards and Granaries and are distributed to housing by Bazaars.</p>
+
+      <!-- ─── Terrain deposits ──────────────────────────────── -->
+      <div class="cat-section">
+        <h2 id="terrain">Terrain Deposits</h2>
+        <p class="cat-desc">
+          Fixed terrain features visible on the map. An extraction building must be placed directly on the deposit to produce the corresponding resource.
+          Deposits are finite — they deplete as the mine operates and are never replenished.
+          See <a href="ore-deposit.html">Ore Deposit</a> for full placement and depletion mechanics.
+        </p>
+        <div class="wiki-table-wrap">
+          <table class="wiki-table res-table">
+            <thead>
+              <tr>
+                <th>Deposit</th>
+                <th>Extractor</th>
+                <th>Resource</th>
+                <th>Delivered to</th>
+                <th class="bld-note">Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="ore-deposit.html#gold">Gold ore</a></td>
+                <td><a href="../buildings/gold-mine.html">Gold Mine</a></td>
+                <td>Gold</td>
+                <td>Palace &#8594; Treasury</td>
+                <td class="bld-note">Converted directly to deben; bypasses Storage Yards</td>
+              </tr>
+              <tr>
+                <td><a href="ore-deposit.html#copper">Copper ore</a></td>
+                <td>Copper Mine</td>
+                <td>Copper</td>
+                <td>Storage Yard</td>
+                <td class="bld-note">Input for Weaponsmith &#8594; Weapons</td>
+              </tr>
+              <tr>
+                <td><a href="ore-deposit.html#gemstone">Gemstone</a></td>
+                <td>Gemstone Mine</td>
+                <td>Gems</td>
+                <td>Storage Yard</td>
+                <td class="bld-note">Input for Jeweler &#8594; Jewelry</td>
+              </tr>
+              <tr>
+                <td>Clay deposit</td>
+                <td>Clay Pit</td>
+                <td>Clay</td>
+                <td>Storage Yard</td>
+                <td class="bld-note">Input for Potter and Brickworks</td>
+              </tr>
+              <tr>
+                <td>Reed marshland</td>
+                <td>Reed Gatherer</td>
+                <td>Reeds</td>
+                <td>Storage Yard</td>
+                <td class="bld-note">Input for Papyrus Maker</td>
+              </tr>
+              <tr>
+                <td>Forest</td>
+                <td>Wood Cutters</td>
+                <td>Timber</td>
+                <td>Storage Yard</td>
+                <td class="bld-note">Input for Chariot Maker and Shipwright</td>
+              </tr>
+              <tr>
+                <td>Stone</td>
+                <td>Stone Quarry</td>
+                <td>Stone</td>
+                <td>Storage Yard</td>
+                <td class="bld-note">Used in monument construction</td>
+              </tr>
+              <tr>
+                <td>Limestone</td>
+                <td>Limestone Quarry</td>
+                <td>Limestone</td>
+                <td>Storage Yard</td>
+                <td class="bld-note">Used in pyramid casing</td>
+              </tr>
+              <tr>
+                <td>Sandstone</td>
+                <td>Sandstone Quarry</td>
+                <td>Sandstone</td>
+                <td>Storage Yard</td>
+                <td class="bld-note">Used in obelisks and temples</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ─── Food ─────────────────────────────────────────── -->
+      <div class="cat-section">
+        <h2 id="food">Food</h2>
+        <p class="cat-desc">
+          Food is produced by farms, hunting lodges, and fishing wharves. It is stored in Granaries and distributed to housing by Bazaars.
+          Most housing tiers require multiple food varieties to evolve further.
+        </p>
+        <div class="wiki-table-wrap">
+          <table class="wiki-table res-table">
+            <thead>
+              <tr><th>Food</th><th>Source</th><th class="bld-note">Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Grain</td><td>Grain Farm</td><td class="bld-note">Also used by Brewery to produce Beer</td></tr>
+              <tr><td>Meat</td><td>Cattle Ranch</td><td class="bld-note"></td></tr>
+              <tr><td>Lettuce</td><td>Lettuce Farm</td><td class="bld-note"></td></tr>
+              <tr><td>Chickpeas</td><td>Chickpea Farm</td><td class="bld-note"></td></tr>
+              <tr><td>Pomegranates</td><td>Pomegranate Farm</td><td class="bld-note"></td></tr>
+              <tr><td>Figs</td><td>Fig Farm</td><td class="bld-note"></td></tr>
+              <tr><td>Game Meat</td><td><a href="../buildings/hunting-lodge.html">Hunting Lodge</a></td><td class="bld-note">Hunter walks out to hunt animals on the map</td></tr>
+              <tr><td>Fish</td><td>Fishing Wharf</td><td class="bld-note">Requires river access</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ─── Raw materials ────────────────────────────────── -->
+      <div class="cat-section">
+        <h2 id="raw">Raw Materials</h2>
+        <p class="cat-desc">
+          Intermediate resources extracted from terrain or farmed, then processed by workshops into manufactured goods.
+          They move between buildings via cartpushers and Storage Yards.
+        </p>
+        <div class="wiki-table-wrap">
+          <table class="wiki-table res-table">
+            <thead>
+              <tr><th>Material</th><th>Source</th><th>Processed by</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Gold</td><td><a href="../buildings/gold-mine.html">Gold Mine</a></td><td>Palace (deben income — no workshop needed)</td></tr>
+              <tr><td>Copper</td><td>Copper Mine</td><td>Weaponsmith &#8594; Weapons</td></tr>
+              <tr><td>Gems</td><td>Gemstone Mine</td><td>Jeweler &#8594; Jewelry</td></tr>
+              <tr><td>Clay</td><td>Clay Pit</td><td>Potter &#8594; Pottery; Brickworks &#8594; Bricks</td></tr>
+              <tr><td>Reeds</td><td>Reed Gatherer</td><td>Papyrus Maker &#8594; Papyrus</td></tr>
+              <tr><td>Timber</td><td>Wood Cutters</td><td>Chariot Maker &#8594; Chariots; Shipwright &#8594; Ships</td></tr>
+              <tr><td>Oil</td><td>Oil Farm</td><td>Lamp Maker &#8594; Lamps</td></tr>
+              <tr><td>Flax</td><td>Flax Farm</td><td>Linen Maker &#8594; Linen</td></tr>
+              <tr><td>Straw</td><td>Grain Farm (byproduct)</td><td>Brickworks (combined with Clay)</td></tr>
+              <tr><td>Stone</td><td>Stone Quarry</td><td>Monument construction</td></tr>
+              <tr><td>Limestone</td><td>Limestone Quarry</td><td>Monument construction (casing)</td></tr>
+              <tr><td>Sandstone</td><td>Sandstone Quarry</td><td>Obelisks, temples</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ─── Manufactured goods ───────────────────────────── -->
+      <div class="cat-section">
+        <h2 id="goods">Manufactured Goods</h2>
+        <p class="cat-desc">
+          Produced in workshops from raw materials. Distributed to housing by Bazaars.
+          Higher housing tiers require more varied goods to continue evolving.
+        </p>
+        <div class="wiki-table-wrap">
+          <table class="wiki-table res-table">
+            <thead>
+              <tr><th>Good</th><th>Producer</th><th>Input</th><th class="bld-note">Consumed by</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Pottery</td><td>Potter Workshop</td><td>Clay</td><td class="bld-note">Housing (via Bazaar)</td></tr>
+              <tr><td>Beer</td><td>Brewery</td><td>Grain</td><td class="bld-note">Housing (via Bazaar)</td></tr>
+              <tr><td>Papyrus</td><td>Papyrus Maker</td><td>Reeds</td><td class="bld-note">Housing (via Bazaar); trade export</td></tr>
+              <tr><td>Linen</td><td>Linen Maker</td><td>Flax</td><td class="bld-note">Housing (via Bazaar); trade export</td></tr>
+              <tr><td>Lamps</td><td>Lamp Maker</td><td>Oil</td><td class="bld-note">Housing (via Bazaar)</td></tr>
+              <tr><td>Bricks</td><td>Brickworks</td><td>Clay + Straw</td><td class="bld-note">Monument construction</td></tr>
+              <tr><td>Weapons</td><td>Weaponsmith</td><td>Copper</td><td class="bld-note">Military forts (infantry, archers)</td></tr>
+              <tr><td>Chariots</td><td>Chariot Maker</td><td>Timber</td><td class="bld-note">Chariot forts</td></tr>
+              <tr><td>Jewelry</td><td>Jeweler</td><td>Gems</td><td class="bld-note">Housing (via Bazaar); trade export</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>

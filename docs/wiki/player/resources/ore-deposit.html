@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ore Deposit — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .orig-screenshots { display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-start; margin: 1rem 0; }
+    .orig-screenshots figure { margin: 0; }
+    .orig-screenshots figcaption { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.3rem; text-align: center; }
+    .orig-screenshots img { display: block; border: 1px solid var(--border); border-radius: 3px; }
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "►"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .kw { color: #c9a84c; } .num { color: #9ecbff; } .str { color: #7ec87e; } .cmt { color: #5a5650; font-style: italic; } .fn { color: #8aabdc; }
+    .file-ref { display: inline-block; font-family: 'Consolas','Courier New',monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .dep-table { width: 100%; border-collapse: collapse; margin: 0.75rem 0 1.5rem; }
+    .dep-table th, .dep-table td { padding: 0.4rem 0.7rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+    .dep-table th { background: var(--bg-card2); color: var(--gold); font-weight: 600; font-size: 0.8rem; }
+    .bld-note { font-size: 0.75rem; color: var(--text-muted); }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+    .res-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .res-nav a { color: var(--gold); }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">&#8592; All Resources</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Terrain Deposits</div>
+        <ul>
+          <li><a href="ore-deposit.html" class="active">Ore Deposit</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#types">Deposit types</a></li>
+          <li><a href="#finding">Finding deposits</a></li>
+          <li><a href="#depletion">Depletion</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Resources</a> /
+        Ore Deposit
+      </div>
+
+      <h1>Ore Deposit</h1>
+      <p>An <strong>ore deposit</strong> is a fixed terrain feature that appears on the map and is the sole source of metal resources in the game. Three types exist: <strong>gold ore</strong>, <strong>copper ore</strong>, and <strong>gemstone</strong>. Each type requires a dedicated extraction building placed directly on the deposit tiles to produce its resource. Deposits are finite and never replenished.</p>
+
+      <!-- ─── Overview ──────────────────────────────────────── -->
+      <h2 id="overview">Overview</h2>
+      <div class="orig-screenshots">
+        <figure>
+          <img src="Cleo_OreRes.webp" alt="Gold ore deposit on the map in Cleopatra: Queen of the Nile" width="298" height="141" />
+          <figcaption>Gold ore deposit — Cleopatra: Queen of the Nile</figcaption>
+        </figure>
+      </div>
+      <p>Ore deposits appear on the map as rocky outcroppings with a distinctive metallic sheen, visually distinguishable from ordinary desert or rocky terrain even without any overlay active. Their position is fixed at mission start and cannot be changed. The placement preview of an extraction building turns green only when all four tiles of its 2×2 footprint land on valid deposit terrain — hovering the cursor is the easiest way to identify deposit boundaries before placing.</p>
+      <p>Unlike farmland, ore deposits do not require any seasonal preparation. They are available from the moment the mission starts, and a mine placed on them will begin producing as soon as workers are assigned.</p>
+
+      <!-- ─── Types ─────────────────────────────────────────── -->
+      <h2 id="types">Deposit types</h2>
+      <table class="dep-table">
+        <thead>
+          <tr>
+            <th>Deposit</th>
+            <th>Extractor</th>
+            <th>Resource</th>
+            <th>Delivered to</th>
+            <th class="bld-note">Use</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="gold">Gold ore</td>
+            <td><a href="../buildings/gold-mine.html">Gold Mine</a></td>
+            <td>Gold</td>
+            <td>Palace</td>
+            <td class="bld-note">Converted to deben income; bypasses Storage Yards entirely</td>
+          </tr>
+          <tr>
+            <td id="copper">Copper ore</td>
+            <td>Copper Mine</td>
+            <td>Copper</td>
+            <td>Storage Yard</td>
+            <td class="bld-note">Input for Weaponsmith &#8594; Weapons for forts</td>
+          </tr>
+          <tr>
+            <td id="gemstone">Gemstone</td>
+            <td>Gemstone Mine</td>
+            <td>Gems</td>
+            <td>Storage Yard</td>
+            <td class="bld-note">Input for Jeweler &#8594; Jewelry for housing and trade</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>All three deposit types share the same fundamental mechanics — 2×2 placement requirement, finite ore, depletion per production tick, and random collapse risk. The key difference is the output path: <strong>gold</strong> bypasses the storage system and is delivered straight to the Palace as treasury income, while <strong>copper</strong> and <strong>gemstones</strong> enter the standard cartpusher-to-storage-yard chain and must then be collected by the relevant workshop.</p>
+
+      <!-- ─── Finding deposits ──────────────────────────────── -->
+      <h2 id="finding">Finding deposits on the map</h2>
+      <p>Deposits are always visible on the default terrain view — no overlay is required to locate them. Look for patches of lighter rocky ground with a metallic texture distinct from the surrounding desert. On zoomed-out views the texture difference is subtle; zoom in to confirm the deposit boundary before placing a mine.</p>
+      <p>The <strong>Raw Materials overlay</strong> (accessible from the info window of any active mine, or via the overlay menu) colour-codes each tile by remaining ore level: bright indicates high reserves, progressively darker shading indicates depletion. Use this overlay to:</p>
+      <ul>
+        <li>Compare multiple deposits when choosing where to place a second mine.</li>
+        <li>Monitor how fast an active mine is consuming its deposit.</li>
+        <li>Identify tiles that are nearly or fully exhausted.</li>
+      </ul>
+
+      <!-- ─── Depletion ─────────────────────────────────────── -->
+      <h2 id="depletion">Depletion</h2>
+      <p>Each day that a mine advances its internal production progress, the underlying ore tile is partially depleted. The depletion amount per day is proportional to the production tick size, which in turn depends on current worker count. A fully staffed mine depletes ore faster than an understaffed one — but produces proportionally more. On most maps a single deposit sustains one mine for many in-game decades; resource-sparse maps or two mines sharing one small deposit will exhaust it much sooner.</p>
+      <p>When a tile's ore value reaches zero the mine becomes idle on that tile. If <em>all four</em> footprint tiles are exhausted the mine stops producing entirely. Demolishing the idle mine and relocating it to a fresh deposit — if one exists on the map — is the only remedy. Deposits are <strong>never replenished</strong>.</p>
+      <p>The optional feature <code>gameplay_change_goldmine_twice_production</code> halves the production divider for Gold Mines, effectively doubling both output and depletion rate for gold ore deposits.</p>
+
+      <!-- ─── Developer reference ───────────────────────────── -->
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">All paths relative to the repository root.</p>
+
+        <details>
+          <summary>Placement requirement — <span class="file-ref">src/scripts/buildings.js</span></summary>
+          <div class="details-body">
+            <p>Ore-based extraction buildings declare terrain requirements in the <code>needs</code> block. Example for the Gold Mine:</p>
+<pre><span class="kw">building_mine_gold</span> {
+  <span class="kw">needs</span> { rock:<span class="kw">true</span>, ore:<span class="kw">true</span> }
+  <span class="cmt">// rock = rocky terrain type required on footprint tiles</span>
+  <span class="cmt">// ore  = non-zero golden value in map tile data required</span>
+}</pre>
+            <p>Copper Mine and Gemstone Mine use identical <code>needs</code> flags. The specific resource produced is determined by <code>output { resource: … }</code> in each building's config block.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Ore tile data — <span class="file-ref">src/grid/</span></summary>
+          <div class="details-body">
+            <p>Per-tile ore values are stored in the map grid and accessed via two functions:</p>
+            <ul>
+              <li><code>map_get_golden(tile)</code> — returns the remaining ore value for a tile (0 = exhausted).</li>
+              <li><code>map_golden_deplete(tile, amount)</code> — reduces the ore value by <code>amount</code>; called each production tick by <code>building_mine_gold::update_production()</code>.</li>
+            </ul>
+            <p>Initial ore values are baked into the map file by the scenario editor. They cannot be modified by scripts at runtime.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Resource enums — <span class="file-ref">src/game/resource.h</span></summary>
+          <div class="details-body">
+<pre><span class="kw">RESOURCE_GOLD</span>   <span class="cmt">// Gold Mine output; delivered to Palace as deben</span>
+<span class="kw">RESOURCE_COPPER</span> <span class="cmt">// Copper Mine output; stored in Storage Yard</span>
+<span class="kw">RESOURCE_GEMS</span>   <span class="cmt">// Gemstone Mine output; stored in Storage Yard</span></pre>
+          </div>
+        </details>
+      </div>
+
+      <div class="res-nav">
+        <span></span>
+        <a href="index.html">All Resources &#8594;</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>

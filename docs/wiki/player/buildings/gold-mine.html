@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gold Mine — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .bld-header-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      margin-bottom: 2rem;
+    }
+    .bld-header-right { display: flex; flex-direction: column; gap: 1rem; }
+    .bld-image-wrap { text-align: center; }
+    .bld-image-wrap img { display: block; border: 1px solid var(--border); border-radius: 3px; image-rendering: pixelated; }
+    .bld-image-wrap figcaption { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.35rem; }
+    .bld-infobox { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.9rem 1.1rem; }
+    .bld-infobox h4 { margin: 0 0 0.6rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold); }
+    .bld-infobox dl { display: grid; grid-template-columns: auto 1fr; gap: 0.2rem 1rem; margin: 0; }
+    .bld-infobox dt { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; padding-top: 0.1rem; }
+    .bld-infobox dd { margin: 0; font-size: 0.85rem; color: var(--text); }
+    .bld-infobox .sep { grid-column: 1/-1; border: none; border-top: 1px solid var(--border); margin: 0.4rem 0; }
+    .bld-stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .bld-stat { text-align: center; }
+    .bld-stat .val { font-size: 1.3rem; font-weight: 700; color: var(--gold); display: block; }
+    .bld-stat .lbl { font-size: 0.7rem; color: var(--text-muted); }
+    .risk-none { color: var(--text-muted); }
+    .des-neg { color: #d07070; }
+    .chain-box {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+      padding: 0.8rem 1.1rem; margin: 1rem 0; display: flex; align-items: center;
+      gap: 0.7rem; font-size: 0.88rem; flex-wrap: wrap;
+    }
+    .chain-box .step { background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.25); border-radius: 3px; padding: 0.3rem 0.7rem; color: var(--text); white-space: nowrap; }
+    .chain-box .step.hub { background: rgba(201,168,76,0.18); border-color: rgba(201,168,76,0.5); font-weight: 700; color: var(--gold); }
+    .chain-box .arrow { color: var(--gold); font-size: 1.1rem; }
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "&#9658;"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .kw { color: #c9a84c; } .num { color: #9ecbff; } .str { color: #7ec87e; } .cmt { color: #5a5650; font-style: italic; } .fn { color: #8aabdc; } .ev { color: #d0a0e0; }
+    .file-ref { display: inline-block; font-family: 'Consolas','Courier New',monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .msg-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+    .msg-table th, .msg-table td { padding: 0.3rem 0.6rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+    .msg-table th { color: var(--text-muted); font-weight: normal; }
+    .bld-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .bld-nav a { color: var(--gold); }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+    .orig-screenshots { display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-start; margin: 1rem 0; }
+    .orig-screenshots figure { margin: 0; }
+    .orig-screenshots figcaption { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.3rem; text-align: center; }
+    .orig-screenshots img { display: block; border: 1px solid var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">&#8592; All Buildings</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Industry</div>
+        <ul>
+          <li><a href="gold-mine.html" class="active">Gold Mine</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#mechanics">Mechanics</a></li>
+          <li><a href="#deposits">Ore deposits</a></li>
+          <li><a href="#depletion">Ore depletion</a></li>
+          <li><a href="#placement">Placement</a></li>
+          <li><a href="#tips">Tips</a></li>
+          <li><a href="#original">Original game</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Buildings</a> /
+        Gold Mine
+      </div>
+
+      <h1>Gold Mine</h1>
+
+      <div class="bld-header-grid">
+        <figure class="bld-image-wrap">
+          <img src="gold-mine.webp" alt="Gold Mine building sprite" width="118" height="63" />
+          <figcaption>Gold Mine · 2×2</figcaption>
+        </figure>
+        <div class="bld-header-right">
+          <div>
+            <p>The <strong>Gold Mine</strong> is an extraction building that harvests gold ore from rocky outcroppings visible on the map. It is the city's only source of <strong>gold</strong>, a resource that is converted directly into deben by the Palace rather than distributed through the storage system. Every deben of gold delivered to the Palace goes straight into the city's treasury.</p>
+            <p>Gold is not merely one commodity among many — it is effectively a second income stream alongside taxation, and is essential for financing large cities and military expenses. Several missions gate key buildings or events behind a cumulative gold income threshold, so establishing mines early is often a top priority.</p>
+            <p>The mine carries a <strong>strong negative desirability</strong> effect that extends well beyond its footprint. It is one of the most undesirable neighbours in the game, comparable to large industrial workshops.</p>
+          </div>
+          <div class="bld-infobox">
+            <h4>Stats</h4>
+            <div class="bld-stat-row" style="margin-bottom:0.9rem">
+              <div class="bld-stat"><span class="val">2×2</span><span class="lbl">Size</span></div>
+              <div class="bld-stat"><span class="val">12</span><span class="lbl">Workers</span></div>
+              <div class="bld-stat"><span class="val des-neg">&#8722;16</span><span class="lbl">Desirability</span></div>
+            </div>
+            <hr class="sep" />
+            <dl>
+              <dt>Cost (Normal)</dt>
+              <dd>150 Db</dd>
+              <dt>Cost by difficulty</dt>
+              <dd style="font-size:0.78rem;color:var(--text-muted)">
+                VE 50 · Easy 100 · <strong style="color:var(--text)">Normal 150</strong> · Hard 250 · VH 400
+              </dd>
+              <dt>Output</dt>
+              <dd>Gold &#8594; Palace (treasury)</dd>
+              <dt>Requires</dt>
+              <dd>Gold ore deposit on footprint tiles</dd>
+              <dt>Labor category</dt>
+              <dd>Industry / Commerce</dd>
+              <dt>Fire risk</dt>
+              <dd class="risk-none">None (fireproof)</dd>
+              <dt>Damage risk</dt>
+              <dd>Low</dd>
+              <dt>Overlay</dt>
+              <dd>Industry <kbd>I</kbd></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Production chain ──────────────────────────────── -->
+      <div class="chain-box">
+        <span class="step">Gold ore deposit (terrain)</span>
+        <span class="arrow">&#8594;</span>
+        <span class="step hub">Gold Mine</span>
+        <span class="arrow">&#8594;</span>
+        <span class="step">Cartpusher delivers gold</span>
+        <span class="arrow">&#8594;</span>
+        <span class="step">Palace &#8594; Treasury (deben)</span>
+      </div>
+
+      <!-- ─── Overview ──────────────────────────────────────── -->
+      <h2 id="overview">Overview</h2>
+      <p>Gold mining was central to the Egyptian economy. The ancient Egyptians worked mines in Nubia, the Eastern Desert, and Sinai — often under gruelling conditions — to supply the royal treasury with the metal that financed monuments, armies, and trade. Unlike most resources, gold was not a trade good in the conventional sense; it flowed upward to the state rather than circulating through markets.</p>
+      <p>In the game this is modelled precisely: gold produced by Gold Mines bypasses the storage yard system entirely and is delivered directly to the Palace, which converts it into deben added to the treasury. The <strong>Industry overlay</strong> (<kbd>I</kbd>) shows the current production state of all mines and workshops; a Gold Mine working at full capacity will show as fully active.</p>
+
+      <!-- ─── Mechanics ─────────────────────────────────────── -->
+      <h2 id="mechanics">Mechanics</h2>
+
+      <h3>Production</h3>
+      <p>The Gold Mine accumulates <em>progress</em> each day based on its current workforce. At full staffing of 12 workers the daily progress increment is:</p>
+      <blockquote style="font-family:monospace;font-size:0.88rem;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:0.6rem 1rem;margin:0.75rem 0">
+        progress_per_day = workers / production_divider = 12 / 10 = 1.2 per day
+      </blockquote>
+      <p>When accumulated progress reaches <strong>200</strong> (<code>progress_max</code>), one batch of gold is produced and progress resets to zero. At full staffing this yields one batch roughly every <strong>167 game days</strong>. The minimum daily increment is 1, so a mine with a single worker still produces — just very slowly.</p>
+      <p>An optional enhanced-edition feature (<code>gameplay_change_goldmine_twice_production</code>) halves the production divider to 5, effectively doubling throughput to one batch every ~83 days at full staffing.</p>
+
+      <h3>Gold delivery</h3>
+      <p>When a batch is ready, a <strong>Cartpusher</strong> figure spawns and carries the gold to the Palace. Unlike all other resources, gold <em>cannot</em> be stored in Storage Yards — the cartpusher's only valid destination is the Palace. If no Palace is reachable via roads, the cartpusher will wander and eventually return, leaving the gold undelivered. Ensure continuous road access between every Gold Mine and the Palace.</p>
+
+      <h3>Mine collapse</h3>
+      <p>Gold Mines — like all extraction buildings — can collapse randomly. With the optional feature <code>gameplay_change_random_mine_or_pit_collapses_take_money</code> enabled, a collapse also levies an emergency fund of <strong>250 deben</strong> from the treasury as a disaster cost. The collapsed building leaves rubble that must be cleared before a new mine can be placed.</p>
+
+      <!-- ─── Ore deposits ─────────────────────────────────────── -->
+      <h2 id="deposits">Ore deposits</h2>
+      <p>Gold ore deposits appear on the map as light rocky outcroppings with a distinctive metallic sheen. The Gold Mine must be placed with all four footprint tiles on valid deposit terrain. For full mechanics — deposit types, Raw Materials overlay, and depletion — see <a href="../resources/ore-deposit.html">Ore Deposit</a>.</p>
+      <div class="orig-screenshots">
+        <figure>
+          <img src="../resources/Cleo_OreRes.webp" alt="Gold ore deposit on the map in Cleopatra: Queen of the Nile" width="298" height="141" />
+          <figcaption>Gold ore deposit — Cleopatra: Queen of the Nile</figcaption>
+        </figure>
+      </div>
+
+      <!-- ─── Ore depletion ──────────────────────────────────── -->
+      <h2 id="depletion">Ore depletion</h2>
+      <p>Gold ore deposits are <strong>finite</strong>. Each day that the mine produces progress, the underlying ore tile is partially depleted. When a tile's ore value reaches zero the mine can no longer extract from it. On most maps a single deposit sustains a mine for many decades of game time, but on resource-sparse maps — or when running multiple mines on the same deposit — depletion can become a limiting factor.</p>
+      <p>The depletion per day is proportional to the progress gained: a faster-producing mine depletes ore faster. The <strong>Raw Materials overlay</strong> accessed from the building info panel shows the remaining ore level. Once the deposit is exhausted the mine becomes idle; demolishing and relocating it to a fresh deposit (if one exists) is the only remedy.</p>
+
+      <!-- ─── Placement ─────────────────────────────────────── -->
+      <h2 id="placement">Placement</h2>
+      <p>The Gold Mine <strong>must be placed directly on a gold ore deposit</strong>. Ore deposits appear as light rocky patches on the terrain; hovering the Gold Mine placement preview over them will show a valid footprint. The mine will not function if placed on ordinary terrain even with road access.</p>
+      <ul>
+        <li>The mine requires <strong>road access</strong> for its cartpusher to deliver gold to the Palace.</li>
+        <li>The mine needs to be within <strong>labor walking range</strong> of a housing cluster — workers commute on foot. If the ore deposit is far from housing, either extend housing toward the mine or ensure a continuous road connecting the two areas.</li>
+        <li>The strong desirability penalty (&#8722;16 at the footprint, affecting tiles up to 6 steps away at step&#8209;size 3) means Gold Mines should be kept well away from residential zones. A buffer of roads, gardens, or open terrain reduces the impact.</li>
+        <li>If a map has multiple ore deposits, prioritise those closest to the Palace road network to minimise cartpusher travel time.</li>
+      </ul>
+
+      <!-- ─── Tips ──────────────────────────────────────────── -->
+      <h2 id="tips">Tips</h2>
+      <ul>
+        <li><strong>Build housing near mines.</strong> Gold ore deposits are often placed far from the starting area. Workers must walk to the mine every day; if the commute is too long the mine will be understaffed and production will crawl. A small housing cluster — even just 2–3 vacant lots with a road connection — close to the mines solves this.</li>
+        <li><strong>Keep a clear road to the Palace.</strong> Gold cartpushers have only one destination. A blocked or missing road segment between the mine and Palace stops gold delivery entirely. Use the road overlay to verify connectivity after placing new buildings.</li>
+        <li><strong>Watch the desirability overlay.</strong> The &#8722;16 penalty is large. Placing a Gold Mine upwind of a housing cluster will stall housing evolution. Use the Desirability overlay before placing to find an isolated spot.</li>
+        <li><strong>Multiple mines on one deposit deplete it faster.</strong> If a map has only one ore patch, spreading two mines across it doubles throughput but also doubles the depletion rate, shortening the effective lifespan of the deposit.</li>
+        <li><strong>Mission thresholds.</strong> Several missions (e.g. Thinis) require a cumulative gold income target to unlock new buildings. Build mines as early as possible in those missions so the threshold is reached before housing evolution stalls.</li>
+      </ul>
+
+      <!-- ─── Original game ─────────────────────────────────── -->
+      <h2 id="original">In the original game</h2>
+      <div class="orig-screenshots">
+        <figure>
+          <img src="gold-mine-rc.webp" alt="Gold Mine right-click info window from the original Pharaoh/Cleopatra" width="300" />
+          <figcaption>Right-click info window (Cleopatra: Queen of the Nile)</figcaption>
+        </figure>
+      </div>
+      <p>In the original Pharaoh and its expansion Cleopatra: Queen of the Nile the Gold Mine behaves identically to the Akhenaten implementation. Gold is the only resource that flows directly to the Palace rather than passing through Storage Yards, and the mine must be placed on a visible rocky ore outcrop. The in-game help text (message ID 93, shared with the Copper Mine) describes gold as "a rare and precious commodity" and explicitly notes that gold never enters the storage yard system.</p>
+
+      <!-- ─── Developer reference ───────────────────────────── -->
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">All paths relative to the repository root.</p>
+
+        <details>
+          <summary>JS config — <span class="file-ref">src/scripts/buildings.js</span></summary>
+          <div class="details-body">
+            <p>Static parameters for the Gold Mine are defined inside <span class="file-ref">src/scripts/buildings.js</span> in the <code>building_mine_gold</code> block:</p>
+<pre><span class="kw">building_mine_gold</span> {
+  <span class="kw">animations</span> {
+    _pack { pack:<span class="str">PACK_GENERAL</span> }
+    preview { id:<span class="num">185</span> }
+    base    { id:<span class="num">185</span> }
+    work    { pos [<span class="num">54</span>, <span class="num">15</span>], pack:<span class="str">PACK_SPR_AMBIENT</span>, internal_offset:<span class="kw">true</span>,
+              id:<span class="num">48</span>, max_frames:<span class="num">16</span>, duration:<span class="num">2</span> }
+  }
+
+  output          { resource: <span class="str">RESOURCE_GOLD</span> }
+  building_size   : <span class="num">2</span>
+  meta            { help_id:<span class="num">93</span>, text_id:<span class="num">162</span> }
+  info_sound      : <span class="str">"Wavs/gold.wav"</span>
+  labor_category  : <span class="str">LABOR_CATEGORY_INDUSTRY_COMMERCE</span>
+
+  needs { rock:<span class="kw">true</span>, ore:<span class="kw">true</span> }
+  flags { is_extractor:<span class="kw">true</span>, is_industry:<span class="kw">true</span> }
+
+  cost            [ <span class="num">50</span>, <span class="num">100</span>, <span class="num">150</span>, <span class="num">250</span>, <span class="num">400</span> ]   <span class="cmt">// VE · Easy · Normal · Hard · VH</span>
+  desirability    { value[<span class="num">-16</span>], step[<span class="num">2</span>], step_size[<span class="num">3</span>], range[<span class="num">6</span>] }
+  laborers        [<span class="num">12</span>]
+  fire_risk       [<span class="num">0</span>]
+  damage_risk     [<span class="num">2</span>]
+  progress_max    : <span class="num">200</span>
+  production_rate : <span class="num">100</span>
+  production_divider : <span class="num">10</span>
+}</pre>
+          </div>
+        </details>
+
+        <details>
+          <summary>JS event handler — <span class="file-ref">src/scripts/building_mine_gold.js</span></summary>
+          <div class="details-body">
+            <p>The only JS event handler for the Gold Mine fires before a collapse:</p>
+<pre><span class="cmt">// src/scripts/building_mine_gold.js</span>
+
+[<span class="ev">es=(building_mine_gold, on_before_collapse)</span>]
+<span class="kw">function</span> <span class="fn">building_mine_gold_on_before_collapse</span>(ev) {
+    <span class="kw">if</span> (!game_features.gameplay_change_random_mine_or_pit_collapses_take_money) {
+        <span class="kw">return</span>
+    }
+    <span class="kw">emit</span> event_finance_request { type: efinance_request_disasters, deben: <span class="num">250</span> }
+}</pre>
+            <p>When the <code>gameplay_change_random_mine_or_pit_collapses_take_money</code> feature flag is active, a collapsing Gold Mine charges 250 deben as a disaster cost before the structure is destroyed.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>C++ — <span class="file-ref">building_mine_gold.h</span> / <span class="file-ref">building_mine_gold.cpp</span></summary>
+          <div class="details-body">
+            <p>The class inherits from <code>building_mine</code> &#8594; <code>building_industry</code> &#8594; <code>building_impl</code>. The only custom static param is <code>production_divider</code>:</p>
+<pre><span class="kw">class</span> <span class="fn">building_mine_gold</span> : <span class="kw">public</span> building_mine {
+<span class="kw">public</span>:
+    BUILDING_METAINFO(<span class="str">BUILDING_GOLD_MINE</span>, building_mine_gold, building_mine)
+
+    <span class="kw">struct</span> <span class="fn">static_params</span> : <span class="kw">public</span> building_static_params {
+        uint16_t production_divider;   <span class="cmt">// default: 10</span>
+    } BUILDING_STATIC_DATA_T;
+
+    <span class="kw">virtual int</span>  <span class="fn">produce_uptick_per_day</span>() <span class="kw">const override</span>;
+    <span class="kw">virtual void</span> <span class="fn">update_production</span>()            <span class="kw">override</span>;
+    <span class="kw">virtual void</span> <span class="fn">production_finished</span>()          <span class="kw">override</span>;
+};</pre>
+            <p>Key method details:</p>
+            <ul>
+              <li><code>produce_uptick_per_day()</code> — returns <code>max(1, workers / divider)</code>. With the <code>gameplay_change_goldmine_twice_production</code> feature the divider is halved first.</li>
+              <li><code>update_production()</code> — scans the 2×2 footprint tiles with <code>map_get_golden()</code>, finds the tile with the most remaining ore, calls <code>building_industry::update_production()</code> to advance progress, then depletes that tile by the progress delta via <code>map_golden_deplete()</code>.</li>
+              <li><code>production_finished()</code> — when <code>progress &gt;= progress_max</code> (200), calls <code>store_resource(RESOURCE_GOLD, ready_production())</code> and resets progress. The stored gold is later picked up by a Cartpusher spawned by the base class.</li>
+            </ul>
+            <p>Enum value: <code>BUILDING_GOLD_MINE = 161</code> (<span class="file-ref">src/building/building_type.h</span> line 140).</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Game message — <span class="file-ref">src/scripts/game_messages_en.js</span></summary>
+          <div class="details-body">
+            <table class="msg-table">
+              <tr><th>Field</th><th>Value</th></tr>
+              <tr><td>Key</td><td><code>message_building_gold_copper_mine</code></td></tr>
+              <tr><td>ID</td><td>93</td></tr>
+              <tr><td>Size</td><td>30 × 28</td></tr>
+              <tr><td>Title</td><td>Gold and Copper Mines</td></tr>
+            </table>
+            <p style="margin-top:0.75rem;font-size:0.82rem;color:var(--text-muted)">
+              This message is shared between the Gold Mine and the Copper Mine. It explains that both mines must be placed on rocky outcroppings with metallic patches, require road access and labor, and are among the most undesirable neighbours in the city. The gold section specifically notes that gold goes directly to the Palace rather than to Storage Yards.
+            </p>
+            <p style="margin-top:0.5rem;font-size:0.82rem;color:var(--text-muted)">
+              The message is shown when the player clicks the help icon on a Gold Mine's info window (<code>help_id: 93</code> in <span class="file-ref">src/scripts/buildings.js</span>).
+            </p>
+          </div>
+        </details>
+      </div><!-- .dev-section -->
+
+      <div class="bld-nav">
+        <span></span>
+        <a href="index.html">All Buildings &#8594;</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>
