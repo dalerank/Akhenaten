@@ -2189,11 +2189,12 @@ void ui::egeneric_button::draw(UiFlags gflags) {
         btn->onrclick(_srfunc);
     }
 
-    if (clickable && is_button_hover(*btn, vec2i{0, 0})) {
+    _hover = is_button_hover(*btn, vec2i{0, 0});
+    if (clickable && _hover) {
         ui::set_tooltip(_tooltip);
     }
 
-    const bool hover_now = clickable && is_button_hover(*btn, vec2i{0, 0});
+    const bool hover_now = clickable && _hover;
     fire_ui_hover_edge(*this, hover_now, _hover_prev);
 
     invoke_draw_callbacks(gflags);

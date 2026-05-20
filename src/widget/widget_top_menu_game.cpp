@@ -34,10 +34,6 @@
 #include "js/js_game.h"
 #include "js/js_struct.h"
 
-static void button_rotate_left(int param1, int param2);
-static void button_rotate_reset(int param1, int param2);
-static void button_rotate_right(int param1, int param2);
-
 struct top_menu_widget_init { vec2i pos; };
 struct top_menu_widget_draw { vec2i pos; };
 struct top_menu_widget_background_draw { vec2i pos;  };
@@ -46,15 +42,6 @@ ANK_REGISTER_STRUCT_WRITER(top_menu_widget_draw, pos);
 ANK_REGISTER_STRUCT_WRITER(top_menu_widget_background_draw, pos);
 
 top_menu_widget_t ANK_VARIABLE(top_menu_widget);
-
-int orientation_button_state = 0;
-int orientation_button_pressed = 0;
-
-static generic_button orientation_buttons_ph[] = {
-    {12, 0, 36 - 24, 21, button_rotate_reset, button_none, 0, 0},
-    {0, 0, 12, 21, button_rotate_left, button_none, 0, 0},
-    {36 - 12, 0, 12, 21, button_rotate_right, button_none, 0, 0},
-};
 
 void top_menu_widget_t::on_mission_start() {
     init();
@@ -86,18 +73,6 @@ void top_menu_widget_t::archive_load(archive arch) {
     for (auto header : headers_elms) {
         header->load_items(arch, header->id, headers.elements);
     }
-}
-
-static void button_rotate_reset(int param1, int param2) {
-    events::emit(event_rotate_map_reset{ 0 });
-}
-
-static void button_rotate_left(int param1, int param2) {
-    events::emit(event_rotate_map{ HOTKEY_ROTATE_MAP_LEFT });
-}
-
-static void button_rotate_right(int param1, int param2) {
-    events::emit(event_rotate_map{ HOTKEY_ROTATE_MAP_RIGHT });
 }
 
 void top_menu_widget_t::draw_elements_impl() {
@@ -276,29 +251,11 @@ void widget_sub_menu_show() {
     window_show(&window);
 }
 
-void top_menu_widget_t::draw_rotate_buttons() {
-    OZZY_PROFILER_FUNCTION();
-
-    // Orientation icon
-    painter ctx = game.painter();
-    if (orientation_button_pressed) {
-        ctx.img_generic(image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state + 3, { offset_rotate, 0 });
-        orientation_button_pressed--;
-    } else {
-        ctx.img_generic(image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state, { offset_rotate, 0 });
-    }
-}
-
 void top_menu_widget_t::draw_foreground(UiFlags flags) {
     OZZY_PROFILER_FUNCTION();
 
     ui.event(top_menu_widget_background_draw{ pos });
     draw_elements_impl();
-    draw_rotate_buttons();
-
-    int s_width = screen_width();
-
-    offset_rotate = s_width - offset_rotate_basic;
 
     // "ui" is the Debens, Population and Date texts
     {
@@ -356,19 +313,6 @@ int widget_top_menu_handle_input(const mouse* m, const hotkeys* h) {
         return 0;
     }
 
-    int button_id = 0;
-    int handled = generic_buttons_handle_mouse(m, { top_menu_widget.offset_rotate, 0}, orientation_buttons_ph, 3, &button_id, nullptr);
-    if (button_id) {
-        orientation_button_state = button_id;
-        if (handled)
-            orientation_button_pressed = 5;
-    } else {
-        orientation_button_state = 0;
-    }
-
-    if (button_id) {
-        return handled ? 1 : 0;
-    }
     if (!!top_menu_widget.open_sub_menu) {
         return top_menu_widget.handle_input_submenu(m, h) ? 1 : 0;
     }

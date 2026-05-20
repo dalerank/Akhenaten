@@ -423,6 +423,7 @@ namespace ui {
         draw_callback _draw_callback;
         bool fill_width = false;
         bool fill_height = false;
+        bool _hover = false;
 
         /** JS registry refs by name (onclick, textfn, …). Max 6 entries. */
         flat_map<xstring, xstring, 6> _js_refs;
@@ -461,6 +462,7 @@ namespace ui {
         virtual int value() const { return 0; }
         virtual void select(bool v) {}
         virtual bool selected() const { return false; }
+        virtual bool hovered() const { return _hover; }
         virtual void max_value(int v) {}
         virtual const xstring& tooltip() const {
             static xstring dummy;

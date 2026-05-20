@@ -34,6 +34,7 @@ void js_register_ui_element_base(js_State *J) {
     def_accessor(J, ui::proxy_get_text_color, ui::proxy_set_text_color, "text_color");
     def_accessor(J, ui::proxy_noop, ui::proxy_set_image, "image");
     def_accessor(J, ui::proxy_get_selected, ui::proxy_set_selected, "selected");
+    def_accessor(J, ui::proxy_get_hovered, ui::proxy_noop, "hovered");
     def_accessor(J, ui::proxy_noop, ui::proxy_set_tooltip, "tooltip");
 
     def_accessor(J, nullptr, ui::proxy_set_onclick, "onclick");

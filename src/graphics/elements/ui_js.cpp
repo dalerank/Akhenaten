@@ -450,9 +450,15 @@ void ui::proxy_set_image_tid(js_State* J) {
     }
     J->pushundefined();
 }
+
 void ui::proxy_get_selected(js_State* J) {
     auto elem = GET_ELEM(J);
     js_pushboolean(J, elem ? elem->selected() : false);
+}
+
+void ui::proxy_get_hovered(js_State* J) {
+    auto elem = GET_ELEM(J);
+    js_pushboolean(J, elem ? elem->hovered() : false);
 }
 
 void ui::proxy_set_selected(js_State* J) {

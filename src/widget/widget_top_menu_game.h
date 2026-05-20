@@ -13,9 +13,6 @@ void widget_top_menu_draw();
 int widget_top_menu_handle_input(const mouse* m, const hotkeys* h);
 
 struct top_menu_widget_t : autoconfig_window {
-    int offset_rotate;
-    int offset_rotate_basic;
-
     xstring open_sub_menu;
     xstring focus_menu_id;
     xstring focus_sub_menu_id;
@@ -39,7 +36,6 @@ struct top_menu_widget_t : autoconfig_window {
     virtual void init() override;
     virtual void on_mission_start() override;
     void draw_elements_impl();
-    void draw_rotate_buttons();
     xstring get_selected_header(const mouse *m);
     xstring bar_handle_mouse(const mouse *m);
     bool handle_input_submenu(const mouse *m, const hotkeys *h);
@@ -54,4 +50,4 @@ struct top_menu_widget_t : autoconfig_window {
     void menu_item_update(pcstr header, int item, pcstr text);
 };
 ANK_CONFIG_STRUCT(top_menu_widget_t,
-    headers, offset, item_height, spacing, offset_rotate_basic, sidebar_offset)
+    headers, offset, item_height, spacing, sidebar_offset)

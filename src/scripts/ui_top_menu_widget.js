@@ -64,7 +64,6 @@ top_menu_widget {
 	background { pack:PACK_GENERAL, id:121, offset:8 }
 	sidebar_offset : 158
 	spacing : 16
-	offset_rotate_basic : 200
 
 	headers {
 		file 			: menu_header({text: "${loc.top_menu_file}", tooltip: "${loc.top_menu_file_tooltip}" })
@@ -161,6 +160,15 @@ top_menu_widget {
 		funds        	: link({margin{right: -440}, size[117, 20]
 							    onrclick: top_menu_funds_explanation
 			                    tooltip[68, 61] })
+
+		rotate_left		: link({ margin{right: -174}, size[14, 24]
+								 onclick:   function() { emit event_rotate_map{ value: HOTKEY_ROTATE_MAP_LEFT } } })
+
+		rotate_reset	: link({ margin{right: -160}, size[14, 24]
+								 onclick:   function() { emit event_rotate_map_reset{ value: 0 } } })
+
+		rotate_right	: link({ margin{right: -144}, size[14, 24],
+								 onclick:   function() { emit event_rotate_map{ value: HOTKEY_ROTATE_MAP_RIGHT } } })
 	}
 }
 
@@ -187,6 +195,17 @@ function top_menu_widget_background_draw(window) {
     }
 
     ui.draw_texture({ x: current_sidebar_offset - block_width + want_sidebar_offset, y: 0 }, block_img.tid)
+
+	var rotate_hover_state = 0
+    if (window.rotate_left.hovered){
+		rotate_hover_state = 2
+	} else if (window.rotate_reset.hovered){
+		rotate_hover_state = 1
+	} else if (window.rotate_right.hovered){
+		rotate_hover_state = 3
+	}
+	var rotate_img = get_image({pack:PACK_GENERAL, id:136, offset:72 + rotate_hover_state })
+	ui.draw_texture({ x: screen.width - 170, y: 0 }, rotate_img.tid)
 }
 
 [es=top_menu_widget_draw]

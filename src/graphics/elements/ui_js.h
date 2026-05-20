@@ -52,6 +52,7 @@ namespace ui {
     void proxy_set_image(js_State* J);
     void proxy_get_image_tid(js_State* J);
     void proxy_set_image_tid(js_State* J);
+    void proxy_get_hovered(js_State* J);
     void proxy_get_selected(js_State* J);
     void proxy_set_selected(js_State* J);
     void proxy_set_tooltip(js_State* J);
