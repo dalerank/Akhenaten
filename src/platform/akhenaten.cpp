@@ -95,10 +95,11 @@ namespace {
 
 static int init_sdl() {
     logs::info("Initializing SDL");
-    Uint32 SDL_flags = SDL_INIT_AUDIO;
+    Uint32 SDL_flags = SDL_INIT_VIDEO;
 
-    // on Vita, need video init only to enable physical kbd/mouse and touch events
-    SDL_flags |= SDL_INIT_VIDEO;
+    if (g_args.use_sound()) {
+        SDL_flags |= SDL_INIT_AUDIO;
+    }
 
 #if defined(__vita__) || defined(__SWITCH__)
     SDL_flags |= SDL_INIT_JOYSTICK;
