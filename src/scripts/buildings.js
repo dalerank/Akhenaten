@@ -742,6 +742,7 @@ building_dentist {
   }
 
   overlay : OVERLAY_DENTIST
+  labor_category : LABOR_CATEGORY_WATER_HEALTH
   min_houses_coverage : 50
   max_serve_clients : 1000
   building_size : 1
@@ -749,7 +750,7 @@ building_dentist {
   info_sound : "Wavs/dentist.wav"
   cost [ 10, 15, 30, 50, 80 ]
   desirability { value[2], step[1], step_size[-1], range[2] }
-  laborers[2]
+  laborers[5]
   fire_risk[4]
   damage_risk[2]
 }
