@@ -138,7 +138,7 @@ int autoconfig_window::draw_background(UiFlags flags) {
         init();
         _is_inited = true;
     }
-    
+
     if (draw_underlying) {
         window_draw_underlying_window(UiFlags_Readonly);
     }

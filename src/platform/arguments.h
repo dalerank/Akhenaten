@@ -84,7 +84,7 @@ public:
     [[nodiscard]] bool should_show_config_window() const { return is("config", false); }
     [[nodiscard]] bool config_file_exists() const { return is("config_file_exists", false); }
     [[nodiscard]] bool should_unpack_scripts() const { return is("unpack_scripts", false); }
-    [[nodiscard]] bool should_run_integral_tests() const { return is("integral_tests", false); }
+    [[nodiscard]] bool is_integral_tests() const { return is("integral_tests", false); }
     [[nodiscard]] bool no_logo() const { return is("no_logo", false); }
     [[nodiscard]] bool no_resource() const { return is("no_resource", false); }
 

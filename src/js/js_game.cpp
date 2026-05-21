@@ -47,11 +47,9 @@
 #include "graphics/elements/ui_js.h"
 #include "window/autoconfig_window.h"
 #include "window/file_dialog_common.h"
-#include "platform/integral_tests.h"
 #include <vector>
 #include <sstream>
 #include <string>
-#include <fstream>
 
 using event_handlers = hvector<xstring, 16>;
 std::unordered_map<xstring, event_handlers> event_type_handlers;
@@ -74,26 +72,7 @@ void js_log_warn_native(js_State *J) {
     J->pushundefined();
 }
 
-void js_test_read_log_file_native(js_State *J) {
-    std::ifstream in(logs::output_path(), std::ios::binary);
-    if (!in) {
-        J->pushstring("");
-        return;
-    }
-    std::string contents((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
-    if (contents.size() >= 3
-        && (unsigned char) contents[0] == 0xEF
-        && (unsigned char) contents[1] == 0xBB
-        && (unsigned char) contents[2] == 0xBF) {
-        contents.erase(0, 3);
-    }
-    J->pushstring(contents.c_str());
-}
-
-void js_test_signal_ready_native(js_State *J) {
-    g_test_signal_ready = true;
-    J->pushundefined();
-}
+// Integraltests-only bindings (__test_*) live in js_test_game.cpp.
 
 void js_loc_native(js_State *J) {
     if (js_isstring(J, 1)) {
@@ -275,7 +254,7 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
 
             case bvariant::etype_vec2i: {
                     const vec2i pos = val.as_vec2i();
-                    js_newvec2i(J, pos.x, pos.y);                    
+                    js_newvec2i(J, pos.x, pos.y);
                 }
                 break;
             case bvariant::etype_none:
@@ -530,8 +509,7 @@ void __game_player_data_new(pcstr name_utf8) {
 void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_log_info_native, "__log_info_native", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_log_warn_native, "__log_warning_native", 1);
-    REGISTER_GLOBAL_FUNCTION(J, js_test_read_log_file_native, "__test_read_log_file", 0);
-    REGISTER_GLOBAL_FUNCTION(J, js_test_signal_ready_native, "__test_signal_ready", 0);
+    // __test_* bindings are auto-registered from js_test_game.cpp via FunctionIterator.
     REGISTER_GLOBAL_FUNCTION(J, js_loc_native, "__loc", 2);
     REGISTER_GLOBAL_FUNCTION(J, js_game_load_text, "load_text", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_get_image, "get_image", 1);

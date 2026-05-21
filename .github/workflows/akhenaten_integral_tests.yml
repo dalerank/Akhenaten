@@ -28,7 +28,7 @@ jobs:
         SDL_VIDEODRIVER: dummy
       run: |
         set +e
-        ./build/akhenaten --integraltests --no-logo --no-resource
+        ./build/akhenaten --integraltests --no-logo --no-resource --window --size 800x600
         echo "rc=$?" >> "$GITHUB_OUTPUT"
         exit 0
     - name: Render summary

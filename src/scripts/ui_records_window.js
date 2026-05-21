@@ -31,6 +31,7 @@ records_window {
 
 [es=(records_window, init)]
 function records_window_on_init(window) {
+    __log_marker("window_show:records_window")
     __highscores_load()
     var count = __highscores_count()
     for (var i = 0; i < 10; i++) {

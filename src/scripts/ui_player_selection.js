@@ -110,5 +110,6 @@ function window_player_selection_on_restore(window) {
 
 [es=(window_player_selection, init)]
 function window_player_selection_on_init(window) {
+   __log_marker("window_show:window_player_selection")
    window_player_selection.need_refresh_list = true
 }

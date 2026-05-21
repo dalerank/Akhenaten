@@ -621,7 +621,7 @@ int main(int argc, char** argv) {
     android_set_startup_log_visible(0);
 #endif
 
-    if (g_args.should_run_integral_tests()) {
+    if (g_args.is_integral_tests()) {
         int rc = run_integral_tests();
         game_imgui_overlay_destroy();
         teardown();
@@ -641,7 +641,7 @@ int main(int argc, char** argv) {
     }
 #else
     while (!g_app.quit) {
-        pump_one_frame();
+        g_app.pump_one_frame();
     }
 #endif
 

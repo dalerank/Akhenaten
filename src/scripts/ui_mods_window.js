@@ -94,6 +94,7 @@ function mods_window_update(window) {
 
 [es=(mods_window, init)]
 function mods_window_on_init(window) {
+    __log_marker("window_show:mods_window")
     window.refresh_mods_text = window.refresh_mods.text
 
     var n = mods.count()
