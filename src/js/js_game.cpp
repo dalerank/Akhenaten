@@ -47,9 +47,11 @@
 #include "graphics/elements/ui_js.h"
 #include "window/autoconfig_window.h"
 #include "window/file_dialog_common.h"
+#include "platform/integral_tests.h"
 #include <vector>
 #include <sstream>
 #include <string>
+#include <fstream>
 
 using event_handlers = hvector<xstring, 16>;
 std::unordered_map<xstring, event_handlers> event_type_handlers;
@@ -69,6 +71,27 @@ void js_log_warn_native(js_State *J) {
     } else {
         logs::info("WARN: %s", js_strnode_cstr(js_tostring(J, 1)));
     }
+    J->pushundefined();
+}
+
+void js_test_read_log_file_native(js_State *J) {
+    std::ifstream in(logs::output_path(), std::ios::binary);
+    if (!in) {
+        J->pushstring("");
+        return;
+    }
+    std::string contents((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+    if (contents.size() >= 3
+        && (unsigned char) contents[0] == 0xEF
+        && (unsigned char) contents[1] == 0xBB
+        && (unsigned char) contents[2] == 0xBF) {
+        contents.erase(0, 3);
+    }
+    J->pushstring(contents.c_str());
+}
+
+void js_test_signal_ready_native(js_State *J) {
+    g_test_signal_ready = true;
     J->pushundefined();
 }
 
@@ -507,6 +530,8 @@ void __game_player_data_new(pcstr name_utf8) {
 void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_log_info_native, "__log_info_native", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_log_warn_native, "__log_warning_native", 1);
+    REGISTER_GLOBAL_FUNCTION(J, js_test_read_log_file_native, "__test_read_log_file", 0);
+    REGISTER_GLOBAL_FUNCTION(J, js_test_signal_ready_native, "__test_signal_ready", 0);
     REGISTER_GLOBAL_FUNCTION(J, js_loc_native, "__loc", 2);
     REGISTER_GLOBAL_FUNCTION(J, js_game_load_text, "load_text", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_get_image, "get_image", 1);

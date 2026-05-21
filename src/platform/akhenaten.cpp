@@ -545,7 +545,7 @@ static void handle_event(SDL_Event* event, bool& active, bool& quit) {
     }
 }
 
-static void main_loop() {
+void application_t::pump_one_frame() {
     SDL_Event event;
 #ifdef PLATFORM_ENABLE_PER_FRAME_CALLBACK
     platform_per_frame_callback();
@@ -561,15 +561,15 @@ static void main_loop() {
 #endif
         bool handled_imgui = game_imgui_overlay_handle_event(&event);
         if (!handled_imgui) {
-            handle_event(&event, g_app.active, g_app.quit);
+            handle_event(&event, active, quit);
         }
     }
 
-    if (g_app.quit) {
+    if (quit) {
         return;
     }
 
-    if (g_app.active) {
+    if (active) {
         run_and_draw();
     } else {
         SDL_WaitEvent(NULL);
@@ -621,20 +621,27 @@ int main(int argc, char** argv) {
     android_set_startup_log_visible(0);
 #endif
 
+    if (g_args.should_run_integral_tests()) {
+        int rc = run_integral_tests();
+        game_imgui_overlay_destroy();
+        teardown();
+        return rc;
+    }
+
 #ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop(main_loop, 0, 1);
+    emscripten_set_main_loop(pump_one_frame, 0, 1);
 #elif defined(GAME_PLATFORM_WIN)
     LONG CALLBACK debug_sehgilter(PEXCEPTION_POINTERS pExceptionPointers);
     __try {
         while (!g_app.quit) {
-            main_loop();
+            g_app.pump_one_frame();
         }
     } __except (debug_sehgilter(GetExceptionInformation())) {
         return 0;
     }
 #else
     while (!g_app.quit) {
-        main_loop();
+        pump_one_frame();
     }
 #endif
 

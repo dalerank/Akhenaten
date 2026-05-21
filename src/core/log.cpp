@@ -28,6 +28,7 @@ namespace {
 
 pcstr logger_filename_ = "akhenaten-log.txt";
 static std::fstream logger_file_stream_;
+static std::string logger_active_path_ = "akhenaten-log.txt";
 
 const std::unordered_map<std::string, SDL_LogPriority> PRIORITY_DICT = {
     {"verbose", SDL_LOG_PRIORITY_VERBOSE},
@@ -116,11 +117,16 @@ void switch_output(pcstr folder) {
     logger_file_stream_.close();
 
     bstring256 filename(folder, "/", logger_filename_);
+    logger_active_path_ = filename.c_str();
     logger_file_stream_.open(filename, std::fstream::out | std::fstream::trunc | std::fstream::binary);
     if (logger_file_stream_.is_open()) {
         const unsigned char bom[] = { 0xEF, 0xBB, 0xBF };
         logger_file_stream_.write(reinterpret_cast<const char*>(bom), sizeof(bom));
     }
+}
+
+pcstr output_path() {
+    return logger_active_path_.c_str();
 }
 
 } // namespace logs

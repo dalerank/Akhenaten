@@ -277,6 +277,14 @@ static js_StringNode property_name = js_intern("name");
 static js_StringNode property_message = js_intern("message");
 
 int js_vm_trypcall(js_State *J, int params) {
+    int ok = js_vm_trypcall_keep_result(J, params);
+    if (ok) {
+        js_pop(J, 1);
+    }
+    return ok;
+}
+
+int js_vm_trypcall_keep_result(js_State *J, int params) {
     if (vm.have_error) {
         return 0;
     }
@@ -325,12 +333,25 @@ int js_vm_trypcall(js_State *J, int params) {
         return 0;
     }
 
-    js_pop(J, 1);
     return 1;
 }
 
 bool js_vm_have_error() {
     return vm.have_error;
+}
+
+void js_vm_reset_error() {
+    vm.have_error = 0;
+}
+
+bool js_vm_global_is_callable(js_State *J, const char *name) {
+    if (!J || !name) {
+        return false;
+    }
+    js_getglobal(J, name);
+    bool ok = J->iscallable(-1);
+    js_pop(J, 1);
+    return ok;
 }
 
 static void copy_js_value_text(js_State *J, js_Value *v, char *out, size_t outsz) {

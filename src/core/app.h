@@ -40,8 +40,8 @@ struct application_t {
     void subscribe_events();
     void register_modules();
 
-
     void register_keyboard_event_handler(event_handler_cb);
+    void pump_one_frame();
 
     void handle_keyboard_event(SDL_Event* event);
 };

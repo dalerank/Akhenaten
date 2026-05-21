@@ -9,6 +9,10 @@ namespace logs {
 /// Initialize SDL logger
 void initialize();
 void switch_output(pcstr folder);
+/// Path of the currently active log file (cwd-relative until switch_output()
+/// is called, then folder/akhenaten-log.txt). Mainly for tooling (e.g.
+/// integraltests need to read back what was just written).
+pcstr output_path();
 
 // Note: to handle format-security warnings
 template <class... Args>

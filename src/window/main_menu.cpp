@@ -208,6 +208,7 @@ void main_menu_screen::init() {
 }
 
 void main_menu_screen::show(bool restart_music) {
+    logs::info("[test-marker] main_menu_shown");
     sound_city_stop();
     sound_city_init();
     if (restart_music) {
