@@ -1,0 +1,75 @@
+name: Akhenaten integral tests
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  integral-tests:
+    name: Linux / integral tests
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+    - name: Install dependencies
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -y cmake build-essential libgl1-mesa-dev libssl-dev
+    - name: Configure and build
+      run: |
+        cmake --preset linux-gcc-release-make
+        cmake --build --preset linux-gcc-release-make -- -j$(nproc)
+    - name: Run integral tests
+      id: tests
+      env:
+        SDL_VIDEODRIVER: dummy
+      run: |
+        set +e
+        ./build/akhenaten --integraltests --no-logo --no-resource
+        echo "rc=$?" >> "$GITHUB_OUTPUT"
+        exit 0
+    - name: Render summary
+      if: always()
+      run: |
+        {
+          echo "## Integral tests"
+          echo ""
+          if [ -f akhenaten-log.txt ]; then
+            echo "| Test | Result |"
+            echo "|------|--------|"
+            grep -E '\[test:[^]]+\] (PASS|FAIL)' akhenaten-log.txt \
+              | sed -E 's/.*\[test:([^]]+)\] (PASS|FAIL.*)/| \1 | \2 |/' \
+              || echo "| _no tests ran_ | |"
+            echo ""
+            grep -E '\[integraltests\] [0-9]+ passed' akhenaten-log.txt \
+              | sed -E 's/.*\[integraltests\] /**/; s/$/**/' || true
+          else
+            echo "_log file not produced_"
+          fi
+        } >> "$GITHUB_STEP_SUMMARY"
+    - name: Emit failure annotations
+      if: always()
+      run: |
+        if [ -f akhenaten-log.txt ]; then
+          grep -E '\[test:[^]]+\] FAIL' akhenaten-log.txt \
+            | sed -E 's/.*\[test:([^]]+)\] FAIL(:.*)?/::error title=integraltest \1::test failed\2/' || true
+        fi
+    - name: Show test log
+      if: always()
+      run: |
+        tail -n 200 akhenaten-log.txt || true
+    - name: Upload log
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: akhenaten-log
+        path: akhenaten-log.txt
+        retention-days: 14
+    - name: Fail if tests failed
+      if: steps.tests.outputs.rc != '0'
+      run: |
+        echo "integral tests exited with code ${{ steps.tests.outputs.rc }}"
+        exit 1
