@@ -629,7 +629,7 @@ int main(int argc, char** argv) {
     }
 
 #ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop(pump_one_frame, 0, 1);
+    emscripten_set_main_loop([]() { g_app.pump_one_frame(); }, 0, 1);
 #elif defined(GAME_PLATFORM_WIN)
     LONG CALLBACK debug_sehgilter(PEXCEPTION_POINTERS pExceptionPointers);
     __try {
