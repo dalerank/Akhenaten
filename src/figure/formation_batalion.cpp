@@ -206,8 +206,13 @@ void formations_t::batalions_update() {
         if (m->has_low_morale()) {
             // flee back to fort
             for (int n = 0; n < formation::max_figures_count; n++) {
+                if (m->figures[n] == 0) {
+                    continue;
+                }
                 figure_soldier* soldier = figure_get(m->figures[n])->dcast_soldier();
-                soldier->goback_to_fort();
+                if (soldier) {
+                    soldier->goback_to_fort();
+                }
             }
 
         } else if (m->layout == FORMATION_MOP_UP) {
