@@ -34,8 +34,7 @@ function window_scenario_selection_custom_btn_start() {
 [es=(window_scenario_selection_custom, mission_changed)]
 function window_scenario_selection_custom_on_mission_changed(ev) {
     ev.img_scenario_thumb.image = get_image({ pack:PACK_UNLOADED, id:28, offset:scenario.campaign_scenario_id }).tid
-    var config = get_mission_config(scenario.campaign_scenario_id)
-    ev.side_mission_title.text = config.selection_title
+    ev.side_mission_title.text = mission_selection_title(scenario.campaign_scenario_id)
     ev.side_subtitle.text = scenario.subtitle
     ev.side_year.text = scenario_selection_format_start_year(scenario.start_year)
 }
