@@ -48,7 +48,7 @@ water_dest map_water_get_closest_wharf(figure &boat) {
 
     int mindist = 9999;
     tile2i dock_tile;
-    buildings_valid_do([&] (building &b) {в
+    buildings_valid_do([&] (building &b) {
         auto w = b.dcast_fishing_wharf();
         if (!w) {
             return;
