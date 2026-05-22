@@ -2,12 +2,18 @@
 
 #include "core/app.h"
 #include "core/log.h"
+#include "core/bstring.h"
 #include "core/vec2i.h"
 #include "js/js.h"
 #include "mujs/mujs.h"
 #include "platform/version.hpp"
 
+#include "cmrc/cmrc.hpp"
 #include <SDL.h>
+#include <string>
+#include <string_view>
+
+CMRC_DECLARE(akhenaten);
 
 #include <algorithm>
 #include <filesystem>
@@ -39,6 +45,31 @@ void run_integral_tests_impl() {
 
     const xstring ver = get_version();
     expect_true(!ver.empty(), "get_version() non-empty");
+
+    // Each mission_N_*.js must unlock advisors (regression guard for #501).
+    // Static check until JS VM + scenario can be bootstrapped here; then this
+    // should be replaced with: load mission, emit event_mission_start, assert
+    // city.is_advisor_available(...) for the expected set.
+    auto scripts_fs = cmrc::akhenaten::get_filesystem();
+    int mission_scripts_found = 0;
+    for (auto &&entry : scripts_fs.iterate_directory("src/scripts/")) {
+        std::string name = entry.filename();
+        if (name.rfind("mission_", 0) != 0 || name.find(".js") == std::string::npos) {
+            continue;
+        }
+        if (name == "mission_debug.js") {
+            continue;
+        }
+        bstring256 fs_path("src/scripts/", name.c_str());
+        auto file = scripts_fs.open(fs_path.c_str());
+        std::string_view body(file.begin(), file.size());
+        const bool has_unlock = body.find("set_advisor_available(") != std::string_view::npos;
+        bstring128 msg;
+        msg.printf("%s calls set_advisor_available", name.c_str());
+        expect_true(has_unlock, msg.c_str());
+        mission_scripts_found++;
+    }
+    expect_true(mission_scripts_found >= 11, "found all 11 mission scripts (0..10)");
 }
 
 std::vector<std::filesystem::path> list_test_files() {
