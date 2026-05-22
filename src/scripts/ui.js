@@ -64,6 +64,7 @@ import ui_set_salary_window
 import ui_donate_to_city_window
 import ui_resource_settings_window
 import ui_police_station_window
+import ui_recruiter_window
 import ui_message_dialog
 import ui_display_options_window
 import ui_sound_options_window
