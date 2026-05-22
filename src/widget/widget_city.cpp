@@ -32,6 +32,7 @@
 #include "sound/sound_city.h"
 #include "sound/effect.h"
 #include "sound/sound.h"
+#include "editor/tool.h"
 #include "widget/city/ornaments.h"
 #include "widget/city/tile_draw.h"
 #include "widget/widget_minimap.h"
@@ -1288,6 +1289,22 @@ void screen_city_t::handle_mouse(const mouse* m) {
     g_zoom.handle_mouse(m);
     if (!ctx.view->can_update(g_zoom.ftarget())) {
         g_zoom.set_scale(old_zoom_target);
+    }
+
+    if (game.debug_terrain_paint && editor_tool_is_active() && current_tile.valid()) {
+        if (m->left.went_down) {
+            editor_tool_start_use(current_tile);
+            editor_tool_update_use(current_tile);
+        } else if (m->left.is_down || editor_tool_is_in_use()) {
+            editor_tool_update_use(current_tile);
+        }
+        if (m->left.went_up) {
+            editor_tool_end_use(current_tile);
+        }
+        if (m->right.went_up) {
+            editor_tool_deactivate();
+        }
+        return;
     }
 
     g_city_planner.draw_as_constructing = false;

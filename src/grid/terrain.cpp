@@ -4,7 +4,11 @@
 #include "city/city_floods.h"
 #include "floodplain.h"
 #include "grid/grid.h"
+#include "grid/image.h"
+#include "grid/moisture.h"
+#include "grid/property.h"
 #include "grid/ring.h"
+#include "grid/tiles.h"
 #include "grid/trees.h"
 #include "grid/routing/routing.h"
 #include "scenario/map.h"
@@ -361,19 +365,74 @@ void map_terrain_clear() {
 }
 
 void map_terrain_init_outside_map() {
+    // Mirror every outside-map tile from its nearest playable-area tile (the
+    // perimeter projection: clamp x/y to the playable rect). Neighbor checks
+    // in the editor's refresh logic see a continuous terrain across the map
+    // edge instead of stale TREE | WATER scenery, which kept turning inward
+    // tiles into grass when the terrain painter touched the perimeter.
     int map_width = scenario_map_data()->width;
     int map_height = scenario_map_data()->height;
+    if (map_width <= 0 || map_height <= 0) {
+        return;
+    }
 
     int y_start = (GRID_LENGTH - map_height) / 2;
     int x_start = (GRID_LENGTH - map_width) / 2;
+    int x_end = x_start + map_width - 1;
+    int y_end = y_start + map_height - 1;
 
     for (int y = 0; y < GRID_LENGTH; y++) {
-        int y_outside_map = y < y_start || y >= y_start + map_height;
+        int ny = y;
+        if (ny < y_start) ny = y_start;
+        else if (ny > y_end) ny = y_end;
+        const bool y_outside = (y < y_start || y > y_end);
         for (int x = 0; x < GRID_LENGTH; x++) {
-            if (y_outside_map || x < x_start || x >= x_start + map_width)
-                map_grid_set(g_terrain_grid, x + GRID_LENGTH * y, TERRAIN_TREE | TERRAIN_WATER);
+            const bool x_outside = (x < x_start || x > x_end);
+            if (!x_outside && !y_outside) {
+                continue;
+            }
+            int nx = x;
+            if (nx < x_start) nx = x_start;
+            else if (nx > x_end) nx = x_end;
+            const int src = map_grid_get(g_terrain_grid, nx + GRID_LENGTH * ny);
+            map_grid_set(g_terrain_grid, x + GRID_LENGTH * y, src);
         }
     }
+}
+
+// Tiles inside the playable rectangle but outside the inscribed visible
+// diamond (the four triangular corners of the rect) are visible at the
+// edges of the city view but are not really part of the game area. Pharaoh
+// authors them with miscellaneous terrain — scattered trees, grass blocks —
+// that the brush keeps revealing every time it re-images them. Force them
+// to a clean state once and they'll re-render as plain desert.
+//
+// Strategy: clear every terrain bit, zero moisture, drop the image. The
+// next set_empty_land_pass1 paints a generic empty-land tile; pass2 reads
+// the now-zero moisture, gets ph_grass=0, and skips the grass overlay.
+static void normalize_outside_diamond_tile(int grid_offset) {
+    if (map_grid_inside_map_area(grid_offset)) {
+        return;
+    }
+    map_terrain_set(grid_offset, 0);
+    map_moisture_clear_tile(grid_offset);
+    map_image_set(grid_offset, 0);
+    map_property_set_multi_tile_size(grid_offset, 1);
+    map_property_mark_draw_tile(grid_offset);
+}
+
+void map_normalize_outside_diamond_all() {
+    // Walk the full playable rectangle; the per-tile guard skips anything
+    // already inside the diamond, so this is a one-shot cleanup that leaves
+    // the gameplay area untouched.
+    map_tiles_foreach_map_tile(normalize_outside_diamond_tile);
+}
+
+void map_normalize_outside_diamond_region(tile2i tmin, tile2i tmax) {
+    // Region variant for the brush refresh — same guard, but iterates only
+    // the region the brush touched (the in-diamond tiles inside this region
+    // are no-ops). map_tiles_foreach_region_tile clamps to the rect for us.
+    map_tiles_foreach_region_tile(tmin, tmax, normalize_outside_diamond_tile);
 }
 
 void build_terrain_caches() {

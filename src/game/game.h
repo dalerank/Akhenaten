@@ -72,6 +72,7 @@ struct game_t {
     bool debug_console = false;
     bool debug_properties = false;
     bool debug_perfmon = false;
+    bool debug_terrain_paint = false;
     uint32_t frame = 0;
     uint16_t last_frame_tick = 0;
     color *frame_pixels = nullptr;

@@ -143,6 +143,19 @@ void map_terrain_restore();
 void map_terrain_clear();
 void map_terrain_init_outside_map();
 
+// Force every tile in the playable rectangle that falls OUTSIDE the
+// inscribed visible diamond into a clean plain-desert state — clears
+// terrain bits, zeros moisture, drops the image so the next empty-land
+// refresh paints a generic desert tile. The four triangular corners of
+// the rect render at the edges of the city view; without this, authored
+// grass / trees in those corners bleed in every time the editor brush
+// re-images nearby tiles.
+//
+// Uses map_grid_inside_map_area as the diamond test — its existing
+// dist_horizontal / dist_vertical formula identifies "boundary or past".
+void map_normalize_outside_diamond_all();
+void map_normalize_outside_diamond_region(tile2i tmin, tile2i tmax);
+
 bool map_terrain_is_near_ferry_route(int base_offset, int radius);
 
 void build_terrain_caches();

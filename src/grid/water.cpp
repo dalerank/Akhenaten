@@ -9,9 +9,12 @@
 #include "grid/point.h"
 #include "grid/property.h"
 #include "grid/terrain.h"
+#include "grid/tiles.h"
 #include "grid/routing/routing.h"
 
+#include <algorithm>
 #include <array>
+#include <cstdlib>
 
 tile_cache river_tiles_cache;
 tile_cache g_river_shore;
@@ -318,4 +321,63 @@ bool map_water_can_spawn_boat(tile2i tile, int size, tile2i &boat_tile) {
         }
     }
     return false;
+}
+
+// Chebyshev (king-move) distance from `tile` to the nearest non-water tile.
+// Returns the ring distance r in [1, max_d], or max_d + 1 if no land within
+// range. Off-map tiles count as land — keeps the shallow collar along the
+// map border the same way it borders inland shores.
+static int distance_to_land(tile2i tile, int max_d) {
+    for (int r = 1; r <= max_d; ++r) {
+        for (int dy = -r; dy <= r; ++dy) {
+            for (int dx = -r; dx <= r; ++dx) {
+                if (std::max(std::abs(dx), std::abs(dy)) != r) {
+                    continue; // only walk the ring at exact distance r
+                }
+                tile2i n(tile.x() + dx, tile.y() + dy);
+                if (!map_grid_is_inside(n, 1)) {
+                    return r; // off-map = shore
+                }
+                if (!map_terrain_is(n.grid_offset(), TERRAIN_WATER | TERRAIN_DEEPWATER)) {
+                    return r;
+                }
+            }
+        }
+    }
+    return max_d + 1;
+}
+
+// Promote/demote the deepwater bit on one tile. Pharaoh's deepwater image
+// table has no land-edge art, so deepwater tiles must sit at least 2
+// Chebyshev-tiles away from any land (1-tile shallow collar). This routine
+// enforces that on both directions: paint-water in the interior promotes
+// to deep, and any previously-deep tile now adjacent to new land gets
+// demoted to shallow.
+static void recompute_depth_tile(int grid_offset) {
+    if (!map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_DEEPWATER)) {
+        return;
+    }
+    // Cap the probe at 1: we only need to know whether land is within 1
+    // ring. distance_to_land returns 2 when no land within 1, which is the
+    // deepwater condition.
+    int d = distance_to_land(tile2i(grid_offset), 1);
+    if (d >= 2) {
+        if (!map_terrain_is(grid_offset, TERRAIN_DEEPWATER)) {
+            map_terrain_add(grid_offset, TERRAIN_DEEPWATER);
+        }
+    } else {
+        if (map_terrain_is(grid_offset, TERRAIN_DEEPWATER)) {
+            map_terrain_remove(grid_offset, TERRAIN_DEEPWATER);
+        }
+    }
+}
+
+void map_water_recompute_depth_region(tile2i tmin, tile2i tmax) {
+    // Widen by 1 — that's the collar width; a tile in the outer ring may
+    // have flipped depth class because the brush changed something within
+    // its 1-tile distance window. map_tiles_foreach_region_tile clamps
+    // out-of-map coordinates safely via map_grid_bound_area.
+    tile2i rmin(tmin.x() - 1, tmin.y() - 1);
+    tile2i rmax(tmax.x() + 1, tmax.y() + 1);
+    map_tiles_foreach_region_tile(rmin, rmax, recompute_depth_tile);
 }

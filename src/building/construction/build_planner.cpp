@@ -1,5 +1,6 @@
 #include "build_planner.h"
 
+#include "editor/tool.h"
 #include "graphics/view/lookup.h"
 #include "grid/floodplain.h"
 #include "core/log.h"
@@ -460,6 +461,10 @@ void build_planner::setup_build(e_building_type type) { // select building for c
     default:
         break;
     }
+
+    // selecting a real building cancels any active debug terrain-paint tool
+    // so the two placement modes can't both be armed at once
+    editor_tool_deactivate();
 
     const auto &params = building_static_params::get(type);
     const auto &preview = building_planer_renderer::get(type);

@@ -1,9 +1,14 @@
 #include "tool.h"
 
+#include "building/building.h"
+#include "building/building_farm.h"
+#include "building/building_house.h"
 #include "building/construction/routed.h"
+#include "figuretype/figure_homeless.h"
 #include "building/building_road.h"
 #include "city/city_warnings.h"
 #include "city/city.h"
+#include "game/game_config.h"
 #include "game/game_events.h"
 #include "city/city_buildings.h"
 #include "core/random.h"
@@ -11,22 +16,27 @@
 #include "game/undo.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
+#include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/elevation.h"
+#include "grid/floodplain.h"
 #include "grid/grid.h"
 #include "grid/trees.h"
 #include "grid/image_context.h"
+#include "grid/moisture.h"
 #include "grid/property.h"
 #include "grid/routing/routing.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
+#include "grid/vegetation.h"
+#include "grid/water.h"
 #include "scenario/editor_events.h"
 #include "scenario/editor_map.h"
 #include "widget/widget_minimap.h"
 #include "building/construction/build_planner.h"
 
-#define TERRAIN_PAINT_MASK ~(TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_MEADOW)
+#define TERRAIN_PAINT_MASK ~(TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_DEEPWATER | TERRAIN_BUILDING | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_MEADOW | TERRAIN_FLOODPLAIN | TERRAIN_MARSHLAND)
 
 static struct {
     int active = 0;
@@ -37,6 +47,15 @@ static struct {
     int start_elevation = 0;
     tile2i start_tile = {0, 0};
 } data;
+
+// Set per stroke by add_terrain when a TOOL_GRASS brush clears a TERRAIN_WATER
+// or TERRAIN_DEEPWATER bit. editor_tool_update_use reads it to decide whether
+// to widen the moisture / empty-land refresh by the band radius. Removing
+// water grows distance-to-water for adjacent land, so the surrounding band
+// needs to settle; but on a paint-over-land stroke nobody's distance
+// changed, and widening would just overwrite authored moisture with the
+// smoothed profile.
+static bool s_brush_cleared_water = false;
 
 int editor_tool_type(void) {
     return data.type;
@@ -119,6 +138,8 @@ int editor_tool_is_brush(void) {
     case TOOL_SHRUB:
     case TOOL_ROCKS:
     case TOOL_MEADOW:
+    case TOOL_FLOODPLAIN:
+    case TOOL_REEDS:
     case TOOL_RAISE_LAND:
     case TOOL_LOWER_LAND:
         return 1;
@@ -156,6 +177,48 @@ static int lower_land_tile(int x, int y, int grid_offset, int terrain) {
     return terrain;
 }
 
+static void demolish_building_at(int grid_offset) {
+    int bid = map_building_at(grid_offset);
+    if (bid <= 0) {
+        return;
+    }
+
+    building *b = building_get(bid)->main();
+    if (!b || b->state == BUILDING_STATE_UNUSED || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
+        return;
+    }
+
+    auto house = b->dcast_house();
+    if (house && house->house_population() > 0) {
+        events::emit(event_create_homeless{ b->tile, house->house_population(), SOURCE_LOCATION });
+        house->runtime_data().population = 0;
+    }
+
+    if (b->is_floodplain_farm() && !!game_features::gameplay_change_soil_depletion) {
+        b->dcast_farm()->deplete_soil();
+    }
+
+    b->state = BUILDING_STATE_DELETED_BY_PLAYER;
+    b->is_deleted = 1;
+
+    building *space = b;
+    for (int iter = 0; space->prev_part_building_id > 0 && iter < 128; ++iter) {
+        space = building_get(space->prev_part_building_id);
+        space->state = BUILDING_STATE_DELETED_BY_PLAYER;
+    }
+
+    space = b;
+    for (int iter = 0; space->next_part_building_id > 0 && iter < 128; ++iter) {
+        space = space->next();
+        if (space->id <= 0) {
+            break;
+        }
+        space->state = BUILDING_STATE_DELETED_BY_PLAYER;
+    }
+
+    map_building_tiles_remove(b->id, b->tile);
+}
+
 static void add_terrain(const void* tile_data, int dx, int dy) {
     tile2i tile = *(tile2i*)tile_data;
     int x = tile.x() + dx;
@@ -165,13 +228,30 @@ static void add_terrain(const void* tile_data, int dx, int dy) {
     int grid_offset = tile.grid_offset() + GRID_OFFSET(dx, dy);
     int terrain = map_terrain_get(grid_offset);
     if (terrain & TERRAIN_BUILDING) {
-        map_building_tiles_remove(0, tile2i(x, y));
+        demolish_building_at(grid_offset);
         terrain = map_terrain_get(grid_offset);
     }
     switch (data.type) {
-    case TOOL_GRASS:
+    case TOOL_GRASS: {
+        // depth on neighbouring water tiles is handled by the per-region
+        // map_water_recompute_depth_region() pass in editor_tool_update_use
+        //
+        // Match the moisture probe's definition of "open water": deepwater
+        // always counts; plain water counts only when NOT marked floodplain.
+        // distance_to_water in moisture.cpp filters out floodplain tiles
+        // (those carry TERRAIN_WATER during the flood stage of the cycle
+        // but the original game does not grow a grass band against them),
+        // so removing one does not change any tile's distance-to-water
+        // and must NOT trigger band-radius widening.
+        const bool was_deepwater = !!(terrain & TERRAIN_DEEPWATER);
+        const bool was_open_water = (terrain & TERRAIN_WATER) && !(terrain & TERRAIN_FLOODPLAIN);
+        if (was_deepwater || was_open_water) {
+            s_brush_cleared_water = true;
+        }
         terrain &= TERRAIN_PAINT_MASK;
+        map_vegetation_deplete(grid_offset);
         break;
+    }
     case TOOL_TREES:
         if (!(terrain & TERRAIN_TREE)) {
             terrain &= TERRAIN_PAINT_MASK;
@@ -202,6 +282,18 @@ static void add_terrain(const void* tile_data, int dx, int dy) {
             terrain |= TERRAIN_MEADOW;
         }
         break;
+    case TOOL_FLOODPLAIN:
+        if (!(terrain & TERRAIN_FLOODPLAIN)) {
+            terrain &= TERRAIN_PAINT_MASK;
+            terrain |= TERRAIN_FLOODPLAIN;
+        }
+        break;
+    case TOOL_REEDS:
+        if (!(terrain & TERRAIN_MARSHLAND)) {
+            terrain &= TERRAIN_PAINT_MASK;
+            terrain |= TERRAIN_MARSHLAND;
+        }
+        break;
     case TOOL_RAISE_LAND:
         terrain = raise_land_tile(x, y, grid_offset, terrain);
         break;
@@ -227,28 +319,98 @@ void editor_tool_update_use(tile2i tile) {
     if (!editor_tool_is_brush())
         return;
 
+    s_brush_cleared_water = false;
     editor_tool_foreach_brush_tile(add_terrain, &tile);
+
+    // Propagate the newly painted perimeter terrain out to the off-map ring
+    // so the refresh passes below see continuous terrain across the map edge
+    // instead of stale TREE | WATER scenery — that mismatch was causing
+    // inward tiles to flip to grass whenever the brush touched the border.
+    map_terrain_init_outside_map();
 
     int x_min = tile.x() - data.brush_size;
     int x_max = tile.x() + data.brush_size;
     int y_min = tile.y() - data.brush_size;
     int y_max = tile.y() + data.brush_size;
     switch (data.type) {
-    case TOOL_GRASS:
+    case TOOL_GRASS: {
+        // rebuild caches first so the river/water cache reflects tiles that
+        // were just painted over, then enforce the 2-tile shallow collar
+        // around the new shore (demotes any old deepwater that the brush
+        // brought within 2 of land), then refresh moisture & images.
+        build_terrain_caches();
+        map_water_recompute_depth_region(tile2i(x_min, y_min), tile2i(x_max, y_max));
+
+        // Widen ONLY when the brush actually removed water. Removing water
+        // grows distance-to-water for adjacent land, so a band-radius ring
+        // around the brush needs to settle. Paint-over-land changes no
+        // tile's distance — widening then would clobber the mapper's
+        // authored per-tile moisture variation with the smoothed profile
+        // and turn authored desert near water into uniform low-grass
+        // anywhere the brush goes (the "grass appears at the border"
+        // symptom). For paint-over-land we still re-image brush ± 1 to
+        // cover set_empty_land_pass2's 1-tile neighbour check.
+        const int m_moisture = s_brush_cleared_water ? map_moisture_band_radius() : 0;
+        const int m_image    = s_brush_cleared_water ? map_moisture_band_radius() : 1;
+        tile2i mmin(x_min - m_moisture, y_min - m_moisture);
+        tile2i mmax(x_max + m_moisture, y_max + m_moisture);
+        map_moisture_update_region(mmin, mmax);
+
+        tile2i imin(x_min - m_image, y_min - m_image);
+        tile2i imax(x_max + m_image, y_max + m_image);
+        // Safety-net: any tile inside the image refresh region that falls
+        // outside the visible diamond gets forced back to plain desert.
+        // The load-time pass already cleared them, but the brush's re-image
+        // pass would otherwise let authored data leak back if a stroke
+        // touched the diamond boundary.
+        map_normalize_outside_diamond_region(imin, imax);
         map_image_context_reset_water();
-        map_tiles_river_refresh_region(x_min, y_min, x_max, y_max);
+        if (s_brush_cleared_water) {
+            map_tiles_river_refresh_entire();
+        } else {
+            map_tiles_river_refresh_region(x_min, y_min, x_max, y_max);
+        }
         map_tiles_update_all_rocks();
-        map_tiles_update_region_empty_land(false, tile2i(x_min, y_min), tile2i(x_max, y_max));
-        map_tiles_update_region_meadow(x_min, y_min, x_max, y_max);
+        map_tiles_update_region_empty_land(true, imin, imax);
+        map_tiles_update_region_meadow(imin.x(), imin.y(), imax.x(), imax.y());
+        map_tree_update_region_tiles(x_min, y_min, x_max, y_max);
+        map_tiles_upadte_all_marshland_tiles();
+        map_routing_update_land();
         break;
+    }
     case TOOL_TREES:
         map_image_context_reset_water();
         map_tiles_river_refresh_region(x_min, y_min, x_max, y_max);
         map_tiles_update_all_rocks();
         map_tree_update_region_tiles(x_min, y_min, x_max, y_max);
         break;
-    case TOOL_WATER:
+    case TOOL_WATER: {
+        // promote interior painted water to deepwater (and demote any old
+        // deepwater now within 2 of new shore) before re-imaging, so the
+        // river refresh sees the final depth state. Then recompute moisture
+        // on the surrounding land — fresh water shrinks distance-to-water
+        // for nearby empty land — and re-image empty land in the same
+        // widened band so the freshly-grown grass shore appears immediately.
+        // The widening lives here now: map_moisture_update_region no longer
+        // widens internally (it would clobber authored moisture on every
+        // brush stroke).
+        map_water_recompute_depth_region(tile2i(x_min, y_min), tile2i(x_max, y_max));
+        map_image_context_reset_water();
+        const int m = map_moisture_band_radius();
+        tile2i wmin(x_min - m, y_min - m), wmax(x_max + m, y_max + m);
+        map_moisture_update_region(wmin, wmax);
+        // Same safety-net as TOOL_GRASS — wipe any out-of-diamond tiles
+        // the refresh region covers, so the wide image pass doesn't put
+        // shore/grass art onto the off-diamond corners.
+        map_normalize_outside_diamond_region(wmin, wmax);
+        map_tiles_update_all_rocks();
+        map_tiles_river_refresh_region(x_min, y_min, x_max, y_max);
+        map_tiles_update_region_empty_land(true, wmin, wmax);
+        map_tiles_update_region_meadow(wmin.x(), wmin.y(), wmax.x(), wmax.y());
+        break;
+    }
     case TOOL_ROCKS:
+    case TOOL_FLOODPLAIN:
         map_image_context_reset_water();
         map_tiles_update_all_rocks();
         map_tiles_river_refresh_region(x_min, y_min, x_max, y_max);
@@ -263,7 +425,16 @@ void editor_tool_update_use(tile2i tile) {
         map_image_context_reset_water();
         map_tiles_river_refresh_region(x_min, y_min, x_max, y_max);
         map_tiles_update_all_rocks();
+        map_tiles_update_region_empty_land(false, tile2i(x_min, y_min), tile2i(x_max, y_max));
         map_tiles_update_region_meadow(x_min, y_min, x_max, y_max);
+        map_routing_update_land();
+        break;
+    case TOOL_REEDS:
+        map_image_context_reset_water();
+        map_tiles_river_refresh_region(x_min, y_min, x_max, y_max);
+        map_tiles_update_all_rocks();
+        build_terrain_caches();
+        map_tiles_upadte_all_marshland_tiles();
         break;
     case TOOL_RAISE_LAND:
     case TOOL_LOWER_LAND:
@@ -431,6 +602,14 @@ void editor_tool_end_use(tile2i tile) {
         break;
     case TOOL_ROAD:
         place_road(data.start_tile, tile);
+        break;
+    case TOOL_GRASS:
+    case TOOL_FLOODPLAIN:
+        // floodplain tile membership changed: re-derive flood order & shores
+        // so painted tiles join (or leave) the inundation cycle
+        build_terrain_caches();
+        map_floodplain_rebuild_rows();
+        map_floodplain_rebuild_shores();
         break;
     default:
         break;

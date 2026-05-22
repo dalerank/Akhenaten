@@ -42,6 +42,7 @@
 #include "grid/sprite.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
+#include "grid/moisture.h"
 #include "grid/floodplain.h"
 #include "grid/water.h"
 #include "grid/sandstone.h"
@@ -777,9 +778,34 @@ void GamestateIO::start_loaded_file() {
         scenario_price_change_init();
     }
 
+    // sample the authored moisture-vs-distance-to-water profile for the
+    // editor terrain brush. Runs for BOTH map and save loads — the moisture
+    // grid is unserialised in either path, so the histogram is always
+    // valid by the time we get here. (Originally placed inside the
+    // load-MAP-only branch, which left the profile zero-initialised on save
+    // loads and caused the paint brush to write desert everywhere.)
+    map_moisture_recompute_profile();
+
     // city view / orientation
     city_view_init();
     map_orientation_update_buildings();
+
+    // Refresh the off-map ring so saves authored under the old behaviour
+    // (TREE | WATER flood across every outside tile) get their border
+    // terrain bits remapped to mirror the in-map perimeter. Without this,
+    // the editor terrain brush sees a phantom water frame around the map
+    // and paints a grass-shore collar on any land it lays down near the
+    // edge — even though those tiles render as plain desert.
+    map_terrain_init_outside_map();
+
+    // Force the four triangular corners of the playable rectangle (the
+    // parts outside the inscribed visible diamond) into plain desert.
+    // These tiles render at the edges of the city view but aren't really
+    // gameplay area; the brush kept re-imaging them and exposing authored
+    // grass/trees. Doing this once at load means they stay desert across
+    // the whole session unless the brush explicitly touches them — and
+    // editor_tool_update_use re-runs the region variant as a safety net.
+    map_normalize_outside_diamond_all();
 
     // river / garden tiles refresh
     build_terrain_caches();

@@ -9,7 +9,12 @@ extern int SCROLL_MIN_SCREENTILE_X;
 extern int SCROLL_MIN_SCREENTILE_Y;
 extern int SCROLL_MAX_SCREENTILE_X;
 extern int SCROLL_MAX_SCREENTILE_Y;
+// Extra panning headroom (in world tiles) beyond the normal map-edge limits.
+// Recomputed into SCROLL_* by camera_calc_scroll_limits(); apply via the
+// helper below so the camera snaps back when the margin is reduced.
+extern int CAMERA_EXTRA_SCROLL_MARGIN_TILES;
 void camera_calc_scroll_limits();
+void camera_set_extra_scroll_margin(int world_tiles);
 
 typedef vec2i screen_tile;
 

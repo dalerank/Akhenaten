@@ -402,6 +402,7 @@ static void run_and_draw() {
             NANO_PROFILE_SCOPE("_DebugUI");
             game_debug_cli_draw();
             game_debug_properties_draw();
+            game_debug_terrain_paint_draw();
             game_perfmon_draw();
         }
 

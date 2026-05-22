@@ -210,6 +210,9 @@ int map_floodplain_rebuild_rows() {
         floodplain_tiles_caches_by_row[row].clear();
     }
 
+    // must be cleared too, otherwise repeated rebuilds keep appending stale tiles
+    floodplain_tiles_random.clear();
+
     foreach_river_tile([&] (int tile_offset) {
         bool is_vergin_floodplain = map_terrain_is(tile_offset, TERRAIN_FLOODPLAIN);
         if (is_vergin_floodplain) {
