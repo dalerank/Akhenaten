@@ -122,7 +122,8 @@ struct platform_t {
 	}
 
 	bool file_manager_should_case_correct_file();
+
+	pcstr user_directory();
 };
 
 extern platform_t platform;
-

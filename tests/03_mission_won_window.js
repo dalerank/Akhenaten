@@ -21,9 +21,8 @@ function run_test() {
 }
 
 function check_valid() {
-    var log = __test_read_log_file()
     var marker = '[test-marker] window_show:window_mission_won'
-    if (log.indexOf(marker) < 0) {
+    if (!__test_find_inlog(marker)) {
         __log_info_native('[test:03] missing marker: ' + marker)
         return false
     }

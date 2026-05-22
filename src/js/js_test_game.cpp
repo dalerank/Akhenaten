@@ -15,23 +15,74 @@
 #include "widget/debug_console.h"
 
 #include <SDL.h>
+#include <cstring>
 #include <fstream>
 #include <string>
 
-static void js_test_read_log_file_native(js_State *J) {
-    std::ifstream in(logs::output_path(), std::ios::binary);
+static bool file_contains_marker(pcstr path, pcstr marker, const size_t marker_len) {
+    std::ifstream in(path, std::ios::binary);
     if (!in) {
-        J->pushstring("");
+        return false;
+    }
+
+    std::string chunk;
+    chunk.reserve(8192 + marker_len);
+    std::string tail;
+    char buf[8192];
+    bool strip_bom = true;
+
+    while (in) {
+        in.read(buf, sizeof(buf));
+        const std::streamsize got = in.gcount();
+        if (got <= 0) {
+            break;
+        }
+
+        chunk = tail;
+        chunk.append(buf, static_cast<size_t>(got));
+
+        if (strip_bom && chunk.size() >= 3
+            && (unsigned char) chunk[0] == 0xEF
+            && (unsigned char) chunk[1] == 0xBB
+            && (unsigned char) chunk[2] == 0xBF) {
+            chunk.erase(0, 3);
+        }
+        strip_bom = false;
+
+        if (chunk.find(marker) != std::string::npos) {
+            return true;
+        }
+
+        if (marker_len <= 1) {
+            tail.clear();
+        } else if (chunk.size() >= marker_len - 1) {
+            tail = chunk.substr(chunk.size() - (marker_len - 1));
+        } else {
+            tail = chunk;
+        }
+    }
+
+    return tail.find(marker) != std::string::npos;
+}
+
+static bool log_contains_marker(pcstr marker) {
+    if (!marker || !*marker) {
+        return false;
+    }
+
+    logs::flush_file();
+
+    const size_t marker_len = std::strlen(marker);
+    return file_contains_marker(logs::output_path(), marker, marker_len);
+}
+
+static void js_test_find_inlog_native(js_State *J) {
+    if (js_isundefined(J, 1)) {
+        js_pushboolean(J, 0);
         return;
     }
-    std::string contents((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
-    if (contents.size() >= 3
-        && (unsigned char) contents[0] == 0xEF
-        && (unsigned char) contents[1] == 0xBB
-        && (unsigned char) contents[2] == 0xBF) {
-        contents.erase(0, 3);
-    }
-    J->pushstring(contents.c_str());
+    pcstr marker = js_strnode_cstr(js_tostring(J, 1));
+    js_pushboolean(J, log_contains_marker(marker) ? 1 : 0);
 }
 
 static void test_pump(int n) {
@@ -128,7 +179,7 @@ static void js_test_run_console_command_native(js_State *J) {
 
 ANK_DECLARE_JSFUNCTION_ITERATOR(register_test_js_functions);
 inline void register_test_js_functions(js_State *J) {
-    REGISTER_GLOBAL_FUNCTION(J, js_test_read_log_file_native,   "__test_read_log_file",   0);
+    REGISTER_GLOBAL_FUNCTION(J, js_test_find_inlog_native,      "__test_find_inlog",      1);
     REGISTER_GLOBAL_FUNCTION(J, js_test_signal_ready_native,    "__test_signal_ready",    0);
     REGISTER_GLOBAL_FUNCTION(J, js_test_pump_frames_native,     "__test_pump_frames",     1);
     REGISTER_GLOBAL_FUNCTION(J, js_test_mouse_click_native,     "__test_mouse_click",     2);

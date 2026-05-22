@@ -2,8 +2,11 @@
 
 #if defined(GAME_PLATFORM_LINUX)
 
+#include "core/bstring.h"
 #include "core/log.h"
 #include "content/vfs.h"
+
+#include <SDL.h>
 
 void platform_t::open_url(pcstr url, pcstr prefix) {
     bstring256 command(prefix, "xdg-open '", url, "'");
@@ -28,9 +31,30 @@ pcstr platform_t::get_steam_path() {
     return steam_path.c_str();
 }
 
+void platform_resolve_user_directory(bstring512& dir) {
+    char* pref = SDL_GetPrefPath("", "Akhenaten");
+    if (pref) {
+        dir = pref;
+        SDL_free(pref);
+    } else {
+        logs::warn("platform::user_directory: SDL_GetPrefPath failed, using cwd");
+        dir = ".";
+    }
+}
+
 #endif
 
 #if defined(GAME_PLATFORM_ANDROID)
+
+#include "core/bstring.h"
+#include "core/log.h"
+
+#include <SDL.h>
+#include <SDL_system.h>
+
+void platform_resolve_user_directory(bstring512& dir) {
+    dir = SDL_AndroidGetExternalStoragePath();
+}
 
 void platform_t::open_url(pcstr url, pcstr prefix) {
 

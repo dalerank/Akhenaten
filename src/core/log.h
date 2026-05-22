@@ -6,13 +6,12 @@
 #include "core/xstring.h"
 
 namespace logs {
-/// Initialize SDL logger
+
 void initialize();
 void switch_output(pcstr folder);
-/// Path of the currently active log file (cwd-relative until switch_output()
-/// is called, then folder/akhenaten-log.txt). Mainly for tooling (e.g.
-/// integraltests need to read back what was just written).
+
 pcstr output_path();
+void flush_file();
 
 // Note: to handle format-security warnings
 template <class... Args>
@@ -75,12 +74,12 @@ inline void verbose(pcstr msg) {
 class Logger {
 public:
     /// Write each record and flush
-    static void write(void* userdata, int category, SDL_LogPriority priority, char const* message);
+    static void write(void* userdata, int category, SDL_LogPriority priority, pcstr message);
 
 private:
     Logger();
     ~Logger();
 
-    void write_to_file_(char const* prefix, char const* message);
-    static void write_to_output_(char const* prefix, char const* message);
+    void write_to_file_(pcstr prefix, pcstr message);
+    static void write_to_output_(pcstr prefix, pcstr message);
 };

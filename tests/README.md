@@ -28,9 +28,8 @@ function run_test() {
 }
 
 function check_valid() {
-    // Inspect the log and/or game state, return true on success.
-    var log = __test_read_log_file();
-    return log.indexOf('[test-marker] something') >= 0;
+    // Search akhenaten-log.txt for a marker without loading the file into the VM.
+    return __test_find_inlog('[test-marker] something');
 }
 ```
 
@@ -46,8 +45,8 @@ If `__test_signal_ready()` is never called the driver times out after ~10 second
 
 | Function | Returns | Purpose |
 |----------|---------|---------|
-| `__test_read_log_file()` | string | Whole contents of `akhenaten-log.txt` (BOM stripped) |
-| `__test_signal_ready()` | undefined | Tell the C++ driver to stop pumping frames and call `check_valid()` |
+| `__test_find_inlog(marker)` | boolean | Returns true if `marker` appears in `akhenaten-log.txt` (searched in C++; the log is never passed into the JS VM) |
+зап| `__test_signal_ready()` | undefined | Tell the C++ driver to stop pumping frames and call `check_valid()` |
 | `__test_pump_frames(n)` | undefined | Advance the real game loop by `n` frames (capped at 240) — use to let UI/events settle between simulated input actions |
 | `__test_mouse_click(x, y)` | undefined | Synthesize a left mouse click at screen pixel `(x, y)`. Internally moves the cursor, presses left, pumps frames, releases, pumps more — onclick handlers fire as in a real session |
 | `__test_mouse_right_click(x, y)` | undefined | Same as above for the right button. Most autoconfig windows (`allow_rmb_goback: true`) close on right-click anywhere outside a control |
@@ -70,5 +69,5 @@ All other in-game JS APIs (`game`, `__game_*`, `emit`, etc.) are also available 
 ## Constraints
 
 - One process, sequential. Tests share global state. The next test's `run_test` / `check_valid` definitions overwrite the previous test's, but any window stack / mods / event handlers accumulate.
-- The log file is truncated each time the process starts.
+- The log file is truncated each time the process starts. Under `--integraltests` it is written to `platform.user_directory()` (e.g. `%APPDATA%\\Akhenaten` on Windows, `~/.local/share/Akhenaten` on Linux); `__test_find_inlog` reads `logs::output_path()`.
 - The driver requires `--no-logo --no-resource` to be hermetic; CI sets `SDL_VIDEODRIVER=dummy` for headless runs.

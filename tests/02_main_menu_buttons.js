@@ -39,11 +39,10 @@ function run_test() {
 }
 
 function check_valid() {
-    var log = __test_read_log_file();
     var all_ok = true;
     for (var i = 0; i < BUTTONS.length; i++) {
         var marker = '[test-marker] window_show:' + BUTTONS[i].window_id;
-        if (log.indexOf(marker) < 0) {
+        if (!__test_find_inlog(marker)) {
             __log_info_native('[test:02] missing marker: ' + marker);
             all_ok = false;
         }

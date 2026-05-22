@@ -8,8 +8,7 @@ function run_test() {
 }
 
 function check_valid() {
-    var log = __test_read_log_file();
-    if (log.indexOf('[test-marker] main_menu_shown') < 0) {
+    if (!__test_find_inlog('[test-marker] main_menu_shown')) {
         __log_info_native('main menu marker not found in log');
         return false;
     }

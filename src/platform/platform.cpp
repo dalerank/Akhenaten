@@ -1,8 +1,12 @@
 #include "platform.h"
 #include "js/js_game.h"
-#include "core/log.h"
+#include "core/bstring.h"
 
 #include <SDL.h>
+
+#include <filesystem>
+
+void platform_resolve_user_directory(bstring512& dir);
 
 int platform_sdl_version_at_least(int major, int minor, int patch) {
     SDL_version v;
@@ -16,3 +20,16 @@ bool platform_t::file_manager_should_case_correct_file() {
 }
 
 platform_t platform;
+
+pcstr platform_t::user_directory() {
+    static bstring512 udirectory;
+    if (!udirectory.empty()) {
+        return udirectory.c_str();
+    }
+
+    platform_resolve_user_directory(udirectory);
+
+    std::error_code ec;
+    std::filesystem::create_directories(udirectory.c_str(), ec);
+    return udirectory.c_str();
+}

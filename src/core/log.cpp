@@ -28,7 +28,7 @@ namespace {
 
 pcstr logger_filename_ = "akhenaten-log.txt";
 static std::fstream logger_file_stream_;
-static std::string logger_active_path_ = "akhenaten-log.txt";
+static std::string logger_active_path_ = logger_filename_;
 
 const std::unordered_map<std::string, SDL_LogPriority> PRIORITY_DICT = {
     {"verbose", SDL_LOG_PRIORITY_VERBOSE},
@@ -129,6 +129,12 @@ pcstr output_path() {
     return logger_active_path_.c_str();
 }
 
+void flush_file() {
+    if (logger_file_stream_.is_open()) {
+        logger_file_stream_.flush();
+    }
+}
+
 } // namespace logs
 
 Logger::Logger() {
@@ -143,15 +149,15 @@ Logger::~Logger() {
     logger_file_stream_.close();
 }
 
-void Logger::write(void* /* userdata */, int /* category */, SDL_LogPriority priority, char const* message) {
+void Logger::write(void* /* userdata */, int /* category */, SDL_LogPriority priority, pcstr message) {
     static Logger logger;
-    char const* const prefix = get_prefix_of(priority);
+    pcstr const prefix = get_prefix_of(priority);
 
     Logger::write_to_output_(prefix, message);
     logger.write_to_file_(prefix, message);
 }
 
-void Logger::write_to_file_(char const* prefix, char const* message) {
+void Logger::write_to_file_(pcstr prefix, pcstr message) {
     logger_file_stream_ << prefix << message << std::endl;
 
 #if defined(GAME_PLATFORM_WIN)
@@ -167,6 +173,6 @@ void Logger::write_to_file_(char const* prefix, char const* message) {
 #endif // GAME_PLATFORM_ANDROID
 }
 
-void Logger::write_to_output_(char const* prefix, char const* message) {
+void Logger::write_to_output_(pcstr prefix, pcstr message) {
     std::cout << prefix << message << std::endl;
 }

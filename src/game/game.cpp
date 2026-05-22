@@ -24,6 +24,7 @@
 #include "io/gamefiles/lang.h"
 #include "content/content.h"
 #include "platform/arguments.h"
+#include "platform/platform.h"
 #include "mission.h"
 #include "figure/formation.h"
 #include "scenario/scenario_event_manager.h"
@@ -343,7 +344,11 @@ static int get_elapsed_ticks() {
 bool game_t::check_valid() {
     vfs::content_cache_paths();
 
-    logs::switch_output(vfs::platform_file_manager_get_base_path());
+    vfs::path log_directory = vfs::platform_file_manager_get_base_path();
+    if (g_args.is_integral_tests()) {
+        log_directory = platform.user_directory();
+    }
+    logs::switch_output(log_directory.c_str());
     locale_determine_language();
 
     game_features::load();   // akhenaten.conf
