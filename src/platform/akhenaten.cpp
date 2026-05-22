@@ -573,7 +573,12 @@ void application_t::pump_one_frame() {
         return;
     }
 
-    if (active) {
+    // Under --integraltests the test driver pumps frames manually and must
+    // always advance the game loop. The dummy SDL video driver used in CI
+    // fires spurious SDL_WINDOWEVENT_HIDDEN events that flip `active` to false;
+    // skipping run_and_draw() there would stop processing simulated input (so
+    // clicks never reach the UI) and SDL_WaitEvent() could block the run.
+    if (active || g_args.is_integral_tests()) {
         run_and_draw();
     } else {
         SDL_WaitEvent(NULL);

@@ -21,6 +21,7 @@
 #include "graphics/elements/ui_js.h"
 #include "resource/icons.h"
 #include "platform/renderer.h"
+#include "platform/arguments.h"
 #include "js/js_game.h"
 #include <regex>
 
@@ -184,25 +185,34 @@ void main_menu_screen::draw_foreground(UiFlags flags) {
 }
 
 void main_menu_screen::init() {
-    // Download changelog in background
-    game.mt.detach_task([&, this] () {
-        xstring changelog = main_menu_download_changelog().c_str();
-        game.add_frame_end_event([this, changelog] () {
-            ui.begin_widget(pos);
-            ui.event(event_changelog_loaded{ changelog });
-            ui.end_widget();
+    // show() calls init() on every (re)show of the main menu, so each of these
+    // detached network tasks is spawned again whenever the player navigates back
+    // here. Their completion fires a frame-end event into this window's ui tree.
+    // Under --integraltests the menu is shown and re-shown rapidly by the input
+    // simulation, so multiple in-flight downloads land on a rebuilt ui tree and
+    // crash. The downloads are also pointless in a headless test run, so skip
+    // them entirely in that mode (keeps the test deterministic and offline).
+    if (!g_args.is_integral_tests()) {
+        // Download changelog in background
+        game.mt.detach_task([&, this] () {
+            xstring changelog = main_menu_download_changelog().c_str();
+            game.add_frame_end_event([this, changelog] () {
+                ui.begin_widget(pos);
+                ui.event(event_changelog_loaded{ changelog });
+                ui.end_widget();
+            });
         });
-    });
 
-    // Check for updates
-    game.mt.detach_task([&] () {
-        int current_commit = main_menu_get_total_commits("dalerank", "Akhenaten");
-        game.add_frame_end_event([this, current_commit] () {
-            ui.begin_widget(pos);
-            ui.event(event_totals_commits_loaded{ current_commit });
-            ui.end_widget();
+        // Check for updates
+        game.mt.detach_task([&] () {
+            int current_commit = main_menu_get_total_commits("dalerank", "Akhenaten");
+            game.add_frame_end_event([this, current_commit] () {
+                ui.begin_widget(pos);
+                ui.event(event_totals_commits_loaded{ current_commit });
+                ui.end_widget();
+            });
         });
-    });
+    }
 
     autoconfig_window::init();
 }
