@@ -411,9 +411,15 @@ building_wood_cutter {
 }
 
 building_artisans_guild = {
-  cost: 30
+  labor_category : LABOR_CATEGORY_INFRASTRUCTURE
+  building_size: 2
+  cost: [ 30, 50, 80, 100, 150 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
   laborers:[15], fire_risk:[2], damage_risk: [2]
+  flags {
+    is_guild: true
+    is_industry: true
+  }
 }
 
 building_tax_collector = {
