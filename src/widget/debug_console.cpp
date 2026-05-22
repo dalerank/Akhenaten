@@ -328,6 +328,8 @@ void game_debug_terrain_paint_draw() {
         { TOOL_FLOODPLAIN, "Floodplain" },
         { TOOL_REEDS,      "Reeds" },
         { TOOL_ROCKS,      "Rocks" },
+        { TOOL_ORE,        "Orebearing rock" },
+        { TOOL_DUNES,      "Dunes" },
         { TOOL_MEADOW,     "Meadow" },
     };
 

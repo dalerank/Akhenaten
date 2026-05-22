@@ -112,6 +112,7 @@ extern const e_pack_tokens_t e_pack_type_tokens;
 #define GROUP_TERRAIN_ELEVATION PACK_TERRAIN, 9      // this isn't in Pharaoh
 #define GROUP_TERRAIN_EMPTY_LAND PACK_TERRAIN, 10
 #define GROUP_TERRAIN_REEDS PACK_TERRAIN, 11
+#define GROUP_TERRAIN_DUNE PACK_TERRAIN, 13 // 8x 1-tile, 4x 2x2, 2x 3x3 - same layout as rocks
 // #define GROUP_BUILDING_TRANSPORT_WHARF  PACK_TERRAIN,  17
 //#define GROUP_BUILDING_FISHING_WHARF PACK_TERRAIN, 18 // 79
 #define GROUP_SUNKEN_TILE PACK_TERRAIN, 20

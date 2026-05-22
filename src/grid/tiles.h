@@ -5,6 +5,7 @@
 #include "grid/point.h"
 
 void map_tiles_update_all_rocks(void);
+void map_tiles_update_all_dunes(void);
 
 void map_tiles_update_region_shrub(int x_min, int y_min, int x_max, int y_max);
 
