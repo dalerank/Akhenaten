@@ -181,6 +181,45 @@ void map_tiles_update_all_rocks(void) {
     map_tiles_foreach_map_tile(set_rock_image);
 }
 
+static bool is_updatable_dune(int grid_offset) {
+    return map_terrain_is(grid_offset, TERRAIN_DUNE) && !map_property_is_plaza_or_earthquake(tile2i(grid_offset))
+           && !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP);
+}
+static void clear_dune_image(int grid_offset) {
+    if (is_updatable_dune(grid_offset)) {
+        map_image_set(grid_offset, 0);
+        map_property_set_multi_tile_size(grid_offset, 1);
+        map_property_mark_draw_tile(grid_offset);
+    }
+}
+static void set_dune_image(int grid_offset) {
+    tile2i tile(grid_offset);
+    // GROUP_TERRAIN_DUNE follows the same multi-tile layout as the rock groups:
+    // 8 single-tile variants, then 4 2x2 variants (offset 8), then 2 3x3
+    // variants (offset 12). Cluster painted dune tiles into the largest sprite
+    // that fits, exactly like set_rock_image / set_ore_rock_image.
+    if (is_updatable_dune(grid_offset)) {
+        if (!map_image_at(grid_offset)) {
+            if (map_terrain_all_tiles_in_area_are(tile, 3, TERRAIN_DUNE)
+                && terrain_no_image_at(grid_offset, 3)) { // 3x3 dune
+                int image_id = 12 + (map_random_get(grid_offset) & 1) + image_id_from_group(GROUP_TERRAIN_DUNE);
+                map_building_tiles_add(0, tile, 3, image_id, TERRAIN_DUNE);
+            } else if (map_terrain_all_tiles_in_area_are(tile, 2, TERRAIN_DUNE)
+                       && terrain_no_image_at(grid_offset, 2)) { // 2x2 dune
+                int image_id = 8 + (map_random_get(grid_offset) & 3) + image_id_from_group(GROUP_TERRAIN_DUNE);
+                map_building_tiles_add(0, tile, 2, image_id, TERRAIN_DUNE);
+            } else { // single-tile dune
+                int image_id = (map_random_get(grid_offset) & 7) + image_id_from_group(GROUP_TERRAIN_DUNE);
+                map_image_set(grid_offset, image_id);
+            }
+        }
+    }
+}
+void map_tiles_update_all_dunes(void) {
+    map_tiles_foreach_map_tile(clear_dune_image);
+    map_tiles_foreach_map_tile(set_dune_image);
+}
+
 static void set_shrub_image(int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_SHRUB)
         && !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {

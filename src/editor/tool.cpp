@@ -36,7 +36,10 @@
 #include "widget/widget_minimap.h"
 #include "building/construction/build_planner.h"
 
-#define TERRAIN_PAINT_MASK ~(TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_DEEPWATER | TERRAIN_BUILDING | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_MEADOW | TERRAIN_FLOODPLAIN | TERRAIN_MARSHLAND)
+#define TERRAIN_PAINT_MASK                                                                                     \
+    ~(TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_DEEPWATER | TERRAIN_BUILDING | TERRAIN_SHRUB       \
+      | TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_MEADOW | TERRAIN_FLOODPLAIN | TERRAIN_MARSHLAND | TERRAIN_DUNE \
+      | TERRAIN_ORE)
 
 static struct {
     int active = 0;
@@ -140,6 +143,8 @@ int editor_tool_is_brush(void) {
     case TOOL_MEADOW:
     case TOOL_FLOODPLAIN:
     case TOOL_REEDS:
+    case TOOL_DUNES:
+    case TOOL_ORE:
     case TOOL_RAISE_LAND:
     case TOOL_LOWER_LAND:
         return 1;
@@ -294,6 +299,26 @@ static void add_terrain(const void* tile_data, int dx, int dy) {
             terrain |= TERRAIN_MARSHLAND;
         }
         break;
+    case TOOL_ORE:
+        // Ore-bearing rock is a rock variant: set_ore_rock_image in
+        // map_tiles_update_all_rocks() keys off TERRAIN_ORE but only images
+        // tiles that also carry TERRAIN_ROCK (is_updatable_rock), so set both.
+        if (!(terrain & TERRAIN_ORE)) {
+            terrain &= TERRAIN_PAINT_MASK;
+            terrain |= TERRAIN_ROCK | TERRAIN_ORE;
+        }
+        break;
+    case TOOL_DUNES:
+        // Just flag the tile; map_tiles_update_all_dunes() (called from
+        // editor_tool_update_use) clears the old image and assigns the proper
+        // dune sprite, clustering neighbouring dune tiles into 2x2 / 3x3
+        // sprites the same way rocks are imaged.
+        if (!(terrain & TERRAIN_DUNE)) {
+            terrain &= TERRAIN_PAINT_MASK;
+            terrain |= TERRAIN_DUNE;
+            map_vegetation_deplete(grid_offset);
+        }
+        break;
     case TOOL_RAISE_LAND:
         terrain = raise_land_tile(x, y, grid_offset, terrain);
         break;
@@ -371,6 +396,9 @@ void editor_tool_update_use(tile2i tile) {
             map_tiles_river_refresh_region(x_min, y_min, x_max, y_max);
         }
         map_tiles_update_all_rocks();
+        // re-cluster any dunes the stroke partially erased, then let the
+        // empty-land pass re-image the tiles whose TERRAIN_DUNE bit was cleared
+        map_tiles_update_all_dunes();
         map_tiles_update_region_empty_land(true, imin, imax);
         map_tiles_update_region_meadow(imin.x(), imin.y(), imax.x(), imax.y());
         map_tree_update_region_tiles(x_min, y_min, x_max, y_max);
@@ -410,9 +438,15 @@ void editor_tool_update_use(tile2i tile) {
         break;
     }
     case TOOL_ROCKS:
+    case TOOL_ORE:
     case TOOL_FLOODPLAIN:
         map_image_context_reset_water();
         map_tiles_update_all_rocks();
+        map_tiles_river_refresh_region(x_min, y_min, x_max, y_max);
+        break;
+    case TOOL_DUNES:
+        map_image_context_reset_water();
+        map_tiles_update_all_dunes();
         map_tiles_river_refresh_region(x_min, y_min, x_max, y_max);
         break;
     case TOOL_SHRUB:

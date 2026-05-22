@@ -26,7 +26,9 @@ enum {
     TOOL_NATIVE_CENTER = 22,
     TOOL_NATIVE_FIELD = 23,
     TOOL_FISHING_POINT = 24,
-    TOOL_HERD_POINT = 25
+    TOOL_HERD_POINT = 25,
+    TOOL_DUNES = 26,
+    TOOL_ORE = 27
 };
 
 int editor_tool_type(void);
