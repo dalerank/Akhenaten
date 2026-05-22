@@ -230,6 +230,8 @@ To use the profiler, download and run the Tracy Profiler GUI v0.13.1 from the [T
 ```
 --logjsfiles
           print logs which files open with js
+--log-sound
+          log sound file loading (city sounds, speech, music, effects)
 --nocrashdlg
           do not show crash dialog
 --fulldmp
@@ -241,7 +243,11 @@ To use the profiler, download and run the Tracy Profiler GUI v0.13.1 from the [T
 --unpack_scripts
           unpack embedded scripts to user directory
 --nosound
-          not use sound manager
+          disable audio: skip sound manager init and audio file probing at startup
+          (no SDL_mixer, no `cant find audio` warnings even without game data)
+--no-resource
+          run without Pharaoh data files (skips campaign.txt and AUDIO/ probing;
+          DATA_DIR is then an optional VFS base path)
 --window
           enable window mode
 --render RENDERER

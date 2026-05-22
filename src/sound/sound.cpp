@@ -8,6 +8,7 @@
 #include "core/log.h"
 #include "core/calc.h"
 #include "game/game_config.h"
+#include "platform/arguments.h"
 #include "platform/platform.h"
 #include "platform/vita/vita.h"
 #include "game/game.h"
@@ -81,7 +82,6 @@ static int percentage_to_volume(int percentage) {
     return percentage * SDL_MIX_MAXVOLUME / 100;
 }
 
-namespace {
 Mix_MusicType get_music_type(pcstr filename) {
     if (vfs::file_has_extension(filename, "mp3")) {
         return MUS_MP3;
@@ -111,7 +111,6 @@ vfs::reader load_music_data(pcstr filename, Mix_MusicType& music_type) {
 
     return vfs::file_open(filename, "rb");
 }
-}
 
 void sound_manager_t::init() {
     if (!_music_player) {
@@ -132,10 +131,7 @@ void sound_manager_t::set_volume(int b, int e, int percentage) {
 void sound_manager_t::shutdown() {
     close();
 
-    // It is counter-intuitive that we must do this after sound_device_close, however it unloads shared libraries
-    // which might be required both for sound_device_close and by other threads fetching new audio chunks until
-    // sound_device_close is called. It is also surprising that we can (and must) call Mix_Quit after Mix_CloseAudio,
-    // even though Mix_CloseAudio's docs say that afterwards "the SDL_mixer functions should not be used".
+
     unload_formats();
 
     delete _music_player;
@@ -169,6 +165,10 @@ vfs::reader sound_manager_t::load_cached_chunk(vfs::path filename) {
 
 void* sound_manager_t::load_chunk(pcstr filename) {
     if (filename && *filename) {
+        if (g_args.is_log_sound()) {
+            logs::info("Sound: load chunk %s", filename);
+        }
+
         auto format = get_format_from_file(filename);
         if (format == FILE_FORMAT_MP3 || format == FILE_FORMAT_WAV) {
             vfs::reader r = load_cached_chunk(filename);
@@ -418,6 +418,10 @@ static void load_music_for_vita(const char* filename) {
 bool sound_manager_t::play_music(pcstr filename, int volume_pct) {
     if (!initialized) {
         return false;
+    }
+
+    if (g_args.is_log_sound()) {
+        logs::info("Sound: play music %s (volume %d%%)", filename ? filename : "<null>", volume_pct);
     }
 
     stop_music();
@@ -735,6 +739,17 @@ void sound_manager_t::use_default_music_player() {
 
 void sound_manager_t::update_channel(int channel, vfs::path filename) {
     if (filename.empty()) {
+        return;
+    }
+
+    if (g_args.is_log_sound()) {
+        logs::info("Sound: register channel %d -> %s", channel, filename.c_str());
+    }
+
+    // --nosound: mixer is never initialized, so populating channel info is pointless.
+    // --no-resource: the AUDIO/ tree is intentionally absent; skip the existence probe
+    // to avoid spamming "cant find audio" for every entry in city_sounds.
+    if (!g_args.use_sound() || g_args.no_resource()) {
         return;
     }
 

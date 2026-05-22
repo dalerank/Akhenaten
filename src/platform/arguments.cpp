@@ -149,7 +149,7 @@ static int parse_decimal_as_percentage(const char *str) {
 } // namespace
 
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--window", "window", true, "enable window mode");
-ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nosound", "sound", false, "not use sound manager");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nosound", "sound", false, "disable audio: skip sound manager init and audio file probing at startup");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--no-logo", "no_logo", true, "skip logo screen; go straight to main menu");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--logjsfiles", "logjsfiles", true, "print logs which files open with js");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-js-handlers", "log_js_handlers", true, "print logs when JavaScript event handlers are registered");
@@ -159,6 +159,7 @@ ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--config", "config", true, "always show conf
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--save_debug_texture", "save_debug_texture", true, "save debug textures to DEV_TESTING/tex/");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--unpack_scripts", "unpack_scripts", true, "unpack embedded scripts to user directory");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-resources", "log_resources", true, "log resource loading (textures, image packs, etc.)");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-sound", "log_sound", true, "log sound file loading (city sounds, speech, music, effects)");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--discord-log", "discord_log", true, "enable Discord RPC verbose logging");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--integraltests", "integral_tests", true, "run built-in tests without game data and exit");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--no-resource", "no_resource", true, "run without Pharaoh data files (skips campaign.txt; DATA_DIR is optional VFS base path)");

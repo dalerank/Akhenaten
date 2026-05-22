@@ -39,12 +39,14 @@ Build output: `./build/`
 ```
 --window              windowed mode
 --language ru         set language (en, ru, fr, de, it, sp, po, pr, sw, tc, sc, kr)
---nosound             disable audio
+--nosound             disable audio (skips sound manager init and audio file probing)
+--no-resource         run without Pharaoh data files (skips campaign.txt and AUDIO/ probing)
 --config              show configuration dialog on startup
 --mods PATH           set mods directory
 --mixed PATH          hot-reload JS scripts from disk (dev mode)
 --unpack_scripts      extract embedded JS to user directory
 --logjsfiles          log which JS files are opened
+--log-sound           log which sound files the game tries to load
 --nocrashdlg          suppress crash dialog
 --fulldmp             create full crash dump
 --save_debug_texture  save debug textures to DEV_TESTING/tex/
