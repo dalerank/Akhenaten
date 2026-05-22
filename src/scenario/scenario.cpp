@@ -181,10 +181,6 @@ int scenario_open_play_id() {
     return g_scenario.open_play_scenario_id;
 }
 
-int scenario_property_climate() {
-    return g_scenario.climate;
-}
-
 int scenario_property_enemy() {
     return g_scenario.enemy_id;
 }
@@ -316,8 +312,8 @@ io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version)
     iob->bind____skip(1); // -1
 
     if (iob->is_read_access()) {
-        for (int i = 0; i < MAX_PREY_HERD_POINTS; i++) { 
-            g_scenario.herd_points_prey[i].invalidate_offset(); 
+        for (int i = 0; i < MAX_PREY_HERD_POINTS; i++) {
+            g_scenario.herd_points_prey[i].invalidate_offset();
         }
     }
 
@@ -382,6 +378,6 @@ io_buffer* iob_scenario_map_name = new io_buffer([](io_buffer* iob, size_t versi
 
 void scenario_data_t::update() {
     scenario_earthquake_process();
-    //scenario_gladiator_revolt_process();
+    //scenario_slave_revolt_process();
     scenario_kingdome_change_process();
 }

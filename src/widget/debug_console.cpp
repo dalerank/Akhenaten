@@ -483,6 +483,13 @@ void bind_debug_command(pcstr cmd, std::function<void(std::istream &, std::ostre
     debug_console().con.bind_command(cmd, f);
 }
 
+void run_debug_command(pcstr line) {
+    if (!line || !*line) {
+        return;
+    }
+    debug_console().con.commandExecute(std::string(line), debug_console());
+}
+
 void bind_debug_console_var_int(pcstr var, int &ref) {
     debug_console().con.bind_cvar(var, ref);
 }

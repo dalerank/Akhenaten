@@ -24,6 +24,7 @@ bool game_imgui_overlay_handle_event(void *event);
 void game_toggle_debug_console();
 
 void bind_debug_command(pcstr cmd, std::function<void(std::istream &, std::ostream &)> f);
+void run_debug_command(pcstr line);
 void bind_debug_console_var_int(pcstr var, int &ref);
 void bind_debug_console_var_int8(pcstr var, int8_t &ref);
 void bind_debug_console_var_int16(pcstr var, int16_t &ref);
@@ -53,7 +54,7 @@ void game_debug_show_property(pcstr field, const std::function<void()> &f, bool 
 void game_debug_show_property(pcstr field, const game_date_t &f, bool disabled = false);
 void game_debug_show_property(pcstr field, const setting_variant &d, bool disabled = false);
 
-#else 
+#else
 
 inline void game_debug_cli_draw() {}
 inline void game_debug_properties_draw() {}
@@ -69,6 +70,7 @@ inline void game_debug_show_property(pcstr, const bstring32 &, bool disabled = f
 inline void game_imgui_overlay_init() {}
 inline bool game_imgui_overlay_handle_event(...) { return false; }
 inline void bind_debug_command(pcstr, std::function<void(std::istream &, std::ostream &)>) {}
+inline void run_debug_command(pcstr) {}
 inline void bind_debug_console_var_int(...) {}
 inline void bind_debug_console_var_int8(...) {}
 inline void bind_debug_console_var_uint8(...) {}

@@ -7,6 +7,7 @@ var INTERMEZZO_WON = 2
 var MISSION_END_STATE_WON = 0
 var MISSION_END_STATE_LOST = 1
 
+
 [es=window]
 window_mission_won {
     pos: [(sw(0) - px(38))/2, (sh(0) - px(27))/2]
@@ -43,6 +44,7 @@ window_mission_lost {
 
 [es=(window_mission_won, init)]
 function window_mission_won_on_init(window) {
+    __log_marker("window_show:window_mission_won")
     var is_custom = scenario.scmode != e_scenario_normal
     var subtitle_id = is_custom ? 20 : scenario.campaign_scenario_id
     window.subtitle.text = __loc(147, subtitle_id)
@@ -77,17 +79,16 @@ function mission_end_advance_to_next_mission() {
     var next_rank = rank + 1
     var completed_id = scenario.campaign_scenario_id
     var savings = city.kingdome.personal_savings
-    var is_custom = scenario.scmode != e_scenario_normal
 
     var next_scenario_id = -1
-    if (!is_custom && next_rank < 11) {
+    if (!scenario.is_custom && next_rank < 11) {
         next_scenario_id = __win_criteria.next_mission
         if (!next_scenario_id) {
             next_scenario_id = completed_id + 1
         }
     }
 
-    if (!is_custom) {
+    if (!scenario.is_custom) {
         city.kingdome.campaign_carry_personal_savings = savings
     }
 
@@ -103,11 +104,11 @@ function mission_end_advance_to_next_mission() {
     city.current_overlay = OVERLAY_NONE
     city.previous_overlay = OVERLAY_NONE
 
-    if (next_rank >= 11 || is_custom) {
+    if (next_rank >= 11 || scenario.is_custom) {
         __game_show_main_menu()
-        if (!is_custom) {
+        if (!scenario.is_custom) {
             __scenario_init()
-            __scenario_set_campaign_rank(2)
+            scenario.campaign_mission_rank = 2
         }
     } else {
         game_show_mission_choice(next_scenario_id)
@@ -127,10 +128,7 @@ function mission_end_show(state) {
         return
     }
 
-    var rank = scenario.campaign_mission_rank
-    var is_custom = scenario.scmode != e_scenario_normal
-
-    if (!is_custom && rank >= 10) {
+    if (!scenario.is_custom && scenario.campaign_mission_rank >= 10) {
         __game_victory_video_show("smk/win_game.smk", 400, 292, "mission_end_after_video")
         return
     }

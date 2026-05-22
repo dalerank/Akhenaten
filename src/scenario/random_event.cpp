@@ -45,7 +45,7 @@ static void disrupt_land_trade(void) {
     if (g_scenario.random_events.land_trade_problem) {
         if (city_trade_has_land_trade_route()) {
             city_trade_start_land_trade_problems(48);
-            if (scenario_property_climate() == CLIMATE_DESERT)
+            if (g_scenario.climate == CLIMATE_DESERT)
                 events::emit(event_message{ true, "message_land_trade_disrupted_sandstorms", 0, 0, SOURCE_LOCATION });
             else {
                 events::emit(event_message{ true, "message_land_trade_disrupted_landslides", 0, 0, SOURCE_LOCATION });

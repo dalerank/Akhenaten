@@ -323,6 +323,10 @@ struct scenario_data_t {
     void init();
     int is_before_mission(int mission);
 
+    bool is_desert() const {
+        return climate == CLIMATE_DESERT;
+    }
+
     int starting_kingdom() {
         return settings.starting_kingdom;
     }
@@ -349,8 +353,6 @@ void scenario_set_name(pcstr name);
 
 
 int scenario_open_play_id();
-
-int scenario_property_climate();
 
 int scenario_property_enemy();
 

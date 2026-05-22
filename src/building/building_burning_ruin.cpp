@@ -118,7 +118,6 @@ xspan<uint16_t> building_burning_ruin::get_all() {
 
 void building_burning_ruin::update_all_ruins() {
     OZZY_PROFILER_FUNCTION();
-    int climate = scenario_property_climate();
     bool recalculate_terrain = 0;
 
     g_burning_ruins.clear();
@@ -134,7 +133,7 @@ void building_burning_ruin::update_all_ruins() {
 }
 
 bool building_burning_ruin::update() {
-    if (base.state == BUILDING_STATE_RUBBLE) { 
+    if (base.state == BUILDING_STATE_RUBBLE) {
         return true;
     }
 
@@ -154,8 +153,7 @@ bool building_burning_ruin::update() {
         return false;
     }
 
-    int climate = scenario_property_climate();
-    if (climate == CLIMATE_DESERT) {
+    if (g_scenario.climate == CLIMATE_DESERT) {
         if (base.fire_duration & 3) { // check spread every 4 ticks
             return false;
         }

@@ -67,6 +67,11 @@ function console_command_request_status(args) {
 	city.create_good_request({ tag_id: 1, resource: RESOURCE_POTTERY, amount: amount, months_initial: 12 })
 }
 
+[console_command=show_mission_won]
+function console_command_show_mission_won(args) {
+    emit event_show_window { id: "window_mission_won" }
+}
+
 /** off/on or 0/1 sets explicitly; no or other arg toggles current */
 function console_tri_state_on_off(args, current) {
 	var v = args && args[0]

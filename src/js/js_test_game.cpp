@@ -12,6 +12,7 @@
 #include "mujs/mujs.h"
 #include "platform/arguments.h"
 #include "platform/integral_tests.h"
+#include "widget/debug_console.h"
 
 #include <SDL.h>
 #include <fstream>
@@ -115,6 +116,16 @@ static void js_test_signal_ready_native(js_State *J) {
     J->pushundefined();
 }
 
+static void js_test_run_console_command_native(js_State *J) {
+    if (js_isundefined(J, 1)) {
+        J->pushundefined();
+        return;
+    }
+    pcstr line = js_strnode_cstr(js_tostring(J, 1));
+    run_debug_command(line);
+    J->pushundefined();
+}
+
 ANK_DECLARE_JSFUNCTION_ITERATOR(register_test_js_functions);
 inline void register_test_js_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_test_read_log_file_native,   "__test_read_log_file",   0);
@@ -122,5 +133,6 @@ inline void register_test_js_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_test_pump_frames_native,     "__test_pump_frames",     1);
     REGISTER_GLOBAL_FUNCTION(J, js_test_mouse_click_native,     "__test_mouse_click",     2);
     REGISTER_GLOBAL_FUNCTION(J, js_test_mouse_right_click_native,"__test_mouse_right_click", 2);
+    REGISTER_GLOBAL_FUNCTION(J, js_test_run_console_command_native,"__test_run_console_command", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_log_test_marker_native,      "__log_marker",      1);
 }

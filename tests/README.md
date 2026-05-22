@@ -51,6 +51,7 @@ If `__test_signal_ready()` is never called the driver times out after ~10 second
 | `__test_pump_frames(n)` | undefined | Advance the real game loop by `n` frames (capped at 240) — use to let UI/events settle between simulated input actions |
 | `__test_mouse_click(x, y)` | undefined | Synthesize a left mouse click at screen pixel `(x, y)`. Internally moves the cursor, presses left, pumps frames, releases, pumps more — onclick handlers fire as in a real session |
 | `__test_mouse_right_click(x, y)` | undefined | Same as above for the right button. Most autoconfig windows (`allow_rmb_goback: true`) close on right-click anywhere outside a control |
+| `__test_run_console_command(line)` | undefined | Dispatch `line` through the in-game debug console parser, exactly as if the player had typed it at the `~` prompt and pressed Enter. Use this to test `[console_command=...]` handlers end-to-end instead of calling the underlying JS function directly |
 | `__log_info_native(msg)` | undefined | Write `msg` to the log (use to leave context lines for FAIL diagnostics) |
 | `__log_marker(tag)` | undefined | Write `tag` to the log; in `--integraltests` mode it is prefixed with `[test-marker] ` so tests can grep for it, in normal play it is a plain log line. Use this from window init handlers to opt the window into test observability |
 

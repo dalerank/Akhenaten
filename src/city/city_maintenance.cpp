@@ -130,7 +130,6 @@ void city_maintenance_t::update_fire_direction() {
 void city_maintenance_t::check_building_destroying() {
     OZZY_PROFILER_FUNCTION();
 
-    int climate = scenario_property_climate();
     int recalculate_terrain = 0;
     random_generate_next();
     int random_global = random_byte() & 7;

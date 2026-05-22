@@ -174,7 +174,7 @@ void building_industry_update_farms(void) {
 
 void building_industry_update_wheat_production() {
     OZZY_PROFILER_FUNCTION();
-    if (scenario_property_climate() == CLIMATE_NORTHERN)
+    if (g_scenario.climate == CLIMATE_NORTHERN)
         return;
 
     buildings_valid_do([] (building &b) {

@@ -104,7 +104,7 @@ static void draw_foreground(int) {
 
     lang_text_draw(44, 76, 32, 125, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw({ 212, 116 }, { 250, 30 }, data.focus_button_id == 2);
-    lang_text_draw_centered(44, 77 + scenario_property_climate(), 212, 125, 250, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(44, 77 + g_scenario.climate, 212, 125, 250, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 40, 32, 165, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw({ 212, 156 }, { 250, 30 }, data.focus_button_id == 3);
@@ -225,7 +225,7 @@ static void button_demand_changes(int param1, int param2) {
 
 static void change_climate(int param1, int param2) {
     scenario_editor_cycle_climate();
-    //    image_load_main_paks(scenario_property_climate(), 1, 0);
+    //    image_load_main_paks(g_scenario.climate, 1, 0);
     widget_minimap_invalidate();
 }
 

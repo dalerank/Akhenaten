@@ -356,7 +356,7 @@ void minimap_window::draw(UiFlags flags) {
 
 void minimap_window::draw_uncached(vec2i pos) {
     screen_offset = pos;
-    enemy_color = ENEMY_COLOR_BY_CLIMATE[scenario_property_climate()];
+    enemy_color = ENEMY_COLOR_BY_CLIMATE[g_scenario.climate];
     draw(UiFlags_None);
 
     cached_texture = graphics_save_to_texture(cached_texture, screen_offset, size);

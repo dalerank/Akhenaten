@@ -25,4 +25,5 @@ scenario = extend(__scenario, {
     @housing_count_goal: { get: function() { return scenario_win_criteria_goal(__win_criteria.housing_count); } }
     @housing_level_goal: { get: function() { return scenario_win_criteria_goal(__win_criteria.housing_level); } }
     @population_goal: { get: function() { return scenario_win_criteria_goal(__win_criteria.population); } }
+    @is_custom: { get: function() { return __scenario.scmode != e_scenario_normal; } }
 })

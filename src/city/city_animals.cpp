@@ -47,7 +47,7 @@ void city_animals_t::create_herds() {
     scenario_map_foreach_herd_point([this] (tile2i p) {
         e_figure_type herd_type;
         int num_animals;
-        switch (scenario_property_climate()) {
+        switch (g_scenario.climate) {
         case CLIMATE_CENTRAL:
             herd_type = FIGURE_ANTELOPE;
             num_animals = rand() % 10;
