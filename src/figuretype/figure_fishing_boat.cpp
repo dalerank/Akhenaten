@@ -48,7 +48,7 @@ water_dest map_water_get_closest_wharf(figure &boat) {
 
     int mindist = 9999;
     tile2i dock_tile;
-    buildings_valid_do([&] (building &b) {      
+    buildings_valid_do([&] (building &b) {в
         auto w = b.dcast_fishing_wharf();
         if (!w) {
             return;
@@ -212,7 +212,7 @@ void figure_fishing_boat::figure_action() {
 
     case ACTION_192_FISHING_BOAT_FISHING: {
             base.wait_ticks++;
-        
+
             // Calculate fishing time based on worker percentage
             // More workers = faster fishing (less time needed)
             int fishing_time_base = current_params().fishing_time_base;

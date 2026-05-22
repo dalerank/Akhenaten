@@ -346,12 +346,6 @@ dock_orders_window = {
     }
 }
 
-info_window_tower = {
-    ui : baseui(building_info_window, {
-
-    })
-}
-
 info_window_senet_house = {
     ui : baseui(building_info_window, {
         advice        : text({pos: [36, 164], wrap:400, font : FONT_NORMAL_BLACK_ON_DARK, multiline:true }),

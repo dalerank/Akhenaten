@@ -8,7 +8,6 @@
 #include "building/building_storage_yard.h"
 #include "building/building_storage_room.h"
 #include "grid/road_access.h"
-#include "graphics/painter.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/elements/lang_text.h"
