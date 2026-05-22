@@ -771,6 +771,7 @@ building_mortuary {
   monthly_linen_consumption : 20
   min_houses_coverage : 50
   building_size : 2
+  labor_category : LABOR_CATEGORY_WATER_HEALTH
   meta { help_id:66, text_id:82 }
   info_sound : "Wavs/mortuary.wav"
   cost [ 20, 30, 50, 100, 200 ]
