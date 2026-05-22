@@ -18,6 +18,7 @@
 #include "core/log.h"
 #include "core/profiler.h"
 #include "game/game.h"
+#include "editor/tool.h"
 
 pcstr __widget_top_menu_new_game(int, int) {
     widget_top_menu_clear_state();
@@ -148,3 +149,14 @@ pcstr __widget_top_menu_toggle_debug_properties(int, int) {
     return "";
 }
 ANK_FUNCTION_2(__widget_top_menu_toggle_debug_properties)
+
+pcstr __widget_top_menu_toggle_debug_terrain_paint(int, int) {
+    game.debug_terrain_paint = !game.debug_terrain_paint;
+    if (!game.debug_terrain_paint) {
+        editor_tool_deactivate();
+    }
+    widget_top_menu_clear_state();
+    window_go_back();
+    return "";
+}
+ANK_FUNCTION_2(__widget_top_menu_toggle_debug_terrain_paint)

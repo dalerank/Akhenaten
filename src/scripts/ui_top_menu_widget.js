@@ -37,6 +37,7 @@ function top_menu_js_debugger_toggle(p1, p2) {
 function top_menu_make_fullscreenshot(p1, p2) { game.make_screenshot(1) }
 function top_menu_make_screenshot(p1, p2) { game.make_screenshot(0) }
 function top_menu_debug_properties_text(p1, p2) { return game.debug_properties ? "Properties ON" : "Properties OFF" }
+function top_menu_debug_terrain_paint_text(p1, p2) { return game.debug_terrain_paint ? "Terrain paint ON" : "Terrain paint OFF" }
 function top_menu_debug_write_video_text(p1, p2) { return game.debug_write_video ? "Write Video ON" : "Write Video OFF" }
 
 function top_menu_debug_buildings_text(p1, p2) { return game.debug_render_mode == e_debug_render_building ? "Buildings ON" : "Buildings OFF" }
@@ -129,6 +130,9 @@ top_menu_widget {
 	debug {
  		properties		: menu_item({textfn: top_menu_debug_properties_text
 									 onclick: __widget_top_menu_toggle_debug_properties })
+
+ 		terrain_paint	: menu_item({textfn: top_menu_debug_terrain_paint_text
+									 onclick: __widget_top_menu_toggle_debug_terrain_paint })
 
  		make_screenshot : menu_item({text: "Make full screenshot", onclick: top_menu_make_fullscreenshot })
  		make_full_screenshot : menu_item({text: "Make screenshot", onclick: top_menu_make_screenshot })

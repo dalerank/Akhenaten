@@ -94,11 +94,30 @@ int SCROLL_MIN_SCREENTILE_X = 0;
 int SCROLL_MIN_SCREENTILE_Y = 0;
 int SCROLL_MAX_SCREENTILE_X = 0;
 int SCROLL_MAX_SCREENTILE_Y = 0;
+int CAMERA_EXTRA_SCROLL_MARGIN_TILES = 0;
+static void camera_validate_position(viewport_t& view);
 void camera_calc_scroll_limits() {
-    SCROLL_MIN_SCREENTILE_X = (GRID_LENGTH - (scenario_map_data()->width / 2) + 2) / 2;
-    SCROLL_MIN_SCREENTILE_Y = ((2 * GRID_LENGTH) - scenario_map_data()->height) / 2;
+    // Y screen-tile units are HALF_TILE_HEIGHT_PIXELS, so a 1-world-tile
+    // margin in Y costs 2 screen-Y units; X units already map 1:1 to a
+    // world tile's screen width. Subtracting from MIN automatically widens
+    // MAX by the same amount because MAX is defined symmetrically about
+    // GRID_LENGTH below.
+    const int margin = CAMERA_EXTRA_SCROLL_MARGIN_TILES;
+    SCROLL_MIN_SCREENTILE_X = (GRID_LENGTH - (scenario_map_data()->width / 2) + 2) / 2 - margin;
+    SCROLL_MIN_SCREENTILE_Y = ((2 * GRID_LENGTH) - scenario_map_data()->height) / 2 - 2 * margin;
     SCROLL_MAX_SCREENTILE_X = GRID_LENGTH - SCROLL_MIN_SCREENTILE_X + 2;
     SCROLL_MAX_SCREENTILE_Y = (2 * GRID_LENGTH) - SCROLL_MIN_SCREENTILE_Y;
+}
+
+void camera_set_extra_scroll_margin(int world_tiles) {
+    if (world_tiles < 0) {
+        world_tiles = 0;
+    }
+    CAMERA_EXTRA_SCROLL_MARGIN_TILES = world_tiles;
+    camera_calc_scroll_limits();
+    // Tightening the bounds may leave the camera outside the new clamp;
+    // validate to snap back to the nearest allowed edge.
+    camera_validate_position(g_city_view);
 }
 
 vec2i city_view_get_camera_max_tile() {

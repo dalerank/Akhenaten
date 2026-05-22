@@ -20,6 +20,9 @@
 #include "backends/imgui_impl_sdl2.h"
 #include "dev/debug.h"
 #include "dev/perfmon.h"
+#include "editor/tool.h"
+#include "building/construction/build_planner.h"
+#include "graphics/view/view.h"
 
 #include <iostream>
 
@@ -289,6 +292,85 @@ void game_debug_properties_draw() {
     //g_debug_figure_id = 0;
 }
 
+void game_debug_terrain_paint_draw() {
+    // Detect open/close edges so we react to both the top-menu toggle and
+    // the ImGui window-close ('X'). On open: widen the camera scroll
+    // bounds by 20 world tiles so the painter can reach the off-map ring.
+    // On close: reset the bounds, which also snaps the camera back to the
+    // nearest allowed perimeter, and drop any active brush.
+    static bool s_prev_open = false;
+    const bool is_open = game.debug_terrain_paint;
+    if (is_open != s_prev_open) {
+        if (is_open) {
+            camera_set_extra_scroll_margin(36);
+        } else {
+            camera_set_extra_scroll_margin(0);
+            editor_tool_deactivate();
+        }
+        s_prev_open = is_open;
+    }
+
+    if (!is_open) {
+        return;
+    }
+
+    ImGui::SetNextWindowSize(ImVec2(220, 320), ImGuiCond_FirstUseEver);
+    if (!ui::Begin("Terrain Paint", &game.debug_terrain_paint)) {
+        ImGui::End();
+        return;
+    }
+
+    struct brush_def { int tool; pcstr label; };
+    static const brush_def brushes[] = {
+        { TOOL_GRASS,      "Land" },
+        { TOOL_TREES,      "Trees" },
+        { TOOL_WATER,      "Water" },
+        { TOOL_FLOODPLAIN, "Floodplain" },
+        { TOOL_REEDS,      "Reeds" },
+        { TOOL_ROCKS,      "Rocks" },
+        { TOOL_MEADOW,     "Meadow" },
+    };
+
+    const int active_tool = editor_tool_is_active() ? editor_tool_type() : -1;
+
+    for (const auto &b : brushes) {
+        const bool selected = (active_tool == b.tool);
+        if (selected) {
+            ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive));
+        }
+        if (ImGui::Button(b.label, ImVec2(-FLT_MIN, 0))) {
+            editor_tool_set_type(b.tool);
+            // selecting a brush cancels any pending building placement
+            g_city_planner.construction_cancel();
+        }
+        if (selected) {
+            ImGui::PopStyleColor();
+        }
+    }
+
+    ImGui::Separator();
+
+    int brush_size = editor_tool_brush_size();
+    if (ImGui::SliderInt("Brush size", &brush_size, 1, 5)) {
+        editor_tool_set_brush_size(brush_size);
+    }
+
+    ImGui::Separator();
+
+    if (ImGui::Button("Stop painting", ImVec2(-FLT_MIN, 0))) {
+        editor_tool_deactivate();
+    }
+
+    if (active_tool >= 0) {
+        ImGui::TextDisabled("Left-click/drag map to paint.");
+        ImGui::TextDisabled("Right-click to deactivate brush.");
+    } else {
+        ImGui::TextDisabled("Select a brush above to start.");
+    }
+
+    ImGui::End();
+}
+
 void game_debug_cli_message(pcstr msg) {
     debug_console() << msg << std::endl;
 }
@@ -343,7 +425,7 @@ bool game_imgui_overlay_handle_event(void *e) {
         debug_console().skip_event = true;
     }
 
-    if (!(game.debug_console || game.debug_properties || game.debug_perfmon)) {
+    if (!(game.debug_console || game.debug_properties || game.debug_perfmon || game.debug_terrain_paint)) {
         return false;
     }
 

@@ -50,3 +50,11 @@ shore_orientation map_shore_determine_orientation(tile2i tile, int size, bool ad
 water_dest map_water_find_shipwreck_tile(figure &wreck);
 void map_water_rebuild_shores();
 bool map_water_can_spawn_boat(tile2i tile, int size, tile2i &boat_tile);
+
+// Walk every water tile inside the region (widened by 1) and set/clear
+// TERRAIN_DEEPWATER based on Chebyshev distance to land: d == 1 keeps
+// TERRAIN_WATER only (the 1-tile shallow shore collar), d >= 2 promotes
+// to TERRAIN_DEEPWATER. Off-map counts as land. Mirrors the 1-tile shallow
+// collar that original Pharaoh maps maintain by hand and keeps the
+// deepwater pattern table (which has no land-edge art) off shore tiles.
+void map_water_recompute_depth_region(tile2i tmin, tile2i tmax);

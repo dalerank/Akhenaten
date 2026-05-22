@@ -46,6 +46,9 @@ ANK_FUNCTION(__game_is_fullscreen_only)
 bool __game_debug_properties() { return game.debug_properties; }
 ANK_FUNCTION(__game_debug_properties)
 
+bool __game_debug_terrain_paint() { return game.debug_terrain_paint; }
+ANK_FUNCTION(__game_debug_terrain_paint)
+
 bool __game_writing_video() { return game.get_write_video(); }
 ANK_FUNCTION(__game_writing_video)
 

@@ -11,6 +11,8 @@ enum {
     TOOL_SHRUB = 4,
     TOOL_ROCKS = 5,
     TOOL_MEADOW = 6,
+    TOOL_FLOODPLAIN = 7,
+    TOOL_REEDS = 8,
     TOOL_ACCESS_RAMP = 9,
     TOOL_ROAD = 10,
     TOOL_RAISE_LAND = 11,
