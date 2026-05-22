@@ -138,6 +138,12 @@ formation_id building_fort::create_batalion() {
         return 0;
     }
 
+    // The free slot may still hold stale data from a previous occupant: a dead
+    // herd is never memset (only enemy formations get cleared on death), so
+    // is_herd / prev.layout (-> "Unknown formation 9") / morale counters can leak
+    // into the new legion and corrupt it. Reset the slot before populating it.
+    g_formations.clear(m->id);
+
     m->faction_id = 1;
     m->in_use = 1;
     m->own_batalion = true;
