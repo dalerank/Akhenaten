@@ -50,12 +50,14 @@ mission10 { // Saqqara
                 BUILDING_SCRIBAL_SCHOOL,
 			  ]
 
+	// Goals match the original Pharaoh 1.3 mission pak (verified against raw pak
+	// values): pop 3500, prosperity 15, monument 19, kingdom 50, NO culture goal.
 	win_criteria {
 		population {enabled : true, goal : 3500 }
-		culture    {enabled : true, goal : 25 }
+		culture    {enabled : false }
 		prosperity {enabled : true, goal : 15 }
 		monuments  {enabled : true, goal : 19 }
-        kingdom    {enabled : true, goal : 50 }
+		kingdom    {enabled : true, goal : 50 }
 	}
 
 	cities [

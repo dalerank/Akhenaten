@@ -40,11 +40,15 @@ mission8 { // Selima
                 BUILDING_SCRIBAL_SCHOOL,
 			  ]
 
+	// Goals match the original Pharaoh 1.3 mission pak (verified against the raw
+	// pak values and the HeavenGames/Sierra walkthroughs): pop 3000, culture 20,
+	// prosperity 20, kingdom 55, no monument rating goal.
 	win_criteria {
-		population {enabled : true, goal : 2500 }
-		culture    {enabled : true, goal : 25 }
-		prosperity {enabled : true, goal : 25 }
-		monuments  {enabled : true, goal : 18 }
+		population {enabled : true, goal : 3000 }
+		culture    {enabled : true, goal : 20 }
+		prosperity {enabled : true, goal : 20 }
+		kingdom    {enabled : true, goal : 55 }
+		monuments  {enabled : false }
 	}
 
     enable_scenario_events : true
