@@ -20,6 +20,7 @@
 #include "grid/sprite.h"
 #include "grid/terrain.h"
 #include "city/city.h"
+#include "js/js_game.h"
 #include "scenario/earthquake.h"
 
 #include <string.h>
@@ -48,6 +49,10 @@ void game_undo_disable(void) {
     auto &data = g_undo_data;
     data.available = 0;
 }
+
+void __game_undo_disable() { game_undo_disable(); }
+ANK_FUNCTION(__game_undo_disable)
+
 void game_undo_add_building(building* b) {
     auto &data = g_undo_data;
     if (b->id <= 0)

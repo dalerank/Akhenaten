@@ -179,11 +179,10 @@ static void pre_load() { // do we NEED this...?
 
 static void post_load() {
     // scenario settings
-    scenario_set_name(g_scenario.scenario_name);
     city_set_player_name(game_features::gameopt_player_name.to_string());
     mission_id_t missionid(g_scenario.campaign_scenario_id);
     int mission_rank = get_scenario_mission_rank(missionid._id);
-    g_scenario.set_campaign_rank(mission_rank);
+    g_scenario.campaign_mission_rank = mission_rank;
 
     // Clear mission variables when starting a new mission (not when loading from save)
     bool is_new_mission = (game.session.last_loaded == e_session_mission);

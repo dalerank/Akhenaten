@@ -21,7 +21,7 @@ function victory_dialog_continue_5() {
 
 [es=(window_victory_dialog, init)]
 function window_victory_dialog_on_init(window) {
-    var rank = __scenario_settings.campaign_mission_rank
+    var rank = scenario.campaign_mission_rank
     var is_custom = scenario.scmode != e_scenario_normal
     var won = __scenario_victory.state == 1
     var next_scenario = rank + 1

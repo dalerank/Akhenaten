@@ -21,3 +21,6 @@ ANK_GLOBAL_OBJECT(g_mouse, __mouse,
     right,
     is_inside_window,
     is_touch);
+
+void __mouse_reset_up_state() { mouse::ref().reset_up_state(); }
+ANK_FUNCTION(__mouse_reset_up_state)

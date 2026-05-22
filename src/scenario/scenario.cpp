@@ -39,7 +39,7 @@ int get_custom_mission_id(xstring mission) {
 
 void scenario_data_t::init() {
     campaign_scenario_id = 0;
-    settings.campaign_mission_rank = 0;
+    campaign_mission_rank = 0;
     scmode = e_scenario_normal;
     settings.starting_kingdom = difficulty_starting_kingdom();
 }
@@ -153,10 +153,6 @@ e_scenario_mode scenario_data_t::mode() {
     return scmode;
 }
 
-void scenario_data_t::set_campaign_rank(int rank) {
-    settings.campaign_mission_rank = rank;
-}
-
 bool scenario_data_t::is_scenario_id(xspan<int> missions) {
     const bool is_custom_map = scmode != e_scenario_normal;
     if (is_custom_map) {
@@ -174,11 +170,11 @@ bool scenario_data_t::is_scenario_id(xspan<int> missions) {
 
 int scenario_data_t::is_before_mission(int mission) {
     const bool is_custom_map = (mode() != e_scenario_normal);
-    return !is_custom_map && settings.campaign_mission_rank < mission;
+    return !is_custom_map && campaign_mission_rank < mission;
 }
 
-void scenario_set_name(const uint8_t* name) {
-    string_copy(name, g_scenario.scenario_name, MAX_SCENARIO_NAME);
+void scenario_set_name(pcstr name) {
+    g_scenario.scenario_name = (name && *name) ? name : "";
 }
 
 int scenario_open_play_id() {
@@ -372,7 +368,7 @@ io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version)
 io_buffer* iob_scenario_carry_settings = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario.settings.starting_kingdom);
     iob->bind____skip(4); // legacy starting_personal_savings (mission scripts set kingdome savings)
-    iob->bind(BIND_SIGNATURE_INT32, &g_scenario.settings.campaign_mission_rank);
+    iob->bind(BIND_SIGNATURE_INT32, &g_scenario.campaign_mission_rank);
 });
 
 io_buffer* iob_scenario_is_custom = new io_buffer([](io_buffer* iob, size_t version) {
@@ -381,7 +377,7 @@ io_buffer* iob_scenario_is_custom = new io_buffer([](io_buffer* iob, size_t vers
 });
 
 io_buffer* iob_scenario_map_name = new io_buffer([](io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_RAW, &g_scenario.scenario_name, MAX_SCENARIO_NAME);
+    iob->bind(BIND_SIGNATURE_XSTR, g_scenario.scenario_name, MAX_SCENARIO_NAME);
 });
 
 void scenario_data_t::update() {

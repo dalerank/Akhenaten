@@ -25,7 +25,7 @@ function discord_presence_city_details(ev) {
             return pname
         }
     }
-    var n = __scenario_scenario_name()
+    var n = scenario.scenario_name
     if (n && n.length > 0) {
         return n
     }

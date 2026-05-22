@@ -1098,9 +1098,9 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
 
     iob->bind(BIND_SIGNATURE_INT32, &data.population.lost_troop_request);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_43f0);
-    iob->bind(BIND_SIGNATURE_INT32, &data.mission.has_won);
-    iob->bind(BIND_SIGNATURE_INT32, &data.mission.continue_months_left);
-    iob->bind(BIND_SIGNATURE_INT32, &data.mission.continue_months_chosen); // wrong? hmm... 300 became 120? is it the wages?
+    iob->bind(BIND_SIGNATURE_INT32, &g_scenario.has_won);
+    iob->bind(BIND_SIGNATURE_INT32, &g_scenario.continue_months_left);
+    iob->bind(BIND_SIGNATURE_INT32, &g_scenario.continue_months_chosen);
     iob->bind____skip(4);
     iob->bind____skip(4);
     iob->bind____skip(4);
@@ -1336,8 +1336,8 @@ io_buffer* iob_city_data_extra = new io_buffer([](io_buffer* iob, size_t version
     auto &data = g_city;
     iob->bind(BIND_SIGNATURE_INT16, &data.unused.faction_bytes[0]);
     iob->bind(BIND_SIGNATURE_INT16, &data.unused.faction_bytes[1]);
-    iob->bind(BIND_SIGNATURE_RAW, &data.kingdome.player_name_adversary, MAX_PLAYER_NAME);
-    iob->bind(BIND_SIGNATURE_RAW, &data.kingdome.player_name, MAX_PLAYER_NAME);
+    iob->bind(BIND_SIGNATURE_XSTR, data.kingdome.player_name_adversary, MAX_PLAYER_NAME);
+    iob->bind(BIND_SIGNATURE_XSTR, data.kingdome.player_name, MAX_PLAYER_NAME);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.faction_id);
 });
 
@@ -1371,21 +1371,16 @@ io_buffer *iob_building_list_large = new io_buffer([] (io_buffer *iob, size_t ve
     g_scenario.bind_data(iob, version, 2000);
 });
 
-const uint8_t* city_player_name() {
-    return g_city.kingdome.player_name;
+pcstr city_player_name() {
+    return g_city.kingdome.player_name.c_str();
 }
 
 void city_set_player_name(xstring name) {
-    auto &data = g_city;
-    string_copy((const uint8_t*)name.c_str(), data.kingdome.player_name, MAX_PLAYER_NAME);
+    g_city.kingdome.player_name = name;
 }
-void city_save_campaign_player_name() {
-    auto &data = g_city;
-    string_copy(data.kingdome.player_name, data.kingdome.campaign_player_name, MAX_PLAYER_NAME);
-}
+
 void city_restore_campaign_player_name() {
-    auto &data = g_city;
-    string_copy(data.kingdome.campaign_player_name, data.kingdome.player_name, MAX_PLAYER_NAME);
+    g_city.kingdome.player_name = g_city.kingdome.campaign_player_name;
 }
 
 struct cproperty {

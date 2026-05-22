@@ -30,6 +30,7 @@ import ui_bazaar_window
 import ui_advisor_chief
 import ui_mission_briefing_window
 import ui_victory_dialog
+import ui_mission_end_window
 import ui_mission_choice_window
 import ui_trade_opened_window
 import ui_empire_window

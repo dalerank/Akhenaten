@@ -148,7 +148,7 @@ enum e_scenario_mode {
 class io_buffer;
 
 struct scenario_data_t {
-    uint8_t scenario_name[65];
+    xstring scenario_name;
     scenario_difficulty_t difficulty;
     victory_state_t victory_state;
 
@@ -264,8 +264,11 @@ struct scenario_data_t {
 
     int campaign_scenario_id;
     e_scenario_mode scmode;
+    int campaign_mission_rank;
+    int32_t has_won;
+    int32_t continue_months_left;
+    int32_t continue_months_chosen;
     struct {
-        int campaign_mission_rank;
         int starting_kingdom;
     } settings;
 
@@ -318,7 +321,6 @@ struct scenario_data_t {
     void load_metadata(const mission_id_t &missionid, bool is_new_mission);
     void bind_data(io_buffer *iob, size_t version, size_t size);
     void init();
-    void set_campaign_rank(int rank);
     int is_before_mission(int mission);
 
     int starting_kingdom() {
@@ -343,7 +345,7 @@ ANK_CONFIG_STRUCT(scenario_data_t::win_criterias_t, population, culture, prosper
 
 extern scenario_data_t g_scenario;
 
-void scenario_set_name(const uint8_t* name);
+void scenario_set_name(pcstr name);
 
 
 int scenario_open_play_id();

@@ -196,7 +196,7 @@ void ui::message_dialog_base::eventmsg_template_combine(pcstr template_ptr, T& b
 
     text_tag_substitution tags[] = {
       {"[greeting]", (pcstr)lang_get_string(32, 11 + g_scenario.campaign_scenario_id)},
-      {"[player_name]", (pcstr)city_player_name()},
+      {"[player_name]", city_player_name()},
       {"[reason_phrase]", phrase_text.c_str()},
       {"[city_name]", (pcstr)lang_get_string(195, city_name_id)},
       {"[a_foreign_army]", g_invasions.get_prop((e_enemy_type)msg.sender_faction).army_title},

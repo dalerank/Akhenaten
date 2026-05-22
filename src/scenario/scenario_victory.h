@@ -19,7 +19,6 @@ struct victory_state_t {
     void reset();
     void update_months_to_govern();
     void continue_governing(int months);
-    void stop_governing();
     bool has_won();
 
     bool is_housing_condition_met();

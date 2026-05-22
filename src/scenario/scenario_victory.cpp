@@ -10,8 +10,8 @@
 #include "scenario/criteria.h"
 #include "scenario/scenario.h"
 #include "sound/sound.h"
-#include "window/mission_end.h"
 #include "window/autoconfig_window.h"
+#include "js/js.h"
 #include "js/js_game.h"
 #include "core/profiler.h"
 #include "dev/debug.h"
@@ -197,8 +197,8 @@ void city_t::victory_check() {
     events::emit(event_update_victory_state{ g_city.population.current });
     g_scenario.victory_state.determine_state();
 
-    if (mission.has_won) {
-        g_scenario.victory_state.state = mission.continue_months_left <= 0 ? e_victory_state_won : e_victory_state_none;
+    if (g_scenario.has_won) {
+        g_scenario.victory_state.state = g_scenario.continue_months_left <= 0 ? e_victory_state_won : e_victory_state_none;
     }
 
     if (g_scenario.victory_state.force_win) {
@@ -217,7 +217,7 @@ void city_t::victory_check() {
         g_city_planner.reset();
         if (g_scenario.victory_state.state == e_victory_state_lost) {
             if (mission.fired_message_shown)
-                window_mission_end_show_fired();
+                js_vm_exec_function_args("mission_end_show", "i", /*lost*/1);
             else {
                 mission.fired_message_shown = 1;
                 messages::popup("message_mission_defeat", 0, 0);
@@ -226,7 +226,7 @@ void city_t::victory_check() {
         } else if (g_scenario.victory_state.state == e_victory_state_won) {
             g_sound.music_stop();
             if (mission.victory_message_shown) {
-                ui::window_mission_won::show();
+                js_vm_exec_function_args("mission_end_show", "i", /*won*/0);
                 g_scenario.victory_state.force_win = 0;
             } else {
                 mission.victory_message_shown = 1;
@@ -237,27 +237,21 @@ void city_t::victory_check() {
 }
 
 void victory_state_t::update_months_to_govern() {
-    if (g_city.mission.has_won) {
-        g_city.mission.continue_months_left--;
+    if (g_scenario.has_won) {
+        g_scenario.continue_months_left--;
     }
 }
 
 void victory_state_t::continue_governing(int months) {
-    g_city.mission.has_won = 1;
-    g_city.mission.continue_months_left += months;
-    g_city.mission.continue_months_chosen = months;
+    g_scenario.has_won = 1;
+    g_scenario.continue_months_left += months;
+    g_scenario.continue_months_chosen = months;
     g_city.kingdome.salary_rank = 0;
     g_city.kingdome.salary_amount = 0;
 }
 
-void victory_state_t::stop_governing() {
-    g_city.mission.has_won = 0;
-    g_city.mission.continue_months_left = 0;
-    g_city.mission.continue_months_chosen = 0;
-}
-
 bool victory_state_t::has_won() {
-    return g_city.mission.has_won;
+    return g_scenario.has_won;
 }
 
 bool victory_state_t::is_housing_condition_met() {

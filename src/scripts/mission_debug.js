@@ -9,7 +9,7 @@ function mission_debug_draw_properties_mission_info(ev) {
     imgui.begin_table("MissionInfo", 2, imgui.table_flags_debug_props())
     imgui.property_input("scenario_id", scenario, "campaign_scenario_id")
     imgui.property_input("campaign_id", __game_campaign_id_for_scenario(scenario.campaign_scenario_id))
-    imgui.property_input("mission_rank", __scenario_settings, "campaign_mission_rank")
+    imgui.property_input("mission_rank", scenario, "campaign_mission_rank")
     imgui.property_input("starting_kingdom", __scenario_settings, "starting_kingdom")
     imgui.property_input("personal_savings", city.kingdome, "personal_savings")
     imgui.property_input("scenario_mode", scenario.scmode)

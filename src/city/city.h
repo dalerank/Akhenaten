@@ -88,9 +88,6 @@ struct city_t {
     city_trade_t trade;
     city_map_t map;
     struct {
-        int32_t has_won;
-        int32_t continue_months_left;
-        int32_t continue_months_chosen;
         bool fired_message_shown;
         bool victory_message_shown;
         bool start_message_shown;
@@ -227,9 +224,8 @@ struct city_t {
     void trade_update();
 };
 
-const uint8_t* city_player_name();
+pcstr city_player_name();
 void city_set_player_name(xstring name);
-void city_save_campaign_player_name();
 void city_restore_campaign_player_name();
 bvariant city_get_property(xstring domain, xstring name);
 

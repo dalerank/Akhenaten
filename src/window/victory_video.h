@@ -1,6 +1,5 @@
-#ifndef WINDOW_VICTORY_VIDEO_H
-#define WINDOW_VICTORY_VIDEO_H
+#pragma once
 
-void window_victory_video_show(const char* filename, int width, int height, void (*callback)(void));
+#include <functional>
 
-#endif // WINDOW_VICTORY_VIDEO_H
+void window_victory_video_show(const char* filename, int width, int height, std::function<void()> callback);

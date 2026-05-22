@@ -41,7 +41,7 @@ ANK_FUNCTION(__city_player_rank)
 bool __city_mission_has_won() { return g_scenario.victory_state.has_won(); }
 ANK_FUNCTION(__city_mission_has_won)
 
-pcstr __city_player_name() { return (pcstr)city_player_name; }
+pcstr __city_player_name() { return city_player_name(); }
 ANK_FUNCTION(__city_player_name)
 
 int __formation_get_num_forts() { return formation_get_num_forts(); }

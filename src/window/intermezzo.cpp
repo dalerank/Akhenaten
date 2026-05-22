@@ -13,6 +13,7 @@
 #include "platform/renderer.h"
 #include "game/game.h"
 #include "window/autoconfig_window.h"
+#include "js/js.h"
 #include "js/js_game.h"
 
 #include <map>
@@ -104,3 +105,13 @@ void __game_mission_briefing_intermezzo(int scenario_id) {
     window_intermezzo_show(scenario_id, INTERMEZZO_MISSION_BRIEFING, mission_briefing_after_intermezzo);
 }
 ANK_FUNCTION_1(__game_mission_briefing_intermezzo)
+
+void __game_intermezzo_show(int scenario_id, int type, pcstr on_done) {
+    bstring64 cb = (on_done && *on_done) ? on_done : "";
+    window_intermezzo_show(scenario_id, (intermezzo_type)type, [cb]() {
+        if (!cb.empty()) {
+            js_vm_exec_function(cb.c_str());
+        }
+    });
+}
+ANK_FUNCTION_3(__game_intermezzo_show)

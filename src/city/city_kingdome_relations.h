@@ -37,10 +37,10 @@ struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
     // Savings carried over from the previous campaign mission
     //  survives pre_load and is applied on next mission start
     uint16_t campaign_carry_personal_savings;
-    uint8_t player_name_adversary[32];
-    uint8_t player_name[32];
+    xstring player_name_adversary;
+    xstring player_name;
     // Temp storage for carrying over player name to next campaign mission
-    uint8_t campaign_player_name[32];
+    xstring campaign_player_name;
     int8_t kingdom_milestone_penalty;
     int8_t kingdom_ignored_request_penalty;
 

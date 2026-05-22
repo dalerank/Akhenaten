@@ -17,11 +17,15 @@ ANK_GLOBAL_OBJECT(g_scenario, __scenario,
     is_open_play,
     subtitle,
     scmode,
-    player_rank
+    player_rank,
+    campaign_mission_rank,
+    has_won,
+    continue_months_left,
+    continue_months_chosen,
+    scenario_name
     );
 
 ANK_GLOBAL_OBJECT(g_scenario.settings, __scenario_settings,
-    campaign_mission_rank,
     starting_kingdom
     );
 
@@ -67,9 +71,4 @@ void __scenario_building_allow(int type, bool enabled) {
 }
 ANK_FUNCTION_2(__scenario_building_allow)
 
-xstring __scenario_scenario_name() {
-    pcstr n = (pcstr)g_scenario.scenario_name;
-    return (n && n[0]) ? xstring(n) : xstring();
-}
-ANK_FUNCTION(__scenario_scenario_name)
 
