@@ -87,7 +87,7 @@ function advisor_labors_window_draw(window) {
 
         var clicked = ui.button({ text: "", pos: pos, size: item_size, border: true, body: false })
         if (clicked) {
-            __window_labor_priority_show(i)
+            show_labor_priority_window(i)
         }
 
         var cat = city.labor.get_category(i)

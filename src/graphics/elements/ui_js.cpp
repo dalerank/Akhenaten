@@ -16,7 +16,6 @@
 #include "window/editor/window_editor.h"
 #include "window/message_dialog_new.h"
 #include "window/window_advisors.h"
-#include "window/window_labor_priority.h"
 #include "window/autoconfig_window.h"
 #include "window/window_empire.h"
 #include "empire/trade_prices.h"
@@ -244,11 +243,6 @@ void __ui_window_editor_map_show() {
     window_editor_map_show();
 }
 ANK_FUNCTION(__ui_window_editor_map_show)
-void __window_labor_priority_show(int category) {
-    window_labor_priority_show(category);
-}
-ANK_FUNCTION_1(__window_labor_priority_show)
-
 void __ui_draw_texture(vec2i pos, int img_id) {
     ::painter ctx = game.painter();
     ctx.img_generic(img_id, pos);

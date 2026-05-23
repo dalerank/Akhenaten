@@ -11,6 +11,8 @@ function get_labor_category(index) {
 
 city.labor = extend(__city_labor, {
     get_category: get_labor_category
+    set_priority: __city_labor_set_priority
+    max_selectable_priority: __city_labor_max_selectable_priority
 
     food_production : get_labor_category(LABOR_CATEGORY_FOOD_PRODUCTION)
     industry_commerce : get_labor_category(LABOR_CATEGORY_INDUSTRY_COMMERCE)
