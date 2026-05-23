@@ -21,7 +21,6 @@ public:
     virtual void update_month() override;
     virtual void update_graphic() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_TAX_COLLECTOR; }
-    virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
     int16_t deben_storage() const { return base.deben_storage; }

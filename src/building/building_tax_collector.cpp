@@ -86,12 +86,3 @@ void building_tax_collector::update_month() {
 void building_tax_collector::update_graphic() {
     update_graphic_work_anim();
 }
-
-bvariant building_tax_collector::get_property(const xstring &domain, const xstring &name) const {
-    auto &d = runtime_data();
-    if (domain == tags().building && name == tags().tax_income_or_storage) {
-        return bvariant(d.tax_income_or_storage);
-    }
-
-    return building_impl::get_property(domain, name);
-}
