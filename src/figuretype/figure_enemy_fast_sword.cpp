@@ -130,7 +130,7 @@ void figure_enemy_fast_sword::enemy_fighting(formation *m) {
         }
     }
 
-    auto &d = runtime_data();
+    auto& d = runtime_data();
     bool attacking = false;
     if (target_id > 0) {
         figure *target = figure_get(base.target_figure_id);
