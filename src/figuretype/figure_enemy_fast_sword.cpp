@@ -122,26 +122,47 @@ void figure_enemy_fast_sword::enemy_fighting(formation *m) {
         }
     }
 
+    auto &d = runtime_data();
     bool attacking = false;
     if (target_id > 0) {
         figure *target = figure_get(base.target_figure_id);
         base.direction = calc_general_direction(tile(), target->tile);
-        base.move_ticks(base.speed_multiplier);
-        if (direction() == DIR_FIGURE_NONE) {
-            base.destination_tile = target->tile;
-            route_remove();
-        } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            advance_action(ACTION_151_ENEMY_FAST_SWORD_INITIAL);
-            base.target_figure_id = 0;
+        if (tile().dist(target->tile) < 2.f) {
+            // adjacent to the targeted soldier: hold position and strike it,
+            // mirroring the building-damage path below. Enemies previously only
+            // ever damaged buildings, so they never actually hurt the legion.
+            attacking = true;
+            base.set_flag(e_figure_flag_inattack);
+            m->recent_fight = 6;
+            d.damage_action++;
+            if (d.damage_action > interval_attack_delay()) {
+                int net = base.attack_value() - target->defense_value();
+                target->damage += (net < 0) ? 0 : net;
+                if (target->damage > target->max_damage()) {
+                    target->kill();
+                    target->wait_ticks = 0;
+                    target->play_die_sound();
+                    formation_update_morale_after_death(formation_get(target->formation_id));
+                }
+                d.damage_action = 0;
+            }
+        } else {
+            base.move_ticks(base.speed_multiplier);
+            if (direction() == DIR_FIGURE_NONE) {
+                base.destination_tile = target->tile;
+                route_remove();
+            } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
+                advance_action(ACTION_151_ENEMY_FAST_SWORD_INITIAL);
+                base.target_figure_id = 0;
+            }
         }
-    } 
+    }
 
-    auto &d = runtime_data();
     if (m->destination_building_id > 0) {
         building *b = building_get(m->destination_building_id);
         float dist = tile().dist(b->tile);
-        attacking |= (dist < 2);
-        if (attacking) {
+        if (dist < 2) {
+            attacking = true;
             base.direction = calc_general_direction(tile(), b->tile);
             d.damage_action++;
             m->recent_fight = 6;
