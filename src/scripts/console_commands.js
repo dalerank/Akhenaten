@@ -72,6 +72,15 @@ function console_command_show_mission_won(args) {
     emit event_show_window { id: "window_mission_won" }
 }
 
+[console_command=show_labor_priority]
+function console_command_show_labor_priority(args) {
+    var category = parseInt((args && args[0]) || "0", 10)
+    if (category < 0 || category >= LABOR_CATEGORY_SIZE) {
+        category = 0
+    }
+    show_labor_priority_window(category)
+}
+
 /** off/on or 0/1 sets explicitly; no or other arg toggles current */
 function console_tri_state_on_off(args, current) {
 	var v = args && args[0]

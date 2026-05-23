@@ -31,6 +31,7 @@
 #include "graphics/elements/ui_scope_property.h"
 #include "graphics/elements/arrow_button.h"
 #include "input/mouse.h"
+#include "graphics/font.h"
 
 #include <cstring>
 
@@ -124,12 +125,30 @@ void __ui_text_abs(pcstr text, vec2i pos, int font) {
 }
 ANK_FUNCTION_3(__ui_text_abs)
 
-int __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags, pcstr tooltip) {
+int ANK_FUNCTION_UNIFIED(__ui_draw_button)(const bvariant_map &args) {
+    if (args.values.empty()) {
+        return 0;
+    }
+
+    const xstring text = args.s("text");
+    const vec2i pos = args.vec2i_or_def("pos", {0, 0});
+    const vec2i size = args.vec2i_or_def("size", {0, 0});
+    const e_font font = (e_font)args.i32("font", FONT_NORMAL_BLACK_ON_LIGHT);
+    const e_font fonthv = (e_font)args.i32("font_hover", FONT_INVALID);
+    const e_font fonth = (fonthv != FONT_INVALID ? fonthv : font);
+    const xstring tooltip = args.s("tooltip");
+
+    int flags = args.int32_or_def("flags", 0);
+    const auto border = args["border"];
+    flags |= (!border.is_empty() && !border.as_bool() ? UiFlags_NoBorder : 0);
+    const auto body = args["body"];
+    flags |= (!body.is_empty() && !body.as_bool() ? UiFlags_NoBody : 0);
+
     const bool is_underlying = g_window_manager.underlying_windows_redrawing > 0;
     flags |= is_underlying ? UiFlags_Readonly : UiFlags_None;
-    auto& btn = ui::button(text, pos, size, fonts_vec{(e_font)font}, (UiFlags)flags);
-    if (tooltip && *tooltip) {
-        btn.tooltip(xstring(tooltip));
+    auto& btn = ui::button(text.c_str(), pos, size, fonts_vec{font, fonth}, (UiFlags)flags);
+    if (!tooltip.empty()) {
+        btn.tooltip(tooltip);
     }
 
     if (is_underlying) {
@@ -143,7 +162,6 @@ int __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags, pcs
     }
     return btn.hovered ? 2 : 0;
 }
-ANK_FUNCTION_6(__ui_draw_button);
 
 bool __ui_draw_arw_button(vec2i pos, bool down, bool tiny, bool allow_repeat) {
     const bool is_underlying = g_window_manager.underlying_windows_redrawing > 0;

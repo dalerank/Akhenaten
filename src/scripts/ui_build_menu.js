@@ -164,7 +164,7 @@ function build_menu_widget_ui_draw_foreground(window) {
             btn_flags = btn_flags | UiFlags_Darkened
         }
 
-        var btn_state = __ui_draw_button("", btn_pos, btn_size, FONT_NORMAL_BLACK_ON_DARK, btn_flags, "")
+        var btn_state = ui.button({ text: "", pos: btn_pos, size: btn_size, font: font, flags: btn_flags })
         if (btn_state == 1) {
             build_menu_widget.button_menu_item(item_index)
         }

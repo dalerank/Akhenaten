@@ -214,7 +214,7 @@ function overlay_menu_widget_ui_draw_foreground(window) {
 	for (var i = 0; i < menus.length; i++) {
 		var btn_pos = {x:base_x, y:base_y + i * (cat_size.y + 4)}
 
-		var clicked = __ui_draw_button(__loc(menus[i].title), btn_pos, cat_size, FONT_NORMAL_BLACK_ON_DARK, UiFlags_PanelSmall, "")
+		var clicked = ui.button({ text: __loc(menus[i].title), pos: btn_pos, size: cat_size, font: FONT_NORMAL_BLACK_ON_DARK, flags: UiFlags_PanelSmall })
 		if (clicked) {
 			city.current_overlay = menus[i].ids[0]
 			overlay_menu_widget.close_submenu()
@@ -243,7 +243,7 @@ function overlay_menu_widget_ui_draw_foreground(window) {
 				}
 
 				var sub_text = overlay_menu_overlay_title(menu.ids[j])
-				var clicked = __ui_draw_button(sub_text, [sub_x, sub_y], [sub_item.size.x, sub_item.size.y], FONT_NORMAL_BLACK_ON_DARK, UiFlags_PanelSmall, "")
+				var clicked = ui.button({ text: sub_text, pos: [sub_x, sub_y], size: sub_item.size, font: FONT_NORMAL_BLACK_ON_DARK, flags: UiFlags_PanelSmall })
 				if (clicked) {
 					city.current_overlay = menu.ids[j]
 					overlay_menu_widget.close_submenu()

@@ -11,7 +11,7 @@
 #include <functional>
 
 enum e_font {
-    FONT_SMALL_PLAIN,
+    FONT_SMALL_PLAIN = 0,
     FONT_NORMAL_BLACK_ON_LIGHT,
     FONT_NORMAL_WHITE_ON_DARK,
     FONT_NORMAL_YELLOW, // Yellow font for Pharaoh

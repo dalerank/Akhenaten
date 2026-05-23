@@ -368,6 +368,44 @@ namespace js_helpers {
         }
     }
 
+    // Convert JS value to bvariant (scalars, vec2i arrays/objects)
+    inline bvariant js_bvariant_from_js_value(js_State *J, int idx) {
+        if (js_isboolean(J, idx)) {
+            return bvariant(js_toboolean(J, idx));
+        }
+        if (js_isstring(J, idx)) {
+            xstring pp;
+            pp._set(js_tostring(J, idx));
+            return bvariant(pp);
+        }
+        if (js_isnumber(J, idx) || js_iscnumber(J, idx)) {
+            const double num = js_tonumber(J, idx);
+            if (num == (int)num) {
+                return bvariant((int)num);
+            }
+            return bvariant((float)num);
+        }
+        if (js_isarray(J, idx)) {
+            return bvariant(js_to_value<vec2i>(J, idx));
+        }
+        if (J->isobject(idx)) {
+            js_Object *o = J->toobject(idx);
+            if (o && o->type == JS_CVEC2I) {
+                return bvariant(js_to_value<vec2i>(J, idx));
+            }
+            J->getproperty(idx, property_x);
+            const bool has_x = js_isnumber(J, -1);
+            js_pop(J, 1);
+            J->getproperty(idx, property_y);
+            const bool has_y = js_isnumber(J, -1);
+            js_pop(J, 1);
+            if (has_x || has_y) {
+                return bvariant(js_to_value<vec2i>(J, idx));
+            }
+        }
+        return bvariant();
+    }
+
     // Convert JS object to bvariant_map
     inline bvariant_map js_object_to_bvariant_map(js_State *J, int idx) {
         bvariant_map result;
@@ -379,26 +417,7 @@ namespace js_helpers {
         js_StringNode key;
         while ((key = js_nextiterator(J, -1))) {
             J->getproperty(idx, key);
-            bvariant value;
-
-            if (js_isboolean(J, -1)) {
-                value = bvariant(js_toboolean(J, -1));
-            } else if (js_isstring(J, -1)) {
-                xstring pp;
-                pp._set(js_tostring(J, -1));
-                value = bvariant(pp);
-            } else if (js_isnumber(J, -1) || js_iscnumber(J, -1)) {
-                double num = js_tonumber(J, -1);
-                // Try to preserve integer if possible
-                if (num == (int)num) {
-                    value = bvariant((int)num);
-                } else {
-                    value = bvariant((float)num);
-                }
-            } else {
-                value = bvariant(); // none
-            }
-
+            bvariant value = js_bvariant_from_js_value(J, -1);
             xstring keyp;
             keyp._set(key);
             result[keyp] = value;

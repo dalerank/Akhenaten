@@ -50,17 +50,7 @@ ui.arw_button = function(pos, down, tiny, allow_repeat) {
     return __ui_draw_arw_button(pos, down, tiny, allow_repeat)
 }
 
-ui.button = function(config) {
-    if (!config) {
-        return
-    }
-
-    var flags = UiFlags_None
-    flags |= (config.border === false ? UiFlags_NoBorder : 0)
-    flags |= (config.body === false ? UiFlags_NoBody : 0)
-
-    return __ui_draw_button(config.text, config.pos, config.size, config.font, flags, config.tooltip)
-}
+ui.button = __ui_draw_button
 
 ui.label = function(text, pos, font) {
     if (!text || !pos) {
