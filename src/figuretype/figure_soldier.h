@@ -23,6 +23,7 @@ public:
 
     virtual void on_create() override {}
     virtual void figure_action() override;
+    virtual void acquire_attack() override;
     virtual figure_soldier *dcast_soldier() override { return this; }
 
     //virtual bool play_die_sound() override;

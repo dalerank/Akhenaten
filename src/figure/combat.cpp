@@ -207,6 +207,7 @@ void figure::resume_activity_after_attack() {
     opponent_id = 0;
     attacker_id1 = 0;
     attacker_id2 = 0;
+    set_flag(e_figure_flag_inattack, false); // allow re-acquiring a new target next tick
     route_remove();
 }
 
@@ -355,7 +356,11 @@ void figure::figure_combat_attack_figure_at(int grid_offset) {
         if (attack) {
             action_state_before_attack = action_state;
             acquire_attack();
-            opponent_id = opponent_id;
+            // NB: a local `int opponent_id` shadows the member here; the old
+            // `opponent_id = opponent_id;` was a no-op self-assign that left the
+            // member at 0, so handle_attack() saw figure_get(0) (dead) and bailed
+            // out before ever dealing damage. Assign the member explicitly.
+            this->opponent_id = opponent_id;
             attacker_id1 = opponent_id;
             num_attackers = 1;
             attack_image_offset = 12;

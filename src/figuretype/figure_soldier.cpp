@@ -159,6 +159,14 @@ bool figure_soldier::play_die_sound() {
     return true;
 }
 
+void figure_soldier::acquire_attack() {
+    // enter the C3-style attack state so action_perform() routes us to
+    // figure_combat_handle_attack(); acquire_attack() was empty, so soldiers
+    // never actually engaged after figure_combat_attack_figure_at() set up a target.
+    base.action_state = ACTION_90_SOLDIER_ATTACK;
+    base.set_flag(e_figure_flag_inattack);
+}
+
 void figure_soldier::figure_action() {
     base.set_flag(e_figure_flag_invisible, false);
 
@@ -340,6 +348,11 @@ void figure_soldier::figure_action() {
     case ACTION_89_SOLDIER_AT_DISTANT_BATTLE:
         base.formation_at_rest = 1;
         base.set_flag(e_figure_flag_invisible);
+        break;
+
+    case ACTION_90_SOLDIER_ATTACK:
+        base.formation_at_rest = 0;
+        base.figure_combat_handle_attack(); // deals damage via hit_opponent, resumes when done
         break;
     }
 
