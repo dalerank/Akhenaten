@@ -220,10 +220,6 @@ bvariant building_house::get_property(const xstring &domain, const xstring &name
         return bvariant((pcstr)lang_get_string(29, level));
     }
 
-    if (domain == tags().building && name == tags().tax_income_or_storage) {
-        return bvariant(d.tax_income_or_storage);
-    }
-
     return building_impl::get_property(domain, name);
 }
 
