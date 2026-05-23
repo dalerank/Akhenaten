@@ -4,11 +4,15 @@
 #include "core/app.h"
 #include "widget/debug_console.h"
 
+#include <SDL_log.h>
+
 #include <algorithm>
+#include <cstdarg>
 #include <csignal>
 #include <cstdlib>
 #include <iostream>
-#include <unordered_map>
+#include <fstream>
+#include <core/flat_map.h>
 
 #ifdef CPPTRACE_ENABLED
 #include <cpptrace/cpptrace.hpp>
@@ -24,13 +28,13 @@
 #include <android/log.h>
 #endif
 
-namespace {
+namespace logs {
 
 pcstr logger_filename_ = "akhenaten-log.txt";
 static std::fstream logger_file_stream_;
-static std::string logger_active_path_ = logger_filename_;
+static xstring logger_active_path_ = logger_filename_;
 
-const std::unordered_map<std::string, SDL_LogPriority> PRIORITY_DICT = {
+const flat_map<xstring, SDL_LogPriority, 8> PRIORITY_DICT = {
     {"verbose", SDL_LOG_PRIORITY_VERBOSE},
     {"debug", SDL_LOG_PRIORITY_DEBUG},
     {"info", SDL_LOG_PRIORITY_INFO},
@@ -39,40 +43,37 @@ const std::unordered_map<std::string, SDL_LogPriority> PRIORITY_DICT = {
     {"critical", SDL_LOG_PRIORITY_CRITICAL}
 };
 
-const std::unordered_map<SDL_LogPriority, char const*> PRIORITY_PREFIX = {
-    {SDL_LOG_PRIORITY_VERBOSE, ""},
-    {SDL_LOG_PRIORITY_DEBUG, "debug: "},
-    {SDL_LOG_PRIORITY_INFO, ""},
-    {SDL_LOG_PRIORITY_WARN, "warn: "},
-    {SDL_LOG_PRIORITY_ERROR, "error: "},
-    {SDL_LOG_PRIORITY_CRITICAL, "critical: "}
+const std::array<pcstr, 8> PRIORITY_PREFIX = {
+    /* SDL_LOG_PRIORITY_NONE, 0 */ "",
+    /* SDL_LOG_PRIORITY_VERBOSE, 1 */ "",
+    /* SDL_LOG_PRIORITY_DEBUG, 2 */ "debug: ",
+    /* SDL_LOG_PRIORITY_INFO, 3 */ "",
+    /* SDL_LOG_PRIORITY_WARN, 4 */ "warn: ",
+    /* SDL_LOG_PRIORITY_ERROR, 5 */ "error: ",
+    /* SDL_LOG_PRIORITY_CRITICAL, 6 */ "critical: ",
+    /* SDL_NUM_LOG_PRIORITIES, 7 */ "unknown: ",
 };
 
-char const* get_prefix_of(SDL_LogPriority priority) {
-    auto it = PRIORITY_PREFIX.find(priority);
-    if (it != PRIORITY_PREFIX.end()) {
-        return it->second;
-    }
-
-    return "unknown";
+pcstr get_prefix_of(SDL_LogPriority priority) {
+    int ridx = std::clamp<int>(priority, 0, SDL_NUM_LOG_PRIORITIES);
+    return PRIORITY_PREFIX[priority];
 }
 
 SDL_LogPriority get_log_priority() {
-    if (char const* priority_ptr = std::getenv("SDL_LOG_PRIORITY")) {
-        auto priority_str = std::string(priority_ptr);
-        std::transform(priority_str.begin(), priority_str.end(), priority_str.begin(), [](unsigned char c) {
-            return std::tolower(c);
-        });
-
-        auto it = PRIORITY_DICT.find(priority_str);
-        if (it != PRIORITY_DICT.end())
-            return it->second;
-
-        std::cerr << "Unknown SDL_LOG_PRIORITY value, VERBOSE will be used" << std::endl;
-        return SDL_LOG_PRIORITY_VERBOSE;
+    pcstr env_str = std::getenv("SDL_LOG_PRIORITY");
+    xstring priority_str = xstring(env_str ? env_str : "").tolower();
+    if (priority_str.empty()) {
+        return SDL_LOG_PRIORITY_INFO;
     }
 
-    return SDL_LOG_PRIORITY_INFO;
+    auto it = PRIORITY_DICT.find(priority_str);
+    if (it != PRIORITY_DICT.end()) {
+        return it->second;
+    }
+
+    std::cerr << "Unknown SDL_LOG_PRIORITY value, VERBOSE will be used" << std::endl;
+    return SDL_LOG_PRIORITY_VERBOSE;
+ 
 }
 
 void sig_handler(int signal_num) {
@@ -88,13 +89,26 @@ void sig_handler(int signal_num) {
     std::ostringstream output_stream;
     trace.print_with_snippets(output_stream);
 
-    logs::critical(output_stream.str().c_str());
+    logs::critical("%s", output_stream.str().c_str());
 #endif // CPPTRACE_ENABLED
 }
 
-} // namespace
+void log_v(SDL_LogPriority priority, pcstr format, va_list args) {
+    SDL_LogMessageV(SDL_LOG_CATEGORY_APPLICATION, priority, format, args);
+}
 
-namespace logs {
+/// Logger used by SDL to store messages to the file.
+class Logger {
+public:
+    static void write(void* userdata, int category, SDL_LogPriority priority, pcstr message);
+
+private:
+    Logger();
+    ~Logger();
+
+    void write(pcstr prefix, pcstr message);
+    static void write_to_output_(pcstr prefix, pcstr message);
+};
 
 void initialize() {
     SDL_LogSetOutputFunction(Logger::write, nullptr);
@@ -129,19 +143,77 @@ pcstr output_path() {
     return logger_active_path_.c_str();
 }
 
-void flush_file() {
+void flush() {
     if (logger_file_stream_.is_open()) {
         logger_file_stream_.flush();
     }
 }
 
-} // namespace logs
+void critical(pcstr format, ...) {
+    if (!format) {
+        format = "empty";
+    }
+    va_list args;
+    va_start(args, format);
+    log_v(SDL_LOG_PRIORITY_CRITICAL, format, args);
+    va_end(args);
+}
+
+void error(pcstr format, ...) {
+    if (!format) {
+        format = "empty";
+    }
+    va_list args;
+    va_start(args, format);
+    log_v(SDL_LOG_PRIORITY_ERROR, format, args);
+    va_end(args);
+}
+
+void warn(pcstr format, ...) {
+    if (!format) {
+        format = "empty";
+    }
+    va_list args;
+    va_start(args, format);
+    log_v(SDL_LOG_PRIORITY_WARN, format, args);
+    va_end(args);
+}
+
+void info(pcstr format, ...) {
+    if (!format) {
+        format = "empty";
+    }
+    va_list args;
+    va_start(args, format);
+    log_v(SDL_LOG_PRIORITY_INFO, format, args);
+    va_end(args);
+}
+
+void debug(pcstr format, ...) {
+    if (!format) {
+        format = "empty";
+    }
+    va_list args;
+    va_start(args, format);
+    log_v(SDL_LOG_PRIORITY_DEBUG, format, args);
+    va_end(args);
+}
+
+void verbose(pcstr format, ...) {
+    if (!format) {
+        format = "empty";
+    }
+    va_list args;
+    va_start(args, format);
+    log_v(SDL_LOG_PRIORITY_VERBOSE, format, args);
+    va_end(args);
+}
 
 Logger::Logger() {
     logger_file_stream_.open(logger_filename_, std::fstream::out | std::fstream::trunc | std::fstream::binary);
     if (logger_file_stream_.is_open()) {
         const unsigned char bom[] = { 0xEF, 0xBB, 0xBF };
-        logger_file_stream_.write(reinterpret_cast<const char*>(bom), sizeof(bom));
+        logger_file_stream_.write((pcstr)bom, sizeof(bom));
     }
 }
 
@@ -151,13 +223,13 @@ Logger::~Logger() {
 
 void Logger::write(void* /* userdata */, int /* category */, SDL_LogPriority priority, pcstr message) {
     static Logger logger;
-    pcstr const prefix = get_prefix_of(priority);
+    pcstr prefix = get_prefix_of(priority);
 
-    Logger::write_to_output_(prefix, message);
-    logger.write_to_file_(prefix, message);
+    write_to_output_(prefix, message);
+    logger.write(prefix, message);
 }
 
-void Logger::write_to_file_(pcstr prefix, pcstr message) {
+void Logger::write(pcstr prefix, pcstr message) {
     logger_file_stream_ << prefix << message << std::endl;
 
 #if defined(GAME_PLATFORM_WIN)
@@ -165,14 +237,16 @@ void Logger::write_to_file_(pcstr prefix, pcstr message) {
     OutputDebugStringA(message);
     OutputDebugStringA("\n");
 #elif defined(GAME_PLATFORM_ANDROID)
-    __android_log_print(ANDROID_LOG_INFO, "ozy-and", "%s%s", prefix, message);
+    __android_log_print(ANDROID_LOG_INFO, "ank-and", "%s%s", prefix, message);
 #endif
 
-#if !defined(GAME_PLATFORM_ANDROID)
-    game_debug_cli_message(message);
-#endif // GAME_PLATFORM_ANDROID
+    if (!platform.is_android()) {
+        game_debug_cli_message(message);
+    }
 }
 
 void Logger::write_to_output_(pcstr prefix, pcstr message) {
     std::cout << prefix << message << std::endl;
 }
+
+} // namespace logs

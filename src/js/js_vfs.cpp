@@ -3,6 +3,8 @@
 #include "cmrc/cmrc.hpp"
 #include "js/js_game.h"
 #include "core/log.h"
+#include <iostream>
+#include <fstream>
 #include <filesystem>
 
 CMRC_DECLARE(akhenaten);

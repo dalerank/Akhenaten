@@ -3,6 +3,7 @@
 [![Website](res/badges/website.svg)](https://dalerank.github.io/Akhenaten/)
 [![Discord](res/badges/discord.svg)](https://discord.gg/HS4njmBvpb)
 [![Download](res/badges/download.svg)](https://dalerank.itch.io/Akhenaten)
+
 [![Windows](res/badges/windows.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_windows/master/windows_build.zip)
 [![Linux](res/badges/linux.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_linux/master/linux_build.zip)
 [![Mac/Arm](res/badges/mac-arm.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac_arm/master/macos_build.zip)

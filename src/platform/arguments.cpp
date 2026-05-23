@@ -11,6 +11,8 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <fstream>
+#include <iostream>
 #include <algorithm>
 #include <SDL.h>
 #include <SDL_system.h>
@@ -33,8 +35,6 @@ namespace {
 
 auto const CFG_FILE_NAME = "akhenaten.cfg";
 auto const CFG_FILE_DIR = "akhenaten";
-
-
 
 /// Create formatted string
 /// NOTE: (use C++20 as soon as it will be available to get rid of this)
@@ -491,7 +491,7 @@ bool load(Arguments& arguments) {
 }
 
 void store(Arguments const& arguments) {
-    std::ofstream output(get_configuration_path(), std::ios::trunc | std::ios::out);
+    std::ofstream output(get_configuration_path().c_str(), std::ios::trunc | std::ios::out);
 
     output << "data_directory" << '=' << arguments.get_data_directory().c_str() << '\n';
     output << "window_mode" << '=' << arguments.is_window_mode() << '\n';

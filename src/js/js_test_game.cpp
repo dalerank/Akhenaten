@@ -70,7 +70,7 @@ static bool log_contains_marker(pcstr marker) {
         return false;
     }
 
-    logs::flush_file();
+    logs::flush();
 
     const size_t marker_len = std::strlen(marker);
     return file_contains_marker(logs::output_path(), marker, marker_len);
