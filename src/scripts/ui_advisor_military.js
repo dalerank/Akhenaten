@@ -67,8 +67,8 @@ function advisor_military_window_init(window) {
     window.distant_text.text = __loc(51, distant_battle_text_id)
 
     var total_soldiers_str = __loc(8, 46) + " " + city.military.total_soldiers
-    var total_batalions_str =  city.military.total_batalions + " Companies"
-    window.forts_text.text = total_soldiers_str + " in " + total_batalions_str
+    var total_batalions_str = city.military.total_batalions + " " + __loc(8, 49)
+    window.forts_text.text = total_soldiers_str + " " + __loc(51, 7) + " " + total_batalions_str
 
     if (city.num_forts > 0) {
         window.nothing_text.enabled = false
