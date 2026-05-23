@@ -1,16 +1,5 @@
 log_info("akhenaten: scenario selection window")
 
-// Campaign steps may reference scenario ids that have no JS mission config yet
-// (only a subset of missions are ported). get_mission_config returns undefined
-// for those, so guard against it instead of dereferencing selection_title.
-function mission_selection_title(scenario_id) {
-    var config = get_mission_config(scenario_id)
-    if (config && config.selection_title && config.selection_title.length > 0) {
-        return config.selection_title
-    }
-    return "No title"
-}
-
 [es=(window_scenario_selection, init)]
 function window_scenario_selection_on_init(ev) {
     var list = ev.scenario_map_list
@@ -49,9 +38,6 @@ function window_scenario_selection_on_mission_changed(ev) {
     var sub = window_scenario_selection.campaign_sub_dialog
     ev.side_hdr_period.text = __loc(294, sub * 4)
     ev.side_mission_title.text = mission_selection_title(scenario.campaign_scenario_id)
-    // Mission subtitle comes from its intro message (id 200 + scenario_id), the same
-    // short one-line tagline the briefing window shows (see ui_mission_briefing_window.js).
-    // g_scenario.subtitle is the editor description for custom maps and is garbage ("?s") here.
     ev.side_subtitle.text = __lang_message_subtitle_text(200 + scenario.campaign_scenario_id)
     ev.side_year.text = scenario_selection_format_start_year(scenario.start_year)
 }
@@ -209,10 +195,6 @@ function window_scenario_selection_update_goals(ev) {
     }
     ev.info_goals_body.text = goal_lines.join("\n")
 
-    // Goals are a variable-length multiline block, so the time-limit line and the
-    // monuments section must flow right below it instead of sitting at fixed Y
-    // (otherwise they overlap the last goal lines). Multiline step for FONT_NORMAL
-    // is line_height(14) + 5 = 19px (see text_draw_multiline in graphics/text.cpp).
     var LINE_STEP = 19
     var anchor = ev.info_goals_body.pos
     var y = anchor.y + goal_lines.length * LINE_STEP + 6
@@ -279,7 +261,6 @@ window_scenario_selection {
         btn_scores             : large_button({ pos[550, 542], size[240, 30], text[44, 221], body:2, font:FONT_NORMAL_BLACK_ON_DARK, onclick_event: "show_scores" })
         btn_start              : image_button({ pos[780, 582], size[27, 27], pack:PACK_GENERAL, id:193, offset:4, onclick: window_scenario_selection_btn_start })
 
-        /* Left column (was native draw_side_panel_info in C++). */
         side_hdr_period        : text_center({ pos[545, 165], size[265, 20], align:"center", text:"", font:FONT_NORMAL_BLACK_ON_LIGHT })
         side_mission_title     : text_center({ pos[545, 192], size[265, 36], align:"center", text:"", font:FONT_LARGE_BLACK_ON_DARK, clip_area:true })
         side_subtitle          : text_center({ pos[545, 220], size[265, 20], align:"center", text:"", font:FONT_NORMAL_WHITE_ON_DARK })
@@ -288,7 +269,6 @@ window_scenario_selection {
         side_scores_intro      : text({ pos[545, 280], size[265, 100], wrap:px(16), text:"", font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
         side_scores_body       : text({ pos[545, 280], size[265, 130], wrap:px(16), text:"", font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
 
-        /* Right panel scenario info. */
         info_hdr_mission       : text_center({ pos[545, 272], size[265, 17], align:"center", text[44, 10], font:FONT_NORMAL_WHITE_ON_DARK })
         info_line_climate      : text({ pos[545, 292], size[265, 17], font:FONT_NORMAL_BLACK_ON_DARK })
         info_line_mapsize      : text({ pos[545, 312], size[265, 17], font:FONT_NORMAL_BLACK_ON_DARK })

@@ -26,7 +26,7 @@ mission10 { // Saqqara
 
 	sounds {
 		briefing : "Voice/Mission/210_mission.mp3"
-		victory : "Voice/Mission/210_victory.mp3"  
+		victory : "Voice/Mission/210_victory.mp3"
 	}
 
 	buildings [

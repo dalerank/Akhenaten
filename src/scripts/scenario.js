@@ -4,6 +4,14 @@ function scenario_win_criteria_goal(c) {
     return c.enabled ? c.goal : 0
 }
 
+function mission_selection_title(scenario_id) {
+    var config = get_mission_config(scenario_id)
+    if (config && config.selection_title && config.selection_title.length > 0) {
+        return config.selection_title
+    }
+    return "No title"
+}
+
 scenario = extend(__scenario, {
     map: __scenario_map,
     has_animals: __scenario_has_animals
