@@ -11,6 +11,12 @@ void figure_standard_bearer::on_create() {
 void figure_standard_bearer::figure_action() {
     const formation *m = formation_get(base.formation_id);
 
+    // The standard is the legion's anchor, not a deployable soldier. Keep it marked
+    // at-rest so calculate_figures() doesn't treat a flag-only legion as "deployed"
+    // (is_at_fort would stay 0, which blocks recruit_type and the very first recruit).
+    // Deployed soldiers still drive is_at_fort=0 on their own when the legion marches out.
+    base.formation_at_rest = 1;
+
     base.wait_ticks = 0;
     base.map_figure_remove();
     if (m->is_at_fort) {
