@@ -218,6 +218,18 @@ void formations_t::calculate_batalion_totals() {
         }
 
         if (m->own_batalion) {
+            // Heal corrupted player legions: slot reuse / old saves can leave is_herd
+            // set or a HERD/enemy layout, which excludes the legion from combat and
+            // spams "Unknown formation 9". A player batalion is never a herd and must
+            // hold a valid player layout (COLUMN..AT_REST).
+            m->is_herd = 0;
+            if (m->layout >= FORMATION_ENEMY_MOB) {
+                m->layout = FORMATION_DOUBLE_LINE_1;
+            }
+            if (m->prev.layout >= FORMATION_ENEMY_MOB) {
+                m->prev.layout = FORMATION_DOUBLE_LINE_1;
+            }
+
             num_batalions++;
             if (m->figure_type == FIGURE_STANDARD_BEARER) {
                 g_city.military.add_infantry_batalion();
