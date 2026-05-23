@@ -56,6 +56,14 @@ void figure_enemy_fast_sword::figure_action() {
     base.set_flag(e_figure_flag_inattack, false);
     base.terrain_usage = TERRAIN_USAGE_ENEMY;
 
+    // locked in melee (set up by the shared C3 path): trade blows via hit_opponent
+    // until one side dies, then resume_activity_after_attack clears opponent_id.
+    if (base.opponent_id > 0 && !figure_get(base.opponent_id)->is_dead()) {
+        base.set_flag(e_figure_flag_inattack);
+        base.figure_combat_handle_attack();
+        return;
+    }
+
     switch (action_state()) {
     case FIGURE_ACTION_148_FLEEING:
         base.destination_tile = base.source_tile;
@@ -128,24 +136,13 @@ void figure_enemy_fast_sword::enemy_fighting(formation *m) {
         figure *target = figure_get(base.target_figure_id);
         base.direction = calc_general_direction(tile(), target->tile);
         if (tile().dist(target->tile) < 2.f) {
-            // adjacent to the targeted soldier: hold position and strike it,
-            // mirroring the building-damage path below. Enemies previously only
-            // ever damaged buildings, so they never actually hurt the legion.
+            // adjacent to the soldier: engage through the shared C3 combat so both
+            // sides use the same attack/defense math, the 2-attacker cap and the
+            // formation-defense bonuses. (A custom damage path here let unlimited
+            // barbarians gang a single soldier and ignored formation defense.)
             attacking = true;
-            base.set_flag(e_figure_flag_inattack);
             m->recent_fight = 6;
-            d.damage_action++;
-            if (d.damage_action > interval_attack_delay()) {
-                int net = base.attack_value() - target->defense_value();
-                target->damage += (net < 0) ? 0 : net;
-                if (target->damage > target->max_damage()) {
-                    target->kill();
-                    target->wait_ticks = 0;
-                    target->play_die_sound();
-                    formation_update_morale_after_death(formation_get(target->formation_id));
-                }
-                d.damage_action = 0;
-            }
+            base.figure_combat_attack_figure_at(target->tile.grid_offset());
         } else {
             base.move_ticks(base.speed_multiplier);
             if (direction() == DIR_FIGURE_NONE) {
