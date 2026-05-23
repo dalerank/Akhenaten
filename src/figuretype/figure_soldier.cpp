@@ -260,7 +260,11 @@ void figure_soldier::figure_action() {
         if (action_state() != ACTION_83_SOLDIER_GOING_TO_STANDARD) {
             if (type() == FIGURE_ARCHER) {
                 base.javelin_launch_missile();
-            } else if (type() == FIGURE_FCHARIOTEER) {
+            } else if (type() == FIGURE_INFANTRY || type() == FIGURE_FCHARIOTEER) {
+                // FIGURE_INFANTRY is the legionary (melee) equivalent and must attack
+                // adjacent enemies while at the standard, like FIGURE_FORT_LEGIONARY did
+                // in the original. The JS-era port left infantry doing nothing here, so
+                // foot soldiers never engaged.
                 base.legionary_attack_adjacent_enemy();
             }
         }
