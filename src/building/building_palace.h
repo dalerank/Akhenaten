@@ -21,8 +21,6 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void spawn_figure() override;
-
-    virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
 };
 
 class building_village_palace : public building_palace {

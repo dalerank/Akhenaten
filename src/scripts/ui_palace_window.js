@@ -13,7 +13,7 @@ info_window_palace {
                                                                     workers_desc : text({pos[50, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
                                                                 }
                                                           })
-        vaults_hold   : text({pos[44, 44], text:"${text.2} ${building.tax_income_or_storage} Db", font: FONT_NORMAL_BLACK_ON_LIGHT })
+        vaults_hold   : text({pos[44, 44], font: FONT_NORMAL_BLACK_ON_LIGHT })
         warning_desc  : text({pos[32, 66], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
         text_visit    : text({pos[90, 252], font: FONT_NORMAL_BLACK_ON_LIGHT, text:"#visit_rating_advisor" })
         visit_advisor : image_button({pos[52, 246], size[28, 28], pack:PACK_GENERAL, id:106,
@@ -35,4 +35,5 @@ function palace_info_window_init_workers_desc(window) {
     }
 
     window.workers_desc.text = __loc(reason.group, reason.id)
+    window.vaults_hold.text = __loc(palace.meta_text_id, 2) + " " + palace.tax_income_or_storage + " Db"
 }

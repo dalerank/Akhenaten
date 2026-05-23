@@ -96,12 +96,3 @@ void building_palace::bind_dynamic(io_buffer *iob, size_t version) {
 void building_palace::spawn_figure() {
     common_spawn_figure_trigger(50);
 }
-
-bvariant building_palace::get_property(const xstring &domain, const xstring &name) const {
-    auto &d = runtime_data();
-    if (domain == tags().building && name == tags().tax_income_or_storage) {
-        return bvariant(d.tax_income_or_storage);
-    }
-
-    return building_impl::get_property(domain, name);
-}
