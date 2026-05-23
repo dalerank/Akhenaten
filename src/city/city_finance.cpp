@@ -312,14 +312,14 @@ void city_finance_t::pay_monthly_salary() {
 
     int salary = g_city.kingdome.salary_amount;
     process_request({ efinance_request_personal_salary, salary });
-    
+
     // Store savings in the mansion building
     const e_building_type mansion_types[] = {
         BUILDING_PERSONAL_MANSION,
         BUILDING_FAMILY_MANSION,
         BUILDING_DYNASTY_MANSION
     };
-    
+
     for (e_building_type type : mansion_types) {
         const auto tracked = g_city.buildings.tracked_buildings()[type];
         for (auto id : tracked) {

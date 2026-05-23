@@ -402,7 +402,6 @@ struct bvariant_map {
         if (it != values.end()) {
             return it->second;
         }
-        // Создаем новый элемент
         values.emplace_back(name, bvariant());
         return values.back().second;
     }
