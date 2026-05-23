@@ -90,17 +90,40 @@ bool building_floodplain_farm::preview::is_blocked(tile2i tile, int size, blocke
     int blocked = 0;
     int num_tiles = (size * size);
 
+    int valid_tiles = 0;
+    const int required_valid_tiles = 4;
     for (int i = 0; i < num_tiles; i++) {
         const int offset = build_planner::tile_grid_offset(orientation_index, i);
         tile2i check_tile = tile.shifted(offset);
-        bool tile_blocked = !map_terrain_is(check_tile, TERRAIN_FLOODPLAIN)
-            || (map_building_at(check_tile) != 0)
-            || map_has_figure_at(check_tile);
+        bool tile_blocked = (map_building_at(check_tile) != 0)
+                            || map_has_figure_at(check_tile);
 
         blocked_tiles.push_back({ check_tile, tile_blocked });
         blocked += (tile_blocked ? 1 : 0);
+
+        valid_tiles += (map_terrain_is(check_tile, TERRAIN_MEADOW | TERRAIN_FLOODPLAIN) ? 1 : 0);
     }
-    return (blocked > 0);
+
+    // a building/figure on any tile blocks placement outright
+    if (blocked > 0) {
+        return true;
+    }
+
+    // otherwise allow placement as long as the majority of the footprint sits
+    // on meadow or floodplain; mark the off-terrain tiles so the ghost shows
+    // exactly which tiles are wrong
+    if (valid_tiles < required_valid_tiles) {
+        blocked_tiles.clear();
+        for (int i = 0; i < num_tiles; i++) {
+            const int offset = build_planner::tile_grid_offset(orientation_index, i);
+            tile2i check_tile = tile.shifted(offset);
+            const bool is_valid = map_terrain_is(check_tile, TERRAIN_MEADOW | TERRAIN_FLOODPLAIN);
+            blocked_tiles.push_back({ check_tile, !is_valid });
+        }
+        return true;
+    }
+
+    return false;
 }
 
 void building_floodplain_farm::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
@@ -118,7 +141,7 @@ void building_floodplain_farm::preview::ghost_preview(build_planner &planer, pai
     draw_crops(ctx, planer.build_type, 0, end, pixel + vec2i{ -60, 30 }, COLOR_MASK_GREEN);
 }
 
-int building_meadow_farm::preview::finalize_check(build_planner &p, tile2i tile, tile2i end, int state) const {
+int building_floodplain_farm::preview::finalize_check(build_planner &p, tile2i tile, tile2i end, int state) const {
     int orientation_index = city_view_orientation() / 2;
     const auto &params = building_static_params::get(p.build_type);
     int num_tiles = (params.building_size * params.building_size);
@@ -132,7 +155,7 @@ int building_meadow_farm::preview::finalize_check(build_planner &p, tile2i tile,
         bool tile_blocked = (map_building_at(check_tile) != 0) || map_has_figure_at(check_tile);
     
         blocked_tiles += (tile_blocked ? 1 : 0);
-        meadow_tiles += (map_terrain_is(check_tile, TERRAIN_MEADOW) ? 1 : 0);
+        meadow_tiles += (map_terrain_is(check_tile, TERRAIN_MEADOW | TERRAIN_FLOODPLAIN) ? 1 : 0);
     }
     
     if (blocked_tiles > 0) {
@@ -146,58 +169,6 @@ int building_meadow_farm::preview::finalize_check(build_planner &p, tile2i tile,
     }
 
     return state;
-}
-
-bool building_meadow_farm::preview::is_blocked(tile2i tile, int size, blocked_tile_vec &blocked_tiles) const {
-    int orientation_index = city_view_orientation() / 2;
-    int blocked = 0;
-    int num_tiles = (size * size);
-
-    int meadow_tiles = 0;
-    int required_meadow_tiles = 4;
-    for (int i = 0; i < num_tiles; i++) {
-        const int offset = build_planner::tile_grid_offset(orientation_index, i);
-        tile2i check_tile = tile.shifted(offset);
-        bool tile_blocked = (map_building_at(check_tile) != 0) 
-                            || map_has_figure_at(check_tile);
-
-        blocked_tiles.push_back({ check_tile, tile_blocked });
-        blocked += (tile_blocked ? 1 : 0);
-
-        meadow_tiles += (map_terrain_is(check_tile, TERRAIN_MEADOW) ? 1 : 0);
-    }
-
-    if (blocked > 0) {
-        return true;
-    }
-
-    if (meadow_tiles < required_meadow_tiles) {
-        blocked_tiles.clear();
-        for (int i = 0; i < num_tiles; i++) {
-            const int offset = build_planner::tile_grid_offset(orientation_index, i);
-            tile2i check_tile = tile.shifted(offset);
-            const bool is_meadow = map_terrain_is(check_tile, TERRAIN_MEADOW);
-            blocked_tiles.push_back({ check_tile, !is_meadow });
-        }
-        return true;
-    }
-
-    return false;
-}
-
-void building_meadow_farm::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
-    const auto &params = building_static_params::get(planer.build_type);
-    blocked_tile_vec blocked_tiles_farm;
-
-    const bool blocked = is_blocked(end, params.building_size, blocked_tiles_farm);
-    if (blocked) {
-        planer.draw_partially_blocked(ctx, false, blocked_tiles_farm);
-        return;
-    }
-
-    int image_id = get_farm_image(planer.build_type, end);
-    planer.draw_building_ghost(ctx, image_id, pixel + vec2i{ -60, 30 });
-    draw_crops(ctx, planer.build_type, 0, end, pixel + vec2i{ -60, 30 }, COLOR_MASK_GREEN);
 }
 
 int building_farm::get_crops_image(e_building_type type, int growth) {
@@ -240,16 +211,25 @@ void building_farm::draw_farm_worker(painter &ctx, int direction, int action, ve
 
 void building_farm::draw_crops(painter &ctx, e_building_type type, int progress, tile2i tile, vec2i point, color color_mask) {
     int image_crops = get_crops_image(type, 0);
-    const auto &fparams = *(const building_farm_grain::static_params*)&building_static_params::get(type);
 
-    if (map_terrain_is(tile, TERRAIN_FLOODPLAIN)) { 
-        // on floodplains - all
+    // crop sprite positions depend on the terrain the farm sits on, not on the
+    // farm's building type — a floodplain farm placed on meadow draws the meadow
+    // layout and vice versa (values mirror src/scripts/building_farm.js)
+    static const vec2i meadow_offsets[5] = {
+        {0, 30}, {30, 45}, {60, 60}, {90, 45}, {120, 30}
+    };
+    static const vec2i floodplain_offsets[9] = {
+        {60, 0}, {90, 15}, {120, 30}, {30, 15}, {60, 30}, {90, 45}, {0, 30}, {30, 45}, {60, 60}
+    };
+
+    if (map_terrain_is(tile, TERRAIN_FLOODPLAIN)) {
+        // on floodplains - all 9 tiles
         for (int i = 0; i < 9; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i * 200) / 100));
 
             auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_from_below);
             command.image_id = image_crops + growth_offset;
-            command.pixel = point + fparams.tile_offsets[i];
+            command.pixel = point + floodplain_offsets[i];
             command.mask = color_mask;
         }
     } else {
@@ -258,7 +238,7 @@ void building_farm::draw_crops(painter &ctx, e_building_type type, int progress,
             int growth_offset = fmin(5, fmax(0, (progress - i * 400) / 100));
             auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_from_below);
             command.image_id = image_crops + growth_offset;
-            command.pixel = point + fparams.tile_offsets[i];
+            command.pixel = point + meadow_offsets[i];
             command.mask = color_mask;
         }
     }
