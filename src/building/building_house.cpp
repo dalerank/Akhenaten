@@ -188,7 +188,8 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind_u16(d.population);
     iob->bind_u8(d.tax_coverage);
     iob->bind_u16((uint16_t&)d.tax_collector_id);
-    iob->bind_i16((int16_t &)d.tax_income_or_storage);
+    //
+    iob->bind_i16(d.tax_income_or_storage);
     iob->bind_u8(d.days_without_food);
     iob->bind_u8(d.hsize);
     iob->bind_u16(d.unreachable_ticks);

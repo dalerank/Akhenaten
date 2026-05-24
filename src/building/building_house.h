@@ -6,9 +6,9 @@
 #include "grid/building.h"
 #include "grid/grid.h"
 
-enum e_house_progress { 
+enum e_house_progress {
     e_house_evolve = 1,
-    e_house_none = 0, 
+    e_house_none = 0,
     e_house_decay = -1
 };
 
