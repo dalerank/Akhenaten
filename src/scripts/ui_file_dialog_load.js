@@ -238,6 +238,8 @@ function file_dialog_load_ui_draw_foreground(window) {
 
 [es=(file_dialog_load, init)]
 function file_dialog_load_on_init(window) {
+    __log_marker("window_show:file_dialog_load")
+
     window.file_type = game.pending_load_type
     file_dialog_load.pending_type = window.file_type
 

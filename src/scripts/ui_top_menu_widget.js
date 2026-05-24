@@ -52,6 +52,14 @@ function top_menu_debug_properties_toggle(p1, p2) {
 	window_go_back()
 }
 function top_menu_debug_terrain_paint_text(p1, p2) { return game.debug_terrain_paint ? "Terrain paint ON" : "Terrain paint OFF" }
+function top_menu_debug_terrain_paint_toggle(p1, p2) {
+	game.debug_terrain_paint = !game.debug_terrain_paint
+	if (!game.debug_terrain_paint) {
+		__editor_tool_deactivate()
+	}
+	widget_top_menu_clear_state()
+	window_go_back()
+}
 function top_menu_debug_write_video_text(p1, p2) { return game.debug_write_video ? "Write Video ON" : "Write Video OFF" }
 
 function top_menu_debug_buildings_text(p1, p2) { return game.debug_render_mode == e_debug_render_building ? "Buildings ON" : "Buildings OFF" }
@@ -228,7 +236,7 @@ top_menu_widget {
 									 onclick: top_menu_debug_properties_toggle })
 
  		terrain_paint	: menu_item({textfn: top_menu_debug_terrain_paint_text
-									 onclick: __widget_top_menu_toggle_debug_terrain_paint })
+									 onclick: top_menu_debug_terrain_paint_toggle })
 
  		make_screenshot : menu_item({text: "Make full screenshot", onclick: top_menu_make_fullscreenshot })
  		make_full_screenshot : menu_item({text: "Make screenshot", onclick: top_menu_make_screenshot })

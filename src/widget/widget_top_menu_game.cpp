@@ -43,6 +43,14 @@ ANK_REGISTER_STRUCT_WRITER(top_menu_widget_background_draw, pos);
 
 top_menu_widget_t ANK_VARIABLE(top_menu_widget);
 
+pcstr __widget_top_menu_hotkeys_options(int, int) {
+    window_hotkey_config_show([] {});
+    return "";
+}
+ANK_FUNCTION_2(__widget_top_menu_hotkeys_options)
+
+ANK_FUNCTION(widget_top_menu_clear_state);
+
 void top_menu_widget_t::menu_item_update(pcstr header, int item, pcstr text) {
     auto menu = headers[header].dcast_menu_header();
     if (!menu) {
