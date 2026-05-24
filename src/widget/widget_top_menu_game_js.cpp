@@ -20,24 +20,6 @@
 #include "game/game.h"
 #include "editor/tool.h"
 
-pcstr __widget_top_menu_new_game(int, int) {
-    widget_top_menu_clear_state();
-    popup_dialog::show_yesno("#popup_dialog_quit", [] (bool confirmed) {
-        if (!confirmed) {
-            window_city_show();
-            return;
-        }
-
-        g_city_planner.reset();
-        game_undo_disable();
-        g_city.reset_overlay();
-        autoconfig_window::show("window_dinasty_menu");
-    });
-
-    return "";
-}
-ANK_FUNCTION_2(__widget_top_menu_new_game)
-
 pcstr __widget_top_menu_replay_map(int, int) {
     widget_top_menu_clear_state();
     popup_dialog::show_yesno("#replay_mission", [] (bool confirmed) {

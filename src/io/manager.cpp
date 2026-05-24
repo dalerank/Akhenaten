@@ -136,10 +136,10 @@ bool FileIOManager::io_failure_cleanup(const char* action, const char* reason) {
     return false;
 }
 
-bool FileIOManager::serialize(const char* filename, int offset, e_file_format format, const int version, void (*init_schema)(e_file_format _format, const int _version)) {
+bool FileIOManager::serialize(pcstr filename, int offset, e_file_format format, const int version, void (*init_schema)(e_file_format _format, const int _version)) {
     // first, clear up the manager data and set the new file info
     clear();
-    strncpy_safe(file_path, filename, MAX_FILE_NAME);
+    file_path = filename;
     file_offset = offset;
     file_format = format;
     file_version = version;
@@ -192,8 +192,7 @@ bool FileIOManager::serialize(const char* filename, int offset, e_file_format fo
     vfs::file_close(fp);
     vfs::sync_em_fs();
 
-    logs::info("File write successful: %s %i@ --- VERSION: %i ---",
-               file_path,
+    logs::info("File write successful: %s %i@ --- VERSION: %i ---", file_path.c_str(),
                file_offset,
                file_version);
 

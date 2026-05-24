@@ -59,7 +59,7 @@ public:
     }
 
     // write/read internal chunk cache (io_buffer sequence) to/from disk file
-    bool serialize(const char* filename, int offset, e_file_format format, const int version, void (*init_schema)(e_file_format _format, const int _version));
+    bool serialize(pcstr filename, int offset, e_file_format format, const int version, void (*init_schema)(e_file_format _format, const int _version));
     bool unserialize(vfs::reader filename, int offset, e_file_format format, const int (*determine_file_version)(pcstr _filename, int _offset),
                      void (*init_schema)(e_file_format _format, const int _version));
 };

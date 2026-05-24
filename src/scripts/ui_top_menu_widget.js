@@ -59,6 +59,22 @@ function top_menu_show_window_by_id(window_id) {
 	}
 }
 
+function top_menu_new_game() {
+	widget_top_menu_clear_state()
+	ui.show_yesno("#popup_dialog_quit",
+		function() {
+			__ui_city_planner_reset()
+			__game_undo_disable()
+			city.current_overlay = OVERLAY_NONE
+			city.previous_overlay = OVERLAY_NONE
+			window_show_by_id("window_dinasty_menu")
+		},
+		function() {
+			ui.window_city_show()
+		}
+	)
+}
+
 top_menu_widget {
 	offset [10, 6]
 	item_height : 20
@@ -76,7 +92,7 @@ top_menu_widget {
 	}
 
 	file {
-		new_game     	: menu_item({text {group:1, id:1}, onclick: __widget_top_menu_new_game })
+		new_game     	: menu_item({text {group:1, id:1}, onclick: top_menu_new_game })
 		replay_map   	: menu_item({text {group:1, id:2}, onclick: __widget_top_menu_replay_map })
 		load_game	    : menu_item({text {group:1, id:3}, onclick: __widget_top_menu_load_map })
 		save_game	    : menu_item({text {group:1, id:4}, onclick: __widget_top_menu_save_map })
