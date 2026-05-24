@@ -135,6 +135,12 @@ function top_menu_show_help(p1, p2) {
 	ui.window_message_dialog("message_dialog_help")
 }
 
+function top_menu_show_about(p1, p2) {
+	widget_top_menu_clear_state()
+	window_go_back()
+	ui.window_message_dialog("message_dialog_about")
+}
+
 top_menu_widget {
 	offset [10, 6]
 	item_height : 20
@@ -185,7 +191,7 @@ top_menu_widget {
 		warnings 		: menu_item({textfn: top_menu_warnings_text
 									 onclick: top_menu_warnings_toggle })
 
-		about 			: menu_item({text: {group:3, id:7}, onclick: __widget_top_menu_show_about })
+		about 			: menu_item({text: {group:3, id:7}, onclick: top_menu_show_about })
 	}
 
 	advisors {

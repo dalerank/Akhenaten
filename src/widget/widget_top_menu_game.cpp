@@ -43,13 +43,6 @@ ANK_REGISTER_STRUCT_WRITER(top_menu_widget_background_draw, pos);
 
 top_menu_widget_t ANK_VARIABLE(top_menu_widget);
 
-void top_menu_widget_t::on_mission_start() {
-    init();
-}
-
-void top_menu_widget_t::init() {
-}
-
 void top_menu_widget_t::menu_item_update(pcstr header, int item, pcstr text) {
     auto menu = headers[header].dcast_menu_header();
     if (!menu) {

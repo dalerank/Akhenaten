@@ -33,8 +33,6 @@ struct top_menu_widget_t : autoconfig_window {
     virtual void ui_draw_foreground(UiFlags flags) override {}
     virtual int get_tooltip_text() override { return 0; }
     virtual int ui_handle_mouse(const mouse *m) override;
-    virtual void init() override;
-    virtual void on_mission_start() override;
     void draw_elements_impl();
     xstring get_selected_header(const mouse *m);
     xstring bar_handle_mouse(const mouse *m);
