@@ -58,6 +58,47 @@ jobs:
           grep -E '\[test:[^]]+\] FAIL' akhenaten-log.txt \
             | sed -E 's/.*\[test:([^]]+)\] FAIL(:.*)?/::error title=integraltest \1::test failed\2/' || true
         fi
+    - name: Parse test counts
+      id: parse
+      if: always()
+      run: |
+        message="log missing"
+        color="lightgrey"
+        if [ -f akhenaten-log.txt ]; then
+          line=$(grep -E '\[integraltests\] [0-9]+ passed, [0-9]+ failed' akhenaten-log.txt | tail -1 || true)
+          if [ -n "$line" ]; then
+            passed=$(echo "$line" | sed -nE 's/.*\[integraltests\] ([0-9]+) passed.*/\1/p')
+            failed=$(echo "$line" | sed -nE 's/.*([0-9]+) failed.*/\1/p')
+            passed=${passed:-0}
+            failed=${failed:-0}
+            total=$((passed + failed))
+            if [ "$total" -eq 0 ]; then
+              message="no tests"
+              color="lightgrey"
+            elif [ "$failed" -eq 0 ]; then
+              message="${passed}/${total} passing"
+              color="brightgreen"
+            else
+              message="${passed}/${total} passing"
+              color="red"
+            fi
+          else
+            message="no summary"
+            color="lightgrey"
+          fi
+        fi
+        echo "message=$message" >> "$GITHUB_OUTPUT"
+        echo "color=$color"   >> "$GITHUB_OUTPUT"
+    - name: Update tests badge gist
+      if: always() && github.event_name == 'push' && github.ref == 'refs/heads/master'
+      uses: schneegans/dynamic-badges-action@v1.7.0
+      with:
+        auth: ${{ secrets.AKHENATEN_TESTS_GIST }}
+        gistID: 28104123b52e0fc76b56b8df8ca345e7
+        filename: akhenaten-tests.json
+        label: tests
+        message: ${{ steps.parse.outputs.message }}
+        color: ${{ steps.parse.outputs.color }}
     - name: Show test log
       if: always()
       run: |

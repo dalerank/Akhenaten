@@ -10,7 +10,8 @@
 [![Mac/x64](res/badges/mac-x64.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac_x64/master/macos_build.zip)
 [![Android](res/badges/android.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_android/master/apk.zip)
 [![Web](res/badges/web.svg)](https://dalerank.github.io/)
-[![Tests](https://github.com/dalerank/Akhenaten/actions/workflows/akhenaten_integral_tests.yml/badge.svg?branch=master)](https://github.com/dalerank/Akhenaten/actions/workflows/akhenaten_integral_tests.yml)
+
+[![Tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/dalerank/28104123b52e0fc76b56b8df8ca345e7/raw/akhenaten-tests.json)](https://github.com/dalerank/Akhenaten/actions/workflows/akhenaten_integral_tests.yml)
 
 Akhenaten aims to make the original game Pharaoh compatible with modern systems with redesigned original engine.
 Unlike the original game, which was developed by Impressions Games, Akhenaten is a community-driven effort to keep the game alive and accessible.
