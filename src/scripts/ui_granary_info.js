@@ -43,6 +43,7 @@ info_window_granary {
 
 [es=(info_window_granary, init)]
 function info_window_granary_on_init(window) {
+    __log_marker("window_show:info_window_granary")
     var b = city.get_building(window.bid)
     var granary = city.get_granary(window.bid)
 
