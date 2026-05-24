@@ -1,9 +1,7 @@
 #include "widget_top_menu_game.h"
 
 #include "js/js_game.h"
-#include "window/popup_dialog.h"
 #include "window/window_city.h"
-#include "window/main_menu.h"
 #include "window/autoconfig_window.h"
 #include "window/hotkey_config.h"
 #include "window/message_dialog_new.h"
@@ -13,21 +11,6 @@
 #include "core/profiler.h"
 #include "game/game.h"
 #include "editor/tool.h"
-
-pcstr __widget_top_menu_exit_game(int, int) {
-    widget_top_menu_clear_state();
-    popup_dialog::show_yesno("#popup_dialog_quit", [] (bool accepted) {
-        if (accepted) {
-            widget_top_menu_clear_state();
-            main_menu_screen::show(/*restart_music*/true);
-        } else {
-            window_city_show();
-        }
-    });
-
-    return "";
-}
-ANK_FUNCTION_2(__widget_top_menu_exit_game)
 
 pcstr __widget_top_menu_hotkeys_options(int, int) {
     window_hotkey_config_show([] {});

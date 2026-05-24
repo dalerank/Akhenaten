@@ -112,6 +112,19 @@ function top_menu_delete_map() {
 	window_file_dialog_delete_show(FILE_TYPE_SAVED_GAME)
 }
 
+function top_menu_exit_game() {
+	widget_top_menu_clear_state()
+	ui.show_yesno("#popup_dialog_quit",
+		function() {
+			widget_top_menu_clear_state()
+			__game_show_main_menu()
+		},
+		function() {
+			ui.window_city_show()
+		}
+	)
+}
+
 top_menu_widget {
 	offset [10, 6]
 	item_height : 20
@@ -134,7 +147,7 @@ top_menu_widget {
 		load_game	    : menu_item({text {group:1, id:3}, onclick: top_menu_load_map })
 		save_game	    : menu_item({text {group:1, id:4}, onclick: top_menu_save_map })
 		delete_game	  	: menu_item({text {group:1, id:6}, onclick: top_menu_delete_map })
-		exit_game	    : menu_item({text {group:1, id:5}, onclick: __widget_top_menu_exit_game })
+		exit_game	    : menu_item({text {group:1, id:5}, onclick: top_menu_exit_game })
 	}
 
 	options {
