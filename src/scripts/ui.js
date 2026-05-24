@@ -62,6 +62,8 @@ import ui_build_menu
 import ui_market_buyer_window
 import ui_storage_yard_info_window
 import ui_storage_yard_orders_window
+import ui_dock_info_window
+import ui_dock_orders_window
 import ui_popup_dialog
 import ui_set_salary_window
 import ui_donate_to_city_window

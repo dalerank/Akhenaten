@@ -45,7 +45,8 @@ void ui::sidebar_window_expanded_t::archive_load(archive arch) {
 }
 
 void ui::sidebar_window_expanded_t::init() {
-    extra_block_size = image_get(extra_block)->size();
+    const image_t *img = image_get(extra_block);
+    extra_block_size = img ? img->size() : vec2i{0, 0};
 
     subscribe_events();
 }
@@ -161,7 +162,8 @@ void ui::sidebar_window_collapsed_t::archive_load(archive arch) {
 }
 
 void ui::sidebar_window_collapsed_t::init() {
-    extra_block_size = image_get(extra_block)->size();
+    const image_t *img = image_get(extra_block);
+    extra_block_size = img ? img->size() : vec2i{0, 0};
 
     ui["expand"].onclick([this] {
         slider.slide_mode = slider.e_slide_collapse;

@@ -239,13 +239,6 @@ health_info_window = {
     })
 }
 
-dock_info_window = {
-    ui : baseui(building_info_window, {
-        background   : outer_panel({size: [29, 16]}),
-        orders       : button({margin:{left:100, bottom:-40}, size:[270, 25], text:{group: 98, id: 5}}),
-    })
-}
-
 warshipwharf_info_window = {
     first_advisor       : ADVISOR_MILITARY,
     ui : baseui(building_info_window, {
@@ -271,24 +264,6 @@ shipyard_info_window = {
     resource_icon : resource_icon({pos: [32, 130] }),
         resource_stored : text({pos: [60, 130], size: [px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT }),
     })
-}
-
-dock_orders_window = {
-    parent_offset: [0, -px(4)],
-    ui : {
-        background   : outer_panel({size: [29, 22]}),
-        title          : text({pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        orders_panel : inner_panel({pos : [16, 42], size: [27, 16] }),
-        button_help  : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
-        button_close : image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
-        accept_none  : button({pos:[80, -1], size:[300, 24], text:{group:99, id:7}, margin:{bottom:-38} }),
-
-        item_orders_column : dummy({margin:{centerx:0}}),
-        item_icon_column : dummy({pos:[25, 0]}),
-        item_name_column : dummy({pos:[55, 0]}),
-        item_row     : dummy({size:[px(13), 20]}),
-        items_area   : dummy({pos:[0, 50]}),
-    }
 }
 
 info_window_senet_house = {
