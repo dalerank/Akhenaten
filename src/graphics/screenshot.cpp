@@ -25,6 +25,8 @@
 #include "widget/widget_city.h"
 #include "game/game.h"
 
+#include "js/js_game.h"
+
 #include <png.h>
 
 #include <stdio.h>
@@ -419,3 +421,8 @@ void graphics_save_screenshot(screenshot_type type) {
         return;
     }
 }
+
+void __game_save_screenshot(int type) {
+    graphics_save_screenshot((screenshot_type)type);
+}
+ANK_FUNCTION_1(__game_save_screenshot)

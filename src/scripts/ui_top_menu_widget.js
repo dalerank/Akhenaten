@@ -34,8 +34,17 @@ function top_menu_js_debugger_toggle(p1, p2) {
 	else
 		__js_debugger_start(4711)
 }
-function top_menu_make_fullscreenshot(p1, p2) { game.make_screenshot(1) }
-function top_menu_make_screenshot(p1, p2) { game.make_screenshot(0) }
+function top_menu_make_fullscreenshot(p1, p2) {
+	widget_top_menu_clear_state()
+	window_go_back()
+	__game_save_screenshot(SCREENSHOT_FULL_CITY)
+}
+
+function top_menu_make_screenshot(p1, p2) {
+	widget_top_menu_clear_state()
+	window_go_back()
+	__game_save_screenshot(SCREENSHOT_DISPLAY)
+}
 function top_menu_debug_properties_text(p1, p2) { return game.debug_properties ? "Properties ON" : "Properties OFF" }
 function top_menu_debug_terrain_paint_text(p1, p2) { return game.debug_terrain_paint ? "Terrain paint ON" : "Terrain paint OFF" }
 function top_menu_debug_write_video_text(p1, p2) { return game.debug_write_video ? "Write Video ON" : "Write Video OFF" }

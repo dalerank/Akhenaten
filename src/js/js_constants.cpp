@@ -15,6 +15,7 @@
 #include "scenario/scenario.h"
 #include "scenario/scenario_event_manager.h"
 #include "graphics/font.h"
+#include "graphics/screenshot.h"
 #include "figure/figure.h"
 #include "city/constants.h"
 #include "city/city_kingdome_relations.h"
@@ -75,6 +76,10 @@ void js_register_game_constants(js_State* J) {
 
     _R(HOTKEY_ROTATE_MAP_LEFT)
     _R(HOTKEY_ROTATE_MAP_RIGHT)
+
+    _R(SCREENSHOT_FULL_CITY)
+    _R(SCREENSHOT_DISPLAY)
+    _R(SCREENSHOT_MINIMAP)
 
     _R(BUILDING_SLOT_SERVICE)
     _R(BUILDING_SLOT_CARTPUSHER)

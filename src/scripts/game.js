@@ -30,7 +30,7 @@ game = extend(__game, {
     @locale_year_before_ad { get: __game_locale_year_before_ad }
 
     toggle_writing_video: __game_toggle_writing_video
-    make_screenshot: __game_make_screenshot
+    save_screenshot: __game_save_screenshot
 
     languages {
         @count : { get: __game_languages_count }
