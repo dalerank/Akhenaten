@@ -366,8 +366,9 @@ static int lexnumber(js_State *J)
 			jsY_next(J);
 	}
 
-	if (jsY_isidentifierstart(J->lexchar))
+	if (jsY_isidentifierstart(J->lexchar)) {
 		jsY_error(J, "number with letter suffix");
+	}
 
 	J->number = js_strtod(s, NULL);
 	return TK_NUMBER;

@@ -3,6 +3,7 @@
 #include "jscompile.h"
 
 #include <cstddef>
+#include <cstdio>
 #include <new>
 #include <utility>
 #include "jsvalue.h" /* for jsV_numbertostring */
@@ -863,15 +864,53 @@ static void cassignop(JF, js_Ast* exp, int opcode) {
     cassignop2(J, F, lhs, 0);
 }
 
-static void cimport(JF, js_Ast* exp) {
-    switch (exp->type) {
+static pcstr import_segment_name(js_State* J, js_Ast* node) {
+    switch (node->type) {
+    case AST_IDENTIFIER:
     case EXP_IDENTIFIER:
-        js_importfile(J, js_strnode_cstr(exp->string));
-        emit(J, F, OP_NULL);
-        break;
+    case EXP_STRING:
+        return js_strnode_cstr(node->string);
     default:
-        jsC_error(J, exp, "invalid l-value in delete expression");
+        jsC_error(J, node, "invalid import path segment");
+        return "";
     }
+}
+
+static void import_path_from_exp(js_State* J, js_Ast* exp, char* buf, size_t cap) {
+    switch (exp->type) {
+    case AST_IDENTIFIER:
+    case EXP_IDENTIFIER:
+    case EXP_STRING:
+        snprintf(buf, cap, "%s", import_segment_name(J, exp));
+        break;
+
+    case EXP_MEMBER: {
+        char left[256];
+        import_path_from_exp(J, exp->a, left, sizeof(left));
+        snprintf(buf, cap, "%s/%s", left, import_segment_name(J, exp->b));
+        break;
+    }
+
+    case EXP_INDEX:
+        if (exp->b->type != EXP_STRING)
+            jsC_error(J, exp, "import index must be a string literal");
+        {
+            char left[256];
+            import_path_from_exp(J, exp->a, left, sizeof(left));
+            snprintf(buf, cap, "%s/%s", left, js_strnode_cstr(exp->b->string));
+        }
+        break;
+
+    default:
+        jsC_error(J, exp, "invalid import path");
+    }
+}
+
+static void cimport(JF, js_Ast* exp) {
+    char path[512];
+    import_path_from_exp(J, exp, path, sizeof(path));
+    js_importfile(J, path);
+    emit(J, F, OP_NULL);
 }
 
 static void cemit(JF, js_Ast* exp) {

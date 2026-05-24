@@ -498,18 +498,18 @@ static void handle_event(SDL_Event* event, bool& active, bool& quit) {
         if (event->motion.which != SDL_TOUCH_MOUSEID && !SDL_GetRelativeMouseMode()) {
             mouse::ref().set_position({event->motion.x, event->motion.y});
         }
-
         break;
+
     case SDL_MOUSEBUTTONDOWN:
         if (event->button.which != SDL_TOUCH_MOUSEID)
             handle_mouse_button(&event->button, 1);
-
         break;
+        
     case SDL_MOUSEBUTTONUP:
         if (event->button.which != SDL_TOUCH_MOUSEID)
             handle_mouse_button(&event->button, 0);
-
         break;
+        
     case SDL_MOUSEWHEEL:
         if (event->wheel.which != SDL_TOUCH_MOUSEID) {
             mouse::ref().set_scroll(event->wheel.y > 0 ? SCROLL_UP : event->wheel.y < 0 ? SCROLL_DOWN : SCROLL_NONE);

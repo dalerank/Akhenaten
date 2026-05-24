@@ -951,7 +951,7 @@ set(SOURCE_FILES
 
 set(SCRIPTS_FOLDER ${PROJECT_SOURCE_DIR}/src/scripts)
 
-file(GLOB SCRIPT_FILES ${SCRIPTS_FOLDER}/*.js)
+file(GLOB_RECURSE SCRIPT_FILES CONFIGURE_DEPENDS "${SCRIPTS_FOLDER}/*.js")
 cmrc_add_resource_library(
     resources
     ALIAS akhenaten::rc

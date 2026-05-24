@@ -61,22 +61,22 @@ function get_mission_config(scenario_id) {
     }
 }
 
-import mission_0_nubt
-import mission_1_thinis
-import mission_2_perwadjyt
-import mission_3_nekhen
-import mission_4_mennefer
-import mission_5_timna
-import mission_6_behdet
-import mission_7_abydos
-import mission_8_selima
-import mission_9_abu
-import mission_10_saqqara
-import mission_128_alexandria
-import mission_129_bridges
-import mission_130_sandbox
-import mission_131_cataract
-import mission_132_chariot_blitz
-import mission_133_empire
-import mission_134_default
-import mission_135_enkomi
+import mission.m_000_nubt
+import mission.m_001_thinis
+import mission.m_002_perwadjyt
+import mission.m_003_nekhen
+import mission.m_004_mennefer
+import mission.m_005_timna
+import mission.m_006_behdet
+import mission.m_007_abydos
+import mission.m_008_selima
+import mission.m_009_abu
+import mission.m_010_saqqara
+import mission.m_128_alexandria
+import mission.m_129_bridges
+import mission.m_130_sandbox
+import mission.m_131_cataract
+import mission.m_132_chariot_blitz
+import mission.m_133_empire
+import mission.m_134_default
+import mission.m_135_enkomi
