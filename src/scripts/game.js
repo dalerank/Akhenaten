@@ -5,6 +5,7 @@ game = extend(__game, {
     // -> pending_save_type
     // -> pending_delete_type
     // -> mission_choice_open_scenario_id
+    // -> debug_properties
     // -> paused
 
     mission_briefing_scenario_id : 0
@@ -14,7 +15,6 @@ game = extend(__game, {
     @simtime_year { get: __game_simtime_year }
     @version { get: __game_version }
     @difficulty { get: __game_difficulty }
-    @debug_properties { get: __game_debug_properties }
     @debug_terrain_paint { get: __game_debug_terrain_paint }
     @writing_video { get: __game_writing_video }
     @debug_render_mode { get: __game_debug_render_mode, set: __game_set_debug_render_mode }

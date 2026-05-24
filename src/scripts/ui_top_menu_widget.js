@@ -46,6 +46,11 @@ function top_menu_make_screenshot(p1, p2) {
 	__game_save_screenshot(SCREENSHOT_DISPLAY)
 }
 function top_menu_debug_properties_text(p1, p2) { return game.debug_properties ? "Properties ON" : "Properties OFF" }
+function top_menu_debug_properties_toggle(p1, p2) {
+	game.debug_properties = !game.debug_properties
+	widget_top_menu_clear_state()
+	window_go_back()
+}
 function top_menu_debug_terrain_paint_text(p1, p2) { return game.debug_terrain_paint ? "Terrain paint ON" : "Terrain paint OFF" }
 function top_menu_debug_write_video_text(p1, p2) { return game.debug_write_video ? "Write Video ON" : "Write Video OFF" }
 
@@ -220,7 +225,7 @@ top_menu_widget {
 
 	debug {
  		properties		: menu_item({textfn: top_menu_debug_properties_text
-									 onclick: __widget_top_menu_toggle_debug_properties })
+									 onclick: top_menu_debug_properties_toggle })
 
  		terrain_paint	: menu_item({textfn: top_menu_debug_terrain_paint_text
 									 onclick: __widget_top_menu_toggle_debug_terrain_paint })

@@ -20,6 +20,7 @@ ANK_GLOBAL_OBJECT(game, __game,
     pending_delete_type,
     logo_show_patch_message,
     mission_choice_open_scenario_id,
+    debug_properties,
     paused);
 
 ANK_GLOBAL_OBJECT(g_screen, __screen,
@@ -42,9 +43,6 @@ ANK_FUNCTION(__game_increase_difficulty)
 
 bool __game_is_fullscreen_only() { return g_render.is_fullscreen_only(); }
 ANK_FUNCTION(__game_is_fullscreen_only)
-
-bool __game_debug_properties() { return game.debug_properties; }
-ANK_FUNCTION(__game_debug_properties)
 
 bool __game_debug_terrain_paint() { return game.debug_terrain_paint; }
 ANK_FUNCTION(__game_debug_terrain_paint)
