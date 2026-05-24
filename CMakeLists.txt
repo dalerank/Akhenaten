@@ -1522,6 +1522,7 @@ if (MSVC)
         "${CMAKE_SOURCE_DIR}/data/pharaoh_fonts_pack.sgx"
         "${CMAKE_SOURCE_DIR}/data/pharaoh_houses_pack.sgx"
         "${CMAKE_SOURCE_DIR}/data/neucha.ttf"
+        "${CMAKE_SOURCE_DIR}/data/default.map"
     )
     set(BINARY_FILES_DIRECTORY "${GAME_WORKING_DIRECTORY}/Data")
     add_custom_command(
