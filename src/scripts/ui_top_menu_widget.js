@@ -194,7 +194,12 @@ function top_menu_widget_background_draw(window) {
 	var screen_width = screen.width
 	var current_sidebar_offset = ui.sidebar.offset_x
 
-    for (var x = -(screen_width - current_sidebar_offset); x < screen_width; x += (block_width - want_sidebar_offset)) {
+	var step = block_width - want_sidebar_offset
+	if (step <= 0) {
+		return
+	}
+
+    for (var x = -(screen_width - current_sidebar_offset); x < screen_width; x += step) {
         ui.draw_texture({ x: x, y: 0 }, block_img.tid)
     }
 
