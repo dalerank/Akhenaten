@@ -310,14 +310,7 @@ city.get_battalion_by_index = function(index) {
 }
 
 city.get_granary = function(building_id) {
-    return {
-        id: building_id
-        @tile { get: __building_tile }
-        total_stored: function() { return __granary_get_total_stored(this.id) }
-        amount: function(resource) { return __granary_get_amount(this.id, resource) }
-        free_space: function() { return __granary_get_freespace(this.id) }
-        is_accepting: function(resource) { return __granary_is_accepting(this.id, resource) }
-    }
+    return new Granary(building_id)
 }
 
 city.get_random_house = function() {
