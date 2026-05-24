@@ -125,6 +125,16 @@ function top_menu_exit_game() {
 	)
 }
 
+function top_menu_features(p1, p2) {
+	window_show_by_id("window_features")
+}
+
+function top_menu_show_help(p1, p2) {
+	widget_top_menu_clear_state()
+	window_go_back()
+	ui.window_message_dialog("message_dialog_help")
+}
+
 top_menu_widget {
 	offset [10, 6]
 	item_height : 20
@@ -163,11 +173,11 @@ top_menu_widget {
 									 onclick: top_menu_autosave_options_toggle })
 
 		hotkeys_options : menu_item({text: "Hotkeys options", onclick: __widget_top_menu_hotkeys_options })
-		enhanced_options: menu_item({text: "Enhanced options", onclick: __widget_top_menu_features })
+		enhanced_options: menu_item({text: "Enhanced options", onclick: top_menu_features })
 	}
 
 	help {
-		help 			: menu_item({text {group:3, id:1}, onclick: __widget_top_menu_show_help })
+		help 			: menu_item({text {group:3, id:1}, onclick: top_menu_show_help })
 
 		mouse 			: menu_item({textfn: top_menu_tooltip_text
 									 onclick: top_menu_tooltip_toggle })

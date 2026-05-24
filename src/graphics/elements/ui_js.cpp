@@ -635,6 +635,11 @@ void __ui_window_message_dialog_show(pcstr template_name) {
 }
 ANK_FUNCTION_1(__ui_window_message_dialog_show)
 
+void __ui_window_message_dialog(pcstr template_name) {
+    window_message_dialog_show(template_name, -1, window_city_draw_all);
+}
+ANK_FUNCTION_1(__ui_window_message_dialog)
+
 void __ui_window_message_dialog_show_city_message(xstring text_id, int message_id, int year, int month, int param1, int param2, int message_advisor) {
     window_message_dialog_show_city_message(text_id, message_id, year, month, param1, param2, message_advisor, false);
 }

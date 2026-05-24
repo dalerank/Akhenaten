@@ -2,7 +2,6 @@
 
 #include "js/js_game.h"
 #include "window/window_city.h"
-#include "window/autoconfig_window.h"
 #include "window/hotkey_config.h"
 #include "window/message_dialog_new.h"
 #include "graphics/window.h"
@@ -17,21 +16,6 @@ pcstr __widget_top_menu_hotkeys_options(int, int) {
     return "";
 }
 ANK_FUNCTION_2(__widget_top_menu_hotkeys_options)
-
-pcstr __widget_top_menu_features(int, int) {
-    autoconfig_window::show("window_features");
-    return "";
-}
-ANK_FUNCTION_2(__widget_top_menu_features)
-
-pcstr __widget_top_menu_show_help(int, int) {
-    logs::info("__widget_top_menu_show_help invoked");
-    widget_top_menu_clear_state();
-    window_go_back();
-    window_message_dialog_show("message_dialog_help", -1, window_city_draw_all);
-    return "";
-}
-ANK_FUNCTION_2(__widget_top_menu_show_help)
 
 pcstr __widget_top_menu_show_about(int, int) {
     widget_top_menu_clear_state();
