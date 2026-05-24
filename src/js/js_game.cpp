@@ -487,7 +487,7 @@ bool __game_delete_map(pcstr filename_short) { return GamestateIO::delete_map(fi
 bool __game_editor_load_scenario(pcstr path) { return game_file_editor_load_scenario(path) != 0; } ANK_FUNCTION_1(__game_editor_load_scenario)
 bool __game_editor_write_scenario(pcstr path) { return game_file_editor_write_scenario(path) != 0; } ANK_FUNCTION_1(__game_editor_write_scenario)
 void __game_load_mission(int scenario_id, int start_immediately) { GamestateIO::load_mission(scenario_id, !!start_immediately); } ANK_FUNCTION_2(__game_load_mission)
-bool __game_load_map(pcstr filename_short, int start_immediately) { return GamestateIO::load_map(filename_short, !!start_immediately); } ANK_FUNCTION_2(__game_load_map)
+bool __game_load_map(pcstr filename_short, int start_immediately) { return GamestateIO::load_map(filename_short, true, !!start_immediately); } ANK_FUNCTION_2(__game_load_map)
 void __game_start_loaded_file() { GamestateIO::start_loaded_file(); } ANK_FUNCTION(__game_start_loaded_file)
 bool __game_mission_is_valid(int scenario_id) { const mission_step_t *s = get_scenario_step_data(scenario_id); return s && s->campaign_id >= 0; } ANK_FUNCTION_1(__game_mission_is_valid)
 int __game_campaign_id_for_scenario(int scenario_id) { return get_scenario_campaign_id(scenario_id); } ANK_FUNCTION_1(__game_campaign_id_for_scenario)

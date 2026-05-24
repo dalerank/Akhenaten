@@ -4,8 +4,7 @@
 #include "content/vfs.h"
 #include "content/file_formats.h"
 #include "io/io_buffer.h"
-
-#include <vector>
+#include "core/hvector.h"
 
 struct file_chunk_t {
     bool VALID = false;
@@ -35,14 +34,14 @@ struct file_chunk_t {
 class FileIOManager {
 private:
     bool loaded = false;
-    char file_path[MAX_FILE_NAME] = "";
+    vfs::path file_path = "";
     int file_size = 0;
     int file_offset = 0;
 
     e_file_format file_format = FILE_FORMAT_NULL;
     int file_version;
 
-    std::vector<file_chunk_t> file_chunks;
+    hvector<file_chunk_t, 128> file_chunks;
     int alloc_index = 0;
 
     void clear();
@@ -61,7 +60,7 @@ public:
 
     // write/read internal chunk cache (io_buffer sequence) to/from disk file
     bool serialize(const char* filename, int offset, e_file_format format, const int version, void (*init_schema)(e_file_format _format, const int _version));
-    bool unserialize(pcstr filename, int offset, e_file_format format, const int (*determine_file_version)(pcstr _filename, int _offset),
+    bool unserialize(vfs::reader filename, int offset, e_file_format format, const int (*determine_file_version)(pcstr _filename, int _offset),
                      void (*init_schema)(e_file_format _format, const int _version));
 };
 

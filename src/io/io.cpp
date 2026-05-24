@@ -38,7 +38,7 @@ int io_read_sgx_entries_num(vfs::path filename) {
     if (!archive.isValid()) {
         return 0;
     }
-        
+
     const auto &entries = archive.entries();
     int png_count = 0;
     for (const auto &entry : entries) {
@@ -59,13 +59,12 @@ int io_read_file_into_buffer(vfs::path filepath, int localizable, buffer* buf, i
         return 0;
     }
 
-    FILE* fp = vfs::file_open_os(fs_file, "rb");
-    if (!fp) {
+    vfs::reader reader = vfs::file_open(fs_file, "rb");
+    if (!reader) {
         return 0;
     }
 
-    fseek(fp, 0, SEEK_END);
-    long size = ftell(fp);
+    long size = reader->size();
     if (size > max_size) {
         size = max_size;
     }
@@ -74,10 +73,8 @@ int io_read_file_into_buffer(vfs::path filepath, int localizable, buffer* buf, i
         return 0;
     }
 
-    fseek(fp, 0, SEEK_SET);
-    int bytes_read = buf->from_file((size_t)size, fp);
-    vfs::file_close(fp);
-    return bytes_read;
+    buf->from_file((size_t)size, reader);
+    return size;
 }
 
 int io_read_file_part_into_buffer(vfs::path  filepath, int localizable, buffer* buf, int size, int offset_in_file) {
@@ -87,13 +84,11 @@ int io_read_file_part_into_buffer(vfs::path  filepath, int localizable, buffer* 
     }
 
     int bytes_read = 0;
-    FILE* fp = vfs::file_open_os(fs_file, "rb");
-    if (fp) {
-        int seek_result = fseek(fp, offset_in_file, SEEK_SET);
-        if (seek_result == 0) {
-            bytes_read = buf->from_file((size_t)size, fp);
-        }
-        vfs::file_close(fp);
+    vfs::reader reader = vfs::file_open(fs_file, "rb");
+    if (reader) {
+        reader->seek(offset_in_file);
+        buf->from_file((size_t)size, reader);
+        bytes_read = size;
     }
     return bytes_read;
 }

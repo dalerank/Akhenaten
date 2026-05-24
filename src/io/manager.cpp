@@ -69,26 +69,26 @@ const int FileIOManager::num_chunks() {
 }
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
-static bool read_compressed_chunk(FILE* fp, buffer* buf, int filepiece_size) {
+static bool read_compressed_chunk(vfs::reader reader, buffer* buf, int filepiece_size) {
     // check that the stream size isn't above maximum temp buffer
     if (filepiece_size > COMPRESS_BUFFER_SIZE)
         return false;
 
     // read 32-bit int header denoting size of compressed chunk
     uint32_t chunk_size = 0;
-    fread(&chunk_size, 4, 1, fp);
+    reader->r(&chunk_size, 4);
 
     // if file signature says "uncompressed" well man, it's uncompressed. read as normal ignoring the directive
     if ((unsigned int)chunk_size == UNCOMPRESSED) {
-        if (buf->from_file(filepiece_size, fp) != filepiece_size)
+        if (buf->from_file(filepiece_size, reader) != filepiece_size)
             return false;
     } else {
         // read into buffer chunk of specified size - the actual "file piece" size is used for the output!
-        size_t csize = fread(compress_buffer, 1, chunk_size, fp);
-        if (csize != chunk_size) {
-            logs::info("Incorrect chunk size, expected %i, found %i", chunk_size, csize);
-            return false;
-        }
+        reader->r((void*)compress_buffer, chunk_size);
+        // if (csize != chunk_size) {
+        //     logs::info("Incorrect chunk size, expected %i, found %i", chunk_size, csize);
+        //     return false;
+        // }
         int bsize = zip_decompress(compress_buffer, chunk_size, buf->data_unsafe_pls_use_carefully(), &filepiece_size);
         if (bsize != buf->size()) {
             logs::info("Incorrect buffer size, expected %u, found %i", buf->size(), bsize);
@@ -200,26 +200,24 @@ bool FileIOManager::serialize(const char* filename, int offset, e_file_format fo
     return true;
 }
 
-bool FileIOManager::unserialize(pcstr filename, int offset, e_file_format format,
+bool FileIOManager::unserialize(vfs::reader reader, int offset, e_file_format format,
                                 const int (*determine_file_version)(pcstr fnm, int ofst),
                                 void (*init_schema)(e_file_format _format, const int _version)) {
     OZZY_PROFILER_FUNCTION();
 
     // first, clear up the manager data and set the new file info
     clear();
-    strncpy_safe(file_path, filename, MAX_FILE_NAME);
+    file_path = reader->debug_info();
     file_offset = offset;
     file_format = format;
 
     // open file handle
-    vfs::path fs_path = vfs::path::resolve(file_path);
-    FILE* fp = vfs::file_open_os(fs_path, "rb");
-    if (!fp) {
-        logs::error("Unable to read file [%s], file could not be accessed.", fs_path.c_str());
+    if (!reader) {
+        logs::error("Unable to read file [%s], file could not be accessed.", file_path.c_str());
         clear();
         return false;
     } else if (file_offset) {
-        fseek(fp, file_offset, SEEK_SET);
+        reader->seek(file_offset);
     }
 
     // determine file version based on provided format
@@ -228,7 +226,7 @@ bool FileIOManager::unserialize(pcstr filename, int offset, e_file_format format
     } else {
         file_version = determine_file_version(file_path, offset);
         if (file_version == -1) {
-            logs::info("Unable to read file [%s], file version/format is invalid ", filename);
+            logs::info("Unable to read file [%s], file version/format is invalid ", file_path.c_str());
             clear();
             return false;
         }
@@ -238,7 +236,7 @@ bool FileIOManager::unserialize(pcstr filename, int offset, e_file_format format
     if (init_schema != nullptr) {
         init_schema(file_format, file_version);
     } else {
-        logs::error("Unable to read file [%s], provided schema is invalid.", fs_path.c_str());
+        logs::error("Unable to read file [%s], provided schema is invalid.", file_path.c_str());
         clear();
         return false;
     }
@@ -248,23 +246,23 @@ bool FileIOManager::unserialize(pcstr filename, int offset, e_file_format format
         file_chunk_t* chunk = &file_chunks.at(i);
         OZZY_PROFILER_SECTION(_, chunk->name);
 
-        long offs = ftell(fp);
+        long offs = reader->tell();
 
         bool result = false;
         if (chunk->compressed) {
-            result = read_compressed_chunk(fp, chunk->buf, chunk->buf->size());
+            result = read_compressed_chunk(reader, chunk->buf, chunk->buf->size());
             if (!result) {
-                logs::error("Unable to read file[%s] chunk[%s], decompression failed.", fs_path.c_str(), chunk->name);
+                logs::error("Unable to read file[%s] chunk[%s], decompression failed.", file_path.c_str(), chunk->name);
                 clear();
                 return false;
             }
         } else {
-            int got = chunk->buf->from_file(chunk->buf->size(), fp);
+            int got = chunk->buf->from_file(chunk->buf->size(), reader);
             int exp = chunk->buf->size();
             result = (got == exp);
             if (!result) {
                 logs::info("Incorrect buffer size, expected %i, found %i", exp, got);
-                logs::error("Unable to read file [%s], chunk size incorrect.", fs_path.c_str());
+                logs::error("Unable to read file [%s], chunk size incorrect.", file_path.c_str());
                 clear();
                 return false;
             }
@@ -278,9 +276,6 @@ bool FileIOManager::unserialize(pcstr filename, int offset, e_file_format format
         // ***************************
     }
 
-    // close file handle
-    vfs::file_close(fp);
-
     // load GAME STATE from buffers
     for (int i = 0; i < num_chunks(); ++i) {
         if (file_chunks.at(i).VALID) {
@@ -289,7 +284,7 @@ bool FileIOManager::unserialize(pcstr filename, int offset, e_file_format format
     }
 
     logs::info("File read successful: %s %i@ --- VERSION HEADER: %i ---",
-               file_path,
+               file_path.c_str(),
                file_offset,
                file_version);
 

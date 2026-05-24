@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "grid/point.h"
+#include "content/reader.h"
 
 /**
  * @file
@@ -62,7 +63,7 @@ public:
     void write_i64(int64_t value);
     void write_raw(const void* value, size_t s);
 
-    size_t from_file(size_t count, FILE* fp);
+    size_t from_file(size_t count, vfs::reader reader);
     size_t to_file(size_t count, FILE* fp) const;
 };
 

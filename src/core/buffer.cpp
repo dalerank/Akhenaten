@@ -249,11 +249,13 @@ void buffer::skip(size_t s) {
     }
 }
 
-size_t buffer::from_file(size_t count, FILE* fp) {
+size_t buffer::from_file(size_t count, vfs::reader reader) {
     verify_no_crash(count <= size());
     size_t result = 0;
-    if (count <= size())
-        result = fread(data.data(), sizeof(get_value(0)), count, fp);
+    if (count <= size()) {
+        reader->r(data.data(), count);
+        result = count;
+    }
     return result;
 }
 

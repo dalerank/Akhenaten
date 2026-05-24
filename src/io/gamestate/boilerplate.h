@@ -35,7 +35,7 @@ bool write_map(pcstr filename_short);
 
 bool load_mission(const int scenario_id, bool start_immediately);
 bool load_savegame(pcstr filename_short, bool start_immediately = true);
-bool load_map(pcstr filename_short, bool start_immediately = true);
+bool load_map(pcstr filename, bool relative, bool start_immediately);
 
 void start_loaded_file();
 

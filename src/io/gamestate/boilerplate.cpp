@@ -13,7 +13,9 @@
 #include "city/city_resource.h"
 #include "core/bstring.h"
 #include "content/vfs.h"
+#include "empire/empire.h"
 #include "empire/empire_map.h"
+#include "empire/type.h"
 #include "empire/trade_prices.h"
 #include "figure/enemy_army.h"
 #include "figure/figure_names.h"
@@ -647,7 +649,9 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
 
     // read file
     pre_load();
-    if (!FILEIO.unserialize(MISSION_PACK_FILE, offset, FILE_FORMAT_MISSION_PAK, GamestateIO::read_file_version, file_schema)) {
+    vfs::path mission_pak_path = vfs::path(MISSION_PACK_FILE).resolve();
+    auto mission_pak = vfs::file_open(mission_pak_path);
+    if (!FILEIO.unserialize(mission_pak, offset, FILE_FORMAT_MISSION_PAK, GamestateIO::read_file_version, file_schema)) {
         return false;
     }
 
@@ -676,12 +680,13 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
 
 bool GamestateIO::load_savegame(pcstr filename_short, bool start_immediately) {
     // concatenate string
-    bstring256 full = fullpath_saves(filename_short);
+    bstring256 full = fullpath_saves(filename_short).resolve();
 
     // read file
     pre_load();
     e_file_format file_format = get_format_from_file(filename_short);
-    if (!FILEIO.unserialize(full, 0, file_format, GamestateIO::read_file_version, file_schema)) {
+    auto savegame = vfs::file_open(full);
+    if (!FILEIO.unserialize(savegame, 0, file_format, GamestateIO::read_file_version, file_schema)) {
         return false;
     }
 
@@ -697,30 +702,36 @@ bool GamestateIO::load_savegame(pcstr filename_short, bool start_immediately) {
     return true;
 }
 
-bool GamestateIO::load_map(pcstr filename_short, bool start_immediately) {
+bool GamestateIO::load_map(pcstr filename, bool relative, bool start_immediately) {
     OZZY_PROFILER_FUNCTION();
-    vfs::path full = fullpath_maps(filename_short);
+    vfs::path fullpath;
+    if (relative) {
+        fullpath = fullpath_maps(filename).resolve();
+    } else {
+        fullpath = vfs::path(filename).resolve();
+    }
 
     // read file
     pre_load();
-    if (!FILEIO.unserialize(full, 0, FILE_FORMAT_MAP_FILE, GamestateIO::read_file_version, file_schema)) {
+    auto mapfile = vfs::file_open(fullpath);
+    if (!FILEIO.unserialize(mapfile, 0, FILE_FORMAT_MAP_FILE, GamestateIO::read_file_version, file_schema)) {
         return false;
     }
 
     game.session.last_loaded = e_session_custom_map;
-    game.session.last_loaded_mission = filename_short;
-    g_scenario.campaign_scenario_id = get_custom_mission_id(filename_short);
-    // temp hack, custom map missions have no cities 
+    game.session.last_loaded_mission = filename;
+    g_scenario.campaign_scenario_id = get_custom_mission_id(filename);
+    // temp hack, custom map missions have no cities
     auto cities = g_empire.get_cities();
+    cities[0].type = EMPIRE_CITY_OURS;
     cities[0].in_use = true;
     // temp hack
     post_load();
 
-    // finish loading and start
     if (start_immediately) {
         start_loaded_file();
-        // replay mission autosave file
-        GamestateIO::write_savegame("autosave_replay.sav");
+        bstring256 filename("autosave_replay.", saved_game_data_expanded.extension);
+        GamestateIO::write_savegame(filename);
     }
 
     return true;
