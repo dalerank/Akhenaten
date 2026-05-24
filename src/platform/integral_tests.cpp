@@ -1,20 +1,23 @@
 #include "integral_tests.h"
 
+#include "content/content.h"
+#include "content/dir.h"
+#include "content/vfs.h"
 #include "core/app.h"
+#include "core/bstring.h"
 #include "core/log.h"
 #include "core/vec2i.h"
 #include "js/js.h"
 #include "mujs/mujs.h"
+#include "platform/arguments.h"
 #include "platform/version.hpp"
 
 #include <SDL.h>
 
 #include <algorithm>
-#include <filesystem>
-#include <fstream>
+#include <cctype>
+#include <cstring>
 #include <string>
-#include <system_error>
-#include <vector>
 
 bool g_test_signal_ready = false;
 
@@ -41,39 +44,58 @@ void run_integral_tests_impl() {
     expect_true(!ver.empty(), "get_version() non-empty");
 }
 
-std::vector<std::filesystem::path> list_test_files() {
-    namespace fs = std::filesystem;
-    std::vector<fs::path> roots;
-    std::error_code ec;
-    roots.push_back(fs::current_path(ec) / "tests");
-    if (char *base = SDL_GetBasePath()) {
-        roots.emplace_back(fs::path(base) / ".." / "tests");
-        SDL_free(base);
+hvector<xstring, 16> list_test_files() {
+    hvector<xstring, 16> found_tests;
+    auto add_tests_from_folder = [&](pcstr root) {
+        vfs::dir_look_entries(root, [&](pcstr e, bool is_folder) {
+            if (is_folder || !e) {
+                return;
+            }
+            // Skip files whose basename starts with '_' (disabled tests). `e`
+            // here is the full path returned by the directory iterator, so we
+            // need to look past the last path separator.
+            pcstr basename = e;
+            for (pcstr p = e; *p; ++p) {
+                if (*p == '/' || *p == '\\') {
+                    basename = p + 1;
+                }
+            }
+            if (*basename == '_') {
+                return;
+            }
+            // vfs::file_has_extension expects the extension without the dot.
+            if (!vfs::file_has_extension(e, "js")) {
+                return;
+            }
+            found_tests.push_back(e);
+        });
+    };
+
+    add_tests_from_folder("tests");
+    add_tests_from_folder("../tests");
+
+    const xstring only = g_args.get_integraltest_only().tolower();
+    if (only.empty()) {
+        return found_tests;
     }
-    std::vector<fs::path> out;
-    for (const auto &root : roots) {
-        if (!fs::is_directory(root, ec)) {
-            continue;
-        }
-        for (const auto &e : fs::directory_iterator(root, ec)) {
-            if (!e.is_regular_file()) {
-                continue;
-            }
-            const auto name = e.path().filename().string();
-            if (name.empty() || name[0] == '_') {
-                continue;
-            }
-            if (e.path().extension() != ".js") {
-                continue;
-            }
-            out.push_back(e.path());
-        }
-        if (!out.empty()) {
-            break; // first non-empty root wins
+
+    for (const auto& p : found_tests) {
+        vfs::path strp = p.c_str();
+        const bool found = strp.strstr(only.c_str()) != nullptr;
+        if (found) {
+            const xstring stem = p;
+            found_tests.clear();
+            found_tests.push_back(p);
+            break;
         }
     }
-    std::sort(out.begin(), out.end());
-    return out;
+
+    if (!found_tests.empty()) {
+        return found_tests;
+    }
+
+    logs::error("[integraltests] cant find '%s' in tests", only.c_str());
+    return {};
 }
 
 void pop_to(js_State *J, int baseline) {
@@ -106,19 +128,25 @@ int run_js_tests() {
 
     const auto files = list_test_files();
     if (files.empty()) {
-        logs::warn("[integraltests] no .js test files found under tests/");
+        if (!g_args.get_integraltest_only().empty()) {
+            // user asked for a specific test that doesn't exist — that's a hard failure
+            return 1;
+        }
+        logs::error("[integraltests] no .js test files found under tests/");
         return 0;
     }
 
     int passed = 0;
     int failed = 0;
-    for (const auto &f : files) {
-        const std::string name = f.stem().string();
+    for (const auto &name : files) {
         logs::info("[integraltests] >> %s", name.c_str());
+
+        g_app.quit = false;
+        SDL_FlushEvent(SDL_USEREVENT);
 
         const int load_baseline = js_gettop(J);
         js_vm_reset_error();
-        if (!js_vm_load_file_and_exec(f.string().c_str())) {
+        if (!js_vm_load_file_and_exec(name.c_str())) {
             logs::error("[test:%s] FAIL: load error", name.c_str());
             pop_to(J, load_baseline);
             js_vm_reset_error();

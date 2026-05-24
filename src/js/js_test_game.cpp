@@ -14,6 +14,16 @@
 #include "platform/integral_tests.h"
 #include "widget/debug_console.h"
 
+#include "building/building.h"
+#include "building/building_static_params.h"
+#include "city/city_buildings.h"
+#include "game/game.h"
+#include "io/gamestate/boilerplate.h"
+#include "game/game_events.h"
+#include "scenario/scenario.h"
+#include "window/window_info.h"
+#include "empire/empire.h"
+
 #include <SDL.h>
 #include <cstring>
 #include <fstream>
@@ -65,7 +75,7 @@ static bool file_contains_marker(pcstr path, pcstr marker, const size_t marker_l
     return tail.find(marker) != std::string::npos;
 }
 
-static bool log_contains_marker(pcstr marker) {
+static bool __test_find_inlog(pcstr marker) {
     if (!marker || !*marker) {
         return false;
     }
@@ -75,15 +85,7 @@ static bool log_contains_marker(pcstr marker) {
     const size_t marker_len = std::strlen(marker);
     return file_contains_marker(logs::output_path(), marker, marker_len);
 }
-
-static void js_test_find_inlog_native(js_State *J) {
-    if (js_isundefined(J, 1)) {
-        js_pushboolean(J, 0);
-        return;
-    }
-    pcstr marker = js_strnode_cstr(js_tostring(J, 1));
-    js_pushboolean(J, log_contains_marker(marker) ? 1 : 0);
-}
+ANK_FUNCTION_1(__test_find_inlog);
 
 static void test_pump(int n) {
     for (int i = 0; i < n && !g_app.quit; ++i) {
@@ -91,31 +93,20 @@ static void test_pump(int n) {
     }
 }
 
-void js_log_test_marker_native(js_State *J) {
-    if (js_isundefined(J, 1)) {
-        logs::info("log() Try to print undefined object", 0, 0);
-        J->pushundefined();
-        return;
-    }
-
+void __log_marker(pcstr message) {
     if (g_args.is_integral_tests()) {
-        logs::info("[test-marker] %s", js_strnode_cstr(js_tostring(J, 1)));
-        J->pushundefined();
-        return;
+        logs::info("[test-marker] %s", message);
     }
 
-    logs::info("%s", js_strnode_cstr(js_tostring(J, 1)));
-    J->pushundefined();
-    return;
+    logs::info("%s", message);
 }
+ANK_FUNCTION_1(__log_marker);
 
-static void js_test_pump_frames_native(js_State *J) {
-    int n = js_tointeger(J, 1);
-    if (n < 0) { n = 0; }
-    if (n > 240) { n = 240; } // safety bound: ~4s at 60fps
+void __test_pump_frames(int n) {
+    n = std::clamp(n, 0, 240); // safety bound: ~4s at 60fps
     test_pump(n);
-    J->pushundefined();
 }
+ANK_FUNCTION_1(__test_pump_frames);
 
 static void push_mouse_motion(int x, int y) {
     SDL_Event e{};
@@ -148,42 +139,81 @@ static void do_synthetic_click(Uint8 sdl_button, int x, int y) {
     test_pump(8);
 }
 
-static void js_test_mouse_click_native(js_State *J) {
-    int x = js_tointeger(J, 1);
-    int y = js_tointeger(J, 2);
+void __test_mouse_click(int x, int y) {
     do_synthetic_click(SDL_BUTTON_LEFT, x, y);
-    J->pushundefined();
 }
+ANK_FUNCTION_2(__test_mouse_click);
 
-static void js_test_mouse_right_click_native(js_State *J) {
-    int x = js_tointeger(J, 1);
-    int y = js_tointeger(J, 2);
+void __test_mouse_right_click(int x, int y) {
     do_synthetic_click(SDL_BUTTON_RIGHT, x, y);
-    J->pushundefined();
 }
+ANK_FUNCTION_2(__test_mouse_right_click);
 
-static void js_test_signal_ready_native(js_State *J) {
+void __test_signal_ready() {
     g_test_signal_ready = true;
-    J->pushundefined();
 }
+ANK_FUNCTION(__test_signal_ready);
 
-static void js_test_run_console_command_native(js_State *J) {
-    if (js_isundefined(J, 1)) {
-        J->pushundefined();
+void __test_run_console_command(pcstr command) {
+    run_debug_command(command);
+}
+ANK_FUNCTION_1(__test_run_console_command);
+
+bool __test_ensure_city_session(pcstr map_path) {
+    if (game.session.active) {
+        return true;
+    }
+
+    if (!GamestateIO::load_map(map_path, false, true)) {
+        logs::error("test_ensure_city_session: load_map(data/default.map) failed");
+        return false;
+    }
+
+    GamestateIO::start_loaded_file();
+    auto cities = g_empire.get_cities();
+    cities[0].type = EMPIRE_CITY_OURS;
+    cities[0].in_use = true;
+
+    return game.session.active;
+}
+ANK_FUNCTION_1(__test_ensure_city_session);
+
+
+static int __test_building_create(int type, int x, int y) {
+    if (type <= BUILDING_NONE || type >= BUILDING_MAX) {
+        return 0;
+    }
+
+    tile2i place = (x < 0 || y < 0) ? tile2i::invalid : tile2i(x, y);
+    if (building *existing = building_first((e_building_type)type)) {
+        return existing->id;
+    }
+
+    if (!place.valid()) {
+        place.set(g_scenario.map.width / 2, g_scenario.map.height / 2);
+    }
+
+    building *b = building_create((e_building_type)type, place, 0);
+    if (!b || b->id <= 0) {
+        return 0;
+    }
+
+    add_building(b, 0, 0);
+    b->state = BUILDING_STATE_VALID;
+    return b->id;
+}
+ANK_FUNCTION_3(__test_building_create);
+
+void __test_show_tile_info(int bid) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
         return;
     }
-    pcstr line = js_strnode_cstr(js_tostring(J, 1));
-    run_debug_command(line);
-    J->pushundefined();
+
+    events::emit(event_show_tile_info{ b->tile, true, "test" });
 }
+ANK_FUNCTION_1(__test_show_tile_info);
 
 ANK_DECLARE_JSFUNCTION_ITERATOR(register_test_js_functions);
 inline void register_test_js_functions(js_State *J) {
-    REGISTER_GLOBAL_FUNCTION(J, js_test_find_inlog_native,      "__test_find_inlog",      1);
-    REGISTER_GLOBAL_FUNCTION(J, js_test_signal_ready_native,    "__test_signal_ready",    0);
-    REGISTER_GLOBAL_FUNCTION(J, js_test_pump_frames_native,     "__test_pump_frames",     1);
-    REGISTER_GLOBAL_FUNCTION(J, js_test_mouse_click_native,     "__test_mouse_click",     2);
-    REGISTER_GLOBAL_FUNCTION(J, js_test_mouse_right_click_native,"__test_mouse_right_click", 2);
-    REGISTER_GLOBAL_FUNCTION(J, js_test_run_console_command_native,"__test_run_console_command", 1);
-    REGISTER_GLOBAL_FUNCTION(J, js_log_test_marker_native,      "__log_marker",      1);
 }

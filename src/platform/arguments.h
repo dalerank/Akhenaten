@@ -93,6 +93,8 @@ public:
     [[nodiscard]] const xstring& get_scripts_directory() const { return get_str("scripts_directory"); }
     [[nodiscard]] const xstring& get_mods_directory() const { return get_str("mods_directory"); }
     [[nodiscard]] const xstring& get_custom_font() const { return get_str("custom_font"); }
+    [[nodiscard]] const xstring& get_load_map() const { return get_str("load_map"); }
+    [[nodiscard]] const xstring& get_integraltest_only() const { return get_str("integraltest_only"); }
 
     void set_custom_font(pcstr value);
 

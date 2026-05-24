@@ -7,6 +7,7 @@
 #include "content/vfs.h"
 #include "game/game.h"
 
+#include <cstring>
 #include <filesystem>
 #include <string>
 #include <unordered_map>
@@ -161,14 +162,16 @@ ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--unpack_scripts", "unpack_scripts", true, "
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-resources", "log_resources", true, "log resource loading (textures, image packs, etc.)");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-sound", "log_sound", true, "log sound file loading (city sounds, speech, music, effects)");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--discord-log", "discord_log", true, "enable Discord RPC verbose logging");
-ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--integraltests", "integral_tests", true, "run built-in tests without game data and exit");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--no-resource", "no_resource", true, "run without Pharaoh data files (skips campaign.txt; DATA_DIR is optional VFS base path)");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--integraltests", "integral_tests", true, "run built-in tests without game data and exit");
 
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--render", "renderer", "Option --render must be opengl,direct3d", "--render RENDERER", "use specific renderer");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--mods", "mods_directory", "Option --mods folder should exist", "--mods PATH", "set mods data directory path");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--mixed", "scripts_directory", MIXED_MODE_ERROR_MESSAGE, "--mixed PATH", "hot reload scripts from disk");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--language", "language", "Option --language must be followed by a language code (e.g., ru, en, fr)", "--language CODE", "set game language (e.g., ru, en, fr, de, it, sp, po, pr, sw, tc, sc, kr)");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--font", "custom_font", "Option --font must be followed by a font file path", "--font PATH", "use custom TTF font file (overrides font from localization.js)");
+ANK_REGISTER_STRING_ARGUMENT_HANDLER("--load-map", "load_map", "Option --load-map must be followed by a map file path", "--load-map PATH", "load arbitrary .map file straight into the city, bypassing the main menu (path may be absolute, relative to PWD/data dir, or a name inside Maps/)");
+ANK_REGISTER_STRING_ARGUMENT_HANDLER("--integraltest-only", "integraltest_only", "Option --integraltest-only must be followed by a test name (e.g. 06 or 06_stonemason_guild_info_window)", "--integraltest-only NAME", "with --integraltests, run only tests whose filename (stem) contains NAME (case-insensitive); useful for debugging a single failing test");
 
 // Register argument handler for --display-scale
 std::optional<arguments::argument_result> handle_display_scale(int argc, char **argv, int current_index) {
@@ -259,14 +262,20 @@ ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_threads, "-threads=N", "number of
 void Arguments::parse(int argc, char** argv) {
     xstring data_dir = std::filesystem::current_path().string().c_str();
 
-    vfs::path steam_path = platform.get_steam_path();
-    if (!steam_path.empty()) {
-        vfs::path pharaoh_steam_path(steam_path, "/steamapps/common/Pharaoh + Cleopatra/");
-        vfs::path pharaoh_exe_path(pharaoh_steam_path, "Pharaoh.exe");
-        bool binary_exist = std::filesystem::exists(pharaoh_exe_path.c_str());
-        if (binary_exist) {
-            logs::info("Steam pharaoh path: %s", pharaoh_steam_path.c_str());
-            data_dir = pharaoh_steam_path.c_str();
+    const bool integraltests_mode = std::any_of(argv + 1, argv + argc, [](pcstr a) {
+        return a && std::strcmp(a, "--integraltests") == 0;
+    });
+
+    if (!integraltests_mode) {
+        vfs::path steam_path = platform.get_steam_path();
+        if (!steam_path.empty()) {
+            vfs::path pharaoh_steam_path(steam_path, "/steamapps/common/Pharaoh + Cleopatra/");
+            vfs::path pharaoh_exe_path(pharaoh_steam_path, "Pharaoh.exe");
+            bool binary_exist = std::filesystem::exists(pharaoh_exe_path.c_str());
+            if (binary_exist) {
+                logs::info("Steam pharaoh path: %s", pharaoh_steam_path.c_str());
+                data_dir = pharaoh_steam_path.c_str();
+            }
         }
     }
 
