@@ -13,6 +13,7 @@ game = extend(__game, {
     mission_briefing_is_review : false
 
     @absolute_day { get: __game_absolute_day }
+    @is_integral_tests { get: __game_is_integral_tests }
     @simtime_year { get: __game_simtime_year }
     @version { get: __game_version }
     @difficulty { get: __game_difficulty }

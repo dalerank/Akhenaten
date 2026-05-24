@@ -718,6 +718,7 @@ file(GLOB PLATFORM_FILES ${PROJECT_SOURCE_DIR}/src/platform/*.cpp)
 file(GLOB CONFIG_FILES ${PROJECT_SOURCE_DIR}/src/config/*.cpp)
 file(GLOB CONTENT_FILES ${PROJECT_SOURCE_DIR}/src/content/*.cpp)
 file(GLOB CORE_FILES ${PROJECT_SOURCE_DIR}/src/core/*.cpp)
+file(GLOB NET_FILES ${PROJECT_SOURCE_DIR}/src/net/*.cpp)
 file(GLOB CORE_ENCODING_FILES ${PROJECT_SOURCE_DIR}/src/core/encoding/*.cpp)
 file(GLOB BUILDING_FILES ${PROJECT_SOURCE_DIR}/src/building/*.cpp)
 file(GLOB BUILDING_CONSTRUCTION_FILES ${PROJECT_SOURCE_DIR}/src/building/construction/*.cpp)
@@ -846,6 +847,7 @@ if(MSVC)
     file(GLOB TRANSLATION_HEADERS ${PROJECT_SOURCE_DIR}/src/translation/*.h)
 
     source_group("core" FILES ${CORE_FILES})
+    source_group("net" FILES ${NET_FILES})
     source_group("core/encoding" FILES ${CORE_ENCODING_FILES})
     source_group("platform" FILES ${PLATFORM_FILES} )
     source_group("building" FILES ${BUILDING_FILES})
@@ -898,6 +900,7 @@ set(SOURCE_FILES
     ${CONTENT_FILES}
     ${CONFIG_FILES}
     ${CORE_FILES} ${CORE_HEADERS}
+    ${NET_FILES}
     ${IO_FILES} ${IO_HEADERS}
     ${IO_CONFIG_FILES}
     ${IO_GAMEFILES_FILES}

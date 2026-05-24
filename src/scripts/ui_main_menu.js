@@ -61,10 +61,21 @@ function main_menu_quit_game() {
 [es=(main_menu_screen, init)]
 function main_menu_on_init(window) {
 	window.continue_game.readonly = !main_menu_can_continue()
+
+	if (!game.is_integral_tests && github_is_active()) {
+		github_download_changelog_async()
+		github_get_total_commits_async("dalerank", "Akhenaten")
+	}
 }
 
-[es=event_totals_commits_loaded]
-function main_menu_download_version(window) {
+[es=(main_menu_screen, update_changelog)]
+function main_menu_on_update(window) {
+	window.changelog.text = window.change_log
+	window.changelog.enabled = true
+}
+
+[es=(main_menu_screen, update_version)]
+function main_menu_on_update_version(window) {
 	log_info("main_menu_download_version: " + window.current_commit)
 	if (window.current_commit <= 1)
 		return
@@ -80,9 +91,13 @@ function main_menu_download_version(window) {
 	game_features.gameopt_last_game_version = window.current_commit
 }
 
-[es=event_changelog_loaded]
-function main_menu_download_changelog(window) {
-	log_info("main_menu_download_changelog: " + window.change_log)
-	window.changelog.text = window.change_log
-	window.changelog.enabled = true
+[es=event_github_totals_commits_loaded]
+function main_menu_download_version(ev) {
+	emit main_menu_screen.update_version{ current_commit: ev.current_commit }
+}
+
+[es=event_github_changelog_loaded]
+function main_menu_download_changelog(ev) {
+	log_info("main_menu_download_changelog: " + ev.change_log)
+	emit main_menu_screen.update_changelog{ change_log: ev.change_log }
 }
