@@ -100,6 +100,12 @@ function top_menu_load_map() {
 	window_file_dialog_load_show(FILE_TYPE_SAVED_GAME)
 }
 
+function top_menu_save_map() {
+	widget_top_menu_clear_state()
+	ui.window_city_show()
+	window_file_dialog_save_show(FILE_TYPE_SAVED_GAME)
+}
+
 top_menu_widget {
 	offset [10, 6]
 	item_height : 20
@@ -120,7 +126,7 @@ top_menu_widget {
 		new_game     	: menu_item({text {group:1, id:1}, onclick: top_menu_new_game })
 		replay_map   	: menu_item({text {group:1, id:2}, onclick: top_menu_replay_map })
 		load_game	    : menu_item({text {group:1, id:3}, onclick: top_menu_load_map })
-		save_game	    : menu_item({text {group:1, id:4}, onclick: __widget_top_menu_save_map })
+		save_game	    : menu_item({text {group:1, id:4}, onclick: top_menu_save_map })
 		delete_game	  	: menu_item({text {group:1, id:6}, onclick: __widget_top_menu_delete_map })
 		exit_game	    : menu_item({text {group:1, id:5}, onclick: __widget_top_menu_exit_game })
 	}

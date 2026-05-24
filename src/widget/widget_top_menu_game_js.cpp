@@ -3,7 +3,6 @@
 #include "js/js_game.h"
 #include "window/popup_dialog.h"
 #include "window/window_city.h"
-#include "window/file_dialog_save.h"
 #include "window/file_dialog_delete.h"
 #include "window/main_menu.h"
 #include "window/autoconfig_window.h"
@@ -15,15 +14,6 @@
 #include "core/profiler.h"
 #include "game/game.h"
 #include "editor/tool.h"
-
-pcstr __widget_top_menu_save_map(int, int) {
-    widget_top_menu_clear_state();
-    window_city_show();
-    window_file_dialog_save_show(FILE_TYPE_SAVED_GAME);
-
-    return "";
-}
-ANK_FUNCTION_2(__widget_top_menu_save_map)
 
 pcstr __widget_top_menu_delete_map(int, int) {
     widget_top_menu_clear_state();
