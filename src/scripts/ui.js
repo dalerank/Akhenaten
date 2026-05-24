@@ -39,6 +39,7 @@ import ui_advisor_imperial
 import ui_workshop_window
 import ui_brickworks_window
 import ui_carpenters_guild_window
+import ui_stonemason_guild_window
 import ui_garden_info
 import ui_sidebar_window
 import ui_batalion_window
