@@ -8,7 +8,7 @@
 //***************************************************************************
 /// Defines a no-position constant.
 //***************************************************************************
-static const size_t type_list_npos = std::numeric_limits<size_t>::max();
+static const size_t type_list_npos = (std::numeric_limits<size_t>::max)();
 
 //***************************************************************************
 /// Type list forward declaration.
