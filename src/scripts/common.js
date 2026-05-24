@@ -26,32 +26,47 @@ function _format() {
     return formatted
 };
 
+function _eformat_eval_expr(expr, locals) {
+    // short notation ${group.id} → __loc(group, id)
+    var locShorthand = /^(\d+)\.(\d+)$/.exec(expr);
+    if (locShorthand) {
+        return __loc(parseInt(locShorthand[1], 10), parseInt(locShorthand[2], 10));
+    }
+
+    // ${loc.keyname} → __loc("#keyname")
+    var locKey = /^loc\.([A-Za-z_][A-Za-z0-9_]*)$/.exec(expr);
+    if (locKey) {
+        return __loc("#" + locKey[1]);
+    }
+
+    var result;
+    if (locals && typeof locals === 'object') {
+        with (locals) {
+            result = eval(expr);
+        }
+    } else {
+        result = eval(expr);
+    }
+
+    if (result === undefined) return 'undefined';
+    if (result === null) return 'null';
+    if (typeof result === 'object') {
+        if (result.toString) return result.toString();
+        return '[object]';
+    }
+    return String(result);
+}
+
 function _eformat(message, locals) {
-    if (typeof message === 'string' && message.indexOf('${') !== -1) {
+    if (typeof message !== 'string') {
+        return message;
+    }
+
+    if (message.indexOf('${') !== -1) {
         try {
             message = message.replace(/\$\{([^}]+)\}/g, function(match, expr) {
                 try {
-                    // short notation ${group.id} → __loc(group, id)
-                    var locShorthand = /^(\d+)\.(\d+)$/.exec(expr);
-                    if (locShorthand) {
-                        expr = '__loc(' + locShorthand[1] + ', ' + locShorthand[2] + ')';
-                    }
-                    var result;
-                    if (locals && typeof locals === 'object') {
-                        with (locals) {
-                            result = eval(expr);
-                        }
-                    } else {
-                        result = eval(expr);
-                    }
-
-                    if (result === undefined) return 'undefined';
-                    if (result === null) return 'null';
-                    if (typeof result === 'object') {
-                        if (result.toString) return result.toString();
-                        return '[object]';
-                    }
-                    return String(result);
+                    return _eformat_eval_expr(expr, locals);
                 } catch (e) {
                     __log_warning_native('[format error: ' + e + ' in ${' + expr + '}]');
                     return '[error: ' + e + ' in ${' + expr + '}]';
@@ -62,6 +77,13 @@ function _eformat(message, locals) {
             message = '[format error: ' + e + ']';
         }
     }
+
+    if (message.indexOf('#') !== -1) {
+        message = message.replace(/#([A-Za-z_][A-Za-z0-9_]*)/g, function(match, key) {
+            return __loc("#" + key);
+        });
+    }
+
     return message;
 }
 

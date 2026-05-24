@@ -51,14 +51,14 @@ function info_window_granary_on_init(window) {
 
     var warning_text = ""
     if (!b.has_road_access) {
-        warning_text = __loc("#granary_no_road_access")
+        warning_text ="#granary_no_road_access"
     } else if (scenario.kingdom_supplies_grain) {
-        warning_text = __loc("#granary_kingdom_supplies_grain")
+        warning_text = "#granary_kingdom_supplies_grain"
     }
-    window.warning_text.text = warning_text
+    window.warning_text.text = fmt(warning_text)
 
-    window.storing.text = __loc("#granary_storing") + " " + granary.total_stored() + " " + __loc("#granary_units")
-    window.free_space.text = __loc("#granary_space_for") + " " + granary.free_space() + " " + __loc("#granary_units")
+    window.storing.text = fmt("#granary_storing ${granary.total_stored()} #granary_units", { granary: granary })
+    window.free_space.text = fmt("#granary_space_for ${granary.free_space()} #granary_units", { granary: granary })
 
     for (var i = 0; i < GRANARY_INFO_FOOD_SLOTS; i++) {
         window["food" + i + "_icon"].image = RESOURCE_NONE
