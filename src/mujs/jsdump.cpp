@@ -753,7 +753,7 @@ void jsC_dumpfunction(js_State *J, js_Function *F)
 	for (i = 0; i < F->funlen; ++i)
 		LPRINTFMT("\tfunction %d %s\n", i, js_strnode_cstr(F->funtab[i]->name));
 	for (i = 0; i < F->varlen; ++i)
-		LPRINTFMT("\tlocal %d %s\n", i + 1, F->vartab[i]);
+		LPRINTFMT("\tlocal %d %s\n", i + 1,js_strnode_cstr(F->vartab[i]));
 
 	LPRINTF("{\n");
 	while (p < end) {
