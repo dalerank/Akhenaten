@@ -21,7 +21,6 @@
 #include "graphics/graphics.h"
 #include "scenario/map.h"
 #include "game/game.h"
-#include "window/building/distribution.h"
 #include "graphics/elements/lang_text.h"
 #include "figuretype/figure_trader_ship.h"
 #include "city/city.h"

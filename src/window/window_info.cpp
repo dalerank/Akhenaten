@@ -31,7 +31,6 @@
 #include "window/window_advisors.h"
 #include "window/building/common.h"
 #include "window/building/culture.h"
-#include "window/building/distribution.h"
 #include "window/building/figures.h"
 #include "window/building/government.h"
 #include "window/building/terrain.h"

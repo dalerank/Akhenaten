@@ -5,7 +5,6 @@
 #include "graphics/window.h"
 #include "grid/building.h"
 #include "building/building_house.h"
-#include "building/distribution.h"
 #include "building/culture.h"
 #include "building/government.h"
 #include "window/building/common.h"

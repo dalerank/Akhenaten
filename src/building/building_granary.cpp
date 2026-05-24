@@ -22,7 +22,6 @@
 #include "widget/city/ornaments.h"
 #include "figure/figure.h"
 #include "game/game.h"
-#include "window/building/distribution.h"
 #include "city/city_labor.h"
 #include "figuretype/figure_storageyard_cart.h"
 #include "js/js_game.h"
