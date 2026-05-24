@@ -44,13 +44,10 @@ info_window_granary {
 [es=(info_window_granary, init)]
 function info_window_granary_on_init(window) {
     __log_marker("window_show:info_window_granary")
-    var b = city.get_building(window.bid)
     var granary = city.get_granary(window.bid)
 
-    window_building_distribution_set_bid(window.bid)
-
     var warning_text = ""
-    if (!b.has_road_access) {
+    if (!granary.has_road_access) {
         warning_text ="#granary_no_road_access"
     } else if (scenario.kingdom_supplies_grain) {
         warning_text = "#granary_kingdom_supplies_grain"
@@ -77,11 +74,11 @@ function info_window_granary_on_init(window) {
         food_index++
     }
 
-    window.workers_text.text = b.num_workers + " " + __loc(8, 12) + " (" + b.max_workers + " " + __loc(69, 0)
+    window.workers_text.text = granary.num_workers + " " + __loc(8, 12) + " (" + granary.max_workers + " " + __loc(69, 0)
 }
 
 [es=(info_window_granary, open_orders_window)]
 function info_window_granary_on_open_orders_window(window) {
-    window_building_distribution_set_bid(window.bid)
-    __window_granary_orders_show()
+    log_info("akhenaten: info_window_granary_on_open_orders_window")
+    emit event_show_window{ id: "granary_orders_window" }
 }

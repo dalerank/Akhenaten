@@ -131,10 +131,6 @@ textid building_info_window::get_tooltip(object_info &c) {
     }
 
     building *b = building_get(c);
-    if (b->type == BUILDING_STORAGE_YARD) {
-        return window_building_get_tooltip_warehouse_orders();
-    }
-
     return b->dcast()->get_tooltip();
 }
 

@@ -49,7 +49,6 @@ public:
     virtual void on_post_load() override;
     virtual void spawn_figure() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
-    virtual textid get_tooltip() const override;
     virtual void update_day() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 

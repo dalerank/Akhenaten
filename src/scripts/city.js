@@ -138,6 +138,7 @@ city {
     resources {
         @available { get: __city_resources_available }
         @available_market { get: __city_resources_available_market_goods }
+        @available_foods { get: __city_resources_available_foods }
         @food_produced_last_month { get: __city_resource_food_produced_last_month }
         @food_consumed_last_month { get: __city_resource_food_consumed_last_month }
         @food_percentage_produced {

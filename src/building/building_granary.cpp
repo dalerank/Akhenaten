@@ -70,7 +70,7 @@ bool building_granary::is_getting(e_resource resource) {
         || (s->resource_state[resource] == STORAGE_STATE_GET && s->resource_max_get[resource] >= THREEQUARTERS_GRANARY && amount < THREEQUARTERS_GRANARY)
         || (s->resource_state[resource] == STORAGE_STATE_GET && s->resource_max_get[resource] >= HALF_GRANARY && amount < HALF_GRANARY)
         || (s->resource_state[resource] == STORAGE_STATE_GET && s->resource_max_get[resource] >= QUARTER_GRANARY && amount < QUARTER_GRANARY)) {
-        return true; 
+        return true;
     } else {
         return false;
     }
@@ -105,9 +105,9 @@ int building_granary::add_resource(e_resource resource, int amount, bool force) 
     const int deliverable_amount = std::min<int>(d.resource_stored[RESOURCE_NONE], amount);
     d.resource_stored[resource] += deliverable_amount;
     d.resource_stored[RESOURCE_NONE] -= deliverable_amount;
-    
+
     events::emit(event_granary_resource_added{ id(), resource, deliverable_amount });
-    
+
     return amount - deliverable_amount;
 }
 
@@ -575,10 +575,6 @@ bool building_granary::draw_ornaments_and_animations_height(painter &ctx, vec2i 
     }
 
     return false;
-}
-
-textid building_granary::get_tooltip() const {
-    return window_building_get_tooltip_granary_orders();
 }
 
 void building_granary::draw_stores(vec2i point, color color_mask, painter &ctx) {

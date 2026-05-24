@@ -99,6 +99,5 @@ function storage_yard_info_on_init_workers_info(window) {
 
 [es=(info_window_storageyard, open_orders_window)]
 function info_window_storageyard_on_open_orders_window(window) {
-    window_building_distribution_set_bid(window.bid)
     emit event_show_window{ id:"storage_yard_orders_window" }
 }
