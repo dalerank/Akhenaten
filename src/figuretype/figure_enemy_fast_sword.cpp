@@ -56,6 +56,14 @@ void figure_enemy_fast_sword::figure_action() {
     base.set_flag(e_figure_flag_inattack, false);
     base.terrain_usage = TERRAIN_USAGE_ENEMY;
 
+    // locked in melee (set up by the shared C3 path): trade blows via hit_opponent
+    // until one side dies, then resume_activity_after_attack clears opponent_id.
+    if (base.opponent_id > 0 && !figure_get(base.opponent_id)->is_dead()) {
+        base.set_flag(e_figure_flag_inattack);
+        base.figure_combat_handle_attack();
+        return;
+    }
+
     switch (action_state()) {
     case FIGURE_ACTION_148_FLEEING:
         base.destination_tile = base.source_tile;
@@ -122,26 +130,36 @@ void figure_enemy_fast_sword::enemy_fighting(formation *m) {
         }
     }
 
+    auto& d = runtime_data();
     bool attacking = false;
     if (target_id > 0) {
         figure *target = figure_get(base.target_figure_id);
         base.direction = calc_general_direction(tile(), target->tile);
-        base.move_ticks(base.speed_multiplier);
-        if (direction() == DIR_FIGURE_NONE) {
-            base.destination_tile = target->tile;
-            route_remove();
-        } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            advance_action(ACTION_151_ENEMY_FAST_SWORD_INITIAL);
-            base.target_figure_id = 0;
+        if (tile().dist(target->tile) < 2.f) {
+            // adjacent to the soldier: engage through the shared C3 combat so both
+            // sides use the same attack/defense math, the 2-attacker cap and the
+            // formation-defense bonuses. (A custom damage path here let unlimited
+            // barbarians gang a single soldier and ignored formation defense.)
+            attacking = true;
+            m->recent_fight = 6;
+            base.figure_combat_attack_figure_at(target->tile.grid_offset());
+        } else {
+            base.move_ticks(base.speed_multiplier);
+            if (direction() == DIR_FIGURE_NONE) {
+                base.destination_tile = target->tile;
+                route_remove();
+            } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
+                advance_action(ACTION_151_ENEMY_FAST_SWORD_INITIAL);
+                base.target_figure_id = 0;
+            }
         }
-    } 
+    }
 
-    auto &d = runtime_data();
     if (m->destination_building_id > 0) {
         building *b = building_get(m->destination_building_id);
         float dist = tile().dist(b->tile);
-        attacking |= (dist < 2);
-        if (attacking) {
+        if (dist < 2) {
+            attacking = true;
             base.direction = calc_general_direction(tile(), b->tile);
             d.damage_action++;
             m->recent_fight = 6;

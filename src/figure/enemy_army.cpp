@@ -93,7 +93,11 @@ void enemy_army_in_city_t::calculate_kingdome_influence() {
                     figure *f = figure_get(m->figures[fig]);
                     figures_num++;
                     uint8_t radiuses[] = { 7, 7, 7, 6, 6, 6, 5, 5, 5, 4, 4, 4, 3, 3, 3, 2, 2, 2 };
-                    if (f && f->state == FIGURE_STATE_ALIVE && f->is_enemy()) {
+                    // own batalion figures are the player's soldiers, not enemies; the
+                    // copy-pasted is_enemy() check (used by the enemy branch below) left the
+                    // soldier-strength map empty, so enemy formations never detected the
+                    // legion and only ever marched to buildings.
+                    if (f && f->state == FIGURE_STATE_ALIVE && !f->is_enemy()) {
                         map_soldier_strength_add(f->tile, radiuses[figures_num], 1);
                     }
                 }

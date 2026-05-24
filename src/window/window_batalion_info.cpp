@@ -100,7 +100,7 @@ void batalion_info_window::change_layout(e_formation_layout new_layout) {
         g_sound.speech_play_file("Wavs/cohort5.wav", 255);
         break;
     }
-    //window_city_military_show(b->formation_id);
+    window_city_military_show(b->formation_id);
     update_layout();
 }
 
@@ -115,12 +115,16 @@ void batalion_info_window::update_layout() {
 
     struct mode_t { int img, mode; };
     static const mode_t OFFSETS_LEGIONARY[2][5] = {
-        {{0, FORMATION_COLUMN}, {1, FORMATION_TORTOISE}, {2, FORMATION_DOUBLE_LINE_1}, {3, FORMATION_DOUBLE_LINE_2}, {4, FORMATION_HERD}},
-        {{0, FORMATION_COLUMN}, {1, FORMATION_TORTOISE}, {3, FORMATION_DOUBLE_LINE_2}, {2, FORMATION_DOUBLE_LINE_1}, {4, FORMATION_HERD}},
+      {{0, FORMATION_COLUMN}, {1, FORMATION_TORTOISE}, {2, FORMATION_DOUBLE_LINE_1}, {3, FORMATION_DOUBLE_LINE_2},
+        {4, FORMATION_MOP_UP}},
+      {{0, FORMATION_COLUMN}, {1, FORMATION_TORTOISE}, {3, FORMATION_DOUBLE_LINE_2}, {2, FORMATION_DOUBLE_LINE_1},
+        {4, FORMATION_MOP_UP}},
     };
     static const mode_t OFFSETS_OTHER[2][5] = {
-        {{5, FORMATION_SINGLE_LINE_1}, {1, FORMATION_SINGLE_LINE_2}, {2, FORMATION_DOUBLE_LINE_1}, {3, FORMATION_DOUBLE_LINE_2}, {4, FORMATION_HERD}},
-        {{6, FORMATION_SINGLE_LINE_2}, {5, FORMATION_SINGLE_LINE_1}, {3, FORMATION_DOUBLE_LINE_2}, {2, FORMATION_DOUBLE_LINE_1}, {4, FORMATION_HERD}},
+      {{5, FORMATION_SINGLE_LINE_1}, {1, FORMATION_SINGLE_LINE_2}, {2, FORMATION_DOUBLE_LINE_1},
+        {3, FORMATION_DOUBLE_LINE_2}, {4, FORMATION_MOP_UP}},
+      {{6, FORMATION_SINGLE_LINE_2}, {5, FORMATION_SINGLE_LINE_1}, {3, FORMATION_DOUBLE_LINE_2},
+        {2, FORMATION_DOUBLE_LINE_1}, {4, FORMATION_MOP_UP}},
     };
 
     const int index = (city_view_orientation() == DIR_6_TOP_LEFT || city_view_orientation() == DIR_2_BOTTOM_RIGHT) ? 1 : 0;

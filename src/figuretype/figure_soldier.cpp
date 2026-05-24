@@ -159,6 +159,14 @@ bool figure_soldier::play_die_sound() {
     return true;
 }
 
+void figure_soldier::acquire_attack() {
+    // enter the C3-style attack state so action_perform() routes us to
+    // figure_combat_handle_attack(); acquire_attack() was empty, so soldiers
+    // never actually engaged after figure_combat_attack_figure_at() set up a target.
+    base.action_state = ACTION_90_SOLDIER_ATTACK;
+    base.set_flag(e_figure_flag_inattack);
+}
+
 void figure_soldier::figure_action() {
     base.set_flag(e_figure_flag_invisible, false);
 
@@ -260,7 +268,11 @@ void figure_soldier::figure_action() {
         if (action_state() != ACTION_83_SOLDIER_GOING_TO_STANDARD) {
             if (type() == FIGURE_ARCHER) {
                 base.javelin_launch_missile();
-            } else if (type() == FIGURE_FCHARIOTEER) {
+            } else if (type() == FIGURE_INFANTRY || type() == FIGURE_FCHARIOTEER) {
+                // FIGURE_INFANTRY is the legionary (melee) equivalent and must attack
+                // adjacent enemies while at the standard, like FIGURE_FORT_LEGIONARY did
+                // in the original. The JS-era port left infantry doing nothing here, so
+                // foot soldiers never engaged.
                 base.legionary_attack_adjacent_enemy();
             }
         }
@@ -336,6 +348,11 @@ void figure_soldier::figure_action() {
     case ACTION_89_SOLDIER_AT_DISTANT_BATTLE:
         base.formation_at_rest = 1;
         base.set_flag(e_figure_flag_invisible);
+        break;
+
+    case ACTION_90_SOLDIER_ATTACK:
+        base.formation_at_rest = 0;
+        base.figure_combat_handle_attack(); // deals damage via hit_opponent, resumes when done
         break;
     }
 

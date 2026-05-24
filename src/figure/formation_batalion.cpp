@@ -108,10 +108,14 @@ void formation_batalion_move_to(formation* m, tile2i tile) {
 
         if (prepare_to_move(m)) {
             figure_soldier *soldier = f->dcast_soldier();
-
-            soldier->base.alternative_location_index = 0;
-            soldier->going_to_standard();
-            soldier->base.route_remove();
+            // m->figures[] also holds the standard bearer (not a soldier); dcast
+            // returns null for it -> guard to avoid a crash. The standard follows
+            // m->standard_tile on its own.
+            if (soldier) {
+                soldier->base.alternative_location_index = 0;
+                soldier->going_to_standard();
+                soldier->base.route_remove();
+            }
         }
     }
 }
