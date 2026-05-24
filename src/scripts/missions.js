@@ -15,12 +15,40 @@ default_tree_grow {
 
 custom_missions = [
 	{
+		filename: "data/default.map"
+		mission_id: 127
+	}
+	{
 		filename: "Alexandria.map"
 		mission_id: 128
 	}
 	{
 		filename: "Bridges.map"
 		mission_id: 129
+	}
+	{
+		filename: "Sandbox.map"
+		mission_id: 130
+	}
+	{
+		filename: "Cataract.map"
+		mission_id: 131
+	}
+	{
+		filename: "Chariot Blitz.map"
+		mission_id: 132
+	}
+	{
+		filename: "Empire.map"
+		mission_id: 133
+	}
+	{
+		filename: "Default.map"
+		mission_id: 134
+	}
+	{
+		filename: "Enkomi.map"
+		mission_id: 135
 	}
 ]
 
@@ -46,3 +74,9 @@ import mission_9_abu
 import mission_10_saqqara
 import mission_128_alexandria
 import mission_129_bridges
+import mission_130_sandbox
+import mission_131_cataract
+import mission_132_chariot_blitz
+import mission_133_empire
+import mission_134_default
+import mission_135_enkomi
