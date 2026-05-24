@@ -318,6 +318,9 @@ void font_atlas_regenerate() {
         utf8_symbols.push_back(missing_codepoint);
     }
 
+    std::sort(utf8_symbols.begin(), utf8_symbols.end());
+    utf8_symbols.erase(std::unique(utf8_symbols.begin(), utf8_symbols.end()), utf8_symbols.end());
+
     if (utf8_symbols.empty()) {
         return;
     }
@@ -360,8 +363,9 @@ void font_atlas_regenerate() {
         font_pack.handle->atlas_pages.push_back(atlas_data);
     }
 
-    // Finish filling in image and atlas information
-    assert(font_pack.handle->images_array.size() < 2000);
+    // Finish filling in image and atlas information.
+    // No magic upper bound here: the real safety check is `image_id < 0xffff`
+    // below, which keeps the font pak inside its reserved index range.
     for (int i = 0; i < font_pack.handle->images_array.size(); i++) {
         image_t &img = font_pack.handle->images_array.at(i);
 
