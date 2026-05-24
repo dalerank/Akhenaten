@@ -106,3 +106,8 @@ void window_granary_orders_show(object_info &c) {
     c.ui = &granary_ordersw;
     c.ui->init(c);
 }
+
+void __window_granary_orders_show() {
+    window_granary_orders_show(common_info_window::get_object_info());
+}
+ANK_FUNCTION(__window_granary_orders_show)

@@ -27,9 +27,9 @@ enum e_custome_image_type {
     CUSTOM_IMAGE_MAX = 8
 };
 
-enum e_image_filter_mode { 
-    IMAGE_FILTER_NEAREST = 0, 
-    IMAGE_FILTER_LINEAR = 1 
+enum e_image_filter_mode {
+    IMAGE_FILTER_NEAREST = 0,
+    IMAGE_FILTER_LINEAR = 1
 };
 
 int platform_renderer_init(SDL_Window* window, xstring renderer);

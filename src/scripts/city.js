@@ -315,6 +315,7 @@ city.get_granary = function(building_id) {
         @tile { get: __building_tile }
         total_stored: function() { return __granary_get_total_stored(this.id) }
         amount: function(resource) { return __granary_get_amount(this.id, resource) }
+        free_space: function() { return __granary_get_freespace(this.id) }
         is_accepting: function(resource) { return __granary_is_accepting(this.id, resource) }
     }
 }

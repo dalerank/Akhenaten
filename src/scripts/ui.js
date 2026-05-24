@@ -23,10 +23,11 @@ import ui_top_menu_widget
 import ui_advisor_religion
 import ui_advisor_finance
 import ui_advisor_health
-import ui_granary_info
 import ui_records_window
+import ui_widgets
 import ui_bazaar_orders_window
 import ui_bazaar_window
+import ui_granary_info
 import ui_advisor_chief
 import ui_mission_briefing_window
 import ui_victory_dialog
@@ -58,7 +59,6 @@ import ui_file_dialog_delete
 import ui_overlay_menu
 import ui_build_menu
 import ui_market_buyer_window
-import ui_widgets
 import ui_storage_yard_info_window
 import ui_storage_yard_orders_window
 import ui_popup_dialog

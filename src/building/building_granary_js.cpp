@@ -22,3 +22,9 @@ bool __granary_is_accepting(int bid, int resource) {
 }
 ANK_FUNCTION_2(__granary_is_accepting)
 
+int __granary_get_freespace(int bid) {
+    building_granary *granary = building_get(bid)->dcast_granary();
+    return granary ? granary->freespace() : 0;
+}
+ANK_FUNCTION_1(__granary_get_freespace)
+
