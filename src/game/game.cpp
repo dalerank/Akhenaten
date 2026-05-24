@@ -390,6 +390,7 @@ bool game_init(game_opts opts) {
     }
 
     game_state_init();
+
     if (g_args.no_logo()) {
         g_sound.play_intro();
         main_menu_screen::show(/*restart_music*/ false);

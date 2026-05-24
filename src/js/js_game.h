@@ -368,7 +368,6 @@ namespace js_helpers {
         }
     }
 
-    // Convert JS value to bvariant (scalars, vec2i arrays/objects)
     inline bvariant js_bvariant_from_js_value(js_State *J, int idx) {
         if (js_isboolean(J, idx)) {
             return bvariant(js_toboolean(J, idx));

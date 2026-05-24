@@ -185,13 +185,6 @@ void main_menu_screen::draw_foreground(UiFlags flags) {
 }
 
 void main_menu_screen::init() {
-    // show() calls init() on every (re)show of the main menu, so each of these
-    // detached network tasks is spawned again whenever the player navigates back
-    // here. Their completion fires a frame-end event into this window's ui tree.
-    // Under --integraltests the menu is shown and re-shown rapidly by the input
-    // simulation, so multiple in-flight downloads land on a rebuilt ui tree and
-    // crash. The downloads are also pointless in a headless test run, so skip
-    // them entirely in that mode (keeps the test deterministic and offline).
     if (!g_args.is_integral_tests()) {
         // Download changelog in background
         game.mt.detach_task([&, this] () {

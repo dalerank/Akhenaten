@@ -202,7 +202,7 @@ static void window_info_draw_foreground(int) {
 static void window_info_handle_input(const mouse* m, const hotkeys* h) {
     auto &context = def_object_info;
     auto &ui = *def_object_info.ui;
-  
+
     bool button_id = context.ui->window_info_handle_mouse(m, context);
 
     if (!button_id) {
