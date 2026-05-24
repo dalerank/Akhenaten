@@ -9,25 +9,12 @@
 #include "window/autoconfig_window.h"
 #include "window/hotkey_config.h"
 #include "window/message_dialog_new.h"
-#include "city/city.h"
-#include "building/construction/build_planner.h"
-#include "game/undo.h"
 #include "graphics/window.h"
 #include "graphics/screenshot.h"
 #include "core/log.h"
 #include "core/profiler.h"
 #include "game/game.h"
 #include "editor/tool.h"
-
-pcstr __widget_top_menu_load_map(int, int) {
-    widget_top_menu_clear_state();
-    g_city_planner.reset();
-    window_city_show();
-    window_file_dialog_load_show(FILE_TYPE_SAVED_GAME);
-
-    return "";
-}
-ANK_FUNCTION_2(__widget_top_menu_load_map)
 
 pcstr __widget_top_menu_save_map(int, int) {
     widget_top_menu_clear_state();
