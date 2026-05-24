@@ -98,6 +98,7 @@ localization_en = [
   {key:"#TR_CONFIG_BUILDING_CLOSEST_ROAD", text:"Building access tile closest road"}
   {key:"#TR_CONFIG_FLOODPLAIN_RANDOM_GROW", text:"Floodplain random grow"}
   {key:"#TR_CONFIG_DRAW_FPS", text:"Draw FPS"}
+  {key:"#TR_CONFIG_SHOW_CURRENT_SELECT_TILE", text:"Show tile under mouse cursor on map"}
   {key:"#TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER", text:"Highlight Top Menu Items"}
   {key:"#TR_CONFIG_EMPIRE_CITY_OLD_NAMES", text:"Show Old Names for city on empire map"}
   {key:"#TR_CONFIG_DRAW_CLOUD_SHADOWS", text:"Draw cloud shadows (experimental)"}

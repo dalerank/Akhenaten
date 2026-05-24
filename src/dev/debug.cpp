@@ -186,10 +186,10 @@ void debug_draw_tile_box(int x, int y, color rect, color bb, int tile_size_x, in
     }
 
     if (bb != COLOR_NULL) {
-        g_render.draw_line(vec2i(left_x * scale, top_x * scale), vec2i(left_y * scale, top_y * scale), bb);
-        g_render.draw_line(vec2i(top_x * scale, right_x * scale), vec2i(top_y * scale, right_y * scale), bb);
-        g_render.draw_line(vec2i(right_x * scale, bottom_x * scale), vec2i(right_y * scale, bottom_y * scale), bb);
-        g_render.draw_line(vec2i(bottom_x * scale, left_x * scale), vec2i(bottom_y * scale, left_y * scale), bb);
+        g_render.draw_line(vec2i(left_x * scale, left_y * scale), vec2i(top_x * scale, top_y * scale), bb);
+        g_render.draw_line(vec2i(top_x * scale, top_y * scale), vec2i(right_x * scale, right_y * scale), bb);
+        g_render.draw_line(vec2i(right_x * scale, right_y * scale), vec2i(bottom_x * scale, bottom_y * scale), bb);
+        g_render.draw_line(vec2i(bottom_x * scale, bottom_y * scale), vec2i(left_x * scale, left_y * scale), bb);
     }
 }
 void debug_draw_tile_top_bb(int x, int y, int height, color color, int size) {

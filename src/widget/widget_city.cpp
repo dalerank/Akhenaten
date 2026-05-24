@@ -475,6 +475,8 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
 
     ImageDraw::apply_render_commands(ctx, "draw_debug_tile");
 
+    draw_current_select_tile(ctx);
+
     // Finalize the rendering by completing any remaining render operations
     // This ensures all graphics commands are flushed and the frame is ready
     ImageDraw::finalize_render(ctx);
@@ -482,6 +484,20 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     // Update and draw cloud effects over the entire scene
     // Clouds are drawn last so they appear above everything else (or are blended appropriately)
     update_clouds(ctx);
+}
+
+void screen_city_t::draw_current_select_tile(painter &ctx) {
+    (void)ctx;
+    if (!game_features::gameui_show_current_select_tile.to_bool()) {
+        return;
+    }
+
+    if (!current_tile.valid()) {
+        return;
+    }
+
+    vec2i pixel = lookup_tile_to_pixel(current_tile);
+    debug_draw_tile_box(pixel.x, pixel.y, COLOR_NULL, COLOR_BLACK);
 }
 
 void screen_city_t::debug_draw_figures(painter &ctx) {
@@ -823,6 +839,9 @@ void screen_city_t::draw_with_overlay(painter &ctx) {
     debug_draw_figures(ctx);
 
     ImageDraw::apply_render_commands(ctx, "debug_draw_figures");
+
+    draw_current_select_tile(ctx);
+
     ImageDraw::finalize_render(ctx);
 
     update_clouds(ctx);

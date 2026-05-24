@@ -18,7 +18,7 @@ mission1 {
 	buildings  [
 					BUILDING_HOUSE_VACANT_LOT, BUILDING_CLEAR_LAND, BUILDING_ROAD, BUILDING_ARCHITECT_POST,
 					BUILDING_FIREHOUSE, BUILDING_POLICE_STATION, BUILDING_BAZAAR, BUILDING_GRANARY, BUILDING_WATER_SUPPLY,
-					BUILDING_GOLD_MINE, BUILDING_VILLAGE_PALACE, BUILDING_HUNTING_LODGE,
+					BUILDING_GOLD_MINE, BUILDING_VILLAGE_PALACE, BUILDING_HUNTING_LODGE
 				]
 
 	win_criteria {
@@ -28,7 +28,7 @@ mission1 {
 
 	sounds {
 		briefing : "Voice/Mission/201_mission.mp3"
-		victory : "Voice/Mission/201_victory.mp3"  
+		victory : "Voice/Mission/201_victory.mp3"
 	}
 
 	vars {
