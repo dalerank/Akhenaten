@@ -39,14 +39,6 @@ reader file_open(path path, pcstr mode = "rb");
 int file_close(FILE *stream);
 
 /**
- * Checks whether the file has the given extension
- * @param filename Filename to check
- * @param extension Extension
- * @return boolean true if the file has the given extension, false otherwise
- */
-bool file_has_extension(pcstr filename, pcstr extension);
-
-/**
  * Replaces the current extension by the given new extension.
  * Filename is unchanged if there was no extension.
  * @param[in,out] filename Filename to change

@@ -1,6 +1,8 @@
 #pragma once
 
-#include "core/xstring.h"
+#include "core/core.h"
+#include "core/xfunction.h"
+#include "content/path.h"
 
 #include <vector>
 
@@ -24,82 +26,6 @@ struct dir_listing {
 
 namespace vfs {
 
-struct path : public bstring256 {
-    void unify() {
-        bstring256 tmp = *this;
-        clear();
-        tmp.replace('\\', '/'); // Replace backslashes with slashes
-        pcstr c = tmp.data();
-        pstr mptr = data();
-        if (c) {
-            *mptr = *c;
-            ++c;
-        }
-
-        for (; *c != 0; ++c) {
-            if (*c == '/' && *mptr == '/') {
-                const bool keep_uri_separator = (mptr > data() && *(mptr - 1) == ':');
-                if (!keep_uri_separator) {
-                    continue;
-                }
-            }
-
-            ++mptr;
-            *mptr = *c;
-        }
-
-        size_t size = mptr - _data;
-        int remain = capacity - size;
-        *(mptr + ((remain > 0) ? 1 : 0)) = 0;
-        replace('\\', '/'); // Replace backslashes with slashes
-    }
-
-    template<typename ...Args>
-    path(Args &&...args) : bstring256(std::forward<Args>(args)...) {
-        unify();
-    }
-
-    path &operator=(pcstr str) {
-        clear();
-        append(str);
-        unify();
-        return *this;
-    }
-
-    path &operator=(const std::string &str) {
-        clear();
-        append(str.c_str());
-        unify();
-        return *this;
-    }
-
-    path &operator=(xstring str) {
-        clear();
-        append(str.c_str());
-        unify();
-        return *this;
-    }
-
-    void remove_extension() {
-        pstr ptr_point = ::strchr(_data, '.');
-        if (ptr_point) {
-            *ptr_point = 0;
-        }
-    }
-
-    /**
-     * Get the case sensitive and localized filename of the file
-     * @param filepath File path to match to a case-sensitive file on the filesystem
-     * @param localizable Whether the file may, must or must not be localized
-     * @return Corrected file, or base path as fallback if the file was not found
-     */
-    vfs::path resolve();
-    static vfs::path resolve(pcstr p) {
-        vfs::path r(p);
-        return r.resolve();
-    }
-};
-
 constexpr pcstr SAVE_FOLDER = "Save";
 constexpr pcstr SCRIPTS_FOLDER = "Scripts";
 constexpr pcstr content_audio = "AUDIO/";
@@ -119,8 +45,12 @@ const dir_listing *dir_append_files_with_extension(xstring dir, xstring extensio
  */
 const dir_listing *dir_find_all_subdirectories(pcstr dir);
 std::vector<path> dir_find_all_subdirectories(vfs::path dir, bool);
+void dir_look_entries(pcstr path, xfunction<void(pcstr, bool)> fn);
 
 vfs::path content_path(pcstr filepath);
+vfs::path current_path(pcstr filepath);
+
+bool is_directory(pcstr path);
 
 void content_cache_real_file_paths(pcstr folder);
 void content_cache_paths();

@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <filesystem>
-#include <filesystem>
+#include <SDL.h>
 #include <map>
 
 namespace fs = std::filesystem;
@@ -189,6 +189,29 @@ vfs::path content_path(pcstr path) {
     }
 
     return orig_path;
+}
+
+vfs::path current_path(pcstr path) {
+    vfs::path result;
+    if (char* base = SDL_GetBasePath()) {
+        result.concat(base, "/", path);
+        SDL_free(base);
+    }
+
+    return result;
+}
+
+void dir_look_entries(pcstr path, xfunction<void(pcstr, bool)> fn) {
+    namespace fs = std::filesystem;
+    std::error_code ec;
+    for (const auto& e : fs::directory_iterator(path, ec)) {
+        fn(e.path().string().c_str(), !e.is_regular_file());
+    }
+}
+
+bool is_directory(pcstr path) {
+    std::error_code ec;
+    return fs::is_directory(path, ec);
 }
 
 vfs::path vfs::path::resolve() {

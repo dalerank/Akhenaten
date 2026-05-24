@@ -133,7 +133,7 @@ protected:
     }
 
 private:
-    bstring128 __debug_info;
+    bstring256 __debug_info;
 
 public:
     pcstr debug_info() const {
