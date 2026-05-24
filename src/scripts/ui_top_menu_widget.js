@@ -65,9 +65,27 @@ function top_menu_new_game() {
 		function() {
 			__ui_city_planner_reset()
 			__game_undo_disable()
-			city.current_overlay = OVERLAY_NONE
-			city.previous_overlay = OVERLAY_NONE
 			window_show_by_id("window_dinasty_menu")
+		},
+		function() {
+			ui.window_city_show()
+		}
+	)
+}
+
+function top_menu_replay_map() {
+	widget_top_menu_clear_state()
+	ui.show_yesno("#replay_mission",
+		function() {
+			__ui_city_planner_reset()
+			var is_custom = scenario.scmode != e_scenario_normal
+			if (is_custom) {
+				__game_load_savegame("autosave_replay.svx")
+				ui.window_city_show()
+			} else {
+				widget_top_menu_clear_state()
+				__game_load_mission(scenario.campaign_scenario_id, 1)
+			}
 		},
 		function() {
 			ui.window_city_show()
@@ -93,7 +111,7 @@ top_menu_widget {
 
 	file {
 		new_game     	: menu_item({text {group:1, id:1}, onclick: top_menu_new_game })
-		replay_map   	: menu_item({text {group:1, id:2}, onclick: __widget_top_menu_replay_map })
+		replay_map   	: menu_item({text {group:1, id:2}, onclick: top_menu_replay_map })
 		load_game	    : menu_item({text {group:1, id:3}, onclick: __widget_top_menu_load_map })
 		save_game	    : menu_item({text {group:1, id:4}, onclick: __widget_top_menu_save_map })
 		delete_game	  	: menu_item({text {group:1, id:6}, onclick: __widget_top_menu_delete_map })
