@@ -150,9 +150,9 @@ void keyboard_module_t::handle_text(SDL_Event* event) {
 
 void ANK_REGISTER_APPLICATION_MODULE(register_keyboard_module) {
     static keyboard_module_t kb;
-    g_app.register_keyboard_event_handler([&](SDL_Event* ev) { kb.handle_key_down(ev); });
-    g_app.register_keyboard_event_handler([&](SDL_Event* ev) { kb.handle_key_up(ev); });
-    g_app.register_keyboard_event_handler([&](SDL_Event* ev) { kb.handle_text(ev); });
+    g_app.register_keyboard_event_handler([&](void* ev) { kb.handle_key_down((SDL_Event*)ev); });
+    g_app.register_keyboard_event_handler([&](void* ev) { kb.handle_key_up((SDL_Event*)ev); });
+    g_app.register_keyboard_event_handler([&](void* ev) { kb.handle_text((SDL_Event*)ev); });
 }
 
 

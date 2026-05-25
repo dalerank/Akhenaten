@@ -32,6 +32,10 @@ int platform_sdl_version_at_least(int major, int minor, int patch);
 #define GAME_PLATFORM_WEB
 #define GAME_PLATFORM_BROWSER
 #define GAME_PLATFORM_NAME "emscripten"
+#elif defined(__SWITCH__)
+#define GAME_PLATFORM_NSWITCH
+#define GAME_PLATFORM_NX
+#define GAME_PLATFORM_NAME "switch"
 #else
 #define GAME_PLATFORM_UNIX
 #define GAME_PLATFORM_LINUX
@@ -120,6 +124,14 @@ struct platform_t {
 		return false;
 #endif
 	}
+
+	inline constexpr bool is_switch() const {
+#ifdef GAME_PLATFORM_SWITCH
+        return true;
+#else
+        return false;
+#endif
+    }
 
 	bool file_manager_should_case_correct_file();
 

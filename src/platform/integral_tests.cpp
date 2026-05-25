@@ -73,11 +73,15 @@ hvector<xstring, 16> list_test_files() {
     };
 
     add_tests_from_folder("tests");
-    add_tests_from_folder("../tests");
 
     std::sort(found_tests.begin(), found_tests.end(), [](const xstring &a, const xstring &b) {
         return a < b;
     });
+
+    logs::info("[integraltests] %d test file(s)", (int)found_tests.size());
+    for (const auto &p : found_tests) {
+        logs::info("[integraltests]   - %s", p.c_str());
+    }
 
     const xstring only = g_args.get_integraltest_only().tolower();
     if (only.empty()) {
@@ -145,12 +149,14 @@ int run_js_tests() {
     int failed = 0;
     for (const auto &name : files) {
         logs::info("[integraltests] >> %s", name.c_str());
+        logs::flush();
 
         g_app.quit = false;
         SDL_FlushEvent(SDL_USEREVENT);
 
         const int load_baseline = js_gettop(J);
         js_vm_reset_error();
+        logs::info("[test:%s] loading script", name.c_str());
         if (!js_vm_load_file_and_exec(name.c_str())) {
             logs::error("[test:%s] FAIL: load error", name.c_str());
             pop_to(J, load_baseline);
@@ -159,6 +165,7 @@ int run_js_tests() {
             continue;
         }
         pop_to(J, load_baseline); // discard top-level result residue
+        logs::info("[test:%s] script loaded", name.c_str());
 
         // run_test
         if (!js_vm_global_is_callable(J, "run_test")) {
@@ -167,11 +174,13 @@ int run_js_tests() {
             continue;
         }
         g_test_signal_ready = false;
+        logs::info("[test:%s] calling run_test()", name.c_str());
         if (!call_global_void(J, "run_test")) {
             logs::error("[test:%s] FAIL: run_test threw", name.c_str());
             ++failed;
             continue;
         }
+        logs::info("[test:%s] run_test() returned, signal_ready=%d", name.c_str(), g_test_signal_ready ? 1 : 0);
 
         // Pump frames while the game runs as usual.
         int frames = 0;
@@ -185,6 +194,7 @@ int run_js_tests() {
             ++failed;
             continue;
         }
+        logs::info("[test:%s] finished after %d frame(s)", name.c_str(), frames);
 
         // check_valid -> bool
         if (!js_vm_global_is_callable(J, "check_valid")) {
@@ -194,6 +204,7 @@ int run_js_tests() {
         }
         const int cv_baseline = js_gettop(J);
         js_vm_reset_error();
+        logs::info("[test:%s] calling check_valid() (log=%s)", name.c_str(), logs::output_path());
         js_getglobal(J, "check_valid");
         js_pushnull(J); // `this`
         int cv_ok = js_vm_trypcall_keep_result(J, 0);
@@ -204,6 +215,7 @@ int run_js_tests() {
             result = (js_toboolean(J, -1) != 0);
         }
         pop_to(J, cv_baseline);
+        logs::flush();
 
         if (!cv_ok) {
             logs::error("[test:%s] FAIL: check_valid threw", name.c_str());
@@ -212,7 +224,7 @@ int run_js_tests() {
             logs::info("[test:%s] PASS", name.c_str());
             ++passed;
         } else {
-            logs::error("[test:%s] FAIL", name.c_str());
+            logs::error("[test:%s] FAIL (check_valid returned false)", name.c_str());
             ++failed;
         }
     }

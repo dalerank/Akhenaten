@@ -449,45 +449,11 @@ static void handle_mouse_button(SDL_MouseButtonEvent* event, int is_down) {
     }
 }
 
-#ifndef __SWITCH__
-static void handle_window_event(SDL_WindowEvent* event, bool& window_active) {
-    switch (event->event) {
-    case SDL_WINDOWEVENT_ENTER:
-        g_mouse.set_inside_window(1);
-        break;
-    case SDL_WINDOWEVENT_LEAVE:
-        g_mouse.set_inside_window(0);
-        break;
-    case SDL_WINDOWEVENT_SIZE_CHANGED:
-        logs::info("Window resized to %d x %d", (int)event->data1, (int)event->data2);
-        platform_screen_resize(event->data1, event->data2, 1);
-        break;
-    case SDL_WINDOWEVENT_RESIZED:
-        logs::info("System resize to %d x %d", (int)event->data1, (int)event->data2);
-        break;
-    case SDL_WINDOWEVENT_MOVED:
-        logs::info("Window move to coordinates x: %d y: %d\n", (int)event->data1, (int)event->data2);
-        platform_screen_move(event->data1, event->data2);
-        break;
-
-    case SDL_WINDOWEVENT_SHOWN:
-        logs::info("Window %d shown", (unsigned int)event->windowID);
-        window_active = true;
-        break;
-    case SDL_WINDOWEVENT_HIDDEN:
-        logs::info("Window %d hidden", (unsigned int)event->windowID);
-        window_active = false;
-        break;
-    }
-}
-#endif
 static void handle_event(SDL_Event* event, bool& active, bool& quit) {
     switch (event->type) {
-#ifndef __SWITCH__
     case SDL_WINDOWEVENT:
-        handle_window_event(&event->window, active);
+        g_app.handle_window_event(&event->window);
         break;
-#endif
     case SDL_KEYDOWN:
     case SDL_KEYUP:
     case SDL_TEXTINPUT:

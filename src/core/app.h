@@ -11,7 +11,6 @@ struct event_app_screenshot { int value; };
 struct event_app_city_screenshot { int value; };
 struct event_request_exit { int value; };
 struct event_display_options_apply_resolution { int w; int h; };
-union SDL_Event;
 
 enum e_user_event {
     USER_EVENT_QUIT,
@@ -32,7 +31,7 @@ struct application_t {
 
     xstring game_name;
 
-    using event_handler_cb = xfunction<void(SDL_Event*)>;
+    using event_handler_cb = xfunction<void(void*)>;
     hvector<event_handler_cb, 32> keyboard_event_handlers;
 
     void setup();
@@ -43,7 +42,8 @@ struct application_t {
     void register_keyboard_event_handler(event_handler_cb);
     void pump_one_frame();
 
-    void handle_keyboard_event(SDL_Event* event);
+    void handle_keyboard_event(void* event);
+    void handle_window_event(void* event);
 };
 
 extern application_t g_app;

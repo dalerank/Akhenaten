@@ -7,6 +7,7 @@
 #include "platform/screen.h"
 #include "graphics/screenshot.h"
 #include "core/log.h"
+#include "input/mouse.h"
 #include "js/js_events.h"
 #include "js/js_game.h"
 
@@ -77,7 +78,41 @@ void application_t::register_keyboard_event_handler(event_handler_cb cb) {
     keyboard_event_handlers.push_back(cb);
 }
 
-void application_t::handle_keyboard_event(SDL_Event* event) {
+void application_t::handle_window_event(void* ev) {
+#ifndef GAME_PLATFORM_NSWITCH
+    const SDL_WindowEvent& event = ((SDL_Event*)ev)->window;
+    switch (event.event) {
+    case SDL_WINDOWEVENT_ENTER:
+        g_mouse.set_inside_window(1);
+        break;
+    case SDL_WINDOWEVENT_LEAVE:
+        g_mouse.set_inside_window(0);
+        break;
+    case SDL_WINDOWEVENT_SIZE_CHANGED:
+        logs::info("Window resized to %d x %d", (int)event.data1, (int)event.data2);
+        platform_screen_resize(event.data1, event.data2, 1);
+        break;
+    case SDL_WINDOWEVENT_RESIZED:
+        logs::info("System resize to %d x %d", (int)event.data1, (int)event.data2);
+        break;
+    case SDL_WINDOWEVENT_MOVED:
+        logs::info("Window move to coordinates x: %d y: %d\n", (int)event.data1, (int)event.data2);
+        platform_screen_move(event.data1, event.data2);
+        break;
+
+    case SDL_WINDOWEVENT_SHOWN:
+        logs::info("Window %d shown", (unsigned int)event.windowID);
+        active = true;
+        break;
+    case SDL_WINDOWEVENT_HIDDEN:
+        logs::info("Window %d hidden", (unsigned int)event.windowID);
+        active = false;
+        break;
+    }
+#endif
+}
+
+void application_t::handle_keyboard_event(void* event) {
     for (auto& handler : keyboard_event_handlers) {
         handler(event);
     }
