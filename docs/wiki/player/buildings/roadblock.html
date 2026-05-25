@@ -342,15 +342,14 @@
         </details>
 
         <details>
-          <summary>Info window — <code>src/window/window_roadblock_info.cpp</code></summary>
+          <summary>Info window — <code>src/scripts/ui_roadblock_info_window.js</code></summary>
           <div class="details-body">
-            <p>The right-click panel is registered as <code>info_window_roadblock</code> in <span class="file-ref">src/window/window_roadblock_info.cpp</span>. It loads its layout from <code>roadblock_info_window</code> in the UI config.</p>
+            <p>The right-click panel is registered as <code>info_window_roadblock</code> in <span class="file-ref">src/scripts/ui_roadblock_info_window.js</span> (<code>[es=building_info_window]</code>).</p>
             <p>Key interactive elements:</p>
             <ul style="font-size:0.82rem;line-height:1.9;padding-left:1.2rem">
-              <li><strong>Orders button</strong> — switches the panel to the permission list view (<code>c.storage_show_special_orders = true</code>).</li>
-              <li><strong>Permission rows</strong> — seven <code>generic_button</code> entries mapped to <code>toggle_figure_state(index, …)</code>, which calls <code>building_roadblock::set_permission((e_permission)index)</code> to XOR-flip the permission bit.</li>
+              <li><strong>Orders button</strong> — opens the modal <code>roadblock_orders_window</code> (<span class="file-ref">src/scripts/ui_roadblock_orders_window.js</span>).</li>
+              <li><strong>Permission rows</strong> — seven scrollable list entries; click calls <code>Roadblock.toggle_permission()</code> via <code>__roadblock_toggle_permission</code> in <span class="file-ref">src/building/building_roadblock_js.cpp</span>, which XOR-flips the permission bit in <code>building_roadblock::set_permission</code>.</li>
             </ul>
-            <p>Permission buttons are at y-offsets 4, 36, 68, 100, 132, 164, 192 (32 px apart) within the orders panel.</p>
           </div>
         </details>
 

@@ -9,15 +9,6 @@ uioptions {
     arrow_button_up : {pack:PACK_UNLOADED, id:0, offset:16}
 }
 
-roadblock_info_window = {
-    ui : {
-        background      : outer_panel({size: [29, 17]}),
-        title           : text({pos: [0, 12], size: [px(28), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        button_help     : help_button({}),
-        button_close    : close_button({}),
-    }
-}
-
 info_window_vacant_lot = {
     help_id : 128,
     ui : {

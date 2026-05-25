@@ -6,9 +6,9 @@ base_fort_ghost {
     ground_check_offset [[3, -1], [4, -1], [4, 0], [3,  0]
                             [-1,-4], [0, -4], [0,-3], [-1,-3]
                             [-4, 0], [-3, 0], [-3,1], [-4, 1]
-                            [0,  3], [1,  3], [1, 4], [0,  4]] 
+                            [0,  3], [1,  3], [1, 4], [0,  4]]
 }
-  
+
 building_fort_charioteers {
     animations {
         _pack {pack: PACK_GENERAL}
@@ -30,7 +30,7 @@ building_fort_charioteers {
         is_military: true
     }
 }
-  
+
 building_fort_infantry {
     animations {
         _pack { pack: PACK_GENERAL }

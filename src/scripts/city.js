@@ -366,6 +366,10 @@ city.get_dock = function(building_id) {
     return new Dock(building_id)
 }
 
+city.get_roadblock = function(building_id) {
+    return new Roadblock(building_id)
+}
+
 city.create_good_request = function(obj) {
     __city_create_good_request(obj)
     return {
