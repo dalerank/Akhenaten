@@ -67,12 +67,17 @@ hvector<xstring, 16> list_test_files() {
             if (!vfs::file_has_extension(e, "js")) {
                 return;
             }
-            found_tests.push_back(e);
+            vfs::path path = e;
+            found_tests.push_back(path.tolower().c_str());
         });
     };
 
     add_tests_from_folder("tests");
     add_tests_from_folder("../tests");
+
+    std::sort(found_tests.begin(), found_tests.end(), [](const xstring &a, const xstring &b) {
+        return a < b;
+    });
 
     const xstring only = g_args.get_integraltest_only().tolower();
     if (only.empty()) {

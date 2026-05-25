@@ -46,6 +46,7 @@ import building_mansion
 import building_workshop
 import building_temple_complex
 import building_entertainment
+import building_booth
 import building_firehouse
 import building_hunting_lodge
 import building_pottery

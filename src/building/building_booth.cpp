@@ -3,8 +3,6 @@
 #include "building/building.h"
 #include "construction/build_planner.h"
 #include "city/object_info.h"
-#include "city/city.h"
-#include "city/city_warnings.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
@@ -16,6 +14,7 @@
 #include "grid/orientation.h"
 #include "grid/property.h"
 #include "grid/building.h"
+#include "grid/figure.h"
 #include "grid/image.h"
 #include "window/building/common.h"
 #include "window/building/figures.h"
@@ -67,7 +66,7 @@ void building_booth::preview::ghost_preview(build_planner &planer, painter &ctx,
         int square_id = params.first_img(animkeys().square);
         for (int i = 0; i < params.building_size * params.building_size; i++) {
             const int x = ((i % params.building_size) - (i / params.building_size)) * 30;
-            const int y = ((i % params.building_size) + (i / params.building_size)) * 15;
+            const int y = ((i % params.building_size) + (i / params.building_size)) * 15 - 15;
             ctx.img_isometric(square_id + i, pixel + vec2i{ x, y }, COLOR_MASK_GREEN, 1.f, ImgFlag_None);
         }
 
@@ -124,13 +123,6 @@ void building_booth::on_place_update_tiles(int orientation, int variant) {
     case 2: place_latch_on_venue(BUILDING_BOOTH, 1, 1, orientation, true); break;
     case 3: place_latch_on_venue(BUILDING_BOOTH, 0, 1, orientation, true); break;
     }
-}
-
-void building_booth::on_place_checks() {
-    construction_warnings warnings;
-
-    const bool has_juggler_school = g_city.buildings.count_active(BUILDING_JUGGLER_SCHOOL) > 0;
-    warnings.add_if(!has_juggler_school, "#build_juggling_school");
 }
 
 void building_booth::spawn_figure() {
