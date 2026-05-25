@@ -165,10 +165,10 @@ function build_menu_widget_ui_draw_foreground(window) {
         }
 
         var btn_state = ui.button({ text: "", pos: btn_pos, size: btn_size, font: font, flags: btn_flags })
-        if (btn_state == 1) {
+        if (btn_state == ui.button_clicked) {
             build_menu_widget.button_menu_item(item_index)
         }
-        if (btn_state == 2) {
+        if (btn_state == ui.button_hovered) {
             font = FONT_NORMAL_BLACK_ON_DARK
         }
 

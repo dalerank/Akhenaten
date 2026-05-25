@@ -48,7 +48,7 @@ function labor_priority_window_draw(window) {
             flags = flags | UiFlags_Readonly
         }
 
-        if (ui.button({ text: String(i + 1), pos: pos, size: size, font: btn.font, flags: flags }) == 1) {
+        if (ui.button({ text: String(i + 1), pos: pos, size: size, font: btn.font, flags: flags }) == ui.button_clicked) {
             city.labor.set_priority(labor_priority_window.category, i + 1)
             window_go_back()
         }

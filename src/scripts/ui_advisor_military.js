@@ -108,7 +108,7 @@ function advisor_military_window_draw(window) {
             ui.image(exp_image, { x:317, y:86 + 44 * i})
 
             var goto_clicked = ui.button({text:"", pos{ x:394, y:83 + 44 * i }, size[ 30, 30 ] })
-            if (goto_clicked) {
+            if (goto_clicked == ui.button_clicked) {
                 city.camera_go_to(form.home)
                 ui.window_city_show()
             }
@@ -116,14 +116,14 @@ function advisor_military_window_draw(window) {
 
             fort_image.tid += (form.is_at_fort ? 1 : 0)
             var back_to_fort_clicked = ui.button({text:"", pos:{ x:464, y:83 + 44 * i }, size[ 30, 30 ], font:FONT_NORMAL_BLACK_ON_DARK});
-            if (back_to_fort_clicked) {
+            if (back_to_fort_clicked == ui.button_clicked) {
                 form.return_home()
             }
             ui.image(fort_image, { x:467, y:86 + 44 * i });
 
             kingdom_service.tid += (form.empire_service ? 1 : 0)
             var kingdom_service_clicked = ui.button({text:"", pos:{ x:544, y:83 + 44 * i }, size[ 30, 30 ], font:FONT_NORMAL_BLACK_ON_DARK});
-            if (kingdom_service_clicked) {
+            if (kingdom_service_clicked == ui.button_clicked) {
                 form.set_empire_service(!form.empire_service)
             }
             ui.image(kingdom_service, vec2i(547, 86 + 44 * i ));

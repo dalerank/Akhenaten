@@ -40,7 +40,7 @@ void building_shipyard::spawn_figure() {
         return;
     }
     common_spawn_labor_seeker(current_params().min_houses_coverage);
-    
+
     if (has_figure_of_type(BUILDING_SLOT_BOAT, FIGURE_FISHING_BOAT)) {
         return;
     }
@@ -49,7 +49,7 @@ void building_shipyard::spawn_figure() {
     if (d.process_type == FIGURE_NONE) {
         return;
     }
-   
+
     int extra_radius = (d.process_type == FIGURE_WARSHIP) ? 1 : 0;
 
     tile2i boat_tile;
@@ -60,7 +60,7 @@ void building_shipyard::spawn_figure() {
 
     const auto &params = current_params();
     switch (d.process_type) {
-    case FIGURE_WARSHIP: 
+    case FIGURE_WARSHIP:
         if ((params.warship_progress_cost > 0) && d.progress >= params.warship_progress_cost) {
             figure *f = figure_create(FIGURE_WARSHIP, boat_tile, DIR_0_TOP_RIGHT);
             f->action_state = ACTION_205_WARSHIP_CREATED;
@@ -84,7 +84,7 @@ void building_shipyard::spawn_figure() {
         }
         break;
 
-    case FIGURE_FISHING_BOAT: 
+    case FIGURE_FISHING_BOAT:
         if ((params.fishingboat_progress_cost > 0 ) && d.progress >= params.fishingboat_progress_cost) {
             figure *f = figure_create(FIGURE_FISHING_BOAT, boat_tile, DIR_0_TOP_RIGHT);
             f->action_state = ACTION_190_FISHING_BOAT_CREATED;

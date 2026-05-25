@@ -925,13 +925,8 @@ namespace js_helpers {
     inline bstring64 es2str(const xstring &es) { return { es.c_str() }; }
     inline bstring64 es2str(const cstring &es) { return { es.c_str() }; }
 
-    // String literals and __func__ deduce as const char[N]; without this overload
-    // es_hash_str(..., __func__) hashes the type name (e.g. "const char [5]")
-    // instead of "init", so [es=(section, init)] handlers never match on GCC/Clang.
     template<size_t N>
-    inline bstring64 es2str(const char (&es)[N]) {
-        return { es };
-    }
+    inline bstring64 es2str(const char (&es)[N]) { return { es }; }
 
     template<typename ES>
     inline bstring64 es2str(const ES &) {

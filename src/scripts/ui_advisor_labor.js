@@ -86,7 +86,7 @@ function advisor_labors_window_draw(window) {
         var pos = {x: item_pos.x + items_area.x, y: item_pos.y * i + items_area.y}
 
         var clicked = ui.button({ text: "", pos: pos, size: item_size, border: true, body: false })
-        if (clicked) {
+        if (clicked == ui.button_clicked) {
             show_labor_priority_window(i)
         }
 

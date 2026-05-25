@@ -27,6 +27,10 @@ ui.image = function(image, pos) {
     }
 }
 
+ui.button_none = 0
+ui.button_clicked = 1
+ui.button_hovered = 2
+
 ui.begin_widget = __ui_begin_widget
 ui.end_widget = __ui_end_widget
 ui.set_clip_rectangle = __ui_set_clip_rectangle

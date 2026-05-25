@@ -67,7 +67,7 @@ function empire_window_draw_trade_resource_row(offset, flags, resource, tradeNow
     var oy = offset.y
     ui.resource_icon_flags({ x: ox + 1, y: oy + 1 }, resource, UiFlags_Outline)
     var clicked = ui.button({text:"", pos[ox - 2, oy - 2], size[105, 24], font:FONT_SMALL_PLAIN, body:false, tooltip:__loc(23, resource)})
-    if (clicked) {
+    if (clicked == ui.button_clicked) {
         show_trade_resource_settings_window(resource)
     }
 
