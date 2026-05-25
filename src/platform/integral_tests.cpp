@@ -8,6 +8,7 @@
 #include "core/log.h"
 #include "core/vec2i.h"
 #include "js/js.h"
+#include "js/js_game.h"
 #include "mujs/mujs.h"
 #include "platform/arguments.h"
 #include "platform/version.hpp"
@@ -32,6 +33,61 @@ void expect_true(bool ok, const char *expr) {
     }
 }
 
+void expect_eq_str(const bstring64 &got, pcstr expected, const char *expr) {
+    if (got != expected) {
+        logs::error("[integraltests] FAIL: %s (got '%s', expected '%s')", expr, got.c_str(), expected);
+        failure_count++;
+    }
+}
+
+namespace es_func_test {
+
+static bstring64 g_es2str_from_init;
+static bstring64 g_hash_from_init;
+void init() {
+    g_es2str_from_init = js_helpers::es2str(__func__);
+    g_hash_from_init = js_helpers::es_hash_str("info_window_granary", __func__);
+}
+
+} // namespace es_func_test
+
+namespace es_func_decay_test {
+
+static bstring64 g_hash_from_init_via_pcstr;
+
+static void record_sub_event(pcstr sub_event) {
+    g_hash_from_init_via_pcstr = js_helpers::es_hash_str("info_window_granary", sub_event);
+}
+
+void init() {
+    record_sub_event(__func__);
+}
+
+} // namespace es_func_decay_test
+
+void run_es_hash_unit_tests() {
+    expect_eq_str(js_helpers::es_hash_str("b", "a"), "a+b", "es_hash_str sorts parts");
+    expect_eq_str(js_helpers::es_hash_str("init", "main_menu_screen"), "init+main_menu_screen",
+                  "es_hash_str init+section");
+    expect_eq_str(js_helpers::es_hash_str("file_dialog_load", "init"), "file_dialog_load+init",
+                  "es_hash_str file_dialog_load+init");
+    expect_eq_str(js_helpers::es_hash_str("info_window_granary", "init"), "info_window_granary+init",
+                  "es_hash_str granary info window");
+
+    es_func_test::init();
+    expect_eq_str(es_func_test::g_es2str_from_init, "init", "es2str(__func__) in init()");
+    expect_eq_str(es_func_test::g_hash_from_init, "info_window_granary+init",
+                  "es_hash_str(section, __func__) in init()");
+
+    es_func_decay_test::init();
+    expect_eq_str(es_func_decay_test::g_hash_from_init_via_pcstr, "info_window_granary+init",
+                  "es_hash_str(__func__) after decay to pcstr in init()");
+
+    const xstring section = "window_mission_won";
+    expect_eq_str(js_helpers::es_hash_str(section, "init"), "init+window_mission_won",
+                  "es_hash_str with xstring section");
+}
+
 void run_integral_tests_impl() {
     expect_true(SDL_strlen("abc") == 3, "SDL_strlen sample");
     expect_true(SDL_strcmp("x", "x") == 0, "SDL_strcmp sample");
@@ -42,6 +98,8 @@ void run_integral_tests_impl() {
 
     const xstring ver = get_version();
     expect_true(!ver.empty(), "get_version() non-empty");
+
+    run_es_hash_unit_tests();
 }
 
 hvector<xstring, 16> list_test_files() {
@@ -73,6 +131,7 @@ hvector<xstring, 16> list_test_files() {
     };
 
     add_tests_from_folder("tests");
+    add_tests_from_folder("../tests");
 
     std::sort(found_tests.begin(), found_tests.end(), [](const xstring &a, const xstring &b) {
         return a < b;

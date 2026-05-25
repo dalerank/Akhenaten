@@ -10,6 +10,7 @@
 #include "js/js_events.h"
 #include "input/input.h"
 #include "input/mouse.h"
+#include "platform/arguments.h"
 #include <algorithm>
 #include <unordered_map>
 #include <mutex>

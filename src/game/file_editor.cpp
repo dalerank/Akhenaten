@@ -30,7 +30,6 @@
 #include "grid/natives.h"
 #include "grid/property.h"
 #include "grid/random.h"
-#include "grid/canals.h"
 #include "grid/road_network.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/soldier_strength.h"

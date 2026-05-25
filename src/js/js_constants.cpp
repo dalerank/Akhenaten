@@ -22,6 +22,7 @@
 #include "sound/sound_city.h"
 #include "game/gods.h"
 #include "figuretype/figure_physician.h"
+#include "figuretype/figure_war_ship.h"
 
 e_advisor_tokens_t ANK_CONFIG_ENUM(e_advisor_tokens);
 e_trade_status_tokens_t ANK_CONFIG_ENUM(e_trade_status_tokens);
@@ -102,6 +103,8 @@ void js_register_game_constants(js_State* J) {
     _R(ACTION_125_ROAMER_ROAMING)
     _R(ACTION_126_ROAMER_RETURNING)
     _R(ACTION_60_PHYSICIAN_CREATED)
+    _R(ACTION_203_WARSHIP_MOORED)
+    _R(ACTION_204_WARSHIP_ATTACK)
 
     _R(MAX_BUILDINGS)
     _R(BUILDING_MAX)

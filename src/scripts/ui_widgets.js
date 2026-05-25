@@ -217,16 +217,6 @@ health_info_window = {
     })
 }
 
-warshipwharf_info_window = {
-    first_advisor       : ADVISOR_MILITARY,
-    ui : baseui(building_info_window, {
-        background    : outer_panel({size: [29, 16]}),
-        resource_icon : resource_icon({pos: [32, 56] }),
-        resource_stored : text({pos: [60, 60], size: [px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT }),
-        workers_desc  : text({pos: [70, 116 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
-    })
-}
-
 shipyard_info_window = {
     ui : baseui(building_info_window, {
         background    : outer_panel({size: [29, 18]}),
