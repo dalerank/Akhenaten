@@ -116,6 +116,11 @@ static void house_proto_toString(js_State *J) {
 
 static void jsB_new_House(js_State *J) {
     const int id = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
+    building *b = building_get(id);
+    if (!b || !b->is_valid() || !b->is_house()) {
+        js_pushnull(J);
+        return;
+    }
     js_pushobject(J, jsV_newobject(J, JS_COBJECT, g_house_proto));
     js_pushnumber(J, (double)id);
     js_setproperty(J, -2, js_intern("id"));

@@ -20,6 +20,7 @@ import granary_prototype
 import dock_prototype
 import roadblock_prototype
 import entertainment_prototype
+import farm_prototype
 import city_finance
 import city_ratings
 import city_festival

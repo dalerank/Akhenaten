@@ -9,19 +9,6 @@ uioptions {
     arrow_button_up : {pack:PACK_UNLOADED, id:0, offset:16}
 }
 
-info_window_vacant_lot = {
-    help_id : 128,
-    ui : {
-        background   : outer_panel({size: [29, 21] }),
-        title          : text({pos: [0, 16], text:"${128.0}", size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        inner_panel  : inner_panel({pos : [16, 40], size: [27, 13] }),
-        describe       : text({pos: [36, 114], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(25) }),
-
-        button_close : close_button({}),
-        button_help  : help_button({}),
-    }
-}
-
 empty_info_window = {
     ui : {
         //background : { type : "outer_panel",  pos: [48, 48], size: [34, 20]},

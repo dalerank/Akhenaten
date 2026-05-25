@@ -1,6 +1,12 @@
 log_info("akhenaten: ui house window started")
 
+[es=building_info_window]
 info_window_house {
+    check_fn: function() {
+        var house = city.get_house(city.object_info.bid)
+        return house && !house.is_vacant_lot
+    }
+
     help_id : "message_housing_and_desirability"
     ui {
         background : outer_panel({size [29, 23] }) // pos/size setup from code
@@ -328,6 +334,25 @@ function info_window_house_init_fill(window) {
     var addInfo = house_get_additional_info(house)
     if (addInfo) {
         window.additional_info.text = addInfo
+    }
+}
+
+[es=building_info_window]
+info_window_vacant_lot {
+    check_fn: function() {
+        var house = city.get_house(city.object_info.bid)
+        return house && house.is_vacant_lot
+    }
+
+    help_id : 128
+    ui {
+        background   : outer_panel({size: [29, 21] })
+        title          : text({pos: [0, 16], text:"${128.0}", size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
+        inner_panel  : inner_panel({pos : [16, 40], size: [27, 13] })
+        describe       : text({pos: [36, 114], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(25) })
+
+        button_close : close_button({})
+        button_help  : help_button({})
     }
 }
 

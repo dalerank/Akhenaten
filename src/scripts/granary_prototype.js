@@ -19,3 +19,10 @@ Granary.prototype.toggle_empty_all = function() { __granary_toggle_empty_all(thi
 Granary.prototype.accept_none = function() { __granary_accept_none(this.id) }
 Granary.prototype.cycle_resource_state = function(resource) { __granary_cycle_resource_state(this.id, resource) }
 Granary.prototype.increase_decrease_resource_state = function(resource, increase) { __granary_increase_decrease_resource_state(this.id, resource, increase) }
+
+city.get_granary = function(building_id) {
+    if (!__building_is_granary(building_id)) {
+        return null
+    }
+    return new Granary(building_id)
+}

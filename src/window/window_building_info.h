@@ -9,6 +9,7 @@ struct building_info_window : public common_info_window {
     e_advisor first_advisor = ADVISOR_NONE;
     svector<e_building_type, 20> related_buildings;
     xstring help_id;
+    xstring check_fn;
 
     building_info_window();
 
@@ -21,10 +22,7 @@ struct building_info_window : public common_info_window {
     virtual textid get_tooltip(object_info &c) override;
     virtual void init(object_info &c) override;
     virtual void update_buttons(object_info &c) override;
-    virtual bool check(object_info &c) override {
-        auto b = c.building_get();
-        return building_type_any_of(b->type, related_buildings);
-    }
+    virtual bool check(object_info &c) override;
 
     building *building_get(object_info &c);
 

@@ -84,12 +84,15 @@ static void storage_yard_proto_toString(js_State *J) {
 static js_Object *g_storage_yard_proto = nullptr;
 
 static void jsB_new_StorageYard(js_State *J) {
-    int id = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
+    const int id = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
     building_storage_yard *yard = storage_yard_cast(building_get(id));
-    id = yard ? yard->id() : 0;
+    if (!yard) {
+        js_pushnull(J);
+        return;
+    }
 
     js_pushobject(J, jsV_newobject(J, JS_COBJECT, g_storage_yard_proto));
-    js_pushnumber(J, (double)id);
+    js_pushnumber(J, id);
     js_setproperty(J, -2, js_intern("id"));
 }
 

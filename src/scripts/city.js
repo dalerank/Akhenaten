@@ -310,9 +310,7 @@ city.get_battalion_by_index = function(index) {
     }
 }
 
-city.get_granary = function(building_id) {
-    return new Granary(building_id)
-}
+
 
 city.get_random_house = function() {
     var building_id = __city_get_random_house_id()
@@ -350,11 +348,10 @@ city.get_house = function(building_id) {
     return new House(building_id)
 }
 
-city.get_bazaar = function(building_id) {
-    return new Bazaar(building_id)
-}
-
 city.get_entertainment_building = function(building_id) {
+    if (!__building_is_entertainment(building_id)) {
+        return null
+    }
     return new EntertainmentBuilding(building_id)
 }
 
@@ -363,10 +360,16 @@ city.get_storage_yard = function(building_id) {
 }
 
 city.get_dock = function(building_id) {
+    if (!__building_is_dock(building_id)) {
+        return null
+    }
     return new Dock(building_id)
 }
 
 city.get_roadblock = function(building_id) {
+    if (!__building_is_roadblock(building_id)) {
+        return null
+    }
     return new Roadblock(building_id)
 }
 
@@ -445,15 +448,10 @@ city.get_building_at = function(x, y) {
 }
 
 city.get_farm = function(building_id) {
-    return {
-        id: building_id
-        __property_getter: function(property) { return __farm_get_property(this.id, property) }
-        @flood_imminent { }
-        @progress { }
-        @is_floodplain { }
-
-        set_worker: function(action, coords) { __farm_set_worker(this.id, action, coords) }
+    if (!__building_is_farm(building_id)) {
+        return null
     }
+    return new Farm(building_id)
 }
 
 city.get_building_params = function(building_id) {

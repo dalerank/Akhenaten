@@ -1,7 +1,16 @@
 #include "building.h"
 #include "building_static_params.h"
 
+#include "building/building_bazaar.h"
+#include "building/building_dock.h"
+#include "building/building_entertainment.h"
+#include "building/building_farm.h"
+#include "building/building_granary.h"
+#include "building/building_roadblock.h"
+#include "building/building_storage_yard.h"
+#include "building/building_temple_complex.h"
 #include "building_mansion.h"
+#include "city/city_buildings.h"
 #include "grid/building.h"
 #include "grid/road_access.h"
 #include "core/bstring.h"
@@ -25,9 +34,57 @@ static int building_this_id(js_State* J) {
 }
 
 bool __building_is_valid(int bid) {
-    return building_get(bid)->is_valid();
+    building *b = building_get(bid);
+    return b && b->is_valid();
 }
 ANK_FUNCTION_1(__building_is_valid)
+
+bool __building_is_bazaar(int bid) {
+    building *b = building_get(bid);
+    return b && b->is_valid() && b->dcast_bazaar();
+}
+ANK_FUNCTION_1(__building_is_bazaar)
+
+bool __building_is_granary(int bid) {
+    building *b = building_get(bid);
+    return b && b->is_valid() && b->dcast_granary();
+}
+ANK_FUNCTION_1(__building_is_granary)
+
+bool __building_is_dock(int bid) {
+    building *b = building_get(bid);
+    return b && b->is_valid() && b->dcast_dock();
+}
+ANK_FUNCTION_1(__building_is_dock)
+
+bool __building_is_roadblock(int bid) {
+    building *b = building_get(bid);
+    return b && b->is_valid() && b->dcast_roadblock();
+}
+ANK_FUNCTION_1(__building_is_roadblock)
+
+bool __building_is_entertainment(int bid) {
+    building *b = building_get(bid);
+    return b && b->is_valid() && b->dcast_entertainment();
+}
+ANK_FUNCTION_1(__building_is_entertainment)
+
+bool __building_is_farm(int bid) {
+    building *b = building_get(bid);
+    return b && b->is_valid() && b->dcast_farm();
+}
+ANK_FUNCTION_1(__building_is_farm)
+
+bool __building_is_storage_yard(int bid) {
+    building *b = building_get(bid);
+    return b && b->is_valid() && storage_yard_cast(b);
+}
+ANK_FUNCTION_1(__building_is_storage_yard)
+
+bool __building_is_temple_complex(int bid) {
+    return !!building_get_ex<building_temple_complex>(bid);
+}
+ANK_FUNCTION_1(__building_is_temple_complex)
 
 bool __building_is_protected_by_police(int bid) {
     building *b = building_get(bid);

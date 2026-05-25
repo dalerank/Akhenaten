@@ -18,6 +18,7 @@
 #include "js/js_struct.h"
 #include "core/profiler.h"
 #include "graphics/elements/ui_js.h"
+#include "js/js_game.h"
 
 struct building_info_window_draw { vec2i pos; building_id bid; };
 struct building_info_window_init { vec2i pos; building_id bid; };
@@ -41,6 +42,24 @@ void building_info_window::archive_load(archive arch) {
     arch.r("first_advisor", first_advisor);
     arch.r("related_buildings", related_buildings);
     arch.r("help_id", help_id);
+
+    if (!check_fn.empty()) {
+        js_unref_function(check_fn);
+    }
+    check_fn = arch.r_function("check_fn");
+}
+
+bool building_info_window::check(object_info &c) {
+    if (!check_fn.empty()) {
+        return js_call_function(check_fn, 0, 0).to_bool();
+    }
+
+    building *b = c.building_get();
+    if (!b) {
+        return false;
+    }
+
+    return building_type_any_of(b->type, related_buildings);
 }
 
 static void draw_native(object_info* c, int group_id) {
