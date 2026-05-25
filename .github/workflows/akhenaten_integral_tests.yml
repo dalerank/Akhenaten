@@ -32,6 +32,13 @@ jobs:
         ./build/akhenaten --integraltests --no-logo --no-resource --nosound --window --size 800x600
         echo "rc=$?" >> "$GITHUB_OUTPUT"
         exit 0
+    - name: Stage integral test log
+      if: always()
+      run: |
+        LOG_FILE="${XDG_DATA_HOME:-$HOME/.local/share}/Akhenaten/akhenaten-log.txt"
+        if [ -f "$LOG_FILE" ]; then
+          cp "$LOG_FILE" akhenaten-log.txt
+        fi
     - name: Render summary
       if: always()
       run: |
