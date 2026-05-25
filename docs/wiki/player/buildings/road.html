@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Road — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .bld-header-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      margin-bottom: 2rem;
+    }
+    .bld-header-right {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .bld-image-wrap {
+      text-align: center;
+    }
+    .bld-image-wrap img {
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      image-rendering: pixelated;
+    }
+    .bld-image-wrap figcaption {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+    .bld-sprites {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-end;
+    }
+    .bld-infobox {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.9rem 1.1rem;
+    }
+    .bld-infobox h4 {
+      margin: 0 0 0.6rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--gold);
+    }
+    .bld-infobox dl {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.2rem 1rem;
+      margin: 0;
+    }
+    .bld-infobox dt { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; padding-top: 0.1rem; }
+    .bld-infobox dd { margin: 0; font-size: 0.85rem; color: var(--text); }
+    .bld-infobox .sep { grid-column: 1/-1; border: none; border-top: 1px solid var(--border); margin: 0.4rem 0; }
+    .bld-stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .bld-stat { text-align: center; }
+    .bld-stat .val { font-size: 1.3rem; font-weight: 700; color: var(--gold); display: block; }
+    .bld-stat .lbl { font-size: 0.7rem; color: var(--text-muted); }
+    .risk-low  { color: #8aabdc; }
+    .risk-med  { color: #d09050; }
+    .des-neg { color: #d07070; }
+    .des-pos { color: #7ec87e; }
+    .des-zero { color: var(--text-muted); }
+
+    /* two-column infobox row */
+    .infobox-pair {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .infobox-pair .bld-infobox {
+      flex: 1 1 220px;
+    }
+
+    /* permission table */
+    .perm-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.75rem 0;
+      font-size: 0.85rem;
+    }
+    .perm-table th, .perm-table td {
+      padding: 0.3rem 0.6rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .perm-table th { color: var(--text-muted); font-weight: normal; }
+    .perm-allow { color: #7ec87e; }
+    .perm-block { color: #d07070; }
+
+    /* developer spoilers */
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .kw { color: #c9a84c; } .num { color: #9ecbff; } .str { color: #7ec87e; } .cmt { color: #5a5650; font-style: italic; } .fn { color: #8aabdc; } .ev { color: #d0a0e0; } .ty { color: #d0a0e0; }
+    .file-ref { display: inline-block; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .bld-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .bld-nav a { color: var(--gold); }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+
+    /* network diagram */
+    .net-diagram {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.8rem 1.1rem;
+      margin: 1rem 0;
+      font-size: 0.85rem;
+    }
+    .net-diagram .net-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .net-diagram code {
+      background: rgba(201,168,76,0.07);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 2px;
+      padding: 0.05rem 0.4rem;
+      font-size: 0.8rem;
+      color: var(--gold);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">← All Buildings</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Municipal</div>
+        <ul>
+          <li><a href="road.html" class="active">Road</a></li>
+          <li><a href="roadblock.html">Roadblock</a></li>
+          <li><a href="firehouse.html">Firehouse</a></li>
+          <li><a href="architect-post.html">Architect's Post</a></li>
+          <li><a href="police-station.html">Police Station</a></li>
+          <li><a href="courthouse.html">Courthouse</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#mechanics">Mechanics</a></li>
+          <li><a href="#paving">Paving &amp; Plaza</a></li>
+          <li><a href="#floodplain">Floodplain &amp; Canals</a></li>
+          <li><a href="#tips">Tips</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Buildings</a> /
+        Road
+      </div>
+
+      <h1>Road</h1>
+
+      <div class="bld-header-grid" style="grid-template-columns:1fr">
+        <figure class="bld-image-wrap">
+          <div class="bld-sprites">
+            <div>
+              <img src="Cleo_Road.webp" alt="Road tile variants" width="236" height="60" />
+              <figcaption>Road variants</figcaption>
+            </div>
+            <div>
+              <img src="Cleo_Plazas.webp" alt="Plaza tile variants" />
+              <figcaption>Plaza variants</figcaption>
+            </div>
+          </div>
+        </figure>
+        <div class="bld-header-right">
+          <div>
+            <p>The <strong>Road</strong> is the foundation of city logistics. Every building that spawns walkers — service providers, traders, priests, tax collectors — requires road access, and all walkers travel exclusively on roads.</p>
+            <p>Roads are draggable: click and drag to lay a chain of tiles at once. The game auto-routes the cheapest path between the start and end tile. Roads placed in high-desirability areas or near fountains automatically display a paved stone appearance. Placing a <strong>Plaza</strong> tile on an existing road gives a permanent decorative upgrade and a small desirability bonus.</p>
+            <p>A companion building, the <strong>Roadblock</strong>, is placed on any road tile to control which categories of roaming walkers are allowed to pass, letting you shape service coverage without demolishing roads.</p>
+          </div>
+          <div class="infobox-pair">
+            <div class="bld-infobox">
+              <h4>Road</h4>
+              <div class="bld-stat-row" style="margin-bottom:0.9rem">
+                <div class="bld-stat"><span class="val">1×1</span><span class="lbl">Size</span></div>
+                <div class="bld-stat"><span class="val">0</span><span class="lbl">Workers</span></div>
+                <div class="bld-stat"><span class="val des-zero">0</span><span class="lbl">Desirability</span></div>
+              </div>
+              <hr class="sep" />
+              <dl>
+                <dt>Cost (Normal)</dt>
+                <dd>5 Db</dd>
+                <dt>Cost by difficulty</dt>
+                <dd style="font-size:0.78rem;color:var(--text-muted)">
+                  VE 1 · Easy 2 · <strong style="color:var(--text)">Normal 5</strong> · Hard 10 · VH 15
+                </dd>
+                <dt>Draggable</dt>
+                <dd>Yes — auto-routes between start and end</dd>
+                <dt>Fire / Damage risk</dt>
+                <dd>None</dd>
+              </dl>
+            </div>
+            <div class="bld-infobox">
+              <h4>Plaza</h4>
+              <div class="bld-stat-row" style="margin-bottom:0.9rem">
+                <div class="bld-stat"><span class="val">1×1</span><span class="lbl">Size</span></div>
+                <div class="bld-stat"><span class="val">0</span><span class="lbl">Workers</span></div>
+                <div class="bld-stat"><span class="val des-pos">+4</span><span class="lbl">Desirability</span></div>
+              </div>
+              <hr class="sep" />
+              <dl>
+                <dt>Cost (Normal)</dt>
+                <dd>10 Db</dd>
+                <dt>Cost by difficulty</dt>
+                <dd style="font-size:0.78rem;color:var(--text-muted)">
+                  VE 3 · Easy 5 · <strong style="color:var(--text)">Normal 10</strong> · Hard 15 · VH 20
+                </dd>
+                <dt>Placement</dt>
+                <dd>On existing road tiles only</dd>
+                <dt>Fire / Damage risk</dt>
+                <dd>None (fire-proof, damage-proof)</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Overview ──────────────────────────────────────── -->
+      <h2 id="overview">Overview</h2>
+      <p>Ancient Egyptian settlements were crisscrossed by paths of packed earth, worn smooth by the feet of workers, merchants, and priests. Major temples and administrative centres were linked by processional avenues paved with stone, flanked by sphinxes and obelisks. The Nile itself served as the primary highway, but inland roads carried the daily flow of goods, food, and people between fields, workshops, and homes.</p>
+      <p>In the game, the road network is the circulatory system of your city. Walkers from service buildings — architects, fire marshals, physicians, bazaar traders, tax collectors, priests, and entertainers — all roam the streets. If housing has no road access, no walker can reach it; the house will devolve. If a production building has no road access, its cartpushers cannot leave with goods. Roads are not optional infrastructure: a city without a connected road network cannot function.</p>
+
+      <!-- ─── Mechanics ─────────────────────────────────────── -->
+      <h2 id="mechanics">Mechanics</h2>
+
+      <h3>Road network connectivity</h3>
+      <p>Every game tick the engine scans the map and assigns a <strong>network ID</strong> to each connected cluster of road tiles using a BFS flood-fill. All buildings and figures track which network they belong to. A Granary on network 3 is invisible to a Bazaar buyer on network 7 — even if they are two tiles apart — because there is no road linking them.</p>
+      <div class="net-diagram">
+        <div class="net-label">Simplified connectivity example</div>
+        <code>Building A</code> — road — road — road — <code>Building B</code> &nbsp;→&nbsp; same network, walkers can travel<br>
+        <code>Building C</code> — &nbsp;(gap)&nbsp; — road — <code>Building D</code> &nbsp;→&nbsp; different networks, walkers cannot travel
+      </div>
+      <p>The engine specifically tracks the <strong>largest road networks</strong> for efficient routing. When you place a building that needs to reach distant storage buildings or housing, always verify it is on the same connected network.</p>
+
+      <h3>Walker types and roads</h3>
+      <p>There are two walker types relevant to road layout:</p>
+      <ul>
+        <li><strong>Destination walkers</strong> (e.g. Bazaar Buyer, Cartpusher) — pathfind directly to a target building. They always find the shortest road path. A Roadblock does not stop them.</li>
+        <li><strong>Roaming walkers</strong> (e.g. Bazaar Trader, Physician, Tax Collector) — have no fixed destination. At each intersection they choose a direction randomly. Their coverage depends entirely on road layout. A <a href="roadblock.html">Roadblock</a> can redirect or block them.</li>
+      </ul>
+      <p>Because roaming walkers choose randomly at intersections, a long straight road with no side branches gives very predictable linear coverage. A dense grid gives unpredictable coverage — walkers may double back and miss streets entirely. Plan road layouts deliberately: use loop roads so walkers always find a forward path, and use <a href="roadblock.html">Roadblocks</a> to prevent them from wandering into zones you do not want served.</p>
+
+      <h3>Building road access</h3>
+      <p>A building is considered to have road access if at least one of the tiles adjacent to its footprint is a road tile. Larger buildings (2×2, 3×3, 4×4) only need one adjacent road tile — walkers spawn from the tile closest to that road. Buildings with no adjacent road tile are shown with a warning in their right-click panel and cannot spawn any walkers.</p>
+
+      <!-- ─── Paving ────────────────────────────────────────── -->
+      <h2 id="paving">Paving &amp; Plaza</h2>
+
+      <h3>Automatic paving</h3>
+      <p>A dirt road tile automatically displays a paved stone appearance (without extra cost) when either condition is met:</p>
+      <ul>
+        <li>The tile's <strong>desirability is above 4</strong>, or</li>
+        <li>The tile's desirability is above 0 <em>and</em> the tile is within a <strong>Fountain's service range</strong>.</li>
+      </ul>
+      <p>Paving is purely visual — it does not affect walker speed or routing. It does give a clear indication that the surrounding neighbourhood has high desirability, which correlates with housing evolution potential.</p>
+
+      <h3>Plaza</h3>
+      <p>Placing a <strong>Plaza</strong> tile on any existing road tile permanently upgrades its appearance to the decorative plaza look and grants <strong>+4 desirability</strong> at that tile (fading over 2 tiles). Plaza tiles are fire-proof and damage-proof. They are most useful for:</p>
+      <ul>
+        <li>Creating decorative main avenues through housing districts to push desirability over evolution thresholds.</li>
+        <li>Bridging a gap between a high-desirability zone and a nearby <a href="bazaar.html">Bazaar</a> or service building to cross the building's upgrade threshold (e.g. Bazaar desirability ≥ 30).</li>
+        <li>Providing a visible landmark for city layout planning.</li>
+      </ul>
+      <p>Plaza cannot be placed on empty ground — place a Road tile first, then the Plaza on top of it. Demolishing a Plaza tile returns the underlying road.</p>
+
+      <!-- ─── Floodplain & Canals ───────────────────────────── -->
+      <h2 id="floodplain">Floodplain &amp; Canals</h2>
+
+      <h3>Floodplain roads</h3>
+      <p>Roads can be placed on floodplain tiles, but with restrictions:</p>
+      <ul>
+        <li>A floodplain road tile is <strong>blocked during inundation</strong> — when the Nile floods and the tile becomes water, walkers cannot traverse it. Plan alternative routes for the flood season.</li>
+        <li>A road can cross a floodplain edge (non-floodplain tile adjacent to exactly one floodplain tile), but a road tile cannot be placed if it would be surrounded by floodplain on more than one cardinal side — the terrain connection rules prevent it.</li>
+        <li>Floodplain roads use special dirt-road images that blend with the earthy floodplain terrain.</li>
+      </ul>
+
+      <h3>Road under canal</h3>
+      <p>An <strong>Irrigation Ditch</strong> (canal) can cross over a road tile. The game checks whether a road can pass under a given canal tile (<code>map_can_place_road_under_canal</code>) and renders a combined road+canal image when both are present on the same tile. This lets you run canals across major roads without severing the road network.</p>
+
+      <!-- ─── Tips ──────────────────────────────────────────── -->
+      <h2 id="tips">Tips</h2>
+      <ul>
+        <li>Always connect every building to the same road network. A disconnected building — even one tile away from a road — cannot function. Use the road overlay or trace the road manually to verify connectivity.</li>
+        <li>Avoid dense grids for service buildings. A bazaar trader or physician on a 4-way intersection has a 25 % chance to go back toward where she came from. A linear road or a simple loop gives much more reliable coverage.</li>
+        <li>Use <a href="roadblock.html">Roadblocks</a> at the entrance to housing blocks to prevent industrial or military walkers from entering residential streets, and vice versa. One Roadblock per road leading into the block is usually enough.</li>
+        <li>Roads on the floodplain are cut off during inundation (roughly Month 4–6 depending on the mission). If critical service buildings rely on floodplain road crossings, add an alternative dry-land route before flood season.</li>
+        <li>Irrigation Ditches can cross over roads, so you do not need to break your road grid to accommodate canal irrigation. Plan canals after roads, not before, to keep layouts tidy.</li>
+        <li>Plaza tiles increase the desirability of adjacent tiles by up to +4. Lining your main avenue with Plazas is often the cheapest way to push a housing cluster over an evolution threshold compared to placing multiple statues.</li>
+        <li>If a roaming walker is not reaching a house, check for dead ends. Walkers avoid dead-end roads after the first visit and may never return. Close the loop or add a <a href="roadblock.html">Roadblock</a> to redirect them.</li>
+      </ul>
+
+      <!-- ─── Developer reference ──────────────────────────── -->
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">All paths relative to the repository root.</p>
+
+        <details>
+          <summary>Building config — <code>src/scripts/buildings.js</code></summary>
+          <div class="details-body">
+            <p><span class="file-ref">src/scripts/buildings.js</span> defines <code>building_road</code> and <code>building_plaza</code>. The Roadblock config is documented on the <a href="roadblock.html">Roadblock page</a>.</p>
+            <pre><code><span class="kw">building_road</span> {
+  <span class="kw">animations</span> {
+    <span class="kw">preview</span> { pack:<span class="ty">PACK_TERRAIN</span>, id:<span class="num">33</span> }
+    <span class="kw">base</span>    { pack:<span class="ty">PACK_TERRAIN</span>, id:<span class="num">33</span> }
+  }
+  <span class="kw">building_size</span> : <span class="num">1</span>
+  <span class="kw">cost</span> [ <span class="num">1</span>, <span class="num">2</span>, <span class="num">5</span>, <span class="num">10</span>, <span class="num">15</span> ]    <span class="cmt">// VE · Easy · Normal · Hard · VH</span>
+  <span class="kw">planner_update_rule</span> {
+    <span class="kw">is_draggable</span> : <span class="kw">true</span>
+  }
+}
+
+<span class="kw">building_plaza</span> {
+  <span class="kw">animations</span> {
+    <span class="kw">preview</span> : { pack:<span class="ty">PACK_GENERAL</span>, id:<span class="num">168</span> }
+    <span class="kw">base</span>    : { pack:<span class="ty">PACK_GENERAL</span>, id:<span class="num">168</span> }
+  },
+  <span class="kw">planner_update_rule</span> { <span class="kw">is_draggable</span> : <span class="kw">true</span> }
+  <span class="kw">fire_proof</span>      : <span class="kw">true</span>
+  <span class="kw">damage_proof</span>    : <span class="kw">true</span>
+  <span class="kw">meta</span>            : { help_id: <span class="num">80</span>, text_id: <span class="num">137</span> }
+  <span class="kw">building_size</span>   : <span class="num">1</span>
+  <span class="kw">cost</span>            : [ <span class="num">3</span>, <span class="num">5</span>, <span class="num">10</span>, <span class="num">15</span>, <span class="num">20</span> ]
+  <span class="kw">desirability</span>    : { value[<span class="num">4</span>], step[<span class="num">1</span>], step_size[<span class="num">-2</span>], range[<span class="num">2</span>] }
+}</code></pre>
+          </div>
+        </details>
+
+        <details>
+          <summary>C++ implementation — <code>src/building/building_road.h / .cpp</code></summary>
+          <div class="details-body">
+            <p><span class="file-ref">src/building/building_road.h</span> declares <code>building_road</code> (inherits <code>building_impl</code>). Key static methods:</p>
+            <ul style="font-size:0.82rem;line-height:1.9;padding-left:1.2rem">
+              <li><code>set_road(tile2i)</code> — adds <code>TERRAIN_ROAD</code> flag to the tile and refreshes surrounding tile images; returns <code>true</code> if the tile was newly set.</li>
+              <li><code>is_paved(tile2i)</code> — returns <code>true</code> if desirability &gt; 4, or (desirability &gt; 0 &amp;&amp; within fountain range). This drives the visual switch between dirt and stone road images.</li>
+              <li><code>set_image(tile2i)</code> — selects the correct image variant for a road tile based on adjacent terrain (auto-connects to neighbours, handles canal-over-road, floodplain, plaza).</li>
+            </ul>
+            <p>The nested <code>preview</code> struct implements the drag-to-place planner:</p>
+            <ul style="font-size:0.82rem;line-height:1.9;padding-left:1.2rem">
+              <li><code>can_construction_start()</code> — calls <code>map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, start)</code> to verify a route exists.</li>
+              <li><code>construction_update()</code> / <code>construction_place()</code> — use <code>place_routed_building()</code> to lay tiles along the auto-routed path.</li>
+              <li><code>ghost_preview()</code> — draws red ghost on blocked tiles (water, non-clearable terrain, inundated floodplain, out-of-money), green/neutral ghost otherwise.</li>
+            </ul>
+            <p>Placement is blocked (red ghost) when the player is out of money, the tile is water, or the tile is an inundated floodplain. Roads can be placed on non-inundated floodplain and over canals.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Road network — <code>src/grid/road_network.cpp</code></summary>
+          <div class="details-body">
+            <p><span class="file-ref">src/grid/road_network.cpp</span> implements the connectivity flood-fill. <code>city_map_t::update_road_network()</code> scans every tile once per update cycle:</p>
+            <pre><code><span class="cmt">// Assigns network_id to every connected road cluster via BFS</span>
+<span class="kw">for each</span> unvisited road tile:
+    size = mark_road_network(tile, network_id++)
+    add_to_largest_road_networks(network_id, size)
+
+<span class="cmt">// BFS kernel — 4-directional, max 1000 tiles in queue</span>
+<span class="fn">mark_road_network</span>(grid_offset, network_id):
+    flood-fill using map_routing_citizen_is_passable()
+    marks tile as network_id in road_network grid</code></pre>
+            <p>The queue limit is 1 000 tiles (<code>MAX_ROAD_QUEUE</code>). Very large connected road grids are handled correctly; the limit only affects queue depth per iteration, not total reachability. The engine tracks the largest networks so that buildings preferentially connect to the biggest network when multiple are reachable.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Road access API — <code>src/grid/road_access.h</code></summary>
+          <div class="details-body">
+            <p><span class="file-ref">src/grid/road_access.h</span> exposes the building-to-road connectivity checks used throughout the codebase:</p>
+            <ul style="font-size:0.82rem;line-height:1.9;padding-left:1.2rem">
+              <li><code>map_has_road_access(tile, size)</code> — returns true if any tile adjacent to the N×N footprint is a valid road tile.</li>
+              <li><code>map_get_road_access_tile(tile, size)</code> — returns the specific adjacent road tile (used to spawn walkers at the right edge).</li>
+              <li><code>map_closest_road_within_radius(tile, size, radius)</code> — finds the nearest road tile within a given search radius; used by buildings that spawn destination walkers.</li>
+              <li><code>map_get_adjacent_road_tiles_for_roaming(grid_offset, road_tiles, permission)</code> — fills an array with the adjacent road tiles a roaming walker <em>may</em> step onto, respecting Roadblock permissions. This is the function that enforces Roadblock filtering during figure movement.</li>
+            </ul>
+            <p><code>road_tile_valid_access(int grid_offset)</code> validates a tile as a usable road: must have <code>TERRAIN_ROAD</code>, must not be water or deep water. Buildings placed over roads are also allowed through (Booths, Bandstands, Pavilions, Festival Squares, and Mud Gatehouses are explicit exceptions).</p>
+          </div>
+        </details>
+
+      </div><!-- .dev-section -->
+
+      <div class="bld-nav">
+        <a href="index.html">← All Buildings</a>
+        <span style="color:var(--text-muted)">Municipal</span>
+        <a href="roadblock.html">Roadblock →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>

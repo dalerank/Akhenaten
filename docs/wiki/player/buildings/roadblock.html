@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roadblock — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .bld-header-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      margin-bottom: 2rem;
+    }
+    .bld-header-right {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .bld-image-wrap {
+      text-align: center;
+    }
+    .bld-image-wrap img {
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      image-rendering: pixelated;
+    }
+    .bld-image-wrap figcaption {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+    .bld-sprites {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-end;
+    }
+    .bld-infobox {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.9rem 1.1rem;
+    }
+    .bld-infobox h4 {
+      margin: 0 0 0.6rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--gold);
+    }
+    .bld-infobox dl {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.2rem 1rem;
+      margin: 0;
+    }
+    .bld-infobox dt { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; padding-top: 0.1rem; }
+    .bld-infobox dd { margin: 0; font-size: 0.85rem; color: var(--text); }
+    .bld-infobox .sep { grid-column: 1/-1; border: none; border-top: 1px solid var(--border); margin: 0.4rem 0; }
+    .bld-stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .bld-stat { text-align: center; }
+    .bld-stat .val { font-size: 1.3rem; font-weight: 700; color: var(--gold); display: block; }
+    .bld-stat .lbl { font-size: 0.7rem; color: var(--text-muted); }
+    .perm-allow { color: #7ec87e; }
+    .perm-block { color: #d07070; }
+    .perm-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.75rem 0;
+      font-size: 0.85rem;
+    }
+    .perm-table th, .perm-table td {
+      padding: 0.3rem 0.6rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .perm-table th { color: var(--text-muted); font-weight: normal; }
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .kw { color: #c9a84c; } .num { color: #9ecbff; } .str { color: #7ec87e; } .cmt { color: #5a5650; font-style: italic; } .fn { color: #8aabdc; } .ty { color: #d0a0e0; }
+    .file-ref { display: inline-block; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .bld-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .bld-nav a { color: var(--gold); }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">← All Buildings</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Municipal</div>
+        <ul>
+          <li><a href="road.html">Road</a></li>
+          <li><a href="roadblock.html" class="active">Roadblock</a></li>
+          <li><a href="firehouse.html">Firehouse</a></li>
+          <li><a href="architect-post.html">Architect's Post</a></li>
+          <li><a href="police-station.html">Police Station</a></li>
+          <li><a href="courthouse.html">Courthouse</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#mechanics">Mechanics</a></li>
+          <li><a href="#permissions">Permissions</a></li>
+          <li><a href="#tips">Tips</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Buildings</a> /
+        Roadblock
+      </div>
+
+      <h1>Roadblock</h1>
+
+      <div class="bld-header-grid">
+        <figure class="bld-image-wrap">
+          <div class="bld-sprites">
+            <div>
+              <img src="Cleo_Roadblock.webp" alt="Roadblock in-game sprite" />
+              <figcaption>Roadblock</figcaption>
+            </div>
+            <div>
+              <img src="Cleo_RoadblockRC.webp" alt="Roadblock right-click panel" width="300" height="121" />
+              <figcaption>Right-click panel</figcaption>
+            </div>
+          </div>
+        </figure>
+        <div class="bld-header-right">
+          <div>
+            <p>The <strong>Roadblock</strong> is placed on any existing road tile to act as a filter for roaming walkers. Each walker category — market traders, priests, entertainers, physicians, and others — can be individually allowed or blocked. Destination walkers such as cartpushers, buyers, and immigrants always pass through regardless of settings.</p>
+            <p>Roadblocks do not sever road connectivity. Buildings on either side of a Roadblock remain on the same network and destination walkers can still reach any building. Only roaming walkers that reach the Roadblock tile consult the permission list before deciding whether to continue or turn back.</p>
+          </div>
+          <div class="bld-infobox">
+            <h4>Stats</h4>
+            <div class="bld-stat-row" style="margin-bottom:0.9rem">
+              <div class="bld-stat"><span class="val">1×1</span><span class="lbl">Size</span></div>
+              <div class="bld-stat"><span class="val">0</span><span class="lbl">Workers</span></div>
+              <div class="bld-stat"><span class="val" style="color:var(--text-muted)">0</span><span class="lbl">Desirability</span></div>
+            </div>
+            <hr class="sep" />
+            <dl>
+              <dt>Cost (Normal)</dt>
+              <dd>5 Db</dd>
+              <dt>Cost by difficulty</dt>
+              <dd style="font-size:0.78rem;color:var(--text-muted)">
+                VE 1 · Easy 2 · <strong style="color:var(--text)">Normal 5</strong> · Hard 10 · VH 20
+              </dd>
+              <dt>Fire / Damage risk</dt>
+              <dd>None (fire-proof, damage-proof)</dd>
+              <dt>Labor category</dt>
+              <dd>Government</dd>
+              <dt>Placement</dt>
+              <dd>On existing road tiles only</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Overview ──────────────────────────────────────── -->
+      <h2 id="overview">Overview</h2>
+      <p>Ancient Egyptian cities were organised into distinct quarters — residential, religious, administrative, and industrial — each with its own character and purpose. Controlling the flow of people between zones was a practical necessity: workers heading to quarries should not wander through the temple precinct, and market women did not need to enter the military barracks.</p>
+      <p>In the game the Roadblock provides exactly this kind of zonal separation without the cost or permanence of walls. A single tile placed at a street entrance turns that road into a selective checkpoint, letting you decide which services reach which parts of the city.</p>
+
+      <!-- ─── Mechanics ─────────────────────────────────────── -->
+      <h2 id="mechanics">Mechanics</h2>
+
+      <h3>How it works</h3>
+      <p>When a <strong>roaming walker</strong> reaches a Roadblock tile, the game checks the walker's category against the Roadblock's permission bitmask:</p>
+      <ul>
+        <li>If the walker's category is <strong>allowed</strong>, she passes through and continues roaming normally.</li>
+        <li>If the walker's category is <strong>blocked</strong>, she turns around and roams back the direction she came from.</li>
+      </ul>
+      <p><strong>Destination walkers</strong> (Bazaar Buyer, Cartpusher, immigrant, tax collector on a direct trip, etc.) are never stopped — they pathfind through Roadblock tiles as if the building were not there. The connectivity check that determines which buildings can reach which storage buildings also ignores Roadblocks entirely.</p>
+
+      <h3>Placement</h3>
+      <p>A Roadblock must be placed on an existing <a href="road.html">Road</a> tile. It occupies that tile and is removed with the demolish tool; demolishing returns the underlying road tile. You can place multiple Roadblocks on parallel roads leading into a zone to ensure complete coverage — a single Roadblock only affects walkers who attempt to use that specific tile.</p>
+
+      <h3>Ordering walkers</h3>
+      <p>Right-click a Roadblock and press <strong>Orders</strong> to open the permission panel. Each row shows a walker category icon and its current Allow / Block state. Click a row to toggle it. Changes take effect immediately — walkers already beyond the Roadblock are not recalled.</p>
+
+      <!-- ─── Permissions ───────────────────────────────────── -->
+      <h2 id="permissions">Permissions</h2>
+      <p>There are seven configurable walker categories. All are allowed by default.</p>
+
+      <table class="perm-table">
+        <thead>
+          <tr>
+            <th>Permission</th>
+            <th>Walkers affected</th>
+            <th>Default</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Maintenance</td>
+            <td>Architect, Fire Marshal</td>
+            <td class="perm-allow">Allow</td>
+          </tr>
+          <tr>
+            <td>Priest</td>
+            <td>Temple priests</td>
+            <td class="perm-allow">Allow</td>
+          </tr>
+          <tr>
+            <td>Market</td>
+            <td>Bazaar Trader</td>
+            <td class="perm-allow">Allow</td>
+          </tr>
+          <tr>
+            <td>Entertainer</td>
+            <td>Juggler, Dancer, Musician</td>
+            <td class="perm-allow">Allow</td>
+          </tr>
+          <tr>
+            <td>Education</td>
+            <td>Teacher, Librarian</td>
+            <td class="perm-allow">Allow</td>
+          </tr>
+          <tr>
+            <td>Medicine</td>
+            <td>Physician, Apothecary</td>
+            <td class="perm-allow">Allow</td>
+          </tr>
+          <tr>
+            <td>Tax Collector</td>
+            <td>Tax Collector</td>
+            <td class="perm-allow">Allow</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Common configurations</h3>
+      <ul>
+        <li><strong>Separating service zones.</strong> If two housing clusters share a junction, place a Roadblock between them and allow only market and maintenance. Each cluster's own service buildings serve only that cluster.</li>
+        <li><strong>Industrial zones.</strong> Block market traders, entertainers, and priests from entering the production district — they have no one to serve there and waste patrol steps.</li>
+        <li><strong>Tax relief.</strong> Temporarily block tax collectors from a struggling housing block to give residents time to recover before taxation resumes.</li>
+        <li><strong>Religion separation.</strong> In cities with multiple temples, block priests at zone boundaries so each god's walker covers only the housing intended for that temple.</li>
+      </ul>
+
+      <!-- ─── Tips ──────────────────────────────────────────── -->
+      <h2 id="tips">Tips</h2>
+      <ul>
+        <li>One Roadblock per road leading into a zone is enough. If a zone has two road entrances, place one Roadblock at each.</li>
+        <li>Roadblocks are cheap (5 Db on Normal) and fire-proof — place them freely without worrying about maintenance.</li>
+        <li>If a service walker is not covering the expected area, check whether a Roadblock from a neighbouring zone is accidentally blocking her. The permission panel shows the current state of each category.</li>
+        <li>Blocking maintenance workers (Architect and Fire Marshal) from a zone leaves its buildings unprotected from damage and fire. Only do this deliberately and temporarily.</li>
+        <li>Roadblocks work well with <a href="bazaar.html">Bazaar</a> Special Orders for fine-grained supply control: Special Orders determine which goods a Bazaar stocks; Roadblocks determine which streets its trader visits.</li>
+      </ul>
+
+      <!-- ─── Developer reference ──────────────────────────── -->
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">All paths relative to the repository root.</p>
+
+        <details>
+          <summary>Building config — <code>src/scripts/buildings.js</code></summary>
+          <div class="details-body">
+            <p>The Roadblock definition is in <span class="file-ref">src/scripts/buildings.js</span> at the <code>building_roadblock</code> block (line 506).</p>
+            <pre><code><span class="kw">building_roadblock</span> = {
+  <span class="kw">animations</span> : {
+    <span class="kw">preview</span>  : { pack:<span class="ty">PACK_GENERAL</span>, id:<span class="num">98</span> }
+    <span class="kw">base</span>     : { pack:<span class="ty">PACK_GENERAL</span>, id:<span class="num">98</span> }
+    <span class="kw">minimap</span>  : { pack:<span class="ty">PACK_GENERAL</span>, id:<span class="num">149</span>, offset:<span class="num">5</span> }
+  },
+  <span class="kw">building_size</span>   : <span class="num">1</span>,
+  <span class="kw">fire_proof</span>      : <span class="kw">true</span>,
+  <span class="kw">damage_proof</span>    : <span class="kw">true</span>,
+  <span class="kw">meta</span>            : { help_id: <span class="num">358</span>, text_id: <span class="num">155</span> }
+  <span class="kw">labor_category</span>  : <span class="ty">LABOR_CATEGORY_GOVERNMENT</span>,
+  <span class="kw">cost</span>            : [ <span class="num">1</span>, <span class="num">2</span>, <span class="num">5</span>, <span class="num">10</span>, <span class="num">20</span> ]
+}</code></pre>
+          </div>
+        </details>
+
+        <details>
+          <summary>C++ implementation — <code>src/building/building_roadblock.h / .cpp</code></summary>
+          <div class="details-body">
+            <p><span class="file-ref">src/building/building_roadblock.h</span> declares the class hierarchy:</p>
+            <pre><code><span class="kw">class</span> <span class="ty">building_routeblock</span> : <span class="kw">public</span> <span class="ty">building_impl</span> {
+    <span class="kw">struct</span> runtime_data_t {
+        <span class="ty">short</span> exceptions;  <span class="cmt">// bitmask — 1 bit per e_permission</span>
+    };
+    <span class="kw">virtual void</span>  set_permission(<span class="ty">e_permission</span>) {}
+    <span class="kw">virtual bool</span>  get_permission(<span class="ty">e_permission</span>) { <span class="kw">return false</span>; }
+};
+
+<span class="kw">class</span> <span class="ty">building_roadblock</span> : <span class="kw">public</span> <span class="ty">building_routeblock</span> {
+    <span class="cmt">// set_permission XORs the bit — toggles the permission on/off</span>
+    <span class="kw">virtual bool</span> target_route_tile_blocked(<span class="ty">int</span> grid_offset) <span class="kw">const override</span>;
+};</code></pre>
+            <p>The <code>exceptions</code> bitmask stores one bit per <code>e_permission</code> value. A set bit means that permission is <em>granted</em> (the walker <em>can</em> pass). <code>set_permission()</code> XOR-flips a bit, toggling the state. <code>get_permission()</code> reads a single bit.</p>
+            <p><code>target_route_tile_blocked()</code> always returns <code>false</code> — Roadblocks never block routing or destination walkers. The filtering of roaming walkers happens in the figure movement code via <code>map_get_adjacent_road_tiles_for_roaming()</code> in <span class="file-ref">src/grid/road_access.h</span>, which passes the walker's permission category and skips tiles blocked by a Roadblock.</p>
+            <p>The permission enum is defined in <span class="file-ref">src/city/constants.h</span>:</p>
+            <pre><code><span class="kw">enum</span> <span class="ty">e_permission</span> : <span class="ty">uint8_t</span> {
+    epermission_none          = <span class="num">0</span>,
+    epermission_maintenance   = <span class="num">1</span>,
+    epermission_priest        = <span class="num">2</span>,
+    epermission_market        = <span class="num">3</span>,
+    epermission_entertainer   = <span class="num">4</span>,
+    epermission_education     = <span class="num">5</span>,
+    epermission_medicine      = <span class="num">6</span>,
+    epermission_tax_collector = <span class="num">7</span>,
+    epermission_count
+};</code></pre>
+          </div>
+        </details>
+
+        <details>
+          <summary>Info window — <code>src/window/window_roadblock_info.cpp</code></summary>
+          <div class="details-body">
+            <p>The right-click panel is registered as <code>info_window_roadblock</code> in <span class="file-ref">src/window/window_roadblock_info.cpp</span>. It loads its layout from <code>roadblock_info_window</code> in the UI config.</p>
+            <p>Key interactive elements:</p>
+            <ul style="font-size:0.82rem;line-height:1.9;padding-left:1.2rem">
+              <li><strong>Orders button</strong> — switches the panel to the permission list view (<code>c.storage_show_special_orders = true</code>).</li>
+              <li><strong>Permission rows</strong> — seven <code>generic_button</code> entries mapped to <code>toggle_figure_state(index, …)</code>, which calls <code>building_roadblock::set_permission((e_permission)index)</code> to XOR-flip the permission bit.</li>
+            </ul>
+            <p>Permission buttons are at y-offsets 4, 36, 68, 100, 132, 164, 192 (32 px apart) within the orders panel.</p>
+          </div>
+        </details>
+
+      </div><!-- .dev-section -->
+
+      <div class="bld-nav">
+        <a href="road.html">← Road</a>
+        <span style="color:var(--text-muted)">Municipal</span>
+        <a href="firehouse.html">Firehouse →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>
