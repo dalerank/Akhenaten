@@ -4,7 +4,7 @@ overlay_menu {
 	menus [
 		{
 			title: "#overlay_menu_normal"
-			ids[OVERLAY_NONE]		
+			ids[OVERLAY_NONE]
 		}
 
 		{
@@ -14,7 +14,7 @@ overlay_menu {
 
 		{
 			title: "#overlay_menu_risks"
-			ids[ 
+			ids[
 			    OVERLAY_FIRE,
 				OVERLAY_DAMAGE,
 				OVERLAY_MALARIA_RISK,
@@ -215,7 +215,7 @@ function overlay_menu_widget_ui_draw_foreground(window) {
 		var btn_pos = {x:base_x, y:base_y + i * (cat_size.y + 4)}
 
 		var clicked = ui.button({ text: __loc(menus[i].title), pos: btn_pos, size: cat_size, font: FONT_NORMAL_BLACK_ON_DARK, flags: UiFlags_PanelSmall })
-		if (clicked) {
+		if (clicked == ui.button_clicked) {
 			city.current_overlay = menus[i].ids[0]
 			overlay_menu_widget.close_submenu()
 			window_go_back()
@@ -244,7 +244,7 @@ function overlay_menu_widget_ui_draw_foreground(window) {
 
 				var sub_text = overlay_menu_overlay_title(menu.ids[j])
 				var clicked = ui.button({ text: sub_text, pos: [sub_x, sub_y], size: sub_item.size, font: FONT_NORMAL_BLACK_ON_DARK, flags: UiFlags_PanelSmall })
-				if (clicked) {
+				if (clicked == ui.button_clicked) {
 					city.current_overlay = menu.ids[j]
 					overlay_menu_widget.close_submenu()
 					window_go_back()
