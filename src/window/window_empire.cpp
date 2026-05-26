@@ -557,7 +557,7 @@ void empire_window::ui_draw_foreground(UiFlags flags) {
 
     ui["city_name"] = "";
     ui["button_help"].enabled = !!city;
-    ui["button_close"].enabled = !!city;
+    ui["button_close"].enabled = true;
     ui["button_advisor"].enabled = !!city;
     ui["city_name"] = city ? city->name_str : "";
     ui["button_pause"].tooltip(lang_xtext_from_key(game.paused ? "#TR_BUTTON_RESUME" : "#TR_BUTTON_PAUSE"));
