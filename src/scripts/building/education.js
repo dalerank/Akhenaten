@@ -40,6 +40,19 @@ building_library {
   max_service: 800
 }
 
+[es=(building_library, spawn_figure)]
+function building_library_spawn_figure(ev) {
+    var building = city.get_building(ev.bid)
+    building.common_spawn_roamer(FIGURE_LIBRARIAN, building_library.min_houses_coverage, ACTION_125_ROAMER_ROAMING)
+}
+
+[es=(building_library, update_graphic)]
+function building_library_update_graphic(ev) {
+    var building = city.get_building(ev.bid)
+    var animkey = building.can_play_animation ? "work" : "base"
+    building.set_animation(animkey)
+}
+
 
 building_academy {
   animations {
