@@ -411,28 +411,32 @@ void building_temple_complex::build_upgrade(e_temple_compex_upgrade upgrade_para
     map_tiles_add_temple_complex_parts(&base);
 }
 
-building *building_temple_complex::get_altar() const {
-    building *next = base.next();
-    while (next) {
-        if (building_type_any_of(next->type, base_params().allowed_altar)) {
-            break;
+// Walk the next_part_building_id chain looking for a part whose type is in
+// `allowed`. building_get() does no bounds checking (g_all_buildings is a fixed
+// 5000-slot array), so a missing/garbage linkage — e.g. a temple complex loaded
+// from an original Pharaoh mission pack that has no Akhenaten-style sub-buildings
+// — would otherwise dereference an out-of-range pointer and crash. Validate each
+// id is in (0, MAX_BUILDINGS) before following it, and cap the walk length to
+// guard against a corrupt cyclic chain.
+static building* temple_complex_find_part(const building& base, const svector<e_building_type, 4>& allowed) {
+    int next_id = base.next_part_building_id;
+    for (int guard = 0; next_id > 0 && next_id < (int)MAX_BUILDINGS && guard < (int)MAX_BUILDINGS; ++guard) {
+        building* next = building_get(next_id);
+        if (building_type_any_of(next->type, allowed)) {
+            return next;
         }
-        next = next->next();
+        next_id = next->next_part_building_id;
     }
 
-    return next;
+    return nullptr;
 }
 
-building *building_temple_complex::get_oracle() const {
-    building *next = base.next();
-    while (next) {
-        if (building_type_any_of(next->type, base_params().allowed_oracle)) {
-            break;
-        }
-        next = next->next();
-    }
+building* building_temple_complex::get_altar() const {
+    return temple_complex_find_part(base, base_params().allowed_altar);
+}
 
-    return next;
+building* building_temple_complex::get_oracle() const {
+    return temple_complex_find_part(base, base_params().allowed_oracle);
 }
 
 building *building_temple_complex::get_upgrade(e_temple_compex_upgrade type) const {
@@ -456,13 +460,19 @@ void building_temple_complex::update_map_orientation(int orientation) {
     orientation = (5 - (runtime_data().variant / 2)) % 4;
     map_add_tiles(type(), tile(), orientation, *runtime_data().decorative_tiles);
 
+    // Altar and oracle are Akhenaten-specific sub-buildings created in on_place().
+    // Missions/saves authored without them (e.g. original Pharaoh mission packs that
+    // store the temple complex as a single building) have no linked parts, so
+    // get_altar()/get_oracle() return null. Skip them rather than dereferencing null.
     building *altar = get_altar();
-    verify_no_crash(altar);
-    altar->dcast()->update_map_orientation(orientation);
+    if (altar) {
+        altar->dcast()->update_map_orientation(orientation);
+    }
 
     building *oracle = get_oracle();
-    verify_no_crash(oracle);
-    oracle->dcast()->update_map_orientation(orientation);
+    if (oracle) {
+        oracle->dcast()->update_map_orientation(orientation);
+    }
 
     building *building_main = &main()->base;
     if (building_main) {
@@ -471,7 +481,7 @@ void building_temple_complex::update_map_orientation(int orientation) {
         pcstr orient_key[] = { "main_n", "main_e", "main_s", "main_w" };
         int image_id = anim(orient_key[orientation]).first_img();
         const bool fancy_oracle = !!(runtime_data().temple_complex_upgrades & etc_upgrade_oracle);
-        if (fancy_oracle && (orientation == 2 || orientation == 3)) {
+        if (fancy_oracle && oracle && (orientation == 2 || orientation == 3)) {
             pcstr orient_key[] = { "fancy_n", "fancy_e", "fancy_s", "fancy_w" };
             const auto &params = oracle->params();
             image_id = params.first_img(orient_key[orientation]);
