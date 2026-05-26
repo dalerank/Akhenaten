@@ -17,7 +17,7 @@ building_firehouse {
     desirability { value[-2], step[1], step_size[1], range[2] }
     laborers [6]
     fire_risk [0]
-    damage_risk [2]
+    damage_risk [0]
     flags {
         is_infrastructure: true
     }
