@@ -30,11 +30,11 @@ void city_military_t::clear_kingdome_service_batalions() {
 void city_military_t::update_totals() {
     kingdome_service_batalions = 0;
     total_soldiers = 0;
-    infantry_batalions = 0;
+    total_batalions = 0;
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         const formation* m = formation_get(i);
         if (m->in_use && m->own_batalion) {
-            infantry_batalions++;
+            total_batalions++;
             total_soldiers += m->num_figures;
             if (m->empire_service && m->num_figures > 0) {
                 kingdome_service_batalions++;
