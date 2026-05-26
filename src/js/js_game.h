@@ -938,7 +938,7 @@ namespace js_helpers {
     template<size_t S = 64, typename ... ES>
     bstring<S> es_hash_str(ES ... es) {
         hvector<bstring<S>, 4> parts;
-        (parts.push_back(es2str(es).c_str()), ...);
+        (parts.push_back(es2str(es)), ...);
         auto cstr_compare = [] (pcstr s1, pcstr s2) { return strcmp(s1, s2) < 0; };
         std::sort(parts.begin(), parts.end(), cstr_compare);
         bstring<S> result;
