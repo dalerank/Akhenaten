@@ -75,7 +75,7 @@ window_scenario_selection_custom {
         debug_file_schema     : text({ pos[265, 170], size[160, 20], text:"", font:FONT_NORMAL_BLACK_ON_DARK })
 
         img_custom            : image({ pos[0, 0], pack:PACK_UNLOADED, id:32, offset:0, enabled:true })
-        img_scenario_thumb    : image({ pos[270, 200], pack:PACK_UNLOADED, id:28, offset:0 })
+        img_scenario_thumb    : image({ pos[270, 200], size[256, 152], fit:true, pack:PACK_UNLOADED, id:28, offset:0 })
 
         scenario_map_list     : scrollable_list({
             pos[210, 360]

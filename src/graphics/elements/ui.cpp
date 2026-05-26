@@ -1184,15 +1184,27 @@ void ui::eimg::draw(UiFlags flags) {
         push(cmd_t::image_isometric, Pos{scr_pos}, ImageId{img_desc.tid()}, Mask{COLOR_MASK_NONE});
     } else {
         vec2i rpos = pos;
-        if (centering.x > -1000 || centering.y > -1000) {
-            const image_t* img = image_get(img_desc);
+        const image_t* img = (fit || centering.x > -1000 || centering.y > -1000) ? image_get(img_desc) : nullptr;
+
+        // Shrink-to-fit: if the image is larger than the size box, scale it down
+        // (preserving aspect ratio), anchored at the element position so previews
+        // that already fit are left exactly where they are.
+        float draw_scale = 1.f;
+        if (fit && img && img->width > 0 && img->height > 0 && size.x > 0 && size.y > 0) {
+            draw_scale = std::min({(float)size.x / img->width, (float)size.y / img->height, 1.f});
+        } else if (centering.x > -1000 || centering.y > -1000) {
             if (img) {
                 const vec2i psize = pxsize();
                 rpos.x += (centering.x > -1000) ? ((psize.x - img->width) / 2 + centering.x) : 0;
                 rpos.y += (centering.y > -1000) ? ((psize.y - img->height) / 2 + centering.y) : 0;
             }
         }
-        ui::eimage(img_desc, rpos);
+
+        if (draw_scale != 1.f) {
+            push(cmd_t::image, Pos{rpos + ui::current_offset()}, ImageId{img_desc.tid()}, Scale{draw_scale});
+        } else {
+            ui::eimage(img_desc, rpos);
+        }
     }
 }
 
@@ -1206,6 +1218,7 @@ void ui::eimg::load(archive arch, element* parent, items& elems) {
     img_desc.offset = arch.r_int("offset");
     isometric = arch.r_bool("isometric");
     centering = arch.r_vec2i("centering", {-1001, -1001});
+    fit = arch.r_bool("fit");
 }
 
 void ui::eimg::image(const image_desc& image) {
