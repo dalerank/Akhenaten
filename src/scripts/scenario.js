@@ -5,6 +5,16 @@ function scenario_win_criteria_goal(c) {
 }
 
 function mission_selection_title(scenario_id) {
+    // Use the original "history" message name (id 200 + scenario_id) as the primary
+    // title. These use the Egyptian place names (e.g. "Abedju") and match the mission
+    // briefing window, keeping the Explore History list consistent. The JS config's
+    // selection_title is an Anglicized fallback (e.g. "Abydos") for any mission whose
+    // history message is missing; "No title" is the last resort for unported ids with
+    // neither.
+    var orig = __lang_message_title_text(200 + scenario_id)
+    if (orig && orig.length > 0) {
+        return orig
+    }
     var config = get_mission_config(scenario_id)
     if (config && config.selection_title && config.selection_title.length > 0) {
         return config.selection_title

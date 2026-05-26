@@ -585,6 +585,10 @@ namespace ui {
         image_desc img_desc;
         bool isometric;
         vec2i centering;
+        // When set (with a non-zero `size`), shrink the image to fit within the
+        // size box, preserving aspect ratio (never enlarges). Used for variable-
+        // sized mission preview thumbnails so large maps don't overflow the panel.
+        bool fit = false;
 
         virtual void draw(UiFlags flags) override;
         virtual void load(archive elem, element* parent, items& elems) override;

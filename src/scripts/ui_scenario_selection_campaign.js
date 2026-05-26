@@ -54,7 +54,7 @@ window_scenario_selection_campaign {
         hdr_pharaoh : text_center({ pos[220, 361], size[144, 20], align:"center", text[294, 41], font:FONT_NORMAL_BLACK_ON_LIGHT })
         hdr_cleopatra : text_center({ pos[352, 361], size[144, 20], align:"center", text[294, 42], font:FONT_NORMAL_BLACK_ON_LIGHT })
 
-        campaign_hover_thumb : image({ pos[270, 200], pack:PACK_UNLOADED, id:28, offset:0 })
+        campaign_hover_thumb : image({ pos[270, 200], size[256, 152], fit:true, pack:PACK_UNLOADED, id:28, offset:0 })
         campaign_hover_subtitle : text_center({ pos[545, 208], size[265, 22], align:"center", font:FONT_LARGE_BLACK_ON_DARK })
         campaign_hover_body : text({ pos[545, 250], size[265, 200], wrap:px(16), font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
 

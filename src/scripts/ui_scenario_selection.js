@@ -16,7 +16,7 @@ function window_scenario_selection_on_init(ev) {
             if (sid < 0) {
                 continue
             }
-            list.add_item(mission_selection_title(sid), list.items_count)
+            list.add_item(mission_selection_title(sid), sid)
         }
     }
     window_scenario_selection.scores_or_goals = 0
@@ -224,8 +224,12 @@ function window_scenario_selection_btn_start() {
 }
 
 function window_scenario_selection_on_map_list_click(entry) {
-    var base = window_scenario_selection.campaign_first_mission
-    __game_load_mission(base + entry.user_data | 0, 0)
+    // user_data carries the real scenario id of the clicked step (set in
+    // on_init). Load it directly: campaign scenario ids are not necessarily
+    // contiguous from the first mission once choice-tree branches exist, so the
+    // old "campaign_first_mission + display_index" math could load a different
+    // mission than the one the player selected.
+    __game_load_mission(entry.user_data | 0, 0)
 
     emit window_scenario_selection.mission_changed { id: scenario.campaign_scenario_id }
 }
@@ -244,7 +248,7 @@ window_scenario_selection {
         img_background         : image({ pos[0, 0], pack:PACK_UNLOADED, id:33, offset:0 })
 
         debug_file_schema      : text({ pos[265, 170], size[160, 20], text:"", font:FONT_NORMAL_BLACK_ON_DARK })
-        img_scenario_thumb     : image({ pos[270, 200], pack:PACK_UNLOADED, id:28, offset:0 })
+        img_scenario_thumb     : image({ pos[270, 200], size[256, 152], fit:true, pack:PACK_UNLOADED, id:28, offset:0 })
 
         scenario_map_list      : scrollable_list({
             pos[210, 360]
