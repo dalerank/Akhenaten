@@ -19,10 +19,10 @@ mission2 {
 				BUILDING_FIGS_FARM, BUILDING_WORK_CAMP, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL, BUILDING_BAZAAR, BUILDING_GRANARY,
 				BUILDING_TEMPLE_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_FESTIVAL_SQUARE
 			  ]
-	
+
 	sounds {
 		briefing : "Voice/Mission/202_mission.mp3"
-		victory : "Voice/Mission/202_victory.mp3"  
+		victory : "Voice/Mission/202_victory.mp3"
 	}
 
 
@@ -43,10 +43,11 @@ mission2 {
 		disease_handled : false
 		pottery_step1_stored_handled : false
 		pottery_step2_stored_handled : false
+		start_message_shown : false
 	}
 }
 
-[event=event_migration_update, mission=mission2]
+[es=event_migration_update, mission=mission2]
 function mission2_handle_population_cap(ev) {
     var max_pop = (!mission.pottery_step1_stored_handled) ? mission.pottery_step1_population_cap : 0;
     migration.set_population_cap("pottery_not_produced_population_cap", max_pop)
@@ -68,8 +69,9 @@ function mission2_get_goal_tooltip() {
 	return ""
 }
 
-[event=event_mission_start, mission=mission2]
+[es=event_mission_start, mission=mission2]
 function mission2_on_start(ev) {
+	mission_show_start_message(mission, "message_farming_along_the_nile")
 	city.set_empire_available(1)
 
 	for (var i = 0; i <= ADVISOR_DIPLOMACY; i++) {
@@ -106,7 +108,7 @@ function mission2_on_start(ev) {
 	city.goal_tooltip = mission2_get_goal_tooltip
 }
 
-[event=event_granary_resource_added, mission=mission2]
+[es=event_granary_resource_added, mission=mission2]
 function mission2_on_filled_granary(ev) {
     if (mission.figs_stored_handled) {
         return
@@ -131,7 +133,7 @@ function mission2_on_filled_granary(ev) {
 	ui.popup_message("message_tutorial_industry")
 }
 
-[event=event_warehouse_filled, mission=mission2]
+[es=event_warehouse_filled, mission=mission2]
 function mission2_warehouse_pottery_1_check(ev) {
     if (mission.pottery_step1_stored_handled) {
         return
@@ -146,7 +148,7 @@ function mission2_warehouse_pottery_1_check(ev) {
 	mission.last_action_time = game.absolute_day
 }
 
-[event=event_warehouse_filled, mission=mission2]
+[es=event_warehouse_filled, mission=mission2]
 function mission2_warehouse_pottery_2_check(ev) {
 	if (!mission.pottery_step1_stored_handled) {
         return
@@ -176,7 +178,7 @@ function mission2_warehouse_pottery_2_check(ev) {
 	ui.popup_message("message_tutorial_municipal_structures")
 }
 
-[event=event_city_disease, mission=mission2]
+[es=event_city_disease, mission=mission2]
 function mission2_on_disease(ev) {
     if (mission.disease_handled) {
         return
@@ -194,7 +196,7 @@ function mission2_on_disease(ev) {
 	ui.popup_message("message_basic_healthcare")
 }
 
-[event=event_update_victory_state, mission=mission2]
+[es=event_update_victory_state, mission=mission2]
 function mission2_handle_victory_state(ev) {
 	city.set_victory_reason("figs_stored_handled", mission.figs_stored_handled)
 	city.set_victory_reason("pottery_step1_stored_handled", mission.pottery_step1_stored_handled)

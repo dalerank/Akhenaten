@@ -93,6 +93,7 @@ mission7 { // Abydos
 	vars {
 		pharaoh_beer_requested : false
 		pharaoh_bricks_gift_sent : false
+		start_message_shown : false
 	}
 }
 
@@ -103,8 +104,9 @@ function mission7_register_animals(ev) {
 	city.remove_animals()
 }
 
-[event=event_mission_start, mission=mission7]
+[es=event_mission_start, mission=mission7]
 function mission7_on_start(ev) {
+	mission_show_start_message(mission, "message_soldiers_and_forts")
 	city.set_empire_available(1)
 
 	for (var i = ADVISOR_NONE + 1; i <= ADVISOR_DIPLOMACY; i++) {

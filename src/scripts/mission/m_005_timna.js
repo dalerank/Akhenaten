@@ -93,10 +93,15 @@ mission5 { // Timna
 			reputation : 60
 		}
 	]
+
+	vars {
+		start_message_shown : false
+	}
 }
 
-[event=event_mission_start, mission=mission5]
+[es=event_mission_start, mission=mission5]
 function mission5_on_start(ev) {
+	mission_show_start_message(mission, "message_history_military")
 	city.set_empire_available(1)
 	for (var i = ADVISOR_NONE + 1; i <= ADVISOR_DIPLOMACY; i++) {
 		city.set_advisor_available(i, 1)

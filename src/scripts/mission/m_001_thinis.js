@@ -41,6 +41,7 @@ mission1 {
 		booth_built : false
 		juggler_school_built : false
 		last_action_time : 0
+		start_message_shown : false
 	}
 }
 
@@ -56,8 +57,9 @@ function mission1_get_goal_tooltip() {
 	return "#mission1_goal_build_mines"
 }
 
-[event=event_mission_start, mission=mission1]
+[es=event_mission_start, mission=mission1]
 function mission1_on_start(ev) {
+	mission_show_start_message(mission, "message_gold_and_crime")
 	city.set_empire_available(-1)
 
 	for (var i = 0; i <= ADVISOR_DIPLOMACY; i++) {

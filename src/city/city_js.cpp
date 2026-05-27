@@ -267,8 +267,6 @@ int __city_workers_diff() {
 }
 ANK_FUNCTION(__city_workers_diff)
 
-ANK_BOUND_BOOL(__city_mission_start_message_shown, g_city.mission.start_message_shown)
-
 tile2i __city_message_next_problem_area_grid_offset() { return tile2i(city_message_next_problem_area_grid_offset()); } ANK_FUNCTION(__city_message_next_problem_area_grid_offset)
 
 void __city_message_sort_and_compact() { city_message_sort_and_compact(); }

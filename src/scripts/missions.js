@@ -61,6 +61,17 @@ function get_mission_config(scenario_id) {
     }
 }
 
+function mission_show_start_message(mission, message_id) {
+    if (mission.start_message_shown) {
+        return
+    }
+    if (!message_id || message_id.length == 0) {
+        return
+    }
+    ui.popup_message(message_id)
+    mission.start_message_shown = true
+}
+
 import mission.m_000_nubt
 import mission.m_001_thinis
 import mission.m_002_perwadjyt

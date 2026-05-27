@@ -116,11 +116,13 @@ mission6 { // Behdet
 		pharaoh_beer_requested : false
 		pharaoh_beer_late_requested : false
 		pharaoh_bricks_gift_sent : false
+		start_message_shown : false
 	}
 }
 
-[event=event_mission_start, mission=mission6]
+[es=event_mission_start, mission=mission6]
 function mission6_on_start(ev) {
+	mission_show_start_message(mission, "message_soldiers_and_forts")
 	city.set_empire_available(1)
 	for (var i = ADVISOR_NONE + 1; i <= ADVISOR_DIPLOMACY; i++) {
 		city.set_advisor_available(i, 1)

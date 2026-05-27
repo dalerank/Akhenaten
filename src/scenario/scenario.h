@@ -298,7 +298,6 @@ struct scenario_data_t {
 
     struct meta_t {
         xstring start_message;
-        bool start_message_shown;
         bool hide_won_screen;
         std::array<int, 8> initial_funds = { 0 };
         std::array<int, 8> rescue_loans = { 0 };

@@ -66,6 +66,7 @@ mission4 {
 		papyrus_made_handled : false
 		bricks_bought_handled : false
 		last_action_time : 0
+		start_message_shown : false
 	}
 }
 
@@ -85,8 +86,9 @@ function mission4_get_goal_tooltip() {
 	return ""
 }
 
-[event=event_mission_start, mission=mission4]
+[es=event_mission_start, mission=mission4]
 function mission4_on_start(ev) {
+	mission_show_start_message(mission, "message_trade_on_the_water")
 	city.set_empire_available(1)
 
 	if (mission.papyrus_made_handled) {

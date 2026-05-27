@@ -192,8 +192,7 @@ io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version)
     iob->bind(BIND_SIGNATURE_INT16, &g_scenario.start_year);
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_INT16, &g_scenario.empire.id);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_scenario.meta.start_message_shown);
-    iob->bind____skip(3);
+    iob->bind____skip(4);
     for (int i = 0; i < MAX_GODS; i++) {
         iob->bind(BIND_SIGNATURE_UINT8, &g_city.religion.gods[i].is_known);
         iob->bind____skip(1);

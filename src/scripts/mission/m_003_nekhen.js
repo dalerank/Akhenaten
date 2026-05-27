@@ -42,6 +42,7 @@ mission3 {
 		tax_collector_built : false
 		modest_houses_reached : false
 		last_action_time : 0
+		start_message_shown : false
 	}
 }
 
@@ -61,8 +62,9 @@ function mission3_get_goal_tooltip() {
 	return ""
 }
 
-[event=event_mission_start, mission=mission3]
+[es=event_mission_start, mission=mission3]
 function mission3_on_start(ev) {
+	mission_show_start_message(mission, "message_developing_culture")
 	city.set_empire_available(1)
 
 	if (mission.tax_collector_built) {

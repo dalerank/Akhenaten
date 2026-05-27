@@ -129,11 +129,13 @@ mission8 { // Selima
 		foreign_army_attack_warning_shown : false
 		foreign_army_attacked_city : false
 		distant_battle_requested : false
+		start_message_shown : false
 	}
 }
 
-[event=event_mission_start, mission=mission8]
+[es=event_mission_start, mission=mission8]
 function mission8_on_start(ev) {
+	mission_show_start_message(mission, "message_the_finer_things_tutorial")
 	city.set_empire_available(1)
 	for (var i = ADVISOR_NONE + 1; i <= ADVISOR_DIPLOMACY; i++) {
 		city.set_advisor_available(i, 1)

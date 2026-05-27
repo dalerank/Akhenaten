@@ -51,10 +51,6 @@ city {
         @average_health {}
     }
 
-    mission {
-        start_message_shown: __city_mission_start_message_shown
-    }
-
     coverage {
         __property_getter: __city_get_coverage_property
         @booth {}

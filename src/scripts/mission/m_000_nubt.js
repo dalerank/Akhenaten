@@ -47,11 +47,13 @@ mission0 { // Nubt
 		tutorial_gamemeat_stored : false
 		granary_built : false
 		last_action_time : 0
+		start_message_shown : false
 	}
 }
 
-[event=event_mission_start, mission=mission0]
+[es=event_mission_start, mission=mission0]
 function mission0_on_start(ev) {
+	mission_show_start_message(mission, "message_housing_and_roads")
 	city.set_empire_available(-1)
 
 	for (var i = 0; i <= ADVISOR_DIPLOMACY; i++) {

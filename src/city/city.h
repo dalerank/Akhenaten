@@ -90,7 +90,6 @@ struct city_t {
     struct {
         bool fired_message_shown;
         bool victory_message_shown;
-        bool start_message_shown;
         bool reserved;
         int32_t reserved_2;
     } mission;

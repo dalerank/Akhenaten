@@ -60,8 +60,6 @@ function mission_briefing_window_on_start_mission(window) {
     __game_sound.speech_stop()
     __game_sound.music_update(1)
     ui.window_city_show()
-
-    city.mission.start_message_shown = true
 }
 
 [es=(mission_briefing_window, init)]
