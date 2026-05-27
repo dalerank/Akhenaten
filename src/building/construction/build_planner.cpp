@@ -75,9 +75,9 @@ build_planner g_city_planner;
 
 static int last_items_cleared;
 
-static const vec2i FORT_OFFSET[4][4] = {{{3, -1}, {4, -1}, {4, 0}, {3, 0}}, 
-                                        {{-1, -4}, {0, -4}, {0, -3}, {-1, -3}}, 
-                                        {{-4, 0}, {-3, 0}, {-3, 1}, {4, 1}}, 
+static const vec2i FORT_OFFSET[4][4] = {{{3, -1}, {4, -1}, {4, 0}, {3, 0}},
+                                        {{-1, -4}, {0, -4}, {0, -3}, {-1, -3}},
+                                        {{-4, 0}, {-3, 0}, {-3, 1}, {4, 1}},
                                         {{0, 3}, {1, 3}, {1, 4}, {0, 4}}};
 
 const vec2i VIEW_OFFSETS[] = {                    {0, 0},

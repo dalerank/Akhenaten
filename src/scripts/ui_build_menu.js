@@ -27,6 +27,7 @@ build_menu_widget.set_submenu = function(submenu) {
     if (build_menu_widget.selected_submenu == submenu) {
         return
     }
+    build_menu_widget.selected_submenu = submenu
     emit event_build_menu_submenu_changed{ submenu: submenu }
 }
 
@@ -36,7 +37,6 @@ build_menu_widget.init_menu = function(submenu) {
 
     building_menu_ctrl.update_temple_complexes()
 
-    var submenu = build_menu_widget.selected_submenu
     for (var i = 0; i < building_menu.length; i++) {
         if (building_menu[i].id == submenu) {
             var anim = building_menu[i].anim

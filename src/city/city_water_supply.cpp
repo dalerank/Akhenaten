@@ -60,6 +60,6 @@ void city_buildings_t::update_water_supply_houses() {
 
 void city_buildings_t::update_canals_from_water_lifts() {
     OZZY_PROFILER_FUNCTION();
-    
+
     // do nothing
 }

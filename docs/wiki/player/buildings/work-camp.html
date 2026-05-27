@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Work Camp — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .bld-header-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      margin-bottom: 2rem;
+    }
+    .bld-header-right {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .bld-image-wrap {
+      text-align: center;
+    }
+    .bld-image-wrap img {
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      image-rendering: pixelated;
+    }
+    .bld-image-wrap figcaption {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+    .bld-infobox {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.9rem 1.1rem;
+    }
+    .bld-infobox h4 {
+      margin: 0 0 0.6rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--gold);
+    }
+    .bld-infobox dl {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.2rem 1rem;
+      margin: 0;
+    }
+    .bld-infobox dt { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; padding-top: 0.1rem; }
+    .bld-infobox dd { margin: 0; font-size: 0.85rem; color: var(--text); }
+    .bld-infobox .sep { grid-column: 1/-1; border: none; border-top: 1px solid var(--border); margin: 0.4rem 0; }
+    .bld-stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .bld-stat { text-align: center; }
+    .bld-stat .val { font-size: 1.3rem; font-weight: 700; color: var(--gold); display: block; }
+    .bld-stat .lbl { font-size: 0.7rem; color: var(--text-muted); }
+    .risk-med { color: #d09050; }
+    .risk-none { color: var(--text-muted); }
+    .des-neg { color: #d07070; }
+    .chain-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.8rem 1.1rem;
+      margin: 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-size: 0.88rem;
+      flex-wrap: wrap;
+    }
+    .chain-box .step {
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 3px;
+      padding: 0.3rem 0.7rem;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .chain-box .arrow { color: var(--gold); font-size: 1.1rem; }
+    .chain-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin: 0.4rem 0 0;
+      display: block;
+    }
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .kw  { color: #c9a84c; } .num { color: #9ecbff; } .str { color: #7ec87e; } .cmt { color: #5a5650; font-style: italic; } .fn { color: #8aabdc; } .ev { color: #d0a0e0; }
+    .file-ref { display: inline-block; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .msg-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+    .msg-table th, .msg-table td { padding: 0.3rem 0.6rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+    .msg-table th { color: var(--text-muted); font-weight: normal; }
+    .bld-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .bld-nav a { color: var(--gold); }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+    .season-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+      margin: 1rem 0;
+    }
+    .season-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.8rem 1rem;
+    }
+    .season-card h4 {
+      margin: 0 0 0.45rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--gold);
+    }
+    .season-card p { margin: 0; font-size: 0.85rem; color: var(--text); }
+    @media (max-width: 600px) { .season-box { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">← All Buildings</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Floodplain Farming</div>
+        <ul>
+          <li><a href="work-camp.html" class="active">Work Camp</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Food Production</div>
+        <ul>
+          <li><a href="hunting-lodge.html">Hunting Lodge</a></li>
+          <li><a href="fishing-wharf.html">Fishing Wharf</a></li>
+          <li><a href="cattle-ranch.html">Cattle Ranch</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#mechanics">Mechanics</a></li>
+          <li><a href="#distance">Distance &amp; output</a></li>
+          <li><a href="#monuments">Monument work</a></li>
+          <li><a href="#placement">Placement</a></li>
+          <li><a href="#tips">Tips</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Buildings</a> /
+        Work Camp
+      </div>
+
+      <h1>Work Camp</h1>
+
+      <div class="bld-header-grid">
+        <figure class="bld-image-wrap">
+          <img src="work-camp.webp" alt="Work Camp in-game sprite" width="122" height="116" />
+          <figcaption>In-game sprite</figcaption>
+        </figure>
+        <div class="bld-header-right">
+          <div>
+            <p>The <strong>Work Camp</strong> is the backbone of floodplain agriculture. Floodplain farms have no workers of their own — they rely entirely on peasant laborers dispatched from nearby Work Camps to till, sow, and harvest their fields. Without a Work Camp within walking distance, a floodplain farm will sit idle and produce nothing.</p>
+            <p>Work Camps serve a second role during the annual Inundation, when the Nile floods the fields and no farming is possible. The same laborers are redirected to the city's monument construction sites, hauling stone and bricks to skilled guild workers who build the great monuments of Egypt.</p>
+            <p>Meadow farms operate independently and do not need a Work Camp — only floodplain farms require peasant labor.</p>
+          </div>
+          <div class="bld-infobox">
+            <h4>Stats</h4>
+            <div class="bld-stat-row" style="margin-bottom:0.9rem">
+              <div class="bld-stat"><span class="val">2×2</span><span class="lbl">Size</span></div>
+              <div class="bld-stat"><span class="val">20</span><span class="lbl">Workers</span></div>
+              <div class="bld-stat"><span class="val des-neg">−3</span><span class="lbl">Desirability</span></div>
+            </div>
+            <hr class="sep" />
+            <dl>
+              <dt>Cost (Normal)</dt>
+              <dd>40 Db</dd>
+              <dt>Cost by difficulty</dt>
+              <dd style="font-size:0.78rem;color:var(--text-muted)">
+                VE 12 · Easy 20 · <strong style="color:var(--text)">Normal 40</strong> · Hard 80 · VH 120
+              </dd>
+              <dt>Labor category</dt>
+              <dd>Industry &amp; Commerce</dd>
+              <dt>Fire risk</dt>
+              <dd class="risk-med">Medium (4)</dd>
+              <dt>Damage risk</dt>
+              <dd>Low (2)</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Labor flow ─────────────────────────────────────── -->
+      <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.3rem">Growing season (Nile receding)</p>
+      <div class="chain-box">
+        <span class="step"><strong>Work Camp</strong></span>
+        <span class="arrow">→</span>
+        <span class="step">Laborer (walker)</span>
+        <span class="arrow">→</span>
+        <span class="step">Floodplain Farm (tills &amp; harvests)</span>
+        <span class="arrow">→</span>
+        <span class="step">Cartpusher</span>
+        <span class="arrow">→</span>
+        <span class="step"><a href="granary.html">Granary</a></span>
+      </div>
+
+      <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.3rem">Inundation (fields flooded)</p>
+      <div class="chain-box">
+        <span class="step"><strong>Work Camp</strong></span>
+        <span class="arrow">→</span>
+        <span class="step">Laborer (walker)</span>
+        <span class="arrow">→</span>
+        <span class="step">Monument site (hauls stone blocks)</span>
+        <span class="arrow">→</span>
+        <span class="step">Guild workers place materials</span>
+      </div>
+
+      <!-- ─── Overview ──────────────────────────────────────── -->
+      <h2 id="overview">Overview</h2>
+      <p>Ancient Egypt's agricultural system was built around the Nile's annual flood cycle. Each year the river overflowed its banks, depositing a layer of rich, dark silt across the flood plain. When the waters retreated, the land was extraordinarily fertile — but the window to farm it was narrow, and the farms had no permanent buildings on the floodplain since the next flood would destroy them. Peasant labor gangs, organized from nearby settlements, were assigned to work the fields during the growing season.</p>
+      <p>The same peasants became monument builders during the Inundation. The construction of the great pyramids and tombs was not slave labour — it was organized corvée, a seasonal obligation fulfilled by free farmers who had nothing to do while their fields were underwater. The state fed, housed, and provisioned them. Work Camps in the game represent these staging points where peasant gangs were organized and dispatched.</p>
+
+      <!-- ─── Mechanics ─────────────────────────────────────── -->
+      <h2 id="mechanics">Mechanics</h2>
+
+      <div class="season-box">
+        <div class="season-card">
+          <h4>Growing Season</h4>
+          <p>Once per month the Work Camp dispatches a single Laborer figure. The laborer walks via roads to the nearest floodplain farm that needs a worker — one with no current laborer and fewer than 48 days of work remaining in its current cycle. When the laborer arrives, the farm begins its 96-day work cycle (roughly six months). At harvest time the farm sends out a cartpusher and resets, ready for the next laborer.</p>
+        </div>
+        <div class="season-card">
+          <h4>Inundation</h4>
+          <p>When the Nile floods the plains, floodplain farms can no longer receive laborers. The Work Camp instead dispatches its laborer to the nearest active monument construction site (phase 0 or 1). The laborer walks to the site, levels an uncompleted tile, and returns. This cycle continues until the flood recedes and farming resumes.</p>
+        </div>
+      </div>
+
+      <p>A farm signals that it needs a new laborer when it is <em>halfway through</em> its current work cycle (at day 47 of 96). This pre-emptive request lets the Work Camp dispatch a replacement in time for seamless, uninterrupted farming across the nine-month growing season. If the Work Camp is too far away, or already has a laborer en route, the gap between laborers will cause the farm to stall.</p>
+
+      <h3>Staffing and output</h3>
+      <p>The Work Camp requires <strong>20 workers</strong> from the city's labor pool. Understaffed camps dispatch laborers less frequently — a camp with very few workers may go months between dispatches, leaving farms idle. Keep the camp fully staffed by ensuring a nearby <a href="housing.html">housing cluster</a> can reach it via road.</p>
+
+      <!-- ─── Distance ──────────────────────────────────────── -->
+      <h2 id="distance">Distance and output</h2>
+      <p>Distance from Work Camp to farm has two effects:</p>
+      <ol>
+        <li><strong>Travel time.</strong> The laborer must walk the full distance on foot using the road network. A distant farm means the laborer spends more time travelling and less time working, which reduces how many farms a single Work Camp can service.</li>
+        <li><strong>Worker effectiveness.</strong> When a laborer arrives, the number of effective farm workers is calculated based on how far the laborer walked. A laborer from a camp right next to the farm grants the farm its full workforce (up to 10 workers). One from a camp 20 tiles away grants only the minimum (2 workers), reducing the farm's yield.</li>
+      </ol>
+
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Camp-to-farm distance</th><th>Effective farm workers</th><th>Impact</th></tr></thead>
+          <tbody>
+            <tr><td>0–2 tiles</td><td>10 (maximum)</td><td>Full yield</td></tr>
+            <tr><td>~10 tiles</td><td>~6</td><td>Reduced yield</td></tr>
+            <tr><td>~17 tiles</td><td>2 (minimum)</td><td>Minimal yield</td></tr>
+            <tr><td>&gt; 20 tiles</td><td>2 (capped minimum)</td><td>Minimal yield</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>One fully staffed Work Camp can support <strong>four to six nearby floodplain farms</strong> without interruption. Beyond six farms, some will occasionally miss a labor cycle and produce less. If monument construction is also needed, fewer laborers are available for farming during the inundation, which can leave some farms short at the start of the following growing season.</p>
+
+      <!-- ─── Monument work ──────────────────────────────────── -->
+      <h2 id="monuments">Monument work</h2>
+      <p>Work Camps are also the primary source of unskilled labor for monument construction. Guild workers (Bricklayers, Stonemasons, Carpenters) provide the skilled craftsmanship but cannot move materials themselves — that task falls to the laborers from Work Camps, who haul blocks from Storage Yards to the construction site by sledge.</p>
+      <p>Monument construction speed is directly tied to how many Work Camps are active. During the growing season, laborers split their time between farms and monuments. During the Inundation, all laborers become available for monument work exclusively. Building additional Work Camps beyond what your farms require accelerates monument construction by keeping more laborers available year-round.</p>
+      <p>The laborer walks to the monument site, works on a single uncompleted tile, then returns to the Work Camp and the cycle starts again. If all monument tiles are either completed or already being worked by other laborers, the laborer turns back immediately.</p>
+
+      <!-- ─── Placement ─────────────────────────────────────── -->
+      <h2 id="placement">Placement</h2>
+      <p>Place Work Camps <strong>close to both the farms and the monument site</strong>. Laborers have a finite walking budget — a long walk means fewer work cycles per month and lower farm yields. As a rough guide, keep Work Camps within 10–15 road tiles of the farms they serve.</p>
+      <p>Work Camps require <strong>road access</strong>. Laborers leave via road and cannot reach farms or monuments on disconnected paths. Always verify road continuity between camp, farms, and monument.</p>
+      <p>Desirability is −3 at the building, falling off over 3 tiles. This is relatively mild compared to other industrial buildings. It is still worth grouping Work Camps with other low-desirability buildings — granaries, bazaars — on the edge of the farming zone, away from the housing cluster you want to evolve.</p>
+
+      <!-- ─── Tips ──────────────────────────────────────────── -->
+      <h2 id="tips">Tips</h2>
+      <ul>
+        <li>Build your first Work Camp as soon as floodplain farms are available — no camp means no farm output, regardless of how many farms you place.</li>
+        <li>One Work Camp per 4–5 farms is a reliable ratio for the early game. Add a second camp when farms start missing their labor cycle (right-click a farm to see its worker status).</li>
+        <li>Place Work Camps closer to farms than monuments — during the inundation laborers will walk farther since there is nothing else to do, but during the growing season travel time directly costs yield.</li>
+        <li>If a monument is stalling with guild workers idle at the site, the bottleneck is usually Work Camps, not materials. Add more camps to accelerate delivery.</li>
+        <li>Multiple construction sites compete for the same laborer pool. Avoid running two monument projects simultaneously unless you have significantly more Work Camps than your farms require.</li>
+        <li>Fire risk is Medium (4). Route a <a href="firehouse.html">Firehouse</a> patrol through the Work Camp cluster, especially when it sits next to wooden farm structures.</li>
+      </ul>
+
+      <!-- ─── Developer reference ──────────────────────────── -->
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">All paths relative to the repository root.</p>
+
+        <details>
+          <summary>Building config — <code>src/scripts/building/config.js</code></summary>
+          <div class="details-body">
+            <p>The static parameters are defined in <span class="file-ref">src/scripts/building/config.js</span> under the <code>building_work_camp</code> key (line 286).</p>
+            <pre><code><span class="kw">building_work_camp</span> = {
+  <span class="kw">animations</span> : {
+    <span class="kw">preview</span> : { pos:[<span class="num">0</span>,<span class="num">0</span>], pack:PACK_GENERAL, id:<span class="num">77</span> },
+    <span class="kw">base</span>    : { pos:[<span class="num">0</span>,<span class="num">0</span>], pack:PACK_GENERAL, id:<span class="num">77</span> },
+    <span class="kw">work</span>    : { pos:[<span class="num">25</span>,<span class="num">-12</span>], pack:PACK_GENERAL, id:<span class="num">77</span>,
+                offset:<span class="num">1</span>, max_frames:<span class="num">19</span>, can_reverse:<span class="kw">true</span>, duration:<span class="num">3</span> },
+    <span class="kw">minimap</span> : { pack:PACK_GENERAL, id:<span class="num">149</span>, offset:<span class="num">160</span> },
+  },
+  <span class="kw">labor_category</span> : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  <span class="kw">meta</span> : { help_id:<span class="num">81</span>, text_id:<span class="num">179</span> }
+  <span class="kw">info_sound</span> : <span class="str">"Wavs/eng_r.wav"</span>
+  <span class="kw">building_size</span> : <span class="num">2</span>,
+  <span class="kw">cost</span>          : [ <span class="num">12</span>, <span class="num">20</span>, <span class="num">40</span>, <span class="num">80</span>, <span class="num">120</span> ]   <span class="cmt">// VeryEasy … VeryHard</span>
+  <span class="kw">desirability</span>  : { value:[-<span class="num">3</span>], step:[<span class="num">1</span>], step_size:[<span class="num">1</span>], range:[<span class="num">3</span>] }
+  <span class="kw">laborers</span> : [<span class="num">20</span>],  <span class="kw">fire_risk</span> : [<span class="num">4</span>],  <span class="kw">damage_risk</span> : [<span class="num">2</span>]
+
+  <span class="kw">flags</span> { is_food: <span class="kw">true</span> }
+}</code></pre>
+            <p>The <code>desirability</code> gradient: −3 at the building tile, improving by 1 per tile over 3 tiles (reaches 0 at 3 tiles out).</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Spawn logic — <code>src/building/building_work_camp.cpp</code></summary>
+          <div class="details-body">
+            <p>The Work Camp's core behavior lives in <span class="file-ref">src/building/building_work_camp.cpp</span>.</p>
+            <p><code>determine_worker_needed()</code> scans all valid buildings and picks the nearest eligible target by squared distance:</p>
+            <pre><code><span class="cmt">// Floodplain farm eligible when:</span>
+<span class="cmt">//   - Nile is in FLOOD_STATE_FARMABLE</span>
+<span class="cmt">//   - farm has road access</span>
+<span class="cmt">//   - farm->requested_workers() returns true</span>
+<span class="cmt">//     (no current worker, labor_days_left &lt;= 47, num_workers == 0)</span>
+
+<span class="cmt">// Monument eligible when:</span>
+<span class="cmt">//   - monument phase &lt; 2  (still under construction)</span>
+<span class="cmt">//   - monument needs workers</span></code></pre>
+            <p><code>spawn_figure()</code> creates a <code>FIGURE_LABORER</code> with the destination returned by <code>determine_worker_needed()</code>. The flag <code>gameplay_change_work_camp_one_worker_per_month</code> limits spawning to one laborer per month when enabled (tracked by <code>base.spawned_worker_this_month</code>, reset in <code>update_month()</code>).</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Laborer behavior — <code>src/figuretype/figure_worker.cpp</code></summary>
+          <div class="details-body">
+            <p>The <code>figure_worker</code> class in <span class="file-ref">src/figuretype/figure_worker.cpp</span> drives the laborer walker. Key state transitions:</p>
+            <pre><code><span class="cmt">// ACTION_10_WORKER_GOING — walking to destination via roads</span>
+<span class="cmt">// On arrival at a floodplain farm:</span>
+b_dest->num_workers = std::<span class="fn">clamp</span>&lt;<span class="kw">int</span>&gt;(
+    (<span class="num">1</span>.f - bhome->tile.<span class="fn">dist</span>(b_dest->tile) / <span class="num">20</span>.f) * <span class="num">12</span>,
+    <span class="num">2</span>, <span class="num">10</span>
+);
+d.work_camp_id   = bhome->id;
+d.labor_days_left = <span class="num">96</span>;   <span class="cmt">// ~6 months</span>
+d.labor_state    = LABOR_STATE_JUST_ENTERED;
+
+<span class="cmt">// ACTION_10_WORKER_GOING — on arrival at a monument:</span>
+<span class="cmt">// Find first uncompleted tile, set its progress to 1,</span>
+<span class="cmt">// walk to that tile and level it (ACTION_12_WORKER_LEVELING_GROUND)</span>
+
+<span class="cmt">// ACTION_13_WORKER_BACK_FROM_WORKS — returning to the Work Camp</span></code></pre>
+            <p>The effective worker count formula means proximity matters significantly: a camp 0–2 tiles away grants the maximum 10 workers; one 17+ tiles away grants only the minimum 2. This directly affects farm yield at harvest.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Farm interaction — <code>src/building/building_farm.cpp</code></summary>
+          <div class="details-body">
+            <p>The <code>requested_workers()</code> method in <span class="file-ref">src/building/building_farm.cpp</span> (line 256) determines when a farm asks for a new laborer:</p>
+            <pre><code><span class="kw">bool</span> building_farm::<span class="fn">requested_workers</span>() <span class="kw">const</span> {
+    <span class="kw">auto</span> &d = <span class="fn">runtime_data</span>();
+    <span class="kw">return</span> !d.worker_id &amp;&amp; d.labor_days_left &lt;= <span class="num">47</span> &amp;&amp; !<span class="fn">num_workers</span>();
+}</code></pre>
+            <p>A farm with <code>labor_days_left</code> between 1 and 47 (the second half of the 96-day cycle) actively requests a new worker from any nearby Work Camp. After harvest the farm resets: <code>work_camp_id = 0</code>, <code>labor_state = LABOR_STATE_NONE</code>, <code>num_workers = 0</code>.</p>
+            <p>The farm's <code>runtime_data_t</code> fields relevant to Work Camp interaction:</p>
+            <pre><code><span class="kw">uint8_t</span>          labor_days_left;   <span class="cmt">// 0 = idle, 96 = freshly assigned</span>
+<span class="kw">e_labor_state</span>    labor_state;       <span class="cmt">// NONE / PRESENT / JUST_ENTERED</span>
+<span class="kw">building_id</span>      work_camp_id;      <span class="cmt">// ID of the Work Camp that sent this laborer</span>
+<span class="kw">figure_id</span>        worker_id;         <span class="cmt">// ID of the laborer figure currently assigned</span></code></pre>
+          </div>
+        </details>
+
+        <details>
+          <summary>UI window — <code>src/scripts/ui_work_camp_window.js</code></summary>
+          <div class="details-body">
+            <p>The right-click info panel is defined in <span class="file-ref">src/scripts/ui_work_camp_window.js</span>. It displays a status message based on the current state of the Work Camp's laborer:</p>
+            <pre><code><span class="kw">if</span> (b.has_road_access == <span class="kw">false</span>)  <span class="cmt">→ "no road access"</span>
+<span class="kw">else if</span> (b.num_workers == <span class="num">0</span>)    <span class="cmt">→ "needs workers"  (text_id 2)</span>
+<span class="kw">else if</span> (dest.is_farm)          <span class="cmt">→ "working on floodplains" (id 5)</span>
+<span class="kw">else if</span> (dest.is_monument)      <span class="cmt">→ "working on monuments"   (id 6)</span>
+<span class="kw">else</span>                            <span class="cmt">→ "idle / looking for work" (id 3–4)</span></code></pre>
+            <p>The worker percentage description is drawn from group 179 (the Work Camp's <code>meta.text_id</code>), mapped via <code>Math.approximate_value</code> to one of five qualitative descriptions (IDs 4–8).</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Game messages — <code>src/scripts/game_messages_en.js</code></summary>
+          <div class="details-body">
+            <table class="msg-table">
+              <thead><tr><th>Key</th><th>Approx. line</th><th>When shown</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><code>message_work_camp_history</code> (group ~78)</td>
+                  <td>~78</td>
+                  <td>History panel — full narrative on corvée labor, farm-to-camp ratios, and monument work. Triggered from in-game help (help_id 8).</td>
+                </tr>
+                <tr>
+                  <td>Farming section (group ~557)</td>
+                  <td>~557</td>
+                  <td>Farming overview — explains floodplain vs meadow farms and the role of Work Camps. Referenced via help_id 45 (Farming).</td>
+                </tr>
+              </tbody>
+            </table>
+            <p style="margin-top:0.6rem">The Work Camp building name is string <code>text_id 179</code> in the localization tables. <code>help_id 81</code> maps to the in-game help panel for the building.</p>
+          </div>
+        </details>
+
+      </div><!-- .dev-section -->
+
+      <div class="bld-nav">
+        <a href="index.html">← All Buildings</a>
+        <span style="color:var(--text-muted)">Floodplain Farming</span>
+        <a href="hunting-lodge.html">Hunting Lodge →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>
