@@ -945,9 +945,9 @@ namespace js_helpers {
         bool first = true;
         for (const auto &p : parts) {
             if (!first) {
-                result.cat("+");
+                result.append("+");
             }
-            result.cat(p.c_str());
+            result.append(p.c_str());
             first = false;
         }
         return result;

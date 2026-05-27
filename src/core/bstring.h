@@ -69,11 +69,36 @@ public:
 #pragma clang diagnostic pop
 #endif
 
-    inline ref cat(pcstr s) { snprintf(_data, _size, "%s%s", _data, s); return *this; }
-    inline ref cat(pcstr s1, pcstr s2) { snprintf(_data, _size, "%s%s%s", _data, s1, s2); return *this; }
-    inline ref cat(pcstr s1,pcstr s2, pcstr s3) { snprintf(_data, _size, "%s%s%s%s", _data, s1, s2, s3); return *this; }
-    inline ref cat(pcstr s1,pcstr s2, pcstr s3, pcstr s4) { snprintf(_data, _size, "%s%s%s%s%s", _data, s1, s2, s3, s4); return *this; }
-    inline ref cat(pcstr*s1,pcstr s2, pcstr s3, pcstr s4, pcstr s5) { snprintf(_data, _size, "%s%s%s%s%s%s", _data, s1, s2, s3, s4, s5); return *this; }
+    inline ref cat(pcstr s) {
+        size_t used = ::strlen(_data);
+        if (used + 1 >= _size) { return *this; }
+        ::snprintf(_data + used, _size - used, "%s", s);
+        return *this;
+    }
+    inline ref cat(pcstr s1, pcstr s2) {
+        size_t used = ::strlen(_data);
+        if (used + 1 >= _size) { return *this; }
+        ::snprintf(_data + used, _size - used, "%s%s", s1, s2);
+        return *this;
+    }
+    inline ref cat(pcstr s1, pcstr s2, pcstr s3) {
+        size_t used = ::strlen(_data);
+        if (used + 1 >= _size) { return *this; }
+        ::snprintf(_data + used, _size - used, "%s%s%s", s1, s2, s3);
+        return *this;
+    }
+    inline ref cat(pcstr s1, pcstr s2, pcstr s3, pcstr s4) {
+        size_t used = ::strlen(_data);
+        if (used + 1 >= _size) { return *this; }
+        ::snprintf(_data + used, _size - used, "%s%s%s%s", s1, s2, s3, s4);
+        return *this;
+    }
+    inline ref cat(pcstr s1, pcstr s2, pcstr s3, pcstr s4, pcstr s5) {
+        size_t used = ::strlen(_data);
+        if (used + 1 >= _size) { return *this; }
+        ::snprintf(_data + used, _size - used, "%s%s%s%s%s", s1, s2, s3, s4, s5);
+        return *this;
+    }
 
     inline ref ncat(pcstr s, size_t cnt) { ::strncat(_data, s, cnt); return *this; }
     inline bool operator!() const { return empty(); }

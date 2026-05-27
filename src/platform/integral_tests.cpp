@@ -88,6 +88,68 @@ void run_es_hash_unit_tests() {
                   "es_hash_str with xstring section");
 }
 
+// Regression: bstring::cat() previously used snprintf(_data, _size, "%s%s", _data, s),
+// which aliased source and destination buffers — undefined behavior per C11
+// §7.21.6.5/2. MSVC/UCRT tolerated it, glibc dropped the prefix and broke
+// es_hash_str on Linux. These tests pin the contract explicitly so a future
+// rewrite cannot silently regress.
+void run_bstring_cat_unit_tests() {
+    {
+        bstring64 b;
+        b.cat("a");
+        b.cat("+");
+        b.cat("b");
+        expect_eq_str(b, "a+b", "bstring::cat chained 3 calls");
+    }
+
+    {
+        bstring64 b;
+        b.cat("init");
+        b.cat("+");
+        b.cat("main_menu_screen");
+        expect_eq_str(b, "init+main_menu_screen", "bstring::cat chained long strings");
+    }
+
+    {
+        bstring64 b = "init+";
+        // Direct self-aliasing: pass our own buffer as the source.
+        // Must not lose the prefix.
+        b.cat(b.c_str());
+        expect_eq_str(b, "init+init+", "bstring::cat self-aliasing");
+    }
+
+    {
+        bstring64 b = "abc";
+        b.cat("d", "e");
+        expect_eq_str(b, "abcde", "bstring::cat 2-arg overload");
+    }
+
+    {
+        bstring64 b = "abc";
+        b.cat("d", "e", "f");
+        expect_eq_str(b, "abcdef", "bstring::cat 3-arg overload");
+    }
+
+    {
+        bstring64 b = "abc";
+        b.cat("d", "e", "f", "g");
+        expect_eq_str(b, "abcdefg", "bstring::cat 4-arg overload");
+    }
+
+    {
+        bstring64 b = "abc";
+        b.cat("d", "e", "f", "g", "h");
+        expect_eq_str(b, "abcdefgh", "bstring::cat 5-arg overload");
+    }
+
+    {
+        // Overflow guard: should not write past the buffer.
+        bstring<8> b = "1234567";
+        b.cat("XYZ");
+        expect_true(b.len() < 8, "bstring::cat respects capacity");
+    }
+}
+
 void run_integral_tests_impl() {
     expect_true(SDL_strlen("abc") == 3, "SDL_strlen sample");
     expect_true(SDL_strcmp("x", "x") == 0, "SDL_strcmp sample");
@@ -99,6 +161,7 @@ void run_integral_tests_impl() {
     const xstring ver = get_version();
     expect_true(!ver.empty(), "get_version() non-empty");
 
+    run_bstring_cat_unit_tests();
     run_es_hash_unit_tests();
 }
 
