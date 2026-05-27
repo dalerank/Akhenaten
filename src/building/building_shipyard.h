@@ -42,3 +42,5 @@ public:
 };
 ANK_CONFIG_STRUCT(building_shipyard::static_params,
     warship_progress_cost, transport_progress_cost, fishingboat_progress_cost)
+
+ANK_CONFIG_PROPERTY(building_shipyard::runtime_data_t, process_type, reparing, progress)

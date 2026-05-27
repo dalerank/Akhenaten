@@ -111,6 +111,11 @@ int __city_count_industry_total(int resource) {
 }
 ANK_FUNCTION_1(__city_count_industry_total)
 
+bool __city_buildings_ships_requested() {
+    return g_city.buildings.fishing_boats_requested > 0 || g_city.buildings.warships_requested > 0;
+}
+ANK_FUNCTION(__city_buildings_ships_requested)
+
 void __city_show_warning(pcstr id) {
     events::emit(event_construction_warning{ id });
 }

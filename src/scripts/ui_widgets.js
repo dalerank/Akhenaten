@@ -217,23 +217,6 @@ health_info_window = {
     })
 }
 
-shipyard_info_window = {
-    ui : baseui(building_info_window, {
-        background    : outer_panel({size: [29, 18]}),
-        warning_text  : text({pos: [28, 40], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-        inner_panel   : inner_panel({pos : [16, 150], size: [27, 5],
-                                                                ui : {
-                                                                    workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
-                                                                    workers_text : text({pos: [50, 16], text:"${building.num_workers} ${8.12} (${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK}),
-                                                                    workers_desc : text({pos: [50, 32], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
-                                                                }
-                                                            }),
-        ready_prod    : text({pos: [30, 110], size: [px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT }),
-    resource_icon : resource_icon({pos: [32, 130] }),
-        resource_stored : text({pos: [60, 130], size: [px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT }),
-    })
-}
-
 info_window_senet_house = {
     ui : baseui(building_info_window, {
         advice        : text({pos: [36, 164], wrap:400, font : FONT_NORMAL_BLACK_ON_DARK, multiline:true }),

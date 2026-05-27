@@ -4,6 +4,7 @@ import building.config
 import building.prototype
 import building.bazaar
 import building.dock
+import building.shipyard
 import building.roadblock
 import building.house
 import building.mastaba
