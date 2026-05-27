@@ -89,6 +89,7 @@ game_features {
     @gameplay_change_random_mine_or_pit_collapses_take_money {}
     @gameopt_display_size {}
     @gameplay_change_multiple_temple_complexes {}
+    @gameplay_change_work_camp_one_worker_per_month {}
     @count { get: __game_features_count }
 }
 

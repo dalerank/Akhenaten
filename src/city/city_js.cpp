@@ -234,16 +234,6 @@ int __scenario_requests_active_count() {
 }
 ANK_FUNCTION(__scenario_requests_active_count)
 
-int __city_floods_expected_quality() {
-    return g_floods.expected_quality();
-}
-ANK_FUNCTION(__city_floods_expected_quality)
-
-int __city_floods_expected_month() {
-    return g_floods.expected_month();
-}
-ANK_FUNCTION(__city_floods_expected_month)
-
 std::optional<bvariant> __city_get_entertainment_property(pcstr property) {
     return archive_helper::get(g_city.entertainment, property, true);
 }

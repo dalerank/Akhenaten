@@ -450,6 +450,21 @@ city.get_farm = function(building_id) {
     return new Farm(building_id)
 }
 
+city.get_monument = function(building_id) {
+    if (!__building_is_monument(building_id)) {
+        return null
+    }
+    return new Monument(building_id)
+}
+
+city.find_farms = function(tile, radius) {
+    return __city_find_farms(tile, radius)
+}
+
+city.find_monuments = function(tile, radius) {
+    return __city_find_monuments(tile, radius)
+}
+
 city.get_building_params = function(building_id) {
     return {
         id: building_id

@@ -20,6 +20,7 @@ Building.property.stored_clay = { get: function() { return this.stored_resource(
 Building.property.stored_straw = { get: function() { return this.stored_resource(RESOURCE_STRAW) } }
 
 Building.property.has_road_access = { }
+Building.property.spawned_worker_this_month = { }
 Building.property.num_workers = { }
 Building.property.max_workers = { }
 Building.property.type = { }

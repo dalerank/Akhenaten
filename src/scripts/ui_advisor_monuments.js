@@ -3,12 +3,16 @@ log_info("akhenaten: ui advisor monuments started")
 var MONUMENT_PHASE_FINISHED = -1
 
 function monuments_advisor_status_line(bid) {
-    var phase = __building_monument_phase_code(bid)
+    var monument = city.get_monument(bid)
+    if (!monument) {
+        return ""
+    }
+    var phase = monument.phase()
     if (phase === MONUMENT_PHASE_FINISHED) {
         return __loc(5, 32)
     }
-    var pct = __building_monument_material_pct_min(bid)
-    var totalPh = __building_monument_phases_total(bid)
+    var pct = monument.material_pct_min()
+    var totalPh = monument.phases_total()
     return String(phase) + " / " + String(totalPh) + "    " + String(pct) + "%"
 }
 

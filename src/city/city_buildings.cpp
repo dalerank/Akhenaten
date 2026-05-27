@@ -86,6 +86,34 @@ building_id building_id_closest(e_building_type type, tile2i center, int8_t radi
     return result;
 }
 
+hvector<building_id, 16> buildings_find_farms_in_radius(tile2i center, int radius) {
+    hvector<building_id, 16> result;
+    const float max_dist_sq = (float)(radius * radius);
+    buildings_valid_farms_do([&] (building &b) {
+        if (b.tile.dist_sq(center) <= max_dist_sq) {
+            result.push_back(b.id);
+        }
+    });
+    return result;
+}
+
+hvector<building_id, 16> buildings_find_monuments_in_radius(tile2i center, int radius) {
+    hvector<building_id, 16> result;
+    const float max_dist_sq = (float)(radius * radius);
+    for (auto &b : city_buildings()) {
+        if (!b.is_valid() || !b.is_monument()) {
+            continue;
+        }
+        if (&b != b.main()) {
+            continue;
+        }
+        if (b.tile.dist_sq(center) <= max_dist_sq) {
+            result.push_back(b.id);
+        }
+    }
+    return result;
+}
+
 building *building_first(e_building_type type) {
     for (int i = 1; i < MAX_BUILDINGS; ++i) {
         building *b = building_get(i);

@@ -7,6 +7,7 @@ import building.dock
 import building.shipyard
 import building.roadblock
 import building.house
+import building.monument
 import building.mastaba
 import building.pyramid
 import building.farm
@@ -31,3 +32,4 @@ import building.granary
 import building.health
 import building.architect_post
 import building.courthouse
+import building.work_camp

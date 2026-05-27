@@ -44,9 +44,13 @@ function city_update_monthly_monument_rating(ev) {
 		if (!w) {
 			continue
 		}
-		var phase = __building_monument_phase_code(bid)
-		var phases = __building_monument_phases_total(bid)
-		var mat = __building_monument_material_pct_min(bid)
+		var monument = city.get_monument(bid)
+		if (!monument) {
+			continue
+		}
+		var phase = monument.phase()
+		var phases = monument.phases_total()
+		var mat = monument.material_pct_min()
 
 		var progress = 0
 		if (phase == -1) {

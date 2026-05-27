@@ -437,7 +437,7 @@ function advisor_chief_window_update_kingdom(window) {
 }
 
 function advisor_chief_window_update_nilometr(window) {
-	var flood_quality = __city_floods_expected_quality()
+	var flood_quality = city.floods.expected_quality()
 	var text_id
 	var font
 	if (flood_quality === 100) {
@@ -462,7 +462,7 @@ function advisor_chief_window_update_nilometr(window) {
 
 	var text = __loc(61, text_id)
 	if (flood_quality > 0) {
-		text += " " + __loc(61, 204 + __city_floods_expected_month())
+		text += " " + __loc(61, 204 + city.floods.expected_month())
 	}
 	advisor_chief_push_wrapped_section_rows(text, __loc("#chief_adv_nilometr"), font)
 }

@@ -21,6 +21,10 @@ Farm.prototype.set_worker = function(action, coords) {
   __farm_set_worker(this.id, action, coords)
 }
 
+Farm.prototype.requested_workers = function() {
+  return __farm_requested_workers(this.id)
+}
+
 // end prototype for farm buildings
 
 building_meadow_farm_tile_offsets = [

@@ -17,6 +17,7 @@ import city_kingdome
 import city_finance
 import city_ratings
 import city_festival
+import city_floods
 import city_monuments
 import city_labor
 import images

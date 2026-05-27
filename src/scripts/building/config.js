@@ -283,26 +283,6 @@ building_bazaar {
   }
 }
 
-building_work_camp = {
-  animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:77 },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:77 },
-    work : { pos : [ 25, -12], pack:PACK_GENERAL, id:77, offset:1, max_frames:19, can_reverse:true, duration:3 },
-    minimap: {pack:PACK_GENERAL, id:149, offset:160},
-  },
-  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  meta : { help_id: 81, text_id: 179 }
-  info_sound : "Wavs/eng_r.wav"
-  building_size : 2,
-  cost:  [ 12, 20, 40, 80, 120 ]
-  desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
-  laborers:[20], fire_risk:[4], damage_risk: [2]
-
-  flags {
-    is_food: true
-  }
-}
-
 building_water_supply {
   animations {
     preview { pack:PACK_GENERAL, id:69 }

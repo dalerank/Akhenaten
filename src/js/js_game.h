@@ -14,6 +14,8 @@
 #include "core/vec2i.h"
 #include "core/archive.h"
 #include "core/variant.h"
+#include "core/svector.h"
+#include "core/hvector.h"
 #include "grid/grid.h"
 #include "grid/point.h"
 
@@ -262,6 +264,24 @@ namespace js_helpers {
     template<>
     inline void js_push_value<e_resource>(js_State *J, e_resource value) {
         js_pushnumber(J, (int)value);
+    }
+
+    template<typename T, size_t Cap>
+    inline void js_push_value(js_State *J, const svector<T, Cap> &arr) {
+        js_newarray(J);
+        for (size_t i = 0; i < arr.size(); ++i) {
+            js_pushnumber(J, (double)arr[i]);
+            js_setindex(J, -2, (int)i);
+        }
+    }
+
+    template<typename T, size_t Cap>
+    inline void js_push_value(js_State *J, const hvector<T, Cap> &arr) {
+        js_newarray(J);
+        for (size_t i = 0; i < arr.size(); ++i) {
+            js_pushnumber(J, (double)arr[i]);
+            js_setindex(J, -2, (int)i);
+        }
     }
 
     inline void js_push_bvariant(js_State *J, const bvariant &val) {

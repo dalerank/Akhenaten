@@ -444,7 +444,7 @@ private:
     void destroy_linked_parts(bool on_fire);
 };
 ANK_CONFIG_PROPERTY(building, has_road_access, num_workers, max_workers, type,
-    collapse_risk, fire_risk, structure_damage,
+    collapse_risk, fire_risk, structure_damage, spawned_worker_this_month,
     current_desirability, has_water_access, has_well_access, curse_days_left)
 
 #define BUILDING_METAINFO(type, clsid, base_class)                                                      \

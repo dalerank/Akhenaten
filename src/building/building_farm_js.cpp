@@ -26,3 +26,9 @@ void __farm_set_worker(int bid, int action, vec2i coords) {
     }
 }
 ANK_FUNCTION_3(__farm_set_worker)
+
+bool __farm_requested_workers(int bid) {
+    building_farm *farm = building_get(bid)->dcast_farm();
+    return farm && farm->requested_workers();
+}
+ANK_FUNCTION_1(__farm_requested_workers)

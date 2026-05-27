@@ -2,6 +2,8 @@
 
 #include "building/building.h"
 #include "core/custom_span.hpp"
+#include "core/svector.h"
+#include "core/hvector.h"
 
 inline building *building_begin() { return building_get(1); }
 inline building *building_end() { return building_get(MAX_BUILDINGS); }
@@ -13,6 +15,9 @@ building *building_next(building_id id, e_building_type type);
 building_id building_id_first(e_building_type type);
 building_id building_id_random(e_building_type type);
 building_id building_id_closest(e_building_type type, tile2i center, int8_t radius);
+
+hvector<building_id, 16> buildings_find_farms_in_radius(tile2i center, int radius);
+hvector<building_id, 16> buildings_find_monuments_in_radius(tile2i center, int radius);
 
 building *building_first(e_building_type type);
 

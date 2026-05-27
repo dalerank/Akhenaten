@@ -11,13 +11,11 @@
 #include "city/object_info.h"
 #include "window/window_info.h"
 #include "building/building.h"
-#include "building/monuments.h"
 #include "city_buildings.h"
 #include "game/resource.h"
 #include "core/profiler.h"
 #include "core/svector.h"
 
-#include <algorithm>
 #include <optional>
 
 static svector<building_id, 512> g_city_monuments_advisor_cache;
@@ -53,53 +51,6 @@ int __city_monuments_list_id_at(int index) {
     return g_city_monuments_advisor_cache[index];
 }
 ANK_FUNCTION_1(__city_monuments_list_id_at)
-
-int __building_monument_phase_code(int bid) {
-    building *b = building_get(bid);
-    if (!b || !b->is_valid() || !b->is_monument()) {
-        return -99;
-    }
-    building_monument *m = b->main()->dcast_monument();
-    if (!m) {
-        return -99;
-    }
-    return m->runtime_data().phase;
-}
-ANK_FUNCTION_1(__building_monument_phase_code)
-
-int __building_monument_phases_total(int bid) {
-    building *b = building_get(bid);
-    if (!b || !b->is_valid() || !b->is_monument()) {
-        return 0;
-    }
-    building_monument *m = b->main()->dcast_monument();
-    return m ? m->phases() : 0;
-}
-ANK_FUNCTION_1(__building_monument_phases_total)
-
-int __building_monument_material_pct_min(int bid) {
-    building *b = building_get(bid);
-    if (!b || !b->is_valid() || !b->is_monument()) {
-        return 0;
-    }
-    building_monument *m = b->main()->dcast_monument();
-    if (!m || m->runtime_data().phase == MONUMENT_FINISHED) {
-        return 100;
-    }
-    auto &d = m->runtime_data();
-    int min_pct = 100;
-    bool any = false;
-    for (int ri = (int)RESOURCES_MIN; ri <= (int)RESOURCES_MAX; ++ri) {
-        const auto r = (e_resource)ri;
-        if (m->needs_resource(r) <= 0) {
-            continue;
-        }
-        any = true;
-        min_pct = std::min(min_pct, (int)d.resources_pct[r]);
-    }
-    return any ? min_pct : 100;
-}
-ANK_FUNCTION_1(__building_monument_material_pct_min)
 
 int __city_count_industry_active(int resource) {
     return g_city.buildings.count_industry_active((e_resource)resource);
@@ -251,3 +202,13 @@ bool __city_resource_is_mothballed(int resource) {
     return g_city.resource.is_mothballed((e_resource)resource);
 }
 ANK_FUNCTION_1(__city_resource_is_mothballed)
+
+hvector<building_id, 16> __city_find_farms(tile2i center, int radius) {
+    return buildings_find_farms_in_radius(center, radius);
+}
+ANK_FUNCTION_2(__city_find_farms)
+
+hvector<building_id, 16> __city_find_monuments(tile2i center, int radius) {
+    return buildings_find_monuments_in_radius(center, radius);
+}
+ANK_FUNCTION_2(__city_find_monuments)
