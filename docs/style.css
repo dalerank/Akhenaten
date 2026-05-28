@@ -1324,3 +1324,67 @@ footer a:hover {
     max-width: 100%;
   }
 }
+
+/* ── Lightbox ── */
+.lb-zoomable {
+  cursor: zoom-in;
+}
+
+#lb-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(0, 0, 0, 0.88);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  outline: none;
+}
+
+#lb-overlay.lb-visible {
+  display: flex;
+}
+
+#lb-img {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border: 1px solid #3a3020;
+  border-radius: 3px;
+  image-rendering: pixelated;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+}
+
+#lb-caption {
+  color: #9a8f78;
+  font-size: 0.82rem;
+  text-align: center;
+  max-width: 60ch;
+}
+
+#lb-close {
+  position: fixed;
+  top: 1rem;
+  right: 1.25rem;
+  background: none;
+  border: 1px solid #3a3020;
+  color: #e8dfc8;
+  font-size: 1.1rem;
+  line-height: 1;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 3px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#lb-close:hover {
+  background: rgba(201,168,76,0.12);
+  border-color: #c9a84c;
+  color: #c9a84c;
+}

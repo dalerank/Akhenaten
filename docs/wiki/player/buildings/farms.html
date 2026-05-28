@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Farms — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .bld-infobox {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 1.2rem;
+    }
+    .bld-infobox h4 {
+      margin: 0 0 0.6rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--gold);
+    }
+    .bld-infobox dl {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.2rem 1rem;
+      margin: 0;
+    }
+    .bld-infobox dt { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; padding-top: 0.1rem; }
+    .bld-infobox dd { margin: 0; font-size: 0.85rem; color: var(--text); }
+    .bld-infobox .sep { grid-column: 1/-1; border: none; border-top: 1px solid var(--border); margin: 0.4rem 0; }
+    .des-neg { color: #d07070; }
+    .chain-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.8rem 1.1rem;
+      margin: 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-size: 0.88rem;
+      flex-wrap: wrap;
+    }
+    .chain-box .step {
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 3px;
+      padding: 0.3rem 0.7rem;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .chain-box .arrow { color: var(--gold); font-size: 1.1rem; }
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .kw  { color: #c9a84c; } .num { color: #9ecbff; } .str { color: #7ec87e; } .cmt { color: #5a5650; font-style: italic; } .fn { color: #8aabdc; } .ev { color: #d0a0e0; }
+    .file-ref { display: inline-block; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+    .bld-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .bld-nav a { color: var(--gold); }
+    .type-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+      margin: 1rem 0;
+    }
+    .type-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.85rem 1rem;
+    }
+    .type-card h4 {
+      margin: 0 0 0.4rem;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--gold);
+    }
+    .type-card p { margin: 0; font-size: 0.84rem; color: var(--text); line-height: 1.5; }
+    @media (max-width: 600px) { .type-grid { grid-template-columns: 1fr; } }
+    .progress-table th, .progress-table td { padding: 0.25rem 0.6rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+    .progress-table th { color: var(--text-muted); font-weight: normal; }
+    .tag-ind {
+      font-size: 0.68rem; font-family: 'Consolas', monospace;
+      background: rgba(200,100,100,0.1); border: 1px solid rgba(200,100,100,0.25);
+      color: #d07070; border-radius: 2px; padding: 0.05rem 0.35rem;
+      vertical-align: middle; margin-left: 0.3rem; white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">← All Buildings</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Farming</div>
+        <ul>
+          <li><a href="farms.html" class="active">Farms (overview)</a></li>
+          <li><a href="work-camp.html">Work Camp</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Food Production</div>
+        <ul>
+          <li><a href="hunting-lodge.html">Hunting Lodge</a></li>
+          <li><a href="fishing-wharf.html">Fishing Wharf</a></li>
+          <li><a href="cattle-ranch.html">Cattle Ranch</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#flood-cycle">Flood cycle</a></li>
+          <li><a href="#floodplain">Floodplain farms</a></li>
+          <li><a href="#meadow">Meadow farms</a></li>
+          <li><a href="#crops">All crop types</a></li>
+          <li><a href="#fertility">Fertility &amp; yield</a></li>
+          <li><a href="#placement">Placement</a></li>
+          <li><a href="#tips">Tips</a></li>
+          <li><a href="#original">Original game</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Buildings</a> /
+        Farms
+      </div>
+
+      <h1>Farms</h1>
+
+      <div class="bld-infobox">
+        <h4>Common stats — all farm types</h4>
+        <dl>
+          <dt>Size</dt><dd>3×3</dd>
+          <dt>Cost (Normal)</dt><dd>15 Db &nbsp;<span style="font-size:0.75rem;color:var(--text-muted)">VE 8 · Easy 10 · Normal 15 · Hard 20 · VH 50</span></dd>
+          <dt>Workers (meadow)</dt><dd>10 — own labor pool</dd>
+          <dt>Workers (floodplain)</dt><dd>none — supplied by <a href="work-camp.html">Work Camp</a></dd>
+          <dt>Desirability</dt><dd class="des-neg">−2, fading over 2 tiles</dd>
+          <dt>Fire / damage risk</dt><dd>None — farms are fire-proof and damage-proof</dd>
+          <dt>Labor category</dt><dd>Food Production</dd>
+        </dl>
+      </div>
+
+      <div style="display:flex;gap:1.5rem;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap">
+        <figure style="margin:0;text-align:center;flex-shrink:0">
+          <img src="farms.gif" alt="Floodplain farms in various growth stages" style="display:block;border:1px solid var(--border);border-radius:3px;image-rendering:pixelated;max-width:220px" />
+          <figcaption style="font-size:0.7rem;color:var(--text-muted);margin-top:0.35rem">Floodplain farms — tiling, seeding, harvest</figcaption>
+        </figure>
+        <p style="margin:0">Farms are Egypt's primary source of food and several important raw materials. There are eight crop types, each available in two variants: a <strong>floodplain farm</strong> that works only during the growing season and depends on <a href="work-camp.html">Work Camp</a> labor, and a <strong>meadow farm</strong> that operates year-round on irrigated meadow land using its own workforce. The two variants produce identical crops from the same building footprint, but differ significantly in how they are managed.</p>
+      </div>
+
+      <!-- ─── Overview ──────────────────────────────────────── -->
+      <h2 id="overview">Overview</h2>
+      <p>Egyptian agriculture was inseparable from the Nile. Every year the river flooded, depositing rich dark silt across its banks. When the waters receded, that soil could sustain extraordinary yields — but for one season only. The Egyptians mastered this rhythm over millennia: they timed their planting to the receding flood, harvested before the next inundation, and organized large gangs of peasant laborers to work the fields during the growing season. Beyond the flood plains, patches of green meadow land could be cultivated year-round with the help of irrigation.</p>
+      <p>The three great Egyptian seasons were <em>akhet</em> (inundation), <em>peret</em> (emergence/growing), and <em>shemu</em> (harvest). Most of the campaign's food comes from floodplain farms in peret and shemu. Industrial crops — barley for beer, flax for linen, henna for paint — also grow on both terrain types and feed the city's workshops.</p>
+
+      <!-- ─── Flood cycle ───────────────────────────────────── -->
+      <h2 id="flood-cycle">The Nile flood cycle</h2>
+      <p>The game models the Nile flood through six states that advance each year. Floodplain farms are only active during <strong>FARMABLE</strong>; they are submerged and locked during all other states.</p>
+
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Flood state</th><th>What happens on farms</th></tr></thead>
+          <tbody>
+            <tr><td><strong>FARMABLE</strong></td><td>Growing season — <a href="work-camp.html">Work Camp</a> laborers walk to farms; progress accumulates</td></tr>
+            <tr><td><strong>IMMINENT</strong></td><td>Harvest trigger — farms with progress &gt; 0 and road access spawn a cartpusher to deliver the crop</td></tr>
+            <tr><td><strong>FLOODING</strong></td><td>Water rising — farms are submerged; no activity</td></tr>
+            <tr><td><strong>INUNDATED</strong></td><td>Peak flood — full submersion; floodplain tiles reset fertility</td></tr>
+            <tr><td><strong>CONTRACTING</strong></td><td>Water receding — tiles re-emerging</td></tr>
+            <tr><td><strong>RESTING</strong></td><td>Ground drying — farms can be (re)built; no production yet</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>The exact month of the inundation varies slightly each year. A Temple Complex dedicated to <strong>Osiris</strong> improves the quality of the flood, which increases farm yields. In years of weak inundation, soil fertility is lower and harvests are smaller.</p>
+
+      <!-- ─── Floodplain ────────────────────────────────────── -->
+      <h2 id="floodplain">Floodplain farms</h2>
+      <p>Floodplain farms occupy fertile land along the Nile banks. They have <strong>no permanent building</strong> on site — structures on the floodplain are swept away by the annual flood. Because of this, they cannot employ workers directly. Instead, they rely entirely on peasant laborers dispatched from a nearby <a href="work-camp.html">Work Camp</a>.</p>
+
+      <div class="chain-box">
+        <span class="step">Nile flood → fertile silt</span>
+        <span class="arrow">→</span>
+        <span class="step"><a href="work-camp.html">Work Camp</a> laborer</span>
+        <span class="arrow">→</span>
+        <span class="step"><strong>Floodplain Farm</strong> (grows for ~6 months)</span>
+        <span class="arrow">→</span>
+        <span class="step">Cartpusher (at harvest)</span>
+        <span class="arrow">→</span>
+        <span class="step"><a href="granary.html">Granary</a> or <a href="../buildings/storage-yard.html">Storage Yard</a></span>
+      </div>
+
+      <p>The farm's <strong>progress</strong> counter (0–2000) advances while a laborer is present. Progress represents the three farming phases visible on the field — tiling, seeding, and harvesting — which are animated as the counter rises. At the start of the IMMINENT flood state, any farm with progress &gt; 0 dispatches a cartpusher to deliver the harvest, then resets to zero to await the next cycle.</p>
+
+      <h3>Labor cycle</h3>
+      <p>When a laborer arrives from a Work Camp, the farm gains a <code>num_workers</code> value (2–10) based on how far the Work Camp is from the farm — closer camps grant more effective workers. The laborer works the farm for roughly 96 game days (~6 months). When the farm reaches the halfway point of the laborer's term, it flags itself as needing a new worker — this pre-emptive request allows the Work Camp to send a replacement before the farm goes idle.</p>
+      <p>Without a Work Camp within walking distance, a floodplain farm will produce nothing regardless of how fertile the soil is.</p>
+
+      <!-- ─── Meadow ─────────────────────────────────────────── -->
+      <h2 id="meadow">Meadow farms</h2>
+      <p>Meadow farms sit on the lighter green meadow tiles away from the Nile banks. Unlike floodplain farms, they have a <strong>permanent building</strong> (farm house) on site, employ their own workers, and are never flooded. They harvest multiple times per year at fixed calendar months.</p>
+
+      <div class="chain-box">
+        <span class="step"><strong>Meadow Farm</strong> (workers on site)</span>
+        <span class="arrow">→</span>
+        <span class="step">Cartpusher (on harvest month)</span>
+        <span class="arrow">→</span>
+        <span class="step"><a href="granary.html">Granary</a> or <a href="../buildings/storage-yard.html">Storage Yard</a></span>
+      </div>
+
+      <p>Meadow farms need road access and draw workers from the city's labor pool like any other building. They harvest on specific months (see the crop table below) — the cartpusher only appears on day 1–2 of the harvest month. Because meadow land is less fertile than floodplain land, meadow farms yield less per harvest than a well-serviced floodplain farm in a good flood year.</p>
+
+      <h3>Irrigation</h3>
+      <p>Meadow tiles farther from the Nile are drier and less fertile. Building <strong>Irrigation Ditches</strong> across meadow terrain, fed by a <strong>Water Lift</strong> at the riverbank, increases those tiles' fertility and raises farm output. The denser the yellow vegetation tufts on a tile, the more fertile it is — always check the terrain before placing a meadow farm.</p>
+
+      <!-- ─── Crops table ───────────────────────────────────── -->
+      <h2 id="crops">All crop types</h2>
+
+      <h3>Food crops</h3>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead>
+            <tr><th>Crop</th><th>Output</th><th>Floodplain harvests</th><th>Meadow harvests</th><th>Downstream use</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Grain</strong></td>
+              <td>grain + straw (1:10)</td>
+              <td>January, May</td>
+              <td>January, May</td>
+              <td>grain → <a href="granary.html">Granary</a> → food; straw → Cattle Ranch, Brickworks, Zoo</td>
+            </tr>
+            <tr>
+              <td><strong>Lettuce</strong></td>
+              <td>lettuce</td>
+              <td>April</td>
+              <td>April</td>
+              <td>Food variety for housing evolution</td>
+            </tr>
+            <tr>
+              <td><strong>Chickpeas</strong></td>
+              <td>chickpeas</td>
+              <td>April</td>
+              <td>April</td>
+              <td>Food variety for housing evolution</td>
+            </tr>
+            <tr>
+              <td><strong>Pomegranates</strong></td>
+              <td>pomegranates</td>
+              <td>June, November</td>
+              <td>June, November</td>
+              <td>Food variety; two harvests per year</td>
+            </tr>
+            <tr>
+              <td><strong>Figs</strong></td>
+              <td>figs</td>
+              <td>September</td>
+              <td>September</td>
+              <td>Food variety for housing evolution</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Industrial crops <span class="tag-ind">raw material</span></h3>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead>
+            <tr><th>Crop</th><th>Output</th><th>Floodplain harvests</th><th>Meadow harvests</th><th>Downstream use</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Barley</strong></td>
+              <td>barley</td>
+              <td>February, August</td>
+              <td>February, August</td>
+              <td>Brewery → beer (for housing, Senet House, festivals)</td>
+            </tr>
+            <tr>
+              <td><strong>Flax</strong></td>
+              <td>flax</td>
+              <td>December</td>
+              <td>December</td>
+              <td>Weaver → linen (for Mortuary, housing evolution)</td>
+            </tr>
+            <tr>
+              <td><strong>Henna</strong></td>
+              <td>henna</td>
+              <td>December</td>
+              <td>December</td>
+              <td>Paint Workshop → paint (for Royal Burial Tombs)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Industrial crops deliver to workshops rather than Granaries. A cartpusher from a Barley Farm will walk to the nearest Brewery; a Flax Farm sends flax to the nearest Weaver. If no workshop can accept the goods, they go to a Storage Yard. Industrial crops do not satisfy hunger — they cannot be stored in Granaries and are not distributed by Bazaars as food.</p>
+
+      <!-- ─── Fertility ─────────────────────────────────────── -->
+      <h2 id="fertility">Fertility and yield</h2>
+      <p>Floodplain tiles have an inherent <strong>fertility</strong> value (0–100) based on their proximity to the Nile and the quality of the most recent flood. The farm tile's visual darkness reflects this — dark brown silt = high fertility, pale tan = low fertility. Eight visual levels are rendered based on the fertility index.</p>
+      <p>At harvest, the yield formula is:</p>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:0.6rem 1rem;margin:0.75rem 0;font-family:'Consolas','Courier New',monospace;font-size:0.82rem">
+        yield = (progress / 2.5) × modifier<br/>
+        <span style="color:var(--text-muted)">// modifier = 1 + produce_multiplier/100 (Osiris blessing doubles yield: modifier = 2)</span><br/>
+        <span style="color:var(--text-muted)">// floodplain: ready_production = progress × fertility / 100</span>
+      </div>
+      <p>A farm at 100% progress (2000) on 100% fertile soil with no blessings delivers the theoretical maximum. In practice, partial harvests are common — a farm whose laborer arrived late in the growing season will have lower progress and deliver less.</p>
+
+      <h3>Soil depletion</h3>
+      <p>Every harvest depletes the soil: tile fertility drops significantly after a crop is taken. The next flood naturally restores fertility — so floodplain farms that experience a strong inundation start the next season with good fertility regardless of the previous harvest. Conversely, if the flood is weak, tiles may still be depleted from the prior year, and yields will be lower. Osiris worship is the primary tool for ensuring strong floods.</p>
+
+      <h3>Osiris blessing</h3>
+      <p>An active Osiris blessing (from a Temple Complex of Osiris) doubles the harvest modifier. This is the single largest yield multiplier in the game. Even a partially-progressed farm under an Osiris blessing can outperform a full-progress farm without one.</p>
+
+      <!-- ─── Placement ─────────────────────────────────────── -->
+      <h2 id="placement">Placement</h2>
+      <p>Placement allows a farm as long as at least <strong>4 of the 9 tiles</strong> (3×3 footprint) sit on valid terrain (floodplain or meadow). The remaining tiles may be on non-farmable ground — the ghost preview highlights invalid tiles in red so you can see exactly what you are getting.</p>
+      <p>For <strong>floodplain farms</strong>, position matters in two ways:</p>
+      <ul>
+        <li><strong>Fertility:</strong> tiles close to the Nile bank are more fertile. Place farms as close to the water as the terrain allows.</li>
+        <li><strong>Distance to Work Camp:</strong> the closer the Work Camp, the more effective workers the laborer grants (up to 10 at short range, minimum 2 at 20+ tiles). Effective workers directly affect yield. Keep the Work Camp within 10–15 road tiles.</li>
+      </ul>
+      <p>For <strong>meadow farms</strong>, place them on the darkest, most dense meadow tiles visible. Connect them to a road — without road access, the cartpusher cannot leave. Irrigation Ditches running from a Water Lift along the river can increase fertility of tiles that are far from water.</p>
+      <p>All farms are fire-proof and damage-proof — no Firehouse or Architect's Post coverage is needed.</p>
+
+      <!-- ─── Tips ──────────────────────────────────────────── -->
+      <h2 id="tips">Tips</h2>
+      <ul>
+        <li>Floodplain farms produce only one crop per year. Build enough <a href="granary.html">Granaries</a> to store the entire harvest before placing farms — if all Granaries are full when the cartpusher arrives, the food is lost.</li>
+        <li>Pomegranates and Barley each harvest twice a year (floodplain and meadow). They are efficient crops when your Nile has a long growing season.</li>
+        <li>Grain farms produce straw as a free byproduct at a 10:1 ratio. If you have Cattle Ranches or Brickworks, a single Grain Farm can supply a small amount of straw without dedicated effort.</li>
+        <li>Industrial crops (Barley, Flax, Henna) go directly to workshops, not Granaries. Build the workshop <em>before</em> the farm, or the first harvest cartpusher will wander looking for a destination and end up at a Storage Yard.</li>
+        <li>One Barley Farm can typically supply two Breweries at full output. Scale proportionally.</li>
+        <li>Meadow farms are more consistent than floodplain farms in poor-flood years — they are never affected by inundation quality. Use them for industrial crops if your Osiris mood is unreliable.</li>
+        <li>Flax and Henna both harvest in December — if you need linen <em>and</em> paint, their cartpushers will compete for road space at the same time. Plan your road network accordingly.</li>
+        <li>The Bazaar distributes food from Granaries to housing. Make sure the Bazaar's <em>Special Orders</em> accept the food types your farms produce — by default some food types may be disabled.</li>
+      </ul>
+
+      <!-- ─── Original game ───────────────────────────────── -->
+      <h2 id="original">In the original game</h2>
+      <p style="font-size:0.88rem;color:var(--text-muted)">Screenshots from <em>Cleopatra: Queen of the Nile</em> (Impressions Games, 2000).</p>
+      <div style="display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start;margin:1rem 0 1.5rem">
+        <figure style="margin:0;text-align:center">
+          <img src="farms-floodplain-rc.webp" alt="Floodplain farm right-click info window from the original game"
+               style="border:1px solid var(--border);border-radius:3px;display:block;image-rendering:pixelated;max-width:300px" />
+          <figcaption style="font-size:0.72rem;color:var(--text-muted);margin-top:0.4rem">
+            Floodplain farm — right-click panel showing flood status, progress, and fertility
+          </figcaption>
+        </figure>
+        <figure style="margin:0;text-align:center">
+          <img src="farms-meadow-rc.webp" alt="Meadow farm right-click info window from the original game"
+               style="border:1px solid var(--border);border-radius:3px;display:block;image-rendering:pixelated;max-width:300px" />
+          <figcaption style="font-size:0.72rem;color:var(--text-muted);margin-top:0.4rem">
+            Meadow farm — right-click panel showing worker status, progress, and fertility
+          </figcaption>
+        </figure>
+      </div>
+
+      <!-- ─── Developer reference ──────────────────────────── -->
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">All paths relative to the repository root.</p>
+
+        <details>
+          <summary>Building config — <code>src/scripts/building/farm.js</code></summary>
+          <div class="details-body">
+            <p>All 16 farm variants are defined in <span class="file-ref">src/scripts/building/farm.js</span>. Each entry follows the same structure; here is the floodplain grain farm as a representative example:</p>
+            <pre><code><span class="kw">building_farm_grain</span> {
+  <span class="kw">output</span>  { resource: RESOURCE_GRAIN, resource_second: RESOURCE_STRAW }
+  <span class="kw">output_resource_second_rate</span> : <span class="num">10</span>   <span class="cmt">// 1 straw per 10 grain</span>
+
+  <span class="kw">building_size</span>  : <span class="num">3</span>
+  <span class="kw">month_harvest</span>  : [MONTH_JANUARY, MONTH_MAY]
+  <span class="kw">progress_max</span>   : <span class="num">2000</span>
+  <span class="kw">fire_proof</span>     : <span class="kw">true</span>
+  <span class="kw">damage_proof</span>   : <span class="kw">true</span>
+  <span class="kw">labor_category</span> : LABOR_CATEGORY_FOOD_PRODUCTION
+
+  <span class="kw">cost</span>          [ <span class="num">8</span>, <span class="num">10</span>, <span class="num">15</span>, <span class="num">20</span>, <span class="num">50</span> ]  <span class="cmt">// VeryEasy … VeryHard</span>
+  <span class="kw">desirability</span>  { value:[-<span class="num">2</span>], step:[<span class="num">1</span>], step_size:[<span class="num">1</span>], range:[<span class="num">2</span>] }
+  <span class="kw">laborers</span>[<span class="num">10</span>],  <span class="kw">fire_risk</span>[<span class="num">0</span>],  <span class="kw">damage_risk</span>[<span class="num">0</span>]
+  <span class="kw">meta</span> { help_id:<span class="num">89</span>, text_id:<span class="num">112</span> }
+  <span class="kw">tile_offsets</span> : building_floodplain_farm_tile_offsets
+}</code></pre>
+            <p>Meadow variants use <code>building_meadow_farm_tile_offsets</code> (5-tile layout) instead of the 9-tile floodplain layout. The <code>month_harvest</code> array controls when meadow farms dispatch their cartpusher — the check fires on day 1–2 of each listed month.</p>
+
+            <p><strong>Harvest month reference (both variants):</strong></p>
+            <table class="wiki-table" style="margin-top:0.5rem">
+              <thead><tr><th>Crop</th><th>Harvest months</th><th>Harvests/year</th></tr></thead>
+              <tbody>
+                <tr><td>Grain</td><td>January, May</td><td>2</td></tr>
+                <tr><td>Lettuce</td><td>April</td><td>1</td></tr>
+                <tr><td>Chickpeas</td><td>April</td><td>1</td></tr>
+                <tr><td>Pomegranates</td><td>June, November</td><td>2</td></tr>
+                <tr><td>Figs</td><td>September</td><td>1</td></tr>
+                <tr><td>Barley</td><td>February, August</td><td>2</td></tr>
+                <tr><td>Flax</td><td>December</td><td>1</td></tr>
+                <tr><td>Henna</td><td>December</td><td>1</td></tr>
+              </tbody>
+            </table>
+            <p style="margin-top:0.6rem"><em>Note: for floodplain farms the month_harvest values are not the trigger — harvest is triggered by FLOOD_STATE_IMMINENT regardless of month. The month_harvest field is only used by meadow farms.</em></p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Farm C++ class — <code>src/building/building_farm.cpp</code></summary>
+          <div class="details-body">
+            <p>All farm types share the <code>building_farm</code> base class in <span class="file-ref">src/building/building_farm.cpp</span>. Key methods:</p>
+            <pre><code><span class="cmt">// Yield calculation at harvest (floodplain):</span>
+<span class="kw">int</span> farm_fertility = map_get_fertility_for_farm(tile());   <span class="cmt">// 0–100</span>
+d.ready_production = d.progress * farm_fertility / <span class="num">100</span>;
+<span class="kw">int</span> yield = <span class="fn">expected_produce</span>();
+<span class="cmt">// expected_produce() = (progress / 2.5) * modifier</span>
+<span class="cmt">// modifier = 1 + produce_multiplier/100  (or 2.0 under Osiris blessing)</span>
+
+<span class="cmt">// Placement rule: 4 of 9 tiles must be TERRAIN_FLOODPLAIN | TERRAIN_MEADOW</span>
+
+<span class="cmt">// Soil depletion after harvest:</span>
+<span class="kw">void</span> building_farm::<span class="fn">deplete_soil</span>() {
+    <span class="cmt">// reduces each tile's fertility malus proportional to progress</span>
+    <span class="kw">int</span> new_fert = map_get_fertility(offset, FERT_WITH_MALUS) * <span class="num">0.2</span>f;
+    <span class="kw">int</span> malus = new_fert - map_get_fertility(offset, FERT_NO_MALUS);
+    map_soil_set_depletion(offset, malus);
+}</code></pre>
+            <p>The fertility tile image is chosen from 8 frames based on <code>clamp(fert_average / 12, 0, 7)</code> — so a fertility of 96+ shows the darkest, most fertile tile, and 0–11 shows the palest.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Worker animation — <code>src/scripts/building/farm.js</code></summary>
+          <div class="details-body">
+            <p>The JS update handler in <span class="file-ref">src/scripts/building/farm.js</span> maps progress to a visual farm worker position. For floodplain farms (progress 0–2000):</p>
+            <table class="wiki-table progress-table" style="margin-top:0.5rem">
+              <thead><tr><th>Progress range</th><th>Worker action</th><th>Position</th></tr></thead>
+              <tbody>
+                <tr><td>0 – 399</td><td>hidden</td><td>—</td></tr>
+                <tr><td>400 – 999</td><td>tiling</td><td>moves across 6 tiles</td></tr>
+                <tr><td>1000 – 1199</td><td>seeding</td><td>3 tiles</td></tr>
+                <tr><td>1200 – 2000</td><td>harvesting</td><td>8 tiles progressively</td></tr>
+              </tbody>
+            </table>
+            <p style="margin-top:0.6rem">Meadow farms use a simpler 5-step layout with coarser progress thresholds (0/100/400/800/1200/1600).</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Flood states — <code>src/city/city_floods.h</code></summary>
+          <div class="details-body">
+            <p>The flood state enum is defined in <span class="file-ref">src/city/city_floods.h</span>:</p>
+            <pre><code><span class="kw">enum</span> e_flood_state {
+    FLOOD_STATE_IMMINENT    = <span class="num">1</span>,  <span class="cmt">// harvest trigger for floodplain farms</span>
+    FLOOD_STATE_FLOODING    = <span class="num">2</span>,
+    FLOOD_STATE_INUNDATED   = <span class="num">3</span>,  <span class="cmt">// full flood; fertility restored by Nile</span>
+    FLOOD_STATE_CONTRACTING = <span class="num">4</span>,
+    FLOOD_STATE_RESTING     = <span class="num">5</span>,
+    FLOOD_STATE_FARMABLE    = <span class="num">6</span>,  <span class="cmt">// Work Camp laborers dispatched; progress grows</span>
+};</code></pre>
+            <p><code>g_floods.state_is(FLOOD_STATE_FARMABLE)</code> is checked in <span class="file-ref">src/building/building_work_camp.cpp</span> before dispatching a laborer. <code>FLOOD_STATE_IMMINENT</code> is checked in <code>building_farm::time_to_deliver()</code> to trigger the cartpusher.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>In-game help messages — <code>src/scripts/game_messages_en.js</code></summary>
+          <div class="details-body">
+            <table class="wiki-table" style="margin-top:0.3rem">
+              <thead><tr><th>Key</th><th>ID</th><th>Covers</th></tr></thead>
+              <tbody>
+                <tr><td><code>message_building_grain_farm</code></td><td>89</td><td>Grain Farm — straw byproduct, Cattle Ranch and Brickworks supply</td></tr>
+                <tr><td><code>message_building_fruit_vegetables_farm</code></td><td>90</td><td>All food fruit/veg farms — lettuce, chickpeas, pomegranates, figs</td></tr>
+                <tr><td><code>message_building_barley_flax_henna_farm</code></td><td>91</td><td>Industrial farms — barley, flax, henna; downstream workshops</td></tr>
+                <tr><td><code>message_farming</code></td><td>150</td><td>History — akhet/peret/shemu seasons, corvée labor, field of reeds</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+      </div><!-- .dev-section -->
+
+      <div class="bld-nav">
+        <a href="index.html">← All Buildings</a>
+        <span style="color:var(--text-muted)">Farming</span>
+        <a href="work-camp.html">Work Camp →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+  <script src="../../../lightbox.js"></script>
+</body>
+</html>
