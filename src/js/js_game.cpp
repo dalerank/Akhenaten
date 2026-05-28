@@ -72,8 +72,6 @@ void js_log_warn_native(js_State *J) {
     J->pushundefined();
 }
 
-// Integraltests-only bindings (__test_*) live in js_test_game.cpp.
-
 void js_loc_native(js_State *J) {
     if (js_isstring(J, 1)) {
         const js_StringNode key_node = js_tostring(J, 1);
@@ -510,7 +508,6 @@ void __game_player_data_new(pcstr name_utf8) {
 void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_log_info_native, "__log_info_native", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_log_warn_native, "__log_warning_native", 1);
-    // __test_* bindings are auto-registered from js_test_game.cpp via FunctionIterator.
     REGISTER_GLOBAL_FUNCTION(J, js_loc_native, "__loc", 2);
     REGISTER_GLOBAL_FUNCTION(J, js_game_load_text, "load_text", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_get_image, "get_image", 1);

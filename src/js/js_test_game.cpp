@@ -16,6 +16,7 @@
 
 #include "building/building.h"
 #include "building/building_static_params.h"
+#include "city/city.h"
 #include "city/city_buildings.h"
 #include "game/game.h"
 #include "io/gamestate/boilerplate.h"
@@ -25,6 +26,8 @@
 #include "empire/empire.h"
 
 #include <SDL.h>
+#include <algorithm>
+#include <cstdio>
 #include <cstring>
 #include <fstream>
 #include <string>
@@ -159,13 +162,13 @@ void __test_run_console_command(pcstr command) {
 }
 ANK_FUNCTION_1(__test_run_console_command);
 
-bool __test_ensure_city_session(pcstr map_path) {
+bool __test_start_city_session(pcstr map_path) {
     if (game.session.active) {
         return true;
     }
 
     if (!GamestateIO::load_map(map_path, false, true)) {
-        logs::error("test_ensure_city_session: load_map(data/default.map) failed");
+        logs::error("test_start_city_session: load_map(%s) failed", map_path);
         return false;
     }
 
@@ -176,8 +179,25 @@ bool __test_ensure_city_session(pcstr map_path) {
 
     return game.session.active;
 }
-ANK_FUNCTION_1(__test_ensure_city_session);
+ANK_FUNCTION_1(__test_start_city_session);
 
+void __test_set_treasury(int amount) {
+    g_city.finance.treasury = amount;
+}
+ANK_FUNCTION_1(__test_set_treasury);
+
+void __test_process_events() {
+    events::process();
+}
+ANK_FUNCTION(__test_process_events);
+
+int __building_static_building_size(int type) {
+    if (type <= BUILDING_NONE || type >= BUILDING_MAX) {
+        return 0;
+    }
+    return std::max(1, (int)building_static_params::get((e_building_type)type).building_size);
+}
+ANK_FUNCTION_1(__building_static_building_size);
 
 static int __test_building_create(int type, int x, int y) {
     if (type <= BUILDING_NONE || type >= BUILDING_MAX) {

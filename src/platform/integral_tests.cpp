@@ -286,6 +286,7 @@ int run_js_tests() {
             ++failed;
             continue;
         }
+        js_vm_sync({}); // run include() queued while loading the test script
         pop_to(J, load_baseline); // discard top-level result residue
         logs::info("[test:%s] script loaded", name.c_str());
 

@@ -3,7 +3,7 @@
 
 function run_test() {
     __log_info_native('[test:10] creating work camp and opening info window')
-    __test_ensure_city_session('data/default.map')
+    test_ensure_city_session('data/default.map')
     var bid = __test_building_create(BUILDING_WORK_CAMP, -1, -1)
     if (!bid) {
         __log_info_native('[test:10] __test_building_create failed')

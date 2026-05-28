@@ -4,7 +4,7 @@
 
 function run_test() {
     __log_info_native('[test:07] opening load savegame file dialog')
-    __test_ensure_city_session('data/default.map')
+    test_ensure_city_session('data/default.map')
     window_file_dialog_load_show(FILE_TYPE_SAVED_GAME)
     __test_pump_frames(10)
 

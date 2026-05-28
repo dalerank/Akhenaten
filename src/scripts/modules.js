@@ -13,6 +13,7 @@ import rating_points
 import animal_herds
 import gods
 import city
+import city_planner
 import city_kingdome
 import city_finance
 import city_ratings
@@ -60,3 +61,4 @@ import player
 import mods
 import empire_map
 import building_menu_ctrl
+import integral_test
