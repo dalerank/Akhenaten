@@ -78,7 +78,7 @@ void building_road::preview::ghost_preview(build_planner &planer, painter &ctx, 
         } else {
             blocked = true;
         }
-    } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR - TERRAIN_FLOODPLAIN)) {
+    } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR - TERRAIN_FLOODPLAIN - TERRAIN_ROAD)) {
         blocked = true;
     } else {
         image_id = image_id_from_group(GROUP_TERRAIN_DIRT_ROAD);
