@@ -6,6 +6,22 @@
 #include "building/building.h"
 #include "game/undo.h"
 #include "grid/figure.h"
+#include "graphics/graphics.h"
+#include "js/js_game.h"
+#include "js/js_struct.h"
+
+struct ghost_preview_ev {
+    tile2i start;
+    tile2i end;
+    vec2i pixel;
+    bool in_progress;
+};
+ANK_REGISTER_STRUCT_WRITER(ghost_preview_ev, start, end, pixel, in_progress)
+
+struct construction_update_ev {
+    int start_x, start_y, end_x, end_y;
+};
+ANK_REGISTER_STRUCT_WRITER(construction_update_ev, start_x, start_y, end_x, end_y)
 
 static std::array<const building_planer_renderer *, BUILDING_MAX> *building_planer_rends = nullptr;
 
@@ -52,6 +68,13 @@ void building_planer_renderer::ghost_blocked(build_planner &planer, painter &ctx
 }
 
 void building_planer_renderer::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
+    const auto &params = building_static_params::get(planer.build_type);
+    const xstring event_name = js_helpers::es_hash_str<64>(params.name, __func__).c_str();
+    if (js_has_event_handlers(event_name)) {
+        es_t(ghost_preview_ev{ start, end, pixel, planer.in_progress }, params.name, __func__);
+        return;
+    }
+
     planer.draw_tile_graphics_array(ctx, start, end, pixel);
 }
 
@@ -94,6 +117,14 @@ int building_planer_renderer::update_building_variant(build_planner &planer) con
 }
 
 int building_planer_renderer::construction_update(build_planner &planer, tile2i start, tile2i end) const {
+    const auto &params = building_static_params::get(planer.build_type);
+    const xstring event_name = js_helpers::es_hash_str<64>(params.name, __func__).c_str();
+    if (js_has_event_handlers(event_name)) {
+        planer.construction_update_items = 0;
+        es_t(construction_update_ev{ start.x(), start.y(), end.x(), end.y() }, params.name, __func__);
+        return planer.construction_update_items;
+    }
+
     if (planer.needMeadow() || planer.needRock()
         || planer.needTrees() || planer.needNearbyWater()
         || planer.needWalls() || planer.needGroundwater()

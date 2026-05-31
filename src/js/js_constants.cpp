@@ -25,6 +25,7 @@
 #include "figuretype/figure_war_ship.h"
 #include "figuretype/figure_worker.h"
 #include "city/city_floods.h"
+#include "grid/terrain.h"
 
 e_advisor_tokens_t ANK_CONFIG_ENUM(e_advisor_tokens);
 e_trade_status_tokens_t ANK_CONFIG_ENUM(e_trade_status_tokens);
@@ -110,6 +111,29 @@ void js_register_game_constants(js_State* J) {
     _R(ACTION_204_WARSHIP_ATTACK)
 
     _R(FLOOD_STATE_FARMABLE)
+
+    _R(TERRAIN_NONE)
+    _R(TERRAIN_TREE)
+    _R(TERRAIN_ROCK)
+    _R(TERRAIN_WATER)
+    _R(TERRAIN_BUILDING)
+    _R(TERRAIN_SHRUB)
+    _R(TERRAIN_GARDEN)
+    _R(TERRAIN_ROAD)
+    _R(TERRAIN_GROUNDWATER)
+    _R(TERRAIN_CANAL)
+    _R(TERRAIN_ELEVATION)
+    _R(TERRAIN_ACCESS_RAMP)
+    _R(TERRAIN_MEADOW)
+    _R(TERRAIN_RUBBLE)
+    _R(TERRAIN_FOUNTAIN_RANGE)
+    _R(TERRAIN_WALL)
+    _R(TERRAIN_GATEHOUSE)
+    _R(TERRAIN_FLOODPLAIN)
+    _R(TERRAIN_FERRY_ROUTE)
+    _R(TERRAIN_MARSHLAND)
+
+    _R(TERRAIN_ROAD_BLOCKED)
 
     _R(MAX_BUILDINGS)
     _R(BUILDING_MAX)

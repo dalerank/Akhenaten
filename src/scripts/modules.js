@@ -13,6 +13,8 @@ import rating_points
 import animal_herds
 import gods
 import city
+import terrain
+import routed_building
 import city_planner
 import city_kingdome
 import city_finance

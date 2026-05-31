@@ -3,6 +3,7 @@
 #include "building_type.h"
 #include "grid/point.h"
 #include "building_fwd.h"
+#include "js/js_game.h"
 
 class build_planner;
 struct painter;
@@ -28,4 +29,10 @@ struct building_planer_renderer {
 
     static void register_model(e_building_type e, const building_planer_renderer &p);
     static const building_planer_renderer &get(e_building_type e);
+
+protected:
+    template<typename T>
+    void es_t(const T &ev, pcstr building_name, pcstr func) const {
+        js_event(ev, building_name, func);
+    }
 };

@@ -1,11 +1,11 @@
 #pragma once
 
 #include "building/building.h"
+#include "core/tokenum.h"
 #include "graphics/color.h"
 #include "graphics/view/view.h"
 #include "grid/point.h"
 #include "grid/terrain.h"
-#include "core/tokenum.h"
 
 enum e_planner_rule : uint8_t {
     Groundwater = 0,
@@ -132,6 +132,7 @@ public:
     bool in_progress;
     sbitarray64 rules;
     bool draw_as_constructing;
+    int construction_update_items = 0;
     tile2i start;
     tile2i end;
     int total_cost;

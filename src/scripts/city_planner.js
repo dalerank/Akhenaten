@@ -1,37 +1,24 @@
 log_info("akhenaten: city_planner.js started")
 
 city_planner = extend(__city_planner, {
-    // 
+    // => build_type
+    // => in_progress
+    // => construction_update_items
+
+    preview_path: null
+
+    update: __city_planner_update
+    can_be_placed: __city_planner_can_be_placed
+    construction_start: __city_planner_construction_start
+    construction_update: __city_planner_construction_update
+    construction_finalize: __city_planner_construction_finalize
+    construction_cancel: __city_planner_construction_cancel
+    last_created_building_id: __city_planner_last_created_building_id
+    validate_last_created: __city_planner_validate_last_created
+
+    draw_blocked: __city_planner_draw_blocked
+    draw_ghost: __city_planner_draw_ghost
+    tile_to_pixel: __lookup_tile_to_pixel
 })
 
-city_planner.update = function(x, y) {
-    __city_planner_update(x, y)
-}
-
-city_planner.can_be_placed = function() {
-    return __city_planner_can_be_placed()
-}
-
-city_planner.construction_start = function(x, y) {
-    __city_planner_construction_start(x, y)
-}
-
-city_planner.construction_update = function(x, y) {
-    __city_planner_construction_update(x, y)
-}
-
-city_planner.construction_finalize = function() {
-    __city_planner_construction_finalize()
-}
-
-city_planner.construction_cancel = function() {
-    __city_planner_construction_cancel()
-}
-
-city_planner.last_created_building_id = function() {
-    return __city_planner_last_created_building_id()
-}
-
-city_planner.validate_last_created = function() {
-    __city_planner_validate_last_created()
-}
+city.planner = city_planner

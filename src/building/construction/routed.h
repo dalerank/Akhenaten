@@ -1,5 +1,6 @@
 #pragma once
 
+#include "grid/point.h"
 #include "grid/routing/routing.h"
 
 struct routed_building_result {

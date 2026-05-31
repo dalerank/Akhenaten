@@ -2,11 +2,19 @@
 
 #include "building/building.h"
 #include "building/construction/build_planner.h"
+#include "core/calc.h"
+#include "game/game.h"
+#include "game/undo.h"
+#include "graphics/graphics.h"
+#include "graphics/view/lookup.h"
+#include "grid/routing/routing.h"
 #include "core/profiler.h"
+#include "mujs/mujs.h"
 
 ANK_GLOBAL_OBJECT(g_city_planner, __city_planner,
     build_type,
-    in_progress
+    in_progress,
+    construction_update_items
 );
 
 void __city_planner_update(int x, int y) {
@@ -52,3 +60,40 @@ void __city_planner_validate_last_created() {
     }
 }
 ANK_FUNCTION(__city_planner_validate_last_created);
+
+void __city_planner_draw_blocked(vec2i pixel) {
+    painter ctx = game.painter();
+    g_city_planner.draw_flat_tile(ctx, pixel, COLOR_MASK_RED);
+}
+ANK_FUNCTION_1(__city_planner_draw_blocked);
+
+void __city_planner_draw_ghost(vec2i pixel, int image_id) {
+    painter ctx = game.painter();
+    g_city_planner.draw_building_ghost(ctx, image_id, pixel);
+}
+ANK_FUNCTION_2(__city_planner_draw_ghost);
+
+vec2i __lookup_tile_to_pixel(tile2i t) {
+    return lookup_tile_to_pixel(t);
+}
+ANK_FUNCTION_1(__lookup_tile_to_pixel);
+
+int __map_routing_distance(tile2i tile) {
+    return map_routing_distance(tile);
+}
+ANK_FUNCTION_1(__map_routing_distance);
+
+int __calc_general_direction(tile2i from, tile2i to) {
+    return calc_general_direction(from, to);
+}
+ANK_FUNCTION_2(__calc_general_direction);
+
+void __game_undo_restore_map(int include_properties) {
+    game_undo_restore_map(include_properties);
+}
+ANK_FUNCTION_1(__game_undo_restore_map);
+
+bool __map_routing_calculate_distances_for_building(int mode, tile2i tile) {
+    return map_routing_calculate_distances_for_building((e_routed_mode)mode, tile);
+}
+ANK_FUNCTION_2(__map_routing_calculate_distances_for_building);

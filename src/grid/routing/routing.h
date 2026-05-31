@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/tokenum.h"
 #include "routing_fwd.h"
 
 class building;
@@ -10,6 +11,8 @@ enum e_routed_mode {
     ROUTED_BUILDING_CANALS = 2,
     ROUTED_BUILDING_CANALS_WITHOUT_GRAPHIC = 4,
 };
+
+using e_routed_mode_tokens_t = token_holder<e_routed_mode, ROUTED_BUILDING_ROAD, (e_routed_mode)3>;
 
 void map_routing_calculate_distances(tile2i tile);
 void map_routing_calculate_distances_water_boat(tile2i tile);
