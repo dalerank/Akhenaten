@@ -2,6 +2,7 @@
 #include "grid/road_canal.h"
 #include "grid/point.h"
 #include "grid/grid.h"
+#include "grid/routing/routing.h"
 #include "building/building_irrigation_ditch.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
@@ -69,9 +70,12 @@ int __map_grid_tiledir_offset(tile2i tile, int direction) {
 }
 ANK_FUNCTION_2(__map_grid_tiledir_offset);
 
-void __map_tile_at_grid_offset(js_State *J) {
-    const int grid_offset = js_tointeger(J, 1);
-    const tile2i tile(grid_offset);
-    js_newvec2i(J, tile.x(), tile.y());
+tile2i __map_tile_at_grid_offset(int grid_offset) {
+    return tile2i(grid_offset);
 }
-ANK_FUNCTION_RAW(__map_tile_at_grid_offset);
+ANK_FUNCTION_1(__map_tile_at_grid_offset);
+
+int __map_routing_distance_at_grid_offset(int grid_offset) {
+    return map_routing_distance(grid_offset);
+}
+ANK_FUNCTION_1(__map_routing_distance_at_grid_offset);

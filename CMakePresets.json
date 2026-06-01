@@ -406,71 +406,71 @@
       "name": "win-msvc-debug-vs2019",
       "configurePreset": "win-msvc-debug-vs2019",
       "configuration": "Debug",
-      "jobs": 0
+      "jobs": 2
     },
     {
       "name": "win-msvc-relwithdebinfo-vs2019",
       "configurePreset": "win-msvc-relwithdebinfo-vs2019",
       "configuration": "RelWithDebInfo",
-      "jobs": 0
+      "jobs": 2
     },
     {
       "name": "win-msvc-debug-vs2022",
       "configurePreset": "win-msvc-debug-vs2022",
       "configuration": "Debug",
-      "jobs": 0
+      "jobs": 2
     },
     {
       "name": "win-msvc-relwithdebinfo-vs2022",
       "configurePreset": "win-msvc-relwithdebinfo-vs2022",
       "configuration": "RelWithDebInfo",
-      "jobs": 0
+      "jobs": 2
     },
     {
       "name": "win-msvc-debug-vs2026",
       "configurePreset": "win-msvc-debug-vs2026",
       "configuration": "Debug",
-      "jobs": 0
+      "jobs": 2
     },
     {
       "name": "win-msvc-relwithdebinfo-vs2026",
       "configurePreset": "win-msvc-relwithdebinfo-vs2026",
       "configuration": "RelWithDebInfo",
-      "jobs": 0
+      "jobs": 2
     },
     {
       "name": "win-msvc-debug-ninja",
       "configurePreset": "win-msvc-debug-ninja",
-      "jobs": 0
+      "jobs": 2
     },
     {
       "name": "win-msvc-relwithdebinfo",
       "configurePreset": "win-msvc-relwithdebinfo",
       "configuration": "RelWithDebInfo",
-      "jobs": 0
+      "jobs": 2
     },
     {
       "name": "win-relwithdebinfo",
       "configurePreset": "win-relwithdebinfo",
       "configuration": "RelWithDebInfo",
-      "jobs": 0
+      "jobs": 2
     },
     {
       "name": "win-debug",
       "configurePreset": "win-debug",
       "configuration": "Debug",
-      "jobs": 0
+      "jobs": 2
     },
     {
       "name": "win-clang-cl-relwithdebinfo",
       "configurePreset": "win-clang-cl-relwithdebinfo",
       "configuration": "RelWithDebInfo",
-      "jobs": 0
+      "jobs": 2
     },
     {
       "name": "win-clang-cl-relwithdebinfo-ninja",
       "configurePreset": "win-clang-cl-relwithdebinfo-ninja",
-      "jobs": 0
+      "jobs": 2
     }
   ]
 }

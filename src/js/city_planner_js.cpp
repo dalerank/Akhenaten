@@ -8,6 +8,8 @@
 #include "graphics/graphics.h"
 #include "graphics/view/lookup.h"
 #include "grid/routing/routing.h"
+#include "building/construction/routed.h"
+#include "grid/image.h"
 #include "core/profiler.h"
 #include "mujs/mujs.h"
 
@@ -97,3 +99,14 @@ bool __map_routing_calculate_distances_for_building(int mode, tile2i tile) {
     return map_routing_calculate_distances_for_building((e_routed_mode)mode, tile);
 }
 ANK_FUNCTION_2(__map_routing_calculate_distances_for_building);
+
+int __place_routed_building(tile2i start, tile2i end, int mode) {
+    const routed_building_result result = place_routed_building(start, end, (e_routed_mode)mode);
+    return result.ok ? result.items : 0;
+}
+ANK_FUNCTION_3(__place_routed_building);
+
+int __map_image_at(tile2i tile) {
+    return map_image_at(tile);
+}
+ANK_FUNCTION_1(__map_image_at);

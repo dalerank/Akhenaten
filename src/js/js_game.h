@@ -134,6 +134,10 @@ namespace js_helpers {
     template<>
     inline tile2i js_to_value<tile2i>(js_State *J, int idx) {
         int x = 0, y = 0;
+        if (J->isobject(idx) && !js_isarray(J, idx) && J->toobject(idx)->type == JS_CVEC2I) {
+            js_Object *o = J->toobject(idx);
+            return tile2i(o->u.vec2.x, o->u.vec2.y);
+        }
         if (J->isobject(idx) && !js_isarray(J, idx)) {
             J->getproperty(idx, property_x);
             x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0;

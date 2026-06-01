@@ -1165,6 +1165,10 @@ void build_planner::update(tile2i cursor_tile) {
     update_requirements_check();
     update_special_case_orientations_check();
     update_unique_only_one_check();
+
+    if (in_progress && draggable()) {
+        construction_update(end);
+    }
 }
 
 void build_planner::draw_flat_tile(vec2i pos, color color_mask, painter &ctx) {

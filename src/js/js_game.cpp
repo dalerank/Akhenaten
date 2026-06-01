@@ -255,6 +255,11 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
                     js_newvec2i(J, pos.x, pos.y);
                 }
                 break;
+            case bvariant::etype_tile2i: {
+                    const tile2i pos = val.as_tile2i();
+                    js_newvec2i(J, pos.x(), pos.y());
+                }
+                break;
             case bvariant::etype_none:
             default:
                 J->pushundefined();
