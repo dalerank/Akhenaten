@@ -82,6 +82,7 @@ game_features {
     @gameopt_sound_city_volume {}
     @gameopt_game_speed {}
     @gameui_sidebar_info {}
+    @gameui_road_preview_in_map_order {}
     @gameopt_scroll_speed {}
     @gameopt_middle_mouse_camera_pan {}
     @gameopt_middle_mouse_pan_speed {}

@@ -15,6 +15,11 @@ bool __map_terrain_is(tile2i tile, int terrain_mask) {
 }
 ANK_FUNCTION_2(__map_terrain_is)
 
+void __map_terrain_add(tile2i tile, int terrain) {
+    map_terrain_add(tile, terrain);
+}
+ANK_FUNCTION_2(__map_terrain_add)
+
 bool __map_terrain_has_adjacent_x_with_type(tile2i tile, int terrain) {
     return map_terrain_has_adjacent_x_with_type(tile.grid_offset(), terrain);
 }

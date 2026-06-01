@@ -1,7 +1,29 @@
 log_info("akhenaten: building_road started")
 
-function building_road_path_has_adjacent_x(tile, pathTiles) {
+function building_road_preview_in_map_order() {
+    return game_features.gameui_road_preview_in_map_order
+}
+
+function building_road_mark_preview_for_map_order(tiles) {
+    if (!building_road_preview_in_map_order()) {
+        return
+    }
+    for (var i = 0; i < tiles.length; i++) {
+        terrain.add(tiles[i], TERRAIN_PLANER_FUTURE)
+    }
+}
+
+function building_road_should_draw_overlay_preview(tile, pathTiles) {
+    if (!building_road_preview_in_map_order()) {
+        return true
+    }
     if (!pathTiles) {
+        return true
+    }
+    return building_road_preview_image(tile, pathTiles).blocked
+}
+
+function building_road_path_has_adjacent_x(tile, pathTiles) {    if (!pathTiles) {
         return false
     }
     for (var i = 0; i < pathTiles.length; i++) {
@@ -109,17 +131,20 @@ function building_road_ghost_preview(ev) {
     if (ev.in_progress) {
         var tiles = city.planner.preview_path
         if (!tiles || tiles.length == 0) {
-            building_road_draw_preview_tile(ev.end, null)
+            if (building_road_should_draw_overlay_preview(ev.end, null)) {
+                building_road_draw_preview_tile(ev.end, null)
+            }
             return
         }
         for (var i = 0; i < tiles.length; i++) {
-            building_road_draw_preview_tile(tiles[i], tiles)
+            if (building_road_should_draw_overlay_preview(tiles[i], tiles)) {
+                building_road_draw_preview_tile(tiles[i], tiles)
+            }
         }
     } else {
         building_road_draw_preview_tile(ev.end, null)
     }
 }
-
 [es=(building_road, construction_update)]
 function building_road_construction_update(ev) {
     __game_undo_restore_map(0)
@@ -140,5 +165,6 @@ function building_road_construction_update(ev) {
 
     var items = __place_routed_building(start, end, ROUTED_BUILDING_ROAD)
     city.planner.preview_path = preview.tiles
+    building_road_mark_preview_for_map_order(preview.tiles)
     city.planner.construction_update_items = items
 }

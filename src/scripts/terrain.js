@@ -5,6 +5,10 @@ terrain = {
         return __map_terrain_is(tile, mask)
     }
 
+    add: function(tile, mask) {
+        __map_terrain_add(tile, mask)
+    }
+
     has_adjacent_x: function(tile, type) {
         return __map_terrain_has_adjacent_x_with_type(tile, type)
     }

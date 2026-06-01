@@ -134,6 +134,7 @@ void js_register_game_constants(js_State* J) {
     _R(TERRAIN_MARSHLAND)
 
     _R(TERRAIN_ROAD_BLOCKED)
+    _R(TERRAIN_PLANER_FUTURE)
 
     _R(MAX_BUILDINGS)
     _R(BUILDING_MAX)

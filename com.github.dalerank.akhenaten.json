@@ -98,71 +98,71 @@
                 },
                 {
                     "type" : "archive",
-                    "url" : "https://github.com/libsdl-org/flac/archive/refs/heads/1.3.4-SDL.tar.gz",
-                    "sha256" : "1588b88d9e7f372a3265a31697b94fd448750e1403ef46179c7b1b27f8b95d01",
+                    "url" : "https://github.com/libsdl-org/flac/archive/833a260a7bc29f80899d33e8c1beb2fc56b4905b.tar.gz",
+                    "sha256" : "4dca01c92c23667aae9518ba629dc7ef53efbe343dfc5e65a341826f16f1a794",
                     "dest" : "_deps/sdl_mixer_deps/flac",
                     "strip-components" : 1
                 },
                 {
                     "type" : "archive",
-                    "url" : "https://github.com/libsdl-org/ogg/archive/refs/heads/v1.3.5-SDL.tar.gz",
-                    "sha256" : "f445e525aa498476aeac314daf73cc0a25d2dd352509eac764e349426401e4ba",
+                    "url" : "https://github.com/libsdl-org/ogg/archive/936fdd822a4e4fc963197b3eda931b89b52859a0.tar.gz",
+                    "sha256" : "30e1012c1a1909f61e1ef27dc72fe072da51641ea826ba32e1f4ebfd3fc24419",
                     "dest" : "_deps/sdl_mixer_deps/ogg",
                     "strip-components" : 1
                 },
                 {
                     "type" : "archive",
-                    "url" : "https://github.com/libsdl-org/vorbis/archive/refs/heads/v1.3.7-SDL.tar.gz",
-                    "sha256" : "c66a4e462bdba9e76cdb0aa1be24d20f971dc05583336a71695f666cb10c7719",
+                    "url" : "https://github.com/libsdl-org/vorbis/archive/eefe62244630a2d2c37ba5e6fb1a1fd8ad93ece5.tar.gz",
+                    "sha256" : "8153e4f9d76ab4aad2b1720d667e6b0c735b59a2fdd9eccd31d9b99da890bc24",
                     "dest" : "_deps/sdl_mixer_deps/vorbis",
                     "strip-components" : 1
                 },
                 {
                     "type" : "archive",
-                    "url" : "https://github.com/libsdl-org/opus/archive/refs/heads/v1.4-SDL.tar.gz",
-                    "sha256" : "2046223c8545d331bdabb3c2ef4c80581898623cd8c8decbff45d93d1b5951d8",
+                    "url" : "https://github.com/libsdl-org/opus/archive/123a9faf5598ceef6fcb6d44bbadc4f9469945a6.tar.gz",
+                    "sha256" : "745eac7ec7aac30162c2e5c921dc979ec961174ee7e19d0ba377664242b9d8e4",
                     "dest" : "_deps/sdl_mixer_deps/opus",
                     "strip-components" : 1
                 },
                 {
                     "type" : "archive",
-                    "url" : "https://github.com/libsdl-org/opusfile/archive/refs/heads/v0.12-SDL.tar.gz",
-                    "sha256" : "4a15459e4c5094cf7b5b3983def25f7ba5cffb6245b85eaaabbfb34df50f8b2f",
+                    "url" : "https://github.com/libsdl-org/opusfile/archive/d820a66af7ba7fdda346b5b439baca9a2f04dd7f.tar.gz",
+                    "sha256" : "4c80a2351c6bd48c939cf0fe357ee9f65e888742386ea1f7653a4abb32fceb93",
                     "dest" : "_deps/sdl_mixer_deps/opusfile",
                     "strip-components" : 1
                 },
                 {
                     "type" : "archive",
-                    "url" : "https://github.com/libsdl-org/tremor/archive/refs/heads/v1.2.1-SDL.tar.gz",
-                    "sha256" : "4303d2a7ac34f542f228bc513db473090c9937c0549c610a737b2569003bf03a",
+                    "url" : "https://github.com/libsdl-org/tremor/archive/7afc84841ffa2e9610b65950fd233e6c428699c7.tar.gz",
+                    "sha256" : "a71f8a35f016751f68df6aacec4f2d8c584314e071b4921ae4f62f30768c82d1",
                     "dest" : "_deps/sdl_mixer_deps/tremor",
                     "strip-components" : 1
                 },
                 {
                     "type" : "archive",
-                    "url" : "https://github.com/libsdl-org/mpg123/archive/refs/heads/v1.31.3-SDL.tar.gz",
-                    "sha256" : "05d1c752be1270e2fb4bbb618093a1d9940a90ae81ff01ebe74bcaac3fe165e5",
+                    "url" : "https://github.com/libsdl-org/mpg123/archive/e1938431b1a9fcc62aadd67590efb6a6dabcaca3.tar.gz",
+                    "sha256" : "01be23eea69634b1cc070861f823d2799b54606c0c778cfbbfec3ae7a37b1fdd",
                     "dest" : "_deps/sdl_mixer_deps/mpg123",
                     "strip-components" : 1
                 },
                 {
                     "type" : "archive",
-                    "url" : "https://github.com/libsdl-org/libxmp/archive/refs/heads/4.6.x-SDL.tar.gz",
-                    "sha256" : "875bcf38625e6d9dff6ec16b828c29d80a2f960c5f459c9874f7eb906c8e2d21",
+                    "url" : "https://github.com/libsdl-org/libxmp/archive/f59573ed254d2c5a5b02bac2d2b09a4496d5d6fc.tar.gz",
+                    "sha256" : "9d10fed58117ff4ee273f343af855900db5df8cf502a53487407558a805a3397",
                     "dest" : "_deps/sdl_mixer_deps/libxmp",
                     "strip-components" : 1
                 },
                 {
                     "type" : "archive",
-                    "url" : "https://github.com/libsdl-org/wavpack/archive/refs/heads/5.6.0-sdl.tar.gz",
-                    "sha256" : "20f1546319abfebf548594bd67201d7341083bea8116149a278087bb5035aa39",
+                    "url" : "https://github.com/libsdl-org/wavpack/archive/112a56419d45dd4bf0f80f6ca89989c574262580.tar.gz",
+                    "sha256" : "69f477fc2d9407125b28bea705b5be79159400a020165a99bc4b742901d92e1a",
                     "dest" : "_deps/sdl_mixer_deps/wavpack",
                     "strip-components" : 1
                 },
                 {
                     "type" : "archive",
-                    "url" : "https://github.com/libsdl-org/game-music-emu/archive/refs/heads/v0.6.3-SDL.tar.gz",
-                    "sha256" : "ec1bbcba782b29f5f1edd6b7872024c9f73a580840c6317b657033092e49bf6c",
+                    "url" : "https://github.com/libsdl-org/game-music-emu/archive/51ce3da09af1e27a203381bb4071604bddfd05a9.tar.gz",
+                    "sha256" : "ec0fd23a0c6342ca1eaf4ff0f7ec0ca4801e5b1f3b02593105e84e8f16c95885",
                     "dest" : "_deps/sdl_mixer_deps/libgme",
                     "strip-components" : 1
                 },

@@ -30,6 +30,7 @@ namespace game_features {
     game_feature gameui_show_water_structure_range{ "gameui_show_water_structure_range", "#TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE", true };
     game_feature gameui_show_construction_size{ "gameui_show_construction_size", "#TR_CONFIG_SHOW_CONSTRUCTION_SIZE", true };
     game_feature gameui_show_current_select_tile{ "gameui_show_current_select_tile", "#TR_CONFIG_SHOW_CURRENT_SELECT_TILE", false };
+    game_feature gameui_road_preview_in_map_order{ "gameui_road_preview_in_map_order", "#TR_CONFIG_ROAD_PREVIEW_IN_MAP_ORDER", true };
     game_feature gameui_zoom{ "gameui_zoom", "#TR_CONFIG_ZOOM_STEPPED", true };
     game_feature gameui_smooth_zoom{ "gameui_smooth_zoom", "#TR_CONFIG_SMOOTH_ZOOM", true };
     game_feature gameui_complete_ratings_columns{ "gameui_complete_ratings_columns", "#TR_CONFIG_COMPLETE_RATING_COLUMNS", true };
