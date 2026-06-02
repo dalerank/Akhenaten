@@ -39,6 +39,7 @@ Results are written to `akhenaten-log.txt` as lines like `[test:tests/11_work_ca
 | `09_ui_button_nonbool_flags.js` | UI button non-boolean flags regression |
 | `10_work_camp_info_window.js` | Work camp info window |
 | `11_work_camp_map_placement.js` | Work camp placed via `test_building_place` (real `city_planner` path) |
+| `12_road_segment_placement.js` | Road from map center to center + {0, 5}; all routed tiles have `TERRAIN_ROAD` |
 
 Shared helpers for city tests and placement live in [`src/scripts/integral_test.js`](../src/scripts/integral_test.js), imported from `modules.js` (always loaded with the game VM, not via `include()` from test files).
 
