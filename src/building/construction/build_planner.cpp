@@ -280,12 +280,12 @@ void build_planner::init() {
     events::subscribe([this] (event_city_building_mode ev) {
         e_building_type btype = (e_building_type)ev.value;
         if (ev.value == BUILDING_NONE) {
-            construction_cancel();
+            construction_cancel(false);
         }
 
         const bool enabled = scenario_building_allowed(btype);
         if (enabled) {
-            construction_cancel();
+            construction_cancel(false);
             setup_build((e_building_type)ev.value);
         }
     });
@@ -973,19 +973,21 @@ void build_planner::construction_start(tile2i tile) {
         const bool can_start = preview.can_construction_start(*this, start);
 
         if (!can_start) {
-            construction_cancel();
+            construction_cancel(false);
         }
     }
 }
 
-void build_planner::construction_cancel() {
+void build_planner::construction_cancel(bool release_sidebar) {
     map_property_clear_constructing_and_deleted();
     if (in_progress && draggable()) {
         game_undo_restore_map(1);
         in_progress = false;
     } else {
         setup_build(BUILDING_NONE);
-        //widget_sidebar_city_release_build_buttons();
+        if (release_sidebar) {
+            events::emit(event_build_menu_submenu_changed{ 0 });
+        }
     }
 
     custom_building_variant = 0;
