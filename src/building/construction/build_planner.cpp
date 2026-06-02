@@ -272,11 +272,6 @@ int build_planner::can_be_placed() {
 }
 
 void build_planner::init() {
-    events::subscribe([this] (event_rotate_building ev) {
-        building_rotation_rotate_by_hotkey();
-        update_orientations();
-    });
-
     events::subscribe([this] (event_city_building_mode ev) {
         e_building_type btype = (e_building_type)ev.value;
         if (ev.value == BUILDING_NONE) {
@@ -288,10 +283,6 @@ void build_planner::init() {
             construction_cancel(false);
             setup_build((e_building_type)ev.value);
         }
-    });
-
-    events::subscribe([this] (event_change_building_variant) {
-        next_building_variant();
     });
 }
 
@@ -310,6 +301,7 @@ void build_planner::reset() {
     // position and orientation
     start.set(-1, -1);
     end.set(-1, -1);
+    global_rotation = 0;
     relative_orientation = 0;
     custom_building_variant = 0;
     building_variant = 0;
@@ -991,7 +983,7 @@ void build_planner::construction_cancel(bool release_sidebar) {
     }
 
     custom_building_variant = 0;
-    building_rotation_reset_rotation();
+    global_rotation = 0;
     update_orientations();
 }
 
@@ -1008,7 +1000,7 @@ void build_planner::construction_update(tile2i tile) {
 
     map_property_clear_constructing_and_deleted();
     uint16_t current_cost = building_static_params::get(build_type).get_cost();
-    int global_rotation = building_rotation_global_rotation();
+    const int rotation = global_rotation;
     int items_placed = 1;
 
     const auto &params = building_static_params::get(build_type);
@@ -1036,7 +1028,7 @@ void build_planner::construction_update(tile2i tile) {
     case BUILDING_FORT_CHARIOTEERS:
     case BUILDING_FORT_INFANTRY:
         if (g_formations.num_batalions < 6) {
-            vec2i offset = FORT_OFFSET[global_rotation][city_view_orientation() / 2];
+            vec2i offset = FORT_OFFSET[rotation][city_view_orientation() / 2];
             tile2i ground = tile.shifted(offset.x, offset.y);
             if (map_building_tiles_are_clear(tile, 3, TERRAIN_ALL)
                 && map_building_tiles_are_clear(ground, 4, TERRAIN_ALL)) {
@@ -1052,7 +1044,7 @@ void build_planner::construction_update(tile2i tile) {
     if (items_placed >= 0) {
         current_cost *= items_placed;
     }
-    
+
     total_cost = current_cost;
 }
 

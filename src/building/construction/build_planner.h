@@ -136,6 +136,8 @@ public:
     tile2i start;
     tile2i end;
     int total_cost;
+    int global_rotation = 0;
+    int road_orientation = 1;
     int relative_orientation;
     int absolute_orientation;
     int custom_building_variant;

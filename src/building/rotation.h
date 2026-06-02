@@ -5,8 +5,9 @@
 
 void building_rotation_update_road_orientation();
 int building_rotation_global_rotation();
+void building_rotation_set_global_rotation(int rotation);
 int building_rotation_get_road_orientation();
-void building_rotation_rotate_by_hotkey();
+void building_rotation_set_road_orientation(int orientation);
 
 void building_rotation_force_two_orientations();
 int building_rotation_get_storage_fort_orientation(int);

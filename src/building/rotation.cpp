@@ -7,49 +7,55 @@
 #include "grid/grid.h"
 #include "game/game_config.h"
 
-int g_global_rotation = 0;
-static int road_orientation = 1;
 static time_millis road_last_update = 0;
 
 static void building_rotation_rotate() {
-    g_global_rotation++;
-    if (g_global_rotation > 3)
-        g_global_rotation = 0;
-}
-
-int building_rotation_global_rotation() {
-    return g_global_rotation;
-}
-
-void building_rotation_rotate_by_hotkey() {
-    if (!!game_features::gameui_rotate_manually) {
-        building_rotation_rotate();
-        road_orientation = road_orientation == 1 ? 2 : 1;
+    g_city_planner.global_rotation++;
+    if (g_city_planner.global_rotation > 3) {
+        g_city_planner.global_rotation = 0;
     }
 }
 
+int building_rotation_global_rotation() {
+    return g_city_planner.global_rotation;
+}
+
+void building_rotation_set_global_rotation(int rotation) {
+    if (rotation < 0) {
+        rotation = 0;
+    } else if (rotation > 3) {
+        rotation = 0;
+    }
+    g_city_planner.global_rotation = rotation;
+}
+
+int building_rotation_get_road_orientation() {
+    return g_city_planner.road_orientation;
+}
+
+void building_rotation_set_road_orientation(int orientation) {
+    g_city_planner.road_orientation = (orientation == 2) ? 2 : 1;
+}
+
 void building_rotation_reset_rotation() {
-    g_global_rotation = 0;
+    g_city_planner.global_rotation = 0;
 }
 
 void building_rotation_force_two_orientations() { // for composite buildings like hippodrome
-    if (g_global_rotation == 1 || g_global_rotation == 2)
-        g_global_rotation = 3;
+    if (g_city_planner.global_rotation == 1 || g_city_planner.global_rotation == 2) {
+        g_city_planner.global_rotation = 3;
+    }
 }
 
 void building_rotation_update_road_orientation() {
     if (!game_features::gameui_rotate_manually) {
         if (time_get_millis() - road_last_update > 1500) {
             road_last_update = time_get_millis();
-            road_orientation = road_orientation == 1 ? 2 : 1;
+            g_city_planner.road_orientation = g_city_planner.road_orientation == 1 ? 2 : 1;
             building_rotation_rotate();
             g_city_planner.update_orientations();
         }
     }
-}
-
-int building_rotation_get_road_orientation() {
-    return road_orientation;
 }
 
 int building_rotation_get_storage_fort_orientation(int building_rotation) {
@@ -61,14 +67,16 @@ int building_rotation_get_storage_gatehouse_orientation(int building_rotation) {
 }
 
 int building_rotation_get_delta_with_rotation(int default_delta) {
-    if (g_global_rotation == 0) {
+    const int global_rotation = g_city_planner.global_rotation;
+    if (global_rotation == 0) {
         return GRID_OFFSET(default_delta, 0);
-    } else if (g_global_rotation == 1)
+    } else if (global_rotation == 1) {
         return GRID_OFFSET(0, -default_delta);
-    else if (g_global_rotation == 2)
+    } else if (global_rotation == 2) {
         return GRID_OFFSET(-default_delta, 0);
-    else
+    } else {
         return GRID_OFFSET(0, default_delta);
+    }
 }
 
 void building_rotation_get_offset_with_rotation(int offset, int rot, int* x, int* y) {

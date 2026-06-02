@@ -16,7 +16,9 @@
 ANK_GLOBAL_OBJECT(g_city_planner, __city_planner,
     build_type,
     in_progress,
-    construction_update_items
+    construction_update_items,
+    global_rotation,
+    road_orientation
 );
 
 void __city_planner_update(int x, int y) {
@@ -48,6 +50,16 @@ void __city_planner_construction_cancel() {
     g_city_planner.construction_cancel();
 }
 ANK_FUNCTION(__city_planner_construction_cancel);
+
+void __city_planner_update_orientations() {
+    g_city_planner.update_orientations();
+}
+ANK_FUNCTION(__city_planner_update_orientations);
+
+void __city_planner_next_building_variant() {
+    g_city_planner.next_building_variant();
+}
+ANK_FUNCTION(__city_planner_next_building_variant);
 
 int __city_planner_last_created_building_id() {
     building *b = g_city_planner.last_created_building;
