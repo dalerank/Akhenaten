@@ -33,6 +33,7 @@ struct application_t {
 
     using event_handler_cb = xfunction<void(void*)>;
     hvector<event_handler_cb, 32> keyboard_event_handlers;
+    hvector<event_handler_cb, 8> user_event_handlers;
 
     void setup();
 
@@ -40,9 +41,11 @@ struct application_t {
     void register_modules();
 
     void register_keyboard_event_handler(event_handler_cb);
+    void register_user_event_handler(event_handler_cb);
     void pump_one_frame();
 
     void handle_keyboard_event(void* event);
+    void handle_user_event(void* event);
     void handle_window_event(void* event);
 };
 

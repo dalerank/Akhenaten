@@ -83,8 +83,6 @@ static_assert(SDL_VERSION_ATLEAST(2, 0, 17));
 #define URL_PATCHES "https://github.com/dalerank/akhenaten/wiki/Patches"
 #define URL_EDITOR  "https://github.com/dalerank/akhenaten/wiki/Editor"
 
-#define INTPTR(d) (*(int*)(d))
-
 namespace {
 
     void show_usage() {
@@ -454,6 +452,7 @@ static void handle_event(SDL_Event* event, bool& active, bool& quit) {
     case SDL_WINDOWEVENT:
         g_app.handle_window_event(&event->window);
         break;
+
     case SDL_KEYDOWN:
     case SDL_KEYUP:
     case SDL_TEXTINPUT:
@@ -470,12 +469,12 @@ static void handle_event(SDL_Event* event, bool& active, bool& quit) {
         if (event->button.which != SDL_TOUCH_MOUSEID)
             handle_mouse_button(&event->button, 1);
         break;
-        
+
     case SDL_MOUSEBUTTONUP:
         if (event->button.which != SDL_TOUCH_MOUSEID)
             handle_mouse_button(&event->button, 0);
         break;
-        
+
     case SDL_MOUSEWHEEL:
         if (event->wheel.which != SDL_TOUCH_MOUSEID) {
             mouse::ref().set_scroll(event->wheel.y > 0 ? SCROLL_UP : event->wheel.y < 0 ? SCROLL_DOWN : SCROLL_NONE);
@@ -500,14 +499,8 @@ static void handle_event(SDL_Event* event, bool& active, bool& quit) {
     case SDL_USEREVENT:
         if (event->user.code == USER_EVENT_QUIT)
             quit = true;
-        else if (event->user.code == USER_EVENT_RESIZE)
-            platform_screen_set_window_size(INTPTR(event->user.data1), INTPTR(event->user.data2));
-        else if (event->user.code == USER_EVENT_FULLSCREEN)
-            platform_screen_set_fullscreen();
-        else if (event->user.code == USER_EVENT_WINDOWED)
-            platform_screen_set_windowed();
-        else if (event->user.code == USER_EVENT_CENTER_WINDOW)
-            platform_screen_center_window();
+        else
+            g_app.handle_user_event(event);
 
         break;
 
