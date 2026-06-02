@@ -74,21 +74,35 @@ function mission_end_replay_mission() {
     }
 }
 
+function mission_end_compute_next_scenario_id(completed_id) {
+    if (scenario.scmode == e_scenario_custom_map) {
+        log_info("mission_end_compute_next: custom map, ending campaign")
+        return -1
+    }
+    var src = get_mission_config(completed_id)
+    var next_id = (src && src.next_mission) ? src.next_mission : 0
+    if (!next_id) {
+        next_id = completed_id + 1
+    }
+    if (next_id < 0 || !__game_mission_is_valid(next_id)) {
+        log_info("mission_end_compute_next: completed=" + completed_id
+            + " scmode=" + scenario.scmode + " next_id=" + next_id
+            + " not a valid campaign step -> end of game")
+        return -1
+    }
+    log_info("mission_end_compute_next: completed=" + completed_id
+        + " scmode=" + scenario.scmode + " -> next_scenario_id=" + next_id)
+    return next_id
+}
+
 function mission_end_advance_to_next_mission() {
     var rank = scenario.campaign_mission_rank
     var next_rank = rank + 1
     var completed_id = scenario.campaign_scenario_id
     var savings = city.kingdome.personal_savings
+    var next_scenario_id = mission_end_compute_next_scenario_id(completed_id)
 
-    var next_scenario_id = -1
-    if (!scenario.is_custom && next_rank < 11) {
-        next_scenario_id = __win_criteria.next_mission
-        if (!next_scenario_id) {
-            next_scenario_id = completed_id + 1
-        }
-    }
-
-    if (!scenario.is_custom) {
+    if (scenario.scmode != e_scenario_custom_map) {
         city.kingdome.campaign_carry_personal_savings = savings
     }
 
@@ -104,9 +118,9 @@ function mission_end_advance_to_next_mission() {
     city.current_overlay = OVERLAY_NONE
     city.previous_overlay = OVERLAY_NONE
 
-    if (next_rank >= 11 || scenario.is_custom) {
+    if (next_scenario_id == -1) {
         __game_show_main_menu()
-        if (!scenario.is_custom) {
+        if (scenario.scmode != e_scenario_custom_map) {
             __scenario_init()
             scenario.campaign_mission_rank = 2
         }
@@ -128,7 +142,8 @@ function mission_end_show(state) {
         return
     }
 
-    if (!scenario.is_custom && scenario.campaign_mission_rank >= 10) {
+    if (mission_end_compute_next_scenario_id(scenario.campaign_scenario_id) == -1
+        && scenario.scmode != e_scenario_custom_map) {
         __game_victory_video_show("smk/win_game.smk", 400, 292, "mission_end_after_video")
         return
     }
