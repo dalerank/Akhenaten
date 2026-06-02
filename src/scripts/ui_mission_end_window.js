@@ -74,29 +74,7 @@ function mission_end_replay_mission() {
     }
 }
 
-// Returns the scenario_id the player should play after completing
-// `completed_id`, or -1 if there's no next mission (true end-of-game).
-// Used by both mission_end_show (to decide between mid-campaign vs.
-// final-victory video) and mission_end_advance_to_next_mission (to
-// decide between the choice screen vs. bouncing to the main menu),
-// so the two stay in sync.
-//
-// Source of truth for `next_mission` is the mission JS config object
-// (e.g. `mission10.next_mission = 11`), NOT __win_criteria — the C++
-// scenario_data_t::win_criterias_t.next_mission field exists but is
-// never written from the mission scripts, so __win_criteria.next_mission
-// is always 0. Read from get_mission_config(completed_id) instead.
-//
-// Validity check uses __game_mission_is_valid (matches game_show_mission_choice's
-// own gate) so a script-declared next_mission that isn't a registered campaign
-// step is treated as end-of-game and we don't hand the choice window a id it'd
-// just bounce back from.
 function mission_end_compute_next_scenario_id(completed_id) {
-    // Use the direct enum check (not scenario.is_custom). The is_custom getter
-    // defined in scenario.js does `scmode != e_scenario_normal`, which is also
-    // true for e_scenario_selected — a value some campaign saves carry, causing
-    // every won campaign mission to end as if it were a custom map (wrong video
-    // + main-menu bounce). Only e_scenario_custom_map genuinely means "custom".
     if (scenario.scmode == e_scenario_custom_map) {
         log_info("mission_end_compute_next: custom map, ending campaign")
         return -1
@@ -122,17 +100,8 @@ function mission_end_advance_to_next_mission() {
     var next_rank = rank + 1
     var completed_id = scenario.campaign_scenario_id
     var savings = city.kingdome.personal_savings
-
-    // (Previously gated on `next_rank < 11`, which assumed the original
-    // Pharaoh player-rank ceiling and silently dropped the link to the
-    // next mission once a campaign's last-rank mission was won — e.g.
-    // Selima(8)→Saqqara(10) and Saqqara(10)→Serabit Khadim(11) both lost
-    // their next_mission and bounced to the main menu.)
     var next_scenario_id = mission_end_compute_next_scenario_id(completed_id)
 
-    // Direct enum check, same reason as in mission_end_compute_next_scenario_id:
-    // the is_custom getter mis-tags e_scenario_selected campaign saves as custom,
-    // which would drop the player's personal-savings carry between missions.
     if (scenario.scmode != e_scenario_custom_map) {
         city.kingdome.campaign_carry_personal_savings = savings
     }
@@ -151,8 +120,6 @@ function mission_end_advance_to_next_mission() {
 
     if (next_scenario_id == -1) {
         __game_show_main_menu()
-        // Same direct-enum guard rationale as above — don't let a misclassified
-        // selected-mode save block the campaign-end scenario reset.
         if (scenario.scmode != e_scenario_custom_map) {
             __scenario_init()
             scenario.campaign_mission_rank = 2
@@ -175,11 +142,6 @@ function mission_end_show(state) {
         return
     }
 
-    // Show the full-game-victory video only when this really IS the final
-    // mission. The hardcoded `rank >= 10` check this replaces fired on
-    // every rank-10 mission (Saqqara, Selima, ...), so mid-campaign
-    // victories incorrectly played the "you completed the entire game"
-    // video. Same end-of-game signal as the bounce-fix above.
     if (mission_end_compute_next_scenario_id(scenario.campaign_scenario_id) == -1
         && scenario.scmode != e_scenario_custom_map) {
         __game_victory_video_show("smk/win_game.smk", 400, 292, "mission_end_after_video")
