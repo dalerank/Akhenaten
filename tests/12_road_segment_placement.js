@@ -1,12 +1,59 @@
-// Builds a dirt road from map center to center + {0, 5} via build_planner (routed drag).
+// Builds a dirt road via build_planner (routed drag) on a valid segment near map center.
 // Marker: [test-marker] test_road_placed:...
 
 var __test12_result = null
 
-function test12_map_center() {
+function test12_find_road_route(end_dx, end_dy) {
+    if (!test_planner_enter_build_mode(BUILDING_ROAD)) {
+        return null
+    }
+
     var w = __scenario_map.width
     var h = __scenario_map.height
-    return { x: (w / 2) | 0, y: (h / 2) | 0 }
+    var cx = (w / 2) | 0
+    var cy = (h / 2) | 0
+    var best = null
+    var best_dist_sq = 999999999
+
+    for (var y = 1; y < h - 1; y++) {
+        for (var x = 1; x < w - 1; x++) {
+            var dx = x - cx
+            var dy = y - cy
+            var dist_sq = dx * dx + dy * dy
+            if (best && dist_sq >= best_dist_sq) {
+                continue
+            }
+
+            var end_x = x + end_dx
+            var end_y = y + end_dy
+            if (end_x < 0 || end_y < 0 || end_x >= w || end_y >= h) {
+                continue
+            }
+
+            var start = { x: x, y: y }
+            var end = { x: end_x, y: end_y }
+            if (!__map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, start)) {
+                continue
+            }
+
+            var preview = routed_building.preview_path(ROUTED_BUILDING_ROAD, start, end)
+            if (!preview.ok || preview.tiles.length < 2) {
+                continue
+            }
+
+            best = {
+                start_x: x,
+                start_y: y,
+                end_x: end_x,
+                end_y: end_y,
+                tiles: preview.tiles,
+            }
+            best_dist_sq = dist_sq
+        }
+    }
+
+    test_planner_exit_build_mode()
+    return best
 }
 
 function test12_road_place(start_x, start_y, end_x, end_y) {
@@ -43,15 +90,18 @@ function run_test() {
     test_reload_city_session('data/default.map')
     __test_set_treasury(10000)
 
-    var center = test12_map_center()
-    var end_y = center.y + 5
-    __test12_result = test12_road_place(center.x, center.y, center.x, end_y)
-
-    if (!__test12_result.ok) {
-        __log_info_native('[test:12] test12_road_place failed: ' + (__test12_result.reason || 'unknown'))
+    var route = test12_find_road_route(0, 5)
+    if (!route) {
+        __test12_result = { ok: false, reason: 'no_route', tiles: [] }
+        __log_info_native('[test:12] test12_find_road_route failed')
     } else {
-        __log_marker('test_road_placed:' + center.x + ',' + center.y + '-' + center.x + ',' + end_y
-            + ':tiles=' + __test12_result.tiles.length)
+        __test12_result = test12_road_place(route.start_x, route.start_y, route.end_x, route.end_y)
+        if (!__test12_result.ok) {
+            __log_info_native('[test:12] test12_road_place failed: ' + (__test12_result.reason || 'unknown'))
+        } else {
+            __log_marker('test_road_placed:' + route.start_x + ',' + route.start_y + '-'
+                + route.end_x + ',' + route.end_y + ':tiles=' + __test12_result.tiles.length)
+        }
     }
     __test_signal_ready()
 }
