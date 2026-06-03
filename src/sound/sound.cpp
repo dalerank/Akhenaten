@@ -18,6 +18,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include <vector>
 #include <map>
 
@@ -65,6 +66,9 @@ struct music_player_t {
     int buffer_size;
     int cur_read;
     int cur_write;
+    uint64_t custom_stream_bytes_written = 0;
+    uint64_t custom_stream_bytes_read = 0;
+    uint32_t custom_stream_bytes_per_second = 0;
     Mix_Music* music;
     vfs::reader current_music_data;
 
@@ -77,6 +81,7 @@ struct music_format {
 };
 
 sound_manager_t g_sound;
+static int s_custom_music_underrun_logs = 0;
 
 static int percentage_to_volume(int percentage) {
     return percentage * SDL_MIX_MAXVOLUME / 100;
@@ -572,6 +577,10 @@ void sound_manager_t::free_custom_audio_stream() {
 
 bool sound_manager_t::create_custom_audio_stream(uint16_t src_format, uint8_t src_channels, int src_rate, uint16_t dst_format, uint8_t dst_channels, int dst_rate) {
     free_custom_audio_stream();
+    _music_player->custom_stream_bytes_written = 0;
+    _music_player->custom_stream_bytes_read = 0;
+    _music_player->custom_stream_bytes_per_second = dst_rate * dst_channels * (SDL_AUDIO_BITSIZE(dst_format) / 8);
+    s_custom_music_underrun_logs = 0;
 
 #ifdef USE_SDL_AUDIOSTREAM
     if (_music_player->use_audiostream) {
@@ -613,7 +622,15 @@ bool sound_manager_t::put_custom_audio_stream(uint8_t* audio_data, int len) {
 
 #ifdef USE_SDL_AUDIOSTREAM
     if (_music_player->use_audiostream) {
-        return SDL_AudioStreamPut(_music_player->stream, audio_data, len) == 0;
+        int available_before = SDL_AudioStreamAvailable(_music_player->stream);
+        if (SDL_AudioStreamPut(_music_player->stream, audio_data, len) == 0) {
+            int available_after = SDL_AudioStreamAvailable(_music_player->stream);
+            if (available_after > available_before) {
+                _music_player->custom_stream_bytes_written += (uint64_t)(available_after - available_before);
+            }
+            return true;
+        }
+        return false;
     }
 #endif
 
@@ -642,6 +659,7 @@ bool sound_manager_t::put_custom_audio_stream(uint8_t* audio_data, int len) {
     free(_music_player->cvt.buf);
     _music_player->cvt.buf = 0;
     _music_player->cvt.len = 0;
+    _music_player->custom_stream_bytes_written += converted_len;
 
     return true;
 }
@@ -653,7 +671,11 @@ int sound_manager_t::get_custom_audio_stream(Uint8* dst, int len) {
 
 #ifdef USE_SDL_AUDIOSTREAM
     if (_music_player->use_audiostream) {
-        return SDL_AudioStreamGet(_music_player->stream, dst, len);
+        int bytes_copied = SDL_AudioStreamGet(_music_player->stream, dst, len);
+        if (bytes_copied > 0) {
+            _music_player->custom_stream_bytes_read += bytes_copied;
+        }
+        return bytes_copied;
     }
 #endif
 
@@ -677,14 +699,42 @@ int sound_manager_t::get_custom_audio_stream(Uint8* dst, int len) {
         }
     }
     _music_player->cur_read = (_music_player->cur_read + bytes_copied) % _music_player->buffer_size;
+    _music_player->custom_stream_bytes_read += bytes_copied;
 
     return bytes_copied;
+}
+
+uint64_t sound_manager_t::custom_music_playback_micros() const {
+    if (!_music_player || !_music_player->custom_stream_bytes_per_second) {
+        return 0;
+    }
+    return (_music_player->custom_stream_bytes_read * 1000000ull) / _music_player->custom_stream_bytes_per_second;
+}
+
+uint64_t sound_manager_t::custom_music_buffered_micros() const {
+    if (!_music_player || !_music_player->custom_stream_bytes_per_second) {
+        return 0;
+    }
+
+    uint64_t buffered = 0;
+    if (_music_player->custom_stream_bytes_written >= _music_player->custom_stream_bytes_read) {
+        buffered = _music_player->custom_stream_bytes_written - _music_player->custom_stream_bytes_read;
+    }
+    return (buffered * 1000000ull) / _music_player->custom_stream_bytes_per_second;
 }
 
 void sound_manager_t::custom_music_callback(void* dummy, Uint8* stream, int len) {
     int bytes_copied = g_sound.get_custom_audio_stream(stream, len);
 
     if (bytes_copied < len) {
+        if (s_custom_music_underrun_logs < 20) {
+            logs::warn("BIK audio underrun: requested=%d copied=%d buffered_us=%llu played_us=%llu",
+                len,
+                bytes_copied,
+                (unsigned long long)g_sound.custom_music_buffered_micros(),
+                (unsigned long long)g_sound.custom_music_playback_micros());
+            ++s_custom_music_underrun_logs;
+        }
         // end of stream, write silence
         memset(&stream[bytes_copied], 0, len - bytes_copied);
     }

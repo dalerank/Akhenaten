@@ -33,6 +33,7 @@
 #include "io/gamestate/boilerplate.h"
 #include "io/manager.h"
 #include "window/main_menu.h"
+#include "window/intro_video.h"
 #include "window/plain_message_dialog.h"
 #include "core/profiler.h"
 #include "core/system_time.h"

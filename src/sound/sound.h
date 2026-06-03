@@ -7,6 +7,7 @@
 #include "sound/channel.h"
 #include "sound/effect.h"
 #include <array>
+#include <stdint.h>
 
 struct music_player_t;
 
@@ -40,6 +41,8 @@ public:
     void use_default_music_player();
     void use_custom_music_player(int bitdepth, int num_channels, int rate, void *audio_data, int len);
     void write_custom_music_data(void *audio_data, int len);
+    uint64_t custom_music_playback_micros() const;
+    uint64_t custom_music_buffered_micros() const;
     bool play_music(pcstr filename, int volume_pct);
     void stop_music();
     bool is_audio_stream_active();

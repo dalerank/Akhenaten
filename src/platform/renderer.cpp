@@ -96,6 +96,7 @@ struct renderer_data_t {
     struct {
         SDL_Texture* texture;
         color* buffer;
+        atlas_data_t atlas;
         image_t img;
     } custom_textures[CUSTOM_IMAGE_MAX];
 
@@ -297,8 +298,13 @@ void graphics_renderer_interface::create_custom_texture(int type, int width, int
 #endif
 
     data.custom_textures[type].texture = SDL_CreateTexture(data.renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, width, height);
+    data.custom_textures[type].atlas.texture = data.custom_textures[type].texture;
+    data.custom_textures[type].atlas.width = width;
+    data.custom_textures[type].atlas.height = height;
     data.custom_textures[type].img.width = width;
     data.custom_textures[type].img.height = height;
+    data.custom_textures[type].img.atlas.offset = {0, 0};
+    data.custom_textures[type].img.atlas.p_atlas = &data.custom_textures[type].atlas;
     //    data.custom_textures[type].img.atlas.id = (ATLAS_CUSTOM << IMAGE_ATLAS_BIT_OFFSET) | type;
     SDL_SetTextureBlendMode(data.custom_textures[type].texture, SDL_BLENDMODE_BLEND);
 }
@@ -553,10 +559,15 @@ static void create_blend_texture(int type) {
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_MOD);
 
     data.custom_textures[type].texture = texture;
+    data.custom_textures[type].atlas.texture = data.custom_textures[type].texture;
+    data.custom_textures[type].atlas.width = 58;
+    data.custom_textures[type].atlas.height = 30;
     memset(&data.custom_textures[type].img, 0, sizeof(data.custom_textures[type].img));
     data.custom_textures[type].img.type = IMAGE_TYPE_ISOMETRIC;
     data.custom_textures[type].img.width = 58;
     data.custom_textures[type].img.height = 30;
+    data.custom_textures[type].img.atlas.offset = {0, 0};
+    data.custom_textures[type].img.atlas.p_atlas = &data.custom_textures[type].atlas;
     //    data.custom_textures[type].img.atlas.bitflags = (ATLAS_CUSTOM << IMAGE_ATLAS_BIT_OFFSET) | type;
 }
 
