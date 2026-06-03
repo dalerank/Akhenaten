@@ -21,7 +21,6 @@
 #include "platform/platform.h"
 #include "platform/prefs.h"
 #include "platform/screen.h"
-#include "platform/touch.h"
 #include "platform/version.hpp"
 #include "platform/options_window.h"
 #include "widget/debug_console.h"
@@ -483,13 +482,9 @@ static void handle_event(SDL_Event* event, bool& active, bool& quit) {
         break;
 
     case SDL_FINGERDOWN:
-        platform_touch_start(&event->tfinger);
-        break;
     case SDL_FINGERMOTION:
-        platform_touch_move(&event->tfinger);
-        break;
     case SDL_FINGERUP:
-        platform_touch_end(&event->tfinger);
+        g_app.handle_touch_event(event);
         break;
 
     case SDL_QUIT:

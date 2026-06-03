@@ -82,6 +82,10 @@ void application_t::register_user_event_handler(event_handler_cb cb) {
     user_event_handlers.push_back(cb);
 }
 
+void application_t::register_touch_event_handler(event_handler_cb cb) {
+    touch_event_handlers.push_back(cb);
+}
+
 void application_t::handle_window_event(void* ev) {
 #ifndef GAME_PLATFORM_NSWITCH
     const SDL_WindowEvent& event = ((SDL_Event*)ev)->window;
@@ -124,6 +128,12 @@ void application_t::handle_keyboard_event(void* event) {
 
 void application_t::handle_user_event(void* event) {
     for (auto& handler : user_event_handlers) {
+        handler(event);
+    }
+}
+
+void application_t::handle_touch_event(void* event) {
+    for (auto& handler : touch_event_handlers) {
         handler(event);
     }
 }

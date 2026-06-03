@@ -34,6 +34,7 @@ struct application_t {
     using event_handler_cb = xfunction<void(void*)>;
     hvector<event_handler_cb, 32> keyboard_event_handlers;
     hvector<event_handler_cb, 8> user_event_handlers;
+    hvector<event_handler_cb, 8> touch_event_handlers;
 
     void setup();
 
@@ -42,10 +43,12 @@ struct application_t {
 
     void register_keyboard_event_handler(event_handler_cb);
     void register_user_event_handler(event_handler_cb);
+    void register_touch_event_handler(event_handler_cb);
     void pump_one_frame();
 
     void handle_keyboard_event(void* event);
     void handle_user_event(void* event);
+    void handle_touch_event(void* event);
     void handle_window_event(void* event);
 };
 
@@ -61,4 +64,4 @@ namespace application {
 
 #define ANK_REGISTER_APPLICATION_MODULE(func) func(); \
     namespace application {int ANK_CONFIG_PULL_VAR_NAME(func) = 1;} \
-    static application::ModuleIterator ANK_CONFIG_CC1(module_handler, __LINE__)(func); void func() 
+    static application::ModuleIterator ANK_CONFIG_CC1(module_handler, __LINE__)(func); void func()
