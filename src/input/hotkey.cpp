@@ -15,6 +15,7 @@
 #include "window/main_menu.h"
 #include "window/popup_dialog.h"
 #include "game/game.h"
+#include "sound/sound.h"
 
 struct hotkey_definition {
     int* action = nullptr;
@@ -396,7 +397,8 @@ void hotkey_handle_escape(void) {
     popup_dialog::show_yesno("#popup_dialog_quit", [] (bool accepted) {
         if (accepted) {
             widget_top_menu_clear_state();
-            main_menu_screen::show(/*restart_music*/true);
+            g_sound.play_intro();
+            main_menu_screen::show();
         } else {
             window_city_show();
         }

@@ -494,8 +494,11 @@ bool __game_load_map(pcstr filename_short, int start_immediately) { return Games
 void __game_start_loaded_file() { GamestateIO::start_loaded_file(); } ANK_FUNCTION(__game_start_loaded_file)
 bool __game_mission_is_valid(int scenario_id) { const mission_step_t *s = get_scenario_step_data(scenario_id); return s && s->campaign_id >= 0; } ANK_FUNCTION_1(__game_mission_is_valid)
 int __game_campaign_id_for_scenario(int scenario_id) { return get_scenario_campaign_id(scenario_id); } ANK_FUNCTION_1(__game_campaign_id_for_scenario)
-void __game_show_main_menu() { main_menu_screen::show(/*restart_music*/true); } ANK_FUNCTION(__game_show_main_menu)
-void __game_show_main_menu_no_restart() { main_menu_screen::show(/*restart_music*/false); } ANK_FUNCTION(__game_show_main_menu_no_restart)
+void __game_show_main_menu() {
+    g_sound.play_intro();
+    main_menu_screen::show();
+} ANK_FUNCTION(__game_show_main_menu)
+void __game_show_main_menu_no_restart() { main_menu_screen::show(); } ANK_FUNCTION(__game_show_main_menu_no_restart)
 void __game_speech_stop() { g_sound.speech_stop(); } ANK_FUNCTION(__game_speech_stop)
 bool __game_file_exists(pcstr path) { return path && *path && vfs::file_exists(path); } ANK_FUNCTION_1(__game_file_exists)
 pcstr __game_get_last_autosave() { const char* p = player_get_last_autosave(); return p ? p : ""; } ANK_FUNCTION(__game_get_last_autosave)

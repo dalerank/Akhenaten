@@ -78,6 +78,10 @@ void application_t::register_keyboard_event_handler(event_handler_cb cb) {
     keyboard_event_handlers.push_back(cb);
 }
 
+void application_t::register_mouse_event_handler(event_handler_cb cb) {
+    mouse_event_handlers.push_back(cb);
+}
+
 void application_t::register_user_event_handler(event_handler_cb cb) {
     user_event_handlers.push_back(cb);
 }
@@ -122,6 +126,12 @@ void application_t::handle_window_event(void* ev) {
 
 void application_t::handle_keyboard_event(void* event) {
     for (auto& handler : keyboard_event_handlers) {
+        handler(event);
+    }
+}
+
+void application_t::handle_mouse_event(void* event) {
+    for (auto& handler : mouse_event_handlers) {
         handler(event);
     }
 }

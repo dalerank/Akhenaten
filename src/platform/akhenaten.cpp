@@ -10,7 +10,6 @@
 #include "game/game.h"
 #include "game/system.h"
 #include "graphics/screen.h"
-#include "input/mouse.h"
 #include "content/vfs.h"
 #include "io/gamefiles/lang.h"
 #include "game/game_config.h"
@@ -431,21 +430,6 @@ static void run_and_draw() {
     }
 }
 
-static void handle_mouse_button(SDL_MouseButtonEvent* event, int is_down) {
-    auto& m = mouse::ref();
-    if (!SDL_GetRelativeMouseMode()) {
-        m.set_position({event->x, event->y});
-    }
-
-    if (event->button == SDL_BUTTON_LEFT) {
-        m.set_left_down(is_down);
-    } else if (event->button == SDL_BUTTON_MIDDLE) {
-        m.set_middle_down(is_down);
-    } else if (event->button == SDL_BUTTON_RIGHT) {
-        m.set_right_down(is_down);
-    }
-}
-
 static void handle_event(SDL_Event* event, bool& active, bool& quit) {
     switch (event->type) {
     case SDL_WINDOWEVENT:
@@ -459,26 +443,10 @@ static void handle_event(SDL_Event* event, bool& active, bool& quit) {
         break;
 
     case SDL_MOUSEMOTION:
-        if (event->motion.which != SDL_TOUCH_MOUSEID && !SDL_GetRelativeMouseMode()) {
-            mouse::ref().set_position({event->motion.x, event->motion.y});
-        }
-        break;
-
     case SDL_MOUSEBUTTONDOWN:
-        if (event->button.which != SDL_TOUCH_MOUSEID)
-            handle_mouse_button(&event->button, 1);
-        break;
-
     case SDL_MOUSEBUTTONUP:
-        if (event->button.which != SDL_TOUCH_MOUSEID)
-            handle_mouse_button(&event->button, 0);
-        break;
-
     case SDL_MOUSEWHEEL:
-        if (event->wheel.which != SDL_TOUCH_MOUSEID) {
-            mouse::ref().set_scroll(event->wheel.y > 0 ? SCROLL_UP : event->wheel.y < 0 ? SCROLL_DOWN : SCROLL_NONE);
-        }
-
+        g_app.handle_mouse_event(event);
         break;
 
     case SDL_FINGERDOWN:

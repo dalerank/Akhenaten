@@ -393,7 +393,7 @@ bool game_init(game_opts opts) {
 
     if (g_args.no_logo()) {
         g_sound.play_intro();
-        main_menu_screen::show(/*restart_music*/ false);
+        main_menu_screen::show();
     } else {
         game.logo_show_patch_message = 0;
         g_sound.play_intro();
@@ -422,7 +422,8 @@ void game_exit_editor() {
     locale_determine_language();
 
     editor_set_active(0);
-    main_menu_screen::show(/*restart_music*/true);
+    g_sound.play_intro();
+    main_menu_screen::show();
 }
 
 void game_t::update() {

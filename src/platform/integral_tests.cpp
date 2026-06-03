@@ -197,7 +197,7 @@ hvector<xstring, 16> list_test_files() {
     add_tests_from_folder("../tests");
 
     std::sort(found_tests.begin(), found_tests.end(), [](const xstring &a, const xstring &b) {
-        return a < b;
+        return std::strcmp(a.c_str(), b.c_str()) < 0;
     });
 
     logs::info("[integraltests] %d test file(s)", (int)found_tests.size());
