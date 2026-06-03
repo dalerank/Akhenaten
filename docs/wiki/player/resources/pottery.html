@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pottery — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .orig-screenshots { display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-start; margin: 1rem 0; }
+    .orig-screenshots figure { margin: 0; }
+    .orig-screenshots figcaption { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.3rem; text-align: center; }
+    .orig-screenshots img { display: block; border: 1px solid var(--border); border-radius: 3px; image-rendering: pixelated; }
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "►"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .kw { color: #c9a84c; } .num { color: #9ecbff; } .str { color: #7ec87e; } .cmt { color: #5a5650; font-style: italic; } .fn { color: #8aabdc; }
+    .file-ref { display: inline-block; font-family: 'Consolas','Courier New',monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .dep-table { width: 100%; border-collapse: collapse; margin: 0.75rem 0 1.5rem; }
+    .dep-table th, .dep-table td { padding: 0.4rem 0.7rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+    .dep-table th { background: var(--bg-card2); color: var(--gold); font-weight: 600; font-size: 0.8rem; }
+    .bld-note { font-size: 0.75rem; color: var(--text-muted); }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+    .res-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .res-nav a { color: var(--gold); }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">&#8592; All Resources</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Manufactured Goods</div>
+        <ul>
+          <li><a href="pottery.html" class="active">Pottery</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#production">Production</a></li>
+          <li><a href="#housing">Housing evolution</a></li>
+          <li><a href="#trade">Trade &amp; burial</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Resources</a> /
+        Pottery
+      </div>
+
+      <h1>Pottery</h1>
+      <p><strong>Pottery</strong> is a manufactured good produced by the <strong>Potter</strong> workshop from <a href="#dev">clay</a>. It is the <strong>first manufactured good your population demands</strong> — the moment a house tries to evolve past Ordinary Cottage it needs pottery delivered by a Bazaar, which makes a working pottery supply chain one of the earliest economic priorities on most missions.</p>
+
+      <!-- ─── Overview ──────────────────────────────────────── -->
+      <h2 id="overview">Overview</h2>
+      <div class="orig-screenshots">
+        <figure>
+          <img src="Pottery.webp" alt="Pottery good icon from Pharaoh" width="130" height="90" />
+          <figcaption>Pottery — Pharaoh</figcaption>
+        </figure>
+      </div>
+      <p>Pottery is made at a <strong>Potter</strong> using clay, which is either produced locally by a <a href="index.html#raw">Clay Pit</a> or imported from another city over a trade route. Finished pottery is hauled by the workshop's cartpusher to a Storage Yard, from where Bazaar traders pick it up and distribute it to housing.</p>
+      <p>It belongs to the same category as Beer, Linen, Papyrus and the other goods consumed directly by housing. Because every house above the most basic tiers needs it, pottery demand grows with your population for the entire life of a city.</p>
+
+      <!-- ─── Production ────────────────────────────────────── -->
+      <h2 id="production">Production</h2>
+      <table class="dep-table">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Value</th>
+            <th class="bld-note">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Producer</td>
+            <td>Potter workshop</td>
+            <td class="bld-note">2&times;2 footprint; industry / commerce labor</td>
+          </tr>
+          <tr>
+            <td>Input</td>
+            <td>Clay</td>
+            <td class="bld-note">From a Clay Pit, stored clay, or import</td>
+          </tr>
+          <tr>
+            <td>Output</td>
+            <td>Pottery</td>
+            <td class="bld-note">Delivered to Storage Yard, then Bazaar &#8594; housing</td>
+          </tr>
+          <tr>
+            <td>Workers</td>
+            <td>12</td>
+            <td class="bld-note">Production scales with the share of workers present</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>A Potter cannot work without clay. When placing one, the game warns if there is no active clay industry and no stored clay, and reminds you to set up an import route if clay is unavailable locally. Keep at least one Clay Pit (or a steady clay import) feeding the Potter, or production stalls.</p>
+
+      <!-- ─── Housing evolution ─────────────────────────────── -->
+      <h2 id="housing">Housing evolution</h2>
+      <p>Pottery is the first good housing requires in order to evolve. The lower tiers — from Crude Hut up to and including <strong>Ordinary Cottage</strong> — need no pottery at all. Starting with the <strong>Modest Homestead</strong> tier and continuing through every tier above it, a house must receive pottery to evolve and to remain at its level:</p>
+      <ul>
+        <li><strong>No pottery required:</strong> Crude Hut, Sturdy Hut, Meager Shanty, Common Shanty, Rough Cottage, Ordinary Cottage.</li>
+        <li><strong>Pottery required:</strong> Modest Homestead and every tier above it, up to the largest estates.</li>
+      </ul>
+      <p>In practice this means a brand-new settlement can grow to Ordinary Cottages with food, water and a Bazaar alone — but the next step up the housing ladder is blocked until pottery reaches those houses. Building the clay&#8594;Potter&#8594;Bazaar chain early is what lets your first neighbourhood break past the cottage ceiling.</p>
+
+      <!-- ─── Trade & burial ────────────────────────────────── -->
+      <h2 id="trade">Trade &amp; burial</h2>
+      <p>Pottery can be exported, but it is a fairly <strong>mediocre export option</strong>: at roughly <strong>105 debens per 100 units</strong> it fetches a low price for a finished good, so its value is almost always greater kept at home to evolve housing than sold abroad. Treat exporting pottery as a way to drain a surplus, not as a core income strategy.</p>
+      <p>Pottery is also sometimes requested as a <strong>burial provision</strong>, consumed alongside other goods for funerary needs on missions where that mechanic is active.</p>
+
+      <!-- ─── Developer reference ───────────────────────────── -->
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">All paths relative to the repository root.</p>
+
+        <details>
+          <summary>Workshop config — <span class="file-ref">src/scripts/building/pottery.js</span></summary>
+          <div class="details-body">
+            <p>The Potter workshop declares its clay&#8594;pottery conversion and production rate:</p>
+<pre><span class="kw">building_pottery</span> {
+  <span class="kw">input</span>  { resource : <span class="kw">RESOURCE_CLAY</span> }
+  <span class="kw">output</span> { resource : <span class="kw">RESOURCE_POTTERY</span> }
+  <span class="kw">production_rate</span> : <span class="num">20</span>
+  <span class="kw">labor_category</span> : <span class="kw">LABOR_CATEGORY_INDUSTRY_COMMERCE</span>
+  <span class="kw">building_size</span> : <span class="num">2</span>
+  <span class="kw">laborers</span>[<span class="num">12</span>]
+  <span class="kw">flags</span> { is_workshop: <span class="kw">true</span>, is_industry: <span class="kw">true</span> }
+}</pre>
+            <p>The same file's <code>on_place_checks</code> handler raises the <code>#building_needs_clay</code> warning when no clay industry is active and no clay is stored, plus the trade-route reminders when clay must be imported.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Housing requirement — <span class="file-ref">src/scripts/houses.js</span></summary>
+          <div class="details-body">
+            <p>Each house tier lists a per-level <code>pottery</code> requirement array. The flag flips from <code>0</code> to <code>1</code> exactly at the Modest Homestead tier:</p>
+<pre><span class="kw">building_house_ordinary_cottage</span> { pottery[<span class="num">0</span>,<span class="num">0</span>,<span class="num">0</span>,<span class="num">0</span>,<span class="num">0</span>] }
+<span class="kw">building_house_modest_homestead</span>  { pottery[<span class="num">1</span>,<span class="num">1</span>,<span class="num">1</span>,<span class="num">1</span>,<span class="num">1</span>] }
+<span class="cmt">// every tier above modest_homestead also requires pottery</span></pre>
+          </div>
+        </details>
+
+        <details>
+          <summary>Resource enums — <span class="file-ref">src/game/resource.h</span></summary>
+          <div class="details-body">
+<pre><span class="kw">RESOURCE_CLAY</span>    = <span class="num">11</span>  <span class="cmt">// Potter input; from Clay Pit or import</span>
+<span class="kw">RESOURCE_POTTERY</span> = <span class="num">13</span>  <span class="cmt">// Potter output; distributed to housing by Bazaars</span></pre>
+          </div>
+        </details>
+      </div>
+
+      <div class="res-nav">
+        <a href="index.html">&#8592; All Resources</a>
+        <a href="index.html#goods">Manufactured Goods &#8594;</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+  <script src="../../../lightbox.js"></script>
+</body>
+</html>
