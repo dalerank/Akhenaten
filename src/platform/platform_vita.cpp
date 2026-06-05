@@ -14,4 +14,8 @@ void platform_post_hint_init() {
 void platform_setup_begin() {
 }
 
+pcstr platform_request_initial_data_directory() {
+    return nullptr;
+}
+
 #endif

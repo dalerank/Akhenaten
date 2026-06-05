@@ -20,6 +20,10 @@ void platform_post_hint_init() {
 void platform_setup_begin() {
 }
 
+pcstr platform_request_initial_data_directory() {
+    return nullptr;
+}
+
 void platform_resolve_user_directory(bstring512& dir) {
     char* pref = SDL_GetPrefPath("", "Akhenaten");
     if (pref) {

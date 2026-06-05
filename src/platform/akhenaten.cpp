@@ -171,9 +171,9 @@ static void setup() {
     platform_init_callback();
 #endif
 
-#if defined(GAME_PLATFORM_ANDROID)
-    g_args.set_data_directory("");
-#endif
+    if (platform.is_android()) {
+        g_args.set_data_directory("");
+    }
 
     // Show configuration window if --config flag is set or config file doesn't exist.
     // Skip in integral-tests mode: the dialog would block forever in a headless CI runner,
@@ -188,17 +188,11 @@ static void setup() {
 
     // pre-init engine: assert game directory, pref files, etc.
     g_app.setup();
-#if defined(GAME_PLATFORM_ANDROID)
-    android_append_startup_log("Startup: asking for data folder");
-    pcstr initial_user_dir = android_show_pharaoh_path_dialog(false);
-    if (!initial_user_dir || !*initial_user_dir) {
-        android_append_startup_log("Startup: no folder selected");
-        exit(-2);
+    if (pcstr initial_user_dir = platform.request_initial_data_directory()) {
+        g_args.set_data_directory(initial_user_dir);
     }
-    android_append_startup_log("Startup: folder selected");
-    g_args.set_data_directory(initial_user_dir);
-    bool again = true;
-#endif // GAME_PLATFORM_ANDROID
+    bool again = platform.is_android();
+
     while (!pre_init(g_args.get_data_directory())) {
 #if defined(GAME_PLATFORM_ANDROID)
             android_append_startup_log("Startup: folder validation failed");
