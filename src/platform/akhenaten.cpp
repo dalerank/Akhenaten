@@ -496,20 +496,15 @@ int main(int argc, char** argv) {
 
     game_imgui_overlay_init();
     g_app.subscribe_events();
-#if defined(GAME_PLATFORM_ANDROID)
-    android_append_startup_log("Startup: language reload");
-#endif
+    platform.append_startup_log("Startup: language reload");
+
     lang_reload_localized_files();
     lang_reload_localized_tables();
 
-#if defined(GAME_PLATFORM_ANDROID)
-    android_append_startup_log("Startup: first frame");
-#endif
+    platform.append_startup_log("Startup: first frame");
     run_and_draw();
-#if defined(GAME_PLATFORM_ANDROID)
-    android_append_startup_log("Startup: first frame done");
-    android_set_startup_log_visible(0);
-#endif
+    platform.append_startup_log("Startup: first frame done");
+    platform.hide_startup_log();
 
     if (g_args.is_integral_tests()) {
         int rc = run_integral_tests();

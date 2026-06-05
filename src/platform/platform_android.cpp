@@ -43,6 +43,14 @@ pcstr platform_request_initial_data_directory() {
     return initial_user_dir;
 }
 
+void platform_append_startup_log(pcstr message) {
+    android_append_startup_log(message);
+}
+
+void platform_hide_startup_log() {
+    android_set_startup_log_visible(0);
+}
+
 void platform_resolve_user_directory(bstring512& dir) {
     dir = SDL_AndroidGetExternalStoragePath();
 }

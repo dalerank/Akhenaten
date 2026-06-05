@@ -33,4 +33,10 @@ pcstr platform_request_initial_data_directory() {
     return nullptr;
 }
 
+void platform_append_startup_log(pcstr message) {
+}
+
+void platform_hide_startup_log() {
+}
+
 #endif

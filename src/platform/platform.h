@@ -151,6 +151,10 @@ struct platform_t {
 
 	pcstr request_initial_data_directory();
 
+	void append_startup_log(pcstr message);
+
+	void hide_startup_log();
+
 	pcstr user_directory();
 };
 

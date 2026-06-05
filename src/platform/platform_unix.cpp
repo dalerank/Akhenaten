@@ -55,6 +55,12 @@ pcstr platform_request_initial_data_directory() {
     return nullptr;
 }
 
+void platform_append_startup_log(pcstr message) {
+}
+
+void platform_hide_startup_log() {
+}
+
 void platform_resolve_user_directory(bstring512& dir) {
     char* pref = SDL_GetPrefPath("", "Akhenaten");
     if (pref) {
