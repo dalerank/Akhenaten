@@ -965,12 +965,25 @@ cmrc_add_resource_library(
     ${PROJECT_SOURCE_DIR}/res/patreon_48.png
 )
 
+if (MSVC)
+    # Generated localization translation units are very large and can exhaust
+    # cl.exe's default heap on some VS setups. Keep this target single-process
+    # because a handful of giant generated translation units are the main issue.
+    target_compile_options(resources PRIVATE /bigobj /Zm1000 /MP1)
+endif()
+
 if (!APPLE)
     set_source_files_properties(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
 endif()
 
 
 add_executable(${GAME} ${SOURCE_FILES})
+
+if (MSVC)
+    # Some translation units in the main game target also hit cl.exe heap limits
+    # on VS2022 without larger compiler heaps/object section support.
+    target_compile_options(${GAME} PRIVATE /bigobj /Zm200)
+endif()
 
 if(LAME_FILES)
     set_source_files_properties(${LAME_FILES} PROPERTIES

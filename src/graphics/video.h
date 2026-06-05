@@ -43,4 +43,10 @@ void video_shutdown(void);
  */
 void video_draw(int x_offset, int y_offset);
 
+/**
+ * Draws the current video scaled to fit inside the window while preserving
+ * aspect ratio.
+ */
+void video_draw_fullscreen(void);
+
 #endif // GRAPHICS_VIDEO_H

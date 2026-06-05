@@ -6,32 +6,50 @@
 #include "graphics/window.h"
 #include "platform/renderer.h"
 #include "sound/sound.h"
+#include "window/autoconfig_window.h"
 
 static struct {
     int width;
     int height;
     int current_video;
+    int video_started;
 } data;
 
 static const char* PH_INTRO_VIDEOS[] = {"BINKS/high/Intro_big.bik"};
 
 static int start_next_video(void) {
-    int videos_num = 0;
-    const char** videos;
-    videos_num = 1;
-    videos = PH_INTRO_VIDEOS;
-    while (data.current_video < 3) {
-        if (videos && video_start(PH_INTRO_VIDEOS[data.current_video++])) {
+    const int videos_num = (int)(sizeof(PH_INTRO_VIDEOS) / sizeof(PH_INTRO_VIDEOS[0]));
+    while (data.current_video < videos_num) {
+        if (video_start(PH_INTRO_VIDEOS[data.current_video++])) {
             video_size(&data.width, &data.height);
             video_init();
+            data.video_started = 1;
             return 1;
         }
     }
     return 0;
 }
+
 static int init(void) {
+    data.width = 0;
+    data.height = 0;
     data.current_video = 0;
-    return start_next_video();
+    data.video_started = 0;
+    return 1;
+}
+
+static int ensure_video_started(void) {
+    if (data.video_started) {
+        return 1;
+    }
+
+    if (start_next_video()) {
+        return 1;
+    }
+
+    g_sound.play_intro();
+    autoconfig_window::show("window_logo");
+    return 0;
 }
 
 static void draw_background(int) {
@@ -39,16 +57,23 @@ static void draw_background(int) {
 }
 
 static void draw_foreground(int) {
-    video_draw((screen_width() - data.width) / 2, (screen_height() - data.height) / 2);
+    if (ensure_video_started()) {
+        video_draw_fullscreen();
+    }
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
+    if (!data.video_started && !ensure_video_started()) {
+        return;
+    }
+
     if (m->left.went_up || m->right.went_up || video_is_finished() || h->enter_pressed) {
         g_sound.music_stop();
         video_stop();
+        data.video_started = 0;
         if (!start_next_video()) {
             g_sound.play_intro();
-            window_go_back();
+            autoconfig_window::show("window_logo");
         }
     }
 }

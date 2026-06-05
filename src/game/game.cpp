@@ -31,6 +31,7 @@
 #include "scenario/scenario.h"
 #include "sound/sound_city.h"
 #include "sound/sound.h"
+#include "window/intro_video.h"
 #include "window/window_city.h"
 #include "window/editor/window_editor.h"
 #include "window/main_menu.h"
@@ -396,8 +397,12 @@ bool game_init(game_opts opts) {
         main_menu_screen::show();
     } else {
         game.logo_show_patch_message = 0;
-        g_sound.play_intro();
-        autoconfig_window::show("window_logo");
+        if (!!game_features::gameui_show_intro_video) {
+            window_intro_video_show();
+        } else {
+            g_sound.play_intro();
+            autoconfig_window::show("window_logo");
+        }
     }
 
     return true;
