@@ -25,6 +25,12 @@ void app_fullscreen(bool fullscreen);
 void app_post_event(int code);
 void app_terminate(const char* message) noexcept;
 
+struct hud_end_context_t {
+    uint32_t time_before_run;
+    uint32_t time_between_run_and_draw;
+    uint32_t time_after_draw;
+};
+
 struct application_t {
     bool active = true;
     bool quit = false;
@@ -36,6 +42,7 @@ struct application_t {
     hvector<event_handler_cb, 8> mouse_event_handlers;
     hvector<event_handler_cb, 8> user_event_handlers;
     hvector<event_handler_cb, 8> touch_event_handlers;
+    hvector<event_handler_cb, 8> hud_end_handlers;
 
     void setup();
 
@@ -46,6 +53,7 @@ struct application_t {
     void register_mouse_event_handler(event_handler_cb);
     void register_user_event_handler(event_handler_cb);
     void register_touch_event_handler(event_handler_cb);
+    void register_hud_end_handler(event_handler_cb);
     void pump_one_frame();
 
     void handle_keyboard_event(void* event);
@@ -53,6 +61,7 @@ struct application_t {
     void handle_user_event(void* event);
     void handle_touch_event(void* event);
     void handle_window_event(void* event);
+    void handle_hud_end(hud_end_context_t* context);
 };
 
 extern application_t g_app;

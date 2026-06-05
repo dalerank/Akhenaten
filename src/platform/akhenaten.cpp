@@ -46,8 +46,6 @@
 #include "dev/perfmon_nanoprofiler.h"
 
 #include "graphics/graphics.h"
-#include "graphics/text.h"
-#include "graphics/window.h"
 
 static_assert(SDL_VERSION_ATLEAST(2, 0, 17));
 #define URL_PATCHES "https://github.com/dalerank/akhenaten/wiki/Patches"
@@ -233,34 +231,26 @@ static void setup() {
         js_vm_add_scripts_folder(vfs::SCRIPTS_FOLDER);                    // setup script engine additional folder
     }
 
-    if (platform.is_android()) {
-        platform.append_startup_log("Startup: js_vm_setup");
-    }
+    platform.append_startup_log("Startup: js_vm_setup");
+
     js_vm_setup();
 
-    if (platform.is_android()) {
-        platform.append_startup_log("Startup: js_vm_sync");
-    }
+    platform.append_startup_log("Startup: js_vm_sync");
     js_vm_sync({});
 
     // init game!
     time_set_millis(SDL_GetTicks());
     game_opts opts = g_args.use_sound() ? game_opt_sound : game_opt_none;
-#if defined(GAME_PLATFORM_ANDROID)
-    android_append_startup_log("Startup: game_init");
-#endif
+    platform.append_startup_log("Startup: game_init");
+
 
     if (!game_init(opts)) {
-#if defined(GAME_PLATFORM_ANDROID)
-        android_append_startup_log("Startup: game_init failed");
-#endif
+        platform.append_startup_log("Startup: game_init failed");
         logs::info("Exiting: game init failed");
         exit(2);
     }
 
-#if defined(GAME_PLATFORM_ANDROID)
-    android_append_startup_log("Startup: config refresh");
-#endif
+    platform.append_startup_log("Startup: config refresh");
     config::refresh(js_vm_state());
 
     if (platform.is_emscripten()) {
@@ -324,20 +314,12 @@ static void run_and_draw() {
                 game.fps.frame_count = 0;
             }
 
-            const bool main_windows
-              = (g_window_manager.window_is("window_city") || g_window_manager.window_is("window_city_military")
-                 || g_window_manager.window_is("window_city_warship") || g_window_manager.window_is("window_sliding_sidebar"));
-            if (!!game_features::gameui_draw_fps && main_windows) {
-                int y_offset = screen_height() - 24;
-                int y_offset_text = y_offset + 5;
-
-                text_draw_number_colored(game.fps.last_fps, 'f', "", 5, y_offset_text, FONT_NORMAL_WHITE_ON_DARK,
-                  COLOR_FONT_RED);
-                text_draw_number_colored(time_between_run_and_draw - time_before_run, 'g', "", 40, y_offset_text,
-                  FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
-                text_draw_number_colored(time_after_draw - time_between_run_and_draw, 'd', "", 70, y_offset_text,
-                  FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_RED);
-            }
+            hud_end_context_t hud_ctx = {
+                time_before_run,
+                time_between_run_and_draw,
+                time_after_draw,
+            };
+            g_app.handle_hud_end(&hud_ctx);
         }
 
         {
