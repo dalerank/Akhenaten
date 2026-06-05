@@ -14,18 +14,6 @@
 // max heap size is approx. 330 MB with -d ATTRIBUTE2=12, otherwise max is 192
 int _newlib_heap_size_user = 300 * 1024 * 1024;
 
-void platform_init_callback(void) {
-    if (!vita2d_init()) {
-        logs::info("Exiting: vita2d init failed");
-        exit(-1);
-    }
-
-    // Black
-    vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
-
-    touch_set_mode(TOUCH_MODE_TOUCHPAD);
-}
-
 int chdir(const char* path) {
     return 0;
 }

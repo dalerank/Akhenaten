@@ -17,6 +17,9 @@ void platform_post_hint_init() {
 void platform_setup_begin() {
 }
 
+void platform_run_init_callback() {
+}
+
 pcstr platform_request_initial_data_directory() {
     return nullptr;
 }

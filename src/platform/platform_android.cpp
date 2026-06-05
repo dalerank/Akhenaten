@@ -22,6 +22,9 @@ void platform_setup_begin() {
     android_append_startup_log("Startup: setup()");
 }
 
+void platform_run_init_callback() {
+}
+
 pcstr platform_request_initial_data_directory() {
     android_append_startup_log("Startup: asking for data folder");
     pcstr initial_user_dir = android_show_pharaoh_path_dialog(false);

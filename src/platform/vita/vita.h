@@ -9,9 +9,6 @@
 #define VITA_DISPLAY_WIDTH 960
 #define VITA_DISPLAY_HEIGHT 544
 
-#define PLATFORM_ENABLE_INIT_CALLBACK
-void platform_init_callback(void);
-
 #define PLATFORM_ENABLE_PER_FRAME_CALLBACK
 void platform_per_frame_callback(void);
 

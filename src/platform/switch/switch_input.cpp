@@ -96,10 +96,6 @@ static void switch_button_to_sdlmouse_event(int switch_button, SDL_Event* event,
 static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancode scan, SDL_Keycode key);
 static void switch_create_key_event_for_direction(int direction, int key_pressed);
 
-void platform_init_callback(void) {
-    touch_set_mode(TOUCH_MODE_TOUCHPAD);
-}
-
 void platform_per_frame_callback(void) {
     if (vkbd.requested) {
         switch_start_text_input();

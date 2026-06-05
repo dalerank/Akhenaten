@@ -44,12 +44,10 @@
 #include "misc/cpp/imgui_stdlib.h"
 
 #ifdef __SWITCH__
-#include "platform/switch/switch.h"
 #include "platform/switch/switch_input.h"
 #endif
 
 #ifdef __vita__
-#include "platform/vita/vita.h"
 #include "platform/vita/vita_input.h"
 #endif
 
@@ -167,9 +165,7 @@ static void setup() {
 
     initialize_frame_string_allocator();
 
-#ifdef PLATFORM_ENABLE_INIT_CALLBACK
-    platform_init_callback();
-#endif
+    platform.init_callback();
 
     if (platform.is_android()) {
         g_args.set_data_directory("");

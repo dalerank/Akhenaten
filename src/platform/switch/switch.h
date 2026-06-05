@@ -10,9 +10,6 @@
 #define SWITCH_PIXEL_WIDTH 1920
 #define SWITCH_PIXEL_HEIGHT 1080
 
-#define PLATFORM_ENABLE_INIT_CALLBACK
-void platform_init_callback(void);
-
 #define PLATFORM_ENABLE_PER_FRAME_CALLBACK
 void platform_per_frame_callback(void);
 

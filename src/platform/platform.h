@@ -141,6 +141,8 @@ struct platform_t {
 
 	void setup_begin();
 
+	void init_callback();
+
 	pcstr request_initial_data_directory();
 
 	pcstr user_directory();
