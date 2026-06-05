@@ -97,9 +97,7 @@ static int init_sdl() {
         SDL_flags |= SDL_INIT_AUDIO;
     }
 
-#if defined(__vita__) || defined(__SWITCH__)
-    SDL_flags |= SDL_INIT_JOYSTICK;
-#endif
+    SDL_flags |= platform.sdl_init_flags();
 
     if (SDL_Init(SDL_flags) != 0) {
         logs::error("Could not initialize SDL: %s", SDL_GetError());

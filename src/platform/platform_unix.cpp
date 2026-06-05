@@ -31,6 +31,10 @@ pcstr platform_t::get_steam_path() {
     return steam_path.c_str();
 }
 
+uint32_t platform_init_sdl_flags() {
+    return 0;
+}
+
 void platform_resolve_user_directory(bstring512& dir) {
     char* pref = SDL_GetPrefPath("", "Akhenaten");
     if (pref) {
@@ -51,6 +55,10 @@ void platform_resolve_user_directory(bstring512& dir) {
 
 #include <SDL.h>
 #include <SDL_system.h>
+
+uint32_t platform_init_sdl_flags() {
+    return 0;
+}
 
 void platform_resolve_user_directory(bstring512& dir) {
     dir = SDL_AndroidGetExternalStoragePath();

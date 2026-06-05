@@ -135,6 +135,8 @@ struct platform_t {
 
 	bool file_manager_should_case_correct_file();
 
+	uint32_t sdl_init_flags();
+
 	pcstr user_directory();
 };
 

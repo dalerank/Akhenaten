@@ -10,6 +10,10 @@
 #include "windows.h"
 #include "content/vfs.h"
 
+uint32_t platform_init_sdl_flags() {
+    return 0;
+}
+
 void platform_resolve_user_directory(bstring512& dir) {
     char* pref = SDL_GetPrefPath("", "Akhenaten");
     if (pref) {
