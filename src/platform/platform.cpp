@@ -12,6 +12,7 @@ void platform_post_hint_init();
 void platform_setup_begin();
 void platform_run_init_callback();
 void platform_run_per_frame_callback();
+int platform_poll_event(CoreEvent* event);
 pcstr platform_request_initial_data_directory();
 
 int platform_sdl_version_at_least(int major, int minor, int patch) {
@@ -38,6 +39,10 @@ void platform_t::init_callback() {
 
 void platform_t::per_frame_callback() {
     platform_run_per_frame_callback();
+}
+
+int platform_t::poll_event(CoreEvent* event) {
+    return platform_poll_event(event);
 }
 
 pcstr platform_t::request_initial_data_directory() {

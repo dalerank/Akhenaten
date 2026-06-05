@@ -25,6 +25,10 @@ void platform_run_per_frame_callback() {
     platform_per_frame_callback();
 }
 
+int platform_poll_event(CoreEvent* event) {
+    return switch_poll_event(reinterpret_cast<SDL_Event*>(event));
+}
+
 pcstr platform_request_initial_data_directory() {
     return nullptr;
 }

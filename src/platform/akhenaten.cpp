@@ -43,14 +43,6 @@
 #include "dev/imguifiledialog.h"
 #include "misc/cpp/imgui_stdlib.h"
 
-#ifdef __SWITCH__
-#include "platform/switch/switch_input.h"
-#endif
-
-#ifdef __vita__
-#include "platform/vita/vita_input.h"
-#endif
-
 #ifdef GAME_PLATFORM_BROWSER
 #include <emscripten/emscripten.h>
 #endif
@@ -447,17 +439,11 @@ static void handle_event(SDL_Event* event, bool& active, bool& quit) {
 }
 
 void application_t::pump_one_frame() {
-    SDL_Event event;
     platform.per_frame_callback();
     /* Process event queue */
 
-#ifdef __vita__
-    while (vita_poll_event(&event)) {
-#elif defined(__SWITCH__)
-    while (switch_poll_event(&event)) {
-#else
-    while (SDL_PollEvent(&event)) {
-#endif
+    CoreEvent event;
+    while (platform.poll_event(reinterpret_cast<CoreEvent*>(&event))) {
         bool handled_imgui = game_imgui_overlay_handle_event(&event);
         if (!handled_imgui) {
             handle_event(&event, active, quit);

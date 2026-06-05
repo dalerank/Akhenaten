@@ -52,6 +52,8 @@ int platform_sdl_version_at_least(int major, int minor, int patch);
 #error "unknown compiler"
 #endif
 
+struct CoreEvent {};
+
 struct platform_t {
 	struct features_t {
 		uint32_t _vmx : 1;	// actually VMX or AltiVec
@@ -144,6 +146,8 @@ struct platform_t {
 	void init_callback();
 
 	void per_frame_callback();
+
+	int poll_event(CoreEvent* event);
 
 	pcstr request_initial_data_directory();
 

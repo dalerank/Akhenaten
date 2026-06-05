@@ -28,6 +28,10 @@ void platform_run_init_callback() {
 void platform_run_per_frame_callback() {
 }
 
+int platform_poll_event(CoreEvent* event) {
+    return SDL_PollEvent(reinterpret_cast<SDL_Event*>(event));
+}
+
 pcstr platform_request_initial_data_directory() {
     android_append_startup_log("Startup: asking for data folder");
     pcstr initial_user_dir = android_show_pharaoh_path_dialog(false);
