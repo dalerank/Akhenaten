@@ -51,6 +51,13 @@ void platform_hide_startup_log() {
     android_set_startup_log_visible(0);
 }
 
+bool platform_run_main_loop(platform_pump_frame_cb pump_frame, platform_should_continue_cb should_continue) {
+    while (should_continue()) {
+        pump_frame();
+    }
+    return true;
+}
+
 void platform_resolve_user_directory(bstring512& dir) {
     dir = SDL_AndroidGetExternalStoragePath();
 }

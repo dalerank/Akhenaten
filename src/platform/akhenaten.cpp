@@ -35,7 +35,6 @@
 
 #include <filesystem>
 #include <set>
-#include <platform/android/android.h>
 
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
@@ -43,25 +42,8 @@
 #include "dev/imguifiledialog.h"
 #include "misc/cpp/imgui_stdlib.h"
 
-#ifdef GAME_PLATFORM_BROWSER
-#include <emscripten/emscripten.h>
-#endif
-
 #include "dev/perfmon.h"
 #include "dev/perfmon_nanoprofiler.h"
-
-#if defined(_WIN32)
-
-#include <string.h>
-
-#if !defined(GAME_PLATFORM_WIN)
-#include <bits/exception_defines.h>
-#else
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#endif
-
-#endif
 
 #include "graphics/graphics.h"
 #include "graphics/text.h"
@@ -182,45 +164,42 @@ static void setup() {
     bool again = platform.is_android();
 
     while (!pre_init(g_args.get_data_directory())) {
-#if defined(GAME_PLATFORM_ANDROID)
-            android_append_startup_log("Startup: folder validation failed");
-#endif
+            if (platform.is_android()) {
+                platform.append_startup_log("Startup: folder validation failed");
+            }
             SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Warning",
               "Akhenaten requires the original files from Pharaoh to run.\n"
-#if defined(GAME_PLATFORM_ANDROID)
               "Copy your entire Pharaoh folder to your Android device into folder"
               "/sdcard0/Android/data/com.github.dalerank.akhenaten/files",
-#else
-              "Move the executable file to the directory containing an existing\n"
-              "Pharaoh installation, or run: akhenaten path/to/directory",
-#endif
               nullptr);
 
-#if defined(GAME_PLATFORM_ANDROID)
-        if (again) {
-            const SDL_MessageBoxButtonData buttons[] = {{SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "OK"},
-              {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel"}};
-            const SDL_MessageBoxData messageboxdata = {SDL_MESSAGEBOX_WARNING, NULL, "Wrong folder selected",
-              "The selected folder is not a proper Pharaoh folder.\n\n"
-              "Please select a path directly from either the internal storage "
-              "or the SD card, otherwise the path may not be recognised.\n\n"
-              "Press OK to select another folder or Cancel to exit.",
-              SDL_arraysize(buttons), buttons, NULL};
-            int result;
-            SDL_ShowMessageBox(&messageboxdata, &result);
-            if (!result) {
-                exit(-2);
+            if (platform.is_android()) {
+                if (again) {
+                    const SDL_MessageBoxButtonData buttons[] = {{SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "OK"},
+                    {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel"}};
+                    const SDL_MessageBoxData messageboxdata = {SDL_MESSAGEBOX_WARNING, NULL, "Wrong folder selected",
+                    "The selected folder is not a proper Pharaoh folder.\n\n"
+                    "Please select a path directly from either the internal storage "
+                    "or the SD card, otherwise the path may not be recognised.\n\n"
+                    "Press OK to select another folder or Cancel to exit.",
+                    SDL_arraysize(buttons), buttons, NULL};
+                    int result;
+                    SDL_ShowMessageBox(&messageboxdata, &result);
+                    if (!result) {
+                        exit(-2);
+                    }
+                }
+                again = true;
+                pcstr user_dir = android_show_pharaoh_path_dialog(again);
+                if (!user_dir || !*user_dir) {
+                    android_append_startup_log("Startup: no folder selected after retry");
+                    exit(-2);
+                }
+                android_append_startup_log("Startup: retry folder selected");
+                g_args.set_data_directory(user_dir);
             }
         }
-        again = true;
-        pcstr user_dir = android_show_pharaoh_path_dialog(again);
-        if (!user_dir || !*user_dir) {
-            android_append_startup_log("Startup: no folder selected after retry");
-            exit(-2);
-        }
-        android_append_startup_log("Startup: retry folder selected");
-        g_args.set_data_directory(user_dir);
-#endif
+
         if (support_window_options) {
             show_options_window(g_args);
         }
@@ -243,24 +222,25 @@ static void setup() {
     image_data_init();                                           // image paks structures init
 
     vfs::path scripts_base_path(vfs::SCRIPTS_FOLDER);
-#if !defined(GAME_PLATFORM_ANDROID)
-    pcstr base_path = vfs::platform_file_manager_get_base_path();
-    scripts_base_path = vfs::path(base_path, "/", vfs::SCRIPTS_FOLDER);
-#endif
+    if (!platform.is_android()) {
+        pcstr base_path = vfs::platform_file_manager_get_base_path();
+        scripts_base_path = vfs::path(base_path, "/", vfs::SCRIPTS_FOLDER);
+    }
     js_vm_add_scripts_folder(scripts_base_path); // setup script engine data scripts folder
 
     js_vm_add_scripts_folder(g_args.get_scripts_directory().c_str()); // setup script engine user folder
-#if !defined(GAME_PLATFORM_ANDROID)
-    js_vm_add_scripts_folder(vfs::SCRIPTS_FOLDER);                    // setup script engine additional folder
-#endif
+    if (!platform.is_android()) {
+        js_vm_add_scripts_folder(vfs::SCRIPTS_FOLDER);                    // setup script engine additional folder
+    }
 
-#if defined(GAME_PLATFORM_ANDROID)
-    android_append_startup_log("Startup: js_vm_setup");
-#endif
+    if (platform.is_android()) {
+        platform.append_startup_log("Startup: js_vm_setup");
+    }
     js_vm_setup();
-#if defined(GAME_PLATFORM_ANDROID)
-    android_append_startup_log("Startup: js_vm_sync");
-#endif
+
+    if (platform.is_android()) {
+        platform.append_startup_log("Startup: js_vm_sync");
+    }
     js_vm_sync({});
 
     // init game!
@@ -513,23 +493,9 @@ int main(int argc, char** argv) {
         return rc;
     }
 
-#ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop([]() { g_app.pump_one_frame(); }, 0, 1);
-#elif defined(GAME_PLATFORM_WIN)
-    LONG CALLBACK debug_sehgilter(PEXCEPTION_POINTERS pExceptionPointers);
-    __try {
-        while (!g_app.quit) {
-            g_app.pump_one_frame();
-        }
-    } __except (debug_sehgilter(GetExceptionInformation())) {
-        return 0;
-    }
-#else
-    while (!g_app.quit) {
-        g_app.pump_one_frame();
-    }
-#endif
-
+    bool ok = platform.run_main_loop(
+          []() { g_app.pump_one_frame(); },
+          []() { return !g_app.quit; });
 
     game_imgui_overlay_destroy();
 

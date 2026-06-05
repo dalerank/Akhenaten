@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/bstring.h"
+#include "core/xfunction.h"
 
 int platform_sdl_version_at_least(int major, int minor, int patch);
 
@@ -53,6 +54,9 @@ int platform_sdl_version_at_least(int major, int minor, int patch);
 #endif
 
 struct CoreEvent {};
+
+using platform_pump_frame_cb = xfunction<void()>;
+using platform_should_continue_cb = xfunction<bool()>;
 
 struct platform_t {
 	struct features_t {
@@ -154,6 +158,8 @@ struct platform_t {
 	void append_startup_log(pcstr message);
 
 	void hide_startup_log();
+
+	bool run_main_loop(platform_pump_frame_cb pump_frame, platform_should_continue_cb should_continue);
 
 	pcstr user_directory();
 };

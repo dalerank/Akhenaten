@@ -39,4 +39,11 @@ void platform_append_startup_log(pcstr message) {
 void platform_hide_startup_log() {
 }
 
+bool platform_run_main_loop(platform_pump_frame_cb pump_frame, platform_should_continue_cb should_continue) {
+    while (should_continue()) {
+        pump_frame();
+    }
+    return true;
+}
+
 #endif

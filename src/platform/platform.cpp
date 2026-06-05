@@ -16,6 +16,7 @@ int platform_poll_event(CoreEvent* event);
 pcstr platform_request_initial_data_directory();
 void platform_append_startup_log(pcstr message);
 void platform_hide_startup_log();
+bool platform_run_main_loop(platform_pump_frame_cb pump_frame, platform_should_continue_cb should_continue);
 
 int platform_sdl_version_at_least(int major, int minor, int patch) {
     SDL_version v;
@@ -57,6 +58,10 @@ void platform_t::append_startup_log(pcstr message) {
 
 void platform_t::hide_startup_log() {
     platform_hide_startup_log();
+}
+
+bool platform_t::run_main_loop(platform_pump_frame_cb pump_frame, platform_should_continue_cb should_continue) {
+    return platform_run_main_loop(pump_frame, should_continue);
 }
 
 bool platform_t::file_manager_should_case_correct_file() {
