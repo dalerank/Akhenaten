@@ -1,5 +1,8 @@
 log_info("akhenaten: main menu started")
 
+var game_updater_windows_url =
+    "https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_windows/master/windows_build.zip"
+
 main_menu_screen {
 	ui {
 		background    : { type:"background", path:"pharaoh_unloaded/title_00001" }
@@ -23,7 +26,7 @@ main_menu_screen {
 		update_panel  : outer_panel({ size[20, 27], enabled:false,
 			ui {
 				update_game : large_button({ pos[32, 16], size[256, 25], text:"update now", enabled: false
-					                         onclick: __game_download_latest_version
+					                         onclick: function() { __game_download_latest_version(game_updater_windows_url) }
 				                           })
 				new_version : text({pos[18, 53], text: game.version, font: FONT_SMALL_PLAIN, enabled: false})
 				changelog : text({pos[18, 73], size[560, 300], wrap:px(18), rich:true, text:"Loading changelog...", font: FONT_SMALL_PLAIN, enabled: false, clip_area: true})

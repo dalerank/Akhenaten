@@ -360,7 +360,7 @@ static void run_and_draw() {
 
         {
             NANO_PROFILE_SCOPE("_GameDraw");
-            game.frame_begin();         
+            game.frame_begin();
             game.city_sounds_frame_begin();
             game.handle_input_frame();
         }
