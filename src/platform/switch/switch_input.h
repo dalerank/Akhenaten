@@ -5,5 +5,6 @@
 
 int switch_poll_event(SDL_Event* event);
 void switch_handle_analog_sticks(void);
+void platform_per_frame_callback(void);
 
 #endif /* SWITCH_INPUT_H */

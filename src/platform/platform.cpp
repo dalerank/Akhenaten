@@ -11,6 +11,7 @@ uint32_t platform_init_sdl_flags();
 void platform_post_hint_init();
 void platform_setup_begin();
 void platform_run_init_callback();
+void platform_run_per_frame_callback();
 pcstr platform_request_initial_data_directory();
 
 int platform_sdl_version_at_least(int major, int minor, int patch) {
@@ -33,6 +34,10 @@ void platform_t::setup_begin() {
 
 void platform_t::init_callback() {
     platform_run_init_callback();
+}
+
+void platform_t::per_frame_callback() {
+    platform_run_per_frame_callback();
 }
 
 pcstr platform_t::request_initial_data_directory() {

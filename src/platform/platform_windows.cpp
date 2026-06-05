@@ -23,6 +23,9 @@ void platform_setup_begin() {
 void platform_run_init_callback() {
 }
 
+void platform_run_per_frame_callback() {
+}
+
 pcstr platform_request_initial_data_directory() {
     return nullptr;
 }

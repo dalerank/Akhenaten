@@ -143,6 +143,8 @@ struct platform_t {
 
 	void init_callback();
 
+	void per_frame_callback();
+
 	pcstr request_initial_data_directory();
 
 	pcstr user_directory();

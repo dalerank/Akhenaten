@@ -9,9 +9,6 @@
 #define VITA_DISPLAY_WIDTH 960
 #define VITA_DISPLAY_HEIGHT 544
 
-#define PLATFORM_ENABLE_PER_FRAME_CALLBACK
-void platform_per_frame_callback(void);
-
 #define PLATFORM_USE_VIRTUAL_KEYBOARD
 void platform_show_virtual_keyboard(const uint8_t* text, int max_length);
 void platform_hide_virtual_keyboard(void);

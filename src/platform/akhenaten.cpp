@@ -448,9 +448,7 @@ static void handle_event(SDL_Event* event, bool& active, bool& quit) {
 
 void application_t::pump_one_frame() {
     SDL_Event event;
-#ifdef PLATFORM_ENABLE_PER_FRAME_CALLBACK
-    platform_per_frame_callback();
-#endif
+    platform.per_frame_callback();
     /* Process event queue */
 
 #ifdef __vita__

@@ -4,6 +4,7 @@
 
 #include "core/log.h"
 #include "input/touch.h"
+#include "platform/vita/vita_input.h"
 
 #include <SDL.h>
 #include <vita2d.h>
@@ -28,6 +29,10 @@ void platform_run_init_callback() {
 
     vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
     touch_set_mode(TOUCH_MODE_TOUCHPAD);
+}
+
+void platform_run_per_frame_callback() {
+    platform_per_frame_callback();
 }
 
 pcstr platform_request_initial_data_directory() {
