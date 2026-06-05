@@ -8,6 +8,8 @@
 
 void platform_resolve_user_directory(bstring512& dir);
 uint32_t platform_init_sdl_flags();
+void platform_post_hint_init();
+void platform_setup_begin();
 
 int platform_sdl_version_at_least(int major, int minor, int patch) {
     SDL_version v;
@@ -17,6 +19,14 @@ int platform_sdl_version_at_least(int major, int minor, int patch) {
 
 uint32_t platform_t::sdl_init_flags() {
     return platform_init_sdl_flags();
+}
+
+void platform_t::post_hint_init() {
+    platform_post_hint_init();
+}
+
+void platform_t::setup_begin() {
+    platform_setup_begin();
 }
 
 bool platform_t::file_manager_should_case_correct_file() {

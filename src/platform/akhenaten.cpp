@@ -108,10 +108,7 @@ static int init_sdl() {
     SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
     SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
     // SDL_SetHint(SDL_HINT_ANDROID_SEPARATE_MOUSE_AND_TOUCH, "1");
-
-#if defined(GAME_PLATFORM_ANDROID)
-    SDL_SetHint(SDL_HINT_ANDROID_TRAP_BACK_BUTTON, "1");
-#endif
+    platform.post_hint_init();
     logs::info("SDL initialized");
     return 1;
 }
@@ -140,22 +137,14 @@ static bool pre_init(const xstring& custom_data_dir) {
         return true;
     }
 
-#if !defined(GAME_PLATFORM_ANDROID)
-    // ...then from the executable base path...
-    static_assert(SDL_VERSION_ATLEAST(2, 0, 1), "SDL version too old");
-#if defined(GAME_PLATFORM_MACOSX)
-    char* tmp_path = SDL_GetPrefPath("", "Akhenaten");
-#else
-    char* tmp_path = SDL_GetBasePath();
-#endif
-    xstring base_path(tmp_path);
-    SDL_free(tmp_path);
-    if (pre_init_dir_attempt(base_path, "Attempting to load game from base path %s")) {
-        return true;
+    if (!platform.is_android()) {
+        pstr tmp_path = platform.is_macos() ? SDL_GetPrefPath("", "Akhenaten") : SDL_GetBasePath();
+        xstring base_path(tmp_path);
+        SDL_free(tmp_path);
+        if (pre_init_dir_attempt(base_path, "Attempting to load game from base path %s")) {
+            return true;
+        }
     }
-#else
-    ; // android should has files in content directory
-#endif //
 
     const char* user_dir = pref_get_gamepath();
     if (user_dir && pre_init_dir_attempt(user_dir, "Attempting to load game from user pref %s")) {
@@ -167,10 +156,7 @@ static bool pre_init(const xstring& custom_data_dir) {
 }
 
 static void setup() {
-#if defined(GAME_PLATFORM_ANDROID)
-    android_clear_startup_log();
-    android_append_startup_log("Startup: setup()");
-#endif
+    platform.setup_begin();
     platform.init_timers();
 
     logs::info("Akhenaten version %s", get_version().c_str());

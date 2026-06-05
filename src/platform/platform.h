@@ -137,6 +137,10 @@ struct platform_t {
 
 	uint32_t sdl_init_flags();
 
+	void post_hint_init();
+
+	void setup_begin();
+
 	pcstr user_directory();
 };
 
