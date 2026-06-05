@@ -13,7 +13,6 @@
 #include <cstring>
 #include <deque>
 #include <memory>
-#include <stdexcept>
 #include <string>
 #include <utility>
 #include <vector>
@@ -123,23 +122,27 @@ struct frame_packet {
     std::vector<uint8_t> video_payload;
 };
 
-static uint32_t read_u32_le(FILE* fp) {
+static bool read_u32_le(FILE* fp, uint32_t& out) {
     uint8_t bytes[4];
     if (std::fread(bytes, 1, 4, fp) != 4) {
-        throw std::runtime_error("Unexpected end of file.");
+        logs::error("BIK: Unexpected end of file.");
+        return false;
     }
-    return (uint32_t)bytes[0]
+    out = (uint32_t)bytes[0]
         | ((uint32_t)bytes[1] << 8)
         | ((uint32_t)bytes[2] << 16)
         | ((uint32_t)bytes[3] << 24);
+    return true;
 }
 
-static uint16_t read_u16_le(FILE* fp) {
+static bool read_u16_le(FILE* fp, uint16_t& out) {
     uint8_t bytes[2];
     if (std::fread(bytes, 1, 2, fp) != 2) {
-        throw std::runtime_error("Unexpected end of file.");
+        logs::error("BIK: Unexpected end of file.");
+        return false;
     }
-    return (uint16_t)(bytes[0] | (bytes[1] << 8));
+    out = (uint16_t)(bytes[0] | (bytes[1] << 8));
+    return true;
 }
 
 static int clamp_int(int value, int min_value, int max_value) {
@@ -162,13 +165,19 @@ class bit_reader_le {
 public:
     explicit bit_reader_le(const std::vector<uint8_t>& data) : data_(data) {}
 
+    bool ok() const { return ok_; }
     int bits_remaining() const { return (int)data_.size() * 8 - bit_position_; }
 
     bool read_bit() { return read_bits(1) != 0; }
 
     uint32_t read_bits(int count) {
+        if (!ok_) {
+            return 0;
+        }
         if (count < 0 || count > 32 || bits_remaining() < count) {
-            throw std::runtime_error("Invalid bit read.");
+            logs::error("BIK: Invalid bit read.");
+            ok_ = false;
+            return 0;
         }
         uint32_t value = 0;
         for (int i = 0; i < count; ++i) {
@@ -183,8 +192,13 @@ public:
     }
 
     void skip_bits(int count) {
+        if (!ok_) {
+            return;
+        }
         if (count < 0 || bits_remaining() < count) {
-            throw std::runtime_error("Invalid bit skip.");
+            logs::error("BIK: Invalid bit skip.");
+            ok_ = false;
+            return;
         }
         bit_position_ += count;
     }
@@ -199,92 +213,137 @@ public:
 private:
     const std::vector<uint8_t>& data_;
     int bit_position_ = 0;
+    bool ok_ = true;
 };
 
 class bink_file {
 public:
     static bink_file load(const std::string& path) {
+        bink_file result;
         FILE* fp = std::fopen(path.c_str(), "rb");
         if (!fp) {
-            throw std::runtime_error("Unable to open BIK file.");
+            logs::error("BIK: Unable to open BIK file.");
+            return result;
         }
 
-        try {
-            uint32_t codec_tag = read_u32_le(fp);
-            if ((codec_tag & kBikTagMask) != kBikTag) {
-                throw std::runtime_error("Unsupported BIK signature.");
-            }
-
-            char revision = (char)((codec_tag >> 24) & 0xff);
-            if (revision != kSupportedRevision) {
-                throw std::runtime_error("Only BIKf video is supported.");
-            }
-
-            uint32_t declared_file_size = read_u32_le(fp) + 8u;
-            uint32_t frame_count = read_u32_le(fp);
-            (void)read_u32_le(fp);
-            (void)read_u32_le(fp);
-            uint32_t width = read_u32_le(fp);
-            uint32_t height = read_u32_le(fp);
-            uint32_t fps_numerator = read_u32_le(fp);
-            uint32_t fps_denominator = read_u32_le(fp);
-            uint32_t video_flags_raw = read_u32_le(fp);
-            uint32_t audio_track_count = read_u32_le(fp);
-
-            if (video_flags_raw != 0) {
-                throw std::runtime_error("Only plain YUV BIKf videos are supported.");
-            }
-            if (audio_track_count != 1) {
-                throw std::runtime_error("Only single-track BIKf files are supported.");
-            }
-
-            uint32_t max_decoded_size = read_u32_le(fp);
-            uint16_t sample_rate = read_u16_le(fp);
-            uint16_t flags = read_u16_le(fp);
-            if ((flags & kAudioFlagUseDct) != 0) {
-                throw std::runtime_error("Only RDFT Bink audio is supported.");
-            }
-
-            audio_track_info audio_track;
-            audio_track.sample_rate = sample_rate;
-            audio_track.max_decoded_size = max_decoded_size;
-            audio_track.is_stereo = (flags & kAudioFlagStereo) != 0;
-
-            (void)read_u32_le(fp);
-            uint32_t next_pos = read_u32_le(fp);
-            bool next_keyframe = true;
-            std::vector<frame_index_entry> index;
-            index.reserve(frame_count);
-
-            for (uint32_t i = 0; i < frame_count; ++i) {
-                bool is_keyframe = next_keyframe;
-                uint32_t pos = next_pos & ~1u;
-                if (i == frame_count - 1) {
-                    next_pos = declared_file_size;
-                    next_keyframe = false;
-                } else {
-                    uint32_t raw_next_pos = read_u32_le(fp);
-                    next_keyframe = (raw_next_pos & 1u) != 0;
-                    next_pos = raw_next_pos & ~1u;
-                }
-
-                if (next_pos <= pos) {
-                    throw std::runtime_error("Invalid BIK frame index.");
-                }
-
-                index.push_back({pos, next_pos - pos, is_keyframe});
-            }
-
+        uint32_t codec_tag = 0;
+        if (!read_u32_le(fp, codec_tag)) {
             std::fclose(fp);
-            return bink_file(path, width, height, fps_numerator, fps_denominator, audio_track, std::move(index));
-        } catch (...) {
-            std::fclose(fp);
-            throw;
+            return result;
         }
+        if ((codec_tag & kBikTagMask) != kBikTag) {
+            logs::error("BIK: Unsupported BIK signature.");
+            std::fclose(fp);
+            return result;
+        }
+
+        char revision = (char)((codec_tag >> 24) & 0xff);
+        if (revision != kSupportedRevision) {
+            logs::error("BIK: Only BIKf video is supported.");
+            std::fclose(fp);
+            return result;
+        }
+
+        uint32_t declared_file_size = 0;
+        uint32_t frame_count = 0;
+        uint32_t width = 0;
+        uint32_t height = 0;
+        uint32_t fps_numerator = 0;
+        uint32_t fps_denominator = 0;
+        uint32_t video_flags_raw = 0;
+        uint32_t audio_track_count = 0;
+        uint32_t max_decoded_size = 0;
+        uint16_t sample_rate = 0;
+        uint16_t flags = 0;
+        uint32_t ignored_u32 = 0;
+
+        if (!read_u32_le(fp, declared_file_size)
+            || !read_u32_le(fp, frame_count)
+            || !read_u32_le(fp, ignored_u32)
+            || !read_u32_le(fp, ignored_u32)
+            || !read_u32_le(fp, width)
+            || !read_u32_le(fp, height)
+            || !read_u32_le(fp, fps_numerator)
+            || !read_u32_le(fp, fps_denominator)
+            || !read_u32_le(fp, video_flags_raw)
+            || !read_u32_le(fp, audio_track_count)) {
+            std::fclose(fp);
+            return result;
+        }
+        declared_file_size += 8u;
+
+        if (video_flags_raw != 0) {
+            logs::error("BIK: Only plain YUV BIKf videos are supported.");
+            std::fclose(fp);
+            return result;
+        }
+        if (audio_track_count != 1) {
+            logs::error("BIK: Only single-track BIKf files are supported.");
+            std::fclose(fp);
+            return result;
+        }
+
+        if (!read_u32_le(fp, max_decoded_size)
+            || !read_u16_le(fp, sample_rate)
+            || !read_u16_le(fp, flags)) {
+            std::fclose(fp);
+            return result;
+        }
+        if ((flags & kAudioFlagUseDct) != 0) {
+            logs::error("BIK: Only RDFT Bink audio is supported.");
+            std::fclose(fp);
+            return result;
+        }
+
+        audio_track_info audio_track;
+        audio_track.sample_rate = sample_rate;
+        audio_track.max_decoded_size = max_decoded_size;
+        audio_track.is_stereo = (flags & kAudioFlagStereo) != 0;
+
+        uint32_t next_pos = 0;
+        if (!read_u32_le(fp, ignored_u32) || !read_u32_le(fp, next_pos)) {
+            std::fclose(fp);
+            return result;
+        }
+
+        bool next_keyframe = true;
+        std::vector<frame_index_entry> index;
+        index.reserve(frame_count);
+
+        for (uint32_t i = 0; i < frame_count; ++i) {
+            bool is_keyframe = next_keyframe;
+            uint32_t pos = next_pos & ~1u;
+            if (i == frame_count - 1) {
+                next_pos = declared_file_size;
+                next_keyframe = false;
+            } else {
+                uint32_t raw_next_pos = 0;
+                if (!read_u32_le(fp, raw_next_pos)) {
+                    std::fclose(fp);
+                    return result;
+                }
+                next_keyframe = (raw_next_pos & 1u) != 0;
+                next_pos = raw_next_pos & ~1u;
+            }
+
+            if (next_pos <= pos) {
+                logs::error("BIK: Invalid BIK frame index.");
+                std::fclose(fp);
+                return result;
+            }
+
+            index.push_back({pos, next_pos - pos, is_keyframe});
+        }
+
+        std::fclose(fp);
+        result = bink_file(path, width, height, fps_numerator, fps_denominator, audio_track, std::move(index));
+        result.valid_ = true;
+        return result;
     }
 
     bink_file() = default;
 
+    bool valid() const { return valid_; }
     const std::string& path() const { return file_path_; }
     int width() const { return (int)width_; }
     int height() const { return (int)height_; }
@@ -322,16 +381,24 @@ private:
     uint32_t fps_denominator_ = 0;
     audio_track_info audio_track_;
     std::vector<frame_index_entry> frame_index_;
+    bool valid_ = false;
 };
 
 class bink_sequential_packet_reader {
 public:
     explicit bink_sequential_packet_reader(const bink_file& file) : file_(file) {
+        if (!file.valid()) {
+            return;
+        }
         fp_ = std::fopen(file.path().c_str(), "rb");
         if (!fp_) {
-            throw std::runtime_error("Unable to open BIK stream.");
+            logs::error("BIK: Unable to open BIK stream.");
+            return;
         }
+        valid_ = true;
     }
+
+    bool valid() const { return valid_; }
 
     ~bink_sequential_packet_reader() {
         if (fp_) {
@@ -339,54 +406,81 @@ public:
         }
     }
 
-    frame_packet read_frame_packet(int frame_number) {
+    bool read_frame_packet(int frame_number, frame_packet& packet) {
+        packet = {};
+        if (!valid_) {
+            return false;
+        }
+
         const auto& index = file_.frame_index();
         if (frame_number < 0 || frame_number >= (int)index.size()) {
-            throw std::runtime_error("Frame index out of range.");
+            logs::error("BIK: Frame index out of range.");
+            valid_ = false;
+            return false;
         }
 
         const frame_index_entry& entry = index[frame_number];
         std::fseek(fp_, (long)entry.offset, SEEK_SET);
 
-        uint32_t audio_size = read_u32_le(fp_);
+        uint32_t audio_size = 0;
+        if (!read_u32_le(fp_, audio_size)) {
+            valid_ = false;
+            return false;
+        }
         int bytes_consumed = 4;
         if (audio_size > entry.size - (uint32_t)bytes_consumed) {
-            throw std::runtime_error("Invalid BIK audio packet boundary.");
+            logs::error("BIK: Invalid BIK audio packet boundary.");
+            valid_ = false;
+            return false;
         }
 
         int encoded_size = 0;
         if (audio_size > 3) {
-            (void)read_u32_le(fp_);
+            uint32_t ignored = 0;
+            if (!read_u32_le(fp_, ignored)) {
+                valid_ = false;
+                return false;
+            }
             bytes_consumed += 4;
             encoded_size = (int)audio_size - 4;
         }
 
-        std::vector<uint8_t> audio_payload = read_exact(encoded_size);
+        std::vector<uint8_t> audio_payload;
+        if (!read_exact(encoded_size, audio_payload)) {
+            valid_ = false;
+            return false;
+        }
         bytes_consumed += (int)audio_payload.size();
 
         int video_size = (int)entry.size - bytes_consumed;
-        std::vector<uint8_t> video_payload = read_exact(video_size);
+        std::vector<uint8_t> video_payload;
+        if (!read_exact(video_size, video_payload)) {
+            valid_ = false;
+            return false;
+        }
 
-        frame_packet packet;
         packet.audio_packets.push_back({std::move(audio_payload)});
         packet.video_payload = std::move(video_payload);
-        return packet;
+        return true;
     }
 
 private:
-    std::vector<uint8_t> read_exact(int count) {
+    bool read_exact(int count, std::vector<uint8_t>& result) {
         if (count < 0) {
-            throw std::runtime_error("Negative packet size.");
+            logs::error("BIK: Negative packet size.");
+            return false;
         }
-        std::vector<uint8_t> result((size_t)count);
+        result.assign((size_t)count, 0);
         if (count > 0 && std::fread(result.data(), 1, (size_t)count, fp_) != (size_t)count) {
-            throw std::runtime_error("Unexpected end of BIK file.");
+            logs::error("BIK: Unexpected end of BIK file.");
+            return false;
         }
-        return result;
+        return true;
     }
 
     const bink_file& file_;
     FILE* fp_ = nullptr;
+    bool valid_ = false;
 };
 
 struct bink_reference_data {
@@ -482,7 +576,8 @@ private:
             } else if (c >= 'a' && c <= 'z') {
                 digit = 10 + (c - 'a');
             } else {
-                throw std::runtime_error("Invalid base36 character.");
+                logs::error("BIK: Invalid base36 character.");
+                return 0;
             }
             value = value * 36 + digit;
         }
@@ -676,20 +771,28 @@ public:
         }
     }
 
-    std::vector<float> decode_packet(const std::vector<uint8_t>& audio_payload) {
+    bool decode_packet(const std::vector<uint8_t>& audio_payload, std::vector<float>& output) {
+        output.clear();
         bit_reader_le reader(audio_payload);
-        std::vector<float> output;
         output.reserve((size_t)frame_length_);
 
         while (reader.bits_remaining() > 0) {
             std::vector<float> coeffs = decode_coefficients(reader);
+            if (!reader.ok()) {
+                output.clear();
+                return false;
+            }
             std::vector<float> transformed = inverse_packed_rdft(coeffs);
             apply_overlap(transformed);
             std::vector<float> block = slice_playable_samples(transformed);
             output.insert(output.end(), block.begin(), block.end());
             reader.align32();
+            if (!reader.ok()) {
+                output.clear();
+                return false;
+            }
         }
-        return output;
+        return true;
     }
 
 private:
@@ -888,23 +991,41 @@ public:
         }
     }
 
-    std::vector<uint8_t> decode(const frame_packet& packet) {
+    bool decode(const frame_packet& packet, std::vector<uint8_t>& yuv) {
+        if (!ok_) {
+            return false;
+        }
+
         int chroma_width = (width_ + 1) >> 1;
         int chroma_height = (height_ + 1) >> 1;
-        std::vector<uint8_t> yuv = previous_frame_data_;
+        yuv = previous_frame_data_;
         bit_reader_le reader(packet.video_payload);
 
         decode_plane(reader, yuv, width_, height_, 0);
+        if (!ok_ || !reader.ok()) {
+            ok_ = false;
+            return false;
+        }
         if (reader.bits_remaining() >= 1) {
             decode_plane(reader, yuv, chroma_width, chroma_height, num_pixels_);
+            if (!ok_ || !reader.ok()) {
+                ok_ = false;
+                return false;
+            }
         }
         if (reader.bits_remaining() >= 1) {
             decode_plane(reader, yuv, chroma_width, chroma_height, num_pixels_ + uv_size_);
+            if (!ok_ || !reader.ok()) {
+                ok_ = false;
+                return false;
+            }
         }
 
         previous_frame_data_ = yuv;
-        return yuv;
+        return true;
     }
+
+    bool ok() const { return ok_; }
 
 private:
     void decode_plane(bit_reader_le& reader, std::vector<uint8_t>& frame_data, int current_width, int current_height, int plane_offset) {
@@ -922,6 +1043,10 @@ private:
 
         init_lengths(std::max(current_width, 8), block_width);
         read_plane_trees(reader);
+        if (!ok_ || !reader.ok()) {
+            ok_ = false;
+            return;
+        }
 
         int block_line_increment = stride_ * 7;
         int current_block_y = 0;
@@ -937,16 +1062,26 @@ private:
             read_dcs(reader, bundles_[kParamIntraDc], false);
             read_dcs(reader, bundles_[kParamInterDc], true);
             read_runs(reader, bundles_[kParamRun]);
+            if (!ok_ || !reader.ok()) {
+                ok_ = false;
+                return;
+            }
 
             int current_block_x = 0;
             while (current_block_x++ < block_width) {
                 int block_type = get_value(kParamBlockTypes);
+                if (!ok_) {
+                    return;
+                }
                 switch (block_type) {
                 case kSkipBlock:
                     break;
                 case kScaledBlock:
                     if ((current_block_y & 1) != 0) {
                         decode_scaled_block(reader, current_plane_ptr);
+                        if (!ok_ || !reader.ok()) {
+                            return;
+                        }
                     }
                     ++current_block_x;
                     current_plane_ptr += 16;
@@ -976,7 +1111,13 @@ private:
                     decode_raw_block(current_plane_ptr);
                     break;
                 default:
-                    throw std::runtime_error("Invalid BIK block type.");
+                    logs::error("BIK: Invalid BIK block type.");
+                    ok_ = false;
+                    return;
+                }
+                if (!ok_ || !reader.ok()) {
+                    ok_ = false;
+                    return;
                 }
                 current_plane_ptr += 8;
             }
@@ -984,6 +1125,9 @@ private:
         }
 
         reader.align32();
+        if (!reader.ok()) {
+            ok_ = false;
+        }
         std::copy(plane_data_.begin(), plane_data_.end(), frame_data.begin() + plane_offset);
     }
 
@@ -1103,7 +1247,9 @@ private:
             decode_pattern_block(temp_scaling_buffer_.data(), temp_scaling_buffer_.size(), 0, 8, false);
             break;
         default:
-            throw std::runtime_error("Invalid BIK scaled block type.");
+            logs::error("BIK: Invalid BIK scaled block type.");
+            ok_ = false;
+            return;
         }
 
         int source_index = 0;
@@ -1402,24 +1548,38 @@ private:
     }
 
     int get_value(int source) {
+        if (!ok_) {
+            return 0;
+        }
         bundle_t& bundle = bundles_[(size_t)source];
         if (bundle.read_index >= (int)bundle.data.size()) {
-            throw std::runtime_error("BIK bundle underflow.");
+            logs::error("BIK: BIK bundle underflow.");
+            ok_ = false;
+            return 0;
         }
         return bundle.data[(size_t)bundle.read_index++];
     }
 
-    static int decode_huff(bit_reader_le& reader, const tree_t& tree) {
+    int decode_huff(bit_reader_le& reader, const tree_t& tree) {
+        if (!ok_) {
+            return 0;
+        }
         int code = 0;
         for (int len = 1; len <= kHuffmanMaxCodeLength; ++len) {
             code |= (reader.read_bit() ? 1 : 0) << (len - 1);
+            if (!reader.ok()) {
+                ok_ = false;
+                return 0;
+            }
             for (int symbol_index = 0; symbol_index < kHuffmanSymbolCount; ++symbol_index) {
                 if (kHuffmanCodeLengths[tree.tree_index][symbol_index] == len && kHuffmanCodeBits[tree.tree_index][symbol_index] == code) {
                     return tree.symbols[(size_t)symbol_index];
                 }
             }
         }
-        throw std::runtime_error("Invalid BIK Huffman code.");
+        logs::error("BIK: Invalid BIK Huffman code.");
+        ok_ = false;
+        return 0;
     }
 
     void read_coefficients_or_residue(bit_reader_le& reader, int* block, int quant_start_index, bool inter) {
@@ -1575,6 +1735,7 @@ private:
     int color_last_value_ = 0;
     int current_plane_width_ = 0;
     int current_plane_height_ = 0;
+    bool ok_ = true;
 };
 
 static uint8_t clamp_to_byte(int value) {
@@ -1643,27 +1804,48 @@ struct bink_movie {
     int next_decode_frame = 0;
     int profile_logs = 0;
     bool current_audio_prebuffered = false;
+    bool valid = false;
 
     explicit bink_movie(const std::string& path)
         : file(bink_file::load(path))
         , reader(file)
         , video_decoder(file)
         , audio_decoder(file.audio_track()) {
+        if (!file.valid() || !reader.valid() || !video_decoder.ok()) {
+            return;
+        }
         current_rgba.reserve((size_t)file.width() * (size_t)file.height());
         current_audio_pcm.reserve(file.audio_track().max_decoded_size);
+        valid = true;
     }
 
     bool decode_frame_data(int frame_index, decoded_frame& decoded) {
+        if (!valid || !reader.valid() || !video_decoder.ok()) {
+            return false;
+        }
+
         Uint32 packet_begin = SDL_GetTicks();
-        frame_packet packet = reader.read_frame_packet(frame_index);
+        frame_packet packet;
+        if (!reader.read_frame_packet(frame_index, packet)) {
+            valid = false;
+            return false;
+        }
         Uint32 packet_end = SDL_GetTicks();
-        std::vector<uint8_t> yuv = video_decoder.decode(packet);
+        std::vector<uint8_t> yuv;
+        if (!video_decoder.decode(packet, yuv)) {
+            valid = false;
+            return false;
+        }
         Uint32 video_end = SDL_GetTicks();
         convert_bik_yuv_to_rgba(yuv, file.width(), file.height(), decoded.rgba);
         Uint32 rgba_end = SDL_GetTicks();
         decoded.audio_pcm.clear();
         if (!packet.audio_packets.empty() && !packet.audio_packets[0].payload.empty()) {
-            std::vector<float> decoded_samples = audio_decoder.decode_packet(packet.audio_packets[0].payload);
+            std::vector<float> decoded_samples;
+            if (!audio_decoder.decode_packet(packet.audio_packets[0].payload, decoded_samples)) {
+                valid = false;
+                return false;
+            }
             floats_to_pcm_s16(decoded_samples, decoded.audio_pcm);
         }
         Uint32 audio_end = SDL_GetTicks();
@@ -1744,15 +1926,17 @@ bink bink_open(const char* filename) {
         return nullptr;
     }
 
-    try {
-        vfs::path fs_file = vfs::path(filename).resolve();
-        if (fs_file.empty()) {
-            return nullptr;
-        }
-        return new bink_movie(fs_file.c_str());
-    } catch (...) {
+    vfs::path fs_file = vfs::path(filename).resolve();
+    if (fs_file.empty()) {
         return nullptr;
     }
+
+    bink_movie* movie = new bink_movie(fs_file.c_str());
+    if (!movie->valid) {
+        delete movie;
+        return nullptr;
+    }
+    return movie;
 }
 
 void bink_close(bink movie) {
@@ -1788,42 +1972,30 @@ int bink_get_audio_bitdepth(bink movie) {
 }
 
 int bink_first_frame(bink movie) {
-    if (!movie) {
+    if (!movie || !movie->valid) {
         return 0;
     }
-    try {
-        movie->queued_frames.clear();
-        movie->next_decode_frame = 1;
-        movie->current_audio_prebuffered = false;
-        return movie->decode_frame(0) ? 1 : 0;
-    } catch (...) {
-        return 0;
-    }
+    movie->queued_frames.clear();
+    movie->next_decode_frame = 1;
+    movie->current_audio_prebuffered = false;
+    return movie->decode_frame(0) ? 1 : 0;
 }
 
 int bink_next_frame(bink movie) {
-    if (!movie) {
+    if (!movie || !movie->valid) {
         return 0;
     }
     if (movie->current_frame + 1 >= (int)movie->file.frame_index().size()) {
         return 0;
     }
-    try {
-        return movie->advance_frame() ? 1 : 0;
-    } catch (...) {
-        return 0;
-    }
+    return movie->advance_frame() ? 1 : 0;
 }
 
 int bink_prebuffer_frames(bink movie, int frame_count, bink_audio_sink sink, void* userdata) {
-    if (!movie) {
+    if (!movie || !movie->valid) {
         return 0;
     }
-    try {
-        return movie->prebuffer_frames(frame_count, sink, userdata) ? 1 : 0;
-    } catch (...) {
-        return 0;
-    }
+    return movie->prebuffer_frames(frame_count, sink, userdata) ? 1 : 0;
 }
 
 int bink_current_audio_is_prebuffered(bink movie) {
