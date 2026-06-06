@@ -3,7 +3,6 @@
 #include "city/constants.h"
 #include "core/app.h"
 #include "overlays/city_overlay.h"
-#include "game/system.h"
 #include "graphics/screenshot.h"
 #include "graphics/video.h"
 #include "graphics/window.h"

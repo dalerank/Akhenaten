@@ -1,7 +1,6 @@
 #include "keys.h"
 
 #include "core/encoding.h"
-#include "game/system.h"
 #include "input/keyboard.h"
 #include "graphics/font.h"
 

@@ -2,7 +2,6 @@
 
 #include "game/file_editor.h"
 #include "game/game.h"
-#include "game/system.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/elements/menu.h"

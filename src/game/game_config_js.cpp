@@ -4,6 +4,7 @@
 #include "core/calc.h"
 #include "js/js_game.h"
 #include "core/profiler.h"
+#include "widget/debug_console.h"
 
 std::optional<bvariant> __game_feature_get(xstring feature_name) {
     auto feature = game_features::find(feature_name);
@@ -86,3 +87,54 @@ void __game_feature_set(xstring feature_name, bvariant value) {
     }
 }
 ANK_FUNCTION_2(__game_feature_set)
+
+int __game_feature_type(xstring feature_name) {
+    auto feature = game_features::find(feature_name);
+    return feature ? (int)feature->type() : (int)setting_none;
+}
+ANK_FUNCTION_1(__game_feature_type)
+
+xstring __game_feature_type_name(int type) {
+    pcstr name = e_setting_variant_type_tokens.name((setting_variant_type)type);
+    return name ? xstring(name) : xstring("unknown");
+}
+ANK_FUNCTION_1(__game_feature_type_name)
+
+std::optional<bvariant> __game_feature_default(xstring feature_name) {
+    auto feature = game_features::find(feature_name);
+    if (!feature) {
+        return std::nullopt;
+    }
+
+    const setting_variant &def = feature->defaultv;
+    if (std::holds_alternative<bool>(def)) {
+        return bvariant(std::get<bool>(def));
+    }
+    if (std::holds_alternative<float>(def)) {
+        return bvariant(std::get<float>(def));
+    }
+    if (std::holds_alternative<vec2i>(def)) {
+        return bvariant(std::get<vec2i>(def));
+    }
+    if (std::holds_alternative<xstring>(def)) {
+        return bvariant(std::get<xstring>(def));
+    }
+    return std::nullopt;
+}
+ANK_FUNCTION_1(__game_feature_default)
+
+void __debug_feature_bool(xstring feature_name, xstring display_name) {
+    auto feature = game_features::find(feature_name);
+    if (!feature || feature->type() != setting_bool) {
+        return;
+    }
+
+    bool current = feature->to_bool();
+    bool saved = current;
+    pcstr label = display_name.empty() ? feature->name.c_str() : display_name.c_str();
+    game_debug_show_property(label, current);
+    if (saved != current) {
+        feature->set(current);
+    }
+}
+ANK_FUNCTION_2(__debug_feature_bool)

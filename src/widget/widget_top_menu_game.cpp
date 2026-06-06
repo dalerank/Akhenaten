@@ -20,7 +20,6 @@
 #include "window/message_dialog.h"
 #include "io/gamestate/boilerplate.h"
 #include "building/construction/build_planner.h"
-#include "game/system.h"
 #include "window/window_city.h"
 #include "window/autoconfig_window.h"
 #include "window/hotkey_config.h"

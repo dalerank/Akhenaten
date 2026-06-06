@@ -1,5 +1,5 @@
 #include "input/cursor.h"
-#include "game/system.h"
+#include "input/mouse.h"
 #include "graphics/color.h"
 #include "platform/cursor.h"
 #include "platform/vita/vita.h"
@@ -43,9 +43,9 @@ void platform_init_cursors(int scale_percentage) {
         cursors[i].hotspot_x = c->hotspot_x;
         cursors[i].hotspot_y = c->hotspot_y;
     }
-    system_set_cursor(CURSOR_ARROW);
+    mouse_set_cursor(CURSOR_ARROW);
 }
 
-void system_set_cursor(int cursor_id) {
+void mouse_set_cursor(int cursor_id) {
     current_cursor = &cursors[cursor_id];
 }

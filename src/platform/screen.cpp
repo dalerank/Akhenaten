@@ -3,7 +3,6 @@
 #include "core/calc.h"
 #include "core/log.h"
 #include "game/game.h"
-#include "game/system.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/menu.h"
 #include "graphics/image.h"

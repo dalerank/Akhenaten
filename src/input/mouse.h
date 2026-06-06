@@ -52,3 +52,9 @@ struct mouse : public vec2i {
 extern mouse g_mouse;
 
 const mouse* mouse_in_dialog(const mouse* m);
+
+/**
+ * Set cursor to the specified cursor in @link input/cursor.h @endlink
+ * @param cursor_id Cursor to set
+ */
+void mouse_set_cursor(int cursor_id);

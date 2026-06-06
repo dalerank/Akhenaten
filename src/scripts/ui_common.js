@@ -10,11 +10,18 @@ ui {
 
 imgui {
     tree_node_ex: __imgui_tree_node_ex
+    tree_node_ex2: __imgui_tree_node_ex2
     tree_pop: __imgui_tree_pop
     begin_table: __imgui_begin_table
     end_table: __imgui_end_table
     table_flags_debug_props: __imgui_table_flags_debug_props
     property_input : __debug_props_show
+    text: __imgui_text
+    same_line: __imgui_same_line
+    button: __imgui_button
+    set_next_item_width: __imgui_set_next_item_width
+    content_region_avail_x: __imgui_content_region_avail_x
+    input_text: __imgui_input_text
 }
 
 ui.image = function(image, pos) {

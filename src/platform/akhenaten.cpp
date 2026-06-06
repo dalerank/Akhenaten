@@ -8,7 +8,6 @@
 #include "js/js_game.h"
 #include "core/profiler.h"
 #include "game/game.h"
-#include "game/system.h"
 #include "graphics/screen.h"
 #include "content/vfs.h"
 #include "io/gamefiles/lang.h"

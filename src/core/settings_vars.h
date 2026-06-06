@@ -7,6 +7,7 @@
 #include "core/vec2i.h"
 #include "core/xstring.h"
 #include "core/archive.h"
+#include "core/tokenum.h"
 
 class settings_vars_impl_t;
 
@@ -17,6 +18,9 @@ enum setting_variant_type {
     setting_string,
 	setting_none,
 };
+
+using e_setting_variant_type_tokens_t = token_holder<setting_variant_type, setting_bool, (setting_variant_type)(setting_none + 1)>;
+extern const e_setting_variant_type_tokens_t e_setting_variant_type_tokens;
 
 using setting_variant = std::variant<bool, float, vec2i, xstring>;
 class settings_vars_t {

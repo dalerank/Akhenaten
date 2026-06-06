@@ -3,7 +3,6 @@
 #include "game/game.h"
 #include "platform/renderer.h"
 #include "dev/debug.h"
-#include "game/system.h"
 #include "core/profiler.h"
 #include "graphics/screen.h"
 #include "editor/tool.h"

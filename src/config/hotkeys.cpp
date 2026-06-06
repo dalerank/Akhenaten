@@ -1,6 +1,5 @@
 #include "hotkeys.h"
 
-#include "game/system.h"
 #include "input/hotkey.h"
 #include "input/keyboard.h"
 #include "content/vfs.h"

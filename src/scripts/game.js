@@ -102,6 +102,9 @@ game_features.text = __game_feature_text
 game_features.get = __game_feature_get
 game_features.set = __game_feature_set
 game_features.count = __game_features_count
+game_features.type = __game_feature_type
+game_features.type_name = __game_feature_type_name
+game_features.default = __game_feature_default
 
 function calc_bound_scroll_speed(v, lo, hi) {
     if (v < lo) { return lo }

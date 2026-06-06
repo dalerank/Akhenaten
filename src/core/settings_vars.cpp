@@ -172,11 +172,11 @@ void settings_vars_t::insert(const settings_vars_t &vars) {
 std::string settings_vars_t::save() const {
 	std::string result;
 	result.reserve(1024);
-	
+
 	for (const auto& [key, value] : impl().get_variants()) {
 		result += key.c_str();
 		result += "=";
-		
+
 		switch (value.index()) {
 		case setting_bool: {
 				result += "b:";
@@ -399,3 +399,5 @@ void globals_settings_t::sync_global(pcstr filename, pcstr name) {
 
 	vfs::file_close(fp);
 }
+
+const e_setting_variant_type_tokens_t ANK_CONFIG_ENUM(e_setting_variant_type_tokens);

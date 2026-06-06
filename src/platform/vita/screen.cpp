@@ -1,7 +1,6 @@
 #include "platform/screen.h"
 
 #include "core/calc.h"
-#include "game/system.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/menu.h"
 #include "graphics/screen.h"

@@ -1,6 +1,5 @@
 #include "window/console.h"
 #include "game/game.h"
-#include "game/system.h"
 #include "input/mouse.h"
 #include "input/hotkey.h"
 #include "input/keyboard.h"

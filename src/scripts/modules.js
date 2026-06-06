@@ -46,6 +46,7 @@ import clouds
 import ui
 import mission_debug
 import gametime_debug
+import game_features_debug
 import houses
 import routing
 import economic

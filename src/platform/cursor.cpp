@@ -1,5 +1,5 @@
 #include "input/cursor.h"
-#include "game/system.h"
+#include "input/mouse.h"
 #include "graphics/color.h"
 
 #include "SDL.h"
@@ -44,10 +44,10 @@ void platform_init_cursors(int scale_percentage) {
         cursor_surfaces[i] = generate_cursor_surface(c->data, c->width, c->height);
         cursors[i] = SDL_CreateColorCursor(cursor_surfaces[i], c->hotspot_x, c->hotspot_y);
     }
-    system_set_cursor(current_cursor_id);
+    mouse_set_cursor(current_cursor_id);
 }
 
-void system_set_cursor(int cursor_id) {
+void mouse_set_cursor(int cursor_id) {
     current_cursor_id = cursor_id;
     SDL_SetCursor(cursors[cursor_id]);
 }

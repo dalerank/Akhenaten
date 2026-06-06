@@ -6,7 +6,6 @@
 #include "core/calc.h"
 #include "core/encoding.h"
 #include "core/string.h"
-#include "game/system.h"
 #include "input/mouse.h"
 
 #define NO_MAPPING -1
