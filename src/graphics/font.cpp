@@ -8,7 +8,10 @@
 #include "content/atlas_packer.h"
 #include "content/vfs.h"
 #include "game/game_config.h"
+#include "game/game.h"
 #include "platform/arguments.h"
+#include "platform/platform.h"
+#include "window/autoconfig_window.h"
 #include "core/app.h"
 
 #include <algorithm>
@@ -444,4 +447,12 @@ void ANK_REGISTER_APPLICATION_MODULE(font_module) {
     } else {
         g_font_data.fill_font_packer = fill_font_packer_pc;
     }
+
+    game.add_frame_serial_part_handler([]() {
+        if (game.system_language_changed || font_need_regeneration()) {
+            game.system_language_changed = false;
+            font_atlas_regenerate();
+            autoconfig_window::refresh_all();
+        }
+    });
 }

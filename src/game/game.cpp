@@ -291,6 +291,18 @@ void game_t::execute_frame_end_events() {
     frame_end_events.clear();
 }
 
+void game_t::add_frame_serial_part_handler(serial_event_t handler) {
+    std::lock_guard<std::mutex> lock(frame_serial_part_handlers_mutex);
+    frame_serial_part_handlers.push_back(std::move(handler));
+}
+
+void game_t::frame_serial_part() {
+    std::lock_guard<std::mutex> lock(frame_serial_part_handlers_mutex);
+    for (auto& handler : frame_serial_part_handlers) {
+        handler();
+    }
+}
+
 static int get_elapsed_ticks() {
     if (game.paused || !city_has_loaded) {
         return 0;

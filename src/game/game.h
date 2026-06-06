@@ -139,12 +139,17 @@ struct game_t {
     void reload_language();
     void add_frame_end_event(serial_event_t ev);
     void execute_frame_end_events();
+    void add_frame_serial_part_handler(serial_event_t handler);
+    void frame_serial_part();
 
     threading::thread_pool mtrpc;
     threading::thread_pool mt;
 
     std::mutex frame_end_events_mutex;
     hvector<serial_event_t, 16> frame_end_events;
+
+    std::mutex frame_serial_part_handlers_mutex;
+    hvector<serial_event_t, 8> frame_serial_part_handlers;
 
     ::painter painter();
 };

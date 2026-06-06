@@ -21,7 +21,7 @@
 #include "content/mods.h"
 #include "scenario/scenario.h"
 #include "game/mission.h"
-#include "widget/debug_console.h"
+#include "game/game.h"
 
 #include "js/js_debugger.h"
 #include "js/js_self_tests.h"
@@ -941,6 +941,13 @@ void js_vm_frame_begin() {
     if (vm.J && vm.J->gccounter > JS_GCLIMIT * 10) {
         vm.J->gccounter = 0;
         vm.J->gc(0);
+    }
+}
+
+void js_vm_frame_end() {
+    mission_id_t missionid(g_scenario.campaign_scenario_id);
+    if (js_vm_sync(missionid.value())) {
+        game.reload_objects();
     }
 }
 

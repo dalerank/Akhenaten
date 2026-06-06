@@ -23,9 +23,7 @@
 #include "platform/version.hpp"
 #include "platform/options_window.h"
 #include "widget/debug_console.h"
-#include "window/autoconfig_window.h"
 #include "graphics/imagepak_holder.h"
-#include "game/mission.h"
 #include "sound/sound.h"
 #include "scenario/scenario.h"
 #include "core/cstring.h"
@@ -345,17 +343,8 @@ static void run_and_draw() {
     }
 
     game_perfmon_frame_mark_end();
-    mission_id_t missionid(g_scenario.campaign_scenario_id);
-    const bool need_reload = js_vm_sync(missionid.value());
-    if (need_reload) {
-        game.reload_objects();
-    }
-
-    if (game.system_language_changed || font_need_regeneration()) {
-        game.system_language_changed = false;
-        font_atlas_regenerate();
-        autoconfig_window::refresh_all();
-    }
+    js_vm_frame_end();
+    game.frame_serial_part();
 }
 
 static void handle_event(SDL_Event* event, bool& active, bool& quit) {

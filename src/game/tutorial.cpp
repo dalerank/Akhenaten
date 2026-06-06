@@ -11,7 +11,6 @@ io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
-    iob->bind(BIND_SIGNATURE_UINT8, &tmp); 
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
@@ -33,13 +32,14 @@ io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
-    iob->bind(BIND_SIGNATURE_UINT8, &tmp); 
-    iob->bind(BIND_SIGNATURE_UINT8, &tmp); 
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
-    iob->bind(BIND_SIGNATURE_UINT8, &tmp); 
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
-    iob->bind(BIND_SIGNATURE_UINT8, &tmp); 
-    iob->bind(BIND_SIGNATURE_UINT8, &tmp); 
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
 });

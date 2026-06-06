@@ -38,6 +38,7 @@ void js_vm_reset_error();
  * internal js_State::iscallable so callers do not need to include mujs/jsi.h. */
 bool js_vm_global_is_callable(js_State *J, const char *name);
 void js_vm_frame_begin();
+void js_vm_frame_end();
 
 /** Bytes allocated for the JS VM via mujs main heap (malloc/realloc through js_alloc_wrapper). */
 uint64_t js_mujs_heap_bytes();

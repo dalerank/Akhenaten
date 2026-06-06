@@ -3,8 +3,8 @@ log_info("akhenaten: ui advisor population graph history started")
 function advisor_population_min_max_month_year(max_months) {
 	var month_count = city.population_stats.monthly_count()
 	if (month_count > max_months) {
-		var end_month = __game_simtime_month() - 1
-		var end_year = game.simtime_year
+		var end_month = game.simtime.month - 1
+		var end_year = game.simtime.year
 		if (end_month < 0) {
 			end_year -= 1
 		}
