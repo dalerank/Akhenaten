@@ -1,6 +1,5 @@
 #include "input/touch.h"
 
-#include "game/system.h"
 #include "input/mouse.h"
 
 #include <stdlib.h>
@@ -262,7 +261,7 @@ static void handle_mouse_touchpad(void) {
         const touch_t * t = get_earliest_touch();
         if (!t->has_moved)
             return;
-        system_move_mouse_cursor(t->frame_movement.x, t->frame_movement.y);
+        m.move_relative(t->frame_movement);
     }
 }
 
@@ -274,7 +273,7 @@ static void handle_mouse_direct(void) {
     const touch_t * first = get_earliest_touch();
     int x = first->current_point.x;
     int y = first->current_point.y;
-    system_set_mouse_position(&x, &y);
+    mouse::ref().warp_position(&x, &y);
     mouse::ref().set_position({ x, y });
 }
 

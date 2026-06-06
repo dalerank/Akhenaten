@@ -210,7 +210,7 @@ void platform_screen_render(void) {
     SDL_RenderPresent(SDL.renderer);
 }
 
-void system_set_mouse_position(int* x, int* y) {
+void platform_screen_warp_mouse(int* x, int* y) {
     *x = calc_bound(*x, 0, SWITCH_DISPLAY_WIDTH - 1);
     *y = calc_bound(*y, 0, SWITCH_DISPLAY_HEIGHT - 1);
     SDL_WarpMouseInWindow(SDL.window, *x, *y);

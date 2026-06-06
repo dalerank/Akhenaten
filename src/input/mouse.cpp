@@ -1,6 +1,9 @@
 #include "input/mouse.h"
 
 #include "graphics/screen.h"
+#include "platform/platform.h"
+
+#include <SDL_mouse.h>
 
 enum { SYSTEM_NONE = 0, SYSTEM_UP = 1, SYSTEM_DOWN = 2, SYSTEM_DOUBLE_CLICK = 4 };
 
@@ -90,7 +93,41 @@ void mouse::set_inside_window(int inside) {
 }
 
 void mouse::init() {
+    relative_mode = 0;
+    relative_mode_restore = { 0, 0 };
     set_inside_window(1);
+}
+
+void mouse::get_relative_state(int *x, int *y) {
+    SDL_GetRelativeMouseState(x, y);
+}
+
+void mouse::warp_position(int *x, int *y) {
+    platform.screen_warp_mouse(x, y);
+}
+
+void mouse::set_relative_mode(int enabled) {
+    if (enabled == relative_mode)
+        return;
+
+    if (enabled) {
+        SDL_GetMouseState(&relative_mode_restore.x, &relative_mode_restore.y);
+        SDL_SetRelativeMouseMode(SDL_TRUE);
+        // Discard the first value, which is incorrect
+        // (the first one gives the relative position to center of window)
+        get_relative_state(nullptr, nullptr);
+    } else {
+        SDL_SetRelativeMouseMode(SDL_FALSE);
+        warp_position(&relative_mode_restore.x, &relative_mode_restore.y);
+        set_position(relative_mode_restore);
+    }
+    relative_mode = enabled;
+}
+
+void mouse::move_relative(vec2i delta) {
+    vec2i p = { this->x + delta.x, this->y + delta.y };
+    warp_position(&p.x, &p.y);
+    set_position(p);
 }
 
 static void update_button_state(mouse_button* button) {

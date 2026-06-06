@@ -385,7 +385,7 @@ void platform_screen_show_error_message_box(const char* title, const char* messa
     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, title, message, g_sdl_screen.window);
 }
 
-void system_set_mouse_position(int* x, int* y) {
+void platform_screen_warp_mouse(int *x, int *y) {
     *x = calc_bound(*x, 0, screen_width() - 1);
     *y = calc_bound(*y, 0, screen_height() - 1);
     SDL_WarpMouseInWindow(g_sdl_screen.window, g_sdl_screen.scale_logical_to_pixels(*x),

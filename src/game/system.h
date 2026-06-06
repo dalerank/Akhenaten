@@ -52,20 +52,3 @@ void system_keyboard_show(const uint8_t* text, int max_length);
  * Hide the virtual keyboard
  */
 void system_keyboard_hide(void);
-
-/**
- * Moves the mouse cursor
- * @param delta_x The amount to move on the X axis
- * @param delta_y The amount to move on the Y axis
- */
-void system_move_mouse_cursor(int delta_x, int delta_y);
-
-/**
- * Sets the mouse position
- * @param x Pointer to X position of the mouse
- * @param y Pointer to Y position of the mouse
- * Note: the function limits x and y to the bounds of the game window
- * if the x and y are less than 0 or greater than the width/height, they will be
- * changed to fit in the window
- */
-void system_set_mouse_position(int* x, int* y);

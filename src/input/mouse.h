@@ -24,10 +24,14 @@ struct mouse : public vec2i {
     mouse_button right;   /**< Right mouse button */
     int is_inside_window; /**< Whether the mouse is in the window */
     int is_touch;         /**< Whether the mouse is a translated touch event */
+    int relative_mode;    /**< SDL relative mouse mode active */
+    vec2i relative_mode_restore; /**< Cursor position before relative mode */
 
     void set_inside_window(int inside);
     void set_relative_mode(int enabled);
     void get_relative_state(int *x, int *y);
+    void warp_position(int *x, int *y);
+    void move_relative(vec2i delta);
     vec2i pos() const { return *this; }
     void init();
 

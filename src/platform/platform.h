@@ -166,6 +166,8 @@ struct platform_t {
 	bool run_main_loop(platform_pump_frame_cb pump_frame, platform_should_continue_cb should_continue);
 
 	pcstr user_directory();
+
+	void screen_warp_mouse(int *x, int *y);
 };
 
 extern platform_t platform;

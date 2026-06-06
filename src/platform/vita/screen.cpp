@@ -125,7 +125,7 @@ void platform_screen_render(void) {
     vita2d_swap_buffers();
 }
 
-void system_set_mouse_position(int* x, int* y) {
+void platform_screen_warp_mouse(int* x, int* y) {
     *x = calc_bound(*x, 0, VITA_DISPLAY_WIDTH - 1);
     *y = calc_bound(*y, 0, VITA_DISPLAY_HEIGHT - 1);
     SDL_WarpMouseInWindow(my_window, *x, *y);
