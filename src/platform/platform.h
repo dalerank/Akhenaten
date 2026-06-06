@@ -168,6 +168,9 @@ struct platform_t {
 	pcstr user_directory();
 
 	void screen_warp_mouse(int *x, int *y);
+
+	void show_virtual_keyboard(const uint8_t *text, int max_length);
+	void hide_virtual_keyboard();
 };
 
 extern platform_t platform;

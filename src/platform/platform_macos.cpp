@@ -79,4 +79,12 @@ pcstr platform_t::get_steam_path() {
     return steam_path.c_str();
 }
 
+void platform_show_virtual_keyboard(const uint8_t *text, int max_length) {
+    (void)text;
+    (void)max_length;
+}
+
+void platform_hide_virtual_keyboard(void) {
+}
+
 #endif

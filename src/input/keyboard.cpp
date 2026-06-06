@@ -2,9 +2,10 @@
 
 #include "core/encoding.h"
 #include "core/string.h"
-#include "game/system.h"
 #include "graphics/text.h"
 #include "input/keys.h"
+
+#include "platform/platform.h"
 
 #include <SDL.h>
 
@@ -512,13 +513,26 @@ void keyboard_t::refresh(void) {
     update_viewport(1);
 }
 
+void keyboard_t::set_input_rect(int x, int y, int width, int height) {
+    SDL_Rect rect = { x, y, width, height };
+    SDL_SetTextInputRect(&rect);
+}
+
+void keyboard_t::show_virtual(const uint8_t *text, int max_length) {
+    platform.show_virtual_keyboard(text, max_length);
+}
+
+void keyboard_t::hide_virtual() {
+    platform.hide_virtual_keyboard();
+}
+
 void keyboard_t::resume_capture(void) {
     capture = 1;
 }
 
 void keyboard_t::pause_capture(void) {
     capture = 0;
-    system_keyboard_hide();
+    hide_virtual();
 }
 
 void keyboard_t::stop_capture(void) {
@@ -529,7 +543,7 @@ void keyboard_t::stop_capture(void) {
     max_length = 0;
     accepted = 0;
     multiline = 0;
-    system_keyboard_hide();
+    hide_virtual();
 }
 
 void keyboard_t::start_capture_numeric(void (*callback)(int)) {

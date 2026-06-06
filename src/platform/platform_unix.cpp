@@ -79,4 +79,12 @@ void platform_resolve_user_directory(bstring512& dir) {
     }
 }
 
+void platform_show_virtual_keyboard(const uint8_t *text, int max_length) {
+    (void)text;
+    (void)max_length;
+}
+
+void platform_hide_virtual_keyboard(void) {
+}
+
 #endif

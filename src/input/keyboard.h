@@ -35,6 +35,10 @@ struct keyboard_t {
     void start_capture_numeric(void (*callback)(int));
     void stop_capture_numeric();
 
+    void set_input_rect(int x, int y, int width, int height);
+    void show_virtual(const uint8_t *text, int max_length);
+    void hide_virtual();
+
     bool input_is_accepted();
     bool is_capturing();
     bool is_capturing_buffer(const uint8_t* buf);

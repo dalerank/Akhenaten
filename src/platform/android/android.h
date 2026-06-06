@@ -18,9 +18,5 @@ int android_remove_directory(const char *path);
 
 void *android_open_asset(const char *asset, const char *mode);
 
-#define PLATFORM_USE_VIRTUAL_KEYBOARD
-void platform_show_virtual_keyboard(void);
-void platform_hide_virtual_keyboard(void);
-
 #endif // __ANDROID__
 

@@ -56,4 +56,12 @@ bool platform_run_main_loop(platform_pump_frame_cb pump_frame, platform_should_c
     return true;
 }
 
+void platform_show_virtual_keyboard(const uint8_t *text, int max_length) {
+    vita_show_virtual_keyboard(text, max_length);
+}
+
+void platform_hide_virtual_keyboard(void) {
+    vita_hide_virtual_keyboard();
+}
+
 #endif

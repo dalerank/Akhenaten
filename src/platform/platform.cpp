@@ -21,6 +21,8 @@ void platform_append_startup_log(pcstr message);
 void platform_hide_startup_log();
 bool platform_run_main_loop(platform_pump_frame_cb pump_frame, platform_should_continue_cb should_continue);
 void platform_screen_warp_mouse(int *x, int *y);
+void platform_show_virtual_keyboard(const uint8_t *text, int max_length);
+void platform_hide_virtual_keyboard(void);
 
 int platform_sdl_version_at_least(int major, int minor, int patch) {
     SDL_version v;
@@ -70,6 +72,14 @@ bool platform_t::run_main_loop(platform_pump_frame_cb pump_frame, platform_shoul
 
 void platform_t::screen_warp_mouse(int *x, int *y) {
     platform_screen_warp_mouse(x, y);
+}
+
+void platform_t::show_virtual_keyboard(const uint8_t *text, int max_length) {
+    platform_show_virtual_keyboard(text, max_length);
+}
+
+void platform_t::hide_virtual_keyboard() {
+    platform_hide_virtual_keyboard();
 }
 
 bool platform_t::file_manager_should_case_correct_file() {

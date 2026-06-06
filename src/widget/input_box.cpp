@@ -2,7 +2,6 @@
 
 #include "core/encoding.h"
 #include "core/string.h"
-#include "game/system.h"
 
 #include <cstring>
 #include "graphics/elements/ui.h"
@@ -18,7 +17,7 @@ void input_box_start(input_box* box, uint8_t* text, int length, int allow_punctu
     box->allow_punctuation = allow_punctuation;
     int text_width = (box->width_blocks - 2) * INPUT_BOX_BLOCK_SIZE;
     g_keyboard.start_capture(text, length, allow_punctuation, text_width, box->font, box->multiline);
-    system_keyboard_set_input_rect(box->x, box->y, box->width_blocks * INPUT_BOX_BLOCK_SIZE, box->height_blocks * INPUT_BOX_BLOCK_SIZE);
+    g_keyboard.set_input_rect(box->x, box->y, box->width_blocks * INPUT_BOX_BLOCK_SIZE, box->height_blocks * INPUT_BOX_BLOCK_SIZE);
 }
 
 void input_box_pause(input_box* box) {
@@ -32,7 +31,7 @@ void input_box_resume(input_box* box) {
 void input_box_stop(input_box* box) {
     box->text = 0;
     g_keyboard.stop_capture();
-    system_keyboard_set_input_rect(0, 0, 0, 0);
+    g_keyboard.set_input_rect(0, 0, 0, 0);
 }
 
 void input_box_refresh_text(input_box* box) {
@@ -111,9 +110,9 @@ int input_box_handle_mouse(const mouse* m, const input_box* box) {
         if (box->host_input) {
             ui::set_active_text_input(static_cast<ui::einput*>(box->host_input));
         }
-        system_keyboard_show(box->text, box->max_length);
+        g_keyboard.show_virtual(box->text, box->max_length);
     } else {
-        system_keyboard_hide();
+        g_keyboard.hide_virtual();
     }
     return selected;
 }
