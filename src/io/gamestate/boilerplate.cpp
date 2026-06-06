@@ -22,7 +22,6 @@
 #include "figure/route.h"
 #include "empire/trader_handler.h"
 #include "game/mission.h"
-#include "game/state.h"
 #include "game/undo.h"
 #include "graphics/image.h"
 #include "grid/canals.h"
@@ -143,7 +142,7 @@ static void pre_load() { // do we NEED this...?
     g_city_planner.reset();
     g_city.init();
     g_message_manager.init();
-    game_state_init();
+    game.init_state();
     game.animation_timers_init();
     sound_city_init();
     building_clear_all();

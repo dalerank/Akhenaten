@@ -15,7 +15,6 @@
 #include "core/core_utility.h"
 #include "game/game_config.h"
 #include "game/cheats.h"
-#include "game/state.h"
 #include "game/undo.h"
 #include "window/file_dialog.h"
 #include "window/message_dialog.h"

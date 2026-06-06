@@ -11,7 +11,6 @@
 #include "window/message_dialog.h"
 #include "sound/sound.h"
 #include "game/game.h"
-#include "game/state.h"
 #include "dev/debug.h"
 #include "io/gamefiles/lang.h"
 #include "core/variant.h"

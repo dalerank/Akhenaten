@@ -131,6 +131,7 @@ struct game_t {
     void frame_end();
 
     void time_init(int year);
+    void init_state();
 
     void city_sounds_frame_begin();
     void before_start_simulation();

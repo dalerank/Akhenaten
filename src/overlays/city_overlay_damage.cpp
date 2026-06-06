@@ -1,6 +1,5 @@
 #include "city_overlay_damage.h"
 
-#include "game/state.h"
 #include "grid/building.h"
 #include "grid/property.h"
 #include "figure/figure.h"

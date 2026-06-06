@@ -13,7 +13,6 @@
 #include "grid/natives.h"
 #include "editor/editor.h"
 #include "game/file_editor.h"
-#include "game/state.h"
 #include "graphics/font.h"
 #include "graphics/image.h"
 #include "graphics/video.h"
@@ -50,6 +49,7 @@
 #include "scenario/distant_battle.h"
 #include "scenario/empire.h"
 #include "empire/empire.h"
+#include "grid/ring.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/tiles.h"
 #include "content/mods.h"
@@ -402,7 +402,7 @@ bool game_init(game_opts opts) {
         g_sound.init();
     }
 
-    game_state_init();
+    game.init_state();
 
     if (g_args.no_logo()) {
         g_sound.play_intro();
@@ -473,6 +473,17 @@ void game_t::frame_end() {
 
 void game_t::time_init(int year) {
     simtime.init(year);
+}
+
+void game_t::init_state() {
+    g_scenario.victory_state.reset();
+    g_city.migration.reset();
+    map_ring_init();
+
+    city_view_reset_orientation();
+    //    city_view_go_to_screen_tile_corner(screen_tile(76, 152), true);
+
+    random_generate_pool();
 }
 
 void game_t::city_sounds_frame_begin() {

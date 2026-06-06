@@ -11,7 +11,6 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "grid/point.h"
-#include "game/state.h"
 
 
 static int terrain_on_fertility_overlay(void) {

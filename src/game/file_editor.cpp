@@ -16,7 +16,6 @@
 #include "empire/trader_handler.h"
 #include "empire/empire.h"
 #include "figuretype/editor.h"
-#include "game/state.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/view/view.h"
@@ -55,7 +54,7 @@ void game_file_editor_clear_data(void) {
     g_city.init();
     g_city.init_custom_map();
     g_message_manager.init();
-    game_state_init();
+    game.init_state();
     game.animation_timers_init();
     sound_city_init();
     events::emit(event_building_menu_update{ "enable_all" });

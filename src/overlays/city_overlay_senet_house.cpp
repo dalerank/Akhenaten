@@ -1,6 +1,5 @@
 #include "city_overlay_entertainment.h"
 
-#include "game/state.h"
 #include "figure/figure.h"
 #include "city_overlay.h"
 #include "building/building_house.h"

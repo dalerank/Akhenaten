@@ -11,7 +11,6 @@
 #include "graphics/color.h"
 #include "graphics/graphics.h"
 #include "grid/point.h"
-#include "game/state.h"
 
 city_overlay_bazaar_access g_city_overlay_bazaar_access;
 

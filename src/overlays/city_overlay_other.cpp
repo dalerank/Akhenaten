@@ -6,7 +6,6 @@
 #include "core/calc.h"
 #include "figure/figure.h"
 #include "game/resource.h"
-#include "game/state.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/tooltip.h"
 #include "grid/building.h"

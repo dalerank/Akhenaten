@@ -1,7 +1,6 @@
 #include "city_overlay_religion.h"
 
 #include "city/constants.h"
-#include "game/state.h"
 #include "grid/building.h"
 #include "grid/property.h"
 #include "figure/figure.h"

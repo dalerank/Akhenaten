@@ -11,7 +11,6 @@
 #include "graphics/color.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
-#include "game/state.h"
 #include "game/game_config.h"
 #include "graphics/elements/ui.h"
 #include "city/city_buildings.h"

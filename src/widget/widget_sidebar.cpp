@@ -2,7 +2,6 @@
 #include "dev/debug.h"
 
 #include "core/profiler.h"
-#include "game/state.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/image_button.h"

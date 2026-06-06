@@ -200,7 +200,7 @@ function advisor_religion_window_draw_background(window) {
 	if (city.festival.is_planned) {
 		var size = __city_festival.planned_size
 		var monthsLeft = __city_festival.months_till_next
-		var plannedMonth = (__game_simtime_month() + monthsLeft) % 12
+		var plannedMonth = (game.simtime.month + monthsLeft) % 12
 		var baseIdx = (size >= 0 && size < festivalTextIffs.length) ? festivalTextIffs[size] : festivalTextIffs[festivalTextIffs.length - 1]
 
 		window.hold_festival_btn.enabled = false

@@ -5,7 +5,6 @@
 #include "building/construction/build_planner.h"
 #include "graphics/view/view.h"
 #include "building/monuments.h"
-#include "game/state.h"
 #include "graphics/graphics.h"
 #include "grid/building.h"
 #include "grid/figure.h"

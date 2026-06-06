@@ -1,6 +1,5 @@
 #include "city_overlay_malaria_risk.h"
 
-#include "game/state.h"
 #include "grid/building.h"
 #include "grid/property.h"
 #include "figure/figure.h"

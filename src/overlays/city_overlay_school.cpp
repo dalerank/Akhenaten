@@ -2,7 +2,6 @@
 
 #include "building/building_house.h"
 #include "figure/figure.h"
-#include "game/state.h"
 #include "grid/property.h"
 #include "grid/building.h"
 

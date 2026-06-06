@@ -6,7 +6,6 @@
 #include "city/city_resource.h"
 #include "overlays/city_overlay.h"
 #include "core/calc.h"
-#include "game/state.h"
 #include "figure/figure.h"
 #include "figure/formation_batalion.h"
 #include "figure/figure_phrase.h"

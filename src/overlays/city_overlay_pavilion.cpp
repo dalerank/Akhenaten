@@ -1,6 +1,5 @@
 #include "city_overlay_pavilion.h"
 
-#include "game/state.h"
 #include "grid/property.h"
 #include "grid/building.h"
 #include "figure/figure.h"

@@ -1,6 +1,5 @@
 #include "city_overlay_desirability.h"
 
-#include "game/state.h"
 #include "grid/terrain.h"
 #include "grid/property.h"
 #include "grid/image.h"
