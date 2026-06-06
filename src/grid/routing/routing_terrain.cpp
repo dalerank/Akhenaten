@@ -146,7 +146,7 @@ static int is_wall_tile(int grid_offset) {
 
 static int count_adjacent_wall_tiles(int grid_offset) {
     int adjacent = 0;
-    switch (city_view_orientation()) {
+    switch (g_city_view.orientation) {
     case DIR_0_TOP_RIGHT:
         adjacent += is_wall_tile(grid_offset + GRID_OFFSET(0, 1));
         adjacent += is_wall_tile(grid_offset + GRID_OFFSET(1, 1));

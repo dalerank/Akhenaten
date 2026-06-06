@@ -1,5 +1,6 @@
 #include "figure/figure.h"
 
+#include "graphics/view/view.h"
 #include "graphics/image.h"
 #include "graphics/image_desc.h"
 #include "graphics/image_groups.h"
@@ -24,7 +25,7 @@ static const int MISSILE_LAUNCHER_OFFSETS[128] = {
 };
 
 static void cc_coords_to_pixel_offset(int cross_country_x, int cross_country_y, int* pixel_x, int* pixel_y) {
-    int dir = city_view_orientation();
+    int dir = g_city_view.orientation;
     if (dir == DIR_0_TOP_RIGHT || dir == DIR_4_BOTTOM_LEFT) {
         int base_pixel_x = 2 * cross_country_x - 2 * cross_country_y;
         int base_pixel_y = cross_country_x + cross_country_y;
@@ -47,7 +48,7 @@ vec2i figure::tile_pixel_coords() {
         int prg_r = progress_on_tile > 7 ? progress_on_tile - 15 : progress_on_tile;
         int prg_x = 2 * (prg_r);
         int prg_y = (prg_r);
-        switch ((8 + direction - city_view_orientation()) % 8) {
+        switch ((8 + direction - g_city_view.orientation) % 8) {
         case 0: return {prg_x, -prg_y};
         case 1: return {2 * prg_x, 0};
         case 2: return {prg_x, prg_y};
@@ -146,7 +147,7 @@ int figure::figure_image_missile_launcher_offset() {
     return MISSILE_LAUNCHER_OFFSETS[attack_image_offset / 2];
 }
 int figure::figure_image_direction() {
-    int dir = direction - city_view_orientation();
+    int dir = direction - g_city_view.orientation;
     if (dir < 0) {
         dir += 8;
     }
@@ -154,7 +155,7 @@ int figure::figure_image_direction() {
 }
 
 int figure::figure_image_normalize_direction(int direction) {
-    int normalized_direction = direction - city_view_orientation();
+    int normalized_direction = direction - g_city_view.orientation;
     if (normalized_direction < 0)
         normalized_direction += 8;
 

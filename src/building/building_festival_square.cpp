@@ -26,7 +26,7 @@ void building_festival_square::preview::ghost_preview(build_planner &planer, pai
 
     bool can_build = map_orientation_for_venue_with_map_orientation(end, e_venue_mode_festival_square, &orientation);
     // TODO: proper correct for map orientation (for now, just use a different orientation)
-    orientation = abs(orientation + (8 - city_view_orientation())) % 8;
+    orientation = abs(orientation + (8 - g_city_view.orientation)) % 8;
 
     if (can_build != 1) { // no can place
         for (int i = 0; i < params.building_size * params.building_size; i++) {

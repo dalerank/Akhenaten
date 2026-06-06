@@ -142,7 +142,7 @@ void tooltip_context::draw_tile_tooltip() {
     screen_tile screen = pixel_to_screentile({mpos.x, mpos.y});
     if (screen.x != -1 && screen.y != -1) {
         int grid_offset = screen_to_tile(screen).grid_offset();
-        city_view_set_selected_view_tile(&screen);
+        g_city_view.set_selected_view_tile(screen);
         int x_tile = MAP_X(grid_offset);
         int y_tile = MAP_Y(grid_offset);
 

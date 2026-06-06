@@ -252,13 +252,12 @@ static void create_full_city_screenshot() {
     if (!g_window_manager.window_is("window_city") && !g_window_manager.window_is("window_city_military")) {
         return;
     }
-    vec2i original_camera_pixels = camera_get_position();
+    vec2i original_camera_pixels = g_city_view.camera_position;
 
     viewport_t full_city_view_data = g_city_view;
     auto mm_view = g_city_view.get_scrollable_pixel_limits();
 
-    vec2i view_pos, view_size;
-    city_view_get_viewport(g_city_view, view_pos, view_size);
+    vec2i view_size = g_city_view.size_pixels;
 
     mm_view.max += view_size;
 
@@ -293,15 +292,16 @@ static void create_full_city_screenshot() {
     int size;
     g_zoom.set_scale(100);
     graphics_set_clip_rectangle({0, TOP_MENU_HEIGHT}, {canvas_width, canvas_height});
-    
+
     vec2i viewport_offset, viewport_size;
-    city_view_get_viewport(g_city_view, viewport_offset, viewport_size);
-    city_view_set_viewport(canvas_width + widget_sidebar_city_offset_max(), canvas_height + TOP_MENU_HEIGHT);
+    viewport_offset = g_city_view.offset;
+    viewport_size = g_city_view.size_pixels;
+    g_city_view.set_screen_size(canvas_width + widget_sidebar_city_offset_max(), canvas_height + TOP_MENU_HEIGHT);
     int current_height = base_height;
 
     int yy = 0;
     while ((size = image_request_rows()) != 0) {
-        
+
         int y_offset = (current_height + canvas_height > mm_view.max.y) ? canvas_height - (mm_view.max.y - current_height) - TILE_Y_SIZE : 0;
 
         std::vector<std::thread> threads;
@@ -315,11 +315,11 @@ static void create_full_city_screenshot() {
                 x_offset = canvas_width - image_section_width - TILE_X_SIZE * 2;
             }
 
-            //threads.push_back(std::thread([] (vec2i min_pos, int width, int canvas_width, int current_height, color *canvas, 
+            //threads.push_back(std::thread([] (vec2i min_pos, int width, int canvas_width, int current_height, color *canvas,
               //                                  int x_offset, int y_offset, int image_section_width, int canvas_height, vec2i city_canvas_pixels, view_data_t &full_city_view_data, int color) {
                //SDL_Surface *surface = SDL_CreateRGBSurface(SDL_SWSURFACE, viewport_size.x, viewport_size.y, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
                //SDL_Renderer *renderer = SDL_CreateSoftwareRenderer(surface);
-                
+
                //SDL_Rect rect{0, 0, canvas_width, canvas_height};
                //SDL_FillRect(surface, &rect, ((yy + i) % 2) ? 0xff00ff00 : 0xff0000ff);
                 viewport_t local_view_data = full_city_view_data;
@@ -328,7 +328,7 @@ static void create_full_city_screenshot() {
                 local_context.global_render_scale = 1.f;
                 local_context.renderer = g_render.renderer();
 
-                camera_go_to_pixel(local_context, vec2i{mm_view.min.x + width, current_height}, false);
+                local_view_data.go_to_pixel(vec2i{mm_view.min.x + width, current_height}, false);
                 g_screen_city.draw_without_overlay(local_context, 0);
                 g_render.save_screen_buffer(local_context, &canvas[width], x_offset, TOP_MENU_HEIGHT + y_offset, image_section_width, canvas_height - y_offset, city_canvas_pixels.x);
                 //SDL_Rect rect2 = {x_offset, y_offset, canvas_width, canvas_height};
@@ -352,19 +352,18 @@ static void create_full_city_screenshot() {
         current_height += canvas_height;
     }
 
-    city_view_set_viewport(viewport_size.x + widget_sidebar_city_offset_max(), viewport_size.y + TOP_MENU_HEIGHT);
+    g_city_view.set_screen_size(viewport_size.x + widget_sidebar_city_offset_max(), viewport_size.y + TOP_MENU_HEIGHT);
     g_zoom.set_scale(old_scale);
 
     graphics_reset_clip_rectangle();
-    painter global_context = game.painter();
-    camera_go_to_pixel(global_context, original_camera_pixels, true);
-    
+    g_city_view.go_to_pixel(original_camera_pixels, true);
+
     if (!error) {
         image_finish();
         logs::info("Saved full city screenshot: %s", filename);
         show_saved_notice(filename);
     }
-    
+
     image_free();
 }
 

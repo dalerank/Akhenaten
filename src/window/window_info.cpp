@@ -91,8 +91,8 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_info_window) {
 }
 
 static int center_in_city(int element_width_pixels) {
-    vec2i view_pos, view_size;
-    city_view_get_viewport(g_city_view, view_pos, view_size);
+    vec2i view_pos = g_city_view.offset;
+    vec2i view_size = g_city_view.size_pixels;
     int margin = (view_size.x - element_width_pixels) / 2;
     return view_pos.x + margin;
 }

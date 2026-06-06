@@ -302,9 +302,9 @@ void game_debug_terrain_paint_draw() {
     const bool is_open = game.debug_terrain_paint;
     if (is_open != s_prev_open) {
         if (is_open) {
-            camera_set_extra_scroll_margin(36);
+            g_city_view.set_extra_scroll_margin(36);
         } else {
-            camera_set_extra_scroll_margin(0);
+            g_city_view.set_extra_scroll_margin(0);
             editor_tool_deactivate();
         }
         s_prev_open = is_open;

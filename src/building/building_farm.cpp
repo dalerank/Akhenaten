@@ -86,7 +86,7 @@ bool building_farm::target_route_tile_blocked(int grid_offset) const {
 }
 
 bool building_floodplain_farm::preview::is_blocked(tile2i tile, int size, blocked_tile_vec &blocked_tiles) const {
-    int orientation_index = city_view_orientation() / 2;
+    int orientation_index = g_city_view.orientation / 2;
     int blocked = 0;
     int num_tiles = (size * size);
 
@@ -142,7 +142,7 @@ void building_floodplain_farm::preview::ghost_preview(build_planner &planer, pai
 }
 
 int building_floodplain_farm::preview::finalize_check(build_planner &p, tile2i tile, tile2i end, int state) const {
-    int orientation_index = city_view_orientation() / 2;
+    int orientation_index = g_city_view.orientation / 2;
     const auto &params = building_static_params::get(p.build_type);
     int num_tiles = (params.building_size * params.building_size);
     

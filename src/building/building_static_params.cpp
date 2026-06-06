@@ -22,7 +22,7 @@ void building_static_params::initialize() {
 }
 
 void add_building(building *b, int orientation, int variant) {
-    int orientation_rel = city_view_relative_orientation(orientation);
+    int orientation_rel = g_city_view.relative_orientation(orientation);
     const auto &params = b->params();
     switch (b->type) {
         // houses

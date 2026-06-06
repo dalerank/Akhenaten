@@ -44,7 +44,7 @@ void building_ferry::on_place_update_tiles(int orientation, int variant) {
 }
 
 void building_ferry::update_map_orientation(int orientation) {
-    int image_offset = city_view_relative_orientation(base.orientation);
+    int image_offset = g_city_view.relative_orientation(base.orientation);
     int image_id = base_img() + image_offset;
     map_water_add_building(id(), tile(), size(), image_id);
 }
@@ -54,7 +54,7 @@ bool building_ferry::force_draw_height_tile(painter &ctx, tile2i t, vec2i pixel,
 
     if (this->main()->tile() == t) {
         int image_id = current_params().first_img(animkeys().top);
-        int image_offset = city_view_relative_orientation(base.orientation);
+        int image_offset = g_city_view.relative_orientation(base.orientation);
 
         auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_top);
         command.image_id = image_id + image_offset;

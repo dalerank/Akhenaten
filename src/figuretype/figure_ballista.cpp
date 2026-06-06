@@ -1,5 +1,6 @@
 #include "figure_ballista.h"
 
+#include "graphics/view/view.h"
 #include "figure/combat.h"
 #include "city/city_figures.h"
 #include "figuretype/figure_missile.h"
@@ -30,7 +31,7 @@ void figure_ballista::figure_action() {
         poof();
 
     base.map_figure_remove();
-    switch (city_view_orientation()) {
+    switch (g_city_view.orientation) {
     case DIR_0_TOP_RIGHT:
         base.tile = b->tile;
         break;

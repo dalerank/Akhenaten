@@ -426,8 +426,8 @@ bool game_init_editor() {
     game_file_editor_clear_data();
     game_file_editor_create_scenario(2);
 
-    if (city_view_is_sidebar_collapsed()) {
-        city_view_toggle_sidebar();
+    if (g_city_view.sidebar_collapsed) {
+        g_city_view.toggle_sidebar();
     }
 
     editor_set_active(1);
@@ -462,6 +462,7 @@ void game_t::update() {
 void game_t::frame_begin() {
     OZZY_PROFILER_FUNCTION();
     frame++;
+    g_city_view.frame_begin();
     window_draw(false);
 }
 
@@ -480,7 +481,7 @@ void game_t::init_state() {
     g_city.migration.reset();
     map_ring_init();
 
-    city_view_reset_orientation();
+    g_city_view.reset_orientation();
     //    city_view_go_to_screen_tile_corner(screen_tile(76, 152), true);
 
     random_generate_pool();

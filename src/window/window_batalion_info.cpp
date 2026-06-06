@@ -13,6 +13,7 @@
 #include "figure/formation_batalion.h"
 #include "window/window_city.h"
 #include "window/window_city_military.h"
+#include "graphics/view/view.h"
 #include "sound/sound.h"
 #include "core/calc.h"
 
@@ -127,7 +128,7 @@ void batalion_info_window::update_layout() {
         {2, FORMATION_DOUBLE_LINE_1}, {4, FORMATION_MOP_UP}},
     };
 
-    const int index = (city_view_orientation() == DIR_6_TOP_LEFT || city_view_orientation() == DIR_2_BOTTOM_RIGHT) ? 1 : 0;
+    const int index = (g_city_view.orientation == DIR_6_TOP_LEFT || g_city_view.orientation == DIR_2_BOTTOM_RIGHT) ? 1 : 0;
     const mode_t *offsets;
     if (m->figure_type == FIGURE_INFANTRY)
         offsets = OFFSETS_LEGIONARY[index];

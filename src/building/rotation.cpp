@@ -59,11 +59,11 @@ void building_rotation_update_road_orientation() {
 }
 
 int building_rotation_get_storage_fort_orientation(int building_rotation) {
-    return (2 * building_rotation + city_view_orientation()) % 8;
+    return (2 * building_rotation + g_city_view.orientation) % 8;
 }
 
 int building_rotation_get_storage_gatehouse_orientation(int building_rotation) {
-    return (2 * building_rotation + city_view_orientation()) % 8;
+    return (2 * building_rotation + g_city_view.orientation) % 8;
 }
 
 int building_rotation_get_delta_with_rotation(int default_delta) {

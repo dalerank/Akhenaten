@@ -203,7 +203,7 @@ void building_mud_wall::set_wall_gatehouse_image_manually(int grid_offset) {
     int gatehouse_down = get_gatehouse_building_id(grid_offset + GRID_OFFSET(0, 1));
     int gatehouse_right = get_gatehouse_building_id(grid_offset + GRID_OFFSET(1, 0));
     int image_offset = 0;
-    int map_orientation = city_view_orientation();
+    int map_orientation = g_city_view.orientation;
     if (map_orientation == DIR_0_TOP_RIGHT) {
         if (gatehouse_up && !gatehouse_left) {
             int pos = get_gatehouse_position(grid_offset, DIR_0_TOP_RIGHT, gatehouse_up);

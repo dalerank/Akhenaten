@@ -100,7 +100,7 @@ void building_fort::preview::ghost_preview(build_planner &planer, painter &ctx, 
     int global_rotation = building_rotation_global_rotation();
 
     const auto &base_params = get_fort_params(planer.build_type);
-    vec2i tile_ground_offset = base_params.ghost.ground_check_offset[global_rotation * 4 + (city_view_orientation() / 2)];
+    vec2i tile_ground_offset = base_params.ghost.ground_check_offset[global_rotation * 4 + (g_city_view.orientation / 2)];
     tile2i tile_ground = end.shifted(tile_ground_offset.x, tile_ground_offset.y);
 
     blocked_tile_vec blocked_tiles_fort;

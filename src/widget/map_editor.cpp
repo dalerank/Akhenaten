@@ -54,11 +54,10 @@ static void draw_flags(vec2i pixel, tile2i point) {
 // }
 
 static void update_zoom_level() {
-    vec2i offset = camera_get_position();
+    vec2i offset = g_city_view.camera_position;
     if (g_zoom.update_value(&offset)) {
-        city_view_refresh_viewport();
-        painter ctx = game.painter();
-        camera_go_to_pixel(ctx, offset, true);
+        g_city_view.refresh_viewport();
+        g_city_view.go_to_pixel(offset, true);
         sound_city_decay_views();
     }
 }
@@ -71,11 +70,11 @@ void widget_map_editor_draw() {
 
     draw_context.init();
     //    city_view_foreach_map_tile(draw_buildings);
-    city_view_foreach_valid_map_tile(ctx, 
+    g_city_view.foreach_valid_map_tile(ctx, 
         [] (vec2i pixel, tile2i tile, painter &ctx) { g_screen_city.draw_isometric_flat(pixel, tile, ctx); }
     );
 
-    city_view_foreach_valid_map_tile(ctx, 
+    g_city_view.foreach_valid_map_tile(ctx, 
         [] (vec2i pixel, tile2i tile, painter &ctx) { g_screen_city.draw_isometric_terrain_height(pixel, tile, ctx); }
     );
     //    city_view_foreach_valid_map_tile(draw_flags, draw_top, 0);
@@ -86,7 +85,7 @@ static void update_city_view_coords(int x, int y, tile2i* tile) {
     screen_tile screen = pixel_to_screentile({x, y});
     if (screen.x != -1 && screen.y != -1) {
         *tile = screen_to_tile(screen);
-        city_view_set_selected_view_tile(&screen);
+        g_city_view.set_selected_view_tile(screen);
     } else {
         *tile = tile2i::invalid;
     }
@@ -95,14 +94,15 @@ static void update_city_view_coords(int x, int y, tile2i* tile) {
 static void scroll_map(const mouse* m) {
     vec2i delta;
     if (scroll_get_delta(m, &delta, SCROLL_TYPE_CITY)) {
-        camera_scroll(delta.x, delta.y);
+        g_city_view.scroll(delta.x, delta.y);
         sound_city_decay_views();
     }
 }
 
 static int input_coords_in_map(int x, int y) {
     vec2i view_pos, view_size;
-    city_view_get_viewport(g_city_view, view_pos, view_size);
+    view_pos = g_city_view.offset;
+    view_size = g_city_view.size_pixels;
 
     x -= view_pos.x;
     y -= view_pos.y;
@@ -115,7 +115,8 @@ static void handle_touch_scroll(const touch_t * t) {
     if (editor_tool_is_active()) {
         if (t->has_started) {
             vec2i view_pos, view_size;
-            city_view_get_viewport(g_city_view, view_pos, view_size);
+            view_pos = g_city_view.offset;
+    view_size = g_city_view.size_pixels;
             scroll_set_custom_margins(view_pos.x, view_pos.y, view_size.x, view_size.y);
         }
         if (t->has_ended)
@@ -166,7 +167,8 @@ static bool handle_cancel_construction_button(const touch_t * t) {
         return false;
 
     vec2i view_pos, view_size;
-    city_view_get_viewport(g_city_view, view_pos, view_size);
+    view_pos = g_city_view.offset;
+    view_size = g_city_view.size_pixels;
 
     int box_size = 5 * 16;
     view_size.x -= box_size;

@@ -123,7 +123,7 @@ void map_editor_tool_draw(painter &ctx, tile2i tile) {
         return;
 
     int type = editor_tool_type();
-    screen_tile screen = camera_get_selected_screen_tile();
+    screen_tile screen = g_city_view.selected_tile;
     int x = screen.x;
     int y = screen.y;
     xstring warning;

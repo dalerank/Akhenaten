@@ -4,6 +4,8 @@
 #include "js/js_struct.h"
 #include "mujs/mujs.h"
 #include "mujs/jsvalue.h"
+#include "core/xstring.h"
+#include "grid/point.h"
 #include "graphics/elements/ui_js.h"
 #include "game/game_events.h"
 
@@ -48,6 +50,7 @@ static bool try_show_cptr_property(js_State *J, pcstr display_name, int obj_idx,
     case JS_PTR_UINT8:  game_debug_show_property(display_name, *(uint8_t *)ptr); break;
     case JS_PTR_INT16:  game_debug_show_property(display_name, *(int16_t *)ptr); break;
     case JS_PTR_UINT16: game_debug_show_property(display_name, *(uint16_t *)ptr);break;
+    case JS_PTR_XSTRING: game_debug_show_property(display_name, ((xstring *)ptr)->c_str()); break;
     }
     return true;
 }
@@ -75,6 +78,15 @@ static void __debug_props_show(js_State *J) {
 
     // 2-arg fallback: property_input("display_name", value) — read-only display.
     const int val_idx = 2;
+
+    if (J->isobject(val_idx) && !js_isarray(J, val_idx)) {
+        js_Object *obj = J->toobject(val_idx);
+        if (obj && obj->type == JS_CVEC2I) {
+            const vec2i v{obj->u.vec2.x, obj->u.vec2.y};
+            game_debug_show_property(field, v, /*disabled*/true);
+            return;
+        }
+    }
 
     if (js_isboolean(J, val_idx)) {
         bool v = js_toboolean(J, val_idx);

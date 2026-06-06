@@ -55,7 +55,7 @@ bool city_overlay::is_drawable_farm_corner(tile2i tile) const {
         return false;
     }
 
-    int map_orientation = city_view_orientation();
+    int map_orientation = g_city_view.orientation;
     int xy = map_property_multi_tile_xy(tile);
     if (map_orientation == DIR_0_TOP_RIGHT && xy == EDGE_X0Y2) {
         return true;
@@ -75,7 +75,7 @@ bool city_overlay::is_drawable_building_corner(tile2i tile, tile2i main, int siz
         return false;
     }
 
-    int map_orientation = city_view_orientation();
+    int map_orientation = g_city_view.orientation;
     tile2i offset_main;
     int offset = size - 1;
     if (map_orientation == DIR_0_TOP_RIGHT) {
@@ -216,7 +216,7 @@ void city_overlay::draw_building_footprint(painter &ctx, vec2i pos, tile2i tile,
     if (show_building(b)) {
         color color_mask = color_mask_building_def(b);
         if (b->is_farm()) {
-            if (is_drawable_farmhouse(tile, city_view_orientation())) {
+            if (is_drawable_farmhouse(tile, g_city_view.orientation)) {
                 auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
                 command.image_id = map_image_at(tile);
                 command.pixel = pos;

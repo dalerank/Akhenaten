@@ -114,7 +114,7 @@ bool zoom_t::update_value(vec2i* camera_position) {
     zoom = new_zoom;
     delta = zoom - old_zoom;
 
-    // re-center camera around the input point   
+    // re-center camera around the input point
     if (!game_features::gameui_smooth_zoom) {
         vec2i old_offset, new_offset;
         old_offset.x = calc_adjust_with_percentage<int>(input_offset.x, (int)old_zoom);
@@ -172,5 +172,5 @@ void zoom_t::set_scale(float z) {
     z = calc_bound(z, zoom_min, zoom_max);
     zoom = z;
     target = z;
-    city_view_refresh_viewport();
+    g_city_view.refresh_viewport();
 }

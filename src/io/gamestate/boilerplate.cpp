@@ -197,7 +197,7 @@ static void post_load() {
     js_register_game_handlers(missionid.value());
 
     // camera
-    //    city_view_camera_position_refresh();
+    //    g_city_view.refresh_camera_position();
     //    city_view_refresh_viewport();
 
     // problems / overlays
@@ -796,7 +796,7 @@ void GamestateIO::start_loaded_file() {
     map_moisture_recompute_profile();
 
     // city view / orientation
-    city_view_init();
+    g_city_view.init();
     map_orientation_update_buildings();
 
     // Refresh the off-map ring so saves authored under the old behaviour

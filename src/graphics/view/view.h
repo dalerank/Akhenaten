@@ -1,20 +1,11 @@
 #pragma once
 
 #include "core/buffer.h"
+#include "core/xstring.h"
 #include "grid/point.h"
 #include "zoom.h"
 #include "graphics/painter.h"
-
-extern int SCROLL_MIN_SCREENTILE_X;
-extern int SCROLL_MIN_SCREENTILE_Y;
-extern int SCROLL_MAX_SCREENTILE_X;
-extern int SCROLL_MAX_SCREENTILE_Y;
-// Extra panning headroom (in world tiles) beyond the normal map-edge limits.
-// Recomputed into SCROLL_* by camera_calc_scroll_limits(); apply via the
-// helper below so the camera snaps back when the margin is reduced.
-extern int CAMERA_EXTRA_SCROLL_MARGIN_TILES;
-void camera_calc_scroll_limits();
-void camera_set_extra_scroll_margin(int world_tiles);
+#include "core/xfunction.h"
 
 typedef vec2i screen_tile;
 
@@ -25,95 +16,90 @@ struct carera_scrollable {
     vec2i max;
 };
 
+struct painter;
+using tile_draw_callback = xfunction<void(vec2i, tile2i, painter&)>;
+
 struct viewport_t {
-    int screen_width;
-    int screen_height;
+    vec2i screen_size;
     bool sidebar_collapsed;
     int orientation;
-    struct {
-        screen_tile tile_internal;
-        vec2i position;
-    } camera;
-    struct {
-        vec2i offset;
-        vec2i size_pixels;
-        int width_tiles;
-        int height_tiles;
-    } viewport;
+    vec2i camera_position;
+    vec2i camera_pixel_offset_internal;
+    vec2i camera_in_pixels;
+    vec2i camera_max_tile;
+    vec2i camera_max_pixel_offset;
+    vec2i scroll_min_screentile;
+    vec2i scroll_max_screentile;
+    int extra_scroll_margin_tiles = 0;
+    screen_tile tile_internal;
+    vec2i render_start_tile;
+    vec2i render_start_pixel;
+    int camera_corner_offset = 0;
+    tile2i camera_mappoint;
+    tile2i view_center;
+    vec2i offset;
+    vec2i size_pixels;
+    vec2i size_tiles;
+    vec2i viewport_tiles;
+    vec2i mouse_viewport;
+    vec2i mouse_camera_coord;
+    vec2i mouse_camera_offset;
+    int mouse_grid_offset = 0;
+    xstring mouse_terrain_type;
+    vec2i mouse_tile_pixel;
     screen_tile selected_tile;
 
+    void init();
+    void frame_begin();
+    void update_derived_camera_state();
+    void update_scroll_limits();
+    void set_extra_scroll_margin(int world_tiles);
+    void validate_camera_position();
+    void go_to_pixel(vec2i pixel, bool validate);
+    void go_to_corner_tile(screen_tile screen, bool validate);
+    void go_to_screen_tile(screen_tile screen, bool validate);
+    void go_to_mappoint(tile2i point);
+    void scroll(int x, int y);
+    void set_selected_view_tile(const vec2i &tile);
     carera_scrollable get_scrollable_pixel_limits(float p = -1.f);
+    vec2i get_camera_scrollable_viewspace_clip() const;
     bool can_update(float p);
+    void set_viewport(int x_offset, int y_offset, int width, int height);
+    void set_viewport_with_sidebar();
+    void set_viewport_without_sidebar();
+    void refresh_viewport();
+    void refresh_camera_position();
+    void set_screen_size(int screen_width, int screen_height);
+    void toggle_sidebar(int mode = -1);
+    void start_sidebar_toggle();
+    void reset_orientation();
+    void rotate_left();
+    void rotate_right();
+    void rotate_north();
+    int relative_orientation(int orientation) const;
+    int absolute_orientation(int orientation_relative) const;
+    bool contains_pixel(vec2i pixel) const;
+    void foreach_valid_map_tile(painter &ctx,
+                                tile_draw_callback callback1,
+                                tile_draw_callback callback2 = {},
+                                tile_draw_callback callback3 = {},
+                                tile_draw_callback callback4 = {},
+                                tile_draw_callback callback5 = {},
+                                tile_draw_callback callback6 = {});
+
+    void foreach_valid_map_tile_rows(painter &ctx,
+                                     int y_begin, int y_end,
+                                     tile_draw_callback callback1,
+                                     tile_draw_callback callback2 = {},
+                                     tile_draw_callback callback3 = {},
+                                     tile_draw_callback callback4 = {},
+                                     tile_draw_callback callback5 = {},
+                                     tile_draw_callback callback6 = {});
+    void foreach_tile_in_range(painter &ctx, int grid_offset, int size, int radius, tile_draw_callback callback);
 };
 
 struct figure_draw_cache_data_t;
-struct painter;
 
-using tile_draw_callback = std::function<void(vec2i, tile2i, painter&)>;
 using minimap_draw_callback = void(vec2i pixel, tile2i point);
 
 extern viewport_t g_city_view;
-
-void city_view_camera_position_refresh();
-
-void city_view_init();
-
-int city_view_orientation(void);
-int city_view_relative_orientation(int orientation);
-int city_view_absolute_orientation(int orientation_relative);
-void city_view_reset_orientation(void);
-
-screen_tile city_view_get_camera_screentile();
-tile2i city_view_get_camera_mappoint();
-vec2i camera_get_position();
-vec2i camera_get_pixel_offset_internal(painter &ctx);
-vec2i city_view_get_camera_max_tile();
-vec2i city_view_get_camera_max_pixel_offset();
-vec2i city_view_get_camera_in_pixels();
-
-
-void city_view_get_camera_scrollable_viewspace_clip(vec2i &clip);
-
-void camera_go_to_pixel(painter &ctx, vec2i pixel, bool validate);
-void camera_go_to_corner_tile(screen_tile screen, bool validate);
-void camera_go_to_screen_tile(screen_tile screen, bool validate);
-void camera_go_to_mappoint(tile2i point);
-void camera_scroll(int x, int y);
-
-screen_tile camera_get_selected_screen_tile();
-void city_view_set_selected_view_tile(const vec2i* tile);
-
-void city_view_rotate_left(void);
-void city_view_rotate_right(void);
-tile2i city_view_get_center();
-
-void city_view_refresh_viewport();
-
-void city_view_set_viewport(int screen_width, int screen_height);
-void city_view_get_viewport(const viewport_t &view, vec2i &pos, vec2i &size);
-vec2i city_view_get_viewport_size_tiles();
-
-bool pixel_is_inside_viewport(vec2i pixel);
-bool city_view_is_sidebar_collapsed(void);
-void city_view_start_sidebar_toggle(void);
-void city_view_toggle_sidebar(int mode = -1);
-
-void city_view_foreach_valid_map_tile(painter &ctx,
-                                      tile_draw_callback callback1,
-                                      tile_draw_callback callback2 = nullptr,
-                                      tile_draw_callback callback3 = nullptr,
-                                      tile_draw_callback callback4 = nullptr,
-                                      tile_draw_callback callback5 = nullptr,
-                                      tile_draw_callback callback6 = nullptr);
-
-/// Iterate only over rows y in [y_begin, y_end). Used to split work for parallel rendering.
-void city_view_foreach_valid_map_tile_rows(painter &ctx,
-                                          int y_begin, int y_end,
-                                          tile_draw_callback callback1,
-                                          tile_draw_callback callback2 = nullptr,
-                                          tile_draw_callback callback3 = nullptr,
-                                          tile_draw_callback callback4 = nullptr,
-                                          tile_draw_callback callback5 = nullptr,
-                                          tile_draw_callback callback6 = nullptr);
-
-void city_view_foreach_tile_in_range(painter &ctx, int grid_offset, int size, int radius, tile_draw_callback callback);

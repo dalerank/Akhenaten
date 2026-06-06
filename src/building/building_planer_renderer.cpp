@@ -84,7 +84,7 @@ int building_planer_renderer::construction_place(build_planner &planer, tile2i s
     verify_no_crash(params.building_size > 0);
 
     // correct building placement for city orientations
-    switch (city_view_orientation()) {
+    switch (g_city_view.orientation) {
     case DIR_2_BOTTOM_RIGHT:
         end = end.shifted(-params.building_size + 1, 0);
         break;
@@ -133,7 +133,7 @@ int building_planer_renderer::construction_update(build_planner &planer, tile2i 
         return 0;
     }
 
-    int real_orientation = (city_view_orientation() / 2) % 2;
+    int real_orientation = (g_city_view.orientation / 2) % 2;
     if (real_orientation == 0) {
         planer.mark_construction(planer.north_tile, planer.size, TERRAIN_ALL, true);
     } else {

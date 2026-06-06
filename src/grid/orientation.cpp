@@ -30,7 +30,7 @@
 #include <scenario/map.h>
 
 static void determine_leftmost_tile() {
-    int orientation = city_view_orientation();
+    int orientation = g_city_view.orientation;
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
@@ -81,7 +81,7 @@ void map_orientation_change(int counter_clockwise) {
 }
 
 void map_orientation_update_buildings() {
-    int map_orientation = city_view_orientation();
+    int map_orientation = g_city_view.orientation;
     int orientation_is_top_bottom = map_orientation == DIR_0_TOP_RIGHT || map_orientation == DIR_4_BOTTOM_LEFT;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
@@ -290,7 +290,7 @@ bool map_orientation_for_venue(int x, int y, e_venue_mode_orientation mode, int*
 bool map_orientation_for_venue_with_map_orientation(tile2i tile, e_venue_mode_orientation mode, int* building_orientation) {
     int x = tile.x();
     int y = tile.y();
-    int map_orientation = city_view_orientation();
+    int map_orientation = g_city_view.orientation;
     switch (map_orientation) {
     case 2: // east
         x -= (mode + 1);
@@ -307,7 +307,7 @@ bool map_orientation_for_venue_with_map_orientation(tile2i tile, e_venue_mode_or
 }
 
 int map_orientation_for_gatehouse(int x, int y) {
-    switch (city_view_orientation()) {
+    switch (g_city_view.orientation) {
     case DIR_2_BOTTOM_RIGHT:
         x--;
         break;
@@ -402,7 +402,7 @@ int map_orientation_for_gatehouse(int x, int y) {
     return 0;
 }
 int map_orientation_for_triumphal_arch(int x, int y) {
-    switch (city_view_orientation()) {
+    switch (g_city_view.orientation) {
     case DIR_2_BOTTOM_RIGHT:
         x -= 2;
         break;

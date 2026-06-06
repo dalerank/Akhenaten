@@ -107,7 +107,7 @@ void ui::message_dialog_disaster::button_go_to_problem() {
     int grid_offset = player_msg.param2;
 
     if (grid_offset > 0 && grid_offset < 26244) {
-        camera_go_to_mappoint(tile2i(grid_offset));
+        g_city_view.go_to_mappoint(tile2i(grid_offset));
     }
 
     window_city_show();

@@ -31,14 +31,14 @@ void ui::message_dialog_invasion::init() {
 
 void ui::message_dialog_invasion::draw_foreground(UiFlags flags) {
     draw_foreground_content();
-        
+
     // Enable go_to_problem button for invasions in normal mode
     const lang_message& msg = lang_get_message(text_id);
     assert(msg.message_type == MESSAGE_TYPE_INVASION);
     ui["button_go_to_problem"].enabled = true;
     //ui["button_go_to_problem"].pos = {pos.x + 64, y_text + 36};
     ui["button_go_to_problem"].onclick([this] { button_go_to_problem(); });
-    
+
     ui.begin_widget(pos);
     ui.draw(flags);
     ui.end_widget();
@@ -47,15 +47,15 @@ void ui::message_dialog_invasion::draw_foreground(UiFlags flags) {
 void ui::message_dialog_invasion::draw_city_message_text(const lang_message& msg) {
     xstring text = msg.content.text;
     painter ctx = game.painter();
- 
+
     if (is_eventmsg) {
         text = body_text;
     }
-    
+
     if (!text) {
         return;
     }
-    
+
     bstring1024 header;
     header.printf("%s %d %s %s", ui::str(25, player_msg.month), player_msg.year, ui::str(63, 5), city_player_name());
 
@@ -73,7 +73,7 @@ void ui::message_dialog_invasion::button_go_to_problem() {
         grid_offset = invasion_grid_offset;
 
     if (grid_offset > 0 && grid_offset < 26244) {
-        camera_go_to_mappoint(tile2i(grid_offset));
+        g_city_view.go_to_mappoint(tile2i(grid_offset));
     }
 
     window_city_show();

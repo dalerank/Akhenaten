@@ -20,7 +20,7 @@ bool map_can_place_road_under_canal(tile2i tile) {
         return false;
 
     //    int check_y = image_id == 0 || image_id == 48;
-    //    if (city_view_orientation() == DIR_6_TOP_LEFT || city_view_orientation() == DIR_2_BOTTOM_RIGHT)
+    //    if (g_city_view.orientation == DIR_6_TOP_LEFT || g_city_view.orientation == DIR_2_BOTTOM_RIGHT)
     //        check_y = !check_y;
     //
     //    if (check_y) {
@@ -45,7 +45,7 @@ bool map_can_place_canal_on_road(tile2i tile) {
         return false;
 
     //    int check_y = image_id == 0 || image_id == 49;
-    //    if (city_view_orientation() == DIR_6_TOP_LEFT || city_view_orientation() == DIR_2_BOTTOM_RIGHT)
+    //    if (g_city_view.orientation == DIR_6_TOP_LEFT || g_city_view.orientation == DIR_2_BOTTOM_RIGHT)
     //        check_y = !check_y;
     //
     //    if (check_y) {

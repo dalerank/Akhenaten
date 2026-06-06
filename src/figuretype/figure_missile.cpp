@@ -1,5 +1,6 @@
 #include "figure_missile.h"
 
+#include "graphics/view/view.h"
 #include "grid/figure.h"
 #include "sound/sound.h"
 #include "graphics/animkeys.h"
@@ -179,7 +180,7 @@ void figure_spear::figure_action() {
         poof();
     }
 
-    int dir = (16 + direction() - 2 * city_view_orientation()) % 16;
+    int dir = (16 + direction() - 2 * g_city_view.orientation) % 16;
     base.main_image_id = anim(animkeys().walk).first_img() + dir;
 }
 
@@ -236,6 +237,6 @@ void figure_bolt::figure_action() {
         poof();
     }
 
-    int dir = (16 + direction() - 2 * city_view_orientation()) % 16;
+    int dir = (16 + direction() - 2 * g_city_view.orientation) % 16;
     base.main_image_id = anim(animkeys().walk).first_img() + 32 + dir;
 }

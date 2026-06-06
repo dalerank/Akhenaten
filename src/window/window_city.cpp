@@ -36,7 +36,8 @@
 
 static int center_in_city(int element_width_pixels) {
     vec2i view_pos, view_size;
-    city_view_get_viewport(g_city_view, view_pos, view_size);
+    view_pos = g_city_view.offset;
+    view_size = g_city_view.size_pixels;
     int margin = (view_size.x - element_width_pixels) / 2;
     return view_pos.x + margin;
 }
@@ -84,8 +85,8 @@ static void draw_cancel_construction() {
         return;
     }
 
-    vec2i view_pos, view_size;
-    city_view_get_viewport(g_city_view, view_pos, view_size);
+    vec2i view_pos = g_city_view.offset;
+    vec2i view_size = g_city_view.size_pixels;
     view_size.x -= 4 * 16;
     inner_panel_draw({ view_size.x - 4, 40 }, { 3, 2 });
     painter ctx = game.painter();
@@ -111,7 +112,7 @@ bool window_city_draw_construction_cost_and_size() {
 
     painter ctx = game.painter();
     set_city_clip_rectangle(ctx);
-    screen_tile screen = camera_get_selected_screen_tile();
+    screen_tile screen = g_city_view.selected_tile;
     int inverted_scale = calc_percentage<int>(100, g_zoom.get_percentage());
     int x = calc_adjust_with_percentage(screen.x, inverted_scale);
     int y = calc_adjust_with_percentage(screen.y, inverted_scale);
@@ -177,7 +178,7 @@ static void cycle_legion(void) {
 
         if (current_legion_id > 0) {
             const formation* m = formation_get(current_legion_id);
-            camera_go_to_mappoint(m->home);
+            g_city_view.go_to_mappoint(m->home);
         }
     }
 }
@@ -222,7 +223,7 @@ void window_city_init() {
     widget_sidebar_city_init();
 
     events::subscribe([] (event_set_bookmark ev) {
-        tile2i center_p = city_view_get_center();
+        tile2i center_p = g_city_view.view_center;
         g_city.bookmarks.set(ev.value - 1, center_p);
     });
 
@@ -230,7 +231,7 @@ void window_city_init() {
         tile2i p = g_city.bookmarks.get(ev.value - 1);
         if (p.valid()) {
             vec2i screen = tile_to_screen(p);
-            camera_go_to_screen_tile(screen, true);
+            g_city_view.go_to_screen_tile(screen, true);
         }
     });
 

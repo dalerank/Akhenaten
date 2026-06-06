@@ -1,4 +1,4 @@
-﻿#include "lookup.h"
+#include "lookup.h"
 #include "core/calc.h"
 #include "graphics/elements/menu.h"
 #include "graphics/image.h"
@@ -77,7 +77,7 @@ tile2i screen_to_tile(vec2i screen) {
         return tile2i(-1);
     }
 
-    int city_orientation = city_view_orientation() / 2;
+    int city_orientation = g_city_view.orientation / 2;
     return SCREENTILE_TO_MAPPOINT_LOOKUP[city_orientation][screen.x][screen.y];
 }
 
@@ -89,7 +89,7 @@ vec2i tile_to_screen(tile2i point) {
     vec2i start;
     vec2i column_step;
     vec2i row_step;
-    int city_orientation = city_view_orientation() / 2;
+    int city_orientation = g_city_view.orientation / 2;
     screentile_calc_params_by_orientation(city_orientation, &start, &column_step, &row_step);
 
     int columns = point.x();
@@ -143,12 +143,12 @@ vec2i lookup_tile_to_pixel(tile2i point) {
 }
 
 vec2i pixel_to_viewport(vec2i pixel) {
-    return pixel - g_city_view.viewport.offset;
+    return pixel - g_city_view.offset;
 }
 
 vec2i pixel_to_camera_coord(vec2i pixel, bool relative) {
     // check if within viewport
-    if (!pixel_is_inside_viewport(pixel))
+    if (!g_city_view.contains_pixel(pixel))
         return {-1, -1};
 
     // remove viewport offset
@@ -158,12 +158,12 @@ vec2i pixel_to_camera_coord(vec2i pixel, bool relative) {
     pixel.x = calc_adjust_with_percentage<int>(pixel.x, g_zoom.get_percentage());
     pixel.y = calc_adjust_with_percentage<int>(pixel.y, g_zoom.get_percentage());
 
-    pixel += relative ? vec2i{0, 0} : g_city_view.camera.position;
+    pixel += relative ? vec2i{0, 0} : g_city_view.camera_position;
     return pixel;
 }
 
 vec2i pixel_to_screentile(vec2i pixel) {
-    if (!pixel_is_inside_viewport(pixel))
+    if (!g_city_view.contains_pixel(pixel))
         return {-1, -1};
 
     // get the absolute camera pixel coords

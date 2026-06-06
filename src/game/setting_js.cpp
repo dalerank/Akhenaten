@@ -14,6 +14,13 @@ void ank_global_obj_bind_field(js_State *J, js_StringNode name, vec2i *ptr) {
     js_setproperty(J, -2, name);
 }
 
+void ank_global_obj_bind_field(js_State *J, js_StringNode name, tile2i *ptr) {
+    js_newobject(J);
+    ank_global_obj_bind_field(J, js_intern("x"), ptr->private_access(_X));
+    ank_global_obj_bind_field(J, js_intern("y"), ptr->private_access(_Y));
+    js_setproperty(J, -2, name);
+}
+
 ANK_GLOBAL_OBJECT(game, __game,
     pending_load_type,
     pending_save_type,

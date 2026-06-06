@@ -94,8 +94,8 @@ static void create_blank_map(int size) {
     scenario_editor_create(size);
     clear_map_data();
     map_image_init_edges();
-    camera_go_to_corner_tile(screen_tile(76, 152), true);
-    city_view_reset_orientation();
+    g_city_view.go_to_corner_tile(screen_tile(76, 152), true);
+    g_city_view.reset_orientation();
 }
 
 static void prepare_map_for_editing(void) {
@@ -120,7 +120,7 @@ static void prepare_map_for_editing(void) {
     map_natives_init_editor();
     map_routing_update_all();
 
-    city_view_init();
+    g_city_view.init();
     game.paused = false;
 }
 
