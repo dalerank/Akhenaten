@@ -15,7 +15,7 @@ game = extend(__game, {
     simtime: __game_simtime
 
     @absolute_day { get: __game_absolute_day }
-    @simtime_year { get: __game_simtime.year }
+    simtime_year : __game_simtime.year
 
     @is_integral_tests { get: __game_is_integral_tests }
     @version { get: __game_version }

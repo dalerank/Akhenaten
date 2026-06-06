@@ -40,16 +40,26 @@ void platform_append_startup_log(pcstr message) {
 void platform_hide_startup_log() {
 }
 
-bool platform_run_main_loop(platform_pump_frame_cb pump_frame, platform_should_continue_cb should_continue) {
+struct platform_main_loop_ctx {
+    platform_pump_frame_cb* pump_frame;
+    platform_should_continue_cb* should_continue;
+};
+
+static bool platform_run_main_loop_seh(platform_main_loop_ctx* ctx) {
     LONG CALLBACK debug_sehgilter(PEXCEPTION_POINTERS pExceptionPointers);
     __try {
-        while (should_continue()) {
-            pump_frame();
+        while ((*ctx->should_continue)()) {
+            (*ctx->pump_frame)();
         }
     } __except (debug_sehgilter(GetExceptionInformation())) {
         return false;
     }
     return true;
+}
+
+bool platform_run_main_loop(platform_pump_frame_cb pump_frame, platform_should_continue_cb should_continue) {
+    platform_main_loop_ctx ctx { &pump_frame, &should_continue };
+    return platform_run_main_loop_seh(&ctx);
 }
 
 void platform_resolve_user_directory(bstring512& dir) {

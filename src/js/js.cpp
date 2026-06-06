@@ -22,6 +22,7 @@
 #include "scenario/scenario.h"
 #include "game/mission.h"
 #include "game/game.h"
+#include "dev/debug.h"
 
 #include "js/js_debugger.h"
 #include "js/js_self_tests.h"

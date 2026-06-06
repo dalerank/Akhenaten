@@ -1,4 +1,5 @@
 #include "game/game.h"
+#include "core/profiler.h"
 #include "js/js_game.h"
 
 int __game_absolute_day() { return game.simtime.absolute_day(true); } ANK_FUNCTION(__game_absolute_day)

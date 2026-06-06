@@ -1,5 +1,6 @@
 #include "core/app.h"
 #include "core/log.h"
+#include "core/profiler.h"
 #include "game/game.h"
 #include "js/js_game.h"
 #include "net/http_client.h"

@@ -53,7 +53,11 @@ int platform_sdl_version_at_least(int major, int minor, int patch);
 #error "unknown compiler"
 #endif
 
-struct CoreEvent {};
+/** Opaque SDL event buffer — must fit SDL_Event (see static_assert in platform.cpp). */
+struct CoreEvent {
+    static constexpr unsigned storage_bytes = 128;
+    alignas(16) unsigned char storage[storage_bytes];
+};
 
 using platform_pump_frame_cb = xfunction<void()>;
 using platform_should_continue_cb = xfunction<bool()>;

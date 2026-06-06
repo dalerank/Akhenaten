@@ -3,7 +3,6 @@
 #include "core/calc.h"
 #include "core/direction.h"
 #include "core/speed.h"
-#include "game/system.h"
 #include "graphics/screen.h"
 #include "input/touch.h"
 #include "game/game_config.h"
@@ -240,7 +239,7 @@ void scroll_drag_start(scroll_drag_source source) {
     data.drag.delta.x = 0;
     data.drag.delta.y = 0;
     if (!data.drag.is_touch)
-        system_mouse_get_relative_state(0, 0);
+        g_mouse.get_relative_state(nullptr, nullptr);
 
     clear_scroll_speed();
 }
@@ -251,7 +250,7 @@ static int set_scroll_speed_from_drag(bool keep_delta) {
     int delta_x = 0;
     int delta_y = 0;
     if (!data.drag.is_touch) {
-        system_mouse_get_relative_state(&delta_x, &delta_y);
+        g_mouse.get_relative_state(&delta_x, &delta_y);
         float fx = dampen_mouse_relative_pan_delta((float)delta_x);
         float fy = dampen_mouse_relative_pan_delta((float)delta_y);
         if (data.drag.apply_middle_mouse_pan_speed) {
@@ -275,7 +274,7 @@ static int set_scroll_speed_from_drag(bool keep_delta) {
     data.drag.delta.y += delta_y;
     if ((delta_x != 0 || delta_y != 0)) {
         //        if (!data.drag.is_touch)
-        //            system_mouse_set_relative_mode(1);
+        //            g_mouse.set_relative_mode(1);
         // Store tiny movements until we decide that it's enough to move into scroll mode
         //        if (!data.drag.has_started)
         //            data.drag.has_started =
@@ -303,7 +302,7 @@ int scroll_drag_end(void) {
     data.drag.apply_middle_mouse_pan_speed = 0;
 
     if (!data.drag.is_touch)
-        system_mouse_set_relative_mode(0);
+        g_mouse.set_relative_mode(0);
     else if (has_scrolled) {
         const touch_t* t = get_earliest_touch();
         speed_set_target(data.speed.x, -t->frame_movement.x, SPEED_CHANGE_IMMEDIATE, 1);
@@ -493,7 +492,7 @@ int scroll_get_delta(const mouse* m, vec2i* delta, scroll_type type) {
 void scroll_stop(void) {
     auto &data = g_input_scroll_data;
     clear_scroll_speed();
-    system_mouse_set_relative_mode(0);
+    g_mouse.set_relative_mode(0);
     data.is_scrolling = 0;
     data.constant_input = 0;
     data.drag.active = 0;

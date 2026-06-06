@@ -11,10 +11,10 @@ struct mouse_button {
     int system_change;
 };
 
-enum e_scroll { 
-    SCROLL_NONE = 0, 
-    SCROLL_UP = -1, 
-    SCROLL_DOWN = 1 
+enum e_scroll {
+    SCROLL_NONE = 0,
+    SCROLL_UP = -1,
+    SCROLL_DOWN = 1
 };
 
 struct mouse : public vec2i {
@@ -26,6 +26,8 @@ struct mouse : public vec2i {
     int is_touch;         /**< Whether the mouse is a translated touch event */
 
     void set_inside_window(int inside);
+    void set_relative_mode(int enabled);
+    void get_relative_state(int *x, int *y);
     vec2i pos() const { return *this; }
     void init();
 

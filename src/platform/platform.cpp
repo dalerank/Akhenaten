@@ -6,6 +6,9 @@
 
 #include <filesystem>
 
+static_assert(sizeof(SDL_Event) <= sizeof(CoreEvent::storage),
+              "CoreEvent storage is too small for SDL_Event");
+
 void platform_resolve_user_directory(bstring512& dir);
 uint32_t platform_init_sdl_flags();
 void platform_post_hint_init();

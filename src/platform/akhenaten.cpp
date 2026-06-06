@@ -31,6 +31,10 @@
 
 #include <SDL.h>
 
+#if defined(GAME_PLATFORM_ANDROID)
+#include "platform/android/android.h"
+#endif
+
 #include <filesystem>
 #include <set>
 
@@ -160,41 +164,38 @@ static void setup() {
     bool again = platform.is_android();
 
     while (!pre_init(g_args.get_data_directory())) {
-            if (platform.is_android()) {
-                platform.append_startup_log("Startup: folder validation failed");
-            }
+            platform.append_startup_log("Startup: folder validation failed");
             SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Warning",
               "Akhenaten requires the original files from Pharaoh to run.\n"
               "Copy your entire Pharaoh folder to your Android device into folder"
               "/sdcard0/Android/data/com.github.dalerank.akhenaten/files",
               nullptr);
 
-            if (platform.is_android()) {
-                if (again) {
-                    const SDL_MessageBoxButtonData buttons[] = {{SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "OK"},
-                    {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel"}};
-                    const SDL_MessageBoxData messageboxdata = {SDL_MESSAGEBOX_WARNING, NULL, "Wrong folder selected",
-                    "The selected folder is not a proper Pharaoh folder.\n\n"
-                    "Please select a path directly from either the internal storage "
-                    "or the SD card, otherwise the path may not be recognised.\n\n"
-                    "Press OK to select another folder or Cancel to exit.",
-                    SDL_arraysize(buttons), buttons, NULL};
-                    int result;
-                    SDL_ShowMessageBox(&messageboxdata, &result);
-                    if (!result) {
-                        exit(-2);
-                    }
-                }
-                again = true;
-                pcstr user_dir = android_show_pharaoh_path_dialog(again);
-                if (!user_dir || !*user_dir) {
-                    android_append_startup_log("Startup: no folder selected after retry");
+#if defined(GAME_PLATFORM_ANDROID)
+            if (again) {
+                const SDL_MessageBoxButtonData buttons[] = {{SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "OK"},
+                {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel"}};
+                const SDL_MessageBoxData messageboxdata = {SDL_MESSAGEBOX_WARNING, NULL, "Wrong folder selected",
+                "The selected folder is not a proper Pharaoh folder.\n\n"
+                "Please select a path directly from either the internal storage "
+                "or the SD card, otherwise the path may not be recognised.\n\n"
+                "Press OK to select another folder or Cancel to exit.",
+                SDL_arraysize(buttons), buttons, NULL};
+                int result;
+                SDL_ShowMessageBox(&messageboxdata, &result);
+                if (!result) {
                     exit(-2);
                 }
-                android_append_startup_log("Startup: retry folder selected");
-                g_args.set_data_directory(user_dir);
             }
-        }
+            again = true;
+            pcstr user_dir = android_show_pharaoh_path_dialog(again);
+            if (!user_dir || !*user_dir) {
+                platform.append_startup_log("Startup: no folder selected after retry");
+                exit(-2);
+            }
+            platform.append_startup_log("Startup: retry folder selected");
+            g_args.set_data_directory(user_dir);
+#endif
 
         if (support_window_options) {
             show_options_window(g_args);
@@ -347,29 +348,30 @@ static void run_and_draw() {
     game.frame_serial_part();
 }
 
-static void handle_event(SDL_Event* event, bool& active, bool& quit) {
-    switch (event->type) {
+static void handle_event(CoreEvent* event, bool& active, bool& quit) {
+    SDL_Event* sdl_event = reinterpret_cast<SDL_Event*>(event);
+    switch (sdl_event->type) {
     case SDL_WINDOWEVENT:
-        g_app.handle_window_event(&event->window);
+        g_app.handle_window_event(&sdl_event->window);
         break;
 
     case SDL_KEYDOWN:
     case SDL_KEYUP:
     case SDL_TEXTINPUT:
-        g_app.handle_keyboard_event(event);
+        g_app.handle_keyboard_event(sdl_event);
         break;
 
     case SDL_MOUSEMOTION:
     case SDL_MOUSEBUTTONDOWN:
     case SDL_MOUSEBUTTONUP:
     case SDL_MOUSEWHEEL:
-        g_app.handle_mouse_event(event);
+        g_app.handle_mouse_event(sdl_event);
         break;
 
     case SDL_FINGERDOWN:
     case SDL_FINGERMOTION:
     case SDL_FINGERUP:
-        g_app.handle_touch_event(event);
+        g_app.handle_touch_event(sdl_event);
         break;
 
     case SDL_QUIT:
@@ -377,10 +379,10 @@ static void handle_event(SDL_Event* event, bool& active, bool& quit) {
         break;
 
     case SDL_USEREVENT:
-        if (event->user.code == USER_EVENT_QUIT)
+        if (sdl_event->user.code == USER_EVENT_QUIT)
             quit = true;
         else
-            g_app.handle_user_event(event);
+            g_app.handle_user_event(sdl_event);
 
         break;
 
@@ -394,7 +396,7 @@ void application_t::pump_one_frame() {
     /* Process event queue */
 
     CoreEvent event;
-    while (platform.poll_event(reinterpret_cast<CoreEvent*>(&event))) {
+    while (platform.poll_event(&event)) {
         bool handled_imgui = game_imgui_overlay_handle_event(&event);
         if (!handled_imgui) {
             handle_event(&event, active, quit);

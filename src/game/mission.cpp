@@ -28,6 +28,7 @@ bool matches_path_id(const mission_step_t* step, int path_id) {
     }
     return false;
 }
+
 static mission_step_t* find_next_connected_path_step(const mission_step_t* step, int path_id) {
     auto next = step->next_in_list;
     while (next != nullptr) {
@@ -42,6 +43,7 @@ static mission_step_t* find_next_connected_path_step(const mission_step_t* step,
     }
     return nullptr;
 }
+
 static mission_step_t* find_next(const mission_step_t* step, int choice_index = 0) {
     if (!step->has_choice) {
         return find_next_connected_path_step(step, 0);

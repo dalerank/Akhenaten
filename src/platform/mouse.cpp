@@ -12,11 +12,11 @@ struct mouse_data_t {
 
 mouse_data_t g_mouse_data;
 
-void system_mouse_get_relative_state(int* x, int* y) {
+void mouse::get_relative_state(int *x, int *y) {
     SDL_GetRelativeMouseState(x, y);
 }
 
-void system_mouse_set_relative_mode(int enabled) {
+void mouse::set_relative_mode(int enabled) {
     auto &data = g_mouse_data;
     if (enabled == data.enabled)
         return;
@@ -26,11 +26,11 @@ void system_mouse_set_relative_mode(int enabled) {
         SDL_SetRelativeMouseMode(SDL_TRUE);
         // Discard the first value, which is incorrect
         // (the first one gives the relative position to center of window)
-        system_mouse_get_relative_state(NULL, NULL);
+        get_relative_state(nullptr, nullptr);
     } else {
         SDL_SetRelativeMouseMode(SDL_FALSE);
         system_set_mouse_position(&data.x, &data.y);
-        mouse::ref().set_position({ data.x, data.y });
+        set_position({ data.x, data.y });
     }
     data.enabled = enabled;
 }
