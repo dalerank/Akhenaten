@@ -13,7 +13,7 @@ window_logo {
 [es=(window_logo, init)]
 function window_logo_on_init(window) {
     window_logo.logo_tick = 0
-    
+
     if (game.logo_show_patch_message === 2) { // MESSAGE_MISSING_FONTS
         __window_plain_message_dialog_show("#TR_MISSING_FONTS_TITLE", "#TR_MISSING_FONTS_MESSAGE")
     }
@@ -27,6 +27,6 @@ function window_logo_ui_draw_foreground(window) {
     window.hint.color = (c << 24) + (c << 16) + (c << 8) + c
 
     if (__mouse.left.went_up || __mouse.right.went_up) {
-        __game_show_main_menu_no_restart();
+        emit event_show_main_menu{ play_intro: false }
     }
 }

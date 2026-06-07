@@ -3,6 +3,7 @@
 #include "input/keys.h"
 #include "config/hotkeys.h"
 #include "core/custom_span.hpp"
+#include "core/xfunction.h"
 
 struct event_hotkey_overlay { int value; };
 struct event_toggle_overlay { int value; };
@@ -26,13 +27,14 @@ struct event_goto_bookmark { int value; };
 struct event_editor_toggle_battle_info { int value; };
 struct event_toggle_legion { int value; };
 struct event_copy_build_from_cursor { int value; };
+struct event_show_main_menu { bool play_intro; };
 
 struct hotkeys {
     // fixed keys with multiple functions
     int enter_pressed;
     int escape_pressed;
 
-    std::function<void()> callback;
+    xfunction<void()> callback;
 
     static void install(const xspan<hotkey_mapping> &mappings);
 };

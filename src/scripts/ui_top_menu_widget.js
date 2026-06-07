@@ -139,7 +139,7 @@ function top_menu_exit_game() {
 	ui.show_yesno("#popup_dialog_quit",
 		function() {
 			widget_top_menu_clear_state()
-			__game_show_main_menu()
+			emit event_show_main_menu{ play_intro: true }
 		},
 		function() {
 			ui.window_city_show()

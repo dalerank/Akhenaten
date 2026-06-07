@@ -59,7 +59,7 @@ void map_water_update_docking_points(building &b, int orientation, int offset) {
     water_access_tiles ppoints;
     if (found) {
         ppoints = map_water_get_access_points(b, b.dcast()->get_orientation(), offset);
-    } 
+    }
     b.dcast()->set_water_access_tiles(ppoints);
 }
 

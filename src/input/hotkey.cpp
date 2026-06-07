@@ -10,7 +10,6 @@
 #include "widget/widget_top_menu_game.h"
 #include "window/window_city.h"
 #include "window/hotkey_editor.h"
-#include "window/main_menu.h"
 #include "window/popup_dialog.h"
 #include "game/game.h"
 #include "sound/sound.h"
@@ -266,7 +265,7 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
 static void add_arrow(const hotkey_mapping& mapping, bool alt) {
     auto& data = g_hotkey_data;
     e_key key = alt ? mapping.alt.key : mapping.state.key;
-    
+
     if (key == KEY_NONE) {
         return;
     }
@@ -295,10 +294,10 @@ static void add_arrow(const hotkey_mapping& mapping, bool alt) {
 
 void hotkeys::install(const xspan<hotkey_mapping> &mappings) {
     auto& data = g_hotkey_data;
-    
+
     data.definitions.clear();
     data.arrows.clear();
-    
+
     // Fixed keys: Escape and Enter
     hotkey_definition &escape_def = data.definitions.emplace_back();
 
@@ -395,8 +394,7 @@ void hotkey_handle_escape(void) {
     popup_dialog::show_yesno("#popup_dialog_quit", [] (bool accepted) {
         if (accepted) {
             widget_top_menu_clear_state();
-            g_sound.play_intro();
-            main_menu_screen::show();
+            events::emit(event_show_main_menu{ true });
         } else {
             window_city_show();
         }

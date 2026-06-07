@@ -36,7 +36,7 @@ function mission_choice_xy(p) {
 
 function game_show_mission_choice(scenario_id) {
     if (!__game_mission_is_valid(scenario_id)) {
-        __game_show_main_menu()
+        emit event_show_main_menu{ play_intro: true }
         return
     }
     var src = get_mission_config(scenario_id)

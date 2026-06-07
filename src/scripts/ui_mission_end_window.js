@@ -119,7 +119,7 @@ function mission_end_advance_to_next_mission() {
     city.previous_overlay = OVERLAY_NONE
 
     if (next_scenario_id == -1) {
-        __game_show_main_menu()
+        emit event_show_main_menu{ play_intro: true }
         if (scenario.scmode != e_scenario_custom_map) {
             __scenario_init()
             scenario.campaign_mission_rank = 2

@@ -23,7 +23,6 @@
 #include "window/window_city.h"
 #include "window/autoconfig_window.h"
 #include "window/hotkey_config.h"
-#include "window/main_menu.h"
 #include "window/popup_dialog.h"
 #include "widget/widget_sidebar.h"
 #include "widget/widget_city.h"

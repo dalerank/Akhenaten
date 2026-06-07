@@ -33,7 +33,8 @@
 #include "window/intro_video.h"
 #include "window/window_city.h"
 #include "window/editor/window_editor.h"
-#include "window/main_menu.h"
+#include "window/autoconfig_window.h"
+#include "input/hotkey.h"
 #include "graphics/view/view.h"
 #include "platform/renderer.h"
 #include "io/movie_writer.h"
@@ -405,8 +406,7 @@ bool game_init(game_opts opts) {
     game.init_state();
 
     if (g_args.no_logo()) {
-        g_sound.play_intro();
-        main_menu_screen::show();
+        events::emit(event_show_main_menu{ true });
     } else {
         game.logo_show_patch_message = 0;
         if (!!game_features::gameui_show_intro_video) {
@@ -439,8 +439,7 @@ void game_exit_editor() {
     locale_determine_language();
 
     editor_set_active(0);
-    g_sound.play_intro();
-    main_menu_screen::show();
+    events::emit(event_show_main_menu{ true });
 }
 
 void game_t::update() {

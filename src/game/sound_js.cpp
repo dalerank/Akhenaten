@@ -2,6 +2,13 @@
 #include "js/js_defines.h"
 #include "js/js_game.h"
 #include "sound/sound.h"
+#include "sound/sound_city.h"
+
+void __sound_city_init() { sound_city_init(); }
+ANK_FUNCTION(__sound_city_init)
+
+void __sound_city_stop() { sound_city_stop(); }
+ANK_FUNCTION(__sound_city_stop)
 
 static void js_sound_set_volume(js_State *J) {
     g_sound.set_volume(js_tointeger(J, 1), js_tointeger(J, 2), js_tointeger(J, 3));

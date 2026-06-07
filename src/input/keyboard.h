@@ -55,7 +55,7 @@ struct keyboard_t {
     void insert_char(const uint8_t* value, int bytes);
     void press_return();
     void press_backspace();
-    void press_delete(); 
+    void press_delete();
     void press_insert();
     void press_left();
     void press_right();

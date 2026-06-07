@@ -3,7 +3,8 @@ log_info("akhenaten: main menu started")
 var game_updater_windows_url =
     "https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_windows/master/windows_build.zip"
 
-main_menu_screen {
+[es=window]
+window_main_menu {
 	ui {
 		background    : { type:"background", path:"pharaoh_unloaded/title_00001" }
 
@@ -61,9 +62,22 @@ function main_menu_quit_game() {
 	})
 }
 
-[es=(main_menu_screen, init)]
+[es=event_show_main_menu]
+function main_menu_on_show(ev) {
+    if (ev.play_intro) {
+        __game_sound.play_intro()
+    }
+    window_show_by_id("window_main_menu")
+}
+
+[es=(window_main_menu, init)]
 function main_menu_on_init(window) {
-	window.continue_game.readonly = !main_menu_can_continue()
+    log_info("[test-marker] main_menu_shown")
+
+    __sound_city_stop()
+    __sound_city_init()
+
+    window.continue_game.readonly = !main_menu_can_continue()
 
 	if (!game.is_integral_tests && github_is_active()) {
 		github_download_changelog_async()
@@ -71,13 +85,13 @@ function main_menu_on_init(window) {
 	}
 }
 
-[es=(main_menu_screen, update_changelog)]
+[es=(window_main_menu, update_changelog)]
 function main_menu_on_update(window) {
 	window.changelog.text = window.change_log
 	window.changelog.enabled = true
 }
 
-[es=(main_menu_screen, update_version)]
+[es=(window_main_menu, update_version)]
 function main_menu_on_update_version(window) {
 	log_info("main_menu_download_version: " + window.current_commit)
 	if (window.current_commit <= 1)
@@ -96,11 +110,11 @@ function main_menu_on_update_version(window) {
 
 [es=event_github_totals_commits_loaded]
 function main_menu_download_version(ev) {
-	emit main_menu_screen.update_version{ current_commit: ev.current_commit }
+	emit window_main_menu.update_version{ current_commit: ev.current_commit }
 }
 
 [es=event_github_changelog_loaded]
 function main_menu_download_changelog(ev) {
 	log_info("main_menu_download_changelog: " + ev.change_log)
-	emit main_menu_screen.update_changelog{ change_log: ev.change_log }
+	emit window_main_menu.update_changelog{ change_log: ev.change_log }
 }
