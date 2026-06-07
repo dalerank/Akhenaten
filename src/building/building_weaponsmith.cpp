@@ -22,6 +22,8 @@ declare_console_command(addweapons, game_cheat_add_resource<RESOURCE_WEAPONS>);
 declare_console_command(addcopper, game_cheat_add_resource<RESOURCE_COPPER>);
 
 void building_weaponsmith::on_place_checks() {
+    building_impl::on_place_checks();
+
     if (g_city.buildings.count_industry_active(RESOURCE_COPPER) > 0) {
         return;
     }

@@ -43,6 +43,8 @@ bool building_papyrus_maker::draw_ornaments_and_animations_height(painter &ctx, 
 }
 
 void building_papyrus_maker::on_place_checks() {
+    building_impl::on_place_checks();
+
     if (g_city.buildings.count_industry_active(RESOURCE_REEDS) > 0) {
         return;
     }
