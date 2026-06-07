@@ -414,7 +414,7 @@
               <li><code>map_closest_road_within_radius(tile, size, radius)</code> — finds the nearest road tile within a given search radius; used by buildings that spawn destination walkers.</li>
               <li><code>map_get_adjacent_road_tiles_for_roaming(grid_offset, road_tiles, permission)</code> — fills an array with the adjacent road tiles a roaming walker <em>may</em> step onto, respecting Roadblock permissions. This is the function that enforces Roadblock filtering during figure movement.</li>
             </ul>
-            <p><code>road_tile_valid_access(int grid_offset)</code> validates a tile as a usable road: must have <code>TERRAIN_ROAD</code>, must not be water or deep water. Buildings placed over roads are also allowed through (Booths, Bandstands, Pavilions, Festival Squares, and Mud Gatehouses are explicit exceptions).</p>
+            <p><code>road_tile_valid_access(int grid_offset)</code> validates a tile as a usable road: must have <code>TERRAIN_ROAD</code>, must not be water or deep water. Buildings placed over roads are also allowed through (<a href="booth.html">Booths</a>, Bandstands, Pavilions, Festival Squares, and Mud Gatehouses are explicit exceptions).</p>
           </div>
         </details>
 

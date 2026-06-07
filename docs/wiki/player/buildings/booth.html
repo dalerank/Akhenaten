@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Booth — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .bld-header-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      margin-bottom: 2rem;
+    }
+    .bld-header-right {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .bld-image-wrap {
+      text-align: center;
+    }
+    .bld-image-wrap img {
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      image-rendering: pixelated;
+    }
+    .bld-image-wrap figcaption {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+    .bld-sprites {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-end;
+    }
+    .bld-infobox {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.9rem 1.1rem;
+    }
+    .bld-infobox h4 {
+      margin: 0 0 0.6rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--gold);
+    }
+    .bld-infobox dl {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.2rem 1rem;
+      margin: 0;
+    }
+    .bld-infobox dt { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; padding-top: 0.1rem; }
+    .bld-infobox dd { margin: 0; font-size: 0.85rem; color: var(--text); }
+    .bld-infobox .sep { grid-column: 1/-1; border: none; border-top: 1px solid var(--border); margin: 0.4rem 0; }
+    .bld-stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .bld-stat { text-align: center; }
+    .bld-stat .val { font-size: 1.3rem; font-weight: 700; color: var(--gold); display: block; }
+    .bld-stat .lbl { font-size: 0.7rem; color: var(--text-muted); }
+    .risk-low  { color: #8aabdc; }
+    .risk-med  { color: #d09050; }
+    .des-neg { color: #d07070; }
+    .des-pos { color: #7ec87e; }
+    .des-zero { color: var(--text-muted); }
+
+    /* two-column infobox row */
+    .infobox-pair {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .infobox-pair .bld-infobox {
+      flex: 1 1 220px;
+    }
+
+    /* developer spoilers */
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .kw { color: #c9a84c; } .num { color: #9ecbff; } .str { color: #7ec87e; } .cmt { color: #5a5650; font-style: italic; } .fn { color: #8aabdc; } .ev { color: #d0a0e0; } .ty { color: #d0a0e0; }
+    .file-ref { display: inline-block; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .bld-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .bld-nav a { color: var(--gold); }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+
+    /* chain diagram */
+    .net-diagram {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.8rem 1.1rem;
+      margin: 1rem 0;
+      font-size: 0.85rem;
+    }
+    .net-diagram .net-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .net-diagram code {
+      background: rgba(201,168,76,0.07);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 2px;
+      padding: 0.05rem 0.4rem;
+      font-size: 0.8rem;
+      color: var(--gold);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">← All Buildings</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Entertainment</div>
+        <ul>
+          <li><a href="booth.html" class="active">Booth</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#mechanics">Mechanics</a></li>
+          <li><a href="#chain">Entertainment chain</a></li>
+          <li><a href="#placement">Placement</a></li>
+          <li><a href="#tips">Tips</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Buildings</a> /
+        Booth
+      </div>
+
+      <h1>Booth</h1>
+
+      <div class="bld-header-grid" style="grid-template-columns:1fr">
+        <figure class="bld-image-wrap">
+          <div class="bld-sprites">
+            <div>
+              <img src="Cleo_Booth.webp" alt="Animated Booth building" width="118" height="74" />
+              <figcaption>Booth (animated preview)</figcaption>
+            </div>
+          </div>
+        </figure>
+        <div class="bld-header-right">
+          <div>
+            <p>The <strong>Booth</strong> is the smallest and cheapest entertainment venue. It hosts <strong>jugglers</strong> trained at a <a href="index.html#entertainment">Juggler School</a> and, once visited, sends a juggler out to roam the surrounding streets and entertain nearby houses.</p>
+            <p>Entertainment is one of the services basic houses need to evolve, and the Booth is the most space- and cost-efficient way to provide it. It is enough to lift the simplest housing, but for more sophisticated dwellings — and a higher Culture rating — you will also need <strong>Bandstands</strong> and <strong>Pavilions</strong>.</p>
+            <p>A Booth is a 2×2 structure laid down over a small plaza. It must touch a road, and like the Bandstand and Pavilion it may be placed directly on a road bend or intersection.</p>
+          </div>
+          <div class="infobox-pair">
+            <div class="bld-infobox">
+              <h4>Booth</h4>
+              <div class="bld-stat-row" style="margin-bottom:0.9rem">
+                <div class="bld-stat"><span class="val">2×2</span><span class="lbl">Size</span></div>
+                <div class="bld-stat"><span class="val">8</span><span class="lbl">Workers</span></div>
+                <div class="bld-stat"><span class="val des-pos">+2</span><span class="lbl">Desirability</span></div>
+              </div>
+              <hr class="sep" />
+              <dl>
+                <dt>Cost (Normal)</dt>
+                <dd>40 Db</dd>
+                <dt>Cost by difficulty</dt>
+                <dd style="font-size:0.78rem;color:var(--text-muted)">
+                  VE 10 · Easy 20 · <strong style="color:var(--text)">Normal 40</strong> · Hard 80 · VH 150
+                </dd>
+                <dt>Labor category</dt>
+                <dd>Entertainment</dd>
+                <dt>Entertainer</dt>
+                <dd>Juggler</dd>
+                <dt>Requires</dt>
+                <dd>A staffed <a href="index.html#entertainment">Juggler School</a></dd>
+                <dt>Fire / Damage risk</dt>
+                <dd><span class="risk-low">Low</span> / <span class="risk-low">Low</span></dd>
+              </dl>
+            </div>
+            <div class="bld-infobox">
+              <h4>Desirability profile</h4>
+              <dl>
+                <dt>Peak value</dt>
+                <dd>+2 at the building</dd>
+                <dt>Falloff</dt>
+                <dd>−1 per step, over 2 tiles</dd>
+                <dt>Range</dt>
+                <dd>2 tiles</dd>
+              </dl>
+              <hr class="sep" />
+              <p style="font-size:0.8rem;color:var(--text-muted);margin:0">A Booth slightly raises the desirability of the tiles immediately around it — a small bonus compared with the entertainment access it grants to nearby housing.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Overview ──────────────────────────────────────── -->
+      <h2 id="overview">Overview</h2>
+      <p>Street performers were a familiar sight in the towns of ancient Egypt. Jugglers, acrobats and tumblers entertained crowds at markets and festivals, tossing balls, clubs and knives to the delight of onlookers. In the game, the Booth captures the humblest form of this entertainment: a simple stage where a passing juggler stops to put on a show.</p>
+      <p>Entertainment in Akhenaten works as a chain of buildings. A school trains a performer, the performer walks to a venue, and the venue then sends entertainers out into the surrounding streets so that houses with road access receive the service. The Booth sits at the bottom of that chain — small, cheap, and limited to jugglers — but it is the workhorse that keeps the entertainment requirement satisfied across most residential districts.</p>
+
+      <!-- ─── Mechanics ─────────────────────────────────────── -->
+      <h2 id="mechanics">Mechanics</h2>
+
+      <h3>What the Booth does</h3>
+      <p>A Booth on its own does nothing. It must first be <em>visited</em> by a juggler walking from a <a href="index.html#entertainment">Juggler School</a>. Each visit tops up the Booth's internal juggler counter. While that counter is above zero the Booth:</p>
+      <ul>
+        <li>runs a show (a juggler animation plays on the stage), and</li>
+        <li>spawns its own <strong>roaming juggler</strong> who walks the nearby roads, delivering the entertainment service to every house she passes.</li>
+      </ul>
+      <p>The counter ticks down over time, so a Booth needs a steady supply of jugglers from its school to keep performing. If the school stops sending jugglers — because it lost workers, lost road access, or was demolished — the Booth eventually goes quiet and stops serving houses.</p>
+
+      <h3>Coverage and housing evolution</h3>
+      <p>The entertainment a Booth provides is enough to evolve <strong>basic housing</strong>. Higher housing tiers demand richer entertainment (musicians and dancers), which only Bandstands and Pavilions can supply. Plan a city so that humble neighbourhoods are covered by Booths, while you reserve the larger, more expensive venues for the districts you want to grow into elite housing.</p>
+
+      <h3>Info window</h3>
+      <p>Right-clicking a Booth opens its info window, which shows the number of workers employed, whether a juggler is currently performing, and the entertainment it is providing to the surrounding area. Use it to confirm a Booth is staffed and actively serving houses.</p>
+      <figure class="bld-image-wrap" style="margin:1rem 0">
+        <img src="Cleo_BoothRC.webp" alt="Booth right-click info window" width="300" height="185" />
+        <figcaption>Booth right-click info window</figcaption>
+      </figure>
+
+      <!-- ─── Entertainment chain ───────────────────────────── -->
+      <h2 id="chain">Entertainment chain</h2>
+      <div class="net-diagram">
+        <div class="net-label">How a juggler reaches a house</div>
+        <code>Juggler School</code> &nbsp;→&nbsp; trains a juggler who walks the roads<br>
+        &nbsp;&nbsp;&nbsp;↳ &nbsp;<code>Booth</code> &nbsp;→&nbsp; juggler arrives, Booth begins shows<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ &nbsp;<code>roaming juggler</code> &nbsp;→&nbsp; walks nearby streets<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ &nbsp;<code>House</code> &nbsp;→&nbsp; gains entertainment access
+      </div>
+      <p>Both legs of this journey are on foot and on roads, so road layout matters twice: once for the school's juggler reaching the Booth, and again for the Booth's juggler reaching the houses. A break anywhere in the chain stops the service.</p>
+
+      <!-- ─── Placement ─────────────────────────────────────── -->
+      <h2 id="placement">Placement</h2>
+      <p>A Booth occupies a 2×2 footprint and is built on top of a plaza that the game lays automatically beneath it. Placement rules:</p>
+      <figure class="bld-image-wrap" style="margin:1rem 0">
+        <img src="Cleo_BoothInter.webp" alt="Booth placed on a road intersection" width="266" height="134" />
+        <figcaption>A Booth placed directly on a road intersection</figcaption>
+      </figure>
+      <ul>
+        <li>The Booth must touch a <a href="road.html">road</a> so that jugglers can arrive and leave.</li>
+        <li>Unlike most buildings, a Booth (like the Bandstand and Pavilion) can be placed <strong>directly on a road bend or intersection</strong> — the road passes underneath it. This lets you drop a venue onto an existing junction without rerouting traffic.</li>
+        <li>When you try to place a Booth without any Juggler School in the city, the game shows a warning reminding you to build one first — the Booth will sit idle until a school exists to staff it.</li>
+      </ul>
+
+      <!-- ─── Tips ──────────────────────────────────────────── -->
+      <h2 id="tips">Tips</h2>
+      <ul>
+        <li>Always build a <a href="index.html#entertainment">Juggler School</a> before — or together with — your first Booths. A Booth with no school never performs.</li>
+        <li>Place a Booth on a road <strong>bend</strong> rather than a 4-way crossroads. Roaming jugglers choose randomly at each junction, so a bend gives more predictable, less wasteful coverage of the houses you actually want served.</li>
+        <li>The Booth is the cheapest way to satisfy the entertainment need of basic housing. Blanket poorer districts with Booths and save Bandstands and Pavilions for the neighbourhoods you intend to push to higher tiers.</li>
+        <li>One Juggler School can feed several Booths. Spread the Booths so their roaming jugglers cover different streets instead of overlapping.</li>
+        <li>If houses report "no entertainment" despite a nearby Booth, trace the road from the school to the Booth and from the Booth to the houses — a missing road link, lost workers, or a dead-end street is the usual culprit.</li>
+      </ul>
+
+      <!-- ─── Developer reference ──────────────────────────── -->
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">All paths relative to the repository root.</p>
+
+        <details>
+          <summary>Building config — <code>src/scripts/building/booth.js</code></summary>
+          <div class="details-body">
+            <p><span class="file-ref">src/scripts/building/booth.js</span> defines <code>building_booth</code> and its placement check. The <code>cost</code> array is indexed by difficulty (VE · Easy · Normal · Hard · VH).</p>
+            <pre><code><span class="kw">building_booth</span> {
+  <span class="kw">animations</span> {
+    <span class="kw">booth</span>   { pack:<span class="ty">PACK_GENERAL</span>, id:<span class="num">114</span> },
+    <span class="kw">square</span>  { pack:<span class="ty">PACK_GENERAL</span>, id:<span class="num">112</span> },        <span class="cmt">// underlying plaza</span>
+    <span class="kw">juggler</span> { pos [<span class="num">35</span>, <span class="num">17</span>], pack:<span class="ty">PACK_SPR_AMBIENT</span>, id:<span class="num">7</span>, offset:<span class="num">-1</span> }
+  }
+  <span class="kw">min_houses_coverage</span> : <span class="num">100</span>
+  <span class="kw">labor_category</span> : <span class="ty">LABOR_CATEGORY_ENTERTAINMENT</span>
+  <span class="kw">meta</span> { help_id:<span class="num">71</span>, text_id:<span class="num">72</span> }
+  <span class="kw">building_size</span> : <span class="num">2</span>
+  <span class="kw">cost</span> [ <span class="num">10</span>, <span class="num">20</span>, <span class="num">40</span>, <span class="num">80</span>, <span class="num">150</span> ]
+  <span class="kw">desirability</span> { value[<span class="num">2</span>], step[<span class="num">1</span>], step_size[<span class="num">-1</span>], range[<span class="num">2</span>] }
+  <span class="kw">laborers</span>[<span class="num">8</span>]
+  <span class="kw">fire_risk</span>[<span class="num">4</span>]
+  <span class="kw">damage_risk</span>[<span class="num">2</span>]
+  <span class="kw">flags</span> { is_entertainment: <span class="kw">true</span> }
+}
+
+<span class="cmt">// Warns the player if no Juggler School exists to staff the Booth</span>
+[es=(<span class="fn">building_booth</span>, <span class="ev">on_place_checks</span>)]
+<span class="kw">function</span> <span class="fn">building_booth_on_place_checks</span>(ev) {
+  <span class="kw">var</span> has_juggler_school = city.count_active_buildings(<span class="ty">BUILDING_JUGGLER_SCHOOL</span>) &gt; <span class="num">0</span>
+  city.warnings.show_if_not(has_juggler_school, <span class="str">"#build_juggling_school"</span>)
+}</code></pre>
+          </div>
+        </details>
+
+        <details>
+          <summary>C++ implementation — <code>src/building/building_booth.h / .cpp</code></summary>
+          <div class="details-body">
+            <p><span class="file-ref">src/building/building_booth.h</span> declares <code>building_booth</code> (inherits <code>building_entertainment</code>), registered with <code>BUILDING_METAINFO(BUILDING_BOOTH, …)</code>. Its overlay is <code>OVERLAY_BOOTH</code> and <code>get_fire_risk()</code> returns <code>value / 10</code>. Key behaviour in <span class="file-ref">building_booth.cpp</span>:</p>
+            <ul style="font-size:0.82rem;line-height:1.9;padding-left:1.2rem">
+              <li><code>spawn_figure()</code> — when the Booth has been visited (<code>runtime_data().juggler_visited &gt; 0</code>), creates a roaming <code>FIGURE_JUGGLER</code> (action <code>ACTION_94_ENTERTAINER_ROAMING</code>) from the juggler slot, gated by <code>min_houses_coverage</code>.</li>
+              <li><code>update_day()</code> — decrements <code>juggler_visited</code> and counts <code>num_shows</code> for that day; this is what makes the venue depend on a steady stream of visiting jugglers.</li>
+              <li><code>update_month()</code> — randomises <code>play_index</code> (0–9) for show-animation variety.</li>
+              <li><code>on_place_update_tiles()</code> — lays the underlying plaza via <code>map_add_venue_plaza_tiles()</code> and attaches the booth part to the correct corner with <code>place_latch_on_venue(BUILDING_BOOTH, …)</code> based on orientation.</li>
+              <li><code>draw_ornaments_and_animations_height()</code> — draws the juggler performing on the stage while <code>juggler_visited</code> is set.</li>
+              <li><code>preview::ghost_allow_tile()</code> — allows placement on road tiles (venue may sit on a road) or any tile with no figure on it.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details>
+          <summary>Juggler figure — <code>src/figuretype/figure_juggler.cpp</code></summary>
+          <div class="details-body">
+            <p><span class="file-ref">src/figuretype/figure_juggler.cpp</span> implements <code>FIGURE_JUGGLER</code>, the roaming entertainer the Booth sends out. It walks road tiles from the venue and marks houses it passes as having entertainment access. The matching overlay that highlights Booth coverage lives in <span class="file-ref">src/overlays/city_overlay_juggler.cpp</span>.</p>
+          </div>
+        </details>
+
+      </div><!-- .dev-section -->
+
+      <div class="bld-nav">
+        <a href="index.html">← All Buildings</a>
+        <span style="color:var(--text-muted)">Entertainment</span>
+        <a href="index.html#entertainment">Entertainment buildings →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+  <script src="../../../lightbox.js"></script>
+</body>
+</html>
