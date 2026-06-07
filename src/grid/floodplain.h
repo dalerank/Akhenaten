@@ -5,7 +5,7 @@
 
 #define MAX_FLOODPLAIN_ROWS 30
 
-enum e_fert_type { 
+enum e_fert_type {
     FERT_NO_MALUS = 0,
     FERT_WITH_MALUS = 1,
     FERT_ONLY_MALUS = 2

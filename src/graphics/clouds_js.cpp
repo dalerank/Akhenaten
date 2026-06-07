@@ -1,10 +1,9 @@
 #include "clouds.h"
 
 #include "core/profiler.h"
-#include "core/xstring.h"
-#include "grid/point.h"
 #include "js/js_game.h"
 #include "js/js_global_object.h"
+#include "mujs/mujs.h"
 
 void __clouds_reset() {
     g_clouds.init_cloud_images();
@@ -30,43 +29,21 @@ ANK_GLOBAL_OBJECT(g_clouds.config, __clouds_config,
     pause_min_frames
 );
 
-xstring __clouds_cloud_status(int index) {
+static void __clouds_cloud(js_State *J) {
+    const int index = static_cast<int>(js_tointeger(J, 1));
     if (index < 0 || index >= static_cast<int>(g_clouds.clouds.size())) {
-        return {};
+        js_pushnull(J);
+        return;
     }
-    pcstr name = e_cloud_status_tokens.name(g_clouds.clouds[index].status);
-    return xstring(name ? name : "UNKNOWN");
-}
-ANK_FUNCTION_1(__clouds_cloud_status);
 
-float __clouds_cloud_speedx(int index) {
-    if (index < 0 || index >= static_cast<int>(g_clouds.clouds.size())) {
-        return 0.f;
-    }
-    return static_cast<float>(g_clouds.clouds[index].speed.x.current_speed);
+    cloud_t &cloud = g_clouds.clouds[index];
+    js_newobject(J);
+    ank_global_obj_bind_field(J, js_intern("status"), &cloud.status);
+    ank_global_obj_bind_field(J, js_intern("pos"), &cloud.pos);
+    ank_global_obj_bind_field(J, js_intern("render_pos"), &cloud.render_pos);
+    js_pushnumber(J, cloud.speed.x.current_speed);
+    js_setproperty(J, -2, js_intern("speedx"));
+    js_pushnumber(J, cloud.speed.y.current_speed);
+    js_setproperty(J, -2, js_intern("speedy"));
 }
-ANK_FUNCTION_1(__clouds_cloud_speedx);
-
-float __clouds_cloud_speedy(int index) {
-    if (index < 0 || index >= static_cast<int>(g_clouds.clouds.size())) {
-        return 0.f;
-    }
-    return static_cast<float>(g_clouds.clouds[index].speed.y.current_speed);
-}
-ANK_FUNCTION_1(__clouds_cloud_speedy);
-
-vec2i __clouds_cloud_pos(int index) {
-    if (index < 0 || index >= static_cast<int>(g_clouds.clouds.size())) {
-        return {0, 0};
-    }
-    return g_clouds.clouds[index].pos;
-}
-ANK_FUNCTION_1(__clouds_cloud_pos);
-
-vec2i __clouds_cloud_render_pos(int index) {
-    if (index < 0 || index >= static_cast<int>(g_clouds.clouds.size())) {
-        return {0, 0};
-    }
-    return g_clouds.clouds[index].render_pos;
-}
-ANK_FUNCTION_1(__clouds_cloud_render_pos);
+ANK_FUNCTION_RAW(__clouds_cloud);

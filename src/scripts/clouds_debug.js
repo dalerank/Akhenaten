@@ -1,5 +1,14 @@
 log_info("akhenaten: clouds_debug")
 
+function e_cloud_status_name(status) {
+    switch (status) {
+    case e_cloud_status_inactive: return "e_cloud_status_inactive"
+    case e_cloud_status_created: return "e_cloud_status_created"
+    case e_cloud_status_moving: return "e_cloud_status_moving"
+    }
+    return "UNKNOWN"
+}
+
 [es=event_draw_debug_properties]
 function clouds_debug_draw_properties(ev) {
     if (!imgui.tree_node_ex("Clouds")) {
@@ -30,12 +39,17 @@ function clouds_debug_draw_properties(ev) {
             continue
         }
 
+        var cloud = __clouds_cloud(i)
+        if (!cloud) {
+            continue
+        }
+
         imgui.begin_table("Cloud" + i, 2, imgui.table_flags_debug_props())
-        imgui.property_input("status", __clouds_cloud_status(i))
-        imgui.property_input("speedx", __clouds_cloud_speedx(i))
-        imgui.property_input("speedy", __clouds_cloud_speedy(i))
-        imgui.property_input("pos", __clouds_cloud_pos(i))
-        imgui.property_input("render_pos", __clouds_cloud_render_pos(i))
+        imgui.property_input("status", e_cloud_status_name(cloud.status))
+        imgui.property_input("speedx", cloud.speedx)
+        imgui.property_input("speedy", cloud.speedy)
+        imgui.property_input("pos", Vec2i(cloud.pos.x, cloud.pos.y))
+        imgui.property_input("render_pos", Vec2i(cloud.render_pos.x, cloud.render_pos.y))
         imgui.end_table()
 
         imgui.tree_pop()
