@@ -27,6 +27,14 @@
     <h1>Devblog</h1>
 
     <article class="post">
+      <div class="post-meta"><time>June 7, 2026</time></div>
+      <h2><a href="devblog/camera-refactor-and-wiki-pages.html">Camera Consolidation and a Growing Player Guide</a></h2>
+      <img src="wiki/player/interface/Sidebar_Expanded.webp" alt="The expanded in-game control panel documented on the new wiki page" class="post-preview" loading="lazy" width="185" height="464" style="width:auto;max-height:200px;display:block;image-rendering:pixelated" />
+      <p>Two halves this time: an engine refactor and new wiki pages. The city camera is consolidated into a single <code>viewport_t</code> with cached state — <code>g_city_view</code> is now <code>g_camera</code>, and screen/tile lookups became viewport methods. The Clouds, Game Features, and Game Time debug panels moved to script, and more main-loop / input / platform glue shifted into the platform layer. On the docs side, the Player Guide gained an <strong>Interface</strong> section with a full <a href="wiki/player/interface/control-panel.html">Control Panel</a> page, plus dedicated <a href="wiki/player/buildings/booth.html">Booth</a>, <a href="wiki/player/buildings/juggler-school.html">Juggler School</a>, and <a href="wiki/player/buildings/vacant-lot.html">Vacant Lot</a> pages — all built from live engine data.</p>
+      <a href="devblog/camera-refactor-and-wiki-pages.html" class="read-more">Read more →</a>
+    </article>
+
+    <article class="post">
       <div class="post-meta"><time>June 3, 2026</time></div>
       <h2><a href="devblog/road-construction-js.html">Road Construction Moves to MuJS</a></h2>
       <img src="images/road-construction-js.png" alt="Green map-order road preview dragged across the city between two temples" class="post-preview" loading="lazy" />
