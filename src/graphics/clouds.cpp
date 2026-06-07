@@ -15,6 +15,8 @@
 
 clouds_t g_clouds;
 
+e_cloud_status_tokens_t ANK_CONFIG_ENUM(e_cloud_status_tokens);
+
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_clouds_config) {
     auto &clouds_config = g_clouds.config;
     g_config_arch.r("clouds_config", clouds_config);

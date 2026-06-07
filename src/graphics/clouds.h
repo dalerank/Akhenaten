@@ -1,6 +1,7 @@
 #pragma once
 
 #include <core/speed.h>
+#include <core/tokenum.h>
 #include <graphics/image.h>
 #include <graphics/painter.h>
 
@@ -25,8 +26,12 @@
 enum e_cloud_status {
     e_cloud_status_inactive,
     e_cloud_status_created,
-    e_cloud_status_moving
+    e_cloud_status_moving,
+
+    e_cloud_status_count
 };
+using e_cloud_status_tokens_t = token_holder<e_cloud_status, e_cloud_status_inactive, e_cloud_status_count>;
+extern e_cloud_status_tokens_t e_cloud_status_tokens;
 
 /**
  * @brief 2D velocity vector for cloud movement
