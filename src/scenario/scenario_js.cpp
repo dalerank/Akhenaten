@@ -72,6 +72,15 @@ int __scenario_criteria_max_year() {
 }
 ANK_FUNCTION(__scenario_criteria_max_year)
 
+bvariant_map __scenario_victory_reasons() {
+    bvariant_map result;
+    for (const auto &[reason, met] : get_victory_reasons()) {
+        result[reason] = bvariant(met);
+    }
+    return result;
+}
+ANK_FUNCTION(__scenario_victory_reasons)
+
 xstring __scenario_event_msg_text(int title_id, int index) {
     return g_scenario.events.msg_text(title_id, index);
 }

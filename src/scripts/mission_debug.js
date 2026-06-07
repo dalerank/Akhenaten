@@ -80,3 +80,45 @@ function mission_debug_draw_properties_victory_status(ev) {
     imgui.end_table()
     imgui.tree_pop()
 }
+
+[es=event_draw_debug_properties]
+function mission_debug_draw_properties_victory_reasons(ev) {
+    if (!imgui.tree_node_ex("Victory Reasons")) {
+        return
+    }
+
+    var reasons = __scenario_victory_reasons()
+    var names = Object.keys(reasons)
+    if (names.length <= 0) {
+        return
+    }
+
+
+    imgui.begin_table("VictoryReasons", 2, imgui.table_flags_debug_props())
+    for (var i = 0; i < names.length; i++) {
+        imgui.property_input(names[i], reasons[names[i]])
+    }
+
+    imgui.end_table()
+    imgui.tree_pop()
+}
+
+[es=event_draw_debug_properties]
+function mission_debug_draw_properties_migration_caps(ev) {
+    if (!imgui.tree_node_ex("Migration Caps")) {
+        return
+    }
+
+    var caps = __city_migration_caps()
+    var names = Object.keys(caps)
+    if (names.length <= 0) {
+        return
+    }
+
+    imgui.begin_table("MigrationCaps", 2, imgui.table_flags_debug_props())
+    for (var i = 0; i < names.length; i++) {
+        imgui.property_input(names[i], caps[names[i]])
+    }
+    imgui.end_table()
+    imgui.tree_pop()
+}

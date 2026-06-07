@@ -215,6 +215,15 @@ int __city_migration_problems_cause() {
 }
 ANK_FUNCTION(__city_migration_problems_cause)
 
+bvariant_map __city_migration_caps() {
+    bvariant_map result;
+    for (const auto &[reason, cap] : g_city.migration.get_migration_caps()) {
+        result[reason] = bvariant(cap);
+    }
+    return result;
+}
+ANK_FUNCTION(__city_migration_caps)
+
 int __scenario_invasion_exists_upcoming() {
     return scenario_invasion_exists_upcoming() ? 1 : 0;
 }
