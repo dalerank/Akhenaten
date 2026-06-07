@@ -4,101 +4,13 @@
 #include "imgui.h"
 #include "imgui_internal.h"
 #include "city/city.h"
-#include "game/game.h"
 #include "scenario/scenario.h"
 #include "js/js_events.h"
-#include "game/game_config.h"
-#include "scenario/criteria.h"
 
 ANK_REGISTER_PROPS_ITERATOR(config_show_mission_properties);
 void config_show_mission_properties(bool header) {
     if (header) {
         return;
-    }
-
-    bool victory_open = ImGui::TreeNodeEx("Victory Status", ImGuiTreeNodeFlags_None, "Victory Status");
-    if (victory_open) {
-        ImGui::BeginTable("VictoryStatus", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
-
-        // Overall victory state
-        const char* state_text = "None";
-        switch (g_scenario.victory_state.state) {
-            case e_victory_state_won: state_text = "WON"; break;
-            case e_victory_state_lost: state_text = "LOST"; break;
-            case e_victory_state_none: state_text = "None"; break;
-        }
-        game_debug_show_property("victory_state", state_text);
-        game_debug_show_property("force_win", g_scenario.victory_state.force_win);
-        game_debug_show_property("force_lost", g_scenario.victory_state.force_lost);
-        {
-            ImGui::TableNextRow();
-            ImGui::TableNextColumn();
-            ImGui::TextUnformatted("disable_victory");
-            ImGui::TableNextColumn();
-            bool v = game_features::gameopt_disable_victory.to_bool();
-            if (ImGui::Checkbox("##disable_victory", &v)) {
-                game_features::gameopt_disable_victory.set(v);
-                game_features::save();
-            }
-        }
-
-        if (winning_population() > 0) {
-            bstring64 label;
-            label.printf("population: %d / %d", g_city.population.current, winning_population());
-            bool met = g_city.population.current >= winning_population();
-            game_debug_show_property(label.c_str(), met);
-        }
-
-        if (winning_culture() > 0) {
-            bstring64 label;
-            label.printf("culture: %d / %d", g_city.ratings.culture, winning_culture());
-            bool met = g_city.ratings.culture >= winning_culture();
-            game_debug_show_property(label.c_str(), met);
-        }
-
-        if (winning_prosperity() > 0) {
-            bstring64 label;
-            label.printf("prosperity: %d / %d", g_city.ratings.prosperity, winning_prosperity());
-            bool met = g_city.ratings.prosperity >= winning_prosperity();
-            game_debug_show_property(label.c_str(), met, true);
-        }
-
-        if (winning_monuments() > 0) {
-            bstring64 label;
-            label.printf("monuments: %d / %d", g_city.ratings.monument, winning_monuments());
-            bool met = g_city.ratings.monument >= winning_monuments();
-            game_debug_show_property(label.c_str(), met, true);
-        }
-
-        if (winning_kingdom() > 0) {
-            bstring64 label;
-            label.printf("kingdom: %d / %d", g_city.kingdome.rating, winning_kingdom());
-            bool met = g_city.kingdome.rating >= winning_kingdom();
-            game_debug_show_property(label.c_str(), met, true);
-        }
-
-        if (winning_housing() > 0) {
-            bstring64 label;
-            label.printf("housing[lvl %d]: %d / %d", winning_houselevel(), g_scenario.victory_state.houses_of_required_level(), winning_housing());
-            game_debug_show_property(label.c_str(), g_scenario.victory_state.is_housing_condition_met(), true);
-        }
-
-        if (scenario_criteria_time_limit_enabled()) {
-            bstring64 label;
-            int years_left = scenario_criteria_max_year() - game.simtime.year;
-            label.printf("time_limit: %d years left", years_left);
-            game_debug_show_property(label.c_str(), years_left > 0);
-        }
-
-        if (scenario_criteria_survival_enabled()) {
-            bstring64 label;
-            int years_left = scenario_criteria_max_year() - game.simtime.year;
-            label.printf("survival_time: %d years left", years_left);
-            game_debug_show_property(label.c_str(), years_left <= 0);
-        }
-
-        ImGui::EndTable();
-        ImGui::TreePop();
     }
 
     // Victory Reasons (custom mission-specific reasons)

@@ -3,6 +3,7 @@
 #include "building/building_type.h"
 #include "core/encoding.h"
 #include "game/game_environment.h"
+#include "scenario/criteria.h"
 
 #include "js/js_game.h"
 
@@ -55,6 +56,21 @@ void __scenario_victory_reset() {
     g_scenario.victory_state.reset();
 }
 ANK_FUNCTION(__scenario_victory_reset)
+
+int __scenario_victory_houses_of_required_level() {
+    return g_scenario.victory_state.houses_of_required_level();
+}
+ANK_FUNCTION(__scenario_victory_houses_of_required_level)
+
+bool __scenario_victory_is_housing_condition_met() {
+    return g_scenario.victory_state.is_housing_condition_met();
+}
+ANK_FUNCTION(__scenario_victory_is_housing_condition_met)
+
+int __scenario_criteria_max_year() {
+    return scenario_criteria_max_year();
+}
+ANK_FUNCTION(__scenario_criteria_max_year)
 
 xstring __scenario_event_msg_text(int title_id, int index) {
     return g_scenario.events.msg_text(title_id, index);
