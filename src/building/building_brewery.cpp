@@ -50,6 +50,8 @@ void building_brewery::update_preproduction() {
 }
 
 void building_brewery::on_place_checks() {
+    building_impl::on_place_checks();
+
     construction_warnings warnings("#needs_barley");
 
     // Check for barley

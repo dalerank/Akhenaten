@@ -26,6 +26,8 @@ bool building_jewels_workshop::can_play_animation() const {
 }
 
 void building_jewels_workshop::on_place_checks() {
+    building_impl::on_place_checks();
+
     if (g_city.buildings.count_industry_active(RESOURCE_GEMS) > 0) {
         return;
     }
