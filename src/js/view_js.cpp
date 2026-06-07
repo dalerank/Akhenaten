@@ -1,5 +1,4 @@
 ﻿#include "graphics/view/view.h"
-#include "graphics/view/lookup.h"
 #include "graphics/view/zoom.h"
 #include "graphics/image.h"
 #include "game/game.h"
@@ -67,7 +66,7 @@ float __zoom_delta() {
 ANK_FUNCTION(__zoom_delta);
 
 vec2i __pixel_to_screentile(vec2i pixel) {
-    return pixel_to_screentile(pixel);
+    return g_camera.pixel_to_screentile(pixel);
 }
 ANK_FUNCTION_1(__pixel_to_screentile);
 

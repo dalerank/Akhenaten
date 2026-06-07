@@ -17,7 +17,7 @@
 #include "io/io_buffer.h"
 #include "graphics/animkeys.h"
 #include "sound/sound_walker.h"
-#include "graphics/view/lookup.h"
+#include "graphics/view/view.h"
 #include "core/object_property.h"
 #include "core/profiler.h"
 #include "widget/widget_city.h"
@@ -576,7 +576,7 @@ void figure::kill() {
 }
 
 vec2i figure::main_sprite_pixel() const {
-    return lookup_tile_to_pixel(tile);
+    return g_camera.lookup_tile_to_pixel(tile);
 }
 
 vec2i figure::cart_sprite_pixel() const {
@@ -760,7 +760,7 @@ void figure::draw_debug(painter &ctx) {
     dlines.clear();
 
     char str[10];
-    vec2i pixel = lookup_tile_to_pixel(tile);
+    vec2i pixel = g_camera.lookup_tile_to_pixel(tile);
     pixel = adjust_pixel_offset(pixel);
     float zoom_scale = g_zoom.get_scale();
     pixel.x = (int)(pixel.x * zoom_scale);
@@ -782,7 +782,7 @@ void figure::draw_debug(painter &ctx) {
         dlines.emplace_back().printf("Roam: %d", roam_length);
 
         if (true) {
-            vec2i tp = lookup_tile_to_pixel(tile);
+            vec2i tp = g_camera.lookup_tile_to_pixel(tile);
             if (tile.grid_offset() != -1)
                 debug_draw_tile_box(tp.x, tp.y, COLOR_LIGHT_BLUE, COLOR_GREEN);
         }
@@ -796,13 +796,13 @@ void figure::draw_debug(painter &ctx) {
     if (!!(draw_mode & e_figure_draw_routing)) {
         // draw path
         if (routing_path_id) {
-            vec2i coords = lookup_tile_to_pixel(destination()->tile);
+            vec2i coords = g_camera.lookup_tile_to_pixel(destination()->tile);
             build_planner::draw_building_ghost(ctx, image_id_from_group(PACK_CUSTOM, 1) + 3, coords);
-            coords = lookup_tile_to_pixel(destination_tile);
+            coords = g_camera.lookup_tile_to_pixel(destination_tile);
             build_planner::draw_building_ghost(ctx, image_id_from_group(PACK_CUSTOM, 1) + 3, coords);
             int tx = tile.x();
             int ty = tile.y();
-            coords = lookup_tile_to_pixel(tile);
+            coords = g_camera.lookup_tile_to_pixel(tile);
             ctx.img_generic(image_id_from_group(PACK_CUSTOM, 1) + 3, coords * zoom_scale);
             int starting_tile_index = routing_path_current_tile;
             if (progress_on_tile >= 0 && progress_on_tile < 8) { // adjust half-tile offset
@@ -822,7 +822,7 @@ void figure::draw_debug(painter &ctx) {
                 case 6: tx--; img_index = 1; break;
                 case 7: tx--; ty--; break;
                 }
-                coords = lookup_tile_to_pixel(tile2i(tx, ty));
+                coords = g_camera.lookup_tile_to_pixel(tile2i(tx, ty));
                 ctx.img_generic(image_id_from_group(PACK_CUSTOM, 1) + img_index, coords * zoom_scale);
             }
         }
@@ -879,11 +879,11 @@ void figure::draw_debug(painter &ctx) {
         if (use_cross_country) {
             vec2i tp;
             if (tile.grid_offset() != -1) {
-                tp = lookup_tile_to_pixel(tile);
+                tp = g_camera.lookup_tile_to_pixel(tile);
                 debug_draw_tile_box(tp.x, tp.y, COLOR_NULL, COLOR_GREEN);
             }
             if (destination_tile.grid_offset() != -1) {
-                tp = lookup_tile_to_pixel(destination_tile);
+                tp = g_camera.lookup_tile_to_pixel(destination_tile);
                 debug_draw_tile_box(tp.x, tp.y, COLOR_NULL, COLOR_FONT_YELLOW);
             }
         }

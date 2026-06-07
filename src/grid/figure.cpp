@@ -1,10 +1,9 @@
-﻿#include "figure.h"
+#include "figure.h"
 
 #include "core/custom_span.hpp"
 #include "grid/grid.h"
 #include "io/io_buffer.h"
 #include "graphics/image.h"
-#include "graphics/view/lookup.h"
 #include "graphics/view/view.h"
 #include "city/city_figures.h"
 #include "core/profiler.h"
@@ -72,11 +71,11 @@ void map_figure_sort_by_y() {
 }
 
 xspan<figure_draw> map_figures_in_row(tile2i tile) {
-    vec2i pixel_begin = lookup_tile_to_pixel(tile);
+    vec2i pixel_begin = g_camera.lookup_tile_to_pixel(tile);
     vec2i pixel_end = pixel_begin + vec2i(0, TILE_HEIGHT_PIXELS);
 
-    vec2i pixel_begin_scr = pixel_to_viewport(pixel_begin);
-    vec2i pixel_end_scr = pixel_to_viewport(pixel_end);
+    vec2i pixel_begin_scr = g_camera.pixel_to_viewport(pixel_begin);
+    vec2i pixel_end_scr = g_camera.pixel_to_viewport(pixel_end);
 
     const float scale = g_zoom.get_scale();
     if (pixel_end_scr.x < 0 || pixel_end_scr.y < 0

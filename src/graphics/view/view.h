@@ -83,6 +83,12 @@ struct viewport_t {
     bool contains_pixel(vec2i pixel) const;
     tile2i screen_to_tile(vec2i screen) const;
     vec2i tile_to_screen(tile2i point) const;
+    void record_mappoint_pixelcoord(tile2i point, vec2i pixel);
+    void clear_mappoint_pixelcoord();
+    vec2i lookup_tile_to_pixel(tile2i point) const;
+    vec2i pixel_to_viewport(vec2i pixel) const;
+    vec2i pixel_to_camera_coord(vec2i pixel, bool relative) const;
+    vec2i pixel_to_screentile(vec2i pixel) const;
     void foreach_valid_map_tile(painter &ctx,
                                 tile_draw_callback callback1,
                                 tile_draw_callback callback2 = {},

@@ -344,6 +344,81 @@ vec2i viewport_t::tile_to_screen(tile2i point) const {
     return screen;
 }
 
+void viewport_t::record_mappoint_pixelcoord(tile2i point, vec2i pixel) {
+    if (screentile_lookup.mappoint_to_pixel.size() != GRID_SIZE_TOTAL) {
+        screentile_lookup.mappoint_to_pixel.assign(GRID_SIZE_TOTAL, vec2i{0, 0});
+    }
+    screentile_lookup.mappoint_to_pixel[point.grid_offset()] = {pixel.x, pixel.y};
+}
+
+void viewport_t::clear_mappoint_pixelcoord() {
+    OZZY_PROFILER_FUNCTION();
+    if (screentile_lookup.mappoint_to_pixel.size() != GRID_SIZE_TOTAL) {
+        screentile_lookup.mappoint_to_pixel.assign(GRID_SIZE_TOTAL, vec2i{0, 0});
+    } else {
+        memset(screentile_lookup.mappoint_to_pixel.data(), 0, screentile_lookup.mappoint_to_pixel.size() * sizeof(vec2i));
+    }
+}
+
+vec2i viewport_t::lookup_tile_to_pixel(tile2i point) const {
+    const int grid_offset = point.grid_offset();
+    assert(grid_offset < GRID_SIZE_TOTAL);
+    if (grid_offset < 0 || screentile_lookup.mappoint_to_pixel.size() != GRID_SIZE_TOTAL) {
+        return {0, 0};
+    }
+    return screentile_lookup.mappoint_to_pixel[grid_offset];
+}
+
+vec2i viewport_t::pixel_to_viewport(vec2i pixel) const {
+    return pixel - offset;
+}
+
+vec2i viewport_t::pixel_to_camera_coord(vec2i pixel, bool relative) const {
+    if (!contains_pixel(pixel)) {
+        return {-1, -1};
+    }
+
+    pixel = pixel_to_viewport(pixel);
+
+    pixel.x = calc_adjust_with_percentage<int>(pixel.x, g_zoom.get_percentage());
+    pixel.y = calc_adjust_with_percentage<int>(pixel.y, g_zoom.get_percentage());
+
+    pixel += relative ? vec2i{0, 0} : camera_position;
+    return pixel;
+}
+
+vec2i viewport_t::pixel_to_screentile(vec2i pixel) const {
+    if (!contains_pixel(pixel)) {
+        return {-1, -1};
+    }
+
+    vec2i coord = pixel_to_camera_coord(pixel, false);
+
+    int odd = (coord.x / HALF_TILE_WIDTH_PIXELS + coord.y / HALF_TILE_HEIGHT_PIXELS) & 1;
+    int x_is_odd = (coord.x / HALF_TILE_WIDTH_PIXELS) & 1;
+    int y_is_odd = (coord.y / HALF_TILE_HEIGHT_PIXELS) & 1;
+    int x_mod = (coord.x % HALF_TILE_WIDTH_PIXELS) / 2;
+    int y_mod = coord.y % HALF_TILE_HEIGHT_PIXELS;
+    int screen_x_offset = coord.x / TILE_WIDTH_PIXELS;
+    int screen_y_offset = coord.y / HALF_TILE_HEIGHT_PIXELS;
+    if (odd) {
+        if (x_mod + y_mod >= HALF_TILE_HEIGHT_PIXELS - 1) {
+            screen_y_offset++;
+            if (x_is_odd && !y_is_odd) {
+                screen_x_offset++;
+            }
+        }
+    } else {
+        if (y_mod > x_mod) {
+            screen_y_offset++;
+        } else if (x_is_odd && y_is_odd) {
+            screen_x_offset++;
+        }
+    }
+
+    return vec2i(screen_x_offset, screen_y_offset);
+}
+
 void viewport_t::frame_begin() {
     update_scroll_limits();
     update_derived_camera_state();

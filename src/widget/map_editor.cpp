@@ -1,5 +1,4 @@
 ﻿#include "map_editor.h"
-#include <graphics/view/lookup.h>
 
 #include "editor/tool.h"
 #include "widget/widget_city.h"
@@ -70,11 +69,11 @@ void widget_map_editor_draw() {
 
     draw_context.init();
     //    city_view_foreach_map_tile(draw_buildings);
-    g_camera.foreach_valid_map_tile(ctx, 
+    g_camera.foreach_valid_map_tile(ctx,
         [] (vec2i pixel, tile2i tile, painter &ctx) { g_screen_city.draw_isometric_flat(pixel, tile, ctx); }
     );
 
-    g_camera.foreach_valid_map_tile(ctx, 
+    g_camera.foreach_valid_map_tile(ctx,
         [] (vec2i pixel, tile2i tile, painter &ctx) { g_screen_city.draw_isometric_terrain_height(pixel, tile, ctx); }
     );
     //    city_view_foreach_valid_map_tile(draw_flags, draw_top, 0);
@@ -82,7 +81,7 @@ void widget_map_editor_draw() {
 }
 
 static void update_city_view_coords(int x, int y, tile2i* tile) {
-    screen_tile screen = pixel_to_screentile({x, y});
+    screen_tile screen = g_camera.pixel_to_screentile({x, y});
     if (screen.x != -1 && screen.y != -1) {
         *tile = g_camera.screen_to_tile(screen);
         g_camera.set_selected_view_tile(screen);

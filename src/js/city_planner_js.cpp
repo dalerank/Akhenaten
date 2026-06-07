@@ -6,7 +6,7 @@
 #include "game/game.h"
 #include "game/undo.h"
 #include "graphics/graphics.h"
-#include "graphics/view/lookup.h"
+#include "graphics/view/view.h"
 #include "grid/routing/routing.h"
 #include "building/construction/routed.h"
 #include "grid/image.h"
@@ -88,7 +88,7 @@ void __city_planner_draw_ghost(vec2i pixel, int image_id) {
 ANK_FUNCTION_2(__city_planner_draw_ghost);
 
 vec2i __lookup_tile_to_pixel(tile2i t) {
-    return lookup_tile_to_pixel(t);
+    return g_camera.lookup_tile_to_pixel(t);
 }
 ANK_FUNCTION_1(__lookup_tile_to_pixel);
 

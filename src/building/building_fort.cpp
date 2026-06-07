@@ -1,4 +1,4 @@
-﻿#include "building/building_fort.h"
+#include "building/building_fort.h"
 
 #include "building/rotation.h"
 #include "figure/formation.h"
@@ -257,15 +257,15 @@ bool building_fort::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
         command.location = SOURCE_LOCATION;
 
         tile2i ftile = tile.shifted(3, 0);
-        vec2i offset = lookup_tile_to_pixel(ftile);
+        vec2i offset = g_camera.lookup_tile_to_pixel(ftile);
         g_screen_city.draw_figures(offset, ftile, ctx, true);
 
         ftile = tile.shifted(3, -1);
-        offset = lookup_tile_to_pixel(ftile);
+        offset = g_camera.lookup_tile_to_pixel(ftile);
         g_screen_city.draw_figures(offset, ftile, ctx, true);
 
         ftile = tile.shifted(3, -2);
-        offset = lookup_tile_to_pixel(ftile);
+        offset = g_camera.lookup_tile_to_pixel(ftile);
         g_screen_city.draw_figures(offset, ftile, ctx, true);
     }
 

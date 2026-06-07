@@ -1,4 +1,4 @@
-﻿#include "building_temple_complex_upgrade.h"
+#include "building_temple_complex_upgrade.h"
 
 #include "graphics/view/view.h"
 #include "grid/building_tiles.h"
@@ -44,7 +44,7 @@ void building_temple_complex_altar::preview::ghost_preview(build_planner &planer
     case 3: offset = { bsize, bsize }; break;
     }
 
-    vec2i pixel_upgrade = lookup_tile_to_pixel(upgrade_base->tile.shifted(offset));
+    vec2i pixel_upgrade = g_camera.lookup_tile_to_pixel(upgrade_base->tile.shifted(offset));
     planer.draw_building_ghost(ctx, image_id, pixel_upgrade);
 }
 
@@ -86,7 +86,7 @@ void building_temple_complex_oracle::preview::ghost_preview(build_planner &plane
     case 3: offset = { bsize, -(bsize + params.building_size - 1) }; break;
     }
 
-    vec2i pixel_upgrade = lookup_tile_to_pixel(upgrade_base->tile.shifted(offset));
+    vec2i pixel_upgrade = g_camera.lookup_tile_to_pixel(upgrade_base->tile.shifted(offset));
     planer.draw_building_ghost(ctx, image_id, pixel_upgrade);
 }
 

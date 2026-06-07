@@ -16,7 +16,7 @@
 #include "scenario/criteria.h"
 #include "scenario/scenario.h"
 
-#include "graphics/view/lookup.h"
+#include "graphics/view/view.h"
 #include "city/constants.h"
 
 static const time_millis TOOLTIP_DELAY_MILLIS = 150;
@@ -139,7 +139,7 @@ void tooltip_context::draw_overlay_tooltip() {
 }
 
 void tooltip_context::draw_tile_tooltip() {
-    screen_tile screen = pixel_to_screentile({mpos.x, mpos.y});
+    screen_tile screen = g_camera.pixel_to_screentile({mpos.x, mpos.y});
     if (screen.x != -1 && screen.y != -1) {
         tile2i tile = g_camera.screen_to_tile(screen);
         g_camera.set_selected_view_tile(screen);

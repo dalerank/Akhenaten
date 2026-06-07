@@ -33,7 +33,7 @@ void figure_homeless::debug_draw(painter &ctx) {
     }
 
     char str[10];
-    vec2i pixel = lookup_tile_to_pixel(tile());
+    vec2i pixel = g_camera.lookup_tile_to_pixel(tile());
     pixel = base.adjust_pixel_offset(pixel);
     pixel.x -= 10;
     pixel.y -= 80;

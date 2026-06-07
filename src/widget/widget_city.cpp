@@ -90,7 +90,7 @@ tile2i screen_city_t::update_city_view_coords(vec2i pixel) {
         return tile2i(0);
     }
 
-    vec2i screen = pixel_to_screentile(pixel);
+    vec2i screen = g_camera.pixel_to_screentile(pixel);
     if (screen.x != -1 && screen.y != -1) {
         g_camera.set_selected_view_tile(screen);
         return g_camera.screen_to_tile(screen);
@@ -141,7 +141,7 @@ void draw_tile_boxes(vec2i pixel, tile2i point) {
 };
 
 void update_tile_coords(vec2i pixel, tile2i tile, painter &ctx) {
-    record_mappoint_pixelcoord(tile, pixel);
+    g_camera.record_mappoint_pixelcoord(tile, pixel);
 }
 
 void screen_city_t::update_clouds(painter &ctx) {
@@ -339,7 +339,7 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     map_render_clear();
     ImageDraw::clear_render_commands();
 
-    clear_mappoint_pixelcoord();
+    g_camera.clear_mappoint_pixelcoord();
 
     // Rebuild the coordinate mapping by iterating through all valid visible map tiles
     // This updates the pixel positions for each tile based on the current camera view
@@ -495,7 +495,7 @@ void screen_city_t::draw_current_select_tile(painter &ctx) {
         return;
     }
 
-    vec2i pixel = lookup_tile_to_pixel(current_tile);
+    vec2i pixel = g_camera.lookup_tile_to_pixel(current_tile);
     debug_draw_tile_box(pixel.x, pixel.y, COLOR_NULL, COLOR_BLACK);
 }
 
@@ -1428,7 +1428,7 @@ static const figure* get_figure_at_mouse(vec2i mouse_pos) {
         return figure_get(0);
     }
 
-    vec2i center_pos = lookup_tile_to_pixel(tile) + vec2i{ HALF_TILE_WIDTH_PIXELS, HALF_TILE_HEIGHT_PIXELS };
+    vec2i center_pos = g_camera.lookup_tile_to_pixel(tile) + vec2i{ HALF_TILE_WIDTH_PIXELS, HALF_TILE_HEIGHT_PIXELS };
     const int radius = 30;
 
     grid_tiles tiles = map_grid_get_tiles(tile.shifted(-1, -1), tile.shifted(1, 1));

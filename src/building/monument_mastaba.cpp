@@ -1,4 +1,4 @@
-﻿#include "monument_mastaba.h"
+#include "monument_mastaba.h"
 
 #include "graphics/view/view.h"
 #include "monuments.h"
@@ -465,7 +465,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(painter &ctx, vec
         for (int dy = 0; dy < base.size; dy++) {
             for (int dx = 0; dx < base.size; dx++) {
                 tile2i ntile = base.tile.shifted(dx, dy);
-                vec2i offset = lookup_tile_to_pixel(ntile);
+                vec2i offset = g_camera.lookup_tile_to_pixel(ntile);
                 uint32_t progress = map_monuments_get_progress(ntile);
                 //if (progress < 200) {
                 //    auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile);
@@ -490,7 +490,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(painter &ctx, vec
         const image_t *img = image_get(image_stick);
         tile2i left_top = base.tile.shifted(0, 0);
         if (left_top == main->tile && map_monuments_get_progress(left_top) == 0) {
-            vec2i offset = lookup_tile_to_pixel(left_top);
+            vec2i offset = g_camera.lookup_tile_to_pixel(left_top);
             auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = image_stick;
             command.pixel = offset;
@@ -501,7 +501,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(painter &ctx, vec
         }
         tile2i right_top = base.tile.shifted(1, 0);
         if (right_top == main->tile.shifted(tiles_size.y - 1, 0) && map_monuments_get_progress(right_top) == 0) {
-            vec2i offset = lookup_tile_to_pixel(right_top);
+            vec2i offset = g_camera.lookup_tile_to_pixel(right_top);
             auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = image_stick;
             command.pixel = offset;
@@ -512,7 +512,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(painter &ctx, vec
         }        
         tile2i left_bottom = base.tile.shifted(0, 1);
         if (left_bottom == main->tile.shifted(0, tiles_size.x - 1) && map_monuments_get_progress(left_bottom) == 0) {
-            vec2i offset = lookup_tile_to_pixel(left_bottom);
+            vec2i offset = g_camera.lookup_tile_to_pixel(left_bottom);
             auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = image_stick;
             command.pixel = offset;
@@ -523,7 +523,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(painter &ctx, vec
         }        
         tile2i right_bottom = base.tile.shifted(1, 1);
         if (right_bottom == main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1) && map_monuments_get_progress(right_bottom) == 0) {
-            vec2i offset = lookup_tile_to_pixel(right_bottom);
+            vec2i offset = g_camera.lookup_tile_to_pixel(right_bottom);
             auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = image_stick;
             command.pixel = offset;
@@ -536,7 +536,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(painter &ctx, vec
         for (int dy = 0; dy < base.size; dy++) {
             for (int dx = 0; dx < base.size; dx++) {
                 tile2i ntile = base.tile.shifted(dx, dy);
-                vec2i offset = lookup_tile_to_pixel(ntile);
+                vec2i offset = g_camera.lookup_tile_to_pixel(ntile);
                 uint32_t progress = map_monuments_get_progress(ntile);
                 if (progress < 200) {
                     auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile);
@@ -560,7 +560,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(painter &ctx, vec
         for (int dy = 0; dy < base.size; dy++) {
             for (int dx = 0; dx < base.size; dx++) {
                 tile2i ntile = base.tile.shifted(dx, dy);
-                vec2i offset = lookup_tile_to_pixel(ntile);
+                vec2i offset = g_camera.lookup_tile_to_pixel(ntile);
                 uint32_t progress = map_monuments_get_progress(ntile);
                 if (progress < 200) {
                     int img = get_image(base.orientation, base.tile.shifted(dx, dy), main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1));
@@ -601,8 +601,8 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(painter &ctx, ve
     }
 
     std::sort(tiles2draw.begin(), tiles2draw.end(), [] (tile2i lhs, tile2i rhs) {
-        vec2i lhs_offset = lookup_tile_to_pixel(lhs);
-        vec2i rhs_offset = lookup_tile_to_pixel(rhs);
+        vec2i lhs_offset = g_camera.lookup_tile_to_pixel(lhs);
+        vec2i rhs_offset = g_camera.lookup_tile_to_pixel(rhs);
         return lhs_offset.y < rhs_offset.y;
     });
 
@@ -620,7 +620,7 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(painter &ctx, ve
         for (auto &tile : tiles2draw) {
             uint32_t progress = map_monuments_get_progress(tile);
             if (progress >= 200) {
-                vec2i offset = lookup_tile_to_pixel(tile);
+                vec2i offset = g_camera.lookup_tile_to_pixel(tile);
                 int img = building_small_mastabe_get_bricks_image(base.orientation, base.type, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), 1);
 
                 auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
@@ -636,7 +636,7 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(painter &ctx, ve
         for (auto &tile : tiles2draw) {
             uint32_t progress = map_monuments_get_progress(tile);
             int img = building_small_mastabe_get_bricks_image(base.orientation, base.type, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), (progress >= 200) ? (phase - 1) : (phase - 2));
-            vec2i offset = lookup_tile_to_pixel(tile);
+            vec2i offset = g_camera.lookup_tile_to_pixel(tile);
 
             auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
@@ -648,7 +648,7 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(painter &ctx, ve
     } else if (monumentd.phase == 8) {
         for (auto &tile : tiles2draw) {
             uint32_t progress = map_monuments_get_progress(tile);
-            vec2i offset = lookup_tile_to_pixel(tile);
+            vec2i offset = g_camera.lookup_tile_to_pixel(tile);
             int img = building_small_mastabe_get_bricks_image(base.orientation, base.type, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), 6);
 
             auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
@@ -663,7 +663,7 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(painter &ctx, ve
     if (monumentd.phase > 2 && base.type == BUILDING_SMALL_MASTABA_SIDE) {
         grid_tiles tile2common = map_grid_get_tiles(main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1));
         for (auto &t : tile2common) {
-            vec2i offset = lookup_tile_to_pixel(t);
+            vec2i offset = g_camera.lookup_tile_to_pixel(t);
             g_screen_city.draw_figures(offset, t, ctx, /*force*/true);
         }
     }

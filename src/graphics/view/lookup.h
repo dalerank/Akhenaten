@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/vec2i.h"
+#include "grid/grid.h"
 #include "grid/point.h"
 
 #include <vector>
@@ -18,6 +19,7 @@ struct screentile_lookup_t {
     };
 
     std::vector<tile2i> tables;
+    std::vector<vec2i> mappoint_to_pixel;
 
     static constexpr int index(int orientation, int x, int y) {
         return orientation * map_size * map_size + x * map_size + y;
@@ -31,11 +33,3 @@ struct screentile_lookup_t {
     void fill_in_for_orientation(int city_orientation);
     void calculate();
 };
-
-void clear_mappoint_pixelcoord();
-void record_mappoint_pixelcoord(tile2i point, vec2i pixel);
-vec2i lookup_tile_to_pixel(tile2i point);
-
-vec2i pixel_to_viewport(vec2i pixel);
-vec2i pixel_to_camera_coord(vec2i pixel, bool relative);
-vec2i pixel_to_screentile(vec2i pixel);

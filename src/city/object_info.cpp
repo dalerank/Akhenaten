@@ -16,7 +16,7 @@ figure *object_info::nfigure_t::get() const {
 void object_info::fill_figures_info(tile2i center) {
     nfigure.selected_index = 0;
     nfigure.ids.clear();
-    vec2i center_pos = lookup_tile_to_pixel(center) + vec2i{ HALF_TILE_WIDTH_PIXELS, HALF_TILE_HEIGHT_PIXELS };
+    vec2i center_pos = g_camera.lookup_tile_to_pixel(center) + vec2i{ HALF_TILE_WIDTH_PIXELS, HALF_TILE_HEIGHT_PIXELS };
 
     grid_tiles tiles = map_grid_get_tiles(center.shifted(-1, -1), center.shifted(1, 1));
     svector<figure*, 32> possible_figures;

@@ -1,4 +1,4 @@
-﻿#include "monument_pyramid.h"
+#include "monument_pyramid.h"
 
 #include "graphics/view/view.h"
 #include "monuments.h"
@@ -453,7 +453,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
     if (is_main()) {
         auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
         command.image_id = first_img(animkeys().enter);
-        command.pixel = lookup_tile_to_pixel(access_point());
+        command.pixel = g_camera.lookup_tile_to_pixel(access_point());
         command.use_sort_pixel = true;
         command.sort_pixel = command.pixel + vec2i(0, 1);
         command.location = SOURCE_LOCATION;
@@ -469,7 +469,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
         for (int dy = 0; dy < base.size; dy++) {
             for (int dx = 0; dx < base.size; dx++) {
                 tile2i ntile = base.tile.shifted(dx, dy);
-                vec2i offset = lookup_tile_to_pixel(ntile);
+                vec2i offset = g_camera.lookup_tile_to_pixel(ntile);
                 uint32_t progress = map_monuments_get_progress(ntile);
 
                 if (progress > 0 && progress <= 200) {
@@ -489,7 +489,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
         const image_t *img = image_get(image_stick);
         tile2i left_top = base.tile.shifted(0, 0);
         if (left_top == main->tile && map_monuments_get_progress(left_top) == 0) {
-            vec2i offset = lookup_tile_to_pixel(left_top);
+            vec2i offset = g_camera.lookup_tile_to_pixel(left_top);
             auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = image_stick;
             command.pixel = offset;
@@ -501,7 +501,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
 
         tile2i right_top = base.tile.shifted(1, 0);
         if (right_top == main->tile.shifted(tiles_size.y - 1, 0) && map_monuments_get_progress(right_top) == 0) {
-            vec2i offset = lookup_tile_to_pixel(right_top);
+            vec2i offset = g_camera.lookup_tile_to_pixel(right_top);
             auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = image_stick;
             command.pixel = offset;
@@ -513,7 +513,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
 
         tile2i left_bottom = base.tile.shifted(0, 1);
         if (left_bottom == main->tile.shifted(0, tiles_size.x - 1) && map_monuments_get_progress(left_bottom) == 0) {
-            vec2i offset = lookup_tile_to_pixel(left_bottom);
+            vec2i offset = g_camera.lookup_tile_to_pixel(left_bottom);
             auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = image_stick;
             command.pixel = offset;
@@ -525,7 +525,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
 
         tile2i right_bottom = base.tile.shifted(1, 1);
         if (right_bottom == main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1) && map_monuments_get_progress(right_bottom) == 0) {
-            vec2i offset = lookup_tile_to_pixel(right_bottom);
+            vec2i offset = g_camera.lookup_tile_to_pixel(right_bottom);
             auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = image_stick;
             command.pixel = offset;
@@ -538,7 +538,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
         for (int dy = 0; dy < base.size; dy++) {
             for (int dx = 0; dx < base.size; dx++) {
                 tile2i ntile = base.tile.shifted(dx, dy);
-                vec2i offset = lookup_tile_to_pixel(ntile);
+                vec2i offset = g_camera.lookup_tile_to_pixel(ntile);
                 uint32_t progress = map_monuments_get_progress(ntile);
                 if (progress < 200) {
                     auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
@@ -568,7 +568,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
         for (int dy = 0; dy < base.size; dy++) {
             for (int dx = 0; dx < base.size; dx++) {
                 tile2i ntile = base.tile.shifted(dx, dy);
-                vec2i offset = lookup_tile_to_pixel(ntile);
+                vec2i offset = g_camera.lookup_tile_to_pixel(ntile);
                 uint32_t progress = map_monuments_get_progress(ntile);
                 if (progress < 200) {
                     int img = get_image(current_params(), base.orientation, base.tile.shifted(dx, dy), main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1));
@@ -690,7 +690,7 @@ void building_stepped_pyramid::draw_phase_3_5_tile(painter& ctx, color color_mas
     for (int dy = 0; dy < base.size; dy++) {
         for (int dx = 0; dx < base.size; dx++) {
             tile2i ntile = base.tile.shifted(dx, dy);
-            vec2i offset = lookup_tile_to_pixel(ntile);
+            vec2i offset = g_camera.lookup_tile_to_pixel(ntile);
             uint32_t progress = map_monuments_get_progress(ntile);
             if (progress < 200) {
                 int ditch_empty_img = get_channel_image(base.orientation, ntile, main->tile, end, channel_base_id_1);
@@ -804,7 +804,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
         uint32_t progress = map_monuments_get_progress(tile);
         if (progress >= 200) {
             int img = get_bricks_image(base.orientation, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), phase() - 6);
-            vec2i offset = lookup_tile_to_pixel(tile);
+            vec2i offset = g_camera.lookup_tile_to_pixel(tile);
 
             auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
@@ -816,7 +816,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
     } else if (phase() > 6 && phase() < 12) {
         uint32_t progress = map_monuments_get_progress(tile);
         int img = get_bricks_image(base.orientation, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), (progress >= 200) ? (phase() - 6) : (phase() - 7));
-        vec2i offset = lookup_tile_to_pixel(tile);
+        vec2i offset = g_camera.lookup_tile_to_pixel(tile);
 
         auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
         command.image_id = img;
@@ -830,7 +830,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
         if (d.layer == 0) {
             auto layer_area = get_layer_area(0);
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
-            vec2i offset = lookup_tile_to_pixel(tile);
+            vec2i offset = g_camera.lookup_tile_to_pixel(tile);
 
             auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
@@ -840,7 +840,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             fill_tiles_height(ctx, tile, img);
         } else {
             int layer_img = current_params().first_img("base_bricks") + 5;
-            vec2i offset = lookup_tile_to_pixel(tile);
+            vec2i offset = g_camera.lookup_tile_to_pixel(tile);
 
             auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = layer_img;
@@ -864,7 +864,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
         if (d.layer == 0) {
             auto layer_area = get_layer_area(0);
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
-            vec2i offset = lookup_tile_to_pixel(tile);
+            vec2i offset = g_camera.lookup_tile_to_pixel(tile);
 
             auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
@@ -875,7 +875,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
         } else if (d.layer == 1) {
             auto layer_area = get_layer_area(1);
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
-            vec2i offset = lookup_tile_to_pixel(tile);
+            vec2i offset = g_camera.lookup_tile_to_pixel(tile);
 
             auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
@@ -885,7 +885,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             fill_tiles_height(ctx, tile, img);
         } else {
             int layer_img = current_params().first_img("base_bricks") + 5;
-            vec2i offset = lookup_tile_to_pixel(tile);
+            vec2i offset = g_camera.lookup_tile_to_pixel(tile);
 
             auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = layer_img;
@@ -909,7 +909,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
         if (d.layer == 0) {
             auto layer_area = get_layer_area(0);
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
-            vec2i offset = lookup_tile_to_pixel(tile);
+            vec2i offset = g_camera.lookup_tile_to_pixel(tile);
 
             auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
@@ -920,7 +920,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
         } else if (d.layer == 1) {
             auto layer_area = get_layer_area(1);
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
-            vec2i offset = lookup_tile_to_pixel(tile);
+            vec2i offset = g_camera.lookup_tile_to_pixel(tile);
 
             auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
@@ -931,7 +931,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
         } else if (d.layer == 2) {
             auto layer_area = get_layer_area(2);
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
-            vec2i offset = lookup_tile_to_pixel(tile);
+            vec2i offset = g_camera.lookup_tile_to_pixel(tile);
 
             auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
@@ -941,7 +941,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             fill_tiles_height(ctx, tile, img);
         } else {
             int layer_img = current_params().first_img("base_bricks") + 5;
-            vec2i offset = lookup_tile_to_pixel(tile);
+            vec2i offset = g_camera.lookup_tile_to_pixel(tile);
 
             auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = layer_img;
@@ -964,7 +964,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
         if (d.layer == 0) {
             auto layer_area = get_layer_area(0);
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
-            vec2i offset = lookup_tile_to_pixel(tile);
+            vec2i offset = g_camera.lookup_tile_to_pixel(tile);
 
             auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
@@ -975,7 +975,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
         } else if (d.layer == 1) {
             auto layer_area = get_layer_area(1);
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
-            vec2i offset = lookup_tile_to_pixel(tile);
+            vec2i offset = g_camera.lookup_tile_to_pixel(tile);
 
             auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
@@ -986,7 +986,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
         } else if (d.layer == 2) {
             auto layer_area = get_layer_area(2);
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
-            vec2i offset = lookup_tile_to_pixel(tile);
+            vec2i offset = g_camera.lookup_tile_to_pixel(tile);
 
             auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
@@ -997,7 +997,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
         } else if (d.layer == 3) {
             auto layer_area = get_layer_area(3);
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
-            vec2i offset = lookup_tile_to_pixel(tile);
+            vec2i offset = g_camera.lookup_tile_to_pixel(tile);
 
             auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
