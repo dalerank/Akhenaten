@@ -6,6 +6,7 @@
 #include "core/typename.h"
 #include "core/custom_span.hpp"
 #include <array>
+#include <utility>
 
 namespace game_features {
     struct game_feature {
@@ -159,4 +160,5 @@ namespace game_features {
 
     void load();
     void save();
+    void apply_cli_overrides(span_const<std::pair<xstring, xstring>> overrides);
 }

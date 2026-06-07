@@ -8,6 +8,9 @@
 #include "core/svector.h"
 #include "js/js_game.h"
 #include "dev/debug.h"
+#include "platform/arguments.h"
+
+#include <SDL.h>
 
 static const char* CONF_FILENAME = "akhenaten.conf";
 
@@ -30,7 +33,7 @@ namespace game_features {
     game_feature gameui_show_water_structure_range{ "gameui_show_water_structure_range", "#TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE", true };
     game_feature gameui_show_construction_size{ "gameui_show_construction_size", "#TR_CONFIG_SHOW_CONSTRUCTION_SIZE", true };
     game_feature gameui_show_current_select_tile{ "gameui_show_current_select_tile", "#TR_CONFIG_SHOW_CURRENT_SELECT_TILE", false };
-    game_feature gameui_show_input_near_cursor{ "gameui_show_input_near_cursor", "#TR_CONFIG_SHOW_INPUT_NEAR_CURSOR", true };
+    game_feature gameui_show_input_near_cursor{ "gameui_show_input_near_cursor", "#TR_CONFIG_SHOW_INPUT_NEAR_CURSOR", false };
     game_feature gameui_road_preview_in_map_order{ "gameui_road_preview_in_map_order", "#TR_CONFIG_ROAD_PREVIEW_IN_MAP_ORDER", true };
     game_feature gameui_zoom{ "gameui_zoom", "#TR_CONFIG_ZOOM_STEPPED", true };
     game_feature gameui_smooth_zoom{ "gameui_smooth_zoom", "#TR_CONFIG_SMOOTH_ZOOM", true };
@@ -216,6 +219,72 @@ void game_features::load() {
 void game_features::save() {
     vfs::sync_em_fs();
     _settings.sync_global(CONF_FILENAME, "game_settings");
+}
+
+static bool parse_bool_setting_value(pcstr value) {
+    if (SDL_strcasecmp(value, "true") == 0 || SDL_strcasecmp(value, "1") == 0 || SDL_strcasecmp(value, "yes") == 0
+        || SDL_strcasecmp(value, "on") == 0) {
+        return true;
+    }
+    if (SDL_strcasecmp(value, "false") == 0 || SDL_strcasecmp(value, "0") == 0 || SDL_strcasecmp(value, "no") == 0
+        || SDL_strcasecmp(value, "off") == 0) {
+        return false;
+    }
+
+    logs::warn("Invalid bool value '%s' for game feature, using false", value);
+    return false;
+}
+
+static vec2i parse_vec2i_setting_value(pcstr value) {
+    vec2i result;
+    if (SDL_sscanf(value, "%dx%d", &result.x, &result.y) == 2) {
+        return result;
+    }
+    if (SDL_sscanf(value, "%d,%d", &result.x, &result.y) == 2) {
+        return result;
+    }
+
+    logs::warn("Invalid vec2i value '%s' for game feature, expected WxH or x,y", value);
+    return {};
+}
+
+void game_features::apply_cli_overrides(span_const<std::pair<xstring, xstring>> overrides) {
+    for (const auto& override_entry : overrides) {
+        game_feature* feature = find(override_entry.first);
+        if (!feature) {
+            logs::warn("Unknown game feature from CLI: %s", override_entry.first.c_str());
+            continue;
+        }
+
+        pcstr value = override_entry.second.c_str();
+        switch (feature->type()) {
+        case setting_bool:
+            feature->set(parse_bool_setting_value(value));
+            logs::info("CLI game feature override: %s = %s", override_entry.first.c_str(), value);
+            break;
+
+        case setting_float:
+            feature->set((float)SDL_atof(value));
+            logs::info("CLI game feature override: %s = %s", override_entry.first.c_str(), value);
+            break;
+
+        case setting_string:
+            feature->set(value);
+            logs::info("CLI game feature override: %s = %s", override_entry.first.c_str(), value);
+            break;
+
+        case setting_vec2i: {
+            const vec2i parsed = parse_vec2i_setting_value(value);
+            feature->set(parsed);
+            logs::info("CLI game feature override: %s = %dx%d", override_entry.first.c_str(), parsed.x, parsed.y);
+            break;
+        }
+
+        default:
+            logs::warn("Unsupported game feature type for CLI override: %s", override_entry.first.c_str());
+            break;
+        }
+    }
 }
 
 declare_console_command_p(savefeatures) {

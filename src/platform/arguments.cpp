@@ -242,6 +242,31 @@ std::optional<arguments::argument_result> handle_pos(int argc, char **argv, int 
 }
 ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_pos, "--pos x,y", "window pos. Example: 10,10");
 
+std::optional<arguments::argument_result> handle_game_config_override(int argc, char** argv, int current_index) {
+    const char* arg = argv[current_index];
+    const char* prefix = "--config:";
+    const size_t prefix_len = SDL_strlen(prefix);
+    if (SDL_strncmp(arg, prefix, prefix_len) != 0) {
+        return std::nullopt;
+    }
+
+    const char* rest = arg + prefix_len;
+    const char* eq = SDL_strchr(rest, '=');
+    if (!eq || eq == rest) {
+        app_terminate("Option --config:NAME=VALUE must have format --config:option_name=value");
+    }
+
+    const std::string name(rest, eq - rest);
+    xstring value(eq + 1);
+    if (value.empty()) {
+        app_terminate("Option --config:NAME=VALUE requires a value");
+    }
+
+    g_args.add_game_config_cli_override(xstring(name.c_str()), value);
+    return arguments::argument_result("_config_cli", bvariant(true), 1);
+}
+ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_game_config_override, "--config:NAME=VALUE", "override a game feature from akhenaten.conf (e.g. --config:gameui_draw_fps=1)");
+
 std::optional<arguments::argument_result> handle_threads(int argc, char** argv, int current_index) {
     const char* arg = argv[current_index];
     const char* prefix_long = "--threads=";
@@ -448,6 +473,10 @@ const bvariant& Arguments::get_arg(const xstring& name) const {
 
 bool Arguments::has_arg(const xstring& name) const {
     return args_.find(name) != args_.end();
+}
+
+void Arguments::add_game_config_cli_override(xstring name, xstring value) {
+    game_config_cli_overrides_.push_back({name, value});
 }
 
 namespace arguments {

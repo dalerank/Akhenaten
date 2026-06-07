@@ -366,6 +366,7 @@ bool game_t::check_valid() {
     locale_determine_language();
 
     game_features::load();   // akhenaten.conf
+    game_features::apply_cli_overrides(make_span(g_args.get_game_config_cli_overrides()));
 
     const auto game_speed = (int)calc_bound(game_features::gameopt_game_speed.to_int(), 10, 1000);
     game_features::gameopt_game_speed.set( game_speed );

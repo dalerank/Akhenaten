@@ -240,6 +240,14 @@ To use the profiler, download and run the Tracy Profiler GUI v0.13.1 from the [T
           create full dump on crash
 --config
           always show configuration window on startup
+--config:NAME=VALUE
+          override a game feature from akhenaten.conf (applied after the config file is loaded;
+          CLI values take precedence over saved settings)
+          bool: 1/0, true/false, yes/no, on/off
+          float: numeric value (e.g. gameopt_game_speed=100)
+          string: plain text
+          vec2i: WxH or x,y (e.g. gameopt_display_size=1280x800)
+          Example: --config:gameui_show_input_near_cursor=1 --config:gameui_draw_fps=0
 --save_debug_texture
           save debug textures to DEV_TESTING/tex/
 --unpack_scripts

@@ -2,6 +2,7 @@
 
 #include "content/vfs.h"
 #include "core/core.h"
+#include "core/hvector.h"
 #include "core/variant.h"
 #include <optional>
 
@@ -114,8 +115,14 @@ public:
     /// Check if a custom argument exists
     [[nodiscard]] bool has_arg(const xstring& name) const;
 
+    void add_game_config_cli_override(xstring name, xstring value);
+    [[nodiscard]] const hvector<std::pair<xstring, xstring>, 32>& get_game_config_cli_overrides() const {
+        return game_config_cli_overrides_;
+    }
+
 private:
     bvariant_map args_;
+    hvector<std::pair<xstring, xstring>, 32> game_config_cli_overrides_;
 
     /// apply parameters from command line
     void parse_cli_(int argc, char** argv);
