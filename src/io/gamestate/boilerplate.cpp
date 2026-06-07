@@ -1,4 +1,4 @@
-#include "boilerplate.h"
+﻿#include "boilerplate.h"
 
 #include "building/construction/build_planner.h"
 #include "building/building_granary.h"
@@ -197,7 +197,7 @@ static void post_load() {
     js_register_game_handlers(missionid.value());
 
     // camera
-    //    g_city_view.refresh_camera_position();
+    //    g_camera.refresh_camera_position();
     //    city_view_refresh_viewport();
 
     // problems / overlays
@@ -333,7 +333,7 @@ static void file_schema(e_file_format file_format, const int file_version) {
         FILEIO.push_chunk(37808, true, "city_data", iob_city_data);
         FILEIO.push_chunk(72, false, "city_data_extra", iob_city_data_extra);
         FILEIO.push_chunk(1056000, true, "buildings", iob_buildings);
-        FILEIO.push_chunk(4, false, "city_view_orientation", iob_city_view_orientation);             // ok
+        FILEIO.push_chunk(4, false, "city_view_orientation", iob_camera_view_orientation);             // ok
         FILEIO.push_chunk(20, false, "game_time", iob_game_time);                                    // ok
         FILEIO.push_chunk(8, false, "building_extra_highest_id_ever", iob_building_highest_id_ever); // ok
         FILEIO.push_chunk(8, false, "random_iv", iob_random_iv);                                     // ok
@@ -516,7 +516,7 @@ static void file_schema(e_file_format file_format, const int file_version) {
         FILEIO.push_chunk(37808, false, "city_data", iob_city_data);
         FILEIO.push_chunk(72, false, "city_data_extra", iob_city_data_extra);
         FILEIO.push_chunk(1056000, false, "buildings", iob_buildings);
-        FILEIO.push_chunk(4, false, "city_view_orientation", iob_city_view_orientation);             // ok
+        FILEIO.push_chunk(4, false, "city_view_orientation", iob_camera_view_orientation);             // ok
         FILEIO.push_chunk(20, false, "game_time", iob_game_time);                                    // ok
         FILEIO.push_chunk(8, false, "building_extra_highest_id_ever", iob_building_highest_id_ever); // ok
         FILEIO.push_chunk(8, false, "random_iv", iob_random_iv);                                     // ok
@@ -796,7 +796,7 @@ void GamestateIO::start_loaded_file() {
     map_moisture_recompute_profile();
 
     // city view / orientation
-    g_city_view.init();
+    g_camera.init();
     map_orientation_update_buildings();
 
     // Refresh the off-map ring so saves authored under the old behaviour

@@ -1,4 +1,4 @@
-#include "monument_mastaba.h"
+﻿#include "monument_mastaba.h"
 
 #include "graphics/view/view.h"
 #include "monuments.h"
@@ -149,7 +149,7 @@ void building_mastaba::preview::setup_preview_graphics(build_planner &planer) co
 
     const vec2i init_tiles = base_params.init_tiles;
 
-    switch (g_city_view.orientation / 2) {
+    switch (g_camera.orientation / 2) {
     case 0: planer.init_tiles(init_tiles.y, init_tiles.x); break;
     case 1: planer.init_tiles(init_tiles.x, init_tiles.y); break;
     case 2: planer.init_tiles(init_tiles.y, init_tiles.x); break;
@@ -189,7 +189,7 @@ void building_mastaba::preview::ghost_preview(build_planner &planer, painter &ct
 
     vec2i size{ 1, 1 };
     vec2i size_b = base_params.init_tiles;
-    switch (g_city_view.orientation / 2) {
+    switch (g_camera.orientation / 2) {
     case 0: size = { size_b.x, size_b.y }; break;
     case 1: size = { size_b.y, size_b.x }; break;
     case 2: size = { size_b.x, size_b.y }; break;
@@ -212,7 +212,7 @@ void building_mastaba::preview::ghost_preview(build_planner &planer, painter &ct
 
 void map_mastaba_tiles_add(int building_id, tile2i tile, int size, int image_id, int terrain) {
     int x_leftmost, y_leftmost;
-    switch (g_city_view.orientation) {
+    switch (g_camera.orientation) {
     case DIR_0_TOP_RIGHT: x_leftmost = 0; y_leftmost = 1; break;
     case DIR_2_BOTTOM_RIGHT: x_leftmost = y_leftmost = 0; break;
     case DIR_4_BOTTOM_LEFT: x_leftmost = 1; y_leftmost = 0; break;
@@ -365,7 +365,7 @@ int building_mastaba::get_image(int orientation, tile2i tile, tile2i start, tile
 
     if (result < random) {
         int offset = result - base_image_id;
-        result = (base_image_id + (offset + (8 - g_city_view.orientation)) % 8);
+        result = (base_image_id + (offset + (8 - g_camera.orientation)) % 8);
         return result;
     }
 
@@ -380,7 +380,7 @@ int building_small_mastabe_get_bricks_image(int orientation, e_building_type typ
     int result = random;
     if (building_type_any_of(type, { BUILDING_SMALL_MASTABA_ENTRANCE, BUILDING_MEDIUM_MASTABA_ENTRANCE })) {
         int ids[4] = {image_base_bricks + 110, image_base_bricks + 104, image_base_bricks + 104, image_base_bricks + 109};
-        int i = (orientation + (g_city_view.orientation / 2)) % 4;
+        int i = (orientation + (g_camera.orientation / 2)) % 4;
         return ids[i];
     } else if (building_type_any_of(type, { BUILDING_SMALL_MASTABA_WALL, BUILDING_MEDIUM_MASTABA_WALL })) {
         return random;
@@ -394,7 +394,7 @@ int building_small_mastabe_get_bricks_image(int orientation, e_building_type typ
 
     if (result < random) {
         int offset = result - image_id;
-        result = (image_id + (offset + (g_city_view.orientation/2)) % 4);
+        result = (image_id + (offset + (g_camera.orientation/2)) % 4);
         return result;
     }
 
@@ -583,7 +583,7 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(painter &ctx, ve
     building *main = base.main();
 
     vec2i city_orientation_offset{ 0, 0 };
-    switch (g_city_view.orientation / 2) {
+    switch (g_camera.orientation / 2) {
     case 0: city_orientation_offset = vec2i(-30, +15); break;
     case 1: city_orientation_offset = vec2i(0, 0); break;
     case 2: city_orientation_offset = vec2i(-30, -15); break;

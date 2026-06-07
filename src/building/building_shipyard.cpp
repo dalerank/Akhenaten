@@ -1,4 +1,4 @@
-#include "building_shipyard.h"
+﻿#include "building_shipyard.h"
 
 #include "building/building.h"
 #include "figuretype/figure_fishing_boat.h"
@@ -112,7 +112,7 @@ void building_shipyard::bind_dynamic(io_buffer *iob, size_t version) {
 }
 
 void building_shipyard::update_map_orientation(int orientation) {
-    int image_offset = g_city_view.relative_orientation(base.orientation);
+    int image_offset = g_camera.relative_orientation(base.orientation);
     int image_id = base_img() + image_offset;
     map_water_add_building(id(), tile(), current_params().building_size, image_id);
 }
@@ -150,7 +150,7 @@ void building_shipyard::on_create(int orientation) {
 }
 
 void building_shipyard::on_place_update_tiles(int orientation, int variant) {
-    int orientation_rel = g_city_view.relative_orientation(orientation);
+    int orientation_rel = g_camera.relative_orientation(orientation);
     map_water_add_building(id(), tile(), size(), base_img() + orientation_rel);
 }
 

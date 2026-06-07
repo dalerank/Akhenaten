@@ -1,4 +1,4 @@
-#include "widget/widget_city.h"
+﻿#include "widget/widget_city.h"
 
 #include "graphics/clouds.h"
 #include "graphics/image.h"
@@ -61,18 +61,18 @@ screen_city_t g_screen_city;
 
 void set_city_clip_rectangle(painter &ctx) {
     OZZY_PROFILER_FUNCTION();
-    vec2i view_pos = g_city_view.offset;
-    vec2i view_size = g_city_view.size_pixels;
+    vec2i view_pos = g_camera.offset;
+    vec2i view_size = g_camera.size_pixels;
     graphics_set_clip_rectangle(view_pos, view_size);
 }
 
 void screen_city_t::update_zoom_level(painter &ctx) {
     OZZY_PROFILER_FUNCTION();
-    vec2i offset = g_city_view.camera_position;
+    vec2i offset = g_camera.camera_position;
 
     if (g_zoom.update_value(&offset)) {
-        g_city_view.refresh_viewport();
-        g_city_view.go_to_pixel(offset, true);
+        g_camera.refresh_viewport();
+        g_camera.go_to_pixel(offset, true);
         sound_city_decay_views();
     }
 }
@@ -80,19 +80,19 @@ void screen_city_t::update_zoom_level(painter &ctx) {
 void screen_city_t::scroll_map(const mouse* m) {
     vec2i delta;
     if (scroll_get_delta(m, &delta, SCROLL_TYPE_CITY)) {
-        g_city_view.scroll(delta.x, delta.y);
+        g_camera.scroll(delta.x, delta.y);
         sound_city_decay_views();
     }
 }
 
 tile2i screen_city_t::update_city_view_coords(vec2i pixel) {
-    if (!g_city_view.contains_pixel(pixel)) {
+    if (!g_camera.contains_pixel(pixel)) {
         return tile2i(0);
     }
 
     vec2i screen = pixel_to_screentile(pixel);
     if (screen.x != -1 && screen.y != -1) {
-        g_city_view.set_selected_view_tile(screen);
+        g_camera.set_selected_view_tile(screen);
         return screen_to_tile(screen);
     }
 
@@ -100,8 +100,8 @@ tile2i screen_city_t::update_city_view_coords(vec2i pixel) {
 }
 
 int screen_city_t::input_coords_in_city(int x, int y) {
-    vec2i view_pos = g_city_view.offset;
-    vec2i view_size = g_city_view.size_pixels;
+    vec2i view_pos = g_camera.offset;
+    vec2i view_size = g_camera.size_pixels;
 
     x -= view_pos.x;
     y -= view_pos.y;
@@ -151,10 +151,10 @@ void screen_city_t::update_clouds(painter &ctx) {
         g_clouds.pause();
     }
 
-    auto mm_view = g_city_view.get_scrollable_pixel_limits();
+    auto mm_view = g_camera.get_scrollable_pixel_limits();
     const vec2i offset = {
-        g_city_view.camera_position.x - mm_view.min.x,
-        g_city_view.camera_position.y - mm_view.min.y,
+        g_camera.camera_position.x - mm_view.min.x,
+        g_camera.camera_position.y - mm_view.min.y,
     };
 
     const vec2i limit = {
@@ -343,26 +343,26 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
 
     // Rebuild the coordinate mapping by iterating through all valid visible map tiles
     // This updates the pixel positions for each tile based on the current camera view
-    g_city_view.foreach_valid_map_tile(ctx, update_tile_coords);
+    g_camera.foreach_valid_map_tile(ctx, update_tile_coords);
 
     // Sort all figures by their Y coordinate for proper depth ordering
     // This ensures figures are drawn in the correct order (back-to-front) for isometric rendering
     map_figure_sort_by_y();
 
     // PHASE 1+2: Draw flat + terrain height. Split by rows across threads when beneficial.
-    const int total_rows = g_city_view.size_tiles.y + 21;
+    const int total_rows = g_camera.size_tiles.y + 21;
     const size_t num_threads = game.mt.get_thread_count();
     const size_t num_blocks = (num_threads > 0 && total_rows > 1)
         ? std::min(num_threads, static_cast<size_t>(total_rows))
         : 0;
 
     if (num_blocks <= 1) {
-        g_city_view.foreach_valid_map_tile(ctx,
+        g_camera.foreach_valid_map_tile(ctx,
             [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_flat(pixel, tile, ctx); },
             [this](vec2i pixel, tile2i tile, painter& ctx) { draw_figures_on_flat_tiles(pixel, tile, ctx); },
             draw_ornaments_flat
         );
-        g_city_view.foreach_valid_map_tile(ctx,
+        g_camera.foreach_valid_map_tile(ctx,
             [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_terrain_height(pixel, tile, ctx); }
         );
     } else {
@@ -383,12 +383,12 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
                 painter worker_ctx = ctx;
                 worker_ctx.command_buffer = &ImageDraw::parallel_block_commands(blk);
                 worker_ctx.subcommand_buffer = &ImageDraw::parallel_block_subcommands(blk);
-                g_city_view.foreach_valid_map_tile_rows(worker_ctx, y_start, y_end,
+                g_camera.foreach_valid_map_tile_rows(worker_ctx, y_start, y_end,
                     [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_flat(pixel, tile, ctx); },
                     [this](vec2i pixel, tile2i tile, painter& ctx) { draw_figures_on_flat_tiles(pixel, tile, ctx); },
                     draw_ornaments_flat
                 );
-                g_city_view.foreach_valid_map_tile_rows(worker_ctx, y_start, y_end,
+                g_camera.foreach_valid_map_tile_rows(worker_ctx, y_start, y_end,
                     [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_terrain_height(pixel, tile, ctx); }
                 );
                 }));
@@ -412,7 +412,7 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     // This includes buildings with height, animated decorations, and all figures (people, animals, etc.)
     // These are drawn after flat terrain so they appear on top
     if (num_blocks <= 1) {
-        g_city_view.foreach_valid_map_tile(ctx,
+        g_camera.foreach_valid_map_tile(ctx,
             [this] (vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_nonterrain_height(pixel, tile, ctx); },
             [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_ornaments_and_animations_height(pixel, tile, ctx); },
             [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_figures(pixel, tile, ctx, false); }
@@ -435,7 +435,7 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
                 painter worker_ctx = ctx;
                 worker_ctx.command_buffer = &ImageDraw::parallel_block_commands()[blk];
                 worker_ctx.subcommand_buffer = &ImageDraw::parallel_block_subcommands()[blk];
-                g_city_view.foreach_valid_map_tile_rows(worker_ctx, y_start, y_end,
+                g_camera.foreach_valid_map_tile_rows(worker_ctx, y_start, y_end,
                     [this] (vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_nonterrain_height(pixel, tile, ctx); },
                     [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_ornaments_and_animations_height(pixel, tile, ctx); },
                     [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_figures(pixel, tile, ctx, false); }
@@ -461,7 +461,7 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     }
 
     // PHASE 5: post-processing of tiles that require special handling after all main elements are drawn
-    g_city_view.foreach_valid_map_tile(ctx,
+    g_camera.foreach_valid_map_tile(ctx,
         [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_postrender_building_effects(pixel, tile, ctx); }
     );
 
@@ -469,7 +469,7 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
 
     // PHASE 6: Draw debug overlays on top of everything else
     // These debug elements should be visible above all game elements for debugging purposes
-    g_city_view.foreach_valid_map_tile(ctx, draw_debug_tile);
+    g_camera.foreach_valid_map_tile(ctx, draw_debug_tile);
     debug_draw_figures(ctx);
 
     ImageDraw::apply_render_commands(ctx, "draw_debug_tile");
@@ -545,8 +545,8 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
         }
     }
 
-    vec2i view_pos = g_city_view.offset;
-    vec2i view_size = g_city_view.size_pixels;
+    vec2i view_pos = g_camera.offset;
+    vec2i view_size = g_camera.size_pixels;
     int direction = SOUND_DIRECTION_CENTER;
     if (pixel.x < view_pos.x + 100) {
         direction = SOUND_DIRECTION_LEFT;
@@ -813,14 +813,14 @@ void screen_city_t::draw_with_overlay(painter &ctx) {
     ImageDraw::clear_render_commands();
 
     g_city_planner.ghost_mark_deleting(current_tile);
-    g_city_view.foreach_valid_map_tile(ctx, update_tile_coords);
+    g_camera.foreach_valid_map_tile(ctx, update_tile_coords);
 
     map_figure_sort_by_y();
-    g_city_view.foreach_valid_map_tile(ctx, draw_isometrics_overlay_flat);
+    g_camera.foreach_valid_map_tile(ctx, draw_isometrics_overlay_flat);
 
     ImageDraw::apply_render_commands(ctx, "draw_isometrics_overlay_flat");
 
-    g_city_view.foreach_valid_map_tile(ctx,
+    g_camera.foreach_valid_map_tile(ctx,
         draw_isometrics_overlay_height,
         [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_ornaments_overlay(pixel, tile, ctx); },
         [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_figures_overlay(pixel, tile, ctx); }
@@ -834,7 +834,7 @@ void screen_city_t::draw_with_overlay(painter &ctx) {
     ImageDraw::apply_render_commands(ctx, "draw_city_planer_overlay");
 
     // finally, draw these on top of everything else
-    g_city_view.foreach_valid_map_tile(ctx, draw_debug_tile);
+    g_camera.foreach_valid_map_tile(ctx, draw_debug_tile);
     debug_draw_figures(ctx);
 
     ImageDraw::apply_render_commands(ctx, "debug_draw_figures");
@@ -889,7 +889,7 @@ static void build_end(void) {
 
 static bool has_confirmed_construction(tile2i ghost, tile2i point, int range_size) {
     //    map_point point = map_point(tile_offset);
-    switch (g_city_view.orientation) {
+    switch (g_camera.orientation) {
     case DIR_0_TOP_RIGHT:
         point.shift(-range_size + 1, -range_size + 1);
     case DIR_2_BOTTOM_RIGHT:
@@ -946,8 +946,8 @@ bool screen_city_t::handle_cancel_construction_button(const touch_t * t) {
     if (!g_city_planner.build_type)
         return false;
 
-    vec2i view_pos = g_city_view.offset;
-    vec2i view_size = g_city_view.size_pixels;
+    vec2i view_pos = g_camera.offset;
+    vec2i view_size = g_camera.size_pixels;
     int box_size = 5 * 16;
     view_size.x -= box_size;
 
@@ -983,8 +983,8 @@ void screen_city_t::handle_touch_scroll(const touch_t * t, bool fore_capture_inp
 
     if (g_city_planner.build_type) {
         if (t->has_started) {
-            vec2i view_pos = g_city_view.offset;
-            vec2i view_size = g_city_view.size_pixels;
+            vec2i view_pos = g_camera.offset;
+            vec2i view_size = g_camera.size_pixels;
             scroll_set_custom_margins(view_pos.x, view_pos.y, view_size.x, view_size.y);
         }
         if (t->has_ended) {
@@ -1160,7 +1160,7 @@ void screen_city_t::military_map_click(int legion_formation_id, tile2i tile) {
 void screen_city_t::handle_input_military(const mouse *m, const hotkeys *h, int legion_formation_id) {
     current_tile = update_city_view_coords(*m);
 
-    if (!g_city_view.sidebar_collapsed && widget_minimap_handle_mouse(m)) {
+    if (!g_camera.sidebar_collapsed && widget_minimap_handle_mouse(m)) {
         return;
     }
 
@@ -1258,7 +1258,7 @@ void screen_city_t::warship_map_click(int warship_figure_id, tile2i tile) {
 void screen_city_t::handle_input_warship(const mouse *m, const hotkeys *h, int warship_figure_id) {
     current_tile = update_city_view_coords(*m);
 
-    if (!g_city_view.sidebar_collapsed && widget_minimap_handle_mouse(m)) {
+    if (!g_camera.sidebar_collapsed && widget_minimap_handle_mouse(m)) {
         return;
     }
 

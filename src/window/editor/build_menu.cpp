@@ -1,4 +1,4 @@
-#include "build_menu.h"
+﻿#include "build_menu.h"
 
 #include "editor/tool.h"
 #include "graphics/elements/generic_button.h"
@@ -86,8 +86,8 @@ static void draw_background(int) {
 }
 
 static int get_sidebar_x_offset(void) {
-    vec2i view_pos = g_city_view.offset;
-    vec2i view_size = g_city_view.size_pixels;
+    vec2i view_pos = g_camera.offset;
+    vec2i view_size = g_camera.size_pixels;
     return view_pos.x + view_size.x;
 }
 

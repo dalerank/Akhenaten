@@ -1,4 +1,4 @@
-#include "screen.h"
+﻿#include "screen.h"
 
 #include "graphics/image.h"
 #include "city/city_warnings.h"
@@ -18,6 +18,6 @@ void screen_t::set_resolution(int w, int h) {
     g_render.clear_screen();
     g_render.set_clip_rectangle({ 0, 0 }, width, height);
 
-    g_city_view.set_screen_size(width, height);
+    g_camera.set_screen_size(width, height);
     g_warning_manager.clear_all();
 }

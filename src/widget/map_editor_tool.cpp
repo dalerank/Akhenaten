@@ -1,4 +1,4 @@
-#include "map_editor_tool.h"
+﻿#include "map_editor_tool.h"
 #include <graphics/view/zoom.h>
 
 #include "editor/tool.h"
@@ -123,7 +123,7 @@ void map_editor_tool_draw(painter &ctx, tile2i tile) {
         return;
 
     int type = editor_tool_type();
-    screen_tile screen = g_city_view.selected_tile;
+    screen_tile screen = g_camera.selected_tile;
     int x = screen.x;
     int y = screen.y;
     xstring warning;

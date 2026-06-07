@@ -1,4 +1,4 @@
-#include "figure_enemy_archer.h"
+﻿#include "figure_enemy_archer.h"
 
 #include "core/profiler.h"
 #include "city/city.h"
@@ -361,7 +361,7 @@ void figure_enemy_archer::debug_draw(painter &ctx) {
         if (target_building && target_building->state == BUILDING_STATE_VALID) {
             tile2i offset = { 0, 0 };
             int bsize = target_building->size - 1;
-            int city_orientation = g_city_view.orientation / 2;
+            int city_orientation = g_camera.orientation / 2;
             switch (city_orientation) {
             case 0: offset = { 0, bsize }; break;
             case 1: offset = { 0, 0 }; break;

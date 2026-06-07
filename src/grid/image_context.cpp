@@ -1,4 +1,4 @@
-#include "image_context.h"
+﻿#include "image_context.h"
 
 #include "city/city_buildings.h"
 #include "graphics/view/view.h"
@@ -379,7 +379,7 @@ terrain_image map_image_context_get_terrain_image(e_terrain_image_context group,
                 context.current_item_offset = 0;
 
             result.is_valid = 1;
-            result.group_offset = context.offset_for_orientation[g_city_view.orientation / 2];
+            result.group_offset = context.offset_for_orientation[g_camera.orientation / 2];
             result.item_offset = context.current_item_offset;
             result.canal_offset = context.canal_offset;
             break;

@@ -1,4 +1,4 @@
-#include "building_wharf.h"
+﻿#include "building_wharf.h"
 
 #include "grid/water.h"
 #include "grid/image.h"
@@ -9,19 +9,19 @@ void building_wharf::on_create(int orientation) {
 }
 
 void building_wharf::on_place(int orientation, int variant) {
-    int orientation_rel = g_city_view.relative_orientation(orientation);
+    int orientation_rel = g_camera.relative_orientation(orientation);
     map_water_add_building(id(), tile(), current_params().building_size, base_img() + orientation_rel);
 
     building_impl::on_place(orientation, variant);
 }
 
 void building_wharf::on_place_update_tiles(int orientation, int variant) {
-    int orientation_rel = g_city_view.relative_orientation(orientation);
+    int orientation_rel = g_camera.relative_orientation(orientation);
     map_water_add_building(id(), tile(), size(), base_img() + orientation_rel);
 }
 
 void building_wharf::update_map_orientation(int orientation) {
-    int image_offset = g_city_view.relative_orientation(base.orientation);
+    int image_offset = g_camera.relative_orientation(base.orientation);
     int image_id = base_img() + image_offset;
     map_water_add_building(id(), tile(), size(), image_id);
 }

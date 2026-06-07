@@ -1,4 +1,4 @@
-#include "graphics/view/view.h"
+﻿#include "graphics/view/view.h"
 #include "graphics/view/lookup.h"
 #include "graphics/view/zoom.h"
 #include "graphics/image.h"
@@ -7,16 +7,16 @@
 #include "grid/point.h"
 #include "js/js_game.h"
 
-void __city_view_rotate_left() { g_city_view.rotate_left(); }
-ANK_FUNCTION(__city_view_rotate_left);
+void __camera_rotate_left() { g_camera.rotate_left(); }
+ANK_FUNCTION(__camera_rotate_left);
 
-void __city_view_rotate_right() { g_city_view.rotate_right(); }
-ANK_FUNCTION(__city_view_rotate_right);
+void __camera_rotate_right() { g_camera.rotate_right(); }
+ANK_FUNCTION(__camera_rotate_right);
 
-void __city_view_rotate_north() { g_city_view.rotate_north(); }
-ANK_FUNCTION(__city_view_rotate_north);
+void __camera_rotate_north() { g_camera.rotate_north(); }
+ANK_FUNCTION(__camera_rotate_north);
 
-ANK_GLOBAL_OBJECT(g_city_view, __city_view,
+ANK_GLOBAL_OBJECT(g_camera, __camera,
     camera_position,
     camera_mappoint,
     camera_pixel_offset_internal,
@@ -36,15 +36,15 @@ ANK_GLOBAL_OBJECT(g_city_view, __city_view,
     orientation
 );
 
-vec2i __city_view_scroll_min() {
-    return g_city_view.get_scrollable_pixel_limits().min;
+vec2i __camera_scroll_min() {
+    return g_camera.get_scrollable_pixel_limits().min;
 }
-ANK_FUNCTION(__city_view_scroll_min);
+ANK_FUNCTION(__camera_scroll_min);
 
-vec2i __city_view_scroll_max() {
-    return g_city_view.get_scrollable_pixel_limits().max;
+vec2i __camera_scroll_max() {
+    return g_camera.get_scrollable_pixel_limits().max;
 }
-ANK_FUNCTION(__city_view_scroll_max);
+ANK_FUNCTION(__camera_scroll_max);
 
 float __zoom_percentage() {
     return g_zoom.get_percentage();

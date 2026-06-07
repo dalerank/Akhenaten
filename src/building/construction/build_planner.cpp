@@ -1,4 +1,4 @@
-#include "build_planner.h"
+﻿#include "build_planner.h"
 
 #include "editor/tool.h"
 #include "graphics/view/lookup.h"
@@ -118,7 +118,7 @@ void build_planner::add_building_tiles_from_list(int building_id, bool graphics_
             tile2i tile = tile_coord_cache[row][column];
 
             // correct for city orientation
-            switch (g_city_view.orientation / 2) {
+            switch (g_camera.orientation / 2) {
             case 0: tile.shift(0, -size + 1); break;
             case 1: break;
             case 2: tile.shift(-size + 1, 0); break;
@@ -749,7 +749,7 @@ void build_planner::update_special_case_orientations_check() {
             }
         }
 
-        dir_relative = g_city_view.relative_orientation(result.orientation_absolute);
+        dir_relative = g_camera.relative_orientation(result.orientation_absolute);
         if (!result.match) {
             immediate_warning = "#building_not_next_to_water";
             can_place = CAN_NOT_PLACE;
@@ -784,7 +784,7 @@ void build_planner::update_special_case_orientations_check() {
             can_place = CAN_NOT_PLACE;
         } else {
             int dir_absolute = (5 - (complex->runtime_data().variant / 2)) % 4;
-            dir_relative = g_city_view.relative_orientation(dir_absolute);
+            dir_relative = g_camera.relative_orientation(dir_absolute);
             relative_orientation = (1 + dir_relative) % 2;
             end = complex->tile();
             update_orientations(false);
@@ -833,8 +833,8 @@ void build_planner::update_coord_caches() {
     if (view_tile.x == 0 && view_tile.y == 0)
         // this prevents graphics from being drawn on the top left corner
         // of the screen when the current "end" tile isn't valid.
-        view_tile = g_city_view.selected_tile;
-    int orientation = g_city_view.orientation / 2;
+        view_tile = g_camera.selected_tile;
+    int orientation = g_camera.orientation / 2;
     for (int row = 0; row < size.y; row++) {
         for (int column = 0; column < size.x; column++) {
             // get tile offset
@@ -906,7 +906,7 @@ void build_planner::update_orientations(bool check_if_changed) {
     building_variant = preview.update_building_variant(*this);
 
     relative_orientation = relative_orientation % 4;
-    absolute_orientation = g_city_view.absolute_orientation(relative_orientation);
+    absolute_orientation = g_camera.absolute_orientation(relative_orientation);
 
     // do not refresh graphics if nothing changed
     if (check_if_changed && relative_orientation == prev_orientation && building_variant == prev_variant) {
@@ -1028,7 +1028,7 @@ void build_planner::construction_update(tile2i tile) {
     case BUILDING_FORT_CHARIOTEERS:
     case BUILDING_FORT_INFANTRY:
         if (g_formations.num_batalions < 6) {
-            vec2i offset = FORT_OFFSET[rotation][g_city_view.orientation / 2];
+            vec2i offset = FORT_OFFSET[rotation][g_camera.orientation / 2];
             tile2i ground = tile.shifted(offset.x, offset.y);
             if (map_building_tiles_are_clear(tile, 3, TERRAIN_ALL)
                 && map_building_tiles_are_clear(ground, 4, TERRAIN_ALL)) {
@@ -1173,7 +1173,7 @@ void build_planner::draw_bridge(tile2i tile, vec2i pixel, int type, painter &ctx
     int length, direction;
     int end_grid_offset = map_bridge_calculate_length_direction(tile.x(), tile.y(), &length, &direction);
 
-    int dir = direction - g_city_view.orientation;
+    int dir = direction - g_camera.orientation;
     if (dir < 0)
         dir += 8;
 
@@ -1228,7 +1228,7 @@ void build_planner::draw_bridge(tile2i tile, vec2i pixel, int type, painter &ctx
 }
 
 int build_planner::is_blocked_for_building(tile2i tile, int size, blocked_tile_vec &blocked_tiles, uint32_t restricted_terrain) {
-    int orientation_index = g_city_view.orientation / 2;
+    int orientation_index = g_camera.orientation / 2;
     int blocked = 0;
     int num_tiles = (size * size);
     for (int i = 0; i < num_tiles; i++) {

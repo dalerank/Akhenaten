@@ -1,4 +1,4 @@
-#include "common.h"
+﻿#include "common.h"
 
 #include "building/building.h"
 #include "city/city_labor.h"
@@ -16,7 +16,7 @@ vec2i window_building_set_possible_position(vec2i offset, vec2i blocks) {
     int dialog_width = 16 * blocks.x;
     int dialog_height = 16 * blocks.y;
 
-    vec2i view_size = g_city_view.size_pixels;
+    vec2i view_size = g_camera.size_pixels;
     view_size.x -= MARGIN_POSITION;
 
     if (offset.y + dialog_height > screen_height() - MARGIN_POSITION) {

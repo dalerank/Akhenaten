@@ -1,4 +1,4 @@
-#include "building_statue.h"
+﻿#include "building_statue.h"
 
 #include "building/building.h"
 #include "building/rotation.h"
@@ -111,7 +111,7 @@ int building_statue::preview::update_building_variant(build_planner &planer) con
 }
 
 void building_statue::on_create(int o) {
-    int orientation = (4 + building_rotation_global_rotation() + g_city_view.orientation / 2) % 4;
+    int orientation = (4 + building_rotation_global_rotation() + g_camera.orientation / 2) % 4;
 
     auto &d = runtime_data();
     d.variant = g_city_planner.building_variant;
@@ -119,7 +119,7 @@ void building_statue::on_create(int o) {
 }
 
 void building_statue::on_place_update_tiles(int orientation, int variant) {
-    int orientation_rel = g_city_view.relative_orientation(orientation);
+    int orientation_rel = g_camera.relative_orientation(orientation);
 
     int image_id = get_image(type(), orientation_rel, variant);
     map_building_tiles_add(id(), tile(), size(), image_id, TERRAIN_BUILDING);

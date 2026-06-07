@@ -1,4 +1,4 @@
-#include "bridge.h"
+﻿#include "bridge.h"
 
 #include "core/direction.h"
 #include "graphics/view/view.h"
@@ -193,7 +193,7 @@ int map_bridge_add(int x, int y, bool is_ship_bridge) {
         return g_bridge.length;
     }
 
-    g_bridge.direction -= g_city_view.orientation;
+    g_bridge.direction -= g_camera.orientation;
     if (g_bridge.direction < 0)
         g_bridge.direction += 8;
 

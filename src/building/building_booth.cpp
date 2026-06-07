@@ -1,4 +1,4 @@
-#include "building_booth.h"
+﻿#include "building_booth.h"
 
 #include "building/building.h"
 #include "construction/build_planner.h"
@@ -56,7 +56,7 @@ void building_booth::preview::ghost_preview(build_planner &planer, painter &ctx,
 
     bool can_build = map_orientation_for_venue_with_map_orientation(end, e_venue_mode_booth, &orientation);
     // TODO: proper correct for map orientation (for now, just use a different orientation)
-    orientation = abs(orientation + (8 - g_city_view.orientation)) % 8;
+    orientation = abs(orientation + (8 - g_camera.orientation)) % 8;
 
     if (!can_build) { // no can place
         for (int i = 0; i < params.building_size * params.building_size; i++) {
@@ -114,7 +114,7 @@ void building_booth::on_place_update_tiles(int orientation, int variant) {
 
     // add underlying plaza first
     map_add_venue_plaza_tiles(id(), current_params().building_size, tile(), image_id, false);
-    int absolute_orientation = (abs(orientation * 2 + (8 - g_city_view.orientation)) % 8) / 2;
+    int absolute_orientation = (abs(orientation * 2 + (8 - g_camera.orientation)) % 8) / 2;
 
     // add additional building parts, update graphics accordingly
     switch (absolute_orientation) {

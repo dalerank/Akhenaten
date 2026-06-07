@@ -1,4 +1,4 @@
-#include "building_bandstand.h"
+﻿#include "building_bandstand.h"
 
 #include "building/building.h"
 #include "city/object_info.h"
@@ -71,7 +71,7 @@ void building_bandstand::preview::ghost_preview(build_planner &planer, painter &
 
     int can_build = map_orientation_for_venue_with_map_orientation(end, e_venue_mode_bandstand, &orientation);
     // TODO: proper correct for map orientation (for now, just use a different orientation)
-    orientation = abs(orientation + (8 - g_city_view.orientation)) % 8;
+    orientation = abs(orientation + (8 - g_camera.orientation)) % 8;
 
     if (can_build != 1) { // no can place
         for (int i = 0; i < params.building_size * params.building_size; i++) {
@@ -148,7 +148,7 @@ void building_bandstand::on_place_update_tiles(int orientation, int variant) {
 
     // add underlying plaza first
     map_add_venue_plaza_tiles(id(), size, tile(), image_id, false);
-    int absolute_orientation = (abs(orientation * 2 + (8 - g_city_view.orientation)) % 8) / 2;
+    int absolute_orientation = (abs(orientation * 2 + (8 - g_camera.orientation)) % 8) / 2;
     // add additional building parts, update graphics accordingly
     switch (absolute_orientation) {
     case 0:

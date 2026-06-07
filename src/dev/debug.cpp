@@ -1,4 +1,4 @@
-#include "debug.h"
+﻿#include "debug.h"
 
 #include <cmath>
 #include <vector>
@@ -844,7 +844,7 @@ void draw_debug_animal_spawn_areas(painter &ctx) {
     }
 
     // Draw filled rectangular areas for all visible tiles in viewport
-    g_city_view.foreach_valid_map_tile(ctx, [&](vec2i pixel, tile2i tile, painter &ctx) {
+    g_camera.foreach_valid_map_tile(ctx, [&](vec2i pixel, tile2i tile, painter &ctx) {
         // Check if this tile is within any spawn area
         for (const auto& area : g_spawn_areas) {
             int distance = calc_maximum_distance(tile, area.spawn_point);

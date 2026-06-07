@@ -1,4 +1,4 @@
-#include "zoom.h"
+﻿#include "zoom.h"
 
 #include "core/calc.h"
 #include "graphics/elements/menu.h"
@@ -172,5 +172,5 @@ void zoom_t::set_scale(float z) {
     z = calc_bound(z, zoom_min, zoom_max);
     zoom = z;
     target = z;
-    g_city_view.refresh_viewport();
+    g_camera.refresh_viewport();
 }

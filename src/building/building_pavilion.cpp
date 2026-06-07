@@ -1,4 +1,4 @@
-#include "building/building_pavilion.h"
+﻿#include "building/building_pavilion.h"
 
 #include "graphics/image.h"
 #include "widget/city/ornaments.h"
@@ -66,7 +66,7 @@ void building_pavilion::preview::ghost_preview(build_planner &planer, painter &c
 
     can_build = map_orientation_for_venue_with_map_orientation(end, e_venue_mode_pavilion, &orientation);
     // TODO: proper correct for map orientation (for now, just use a different orientation)
-    orientation = abs(orientation + (8 - g_city_view.orientation)) % 8;
+    orientation = abs(orientation + (8 - g_camera.orientation)) % 8;
 
     if (can_build != 1) { // no can place
         for (int i = 0; i < params.building_size * params.building_size; i++) {
@@ -126,7 +126,7 @@ void building_pavilion::on_place_update_tiles(int orientation, int variant) {
 
     // add underlying plaza first
     map_add_venue_plaza_tiles(id(), size, tile(), image_id, false);
-    int absolute_orientation = abs(basic_orientation + (8 - g_city_view.orientation)) % 8;
+    int absolute_orientation = abs(basic_orientation + (8 - g_camera.orientation)) % 8;
     for (const auto &item: current_params().place_dir[absolute_orientation].items) {
         place_latch_on_venue(item.type, item.offset.x, item.offset.y, orientation, item.main);
     }

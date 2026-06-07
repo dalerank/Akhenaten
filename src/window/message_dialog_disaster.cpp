@@ -1,4 +1,4 @@
-#include "message_dialog_disaster.h"
+﻿#include "message_dialog_disaster.h"
 
 #include "city/city_message.h"
 #include "city/city.h"
@@ -107,7 +107,7 @@ void ui::message_dialog_disaster::button_go_to_problem() {
     int grid_offset = player_msg.param2;
 
     if (grid_offset > 0 && grid_offset < 26244) {
-        g_city_view.go_to_mappoint(tile2i(grid_offset));
+        g_camera.go_to_mappoint(tile2i(grid_offset));
     }
 
     window_city_show();

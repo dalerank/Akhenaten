@@ -1,4 +1,4 @@
-#include "building_well.h"
+﻿#include "building_well.h"
 
 #include "grid/desirability.h"
 #include "grid/terrain.h"
@@ -20,7 +20,7 @@ well_info_window well_infow;
 
 void building_well::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
     if (!!game_features::gameui_show_water_structure_range) {
-        g_city_view.foreach_tile_in_range(ctx, tile.grid_offset(), 1, 2, [] (vec2i pixel, tile2i point, painter &ctx) {
+        g_camera.foreach_tile_in_range(ctx, tile.grid_offset(), 1, 2, [] (vec2i pixel, tile2i point, painter &ctx) {
             ctx.img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel, COLOR_MASK_BLUE, g_zoom.get_scale());
         });
     }

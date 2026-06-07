@@ -1,4 +1,4 @@
-#include "building_tiles.h"
+﻿#include "building_tiles.h"
 
 #include "building/monuments.h"
 #include "widget/city/ornaments.h"
@@ -35,7 +35,7 @@ static int north_tile_grid_offset(tile2i tile, int* size) {
     return grid_offset;
 }
 static void adjust_to_absolute_xy(tile2i tile, int size) {
-    switch (g_city_view.orientation) {
+    switch (g_camera.orientation) {
     case DIR_2_BOTTOM_RIGHT:
         tile.set_x(tile.x() - size + 1);
         break;
@@ -54,7 +54,7 @@ static void set_crop_tile(painter &ctx, int building_id, int x, int y, int dx, i
 
 void map_building_tiles_add(int building_id, tile2i tile, int size, int image_id, int terrain) {
     int x_leftmost, y_leftmost;
-    switch (g_city_view.orientation) {
+    switch (g_camera.orientation) {
     case DIR_0_TOP_RIGHT:
         x_leftmost = 0;
         y_leftmost = 1;
@@ -111,7 +111,7 @@ static void set_underlying_venue_plaza_tile(int grid_offset, int building_id, in
 void map_add_venue_plaza_tiles(int building_id, int size, tile2i tile, int image_id, bool update_only) {
     int x = tile.x();
     int y = tile.y();
-    switch (g_city_view.orientation) {
+    switch (g_camera.orientation) {
     case 0: // north
         for (int dy = 0; dy < size; dy++) {
             for (int dx = 0; dx < size; dx++) {

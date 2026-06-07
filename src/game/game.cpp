@@ -1,4 +1,4 @@
-#include "game.h"
+﻿#include "game.h"
 
 #include "building/construction/build_planner.h"
 #include "building/building_barracks.h"
@@ -267,7 +267,7 @@ void game_t::reload_objects() {
 
 ::painter game_t::painter() {
     ::painter ctx;
-    ctx.view = &g_city_view;
+    ctx.view = &g_camera;
     ctx.renderer = g_render.renderer();
     ctx.global_render_scale = g_render.scale();
 
@@ -426,8 +426,8 @@ bool game_init_editor() {
     game_file_editor_clear_data();
     game_file_editor_create_scenario(2);
 
-    if (g_city_view.sidebar_collapsed) {
-        g_city_view.toggle_sidebar();
+    if (g_camera.sidebar_collapsed) {
+        g_camera.toggle_sidebar();
     }
 
     editor_set_active(1);
@@ -462,7 +462,7 @@ void game_t::update() {
 void game_t::frame_begin() {
     OZZY_PROFILER_FUNCTION();
     frame++;
-    g_city_view.frame_begin();
+    g_camera.frame_begin();
     window_draw(false);
 }
 
@@ -481,7 +481,7 @@ void game_t::init_state() {
     g_city.migration.reset();
     map_ring_init();
 
-    g_city_view.reset_orientation();
+    g_camera.reset_orientation();
     //    city_view_go_to_screen_tile_corner(screen_tile(76, 152), true);
 
     random_generate_pool();

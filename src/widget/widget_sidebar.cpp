@@ -1,4 +1,4 @@
-#include "widget_sidebar.h"
+﻿#include "widget_sidebar.h"
 #include "dev/debug.h"
 
 #include "core/profiler.h"
@@ -68,7 +68,7 @@ void ui::sidebar_window_expanded_t::subscribe_events() {
 }
 
 void ui::sidebar_window_expanded_t::collapse() {
-    g_city_view.start_sidebar_toggle();
+    g_camera.start_sidebar_toggle();
     slider.slide_mode = slider.e_slide_collapse;
     slider.position = 0;
     speed_clear(slider.slide_speed);
@@ -77,8 +77,8 @@ void ui::sidebar_window_expanded_t::collapse() {
 }
 
 void ui::sidebar_window_expanded_t::expand() {
-    g_city_view.start_sidebar_toggle();
-    g_city_view.toggle_sidebar(false);
+    g_camera.start_sidebar_toggle();
+    g_camera.toggle_sidebar(false);
     slider.slide_mode = slider.e_slide_expand;
     slider.position = 0;
     speed_clear(slider.slide_speed);
@@ -111,7 +111,7 @@ void ui::sidebar_window_expanded_t::ui_draw_foreground(UiFlags flags) {
     {
         OZZY_PROFILER_SECTION(_, "slider.update")
         slider.update(x_offset, expanded_offset_x, [this] {
-            g_city_view.toggle_sidebar(slider.slide_mode == slider.e_slide_collapse);
+            g_camera.toggle_sidebar(slider.slide_mode == slider.e_slide_collapse);
         });
     }
 
@@ -134,7 +134,7 @@ void ui::sidebar_window_expanded_t::ui_draw_foreground(UiFlags flags) {
 }
 
 void ui::sidebar_window_collapsed_t::collapse() {
-    g_city_view.start_sidebar_toggle();
+    g_camera.start_sidebar_toggle();
     slider.slide_mode = slider.e_slide_collapse;
     slider.position = 0;
     speed_clear(slider.slide_speed);
@@ -143,8 +143,8 @@ void ui::sidebar_window_collapsed_t::collapse() {
 }
 
 void ui::sidebar_window_collapsed_t::expand() {
-    g_city_view.start_sidebar_toggle();
-    g_city_view.toggle_sidebar(false);
+    g_camera.start_sidebar_toggle();
+    g_camera.toggle_sidebar(false);
     slider.slide_mode = slider.e_slide_expand;
     slider.position = 0;
     speed_clear(slider.slide_speed);
@@ -179,7 +179,7 @@ void ui::sidebar_window_collapsed_t::ui_draw_foreground(UiFlags flags) {
     x_offset = screen_width();
     slider.update(x_offset, expanded_offset_x, [this] {
         if (slider.slide_mode == slider.e_slide_collapse) {
-            g_city_view.toggle_sidebar(false);
+            g_camera.toggle_sidebar(false);
             sidebar_window_expanded.expand();
         }
     });
@@ -210,13 +210,13 @@ void widget_sidebar_city_init() {
 }
 
 int widget_sidebar_city_offset_x() {
-    return g_city_view.sidebar_collapsed
+    return g_camera.sidebar_collapsed
              ? sidebar_window_collapsed.pos.x
              : sidebar_window_expanded.pos.x;
 }
 
 int widget_sidebar_city_offset_max() {
-    return (g_city_view.sidebar_collapsed)
+    return (g_camera.sidebar_collapsed)
              ? sidebar_window_collapsed.expanded_offset_x
              : sidebar_window_expanded.expanded_offset_x;
 }
@@ -253,7 +253,7 @@ static void draw_sidebar_extra_blocks(image_desc block, int anchor_x, vec2i bloc
 void widget_sidebar_city_draw_foreground() {
     OZZY_PROFILER_FUNCTION();
 
-    const bool collapsed = g_city_view.sidebar_collapsed;
+    const bool collapsed = g_camera.sidebar_collapsed;
     const int sw = screen_width();
 
     if (collapsed) {
@@ -277,13 +277,13 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
         return false;
     }
 
-    if (g_city_view.sidebar_collapsed) {
+    if (g_camera.sidebar_collapsed) {
         sidebar_window_collapsed.ui_handle_mouse(m);
     } else {
         sidebar_window_expanded.ui_handle_mouse(m);
     }
 
-    if (!g_city_view.sidebar_collapsed) {
+    if (!g_camera.sidebar_collapsed) {
         if (widget_minimap_handle_mouse(m)) {
             return true;
         }
@@ -292,7 +292,7 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
 }
 
 int widget_sidebar_city_handle_mouse_build_menu(const mouse* m) {
-    if (g_city_view.sidebar_collapsed) {
+    if (g_camera.sidebar_collapsed) {
         return sidebar_window_collapsed.ui_handle_mouse(m);
     } else {
         return sidebar_window_expanded.ui_handle_mouse(m);

@@ -1,4 +1,4 @@
-#include "figure.h"
+﻿#include "figure.h"
 
 #include "core/custom_span.hpp"
 #include "grid/grid.h"
@@ -80,8 +80,8 @@ xspan<figure_draw> map_figures_in_row(tile2i tile) {
 
     const float scale = g_zoom.get_scale();
     if (pixel_end_scr.x < 0 || pixel_end_scr.y < 0
-        || pixel_begin_scr.x * scale > g_city_view.size_pixels.x
-        || pixel_begin_scr.y * scale > g_city_view.size_pixels.y) {
+        || pixel_begin_scr.x * scale > g_camera.size_pixels.x
+        || pixel_begin_scr.y * scale > g_camera.size_pixels.y) {
         return {};
     }
 

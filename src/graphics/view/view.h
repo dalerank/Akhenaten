@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "core/buffer.h"
 #include "core/xstring.h"
@@ -102,4 +102,4 @@ struct figure_draw_cache_data_t;
 
 using minimap_draw_callback = void(vec2i pixel, tile2i point);
 
-extern viewport_t g_city_view;
+extern viewport_t g_camera;

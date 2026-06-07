@@ -1,4 +1,4 @@
-#include "building_gatehouse.h"
+﻿#include "building_gatehouse.h"
 
 #include "grid/property.h"
 #include "core/direction.h"
@@ -145,7 +145,7 @@ void building_gatehouse::preview::ghost_preview(build_planner &planer, painter &
     uint32_t restricted_terrain = TERRAIN_ALL;
     restricted_terrain -= TERRAIN_ROAD;
     
-    const int city_orientation = g_city_view.orientation / 2;
+    const int city_orientation = g_camera.orientation / 2;
   
     back_tile_orientation back_tile = building_gatehouse::second_part_tile(planer, end, city_orientation);
 
@@ -197,10 +197,10 @@ void building_gatehouse::on_create(int orientation) {
 }
 
 void building_gatehouse::update_image_set(building& maingate) {
-    const int city_orientation = g_city_view.orientation / 2;
+    const int city_orientation = g_camera.orientation / 2;
     const auto& bparams = maingate.params();
     int image_id = bparams.base_img();
-    int map_orientation = g_city_view.orientation;
+    int map_orientation = g_camera.orientation;
 
     building &backside = *maingate.next();
     const int building_rotation = calc_general_direction(maingate.tile, backside.tile) / 2;
@@ -281,7 +281,7 @@ void building_gatehouse::on_place_update_tiles(int orientation, int variant) {
 void building_gatehouse::on_place(int orientation, int variant) {
     building_impl::on_place(orientation, variant);
 
-    const int city_orientation = g_city_view.orientation / 2;
+    const int city_orientation = g_camera.orientation / 2;
     back_tile_orientation back_tile = building_gatehouse::second_part_tile(g_city_planner, tile(), city_orientation);
 
     building *backside, *mainside;
@@ -361,7 +361,7 @@ void building_gatehouse::spawn_figure() {
 
 bool building_mud_gatehouse::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     int xy = map_property_multi_tile_xy(tile.grid_offset());
-    int orientation = g_city_view.orientation;
+    int orientation = g_camera.orientation;
     int x = point.x;
     int y = point.y;
     if ((orientation == DIR_0_TOP_RIGHT && xy == EDGE_X1Y1) || (orientation == DIR_2_BOTTOM_RIGHT && xy == EDGE_X0Y1)

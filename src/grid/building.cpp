@@ -1,4 +1,4 @@
-#include "building.h"
+﻿#include "building.h"
 #include "io/io_buffer.h"
 
 #include "building/building.h"
@@ -118,7 +118,7 @@ adjust_orientation map_adjust_building_determine_orientation(tile2i tile, int si
     int y = tile.y();
 
     if (adjust_xy) {
-        switch (g_city_view.orientation) {
+        switch (g_camera.orientation) {
         case DIR_0_TOP_RIGHT:
             break;
 

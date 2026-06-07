@@ -1,4 +1,4 @@
-#include "js/js_game.h"
+﻿#include "js/js_game.h"
 
 #include "graphics/view/view.h"
 #include "building/building_type.h"
@@ -248,7 +248,7 @@ std::optional<bvariant> __city_get_labor_category_property(int index, pcstr prop
 }
 ANK_FUNCTION_2(__city_get_labor_category_property)
 
-void __city_camera_go_to(tile2i tile) { g_city_view.go_to_mappoint(tile); } ANK_FUNCTION_1(__city_camera_go_to)
+void __city_camera_go_to(tile2i tile) { g_camera.go_to_mappoint(tile); } ANK_FUNCTION_1(__city_camera_go_to)
 
 e_resource __city_allowed_foods(int index) { return g_city.allowed_foods(index); }
 ANK_FUNCTION_1(__city_allowed_foods)

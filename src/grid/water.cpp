@@ -1,4 +1,4 @@
-#include "water.h"
+﻿#include "water.h"
 
 #include "building/building.h"
 #include "graphics/view/view.h"
@@ -99,7 +99,7 @@ void map_water_add_building(int building_id, tile2i tile, int size, int image_id
     }
 
     tile2i leftmost;
-    switch (g_city_view.orientation) {
+    switch (g_camera.orientation) {
     case DIR_0_TOP_RIGHT:
         leftmost.set(0, size - 1);
         break;
@@ -165,7 +165,7 @@ shore_orientation map_shore_determine_orientation(tile2i tile, int size, bool ad
     int y = tile.y();
 
     if (adjust_xy) {
-        switch (g_city_view.orientation) {
+        switch (g_camera.orientation) {
         case DIR_0_TOP_RIGHT:
             break;
 

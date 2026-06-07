@@ -1,4 +1,4 @@
-#include "window_city.h"
+﻿#include "window_city.h"
 
 #include "overlays/city_overlay.h"
 #include "building/building.h"
@@ -36,8 +36,8 @@
 
 static int center_in_city(int element_width_pixels) {
     vec2i view_pos, view_size;
-    view_pos = g_city_view.offset;
-    view_size = g_city_view.size_pixels;
+    view_pos = g_camera.offset;
+    view_size = g_camera.size_pixels;
     int margin = (view_size.x - element_width_pixels) / 2;
     return view_pos.x + margin;
 }
@@ -85,8 +85,8 @@ static void draw_cancel_construction() {
         return;
     }
 
-    vec2i view_pos = g_city_view.offset;
-    vec2i view_size = g_city_view.size_pixels;
+    vec2i view_pos = g_camera.offset;
+    vec2i view_size = g_camera.size_pixels;
     view_size.x -= 4 * 16;
     inner_panel_draw({ view_size.x - 4, 40 }, { 3, 2 });
     painter ctx = game.painter();
@@ -112,7 +112,7 @@ bool window_city_draw_construction_cost_and_size() {
 
     painter ctx = game.painter();
     set_city_clip_rectangle(ctx);
-    screen_tile screen = g_city_view.selected_tile;
+    screen_tile screen = g_camera.selected_tile;
     int inverted_scale = calc_percentage<int>(100, g_zoom.get_percentage());
     int x = calc_adjust_with_percentage(screen.x, inverted_scale);
     int y = calc_adjust_with_percentage(screen.y, inverted_scale);
@@ -178,7 +178,7 @@ static void cycle_legion(void) {
 
         if (current_legion_id > 0) {
             const formation* m = formation_get(current_legion_id);
-            g_city_view.go_to_mappoint(m->home);
+            g_camera.go_to_mappoint(m->home);
         }
     }
 }
@@ -223,7 +223,7 @@ void window_city_init() {
     widget_sidebar_city_init();
 
     events::subscribe([] (event_set_bookmark ev) {
-        tile2i center_p = g_city_view.view_center;
+        tile2i center_p = g_camera.view_center;
         g_city.bookmarks.set(ev.value - 1, center_p);
     });
 
@@ -231,7 +231,7 @@ void window_city_init() {
         tile2i p = g_city.bookmarks.get(ev.value - 1);
         if (p.valid()) {
             vec2i screen = tile_to_screen(p);
-            g_city_view.go_to_screen_tile(screen, true);
+            g_camera.go_to_screen_tile(screen, true);
         }
     });
 

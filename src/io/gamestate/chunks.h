@@ -30,7 +30,7 @@ extern io_buffer* iob_formations_info;
 extern io_buffer* iob_city_data;
 extern io_buffer* iob_city_data_extra;
 extern io_buffer* iob_buildings;
-extern io_buffer* iob_city_view_orientation;
+extern io_buffer* iob_camera_view_orientation;
 extern io_buffer* iob_game_time;
 extern io_buffer* iob_building_highest_id_ever;
 extern io_buffer* iob_random_iv;

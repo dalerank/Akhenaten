@@ -1,4 +1,4 @@
-#include "window_editor.h"
+﻿#include "window_editor.h"
 
 #include "editor/editor.h"
 #include "editor/tool.h"
@@ -33,7 +33,7 @@ static void draw_cancel_construction() {
     if (!mouse::get().is_touch || !editor_tool_is_active()) {
         return;
     }
-    vec2i view_size = g_city_view.size_pixels;
+    vec2i view_size = g_camera.size_pixels;
     view_size.x -= 4 * 16;
     inner_panel_draw({ view_size.x - 4, 40 }, { 3, 2 });
     ctx.img_generic(image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, vec2i{view_size.x, 44});

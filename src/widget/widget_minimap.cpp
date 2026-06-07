@@ -1,4 +1,4 @@
-#include "widget_minimap.h"
+﻿#include "widget_minimap.h"
 
 #include "building/building.h"
 #include "core/profiler.h"
@@ -103,15 +103,15 @@ int minimap_window::handle_mouse(const mouse *m) {
         float xx, yy;
         vec2i relative = get_mouse_relative_pos(m, xx, yy);
         if (relative.x > 0 && relative.y > 0) {
-            auto mm_view = g_city_view.get_scrollable_pixel_limits();
-            vec2i view_pos = g_city_view.offset;
-            vec2i view_size = g_city_view.size_pixels;
+            auto mm_view = g_camera.get_scrollable_pixel_limits();
+            vec2i view_pos = g_camera.offset;
+            vec2i view_size = g_camera.size_pixels;
 
             mm_view.max += view_size;
             vec2i city_canvas_pixels = mm_view.max - mm_view.min;
             vec2i map_pos(city_canvas_pixels.x * xx, city_canvas_pixels.y * yy);
 
-            g_city_view.go_to_pixel(mm_view.min + map_pos - view_size / 2, true);
+            g_camera.go_to_pixel(mm_view.min + map_pos - view_size / 2, true);
             widget_minimap_invalidate();
             mouse_last_coords = { m->x, m->y };
             return true;
@@ -163,8 +163,8 @@ void minimap_window::set_bounds(vec2i ds) {
     absolute_tile = tile2i((GRID_LENGTH - ds.x) / 2 + 1, ((2 * GRID_LENGTH) + 1 - ds.y) / 2);
 
     //    int camera_x, camera_y;
-    tile2i camera_tile = g_city_view.camera_mappoint;
-    vec2i view_size_tiles = g_city_view.size_tiles;
+    tile2i camera_tile = g_camera.camera_mappoint;
+    vec2i view_size_tiles = g_camera.size_tiles;
 
     if ((scenario_map_data()->width - ds.x) / 2 > 0) {
         if (camera_tile.x() < absolute_tile.x()) {
@@ -325,9 +325,9 @@ void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
 }
 
 void minimap_window::draw_viewport_rectangle(painter &ctx) {
-    tile2i camera_tile = g_city_view.camera_mappoint;
-    vec2i camera_pixels = g_city_view.camera_pixel_offset_internal;
-    vec2i view_size_tiles = g_city_view.size_tiles;
+    tile2i camera_tile = g_camera.camera_mappoint;
+    vec2i camera_pixels = g_camera.camera_pixel_offset_internal;
+    vec2i view_size_tiles = g_camera.size_tiles;
 
     int x_offset = screen_offset.x + 2 * (camera_tile.x() - absolute_tile.x()) - 2 + camera_pixels.x / 30;
     x_offset = std::max(x_offset, screen_offset.x);

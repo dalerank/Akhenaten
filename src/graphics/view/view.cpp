@@ -1,4 +1,4 @@
-#include "view.h"
+﻿#include "view.h"
 
 #include <cmath>
 
@@ -24,13 +24,13 @@
 #include "input/mouse.h"
 #include "core/profiler.h"
 
-viewport_t g_city_view;
+viewport_t g_camera;
 
 static const int X_DIRECTION_FOR_ORIENTATION[] = {1, 1, -1, -1};
 static const int Y_DIRECTION_FOR_ORIENTATION[] = {1, -1, -1, 1};
 
-io_buffer* iob_city_view_orientation = new io_buffer([](io_buffer* iob, size_t version) {
-    auto& data = g_city_view;
+io_buffer* iob_camera_view_orientation = new io_buffer([](io_buffer* iob, size_t version) {
+    auto& data = g_camera;
 
     iob->bind(BIND_SIGNATURE_INT32, &data.orientation);
 
@@ -41,7 +41,7 @@ io_buffer* iob_city_view_orientation = new io_buffer([](io_buffer* iob, size_t v
 });
 
 io_buffer* iob_city_view_camera = new io_buffer([](io_buffer* iob, size_t version) {
-    auto& data = g_city_view;
+    auto& data = g_camera;
 
     iob->bind(BIND_SIGNATURE_INT32, &data.tile_internal.x);
     iob->bind(BIND_SIGNATURE_INT32, &data.tile_internal.y);

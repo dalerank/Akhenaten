@@ -1,4 +1,4 @@
-#include "screenshot.h"
+﻿#include "screenshot.h"
 
 #include "city/city_warnings.h"
 #include "city/city.h"
@@ -252,12 +252,12 @@ static void create_full_city_screenshot() {
     if (!g_window_manager.window_is("window_city") && !g_window_manager.window_is("window_city_military")) {
         return;
     }
-    vec2i original_camera_pixels = g_city_view.camera_position;
+    vec2i original_camera_pixels = g_camera.camera_position;
 
-    viewport_t full_city_view_data = g_city_view;
-    auto mm_view = g_city_view.get_scrollable_pixel_limits();
+    viewport_t full_city_view_data = g_camera;
+    auto mm_view = g_camera.get_scrollable_pixel_limits();
 
-    vec2i view_size = g_city_view.size_pixels;
+    vec2i view_size = g_camera.size_pixels;
 
     mm_view.max += view_size;
 
@@ -294,9 +294,9 @@ static void create_full_city_screenshot() {
     graphics_set_clip_rectangle({0, TOP_MENU_HEIGHT}, {canvas_width, canvas_height});
 
     vec2i viewport_offset, viewport_size;
-    viewport_offset = g_city_view.offset;
-    viewport_size = g_city_view.size_pixels;
-    g_city_view.set_screen_size(canvas_width + widget_sidebar_city_offset_max(), canvas_height + TOP_MENU_HEIGHT);
+    viewport_offset = g_camera.offset;
+    viewport_size = g_camera.size_pixels;
+    g_camera.set_screen_size(canvas_width + widget_sidebar_city_offset_max(), canvas_height + TOP_MENU_HEIGHT);
     int current_height = base_height;
 
     int yy = 0;
@@ -352,11 +352,11 @@ static void create_full_city_screenshot() {
         current_height += canvas_height;
     }
 
-    g_city_view.set_screen_size(viewport_size.x + widget_sidebar_city_offset_max(), viewport_size.y + TOP_MENU_HEIGHT);
+    g_camera.set_screen_size(viewport_size.x + widget_sidebar_city_offset_max(), viewport_size.y + TOP_MENU_HEIGHT);
     g_zoom.set_scale(old_scale);
 
     graphics_reset_clip_rectangle();
-    g_city_view.go_to_pixel(original_camera_pixels, true);
+    g_camera.go_to_pixel(original_camera_pixels, true);
 
     if (!error) {
         image_finish();

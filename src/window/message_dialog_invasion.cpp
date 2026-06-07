@@ -1,4 +1,4 @@
-#include "message_dialog_invasion.h"
+﻿#include "message_dialog_invasion.h"
 
 #include "city/city_message.h"
 #include "city/city.h"
@@ -73,7 +73,7 @@ void ui::message_dialog_invasion::button_go_to_problem() {
         grid_offset = invasion_grid_offset;
 
     if (grid_offset > 0 && grid_offset < 26244) {
-        g_city_view.go_to_mappoint(tile2i(grid_offset));
+        g_camera.go_to_mappoint(tile2i(grid_offset));
     }
 
     window_city_show();

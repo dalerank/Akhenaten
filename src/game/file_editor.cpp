@@ -1,4 +1,4 @@
-#include "file_editor.h"
+﻿#include "file_editor.h"
 
 #include "building/construction/build_planner.h"
 #include "building/building_storage.h"
@@ -94,8 +94,8 @@ static void create_blank_map(int size) {
     scenario_editor_create(size);
     clear_map_data();
     map_image_init_edges();
-    g_city_view.go_to_corner_tile(screen_tile(76, 152), true);
-    g_city_view.reset_orientation();
+    g_camera.go_to_corner_tile(screen_tile(76, 152), true);
+    g_camera.reset_orientation();
 }
 
 static void prepare_map_for_editing(void) {
@@ -120,7 +120,7 @@ static void prepare_map_for_editing(void) {
     map_natives_init_editor();
     map_routing_update_all();
 
-    g_city_view.init();
+    g_camera.init();
     game.paused = false;
 }
 

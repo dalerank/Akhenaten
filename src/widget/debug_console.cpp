@@ -1,4 +1,4 @@
-#include "debug_console.h"
+﻿#include "debug_console.h"
 
 #include "core/custom_span.hpp"
 #include "graphics/screen.h"
@@ -302,9 +302,9 @@ void game_debug_terrain_paint_draw() {
     const bool is_open = game.debug_terrain_paint;
     if (is_open != s_prev_open) {
         if (is_open) {
-            g_city_view.set_extra_scroll_margin(36);
+            g_camera.set_extra_scroll_margin(36);
         } else {
-            g_city_view.set_extra_scroll_margin(0);
+            g_camera.set_extra_scroll_margin(0);
             editor_tool_deactivate();
         }
         s_prev_open = is_open;

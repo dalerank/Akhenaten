@@ -1,4 +1,4 @@
-#include "building_ghost.h"
+﻿#include "building_ghost.h"
 
 #include "grid/routing/routing.h"
 #include "building/construction/build_planner.h"
@@ -58,7 +58,7 @@ static int get_building_image_id(int map_x, int map_y, int type) {
         else {
             image_offset = building_rotation_get_road_orientation() == 2 ? 1 : 0;
         }
-        int map_orientation = g_city_view.orientation;
+        int map_orientation = g_camera.orientation;
         if (map_orientation == DIR_6_TOP_LEFT || map_orientation == DIR_2_BOTTOM_RIGHT)
             image_offset = 1 - image_offset;
 
@@ -73,7 +73,7 @@ static int get_building_image_id(int map_x, int map_y, int type) {
         else {
             image_offset = building_rotation_get_road_orientation() == 2 ? 2 : 0;
         }
-        int map_orientation = g_city_view.orientation;
+        int map_orientation = g_camera.orientation;
         if (map_orientation == DIR_6_TOP_LEFT || map_orientation == DIR_2_BOTTOM_RIGHT)
             image_offset = 2 - image_offset;
 
@@ -83,7 +83,7 @@ static int get_building_image_id(int map_x, int map_y, int type) {
 }
 
 static void get_building_base_xy(int map_x, int map_y, int building_size, int* x, int* y) {
-    switch (g_city_view.orientation) {
+    switch (g_camera.orientation) {
     case DIR_0_TOP_RIGHT:
         *x = map_x;
         *y = map_y;

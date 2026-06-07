@@ -1,4 +1,4 @@
-#include "routing_terrain.h"
+﻿#include "routing_terrain.h"
 
 #include "building/building.h"
 #include "building/monuments.h"
@@ -146,7 +146,7 @@ static int is_wall_tile(int grid_offset) {
 
 static int count_adjacent_wall_tiles(int grid_offset) {
     int adjacent = 0;
-    switch (g_city_view.orientation) {
+    switch (g_camera.orientation) {
     case DIR_0_TOP_RIGHT:
         adjacent += is_wall_tile(grid_offset + GRID_OFFSET(0, 1));
         adjacent += is_wall_tile(grid_offset + GRID_OFFSET(1, 1));

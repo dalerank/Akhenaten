@@ -1,4 +1,4 @@
-#include "tile_draw.h"
+﻿#include "tile_draw.h"
 
 #include "dev/debug.h"
 #include "core/svector.h"
@@ -140,9 +140,9 @@ static bool is_multi_tile_terrain(int grid_offset) {
 static bool has_adjacent_deletion(int grid_offset) {
     int size = map_property_multi_tile_size(grid_offset);
     int total_adjacent_offsets = size * 2 + 1;
-    const int* adjacent_offset; // = ADJACENT_OFFSETS[size - 2][g_city_view.orientation / 2];
+    const int* adjacent_offset; // = ADJACENT_OFFSETS[size - 2][g_camera.orientation / 2];
 
-    adjacent_offset = ADJACENT_OFFSETS_PH[size - 2][g_city_view.orientation / 2];
+    adjacent_offset = ADJACENT_OFFSETS_PH[size - 2][g_camera.orientation / 2];
     for (int i = 0; i < total_adjacent_offsets; ++i) {
         if (map_property_is_deleted(grid_offset + adjacent_offset[i])
             || drawing_building_as_deleted(building_at(grid_offset + adjacent_offset[i]))) {
