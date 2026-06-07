@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Control Panel — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .net-diagram { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.8rem 1.1rem; margin: 1rem 0; font-size: 0.85rem; }
+    .net-diagram .net-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .net-diagram code { background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.15); border-radius: 2px; padding: 0.05rem 0.4rem; font-size: 0.8rem; color: var(--gold); }
+
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .kw { color: #c9a84c; } .num { color: #9ecbff; } .str { color: #7ec87e; } .cmt { color: #5a5650; font-style: italic; } .fn { color: #8aabdc; } .ev { color: #d0a0e0; } .ty { color: #d0a0e0; }
+    .file-ref { display: inline-block; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+
+    .cp-table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; font-size: 0.85rem; }
+    .cp-table th, .cp-table td { padding: 0.35rem 0.6rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .cp-table th { color: var(--text-muted); font-weight: normal; }
+    .cp-table td:first-child { white-space: nowrap; color: var(--gold); }
+    .bld-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .bld-nav a { color: var(--gold); }
+
+    .cp-collapse-layout { display: flex; gap: 1.5rem; align-items: flex-start; flex-wrap: wrap; }
+    .cp-collapse-layout > p { flex: 1 1 280px; margin-top: 0; }
+    .cp-figure { text-align: center; margin: 0; }
+    .cp-figure img { display: block; border: 1px solid var(--border); border-radius: 3px; image-rendering: pixelated; }
+    .cp-figure figcaption { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.35rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="../index.html">← Player Guide</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Interface</div>
+        <ul>
+          <li><a href="control-panel.html" class="active">Control Panel</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#topbar">Top menu bar</a></li>
+          <li><a href="#sidepanel">Side control panel</a></li>
+          <li><a href="#buildmenu">Build menu buttons</a></li>
+          <li><a href="#ratings">Ratings &amp; speed</a></li>
+          <li><a href="#collapse">Collapsing the panel</a></li>
+          <li><a href="#tips">Tips</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        Control Panel
+      </div>
+
+      <h1>Control Panel</h1>
+
+      <p class="section-intro">The Control Panel is the permanent on-screen interface — the bar across the top of the screen and the panel down the right-hand side. Together they hold every command you use to read the state of your city and to build, inspect, and manage it. Almost everything you do outside of clicking the map itself starts here.</p>
+
+      <!-- ─── Overview ──────────────────────────────────────── -->
+      <h2 id="overview">Overview</h2>
+      <p>The interface is split into two persistent regions:</p>
+      <ul>
+        <li>The <strong>top menu bar</strong> — drop-down menus on the left (File, Options, Help, Overseers) and the live city read-outs on the right (date, population, treasury) together with the map-rotation controls.</li>
+        <li>The <strong>side control panel</strong> — the overview minimap, the overlay selector, the advisor and world-map buttons, the twelve build-menu category buttons, an action row (undo, messages, problem finder, mission briefing), and the city ratings with the game-speed control.</li>
+      </ul>
+      <p>The side panel can be <a href="#collapse">collapsed</a> to a narrow strip to free up screen space, leaving only the build buttons visible.</p>
+
+      <!-- ─── Top bar ───────────────────────────────────────── -->
+      <h2 id="topbar">Top menu bar</h2>
+      <p>The left side of the top bar holds four drop-down menus. Click a header to open it; click an item to act.</p>
+
+      <h3>File</h3>
+      <figure class="cp-figure" style="text-align:left;margin:0.75rem 0">
+        <img src="TopMenu_File.webp" alt="The open File menu in the top bar" width="427" height="174" />
+        <figcaption>The File menu open in-game (New Game can be hidden by the mission)</figcaption>
+      </figure>
+      <table class="cp-table">
+        <tr><th>Item</th><th>Action</th></tr>
+        <tr><td>New Game</td><td>Abandon the current city and return to the dynasty / mission selection. May be hidden in some missions.</td></tr>
+        <tr><td>Replay Map</td><td>Restart the current mission from the beginning.</td></tr>
+        <tr><td>Load Game</td><td>Open the load-game file dialog.</td></tr>
+        <tr><td>Save Game</td><td>Open the save-game file dialog.</td></tr>
+        <tr><td>Delete Game</td><td>Open the delete-save file dialog.</td></tr>
+        <tr><td>Exit Game</td><td>Quit to the main menu (with confirmation).</td></tr>
+      </table>
+
+      <h3>Options</h3>
+      <figure class="cp-figure" style="text-align:left;margin:0.75rem 0">
+        <img src="TopMenu_Options.webp" alt="The open Options menu in the top bar" width="412" height="222" />
+        <figcaption>The Options menu open in-game</figcaption>
+      </figure>
+      <table class="cp-table">
+        <tr><th>Item</th><th>Action</th></tr>
+        <tr><td>Display Options</td><td>Resolution / windowed settings (hidden when the build is fullscreen-only).</td></tr>
+        <tr><td>Sound Options</td><td>Music, speech, effects, and city-sound volumes.</td></tr>
+        <tr><td>Speed Options</td><td>Game-speed and scroll-speed settings.</td></tr>
+        <tr><td>Difficulty Options</td><td>Set the difficulty level.</td></tr>
+        <tr><td>City Names</td><td>Toggle between modern and historical empire-city names.</td></tr>
+        <tr><td>Monthly Autosave</td><td>Toggle the automatic monthly save on or off.</td></tr>
+        <tr><td>Hotkeys Options</td><td>Open the keyboard-shortcut configuration.</td></tr>
+        <tr><td>Enhanced Options</td><td>Akhenaten's extra engine features panel.</td></tr>
+      </table>
+
+      <h3>Help</h3>
+      <figure class="cp-figure" style="text-align:left;margin:0.75rem 0">
+        <img src="TopMenu_Help.webp" alt="The open Help menu in the top bar" width="425" height="154" />
+        <figcaption>The Help menu open in-game</figcaption>
+      </figure>
+      <table class="cp-table">
+        <tr><th>Item</th><th>Action</th></tr>
+        <tr><td>Help</td><td>Open the in-game help dialog.</td></tr>
+        <tr><td>Mouse / Tooltips</td><td>Cycle the tooltip display mode (off / some / full).</td></tr>
+        <tr><td>Warnings</td><td>Toggle on-screen building warnings.</td></tr>
+        <tr><td>About</td><td>Show the about dialog.</td></tr>
+      </table>
+
+      <h3>Overseers (Advisors)</h3>
+      <p>The <strong>Overseers</strong> menu opens any of the twelve advisors directly: Labor, Military, Imperial, Ratings, Trade, Population, Health, Education, Entertainment, Religion, Financial, and Chief. (The same advisors can be reached from the advisor button on the side panel.)</p>
+
+      <h3>City read-outs &amp; map rotation</h3>
+      <p>The right side of the top bar shows three live read-outs and the rotation controls:</p>
+      <table class="cp-table">
+        <tr><th>Element</th><th>Shows</th></tr>
+        <tr><td>Funds</td><td>Current treasury in <strong>Debens</strong>. The text turns red when the treasury is negative.</td></tr>
+        <tr><td>Population</td><td>Current city population.</td></tr>
+        <tr><td>Date</td><td>Current month and year (BC / AD).</td></tr>
+        <tr><td>Rotate ◄ ● ►</td><td>Rotate the isometric map left, reset orientation, or rotate right.</td></tr>
+      </table>
+      <p><strong>Right-click</strong> the date, population, or funds read-out to open a short dialog explaining what that number means and how it is calculated.</p>
+
+      <!-- ─── Side panel ────────────────────────────────────── -->
+      <h2 id="sidepanel">Side control panel</h2>
+      <figure class="cp-figure" style="float:right;margin:0 0 1rem 1.5rem">
+        <img src="Sidebar_Expanded.webp" alt="The expanded side control panel" width="185" height="464" />
+        <figcaption>The expanded side panel</figcaption>
+      </figure>
+      <p>From top to bottom, the expanded side panel contains:</p>
+      <table class="cp-table">
+        <tr><th>Element</th><th>Function</th></tr>
+        <tr><td>Minimap</td><td>A radar-style overview of the whole city, colour-coded by structure type. The colouring changes to match the active overlay. Click it to jump the camera.</td></tr>
+        <tr><td>Overlays link</td><td>Left-click opens the overlay menu (desirability, water, crime, labor, entertainment, etc.); right-click opens the overlay selector list.</td></tr>
+        <tr><td>Advisors button</td><td>Opens the advisors (Overseers) screens — the same set listed above.</td></tr>
+        <tr><td>World Map button</td><td>Opens the Empire / world map showing trade routes and neighbouring cities.</td></tr>
+        <tr><td>Build menu buttons</td><td>Twelve construction categories — see <a href="#buildmenu">below</a>.</td></tr>
+        <tr><td>Undo</td><td>Reverts the last build action (greyed out when nothing can be undone).</td></tr>
+        <tr><td>Messages</td><td>Opens the message list; a small counter shows the number of unread messages (greyed out when there are none).</td></tr>
+        <tr><td>Go to problem</td><td>Jumps the camera to the next flagged problem area in the city.</td></tr>
+        <tr><td>Mission briefing</td><td>Re-opens the current mission's briefing for review.</td></tr>
+      </table>
+
+      <!-- ─── Build menu ────────────────────────────────────── -->
+      <h2 id="buildmenu">Build menu buttons</h2>
+      <p>The heart of the panel is a grid of twelve category buttons. Clicking one opens that category's build menu, from which you place buildings on the map. A category button is <strong>greyed out</strong> when the current mission has no buildings unlocked in it yet.</p>
+      <figure class="cp-figure" style="text-align:left;margin:0.75rem 0">
+        <img src="BuildMenu_Housing.webp" alt="Hovering the Housing build button shows the 'Build Housing' tooltip" width="395" height="309" />
+        <figcaption>Hovering a category button shows its tooltip (here: Build Housing)</figcaption>
+      </figure>
+      <div class="net-diagram">
+        <div class="net-label">The twelve build categories</div>
+        <a href="../buildings/housing.html"><code>Housing</code></a> · <a href="../buildings/road.html"><code>Road</code></a> · <code>Clear Land</code> · <code>Food</code> · <code>Industry</code> · <code>Distribution</code><br>
+        <code>Entertainment</code> · <code>Religion</code> · <code>Education</code> · <code>Health</code> · <code>Administration</code> · <code>Security</code>
+      </div>
+      <p>The currently open category stays highlighted while you build. These same twelve buttons are the only part of the panel that remains visible when it is <a href="#collapse">collapsed</a>.</p>
+
+      <!-- ─── Ratings & speed ───────────────────────────────── -->
+      <h2 id="ratings">Ratings &amp; speed</h2>
+      <figure class="cp-figure" style="float:right;margin:0 0 1rem 1.5rem">
+        <img src="Sidebar_Ratings.webp" alt="The ratings and game-speed section of the side panel" width="183" height="309" />
+        <figcaption>Speed, unemployment &amp; the four ratings</figcaption>
+      </figure>
+      <p>Below the build buttons, the expanded panel shows the city's vital statistics and the game-speed control:</p>
+      <table class="cp-table">
+        <tr><th>Read-out</th><th>Meaning</th></tr>
+        <tr><td>Game speed</td><td>Current speed, with up / down arrows to change it.</td></tr>
+        <tr><td>Unemployment</td><td>Current unemployment percentage.</td></tr>
+        <tr><td>Population</td><td>Current population total.</td></tr>
+        <tr><td>Culture</td><td>Culture rating.</td></tr>
+        <tr><td>Prosperity</td><td>Prosperity rating.</td></tr>
+        <tr><td>Monument</td><td>Monument rating.</td></tr>
+        <tr><td>Kingdom</td><td>Kingdom rating.</td></tr>
+      </table>
+      <p>The four ratings (Culture, Prosperity, Monument, Kingdom) are the values most mission win-conditions are measured against, so keeping this part of the panel in view is a quick way to track progress toward victory.</p>
+
+      <!-- ─── Collapse ──────────────────────────────────────── -->
+      <h2 id="collapse" style="clear:both">Collapsing the panel</h2>
+      <div class="cp-collapse-layout">
+        <p>A collapse / expand button at the top of the side panel slides it in and out with a short animation and sound. When collapsed, the panel shrinks to a narrow strip that keeps only the twelve build-menu buttons, giving the city view more horizontal space. Expand it again to bring back the minimap, advisor and world-map buttons, the action row, and the ratings.</p>
+        <figure class="cp-figure">
+          <img src="Cleo_ControlPanel.webp" alt="Collapsed side control panel showing only the build-menu buttons" width="28" height="419" />
+          <figcaption>Collapsed side panel</figcaption>
+        </figure>
+      </div>
+
+      <!-- ─── Tips ──────────────────────────────────────────── -->
+      <h2 id="tips">Tips</h2>
+      <ul>
+        <li>Right-click the funds, population, or date read-out whenever you are unsure what a number includes — each opens a plain-language explanation.</li>
+        <li>Use the <strong>Go to problem</strong> button to sweep the city quickly: it cycles through fires, collapses, blocked buildings, and other flagged issues without hunting for them on the map.</li>
+        <li>Keep an eye on the <strong>messages counter</strong> — gods' moods, requests, and disasters all arrive as messages, and ignoring a request can close trade routes.</li>
+        <li>Collapse the side panel on small screens or during careful map work; the build buttons stay available so you lose nothing essential.</li>
+        <li>The build-category buttons grey out until the mission unlocks them — if a category looks disabled, its buildings are not yet available, not missing.</li>
+      </ul>
+
+      <!-- ─── Developer reference ──────────────────────────── -->
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">All paths relative to the repository root. The Control Panel is defined declaratively in JS and rendered by C++ widgets.</p>
+
+        <details>
+          <summary>Side panel config — <code>src/scripts/ui_sidebar_window.js</code></summary>
+          <div class="details-body">
+            <p><span class="file-ref">src/scripts/ui_sidebar_window.js</span> declares two layouts, <code>sidebar_window_expanded</code> (186&nbsp;px wide) and <code>sidebar_window_collapsed</code> (66&nbsp;px). Each defines its buttons as <code>image_button</code> / <code>link</code> elements with a <code>tooltip</code> (group&nbsp;68) and an <code>onclick</code> handler:</p>
+            <pre><code><span class="kw">build_house</span> : image_button({ ... tooltip:[<span class="num">68</span>, <span class="num">20</span>], onclick: <span class="fn">window_build_menu_build_house</span> })
+<span class="kw">show_overlays</span> : link({ onclick: <span class="fn">show_window_by_id</span>(<span class="str">"overlay_menu_widget"</span>), onrclick: <span class="fn">window_city_overlays_right_click</span> })
+<span class="kw">show_advisors</span> : advisor_button({ ... onclick: <span class="fn">window_advisors_show_checked</span> })
+<span class="kw">show_empire</span> : image_button({ ... onclick: <span class="fn">window_empire_show_checked</span> })
+<span class="kw">undo_btn</span> : image_button({ ... onclick: <span class="fn">__ui_game_undo_perform</span> })</code></pre>
+            <p>The twelve category buttons map to <code>window_build_menu_build_*</code> helpers, each calling <code>ui.sidebar_set_type()</code> + <code>ui.window_build_menu_show()</code>. <code>sidebar_window_draw_background()</code> sets each button's <code>readonly</code> flag from <code>building_menu_ctrl.count_items(BUILDING_MENU_*)</code> (0 items → greyed out) and its <code>selected</code> flag from the currently open menu. The expanded layout's bottom block holds the speed control and the Unemployment / Population / Culture / Prosperity / Monument / Kingdom read-outs.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Top menu config — <code>src/scripts/ui_top_menu_widget.js</code></summary>
+          <div class="details-body">
+            <p><span class="file-ref">src/scripts/ui_top_menu_widget.js</span> defines <code>top_menu_widget</code>: the <code>headers</code> block (file, options, help, advisors, plus debug/render headers) and one items block per menu. The right-aligned <code>ui</code> block defines the <code>date</code>, <code>population</code>, and <code>funds</code> links and the <code>rotate_left / rotate_reset / rotate_right</code> controls.</p>
+            <ul style="font-size:0.82rem;line-height:1.9;padding-left:1.2rem">
+              <li><code>top_menu_widget_draw</code> (on <code>top_menu_widget_draw</code> event) writes the funds text — <code>__loc(6,0) + treasury</code>, red font when treasury &lt; 0 — and the cached date / population strings.</li>
+              <li><code>top_menu_update_population_text</code> / <code>top_menu_update_date_text</code> rebuild those strings on <code>event_population_changed</code> and <code>event_advance_day</code>.</li>
+              <li>Right-click handlers <code>top_menu_*_explanation</code> open <code>message_game_control_*_display</code> dialogs for date, population, and money.</li>
+              <li>The <code>advisors</code> header items carry <code>group&nbsp;4</code> ids matching the <code>ADVISOR_*</code> enum.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details>
+          <summary>C++ renderers — <code>src/widget/widget_sidebar.cpp</code>, <code>widget_top_menu_game.cpp</code></summary>
+          <div class="details-body">
+            <p><span class="file-ref">src/widget/widget_sidebar.cpp</span> drives the panel:</p>
+            <ul style="font-size:0.82rem;line-height:1.9;padding-left:1.2rem">
+              <li><code>sidebar_window_expanded_t</code> / <code>sidebar_window_collapsed_t</code> — the two states; <code>collapse()</code> / <code>expand()</code> run the slide animation (<code>slide_driver::update</code>) and play <code>SOUND_EFFECT_SIDEBAR</code>. State is tracked by <code>g_camera.sidebar_collapsed</code>.</li>
+              <li><code>widget_minimap_draw()</code> renders the overview map at <code>MINIMAP_Y_OFFSET</code>; the minimap itself lives in <span class="file-ref">src/widget/widget_minimap.cpp</span>.</li>
+              <li>Buttons are darkened (<code>UiFlags_Darkened</code>) unless the active window is <code>window_city</code> or <code>build_menu_widget</code>.</li>
+            </ul>
+            <p><span class="file-ref">src/widget/widget_top_menu_game.cpp</span> implements <code>top_menu_widget_t</code>: header hit-testing (<code>bar_handle_mouse</code>), sub-menu drawing (<code>sub_menu_draw_text</code>), and item dispatch (<code>menu_handle_mouse</code>). The money / population / date texts are drawn from the <code>ui</code> block in <code>draw_foreground</code>.</p>
+          </div>
+        </details>
+
+      </div><!-- .dev-section -->
+
+      <div class="bld-nav">
+        <a href="../index.html">← Player Guide</a>
+        <span style="color:var(--text-muted)">Interface</span>
+        <a href="../buildings/index.html">Buildings →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>

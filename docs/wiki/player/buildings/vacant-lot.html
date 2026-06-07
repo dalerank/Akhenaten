@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vacant Lot — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .bld-header-grid { display: grid; grid-template-columns: auto 1fr; gap: 1.5rem; align-items: start; margin-bottom: 2rem; }
+    .bld-header-right { display: flex; flex-direction: column; gap: 1rem; }
+    .bld-image-wrap { text-align: center; }
+    .bld-image-wrap img { display: block; border: 1px solid var(--border); border-radius: 3px; image-rendering: pixelated; }
+    .bld-image-wrap figcaption { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.35rem; }
+    .bld-sprites { display: flex; gap: 0.75rem; align-items: flex-end; }
+    .bld-infobox { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.9rem 1.1rem; }
+    .bld-infobox h4 { margin: 0 0 0.6rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold); }
+    .bld-infobox dl { display: grid; grid-template-columns: auto 1fr; gap: 0.2rem 1rem; margin: 0; }
+    .bld-infobox dt { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; padding-top: 0.1rem; }
+    .bld-infobox dd { margin: 0; font-size: 0.85rem; color: var(--text); }
+    .bld-infobox .sep { grid-column: 1/-1; border: none; border-top: 1px solid var(--border); margin: 0.4rem 0; }
+    .bld-stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .bld-stat { text-align: center; }
+    .bld-stat .val { font-size: 1.3rem; font-weight: 700; color: var(--gold); display: block; }
+    .bld-stat .lbl { font-size: 0.7rem; color: var(--text-muted); }
+    .des-neg { color: #d07070; } .des-pos { color: #7ec87e; } .des-zero { color: var(--text-muted); }
+    .infobox-pair { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .infobox-pair .bld-infobox { flex: 1 1 220px; }
+
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .kw { color: #c9a84c; } .num { color: #9ecbff; } .str { color: #7ec87e; } .cmt { color: #5a5650; font-style: italic; } .fn { color: #8aabdc; } .ty { color: #d0a0e0; }
+    .file-ref { display: inline-block; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .bld-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .bld-nav a { color: var(--gold); }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">← All Buildings</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Housing</div>
+        <ul>
+          <li><a href="vacant-lot.html" class="active">Vacant Lot</a></li>
+          <li><a href="housing.html">Housing</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#mechanics">Mechanics</a></li>
+          <li><a href="#tips">Tips</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Buildings</a> /
+        Vacant Lot
+      </div>
+
+      <h1>Vacant Lot</h1>
+
+      <div class="bld-header-grid" style="grid-template-columns:1fr">
+        <figure class="bld-image-wrap">
+          <div class="bld-sprites">
+            <div>
+              <img src="Cleo_VacantLot.webp" alt="Empty vacant housing lot tile" width="58" height="30" />
+              <figcaption>An empty vacant lot tile</figcaption>
+            </div>
+          </div>
+        </figure>
+        <div class="bld-header-right">
+          <div>
+            <p>A <strong>Vacant Lot</strong> is an empty residential plot — the seed from which all <a href="housing.html">housing</a> grows. It is placed with the <strong>Housing</strong> button on the <a href="../interface/control-panel.html">control panel</a> and costs nothing to lay down; you are simply marking ground as open for settlement.</p>
+            <p>As soon as a vacant lot has road access, immigrants walk in from the map edge and the plot becomes a <strong>Crude Hut</strong> — the first housing tier. From there it evolves automatically as services reach it. An empty lot that never gains road access stays vacant forever.</p>
+          </div>
+          <div class="infobox-pair">
+            <div class="bld-infobox">
+              <h4>Vacant Lot</h4>
+              <div class="bld-stat-row" style="margin-bottom:0.9rem">
+                <div class="bld-stat"><span class="val">1×1</span><span class="lbl">Size</span></div>
+                <div class="bld-stat"><span class="val">0</span><span class="lbl">Workers</span></div>
+                <div class="bld-stat"><span class="val">Free</span><span class="lbl">Cost</span></div>
+              </div>
+              <hr class="sep" />
+              <dl>
+                <dt>Build menu</dt>
+                <dd>Housing</dd>
+                <dt>Draggable</dt>
+                <dd>Yes — drag to mark many plots at once</dd>
+                <dt>Becomes</dt>
+                <dd><a href="housing.html">Crude Hut</a> once occupied</dd>
+                <dt>Requires</dt>
+                <dd><a href="road.html">Road</a> access within 2 tiles</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Overview ──────────────────────────────────────── -->
+      <h2 id="overview">Overview</h2>
+      <p>Every city begins with empty land. The Vacant Lot is how you tell the game where citizens may live: it reserves a tile for residential use without committing any money or specifying a house type. The plot itself is just bare ground with a low fence — it produces nothing, employs no one, and sits at the very bottom of the housing chain.</p>
+      <p>The Vacant Lot is not a distinct building so much as the <em>unoccupied state</em> of a house. Internally it is the first housing tier (the Crude Hut) before anyone has moved in. Once immigrants arrive it stops being "vacant" and the normal <a href="housing.html">housing evolution</a> rules take over.</p>
+
+      <!-- ─── Mechanics ─────────────────────────────────────── -->
+      <h2 id="mechanics">Mechanics</h2>
+
+      <h3>Becoming occupied</h3>
+      <p>A vacant lot becomes occupied the moment it has <a href="road.html">road</a> access within two tiles and the city has room for more population. Immigrants enter from the <strong>kingdom road entry point</strong> at the edge of the map, walk to the nearest open plot, and turn it into a Crude Hut. If immigration is stalled — because a population cap is in force, the city has no road link to the entry point, or sentiment is too low — vacant lots simply stay empty.</p>
+
+      <h3>Placing lots</h3>
+      <p>The Housing tool is draggable: click and drag to mark a whole block of vacant lots at once. Lots can only be placed on clear, buildable land — not on water, rock, or floodplain during inundation. Lay roads first, then fill the gaps with housing so that every plot is within two tiles of a road.</p>
+
+      <h3>Desirability</h3>
+      <p>An empty plot contributes nothing positive to its surroundings, and a sprawl of unoccupied lots is a sign that something is blocking immigration. Once occupied and evolving, houses begin to raise local desirability as they climb the tiers. Keep an eye on lots that refuse to fill — they almost always indicate a missing road link or a service gap nearby.</p>
+
+      <!-- ─── Tips ──────────────────────────────────────────── -->
+      <h2 id="tips">Tips</h2>
+      <ul>
+        <li>Lay your <a href="road.html">road</a> grid <em>before</em> placing housing, then drag vacant lots into the gaps — every plot must be within two tiles of a road to attract immigrants.</li>
+        <li>If vacant lots are not filling, check three things in order: is there a road path to the map's kingdom entry point, is a population cap in force this mission, and is city sentiment high enough for immigration?</li>
+        <li>Leave a little space between housing blocks for the services (wells, bazaars, temples, entertainment) that the houses will need to evolve — overcrowding lots with no room for civic buildings stalls growth at the lowest tiers.</li>
+        <li>Demolishing an occupied house returns it to clear land, not to a vacant lot; you re-place housing with the Housing tool as normal.</li>
+      </ul>
+
+      <!-- ─── Developer reference ──────────────────────────── -->
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">All paths relative to the repository root.</p>
+
+        <details>
+          <summary>Type &amp; build menu</summary>
+          <div class="details-body">
+            <p>The Vacant Lot is not a separate building type — it is an alias for the lowest housing tier. In <span class="file-ref">src/building/building_type.h</span>:</p>
+            <pre><code><span class="kw">constexpr</span> e_building_type <span class="ty">BUILDING_HOUSE_VACANT_LOT</span> = <span class="ty">BUILDING_HOUSE_CRUDE_HUT</span>;</code></pre>
+            <p>It is exposed through the Housing build menu in <span class="file-ref">src/scripts/building_menu.js</span>:</p>
+            <pre><code>{
+  id: <span class="ty">BUILDING_MENU_VACANT_HOUSE</span>,
+  items[<span class="ty">BUILDING_HOUSE_VACANT_LOT</span>]
+}</code></pre>
+            <p>The sidebar's Housing button (<span class="file-ref">src/scripts/ui_sidebar_window.js</span>) opens this menu via <code>window_build_menu_build_house()</code> → <code>BUILDING_MENU_VACANT_HOUSE</code>.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>House behaviour — <code>src/building/building_house.* / house.js</code></summary>
+          <div class="details-body">
+            <p>Occupancy and evolution are handled by <span class="file-ref">src/building/building_house.cpp</span> / <span class="file-ref">building_house.h</span>. The "vacant" state is queried in script through <span class="file-ref">src/scripts/building/house.js</span>:</p>
+            <pre><code><span class="ty">House</span>.property.is_vacant_lot = { get: <span class="kw">function</span>() { <span class="kw">return</span> <span class="kw">this</span>.<span class="fn">__is_vacant_lot</span>() } }</code></pre>
+            <p>A lot is "vacant" while it is the Crude Hut tier with zero population; immigration sets population &gt; 0, after which the standard housing evolution checks (food, water, goods, services, desirability) drive upgrades and downgrades. See the <a href="housing.html#dev">Housing developer reference</a> for the full tier model.</p>
+          </div>
+        </details>
+
+      </div><!-- .dev-section -->
+
+      <div class="bld-nav">
+        <a href="index.html">← All Buildings</a>
+        <span style="color:var(--text-muted)">Housing</span>
+        <a href="housing.html">Housing →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+  <script src="../../../lightbox.js"></script>
+</body>
+</html>

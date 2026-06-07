@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Juggler School — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .bld-header-grid { display: grid; grid-template-columns: auto 1fr; gap: 1.5rem; align-items: start; margin-bottom: 2rem; }
+    .bld-header-right { display: flex; flex-direction: column; gap: 1rem; }
+    .bld-image-wrap { text-align: center; }
+    .bld-image-wrap img { display: block; border: 1px solid var(--border); border-radius: 3px; image-rendering: pixelated; }
+    .bld-image-wrap figcaption { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.35rem; }
+    .bld-sprites { display: flex; gap: 0.75rem; align-items: flex-end; }
+    .bld-infobox { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.9rem 1.1rem; }
+    .bld-infobox h4 { margin: 0 0 0.6rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold); }
+    .bld-infobox dl { display: grid; grid-template-columns: auto 1fr; gap: 0.2rem 1rem; margin: 0; }
+    .bld-infobox dt { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; padding-top: 0.1rem; }
+    .bld-infobox dd { margin: 0; font-size: 0.85rem; color: var(--text); }
+    .bld-infobox .sep { grid-column: 1/-1; border: none; border-top: 1px solid var(--border); margin: 0.4rem 0; }
+    .bld-stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .bld-stat { text-align: center; }
+    .bld-stat .val { font-size: 1.3rem; font-weight: 700; color: var(--gold); display: block; }
+    .bld-stat .lbl { font-size: 0.7rem; color: var(--text-muted); }
+    .risk-low { color: #8aabdc; }
+    .des-neg { color: #d07070; } .des-pos { color: #7ec87e; } .des-zero { color: var(--text-muted); }
+    .infobox-pair { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .infobox-pair .bld-infobox { flex: 1 1 220px; }
+
+    .cp-table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; font-size: 0.85rem; }
+    .cp-table th, .cp-table td { padding: 0.35rem 0.6rem; text-align: left; border-bottom: 1px solid var(--border); }
+    .cp-table th { color: var(--text-muted); font-weight: normal; }
+    .cp-table td:first-child { color: var(--gold); white-space: nowrap; }
+
+    .net-diagram { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.8rem 1.1rem; margin: 1rem 0; font-size: 0.85rem; }
+    .net-diagram .net-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .net-diagram code { background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.15); border-radius: 2px; padding: 0.05rem 0.4rem; font-size: 0.8rem; color: var(--gold); }
+
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .kw { color: #c9a84c; } .num { color: #9ecbff; } .str { color: #7ec87e; } .cmt { color: #5a5650; font-style: italic; } .fn { color: #8aabdc; } .ev { color: #d0a0e0; } .ty { color: #d0a0e0; }
+    .file-ref { display: inline-block; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .bld-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .bld-nav a { color: var(--gold); }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">← All Buildings</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Entertainment</div>
+        <ul>
+          <li><a href="booth.html">Booth</a></li>
+          <li><a href="juggler-school.html" class="active">Juggler School</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#mechanics">Mechanics</a></li>
+          <li><a href="#chain">Entertainment chain</a></li>
+          <li><a href="#tips">Tips</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Buildings</a> /
+        Juggler School
+      </div>
+
+      <h1>Juggler School</h1>
+
+      <div class="bld-header-grid" style="grid-template-columns:1fr">
+        <figure class="bld-image-wrap">
+          <div class="bld-sprites">
+            <div>
+              <img src="Cleo_JugglerSchool.webp" alt="Juggler School building" width="118" height="102" />
+              <figcaption>Juggler School</figcaption>
+            </div>
+            <div>
+              <img src="Cleo_JugglerSchool_work.webp" alt="Juggler School work animation" width="118" height="102" />
+              <figcaption>Working (animated)</figcaption>
+            </div>
+          </div>
+        </figure>
+        <div class="bld-header-right">
+          <div>
+            <p>The <strong>Juggler School</strong> is the training facility that produces <strong>jugglers</strong> — the most basic entertainers in the city. Trained jugglers walk to a nearby venue (a <a href="booth.html">Booth</a>, Bandstand, or Pavilion) and perform there; if no venue is reachable, a juggler will roam directly from the school instead.</p>
+            <p>It is the first link in the entertainment chain. Without at least one Juggler School, a <a href="booth.html">Booth</a> has no performers and stays idle — placing a Booth with no school in the city triggers an on-screen warning.</p>
+            <p>The school is a 2×2 building. Unlike the other training schools it is only mildly undesirable, so it can sit reasonably close to housing without dragging neighbourhood desirability down too far.</p>
+          </div>
+          <div class="infobox-pair">
+            <div class="bld-infobox">
+              <h4>Juggler School</h4>
+              <div class="bld-stat-row" style="margin-bottom:0.9rem">
+                <div class="bld-stat"><span class="val">2×2</span><span class="lbl">Size</span></div>
+                <div class="bld-stat"><span class="val">5</span><span class="lbl">Workers</span></div>
+                <div class="bld-stat"><span class="val des-neg">−3</span><span class="lbl">Desirability</span></div>
+              </div>
+              <hr class="sep" />
+              <dl>
+                <dt>Cost (Normal)</dt>
+                <dd>50 Db</dd>
+                <dt>Cost by difficulty</dt>
+                <dd style="font-size:0.78rem;color:var(--text-muted)">
+                  VE 10 · Easy 20 · <strong style="color:var(--text)">Normal 50</strong> · Hard 100 · VH 200
+                </dd>
+                <dt>Labor category</dt>
+                <dd>Entertainment</dd>
+                <dt>Trains</dt>
+                <dd>Jugglers</dd>
+                <dt>Supplies</dt>
+                <dd><a href="booth.html">Booth</a>, Bandstand, Pavilion</dd>
+                <dt>Fire / Damage risk</dt>
+                <dd><span class="risk-low">Low</span> / <span class="risk-low">Low</span></dd>
+              </dl>
+            </div>
+            <div class="bld-infobox">
+              <h4>Desirability profile</h4>
+              <dl>
+                <dt>Peak value</dt>
+                <dd>−3 at the building</dd>
+                <dt>Falloff</dt>
+                <dd>+1 per step (eases toward 0)</dd>
+                <dt>Range</dt>
+                <dd>3 tiles</dd>
+              </dl>
+              <hr class="sep" />
+              <p style="font-size:0.8rem;color:var(--text-muted);margin:0">Mildly undesirable — the least negative of the training schools, so it tolerates being placed near housing.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Overview ──────────────────────────────────────── -->
+      <h2 id="overview">Overview</h2>
+      <p>Juggling was a popular street entertainment in ancient Egypt — tomb paintings show performers, often women, tossing balls in intricate patterns. In the game the Juggler School represents the troupe that trains these performers and sends them out to entertain the population.</p>
+      <p>Entertainment in Akhenaten flows along a chain of buildings: a <em>school</em> trains a performer, the performer walks to a <em>venue</em>, and the venue sends entertainers into the surrounding streets so that houses with road access receive the service. The Juggler School sits at the head of that chain for the cheapest entertainer type, the juggler.</p>
+
+      <!-- ─── Mechanics ─────────────────────────────────────── -->
+      <h2 id="mechanics">Mechanics</h2>
+
+      <h3>Training jugglers</h3>
+      <p>While the school is staffed it periodically produces a juggler. The juggler looks for the nearest entertainment venue — checked in priority order <strong>Pavilion → Bandstand → Booth</strong> — and walks there as a destination walker to perform. If no venue is reachable, the juggler instead leaves the school as a roaming entertainer and services houses directly along the way.</p>
+
+      <h3>Production rate</h3>
+      <p>How often a juggler is produced depends on how fully the school is staffed:</p>
+      <table class="cp-table">
+        <tr><th>Workers employed</th><th>One juggler every…</th><th>Roughly</th></tr>
+        <tr><td>100%</td><td>7 days</td><td>~4 per month</td></tr>
+        <tr><td>75%+</td><td>15 days</td><td>~2 per month</td></tr>
+        <tr><td>50%+</td><td>30 days</td><td>~1 per month</td></tr>
+        <tr><td>25%+</td><td>60 days</td><td>1 every 2 months</td></tr>
+        <tr><td>1–24%</td><td>90 days</td><td>1 every 3 months</td></tr>
+        <tr><td>0%</td><td>—</td><td>nothing produced</td></tr>
+      </table>
+      <p>A fully staffed school keeps several venues supplied; a half-staffed one struggles to keep even one Booth performing. Make sure the school has labor access and enough workers in the city.</p>
+
+      <h3>Info window</h3>
+      <p>Right-clicking the school opens its info window, showing how many workers it employs and its current output of jugglers. Use it to confirm the school is staffed and actively training performers.</p>
+      <figure class="bld-image-wrap" style="margin:1rem 0">
+        <img src="Cleo_JugglerSchoolRC.webp" alt="Juggler School right-click info window" width="300" height="163" />
+        <figcaption>Juggler School right-click info window</figcaption>
+      </figure>
+
+      <!-- ─── Entertainment chain ───────────────────────────── -->
+      <h2 id="chain">Entertainment chain</h2>
+      <div class="net-diagram">
+        <div class="net-label">How a juggler reaches a house</div>
+        <code>Juggler School</code> &nbsp;→&nbsp; trains a juggler<br>
+        &nbsp;&nbsp;&nbsp;↳ &nbsp;walks to the nearest <code>Pavilion</code> / <code>Bandstand</code> / <code>Booth</code><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ &nbsp;the venue sends a <code>roaming juggler</code> into nearby streets<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ &nbsp;<code>House</code> &nbsp;→&nbsp; gains entertainment access
+      </div>
+      <p>Every leg of this journey is on foot and on <a href="road.html">roads</a>. Keep the school, its venues, and the housing it serves on the same connected road network, or the chain breaks and houses lose entertainment.</p>
+
+      <!-- ─── Tips ──────────────────────────────────────────── -->
+      <h2 id="tips">Tips</h2>
+      <ul>
+        <li>Always build the Juggler School together with its <a href="booth.html">Booths</a> — the school alone entertains nobody, and a Booth alone has no performers.</li>
+        <li>Keep the school well staffed. Under ~50% workers it produces jugglers too slowly to keep multiple venues running.</li>
+        <li>Place the school within walking distance of the venues it feeds; a juggler that cannot reach a venue wanders off as a roaming entertainer and may not cover the houses you intended.</li>
+        <li>Its desirability penalty is mild (−3, fading over 3 tiles), so it is safe to tuck near housing — but still keep it off your most prestigious avenues.</li>
+        <li>One well-staffed school can supply several Booths/Bandstands; spread the venues so coverage does not overlap.</li>
+      </ul>
+
+      <!-- ─── Developer reference ──────────────────────────── -->
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">All paths relative to the repository root.</p>
+
+        <details>
+          <summary>Building config — <code>src/scripts/building/entertainment.js</code></summary>
+          <div class="details-body">
+            <p><span class="file-ref">src/scripts/building/entertainment.js</span> defines <code>building_juggler_school</code>. The <code>cost</code> array is indexed by difficulty (VE · Easy · Normal · Hard · VH); the <code>spawn_delay_*</code> fields set the production rate per worker bracket.</p>
+            <pre><code><span class="kw">building_juggler_school</span> {
+  <span class="kw">animations</span> { preview { id:<span class="num">46</span> } base { id:<span class="num">46</span> } work { ... id:<span class="num">46</span>, offset:<span class="num">1</span>, max_frames:<span class="num">14</span> } }
+
+  <span class="kw">spawn_delay_100_percent</span> : <span class="num">7</span>    <span class="cmt">// ~4 jugglers/month</span>
+  <span class="kw">spawn_delay_75_percent</span>  : <span class="num">15</span>   <span class="cmt">// ~2/month</span>
+  <span class="kw">spawn_delay_50_percent</span>  : <span class="num">30</span>   <span class="cmt">// ~1/month</span>
+  <span class="kw">spawn_delay_25_percent</span>  : <span class="num">60</span>   <span class="cmt">// 1 / 2 months</span>
+  <span class="kw">spawn_delay_default</span>     : <span class="num">90</span>   <span class="cmt">// 1 / 3 months (1-24% workers)</span>
+
+  <span class="kw">building_size</span> : <span class="num">2</span>
+  <span class="kw">min_houses_coverage</span> : <span class="num">50</span>
+  <span class="kw">cost</span> [ <span class="num">10</span>, <span class="num">20</span>, <span class="num">50</span>, <span class="num">100</span>, <span class="num">200</span> ]
+  <span class="kw">desirability</span> { value[<span class="num">-3</span>], step[<span class="num">1</span>], step_size[<span class="num">1</span>], range[<span class="num">3</span>] }
+  <span class="kw">laborers</span>[<span class="num">5</span>]  <span class="kw">fire_risk</span>[<span class="num">4</span>]  <span class="kw">damage_risk</span>[<span class="num">2</span>]
+  <span class="kw">flags</span> { is_entertainment: <span class="kw">true</span> }
+}</code></pre>
+          </div>
+        </details>
+
+        <details>
+          <summary>C++ implementation — <code>src/building/building_jugler_school.h / .cpp</code></summary>
+          <div class="details-body">
+            <p><span class="file-ref">src/building/building_jugler_school.h</span> declares <code>building_juggler_school</code> (inherits <code>building_entertainment</code>), registered with <code>BUILDING_METAINFO(BUILDING_JUGGLER_SCHOOL, …)</code>. The <code>static_params</code> struct carries the five <code>spawn_delay_*</code> values. Behaviour in <span class="file-ref">building_jugler_school.cpp</span>:</p>
+            <ul style="font-size:0.82rem;line-height:1.9;padding-left:1.2rem">
+              <li><code>spawn_figure()</code> — picks a spawn interval from <code>worker_percentage()</code>, then calls <code>figure_entertainer::determine_venue_destination(road_access, FIGURE_JUGGLER, {BUILDING_PAVILLION, BUILDING_BANDSTAND, BUILDING_BOOTH})</code>. If a venue is found it sends a destination juggler (<code>ACTION_92_ENTERTAINER_GOING_TO_VENUE</code>); otherwise it spawns a roaming juggler (<code>ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED</code>). The cooldown <code>spawned_entertainer_days</code> gates the next spawn.</li>
+              <li><code>update_day()</code> — decrements the <code>spawned_entertainer_days</code> cooldown.</li>
+              <li><code>update_graphic()</code> — plays the work animation while staffed.</li>
+            </ul>
+            <p>The juggler figure itself is implemented in <span class="file-ref">src/figuretype/figure_juggler.cpp</span>; the entertainment overlay is <code>OVERLAY_BOOTH</code>.</p>
+          </div>
+        </details>
+
+      </div><!-- .dev-section -->
+
+      <div class="bld-nav">
+        <a href="booth.html">← Booth</a>
+        <span style="color:var(--text-muted)">Entertainment</span>
+        <a href="index.html#entertainment">Entertainment buildings →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+  <script src="../../../lightbox.js"></script>
+</body>
+</html>
