@@ -72,7 +72,7 @@ vec2i __pixel_to_screentile(vec2i pixel) {
 ANK_FUNCTION_1(__pixel_to_screentile);
 
 tile2i __screen_to_tile(vec2i screen) {
-    return screen_to_tile(screen);
+    return g_camera.screen_to_tile(screen);
 }
 ANK_FUNCTION_1(__screen_to_tile);
 

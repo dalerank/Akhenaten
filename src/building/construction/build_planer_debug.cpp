@@ -26,11 +26,11 @@ void config_show_build_planer_properties(bool header) {
         game_debug_show_property("end", g_city_planner.end.x());
         game_debug_show_property("", g_city_planner.end.y());
 
-        vec2i screen_start = tile_to_screen(g_city_planner.start);
-        vec2i screen_end = tile_to_screen(g_city_planner.end);
+        vec2i screen_start = g_camera.tile_to_screen(g_city_planner.start);
+        vec2i screen_end = g_camera.tile_to_screen(g_city_planner.end);
         game_debug_show_property("screen start", screen_start, true);
         game_debug_show_property("screen ebd", screen_end, true);
-        
+
         game_debug_show_property("cost:", g_city_planner.total_cost);
 
         ImGui::EndTable();

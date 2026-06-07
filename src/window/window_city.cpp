@@ -230,7 +230,7 @@ void window_city_init() {
     events::subscribe([] (event_goto_bookmark ev) {
         tile2i p = g_city.bookmarks.get(ev.value - 1);
         if (p.valid()) {
-            vec2i screen = tile_to_screen(p);
+            vec2i screen = g_camera.tile_to_screen(p);
             g_camera.go_to_screen_tile(screen, true);
         }
     });

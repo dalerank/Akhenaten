@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "lookup.h"
 #include "core/buffer.h"
 #include "core/xstring.h"
 #include "grid/point.h"
@@ -48,6 +49,7 @@ struct viewport_t {
     xstring mouse_terrain_type;
     vec2i mouse_tile_pixel;
     screen_tile selected_tile;
+    screentile_lookup_t screentile_lookup;
 
     void init();
     void frame_begin();
@@ -79,6 +81,8 @@ struct viewport_t {
     int relative_orientation(int orientation) const;
     int absolute_orientation(int orientation_relative) const;
     bool contains_pixel(vec2i pixel) const;
+    tile2i screen_to_tile(vec2i screen) const;
+    vec2i tile_to_screen(tile2i point) const;
     void foreach_valid_map_tile(painter &ctx,
                                 tile_draw_callback callback1,
                                 tile_draw_callback callback2 = {},

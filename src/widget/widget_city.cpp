@@ -93,7 +93,7 @@ tile2i screen_city_t::update_city_view_coords(vec2i pixel) {
     vec2i screen = pixel_to_screentile(pixel);
     if (screen.x != -1 && screen.y != -1) {
         g_camera.set_selected_view_tile(screen);
-        return screen_to_tile(screen);
+        return g_camera.screen_to_tile(screen);
     }
 
     return tile2i::invalid;

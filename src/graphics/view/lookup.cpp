@@ -1,44 +1,44 @@
 ﻿#include "lookup.h"
+#include "view.h"
 #include "core/calc.h"
 #include "graphics/elements/menu.h"
 #include "graphics/image.h"
 #include "grid/grid.h"
 #include "core/profiler.h"
 
-constexpr int map_lookup_size = 500;
-static tile2i SCREENTILE_TO_MAPPOINT_LOOKUP[4][map_lookup_size][map_lookup_size];
-constexpr int max_grid_offset = 4 * 500 * 500;
-static void screentile_calc_params_by_orientation(int city_orientation, vec2i* start, vec2i* column_step, vec2i* row_step) {
+tile2i& screentile_lookup_t::at(int orientation, int x, int y) {
+    return tables[index(orientation, x, y)];
+}
+
+tile2i screentile_lookup_t::at(int orientation, int x, int y) const {
+    return tables[index(orientation, x, y)];
+}
+
+void screentile_lookup_t::ensure_tables() {
+    if (!tables.empty()) {
+        return;
+    }
+
+    tables.assign(table_size, tile2i(-1));
+}
+
+screentile_lookup_t::orientation_params_t screentile_lookup_t::calc_params_by_orientation(int city_orientation) {
     switch (city_orientation) {
     default:
     case 0:
-        *start = {GRID_LENGTH + 2, 1};
-        *column_step = {1, 1};
-        *row_step = {-1, 1};
-        break;
+        return {{GRID_LENGTH + 2, 1}, {1, 1}, {-1, 1}};
     case 1:
-        *start = {3, GRID_LENGTH};
-        *column_step = {1, -1};
-        *row_step = {1, 1};
-        break;
+        return {{3, GRID_LENGTH}, {1, -1}, {1, 1}};
     case 2:
-        *start = {GRID_LENGTH + 2, (2 * GRID_LENGTH) - 1};
-        *column_step = {-1, -1};
-        *row_step = {1, -1};
-        break;
+        return {{GRID_LENGTH + 2, (2 * GRID_LENGTH) - 1}, {-1, -1}, {1, -1}};
     case 3:
-        *start = {(2 * GRID_LENGTH) + 1, GRID_LENGTH};
-        *column_step = {-1, 1};
-        *row_step = {-1, -1};
-        break;
+        return {{(2 * GRID_LENGTH) + 1, GRID_LENGTH}, {-1, 1}, {-1, -1}};
     }
 }
 
-static void fill_in_lookup_table_for_orientation(int city_orientation) {
-    vec2i start;
-    vec2i column_step;
-    vec2i row_step;
-    screentile_calc_params_by_orientation(city_orientation, &start, &column_step, &row_step);
+void screentile_lookup_t::fill_in_for_orientation(int city_orientation) {
+    const auto params = calc_params_by_orientation(city_orientation);
+    vec2i start = params.start;
 
     for (int y = 0; y < GRID_LENGTH; y++) {
         screen_tile screen = start;
@@ -46,84 +46,33 @@ static void fill_in_lookup_table_for_orientation(int city_orientation) {
             int grid_offset = x + GRID_LENGTH * y;
 
             bool is_inside_area = map_grid_inside_map_area(grid_offset) || 1;
+            auto &cell = at(city_orientation, screen.x / 2, screen.y);
+
             if (is_inside_area) // inside area
-                SCREENTILE_TO_MAPPOINT_LOOKUP[city_orientation][screen.x / 2][screen.y].set(grid_offset);
+                cell.set(grid_offset);
             else // outside area
-                SCREENTILE_TO_MAPPOINT_LOOKUP[city_orientation][screen.x / 2][screen.y].set(-1);
-            screen += column_step;
+                cell.set(-1);
+
+            screen += params.column_step;
         }
-        start += row_step;
+        start += params.row_step;
     }
 }
 
-void calculate_screentile_lookup_tables() {
-    // reset lookup tables
-    constexpr int orientations = 4;
+void screentile_lookup_t::calculate() {
+    ensure_tables();
+
     for (int o = 0; o < orientations; ++o) {
         for (int y = 0; y < (2 * GRID_LENGTH) + 1; y++) {
             for (int x = 0; x < GRID_LENGTH + 3; x++) {
-                SCREENTILE_TO_MAPPOINT_LOOKUP[o][x][y].set(-1);
+                at(o, x, y).set(-1);
             }
         }
     }
-    // fill in tables
+
     for (int orientation = 0; orientation < orientations; ++orientation) {
-        fill_in_lookup_table_for_orientation(orientation);
+        fill_in_for_orientation(orientation);
     }
-}
-
-tile2i screen_to_tile(vec2i screen) {
-    if (screen.x == -1 || screen.y == -1) {
-        return tile2i(-1);
-    }
-
-    int city_orientation = g_camera.orientation / 2;
-    return SCREENTILE_TO_MAPPOINT_LOOKUP[city_orientation][screen.x][screen.y];
-}
-
-vec2i tile_to_screen(tile2i point) {
-    if (!map_grid_inside_map_area(point.grid_offset())) {
-        return { -1, -1 };
-    }
-
-    vec2i start;
-    vec2i column_step;
-    vec2i row_step;
-    int city_orientation = g_camera.orientation / 2;
-    screentile_calc_params_by_orientation(city_orientation, &start, &column_step, &row_step);
-
-    int columns = point.x();
-    int rows = point.y();
-
-    vec2i screen = { -1, -1 };
-    tile2i *ptr = nullptr;
-    switch (city_orientation) {
-    case 0:
-    case 2:
-        screen.x = (start.x + (rows * row_step.x) + (columns * column_step.x)) / 2;
-        ptr = SCREENTILE_TO_MAPPOINT_LOOKUP[city_orientation][screen.x];
-        for (int i = 0; i < map_lookup_size; ++i, ++ptr) {
-            if (ptr->grid_offset() == point.grid_offset()) {
-                screen.y = i;
-                break;
-            }
-        }
-        break;
-
-    case 1:
-    case 3:
-        screen.y = (start.y + (rows * row_step.y) + (columns * column_step.y));
-        for (int i = 0; i < map_lookup_size; ++i) {
-            ptr = &SCREENTILE_TO_MAPPOINT_LOOKUP[city_orientation][i][screen.y];
-            if (ptr->grid_offset() == point.grid_offset()) {
-                screen.x = i;
-                break;
-            }
-        }
-        break;
-    }
-
-    return screen;
 }
 
 static vec2i MAPPOINT_TO_PIXEL_LOOKUP[GRID_SIZE_TOTAL];
@@ -138,7 +87,7 @@ void record_mappoint_pixelcoord(tile2i point, vec2i pixel) {
 
 vec2i lookup_tile_to_pixel(tile2i point) {
     int grid_offset = point.grid_offset();
-    assert(grid_offset < max_grid_offset);
+    assert(grid_offset < screentile_lookup_t::max_grid_offset);
     return MAPPOINT_TO_PIXEL_LOOKUP[grid_offset];
 }
 

@@ -4,6 +4,7 @@
 #include "graphics/elements/menu.h"
 #include "game/game_config.h"
 #include "lookup.h"
+#include "view.h"
 #include "js/js_game.h"
 #include <cmath>
 

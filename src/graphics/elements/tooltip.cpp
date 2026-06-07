@@ -141,10 +141,8 @@ void tooltip_context::draw_overlay_tooltip() {
 void tooltip_context::draw_tile_tooltip() {
     screen_tile screen = pixel_to_screentile({mpos.x, mpos.y});
     if (screen.x != -1 && screen.y != -1) {
-        int grid_offset = screen_to_tile(screen).grid_offset();
+        tile2i tile = g_camera.screen_to_tile(screen);
         g_camera.set_selected_view_tile(screen);
-        int x_tile = MAP_X(grid_offset);
-        int y_tile = MAP_Y(grid_offset);
 
         int x, y;
         int width = 60;
@@ -163,8 +161,8 @@ void tooltip_context::draw_tile_tooltip() {
 
         draw_box(x, y, width, height);
         bstring64 sx, sy;
-        sx.printf("x: %d", x_tile);
-        sy.printf("y: %d", y_tile);
+        sx.printf("x: %d", tile.x());
+        sy.printf("y: %d", tile.y());
         ui::text_multiline(sx, {x + 2, y + 5}, width, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
         ui::text_multiline(sy, {x + 2, y + 19}, width, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
     }

@@ -84,7 +84,7 @@ void widget_map_editor_draw() {
 static void update_city_view_coords(int x, int y, tile2i* tile) {
     screen_tile screen = pixel_to_screentile({x, y});
     if (screen.x != -1 && screen.y != -1) {
-        *tile = screen_to_tile(screen);
+        *tile = g_camera.screen_to_tile(screen);
         g_camera.set_selected_view_tile(screen);
     } else {
         *tile = tile2i::invalid;

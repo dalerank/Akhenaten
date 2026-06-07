@@ -293,13 +293,64 @@ void viewport_t::update_derived_camera_state() {
     mouse_tile_pixel = lookup_tile_to_pixel(mouse_tile);
 }
 
+tile2i viewport_t::screen_to_tile(vec2i screen) const {
+    if (screen.x == -1 || screen.y == -1 || screentile_lookup.tables.empty()) {
+        return tile2i(-1);
+    }
+
+    const int city_orientation = orientation / 2;
+    return screentile_lookup.at(city_orientation, screen.x, screen.y);
+}
+
+vec2i viewport_t::tile_to_screen(tile2i point) const {
+    if (!map_grid_inside_map_area(point.grid_offset()) || screentile_lookup.tables.empty()) {
+        return { -1, -1 };
+    }
+
+    const int city_orientation = orientation / 2;
+    const auto params = screentile_lookup_t::calc_params_by_orientation(city_orientation);
+
+    const int columns = point.x();
+    const int rows = point.y();
+
+    vec2i screen = { -1, -1 };
+    switch (city_orientation) {
+    case 0:
+    case 2:
+        screen.x = (params.start.x + (rows * params.row_step.x) + (columns * params.column_step.x)) / 2;
+        {
+            const tile2i* row = screentile_lookup.tables.data() + screentile_lookup_t::index(city_orientation, screen.x, 0);
+            for (int i = 0; i < screentile_lookup_t::map_size; ++i, ++row) {
+                if (row->grid_offset() == point.grid_offset()) {
+                    screen.y = i;
+                    break;
+                }
+            }
+        }
+        break;
+
+    case 1:
+    case 3:
+        screen.y = (params.start.y + (rows * params.row_step.y) + (columns * params.column_step.y));
+        for (int i = 0; i < screentile_lookup_t::map_size; ++i) {
+            if (screentile_lookup.at(city_orientation, i, screen.y).grid_offset() == point.grid_offset()) {
+                screen.x = i;
+                break;
+            }
+        }
+        break;
+    }
+
+    return screen;
+}
+
 void viewport_t::frame_begin() {
     update_scroll_limits();
     update_derived_camera_state();
 }
 
 void viewport_t::init() {
-    calculate_screentile_lookup_tables();
+    screentile_lookup.calculate();
     g_zoom.set_scale(100.0f);
     widget_minimap_invalidate();
 }
