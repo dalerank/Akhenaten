@@ -46,6 +46,18 @@ std::optional<bvariant> __building_get_static_params_property(int type, pcstr pr
 }
 ANK_FUNCTION_2(__building_get_static_params_property)
 
+int building_static_first_img_for_type(int type, xstring anim_key) {
+    if (type <= BUILDING_NONE || type >= BUILDING_MAX) {
+        return 0;
+    }
+    return building_static_params::get((e_building_type)type).first_img(anim_key);
+}
+
+int __building_static_first_img(int type, xstring anim_key) {
+    return building_static_first_img_for_type(type, anim_key);
+}
+ANK_FUNCTION_2(__building_static_first_img)
+
 static js_Object *g_building_params_proto = nullptr;
 
 static void building_params_proto___property_getter(js_State *J) {
@@ -63,6 +75,12 @@ static void building_params_proto___property_getter(js_State *J) {
 static void building_params_proto___cost(js_State *J) {
     const building_static_params *params = building_params_for_type(building_params_this_type(J));
     js_helpers::js_push_value(J, params ? (int)params->get_cost() : 0);
+}
+
+static void building_params_proto_first_img(js_State *J) {
+    const int type = building_params_this_type(J);
+    const xstring anim_key = js_helpers::js_to_value<xstring>(J, 1);
+    js_helpers::js_push_value(J, building_static_first_img_for_type(type, anim_key));
 }
 
 static void building_params_proto_toString(js_State *J) {
@@ -84,6 +102,7 @@ void js_register_building_params(js_State *J) {
 
     jsB_propf(J, js_intern("BuildingParams.prototype.__property_getter"), building_params_proto___property_getter, 1);
     jsB_propf(J, js_intern("BuildingParams.prototype.__cost"), building_params_proto___cost, 0);
+    jsB_propf(J, js_intern("BuildingParams.prototype.first_img"), building_params_proto_first_img, 1);
     jsB_propf(J, js_intern("BuildingParams.prototype.toString"), building_params_proto_toString, 0);
 
     js_newcconstructor(J, jsB_BuildingParams_for_type, jsB_BuildingParams_for_type, js_intern("BuildingParams"), 1);

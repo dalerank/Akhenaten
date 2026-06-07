@@ -36,7 +36,8 @@ function building_booth_on_place_checks(ev) {
 [es=(building_booth, ghost_preview)]
 function building_booth_ghost_preview(ev) {
     var pixel = ev.pixel
-    var building_size = building_booth.building_size
+    var params = city.get_building_params_by_type(BUILDING_BOOTH)
+    var building_size = params.building_size
 
     var orientation = __map_venue_build_orientation(ev.end, e_venue_mode_booth)
     if (orientation < 0) {
@@ -44,7 +45,7 @@ function building_booth_ghost_preview(ev) {
         return
     }
 
-    var square_id = __building_static_first_img(BUILDING_BOOTH, "square")
+    var square_id = params.first_img("square")
     for (var i = 0; i < building_size * building_size; i++) {
         var col = i % building_size
         var row = Math.floor(i / building_size)
@@ -55,7 +56,7 @@ function building_booth_ghost_preview(ev) {
         city.planner.draw_isometric_ghost(tile_pixel, square_id + i)
     }
 
-    var booth_id = __building_static_first_img(BUILDING_BOOTH, "booth")
+    var booth_id = params.first_img("booth")
     var off = building_booth.preview_booth_offsets[Math.floor(orientation / 2)]
     city.planner.draw_ghost({ x: pixel.x + off[0], y: pixel.y + off[1] }, booth_id)
 }

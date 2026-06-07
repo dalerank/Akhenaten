@@ -1,6 +1,6 @@
 log_info("akhenaten: building_params.js loaded")
 
-/* for_type, __property_getter, __cost, toString: native (js_register_building_params). */
+/* for_type, __property_getter, __cost, first_img, toString: native (js_register_building_params). */
 
 BuildingParams.property.cost = { get: function() { return this.__cost() } }
 BuildingParams.property.min_houses_coverage = { }

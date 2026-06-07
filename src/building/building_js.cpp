@@ -314,14 +314,6 @@ pcstr __building_static_text(int type, pcstr field) {
 }
 ANK_FUNCTION_2(__building_static_text)
 
-int __building_static_first_img(int type, xstring anim_key) {
-    if (type <= BUILDING_NONE || type >= BUILDING_MAX) {
-        return 0;
-    }
-    return building_static_params::get((e_building_type)type).first_img(anim_key);
-}
-ANK_FUNCTION_2(__building_static_first_img)
-
 void __building_tile_j(js_State *J) {
     const int bid = building_this_id(J);
     building* b = building_get(bid);
@@ -351,6 +343,14 @@ static void building_proto_toString(js_State *J) {
     char buf[64];
     snprintf(buf, sizeof buf, "Building(%d)", building_this_id(J));
     J->pushstring(buf);
+}
+
+int building_static_first_img_for_type(int type, xstring anim_key);
+static void building_proto_first_img(js_State *J) {
+    const int bid = building_this_id(J);
+    building *b = building_get(bid);
+    const xstring anim_key = js_helpers::js_to_value<xstring>(J, 1);
+    js_helpers::js_push_value(J, b ? building_static_first_img_for_type(b->type, anim_key) : 0);
 }
 
 static void jsB_new_Building(js_State *J) {
@@ -388,6 +388,7 @@ void js_register_building(js_State *J) {
     jsB_propf(J, js_intern("Building.prototype.common_spawn_figure_trigger"), __building_common_spawn_figure_trigger, 2);
     jsB_propf(J, js_intern("Building.prototype.create_figure_with_destination"), __building_create_figure_with_destination, 4);
     jsB_propf(J, js_intern("Building.prototype.add_workers"), __building_add_workers, 1);
+    jsB_propf(J, js_intern("Building.prototype.first_img"), building_proto_first_img, 1);
 
     jsB_propf(J, js_intern("Building.prototype.toString"), building_proto_toString, 0);
 
