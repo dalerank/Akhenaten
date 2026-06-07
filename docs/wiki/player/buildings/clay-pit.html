@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clay Pit — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .bld-header-grid { display: grid; grid-template-columns: auto 1fr; gap: 1.5rem; align-items: start; margin-bottom: 2rem; }
+    .bld-header-right { display: flex; flex-direction: column; gap: 1rem; }
+    .bld-image-wrap { text-align: center; }
+    .bld-image-wrap img { display: block; border: 1px solid var(--border); border-radius: 3px; image-rendering: pixelated; }
+    .bld-image-wrap figcaption { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.35rem; }
+    .bld-sprites { display: flex; gap: 0.75rem; align-items: flex-end; }
+    .bld-infobox { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.9rem 1.1rem; }
+    .bld-infobox h4 { margin: 0 0 0.6rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold); }
+    .bld-infobox dl { display: grid; grid-template-columns: auto 1fr; gap: 0.2rem 1rem; margin: 0; }
+    .bld-infobox dt { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; padding-top: 0.1rem; }
+    .bld-infobox dd { margin: 0; font-size: 0.85rem; color: var(--text); }
+    .bld-infobox .sep { grid-column: 1/-1; border: none; border-top: 1px solid var(--border); margin: 0.4rem 0; }
+    .bld-stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .bld-stat { text-align: center; }
+    .bld-stat .val { font-size: 1.3rem; font-weight: 700; color: var(--gold); display: block; }
+    .bld-stat .lbl { font-size: 0.7rem; color: var(--text-muted); }
+    .risk-low { color: #8aabdc; } .risk-med { color: #d09050; } .risk-none { color: var(--text-muted); }
+    .des-neg { color: #d07070; } .des-pos { color: #7ec87e; } .des-zero { color: var(--text-muted); }
+    .infobox-pair { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .infobox-pair .bld-infobox { flex: 1 1 220px; }
+
+    .net-diagram { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.8rem 1.1rem; margin: 1rem 0; font-size: 0.85rem; }
+    .net-diagram .net-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .net-diagram code { background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.15); border-radius: 2px; padding: 0.05rem 0.4rem; font-size: 0.8rem; color: var(--gold); }
+
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .kw { color: #c9a84c; } .num { color: #9ecbff; } .str { color: #7ec87e; } .cmt { color: #5a5650; font-style: italic; } .fn { color: #8aabdc; } .ev { color: #d0a0e0; } .ty { color: #d0a0e0; }
+    .file-ref { display: inline-block; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .bld-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .bld-nav a { color: var(--gold); }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">← All Buildings</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Industry</div>
+        <ul>
+          <li><a href="clay-pit.html" class="active">Clay Pit</a></li>
+          <li><a href="pottery-workshop.html">Pottery Workshop</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#mechanics">Mechanics</a></li>
+          <li><a href="#chain">Production chain</a></li>
+          <li><a href="#tips">Tips</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Buildings</a> /
+        Clay Pit
+      </div>
+
+      <h1>Clay Pit</h1>
+
+      <div class="bld-header-grid" style="grid-template-columns:1fr">
+        <figure class="bld-image-wrap">
+          <div class="bld-sprites">
+            <div>
+              <img src="claypit-building.webp" alt="Clay Pit building" width="118" height="60" />
+              <figcaption>Clay Pit</figcaption>
+            </div>
+            <div>
+              <img src="Cleo_ClayPit.webp" alt="Clay Pit work animation" width="118" height="70" />
+              <figcaption>Diggers at work (animated)</figcaption>
+            </div>
+          </div>
+        </figure>
+        <div class="bld-header-right">
+          <div>
+            <p>The <strong>Clay Pit</strong> is a raw-material extractor: it digs <strong>clay</strong> out of clay deposits along the Nile and ships it to workshops. Clay is the raw input for two of the city's earliest industries — the <a href="pottery-workshop.html">Pottery Workshop</a> (clay → pottery) and the Bricks Workshop (clay → bricks).</p>
+            <p>Like floodplain farms, a Clay Pit must sit on low ground beside the river, so it is <strong>swamped during the annual flood</strong>: while the Nile is in inundation the pit stops working, and a flooded pit cannot be demolished until the waters recede.</p>
+            <p>It is a 2×2 building and, like all extraction industry, it lowers the desirability of its surroundings — keep it well away from housing you want to evolve.</p>
+          </div>
+          <div class="infobox-pair">
+            <div class="bld-infobox">
+              <h4>Clay Pit</h4>
+              <div class="bld-stat-row" style="margin-bottom:0.9rem">
+                <div class="bld-stat"><span class="val">2×2</span><span class="lbl">Size</span></div>
+                <div class="bld-stat"><span class="val">8</span><span class="lbl">Workers</span></div>
+                <div class="bld-stat"><span class="val des-neg">−3</span><span class="lbl">Desirability</span></div>
+              </div>
+              <hr class="sep" />
+              <dl>
+                <dt>Cost (Normal)</dt>
+                <dd>30 Db</dd>
+                <dt>Cost by difficulty</dt>
+                <dd style="font-size:0.78rem;color:var(--text-muted)">
+                  VE 8 · Easy 15 · <strong style="color:var(--text)">Normal 30</strong> · Hard 50 · VH 100
+                </dd>
+                <dt>Labor category</dt>
+                <dd>Industry &amp; Commerce</dd>
+                <dt>Terrain</dt>
+                <dd>Clay deposits, near water</dd>
+                <dt>Produces</dt>
+                <dd>Clay</dd>
+                <dt>Fire / Damage risk</dt>
+                <dd><span class="risk-none">None</span> / <span class="risk-low">Low</span></dd>
+              </dl>
+            </div>
+            <div class="bld-infobox">
+              <h4>Output</h4>
+              <figure style="margin:0">
+                <img src="Cleo_ClayCommodity.webp" alt="Clay commodity" width="235" height="60" style="max-width:100%;border:1px solid var(--border);border-radius:3px;image-rendering:pixelated" />
+                <figcaption style="font-size:0.7rem;color:var(--text-muted);margin-top:0.35rem">Clay — the raw material</figcaption>
+              </figure>
+              <hr class="sep" />
+              <p style="font-size:0.8rem;color:var(--text-muted);margin:0">Each batch of clay is carried by a cartpusher to a Storage Yard, then drawn from there by a Pottery or Bricks workshop.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Overview ──────────────────────────────────────── -->
+      <h2 id="overview">Overview</h2>
+      <p>Clay was the foundation of everyday Egyptian craft — the material for pots, jars, and sun-dried mud bricks. In the game the Clay Pit is one of the very first extraction buildings a city builds, because the goods it feeds (pottery and bricks) are needed both for housing to evolve and for the earliest brick monuments.</p>
+      <p>The pit works the clay deposits that appear on the riverbank — visible on the resource overlay. Diggers extract clay continuously while the pit is staffed and the deposit beneath it still holds clay; a cartpusher then carries each finished load away to storage.</p>
+
+      <!-- ─── Mechanics ─────────────────────────────────────── -->
+      <h2 id="mechanics">Mechanics</h2>
+
+      <h3>Digging clay</h3>
+      <p>While the pit is staffed it searches the tiles under its footprint for the richest clay deposit and digs there, producing raw clay and <strong>depleting that deposit</strong> as it goes. Clay deposits are a finite map resource: if the ground beneath the pit runs dry, output stops even though the building is otherwise healthy. Place the pit over the thickest clay you can find.</p>
+
+      <h3>The flood</h3>
+      <p>Because clay sits on low riverbank ground, the Clay Pit is caught by the annual inundation. When the flood reaches it the pit is <strong>swamped</strong>: its workers are sent home, production halts, and it switches to a flooded sprite. A flooded pit <strong>cannot be demolished</strong> until the water recedes. With the optional collapse-cost rule enabled, a swamped pit also triggers a 250&nbsp;Db disaster expense. Once the flood passes the pit returns to work on its own.</p>
+
+      <h3>Output rate &amp; staffing</h3>
+      <p>Production speed depends on how fully the pit is staffed — a fully manned pit digs at its base rate, and output falls off as the worker percentage drops. Keep the pit connected by road to a housing block with spare labor, or it will throttle down.</p>
+
+      <h3>Risks</h3>
+      <p>The Clay Pit carries essentially <strong>no fire risk</strong> and only a low collapse (damage) risk, so it needs little fire-marshal or architect coverage compared with most industry. Its real hazard is the flood, not fire.</p>
+
+      <!-- ─── Production chain ───────────────────────────────── -->
+      <h2 id="chain">Production chain</h2>
+      <div class="net-diagram">
+        <div class="net-label">From a riverbank deposit to finished goods</div>
+        <code>Clay Pit</code> &nbsp;→&nbsp; digs raw clay<br>
+        &nbsp;&nbsp;&nbsp;↳ &nbsp;<code>Storage Yard</code> &nbsp;→&nbsp; stockpiles clay<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ &nbsp;<a href="pottery-workshop.html"><code>Pottery Workshop</code></a> &nbsp;→&nbsp; <a href="../resources/pottery.html">pottery</a> (housing evolution &amp; export)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ &nbsp;<code>Bricks Workshop</code> &nbsp;→&nbsp; bricks (brick monuments &amp; walls)
+      </div>
+      <p>Every leg runs on <a href="road.html">roads</a>: clay is carried from the pit to a Storage Yard, and from there the Pottery and Bricks workshops draw it as they need it. One clay pit is enough to keep a single workshop fed; if your workshops idle for lack of clay, add pit capacity or a second pit on another deposit. Clay can also be <strong>imported</strong> over a trade route when no local deposit is available.</p>
+
+      <h3>Info window</h3>
+      <p>Right-clicking the pit opens its info window, showing the workers employed, how much clay is in stock, and whether the pit is currently flooded or producing. It is the quickest way to spot a pit that has run its deposit dry or been caught by the flood.</p>
+      <figure class="bld-image-wrap" style="margin:1rem 0">
+        <img src="Cleo_ClayPitRC.webp" alt="Clay Pit right-click info window" width="300" height="229" />
+        <figcaption>Clay Pit right-click info window</figcaption>
+      </figure>
+
+      <!-- ─── Tips ──────────────────────────────────────────── -->
+      <h2 id="tips">Tips</h2>
+      <ul>
+        <li>Build the Clay Pit before its workshops — a Pottery or Bricks workshop with no clay just sits idle and wastes its workers.</li>
+        <li>Site the pit over the thickest clay deposit (check the resource overlay); deposits are finite and a thin one will run dry.</li>
+        <li>Expect the pit to stop every year during the flood. Plan a small clay buffer in a Storage Yard so workshops keep running while the pit is swamped.</li>
+        <li>Keep the pit close to a Storage Yard and its workshops to keep cartpusher trips short; long hauls slow the whole chain.</li>
+        <li>Industry drags desirability down (−3, fading over 2 tiles). Keep clay pits on the industrial, riverside edge of town, away from housing you want to evolve.</li>
+        <li>No local clay? Set up a clay import route instead — workshops will draw imported clay from the Storage Yard just the same.</li>
+      </ul>
+
+      <!-- ─── Developer reference ──────────────────────────── -->
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">All paths relative to the repository root.</p>
+
+        <details>
+          <summary>Building config — <code>src/scripts/building/config.js</code></summary>
+          <div class="details-body">
+            <p><span class="file-ref">src/scripts/building/config.js</span> defines <code>building_clay_pit</code> with its clay output, production rate, terrain need, and risk profile. The <code>cost</code> array is indexed by difficulty (VE · Easy · Normal · Hard · VH).</p>
+            <pre><code><span class="kw">building_clay_pit</span> {
+  <span class="kw">output</span> { resource : <span class="ty">RESOURCE_CLAY</span> }
+
+  <span class="kw">progress_max</span> : <span class="num">200</span>
+  <span class="kw">production_rate</span> : <span class="num">100</span>
+  <span class="kw">building_size</span> : <span class="num">2</span>
+  <span class="kw">labor_category</span> : <span class="ty">LABOR_CATEGORY_INDUSTRY_COMMERCE</span>
+  <span class="kw">cost</span> [ <span class="num">8</span>, <span class="num">15</span>, <span class="num">30</span>, <span class="num">50</span>, <span class="num">100</span> ]
+  <span class="kw">desirability</span> { value[<span class="num">-3</span>], step[<span class="num">1</span>], step_size[<span class="num">1</span>], range[<span class="num">2</span>] }
+  <span class="kw">laborers</span>[<span class="num">8</span>]  <span class="kw">fire_risk</span>[<span class="num">0</span>]  <span class="kw">damage_risk</span>[<span class="num">1</span>]
+  <span class="kw">needs</span> { nearby_water : <span class="kw">true</span> }   <span class="cmt">// must be placed beside the river</span>
+  <span class="kw">flags</span> { is_extractor: <span class="kw">true</span>, is_industry: <span class="kw">true</span> }
+  <span class="kw">info_sound</span> : <span class="str">"Wavs/clay.wav"</span>
+  <span class="kw">meta</span> { help_id: <span class="num">92</span>, text_id: <span class="num">121</span> }
+}</code></pre>
+          </div>
+        </details>
+
+        <details>
+          <summary>C++ implementation — <code>src/building/building_clay_pit.h / .cpp</code></summary>
+          <div class="details-body">
+            <p><span class="file-ref">src/building/building_clay_pit.h</span> declares <code>building_clay_pit</code> (inherits <code>building_industry</code>), registered with <code>BUILDING_METAINFO(BUILDING_CLAY_PIT, …)</code>. Its sound channel is <code>SOUND_CHANNEL_CITY_CLAY_PIT</code>. Notable overrides in <span class="file-ref">building_clay_pit.cpp</span>:</p>
+            <ul>
+              <li><code>update_production()</code> — scans the footprint for the richest clay tile via <code>map_get_clay()</code>, runs the shared <code>building_industry</code> production, then depletes that deposit with <code>map_clay_deplete()</code> by the progress gained. Stops if no clay remains under the pit.</li>
+              <li><code>on_before_flooded()</code> — sets <code>destroy_reason = e_destroy_flooded</code>, zeroes <code>num_workers</code> and progress; with <code>gameplay_change_random_mine_or_pit_collapses_take_money</code> enabled it emits a 250&nbsp;Db <code>event_finance_request</code>.</li>
+              <li><code>spawn_figure()</code> / <code>update_production()</code> — early-return while flooded, so a swamped pit dispatches no cartpushers and produces nothing.</li>
+              <li><code>update_graphic()</code> — shows the <code>"flooded"</code> animation while swamped, otherwise the normal work animation; <code>draw_ornaments_and_animations_height()</code> stacks the clay-pile sprite by stored amount.</li>
+              <li><code>is_deletable()</code> — returns <code>false</code> while flooded, so the player cannot demolish a swamped pit.</li>
+              <li><code>get_fire_risk()</code> — halves the configured fire risk when <code>gameplay_change_fire_risk_clay_pit_reduced</code> is enabled.</li>
+            </ul>
+          </div>
+        </details>
+
+      </div><!-- .dev-section -->
+
+      <div class="bld-nav">
+        <a href="index.html">← All Buildings</a>
+        <span style="color:var(--text-muted)">Industry</span>
+        <a href="pottery-workshop.html">Pottery Workshop →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+  <script src="../../../lightbox.js"></script>
+</body>
+</html>
