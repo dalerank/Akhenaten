@@ -991,6 +991,7 @@ building_marble_quarry {
     work { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16 }
   }
   meta { help_id:95, text_id:118 }
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   cost[ 15, 30, 50, 80, 150 ]
   desirability { value[-6], step[1], step_size[1], range[6] }
   laborers[12]
