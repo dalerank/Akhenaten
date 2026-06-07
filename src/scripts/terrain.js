@@ -5,6 +5,10 @@ terrain = {
         return __map_terrain_is(tile, mask)
     }
 
+    is_plaza_or_earthquake: function(tile) {
+        return __map_property_is_plaza_or_earthquake(tile)
+    }
+
     add: function(tile, mask) {
         __map_terrain_add(tile, mask)
     }

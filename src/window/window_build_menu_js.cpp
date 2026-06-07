@@ -15,6 +15,11 @@ void __ui_screen_city_clear_current_tile() {
 }
 ANK_FUNCTION(__ui_screen_city_clear_current_tile)
 
+tile2i __ui_screen_city_current_tile() {
+    return g_screen_city.current_tile;
+}
+ANK_FUNCTION(__ui_screen_city_current_tile)
+
 void __ui_city_planner_reset() {
     g_city_planner.reset();
 }

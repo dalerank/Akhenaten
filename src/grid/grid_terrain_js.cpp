@@ -1,4 +1,5 @@
 #include "grid/terrain.h"
+#include "grid/property.h"
 #include "grid/road_canal.h"
 #include "grid/point.h"
 #include "grid/grid.h"
@@ -14,6 +15,11 @@ bool __map_terrain_is(tile2i tile, int terrain_mask) {
     return map_terrain_is(tile, terrain_mask);
 }
 ANK_FUNCTION_2(__map_terrain_is)
+
+bool __map_property_is_plaza_or_earthquake(tile2i tile) {
+    return map_property_is_plaza_or_earthquake(tile);
+}
+ANK_FUNCTION_1(__map_property_is_plaza_or_earthquake)
 
 void __map_terrain_add(tile2i tile, int terrain) {
     map_terrain_add(tile, terrain);

@@ -178,6 +178,12 @@ int __building_at(int x, int y) {
 }
 ANK_FUNCTION_2(__building_at)
 
+int __building_main_id(int bid) {
+    building *b = building_get(bid);
+    return b ? b->main()->id : 0;
+}
+ANK_FUNCTION_1(__building_main_id)
+
 int __building_type(int bid) {
     building *b = building_get(bid);
     return (b && b->is_valid()) ? (int)b->type : 0;
