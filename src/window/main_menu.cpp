@@ -22,12 +22,6 @@
 #include "platform/renderer.h"
 
 main_menu_screen g_main_menu;
-int main_menu_screen::draw_background(UiFlags flags) {
-    autoconfig_window::draw_background(flags);
-
-    g_render.clear_screen();
-    return 0;
-}
 
 void main_menu_screen::show() {
     logs::info("[test-marker] main_menu_shown");
@@ -36,12 +30,11 @@ void main_menu_screen::show() {
 
     static window_type window = {
         "window_main_menu",
-        [] (int flags) { instance().draw_background(flags); },
-        [] (int flags) { instance().ui_draw_foreground(flags); },
-        [] (auto m, auto h) { instance().ui_handle_mouse(m); },
+        [] (int flags) { g_main_menu.draw_background(flags); },
+        [] (int flags) { g_main_menu.ui_draw_foreground(flags); },
+        [] (auto m, auto h) { g_main_menu.ui_handle_mouse(m); },
     };
 
-    instance().init();
     window_show(&window);
 }
 

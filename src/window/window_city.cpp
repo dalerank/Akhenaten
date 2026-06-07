@@ -23,7 +23,6 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "graphics/view/lookup.h"
-#include "grid/bookmark.h"
 #include "grid/grid.h"
 #include "scenario/scenario.h"
 #include "scenario/criteria.h"
@@ -34,6 +33,8 @@
 #include "window/file_dialog.h"
 #include "input/scroll.h"
 
+window_city g_window_city;
+
 static int center_in_city(int element_width_pixels) {
     vec2i view_pos, view_size;
     view_pos = g_camera.offset;
@@ -42,9 +43,15 @@ static int center_in_city(int element_width_pixels) {
     return view_pos.x + margin;
 }
 
-void window_city_draw_background(int) {
+int window_city::draw_background(UiFlags flags) {
     OZZY_PROFILER_FUNCTION();
+    autoconfig_window::draw_background(flags);
     widget_top_menu_draw();
+    return 0;
+}
+
+void window_city_draw_background(int) {
+    g_window_city.draw_background(UiFlags_None);
 }
 
 void window_city_draw_paused_and_time_left() {
@@ -186,10 +193,13 @@ static void cycle_legion(void) {
 bool city_has_loaded = false;
 
 void window_city_handle_hotkeys(const hotkeys* h) {
-
 }
 
-void window_city_handle_input(const mouse* m, const hotkeys* h) {
+int window_city::handle_mouse(const mouse* m) {
+    return 0;
+}
+
+void window_city::handle_input(const mouse* m, const hotkeys* h) {
     window_city_handle_hotkeys(h);
 
     if (!g_city_planner.in_progress) {
@@ -207,6 +217,7 @@ void window_city_draw_all() {
     window_city_draw_background(0);
     window_city_draw_foreground(0);
 }
+
 void window_city_draw_panels() {
     window_city_draw_background(0);
 }
@@ -219,21 +230,8 @@ void window_city_draw() {
     g_warning_manager.draw_foreground(0);
 }
 
-void window_city_init() {
+void window_city::init_city() {
     widget_sidebar_city_init();
-
-    events::subscribe([] (event_set_bookmark ev) {
-        tile2i center_p = g_camera.view_center;
-        g_city.bookmarks.set(ev.value - 1, center_p);
-    });
-
-    events::subscribe([] (event_goto_bookmark ev) {
-        tile2i p = g_city.bookmarks.get(ev.value - 1);
-        if (p.valid()) {
-            vec2i screen = g_camera.tile_to_screen(p);
-            g_camera.go_to_screen_tile(screen, true);
-        }
-    });
 
     events::subscribe([] (event_toggle_legion ev) {
         cycle_legion();
@@ -273,17 +271,24 @@ void window_city_init() {
     });
 }
 
-void window_city_show() {
+window_city &window_city::instance() {
+    return g_window_city;
+}
+
+void window_city::show() {
     static window_type window = {
         "window_city",
-        window_city_draw_background,
+        [](int flags) { instance().draw_background(flags); },
         window_city_draw_foreground,
-        window_city_handle_input,
-        [] (auto c) { g_screen_city.draw_tooltip(c); }
+        [](const mouse *m, const hotkeys *h) { instance().handle_input(m, h); },
+        [](tooltip_context *c) { g_screen_city.draw_tooltip(c); }
     };
 
-    window_city_init();
+    instance().init_city();
     window_show(&window);
     city_has_loaded = false;
 }
 
+void window_city_show() {
+    window_city::show();
+}

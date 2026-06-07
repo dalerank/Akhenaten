@@ -214,6 +214,11 @@ city {
     start_foreign_army_invasion : __city_start_foreign_army_invasion
     camera_go_to : __city_camera_go_to
     allowed_foods : __city_allowed_foods
+
+    bookmarks {
+        set : __city_bookmark_set
+        get : __city_bookmark_get
+    }
 }
 
 function city_resource_view(resource_id) {

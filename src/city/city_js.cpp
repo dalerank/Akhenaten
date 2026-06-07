@@ -250,6 +250,12 @@ ANK_FUNCTION_2(__city_get_labor_category_property)
 
 void __city_camera_go_to(tile2i tile) { g_camera.go_to_mappoint(tile); } ANK_FUNCTION_1(__city_camera_go_to)
 
+void __city_bookmark_set(int index, tile2i tile) { g_city.bookmarks.set(index, tile); }
+ANK_FUNCTION_2(__city_bookmark_set)
+
+tile2i __city_bookmark_get(int index) { return g_city.bookmarks.get(index); }
+ANK_FUNCTION_1(__city_bookmark_get)
+
 e_resource __city_allowed_foods(int index) { return g_city.allowed_foods(index); }
 ANK_FUNCTION_1(__city_allowed_foods)
 

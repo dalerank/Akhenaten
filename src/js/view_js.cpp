@@ -22,6 +22,7 @@ ANK_GLOBAL_OBJECT(g_camera, __camera,
     camera_max_tile,
     camera_max_pixel_offset,
     scroll_min_screentile,
+    view_center,
     offset,
     size_pixels,
     size_tiles,
@@ -34,6 +35,15 @@ ANK_GLOBAL_OBJECT(g_camera, __camera,
     mouse_tile_pixel,
     orientation
 );
+
+void __camera_go_to_bookmark_tile(tile2i tile) {
+    if (!tile.valid()) {
+        return;
+    }
+    vec2i screen = g_camera.tile_to_screen(tile);
+    g_camera.go_to_screen_tile(screen, true);
+}
+ANK_FUNCTION_1(__camera_go_to_bookmark_tile)
 
 vec2i __camera_scroll_min() {
     return g_camera.get_scrollable_pixel_limits().min;

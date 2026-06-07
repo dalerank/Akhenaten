@@ -90,6 +90,8 @@ ANK_SCRIPT_EVENT(event_building_menu_update, stage)
 ANK_SCRIPT_EVENT(event_building_menu_changed, temp)
 ANK_SCRIPT_EVENT(event_use_building, type, en)
 ANK_SCRIPT_EVENT(event_religion_god_status_update, god, status)
+ANK_SCRIPT_EVENT(event_set_bookmark, value)
+ANK_SCRIPT_EVENT(event_goto_bookmark, value)
 
 int js_emit_script_event(pcstr event_name, const bvariant_map &args) {
     auto it = g_script_emit_handlers.find(event_name);
