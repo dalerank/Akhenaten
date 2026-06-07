@@ -85,3 +85,8 @@ tile2i __screen_to_tile(vec2i screen) {
 }
 ANK_FUNCTION_1(__screen_to_tile);
 
+vec2i __camera_tile_to_screen(vec2i tile) {
+    return g_camera.tile_to_screen(tile2i(tile.x, tile.y));
+}
+ANK_FUNCTION_1(__camera_tile_to_screen);
+

@@ -18,7 +18,14 @@
 ANK_GLOBAL_OBJECT(g_city_planner, __city_planner,
     build_type,
     in_progress,
+    draw_as_constructing,
     construction_update_items,
+    absolute_orientation,
+    relative_orientation,
+    building_variant,
+    start,
+    end,
+    total_cost,
     global_rotation,
     road_orientation
 );
