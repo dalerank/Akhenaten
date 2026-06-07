@@ -466,12 +466,11 @@ city.find_monuments = function(tile, radius) {
 }
 
 city.get_building_params = function(building_id) {
-    return {
-        id: building_id
-        __property_getter: function(property) { return __building_get_params_property(this.id, property) }
+    return BuildingParams.for_type(__building_type(building_id))
+}
 
-        @min_houses_coverage { }
-    }
+city.get_building_params_by_type = function(type) {
+    return BuildingParams.for_type(type)
 }
 
 city.get_building = function(building_id) {

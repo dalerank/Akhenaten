@@ -6,7 +6,9 @@
 #include "game/game.h"
 #include "game/undo.h"
 #include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "graphics/view/view.h"
+#include "grid/orientation.h"
 #include "grid/routing/routing.h"
 #include "building/construction/routed.h"
 #include "grid/image.h"
@@ -86,6 +88,30 @@ void __city_planner_draw_ghost(vec2i pixel, int image_id) {
     g_city_planner.draw_building_ghost(ctx, image_id, pixel);
 }
 ANK_FUNCTION_2(__city_planner_draw_ghost);
+
+int __map_venue_build_orientation(tile2i tile, int mode) {
+    int orientation = 0;
+    const bool ok = map_orientation_for_venue_with_map_orientation(tile, (e_venue_mode_orientation)mode, &orientation);
+    if (!ok) {
+        return -1;
+    }
+    return abs(orientation + (8 - g_camera.orientation)) % 8;
+}
+ANK_FUNCTION_2(__map_venue_build_orientation);
+
+void __city_planner_draw_flat_tiles(vec2i pixel, int count) {
+    painter ctx = game.painter();
+    for (int i = 0; i < count; i++) {
+        g_city_planner.draw_flat_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
+    }
+}
+ANK_FUNCTION_2(__city_planner_draw_flat_tiles);
+
+void __city_planner_draw_isometric_ghost(vec2i pixel, int image_id) {
+    painter ctx = game.painter();
+    ctx.img_isometric(image_id, pixel, COLOR_MASK_GREEN, 1.f, ImgFlag_None);
+}
+ANK_FUNCTION_2(__city_planner_draw_isometric_ghost);
 
 vec2i __lookup_tile_to_pixel(tile2i t) {
     return g_camera.lookup_tile_to_pixel(t);

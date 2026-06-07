@@ -7,6 +7,10 @@ building_booth {
         juggler { pos [35, 17], pack:PACK_SPR_AMBIENT, id:7, offset:-1 },
     }
 
+    preview_booth_offsets : [
+        [0, 0], [30, 15], [0, 30], [-30, 15]
+    ]
+
     min_houses_coverage : 100
     labor_category : LABOR_CATEGORY_ENTERTAINMENT
     meta { help_id:71, text_id:72 }
@@ -27,4 +31,31 @@ building_booth {
 function building_booth_on_place_checks(ev) {
     var has_juggler_school = city.count_active_buildings(BUILDING_JUGGLER_SCHOOL) > 0
     city.warnings.show_if_not(has_juggler_school, "#build_juggling_school")
+}
+
+[es=(building_booth, ghost_preview)]
+function building_booth_ghost_preview(ev) {
+    var pixel = ev.pixel
+    var building_size = building_booth.building_size
+
+    var orientation = __map_venue_build_orientation(ev.end, e_venue_mode_booth)
+    if (orientation < 0) {
+        city.planner.draw_flat_tiles(pixel, building_size * building_size)
+        return
+    }
+
+    var square_id = __building_static_first_img(BUILDING_BOOTH, "square")
+    for (var i = 0; i < building_size * building_size; i++) {
+        var col = i % building_size
+        var row = Math.floor(i / building_size)
+        var tile_pixel = {
+            x: pixel.x + (col - row) * 30,
+            y: pixel.y + (col + row) * 15 - 15
+        }
+        city.planner.draw_isometric_ghost(tile_pixel, square_id + i)
+    }
+
+    var booth_id = __building_static_first_img(BUILDING_BOOTH, "booth")
+    var off = building_booth.preview_booth_offsets[Math.floor(orientation / 2)]
+    city.planner.draw_ghost({ x: pixel.x + off[0], y: pixel.y + off[1] }, booth_id)
 }

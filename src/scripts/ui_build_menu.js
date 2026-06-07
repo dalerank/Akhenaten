@@ -175,7 +175,12 @@ function build_menu_widget_ui_draw_foreground(window) {
         __ui_draw_label_ex(label_str, [btn_pos.x + build_menu_widget.btn_text_w_offset.x, btn_pos.y + build_menu_widget.btn_text_w_offset.y],
             font, UiFlags_None, build_menu_widget.btn_text_w_size.x)
 
-        var cost = (type == BUILDING_MENU_FORTS) ? 0 : __building_static_cost(type)
+        var cost = 0
+        if (type != BUILDING_MENU_FORTS) {
+            var params = city.get_building_params_by_type(type)
+            cost = params.cost
+        }
+
         if (cost > 0) {
             var cost_x = x_offset + build_menu_widget.btn_w_cost_offset - build_menu_widget.btn_w_tot_offset
             var cost_y = y_offset + build_menu_widget.btn_w_start_pos.y + build_menu_widget.btn_text_w_offset.y + item.size.y * i

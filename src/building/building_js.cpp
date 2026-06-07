@@ -254,11 +254,6 @@ static void building_proto___property_setter(js_State *J) {
     }
 }
 
-std::optional<bvariant> __building_get_params_property(int bid, pcstr property) {
-    return archive_helper::get(building_get(bid)->params(), property, true);
-}
-ANK_FUNCTION_2(__building_get_params_property)
-
 void __building_meta_text_id(js_State *J) {
     const int bid = building_this_id(J);
     js_helpers::js_push_value<int>(J, building_get(bid)->params().meta.text_id);
@@ -319,10 +314,13 @@ pcstr __building_static_text(int type, pcstr field) {
 }
 ANK_FUNCTION_2(__building_static_text)
 
-int __building_static_cost(int type) {
-    return building_static_params::get((e_building_type)type).get_cost();
+int __building_static_first_img(int type, xstring anim_key) {
+    if (type <= BUILDING_NONE || type >= BUILDING_MAX) {
+        return 0;
+    }
+    return building_static_params::get((e_building_type)type).first_img(anim_key);
 }
-ANK_FUNCTION_1(__building_static_cost)
+ANK_FUNCTION_2(__building_static_first_img)
 
 void __building_tile_j(js_State *J) {
     const int bid = building_this_id(J);

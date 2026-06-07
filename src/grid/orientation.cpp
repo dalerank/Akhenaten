@@ -27,7 +27,11 @@
 #include "grid/water.h"
 #include "grid/canals.h"
 #include "image.h"
+#include "js/js_game.h"
 #include <scenario/map.h>
+
+using e_venue_mode_tokens_t = token_holder<e_venue_mode_orientation, e_venue_mode_booth, e_venue_mode_festival_square>;
+const e_venue_mode_tokens_t ANK_CONFIG_ENUM(e_venue_mode_tokens);
 
 static void determine_leftmost_tile() {
     int orientation = g_camera.orientation;

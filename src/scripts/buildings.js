@@ -2,6 +2,7 @@ log_info("akhenaten: load buildings started")
 
 import building.config
 import building.prototype
+import building.building_params
 import building.bazaar
 import building.dock
 import building.shipyard

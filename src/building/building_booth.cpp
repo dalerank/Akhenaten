@@ -11,7 +11,6 @@
 #include "io/gamefiles/lang.h"
 #include "game/game_config.h"
 #include "grid/building_tiles.h"
-#include "grid/orientation.h"
 #include "grid/property.h"
 #include "grid/building.h"
 #include "grid/figure.h"
@@ -19,7 +18,6 @@
 #include "window/building/common.h"
 #include "window/building/figures.h"
 #include "widget/city/ornaments.h"
-#include "widget/city/building_ghost.h"
 #include "sound/sound_building.h"
 #include "figuretype/figure_entertainer.h"
 #include "city/city_labor.h"
@@ -48,36 +46,6 @@ bool building_booth::get_route_citizen_land_type(int grid_offset, int &land_resu
 
 bool building_booth::target_route_tile_blocked(int grid_offset) const {
     return false;
-}
-
-void building_booth::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
-    const auto &params = building_static_params::get(planer.build_type);
-    int orientation = 0;
-
-    bool can_build = map_orientation_for_venue_with_map_orientation(end, e_venue_mode_booth, &orientation);
-    // TODO: proper correct for map orientation (for now, just use a different orientation)
-    orientation = abs(orientation + (8 - g_camera.orientation)) % 8;
-
-    if (!can_build) { // no can place
-        for (int i = 0; i < params.building_size * params.building_size; i++) {
-            planer.draw_flat_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
-        }
-    } else { // can place (theoretically)
-        int square_id = params.first_img(animkeys().square);
-        for (int i = 0; i < params.building_size * params.building_size; i++) {
-            const int x = ((i % params.building_size) - (i / params.building_size)) * 30;
-            const int y = ((i % params.building_size) + (i / params.building_size)) * 15 - 15;
-            ctx.img_isometric(square_id + i, pixel + vec2i{ x, y }, COLOR_MASK_GREEN, 1.f, ImgFlag_None);
-        }
-
-        const int booth = params.first_img(animkeys().booth);
-        switch (orientation / 2) {
-        case 0: planer.draw_building_ghost(ctx, booth, pixel, COLOR_MASK_GREEN); break;
-        case 1: planer.draw_building_ghost(ctx, booth, pixel + vec2i{ 30, 15 }, COLOR_MASK_GREEN); break;
-        case 2: planer.draw_building_ghost(ctx, booth, pixel + vec2i{ 0, 30 }, COLOR_MASK_GREEN); break;
-        case 3: planer.draw_building_ghost(ctx, booth, pixel + vec2i{ -30, 15 }, COLOR_MASK_GREEN); break;
-        }
-    }
 }
 
 void building_booth::preview::setup_preview_graphics(build_planner &planer) const {

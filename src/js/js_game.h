@@ -912,6 +912,7 @@ void js_register_empire_city_proto(js_State* J);
 void js_register_mission_objects(js_State *J);
 void js_register_city_objects(js_State *J);
 void js_register_building(js_State *J);
+void js_register_building_params(js_State *J);
 void js_register_imperial_visible_request(js_State *J);
 void js_register_house(js_State *J);
 void js_register_temple_complex_building(js_State *J);

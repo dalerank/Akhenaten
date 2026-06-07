@@ -907,6 +907,7 @@ void js_reset_vm_state() {
     js_register_empire_objects(vm.J);
     js_register_city_objects(vm.J);
     js_register_building(vm.J);
+    js_register_building_params(vm.J);
     js_register_imperial_visible_request(vm.J);
     js_register_house(vm.J);
     js_register_temple_complex_building(vm.J);
