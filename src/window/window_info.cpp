@@ -334,7 +334,7 @@ void common_info_window::update_buttons(object_info &c) {
     auto first_advisor = ui["first_advisor"].dcast_image_button();
     if (first_advisor) {
         first_advisor->enabled = c.go_to_advisor.first && g_city.is_advisor_available(c.go_to_advisor.first);
-        first_advisor->img_desc.offset = (c.go_to_advisor.left_a - 1) * 3;
+        first_advisor->image((c.go_to_advisor.first - 1) * 3);
         first_advisor->pos.y = bgsize.y - 40;
         first_advisor->onclick([&c] {
             events::emit(event_show_advisor{(e_advisor)c.go_to_advisor.first});
@@ -348,7 +348,7 @@ void common_info_window::update_buttons(object_info &c) {
     auto second_advisor = ui["second_advisor"].dcast_image_button();
     if (second_advisor) {
         second_advisor->enabled = c.go_to_advisor.left_a && g_city.is_advisor_available(c.go_to_advisor.left_a);
-        second_advisor->img_desc.offset = (c.go_to_advisor.left_a - 1) * 3;
+        second_advisor->image((c.go_to_advisor.left_a - 1) * 3);
         second_advisor->pos.y = bgsize.y - 40;
         second_advisor->onclick([&c] {
             events::emit(event_show_advisor{(e_advisor)c.go_to_advisor.left_a});
@@ -362,7 +362,7 @@ void common_info_window::update_buttons(object_info &c) {
     auto third_advisor = ui["third_advisor"].dcast_image_button();
     if (third_advisor) {
         third_advisor->enabled = c.go_to_advisor.left_b && g_city.is_advisor_available(c.go_to_advisor.left_b);
-        third_advisor->img_desc.offset = (c.go_to_advisor.left_b - 1) * 3;
+        third_advisor->image((c.go_to_advisor.left_b - 1) * 3);
         third_advisor->pos.y = bgsize.y - 40;
         third_advisor->onclick([&c] {
             events::emit(event_show_advisor{(e_advisor)c.go_to_advisor.left_b});

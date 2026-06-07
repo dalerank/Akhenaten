@@ -37,7 +37,7 @@ info_window_temple_complex {
         show_overlay : button({ margin{right:-64, bottom:-40}, size[23, 23]})
         god_image    : image({ pos[190, 134] })
 
-        mothball     : button({ 
+        mothball     : button({
                                 margin{right:-90, bottom:-40}, size[23, 23]
                                 textfn:building_info_window_text_mothball
                                 onclick: building_info_window_toggle_mothball

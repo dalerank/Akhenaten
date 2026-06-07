@@ -47,6 +47,7 @@ building_cattle_ranch {
   laborers[12]
   fire_risk[1]
   damage_risk[2]
+  info_advisors [ADVISOR_LABOR]
   flags {
     is_food: true
   }
@@ -108,6 +109,7 @@ building_stonemason_guild = {
   cost: [ 30, 50, 80, 100, 150 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
   laborers:[12], fire_risk:[0], damage_risk: [1]
+  info_advisors [ADVISOR_LABOR]
   flags {
     is_guild: true
     is_industry: true
@@ -132,6 +134,7 @@ building_bricklayers_guild = {
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
   laborers:[10], fire_risk:[2], damage_risk: [2]
   max_workers : 1
+  info_advisors [ADVISOR_LABOR]
   flags {
     is_guild: true
     is_industry: true
@@ -149,6 +152,7 @@ building_carpenters_guild = {
   cost : [ 10, 15, 30, 50, 100 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
   laborers:[8], fire_risk:[4], damage_risk: [2]
+  info_advisors [ADVISOR_LABOR]
   flags {
     is_guild: true
     is_industry: true

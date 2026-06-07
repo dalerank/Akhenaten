@@ -945,9 +945,9 @@ namespace ui {
         }
         virtual void tooltip(textid t) override { _tooltip = ui::str(t); }
         virtual void tooltip(const xstring& t) override { _tooltip = t; }
-        virtual void image(const image_desc& d) override { img_desc = d; }
+        virtual void image(const image_desc& d) override { img_desc = d; offsets.data[0] = d.offset; }
         virtual void image(const animation_t& d) override;
-        virtual void image(int v) override { img_desc.offset = v; }
+        virtual void image(int v) override { img_desc.offset = v; offsets.data[0] = v; }
 
         virtual eimage_button* dcast_image_button() override { return this; }
 

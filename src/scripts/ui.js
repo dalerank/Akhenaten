@@ -24,6 +24,7 @@ import ui_advisor_religion
 import ui_advisor_finance
 import ui_advisor_health
 import ui_records_window
+import ui_building_info_window
 import ui_widgets
 import ui_bazaar_orders_window
 import ui_bazaar_window
@@ -40,6 +41,7 @@ import ui_advisor_education
 import ui_advisor_imperial
 import ui_workshop_window
 import ui_brickworks_window
+import ui_bricklayers_guild_window
 import ui_carpenters_guild_window
 import ui_stonemason_guild_window
 import ui_garden_info

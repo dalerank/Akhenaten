@@ -27,6 +27,7 @@ building_brewery {
   laborers[12]
   fire_risk[4]
   damage_risk[2]
+  info_advisors [ADVISOR_LABOR]
   flags {
     is_workshop: true
     is_industry: true
@@ -53,6 +54,7 @@ building_weaver = {
   cost: [ 16, 30, 50, 100, 150 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
   laborers:[12], fire_risk:[4], damage_risk: [3]
+  info_advisors [ADVISOR_LABOR]
   flags {
     is_workshop: true
     is_industry: true
@@ -80,6 +82,7 @@ building_weaponsmith = {
   cost: [ 24, 40, 80, 120, 150 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
   laborers:[12], fire_risk:[4], damage_risk: [2]
+  info_advisors [ADVISOR_LABOR, ADVISOR_MILITARY]
   flags {
     is_workshop: true
     is_industry: true
@@ -106,6 +109,7 @@ building_jewels_workshop = {
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
   laborers:[12], fire_risk:[4], damage_risk: [0]
   material_reduction_per_nearby_workshop : 5
+  info_advisors [ADVISOR_LABOR]
   flags {
     is_workshop: true
     is_industry: true
@@ -134,6 +138,7 @@ building_papyrus_maker = {
   cost: [ 20, 30, 50, 100, 200 ]
   desirability : { value:[-4], step:[1], step_size:[1], range: [4] }
   laborers:[12], fire_risk:[4], damage_risk: [2]
+  info_advisors [ADVISOR_LABOR]
   flags {
     is_workshop: true
     is_industry: true
@@ -165,6 +170,7 @@ building_bricks_workshop = {
   cost: [ 12, 20, 30, 40, 50 ]
   desirability : { value:[-4], step:[1], step_size:[1], range: [4] }
   laborers:[12], fire_risk:[2], damage_risk: [3]
+  info_advisors [ADVISOR_LABOR]
   flags {
     is_workshop: true
     is_industry: true
@@ -193,6 +199,7 @@ building_chariots_workshop = {
   cost: [ 50, 100, 150, 300, 500 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [6] }
   laborers:[30], fire_risk:[4], damage_risk: [3]
+  info_advisors [ADVISOR_LABOR, ADVISOR_MILITARY]
   flags {
     is_workshop: true
     is_industry: true
@@ -223,6 +230,7 @@ building_lamp_workshop {
   laborers [12]
   fire_risk [4]
   damage_risk [3]
+  info_advisors [ADVISOR_LABOR]
   flags {
     is_workshop: true
     is_industry: true

@@ -705,7 +705,7 @@ image_button& ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_b
     }
 
     int image_id = image_id_from_group(ibutton.image_collection, ibutton.image_group) + ibutton.image_offset;
-    if (image_id > 0) {
+    if (image_id >= 0 && image_get(image_id)) {
         if (ibutton.enabled) {
             const int offset = (ibutton.pressed || force_pressed) ? 2 : ibutton.hovered ? 1 : 0;
             image_id += offset ? offsets.data[offset] : 0;
@@ -1517,17 +1517,9 @@ void ui::eimage_button::load(archive arch, element* parent, items& elems) {
 
 void ui::eimage_button::draw(UiFlags gflags) {
     scr_pos = g_state.offset() + pos;
-    UiFlags flags = gflags | (_selected ? UiFlags_Selected : UiFlags_None);
-    flags |= (readonly ? UiFlags_Readonly : UiFlags_None);
-    flags |= (!!(darkened & UiFlags_Grayscale) ? UiFlags_Grayscale : UiFlags_None);
-    flags |= (composite ? UiFlags_Composite : UiFlags_None);
-
-    const int resolved_image_id = img_desc.tid();
-    if (!img_desc.path.empty() && resolved_image_id >= 0) {
-        offsets.data[0] = img_desc.offset;
-    }
 
     vec2i tsize = size;
+    const int resolved_image_id = img_desc.tid();
     if (resolved_image_id >= 0) {
         const image_t* img_ptr = image_get(resolved_image_id);
         if (img_ptr) {
@@ -1535,6 +1527,16 @@ void ui::eimage_button::draw(UiFlags gflags) {
             tsize.y = size.y > 0 ? size.y : img_ptr->height;
         }
     }
+
+    if (!enabled) {
+        fire_ui_hover_edge(*this, false, _hover_prev);
+        return;
+    }
+
+    UiFlags flags = gflags | (_selected ? UiFlags_Selected : UiFlags_None);
+    flags |= (readonly ? UiFlags_Readonly : UiFlags_None);
+    flags |= (!!(darkened & UiFlags_Grayscale) ? UiFlags_Grayscale : UiFlags_None);
+    flags |= (composite ? UiFlags_Composite : UiFlags_None);
 
     image_button* btn = nullptr;
     if (resolved_image_id >= 0) {

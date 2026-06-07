@@ -1,16 +1,15 @@
-log_info("akhenaten: ui stonemason guild info window started")
+log_info("akhenaten: ui bricklayers guild info window started")
 
 [es=building_info_window]
-stonemason_guild_info_window {
-    related_buildings [BUILDING_STONEMASONS_GUILD]
+bricklayers_guild_info_window {
+    related_buildings [BUILDING_BRICKLAYERS_GUILD]
     ui : baseui(workshop_info_window, {
 
     })
 }
 
-[es=(stonemason_guild_info_window, init)]
-function stonemason_guild_info_window_on_init(window) {
-    __log_marker("window_show:stonemason_guild_info_window")
+[es=(bricklayers_guild_info_window, init)]
+function bricklayers_guild_info_window_on_init(window) {
     var b = city.get_building(window.bid)
     window.mothball.enabled = game_features.gameui_building_mothball_button && b.max_workers && b.max_workers > 0
     window.mothball.tooltip = __loc(54, b.state == 1 ? 16 : 17)
@@ -23,6 +22,8 @@ function stonemason_guild_info_window_on_init(window) {
         reason.id = 4
     } else if (b.num_workers <= 0) {
         reason.id = 5
+    } else if (b.first_material_stored < 100) {
+        reason.id = 11
     } else {
         reason.id = Math.approximate_value(b.worker_percentage / 100.0, [10, 9, 8, 7, 6])
     }

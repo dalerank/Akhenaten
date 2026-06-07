@@ -32,6 +32,7 @@ building_pottery {
     laborers[12]
     fire_risk[4]
     damage_risk[3]
+    info_advisors [ADVISOR_LABOR]
     flags {
         is_workshop: true
         is_industry: true

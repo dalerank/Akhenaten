@@ -40,6 +40,8 @@ int building_info_window::window_info_handle_mouse(const mouse *m, object_info &
 void building_info_window::archive_load(archive arch) {
     common_info_window::archive_load(arch);
     arch.r("first_advisor", first_advisor);
+    arch.r("second_advisor", second_advisor);
+    arch.r("third_advisor", third_advisor);
     arch.r("related_buildings", related_buildings);
     arch.r("help_id", help_id);
 
@@ -179,9 +181,15 @@ void building_info_window::init(object_info &c) {
 
     window_message_setup_help_id(correct_help_id);
 
-    c.go_to_advisor.first = ADVISOR_NONE;
+    c.go_to_advisor = {ADVISOR_NONE, ADVISOR_NONE, ADVISOR_NONE};
     if (first_advisor != ADVISOR_NONE) {
         c.go_to_advisor.first = first_advisor;
+    }
+    if (second_advisor != ADVISOR_NONE) {
+        c.go_to_advisor.left_a = second_advisor;
+    }
+    if (third_advisor != ADVISOR_NONE) {
+        c.go_to_advisor.left_b = third_advisor;
     }
 
     if (c.can_play_sound) {

@@ -102,6 +102,19 @@ bool __building_is_protected_by_police(int bid) {
 }
 ANK_FUNCTION_1(__building_is_protected_by_police)
 
+int __building_first_material_stored(int bid) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return 0;
+    }
+    const e_resource resource = b->input.resource;
+    if (resource == RESOURCE_NONE) {
+        return 0;
+    }
+    return b->stored_amount(resource);
+}
+ANK_FUNCTION_1(__building_first_material_stored)
+
 int __building_des_influence_value(int bid) {
     return (int)building_get(bid)->des_influence.value;
 }
