@@ -96,16 +96,22 @@ void windows_manager_t::update_input_after() {
     auto& data = g_window_manager;
     reset_touches(0);
     mouse::ref().reset_scroll();
-    input_cursor_update(data.current_window->id);
+    if (data.current_window) {
+        input_cursor_update(data.current_window->id);
+    }
     hotkey_reset_state();
 }
 
 void windows_manager_t::handle_input(const mouse *m, const hotkeys *h) {
-    current_window->handle_input(m, h);
+    if (current_window) {
+        current_window->handle_input(m, h);
+    }
 }
 
 void windows_manager_t::handle_tooltip(const mouse *m) {
-    tooltip_handle(m, current_window->draw_tooltip);
+    if (current_window) {
+        tooltip_handle(m, current_window->draw_tooltip);
+    }
 }
 
 void window_draw(int force) {
@@ -118,6 +124,9 @@ void window_draw(int force) {
     }
 
     window_type* w = data.current_window;
+    if (!w) {
+        return;
+    }
 
     {
         OZZY_PROFILER_SECTION(_, "Render/Frame/Refresh");
