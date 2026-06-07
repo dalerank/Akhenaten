@@ -49,6 +49,7 @@ import mission_debug
 import gametime_debug
 import camera_debug
 import build_planner_debug
+import sound_debug
 import game_features_debug
 import houses
 import routing
