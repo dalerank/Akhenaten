@@ -49,7 +49,7 @@ static void decrease_queue_index(void) {
 }
 
 bool windows_manager_t::window_is(xstring id) {
-    return current_window->id == id;
+    return current_window && current_window->id == id;
 }
 
 xstring window_get_id() {
