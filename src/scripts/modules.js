@@ -43,14 +43,8 @@ import desirability
 import kingdome_relation
 import floodplain
 import clouds
-import clouds_debug
 import ui
-import mission_debug
-import gametime_debug
-import camera_debug
-import build_planner_debug
-import sound_debug
-import game_features_debug
+import debug
 import houses
 import routing
 import economic
