@@ -55,6 +55,7 @@ function building_library_update_graphic(ev) {
 
 
 building_academy {
+  show_in_debug: false
   animations {
     _pack { pack:PACK_GENERAL }
     preview { id:44 }

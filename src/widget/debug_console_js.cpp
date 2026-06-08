@@ -91,6 +91,7 @@ static void __debug_props_show(js_State *J) {
     if (js_isboolean(J, val_idx)) {
         bool v = js_toboolean(J, val_idx);
         game_debug_show_property(field, v);
+        js_pushboolean(J, v);
         return;
     }
 

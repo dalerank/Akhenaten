@@ -5,6 +5,7 @@
 #include "city/constants.h"
 #include "empire/empire.h"
 #include "building/building_house.h"
+#include "building/building_type.h"
 #include "grid/grid.h"
 #include "core/log.h"
 #include "game/game_events.h"
@@ -15,7 +16,6 @@
 #include "game/resource.h"
 #include "core/profiler.h"
 #include "core/svector.h"
-
 #include <optional>
 
 static svector<building_id, 512> g_city_monuments_advisor_cache;

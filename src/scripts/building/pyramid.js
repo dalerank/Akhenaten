@@ -48,8 +48,8 @@ building_small_stepped_pyramid {
   }
 
   // Pyramid part buildings - all parts use same config as main pyramid
-  building_small_stepped_pyramid_corner = building_small_stepped_pyramid
-  building_small_stepped_pyramid_wall = building_small_stepped_pyramid
+  building_small_stepped_pyramid_corner { show_in_debug: false }
+  building_small_stepped_pyramid_wall { show_in_debug: false }
   building_small_stepped_pyramid_cone = building_small_stepped_pyramid
 
   building_medium_stepped_pyramid {
@@ -219,6 +219,6 @@ building_small_stepped_pyramid {
     // todo
   }
 
-  building_medium_stepped_pyramid_corner = building_medium_stepped_pyramid
-  building_medium_stepped_pyramid_wall = building_medium_stepped_pyramid
+  building_medium_stepped_pyramid_corner { show_in_debug: false }
+  building_medium_stepped_pyramid_wall { show_in_debug: false }
   building_medium_stepped_pyramid_cone = building_medium_stepped_pyramid

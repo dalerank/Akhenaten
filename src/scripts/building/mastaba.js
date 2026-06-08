@@ -57,9 +57,9 @@ building_small_mastaba {
     ]
   }
 
-  building_small_mastaba_part_side = building_small_mastaba
-  building_small_mastaba_part_wall = building_small_mastaba
-  building_small_mastaba_part_entrance = building_small_mastaba
+  building_small_mastaba_part_side { show_in_debug: false }
+  building_small_mastaba_part_wall { show_in_debug: false }
+  building_small_mastaba_part_entrance { show_in_debug: false }
 
   building_medium_mastaba  {
     animations {
@@ -126,7 +126,7 @@ building_small_mastaba {
         { type: BUILDING_MEDIUM_MASTABA_SIDE, offset[2, 0] },      { type: BUILDING_MEDIUM_MASTABA_SIDE, offset[4, -2] },   { type: BUILDING_MEDIUM_MASTABA, offset[-1, -1], base:true }
     ]
   }
-  
-  building_medium_mastaba_part_side = building_medium_mastaba
-  building_medium_mastaba_part_wall = building_medium_mastaba
-  building_medium_mastaba_part_entrance = building_medium_mastaba
+
+  building_medium_mastaba_part_side { show_in_debug: false }
+  building_medium_mastaba_part_wall { show_in_debug: false }
+  building_medium_mastaba_part_entrance { show_in_debug: false }
