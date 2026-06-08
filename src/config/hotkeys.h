@@ -3,6 +3,7 @@
 #include "input/keys.h"
 #include "core/xstring.h"
 #include "core/custom_span.hpp"
+#include "core/tokenum.h"
 
 enum e_hotkey_action {
     HOTKEY_NONE = 0,
@@ -81,6 +82,8 @@ enum e_hotkey_action {
     //
     HOTKEY_MAX_ITEMS
 };
+
+using e_hotkey_action_tokens_t = token_holder<e_hotkey_action, HOTKEY_NONE, HOTKEY_MAX_ITEMS>;
 
 struct hotkey_mapping_state {
     e_key key = KEY_NONE;

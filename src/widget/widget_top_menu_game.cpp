@@ -22,7 +22,6 @@
 #include "building/construction/build_planner.h"
 #include "window/window_city.h"
 #include "window/autoconfig_window.h"
-#include "window/hotkey_config.h"
 #include "window/popup_dialog.h"
 #include "widget/widget_sidebar.h"
 #include "widget/widget_city.h"
@@ -39,12 +38,6 @@ ANK_REGISTER_STRUCT_WRITER(top_menu_widget_draw, pos);
 ANK_REGISTER_STRUCT_WRITER(top_menu_widget_background_draw, pos);
 
 top_menu_widget_t ANK_VARIABLE(top_menu_widget);
-
-pcstr __widget_top_menu_hotkeys_options(int, int) {
-    window_hotkey_config_show([] {});
-    return "";
-}
-ANK_FUNCTION_2(__widget_top_menu_hotkeys_options)
 
 ANK_FUNCTION(widget_top_menu_clear_state);
 

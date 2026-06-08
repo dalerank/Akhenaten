@@ -177,6 +177,7 @@ function background(config) { return ui_extend({type:"background", down:true}, c
 function resource_icon(config) { return ui_extend({ type : "resource_icon"}, config) }
 function large_button(config) { return ui_extend({ type : "large_button"}, config) }
 function scrollable_list(config) { return ui_extend({ type : "scrollable_list"}, config) }
+function scrollbar(config) { return ui_extend({ type : "scrollbar"}, config) }
 function input(config) { return ui_extend({ type : "input", font : FONT_NORMAL_WHITE_ON_DARK }, config) }
 function menu_item(config) { return ui_extend({ type : "menu_item"}, config) }
 function menu_header(config) { return ui_extend({ type : "menu_header"}, config) }

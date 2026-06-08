@@ -200,7 +200,7 @@ top_menu_widget {
 		autosave_options: menu_item({textfn: top_menu_autosave_options_text
 									 onclick: top_menu_autosave_options_toggle })
 
-		hotkeys_options : menu_item({text: "Hotkeys options", onclick: __widget_top_menu_hotkeys_options })
+		hotkeys_options : menu_item({text: "Hotkeys options", onclick: top_menu_show_window_by_id("window_hotkey_config") })
 		enhanced_options: menu_item({text: "Enhanced options", onclick: top_menu_features })
 	}
 

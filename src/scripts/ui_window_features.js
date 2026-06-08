@@ -219,7 +219,7 @@ function window_features_btn_defaults(p1, p2) {
 }
 
 function window_features_btn_hotkeys(p1, p2) {
-    main_menu_show_window("window_hotkey_config")
+    window_show_by_id("window_hotkey_config")
 }
 
 function window_features_btn_close(p1, p2) {

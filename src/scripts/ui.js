@@ -56,6 +56,7 @@ import ui_advisor_ratings
 import ui_advisor_monuments
 import ui_labor_priority_window
 import ui_window_features
+import ui_hotkey_config_window
 import ui_file_dialog_save
 import ui_file_dialog_load
 import ui_file_dialog_delete
