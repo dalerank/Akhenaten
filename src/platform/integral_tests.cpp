@@ -319,6 +319,12 @@ int run_js_tests() {
         }
         logs::info("[test:%s] finished after %d frame(s)", name.c_str(), frames);
 
+        if (test_log_contains("!!! TypeError:")) {
+            logs::error("[test:%s] FAIL: !!! TypeError: found in log", name.c_str());
+            ++failed;
+            continue;
+        }
+
         // check_valid -> bool
         if (!js_vm_global_is_callable(J, "check_valid")) {
             logs::error("[test:%s] FAIL: missing check_valid()", name.c_str());

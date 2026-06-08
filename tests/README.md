@@ -64,6 +64,8 @@ function check_valid() {
 
 If `__test_signal_ready()` is never called, the driver times out after ~10 seconds (600 frames at 60 fps) and the test is marked FAIL.
 
+After each test finishes pumping frames, the driver scans `akhenaten-log.txt` for `!!! TypeError:` (MuJS runtime errors logged during the test). If that substring appears, the test fails even when `check_valid()` would return true.
+
 After each test script loads, the driver calls `js_vm_sync({})` so any top-level `include()` in that file is flushed before `run_test()` runs.
 
 ## Naming convention

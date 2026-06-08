@@ -78,7 +78,7 @@ static bool file_contains_marker(pcstr path, pcstr marker, const size_t marker_l
     return tail.find(marker) != std::string::npos;
 }
 
-static bool __test_find_inlog(pcstr marker) {
+bool test_log_contains(pcstr marker) {
     if (!marker || !*marker) {
         return false;
     }
@@ -87,6 +87,10 @@ static bool __test_find_inlog(pcstr marker) {
 
     const size_t marker_len = std::strlen(marker);
     return file_contains_marker(logs::output_path(), marker, marker_len);
+}
+
+static bool __test_find_inlog(pcstr marker) {
+    return test_log_contains(marker);
 }
 ANK_FUNCTION_1(__test_find_inlog);
 
