@@ -232,7 +232,7 @@ io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version)
 
     if (iob->is_read_access()) {
         auto& lands = g_scenario.invasion_points_land;
-        auto& sea = g_scenario.invasion_points_land;
+        auto& sea = g_scenario.invasion_points_sea;
         std::fill(lands.begin(), lands.end(), tile2i::invalid);
         std::fill(sea.begin(), sea.end(), tile2i::invalid);
     }
