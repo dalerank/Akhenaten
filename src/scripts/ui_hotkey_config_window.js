@@ -5,42 +5,6 @@ function hotkey_config_label_pos(i) { return { x: 32, y: hotkey_config_row_y(i) 
 function hotkey_config_btn_pos(i) { return { x: 290, y: hotkey_config_row_y(i) } }
 function hotkey_config_btn_alt_pos(i) { return { x: 430, y: hotkey_config_row_y(i) } }
 
-function hotkey_config_load_mappings() {
-    var mappings = {}
-    var widgets = window_hotkey_config.widgets
-    var header = window_hotkey_config.header_action
-    for (var i = 0; i < widgets.length; i++) {
-        var widget = widgets[i]
-        if (widget.action === header)
-            continue
-        mappings[widget.action] = {
-            key: __hotkey_get_key(widget.action, 0),
-            modifiers: __hotkey_get_modifiers(widget.action, 0),
-            alt_key: __hotkey_get_key(widget.action, 1),
-            alt_modifiers: __hotkey_get_modifiers(widget.action, 1)
-        }
-    }
-    return mappings
-}
-
-function hotkey_config_load_default_mappings() {
-    var mappings = {}
-    var widgets = window_hotkey_config.widgets
-    var header = window_hotkey_config.header_action
-    for (var i = 0; i < widgets.length; i++) {
-        var widget = widgets[i]
-        if (widget.action === header)
-            continue
-        mappings[widget.action] = {
-            key: __hotkey_get_default_key(widget.action, 0),
-            modifiers: __hotkey_get_default_modifiers(widget.action, 0),
-            alt_key: __hotkey_get_default_key(widget.action, 1),
-            alt_modifiers: __hotkey_get_default_modifiers(widget.action, 1)
-        }
-    }
-    return mappings
-}
-
 function hotkey_config_btn_key(row, is_alt) {
     var scroll = window_hotkey_config.scroll_position
     var widgets = window_hotkey_config.widgets
@@ -51,7 +15,7 @@ function hotkey_config_btn_key(row, is_alt) {
 }
 
 function hotkey_config_btn_defaults(p1, p2) {
-    window_hotkey_config.mappings = hotkey_config_load_default_mappings()
+    window_hotkey_config.load_default_mappings()
     window_hotkey_config.needs_rebuild = true
 }
 
@@ -208,6 +172,42 @@ window_hotkey_config {
 
     scroll_position: 0
 
+    load_mappings: function () {
+        var result = {}
+        var widgets = this.widgets
+        var header = this.header_action
+        for (var i = 0; i < widgets.length; i++) {
+            var widget = widgets[i]
+            if (widget.action === header)
+                continue
+            result[widget.action] = {
+                key: __hotkey_get_key(widget.action, 0),
+                modifiers: __hotkey_get_modifiers(widget.action, 0),
+                alt_key: __hotkey_get_key(widget.action, 1),
+                alt_modifiers: __hotkey_get_modifiers(widget.action, 1)
+            }
+        }
+        this.mappings = result
+    }
+
+    load_default_mappings: function () {
+        var result = {}
+        var widgets = this.widgets
+        var header = this.header_action
+        for (var i = 0; i < widgets.length; i++) {
+            var widget = widgets[i]
+            if (widget.action === header)
+                continue
+            result[widget.action] = {
+                key: __hotkey_get_default_key(widget.action, 0),
+                modifiers: __hotkey_get_default_modifiers(widget.action, 0),
+                alt_key: __hotkey_get_default_key(widget.action, 1),
+                alt_modifiers: __hotkey_get_default_modifiers(widget.action, 1)
+            }
+        }
+        this.mappings = result
+    }
+
     ui: {
         background_image: background({ pack: PACK_UNLOADED, id: 8 })
         background: outer_panel({ size: [40, 30] })
@@ -271,17 +271,13 @@ window_hotkey_config {
 [es=(window_hotkey_config, init)]
 function hotkey_config_on_init(window) {
     __log_marker("window_show:window_hotkey_config")
-    window_hotkey_config.mappings = hotkey_config_load_mappings()
+    window_hotkey_config.load_mappings()
     window_hotkey_config.needs_rebuild = true
     window.list_scroll.max_value = window_hotkey_config.widgets.length - window_hotkey_config.visible_rows
 }
 
 [es=(window_hotkey_config, ui_draw_foreground)]
 function hotkey_config_draw(window) {
-    if (window_hotkey_config.needs_rebuild) {
-        hotkey_config_update_rows(window)
-        window_hotkey_config.needs_rebuild = false
-    } else {
-        hotkey_config_update_rows(window)
-    }
+    hotkey_config_update_rows(window)
+    window_hotkey_config.needs_rebuild = false
 }
