@@ -19,41 +19,29 @@ static void hotkey_editor_js_callback(int action, int index, e_key key, e_key_mo
     events::emit(event_hotkey_editor_result{action, index, (int)key, (int)modifiers});
 }
 
-int __hotkey_get_key(int action, int is_alt) {
-    const hotkey_mapping *mapping = game_hotkeys::hotkey_for_action(static_cast<e_hotkey_action>(action));
+static bvariant_map hotkey_mapping_to_js(const hotkey_mapping *mapping) {
+    bvariant_map result;
     if (!mapping) {
-        return KEY_NONE;
+        result["key"] = (int32_t)KEY_NONE;
+        result["modifiers"] = (int32_t)KEY_MOD_NONE;
+        result["alt_key"] = (int32_t)KEY_NONE;
+        result["alt_modifiers"] = (int32_t)KEY_MOD_NONE;
+        return result;
     }
-    return is_alt ? mapping->alt.key : mapping->state.key;
+    result["key"] = (int32_t)mapping->state.key;
+    result["modifiers"] = (int32_t)mapping->state.modifiers;
+    result["alt_key"] = (int32_t)mapping->alt.key;
+    result["alt_modifiers"] = (int32_t)mapping->alt.modifiers;
+    return result;
 }
-ANK_FUNCTION_2(__hotkey_get_key)
 
-int __hotkey_get_modifiers(int action, int is_alt) {
-    const hotkey_mapping *mapping = game_hotkeys::hotkey_for_action(static_cast<e_hotkey_action>(action));
-    if (!mapping) {
-        return KEY_MOD_NONE;
-    }
-    return is_alt ? mapping->alt.modifiers : mapping->state.modifiers;
+bvariant_map __hotkey_read_mapping(int action, int use_defaults) {
+    const hotkey_mapping *mapping = use_defaults
+        ? game_hotkeys::hotkey_default(static_cast<e_hotkey_action>(action))
+        : game_hotkeys::hotkey_for_action(static_cast<e_hotkey_action>(action));
+    return hotkey_mapping_to_js(mapping);
 }
-ANK_FUNCTION_2(__hotkey_get_modifiers)
-
-int __hotkey_get_default_key(int action, int is_alt) {
-    const hotkey_mapping *mapping = game_hotkeys::hotkey_default(static_cast<e_hotkey_action>(action));
-    if (!mapping) {
-        return KEY_NONE;
-    }
-    return is_alt ? mapping->alt.key : mapping->state.key;
-}
-ANK_FUNCTION_2(__hotkey_get_default_key)
-
-int __hotkey_get_default_modifiers(int action, int is_alt) {
-    const hotkey_mapping *mapping = game_hotkeys::hotkey_default(static_cast<e_hotkey_action>(action));
-    if (!mapping) {
-        return KEY_MOD_NONE;
-    }
-    return is_alt ? mapping->alt.modifiers : mapping->state.modifiers;
-}
-ANK_FUNCTION_2(__hotkey_get_default_modifiers)
+ANK_FUNCTION_2(__hotkey_read_mapping)
 
 void __hotkey_set_mapping(int action, int key, int modifiers, int alt_key, int alt_modifiers) {
     hotkey_mapping mapping = *game_hotkeys::hotkey_for_action(static_cast<e_hotkey_action>(action));

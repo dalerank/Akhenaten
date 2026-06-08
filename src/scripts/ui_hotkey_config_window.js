@@ -180,12 +180,7 @@ window_hotkey_config {
             var widget = widgets[i]
             if (widget.action === header)
                 continue
-            result[widget.action] = {
-                key: __hotkey_get_key(widget.action, 0),
-                modifiers: __hotkey_get_modifiers(widget.action, 0),
-                alt_key: __hotkey_get_key(widget.action, 1),
-                alt_modifiers: __hotkey_get_modifiers(widget.action, 1)
-            }
+            result[widget.action] = __hotkey_read_mapping(widget.action, false)
         }
         this.mappings = result
     }
@@ -198,12 +193,7 @@ window_hotkey_config {
             var widget = widgets[i]
             if (widget.action === header)
                 continue
-            result[widget.action] = {
-                key: __hotkey_get_default_key(widget.action, 0),
-                modifiers: __hotkey_get_default_modifiers(widget.action, 0),
-                alt_key: __hotkey_get_default_key(widget.action, 1),
-                alt_modifiers: __hotkey_get_default_modifiers(widget.action, 1)
-            }
+            result[widget.action] = __hotkey_read_mapping(widget.action, true)
         }
         this.mappings = result
     }
