@@ -46,7 +46,7 @@ tile2i scenario_editor_predator_herd_point(int id) {
 }
 
 void scenario_editor_set_predator_herd_point(int id, int x, int y) {
-    g_scenario.herd_points_animals[id] = tile2i::invalid;
+    g_scenario.herd_points_animals[id] = tile2i{ x, y };
     g_scenario.is_saved = 0;
 }
 
