@@ -68,26 +68,24 @@ void scenario_editor_set_fishing_point(int id, int x, int y) {
 
 int scenario_editor_count_invasion_points(void) {
     int points = 0;
-    //    for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++) {
-    //        if (g_scenario.invasion_points_land[i].x != -1)
-    //            points++;
-    //    }
-    //    for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++) {
-    //        if (g_scenario.invasion_points_sea[i].x != -1)
-    //            points++;
-    //    }
+    for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++) {
+        if (g_scenario.invasion_points_land[i].valid())
+            points++;
+    }
+    for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++) {
+        if (g_scenario.invasion_points_sea[i].valid())
+            points++;
+    }
     return points;
 }
 
 void scenario_editor_clear_invasion_points(void) {
-    //    for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++) {
-    //        g_scenario.invasion_points_land[i].x = -1;
-    //        g_scenario.invasion_points_land[i].y = -1;
-    //    }
-    //    for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++) {
-    //        g_scenario.invasion_points_sea[i].x = -1;
-    //        g_scenario.invasion_points_sea[i].y = -1;
-    //    }
+    for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++) {
+        g_scenario.invasion_points_land[i] = tile2i::invalid;
+    }
+    for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++) {
+        g_scenario.invasion_points_sea[i] = tile2i::invalid;
+    }
     g_scenario.is_saved = 0;
 }
 
@@ -96,8 +94,7 @@ tile2i scenario_editor_land_invasion_point(int id) {
 }
 
 void scenario_editor_set_land_invasion_point(int id, int x, int y) {
-    //    g_scenario.invasion_points_land[id].x = x;
-    //    g_scenario.invasion_points_land[id].y = y;
+    g_scenario.invasion_points_land[id] = tile2i{ x, y };
     g_scenario.is_saved = 0;
 }
 
