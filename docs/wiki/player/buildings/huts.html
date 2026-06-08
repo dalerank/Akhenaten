@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Huts — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .bld-header-grid { display: grid; grid-template-columns: auto 1fr; gap: 1.5rem; align-items: start; margin-bottom: 2rem; }
+    .bld-header-right { display: flex; flex-direction: column; gap: 1rem; }
+    .bld-image-wrap { text-align: center; }
+    .bld-image-wrap img { display: block; border: 1px solid var(--border); border-radius: 3px; image-rendering: pixelated; }
+    .bld-image-wrap figcaption { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.35rem; }
+    .bld-sprites { display: flex; gap: 0.75rem; align-items: flex-end; justify-content: center; flex-wrap: wrap; }
+    .bld-infobox { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.9rem 1.1rem; }
+    .bld-infobox h4 { margin: 0 0 0.6rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold); }
+    .bld-infobox dl { display: grid; grid-template-columns: auto 1fr; gap: 0.2rem 1rem; margin: 0; }
+    .bld-infobox dt { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; padding-top: 0.1rem; }
+    .bld-infobox dd { margin: 0; font-size: 0.85rem; color: var(--text); }
+    .bld-infobox .sep { grid-column: 1/-1; border: none; border-top: 1px solid var(--border); margin: 0.4rem 0; }
+    .bld-stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .bld-stat { text-align: center; }
+    .bld-stat .val { font-size: 1.3rem; font-weight: 700; color: var(--gold); display: block; }
+    .bld-stat .lbl { font-size: 0.7rem; color: var(--text-muted); }
+    .risk-low { color: #8aabdc; } .risk-med { color: #d09050; } .risk-none { color: var(--text-muted); }
+    .des-neg { color: #d07070; } .des-pos { color: #7ec87e; } .des-zero { color: var(--text-muted); }
+    .infobox-pair { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .infobox-pair .bld-infobox { flex: 1 1 240px; }
+
+    .net-diagram { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.8rem 1.1rem; margin: 1rem 0; font-size: 0.85rem; }
+    .net-diagram .net-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .net-diagram code { background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.15); border-radius: 2px; padding: 0.05rem 0.4rem; font-size: 0.8rem; color: var(--gold); }
+
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .kw { color: #c9a84c; } .num { color: #9ecbff; } .str { color: #7ec87e; } .cmt { color: #5a5650; font-style: italic; } .fn { color: #8aabdc; } .ev { color: #d0a0e0; } .ty { color: #d0a0e0; }
+    .file-ref { display: inline-block; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .bld-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .bld-nav a { color: var(--gold); }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+    .struct-card { display: grid; grid-template-columns: auto 1fr; gap: 1.25rem; align-items: start; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1.1rem 1.2rem; margin: 1.25rem 0; }
+    .struct-card .struct-art { display: flex; gap: 0.6rem; align-items: flex-end; }
+    .struct-card figcaption { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.3rem; text-align: center; }
+    @media (max-width: 640px) { .struct-card { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">← All Buildings</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Housing</div>
+        <ul>
+          <li><a href="housing.html">Housing overview</a></li>
+          <li><a href="huts.html" class="active">Huts</a></li>
+          <li><a href="vacant-lot.html">Vacant Lot</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#structures">Structures</a></li>
+          <li><a href="#evolution">Evolution &amp; devolution</a></li>
+          <li><a href="#tips">Tips</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Buildings</a> /
+        Huts
+      </div>
+
+      <h1>Huts</h1>
+
+      <div class="bld-header-grid" style="grid-template-columns:1fr">
+        <figure class="bld-image-wrap">
+          <div class="bld-sprites">
+            <div>
+              <img src="Housing_01a.webp" alt="Crude Hut" width="78" />
+              <figcaption>Crude Hut</figcaption>
+            </div>
+            <div>
+              <img src="Housing_02a.webp" alt="Sturdy Hut" width="78" />
+              <figcaption>Sturdy Hut</figcaption>
+            </div>
+          </div>
+        </figure>
+        <div class="bld-header-right">
+          <div>
+            <p><strong>Huts</strong> are the two lowest housing tiers — the first roofs immigrants raise when they walk in from the kingdom road. A player never places a hut directly: a <a href="vacant-lot.html">vacant lot</a> with road access becomes a <strong>Crude Hut</strong> the moment the first family moves in, and from there the house evolves on its own as services reach it.</p>
+            <p>Huts ask for almost nothing — the Crude Hut needs no water, food, or goods at all, and the Sturdy Hut adds only a water source. In exchange they hold very few people, pay little tax, and <strong>lower the desirability</strong> of everything around them, so a city of bare huts struggles to grow. They are a starting point to be grown out of, not a goal.</p>
+          </div>
+          <div class="infobox-pair">
+            <div class="bld-infobox">
+              <h4>Crude Hut <span style="color:var(--text-muted);font-weight:400">· tier 1</span></h4>
+              <div class="bld-stat-row" style="margin-bottom:0.9rem">
+                <div class="bld-stat"><span class="val">1×1</span><span class="lbl">Size</span></div>
+                <div class="bld-stat"><span class="val">5</span><span class="lbl">Max people</span></div>
+                <div class="bld-stat"><span class="val des-neg">−2</span><span class="lbl">Desirability</span></div>
+              </div>
+              <hr class="sep" />
+              <dl>
+                <dt>Water</dt><dd>None required</dd>
+                <dt>Food / Goods</dt><dd>None</dd>
+                <dt>Evolves at</dt><dd>Desirability ≥ −10</dd>
+                <dt>Merges</dt><dd>Yes → 2×2 block</dd>
+                <dt>Fire / Damage</dt><dd><span class="risk-med">Moderate</span> / <span class="risk-none">None</span></dd>
+              </dl>
+            </div>
+            <div class="bld-infobox">
+              <h4>Sturdy Hut <span style="color:var(--text-muted);font-weight:400">· tier 2</span></h4>
+              <div class="bld-stat-row" style="margin-bottom:0.9rem">
+                <div class="bld-stat"><span class="val">1×1</span><span class="lbl">Size</span></div>
+                <div class="bld-stat"><span class="val">7</span><span class="lbl">Max people</span></div>
+                <div class="bld-stat"><span class="val des-neg">−2</span><span class="lbl">Desirability</span></div>
+              </div>
+              <hr class="sep" />
+              <dl>
+                <dt>Water</dt><dd>Well (water access)</dd>
+                <dt>Food / Goods</dt><dd>None</dd>
+                <dt>Evolves at</dt><dd>Desirability ≥ −5</dd>
+                <dt>Devolves below</dt><dd>Desirability −12</dd>
+                <dt>Fire / Damage</dt><dd><span class="risk-med">Moderate</span> / <span class="risk-none">None</span></dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Overview ──────────────────────────────────────── -->
+      <h2 id="overview">Overview</h2>
+      <p>In the housing ladder Pharaoh tracks twenty tiers, the two hut tiers sit right at the bottom, below the <em>shanties</em>. They are the housing every city starts with and the housing a neglected district falls back to. Both are 1×1 plots that can <strong>merge</strong> into a single 2×2 block once four adjacent plots of the same tier qualify for the next step up — a merged hut block packs four times the residents into one footprint.</p>
+      <p>Huts are pure worker housing: every resident counts toward the city's labour pool, feeding nearby farms, quarries, and workshops. Their downside is desirability — a hut radiates a small negative influence (−2 at the tile, fading over three tiles), so a dense field of huts holds <em>itself</em> down and makes it harder for any one plot to reach the desirability it needs to evolve. Breaking that deadlock with a few gardens, a well, and the first roaming services is the earliest growth puzzle of every mission.</p>
+
+      <!-- ─── Structures ────────────────────────────────────── -->
+      <h2 id="structures">Structures</h2>
+
+      <div class="struct-card">
+        <figure class="struct-art">
+          <div>
+            <img src="Housing_01a.webp" alt="Crude Hut in-game sprite" width="90" />
+            <figcaption>In-game</figcaption>
+          </div>
+          <div>
+            <img src="Huts_crude_orig.webp" alt="Crude Hut original Cleopatra art" width="118" />
+            <figcaption>Original (Cleopatra)</figcaption>
+          </div>
+        </figure>
+        <div>
+          <h3 style="margin-top:0">Crude Hut</h3>
+          <p>The starting roof. A vacant lot turns into a Crude Hut as soon as it has a road within two tiles and an immigrant arrives. It demands <strong>nothing</strong> — no water, no food, no goods, no services — so it will appear and survive anywhere a road reaches, but it also holds only <strong>5 people</strong> and contributes very little tax. It cannot devolve any further; it is the floor of the housing ladder. To advance to a Sturdy Hut it needs the tile desirability to climb to <strong>−10 or better</strong>, which usually means simply not crowding it with other huts and undesirable industry.</p>
+        </div>
+      </div>
+
+      <div class="struct-card">
+        <figure class="struct-art">
+          <div>
+            <img src="Housing_02a.webp" alt="Sturdy Hut in-game sprite" width="90" />
+            <figcaption>In-game</figcaption>
+          </div>
+          <div>
+            <img src="Huts_sturdy_orig.webp" alt="Sturdy Hut original Cleopatra art" width="118" />
+            <figcaption>Original (Cleopatra)</figcaption>
+          </div>
+        </figure>
+        <div>
+          <h3 style="margin-top:0">Sturdy Hut</h3>
+          <p>The second tier. A Sturdy Hut holds <strong>7 people</strong> and adds one requirement over the Crude Hut: <strong>water access</strong>, satisfied by a <a href="water-supply.html">Well</a> whose water carrier (or coverage) reaches the house. Lose that water and the house slides back to a Crude Hut once desirability falls below <strong>−12</strong>. With desirability of <strong>−5 or better</strong> and its water kept up, a Sturdy Hut evolves into a <em>Meager Shanty</em> — the first tier that begins asking for food and bazaar goods. Sturdy Huts cannot be placed directly; they only ever arise by evolution from a Crude Hut.</p>
+        </div>
+      </div>
+
+      <!-- ─── Evolution ─────────────────────────────────────── -->
+      <h2 id="evolution">Evolution &amp; devolution</h2>
+      <p>Like every house, a hut is re-evaluated at regular intervals against the requirements of the tier above it. Three things decide whether it climbs or slips:</p>
+      <ul class="wiki-list">
+        <li><strong>Desirability</strong> — the tile score from surrounding buildings. A Crude Hut needs ≥ −10 to become a Sturdy Hut; a Sturdy Hut needs ≥ −5 to become a Meager Shanty. Gardens, a well, plazas, and keeping industry and other huts at arm's length all push the number up.</li>
+        <li><strong>Water</strong> — irrelevant to the Crude Hut, but a Sturdy Hut must have a water source within reach. This is the single most common reason an early district stalls at Crude Huts.</li>
+        <li><strong>Reachability</strong> — the house must stay connected to the road network. A hut cut off from roads for too long is flagged unreachable and will devolve.</li>
+      </ul>
+      <div class="net-diagram">
+        <div class="net-label">The bottom of the housing ladder</div>
+        <a href="vacant-lot.html"><code>Vacant Lot</code></a> &nbsp;→ immigrant arrives →&nbsp; <code>Crude Hut</code> &nbsp;→ desirability ≥ −10 →&nbsp; <code>Sturdy Hut</code> &nbsp;→ desirability ≥ −5 &amp; water →&nbsp; <a href="housing.html"><code>Meager Shanty</code></a>
+      </div>
+      <p>Devolution runs the chain in reverse after a short grace period (the hut's <em>devolve delay</em>). Because the Crude Hut has no requirements, it is the safe floor: a district stripped of water or services collapses no lower than bare Crude Huts rather than vanishing.</p>
+
+      <!-- ─── Tips ──────────────────────────────────────────── -->
+      <h2 id="tips">Tips</h2>
+      <ul class="wiki-list">
+        <li><strong>Don't fight the huts — grow out of them.</strong> A field of Crude Huts holds its own desirability down. A single <a href="water-supply.html">Well</a> plus a couple of gardens is usually enough to tip the first plots up to Sturdy Huts and start the chain.</li>
+        <li><strong>Water is the Sturdy-Hut gate.</strong> If an early district refuses to climb past Crude Huts, check that a well's coverage actually reaches the houses — proximity alone is not enough.</li>
+        <li><strong>Huts are your workforce.</strong> Every hut resident feeds the labour pool. In the opening of a mission you usually <em>want</em> plenty of huts near your first farms and workshops; refine them into higher housing only once basic industry is staffed.</li>
+        <li><strong>Mind the fire risk.</strong> Huts carry a moderate fire risk that only rises through the early-to-mid tiers — keep a firehouse near any dense hut cluster.</li>
+        <li><strong>Let them merge.</strong> Leave room for 1×1 huts to combine into 2×2 blocks; a merged block houses far more people on the same ground once it qualifies to evolve.</li>
+      </ul>
+
+      <!-- ─── Developer reference ──────────────────────────── -->
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">All paths relative to the repository root. Model arrays are indexed by difficulty: Very Easy · Easy · <strong>Normal</strong> · Hard · Very Hard. Player-facing values above use the Normal (index 2) column.</p>
+
+        <details>
+          <summary>House config — <code>src/scripts/houses.js</code></summary>
+          <div class="details-body">
+            <p><span class="file-ref">src/scripts/houses.js</span> defines both hut tiers. <code>building_house_crude_hut</code> carries a <code>cost</code> array (the cost of placing the starting plot); <code>building_house_sturdy_hut</code> has none because it only arises by evolution. The <code>model</code> block holds the per-tier evolution thresholds, capacity, and risk curves.</p>
+            <pre><code><span class="kw">building_house_crude_hut</span> {
+  <span class="kw">building_size</span> : <span class="num">1</span>
+  <span class="kw">can_merge</span> : <span class="kw">true</span>
+  <span class="kw">desirability</span> { value[<span class="num">-2</span>], step[<span class="num">1</span>], step_size[<span class="num">1</span>], range[<span class="num">3</span>] }
+  <span class="kw">laborers</span>[<span class="num">0</span>]
+  <span class="kw">cost</span> [ <span class="num">5</span>, <span class="num">10</span>, <span class="num">20</span>, <span class="num">40</span>, <span class="num">50</span> ]
+  <span class="kw">fire_risk</span>[<span class="num">3</span>]  <span class="kw">damage_risk</span>[<span class="num">0</span>]
+  <span class="kw">model</span> {
+    <span class="kw">evolve_desirability</span>[<span class="num">-10</span>,<span class="num">-10</span>,<span class="num">-10</span>,<span class="num">-10</span>,<span class="num">-10</span>]
+    <span class="kw">devolve_desirability</span>[<span class="num">-99</span>,<span class="num">-99</span>,<span class="num">-99</span>,<span class="num">-99</span>,<span class="num">-99</span>]  <span class="cmt">// floor — never devolves</span>
+    <span class="kw">water</span>[<span class="num">0</span>,<span class="num">0</span>,<span class="num">0</span>,<span class="num">0</span>,<span class="num">0</span>]      <span class="cmt">// no water needed</span>
+    <span class="kw">max_people</span>[<span class="num">5</span>,<span class="num">5</span>,<span class="num">5</span>,<span class="num">5</span>,<span class="num">5</span>]
+    <span class="kw">food_types</span>[<span class="num">0</span>,<span class="num">0</span>,<span class="num">0</span>,<span class="num">0</span>,<span class="num">0</span>]
+  }
+  <span class="kw">meta</span> { help_id: <span class="num">128</span>, text_id: <span class="num">-1</span> }
+  <span class="kw">flags</span> { is_house: <span class="kw">true</span> }
+}
+
+<span class="kw">building_house_sturdy_hut</span> {
+  <span class="kw">building_size</span> : <span class="num">1</span>
+  <span class="kw">can_merge</span> : <span class="kw">true</span>
+  <span class="kw">desirability</span> { value[<span class="num">-2</span>], step[<span class="num">1</span>], step_size[<span class="num">1</span>], range[<span class="num">3</span>] }
+  <span class="kw">fire_risk</span>[<span class="num">3</span>]  <span class="kw">damage_risk</span>[<span class="num">0</span>]
+  <span class="kw">model</span> {
+    <span class="kw">evolve_desirability</span>[<span class="num">-7</span>,<span class="num">-6</span>,<span class="num">-5</span>,<span class="num">-5</span>,<span class="num">-5</span>]
+    <span class="kw">devolve_desirability</span>[<span class="num">-12</span>,<span class="num">-12</span>,<span class="num">-12</span>,<span class="num">-12</span>,<span class="num">-12</span>]
+    <span class="kw">water</span>[<span class="num">1</span>,<span class="num">1</span>,<span class="num">1</span>,<span class="num">1</span>,<span class="num">1</span>]      <span class="cmt">// requires a water source</span>
+    <span class="kw">max_people</span>[<span class="num">7</span>,<span class="num">7</span>,<span class="num">7</span>,<span class="num">7</span>,<span class="num">7</span>]
+    <span class="kw">food_types</span>[<span class="num">0</span>,<span class="num">0</span>,<span class="num">0</span>,<span class="num">0</span>,<span class="num">0</span>]
+  }
+  <span class="kw">flags</span> { is_house: <span class="kw">true</span> }
+}</code></pre>
+            <p>The hut sprites are atlas <code>PACK_GENERAL</code> id <code>26</code> (offsets 0–1 Crude, 2–3 Sturdy; offsets 4–5 are the merged 2×2 variants).</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Evolution logic — <code>src/building/building_house.cpp</code></summary>
+          <div class="details-body">
+            <p>House evolution and devolution is driven by <span class="file-ref">src/building/building_house.cpp</span>, which each cycle compares the tile's accumulated desirability against the current tier's <code>evolve_desirability</code> / <code>devolve_desirability</code> and checks the required service levels (here only <code>water</code> for the Sturdy Hut). When all conditions for the next tier hold it promotes the house type; when a requirement lapses past the <code>devolve_delay</code> it demotes. Merging of four 1×1 plots into a 2×2 block uses <code>can_merge</code> and the <code>variants_merged</code> sprite set defined in <span class="file-ref">houses.js</span>.</p>
+          </div>
+        </details>
+
+      </div><!-- .dev-section -->
+
+      <div class="bld-nav">
+        <a href="housing.html">← Housing overview</a>
+        <span style="color:var(--text-muted)">Housing</span>
+        <a href="index.html">All Buildings →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+  <script src="../../../lightbox.js"></script>
+</body>
+</html>
