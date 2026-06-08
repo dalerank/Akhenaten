@@ -301,6 +301,7 @@ namespace ui {
     struct emenu_header;
     struct eimage_button;
     struct escrollable_list;
+    struct escrollbar;
     struct etext;
 
     template <typename T, typename R>
@@ -496,6 +497,7 @@ namespace ui {
         virtual emenu_header* dcast_menu_header() { return nullptr; }
         virtual eimage_button* dcast_image_button() { return nullptr; }
         virtual escrollable_list* dcast_scrollable_list() { return nullptr; }
+        virtual escrollbar* dcast_escrollbar() { return nullptr; }
         virtual etext* dcast_etext() { return nullptr; }
         virtual einput* dcast_einput() { return nullptr; }
 
@@ -710,6 +712,10 @@ namespace ui {
 
     struct escrollbar : public element {
         scrollbar_t scrollbar;
+
+        static const xstring skind() { return "UIScrollbar"; }
+        virtual xstring kind() const override { return escrollbar::skind(); }
+        virtual escrollbar* dcast_escrollbar() override { return this; }
 
         virtual int value() const override { return scrollbar.scroll_position; }
         virtual void max_value(int v) override { scrollbar.max_scroll_position = v; }

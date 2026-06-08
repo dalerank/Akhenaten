@@ -228,15 +228,6 @@ void __ui_draw_resource_icon_flags(vec2i pos, int resource, int flags) {
 }
 ANK_FUNCTION_3(__ui_draw_resource_icon_flags)
 
-void __ui_element_max_value(pcstr id, int v) {
-    ui::widget* w = ui::get_current_widget();
-    if (!w) {
-        return;
-    }
-    (*w)[id].max_value(v);
-}
-ANK_FUNCTION_2(__ui_element_max_value)
-
 int __trade_price_buy(int resource) {
     return trade_price_buy((e_resource)resource);
 }

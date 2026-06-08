@@ -168,6 +168,23 @@ localization_en = [
   {key:"#TR_HOTKEY_SHOW_OVERLAY_CRIME", text:"Crime overlay"}
   {key:"#TR_HOTKEY_ROTATE_BUILDING", text:"Rotate building"}
   {key:"#TR_HOTKEY_COPY_BUILD", text:"Copy build under cursor"}
+  {key:"#TR_HOTKEY_BUILD_CLEAR_LAND", group:68, id:21}
+  {key:"#TR_HOTKEY_BUILD_VACANT_HOUSE", group:67, id:7}
+  {key:"#TR_HOTKEY_BUILD_ROAD", group:28, id:5}
+  {key:"#TR_HOTKEY_BUILD_PLAZA", group:28, id:38}
+  {key:"#TR_HOTKEY_BUILD_GARDENS", group:28, id:39}
+  {key:"#TR_HOTKEY_BUILD_FIREHOUSE", group:28, id:167}
+  {key:"#TR_HOTKEY_BUILD_ARCHITECT", group:28, id:81}
+  {key:"#TR_HOTKEY_BUILD_APOTHECARY", group:28, id:46}
+  {key:"#TR_HOTKEY_BUILD_GRANARY", group:28, id:71}
+  {key:"#TR_HOTKEY_BUILD_STORAGE_YARD", group:28, id:72}
+  {key:"#TR_HOTKEY_BUILD_BAZAAR", group:28, id:70}
+  {key:"#TR_HOTKEY_BUILD_WALL", group:28, id:6}
+  {key:"#TR_HOTKEY_BUILD_GATEHOUSE", group:28, id:58}
+  {key:"#TR_HOTKEY_BUILD_WATERLIFT", group:28, id:7}
+  {key:"#TR_HOTKEY_BUILD_CANAL", group:28, id:8}
+  {key:"#TR_HOTKEY_BUILD_WATER_SUPPLY", group:28, id:180}
+  {key:"#TR_HOTKEY_BUILD_ROADBLOCK", group:28, id:138}
   {key:"#TR_HOTKEY_SHOW_OVERLAY_PROBLEMS", text:"Problems overlay"}
   {key:"#TR_HOTKEY_GO_TO_BOOKMARK_1", text:"Go to bookmark 1"}
   {key:"#TR_HOTKEY_GO_TO_BOOKMARK_2", text:"Go to bookmark 2"}

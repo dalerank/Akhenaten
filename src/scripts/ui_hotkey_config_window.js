@@ -1,101 +1,17 @@
 log_info("akhenaten: hotkey config window started")
 
-var HOTKEY_CONFIG_VISIBLE = 14
-var HOTKEY_HEADER = -1
-var GROUP_BUILDINGS = 28
-
 function hotkey_config_row_y(i) { return 80 + 24 * i }
 function hotkey_config_label_pos(i) { return { x: 32, y: hotkey_config_row_y(i) + 6 } }
 function hotkey_config_btn_pos(i) { return { x: 290, y: hotkey_config_row_y(i) } }
 function hotkey_config_btn_alt_pos(i) { return { x: 430, y: hotkey_config_row_y(i) } }
 
-var hotkey_config_widgets = [
-    { action: HOTKEY_HEADER, text: "#TR_HOTKEY_HEADER_ARROWS" },
-    { action: HOTKEY_ARROW_UP, text: "#TR_HOTKEY_ARROW_UP" },
-    { action: HOTKEY_ARROW_DOWN, text: "#TR_HOTKEY_ARROW_DOWN" },
-    { action: HOTKEY_ARROW_LEFT, text: "#TR_HOTKEY_ARROW_LEFT" },
-    { action: HOTKEY_ARROW_RIGHT, text: "#TR_HOTKEY_ARROW_RIGHT" },
-    { action: HOTKEY_HEADER, text: "#TR_HOTKEY_HEADER_GLOBAL" },
-    { action: HOTKEY_TOGGLE_FULLSCREEN, text: "#TR_HOTKEY_TOGGLE_FULLSCREEN" },
-    { action: HOTKEY_CENTER_WINDOW, text: "#TR_HOTKEY_CENTER_WINDOW" },
-    { action: HOTKEY_SAVE_SCREENSHOT, text: "#TR_HOTKEY_SAVE_SCREENSHOT" },
-    { action: HOTKEY_SAVE_CITY_SCREENSHOT, text: "#TR_HOTKEY_SAVE_CITY_SCREENSHOT" },
-    { action: HOTKEY_LOAD_FILE, text: "#TR_HOTKEY_LOAD_FILE" },
-    { action: HOTKEY_SAVE_FILE, text: "#TR_HOTKEY_SAVE_FILE" },
-    { action: HOTKEY_HEADER, text: "#TR_HOTKEY_HEADER_CITY" },
-    { action: HOTKEY_INCREASE_GAME_SPEED, text: "#TR_HOTKEY_INCREASE_GAME_SPEED" },
-    { action: HOTKEY_DECREASE_GAME_SPEED, text: "#TR_HOTKEY_DECREASE_GAME_SPEED" },
-    { action: HOTKEY_TOGGLE_PAUSE, text: "#TR_HOTKEY_TOGGLE_PAUSE" },
-    { action: HOTKEY_CYCLE_LEGION, text: "#TR_HOTKEY_CYCLE_LEGION" },
-    { action: HOTKEY_ROTATE_MAP_LEFT, text: "#TR_HOTKEY_ROTATE_MAP_LEFT" },
-    { action: HOTKEY_ROTATE_MAP_RIGHT, text: "#TR_HOTKEY_ROTATE_MAP_RIGHT" },
-    { action: HOTKEY_ROTATE_BUILDING, text: "#TR_HOTKEY_ROTATE_BUILDING" },
-    { action: HOTKEY_HEADER, text: "#TR_HOTKEY_HEADER_BUILD" },
-    { action: HOTKEY_COPY_BUILD, text: "#TR_HOTKEY_COPY_BUILD" },
-    { action: HOTKEY_BUILD_CLEAR_LAND, lang: [68, 21] },
-    { action: HOTKEY_BUILD_VACANT_HOUSE, lang: [67, 7] },
-    { action: HOTKEY_BUILD_ROAD, lang: [GROUP_BUILDINGS, BUILDING_ROAD] },
-    { action: HOTKEY_BUILD_PLAZA, lang: [GROUP_BUILDINGS, BUILDING_PLAZA] },
-    { action: HOTKEY_BUILD_GARDENS, lang: [GROUP_BUILDINGS, BUILDING_GARDENS] },
-    { action: HOTKEY_BUILD_FIREHOUSE, lang: [GROUP_BUILDINGS, BUILDING_FIREHOUSE] },
-    { action: HOTKEY_BUILD_ARCHITECT, lang: [GROUP_BUILDINGS, BUILDING_ARCHITECT_POST] },
-    { action: HOTKEY_BUILD_APOTHECARY, lang: [GROUP_BUILDINGS, BUILDING_APOTHECARY] },
-    { action: HOTKEY_BUILD_GRANARY, lang: [GROUP_BUILDINGS, BUILDING_GRANARY] },
-    { action: HOTKEY_BUILD_STORAGE_YARD, lang: [GROUP_BUILDINGS, BUILDING_STORAGE_YARD] },
-    { action: HOTKEY_BUILD_BAZAAR, lang: [GROUP_BUILDINGS, BUILDING_BAZAAR] },
-    { action: HOTKEY_BUILD_WALL, lang: [GROUP_BUILDINGS, BUILDING_MUD_WALL] },
-    { action: HOTKEY_BUILD_GATEHOUSE, lang: [GROUP_BUILDINGS, BUILDING_MUD_GATEHOUSE] },
-    { action: HOTKEY_BUILD_WATERLIFT, lang: [GROUP_BUILDINGS, BUILDING_WATER_LIFT] },
-    { action: HOTKEY_BUILD_CANAL, lang: [GROUP_BUILDINGS, BUILDING_IRRIGATION_DITCH] },
-    { action: HOTKEY_BUILD_WATER_SUPPLY, lang: [GROUP_BUILDINGS, BUILDING_WATER_SUPPLY] },
-    { action: HOTKEY_BUILD_ROADBLOCK, lang: [GROUP_BUILDINGS, BUILDING_ROADBLOCK] },
-    { action: HOTKEY_HEADER, text: "#TR_HOTKEY_HEADER_ADVISORS" },
-    { action: HOTKEY_SHOW_ADVISOR_LABOR, text: "#TR_HOTKEY_SHOW_ADVISOR_LABOR" },
-    { action: HOTKEY_SHOW_ADVISOR_MILITARY, text: "#TR_HOTKEY_SHOW_ADVISOR_MILITARY" },
-    { action: HOTKEY_SHOW_ADVISOR_KINGDOME, text: "#TR_HOTKEY_SHOW_ADVISOR_IMPERIAL" },
-    { action: HOTKEY_SHOW_ADVISOR_RATINGS, text: "#TR_HOTKEY_SHOW_ADVISOR_RATINGS" },
-    { action: HOTKEY_SHOW_ADVISOR_TRADE, text: "#TR_HOTKEY_SHOW_ADVISOR_TRADE" },
-    { action: HOTKEY_SHOW_ADVISOR_POPULATION, text: "#TR_HOTKEY_SHOW_ADVISOR_POPULATION" },
-    { action: HOTKEY_SHOW_ADVISOR_HEALTH, text: "#TR_HOTKEY_SHOW_ADVISOR_HEALTH" },
-    { action: HOTKEY_SHOW_ADVISOR_EDUCATION, text: "#TR_HOTKEY_SHOW_ADVISOR_EDUCATION" },
-    { action: HOTKEY_SHOW_ADVISOR_ENTERTAINMENT, text: "#TR_HOTKEY_SHOW_ADVISOR_ENTERTAINMENT" },
-    { action: HOTKEY_SHOW_ADVISOR_RELIGION, text: "#TR_HOTKEY_SHOW_ADVISOR_RELIGION" },
-    { action: HOTKEY_SHOW_ADVISOR_FINANCIAL, text: "#TR_HOTKEY_SHOW_ADVISOR_FINANCIAL" },
-    { action: HOTKEY_SHOW_ADVISOR_CHIEF, text: "#TR_HOTKEY_SHOW_ADVISOR_CHIEF" },
-    { action: HOTKEY_SHOW_ADVISOR_HOUSING, text: "#TR_HOTKEY_SHOW_ADVISOR_HOUSING" },
-    { action: HOTKEY_HEADER, text: "#TR_HOTKEY_HEADER_OVERLAYS" },
-    { action: HOTKEY_TOGGLE_OVERLAY, text: "#TR_HOTKEY_TOGGLE_OVERLAY" },
-    { action: HOTKEY_SHOW_OVERLAY_WATER, text: "#TR_HOTKEY_SHOW_OVERLAY_WATER" },
-    { action: HOTKEY_SHOW_OVERLAY_FIRE, text: "#TR_HOTKEY_SHOW_OVERLAY_FIRE" },
-    { action: HOTKEY_SHOW_OVERLAY_DAMAGE, text: "#TR_HOTKEY_SHOW_OVERLAY_DAMAGE" },
-    { action: HOTKEY_SHOW_OVERLAY_CRIME, text: "#TR_HOTKEY_SHOW_OVERLAY_CRIME" },
-    { action: HOTKEY_SHOW_OVERLAY_PROBLEMS, text: "#TR_HOTKEY_SHOW_OVERLAY_PROBLEMS" },
-    { action: HOTKEY_HEADER, text: "#TR_HOTKEY_HEADER_BOOKMARKS" },
-    { action: HOTKEY_GO_TO_BOOKMARK_1, text: "#TR_HOTKEY_GO_TO_BOOKMARK_1" },
-    { action: HOTKEY_GO_TO_BOOKMARK_2, text: "#TR_HOTKEY_GO_TO_BOOKMARK_2" },
-    { action: HOTKEY_GO_TO_BOOKMARK_3, text: "#TR_HOTKEY_GO_TO_BOOKMARK_3" },
-    { action: HOTKEY_GO_TO_BOOKMARK_4, text: "#TR_HOTKEY_GO_TO_BOOKMARK_4" },
-    { action: HOTKEY_SET_BOOKMARK_1, text: "#TR_HOTKEY_SET_BOOKMARK_1" },
-    { action: HOTKEY_SET_BOOKMARK_2, text: "#TR_HOTKEY_SET_BOOKMARK_2" },
-    { action: HOTKEY_SET_BOOKMARK_3, text: "#TR_HOTKEY_SET_BOOKMARK_3" },
-    { action: HOTKEY_SET_BOOKMARK_4, text: "#TR_HOTKEY_SET_BOOKMARK_4" },
-    { action: HOTKEY_HEADER, text: "#TR_HOTKEY_HEADER_EDITOR" },
-    { action: HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, text: "#TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO" }
-]
-
-function hotkey_config_widget_label(widget) {
-    if (widget.text)
-        return widget.text
-    if (widget.lang)
-        return __loc(widget.lang[0], widget.lang[1])
-    return ""
-}
-
 function hotkey_config_load_mappings() {
     var mappings = {}
-    for (var i = 0; i < hotkey_config_widgets.length; i++) {
-        var widget = hotkey_config_widgets[i]
-        if (widget.action === HOTKEY_HEADER)
+    var widgets = window_hotkey_config.widgets
+    var header = window_hotkey_config.header_action
+    for (var i = 0; i < widgets.length; i++) {
+        var widget = widgets[i]
+        if (widget.action === header)
             continue
         mappings[widget.action] = {
             key: __hotkey_get_key(widget.action, 0),
@@ -109,9 +25,11 @@ function hotkey_config_load_mappings() {
 
 function hotkey_config_load_default_mappings() {
     var mappings = {}
-    for (var i = 0; i < hotkey_config_widgets.length; i++) {
-        var widget = hotkey_config_widgets[i]
-        if (widget.action === HOTKEY_HEADER)
+    var widgets = window_hotkey_config.widgets
+    var header = window_hotkey_config.header_action
+    for (var i = 0; i < widgets.length; i++) {
+        var widget = widgets[i]
+        if (widget.action === header)
             continue
         mappings[widget.action] = {
             key: __hotkey_get_default_key(widget.action, 0),
@@ -124,9 +42,10 @@ function hotkey_config_load_default_mappings() {
 }
 
 function hotkey_config_btn_key(row, is_alt) {
-    var scroll = __ui_scrollbar_position("list_scroll")
-    var widget = hotkey_config_widgets[row + scroll]
-    if (!widget || widget.action === HOTKEY_HEADER)
+    var scroll = window_hotkey_config.scroll_position
+    var widgets = window_hotkey_config.widgets
+    var widget = widgets[row + scroll]
+    if (!widget || widget.action === window_hotkey_config.header_action)
         return
     __hotkey_editor_show(widget.action, is_alt)
 }
@@ -151,9 +70,12 @@ function hotkey_config_btn_save(p1, p2) {
 }
 
 function hotkey_config_update_rows(window) {
-    var scroll = __ui_scrollbar_position("list_scroll")
-    for (var i = 0; i < HOTKEY_CONFIG_VISIBLE; i++) {
-        var widget = hotkey_config_widgets[i + scroll]
+    var scroll = window.list_scroll.value
+    window_hotkey_config.scroll_position = scroll
+    var widgets = window_hotkey_config.widgets
+    var header = window_hotkey_config.header_action
+    for (var i = 0; i < window_hotkey_config.visible_rows; i++) {
+        var widget = widgets[i + scroll]
         var label = window["trow" + i]
         var btn1 = window["kbtn" + i]
         var btn2 = window["kbtn" + i + "alt"]
@@ -167,15 +89,15 @@ function hotkey_config_update_rows(window) {
             continue
         }
 
-        if (widget.action === HOTKEY_HEADER) {
-            label.text = hotkey_config_widget_label(widget)
+        if (widget.action === header) {
+            label.text = widget.text ? widget.text : ""
             label.font = FONT_NORMAL_WHITE_ON_DARK
             btn1.enabled = false
             btn2.enabled = false
             btn1.text = ""
             btn2.text = ""
         } else {
-            label.text = hotkey_config_widget_label(widget)
+            label.text = widget.text ? widget.text : ""
             label.font = FONT_NORMAL_BLACK_ON_DARK
             btn1.enabled = true
             btn2.enabled = true
@@ -205,8 +127,86 @@ function hotkey_config_on_editor_result(ev) {
 window_hotkey_config {
     pos: [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
     allow_rmb_goback: true
+    default_font: FONT_NORMAL_BLACK_ON_DARK
+    visible_rows: 14
+    header_action: -1
     mappings: {}
     needs_rebuild: true
+    widgets: [
+        { action: -1, text: "#TR_HOTKEY_HEADER_ARROWS" },
+        { action: HOTKEY_ARROW_UP, text: "#TR_HOTKEY_ARROW_UP" },
+        { action: HOTKEY_ARROW_DOWN, text: "#TR_HOTKEY_ARROW_DOWN" },
+        { action: HOTKEY_ARROW_LEFT, text: "#TR_HOTKEY_ARROW_LEFT" },
+        { action: HOTKEY_ARROW_RIGHT, text: "#TR_HOTKEY_ARROW_RIGHT" },
+        { action: -1, text: "#TR_HOTKEY_HEADER_GLOBAL" },
+        { action: HOTKEY_TOGGLE_FULLSCREEN, text: "#TR_HOTKEY_TOGGLE_FULLSCREEN" },
+        { action: HOTKEY_CENTER_WINDOW, text: "#TR_HOTKEY_CENTER_WINDOW" },
+        { action: HOTKEY_SAVE_SCREENSHOT, text: "#TR_HOTKEY_SAVE_SCREENSHOT" },
+        { action: HOTKEY_SAVE_CITY_SCREENSHOT, text: "#TR_HOTKEY_SAVE_CITY_SCREENSHOT" },
+        { action: HOTKEY_LOAD_FILE, text: "#TR_HOTKEY_LOAD_FILE" },
+        { action: HOTKEY_SAVE_FILE, text: "#TR_HOTKEY_SAVE_FILE" },
+        { action: -1, text: "#TR_HOTKEY_HEADER_CITY" },
+        { action: HOTKEY_INCREASE_GAME_SPEED, text: "#TR_HOTKEY_INCREASE_GAME_SPEED" },
+        { action: HOTKEY_DECREASE_GAME_SPEED, text: "#TR_HOTKEY_DECREASE_GAME_SPEED" },
+        { action: HOTKEY_TOGGLE_PAUSE, text: "#TR_HOTKEY_TOGGLE_PAUSE" },
+        { action: HOTKEY_CYCLE_LEGION, text: "#TR_HOTKEY_CYCLE_LEGION" },
+        { action: HOTKEY_ROTATE_MAP_LEFT, text: "#TR_HOTKEY_ROTATE_MAP_LEFT" },
+        { action: HOTKEY_ROTATE_MAP_RIGHT, text: "#TR_HOTKEY_ROTATE_MAP_RIGHT" },
+        { action: HOTKEY_ROTATE_BUILDING, text: "#TR_HOTKEY_ROTATE_BUILDING" },
+        { action: -1, text: "#TR_HOTKEY_HEADER_BUILD" },
+        { action: HOTKEY_COPY_BUILD, text: "#TR_HOTKEY_COPY_BUILD" },
+        { action: HOTKEY_BUILD_CLEAR_LAND, text: "#TR_HOTKEY_BUILD_CLEAR_LAND" },
+        { action: HOTKEY_BUILD_VACANT_HOUSE, text: "#TR_HOTKEY_BUILD_VACANT_HOUSE" },
+        { action: HOTKEY_BUILD_ROAD, text: "#TR_HOTKEY_BUILD_ROAD" },
+        { action: HOTKEY_BUILD_PLAZA, text: "#TR_HOTKEY_BUILD_PLAZA" },
+        { action: HOTKEY_BUILD_GARDENS, text: "#TR_HOTKEY_BUILD_GARDENS" },
+        { action: HOTKEY_BUILD_FIREHOUSE, text: "#TR_HOTKEY_BUILD_FIREHOUSE" },
+        { action: HOTKEY_BUILD_ARCHITECT, text: "#TR_HOTKEY_BUILD_ARCHITECT" },
+        { action: HOTKEY_BUILD_APOTHECARY, text: "#TR_HOTKEY_BUILD_APOTHECARY" },
+        { action: HOTKEY_BUILD_GRANARY, text: "#TR_HOTKEY_BUILD_GRANARY" },
+        { action: HOTKEY_BUILD_STORAGE_YARD, text: "#TR_HOTKEY_BUILD_STORAGE_YARD" },
+        { action: HOTKEY_BUILD_BAZAAR, text: "#TR_HOTKEY_BUILD_BAZAAR" },
+        { action: HOTKEY_BUILD_WALL, text: "#TR_HOTKEY_BUILD_WALL" },
+        { action: HOTKEY_BUILD_GATEHOUSE, text: "#TR_HOTKEY_BUILD_GATEHOUSE" },
+        { action: HOTKEY_BUILD_WATERLIFT, text: "#TR_HOTKEY_BUILD_WATERLIFT" },
+        { action: HOTKEY_BUILD_CANAL, text: "#TR_HOTKEY_BUILD_CANAL" },
+        { action: HOTKEY_BUILD_WATER_SUPPLY, text: "#TR_HOTKEY_BUILD_WATER_SUPPLY" },
+        { action: HOTKEY_BUILD_ROADBLOCK, text: "#TR_HOTKEY_BUILD_ROADBLOCK" },
+        { action: -1, text: "#TR_HOTKEY_HEADER_ADVISORS" },
+        { action: HOTKEY_SHOW_ADVISOR_LABOR, text: "#TR_HOTKEY_SHOW_ADVISOR_LABOR" },
+        { action: HOTKEY_SHOW_ADVISOR_MILITARY, text: "#TR_HOTKEY_SHOW_ADVISOR_MILITARY" },
+        { action: HOTKEY_SHOW_ADVISOR_KINGDOME, text: "#TR_HOTKEY_SHOW_ADVISOR_IMPERIAL" },
+        { action: HOTKEY_SHOW_ADVISOR_RATINGS, text: "#TR_HOTKEY_SHOW_ADVISOR_RATINGS" },
+        { action: HOTKEY_SHOW_ADVISOR_TRADE, text: "#TR_HOTKEY_SHOW_ADVISOR_TRADE" },
+        { action: HOTKEY_SHOW_ADVISOR_POPULATION, text: "#TR_HOTKEY_SHOW_ADVISOR_POPULATION" },
+        { action: HOTKEY_SHOW_ADVISOR_HEALTH, text: "#TR_HOTKEY_SHOW_ADVISOR_HEALTH" },
+        { action: HOTKEY_SHOW_ADVISOR_EDUCATION, text: "#TR_HOTKEY_SHOW_ADVISOR_EDUCATION" },
+        { action: HOTKEY_SHOW_ADVISOR_ENTERTAINMENT, text: "#TR_HOTKEY_SHOW_ADVISOR_ENTERTAINMENT" },
+        { action: HOTKEY_SHOW_ADVISOR_RELIGION, text: "#TR_HOTKEY_SHOW_ADVISOR_RELIGION" },
+        { action: HOTKEY_SHOW_ADVISOR_FINANCIAL, text: "#TR_HOTKEY_SHOW_ADVISOR_FINANCIAL" },
+        { action: HOTKEY_SHOW_ADVISOR_CHIEF, text: "#TR_HOTKEY_SHOW_ADVISOR_CHIEF" },
+        { action: HOTKEY_SHOW_ADVISOR_HOUSING, text: "#TR_HOTKEY_SHOW_ADVISOR_HOUSING" },
+        { action: -1, text: "#TR_HOTKEY_HEADER_OVERLAYS" },
+        { action: HOTKEY_TOGGLE_OVERLAY, text: "#TR_HOTKEY_TOGGLE_OVERLAY" },
+        { action: HOTKEY_SHOW_OVERLAY_WATER, text: "#TR_HOTKEY_SHOW_OVERLAY_WATER" },
+        { action: HOTKEY_SHOW_OVERLAY_FIRE, text: "#TR_HOTKEY_SHOW_OVERLAY_FIRE" },
+        { action: HOTKEY_SHOW_OVERLAY_DAMAGE, text: "#TR_HOTKEY_SHOW_OVERLAY_DAMAGE" },
+        { action: HOTKEY_SHOW_OVERLAY_CRIME, text: "#TR_HOTKEY_SHOW_OVERLAY_CRIME" },
+        { action: HOTKEY_SHOW_OVERLAY_PROBLEMS, text: "#TR_HOTKEY_SHOW_OVERLAY_PROBLEMS" },
+        { action: -1, text: "#TR_HOTKEY_HEADER_BOOKMARKS" },
+        { action: HOTKEY_GO_TO_BOOKMARK_1, text: "#TR_HOTKEY_GO_TO_BOOKMARK_1" },
+        { action: HOTKEY_GO_TO_BOOKMARK_2, text: "#TR_HOTKEY_GO_TO_BOOKMARK_2" },
+        { action: HOTKEY_GO_TO_BOOKMARK_3, text: "#TR_HOTKEY_GO_TO_BOOKMARK_3" },
+        { action: HOTKEY_GO_TO_BOOKMARK_4, text: "#TR_HOTKEY_GO_TO_BOOKMARK_4" },
+        { action: HOTKEY_SET_BOOKMARK_1, text: "#TR_HOTKEY_SET_BOOKMARK_1" },
+        { action: HOTKEY_SET_BOOKMARK_2, text: "#TR_HOTKEY_SET_BOOKMARK_2" },
+        { action: HOTKEY_SET_BOOKMARK_3, text: "#TR_HOTKEY_SET_BOOKMARK_3" },
+        { action: HOTKEY_SET_BOOKMARK_4, text: "#TR_HOTKEY_SET_BOOKMARK_4" },
+        { action: -1, text: "#TR_HOTKEY_HEADER_EDITOR" },
+        { action: HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, text: "#TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO" }
+    ]
+
+    scroll_position: 0
 
     ui: {
         background_image: background({ pack: PACK_UNLOADED, id: 8 })
@@ -270,9 +270,10 @@ window_hotkey_config {
 
 [es=(window_hotkey_config, init)]
 function hotkey_config_on_init(window) {
+    __log_marker("window_show:window_hotkey_config")
     window_hotkey_config.mappings = hotkey_config_load_mappings()
     window_hotkey_config.needs_rebuild = true
-    __ui_element_max_value("list_scroll", hotkey_config_widgets.length - HOTKEY_CONFIG_VISIBLE)
+    window.list_scroll.max_value = window_hotkey_config.widgets.length - window_hotkey_config.visible_rows
 }
 
 [es=(window_hotkey_config, ui_draw_foreground)]

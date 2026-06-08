@@ -5,7 +5,6 @@
 #include "js/js_events.h"
 #include "js/js_game.h"
 #include "window/hotkey_editor.h"
-#include "graphics/elements/ui.h"
 #include "core/profiler.h"
 
 struct event_hotkey_editor_result {
@@ -82,14 +81,5 @@ void __hotkey_editor_show(int action, int is_alt) {
     window_hotkey_editor_show(action, is_alt, hotkey_editor_js_callback);
 }
 ANK_FUNCTION_2(__hotkey_editor_show)
-
-int __ui_scrollbar_position(pcstr element_id) {
-    ui::widget *w = ui::get_current_widget();
-    if (!w) {
-        return 0;
-    }
-    return (*w)[element_id].value();
-}
-ANK_FUNCTION_1(__ui_scrollbar_position)
 
 e_hotkey_action_tokens_t ANK_CONFIG_ENUM(e_hotkey_action_tokens);
