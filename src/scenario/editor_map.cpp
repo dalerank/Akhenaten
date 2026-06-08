@@ -6,14 +6,12 @@
 // TODO !!!!!!
 
 void scenario_editor_set_entry_point(int x, int y) {
-    //    g_scenario.entry_point.x() = x;
-    //    g_scenario.entry_point.y() = y;
+    g_scenario.entry_point = tile2i{ x, y };
     g_scenario.is_saved = 0;
 }
 
 void scenario_editor_set_exit_point(int x, int y) {
-    //    g_scenario.exit_point.x() = x;
-    //    g_scenario.exit_point.y() = y;
+    g_scenario.exit_point = tile2i{ x, y };
     g_scenario.is_saved = 0;
 }
 
@@ -22,8 +20,7 @@ static void update_river() {
 }
 
 void scenario_editor_set_river_entry_point(int x, int y) {
-    //    g_scenario.river_entry_point.x() = x;
-    //    g_scenario.river_entry_point.y() = y;
+    g_scenario.river_entry_point = tile2i{ x, y };
     g_scenario.is_saved = 0;
     update_river();
 }
@@ -106,8 +103,7 @@ tile2i scenario_editor_earthquake_point(void) {
 }
 
 void scenario_editor_set_earthquake_point(int x, int y) {
-    //    g_scenario.earthquake_point.x = x;
-    //    g_scenario.earthquake_point.y = y;
+    g_scenario.earthquake_point = tile2i{ x, y };
     g_scenario.is_saved = 0;
 }
 
