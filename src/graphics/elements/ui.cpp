@@ -2180,8 +2180,9 @@ void ui::egeneric_button::draw(UiFlags gflags) {
 
     xstring onclick_event = event_name(ONCLICK_EVENT);
     if (clickable && !onclick_event.empty()) {
-        btn->onclick([onclick_event] {
-            dispatch_autoconfig_es_event(get_current_widget(), onclick_event, {});
+        btn->onclick([onclick_event, p1 = param1, p2 = param2]() {
+            dispatch_autoconfig_es_event(get_current_widget(), onclick_event,
+                bvariant_map{{"param1", (int32_t)p1}, {"param2", (int32_t)p2}});
         });
     } else if (clickable && !js_ref(ONCLICK).empty()) {
         btn->onclick([this] { this->js_call(); });

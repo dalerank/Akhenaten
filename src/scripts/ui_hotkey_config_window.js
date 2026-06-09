@@ -5,70 +5,13 @@ function hotkey_config_label_pos(i) { return { x: 32, y: hotkey_config_row_y(i) 
 function hotkey_config_btn_pos(i) { return { x: 290, y: hotkey_config_row_y(i) } }
 function hotkey_config_btn_alt_pos(i) { return { x: 430, y: hotkey_config_row_y(i) } }
 
-function hotkey_config_btn_key(row, is_alt) {
-    var scroll = window_hotkey_config.scroll_position
-    var widgets = window_hotkey_config.widgets
-    var widget = widgets[row + scroll]
-    if (!widget || widget.action === window_hotkey_config.header_action)
-        return
-    __hotkey_editor_show(widget.action, is_alt)
-}
-
-function hotkey_config_btn_defaults(p1, p2) {
-    window_hotkey_config.load_default_mappings()
-    window_hotkey_config.needs_rebuild = true
-}
-
-function hotkey_config_btn_cancel(p1, p2) {
-    window_go_back()
-}
-
-function hotkey_config_btn_save(p1, p2) {
-    var mappings = window_hotkey_config.mappings
-    for (var action in mappings) {
-        var m = mappings[action]
-        __hotkey_set_mapping(+action, m.key, m.modifiers, m.alt_key, m.alt_modifiers)
-    }
-    __hotkey_save_and_install()
-    window_go_back()
-}
-
-function hotkey_config_update_rows(window) {
-    var scroll = window.list_scroll.value
-    window_hotkey_config.scroll_position = scroll
-    var widgets = window_hotkey_config.widgets
-    var header = window_hotkey_config.header_action
-    for (var i = 0; i < window_hotkey_config.visible_rows; i++) {
-        var widget = widgets[i + scroll]
-        var label = window["trow" + i]
-        var btn1 = window["kbtn" + i]
-        var btn2 = window["kbtn" + i + "alt"]
-
-        if (!widget) {
-            label.text = ""
-            btn1.enabled = false
-            btn2.enabled = false
-            btn1.text = ""
-            btn2.text = ""
-            continue
-        }
-
-        if (widget.action === header) {
-            label.text = widget.text ? widget.text : ""
-            label.font = FONT_NORMAL_WHITE_ON_DARK
-            btn1.enabled = false
-            btn2.enabled = false
-            btn1.text = ""
-            btn2.text = ""
-        } else {
-            label.text = widget.text ? widget.text : ""
-            label.font = FONT_NORMAL_BLACK_ON_DARK
-            btn1.enabled = true
-            btn2.enabled = true
-            var m = window_hotkey_config.mappings[widget.action]
-            btn1.text = (m && m.key) ? __hotkey_key_display_name(m.key, m.modifiers) : ""
-            btn2.text = (m && m.alt_key) ? __hotkey_key_display_name(m.alt_key, m.alt_modifiers) : ""
-        }
+function hotkey_config_key_button(row, is_alt) {
+    return {
+        pos: is_alt ? hotkey_config_btn_alt_pos(row) : hotkey_config_btn_pos(row),
+        size: [140, 22],
+        param1: row,
+        param2: is_alt ? 1 : 0,
+        onclick_event: "edit_key"
     }
 }
 
@@ -85,6 +28,33 @@ function hotkey_config_on_editor_result(ev) {
         mappings[ev.action].modifiers = ev.modifiers
     }
     window_hotkey_config.needs_rebuild = true
+}
+
+[es=(window_hotkey_config, edit_key)]
+function hotkey_config_on_edit_key(ev) {
+    var scroll = window_hotkey_config.scroll_position
+    var widgets = window_hotkey_config.widgets
+    var widget = widgets[ev.param1 + scroll]
+    if (!widget || widget.action === window_hotkey_config.header_action)
+        return
+    __hotkey_editor_show(widget.action, ev.param2)
+}
+
+[es=(window_hotkey_config, reset_defaults)]
+function hotkey_config_on_reset_defaults() {
+    window_hotkey_config.load_default_mappings()
+    window_hotkey_config.needs_rebuild = true
+}
+
+[es=(window_hotkey_config, save)]
+function hotkey_config_on_save() {
+    var mappings = window_hotkey_config.mappings
+    for (var action in mappings) {
+        var m = mappings[action]
+        __hotkey_set_mapping(+action, m.key, m.modifiers, m.alt_key, m.alt_modifiers)
+    }
+    __hotkey_save_and_install()
+    window_go_back()
 }
 
 [es=window]
@@ -210,51 +180,51 @@ window_hotkey_config {
         list_scroll: scrollbar({ pos: [580, 72], size: [0, 352] })
 
         trow0: text({ pos: hotkey_config_label_pos(0) })
-        kbtn0: button({ pos: hotkey_config_btn_pos(0), size: [140, 22], onclick: function () { hotkey_config_btn_key(0, 0) } })
-        kbtn0alt: button({ pos: hotkey_config_btn_alt_pos(0), size: [140, 22], onclick: function () { hotkey_config_btn_key(0, 1) } })
+        kbtn0: button(hotkey_config_key_button(0, false))
+        kbtn0alt: button(hotkey_config_key_button(0, true))
         trow1: text({ pos: hotkey_config_label_pos(1) })
-        kbtn1: button({ pos: hotkey_config_btn_pos(1), size: [140, 22], onclick: function () { hotkey_config_btn_key(1, 0) } })
-        kbtn1alt: button({ pos: hotkey_config_btn_alt_pos(1), size: [140, 22], onclick: function () { hotkey_config_btn_key(1, 1) } })
+        kbtn1: button(hotkey_config_key_button(1, false))
+        kbtn1alt: button(hotkey_config_key_button(1, true))
         trow2: text({ pos: hotkey_config_label_pos(2) })
-        kbtn2: button({ pos: hotkey_config_btn_pos(2), size: [140, 22], onclick: function () { hotkey_config_btn_key(2, 0) } })
-        kbtn2alt: button({ pos: hotkey_config_btn_alt_pos(2), size: [140, 22], onclick: function () { hotkey_config_btn_key(2, 1) } })
+        kbtn2: button(hotkey_config_key_button(2, false))
+        kbtn2alt: button(hotkey_config_key_button(2, true))
         trow3: text({ pos: hotkey_config_label_pos(3) })
-        kbtn3: button({ pos: hotkey_config_btn_pos(3), size: [140, 22], onclick: function () { hotkey_config_btn_key(3, 0) } })
-        kbtn3alt: button({ pos: hotkey_config_btn_alt_pos(3), size: [140, 22], onclick: function () { hotkey_config_btn_key(3, 1) } })
+        kbtn3: button(hotkey_config_key_button(3, false))
+        kbtn3alt: button(hotkey_config_key_button(3, true))
         trow4: text({ pos: hotkey_config_label_pos(4) })
-        kbtn4: button({ pos: hotkey_config_btn_pos(4), size: [140, 22], onclick: function () { hotkey_config_btn_key(4, 0) } })
-        kbtn4alt: button({ pos: hotkey_config_btn_alt_pos(4), size: [140, 22], onclick: function () { hotkey_config_btn_key(4, 1) } })
+        kbtn4: button(hotkey_config_key_button(4, false))
+        kbtn4alt: button(hotkey_config_key_button(4, true))
         trow5: text({ pos: hotkey_config_label_pos(5) })
-        kbtn5: button({ pos: hotkey_config_btn_pos(5), size: [140, 22], onclick: function () { hotkey_config_btn_key(5, 0) } })
-        kbtn5alt: button({ pos: hotkey_config_btn_alt_pos(5), size: [140, 22], onclick: function () { hotkey_config_btn_key(5, 1) } })
+        kbtn5: button(hotkey_config_key_button(5, false))
+        kbtn5alt: button(hotkey_config_key_button(5, true))
         trow6: text({ pos: hotkey_config_label_pos(6) })
-        kbtn6: button({ pos: hotkey_config_btn_pos(6), size: [140, 22], onclick: function () { hotkey_config_btn_key(6, 0) } })
-        kbtn6alt: button({ pos: hotkey_config_btn_alt_pos(6), size: [140, 22], onclick: function () { hotkey_config_btn_key(6, 1) } })
+        kbtn6: button(hotkey_config_key_button(6, false))
+        kbtn6alt: button(hotkey_config_key_button(6, true))
         trow7: text({ pos: hotkey_config_label_pos(7) })
-        kbtn7: button({ pos: hotkey_config_btn_pos(7), size: [140, 22], onclick: function () { hotkey_config_btn_key(7, 0) } })
-        kbtn7alt: button({ pos: hotkey_config_btn_alt_pos(7), size: [140, 22], onclick: function () { hotkey_config_btn_key(7, 1) } })
+        kbtn7: button(hotkey_config_key_button(7, false))
+        kbtn7alt: button(hotkey_config_key_button(7, true))
         trow8: text({ pos: hotkey_config_label_pos(8) })
-        kbtn8: button({ pos: hotkey_config_btn_pos(8), size: [140, 22], onclick: function () { hotkey_config_btn_key(8, 0) } })
-        kbtn8alt: button({ pos: hotkey_config_btn_alt_pos(8), size: [140, 22], onclick: function () { hotkey_config_btn_key(8, 1) } })
+        kbtn8: button(hotkey_config_key_button(8, false))
+        kbtn8alt: button(hotkey_config_key_button(8, true))
         trow9: text({ pos: hotkey_config_label_pos(9) })
-        kbtn9: button({ pos: hotkey_config_btn_pos(9), size: [140, 22], onclick: function () { hotkey_config_btn_key(9, 0) } })
-        kbtn9alt: button({ pos: hotkey_config_btn_alt_pos(9), size: [140, 22], onclick: function () { hotkey_config_btn_key(9, 1) } })
+        kbtn9: button(hotkey_config_key_button(9, false))
+        kbtn9alt: button(hotkey_config_key_button(9, true))
         trow10: text({ pos: hotkey_config_label_pos(10) })
-        kbtn10: button({ pos: hotkey_config_btn_pos(10), size: [140, 22], onclick: function () { hotkey_config_btn_key(10, 0) } })
-        kbtn10alt: button({ pos: hotkey_config_btn_alt_pos(10), size: [140, 22], onclick: function () { hotkey_config_btn_key(10, 1) } })
+        kbtn10: button(hotkey_config_key_button(10, false))
+        kbtn10alt: button(hotkey_config_key_button(10, true))
         trow11: text({ pos: hotkey_config_label_pos(11) })
-        kbtn11: button({ pos: hotkey_config_btn_pos(11), size: [140, 22], onclick: function () { hotkey_config_btn_key(11, 0) } })
-        kbtn11alt: button({ pos: hotkey_config_btn_alt_pos(11), size: [140, 22], onclick: function () { hotkey_config_btn_key(11, 1) } })
+        kbtn11: button(hotkey_config_key_button(11, false))
+        kbtn11alt: button(hotkey_config_key_button(11, true))
         trow12: text({ pos: hotkey_config_label_pos(12) })
-        kbtn12: button({ pos: hotkey_config_btn_pos(12), size: [140, 22], onclick: function () { hotkey_config_btn_key(12, 0) } })
-        kbtn12alt: button({ pos: hotkey_config_btn_alt_pos(12), size: [140, 22], onclick: function () { hotkey_config_btn_key(12, 1) } })
+        kbtn12: button(hotkey_config_key_button(12, false))
+        kbtn12alt: button(hotkey_config_key_button(12, true))
         trow13: text({ pos: hotkey_config_label_pos(13) })
-        kbtn13: button({ pos: hotkey_config_btn_pos(13), size: [140, 22], onclick: function () { hotkey_config_btn_key(13, 0) } })
-        kbtn13alt: button({ pos: hotkey_config_btn_alt_pos(13), size: [140, 22], onclick: function () { hotkey_config_btn_key(13, 1) } })
+        kbtn13: button(hotkey_config_key_button(13, false))
+        kbtn13alt: button(hotkey_config_key_button(13, true))
 
-        btn_defaults: button({ pos: [240, 430], size: [160, 30], text: "#TR_BUTTON_RESET_DEFAULTS", onclick: hotkey_config_btn_defaults })
-        btn_cancel: button({ pos: [410, 430], size: [100, 30], text: "#TR_BUTTON_CANCEL", onclick: hotkey_config_btn_cancel })
-        btn_save: button({ pos: [520, 430], size: [100, 30], text: "#TR_BUTTON_OK", onclick: hotkey_config_btn_save })
+        btn_defaults: button({ pos: [240, 430], size: [160, 30], text: "#TR_BUTTON_RESET_DEFAULTS", onclick_event: "reset_defaults" })
+        btn_cancel: button({ pos: [410, 430], size: [100, 30], text: "#TR_BUTTON_CANCEL", onclick: window_go_back })
+        btn_save: button({ pos: [520, 430], size: [100, 30], text: "#TR_BUTTON_OK", onclick_event: "save" })
     }
 }
 
@@ -268,6 +238,43 @@ function hotkey_config_on_init(window) {
 
 [es=(window_hotkey_config, ui_draw_foreground)]
 function hotkey_config_draw(window) {
-    hotkey_config_update_rows(window)
+    if (window_hotkey_config.needs_rebuild) {
+        var scroll = window.list_scroll.value
+        window_hotkey_config.scroll_position = scroll
+        var widgets = window_hotkey_config.widgets
+        var header = window_hotkey_config.header_action
+        for (var i = 0; i < window_hotkey_config.visible_rows; i++) {
+            var widget = widgets[i + scroll]
+            var label = window["trow" + i]
+            var btn1 = window["kbtn" + i]
+            var btn2 = window["kbtn" + i + "alt"]
+
+            if (!widget) {
+                label.text = ""
+                btn1.enabled = false
+                btn2.enabled = false
+                btn1.text = ""
+                btn2.text = ""
+                continue
+            }
+
+            if (widget.action === header) {
+                label.text = widget.text ? widget.text : ""
+                label.font = FONT_NORMAL_WHITE_ON_DARK
+                btn1.enabled = false
+                btn2.enabled = false
+                btn1.text = ""
+                btn2.text = ""
+            } else {
+                label.text = widget.text ? widget.text : ""
+                label.font = FONT_NORMAL_BLACK_ON_DARK
+                btn1.enabled = true
+                btn2.enabled = true
+                var m = window_hotkey_config.mappings[widget.action]
+                btn1.text = (m && m.key) ? __hotkey_key_display_name(m.key, m.modifiers) : ""
+                btn2.text = (m && m.alt_key) ? __hotkey_key_display_name(m.alt_key, m.alt_modifiers) : ""
+            }
+        }
+    }
     window_hotkey_config.needs_rebuild = false
 }
