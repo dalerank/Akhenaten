@@ -106,7 +106,7 @@ sound_key figure_dentist::phrase_key() const {
         keys.push_back("dentist_unemployment_is_high");
     }
     
-    if (g_city.festival.months_since_festival > 6) {
+    if (g_city.festival.entertainment_is_low()) {
         keys.push_back("dentist_low_entertainment");
     }
     

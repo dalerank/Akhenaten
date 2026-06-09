@@ -68,7 +68,7 @@ sound_key figure_architector::phrase_key() const {
         {"city_has_bad_reputation", sentiment < 30},
         {"city_is_good", sentiment > 50},
         {"city_is_bad", sentiment >= 30},
-        {"low_entertainment", g_city.festival.months_since_festival > 6},
+        {"low_entertainment", g_city.festival.entertainment_is_low()},
         {"city_is_amazing", sentiment > 90},
         {"i_am_works", true}
     };

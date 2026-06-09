@@ -16,7 +16,7 @@ sound_key figure_teacher::phrase_key() const {
         keys.push_back("teacher_desease_can_start_at_any_moment");
     }
 
-    if (g_city.festival.months_since_festival > 6) {  // low entertainment
+    if (g_city.festival.entertainment_is_low()) {  // low entertainment
         keys.push_back("teacher_low_entertainment");
     }
 

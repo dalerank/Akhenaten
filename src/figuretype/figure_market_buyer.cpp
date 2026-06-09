@@ -103,7 +103,7 @@ sound_key figure_market_buyer::phrase_key() const {
         keys.push_back("buyer_too_much_unemployments");
     }
 
-    if (g_city.festival.months_since_festival > 6) {  // low entertainment
+    if (g_city.festival.entertainment_is_low()) {  // low entertainment
         keys.push_back("buyer_low_entertainment");
     }
 

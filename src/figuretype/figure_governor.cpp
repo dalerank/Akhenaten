@@ -68,7 +68,7 @@ sound_key figure_governor::phrase_key() const {
         return "governor_city_left_much_nobles";
     }
 
-    if (g_city.festival.months_since_festival < 6) {
+    if (g_city.festival.was_recent()) {
         return "governor_festival_was_near";
     }
 

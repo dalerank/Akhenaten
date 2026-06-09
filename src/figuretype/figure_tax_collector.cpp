@@ -107,7 +107,7 @@ sound_key figure_tax_collector::phrase_key() const {
         {"gods_are_angry", g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT},
         {"city_is_bad", g_city.kingdome.rating < 30},
         {"much_unemployments", g_city.sentiment.low_mood_cause == LOW_MOOD_NO_JOBS},
-        {"low_entertainment", g_city.festival.months_since_festival > 6},
+        {"low_entertainment", g_city.festival.entertainment_is_low()},
         {"city_is_good", sentiment > 50},
         {"city_is_amazing", sentiment > 90}
     };

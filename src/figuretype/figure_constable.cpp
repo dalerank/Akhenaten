@@ -76,7 +76,7 @@ sound_key figure_constable::phrase_key() const {
         keys.push_back("policeman_much_unemployments");
     }
 
-    if (g_city.festival.months_since_festival > 6) {  // low entertainment
+    if (g_city.festival.entertainment_is_low()) {  // low entertainment
         keys.push_back("policeman_low_entertainment");
     }
 

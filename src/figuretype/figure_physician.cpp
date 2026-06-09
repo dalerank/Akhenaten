@@ -76,7 +76,7 @@ sound_key figure_physician::phrase_key() const {
         keys.push_back("gods_are_pleasures");
     }
 
-    if (g_city.festival.months_since_festival > 6) {  // low entertainment
+    if (g_city.festival.entertainment_is_low()) {  // low entertainment
         keys.push_back("low_entertainment");
     }
 
