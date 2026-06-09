@@ -23,6 +23,6 @@ int city_overlay_apothecary::get_column_height(const building *b) const {
 
     auto &housed = house->runtime_data();
     return house->house_population() > 0
-                ? housed.apothecary / 10 
+                ? housed.apothecary / 10
                 : COLUMN_TYPE_NONE;
 }

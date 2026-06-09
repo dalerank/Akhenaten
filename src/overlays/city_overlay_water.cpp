@@ -96,7 +96,7 @@ bool city_overlay_water::draw_custom_footprint(vec2i pixel, tile2i tile, painter
     return true;
 }
 
-void city_overlay_water::get_tooltip(tooltip_context* c, tile2i tile, xstring &tooltip) const {
+void city_overlay_water::get_tooltip(tooltip_context* c, tile2i tile, xstring &tooltip) {
     int building_id = map_building_at(tile);
     if (building_id && building_get(building_id)->is_house()) {
         if (map_terrain_is(tile, TERRAIN_FOUNTAIN_RANGE)) {

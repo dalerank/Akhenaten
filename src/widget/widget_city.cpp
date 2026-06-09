@@ -1410,9 +1410,10 @@ xstring screen_city_t::get_overlay_tooltip(tooltip_context *c, tile2i tile) {
     }
 
     xstring tooltip;
-    ((city_overlay*)overlay)->get_tooltip_for_building(c, b, tooltip);
+    auto *city_overlay_ptr = (city_overlay *)overlay;
+    city_overlay_ptr->get_tooltip_for_building(c, b, tooltip);
     if (!tooltip) {
-        overlay->get_tooltip(c, tile, tooltip);
+        city_overlay_ptr->get_tooltip(c, tile, tooltip);
     }
 
     return tooltip;

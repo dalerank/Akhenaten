@@ -66,7 +66,7 @@ inline void city_overlay_fertility::draw_custom_top(vec2i pixel, tile2i point, p
     }
 }
 
-void city_overlay_fertility::get_tooltip(tooltip_context *c, tile2i, xstring &tooltip) const {
+void city_overlay_fertility::get_tooltip(tooltip_context *c, tile2i, xstring &tooltip) {
 }
 
 void city_overlay_fertility::get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip){

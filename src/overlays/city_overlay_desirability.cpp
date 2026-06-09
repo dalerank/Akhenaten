@@ -94,7 +94,7 @@ void city_overlay_desirability::get_tooltip_for_building(tooltip_context *c, con
     return;
 }
 
-void city_overlay_desirability::get_tooltip(tooltip_context *c, tile2i tile, xstring &tooltip) const {
+void city_overlay_desirability::get_tooltip(tooltip_context *c, tile2i tile, xstring &tooltip) {
     int desirability = g_desirability.get(tile);
     if (desirability < 0) {
         tooltip = ui::str(66, 91);

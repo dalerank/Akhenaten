@@ -85,7 +85,7 @@ void city_overlay_crime::get_tooltip_for_building(tooltip_context* c, const buil
     return;
 }
 
-void city_overlay_crime::get_tooltip(tooltip_context *c, tile2i tile, xstring &tooltip) const {
+void city_overlay_crime::get_tooltip(tooltip_context *c, tile2i tile, xstring &tooltip) {
     int crime = g_crime.get(tile);
     if (crime < 0) {
         tooltip = ui::str(66, 58); // Low crime

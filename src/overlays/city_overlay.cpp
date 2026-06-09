@@ -20,11 +20,12 @@
 #include "js/js_game.h"
 #include "js/js_struct.h"
 
-struct overlay_building_tooltip_ev {
+struct overlay_tooltip_ev {
     building_id bid;
     tile2i tile;
+    vec2i mpos;
 };
-ANK_REGISTER_STRUCT_WRITER(overlay_building_tooltip_ev, bid, tile)
+ANK_REGISTER_STRUCT_WRITER(overlay_tooltip_ev, bid, tile, mpos)
 
 const e_overlay_tokens_t ANK_CONFIG_ENUM(e_overlay_tokens);
 const e_column_type_tokens_t ANK_CONFIG_ENUM(e_column_type_tokens);
@@ -287,8 +288,19 @@ void city_overlay::get_tooltip_for_building(tooltip_context* c, const building* 
     current_building_id = b->id;
     current_tooltip = {};
 
+    js_event(overlay_tooltip_ev{ b->id, b->tile, c->mpos }, es_name, __func__);
+    tooltip = current_tooltip;
+}
 
-    js_event(overlay_building_tooltip_ev{ b->id, b->tile }, es_name, __func__);
+void city_overlay::get_tooltip(tooltip_context *c, tile2i tile, xstring &tooltip) {
+    if (es_name.empty() || !tile.valid()) {
+        return;
+    }
+
+    current_building_id = 0;
+    current_tooltip = {};
+
+    js_event(overlay_tooltip_ev{ 0, tile, c->mpos }, es_name, __func__);
     tooltip = current_tooltip;
 }
 
