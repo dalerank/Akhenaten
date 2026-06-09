@@ -81,6 +81,21 @@ function console_command_show_labor_priority(args) {
     show_labor_priority_window(category)
 }
 
+[console_command=addmoney]
+function console_command_addmoney(args) {
+    var money = parseInt((args && args[0]) || "100", 10)
+    if (money <= 0) {
+        money = 100
+    }
+    emit event_finance_donation{ amount: money }
+    city.warnings.show("Added money")
+}
+
+[console_command=crashme]
+function console_command_crashme(args) {
+    __debug_crash()
+}
+
 /** off/on or 0/1 sets explicitly; no or other arg toggles current */
 function console_tri_state_on_off(args, current) {
 	var v = args && args[0]

@@ -5,26 +5,26 @@
 #include "building/building_type.h"
 #include "building/destruction.h"
 #include "building/monuments.h"
-#include "city/city_finance.h"
 #include "city/city.h"
-#include "game/game_events.h"
-#include "city/city_warnings.h"
 #include "city/city_health.h"
 #include "city/city_resource.h"
+#include "city/city_warnings.h"
 #include "core/string.h"
 #include "figure/figure.h"
+#include "game/game_events.h"
 #include "graphics/color.h"
 #include "graphics/font.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "js/js_game.h"
 #include "scenario/scenario_invasion.h"
 #include "window/window_building_info.h"
 #include "window/window_city.h"
 #include "window/console.h"
 #include "dev/debug.h"
 
-#include <string.h>
 #include <iostream>
+#include <string.h>
 
 #ifndef _WIN32
 #define stricmp strcasecmp
@@ -92,7 +92,7 @@ static void game_cheat_spawn_nobles(pcstr args) {
             buildings.push_back(&house->base);
         }
     });
-    
+
     int step = std::max<int>(1, (int)buildings.size() / count);
     for (int i = 0; i < buildings.size(); i += step) {
         if (!buildings[i]->has_road_access) {
@@ -114,17 +114,10 @@ void game_cheat_parse_command(pcstr command) {
     }
 }
 
-declare_console_command_p(addmoney) {
-    std::string args; is >> args;
-    int money = 0;
-    parse_integer(args.empty() ? (pcstr )"100" : args.c_str(), money);
-    g_city.finance.treasury += money;
-    events::emit(event_city_warning{ "Added money" });
-}
-
-declare_console_command_p(crashme) {
+void __debug_crash() {
     events::emit(event_city_warning{ "Trying to crash the game" });
     const int *p = nullptr;
     std::cout << *p;
 }
+ANK_FUNCTION(__debug_crash)
 
