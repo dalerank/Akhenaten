@@ -155,6 +155,7 @@ namespace game_features {
     extern game_feature gameplay_change_empire_map_runs_simulation;
     extern game_feature gameui_disable_nilometer_popups;
     extern game_feature gameui_building_mothball_button;
+    extern game_feature gameui_prompt_save_on_exit;
 
     xspan<game_feature*> all();
     game_feature* find(const xstring& name);

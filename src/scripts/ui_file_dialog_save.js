@@ -97,6 +97,7 @@ function file_dialog_save_handle_commit(ev) {
         game.write_savegame(normalized + ".svx")
         ui.window_city_show()
         __set_last_loaded_utf8(FILE_TYPE_SAVED_GAME, normalized)
+        app_finish_exit_after_save()
     } else if (pending === FILE_TYPE_SCENARIO) {
         var full = file_dialog_save_scenario_disk_path(normalized)
         game.editor_write_scenario(full)
@@ -106,6 +107,7 @@ function file_dialog_save_handle_commit(ev) {
 }
 
 function file_dialog_save_on_cancel() {
+    app_clear_pending_exit_after_save()
     window_go_back()
 }
 

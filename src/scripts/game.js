@@ -86,6 +86,7 @@ game_features {
     @gameopt_game_speed {}
     @gameui_sidebar_info {}
     @gameui_building_mothball_button {}
+    @gameui_prompt_save_on_exit {}
     @gameui_road_preview_in_map_order {}
     @gameopt_scroll_speed {}
     @gameopt_middle_mouse_camera_pan {}
@@ -174,4 +175,47 @@ function event_change_gamespeed_handler(ev) {
         }
     }
     game_features.gameopt_game_speed = s
+}
+
+var app_pending_exit_after_save = false
+
+function app_clear_pending_exit_after_save() {
+    app_pending_exit_after_save = false
+}
+
+function app_open_save_dialog_for_exit() {
+    app_pending_exit_after_save = true
+    ui.window_city_show()
+    window_file_dialog_save_show(FILE_TYPE_SAVED_GAME)
+}
+
+function app_finish_exit_after_save() {
+    if (app_pending_exit_after_save) {
+        app_pending_exit_after_save = false
+        emit event_request_exit{ value: true }
+    }
+}
+
+[es=event_app_close_requested]
+function app_on_close_requested(ev) {
+    if (!game_features.gameui_prompt_save_on_exit) {
+        emit event_request_exit{ value: true }
+        return
+    }
+
+    if (game.session_active) {
+        ui.show_yesno("#popup_dialog_quit_without_saving",
+            function() {
+                emit event_request_exit{ value: true }
+            },
+            function() {
+                app_open_save_dialog_for_exit()
+            }
+        )
+        return
+    }
+
+    ui.show_yesno("#popup_dialog_quit", function() {
+        emit event_request_exit{ value: true }
+    })
 }

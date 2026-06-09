@@ -1,4 +1,5 @@
 #include "core/bstring.h"
+#include "core/app.h"
 #include "game/game_events.h"
 #include "city/city_maintenance.h"
 #include "city/city_finance.h"
@@ -67,6 +68,7 @@ ANK_SCRIPT_EVENT(event_storageyards_remove_resource, resource, amount)
 ANK_SCRIPT_EVENT(event_mods_info_updated, count)
 ANK_SCRIPT_EVENT(event_toggle_industry_mothballed, resource)
 ANK_SCRIPT_EVENT(event_toggle_pause, value)
+ANK_SCRIPT_EVENT(event_app_close_requested, reserved)
 ANK_SCRIPT_EVENT(event_save_city, value)
 ANK_SCRIPT_EVENT(event_change_gamespeed, increase)
 ANK_SCRIPT_EVENT(event_change_scroll_speed, increase)

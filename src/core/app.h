@@ -10,6 +10,7 @@ struct event_app_toggle_fullscreen { int value; };
 struct event_app_screenshot { int value; };
 struct event_app_city_screenshot { int value; };
 struct event_request_exit { int value; };
+struct event_app_close_requested { int reserved = 0; };
 struct event_display_options_apply_resolution { int w; int h; };
 
 enum e_user_event {
@@ -23,6 +24,7 @@ enum e_user_event {
 void app_window_resize(const vec2i& wsize);
 void app_fullscreen(bool fullscreen);
 void app_post_event(int code);
+void app_handle_close_request();
 void app_terminate(const char* message) noexcept;
 
 struct hud_end_context_t {

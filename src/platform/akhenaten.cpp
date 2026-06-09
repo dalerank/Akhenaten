@@ -374,7 +374,7 @@ static void handle_event(CoreEvent* event, bool& active, bool& quit) {
         break;
 
     case SDL_QUIT:
-        quit = true;
+        app_handle_close_request();
         break;
 
     case SDL_USEREVENT:

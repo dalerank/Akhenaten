@@ -1,7 +1,9 @@
 #include "app.h"
 
 #include "core/archive.h"
+#include "editor/editor.h"
 #include "game/game.h"
+#include "game/game_config.h"
 #include "game/game_events.h"
 #include "game/game_events_history.h"
 #include "platform/screen.h"
@@ -10,6 +12,8 @@
 #include "input/mouse.h"
 #include "js/js_events.h"
 #include "js/js_game.h"
+#include "scenario/scenario.h"
+#include "window/popup_dialog.h"
 
 #include <SDL.h>
 
@@ -54,6 +58,29 @@ void app_post_event(int code) {
     event.user.type = SDL_USEREVENT;
     event.user.code = code;
     SDL_PushEvent(&event);
+}
+
+void app_handle_close_request() {
+    if (!game_features::gameui_prompt_save_on_exit) {
+        g_app.quit = true;
+        return;
+    }
+
+    if (editor_is_active()) {
+        if (g_scenario.is_saved) {
+            g_app.quit = true;
+            return;
+        }
+
+        popup_dialog::show_yesno("#popup_dialog_quit_without_saving", [](bool accepted) {
+            if (accepted) {
+                g_app.quit = true;
+            }
+        });
+        return;
+    }
+
+    events::emit(event_app_close_requested{});
 }
 
 void app_terminate(const char* message) noexcept {

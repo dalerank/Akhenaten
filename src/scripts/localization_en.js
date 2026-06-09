@@ -31,6 +31,7 @@ localization_en = [
   {key:"#TR_CONFIG_SAVE_YEAR_KINGDOME_RATING", text:"Save kingdom rating on yearly update"}
   {key:"#TR_CONFIG_SIDEBAR_INFO", text:"Extra information in the control panel"}
   {key:"#TR_CONFIG_BUILDING_MOTHBALL_BUTTON", text:"Show mothball button on building info windows"}
+  {key:"#TR_CONFIG_PROMPT_SAVE_ON_EXIT", text:"Prompt to save when closing the game (Alt+F4)"}
   {key:"#TR_CONFIG_SMOOTH_SCROLLING", text:"Enable smooth scrolling"}
   {key:"#TR_CONFIG_SMOOTH_ZOOM", text:"Enable smooth zoom"}
   {key:"#TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE", text:"Improve visual feedback when clearing land"}
