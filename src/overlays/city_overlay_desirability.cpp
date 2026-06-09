@@ -94,14 +94,14 @@ void city_overlay_desirability::get_tooltip_for_building(tooltip_context *c, con
     return;
 }
 
-xstring city_overlay_desirability::get_tooltip(tooltip_context *c, tile2i tile) const {
+void city_overlay_desirability::get_tooltip(tooltip_context *c, tile2i tile, xstring &tooltip) const {
     int desirability = g_desirability.get(tile);
     if (desirability < 0) {
-        return ui::str(66, 91);
+        tooltip = ui::str(66, 91);
     } else if (desirability == 0) {
-        return ui::str(66, 92);
+        tooltip = ui::str(66, 92);
     } else {
-        return ui::str(66, 93);
+        tooltip = ui::str(66, 93);
     }
 }
 

@@ -37,7 +37,7 @@ void city_overlay_water::draw_custom_top(vec2i pixel, tile2i tile, painter &ctx)
         }
 
         return;
-    } 
+    }
 
     building *b = building_at(tile);
     if (b->is_valid()) {
@@ -96,23 +96,21 @@ bool city_overlay_water::draw_custom_footprint(vec2i pixel, tile2i tile, painter
     return true;
 }
 
-xstring city_overlay_water::get_tooltip(tooltip_context* c, tile2i tile) const {
+void city_overlay_water::get_tooltip(tooltip_context* c, tile2i tile, xstring &tooltip) const {
     int building_id = map_building_at(tile);
     if (building_id && building_get(building_id)->is_house()) {
         if (map_terrain_is(tile, TERRAIN_FOUNTAIN_RANGE)) {
-            return ui::str(66, 3);
+            tooltip = ui::str(66, 3);
         } else {
-            return ui::str(66, 2);
+            tooltip = ui::str(66, 2);
         }
     } else if (map_terrain_is(tile, TERRAIN_GROUNDWATER)) {
         if (map_terrain_is(tile, TERRAIN_FOUNTAIN_RANGE)) {
-            return ui::str(66, 3);
+            tooltip = ui::str(66, 3);
         } else {
-            return ui::str(66, 1);
+            tooltip = ui::str(66, 1);
         }
     }
-
-    return {};
 }
 
 int city_overlay_water::get_column_height(const building *b) const {
