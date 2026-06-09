@@ -20,7 +20,7 @@ int city_overlay_bazaar_access::get_column_height(const building *b) const {
     if (!house) {
         return COLUMN_TYPE_NONE;
     }
-    
+
     if (house->house_population() <= 0) {
         return COLUMN_TYPE_NONE;
     }
@@ -29,15 +29,16 @@ int city_overlay_bazaar_access::get_column_height(const building *b) const {
     return std::clamp<int>(housed.bazaar_access / 10, 0, 8);
 }
 
-xstring city_overlay_bazaar_access::get_tooltip_for_building(tooltip_context *c, const building *b) {
+void city_overlay_bazaar_access::get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip){
     auto house = ((building *)b)->dcast_house();
 
     if (!house) {
-        return {};
+        return;
     }
 
     if (current_building_id == b->id) {
-        return current_tooltip;
+        tooltip = current_tooltip;
+        return;
     }
 
     current_building_id = b->id;
@@ -45,7 +46,7 @@ xstring city_overlay_bazaar_access::get_tooltip_for_building(tooltip_context *c,
 
     auto &housed = house->runtime_data();
     if (housed.population <= 0) {
-        return {};
+        return;
     }
 
     if (!house->model().food_types) {
@@ -68,12 +69,13 @@ xstring city_overlay_bazaar_access::get_tooltip_for_building(tooltip_context *c,
         }
     }
 
-    xstring tooltip = "#unknown_tooltip_food_stock";
+    xstring tooltip_key = "#unknown_tooltip_food_stock";
     if (tooltips && !tooltips->values.empty()) {
         int index = rand() % tooltips->values.size();
-        tooltip = tooltips->values[index];
+        tooltip_key = tooltips->values[index];
     }
 
-    current_tooltip = lang_xtext_from_key(tooltip);
-    return current_tooltip;
+    current_tooltip = lang_xtext_from_key(tooltip_key);
+    tooltip = current_tooltip;
+    return;
 }

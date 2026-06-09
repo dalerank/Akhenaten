@@ -17,35 +17,47 @@ int city_overlay_entertainment::get_column_height(const building *b) const {
     return (house->house_population() > 0) ? house->runtime_data().entertainment / 10 : COLUMN_TYPE_NONE;
 }
 
-xstring city_overlay_entertainment::get_tooltip_for_building(tooltip_context *c, const building *b) {
+void city_overlay_entertainment::get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip){
     auto house = ((building *)b)->dcast_house();
 
     if (!house) {
-        return ui::str(66, 74);;
+        tooltip = ui::str(66, 74);;
+        return;
     }
 
     auto &housed = house->runtime_data();
     if (housed.entertainment <= 0) {
-        return ui::str(66, 64);
+        tooltip = ui::str(66, 64);
+        return;
     } else if (housed.entertainment < 10) {
-        return ui::str(66, 65);
+        tooltip = ui::str(66, 65);
+        return;
     } else if (housed.entertainment < 20) {
-        return ui::str(66, 66);
+        tooltip = ui::str(66, 66);
+        return;
     } else if (housed.entertainment < 30) {
-        return ui::str(66, 67);
+        tooltip = ui::str(66, 67);
+        return;
     } else if (housed.entertainment < 40) {
-        return ui::str(66, 68);
+        tooltip = ui::str(66, 68);
+        return;
     } else if (housed.entertainment < 50) {
-        return ui::str(66, 69);
+        tooltip = ui::str(66, 69);
+        return;
     } else if (housed.entertainment < 60) {
-        return ui::str(66, 70);
+        tooltip = ui::str(66, 70);
+        return;
     } else if (housed.entertainment < 70) {
-        return ui::str(66, 71);
+        tooltip = ui::str(66, 71);
+        return;
     } else if (housed.entertainment < 80) {
-        return ui::str(66, 72);
+        tooltip = ui::str(66, 72);
+        return;
     } else if (housed.entertainment < 90) {
-        return ui::str(66, 73);
+        tooltip = ui::str(66, 73);
+        return;
     } else {
-        return ui::str(66, 74);
+        tooltip = ui::str(66, 74);
+        return;
     }
 }

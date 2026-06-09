@@ -11,15 +11,16 @@
 
 city_overlay_bandstand g_city_overlay_bandstand;
 
-xstring city_overlay_bandstand::get_tooltip_for_building(tooltip_context *c, const building *b) {
+void city_overlay_bandstand::get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip){
     auto house = ((building *)b)->dcast_house();
 
     if (!house) {
-        return {};
+        return;
     }
 
     if (current_building_id == b->id) {
-        return current_tooltip;
+        tooltip = current_tooltip;
+        return;
     }
 
     current_building_id = b->id;
@@ -31,15 +32,16 @@ xstring city_overlay_bandstand::get_tooltip_for_building(tooltip_context *c, con
     else if (musician_value <= 40) tooltips = &get_tooltips("usual");
     else if (musician_value <= 80) tooltips = &get_tooltips("medium");
     else tooltips = &get_tooltips("high");
-    
-    xstring tooltip = "#unknown_tooltip_bandstand";
+
+    xstring tooltip_key = "#unknown_tooltip_bandstand";
     if (tooltips && !tooltips->values.empty()) {
         int index = rand() % tooltips->values.size();
-        tooltip = tooltips->values[index];
+        tooltip_key = tooltips->values[index];
     }
 
-    current_tooltip = lang_xtext_from_key(tooltip);
-    return current_tooltip;
+    current_tooltip = lang_xtext_from_key(tooltip_key);
+    tooltip = current_tooltip;
+    return;
 }
 
 bool city_overlay_bandstand::show_figure(const figure *f) const {

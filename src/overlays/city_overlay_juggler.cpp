@@ -23,23 +23,31 @@ int city_overlay_booth::get_column_height(const building *b) const {
     return COLUMN_TYPE_NONE;
 }
 
-xstring city_overlay_booth::get_tooltip_for_building(tooltip_context *c, const building *b) {
+void city_overlay_booth::get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip){
     auto house = ((building *)b)->dcast_house();
 
     if (!house) {
-        return ui::str(66, 78);
+        tooltip = ui::str(66, 78);
+        return;
     }
 
     auto &housed = house->runtime_data();
     int juggler_value = std::max<int>(housed.booth_juggler, housed.bandstand_juggler);
 
-    if (juggler_value <= 0)
-        return ui::str(66, 75);
-    else if (juggler_value >= 80)
-        return ui::str(66, 76);
-    else if (juggler_value >= 20)
-        return ui::str(66, 77);
+    if (juggler_value <= 0) {
+        tooltip = ui::str(66, 75);
+        return;
+        }
+    else if (juggler_value >= 80) {
+        tooltip = ui::str(66, 76);
+        return;
+        }
+    else if (juggler_value >= 20) {
+        tooltip = ui::str(66, 77);
+        return;
+        }
     else {
-        return ui::str(66, 78);
+        tooltip = ui::str(66, 78);
+        return;
     }
 }

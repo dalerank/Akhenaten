@@ -54,18 +54,23 @@ void city_overlay_health::draw_custom_top(vec2i pixel, tile2i tile, painter &ctx
     }
 }
 
-xstring city_overlay_health::get_tooltip_for_building(tooltip_context *c, const building *b) {
+void city_overlay_health::get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip){
     if (b->disease_days > 0) {
-        return ui::str(66, 131);
+        tooltip = ui::str(66, 131);
+        return;
     }
 
     if (b->common_health < 25) {
-        return ui::str(66, 130);
+        tooltip = ui::str(66, 130);
+        return;
     } else if (b->common_health < 50) {
-        return ui::str(66, 129);
+        tooltip = ui::str(66, 129);
+        return;
     } else if (b->common_health < 75) {
-        return ui::str(66, 128);
+        tooltip = ui::str(66, 128);
+        return;
     } else {
-        return ui::str(66, 127);
+        tooltip = ui::str(66, 127);
+        return;
     }
 }

@@ -35,18 +35,29 @@ void city_overlay_damage::draw_custom_top(vec2i pixel, tile2i tile, painter &ctx
     }
 }
 
-xstring city_overlay_damage::get_tooltip_for_building(tooltip_context *c, const building *b) {
-    if (b->collapse_risk <= 0)
-        return ui::str(66, 52);
-    else if (b->collapse_risk <= 40)
-        return ui::str(66, 53);
-    else if (b->collapse_risk <= 80)
-        return ui::str(66, 54);
-    else if (b->collapse_risk <= 120)
-        return ui::str(66, 55);
-    else if (b->collapse_risk <= 160)
-        return ui::str(66, 56);
+void city_overlay_damage::get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip){
+    if (b->collapse_risk <= 0) {
+        tooltip = ui::str(66, 52);
+        return;
+        }
+    else if (b->collapse_risk <= 40) {
+        tooltip = ui::str(66, 53);
+        return;
+        }
+    else if (b->collapse_risk <= 80) {
+        tooltip = ui::str(66, 54);
+        return;
+        }
+    else if (b->collapse_risk <= 120) {
+        tooltip = ui::str(66, 55);
+        return;
+        }
+    else if (b->collapse_risk <= 160) {
+        tooltip = ui::str(66, 56);
+        return;
+        }
     else {
-        return ui::str(66, 57);
+        tooltip = ui::str(66, 57);
+        return;
     }
 }

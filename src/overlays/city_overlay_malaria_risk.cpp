@@ -51,17 +51,22 @@ void city_overlay_malaria_risk::draw_custom_top(vec2i pixel, tile2i tile, painte
     }
 }
 
-xstring city_overlay_malaria_risk::get_tooltip_for_building(tooltip_context *c, const building *b) {
+void city_overlay_malaria_risk::get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip) {
     if (b->malaria_risk <= 0) {
-        return ui::str(66, 137); // "This building is a negligible malaria risk."
+        tooltip = ui::str(66, 137); // "This building is a negligible malaria risk."
+        return;
     } else if (b->malaria_risk <= 20) {
-        return ui::str(66, 138); // "This building has some risk of malaria."
+        tooltip = ui::str(66, 138); // "This building has some risk of malaria."
+        return;
     } else if (b->malaria_risk <= 40) {
-        return ui::str(66, 139); // "This building has a risk of malaria"
+        tooltip = ui::str(66, 139); // "This building has a risk of malaria"
+        return;
     } else if (b->malaria_risk <= 60) {
-        return ui::str(66, 140); // "This building will have malaria soon."
+        tooltip = ui::str(66, 140); // "This building will have malaria soon."
+        return;
     } else {
-        return ui::str(66, 147); // "Risk of malaria"
+        tooltip = ui::str(66, 147); // "Risk of malaria"
+        return;
     }
 }
 

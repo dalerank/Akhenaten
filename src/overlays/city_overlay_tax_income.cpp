@@ -25,10 +25,11 @@ int city_overlay_tax_income::get_column_height(const building *b) const {
     return COLUMN_TYPE_NONE;
 }
 
-xstring city_overlay_tax_income::get_tooltip_for_building(tooltip_context *c, const building *b) {
+void city_overlay_tax_income::get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip){
     auto house = ((building*)b)->dcast_house();
     if (!house) {
-        return ui::str(66, 43);
+        tooltip = ui::str(66, 43);
+        return;
     }
 
     auto &housed = house->runtime_data();
@@ -36,10 +37,13 @@ xstring city_overlay_tax_income::get_tooltip_for_building(tooltip_context *c, co
     if (denarii > 0) {
         c->has_numeric_prefix = 1;
         c->numeric_prefix = denarii;
-        return ui::str(66, 45);
+        tooltip = ui::str(66, 45);
+        return;
     } else if (housed.tax_coverage > 0) {
-        return ui::str(66, 44);
+        tooltip = ui::str(66, 44);
+        return;
     } else {
-        return ui::str(66, 43);
+        tooltip = ui::str(66, 43);
+        return;
     }
 }

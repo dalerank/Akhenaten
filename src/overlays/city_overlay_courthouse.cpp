@@ -22,20 +22,25 @@ int city_overlay_courthouse::get_column_height(const building *b) const {
     return COLUMN_TYPE_NONE;
 }
 
-xstring city_overlay_courthouse::get_tooltip_for_building(tooltip_context *c, const building *b) {
+void city_overlay_courthouse::get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip){
     auto house = ((building *)b)->dcast_house();
     if (!house) {
-        return  ui::str(66, 159);
+        tooltip = ui::str(66, 159);
+        return;
     }
 
     auto &housed = house->runtime_data();
     if (housed.magistrate <= 0) {
-        return ui::str(66, 158);
+        tooltip = ui::str(66, 158);
+        return;
     } else if (housed.magistrate <= 33) {
-        return ui::str(66, 161);
+        tooltip = ui::str(66, 161);
+        return;
     } else if (housed.magistrate <= 66) {
-        return ui::str(66, 160);
+        tooltip = ui::str(66, 160);
+        return;
     } else {
-        return ui::str(66, 159);
+        tooltip = ui::str(66, 159);
+        return;
     }
 }

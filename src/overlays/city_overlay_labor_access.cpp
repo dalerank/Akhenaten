@@ -17,14 +17,15 @@ struct city_overlay_labor_access : public city_overlay_t<OVERLAY_LABOR_ACCESS> {
         return false;
     }
     virtual int get_column_height(const building *b) const override;
-    virtual xstring get_tooltip_for_building(tooltip_context *c, const building *b) override;
+    virtual void get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip) override;
     virtual bool show_building(const building *b) const override;
 };
 
 city_overlay_labor_access g_city_overlay_labor_access;
 
-xstring city_overlay_labor_access::get_tooltip_for_building(tooltip_context *c, const building *b) {
-    return ui::str(66, 57);
+void city_overlay_labor_access::get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip){
+    tooltip = ui::str(66, 57);
+    return;
 }
 
 int city_overlay_labor_access::get_column_height(const building *b) const {

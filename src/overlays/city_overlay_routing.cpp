@@ -101,25 +101,37 @@ inline void city_overlay_routing::draw_custom_top(vec2i pixel, tile2i point, pai
     }
 }
 
-xstring city_overlay_routing::get_tooltip_for_building(tooltip_context *c, const building *b) {
+void city_overlay_routing::get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip){
     if (b->is_farm()) {
         tile2i tile = b->tile;
         int fertility = 0;
-        if (fertility > 80)
-            return ui::str(66, 63);
-        else if (fertility > 60)
-            return ui::str(66, 62);
-        else if (fertility > 40)
-            return ui::str(66, 61);
-        else if (fertility > 20)
-            return ui::str(66, 60);
-        else if (fertility > 10)
-            return ui::str(66, 59);
+        if (fertility > 80) {
+            tooltip = ui::str(66, 63);
+            return;
+            }
+        else if (fertility > 60) {
+            tooltip = ui::str(66, 62);
+            return;
+            }
+        else if (fertility > 40) {
+            tooltip = ui::str(66, 61);
+            return;
+            }
+        else if (fertility > 20) {
+            tooltip = ui::str(66, 60);
+            return;
+            }
+        else if (fertility > 10) {
+            tooltip = ui::str(66, 59);
+            return;
+            }
         else {
-            return ui::str(66, 58);
+            tooltip = ui::str(66, 58);
+            return;
         }
     }
-    return ui::str(66, 58);
+    tooltip = ui::str(66, 58);
+    return;
 }
 
 inline bool city_overlay_routing::show_building(const building *b) const {

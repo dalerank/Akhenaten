@@ -37,11 +37,12 @@ int city_overlay_religion::get_column_height(const building *b) const {
                 : COLUMN_TYPE_NONE;
 }
 
-xstring city_overlay_religion::get_tooltip_for_building(tooltip_context *c, const building *b) {
+void city_overlay_religion::get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip){
     auto house = ((building *)b)->dcast_house();
 
     if (!house) {
-        return ui::str(66, 18);
+        tooltip = ui::str(66, 18);
+        return;
     }
 
     auto &housed = house->runtime_data();
@@ -63,18 +64,25 @@ xstring city_overlay_religion::get_tooltip_for_building(tooltip_context *c, cons
     }
 
     if (housed.num_gods <= 0) {
-        return ui::str(66, 12);
+        tooltip = ui::str(66, 12);
+        return;
     } else if (housed.num_gods == 1) {
-        return ui::str(66, 13);
+        tooltip = ui::str(66, 13);
+        return;
     } else if (housed.num_gods == 2) {
-        return ui::str(66, 14);
+        tooltip = ui::str(66, 14);
+        return;
     } else if (housed.num_gods == 3) {
-        return ui::str(66, 15);
+        tooltip = ui::str(66, 15);
+        return;
     } else if (housed.num_gods == 4) {
-        return ui::str(66, 16);
+        tooltip = ui::str(66, 16);
+        return;
     } else if (housed.num_gods == 5) {
-        return ui::str(66, 17);
+        tooltip = ui::str(66, 17);
+        return;
     } else {
-        return ui::str(66, 18); // >5 gods, shouldn't happen...
+        tooltip = ui::str(66, 18); // >5 gods, shouldn't happen...
+        return;
     }
 }

@@ -49,7 +49,7 @@ struct city_overlay {
     virtual int get_column_height(const building *b) const { return COLUMN_TYPE_NONE; }
     virtual e_column_color get_column_color(const building *b) const { return COLUMN_COLOR_NONE; }
     virtual xstring get_tooltip(tooltip_context *c, tile2i tile) const { return {}; }
-    virtual xstring get_tooltip_for_building(tooltip_context *c, const building *b) { return {}; }
+    virtual void get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip) {}
     virtual bool draw_custom_footprint(vec2i pixel, tile2i point, painter &ctx) const { return false; }
     virtual void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const;
     virtual void draw_building_footprint(painter &ctx, vec2i pos, tile2i tile, int image_offset) const;

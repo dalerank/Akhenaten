@@ -36,22 +36,27 @@ int city_overlay_pavilion::get_column_height(const building *b) const {
                 : COLUMN_TYPE_NONE;
 }
 
-xstring city_overlay_pavilion::get_tooltip_for_building(tooltip_context *c, const building *b) {
+void city_overlay_pavilion::get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip){
     auto house = ((building *)b)->dcast_house();
 
     if (!house) {
-        return ui::str(66, 86);
+        tooltip = ui::str(66, 86);
+        return;
     }
 
     auto &housed = house->runtime_data();
     if (housed.senet_player <= 0) {
-        return ui::str(66, 83);
+        tooltip = ui::str(66, 83);
+        return;
     } else if (housed.senet_player >= 80) {
-        return ui::str(66, 84);
+        tooltip = ui::str(66, 84);
+        return;
     } else if (housed.senet_player >= 20) {
-        return ui::str(66, 85);
+        tooltip = ui::str(66, 85);
+        return;
     } else {
-        return ui::str(66, 86);
+        tooltip = ui::str(66, 86);
+        return;
     }
 }
 

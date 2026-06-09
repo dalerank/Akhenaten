@@ -19,7 +19,6 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "grid/building.h"
-#include "grid/grid.h"
 #include "grid/figure.h"
 #include "grid/image.h"
 #include "grid/terrain.h"
@@ -41,12 +40,9 @@
 #include "window/window_city_warship.h"
 #include "figuretype/figure_war_ship.h"
 #include "building/building_warship_wharf.h"
-#include "grid/figure.h"
 #include "grid/water.h"
-#include "grid/building.h"
 #include "game/game.h"
 #include "core/threading.h"
-#include "overlays/city_overlay.h"
 #include "building/building.h"
 #include "dev/debug.h"
 #include "graphics/elements/tooltip.h"
@@ -1413,7 +1409,8 @@ xstring screen_city_t::get_overlay_tooltip(tooltip_context *c, tile2i tile) {
         return {};
     }
 
-    xstring tooltip = ((city_overlay*)overlay)->get_tooltip_for_building(c, b);
+    xstring tooltip;
+    ((city_overlay*)overlay)->get_tooltip_for_building(c, b, tooltip);
     if (!tooltip) {
         tooltip = overlay->get_tooltip(c, tile);
     }

@@ -23,21 +23,26 @@ int city_overlay_physician::get_column_height(const building *b) const {
              : COLUMN_TYPE_NONE;
 }
 
-xstring city_overlay_physician::get_tooltip_for_building(tooltip_context *c, const building *b) {
+void city_overlay_physician::get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip){
     auto house = ((building *)b)->dcast_house();
 
     if (!house) {
-        return ui::str(66, 135);
+        tooltip = ui::str(66, 135);
+        return;
     }
 
     auto &housed = house->runtime_data();
     if (housed.physician <= 0) {
-        return ui::str(66, 132);
+        tooltip = ui::str(66, 132);
+        return;
     } else if (housed.physician <= 33) {
-        return ui::str(66, 133);
+        tooltip = ui::str(66, 133);
+        return;
     } else if (housed.physician <= 66) {
-        return ui::str(66, 134);
+        tooltip = ui::str(66, 134);
+        return;
     } else {
-        return ui::str(66, 135);
+        tooltip = ui::str(66, 135);
+        return;
     }
 }

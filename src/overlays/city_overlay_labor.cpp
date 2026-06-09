@@ -14,7 +14,7 @@ struct city_overlay_labor : public city_overlay_t<OVERLAY_LABOR> {
         return false;
     }
     virtual int get_column_height(const building *b) const override;
-    virtual xstring get_tooltip_for_building(tooltip_context *c, const building *b) override;
+    virtual void get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip) override;
     virtual bool show_building(const building *b) const override;
 };
 
@@ -33,20 +33,31 @@ int city_overlay_labor::get_column_height(const building *b) const {
     return 10 - percentage / 10;
 }
 
-xstring city_overlay_labor::get_tooltip_for_building(tooltip_context *c, const building *b) {
+void city_overlay_labor::get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip){
     int percentage = b->worker_percentage();
-    if (percentage <= 0)
-        return ui::str(66, 52);
-    else if (percentage <= 20)
-        return ui::str(66, 53);
-    else if (percentage <= 40)
-        return ui::str(66, 54);
-    else if (percentage <= 60)
-        return ui::str(66, 55);
-    else if (percentage <= 80)
-        return ui::str(66, 56);
+    if (percentage <= 0) {
+        tooltip = ui::str(66, 52);
+        return;
+        }
+    else if (percentage <= 20) {
+        tooltip = ui::str(66, 53);
+        return;
+        }
+    else if (percentage <= 40) {
+        tooltip = ui::str(66, 54);
+        return;
+        }
+    else if (percentage <= 60) {
+        tooltip = ui::str(66, 55);
+        return;
+        }
+    else if (percentage <= 80) {
+        tooltip = ui::str(66, 56);
+        return;
+        }
 
-    return ui::str(66, 57);
+    tooltip = ui::str(66, 57);
+    return;
 }
 
 bool city_overlay_labor::show_building(const building *b) const {

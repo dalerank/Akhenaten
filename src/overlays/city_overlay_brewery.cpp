@@ -18,21 +18,26 @@ int city_overlay_brewery::get_column_height(const building* b) const {
     return std::clamp<int>(housed.inventory[INVENTORY_GOOD4] / 10, 0, 10);
 }
 
-xstring city_overlay_brewery::get_tooltip_for_building(tooltip_context* c, const building* b) {
+void city_overlay_brewery::get_tooltip_for_building(tooltip_context* c, const building* b, xstring &tooltip){
     auto house = ((building*)b)->dcast_house();
 
     if (!house) {
-        return ui::str(66, 90);
+        tooltip = ui::str(66, 90);
+        return;
     }
 
     const auto& housed = house->runtime_data();
     if (housed.inventory[INVENTORY_GOOD4] <= 0) {
-        return ui::str(66, 87);
+        tooltip = ui::str(66, 87);
+        return;
     } else if (housed.inventory[INVENTORY_GOOD4] <= 30) {
-        return ui::str(66, 88);
+        tooltip = ui::str(66, 88);
+        return;
     } else if (housed.inventory[INVENTORY_GOOD4] <= 70) {
-        return ui::str(66, 89);
+        tooltip = ui::str(66, 89);
+        return;
     } else {
-        return ui::str(66, 90);
+        tooltip = ui::str(66, 90);
+        return;
     }
 }

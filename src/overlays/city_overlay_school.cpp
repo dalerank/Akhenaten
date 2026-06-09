@@ -21,22 +21,30 @@ int city_overlay_schools::get_column_height(const building *b) const {
     return housed.school / 10;
 }
 
-xstring city_overlay_schools::get_tooltip_for_building(tooltip_context *c, const building *b) {
+void city_overlay_schools::get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip){
     auto house = ((building *)b)->dcast_house();
 
     if (!house) {
-        return ui::str(66, 22);
+        tooltip = ui::str(66, 22);
+        return;
     }
 
     auto &housed = house->runtime_data();
-    if (housed.school <= 0)
-        return ui::str(66, 19);
+    if (housed.school <= 0) {
+        tooltip = ui::str(66, 19);
+        return;
+        }
     
-    if (housed.school >= 80)
-        return ui::str(66, 20);
+    if (housed.school >= 80) {
+        tooltip = ui::str(66, 20);
+        return;
+        }
     
-    if (housed.school >= 20)
-        return ui::str(66, 21);
+    if (housed.school >= 20) {
+        tooltip = ui::str(66, 21);
+        return;
+        }
     
-    return ui::str(66, 22);
+    tooltip = ui::str(66, 22);
+    return;
 }

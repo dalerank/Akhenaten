@@ -6,7 +6,7 @@
 
 struct city_overlay_religion : public city_overlay_t<OVERLAY_RELIGION> {
     virtual int get_column_height(const building* b) const override;
-    virtual xstring get_tooltip_for_building(tooltip_context* c, const building* b) override;
+    virtual void get_tooltip_for_building(tooltip_context* c, const building* b, xstring &tooltip) override;
 };
 
 template <e_overlay TYPE>

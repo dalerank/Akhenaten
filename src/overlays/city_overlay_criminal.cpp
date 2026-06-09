@@ -81,8 +81,8 @@ void city_overlay_crime::draw_custom_top(vec2i pixel, tile2i point, painter &ctx
     }
 }
 
-xstring city_overlay_crime::get_tooltip_for_building(tooltip_context* c, const building* b) {
-    return {};
+void city_overlay_crime::get_tooltip_for_building(tooltip_context* c, const building* b, xstring &tooltip){
+    return;
 }
 
 xstring city_overlay_crime::get_tooltip(tooltip_context *c, tile2i tile) const {
@@ -173,25 +173,37 @@ void city_overlay_criminal::draw_custom_top(vec2i pixel, tile2i point, painter &
     city_overlay::draw_custom_top(pixel, point, ctx);
 }
 
-xstring city_overlay_criminal::get_tooltip_for_building(tooltip_context* c, const building* b) {
+void city_overlay_criminal::get_tooltip_for_building(tooltip_context* c, const building* b, xstring &tooltip){
     auto house = ((building *)b)->dcast_house();
     if (!house || house->house_population() <= 0) {
-        return ui::str(66, 63);
+        tooltip = ui::str(66, 63);
+        return;
     }
 
     auto &housed = house->runtime_data();
-    if (housed.criminal_active >= 80)
-        return ui::str(66, 63);
-    else if (housed.criminal_active >= 60)
-        return ui::str(66, 62);
-    else if (housed.criminal_active >= 40)
-        return ui::str(66, 61);
-    else if (housed.criminal_active >= 30)
-        return ui::str(66, 60);
-    else if (housed.criminal_active >= 20)
-        return ui::str(66, 59);
+    if (housed.criminal_active >= 80) {
+        tooltip = ui::str(66, 63);
+        return;
+        }
+    else if (housed.criminal_active >= 60) {
+        tooltip = ui::str(66, 62);
+        return;
+        }
+    else if (housed.criminal_active >= 40) {
+        tooltip = ui::str(66, 61);
+        return;
+        }
+    else if (housed.criminal_active >= 30) {
+        tooltip = ui::str(66, 60);
+        return;
+        }
+    else if (housed.criminal_active >= 20) {
+        tooltip = ui::str(66, 59);
+        return;
+        }
     else {
-        return ui::str(66, 58);
+        tooltip = ui::str(66, 58);
+        return;
     }
 }
 

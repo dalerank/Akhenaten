@@ -19,21 +19,26 @@ int city_overlay_mortuary::get_column_height(const building *b) const {
     return (housed.mortuary > 0) ? housed.mortuary / 10 : COLUMN_TYPE_NONE;
 }
 
-xstring city_overlay_mortuary::get_tooltip_for_building(tooltip_context *c, const building *b) {
+void city_overlay_mortuary::get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip){
     auto house = ((building *)b)->dcast_house();
 
     if (!house) {
-        return ui::str(66, 42);
+        tooltip = ui::str(66, 42);
+        return;
     }
 
     auto &housed = house->runtime_data();
     if (housed.mortuary <= 0) {
-        return ui::str(66, 39);
+        tooltip = ui::str(66, 39);
+        return;
     } else if (housed.mortuary >= 80) {
-        return ui::str(66, 40);
+        tooltip = ui::str(66, 40);
+        return;
     } else if (housed.mortuary >= 20) {
-        return ui::str(66, 41);
+        tooltip = ui::str(66, 41);
+        return;
     }
 
-    return ui::str(66, 42);
+    tooltip = ui::str(66, 42);
+    return;
 }

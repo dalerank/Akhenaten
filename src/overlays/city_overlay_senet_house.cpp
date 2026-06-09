@@ -15,21 +15,26 @@ int city_overlay_senet_house::get_column_height(const building *b) const {
     return (house->house_population() > 0) ? housed.senet_player / 10 : COLUMN_TYPE_NONE;
 }
 
-xstring city_overlay_senet_house::get_tooltip_for_building(tooltip_context *c, const building *b) {
+void city_overlay_senet_house::get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip){
     auto house = ((building *)b)->dcast_house();
 
     if (!house) {
-        return ui::str(66, 90);
+        tooltip = ui::str(66, 90);
+        return;
     }
 
     auto &housed = house->runtime_data();
     if (housed.senet_player <= 0) {
-        return ui::str(66, 87);
+        tooltip = ui::str(66, 87);
+        return;
     } else if (housed.senet_player >= 80) {
-        return ui::str(66, 88);
+        tooltip = ui::str(66, 88);
+        return;
     } else if (housed.senet_player >= 20) {
-        return ui::str(66, 89);
+        tooltip = ui::str(66, 89);
+        return;
     } else {
-        return ui::str(66, 90);
+        tooltip = ui::str(66, 90);
+        return;
     }
 }
