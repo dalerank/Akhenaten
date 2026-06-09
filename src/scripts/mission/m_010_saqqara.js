@@ -143,7 +143,7 @@ function mission10_on_start(ev) {
 	}
 }
 
-[es=event_register_mission_animals, mission=mission10]
+[es=(city_animals, create_herds), mission=mission10]
 function mission10_register_animals(ev) {
 	city.remove_animals()
 

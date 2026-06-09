@@ -1,16 +1,16 @@
 #pragma once
 
 #include "figure/figure.h"
+#include "game/game_system.h"
 
-struct event_register_mission_animals { uint8_t mid; };
+struct city_animals_t : public game_system {
+    ANK_ESID(city_animals)
 
-struct city_animals_t {
     bool herd_migration;
 
     void create_herds();
     formation* create_herd(tile2i tile, e_figure_type ftype, int num_animals);
 
-    void init();
     void update();
     void remove_all();
 
@@ -28,6 +28,4 @@ struct city_animals_t {
     void set_animals_area(int index, int reseach_radius);
 };
 ANK_CONFIG_STRUCT(city_animals_t, herd_migration)
-
-extern city_animals_t g_city_animals;
 

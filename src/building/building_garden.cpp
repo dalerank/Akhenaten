@@ -19,6 +19,7 @@
 #include "grid/gardens.h"
 #include "grid/random.h"
 #include "grid/building_tiles.h"
+#include "city/city.h"
 #include "city/city_animals.h"
 #include "game/game_events.h"
 #include "city/city_warnings.h"
@@ -42,11 +43,11 @@ int building_garden::preview::place_impl(tile2i start, tile2i end, bool place) c
             return;
         }
 
-        if (g_city_animals.breeding_ground_at(rtile, 1)) {
+        if (g_city.animals.breeding_ground_at(rtile, 1)) {
             map_property_clear_constructing_and_deleted();
             events::emit(event_city_warning{ "#cannot_build_over_animal_breeding_grounds" });
             return;
-        } 
+        }
 
         items_placed++;
         int addition_flag = place ? 0 : TERRAIN_PLANER_FUTURE;

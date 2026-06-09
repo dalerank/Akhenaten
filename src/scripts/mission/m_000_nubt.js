@@ -86,7 +86,7 @@ function mission0_on_start(ev) {
 	city.goal_tooltip = mission0_get_goal_tooltip
 }
 
-[es=event_register_mission_animals, mission=mission0]
+[es=(city_animals, create_herds), mission=mission0]
 function mission0_register_animals(ev) {
 	city.remove_animals()
 

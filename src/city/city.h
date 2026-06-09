@@ -221,6 +221,14 @@ struct city_t {
     bvariant get_property(xstring domain, xstring name) const;
     void on_post_load();
     void trade_update();
+
+    template <typename T>
+    void reload_system(T &system) {
+        call_unload_if_exists(system);
+        const bool ok = g_config_arch.r(system.esid(), system);
+        call_init_if_exists(system);
+        verify_no_crash_var(ok, "Variable not exist in config: %s", system.esid());
+    }
 };
 
 pcstr city_player_name();

@@ -237,7 +237,7 @@ int build_planner::place_houses(bool measure_only, int x_start, int y_start, int
                 items_placed++;
 
             } else {
-                if (g_city_animals.breeding_ground_at(tile2i(x, y), 1)) {
+                if (g_city.animals.breeding_ground_at(tile2i(x, y), 1)) {
                     map_property_clear_constructing_and_deleted();
                     events::emit(event_city_warning{ "#cannot_build_over_animal_breeding_grounds" });
                 } else {

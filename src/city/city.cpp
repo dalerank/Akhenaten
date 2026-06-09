@@ -57,6 +57,11 @@
 city_t g_city;
 events::typed_queue g_city_events;
 
+ANK_DECLARE_CONFIG_ITERATOR(config_reload_city);
+void config_reload_city() {
+    g_city.reload_system(g_city.animals);
+}
+
 void city_t::init() {
     buildings.shutdown();
     g_city_events.removeListeners();
@@ -92,6 +97,7 @@ void city_t::init() {
     bookmarks.reset();
     common_info_window::register_handlers();
     kingdome.init();
+    reload_system(animals);
 }
 
 void city_t::reload_objects() {

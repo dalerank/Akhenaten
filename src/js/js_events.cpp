@@ -16,7 +16,6 @@
 #include "city/city_religion.h"
 #include "city/city_resource.h"
 #include "scenario/scenario.h"
-#include "city/city_animals.h"
 #include "city/city_kingdome_relations.h"
 #include "city/city_population.h"
 #include "dev/debug.h"
@@ -56,7 +55,6 @@ ANK_SCRIPT_EVENT(event_building_create, bid)
 ANK_SCRIPT_EVENT(event_city_disease, absday)
 ANK_SCRIPT_EVENT(event_warehouse_filled, bid)
 ANK_SCRIPT_EVENT(event_mission_briefing_show_after_load, scenario_id)
-ANK_SCRIPT_EVENT(event_register_mission_animals, mid)
 ANK_SCRIPT_EVENT(event_finance_changed, value)
 ANK_SCRIPT_EVENT(event_show_advisor, advisor)
 ANK_SCRIPT_EVENT(event_building_place_checks, bid)

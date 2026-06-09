@@ -1,5 +1,6 @@
 #include "city_animals.h"
 
+#include "city/city.h"
 #include "core/random.h"
 #include "figuretype/figure_animal.h"
 #include "figuretype/animal_hyena.h"
@@ -11,16 +12,9 @@
 #include "game/game_config.h"
 #include "figure/figure.h"
 #include "figure/formation_enemy.h"
-#include "game/game_events.h"
 #include "dev/debug.h"
 
 declare_console_var_bool(allow_span_ostrich, true)
-
-city_animals_t ANK_VARIABLE_N(g_city_animals, "city_animals")
-
-declare_console_command_p(remove_animals) {
-    g_city_animals.remove_all();
-};
 
 formation* city_animals_t::create_herd(tile2i tile, e_figure_type herd_type, int num_animals) {
     formation* formation = formation_create_herd(herd_type, tile, num_animals);
@@ -70,7 +64,7 @@ void city_animals_t::create_herds() {
         this->create_herd(p, herd_type, num_animals);
     });
 
-    events::emit(event_register_mission_animals{});
+    emit(esid(__func__));
 }
 
 bool city_animals_t::get_free_tile(int x, int y, int allow_negative_desirability, tile2i &outtile) {
@@ -358,9 +352,6 @@ void city_animals_t::update_herd_formation(formation *m) {
             }
         }
     }
-}
-
-void city_animals_t::init() {
 }
 
 void city_animals_t::remove_all() {
