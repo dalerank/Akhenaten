@@ -42,6 +42,7 @@ struct city_overlay {
     e_column_type column_type = COLUMN_TYPE_NONE;
     animation_t column_anim;
     xstring title_text;
+    xstring es_name;
 
     city_overlay(e_overlay t);
 
@@ -49,7 +50,7 @@ struct city_overlay {
     virtual int get_column_height(const building *b) const { return COLUMN_TYPE_NONE; }
     virtual e_column_color get_column_color(const building *b) const { return COLUMN_COLOR_NONE; }
     virtual void get_tooltip(tooltip_context *c, tile2i tile, xstring &tooltip) const {}
-    virtual void get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip) {}
+    virtual void get_tooltip_for_building(tooltip_context* c, const building* b, xstring& tooltip);
     virtual bool draw_custom_footprint(vec2i pixel, tile2i point, painter &ctx) const { return false; }
     virtual void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const;
     virtual void draw_building_footprint(painter &ctx, vec2i pos, tile2i tile, int image_offset) const;
@@ -72,7 +73,7 @@ struct city_overlay {
     static city_overlay *get(e_overlay e);
     static overlay_list &overlays();
 };
-ANK_CONFIG_STRUCT(city_overlay, id, walkers, buildings, column_type, column_anim, tooltips, building_tooltips)
+ANK_CONFIG_STRUCT(city_overlay, id, walkers, buildings, column_type, column_anim, tooltips, building_tooltips, es_name)
 
 template<e_overlay TYPE>
 struct city_overlay_t : public city_overlay {

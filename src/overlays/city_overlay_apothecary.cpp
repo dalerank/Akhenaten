@@ -10,37 +10,9 @@
 
 struct city_overlay_apothecary : public city_overlay_t<OVERLAY_APOTHECARY> {
     virtual int get_column_height(const building *b) const override;
-    virtual void get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip) override;
 };
 
 city_overlay_apothecary g_city_overlay_apothecary;
-
-void city_overlay_apothecary::get_tooltip_for_building(tooltip_context* c, const building* b, xstring &tooltip){
-    auto house = ((building *)b)->dcast_house();
-
-    if (!house) {
-        tooltip = ui::str(66, 34);
-        return;
-    }
-
-    auto &housed = house->runtime_data();
-    if (housed.apothecary <= 0) {
-        tooltip = ui::str(66, 31);
-        return;
-        }
-    else if (housed.apothecary >= 80) {
-        tooltip = ui::str(66, 32);
-        return;
-        }
-    else if (housed.apothecary < 20) {
-        tooltip = ui::str(66, 33);
-        return;
-        }
-    else {
-        tooltip = ui::str(66, 34);
-        return;
-    }
-}
 
 int city_overlay_apothecary::get_column_height(const building *b) const {
     auto house = ((building *)b)->dcast_house();

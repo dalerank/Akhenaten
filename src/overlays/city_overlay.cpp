@@ -16,7 +16,15 @@
 #include "game/game_config.h"
 
 #include "game/game.h"
+#include "city/city.h"
 #include "js/js_game.h"
+#include "js/js_struct.h"
+
+struct overlay_building_tooltip_ev {
+    building_id bid;
+    tile2i tile;
+};
+ANK_REGISTER_STRUCT_WRITER(overlay_building_tooltip_ev, bid, tile)
 
 const e_overlay_tokens_t ANK_CONFIG_ENUM(e_overlay_tokens);
 const e_column_type_tokens_t ANK_CONFIG_ENUM(e_column_type_tokens);
@@ -108,6 +116,13 @@ const tooltips_t &city_overlay::get_tooltips(const xstring &level) const {
 
     return empty_tolltips;
 }
+
+void __city_overlay_set_tooltip(pcstr text) {
+    if (const city_overlay *overlay = g_city.overlay()) {
+        const_cast<city_overlay *>(overlay)->current_tooltip = xstring(text);
+    }
+}
+ANK_FUNCTION_1(__city_overlay_set_tooltip)
 
 void city_overlay::draw_overlay_column(e_column_color color, vec2i pixel, int height, int column_style, painter &ctx) const {
     if (color == COLUMN_COLOR_NONE) {
@@ -264,7 +279,20 @@ bool city_overlay::show_figure(const figure *f) const {
     return std::find(walkers.begin(), walkers.end(), f->type) != walkers.end();
 }
 
-void city_overlay::draw_custom_top(vec2i pixel, tile2i tile, painter &ctx) const {
+void city_overlay::get_tooltip_for_building(tooltip_context* c, const building* b, xstring& tooltip) {
+    if (es_name.empty() || !b) {
+        return;
+    }
+
+    current_building_id = b->id;
+    current_tooltip = {};
+
+
+    js_event(overlay_building_tooltip_ev{ b->id, b->tile }, es_name, __func__);
+    tooltip = current_tooltip;
+}
+
+void city_overlay::draw_custom_top(vec2i pixel, tile2i tile, painter& ctx) const {
     if (!map_property_is_draw_tile(tile)) {
         return;
     }

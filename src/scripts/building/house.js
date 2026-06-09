@@ -18,6 +18,7 @@ House.property.library = { }
 House.property.magistrate = { }
 House.property.num_gods = { }
 House.property.dentist = { }
+House.property.apothecary = { }
 House.property.health = { }
 House.property.mortuary = { }
 House.property.physician = { }
