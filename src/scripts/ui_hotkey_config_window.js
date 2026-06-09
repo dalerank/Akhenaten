@@ -1,13 +1,14 @@
 log_info("akhenaten: hotkey config window started")
 
+var HOTKEY_CONFIG_VISIBLE_ROWS = 14
+
 function hotkey_config_row_y(i) { return 80 + 24 * i }
 function hotkey_config_label_pos(i) { return { x: 32, y: hotkey_config_row_y(i) + 6 } }
-function hotkey_config_btn_pos(i) { return { x: 290, y: hotkey_config_row_y(i) } }
-function hotkey_config_btn_alt_pos(i) { return { x: 430, y: hotkey_config_row_y(i) } }
+function hotkey_config_key_pos(row, is_alt) { return { x: is_alt ? 430 : 290, y: hotkey_config_row_y(row) } }
 
 function hotkey_config_key_button(row, is_alt) {
     return {
-        pos: is_alt ? hotkey_config_btn_alt_pos(row) : hotkey_config_btn_pos(row),
+        pos: hotkey_config_key_pos(row, is_alt),
         size: [140, 22],
         param1: row,
         param2: is_alt ? 1 : 0,
@@ -15,27 +16,36 @@ function hotkey_config_key_button(row, is_alt) {
     }
 }
 
+function hotkey_config_rows_ui(count) {
+    var rows = {}
+    for (var i = 0; i < count; i++) {
+        rows["trow" + i] = text({ pos: hotkey_config_label_pos(i) })
+        rows["kbtn" + i] = button(hotkey_config_key_button(i, false))
+        rows["kbtn" + i + "alt"] = button(hotkey_config_key_button(i, true))
+    }
+    return rows
+}
+
 [es=event_hotkey_editor_result]
 function hotkey_config_on_editor_result(ev) {
-    var mappings = window_hotkey_config.mappings
-    if (!mappings[ev.action])
-        mappings[ev.action] = {}
+    var m = window_hotkey_config.mappings[ev.action]
+    if (!m)
+        m = window_hotkey_config.mappings[ev.action] = {}
     if (ev.is_alt) {
-        mappings[ev.action].alt_key = ev.key
-        mappings[ev.action].alt_modifiers = ev.modifiers
+        m.alt_key = ev.key
+        m.alt_modifiers = ev.modifiers
     } else {
-        mappings[ev.action].key = ev.key
-        mappings[ev.action].modifiers = ev.modifiers
+        m.key = ev.key
+        m.modifiers = ev.modifiers
     }
     window_hotkey_config.needs_rebuild = true
 }
 
 [es=(window_hotkey_config, edit_key)]
 function hotkey_config_on_edit_key(ev) {
-    var scroll = window_hotkey_config.scroll_position
-    var widgets = window_hotkey_config.widgets
-    var widget = widgets[ev.param1 + scroll]
-    if (!widget || widget.action === window_hotkey_config.header_action)
+    var cfg = window_hotkey_config
+    var widget = cfg.widgets[ev.param1 + cfg.scroll_position]
+    if (!widget || widget.action === cfg.header_action)
         return
     __hotkey_editor_show(widget.action, ev.param2)
 }
@@ -43,7 +53,6 @@ function hotkey_config_on_edit_key(ev) {
 [es=(window_hotkey_config, reset_defaults)]
 function hotkey_config_on_reset_defaults() {
     window_hotkey_config.load_default_mappings()
-    window_hotkey_config.needs_rebuild = true
 }
 
 [es=(window_hotkey_config, save)]
@@ -62,7 +71,7 @@ window_hotkey_config {
     pos: [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
     allow_rmb_goback: true
     default_font: FONT_NORMAL_BLACK_ON_DARK
-    visible_rows: 14
+    visible_rows: HOTKEY_CONFIG_VISIBLE_ROWS
     header_action: -1
     mappings: {}
     needs_rebuild: true
@@ -142,109 +151,29 @@ window_hotkey_config {
 
     scroll_position: 0
 
-    load_mappings: function () {
+    load_mappings: function (use_defaults) {
         var result = {}
-        var widgets = this.widgets
         var header = this.header_action
-        for (var i = 0; i < widgets.length; i++) {
-            var widget = widgets[i]
+        for (var i = 0; i < this.widgets.length; i++) {
+            var widget = this.widgets[i]
             if (widget.action === header)
                 continue
-            result[widget.action] = __hotkey_read_mapping(widget.action, false)
+            result[widget.action] = __hotkey_read_mapping(widget.action, !!use_defaults)
         }
         this.mappings = result
     }
 
     load_default_mappings: function () {
-        var result = {}
-        var widgets = this.widgets
-        var header = this.header_action
-        for (var i = 0; i < widgets.length; i++) {
-            var widget = widgets[i]
-            if (widget.action === header)
-                continue
-            result[widget.action] = __hotkey_read_mapping(widget.action, true)
-        }
-        this.mappings = result
+        this.load_mappings(true)
+        this.needs_rebuild = true
     }
 
-    ui: {
-        background_image: background({ pack: PACK_UNLOADED, id: 8 })
-        background: outer_panel({ size: [40, 30] })
-
-        title: text({ pos: [0, 16], size: [px(40), 20], align: "center", font: FONT_LARGE_BLACK_ON_LIGHT, text: "#TR_HOTKEY_TITLE" })
-        label_primary: text({ pos: [290, 55], size: [140, 20], align: "center", font: FONT_NORMAL_BLACK_ON_LIGHT, text: "#TR_HOTKEY_LABEL" })
-        label_alt: text({ pos: [430, 55], size: [140, 20], align: "center", font: FONT_NORMAL_BLACK_ON_LIGHT, text: "#TR_HOTKEY_ALTERNATIVE_LABEL" })
-
-        content_panel: inner_panel({ pos: [20, 72], size: [35, 22] })
-        list_scroll: scrollbar({ pos: [580, 72], size: [0, 352] })
-
-        trow0: text({ pos: hotkey_config_label_pos(0) })
-        kbtn0: button(hotkey_config_key_button(0, false))
-        kbtn0alt: button(hotkey_config_key_button(0, true))
-        trow1: text({ pos: hotkey_config_label_pos(1) })
-        kbtn1: button(hotkey_config_key_button(1, false))
-        kbtn1alt: button(hotkey_config_key_button(1, true))
-        trow2: text({ pos: hotkey_config_label_pos(2) })
-        kbtn2: button(hotkey_config_key_button(2, false))
-        kbtn2alt: button(hotkey_config_key_button(2, true))
-        trow3: text({ pos: hotkey_config_label_pos(3) })
-        kbtn3: button(hotkey_config_key_button(3, false))
-        kbtn3alt: button(hotkey_config_key_button(3, true))
-        trow4: text({ pos: hotkey_config_label_pos(4) })
-        kbtn4: button(hotkey_config_key_button(4, false))
-        kbtn4alt: button(hotkey_config_key_button(4, true))
-        trow5: text({ pos: hotkey_config_label_pos(5) })
-        kbtn5: button(hotkey_config_key_button(5, false))
-        kbtn5alt: button(hotkey_config_key_button(5, true))
-        trow6: text({ pos: hotkey_config_label_pos(6) })
-        kbtn6: button(hotkey_config_key_button(6, false))
-        kbtn6alt: button(hotkey_config_key_button(6, true))
-        trow7: text({ pos: hotkey_config_label_pos(7) })
-        kbtn7: button(hotkey_config_key_button(7, false))
-        kbtn7alt: button(hotkey_config_key_button(7, true))
-        trow8: text({ pos: hotkey_config_label_pos(8) })
-        kbtn8: button(hotkey_config_key_button(8, false))
-        kbtn8alt: button(hotkey_config_key_button(8, true))
-        trow9: text({ pos: hotkey_config_label_pos(9) })
-        kbtn9: button(hotkey_config_key_button(9, false))
-        kbtn9alt: button(hotkey_config_key_button(9, true))
-        trow10: text({ pos: hotkey_config_label_pos(10) })
-        kbtn10: button(hotkey_config_key_button(10, false))
-        kbtn10alt: button(hotkey_config_key_button(10, true))
-        trow11: text({ pos: hotkey_config_label_pos(11) })
-        kbtn11: button(hotkey_config_key_button(11, false))
-        kbtn11alt: button(hotkey_config_key_button(11, true))
-        trow12: text({ pos: hotkey_config_label_pos(12) })
-        kbtn12: button(hotkey_config_key_button(12, false))
-        kbtn12alt: button(hotkey_config_key_button(12, true))
-        trow13: text({ pos: hotkey_config_label_pos(13) })
-        kbtn13: button(hotkey_config_key_button(13, false))
-        kbtn13alt: button(hotkey_config_key_button(13, true))
-
-        btn_defaults: button({ pos: [240, 430], size: [160, 30], text: "#TR_BUTTON_RESET_DEFAULTS", onclick_event: "reset_defaults" })
-        btn_cancel: button({ pos: [410, 430], size: [100, 30], text: "#TR_BUTTON_CANCEL", onclick: window_go_back })
-        btn_save: button({ pos: [520, 430], size: [100, 30], text: "#TR_BUTTON_OK", onclick_event: "save" })
-    }
-}
-
-[es=(window_hotkey_config, init)]
-function hotkey_config_on_init(window) {
-    __log_marker("window_show:window_hotkey_config")
-    window_hotkey_config.load_mappings()
-    window_hotkey_config.needs_rebuild = true
-    window.list_scroll.max_value = window_hotkey_config.widgets.length - window_hotkey_config.visible_rows
-}
-
-[es=(window_hotkey_config, ui_draw_foreground)]
-function hotkey_config_draw(window) {
-    if (window_hotkey_config.needs_rebuild) {
+    update_rows: function (window) {
         var scroll = window.list_scroll.value
-        window_hotkey_config.scroll_position = scroll
-        var widgets = window_hotkey_config.widgets
-        var header = window_hotkey_config.header_action
-        for (var i = 0; i < window_hotkey_config.visible_rows; i++) {
-            var widget = widgets[i + scroll]
+        this.scroll_position = scroll
+        var header = this.header_action
+        for (var i = 0; i < this.visible_rows; i++) {
+            var widget = this.widgets[i + scroll]
             var label = window["trow" + i]
             var btn1 = window["kbtn" + i]
             var btn2 = window["kbtn" + i + "alt"]
@@ -258,23 +187,51 @@ function hotkey_config_draw(window) {
                 continue
             }
 
+            label.text = widget.text ? widget.text : ""
             if (widget.action === header) {
-                label.text = widget.text ? widget.text : ""
                 label.font = FONT_NORMAL_WHITE_ON_DARK
                 btn1.enabled = false
                 btn2.enabled = false
                 btn1.text = ""
                 btn2.text = ""
             } else {
-                label.text = widget.text ? widget.text : ""
                 label.font = FONT_NORMAL_BLACK_ON_DARK
                 btn1.enabled = true
                 btn2.enabled = true
-                var m = window_hotkey_config.mappings[widget.action]
+                var m = this.mappings[widget.action]
                 btn1.text = (m && m.key) ? __hotkey_key_display_name(m.key, m.modifiers) : ""
                 btn2.text = (m && m.alt_key) ? __hotkey_key_display_name(m.alt_key, m.alt_modifiers) : ""
             }
         }
     }
+
+    ui: ui_extend({
+        background_image: background({ pack: PACK_UNLOADED, id: 8 })
+        background: outer_panel({ size: [40, 30] })
+
+        title: text({ pos: [0, 16], size: [px(40), 20], align: "center", font: FONT_LARGE_BLACK_ON_LIGHT, text: "#TR_HOTKEY_TITLE" })
+        label_primary: text({ pos: [290, 55], size: [140, 20], align: "center", font: FONT_NORMAL_BLACK_ON_LIGHT, text: "#TR_HOTKEY_LABEL" })
+        label_alt: text({ pos: [430, 55], size: [140, 20], align: "center", font: FONT_NORMAL_BLACK_ON_LIGHT, text: "#TR_HOTKEY_ALTERNATIVE_LABEL" })
+
+        content_panel: inner_panel({ pos: [20, 72], size: [35, 22] })
+        list_scroll: scrollbar({ pos: [580, 72], size: [0, 352] })
+
+        btn_defaults: button({ pos: [240, 430], size: [160, 30], text: "#TR_BUTTON_RESET_DEFAULTS", onclick_event: "reset_defaults" })
+        btn_cancel: button({ pos: [410, 430], size: [100, 30], text: "#TR_BUTTON_CANCEL", onclick: window_go_back })
+        btn_save: button({ pos: [520, 430], size: [100, 30], text: "#TR_BUTTON_OK", onclick_event: "save" })
+    }, hotkey_config_rows_ui(HOTKEY_CONFIG_VISIBLE_ROWS))
+}
+
+[es=(window_hotkey_config, init)]
+function hotkey_config_on_init(window) {
+    __log_marker("window_show:window_hotkey_config")
+    window_hotkey_config.load_mappings(false)
+    window_hotkey_config.needs_rebuild = true
+    window.list_scroll.max_value = window_hotkey_config.widgets.length - window_hotkey_config.visible_rows
+}
+
+[es=(window_hotkey_config, ui_draw_foreground)]
+function hotkey_config_draw(window) {
+    window_hotkey_config.update_rows(window)
     window_hotkey_config.needs_rebuild = false
 }
