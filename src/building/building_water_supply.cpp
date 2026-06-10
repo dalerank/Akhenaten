@@ -40,6 +40,8 @@ bool building_water_supply::draw_ornaments_and_animations_height(painter &ctx, v
 }
 
 void building_water_supply::on_place_checks() {
+    building_impl::on_place_checks();
+
     construction_warnings warnings;
 
     int has_water = map_terrain_is(tile(), TERRAIN_GROUNDWATER);
