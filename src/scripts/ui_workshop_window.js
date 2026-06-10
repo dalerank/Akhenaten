@@ -44,9 +44,8 @@ function workshop_info_window_setup_advisors(window, building_type) {
         var advisor = (i < advisors.length) ? advisors[i] : ADVISOR_NONE
         var show = advisor && city.is_advisor_available(advisor)
         btn.enabled = !!show
-        var tid = get_image({pack:PACK_GENERAL, id:106, offset:!!show ? (advisor - 1) * 3 : 0}).tid
-        log_info("akhenaten: workshop_info_window_setup_advisors " + slots[i] + " " + advisor + " " + show + " " + tid)
-        btn.image = tid
+        var img = get_image({pack:PACK_GENERAL, id:106, offset:!!show ? (advisor - 1) * 3 : 0})
+        btn.image = img ? img.tid : 0
     }
 }
 
