@@ -164,7 +164,9 @@ void empire_traders_manager::create_trader(int trade_route_id, int destination_c
             }
         }
     }
-    trader->movement_delay_max = std::max<uint8_t>(movement_delay_range.x, rand() % (movement_delay_range.y));
+    // guard against modulo-by-zero when the config/city delay range max is 0
+    const int delay_max_bound = std::max(1, movement_delay_range.y);
+    trader->movement_delay_max = std::max<uint8_t>(movement_delay_range.x, rand() % delay_max_bound);
 
     if (route.in_use && route.num_points > 0) {
         const auto &point = route.points[route.num_points - 1];
