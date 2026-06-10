@@ -91,11 +91,11 @@ bool map_road_find_minimum_tile_xy_classic(tile2i tile, int sizex, int sizey, in
         if (road_index < *min_value) {
             *min_value = road_index;
             *min_grid_offset = grid_offset;
-            found = false;
+            found = true;
         }
     }
 
-    return false;
+    return found;
 }
 
 bool map_has_road_access(tile2i tile, int size) {
