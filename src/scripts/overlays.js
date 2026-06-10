@@ -2,6 +2,7 @@ log_info("akhenaten: overlays started")
 
 import overlays.apothecary
 import overlays.health
+import overlays.tax_income
 
 overlays = [
   {
@@ -333,15 +334,6 @@ overlays = [
     title: "#overlay_desirability"
     walkers:[]
     buildings:[BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_WATER_ACCESS
-    column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_TAX_INCOME
-    title: "#overlay_tax_income"
-    walkers:[FIGURE_TAX_COLLECTOR]
-    buildings:[BUILDING_TAX_COLLECTOR, BUILDING_TAX_COLLECTOR_UPGRADED, BUILDING_VILLAGE_PALACE, BUILDING_TOWN_PALACE, BUILDING_CITY_PALACE, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
   }

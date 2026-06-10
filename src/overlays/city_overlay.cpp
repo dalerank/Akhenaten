@@ -358,10 +358,6 @@ void city_overlay::draw_custom_top(vec2i pixel, tile2i tile, painter& ctx) const
         return;
     }
 
-    if (debug_render_mode() != e_debug_render_overlay_add) {
-        return;
-    }
-
     const int bid = map_building_at(tile);
     if (!bid) {
         return;

@@ -74,6 +74,10 @@ function health_building_column_color(ev) {
 
 [es=(overlay_health, draw_custom_top)]
 function health_draw_custom_top(ev) {
+    if (game.debug_render_mode != e_debug_render_overlay_add) {
+        return
+    }
+
     var building = city.get_building(ev.bid)
     if (!building || !building.valid) {
         return
