@@ -27,6 +27,14 @@
     <h1>Devblog</h1>
 
     <article class="post">
+      <div class="post-meta"><time>June 10, 2026</time></div>
+      <h2><a href="devblog/script-defined-overlays-es.html">Overlays Become Script-Declared</a></h2>
+      <img src="images/script-defined-overlays-es.png" alt="Apothecary building info window showing employee count and an operational-status tooltip under the apothecary overlay" class="post-preview" loading="lazy" style="image-rendering:pixelated" />
+      <p>City overlays can now be declared entirely in JavaScript with an <code>[es=city_overlay]</code> block instead of a hand-written C++ slot. A new entity-system registry scans for those declarations, validates the overlay <code>id</code>, and registers each into the engine's slot table after config load — refusing duplicates and unknown ids. The Apothecary health overlay is the first migration: its declaration plus tooltip and column-height handlers now live in a self-contained <code>overlays/apothecary.js</code>, with handlers writing through the new <code>city.overlay_tooltip</code> / <code>city.overlay_column_height</code> properties. Adding an overlay no longer needs a new <code>.cpp</code> or a recompile.</p>
+      <a href="devblog/script-defined-overlays-es.html" class="read-more">Read more →</a>
+    </article>
+
+    <article class="post">
       <div class="post-meta"><time>June 7, 2026</time></div>
       <h2><a href="devblog/camera-refactor-and-wiki-pages.html">Camera Consolidation and a Growing Player Guide</a></h2>
       <img src="wiki/player/interface/Sidebar_Expanded.webp" alt="The expanded in-game control panel documented on the new wiki page" class="post-preview" loading="lazy" width="185" height="464" style="width:auto;max-height:200px;display:block;image-rendering:pixelated" />

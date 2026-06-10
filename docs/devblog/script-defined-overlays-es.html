@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overlays Become Script-Declared — Akhenaten</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../devblog.html" class="active">Devblog</a></li>
+        <li><a href="../wiki/index.html">Wiki</a></li>
+        <li><a href="../screenshots.html">Screenshots</a></li>
+        <li><a href="../downloads.html">Downloads</a></li>
+        <li><a href="../contributors.html">Contributors</a></li>
+        <li><a href="../contact.html">Join us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-content post-page">
+    <div class="post-meta"><time>June 10, 2026</time> — <a href="../devblog.html">← Devblog</a></div>
+    <h1>Overlays Become Script-Declared</h1>
+
+    <img src="../images/script-defined-overlays-es.png" alt="Apothecary building info window showing employee count and an operational-status tooltip under the apothecary overlay" class="post-image" loading="lazy" />
+
+    <p>
+      Last month the overlay <em>menu</em> moved to script. This time the overlays <em>themselves</em> follow. A city overlay — the data that says which walkers and buildings light up, which column type is drawn, and how tooltips read — can now be declared entirely in JavaScript with an <code>[es=city_overlay]</code> block, instead of requiring a hand-written C++ slot. The Apothecary health overlay is the first one migrated, and it now lives in its own <code>overlays/apothecary.js</code>.
+    </p>
+
+    <h2>What Changed</h2>
+    <ul>
+      <li>A new entity-system registry, <code>city_overlay_js_registry.cpp</code>, scans for <code>[es=city_overlay]</code> declarations and registers each into the engine's overlay slot table after config load</li>
+      <li>The per-overlay C++ instance is gone — <code>city_overlay_apothecary.cpp</code> (just <code>city_overlay_t&lt;OVERLAY_APOTHECARY&gt; g_city_overlay_apothecary;</code>) was deleted</li>
+      <li>Apothecary's declaration and its tooltip / column-height handlers moved out of the monolithic <code>overlays.js</code> into a dedicated <code>overlays/apothecary.js</code>, pulled in with <code>import overlays.apothecary</code></li>
+      <li><code>es_name</code> is no longer a serialized config field; the registry sets it programmatically from the declaration name</li>
+      <li>Handlers now write results through the new <code>city.overlay_tooltip</code> and <code>city.overlay_column_height</code> property setters instead of calling <code>__city_overlay_set_*</code> bindings directly</li>
+    </ul>
+
+    <h2>Before: A C++ Slot per Overlay</h2>
+    <p>
+      Every overlay needed a translation unit whose only job was to instantiate a typed slot:
+    </p>
+    <pre><code>// city_overlay_apothecary.cpp
+city_overlay_t&lt;OVERLAY_APOTHECARY&gt; g_city_overlay_apothecary;</code></pre>
+    <p>
+      The data (walkers, buildings, column type, animation) was already in <code>overlays.js</code>, but the slot lived in the binary. Adding an overlay meant a new <code>.cpp</code> file and a recompile, and the script and engine sides had to be kept in lock-step by hand.
+    </p>
+
+    <h2>After: Declared in Script</h2>
+    <p>
+      The overlay is now a plain script declaration. The registry reads the named config section, validates the <code>id</code> against the overlay enum, allocates a <code>city_overlay</code>, fills it from the archive, stamps <code>es_name</code>, and drops it into the slot table — refusing duplicates and unknown ids along the way.
+    </p>
+    <pre><code>[es=city_overlay]
+overlay_apothecary {
+  id: OVERLAY_APOTHECARY
+  title: "#overlay_apothecary"
+  walkers: [FIGURE_HERBALIST]
+  buildings: [BUILDING_APOTHECARY, BUILDING_ROADBLOCK],
+  column_type: COLUMN_TYPE_POSITIVE
+  column_anim: {pack:PACK_GENERAL, id:103}
+}</code></pre>
+    <p>
+      The tooltip and column-height logic stays right next to the declaration, now reading and writing through city properties so the binding surface is uniform with the rest of the script API:
+    </p>
+    <pre><code>[es=(overlay_apothecary, get_column_height)]
+function apothecary_building_column_height(ev) {
+    var house = city.get_house(ev.bid)
+    if (!house || house.population &lt;= 0) {
+        city.overlay_column_height = -1
+        return
+    }
+    city.overlay_column_height = house.apothecary / 10
+}</code></pre>
+    <p>
+      On script reload the registry clears the slots it owns and rebuilds them, so the hot-reload workflow applies to overlays just like it already does for building windows and the overlay menu.
+    </p>
+
+    <h2>Why This Matters</h2>
+    <p>
+      Overlays are now fully data-driven from script: their slot, their data, and their tooltip/column behaviour all live in one self-contained JS file. A modder can add a custom overlay for a new building type without adding a C++ file or recompiling the engine — declare it, write two handlers, press F5. Apothecary is the template; the remaining built-in overlays can migrate the same way, one file at a time.
+    </p>
+
+    <div class="post-nav">
+      <a href="camera-refactor-and-wiki-pages.html">← Camera Consolidation and a Growing Player Guide</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>
