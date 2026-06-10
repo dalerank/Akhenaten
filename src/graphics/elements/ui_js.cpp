@@ -125,6 +125,11 @@ void __ui_text_abs(pcstr text, vec2i pos, int font) {
 }
 ANK_FUNCTION_3(__ui_text_abs)
 
+void __ui_text_abs_colored(pcstr text, vec2i pos, int font, unsigned int c) {
+    ui::text_abs(text, pos, (e_font)font, (color)c);
+}
+ANK_FUNCTION_4(__ui_text_abs_colored)
+
 int ANK_FUNCTION_UNIFIED(__ui_draw_button)(const bvariant_map &args) {
     if (args.values.empty()) {
         return 0;

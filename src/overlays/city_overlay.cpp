@@ -17,6 +17,7 @@
 
 #include "game/game.h"
 #include "city/city.h"
+#include "dev/debug.h"
 #include "js/js_game.h"
 #include "js/js_struct.h"
 
@@ -132,6 +133,13 @@ void __city_overlay_set_column_height(int height) {
 }
 ANK_FUNCTION_1(__city_overlay_set_column_height)
 
+void __city_overlay_set_column_color(int color) {
+    if (const city_overlay *overlay = g_city.overlay()) {
+        const_cast<city_overlay *>(overlay)->current_column_color = color;
+    }
+}
+ANK_FUNCTION_1(__city_overlay_set_column_color)
+
 int city_overlay::get_column_height(const building *b) const {
     if (es_name.empty() || !b) {
         return COLUMN_TYPE_NONE;
@@ -143,6 +151,19 @@ int city_overlay::get_column_height(const building *b) const {
 
     js_event(overlay_tooltip_ev{ b->id, b->tile, {} }, es_name, __func__);
     return self->current_column_height;
+}
+
+e_column_color city_overlay::get_column_color(const building *b) const {
+    if (es_name.empty() || !b) {
+        return COLUMN_COLOR_NONE;
+    }
+
+    auto *self = const_cast<city_overlay *>(this);
+    self->current_building_id = b->id;
+    self->current_column_color = COLUMN_COLOR_NONE;
+
+    js_event(overlay_tooltip_ev{ b->id, b->tile, {} }, es_name, __func__);
+    return (e_column_color)self->current_column_color;
 }
 
 void city_overlay::draw_overlay_column(e_column_color color, vec2i pixel, int height, int column_style, painter &ctx) const {
@@ -332,6 +353,21 @@ void city_overlay::draw_custom_top(vec2i pixel, tile2i tile, painter& ctx) const
     if (map_building_at(tile)) {
         city_overlay::draw_building_top(pixel, tile, ctx);
     }
+
+    if (es_name.empty()) {
+        return;
+    }
+
+    if (debug_render_mode() != e_debug_render_overlay_add) {
+        return;
+    }
+
+    const int bid = map_building_at(tile);
+    if (!bid) {
+        return;
+    }
+
+    js_event(overlay_tooltip_ev{ (building_id)bid, tile, pixel }, es_name, __func__);
 }
 
 bool city_overlay::show_building(const building *b) const {

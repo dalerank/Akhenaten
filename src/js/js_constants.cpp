@@ -70,6 +70,7 @@ void js_register_game_constants(js_State* J) {
     _R(COLOR_FONT_SHITTY_BROWN)
     _R(COLOR_BLACK)
     _R(COLOR_BLUE)
+    _R(COLOR_LIGHT_BLUE)
     _R(COLOR_RED)
     _R(COLOR_GREEN)
     _R(COLOR_YELLOW)

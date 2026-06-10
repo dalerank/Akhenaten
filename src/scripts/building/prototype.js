@@ -13,6 +13,8 @@ Building.property.worker_percentage = { get: function() { return this.__worker_p
 Building.property.output_resource_id = { get: function() { return this.__output_resource_id() } }
 Building.property.meta_text_id = { get: function() { return this.__meta_text_id() } }
 Building.property.curse_days_left = { }
+Building.property.common_health = { }
+Building.property.disease_days = { }
 Building.property.can_play_animation = { get: function() { return this.__can_play_animation() } }
 Building.property.is_output_resourece_mothballed = { get: function() { return __city_resource_is_mothballed(this.output_resource_id) } }
 

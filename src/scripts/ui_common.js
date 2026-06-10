@@ -46,6 +46,7 @@ ui.fill_rect = __ui_fill_rect
 ui.border = __ui_border
 ui.button_border = __ui_button_border
 ui.label_colored = __ui_label_colored
+ui.text_abs_colored = __ui_text_abs_colored
 ui.draw_texture = __ui_draw_texture
 ui.window_is = __ui_window_is
 ui.resource_icon_flags = __ui_draw_resource_icon_flags

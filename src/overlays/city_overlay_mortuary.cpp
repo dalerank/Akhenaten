@@ -1,4 +1,4 @@
-#include "city_overlay_health.h"
+#include "city_overlay_mortuary.h"
 
 #include "grid/property.h"
 #include "grid/building.h"
