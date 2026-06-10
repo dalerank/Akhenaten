@@ -125,6 +125,26 @@ void __city_overlay_set_tooltip(pcstr text) {
 }
 ANK_FUNCTION_1(__city_overlay_set_tooltip)
 
+void __city_overlay_set_column_height(int height) {
+    if (const city_overlay *overlay = g_city.overlay()) {
+        const_cast<city_overlay *>(overlay)->current_column_height = height;
+    }
+}
+ANK_FUNCTION_1(__city_overlay_set_column_height)
+
+int city_overlay::get_column_height(const building *b) const {
+    if (es_name.empty() || !b) {
+        return COLUMN_TYPE_NONE;
+    }
+
+    auto *self = const_cast<city_overlay *>(this);
+    self->current_building_id = b->id;
+    self->current_column_height = COLUMN_TYPE_NONE;
+
+    js_event(overlay_tooltip_ev{ b->id, b->tile, {} }, es_name, __func__);
+    return self->current_column_height;
+}
+
 void city_overlay::draw_overlay_column(e_column_color color, vec2i pixel, int height, int column_style, painter &ctx) const {
     if (color == COLUMN_COLOR_NONE) {
         switch (column_style) {
@@ -149,7 +169,7 @@ void city_overlay::draw_overlay_column(e_column_color color, vec2i pixel, int he
 
     height = std::min(height, 10);
     int capital_height = image_get(image_id)->height;
-    // base 
+    // base
     auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
     command.image_id = image_id + 2;
     command.pixel = pixel + vec2i{ 9, -8 };
@@ -336,7 +356,6 @@ color city_overlay::color_mask_building(const building *b) const {
 
 void city_overlay::draw_overlay_building_column(building* b, vec2i pixel, tile2i tile, painter &ctx) const {
     int column_height = get_column_height(b);
-    e_column_color column_color = get_column_color(b);
     if (column_height == COLUMN_TYPE_NONE) {
         return;
     }
@@ -347,6 +366,7 @@ void city_overlay::draw_overlay_building_column(building* b, vec2i pixel, tile2i
     }
 
     if (draw) {
+        e_column_color column_color = get_column_color(b);
         draw_overlay_column(column_color, pixel, column_height, column_type, ctx);
     }
 }

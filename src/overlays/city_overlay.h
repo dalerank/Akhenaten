@@ -34,6 +34,7 @@ struct city_overlay {
     e_overlay id;
     building_id current_building_id;
     xstring current_tooltip;
+    int current_column_height = COLUMN_TYPE_NONE;
 
     svector<e_figure_type, 10> walkers;
     svector<e_building_type, 10> buildings;
@@ -47,7 +48,7 @@ struct city_overlay {
     city_overlay(e_overlay t);
 
     virtual bool show_figure(const figure *f) const;
-    virtual int get_column_height(const building *b) const { return COLUMN_TYPE_NONE; }
+    virtual int get_column_height(const building *b) const;
     virtual e_column_color get_column_color(const building *b) const { return COLUMN_COLOR_NONE; }
     virtual void get_tooltip(tooltip_context *c, tile2i tile, xstring &tooltip);
     virtual void get_tooltip_for_building(tooltip_context* c, const building* b, xstring& tooltip);

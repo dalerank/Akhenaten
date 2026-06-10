@@ -384,7 +384,7 @@ overlays = [
 [es=(overlay_apothecary, get_tooltip_for_building)]
 function apothecary_building_tooltip(ev) {
     var house = city.get_house(ev.bid)
-    if (!house.id) {
+    if (!house) {
         __city_overlay_set_tooltip(__loc(66, 34))
         return
     }
@@ -399,4 +399,20 @@ function apothecary_building_tooltip(ev) {
     } else {
         __city_overlay_set_tooltip(__loc(66, 34))
     }
+}
+
+[es=(overlay_apothecary, get_column_height)]
+function apothecary_building_column_height(ev) {
+    var house = city.get_house(ev.bid)
+    if (!house) {
+        __city_overlay_set_column_height(-1)
+        return
+    }
+
+    if (house.population <= 0) {
+        __city_overlay_set_column_height(-1)
+        return
+    }
+
+    __city_overlay_set_column_height(house.apothecary / 10)
 }
