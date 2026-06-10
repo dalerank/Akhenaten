@@ -85,8 +85,10 @@ void figure::figure_phrase_determine() {
 }
 
 int figure::figure_play_phrase_file() {
-    // TODO: Exclude all non-speaking figures
-    if (type == 0 || category() == figure_category_animal) {
+    // Exclude non-speaking figures: unused slots, animals, and any type with no
+    // configured sound reactions (cart/service figures lack a `sounds {}` block,
+    // so attempting speech_file_exist + TTS synthesis is pointless for them).
+    if (type == 0 || category() == figure_category_animal || params().sounds.data.empty()) {
         return -1;
     }
 
