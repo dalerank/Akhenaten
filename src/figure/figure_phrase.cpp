@@ -94,12 +94,12 @@ int figure::figure_play_phrase_file() {
     if (phrase_key.empty() || phrase_key == "empty") {
         bstring32 prefix = params().name;
         prefix.replace_str("figure_", "");
-        path.printf("Voice/Walker/%s_random_%02u.wav", prefix.c_str(), phrase_key.c_str(), rand() % 10);
+        path.printf("Voice/Walker/%s_random_%02u.wav", prefix.c_str(), rand() % 10);
 
         vfs::path tmp;
         if (!g_sound.speech_file_exist(path, tmp)) {
             // fallback to standart phrase
-            path.printf("Voice/Walker/%s_random_01.wav", prefix.c_str(), phrase_key.c_str());
+            path.printf("Voice/Walker/%s_random_01.wav", prefix.c_str());
         }
     } else {
         auto reaction = dcast()->get_sound_reaction(phrase_key);
