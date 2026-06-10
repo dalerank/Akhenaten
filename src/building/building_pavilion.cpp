@@ -133,6 +133,8 @@ void building_pavilion::on_place_update_tiles(int orientation, int variant) {
 }
 
 void building_pavilion::on_place_checks() {
+    building_impl::on_place_checks();
+
     construction_warnings warnings;
     const bool has_dance_school = g_city.buildings.count_active(BUILDING_DANCE_SCHOOL) > 0;
     const bool has_jugglers = g_city.buildings.count_active(BUILDING_JUGGLER_SCHOOL) > 0;
