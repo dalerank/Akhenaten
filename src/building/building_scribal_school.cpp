@@ -26,6 +26,8 @@ void building_scribal_school::update_month() {
 }
 
 void building_scribal_school::on_place_checks() {
+    building_impl::on_place_checks();
+
     if (g_city.buildings.count_industry_active(RESOURCE_PAPYRUS) > 0) {
         return;
     }
