@@ -77,10 +77,8 @@ void empire_trader::update() {
 }
 
 bool empire_trader::is_at_destination() const {
-    if (destination_city_id < 0) {
-        return false;
-    }
-
+    // destination_city_id is uint8_t, so a "< 0" sentinel check is impossible here;
+    // an unset/invalid destination is caught by the route checks below instead.
     const map_route_object& route = g_empire.get_route_object(trade_route_id);
     if (!route.in_use || route.num_points == 0) {
         return false;
