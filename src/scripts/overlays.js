@@ -1,5 +1,7 @@
 log_info("akhenaten: overlays started")
 
+import overlays.apothecary
+
 overlays = [
   {
   	id:OVERLAY_RELIGION_OSIRIS
@@ -65,16 +67,6 @@ overlays = [
     walkers:[FIGURE_WATER_CARRIER]
     buildings:[BUILDING_WELL, BUILDING_MENU_BEAUTIFICATION, BUILDING_WATER_LIFT, BUILDING_WATER_SUPPLY, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
-    column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_APOTHECARY
-    title: "#overlay_apothecary"
-    es_name: "overlay_apothecary"
-    walkers:[FIGURE_HERBALIST]
-    buildings:[BUILDING_APOTHECARY, BUILDING_ROADBLOCK],
-    column_type: COLUMN_TYPE_POSITIVE
     column_anim: {pack:PACK_GENERAL, id:103}
   }
 
@@ -380,39 +372,3 @@ overlays = [
     column_anim: {pack:PACK_GENERAL, id:103}
   }
 ]
-
-[es=(overlay_apothecary, get_tooltip_for_building)]
-function apothecary_building_tooltip(ev) {
-    var house = city.get_house(ev.bid)
-    if (!house) {
-        __city_overlay_set_tooltip(__loc(66, 34))
-        return
-    }
-
-    var apothecary = house.apothecary
-    if (apothecary <= 0) {
-        __city_overlay_set_tooltip(__loc(66, 31))
-    } else if (apothecary >= 80) {
-        __city_overlay_set_tooltip(__loc(66, 32))
-    } else if (apothecary < 20) {
-        __city_overlay_set_tooltip(__loc(66, 33))
-    } else {
-        __city_overlay_set_tooltip(__loc(66, 34))
-    }
-}
-
-[es=(overlay_apothecary, get_column_height)]
-function apothecary_building_column_height(ev) {
-    var house = city.get_house(ev.bid)
-    if (!house) {
-        __city_overlay_set_column_height(-1)
-        return
-    }
-
-    if (house.population <= 0) {
-        __city_overlay_set_column_height(-1)
-        return
-    }
-
-    __city_overlay_set_column_height(house.apothecary / 10)
-}

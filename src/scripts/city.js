@@ -177,6 +177,9 @@ city {
         least_happy: __city_religion_least_happy_god
     }
 
+    @overlay_tooltip: { set: __city_overlay_set_tooltip }
+    @overlay_column_height: { set: __city_overlay_set_column_height }
+
     goal_tooltip: function() { return "" }
     set_victory_reason : city_set_victory_reason
     remove_animals : __city_remove_animals
