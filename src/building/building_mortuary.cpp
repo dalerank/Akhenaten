@@ -24,6 +24,8 @@
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mortuary);
 
 void building_mortuary::on_place_checks() {
+    building_impl::on_place_checks();
+
     if (g_city.buildings.count_industry_active(RESOURCE_LINEN) > 0) {
         return;
     }
