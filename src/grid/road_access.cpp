@@ -157,7 +157,9 @@ tile2i map_has_road_access_rotation(int rotation, tile2i tile, int size) {
 //     return map_has_road_access_hippodrome_rotation(x, y, road, building_rotation_get_rotation());
 // }
 
-// TODO: fix getting road access for temple complex
+// Corner-conversion offsets below must match building_temple_complex::map_add_tiles()
+// (building_temple_complex.cpp), which places the 7x13 footprint from the same corner
+// given the same main-building tile and orientation. Keep them in sync.
 bool map_has_road_access_temple_complex(tile2i tile, int orientation, bool from_corner, tile2i* road) {
     int sizex = 7;
     int sizey = 13;
@@ -175,7 +177,7 @@ bool map_has_road_access_temple_complex(tile2i tile, int orientation, bool from_
     if (!from_corner) {
         switch (orientation) {
         case 0:
-            tile.shift(-2, -11);
+            tile.shift(-2, -10);
             break;
         case 1:
             tile.shift(0, -2);
@@ -184,7 +186,7 @@ bool map_has_road_access_temple_complex(tile2i tile, int orientation, bool from_
             tile.shift(-2, 0);
             break;
         case 3:
-            tile.shift(-11, -2);
+            tile.shift(-10, -2);
             break;
         }
     }
