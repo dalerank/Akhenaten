@@ -39,6 +39,11 @@ void building_well::update_month() {
 }
 
 void building_well::on_place_checks() {
+    // Do NOT chain to building_impl::on_place_checks() here. A well needs groundwater,
+    // not road access, and has no labor -- the base would emit spurious #needs_road_access
+    // and #city_needs_more_workers warnings. Same rationale as building_irrigation_ditch
+    // and building_road (both deliberately skip the base). The only relevant check is
+    // groundwater presence below.
     construction_warnings warnings;
 
     int has_water = map_terrain_is(tile(), TERRAIN_GROUNDWATER);
