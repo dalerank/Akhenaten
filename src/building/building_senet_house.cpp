@@ -20,6 +20,8 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_senet_house);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_bullfight_school);
 
 void building_senet_house::on_place_checks() {
+    building_impl::on_place_checks();
+
     construction_warnings warnings;
 
     const bool has_senet_master = (g_city.buildings.count_active(BUILDING_BULLFIGHT_SCHOOL) > 0);
