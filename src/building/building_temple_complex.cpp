@@ -494,9 +494,9 @@ void building_temple_complex::update_map_orientation(int orientation) {
 tile2i temple_complex_part_target(building *main, int part) {
     building *b = main;
     if (part == 1) {
-        b = b->next();
+        b = b->next();          // altar (first linked part)
     } else if (part == 2) {
-        // b = get_temple_complex_front_facing_part(main);
+        b = b->next()->next();  // oracle / front-facing part (second linked part)
     }
 
     int x = b->tile.x();
