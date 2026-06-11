@@ -2882,17 +2882,6 @@ localization_base_en = [
     { group:66, id:61, text: "Several crimes were reported here recently, but on the whole, this neighborhood is reasonably secure" }
     { group:66, id:62, text: "This is a high-crime area. Residents are unhappy, and the streets are not safe to walk at night" }
     { group:66, id:63, text: "This whole area is a tinderbox of unrest! Crime is endemic, and anything might happen" }
-    { group:66, id:64, text: "This dwelling has no access to any entertainment whatsoever" }
-    { group:66, id:65, text: "This dwelling barely has access to any entertainment" }
-    { group:66, id:66, text: "This dwelling has very limited access to entertainment venues" }
-    { group:66, id:67, text: "This dwelling has limited access to entertainment venues" }
-    { group:66, id:68, text: "This dwelling has some access to entertainment venues" }
-    { group:66, id:69, text: "This dwelling has access to several entertainment venues" }
-    { group:66, id:70, text: "This dwelling has reasonable access to entertainment venues" }
-    { group:66, id:71, text: "This dwelling has good access to entertainment venues" }
-    { group:66, id:72, text: "This dwelling has very good access to entertainment venues" }
-    { group:66, id:73, text: "This dwelling has excellent access to entertainment venues" }
-    { group:66, id:74, text: "This dwelling has access to all the entertainment it could ever desire" }
     { group:66, id:83, text: "This house has no access to a dance stage" }
     { group:66, id:84, text: "This house was recently passed by a dancer. It will have dance stage access for a long time" }
     { group:66, id:85, text: "This house has dance stage access" }

@@ -4,6 +4,7 @@ import overlays.apothecary
 import overlays.health
 import overlays.tax_income
 import overlays.booth
+import overlays.entertainment
 
 overlays = [
   {
@@ -204,18 +205,6 @@ overlays = [
     title: "#overlay_education"
     walkers:[FIGURE_SCRIBER, FIGURE_LIBRARIAN, FIGURE_TEACHER]
     buildings:[BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY, BUILDING_ACADEMY, BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_WATER_ACCESS
-    column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_ENTERTAINMENT
-    title: "#overlay_entertainment"
-    walkers:[FIGURE_JUGGLER, FIGURE_MUSICIAN, FIGURE_DANCER, FIGURE_SENET_PLAYER, FIGURE_CHARIOR_RACER]
-    buildings:[ BUILDING_JUGGLER_SCHOOL, BUILDING_BOOTH, BUILDING_CONSERVATORY,
-                BUILDING_BANDSTAND, BUILDING_DANCE_SCHOOL, BUILDING_PAVILLION,
-                BUILDING_BULLFIGHT_SCHOOL, BUILDING_SENET_HOUSE,
-                BUILDING_ROADBLOCK ]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
   }

@@ -1208,6 +1208,19 @@ localization_de = [
   { key: "#tax_income_none_yet", text: "Bisher dieses Jahr keine Steuern von diesem Haus eingezogen." }
   { key: "#tax_income_collected", text: " Deben bisher dieses Jahr eingezogen." }
 
+  // entertainment overlay
+  { key: "#entertainment_access_none", text: "Diese Wohnung hat überhaupt keinen Zugang zu Unterhaltung" }
+  { key: "#entertainment_access_barely", text: "Diese Wohnung hat kaum Zugang zu Unterhaltung" }
+  { key: "#entertainment_access_very_limited", text: "Diese Wohnung hat sehr begrenzten Zugang zu Unterhaltungsangeboten" }
+  { key: "#entertainment_access_limited", text: "Diese Wohnung hat begrenzten Zugang zu Unterhaltungsangeboten" }
+  { key: "#entertainment_access_some", text: "Diese Wohnung hat etwas Zugang zu Unterhaltungsangeboten" }
+  { key: "#entertainment_access_several", text: "Diese Wohnung hat Zugang zu mehreren Unterhaltungsangeboten" }
+  { key: "#entertainment_access_reasonable", text: "Diese Wohnung hat angemessenen Zugang zu Unterhaltungsangeboten" }
+  { key: "#entertainment_access_good", text: "Diese Wohnung hat guten Zugang zu Unterhaltungsangeboten" }
+  { key: "#entertainment_access_very_good", text: "Diese Wohnung hat sehr guten Zugang zu Unterhaltungsangeboten" }
+  { key: "#entertainment_access_excellent", text: "Diese Wohnung hat ausgezeichneten Zugang zu Unterhaltungsangeboten" }
+  { key: "#entertainment_access_max", text: "Diese Wohnung hat Zugang zu aller Unterhaltung, die sie sich wünschen könnte" }
+
   { key: "#top_menu_file", text: "Datei" }
   { key: "#top_menu_file_tooltip", text: "Neues Spiel, Laden, Speichern, Spiel beenden" }
   { key: "#top_menu_options", text: "Optionen" }

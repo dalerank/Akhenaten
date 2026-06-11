@@ -1257,6 +1257,19 @@ localization_en = [
   { key: "#tax_income_none_yet", text: "No tax collected from this house so far this year." }
   { key: "#tax_income_collected", text: " deben collected so far this year." }
 
+  // entertainment overlay
+  { key: "#entertainment_access_none", text: "This dwelling has no access to any entertainment whatsoever" }
+  { key: "#entertainment_access_barely", text: "This dwelling barely has access to any entertainment" }
+  { key: "#entertainment_access_very_limited", text: "This dwelling has very limited access to entertainment venues" }
+  { key: "#entertainment_access_limited", text: "This dwelling has limited access to entertainment venues" }
+  { key: "#entertainment_access_some", text: "This dwelling has some access to entertainment venues" }
+  { key: "#entertainment_access_several", text: "This dwelling has access to several entertainment venues" }
+  { key: "#entertainment_access_reasonable", text: "This dwelling has reasonable access to entertainment venues" }
+  { key: "#entertainment_access_good", text: "This dwelling has good access to entertainment venues" }
+  { key: "#entertainment_access_very_good", text: "This dwelling has very good access to entertainment venues" }
+  { key: "#entertainment_access_excellent", text: "This dwelling has excellent access to entertainment venues" }
+  { key: "#entertainment_access_max", text: "This dwelling has access to all the entertainment it could ever desire" }
+
   { key: "#top_menu_file", text: "File" }
   { key: "#top_menu_file_tooltip", text: "Load, save, new game and exit" }
   { key: "#top_menu_options", text: "Options" }

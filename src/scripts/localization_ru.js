@@ -483,6 +483,19 @@ localization_ru = [
     { key: "#tax_income_none_yet", text: "Налогов с этого дома в этом году пока не собрано." }
     { key: "#tax_income_collected", text: " дебенов собрано в этом году." }
 
+    // entertainment overlay
+    { key: "#entertainment_access_none", text: "У этого жилья нет доступа ни к каким развлечениям вообще" }
+    { key: "#entertainment_access_barely", text: "У этого жилья едва есть доступ к каким-либо развлечениям" }
+    { key: "#entertainment_access_very_limited", text: "У этого жилья очень ограниченный доступ к развлекательным заведениям" }
+    { key: "#entertainment_access_limited", text: "У этого жилья ограниченный доступ к развлекательным заведениям" }
+    { key: "#entertainment_access_some", text: "У этого жилья есть некоторый доступ к развлекательным заведениям" }
+    { key: "#entertainment_access_several", text: "У этого жилья есть доступ к нескольким развлекательным заведениям" }
+    { key: "#entertainment_access_reasonable", text: "У этого жилья разумный доступ к развлекательным заведениям" }
+    { key: "#entertainment_access_good", text: "У этого жилья хороший доступ к развлекательным заведениям" }
+    { key: "#entertainment_access_very_good", text: "У этого жилья очень хороший доступ к развлекательным заведениям" }
+    { key: "#entertainment_access_excellent", text: "У этого жилья превосходный доступ к развлекательным заведениям" }
+    { key: "#entertainment_access_max", text: "У этого жилья есть доступ ко всем развлечениям, которые оно могло бы желать" }
+
     { key: "#top_menu_file", text: "Файл" }
     { key: "#top_menu_file_tooltip", text: "Загрузить, сохранить, начать новую игру и выйти" }
     { key: "#top_menu_options", text: "Параметры" }

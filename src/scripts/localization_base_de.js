@@ -2887,17 +2887,6 @@ localization_base_de = [
     { group:66, id:61, text: "Mehrere Verbrechen wurden hier kürzlich gemeldet, aber insgesamt ist diese Nachbarschaft einigermaßen sicher" }
     { group:66, id:62, text: "Dies ist ein Gebiet mit hoher Kriminalität. Bewohner sind unglücklich und die Straßen sind nachts nicht sicher" }
     { group:66, id:63, text: "Diese ganze Gegend ist ein Pulverfass der Unruhe! Verbrechen ist endemisch und alles könnte passieren" }
-    { group:66, id:64, text: "Diese Wohnung hat überhaupt keinen Zugang zu Unterhaltung" }
-    { group:66, id:65, text: "Diese Wohnung hat kaum Zugang zu Unterhaltung" }
-    { group:66, id:66, text: "Diese Wohnung hat sehr begrenzten Zugang zu Unterhaltungsangeboten" }
-    { group:66, id:67, text: "Diese Wohnung hat begrenzten Zugang zu Unterhaltungsangeboten" }
-    { group:66, id:68, text: "Diese Wohnung hat etwas Zugang zu Unterhaltungsangeboten" }
-    { group:66, id:69, text: "Diese Wohnung hat Zugang zu mehreren Unterhaltungsangeboten" }
-    { group:66, id:70, text: "Diese Wohnung hat angemessenen Zugang zu Unterhaltungsangeboten" }
-    { group:66, id:71, text: "Diese Wohnung hat guten Zugang zu Unterhaltungsangeboten" }
-    { group:66, id:72, text: "Diese Wohnung hat sehr guten Zugang zu Unterhaltungsangeboten" }
-    { group:66, id:73, text: "Diese Wohnung hat ausgezeichneten Zugang zu Unterhaltungsangeboten" }
-    { group:66, id:74, text: "Diese Wohnung hat Zugang zu aller Unterhaltung, die sie sich wünschen könnte" }
     { group:66, id:83, text: "Dieses Haus hat keinen Zugang zu einer Tanzbühne" }
     { group:66, id:84, text: "Dieses Haus wurde kürzlich von einem Tänzer besucht. Es wird für lange Zeit Tanzbühnenzugang haben" }
     { group:66, id:85, text: "Dieses Haus hat Tanzbühnenzugang" }
