@@ -18,19 +18,19 @@ function booth_juggler_value(house) {
 function booth_building_tooltip(ev) {
     var house = city.get_house(ev.bid)
     if (!house) {
-        city.overlay_tooltip = __loc("#booth_access_low")
+        city.overlay_tooltip = "#booth_access_low"
         return
     }
 
     var juggler = booth_juggler_value(house)
     if (juggler <= 0) {
-        city.overlay_tooltip = __loc("#booth_access_none")
+        city.overlay_tooltip = "#booth_access_none"
     } else if (juggler >= 80) {
-        city.overlay_tooltip = __loc("#booth_access_high")
+        city.overlay_tooltip = "#booth_access_high"
     } else if (juggler >= 20) {
-        city.overlay_tooltip = __loc("#booth_access_medium")
+        city.overlay_tooltip = "#booth_access_medium"
     } else {
-        city.overlay_tooltip = __loc("#booth_access_low")
+        city.overlay_tooltip = "#booth_access_low"
     }
 }
 

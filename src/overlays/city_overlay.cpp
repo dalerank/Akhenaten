@@ -121,7 +121,7 @@ const tooltips_t &city_overlay::get_tooltips(const xstring &level) const {
 
 void __city_overlay_set_tooltip(pcstr text) {
     if (const city_overlay *overlay = g_city.overlay()) {
-        const_cast<city_overlay *>(overlay)->current_tooltip = xstring(text);
+        const_cast<city_overlay *>(overlay)->current_tooltip = lang_xtext_from_key(text);
     }
 }
 ANK_FUNCTION_1(__city_overlay_set_tooltip)
