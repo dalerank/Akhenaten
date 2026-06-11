@@ -18,22 +18,22 @@ function tax_income_denarii(house) {
 function tax_income_building_tooltip(ev) {
     var house = city.get_house(ev.bid)
     if (!house) {
-        city.overlay_tooltip = __loc(66, 43)
+        city.overlay_tooltip = __loc("#tax_income_not_registered")
         return
     }
 
     var denarii = tax_income_denarii(house)
     if (denarii > 0) {
-        city.overlay_tooltip = denarii + __loc(66, 45)
+        city.overlay_tooltip = denarii + __loc("#tax_income_collected")
         return
     }
 
     if (house.tax_coverage > 0) {
-        city.overlay_tooltip = __loc(66, 44)
+        city.overlay_tooltip = __loc("#tax_income_none_yet")
         return
     }
 
-    city.overlay_tooltip = __loc(66, 43)
+    city.overlay_tooltip = __loc("#tax_income_not_registered")
 }
 
 [es=(overlay_tax_income, get_column_height)]

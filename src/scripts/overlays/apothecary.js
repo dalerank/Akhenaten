@@ -14,19 +14,19 @@ overlay_apothecary {
 function apothecary_building_tooltip(ev) {
     var house = city.get_house(ev.bid)
     if (!house) {
-        city.overlay_tooltip = __loc(66, 34)
+        city.overlay_tooltip = __loc("#apothecary_access_medium")
         return
     }
 
     var apothecary = house.apothecary
     if (apothecary <= 0) {
-        city.overlay_tooltip = __loc(66, 31)
+        city.overlay_tooltip = __loc("#apothecary_access_none")
     } else if (apothecary >= 80) {
-        city.overlay_tooltip = __loc(66, 32)
+        city.overlay_tooltip = __loc("#apothecary_access_high")
     } else if (apothecary < 20) {
-        city.overlay_tooltip = __loc(66, 33)
+        city.overlay_tooltip = __loc("#apothecary_access_low")
     } else {
-        city.overlay_tooltip = __loc(66, 34)
+        city.overlay_tooltip = __loc("#apothecary_access_medium")
     }
 }
 

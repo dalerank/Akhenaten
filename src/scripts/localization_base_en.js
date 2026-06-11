@@ -2860,17 +2860,10 @@ localization_base_en = [
     { group:66, id:32, text: "This house was recently passed by a dentist. It will have Dentist access for a long time" }
     { group:66, id:33, text: "This house has Dentist access" }
     { group:66, id:34, text: "Unless a dentist walks by soon, this house will lose Dentist office access" }
-    { group:66, id:35, text: "This house has no access to an Apothecary" }
-    { group:66, id:36, text: "This house was recently passed by an herbalist. It will have Apothecary access for a long time" }
-    { group:66, id:37, text: "This house has Apothecary access" }
-    { group:66, id:38, text: "Unless an herbalist passes it soon, this house will lose Apothecary access" }
     { group:66, id:39, text: "This house has no access to a Mortuary" }
     { group:66, id:40, text: "This house was recently passed by a embalmer. It will have Mortuary access for a long time" }
     { group:66, id:41, text: "This house has Mortuary access" }
     { group:66, id:42, text: "Unless a embalmer passes it soon, this house will lose Mortuary access" }
-    { group:66, id:43, text: "This house is not registered for taxes, and so does not pay any tax" }
-    { group:66, id:44, text: "No tax collected from this house so far this year." }
-    { group:66, id:45, text: " deben collected so far this year." }
     { group:66, id:46, text: "This building has no likelihood of catching fire" }
     { group:66, id:47, text: "This building is a negligible fire risk" }
     { group:66, id:48, text: "This building has some risk of fire" }
@@ -2900,10 +2893,6 @@ localization_base_en = [
     { group:66, id:72, text: "This dwelling has very good access to entertainment venues" }
     { group:66, id:73, text: "This dwelling has excellent access to entertainment venues" }
     { group:66, id:74, text: "This dwelling has access to all the entertainment it could ever desire" }
-    { group:66, id:75, text: "This house has no access to a juggler" }
-    { group:66, id:76, text: "This house was recently passed by a juggler. It will have juggler access for a long time" }
-    { group:66, id:77, text: "This house has juggler access" }
-    { group:66, id:78, text: "This house has not been passed by a juggler for a while. It will soon lose juggler access" }    
     { group:66, id:83, text: "This house has no access to a dance stage" }
     { group:66, id:84, text: "This house was recently passed by a dancer. It will have dance stage access for a long time" }
     { group:66, id:85, text: "This house has dance stage access" }
@@ -2948,11 +2937,6 @@ localization_base_en = [
     { group:66, id:124, text: " flasks of beer are stored in this building." }
     { group:66, id:125, text: " flask of beer is stored in this building." }
     { group:66, id:126, text: "This building does not store goods." }
-    { group:66, id:127, text: "This building has no likelihood of disease." }
-    { group:66, id:128, text: "This building is a negligible disease risk." }
-    { group:66, id:129, text: "This building has some risk of disease." }
-    { group:66, id:130, text: "This building has a risk of disease" }
-    { group:66, id:131, text: "This building is disease ridden." }
     { group:66, id:132, text: "No Physician access." }
     { group:66, id:133, text: "This house hasn't been passed by a physician in a while." }
     { group:66, id:134, text: "This house has had a physician pass by." }

@@ -1233,6 +1233,30 @@ localization_en = [
   { key: "#food_stocks_medium", text: "This house has food stocks to last for at least the coming month" }
   { key: "#food_stocks_high", text: "This house has no problems in getting the food it requires to survive" }
 
+  // apothecary access
+  { key: "#apothecary_access_none", text: "This house has no access to an Apothecary" }
+  { key: "#apothecary_access_high", text: "This house was recently passed by an herbalist. It will have Apothecary access for a long time" }
+  { key: "#apothecary_access_medium", text: "This house has Apothecary access" }
+  { key: "#apothecary_access_low", text: "Unless an herbalist passes it soon, this house will lose Apothecary access" }
+
+  // booth access
+  { key: "#booth_access_none", text: "This house has no access to a juggler" }
+  { key: "#booth_access_high", text: "This house was recently passed by a juggler. It will have juggler access for a long time" }
+  { key: "#booth_access_medium", text: "This house has juggler access" }
+  { key: "#booth_access_low", text: "This house has not been passed by a juggler for a while. It will soon lose juggler access" }
+
+  // health overlay
+  { key: "#health_risk_none", text: "This building has no likelihood of disease." }
+  { key: "#health_risk_negligible", text: "This building is a negligible disease risk." }
+  { key: "#health_risk_some", text: "This building has some risk of disease." }
+  { key: "#health_risk_high", text: "This building has a risk of disease" }
+  { key: "#health_diseased", text: "This building is disease ridden." }
+
+  // tax income overlay
+  { key: "#tax_income_not_registered", text: "This house is not registered for taxes, and so does not pay any tax" }
+  { key: "#tax_income_none_yet", text: "No tax collected from this house so far this year." }
+  { key: "#tax_income_collected", text: " deben collected so far this year." }
+
   { key: "#top_menu_file", text: "File" }
   { key: "#top_menu_file_tooltip", text: "Load, save, new game and exit" }
   { key: "#top_menu_options", text: "Options" }

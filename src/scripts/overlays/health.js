@@ -18,19 +18,19 @@ function health_building_tooltip(ev) {
     }
 
     if (building.disease_days > 0) {
-        city.overlay_tooltip = __loc(66, 131)
+        city.overlay_tooltip = __loc("#health_diseased")
         return
     }
 
     var health = building.common_health
     if (health < 25) {
-        city.overlay_tooltip = __loc(66, 130)
+        city.overlay_tooltip = __loc("#health_risk_high")
     } else if (health < 50) {
-        city.overlay_tooltip = __loc(66, 129)
+        city.overlay_tooltip = __loc("#health_risk_some")
     } else if (health < 75) {
-        city.overlay_tooltip = __loc(66, 128)
+        city.overlay_tooltip = __loc("#health_risk_negligible")
     } else {
-        city.overlay_tooltip = __loc(66, 127)
+        city.overlay_tooltip = __loc("#health_risk_none")
     }
 }
 

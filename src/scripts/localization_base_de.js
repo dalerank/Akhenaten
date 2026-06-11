@@ -2865,17 +2865,10 @@ localization_base_de = [
     { group:66, id:32, text: "Dieses Haus wurde kürzlich von einem Zahnarzt besucht. Es wird für lange Zeit Zahnarztzugang haben" }
     { group:66, id:33, text: "Dieses Haus hat Zahnarztzugang" }
     { group:66, id:34, text: "Wenn nicht bald ein Zahnarzt vorbeikommt, wird dieses Haus den Zugang zur Zahnarztpraxis verlieren" }
-    { group:66, id:35, text: "Dieses Haus hat keinen Zugang zu einer Apotheke" }
-    { group:66, id:36, text: "Dieses Haus wurde kürzlich von einem Kräuterkundigen besucht. Es wird für lange Zeit Apothekenzugang haben" }
-    { group:66, id:37, text: "Dieses Haus hat Apothekenzugang" }
-    { group:66, id:38, text: "Wenn nicht bald ein Kräuterkundiger vorbeikommt, wird dieses Haus den Apothekenzugang verlieren" }
     { group:66, id:39, text: "Dieses Haus hat keinen Zugang zu einer Leichenhalle" }
     { group:66, id:40, text: "Dieses Haus wurde kürzlich von einem Einbalsamierer besucht. Es wird für lange Zeit Leichenhallenzugang haben" }
     { group:66, id:41, text: "Dieses Haus hat Leichenhallenzugang" }
     { group:66, id:42, text: "Wenn nicht bald ein Einbalsamierer vorbeikommt, wird dieses Haus den Leichenhallenzugang verlieren" }
-    { group:66, id:43, text: "Dieses Haus ist nicht für Steuern registriert und zahlt daher keine Steuern" }
-    { group:66, id:44, text: "Bisher dieses Jahr keine Steuern von diesem Haus eingezogen." }
-    { group:66, id:45, text: " Deben bisher dieses Jahr eingezogen." }
     { group:66, id:46, text: "Dieses Gebäude hat keine Brandgefahr" }
     { group:66, id:47, text: "Dieses Gebäude hat eine vernachlässigbare Brandgefahr" }
     { group:66, id:48, text: "Dieses Gebäude hat etwas Brandgefahr" }
@@ -2905,10 +2898,6 @@ localization_base_de = [
     { group:66, id:72, text: "Diese Wohnung hat sehr guten Zugang zu Unterhaltungsangeboten" }
     { group:66, id:73, text: "Diese Wohnung hat ausgezeichneten Zugang zu Unterhaltungsangeboten" }
     { group:66, id:74, text: "Diese Wohnung hat Zugang zu aller Unterhaltung, die sie sich wünschen könnte" }
-    { group:66, id:75, text: "Dieses Haus hat keinen Zugang zu einem Gaukler" }
-    { group:66, id:76, text: "Dieses Haus wurde kürzlich von einem Gaukler besucht. Es wird für lange Zeit Gauklerzugang haben" }
-    { group:66, id:77, text: "Dieses Haus hat Gauklerzugang" }
-    { group:66, id:78, text: "Dieses Haus wurde eine Weile nicht von einem Gaukler besucht. Es wird bald den Gauklerzugang verlieren" }
     { group:66, id:83, text: "Dieses Haus hat keinen Zugang zu einer Tanzbühne" }
     { group:66, id:84, text: "Dieses Haus wurde kürzlich von einem Tänzer besucht. Es wird für lange Zeit Tanzbühnenzugang haben" }
     { group:66, id:85, text: "Dieses Haus hat Tanzbühnenzugang" }
@@ -2953,11 +2942,6 @@ localization_base_de = [
     { group:66, id:124, text: " Krüge Bier sind in diesem Gebäude gelagert." }
     { group:66, id:125, text: " Krug Bier ist in diesem Gebäude gelagert." }
     { group:66, id:126, text: "Dieses Gebäude lagert keine Waren." }
-    { group:66, id:127, text: "Dieses Gebäude hat keine Krankheitsgefahr." }
-    { group:66, id:128, text: "Dieses Gebäude hat eine vernachlässigbare Krankheitsgefahr." }
-    { group:66, id:129, text: "Dieses Gebäude hat etwas Krankheitsgefahr." }
-    { group:66, id:130, text: "Dieses Gebäude hat Krankheitsgefahr" }
-    { group:66, id:131, text: "Dieses Gebäude ist krankheitsverseucht." }
     { group:66, id:132, text: "Kein Arztzugang." }
     { group:66, id:133, text: "Dieses Haus wurde eine Weile nicht von einem Arzt besucht." }
     { group:66, id:134, text: "Dieses Haus wurde von einem Arzt besucht." }

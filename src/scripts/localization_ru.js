@@ -459,6 +459,30 @@ localization_ru = [
     { key: "#food_stocks_medium", text: "У этого дома есть запасы еды минимум на предстоящий месяц" }
     { key: "#food_stocks_high", text: "У этого дома нет проблем с получением еды, необходимой для выживания" }
 
+    // apothecary access
+    { key: "#apothecary_access_none", text: "У этого дома нет доступа к аптекарю" }
+    { key: "#apothecary_access_high", text: "Мимо этого дома недавно проходил травник. У него будет доступ к аптекарю надолго" }
+    { key: "#apothecary_access_medium", text: "У этого дома есть доступ к аптекарю" }
+    { key: "#apothecary_access_low", text: "Если травник не пройдёт мимо него скоро, этот дом потеряет доступ к аптекарю" }
+
+    // booth access
+    { key: "#booth_access_none", text: "У этого дома нет доступа к жонглёру" }
+    { key: "#booth_access_high", text: "Мимо этого дома недавно проходил жонглёр. У него будет доступ к жонглёру надолго" }
+    { key: "#booth_access_medium", text: "У этого дома есть доступ к жонглёру" }
+    { key: "#booth_access_low", text: "Мимо этого дома давно не проходил жонглёр. Он скоро потеряет доступ к жонглёру" }
+
+    // health overlay
+    { key: "#health_risk_none", text: "У этого здания нет вероятности болезни." }
+    { key: "#health_risk_negligible", text: "Это здание имеет незначительный риск болезни." }
+    { key: "#health_risk_some", text: "У этого здания есть некоторый риск болезни." }
+    { key: "#health_risk_high", text: "У этого здания есть риск болезни" }
+    { key: "#health_diseased", text: "Это здание охвачено болезнью." }
+
+    // tax income overlay
+    { key: "#tax_income_not_registered", text: "Этот дом не зарегистрирован для налогов и поэтому не платит никаких налогов" }
+    { key: "#tax_income_none_yet", text: "Налогов с этого дома в этом году пока не собрано." }
+    { key: "#tax_income_collected", text: " дебенов собрано в этом году." }
+
     { key: "#top_menu_file", text: "Файл" }
     { key: "#top_menu_file_tooltip", text: "Загрузить, сохранить, начать новую игру и выйти" }
     { key: "#top_menu_options", text: "Параметры" }

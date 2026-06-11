@@ -1184,6 +1184,30 @@ localization_de = [
   { key: "#food_stocks_medium", text: "Dieses Haus hat Nahrungsvorräte für mindestens den kommenden Monat" }
   { key: "#food_stocks_high", text: "Dieses Haus hat keine Probleme, die Nahrung zu bekommen, die es zum Überleben braucht" }
 
+  // apothecary access
+  { key: "#apothecary_access_none", text: "Dieses Haus hat keinen Zugang zu einer Apotheke" }
+  { key: "#apothecary_access_high", text: "Dieses Haus wurde kürzlich von einem Kräuterkundigen besucht. Es wird für lange Zeit Apothekenzugang haben" }
+  { key: "#apothecary_access_medium", text: "Dieses Haus hat Apothekenzugang" }
+  { key: "#apothecary_access_low", text: "Wenn nicht bald ein Kräuterkundiger vorbeikommt, wird dieses Haus den Apothekenzugang verlieren" }
+
+  // booth access
+  { key: "#booth_access_none", text: "Dieses Haus hat keinen Zugang zu einem Gaukler" }
+  { key: "#booth_access_high", text: "Dieses Haus wurde kürzlich von einem Gaukler besucht. Es wird für lange Zeit Gauklerzugang haben" }
+  { key: "#booth_access_medium", text: "Dieses Haus hat Gauklerzugang" }
+  { key: "#booth_access_low", text: "Dieses Haus wurde eine Weile nicht von einem Gaukler besucht. Es wird bald den Gauklerzugang verlieren" }
+
+  // health overlay
+  { key: "#health_risk_none", text: "Dieses Gebäude hat keine Krankheitsgefahr." }
+  { key: "#health_risk_negligible", text: "Dieses Gebäude hat eine vernachlässigbare Krankheitsgefahr." }
+  { key: "#health_risk_some", text: "Dieses Gebäude hat etwas Krankheitsgefahr." }
+  { key: "#health_risk_high", text: "Dieses Gebäude hat Krankheitsgefahr" }
+  { key: "#health_diseased", text: "Dieses Gebäude ist krankheitsverseucht." }
+
+  // tax income overlay
+  { key: "#tax_income_not_registered", text: "Dieses Haus ist nicht für Steuern registriert und zahlt daher keine Steuern" }
+  { key: "#tax_income_none_yet", text: "Bisher dieses Jahr keine Steuern von diesem Haus eingezogen." }
+  { key: "#tax_income_collected", text: " Deben bisher dieses Jahr eingezogen." }
+
   { key: "#top_menu_file", text: "Datei" }
   { key: "#top_menu_file_tooltip", text: "Neues Spiel, Laden, Speichern, Spiel beenden" }
   { key: "#top_menu_options", text: "Optionen" }
