@@ -1,4 +1,4 @@
-#include "city_overlay_juggler.h"
+#include "city_overlay_bandstand.h"
 
 #include "figure/figure.h"
 #include "grid/property.h"

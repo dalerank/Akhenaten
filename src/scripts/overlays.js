@@ -3,6 +3,7 @@ log_info("akhenaten: overlays started")
 import overlays.apothecary
 import overlays.health
 import overlays.tax_income
+import overlays.booth
 
 overlays = [
   {
@@ -264,15 +265,6 @@ overlays = [
     walkers:[]
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
-    column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_BOOTH
-    title: "#overlay_booth"
-    walkers:[FIGURE_JUGGLER]
-    buildings:[BUILDING_JUGGLER_SCHOOL, BUILDING_BOOTH, BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_POSITIVE
     column_anim: {pack:PACK_GENERAL, id:103}
   }
 
