@@ -2891,17 +2891,13 @@ localization_base_de = [
     { group:66, id:84, text: "Dieses Haus wurde kürzlich von einem Tänzer besucht. Es wird für lange Zeit Tanzbühnenzugang haben" }
     { group:66, id:85, text: "Dieses Haus hat Tanzbühnenzugang" }
     { group:66, id:86, text: "Dieses Haus wurde eine Weile nicht von einem Tänzer besucht. Es wird bald den Tanzzugang verlieren" }
-    { group:66, id:87, text: "Dieses Haus hat keinen Zugang zu einem Senet-Haus" }
-    { group:66, id:88, text: "Dieses Haus wurde kürzlich von einem Senet-Meister besucht. Es wird für lange Zeit Senet-Haus-Zugang haben" }
-    { group:66, id:89, text: "Dieses Haus hat Senet-Haus-Zugang" }
-    { group:66, id:90, text: "Dieses Haus wurde eine Weile nicht von einem Senet-Meister besucht. Es wird bald den Senet-Haus-Zugang verlieren" }
     { group:66, id:91, text: "ALT: Keine Bürger wollen hier leben" }
     { group:66, id:92, text: "ALT: Eure Bürger sehen keine positiven oder negativen Faktoren in Verbindung mit dieser Gegend" }
     { group:66, id:93, text: "ALT: Dieses Land ist eine begehrte Gegend" }
     { group:66, id:94, text: "Dieses Gebäude hat derzeit keinen Zugang zu Menschen, die es mit Arbeitskraft versorgen" }
     { group:66, id:95, text: "Dieses Gebäude hat derzeit sehr wenig Zugang zu Menschen, die es mit Arbeitskraft versorgen" }
     { group:66, id:96, text: "Dieses Gebäude hat derzeit schlechten Zugang zu Menschen, die es mit Arbeitskraft versorgen" }
-    { group:66, id:97, text: "Dieses Gebäude hat derzeit etwas Zugang zu Menschen, die es mit Arbeitskraft versorgen" }
+    { group:66, id:97, text: "Dieses Gebäude hat derzeit etwas Zugang zu Menschen, die es mit Arbeitskraft versorgen" }заpf
     { group:66, id:98, text: "Dieses Gebäude hat derzeit guten Zugang zu Menschen, die es mit Arbeitskraft versorgen" }
     { group:66, id:99, text: "Dieses Gebäude hat derzeit ausgezeichneten Zugang zu Menschen, die es mit Arbeitskraft versorgen" }
     { group:66, id:100, text: "Dieses Haus hat keinen Zugang zu Schreibschulen oder Bibliotheken" }

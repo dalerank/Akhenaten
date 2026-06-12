@@ -23,6 +23,7 @@ House.property.health = { }
 House.property.mortuary = { }
 House.property.physician = { }
 House.property.booth_juggler = { }
+House.property.senet_player = { }
 House.property.bandstand_juggler = { }
 House.property.worst_desirability_building_id = { }
 House.property.fancy_bazaar_access = { }

@@ -1221,6 +1221,12 @@ localization_de = [
   { key: "#entertainment_access_excellent", text: "Diese Wohnung hat ausgezeichneten Zugang zu Unterhaltungsangeboten" }
   { key: "#entertainment_access_max", text: "Diese Wohnung hat Zugang zu aller Unterhaltung, die sie sich wünschen könnte" }
 
+  // senet house overlay
+  { key: "#senet_access_none", text: "Dieses Haus hat keinen Zugang zu einem Senet-Haus" }
+  { key: "#senet_access_high", text: "Dieses Haus wurde kürzlich von einem Senet-Meister besucht. Es wird für lange Zeit Senet-Haus-Zugang haben" }
+  { key: "#senet_access_medium", text: "Dieses Haus hat Senet-Haus-Zugang" }
+  { key: "#senet_access_low", text: "Dieses Haus wurde eine Weile nicht von einem Senet-Meister besucht. Es wird bald den Senet-Haus-Zugang verlieren" }
+
   { key: "#top_menu_file", text: "Datei" }
   { key: "#top_menu_file_tooltip", text: "Neues Spiel, Laden, Speichern, Spiel beenden" }
   { key: "#top_menu_options", text: "Optionen" }

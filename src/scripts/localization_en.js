@@ -1270,6 +1270,12 @@ localization_en = [
   { key: "#entertainment_access_excellent", text: "This dwelling has excellent access to entertainment venues" }
   { key: "#entertainment_access_max", text: "This dwelling has access to all the entertainment it could ever desire" }
 
+  // senet house overlay
+  { key: "#senet_access_none", text: "This house has no access to a Senet House" }
+  { key: "#senet_access_high", text: "This house was recently passed by a senet master. It will have Senet House access for a long time" }
+  { key: "#senet_access_medium", text: "This house has Senet House access" }
+  { key: "#senet_access_low", text: "This house has not been passed by a senet master for a while. It will soon lose Senet House access" }
+
   { key: "#top_menu_file", text: "File" }
   { key: "#top_menu_file_tooltip", text: "Load, save, new game and exit" }
   { key: "#top_menu_options", text: "Options" }

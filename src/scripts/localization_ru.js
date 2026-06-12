@@ -496,6 +496,12 @@ localization_ru = [
     { key: "#entertainment_access_excellent", text: "У этого жилья превосходный доступ к развлекательным заведениям" }
     { key: "#entertainment_access_max", text: "У этого жилья есть доступ ко всем развлечениям, которые оно могло бы желать" }
 
+    // senet house overlay
+    { key: "#senet_access_none", text: "У этого дома нет доступа к дому сенета" }
+    { key: "#senet_access_high", text: "Мимо этого дома недавно проходил мастер сенета. У него будет доступ к дому сенета надолго" }
+    { key: "#senet_access_medium", text: "У этого дома есть доступ к дому сенета" }
+    { key: "#senet_access_low", text: "Мимо этого дома давно не проходил мастер сенета. Он скоро потеряет доступ к дому сенета" }
+
     { key: "#top_menu_file", text: "Файл" }
     { key: "#top_menu_file_tooltip", text: "Загрузить, сохранить, начать новую игру и выйти" }
     { key: "#top_menu_options", text: "Параметры" }

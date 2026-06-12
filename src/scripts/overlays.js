@@ -5,6 +5,7 @@ import overlays.health
 import overlays.tax_income
 import overlays.booth
 import overlays.entertainment
+import overlays.senet_house
 
 overlays = [
   {
@@ -206,15 +207,6 @@ overlays = [
     walkers:[FIGURE_SCRIBER, FIGURE_LIBRARIAN, FIGURE_TEACHER]
     buildings:[BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY, BUILDING_ACADEMY, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
-    column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_SENET_HOUSE
-    title: "#overlay_senet_house"
-    walkers:[FIGURE_CHARIOR_RACER]
-    buildings:[BUILDING_BULLFIGHT_SCHOOL, BUILDING_SENET_HOUSE, BUILDING_ROADBLOCK]
-    column_type:COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
   }
 

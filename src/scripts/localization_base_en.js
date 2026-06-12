@@ -2886,10 +2886,6 @@ localization_base_en = [
     { group:66, id:84, text: "This house was recently passed by a dancer. It will have dance stage access for a long time" }
     { group:66, id:85, text: "This house has dance stage access" }
     { group:66, id:86, text: "This house has not been passed by a dancer for a while. It will soon lose dance access" }
-    { group:66, id:87, text: "This house has no access to a Senet House" }
-    { group:66, id:88, text: "This house was recently passed by a senet master. It will have Senet House access for a long time" }
-    { group:66, id:89, text: "This house has Senet House access" }
-    { group:66, id:90, text: "This house has not been passed by a senet master for a while. It will soon lose Senet House access" }
     { group:66, id:91, text: "OLD: No citizens want to live here" }
     { group:66, id:92, text: "OLD: Your citizens see no positive or negative factors associated with this area" }
     { group:66, id:93, text: "OLD: This land is a desirable area" }
