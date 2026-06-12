@@ -51,21 +51,48 @@ jobs:
       with:
         name: emscripten_build
         path: src/assets/module/
-      env:
-        VITE_BASE: /
     - name: Install and Build 🔧
+      env:
+        VITE_BASE: /Akhenaten/play/
       run: |
         npm install
         npm run build
-    - name: Deploy 🚀
-      uses: JamesIves/github-pages-deploy-action@v4
+    - name: Upload web game build 📦
+      uses: actions/upload-artifact@v4
       with:
-        token: ${{ secrets.PAGES_DEPLOY }}
-        repository-name: dalerank/dalerank.github.io
-        branch: main
-        folder: dist
-        target-folder: /
-        clean: true
-        single-commit: true
+        name: web-game
+        path: dist
 
-
+  deploy-pages:
+    runs-on: ubuntu-latest
+    needs: build-Akhenaten-ems-launcher
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
+    steps:
+    - name: Checkout site 🛎️
+      uses: actions/checkout@v6
+    - name: Download web game build 📥
+      uses: actions/download-artifact@v4
+      with:
+        name: web-game
+        path: docs/play
+    - name: Configure Pages
+      uses: actions/configure-pages@v5
+      with:
+        enablement: true
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: docs
+    - name: Deploy to GitHub Pages 🚀
+      id: deployment
+      uses: actions/deploy-pages@v4
