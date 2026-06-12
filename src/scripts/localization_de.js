@@ -1227,6 +1227,12 @@ localization_de = [
   { key: "#senet_access_medium", text: "Dieses Haus hat Senet-Haus-Zugang" }
   { key: "#senet_access_low", text: "Dieses Haus wurde eine Weile nicht von einem Senet-Meister besucht. Es wird bald den Senet-Haus-Zugang verlieren" }
 
+  // mortuary overlay
+  { key: "#mortuary_access_none", text: "Dieses Haus hat keinen Zugang zu einer Leichenhalle" }
+  { key: "#mortuary_access_high", text: "Dieses Haus wurde kürzlich von einem Einbalsamierer besucht. Es wird für lange Zeit Leichenhallenzugang haben" }
+  { key: "#mortuary_access_medium", text: "Dieses Haus hat Leichenhallenzugang" }
+  { key: "#mortuary_access_low", text: "Wenn nicht bald ein Einbalsamierer vorbeikommt, wird dieses Haus den Leichenhallenzugang verlieren" }
+
   { key: "#top_menu_file", text: "Datei" }
   { key: "#top_menu_file_tooltip", text: "Neues Spiel, Laden, Speichern, Spiel beenden" }
   { key: "#top_menu_options", text: "Optionen" }

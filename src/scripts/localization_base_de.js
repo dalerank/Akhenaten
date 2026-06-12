@@ -2865,10 +2865,6 @@ localization_base_de = [
     { group:66, id:32, text: "Dieses Haus wurde kürzlich von einem Zahnarzt besucht. Es wird für lange Zeit Zahnarztzugang haben" }
     { group:66, id:33, text: "Dieses Haus hat Zahnarztzugang" }
     { group:66, id:34, text: "Wenn nicht bald ein Zahnarzt vorbeikommt, wird dieses Haus den Zugang zur Zahnarztpraxis verlieren" }
-    { group:66, id:39, text: "Dieses Haus hat keinen Zugang zu einer Leichenhalle" }
-    { group:66, id:40, text: "Dieses Haus wurde kürzlich von einem Einbalsamierer besucht. Es wird für lange Zeit Leichenhallenzugang haben" }
-    { group:66, id:41, text: "Dieses Haus hat Leichenhallenzugang" }
-    { group:66, id:42, text: "Wenn nicht bald ein Einbalsamierer vorbeikommt, wird dieses Haus den Leichenhallenzugang verlieren" }
     { group:66, id:46, text: "Dieses Gebäude hat keine Brandgefahr" }
     { group:66, id:47, text: "Dieses Gebäude hat eine vernachlässigbare Brandgefahr" }
     { group:66, id:48, text: "Dieses Gebäude hat etwas Brandgefahr" }

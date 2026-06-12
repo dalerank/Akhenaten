@@ -1276,6 +1276,12 @@ localization_en = [
   { key: "#senet_access_medium", text: "This house has Senet House access" }
   { key: "#senet_access_low", text: "This house has not been passed by a senet master for a while. It will soon lose Senet House access" }
 
+  // mortuary overlay
+  { key: "#mortuary_access_none", text: "This house has no access to a Mortuary" }
+  { key: "#mortuary_access_high", text: "This house was recently passed by a embalmer. It will have Mortuary access for a long time" }
+  { key: "#mortuary_access_medium", text: "This house has Mortuary access" }
+  { key: "#mortuary_access_low", text: "Unless a embalmer passes it soon, this house will lose Mortuary access" }
+
   { key: "#top_menu_file", text: "File" }
   { key: "#top_menu_file_tooltip", text: "Load, save, new game and exit" }
   { key: "#top_menu_options", text: "Options" }

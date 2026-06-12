@@ -6,6 +6,7 @@ import overlays.tax_income
 import overlays.booth
 import overlays.entertainment
 import overlays.senet_house
+import overlays.mortuary
 
 overlays = [
   {
@@ -246,15 +247,6 @@ overlays = [
     walkers:[]
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
-    column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_MORTUARY
-    title: "#overlay_mortuary"
-    walkers:[FIGURE_EMBALMER]
-    buildings:[BUILDING_MORTUARY, BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_POSITIVE
     column_anim: {pack:PACK_GENERAL, id:103}
   }
 

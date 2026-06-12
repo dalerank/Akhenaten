@@ -502,6 +502,12 @@ localization_ru = [
     { key: "#senet_access_medium", text: "У этого дома есть доступ к дому сенета" }
     { key: "#senet_access_low", text: "Мимо этого дома давно не проходил мастер сенета. Он скоро потеряет доступ к дому сенета" }
 
+    // mortuary overlay
+    { key: "#mortuary_access_none", text: "У этого дома нет доступа к моргу" }
+    { key: "#mortuary_access_high", text: "Мимо этого дома недавно проходил бальзамировщик. У него будет доступ к моргу надолго" }
+    { key: "#mortuary_access_medium", text: "У этого дома есть доступ к моргу" }
+    { key: "#mortuary_access_low", text: "Если бальзамировщик не пройдёт мимо него скоро, этот дом потеряет доступ к моргу" }
+
     { key: "#top_menu_file", text: "Файл" }
     { key: "#top_menu_file_tooltip", text: "Загрузить, сохранить, начать новую игру и выйти" }
     { key: "#top_menu_options", text: "Параметры" }
