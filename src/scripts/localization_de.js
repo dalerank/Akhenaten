@@ -1247,6 +1247,24 @@ localization_de = [
   { key: "#dentist_access_medium", text: "Dieses Haus hat Zahnarztzugang" }
   { key: "#dentist_access_low", text: "Wenn nicht bald ein Zahnarzt vorbeikommt, wird dieses Haus den Zugang zur Zahnarztpraxis verlieren" }
 
+  // education overlay
+  { key: "#education_access_none", text: "Dieses Haus hat keinen Zugang zu Schreibschulen oder Bibliotheken" }
+  { key: "#education_access_school_or_library", text: "Dieses Haus hat Zugang zu einer Schreibschule oder zu einer Bibliothek" }
+  { key: "#education_access_school_and_library", text: "Dieses Haus hat Zugang zu sowohl einer Schreibschule als auch einer Bibliothek" }
+  { key: "#education_access_academy_district", text: "Dieses Haus hat Zugang zu Schreibschule und Bibliothek. Seine Kinder sind auch in einem Akademiebezirk" }
+
+  // library overlay
+  { key: "#library_access_none", text: "Dieses Haus hat keinen Zugang zu einer Bibliothek" }
+  { key: "#library_access_high", text: "Dieses Haus wurde kürzlich von einem Bibliothekar besucht. Es wird für lange Zeit Bibliothekszugang haben" }
+  { key: "#library_access_medium", text: "Dieses Haus hat Bibliothekszugang" }
+  { key: "#library_access_low", text: "Wenn nicht bald ein Bibliothekar vorbeikommt, wird dieses Haus den Bibliothekszugang verlieren" }
+
+  // academy overlay
+  { key: "#academy_access_none", text: "Dieses Haus hat keinen Zugang zu einer Akademie" }
+  { key: "#academy_access_high", text: "Dieses Haus wurde kürzlich von einem Lehrer besucht. Es wird für lange Zeit Akademiezugang haben" }
+  { key: "#academy_access_medium", text: "Dieses Haus hat Akademiezugang" }
+  { key: "#academy_access_low", text: "Wenn nicht bald ein Lehrer vorbeikommt, wird dieses Haus den Akademiezugang verlieren" }
+
   { key: "#top_menu_file", text: "Datei" }
   { key: "#top_menu_file_tooltip", text: "Neues Spiel, Laden, Speichern, Spiel beenden" }
   { key: "#top_menu_options", text: "Optionen" }

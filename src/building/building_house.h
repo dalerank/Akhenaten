@@ -145,7 +145,7 @@ public:
 };
 ANK_CONFIG_PROPERTY(building_house::runtime_data_t,
     population, tax_coverage, tax_income_or_storage, house_happiness,
-    entertainment, water_supply, bazaar_access, education, school, library,
+    entertainment, water_supply, bazaar_access, education, school, library, academy,
     magistrate, num_gods, dentist, apothecary, health, mortuary, physician,
     booth_juggler, bandstand_juggler, senet_player,
     no_space_to_expand, fancy_bazaar_access, worst_desirability_building_id,

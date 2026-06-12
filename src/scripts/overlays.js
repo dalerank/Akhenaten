@@ -9,6 +9,9 @@ import overlays.senet_house
 import overlays.mortuary
 import overlays.dentist
 import overlays.damage
+import overlays.education
+import overlays.academy
+import overlays.library
 
 overlays = [
   {
@@ -165,33 +168,6 @@ overlays = [
     walkers:[]
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_POSITIVE
-    column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_LIBRARY
-    title: "#overlay_library"
-    walkers:[FIGURE_LIBRARIAN]
-    buildings:[BUILDING_LIBRARY, BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_WATER_ACCESS
-    column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_ACADEMY
-    title: "#overlay_academy"
-    walkers:[FIGURE_LIBRARIAN]
-    buildings:[BUILDING_LIBRARY, BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_WATER_ACCESS
-    column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_EDUCATION
-    title: "#overlay_education"
-    walkers:[FIGURE_SCRIBER, FIGURE_LIBRARIAN, FIGURE_TEACHER]
-    buildings:[BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY, BUILDING_ACADEMY, BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
   }
 

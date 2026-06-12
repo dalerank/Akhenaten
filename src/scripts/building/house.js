@@ -15,6 +15,7 @@ House.property.bazaar_access = { }
 House.property.education = { }
 House.property.school = { }
 House.property.library = { }
+House.property.academy = { }
 House.property.magistrate = { }
 House.property.num_gods = { }
 House.property.dentist = { }

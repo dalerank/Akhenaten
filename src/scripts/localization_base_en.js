@@ -2848,14 +2848,6 @@ localization_base_en = [
     { group:66, id:20, text: "This house was recently passed by a scholar. It will have Scribal School access for a long time" }
     { group:66, id:21, text: "This house has Scribal School access" }
     { group:66, id:22, text: "Unless a scholar passes by soon, this house will lose Scribal School access" }
-    { group:66, id:23, text: "This house has no access to a Library" }
-    { group:66, id:24, text: "This house was recently passed by a librarian. It will have Library access for a long time" }
-    { group:66, id:25, text: "This house has Library access" }
-    { group:66, id:26, text: "Unless a librarian passes it soon, this house will lose Library access" }
-    { group:66, id:27, text: "This house has no access to an Academy" }
-    { group:66, id:28, text: "This house was recently passed by a teacher. It will have Academy access for a long time" }
-    { group:66, id:29, text: "This house has Academy access" }
-    { group:66, id:30, text: "Unless a teacher passes it soon, this house will lose Academy access" }
     { group:66, id:46, text: "This building has no likelihood of catching fire" }
     { group:66, id:47, text: "This building is a negligible fire risk" }
     { group:66, id:48, text: "This building has some risk of fire" }
@@ -2881,10 +2873,6 @@ localization_base_en = [
     { group:66, id:97, text: "This building currently has some access to people to supply it with labor" }
     { group:66, id:98, text: "This building currently has good access to people to supply it with labor" }
     { group:66, id:99, text: "This building currently has excellent access to people to supply it with labor" }
-    { group:66, id:100, text: "This house has no access to any Scribal Schools or Libraries" }
-    { group:66, id:101, text: "This house has access to a Scribal School or to a Library" }
-    { group:66, id:102, text: "This house has access to both a Scribal School and a Library" }
-    { group:66, id:103, text: "This house has Scribal School and Library access. Its children are also in an Academy district" }
     { group:66, id:104, text: "This hut scavenges for its own food..." }
     { group:66, id:105, text: "This land is abundantly fertile. Crops grown here will be big and strong." }
     { group:66, id:106, text: "This land is fairly fertile. Crops grown here will tend to be quite healthy." }

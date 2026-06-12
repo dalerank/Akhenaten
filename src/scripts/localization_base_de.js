@@ -2853,14 +2853,6 @@ localization_base_de = [
     { group:66, id:20, text: "Dieses Haus wurde kürzlich von einem Gelehrten besucht. Es wird für lange Zeit Zugang zur Schreibschule haben" }
     { group:66, id:21, text: "Dieses Haus hat Zugang zur Schreibschule" }
     { group:66, id:22, text: "Wenn nicht bald ein Gelehrter vorbeikommt, wird dieses Haus den Zugang zur Schreibschule verlieren" }
-    { group:66, id:23, text: "Dieses Haus hat keinen Zugang zu einer Bibliothek" }
-    { group:66, id:24, text: "Dieses Haus wurde kürzlich von einem Bibliothekar besucht. Es wird für lange Zeit Bibliothekszugang haben" }
-    { group:66, id:25, text: "Dieses Haus hat Bibliothekszugang" }
-    { group:66, id:26, text: "Wenn nicht bald ein Bibliothekar vorbeikommt, wird dieses Haus den Bibliothekszugang verlieren" }
-    { group:66, id:27, text: "Dieses Haus hat keinen Zugang zu einer Akademie" }
-    { group:66, id:28, text: "Dieses Haus wurde kürzlich von einem Lehrer besucht. Es wird für lange Zeit Akademiezugang haben" }
-    { group:66, id:29, text: "Dieses Haus hat Akademiezugang" }
-    { group:66, id:30, text: "Wenn nicht bald ein Lehrer vorbeikommt, wird dieses Haus den Akademiezugang verlieren" }
     { group:66, id:46, text: "Dieses Gebäude hat keine Brandgefahr" }
     { group:66, id:47, text: "Dieses Gebäude hat eine vernachlässigbare Brandgefahr" }
     { group:66, id:48, text: "Dieses Gebäude hat etwas Brandgefahr" }
@@ -2886,10 +2878,6 @@ localization_base_de = [
     { group:66, id:97, text: "Dieses Gebäude hat derzeit etwas Zugang zu Menschen, die es mit Arbeitskraft versorgen" }заpf
     { group:66, id:98, text: "Dieses Gebäude hat derzeit guten Zugang zu Menschen, die es mit Arbeitskraft versorgen" }
     { group:66, id:99, text: "Dieses Gebäude hat derzeit ausgezeichneten Zugang zu Menschen, die es mit Arbeitskraft versorgen" }
-    { group:66, id:100, text: "Dieses Haus hat keinen Zugang zu Schreibschulen oder Bibliotheken" }
-    { group:66, id:101, text: "Dieses Haus hat Zugang zu einer Schreibschule oder zu einer Bibliothek" }
-    { group:66, id:102, text: "Dieses Haus hat Zugang zu sowohl einer Schreibschule als auch einer Bibliothek" }
-    { group:66, id:103, text: "Dieses Haus hat Zugang zu Schreibschule und Bibliothek. Seine Kinder sind auch in einem Akademiebezirk" }
     { group:66, id:104, text: "Diese Hütte sammelt ihre eigene Nahrung..." }
     { group:66, id:105, text: "Dieses Land ist überaus fruchtbar. Hier angebaute Pflanzen werden groß und stark." }
     { group:66, id:106, text: "Dieses Land ist ziemlich fruchtbar. Hier angebaute Pflanzen werden tendenziell recht gesund sein." }

@@ -522,6 +522,24 @@ localization_ru = [
     { key: "#dentist_access_medium", text: "У этого дома есть доступ к дантисту" }
     { key: "#dentist_access_low", text: "Если дантист не пройдёт мимо скоро, этот дом потеряет доступ к кабинету дантиста" }
 
+    // education overlay
+    { key: "#education_access_none", text: "У этого дома нет доступа ни к школам писцов, ни к библиотекам" }
+    { key: "#education_access_school_or_library", text: "У этого дома есть доступ к школе писцов или к библиотеке" }
+    { key: "#education_access_school_and_library", text: "У этого дома есть доступ и к школе писцов, и к библиотеке" }
+    { key: "#education_access_academy_district", text: "У этого дома есть доступ к школе писцов и библиотеке. Его дети также находятся в районе академии" }
+
+    // library overlay
+    { key: "#library_access_none", text: "У этого дома нет доступа к библиотеке" }
+    { key: "#library_access_high", text: "Мимо этого дома недавно проходил библиотекарь. У него будет доступ к библиотеке надолго" }
+    { key: "#library_access_medium", text: "У этого дома есть доступ к библиотеке" }
+    { key: "#library_access_low", text: "Если библиотекарь не пройдёт мимо него скоро, этот дом потеряет доступ к библиотеке" }
+
+    // academy overlay
+    { key: "#academy_access_none", text: "У этого дома нет доступа к академии" }
+    { key: "#academy_access_high", text: "Мимо этого дома недавно проходил учитель. У него будет доступ к академии надолго" }
+    { key: "#academy_access_medium", text: "У этого дома есть доступ к академии" }
+    { key: "#academy_access_low", text: "Если учитель не пройдёт мимо него скоро, этот дом потеряет доступ к академии" }
+
     { key: "#top_menu_file", text: "Файл" }
     { key: "#top_menu_file_tooltip", text: "Загрузить, сохранить, начать новую игру и выйти" }
     { key: "#top_menu_options", text: "Параметры" }

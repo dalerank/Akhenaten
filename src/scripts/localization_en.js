@@ -1296,6 +1296,24 @@ localization_en = [
   { key: "#dentist_access_medium", text: "This house has Dentist access" }
   { key: "#dentist_access_low", text: "Unless a dentist walks by soon, this house will lose Dentist office access" }
 
+  // education overlay
+  { key: "#education_access_none", text: "This house has no access to any Scribal Schools or Libraries" }
+  { key: "#education_access_school_or_library", text: "This house has access to a Scribal School or to a Library" }
+  { key: "#education_access_school_and_library", text: "This house has access to both a Scribal School and a Library" }
+  { key: "#education_access_academy_district", text: "This house has Scribal School and Library access. Its children are also in an Academy district" }
+
+  // library overlay
+  { key: "#library_access_none", text: "This house has no access to a Library" }
+  { key: "#library_access_high", text: "This house was recently passed by a librarian. It will have Library access for a long time" }
+  { key: "#library_access_medium", text: "This house has Library access" }
+  { key: "#library_access_low", text: "Unless a librarian passes it soon, this house will lose Library access" }
+
+  // academy overlay
+  { key: "#academy_access_none", text: "This house has no access to an Academy" }
+  { key: "#academy_access_high", text: "This house was recently passed by a teacher. It will have Academy access for a long time" }
+  { key: "#academy_access_medium", text: "This house has Academy access" }
+  { key: "#academy_access_low", text: "Unless a teacher passes it soon, this house will lose Academy access" }
+
   { key: "#top_menu_file", text: "File" }
   { key: "#top_menu_file_tooltip", text: "Load, save, new game and exit" }
   { key: "#top_menu_options", text: "Options" }
