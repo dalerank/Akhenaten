@@ -7,6 +7,7 @@ import overlays.booth
 import overlays.entertainment
 import overlays.senet_house
 import overlays.mortuary
+import overlays.dentist
 
 overlays = [
   {
@@ -163,15 +164,6 @@ overlays = [
     walkers:[FIGURE_ARCHITECT]
     buildings:[BUILDING_ARCHITECT_POST, BUILDING_FESTIVAL_SQUARE, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
-    column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_DENTIST
-    title: "#overlay_dentist"
-    walkers:[FIGURE_DENTIST]
-    buildings:[BUILDING_DENTIST, BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_POSITIVE
     column_anim: {pack:PACK_GENERAL, id:103}
   }
 

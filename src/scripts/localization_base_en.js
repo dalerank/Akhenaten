@@ -2856,10 +2856,6 @@ localization_base_en = [
     { group:66, id:28, text: "This house was recently passed by a teacher. It will have Academy access for a long time" }
     { group:66, id:29, text: "This house has Academy access" }
     { group:66, id:30, text: "Unless a teacher passes it soon, this house will lose Academy access" }
-    { group:66, id:31, text: "This house has no access to a Dentist's office" }
-    { group:66, id:32, text: "This house was recently passed by a dentist. It will have Dentist access for a long time" }
-    { group:66, id:33, text: "This house has Dentist access" }
-    { group:66, id:34, text: "Unless a dentist walks by soon, this house will lose Dentist office access" }
     { group:66, id:46, text: "This building has no likelihood of catching fire" }
     { group:66, id:47, text: "This building is a negligible fire risk" }
     { group:66, id:48, text: "This building has some risk of fire" }

@@ -1233,6 +1233,12 @@ localization_de = [
   { key: "#mortuary_access_medium", text: "Dieses Haus hat Leichenhallenzugang" }
   { key: "#mortuary_access_low", text: "Wenn nicht bald ein Einbalsamierer vorbeikommt, wird dieses Haus den Leichenhallenzugang verlieren" }
 
+  // dentist overlay
+  { key: "#dentist_access_none", text: "Dieses Haus hat keinen Zugang zu einer Zahnarztpraxis" }
+  { key: "#dentist_access_high", text: "Dieses Haus wurde kürzlich von einem Zahnarzt besucht. Es wird für lange Zeit Zahnarztzugang haben" }
+  { key: "#dentist_access_medium", text: "Dieses Haus hat Zahnarztzugang" }
+  { key: "#dentist_access_low", text: "Wenn nicht bald ein Zahnarzt vorbeikommt, wird dieses Haus den Zugang zur Zahnarztpraxis verlieren" }
+
   { key: "#top_menu_file", text: "Datei" }
   { key: "#top_menu_file_tooltip", text: "Neues Spiel, Laden, Speichern, Spiel beenden" }
   { key: "#top_menu_options", text: "Optionen" }

@@ -1282,6 +1282,12 @@ localization_en = [
   { key: "#mortuary_access_medium", text: "This house has Mortuary access" }
   { key: "#mortuary_access_low", text: "Unless a embalmer passes it soon, this house will lose Mortuary access" }
 
+  // dentist overlay
+  { key: "#dentist_access_none", text: "This house has no access to a Dentist's office" }
+  { key: "#dentist_access_high", text: "This house was recently passed by a dentist. It will have Dentist access for a long time" }
+  { key: "#dentist_access_medium", text: "This house has Dentist access" }
+  { key: "#dentist_access_low", text: "Unless a dentist walks by soon, this house will lose Dentist office access" }
+
   { key: "#top_menu_file", text: "File" }
   { key: "#top_menu_file_tooltip", text: "Load, save, new game and exit" }
   { key: "#top_menu_options", text: "Options" }

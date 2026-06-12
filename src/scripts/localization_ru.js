@@ -508,6 +508,12 @@ localization_ru = [
     { key: "#mortuary_access_medium", text: "У этого дома есть доступ к моргу" }
     { key: "#mortuary_access_low", text: "Если бальзамировщик не пройдёт мимо него скоро, этот дом потеряет доступ к моргу" }
 
+    // dentist overlay
+    { key: "#dentist_access_none", text: "У этого дома нет доступа к кабинету дантиста" }
+    { key: "#dentist_access_high", text: "Мимо этого дома недавно проходил дантист. У него будет доступ к дантисту надолго" }
+    { key: "#dentist_access_medium", text: "У этого дома есть доступ к дантисту" }
+    { key: "#dentist_access_low", text: "Если дантист не пройдёт мимо скоро, этот дом потеряет доступ к кабинету дантиста" }
+
     { key: "#top_menu_file", text: "Файл" }
     { key: "#top_menu_file_tooltip", text: "Загрузить, сохранить, начать новую игру и выйти" }
     { key: "#top_menu_options", text: "Параметры" }
