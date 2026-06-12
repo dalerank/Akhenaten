@@ -2867,12 +2867,6 @@ localization_base_de = [
     { group:66, id:49, text: "Dieses Gebäude hat Brandgefahr" }
     { group:66, id:50, text: "Dieses Gebäude ist eine Brandfalle" }
     { group:66, id:51, text: "Dieses Gebäude könnte jeden Moment in Brand geraten!" }
-    { group:66, id:52, text: "Dieses Gebäude ist in perfektem baulichem Zustand" }
-    { group:66, id:53, text: "Dieses Gebäude hat eine vernachlässigbare Einsturzgefahr" }
-    { group:66, id:54, text: "Dieses Gebäude hat eine geringe Einsturzgefahr" }
-    { group:66, id:55, text: "Dieses Gebäude hat einige bauliche Mängel" }
-    { group:66, id:56, text: "Dieses Gebäude hat viele bauliche Mängel und Risse" }
-    { group:66, id:57, text: "Dieses Gebäude ist instabil und wird wahrscheinlich bald einstürzen" }
     { group:66, id:58, text: "Dies ist eine sehr gesetzestreue Nachbarschaft, ohne jegliche gemeldete Verbrechen" }
     { group:66, id:59, text: "Es gibt nur gelegentlich Verbrechen in dieser Gegend" }
     { group:66, id:60, text: "Dies ist ein Gebiet mit niedriger Kriminalität, aber ein paar Bewohner haben sich beschwert" }

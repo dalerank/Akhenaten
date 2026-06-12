@@ -2862,12 +2862,6 @@ localization_base_en = [
     { group:66, id:49, text: "This building has a risk of fire" }
     { group:66, id:50, text: "This building is a fire trap" }
     { group:66, id:51, text: "This building could catch fire at any moment!" }
-    { group:66, id:52, text: "This building is in perfect structural condition" }
-    { group:66, id:53, text: "This building has a negligible risk of collapse" }
-    { group:66, id:54, text: "This building has a low risk of collapse" }
-    { group:66, id:55, text: "This building has some structural faults" }
-    { group:66, id:56, text: "This building has many structural faults and cracks" }
-    { group:66, id:57, text: "This building is unstable, and is likely to collapse soon" }
     { group:66, id:58, text: "This is a very law-abiding neighborhood, with no crimes reported at all" }
     { group:66, id:59, text: "There is only the occasional crime in this area" }
     { group:66, id:60, text: "This is a low-crime area, but a few residents have complained" }

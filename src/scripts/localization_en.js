@@ -1252,6 +1252,14 @@ localization_en = [
   { key: "#health_risk_high", text: "This building has a risk of disease" }
   { key: "#health_diseased", text: "This building is disease ridden." }
 
+  // damage overlay
+  { key: "#damage_risk_perfect", text: "This building is in perfect structural condition" }
+  { key: "#damage_risk_negligible", text: "This building has a negligible risk of collapse" }
+  { key: "#damage_risk_low", text: "This building has a low risk of collapse" }
+  { key: "#damage_risk_some", text: "This building has some structural faults" }
+  { key: "#damage_risk_many", text: "This building has many structural faults and cracks" }
+  { key: "#damage_risk_critical", text: "This building is unstable, and is likely to collapse soon" }
+
   // tax income overlay
   { key: "#tax_income_not_registered", text: "This house is not registered for taxes, and so does not pay any tax" }
   { key: "#tax_income_none_yet", text: "No tax collected from this house so far this year." }

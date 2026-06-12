@@ -1203,6 +1203,14 @@ localization_de = [
   { key: "#health_risk_high", text: "Dieses Gebäude hat Krankheitsgefahr" }
   { key: "#health_diseased", text: "Dieses Gebäude ist krankheitsverseucht." }
 
+  // damage overlay
+  { key: "#damage_risk_perfect", text: "Dieses Gebäude ist in perfektem baulichem Zustand" }
+  { key: "#damage_risk_negligible", text: "Dieses Gebäude hat eine vernachlässigbare Einsturzgefahr" }
+  { key: "#damage_risk_low", text: "Dieses Gebäude hat eine geringe Einsturzgefahr" }
+  { key: "#damage_risk_some", text: "Dieses Gebäude hat einige bauliche Mängel" }
+  { key: "#damage_risk_many", text: "Dieses Gebäude hat viele bauliche Mängel und Risse" }
+  { key: "#damage_risk_critical", text: "Dieses Gebäude ist instabil und wird wahrscheinlich bald einstürzen" }
+
   // tax income overlay
   { key: "#tax_income_not_registered", text: "Dieses Haus ist nicht für Steuern registriert und zahlt daher keine Steuern" }
   { key: "#tax_income_none_yet", text: "Bisher dieses Jahr keine Steuern von diesem Haus eingezogen." }

@@ -27,6 +27,7 @@ Building.property.spawned_worker_this_month = { }
 Building.property.num_workers = { }
 Building.property.max_workers = { }
 Building.property.type = { }
+Building.property.prev_part_building_id = { }
 Building.property.structure_damage = { }
 Building.property.collapse_risk = { }
 Building.property.fire_risk = { }

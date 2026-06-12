@@ -8,6 +8,7 @@ import overlays.entertainment
 import overlays.senet_house
 import overlays.mortuary
 import overlays.dentist
+import overlays.damage
 
 overlays = [
   {
@@ -154,15 +155,6 @@ overlays = [
     title: "#overlay_routing"
     walkers:[],
     buildings:[BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_RISK
-    column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_DAMAGE
-    title: "#overlay_damage"
-    walkers:[FIGURE_ARCHITECT]
-    buildings:[BUILDING_ARCHITECT_POST, BUILDING_FESTIVAL_SQUARE, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
     column_anim: {pack:PACK_GENERAL, id:103}
   }

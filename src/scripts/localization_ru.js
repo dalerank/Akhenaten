@@ -478,6 +478,14 @@ localization_ru = [
     { key: "#health_risk_high", text: "У этого здания есть риск болезни" }
     { key: "#health_diseased", text: "Это здание охвачено болезнью." }
 
+    // damage overlay
+    { key: "#damage_risk_perfect", text: "Это здание в идеальном структурном состоянии" }
+    { key: "#damage_risk_negligible", text: "У этого здания незначительный риск обрушения" }
+    { key: "#damage_risk_low", text: "У этого здания низкий риск обрушения" }
+    { key: "#damage_risk_some", text: "У этого здания есть некоторые структурные дефекты" }
+    { key: "#damage_risk_many", text: "У этого здания много структурных дефектов и трещин" }
+    { key: "#damage_risk_critical", text: "Это здание нестабильно и, вероятно, скоро обрушится" }
+
     // tax income overlay
     { key: "#tax_income_not_registered", text: "Этот дом не зарегистрирован для налогов и поэтому не платит никаких налогов" }
     { key: "#tax_income_none_yet", text: "Налогов с этого дома в этом году пока не собрано." }
