@@ -126,7 +126,11 @@ void building_statue::on_place_update_tiles(int orientation, int variant) {
 }
 
 void building_statue::on_place_checks() {
-    /*nothing*/
+    // Do NOT chain to building_impl::on_place_checks() here. A statue is purely
+    // decorative: it needs no road access and has no labor (max_workers == 0), so the
+    // base would emit a spurious #needs_road_access warning. Same rationale as
+    // building_garden (also a deliberately empty on_place_checks). There is no statue
+    // JS on_place_checks handler, so nothing is dropped by skipping the base es() dispatch.
 }
 
 void building_statue::update_map_orientation(int map_orientation) {
