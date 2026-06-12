@@ -35,6 +35,8 @@ void building_water_lift::on_place_update_tiles(int orientation, int variant) {
 }
 
 void building_water_lift::on_place_checks() {
+    building_impl::on_place_checks();
+
     construction_warnings warnings;
 
     const bool has_water_lift = g_city.buildings.count_active(BUILDING_WATER_LIFT) > 0;
