@@ -1,7 +1,5 @@
 #include "building_shrine.h"
 
-#include "city/city_warnings.h"
-#include "grid/road_access.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_shrine_osiris);
@@ -11,10 +9,10 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_shrine_seth);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_shrine_bast);
 
 void building_shrine::on_place_checks() {
-    construction_warnings warnings;
-
-    const bool has_road = map_has_road_access(tile(), 2);
-    warnings.add_if(!has_road, "#needs_road_access");
+    // chain to base: emits #needs_road_access (with the correct size()-based
+    // footprint) and dispatches the es() JS on_place_checks event. Shrines have
+    // no workers, so the base #city_needs_more_workers warning self-suppresses.
+    building_impl::on_place_checks();
 }
 
 e_overlay building_shrine::get_overlay() const {
