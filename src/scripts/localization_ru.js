@@ -478,6 +478,13 @@ localization_ru = [
     { key: "#health_risk_high", text: "У этого здания есть риск болезни" }
     { key: "#health_diseased", text: "Это здание охвачено болезнью." }
 
+    // malaria risk overlay
+    { key: "#malaria_risk_negligible", text: "Это здание имеет незначительный риск малярии." }
+    { key: "#malaria_risk_some", text: "У этого здания есть некоторый риск малярии." }
+    { key: "#malaria_risk_present", text: "У этого здания есть риск малярии" }
+    { key: "#malaria_risk_imminent", text: "У этого здания скоро будет малярия." }
+    { key: "#malaria_risk_critical", text: "Риск малярии" }
+
     // damage overlay
     { key: "#damage_risk_perfect", text: "Это здание в идеальном структурном состоянии" }
     { key: "#damage_risk_negligible", text: "У этого здания незначительный риск обрушения" }

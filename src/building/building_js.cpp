@@ -183,6 +183,11 @@ void __building_get_state(js_State *J) {
     js_helpers::js_push_value(J, (int)building_get(bid)->state);
 }
 
+void __building_get_valid(js_State *J) {
+    const int bid = building_this_id(J);
+    js_helpers::js_push_value(J, __building_is_valid(bid));
+}
+
 void __building_mothball_toggle(js_State *J) {
     const int bid = building_this_id(J);
     building* b = building_get(bid);
@@ -380,6 +385,7 @@ void js_register_building(js_State *J) {
     jsB_propf(J, js_intern("Building.prototype.__tile"), __building_tile_j, 0);
     jsB_propf(J, js_intern("Building.prototype.__meta_text_id"), __building_meta_text_id, 0);
     jsB_propf(J, js_intern("Building.prototype.__state"), __building_get_state, 0);
+    jsB_propf(J, js_intern("Building.prototype.__valid"), __building_get_valid, 0);
     jsB_propf(J, js_intern("Building.prototype.__worker_percentage"), __building_get_worker_percentage, 0);
     jsB_propf(J, js_intern("Building.prototype.__output_resource_id"), __building_get_output_resource_id, 0);
     jsB_propf(J, js_intern("Building.prototype.__overlay"), __building_get_overlay, 0);

@@ -17,6 +17,7 @@ import overlays.physician
 import overlays.religion
 import overlays.pavilion
 import overlays.labor
+import overlays.malaria_risk
 
 overlays = [
   {
@@ -134,15 +135,6 @@ overlays = [
         ]
       }
     ]
-  }
-
-  {
-    id:OVERLAY_MALARIA_RISK
-    title: "#overlay_malaria_risk"
-    walkers:[FIGURE_HERBALIST]
-    buildings:[BUILDING_APOTHECARY, BUILDING_WATER_SUPPLY, BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_RISK
-    column_anim: {pack:PACK_GENERAL, id:103}
   }
 
   {

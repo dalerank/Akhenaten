@@ -7,37 +7,33 @@
 #include "grid/malaria_risk.h"
 #include "grid/terrain.h"
 #include "city/city_buildings.h"
+#include "js/js_game.h"
 
 void building_update_malaria_risk(void) {
     OZZY_PROFILER_FUNCTION();
     buildings_valid_do([] (building &b) {
         int risk = g_malaria_risk.get_max(b.tile, b.size);
-        
-        // Вычисляем базовый риск от terrain (вода/болота) - это минимальное значение
-        // которое не может быть снижено аптекой/водоснабжением
+
         int base_terrain_risk = 0;
-        
-        // Проверяем близость к болотам (высокий базовый риск)
+
         if (map_terrain_exists_tile_in_radius_with_type(b.tile, b.size, 3, TERRAIN_MARSHLAND)) {
-            base_terrain_risk = std::max(base_terrain_risk, 50); // Минимум 50 для болот
+            base_terrain_risk = std::max(base_terrain_risk, 50);
         } else if (map_terrain_exists_tile_in_radius_with_type(b.tile, b.size, 2, TERRAIN_MARSHLAND)) {
             base_terrain_risk = std::max(base_terrain_risk, 40);
         }
-        
-        // Проверяем близость к воде (средний базовый риск)
+
         if (map_terrain_is_adjacent_to_water(b.tile, b.size)) {
-            base_terrain_risk = std::max(base_terrain_risk, 40); // Минимум 40 для воды рядом
+            base_terrain_risk = std::max(base_terrain_risk, 40);
         } else if (map_terrain_exists_tile_in_radius_with_type(b.tile, b.size, 2, TERRAIN_WATER)) {
-            base_terrain_risk = std::max(base_terrain_risk, 30); // Минимум 30 для воды в радиусе 2
+            base_terrain_risk = std::max(base_terrain_risk, 30);
         }
 
         if (map_terrain_exists_tile_in_radius_with_type(b.tile, b.size, 1, TERRAIN_FLOODPLAIN)) {
-            base_terrain_risk = std::max(base_terrain_risk, 40); // Минимум 40 для пойменных земель рядом
+            base_terrain_risk = std::max(base_terrain_risk, 40);
         } else if (map_terrain_exists_tile_in_radius_with_type(b.tile, b.size, 2, TERRAIN_FLOODPLAIN)) {
-            base_terrain_risk = std::max(base_terrain_risk, 30); // Минимум 30 для пойменных земель в радиусе 2
+            base_terrain_risk = std::max(base_terrain_risk, 30);
         }
-        
-        // Применяем снижение от аптеки/водоснабжения, но не ниже базового риска от terrain
+
         auto house = b.dcast_house();
         if (house) {
             auto &housed = house->runtime_data();
@@ -49,11 +45,16 @@ void building_update_malaria_risk(void) {
                 risk = std::max(base_terrain_risk, risk - 20);
             }
         }
-        
+
         // Финальный риск не может быть ниже базового риска от terrain
         risk = std::max(risk, base_terrain_risk);
-        
+
         b.malaria_risk = (uint8_t)calc_bound(risk, 0, 100);
     });
 }
+
+int __malaria_risk_at_tile(int x, int y) {
+    return g_malaria_risk.get(tile2i(x, y));
+}
+ANK_FUNCTION_2(__malaria_risk_at_tile)
 

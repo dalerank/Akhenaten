@@ -30,6 +30,7 @@ Building.property.type = { }
 Building.property.prev_part_building_id = { }
 Building.property.structure_damage = { }
 Building.property.collapse_risk = { }
+Building.property.malaria_risk = { }
 Building.property.fire_risk = { }
 Building.property.fire_duration = { }
 Building.property.health_proof = { }

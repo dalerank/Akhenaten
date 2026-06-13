@@ -1252,6 +1252,13 @@ localization_en = [
   { key: "#health_risk_high", text: "This building has a risk of disease" }
   { key: "#health_diseased", text: "This building is disease ridden." }
 
+  // malaria risk overlay
+  { key: "#malaria_risk_negligible", text: "This building is a negligible malaria risk." }
+  { key: "#malaria_risk_some", text: "This building has some risk of malaria." }
+  { key: "#malaria_risk_present", text: "This building has a risk of malaria" }
+  { key: "#malaria_risk_imminent", text: "This building will have malaria soon." }
+  { key: "#malaria_risk_critical", text: "Risk of malaria" }
+
   // damage overlay
   { key: "#damage_risk_perfect", text: "This building is in perfect structural condition" }
   { key: "#damage_risk_negligible", text: "This building has a negligible risk of collapse" }

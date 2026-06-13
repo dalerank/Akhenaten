@@ -1203,6 +1203,13 @@ localization_de = [
   { key: "#health_risk_high", text: "Dieses Gebäude hat Krankheitsgefahr" }
   { key: "#health_diseased", text: "Dieses Gebäude ist krankheitsverseucht." }
 
+  // malaria risk overlay
+  { key: "#malaria_risk_negligible", text: "Dieses Gebäude hat eine vernachlässigbare Malariagefahr." }
+  { key: "#malaria_risk_some", text: "Dieses Gebäude hat etwas Malariagefahr." }
+  { key: "#malaria_risk_present", text: "Dieses Gebäude hat Malariagefahr" }
+  { key: "#malaria_risk_imminent", text: "Dieses Gebäude wird bald Malaria haben." }
+  { key: "#malaria_risk_critical", text: "Malariagefahr" }
+
   // damage overlay
   { key: "#damage_risk_perfect", text: "Dieses Gebäude ist in perfektem baulichem Zustand" }
   { key: "#damage_risk_negligible", text: "Dieses Gebäude hat eine vernachlässigbare Einsturzgefahr" }
