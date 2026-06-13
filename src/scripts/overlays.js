@@ -28,6 +28,7 @@ import overlays.criminal
 import overlays.desirability
 import overlays.fertility
 import overlays.labor_access
+import overlays.food_stocks
 
 overlays = [
   {
@@ -82,23 +83,6 @@ overlays = [
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_POSITIVE
     column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_FOOD_STOCKS
-    title: "#overlay_food_stocks"
-    walkers:[FIGURE_MARKET_TRADER, FIGURE_MARKET_BUYER]
-    buildings:[BUILDING_BAZAAR, BUILDING_FISHING_WHARF, BUILDING_GRANARY, BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_POSITIVE
-    column_anim: {pack:PACK_GENERAL, id:103}
-
-    tooltips {
-      not_provided { values:[ "#food_stocks_not_provided" ] }
-      none { values:[ "#food_stocks_none" ] }
-      low { values:[ "#food_stocks_low" ] }
-      medium { values:[ "#food_stocks_medium" ] }
-      high { values:[ "#food_stocks_high" ] }
-    }
   }
 
   {
