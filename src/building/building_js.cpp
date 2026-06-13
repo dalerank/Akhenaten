@@ -135,18 +135,13 @@ void __building_des_influence_step_size_j(js_State* J) {
     js_helpers::js_push_value(J, building_get(bid)->des_influence.step_size);
 }
 
-int __building_des_influence_range(int bid) {
-    building* b = building_get(bid);
-    return b ? b->des_influence.range : 0;
-}
-ANK_FUNCTION_1(__building_des_influence_range)
-
 void __building_des_influence_range_j(js_State* J) {
     const int bid = building_this_id(J);
     js_helpers::js_push_value(J, building_get(bid)->des_influence.range);
 }
 
 void __building_crime_influence_value_j(js_State* J) {
+    const int bid = building_this_id(J);
     building *b = building_get(bid);
     js_helpers::js_push_value(J, b ? b->crime_influence.value : 0);
 }

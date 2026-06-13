@@ -1302,6 +1302,9 @@ localization_en = [
   { key: "#desirability_level_normal", group:66, id:92 }
   { key: "#desirability_level_high", group:66, id:93 }
 
+  // labor access overlay
+  { key: "#labor_access_tooltip", group:66, id:57 }
+
   // tax income overlay
   { key: "#tax_income_not_registered", text: "This house is not registered for taxes, and so does not pay any tax" }
   { key: "#tax_income_none_yet", text: "No tax collected from this house so far this year." }

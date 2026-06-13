@@ -27,6 +27,7 @@ import overlays.crime
 import overlays.criminal
 import overlays.desirability
 import overlays.fertility
+import overlays.labor_access
 
 overlays = [
   {
@@ -104,15 +105,6 @@ overlays = [
     id:OVERLAY_DESIRABILITY
     title: "#overlay_desirability"
     walkers:[]
-    buildings:[BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_WATER_ACCESS
-    column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_LABOR_ACCESS
-    title: "#overlay_labor_access"
-    walkers:[FIGURE_LABOR_SEEKER]
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
