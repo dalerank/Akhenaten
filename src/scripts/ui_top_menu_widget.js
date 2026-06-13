@@ -181,7 +181,7 @@ top_menu_widget {
 
 	file {
 		new_game     	: menu_item({text {group:1, id:1}, onclick: top_menu_new_game })
-		replay_map   	: menu_item({text {group:1, id:2}, onclick: top_menu_replay_map })
+		replay_map   	: menu_item({text:"#replay_mission", onclick: top_menu_replay_map })
 		load_game	    : menu_item({text {group:1, id:3}, onclick: top_menu_load_map })
 		save_game	    : menu_item({text {group:1, id:4}, onclick: top_menu_save_map })
 		delete_game	  	: menu_item({text {group:1, id:6}, onclick: top_menu_delete_map })

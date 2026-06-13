@@ -45,7 +45,7 @@ advisor_monuments_window {
                 background    : outer_panel({size[40, 27]})
                 advisor_icon  : image({pack:PACK_GENERAL, id:128, offset:12, pos[10, 10] })
                 title         : text({pos[60, 12], text{group:4, id:13}, font:FONT_LARGE_BLACK_ON_LIGHT })
-                rating_line   : label({pos[60, 42], text:"${148.2} ${city.rating.monument}", font:FONT_NORMAL_BLACK_ON_LIGHT})
+                rating_line   : label({pos[60, 42], text:"", font:FONT_NORMAL_BLACK_ON_LIGHT})
                 inner_panel   : inner_panel({pos[32, 70], size[36, 17]})
 
                 monuments_list : scrollable_list({
@@ -73,6 +73,7 @@ advisor_monuments_window {
 
 [es=(advisor_monuments_window, init)]
 function advisor_monuments_window_init(window) {
+    window.rating_line.text = __loc("#mission_won_monument_rating") + " " + city.rating.monument
     advisors_toolbar_refresh(window, ADVISOR_MONUMENTS)
 }
 

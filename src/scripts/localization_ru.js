@@ -118,6 +118,26 @@ localization_ru = [
     { key:"#TR_BUILDING_ROADBLOCK", text:"Дорожный блок"}
     { key:"#TR_BUILDING_ROADBLOCK_DESC", text:"Блокирует проход бесцельно бродящим ходокам"}
     { key:"#display_options_title", text:"Настройки дисплея"}
+    { key:"#popup_dialog_quit", text:"Выход" }
+    { key:"#popup_dialog_open_trade", text:"Открыть торговый путь" }
+    { key:"#popup_dialog_send_goods", text:"Отправить товары?" }
+    { key:"#popup_dialog_not_enough_goods", text:"Запрос фараона" }
+    { key:"#popup_dialog_no_legions_available", text:"Запрос фараона" }
+    { key:"#popup_dialog_no_legions_selected", text:"Запрос фараона" }
+    { key:"#popup_dialog_send_troops", text:"Запрос фараона" }
+    { key:"#popup_dialog_delete_fort", text:"Снос форта" }
+    { key:"#popup_dialog_delete_bridge", text:"Снос моста" }
+    { key:"#popup_dialog_quit_without_saving", text:"Выход" }
+    { key:"#exit_without_saving", text:"Выйти без сохранения?" }
+    { key:"#popup_dialog_no_festival_square", text:"Фестиваль: Нет площади для фестивалей." }
+    { key:"#popup_dialog_delete_dynasty", text:"Удалить династию?" }
+    { key:"#popup_dialog_no_dynasty", text:"Нет династии" }
+    { key:"#replay_mission", text:"Повторить миссию" }
+    { key:"#mission_won_culture_rating", text:"Финальный рейтинг культуры" }
+    { key:"#mission_won_prosperity_rating", text:"Финальный рейтинг процветания" }
+    { key:"#mission_won_monument_rating", text:"Финальный рейтинг монумента" }
+    { key:"#mission_won_treasury", text:"Финальный рейтинг королевства" }
+    { key:"#mission_won_kingdom_rating", text:"Финальное население" }
     { key:"#ui_gift_to_kingdome_window_title", text:"Отдать народу Египта"}
     { key:"#ui_unable_to_fulfill_request", text:"Невозможно выполнить запрос"}
     { key:"#ui_gift_time_since_last", text:"Время с последнего подарка"}
@@ -129,6 +149,32 @@ localization_ru = [
     { key:"#ui_gift_dispatch_lavish", text:"Отправить роскошный подарок"}
     { key:"#ui_gift_cannot_afford_savings", text:"У вас недостаточно личных сбережений, чтобы сделать подарок Египту. Попробуйте платить себе большую зарплату!"}
     { key:"#ui_mission_choice_prompt", text:"Кликните на город для управления "}
+    { key:"#granary_info_title", text:"Зернохранилище" }
+    { key:"#granary_no_road_access", text:"ПРЕДУПРЕЖДЕНИЕ: Это здание не примыкает к дороге" }
+    { key:"#granary_kingdom_supplies_grain", text:"Это зернохранилище не нужно. Египет обеспечивает наш город всем зерном, которое ему нужно. Любая еда, которую мы производим, пойдёт прямо в любые склады со свободным местом." }
+    { key:"#granary_storing", text:"Хранит" }
+    { key:"#granary_space_for", text:"Место для" }
+    { key:"#granary_units", text:"единиц." }
+    { key:"#chief_overseer", text:"Главный надзиратель" }
+    { key:"#chief_adv_sentiment", text:"Настроение города" }
+    { key:"#chief_adv_migration", text:"Миграция" }
+    { key:"#chief_adv_workers", text:"Занятость" }
+    { key:"#chief_adv_foodstocks", text:"Запасы еды" }
+    { key:"#chief_adv_foodconsumption", text:"Производство еды" }
+    { key:"#chief_adv_health", text:"Здоровье" }
+    { key:"#chief_adv_religion", text:"Религия" }
+    { key:"#chief_adv_finance", text:"Финансы" }
+    { key:"#chief_adv_crime", text:"Преступность" }
+    { key:"#chief_adv_military", text:"Военные" }
+    { key:"#chief_adv_kingdom", text:"Королевство" }
+    { key:"#chief_adv_nilometr", text:"Нилометр" }
+    { key:"#trade_overseer", text:"Надзиратель торговли" }
+    { key:"#building_have_no_access", text:"ПРЕДУПРЕЖДЕНИЕ: Это здание не примыкает к дороге" }
+    { key:"#bazaar_info_title", text:"Базар" }
+    { key:"#well_info_title", text:"Колодец" }
+    { key:"#visit_rating_advisor", text:"Посетить вашего надзирателя рейтингов?" }
+    { key:"#gardens_describe", text:"Этот приятный участок даёт гражданам облегчение от шума, жары и грязи города с прохладным оазисом зелёного пространства. Каждый хочет сад по соседству." }
+    { key:"#popup_dialog_proceed", text:"Продолжить?" }
 	{ key:"#TR_CONFIG_HEADER_LANGUAGES", lang:"en", text: "Язык игры"}
 
     {key: "#mission2_store_figs", text:"Постройте зернохранилище и заполните его инжиром"}

@@ -2,7 +2,6 @@ log_info("akhenaten: localization_en config started")
 
 localization_base_en = [
     { group:1, id:1, text: "New game" }
-    { group:1, id:2, text: "Replay mission" }
     { group:1, id:3, text: "Load game" }
     { group:1, id:4, text: "Save game" }
     { group:1, id:5, text: "Exit game" }
@@ -42,30 +41,19 @@ localization_base_en = [
     { group:4, id:11, text: "Overseer of the Treasury" }
     { group:4, id:12, text: "Chief Overseer" }
     { group:4, id:13, text: "Overseer of Monuments" }
-    { group:5, id:0, text: "Quit" }
     { group:5, id:1, text: "Leave the Kingdom?" }
-    { group:5, id:2, text: "Open trade route" }
     { group:5, id:3, text: "Pay to open this land trade route?" }
     { group:5, id:4, text: "Open trade route" }
     { group:5, id:5, text: "Pay to open this water trade route?" }
     { group:5, id:6, text: "Pharaonic request" }
-    { group:5, id:7, text: "Dispatch goods?" }
-    { group:5, id:8, text: "Pharaonic request" }
     { group:5, id:9, text: "You do not have enough to fulfill the request " }
-    { group:5, id:10, text: "Pharaonic request" }
     { group:5, id:11, text: "You do not have any companies to send" }
-    { group:5, id:12, text: "Pharaonic request" }
     { group:5, id:13, text: "Tell your Overseer of the Military to assign some operational companies to Kingdom service" }
-    { group:5, id:14, text: "Pharaonic request" }
     { group:5, id:15, text: "Dispatch relief force?" }
-    { group:5, id:16, text: "Demolishing a Fort" }
     { group:5, id:17, text: "Are you sure you wish to decommission this Fort?" }
     { group:5, id:18, text: "Missing CD" }
     { group:5, id:19, text: "Please replace your Cleopatra CD in your CD-ROM drive" }
-    { group:5, id:20, text: "Demolishing a bridge" }
     { group:5, id:21, text: "Pull down bridges with care. Isolated communities soon perish if they are cut off from the Kingdom road." }
-    { group:5, id:22, text: "Quit" }
-    { group:5, id:23, text: "Exit without saving?" }
     { group:5, id:24, text: "Old Version" }
     { group:5, id:25, text: "This file is an old version and cannot be loaded" }
     { group:5, id:26, text: "Too many burial provisions!" }
@@ -130,13 +118,10 @@ localization_base_en = [
     { group:5, id:85, text: "This city does not have a Weaponsmith. Fort: Infantry has been removed." }
     { group:5, id:86, text: "Fort: Charioteers cannot work." }
     { group:5, id:87, text: "This city does not have a Chariot Maker. Fort: Charioteer has been removed." }
-    { group:5, id:88, text: "Festival: No Festival Square." }
     { group:5, id:89, text: "You need a Festival Square to hold a festival." }
-    { group:5, id:90, text: "Delete Dynasty?" }
     { group:5, id:91, text: "This deletes the selected dynasty and all of its saved games. Do you really want to do that?" }
     { group:5, id:92, text: "Dynasty Exists" }
     { group:5, id:93, text: "This name is already being used.  Choose another name." }
-    { group:5, id:94, text: "No Dynasty" }
     { group:5, id:95, text: "You must select a dynasty" }
     { group:5, id:96, text: "Warning" }
     { group:5, id:97, text: "You do not have enough debens to hold a festival." }
@@ -214,7 +199,6 @@ localization_base_en = [
     { group:8, id:14, text: "more person" }
     { group:8, id:15, text: "more people" }
     { group:8, id:16, text: "unit." }
-    { group:8, id:17, text: "units." }
     { group:8, id:18, text: "Scribal School" }
     { group:8, id:19, text: "Scribal Schools" }
     { group:8, id:20, text: "Academy" }
@@ -2140,7 +2124,6 @@ localization_base_en = [
     { group:53, id:67, text: "This city has the most magnificent Monuments in all Egypt!" }
     { group:53, id:68, text: "Your Kingdom is the best rated in all Egypt!" }
     { group:53, id:69, text: "There are no monuments in this city yet." }
-    { group:54, id:0, text: "Overseer of Commerce" }
     { group:54, id:1, text: "click on an item to trade, stockpile, or change industry status" }
     { group:54, id:2, text: "Show prices" }
     { group:54, id:3, text: "Stockpiling" }
@@ -2453,19 +2436,6 @@ localization_base_en = [
     { group:60, id:22, text: "Requests and Festivals" }
     { group:60, id:23, text: "uncollected this year" }
     { group:60, id:24, text: "Mined Gold" }
-    { group:61, id:0, text: "Chief Overseer" }
-    { group:61, id:1, text: "City Sentiment" }
-    { group:61, id:2, text: "Migration" }
-    { group:61, id:3, text: "Employment" }
-    { group:61, id:4, text: "Food Stocks" }
-    { group:61, id:5, text: "Food Production" }
-    { group:61, id:6, text: "Health" }
-    { group:61, id:7, text: "Religion" }
-    { group:61, id:8, text: "Finances" }
-    { group:61, id:9, text: "Crime" }
-    { group:61, id:10, text: "Military" }
-    { group:61, id:11, text: "Kingdom" }
-    { group:61, id:12, text: "Nilometer" }
     { group:61, id:13, text: "We produce much more than we eat" }
     { group:61, id:14, text: "We produce a little more than we eat" }
     { group:61, id:15, text: "We produce just enough to feed everyone" }
@@ -3321,7 +3291,6 @@ localization_base_en = [
     { group:78, id:6, text: "I have no staff other than myself. I cannot be expected to work under these conditions!  At best, I can hone one senet master in three months." }
     { group:78, id:7, text: "With no teachers, no new senet masters will be trained. Senet Houses throughout the city could suffer as a result." }
     { group:79, id:0, text: "Gardens" }
-    { group:79, id:1, text: "This pleasant lot gives citizens relief from the noise, heat and dirt of the city with a cool oasis of green space.  Everyone wants a garden next door." }
     { group:80, id:0, text: "Statue" }
     { group:80, id:1, text: "Monuments to gods and bygone pharaohs enhance a neighborhood's prestige. People are proud to have statues nearby...and the bigger, the better." }
     { group:80, id:2, text: "Triumphal arch" }
@@ -3387,7 +3356,6 @@ localization_base_en = [
     { group:95, id:1, text: "Seth watches over soldiers and encourages valor in combat. No man dares fight without the blessing of Seth." }
     { group:96, id:0, text: "Temple to Bast (Home)" }
     { group:96, id:1, text: "When Bast is displeased, nobody's home is safe. Some blame Bast for disease, too." }
-    { group:97, id:0, text: "Bazaar" }
     { group:97, id:1, text: "Our Bazaars make the Kingdom's bounty available to every nearby citizen. Every home needs Bazaar access, although no one wants to live next door to one." }
     { group:97, id:2, text: "This Bazaar is not operational, and supplies nothing to the local community." }
     { group:97, id:3, text: "This Bazaar is operational and supplies the needs of local homes." }
@@ -3400,11 +3368,7 @@ localization_base_en = [
     { group:97, id:10, text: "The Bazaar trader is here, awaiting food." }
     { group:97, id:11, text: "The Bazaar trader is out distributing goods." }
     { group:97, id:12, text: "The Bazaar trader is returning to restock." }
-    { group:98, id:0, text: "Granary" }
     { group:98, id:1, text: "Full Granaries are vital for keeping the people's bellies filled, and help attract new citizens. A Granary can store any type of food." }
-    { group:98, id:2, text: "Storing" }
-    { group:98, id:3, text: "Space for" }
-    { group:98, id:4, text: "This Granary is not needed. Egypt provides our city with all the grain it needs. Any food we produce will go straight into any Storage Yards with empty space." }
     { group:98, id:5, text: "Special orders" }
     { group:98, id:6, text: "Granary instructions" }
     { group:98, id:7, text: "Empty Granary" }
@@ -3503,7 +3467,6 @@ localization_base_en = [
     { group:105, id:0, text: "Palace" }
     { group:105, id:1, text: "The Palace is among your city's most desirable buildings and the cornerstone of the city economy. It turns gold nuggets to debens and stores some of the city's funds." }
     { group:105, id:2, text: "Vaults hold" }
-    { group:105, id:3, text: "Visit your Ratings Overseer?" }
     { group:106, id:0, text: "Tax Collector's office" }
     { group:106, id:1, text: "Although not the most popular workers in the city, tax collectors make possible our great Kingdom and all the benefits that flow to us." }
     { group:106, id:2, text: "Vaults hold" }
@@ -3529,7 +3492,6 @@ localization_base_en = [
     { group:108, id:5, text: "We have far too few workers. Sometimes, no water is delivered for up to two weeks at a time." }
     { group:108, id:6, text: "We are operating on a skeleton staff only. We frequently go a full month without delivering any water." }
     { group:108, id:7, text: "With no delivery staff, this facility could just as well be a dry hole in the ground." }
-    { group:109, id:0, text: "Well" }
     { group:109, id:1, text: "Citizens without clean water deliveries can draw water from Wells, but Well-water neighborhoods are not the healthiest or most desirable places to live." }
     { group:109, id:2, text: "This well is unneeded. All the houses it serves get deliveries from a Water Supply." }
     { group:109, id:3, text: "This well's water is going to waste, as there are no houses within its service range." }
@@ -4132,11 +4094,6 @@ localization_base_en = [
     { group:147, id:52, text: "With Cleopatra's deep treasury and Antony's genius for tactics, Octavian's fleet and veteran legions have been scattered to the four winds. Romans impatiently await the triumphant return of Antony and Cleopatra. Hand in hand, Rome and Alexandria will rule the Mediterranean for many more generations." }
     { group:147, id:53, text: "Custom Mission Victory" }
     { group:147, id:54, text: "You have done well, but many more challenges await you on your quest to become...Pharaoh! " }
-    { group:148, id:0, text: "Final Culture rating" }
-    { group:148, id:1, text: "Final Prosperity rating" }
-    { group:148, id:2, text: "Final Monument rating" }
-    { group:148, id:3, text: "Final Kingdom Rating" }
-    { group:148, id:4, text: "Final population" }
     { group:148, id:5, text: "Final city funds" }
     { group:148, id:6, text: "Monuments Erected" }
     { group:148, id:7, text: "Mission was completed in" }

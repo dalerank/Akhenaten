@@ -2,7 +2,6 @@ log_info("akhenaten: localization_de config started")
 
 localization_base_de = [
     { group:1, id:1, text: "Neues Spiel" }
-    { group:1, id:2, text: "Mission wiederholen" }
     { group:1, id:3, text: "Spiel laden" }
     { group:1, id:4, text: "Spiel speichern" }
     { group:1, id:5, text: "Spiel beenden" }
@@ -42,30 +41,19 @@ localization_base_de = [
     { group:4, id:11, text: "Aufseher der Schatzkammer" }
     { group:4, id:12, text: "Oberaufseher" }
     { group:4, id:13, text: "Aufseher der Monumente" }
-    { group:5, id:0, text: "Beenden" }
     { group:5, id:1, text: "Das Königreich verlassen?" }
-    { group:5, id:2, text: "Handelsroute öffnen" }
     { group:5, id:3, text: "Für diese Landhandelsroute bezahlen?" }
     { group:5, id:4, text: "Handelsroute öffnen" }
     { group:5, id:5, text: "Für diese Wasserhandelsroute bezahlen?" }
     { group:5, id:6, text: "Pharaonische Anfrage" }
-    { group:5, id:7, text: "Waren versenden?" }
-    { group:5, id:8, text: "Pharaonische Anfrage" }
     { group:5, id:9, text: "Ihr habt nicht genug, um die Anfrage zu erfüllen" }
-    { group:5, id:10, text: "Pharaonische Anfrage" }
     { group:5, id:11, text: "Ihr habt keine Kompanien zum Entsenden" }
-    { group:5, id:12, text: "Pharaonische Anfrage" }
     { group:5, id:13, text: "Weist Euren Aufseher des Militärs an, einige einsatzbereite Kompanien dem Königreich zuzuweisen" }
-    { group:5, id:14, text: "Pharaonische Anfrage" }
     { group:5, id:15, text: "Hilfstruppen entsenden?" }
-    { group:5, id:16, text: "Abriss eines Forts" }
     { group:5, id:17, text: "Seid Ihr sicher, dass Ihr dieses Fort außer Dienst stellen wollt?" }
     { group:5, id:18, text: "CD fehlt" }
     { group:5, id:19, text: "Bitte legt Eure Cleopatra-CD ins CD-ROM-Laufwerk ein" }
-    { group:5, id:20, text: "Abriss einer Brücke" }
     { group:5, id:21, text: "Reißt Brücken mit Bedacht ab. Isolierte Gemeinden gehen bald zugrunde, wenn sie vom Königreichsweg abgeschnitten sind." }
-    { group:5, id:22, text: "Beenden" }
-    { group:5, id:23, text: "Beenden ohne zu speichern?" }
     { group:5, id:24, text: "Alte Version" }
     { group:5, id:25, text: "Diese Datei ist eine alte Version und kann nicht geladen werden" }
     { group:5, id:26, text: "Zu viele Grabbeigaben!" }
@@ -130,13 +118,10 @@ localization_base_de = [
     { group:5, id:85, text: "Diese Stadt hat keine Waffenschmiede. Fort: Infanterie wurde entfernt." }
     { group:5, id:86, text: "Fort: Streitwagenkämpfer kann nicht arbeiten." }
     { group:5, id:87, text: "Diese Stadt hat keinen Wagenbauer. Fort: Streitwagenkämpfer wurde entfernt." }
-    { group:5, id:88, text: "Fest: Kein Festplatz." }
     { group:5, id:89, text: "Ihr benötigt einen Festplatz, um ein Fest abzuhalten." }
-    { group:5, id:90, text: "Dynastie löschen?" }
     { group:5, id:91, text: "Dies löscht die gewählte Dynastie und alle ihre gespeicherten Spiele. Wollt Ihr das wirklich tun?" }
     { group:5, id:92, text: "Dynastie existiert" }
     { group:5, id:93, text: "Dieser Name wird bereits verwendet. Wählt einen anderen Namen." }
-    { group:5, id:94, text: "Keine Dynastie" }
     { group:5, id:95, text: "Ihr müsst eine Dynastie auswählen" }
     { group:5, id:96, text: "Warnung" }
     { group:5, id:97, text: "Ihr habt nicht genug Deben, um ein Fest abzuhalten." }
@@ -214,7 +199,6 @@ localization_base_de = [
     { group:8, id:14, text: "weitere Person" }
     { group:8, id:15, text: "weitere Personen" }
     { group:8, id:16, text: "Einheit." }
-    { group:8, id:17, text: "Einheiten." }
     { group:8, id:18, text: "Schreiberschule" }
     { group:8, id:19, text: "Schreiberschulen" }
     { group:8, id:20, text: "Akademie" }
@@ -2141,7 +2125,6 @@ localization_base_de = [
     { group:53, id:66, text: "Der erstaunliche Wohlstand dieser Stadt ist Stadtgespräch in Ägypten!" }
     { group:53, id:67, text: "Diese Stadt hat die prächtigsten Monumente in ganz Ägypten!" }
     { group:53, id:68, text: "Euer Königreich ist das bestbewertete in ganz Ägypten!" }
-    { group:54, id:0, text: "Aufseher des Handels" }
     { group:54, id:1, text: "Klickt auf einen Artikel, um zu handeln, einzulagern oder den Industriestatus zu ändern" }
     { group:54, id:2, text: "Preise anzeigen" }
     { group:54, id:3, text: "Einlagernd" }
@@ -2459,19 +2442,6 @@ localization_base_de = [
     { group:60, id:22, text: "Anfragen und Festivals" }
     { group:60, id:23, text: "dieses Jahr nicht eingesammelt" }
     { group:60, id:24, text: "Abgebautes Gold" }
-    { group:61, id:0, text: "Oberaufseher" }
-    { group:61, id:1, text: "Stadtstimmung" }
-    { group:61, id:2, text: "Migration" }
-    { group:61, id:3, text: "Beschäftigung" }
-    { group:61, id:4, text: "Nahrungsvorräte" }
-    { group:61, id:5, text: "Nahrungsproduktion" }
-    { group:61, id:6, text: "Gesundheit" }
-    { group:61, id:7, text: "Religion" }
-    { group:61, id:8, text: "Finanzen" }
-    { group:61, id:9, text: "Verbrechen" }
-    { group:61, id:10, text: "Militär" }
-    { group:61, id:11, text: "Königreich" }
-    { group:61, id:12, text: "Nilometer" }
     { group:61, id:13, text: "Wir produzieren viel mehr, als wir essen" }
     { group:61, id:14, text: "Wir produzieren etwas mehr, als wir essen" }
     { group:61, id:15, text: "Wir produzieren gerade genug, um alle zu ernähren" }
@@ -3326,7 +3296,6 @@ localization_base_de = [
     { group:78, id:6, text: "Ich habe keine Mitarbeiter außer mir selbst. Man kann nicht erwarten, dass ich unter diesen Bedingungen arbeite! Bestenfalls kann ich einen Senet-Meister in drei Monaten verfeinern." }
     { group:78, id:7, text: "Ohne Lehrer werden keine neuen Senet-Meister ausgebildet. Senet-Häuser in der ganzen Stadt könnten als Folge leiden." }
     { group:79, id:0, text: "Gärten" }
-    { group:79, id:1, text: "Dieses angenehme Grundstück verschafft Bürgern Erleichterung von Lärm, Hitze und Schmutz der Stadt mit einer kühlen Oase grünen Raums. Jeder möchte einen Garten nebenan." }
     { group:80, id:0, text: "Statue" }
     { group:80, id:1, text: "Monumente für Götter und vergangene Pharaonen erhöhen das Prestige einer Nachbarschaft. Menschen sind stolz, Statuen in der Nähe zu haben...und je größer, desto besser." }
     { group:80, id:2, text: "Triumphbogen" }
@@ -3392,7 +3361,6 @@ localization_base_de = [
     { group:95, id:1, text: "Seth wacht über Soldaten und ermutigt Tapferkeit im Kampf. Kein Mann wagt es, ohne den Segen von Seth zu kämpfen." }
     { group:96, id:0, text: "Tempel der Bast (Heim)" }
     { group:96, id:1, text: "Wenn Bast missfällt, ist niemandes Heim sicher. Einige geben Bast auch die Schuld für Krankheiten." }
-    { group:97, id:0, text: "Basar" }
     { group:97, id:1, text: "Unsere Basare machen die Fülle des Königreichs für jeden nahegelegenen Bürger verfügbar. Jedes Heim braucht Basarzugang, obwohl niemand nebenan wohnen möchte." }
     { group:97, id:2, text: "Dieser Basar ist nicht funktionsfähig und liefert nichts an die örtliche Gemeinschaft." }
     { group:97, id:3, text: "Dieser Basar ist funktionsfähig und versorgt die Bedürfnisse der örtlichen Heime." }
@@ -3405,11 +3373,7 @@ localization_base_de = [
     { group:97, id:10, text: "Der Basarhändler ist hier und wartet auf Nahrung." }
     { group:97, id:11, text: "Der Basarhändler ist unterwegs und verteilt Waren." }
     { group:97, id:12, text: "Der Basarhändler kehrt zurück, um aufzustocken." }
-    { group:98, id:0, text: "Getreidespeicher" }
     { group:98, id:1, text: "Volle Getreidespeicher sind lebenswichtig, um die Bäuche der Menschen zu füllen, und helfen, neue Bürger anzuziehen. Ein Getreidespeicher kann jede Art von Nahrung lagern." }
-    { group:98, id:2, text: "Lagert" }
-    { group:98, id:3, text: "Platz für" }
-    { group:98, id:4, text: "Dieser Getreidespeicher wird nicht benötigt. Ägypten versorgt unsere Stadt mit allem Getreide, das sie braucht. Jede Nahrung, die wir produzieren, geht direkt in alle Lagerhöfe mit leerem Platz." }
     { group:98, id:5, text: "Spezialbestellungen" }
     { group:98, id:6, text: "Getreidespeicheranweisungen" }
     { group:98, id:7, text: "Getreidespeicher leeren" }
@@ -3508,7 +3472,6 @@ localization_base_de = [
     { group:105, id:0, text: "Palast" }
     { group:105, id:1, text: "Der Palast gehört zu den begehrtesten Gebäuden Eurer Stadt und ist der Eckpfeiler der Stadtwirtschaft. Er verwandelt Goldklumpen in Deben und lagert einige der Stadtmittel." }
     { group:105, id:2, text: "Tresore enthalten" }
-    { group:105, id:3, text: "Euren Bewertungsaufseher besuchen?" }
     { group:106, id:0, text: "Steuereintreiberbüro" }
     { group:106, id:1, text: "Obwohl nicht die beliebtesten Arbeiter in der Stadt, ermöglichen Steuereintreiber unser großes Königreich und all die Vorteile, die uns zufließen." }
     { group:106, id:2, text: "Tresore enthalten" }
@@ -3534,7 +3497,6 @@ localization_base_de = [
     { group:108, id:5, text: "Wir haben viel zu wenige Arbeiter. Manchmal wird bis zu zwei Wochen am Stück kein Wasser geliefert." }
     { group:108, id:6, text: "Wir arbeiten nur mit Notbesetzung. Wir gehen häufig einen vollen Monat, ohne Wasser zu liefern." }
     { group:108, id:7, text: "Ohne Lieferpersonal könnte diese Einrichtung genauso gut ein trockenes Loch im Boden sein." }
-    { group:109, id:0, text: "Brunnen" }
     { group:109, id:1, text: "Bürger ohne saubere Wasserlieferungen können Wasser aus Brunnen ziehen, aber Brunnenwasser-Nachbarschaften sind nicht die gesündesten oder begehrtesten Wohnorte." }
     { group:109, id:2, text: "Dieser Brunnen wird nicht benötigt. Alle Häuser, die er versorgt, bekommen Lieferungen von einer Wasserversorgung." }
     { group:109, id:3, text: "Das Wasser dieses Brunnens wird verschwendet, da es keine Häuser in seinem Versorgungsbereich gibt." }
@@ -4137,11 +4099,6 @@ localization_base_de = [
     { group:147, id:52, text: "Mit Kleopatras tiefer Schatzkammer und Antonius' Genie für Taktik wurde Octavians Flotte und veterane Legionen in alle Winde zerstreut. Römer warten ungeduldig auf die triumphale Rückkehr von Antonius und Kleopatra. Hand in Hand werden Rom und Alexandria das Mittelmeer für viele weitere Generationen regieren." }
     { group:147, id:53, text: "Benutzerdefinierter Missionssieg" }
     { group:147, id:54, text: "Ihr habt gut gearbeitet, aber viele weitere Herausforderungen erwarten Euch auf Eurer Suche, ...Pharao zu werden! " }
-    { group:148, id:0, text: "Endgültige Kulturbewertung" }
-    { group:148, id:1, text: "Endgültige Wohlstandsbewertung" }
-    { group:148, id:2, text: "Endgültige Monumentbewertung" }
-    { group:148, id:3, text: "Endgültige Königreichsbewertung" }
-    { group:148, id:4, text: "Endgültige Bevölkerung" }
     { group:148, id:5, text: "Endgültige Stadtmittel" }
     { group:148, id:6, text: "Errichtete Monumente" }
     { group:148, id:7, text: "Mission wurde abgeschlossen in" }

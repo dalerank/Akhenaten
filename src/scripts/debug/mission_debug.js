@@ -36,34 +36,34 @@ function mission_debug_draw_properties_victory_status(ev) {
     imgui.property_input("force_lost", __scenario_victory, "force_lost")
     __debug_feature_bool("gameopt_disable_victory", "disable_victory")
 
-    if (scenario.population_goal > 0) {
-        imgui.property_input("population: " + city.population + " / " + scenario.population_goal,
-                             city.population >= scenario.population_goal)
+    if (city.winning.population.enabled) {
+        imgui.property_input("population: " + city.population + " / " + city.winning.population.goal,
+                             city.population >= city.winning.population.goal)
     }
 
-    if (scenario.culture_goal > 0) {
-        imgui.property_input("culture: " + city.rating.culture + " / " + scenario.culture_goal,
-                             city.rating.culture >= scenario.culture_goal)
+    if (city.winning.culture.enabled) {
+        imgui.property_input("culture: " + city.rating.culture + " / " + city.winning.culture.goal,
+                             city.rating.culture >= city.winning.culture.goal)
     }
 
-    if (scenario.prosperity_goal > 0) {
-        imgui.property_input("prosperity: " + city.rating.prosperity + " / " + scenario.prosperity_goal,
-                             city.rating.prosperity >= scenario.prosperity_goal)
+    if (city.winning.prosperity.enabled) {
+        imgui.property_input("prosperity: " + city.rating.prosperity + " / " + city.winning.prosperity.goal,
+                             city.rating.prosperity >= city.winning.prosperity.goal)
     }
 
-    if (scenario.monuments_goal > 0) {
-        imgui.property_input("monuments: " + city.rating.monument + " / " + scenario.monuments_goal,
-                             city.rating.monument >= scenario.monuments_goal)
+    if (city.winning.monuments.enabled) {
+        imgui.property_input("monuments: " + city.rating.monument + " / " + city.winning.monuments.goal,
+                             city.rating.monument >= city.winning.monuments.goal)
     }
 
-    if (scenario.kingdom_goal > 0) {
-        imgui.property_input("kingdom: " + city.rating.kingdom + " / " + scenario.kingdom_goal,
-                             city.rating.kingdom >= scenario.kingdom_goal)
+    if (city.winning.kingdom.enabled) {
+        imgui.property_input("kingdom: " + city.rating.kingdom + " / " + city.winning.kingdom.goal,
+                             city.rating.kingdom >= city.winning.kingdom.goal)
     }
 
-    if (scenario.housing_count_goal > 0) {
-        imgui.property_input("housing[lvl " + scenario.housing_level_goal + "]: "
-                             + __scenario_victory_houses_of_required_level() + " / " + scenario.housing_count_goal,
+    if (city.winning.housing_count.enabled) {
+        imgui.property_input("housing[lvl " + city.winning.housing_level.goal + "]: "
+                             + __scenario_victory_houses_of_required_level() + " / " + city.winning.housing_count.goal,
                              __scenario_victory_is_housing_condition_met())
     }
 
@@ -90,9 +90,9 @@ function mission_debug_draw_properties_victory_reasons(ev) {
     var reasons = __scenario_victory_reasons()
     var names = Object.keys(reasons)
     if (names.length <= 0) {
+        imgui.tree_pop()
         return
     }
-
 
     imgui.begin_table("VictoryReasons", 2, imgui.table_flags_debug_props())
     for (var i = 0; i < names.length; i++) {

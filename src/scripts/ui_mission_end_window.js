@@ -14,18 +14,18 @@ window_mission_won {
     draw_underlying: true
     ui {
         background          : outer_panel({size:[34, 18]})
-        title               : text({pos:[0, 16], size:[px(34), 20], text:"${62.0}", align:"center", font: FONT_LARGE_BLACK_ON_LIGHT })
+        title               : text({pos:[0, 16], size:[px(34), 20], text:{group:62, id:0}, align:"center", font: FONT_LARGE_BLACK_ON_LIGHT })
         description_panel   : inner_panel({pos:{x:32, y:40}, size:{w:30, h:8},
             ui : {
-                culture_header      : text({pos:{x:30, y:10}, text:"${148.0} ${rating.culture}", font: FONT_NORMAL_WHITE_ON_DARK})
-                prosperity_header   : text({pos:{x:30, y:30}, text:"${148.1} ${rating.prosperity}", font: FONT_NORMAL_WHITE_ON_DARK})
-                monument_header     : text({pos:{x:30, y:50}, text:"${148.2} ${rating.monument}", font: FONT_NORMAL_WHITE_ON_DARK})
-                treasury_header     : text({pos:{x:30, y:70}, text:"${148.3} ${city.treasury}", font: FONT_NORMAL_WHITE_ON_DARK})
-                population_header   : text({pos:{x:30, y:90}, text:"${148.4} ${rating.kingdom}", font: FONT_NORMAL_WHITE_ON_DARK})
+                culture_header      : text({pos:{x:30, y:10}, text:"", font: FONT_NORMAL_WHITE_ON_DARK})
+                prosperity_header   : text({pos:{x:30, y:30}, text:"", font: FONT_NORMAL_WHITE_ON_DARK})
+                monument_header     : text({pos:{x:30, y:50}, text:"", font: FONT_NORMAL_WHITE_ON_DARK})
+                treasury_header     : text({pos:{x:30, y:70}, text:"", font: FONT_NORMAL_WHITE_ON_DARK})
+                population_header   : text({pos:{x:30, y:90}, text:"", font: FONT_NORMAL_WHITE_ON_DARK})
             }
         })
         subtitle            : text({pos:[32, 178], size:[px(32), -1], multiline:true, wrap:px(32), font: FONT_NORMAL_BLACK_ON_LIGHT })
-        desc_header         : text({margin:{left:0, bottom:-40}, size:[px(32), 20], align:"center", text:"${13.1}", font: FONT_NORMAL_BLACK_ON_LIGHT })
+        desc_header         : text({margin:{left:0, bottom:-40}, size:[px(32), 20], align:"center", text:{group:13, id:1}, font: FONT_NORMAL_BLACK_ON_LIGHT })
     }
 }
 
@@ -35,10 +35,10 @@ window_mission_lost {
     draw_underlying: true
     ui {
         background          : outer_panel({size:[34, 16]})
-        title               : text({pos:[0, 32], text:"${62.1}", font: FONT_LARGE_BLACK_ON_LIGHT, align:"center", size:[px(32), 20] })
-        warning_text        : text({pos:[32, 72], text:"${62.16}", wrap:px(32), font: FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
+        title               : text({pos:[0, 32], text:{group:62, id:1}, font: FONT_LARGE_BLACK_ON_LIGHT, align:"center", size:[px(32), 20] })
+        warning_text        : text({pos:[32, 72], text:{group:62, id:16}, wrap:px(32), font: FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
 
-        replay_mission      : button({margin:{centerx:-135, bottom:-40}, size:[270, 25], text:"${loc.replay_mission}" })
+        replay_mission      : button({margin:{centerx:-135, bottom:-40}, size:[270, 25], text:"#replay_mission" })
     }
 }
 
@@ -48,6 +48,12 @@ function window_mission_won_on_init(window) {
     var is_custom = scenario.scmode != e_scenario_normal
     var subtitle_id = is_custom ? 20 : scenario.campaign_scenario_id
     window.subtitle.text = __loc(147, subtitle_id)
+
+    window.culture_header.text = __loc("#mission_won_culture_rating") + " " + city.rating.culture
+    window.prosperity_header.text = __loc("#mission_won_prosperity_rating") + " " + city.rating.prosperity
+    window.monument_header.text = __loc("#mission_won_monument_rating") + " " + city.rating.monument
+    window.treasury_header.text = __loc("#mission_won_treasury") + " " + city.treasury
+    window.population_header.text = __loc("#mission_won_kingdom_rating") + " " + city.rating.kingdom
 }
 
 [es=(window_mission_won, go_back)]
@@ -90,8 +96,7 @@ function mission_end_compute_next_scenario_id(completed_id) {
             + " not a valid campaign step -> end of game")
         return -1
     }
-    log_info("mission_end_compute_next: completed=" + completed_id
-        + " scmode=" + scenario.scmode + " -> next_scenario_id=" + next_id)
+    log_info("mission_end_compute_next: completed=" + completed_id + " scmode=" + scenario.scmode + " -> next_scenario_id=" + next_id)
     return next_id
 }
 

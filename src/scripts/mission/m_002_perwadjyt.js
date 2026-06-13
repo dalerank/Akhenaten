@@ -28,6 +28,7 @@ mission2 {
 
 	win_criteria {
 		population    {enabled : true, goal : 600 }
+		prosperity    {enabled : false, goal : 0 }
 		housing_count {enabled : true, goal : 10 }
 		housing_level {enabled : true, goal : 6 }
 	}
@@ -72,7 +73,7 @@ function mission2_get_goal_tooltip() {
 [es=event_mission_start, mission=mission2]
 function mission2_on_start(ev) {
 	mission_show_start_message(mission, "message_farming_along_the_nile")
-	city.set_empire_available(1)
+	city.set_empire_available(-1)
 
 	for (var i = 0; i <= ADVISOR_DIPLOMACY; i++) {
 		city.set_advisor_available(i, 0)

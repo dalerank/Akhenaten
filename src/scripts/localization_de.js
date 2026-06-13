@@ -215,21 +215,26 @@ localization_de = [
 
   {key: "#display_options_title", text:"Anzeigeoptionen"}
 
-  {key: "#popup_dialog_quit", group:5, id:0 }
-  {key: "#popup_dialog_open_trade", group:5, id:2 }
-  {key: "#popup_dialog_send_goods", group:5, id:7 }
-  {key: "#popup_dialog_not_enough_goods", group:5, id:8 }
-  {key: "#popup_dialog_no_legions_available", group:5, id:10 }
-  {key: "#popup_dialog_no_legions_selected", group:5, id:12 }
-  {key: "#popup_dialog_send_troops", group:5, id:14 }
-  {key: "#popup_dialog_delete_fort", group:5, id:16 }
-  {key: "#popup_dialog_delete_bridge", group:5, id:20 }
-  {key: "#popup_dialog_quit_without_saving", group:5, id:22 }
-  {key: "#exit_without_saving", group:5, id:23 }
-  {key: "#popup_dialog_no_festival_square", group:5, id:88 }
-  {key: "#popup_dialog_delete_dynasty", group:5, id:90 }
-  {key: "#popup_dialog_no_dynasty", group:5, id:94 }
-  {key: "#replay_mission", group:1, id:2 }
+  {key: "#popup_dialog_quit", text:"Beenden" }
+  {key: "#popup_dialog_open_trade", text:"Handelsroute öffnen" }
+  {key: "#popup_dialog_send_goods", text:"Waren versenden?" }
+  {key: "#popup_dialog_not_enough_goods", text:"Pharaonische Anfrage" }
+  {key: "#mission_won_culture_rating", text:"Endgültige Kulturbewertung" }
+  {key: "#mission_won_prosperity_rating", text:"Endgültige Wohlstandsbewertung" }
+  {key: "#mission_won_monument_rating", text:"Endgültige Monumentbewertung" }
+  {key: "#mission_won_treasury", text:"Endgültige Königreichsbewertung" }
+  {key: "#mission_won_kingdom_rating", text:"Endgültige Bevölkerung" }
+  {key: "#popup_dialog_no_legions_available", text:"Pharaonische Anfrage" }
+  {key: "#popup_dialog_no_legions_selected", text:"Pharaonische Anfrage" }
+  {key: "#popup_dialog_send_troops", text:"Pharaonische Anfrage" }
+  {key: "#popup_dialog_delete_fort", text:"Abriss eines Forts" }
+  {key: "#popup_dialog_delete_bridge", text:"Abriss einer Brücke" }
+  {key: "#popup_dialog_quit_without_saving", text:"Beenden" }
+  {key: "#exit_without_saving", text:"Beenden ohne zu speichern?" }
+  {key: "#popup_dialog_no_festival_square", text:"Fest: Kein Festplatz." }
+  {key: "#popup_dialog_delete_dynasty", text:"Dynastie löschen?" }
+  {key: "#popup_dialog_no_dynasty", text:"Keine Dynastie" }
+  {key: "#replay_mission", text:"Mission wiederholen" }
   {key: "#ui_gift_to_kingdome_window_title", text:"Dem Volk Ägyptens geben"}
   {key: "#ui_unable_to_fulfill_request", text:"Anfrage kann nicht erfüllt werden"}
   {key: "#ui_gift_time_since_last", text:"Zeit seit letztem Geschenk"}
@@ -241,38 +246,38 @@ localization_de = [
   {key: "#ui_gift_dispatch_lavish", text:"Verschwenderisches Geschenk senden"}
   {key: "#ui_gift_cannot_afford_savings", text:"Ihr habt nicht genug persönliche Ersparnisse, um ein Geschenk an Ägypten zu machen. Versucht, Euch ein größeres Gehalt zu zahlen!"}
   {key: "#ui_mission_choice_prompt", text:"Klickt auf eine Stadt, um sie zu regieren "}
-  {key: "#granary_info_title", group:98, id:0 }
-  {key: "#granary_no_road_access", group:69, id:25 }
-  {key: "#granary_kingdom_supplies_grain", group:98, id:4 }
-  {key: "#granary_storing", group:98, id:2 }
-  {key: "#granary_space_for", group:98, id:3 }
-  {key: "#granary_units", group:8, id:17 }
-  {key: "#chief_overseer", group:61, id:0 }
-  {key: "#chief_adv_sentiment", group:61, id:1 }
-  {key: "#chief_adv_migration", group:61, id:2 }
-  {key: "#chief_adv_workers", group:61, id:3 }
-  {key: "#chief_adv_foodstocks", group:61, id:4 }
-  {key: "#chief_adv_foodconsumption", group:61, id:5 }
-  {key: "#chief_adv_health", group:61, id:6 }
-  {key: "#chief_adv_religion", group:61, id:7 }
-  {key: "#chief_adv_finance", group:61, id:8 }
-  {key: "#chief_adv_crime", group:61, id:9 }
-  {key: "#chief_adv_military", group:61, id:10 }
-  {key: "#chief_adv_kingdom", group:61, id:11 }
-  {key: "#chief_adv_nilometr", group:61, id:12 }
-  {key: "#trade_overseer", group:54, id:0 }
+  {key: "#granary_info_title", text:"Getreidespeicher" }
+  {key: "#granary_no_road_access", text:"WARNUNG: Dieses Gebäude grenzt nicht an eine Straße" }
+  {key: "#granary_kingdom_supplies_grain", text:"Dieser Getreidespeicher wird nicht benötigt. Ägypten versorgt unsere Stadt mit allem Getreide, das sie braucht. Jede Nahrung, die wir produzieren, geht direkt in alle Lagerhöfe mit leerem Platz." }
+  {key: "#granary_storing", text:"Lagert" }
+  {key: "#granary_space_for", text:"Platz für" }
+  {key: "#granary_units", text:"Einheiten." }
+  {key: "#chief_overseer", text:"Oberaufseher" }
+  {key: "#chief_adv_sentiment", text:"Stadtstimmung" }
+  {key: "#chief_adv_migration", text:"Migration" }
+  {key: "#chief_adv_workers", text:"Beschäftigung" }
+  {key: "#chief_adv_foodstocks", text:"Nahrungsvorräte" }
+  {key: "#chief_adv_foodconsumption", text:"Nahrungsproduktion" }
+  {key: "#chief_adv_health", text:"Gesundheit" }
+  {key: "#chief_adv_religion", text:"Religion" }
+  {key: "#chief_adv_finance", text:"Finanzen" }
+  {key: "#chief_adv_crime", text:"Verbrechen" }
+  {key: "#chief_adv_military", text:"Militär" }
+  {key: "#chief_adv_kingdom", text:"Königreich" }
+  {key: "#chief_adv_nilometr", text:"Nilometer" }
+  {key: "#trade_overseer", text:"Aufseher des Handels" }
   {key: "#trade_overseer_hint", group:54, id:1 }
-  {key: "#building_have_no_access", group:69, id:25 }
-  {key: "#bazaar_info_title", group: 97, id:0}
-  {key: "#well_info_title", group:109, id:0}
+  {key: "#building_have_no_access", text:"WARNUNG: Dieses Gebäude grenzt nicht an eine Straße" }
+  {key: "#bazaar_info_title", text:"Basar" }
+  {key: "#well_info_title", text:"Brunnen" }
   {key: "#trade_overseer_prices", group:54, id:2}
   {key: "#trade_overseer_prices_hint", group:68, id:108}
   {key: "#trade_overseer_goto_empire", group:54, id:30}
   {key: "#trade_overseer_goto_empire_hint", group:68, id:42}
   {key: "#festival_square_info_title", group:188, id:0}
-  {key: "#visit_rating_advisor", group:105, id:3}
-  {key: "#gardens_describe", group:79, id:1}
-  {key: "#popup_dialog_proceed", group:43, id:5}
+  {key: "#visit_rating_advisor", text: "Euren Bewertungsaufseher besuchen?"}
+  {key: "#gardens_describe", text: "Dieses angenehme Grundstück verschafft Bürgern Erleichterung von Lärm, Hitze und Schmutz der Stadt mit einer kühlen Oase grünen Raums. Jeder möchte einen Garten nebenan."}
+  {key: "#popup_dialog_proceed", text: "Fortfahren?"}
 
   {key: "#must_build_on_cleared_land", group:19, id:0}
   {key: "#out_of_credit", group:19, id:1}

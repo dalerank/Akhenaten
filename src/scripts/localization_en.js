@@ -246,21 +246,26 @@ localization_en = [
 
   {key: "#exit_this_panel", text:"Exit this panel"}
   {key: "#display_options_title", text:"Display options"}
-  {key: "#popup_dialog_quit", group:5, id:0 }
-  {key: "#popup_dialog_open_trade", group:5, id:2 }
-  {key: "#popup_dialog_send_goods", group:5, id:7 }
-  {key: "#popup_dialog_not_enough_goods", group:5, id:8 }
-  {key: "#popup_dialog_no_legions_available", group:5, id:10 }
-  {key: "#popup_dialog_no_legions_selected", group:5, id:12 }
-  {key: "#popup_dialog_send_troops", group:5, id:14 }
-  {key: "#popup_dialog_delete_fort", group:5, id:16 }
-  {key: "#popup_dialog_delete_bridge", group:5, id:20 }
-  {key: "#popup_dialog_quit_without_saving", group:5, id:22 }
-  {key: "#exit_without_saving", group:5, id:23 }
-  {key: "#popup_dialog_no_festival_square", group:5, id:88 }
-  {key: "#popup_dialog_delete_dynasty", group:5, id:90 }
-  {key: "#popup_dialog_no_dynasty", group:5, id:94 }
-  {key: "#replay_mission", group:1, id:2 }
+  {key: "#popup_dialog_quit", text:"Quit" }
+  {key: "#popup_dialog_open_trade", text:"Open trade route" }
+  {key: "#popup_dialog_send_goods", text:"Dispatch goods?" }
+  {key: "#popup_dialog_not_enough_goods", text:"Pharaonic request" }
+  {key: "#mission_won_culture_rating", text:"Final Culture rating" }
+  {key: "#mission_won_prosperity_rating", text:"Final Prosperity rating" }
+  {key: "#mission_won_monument_rating", text:"Final Monument rating" }
+  {key: "#mission_won_treasury", text:"Final Kingdom Rating" }
+  {key: "#mission_won_kingdom_rating", text:"Final population" }
+  {key: "#popup_dialog_no_legions_available", text:"Pharaonic request" }
+  {key: "#popup_dialog_no_legions_selected", text:"Pharaonic request" }
+  {key: "#popup_dialog_send_troops", text:"Pharaonic request" }
+  {key: "#popup_dialog_delete_fort", text:"Demolishing a Fort" }
+  {key: "#popup_dialog_delete_bridge", text:"Demolishing a bridge" }
+  {key: "#popup_dialog_quit_without_saving", text:"Quit" }
+  {key: "#exit_without_saving", text:"Exit without saving?" }
+  {key: "#popup_dialog_no_festival_square", text:"Festival: No Festival Square." }
+  {key: "#popup_dialog_delete_dynasty", text:"Delete Dynasty?" }
+  {key: "#popup_dialog_no_dynasty", text:"No Dynasty" }
+  {key: "#replay_mission", text:"Replay mission" }
   {key: "#ui_gift_to_kingdome_window_title", text:"Give to the people of Egypt"}
   {key: "#ui_unable_to_fulfill_request", text:"Unable to fulfill request"}
   {key: "#ui_gift_time_since_last", text:"Time since last gift"}
@@ -272,38 +277,38 @@ localization_en = [
   {key: "#ui_gift_dispatch_lavish", text:"Dispatch lavish gift"}
   {key: "#ui_gift_cannot_afford_savings", text:"You do not have enough personal savings to make a gift to Egypt. Try paying yourself a bigger salary!"}
   {key: "#ui_mission_choice_prompt", text:"Click on a city to govern "}
-  {key: "#granary_info_title", group:98, id:0 }
-  {key: "#granary_no_road_access", group:69, id:25 }
-  {key: "#granary_kingdom_supplies_grain", group:98, id:4 }
-  {key: "#granary_storing", group:98, id:2 }
-  {key: "#granary_space_for", group:98, id:3 }
-  {key: "#granary_units", group:8, id:17 }
-  {key: "#chief_overseer", group:61, id:0 }
-  {key: "#chief_adv_sentiment", group:61, id:1 }
-  {key: "#chief_adv_migration", group:61, id:2 }
-  {key: "#chief_adv_workers", group:61, id:3 }
-  {key: "#chief_adv_foodstocks", group:61, id:4 }
-  {key: "#chief_adv_foodconsumption", group:61, id:5 }
-  {key: "#chief_adv_health", group:61, id:6 }
-  {key: "#chief_adv_religion", group:61, id:7 }
-  {key: "#chief_adv_finance", group:61, id:8 }
-  {key: "#chief_adv_crime", group:61, id:9 }
-  {key: "#chief_adv_military", group:61, id:10 }
-  {key: "#chief_adv_kingdom", group:61, id:11 }
-  {key: "#chief_adv_nilometr", group:61, id:12 }
-  {key: "#trade_overseer", group:54, id:0 }
+  {key: "#granary_info_title", text:"Granary" }
+  {key: "#granary_no_road_access", text:"WARNING: This building is not adjacent to a road" }
+  {key: "#granary_kingdom_supplies_grain", text:"This Granary is not needed. Egypt provides our city with all the grain it needs. Any food we produce will go straight into any Storage Yards with empty space." }
+  {key: "#granary_storing", text:"Storing" }
+  {key: "#granary_space_for", text:"Space for" }
+  {key: "#granary_units", text:"units." }
+  {key: "#chief_overseer", text:"Chief Overseer" }
+  {key: "#chief_adv_sentiment", text:"City Sentiment" }
+  {key: "#chief_adv_migration", text:"Migration" }
+  {key: "#chief_adv_workers", text:"Employment" }
+  {key: "#chief_adv_foodstocks", text:"Food Stocks" }
+  {key: "#chief_adv_foodconsumption", text:"Food Production" }
+  {key: "#chief_adv_health", text:"Health" }
+  {key: "#chief_adv_religion", text:"Religion" }
+  {key: "#chief_adv_finance", text:"Finances" }
+  {key: "#chief_adv_crime", text:"Crime" }
+  {key: "#chief_adv_military", text:"Military" }
+  {key: "#chief_adv_kingdom", text:"Kingdom" }
+  {key: "#chief_adv_nilometr", text:"Nilometer" }
+  {key: "#trade_overseer", text:"Overseer of Commerce" }
   {key: "#trade_overseer_hint", group:54, id:1 }
-  {key: "#building_have_no_access", group:69, id:25 }
-  {key: "#bazaar_info_title", group: 97, id:0}
-  {key: "#well_info_title", group:109, id:0}
+  {key: "#building_have_no_access", text:"WARNING: This building is not adjacent to a road" }
+  {key: "#bazaar_info_title", text:"Bazaar" }
+  {key: "#well_info_title", text:"Well" }
   {key: "#trade_overseer_prices", group:54, id:2}
   {key: "#trade_overseer_prices_hint", group:68, id:108}
   {key: "#trade_overseer_goto_empire", group:54, id:30}
   {key: "#trade_overseer_goto_empire_hint", group:68, id:42}
   {key: "#festival_square_info_title", group:188, id:0}
-  {key: "#visit_rating_advisor", group:105, id:3}
-  {key: "#gardens_describe", group:79, id:1}
-  {key: "#popup_dialog_proceed", group:43, id:5}
+  {key: "#visit_rating_advisor", text: "Visit your Ratings Overseer?"}
+  {key: "#gardens_describe", text: "This pleasant lot gives citizens relief from the noise, heat and dirt of the city with a cool oasis of green space.  Everyone wants a garden next door."}
+  {key: "#popup_dialog_proceed", text: "Proceed?"}
 
   {key: "#must_build_on_cleared_land", group:19, id:0}
   {key: "#out_of_credit", group:19, id:1}
