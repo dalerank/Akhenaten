@@ -115,13 +115,13 @@ function mission1_handle_population_cap(ev) {
 
 [event=event_update_victory_state, mission=mission1]
 function mission1_handle_victory_state(ev) {
-	city.set_victory_reason("gold_mined_handled", mission.gold_mined_handled)
-	city.set_victory_reason("temples_built", mission.temples_built)
-	city.set_victory_reason("booth_built", mission.booth_built)
-	city.set_victory_reason("juggler_school_built", mission.juggler_school_built)
+	city.victory.set_reason("gold_mined_handled", mission.gold_mined_handled)
+	city.victory.set_reason("temples_built", mission.temples_built)
+	city.victory.set_reason("booth_built", mission.booth_built)
+	city.victory.set_reason("juggler_school_built", mission.juggler_school_built)
 
     var some_days_after_last_action = (game.absolute_day - mission.last_action_time) > mission.victory_last_action_delay;
-	city.set_victory_reason("some_days_after_last_action", some_days_after_last_action)
+	city.victory.set_reason("some_days_after_last_action", some_days_after_last_action)
 }
 
 [event=event_advance_day, mission=mission1]

@@ -216,13 +216,13 @@ function mission0_on_filled_granary(ev) {
 
 [event=event_update_victory_state, mission=mission0]
 function mission0_handle_victory_state(ev) {
-	city.set_victory_reason("gamemeat_stored", mission.tutorial_gamemeat_stored)
-	city.set_victory_reason("tutorial_granary_opened", mission.tutorial_granary_opened)
-	city.set_victory_reason("granary_built", mission.granary_built)
-	city.set_victory_reason("tutorial_firehouse_built", mission.tutorial_firehouse_built)
+	city.victory.set_reason("gamemeat_stored", mission.tutorial_gamemeat_stored)
+	city.victory.set_reason("tutorial_granary_opened", mission.tutorial_granary_opened)
+	city.victory.set_reason("granary_built", mission.granary_built)
+	city.victory.set_reason("tutorial_firehouse_built", mission.tutorial_firehouse_built)
 
 	var some_days_after_last_action = (game.absolute_day - mission.last_action_time) > mission.victory_last_action_delay;
-	city.set_victory_reason("some_days_after_last_action", some_days_after_last_action)
+	city.victory.set_reason("some_days_after_last_action", some_days_after_last_action)
 }
 
 [event=event_migration_update, mission=mission0]

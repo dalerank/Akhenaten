@@ -20,7 +20,4 @@ struct city_victory_t : public game_system {
 
     void reset();
     void victory_check();
-    void update_months_to_govern();
 };
-
-const std::unordered_map<xstring, bool> &get_victory_reasons();

@@ -136,9 +136,9 @@ function mission3_handle_spacious_apartment() {
 
 [event=event_update_victory_state, mission=mission3]
 function mission3_handle_victory_state(ev) {
-	city.set_victory_reason("beer_stored_handled", mission.beer_stored_handled)
-	city.set_victory_reason("tax_collector_built", mission.tax_collector_built)
+	city.victory.set_reason("beer_stored_handled", mission.beer_stored_handled)
+	city.victory.set_reason("tax_collector_built", mission.tax_collector_built)
 
 	var some_days_after_last_action = (game.absolute_day - mission.last_action_time) > mission.victory_last_action_delay
-	city.set_victory_reason("some_days_after_last_action", some_days_after_last_action)
+	city.victory.set_reason("some_days_after_last_action", some_days_after_last_action)
 }

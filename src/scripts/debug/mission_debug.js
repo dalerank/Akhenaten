@@ -87,7 +87,7 @@ function mission_debug_draw_properties_victory_reasons(ev) {
         return
     }
 
-    var reasons = __city_victory_reasons()
+    var reasons = city.victory.reasons
     var names = Object.keys(reasons)
     if (names.length <= 0) {
         imgui.tree_pop()

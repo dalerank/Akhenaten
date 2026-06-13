@@ -1,6 +1,12 @@
 log_info("akhenaten: city victory started")
 
 city.victory = extend(__city_victory, {
+    reasons: {},
+
+    set_reason: function(name, value) {
+        this.reasons[name] = value
+    },
+
     continue_governing: function(months) {
         scenario.has_won = true
         scenario.continue_months_left += months
@@ -27,7 +33,7 @@ city.victory = extend(__city_victory, {
 })
 
 function city_victory_all_reasons_met() {
-    var reasons = __city_victory_reasons()
+    var reasons = city.victory.reasons
     var names = Object.keys(reasons)
     if (names.length <= 0) {
         return true
@@ -179,6 +185,18 @@ function city_victory_handle_outcome() {
             emit event_show_window { id: "window_victory_dialog" }
         }
     }
+}
+
+[es=event_advance_month]
+function city_victory_on_advance_month(ev) {
+    if (scenario.has_won) {
+        scenario.continue_months_left--
+    }
+}
+
+[es=(city_victory, reset)]
+function city_victory_on_reset(ev) {
+    city.victory.reasons = {}
 }
 
 [es=(city_victory, victory_check)]

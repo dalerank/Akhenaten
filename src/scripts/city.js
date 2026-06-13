@@ -185,7 +185,6 @@ city {
     @overlay_color_mask: { set: __city_overlay_set_color_mask }
 
     goal_tooltip: function() { return "" }
-    set_victory_reason : city_set_victory_reason
     remove_animals : __city_remove_animals
     add_animals_point : __city_add_animals_point
     set_animals_area : __city_set_animals_area

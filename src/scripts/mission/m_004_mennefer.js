@@ -146,12 +146,12 @@ function mission4_handle_spacious_apartment() {
 
 [event=event_update_victory_state, mission=mission4]
 function mission4_handle_victory_state(ev) {
-	city.set_victory_reason("spacious_apartment_built", mission.spacious_apartment_built)
-	city.set_victory_reason("papyrus_made", mission.papyrus_made_handled)
-	city.set_victory_reason("bricks_bought", mission.bricks_bought_handled)
+	city.victory.set_reason("spacious_apartment_built", mission.spacious_apartment_built)
+	city.victory.set_reason("papyrus_made", mission.papyrus_made_handled)
+	city.victory.set_reason("bricks_bought", mission.bricks_bought_handled)
 
 	var some_days_after_last_action = (game.absolute_day - mission.last_action_time) > mission.victory_last_action_delay
-	city.set_victory_reason("some_days_after_last_action", some_days_after_last_action)
+	city.victory.set_reason("some_days_after_last_action", some_days_after_last_action)
 }
 
 [event=event_warehouse_filled, mission=mission4]

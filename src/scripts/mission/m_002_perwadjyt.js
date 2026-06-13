@@ -199,10 +199,10 @@ function mission2_on_disease(ev) {
 
 [es=event_update_victory_state, mission=mission2]
 function mission2_handle_victory_state(ev) {
-	city.set_victory_reason("figs_stored_handled", mission.figs_stored_handled)
-	city.set_victory_reason("pottery_step1_stored_handled", mission.pottery_step1_stored_handled)
-	city.set_victory_reason("pottery_step2_stored_handled", mission.pottery_step2_stored_handled)
+	city.victory.set_reason("figs_stored_handled", mission.figs_stored_handled)
+	city.victory.set_reason("pottery_step1_stored_handled", mission.pottery_step1_stored_handled)
+	city.victory.set_reason("pottery_step2_stored_handled", mission.pottery_step2_stored_handled)
 
 	var some_days_after_last_action = (game.absolute_day - mission.last_action_time) > mission.victory_last_action_delay;
-	city.set_victory_reason("some_days_after_last_action", some_days_after_last_action)
+	city.victory.set_reason("some_days_after_last_action", some_days_after_last_action)
 }

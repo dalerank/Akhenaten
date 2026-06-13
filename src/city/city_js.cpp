@@ -376,14 +376,5 @@ void __city_victory_reset() {
 }
 ANK_FUNCTION(__city_victory_reset)
 
-bvariant_map __city_victory_reasons() {
-    bvariant_map result;
-    for (const auto &[reason, met] : get_victory_reasons()) {
-        result[reason] = bvariant(met);
-    }
-    return result;
-}
-ANK_FUNCTION(__city_victory_reasons)
-
 void js_register_city_objects(js_State *J) {
 }

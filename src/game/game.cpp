@@ -163,7 +163,6 @@ void game_t::advance_week() {
 
 void game_t::advance_month() {
     g_city.update_month(simtime);
-    g_city.victory.update_months_to_govern();
     g_distant_battle.update_month();
 
     random_generate_next();                  // TODO: find out the source / reason for this
