@@ -528,6 +528,12 @@ localization_ru = [
     { key: "#education_access_school_and_library", text: "У этого дома есть доступ и к школе писцов, и к библиотеке" }
     { key: "#education_access_academy_district", text: "У этого дома есть доступ к школе писцов и библиотеке. Его дети также находятся в районе академии" }
 
+    // scribal school overlay
+    { key: "#school_access_none", text: "У этого дома нет доступа к школе писцов" }
+    { key: "#school_access_high", text: "Мимо этого дома недавно проходил учёный. У него будет доступ к школе писцов надолго" }
+    { key: "#school_access_medium", text: "У этого дома есть доступ к школе писцов" }
+    { key: "#school_access_low", text: "Если учёный не пройдёт мимо скоро, этот дом потеряет доступ к школе писцов" }
+
     // library overlay
     { key: "#library_access_none", text: "У этого дома нет доступа к библиотеке" }
     { key: "#library_access_high", text: "Мимо этого дома недавно проходил библиотекарь. У него будет доступ к библиотеке надолго" }

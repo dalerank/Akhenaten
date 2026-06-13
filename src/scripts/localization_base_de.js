@@ -2849,10 +2849,6 @@ localization_base_de = [
     { group:66, id:16, text: "Dieses Haus hat Zugang zu Tempeln von 4 verschiedenen Göttern" }
     { group:66, id:17, text: "Dieses Haus hat Zugang zu Tempeln aller Götter" }
     { group:66, id:18, text: "Dieses Haus hat Zugang zu einem Schrein und Tempeln aller Götter" }
-    { group:66, id:19, text: "Dieses Haus hat keinen Zugang zu einer Schreibschule" }
-    { group:66, id:20, text: "Dieses Haus wurde kürzlich von einem Gelehrten besucht. Es wird für lange Zeit Zugang zur Schreibschule haben" }
-    { group:66, id:21, text: "Dieses Haus hat Zugang zur Schreibschule" }
-    { group:66, id:22, text: "Wenn nicht bald ein Gelehrter vorbeikommt, wird dieses Haus den Zugang zur Schreibschule verlieren" }
     { group:66, id:46, text: "Dieses Gebäude hat keine Brandgefahr" }
     { group:66, id:47, text: "Dieses Gebäude hat eine vernachlässigbare Brandgefahr" }
     { group:66, id:48, text: "Dieses Gebäude hat etwas Brandgefahr" }

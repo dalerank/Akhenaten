@@ -2844,10 +2844,6 @@ localization_base_en = [
     { group:66, id:16, text: "This house has access to Temples to 4 different gods" }
     { group:66, id:17, text: "This house has access to Temples to all the gods" }
     { group:66, id:18, text: "This house has access to a Shrine, and Temples to all the gods" }
-    { group:66, id:19, text: "This house has no access to a Scribal School" }
-    { group:66, id:20, text: "This house was recently passed by a scholar. It will have Scribal School access for a long time" }
-    { group:66, id:21, text: "This house has Scribal School access" }
-    { group:66, id:22, text: "Unless a scholar passes by soon, this house will lose Scribal School access" }
     { group:66, id:46, text: "This building has no likelihood of catching fire" }
     { group:66, id:47, text: "This building is a negligible fire risk" }
     { group:66, id:48, text: "This building has some risk of fire" }

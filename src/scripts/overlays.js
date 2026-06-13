@@ -12,6 +12,7 @@ import overlays.damage
 import overlays.education
 import overlays.academy
 import overlays.library
+import overlays.scribal_school
 
 overlays = [
   {
@@ -241,15 +242,6 @@ overlays = [
     title: "#overlay_physician"
     walkers:[FIGURE_PHYSICIAN]
     buildings:[BUILDING_PHYSICIAN, BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_WATER_ACCESS
-    column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_SCRIBAL_SCHOOL
-    title: "#overlay_scribal_school"
-    walkers:[FIGURE_TEACHER]
-    buildings:[BUILDING_SCRIBAL_SCHOOL, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
   }

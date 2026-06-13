@@ -1253,6 +1253,12 @@ localization_de = [
   { key: "#education_access_school_and_library", text: "Dieses Haus hat Zugang zu sowohl einer Schreibschule als auch einer Bibliothek" }
   { key: "#education_access_academy_district", text: "Dieses Haus hat Zugang zu Schreibschule und Bibliothek. Seine Kinder sind auch in einem Akademiebezirk" }
 
+  // scribal school overlay
+  { key: "#school_access_none", text: "Dieses Haus hat keinen Zugang zu einer Schreibschule" }
+  { key: "#school_access_high", text: "Dieses Haus wurde kürzlich von einem Gelehrten besucht. Es wird für lange Zeit Zugang zur Schreibschule haben" }
+  { key: "#school_access_medium", text: "Dieses Haus hat Zugang zur Schreibschule" }
+  { key: "#school_access_low", text: "Wenn nicht bald ein Gelehrter vorbeikommt, wird dieses Haus den Zugang zur Schreibschule verlieren" }
+
   // library overlay
   { key: "#library_access_none", text: "Dieses Haus hat keinen Zugang zu einer Bibliothek" }
   { key: "#library_access_high", text: "Dieses Haus wurde kürzlich von einem Bibliothekar besucht. Es wird für lange Zeit Bibliothekszugang haben" }

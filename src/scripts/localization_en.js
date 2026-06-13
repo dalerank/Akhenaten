@@ -1302,6 +1302,12 @@ localization_en = [
   { key: "#education_access_school_and_library", text: "This house has access to both a Scribal School and a Library" }
   { key: "#education_access_academy_district", text: "This house has Scribal School and Library access. Its children are also in an Academy district" }
 
+  // scribal school overlay
+  { key: "#school_access_none", text: "This house has no access to a Scribal School" }
+  { key: "#school_access_high", text: "This house was recently passed by a scholar. It will have Scribal School access for a long time" }
+  { key: "#school_access_medium", text: "This house has Scribal School access" }
+  { key: "#school_access_low", text: "Unless a scholar passes by soon, this house will lose Scribal School access" }
+
   // library overlay
   { key: "#library_access_none", text: "This house has no access to a Library" }
   { key: "#library_access_high", text: "This house was recently passed by a librarian. It will have Library access for a long time" }
