@@ -1296,11 +1296,26 @@ localization_en = [
   { key: "#dentist_access_medium", text: "This house has Dentist access" }
   { key: "#dentist_access_low", text: "Unless a dentist walks by soon, this house will lose Dentist office access" }
 
+  // physician overlay
+  { key: "#physician_access_none", text: "No Physician access." }
+  { key: "#physician_access_low", text: "This house hasn't been passed by a physician in a while." }
+  { key: "#physician_access_medium", text: "This house has had a physician pass by." }
+  { key: "#physician_access_high", text: "This house has recently had a physician pass by." }
+
   // education overlay
   { key: "#education_access_none", text: "This house has no access to any Scribal Schools or Libraries" }
   { key: "#education_access_school_or_library", text: "This house has access to a Scribal School or to a Library" }
   { key: "#education_access_school_and_library", text: "This house has access to both a Scribal School and a Library" }
   { key: "#education_access_academy_district", text: "This house has Scribal School and Library access. Its children are also in an Academy district" }
+
+  // religion overlay
+  { key: "#religion_access_none", text: "This house has no access to any Temples or Shrines" }
+  { key: "#religion_access_one", text: "This house has access to a Temple to a single god only" }
+  { key: "#religion_access_two", text: "This house has access to Temples to 2 different gods" }
+  { key: "#religion_access_three", text: "This house has access to Temples to 3 different gods" }
+  { key: "#religion_access_four", text: "This house has access to Temples to 4 different gods" }
+  { key: "#religion_access_all", text: "This house has access to Temples to all the gods" }
+  { key: "#religion_access_shrine_and_all", text: "This house has access to a Shrine, and Temples to all the gods" }
 
   // scribal school overlay
   { key: "#school_access_none", text: "This house has no access to a Scribal School" }

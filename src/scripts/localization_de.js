@@ -1247,11 +1247,26 @@ localization_de = [
   { key: "#dentist_access_medium", text: "Dieses Haus hat Zahnarztzugang" }
   { key: "#dentist_access_low", text: "Wenn nicht bald ein Zahnarzt vorbeikommt, wird dieses Haus den Zugang zur Zahnarztpraxis verlieren" }
 
+  // physician overlay
+  { key: "#physician_access_none", text: "Kein Arztzugang." }
+  { key: "#physician_access_low", text: "Dieses Haus wurde eine Weile nicht von einem Arzt besucht." }
+  { key: "#physician_access_medium", text: "Dieses Haus wurde von einem Arzt besucht." }
+  { key: "#physician_access_high", text: "Dieses Haus wurde kürzlich von einem Arzt besucht." }
+
   // education overlay
   { key: "#education_access_none", text: "Dieses Haus hat keinen Zugang zu Schreibschulen oder Bibliotheken" }
   { key: "#education_access_school_or_library", text: "Dieses Haus hat Zugang zu einer Schreibschule oder zu einer Bibliothek" }
   { key: "#education_access_school_and_library", text: "Dieses Haus hat Zugang zu sowohl einer Schreibschule als auch einer Bibliothek" }
   { key: "#education_access_academy_district", text: "Dieses Haus hat Zugang zu Schreibschule und Bibliothek. Seine Kinder sind auch in einem Akademiebezirk" }
+
+  // religion overlay
+  { key: "#religion_access_none", text: "Dieses Haus hat keinen Zugang zu Tempeln oder Schreinen" }
+  { key: "#religion_access_one", text: "Dieses Haus hat Zugang zu einem Tempel nur eines einzigen Gottes" }
+  { key: "#religion_access_two", text: "Dieses Haus hat Zugang zu Tempeln von 2 verschiedenen Göttern" }
+  { key: "#religion_access_three", text: "Dieses Haus hat Zugang zu Tempeln von 3 verschiedenen Göttern" }
+  { key: "#religion_access_four", text: "Dieses Haus hat Zugang zu Tempeln von 4 verschiedenen Göttern" }
+  { key: "#religion_access_all", text: "Dieses Haus hat Zugang zu Tempeln aller Götter" }
+  { key: "#religion_access_shrine_and_all", text: "Dieses Haus hat Zugang zu einem Schrein und Tempeln aller Götter" }
 
   // scribal school overlay
   { key: "#school_access_none", text: "Dieses Haus hat keinen Zugang zu einer Schreibschule" }

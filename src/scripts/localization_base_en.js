@@ -2892,10 +2892,6 @@ localization_base_en = [
     { group:66, id:124, text: " flasks of beer are stored in this building." }
     { group:66, id:125, text: " flask of beer is stored in this building." }
     { group:66, id:126, text: "This building does not store goods." }
-    { group:66, id:132, text: "No Physician access." }
-    { group:66, id:133, text: "This house hasn't been passed by a physician in a while." }
-    { group:66, id:134, text: "This house has had a physician pass by." }
-    { group:66, id:135, text: "This house has recently had a physician pass by." }
     { group:66, id:136, text: "This building has no likelihood of malaria." }
     { group:66, id:137, text: "This building is a negligible malaria risk." }
     { group:66, id:138, text: "This building has some risk of malaria." }

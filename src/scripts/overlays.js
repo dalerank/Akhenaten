@@ -13,39 +13,10 @@ import overlays.education
 import overlays.academy
 import overlays.library
 import overlays.scribal_school
+import overlays.physician
+import overlays.religion
 
 overlays = [
-  {
-  	id:OVERLAY_RELIGION_OSIRIS
-  	title: "#overlay_osiris"
-  	walkers:[FIGURE_PRIEST]
-  	buildings:[BUILDING_TEMPLE_OSIRIS, BUILDING_TEMPLE_COMPLEX_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_ROADBLOCK]
-  	tooltip_base:0
-  	tooltips:[]
-    column_type: COLUMN_TYPE_WATER_ACCESS
-    column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-  	id:OVERLAY_RELIGION_RA
-  	title: "#overlay_ra"
-  	walkers:[FIGURE_PRIEST]
-  	buildings:[BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_SHRINE_RA, BUILDING_ROADBLOCK]
-  	tooltip_base:0
-  	tooltips:[]
-    column_type: COLUMN_TYPE_WATER_ACCESS
-    column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_RELIGION_SETH
-    title: "#overlay_seth"
-    walkers:[FIGURE_PRIEST]
-    buildings:[BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_SHRINE_SETH, BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_WATER_ACCESS
-    column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
   {
     id:OVERLAY_NATIVE
     title: "#overlay_native"
@@ -56,40 +27,10 @@ overlays = [
   }
 
   {
-    id:OVERLAY_RELIGION_PTAH
-    title: "#overlay_ptah"
-    walkers:[FIGURE_PRIEST]
-    buildings:[BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_SHRINE_PTAH, BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_WATER_ACCESS
-    column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_RELIGION_BAST
-    title: "#overlay_bast"
-    walkers:[FIGURE_PRIEST]
-    buildings:[BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST, BUILDING_SHRINE_BAST, BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_WATER_ACCESS
-    column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
     id:OVERLAY_WATER
     title: "#overlay_menu_water"
     walkers:[FIGURE_WATER_CARRIER]
     buildings:[BUILDING_WELL, BUILDING_MENU_BEAUTIFICATION, BUILDING_WATER_LIFT, BUILDING_WATER_SUPPLY, BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_WATER_ACCESS
-    column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_RELIGION
-    title: "#overlay_menu_religion"
-    walkers:[FIGURE_PRIEST]
-    buildings:[ BUILDING_FESTIVAL_SQUARE,
-                BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_SHRINE_RA,
-                BUILDING_TEMPLE_OSIRIS, BUILDING_TEMPLE_COMPLEX_OSIRIS, BUILDING_SHRINE_OSIRIS,
-                BUILDING_ROADBLOCK ]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
   }
@@ -233,15 +174,6 @@ overlays = [
     title: "#overlay_pavilion"
     walkers:[]
     buildings:[BUILDING_CONSERVATORY, BUILDING_DANCE_SCHOOL, BUILDING_PAVILLION, BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_WATER_ACCESS
-    column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_PHYSICIAN
-    title: "#overlay_physician"
-    walkers:[FIGURE_PHYSICIAN]
-    buildings:[BUILDING_PHYSICIAN, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
   }

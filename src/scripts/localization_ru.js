@@ -522,11 +522,26 @@ localization_ru = [
     { key: "#dentist_access_medium", text: "У этого дома есть доступ к дантисту" }
     { key: "#dentist_access_low", text: "Если дантист не пройдёт мимо скоро, этот дом потеряет доступ к кабинету дантиста" }
 
+    // physician overlay
+    { key: "#physician_access_none", text: "Нет доступа к врачу." }
+    { key: "#physician_access_low", text: "Мимо этого дома давно не проходил врач." }
+    { key: "#physician_access_medium", text: "Мимо этого дома проходил врач." }
+    { key: "#physician_access_high", text: "Мимо этого дома недавно проходил врач." }
+
     // education overlay
     { key: "#education_access_none", text: "У этого дома нет доступа ни к школам писцов, ни к библиотекам" }
     { key: "#education_access_school_or_library", text: "У этого дома есть доступ к школе писцов или к библиотеке" }
     { key: "#education_access_school_and_library", text: "У этого дома есть доступ и к школе писцов, и к библиотеке" }
     { key: "#education_access_academy_district", text: "У этого дома есть доступ к школе писцов и библиотеке. Его дети также находятся в районе академии" }
+
+    // religion overlay
+    { key: "#religion_access_none", text: "У этого дома нет доступа ни к каким храмам или святилищам" }
+    { key: "#religion_access_one", text: "У этого дома есть доступ к храму только одного бога" }
+    { key: "#religion_access_two", text: "У этого дома есть доступ к храмам 2 разных богов" }
+    { key: "#religion_access_three", text: "У этого дома есть доступ к храмам 3 разных богов" }
+    { key: "#religion_access_four", text: "У этого дома есть доступ к храмам 4 разных богов" }
+    { key: "#religion_access_all", text: "У этого дома есть доступ к храмам всех богов" }
+    { key: "#religion_access_shrine_and_all", text: "У этого дома есть доступ к святилищу и храмам всех богов" }
 
     // scribal school overlay
     { key: "#school_access_none", text: "У этого дома нет доступа к школе писцов" }

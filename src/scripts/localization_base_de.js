@@ -2897,10 +2897,6 @@ localization_base_de = [
     { group:66, id:124, text: " Krüge Bier sind in diesem Gebäude gelagert." }
     { group:66, id:125, text: " Krug Bier ist in diesem Gebäude gelagert." }
     { group:66, id:126, text: "Dieses Gebäude lagert keine Waren." }
-    { group:66, id:132, text: "Kein Arztzugang." }
-    { group:66, id:133, text: "Dieses Haus wurde eine Weile nicht von einem Arzt besucht." }
-    { group:66, id:134, text: "Dieses Haus wurde von einem Arzt besucht." }
-    { group:66, id:135, text: "Dieses Haus wurde kürzlich von einem Arzt besucht." }
     { group:66, id:136, text: "Dieses Gebäude hat keine Malariagefahr." }
     { group:66, id:137, text: "Dieses Gebäude hat eine vernachlässigbare Malariagefahr." }
     { group:66, id:138, text: "Dieses Gebäude hat etwas Malariagefahr." }
