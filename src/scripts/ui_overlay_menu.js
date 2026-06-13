@@ -119,21 +119,8 @@ overlay_menu {
 	]
 }
 
-function overlay_menu_overlay_config(overlay_id) {
-	for (var i = 0; i < overlays.length; i++) {
-		if (overlays[i].id === overlay_id) {
-			return overlays[i]
-		}
-	}
-	return null
-}
-
 function overlay_menu_overlay_title(overlay_id) {
-	var cfg = overlay_menu_overlay_config(overlay_id)
-	if (!cfg || !cfg.title) {
-		return "unknown"
-	}
-	return __loc(cfg.title)
+	return __city_get_overlay_title(overlay_id)
 }
 
 function overlay_menu_point_in_rect(mx, my, x, y, w, h) {

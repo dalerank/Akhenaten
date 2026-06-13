@@ -17,6 +17,7 @@
 #include "scenario/request.h"
 
 #include "city/city_population.h"
+#include "overlays/city_overlay.h"
 
 void __city_ratings_set_monument(int new_value) { g_city.ratings.monument = new_value; }
 ANK_FUNCTION_1(__city_ratings_set_monument)
@@ -29,6 +30,14 @@ ANK_FUNCTION(__city_get_current_overlay)
 
 void __city_set_current_overlay(int overlay) { g_city.set_overlay((e_overlay)overlay); }
 ANK_FUNCTION_1(__city_set_current_overlay)
+
+pcstr __city_get_overlay_title(int overlay) {
+    static xstring storage;
+    const city_overlay *o = city_overlay::get((e_overlay)overlay);
+    storage = o ? o->title() : xstring("unknown");
+    return storage.c_str();
+}
+ANK_FUNCTION_1(__city_get_overlay_title)
 
 int __city_population() { return g_city.population.current; }
 ANK_FUNCTION(__city_population)
