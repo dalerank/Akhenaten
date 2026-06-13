@@ -1,68 +1,32 @@
-log_info("akhenaten: building statue started")
+log_info("akhenaten: building statue common started")
 
-building_small_statue = {
-    variants : [
-      {pack: PACK_GENERAL, id: 61, offset:0}
-      {pack: PACK_GENERAL, id: 61, offset:4}
-      {pack: PACK_EXPANSION, id: 37, offset:0}
-      {pack: PACK_EXPANSION, id: 37, offset:4}
-      {pack: PACK_TEMPLE_RA, id: 1, offset:27}
-    ]
-    meta : {
-      help_id:79
-      text_id:80
+function statue_get_image(variants, orientation, variant) {
+    var size = variants.length
+    if (!size) {
+        return 0
     }
-    info_sound : "Wavs/statue1.wav"
-    building_size : 1
-    cost : [ 3, 5, 8, 13, 21 ]
-    desirability : { value:[3], step:[1], step_size:[-1], range: [3] }
-    flags {
-      is_statue: true
-      is_beautification: true
-      allow_rotate: true
-    }
-  }
 
-  building_medium_statue = {
-    variants : [
-      {pack: PACK_GENERAL, id: 8, offset:1},
-      {pack: PACK_GENERAL, id: 8, offset:5},
-      {pack: PACK_EXPANSION, id: 36, offset:1},
-      {pack: PACK_EXPANSION, id: 36, offset:5},
-    ]
-    meta : {
-      help_id:79
-      text_id:80
-    }
-    info_sound : "Wavs/statue1.wav"
-    building_size : 2
-    cost : [ 12, 18, 24, 30, 50 ]
-    desirability : { value:[10], step:[1], step_size:[-2], range: [4] }
-    flags {
-      is_statue: true
-      is_beautification: true
-      allow_rotate: true
-    }
-  }
+    while (orientation < 0) { orientation += 4 }
+    while (orientation > 3) { orientation -= 4 }
 
-  building_large_statue = {
-    variants : [
-      {pack: PACK_GENERAL, id: 7, offset:1},
-      {pack: PACK_GENERAL, id: 7, offset:5},
-      {pack: PACK_EXPANSION, id: 35, offset:1},
-      {pack: PACK_EXPANSION, id: 35, offset:5},
-    ]
-    meta : {
-      help_id:79
-      text_id:80
+    while (variant < 0) { variant += 4 }
+    while (variant > (size - 1)) { variant -= size }
+    variant = variant % size
+
+    var desc = variants[variant]
+    var img = get_image({ pack: desc.pack, id: desc.id, offset: desc.offset + orientation })
+    return img ? img.tid : 0
+}
+
+function statue_next_building_variant(ev, variants) {
+    var size = variants.length
+    if (ev.variant < 0) {
+        city_planner.custom_building_variant = 0
+        return
     }
-    info_sound : "Wavs/statue1.wav"
-    building_size : 3
-    cost : [ 30, 45, 60, 90, 150 ]
-    desirability : { value:[14], step:[2], step_size:[-2], range: [5] }
-    flags {
-      is_statue: true
-      is_beautification: true
-      allow_rotate: true
+    if (!size) {
+        city_planner.custom_building_variant = ev.variant
+        return
     }
-  }
+    city_planner.custom_building_variant = (ev.variant + 1) % size
+}

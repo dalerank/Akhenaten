@@ -71,46 +71,6 @@ int building_statue::get_image(e_building_type type, int orientation, int varian
     return (imdesc + orientation).tid();
 }
 
-void building_statue::preview::setup_preview_graphics(build_planner &planer) const {
-    const auto &params = building_static_params::get(planer.build_type);
-    int statue_img = get_image(planer.build_type, planer.relative_orientation, planer.building_variant);
-    planer.set_tiles_building(statue_img, params.building_size);
-}
-
-int building_statue::preview::setup_building_variant(e_building_type type, tile2i tile, int variant) const {
-    const auto &params = building_static_params::get(type);
-    verify_no_crash(params.flags.is_statue);
-
-    const auto &statue_params = get_statue_params(type);
-    int size = statue_params.variants.size();
-
-    return rand() % size;
-}
-
-int building_statue::preview::next_building_variant(e_building_type type, tile2i tile, int variant) const {
-    if (variant < 0) {
-        return 0;
-    }
-
-    const auto &statue_params = get_statue_params(type);
-    int size = statue_params.variants.size();
-    if (!size) {
-        return variant;
-    }
-
-    variant = (variant + 1) % size;
-    return variant;
-}
-
-int building_statue::preview::update_relative_orientation(build_planner &p, tile2i tile, int global_rotation) const {
-    (void)global_rotation;
-    return (p.global_rotation + 1) % 4;
-}
-
-int building_statue::preview::update_building_variant(build_planner &planer) const {
-    return planer.custom_building_variant;
-}
-
 void building_statue::on_create(int o) {
     int orientation = (4 + building_rotation_global_rotation() + g_camera.orientation / 2) % 4;
 

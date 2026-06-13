@@ -15,9 +15,9 @@ struct building_planer_renderer {
     virtual int setup_orientation(int orientation) const { return orientation; }
     virtual void setup_build(build_planner &planer) const {}
     virtual void setup_preview_graphics(build_planner &planer) const;
-    virtual int setup_building_variant(e_building_type type, tile2i tile, int variant) const { return variant; }
-    virtual int next_building_variant(e_building_type type, tile2i tile, int variant) const { return (variant + 1) % 4; }
-    virtual int update_relative_orientation(build_planner &p, tile2i tile, int global_orientation) const { return global_orientation; }
+    virtual int setup_building_variant(e_building_type type, tile2i tile, int variant) const;
+    virtual int next_building_variant(e_building_type type, tile2i tile, int variant) const;
+    virtual int update_relative_orientation(build_planner &p, tile2i tile, int global_orientation) const;
     virtual int update_building_variant(build_planner &p) const;
     virtual int construction_update(build_planner &p, tile2i start, tile2i end) const;
     virtual int construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const;

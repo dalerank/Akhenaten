@@ -11,15 +11,6 @@ public:
         svector<image_desc, 8> variants;
     };
 
-    struct preview : public building_planer_renderer {
-        virtual int setup_orientation(int orientation) const override { return 1; }
-        virtual void setup_preview_graphics(build_planner &planer) const override;
-        virtual int setup_building_variant(e_building_type type, tile2i tile, int variant) const override;
-        virtual int next_building_variant(e_building_type type, tile2i tile, int variant) const override;
-        virtual int update_relative_orientation(build_planner &p, tile2i tile, int global_orientation) const override;
-        virtual int update_building_variant(build_planner &planer) const override;
-    };
-
     struct runtime_data_t {
         uint8_t variant;
         uint8_t statue_offset;

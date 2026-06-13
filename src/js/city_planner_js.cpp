@@ -23,6 +23,7 @@ ANK_GLOBAL_OBJECT(g_city_planner, __city_planner,
     absolute_orientation,
     relative_orientation,
     building_variant,
+    custom_building_variant,
     start,
     end,
     total_cost,
@@ -69,6 +70,11 @@ void __city_planner_next_building_variant() {
     g_city_planner.next_building_variant();
 }
 ANK_FUNCTION(__city_planner_next_building_variant);
+
+void __city_planner_set_tiles_building(int image_id, int size) {
+    g_city_planner.set_tiles_building(image_id, size);
+}
+ANK_FUNCTION_2(__city_planner_set_tiles_building);
 
 int __city_planner_last_created_building_id() {
     building *b = g_city_planner.last_created_building;

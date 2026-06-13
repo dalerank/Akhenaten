@@ -23,6 +23,14 @@ struct construction_update_ev {
 };
 ANK_REGISTER_STRUCT_WRITER(construction_update_ev, start_x, start_y, end_x, end_y)
 
+struct building_variant_ev {
+    int type;
+    tile2i tile;
+    int variant;
+    int global_orientation;
+};
+ANK_REGISTER_STRUCT_WRITER(building_variant_ev, type, tile, variant, global_orientation)
+
 static std::array<const building_planer_renderer *, BUILDING_MAX> *building_planer_rends = nullptr;
 
 bool building_planer_renderer::is_need_flag(build_planner &planer, e_building_need_rules flag) const {
@@ -113,6 +121,9 @@ int building_planer_renderer::construction_place(build_planner &planer, tile2i s
 }
 
 int building_planer_renderer::update_building_variant(build_planner &planer) const {
+    const auto &params = building_static_params::get(planer.build_type);
+
+    es_t(building_variant_ev{ planer.build_type, planer.end, planer.custom_building_variant, planer.relative_orientation }, params.name, __func__);
     return planer.building_variant;
 }
 
@@ -145,12 +156,39 @@ int building_planer_renderer::construction_update(build_planner &planer, tile2i 
 
 void building_planer_renderer::setup_preview_graphics(build_planner &planer) const {
     const auto &params = building_static_params::get(planer.build_type);
+
     int img_id = params.base_img();
     if (!img_id) {
         img_id = params.first_img(animkeys().preview);
     }
     img_id += params.planner_update_rule.relative_orientation * planer.relative_orientation;
     planer.set_tiles_building(img_id, params.building_size);
+
+    es_t(ghost_preview_ev{ planer.start, planer.end, g_camera.lookup_tile_to_pixel(planer.end), planer.in_progress }, params.name, __func__);
+}
+
+int building_planer_renderer::setup_building_variant(e_building_type type, tile2i tile, int variant) const {
+    const auto &params = building_static_params::get(type);
+
+    g_city_planner.custom_building_variant = variant;
+    es_t(building_variant_ev{ type, tile, variant, g_city_planner.relative_orientation }, params.name, __func__);
+    return g_city_planner.custom_building_variant;
+}
+
+int building_planer_renderer::next_building_variant(e_building_type type, tile2i tile, int variant) const {
+    const auto &params = building_static_params::get(type);
+
+    g_city_planner.custom_building_variant = (variant + 1) % 4;
+    es_t(building_variant_ev{ type, tile, variant, g_city_planner.relative_orientation }, params.name, __func__);
+    return g_city_planner.custom_building_variant;
+}
+
+int building_planer_renderer::update_relative_orientation(build_planner &planer, tile2i tile, int global_orientation) const {
+    const auto &params = building_static_params::get(planer.build_type);
+
+    planer.relative_orientation = global_orientation;
+    es_t(building_variant_ev{ planer.build_type, tile, planer.custom_building_variant, global_orientation }, params.name, __func__);
+    return planer.relative_orientation;
 }
 
 const building_planer_renderer &building_planer_renderer::get(e_building_type e) {

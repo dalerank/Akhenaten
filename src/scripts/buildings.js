@@ -18,6 +18,9 @@ import building.palace
 import building.temple
 import building.shrine
 import building.statue
+import building.statue_small
+import building.statue_medium
+import building.statue_large
 import building.mansion
 import building.workshop
 import building.temple_complex
