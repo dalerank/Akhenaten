@@ -152,6 +152,13 @@ void __city_overlay_set_show_figure(int show) {
 }
 ANK_FUNCTION_1(__city_overlay_set_show_figure)
 
+void __city_overlay_set_show_building(int show) {
+    if (const city_overlay *overlay = g_city.overlay()) {
+        const_cast<city_overlay *>(overlay)->current_show_building = (show != 0);
+    }
+}
+ANK_FUNCTION_1(__city_overlay_set_show_building)
+
 int city_overlay::get_column_height(const building *b) const {
     if (es_name.empty() || !b) {
         return COLUMN_TYPE_NONE;
@@ -392,7 +399,16 @@ bool city_overlay::show_building(const building *b) const {
         return true;
     }
 
-    return std::find(buildings.begin(), buildings.end(), b->type) != buildings.end();
+    const bool default_show = std::find(buildings.begin(), buildings.end(), b->type) != buildings.end();
+    if (es_name.empty() || !b) {
+        return default_show;
+    }
+
+    auto *self = const_cast<city_overlay *>(this);
+    self->current_show_building = default_show;
+
+    js_event(overlay_tooltip_ev{ b->id, b->tile, {} }, es_name, __func__);
+    return self->current_show_building;
 }
 
 color city_overlay::color_mask_building_def(const building *b) const {

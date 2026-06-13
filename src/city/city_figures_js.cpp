@@ -26,6 +26,9 @@ ANK_FUNCTION_1(__figure_get_action_state)
 int __figure_get_destination_building_id(int fid) { return figure_get(fid)->destination_building_id; }
 ANK_FUNCTION_1(__figure_get_destination_building_id)
 
+int __figure_get_home_building_id(int fid) { return figure_get(fid)->homeID(); }
+ANK_FUNCTION_1(__figure_get_home_building_id)
+
 int __figure_get_state(int fid) {
     if (!fid) {
         return 0;

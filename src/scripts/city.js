@@ -181,6 +181,7 @@ city {
     @overlay_column_height: { set: __city_overlay_set_column_height }
     @overlay_column_color: { set: __city_overlay_set_column_color }
     @overlay_show_figure: { set: __city_overlay_set_show_figure }
+    @overlay_show_building: { set: __city_overlay_set_show_building }
 
     goal_tooltip: function() { return "" }
     set_victory_reason : city_set_victory_reason
@@ -441,6 +442,7 @@ city.get_figure = function(figure_id) {
         @resource { get: function() { return __figure_get_resource(this.id) } }
         @destination_id { get: function() { return __figure_get_destination_building_id(this.id) } }
         @destination { get: function() { return city.get_building(__figure_get_destination_building_id(this.id)) } }
+        @home { get: function() { return city.get_building(__figure_get_home_building_id(this.id)) } }
     }
 }
 
