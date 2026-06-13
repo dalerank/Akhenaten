@@ -36,6 +36,7 @@ struct city_overlay {
     xstring current_tooltip;
     int current_column_height = COLUMN_TYPE_NONE;
     int current_column_color = COLUMN_COLOR_NONE;
+    bool current_show_figure = false;
 
     svector<e_figure_type, 10> walkers;
     svector<e_building_type, 10> buildings;

@@ -1284,6 +1284,12 @@ localization_en = [
   { key: "#senet_access_medium", text: "This house has Senet House access" }
   { key: "#senet_access_low", text: "This house has not been passed by a senet master for a while. It will soon lose Senet House access" }
 
+  // pavilion overlay
+  { key: "#pavilion_access_none", text: "This house has no access to a dance stage" }
+  { key: "#pavilion_access_high", text: "This house was recently passed by a dancer. It will have dance stage access for a long time" }
+  { key: "#pavilion_access_medium", text: "This house has dance stage access" }
+  { key: "#pavilion_access_low", text: "This house has not been passed by a dancer for a while. It will soon lose dance access" }
+
   // mortuary overlay
   { key: "#mortuary_access_none", text: "This house has no access to a Mortuary" }
   { key: "#mortuary_access_high", text: "This house was recently passed by a embalmer. It will have Mortuary access for a long time" }

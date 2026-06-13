@@ -180,6 +180,7 @@ city {
     @overlay_tooltip: { set: __city_overlay_set_tooltip }
     @overlay_column_height: { set: __city_overlay_set_column_height }
     @overlay_column_color: { set: __city_overlay_set_column_color }
+    @overlay_show_figure: { set: __city_overlay_set_show_figure }
 
     goal_tooltip: function() { return "" }
     set_victory_reason : city_set_victory_reason

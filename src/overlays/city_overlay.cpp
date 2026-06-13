@@ -28,6 +28,11 @@ struct overlay_tooltip_ev {
 };
 ANK_REGISTER_STRUCT_WRITER(overlay_tooltip_ev, bid, tile, mpos)
 
+struct overlay_figure_ev {
+    figure_id fid;
+};
+ANK_REGISTER_STRUCT_WRITER(overlay_figure_ev, fid)
+
 const e_overlay_tokens_t ANK_CONFIG_ENUM(e_overlay_tokens);
 const e_column_type_tokens_t ANK_CONFIG_ENUM(e_column_type_tokens);
 
@@ -139,6 +144,13 @@ void __city_overlay_set_column_color(int color) {
     }
 }
 ANK_FUNCTION_1(__city_overlay_set_column_color)
+
+void __city_overlay_set_show_figure(int show) {
+    if (const city_overlay *overlay = g_city.overlay()) {
+        const_cast<city_overlay *>(overlay)->current_show_figure = (show != 0);
+    }
+}
+ANK_FUNCTION_1(__city_overlay_set_show_figure)
 
 int city_overlay::get_column_height(const building *b) const {
     if (es_name.empty() || !b) {
@@ -318,7 +330,16 @@ city_overlay::city_overlay(e_overlay t) : id(t) {
 }
 
 bool city_overlay::show_figure(const figure *f) const {
-    return std::find(walkers.begin(), walkers.end(), f->type) != walkers.end();
+    const bool default_show = std::find(walkers.begin(), walkers.end(), f->type) != walkers.end();
+    if (es_name.empty()) {
+        return default_show;
+    }
+
+    auto *self = const_cast<city_overlay *>(this);
+    self->current_show_figure = default_show;
+
+    js_event(overlay_figure_ev{ f->id }, es_name, __func__);
+    return self->current_show_figure;
 }
 
 void city_overlay::get_tooltip_for_building(tooltip_context* c, const building* b, xstring& tooltip) {

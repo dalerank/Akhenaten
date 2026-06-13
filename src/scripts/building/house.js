@@ -31,6 +31,7 @@ House.property.physician = { }
 House.property.booth_juggler = { }
 House.property.senet_player = { }
 House.property.bandstand_juggler = { }
+House.property.pavillion_dancer = { }
 House.property.worst_desirability_building_id = { }
 House.property.fancy_bazaar_access = { }
 House.property.no_space_to_expand = { }

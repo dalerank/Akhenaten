@@ -1235,6 +1235,12 @@ localization_de = [
   { key: "#senet_access_medium", text: "Dieses Haus hat Senet-Haus-Zugang" }
   { key: "#senet_access_low", text: "Dieses Haus wurde eine Weile nicht von einem Senet-Meister besucht. Es wird bald den Senet-Haus-Zugang verlieren" }
 
+  // pavilion overlay
+  { key: "#pavilion_access_none", text: "Dieses Haus hat keinen Zugang zu einer Tanzbühne" }
+  { key: "#pavilion_access_high", text: "Dieses Haus wurde kürzlich von einem Tänzer besucht. Es wird für lange Zeit Tanzbühnenzugang haben" }
+  { key: "#pavilion_access_medium", text: "Dieses Haus hat Tanzbühnenzugang" }
+  { key: "#pavilion_access_low", text: "Dieses Haus wurde eine Weile nicht von einem Tänzer besucht. Es wird bald den Tanzzugang verlieren" }
+
   // mortuary overlay
   { key: "#mortuary_access_none", text: "Dieses Haus hat keinen Zugang zu einer Leichenhalle" }
   { key: "#mortuary_access_high", text: "Dieses Haus wurde kürzlich von einem Einbalsamierer besucht. Es wird für lange Zeit Leichenhallenzugang haben" }

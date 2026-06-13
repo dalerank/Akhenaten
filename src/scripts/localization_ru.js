@@ -510,6 +510,12 @@ localization_ru = [
     { key: "#senet_access_medium", text: "У этого дома есть доступ к дому сенета" }
     { key: "#senet_access_low", text: "Мимо этого дома давно не проходил мастер сенета. Он скоро потеряет доступ к дому сенета" }
 
+    // pavilion overlay
+    { key: "#pavilion_access_none", text: "У этого дома нет доступа к танцевальной сцене" }
+    { key: "#pavilion_access_high", text: "Мимо этого дома недавно проходил танцор. У него будет доступ к танцевальной сцене надолго" }
+    { key: "#pavilion_access_medium", text: "У этого дома есть доступ к танцевальной сцене" }
+    { key: "#pavilion_access_low", text: "Мимо этого дома давно не проходил танцор. Он скоро потеряет доступ к танцам" }
+
     // mortuary overlay
     { key: "#mortuary_access_none", text: "У этого дома нет доступа к моргу" }
     { key: "#mortuary_access_high", text: "Мимо этого дома недавно проходил бальзамировщик. У него будет доступ к моргу надолго" }

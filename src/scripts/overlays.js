@@ -15,6 +15,7 @@ import overlays.library
 import overlays.scribal_school
 import overlays.physician
 import overlays.religion
+import overlays.pavilion
 
 overlays = [
   {
@@ -167,15 +168,6 @@ overlays = [
       medium { values:[ "#food_stocks_medium" ] }
       high { values:[ "#food_stocks_high" ] }
     }
-  }
-
-  {
-    id:OVERLAY_PAVILION
-    title: "#overlay_pavilion"
-    walkers:[]
-    buildings:[BUILDING_CONSERVATORY, BUILDING_DANCE_SCHOOL, BUILDING_PAVILLION, BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_WATER_ACCESS
-    column_anim: {pack:PACK_GENERAL, id:103}
   }
 
   {
