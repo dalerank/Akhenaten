@@ -305,6 +305,15 @@ void __building_add_structure_damage(js_State* J) {
     js_helpers::js_push_void(J);
 }
 
+void __building_destroy_by_fire(js_State *J) {
+    const int bid = building_this_id(J);
+    building *b = building_get(bid);
+    if (b->is_valid()) {
+        b->main()->destroy_by_fire();
+    }
+    js_helpers::js_push_void(J);
+}
+
 tile2i __building_tile(int bid) {
     building* b = building_get(bid);
     return b->tile;
@@ -401,6 +410,7 @@ void js_register_building(js_State *J) {
     jsB_propf(J, js_intern("Building.prototype.add_structure_damage"), __building_add_structure_damage, 1);
     jsB_propf(J, js_intern("Building.prototype.add_fire_damage"), __building_add_fire_damage, 1);
     jsB_propf(J, js_intern("Building.prototype.add_collapse_damage"), __building_add_collapse_damage, 1);
+    jsB_propf(J, js_intern("Building.prototype.destroy_by_fire"), __building_destroy_by_fire, 0);
     jsB_propf(J, js_intern("Building.prototype.stored_resource"), __building_stored_resource, 1);
     jsB_propf(J, js_intern("Building.prototype.set_animation"), __building_set_animation, 1);
     jsB_propf(J, js_intern("Building.prototype.common_spawn_roamer"), __building_common_spawn_roamer, 3);

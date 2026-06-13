@@ -44,6 +44,27 @@ function console_command_damage_no(args) {
 	}
 }
 
+[console_command=fire_no]
+function console_command_fire_no(args) {
+	for (var i = 1; i <= MAX_BUILDINGS; i++) {
+		var building = city.get_building(i)
+		building.add_fire_damage(-building.fire_risk)
+	}
+}
+
+[console_command=fire_start]
+function console_command_fire_start(args) {
+	var count = parseInt((args && args[0]) || "1", 10)
+	if (count <= 0) {
+		count = 1
+	}
+
+	for (var i = 0; i < count; i++) {
+		var building = city.get_random_building()
+		building.destroy_by_fire()
+	}
+}
+
 [console_command=collapse_random_buildings]
 function console_command_collapse_random_buildings(args) {
 	var count = parseInt((args && args[0]) || "0", 10)
