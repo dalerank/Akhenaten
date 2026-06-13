@@ -213,6 +213,14 @@ int empire_t::get_closest_object(vec2i pos) const {
             continue;
         }
 
+        if (obj->type == EMPIRE_OBJECT_CITY) {
+            const int city_id = get_city_for_object(i);
+            const empire_city* ecity = city_id ? g_empire.city(city_id) : nullptr;
+            if (!ecity || !ecity->is_selectable_on_empire_map()) {
+                continue;
+            }
+        }
+
         int dist = calc_maximum_distance(pos, vec2i(obj_pos.x + obj->width / 2, obj_pos.y + obj->height / 2));
         if (dist < min_dist) {
             min_dist = dist;

@@ -27,7 +27,7 @@ public:
     bool is_trade_route_open(int route_id);
     int trade_route_for_city(int city_id);
     void reset_yearly_trade_amounts();
-    int get_city_for_object(int empire_object_id);
+    int get_city_for_object(int empire_object_id) const;
     int count_beer_sources();
     void expand();
     int get_city_vulnerable();

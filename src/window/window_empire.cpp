@@ -340,11 +340,14 @@ void empire_window::draw_empire_object(int object_index, const empire_object& ob
         if (!img) {
             return;
         }
+        int empire_city_id = g_empire.get_city_for_object(object_index);
+        const empire_city* city = g_empire.city(empire_city_id);
+        if (!city || !city->shows_as_trade_city_on_map()) {
+            return;
+        }
         sprite spr;
         spr.img = img;
         ctx.draw(spr, draw_pos, COLOR_MASK_NONE, scale, scale);
-        int empire_city_id = g_empire.get_city_for_object(object_index);
-        const empire_city* city = g_empire.city(empire_city_id);
         const vec2i scaled_img_size{
             std::max(1, (int)std::lround(img->width * scale)),
             std::max(1, (int)std::lround(img->height * scale))
@@ -392,7 +395,8 @@ void empire_window::draw_empire_object(int object_index, const empire_object& ob
             ui::label_colored("under siege", siege_text_pos, FONT_SMALL_PLAIN, COLOR_FONT_RED, obj.width);
         }
 
-        if (last_mouse_pos.x > draw_pos.x && last_mouse_pos.y > draw_pos.y
+        if (city && city->type != EMPIRE_CITY_OURS
+            && last_mouse_pos.x > draw_pos.x && last_mouse_pos.y > draw_pos.y
             && last_mouse_pos.x < draw_pos.x + scaled_img_size.x
             && last_mouse_pos.y < draw_pos.y + scaled_img_size.y) {
             hovered_object_tooltip = tooltip_text;

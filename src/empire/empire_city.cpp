@@ -31,6 +31,22 @@ bool empire_city::can_trade() const {
     return false;
 }
 
+bool empire_city::shows_as_trade_city_on_map() const {
+    if (type == EMPIRE_CITY_OURS) {
+        return true;
+    }
+
+    if (!can_trade()) {
+        return false;
+    }
+
+    return is_open || cost_to_open > 0;
+}
+
+bool empire_city::is_selectable_on_empire_map() const {
+    return shows_as_trade_city_on_map();
+}
+
 trade_route &empire_city::get_route() {
     return g_empire.get_route(route_id);
 }

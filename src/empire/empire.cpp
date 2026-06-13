@@ -168,7 +168,7 @@ bool empire_t::can_export_resource(e_resource resource, bool check_if_open) {
     return false;
 }
 
-int empire_t::get_city_for_object(int empire_object_id) {
+int empire_t::get_city_for_object(int empire_object_id) const {
     for (auto &city: cities) {
         if (city.in_use && city.empire_object_id == empire_object_id) {
             return std::distance(cities, &city);
