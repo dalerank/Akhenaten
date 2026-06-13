@@ -4,6 +4,7 @@ import overlays.apothecary
 import overlays.health
 import overlays.tax_income
 import overlays.booth
+import overlays.bandstand
 import overlays.entertainment
 import overlays.senet_house
 import overlays.mortuary
@@ -36,22 +37,6 @@ overlays = [
     buildings:[BUILDING_WELL, BUILDING_MENU_BEAUTIFICATION, BUILDING_WATER_LIFT, BUILDING_WATER_SUPPLY, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_BANDSTAND
-    title: "#overlay_bandstand"
-    walkers:[FIGURE_PRIEST]
-    buildings:[BUILDING_CONSERVATORY, BUILDING_BANDSTAND, BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_POSITIVE
-    column_anim: {pack:PACK_GENERAL, id:103}
-
-    tooltips {
-      low { values:[ "#bandstand_none" ] }
-      usual { values:[ "#bandstand_low" ] }
-      medium { values:[ "#bandstand_medium" ] }
-      high { values:[ "#bandstand_high" ] }
-    }
   }
 
   {
