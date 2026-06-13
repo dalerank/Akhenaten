@@ -1287,6 +1287,11 @@ localization_en = [
   { key: "#fire_risk_high", text: "This building is a fire trap" }
   { key: "#fire_risk_critical", text: "This building could catch fire at any moment!" }
 
+  // crime overlay
+  { key: "#crime_level_low", group:66, id:58 }
+  { key: "#crime_level_normal", group:66, id:59 }
+  { key: "#crime_level_high", group:66, id:60 }
+
   // tax income overlay
   { key: "#tax_income_not_registered", text: "This house is not registered for taxes, and so does not pay any tax" }
   { key: "#tax_income_none_yet", text: "No tax collected from this house so far this year." }

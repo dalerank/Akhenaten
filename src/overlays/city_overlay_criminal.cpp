@@ -81,21 +81,6 @@ void city_overlay_crime::draw_custom_top(vec2i pixel, tile2i point, painter &ctx
     }
 }
 
-void city_overlay_crime::get_tooltip_for_building(tooltip_context* c, const building* b, xstring &tooltip){
-    return;
-}
-
-void city_overlay_crime::get_tooltip(tooltip_context *c, tile2i tile, xstring &tooltip) {
-    int crime = g_crime.get(tile);
-    if (crime < 0) {
-        tooltip = ui::str(66, 58); // Low crime
-    } else if (crime == 0) {
-        tooltip = ui::str(66, 59); // Normal crime
-    } else {
-        tooltip = ui::str(66, 60); // High crime
-    }
-}
-
 bool city_overlay_crime::draw_custom_footprint(vec2i pixel, tile2i point, painter &ctx) const {
     int grid_offset = point.grid_offset();
     int crime_level = g_crime.get(grid_offset);
@@ -123,7 +108,7 @@ bool city_overlay_crime::draw_custom_footprint(vec2i pixel, tile2i point, painte
     } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || crime_level != 0) {
         if (has_deleted_building(grid_offset)) {
             color_mask = COLOR_MASK_RED;
-        } 
+        }
 
         int offset = get_crime_image_offset(crime_level);
         int img_id = image_id_from_group(GROUP_TERRAIN_DESIRABILITY);

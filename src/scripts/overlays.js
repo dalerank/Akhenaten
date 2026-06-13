@@ -23,6 +23,7 @@ import overlays.labor
 import overlays.malaria_risk
 import overlays.courthouse
 import overlays.fire
+import overlays.crime
 
 overlays = [
   {
