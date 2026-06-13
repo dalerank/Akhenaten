@@ -1245,6 +1245,12 @@ localization_en = [
   { key: "#apothecary_access_medium", text: "This house has Apothecary access" }
   { key: "#apothecary_access_low", text: "Unless an herbalist passes it soon, this house will lose Apothecary access" }
 
+  // magistrate access
+  { key: "#magistrate_access_none", text: "This house has no access to a Courthouse" }
+  { key: "#magistrate_access_high", text: "This house was recently passed by a magistrate. It will have Courthouse access for a long time" }
+  { key: "#magistrate_access_medium", text: "This house has Courthouse access" }
+  { key: "#magistrate_access_low", text: "This house has not been passed by a magistrate for a while. It will soon lose Courthouse access" }
+
   // booth access
   { key: "#booth_access_none", text: "This house has no access to a juggler" }
   { key: "#booth_access_high", text: "This house was recently passed by a juggler. It will have juggler access for a long time" }

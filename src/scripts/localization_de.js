@@ -1195,6 +1195,12 @@ localization_de = [
   { key: "#apothecary_access_medium", text: "Dieses Haus hat Apothekenzugang" }
   { key: "#apothecary_access_low", text: "Wenn nicht bald ein Kräuterkundiger vorbeikommt, wird dieses Haus den Apothekenzugang verlieren" }
 
+  // magistrate access
+  { key: "#magistrate_access_none", text: "Dieses Haus hat keinen Zugang zu einem Gerichtsgebäude" }
+  { key: "#magistrate_access_high", text: "Dieses Haus wurde kürzlich von einem Magistrat besucht. Es wird für lange Zeit Gerichtsgebäudezugang haben" }
+  { key: "#magistrate_access_medium", text: "Dieses Haus hat Gerichtsgebäudezugang" }
+  { key: "#magistrate_access_low", text: "Dieses Haus wurde eine Weile nicht von einem Magistrat besucht. Es wird bald den Gerichtsgebäudezugang verlieren" }
+
   // booth access
   { key: "#booth_access_none", text: "Dieses Haus hat keinen Zugang zu einem Gaukler" }
   { key: "#booth_access_high", text: "Dieses Haus wurde kürzlich von einem Gaukler besucht. Es wird für lange Zeit Gauklerzugang haben" }

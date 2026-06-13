@@ -470,6 +470,12 @@ localization_ru = [
     { key: "#apothecary_access_medium", text: "У этого дома есть доступ к аптекарю" }
     { key: "#apothecary_access_low", text: "Если травник не пройдёт мимо него скоро, этот дом потеряет доступ к аптекарю" }
 
+    // magistrate access
+    { key: "#magistrate_access_none", text: "У этого дома нет доступа к зданию суда" }
+    { key: "#magistrate_access_high", text: "Мимо этого дома недавно проходил магистрат. У него будет доступ к зданию суда надолго" }
+    { key: "#magistrate_access_medium", text: "У этого дома есть доступ к зданию суда" }
+    { key: "#magistrate_access_low", text: "Мимо этого дома давно не проходил магистрат. Он скоро потеряет доступ к зданию суда" }
+
     // booth access
     { key: "#booth_access_none", text: "У этого дома нет доступа к жонглёру" }
     { key: "#booth_access_high", text: "Мимо этого дома недавно проходил жонглёр. У него будет доступ к жонглёру надолго" }

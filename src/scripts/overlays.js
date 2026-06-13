@@ -21,6 +21,7 @@ import overlays.religion
 import overlays.pavilion
 import overlays.labor
 import overlays.malaria_risk
+import overlays.courthouse
 
 overlays = [
   {
@@ -37,15 +38,6 @@ overlays = [
     title: "#overlay_menu_water"
     walkers:[FIGURE_WATER_CARRIER]
     buildings:[BUILDING_WELL, BUILDING_MENU_BEAUTIFICATION, BUILDING_WATER_LIFT, BUILDING_WATER_SUPPLY, BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_WATER_ACCESS
-    column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_COUTHOUSE
-    title: "#overlay_magistrate"
-    walkers:[FIGURE_MAGISTRATE]
-    buildings:[BUILDING_COURTHOUSE, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
   }
@@ -110,7 +102,7 @@ overlays = [
   {
     id:OVERLAY_FOOD_STOCKS
     title: "#overlay_food_stocks"
-    walkers:[FIGURE_EMBALMER]
+    walkers:[FIGURE_MARKET_TRADER, FIGURE_MARKET_BUYER]
     buildings:[BUILDING_BAZAAR, BUILDING_FISHING_WHARF, BUILDING_GRANARY, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_POSITIVE
     column_anim: {pack:PACK_GENERAL, id:103}
