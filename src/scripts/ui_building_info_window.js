@@ -12,7 +12,7 @@ function building_info_window_text_mothball(window) {
 
 function building_info_window_text_overlay(window) {
     var b = city.get_building(city.object_info.bid)
-    return (city.overlay == b.overlay ? "V" : "v")
+    return (city.current_overlay == b.overlay ? "V" : "v")
 }
 
 function building_info_window_toggle_mothball() {

@@ -8,7 +8,7 @@ function bazaar_info_window_toggle_overlay() {
 
 function bazaar_info_window_text_overlay(window) {
     var b = city.get_building(city.object_info.bid)
-    return (city.overlay == b.overlay ? "V" : "v")
+    return (city.current_overlay == b.overlay ? "V" : "v")
 }
 
 function bazaar_info_window_text_mothball() {

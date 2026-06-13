@@ -6,7 +6,11 @@ shrine_info_window {
         title        : text({ pos[0, 16], size[px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center" })
         warning_text : text({ pos[20, 46], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
         god_image    : image({ pos[190, 94] })
-        show_overlay : button({ margin:{right:-64, bottom:-40}, size:[23, 23] })
+        show_overlay : button({
+            margin:{right:-64, bottom:-40}, size:[23, 23]
+            textfn: building_info_window_text_overlay
+            onclick: building_info_window_toggle_overlay
+        })
 
         button_help  : help_button({})
         button_close : close_button({})

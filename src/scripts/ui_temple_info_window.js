@@ -11,7 +11,11 @@ temple_info_window {
         workers_desc : text({ pos[70, 74 + 16], font: FONT_NORMAL_BLACK_ON_DARK })
         button_help  : image_button({ margin:{left:14, bottom:-40}, size[27, 27], pack:PACK_GENERAL, id:134 })
         button_close : image_button({ margin:{right:-40, bottom:-40}, size[27, 27], pack:PACK_GENERAL, id:134, offset:4 })
-        show_overlay : button({ margin:{right:-64, bottom:-40}, size[23, 23]})
+        show_overlay : button({
+            margin:{right:-64, bottom:-40}, size:[23, 23]
+            textfn: building_info_window_text_overlay
+            onclick: building_info_window_toggle_overlay
+        })
         god_image    : image({ pos[190, 134] })
         mothball     : button({
                                margin:{right:-90, bottom:-40}, size[23, 23]
@@ -34,7 +38,11 @@ info_window_temple_complex {
         workers_desc : text({ pos[70, 74 + 16], font: FONT_NORMAL_BLACK_ON_DARK })
         button_help  : image_button({ margin{left:14, bottom:-40}, size[27, 27], pack:PACK_GENERAL, id:134 })
         button_close : image_button({ margin{right:-40, bottom:-40}, size[27, 27], pack:PACK_GENERAL, id:134, offset:4 })
-        show_overlay : button({ margin{right:-64, bottom:-40}, size[23, 23]})
+        show_overlay : button({
+            margin{right:-64, bottom:-40}, size[23, 23]
+            textfn: building_info_window_text_overlay
+            onclick: building_info_window_toggle_overlay
+        })
         god_image    : image({ pos[190, 134] })
 
         mothball     : button({

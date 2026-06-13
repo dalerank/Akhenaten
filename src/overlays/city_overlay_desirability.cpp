@@ -49,32 +49,6 @@ static int get_desirability_image_offset(int desirability) {
         return 9;
 }
 
-// static void draw_top_desirability(pixel_coordinate pixel, map_point point) {
-//     int grid_offset = point.grid_offset();
-//     int x = pixel.x;
-//     int y = pixel.y;
-//     color color_mask = map_property_is_deleted(grid_offset) ? COLOR_MASK_RED : 0;
-//     if (map_terrain_is(grid_offset, terrain_on_desirability_overlay()) &&
-//         !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-//         // display normal tile
-//         if (map_property_is_draw_tile(grid_offset))
-//             ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask,
-//             city_view_get_scale_float());
-//
-//     } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
-//         // groundwater, no top needed
-//     } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_desirability_get(grid_offset)) {
-//         if (has_deleted_building(grid_offset))
-//             color_mask = COLOR_MASK_RED;
-//
-//         int offset = get_desirability_image_offset(map_desirability_get(grid_offset));
-//         ImageDraw::isometric_top_from_drawtile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y,
-//                                                color_mask, city_view_get_scale_float());
-//     } else
-//         ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask,
-//         city_view_get_scale_float());
-// }
-
 city_overlay_desirability g_city_overlay_desirability;
 
 bool city_overlay_desirability::show_figure(const figure *f) const {

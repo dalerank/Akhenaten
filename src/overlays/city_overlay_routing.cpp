@@ -21,7 +21,7 @@ static bool building_on_routing_overlay(e_building_type type) {
     return building_type_any_of(type, { BUILDING_FERRY, BUILDING_PLAZA, BUILDING_BOOTH, BUILDING_ROAD });
 }
 
-inline bool city_overlay_routing::show_figure(const figure *f) const {
+bool city_overlay_routing::show_figure(const figure *f) const {
     return (f->type == FIGURE_IMMIGRANT);
 }
 
@@ -29,7 +29,7 @@ int city_overlay_routing::get_column_height(const building *b) const {
     return COLUMN_TYPE_NONE;
 }
 
-inline void city_overlay_routing::draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {
+void city_overlay_routing::draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {
     int grid_offset = point.grid_offset();
 
     color color_mask = 0;
@@ -134,6 +134,6 @@ void city_overlay_routing::get_tooltip_for_building(tooltip_context *c, const bu
     return;
 }
 
-inline bool city_overlay_routing::show_building(const building *b) const {
+bool city_overlay_routing::show_building(const building *b) const {
     return /*b->type == BUILDING_FERRY ||*/ b->type == BUILDING_PLAZA || b->type == BUILDING_BOOTH;
 }

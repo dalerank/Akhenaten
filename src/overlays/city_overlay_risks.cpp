@@ -54,7 +54,7 @@ bool city_overlay_problems::show_figure(const figure *f) const {
         return ((figure *)f)->home()->show_on_problem_overlay;
     } else if (f->type == FIGURE_CART_PUSHER) {
         return f->action_state == ACTION_20_CARTPUSHER_INITIAL || f->min_max_seen;
-    } 
+    }
 
     return false;
 }
