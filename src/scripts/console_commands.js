@@ -93,6 +93,22 @@ function console_command_show_mission_won(args) {
     emit event_show_window { id: "window_mission_won" }
 }
 
+[console_command=show_victory_dialog]
+function console_command_show_victory_dialog(args) {
+    __scenario_victory.state = 1
+    emit event_show_window { id: "window_victory_dialog" }
+}
+
+[console_command=victory]
+function console_command_victory(args) {
+    __scenario_victory.force_win = true
+}
+
+[console_command=defeat]
+function console_command_defeat(args) {
+    __scenario_victory.force_lost = true
+}
+
 [console_command=show_labor_priority]
 function console_command_show_labor_priority(args) {
     var category = parseInt((args && args[0]) || "0", 10)

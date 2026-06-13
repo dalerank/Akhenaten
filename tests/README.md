@@ -41,6 +41,7 @@ Results are written to `akhenaten-log.txt` as lines like `[test:tests/11_work_ca
 | `11_work_camp_map_placement.js` | Work camp placed via `test_building_place` (real `city_planner` path) |
 | `12_road_segment_placement.js` | Road via `build_planner` on a valid segment near map center; all routed tiles have `TERRAIN_ROAD` |
 | `14_hotkey_config_window.js` | Hotkey config window (`window_show_by_id`) |
+| `15_victory_dialog_window.js` | `show_victory_dialog` console command → victory dialog |
 
 Shared helpers for city tests and placement live in [`src/scripts/integral_test.js`](../src/scripts/integral_test.js), imported from `modules.js` (always loaded with the game VM, not via `include()` from test files).
 
@@ -124,7 +125,7 @@ There is no global window-init hook. Each observable window logs `__log_marker("
 
 - `ui_player_selection.js`, `ui_records_window.js`, `ui_mods_window.js`
 - `ui_stonemason_guild_window.js`, `ui_granary_info.js`, `ui_work_camp_window.js`
-- `ui_file_dialog_load.js`, `ui_mission_end_window.js`
+- `ui_file_dialog_load.js`, `ui_mission_end_window.js`, `ui_victory_dialog.js`
 
 When adding a test that asserts a window transition, add the matching `__log_marker` in that window's `init` handler so a broken script fails the test if `init` never runs.
 
