@@ -5,6 +5,8 @@ import overlays.health
 import overlays.tax_income
 import overlays.booth
 import overlays.bandstand
+import overlays.bazaar_access
+import overlays.brewery
 import overlays.entertainment
 import overlays.senet_house
 import overlays.mortuary
@@ -37,23 +39,6 @@ overlays = [
     buildings:[BUILDING_WELL, BUILDING_MENU_BEAUTIFICATION, BUILDING_WATER_LIFT, BUILDING_WATER_SUPPLY, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_BAZAAR_ACCESS
-    title: "#overlay_bazaar_access"
-    walkers:[FIGURE_MARKET_BUYER, FIGURE_MARKET_TRADER]
-    buildings:[BUILDING_BAZAAR, BUILDING_ROADBLOCK, BUILDING_GRANARY]
-    column_type: COLUMN_TYPE_POSITIVE
-    column_anim: {pack:PACK_GENERAL, id:103}
-
-    tooltips {
-      not_provided { values:[ "#food_stocks_not_provided" ] }
-      none { values:[ "#food_stocks_none" ] }
-      low { values:[ "#food_stocks_low" ] }
-      medium { values:[ "#food_stocks_medium" ] }
-      high { values:[ "#food_stocks_high" ] }
-    }
   }
 
   {

@@ -459,6 +459,11 @@ localization_ru = [
     { key: "#food_stocks_medium", text: "У этого дома есть запасы еды минимум на предстоящий месяц" }
     { key: "#food_stocks_high", text: "У этого дома нет проблем с получением еды, необходимой для выживания" }
 
+    { key: "#beer_stocks_none", text: "В этом доме нет запасов пива" }
+    { key: "#beer_stocks_low", text: "Этот дом скоро израсходует свои ограниченные запасы пива" }
+    { key: "#beer_stocks_medium", text: "У этого дома есть запасы пива минимум на предстоящий месяц" }
+    { key: "#beer_stocks_high", text: "У этого дома нет проблем с получением необходимого пива" }
+
     // apothecary access
     { key: "#apothecary_access_none", text: "У этого дома нет доступа к аптекарю" }
     { key: "#apothecary_access_high", text: "Мимо этого дома недавно проходил травник. У него будет доступ к аптекарю надолго" }

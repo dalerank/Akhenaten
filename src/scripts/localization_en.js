@@ -1233,6 +1233,12 @@ localization_en = [
   { key: "#food_stocks_medium", text: "This house has food stocks to last for at least the coming month" }
   { key: "#food_stocks_high", text: "This house has no problems in getting the food it requires to survive" }
 
+  // brewery overlay (beer stocks)
+  { key: "#beer_stocks_none", text: "This house has no stocks of beer" }
+  { key: "#beer_stocks_low", text: "This house will soon drink through its limited stocks of beer" }
+  { key: "#beer_stocks_medium", text: "This house has beer stocks to last for at least the coming month" }
+  { key: "#beer_stocks_high", text: "This house has no problems in getting the beer it requires" }
+
   // apothecary access
   { key: "#apothecary_access_none", text: "This house has no access to an Apothecary" }
   { key: "#apothecary_access_high", text: "This house was recently passed by an herbalist. It will have Apothecary access for a long time" }

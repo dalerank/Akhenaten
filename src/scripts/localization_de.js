@@ -1184,6 +1184,11 @@ localization_de = [
   { key: "#food_stocks_medium", text: "Dieses Haus hat Nahrungsvorräte für mindestens den kommenden Monat" }
   { key: "#food_stocks_high", text: "Dieses Haus hat keine Probleme, die Nahrung zu bekommen, die es zum Überleben braucht" }
 
+  { key: "#beer_stocks_none", text: "Dieses Haus hat keine Bierbestände" }
+  { key: "#beer_stocks_low", text: "Dieses Haus wird bald seine begrenzten Bierbestände aufbrauchen" }
+  { key: "#beer_stocks_medium", text: "Dieses Haus hat Bierbestände für mindestens den kommenden Monat" }
+  { key: "#beer_stocks_high", text: "Dieses Haus hat keine Probleme, das benötigte Bier zu bekommen" }
+
   // apothecary access
   { key: "#apothecary_access_none", text: "Dieses Haus hat keinen Zugang zu einer Apotheke" }
   { key: "#apothecary_access_high", text: "Dieses Haus wurde kürzlich von einem Kräuterkundigen besucht. Es wird für lange Zeit Apothekenzugang haben" }
