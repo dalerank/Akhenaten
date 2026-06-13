@@ -1279,6 +1279,14 @@ localization_en = [
   { key: "#damage_risk_many", text: "This building has many structural faults and cracks" }
   { key: "#damage_risk_critical", text: "This building is unstable, and is likely to collapse soon" }
 
+  // fire overlay
+  { key: "#fire_risk_none", text: "This building has no likelihood of catching fire" }
+  { key: "#fire_risk_negligible", text: "This building is a negligible fire risk" }
+  { key: "#fire_risk_low", text: "This building has some risk of fire" }
+  { key: "#fire_risk_some", text: "This building has a risk of fire" }
+  { key: "#fire_risk_high", text: "This building is a fire trap" }
+  { key: "#fire_risk_critical", text: "This building could catch fire at any moment!" }
+
   // tax income overlay
   { key: "#tax_income_not_registered", text: "This house is not registered for taxes, and so does not pay any tax" }
   { key: "#tax_income_none_yet", text: "No tax collected from this house so far this year." }

@@ -1229,6 +1229,14 @@ localization_de = [
   { key: "#damage_risk_many", text: "Dieses Gebäude hat viele bauliche Mängel und Risse" }
   { key: "#damage_risk_critical", text: "Dieses Gebäude ist instabil und wird wahrscheinlich bald einstürzen" }
 
+  // fire overlay
+  { key: "#fire_risk_none", text: "Dieses Gebäude hat keine Brandgefahr" }
+  { key: "#fire_risk_negligible", text: "Dieses Gebäude hat eine vernachlässigbare Brandgefahr" }
+  { key: "#fire_risk_low", text: "Dieses Gebäude hat etwas Brandgefahr" }
+  { key: "#fire_risk_some", text: "Dieses Gebäude hat Brandgefahr" }
+  { key: "#fire_risk_high", text: "Dieses Gebäude ist eine Brandfalle" }
+  { key: "#fire_risk_critical", text: "Dieses Gebäude könnte jeden Moment in Brand geraten!" }
+
   // tax income overlay
   { key: "#tax_income_not_registered", text: "Dieses Haus ist nicht für Steuern registriert und zahlt daher keine Steuern" }
   { key: "#tax_income_none_yet", text: "Bisher dieses Jahr keine Steuern von diesem Haus eingezogen." }

@@ -22,6 +22,7 @@ import overlays.pavilion
 import overlays.labor
 import overlays.malaria_risk
 import overlays.courthouse
+import overlays.fire
 
 overlays = [
   {
@@ -76,27 +77,6 @@ overlays = [
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_POSITIVE
     column_anim: {pack:PACK_GENERAL, id:103}
-  }
-
-  {
-    id:OVERLAY_FIRE
-    title: "#overlay_fire"
-    walkers[FIGURE_FIREMAN]
-    buildings[BUILDING_FIREHOUSE, BUILDING_BURNING_RUIN, BUILDING_FESTIVAL_SQUARE, BUILDING_ROADBLOCK]
-    column_type: COLUMN_TYPE_RISK
-    column_anim {pack:PACK_GENERAL, id:103}
-
-    building_tooltips [
-      {
-        building_type : BUILDING_FIREHOUSE
-        tooltips [
-          "This month:\t${building.buildings_served_this_month}",
-          "This year:\t${building.buildings_served_this_year}",
-          "Total served:\t${building.total_buildings_served}",
-          "Months active:\t${building.months_active}"
-        ]
-      }
-    ]
   }
 
   {

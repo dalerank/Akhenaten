@@ -504,6 +504,14 @@ localization_ru = [
     { key: "#damage_risk_many", text: "У этого здания много структурных дефектов и трещин" }
     { key: "#damage_risk_critical", text: "Это здание нестабильно и, вероятно, скоро обрушится" }
 
+    // fire overlay
+    { key: "#fire_risk_none", text: "У этого здания нет вероятности возгорания" }
+    { key: "#fire_risk_negligible", text: "Это здание имеет незначительный риск пожара" }
+    { key: "#fire_risk_low", text: "У этого здания есть некоторый риск пожара" }
+    { key: "#fire_risk_some", text: "У этого здания есть риск пожара" }
+    { key: "#fire_risk_high", text: "Это здание - пожарная ловушка" }
+    { key: "#fire_risk_critical", text: "Это здание может загореться в любой момент!" }
+
     // tax income overlay
     { key: "#tax_income_not_registered", text: "Этот дом не зарегистрирован для налогов и поэтому не платит никаких налогов" }
     { key: "#tax_income_none_yet", text: "Налогов с этого дома в этом году пока не собрано." }

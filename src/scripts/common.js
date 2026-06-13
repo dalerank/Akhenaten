@@ -155,6 +155,17 @@ Math.calc_percentage = function(value, total) {
     return 0;
 }
 
+Math.color_from_green_to_red = function(value) {
+    if (value < 0) {
+        value = 0;
+    } else if (value > 100) {
+        value = 100;
+    }
+    var red = (value * 255 / 100) | 0;
+    var green = 255 - red;
+    return 0xff000000 | (red << 16) | (green << 8);
+}
+
 function normalize_savegame_path_for_load(path) {
     if (!path || path.length === 0)
         return path

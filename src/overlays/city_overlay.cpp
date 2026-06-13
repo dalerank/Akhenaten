@@ -159,6 +159,13 @@ void __city_overlay_set_show_building(int show) {
 }
 ANK_FUNCTION_1(__city_overlay_set_show_building)
 
+void __city_overlay_set_color_mask(int mask) {
+    if (const city_overlay *overlay = g_city.overlay()) {
+        const_cast<city_overlay *>(overlay)->current_color_mask = (color)mask;
+    }
+}
+ANK_FUNCTION_1(__city_overlay_set_color_mask)
+
 int city_overlay::get_column_height(const building *b) const {
     if (es_name.empty() || !b) {
         return COLUMN_TYPE_NONE;
@@ -420,7 +427,16 @@ color city_overlay::color_mask_building_def(const building *b) const {
 }
 
 color city_overlay::color_mask_building(const building *b) const {
-    return COLOR_MASK_NONE;
+    if (es_name.empty() || !b) {
+        return COLOR_MASK_NONE;
+    }
+
+    auto *self = const_cast<city_overlay *>(this);
+    self->current_building_id = b->id;
+    self->current_color_mask = COLOR_MASK_NONE;
+
+    js_event(overlay_tooltip_ev{ b->id, b->tile, {} }, es_name, __func__);
+    return self->current_color_mask;
 }
 
 void city_overlay::draw_overlay_building_column(building* b, vec2i pixel, tile2i tile, painter &ctx) const {

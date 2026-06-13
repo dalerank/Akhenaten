@@ -182,6 +182,7 @@ city {
     @overlay_column_color: { set: __city_overlay_set_column_color }
     @overlay_show_figure: { set: __city_overlay_set_show_figure }
     @overlay_show_building: { set: __city_overlay_set_show_building }
+    @overlay_color_mask: { set: __city_overlay_set_color_mask }
 
     goal_tooltip: function() { return "" }
     set_victory_reason : city_set_victory_reason

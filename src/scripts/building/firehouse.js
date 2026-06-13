@@ -1,5 +1,29 @@
 log_info("akhenaten: loading building_firehouse")
 
+function Firehouse(building_id) {
+    this.id = building_id
+}
+
+Firehouse.prototype = Object.create(Building.prototype)
+Firehouse.prototype.constructor = Firehouse
+
+Firehouse.prototype.__property_getter = function(property) {
+    return __firehouse_get_property(this.id, property)
+}
+
+Firehouse.property.buildings_served_this_month = { }
+Firehouse.property.buildings_served_this_year = { }
+Firehouse.property.total_buildings_served = { }
+Firehouse.property.months_active = { }
+
+city.get_firehouse = function(building_id) {
+    var b = city.get_building(building_id)
+    if (!b.valid || b.type != BUILDING_FIREHOUSE) {
+        return null
+    }
+    return new Firehouse(building_id)
+}
+
 building_firehouse {
     animations {
         _pack { pack:PACK_GENERAL }

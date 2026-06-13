@@ -36,6 +36,7 @@ struct city_overlay {
     xstring current_tooltip;
     int current_column_height = COLUMN_TYPE_NONE;
     int current_column_color = COLUMN_COLOR_NONE;
+    color current_color_mask = COLOR_MASK_NONE;
     bool current_show_figure = false;
     bool current_show_building = false;
 

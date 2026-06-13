@@ -46,7 +46,7 @@ bool building_firehouse::draw_ornaments_and_animations_height(painter &ctx, vec2
 
 void building_firehouse::update_month() {
     building_impl::update_month();
-    
+
     auto &data = runtime_data();
     data.months_active += (data.buildings_served_this_month > 0) ? 1 : 0;
     data.total_buildings_served += data.buildings_served_this_month;
@@ -64,6 +64,6 @@ bvariant building_firehouse::get_property(const xstring &domain, const xstring &
     if (result) {
         return result.value();
     }
-    
+
     return building_impl::get_property(domain, name);
 }
