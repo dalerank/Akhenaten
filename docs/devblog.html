@@ -27,6 +27,14 @@
     <h1>Devblog</h1>
 
     <article class="post">
+      <div class="post-meta"><time>June 13, 2026</time></div>
+      <h2><a href="devblog/statue-preview-and-rotation.html">Statue Preview and Rotation Move to Script</a></h2>
+      <img src="images/statue-preview-and-rotation.gif" alt="Placing statues: the ghost preview cycles variants and rotates with the R hotkey" class="post-preview" loading="lazy" style="image-rendering:pixelated" />
+      <p>The statue placement preview — its sprite, variant, and facing — now lives entirely in script. Two fixes came with it: pressing <code>R</code> finally rotates a statue ghost (the preview used to ignore orientation and hand back the base frame), and a new per-building <code>allow_rotate</code> flag lets statues rotate manually even when the global auto-rotate option is off. The preview pipeline left <code>building_statue.cpp</code> behind a set of <code>[es=...]</code> hooks plus one new <code>__city_planner_set_tiles_building</code> binding, and the old combined block was split into self-contained <code>statue_small.js</code>, <code>statue_medium.js</code>, and <code>statue_large.js</code> files.</p>
+      <a href="devblog/statue-preview-and-rotation.html" class="read-more">Read more →</a>
+    </article>
+
+    <article class="post">
       <div class="post-meta"><time>June 10, 2026</time></div>
       <h2><a href="devblog/script-defined-overlays-es.html">Overlays Become Script-Declared</a></h2>
       <img src="images/script-defined-overlays-es.png" alt="Apothecary building info window showing employee count and an operational-status tooltip under the apothecary overlay" class="post-preview" loading="lazy" style="image-rendering:pixelated" />

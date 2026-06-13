@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Statue Preview and Rotation Move to Script — Akhenaten</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../devblog.html" class="active">Devblog</a></li>
+        <li><a href="../wiki/index.html">Wiki</a></li>
+        <li><a href="../screenshots.html">Screenshots</a></li>
+        <li><a href="../downloads.html">Downloads</a></li>
+        <li><a href="../contributors.html">Contributors</a></li>
+        <li><a href="../contact.html">Join us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-content post-page">
+    <div class="post-meta"><time>June 13, 2026</time> — <a href="../devblog.html">← Devblog</a></div>
+    <h1>Statue Preview and Rotation Move to Script</h1>
+
+    <img src="../images/statue-preview-and-rotation.gif" alt="Placing statues in the city: the ghost preview cycles through variants and rotates with the R hotkey before each one is built" class="post-image" loading="lazy" style="image-rendering:pixelated" />
+
+    <p>
+      Statues were one of the last building types whose placement preview still lived in C++. This pass finishes the migration: the ghost that follows your cursor — its sprite, its variant, and which way it faces — is now resolved entirely in script. Along the way two long-standing annoyances got fixed: pressing <code>R</code> now actually rotates a statue before you place it, and that works even when the global "rotate buildings manually" option is off.
+    </p>
+
+    <h2>The Rotation Bug</h2>
+    <p>
+      Statue sprites are stored as a base image plus four orientation frames. The preview resolved a variant but always handed back the base frame, ignoring orientation completely — so the <code>R</code> hotkey changed an internal value that never reached the picture. The ghost just sat there facing the same way no matter how many times you pressed it.
+    </p>
+    <p>
+      The fix is to add the orientation offset when resolving the image, and to derive the placement orientation from the planner's <code>global_rotation</code> rather than a stale local value:
+    </p>
+    <pre><code>int building_statue::get_image(e_building_type type, int orientation, int variant, ...) {
+    variant %= size;
+    image_desc imdesc = statue_params.variants[variant];
+    return (imdesc + orientation).tid();   // was: imdesc.tid()
+}</code></pre>
+
+    <h2>Rotate Even When Auto-Rotate Is Off</h2>
+    <p>
+      The hotkey was also gated behind the global <code>gameui_rotate_manually</code> feature, so with that option disabled <code>R</code> did nothing for anything. But some buildings — statues especially — want manual rotation regardless. A new per-building <code>allow_rotate</code> flag opts them in:
+    </p>
+    <pre><code>flags {
+  is_statue: true
+  is_beautification: true
+  allow_rotate: true
+}</code></pre>
+    <p>
+      The hotkey handler now checks the building's own config before bailing out:
+    </p>
+    <pre><code>rotate_by_hotkey: function() {
+    var cfg = get_building_config_by_id(city_planner.build_type)
+    var allow_rotate = cfg &amp;&amp; cfg.flags &amp;&amp; cfg.flags.allow_rotate
+
+    if (!game_features.gameui_rotate_manually &amp;&amp; !allow_rotate) {
+        return
+    }
+    ...
+}</code></pre>
+
+    <h2>Preview Logic Leaves C++</h2>
+    <p>
+      With rotation working, the whole statue preview pipeline moved out of <code>building_statue.cpp</code> and into script. The engine side now just exposes the entity-system hooks — <code>setup_preview_graphics</code>, <code>setup_building_variant</code>, <code>next_building_variant</code>, <code>update_relative_orientation</code>, <code>update_building_variant</code> — plus one new binding, <code>__city_planner_set_tiles_building</code>, so script can stamp the ghost's image and size onto the planner directly.
+    </p>
+    <p>
+      The shared <code>statue.js</code> shrank to two helpers — image resolution and variant cycling — that every statue size reuses:
+    </p>
+    <pre><code>function statue_get_image(variants, orientation, variant) {
+    var size = variants.length
+    if (!size) { return 0 }
+
+    while (orientation &lt; 0) { orientation += 4 }
+    while (orientation &gt; 3) { orientation -= 4 }
+    variant = ((variant % size) + size) % size
+
+    var desc = variants[variant]
+    var img = get_image({ pack: desc.pack, id: desc.id, offset: desc.offset + orientation })
+    return img ? img.tid : 0
+}</code></pre>
+
+    <h2>One File per Statue Size</h2>
+    <p>
+      The monolithic block that defined small, medium, and large statues together was split into <code>statue_small.js</code>, <code>statue_medium.js</code>, and <code>statue_large.js</code>, each pulled in from <code>buildings.js</code>. Every file now carries its own data <em>and</em> its preview behaviour as <code>[es=...]</code> handlers right next to it:
+    </p>
+    <pre><code>[es=(building_small_statue, setup_preview_graphics)]
+function building_small_statue_setup_preview_graphics(ev) {
+    var img = statue_get_image(building_small_statue.variants,
+                               city_planner.relative_orientation,
+                               city_planner.building_variant)
+    __city_planner_set_tiles_building(img, building_small_statue.building_size)
+}
+
+[es=(building_small_statue, setup_building_variant)]
+function building_small_statue_setup_building_variant(ev) {
+    city_planner.custom_building_variant =
+        Math.floor(Math.random() * building_small_statue.variants.length)
+}
+
+[es=(building_small_statue, update_relative_orientation)]
+function building_small_statue_update_relative_orientation(ev) {
+    city_planner.relative_orientation = (city_planner.global_rotation + 1) % 4
+}</code></pre>
+
+    <h2>Why This Matters</h2>
+    <p>
+      A statue is now fully described in one script file: its variants, its cost and desirability, the random variant rolled when you pick it up, how it cycles, and how it rotates under the cursor. Adding a new statue — or giving any other building a hand-rotatable preview — no longer touches C++ or needs a recompile: drop in a file, set <code>allow_rotate</code>, press F5. It's the same one-file-at-a-time pattern the overlays and building windows have been following.
+    </p>
+
+    <div class="post-nav">
+      <a href="script-defined-overlays-es.html">← Overlays Become Script-Declared</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>
