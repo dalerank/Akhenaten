@@ -29,7 +29,7 @@ mission4 {
 
 	sounds {
 		briefing : "Voice/Mission/204_mission.mp3"
-		victory : "Voice/Mission/204_victory.mp3"  
+		victory : "Voice/Mission/204_victory.mp3"
 	}
 
 	win_criteria {
@@ -89,7 +89,7 @@ function mission4_get_goal_tooltip() {
 [es=event_mission_start, mission=mission4]
 function mission4_on_start(ev) {
 	mission_show_start_message(mission, "message_trade_on_the_water")
-	city.set_empire_available(1)
+	city.set_empire_available(-1)
 
 	if (mission.papyrus_made_handled) {
 		city.set_advisor_available(ADVISOR_TRADE, 1)
@@ -169,6 +169,7 @@ function mission4_handle_papyrus(ev) {
 	mission.last_action_time = game.absolute_day
 
 	city.set_advisor_available(ADVISOR_TRADE, 1)
+	city.set_empire_available(1)
     city.use_building(BUILDING_DOCK, true)
 
 	ui.popup_message("message_tutorial_trade_with_other_cities")

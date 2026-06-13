@@ -65,7 +65,7 @@ function mission3_get_goal_tooltip() {
 [es=event_mission_start, mission=mission3]
 function mission3_on_start(ev) {
 	mission_show_start_message(mission, "message_developing_culture")
-	city.set_empire_available(1)
+	city.set_empire_available(-1)
 
 	if (mission.tax_collector_built) {
 		city.use_building(BUILDING_TAX_COLLECTOR, true)
