@@ -15,8 +15,6 @@ int winning_monuments();
 int winning_kingdom();
 int winning_housing();
 int winning_houselevel();
-int winning_conditions();
-int winning_reasons();
 
 int scenario_criteria_milestone_year(int percentage);
 void scenario_criteria_init_max_year();

@@ -61,13 +61,13 @@ set_salary_window_mansion {
 
 function set_salary_window_fill_lists_and_text(window) {
     window.salary_ranks.clear()
-    window.salary_ranks.readonly = city.mission_has_won
+    window.salary_ranks.readonly = scenario.has_won
     var rank
     for (rank = 0; rank < 11; rank++) {
         window.salary_ranks.add_item("", rank)
     }
 
-    if (!city.mission_has_won) {
+    if (!scenario.has_won) {
         if (player.salary_rank <= city.player_rank) {
             window.explanation_text.text = __loc(52, 76)
         } else {

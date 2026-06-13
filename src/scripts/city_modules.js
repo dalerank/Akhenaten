@@ -9,3 +9,4 @@ import city.floods
 import city.monuments
 import city.labor
 import city.sounds
+import city.victory

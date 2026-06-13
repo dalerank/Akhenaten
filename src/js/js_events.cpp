@@ -14,6 +14,7 @@
 #include "city/city_migration.h"
 #include "city/city_health.h"
 #include "city/city_festival.h"
+#include "city/city_victory.h"
 #include "city/city_religion.h"
 #include "city/city_resource.h"
 #include "scenario/scenario.h"

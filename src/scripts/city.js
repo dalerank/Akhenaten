@@ -5,7 +5,6 @@ city {
     @health_rating { get: __city_health_rating }
     @workers_diff { get: __city_workers_diff }
     @player_rank { get: __city_player_rank }
-    @mission_has_won { get: __city_mission_has_won }
     @rating_kingdom { get: __city_rating_kingdom }
     @num_forts { get: __formation_get_num_forts }
     @current_overlay { get: __city_get_current_overlay, set: __city_set_current_overlay }
@@ -34,6 +33,7 @@ city {
         @current { }
         @people_in_shanties { }
         @people_in_manors { }
+        @highest_ever { }
         monthly_count: __city_population_monthly_count
         at_month: __city_population_at_month
         at_age: __city_population_at_age
@@ -294,6 +294,11 @@ city.winning = extend(__win_criteria, {
     // => population [goal, enabled]
     // => housing_count [goal, enabled]
     // => housing_level [goal, enabled]
+})
+
+city.mission = extend(__city_mission, {
+    // fired_message_shown
+    // victory_message_shown
 })
 
 city.use_building = function(type, en) {

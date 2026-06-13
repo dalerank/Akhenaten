@@ -31,6 +31,11 @@ ANK_GLOBAL_OBJECT(g_city_planner, __city_planner,
     road_orientation
 );
 
+void __city_planner_reset() {
+    g_city_planner.reset();
+}
+ANK_FUNCTION(__city_planner_reset)
+
 void __city_planner_update(int x, int y) {
     g_city_planner.update(tile2i(x, y));
 }

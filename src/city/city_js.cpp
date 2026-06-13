@@ -17,6 +17,7 @@
 #include "scenario/request.h"
 
 #include "city/city_population.h"
+#include "city/city_victory.h"
 #include "overlays/city_overlay.h"
 
 void __city_ratings_set_monument(int new_value) { g_city.ratings.monument = new_value; }
@@ -47,9 +48,6 @@ ANK_FUNCTION(__city_health_rating)
 
 int __city_player_rank() { return g_city.kingdome.player_rank; }
 ANK_FUNCTION(__city_player_rank)
-
-bool __city_mission_has_won() { return g_scenario.victory_state.has_won(); }
-ANK_FUNCTION(__city_mission_has_won)
 
 pcstr __city_player_name() { return city_player_name(); }
 ANK_FUNCTION(__city_player_name)
@@ -361,6 +359,31 @@ bool __city_can_produce_resource(int resource) {
     return g_city.can_produce_resource((e_resource)resource);
 }
 ANK_FUNCTION_1(__city_can_produce_resource)
+
+ANK_GLOBAL_OBJECT(g_city.mission, __city_mission,
+    fired_message_shown,
+    victory_message_shown
+    );
+
+ANK_GLOBAL_OBJECT(g_city.victory, __city_victory,
+    state,
+    force_win,
+    force_lost
+    );
+
+void __city_victory_reset() {
+    g_city.victory.reset();
+}
+ANK_FUNCTION(__city_victory_reset)
+
+bvariant_map __city_victory_reasons() {
+    bvariant_map result;
+    for (const auto &[reason, met] : get_victory_reasons()) {
+        result[reason] = bvariant(met);
+    }
+    return result;
+}
+ANK_FUNCTION(__city_victory_reasons)
 
 void js_register_city_objects(js_State *J) {
 }

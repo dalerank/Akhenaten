@@ -28,12 +28,12 @@ function mission_debug_draw_properties_victory_status(ev) {
     imgui.begin_table("VictoryStatus", 2, imgui.table_flags_debug_props())
 
     var state_text = "None"
-    if (__scenario_victory.state == 1) { state_text = "WON" }
-    else if (__scenario_victory.state == -1) { state_text = "LOST" }
+    if (city.victory.state == 1) { state_text = "WON" }
+    else if (city.victory.state == -1) { state_text = "LOST" }
 
     imgui.property_input("victory_state", state_text)
-    imgui.property_input("force_win", __scenario_victory, "force_win")
-    imgui.property_input("force_lost", __scenario_victory, "force_lost")
+    imgui.property_input("force_win", city.victory, "force_win")
+    imgui.property_input("force_lost", city.victory, "force_lost")
     __debug_feature_bool("gameopt_disable_victory", "disable_victory")
 
     if (city.winning.population.enabled) {
@@ -63,8 +63,8 @@ function mission_debug_draw_properties_victory_status(ev) {
 
     if (city.winning.housing_count.enabled) {
         imgui.property_input("housing[lvl " + city.winning.housing_level.goal + "]: "
-                             + __scenario_victory_houses_of_required_level() + " / " + city.winning.housing_count.goal,
-                             __scenario_victory_is_housing_condition_met())
+                             + city.victory.houses_of_required_level() + " / " + city.winning.housing_count.goal,
+                             city.victory.is_housing_condition_met())
     }
 
     if (__win_criteria.time_limit.enabled) {
@@ -87,7 +87,7 @@ function mission_debug_draw_properties_victory_reasons(ev) {
         return
     }
 
-    var reasons = __scenario_victory_reasons()
+    var reasons = __city_victory_reasons()
     var names = Object.keys(reasons)
     if (names.length <= 0) {
         imgui.tree_pop()

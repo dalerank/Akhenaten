@@ -5,9 +5,9 @@ function victory_dialog_btn_accept() {
 }
 
 function victory_dialog_continue(months) {
-    __scenario_victory_continue_governing(months)
+    city.victory.continue_governing(months)
     ui.window_city_show()
-    __scenario_victory_reset()
+    __city_victory_reset()
     __game_sound.music_update(1)
 }
 
@@ -24,7 +24,7 @@ function window_victory_dialog_on_init(window) {
     __log_marker("window_show:window_victory_dialog")
     var rank = scenario.campaign_mission_rank
     var is_custom = scenario.scmode != e_scenario_normal
-    var won = __scenario_victory.state == 1
+    var won = city.victory.state == 1
     var next_scenario = rank + 1
     var early_campaign = rank < 10 || is_custom
     var show_continue = rank >= 2 || is_custom

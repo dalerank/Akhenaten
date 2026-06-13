@@ -137,7 +137,7 @@ static void pre_load() { // do we NEED this...?
     grid_xx::init_all_grids();
 
     // clear data
-    g_scenario.victory_state.reset();
+    g_city.victory.reset();
     g_city.migration.reset();
     g_city_planner.reset();
     g_city.init();

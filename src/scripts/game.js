@@ -96,6 +96,8 @@ game_features {
     @gameopt_display_size {}
     @gameplay_change_multiple_temple_complexes {}
     @gameplay_change_work_camp_one_worker_per_month {}
+    @gameplay_fix_editor_events {}
+    @gameopt_disable_victory {}
     @count { get: __game_features_count }
 }
 

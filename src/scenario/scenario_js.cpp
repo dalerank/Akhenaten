@@ -41,45 +41,10 @@ ANK_GLOBAL_OBJECT(g_scenario.monuments, __scenario_monuments,
     third
     );
 
-ANK_GLOBAL_OBJECT(g_scenario.victory_state, __scenario_victory,
-    state,
-    force_win,
-    force_lost
-    );
-
-void __scenario_victory_continue_governing(int months) {
-    g_scenario.victory_state.continue_governing(months);
-}
-ANK_FUNCTION_1(__scenario_victory_continue_governing)
-
-void __scenario_victory_reset() {
-    g_scenario.victory_state.reset();
-}
-ANK_FUNCTION(__scenario_victory_reset)
-
-int __scenario_victory_houses_of_required_level() {
-    return g_scenario.victory_state.houses_of_required_level();
-}
-ANK_FUNCTION(__scenario_victory_houses_of_required_level)
-
-bool __scenario_victory_is_housing_condition_met() {
-    return g_scenario.victory_state.is_housing_condition_met();
-}
-ANK_FUNCTION(__scenario_victory_is_housing_condition_met)
-
 int __scenario_criteria_max_year() {
     return scenario_criteria_max_year();
 }
 ANK_FUNCTION(__scenario_criteria_max_year)
-
-bvariant_map __scenario_victory_reasons() {
-    bvariant_map result;
-    for (const auto &[reason, met] : get_victory_reasons()) {
-        result[reason] = bvariant(met);
-    }
-    return result;
-}
-ANK_FUNCTION(__scenario_victory_reasons)
 
 xstring __scenario_event_msg_text(int title_id, int index) {
     return g_scenario.events.msg_text(title_id, index);

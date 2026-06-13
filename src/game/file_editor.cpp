@@ -48,7 +48,7 @@
 #include "empire/empire_traders.h"
 
 void game_file_editor_clear_data(void) {
-    g_scenario.victory_state.reset();
+    g_city.victory.reset();
     g_city.migration.reset();
     g_city_planner.reset();
     g_city.init();

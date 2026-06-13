@@ -25,6 +25,7 @@
 #include "grid/point.h"
 #include "city/city_trade.h"
 #include "city/city_festival.h"
+#include "city/city_victory.h"
 #include "grid/desirability.h"
 #include "city/city_buildings.h"
 #include "city/city_maintenance.h"
@@ -66,6 +67,7 @@ struct city_t {
     city_monuments_t monuments;
 
     city_festival_t festival;
+    city_victory_t victory;
     city_coverage_t coverage;
     e_overlay current_overlay = OVERLAY_NONE;
     e_overlay previous_overlay = OVERLAY_NONE;
@@ -196,7 +198,6 @@ struct city_t {
     bool determine_granary_get_foods(resource_list &foods, int road_network);
 
     empire_city& ourcity();
-    void victory_check();
     void buildings_update_open_water_access();
 
     void government_distribute_treasury();

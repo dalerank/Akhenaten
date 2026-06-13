@@ -163,7 +163,7 @@ void game_t::advance_week() {
 
 void game_t::advance_month() {
     g_city.update_month(simtime);
-    g_scenario.victory_state.update_months_to_govern();
+    g_city.victory.update_months_to_govern();
     g_distant_battle.update_month();
 
     random_generate_next();                  // TODO: find out the source / reason for this
@@ -207,7 +207,7 @@ void game_t::advance_day() {
     g_distant_battle.update_day();
 
     g_city.update_day(simtime);
-    g_city.victory_check();
+    g_city.victory.victory_check();
     g_city.avg_coverage.update();
 
     g_sound.music_update(false);
@@ -477,7 +477,7 @@ void game_t::time_init(int year) {
 }
 
 void game_t::init_state() {
-    g_scenario.victory_state.reset();
+    g_city.victory.reset();
     g_city.migration.reset();
     map_ring_init();
 
