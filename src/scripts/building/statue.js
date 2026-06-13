@@ -2,10 +2,10 @@ log_info("akhenaten: building statue started")
 
 building_small_statue = {
     variants : [
-      {pack: PACK_GENERAL, id: 61, offset:1}
-      {pack: PACK_GENERAL, id: 61, offset:5}
-      {pack: PACK_EXPANSION, id: 37, offset:1}
-      {pack: PACK_EXPANSION, id: 37, offset:5}
+      {pack: PACK_GENERAL, id: 61, offset:0}
+      {pack: PACK_GENERAL, id: 61, offset:4}
+      {pack: PACK_EXPANSION, id: 37, offset:0}
+      {pack: PACK_EXPANSION, id: 37, offset:4}
       {pack: PACK_TEMPLE_RA, id: 1, offset:27}
     ]
     meta : {
@@ -19,9 +19,10 @@ building_small_statue = {
     flags {
       is_statue: true
       is_beautification: true
+      allow_rotate: true
     }
   }
-  
+
   building_medium_statue = {
     variants : [
       {pack: PACK_GENERAL, id: 8, offset:1},
@@ -40,9 +41,10 @@ building_small_statue = {
     flags {
       is_statue: true
       is_beautification: true
+      allow_rotate: true
     }
   }
-  
+
   building_large_statue = {
     variants : [
       {pack: PACK_GENERAL, id: 7, offset:1},
@@ -61,5 +63,6 @@ building_small_statue = {
     flags {
       is_statue: true
       is_beautification: true
+      allow_rotate: true
     }
   }

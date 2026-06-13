@@ -68,7 +68,7 @@ int building_statue::get_image(e_building_type type, int orientation, int varian
 
     variant %= size;
     image_desc imdesc = statue_params.variants[variant];
-    return imdesc.tid();
+    return (imdesc + orientation).tid();
 }
 
 void building_statue::preview::setup_preview_graphics(build_planner &planer) const {
@@ -103,11 +103,12 @@ int building_statue::preview::next_building_variant(e_building_type type, tile2i
 }
 
 int building_statue::preview::update_relative_orientation(build_planner &p, tile2i tile, int global_rotation) const {
-    return global_rotation + 1;
+    (void)global_rotation;
+    return (p.global_rotation + 1) % 4;
 }
 
 int building_statue::preview::update_building_variant(build_planner &planer) const {
-    return planer.custom_building_variant; 
+    return planer.custom_building_variant;
 }
 
 void building_statue::on_create(int o) {

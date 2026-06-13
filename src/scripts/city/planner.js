@@ -23,7 +23,10 @@ city_planner = extend(__city_planner, {
     tile_to_pixel: __lookup_tile_to_pixel
 
     rotate_by_hotkey: function() {
-        if (!game_features.gameui_rotate_manually) {
+        var cfg = get_building_config_by_id(city_planner.build_type)
+        var allow_rotate = cfg && cfg.flags && cfg.flags.allow_rotate
+
+        if (!game_features.gameui_rotate_manually && !allow_rotate) {
             return
         }
 
