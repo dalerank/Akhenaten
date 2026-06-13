@@ -552,6 +552,11 @@ uint8_t map_get_fertility_for_farm(int grid_offset) {
     return std::min(2 + map_get_fertility_average(tile, 3) + is_irrigated * irrigation_bonus, 99);
 }
 
+int __fertility_for_farm_at_tile(int x, int y) {
+    return map_get_fertility_for_farm(tile2i(x, y));
+}
+ANK_FUNCTION_2(__fertility_for_farm_at_tile)
+
 void map_set_floodplain_growth(int grid_offset, int growth) {
     if (growth >= 0 && growth < 6) {
         map_grid_set(g_terrain_floodplain_growth, grid_offset, growth);
