@@ -10,7 +10,6 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "game/game_config.h"
-#include "graphics/elements/ui.h"
 #include "city/city_buildings.h"
 
 static int terrain_on_desirability_overlay(void) {
@@ -88,21 +87,6 @@ int city_overlay_desirability::get_column_height(const building *b) const {
 
 void city_overlay_desirability::draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {
     ; // nothing
-}
-
-void city_overlay_desirability::get_tooltip_for_building(tooltip_context *c, const building *b, xstring &tooltip){
-    return;
-}
-
-void city_overlay_desirability::get_tooltip(tooltip_context *c, tile2i tile, xstring &tooltip) {
-    int desirability = g_desirability.get(tile);
-    if (desirability < 0) {
-        tooltip = ui::str(66, 91);
-    } else if (desirability == 0) {
-        tooltip = ui::str(66, 92);
-    } else {
-        tooltip = ui::str(66, 93);
-    }
 }
 
 bool city_overlay_desirability::draw_custom_footprint(vec2i pixel, tile2i point, painter &ctx) const {

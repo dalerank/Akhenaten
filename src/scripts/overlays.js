@@ -25,6 +25,7 @@ import overlays.courthouse
 import overlays.fire
 import overlays.crime
 import overlays.criminal
+import overlays.desirability
 
 overlays = [
   {
