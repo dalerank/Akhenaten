@@ -1292,6 +1292,11 @@ localization_en = [
   { key: "#crime_level_normal", group:66, id:59 }
   { key: "#crime_level_high", group:66, id:60 }
 
+  // criminal overlay
+  { key: "#criminal_level_secure", group:66, id:61 }
+  { key: "#criminal_level_high", group:66, id:62 }
+  { key: "#criminal_level_worst", group:66, id:63 }
+
   // tax income overlay
   { key: "#tax_income_not_registered", text: "This house is not registered for taxes, and so does not pay any tax" }
   { key: "#tax_income_none_yet", text: "No tax collected from this house so far this year." }

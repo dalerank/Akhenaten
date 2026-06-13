@@ -34,6 +34,7 @@ House.property.bandstand_juggler = { }
 House.property.bandstand_musician = { }
 House.property.pavillion_musician = { }
 House.property.pavillion_dancer = { }
+House.property.criminal_active = { }
 House.property.worst_desirability_building_id = { }
 House.property.fancy_bazaar_access = { }
 House.property.no_space_to_expand = { }

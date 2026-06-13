@@ -12,9 +12,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "game/game_config.h"
-#include "graphics/elements/ui.h"
 #include "city/city_buildings.h"
-#include "dev/debug.h"
 
 static int terrain_on_crime_overlay(void) {
     return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD
@@ -61,24 +59,6 @@ bool city_overlay_crime::show_figure(const figure *f) const {
 
 int city_overlay_crime::get_column_height(const building* b) const {
     return COLUMN_TYPE_NONE;
-}
-
-void city_overlay_crime::draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {
-    city_overlay::draw_custom_top(pixel, point, ctx);
-
-    if (debug_render_mode() == e_debug_render_overlay_add) {
-        building *b = building_at(point);
-        if (b->id) {
-            bstring32 text;
-            text.printf("%d", b->crime_influence.value);
-            debug_text_a(ctx, text, pixel.x + 15, pixel.y + 15, 0, text, COLOR_LIGHT_BLUE);
-        } else {
-            int crime = g_crime.get(point);
-            bstring32 text;
-            text.printf("%d", crime);
-            debug_text_a(ctx, text, pixel.x + 15, pixel.y + 15, 0, text, COLOR_LIGHT_BLUE);
-        }
-    }
 }
 
 bool city_overlay_crime::draw_custom_footprint(vec2i pixel, tile2i point, painter &ctx) const {
@@ -156,40 +136,6 @@ int city_overlay_criminal::get_column_height(const building* b) const {
 
 void city_overlay_criminal::draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {
     city_overlay::draw_custom_top(pixel, point, ctx);
-}
-
-void city_overlay_criminal::get_tooltip_for_building(tooltip_context* c, const building* b, xstring &tooltip){
-    auto house = ((building *)b)->dcast_house();
-    if (!house || house->house_population() <= 0) {
-        tooltip = ui::str(66, 63);
-        return;
-    }
-
-    auto &housed = house->runtime_data();
-    if (housed.criminal_active >= 80) {
-        tooltip = ui::str(66, 63);
-        return;
-        }
-    else if (housed.criminal_active >= 60) {
-        tooltip = ui::str(66, 62);
-        return;
-        }
-    else if (housed.criminal_active >= 40) {
-        tooltip = ui::str(66, 61);
-        return;
-        }
-    else if (housed.criminal_active >= 30) {
-        tooltip = ui::str(66, 60);
-        return;
-        }
-    else if (housed.criminal_active >= 20) {
-        tooltip = ui::str(66, 59);
-        return;
-        }
-    else {
-        tooltip = ui::str(66, 58);
-        return;
-    }
 }
 
 bool city_overlay_criminal::show_building(const building *b) const {

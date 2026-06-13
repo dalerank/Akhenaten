@@ -146,6 +146,11 @@ void __building_des_influence_range_j(js_State* J) {
     js_helpers::js_push_value(J, building_get(bid)->des_influence.range);
 }
 
+void __building_crime_influence_value_j(js_State* J) {
+    building *b = building_get(bid);
+    js_helpers::js_push_value(J, b ? b->crime_influence.value : 0);
+}
+
 void __building_stored_resource(js_State* J) {
     const int bid = building_this_id(J);
     const int resource = js_helpers::js_to_value<int>(J, 1);
@@ -401,6 +406,7 @@ void js_register_building(js_State *J) {
     jsB_propf(J, js_intern("Building.prototype.__des_influence_value"), __building_des_influence_value_j, 0);
     jsB_propf(J, js_intern("Building.prototype.__des_influence_step_size"), __building_des_influence_step_size_j, 0);
     jsB_propf(J, js_intern("Building.prototype.__des_influence_range"), __building_des_influence_range_j, 0);
+    jsB_propf(J, js_intern("Building.prototype.__crime_influence_value"), __building_crime_influence_value_j, 0);
     jsB_propf(J, js_intern("Building.prototype.__property_getter"), building_proto___property_getter, 1);
     jsB_propf(J, js_intern("Building.prototype.__property_setter"), building_proto___property_setter, 2);
     jsB_propf(J, js_intern("Building.prototype.__can_play_animation"), __building_can_play_animation, 0);

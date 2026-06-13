@@ -5,6 +5,7 @@ Building.property.params = { get: function() { return city.get_building_params(t
 Building.property.des_influence_value = { get: function() { return this.__des_influence_value() } }
 Building.property.des_influence_step_size = { get: function() { return this.__des_influence_step_size() } }
 Building.property.des_influence_range = { get: function() { return this.__des_influence_range() } }
+Building.property.crime_influence_value = { get: function() { return this.__crime_influence_value() } }
 Building.property.tile = { get: function() { return this.__tile() } }
 Building.property.overlay = { get: function() { return this.__overlay() } }
 Building.property.state = { get: function() { return this.__state() } }
