@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ECS, DynVMT, Logical Threads, and Pharaoh — Akhenaten</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    .habr-img { max-width: 100%; margin: .75em 0; display: block; image-rendering: pixelated; }
+    .img-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-start; margin: .75em 0; }
+    .img-row img { max-width: 48%; flex: 1 1 360px; }
+    .img-row figcaption { width: 100%; font-size: 0.9em; color: var(--text-muted); margin-top: -0.25em; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../devblog.html" class="active">Devblog</a></li>
+        <li><a href="../wiki/index.html">Wiki</a></li>
+        <li><a href="../screenshots.html">Screenshots</a></li>
+        <li><a href="../downloads.html">Downloads</a></li>
+        <li><a href="../contributors.html">Contributors</a></li>
+        <li><a href="../contact.html">Join us</a></li>
+        <li><a href="../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-content post-page">
+    <div class="post-meta"><time>June 14, 2026</time> — <a href="../devblog.html">← Devblog</a></div>
+    <h1>ECS, DynVMT, Logical Threads, and Pharaoh</h1>
+
+    <p>
+      <em>English translation of the article originally published on <a href="https://habr.com/ru/articles/849152/" rel="noopener">Habr</a> by Sergei Kushnirenko (<a href="https://github.com/dalerank" rel="noopener">dalerank</a>). All in-game screenshots are from the open-source Akhenaten build.</em>
+    </p>
+
+    <p>
+      In the late 1990s Sierra's historical city-builder series was at the height of its popularity — strong reviews, many imitators, and a long line of descendants from <em>Children of the Nile</em> through <em>Banished</em> (2014), <em>Pharaoh: A New Era</em> (2023), <em>Nebuchadnezzar</em> (2021), and the sadly cancelled <em>Builders of Egypt</em>. The genre's grandparent, in many ways, is still the 1999 original.
+    </p>
+    <p>
+      <em>Pharaoh</em> shipped two years after the beloved <em>Caesar III</em>. It was the first game in the line to move the setting from Rome to Egypt and offered — or rather, largely repeated — a complex loop that still did not depend on micromanaging every building and citizen individually. Many players remember these games through hundreds of failed missions: an angry emperor sending troops, or the kingdom revoking your title over unpaid debts. Simon Bradbury, the studio's technical lead and the soul of the project, left to found Firefly Studios and give us <em>Stronghold</em> a year later.
+    </p>
+    <p>
+      Digging through the binaries of both Caesar and Pharaoh turns up plenty of interesting legacy — technical solutions you still see in other projects, games included. It may look crude next to a modern engine, but there is real elegance here, and remember: these games ran at a respectable 15–30 FPS on single-core Pentiums, 586s, and early Athlons with as little as 32&nbsp;MB of RAM total, not cache. Fast, pretty, and on one core.
+    </p>
+
+    <img src="https://habrastorage.org/r/w780/getpro/habr/upload_files/20c/6c7/d68/20c6c7d6830e8353c3aca6a46022699d.png" alt="Pharaoh city view in Akhenaten" class="habr-img" loading="lazy" />
+
+    <h2>Ancient Egyptian ECS</h2>
+    <p>
+      How does this relate to modern ECS frameworks? Entity–Component–System ideas existed in games long before ENTT went mainstream around 2017. In the Caesar/Pharaoh engine they were never branded as a separate framework, but the principles were already clear and copied across subsystems — one reason the sim could squeeze those 15–20 FPS out of the weakest machines. Today we can afford to rebuild a GPU frame from scratch every tick; on the APIs of the late 1990s that was expensive, and tricks like updating only the dirty screen region or splitting the map into staggered work zones mattered a lot. (It is hard not to grumble when UE&nbsp;5.1 needs two minutes and six gigabytes of RAM to open an empty scene across twelve threads.)
+    </p>
+    <p>
+      In classic OOP you inherit data and behaviour together. A cartpusher inherits from a person, who inherits from a movable object, who inherits from something that plays animations. A trader inherits from a cartpusher because cartpushers already carry things, and so on.
+    </p>
+    <p>
+      The same pattern appears on the map: you need to know whether a tile is water, land, trees, dunes, and so on. Two problems follow. First, inheritance is rigid when types combine — rocks you can build on, or shoreline tiles that are water but sometimes allow construction — and the tree breaks. Second, cache efficiency: every frame the game walks all map tiles to update state, resources, or other fields. In the naive approach each tile is a fat struct:
+    </p>
+    <pre><code>struct Tile {
+    int i, j;
+    int resources;
+    int state;
+    bool isOccupied;
+    ...
+};</code></pre>
+    <p>
+      Updating one field pulls unrelated neighbours into the cache — wasteful on hardware with almost no margin. ECS separates the hot little fields into dense arrays processed by dedicated systems. Map trees go to one grid, rocks to another, buildings to a third, tile animations to a fourth. Architecture gets harder and cross-system dependencies appear, but that was a fair price for speed on a 32&nbsp;MB machine.
+    </p>
+    <p>
+      Simon Bradbury and Mike Gingevich had already settled on the answer by 1998. Game entities sit in arrays indexed by tile offset. The map is fixed at 228×228; the playable area can be smaller, with unused slots marked so systems skip them. Desirability, water access, and per-tile animation all work this way.
+    </p>
+
+    <figure class="img-row">
+      <img src="https://habrastorage.org/r/w780/getpro/habr/upload_files/12d/11f/ecf/12d11fecf12c0f418b2613b87ece6473.png" alt="City map with desirability overlay" loading="lazy" />
+      <img src="https://habrastorage.org/r/w780/getpro/habr/upload_files/466/f70/4a1/466f704a150e003b1e47a967aa0a0329.png" alt="Desirability grid as raw data" loading="lazy" />
+      <figcaption>Left: desirability on the live map. Right: the same data as a flat array — the layout the engine actually iterates.</figcaption>
+    </figure>
+
+    <figure class="img-row">
+      <img src="https://habrastorage.org/r/w780/getpro/habr/upload_files/c85/e9e/ed8/c85e9eed8c09af4e561da7612638ddf8.png" alt="Water access map" loading="lazy" />
+      <img src="https://habrastorage.org/r/w780/getpro/habr/upload_files/130/26c/a0f/13026ca0f6d69562c6c6e9791641f6e4.png" alt="Water access grid" loading="lazy" />
+      <figcaption>Water availability uses the same pattern: one byte (or similar) per tile, updated by systems and read during house evolution.</figcaption>
+    </figure>
+
+    <p>
+      Per-tile animation indices invert the relationship: at render time the engine reads this array to pick sprites; writing the array updates the map display without touching heavier tile objects.
+    </p>
+    <img src="https://habrastorage.org/r/w780/getpro/habr/upload_files/07c/1cc/e6f/07c1cce6f0a297c3db1b70b253733982.png" alt="Per-tile animation index grid" class="habr-img" loading="lazy" />
+
+    <p>
+      Desirability updates illustrate the payoff. In Akhenaten the grid and helpers look like this (structure preserved from the original; names modernised):
+    </p>
+    <pre><code>grid_xx g_desirability_grid = {0, {FS_INT8, FS_INT8}};
+
+void map_grid_add(grid_xx* grid, uint32_t at, uint32_t v) {
+    if (at >= GRID_SIZE_TOTAL)
+        return;
+    ((uint8_t*)grid->items_xx)[at] += v;
+}
+
+void desirability_t::update_buildings() {
+    int max_id = building_get_highest_id();
+    for (int i = 1; i <= max_id; i++) {
+        building* b = building_get(i);
+        if (b->state != BUILDING_STATE_VALID)
+            continue;
+        const model_building* model = model_get_building(b->type);
+        map_grid_add(&g_desirability_grid, grid_offset, model->desirabilty);
+        ...
+    }
+}</code></pre>
+    <p>
+      A desirability pass becomes indexed array writes instead of chasing fat tile objects. Save/load can memcpy whole grids without reconstructing graphs of pointers — another win on period hardware.
+    </p>
+
+    <h2>Ancient DynVMT</h2>
+    <p>
+      The engine is plain C; comments and constants recovered from the binary put Pharaoh at engine version 6.4 (Caesar III was 6.1). There were no C++ virtual tables, but the team built the same idea with callbacks — dynamic dispatch before it had a fashionable name.
+    </p>
+    <p>
+      Static dispatch binds one implementation at compile time. Virtual methods need runtime lookup when a pointer might point at a derived type:
+    </p>
+    <pre><code>struct B {
+    virtual void bar() { printf("B::bar"); }
+};
+struct C : public B {
+    virtual void bar() override { printf("C::bar"); }
+};
+B* b = new C();
+b->bar();  // must call C::bar, not B::bar</code></pre>
+    <p>
+      The UI needed something VMT-like for pseudo windowing. Only one window was truly active — drawing every panel every frame would have dropped framerate to 2–3 FPS on target machines. The solution is a struct of function pointers set in each window's constructor:
+    </p>
+    <pre><code>struct window_type {
+    e_window_id id;
+    void (*draw_background)() = nullptr;
+    void (*draw_foreground)() = nullptr;
+    void (*handle_input)(const mouse* m, const hotkeys* h) = nullptr;
+    void (*get_tooltip)(tooltip_context* c) = nullptr;
+    void (*draw_refresh)() = nullptr;
+};</code></pre>
+    <p>
+      That removed giant <code>switch</code> statements, split implementations across files, and gave a real window stack. The advisors screen reuses one shell and swaps the draw callbacks per advisor — in C++ you would need a class per advisor or a pile of overrides; here you just replace pointers.
+    </p>
+    <pre><code>void window_file_dialog_show(file_type type, file_dialog_type dialog_type) {
+    static window_type window = {
+        WINDOW_FILE_DIALOG,
+        window_draw_underlying_window,
+        draw_foreground,
+        handle_input
+    };
+    init(type, dialog_type);
+    window_show(&window);
+}</code></pre>
+
+    <img src="https://habrastorage.org/r/w780/getpro/habr/upload_files/d98/42c/9bf/d9842c9bf6c05829b645e04a633b6512.png" alt="Window stack and callback dispatch in the original UI model" class="habr-img" loading="lazy" />
+
+    <p>
+      Akhenaten is migrating these windows to MuJS autoconfig — same separation of data and behaviour, but hot-reloadable. The DynVMT pattern is what we are slowly replacing, not what we are copying verbatim.
+    </p>
+
+    <h2>Logical Threads from the Last Century</h2>
+    <p>
+      For the last twenty years games often use OS threads for parallel work. Before the mid-2000s most titles were single-threaded for simulation; threads handled audio decode, IO, and texture upload, not city ticks. An event loop still dispatches input — as today — but the sim also had to <em>look</em> like it did many jobs per frame without actually running them all at once.
+    </p>
+    <p>
+      Pharaoh's answer is a <strong>logical thread</strong>: split the city update into steps (fire risk, tree growth, immigrant generation, well coverage, …) and run one step per game tick in a round-robin. Over ten ticks you complete a full cycle; animations still advance every frame, so the player does not feel the stretch. Roughly 140&nbsp;ms of work spread across ten ticks becomes ~14&nbsp;ms per frame plus render — 7&nbsp;FPS becomes 20–30&nbsp;FPS.
+    </p>
+    <p>
+      Akhenaten still carries the skeleton of that design:
+    </p>
+    <pre><code>void game_t::update_city(int ticks) {
+    g_city.buildings.update_tick(game.paused);
+
+    switch (gametime().tick) {
+    case 1:
+        g_city.religion.update();
+        g_city.coverage_update();
+        break;
+    case 2:
+        g_sound.music_update(false);
+        break;
+    case 3:
+        widget_minimap_invalidate();
+        break;
+    case 4:
+        g_city.kingdome.update();
+        break;
+    case 5:
+        formation_update_all(false);
+        break;
+    case 6:
+        map_natives_check_land();
+        break;
+    ...
+    }</code></pre>
+
+    <img src="https://habrastorage.org/r/w780/getpro/habr/upload_files/8ce/d8a/b8b/8ced8ab8bc31734168df8fece6dd5184.png" alt="Game tick phases spread across frames" class="habr-img" loading="lazy" />
+
+    <h2>God Object and the Memory Budget</h2>
+    <p>
+      A <em>god object</em> is the anti-pattern everyone warns about — one type that knows and does too much. I have yet to see a game engine completely avoid some version of it. Pharaoh's figure struct is the textbook case: one blob for every walker type, with type-specific state packed in a <code>union</code> to save RAM. On low-memory mode the game capped figures at 2&nbsp;000 instead of 4&nbsp;000 so more people could play at all.
+    </p>
+    <p>
+      The upside ends quickly; the downside is maintenance pain and the occasional midnight corruption. Archaeology has its rules — to stay compatible with original saves you tolerate awkward layouts for a while. Akhenaten is peeling types apart into real figure classes, but the legacy shape is still visible in <a href="https://github.com/dalerank/Akhenaten/blob/master/src/figure/figure.h" rel="noopener"><code>src/figure/figure.h</code></a>:
+    </p>
+    <pre><code>class figure {
+public:
+    e_resource resource_id;
+    uint16_t resource_amount_full;
+    uint16_t home_building_id;
+    uint16_t immigrant_home_building_id;
+    uint16_t destination_building_id;
+    uint16_t id;
+    uint16_t sprite_image_id;
+    ...
+    union {
+        struct { ... } herbalist;
+        struct { ... } taxman;
+        struct { ... } flotsam;
+        struct { ... } fishpoint;
+        ...
+    } local_data;
+};</code></pre>
+
+    <img src="https://habrastorage.org/r/w780/getpro/habr/upload_files/810/91a/37c/81091a37c403b58153a8b17c3c0798da.png" alt="Figure data layout — shared fields plus per-type union" class="habr-img" loading="lazy" />
+
+    <h2>Eternal Pyramids</h2>
+    <p>
+      Pyramids are still hard — the ASM tangle for construction logic is a project of its own. Simpler monuments are further along: mastabas already build in-engine. When the original article was written that was the frontier; RA&nbsp;0.27 has since pushed monument rating, temple complexes, and script-driven placement much further. The pyramid stack remains on the todo list.
+    </p>
+
+    <figure class="img-row">
+      <img src="https://habrastorage.org/getpro/habr/upload_files/8b7/0e5/4cb/8b70e54cb0d5fc89f4c080698ff12609.gif" alt="Mastaba construction in Akhenaten" loading="lazy" />
+      <img src="https://habrastorage.org/getpro/habr/upload_files/2ee/d07/2ef/2eed072ef93de14e1f6c95c6f3f65a8c.gif" alt="Monument work in progress" loading="lazy" />
+      <figcaption>Mastabas in the open-source build — the pyramid logic the article hoped for is still catching up.</figcaption>
+    </figure>
+
+    <p>
+      Thanks for reading. If the project interests you, issues and PRs are welcome on <a href="https://github.com/dalerank/Akhenaten" rel="noopener">GitHub</a> — we are still building pyramids, one layer at a time.
+    </p>
+
+    <p>
+      <strong>See also:</strong>
+      <a href="reverse-engineering-caesar3-rendering.html">Reverse-engineering Caesar III: City Rendering (Part 2)</a>,
+      <a href="reverse-engineering-caesar3-game-logic.html">Reverse-engineering Caesar III: Game Logic (Part 3)</a>,
+      <a href="how-to-build-a-mastaba.html">How to Build a Mastaba</a>.
+    </p>
+
+    <div class="post-nav">
+      <span></span>
+      <a href="ra-027-release-notes.html">Akhenaten RA 0.27 — Release Notes →</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>
