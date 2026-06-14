@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Akhenaten RA 0.27 — Release Notes — Akhenaten</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../devblog.html" class="active">Devblog</a></li>
+        <li><a href="../wiki/index.html">Wiki</a></li>
+        <li><a href="../screenshots.html">Screenshots</a></li>
+        <li><a href="../downloads.html">Downloads</a></li>
+        <li><a href="../contributors.html">Contributors</a></li>
+        <li><a href="../contact.html">Join us</a></li>
+        <li><a href="../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-content post-page">
+    <div class="post-meta"><time>June 14, 2026</time> — <a href="../devblog.html">← Devblog</a></div>
+    <h1>Akhenaten RA 0.27 — Eight Months of Script, Simulation, and Polish</h1>
+
+    <p>
+      <strong>RA 0.27</strong> is out. Since <a href="https://github.com/dalerank/Akhenaten/releases/tag/ra2510">RA 0.26</a> in late October 2025 the project has landed roughly <strong>two thousand commits</strong> — not a single headline feature, but a sustained push toward two goals: make the game behave more like original <em>Pharaoh</em>, and move as much of the engine as possible into JavaScript so modders can change behaviour without recompiling.
+    </p>
+    <p>
+      This post is the release-notes companion: what changed for players, what changed under the hood, and where the project is headed next.
+    </p>
+
+    <h2>The Big Theme: Logic Leaves C++</h2>
+    <p>
+      If RA 0.26 was about localization, deferred rendering, and the enemy system, RA 0.27 is the <em>script migration wave</em>. Piece by piece, hardcoded C++ has been replaced with MuJS configs and event handlers. The pattern is always the same: declare data in a <code>[es=...]</code> block, wire behaviour through events, hot-reload with <code>--mixed</code>, ship.
+    </p>
+
+    <img src="../images/script-defined-overlays-es.png" alt="Building info window under a script-defined city overlay" class="post-image" loading="lazy" />
+
+    <h3>City overlays — all of them</h3>
+    <p>
+      The overlay <em>menu</em> moved to script in May. This release finishes the job: <strong>every built-in city overlay</strong> — Water, Health, Religion, Crime, Fire, Labor, Education, Entertainment, Food, Tax, and more — is now declared with <code>[es=city_overlay]</code> and registered through the entity-system registry. Tooltip text and column heights route through <code>city.overlay_tooltip</code> and script event handlers instead of per-overlay C++ subclasses.
+    </p>
+    <p>
+      For modders that means a custom overlay for a new building type is a self-contained <code>.js</code> file, not a new translation unit and a rebuild. See the dedicated write-up: <a href="script-defined-overlays-es.html">Overlays Become Script-Declared</a>.
+    </p>
+
+    <h3>Windows players actually open</h3>
+    <ul>
+      <li><strong>Main menu</strong> — continue/load/new game, GitHub update check, logo skip via <code>--no-logo</code></li>
+      <li><strong>Scenario selection</strong> — campaign periods, mission info panel, custom map browser (<a href="scenario-selection-js.html">write-up</a>)</li>
+      <li><strong>All advisor screens</strong> — finance, religion, health, military, population, housing, entertainment, ratings, imperial overseer, chief advisor</li>
+      <li><strong>Build menu</strong> and sidebar — costs, captions, temple-complex upgrades, mothball toggles on industry windows</li>
+      <li><strong>Hotkey configuration</strong> — full remapping UI in script with persistence fixes</li>
+      <li><strong>Victory and defeat</strong> — win checks, continue-governing timer, and dialog content now live in <code>src/scripts/city/victory.js</code></li>
+      <li><strong>Granary, bazaar, warehouse, tax collector, festival square, hold-festival</strong> — info and orders panels script-driven</li>
+      <li><strong>Top menu</strong> — save, load, replay, exit, screenshots, debug toggles</li>
+    </ul>
+
+    <img src="../images/scenario-selection-mission.png" alt="Scenario selection mission info panel" class="post-image" loading="lazy" />
+
+    <h3>Build planner and roads</h3>
+    <p>
+      Road construction — path routing, junction sprites, drag preview — moved to <code>road.js</code>. The preview places tiles temporarily on the map to read real corner sprites, so half-drawn roads look correct. Statue placement preview and rotation (<code>R</code> hotkey, per-building <code>allow_rotate</code>) followed the same path. Copy-build-under-cursor (<strong>Q</strong> by default) also lives in script now.
+    </p>
+    <img src="../images/road-construction-js.png" alt="Green road preview dragged across the city map" class="post-image" loading="lazy" />
+
+    <h2>Gameplay: Closer to Pharaoh.exe</h2>
+    <p>
+      Script migration is the engineering story; accuracy is the player story. RA 0.27 fixes and restores systems that had been missing, simplified, or wrong.
+    </p>
+
+    <h3>Combat and military</h3>
+    <ul>
+      <li><strong>Player legions fight again</strong> — on-map battles and distant battles both work; recruitment starts when the standard is at rest</li>
+      <li>Army advisor layout fixed — legion rows stay inside the window, battalion counts correct</li>
+      <li>Fort troop-type signs render properly; low-morale rout no longer crashes on a null soldier</li>
+    </ul>
+
+    <h3>Economy, resources, and industry</h3>
+    <ul>
+      <li><strong>Resource depletion</strong> for gold, stone, sandstone, copper, gems, and clay — mines and quarries exhaust their tiles over time, with save/load of depletion grids</li>
+      <li><strong>Irrigation</strong> — water lifts and ditches spread <code>irrigation_value</code> across farmland</li>
+      <li><strong>Meadow farms</strong> and unified floodplain/meadow placement rules</li>
+      <li>Dock warehouse search retries across budget slots; optional double-haul gameplay flag</li>
+      <li>Kingdom trader imports capped at 400 per storage slot (matching original behaviour)</li>
+      <li>Bazaar spawn delay always runs; buyer dispatch preferred over trader when both are ready</li>
+    </ul>
+
+    <h3>Religion, monuments, and city life</h3>
+    <ul>
+      <li><strong>Monument rating</strong> uses Pharaoh.exe weights; mastabas and pyramid variants included</li>
+      <li>Seth minor curse (fort destruction) and Osiris locust curse (<code>building_curse_farms</code>) implemented</li>
+      <li>Temple complex upgrades, road-access corner offsets fixed, oracle branch for part 2</li>
+      <li>Police station, mortuary, and festival logic restored or improved</li>
+      <li>Hyenas hunt ostriches; city animals API exposed to mission scripts</li>
+      <li>Figure phrase sounds overhauled for dozens of walker types</li>
+    </ul>
+
+    <h3>Missions and campaign</h3>
+    <ul>
+      <li>Early missions (Nubt, Thinis, Perwadjyt) aligned with the original; Selima and Saqqara win criteria corrected</li>
+      <li>Mission intro popups restored via per-mission JS handlers</li>
+      <li>Empire map disabled in missions 4 and 5, as in the OG campaign</li>
+      <li>Campaign victory now advances to the next mission reliably</li>
+      <li>Tutorial triggers separated from real win conditions (e.g. disease_handled in mission 2)</li>
+      <li>Pharaoh gift/request events for later missions ported to JS handlers</li>
+    </ul>
+
+    <h2>UI and Quality of Life</h2>
+    <ul>
+      <li><strong>BIK video playback</strong> — intro and briefing movies from the original <code>.bik</code> files</li>
+      <li><strong>Windows self-update</strong> from GitHub releases, URL configured in script</li>
+      <li>Optional <strong>save prompt on Alt+F4</strong> (<code>gameui_prompt_save_on_exit</code>)</li>
+      <li>Hovered map tile highlighted with a black outline</li>
+      <li>Sound settings window redesigned — per-channel volume for music, speech, effects, ambient, city (<a href="sound-settings-window.html">write-up</a>)</li>
+      <li>CLI flags: <code>--no-logo</code>, <code>--no-resource</code>, <code>--log-sound</code>, <code>--config:NAME=VALUE</code></li>
+      <li>Empire window always closable; siege battle icon position exposed; traders draw correctly on the map</li>
+      <li>Message list capacity raised; mission goals panel layout fixed</li>
+    </ul>
+
+    <img src="../images/overlay-menu-js.png" alt="Overlay menu with localized category titles" class="post-image" loading="lazy" />
+
+    <h2>Scenario Editor and Debug Tools</h2>
+    <p>
+      The in-game scenario editor gained real persistence for points that used to be discarded on save: land and sea invasion points, entry/exit, river entry, earthquake locations, predator herd tiles. Invasion points reset correctly on scenario load. A debug <strong>terrain paint brush</strong> lets you paint land, water, floodplain, reeds, rocks, ore, dunes, and meadow at runtime — with physics enforced (water depth, moisture regrowth, homeless on demolition). Contributed by <strong>@cwshields</strong>; see <a href="terrain-paint-brush.html">the brush write-up</a>.
+    </p>
+    <p>
+      Debug panels for missions, buildings, migration, sound, clouds, game features, game time, build planner, and sentiment moved to JavaScript. Console commands for fire, victory, money, collapse, and more can be registered from script.
+    </p>
+
+    <h2>Platforms and Distribution</h2>
+    <ul>
+      <li><strong>Windows</strong> — nightly builds, self-update, BugTrap crash reporting</li>
+      <li><strong>Linux</strong> — binary zip, Flatpak, Bazzite image</li>
+      <li><strong>macOS</strong> — separate ARM and x86_64 builds with corrected deployment targets</li>
+      <li><strong>Android</strong> — Gradle-based build, SDL2/SDL2_mixer from source</li>
+      <li><strong>Browser</strong> — Emscripten build on its own play page</li>
+      <li><strong>itch.io</strong> — official download channel alongside GitHub</li>
+    </ul>
+    <p>
+      German localization files landed (<code>localization_de.js</code>, <code>eventmsg_de.js</code>). The <a href="../wiki/player/index.html">Player Wiki</a> grew substantially — housing, roads, farms, missions, and individual building pages written from live engine data.
+    </p>
+
+    <h2>Under the Hood: Tests and Stability</h2>
+    <p>
+      A <strong>JS-driven integral test framework</strong> now boots the real game under <code>--integraltests</code>, runs each <code>tests/*.js</code> file sequentially, and reports PASS/FAIL in the log. CI surfaces results on GitHub Actions. Current coverage includes main menu, file dialogs, granary info, road placement, pottery workshop placement, work camp info, and victory dialog flow. Tests fail automatically if the log contains a MuJS <code>TypeError</code> — catching script regressions before they reach players.
+    </p>
+    <p>
+      Dozens of <code>on_place_checks</code> fixes chain building overrides back to the base implementation so placement warnings (weaver flax source, shrine road access, water supply, workshops, and more) fire correctly. Routing improvements keep citizens off shorelines under roads and boats off corner tiles.
+    </p>
+
+    <h2>Modding Quick Reference</h2>
+    <ul>
+      <li>Hot-reload scripts: <code>akhenaten --mixed /path/to/scripts</code> (macOS/Linux)</li>
+      <li>Unpack embedded scripts from the mods window or <code>--unpack_scripts</code></li>
+      <li>Override features: <code>--config:pyramid_speedup=1</code> style CLI flags</li>
+      <li>Building configs: <code>src/scripts/building/</code></li>
+      <li>City systems: <code>src/scripts/city/</code> (victory, festival, animals, …)</li>
+      <li>Mission scripts: dotted import paths, per-mission handlers in <code>src/scripts/mission/</code></li>
+      <li>MuJS debugger: start from the top-menu debug entry, attach VS Code on port 4711</li>
+    </ul>
+
+    <h2>Download</h2>
+    <p>
+      <strong>RA 0.27</strong> (version <code>0.2.7</code>) is available from <a href="https://github.com/dalerank/Akhenaten/releases">GitHub Releases</a> and <a href="https://dalerank.itch.io/Akhenaten">itch.io</a>. Saves from RA 0.26 should load; report issues on <a href="https://github.com/dalerank/Akhenaten/issues">GitHub</a> or <a href="https://discord.gg/HS4njmBvpb">Discord</a>.
+    </p>
+    <p>
+      Thank you to everyone who filed bugs, sent PRs, and playtested nightly builds — especially <strong>@cwshields</strong>, <strong>Chase Shields</strong>, <strong>MacThings</strong>, <strong>IvanAnis777</strong>, and the rest of the contributors who shaped this release.
+    </p>
+
+    <div class="post-nav">
+      <a href="statue-preview-and-rotation.html">← Statue Preview and Rotation Move to Script</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>
