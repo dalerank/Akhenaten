@@ -73,7 +73,6 @@ declare_console_command_p(nextyear) {
 const e_sound_type_tokens_t ANK_CONFIG_ENUM(e_sound_type_tokens);
 
 namespace {
-    static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700};
     static time_millis last_update;
 }
 
@@ -346,7 +345,7 @@ static int get_elapsed_ticks() {
 
     time_millis now = time_get_millis();
     time_millis diff = now - last_update;
-    if (diff < MILLIS_PER_TICK_PER_SPEED[game_speed_index] + 2) {
+    if (diff < game.tick_timer_ms) {
         return 0;
     }
 

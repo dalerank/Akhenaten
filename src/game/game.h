@@ -51,6 +51,7 @@ enum e_session_type {
 class MovieWriter;
 struct event_game_mission_pre_load {};
 struct event_game_scripts_was_reloaded {};
+struct event_update_game_tick_timer { uint8_t reserved = 0; };
 struct event_debug_properties_draw_mission_info { uint8_t reserved = 0; };
 struct event_report_bug_result { int ok; xstring url; xstring error; };
 
@@ -83,6 +84,7 @@ struct game_t {
     uint8_t pending_delete_type = 0;
     uint8_t logo_show_patch_message = 0;
     int mission_choice_open_scenario_id = 0;
+    int tick_timer_ms = 37;
 
     MovieWriter *mvwriter = nullptr;
     simulation_time_t simtime;

@@ -29,7 +29,8 @@ ANK_GLOBAL_OBJECT(game, __game,
     mission_choice_open_scenario_id,
     debug_properties,
     debug_terrain_paint,
-    paused);
+    paused,
+    tick_timer_ms);
 
 ANK_GLOBAL_OBJECT(g_screen, __screen,
     width,

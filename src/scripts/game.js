@@ -177,6 +177,7 @@ function event_change_gamespeed_handler(ev) {
         }
     }
     game_features.gameopt_game_speed = s
+    emit event_update_game_tick_timer{ reserved: 0 }
 }
 
 var app_pending_exit_after_save = false

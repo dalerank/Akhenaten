@@ -3,6 +3,7 @@ log_info("akhenaten: ui speed options window started")
 function speed_options_on_cancel() {
     var w = speed_options_window
     game_features.gameopt_game_speed = w.original_game_speed
+    emit event_update_game_tick_timer{ reserved: 0 }
     game_features.gameopt_scroll_speed = w.original_scroll_speed
     game_features.gameopt_clouds_speed = w.original_clouds_speed
     game_features.gameopt_middle_mouse_camera_pan = w.original_middle_mouse_camera_pan
