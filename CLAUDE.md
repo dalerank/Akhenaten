@@ -4,7 +4,7 @@
 
 Modern open-source reimplementation of the classic city-builder **Pharaoh (1999)** by Impressions Games.
 Fork of Julius/Augustus, targets Pharaoh + Cleopatra expansion. Full savegame compatibility with the original.
-Version: 0.2.6 | License: AGPL-3.0 | Solo maintainer + community contributors.
+Version: 0.2.7 | License: AGPL-3.0 | Solo maintainer + community contributors.
 
 ## Build (Windows)
 
