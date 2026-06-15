@@ -22,6 +22,7 @@
 #include "sound/sound_city.h"
 #include "game/gods.h"
 #include "figuretype/figure_physician.h"
+#include "figuretype/figure_fishing_boat.h"
 #include "figuretype/figure_war_ship.h"
 #include "figuretype/figure_worker.h"
 #include "city/city_floods.h"
@@ -105,6 +106,7 @@ void js_register_game_constants(js_State* J) {
     _R(ACTION_126_ROAMER_RETURNING)
     _R(ACTION_60_PHYSICIAN_CREATED)
     _R(ACTION_9_WORKER_CREATED)
+    _R(ACTION_194_FISHING_BOAT_AT_WHARF)
     _R(ACTION_203_WARSHIP_MOORED)
     _R(ACTION_204_WARSHIP_ATTACK)
 

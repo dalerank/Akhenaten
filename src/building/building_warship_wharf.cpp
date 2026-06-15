@@ -1,13 +1,8 @@
 #include "building_warship_wharf.h"
 
 #include "grid/water.h"
-#include "grid/figure.h"
-#include "grid/image.h"
-#include "grid/building.h"
-#include "grid/building_tiles.h"
 #include "city/city.h"
 #include "construction/build_planner.h"
-#include "figuretype/figure_war_ship.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_warship_wharf);
@@ -29,16 +24,6 @@ void building_warship_wharf::spawn_figure() {
     if (has_road_access()) {
         common_spawn_labor_seeker(current_params().min_houses_coverage);
     }
-}
-
-bool building_warship_wharf::ship_moored() const {
-    figure *f = base.get_figure(BUILDING_SLOT_BOAT);
-    if (!f->is_valid()) {
-        return false;
-    }
-
-    const bool moored = (f->action_state == ACTION_203_WARSHIP_MOORED);
-    return moored;
 }
 
 void building_warship_wharf::update_month() {

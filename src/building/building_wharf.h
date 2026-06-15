@@ -20,12 +20,9 @@ public:
     virtual void update_map_orientation(int orientation) override;
     virtual void highlight_waypoints() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
-    virtual void update_graphic() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void set_water_access_tiles(const water_access_tiles &tiles) override;
 
     water_access_tiles get_water_access_tiles() const;
-    
-    virtual bool ship_moored() const { return false; }
 };
 

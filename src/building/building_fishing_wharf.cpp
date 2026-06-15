@@ -8,7 +8,6 @@
 #include "game/game_config.h"
 #include "figuretype/figure_fishing_boat.h"
 #include "core/random.h"
-#include "grid/image.h"
 #include "widget/city/ornaments.h"
 #include "sound/sound_building.h"
 #include "game/game.h"
@@ -70,40 +69,6 @@ void building_fishing_wharf::update_month() {
     map_water_update_docking_points(base, get_orientation(), 1);
 }
 
-void building_fishing_wharf::update_graphic() {
-    building_impl::update_graphic();
-
-    if (!can_play_animation()) {
-        set_animation(animkeys().none);
-        return;
-    }
-    
-    figure *f = base.get_figure(BUILDING_SLOT_BOAT);
-    if (!f->is_valid()) {
-        set_animation(animkeys().none);
-        return;
-    }
-
-    int image_warf = map_image_at(tile());
-    int image_warf_base = base_img();
-    const bool has_cart = base.get_figure_id(BUILDING_SLOT_CARTPUSHER);
-    xstring animkey;
-    if (f->action_state != ACTION_194_FISHING_BOAT_AT_WHARF) {
-        if (image_warf == image_warf_base) animkey = animkeys().wait_n;
-        else if (image_warf == image_warf_base + 1) animkey = animkeys().wait_w;
-        else if (image_warf == image_warf_base + 2) animkey = animkeys().wait_s;
-        else animkey = animkeys().wait_e;
-    } else {
-        if (has_cart) animkey = animkeys().none;
-        else if (image_warf == image_warf_base) animkey = animkeys().work_n;
-        else if (image_warf == image_warf_base + 1) animkey = animkeys().work_w;
-        else if (image_warf == image_warf_base + 2) animkey = animkeys().work_s;
-        else animkey = animkeys().work_e;
-    }
-
-    set_animation(animkey);
-}
-
 void building_fishing_wharf::spawn_figure() {
     check_labor_problem();
 
@@ -129,7 +94,7 @@ void building_fishing_wharf::spawn_figure() {
                     f->set_home(id());
                     base.set_figure(BUILDING_SLOT_BOAT, f);
                     random_generate_next();
-                    f->wait_ticks = random_short() % 30; // ok                   
+                    f->wait_ticks = random_short() % 30; // ok
                 }
             }
         }

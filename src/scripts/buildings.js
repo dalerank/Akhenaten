@@ -5,6 +5,10 @@ import building.prototype
 import building.building_params
 import building.bazaar
 import building.dock
+import building.wharf_common
+import building.transport_wharf
+import building.warship_wharf
+import building.fishing_wharf
 import building.shipyard
 import building.roadblock
 import building.house

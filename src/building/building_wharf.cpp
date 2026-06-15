@@ -1,7 +1,6 @@
 ﻿#include "building_wharf.h"
 
 #include "grid/water.h"
-#include "grid/image.h"
 #include "grid/building.h"
 
 void building_wharf::on_create(int orientation) {
@@ -48,32 +47,6 @@ void building_wharf::on_tick(bool refresh_only) {
         d.docker_anim_frame++;
         d.docker_anim_frame %= (anim_wharf.max_frames * anim_wharf.frame_duration);
     }
-}
-
-void building_wharf::update_graphic() {
-    building_impl::update_graphic();
-
-    if (!can_play_animation()) {
-        set_animation(animkeys().none);
-        return;
-    }
-
-    int image_warf = map_image_at(tile());
-    int image_warf_base = base_img();
-    xstring animkey;
-    if (!ship_moored()) {
-        if (image_warf == image_warf_base) animkey = animkeys().wait_n;
-        else if (image_warf == image_warf_base + 1) animkey = animkeys().wait_w;
-        else if (image_warf == image_warf_base + 2) animkey = animkeys().wait_s;
-        else animkey = animkeys().wait_e;
-    } else {
-        if (image_warf == image_warf_base) animkey = animkeys().work_n;
-        else if (image_warf == image_warf_base + 1) animkey = animkeys().work_w;
-        else if (image_warf == image_warf_base + 2) animkey = animkeys().work_s;
-        else animkey = animkeys().work_e;
-    }
-
-    set_animation(animkey);
 }
 
 bool building_wharf::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
