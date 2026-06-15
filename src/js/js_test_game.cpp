@@ -185,6 +185,11 @@ bool __test_start_city_session(pcstr map_path) {
 }
 ANK_FUNCTION_1(__test_start_city_session);
 
+void __test_end_city_session() {
+    game.session.active = false;
+}
+ANK_FUNCTION(__test_end_city_session);
+
 void __test_set_treasury(int amount) {
     g_city.finance.treasury = amount;
 }

@@ -28,6 +28,7 @@ function test_ensure_city_session(map_path) {
 }
 
 function test_reload_city_session(map_path) {
+    __test_end_city_session()
     return __test_start_city_session(map_path)
 }
 

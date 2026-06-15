@@ -3,6 +3,7 @@
 #include "grid/road_canal.h"
 #include "grid/point.h"
 #include "grid/grid.h"
+#include "grid/water.h"
 #include "grid/routing/routing.h"
 #include "building/building_irrigation_ditch.h"
 #include "graphics/image.h"
@@ -25,6 +26,11 @@ void __map_terrain_add(tile2i tile, int terrain) {
     map_terrain_add(tile, terrain);
 }
 ANK_FUNCTION_2(__map_terrain_add)
+
+void __map_water_rebuild_shores() {
+    map_water_rebuild_shores();
+}
+ANK_FUNCTION(__map_water_rebuild_shores)
 
 bool __map_terrain_has_adjacent_x_with_type(tile2i tile, int terrain) {
     return map_terrain_has_adjacent_x_with_type(tile.grid_offset(), terrain);
