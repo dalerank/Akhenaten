@@ -454,6 +454,7 @@ void game_t::update() {
         anti_scum_random_15bit();
     }
 
+    events::emit(event_update_game_tick_timer{});
     events::process();
 }
 

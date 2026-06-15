@@ -29,6 +29,7 @@ import building.booth
 import building.firehouse
 import building.hunting_lodge
 import building.pottery
+import building.papyrus_maker
 import building.mine_copper
 import building.mine_gold
 import building.mine_gems

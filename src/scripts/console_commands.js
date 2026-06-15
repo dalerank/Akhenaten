@@ -14,6 +14,15 @@ function console_command_add_pottery(args) {
 	__cheat_add_resource(RESOURCE_POTTERY, amount)
 }
 
+[console_command=addpapyrus]
+function console_command_addpapyrus(args) {
+	var amount = parseInt((args && args[0]) || "100", 10)
+	if (amount <= 0) {
+		amount = 100
+	}
+	__cheat_add_resource(RESOURCE_PAPYRUS, amount)
+}
+
 [console_command=add_chickpeas]
 function console_command_add_chickpeas(args) {
 	var amount = parseInt((args && args[0]) || "100", 10)
