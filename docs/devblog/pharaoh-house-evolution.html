@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>House Evolution Mechanics in Pharaoh (1999) — Akhenaten</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../devblog.html" class="active">Devblog</a></li>
+        <li><a href="../wiki/index.html">Wiki</a></li>
+        <li><a href="../screenshots.html">Screenshots</a></li>
+        <li><a href="../downloads.html">Downloads</a></li>
+        <li><a href="../contributors.html">Contributors</a></li>
+        <li><a href="../contact.html">Join us</a></li>
+        <li><a href="../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-content post-page">
+    <div class="post-meta"><time>June 19, 2026</time> — <a href="../devblog.html">← Devblog</a></div>
+    <h1>House Evolution Mechanics in Pharaoh (1999)</h1>
+
+    <img src="https://habrastorage.org/r/w1560/getpro/habr/upload_files/f84/c59/c21/f84c59c21506838ac105d2c3c937e51d.png" alt="Houses evolving in a Pharaoh city" class="post-image" loading="lazy" />
+
+    <p>The journey from simple huts to luxurious manors decorated with frescoes and columns in <em>Pharaoh</em> is not just a matter of architecture and different textures. It reflects the player's care for their virtual city — its needs, faith and safety. Every dwelling in the city is an FSM that reacts to the conditions around it: food supply, access to water, religious rites, cultural delights and much more.</p>
+    <p>As soon as you start satisfying ever more diverse needs of the citizens, their houses begin to change — sometimes imperceptibly, sometimes rapidly. This system lies at the very heart of the game, as it did in the previous game of the series; houses influence each other and neighbouring buildings, and behind the simple visual component of a couple of textures per house level hides a complex simulation mechanism that makes every district of the city unique.</p>
+    <p>In this article I'll try to explain how house evolution works, what requirements stand behind each housing level, and how it was implemented in the original game. If you happened to miss the gathering of our priestly circle... sorry, the previous articles about restoring the sources of this old city-builder — be sure to find time to take a look at a couple of interesting moments (<a href="pharaoh-engine-ecs-dynvtbl.html">ECS, DynVMT, Logical Threads, and Pharaoh</a>, <a href="how-to-build-a-mastaba.html">How to Build a Mastaba</a>).</p>
+    <p>All screenshots in this article were taken on the project's renderer; the <a href="https://github.com/dalerank/Akhenaten" target="_blank">sources are on github</a>.</p>
+
+    <hr/>
+
+    <h2>Theory without code</h2>
+    <img src="https://habrastorage.org/r/w1560/getpro/habr/upload_files/01b/d02/930/01bd02930775b8828770ea47ff0b8da2.png" alt="House needs and stored goods" class="post-image" loading="lazy" />
+    <p>Your subjects always demand something: grain, beer, a place to pray... Naturally, needs are an integral part of the game, of the city's life cycle — it's a city-builder, after all. Needs translate into concrete benefits: content residents pay more taxes, rebel less often and aren't in a hurry to start fires (the rioters mechanic) at their neighbours'. In such conditions the city flourishes, and statues in your honour reach up to the sun god Ra.</p>
+    <p>Each satisfied need should trigger some game logic — be it increased stability, taxes, or rooms for new residents. I don't know what these mechanics were called in the original game; from my correspondence with Simon Bradbury, the tech lead of the original Caesar III, I understood that he calls them <em>properties</em> or attributes. These properties add up to a coherent system that requires strategic thinking and planning on a city-wide scale, and mistakes are punished by a fairly quick exodus of the population.</p>
+    <p>From the player's point of view in <em>Caesar / Pharaoh / Zeus</em>, these attributes were hidden behind text in the style of "Needs a temple", "No clean water" or "A granary is in the way" — this was a distinctive feature of the series and made it possible to implement a seemingly complex mechanic (no explicit numbers) with interactions between buildings and land desirability. But inside, this system turned out to be surprisingly simple.</p>
+    <img src="https://habrastorage.org/r/w1560/getpro/habr/upload_files/3db/284/279/3db284279a9d74dc8c5f9648c2250dbe.png" alt="Income, happiness and population indicators" class="post-image" loading="lazy" />
+    <p>Such things as income, happiness (desirability of the land) and population were already present in the previous parts of the series. As usual, the choice of which needs to satisfy first and which additional ones to fulfil for bonuses is part of the puzzle of city development. And it really is a puzzle — the original levels were designed so that the player would find an efficient solution for a limited set of resources; the vanilla levels of both Caesar and Pharaoh were created precisely as a resource puzzle with a limited set of pieces.</p>
+    <p>The main parameters of houses are population, consumed resources, and services provided by various buildings, and they grow mainly through satisfying the houses' needs by placing the buildings that provide those services nearby. The mechanic of working with parameters carried over directly from Caesar — if you provide the residents of low-level houses with food and access to clean water, then each such provisioned dwelling already gives a population bonus and the ability to generate income if you build a tax collector.</p>
+    <img src="https://habrastorage.org/r/w1560/getpro/habr/upload_files/dd6/f4f/4b1/dd6f4f4b1eabc02aae767f5ffc14e436.png" alt="House info panel with stored goods" class="post-image" loading="lazy" />
+    <p>Moreover, the game shows only the values of goods stored in the house at the current moment and a description of what the building lacks to grow a level.</p>
+
+    <h2>A bit more theory</h2>
+    <p>But it's not only about happiness, income and population. The group of attributes also includes fire safety, healthcare and a number of other parameters tied to capabilities that unlock as you progress through the missions. They too are all measured by certain numbers, but the player doesn't see them at all; the screenshots below show the representation of a building's fire-hazard level through an overlay, and how it actually exists in the game.</p>
+    <img src="https://habrastorage.org/r/w1560/getpro/habr/upload_files/fc9/d79/2bc/fc9d792bca6d101f05ac77b5b135b44f.png" alt="Fire-hazard overlay on the city map" class="post-image" loading="lazy" />
+    <img src="https://habrastorage.org/r/w1560/getpro/habr/upload_files/190/a02/6e9/190a026e927581698613642a011f9bdc.png" alt="Fire-hazard value as it exists internally" class="post-image" loading="lazy" />
+    <p>In the original game the list of overlay layers wasn't very large, but I managed to restore more — apparently the authors didn't consider them important or didn't manage to finish them in time for release.</p>
+    <p>A wide set of attributes tied to the needs system gives great freedom both in designing the connections themselves and in terms of almost endless replayability and a large number of ways to combine attributes, letting the player choose exactly the solutions that best match their management style or the current state of affairs on the map.</p>
+    <details><summary>Overlays</summary>
+<pre><code>enum e_overlay {
+    OVERLAY_NONE = 0,
+    OVERLAY_WATER = 2,
+    OVERLAY_RELIGION = 4,
+    OVERLAY_FIRE = 8,
+    OVERLAY_DAMAGE = 9,
+    OVERLAY_CRIME = 10,
+    OVERLAY_ENTERTAINMENT = 11,
+    OVERLAY_BOOTH = 12,
+    OVERLAY_BANDSTAND = 13,
+    OVERLAY_PAVILION = 14,
+    OVERLAY_SENET_HOUSE = 15,
+    OVERLAY_EDUCATION = 16,
+    OVERLAY_SCRIBAL_SCHOOL = 17,
+    OVERLAY_LIBRARY = 18,
+    OVERLAY_ACADEMY = 19,
+    OVERLAY_APOTHECARY = 20,
+    OVERLAY_DENTIST = 21,
+    OVERLAY_PHYSICIAN = 22,
+    OVERLAY_MORTUARY = 23,
+    OVERLAY_TAX_INCOME = 24,
+    OVERLAY_FOOD_STOCKS = 25,
+    OVERLAY_DESIRABILITY = 26,
+    OVERLAY_WORKERS_UNUSED = 27,
+    OVERLAY_NATIVE = 28,
+    OVERLAY_PROBLEMS = 29,
+    /// the visible overlays of the original ended here
+    /// but there were others too, and I haven't pulled them all out yet
+    OVERLAY_RELIGION_OSIRIS = 30,
+    OVERLAY_RELIGION_RA = 31,
+    OVERLAY_RELIGION_PTAH = 32,
+    OVERLAY_RELIGION_SETH = 33,
+    OVERLAY_RELIGION_BAST = 34,
+    OVERLAY_FERTILITY = 35,
+    OVERLAY_BAZAAR_ACCESS = 36,
+    OVERLAY_ROUTING = 37,
+    OVERLAY_HEALTH = 38,
+    OVERLAY_LABOR = 39,
+    OVERLAY_COUTHOUSE = 40,
+    OVERLAY_BREWERY = 41,
+    OVERLAY_LABOR_ACCESS = 42,
+
+    OVERLAY_SIZE
+};</code></pre>
+    </details>
+    <p>There are indeed many parameters, and to give the player the ability to see a more complete picture of the map's state, so-called overlays were used, which visually display different parameters on the map, as shown in the two screenshots above. This helps to quickly understand what affects one indicator or another and, for example, to fix a low level of fire safety by rebuilding a district or adding new buildings. Drawing an overlay is a separate topic, also interesting, but it heavily touches the renderer and goes beyond the scope of this article; if anyone's interested, I'll write about it separately.</p>
+    <p>Solving the needs puzzle plays a key role in the growth of the city's population and in completing the level: all the attributes a residential building provides depend directly on which needs are satisfied in it — this formula was tried back in Caesar and proved itself well. Higher-level needs give higher attribute values — both directly (through the house's level growth) and indirectly: new needs require new buildings, which usually need new resources, for which other buildings that produce those resources are needed — such hidden production chains.</p>
+
+    <h2>Code</h2>
+    <p>The house-evolution FSM is located (for now) in the file building_house.cpp (<a href="https://github.com/dalerank/Akhenaten/blob/master/src/building/building_house.cpp" target="_blank">https://github.com/dalerank/Akhenaten/blob/master/src/building/building_house.cpp</a>)</p>
+    <p>The FSM's work is split into several parts: consumption of food, resources, services, and the actual upgrade or downgrade of the house level. Because the engine has almost no memory allocations, all of this spins quite briskly on large maps in a single thread. For some of the data I never managed to understand what it was responsible for, so it's marked something like <code>unused.unknown_00c0</code>.</p>
+<pre><code>void city_resources_t::consume_food(const simulation_time_t&amp; t) {
+    calculate_available_food();
+    g_city.unused.unknown_00c0 = 0;
+    resource_list consumed_food;
+    buildings_house_do([&amp;] (building_house *house) {
+        resource_list consumed = house-&gt;consume_food();
+
+        consumed_food.append(consumed);
+    });
+
+    res_this_month.consumed.append(consumed_food);
+}
+
+void city_resources_t::consume_goods(const simulation_time_t&amp; t) {
+    if (t.day == 0 || t.day == 7) {
+        resource_list consumed_goods;
+        buildings_house_do([&amp;] (building_house *house) {
+            auto house_consumed = house-&gt;consume_resources();
+            consumed_goods.append(house_consumed);
+        });
+
+        res_this_month.consumed.append(consumed_goods);
+    }
+}</code></pre>
+    <img src="https://habrastorage.org/r/w1560/getpro/habr/upload_files/647/f4a/20a/647f4a20ac5d3cbee98c2fff34f4fa88.png" alt="Reverse-engineered house code" class="post-image" loading="lazy" />
+    <p>Originally, in the dug-out sources there was a huge sausage of <code>if</code>s, and even the tidied-up version stuck out somewhere past eight hundred lines. Whether the compiler unrolled the original sources like that — which is doubtful, since the engine was written in '98 and optimizing compilers hadn't yet seen wide use — or whether it was the original intent, but what was, was.</p>
+    <details><summary>Archaeology</summary>
+<pre><code>  if (state == HouseState::CRUDE_HUT) {
+        if (status == e_house_evolve)
+            change_to(BUILDING_HOUSE_STURDY_HUT);
+    } else if (state == HouseState::STURDY_HUT) {
+        if (status == e_house_evolve)
+            change_to(BUILDING_HOUSE_MEAGER_SHANTY);
+        else if (status == e_house_decay)
+            change_to(BUILDING_HOUSE_CRUDE_HUT);
+    } else if (state == HouseState::MEAGER_SHANTY) {
+        if (status == e_house_evolve)
+            change_to(BUILDING_HOUSE_COMMON_SHANTY);
+        else if (status == e_house_decay)
+            change_to(BUILDING_HOUSE_STURDY_HUT);
+    } else if (state == HouseState::COMMON_SHANTY) {
+       ....</code></pre>
+    </details>
+    <p>I had to clean up this logic for a long time to get a readable version, and in the end it all came down to a smaller <code>switch</code> like this:</p>
+    <details><summary>Readable version</summary>
+<pre><code>enum HouseState {
+    CRUDE_HUT,
+    STURDY_HUT,
+    MEAGER_SHANTY,
+    COMMON_SHANTY,
+    ROUGH_COTTAGE,
+    // ...
+    PALATIAL_ESTATE
+};
+
+struct House {
+    HouseState state;
+    house_demands* demands;
+
+    bool evolve() {
+        if (house_population() &lt;= 0)
+            return false;
+
+        merge(); // Always happens if pop &gt; 0
+
+        auto status = check_requirements(demands);
+        if (has_devolve_delay(status))
+            return false;
+
+        switch (state) {
+            case HouseState::CRUDE_HUT:
+                if (status == e_house_evolve)
+                    change_to(BUILDING_HOUSE_STURDY_HUT);
+                break;
+            case HouseState::STURDY_HUT:
+                if (status == e_house_evolve)
+                    change_to(BUILDING_HOUSE_MEAGER_SHANTY);
+                else if (status == e_house_decay)
+                    change_to(BUILDING_HOUSE_CRUDE_HUT);
+                break;
+            // ... continue for each state ...
+            case HouseState::FANCY_RESIDENCE:
+                if (status == e_house_evolve &amp;&amp; can_expand(9)) {
+                    expand_to_common_manor();
+                    map_tiles_gardens_update_all();
+                    return true;
+                } else if (status == e_house_decay)
+                    change_to(BUILDING_HOUSE_ELEGANT_RESIDENCE);
+                break;
+            // ...
+            default:
+                break;
+        }
+
+        return false;
+    }
+};</code></pre>
+    </details>
+    <p>And even later all the logic was split into separate implementations, where some semblance of a structure began to show through — one you can already edit without tears. There's still enough copy-paste there even now, but there was no time to pull it apart further.</p>
+<pre><code>bool building_house_elegant_manor::evolve(house_demands* demands) {
+    if (house_population() &lt;= 0) {
+        return false;
+    }
+
+    e_house_progress status = check_requirements(demands);
+    if (has_devolve_delay(status)) {
+        return false;
+    }
+
+    if (status == e_house_evolve) {
+        change_to(base, BUILDING_HOUSE_STATELY_MANOR);
+    } else if (status == e_house_decay) {
+        change_to(base, BUILDING_HOUSE_SPACIOUS_MANOR);
+    }
+
+    return false;
+}</code></pre>
+    <p>For a house to move to the next level, it has to check the availability of various conditions; the higher the house level, the more services it needs. These checks are fairly simple, so they can be run often without fear for the FPS. The authors of the original game (keep in mind the game had to run on 200-megahertz monsters; the author of this article first played the OG on an AMD K6 — 266 MHz, Super Socket 7 if memory serves — and had to lower the city speed because everything was very fast) ran such a check once per game day for all houses on the map at once, which gave a somewhat robotic update of houses in the early stages of the game, when the city is small.</p>
+    <img src="https://habrastorage.org/r/w1560/getpro/habr/upload_files/888/836/309/88883630910c57edbe7d1eaf11a1d5c9.png" alt="House evolution requirement text" class="post-image" loading="lazy" />
+    <img src="https://habrastorage.org/r/w1560/getpro/habr/upload_files/4d3/b2e/fa2/4d3b2efa23eafd1180078575097a955e.png" alt="House evolution requirement text" class="post-image" loading="lazy" />
+    <img src="https://habrastorage.org/r/w1560/getpro/habr/upload_files/5b6/38a/3f8/5b638a3f88b4d94cf4bc81a8d214aa74.png" alt="House evolution requirement text" class="post-image" loading="lazy" />
+    <img src="https://habrastorage.org/r/w1560/getpro/habr/upload_files/84f/1bd/cd9/84f1bdcd9a3aba3e41cfe337f5790ba6.png" alt="House evolution requirement text" class="post-image" loading="lazy" />
+    <img src="https://habrastorage.org/r/w1560/getpro/habr/upload_files/ff1/c94/5de/ff1c945dea3660bed32c15242637bb6b.png" alt="House evolution requirement text" class="post-image" loading="lazy" />
+<pre><code>+--------------------------+           +-----------------------------+
+|  Start &amp; house_level     |    +----&gt; | Religion checks:            |
+|  if for_upgrade: ++level |    |      | - num_gods vs requirement   |
++--------------------------+    |      | - update demands-&gt;missing   |
+           |                    |      | - update demands-&gt;requiring |
+           v                    |      +-----------------------------+
++--------------------------+    |                   |
+| Load model for level     |    |                   v
+| model = model_get_house  |    |      +-----------------------------+
++--------------------------+    |      | Health services:            |
+           |                    |      | - dentist, magistrate       |
+           v                    |      | - health level check        |
++--------------------------+    |      | - update demands-&gt;missing   |
+| Water access:            |    |      | - update demands-&gt;requiring |
+| - needs fountain or well |    |      +-----------------------------+
+| - update demands-&gt;missing|    |                   |
++--------------------------+    |                   v
+           |                    |      +-----------------------------+
+           v                    |      | Food types available        |
++--------------------------+    |      | - count types               |
+| Entertainment &amp; Education|    |      | - if &lt; required: missing    |
+| - check d.entertainment  |    |      +-----------------------------+
+| - check d.education      |    |                   |
+| - update demands-&gt;missing|    |                   v
++--------------------------+    |      +----------------------------+
+          | Goods check:        |      |                            |
+          |                     |      | - pottery, linen, jewelry  |
+          +---------&gt;&gt;&gt;&gt;&gt;&gt;------|      | - beer and wine            |
+                                       | - update demands if miss   |
+                                       +----------------------------+
+                                                   |
+                                                   v
+                                      +--------------------------+
+                                      | Return e_house_evolve    |
+                                      | (if all passed)          |
+                                      +--------------------------+</code></pre>
+    <p>And so, if the little house was ready for an upgrade, the texture swap was launched, merging adjacent 1-cell houses into one big 2×2 house.</p>
+
+    <h2>A bit more code</h2>
+    <p>Even in such a fairly old game, the developers paid a lot of attention to a relatively realistic model of how a house functions, one that took many parameters into account. And another 6 I couldn't restore, because no code in the original game touched these addresses — perhaps it was something for debugging.</p>
+    <details><summary>The set of parameters one house operates on every frame</summary>
+<pre><code>    struct runtime_data_t : no_copy_assignment {
+        //e_house_level level;
+        uint16_t foods[8];
+        uint16_t inventory[8];
+        uint16_t highest_population;
+        uint16_t unreachable_ticks;
+        uint16_t last_update_day;
+        building_id tax_collector_id;
+        uint16_t population;
+        int16_t tax_income_or_storage;
+        uint8_t is_merged;
+        uint8_t booth_juggler;
+        uint8_t bandstand_juggler;
+        uint8_t bandstand_musician;
+        uint8_t pavillion_musician;
+        uint8_t pavillion_dancer;
+        uint8_t senet_player;
+        uint8_t magistrate;
+        uint8_t bullfighter;
+        uint8_t school;
+        uint8_t library;
+        uint8_t academy;
+        uint8_t apothecary;
+        uint8_t dentist;
+        uint8_t mortuary;
+        uint8_t physician;
+        uint8_t temple_osiris;
+        uint8_t temple_ra;
+        uint8_t temple_ptah;
+        uint8_t temple_seth;
+        uint8_t temple_bast;
+        uint8_t no_space_to_expand;
+        uint8_t num_foods;
+        uint8_t entertainment;
+        uint8_t education;
+        uint8_t health;
+        uint8_t num_gods;
+        uint8_t shrine_access;
+        uint8_t devolve_delay;
+        uint8_t bazaar_access;
+        uint8_t fancy_bazaar_access;
+        uint8_t water_supply;
+        uint8_t house_happiness;
+        uint8_t criminal_active;
+        uint8_t tax_coverage;
+        uint8_t days_without_food;
+        uint8_t hsize;
+        uint8_t unknown_00;
+        uint8_t unknown_01;
+        uint8_t unknown_02;
+        uint8_t unknown_03;
+        uint8_t unknown_04;
+        uint8_t unknown_05;
+        building_id worst_desirability_building_id;
+        xstring evolve_text;
+    };</code></pre>
+    </details>
+    <p>When all the parameters are right for an upgrade, very little remains — to change the texture. I already wrote about the <code>vtable</code> implementation in plain C <a href="pharaoh-engine-ecs-dynvtbl.html">here</a>, and here there's another interesting moment — this line<br/><code>auto &amp;d = (building_house::runtime_data_t)b.runtime_data;</code></p>
+    <p>refers to a shared data buffer that is shared between all building types present in the game, but turns into the concrete data that the existing building operates on.</p>
+<pre><code>building g_all_buildings[5000];
+
+class building {
+public:
+    enum { max_figures = 4 };
+    using ptr_buffer_t = char[24];
+
+private:
+    ptr_buffer_t _ptr_buffer = { 0 };
+    class building_impl *_ptr = nullptr; // dcast
+
+public:
+    e_building_type type;
+
+    animation_context anim;
+    std::array&lt;figure_id, max_figures&gt; figure_ids;
+    char runtime_data[512] = { 0 };</code></pre>
+    <p>A fairly elegant solution for that time, which made it possible to get a semblance of virtuality and have overloaded functions for each building type (update, draw, handle, etc.) while keeping the speed of pure C. Pharaoh's engine had not yet been fully ported to C++, as was done in <em>Zeus</em>, where you can already see mangled class and struct names, but it also wasn't pure C as Caesar was.</p>
+    <p>A downside of such a solution with a shared cache was the impossibility of storing more than 512 bytes in the cache for a specific building, but I think that was much more than the classes really needed. Nowadays a similar pattern could be called runtime_data, where data for different structures is created in a pool of equal-sized slots — except here it turns out that we carry this pool around with us at all times.</p>
+    <p>Even the heaviest class — the one describing pyramids, or rather its cache — took only 234 bytes. In the original game the building structure takes 836 bytes, which with a static array of 5000 buildings gave ~4.2 MB in RAM; considering the game came out in 1999, when the average was about 64 MB on ordinary systems and 128 MB on gaming ones, it should have been enough for a very large city. I unfortunately haven't gotten to the pyramids yet, but mastabas can already be built, and their logic is essentially the same.</p>
+    <img src="https://habrastorage.org/r/w1560/getpro/habr/upload_files/cea/ea0/e6e/ceaea0e6e8a4e738db8daec9f7043d3a.png" alt="A densely built-up city" class="post-image" loading="lazy" />
+    <p>Rarely could maps be built up with such a large number of buildings; an advantage of such a solution is that this chunk of memory can simply be saved and read without worrying about serialization. And in general, analyzing the reverse-engineered sources of the game, I'm becoming more and more convinced that it was written by, at the very least, geniuses who managed to cram an excellent city-builder into such volumes (the game ran on at least 32 MB — and that's with textures).</p>
+    <p>Let's get back to updating the texture; here the code is already C++ and mine, but most of the logic is still preserved. In particular, there's still a hardcode for offsets in the textures for merged and single houses.</p>
+<pre><code>void building_house::change_to(building &amp;b, e_building_type new_type) {
+    auto &amp;d = *(building_house::runtime_data_t*)b.runtime_data;
+
+    const int house_update_delay = std::min(house_up_delay(), 7);
+    const int absolute_day = game.simtime.absolute_day(true);
+    const bool can_update = (absolute_day - d.last_update_day &lt; house_update_delay);
+    if (house_update_delay &gt; 0 &amp;&amp; (new_type &gt; b.type) &amp;&amp; can_update) {
+        return;
+    }
+
+    b.clear_impl(); // clear old impl
+    b.type = new_type;
+
+    auto house = b.dcast_house();
+    int image_id = house_image_group&lt;false&gt;(house-&gt;house_level());
+
+    const int img_offset = house-&gt;anim(animkeys().house).offset;
+    if (house-&gt;is_merged()) {
+        image_id += 4;
+        if (img_offset) {
+            image_id += 1;
+        }
+    } else {
+        image_id += img_offset;
+        image_id += map_random_get(b.tile) &amp; (house-&gt;params().num_types - 1);
+    }
+
+    map_building_tiles_add(b.id, b.tile, b.size, image_id, TERRAIN_BUILDING);
+    d.last_update_day = game.simtime.absolute_day(true);
+}</code></pre>
+    <p>And this line is responsible for the random textures of single houses, so the city doesn't look completely uniform.</p>
+<pre><code>image_id += map_random_get(b.tile) &amp; (house-&gt;params().num_types - 1);</code></pre>
+    <img src="https://habrastorage.org/r/w1560/getpro/habr/upload_files/7b4/67c/42c/7b467c42c7bcde816f399a9d0f98fd49.png" alt="Varied single-house textures across a district" class="post-image" loading="lazy" />
+
+    <h2>Conclusion</h2>
+    <p>With this I'll wrap up the story about attributes — a system that for many years became a benchmark in the city-builder genre and was developed further in games familiar to many: Stronghold, Anno, Patrician. If anyone is tormented by nostalgia for an old city-builder — come to <a href="https://github.com/dalerank/Akhenaten" target="_blank">github</a> or itch.io; the sources are openly available, and you can play through the first 8 missions. The goal of the project is to restore the original game (without preserving the authenticity of the sources, as is done in the Julius project) and to make it possible to play it on new platforms and develop it further with the help of mods and graphics packs.</p>
+    <img src="https://habrastorage.org/r/w1560/getpro/habr/upload_files/d09/587/5fb/d095875fb5578a35fb5f649f615d382f.png" alt="Akhenaten city overview" class="post-image" loading="lazy" />
+
+    <div class="post-nav">
+      <span></span>
+      <a href="pharaoh-engine-ecs-dynvtbl.html">ECS, DynVMT, Logical Threads, and Pharaoh →</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>
