@@ -1,26 +1,5 @@
 log_info("akhenaten: building education started")
 
-building_scribal_school = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:42},
-    base : { pack:PACK_GENERAL, id:42},
-    work : { pos:[2, -25], pack:PACK_GENERAL, id:42, offset:1, max_frames:11, duration:4, can_reverse:true },
-    papyrus : { pos:[61, 14], pack:PACK_GENERAL, id:207, offset:0},
-  }
-  input : {
-    resource : RESOURCE_PAPYRUS
-  }
-  meta : { help_id: 68, text_id: 85 }
-  info_sound : "Wavs/school_scribe.wav"
-  min_houses_coverage : 50
-  building_size : 2
-  labor_category : LABOR_CATEGORY_EDUCATION
-  cost : [ 30, 50, 70, 100, 150 ]
-  desirability : { value:[4], step:[1], step_size:[-1], range:[4] }
-  laborers:[10], fire_risk:[6], damage_risk: [2]
-  max_service: 75
-}
-
 building_library {
   animations {
     preview { pos[0, 0], pack:PACK_GENERAL, id:43 }

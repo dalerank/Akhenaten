@@ -11,7 +11,5 @@ public:
     virtual e_overlay get_overlay() const override { return OVERLAY_SCRIBAL_SCHOOL; }
     virtual void update_graphic() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
-    virtual void update_month() override;
-    virtual void on_place_checks() override;
     virtual bool add_resource(e_resource resource, int amount) override;
 };

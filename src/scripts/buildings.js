@@ -18,6 +18,7 @@ import building.pyramid
 import building.farm
 import building.fort
 import building.education
+import building.scribal_school
 import building.palace
 import building.temple
 import building.shrine
