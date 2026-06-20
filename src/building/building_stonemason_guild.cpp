@@ -13,16 +13,9 @@
 #include "sound/sound_building.h"
 #include "widget/city/ornaments.h"
 #include "game/game.h"
-#include "dev/debug.h"
 #include "js/js_game.h"
-#include <iostream>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_stonemason_guild);
-
-declare_console_command(addstone, game_cheat_add_resource<RESOURCE_STONE>);
-declare_console_command(addlimestone, game_cheat_add_resource<RESOURCE_LIMESTONE>);
-declare_console_command(addgranite, game_cheat_add_resource<RESOURCE_GRANITE>);
-declare_console_command(addsandstone, game_cheat_add_resource<RESOURCE_SANDSTONE>);
 
 void building_stonemason_guild::update_graphic() {
     update_graphic_work_anim();
@@ -103,7 +96,7 @@ void building_stonemason_guild::spawn_figure() {
 
         const bool has_worker = statue->get_figure_id(BUILDING_SLOT_SERVICE) != 0;
         if (has_worker) {
-            return; 
+            return;
         }
 
         const int value = statue->service();

@@ -37,6 +37,34 @@ function console_command_add_gamemeat(args) {
 	__cheat_add_resource(RESOURCE_GAMEMEAT, amount)
 }
 
+[console_command=addstone]
+function console_command_addstone(args) {
+	var amount = parseInt((args && args[0]) || "100", 10)
+	if (amount <= 0) amount = 100
+	__cheat_add_resource(RESOURCE_STONE, amount)
+}
+
+[console_command=addlimestone]
+function console_command_addlimestone(args) {
+	var amount = parseInt((args && args[0]) || "100", 10)
+	if (amount <= 0) amount = 100
+	__cheat_add_resource(RESOURCE_LIMESTONE, amount)
+}
+
+[console_command=addgranite]
+function console_command_addgranite(args) {
+	var amount = parseInt((args && args[0]) || "100", 10)
+	if (amount <= 0) amount = 100
+	__cheat_add_resource(RESOURCE_GRANITE, amount)
+}
+
+[console_command=addsandstone]
+function console_command_addsandstone(args) {
+	var amount = parseInt((args && args[0]) || "100", 10)
+	if (amount <= 0) amount = 100
+	__cheat_add_resource(RESOURCE_SANDSTONE, amount)
+}
+
 [console_command=collapse_no]
 function console_command_collapse_no(args) {
 	for (var i = 1; i <= MAX_BUILDINGS; i++) {
