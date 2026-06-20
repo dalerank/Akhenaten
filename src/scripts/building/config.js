@@ -221,38 +221,6 @@ building_military_academy_adv = {
   }
 }
 
-building_storage_yard = {
-  animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:82, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:82, },
-    cover : { pos : [-5, -42], pack:PACK_GENERAL, id:82, offset:17 },
-    work : { pos : [10, -10], pack:PACK_SPR_AMBIENT, id:51, offset:1, max_frames:14, duration:3 },
-  }
-  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
-  meta : { help_id : 4, text_id:99 }
-  info_sound : "Wavs/warehouse1.wav"
-  building_size : 3
-  min_houses_coverage : 100
-  cost: [ 14, 30, 50, 100, 150 ]
-  desirability : { value:[-5], step:[2], step_size:[2], range: [3] }
-  laborers:[6], fire_risk:[4], damage_risk: [1]
-  flags {
-    is_industry: true
-  }
-}
-
-building_storage_room {
-  animations  {
-  }
-
-  building_size : 3
-  fire_proof : true
-
-  flags {
-    is_industry: true
-  }
-}
-
 building_bazaar {
   animations {
     preview {pack:PACK_GENERAL, id:22, }

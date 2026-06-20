@@ -5,12 +5,6 @@
 #include "grid/point.h"
 #include "core/svector.h"
 
-enum e_storageyard_state {
-    STORAGEYARD_ROOM = 0,
-    STORAGEYARD_FULL = 1,
-    STORAGEYARD_SOME_ROOM = 2
-};
-
 enum e_storageyard_task {
     STORAGEYARD_TASK_NONE = -1,
     STORAGEYARD_TASK_GETTING = 0,
@@ -40,11 +34,6 @@ public:
     struct runtime_data_t {
         std::array<building_id, 4> police_station_weapon_requests;
     } BUILDING_RUNTIME_DATA_T;
-
-    struct preview : building_planer_renderer {
-        virtual int construction_update(build_planner &p, tile2i start, tile2i end) const override;
-        virtual void ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
-    };
 
     virtual void on_create(int orientation) override;
     virtual void on_post_load() override;
@@ -81,7 +70,6 @@ public:
     storage_worker_task determine_worker_task();
 
 private:
-    int get_space_info() const;
     bool is_accepting(e_resource resource);
     building *add_storageyard_space(int x, int y, building *prev);
 };

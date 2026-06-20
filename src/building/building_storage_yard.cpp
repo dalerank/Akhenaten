@@ -36,64 +36,12 @@
 #include "scenario/scenario.h"
 #include "game/game_config.h"
 #include "widget/city/ornaments.h"
-#include "widget/city/building_ghost.h"
 #include "figuretype/figure_storageyard_cart.h"
-#include "construction/build_planner.h"
 #include "figuretype/figure_sled.h"
 #include "js/js_game.h"
 #include <cmath>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_storage_yard);
-
-int building_storage_yard::preview::construction_update(build_planner &planer, tile2i start, tile2i end) const {
-    planer.mark_construction(end, { 3, 3 }, TERRAIN_ALL, false);
-    return 1;
-}
-
-void building_storage_yard::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
-    const auto &params = building_static_params::get(planer.build_type);
-    int global_rotation = building_rotation_global_rotation();
-    int index_rotation = building_rotation_get_storage_fort_orientation(global_rotation);
-    int corner = building_rotation_get_corner(index_rotation);
-    vec2i corner_offset{ -5, -45 };
-    vec2i place_offset{ 0, 0 };
-
-    int image_id_hut = params.base_img();
-    int image_id_space = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY);
-    for (int i = 0; i < 9; i++) {
-        if (i == corner) {
-            planer.draw_building_ghost(ctx, image_id_hut, pixel + VIEW_OFFSETS[i]);
-            ctx.img_generic(image_id_hut + 17, pixel + VIEW_OFFSETS[i] + corner_offset, COLOR_MASK_GREEN);
-        } else {
-            planer.draw_building_ghost(ctx, image_id_space, pixel + VIEW_OFFSETS[i] + place_offset);
-        }
-    }
-}
-
-int building_storage_yard::get_space_info() const {
-    int total_amounts = 0;
-    int empty_spaces = 0;
-
-    const building_storage_room* space = room();
-    while (space) {
-        if (space->resource()) {
-            total_amounts += space->stored_first().value;
-        } else {
-            empty_spaces++;
-        }
-        space = space->next_room();
-    }
-
-    if (empty_spaces > 0) {
-        return STORAGEYARD_ROOM;
-    }
-
-    if (total_amounts < 3200) {
-        return STORAGEYARD_SOME_ROOM;
-    }
-
-    return STORAGEYARD_FULL;
-}
 
 int building_storage_yard::amount(e_resource resource) const {
     int total = 0;
@@ -838,7 +786,7 @@ storage_worker_task building_storage_yard::determine_worker_task() {
             return task;
         }
     }
-    
+
     // move goods to other warehouses
     if (is_empty_all()) {
         auto space = room();

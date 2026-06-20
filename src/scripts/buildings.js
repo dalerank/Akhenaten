@@ -39,6 +39,7 @@ import building.mine_copper
 import building.mine_gold
 import building.mine_gems
 import building.granary
+import building.storage_yard
 import building.health
 import building.architect_post
 import building.courthouse
