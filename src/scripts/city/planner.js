@@ -18,6 +18,7 @@ city_planner = extend(__city_planner, {
 
     draw_blocked: __city_planner_draw_blocked
     draw_ghost: __city_planner_draw_ghost
+    draw_ghost_overlay: __city_planner_draw_ghost_overlay
     draw_flat_tiles: __city_planner_draw_flat_tiles
     draw_isometric_ghost: __city_planner_draw_isometric_ghost
     draw_overlay_tile: __city_planner_draw_overlay_tile

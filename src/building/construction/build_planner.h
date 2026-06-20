@@ -185,6 +185,7 @@ public:
     void init_tiles(int size_x, int size_y);
 
     static void draw_building_ghost(painter &ctx, int image_id, vec2i pixel, color color_mask = COLOR_MASK_GREEN);
+    static void draw_ghost_overlay(painter &ctx, int image_id, vec2i pixel);
     static void draw_overlay_tile(painter &ctx, int image_id, vec2i pixel, color color_mask, float scale = 1.f);
     static void draw_flat_tile(painter &ctx, vec2i pixel, color color_mask);
     static void draw_flat_tile(vec2i pos, color color_mask, painter &ctx);

@@ -109,6 +109,12 @@ void __city_planner_draw_ghost(vec2i pixel, int image_id) {
 }
 ANK_FUNCTION_2(__city_planner_draw_ghost);
 
+void __city_planner_draw_ghost_overlay(vec2i pixel, int image_id) {
+    painter ctx = game.painter();
+    build_planner::draw_ghost_overlay(ctx, image_id, pixel);
+}
+ANK_FUNCTION_2(__city_planner_draw_ghost_overlay);
+
 int __map_venue_build_orientation(tile2i tile, int mode) {
     int orientation = 0;
     const bool ok = map_orientation_for_venue_with_map_orientation(tile, (e_venue_mode_orientation)mode, &orientation);

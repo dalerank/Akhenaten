@@ -74,11 +74,9 @@ function building_storage_yard_ghost_preview(ev) {
         var tile_pixel = { x: pixel.x + off[0], y: pixel.y + off[1] }
         if (i == corner) {
             city.planner.draw_ghost(tile_pixel, hut_id)
-            city.planner.draw_overlay_tile(
+            city.planner.draw_ghost_overlay(
                 { x: tile_pixel.x + cover_off[0], y: tile_pixel.y + cover_off[1] },
-                cover_id,
-                COLOR_MASK_GREEN,
-                1.0
+                cover_id
             )
         } else {
             city.planner.draw_ghost(tile_pixel, space_id)
