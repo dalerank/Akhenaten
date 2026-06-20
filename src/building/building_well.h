@@ -1,7 +1,6 @@
 #pragma once
 
 #include "building/building.h"
-#include "window/window_building_info.h"
 
 class building_well : public building_impl {
 public:
@@ -24,8 +23,3 @@ public:
     virtual bool can_play_animation() const override;
 };
 ANK_CONFIG_STRUCT(building_well::static_params, desirability_range_check, desirability_fancy)
-
-struct well_info_window : public building_info_window_t<well_info_window> {
-    virtual void init(object_info &c) override;
-    virtual bool check(object_info &c) override;
-};

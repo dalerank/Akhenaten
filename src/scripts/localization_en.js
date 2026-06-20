@@ -301,6 +301,9 @@ localization_en = [
   {key: "#building_have_no_access", text:"WARNING: This building is not adjacent to a road" }
   {key: "#bazaar_info_title", text:"Bazaar" }
   {key: "#well_info_title", text:"Well" }
+  {key: "#well_info_necessary", group:109, id:1}
+  {key: "#well_info_unneeded_fountain", group:109, id:2}
+  {key: "#well_info_unneeded_no_houses", group:109, id:3}
   {key: "#trade_overseer_prices", group:54, id:2}
   {key: "#trade_overseer_prices_hint", group:68, id:108}
   {key: "#trade_overseer_goto_empire", group:54, id:30}

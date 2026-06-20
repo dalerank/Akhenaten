@@ -27,6 +27,7 @@
 #include "figuretype/figure_worker.h"
 #include "city/city_floods.h"
 #include "grid/terrain.h"
+#include "grid/water_supply.h"
 
 e_advisor_tokens_t ANK_CONFIG_ENUM(e_advisor_tokens);
 e_trade_status_tokens_t ANK_CONFIG_ENUM(e_trade_status_tokens);
@@ -136,6 +137,10 @@ void js_register_game_constants(js_State* J) {
 
     _R(TERRAIN_ROAD_BLOCKED)
     _R(TERRAIN_PLANER_FUTURE)
+
+    _R(WELL_NECESSARY)
+    _R(WELL_UNNECESSARY_FOUNTAIN)
+    _R(WELL_UNNECESSARY_NO_HOUSES)
 
     _R(MAX_BUILDINGS)
     _R(BUILDING_MAX)

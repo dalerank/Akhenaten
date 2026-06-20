@@ -178,14 +178,6 @@ info_window_milacademy = {
 }
 
 
-well_info_window = {
-    ui : {
-        background    : outer_panel({size: [29, 14] }),
-        title           : text({pos: [0, 12], size: [px(28), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center", text:"${loc.well_info_title}"}),
-        text          : text({pos: [32, 56], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-    }
-}
-
 minimap_window {
     draw_size [73, 111]
 

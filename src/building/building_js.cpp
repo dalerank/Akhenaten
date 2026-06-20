@@ -7,6 +7,7 @@
 #include "building/building_farm.h"
 #include "building/building_granary.h"
 #include "building/building_roadblock.h"
+#include "building/building_well.h"
 #include "building/building_storage_yard.h"
 #include "building/building_temple_complex.h"
 #include "building_mansion.h"
@@ -63,6 +64,12 @@ bool __building_is_roadblock(int bid) {
     return b && b->is_valid() && b->dcast_roadblock();
 }
 ANK_FUNCTION_1(__building_is_roadblock)
+
+bool __building_is_well(int bid) {
+    building *b = building_get(bid);
+    return b && b->is_valid() && b->dcast_well();
+}
+ANK_FUNCTION_1(__building_is_well)
 
 bool __building_is_entertainment(int bid) {
     building *b = building_get(bid);

@@ -172,6 +172,9 @@ localization_ru = [
     { key:"#building_have_no_access", text:"ПРЕДУПРЕЖДЕНИЕ: Это здание не примыкает к дороге" }
     { key:"#bazaar_info_title", text:"Базар" }
     { key:"#well_info_title", text:"Колодец" }
+    { key:"#well_info_necessary", group:109, id:1 }
+    { key:"#well_info_unneeded_fountain", group:109, id:2 }
+    { key:"#well_info_unneeded_no_houses", group:109, id:3 }
     { key:"#visit_rating_advisor", text:"Посетить вашего надзирателя рейтингов?" }
     { key:"#gardens_describe", text:"Этот приятный участок даёт гражданам облегчение от шума, жары и грязи города с прохладным оазисом зелёного пространства. Каждый хочет сад по соседству." }
     { key:"#popup_dialog_proceed", text:"Продолжить?" }

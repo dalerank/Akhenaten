@@ -5,13 +5,10 @@
 #include "city/city_warnings.h"
 #include "grid/image.h"
 #include "grid/water_supply.h"
-#include "window/building/common.h"
-#include "graphics/elements/ui.h"
 #include "widget/city/ornaments.h"
 #include "city/city_labor.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_well);
-well_info_window well_infow;
 
 void building_well::update_month() {
     int avg_desirability = g_desirability.get_avg(tile(), current_params().desirability_range_check);
@@ -61,27 +58,3 @@ bool building_well::can_play_animation() const {
 
     return true;
 }
-
-void well_info_window::init(object_info &c) {
-    building_info_window::init(c);
-
-    int well_necessity = map_water_supply_is_well_unnecessary(c.bid, 2);
-    int text_id = 0;
-    if (well_necessity == WELL_NECESSARY) { // well is OK
-        text_id = 1;
-    } else if (well_necessity == WELL_UNNECESSARY_FOUNTAIN) { // all houses have fountain
-        text_id = 2;
-    } else if (well_necessity == WELL_UNNECESSARY_NO_HOUSES) { // no houses around
-        text_id = 3;
-    }
-
-    if (text_id) {
-        ui["text"].text(ui::str(c.group_id, text_id));
-    }
-}
-
-bool well_info_window::check(object_info &c) {
-    building *b = c.building_get();
-    return b->dcast_well();
-}
-
