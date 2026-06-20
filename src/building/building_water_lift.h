@@ -12,11 +12,6 @@ public:
         uint8_t base_irrigation_value;
     } BUILDING_STATIC_DATA_T;
 
-    struct preview : building_planer_renderer {
-        virtual void setup_preview_graphics(build_planner &planer) const override;
-        virtual int construction_update(build_planner &planer, tile2i start, tile2i end) const override;
-    };
-
     struct runtime_data_t {
         int16_t input_tiles[2];
         int16_t output_tiles[2];
@@ -25,7 +20,6 @@ public:
 
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
-    virtual void on_place_checks() override;
     virtual void on_post_load() override;
     virtual void update_day() override;
     virtual void on_tick(bool) override;

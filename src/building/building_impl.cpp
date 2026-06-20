@@ -111,6 +111,8 @@ void building_impl::spawn_figure() {
 void building_impl::update_day() {
     update_graphic();
     remove_dead_figures();
+
+    es(__func__);
 }
 
 void building_impl::update_month() {

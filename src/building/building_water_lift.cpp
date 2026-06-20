@@ -8,23 +8,9 @@
 #include "grid/building.h"
 #include "widget/city/ornaments.h"
 #include "graphics/elements/ui.h"
-#include "construction/build_planner.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_water_lift);
-
-void building_water_lift::preview::setup_preview_graphics(build_planner &planer) const {
-    const auto &params = building_static_params::get(planer.build_type);
-    const int baseid = params.base_img();
-    const int imgid = baseid + planer.relative_orientation;
-    planer.set_tiles_building(imgid, params.building_size);
-}
-
-int building_water_lift::preview::construction_update(build_planner &planer, tile2i start, tile2i end) const {
-    const auto &params = building_static_params::get(planer.build_type);
-    planer.draw_as_constructing = map_shore_determine_orientation(end, params.building_size, true).match;
-    return 0;
-}
 
 void building_water_lift::on_create(int orientation) {
     base.orientation = orientation;
@@ -32,15 +18,6 @@ void building_water_lift::on_create(int orientation) {
 
 void building_water_lift::on_place_update_tiles(int orientation, int variant) {
     update_map_orientation(orientation);
-}
-
-void building_water_lift::on_place_checks() {
-    building_impl::on_place_checks();
-
-    construction_warnings warnings;
-
-    const bool has_water_lift = g_city.buildings.count_active(BUILDING_WATER_LIFT) > 0;
-    warnings.add_if(!has_water_lift, "#needs_access_to_water_lift");
 }
 
 void building_water_lift::on_post_load() {
@@ -65,7 +42,7 @@ void building_water_lift::update_day() {
     const auto &d = runtime_data();
     const bool is_water1 = map_terrain_is(d.input_tiles[0], TERRAIN_WATER);
     const bool is_water2 = map_terrain_is(d.input_tiles[1], TERRAIN_WATER);
-    base.has_water_access = (is_water1 || is_water2);   
+    base.has_water_access = (is_water1 || is_water2);
 }
 
 void building_water_lift::on_tick(bool b) {
@@ -96,8 +73,8 @@ void building_water_lift::on_tick(bool b) {
 int building_water_lift::animation_speed(int speed) const {
     if (num_workers() <= 0) {
         return 0;
-    } 
-    
+    }
+
     if (!base.has_water_access) {
         return 0;
     }
