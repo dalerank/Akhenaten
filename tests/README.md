@@ -40,8 +40,12 @@ Results are written to `akhenaten-log.txt` as lines like `[test:tests/11_work_ca
 | `10_work_camp_info_window.js` | Work camp info window |
 | `11_work_camp_map_placement.js` | Work camp placed via `test_building_place` (real `city_planner` path) |
 | `12_road_segment_placement.js` | Road via `build_planner` on a valid segment near map center; all routed tiles have `TERRAIN_ROAD` |
+| `13_pottery_workshop_placement.js` | Pottery workshop via `test_building_place` |
 | `14_hotkey_config_window.js` | Hotkey config window (`window_show_by_id`) |
 | `15_victory_dialog_window.js` | `show_victory_dialog` console command → victory dialog |
+| `16_papyrus_maker_placement.js` | Papyrus maker via `test_building_place` |
+| `17_fishing_wharf_placement.js` | Fishing wharf on synthetic shoreline via `test_building_place` |
+| `18_water_lift_placement.js` | Water lift on synthetic shoreline via `test_building_place` |
 
 Shared helpers for city tests and placement live in [`src/scripts/integral_test.js`](../src/scripts/integral_test.js), imported from `modules.js` (always loaded with the game VM, not via `include()` from test files).
 
