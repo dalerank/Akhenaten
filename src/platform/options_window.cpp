@@ -13,16 +13,65 @@
 #include "dev/imguifiledialog.h"
 #include "misc/cpp/imgui_stdlib.h"
 
+#include <algorithm>
+#include <cmath>
 #include <cstdlib>
 
+namespace {
+
+constexpr int BASE_CONFIG_WINDOW_W = 1280;
+constexpr int BASE_CONFIG_WINDOW_H = 720;
+
+float get_ui_scale_for_display(int display_index) {
+    float scale = ImGui_ImplSDL2_GetContentScaleForDisplay(display_index);
+    if (scale <= 0.0f || !std::isfinite(scale)) {
+        scale = 1.0f;
+    }
+
+    SDL_DisplayMode desktop{};
+    if (SDL_GetDesktopDisplayMode(display_index, &desktop) == 0) {
+        if (desktop.h >= 2160) {
+            scale = std::max(scale, 2.0f);
+        } else if (desktop.h >= 1440) {
+            scale = std::max(scale, 1.5f);
+        }
+    }
+
+    return std::clamp(scale, 1.0f, 3.0f);
+}
+
+void apply_imgui_ui_scale(float ui_scale) {
+    ImGui::GetStyle().ScaleAllSizes(ui_scale);
+    ImGui::GetIO().FontGlobalScale = ui_scale;
+}
+
+} // namespace
+
 void show_options_window(Arguments& args) {
-#ifndef __APPLE__
+#if defined(_WIN32)
     auto const window_flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
 #else
+    // SDL_WINDOW_ALLOW_HIGHDPI breaks mouse coordinates on macOS and Linux/Wayland compositors.
     auto const window_flags = SDL_WINDOW_RESIZABLE;
 #endif
 
-    SDL_Window* platform_window = SDL_CreateWindow("Akhenaten: configuration", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
+    const int display_index = 0;
+    const float ui_scale = get_ui_scale_for_display(display_index);
+
+    SDL_DisplayMode desktop{};
+    int window_w = static_cast<int>(BASE_CONFIG_WINDOW_W * ui_scale);
+    int window_h = static_cast<int>(BASE_CONFIG_WINDOW_H * ui_scale);
+    if (SDL_GetDesktopDisplayMode(display_index, &desktop) == 0) {
+        window_w = std::min(window_w, static_cast<int>(desktop.w * 0.9f));
+        window_h = std::min(window_h, static_cast<int>(desktop.h * 0.9f));
+    }
+
+    if (args.get_display_scale_percentage() == 100 && ui_scale > 1.0f) {
+        args.set_display_scale_percentage(static_cast<int>(ui_scale * 100.0f));
+    }
+
+    SDL_Window* platform_window = SDL_CreateWindow("Akhenaten: configuration", SDL_WINDOWPOS_CENTERED,
+      SDL_WINDOWPOS_CENTERED, window_w, window_h, window_flags);
 
     SDL_Renderer* renderer = SDL_CreateRenderer(platform_window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     if (renderer == nullptr) {
@@ -36,6 +85,7 @@ void show_options_window(Arguments& args) {
     // Setup Platform/Renderer backends
     ImGui_ImplSDL2_InitForSDLRenderer(platform_window, renderer);
     ImGui_ImplSDLRenderer2_Init(renderer);
+    apply_imgui_ui_scale(ui_scale);
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -61,14 +111,10 @@ void show_options_window(Arguments& args) {
         ImGui_ImplSDL2_NewFrame();
         ImGui::NewFrame();
 
-        // Handle window resize events
-        int platform_window_w, platform_window_h;
-        SDL_GetWindowSize(platform_window, &platform_window_w, &platform_window_h);
-
-        // Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
+        // Use ImGui display size (matches mouse coordinates after NewFrame).
         {
             bstring512 data_directory = args.get_data_directory().c_str();
-            ImVec2 window_size((float)platform_window_w, (float)platform_window_h);
+            ImVec2 window_size = ImGui::GetIO().DisplaySize;
 
             ImVec2 window_pos(0, 0);
             ImGui::SetNextWindowPos(window_pos);
@@ -122,6 +168,16 @@ void show_options_window(Arguments& args) {
                 args.set_window_mode(is_window_mode);
             }
 
+            int display_scale = args.get_display_scale_percentage();
+            if (ImGui::SliderInt("Display scale %", &display_scale, 50, 300)) {
+                args.set_display_scale_percentage(display_scale);
+            }
+            ImGui::SameLine();
+            ImGui::TextDisabled("(?)");
+            if (ImGui::IsItemHovered()) {
+                ImGui::SetTooltip("UI scale in game. Use 150-200%% on 4K monitors.");
+            }
+
             if (ImGui::Checkbox("Store configuration (to skip this dialog for the next time)", &store_configuration)) {
                 if (store_configuration) {
                     arguments::store(args);
@@ -152,7 +208,7 @@ void show_options_window(Arguments& args) {
 
             ImGui::EndChild(); // RenderSection
 
-            ImVec2 left_bottom_corner{5, window_size.y - 30};
+            ImVec2 left_bottom_corner{5, window_size.y - 30.0f * ui_scale};
             ImGui::SetCursorPos(left_bottom_corner);
             {ImGui::BeginChild("StartSection");
                 if (ImGui::Button("RUN GAME")) {
