@@ -31,6 +31,10 @@ TargetView::~TargetView() {
 
 void TargetView::init() {
     _displayProgram = GLProgram::createByShaderString(kDefaultVertexShader, kDefaultFragmentShader);
+    if (!_displayProgram) {
+        return;
+    }
+
     _positionAttribLocation = _displayProgram->getAttribLocation("position");
     _texCoordAttribLocation = _displayProgram->getAttribLocation("inputTextureCoordinate");
     _colorMapUniformLocation = _displayProgram->getUniformLocation("textureCoordinate");

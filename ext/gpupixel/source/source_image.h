@@ -24,6 +24,9 @@ public:
     static SourceImagePtr create(const std::string name);
 
     static SourceImagePtr create_from_memory(int width, int height, int channel_count, const unsigned char *pixels);
+
+    bool has_valid_program() const { return _displayProgram != nullptr; }
+
 private:
 
 #if defined(GPUPIXEL_ANDROID)

@@ -45,11 +45,6 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_storage_yard);
 
-void building_storage_yard::preview::setup_preview_graphics(build_planner &planer) const {
-    const auto &params = building_static_params::get(planer.build_type);
-    planer.set_tiles_building(params.base_img(), 3);
-}
-
 int building_storage_yard::preview::construction_update(build_planner &planer, tile2i start, tile2i end) const {
     planer.mark_construction(end, { 3, 3 }, TERRAIN_ALL, false);
     return 1;

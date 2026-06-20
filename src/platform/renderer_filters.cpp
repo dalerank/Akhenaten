@@ -1,5 +1,6 @@
 #include "renderer.h"
 
+#include "core/log.h"
 #include "core/profiler.h"
 #include "imgui.h"
 #include "imgui_internal.h"
@@ -148,6 +149,11 @@ void platform_render_init_filters() {
     gpupixel::GPUPixelContext::initOpengl();
 
     data.sourceImage = gpupixel::SourceImage::create_from_memory(0, 0, 4, nullptr);
+    if (!data.sourceImage) {
+        logs::warn("GPU filters disabled: failed to initialize GPUPixel shaders");
+        data.render_support_filters = false;
+        return;
+    }
 
     // Initialize all filters
     data.bilaterial = gpupixel::BilateralFilter::create();
@@ -184,6 +190,12 @@ void platform_render_init_filters() {
     });
     
     data.outputImage = gpupixel::TargetView::create();
+    if (!data.outputImage || !data.outputImage->has_valid_program()) {
+        logs::warn("GPU filters disabled: failed to initialize GPUPixel output view");
+        data.sourceImage.reset();
+        data.render_support_filters = false;
+        return;
+    }
 
     data.sourceImage->addTarget(data.outputImage);
 }

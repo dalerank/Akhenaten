@@ -27,6 +27,7 @@ class TargetView : public Target {
   static std::shared_ptr<TargetView> create() { return std::make_shared<TargetView>(); }
 
   void init();
+  bool has_valid_program() const { return _displayProgram != nullptr; }
   virtual void setInputFramebuffer(std::shared_ptr<Framebuffer> framebuffer,
                                    RotationMode rotationMode = NoRotation,
                                    int texIdx = 0) override;

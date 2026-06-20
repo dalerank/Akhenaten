@@ -18,6 +18,10 @@ USING_NS_GPUPIXEL
 
 SourceImage::SourceImage() {
     _displayProgram = GLProgram::createByShaderString(kDefaultVertexShader, kDefaultFragmentShader);
+    if (!_displayProgram) {
+        return;
+    }
+
     _positionAttribLocation = _displayProgram->getAttribLocation("position");
     _texCoordAttribLocation = _displayProgram->getAttribLocation("inputTextureCoordinate");
     _colorMapUniformLocation = _displayProgram->getUniformLocation("textureCoordinate");
@@ -34,6 +38,10 @@ SourceImage::~SourceImage() {
 
 std::shared_ptr<SourceImage> SourceImage::create_from_memory(int width, int height, int channel_count, const unsigned char *pixels) {
     auto sourceImage = std::shared_ptr<SourceImage>(new SourceImage());
+    if (!sourceImage->has_valid_program()) {
+        return nullptr;
+    }
+
     sourceImage->init(width, height, channel_count, pixels);
     return sourceImage;
 }
