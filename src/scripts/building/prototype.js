@@ -17,6 +17,7 @@ Building.property.curse_days_left = { }
 Building.property.common_health = { }
 Building.property.disease_days = { }
 Building.property.can_play_animation = { get: function() { return this.__can_play_animation() } }
+Building.property.is_fancy = { get: function() { return this.__is_fancy() } }
 Building.property.is_output_resourece_mothballed = { get: function() { return __city_resource_is_mothballed(this.output_resource_id) } }
 
 Building.property.stored_clay = { get: function() { return this.stored_resource(RESOURCE_CLAY) } }

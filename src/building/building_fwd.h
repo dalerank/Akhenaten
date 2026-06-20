@@ -125,12 +125,13 @@ struct building_flags_rule {
     bool is_entertainment;
     bool is_food;
     bool allow_rotate;
+    bool no_road_access;
 };
 ANK_CONFIG_STRUCT(building_flags_rule,
     is_monument, is_extractor, is_harvester, is_farm, is_fort, is_education, is_palace, is_temple,
     is_shrine, is_tax_collector, is_statue, is_administration, is_water_crossing, is_infrastructure,
     is_beautification, is_guild, is_industry, is_workshop, is_house, is_wall, is_defense, is_temple_complex,
-    is_religion, is_military, is_entertainment, is_food, allow_rotate)
+    is_religion, is_military, is_entertainment, is_food, allow_rotate, no_road_access)
 
 struct building_crime_t {
     svector<int8_t, 6> value;

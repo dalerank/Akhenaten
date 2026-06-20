@@ -67,8 +67,6 @@ int building_garden::preview::construction_place(build_planner &planer, tile2i s
     return place_impl(start, end, true);
 }
 
-void building_garden::on_place_checks() {  /*nothing*/ }
-
 void building_garden::set_image(int grid_offset) {
     tile2i tile(grid_offset);
     int garden_base = building_static_params::get(BUILDING_GARDENS).base_img();

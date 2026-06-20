@@ -50,10 +50,6 @@ int building_road::preview::construction_place(build_planner &planer, tile2i sta
     return items_placed;
 }
 
-void building_road::on_place_checks() {
-    /*nothing*/
-}
-
 bool building_road::is_paved(tile2i tile) {
     int desirability = g_desirability.get(tile.grid_offset());
     if (desirability > 4) {

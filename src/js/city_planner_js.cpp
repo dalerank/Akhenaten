@@ -9,6 +9,7 @@
 #include "graphics/image.h"
 #include "graphics/view/view.h"
 #include "graphics/view/zoom.h"
+#include "grid/image.h"
 #include "grid/orientation.h"
 #include "grid/routing/routing.h"
 #include "building/construction/routed.h"
@@ -173,3 +174,8 @@ int __map_image_at(tile2i tile) {
     return map_image_at(tile);
 }
 ANK_FUNCTION_1(__map_image_at);
+
+void __map_image_set(tile2i tile, int image_id) {
+    map_image_set(tile, image_id);
+}
+ANK_FUNCTION_2(__map_image_set);

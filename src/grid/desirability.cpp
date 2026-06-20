@@ -158,6 +158,11 @@ int desirability_t::get_avg(tile2i tile, int size) {
     return summ / count;
 }
 
+int __desirability_get_avg(tile2i tile, int size) {
+    return g_desirability.get_avg(tile, size);
+}
+ANK_FUNCTION_2(__desirability_get_avg)
+
 int __desirability_at_tile(int x, int y) {
     return g_desirability.get(tile2i(x, y));
 }

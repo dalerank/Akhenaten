@@ -65,8 +65,6 @@ void add_building(building *b, int orientation, int variant) {
     }
 }
 
-
-
 uint16_t building_static_params::get_cost() const {
     const uint16_t mcost = this->cost.get();
     return mcost;

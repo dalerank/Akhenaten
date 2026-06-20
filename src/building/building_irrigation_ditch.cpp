@@ -211,11 +211,3 @@ int building_irrigation_ditch::preview::can_place(build_planner &p, tile2i tile,
 const building_irrigation_ditch::image_set &building_irrigation_ditch::images() {
     return g_canal_images;
 }
-
-void building_irrigation_ditch::on_place_checks() {
-    // Intentionally empty: an irrigation ditch is a drag-placed canal segment, not a
-    // worker building. Do NOT chain to building_impl::on_place_checks() here -- the base
-    // emits #needs_road_access (canals never need road access) and #city_needs_more_workers
-    // (canals have no labor), both of which are spurious for a canal. building_road does
-    // the same (deliberately empty on_place_checks).
-}

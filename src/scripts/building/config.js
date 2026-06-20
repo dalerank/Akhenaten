@@ -339,6 +339,9 @@ building_well {
   fire_risk[0]
   damage_risk[0]
   desirability { value[1], step[1], step_size[-1], range[1] }
+  flags {
+    no_road_access: true
+  }
 }
 
 building_reed_gatherer {
@@ -499,6 +502,9 @@ building_roadblock = {
   meta : { help_id: 358, text_id: 155 }
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   cost : [1, 2, 5, 10, 20 ]
+  flags {
+    no_road_access: true
+  }
 }
 
 building_brick_tower = {
@@ -727,6 +733,7 @@ building_garden {
   desirability { value[3], step[1], step_size[-1], range[3] }
   flags {
     is_beautification: true
+    no_road_access: true
   }
 }
 
@@ -741,6 +748,9 @@ building_road {
   cost [ 1, 2, 5, 10, 15 ]
   planner_update_rule {
     is_draggable : true
+  }
+  flags {
+    no_road_access: true
   }
 }
 
@@ -762,6 +772,9 @@ building_irrigation_ditch {
 
   cost [ 2, 4, 7, 10, 15 ]
   canal_irrigation_value_multiplier : 2
+  flags {
+    no_road_access: true
+  }
 }
 
 building_clay_pit {

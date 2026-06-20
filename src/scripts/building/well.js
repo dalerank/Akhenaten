@@ -18,6 +18,36 @@ city.get_well = function(building_id) {
     return new BuildingWell(building_id)
 }
 
+[es=(building_well, on_place_checks)]
+function building_well_on_place_checks(ev) {
+    var b = city.get_building(ev.bid)
+    var has_groundwater = terrain.is(b.tile, TERRAIN_GROUNDWATER)
+    city.warnings.show_if_not(has_groundwater, "#needs_groundwater")
+}
+
+[es=(building_well, update_graphic)]
+function building_well_update_graphic(ev) {
+    var well = city.get_well(ev.bid)
+    if (!well.can_play_animation) {
+        well.set_animation("none")
+        return
+    }
+
+    var animkey = well.is_fancy ? "base_work" : "fancy_work"
+    well.set_animation(animkey)
+}
+
+[es=(building_well, update_month)]
+function building_well_update_month(ev) {
+    var well = city.get_well(ev.bid)
+    var params = well.params
+    var avg_desirability = __desirability_get_avg(well.tile, params.desirability_range_check)
+    var is_fancy = avg_desirability > params.desirability_fancy
+    well.set_fancy(is_fancy)
+    var animkey = is_fancy ? "fancy" : "base"
+    __map_image_set(well.tile, well.first_img(animkey))
+}
+
 [es=(building_well, ghost_preview)]
 function building_well_ghost_preview(ev) {
     if (game_features.gameui_show_water_structure_range) {

@@ -21,7 +21,6 @@ public:
     BUILDING_METAINFO(BUILDING_ROADBLOCK, building_roadblock, building_routeblock)
     virtual building_roadblock *dcast_roadblock() override { return this; }
 
-    virtual void on_place_checks() override;
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
     virtual bool force_draw_top_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;

@@ -10,10 +10,6 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_roadblock);
 
-void building_roadblock::on_place_checks() {
-    /*nothing*/
-}
-
 bool building_roadblock::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
     /*nothing*/
     return true;

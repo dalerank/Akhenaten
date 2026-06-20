@@ -69,7 +69,7 @@ void building_impl::on_place_checks() {
     }
 
     construction_warnings warnings;
-    const bool has_road = map_has_road_access(tile(), size());
+    const bool has_road = current_params().flags.no_road_access || map_has_road_access(tile(), size());
     warnings.add_if(!has_road, "#needs_road_access");
 
     const bool need_workers = (base.max_workers > 0 && g_city.labor.workers_needed >= 10);

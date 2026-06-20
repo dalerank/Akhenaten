@@ -20,6 +20,7 @@ building_small_statue = {
       is_statue: true
       is_beautification: true
       allow_rotate: true
+      no_road_access: true
     }
 }
 

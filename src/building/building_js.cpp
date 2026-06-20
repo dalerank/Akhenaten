@@ -213,6 +213,22 @@ void __building_set_animation(js_State *J) {
     js_helpers::js_push_void(J);
 }
 
+void __building_set_fancy(js_State *J) {
+    const int bid = building_this_id(J);
+    const bool is_fancy = js_helpers::js_to_value<bool>(J, 1);
+    building *b = building_get(bid);
+    if (b) {
+        b->set_flag(e_building_fancy, is_fancy);
+    }
+    js_helpers::js_push_void(J);
+}
+
+void __building_is_fancy(js_State *J) {
+    const int bid = building_this_id(J);
+    building *b = building_get(bid);
+    js_helpers::js_push_value(J, b ? b->get_flag(e_building_fancy) : false);
+}
+
 void __building_common_spawn_roamer(js_State *J) {
     const int bid = building_this_id(J);
     const int figure_type = js_helpers::js_to_value<int>(J, 1);
@@ -421,6 +437,8 @@ void js_register_building(js_State *J) {
     jsB_propf(J, js_intern("Building.prototype.destroy_by_fire"), __building_destroy_by_fire, 0);
     jsB_propf(J, js_intern("Building.prototype.stored_resource"), __building_stored_resource, 1);
     jsB_propf(J, js_intern("Building.prototype.set_animation"), __building_set_animation, 1);
+    jsB_propf(J, js_intern("Building.prototype.set_fancy"), __building_set_fancy, 1);
+    jsB_propf(J, js_intern("Building.prototype.__is_fancy"), __building_is_fancy, 0);
     jsB_propf(J, js_intern("Building.prototype.common_spawn_roamer"), __building_common_spawn_roamer, 3);
     jsB_propf(J, js_intern("Building.prototype.common_spawn_figure_trigger"), __building_common_spawn_figure_trigger, 2);
     jsB_propf(J, js_intern("Building.prototype.create_figure_with_destination"), __building_create_figure_with_destination, 4);

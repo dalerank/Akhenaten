@@ -11,8 +11,6 @@ public:
         virtual int construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const override;
     };
 
-    virtual void on_place_checks() override;
-
     static void set_image(tile2i tile);
     static bool set_road(tile2i tile);
     static bool is_paved(tile2i tile);

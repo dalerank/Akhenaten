@@ -30,7 +30,5 @@ public:
         bool map_is_straight_road_for_canal(tile2i tile) const;
         bool is_road_tile_for_canal(tile2i tile, int gate_orientation) const;
     };
-
-    virtual void on_place_checks() override;
 };
 ANK_CONFIG_STRUCT(building_irrigation_ditch::static_params, canal_irrigation_value_multiplier)
