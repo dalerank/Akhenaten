@@ -576,6 +576,36 @@ int text_draw_multiline(xstring strkey, vec2i offset, int box_width, e_font font
     return y - offset.y;
 }
 
+int text_draw_multiline_centered(xstring strkey, vec2i offset, int box_width, e_font font, uint32_t color) {
+    int line_height = font_definition_for(font)->line_height;
+    if (line_height < 11) {
+        line_height = 11;
+    }
+
+    pcstr str = strkey.c_str();
+    pcstr full_start = str;
+    int has_more_characters = 1;
+    int guard = 0;
+    int y = offset.y;
+
+    while (has_more_characters) {
+        int begin_idx;
+        int end_idx;
+        int visual_begin_idx;
+        if (!multiline_take_next_line(
+              &str, &has_more_characters, full_start, box_width, font, &begin_idx, &end_idx, &visual_begin_idx, &guard)) {
+            break;
+        }
+        (void)begin_idx;
+        (void)end_idx;
+        (void)visual_begin_idx;
+        text_draw_centered(tmp_line, offset.x, y, box_width, font, color);
+        y += line_height + 5;
+    }
+
+    return y - offset.y;
+}
+
 bool text_multiline_cursor_screen_pos(pcstr utf8_full, int cursor_utf8_byte, vec2i text_offset_screen, int box_width, e_font font,
   vec2i* out_screen) {
     const pcstr full_start = utf8_full;

@@ -59,6 +59,10 @@ void execute_ui_command(painter& ctx, const ui::cmd_t& cmd) {
         text_draw_multiline(cmd.str.c_str(), cmd.pos, cmd.box_width, cmd.font, cmd.clr);
         break;
 
+    case cmd_t::text_multiline_centered:
+        text_draw_multiline_centered(cmd.str.c_str(), cmd.pos, cmd.box_width, cmd.font, cmd.clr);
+        break;
+
     case cmd_t::lang_text_year:
         lang_text_draw_year(cmd.year, cmd.pos.x, cmd.pos.y, cmd.font);
         break;

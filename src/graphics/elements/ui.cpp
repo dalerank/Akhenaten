@@ -1934,8 +1934,13 @@ void ui::etext::draw(UiFlags flags) {
         if (boxw <= 0) {
             boxw = 9999;
         }
-        push(cmd_t::text_multiline, Pos{scr_pos}, BoxWidth{boxw}, Font{_font}, TextColor{_color},
-          Caption{_text.c_str()});
+        if (!!(_flags & UiFlags_AlignCentered)) {
+            push(cmd_t::text_multiline_centered, Pos{scr_pos}, BoxWidth{boxw}, Font{_font}, TextColor{_color},
+              Caption{_text.c_str()});
+        } else {
+            push(cmd_t::text_multiline, Pos{scr_pos}, BoxWidth{boxw}, Font{_font}, TextColor{_color},
+              Caption{_text.c_str()});
+        }
     } else if (!!(_flags & UiFlags_AlignCentered)) {
         int additionaly = 0;
         if (pxsize().y > 0) {

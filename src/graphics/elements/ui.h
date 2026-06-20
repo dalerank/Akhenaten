@@ -123,6 +123,7 @@ namespace ui {
             text,
             text_centered,
             text_multiline,
+            text_multiline_centered,
             text_colored,
             text_rich,
             clip_set,
