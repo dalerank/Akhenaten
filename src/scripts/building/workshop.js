@@ -75,34 +75,6 @@ function building_weaver_on_place_checks(ev) {
     city.warnings.show_if_not(flax.trade_status == TRADE_STATUS_IMPORT, "#overseer_of_commerce_to_import")
 }
 
-building_weaponsmith = {
-  animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:123, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:123, offset:0 },
-    work : { pos : [57, -16], pack:PACK_GENERAL, id:123, offset:1, max_frames:20, duration:5, can_reverse:true },
-    copper : { pos : [93, 0], pack:PACK_GENERAL, id:203 },
-  }
-
-  input : {
-    resource : RESOURCE_COPPER
-  }
-  output : {
-    resource : RESOURCE_WEAPONS
-  }
-  labor_category : LABOR_CATEGORY_MILITARY
-  meta : { help_id: 98, text_id: 124 }
-  info_sound : "Wavs/weapon.wav"
-  building_size: 2
-  cost: [ 24, 40, 80, 120, 150 ]
-  desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
-  laborers:[12], fire_risk:[4], damage_risk: [2]
-  info_advisors [ADVISOR_LABOR, ADVISOR_MILITARY]
-  flags {
-    is_workshop: true
-    is_industry: true
-  }
-}
-
 building_jewels_workshop = {
   animations : {
     preview : { pos: [0, 0], pack:PACK_GENERAL, id:119 },

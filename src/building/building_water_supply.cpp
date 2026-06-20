@@ -1,29 +1,8 @@
 #include "building/building_water_supply.h"
 
-#include "grid/desirability.h"
-#include "grid/terrain.h"
-#include "grid/building_tiles.h"
-#include "window/building/common.h"
-#include "city/city_warnings.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_water_supply);
-
-void building_water_supply::update_month() {
-    int avg_desirability = g_desirability.get_avg(tile(), 4);
-    const bool is_fancy = avg_desirability > 30;
-    base.set_flag(e_building_fancy, is_fancy);
-    const xstring &animkey = is_fancy ? animkeys().fancy : animkeys().base;
-    const animation_t &anim = this->anim(animkey);
-    map_building_tiles_add(id(), tile(), 2, anim.first_img(), TERRAIN_BUILDING);
-}
-
-void building_water_supply::update_graphic() {
-    const xstring &animwork = base.get_flag(e_building_fancy) ? animkeys().fancy_work : animkeys().base_work;
-    set_animation(animwork);
-
-    building_impl::update_graphic();
-}
 
 void building_water_supply::spawn_figure() {
     if (!base.has_water_access) {
@@ -37,13 +16,4 @@ bool building_water_supply::draw_ornaments_and_animations_height(painter &ctx, v
     draw_normal_anim(ctx, point, tile, color_mask);
 
     return true;
-}
-
-void building_water_supply::on_place_checks() {
-    building_impl::on_place_checks();
-
-    construction_warnings warnings;
-
-    int has_water = map_terrain_is(tile(), TERRAIN_GROUNDWATER);
-    warnings.add_if(!has_water, "#needs_groundwater");
 }

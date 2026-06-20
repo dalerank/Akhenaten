@@ -287,31 +287,6 @@ building_bazaar {
   }
 }
 
-building_water_supply {
-  animations {
-    preview { pack:PACK_GENERAL, id:69 }
-    base { pack:PACK_GENERAL, id:69, offset:0 }
-    base_work { pos[42, 10], pack:PACK_GENERAL, id:69, offset:1, max_frames:1 }
-    fancy { pack:PACK_GENERAL, id:69, offset:2 }
-    fancy_work { pos[10, 0], pack:PACK_GENERAL, id:69, offset:3, max_frames:1 }
-  }
-
-  min_houses_coverage : 50
-  labor_category : LABOR_CATEGORY_WATER_HEALTH,
-  fire_proof : true
-  meta { help_id:61, text_id:108 }
-  info_sound : "Wavs/WELL.WAV"
-  building_size : 2
-  needs { 
-    groundwater : true
-  }
-  cost [ 10, 20, 40, 80, 140 ]
-  desirability { value[4], step[1], step_size[-1], range[4] }
-  laborers[5]
-  fire_risk[0]
-  damage_risk[0]
-}
-
 building_well {
   animations {
     preview { pack: PACK_GENERAL, id:23, max_frames:1 }

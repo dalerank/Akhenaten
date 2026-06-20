@@ -34,6 +34,7 @@ import building.firehouse
 import building.hunting_lodge
 import building.pottery
 import building.papyrus_maker
+import building.weaponsmith
 import building.mine_copper
 import building.mine_gold
 import building.mine_gems
@@ -44,3 +45,4 @@ import building.courthouse
 import building.work_camp
 import building.road
 import building.well
+import building.water_supply
