@@ -7,10 +7,6 @@ class building_ferry : public building_routeblock {
 public:
     BUILDING_METAINFO(BUILDING_FERRY, building_ferry, building_routeblock)
 
-    struct preview : building_planer_renderer {
-        virtual int construction_update(build_planner &planer, tile2i start, tile2i end) const override;
-    };
-
     struct runtime_data_t {
         int dock_tiles[2];
     } BUILDING_RUNTIME_DATA(runtime_data_t);
@@ -31,7 +27,7 @@ public:
     virtual bool target_route_tile_blocked(int grid_offset) const override;
 
     virtual bool get_permission(e_permission p) override { return false; }
-    
+
     virtual void spawn_figure() override;
 };
 

@@ -8,11 +8,6 @@ public:
 
     virtual building_fishing_wharf *dcast_fishing_wharf() override { return this; }
 
-    struct preview : public building_planer_renderer {
-        virtual int construction_update(build_planner &planer, tile2i start, tile2i end) const override;
-        virtual void setup_preview_graphics(build_planner &planer) const override;
-    };
-
     struct static_params : public building_static_params {
         uint16_t max_storage;
         uint8_t wait_time_multiplier;

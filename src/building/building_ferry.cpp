@@ -7,7 +7,6 @@
 #include "grid/building_tiles.h"
 #include "grid/routing/routing.h"
 #include "graphics/elements/ui.h"
-#include "construction/build_planner.h"
 #include "js/js_game.h"
 #include "io/gamefiles/lang.h"
 #include "figuretype/figure_ferry_boat.h"
@@ -16,12 +15,6 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_ferry);
 info_window_ferry ferry_infow;
-
-int building_ferry::preview::construction_update(build_planner &planer, tile2i start, tile2i end) const {
-    const auto &params = building_static_params::get(planer.build_type);
-    planer.draw_as_constructing = map_shore_determine_orientation(end, params.building_size, true).match;
-    return 1;
-}
 
 void building_ferry::on_create(int orientation) {
     base.orientation = orientation;

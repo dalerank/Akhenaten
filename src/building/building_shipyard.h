@@ -8,10 +8,6 @@ public:
 
     virtual building_shipyard *dcast_shipyard() override { return this; }
 
-    struct preview : building_planer_renderer {
-        virtual int construction_update(build_planner &planer, tile2i start, tile2i end) const override;
-    };
-
     struct static_params : public building_static_params {
         int warship_progress_cost;
         int transport_progress_cost;

@@ -13,7 +13,6 @@
 #include "game/game.h"
 #include "graphics/elements/ui.h"
 #include "graphics/graphics.h"
-#include "construction/build_planner.h"
 #include "js/js_game.h"
 #include "dev/debug.h"
 #include <iostream>
@@ -22,19 +21,6 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_fishing_wharf);
 
 declare_console_command_p(killfishboats) {
     figure_valid_do([] (figure &f) { f.poof(); }, make_array(FIGURE_FISHING_BOAT));
-}
-
-int building_fishing_wharf::preview::construction_update(build_planner &planer, tile2i start, tile2i end) const {
-    const auto &params = building_static_params::get(planer.build_type);
-    const auto result = map_shore_determine_orientation(end, params.building_size, true);
-    planer.draw_as_constructing = result.match;
-    return 1;
-}
-
-void building_fishing_wharf::preview::setup_preview_graphics(build_planner &planer) const {
-    const auto &params = building_static_params::get(planer.build_type);
-    const int imgid = params.base_img() + planer.relative_orientation;
-    planer.set_tiles_building(imgid, params.building_size);
 }
 
 void building_fishing_wharf::on_place_update_tiles(int orientation, int variant) {

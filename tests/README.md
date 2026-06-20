@@ -46,6 +46,11 @@ Results are written to `akhenaten-log.txt` as lines like `[test:tests/11_work_ca
 | `16_papyrus_maker_placement.js` | Papyrus maker via `test_building_place` |
 | `17_fishing_wharf_placement.js` | Fishing wharf on synthetic shoreline via `test_building_place` |
 | `18_water_lift_placement.js` | Water lift on synthetic shoreline via `test_building_place` |
+| `19_transport_wharf_placement.js` | Transport wharf on synthetic shoreline |
+| `20_warship_wharf_placement.js` | Warship wharf on synthetic shoreline |
+| `21_dock_placement.js` | Dock on synthetic shoreline |
+| `22_shipyard_placement.js` | Shipyard on synthetic shoreline |
+| `23_ferry_placement.js` | Ferry landing on synthetic shoreline |
 
 Shared helpers for city tests and placement live in [`src/scripts/integral_test.js`](../src/scripts/integral_test.js), imported from `modules.js` (always loaded with the game VM, not via `include()` from test files).
 
@@ -110,6 +115,9 @@ Loaded via `import integral_test` in `modules.js` (after `city_planner`).
 | `test_planner_exit_build_mode()` | undefined | Cancel construction, exit build mode |
 | `test_find_buildable_tile(type)` | `{x,y}` or null | Scan map for a valid tile near center |
 | `test_building_place(type, x, y)` | building id | Full placement via `city_planner`; auto-tile when `x` or `y` is negative; calls `test_log_building_placed` |
+| `test_prepare_shoreline_patch(cx, cy, w, h)` | undefined | Paint water and rebuild shores (land row at `cy - 1`) |
+| `test_shoreline_building_place(type, size)` | building id | Reload not included; shoreline patch + `test_building_place` at map center |
+| `test_assert_building_placed(bid, type, tag)` | boolean | Type, map tile, and per-bid marker checks |
 | `test_log_building_placed(bid)` | undefined | `[test-marker] test_building_placed:…` (work camp uses `work_camp` suffix) |
 
 `city_planner` is an `ANK_GLOBAL_OBJECT` (`build_type`, `in_progress`, methods in [`city_planner.js`](../src/scripts/city_planner.js)).

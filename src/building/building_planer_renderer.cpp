@@ -2,6 +2,7 @@
 
 #include "building_static_params.h"
 #include "building/construction/build_planner.h"
+#include "grid/water.h"
 #include "city/city_buildings.h"
 #include "building/building.h"
 #include "game/undo.h"
@@ -136,10 +137,15 @@ int building_planer_renderer::construction_update(build_planner &planer, tile2i 
         return planer.construction_update_items;
     }
 
+    if (planer.needShoreLine()) {
+        planer.draw_as_constructing = map_shore_determine_orientation(end, params.building_size, true).match;
+        return 1;
+    }
+
     if (planer.needMeadow() || planer.needRock()
         || planer.needTrees() || planer.needNearbyWater()
         || planer.needWalls() || planer.needGroundwater()
-        || planer.needWater() || planer.needShoreLine()
+        || planer.needWater()
         || planer.needRoad() || planer.needIntersection()) {
         return 0;
     }

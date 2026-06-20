@@ -122,3 +122,86 @@ function test_building_place(type, x, y) {
     test_log_building_placed(bid)
     return bid
 }
+
+// Synthetic shoreline: land row at cy - 1, water patch below (see tests/17, tests/19).
+function test_prepare_shoreline_patch(cx, cy, water_width, water_height) {
+    var x0 = cx - ((water_width / 2) | 0)
+    for (var dy = 0; dy < water_height; dy++) {
+        for (var dx = 0; dx < water_width; dx++) {
+            terrain.add({ x: x0 + dx, y: cy + dy }, TERRAIN_WATER)
+        }
+    }
+    __map_water_rebuild_shores()
+}
+
+function test_assert_building_placed(bid, type, tag) {
+    if (!bid) {
+        __log_info_native('[' + tag + '] no building id')
+        return false
+    }
+
+    if (__building_type(bid) != type) {
+        __log_info_native('[' + tag + '] wrong building type for id ' + bid)
+        return false
+    }
+
+    var tile = __building_tile(bid)
+    var at = city.get_building_at(tile.x, tile.y)
+    if (!at || at.id != bid) {
+        __log_info_native('[' + tag + '] map_building_at mismatch at ' + tile.x + ',' + tile.y)
+        return false
+    }
+
+    var marker = '[test-marker] test_building_placed:type_' + type + ':' + bid + ':'
+    if (!__test_find_inlog(marker)) {
+        __log_info_native('[' + tag + '] missing marker: ' + marker)
+        return false
+    }
+
+    return true
+}
+
+function test_shoreline_building_place(type, building_size) {
+    var cx = (__scenario_map.width / 2) | 0
+    var cy = (__scenario_map.height / 2) | 0
+    var water_width = building_size + 2
+    var water_height = 2
+    if (building_size >= 3) {
+        water_width = building_size + 4
+        water_height = 3
+    }
+    test_prepare_shoreline_patch(cx, cy, water_width, water_height)
+
+    var candidates = [{ x: cx - 1, y: cy - 1 }]
+    if (building_size >= 3) {
+        candidates.push({ x: cx - 2, y: cy - 1 })
+        candidates.push({ x: cx - 1, y: cy - 2 })
+    }
+
+    if (!test_planner_enter_build_mode(type)) {
+        __log_info_native('[test_planner] failed to enter build mode for type ' + type)
+        return 0
+    }
+
+    for (var i = 0; i < candidates.length; i++) {
+        var place = candidates[i]
+        city_planner.update(place.x, place.y)
+        if (city_planner.can_be_placed() != CAN_PLACE) {
+            continue
+        }
+        city_planner.construction_start(place.x, place.y)
+        city_planner.construction_update(place.x, place.y)
+        city_planner.construction_finalize()
+        var bid = city_planner.last_created_building_id()
+        city_planner.validate_last_created()
+        if (bid && __building_type(bid) == type) {
+            test_planner_exit_build_mode()
+            test_log_building_placed(bid)
+            return bid
+        }
+    }
+
+    __log_info_native('[test_planner] no valid shoreline tile for type ' + type)
+    test_planner_exit_build_mode()
+    return 0
+}
