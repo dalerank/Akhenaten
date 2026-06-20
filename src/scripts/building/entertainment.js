@@ -230,6 +230,20 @@ building_senet_house = {
   }
 }
 
+[es=(building_senet_house, on_place_checks)]
+function building_senet_house_on_place_checks(ev) {
+  var has_senet_master = city.count_active_buildings(BUILDING_BULLFIGHT_SCHOOL) > 0
+  var beer = city.resources.beer
+  var is_import_beer = beer.trade_status == TRADE_STATUS_IMPORT
+
+  city.warnings.show_if_not(has_senet_master, "#build_senet_master")
+  city.warnings.show_if_not(beer.yards_stored > 0, "#need_beer")
+  city.warnings.show_if_not(beer.count_active_industry > 0, "#need_brewery")
+  city.warnings.show_if_not(beer.can_produce, "#build_brewery")
+  city.warnings.show_if_not(beer.can_import, "#import_beer_overseer")
+  city.warnings.show_if_not(is_import_beer, "#import_beer_trade_route")
+}
+
 building_bullfight_school = {
   animations : {
     preview : { pack:PACK_CUSTOM, id:0 },

@@ -7,7 +7,6 @@ public:
     BUILDING_METAINFO(BUILDING_SENET_HOUSE, building_senet_house, building_entertainment)
     building_senet_house* dcast_senet_house() override { return this; }
 
-    virtual void on_place_checks() override;
     virtual void on_destroy() override;
     virtual void spawn_figure() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_SENET_HOUSE; }
