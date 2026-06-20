@@ -28,6 +28,9 @@ function building_well_on_place_checks(ev) {
 [es=(building_well, update_graphic)]
 function building_well_update_graphic(ev) {
     var well = city.get_well(ev.bid)
+    if (!well) {
+        return
+    }
     if (!well.can_play_animation) {
         well.set_animation("none")
         return
@@ -54,7 +57,7 @@ function building_well_ghost_preview(ev) {
         var overlay = get_image({ pack: PACK_TERRAIN, id: 21 }).tid
         var pixels = __camera_tile_range_pixels(city.planner.end, 1, 2)
         for (var i = 0; i < pixels.length; i++) {
-            city.planner.draw_overlay_tile(pixels[i], overlay, COLOR_MASK_BLUE)
+            city.planner.draw_overlay_tile(pixels[i], overlay, COLOR_MASK_BLUE, 1.0)
         }
     }
 

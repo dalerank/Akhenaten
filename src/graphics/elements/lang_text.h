@@ -48,7 +48,7 @@ template<typename ... Args>
 inline int lang_text_draw(vec2i offset, e_font font, int box_width, pcstr fmt, const Args&... args) {
     bstring1024 s;
     s.printf(fmt, args...);
-    return lang_text_draw(s.c_str(), offset, font, box_width); 
+    return lang_text_draw(s.c_str(), offset, font, box_width);
 }
 
 int lang_text_draw_colored(int group, int number, int x_offset, int y_offset, e_font font, color color);

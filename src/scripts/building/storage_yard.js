@@ -77,7 +77,8 @@ function building_storage_yard_ghost_preview(ev) {
             city.planner.draw_overlay_tile(
                 { x: tile_pixel.x + cover_off[0], y: tile_pixel.y + cover_off[1] },
                 cover_id,
-                COLOR_MASK_GREEN
+                COLOR_MASK_GREEN,
+                1.0
             )
         } else {
             city.planner.draw_ghost(tile_pixel, space_id)

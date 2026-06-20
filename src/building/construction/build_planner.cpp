@@ -1302,6 +1302,15 @@ void build_planner::draw_building_ghost(painter &ctx, int image_id, vec2i pixel,
     command.location = SOURCE_LOCATION;
 }
 
+void build_planner::draw_overlay_tile(painter &ctx, int image_id, vec2i pixel, color color_mask, float scale) {
+    auto& command = ImageDraw::create_command(ctx, render_command_t::ert_generic);
+    command.image_id = image_id;
+    command.pixel = pixel;
+    command.mask = color_mask;
+    command.scale = scale;
+    command.location = SOURCE_LOCATION;
+}
+
 void build_planner::draw_graphics(painter &ctx) {
     // TODO: bring these all over the unified system
     // special graphics buildings

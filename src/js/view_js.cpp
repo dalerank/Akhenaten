@@ -95,8 +95,8 @@ hvector<vec2i, 256> __camera_tile_range_pixels(tile2i tile, int size, int radius
     hvector<vec2i, 256> pixels;
     painter ctx = game.painter();
     g_camera.foreach_tile_in_range(ctx, tile.grid_offset(), size, radius,
-        [&pixels](vec2i pixel, tile2i, painter &) {
-            pixels.push_back(pixel);
+        [&pixels](vec2i, tile2i point, painter &) {
+            pixels.push_back(g_camera.lookup_tile_to_pixel(point));
         });
 
     return pixels;
