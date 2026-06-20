@@ -200,6 +200,12 @@ namespace {
 }
 #endif
 
+#if defined(GAME_PLATFORM_ANDROID)
+bool lang_android_load_localization_base_en_direct(pcstr path) {
+    return android_load_localization_base_en_direct(path);
+}
+#endif
+
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_localization) {
     g_localization.clear();
     lang_reload_localized_tables();
@@ -215,7 +221,7 @@ bool lang_reload_localized_files() {
         logs::info("game_languages is empty, attempting to load localization.js");
         js_vm_load_file_and_exec(":localization.js");
         config::refresh(js_vm_state());
-        
+
         // Check again after loading
         if (game_languages.empty()) {
             logs::error("Failed to load game_languages from localization.js");
@@ -233,7 +239,7 @@ bool lang_reload_localized_files() {
         vfs::path lang_base_file(":", localization_base_table.c_str(), ".js");
         bool lang_base_file_loaded = false;
 #if defined(GAME_PLATFORM_ANDROID)
-        if (localization_base_table == "localization_base_en" && android_load_localization_base_en_direct(lang_base_file.c_str())) {
+        if (localization_base_table == "localization_base_en" && lang_android_load_localization_base_en_direct(lang_base_file.c_str())) {
             logs::info("Loaded localization base directly on Android: %s", lang_base_file.c_str());
             lang_base_file_loaded = true;
         } else

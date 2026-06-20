@@ -188,7 +188,7 @@ void platform_render_init_filters() {
         data.weakPixelInclusion = gpupixel::WeakPixelInclusionFilter::Create();
         data.whiteBalance = gpupixel::WhiteBalanceFilter::Create();
     });
-    
+
     data.outputImage = gpupixel::TargetView::create();
     if (!data.outputImage || !data.outputImage->has_valid_program()) {
         logs::warn("GPU filters disabled: failed to initialize GPUPixel output view");

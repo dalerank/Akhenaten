@@ -116,12 +116,11 @@ void dev::qconsole::bindBasicCommands() {
 }
 
 void dev::qconsole::commandExecute(std::istream &is, std::ostream &os) {
-    char ch;
     while (!is.eof()) {
-        ch = is.peek();
+        const int ch = is.peek();
 
         if (ch == std::char_traits<char>::eof()) {
-            is.get(ch);
+            is.get();
             return;
         } else if (ch == '#') {
             std::string tmp;
@@ -129,7 +128,7 @@ void dev::qconsole::commandExecute(std::istream &is, std::ostream &os) {
             return;
         } //if newline we will not parse anything else
         else if (std::isspace(ch)) {
-            is.get(ch);
+            is.get();
             continue;
         } else {
             break;

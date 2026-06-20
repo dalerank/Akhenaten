@@ -82,7 +82,7 @@ public:
     void setup_phase_6_tiles();
     void setup_phase_6_basement();
     virtual bool need_workers() const override;
-    span_const<uint16_t> active_workers() const;
+    span_const<uint16_t> active_workers() const override;
 
     static void finalize(building *b, const vec2i size_b);
     static int get_image(const building_static_params &, int orientation, tile2i tile, tile2i start, tile2i end);

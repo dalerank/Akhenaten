@@ -426,7 +426,7 @@ bool scenario_invasion_start_from_kingdome(int size) {
 
 void scenario_invasion_start(invasion_opts_t opts) {
     auto &data = g_invasions;
-    switch (opts.attack_type) {
+    switch (opts.mode) {
     case ATTACK_TYPE_ENEMIES: {
         opts.attack_type = FORMATION_ATTACK_RANDOM;
         tile2i invasion_tile = scenario_start_invasion_impl(opts);

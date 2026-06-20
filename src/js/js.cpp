@@ -23,6 +23,9 @@
 #include "game/mission.h"
 #include "game/game.h"
 #include "dev/debug.h"
+#if defined(GAME_PLATFORM_ANDROID)
+#include "graphics/elements/lang_text.h"
+#endif
 
 #include "js/js_debugger.h"
 #include "js/js_self_tests.h"
@@ -463,6 +466,15 @@ int js_vm_load_file_and_exec(pcstr path) {
     if (!path || !*path) {
         return 0;
     }
+
+#if defined(GAME_PLATFORM_ANDROID)
+    if (strcmp(path, ":localization_base_en.js") == 0) {
+        if (lang_android_load_localization_base_en_direct(path)) {
+            logs::info("Loaded localization base directly on Android: %s", path);
+            return 1;
+        }
+    }
+#endif
 
 #if defined(GAME_PLATFORM_ANDROID)
     const bool prefer_internal_script = (*path == ':');

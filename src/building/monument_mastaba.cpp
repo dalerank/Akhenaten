@@ -793,7 +793,7 @@ void building_mastaba::bind_dynamic(io_buffer *iob, size_t version) {
 
 bool building_mastaba::get_route_citizen_land_type(int grid_offset, int &land_result) const {
     {
-        if (phase() == MONUMENT_FINISHED) {
+        if (is_finished()) {
             land_result = CITIZEN_N1_BLOCKED;
             return true;
         } else if (phase() > 2) {

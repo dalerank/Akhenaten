@@ -139,11 +139,11 @@ tile2i building_pyramid::center_point() const {
 }
 
 bool building_pyramid::get_route_citizen_land_type(int grid_offset, int &land_result) const {
-    if (phase() == MONUMENT_FINISHED) {
+    if (is_finished()) {
         land_result = CITIZEN_N1_BLOCKED;
         return true;
-    } 
-    
+    }
+
     if (phase() > 6) {
         const auto &itiles = pyramid_params().init_tiles;
         tile2i maint = main()->tile();

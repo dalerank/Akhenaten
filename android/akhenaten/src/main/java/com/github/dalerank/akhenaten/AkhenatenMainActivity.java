@@ -8,6 +8,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -22,6 +23,8 @@ public class AkhenatenMainActivity extends SDLActivity {
     private boolean shouldLaunchInitialDirectorySelection = false;
     private TextView startupLogView;
     private ScrollView startupLogScroll;
+    private Button startupLogToggleButton;
+    private boolean startupLogVisible = true;
 
     @Override
     public void onStop() {
@@ -129,9 +132,7 @@ public class AkhenatenMainActivity extends SDLActivity {
             if (startupLogView != null) {
                 startupLogView.setText("");
             }
-            if (startupLogScroll != null) {
-                startupLogScroll.setVisibility(ScrollView.VISIBLE);
-            }
+            updateStartupLogVisibility();
         });
     }
 
@@ -150,8 +151,7 @@ public class AkhenatenMainActivity extends SDLActivity {
                 next = next.substring(next.length() - STARTUP_LOG_MAX_CHARS);
             }
             startupLogView.setText(next);
-            if (startupLogScroll != null) {
-                startupLogScroll.setVisibility(ScrollView.VISIBLE);
+            if (startupLogScroll != null && startupLogVisible) {
                 startupLogScroll.post(() -> startupLogScroll.fullScroll(ScrollView.FOCUS_DOWN));
             }
         });
@@ -159,11 +159,17 @@ public class AkhenatenMainActivity extends SDLActivity {
 
     @SuppressWarnings("unused")
     public void setStartupLogVisible(boolean visible) {
-        runOnUiThread(() -> {
-            if (startupLogScroll != null) {
-                startupLogScroll.setVisibility(visible ? ScrollView.VISIBLE : ScrollView.GONE);
-            }
-        });
+        startupLogVisible = visible;
+        runOnUiThread(this::updateStartupLogVisibility);
+    }
+
+    private void updateStartupLogVisibility() {
+        if (startupLogScroll != null) {
+            startupLogScroll.setVisibility(startupLogVisible ? ScrollView.VISIBLE : ScrollView.GONE);
+        }
+        if (startupLogToggleButton != null) {
+            startupLogToggleButton.setText(startupLogVisible ? "Hide log" : "Log");
+        }
     }
 
     private void installStartupLogOverlay() {
@@ -190,6 +196,22 @@ public class AkhenatenMainActivity extends SDLActivity {
         params.topMargin = dp(8);
         params.rightMargin = dp(8);
         addContentView(startupLogScroll, params);
+
+        startupLogToggleButton = new Button(this);
+        startupLogToggleButton.setText("Hide log");
+        startupLogToggleButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        startupLogToggleButton.setPadding(dp(10), dp(6), dp(10), dp(6));
+        startupLogToggleButton.setAlpha(0.9f);
+        startupLogToggleButton.setOnClickListener(v -> setStartupLogVisible(!startupLogVisible));
+
+        FrameLayout.LayoutParams buttonParams = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                Gravity.BOTTOM | Gravity.END
+        );
+        buttonParams.rightMargin = dp(8);
+        buttonParams.bottomMargin = dp(8);
+        addContentView(startupLogToggleButton, buttonParams);
     }
 
     private int dp(int value) {

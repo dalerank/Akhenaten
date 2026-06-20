@@ -68,6 +68,7 @@ file(GLOB IO_PLAYERDATA_FILES ${SRC_ROOT}/io/playerdata/*.cpp)
 file(GLOB RESOURCE_FILES ${SRC_ROOT}/resource/*.cpp)
 file(GLOB JS_FILES ${SRC_ROOT}/js/*.cpp)
 file(GLOB SCRIPTS_FILES ${SRC_ROOT}/scripts/*.cpp)
+file(GLOB NET_FILES ${SRC_ROOT}/net/*.cpp)
 file(GLOB LZMA_FILES ${SRC_ROOT}/lzma/*.c)
 file(GLOB BZIP_FILES ${SRC_ROOT}/bzip/*.c)
 file(GLOB LAME_FILES ${SRC_ROOT}/lame/libmp3lame/*.c)
@@ -140,6 +141,7 @@ set(SOURCE_FILES
     ${RESOURCE_FILES}
     ${JS_FILES}
     ${SCRIPTS_FILES}
+    ${NET_FILES}
     ${LZMA_FILES}
     ${BZIP_FILES}
     ${LAME_FILES}
@@ -150,7 +152,7 @@ set(SOURCE_FILES
 # Embedded resources (CMRC).
 set(PROJECT_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../")
 set(SCRIPTS_FOLDER "${PROJECT_ROOT}/src/scripts")
-file(GLOB SCRIPT_FILES ${SCRIPTS_FOLDER}/*.js)
+file(GLOB_RECURSE SCRIPT_FILES "${SCRIPTS_FOLDER}/*.js")
 set(RES_FOLDER "${PROJECT_ROOT}/res")
 
 cmrc_add_resource_library(
@@ -171,6 +173,16 @@ cmrc_add_resources(
 
 # Shared library target.
 add_library(akhenaten SHARED ${SOURCE_FILES})
+
+if (LAME_FILES)
+    set_source_files_properties(${LAME_FILES} PROPERTIES COMPILE_FLAGS "-Wno-absolute-value")
+endif()
+
+if (MUJS_FILES)
+    set_source_files_properties(${MUJS_FILES} PROPERTIES COMPILE_FLAGS "-Wno-writable-strings")
+endif()
+
+set_source_files_properties(${SRC_ROOT}/core/interlocked.cpp PROPERTIES COMPILE_FLAGS "-Wno-atomic-alignment")
 
 # Include directories.
 target_include_directories(akhenaten PRIVATE

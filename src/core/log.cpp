@@ -26,6 +26,8 @@
 #include <crtdbg.h>
 #elif defined(GAME_PLATFORM_ANDROID)
 #include <android/log.h>
+#include "content/content.h"
+#include "platform/android/android.h"
 #endif
 
 namespace logs {
@@ -33,6 +35,9 @@ namespace logs {
 pcstr logger_filename_ = "akhenaten-log.txt";
 static std::fstream logger_file_stream_;
 static xstring logger_active_path_ = logger_filename_;
+#if defined(GAME_PLATFORM_ANDROID)
+static FILE *logger_file_ = nullptr;
+#endif
 
 const flat_map<xstring, SDL_LogPriority, 8> PRIORITY_DICT = {
     {"verbose", SDL_LOG_PRIORITY_VERBOSE},
@@ -128,6 +133,24 @@ void initialize() {
 }
 
 void switch_output(pcstr folder) {
+#if defined(GAME_PLATFORM_ANDROID)
+    (void)folder;
+    if (logger_file_) {
+        fclose(logger_file_);
+        logger_file_ = nullptr;
+    }
+    logger_file_stream_.close();
+    logger_active_path_ = logger_filename_;
+    vfs::platform_file_manager_remove_file(logger_filename_);
+    logger_file_ = vfs::platform_file_manager_open_file(logger_filename_, "w");
+    if (!logger_file_) {
+        __android_log_print(ANDROID_LOG_WARN, "ank-and", "Failed to open log file: %s", logger_filename_);
+        return;
+    }
+    const unsigned char bom[] = {0xEF, 0xBB, 0xBF};
+    fwrite(bom, 1, sizeof(bom), logger_file_);
+    fflush(logger_file_);
+#else
     logger_file_stream_.close();
 
     bstring256 filename(folder, "/", logger_filename_);
@@ -137,6 +160,7 @@ void switch_output(pcstr folder) {
         const unsigned char bom[] = { 0xEF, 0xBB, 0xBF };
         logger_file_stream_.write(reinterpret_cast<const char*>(bom), sizeof(bom));
     }
+#endif
 }
 
 pcstr output_path() {
@@ -144,9 +168,15 @@ pcstr output_path() {
 }
 
 void flush() {
+#if defined(GAME_PLATFORM_ANDROID)
+    if (logger_file_) {
+        fflush(logger_file_);
+    }
+#else
     if (logger_file_stream_.is_open()) {
         logger_file_stream_.flush();
     }
+#endif
 }
 
 void critical(pcstr format, ...) {
@@ -210,15 +240,24 @@ void verbose(pcstr format, ...) {
 }
 
 Logger::Logger() {
+#if !defined(GAME_PLATFORM_ANDROID)
     logger_file_stream_.open(logger_filename_, std::fstream::out | std::fstream::trunc | std::fstream::binary);
     if (logger_file_stream_.is_open()) {
         const unsigned char bom[] = { 0xEF, 0xBB, 0xBF };
         logger_file_stream_.write((pcstr)bom, sizeof(bom));
     }
+#endif
 }
 
 Logger::~Logger() {
+#if defined(GAME_PLATFORM_ANDROID)
+    if (logger_file_) {
+        fclose(logger_file_);
+        logger_file_ = nullptr;
+    }
+#else
     logger_file_stream_.close();
+#endif
 }
 
 void Logger::write(void* /* userdata */, int /* category */, SDL_LogPriority priority, pcstr message) {
@@ -230,19 +269,24 @@ void Logger::write(void* /* userdata */, int /* category */, SDL_LogPriority pri
 }
 
 void Logger::write(pcstr prefix, pcstr message) {
+#if defined(GAME_PLATFORM_ANDROID)
+    if (logger_file_) {
+        fprintf(logger_file_, "%s%s\n", prefix, message);
+        fflush(logger_file_);
+    }
+    __android_log_print(ANDROID_LOG_INFO, "ank-and", "%s%s", prefix, message);
+    android_append_startup_log(message);
+#else
     logger_file_stream_ << prefix << message << std::endl;
 
 #if defined(GAME_PLATFORM_WIN)
     OutputDebugStringA(prefix);
     OutputDebugStringA(message);
     OutputDebugStringA("\n");
-#elif defined(GAME_PLATFORM_ANDROID)
-    __android_log_print(ANDROID_LOG_INFO, "ank-and", "%s%s", prefix, message);
 #endif
 
-    if (!platform.is_android()) {
-        game_debug_cli_message(message);
-    }
+    game_debug_cli_message(message);
+#endif
 }
 
 void Logger::write_to_output_(pcstr prefix, pcstr message) {
