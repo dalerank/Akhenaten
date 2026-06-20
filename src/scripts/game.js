@@ -98,6 +98,7 @@ game_features {
     @gameplay_change_work_camp_one_worker_per_month {}
     @gameplay_fix_editor_events {}
     @gameopt_disable_victory {}
+    @gameui_show_water_structure_range {}
     @count { get: __game_features_count }
 }
 

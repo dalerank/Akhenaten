@@ -1143,7 +1143,7 @@ void build_planner::construction_finalize() { // confirm final placement
 
 //////////////////////
 
-void build_planner::update(tile2i cursor_tile) {
+void build_planner::update_preview(tile2i cursor_tile) {
     OZZY_PROFILER_FUNCTION();
     if (!build_type) {
         return;
@@ -1159,6 +1159,18 @@ void build_planner::update(tile2i cursor_tile) {
     update_requirements_check();
     update_special_case_orientations_check();
     update_unique_only_one_check();
+}
+
+void build_planner::update_hover(tile2i cursor_tile) {
+    if (in_progress) {
+        return;
+    }
+
+    update_preview(cursor_tile);
+}
+
+void build_planner::update(tile2i cursor_tile) {
+    update_preview(cursor_tile);
 
     if (in_progress && draggable()) {
         construction_update(end);
@@ -1303,11 +1315,8 @@ bool build_planner::place() {
         return false;
     }
 
-    int x = end.x();
-    int y = end.y();
-
     // for debugging...
-    logs::info("Attempting to place at: %03i %03i %06i", x, y, MAP_OFFSET(x, y));
+    logs::info("Attempting to place at: %03i %03i %06i", end.x(), end.y(), end.grid_offset());
 
     // Check warnings for placement and create building/update tiles accordingly.
     // Some of the buildings below have specific warning messages (e.g. roadblocks)
@@ -1331,9 +1340,8 @@ bool build_planner::place() {
         break;
 
     case BUILDING_LOW_BRIDGE:
-    case BUILDING_UNUSED_SHIP_BRIDGE_83: {
-            placement_cost *= map_bridge_add(x, y, build_type == BUILDING_UNUSED_SHIP_BRIDGE_83);
-        }
+    case BUILDING_UNUSED_SHIP_BRIDGE_83:
+        placement_cost *= map_bridge_add(end.x(), end.y(), build_type == BUILDING_UNUSED_SHIP_BRIDGE_83);
         break;
 
     case BUILDING_HOUSE_VACANT_LOT:

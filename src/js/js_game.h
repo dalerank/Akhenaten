@@ -288,6 +288,15 @@ namespace js_helpers {
         }
     }
 
+    template<size_t Cap>
+    inline void js_push_value(js_State *J, const hvector<vec2i, Cap> &arr) {
+        js_newarray(J);
+        for (size_t i = 0; i < arr.size(); ++i) {
+            js_push_value<vec2i>(J, arr[i]);
+            js_setindex(J, -2, (int)i);
+        }
+    }
+
     inline void js_push_bvariant(js_State *J, const bvariant &val) {
         switch (val.value_type()) {
         case bvariant::etype_bool:

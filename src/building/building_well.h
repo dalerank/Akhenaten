@@ -15,10 +15,6 @@ public:
         uint8_t unnecessary_range_check;
     } BUILDING_STATIC_DATA_T;
 
-    struct preview : building_planer_renderer {
-        virtual void ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
-    };
-
     virtual void update_graphic() override;
     virtual void update_month() override;
     virtual bool need_road_access() const override { return false; }

@@ -4,29 +4,14 @@
 #include "grid/terrain.h"
 #include "city/city_warnings.h"
 #include "grid/image.h"
-#include "game/game_config.h"
-#include "graphics/graphics.h"
-#include "graphics/view/view.h"
-#include "graphics/image.h"
 #include "grid/water_supply.h"
 #include "window/building/common.h"
 #include "graphics/elements/ui.h"
 #include "widget/city/ornaments.h"
 #include "city/city_labor.h"
-#include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_well);
 well_info_window well_infow;
-
-void building_well::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
-    if (!!game_features::gameui_show_water_structure_range) {
-        g_camera.foreach_tile_in_range(ctx, tile.grid_offset(), 1, 2, [] (vec2i pixel, tile2i point, painter &ctx) {
-            ctx.img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel, COLOR_MASK_BLUE, g_zoom.get_scale());
-        });
-    }
-
-    building_planer_renderer::ghost_preview(planer, ctx, tile, end, pixel);
-}
 
 void building_well::update_month() {
     int avg_desirability = g_desirability.get_avg(tile(), current_params().desirability_range_check);

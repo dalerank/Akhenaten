@@ -23,3 +23,5 @@ BuildingParams.property.sound_channel = { }
 BuildingParams.property.max_service = { }
 BuildingParams.property.max_storage_amount = { }
 BuildingParams.property.meta_id = { }
+
+BuildingParams.property.preview_image = { get: function() { return this.first_img("preview") } }

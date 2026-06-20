@@ -8,6 +8,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/view/view.h"
+#include "graphics/view/zoom.h"
 #include "grid/orientation.h"
 #include "grid/routing/routing.h"
 #include "building/construction/routed.h"
@@ -130,6 +131,12 @@ void __city_planner_draw_isometric_ghost(vec2i pixel, int image_id) {
     ctx.img_isometric(image_id, pixel, COLOR_MASK_GREEN, 1.f, ImgFlag_None);
 }
 ANK_FUNCTION_2(__city_planner_draw_isometric_ghost);
+
+void __city_planner_draw_overlay_tile(vec2i pixel, int image_id, int color_mask) {
+    painter ctx = game.painter();
+    ctx.img_generic(image_id, pixel, color_mask, g_zoom.get_scale());
+}
+ANK_FUNCTION_3(__city_planner_draw_overlay_tile);
 
 vec2i __lookup_tile_to_pixel(tile2i t) {
     return g_camera.lookup_tile_to_pixel(t);

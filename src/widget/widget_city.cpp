@@ -81,6 +81,11 @@ void screen_city_t::scroll_map(const mouse* m) {
     }
 }
 
+static tile2i city_planner_cursor_tile_from_mouse() {
+    const mouse &m = mouse::get();
+    return g_screen_city.update_city_view_coords({m.x, m.y});
+}
+
 tile2i screen_city_t::update_city_view_coords(vec2i pixel) {
     if (!g_camera.contains_pixel(pixel)) {
         return tile2i(0);
@@ -452,7 +457,7 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     // Draw the city planner overlay (construction previews, ghost buildings) if no figure is selected
     // When a figure is selected, we skip the planner drawing to avoid visual clutter
     if (!selected_figure_id) {
-        g_city_planner.update(current_tile);
+        g_city_planner.update(city_planner_cursor_tile_from_mouse());
         g_city_planner.draw(ctx);
     }
 
@@ -824,7 +829,7 @@ void screen_city_t::draw_with_overlay(painter &ctx) {
 
     ImageDraw::apply_render_commands(ctx, "draw_ornaments_figures_overlay");
 
-    g_city_planner.update(current_tile);
+    g_city_planner.update(city_planner_cursor_tile_from_mouse());
     g_city_planner.draw(ctx);
 
     ImageDraw::apply_render_commands(ctx, "draw_city_planer_overlay");
@@ -1116,6 +1121,10 @@ void screen_city_t::handle_touch() {
         current_tile = update_city_view_coords(first->current_point);
     }
 
+    if (g_city_planner.build_type && !g_city_planner.in_progress) {
+        g_city_planner.update_hover(current_tile);
+    }
+
     if (first->has_started && input_coords_in_city(first->current_point.x, first->current_point.y)) {
         capture_input = true;
         scroll_restore_margins();
@@ -1297,6 +1306,10 @@ void screen_city_t::handle_input_warship(const mouse *m, const hotkeys *h, int w
 
 void screen_city_t::handle_mouse(const mouse* m) {
     current_tile = update_city_view_coords(*m);
+
+    if (g_city_planner.build_type && !g_city_planner.in_progress) {
+        g_city_planner.update_hover(current_tile);
+    }
 
     const float old_zoom_target = g_zoom.ftarget();
     painter ctx = game.painter();

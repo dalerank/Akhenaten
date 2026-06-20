@@ -2,6 +2,7 @@
 #include "graphics/view/zoom.h"
 #include "graphics/image.h"
 #include "game/game.h"
+#include "core/hvector.h"
 #include "core/profiler.h"
 #include "grid/point.h"
 #include "js/js_game.h"
@@ -90,3 +91,14 @@ vec2i __camera_tile_to_screen(vec2i tile) {
 }
 ANK_FUNCTION_1(__camera_tile_to_screen);
 
+hvector<vec2i, 256> __camera_tile_range_pixels(tile2i tile, int size, int radius) {
+    hvector<vec2i, 256> pixels;
+    painter ctx = game.painter();
+    g_camera.foreach_tile_in_range(ctx, tile.grid_offset(), size, radius,
+        [&pixels](vec2i pixel, tile2i, painter &) {
+            pixels.push_back(pixel);
+        });
+
+    return pixels;
+}
+ANK_FUNCTION_3(__camera_tile_range_pixels);

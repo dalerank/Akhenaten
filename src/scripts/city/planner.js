@@ -20,6 +20,7 @@ city_planner = extend(__city_planner, {
     draw_ghost: __city_planner_draw_ghost
     draw_flat_tiles: __city_planner_draw_flat_tiles
     draw_isometric_ghost: __city_planner_draw_isometric_ghost
+    draw_overlay_tile: __city_planner_draw_overlay_tile
     tile_to_pixel: __lookup_tile_to_pixel
 
     rotate_by_hotkey: function() {

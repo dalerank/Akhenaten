@@ -174,6 +174,8 @@ public:
     int get_total_drag_size(int* x, int* y);
     bool is_flag(e_planner_rule flag, int param1 = -1, int param2 = -1, int param3 = -1) const;
 
+    void update_preview(tile2i cursor_tile);
+    void update_hover(tile2i cursor_tile);
     void update(tile2i cursor_tile);
     void draw(painter &ctx);
     bool place();
