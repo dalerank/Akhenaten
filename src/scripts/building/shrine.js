@@ -6,6 +6,7 @@ building_shrine_osiris = {
       base : {pack:PACK_GENERAL, id:75, offset:0 }
     }
     labor_category : LABOR_CATEGORY_RELIGION
+    overlay : OVERLAY_RELIGION_OSIRIS
     meta : { help_id: 67, text_id: 161 }
     info_sound : "Wavs/shr_osiris.wav"
     building_size : 1
@@ -25,6 +26,7 @@ building_shrine_osiris = {
       base : {pack:PACK_GENERAL, id:74, offset:0 },
     },
     labor_category : LABOR_CATEGORY_RELIGION,
+    overlay : OVERLAY_RELIGION_RA,
     meta : { help_id: 67, text_id: 161 }
     info_sound : "Wavs/SHR_RA.wav"
     building_size : 1
@@ -44,6 +46,7 @@ building_shrine_osiris = {
       base : {pack:PACK_GENERAL, id:73, offset:0 },
     },
     labor_category : LABOR_CATEGORY_RELIGION,
+    overlay : OVERLAY_RELIGION_PTAH,
     meta : { help_id: 67, text_id: 161 }
     info_sound : "Wavs/SHR_PTAH.wav"
     building_size : 1
@@ -63,6 +66,7 @@ building_shrine_osiris = {
       base : {pack:PACK_GENERAL, id:72, offset:0 },
     },
     labor_category : LABOR_CATEGORY_RELIGION,
+    overlay : OVERLAY_RELIGION_SETH,
     meta : { help_id: 67, text_id: 161 }
     info_sound : "Wavs/SHR_SETH.wav"
     building_size : 1
@@ -82,6 +86,7 @@ building_shrine_osiris = {
       base : {pack:PACK_GENERAL, id:71, offset:0 },
     },
     labor_category : LABOR_CATEGORY_RELIGION,
+    overlay : OVERLAY_RELIGION_BAST,
     meta : { help_id: 67, text_id: 161 }
     info_sound : "Wavs/SHR_BAST.wav"
     building_size : 1
