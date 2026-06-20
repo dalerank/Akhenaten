@@ -42,6 +42,7 @@ Build output: `./build/`
 --nosound             disable audio (skips sound manager init and audio file probing)
 --no-resource         run without Pharaoh data files (skips campaign.txt and AUDIO/ probing)
 --config              show configuration dialog on startup
+--noconfig-window     skip configuration dialog on startup (even without akhenaten.cfg)
 --mods PATH           set mods directory
 --mixed PATH          hot-reload JS scripts from disk (dev mode)
 --unpack_scripts      extract embedded JS to user directory

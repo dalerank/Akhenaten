@@ -144,15 +144,13 @@ static void setup() {
         g_args.set_data_directory("");
     }
 
-    // Show configuration window if --config flag is set or config file doesn't exist.
+    // Show configuration window if --config is set or akhenaten.cfg is missing (--noconfig-window skips).
     // Skip in integral-tests mode: the dialog would block forever in a headless CI runner,
     // and SDL_CreateRenderer there fails because the dummy video driver doesn't support
     // SDL_RENDERER_ACCELERATED, which is what options_window.cpp requests.
     const bool support_window_options = !(platform.is_android() || platform.is_emscripten() || g_args.is_integral_tests());
-    if (g_args.should_show_config_window() || !g_args.config_file_exists()) {
-        if (support_window_options) {
-            show_options_window(g_args);
-        }
+    if (g_args.should_show_startup_config_window() && support_window_options) {
+        show_options_window(g_args);
     }
 
     // pre-init engine: assert game directory, pref files, etc.

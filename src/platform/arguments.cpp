@@ -157,6 +157,7 @@ ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-js-handlers", "log_js_handlers", true,
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nocrashdlg", "crashdlg", false, "do not show crash dialog");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--fulldmp", "fulldmp", true, "create full dump on crash");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--config", "config", true, "always show configuration window on startup");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--noconfig-window", "noconfig_window", true, "skip configuration window on startup (even if akhenaten.cfg is missing)");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--save_debug_texture", "save_debug_texture", true, "save debug textures to DEV_TESTING/tex/");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--unpack_scripts", "unpack_scripts", true, "unpack embedded scripts to user directory");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-resources", "log_resources", true, "log resource loading (textures, image packs, etc.)");
@@ -352,6 +353,16 @@ bool Arguments::is(const xstring & name, bool def) const {
     }
 
     return def;
+}
+
+bool Arguments::should_show_startup_config_window() const {
+    if (should_show_config_window()) {
+        return true;
+    }
+    if (should_skip_config_window()) {
+        return false;
+    }
+    return !config_file_exists();
 }
 
 int Arguments::get_display_scale_percentage() const {

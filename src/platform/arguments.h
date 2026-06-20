@@ -84,6 +84,8 @@ public:
     [[nodiscard]] bool use_crashdlg() const { return is("crashdlg", true); }
     [[nodiscard]] bool create_fulldmp() const { return is("fulldmp", false); }
     [[nodiscard]] bool should_show_config_window() const { return is("config", false); }
+    [[nodiscard]] bool should_skip_config_window() const { return is("noconfig_window", false); }
+    [[nodiscard]] bool should_show_startup_config_window() const;
     [[nodiscard]] bool config_file_exists() const { return is("config_file_exists", false); }
     [[nodiscard]] bool should_unpack_scripts() const { return is("unpack_scripts", false); }
     [[nodiscard]] bool is_integral_tests() const { return is("integral_tests", false); }

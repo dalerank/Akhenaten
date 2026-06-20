@@ -240,6 +240,8 @@ To use the profiler, download and run the Tracy Profiler GUI v0.13.1 from the [T
           create full dump on crash
 --config
           always show configuration window on startup
+--noconfig-window
+          skip configuration window on startup (even if akhenaten.cfg is missing)
 --config:NAME=VALUE
           override a game feature from akhenaten.conf (applied after the config file is loaded;
           CLI values take precedence over saved settings)
