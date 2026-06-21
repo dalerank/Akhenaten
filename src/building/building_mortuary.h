@@ -23,7 +23,6 @@ public:
     virtual building_mortuary *dcast_mortuary() override { return this; }
 
     virtual void spawn_figure() override;
-    virtual void on_place_checks() override;
     virtual void update_month() override;
     virtual void update_year() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_MORTUARY; }

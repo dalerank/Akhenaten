@@ -42,6 +42,7 @@ import building.mine_gems
 import building.granary
 import building.storage_yard
 import building.health
+import building.mortuary
 import building.architect_post
 import building.courthouse
 import building.work_camp

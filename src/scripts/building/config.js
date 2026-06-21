@@ -592,33 +592,6 @@ building_dentist {
   damage_risk[2]
 }
 
-building_mortuary {
-  animations {
-    preview { pack:PACK_GENERAL, id:175 },
-    base { pack:PACK_GENERAL, id:175 },
-    work { pos[35, -20], pack:PACK_GENERAL, id:175, offset:1, max_frames:12, duration:4 },
-    linen { pos : [45, 3], pack:PACK_GENERAL, id:206 },
-  }
-
-  input : {
-    resource : RESOURCE_LINEN
-  }
-  max_serve_clients : 1000
-  linen_required_for_spawn : 20
-  linen_required_for_animation : 100
-  monthly_linen_consumption : 20
-  min_houses_coverage : 50
-  building_size : 2
-  labor_category : LABOR_CATEGORY_WATER_HEALTH
-  meta { help_id:66, text_id:82 }
-  info_sound : "Wavs/mortuary.wav"
-  cost [ 20, 30, 50, 100, 200 ]
-  desirability { value[-3], step[2], step_size[1], range[2] }
-  laborers[8]
-  fire_risk[4]
-  damage_risk[2]
-}
-
 building_plaza {
   animations {
     preview { pack:PACK_GENERAL, id:168 },

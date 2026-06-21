@@ -21,7 +21,6 @@ building_apothecary {
     damage_risk[2]
 }
 
-
 [es=(building_apothecary, spawn_figure)]
 function building_apothecary_spawn_figure(ev) {
     var building = city.get_building(ev.bid)

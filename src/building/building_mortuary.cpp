@@ -13,41 +13,18 @@
 #include "sound/sound_building.h"
 #include "widget/city/ornaments.h"
 #include "city/city.h"
-#include "city/city_resource_handle.h"
 #include "city/city_resource.h"
-#include "city/city_warnings.h"
-#include "empire/empire.h"
 #include "dev/debug.h"
 #include "js/js_game.h"
 #include <iostream>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mortuary);
 
-void building_mortuary::on_place_checks() {
-    building_impl::on_place_checks();
-
-    if (g_city.buildings.count_industry_active(RESOURCE_LINEN) > 0) {
-        return;
-    }
-
-    if (g_city.resource.yards_stored(RESOURCE_LINEN) > 0) {
-        return;
-    }
-
-    construction_warnings warnings("#building_needs_linen");
-
-    const bool trade_import = (city_resource_linen.trade_status() != TRADE_STATUS_IMPORT);
-
-    warnings.add_if(city_resource_linen.can_produce(), "#build_weaver_or_import_linen");
-    warnings.add_if(!city_resource_linen.can_import(true), "#setup_trade_route_to_import");
-    warnings.add_if(trade_import, "#overseer_of_commerce_to_import");
-}
-
 void building_mortuary::spawn_figure() {
     if (g_city.resource.is_mothballed(RESOURCE_LINEN)) {
         return;
     }
-    
+
     if (num_workers() <= 0) {
         return;
     }
