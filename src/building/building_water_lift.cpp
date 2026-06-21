@@ -1,4 +1,4 @@
-﻿#include "building_water_lift.h"
+#include "building_water_lift.h"
 
 #include "grid/water.h"
 #include "city/city.h"
@@ -10,6 +10,7 @@
 #include "graphics/elements/ui.h"
 #include "js/js_game.h"
 
+BUILDING_RUNTIME_DATA_IMPL(building_water_lift)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_water_lift);
 
 void building_water_lift::on_create(int orientation) {

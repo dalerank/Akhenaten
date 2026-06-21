@@ -1,4 +1,6 @@
 #include "building_mortuary.h"
+BUILDING_RUNTIME_DATA_IMPL(building_mortuary)
+
 
 #include "building/building_house.h"
 #include "city/object_info.h"

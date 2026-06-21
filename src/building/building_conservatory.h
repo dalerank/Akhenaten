@@ -27,4 +27,6 @@ public:
     building_id find_square_in_city();
     void spend_musician_to_festival_square();
 };
+
+ANK_CONFIG_PROPERTY(building_conservatory::runtime_data_t, months_until_square_send)
 ANK_CONFIG_STRUCT(building_conservatory::static_params, spawn_interval)

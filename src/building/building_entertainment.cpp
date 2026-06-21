@@ -1,4 +1,4 @@
-﻿#include "building_entertainment.h"
+#include "building_entertainment.h"
 
 #include "io/io_buffer.h"
 #include "grid/terrain.h"
@@ -7,6 +7,8 @@
 #include "grid/gardens.h"
 #include "grid/building_tiles.h"
 #include "graphics/view/view.h"
+
+BUILDING_RUNTIME_DATA_IMPL(building_entertainment)
 
 int building_entertainment::bandstand_main_img_offset(int orientation) {
     int offset = 0;

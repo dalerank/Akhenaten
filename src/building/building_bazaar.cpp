@@ -23,6 +23,7 @@
 #include "js/js_game.h"
 #include <numeric>
 
+BUILDING_RUNTIME_DATA_IMPL(building_bazaar)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_bazaar);
 
 struct resource_data {

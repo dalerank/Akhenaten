@@ -41,6 +41,7 @@
 #include "js/js_game.h"
 #include <cmath>
 
+BUILDING_RUNTIME_DATA_IMPL(building_storage_yard)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_storage_yard);
 
 int building_storage_yard::amount(e_resource resource) const {

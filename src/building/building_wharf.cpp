@@ -3,6 +3,8 @@
 #include "grid/water.h"
 #include "grid/building.h"
 
+BUILDING_RUNTIME_DATA_IMPL(building_wharf)
+
 void building_wharf::on_create(int orientation) {
     base.orientation = orientation;
 }

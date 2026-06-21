@@ -38,6 +38,7 @@ public:
     formation_id get_closest_batalion_needing_soldiers();
 };
 ANK_CONFIG_STRUCT(building_recruiter::static_params, meta)
+ANK_CONFIG_PROPERTY(building_recruiter::runtime_data_t, priority)
 
 void building_barracks_request_tower_sentry();
 void building_barracks_decay_tower_sentry_request();

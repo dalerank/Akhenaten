@@ -1,4 +1,4 @@
-﻿#include "building_dock.h"
+#include "building_dock.h"
 
 #include "building/building_bazaar.h"
 #include "building/building.h"
@@ -26,6 +26,7 @@
 #include "city/city.h"
 #include "js/js_game.h"
 
+BUILDING_RUNTIME_DATA_IMPL(building_dock)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_dock);
 
 void building_dock::on_create(int orientation) {

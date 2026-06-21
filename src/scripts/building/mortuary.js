@@ -1,5 +1,25 @@
 log_info("akhenaten: building mortuary started")
 
+function Mortuary(building_id) {
+    this.id = building_id
+}
+
+Mortuary.prototype = Object.create(Building.prototype)
+Mortuary.prototype.constructor = Mortuary
+
+Mortuary.property.residents_served_this_month = { }
+Mortuary.property.residents_served_this_year = { }
+Mortuary.property.total_residents_served = { }
+Mortuary.property.months_active = { }
+
+city.get_mortuary = function(building_id) {
+    var b = city.get_building(building_id)
+    if (!b.valid || b.type != BUILDING_MORTUARY) {
+        return null
+    }
+    return new Mortuary(building_id)
+}
+
 building_mortuary {
   animations {
     preview { pack:PACK_GENERAL, id:175 },

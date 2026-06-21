@@ -4,6 +4,8 @@
 
 class building_industry : public building_impl {
 public:
+    using inherited = building_impl;
+
     building_industry(building &b) : building_impl(b) {}
     virtual building_industry *dcast_industry() override { return this; }
 
@@ -30,7 +32,7 @@ public:
     virtual void update_production();
     virtual void production_started() { /*do nothing*/ }
     virtual void production_finished();
-    
+
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void update_graphic() override;
     virtual void on_create(int orientation) override;
@@ -42,7 +44,7 @@ public:
     virtual void update_count() const override;
     virtual void update_day() override;
     virtual bool can_play_animation() const override;
-    virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
 
     virtual void debug_draw_properties() override;
 };
+ANK_CONFIG_PROPERTY(building_industry::runtime_data_t, progress)

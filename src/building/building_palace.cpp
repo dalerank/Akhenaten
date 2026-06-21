@@ -36,6 +36,8 @@
 #include "core/profiler.h"
 #include "graphics/elements/ui_js.h"
 
+BUILDING_RUNTIME_DATA_IMPL(building_palace)
+
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_village_palace);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_town_palace);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_city_palace);

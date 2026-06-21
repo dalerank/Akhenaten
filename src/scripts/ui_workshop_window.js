@@ -49,6 +49,12 @@ function workshop_info_window_setup_advisors(window, building_type) {
     }
 }
 
+function industry_info_window_format_progress(b, spaced_pct) {
+    var pct = __building_industry_progress_pct(b.id)
+    var pct_str = spaced_pct ? (pct + " %") : (pct + "%")
+    return __loc(b.meta_text_id, 2) + " " + pct_str + " " + __loc(b.meta_text_id, 3)
+}
+
 function workshop_info_window_status_reason(b) {
     var reason = { group: b.meta_text_id, id: 0 }
     if (!b.has_road_access) {
@@ -74,7 +80,7 @@ workshop_info_window {
         background    : outer_panel({size[29, 16] }),
         title         : text({pos[0, 12], size[px(29), 20], text:"${building.name}", font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
         produce_icon  : resource_icon({pos[10, 10], prop:"${building.output_resource}" })
-        ready_prod    : text({pos[32, 40], size[px(27), 20], text:"${text.2} ${industry.progress}% ${text.3}", font : FONT_NORMAL_BLACK_ON_LIGHT })
+        ready_prod    : text({pos[32, 40], size[px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT })
         resource_icon : resource_icon({pos[32, 56], prop:"${building.first_material}" })
         resource_stored : text({pos[60, 60], size[px(27), 20], font:FONT_NORMAL_BLACK_ON_LIGHT })
         warning_text  : text({pos[32, 86], size[px(27), 60], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
@@ -108,6 +114,7 @@ function workshop_info_window_on_init(window) {
     window.mothball.tooltip = __loc(54, b.state == 1 ? 16 : 17)
 
     workshop_info_window_setup_advisors(window, b.type)
+    window.ready_prod.text = industry_info_window_format_progress(b, false)
     var reason = workshop_info_window_status_reason(b)
     window.warning_text.text = __loc(reason.group, reason.id)
     window.resource_stored.text = __loc(b.meta_text_id, 12) + " " + workshop_format_stored_amount(b.first_material_stored)

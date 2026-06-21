@@ -18,6 +18,8 @@ enum e_house_progress {
 // Derived classes only override evolution thresholds or provide different art/models.
 class building_house : public building_impl {
 public:
+    using inherited = building_impl;
+
     building_house(building &b) : building_impl(b) {}
     virtual building_house *dcast_house() override { return this; }
 
@@ -102,7 +104,6 @@ public:
     virtual bool evolve(house_demands* demands) = 0;
     virtual int get_fire_risk(int value) const override;
     virtual void highlight_waypoints() override;
-    virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
     virtual void spawn_figure() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual bool target_route_tile_blocked(int grid_offset) const override;

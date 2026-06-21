@@ -1,4 +1,4 @@
-﻿#include "building_statue.h"
+#include "building_statue.h"
 
 #include "building/building.h"
 #include "building/rotation.h"
@@ -21,6 +21,7 @@
 
 #include "js/js_game.h"
 
+BUILDING_RUNTIME_DATA_IMPL(building_statue)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_small_statue);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_medium_statue);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_large_statue);

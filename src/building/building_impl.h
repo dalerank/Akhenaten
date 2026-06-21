@@ -63,6 +63,7 @@ public:
     virtual void draw_tooltip(tooltip_context *c) const;;
     virtual void bind_dynamic(io_buffer *iob, size_t version);
     virtual bvariant get_property(const xstring &domain, const xstring &name) const;
+    virtual bool set_property(const xstring &domain, const xstring &name, const bvariant &value);
     virtual bool add_resource(e_resource resource, int amount) { return false; }
     virtual int get_orientation() const;
     virtual void on_config_reload() {}

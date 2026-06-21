@@ -26,6 +26,7 @@
 
 int g_tower_sentry_request = 0;
 
+BUILDING_RUNTIME_DATA_IMPL(building_recruiter)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_recruiter);
 
 bool building_recruiter::static_params::is_unique_building() const {

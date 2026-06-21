@@ -8,8 +8,9 @@ public:
     BUILDING_METAINFO(BUILDING_FERRY, building_ferry, building_routeblock)
 
     struct runtime_data_t {
+        int reserved;
         int dock_tiles[2];
-    } BUILDING_RUNTIME_DATA(runtime_data_t);
+    } BUILDING_RUNTIME_DATA_T;
 
     virtual building_ferry *dcast_ferry() override { return this; }
     virtual building_routeblock *dcast_routeblock() override { return this; }
@@ -30,6 +31,7 @@ public:
 
     virtual void spawn_figure() override;
 };
+ANK_CONFIG_PROPERTY(building_ferry::runtime_data_t, reserved)
 
 struct info_window_ferry : public building_info_window_t<info_window_ferry> {
     virtual void init(object_info &c) override;

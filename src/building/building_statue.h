@@ -4,6 +4,8 @@
 
 class building_statue : public building_impl {
 public:
+    using inherited = building_impl;
+
     building_statue(building &b) : building_impl(b) {}
     virtual building_statue *dcast_statue() override { return this; }
 
@@ -34,6 +36,7 @@ public:
     void set_service(uint8_t v) { runtime_data().service = v; }
     static int get_image(e_building_type type, int orientation, int variant);
 };
+ANK_CONFIG_PROPERTY(building_statue::runtime_data_t, variant)
 ANK_CONFIG_STRUCT(building_statue::statue_params_t, variants)
 
 class building_small_statue : public building_statue {

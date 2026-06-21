@@ -34,4 +34,5 @@ public:
     virtual void update_count() const override;
 };
 ANK_CONFIG_STRUCT(building_mortuary::static_params, max_serve_clients, linen_required_for_spawn, linen_required_for_animation, monthly_linen_consumption)
+ANK_CONFIG_PROPERTY(building_mortuary::runtime_data_t, residents_served_this_month, residents_served_this_year, total_residents_served, months_active)
 

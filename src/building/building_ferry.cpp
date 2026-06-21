@@ -1,4 +1,4 @@
-﻿#include "building/building_ferry.h"
+#include "building/building_ferry.h"
 
 #include "city/city_labor.h"
 #include "grid/water.h"
@@ -14,6 +14,7 @@
 #include "core/profiler.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_ferry);
+BUILDING_RUNTIME_DATA_IMPL(building_ferry)
 info_window_ferry ferry_infow;
 
 void building_ferry::on_create(int orientation) {

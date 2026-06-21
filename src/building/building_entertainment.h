@@ -4,6 +4,8 @@
 
 class building_entertainment : public building_impl {
 public:
+    using inherited = building_impl;
+
     building_entertainment(building &b) : building_impl(b) {}
     virtual building_entertainment *dcast_entertainment() override { return this; }
 

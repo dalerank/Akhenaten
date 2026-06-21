@@ -1,15 +1,19 @@
 #include "building/building_industry.h"
 
+#include "city/city_buildings.h"
+#include "core/calc.h"
 #include "io/io_buffer.h"
 #include "city/city.h"
 #include "core/object_property.h"
 #include "figuretype/figure_cartpusher.h"
 #include "game/game_events.h"
 #include "city/city_resource.h"
+#include "js/js_game.h"
 #include "widget/debug_console.h"
 
 constexpr short MAX_PROGRESS_RAW = 200;
 constexpr short MAX_PROGRESS_WORKSHOP = 400;
+BUILDING_RUNTIME_DATA_IMPL(building_industry)
 
 void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
     auto &d = runtime_data();
@@ -214,14 +218,20 @@ void building_industry::update_day() {
     }
 }
 
-bvariant building_industry::get_property(const xstring &domain, const xstring &name) const {
-    if (domain == tags().industry && name == tags().progress) {
-       int pct_done = calc_percentage<int>(progress(), progress_max());
-       return bvariant(pct_done);
+int __building_industry_progress_pct(int bid) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return 0;
     }
 
-    return building_impl::get_property(domain, name);
+    building_industry *ind = b->dcast_industry();
+    if (!ind) {
+        return 0;
+    }
+
+    return calc_percentage<int>(ind->progress(), ind->progress_max());
 }
+ANK_FUNCTION_1(__building_industry_progress_pct)
 
 void building_industry::debug_draw_properties() {
     auto &d = runtime_data();

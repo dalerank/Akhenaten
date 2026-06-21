@@ -47,6 +47,7 @@ public:
     inline int allow_food_types() const { return 4; }
     inline int allow_good_types() const { return 4; }
 };
+ANK_CONFIG_PROPERTY(building_bazaar::runtime_data_t, pottery_demand)
 ANK_CONFIG_STRUCT(building_bazaar::static_params, 
                     max_search_distance, fancy_treshold_desirability, minimal_pick_food_amount,
                     pick_food_below, pick_good_below)

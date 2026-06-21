@@ -5,12 +5,14 @@
 
 class building_palace : public building_impl {
 public:
+    using inherited = building_impl;
+
     building_palace(building &b) : building_impl(b) {}
     virtual building_palace *dcast_palace() override { return this; }
 
     struct runtime_data_t {
         int16_t tax_income_or_storage;
-    } BUILDING_RUNTIME_DATA(runtime_data_t);
+    } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_create(int orientation) override;
     virtual void on_post_load() override;
@@ -22,6 +24,7 @@ public:
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void spawn_figure() override;
 };
+ANK_CONFIG_PROPERTY(building_palace::runtime_data_t, tax_income_or_storage)
 
 class building_village_palace : public building_palace {
 public:

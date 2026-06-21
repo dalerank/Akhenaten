@@ -35,4 +35,6 @@ public:
 
     void update_inout_tiles();
 };
+
+ANK_CONFIG_PROPERTY(building_water_lift::runtime_data_t, tick)
 ANK_CONFIG_STRUCT(building_water_lift::static_params, irrigation_radius, canal_fill_water_level, base_irrigation_value)

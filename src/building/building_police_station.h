@@ -29,4 +29,5 @@ public:
     void draw_weapons(vec2i point, color color_mask, painter &ctx);
 };
 
+ANK_CONFIG_PROPERTY(building_police_station::runtime_data_t, weapon_requested_this_month)
 ANK_CONFIG_STRUCT(building_police_station::static_params, weapon_spot_pos);

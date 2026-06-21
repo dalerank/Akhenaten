@@ -34,6 +34,8 @@
 
 #include <iostream>
 
+BUILDING_RUNTIME_DATA_IMPL(building_farm)
+
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_grain);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_meadow_farm_grain);
 
@@ -242,15 +244,6 @@ void building_farm::draw_crops(painter &ctx, e_building_type type, int progress,
             command.mask = color_mask;
         }
     }
-}
-
-bvariant building_farm::get_property(const xstring &domain, const xstring &name) const {
-    if (domain == tags().farm && name == tags().progress) {
-        int pct_done = calc_percentage<int>(progress(), progress_max());
-        return bvariant(pct_done);
-    }
-
-    return building_impl::get_property(domain, name);
 }
 
 bool building_farm::requested_workers() const {

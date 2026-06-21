@@ -4,6 +4,8 @@
 
 class building_mansion : public building_impl {
 public:
+    using inherited = building_impl;
+
     building_mansion(building &b) : building_impl(b) {}
     virtual building_mansion *dcast_mansion() override { return this; }
 
@@ -26,6 +28,7 @@ public:
 
     static bool exist_in_city();
 };
+ANK_CONFIG_PROPERTY(building_mansion::runtime_data_t, personal_savings_storage)
 
 class building_personal_mansion : public building_mansion {
 public:

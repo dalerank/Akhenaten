@@ -22,6 +22,7 @@
 #include "figuretype/figure_cartpusher.h"
 #include "js/js_game.h"
 
+BUILDING_RUNTIME_DATA_IMPL(building_tax_collector)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_tax_collector);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_tax_collector_up);
 

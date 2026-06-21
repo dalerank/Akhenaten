@@ -1,4 +1,4 @@
-﻿#include "building_festival_square.h"
+#include "building_festival_square.h"
 
 #include "city/buildings.h"
 #include "city/city.h"
@@ -14,6 +14,7 @@
 #include "city/city_labor.h"
 #include "js/js_game.h"
 
+BUILDING_RUNTIME_DATA_IMPL(building_festival_square)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_festival_square);
 
 void building_festival_square::preview::setup_preview_graphics(build_planner &planer) const {

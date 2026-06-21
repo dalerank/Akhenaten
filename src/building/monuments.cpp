@@ -33,6 +33,7 @@
 #define INFINITE 10000
 
 grid_xx g_monuments_progress_grid(FS_UINT32);
+BUILDING_RUNTIME_DATA_IMPL(building_monument)
 
 io_buffer* iob_monuments_progress_grid = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_monuments_progress_grid);

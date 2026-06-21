@@ -30,6 +30,7 @@
 #include "js/js_game.h"
 #include "dev/debug.h"
 
+BUILDING_RUNTIME_DATA_IMPL(building_fort)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_fort_charioteers);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_fort_archers);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_fort_infantry);

@@ -740,10 +740,45 @@ struct g_archive_section {
 
 #define ANK_CONFIG_STRUCT_FROM(v1) js_j.r(#v1, js_t.v1);
 #define ANK_PROPERTY_FROM(v1) if (name == #v1) { return std::make_optional<bvariant>(bvariant(data.v1)); }
+#define ANK_PROPERTY_SET(v1) if (name == #v1) { data.v1 = archive_helper::coerce<std::decay_t<decltype(data.v1)>>(value); return true; }
+#define ANK_PROPERTY_NAME(v1) out.push_back(#v1);
 
 namespace archive_helper {
     template<typename T>
     std::optional<bvariant> get(const T &data, const xstring &name, bool check);
+
+    // Generic property write: declared here, specialized by ANK_CONFIG_PROPERTY.
+    template<typename T>
+    bool set(T &data, const xstring &name, const bvariant &value, bool check);
+
+    // Generic property name enumeration: declared here, specialized by ANK_CONFIG_PROPERTY.
+    template<typename T>
+    void names(std::vector<xstring> &out);
+
+    inline double bvariant_to_number(const bvariant &v) {
+        switch (v.value_type()) {
+        case bvariant::etype_bool: return v.as_bool() ? 1.0 : 0.0;
+        case bvariant::etype_u16: return (double)v.as_u16();
+        case bvariant::etype_int32: return (double)v.as_int32();
+        case bvariant::etype_uint32: return (double)v.as_uint32();
+        case bvariant::etype_uint64: return (double)v.as_uint64();
+        case bvariant::etype_float: return (double)v.as_float();
+        default: return 0.0;
+        }
+    }
+
+    template<typename F>
+    inline F coerce(const bvariant &v) {
+        if constexpr (std::is_same_v<F, bool>) {
+            return bvariant_to_number(v) != 0.0;
+        } else if constexpr (std::is_floating_point_v<F>) {
+            return (F)bvariant_to_number(v);
+        } else if constexpr (std::is_integral_v<F> || std::is_enum_v<F>) {
+            return (F)(int64_t)bvariant_to_number(v);
+        } else {
+            return F{};
+        }
+    }
 }
 
 template<typename, typename = void> struct class_has_load_function : std::false_type {};
@@ -808,6 +843,14 @@ namespace archive_helper {                                                      
         if (!c) return {};                                                                        \
         ANK_CONFIG_STRUCT_EXPAND(ANK_CONFIG_STRUCT_PASTE(ANK_PROPERTY_FROM, __VA_ARGS__));        \
         return {};                                                                                \
+    }                                                                                             \
+    template<> inline bool set<Type>(Type &data, const xstring &name, const bvariant &value, bool c) { \
+        if (!c) return false;                                                                     \
+        ANK_CONFIG_STRUCT_EXPAND(ANK_CONFIG_STRUCT_PASTE(ANK_PROPERTY_SET, __VA_ARGS__));         \
+        return false;                                                                             \
+    }                                                                                             \
+    template<> inline void names<Type>(std::vector<xstring> &out) {                               \
+        ANK_CONFIG_STRUCT_EXPAND(ANK_CONFIG_STRUCT_PASTE(ANK_PROPERTY_NAME, __VA_ARGS__));        \
     }                                                                                             \
 }
 

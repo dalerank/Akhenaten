@@ -1,4 +1,4 @@
-ï»¿#include "building_temple_complex.h"
+#include "building_temple_complex.h"
 
 #include "city/city.h"
 #include "game/undo.h"
@@ -14,6 +14,8 @@
 #include "construction/build_planner.h"
 #include "js/js_game.h"
 #include "game/game_pool.h"
+
+BUILDING_RUNTIME_DATA_IMPL(building_temple_complex)
 
 building_temple_complex::decoraive_tiles_pool_t &building_temple_complex::get_decorative_tiles_pool() {
     static decoraive_tiles_pool_t _inst;
@@ -413,9 +415,9 @@ void building_temple_complex::build_upgrade(e_temple_compex_upgrade upgrade_para
 
 // Walk the next_part_building_id chain looking for a part whose type is in
 // `allowed`. building_get() does no bounds checking (g_all_buildings is a fixed
-// 5000-slot array), so a missing/garbage linkage â€” e.g. a temple complex loaded
+// 5000-slot array), so a missing/garbage linkage — e.g. a temple complex loaded
 // from an original Pharaoh mission pack that has no Akhenaten-style sub-buildings
-// â€” would otherwise dereference an out-of-range pointer and crash. Validate each
+// — would otherwise dereference an out-of-range pointer and crash. Validate each
 // id is in (0, MAX_BUILDINGS) before following it, and cap the walk length to
 // guard against a corrupt cyclic chain.
 static building* temple_complex_find_part(const building& base, const svector<e_building_type, 4>& allowed) {
@@ -579,7 +581,7 @@ void building_temple_complex::on_destroy() {
     auto &tiles = *runtime_data().decorative_tiles;
     if (is_main() && !tiles.empty()) {
         // Per-tile reset matches what map_building_tiles_remove() does for a
-        // building's footprint â€” without it the decorative sprites stay drawn
+        // building's footprint — without it the decorative sprites stay drawn
         // and the cursor-to-building grid keeps stale ids on those tiles.
         for (auto &t : tiles) {
             map_building_tile_clear_at(t, /*building_type*/ 0);

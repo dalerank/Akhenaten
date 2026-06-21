@@ -32,6 +32,7 @@ public:
     virtual building_storage_yard *dcast_storage_yard() override { return this; }
 
     struct runtime_data_t {
+        int reserved;
         std::array<building_id, 4> police_station_weapon_requests;
     } BUILDING_RUNTIME_DATA_T;
 
@@ -73,6 +74,7 @@ private:
     bool is_accepting(e_resource resource);
     building *add_storageyard_space(int x, int y, building *prev);
 };
+ANK_CONFIG_PROPERTY(building_storage_yard::runtime_data_t, reserved)
 
 building_storage_yard *storage_yard_cast(building *b);
 

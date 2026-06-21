@@ -7,6 +7,7 @@
 #include "js/js_game.h"
 #include "figuretype/figure_dentist.h"
 
+BUILDING_RUNTIME_DATA_IMPL(building_dentist)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_dentist);
 
 void building_dentist::update_graphic() {

@@ -31,3 +31,4 @@ public:
     virtual void update_map_orientation(int map_orientation) override;
     virtual bool target_route_tile_blocked(int grid_offset) const override;
 };
+ANK_CONFIG_PROPERTY(building_festival_square::runtime_data_t, num_shows)

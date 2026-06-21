@@ -31,4 +31,6 @@ public:
     virtual void highlight_waypoints() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 };
+
+ANK_CONFIG_PROPERTY(building_fishing_wharf::runtime_data_t, no_fishing_points_warning_shown)
 ANK_CONFIG_STRUCT(building_fishing_wharf::static_params, max_storage, wait_time_multiplier, wait_time_base)

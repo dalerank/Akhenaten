@@ -21,4 +21,6 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter& ctx, vec2i point, tile2i tile,
       color color_mask) override;
 };
+
+ANK_CONFIG_PROPERTY(building_physician::runtime_data_t, residents_served_this_month)
 ANK_CONFIG_STRUCT(building_physician::static_params, max_serve_clients)

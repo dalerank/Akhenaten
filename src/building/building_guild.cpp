@@ -5,6 +5,8 @@
 
 constexpr uint16_t MAX_PROGRESS_GUILD = 400;
 
+BUILDING_RUNTIME_DATA_IMPL(building_guild)
+
 void building_guild::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind____skip(26);
     iob->bind____skip(56);
@@ -27,13 +29,4 @@ void building_guild::on_create(int orientation) {
 bool building_guild::has_resources() const {
     const bool hase_first_resource = (stored_amount(base.input.resource) >= 100);
     return hase_first_resource;
-}
-
-bvariant building_guild::get_property(const xstring &domain, const xstring &name) const {
-    if (domain == tags().industry && name == tags().progress) {
-        int pct_done = calc_percentage<int>(progress(), progress_max());
-        return bvariant(pct_done);
-    }
-
-    return building_impl::get_property(domain, name);
 }

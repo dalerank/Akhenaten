@@ -8,13 +8,13 @@ public:
 
     virtual building_tax_collector *dcast_tax_collector() override { return this; }
 
-    struct runtime_data_t {
-        int16_t tax_income_or_storage;
-    } BUILDING_RUNTIME_DATA_T;
-
     struct static_params : public building_static_params {
         uint16_t max_deben_storage;
     } BUILDING_STATIC_DATA_T;
+
+    struct runtime_data_t {
+        int16_t tax_income_or_storage;
+    } BUILDING_RUNTIME_DATA_T;
 
     virtual void spawn_figure() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_TAX_INCOME; }
@@ -26,6 +26,7 @@ public:
     int16_t deben_storage() const { return base.deben_storage; }
     int16_t tax_storage() const { return runtime_data().tax_income_or_storage; }
 };
+ANK_CONFIG_PROPERTY(building_tax_collector::runtime_data_t, tax_income_or_storage)
 ANK_CONFIG_STRUCT(building_tax_collector::static_params, max_deben_storage)
 
 class building_tax_collector_up : public building_tax_collector {

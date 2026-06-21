@@ -15,6 +15,8 @@ class building_temple_complex : public building_impl {
     using decoraive_tiles_pool_t = mission_permanent_memory_pool<building_temple_complex::decoraive_tiles_t, 2>;
 
 public:
+    using inherited = building_impl;
+
     building_temple_complex(building &b) : building_impl(b) {}
 
     virtual building_temple_complex *dcast_temple_complex() override { return this; }
@@ -66,6 +68,7 @@ public:
 
     virtual const base_params_t &base_params() const = 0;
 };
+ANK_CONFIG_PROPERTY(building_temple_complex::runtime_data_t, variant)
 
 class building_temple_complex_osiris : public building_temple_complex {
 public:

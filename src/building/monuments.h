@@ -28,6 +28,8 @@ struct monument {
 
 class building_monument : public building_impl {
 public:
+    using inherited = building_impl;
+
     building_monument(building &b) : building_impl(b) {}
 
     building_monument *dcast_monument() override { return this; }
@@ -80,6 +82,8 @@ public:
     virtual bool is_unfinished() const;
     virtual bool is_finished() const;
 };
+
+ANK_CONFIG_PROPERTY(building_monument::runtime_data_t, variant)
 
 enum module_type {
     

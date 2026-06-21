@@ -30,6 +30,8 @@
 
 #define MAX_DIR 4
 
+BUILDING_RUNTIME_DATA_IMPL(building_house)
+
 declare_console_command_p(house_up) {
     buildings_house_do([] (building_house *house) {
         e_building_type next_level = (e_building_type)(BUILDING_HOUSE_CRUDE_HUT + house->house_level() + 1);
@@ -212,16 +214,6 @@ int building_house::get_fire_risk(int value) const {
 
 void building_house::highlight_waypoints() {
     // nothing
-}
-
-bvariant building_house::get_property(const xstring &domain, const xstring &name) const {
-    auto &d = runtime_data();
-    if (domain == tags().house && name == tags().level_name) {
-        int level = base.type - 10;
-        return bvariant((pcstr)lang_get_string(29, level));
-    }
-
-    return building_impl::get_property(domain, name);
 }
 
 void building_house::spawn_figure() {

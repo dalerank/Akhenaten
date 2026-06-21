@@ -270,8 +270,8 @@ const auto& get_properties() {
     return bproperties;
 }
 
-void building_impl::consume_resource(e_resource r, int16_t amount) { 
-    base.consume_resource(r, amount); 
+void building_impl::consume_resource(e_resource r, int16_t amount) {
+    base.consume_resource(r, amount);
 }
 
 void building_impl::store_resource(e_resource r, int16_t amount) {
@@ -287,12 +287,13 @@ resource_value &building_impl::stored_first() {
 }
 
 bvariant building_impl::get_property(const xstring &domain, const xstring &name) const {
-    // Try to get property from static_params first
-    // auto result = archive_helper::get(current_params(), name, domain == tags().building);
-    // if (result) {
-    //     return result.value();
-    // }
-    
+    if (domain == tags().building) {
+        auto result = archive_helper::get(base, name, true);
+        if (result) {
+            return result.value();
+        }
+    }
+
     // Then try properties from get_properties()
     static const xstring wildname("*");
     for (const auto &prop : get_properties()) {
@@ -306,6 +307,14 @@ bvariant building_impl::get_property(const xstring &domain, const xstring &name)
     }
 
     return bvariant();
+}
+
+bool building_impl::set_property(const xstring &domain, const xstring &name, const bvariant &value) {
+    if (domain == tags().building) {
+        return archive_helper::set(base, name, value, true);
+    }
+
+    return false;
 }
 
 int building_impl::get_orientation() const {

@@ -35,6 +35,7 @@ const int THREEQUARTERS_GRANARY = 2400;
 const int HALF_GRANARY = 1600;
 const int QUARTER_GRANARY = 800;
 
+BUILDING_RUNTIME_DATA_IMPL(building_granary)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_granary);
 
 int building_granary::amount(e_resource resource) const {

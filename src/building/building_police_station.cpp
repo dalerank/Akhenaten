@@ -18,6 +18,7 @@
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 
+BUILDING_RUNTIME_DATA_IMPL(building_police_station)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_police_station);
 
 bool building_police_station::request_weapons_if_need() {

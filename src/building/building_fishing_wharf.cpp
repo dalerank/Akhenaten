@@ -1,4 +1,4 @@
-﻿#include "building_fishing_wharf.h"
+#include "building_fishing_wharf.h"
 
 #include "city/city.h"
 #include "grid/water.h"
@@ -17,6 +17,7 @@
 #include "dev/debug.h"
 #include <iostream>
 
+BUILDING_RUNTIME_DATA_IMPL(building_fishing_wharf)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_fishing_wharf);
 
 declare_console_command_p(killfishboats) {

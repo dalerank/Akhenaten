@@ -1,4 +1,4 @@
-#include "building.h"
+#include "building/building.h"
 #include "building_static_params.h"
 
 #include "building/building_bazaar.h"
@@ -15,6 +15,7 @@
 #include "grid/building.h"
 #include "grid/road_access.h"
 #include "core/bstring.h"
+#include "core/object_property.h"
 #include "core/profiler.h"
 #include "figure/figure.h"
 #include "figure/action.h"
@@ -300,10 +301,7 @@ static void building_proto___property_setter(js_State *J) {
     }
 
     pcstr prop = js_strnode_cstr(js_tostring(J, 1));
-    const int value = (int)js_tointeger(J, 2);
-    if (!strcmp(prop, "spawned_worker_this_month")) {
-        b->spawned_worker_this_month = (uint8_t)value;
-    }
+    b->dcast()->set_property(tags().building, prop, js_helpers::js_bvariant_from_js_value(J, 2));
 }
 
 void __building_meta_text_id(js_State *J) {
@@ -396,8 +394,18 @@ static js_Object *g_building_proto = nullptr;
 static void building_proto___property_getter(js_State *J) {
     const int bid = building_this_id(J);
     pcstr prop = js_strnode_cstr(js_tostring(J, 1));
-    auto opt = archive_helper::get(*building_get(bid), prop, true);
-    js_helpers::js_push_value<std::optional<bvariant>>(J, opt);
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        J->pushundefined();
+        return;
+    }
+
+    const bvariant value = b->dcast()->get_property(tags().building, prop);
+    if (value.value_type() == bvariant::etype_none) {
+        J->pushundefined();
+    } else {
+        js_helpers::js_push_bvariant(J, value);
+    }
 }
 
 static void building_proto_toString(js_State *J) {

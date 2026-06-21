@@ -5,6 +5,8 @@
 
 class building_routeblock : public building_impl {
 public:
+    using inherited = building_impl;
+
     building_routeblock(building &b) : building_impl(b) {}
     virtual building_routeblock *dcast_routeblock() override { return this; }
 
@@ -15,6 +17,7 @@ public:
     virtual void set_permission(e_permission) {}
     virtual bool get_permission(e_permission) { return false; }
 };
+ANK_CONFIG_PROPERTY(building_routeblock::runtime_data_t, exceptions)
 
 class building_roadblock : public building_routeblock {
 public:

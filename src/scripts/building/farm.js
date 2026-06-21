@@ -9,10 +9,6 @@ function Farm(building_id) {
 Farm.prototype = Object.create(Building.prototype)
 Farm.prototype.constructor = Farm
 
-Farm.prototype.__property_getter = function(property) {
-  return __farm_get_property(this.id, property)
-}
-
 Farm.property.flood_imminent = { }
 Farm.property.progress = { }
 Farm.property.is_floodplain = { }

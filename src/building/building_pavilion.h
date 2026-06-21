@@ -9,7 +9,7 @@ struct pavilion_place_offset {
         bool main;
     };
     svector<item, 8> items;
-}; 
+};
 ANK_CONFIG_STRUCT(pavilion_place_offset::item, type, offset, main)
 ANK_CONFIG_STRUCT(pavilion_place_offset, items)
 
@@ -39,7 +39,7 @@ public:
 
         void archive_load(archive arch);
     } BUILDING_STATIC_DATA_T;
-    
+
     virtual void on_create(int orientation) override;
     virtual void update_day() override;
     virtual void update_month() override;

@@ -13,6 +13,8 @@ ANK_CONFIG_STRUCT(building_fort_ghost,
 
 class building_fort : public building_impl {
 public:
+    using inherited = building_impl;
+
     building_fort(building &b) : building_impl(b) {}
     virtual building_fort *dcast_fort() override { return this; }
 
@@ -46,6 +48,7 @@ public:
 
     const base_params &base_params_ref() const;
 };
+ANK_CONFIG_PROPERTY(building_fort::runtime_data_t, fid)
 
 class building_fort_ground : public building_impl {
 public:

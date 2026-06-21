@@ -28,6 +28,8 @@
 #include "building_impl.h"
 #include "building_cast.h"
 #include "core/xfunction.h"
+#include "core/archive.h"
+#include "core/object_property.h"
 
 #include <stdint.h>
 #include <algorithm>
@@ -458,9 +460,26 @@ ANK_CONFIG_PROPERTY(building, has_road_access, num_workers, max_workers, type, o
 
 #define BUILDING_RUNTIME_DATA(type) ;                                                                   \
     type& runtime_data() { return *(type*)this->base.runtime_data; }                                    \
-    const type& runtime_data() const { static_assert(sizeof(type) < sizeof(building::runtime_data)); return *(type*)this->base.runtime_data; }
+    const type& runtime_data() const { static_assert(sizeof(type) < sizeof(building::runtime_data)); return *(type*)this->base.runtime_data; } \
+    virtual bvariant get_property(const xstring &domain, const xstring &name) const override;           \
+    virtual bool set_property(const xstring &domain, const xstring &name, const bvariant &value) override;
 
 #define BUILDING_RUNTIME_DATA_T BUILDING_RUNTIME_DATA(runtime_data_t)
+
+#define BUILDING_RUNTIME_DATA_IMPL(type)                                                                \
+    bvariant type::get_property(const xstring& domain, const xstring& name) const {                     \
+        auto result = archive_helper::get(runtime_data(), name, domain == tags().building);             \
+        if (result) {                                                                                   \
+            return result.value();                                                                      \
+        }                                                                                               \
+        return inherited::get_property(domain, name);                                                   \
+    }                                                                                                   \
+    bool type::set_property(const xstring& domain, const xstring& name, const bvariant& value) {        \
+        if (domain == tags().building && archive_helper::set(runtime_data(), name, value, true)) {      \
+            return true;                                                                                \
+        }                                                                                               \
+        return inherited::set_property(domain, name, value);                                            \
+    }
 
 #define BUILDING_STATIC_DATA(type) ;                                                                    \
     static const type &current_params() { return (const type &)building_static_params::get(TYPE); }

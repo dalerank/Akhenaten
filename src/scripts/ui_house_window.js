@@ -10,7 +10,7 @@ info_window_house {
     help_id : "message_housing_and_desirability"
     ui {
         background : outer_panel({size [29, 23] }) // pos/size setup from code
-        title      : text({pos[0, 16], text:"${house.level_name}", size[px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
+        title      : text({pos[0, 16], size[px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
         evolve_reason : text({pos[32, 40], size[px(27), -1], font : FONT_NORMAL_BLACK_ON_LIGHT, rich:true, wrap:px(27), scroll:false })
         food0_icon : resource_icon({pos[32, 95] })
         food0_text : text({pos[64, 100], font: FONT_NORMAL_BLACK_ON_LIGHT })
@@ -298,6 +298,8 @@ function house_get_evolve_reason(house) {
 [es=(info_window_house, init)]
 function info_window_house_init_fill(window) {
     var house = city.get_house(window.bid)
+    window.title.text = __loc(29, house.level)
+
     if (house.population <= 0)
         return
 

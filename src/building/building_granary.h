@@ -42,6 +42,7 @@ public:
     } BUILDING_STATIC_DATA_T;
 
     struct runtime_data_t {
+        int reserved;
         short resource_stored[16];
     } BUILDING_RUNTIME_DATA_T;
 
@@ -69,6 +70,8 @@ public:
     template<e_building_type T>
     int better_getting_storage();
 };
+
+ANK_CONFIG_PROPERTY(building_granary::runtime_data_t, reserved)
 ANK_CONFIG_STRUCT(building_granary::static_params, begin_spot_pos, res_image_offsets,
     min_workers_percent_for_tasks, min_workers_percent_for_accepting, min_workers_percent_for_getting,
     max_capacty_stored, allow_food_types);

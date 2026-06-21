@@ -24,4 +24,6 @@ public:
     
     building_id find_noble_house_with_max_bad_teeth();
 };
+
+ANK_CONFIG_PROPERTY(building_dentist::runtime_data_t, residents_served_this_month)
 ANK_CONFIG_STRUCT(building_dentist::static_params, max_serve_clients)

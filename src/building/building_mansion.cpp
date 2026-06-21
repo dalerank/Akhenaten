@@ -27,6 +27,7 @@
 #include "core/random.h"
 #include <algorithm>
 
+BUILDING_RUNTIME_DATA_IMPL(building_mansion)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_personal_mansion);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_family_mansion);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_dynasty_mansion);

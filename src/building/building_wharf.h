@@ -4,9 +4,12 @@
 
 class building_wharf : public building_impl {
 public:
+    using inherited = building_impl;
+
     building_wharf(building &b) : building_impl(b) {}
 
     struct runtime_data_t {
+        int reserved;
         int dock_tiles[2];
         uint8_t docker_anim_frame;
     } BUILDING_RUNTIME_DATA_T;
@@ -25,4 +28,6 @@ public:
 
     water_access_tiles get_water_access_tiles() const;
 };
+
+ANK_CONFIG_PROPERTY(building_wharf::runtime_data_t, reserved)
 

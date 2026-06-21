@@ -5,7 +5,7 @@ brickworks_info_window {
     related_buildings [BUILDING_BRICKS_WORKSHOP]
     ui : baseui(workshop_info_window, {
         background    : outer_panel({size[29, 18] })
-        ready_prod    : text({pos[32, 40], size[px(27), 20], text:"${text.2} ${industry.progress}% ${text.3}", font : FONT_NORMAL_BLACK_ON_LIGHT })
+        ready_prod    : text({pos[32, 40], size[px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT })
         resource_icon : resource_icon({pos[32, 56], prop:"${building.first_material}" })
         resource_stored : text({pos[60, 60], size[px(27), 20], font:FONT_NORMAL_BLACK_ON_LIGHT })
         resource_icon_b : resource_icon({pos[32, 80], prop:"${building.second_material}" })
@@ -24,6 +24,7 @@ function brickworks_info_window_on_init(window) {
     window.mothball.tooltip = __loc(54, b.state == 1 ? 16 : 17)
 
     workshop_info_window_setup_advisors(window, b.type)
+    window.ready_prod.text = industry_info_window_format_progress(b, false)
     var reason = { group: b.meta_text_id, id: 0 }
     if (!b.has_road_access) {
         reason = { group: 69, id: 25 }

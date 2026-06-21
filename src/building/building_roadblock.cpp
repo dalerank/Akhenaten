@@ -1,13 +1,12 @@
 #include "building_roadblock.h"
 
-#include "building/building_roadblock.h"
-
 #include "graphics/elements/ui.h"
 #include "graphics/window.h"
 #include "window/building/common.h"
 #include "window/window_building_info.h"
 #include "js/js_game.h"
 
+BUILDING_RUNTIME_DATA_IMPL(building_routeblock)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_roadblock);
 
 bool building_roadblock::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {

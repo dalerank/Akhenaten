@@ -13,7 +13,7 @@ public:
         uint8_t spawn_delay_75_percent;
         uint8_t spawn_delay_50_percent;
         uint8_t spawn_delay_25_percent;
-        uint8_t spawn_delay_default;  // для 1-24% работников
+        uint8_t spawn_delay_default;
     } BUILDING_STATIC_DATA_T;
 
     virtual e_overlay get_overlay() const override { return OVERLAY_BOOTH; }

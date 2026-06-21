@@ -1,4 +1,6 @@
-﻿#include "building_shipyard.h"
+#include "building_shipyard.h"
+BUILDING_RUNTIME_DATA_IMPL(building_shipyard)
+
 
 #include "building/building.h"
 #include "figuretype/figure_fishing_boat.h"

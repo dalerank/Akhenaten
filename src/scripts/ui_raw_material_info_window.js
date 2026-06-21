@@ -3,7 +3,7 @@ log_info("akhenaten: raw material info window started")
 raw_material_info_window {
     ui : baseui(building_info_window, {
         resource_img  : resource_icon({ pos:[14, 14], prop:"${building.output_resource}" }),
-        progress_desc : text({ pos:[32, 44], text:"${text.2} ${industry.progress} % ${text.3}", font: FONT_NORMAL_BLACK_ON_LIGHT }),
+        progress_desc : text({ pos:[32, 44], font: FONT_NORMAL_BLACK_ON_LIGHT }),
         warning_desc  : text({ pos:[32, 66], text:"${text.1}", font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true }),
         inner_panel   : inner_panel({ pos:[16, 140], size:[27, 5],
             ui : {
@@ -30,6 +30,7 @@ info_window_raw_material {
 function info_window_raw_material_on_init(window) {
     log_info("akhenaten: info_window_raw_material_on_init: window.bid = " + window.bid)
     var b = city.get_building(window.bid)
+    window.progress_desc.text = industry_info_window_format_progress(b, true)
     var reason = { group: b.meta_text_id, id: 10 }
     log_info("akhenaten: info_window_raw_material_common_init: b.type = " + b.type)
 

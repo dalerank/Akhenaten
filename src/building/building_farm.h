@@ -13,6 +13,8 @@ enum e_farm_worker_state {
 
 class building_farm : public building_impl {
 public:
+    using inherited = building_impl;
+
     building_farm(building &b) : building_impl(b) {}
     virtual building_farm *dcast_farm() override { return this; }
 
@@ -55,7 +57,6 @@ public:
     virtual void on_tick(bool refresh) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void start_production() override;
-    virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
     virtual figure_id expected_worker_id() const { return runtime_data().worker_id; }
     virtual bool requested_workers() const;
     virtual bool target_route_tile_blocked(int grid_offset) const override;
