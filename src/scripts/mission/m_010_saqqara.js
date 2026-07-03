@@ -4,7 +4,30 @@ mission10 { // Saqqara
 	start_message : "message_innovations"
 	selection_title : "Saqqara"
 	player_rank : 1
-	next_mission : 11
+
+	choice_background {pack:PACK_UNLOADED, id:12}
+	choice_image1 {pack:PACK_UNLOADED, id:13}
+	choice_image1_pos [192, 144]
+	choice_title [144, 28]
+
+	choice [
+		{
+			name : "Serabit Khadim"
+			id : 11
+			image {pack:PACK_UNLOADED, id:20, offset:0}
+			tooltip [144, 29]
+			pos [620, 420]
+		}
+
+		{
+			name : "Meidum"
+			id : 12
+			image {pack:PACK_UNLOADED, id:20}
+			tooltip [144, 30]
+			pos [640, 480]
+		}
+	]
+
 	initial_funds [7500, 5000, 3750, 2500, 2000]
 	rescue_loans [7500, 5000, 3750, 2500, 2000]
 	house_tax_multipliers [300, 200, 150, 100, 75]

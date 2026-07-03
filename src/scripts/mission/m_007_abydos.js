@@ -9,7 +9,30 @@ mission7 { // Abydos
 	    tree_grow : default_tree_grow
 	}
 	player_rank : 1
-	next_mission : 9
+
+	choice_background {pack:PACK_UNLOADED, id:12}
+	choice_image1 {pack:PACK_UNLOADED, id:13}
+	choice_image1_pos [192, 144]
+	choice_title [144, 22]
+
+	choice [
+		{
+			name : "Selima"
+			id : 8
+			image {pack:PACK_UNLOADED, id:20, offset:0}
+			tooltip [144, 23]
+			pos [620, 420]
+		}
+
+		{
+			name : "Abu"
+			id : 9
+			image {pack:PACK_UNLOADED, id:20}
+			tooltip [144, 24]
+			pos [640, 480]
+		}
+	]
+
 	initial_funds [7500, 5000, 3750, 2500, 2000]
 	rescue_loans [7500, 5000, 3750, 2500, 2000]
 	house_tax_multipliers [300, 200, 150, 100, 75]

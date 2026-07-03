@@ -4,7 +4,30 @@ mission6 { // Behdet
 	start_message : "message_soldiers_and_forts"
 	selection_title : "Behdet"
 	player_rank : 1
-	next_mission : 8
+
+	choice_background {pack:PACK_UNLOADED, id:12}
+	choice_image1 {pack:PACK_UNLOADED, id:13}
+	choice_image1_pos [192, 144]
+	choice_title [144, 22]
+
+	choice [
+		{
+			name : "Selima"
+			id : 8
+			image {pack:PACK_UNLOADED, id:20, offset:0}
+			tooltip [144, 23]
+			pos [620, 420]
+		}
+
+		{
+			name : "Abu"
+			id : 9
+			image {pack:PACK_UNLOADED, id:20}
+			tooltip [144, 24]
+			pos [640, 480]
+		}
+	]
+
 	initial_funds [7500, 5000, 3750, 2500, 2000]
 	rescue_loans [7500, 5000, 3750, 2500, 2000]
 	house_tax_multipliers [300, 200, 150, 100, 75]

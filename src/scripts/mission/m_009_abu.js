@@ -103,24 +103,6 @@ mission9 = { // Abu
 			deadline : 9
 		},
 	],
-
-	choice : [
-		{
-			name : "Selima",
-			id : 8,
-			image: {pack:PACK_UNLOADED, id:20, offset:0},
-			tooltip : [144, 23],
-			pos : [620, 420],
-		},
-
-		{
-			name : "Abu",
-			id : 9,
-			image: {pack:PACK_UNLOADED, id:20},
-			tooltip : [144, 24],
-			pos : [640, 480],
-		}
-	],
 }
 
 [event=event_mission_start, mission=mission9]
