@@ -760,7 +760,6 @@ void GamestateIO::start_loaded_file() {
         map_tiles_update_all_meadow();
         map_tiles_update_all_roads();
         map_tiles_update_all_plazas();
-        building_mud_wall::update_all_walls();
         map_canal_update_all_tiles(0);
 
         //        map_natives_init();

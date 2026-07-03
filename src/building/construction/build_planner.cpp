@@ -512,6 +512,7 @@ void build_planner::setup_build_flags() {
     case BUILDING_MUD_GATEHOUSE_UP:
     case BUILDING_BRICK_GATEHOUSE:
     case BUILDING_BRICK_GATEHOUSE_UP:
+    case BUILDING_DECORATIVE_GATEHOUSE:
         set_flag(e_planner_rule::Road, false);
         break;
 

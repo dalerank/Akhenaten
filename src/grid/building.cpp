@@ -2,7 +2,9 @@
 #include "io/io_buffer.h"
 
 #include "building/building.h"
+#include "building/building_wall.h"
 #include "grid/grid.h"
+#include "grid/orientation.h"
 #include "grid/property.h"
 #include "grid/image.h"
 #include "game/game_config.h"
@@ -225,7 +227,8 @@ adjust_orientation map_adjust_building_determine_orientation(tile2i tile, int si
 }
 
 void map_building_update_all_tiles() {
-
+    map_orientation_update_buildings();
+    building_mud_wall::update_all_walls();
 }
 
 io_buffer *iob_building_grid = new io_buffer([] (io_buffer *iob, size_t version) {

@@ -1,6 +1,7 @@
 #include "graphics/image.h"
 
 #include "graphics/animation.h"
+#include "grid/point.h"
 #include "io/io_buffer.h"
 #include "grid/grid.h"
 #include "image.h"

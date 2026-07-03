@@ -255,7 +255,7 @@ void building_update_state(void) {
                 water_routes_recalc |= params.planner_update_rule.ferries;
                 //roads_recalc |= params.updates.roads;
 
-                if (b->type == BUILDING_MUD_TOWER || b->type == BUILDING_MUD_GATEHOUSE) {
+                if (b->type == BUILDING_MUD_TOWER || b->type == BUILDING_MUD_GATEHOUSE || b->type == BUILDING_DECORATIVE_GATEHOUSE) {
                     walls_recalc = true;
                     //roads_recalc = true;
                 }

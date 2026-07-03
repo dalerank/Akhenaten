@@ -458,7 +458,7 @@ void map_image_context_set_tiles_road(tile2i tile, image_tiles_vec& tiles) {
         int offset = grid_offset + map_grid_direction_delta(i);
         if (map_terrain_is(offset, TERRAIN_GATEHOUSE)) {
             building* b = building_at(offset);
-            if (b->type == BUILDING_MUD_GATEHOUSE && b->orientation == 1 + ((i / 2) & 1)) { // 1,2,1,2
+            if ((b->type == BUILDING_MUD_GATEHOUSE || b->type == BUILDING_DECORATIVE_GATEHOUSE) && b->orientation == 1 + ((i / 2) & 1)) { // 1,2,1,2
                 tiles[i] = 1;
             }
         } else if (map_terrain_is(offset, TERRAIN_ACCESS_RAMP)) {

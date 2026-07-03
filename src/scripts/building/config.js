@@ -1062,6 +1062,34 @@ building_mud_gatehouse = {
   }
 }
 
+// Decorative composite gatehouse (original type 202): 2x2 special wall + 1x2 gate + 2x2 special wall (5x2).
+building_decorative_gatehouse = {
+  animations : {
+    preview : { pack:PACK_TERRAIN, id:318 },
+    wall_left_0_0 : { pack:PACK_TERRAIN, id:314 },
+    wall_left_1_0 : { pack:PACK_TERRAIN, id:315 },
+    gate_0_0 : { pack:PACK_TERRAIN, id:318 },
+    wall_right_0_0 : { pack:PACK_TERRAIN, id:316 },
+    wall_right_1_0 : { pack:PACK_TERRAIN, id:317 },
+    wall_left_0_1 : { pack:PACK_TERRAIN, id:324 },
+    wall_left_1_1 : { pack:PACK_TERRAIN, id:325 },
+    gate_0_1 : { pack:PACK_TERRAIN, id:319 },
+    wall_right_0_1 : { pack:PACK_TERRAIN, id:326 },
+    wall_right_1_1 : { pack:PACK_TERRAIN, id:327 },
+  }
+
+  building_size : 5
+  meta : { help_id:85, text_id:90 }
+  cost : [ 100, 150, 200, 300, 400 ]
+  desirability : { value:[-6], step:[1], step_size:[2], range: [6] }
+  laborers:[3], fire_risk:[0], damage_risk: [3]
+  flags {
+    is_defense: true
+    is_wall: true
+    is_gatehouse: true
+  }
+}
+
 building_brick_wall {
   animations {
     preview { pack:PACK_GENERAL, id:138, offset:27 },

@@ -310,7 +310,7 @@ void building_mud_wall::set_wall_gatehouse_image_manually(int grid_offset) {
 
 terrain_image building_mud_wall::get_terrain_image(tile2i tile) {
     std::array<int, MAP_IMAGE_MAX_TILES> tiles;
-    
+
     map_image_context_fill_matches(tile, TERRAIN_WALL | TERRAIN_GATEHOUSE, { 0, 1 }, tiles);
 
     terrain_image timg = map_image_context_get_terrain_image(CONTEXT_WALL, tiles);
@@ -326,15 +326,19 @@ void building_mud_wall::set_image(tile2i tile) {
 
     terrain_image img = get_terrain_image(tile);
     const int id = building_static_params::get(TYPE).base_img();
+    if (!img.is_valid) {
+        return;
+    }
+
     const int img_id = id + img.group_offset + img.item_offset;
     map_image_set(tile, img_id);
     map_property_set_multi_tile_size(tile.grid_offset(), 1);
     map_property_mark_draw_tile(tile);
 
     if (map_terrain_count_directly_adjacent_with_type(tile.grid_offset(), TERRAIN_GATEHOUSE) > 0) {
-        img = map_image_context_get_wall_gatehouse(tile);
-        if (img.is_valid) {
-            map_image_set(tile, img_id);
+        terrain_image gate_img = map_image_context_get_wall_gatehouse(tile);
+        if (gate_img.is_valid) {
+            map_image_set(tile, id + gate_img.group_offset + gate_img.item_offset);
         } else {
             set_wall_gatehouse_image_manually(tile.grid_offset());
         }
@@ -344,7 +348,7 @@ void building_mud_wall::set_image(tile2i tile) {
 bool building_mud_wall::set_wall(tile2i tile) {
     int grid_offset = tile.grid_offset();
     bool tile_set = false;
-    
+
     if (!map_terrain_is(grid_offset, TERRAIN_WALL)) {
         tile_set = true;
     }

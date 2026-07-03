@@ -1,9 +1,12 @@
 #pragma once
 
+#include "graphics/image_desc.h"
 #include "tile_cache.h"
 #include <stdint.h>
 
 #define MAX_FLOODPLAIN_ROWS 30
+
+extern image_desc floodplain_tile;
 
 enum e_fert_type {
     FERT_NO_MALUS = 0,

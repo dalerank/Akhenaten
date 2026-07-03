@@ -29,7 +29,7 @@ bool road_tile_valid_access(int grid_offset) {
 
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {// general case -- no buildings over road!
         e_building_type btype = building_at(grid_offset)->type; // exceptions: vvv
-        if (building_type_any_of(btype, { BUILDING_MUD_GATEHOUSE, BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION, BUILDING_FESTIVAL_SQUARE })) {
+        if (building_type_any_of(btype, { BUILDING_MUD_GATEHOUSE, BUILDING_DECORATIVE_GATEHOUSE, BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION, BUILDING_FESTIVAL_SQUARE })) {
             return true;
         }
     }
@@ -450,15 +450,15 @@ static bool is_adjacent_road_tile_for_roaming(int grid_offset, e_permission perm
     }
 
     building* b = building_at(grid_offset);
-    if (b->type == BUILDING_MUD_GATEHOUSE) {
+    if (b->type == BUILDING_MUD_GATEHOUSE || b->type == BUILDING_DECORATIVE_GATEHOUSE) {
         return false;
-    } 
-        
+    }
+
     building_routeblock *roadblock = b->dcast_roadblock();
     if (roadblock && !roadblock->get_permission(perm)) {
         return false;
-    } 
-        
+    }
+
     if (b->type == BUILDING_GRANARY) {
         if (map_routing_citizen_is_road(grid_offset)) {
             if (!!game_features::gameplay_dynamic_granaries) {
@@ -471,8 +471,8 @@ static bool is_adjacent_road_tile_for_roaming(int grid_offset, e_permission perm
             }
         }
         return is_road;
-    } 
-        
+    }
+
     if (b->type == BUILDING_RESERVED_TRIUMPHAL_ARCH_56) {
         if (map_routing_citizen_is_road(grid_offset)) {
             is_road = 1;
