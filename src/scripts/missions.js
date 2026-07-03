@@ -133,6 +133,7 @@ import mission.m_007_abydos
 import mission.m_008_selima
 import mission.m_009_abu
 import mission.m_010_saqqara
+import mission.m_011_serabit_khadim
 import mission.m_128_alexandria
 import mission.m_129_bridges
 import mission.m_130_sandbox
