@@ -856,7 +856,7 @@ tile2i building_small_mastaba::access_point() const {
 }
 
 const monument &building_medium_mastaba::config() const {
-    return g_monument_small_mastaba;
+    return g_monument_medium_mastaba;
 }
 
 tile2i building_medium_mastaba::center_point() const {

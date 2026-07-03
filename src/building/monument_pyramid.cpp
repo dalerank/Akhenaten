@@ -85,7 +85,7 @@ struct monument_small_stepped_pyramid : public monument {
 } g_monument_small_stepped_pyramid;
 
 struct monument_medium_stepped_pyramid : public monument {
-    monument_medium_stepped_pyramid() : monument{ BUILDING_SMALL_STEPPED_PYRAMID } {
+    monument_medium_stepped_pyramid() : monument{ BUILDING_MEDIUM_STEPPED_PYRAMID } {
         phases.push_back({ 0, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
         phases.push_back({ 1, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
         phases.push_back({ 2, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_STONE, 4800} });
@@ -1325,7 +1325,7 @@ void building_stepped_pyramid::on_place(int orientation, int variant) {
     }
 
     // Add main building to parts list
-    pyramid_part main{BUILDING_SMALL_STEPPED_PYRAMID, {0, 0}, &base};
+    pyramid_part main{type(), {0, 0}, &base};
     switch (orientation) {
     case 0: parts.insert(parts.begin(), main); break;
     case 1: parts.insert(parts.begin() + 1, main); break;
