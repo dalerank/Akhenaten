@@ -80,38 +80,28 @@ function mission_end_replay_mission() {
     }
 }
 
-function mission_end_compute_next_scenario_id(completed_id) {
-    if (scenario.scmode == e_scenario_custom_map) {
-        log_info("mission_end_compute_next: custom map, ending campaign")
-        return -1
-    }
-    var src = get_mission_config(completed_id)
-    var next_id = (src && src.next_mission) ? src.next_mission : 0
-    if (!next_id) {
-        next_id = completed_id + 1
-    }
-    if (next_id < 0 || !__game_mission_is_valid(next_id)) {
-        log_info("mission_end_compute_next: completed=" + completed_id
-            + " scmode=" + scenario.scmode + " next_id=" + next_id
-            + " not a valid campaign step -> end of game")
-        return -1
-    }
-    log_info("mission_end_compute_next: completed=" + completed_id + " scmode=" + scenario.scmode + " -> next_scenario_id=" + next_id)
-    return next_id
-}
-
 function mission_end_advance_to_next_mission() {
     var rank = scenario.campaign_mission_rank
     var next_rank = rank + 1
     var completed_id = scenario.campaign_scenario_id
     var savings = city.kingdome.personal_savings
-    var next_scenario_id = mission_end_compute_next_scenario_id(completed_id)
 
     if (scenario.scmode != e_scenario_custom_map) {
         city.kingdome.campaign_carry_personal_savings = savings
     }
 
+    var next_scenario_id = -1
+    if (mission_has_post_victory_choice(completed_id)) {
+        next_scenario_id = completed_id
+    } else {
+        next_scenario_id = mission_end_compute_next_scenario_id(completed_id)
+    }
+
     emit event_mission_won { scenario_id: completed_id, next_scenario_id: next_scenario_id }
+
+    if (scenario.scmode != e_scenario_custom_map) {
+        __game_player_record_mission_win(completed_id)
+    }
 
     scenario.campaign_mission_rank = next_rank
     city.kingdome.player_name = city.kingdome.campaign_player_name
@@ -129,8 +119,10 @@ function mission_end_advance_to_next_mission() {
             __scenario_init()
             scenario.campaign_mission_rank = 2
         }
+    } else if (mission_has_post_victory_choice(completed_id)) {
+        game_show_mission_choice(completed_id, completed_id)
     } else {
-        game_show_mission_choice(next_scenario_id)
+        game_show_mission_choice(next_scenario_id, completed_id)
     }
 }
 

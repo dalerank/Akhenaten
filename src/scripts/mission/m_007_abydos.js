@@ -9,7 +9,7 @@ mission7 { // Abydos
 	    tree_grow : default_tree_grow
 	}
 	player_rank : 1
-	next_mission : 8
+	next_mission : 9
 	initial_funds [7500, 5000, 3750, 2500, 2000]
 	rescue_loans [7500, 5000, 3750, 2500, 2000]
 	house_tax_multipliers [300, 200, 150, 100, 75]
@@ -65,28 +65,6 @@ mission7 { // Abydos
 			is_sea_trade : true,
 			max_traders : 1
 			trade_limits : default_trade_limits
-		}
-	]
-
-	choice_background {pack:PACK_UNLOADED, id:12}
-	choice_image1 {pack:PACK_UNLOADED, id:13}
-	choice_image1_pos [192, 144]
-	choice_title [144, 19]
-	choice [
-		{
-			name : "Abydos"
-			id : 6
-			image {pack:PACK_UNLOADED, id:20}
-			tooltip [144, 20]
-			pos [620, 420]
-		}
-
-		{
-			name : "Behdet"
-			id : 7
-			image {pack:PACK_UNLOADED, id:20}
-			tooltip [144, 21]
-			pos [640, 480]
 		}
 	]
 

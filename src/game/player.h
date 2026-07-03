@@ -63,6 +63,7 @@ void highscores_load();
 
 // const char *player_get_cached_scenario_name(int scenario_id);
 const player_record* player_get_scenario_record(int scenario_id);
+void player_record_mission_win(int scenario_id);
 const char* player_get_last_autosave();
 
 void player_data_new(const uint8_t* player_name);

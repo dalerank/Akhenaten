@@ -34,19 +34,35 @@ function mission_choice_xy(p) {
     return [0, 0]
 }
 
-function game_show_mission_choice(scenario_id) {
-    if (!__game_mission_is_valid(scenario_id)) {
+function game_show_mission_choice(choice_host_id, completed_id) {
+    if (choice_host_id === undefined || choice_host_id === null) {
+        choice_host_id = -1
+    }
+    if (completed_id === undefined || completed_id === null) {
+        completed_id = -1
+    }
+
+    if (!__game_mission_is_valid(choice_host_id)) {
         emit event_show_main_menu{ play_intro: true }
         return
     }
-    var src = get_mission_config(scenario_id)
-    var nch = (src && src.choice) ? src.choice.length : 0
-    if (!src || !src.choice || src.choice.length === 0) {
-        log_info("mission_choice: no choice in config -> load_mission(" + scenario_id + ",1)")
-        __game_load_mission(scenario_id, 1)
+
+    var src = get_mission_config(choice_host_id)
+    var choices = mission_get_visible_choices(src, completed_id)
+    if (!src || choices.length === 0) {
+        log_info("mission_choice: no choice in config -> load_mission(" + choice_host_id + ",1)")
+        __game_load_mission(choice_host_id, 1)
         return
     }
-    game.mission_choice_open_scenario_id = scenario_id
+
+    if (choices.length === 1) {
+        log_info("mission_choice: single branch -> load_mission(" + choices[0].id + ",1)")
+        mission_choice_branch_start(choices[0].id)
+        return
+    }
+
+    game.mission_choice_open_scenario_id = choice_host_id
+    game.mission_choice_completed_scenario_id = completed_id
     emit event_show_window{ id:"mission_choice_window" }
 }
 
@@ -92,11 +108,14 @@ mission_choice_window {
 [es=(mission_choice_window, init)]
 function mission_choice_window_on_init(window) {
     var open_id = game.mission_choice_open_scenario_id
+    var completed_id = game.mission_choice_completed_scenario_id
     var src = get_mission_config(open_id)
     if (!src) {
         return
     }
-    if (!src.choice || src.choice.length === 0) {
+
+    var choices = mission_get_visible_choices(src, completed_id)
+    if (choices.length === 0) {
         return
     }
 
@@ -110,18 +129,30 @@ function mission_choice_window_on_init(window) {
     window.image2.pos = mission_choice_xy(src.choice_image2_pos)
     window.title.text = mission_choice_resolve_text(src.choice_title)
 
-    var n = src.choice.length
+    var n = choices.length
     var i = 0
+    for (i = 0; i < 4; i++) {
+        var btn = window["point" + i]
+        if (!btn) {
+            break
+        }
+        btn.enabled = false
+        btn.image = 0
+        btn.tooltip = ""
+        btn.onclick = null
+    }
+
     for (i = 0; i < n; i++) {
         var btn = window["point" + i]
         if (!btn) {
             break
         }
-        var pt = src.choice[i]
+        var pt = choices[i]
         var tBtn = mission_choice_image_tid(pt.image)
         btn.image = mission_choice_image_tid(pt.image)
         btn.pos = mission_choice_xy(pt.pos)
         btn.tooltip = mission_choice_resolve_text(pt.tooltip)
+        btn.enabled = true
         ;(function (point_btn, scenarioId) {
             point_btn.onclick = function () {
                 mission_choice_branch_start(scenarioId)

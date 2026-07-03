@@ -71,45 +71,6 @@ mission6 { // Behdet
 		}
 	]
 
-	choice_background {pack:PACK_UNLOADED, id:12}
-	choice_image1 {pack:PACK_UNLOADED, id:13}
-	choice_image1_pos [192, 144]
-	choice_title [144, 19]
-
-	choice [
-		{
-			name : "Abydos"
-			id : 6
-			image {pack:PACK_UNLOADED, id:20}
-			tooltip [144, 20]
-			pos [620, 420]
-		}
-
-		{
-			name : "Marathart"
-			id : 6
-			image {pack:PACK_UNLOADED, id:20}
-			tooltip [144, 20]
-			pos [470, 220]
-		}
-
-		{
-			name : "Behdet"
-			id : 7
-			image {pack:PACK_UNLOADED, id:20}
-			tooltip [144, 21]
-			pos [640, 480]
-		}
-
-		{
-			name : "Baruth"
-			id : 7
-			image {pack:PACK_UNLOADED, id:20}
-			tooltip [144, 21]
-			pos [460, 280]
-		}
-	]
-
 	vars {
 		pharaoh_pottery_requested : false
 		pharaoh_fish_requested : false

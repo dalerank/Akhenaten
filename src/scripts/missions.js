@@ -61,6 +61,56 @@ function get_mission_config(scenario_id) {
     }
 }
 
+// Returns choice entries visible after completing completed_id (optional after filter).
+function mission_get_visible_choices(mission_config, completed_id) {
+    if (!mission_config || !mission_config.choice || mission_config.choice.length === 0) {
+        return []
+    }
+
+    var out = []
+    var seen = {}
+    for (var i = 0; i < mission_config.choice.length; i++) {
+        var pt = mission_config.choice[i]
+        if (!pt || pt.id === undefined || pt.id === null) {
+            continue
+        }
+        if (pt.after !== undefined && pt.after !== null && pt.after !== completed_id) {
+            continue
+        }
+        if (seen[pt.id]) {
+            continue
+        }
+        seen[pt.id] = true
+        out.push(pt)
+    }
+    return out
+}
+
+function mission_has_post_victory_choice(completed_id) {
+    var src = get_mission_config(completed_id)
+    return mission_get_visible_choices(src, completed_id).length > 0
+}
+
+function mission_end_compute_next_scenario_id(completed_id) {
+    if (scenario.scmode == e_scenario_custom_map) {
+        log_info("mission_end_compute_next: custom map, ending campaign")
+        return -1
+    }
+    var src = get_mission_config(completed_id)
+    var next_id = (src && src.next_mission) ? src.next_mission : 0
+    if (!next_id) {
+        next_id = completed_id + 1
+    }
+    if (next_id < 0 || !__game_mission_is_valid(next_id)) {
+        log_info("mission_end_compute_next: completed=" + completed_id
+            + " scmode=" + scenario.scmode + " next_id=" + next_id
+            + " not a valid campaign step -> end of game")
+        return -1
+    }
+    log_info("mission_end_compute_next: completed=" + completed_id + " scmode=" + scenario.scmode + " -> next_scenario_id=" + next_id)
+    return next_id
+}
+
 function mission_show_start_message(mission, message_id) {
     if (mission.start_message_shown) {
         return

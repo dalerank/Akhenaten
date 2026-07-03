@@ -7,6 +7,10 @@
 #include "io/gamestate/boilerplate.h"
 #include "io/io.h"
 #include "io/manager.h"
+#include "city/city.h"
+#include "game/game.h"
+#include "game/simulation_time.h"
+#include "js/js_game.h"
 
 #include <filesystem>
 
@@ -125,6 +129,34 @@ const player_record* player_get_scenario_record(int scenario_id) {
     auto& data = player_data();
     return &data.player_scenario_records[scenario_id];
 }
+
+void player_record_mission_win(int scenario_id) {
+    if (scenario_id < 0 || scenario_id >= MAX_DAT_ENTRIES) {
+        return;
+    }
+
+    auto& data = player_data();
+    player_record& record = data.player_scenario_records[scenario_id];
+    record.nonempty = true;
+    record.mission_idx = scenario_id;
+    record.rating_culture = g_city.ratings.culture;
+    record.rating_prosperity = g_city.ratings.prosperity;
+    record.rating_kingdom = g_city.kingdome.rating;
+    record.final_population = g_city.population.current;
+    record.final_funds = g_city.finance.treasury;
+    record.completion_months = (uint32_t)(game.simtime.years_since_start() * simulation_time_t::months_in_year
+                                          + game.simtime.month + 1);
+    record.difficulty = game_difficulty();
+    record.unk09 = 0;
+    string_copy((const uint8_t*)g_city.kingdome.player_name.c_str(), record.player_name, MAX_PLAYER_NAME);
+    record.score = records_calc_score(&record);
+    record.score_is_valid = record.score == records_calc_score(&record);
+}
+
+void __game_player_record_mission_win(int scenario_id) {
+    player_record_mission_win(scenario_id);
+}
+ANK_FUNCTION_1(__game_player_record_mission_win)
 const char* player_get_last_autosave() {
     auto& data = player_data();
     return data.last_autosave_path;

@@ -182,14 +182,15 @@ static void post_load() {
     // scenario settings
     city_set_player_name(game_features::gameopt_player_name.to_string());
     mission_id_t missionid(g_scenario.campaign_scenario_id);
-    int mission_rank = get_scenario_mission_rank(missionid._id);
-    g_scenario.campaign_mission_rank = mission_rank;
 
     // Clear mission variables when starting a new mission (not when loading from save)
     bool is_new_mission = (game.session.last_loaded == e_session_mission);
     if (is_new_mission) {
         g_scenario.vars.clear();
     }
+
+    // campaign_mission_rank: JS advances on victory; load_mission preserves across transitions.
+    // When loading a save, rank comes from iob_scenario_carry_settings (not legacy campaign.txt).
 
     g_scenario.load_metadata(missionid, is_new_mission);
     js_register_mission_vars(g_scenario.vars);
@@ -642,9 +643,9 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
         return false;
     }
 
-    // mission pack files do not store carry savings; preserve the current value
-    // across pre_load() (which memset()'s the whole city) and unserialize().
+    // mission pack files do not store carry savings or campaign rank; preserve across pre_load().
     const uint16_t saved_carry = g_city.kingdome.campaign_carry_personal_savings;
+    const int32_t saved_rank = g_scenario.campaign_mission_rank;
 
     // read file
     pre_load();
@@ -655,6 +656,7 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
     }
 
     g_city.kingdome.campaign_carry_personal_savings = saved_carry;
+    g_scenario.campaign_mission_rank = saved_rank;
 
     game.session.last_loaded = e_session_mission;
     game.session.last_loaded_mission = MISSION_PACK_FILE;

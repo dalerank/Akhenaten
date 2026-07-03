@@ -5,10 +5,6 @@ mission10 { // Saqqara
 	selection_title : "Saqqara"
 	player_rank : 1
 	next_mission : 11
-	choice_background {pack:PACK_UNLOADED, id:12}
-	choice_image1 {pack:PACK_UNLOADED, id:13, offset:0}
-	choice_image1_pos [192, 144]
-	choice_title [144, 22]
 	initial_funds [7500, 5000, 3750, 2500, 2000]
 	rescue_loans [7500, 5000, 3750, 2500, 2000]
 	house_tax_multipliers [300, 200, 150, 100, 75]
