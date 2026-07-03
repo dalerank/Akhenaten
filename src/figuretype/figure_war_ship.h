@@ -39,11 +39,18 @@ public:
 
     struct static_params : public figure_static_params {
         std::unordered_map<xstring, order_t> orders_info;
+        int8_t missile_attack_value = 6;
+        int16_t missile_delay = 200;
     } FIGURE_STATIC_DATA_T;
 
     struct runtime_data_t {
         short active_order;
+        short target_id;
+        short last_order;
     } FIGURE_RUNTIME_DATA_T;
+
+    int8_t missile_attack_value() const { return current_params().missile_attack_value; }
+    int16_t missile_delay() const { return current_params().missile_delay; }
 
     virtual void on_create() override;
     virtual void on_destroy() override;
@@ -57,9 +64,18 @@ public:
 
     void figure_action_goto_wharf();
     void figure_action_common();
+    void figure_action_combat();
+    void figure_action_repair();
+    void figure_action_move_to_tile();
+
+    figure_id find_combat_target(int max_distance);
+    void combat_tick_vs_target(figure *target, int max_pursue_distance);
+    void launch_missile_at(figure *target);
+    void ram_target(figure *target);
+    void check_sink();
 
     void move_to_tile(tile2i dest);
     void move_to_wharf(int wharf_building_id, tile2i dock_tile);
 };
 ANK_CONFIG_STRUCT(figure_warship::order_t, id, text)
-ANK_CONFIG_STRUCT(figure_warship::static_params, orders_info)
+ANK_CONFIG_STRUCT(figure_warship::static_params, orders_info, missile_attack_value, missile_delay)

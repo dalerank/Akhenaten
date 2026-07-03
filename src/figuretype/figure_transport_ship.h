@@ -17,7 +17,17 @@ public:
     figure_transport_ship(figure *f) : figure_impl(f) {}
 
     virtual figure_transport_ship *dcast_transport_ship() override { return this; }
-    
+
+    struct runtime_data_t {
+        int8_t formation_id;
+        int8_t phase;
+        int16_t landing_x;
+        int16_t landing_y;
+        int16_t disembark_x;
+        int16_t disembark_y;
+        int16_t embark_ticks;
+    } FIGURE_RUNTIME_DATA_T;
+
     virtual void on_create() override;
     virtual void on_destroy() override;
     virtual void before_poof() override;
@@ -27,4 +37,10 @@ public:
     virtual sound_key phrase_key() const override;
     virtual figure_sound_t get_sound_reaction(xstring key) const override { return {}; }
     virtual void update_animation() override;
+
+    bool has_troops() const;
+    int transported_formation() const;
+    bool embark_formation(int formation_id);
+    void sail_to_landing(tile2i water_tile);
+    void disembark_troops();
 };

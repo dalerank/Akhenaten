@@ -1311,7 +1311,7 @@ void building_stepped_pyramid::on_place(int orientation, int variant) {
                 // Block is interior (filler)
                 part_type = pi_params.filler_type;
             }
-            
+
             parts.push_back({part_type, {tile_x, tile_y}, nullptr});
         }
     }

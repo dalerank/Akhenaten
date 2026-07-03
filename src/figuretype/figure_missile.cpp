@@ -7,6 +7,7 @@
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
 #include "figuretype/figure_enemy_archer.h"
+#include "figuretype/figure_war_ship.h"
 #include "game/game_events.h"
 #include "js/js_game.h"
 
@@ -32,8 +33,15 @@ figure_missile* figure_missile::create(figure_id fid, tile2i src, tile2i dst, e_
 
 void figure_missile::on_create() {
     auto &d = runtime_data();
-    auto shooter = figure_get<figure_enemy_archer>(d.shooter_id);
-    d.missile_attack_value = (shooter ? shooter->missile_attack_value() : 10);
+    int attack = 10;
+    if (figure *shooter = figure_get(d.shooter_id)) {
+        if (auto archer = smart_cast<figure_enemy_archer>(shooter)) {
+            attack = archer->missile_attack_value();
+        } else if (auto warship = smart_cast<figure_warship>(shooter)) {
+            attack = warship->missile_attack_value();
+        }
+    }
+    d.missile_attack_value = attack;
 }
 
 void figure_missile::figure_before_action() {
