@@ -228,7 +228,7 @@ void figure_transport_ship::before_poof() {
 void figure_transport_ship::figure_action() {
     building *b = home();
     building_transport_wharf *wharf = b->dcast_transport_wharf();
-    
+
     if (!wharf) {
         if (action_state() != ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF || base.destination_building_id == 0) {
             water_dest result = map_water_get_closest_working_transport_wharf(base);
@@ -249,7 +249,7 @@ void figure_transport_ship::figure_action() {
             poof();
         }
         return;
-    } 
+    }
 
     if (wharf->num_workers() == 0 && action_state() != ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF) {
         set_destination(&wharf->base);
@@ -360,23 +360,23 @@ void figure_transport_ship::kill() {
 
 sound_key figure_transport_ship::phrase_key() const {
     svector<sound_key, 4> keys;
-    
+
     if (g_city.figures.enemies > 0) {
         keys.push_back("transport_enemy_is_here");
     }
-    
+
     if (action_state() == ACTION_213_TRANSPORT_SHIP_MOORED) {
         keys.push_back("transport_were_prepared");
     }
-    
+
     if (action_state() == ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF ||
         action_state() == ACTION_211_TRANSPORT_SHIP_CREATED ||
         action_state() == ACTION_215_TRANSPORT_SHIP_LEAVING) {
         keys.push_back("transport_must_protect_our_ship");
     }
-    
+
     keys.push_back("transport_ready_if_need_arises");
-    
+
     int index = rand() % keys.size();
     return keys[index];
 }
