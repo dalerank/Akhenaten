@@ -1312,6 +1312,15 @@ void build_planner::draw_ghost_overlay(painter &ctx, int image_id, vec2i pixel) 
     command.location = SOURCE_LOCATION;
 }
 
+void build_planner::draw_from_below(painter &ctx, int image_id, vec2i pixel, color color_mask) {
+    auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_from_below);
+    command.image_id = image_id;
+    command.pixel = pixel;
+    command.mask = color_mask;
+    command.scale = 1.f;
+    command.location = SOURCE_LOCATION;
+}
+
 void build_planner::draw_overlay_tile(painter &ctx, int image_id, vec2i pixel, color color_mask, float scale) {
     auto& command = ImageDraw::create_command(ctx, render_command_t::ert_generic);
     command.image_id = image_id;

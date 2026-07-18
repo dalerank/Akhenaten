@@ -59,6 +59,7 @@ building_meadow_farm_tile_offsets = [
 
     build_menu_text : "Grain Meadow Farm"
     info_sound : "Wavs/farm1.wav"
+    sound_channel : SOUND_CHANNEL_CITY_CHICKFARM
 
     building_size : 3
     month_harvest: [MONTH_JANUARY, MONTH_MAY]
@@ -111,6 +112,7 @@ building_meadow_farm_tile_offsets = [
     damage_proof : true
     meta { help_id:90, text_id:112 }
     info_sound : "Wavs/farm1.wav"
+    sound_channel : SOUND_CHANNEL_CITY_CHICKFARM
     progress_max: 2000
     labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
 
@@ -152,6 +154,7 @@ building_meadow_farm_tile_offsets = [
 
     build_menu_text : "Chickpeas Meadow Farm"
     info_sound : "Wavs/chickfarm.wav"
+    sound_channel : SOUND_CHANNEL_CITY_CHICKFARM
 
     building_size : 3
     month_harvest: [MONTH_APRIL]
@@ -199,6 +202,7 @@ building_meadow_farm_tile_offsets = [
     damage_proof : true
     meta { help_id:90, text_id:182 }
     info_sound : "Wavs/chickfarm.wav"
+    sound_channel : SOUND_CHANNEL_CITY_CHICKFARM
     progress_max: 2000
     labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
     needs {
@@ -239,6 +243,7 @@ building_meadow_farm_tile_offsets = [
 
     build_menu_text : "Lettuce Meadow Farm"
     info_sound : "Wavs/lettucefarm.wav"
+    sound_channel : SOUND_CHANNEL_CITY_CHICKFARM
 
     building_size : 3
     month_harvest: [MONTH_APRIL]
@@ -295,6 +300,7 @@ building_meadow_farm_tile_offsets = [
     damage_proof : true
     meta { help_id:91, text_id:113 }
     info_sound : "Wavs/lettucefarm.wav"
+    sound_channel : SOUND_CHANNEL_CITY_CHICKFARM
     progress_max: 2000
     labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
     needs {
@@ -330,6 +336,7 @@ building_meadow_farm_tile_offsets = [
 
     build_menu_text : "Pomegranates Meadow Farm"
     info_sound : "Wavs/pomfarm.wav"
+    sound_channel : SOUND_CHANNEL_CITY_CHICKFARM
 
     building_size : 3
     month_harvest: [MONTH_JUNE, MONTH_NOVEMBER]
@@ -387,6 +394,7 @@ building_meadow_farm_tile_offsets = [
     damage_proof : true
     meta { help_id:91, text_id:114 }
     info_sound : "Wavs/pomfarm.wav"
+    sound_channel : SOUND_CHANNEL_CITY_CHICKFARM
     progress_max: 2000
     labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
     needs {
@@ -421,6 +429,7 @@ building_meadow_farm_tile_offsets = [
 
     build_menu_text : "Barley Meadow Farm"
     info_sound : "Wavs/barleyfarm.wav"
+    sound_channel : SOUND_CHANNEL_CITY_CHICKFARM
 
     building_size : 3
     month_harvest: [MONTH_FEBRUARY, MONTH_AUGUST]
@@ -472,6 +481,7 @@ building_meadow_farm_tile_offsets = [
     damage_proof : true
     meta { help_id:89, text_id:181 }
     info_sound : "Wavs/barleyfarm.wav"
+    sound_channel : SOUND_CHANNEL_CITY_CHICKFARM
     progress_max: 2000
     labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
     needs {
@@ -517,6 +527,7 @@ building_meadow_farm_tile_offsets = [
 
     build_menu_text : "Flax Meadow Farm"
     info_sound : "Wavs/flaxfarm.wav"
+    sound_channel : SOUND_CHANNEL_CITY_CHICKFARM
 
     building_size : 3
     month_harvest: [MONTH_DECEMBER]
@@ -563,6 +574,7 @@ building_meadow_farm_tile_offsets = [
     month_harvest: [MONTH_DECEMBER]
     meta { help_id: 90, text_id: 115 }
     info_sound : "Wavs/flaxfarm.wav"
+    sound_channel : SOUND_CHANNEL_CITY_CHICKFARM
     progress_max: 2000
     labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
     needs {
@@ -606,6 +618,7 @@ building_meadow_farm_tile_offsets = [
 
     build_menu_text : "Henna Meadow Farm"
     info_sound : "Wavs/farm2.wav"
+    sound_channel : SOUND_CHANNEL_CITY_CHICKFARM
 
     building_size : 3
     month_harvest: [MONTH_DECEMBER]
@@ -652,6 +665,7 @@ building_meadow_farm_tile_offsets = [
     month_harvest[MONTH_DECEMBER]
     meta { help_id:90, text_id:306 }
     info_sound : "Wavs/farm2.wav"
+    sound_channel : SOUND_CHANNEL_CITY_CHICKFARM
     progress_max: 2000
     labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
     needs {
@@ -690,6 +704,7 @@ building_meadow_farm_figs {
 
   build_menu_text : "Figs Meadow Farm"
   info_sound : "Wavs/figs_farm.wav"
+    sound_channel : SOUND_CHANNEL_CITY_CHICKFARM
 
   building_size : 3
   month_harvest: [MONTH_SEPTEMBER]
@@ -741,6 +756,7 @@ building_farm_figs {
   damage_proof : true
   meta { help_id:90, text_id:183 }
   info_sound : "Wavs/figs_farm.wav"
+    sound_channel : SOUND_CHANNEL_CITY_CHICKFARM
   progress_max: 2000
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
   needs {
@@ -809,6 +825,32 @@ function building_farm_draw_partially_blocked(tiles) {
   }
 }
 
+function building_farm_get_image(type, tile) {
+  var params = city.get_building_params_by_type(type)
+  if (terrain.is(tile, TERRAIN_FLOODPLAIN)) {
+    var base = params.first_img("farmland")
+    var fert = __fertility_for_farm_at_tile(tile.x, tile.y)
+    var fertility_index = Math.min(7, Math.max(0, Math.floor(fert / 12)))
+    return base + fertility_index
+  }
+  return params.first_img("farm_house")
+}
+
+function building_farm_draw_crops(type, progress, tile, point) {
+  var params = city.get_building_params_by_type(type)
+  var image_crops = params.first_img("crops")
+  var is_floodplain = terrain.is(tile, TERRAIN_FLOODPLAIN)
+  var offsets = is_floodplain ? building_floodplain_farm_tile_offsets : building_meadow_farm_tile_offsets
+  var step = is_floodplain ? 200 : 400
+  for (var i = 0; i < offsets.length; i++) {
+    var growth = Math.min(5, Math.max(0, Math.floor((progress - i * step) / 100)))
+    city.planner.draw_from_below(
+      { x: point.x + offsets[i][0], y: point.y + offsets[i][1] },
+      image_crops + growth
+    )
+  }
+}
+
 function building_farm_ghost_preview(ev) {
   var params = city.get_building_params_by_type(city.planner.build_type)
   var check = building_farm_footprint_check(ev.end, params.building_size)
@@ -818,9 +860,9 @@ function building_farm_ghost_preview(ev) {
   }
 
   var ghost_pixel = { x: ev.pixel.x - 60, y: ev.pixel.y + 30 }
-  var image_id = __farm_get_image(city.planner.build_type, ev.end)
+  var image_id = building_farm_get_image(city.planner.build_type, ev.end)
   city.planner.draw_ghost(ghost_pixel, image_id)
-  __farm_draw_crops(city.planner.build_type, 0, ev.end, ghost_pixel, COLOR_MASK_GREEN)
+  building_farm_draw_crops(city.planner.build_type, 0, ev.end, ghost_pixel)
 }
 
 function building_farm_finalize_check(ev) {

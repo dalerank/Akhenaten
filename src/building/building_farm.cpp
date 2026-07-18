@@ -208,29 +208,6 @@ void building_farm::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, col
     ctx.img_sprite(base.anim.start_frame() + base.anim.current_frame(), pos, mask);
 }
 
-e_sound_channel_city building_farm::sound_channel() const {
-    switch (type()) {
-    case BUILDING_CHICKPEAS_FARM:
-    case BUILDING_BARLEY_FARM:
-    case BUILDING_FLAX_FARM:
-    case BUILDING_GRAIN_FARM:
-    case BUILDING_FIGS_FARM:
-    case BUILDING_BARLEY_MEADOW_FARM:
-    case BUILDING_FLAX_MEADOW_FARM:
-    case BUILDING_GRAIN_MEADOW_FARM:
-    case BUILDING_LETTUCE_MEADOW_FARM:
-    case BUILDING_POMEGRANATES_MEADOW_FARM:
-    case BUILDING_CHICKPEAS_MEADOW_FARM:
-    case BUILDING_HENNA_MEADOW_FARM:
-    case BUILDING_FIGS_MEADOW_FARM:
-        return SOUND_CHANNEL_CITY_CHICKFARM;
-
-    default:
-        verify_no_crash(false);
-    }
-    return SOUND_CHANNEL_CITY_CHICKFARM;
-}
-
 void building_farm::update_count() const {
     building_impl::update_count();
 
@@ -258,7 +235,7 @@ void building_farm::update_count() const {
 
 void building_farm::update_month() {
     building_impl::update_month();
-    
+
     figure_id fid = runtime_data().worker_id;
     auto worker = figure_get(fid)->dcast_worker();
     if (!worker || !worker->is_destination(&base)) {
@@ -290,7 +267,7 @@ void building_farm::on_undo() {
 
 void building_farm::on_tick(bool refresh) {
     building_impl::on_tick(refresh);
-    
+
     auto &d = runtime_data();
     d.is_floodplain = base.is_floodplain_farm();
     d.flood_imminent = (d.is_floodplain && g_floods.state_is(FLOOD_STATE_IMMINENT));
