@@ -59,6 +59,11 @@ C++ smoke checks run first (before JS files): `SDL_strlen`/`strcmp`, `vec2i`, `g
 | `35_floodplain_farm_placement.js` | Grain farm on synthetic floodplain via `test_farm_place` |
 | `36_house_evolve_text_property.js` | House `evolve_text` xstring property roundtrip (write / clear / rewrite) |
 
+Farm **placement** tests cover `can_place` / terrain rules, not ghost paint. When adding
+preview draw coverage, follow JS draw conventions in
+[`src/building/CLAUDE.md`](../src/building/CLAUDE.md) (ghost_preview section) and
+[`src/js/CLAUDE.md`](../src/js/CLAUDE.md).
+
 Shared helpers for city tests and placement live in [`src/scripts/integral_test.js`](../src/scripts/integral_test.js), imported from `modules.js` (always loaded with the game VM, not via `include()` from test files).
 
 ## Writing a test

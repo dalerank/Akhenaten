@@ -54,7 +54,8 @@ create_figure_with_destination(FIGURE_CARTPUSHER, dest_tile, SLOT_CARTPUSHER);
 
 ### Exposing a `building` field to JS
 Prefer the generic property mechanism over hand-written bindings:
-1. Add the field to `ANK_CONFIG_PROPERTY(building, ...)` in `building.h`.
+1. Add the field to `ANK_CONFIG_PROPERTY(building, ...)` in `building.h`
+   (macro must stay at global scope — see `src/core/archive.h` / `src/CLAUDE.md`).
 2. Declare it in `src/scripts/building/prototype.js` as an empty descriptor: `Building.property.my_field = { }`.
 
 An empty `{ }` descriptor is **not** a no-op — it routes through the shared
@@ -65,6 +66,36 @@ Only write a dedicated `__my_getter`/`__my_setter` C++ function + `jsB_propf`
 registration when the value is **computed** and cannot be modelled any other way.
 Don't add custom get/set bindings for a primitive field — add it to
 `ANK_CONFIG_PROPERTY` instead.
+
+### JS `ghost_preview` / placement draw APIs
+
+When moving building placement preview from C++ `preview::ghost_preview` into MuJS
+(`[es=(building_*, ghost_preview)]` in `src/scripts/building/*.js`):
+
+1. **Color masks.** Full masks like `COLOR_MASK_GREEN` (`0xff18ff18`) exceed `INT_MAX`.
+   Passing them through JS as `int` via `js_tointeger` corrupts the value (sprites vanish
+   or look wrong). Until J1 (`uint32` color bindings) is done, keep the mask in C++ —
+   pattern: `city.planner.draw_ghost` / `draw_from_below` / `draw_ghost_overlay`
+   (`src/js/city_planner_js.cpp`). Prefer `_30` masks only if you must pass color from JS
+   today. Do not add new `int color_mask` parameters from JS for full `COLOR_MASK_*`.
+
+2. **No thin `__foo_draw_*` wrappers.** Do not bind a one-liner that only calls a single
+   C++ helper (e.g. former `__farm_draw_crops` → `building_farm::draw_crops`). Port the
+   algorithm to JS (offsets, image ids, loops) and draw with shared planner primitives:
+   `draw_ghost`, `draw_from_below`, `draw_flat_tile`, `draw_ghost_overlay`, etc.
+   (`src/scripts/city/planner.js`). Add a new C++ primitive only when no existing draw
+   command type fits (`ert_from_below`, `ert_drawtile_full`, …).
+
+3. **Draw order.** Match the old C++ sequence: first a parent command (`draw_ghost` /
+   `create_command`), then overlays as subcommands (`draw_from_below` /
+   `draw_ghost_overlay` use `create_subcommand`). Wrong order breaks attachment to the
+   ghost tile. Reference: farm preview in `src/scripts/building/farm.js`
+   (`building_farm_ghost_preview`).
+
+4. **Logic vs paint.** Prefer computing image ids / blocked tiles in JS
+   (`params.first_img`, terrain helpers), then paint. Keep C++ copies only where placed
+   buildings still need them (e.g. `building_farm::draw_crops` for ornaments) until a
+   dedicated unify pass (FP1).
 
 For per-building quantities that behave like an inventory count but aren't a real
 traded resource (e.g. brewery water), prefer a **pseudo-resource**: add an id past

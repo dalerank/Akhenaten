@@ -154,6 +154,8 @@ void run_bstring_cat_unit_tests() {
 
 } // namespace
 
+// ANK_CONFIG_PROPERTY must be at global scope: it opens namespace archive_helper and
+// specializes ::archive_helper::get/set (not a nested anonymous one). See archive.h.
 struct archive_property_roundtrip_t {
     xstring evolve_text;
     int count = 0;

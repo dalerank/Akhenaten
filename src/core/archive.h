@@ -833,6 +833,9 @@ template<typename Type> inline void call_init_if_exists_impl(Type &js_t, std::tr
 template<typename Type> inline void call_init_if_exists_impl(Type &js_t, std::false_type) { /*nothing to do, class has no load function*/ }
 template<typename Type> inline void call_init_if_exists(Type &js_t) { call_init_if_exists_impl(js_t, std::bool_constant<class_has_init_function_v<Type>>{}); }
 
+// ANK_CONFIG_STRUCT / ANK_CONFIG_PROPERTY open `namespace archive_helper` and specialize
+// ::archive_helper::{reader,get,set,...}. Use them only at global (or named) namespace scope —
+// never inside an anonymous namespace (MSVC: C2988 / nested archive_helper).
 #define ANK_CONFIG_STRUCT(Type, ...)                                                              \
 namespace archive_helper {                                                                        \
     template<> constexpr bool class_has_archive_reader<Type>() { return true; }                   \
@@ -843,6 +846,7 @@ namespace archive_helper {                                                      
     }                                                                                             \
 }
 
+// See note on ANK_CONFIG_STRUCT above (global scope only).
 #define ANK_CONFIG_PROPERTY(Type, ...)                                                            \
 namespace archive_helper {                                                                        \
     template<> inline std::optional<bvariant> get<Type>(const Type &data, const xstring &name, bool c) { \

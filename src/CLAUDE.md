@@ -68,7 +68,10 @@ g_city_events.post(event_finance_changed{amount});
 Subscribers register callbacks; no direct cross-module coupling.
 
 ### Config/content loading
-`ANK_CONFIG_PROPERTY(struct, field1, field2...)` exposes struct fields for JSON serialization.
+`ANK_CONFIG_PROPERTY(struct, field1, field2...)` exposes struct fields for JSON serialization
+and JS property get/set via `archive_helper`. Same for `ANK_CONFIG_STRUCT` (archive readers).
+Both macros must be used at **global scope** (they open `namespace archive_helper`); do not
+place them inside an anonymous namespace — MSVC fails with C2988 / nested `archive_helper`.
 Content loaded from SGX/SGX archives at startup.
 
 ## Data Flow Summary
