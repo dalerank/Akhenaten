@@ -187,6 +187,7 @@ localization_ru = [
     { key: "#immigrant_im_new_here", text: "Я здесь новенький. Интересно, что город предложит такому человеку, как я." }
     { key: "#immigrant_heard_there_is_a_job_here", text: "Я слышал, здесь есть работа для любого, кто её хочет." }
     { key: "#immigrant_city_has_plenty_of_food", text: "Люди говорят, что в этом городе много еды на всех." }
+    { key: "#immigration_people_wont_come", text: "Люди не хотят приходить в ваш город" }
 
     { key: "#emigrant_no_job_in_city", text: "Я не могу найти здесь работу. Я буду искать в другом месте." }
     { key: "#emigrant_no_food_in_city", text: "Здесь недостаточно еды, чтобы мне есть. Я уезжаю из этой пустыни!" }

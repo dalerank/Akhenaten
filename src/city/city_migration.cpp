@@ -2,6 +2,7 @@
 
 #include "city/city.h"
 #include "city/city_message.h"
+#include "city/city_warnings.h"
 #include "core/calc.h"
 #include "game/game_events.h"
 #include "js/js_game.h"
@@ -36,7 +37,7 @@ void city_migration_t::update_status() {
     std::pair<int, int> range_percentage_by_unemployments{ -9999, 9999 };
     for (const auto &it : g_migration_unemployment_cap_reasons) {
         range_percentage_by_unemployments.first = std::max(range_percentage_by_unemployments.first, it.second.first);
-        range_percentage_by_unemployments.second = std::min(range_percentage_by_unemployments.second, it.second.first);
+        range_percentage_by_unemployments.second = std::min(range_percentage_by_unemployments.second, it.second.second);
     }
     percentage_by_unemployments = std::clamp(want_percentage_by_unemployments, range_percentage_by_unemployments.first, range_percentage_by_unemployments.second);
 
@@ -59,9 +60,13 @@ void city_migration_t::update_status() {
 
     if (cur_population_cap > 0 && g_city.population.current >= cur_population_cap) {
         percentage = 0;
+        if (!migration_cap && g_city.population.room_in_houses > 0) {
+            events::emit(event_city_warning{ "#immigration_people_wont_come" });
+        }
         migration_cap = true;
         return;
     }
+    migration_cap = false;
 
     // war scares immigrants away
     if (g_city.figures.total_invading_enemies() > 3 && percentage > 0) {
@@ -69,6 +74,7 @@ void city_migration_t::update_status() {
         invading_cap = true;
         return;
     }
+    invading_cap = false;
 
     if (percentage > 0) {
         // immigration
@@ -169,7 +175,10 @@ void city_migration_t::create_migrants() {
 
 void city_migration_t::reset() {
     g_migration_conditions.clear();
+    g_migration_cap_reasons.clear();
     g_migration_unemployment_cap_reasons.clear();
+    migration_cap = false;
+    invading_cap = false;
 }
 
 void city_migration_t::update_conditions() {

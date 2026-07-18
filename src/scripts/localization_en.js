@@ -434,6 +434,7 @@ localization_en = [
   {key: "#unhappiness_low_wages", group:19, id:118}
   {key: "#unhappiness_too_many_slums", group:19, id:119}
   {key: "#immigration_people_coming", group:19, id:120}
+  {key: "#immigration_people_wont_come", text: "People do not want to come to your city"}
   {key: "#immigration_no_housing", group:19, id:121}
   {key: "#immigration_low_wages_deter", group:19, id:122}
   {key: "#immigration_lack_of_jobs", group:19, id:123}
