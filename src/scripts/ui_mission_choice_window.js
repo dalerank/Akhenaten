@@ -3,7 +3,7 @@ log_info("akhenaten: ui mission choice window started")
 [console_command=update_mission_next]
 function console_command_update_mission_next(args) {
     var scenario_id = parseInt((args && args[0]) || "0", 10)
-    game_show_mission_choice(scenario_id)
+    game_show_mission_choice(scenario_id, scenario_id)
 }
 
 function mission_choice_image_tid(img) {
@@ -49,9 +49,12 @@ function game_show_mission_choice(choice_host_id, completed_id) {
     }
 
     var src = get_mission_config(choice_host_id)
-    var choices = mission_get_visible_choices(src, completed_id)
+    var choices = (choice_host_id === completed_id)
+        ? mission_get_visible_choices(src, completed_id)
+        : []
     if (!src || choices.length === 0) {
-        log_info("mission_choice: no choice in config -> load_mission(" + choice_host_id + ",1)")
+        log_info("mission_choice: no active fork for host " + choice_host_id
+            + " (completed " + completed_id + ") -> load_mission(" + choice_host_id + ",1)")
         __game_load_mission(choice_host_id, 1)
         return
     }
