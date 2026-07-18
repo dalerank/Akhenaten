@@ -52,19 +52,22 @@ void building_brewery::update_preproduction() {
 void building_brewery::on_place_checks() {
     building_impl::on_place_checks();
 
-    construction_warnings warnings("#needs_barley");
+    construction_warnings warnings;
 
-    // Check for barley
-    if (city_resource_barley.industry_active() > 0) {
-        // Barley available, skip barley warnings
-    } else if (city_resource_barley.yards_stored() > 0) {
-        // Barley in storage, skip barley warnings
-    } else {
-        const bool is_import_barley = (city_resource_barley.trade_status() == TRADE_STATUS_IMPORT);
+    // Check for barley: prefer local production over import tips
+    const bool has_barley_supply = city_resource_barley.industry_active() > 0
+        || city_resource_barley.yards_stored() > 0;
+    if (!has_barley_supply) {
+        warnings.add("#needs_barley");
 
-        warnings.add_if(!city_resource_barley.can_produce(), "#needs_barley");
-        warnings.add_if(!city_resource_barley.can_import(true), "#setup_trade_route_to_import");
-        warnings.add_if(!is_import_barley, "#overseer_of_commerce_to_import");
+        if (city_resource_barley.can_produce()) {
+            warnings.add("#build_barley_farm");
+        } else if (city_resource_barley.can_import(true)) {
+            warnings.add_if(city_resource_barley.trade_status() != TRADE_STATUS_IMPORT,
+                            "#overseer_of_commerce_to_import");
+        } else if (city_resource_barley.can_import(false)) {
+            warnings.add("#setup_trade_route_to_import");
+        }
     }
 
     // Check for water access if feature is enabled
@@ -73,14 +76,14 @@ void building_brewery::on_place_checks() {
                          map_terrain_exists_tile_in_area_with_type(base.tile, base.size, TERRAIN_FOUNTAIN_RANGE) ||
                          map_terrain_exists_tile_in_radius_with_type(base.tile, base.size, 3, TERRAIN_WATER) ||
                          map_terrain_exists_tile_in_radius_with_type(base.tile, base.size, 3, TERRAIN_FLOODPLAIN);
-        
+
         warnings.add_if(!has_water, "#needs_water_access");
     }
 }
 
 void building_brewery::on_create(int orientation) {
     building_industry::on_create(orientation);
-    
+
     if (!!game_features::gameplay_brewery_requires_water) {
         set_water_stored(0);
     }
@@ -88,7 +91,7 @@ void building_brewery::on_create(int orientation) {
 
 void building_brewery::bind_dynamic(io_buffer *iob, size_t version) {
     building_industry::bind_dynamic(iob, version);
-    
+
     // No additional binding needed
 }
 
