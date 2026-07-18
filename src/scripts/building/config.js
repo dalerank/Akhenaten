@@ -159,35 +159,6 @@ building_carpenters_guild = {
   }
 }
 
-building_dock = {
-  animations : {
-    preview : { pack:PACK_TERRAIN, id:49 },
-    base : { pack:PACK_TERRAIN, id:49 },
-    work_n : { pos:[135, -7], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:8 },
-    work_w : { pos:[100, -7], pack:PACK_SPR_AMBIENT, id:55, offset:1, max_frames:25, duration:8 },
-    work_s : { pos:[55, 7], pack:PACK_SPR_AMBIENT, id:55, offset:0, max_frames:25, duration:4 },
-    work_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:2, max_frames:25, duration:4 },
-  }
-  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
-  planner_update_rule : {
-    relative_orientation: true
-  }
-  min_houses_coverage : 50
-  building_size : 3
-  meta : { help_id:82, text_id:101 }
-  info_sound : "Wavs/DOCK1.WAV"
-  needs : {
-    water_access : true
-    shoreline : true
-  }
-  cost: [ 20, 40, 70, 100, 150 ]
-  desirability : { value:[-12], step:[2], step_size:[2], range: [6] }
-  laborers:[12], fire_risk:[4], damage_risk: [1]
-  flags {
-    is_industry: true
-  }
-}
-
 building_military_academy = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:173 },

@@ -26,15 +26,11 @@ public:
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_place(int orientation, int variant) override;
-    virtual void on_destroy() override;
     virtual void on_tick(bool refresh_only) override;
-    virtual void update_animation() override;
     virtual void update_count() const override;
     virtual void update_month() override;
     virtual void update_map_orientation(int orientation) override;
     virtual void spawn_figure() override;
-    virtual void update_graphic() override;
-    virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_DOCK; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void highlight_waypoints() override;
@@ -52,7 +48,7 @@ public:
     tile2i reid_tile() const;
 };
 
-ANK_CONFIG_PROPERTY(building_dock::runtime_data_t, has_fish)
+ANK_CONFIG_PROPERTY(building_dock::runtime_data_t, has_fish, num_ships)
 
 building_dest map_get_free_destination_dock(int ship_id);
 building_dest map_get_queue_destination_dock(int ship_id);

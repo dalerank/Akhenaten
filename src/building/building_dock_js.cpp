@@ -31,3 +31,9 @@ bool __dock_has_trade_ship(int bid) {
     return b && b->runtime_data().trade_ship != 0;
 }
 ANK_FUNCTION_1(__dock_has_trade_ship)
+
+int __dock_count_idle_dockers(int bid) {
+    auto b = building_get(bid)->dcast_dock();
+    return b ? b->count_idle_dockers() : 0;
+}
+ANK_FUNCTION_1(__dock_count_idle_dockers)

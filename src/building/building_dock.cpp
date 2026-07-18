@@ -41,19 +41,6 @@ void building_dock::on_place(int orientation, int variant) {
     building_impl::on_place(orientation, variant);
 }
 
-void building_dock::on_destroy() {
-}
-
-void building_dock::update_animation() {
-    if (runtime_data().num_ships > 0) {
-        base.play_animation = true;
-    } else {
-        map_sprite_animation_set(tile(), 1);
-        base.play_animation = false;
-    }
-    es(__func__);
-}
-
 void building_dock::update_count() const {
     const bool is_active = num_workers() > 0 && base.has_open_water_access;
     g_city.buildings.track_building(base, is_active);
@@ -137,24 +124,6 @@ void building_dock::on_tick(bool refresh_only) {
         d.docker_anim_frame++;
         d.docker_anim_frame %= (anim_wharf.max_frames * anim_wharf.frame_duration);
     }
-}
-
-void building_dock::update_graphic() {
-    int num_idle_dockers = count_idle_dockers();
-    if (num_idle_dockers > 0) {
-        int image_dock = map_image_at(tile());
-        xstring animkey;
-        int image_dock_base = base_img();
-
-        if (image_dock == image_dock_base) animkey = animkeys().work_n;
-        else if (image_dock == image_dock_base + 1) animkey = animkeys().work_w;
-        else if (image_dock == image_dock_base + 2) animkey = animkeys().work_s;
-        else animkey = animkeys().work_e;
-
-        set_animation(animkey);
-    }
-
-    building_impl::update_graphic();
 }
 
 bool building_dock::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i t, color color_mask) {

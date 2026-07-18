@@ -147,7 +147,7 @@ int building_floodplain_farm::preview::finalize_check(build_planner &p, tile2i t
     int orientation_index = g_camera.orientation / 2;
     const auto &params = building_static_params::get(p.build_type);
     int num_tiles = (params.building_size * params.building_size);
-    
+
     int meadow_tiles = 0;
     int required_meadow_tiles = 4;
     int blocked_tiles = 0;
@@ -155,16 +155,16 @@ int building_floodplain_farm::preview::finalize_check(build_planner &p, tile2i t
         const int offset = build_planner::tile_grid_offset(orientation_index, i);
         tile2i check_tile = tile.shifted(offset);
         bool tile_blocked = (map_building_at(check_tile) != 0) || map_has_figure_at(check_tile);
-    
+
         blocked_tiles += (tile_blocked ? 1 : 0);
         meadow_tiles += (map_terrain_is(check_tile, TERRAIN_MEADOW | TERRAIN_FLOODPLAIN) ? 1 : 0);
     }
-    
+
     if (blocked_tiles > 0) {
         p.set_warning("Some tiles blocked");
         return CAN_NOT_PLACE;
     }
-    
+
     if (meadow_tiles < required_meadow_tiles) {
         p.set_warning("Need more meadow tiles");
         return CAN_NOT_PLACE;

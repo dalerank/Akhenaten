@@ -4,6 +4,7 @@
 #include "grid/point.h"
 #include "grid/grid.h"
 #include "grid/water.h"
+#include "grid/sprite.h"
 #include "grid/routing/routing.h"
 #include "building/building_irrigation_ditch.h"
 #include "graphics/image.h"
@@ -106,3 +107,8 @@ int __map_routing_distance_at_grid_offset(int grid_offset) {
     return map_routing_distance(grid_offset);
 }
 ANK_FUNCTION_1(__map_routing_distance_at_grid_offset);
+
+void __map_sprite_animation_set(tile2i tile, int value) {
+    map_sprite_animation_set(tile, value);
+}
+ANK_FUNCTION_2(__map_sprite_animation_set);
