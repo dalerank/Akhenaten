@@ -9,13 +9,6 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_cattle_ranch);
 
-void building_cattle_ranch::update_animation() {
-    building_industry::update_animation();
-    if (base.stored_amount(RESOURCE_STRAW) < 100 || worker_percentage() < 50) {
-        base.play_animation = false;
-    }
-}
-
 bool building_cattle_ranch::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     draw_normal_anim(ctx, point, tile, color_mask);
 
