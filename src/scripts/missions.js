@@ -61,7 +61,10 @@ function get_mission_config(scenario_id) {
     }
 }
 
-// Returns choice entries visible after completing completed_id (optional after filter).
+function mission_is_playable(scenario_id) {
+    return __game_mission_is_valid(scenario_id) && get_mission_config(scenario_id) !== undefined
+}
+
 function mission_get_visible_choices(mission_config, completed_id) {
     if (!mission_config || !mission_config.choice || mission_config.choice.length === 0) {
         return []
@@ -75,6 +78,10 @@ function mission_get_visible_choices(mission_config, completed_id) {
             continue
         }
         if (pt.after !== undefined && pt.after !== null && pt.after !== completed_id) {
+            continue
+        }
+        if (!mission_is_playable(pt.id)) {
+            log_info("mission_choice: dropping choice target " + pt.id + " — not a scripted/playable mission yet (B5)")
             continue
         }
         if (seen[pt.id]) {
@@ -101,10 +108,10 @@ function mission_end_compute_next_scenario_id(completed_id) {
     if (!next_id) {
         next_id = completed_id + 1
     }
-    if (next_id < 0 || !__game_mission_is_valid(next_id)) {
+    if (next_id < 0 || !mission_is_playable(next_id)) {
         log_info("mission_end_compute_next: completed=" + completed_id
             + " scmode=" + scenario.scmode + " next_id=" + next_id
-            + " not a valid campaign step -> end of game")
+            + " not a scripted/playable campaign step -> end of game")
         return -1
     }
     log_info("mission_end_compute_next: completed=" + completed_id + " scmode=" + scenario.scmode + " -> next_scenario_id=" + next_id)

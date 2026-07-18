@@ -42,7 +42,8 @@ function game_show_mission_choice(choice_host_id, completed_id) {
         completed_id = -1
     }
 
-    if (!__game_mission_is_valid(choice_host_id)) {
+    if (!mission_is_playable(choice_host_id)) {
+        log_info("mission_choice: host " + choice_host_id + " not scripted/playable -> main menu (B5)")
         emit event_show_main_menu{ play_intro: true }
         return
     }
