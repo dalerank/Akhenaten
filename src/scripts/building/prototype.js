@@ -28,6 +28,7 @@ Building.property.has_road_access = { }
 Building.property.has_water_access = { }
 Building.property.spawned_worker_this_month = { }
 Building.property.play_animation = { }
+Building.property.destroy_reason = { }
 Building.property.num_workers = { }
 Building.property.max_workers = { }
 Building.property.type = { }

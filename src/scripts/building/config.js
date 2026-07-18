@@ -693,35 +693,6 @@ building_irrigation_ditch {
   }
 }
 
-building_clay_pit {
-  animations {
-    preview { pack:PACK_GENERAL, id:40 }
-    base { pack:PACK_GENERAL, id:40 }
-    work { pos[18, -20], pack:PACK_GENERAL, id:40, offset:1, max_frames:23, duration:2 }
-  }
-  output {
-    resource : RESOURCE_CLAY
-  }
-  progress_max : 200,
-  building_size : 2,
-  production_rate : 100,
-  meta { help_id:92, text_id:121 }
-  info_sound : "Wavs/clay.wav"
-  needs {
-    nearby_water : true
-  }
-  flags {
-    is_extractor: true
-    is_industry: true
-  }
-  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
-  cost[ 8, 15, 30, 50, 100 ]
-  desirability { value[-3], step[1], step_size[1], range[2] }
-  laborers[8]
-  fire_risk[0]
-  damage_risk[1]
-}
-
 building_mine_copper {
   animations {
     preview { pack:PACK_GENERAL, id:196 },

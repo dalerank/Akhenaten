@@ -80,15 +80,6 @@ void building_clay_pit::update_production() {
     }
 }
 
-void building_clay_pit::update_graphic() {
-    if (base.destroy_reason == e_destroy_flooded) {
-        set_animation("flooded");
-        return;
-    }
-
-    building_industry::update_graphic();
-}
-
 bool building_clay_pit::is_deletable() const {
     if (base.destroy_reason == e_destroy_flooded) {
         return false;

@@ -53,7 +53,7 @@
 declare_console_command_p(destroytype) {
     std::string args; is >> args;
     int type = atoi(args.empty() ? (pcstr)"0" : args.c_str());
-    
+
     buildings_valid_do([] (building &b) {
         b.destroy_by_collapse();
     }, (e_building_type)type);
@@ -61,6 +61,9 @@ declare_console_command_p(destroytype) {
 
 using e_building_state_tokens_t = token_holder<e_building_state, BUILDING_STATE_UNUSED, BUILDING_STATE_COUNT>;
 const e_building_state_tokens_t e_building_state_tokens;
+
+using e_destroy_reason_tokens_t = token_holder<e_destroy_reason, e_destroy_simple, e_destroy_reason_max>;
+const e_destroy_reason_tokens_t ANK_CONFIG_ENUM(e_destroy_reason_tokens);
 
 using e_building_type_tokens_t = token_holder<e_building_type, BUILDING_NONE, BUILDING_MAX>;
 const e_building_type_tokens_t ANK_CONFIG_ENUM(e_building_type_tokens);

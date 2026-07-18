@@ -68,6 +68,7 @@ enum e_destroy_reason : uint8_t {
     e_destroy_collapse = 1,
     e_destroy_flooded = 2,
     e_destroy_enemy = 3,
+    e_destroy_reason_max
 };
 
 enum e_building_flag : uint8_t {
@@ -449,7 +450,7 @@ private:
 ANK_CONFIG_PROPERTY(building, has_road_access, num_workers, max_workers, type, orientation,
     prev_part_building_id, collapse_risk, fire_risk, malaria_risk, structure_damage, spawned_worker_this_month,
     current_desirability, has_water_access, has_well_access, curse_days_left,
-    common_health, disease_days, houses_covered, show_on_problem_overlay, play_animation)
+    common_health, disease_days, houses_covered, show_on_problem_overlay, play_animation, destroy_reason)
 
 #define BUILDING_METAINFO(type, clsid, base_class)                                                      \
     clsid(building &b) : base_class(b) {}                                                               \
