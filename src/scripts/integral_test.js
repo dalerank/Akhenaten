@@ -159,6 +159,61 @@ function test_farm_place(type, terrain_mask) {
     return test_building_place(type, place_x, place_y)
 }
 
+function test_log_figure_created(fid) {
+    if (!fid) {
+        return
+    }
+    var type = __figure_get_type(fid)
+    var tile = __figure_get_tile(fid)
+    if (!type || !tile) {
+        return
+    }
+    __log_marker('test_figure_created:type_' + type + ':' + fid + ':' + tile.x + ',' + tile.y)
+}
+
+function test_figure_create(type, x, y) {
+    var place_x = (typeof x === 'number') ? x : -1
+    var place_y = (typeof y === 'number') ? y : -1
+    var fid = __test_figure_create(type, place_x, place_y)
+    if (!fid) {
+        __log_info_native('[test_figure] create failed for type ' + type)
+        return 0
+    }
+    test_log_figure_created(fid)
+    return fid
+}
+
+function test_assert_figure_created(fid, type, tag) {
+    if (!fid) {
+        __log_info_native('[' + tag + '] no figure id')
+        return false
+    }
+
+    if (!__figure_is_valid(fid)) {
+        __log_info_native('[' + tag + '] figure ' + fid + ' not valid')
+        return false
+    }
+
+    if (__figure_get_type(fid) != type) {
+        __log_info_native('[' + tag + '] wrong figure type for id ' + fid)
+        return false
+    }
+
+    var tile = __figure_get_tile(fid)
+    if (!tile || !__map_has_figure_at(tile)) {
+        __log_info_native('[' + tag + '] map_has_figure_at mismatch')
+        return false
+    }
+
+    var marker = '[test-marker] test_figure_created:type_' + type + ':' + fid + ':'
+    if (!__test_find_inlog(marker)) {
+        __log_info_native('[' + tag + '] missing marker: ' + marker)
+        return false
+    }
+
+    return true
+}
+
 function test_assert_building_placed(bid, type, tag) {
     if (!bid) {
         __log_info_native('[' + tag + '] no building id')

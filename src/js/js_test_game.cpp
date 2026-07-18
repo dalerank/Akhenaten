@@ -16,6 +16,8 @@
 
 #include "building/building.h"
 #include "building/building_static_params.h"
+#include "figure/figure.h"
+#include "figure/figure_impl.h"
 #include "graphics/color.h"
 #include "city/city.h"
 #include "city/city_buildings.h"
@@ -238,6 +240,60 @@ color __test_color_roundtrip(color c) {
     return c;
 }
 ANK_FUNCTION_1(__test_color_roundtrip);
+
+static int __test_figure_create(int type, int x, int y) {
+    if (type <= FIGURE_NONE || type >= FIGURE_MAX) {
+        return 0;
+    }
+
+    tile2i place = (x < 0 || y < 0) ? tile2i::invalid : tile2i(x, y);
+    if (!place.valid()) {
+        place.set(g_scenario.map.width / 2, g_scenario.map.height / 2);
+    }
+
+    figure *f = figure_create((e_figure_type)type, place, DIR_0_TOP_RIGHT);
+    if (!f || f->id <= 0 || !f->is_alive()) {
+        return 0;
+    }
+
+    return f->id;
+}
+ANK_FUNCTION_3(__test_figure_create);
+
+static void __test_figure_set_action(int fid, int action) {
+    figure *f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return;
+    }
+    f->advance_action((short)action);
+}
+ANK_FUNCTION_2(__test_figure_set_action);
+
+static void __test_figure_update_animation(int fid) {
+    figure *f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return;
+    }
+    figure_impl *impl = f->dcast();
+    if (impl) {
+        impl->update_animation();
+    }
+}
+ANK_FUNCTION_1(__test_figure_update_animation);
+
+bool __test_enemy_figure_registered(int type) {
+    tile2i tile(g_scenario.map.width / 2, g_scenario.map.height / 2);
+    figure *f = figure_create((e_figure_type)type, tile, 0);
+    if (!f) {
+        return false;
+    }
+
+    figure_impl *impl = f->dcast();
+    bool is_enemy = impl && impl->dcast_enemy();
+    f->poof();
+    return is_enemy;
+}
+ANK_FUNCTION_1(__test_enemy_figure_registered);
 
 void __test_show_tile_info(int bid) {
     building *b = building_get(bid);

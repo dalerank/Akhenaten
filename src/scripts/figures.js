@@ -389,11 +389,12 @@ figure_birds_hunter {
 figure_hippo = {
   animations : {
 		walk : { pack:PACK_SPR_AMBIENT, id:22, max_frames:12 }
+		idle : { pack:PACK_SPR_AMBIENT, id:22, max_frames:1 }
 		death : { pack:PACK_SPR_AMBIENT, id:23, max_frames:8, duration:3, loop:false }
 		attack : { pack:PACK_SPR_AMBIENT, id:24, max_frames:7 }
-		sweem : { pack:PACK_SPR_AMBIENT, id:25, max_frames:8 }
-		sweem_attack : { pack:PACK_SPR_AMBIENT, id:26, max_frames:8 }
-		sweem_idle : { pack:PACK_SPR_AMBIENT, id:27, max_frames:8 }
+		swim : { pack:PACK_SPR_AMBIENT, id:25, max_frames:8 }
+		swim_attack : { pack:PACK_SPR_AMBIENT, id:26, max_frames:8 }
+		swim_idle : { pack:PACK_SPR_AMBIENT, id:27, max_frames:8 }
 		eating : { pack:PACK_SPR_AMBIENT, id:28, max_frames:8 }
 		dance : { pack:PACK_SPR_AMBIENT, id:29, max_frames:8 }
 		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_HIPPO }

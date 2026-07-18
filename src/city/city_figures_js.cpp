@@ -46,3 +46,21 @@ int __figure_get_resource(int fid) {
     return f ? (int)f->get_resource() : (int)RESOURCE_NONE;
 }
 ANK_FUNCTION_1(__figure_get_resource)
+
+tile2i __figure_get_tile(int fid) {
+    if (!fid) {
+        return tile2i::invalid;
+    }
+    figure *f = figure_get(fid);
+    return (f && f->is_valid()) ? f->tile : tile2i::invalid;
+}
+ANK_FUNCTION_1(__figure_get_tile)
+
+xstring __figure_get_anim_key(int fid) {
+    if (!fid) {
+        return {};
+    }
+    figure *f = figure_get(fid);
+    return (f && f->is_valid()) ? f->animctx.key : xstring{};
+}
+ANK_FUNCTION_1(__figure_get_anim_key)

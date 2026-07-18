@@ -60,6 +60,8 @@ C++ smoke checks run first (before JS files): `SDL_strlen`/`strcmp`, `vec2i`, `g
 | `36_house_evolve_text_property.js` | House runtime `{}` property bindings: `evolve_text` xstring roundtrip, `worst_desirability_building_id` int (uint16) roundtrip, and the info-window fill path (`house_determine_*` helpers) without TypeError (H1) |
 | `37_farm_preview_images.js` | Farm preview smoke: crops ≠ 0, get_image meadow/floodplain routing, `draw_from_below` |
 | `38_color_mask_passing.js` | Full `COLOR_MASK_*` (> INT_MAX) survive MuJS→C++ as `color` (uint32): `__test_color_roundtrip` for GREEN/RED/BLUE + `draw_flat_tile` with a full mask without TypeError (J1) |
+| `39_enemy_chariot_registered.js` | Enemy chariot FIGURE_METAINFO registration (`__test_enemy_figure_registered`) |
+| `40_hippo_spawn.js` | Spawn `FIGURE_HIPPO` on land and water; `update_animation` → `walk` / `swim` (#77) |
 
 Farm **placement** tests (34/35) cover `can_place` / terrain rules; **37** covers preview image helpers.
 When adding more preview draw coverage, follow JS draw conventions in
@@ -114,9 +116,14 @@ After each test script loads, the driver calls `js_vm_sync({})` so any top-level
 | `__test_set_treasury(amount)` | undefined | Set treasury deben |
 | `__test_process_events()` | undefined | Drain C++ event queue after `emit` (e.g. `event_city_building_mode`) |
 | `__test_building_create(type, x, y)` | building id | Fast spawn without terrain checks; reuses first building of that type if present; center tile when `x` or `y` is negative |
+| `__test_figure_create(type, x, y)` | figure id | Fast spawn via `figure_create` (no herd/formation); center tile when `x` or `y` is negative |
+| `__test_figure_set_action(fid, action)` | undefined | Set figure `action_state` via `advance_action` |
+| `__test_figure_update_animation(fid)` | undefined | Call `figure_impl::update_animation()` |
+| `__figure_get_anim_key(fid)` | string | Current `animctx.key` (e.g. `walk`, `swim`) |
 | `__test_show_tile_info(bid)` | undefined | Open building info window for `bid` |
 | `__test_color_roundtrip(color)` | number | Echo a `color` (uint32) back through the binding conversion; asserts full `COLOR_MASK_*` survive MuJS→C++ (J1) |
 | `__building_static_building_size(type)` | int | Footprint from static building params |
+| `__figure_get_tile(fid)` | `{x,y}` | Current figure tile (invalid/empty when figure missing) |
 
 ## JS helpers (`integral_test.js`)
 
@@ -134,6 +141,9 @@ Loaded via `import integral_test` in `modules.js` (after `city_planner`).
 | `test_shoreline_building_place(type, size)` | building id | Reload not included; shoreline patch + `test_building_place` at map center |
 | `test_assert_building_placed(bid, type, tag)` | boolean | Type, map tile, and per-bid marker checks |
 | `test_log_building_placed(bid)` | undefined | `[test-marker] test_building_placed:…` (work camp uses `work_camp` suffix) |
+| `test_figure_create(type, x, y)` | figure id | `__test_figure_create` + marker; auto-tile when `x`/`y` omitted or negative |
+| `test_assert_figure_created(fid, type, tag)` | boolean | Type, validity, map occupancy, and marker checks |
+| `test_log_figure_created(fid)` | undefined | `[test-marker] test_figure_created:type_<n>:<fid>:x,y` |
 
 `city_planner` is an `ANK_GLOBAL_OBJECT` (`build_type`, `in_progress`, methods in [`city_planner.js`](../src/scripts/city_planner.js)).
 

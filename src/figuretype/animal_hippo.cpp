@@ -117,7 +117,7 @@ void figure_hippo::figure_action() {
         break;
 
     case ACTION_9_HIPPO_SEARCHING_FOOD:
-        if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY, ACTION_12_HIPPO_EATING, ACTION_8_HIPPO_RECALCULATE)) {
+        if (do_goto(base.destination_tile, TERRAIN_USAGE_AMPHIBIA, ACTION_12_HIPPO_EATING, ACTION_8_HIPPO_RECALCULATE)) {
             if (can_harvest_point(tile())) {
                 base.wait_ticks = 0;
                 advance_action(ACTION_12_HIPPO_EATING);
@@ -133,7 +133,7 @@ void figure_hippo::figure_action() {
             advance_action(ACTION_8_HIPPO_RECALCULATE);
             break;
         }
-        
+
         map_vegetation_deplete(tile(), 3);
         d.satiety = std::min(100, d.satiety + 1);
         break;
@@ -146,9 +146,9 @@ void figure_hippo::figure_action() {
             advance_action(ACTION_8_HIPPO_RECALCULATE);
             break;
         }
-        
+
         base.destination_tile = attacker->tile;
-        
+
         // Check if we're close enough to attack
         int distance = calc_maximum_distance(tile(), attacker->tile);
         if (distance <= 1) {
@@ -156,7 +156,7 @@ void figure_hippo::figure_action() {
             base.wait_ticks = 12; // Attack animation duration
         } else {
             // Keep chasing
-            do_goto(base.destination_tile, TERRAIN_USAGE_ANY, ACTION_11_HIPPO_ATTACKING, ACTION_16_HIPPO_CHASING);
+            do_goto(base.destination_tile, TERRAIN_USAGE_AMPHIBIA, ACTION_11_HIPPO_ATTACKING, ACTION_16_HIPPO_CHASING);
         }
         break;
     }
@@ -183,9 +183,9 @@ void figure_hippo::figure_action() {
         }
         break;
     }
-        
+
     case ACTION_10_HIPPO_GOING:
-        if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY, ACTION_18_HIPPO_ROOSTING + (random_byte() & 0x1), ACTION_8_HIPPO_RECALCULATE)) {
+        if (do_goto(base.destination_tile, TERRAIN_USAGE_AMPHIBIA, ACTION_18_HIPPO_ROOSTING + (random_byte() & 0x1), ACTION_8_HIPPO_RECALCULATE)) {
             if (map_has_figure_but(base.destination_tile, id())) {
                 base.wait_ticks = 1;
                 advance_action(ACTION_8_HIPPO_RECALCULATE);
@@ -213,41 +213,46 @@ void figure_hippo::update_day() {
 }
 
 void figure_hippo::update_animation() {
+    xstring anim_key = animkeys().walk;
+    const bool is_water_tile = map_terrain_is(tile(), TERRAIN_WATER);
+
     switch (action_state()) {
     case ACTION_8_HIPPO_RECALCULATE:
     case ACTION_19_HIPPO_IDLE:
-        image_set_animation(animkeys().idle);
+    case ACTION_15_HIPPO_TERRIFIED:
+    case ACTION_24_HIPPO_SPAWNED:
+    case ACTION_196_HIPPO_AT_REST:
+    case 14:
+        anim_key = is_water_tile ? animkeys().swim_idle : animkeys().idle;
         break;
 
     case ACTION_9_HIPPO_SEARCHING_FOOD:
     case ACTION_16_HIPPO_CHASING:
     case ACTION_10_HIPPO_GOING:
-        image_set_animation(animkeys().walk);
+        anim_key = is_water_tile ? animkeys().swim : animkeys().walk;
         break;
 
     case ACTION_12_HIPPO_EATING:
     case ACTION_18_HIPPO_ROOSTING:
-        image_set_animation(animkeys().eating);
+        anim_key = animkeys().eating;
         break;
 
     case ACTION_11_HIPPO_ATTACKING:
-        image_set_animation(animkeys().attack);
-        break;
-
-    case ACTION_15_HIPPO_TERRIFIED:
-    case 14:
-        image_set_animation(animkeys().idle);
-        base.animctx.frame = 0;
+        anim_key = is_water_tile ? animkeys().swim_attack : animkeys().attack;
         break;
 
     case FIGURE_ACTION_149_CORPSE:
-        image_set_animation(animkeys().death);
+        anim_key = animkeys().death;
         break;
 
     default:
-        // In any strange situation load eating/roosting animation
-        image_set_animation(animkeys().eating);
+        anim_key = is_water_tile ? animkeys().swim_idle : animkeys().idle;
         break;
+    }
+
+    image_set_animation(anim_key);
+    if (action_state() == ACTION_15_HIPPO_TERRIFIED || action_state() == 14) {
+        base.animctx.frame = 0;
     }
 }
 
