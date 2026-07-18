@@ -83,6 +83,7 @@ function advisor_military_window_init(window) {
 
 [es=(advisor_military_window, ui_draw_foreground)]
 function advisor_military_window_draw(window) {
+    advisor_window_reflow(window)
     if (city.num_forts > 0) {
         // The legion rows are immediate-mode draws, so they must be offset by the
         // (centered) advisor window origin; otherwise they render at the top-left

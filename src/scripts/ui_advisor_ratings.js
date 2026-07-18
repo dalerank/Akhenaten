@@ -148,3 +148,8 @@ function advisor_ratings_window_init(window) {
 
 	advisors_toolbar_refresh(window, ADVISOR_RATINGS)
 }
+
+[es=(advisor_ratings_window, ui_draw_foreground)]
+function advisor_ratings_window_reflow(window) {
+	advisor_window_reflow(window)
+}
