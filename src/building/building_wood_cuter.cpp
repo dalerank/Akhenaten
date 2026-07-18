@@ -71,12 +71,11 @@ void building_wood_cutter::spawn_figure() {
     }
 }
 
-bool building_wood_cutter::can_play_animation() const {
+void building_wood_cutter::update_animation() {
+    building_industry::update_animation();
     if (base.stored_amount(RESOURCE_TIMBER) >= current_params().max_storage_amount) {
-        return false;
+        base.play_animation = false;
     }
-
-    return building_industry::can_play_animation();
 }
 
 bool building_wood_cutter::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

@@ -51,6 +51,7 @@ Results are written to `akhenaten-log.txt` as lines like `[test:tests/11_work_ca
 | `21_dock_placement.js` | Dock on synthetic shoreline |
 | `22_shipyard_placement.js` | Shipyard on synthetic shoreline |
 | `23_ferry_placement.js` | Ferry landing on synthetic shoreline |
+| `24_brewery_placement.js` | Brewery via `test_building_place`; also reads `stored_resource(RESOURCE_WATER)` pseudo-resource |
 
 Shared helpers for city tests and placement live in [`src/scripts/integral_test.js`](../src/scripts/integral_test.js), imported from `modules.js` (always loaded with the game VM, not via `include()` from test files).
 

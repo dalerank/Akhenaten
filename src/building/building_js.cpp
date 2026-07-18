@@ -8,6 +8,8 @@
 #include "building/building_granary.h"
 #include "building/building_roadblock.h"
 #include "building/building_well.h"
+#include "building/building_brewery.h"
+#include "building/building_industry.h"
 #include "building/building_storage_yard.h"
 #include "building/building_temple_complex.h"
 #include "building_mansion.h"
@@ -15,6 +17,7 @@
 #include "grid/building.h"
 #include "grid/road_access.h"
 #include "core/bstring.h"
+#include "core/log.h"
 #include "core/object_property.h"
 #include "core/profiler.h"
 #include "figure/figure.h"
@@ -213,11 +216,6 @@ void __building_mothball_toggle(js_State *J) {
     js_helpers::js_push_value(J, b->max_workers ? b->mothball_toggle() : 0);
 }
 
-void __building_can_play_animation(js_State *J) {
-    const int bid = building_this_id(J);
-    js_helpers::js_push_value(J, building_get(bid)->dcast()->can_play_animation());
-}
-
 void __building_set_animation(js_State *J) {
     const int bid = building_this_id(J);
     const char *animkey = js_helpers::js_to_value<const char *>(J, 1);
@@ -301,7 +299,12 @@ static void building_proto___property_setter(js_State *J) {
     }
 
     pcstr prop = js_strnode_cstr(js_tostring(J, 1));
-    b->dcast()->set_property(tags().building, prop, js_helpers::js_bvariant_from_js_value(J, 2));
+    const bool ok = b->dcast()->set_property(tags().building, prop, js_helpers::js_bvariant_from_js_value(J, 2));
+    if (!ok) {
+        logs::error("building: JS write to unregistered property '%s' on building type %d "
+                    "(add the field to ANK_CONFIG_PROPERTY(building, ...) or provide a get/set binding)",
+                    prop, (int)b->type);
+    }
 }
 
 void __building_meta_text_id(js_State *J) {
@@ -402,6 +405,9 @@ static void building_proto___property_getter(js_State *J) {
 
     const bvariant value = b->dcast()->get_property(tags().building, prop);
     if (value.value_type() == bvariant::etype_none) {
+        logs::error("building: JS read of unregistered property '%s' on building type %d "
+                    "(add the field to ANK_CONFIG_PROPERTY(building, ...) or provide a get binding)",
+                    prop, (int)b->type);
         J->pushundefined();
     } else {
         js_helpers::js_push_bvariant(J, value);
@@ -446,8 +452,6 @@ void js_register_building(js_State *J) {
     jsB_propf(J, js_intern("Building.prototype.__crime_influence_value"), __building_crime_influence_value_j, 0);
     jsB_propf(J, js_intern("Building.prototype.__property_getter"), building_proto___property_getter, 1);
     jsB_propf(J, js_intern("Building.prototype.__property_setter"), building_proto___property_setter, 2);
-    jsB_propf(J, js_intern("Building.prototype.__can_play_animation"), __building_can_play_animation, 0);
-
     jsB_propf(J, js_intern("Building.prototype.has_figure"), __building_has_figure, 1);
     jsB_propf(J, js_intern("Building.prototype.mothball_toggle"), __building_mothball_toggle, 0);
     jsB_propf(J, js_intern("Building.prototype.add_structure_damage"), __building_add_structure_damage, 1);

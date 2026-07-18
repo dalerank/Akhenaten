@@ -14,7 +14,7 @@ function building_wharf_set_orient_animation(building, prefix) {
 }
 
 function building_wharf_update_graphic_moored(building, moored) {
-    if (!building.can_play_animation) {
+    if (!building.play_animation) {
         building.set_animation("none")
         return
     }

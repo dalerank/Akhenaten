@@ -43,7 +43,7 @@ public:
     virtual void spawn_figure() override;
     virtual void update_count() const override;
     virtual void update_day() override;
-    virtual bool can_play_animation() const override;
+    virtual void update_animation() override;
 
     virtual void debug_draw_properties() override;
 };

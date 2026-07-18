@@ -16,7 +16,7 @@ Building.property.meta_text_id = { get: function() { return this.__meta_text_id(
 Building.property.curse_days_left = { }
 Building.property.common_health = { }
 Building.property.disease_days = { }
-Building.property.can_play_animation = { get: function() { return this.__can_play_animation() } }
+Building.property.can_play_animation = { get: function() { return this.play_animation } }
 Building.property.is_fancy = { get: function() { return this.__is_fancy() } }
 Building.property.is_output_resourece_mothballed = { get: function() { return __city_resource_is_mothballed(this.output_resource_id) } }
 
@@ -27,6 +27,7 @@ Building.property.first_material_stored = { get: function() { return __building_
 Building.property.has_road_access = { }
 Building.property.has_water_access = { }
 Building.property.spawned_worker_this_month = { }
+Building.property.play_animation = { }
 Building.property.num_workers = { }
 Building.property.max_workers = { }
 Building.property.type = { }

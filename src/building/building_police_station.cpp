@@ -121,7 +121,7 @@ void building_police_station::spawn_figure() {
 }
 
 void building_police_station::update_graphic() {
-    const xstring &animkey = can_play_animation()
+    const xstring &animkey = base.play_animation
                                 ? animkeys().work
                                 : animkeys().none;
     set_animation(animkey);

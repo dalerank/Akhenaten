@@ -52,7 +52,7 @@ void building_senet_house::spawn_figure() {
 }
 
 void building_senet_house::update_graphic() {
-    const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
+    const xstring &animkey = base.play_animation ? animkeys().work : animkeys().none;
     set_animation(animkey);
 
     building_impl::update_graphic();

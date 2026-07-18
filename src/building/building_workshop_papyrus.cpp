@@ -9,13 +9,12 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_papyrus_maker);
 
-bool building_papyrus_maker::can_play_animation() const {
+void building_papyrus_maker::update_animation() {
+    building_industry::update_animation();
     auto &d = runtime_data();
     if (base.stored_amount(RESOURCE_REEDS) < 100 && d.progress == 0) {
-        return false;
+        base.play_animation = false;
     }
-
-    return building_industry::can_play_animation();
 }
 
 bool building_papyrus_maker::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

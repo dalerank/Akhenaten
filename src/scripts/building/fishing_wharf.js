@@ -45,7 +45,7 @@ building_fishing_wharf {
 [es=(building_fishing_wharf, update_graphic)]
 function building_fishing_wharf_update_graphic(ev) {
     var building = city.get_building(ev.bid)
-    if (!building.can_play_animation) {
+    if (!building.play_animation) {
         building.set_animation("none")
         return
     }

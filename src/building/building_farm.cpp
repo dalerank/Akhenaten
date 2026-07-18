@@ -304,7 +304,7 @@ void building_farm::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, col
         return;
     }
 
-    if (!can_play_animation()) {
+    if (!base.play_animation) {
         return;
     }
 

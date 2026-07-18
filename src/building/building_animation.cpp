@@ -6,7 +6,7 @@
 #include "grid/sprite.h"
 
 int building::animation_offset(int image_id, int grid_offset, int max_frames, int duration) {
-    if (!dcast()->can_play_animation()) {
+    if (!play_animation) {
         return 0;
     }
 

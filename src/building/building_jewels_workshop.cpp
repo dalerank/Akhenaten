@@ -17,12 +17,11 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_jewels_workshop);
 
-bool building_jewels_workshop::can_play_animation() const {
+void building_jewels_workshop::update_animation() {
+    building_industry::update_animation();
     if (base.stored_amount(RESOURCE_GEMS) < 100) {
-        return false;
+        base.play_animation = false;
     }
-
-    return building_industry::can_play_animation();
 }
 
 void building_jewels_workshop::on_place_checks() {

@@ -52,6 +52,7 @@ enum e_resource : uint8_t {
     //
     RESOURCE_DEBEN = 36,
     RESOURCE_TROOPS = 37,
+    RESOURCE_WATER = 38, // pseudo-resource (like DEBEN/TROOPS): not carted/traded, only local brewery water
     // RESOURCE_WARSHIP
     // RESOURCE_FURNITURE
     // RESOURCE_DATES 
@@ -162,6 +163,7 @@ struct id_resources_t {
     static const xstring marble;
     static const xstring deben;
     static const xstring troops;
+    static const xstring water;
 };
 
 const id_resources_t& resources();

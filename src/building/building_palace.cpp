@@ -59,8 +59,9 @@ void building_palace::update_count() const {
     g_city.buildings.track_building(base, true);
 }
 
-bool building_palace::can_play_animation() const {
-    return worker_percentage() > 50;
+void building_palace::update_animation() {
+    base.play_animation = worker_percentage() > 50;
+    es(__func__);
 }
 
 void building_palace::update_graphic() {

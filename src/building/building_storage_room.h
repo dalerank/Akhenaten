@@ -15,7 +15,7 @@ public:
     virtual void on_post_load() override;
     virtual void spawn_figure() override { /*nothing*/ }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_STORAGE_YARD; }
-    virtual bool can_play_animation() const override { return false; }
+    virtual void update_animation() override { base.play_animation = false; es(__func__); }
     virtual int get_fire_risk(int value) const override { return 0; }
 
     e_resource resource() const { return base.storage.data()[0].type; }

@@ -57,6 +57,7 @@ void js_register_game_constants(js_State* J) {
     // coz it is eqaul to RESOURCE_MAX
     _R(RESOURCE_DEBEN)
     _R(RESOURCE_TROOPS)
+    _R(RESOURCE_WATER)
     _R(LABOR_CATEGORY_NONE)
     _R(LABOR_CATEGORY_SIZE)
     _R(LABOR_CATEGORY_CULTURE)

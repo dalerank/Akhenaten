@@ -66,12 +66,11 @@ void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &tmp); // reserved for extended figure type
 }
 
-bool building_industry::can_play_animation() const {
+void building_industry::update_animation() {
+    building_impl::update_animation();
     if (g_city.resource.is_mothballed(base.output.resource)) {
-        return false;
+        base.play_animation = false;
     }
-
-    return building_impl::can_play_animation();
 }
 
 void building_industry::update_graphic() {

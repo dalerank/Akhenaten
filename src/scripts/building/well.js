@@ -31,7 +31,7 @@ function building_well_update_graphic(ev) {
     if (!well) {
         return
     }
-    if (!well.can_play_animation) {
+    if (!well.play_animation) {
         well.set_animation("none")
         return
     }

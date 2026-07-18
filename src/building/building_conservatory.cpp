@@ -152,7 +152,7 @@ void building_conservatory::spawn_figure() {
 
 void building_conservatory::update_graphic() {
     const bool can_train_musicians = worker_percentage() > 50;
-    const xstring &animkey = (can_train_musicians && can_play_animation())
+    const xstring &animkey = (can_train_musicians && base.play_animation)
                                 ? animkeys().work
                                 : animkeys().none;
 

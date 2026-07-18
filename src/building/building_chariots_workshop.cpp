@@ -7,18 +7,13 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_chariots_workshop);
 
-bool building_chariots_workshop::can_play_animation() const {
+void building_chariots_workshop::update_animation() {
+    building_industry::update_animation();
     if (progress() == 0) {
-        if (base.stored_amount(RESOURCE_TIMBER) < 100) {
-            return false;
-        }
-
-        if (base.stored_amount(RESOURCE_WEAPONS) < 100) {
-            return false;
+        if (base.stored_amount(RESOURCE_TIMBER) < 100 || base.stored_amount(RESOURCE_WEAPONS) < 100) {
+            base.play_animation = false;
         }
     }
-
-    return building_industry::can_play_animation();
 }
 
 bool building_chariots_workshop::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

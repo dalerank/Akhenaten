@@ -52,6 +52,37 @@ create_roaming_figure(FIGURE_ENTERTAINER, ACTION_ROAM, SLOT_SERVICE);
 create_figure_with_destination(FIGURE_CARTPUSHER, dest_tile, SLOT_CARTPUSHER);
 ```
 
+### Exposing a `building` field to JS
+Prefer the generic property mechanism over hand-written bindings:
+1. Add the field to `ANK_CONFIG_PROPERTY(building, ...)` in `building.h`.
+2. Declare it in `src/scripts/building/prototype.js` as an empty descriptor: `Building.property.my_field = { }`.
+
+An empty `{ }` descriptor is **not** a no-op — it routes through the shared
+`building_proto___property_getter/__property_setter`, which read/write the struct
+field by name via `archive_helper`. This works for primitive fields (bool, int, enum).
+
+Only write a dedicated `__my_getter`/`__my_setter` C++ function + `jsB_propf`
+registration when the value is **computed** and cannot be modelled any other way.
+Don't add custom get/set bindings for a primitive field — add it to
+`ANK_CONFIG_PROPERTY` instead.
+
+For per-building quantities that behave like an inventory count but aren't a real
+traded resource (e.g. brewery water), prefer a **pseudo-resource**: add an id past
+`RESOURCES_MAX` (like `RESOURCE_DEBEN`/`RESOURCE_TROOPS`/`RESOURCE_WATER`), override
+`stored_amount(e_resource)` in the building to intercept it, and read it from JS via
+the existing `b.stored_resource(RESOURCE_X)` — no new binding needed. Pseudo-resources
+don't leak into trade/overlays/warehouses (those iterate `< RESOURCES_MAX`), and
+`base.storage` is a sparse key-value store so ids past the max are safe.
+
+### Animation state
+Buildings expose a runtime `bool play_animation` flag (not a virtual predicate).
+Override `virtual void update_animation()` to set `base.play_animation`, call the
+parent's `update_animation()` first, then `es(__func__)` at the end to let JS
+scripts override the decision (e.g. brewery rules live in `scripts/building/workshop.js`).
+`update_animation()` is invoked before `update_graphic()` in `on_place`,
+`on_post_load`, and `update_day`. Rendering (`animation_offset`,
+`update_graphic_work_anim`) reads `base.play_animation` directly.
+
 ### Lifecycle
 `initialize → on_create → on_place → on_place_checks → update_day/week/month/year → on_destroy`
 

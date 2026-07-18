@@ -15,7 +15,7 @@ public:
 
     virtual void on_place(int orientation, int variant) override;
     virtual void spawn_figure() override;
-    virtual bool can_play_animation() const override { return true; }
+    virtual void update_animation() override { base.play_animation = true; es(__func__); }
     virtual void update_graphic() override;
     virtual void on_post_load() override;
     virtual void update_count() const override;

@@ -6,6 +6,6 @@ class building_weaponsmith : public building_industry {
 public:
     BUILDING_METAINFO(BUILDING_WEAPONSMITH, building_weaponsmith, building_industry)
 
-    virtual bool can_play_animation() const override;
+    virtual void update_animation() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
 };

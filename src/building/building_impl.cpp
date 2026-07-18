@@ -45,6 +45,7 @@ void building_impl::on_place(int orientation, int variant) {
     base.output_resource_second_rate = p.output_resource_second_rate;
 
     on_place_update_tiles(orientation, variant);
+    update_animation();
     update_graphic();
 }
 
@@ -85,7 +86,7 @@ void building_impl::update_graphic() {
 }
 
 void building_impl::update_graphic_work_anim() {
-    set_animation(can_play_animation() ? animkeys().work : animkeys().none);
+    set_animation(base.play_animation ? animkeys().work : animkeys().none);
     building_impl::update_graphic();
 }
 
@@ -100,6 +101,7 @@ void building_impl::remove_dead_figures() {
 
 void building_impl::on_post_load() {
     base.setup_static_flags();
+    update_animation();
     update_graphic();
     remove_dead_figures();
 }
@@ -109,6 +111,7 @@ void building_impl::spawn_figure() {
 }
 
 void building_impl::update_day() {
+    update_animation();
     update_graphic();
     remove_dead_figures();
 
@@ -195,12 +198,9 @@ bool building_impl::is_enemies_nearby() const {
     return false;
 }
 
-bool building_impl::can_play_animation() const {
-    if (is_enemies_nearby()) {
-        return false;
-    }
-
-    return base.main()->num_workers > 0;
+void building_impl::update_animation() {
+    base.play_animation = !is_enemies_nearby() && base.main()->num_workers > 0;
+    es(__func__);
 }
 
 void building_impl::update_count() const {
@@ -215,7 +215,7 @@ e_sound_channel_city building_impl::sound_channel() const {
 }
 
 void building_impl::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, color mask) {
-    if (!can_play_animation()) {
+    if (!base.play_animation) {
         return;
     }
 

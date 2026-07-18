@@ -49,6 +49,7 @@ const xstring id_resources_t::lamps = "lamps";
 const xstring id_resources_t::marble = "marble";
 const xstring id_resources_t::deben = "deben";
 const xstring id_resources_t::troops = "troops";
+const xstring id_resources_t::water = "water";
 
 e_resource resource_type(const xstring &name) {
     if (name == resources().none) return RESOURCE_NONE;
@@ -88,6 +89,7 @@ e_resource resource_type(const xstring &name) {
     if (name == resources().marble) return RESOURCE_MARBLE;
     if (name == resources().deben) return RESOURCE_DEBEN;
     if (name == resources().troops) return RESOURCE_TROOPS;
+    if (name == resources().water) return RESOURCE_WATER;
 
     assert(false);
     return RESOURCE_NONE;
@@ -133,6 +135,7 @@ pcstr resource_name(e_resource resource) {
     case RESOURCE_MARBLE: return "marble";
     case RESOURCE_DEBEN: return "deben";
     case RESOURCE_TROOPS: return "troops";
+    case RESOURCE_WATER: return "water";
 
     default:
         assert(false);

@@ -11,11 +11,8 @@ bool building_well::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     return true;
 }
 
-bool building_well::can_play_animation() const {
+void building_well::update_animation() {
     const e_well_status status = map_water_supply_is_well_unnecessary(id(), current_params().unnecessary_range_check);
-    if (status != WELL_NECESSARY) {
-        return false;
-    }
-
-    return true;
+    base.play_animation = (status == WELL_NECESSARY);
+    es(__func__);
 }

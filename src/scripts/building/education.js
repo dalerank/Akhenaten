@@ -28,7 +28,7 @@ function building_library_spawn_figure(ev) {
 [es=(building_library, update_graphic)]
 function building_library_update_graphic(ev) {
     var building = city.get_building(ev.bid)
-    var animkey = building.can_play_animation ? "work" : "base"
+    var animkey = building.play_animation ? "work" : "base"
     building.set_animation(animkey)
 }
 

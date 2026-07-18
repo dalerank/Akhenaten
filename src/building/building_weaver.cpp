@@ -7,13 +7,12 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_weaver);
 
-bool building_weaver::can_play_animation() const {
+void building_weaver::update_animation() {
+    building_industry::update_animation();
     auto &d = runtime_data();
     if (base.stored_amount(RESOURCE_FLAX) < 100 && d.progress == 0) {
-        return false;
+        base.play_animation = false;
     }
-
-    return building_industry::can_play_animation();
 }
 
 bool building_weaver::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

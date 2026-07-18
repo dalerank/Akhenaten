@@ -209,7 +209,11 @@ namespace js_helpers {
     }
 
     template<typename T>
-    inline void js_push_value(js_State *J, T value);
+    inline void js_push_value(js_State *J, T value) {
+        static_assert(std::is_arithmetic_v<T> || std::is_enum_v<T>,
+                      "js_push_value: no specialization for this type; add one in js_game.h");
+        js_pushnumber(J, (double)value);
+    }
 
     template<>
     inline void js_push_value<int>(js_State *J, int value) {

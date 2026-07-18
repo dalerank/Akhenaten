@@ -44,17 +44,17 @@ void building_mortuary::spawn_figure() {
     }
 }
 
-bool building_mortuary::can_play_animation() const {
+void building_mortuary::update_animation() {
+    building_impl::update_animation();
     if (g_city.resource.is_mothballed(RESOURCE_LINEN)) {
-        return false;
+        base.play_animation = false;
+        return;
     }
 
     const auto &params = current_params();
     if (base.stored_amount(RESOURCE_LINEN) < params.linen_required_for_animation) {
-        return false;
+        base.play_animation = false;
     }
-
-    return building_impl::can_play_animation();
 }
 
 void building_mortuary::update_graphic() {

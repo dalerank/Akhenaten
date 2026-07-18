@@ -44,13 +44,14 @@ void building_dock::on_place(int orientation, int variant) {
 void building_dock::on_destroy() {
 }
 
-bool building_dock::can_play_animation() const {
+void building_dock::update_animation() {
     if (runtime_data().num_ships > 0) {
-        return true;
+        base.play_animation = true;
+    } else {
+        map_sprite_animation_set(tile(), 1);
+        base.play_animation = false;
     }
-
-    map_sprite_animation_set(tile(), 1);
-    return false;
+    es(__func__);
 }
 
 void building_dock::update_count() const {

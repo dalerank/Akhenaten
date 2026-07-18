@@ -7,18 +7,13 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_bricks_workshop);
 
-bool building_bricks_workshop::can_play_animation() const {
+void building_bricks_workshop::update_animation() {
+    building_industry::update_animation();
     if (progress() == 0) {
-        if (base.stored_amount(RESOURCE_CLAY) < 100) {
-            return false;
-        }
-
-        if (base.stored_amount(RESOURCE_STRAW) < 100) {
-            return false;
+        if (base.stored_amount(RESOURCE_CLAY) < 100 || base.stored_amount(RESOURCE_STRAW) < 100) {
+            base.play_animation = false;
         }
     }
-
-    return building_industry::can_play_animation();
 }
 
 

@@ -16,6 +16,6 @@ public:
 
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_WELL; }
-    virtual bool can_play_animation() const override;
+    virtual void update_animation() override;
 };
 ANK_CONFIG_STRUCT(building_well::static_params, desirability_range_check, desirability_fancy)

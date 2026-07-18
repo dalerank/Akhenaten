@@ -30,7 +30,7 @@ function building_apothecary_spawn_figure(ev) {
 [es=(building_apothecary, update_graphic)]
 function building_apothecary_update_graphic(ev) {
     var building = city.get_building(ev.bid)
-    var animkey = building.can_play_animation ? "work" : "none"
+    var animkey = building.play_animation ? "work" : "none"
     building.set_animation(animkey)
 }
 
@@ -44,6 +44,6 @@ function building_physician_spawn_figure(ev) {
 [es=(building_physician, update_graphic)]
 function building_physician_update_graphic(ev) {
     var building = city.get_building(ev.bid)
-    var animkey = building.can_play_animation ? "work" : "none"
+    var animkey = building.play_animation ? "work" : "none"
     building.set_animation(animkey)
 }

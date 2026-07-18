@@ -43,10 +43,6 @@ bool building_reed_gatherer::can_spawn_gatherer(int max_gatherers_per_building, 
     return false;
 }
 
-bool building_reed_gatherer::can_play_animation() const {
-    return building_industry::can_play_animation();
-}
-
 bool building_reed_gatherer::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     draw_normal_anim(ctx, point, tile, color_mask);
 

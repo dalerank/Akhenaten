@@ -17,7 +17,7 @@ public:
     virtual void spawn_figure() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_NONE; }
-    virtual bool can_play_animation() const override;
+    virtual void update_animation() override;
     // Output is deposited by lumberjack figures returning home — skip the
     // progress-driven industry tick so production isn't double-counted.
     virtual void update_production() override {}

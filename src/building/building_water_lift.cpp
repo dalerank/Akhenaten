@@ -115,7 +115,7 @@ void building_water_lift::bind_dynamic(io_buffer *iob, size_t version) {
 void building_water_lift::update_graphic() {
     building_impl::update_graphic();
 
-    if (!can_play_animation()) {
+    if (!base.play_animation) {
         set_animation(animkeys().none);
         building_impl::update_graphic();
         return;

@@ -60,6 +60,23 @@ function building_brewery_on_place_checks(ev) {
     }
 }
 
+[es=(building_brewery, update_animation)]
+function building_brewery_on_update_animation(ev) {
+    var b = city.get_building(ev.bid)
+    if (!b.play_animation) {
+        return
+    }
+
+    if (b.stored_resource(RESOURCE_BARLEY) < 100) {
+        b.play_animation = false
+        return
+    }
+
+    if (game_features.gameplay_brewery_requires_water && b.stored_resource(RESOURCE_WATER) < 50) {
+        b.play_animation = false
+    }
+}
+
 building_weaver = {
   animations : {
     preview : { pos: [0, 0], pack:PACK_GENERAL, id:122 },

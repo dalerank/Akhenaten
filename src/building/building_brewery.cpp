@@ -2,6 +2,7 @@
 
 #include "building/building_workshop.h"
 #include "widget/city/ornaments.h"
+#include "city/city_resource.h"
 #include "game/game_config.h"
 #include "grid/terrain.h"
 #include "io/io_buffer.h"
@@ -17,6 +18,13 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_brewery);
 
 declare_console_command(add_beer, game_cheat_add_resource<RESOURCE_BEER>);
 declare_console_command(add_barley, game_cheat_add_resource<RESOURCE_BARLEY>);
+
+int building_brewery::stored_amount(e_resource r) const {
+    if (r == RESOURCE_WATER) {
+        return water_stored();
+    }
+    return building_industry::stored_amount(r);
+}
 
 bool building_brewery::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     const auto &ranim = anim(animkeys().work);
@@ -49,36 +57,6 @@ void building_brewery::on_create(int orientation) {
     }
 }
 
-void building_brewery::bind_dynamic(io_buffer *iob, size_t version) {
-    building_industry::bind_dynamic(iob, version);
-
-    // No additional binding needed
-}
-
-bool building_brewery::can_play_animation() const {
-    if (!building_industry::can_play_animation()) {
-        return false;
-    }
-
-    if (!!game_features::gameplay_brewery_requires_water) {
-        // Need both barley and water to produce
-        if (base.stored_amount(RESOURCE_BARLEY) < 100) {
-            return false;
-        }
-
-        if (water_stored() < 50) {
-            return false;
-        }
-    } else {
-        // Original behavior: only check barley
-        if (base.stored_amount(RESOURCE_BARLEY) < 100) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
 void building_brewery::update_production() {
     if (!!game_features::gameplay_brewery_requires_water) {
         auto &d = runtime_data();
@@ -89,11 +67,11 @@ void building_brewery::update_production() {
         } else {
             return; // No water, halt production
         }
-        
+
         // Update water supply (slow replenishment from well)
         update_water_supply();
     }
-    
+
     building_industry::update_production();
 }
 
@@ -123,7 +101,7 @@ bool building_brewery::has_water_access() const {
     if (!game_features::gameplay_brewery_requires_water) {
         return true; // Feature disabled, no water requirement
     }
-    
+
     return map_terrain_exists_tile_in_area_with_type(base.tile, base.size, TERRAIN_GROUNDWATER) ||
            map_terrain_exists_tile_in_area_with_type(base.tile, base.size, TERRAIN_FOUNTAIN_RANGE) ||
            map_terrain_exists_tile_in_radius_with_type(base.tile, base.size, 3, TERRAIN_WATER) ||
@@ -134,16 +112,16 @@ void building_brewery::update_water_supply() {
     if (!game_features::gameplay_brewery_requires_water) {
         return;
     }
-    
+
     int current_water = water_stored();
     if (current_water >= current_params().max_water_storage) {
         return;
     }
-    
+
     // Slow water replenishment from nearby well (TERRAIN_FOUNTAIN_RANGE)
     if (!map_terrain_exists_tile_in_area_with_type(base.tile, base.size, TERRAIN_FOUNTAIN_RANGE)) {
         return;
     }
-    
+
     set_water_stored(current_water + 1);
 }

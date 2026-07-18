@@ -9,16 +9,11 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_cattle_ranch);
 
-bool building_cattle_ranch::can_play_animation() const {
-    if (base.stored_amount(RESOURCE_STRAW) < 100) {
-        return false;
+void building_cattle_ranch::update_animation() {
+    building_industry::update_animation();
+    if (base.stored_amount(RESOURCE_STRAW) < 100 || worker_percentage() < 50) {
+        base.play_animation = false;
     }
-
-    if (worker_percentage() < 50) {
-        return false;
-    }
-
-    return building_industry::can_play_animation();
 }
 
 bool building_cattle_ranch::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

@@ -13,14 +13,13 @@ public:
     } BUILDING_STATIC_DATA_T;
 
     virtual bool is_workshop() const override { return true; }
+    virtual int stored_amount(e_resource r) const override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_BREWERY_WORKSHOP; }
-    virtual bool can_play_animation() const override;
     virtual void update_preproduction() override;
     virtual void update_production() override;
     virtual void start_production() override;
     virtual void production_started() override;
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void on_create(int orientation) override;
 
     void update_water_supply();

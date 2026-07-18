@@ -120,6 +120,6 @@ function building_work_camp_update_month(ev) {
 [es=(building_work_camp, update_graphic)]
 function building_work_camp_update_graphic(ev) {
     var building = city.get_building(ev.bid)
-    var animkey = building.can_play_animation ? "work" : "none"
+    var animkey = building.play_animation ? "work" : "none"
     building.set_animation(animkey)
 }

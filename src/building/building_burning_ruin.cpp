@@ -99,8 +99,9 @@ void building_burning_ruin::on_tick(bool refresh_only) {
     }
 }
 
-bool building_burning_ruin::can_play_animation() const {
-    return base.fire_duration > 0;
+void building_burning_ruin::update_animation() {
+    base.play_animation = base.fire_duration > 0;
+    es(__func__);
 }
 
 bool building_burning_ruin::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

@@ -105,14 +105,17 @@ bool building_hunting_lodge::draw_ornaments_and_animations_height(painter &ctx, 
     return true;
 }
 
-bool building_hunting_lodge::can_play_animation() const {
-    if (!building_impl::can_play_animation()) {
-        return false;
+void building_hunting_lodge::update_animation() {
+    building_impl::update_animation();
+    if (!base.play_animation) {
+        return;
     }
 
     if (worker_percentage() <= 50) {
-        return false;
+        base.play_animation = false;
+        return;
     }
 
-    return (stored_amount(RESOURCE_GAMEMEAT) > 0 || has_figure_of_type(BUILDING_SLOT_HUNTER, FIGURE_OSTRICH_HUNTER));
+    base.play_animation = (stored_amount(RESOURCE_GAMEMEAT) > 0
+        || has_figure_of_type(BUILDING_SLOT_HUNTER, FIGURE_OSTRICH_HUNTER));
 }
