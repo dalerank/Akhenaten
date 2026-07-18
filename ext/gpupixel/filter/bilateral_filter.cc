@@ -192,6 +192,9 @@ bool BilateralFilter::init() {
 
     _hBlurFilter = BilateralMonoFilter::create(BilateralMonoFilter::HORIZONTAL);
     _vBlurFilter = BilateralMonoFilter::create(BilateralMonoFilter::VERTICAL);
+    if (!_hBlurFilter || !_vBlurFilter) {
+        return false;
+    }
     _hBlurFilter->addTarget(_vBlurFilter);
     addFilter(_hBlurFilter);
 

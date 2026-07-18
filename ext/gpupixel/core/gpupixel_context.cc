@@ -53,6 +53,9 @@ FramebufferCache *GPUPixelContext::getFramebufferCache() const {
 }
 
 void GPUPixelContext::setActiveShaderProgram(GLProgram *shaderProgram) {
+    if (!shaderProgram) {
+        return;
+    }
     if (_curShaderProgram != shaderProgram) {
         _curShaderProgram = shaderProgram;
         shaderProgram->use();

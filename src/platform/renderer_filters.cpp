@@ -146,6 +146,12 @@ void platform_render_init_filters() {
         return;
     }
 
+    if (!SDL_GL_GetCurrentContext()) {
+        logs::warn("GPU filters disabled: no active OpenGL context");
+        data.render_support_filters = false;
+        return;
+    }
+
     gpupixel::GPUPixelContext::initOpengl();
 
     data.sourceImage = gpupixel::SourceImage::create_from_memory(0, 0, 4, nullptr);

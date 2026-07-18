@@ -37,6 +37,9 @@ bool GaussianBlurFilter::Init(int radius, float sigma) {
       GaussianBlurMonoFilter::HORIZONTAL, radius, sigma);
   vertical_blur_filter_ = GaussianBlurMonoFilter::Create(
       GaussianBlurMonoFilter::VERTICAL, radius, sigma);
+  if (!horizontal_blur_filter_ || !vertical_blur_filter_) {
+    return false;
+  }
   horizontal_blur_filter_->addTarget(vertical_blur_filter_);
   addFilter(horizontal_blur_filter_);
 

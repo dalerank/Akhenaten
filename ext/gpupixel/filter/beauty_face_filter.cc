@@ -33,12 +33,13 @@ bool BeautyFaceFilter::Init() {
   }
 
   box_blur_filter_ = BoxBlurFilter::Create();
-  addFilter(box_blur_filter_);
-
   box_high_pass_filter_ = BoxHighPassFilter::Create();
-  addFilter(box_high_pass_filter_);
-
   beauty_face_filter_ = BeautyFaceUnitFilter::Create();
+  if (!box_blur_filter_ || !box_high_pass_filter_ || !beauty_face_filter_) {
+    return false;
+  }
+  addFilter(box_blur_filter_);
+  addFilter(box_high_pass_filter_);
   addFilter(beauty_face_filter_);
 
   box_blur_filter_->addTarget(beauty_face_filter_, 1);

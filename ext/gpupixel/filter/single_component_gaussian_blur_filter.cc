@@ -38,6 +38,9 @@ bool SingleComponentGaussianBlurFilter::Init(int radius, float sigma) {
       SingleComponentGaussianBlurMonoFilter::HORIZONTAL, radius, sigma);
   v_blur_filter_ = SingleComponentGaussianBlurMonoFilter::Create(
       SingleComponentGaussianBlurMonoFilter::VERTICAL, radius, sigma);
+  if (!h_blur_filter_ || !v_blur_filter_) {
+    return false;
+  }
   h_blur_filter_->addTarget(v_blur_filter_);
   addFilter(h_blur_filter_);
 

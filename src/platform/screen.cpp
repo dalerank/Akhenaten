@@ -172,6 +172,9 @@ int platform_screen_t::create(const xstring& title, const xstring& renderer, boo
     }
 
     platform_render_setup_options(renderer);
+    if (renderer == "opengl") {
+        flags |= SDL_WINDOW_OPENGL;
+    }
     window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, wsize.x, wsize.y, flags);
 
     if (!window) {

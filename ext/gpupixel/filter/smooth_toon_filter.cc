@@ -31,6 +31,9 @@ bool SmoothToonFilter::Init() {
   }
   gaussian_blur_filter_ = GaussianBlurFilter::Create();
   toon_filter_ = ToonFilter::Create();
+  if (!gaussian_blur_filter_ || !toon_filter_) {
+    return false;
+  }
   gaussian_blur_filter_->addTarget(toon_filter_);
   addFilter(gaussian_blur_filter_);
 

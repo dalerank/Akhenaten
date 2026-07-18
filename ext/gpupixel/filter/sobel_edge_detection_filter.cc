@@ -76,6 +76,9 @@ bool SobelEdgeDetectionFilter::Init() {
 
     grayscale_filter_ = GrayscaleFilter::create();
     sobel_edge_detection_filter_ = _SobelEdgeDetectionFilter::Create();
+    if (!grayscale_filter_ || !sobel_edge_detection_filter_) {
+        return false;
+    }
     grayscale_filter_->addTarget(sobel_edge_detection_filter_);
     addFilter(grayscale_filter_);
 

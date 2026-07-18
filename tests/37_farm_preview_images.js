@@ -9,7 +9,9 @@
 
 function run_test() {
     __log_info_native('[test:37] farm preview image/crops smoke')
-    test_ensure_city_session('data/default.map')
+    // Reload for a clean map: earlier farm tests (34/35) leave MEADOW/FLOODPLAIN
+    // terrain flags near map center that would break the meadow-route assertion.
+    test_reload_city_session('data/default.map')
 
     var cx = (__scenario_map.width / 2) | 0
     var cy = (__scenario_map.height / 2) | 0

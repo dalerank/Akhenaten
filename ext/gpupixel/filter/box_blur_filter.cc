@@ -35,6 +35,9 @@ bool BoxBlurFilter::Init(int radius, float sigma) {
       BoxMonoBlurFilter::Create(GaussianBlurMonoFilter::HORIZONTAL, 4, 0.0);
   vertical_blur_filter_ =
       BoxMonoBlurFilter::Create(GaussianBlurMonoFilter::VERTICAL, 4, 0.0);
+  if (!horizontal_blur_filter_ || !vertical_blur_filter_) {
+    return false;
+  }
   horizontal_blur_filter_->addTarget(vertical_blur_filter_);
   addFilter(horizontal_blur_filter_);
 

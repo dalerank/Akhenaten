@@ -70,6 +70,9 @@ bool SketchFilter::Init() {
 
     grayscale_filter_ = GrayscaleFilter::create();
     sketch_filter_ = _SketchFilter::Create();
+    if (!grayscale_filter_ || !sketch_filter_) {
+        return false;
+    }
     grayscale_filter_->addTarget(sketch_filter_);
     addFilter(grayscale_filter_);
 

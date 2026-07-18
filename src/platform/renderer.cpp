@@ -948,7 +948,7 @@ void platform_render_save_options() {
 void platform_render_make_current_context() {
     auto &data = g_renderer_data;
 
-    if (data.is_opengl_context) {
+    if (data.is_opengl_context && data.main_gl_context) {
         SDL_GL_MakeCurrent(data.window, data.main_gl_context);
     }
 }
@@ -958,7 +958,13 @@ void platform_render_create_context() {
 
     if (data.is_opengl_context) {
         data.main_gl_context = SDL_GL_CreateContext(data.window);
-        SDL_GL_MakeCurrent(data.window, data.main_gl_context);
+        if (!data.main_gl_context) {
+            logs::warn("Failed to create OpenGL context: %s", SDL_GetError());
+            return;
+        }
+        if (SDL_GL_MakeCurrent(data.window, data.main_gl_context) != 0) {
+            logs::warn("Failed to activate OpenGL context: %s", SDL_GetError());
+        }
     }
 }
 

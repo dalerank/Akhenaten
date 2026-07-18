@@ -30,9 +30,11 @@ bool BoxHighPassFilter::Init() {
   }
 
   box_blur_filter_ = BoxBlurFilter::Create();
-  addFilter(box_blur_filter_);
-
   box_difference_filter_ = BoxDifferenceFilter::Create();
+  if (!box_blur_filter_ || !box_difference_filter_) {
+    return false;
+  }
+  addFilter(box_blur_filter_);
   addFilter(box_difference_filter_);
 
   box_blur_filter_->addTarget(box_difference_filter_, 1);
