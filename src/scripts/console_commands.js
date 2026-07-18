@@ -5,6 +5,31 @@ function console_command_hello(args) {
 	log_info("Hello, " + ((args && args[0]) || "World") + "!");
 }
 
+[console_command=add_grain]
+function console_command_add_grain(args) {
+	var amount = parseInt((args && args[0]) || "100", 10)
+	if (amount <= 0) {
+		amount = 100
+	}
+	__cheat_add_resource(RESOURCE_GRAIN, amount)
+}
+
+[console_command=farm_grow]
+function console_command_farm_grow(args) {
+	var amount = parseInt((args && args[0]) || "100", 10)
+	if (amount <= 0) {
+		amount = 100
+	}
+
+	for (var i = 1; i <= MAX_BUILDINGS; i++) {
+		var farm = city.get_farm(i)
+		if (!farm) {
+			continue
+		}
+		farm.progress += amount
+	}
+}
+
 [console_command=add_pottery]
 function console_command_add_pottery(args) {
 	var amount = parseInt((args && args[0]) || "100", 10)

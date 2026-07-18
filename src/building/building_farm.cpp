@@ -28,11 +28,8 @@
 #include "sound/sound_building.h"
 #include "figuretype/figure_worker.h"
 #include "grid/tiles.h"
-#include "dev/debug.h"
 #include "figuretype/figure_cartpusher.h"
 #include "js/js_game.h"
-
-#include <iostream>
 
 BUILDING_RUNTIME_DATA_IMPL(building_farm)
 
@@ -62,21 +59,6 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_meadow_farm_figs);
 
 using e_farm_worker_state_tokens_t = token_holder<e_farm_worker_state, e_farm_worker_tiling, e_farm_worker_count>;
 const e_farm_worker_state_tokens_t ANK_CONFIG_ENUM(e_farm_worker_state_tokens);
-
-declare_console_command(add_grain, game_cheat_add_resource<RESOURCE_GRAIN>);
-declare_console_command_p(farm_grow) {
-    std::string args; is >> args;
-    int amount = atoi(args.empty() ? (pcstr)"100" : args.c_str());
-
-    buildings_valid_farms_do([amount] (building &b) {
-        building_farm *farm = b.dcast_farm();
-        if (!farm) {
-            return;
-        }
-
-        farm->runtime_data().progress += amount;
-    });
-};
 
 void building_farm::map_building_tiles_add_farm(e_building_type type, int building_id, tile2i tile, int progress) {
     building *b = building_get(building_id);
