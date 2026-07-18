@@ -45,9 +45,10 @@ public:
 
     void set_immigrant_home(int _id) {
         runtime_data().adv_home_building_id = _id;
+        base.home_building_id = _id;
     };
 
     void set_immigrant_home(building* b) {
-        runtime_data().adv_home_building_id = b->id;
+        set_immigrant_home(b ? b->id : 0);
     };
 };

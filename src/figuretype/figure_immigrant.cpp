@@ -48,7 +48,7 @@ void figure_immigrant::debug_draw(painter &ctx) {
     if (!base.draw_mode) {
         return;
     }
-    
+
     auto &d = runtime_data();
     if (!!(base.draw_mode & e_figure_draw_building)) {
         auto &dlines = base.debug_lines();
@@ -57,17 +57,26 @@ void figure_immigrant::debug_draw(painter &ctx) {
 }
 
 void figure_immigrant::on_destroy() {
-    auto h = home();
-    auto bhome = immigrant_home();
+    building *bhome = immigrant_home();
+    if (bhome->id) {
+        bhome->remove_figure_by_id(id());
+    }
 
-    bhome->remove_figure_by_id(id());
-    h->remove_figure_by_id(id());
+    building *h = home();
+    if (h->id) {
+        h->remove_figure_by_id(id());
+    }
 }
 
 void figure_immigrant::figure_action() {
     OZZY_PROFILER_FUNCTION();
     building* home = immigrant_home();
     auto &d = runtime_data();
+
+    if (!home->id || home->type == BUILDING_NONE) {
+        poof();
+        return;
+    }
 
     switch (action_state()) {
     case ACTION_1_IMMIGRANT_CREATED:
@@ -136,7 +145,14 @@ void figure_immigrant::figure_action() {
 }
 
 void figure_immigrant::figure_before_action() {
-    auto b_imm = immigrant_home();
+    building *b_imm = immigrant_home();
+    // Original .sav files store the destination house in home_building_id;
+    // adv_home_building_id lives in Akhenaten runtime_data and can be garbage
+    // after a legacy load (see #609). Drop the figure rather than OOB-crash.
+    if (!b_imm->id || b_imm->type == BUILDING_NONE) {
+        poof();
+        return;
+    }
     if (b_imm->type == BUILDING_BURNING_RUIN) {
         advance_action(ACTION_1_IMMIGRANT_CREATED);
     }
@@ -174,5 +190,18 @@ void figure_immigrant::debug_show_properties() {
 }
 
 building* figure_immigrant::immigrant_home() {
-    return building_get(runtime_data().adv_home_building_id);
-};
+    building_id bid = runtime_data().adv_home_building_id;
+    // Prefer adv_home when valid; otherwise fall back to home_building_id
+    // so original Pharaoh .sav immigrants keep their destination house.
+    if (bid == 0 || bid >= MAX_BUILDINGS) {
+        bid = base.home_building_id;
+    }
+    if (bid >= MAX_BUILDINGS) {
+        bid = 0;
+    }
+    // Heal runtime_data so subsequent ticks and saves use the correct id.
+    if (bid != 0 && runtime_data().adv_home_building_id != bid) {
+        runtime_data().adv_home_building_id = bid;
+    }
+    return building_get(bid);
+}
