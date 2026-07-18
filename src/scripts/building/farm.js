@@ -798,82 +798,82 @@ function building_meadow_farm_on_update_graphic(ev) {
   }
 }
 
-[es=building_meadow_farm_grain_update_graphic]
+[es=(building_meadow_farm_grain, update_graphic)]
 function building_meadow_farm_grain_on_update_graphic(ev) {
   building_meadow_farm_on_update_graphic(ev)
 }
 
-[es=building_farm_grain_update_graphic]
+[es=(building_farm_grain, update_graphic)]
 function building_farm_grain_on_update_graphic(ev) {
   building_floodplain_farm_on_update_graphic(ev)
 }
 
-[es=building_meadow_farm_chickpeas_update_graphic]
+[es=(building_meadow_farm_chickpeas, update_graphic)]
 function building_meadow_farm_chickpeas_on_update_graphic(ev) {
   building_meadow_farm_on_update_graphic(ev)
 }
 
-[es=building_farm_chickpeas_update_graphic]
+[es=(building_farm_chickpeas, update_graphic)]
 function building_farm_chickpeas_on_update_graphic(ev) {
   building_floodplain_farm_on_update_graphic(ev)
 }
 
-[es=building_meadow_farm_lettuce_update_graphic]
+[es=(building_meadow_farm_lettuce, update_graphic)]
 function building_meadow_farm_lettuce_on_update_graphic(ev) {
   building_meadow_farm_on_update_graphic(ev)
 }
 
-[es=building_farm_lettuce_update_graphic]
+[es=(building_farm_lettuce, update_graphic)]
 function building_farm_lettuce_on_update_graphic(ev) {
   building_floodplain_farm_on_update_graphic(ev)
 }
 
-[es=building_meadow_farm_pomegranates_update_graphic]
+[es=(building_meadow_farm_pomegranates, update_graphic)]
 function building_meadow_farm_pomegranates_on_update_graphic(ev) {
   building_meadow_farm_on_update_graphic(ev)
 }
 
-[es=building_farm_pomegranates_update_graphic]
+[es=(building_farm_pomegranates, update_graphic)]
 function building_farm_pomegranates_on_update_graphic(ev) {
   building_floodplain_farm_on_update_graphic(ev)
 }
 
-[es=building_meadow_farm_barley_update_graphic]
+[es=(building_meadow_farm_barley, update_graphic)]
 function building_meadow_farm_barley_on_update_graphic(ev) {
   building_meadow_farm_on_update_graphic(ev)
 }
 
-[es=building_farm_barley_update_graphic]
+[es=(building_farm_barley, update_graphic)]
 function building_farm_barley_on_update_graphic(ev) {
   building_floodplain_farm_on_update_graphic(ev)
 }
 
-[es=building_meadow_farm_flax_update_graphic]
+[es=(building_meadow_farm_flax, update_graphic)]
 function building_meadow_farm_flax_on_update_graphic(ev) {
   building_meadow_farm_on_update_graphic(ev)
 }
 
-[es=building_farm_flax_update_graphic]
+[es=(building_farm_flax, update_graphic)]
 function building_farm_flax_on_update_graphic(ev) {
   building_floodplain_farm_on_update_graphic(ev)
 }
 
-[es=building_meadow_farm_henna_update_graphic]
+[es=(building_meadow_farm_henna, update_graphic)]
 function building_meadow_farm_henna_on_update_graphic(ev) {
   building_meadow_farm_on_update_graphic(ev)
 }
 
-[es=building_farm_henna_update_graphic]
+[es=(building_farm_henna, update_graphic)]
 function building_farm_henna_on_update_graphic(ev) {
   building_floodplain_farm_on_update_graphic(ev)
 }
 
-[es=building_meadow_farm_figs_update_graphic]
+[es=(building_meadow_farm_figs, update_graphic)]
 function building_meadow_farm_figs_on_update_graphic(ev) {
   building_meadow_farm_on_update_graphic(ev)
 }
 
-[es=building_farm_figs_update_graphic]
+[es=(building_farm_figs, update_graphic)]
 function building_farm_figs_on_update_graphic(ev) {
   building_floodplain_farm_on_update_graphic(ev)
 }
