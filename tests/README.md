@@ -58,9 +58,10 @@ C++ smoke checks run first (before JS files): `SDL_strlen`/`strcmp`, `vec2i`, `g
 | `34_meadow_farm_placement.js` | Grain meadow farm on synthetic meadow; rejected on clear land |
 | `35_floodplain_farm_placement.js` | Grain farm on synthetic floodplain via `test_farm_place` |
 | `36_house_evolve_text_property.js` | House `evolve_text` xstring property roundtrip (write / clear / rewrite) |
+| `37_farm_preview_images.js` | Farm preview smoke: crops ≠ 0, get_image meadow/floodplain routing, `draw_from_below` |
 
-Farm **placement** tests cover `can_place` / terrain rules, not ghost paint. When adding
-preview draw coverage, follow JS draw conventions in
+Farm **placement** tests (34/35) cover `can_place` / terrain rules; **37** covers preview image helpers.
+When adding more preview draw coverage, follow JS draw conventions in
 [`src/building/CLAUDE.md`](../src/building/CLAUDE.md) (ghost_preview section) and
 [`src/js/CLAUDE.md`](../src/js/CLAUDE.md).
 
