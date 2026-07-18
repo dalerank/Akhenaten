@@ -24,6 +24,8 @@ The game starts normally (logo skipped, no Pharaoh data required), then iterates
 
 Results are written to `akhenaten-log.txt` as lines like `[test:tests/11_work_camp_map_placement.js] PASS` or `FAIL: …`, plus a final `[integraltests] N passed, M failed` summary.
 
+C++ smoke checks run first (before JS files): `SDL_strlen`/`strcmp`, `vec2i`, `get_version`, `bstring::cat`, `es_hash_str`, and `archive_helper::coerce`/`set`/`get` for `xstring` (and `vec2i`) property binding.
+
 ## Test files (current)
 
 | File | What it checks |
@@ -52,6 +54,10 @@ Results are written to `akhenaten-log.txt` as lines like `[test:tests/11_work_ca
 | `22_shipyard_placement.js` | Shipyard on synthetic shoreline |
 | `23_ferry_placement.js` | Ferry landing on synthetic shoreline |
 | `24_brewery_placement.js` | Brewery via `test_building_place`; also reads `stored_resource(RESOURCE_WATER)` pseudo-resource |
+| `33_clay_pit_placement.js` | Clay pit near synthetic water (`needs.nearby_water`) |
+| `34_meadow_farm_placement.js` | Grain meadow farm on synthetic meadow; rejected on clear land |
+| `35_floodplain_farm_placement.js` | Grain farm on synthetic floodplain via `test_farm_place` |
+| `36_house_evolve_text_property.js` | House `evolve_text` xstring property roundtrip (write / clear / rewrite) |
 
 Shared helpers for city tests and placement live in [`src/scripts/integral_test.js`](../src/scripts/integral_test.js), imported from `modules.js` (always loaded with the game VM, not via `include()` from test files).
 

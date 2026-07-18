@@ -46,26 +46,10 @@ void house_proto___house_level(js_State *J) {
     js_helpers::js_push_value(J, value);
 }
 
-void house_proto_set_evolve_text(js_State *J) {
-    const int bid = house_this_id(J);
-    const char *text = js_strnode_cstr(js_tostring(J, 1));
-    building_house* house = house_from_bid(bid);
-    if (house)
-        house->runtime_data().evolve_text = text ? xstring(text) : "";
-}
-
 std::optional<bvariant> __house_model_property(int level, pcstr property) {
     return archive_helper::get(building_house::get_model(level), xstring(property), true);
 }
 ANK_FUNCTION_2(__house_model_property)
-
-void house_proto_set_worst_desirability_building_id(js_State *J) {
-    const int bid = house_this_id(J);
-    const int building_id = js_helpers::js_to_value<int>(J, 1);
-    building_house* house = house_from_bid(bid);
-    if (house)
-        house->runtime_data().worst_desirability_building_id = building_id;
-}
 
 void house_proto_get_inventory(js_State *J) {
     const int bid = house_this_id(J);
@@ -135,8 +119,6 @@ void js_register_house(js_State *J) {
     jsB_propf(J, js_intern("House.prototype.__population_room"), house_proto___population_room, 0);
     jsB_propf(J, js_intern("House.prototype.__house_level"), house_proto___house_level, 0);
     jsB_propf(J, js_intern("House.prototype.__is_vacant_lot"), house_proto___is_vacant_lot, 0);
-    jsB_propf(J, js_intern("House.prototype.__set_evolve_text"), house_proto_set_evolve_text, 1);
-    jsB_propf(J, js_intern("House.prototype.__set_worst_desirability_building_id"), house_proto_set_worst_desirability_building_id, 1);
     jsB_propf(J, js_intern("House.prototype.get_inventory"), house_proto_get_inventory, 1);
     jsB_propf(J, js_intern("House.prototype.food"), house_proto_food, 1);
     jsB_propf(J, js_intern("House.prototype.inv"), house_proto_get_inventory, 1);

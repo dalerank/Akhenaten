@@ -297,6 +297,7 @@ function house_get_evolve_reason(house) {
 
 [es=(info_window_house, init)]
 function info_window_house_init_fill(window) {
+    __log_marker("window_show:info_window_house")
     var house = city.get_house(window.bid)
     window.title.text = __loc(29, house.level)
 

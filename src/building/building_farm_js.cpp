@@ -2,6 +2,8 @@
 
 #include "core/calc.h"
 #include "core/profiler.h"
+#include "game/game.h"
+#include "graphics/graphics.h"
 #include "grid/floodplain.h"
 #include "js/js_game.h"
 
@@ -39,3 +41,14 @@ bool __farm_requested_workers(int bid) {
     return farm && farm->requested_workers();
 }
 ANK_FUNCTION_1(__farm_requested_workers)
+
+int __farm_get_image(int type, tile2i tile) {
+    return building_farm::get_farm_image((e_building_type)type, tile);
+}
+ANK_FUNCTION_2(__farm_get_image)
+
+void __farm_draw_crops(int type, int progress, tile2i tile, vec2i pixel, int color_mask) {
+    painter ctx = game.painter();
+    building_farm::draw_crops(ctx, (e_building_type)type, progress, tile, pixel, (color)color_mask);
+}
+ANK_FUNCTION_5(__farm_draw_crops)

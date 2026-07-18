@@ -4,8 +4,10 @@
 #include "content/dir.h"
 #include "content/vfs.h"
 #include "core/app.h"
+#include "core/archive.h"
 #include "core/bstring.h"
 #include "core/log.h"
+#include "core/variant.h"
 #include "core/vec2i.h"
 #include "js/js.h"
 #include "js/js_game.h"
@@ -150,6 +152,65 @@ void run_bstring_cat_unit_tests() {
     }
 }
 
+} // namespace
+
+struct archive_property_roundtrip_t {
+    xstring evolve_text;
+    int count = 0;
+};
+ANK_CONFIG_PROPERTY(archive_property_roundtrip_t, evolve_text, count)
+
+namespace {
+
+void run_archive_property_unit_tests() {
+    {
+        const xstring src = "#cannot_evolve_cause_low_desirability";
+        const xstring got = ::archive_helper::coerce<xstring>(bvariant(src));
+        expect_true(got == src, "coerce<xstring> preserves string bvariant");
+    }
+
+    {
+        const xstring got = ::archive_helper::coerce<xstring>(bvariant(42));
+        expect_true(got.empty(), "coerce<xstring> from int yields empty");
+    }
+
+    {
+        const xstring got = ::archive_helper::coerce<xstring>(bvariant());
+        expect_true(got.empty(), "coerce<xstring> from empty bvariant yields empty");
+    }
+
+    {
+        archive_property_roundtrip_t data;
+        const bool ok = ::archive_helper::set(data, "evolve_text", bvariant(xstring("#house_upgrade_inprogress")), true);
+        expect_true(ok, "archive_helper::set xstring evolve_text");
+        expect_true(data.evolve_text == "#house_upgrade_inprogress", "xstring field stored after set");
+
+        auto opt = ::archive_helper::get(data, xstring("evolve_text"), true);
+        expect_true(opt.has_value(), "archive_helper::get xstring has value");
+        expect_true(opt.has_value() && opt->is_str() && opt->as_str() == "#house_upgrade_inprogress",
+                    "archive_helper::get xstring roundtrip");
+    }
+
+    {
+        archive_property_roundtrip_t data;
+        data.evolve_text = "#keep_me";
+        const bool ok = ::archive_helper::set(data, "evolve_text", bvariant(xstring("")), true);
+        expect_true(ok, "archive_helper::set empty xstring");
+        expect_true(data.evolve_text.empty(), "xstring field cleared");
+    }
+
+    {
+        archive_property_roundtrip_t data;
+        expect_true(::archive_helper::set(data, "count", bvariant(7), true), "archive_helper::set int still works");
+        expect_true(data.count == 7, "int field stored after set");
+    }
+
+    {
+        const vec2i got = ::archive_helper::coerce<vec2i>(bvariant(vec2i{3, 4}));
+        expect_true(got.x == 3 && got.y == 4, "coerce<vec2i> preserves value");
+    }
+}
+
 void run_integral_tests_impl() {
     expect_true(SDL_strlen("abc") == 3, "SDL_strlen sample");
     expect_true(SDL_strcmp("x", "x") == 0, "SDL_strcmp sample");
@@ -163,6 +224,7 @@ void run_integral_tests_impl() {
 
     run_bstring_cat_unit_tests();
     run_es_hash_unit_tests();
+    run_archive_property_unit_tests();
 }
 
 hvector<xstring, 16> list_test_files() {

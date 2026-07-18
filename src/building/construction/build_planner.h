@@ -133,6 +133,7 @@ public:
     sbitarray64 rules;
     bool draw_as_constructing;
     int construction_update_items = 0;
+    int finalize_check_result = 0;
     tile2i start;
     tile2i end;
     int total_cost;

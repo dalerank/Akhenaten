@@ -134,6 +134,31 @@ function test_prepare_shoreline_patch(cx, cy, water_width, water_height) {
     __map_water_rebuild_shores()
 }
 
+// Paint a square terrain patch centered on (cx, cy). Used for farm meadow/floodplain.
+function test_prepare_terrain_patch(cx, cy, size, terrain_mask) {
+    var x0 = cx - ((size / 2) | 0)
+    var y0 = cy - ((size / 2) | 0)
+    for (var dy = 0; dy < size; dy++) {
+        for (var dx = 0; dx < size; dx++) {
+            terrain.add({ x: x0 + dx, y: y0 + dy }, terrain_mask)
+        }
+    }
+}
+
+// Place a farm on a synthetic meadow/floodplain patch near map center.
+function test_farm_place(type, terrain_mask) {
+    var cx = (__scenario_map.width / 2) | 0
+    var cy = (__scenario_map.height / 2) | 0
+    var footprint = __building_static_building_size(type)
+    if (footprint <= 0) {
+        footprint = 3
+    }
+    test_prepare_terrain_patch(cx, cy, footprint + 2, terrain_mask)
+    var place_x = cx - ((footprint / 2) | 0)
+    var place_y = cy - ((footprint / 2) | 0)
+    return test_building_place(type, place_x, place_y)
+}
+
 function test_assert_building_placed(bid, type, tag) {
     if (!bid) {
         __log_info_native('[' + tag + '] no building id')

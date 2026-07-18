@@ -10,6 +10,7 @@
 #include "game/mission.h"
 #include "overlays/city_overlay.h"
 #include "building/building.h"
+#include "building/construction/build_planner.h"
 #include "graphics/image_desc.h"
 #include "graphics/image_groups.h"
 #include "scenario/scenario.h"
@@ -80,9 +81,14 @@ void js_register_game_constants(js_State* J) {
     _R(COLOR_WHITE)
     _R(COLOR_MASK_BLUE)
     _R(COLOR_MASK_GREEN)
+    _R(COLOR_MASK_RED_30)
+    _R(COLOR_MASK_GREEN_30)
     _R(COLOR_TOOLTIP_FILL)
     _R(COLOR_TOOLTIP_BORDER)
     _R(COLOR_TOOLTIP_TEXT)
+
+    _R(CAN_PLACE)
+    _R(CAN_NOT_PLACE)
 
     _R(SCREENSHOT_FULL_CITY)
     _R(SCREENSHOT_DISPLAY)

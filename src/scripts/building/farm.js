@@ -760,9 +760,106 @@ building_farm_figs {
   tile_offsets : building_floodplain_farm_tile_offsets
 }
 
+var building_farm_required_valid_tiles = 4
+
+function building_farm_footprint_check(tile, size) {
+  var orientation = Math.floor(__camera.orientation / 2)
+  var num_tiles = size * size
+  var tiles = []
+  var blocked = 0
+  var valid_tiles = 0
+
+  for (var i = 0; i < num_tiles; i++) {
+    var offset = city.planner.tile_grid_offset(orientation, i)
+    var check_tile = __map_tile_shift_offset(tile, offset)
+    var tile_blocked = (__building_at(check_tile.x, check_tile.y) != 0) || __map_has_figure_at(check_tile)
+    tiles.push({ tile: check_tile, blocked: tile_blocked })
+    if (tile_blocked) {
+      blocked++
+    }
+    if (terrain.is(check_tile, TERRAIN_MEADOW | TERRAIN_FLOODPLAIN)) {
+      valid_tiles++
+    }
+  }
+
+  if (blocked > 0) {
+    return { blocked: true, tiles: tiles }
+  }
+
+  if (valid_tiles < building_farm_required_valid_tiles) {
+    tiles = []
+    for (var i = 0; i < num_tiles; i++) {
+      var offset = city.planner.tile_grid_offset(orientation, i)
+      var check_tile = __map_tile_shift_offset(tile, offset)
+      var is_valid = terrain.is(check_tile, TERRAIN_MEADOW | TERRAIN_FLOODPLAIN)
+      tiles.push({ tile: check_tile, blocked: !is_valid })
+    }
+    return { blocked: true, tiles: tiles }
+  }
+
+  return { blocked: false, tiles: tiles }
+}
+
+function building_farm_draw_partially_blocked(tiles) {
+  for (var i = 0; i < tiles.length; i++) {
+    var entry = tiles[i]
+    var pixel = city.planner.tile_to_pixel(entry.tile)
+    var color = entry.blocked ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30
+    city.planner.draw_flat_tile(pixel, color)
+  }
+}
+
+function building_farm_ghost_preview(ev) {
+  var params = city.get_building_params_by_type(city.planner.build_type)
+  var check = building_farm_footprint_check(ev.end, params.building_size)
+  if (check.blocked) {
+    building_farm_draw_partially_blocked(check.tiles)
+    return
+  }
+
+  var ghost_pixel = { x: ev.pixel.x - 60, y: ev.pixel.y + 30 }
+  var image_id = __farm_get_image(city.planner.build_type, ev.end)
+  city.planner.draw_ghost(ghost_pixel, image_id)
+  __farm_draw_crops(city.planner.build_type, 0, ev.end, ghost_pixel, COLOR_MASK_GREEN)
+}
+
+function building_farm_finalize_check(ev) {
+  var params = city.get_building_params_by_type(city.planner.build_type)
+  var orientation = Math.floor(__camera.orientation / 2)
+  var num_tiles = params.building_size * params.building_size
+  var meadow_tiles = 0
+  var blocked_tiles = 0
+
+  for (var i = 0; i < num_tiles; i++) {
+    var offset = city.planner.tile_grid_offset(orientation, i)
+    var check_tile = __map_tile_shift_offset(ev.start, offset)
+    var tile_blocked = (__building_at(check_tile.x, check_tile.y) != 0) || __map_has_figure_at(check_tile)
+    if (tile_blocked) {
+      blocked_tiles++
+    }
+    if (terrain.is(check_tile, TERRAIN_MEADOW | TERRAIN_FLOODPLAIN)) {
+      meadow_tiles++
+    }
+  }
+
+  if (blocked_tiles > 0) {
+    city.planner.set_warning("Some tiles blocked")
+    city.planner.finalize_check_result = CAN_NOT_PLACE
+    return
+  }
+
+  if (meadow_tiles < building_farm_required_valid_tiles) {
+    city.planner.set_warning("Need more meadow tiles")
+    city.planner.finalize_check_result = CAN_NOT_PLACE
+    return
+  }
+
+  city.planner.finalize_check_result = ev.state
+}
+
 function building_floodplain_farm_on_update_graphic(ev) {
   var farm = city.get_farm(ev.bid)
-  if (farm.flood_imminent)
+  if (!farm || farm.flood_imminent)
     return
 
   var progress = farm.progress
@@ -788,6 +885,9 @@ function building_floodplain_farm_on_update_graphic(ev) {
 
 function building_meadow_farm_on_update_graphic(ev) {
   var farm = city.get_farm(ev.bid)
+  if (!farm) {
+    return
+  }
   var progress = farm.progress
   if (progress < 100)  { farm.set_worker(-1, {x:1, y:1})
   } else if (progress < 400)  { farm.set_worker(e_farm_worker_tiling, {x:0, y:1})
@@ -877,3 +977,131 @@ function building_meadow_farm_figs_on_update_graphic(ev) {
 function building_farm_figs_on_update_graphic(ev) {
   building_floodplain_farm_on_update_graphic(ev)
 }
+
+[es=(building_meadow_farm_grain, ghost_preview)]
+function building_meadow_farm_grain_ghost_preview(ev) {
+  building_farm_ghost_preview(ev)
+}
+
+[es=(building_farm_grain, ghost_preview)]
+function building_farm_grain_ghost_preview(ev) {
+  building_farm_ghost_preview(ev)
+}
+
+[es=(building_meadow_farm_chickpeas, ghost_preview)]
+function building_meadow_farm_chickpeas_ghost_preview(ev) {
+  building_farm_ghost_preview(ev)
+}
+
+[es=(building_farm_chickpeas, ghost_preview)]
+function building_farm_chickpeas_ghost_preview(ev) {
+  building_farm_ghost_preview(ev)
+}
+
+[es=(building_meadow_farm_lettuce, ghost_preview)]
+function building_meadow_farm_lettuce_ghost_preview(ev) {
+  building_farm_ghost_preview(ev)
+}
+
+[es=(building_farm_lettuce, ghost_preview)]
+function building_farm_lettuce_ghost_preview(ev) {
+  building_farm_ghost_preview(ev)
+}
+
+[es=(building_meadow_farm_pomegranates, ghost_preview)]
+function building_meadow_farm_pomegranates_ghost_preview(ev) {
+  building_farm_ghost_preview(ev)
+}
+
+[es=(building_farm_pomegranates, ghost_preview)]
+function building_farm_pomegranates_ghost_preview(ev) {
+  building_farm_ghost_preview(ev)
+}
+
+[es=(building_meadow_farm_barley, ghost_preview)]
+function building_meadow_farm_barley_ghost_preview(ev) {
+  building_farm_ghost_preview(ev)
+}
+
+[es=(building_farm_barley, ghost_preview)]
+function building_farm_barley_ghost_preview(ev) {
+  building_farm_ghost_preview(ev)
+}
+
+[es=(building_meadow_farm_flax, ghost_preview)]
+function building_meadow_farm_flax_ghost_preview(ev) {
+  building_farm_ghost_preview(ev)
+}
+
+[es=(building_farm_flax, ghost_preview)]
+function building_farm_flax_ghost_preview(ev) {
+  building_farm_ghost_preview(ev)
+}
+
+[es=(building_meadow_farm_henna, ghost_preview)]
+function building_meadow_farm_henna_ghost_preview(ev) {
+  building_farm_ghost_preview(ev)
+}
+
+[es=(building_farm_henna, ghost_preview)]
+function building_farm_henna_ghost_preview(ev) {
+  building_farm_ghost_preview(ev)
+}
+
+[es=(building_meadow_farm_figs, ghost_preview)]
+function building_meadow_farm_figs_ghost_preview(ev) {
+  building_farm_ghost_preview(ev)
+}
+
+[es=(building_farm_figs, ghost_preview)]
+function building_farm_figs_ghost_preview(ev) {
+  building_farm_ghost_preview(ev)
+}
+
+[es=(building_meadow_farm_grain, finalize_check)]
+function building_meadow_farm_grain_finalize_check(ev) { building_farm_finalize_check(ev) }
+
+[es=(building_farm_grain, finalize_check)]
+function building_farm_grain_finalize_check(ev) { building_farm_finalize_check(ev) }
+
+[es=(building_meadow_farm_chickpeas, finalize_check)]
+function building_meadow_farm_chickpeas_finalize_check(ev) { building_farm_finalize_check(ev) }
+
+[es=(building_farm_chickpeas, finalize_check)]
+function building_farm_chickpeas_finalize_check(ev) { building_farm_finalize_check(ev) }
+
+[es=(building_meadow_farm_lettuce, finalize_check)]
+function building_meadow_farm_lettuce_finalize_check(ev) { building_farm_finalize_check(ev) }
+
+[es=(building_farm_lettuce, finalize_check)]
+function building_farm_lettuce_finalize_check(ev) { building_farm_finalize_check(ev) }
+
+[es=(building_meadow_farm_pomegranates, finalize_check)]
+function building_meadow_farm_pomegranates_finalize_check(ev) { building_farm_finalize_check(ev) }
+
+[es=(building_farm_pomegranates, finalize_check)]
+function building_farm_pomegranates_finalize_check(ev) { building_farm_finalize_check(ev) }
+
+[es=(building_meadow_farm_barley, finalize_check)]
+function building_meadow_farm_barley_finalize_check(ev) { building_farm_finalize_check(ev) }
+
+[es=(building_farm_barley, finalize_check)]
+function building_farm_barley_finalize_check(ev) { building_farm_finalize_check(ev) }
+
+[es=(building_meadow_farm_flax, finalize_check)]
+function building_meadow_farm_flax_finalize_check(ev) { building_farm_finalize_check(ev) }
+
+[es=(building_farm_flax, finalize_check)]
+function building_farm_flax_finalize_check(ev) { building_farm_finalize_check(ev) }
+
+[es=(building_meadow_farm_henna, finalize_check)]
+function building_meadow_farm_henna_finalize_check(ev) { building_farm_finalize_check(ev) }
+
+[es=(building_farm_henna, finalize_check)]
+function building_farm_henna_finalize_check(ev) { building_farm_finalize_check(ev) }
+
+[es=(building_meadow_farm_figs, finalize_check)]
+function building_meadow_farm_figs_finalize_check(ev) { building_farm_finalize_check(ev) }
+
+[es=(building_farm_figs, finalize_check)]
+function building_farm_figs_finalize_check(ev) { building_farm_finalize_check(ev) }

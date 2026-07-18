@@ -90,25 +90,10 @@ ANK_CONFIG_PROPERTY(building_farm::runtime_data_t, is_floodplain, flood_imminent
 
 struct building_floodplain_farm : public building_farm {
     building_floodplain_farm(building &b) : building_farm(b) {}
-
-    // Unified farm placement preview: any farm may be built on meadow or
-    // floodplain. Placement is allowed as long as the majority of the 3x3
-    // footprint (4 of 9 tiles) sits on valid terrain (TERRAIN_MEADOW |
-    // TERRAIN_FLOODPLAIN) and no tile is occupied by a building or figure.
-    struct preview : building_planer_renderer {
-        bool is_blocked(tile2i tile, int size, blocked_tile_vec &blocked_tiles) const;
-        virtual void ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
-        virtual int finalize_check(build_planner &p, tile2i tile, tile2i end, int state) const override;
-    };
 };
 
-// Meadow farms are retained only for savegame compatibility (older saves may
-// contain placed BUILDING_*_MEADOW_FARM buildings). They are no longer offered
-// in the build menu and share the regular farm's terrain-agnostic preview.
 struct building_meadow_farm : public building_farm {
     building_meadow_farm(building &b) : building_farm(b) {}
-
-    struct preview : building_floodplain_farm::preview {};
 };
 
 struct building_farm_grain : public building_floodplain_farm {

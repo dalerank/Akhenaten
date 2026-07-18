@@ -771,6 +771,12 @@ namespace archive_helper {
     inline F coerce(const bvariant &v) {
         if constexpr (std::is_same_v<F, bool>) {
             return bvariant_to_number(v) != 0.0;
+        } else if constexpr (std::is_same_v<F, xstring>) {
+            return v.is_str() ? v.as_str() : xstring();
+        } else if constexpr (std::is_same_v<F, vec2i>) {
+            return v.is_vec2i() ? v.as_vec2i() : vec2i{};
+        } else if constexpr (std::is_same_v<F, tile2i>) {
+            return v.is_tile2i() ? v.as_tile2i() : tile2i{};
         } else if constexpr (std::is_floating_point_v<F>) {
             return (F)bvariant_to_number(v);
         } else if constexpr (std::is_integral_v<F> || std::is_enum_v<F>) {

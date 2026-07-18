@@ -38,10 +38,9 @@ House.property.criminal_active = { }
 House.property.worst_desirability_building_id = { }
 House.property.fancy_bazaar_access = { }
 House.property.no_space_to_expand = { }
+House.property.evolve_text = { }
 
 House.property.population_room = { get: function() { return this.__population_room() } }
 House.property.level = { get: function() { return this.__house_level() } }
 House.property.model = { get: function() { return city.get_house_model(this.level) } }
 House.property.is_vacant_lot = { get: function() { return this.__is_vacant_lot() } }
-House.property.evolve_text = { get: function() { return this.__evolve_text() } }
-House.property.worst_desirability_building_id = { get: function() { return this.__worst_desirability_building_id() } }

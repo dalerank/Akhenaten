@@ -12,6 +12,7 @@
 #include "grid/building_tiles.h"
 #include "grid/orientation.h"
 #include "grid/routing/routing.h"
+#include "grid/figure.h"
 #include "building/construction/routed.h"
 #include "grid/image.h"
 #include "core/profiler.h"
@@ -22,6 +23,7 @@ ANK_GLOBAL_OBJECT(g_city_planner, __city_planner,
     in_progress,
     draw_as_constructing,
     construction_update_items,
+    finalize_check_result,
     absolute_orientation,
     relative_orientation,
     building_variant,
@@ -144,6 +146,32 @@ void __city_planner_draw_overlay_tile(vec2i pixel, int image_id, int color_mask,
     build_planner::draw_overlay_tile(ctx, image_id, pixel, color_mask, scale);
 }
 ANK_FUNCTION_4(__city_planner_draw_overlay_tile);
+
+void __city_planner_draw_flat_tile(vec2i pixel, int color_mask) {
+    painter ctx = game.painter();
+    build_planner::draw_flat_tile(ctx, pixel, (color)color_mask);
+}
+ANK_FUNCTION_2(__city_planner_draw_flat_tile);
+
+int __city_planner_tile_grid_offset(int orientation, int index) {
+    return build_planner::tile_grid_offset(orientation, index);
+}
+ANK_FUNCTION_2(__city_planner_tile_grid_offset);
+
+void __city_planner_set_warning(xstring warning) {
+    g_city_planner.set_warning(warning);
+}
+ANK_FUNCTION_1(__city_planner_set_warning);
+
+tile2i __map_tile_shift_offset(tile2i tile, int offset) {
+    return tile.shifted(offset);
+}
+ANK_FUNCTION_2(__map_tile_shift_offset);
+
+bool __map_has_figure_at(tile2i tile) {
+    return map_has_figure_at(tile);
+}
+ANK_FUNCTION_1(__map_has_figure_at);
 
 vec2i __lookup_tile_to_pixel(tile2i t) {
     return g_camera.lookup_tile_to_pixel(t);

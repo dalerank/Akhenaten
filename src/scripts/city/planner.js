@@ -20,9 +20,12 @@ city_planner = extend(__city_planner, {
     draw_ghost: __city_planner_draw_ghost
     draw_ghost_overlay: __city_planner_draw_ghost_overlay
     draw_flat_tiles: __city_planner_draw_flat_tiles
+    draw_flat_tile: __city_planner_draw_flat_tile
     draw_isometric_ghost: __city_planner_draw_isometric_ghost
     draw_overlay_tile: __city_planner_draw_overlay_tile
     tile_to_pixel: __lookup_tile_to_pixel
+    tile_grid_offset: __city_planner_tile_grid_offset
+    set_warning: __city_planner_set_warning
 
     rotate_by_hotkey: function() {
         var cfg = get_building_config_by_id(city_planner.build_type)

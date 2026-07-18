@@ -24,6 +24,13 @@ struct construction_update_ev {
 };
 ANK_REGISTER_STRUCT_WRITER(construction_update_ev, start_x, start_y, end_x, end_y)
 
+struct finalize_check_ev {
+    tile2i start;
+    tile2i end;
+    int state;
+};
+ANK_REGISTER_STRUCT_WRITER(finalize_check_ev, start, end, state)
+
 struct building_variant_ev {
     int type;
     tile2i tile;
@@ -85,6 +92,18 @@ void building_planer_renderer::ghost_preview(build_planner &planer, painter &ctx
     }
 
     planer.draw_tile_graphics_array(ctx, start, end, pixel);
+}
+
+int building_planer_renderer::finalize_check(build_planner &planer, tile2i start, tile2i end, int state) const {
+    const auto &params = building_static_params::get(planer.build_type);
+    const xstring event_name = js_helpers::es_hash_str<64>(params.name, __func__).c_str();
+    if (js_has_event_handlers(event_name)) {
+        planer.finalize_check_result = state;
+        es_t(finalize_check_ev{ start, end, state }, params.name, __func__);
+        return planer.finalize_check_result;
+    }
+
+    return state;
 }
 
 int building_planer_renderer::construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
