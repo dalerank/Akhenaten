@@ -22,7 +22,7 @@ struct city_storage_t {
 city_storage_t g_storages[MAX_STORAGES];
 
 void building_storage_clear_all(void) {
-    memset(g_storages, 0, MAX_STORAGES * sizeof(storage_t));
+    memset(g_storages, 0, sizeof(g_storages));
 }
 
 void building_storage_reset_building_ids(void) {
@@ -51,7 +51,7 @@ void building_storage_reset_building_ids(void) {
 int building_storage_create(int building_type) {
     for (int i = 1; i < MAX_STORAGES; i++) {
         if (!g_storages[i].in_use) {
-            memset(&g_storages[i], 0, sizeof(storage_t));
+            memset(&g_storages[i], 0, sizeof(g_storages[i]));
             g_storages[i].in_use = 1;
 
             // default settings for Pharaoh
@@ -143,11 +143,27 @@ const storage_t* building_storage_get(int storage_id) {
 }
 
 void building_storage_toggle_empty_all(int storage_id) {
-    g_storages[storage_id].storage.empty_all = 1 - g_storages[storage_id].storage.empty_all;
+    if (storage_id <= 0 || storage_id >= MAX_STORAGES) {
+        return;
+    }
 
     auto &storage = g_storages[storage_id].storage;
-    for (auto &state : storage.resource_state) {
-        state = STORAGE_STATE_EMPTY;
+    storage.empty_all = 1 - storage.empty_all;
+
+    // START → all Empty; STOP → all Accept (issue #608: STOP used to leave Empty).
+    const int state = storage.empty_all ? STORAGE_STATE_EMPTY : STORAGE_STATE_ACCEPT;
+    for (auto &resource_state : storage.resource_state) {
+        resource_state = state;
+    }
+}
+
+void building_storage_accept_none(int storage_id) {
+    if (storage_id <= 0 || storage_id >= MAX_STORAGES) {
+        return;
+    }
+
+    for (auto &state : g_storages[storage_id].storage.resource_state) {
+        state = STORAGE_STATE_REFUSE;
     }
 }
 
@@ -231,13 +247,6 @@ void building_storage_increase_decrease_resource_state(int storage_id, int resou
         }
 
         g_storages[storage_id].storage.resource_max_get[resource_id] = max_get;
-    }
-}
-
-void building_storage_accept_none(int storage_id) {
-    auto &storage = g_storages[storage_id].storage;
-    for (auto &state: storage.resource_state) {
-        state = STORAGE_STATE_REFUSE;
     }
 }
 
