@@ -32,6 +32,7 @@ int building_clay_pit::get_fire_risk(int value) const {
 
 void building_clay_pit::on_before_flooded() {
     base.destroy_reason = e_destroy_flooded;
+    base.set_flag(e_building_non_deletable, true);
     base.num_workers = 0;
     auto &d = runtime_data();
     d.progress = 0;
@@ -78,14 +79,6 @@ void building_clay_pit::update_production() {
     if (delta_progress > 0) {
         map_clay_deplete(best_tile, delta_progress);
     }
-}
-
-bool building_clay_pit::is_deletable() const {
-    if (base.destroy_reason == e_destroy_flooded) {
-        return false;
-    }
-
-    return true;
 }
 
 bool building_clay_pit::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

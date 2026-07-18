@@ -12,6 +12,5 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void spawn_figure() override;
     virtual void update_production() override;
-    virtual bool is_deletable() const override;
 };
 

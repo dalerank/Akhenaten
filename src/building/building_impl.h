@@ -74,7 +74,6 @@ public:
 
     virtual void remove_worker(figure_id fid) {}
     virtual void add_workers(figure_id fid) {}
-    virtual bool is_deletable() const { return true; }
     virtual bool get_route_citizen_land_type(int grid_offset, int &land_result) const { return false; }
     virtual bool target_route_tile_blocked(int grid_offset) const { return true; }
 

@@ -67,7 +67,7 @@ static building* get_deletable_building(int grid_offset) {
         return nullptr;
     }
 
-    if (!b->dcast()->is_deletable()) {
+    if (!b->is_deletable()) {
         return nullptr;
     }
 
@@ -100,7 +100,7 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
                 }
 
                 map_building_tiles_mark_deleting(grid_offset);
-                
+
                 if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
                     if (b) {
                         items_placed++;

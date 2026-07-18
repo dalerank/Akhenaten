@@ -99,6 +99,7 @@ enum e_building_flag : uint8_t {
     e_building_military = 24,
     e_building_entertainment = 25,
     e_building_food = 26,
+    e_building_non_deletable = 27,
 };
 
 class building_work_camp;
@@ -283,6 +284,7 @@ public:
     bool is_religion() const { return get_flag(e_building_religion); }
     bool is_education() const { return get_flag(e_building_education); }
     bool is_military() const { return get_flag(e_building_military); }
+    bool is_deletable() const { return !get_flag(e_building_non_deletable); }
 
     inline bool same_network(building &b) const { return road_network_id == b.road_network_id; }
     xstring get_sound();
@@ -315,9 +317,9 @@ public:
     resource_value& stored_first() { return storage.data()[0]; }
 
     const resource_value& stored_second() const { return storage.data()[1]; }
-    
+
     int mothball_toggle();
-    
+
     figure* create_figure_generic(e_figure_type _type, e_figure_action created_action, e_building_slot slot, int created_dir);
     figure* create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot);
     figure* create_figure_with_destination(e_figure_type _type, building* destination, e_figure_action created_action, e_building_slot slot = BUILDING_SLOT_SERVICE);
