@@ -138,6 +138,7 @@ namespace game_features {
     game_feature gameui_disable_nilometer_popups{ "gameui_disable_nilometer_popups", "#TR_CONFIG_DISABLE_NILOMETER_POPUPS", false };
     game_feature gameui_building_mothball_button{ "gameui_building_mothball_button", "#TR_CONFIG_BUILDING_MOTHBALL_BUTTON", true };
     game_feature gameui_prompt_save_on_exit{ "gameui_prompt_save_on_exit", "#TR_CONFIG_PROMPT_SAVE_ON_EXIT", true };
+    game_feature gameplay_pause_sim_while_building{ "gameplay_pause_sim_while_building", "#TR_CONFIG_PAUSE_SIM_WHILE_BUILDING", true };
 
     xspan<game_feature*> all() {
         return { _features.data(), _features.size() };

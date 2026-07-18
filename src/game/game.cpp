@@ -335,7 +335,7 @@ static int get_elapsed_ticks() {
         return 0;
     }
 
-    if (g_city_planner.in_progress) {
+    if (g_city_planner.in_progress && game_features::gameplay_pause_sim_while_building.to_bool()) {
         return 0;
     }
 

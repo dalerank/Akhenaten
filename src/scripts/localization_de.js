@@ -34,6 +34,7 @@ localization_de = [
   {key:"#TR_CONFIG_ALLOW_CYCLING_TEMPLES", text:"Bau jedes Tempels nacheinander erlauben"}
   {key:"#TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE", text:"Reichweite beim Bau von Reservoirs, Brunnen und Quellen anzeigen"}
   {key:"#TR_CONFIG_SHOW_CONSTRUCTION_SIZE", text:"Ziehbare Baugröße anzeigen"}
+  {key:"#TR_CONFIG_PAUSE_SIM_WHILE_BUILDING", text:"Simulation während dem Bau anhalten"}
   {key:"#TR_CONFIG_HIGHLIGHT_LEGIONS", text:"Legion beim Überfahren mit Mauszeiger hervorheben"}
   {key:"#TR_CONFIG_ROTATE_MANUALLY", text:"Torhaus und Triumphbogen per Tastenkürzel drehen"}
   {key:"#TR_CONFIG_FIX_IMMIGRATION_BUG", text:"Einwanderungsfehler bei sehr schwer beheben"}

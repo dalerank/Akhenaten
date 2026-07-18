@@ -38,6 +38,7 @@ localization_en = [
   {key:"#TR_CONFIG_ALLOW_CYCLING_TEMPLES", text:"Allow building each temple in succession"}
   {key:"#TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE", text:"Show range when building reservoirs, fountains and wells"}
   {key:"#TR_CONFIG_SHOW_CONSTRUCTION_SIZE", text:"Show draggable construction size"}
+  {key:"#TR_CONFIG_PAUSE_SIM_WHILE_BUILDING", text:"Pause simulation while placing buildings"}
   {key:"#TR_CONFIG_HIGHLIGHT_LEGIONS", text:"Highlight legion on cursor hover"}
   {key:"#TR_CONFIG_ROTATE_MANUALLY", text:"Rotate Gatehouse and Triumph Arch by hotkey"}
   {key:"#TR_CONFIG_FIX_IMMIGRATION_BUG", text:"Fix immigration bug on very hard"}

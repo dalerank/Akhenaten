@@ -28,6 +28,7 @@ localization_ru = [
     { key:"#TR_CONFIG_ALLOW_CYCLING_TEMPLES", text:"Разрешить строительство каждого храма по очереди"}
     { key:"#TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE", text:"Отображать область водоснабжения при строительстве зданий водоснабжения"}
     { key:"#TR_CONFIG_SHOW_CONSTRUCTION_SIZE", text:"Отображать размер здания при строительстве с зажатой клавишей мыши"}
+    { key:"#TR_CONFIG_PAUSE_SIM_WHILE_BUILDING", text:"Ставить симуляцию на паузу при размещении зданий"}
     { key:"#TR_CONFIG_SHOW_CURRENT_SELECT_TILE", text:"Показывать тайл под курсором на карте"}
     { key:"#TR_CONFIG_SHOW_INPUT_NEAR_CURSOR", text:"Показывать нажатые клавиши и кнопки мыши рядом с курсором"}
     { key:"#TR_CONFIG_ROAD_PREVIEW_IN_MAP_ORDER", text:"Превью дороги в общем порядке отрисовки карты"}
