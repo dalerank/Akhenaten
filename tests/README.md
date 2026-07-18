@@ -60,7 +60,7 @@ C++ smoke checks run first (before JS files): `SDL_strlen`/`strcmp`, `vec2i`, `g
 | `36_house_evolve_text_property.js` | House runtime `{}` property bindings: `evolve_text` xstring roundtrip, `worst_desirability_building_id` int (uint16) roundtrip, and the info-window fill path (`house_determine_*` helpers) without TypeError (H1) |
 | `37_farm_preview_images.js` | Farm preview smoke: crops ≠ 0, get_image meadow/floodplain routing, `draw_from_below` |
 | `38_color_mask_passing.js` | Full `COLOR_MASK_*` (> INT_MAX) survive MuJS→C++ as `color` (uint32): `__test_color_roundtrip` for GREEN/RED/BLUE + `draw_flat_tile` with a full mask without TypeError (J1) |
-| `39_enemy_chariot_registered.js` | Enemy chariot FIGURE_METAINFO registration (`__test_enemy_figure_registered`) |
+| `39_enemy_chariot_registered.js` | Every `FIGURE_ENEMY_*_CHARIOT` resolves to a registered enemy class (`__test_enemy_figure_registered`) instead of asserting; Assyrian/Hyksos chariots (missions 32/33) covered (F2) |
 | `40_hippo_spawn.js` | Spawn `FIGURE_HIPPO` on land and water; `update_animation` → `walk` / `swim` (#77) |
 
 Farm **placement** tests (34/35) cover `can_place` / terrain rules; **37** covers preview image helpers.
@@ -122,6 +122,7 @@ After each test script loads, the driver calls `js_vm_sync({})` so any top-level
 | `__figure_get_anim_key(fid)` | string | Current `animctx.key` (e.g. `walk`, `swim`) |
 | `__test_show_tile_info(bid)` | undefined | Open building info window for `bid` |
 | `__test_color_roundtrip(color)` | number | Echo a `color` (uint32) back through the binding conversion; asserts full `COLOR_MASK_*` survive MuJS→C++ (J1) |
+| `__test_enemy_figure_registered(type)` | boolean | Spawn `type` and report whether it resolved to a registered enemy class (`dcast_enemy` != null); false for a missing `FIGURE_METAINFO` (F2) |
 | `__building_static_building_size(type)` | int | Footprint from static building params |
 | `__figure_get_tile(fid)` | `{x,y}` | Current figure tile (invalid/empty when figure missing) |
 

@@ -717,7 +717,9 @@ enemy_kushite = {
     type : ENEMY_6_KUSHITE
     // F1: figure_types[2] is FIGURE_NONE, so the original 20% third-contingent share
     // never spawned. Folded into the axemen (type2) so the army spawns full strength.
-    // TODO(F2): restore a Kushite chariot share as figure_types[2] if the original has one.
+    // F2 done: FIGURE_ENEMY_KUSHITE_CHARIOT now has a class, so re-adding a chariot
+    // contingent here is purely a data decision — set figure_types[2] and a
+    // percentage_type3 once the original share is confirmed.
     percentage_type1 : 50
     percentage_type2 : 50
     percentage_type3 : 0
@@ -925,7 +927,9 @@ enemy_nubian = {
     type : ENEMY_8_NUBIAN
     // F1: figure_types[2] is FIGURE_NONE, so the original 20% third-contingent share
     // never spawned. Folded into the axemen (type2) so the army spawns full strength.
-    // TODO(F2): restore a Nubian chariot share as figure_types[2] if the original has one.
+    // F2 done: FIGURE_ENEMY_NUBIAN_CHARIOT now has a class, so re-adding a chariot
+    // contingent here is purely a data decision — set figure_types[2] and a
+    // percentage_type3 once the original share is confirmed.
     percentage_type1 : 60
     percentage_type2 : 40
     percentage_type3 : 0
@@ -1127,7 +1131,9 @@ enemy_phoenician = {
     type : ENEMY_10_PHOENICIAN
     // F1: figure_types[2] is FIGURE_NONE, so the original 10% third-contingent share
     // never spawned. Folded into the swordsmen (type2) so the army spawns full strength.
-    // TODO(F2): restore a Phoenician chariot share as figure_types[2] if the original has one.
+    // F2 done: FIGURE_ENEMY_PHOENICIAN_CHARIOT now has a class, so re-adding a chariot
+    // contingent here is purely a data decision — set figure_types[2] and a
+    // percentage_type3 once the original share is confirmed.
     percentage_type1 : 80
     percentage_type2 : 20
     percentage_type3 : 0
@@ -1333,7 +1339,9 @@ enemy_seapeople = {
     type : ENEMY_12_SEAPEOPLE
     // F1: figure_types[2] is FIGURE_NONE, so the original 10% third-contingent share
     // never spawned. Folded into the swordsmen (type2) so the army spawns full strength.
-    // TODO(F2): restore a Sea People chariot share as figure_types[2] if the original has one.
+    // F2 done: FIGURE_ENEMY_SEAPEOPLE_CHARIOT now has a class, so re-adding a chariot
+    // contingent here is purely a data decision — set figure_types[2] and a
+    // percentage_type3 once the original share is confirmed.
     percentage_type1 : 80
     percentage_type2 : 20
     percentage_type3 : 0

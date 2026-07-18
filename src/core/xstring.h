@@ -124,7 +124,9 @@ public:
     bool equal(const xstring& rhs) const { return (_p == rhs._p); }
 
     [[nodiscard]]
-    bool equal(pcstr rhs) const { return strcmp(c_str(), rhs) == 0; }
+    bool equal(pcstr rhs) const {
+        return strcmp(_p ? c_str() : "", rhs ? rhs : "") == 0;
+    }
 
     xstring& printf(const char* format, ...) {
         bstring<4096> buf;

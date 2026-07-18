@@ -1,0 +1,18 @@
+#include "figure_enemy_chariot.h"
+
+#include "js/js_game.h"
+
+// Bind each chariot type's static params (animations + combat stats) to its
+// matching JS config block in src/scripts/enemies.js (figure_<nation>_chariot).
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_assyrian_chariot)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_hyksos_chariot)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_egyptian_chariot)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_canaanite_chariot)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_kushite_chariot)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_hittite_chariot)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_persian_chariot)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_libian_chariot)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_nubian_chariot)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_phoenician_chariot)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_roman_chariot)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_seapeople_chariot)
