@@ -57,7 +57,7 @@ C++ smoke checks run first (before JS files): `SDL_strlen`/`strcmp`, `vec2i`, `g
 | `33_clay_pit_placement.js` | Clay pit near synthetic water (`needs.nearby_water`) |
 | `34_meadow_farm_placement.js` | Grain meadow farm on synthetic meadow; rejected on clear land |
 | `35_floodplain_farm_placement.js` | Grain farm on synthetic floodplain via `test_farm_place` |
-| `36_house_evolve_text_property.js` | House `evolve_text` xstring property roundtrip (write / clear / rewrite) |
+| `36_house_evolve_text_property.js` | House runtime `{}` property bindings: `evolve_text` xstring roundtrip, `worst_desirability_building_id` int (uint16) roundtrip, and the info-window fill path (`house_determine_*` helpers) without TypeError (H1) |
 | `37_farm_preview_images.js` | Farm preview smoke: crops ≠ 0, get_image meadow/floodplain routing, `draw_from_below` |
 
 Farm **placement** tests (34/35) cover `can_place` / terrain rules; **37** covers preview image helpers.
