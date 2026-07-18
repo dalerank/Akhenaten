@@ -23,10 +23,10 @@ struct std::hash<trade_price> {
     }
 };
 
-enum e_price_rule { 
-    PRICE_WITH_BONUS, 
-    PRICE_ONLY_BASE, 
-    PRICE_ONLY_BONUS 
+enum e_price_rule {
+    PRICE_WITH_BONUS,
+    PRICE_ONLY_BASE,
+    PRICE_ONLY_BONUS
 };
 
 void trade_prices_reset();

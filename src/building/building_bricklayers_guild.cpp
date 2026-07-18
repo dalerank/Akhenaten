@@ -113,7 +113,7 @@ void building_bricklayers_guild::spawn_figure() {
         }
 
         auto monument = b.dcast_monument();
-        if (!monument->is_unfinished()) { 
+        if (!monument->is_unfinished()) {
            return false;
         }
 
@@ -138,7 +138,7 @@ void building_bricklayers_guild::spawn_figure() {
 
         const bool has_worker = statue->get_figure_id(BUILDING_SLOT_SERVICE) != 0;
         if (has_worker) {
-            return; 
+            return;
         }
 
         const int value = statue->service();

@@ -28,6 +28,7 @@ import building.statue_medium
 import building.statue_large
 import building.mansion
 import building.workshop
+import building.bricks_workshop
 import building.temple_complex
 import building.entertainment
 import building.booth

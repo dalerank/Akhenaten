@@ -531,14 +531,26 @@ static int try_proto_property_define(JF, js_Ast* lhs, js_Ast* rhs, js_Ast** out)
     } else
         return 0;
 
-    /* Empty { }: synthesize get: function() { return this.__property_getter ? ... : undefined } */
+    /* Empty { }: synthesize a getter calling this.__property_getter AND a setter
+     * calling this.__property_setter, so the field is both readable and writable
+     * from JS. The setter is guarded (create_property_setter_ast wraps it in
+     * `if (this.__property_setter) { ... }`), so prototypes without a setter binding
+     * treat writes as a no-op instead of silently shadowing the accessor with an
+     * own data property. */
     if (rhs->a == NULL) {
         js_Ast* getter_fun = create_property_getter_ast(J, lhs, pname);
         js_Ast* get_entry = new_ast_node(J, EXP_PROP_VAL,
             new_str_ast_node(J, AST_IDENTIFIER, property_get, lhs->line),
             getter_fun, 0, 0, lhs->line);
+
+        js_Ast* setter_fun = create_property_setter_ast(J, lhs, pname);
+        js_Ast* set_entry = new_ast_node(J, EXP_PROP_VAL,
+            new_str_ast_node(J, AST_IDENTIFIER, property_set, lhs->line),
+            setter_fun, 0, 0, lhs->line);
+
         /* EXP_OBJECT.a must be an AST_LIST of property nodes (same shape as merge_descriptor_with_defaults). */
         js_Ast* prop_list = new_ast_node(J, AST_LIST, get_entry, NULL, 0, 0, lhs->line);
+        prop_list = new_ast_node(J, AST_LIST, set_entry, prop_list, 0, 0, lhs->line);
         rhs = new_ast_node(J, EXP_OBJECT, prop_list, NULL, NULL, NULL, lhs->line);
     }
 
