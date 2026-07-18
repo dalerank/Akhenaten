@@ -48,6 +48,9 @@ building_dock = {
 [es=(building_dock, update_animation)]
 function building_dock_on_update_animation(ev) {
     var dock = city.get_dock(ev.bid)
+    if (!dock) {
+        return
+    }
     if (dock.num_ships > 0) {
         dock.play_animation = true
         return
@@ -59,6 +62,9 @@ function building_dock_on_update_animation(ev) {
 [es=(building_dock, update_graphic)]
 function building_dock_on_update_graphic(ev) {
     var dock = city.get_dock(ev.bid)
+    if (!dock) {
+        return
+    }
     if (dock.count_idle_dockers() <= 0) {
         return
     }
