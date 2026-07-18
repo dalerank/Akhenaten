@@ -2,16 +2,19 @@
 
 #include "empire/empire.h"
 #include "empire/empire_object.h"
+#include "empire/empire_city.h"
 #include "empire/type.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/graphics.h"
 #include "figuretype/figure_kingdome_trader.h"
 #include "figuretype/figure_trader_ship.h"
+#include "building/building_dock.h"
 #include "core/calc.h"
 #include "game/game.h"
 #include "dev/debug.h"
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "core/log.h"
 #include "js/js_game.h"
 
@@ -187,6 +190,78 @@ void empire_traders_manager::clear_all() {
     for (int i = 0; i < traders.size(); ++i) {
         traders[i].id = i;
         traders[i].is_active = false;
+    }
+}
+
+void empire_traders_manager::purge_dead() {
+    // Defensive sweep after save load. Three places can hold a stale reference
+    // to a vanished trade ship or caravan: traders[].is_active, dock.trade_ship,
+    // and empire_city.trader_figure_ids. Without this, old saves and crash-recovered
+    // states starve every trade route once the 2-per-route cap is full of ghosts.
+
+    std::array<bool, 100> live_handles{};
+    figure_valid_do(
+      [&](figure& f) {
+          if (auto* ship = f.dcast()->dcast_trade_ship()) {
+              uint8_t h = ship->runtime_data().trader.handle;
+              if (h < live_handles.size()) {
+                  live_handles[h] = true;
+              }
+              return;
+          }
+          if (auto* caravan = f.dcast()->dcast_trade_caravan()) {
+              uint8_t h = caravan->runtime_data().trader.handle;
+              if (h < live_handles.size()) {
+                  live_handles[h] = true;
+              }
+          }
+      },
+      make_array(FIGURE_TRADE_SHIP, FIGURE_TRADE_CARAVAN));
+
+    int freed_empire = 0;
+    for (size_t i = 1; i < traders.size(); ++i) {
+        if (traders[i].is_active && !live_handles[i]) {
+            traders[i].is_active = false;
+            ++freed_empire;
+        }
+    }
+
+    int freed_dock = 0;
+    for (building_id bid : g_city.buildings.track_buildings(BUILDING_DOCK)) {
+        building_dock* dock = building_get(bid)->dcast_dock();
+        if (!dock) {
+            continue;
+        }
+        auto& d = dock->runtime_data();
+        if (d.trade_ship == 0) {
+            continue;
+        }
+        figure* f = figure_get(d.trade_ship);
+        if (!f || f->state == FIGURE_STATE_NONE || f->type != FIGURE_TRADE_SHIP) {
+            d.trade_ship = 0;
+            ++freed_dock;
+        }
+    }
+
+    int freed_city = 0;
+    for (auto& city : g_empire.get_cities()) {
+        for (int i = 0; i < 3; ++i) {
+            int fid = city.trader_figure_ids[i];
+            if (fid == 0) {
+                continue;
+            }
+            figure* f = figure_get(fid);
+            if (!f || f->state == FIGURE_STATE_NONE
+                || (f->type != FIGURE_TRADE_SHIP && f->type != FIGURE_TRADE_CARAVAN)) {
+                city.trader_figure_ids[i] = 0;
+                ++freed_city;
+            }
+        }
+    }
+
+    if (freed_empire || freed_dock || freed_city) {
+        logs::info("empire_traders::purge_dead: freed %d empire slots, %d dock slots, %d city slots", freed_empire,
+          freed_dock, freed_city);
     }
 }
 

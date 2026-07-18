@@ -46,7 +46,8 @@ public:
     void create_trader(int trade_route_id, int destination_city_id);
     void remove_trader(int trader_id);
     void clear_all();
-    
+    void purge_dead();
+
     std::array<empire_trader, 100> traders;
     vec2i ship_movement_delay;
     vec2i land_movement_delay;

@@ -226,6 +226,7 @@ static void post_load() {
     city_resource_calculate_storageyard_stocks();
     building_storage_reset_building_ids();
     g_city.avg_coverage.update();
+    g_empire_traders.purge_dead();
 
     g_city.religion.ra_no_traders_months_left = std::clamp<int>(g_city.religion.ra_no_traders_months_left, 0, 12);
     g_city.religion.ra_harshly_reduced_trading_months_left = std::clamp<int>(g_city.religion.ra_harshly_reduced_trading_months_left, 0, 12);
