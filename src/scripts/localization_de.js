@@ -270,9 +270,9 @@ localization_de = [
   {key: "#building_have_no_access", text:"WARNUNG: Dieses Gebäude grenzt nicht an eine Straße" }
   {key: "#bazaar_info_title", text:"Basar" }
   {key: "#well_info_title", text:"Brunnen" }
-  {key: "#well_info_necessary", group:109, id:1}
-  {key: "#well_info_unneeded_fountain", group:109, id:2}
-  {key: "#well_info_unneeded_no_houses", group:109, id:3}
+  {key: "#well_info_necessary", text: "Bürger ohne saubere Wasserlieferungen können Wasser aus Brunnen ziehen, aber Brunnenwasser-Nachbarschaften sind nicht die gesündesten oder begehrtesten Wohnorte."}
+  {key: "#well_info_unneeded_fountain", text: "Dieser Brunnen wird nicht benötigt. Alle Häuser, die er versorgt, bekommen Lieferungen von einer Wasserversorgung."}
+  {key: "#well_info_unneeded_no_houses", text: "Das Wasser dieses Brunnens wird verschwendet, da es keine Häuser in seinem Versorgungsbereich gibt."}
   {key: "#trade_overseer_prices", group:54, id:2}
   {key: "#trade_overseer_prices_hint", group:68, id:108}
   {key: "#trade_overseer_goto_empire", group:54, id:30}

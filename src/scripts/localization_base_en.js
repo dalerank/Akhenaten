@@ -3492,9 +3492,6 @@ localization_base_en = [
     { group:108, id:5, text: "We have far too few workers. Sometimes, no water is delivered for up to two weeks at a time." }
     { group:108, id:6, text: "We are operating on a skeleton staff only. We frequently go a full month without delivering any water." }
     { group:108, id:7, text: "With no delivery staff, this facility could just as well be a dry hole in the ground." }
-    { group:109, id:1, text: "Citizens without clean water deliveries can draw water from Wells, but Well-water neighborhoods are not the healthiest or most desirable places to live." }
-    { group:109, id:2, text: "This well is unneeded. All the houses it serves get deliveries from a Water Supply." }
-    { group:109, id:3, text: "This well's water is going to waste, as there are no houses within its service range." }
     { group:110, id:0, text: "Oracle? Does Shrine go here?" }
     { group:110, id:1, text: "This Shrine makes nearby homes more desirable and pleases all of the gods. It does not employ priests, though, or provide houses with access to any particular god." }
     { group:111, id:0, text: "Burning ruin" }

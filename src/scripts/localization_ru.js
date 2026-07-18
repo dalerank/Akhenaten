@@ -172,9 +172,9 @@ localization_ru = [
     { key:"#building_have_no_access", text:"ПРЕДУПРЕЖДЕНИЕ: Это здание не примыкает к дороге" }
     { key:"#bazaar_info_title", text:"Базар" }
     { key:"#well_info_title", text:"Колодец" }
-    { key:"#well_info_necessary", group:109, id:1 }
-    { key:"#well_info_unneeded_fountain", group:109, id:2 }
-    { key:"#well_info_unneeded_no_houses", group:109, id:3 }
+    { key:"#well_info_necessary", text: "Граждане без доставки чистой воды могут брать воду из колодцев, но районы с колодезной водой не самые здоровые или наиболее желанные места для жизни." }
+    { key:"#well_info_unneeded_fountain", text: "Этот колодец не нужен. Все дома, которые он обслуживает, получают доставки от водоснабжения." }
+    { key:"#well_info_unneeded_no_houses", text: "Вода этого колодца идёт впустую, так как в его зоне обслуживания нет домов." }
     { key:"#visit_rating_advisor", text:"Посетить вашего надзирателя рейтингов?" }
     { key:"#gardens_describe", text:"Этот приятный участок даёт гражданам облегчение от шума, жары и грязи города с прохладным оазисом зелёного пространства. Каждый хочет сад по соседству." }
     { key:"#popup_dialog_proceed", text:"Продолжить?" }
@@ -264,11 +264,11 @@ localization_ru = [
     { key: "#fireman_city_is_amazing", text: "Этот город классный." }
     { key: "#fireman_fighting_fire", text: "Я не могу говорить сейчас. Я занят тушением этого пожара." }
     { key: "#fireman_going_to_fire", text: "Этот пожар может сжечь весь город дотла, если я не буду действовать быстро!" }
-    { key: "#fireman_fighting_fire_also", text: "Ух, это горячо!" }   
+    { key: "#fireman_fighting_fire_also", text: "Ух, это горячо!" }
 
     { key: "#malaria_problem", text: "(Не используется)" }
     { key: "#malaria_not_a_problem", text: "Малярия, похоже, здесь не проблема." }
-    { key: "#malaria_outbreak_could_strike", text: "Вспышка малярии может произойти, если ничего не сделать." }    
+    { key: "#malaria_outbreak_could_strike", text: "Вспышка малярии может произойти, если ничего не сделать." }
 
     { key: "#policeman_desease_can_start_at_any_moment", text: "С таким количеством слабых и больных людей я боюсь за будущее." }
     { key: "#policeman_no_food_in_city", text: "Я так долго не ел, что даже я подумываю о краже еды!" }
@@ -442,7 +442,7 @@ localization_ru = [
     { key: "#scriber_much_unemployments", text: "В городе много безработных. По крайней мере, у них много времени для чтения." }
     { key: "#scriber_low_entertainment", text: "Иногда мои глаза хотят отдохнуть на чём-то другом, кроме иероглифов. Я хочу увидеть шоу!" }
     { key: "#scriber_city_is_ok", text: "Этот город сравним с другими, о которых я читал." }
-    { key: "#scriber_city_is_amazing", text: "Этот город - лучший, который когда-либо знала история!" }    
+    { key: "#scriber_city_is_amazing", text: "Этот город - лучший, который когда-либо знала история!" }
 
     { key: "#dentist_concerned_about_plague", text: "Люди так обеспокоены заражением чумой, что пренебрегают своими зубами." }
     { key: "#dentist_no_food_in_city", text: "Я так мало ел в последнее время... какая печальная трата идеальных зубов." }
@@ -453,7 +453,7 @@ localization_ru = [
     { key: "#dentist_much_unemployments", text: "Я никогда раньше не видел столько людей без работы!" }
     { key: "#dentist_low_entertainment", text: "Мне скучно! Думаю, я почищу зубы снова." }
     { key: "#dentist_city_is_ok", text: "Этот город нормальный. Всего несколько полостей!" }
-    { key: "#dentist_city_is_amazing", text: "У этого города самая яркая улыбка во всём Египте." }    
+    { key: "#dentist_city_is_amazing", text: "У этого города самая яркая улыбка во всём Египте." }
 
     { key: "#magistrate_i_hope_we_are_ready", text: "Условия здоровья в этом городе преступны. Чума - наказание, которое соответствует преступлению." }
     { key: "#magistrate_no_food_in_city", text: "Я так голоден, хорошая еда купит вам любой приговор, который вы хотите." }

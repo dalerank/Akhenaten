@@ -3497,9 +3497,6 @@ localization_base_de = [
     { group:108, id:5, text: "Wir haben viel zu wenige Arbeiter. Manchmal wird bis zu zwei Wochen am Stück kein Wasser geliefert." }
     { group:108, id:6, text: "Wir arbeiten nur mit Notbesetzung. Wir gehen häufig einen vollen Monat, ohne Wasser zu liefern." }
     { group:108, id:7, text: "Ohne Lieferpersonal könnte diese Einrichtung genauso gut ein trockenes Loch im Boden sein." }
-    { group:109, id:1, text: "Bürger ohne saubere Wasserlieferungen können Wasser aus Brunnen ziehen, aber Brunnenwasser-Nachbarschaften sind nicht die gesündesten oder begehrtesten Wohnorte." }
-    { group:109, id:2, text: "Dieser Brunnen wird nicht benötigt. Alle Häuser, die er versorgt, bekommen Lieferungen von einer Wasserversorgung." }
-    { group:109, id:3, text: "Das Wasser dieses Brunnens wird verschwendet, da es keine Häuser in seinem Versorgungsbereich gibt." }
     { group:110, id:0, text: "Orakel? Gehört Schrein hierher?" }
     { group:110, id:1, text: "Dieser Schrein macht nahegelegene Heime begehrter und erfreut alle Götter. Er beschäftigt jedoch keine Priester oder bietet Häusern Zugang zu einem bestimmten Gott." }
     { group:111, id:0, text: "Brennende Ruine" }
