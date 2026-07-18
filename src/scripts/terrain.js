@@ -29,6 +29,14 @@ terrain = {
         return __map_terrain_count_directly_adjacent_with_type(tile, type)
     }
 
+    exists_in_area: function(tile, size, type) {
+        return __map_terrain_exists_in_area(tile, size, type)
+    }
+
+    exists_in_radius: function(tile, size, radius, type) {
+        return __map_terrain_exists_in_radius(tile, size, radius, type)
+    }
+
     can_place_road_under_canal: function(tile) {
         return __map_can_place_road_under_canal(tile)
     }

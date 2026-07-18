@@ -52,6 +52,16 @@ int __map_terrain_count_directly_adjacent_with_type(tile2i tile, int terrain) {
 }
 ANK_FUNCTION_2(__map_terrain_count_directly_adjacent_with_type)
 
+bool __map_terrain_exists_in_area(tile2i tile, int size, int terrain) {
+    return map_terrain_exists_tile_in_area_with_type(tile, size, terrain);
+}
+ANK_FUNCTION_3(__map_terrain_exists_in_area)
+
+bool __map_terrain_exists_in_radius(tile2i tile, int size, int radius, int terrain) {
+    return map_terrain_exists_tile_in_radius_with_type(tile, size, radius, terrain);
+}
+ANK_FUNCTION_4(__map_terrain_exists_in_radius)
+
 bool __map_can_place_road_under_canal(tile2i tile) {
     return map_can_place_road_under_canal(tile);
 }

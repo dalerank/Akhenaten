@@ -34,6 +34,32 @@ building_brewery {
   }
 }
 
+[es=(building_brewery, on_place_checks)]
+function building_brewery_on_place_checks(ev) {
+    var barley = city.resources.barley
+    var has_supply = (barley.count_active_industry > 0) || (barley.yards_stored > 0)
+    if (!has_supply) {
+        city.warnings.show("#needs_barley")
+        if (barley.can_produce) {
+            city.warnings.show("#build_barley_farm")
+        } else if (barley.can_import) {
+            city.warnings.show_if_not(barley.trade_status == TRADE_STATUS_IMPORT, "#overseer_of_commerce_to_import")
+        } else if (barley.could_import) {
+            city.warnings.show("#setup_trade_route_to_import")
+        }
+    }
+
+    if (game_features.gameplay_brewery_requires_water) {
+        var b = city.get_building(ev.bid)
+        var size = b.params.building_size
+        var has_water = terrain.exists_in_area(b.tile, size, TERRAIN_GROUNDWATER)
+            || terrain.exists_in_area(b.tile, size, TERRAIN_FOUNTAIN_RANGE)
+            || terrain.exists_in_radius(b.tile, size, 3, TERRAIN_WATER)
+            || terrain.exists_in_radius(b.tile, size, 3, TERRAIN_FLOODPLAIN)
+        city.warnings.show_if_not(has_water, "#needs_water_access")
+    }
+}
+
 building_weaver = {
   animations : {
     preview : { pos: [0, 0], pack:PACK_GENERAL, id:122 },

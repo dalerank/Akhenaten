@@ -2,19 +2,11 @@
 
 #include "building/building_workshop.h"
 #include "widget/city/ornaments.h"
-#include "city/city.h"
-#include "city/city_labor.h"
-#include "city/city_resource.h"
-#include "city/city_warnings.h"
-#include "city/city_resource_handle.h"
-#include "empire/empire.h"
 #include "game/game_config.h"
 #include "grid/terrain.h"
 #include "io/io_buffer.h"
-#include "figure/service.h"
 
 #include "js/js_game.h"
-#include "graphics/window.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "dev/debug.h"
@@ -49,38 +41,6 @@ void building_brewery::update_preproduction() {
     update_water_supply();
 }
 
-void building_brewery::on_place_checks() {
-    building_impl::on_place_checks();
-
-    construction_warnings warnings;
-
-    // Check for barley: prefer local production over import tips
-    const bool has_barley_supply = city_resource_barley.industry_active() > 0
-        || city_resource_barley.yards_stored() > 0;
-    if (!has_barley_supply) {
-        warnings.add("#needs_barley");
-
-        if (city_resource_barley.can_produce()) {
-            warnings.add("#build_barley_farm");
-        } else if (city_resource_barley.can_import(true)) {
-            warnings.add_if(city_resource_barley.trade_status() != TRADE_STATUS_IMPORT,
-                            "#overseer_of_commerce_to_import");
-        } else if (city_resource_barley.can_import(false)) {
-            warnings.add("#setup_trade_route_to_import");
-        }
-    }
-
-    // Check for water access if feature is enabled
-    if (!!game_features::gameplay_brewery_requires_water) {
-        bool has_water = map_terrain_exists_tile_in_area_with_type(base.tile, base.size, TERRAIN_GROUNDWATER) ||
-                         map_terrain_exists_tile_in_area_with_type(base.tile, base.size, TERRAIN_FOUNTAIN_RANGE) ||
-                         map_terrain_exists_tile_in_radius_with_type(base.tile, base.size, 3, TERRAIN_WATER) ||
-                         map_terrain_exists_tile_in_radius_with_type(base.tile, base.size, 3, TERRAIN_FLOODPLAIN);
-
-        warnings.add_if(!has_water, "#needs_water_access");
-    }
-}
-
 void building_brewery::on_create(int orientation) {
     building_industry::on_create(orientation);
 
@@ -105,7 +65,7 @@ bool building_brewery::can_play_animation() const {
         if (base.stored_amount(RESOURCE_BARLEY) < 100) {
             return false;
         }
-        
+
         if (water_stored() < 50) {
             return false;
         }
