@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iunet — The Defense of Egypt — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .mission-header-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: start; margin-bottom: 2rem; }
+    .mission-infobox { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.9rem 1.1rem; }
+    .mission-infobox dl { display: grid; grid-template-columns: auto 1fr; gap: 0.25rem 1rem; margin: 0; }
+    .mission-infobox dt { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; padding-top: 0.1rem; }
+    .mission-infobox dd { margin: 0; font-size: 0.85rem; color: var(--text); }
+    .mission-infobox .funds-row { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .mission-infobox .funds-row span { font-size: 0.75rem; color: var(--text-muted); }
+    .mission-infobox .funds-row span strong { color: var(--text); }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .details-body pre code { color: #c8c0a8; }
+    .details-body .kw  { color: #c9a84c; }
+    .details-body .num { color: #9ecbff; }
+    .details-body .str { color: #7ec87e; }
+    .details-body .cmt { color: #5a5650; font-style: italic; }
+    .file-ref { display: inline-block; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .msg-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+    .msg-table th, .msg-table td { padding: 0.3rem 0.6rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+    .msg-table th { color: var(--text-muted); font-weight: normal; }
+    .msg-table code { font-size: 0.75rem; }
+    .event-list { list-style: none; padding: 0; margin: 0; }
+    .event-list li { display: grid; grid-template-columns: 1fr auto; gap: 0.5rem 1rem; padding: 0.35rem 0; border-bottom: 1px solid var(--border); align-items: baseline; }
+    .event-list li:last-child { border-bottom: none; }
+    .event-list .ev-name { font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78rem; color: #d0a0e0; }
+    .event-list .ev-fn   { font-family: 'Consolas', 'Courier New', monospace; font-size: 0.75rem; color: #8aabdc; }
+    .event-list .ev-line { font-size: 0.72rem; color: var(--text-muted); text-align: right; white-space: nowrap; }
+    .event-list .ev-desc { grid-column: 1 / -1; color: var(--text-muted); font-size: 0.8rem; padding-bottom: 0.2rem; }
+    .mission-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .mission-nav a { color: var(--gold); }
+    .mission-nav .nav-prev::before { content: "← "; }
+    .mission-nav .nav-next::after  { content: " →"; }
+    .tutorial-step { display: flex; flex-direction: column; align-items: flex-start; gap: 0.3rem; margin-bottom: 1rem; }
+    .tutorial-step .step-tag { flex-shrink: 0; font-size: 0.7rem; font-family: 'Consolas', 'Courier New', monospace; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.25); color: var(--gold); border-radius: 2px; padding: 0.1rem 0.4rem; white-space: nowrap; }
+    .game-quote { background: var(--surface); border-left: 3px solid var(--gold); padding: 0.9rem 1.1rem; margin: 1rem 0; font-style: italic; color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; border-radius: 0 3px 3px 0; }
+    .game-quote p { margin: 0 0 0.6rem; }
+    .game-quote p:last-child { margin-bottom: 0; }
+    .objectives-list { list-style: none; padding: 0; margin: 0.75rem 0; }
+    .objectives-list li { display: flex; align-items: baseline; gap: 0.6rem; padding: 0.3rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    .objectives-list li:last-child { border-bottom: none; }
+    .obj-label { font-weight: 600; color: var(--text); min-width: 8rem; }
+    .obj-value { color: var(--text-muted); }
+    .deviation-note { background: rgba(201,120,76,0.08); border: 1px solid rgba(201,120,76,0.3); border-radius: 4px; padding: 0.75rem 1rem; font-size: 0.85rem; color: var(--text-muted); margin: 0.75rem 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">← All Missions</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Old Kingdom — Khufu</div>
+        <ul>
+          <li><a href="iunet.html" class="active">16 · Iunet</a></li>
+          <li><a href="on.html">17 · On</a></li>
+          <li><a href="rostja.html">18 · Rostja</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#briefing">Briefing</a></li>
+          <li><a href="#objectives">Objectives</a></li>
+          <li><a href="#events">Scripted events</a></li>
+          <li><a href="#strategy">Strategy</a></li>
+          <li><a href="#buildings">Available buildings</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Missions</a> /
+        Iunet
+      </div>
+
+      <h1>Iunet <span style="color:var(--text-muted);font-weight:normal;font-size:0.65em">— The Defense of Egypt</span></h1>
+
+      <div class="mission-header-grid">
+        <div class="mission-infobox">
+          <dl>
+            <dt>Mission</dt>
+            <dd>16 of 38 — choice A of the Iunet / On pair</dd>
+            <dt>Era</dt>
+            <dd>Old Kingdom · Dynasty 4 · Pharaoh Khufu</dd>
+            <dt>Classical name</dt>
+            <dd>Dendera (Tentyris) — the mission briefing popup uses "Dendera"</dd>
+            <dt>Starting funds</dt>
+            <dd>
+              <div class="funds-row">
+                <span><strong>Very Easy</strong> 7 500 Db</span>
+                <span><strong>Easy</strong> 5 000 Db</span>
+                <span><strong>Normal</strong> 3 750 Db</span>
+                <span><strong>Hard</strong> 2 500 Db</span>
+                <span><strong>Very Hard</strong> 2 000 Db</span>
+              </div>
+            </dd>
+            <dt>Deities</dt>
+            <dd>Osiris · Ptah · Seth · Ra</dd>
+            <dt>Trade</dt>
+            <dd>Abu · Men-nefer · Byblos (luxury goods / "ivory")</dd>
+            <dt>Previous mission</dt>
+            <dd><a href="north-dahshur.html">North Dahshur</a></dd>
+            <dt>Next mission</dt>
+            <dd>Rostja (18) — the Iunet / On paths converge there</dd>
+            <dt>Status</dt>
+            <dd><span class="mission-badge badge-choice">Choice A</span> <span class="mission-badge badge-impl">Implemented</span></dd>
+          </dl>
+        </div>
+      </div>
+
+      <h2 id="briefing">Briefing</h2>
+      <p>The mission opens with the history panel (<code>message_history_iunet</code>) and the briefing popup (<code>message_mission_dendera</code>):</p>
+      <div class="game-quote">
+        <p>Pharaoh Khufu has taken the throne, and, as foretold by the seers of Horus and Ra, our people have already begun to suffer under his oppression. Khufu has ordered that a Royal Governor be dispatched at once to Iunet, to defend our land against Kushite invaders.</p>
+        <p>Iunet can support a small fishing industry. If the Kushites invade by water, the river may become unsafe for fishing boats, and shore areas may be better used to support a fleet of warships. If food becomes scarce, cattle may be raised for meat, though the herds require much straw for fodder — straw you will also need to make bricks for your mastaba.</p>
+        <p>The finest ivory may be obtained via Byblos, trading with Assyria and Ur. And Pharaoh has ordered countless quarries dug at On — it is rumored he plans a colossal building project on the plateau outside Rostja.</p>
+      </div>
+      <p>Iunet is the ancient Egyptian name for Dendera in Upper Egypt, later famous for its Ptolemaic temple of Hathor. In the campaign it is the military arm of the Khufu-era fork: a frontier town defending against Kushite raids while building a single noble mastaba and thriving on fishing, cattle, gold, and the new luxury trade in ivory.</p>
+
+      <h2 id="objectives">Objectives</h2>
+      <ul class="objectives-list">
+        <li><span class="obj-label">Population</span><span class="obj-value">4 000 citizens</span></li>
+        <li><span class="obj-label">Culture rating</span><span class="obj-value">30</span></li>
+        <li><span class="obj-label">Prosperity rating</span><span class="obj-value">30</span></li>
+        <li><span class="obj-label">Monument rating</span><span class="obj-value">9 — one small mastaba (built with granite)</span></li>
+        <li><span class="obj-label">Kingdom rating</span><span class="obj-value">65</span></li>
+      </ul>
+      <p>The small mastaba is implemented and yields the same rating (9) as in the original, so this mission's monument goal matches the original exactly — no stand-in.</p>
+
+      <h2 id="events">Scripted events</h2>
+      <div class="tutorial-step"><span class="step-tag">Year 2</span><span>Pharaoh requests <strong>12 fish</strong> (12 months). Late summer: <strong>first Kushite attack</strong> (12 units).</span></div>
+      <div class="tutorial-step"><span class="step-tag">Year 3</span><span>Pharaoh requests <strong>10 meat</strong> (from cattle ranches).</span></div>
+      <div class="tutorial-step"><span class="step-tag">Year 4</span><span>Pharaoh requests <strong>12 pottery</strong>.</span></div>
+      <div class="tutorial-step"><span class="step-tag">Year 5</span><span>A second, larger <strong>Kushite attack</strong> (16 units).</span></div>
+      <div class="deviation-note"><strong>Deviation:</strong> in the original the Kushites <em>sail in from the east</em> and land troops. Enemy naval transports are not implemented yet (task E3), so the raids are scripted as land armies from the default entry point (<code>TODO(E3)</code> in the script).</div>
+
+      <h2 id="strategy">Strategy</h2>
+      <p>Iunet balances a large population (4 000), a demanding kingdom rating (65), and recurring Kushite raids around a single-mastaba monument goal.</p>
+      <h3>Phase 1 — Food from river and herds</h3>
+      <p>Fishing Wharves feed the city while the river is safe; add Cattle Ranches for meat (and Pharaoh's year-3 request), but note cattle need straw fodder — import straw from Abu or Men-nefer. Grain and barley farms round out the food supply for 4 000 citizens.</p>
+      <h3>Phase 2 — Gold and the mastaba</h3>
+      <p>Establish Gold Mines early — gold and granite are your export earners toward the kingdom rating. A Granite Quarry supplies both exports and the granite the small mastaba needs. Build the mastaba once granite flows; it alone satisfies the monument goal (9).</p>
+      <h3>Phase 3 — Defense</h3>
+      <p>Kushites raid around years 2 and 5. Wall the city, keep a Military Academy and trained companies, and build Warship Wharves — even though enemy ships aren't modelled yet, warships help patrol and the wharves match the briefing's intent. Don't stand the army down between raids.</p>
+      <h3>Phase 4 — Culture, prosperity, luxury</h3>
+      <p>Culture 30 and prosperity 30 need schools, a library, temples, entertainment (including a Senet House), and beautification. Import ivory-as-luxury-goods via Byblos to lift house values toward prosperity 30.</p>
+      <h3>Tips</h3>
+      <ul>
+        <li>Cattle need straw — never let the straw import lapse or meat production (and the year-3 request) stalls.</li>
+        <li>Gold is the kingdom-rating engine here; each fulfilled Pharaoh request is +8.</li>
+        <li>The mastaba needs granite, not plain stone — quarry or import granite before starting it.</li>
+      </ul>
+
+      <h2 id="buildings">Available buildings</h2>
+      <p>All buildings are available from mission start:</p>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Category</th><th>Buildings</th></tr></thead>
+          <tbody>
+            <tr><td>Housing &amp; roads</td><td>Vacant Lot · Clear Land · Road · Road Block · Ferry</td></tr>
+            <tr><td>Municipal</td><td>Firehouse · Architect's Post · Police Station · Village Palace · Personal Mansion · Tax Collector · Courthouse</td></tr>
+            <tr><td>Health</td><td>Water Supply · Apothecary · Physician · Mortuary</td></tr>
+            <tr><td>Food &amp; farming</td><td>Grain / Barley / Figs Farm · <strong>Fishing Wharf</strong> · <strong>Cattle Ranch</strong> · Hunting Lodge · Water Lift · Irrigation Ditch · Bazaar · Granary · Storage Yard</td></tr>
+            <tr><td>Raw materials</td><td><strong>Gold Mine</strong> · <strong>Granite Quarry</strong> · Stone Quarry · Clay Pit</td></tr>
+            <tr><td>Industry</td><td>Bricks · Pottery · Brewery · Papyrus · Weaver · Jewels Workshops · Work Camp</td></tr>
+            <tr><td>Monuments</td><td>Small Mastaba · Medium Mastaba</td></tr>
+            <tr><td>Guilds</td><td>Stonemasons' · Carpenters' · Bricklayers'</td></tr>
+            <tr><td>Military</td><td>Recruiter · Weaponsmith · Military Academy · Infantry / Archers / Charioteers Fort · Mud Wall · Mud Gatehouse · Mud Tower · Warship Wharf · Transport Wharf · Shipwright</td></tr>
+            <tr><td>Religion</td><td>Temples &amp; Shrines of Osiris, Ptah, Seth, Ra · Festival Square</td></tr>
+            <tr><td>Education / Entertainment</td><td>Scribal School · Library · Booth · Juggler School · Bandstand · Conservatory · Pavilion · Dance School · <strong>Senet House</strong></td></tr>
+            <tr><td>Beautification</td><td>Small / Medium / Large Statue · Gardens · Plaza</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">All paths are relative to the repository root.</p>
+        <details>
+          <summary>Mission script — <code>src/scripts/mission/m_016_iunet.js</code></summary>
+          <div class="details-body">
+            <p>Imported by <span class="file-ref">src/scripts/missions.js</span>. Key config:</p>
+            <pre><code><span class="kw">mission16</span> {
+  <span class="kw">start_message</span> : <span class="str">"message_mission_dendera"</span>   <span class="cmt">// briefing popup uses the classical name</span>
+  <span class="kw">player_rank</span> : <span class="num">3</span>
+  <span class="kw">next_mission</span> : <span class="num">18</span>          <span class="cmt">// line 9 — converges on Rostja</span>
+
+  <span class="kw">win_criteria</span> {              <span class="cmt">// line 62</span>
+    <span class="kw">population</span> { enabled : <span class="num">true</span>, goal : <span class="num">4000</span> }
+    <span class="kw">culture</span>    { enabled : <span class="num">true</span>, goal : <span class="num">30</span> }
+    <span class="kw">prosperity</span> { enabled : <span class="num">true</span>, goal : <span class="num">30</span> }
+    <span class="kw">monuments</span>  { enabled : <span class="num">true</span>, goal : <span class="num">9</span> }   <span class="cmt">// 1 small mastaba (matches original)</span>
+    <span class="kw">kingdom</span>    { enabled : <span class="num">true</span>, goal : <span class="num">65</span> }
+  }
+}</code></pre>
+          </div>
+        </details>
+        <details>
+          <summary>Event handlers — <code>m_016_iunet.js</code></summary>
+          <div class="details-body">
+            <ul class="event-list">
+              <li><span class="ev-name">event_mission_start</span><span class="ev-line">line 116</span><span class="ev-desc">Start message, empire map, advisors up to Diplomacy.</span><span class="ev-fn">mission16_on_start</span><span></span></li>
+              <li><span class="ev-name">event_advance_month</span><span class="ev-line">line 127</span><span class="ev-desc">Year 2: request 12 fish (+8/−8 kingdom).</span><span class="ev-fn">mission16_pharaoh_request_fish</span><span></span></li>
+              <li><span class="ev-name">event_advance_month</span><span class="ev-line">line 146</span><span class="ev-desc">Year 3: request 10 meat.</span><span class="ev-fn">mission16_pharaoh_request_meat</span><span></span></li>
+              <li><span class="ev-name">event_advance_month</span><span class="ev-line">line 165</span><span class="ev-desc">Year 4: request 12 pottery.</span><span class="ev-fn">mission16_pharaoh_request_pottery</span><span></span></li>
+              <li><span class="ev-name">event_advance_month</span><span class="ev-line">line 187</span><span class="ev-desc">Year 2, m8: first Kushite raid (ENEMY_6_KUSHITE, size 12).</span><span class="ev-fn">mission16_kushite_invasion_1</span><span></span></li>
+              <li><span class="ev-name">event_advance_month</span><span class="ev-line">line 203</span><span class="ev-desc">Year 5, m4: second Kushite raid (size 16).</span><span class="ev-fn">mission16_kushite_invasion_2</span><span></span></li>
+            </ul>
+          </div>
+        </details>
+        <details>
+          <summary>Game messages &amp; known deviations</summary>
+          <div class="details-body">
+            <table class="msg-table">
+              <thead><tr><th>Key</th><th>ID</th><th>Line</th><th>When shown</th></tr></thead>
+              <tbody>
+                <tr><td><code>message_history_iunet</code></td><td>216</td><td>2685</td><td>History briefing ("The defense of Egypt")</td></tr>
+                <tr><td><code>message_mission_dendera</code></td><td>416</td><td>4946</td><td><code>start_message</code> popup (classical name)</td></tr>
+              </tbody>
+            </table>
+            <ul style="margin-top:0.75rem">
+              <li><strong>Kushite naval landing</strong> approximated as a land army — enemy ships pending (task E3).</li>
+              <li><strong>Ivory</strong> has no dedicated resource in this build; represented as luxury goods via Byblos.</li>
+              <li><strong>Request years/amounts, invasion timing, player_rank (3), trade goods</strong> are provisional — verify vs original <code>.pak</code>.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+
+      <div class="mission-nav">
+        <a href="north-dahshur.html" class="nav-prev">15 · North Dahshur — The True Pyramid</a>
+        <a href="on.html" class="nav-next">17 · On — Ivory from the East</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+  <script src="../../../lightbox.js"></script>
+</body>
+</html>

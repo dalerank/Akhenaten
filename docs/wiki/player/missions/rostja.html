@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rostja — The Great Pyramid and Sphinx — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .mission-header-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: start; margin-bottom: 2rem; }
+    .mission-infobox { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.9rem 1.1rem; }
+    .mission-infobox dl { display: grid; grid-template-columns: auto 1fr; gap: 0.25rem 1rem; margin: 0; }
+    .mission-infobox dt { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; padding-top: 0.1rem; }
+    .mission-infobox dd { margin: 0; font-size: 0.85rem; color: var(--text); }
+    .mission-infobox .funds-row { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .mission-infobox .funds-row span { font-size: 0.75rem; color: var(--text-muted); }
+    .mission-infobox .funds-row span strong { color: var(--text); }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .details-body pre code { color: #c8c0a8; }
+    .details-body .kw  { color: #c9a84c; }
+    .details-body .num { color: #9ecbff; }
+    .details-body .str { color: #7ec87e; }
+    .details-body .cmt { color: #5a5650; font-style: italic; }
+    .file-ref { display: inline-block; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .msg-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+    .msg-table th, .msg-table td { padding: 0.3rem 0.6rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+    .msg-table th { color: var(--text-muted); font-weight: normal; }
+    .msg-table code { font-size: 0.75rem; }
+    .event-list { list-style: none; padding: 0; margin: 0; }
+    .event-list li { display: grid; grid-template-columns: 1fr auto; gap: 0.5rem 1rem; padding: 0.35rem 0; border-bottom: 1px solid var(--border); align-items: baseline; }
+    .event-list li:last-child { border-bottom: none; }
+    .event-list .ev-name { font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78rem; color: #d0a0e0; }
+    .event-list .ev-fn   { font-family: 'Consolas', 'Courier New', monospace; font-size: 0.75rem; color: #8aabdc; }
+    .event-list .ev-line { font-size: 0.72rem; color: var(--text-muted); text-align: right; white-space: nowrap; }
+    .event-list .ev-desc { grid-column: 1 / -1; color: var(--text-muted); font-size: 0.8rem; padding-bottom: 0.2rem; }
+    .mission-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .mission-nav a { color: var(--gold); }
+    .mission-nav .nav-prev::before { content: "← "; }
+    .mission-nav .nav-next::after  { content: " →"; }
+    .tutorial-step { display: flex; flex-direction: column; align-items: flex-start; gap: 0.3rem; margin-bottom: 1rem; }
+    .tutorial-step .step-tag { flex-shrink: 0; font-size: 0.7rem; font-family: 'Consolas', 'Courier New', monospace; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.25); color: var(--gold); border-radius: 2px; padding: 0.1rem 0.4rem; white-space: nowrap; }
+    .game-quote { background: var(--surface); border-left: 3px solid var(--gold); padding: 0.9rem 1.1rem; margin: 1rem 0; font-style: italic; color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; border-radius: 0 3px 3px 0; }
+    .game-quote p { margin: 0 0 0.6rem; }
+    .game-quote p:last-child { margin-bottom: 0; }
+    .objectives-list { list-style: none; padding: 0; margin: 0.75rem 0; }
+    .objectives-list li { display: flex; align-items: baseline; gap: 0.6rem; padding: 0.3rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    .objectives-list li:last-child { border-bottom: none; }
+    .obj-label { font-weight: 600; color: var(--text); min-width: 8rem; }
+    .obj-value { color: var(--text-muted); }
+    .deviation-note { background: rgba(201,120,76,0.08); border: 1px solid rgba(201,120,76,0.3); border-radius: 4px; padding: 0.75rem 1rem; font-size: 0.85rem; color: var(--text-muted); margin: 0.75rem 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">← All Missions</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Old Kingdom — Khufu</div>
+        <ul>
+          <li><a href="iunet.html">16 · Iunet</a></li>
+          <li><a href="on.html">17 · On</a></li>
+          <li><a href="rostja.html" class="active">18 · Rostja</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#briefing">Briefing</a></li>
+          <li><a href="#objectives">Objectives</a></li>
+          <li><a href="#events">Scripted events</a></li>
+          <li><a href="#strategy">Strategy</a></li>
+          <li><a href="#buildings">Available buildings</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Missions</a> /
+        Rostja
+      </div>
+
+      <h1>Rostja <span style="color:var(--text-muted);font-weight:normal;font-size:0.65em">— The Great Pyramid and Sphinx</span></h1>
+
+      <div class="mission-header-grid">
+        <div class="mission-infobox">
+          <dl>
+            <dt>Mission</dt>
+            <dd>18 of 38 — convergence of the Iunet / On fork</dd>
+            <dt>Era</dt>
+            <dd>Old Kingdom · Dynasty 4 · Pharaoh Khufu</dd>
+            <dt>Classical name</dt>
+            <dd>Giza — the mission briefing popup uses "Giza"</dd>
+            <dt>Starting funds</dt>
+            <dd>
+              <div class="funds-row">
+                <span><strong>Very Easy</strong> 10 000 Db</span>
+                <span><strong>Easy</strong> 8 000 Db</span>
+                <span><strong>Normal</strong> 6 000 Db</span>
+                <span><strong>Hard</strong> 4 000 Db</span>
+                <span><strong>Very Hard</strong> 3 000 Db</span>
+              </div>
+            </dd>
+            <dt>Deities</dt>
+            <dd>Osiris · Ptah · Seth · Ra</dd>
+            <dt>Trade</dt>
+            <dd>On (limestone) · Men-nefer (stone) · Byblos (cedar/timber)</dd>
+            <dt>Previous mission</dt>
+            <dd><a href="iunet.html">Iunet</a> or <a href="on.html">On</a></dd>
+            <dt>Next mission</dt>
+            <dd>Player's choice: Bahariya (19) or Djedu (20) — <em>not yet scripted</em></dd>
+            <dt>Status</dt>
+            <dd><span class="mission-badge badge-impl">Implemented</span></dd>
+          </dl>
+        </div>
+      </div>
+
+      <h2 id="briefing">Briefing</h2>
+      <p>The mission opens with the history panel (<code>message_history_rostja</code>) and the briefing popup (<code>message_mission_giza</code>):</p>
+      <div class="game-quote">
+        <p>Pharaoh Khufu has at last made his plans known. You have been awarded the status of Nomarch, but also charged with carrying out the most ambitious building project ever undertaken in our land.</p>
+        <p>Pharaoh's eternal resting place shall be a massive pyramid complex on the plateau outside Rostja. His sarcophagus shall be of solid granite, his funeral barge of precious Lebanese cedar. Beside it, a smaller pyramid shall be built for his son prince Khafra, who also declares his image be carved into the living rock as a "sphinx" — the body of a lion and the head of a man.</p>
+        <p>You'll need a large settlement to support the effort. Conditions there may not be overly refined; your goal is only to complete these three great projects, and to honor Pharaoh — whatever the cost.</p>
+      </div>
+      <p>Rostja (Rosetau) is the ancient name for the Giza plateau. This is the campaign's marquee mission — Khufu's Great Pyramid, Khafra's pyramid, and the Sphinx — a pure construction-and-loyalty scenario with no population, culture, or prosperity requirement, only monuments and the Pharaoh's favor.</p>
+
+      <h2 id="objectives">Objectives</h2>
+      <ul class="objectives-list">
+        <li><span class="obj-label">Population</span><span class="obj-value">not required</span></li>
+        <li><span class="obj-label">Culture / Prosperity</span><span class="obj-value">not required</span></li>
+        <li><span class="obj-label">Monument rating</span><span class="obj-value">33 — build the full available monument set</span></li>
+        <li><span class="obj-label">Kingdom rating</span><span class="obj-value">50</span></li>
+      </ul>
+      <div class="deviation-note">
+        <strong>Temporary deviation from the original:</strong> the original requires a Sphinx + a pyramid complex + a (prince's) pyramid, for monument rating 53. True pyramids (task C3) and the Sphinx (task C6) are not implemented, and the available monuments cannot reach 53. As a stand-in the mission requires the full available set — both stepped pyramids (8 + 16) and both mastabas (2 + 2), summing to a rating of 33. When C3 and C6 land, the goal reverts to 53 with the pyramid complex, prince's pyramid, and Sphinx.
+      </div>
+
+      <h2 id="events">Scripted events</h2>
+      <div class="tutorial-step"><span class="step-tag">Year 2</span><span>Pharaoh requests <strong>20 limestone</strong> for the outer casing (12 months). +8 / −8 kingdom.</span></div>
+      <div class="tutorial-step"><span class="step-tag">Year 3</span><span>Summer: <strong>Libyan raid</strong> from the mid-east (14 units).</span></div>
+      <div class="tutorial-step"><span class="step-tag">Year 4</span><span>Pharaoh requests <strong>20 plain stone</strong>.</span></div>
+      <div class="tutorial-step"><span class="step-tag">Year 6</span><span>A second, larger <strong>Libyan raid</strong> from the south-east shore (18 units).</span></div>
+
+      <h2 id="strategy">Strategy</h2>
+      <p>Rostja is all about the monuments. There is no population, culture, or prosperity goal — the entire city exists to feed stone, limestone, and granite to the great projects while keeping the Pharaoh (kingdom rating 50) and the gods content, and repelling two Libyan raids.</p>
+      <h3>Phase 1 — Workforce and stone</h3>
+      <p>Build enough housing to staff a large labor pool (even without a population goal), then stand up Stone, Limestone, and Granite Quarries with multiple Work Camps and all three guilds. Import extra plain stone from Men-nefer, limestone from On, and Lebanese cedar (timber) from Byblos for the ramps and the funeral barge.</p>
+      <h3>Phase 2 — The great projects</h3>
+      <p>Lay out all four monuments early (both stepped pyramids and both mastabas stand in for the pyramid complex, prince's pyramid, and Sphinx). They take years — keep the stone/limestone pipeline saturated so no phase stalls. The generous starting funds (up to 10 000 Db) exist because you'll be buying a great deal of material.</p>
+      <h3>Phase 3 — Defense</h3>
+      <p>Two Libyan raids (years 3 and 6) come from the east/south-east. Wall the settlement and keep a standing academy-trained army; the monuments themselves are the prize the raiders target.</p>
+      <h3>Tips</h3>
+      <ul>
+        <li>Ignore culture and prosperity — pour everything into the stone economy and the four monuments.</li>
+        <li>Keep large limestone and plain-stone buffers; a stall in supply freezes construction for months.</li>
+        <li>Each fulfilled Pharaoh request is +8 kingdom toward the goal of 50 — the requests are the fastest path there.</li>
+      </ul>
+
+      <h2 id="buildings">Available buildings</h2>
+      <p>All buildings are available from mission start. Culture buildings are deliberately minimal — there is no culture goal:</p>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Category</th><th>Buildings</th></tr></thead>
+          <tbody>
+            <tr><td>Housing &amp; roads</td><td>Vacant Lot · Clear Land · Road · Road Block · Ferry</td></tr>
+            <tr><td>Municipal</td><td>Firehouse · Architect's Post · Police Station · Village Palace · Personal Mansion · Tax Collector · Courthouse</td></tr>
+            <tr><td>Health</td><td>Water Supply · Apothecary · Physician · Mortuary</td></tr>
+            <tr><td>Food &amp; farming</td><td>Grain / Barley / Figs Farm · Hunting Lodge · Water Lift · Irrigation Ditch · Bazaar · Granary · Storage Yard</td></tr>
+            <tr><td>Raw materials</td><td><strong>Stone Quarry</strong> · <strong>Limestone Quarry</strong> · <strong>Granite Quarry</strong> · Clay Pit</td></tr>
+            <tr><td>Industry</td><td>Bricks · Pottery · Brewery · Papyrus · Weaver · Jewels Workshops · Work Camp</td></tr>
+            <tr><td>Monuments</td><td>Small / Medium Stepped Pyramid · Small / Medium Mastaba <span style="color:var(--text-muted)">(pyramid complex + Sphinx pending — tasks C3, C6)</span></td></tr>
+            <tr><td>Guilds</td><td>Stonemasons' · Carpenters' · Bricklayers'</td></tr>
+            <tr><td>Military</td><td>Recruiter · Weaponsmith · Military Academy · Infantry / Archers / Charioteers Fort · Mud Wall · Mud Gatehouse · Mud Tower</td></tr>
+            <tr><td>Religion</td><td>Temples &amp; Shrines of Osiris, Ptah, Seth, Ra · Festival Square</td></tr>
+            <tr><td>Education / Entertainment</td><td>Scribal School · Booth · Juggler School · Bandstand · Pavilion</td></tr>
+            <tr><td>Beautification</td><td>Small / Medium / Large Statue · Gardens · Plaza</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">All paths are relative to the repository root.</p>
+        <details>
+          <summary>Mission script — <code>src/scripts/mission/m_018_rostja.js</code></summary>
+          <div class="details-body">
+            <p>Imported by <span class="file-ref">src/scripts/missions.js</span>. Key config:</p>
+            <pre><code><span class="kw">mission18</span> {
+  <span class="kw">start_message</span> : <span class="str">"message_mission_giza"</span>
+  <span class="kw">player_rank</span> : <span class="num">3</span>
+
+  <span class="kw">choice</span> [                       <span class="cmt">// line 16 — next fork: Bahariya (19) / Djedu (20)</span>
+    { <span class="kw">name</span> : <span class="str">"Bahariya"</span>, <span class="kw">id</span> : <span class="num">19</span> }
+    { <span class="kw">name</span> : <span class="str">"Djedu"</span>,    <span class="kw">id</span> : <span class="num">20</span> }
+  ]
+
+  <span class="cmt">// original: no pop/culture/prosperity; monument 53 (sphinx + complex + pyramid), kingdom 50</span>
+  <span class="cmt">// TODO(C3+C6): true pyramid/complex + sphinx not implemented; full available set stands in (33)</span>
+  <span class="kw">win_criteria</span> {              <span class="cmt">// line 87</span>
+    <span class="kw">population</span> { enabled : <span class="num">false</span> }
+    <span class="kw">culture</span>    { enabled : <span class="num">false</span> }
+    <span class="kw">prosperity</span> { enabled : <span class="num">false</span> }
+    <span class="kw">monuments</span>  { enabled : <span class="num">true</span>, goal : <span class="num">33</span> }
+    <span class="kw">kingdom</span>    { enabled : <span class="num">true</span>, goal : <span class="num">50</span> }
+  }
+}</code></pre>
+            <p>Choice targets 19/20 are not scripted yet, so the post-victory choice screen leads to dead ends (task B5). Starting funds are raised (up to 10 000 Db) to match the material-buying demands of the original.</p>
+          </div>
+        </details>
+        <details>
+          <summary>Event handlers — <code>m_018_rostja.js</code></summary>
+          <div class="details-body">
+            <ul class="event-list">
+              <li><span class="ev-name">event_mission_start</span><span class="ev-line">line 139</span><span class="ev-desc">Start message, empire map, advisors up to Diplomacy.</span><span class="ev-fn">mission18_on_start</span><span></span></li>
+              <li><span class="ev-name">event_advance_month</span><span class="ev-line">line 151</span><span class="ev-desc">Year 2: request 20 limestone (+8/−8 kingdom).</span><span class="ev-fn">mission18_pharaoh_request_limestone</span><span></span></li>
+              <li><span class="ev-name">event_advance_month</span><span class="ev-line">line 170</span><span class="ev-desc">Year 4: request 20 plain stone.</span><span class="ev-fn">mission18_pharaoh_request_stone</span><span></span></li>
+              <li><span class="ev-name">event_advance_month</span><span class="ev-line">line 190</span><span class="ev-desc">Year 3, m6: first Libyan raid (ENEMY_7_LIBIAN, size 14).</span><span class="ev-fn">mission18_libyan_invasion_1</span><span></span></li>
+              <li><span class="ev-name">event_advance_month</span><span class="ev-line">line 206</span><span class="ev-desc">Year 6, m1: second Libyan raid (size 18).</span><span class="ev-fn">mission18_libyan_invasion_2</span><span></span></li>
+            </ul>
+          </div>
+        </details>
+        <details>
+          <summary>Game messages &amp; known deviations</summary>
+          <div class="details-body">
+            <table class="msg-table">
+              <thead><tr><th>Key</th><th>ID</th><th>Line</th><th>When shown</th></tr></thead>
+              <tbody>
+                <tr><td><code>message_history_rostja</code></td><td>218</td><td>2717</td><td>History briefing ("The Great Pyramid and Sphinx")</td></tr>
+                <tr><td><code>message_mission_giza</code></td><td>418</td><td>4978</td><td><code>start_message</code> popup (classical name)</td></tr>
+              </tbody>
+            </table>
+            <ul style="margin-top:0.75rem">
+              <li><strong>Monument:</strong> Sphinx (C6) + pyramid complex/pyramid (C3) not implemented; full stepped-pyramid + mastaba set stands in (rating 33 vs original 53). <code>TODO(C3+C6)</code> in the script.</li>
+              <li><strong>Choice targets 19/20</strong> (Bahariya / Djedu) not scripted yet — choice screen is a dead end until D6 (task B5).</li>
+              <li><strong>Request years/amounts, invasion timing, player_rank (3), trade goods</strong> provisional — verify vs <code>.pak</code>.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+
+      <div class="mission-nav">
+        <a href="on.html" class="nav-prev">17 · On — Ivory from the East</a>
+        <a href="index.html" class="nav-next">All missions</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+  <script src="../../../lightbox.js"></script>
+</body>
+</html>
