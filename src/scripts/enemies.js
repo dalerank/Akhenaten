@@ -300,8 +300,8 @@ figure_canaanite_chariot = {
 enemy_canaanite = {
     type : ENEMY_2_CANAANITE
     percentage_type1 : 50
-    percentage_type2 : 40
-    percentage_type3 : 10
+    percentage_type2 : 50
+    percentage_type3 : 0
     figure_types : [FIGURE_ENEMY_CANAANITE_ARCHER, FIGURE_ENEMY_CANAANITE_SWORD, FIGURE_NONE]
     layout : FORMATION_ENEMY_MOB
 }
@@ -715,9 +715,12 @@ figure_kushite_chariot = {
 
 enemy_kushite = {
     type : ENEMY_6_KUSHITE
+    // F1: figure_types[2] is FIGURE_NONE, so the original 20% third-contingent share
+    // never spawned. Folded into the axemen (type2) so the army spawns full strength.
+    // TODO(F2): restore a Kushite chariot share as figure_types[2] if the original has one.
     percentage_type1 : 50
-    percentage_type2 : 30
-    percentage_type3 : 20
+    percentage_type2 : 50
+    percentage_type3 : 0
     figure_types: [FIGURE_ENEMY_KUSHITE_SPEARMAN, FIGURE_ENEMY_KUSHITE_AXEMAN, FIGURE_NONE]
     layout: FORMATION_ENEMY_DOUBLE_LINE
 }
@@ -920,9 +923,12 @@ figure_nubian_chariot = {
 
 enemy_nubian = {
     type : ENEMY_8_NUBIAN
+    // F1: figure_types[2] is FIGURE_NONE, so the original 20% third-contingent share
+    // never spawned. Folded into the axemen (type2) so the army spawns full strength.
+    // TODO(F2): restore a Nubian chariot share as figure_types[2] if the original has one.
     percentage_type1 : 60
-    percentage_type2 : 20
-    percentage_type3 : 20
+    percentage_type2 : 40
+    percentage_type3 : 0
     figure_types: [FIGURE_ENEMY_NUBIAN_ARCHER, FIGURE_ENEMY_NUBIAN_AXEMAN, FIGURE_NONE]
     layout: FORMATION_ENEMY_DOUBLE_LINE
 }
@@ -1119,9 +1125,12 @@ figure_phoenician_chariot = {
 
 enemy_phoenician = {
     type : ENEMY_10_PHOENICIAN
+    // F1: figure_types[2] is FIGURE_NONE, so the original 10% third-contingent share
+    // never spawned. Folded into the swordsmen (type2) so the army spawns full strength.
+    // TODO(F2): restore a Phoenician chariot share as figure_types[2] if the original has one.
     percentage_type1 : 80
-    percentage_type2 : 10
-    percentage_type3 : 10
+    percentage_type2 : 20
+    percentage_type3 : 0
     figure_types: [FIGURE_ENEMY_PHOENICIAN_SPEARMAN, FIGURE_ENEMY_PHOENICIAN_SWORDMAN, FIGURE_NONE]
     layout: FORMATION_ENEMY_WIDE_COLUMN
 }
@@ -1322,9 +1331,12 @@ figure_seapeople_chariot = {
 
 enemy_seapeople = {
     type : ENEMY_12_SEAPEOPLE
+    // F1: figure_types[2] is FIGURE_NONE, so the original 10% third-contingent share
+    // never spawned. Folded into the swordsmen (type2) so the army spawns full strength.
+    // TODO(F2): restore a Sea People chariot share as figure_types[2] if the original has one.
     percentage_type1 : 80
-    percentage_type2 : 10
-    percentage_type3 : 10
+    percentage_type2 : 20
+    percentage_type3 : 0
     figure_types: [FIGURE_ENEMY_SEAPEOPLE_ARCHER, FIGURE_ENEMY_SEAPEOPLE_SWORDMAN, FIGURE_NONE]
     layout: FORMATION_COLUMN
 }
