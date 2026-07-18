@@ -46,7 +46,7 @@ namespace js_helpers {
 
     template<>
     inline unsigned int js_to_value<unsigned int>(js_State *J, int idx) {
-        return (unsigned int)js_tonumber(J, idx);
+        return js_touint32(J, idx);
     }
 
     template<>

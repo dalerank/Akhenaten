@@ -81,6 +81,7 @@ void js_register_game_constants(js_State* J) {
     _R(COLOR_WHITE)
     _R(COLOR_MASK_BLUE)
     _R(COLOR_MASK_GREEN)
+    _R(COLOR_MASK_RED)
     _R(COLOR_MASK_RED_30)
     _R(COLOR_MASK_GREEN_30)
     _R(COLOR_TOOLTIP_FILL)

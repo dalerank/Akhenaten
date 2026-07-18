@@ -118,7 +118,6 @@ void __city_planner_draw_ghost_overlay(vec2i pixel, int image_id) {
 ANK_FUNCTION_2(__city_planner_draw_ghost_overlay);
 
 void __city_planner_draw_from_below(vec2i pixel, int image_id) {
-    // Mask stays in C++: COLOR_MASK_GREEN exceeds INT_MAX and breaks via js_tointeger.
     painter ctx = game.painter();
     build_planner::draw_from_below(ctx, image_id, pixel, COLOR_MASK_GREEN);
 }
@@ -148,15 +147,15 @@ void __city_planner_draw_isometric_ghost(vec2i pixel, int image_id) {
 }
 ANK_FUNCTION_2(__city_planner_draw_isometric_ghost);
 
-void __city_planner_draw_overlay_tile(vec2i pixel, int image_id, int color_mask, float scale) {
+void __city_planner_draw_overlay_tile(vec2i pixel, int image_id, color color_mask, float scale) {
     painter ctx = game.painter();
     build_planner::draw_overlay_tile(ctx, image_id, pixel, color_mask, scale);
 }
 ANK_FUNCTION_4(__city_planner_draw_overlay_tile);
 
-void __city_planner_draw_flat_tile(vec2i pixel, int color_mask) {
+void __city_planner_draw_flat_tile(vec2i pixel, color color_mask) {
     painter ctx = game.painter();
-    build_planner::draw_flat_tile(ctx, pixel, (color)color_mask);
+    build_planner::draw_flat_tile(ctx, pixel, color_mask);
 }
 ANK_FUNCTION_2(__city_planner_draw_flat_tile);
 

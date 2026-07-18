@@ -16,6 +16,7 @@
 
 #include "building/building.h"
 #include "building/building_static_params.h"
+#include "graphics/color.h"
 #include "city/city.h"
 #include "city/city_buildings.h"
 #include "game/game.h"
@@ -232,6 +233,11 @@ static int __test_building_create(int type, int x, int y) {
     return b->id;
 }
 ANK_FUNCTION_3(__test_building_create);
+
+color __test_color_roundtrip(color c) {
+    return c;
+}
+ANK_FUNCTION_1(__test_color_roundtrip);
 
 void __test_show_tile_info(int bid) {
     building *b = building_get(bid);

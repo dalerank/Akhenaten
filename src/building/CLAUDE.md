@@ -74,10 +74,12 @@ When moving building placement preview from C++ `preview::ghost_preview` into Mu
 
 1. **Color masks.** Full masks like `COLOR_MASK_GREEN` (`0xff18ff18`) exceed `INT_MAX`.
    Passing them through JS as `int` via `js_tointeger` corrupts the value (sprites vanish
-   or look wrong). Until J1 (`uint32` color bindings) is done, keep the mask in C++ —
-   pattern: `city.planner.draw_ghost` / `draw_from_below` / `draw_ghost_overlay`
-   (`src/js/city_planner_js.cpp`). Prefer `_30` masks only if you must pass color from JS
-   today. Do not add new `int color_mask` parameters from JS for full `COLOR_MASK_*`.
+   or look wrong). **Resolved (J1):** bind color params as `color` (== `uint32_t`), which
+   routes through `js_to_value<unsigned int>` → `js_touint32` and preserves the full mask.
+   `draw_flat_tile` / `draw_overlay_tile` (`src/js/city_planner_js.cpp`) take `color`, so
+   you may now pass full `COLOR_MASK_*` from JS (regression test: `tests/38_color_mask_passing.js`).
+   Use `color` — not `int` — for any new color parameter; the `_30` masks are no longer a
+   required workaround.
 
 2. **No thin `__foo_draw_*` wrappers.** Do not bind a one-liner that only calls a single
    C++ helper (e.g. former `__farm_draw_crops` → `building_farm::draw_crops`). Port the
