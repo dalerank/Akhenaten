@@ -250,11 +250,6 @@ localization_en = [
   {key: "#popup_dialog_open_trade", text:"Open trade route" }
   {key: "#popup_dialog_send_goods", text:"Dispatch goods?" }
   {key: "#popup_dialog_not_enough_goods", text:"Pharaonic request" }
-  {key: "#mission_won_culture_rating", text:"Final Culture rating" }
-  {key: "#mission_won_prosperity_rating", text:"Final Prosperity rating" }
-  {key: "#mission_won_monument_rating", text:"Final Monument rating" }
-  {key: "#mission_won_treasury", text:"Final Kingdom Rating" }
-  {key: "#mission_won_kingdom_rating", text:"Final population" }
   {key: "#popup_dialog_no_legions_available", text:"Pharaonic request" }
   {key: "#popup_dialog_no_legions_selected", text:"Pharaonic request" }
   {key: "#popup_dialog_send_troops", text:"Pharaonic request" }
@@ -266,6 +261,11 @@ localization_en = [
   {key: "#popup_dialog_delete_dynasty", text:"Delete Dynasty?" }
   {key: "#popup_dialog_no_dynasty", text:"No Dynasty" }
   {key: "#replay_mission", text:"Replay mission" }
+  {key: "#mission_won_culture_rating", text:"Final Culture rating" }
+  {key: "#mission_won_prosperity_rating", text:"Final Prosperity rating" }
+  {key: "#mission_won_kingdom_rating", text:"Final Kingdom Rating" }
+  {key: "#mission_won_population", text:"Final population" }
+  {key: "#mission_won_monument_rating", text:"Final Monument rating" }
   {key: "#ui_gift_to_kingdome_window_title", text:"Give to the people of Egypt"}
   {key: "#ui_unable_to_fulfill_request", text:"Unable to fulfill request"}
   {key: "#ui_gift_time_since_last", text:"Time since last gift"}

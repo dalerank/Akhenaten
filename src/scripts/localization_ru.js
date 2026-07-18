@@ -135,9 +135,9 @@ localization_ru = [
     { key:"#replay_mission", text:"Повторить миссию" }
     { key:"#mission_won_culture_rating", text:"Финальный рейтинг культуры" }
     { key:"#mission_won_prosperity_rating", text:"Финальный рейтинг процветания" }
-    { key:"#mission_won_monument_rating", text:"Финальный рейтинг монумента" }
-    { key:"#mission_won_treasury", text:"Финальный рейтинг королевства" }
-    { key:"#mission_won_kingdom_rating", text:"Финальное население" }
+    { key:"#mission_won_kingdom_rating", text:"Финальный рейтинг королевства" }
+    { key:"#mission_won_population", text:"Финальное население" }
+    { key:"#mission_won_monument_rating", text:"Финальный рейтинг монументов" }
     { key:"#ui_gift_to_kingdome_window_title", text:"Отдать народу Египта"}
     { key:"#ui_unable_to_fulfill_request", text:"Невозможно выполнить запрос"}
     { key:"#ui_gift_time_since_last", text:"Время с последнего подарка"}

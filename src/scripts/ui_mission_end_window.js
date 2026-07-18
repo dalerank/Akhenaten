@@ -7,25 +7,38 @@ var INTERMEZZO_WON = 2
 var MISSION_END_STATE_WON = 0
 var MISSION_END_STATE_LOST = 1
 
+var MISSION_WON_DIFFICULTY_KEYS = [
+    "#difficulty_very_easy",
+    "#difficulty_easy",
+    "#difficulty_normal",
+    "#difficulty_hard",
+    "#difficulty_very_hard"
+]
 
 [es=window]
 window_mission_won {
-    pos: [(sw(0) - px(38))/2, (sh(0) - px(27))/2]
+    pos: [(sw(0) - px(38))/2, (sh(0) - px(28))/2]
     draw_underlying: true
     ui {
-        background          : outer_panel({size:[34, 18]})
-        title               : text({pos:[0, 16], size:[px(34), 20], text:{group:62, id:0}, align:"center", font: FONT_LARGE_BLACK_ON_LIGHT })
-        description_panel   : inner_panel({pos:{x:32, y:40}, size:{w:30, h:8},
-            ui : {
-                culture_header      : text({pos:{x:30, y:10}, text:"", font: FONT_NORMAL_WHITE_ON_DARK})
-                prosperity_header   : text({pos:{x:30, y:30}, text:"", font: FONT_NORMAL_WHITE_ON_DARK})
-                monument_header     : text({pos:{x:30, y:50}, text:"", font: FONT_NORMAL_WHITE_ON_DARK})
-                treasury_header     : text({pos:{x:30, y:70}, text:"", font: FONT_NORMAL_WHITE_ON_DARK})
-                population_header   : text({pos:{x:30, y:90}, text:"", font: FONT_NORMAL_WHITE_ON_DARK})
-            }
-        })
-        subtitle            : text({pos:[32, 178], size:[px(32), -1], multiline:true, wrap:px(32), font: FONT_NORMAL_BLACK_ON_LIGHT })
-        desc_header         : text({margin:{left:0, bottom:-40}, size:[px(32), 20], align:"center", text:{group:13, id:1}, font: FONT_NORMAL_BLACK_ON_LIGHT })
+        background          : outer_panel({size:[38, 28]})
+        title               : text({pos:[0, 16], size:[px(38), 20], text:{group:62, id:0}, align:"center", font: FONT_LARGE_BLACK_ON_LIGHT })
+        description_panel   : inner_panel({pos:{x:32, y:48}, size:{w:34, h:7}})
+        victory_text        : text({pos:[48, 56], size:[px(32), px(6)], multiline:true, wrap:px(32), font: FONT_NORMAL_WHITE_ON_DARK })
+
+        culture_line        : text({pos:[48, 180], text:"", font: FONT_NORMAL_BLACK_ON_LIGHT })
+        prosperity_line     : text({pos:[48, 200], text:"", font: FONT_NORMAL_BLACK_ON_LIGHT })
+        kingdom_line        : text({pos:[48, 220], text:"", font: FONT_NORMAL_BLACK_ON_LIGHT })
+        funds_line          : text({pos:[48, 240], text:"", font: FONT_NORMAL_BLACK_ON_LIGHT })
+        population_line     : text({pos:[48, 260], text:"", font: FONT_NORMAL_BLACK_ON_LIGHT })
+
+        monuments_header    : text({pos:[320, 180], text:{group:148, id:6}, font: FONT_NORMAL_BLACK_ON_LIGHT })
+        monuments_list      : text({pos:[320, 200], size:[px(16), -1], multiline:true, wrap:px(16), text:"", font: FONT_NORMAL_BLACK_ON_LIGHT })
+
+        months_line         : text({pos:[0, 320], size:[px(38), 20], align:"center", text:"", font: FONT_NORMAL_BLACK_ON_LIGHT })
+        difficulty_line     : text({pos:[0, 340], size:[px(38), 20], align:"center", text:"", font: FONT_NORMAL_BLACK_ON_LIGHT })
+        score_line          : text({pos:[0, 360], size:[px(38), 20], align:"center", text:"", font: FONT_NORMAL_BLACK_ON_LIGHT })
+        compare_line        : text({pos:[32, 388], size:[px(34), -1], multiline:true, wrap:px(34), align:"center", text:"", font: FONT_NORMAL_BLACK_ON_LIGHT })
+        continue_hint       : text({margin:{left:0, bottom:-40}, size:[px(38), 20], align:"center", text:{group:13, id:1}, font: FONT_NORMAL_BLACK_ON_LIGHT })
     }
 }
 
@@ -42,18 +55,97 @@ window_mission_lost {
     }
 }
 
+function mission_won_completion_months() {
+    var years = game.simtime.year - scenario.start_year
+    if (years < 0) {
+        years = 0
+    }
+    return years * 12 + game.simtime.month + 1
+}
+
+function mission_won_calc_score(funds, population, culture, prosperity, kingdom, months, difficulty) {
+    if (months < 1) {
+        months = 1
+    }
+    var score = (difficulty + 1.0) / 3.0
+        * ((funds / (months / 30.0))
+           + population * 0.002 * (culture + prosperity + kingdom))
+    if (score < 0) {
+        score = 0
+    }
+    return score | 0
+}
+
+function mission_won_difficulty_label(diff) {
+    if (diff < 0 || diff >= MISSION_WON_DIFFICULTY_KEYS.length) {
+        diff = 2
+    }
+    return __loc(MISSION_WON_DIFFICULTY_KEYS[diff])
+}
+
+function mission_won_erected_monuments_text() {
+    var n = __city_monuments_list_refresh()
+    var names = []
+    for (var i = 0; i < n; i++) {
+        var bid = __city_monuments_list_id_at(i)
+        if (!bid) {
+            continue
+        }
+        var monument = city.get_monument(bid)
+        if (!monument || monument.phase() != -1) {
+            continue
+        }
+        var name = __building_display_name(bid)
+        if (name && name.length > 0) {
+            names.push(name)
+        }
+    }
+    return names.join("\n")
+}
+
+function mission_won_compare_text(scenario_id, new_score) {
+    if (!__game_mission_scenario_beaten(scenario_id)) {
+        return ""
+    }
+    var prev_score = __game_player_scenario_record_score(scenario_id)
+    if (new_score > prev_score) {
+        return __loc(148, 12)
+    }
+    if (new_score < prev_score) {
+        return __loc(148, 11)
+    }
+    return ""
+}
+
 [es=(window_mission_won, init)]
 function window_mission_won_on_init(window) {
     __log_marker("window_show:window_mission_won")
     var is_custom = scenario.scmode != e_scenario_normal
-    var subtitle_id = is_custom ? 20 : scenario.campaign_scenario_id
-    window.subtitle.text = __loc(147, subtitle_id)
+    var subtitle_id = is_custom ? 53 : scenario.campaign_scenario_id
+    window.victory_text.text = __loc(147, subtitle_id)
 
-    window.culture_header.text = __loc("#mission_won_culture_rating") + " " + city.rating.culture
-    window.prosperity_header.text = __loc("#mission_won_prosperity_rating") + " " + city.rating.prosperity
-    window.monument_header.text = __loc("#mission_won_monument_rating") + " " + city.rating.monument
-    window.treasury_header.text = __loc("#mission_won_treasury") + " " + city.treasury
-    window.population_header.text = __loc("#mission_won_kingdom_rating") + " " + city.rating.kingdom
+    var culture = city.rating.culture
+    var prosperity = city.rating.prosperity
+    var kingdom = city.rating.kingdom
+    var funds = city.finance.treasury
+    var population = city.population
+    var months = mission_won_completion_months()
+    var difficulty = game.difficulty
+    var score = mission_won_calc_score(funds, population, culture, prosperity, kingdom, months, difficulty)
+
+    // Win-screen labels match the original dialog (no "was"); group 298 is for score panels.
+    window.culture_line.text = __loc("#mission_won_culture_rating") + " " + String(culture)
+    window.prosperity_line.text = __loc("#mission_won_prosperity_rating") + " " + String(prosperity)
+    window.kingdom_line.text = __loc("#mission_won_kingdom_rating") + " " + String(kingdom)
+    window.funds_line.text = __loc(148, 5) + " " + String(funds)
+    window.population_line.text = __loc("#mission_won_population") + " " + String(population)
+
+    window.monuments_list.text = mission_won_erected_monuments_text()
+
+    window.months_line.text = __loc(148, 7) + " " + String(months) + " " + __loc(148, 15)
+    window.difficulty_line.text = __loc(148, 8) + " " + mission_won_difficulty_label(difficulty)
+    window.score_line.text = __loc(148, 9) + " " + String(score)
+    window.compare_line.text = mission_won_compare_text(scenario.campaign_scenario_id, score)
 }
 
 [es=(window_mission_won, go_back)]

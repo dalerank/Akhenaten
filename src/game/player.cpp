@@ -148,7 +148,8 @@ void player_record_mission_win(int scenario_id) {
                                           + game.simtime.month + 1);
     record.difficulty = game_difficulty();
     record.unk09 = 0;
-    string_copy((const uint8_t*)g_city.kingdome.player_name.c_str(), record.player_name, MAX_PLAYER_NAME);
+    pcstr won_player = g_city.kingdome.player_name.empty() ? "unknown" : g_city.kingdome.player_name.c_str();    
+    string_copy((const uint8_t*)won_player, record.player_name, MAX_PLAYER_NAME);
     record.score = records_calc_score(&record);
     record.score_is_valid = record.score == records_calc_score(&record);
 }

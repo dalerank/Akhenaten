@@ -219,11 +219,6 @@ localization_de = [
   {key: "#popup_dialog_open_trade", text:"Handelsroute öffnen" }
   {key: "#popup_dialog_send_goods", text:"Waren versenden?" }
   {key: "#popup_dialog_not_enough_goods", text:"Pharaonische Anfrage" }
-  {key: "#mission_won_culture_rating", text:"Endgültige Kulturbewertung" }
-  {key: "#mission_won_prosperity_rating", text:"Endgültige Wohlstandsbewertung" }
-  {key: "#mission_won_monument_rating", text:"Endgültige Monumentbewertung" }
-  {key: "#mission_won_treasury", text:"Endgültige Königreichsbewertung" }
-  {key: "#mission_won_kingdom_rating", text:"Endgültige Bevölkerung" }
   {key: "#popup_dialog_no_legions_available", text:"Pharaonische Anfrage" }
   {key: "#popup_dialog_no_legions_selected", text:"Pharaonische Anfrage" }
   {key: "#popup_dialog_send_troops", text:"Pharaonische Anfrage" }
@@ -235,6 +230,11 @@ localization_de = [
   {key: "#popup_dialog_delete_dynasty", text:"Dynastie löschen?" }
   {key: "#popup_dialog_no_dynasty", text:"Keine Dynastie" }
   {key: "#replay_mission", text:"Mission wiederholen" }
+  {key: "#mission_won_culture_rating", text:"Endgültige Kulturbewertung" }
+  {key: "#mission_won_prosperity_rating", text:"Endgültige Wohlstandsbewertung" }
+  {key: "#mission_won_kingdom_rating", text:"Endgültige Reichsbewertung" }
+  {key: "#mission_won_population", text:"Endgültige Bevölkerung" }
+  {key: "#mission_won_monument_rating", text:"Endgültige Monumentbewertung" }
   {key: "#ui_gift_to_kingdome_window_title", text:"Dem Volk Ägyptens geben"}
   {key: "#ui_unable_to_fulfill_request", text:"Anfrage kann nicht erfüllt werden"}
   {key: "#ui_gift_time_since_last", text:"Zeit seit letztem Geschenk"}
