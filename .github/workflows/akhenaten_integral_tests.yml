@@ -17,7 +17,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update -qq
-        sudo apt-get install -y cmake build-essential libgl1-mesa-dev libssl-dev
+        sudo apt-get install -y cmake build-essential libgl1-mesa-dev libssl-dev libasound2-dev libpulse-dev
     - name: Configure and build
       run: |
         cmake --preset linux-gcc-release-make

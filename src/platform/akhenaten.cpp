@@ -63,11 +63,6 @@ namespace {
 static int init_sdl() {
     logs::info("Initializing SDL");
     Uint32 SDL_flags = SDL_INIT_VIDEO;
-
-    if (g_args.use_sound()) {
-        SDL_flags |= SDL_INIT_AUDIO;
-    }
-
     SDL_flags |= platform.sdl_init_flags();
 
     if (SDL_Init(SDL_flags) != 0) {
