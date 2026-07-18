@@ -224,6 +224,10 @@ void game_features::save() {
     _settings.sync_global(CONF_FILENAME, "game_settings");
 }
 
+globals_settings_t &game_features::settings() {
+    return _settings;
+}
+
 static bool parse_bool_setting_value(pcstr value) {
     if (SDL_strcasecmp(value, "true") == 0 || SDL_strcasecmp(value, "1") == 0 || SDL_strcasecmp(value, "yes") == 0
         || SDL_strcasecmp(value, "on") == 0) {

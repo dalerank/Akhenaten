@@ -163,5 +163,6 @@ namespace game_features {
 
     void load();
     void save();
+    globals_settings_t &settings();
     void apply_cli_overrides(span_const<std::pair<xstring, xstring>> overrides);
 }

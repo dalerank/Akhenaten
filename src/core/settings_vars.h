@@ -77,6 +77,7 @@ public:
 
 	void load_global(pcstr name);
 	void sync_global(pcstr filename, pcstr name);
+	void mark_dirty() { _variantsDirty = true; }
 };
 
 namespace archive_helper {
