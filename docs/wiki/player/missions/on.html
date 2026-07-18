@@ -158,11 +158,11 @@
         <li><span class="obj-label">Population</span><span class="obj-value">4 000 citizens</span></li>
         <li><span class="obj-label">Culture rating</span><span class="obj-value">40 — the highest yet</span></li>
         <li><span class="obj-label">Prosperity rating</span><span class="obj-value">35</span></li>
-        <li><span class="obj-label">Monument rating</span><span class="obj-value">15 — three small mastabas</span></li>
+        <li><span class="obj-label">Monument rating</span><span class="obj-value">18 — three small mastabas</span></li>
         <li><span class="obj-label">Kingdom rating</span><span class="obj-value">60</span></li>
       </ul>
       <div class="deviation-note">
-        <strong>Temporary deviation from the original:</strong> the original monument rating for three small mastabas is 18; the reimplemented rating formula (<code>6.32·√Σ+0.5</code> in <code>city/monuments.js</code>) yields 15 for the same three mastabas (weight 2 each). The goal is set to 15 so the intended "three noble mastabas" wins. When the rating formula is reconciled with original values, the goal reverts to 18.
+        <strong>Matches the original:</strong> the monument goal is 18 — the rating produced by three small mastabas under the additive rating formula (<code>2.25·Σ+4.5</code>, weight 2 each → <code>2.25·6+4.5 = 18</code>, in <code>city/monuments.js</code>). This earlier read 15 under the old concave <code>6.32·√Σ+0.5</code> formula; the additive formula (task F3) now reproduces the original. The per-type weights are still provisional and will be recalibrated when they move to per-building configs.
       </div>
 
       <h2 id="events">Scripted events</h2>
@@ -219,16 +219,16 @@
   <span class="kw">player_rank</span> : <span class="num">3</span>
   <span class="kw">next_mission</span> : <span class="num">18</span>          <span class="cmt">// line 9 — converges on Rostja</span>
 
-  <span class="cmt">// original monument 18 (3 small mastabas); rating formula yields 15 -> temp goal 15</span>
+  <span class="cmt">// monument 18 (3 small mastabas); additive rating 2.25*6+4.5 = 18 matches the original</span>
   <span class="kw">win_criteria</span> {              <span class="cmt">// line 62</span>
     <span class="kw">population</span> { enabled : <span class="num">true</span>, goal : <span class="num">4000</span> }
     <span class="kw">culture</span>    { enabled : <span class="num">true</span>, goal : <span class="num">40</span> }
     <span class="kw">prosperity</span> { enabled : <span class="num">true</span>, goal : <span class="num">35</span> }
-    <span class="kw">monuments</span>  { enabled : <span class="num">true</span>, goal : <span class="num">15</span> }
+    <span class="kw">monuments</span>  { enabled : <span class="num">true</span>, goal : <span class="num">18</span> }
     <span class="kw">kingdom</span>    { enabled : <span class="num">true</span>, goal : <span class="num">60</span> }
   }
 }</code></pre>
-            <p>The 15-vs-18 gap is a rating-formula limitation, not a data error — see the deviations note. Documented as a <code>TODO</code> in the script to reconcile <code>MONUMENT_WEIGHTS</code> / the rating formula with the original per-monument totals.</p>
+            <p>The additive rating formula (task F3) reproduces the original monument total: three small mastabas (weight 2 each) → <code>2.25·6+4.5 = 18</code>. The per-type <code>MONUMENT_WEIGHTS</code> are still provisional and will be recalibrated against the original per-monument totals when they move to per-building configs.</p>
           </div>
         </details>
         <details>
@@ -252,7 +252,7 @@
               </tbody>
             </table>
             <ul style="margin-top:0.75rem">
-              <li><strong>Monument goal 15 vs original 18</strong> — rating formula limitation (3 small mastabas).</li>
+              <li><strong>Monument goal 18</strong> — matches the original (3 small mastabas) under the additive rating formula; per-type weights still provisional (task F3).</li>
               <li><strong>Ivory</strong> represented as luxury goods via Byblos (no dedicated resource).</li>
               <li><strong>Request years/amounts, player_rank (3), trade goods</strong> provisional — verify vs <code>.pak</code>.</li>
             </ul>

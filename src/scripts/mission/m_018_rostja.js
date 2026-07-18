@@ -79,16 +79,17 @@ mission18 { // Rostja (Giza) — The Great Pyramid and Sphinx
 	// no population / culture / prosperity requirement; monument 53 (Sphinx + pyramid
 	// complex + pyramid), kingdom 50. A pure monument-and-loyalty mission.
 	// C3 (true pyramid / complex) and C6 (sphinx) are NOT implemented; the available
-	// monuments cannot reach 53. Stand-in: require the full available set — both stepped
-	// pyramids (8+16) + both mastabas (2+2) = sum 28 -> 6.32*sqrt(28)+0.5 = 33.
-	// Temporary monument goal 33.
-	// TODO(C3+C6): restore goal 53 and replace the stepped pyramids/mastabas with
+	// monuments cannot reach the original 53. Stand-in: require the full available set —
+	// both stepped pyramids (8+16) + both mastabas (2+2) = sum 28 -> 2.25*28+4.5 = 67
+	// (additive rating, see city/monuments.js). Temporary monument goal 67 (needs all
+	// four monuments finished).
+	// TODO(C3+C6/F3): restore goal 53 and replace the stepped pyramids/mastabas with
 	// BUILDING_PYRAMID_COMPLEX + BUILDING_LARGE_PYRAMID (prince) + BUILDING_SPHINX.
 	win_criteria {
 		population {enabled : false }
 		culture    {enabled : false }
 		prosperity {enabled : false }
-		monuments  {enabled : true, goal : 33 }
+		monuments  {enabled : true, goal : 67 }
 		kingdom    {enabled : true, goal : 50 }
 	}
 

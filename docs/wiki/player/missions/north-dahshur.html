@@ -158,11 +158,11 @@
         <li><span class="obj-label">Population</span><span class="obj-value">3 000 citizens</span></li>
         <li><span class="obj-label">Culture rating</span><span class="obj-value">20</span></li>
         <li><span class="obj-label">Prosperity rating</span><span class="obj-value">30</span></li>
-        <li><span class="obj-label">Monument rating</span><span class="obj-value">31 — complete <strong>both</strong> stepped pyramids (a large true pyramid in the original)</span></li>
+        <li><span class="obj-label">Monument rating</span><span class="obj-value">58 — complete <strong>both</strong> stepped pyramids (a large true pyramid in the original)</span></li>
         <li><span class="obj-label">Kingdom rating</span><span class="obj-value">55</span></li>
       </ul>
       <div class="deviation-note">
-        <strong>Temporary deviation from the original:</strong> the original requires one large <em>true</em> pyramid (monument rating 32). True pyramids are not implemented yet (task C3). As a stand-in the mission requires both the small and the medium stepped pyramid — a larger commitment than mission 14 — which yields a rating of 31. When true pyramids land, the goal reverts to 32 and a single large pyramid replaces the two stepped ones.
+        <strong>Temporary deviation from the original:</strong> the original requires one large <em>true</em> pyramid (monument rating 32). True pyramids are not implemented yet (task C3). As a stand-in the mission requires both the small and the medium stepped pyramid — a larger commitment than mission 14 — which yields a rating of 58 with the additive rating formula. When true pyramids land and the per-type weights are calibrated against the original (task F3), the goal reverts to 32 and a single large pyramid replaces the two stepped ones.
       </div>
 
       <h2 id="events">Scripted events</h2>
@@ -231,12 +231,12 @@
   ]
 
   <span class="cmt">// pop 3000, culture 20, prosperity 30, monument 32 (large true pyramid), kingdom 55</span>
-  <span class="cmt">// TODO(C3): true pyramid not implemented; both stepped pyramids stand in (rating 31).</span>
+  <span class="cmt">// TODO(C3/F3): true pyramid not implemented; both stepped pyramids stand in (rating 58).</span>
   <span class="kw">win_criteria</span> {              <span class="cmt">// line 87</span>
     <span class="kw">population</span> { enabled : <span class="num">true</span>, goal : <span class="num">3000</span> }
     <span class="kw">culture</span>    { enabled : <span class="num">true</span>, goal : <span class="num">20</span> }
     <span class="kw">prosperity</span> { enabled : <span class="num">true</span>, goal : <span class="num">30</span> }
-    <span class="kw">monuments</span>  { enabled : <span class="num">true</span>, goal : <span class="num">31</span> }
+    <span class="kw">monuments</span>  { enabled : <span class="num">true</span>, goal : <span class="num">58</span> }
     <span class="kw">kingdom</span>    { enabled : <span class="num">true</span>, goal : <span class="num">55</span> }
   }
 }</code></pre>
@@ -277,7 +277,7 @@
           <summary>Known deviations from the original (tracked)</summary>
           <div class="details-body">
             <ul>
-              <li><strong>Monument:</strong> large true pyramid (task C3) not implemented; both stepped pyramids stand in (rating 31 vs the original 32). <code>TODO(C3)</code> in the script.</li>
+              <li><strong>Monument:</strong> large true pyramid (task C3) not implemented; both stepped pyramids stand in (rating 58 vs the original 32). <code>TODO(C3/F3)</code> in the script.</li>
               <li><strong>Choice targets 16/17</strong> (Iunet / On) are not scripted yet — the post-victory choice screen is a dead end until D5 (task B5 covers validating choice targets).</li>
               <li><strong>Request years/amounts</strong> and <strong>invasion timing/size</strong> are provisional. The original has multiple recurring Libyan and Bedouin waves; only one of each is scripted here.</li>
               <li><strong>Byblos trade</strong> is set to land caravan (<code>is_sea_trade:false</code>) so timber is reachable on this inland map without a dock — verify against the original map.</li>

@@ -35,7 +35,7 @@ bool building_reed_gatherer::can_spawn_gatherer(int max_gatherers_per_building, 
     int max_storage = current_params().max_storage_amount;
     int max_loads = max_storage / carry_per_person;
     int stored_loads = base.stored_amount(base.output.resource) / carry_per_person;
-    
+
     if (gatherers_this_yard < max_gatherers_per_building && gatherers_this_yard + stored_loads < max_loads) {
         return true;
     }

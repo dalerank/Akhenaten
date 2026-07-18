@@ -151,14 +151,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(GAME_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin_x64")
 
-if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
-    SET(GAME_BUILD_TYPE "RelWithDebInfo")
-elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
-    SET(GAME_BUILD_TYPE "Release")
-else()
-    SET(GAME_BUILD_TYPE "Debug")
-endif()
-
 #
 # Dependencies and libs
 #
@@ -1514,8 +1506,8 @@ endif()
 
 if (MSVC)
     set(BINARY_FILES
-        "${CMAKE_BINARY_DIR}/${GAME_BUILD_TYPE}/${GAME}.exe"
-        "${CMAKE_BINARY_DIR}/${GAME_BUILD_TYPE}/${GAME}.pdb"
+        "$<TARGET_FILE:${GAME}>"
+        "$<TARGET_PDB_FILE:${GAME}>"
         "${CMAKE_SOURCE_DIR}/ext/bugtrap/BugTrap-x64.dll"
     )
     add_custom_command(

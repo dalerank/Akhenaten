@@ -3,7 +3,6 @@
 #include "figure/figure.h"
 #include "core/random.h"
 #include "js/js_game.h"
-#include "building_raw_material.h"
 #include "widget/city/ornaments.h"
 #include "grid/routing/routing.h"
 #include "graphics/graphics.h"

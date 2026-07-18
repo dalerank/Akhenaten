@@ -59,8 +59,9 @@ mission13 { // Buhen — Expansion to Nubia
 	// Goals from the Pharaoh Heaven walkthrough (original .pak values NOT yet verified):
 	// pop 3000, culture 25, prosperity 25, monument 9 (small obelisk), kingdom 75.
 	// The small obelisk (BUILDING_SMALL_OBELISK, granite) is not implemented yet (task C7).
-	// A small mastaba (weight 2) yields the same rating: 6.32*sqrt(2)+0.5 = 9, so the
-	// original monument goal 9 is kept and a small mastaba stands in for the obelisk.
+	// A small mastaba (weight 2) yields the same rating: 2.25*2+4.5 = 9 (additive rating,
+	// see city/monuments.js), so the original monument goal 9 is kept and a small mastaba
+	// stands in for the obelisk.
 	// TODO(C7): add BUILDING_SMALL_OBELISK to the buildings list (granite imported from
 	// Abu) and, if desired, drop the mastaba stand-in.
 	win_criteria {

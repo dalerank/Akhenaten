@@ -58,15 +58,16 @@ mission14 { // South Dahshur — Snofru's Bent Pyramid
 	// pop 3500, culture 0 (disabled), prosperity 25, monument 21 (1 medium bent pyramid),
 	// kingdom 50.
 	// The bent pyramid (BUILDING_MEDIUM_BENT_PYRAMID = 242) is not implemented yet (task C4).
-	// A medium stepped pyramid (weight 16) stands in: 6.32*sqrt(16)+0.5 = 25, so the
-	// temporary monument goal is 25.
-	// TODO(C4): restore goal 21 and swap BUILDING_MEDIUM_STEPPED_PYRAMID for
-	// BUILDING_MEDIUM_BENT_PYRAMID in the buildings list.
+	// A medium stepped pyramid (weight 16) stands in: 2.25*16+4.5 = 40 (additive rating,
+	// see city/monuments.js), so the temporary monument goal is 40 (needs the medium
+	// stepped pyramid finished; a small stepped alone only reaches 22).
+	// TODO(C4/F3): restore goal 21 and swap BUILDING_MEDIUM_STEPPED_PYRAMID for
+	// BUILDING_MEDIUM_BENT_PYRAMID once bent pyramids and calibrated weights land.
 	win_criteria {
 		population {enabled : true, goal : 3500 }
 		culture    {enabled : false }
 		prosperity {enabled : true, goal : 25 }
-		monuments  {enabled : true, goal : 25 }
+		monuments  {enabled : true, goal : 40 }
 		kingdom    {enabled : true, goal : 50 }
 	}
 

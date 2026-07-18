@@ -57,8 +57,8 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 
 	// Goals from the Pharaoh Heaven walkthrough (original .pak values NOT yet verified):
 	// pop 4000, culture 30, prosperity 30, monument 9 (1 small mastaba), kingdom 65.
-	// The small mastaba is implemented and yields rating 9 (6.32*sqrt(2)+0.5) — the goal
-	// matches the original, no stand-in needed.
+	// The small mastaba is implemented and yields rating 9 (2.25*2+4.5, additive rating,
+	// see city/monuments.js) — the goal matches the original, no stand-in needed.
 	win_criteria {
 		population {enabled : true, goal : 4000 }
 		culture    {enabled : true, goal : 30 }

@@ -157,11 +157,11 @@
         <li><span class="obj-label">Population</span><span class="obj-value">3 500 citizens</span></li>
         <li><span class="obj-label">Culture rating</span><span class="obj-value">not required</span></li>
         <li><span class="obj-label">Prosperity rating</span><span class="obj-value">25</span></li>
-        <li><span class="obj-label">Monument rating</span><span class="obj-value">25 — complete the medium pyramid (bent pyramid in the original)</span></li>
+        <li><span class="obj-label">Monument rating</span><span class="obj-value">40 — complete the medium pyramid (bent pyramid in the original)</span></li>
         <li><span class="obj-label">Kingdom rating</span><span class="obj-value">50</span></li>
       </ul>
       <div class="deviation-note">
-        <strong>Temporary deviation from the original:</strong> the original requires a medium <em>bent</em> pyramid (monument rating 21). The bent pyramid is not implemented yet (task C4); a medium stepped pyramid stands in, which produces a rating of 25, so the temporary goal is 25. When the bent pyramid is implemented the goal reverts to 21 and the stepped pyramid is swapped for it.
+        <strong>Temporary deviation from the original:</strong> the original requires a medium <em>bent</em> pyramid (monument rating 21). The bent pyramid is not implemented yet (task C4); a medium stepped pyramid stands in, which produces a rating of 40 with the additive rating formula, so the temporary goal is 40. When the bent pyramid is implemented and the per-type weights are calibrated against the original (task F3), the goal reverts to 21 and the stepped pyramid is swapped for it.
       </div>
 
       <h2 id="events">Scripted events</h2>
@@ -222,12 +222,12 @@
   <span class="kw">next_mission</span> : <span class="num">15</span>          <span class="cmt">// line 12 — converges on North Dahshur (not scripted yet)</span>
 
   <span class="cmt">// pop 3500, culture 0 (off), prosperity 25, monument 21 (bent pyramid), kingdom 50</span>
-  <span class="cmt">// TODO(C4): bent pyramid not implemented; medium stepped (weight 16 -> rating 25) stands in.</span>
+  <span class="cmt">// TODO(C4/F3): bent pyramid not implemented; medium stepped (weight 16 -> rating 40) stands in.</span>
   <span class="kw">win_criteria</span> {              <span class="cmt">// line 65</span>
     <span class="kw">population</span> { enabled : <span class="num">true</span>, goal : <span class="num">3500</span> }
     <span class="kw">culture</span>    { enabled : <span class="num">false</span> }
     <span class="kw">prosperity</span> { enabled : <span class="num">true</span>, goal : <span class="num">25</span> }
-    <span class="kw">monuments</span>  { enabled : <span class="num">true</span>, goal : <span class="num">25</span> }
+    <span class="kw">monuments</span>  { enabled : <span class="num">true</span>, goal : <span class="num">40</span> }
     <span class="kw">kingdom</span>    { enabled : <span class="num">true</span>, goal : <span class="num">50</span> }
   }
 }</code></pre>
@@ -265,7 +265,7 @@
           <summary>Known deviations from the original (tracked)</summary>
           <div class="details-body">
             <ul>
-              <li><strong>Monument:</strong> medium bent pyramid (task C4) not implemented; medium stepped pyramid stands in (rating 25 vs the original 21). <code>TODO(C4)</code> in the script.</li>
+              <li><strong>Monument:</strong> medium bent pyramid (task C4) not implemented; medium stepped pyramid stands in (rating 40 vs the original 21). <code>TODO(C4/F3)</code> in the script.</li>
               <li><strong>Request years/amounts</strong> are provisional (walkthrough prose, not the original <code>.pak</code>).</li>
               <li><strong>Trade partners and goods</strong> are inferred from the briefing — verify against the original empire map.</li>
               <li><strong>player_rank (2)</strong> is a guess for the Snofru era — verify against the original.</li>

@@ -75,15 +75,17 @@ mission12 { // Meidum
 	// Goals from the Pharaoh Heaven walkthrough (original .pak values NOT yet verified):
 	// pop 3000, culture 25, prosperity 25, monument 39, kingdom 40.
 	// Original monuments: small stepped pyramid + stepped pyramid COMPLEX (weight 44).
-	// The complex is not implemented yet (task C1) -> temporary monument goal 31,
-	// reachable with small (8) + medium (16) stepped pyramids: 6.32*sqrt(24)+0.5 = 31.
-	// TODO(C1): restore goal 39 and swap BUILDING_MEDIUM_STEPPED_PYRAMID for
-	// BUILDING_STEPPED_PYRAMID_COMPLEX in the buildings list.
+	// The complex is not implemented yet (task C1) -> temporary monument goal, reachable
+	// with small (8) + medium (16) stepped pyramids: 2.25*24+4.5 = 58 (additive rating,
+	// see city/monuments.js). Requires BOTH stepped pyramids to be finished.
+	// TODO(C1/F3): restore goal 39 and swap BUILDING_MEDIUM_STEPPED_PYRAMID for
+	// BUILDING_STEPPED_PYRAMID_COMPLEX once the complex and the calibrated per-type
+	// monument weights land.
 	win_criteria {
 		population {enabled : true, goal : 3000 }
 		culture    {enabled : true, goal : 25 }
 		prosperity {enabled : true, goal : 25 }
-		monuments  {enabled : true, goal : 31 }
+		monuments  {enabled : true, goal : 58 }
 		kingdom    {enabled : true, goal : 40 }
 	}
 

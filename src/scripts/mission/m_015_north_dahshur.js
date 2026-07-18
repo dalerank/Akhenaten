@@ -81,14 +81,16 @@ mission15 { // North Dahshur — The True Pyramid
 	// pop 3000, culture 20, prosperity 30, monument 32 (1 large true pyramid), kingdom 55.
 	// The true (smooth) pyramid (BUILDING_LARGE_PYRAMID = 255) is not implemented yet (task C3).
 	// Stand-in: require BOTH stepped pyramids — small (8) + medium (16) = sum 24 ->
-	// 6.32*sqrt(24)+0.5 = 31 (a bigger build than mission 14's single medium stepped,
-	// matching "the largest pyramid yet"). Temporary monument goal 31.
-	// TODO(C3): restore goal 32 and swap the two stepped pyramids for BUILDING_LARGE_PYRAMID.
+	// 2.25*24+4.5 = 58 (additive rating, see city/monuments.js). A bigger build than
+	// mission 14's single medium stepped, matching "the largest pyramid yet". Temporary
+	// monument goal 58 (needs both stepped pyramids finished).
+	// TODO(C3/F3): restore goal 32 and swap the two stepped pyramids for
+	// BUILDING_LARGE_PYRAMID once true pyramids and calibrated weights land.
 	win_criteria {
 		population {enabled : true, goal : 3000 }
 		culture    {enabled : true, goal : 20 }
 		prosperity {enabled : true, goal : 30 }
-		monuments  {enabled : true, goal : 31 }
+		monuments  {enabled : true, goal : 58 }
 		kingdom    {enabled : true, goal : 55 }
 	}
 

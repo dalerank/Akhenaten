@@ -54,16 +54,14 @@ mission17 { // On (Heliopolis) — Ivory from the East
 
 	// Goals from the Pharaoh Heaven walkthrough (original .pak values NOT yet verified):
 	// pop 4000, culture 40, prosperity 35, monument 18 (3 small mastabas), kingdom 60.
-	// NOTE: the reimplemented monument rating formula (6.32*sqrt(sum)+0.5 in
-	// city/monuments.js) does not reproduce the original per-monument totals for multiple
-	// monuments — 3 small mastabas (weight 2 each, sum 6) yield 15, not the original 18.
-	// Temporary monument goal 15 so the intended "3 small mastabas" wins.
-	// TODO: reconcile MONUMENT_WEIGHTS / rating formula with original values, then restore 18.
+	// The mastabas ARE the real monument here (implemented), and the additive rating
+	// formula now reproduces the original: 3 small mastabas (weight 2 each, sum 6) ->
+	// 2.25*6+4.5 = 18 (see city/monuments.js). Original goal 18 restored — needs 3 mastabas.
 	win_criteria {
 		population {enabled : true, goal : 4000 }
 		culture    {enabled : true, goal : 40 }
 		prosperity {enabled : true, goal : 35 }
-		monuments  {enabled : true, goal : 15 }
+		monuments  {enabled : true, goal : 18 }
 		kingdom    {enabled : true, goal : 60 }
 	}
 

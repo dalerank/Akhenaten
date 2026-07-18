@@ -25,8 +25,20 @@ MONUMENT_WEIGHTS[BUILDING_MEDIUM_ROYAL_TOMB]              = 1
 MONUMENT_WEIGHTS[BUILDING_LARGE_ROYAL_TOMB]               = 1
 MONUMENT_WEIGHTS[BUILDING_GRAND_ROYAL_TOMB]               = 4
 
-var MONUMENT_RATING_MULT = 6.32
-var MONUMENT_RATING_OFFSET = 0.5
+// Monument rating is APPROXIMATE and additive, not concave. The original Pharaoh
+// aggregates monument points roughly linearly across the built monuments; the old
+// concave `6.32*sqrt(sum)+0.5` under-counted multiple monuments (3 small mastabas
+// gave 15 instead of the original 18). These constants reproduce the known anchor
+// points with the current weights:
+//   1 small mastaba   (sum 2)  -> 2.25*2 +4.5 = 9   (missions 4/13/16, and On x1)
+//   3 small mastabas  (sum 6)  -> 2.25*6 +4.5 = 18  (mission 17 On)
+//   1 medium stepped  (sum 16) -> 2.25*16+4.5 = 40  (>= Saqqara verified goal 19)
+// The exact per-monument point table is NOT yet taken from the original (task F3):
+// the weights below are placeholders and will be moved to per-building configs and
+// recalibrated against the real .pak data later. Until then mission monument goals
+// are derived from these constants (see each m_0xx script comment).
+var MONUMENT_RATING_MULT = 2.25
+var MONUMENT_RATING_OFFSET = 4.5
 
 [es=event_advance_month]
 function city_update_monthly_monument_rating(ev) {
@@ -71,7 +83,13 @@ function city_update_monthly_monument_rating(ev) {
 		sum += (w * progress) / 100
 	}
 
-	var rating = MONUMENT_RATING_MULT * Math.sqrt(sum) + MONUMENT_RATING_OFFSET
+	// Additive: base offset for having any monument at all, plus a linear term.
+	// No monument progress -> rating 0 (avoid the offset leaking in on an
+	// unbuilt/zero-progress foundation).
+	var rating = 0
+	if (sum > 0) {
+		rating = MONUMENT_RATING_MULT * sum + MONUMENT_RATING_OFFSET
+	}
 	if (rating < 0) {
 		rating = 0
 	}
