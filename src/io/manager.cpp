@@ -151,7 +151,9 @@ bool FileIOManager::serialize(pcstr filename, int offset, e_file_format format, 
     }
     FILE* fp = vfs::file_open_os(fs_path, "wb");
     if (!fp) {
-        return io_failure_cleanup("write", "file could not be accessed");
+        logs::error("Unable to write file [%s], file could not be accessed.", fs_path.c_str());
+        clear();
+        return false;
     } else if (file_offset) {
         fseek(fp, file_offset, SEEK_SET);
     }
@@ -160,7 +162,9 @@ bool FileIOManager::serialize(pcstr filename, int offset, e_file_format format, 
     if (init_schema != nullptr) {
         init_schema(file_format, file_version);
     } else {
-        return io_failure_cleanup("write", "provided schema is invalid");
+        logs::error("Unable to write file [%s], provided schema is invalid.", fs_path.c_str());
+        clear();
+        return false;
     }
 
     // fill chunks with bound data
@@ -182,7 +186,8 @@ bool FileIOManager::serialize(pcstr filename, int offset, e_file_format format, 
 
         // The last piece may be smaller than buf->size
         if (!result) {
-            logs::error("Unable to write file, write failure.");
+            logs::error("Unable to write file [%s], write failure at chunk %d (%s).",
+                        fs_path.c_str(), i, chunk->name);
             clear();
             return false;
         }

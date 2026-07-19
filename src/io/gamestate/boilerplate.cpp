@@ -78,6 +78,7 @@
 #include "chunks.h"
 #include "city/coverage.h"
 #include "city/city_floods.h"
+#include "core/log.h"
 #include "core/profiler.h"
 #include "io/io.h"
 #include "io/manager.h"
@@ -603,7 +604,7 @@ static void file_schema(e_file_format file_format, const int file_version) {
         if (file_version > 169) {
             FILEIO.push_chunk(16384, false, "iob_enemy_armies_stats", iob_enemy_armies_stats); // actual 15360 + 256 bytes
         }
-            
+
         break;
     }
 }
@@ -616,15 +617,18 @@ bool GamestateIO::write_mission(const int scenario_id) {
 bool GamestateIO::write_savegame(pcstr filename_short) {
     vfs::path full = fullpath_saves(filename_short);
 
-    // write file
+    logs::info("Save game: writing %s", full.c_str());
+
     e_file_format format = get_format_from_file(filename_short);
     assert(format == FILE_FORMAT_SAVE_FILE_EXT);
     bool save_ok = FILEIO.serialize(full, 0, format, latest_save_version, file_schema);
     if (save_ok) {
-        //vfs::path fs_path = vfs::content_path(full);
         game_features::gameopt_last_save_filename = full.c_str();
         game_features::gameopt_last_player = game_features::gameopt_player_name.to_string();
         game_features::save();
+        logs::info("Save game: OK %s", full.c_str());
+    } else {
+        logs::error("Save game: FAILED %s", full.c_str());
     }
 
     return save_ok;
