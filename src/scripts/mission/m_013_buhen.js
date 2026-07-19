@@ -119,6 +119,8 @@ mission13 { // Buhen — Expansion to Nubia
 
 [es=event_mission_start, mission=mission13]
 function mission13_on_start(ev) {
+	__image_request_pak(PACK_ENEMY_NUBIAN)
+	__image_request_pak(PACK_MASTABA)
 	mission_show_start_message(mission, "message_mission_buhen")
 	city.set_empire_available(1)
 	for (var i = ADVISOR_NONE + 1; i <= ADVISOR_DIPLOMACY; i++) {

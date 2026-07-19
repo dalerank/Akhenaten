@@ -138,6 +138,9 @@ mission18 { // Rostja (Giza) — The Great Pyramid and Sphinx
 
 [es=event_mission_start, mission=mission18]
 function mission18_on_start(ev) {
+	__image_request_pak(PACK_ENEMY_LIBIAN)
+	__image_request_pak(PACK_MASTABA)
+	__image_request_pak(PACK_STEPPED_PYRAMID)
 	mission_show_start_message(mission, "message_mission_giza")
 	city.set_empire_available(1)
 	for (var i = ADVISOR_NONE + 1; i <= ADVISOR_DIPLOMACY; i++) {

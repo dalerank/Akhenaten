@@ -143,6 +143,10 @@ mission15 { // North Dahshur — The True Pyramid
 
 [es=event_mission_start, mission=mission15]
 function mission15_on_start(ev) {
+	__image_request_pak(PACK_ENEMY_LIBIAN)
+	__image_request_pak(PACK_ENEMY_BARBARIAN)
+	__image_request_pak(PACK_MASTABA)
+	__image_request_pak(PACK_STEPPED_PYRAMID)
 	mission_show_start_message(mission, "message_mission_north_dahshur")
 	city.set_empire_available(1)
 	for (var i = ADVISOR_NONE + 1; i <= ADVISOR_DIPLOMACY; i++) {

@@ -113,6 +113,8 @@ mission8 { // Selima
 
 [es=event_mission_start, mission=mission8]
 function mission8_on_start(ev) {
+	__image_request_pak(PACK_ENEMY_LIBIAN)
+	__image_request_pak(PACK_TEMPLE_SETH)
 	mission_show_start_message(mission, "message_the_finer_things_tutorial")
 	city.set_empire_available(1)
 	for (var i = ADVISOR_NONE + 1; i <= ADVISOR_DIPLOMACY; i++) {

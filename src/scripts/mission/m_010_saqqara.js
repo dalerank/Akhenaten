@@ -155,6 +155,9 @@ mission10 { // Saqqara
 
 [es=event_mission_start, mission=mission10]
 function mission10_on_start(ev) {
+	__image_request_pak(PACK_MASTABA)
+	__image_request_pak(PACK_STEPPED_PYRAMID)
+	__image_request_pak(PACK_TEMPLE_SETH)
 	mission_show_start_message(mission, "message_innovations")
 	city.set_empire_available(1)
 	for (var i = ADVISOR_NONE + 1; i <= ADVISOR_DIPLOMACY; i++) {

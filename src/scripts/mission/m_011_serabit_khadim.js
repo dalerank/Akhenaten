@@ -131,6 +131,8 @@ mission11 { // Serabit Khadim
 
 [es=event_mission_start, mission=mission11]
 function mission11_on_start(ev) {
+	__image_request_pak(PACK_ENEMY_BARBARIAN)
+	__image_request_pak(PACK_ENEMY_CANAANITE)
 	mission_show_start_message(mission, "message_mission_serabit_khadim")
 	city.set_empire_available(1)
 	for (var i = ADVISOR_NONE + 1; i <= ADVISOR_DIPLOMACY; i++) {
