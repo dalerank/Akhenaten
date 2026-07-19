@@ -18,6 +18,7 @@ void input_box_start(input_box* box, uint8_t* text, int length, int allow_punctu
     int text_width = (box->width_blocks - 2) * INPUT_BOX_BLOCK_SIZE;
     g_keyboard.start_capture(text, length, allow_punctuation, text_width, box->font, box->multiline);
     g_keyboard.set_input_rect(box->x, box->y, box->width_blocks * INPUT_BOX_BLOCK_SIZE, box->height_blocks * INPUT_BOX_BLOCK_SIZE);
+    g_keyboard.show_virtual(box->text, box->max_length);
 }
 
 void input_box_pause(input_box* box) {
@@ -26,6 +27,10 @@ void input_box_pause(input_box* box) {
 
 void input_box_resume(input_box* box) {
     g_keyboard.resume_capture();
+    if (box->text) {
+        g_keyboard.set_input_rect(box->x, box->y, box->width_blocks * INPUT_BOX_BLOCK_SIZE, box->height_blocks * INPUT_BOX_BLOCK_SIZE);
+        g_keyboard.show_virtual(box->text, box->max_length);
+    }
 }
 
 void input_box_stop(input_box* box) {
