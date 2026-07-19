@@ -23,6 +23,7 @@
 #include "platform/options_window.h"
 #include "widget/debug_console.h"
 #include "graphics/imagepak_holder.h"
+#include "graphics/image.h"
 #include "sound/sound.h"
 #include "scenario/scenario.h"
 #include "core/cstring.h"
@@ -278,6 +279,9 @@ static void run_and_draw() {
             NANO_PROFILE_SCOPE("_GameUpdate");
             game.update();
         }
+
+        image_paks_pump();
+
         Uint32 time_between_run_and_draw = SDL_GetTicks();
 
         {

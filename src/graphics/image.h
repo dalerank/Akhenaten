@@ -139,6 +139,13 @@ bool image_data_fonts_ready();
 bool image_data_render_on_new_loadpacks();
 bool image_load_paks();
 
+bool image_request_pak(int pak_id);
+bool image_request_pak(const xstring &name);
+bool image_pak_is_loaded(int pak_id);
+bool image_pak_is_loaded(const xstring &name);
+bool image_ensure_pak_loaded(int pak_id);
+void image_paks_pump();
+
 int image_id_resource_icon(int resource);
 int image_id_from_group(int collection, int group);
 

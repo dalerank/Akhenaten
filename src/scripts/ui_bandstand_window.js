@@ -19,6 +19,9 @@ info_window_bandstand {
 [es=(info_window_bandstand, init)]
 function info_window_bandstand_on_init(window) {
     var b = city.get_entertainment_building(window.bid)
+    if (!b) {
+        return
+    }
     var gid = b.meta_text_id
     var d = b
     var reason = { group: gid, id: 1 }

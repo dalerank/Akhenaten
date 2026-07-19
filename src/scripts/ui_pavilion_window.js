@@ -20,6 +20,9 @@ info_window_pavilion {
 [es=(info_window_pavilion, init)]
 function info_window_pavilion_on_init(window) {
     var b = city.get_entertainment_building(window.bid)
+    if (!b) {
+        return
+    }
     var gid = b.meta_text_id
     var d = b
     var workers_group = gid

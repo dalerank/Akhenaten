@@ -3,6 +3,15 @@
 #include "content/imagepak.h"
 #include "core/xstring.h"
 #include "core/archive.h"
+#include "core/hvector.h"
+
+enum e_imagepak_load_status : uint8_t {
+    IMAGEPAK_LOAD_IDLE = 0,
+    IMAGEPAK_LOAD_QUEUED,
+    IMAGEPAK_LOAD_LOADING,
+    IMAGEPAK_LOAD_LOADED,
+    IMAGEPAK_LOAD_FAILED,
+};
 
 struct imagepak_handle {
     xstring name;
@@ -13,6 +22,7 @@ struct imagepak_handle {
     bool custom = false;
     bool delayed = true;
     imagepak *handle = nullptr;
+    e_imagepak_load_status load_status = IMAGEPAK_LOAD_IDLE;
 };
 ANK_CONFIG_STRUCT(imagepak_handle, name, id, index, entries_num, system, custom, delayed)
 
@@ -39,6 +49,7 @@ struct imagepak_holder_t {
 
     stable_array<imagepak_handle> pak_list;
     std::vector<const image_t *> image_cache;
+    hvector<int, 32> load_queue;
 };
 
 void image_data_init();

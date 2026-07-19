@@ -19,6 +19,9 @@ info_window_booth {
 [es=(info_window_booth, init)]
 function info_window_booth_on_init(window) {
     var b = city.get_entertainment_building(window.bid)
+    if (!b) {
+        return
+    }
     var gid = b.meta_text_id
     var reason = { group: gid, id: 1 }
     if (!b.has_road_access) {
