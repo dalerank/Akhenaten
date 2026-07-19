@@ -41,10 +41,22 @@ figure::action_perform()
 ## Adding a New Figure Type
 
 1. Create `figuretype/figure_mytype.h/.cpp` inheriting from `figure_worker`, `figure_soldier`, etc.
-2. Use `FIGURE_METAINFO(FIGURE_MYTYPE, figure_mytype)` macro for registration
-3. Implement `figure_action()` with action state transitions
-4. Define nested `static_params` and `runtime_data_t` (max 40 bytes, `static_assert` enforced)
-5. Implement animations and sounds in config
+2. `FIGURE_METAINFO(FIGURE_MYTYPE, figure_mytype)` sets `TYPE`/`CLSID` — but it does **not**
+   register the type. Registration into the `figure_impl::acquire` ctor loop happens via
+   `REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_mytype)` in the `.cpp` (its global
+   `model_t<T>` constructor adds the ctor). **Omit it and the type silently falls back to a
+   base `figure_impl`** — `dcast_*()` returns null and debug builds hit `assert(false)` in
+   `figure_impl::acquire`.
+3. Implement `figure_action()` with action state transitions.
+4. Define nested `static_params` and `runtime_data_t` (max 40 bytes, `static_assert` enforced).
+   A subclass may add **no data members** — `static_assert(sizeof(T) == sizeof(figure_impl))`
+   enforces this; all mutable state lives in `runtime_data` (`FIGURE_RUNTIME_DATA_T`).
+5. Static params bind **by class-name string** (`CLSID`): class `figure_mytype` ⇄ config
+   `figure_mytype = { ... }` in `src/scripts/figures.js` / `enemies.js`. Animations, sounds,
+   and combat live in the `figure_static_params` base (parsed generically); `ANK_CONFIG_STRUCT`
+   lists only the **extra** fields. New `.cpp` files need a CMake reconfigure (see root
+   `CLAUDE.md`). Reference: `figure_enemy_chariot.{h,cpp}` (12 leaves, shared base, one config
+   per class); regression pattern: `tests/39_enemy_chariot_registered.js`.
 
 ## Cross-Subsystem Connections
 

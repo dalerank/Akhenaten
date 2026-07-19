@@ -450,7 +450,7 @@ private:
     void destroy_linked_parts(bool on_fire);
 };
 ANK_CONFIG_PROPERTY(building, has_road_access, num_workers, max_workers, type, orientation,
-    prev_part_building_id, collapse_risk, fire_risk, malaria_risk, structure_damage, spawned_worker_this_month,
+    prev_part_building_id, formation_id, collapse_risk, fire_risk, malaria_risk, structure_damage, spawned_worker_this_month,
     current_desirability, has_water_access, has_well_access, curse_days_left,
     common_health, disease_days, houses_covered, show_on_problem_overlay, play_animation, destroy_reason)
 

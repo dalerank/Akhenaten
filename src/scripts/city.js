@@ -322,6 +322,28 @@ city.get_battalion_by_index = function(index) {
     }
 }
 
+city.get_formation = function(formation_id) {
+    if (!formation_id) {
+        return null
+    }
+    return {
+        id: formation_id
+        __property_getter: function(property) { return __formation_get_property(this.id, property) }
+        @in_use { }
+        @batalion_id { }
+        @figure_type { }
+        @num_figures { }
+        @morale { }
+        @experience { }
+        @total_damage { }
+        @max_total_damage { }
+        @cursed_by_seth { }
+        @is_at_fort { }
+        @in_distant_battle { }
+        @empire_service { }
+    }
+}
+
 
 
 city.get_random_house = function() {

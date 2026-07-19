@@ -239,18 +239,9 @@ void batalion_info_window::window_info_background(object_info &c) {
 //}
 
 bool batalion_info_window::check(object_info &c) {
-    building *b = c.building_get();
-    if (!b->is_valid()) {
-        return false;
-    }
-
-    const bool is_fort = b->dcast_fort() || b->dcast_fort_ground();
-    if (!is_fort) {
-        return false;
-    }
-
-    c.bid = b->main()->id;
-    return true;
+    // Fort buildings use info_window_fort. Company-orders routing for this
+    // window will be wired separately later.
+    return false;
 }
 
 void batalion_info_window::update_describe_layout(object_info &c) {

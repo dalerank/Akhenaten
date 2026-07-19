@@ -47,6 +47,7 @@ import ui_stonemason_guild_window
 import ui_garden_info
 import ui_sidebar_window
 import ui_batalion_window
+import ui_fort_window
 import ui_mods_window
 import ui_messages_window
 import ui_house_window

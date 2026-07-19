@@ -33,6 +33,13 @@ Build output: `./build/`
 -DCMAKE_BUILD_TYPE=Debug     # force debug
 ```
 
+### Adding a new source file
+Sources are collected via `file(GLOB ...)` with **no `CONFIGURE_DEPENDS`**, so a brand-new
+`.cpp`/`.h` is **not** picked up by a plain `cmake --build`. Re-run the configure step first
+(`cmake --preset <preset>`), then build. Editing existing files needs no reconfigure.
+(`src/scripts/*.js` are embedded at build time into `*.js.cpp` — a rebuild re-embeds them;
+`tests/*.js` load from disk and need no rebuild.)
+
 ## Run & Debug
 
 ### Command-line parameters
