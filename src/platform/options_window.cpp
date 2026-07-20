@@ -174,17 +174,58 @@ void try_save_game_features(pcstr data_directory) {
     save_settings_file(CONF_FILENAME);
 }
 
+float parse_positive_float_env(pcstr name) {
+    pcstr value = SDL_getenv(name);
+    if (!value || !*value) {
+        return 0.0f;
+    }
+
+    char *end = nullptr;
+    const float parsed = std::strtof(value, &end);
+    if (end == value || !std::isfinite(parsed) || parsed <= 0.0f) {
+        return 0.0f;
+    }
+    return parsed;
+}
+
 float get_ui_scale_for_display(int display_index) {
-    float scale = ImGui_ImplSDL2_GetContentScaleForDisplay(display_index);
-    if (scale <= 0.0f || !std::isfinite(scale)) {
-        scale = 1.0f;
+    float scale = 1.0f;
+
+    // ImGui helper: uses SDL DPI on most platforms, but always returns 1.0 on macOS.
+    const float imgui_scale = ImGui_ImplSDL2_GetContentScaleForDisplay(display_index);
+    if (imgui_scale > 0.0f && std::isfinite(imgui_scale)) {
+        scale = std::max(scale, imgui_scale);
+    }
+
+    // Query SDL DPI on all platforms (including macOS, which ImGui skips on purpose).
+    float dpi = 0.0f;
+    if (SDL_GetDisplayDPI(display_index, &dpi, nullptr, nullptr) == 0 && dpi > 0.0f) {
+        scale = std::max(scale, dpi / 96.0f);
+    }
+
+#if defined(GAME_PLATFORM_LINUX)
+    // Wayland/XWayland/Flatpak often report 96 DPI while the DE scale is >100%.
+    for (pcstr key : {"GDK_SCALE", "QT_SCALE_FACTOR", "ELM_SCALE"}) {
+        const float env_scale = parse_positive_float_env(key);
+        if (env_scale > 0.0f) {
+            scale = std::max(scale, env_scale);
+        }
+    }
+    if (const float gdk_dpi_scale = parse_positive_float_env("GDK_DPI_SCALE"); gdk_dpi_scale > 1.0f) {
+        scale = std::max(scale, gdk_dpi_scale);
+    }
+#endif
+
+    if (platform.is_steamdeck()) {
+        scale = std::max(scale, 1.5f);
     }
 
     SDL_DisplayMode desktop{};
-    if (SDL_GetDesktopDisplayMode(display_index, &desktop) == 0) {
-        if (desktop.h >= 2160) {
+    if (SDL_GetDesktopDisplayMode(display_index, &desktop) == 0 && desktop.w > 0 && desktop.h > 0) {
+        const int max_dim = std::max(desktop.w, desktop.h);
+        if (desktop.h >= 2160 || max_dim >= 3840) {
             scale = std::max(scale, 2.0f);
-        } else if (desktop.h >= 1440) {
+        } else if (desktop.h >= 1440 || max_dim >= 2560) {
             scale = std::max(scale, 1.5f);
         }
     }
@@ -192,7 +233,46 @@ float get_ui_scale_for_display(int display_index) {
     return std::clamp(scale, 1.0f, 3.0f);
 }
 
+float refine_ui_scale_from_renderer(SDL_Window *window, SDL_Renderer *renderer, float current_scale) {
+    int window_w = 0;
+    int window_h = 0;
+    int output_w = 0;
+    int output_h = 0;
+    SDL_GetWindowSize(window, &window_w, &window_h);
+    if (window_w <= 0 || window_h <= 0) {
+        return current_scale;
+    }
+    if (SDL_GetRendererOutputSize(renderer, &output_w, &output_h) != 0 || output_w <= 0 || output_h <= 0) {
+        return current_scale;
+    }
+
+    const float fb_scale = std::max(static_cast<float>(output_w) / static_cast<float>(window_w),
+      static_cast<float>(output_h) / static_cast<float>(window_h));
+    if (!std::isfinite(fb_scale) || fb_scale <= 1.01f) {
+        return current_scale;
+    }
+
+    return std::clamp(std::max(current_scale, fb_scale), 1.0f, 3.0f);
+}
+
+void compute_config_window_size(int display_index, float ui_scale, int *out_w, int *out_h) {
+    int window_w = static_cast<int>(BASE_CONFIG_WINDOW_W * ui_scale);
+    int window_h = static_cast<int>(BASE_CONFIG_WINDOW_H * ui_scale);
+
+    SDL_DisplayMode desktop{};
+    if (SDL_GetDesktopDisplayMode(display_index, &desktop) == 0) {
+        window_w = std::min(window_w, static_cast<int>(desktop.w * 0.9f));
+        window_h = std::min(window_h, static_cast<int>(desktop.h * 0.9f));
+    }
+
+    *out_w = std::max(window_w, 640);
+    *out_h = std::max(window_h, 480);
+}
+
 void apply_imgui_ui_scale(float ui_scale) {
+    // ScaleAllSizes is cumulative — reset to defaults before re-applying.
+    ImGui::GetStyle() = ImGuiStyle();
+    ImGui::StyleColorsDark();
     ImGui::GetStyle().ScaleAllSizes(ui_scale);
     ImGui::GetIO().FontGlobalScale = ui_scale;
 }
@@ -287,19 +367,11 @@ void show_options_window(Arguments& args) {
 #endif
 
     const int display_index = 0;
-    const float ui_scale = get_ui_scale_for_display(display_index);
+    float ui_scale = get_ui_scale_for_display(display_index);
 
-    SDL_DisplayMode desktop{};
-    int window_w = static_cast<int>(BASE_CONFIG_WINDOW_W * ui_scale);
-    int window_h = static_cast<int>(BASE_CONFIG_WINDOW_H * ui_scale);
-    if (SDL_GetDesktopDisplayMode(display_index, &desktop) == 0) {
-        window_w = std::min(window_w, static_cast<int>(desktop.w * 0.9f));
-        window_h = std::min(window_h, static_cast<int>(desktop.h * 0.9f));
-    }
-
-    if (args.get_display_scale_percentage() == 100 && ui_scale > 1.0f) {
-        args.set_display_scale_percentage(static_cast<int>(ui_scale * 100.0f));
-    }
+    int window_w = 0;
+    int window_h = 0;
+    compute_config_window_size(display_index, ui_scale, &window_w, &window_h);
 
     SDL_Window* platform_window = SDL_CreateWindow("Akhenaten: configuration", SDL_WINDOWPOS_CENTERED,
       SDL_WINDOWPOS_CENTERED, window_w, window_h, window_flags);
@@ -309,6 +381,19 @@ void show_options_window(Arguments& args) {
         logs::info("Error creating SDL_Renderer!");
         exit(-1);
     }
+
+    // On Windows HiDPI, drawable/window ratio is the reliable scale signal.
+    const float refined_scale = refine_ui_scale_from_renderer(platform_window, renderer, ui_scale);
+    if (refined_scale > ui_scale + 0.01f) {
+        ui_scale = refined_scale;
+        compute_config_window_size(display_index, ui_scale, &window_w, &window_h);
+        SDL_SetWindowSize(platform_window, window_w, window_h);
+    }
+
+    if (args.get_display_scale_percentage() == 100 && ui_scale > 1.0f) {
+        args.set_display_scale_percentage(static_cast<int>(ui_scale * 100.0f + 0.5f));
+    }
+    logs::info("Config UI scale: %.2f", ui_scale);
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -425,6 +510,19 @@ void show_options_window(Arguments& args) {
             ImGui::TextDisabled("(?)");
             if (ImGui::IsItemHovered()) {
                 ImGui::SetTooltip("UI scale in game. Use 150-200%% on 4K monitors.");
+            }
+
+            float ui_scale_slider = ui_scale;
+            if (ImGui::SliderFloat("Config UI scale", &ui_scale_slider, 1.0f, 3.0f, "%.2f")) {
+                ui_scale = std::clamp(ui_scale_slider, 1.0f, 3.0f);
+                apply_imgui_ui_scale(ui_scale);
+                compute_config_window_size(display_index, ui_scale, &window_w, &window_h);
+                SDL_SetWindowSize(platform_window, window_w, window_h);
+            }
+            ImGui::SameLine();
+            ImGui::TextDisabled("(?)");
+            if (ImGui::IsItemHovered()) {
+                ImGui::SetTooltip("Scale of this configuration dialog. Auto-detected from DPI/resolution.");
             }
 
             if (ImGui::Checkbox("Store configuration (to skip this dialog for the next time)", &store_configuration)) {

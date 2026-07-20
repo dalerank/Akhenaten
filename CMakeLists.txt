@@ -6,8 +6,14 @@ include(ExternalProject)
 set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: android default")
 
 option(OPTION_ENABLE_TRACY "Enable Tracy profiler support" ON)
+option(OPTION_STEAMDECK "Force Steam Deck platform defaults (GAME_PLATFORM_STEAMDECK)" OFF)
 
 message(STATUS "OPTION_ENABLE_TRACY: ${OPTION_ENABLE_TRACY}")
+message(STATUS "OPTION_STEAMDECK: ${OPTION_STEAMDECK}")
+
+if (OPTION_STEAMDECK)
+    add_compile_definitions(GAME_PLATFORM_STEAMDECK)
+endif()
 
 if (CMAKE_BUILD_PLATFORM STREQUAL "win_emscripten")
     message("Platform: win + emscripten")

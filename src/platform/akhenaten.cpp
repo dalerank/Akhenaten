@@ -127,6 +127,7 @@ static void setup() {
     platform.init_timers();
 
     logs::info("Akhenaten version %s", get_version().c_str());
+
     if (!init_sdl()) {
         logs::error("Exiting: SDL init failed");
         exit(-1);

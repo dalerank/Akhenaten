@@ -40,7 +40,11 @@ int platform_sdl_version_at_least(int major, int minor, int patch);
 #else
 #define GAME_PLATFORM_UNIX
 #define GAME_PLATFORM_LINUX
+#if defined(GAME_PLATFORM_STEAMDECK)
+#define GAME_PLATFORM_NAME "steamdeck"
+#else
 #define GAME_PLATFORM_NAME "linux"
+#endif
 #endif
 
 #if defined(__clang__) || defined(__GNUC__)
@@ -142,6 +146,22 @@ struct platform_t {
         return false;
 #endif
     }
+
+	inline constexpr bool is_linux() const {
+#ifdef GAME_PLATFORM_LINUX
+		return true;
+#else
+		return false;
+#endif
+	}
+
+	inline constexpr bool is_steamdeck() const {
+#ifdef GAME_PLATFORM_STEAMDECK
+		return true;
+#else
+		return false;
+#endif
+	}
 
 	bool file_manager_should_case_correct_file();
 
