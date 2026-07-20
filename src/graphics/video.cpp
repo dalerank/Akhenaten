@@ -166,8 +166,10 @@ bool video_start(const char* filename) {
         data.buffer.pixels = g_render.get_custom_texture_buffer(CUSTOM_IMAGE_VIDEO, &data.buffer.width);
         data.is_playing = true;
         return true;
-    } else
-        return false;
+    }
+
+    logs::info("Video: failed to open '%s'", filename ? filename : "(null)");
+    return false;
 }
 
 void video_size(int* width, int* height) {

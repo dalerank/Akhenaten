@@ -1926,13 +1926,20 @@ bink bink_open(const char* filename) {
         return nullptr;
     }
 
+    if (!vfs::file_exists(filename)) {
+        logs::info("BIK: file not found: %s", filename);
+        return nullptr;
+    }
+
     vfs::path fs_file = vfs::path(filename).resolve();
     if (fs_file.empty()) {
+        logs::info("BIK: file not found: %s", filename);
         return nullptr;
     }
 
     bink_movie* movie = new bink_movie(fs_file.c_str());
     if (!movie->valid) {
+        logs::error("BIK: failed to decode '%s'", filename);
         delete movie;
         return nullptr;
     }

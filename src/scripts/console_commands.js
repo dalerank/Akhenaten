@@ -161,6 +161,29 @@ function console_command_show_victory_dialog(args) {
     emit event_show_window { id: "window_victory_dialog" }
 }
 
+// show_video                    → message dialog with embedded SMK (illness)
+// show_video message_<id>       → that message dialog (if it has video{})
+// show_video <path> [w] [h]     → centered video window (.smk / .bik)
+[console_command=show_video]
+function console_command_show_video(args) {
+    var a0 = (args && args[0]) || ""
+    if (!a0 || a0.indexOf("message_") === 0) {
+        var msgid = a0 || "message_illness_video"
+        ui.window_message_dialog(msgid)
+        return
+    }
+    var w = parseInt((args && args[1]) || "400", 10)
+    var h = parseInt((args && args[2]) || "292", 10)
+    if (!(w > 0)) { w = 400 }
+    if (!(h > 0)) { h = 292 }
+    __game_victory_video_show(a0, w, h, "")
+}
+
+[console_command=show_intro_video]
+function console_command_show_intro_video(args) {
+    __window_intro_video_show()
+}
+
 [console_command=victory]
 function console_command_victory(args) {
     city.victory.force_win = true

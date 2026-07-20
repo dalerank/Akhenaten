@@ -26,7 +26,7 @@ namespace game_features {
     game_feature gameplay_fix_100y_ghosts{ "gameplay_fix_100y_ghosts", "#TR_CONFIG_FIX_100_YEAR_GHOSTS", true };
     game_feature gameplay_fix_editor_events{ "gameplay_fix_editor_events", "#TR_CONFIG_FIX_EDITOR_EVENTS", true };
     game_feature gameui_sidebar_info{ "gameui_sidebar_info", "#TR_CONFIG_SIDEBAR_INFO", true };
-    game_feature gameui_show_intro_video{ "gameui_show_intro_video", "#TR_CONFIG_SHOW_INTRO_VIDEO", false };
+    game_feature gameui_show_intro_video{ "gameui_show_intro_video", "#TR_CONFIG_SHOW_INTRO_VIDEO", true };
     game_feature gameui_smooth_scrolling{ "gameui_smooth_scrolling", "#TR_CONFIG_SMOOTH_SCROLLING", true };
     game_feature gameui_walker_waypoints{ "gameui_walker_waypoints", "#TR_CONFIG_DRAW_WALKER_WAYPOINTS", true };
     game_feature gameui_visual_feedback_on_delete{ "gameui_visual_feedback_on_delete", "#TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE", true };
