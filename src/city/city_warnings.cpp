@@ -27,6 +27,7 @@ void window_warnings::archive_load(archive arch) {
     timeout_ms = arch.r_int("timeout_ms", 15000);
     top_offset = arch.r_int("top_offset", 30);
     message_width = arch.r_int("message_width", 25);
+    message_interval = arch.r_int("message_interval", 25);
 }
 
 window_warnings::warning* window_warnings::new_warning() {

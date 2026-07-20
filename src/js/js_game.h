@@ -944,6 +944,7 @@ int js_game_emit_es(xstring es, xstring sub_event, bvariant_map args);
 void js_register_game_handlers(xstring missionid);
 void js_call_event_handlers(const xstring &event_name, const bvariant_map &object);
 bool js_has_event_handlers(const xstring &event_name);
+
 void js_register_entity_systems();
 void js_register_console_command(js_State *J);
 

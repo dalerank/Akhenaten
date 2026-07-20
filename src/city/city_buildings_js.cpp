@@ -72,6 +72,12 @@ void __city_show_warning(pcstr id) {
 }
 ANK_FUNCTION_1(__city_show_warning)
 
+void __city_warnings_run(pcstr system, pcstr method) {
+    bvariant_map empty;
+    js_call_event_handlers(js_helpers::es_hash_str(system, method).c_str(), empty);
+}
+ANK_FUNCTION_2(__city_warnings_run)
+
 int __map_rubble_building_type_at_grid(int grid_offset) {
     return map_rubble_building_type(grid_offset);
 }

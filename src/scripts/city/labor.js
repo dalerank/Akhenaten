@@ -26,3 +26,13 @@ city.labor = extend(__city_labor, {
     culture : get_labor_category(LABOR_CATEGORY_CULTURE)
     house : get_labor_category(LABOR_CATEGORY_HOUSE)
 })
+
+[es=(city_warnings, update_monthly)]
+function city_warnings_needs_more_workers() {
+    var avail = city.labor.workers_available
+    var needed = city.labor.workers_needed
+    var pct = avail ? Math.calc_percentage(needed, avail) : (needed > 0 ? 100 : 0)
+    if (pct >= 15) {
+        city.warnings.add("#city_needs_more_workers")
+    }
+}

@@ -7,6 +7,7 @@ import city.ratings
 import city.festival
 import city.floods
 import city.monuments
+import city.warnings
 import city.labor
 import city.sounds
 import city.victory

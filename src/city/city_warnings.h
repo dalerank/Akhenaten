@@ -17,6 +17,7 @@ struct window_warnings : autoconfig_window_t<window_warnings> {
     int timeout_ms = 15000;
     int top_offset = 30;
     int message_width = 25;
+    int message_interval = 25;
 
     void on_mission_start() override;
     void show(pcstr type);
