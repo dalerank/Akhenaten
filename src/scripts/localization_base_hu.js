@@ -3537,9 +3537,6 @@ localization_base_hu = [
     { group:108, id:5, text: "Túl kevés munkásunk van. Néha akár két héten keresztül sem érkezik vízszállítás." }
     { group:108, id:6, text: "Csak minimális személyzettel működünk. Gyakran előfordul, hogy egy teljes hónapig nem szállítunk vizet." }
     { group:108, id:7, text: "Szállító személyzet nélkül ez a létesítmény akár egy száraz gödör is lehetne a földben." }
-    { group:109, id:1, text: "A tisztavíz-szállításban nem részesülő polgárok kutakból vehetnek vizet, de a kúttal ellátott városrészek nem a legegészségesebb vagy legkívánatosabb lakóhelyek." }
-    { group:109, id:2, text: "Erre a kútra nincs szükség. Minden ház, amelyet ellát, vízellátásból kapja a vizet." }
-    { group:109, id:3, text: "Ennek a kútnak a vize kárba vész, mert nincs ház a szolgáltatási körzetében." }
     { group:110, id:0, text: "Jósda? Ide kerülne a szentély?" }
     { group:110, id:1, text: "Ez a szentély kívánatosabbá teszi a közeli otthonokat, és minden istent megelégedéssel tölt el. Nem alkalmaz papokat, és nem biztosít hozzáférést egyetlen konkrét istenhez sem." }
     { group:111, id:0, text: "Égő rom" }
