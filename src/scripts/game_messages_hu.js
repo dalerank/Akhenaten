@@ -245,187 +245,187 @@ game_messages_hu {
 
     message_overseer_military {
         id: 21,
-        
+
         size [30, 28]
         title {
-            text: "Overseer of the Military",
+            text: "A hadsereg felügyelője",
         }
         subtitle {
-            text: "Game Control",
+            text: "Játékvezérlés",
         }
         content {
-            text: "Your Overseer of the Military keeps tabs on all of the city's @37companies, @365warships and @367transport&ships. @PYour Overseer of the Military issues both an army report and a navy report.  In the army report, your Overseer briefly updates you on the number and condition of each of the city's companies. He keeps tabs on their morale and experience level and can also earmark a company for Kingdom service, and, if only one other city is requesting aid, send the company. Visit any one of the companies by clicking the 'Go to Company' button.  You can also order a company back to its Fort from the army status report. @PClick the button in the lower right corner to view the navy status report, which tells you everything you need to know about the navy's warships and transport ships.  Your Overseer reports each warship crew's fatigue level and the hull's strength.  He can also send warships to aid Pharaoh or another city, if needed.  Click 'Go to Warship' to visit a specific crew, and click 'Return to Wharf' to send a warship back to moor. @PYour Overseer of the Military also updates you on general military activity in and around the city. He'll tell you if there are enemies approaching or if anyone requires the services of your troops or warships. @PFor more on war in Pharaoh, click @52here. @L@LThe ancient Egyptians raised mighty armies and navies. Click @184here to find out more about ancient warfare."
+            text: "A hadsereg felügyelője nyomon követi a város összes @37csapatának, @365hadihajójának és @367szállítóhajójának állapotát. @PA hadsereg felügyelője hadijelentést és flottajelentést is készít. A hadijelentésben röviden tájékoztat az egyes csapatok létszámáról és állapotáról. Figyeli a moráljukat és tapasztalati szintjüket, kijelölhet egy csapatot a Királyság szolgálatára, és ha csak egy másik város kér segítséget, elküldheti azt. Egy csapat megtekintéséhez kattints a „Csapat megtekintése” gombra. A hadsereg állapotjelentéséből egy csapatot vissza is rendelhetsz az erődjébe. @PA jobb alsó sarokban lévő gombra kattintva megtekintheted a flotta állapotjelentését, amely minden szükséges információt tartalmaz a hadihajókról és szállítóhajókról. A felügyelő jelentést ad minden hadihajó legénységének fáradtsági szintjéről és a hajótest állapotáról. Szükség esetén hadihajókat is küldhet a fáraó vagy egy másik város megsegítésére. Kattints a „Hadihajó megtekintése” gombra egy adott legénység felkereséséhez, vagy a „Vissza a kikötőbe” gombra, hogy a hajót visszaküldd kikötni. @PA hadsereg felügyelője a városban és környékén zajló általános katonai tevékenységről is tájékoztat. Megmondja, ha ellenség közeledik, vagy ha valakinek szüksége van csapataid vagy hadihajóid segítségére. @PTovábbi információkért a fáraói háborúkról kattints @52ide. @L@LAz ókori egyiptomiak hatalmas hadseregeket és flottákat hoztak létre. Kattints @184ide, ha többet szeretnél megtudni az ókori hadviselésről."
         }
     }
 
     message_overseer_political {
         id: 22,
-        
+
         size [30, 28]
         title {
-            text: "Political Overseer",
+            text: "Politikai felügyelő",
         }
         subtitle {
-            text: "Game Control",
+            text: "Játékvezérlés",
         }
         content {
-            text: "Your Political Overseer manages your relations with the rest of Egypt.   @PThe Political Overseer keeps track of all requests for supplies, whether from other cities or from Pharaoh. He knows how much of the requested good the city has available in its @4Storage&Yards and will notify you when you are able to comply with the request. You can then tell your Political Overseer to send the goods. It's generally a good idea to comply with requests from Pharaoh or other cities as quickly as possible. Ignoring a request entirely can reduce @47trade, or even prompt an attack on your city. Sending goods late is better than not sending them at all. @PThe Political Overseer also helps you manage your family savings. He knows how much you have saved and your current salary level. Family savings carry over from mission to mission unless Egypt's centralized government breaks down (between each Period). Your Political Overseer will change your salary if you so command. Simply click on the button that lists your current salary, and, when the list of titles with their associated salaries appears, choose a new salary level from this screen. Keep in mind that your fellow Egyptians frown on those who pay themselves more than their rank merits. @PIf you want to spend some of your family's savings, the Political Overseer will manage the transaction. You can choose to send a gift for Egypt (other political leaders or the people of other cities), or you can give to your city's treasury.  @PSending a gift for Egypt can boost your @35Kingdom&Rating.  If your family has enough saved, you can choose among three gifts to send. Don't be overly generous, though. If you send gifts too frequently, the recipients begin to expect them, and might grow angry if they stop arriving. They also tend to expect each gift to be more precious than the previous one. When you decide to send a gift, the Political Overseer will make sure the gift arrives intact. @PYou can also donate your family savings to the city's treasury.  This can be a good idea, especially if your family savings can prevent the city from going into debt. Debt can be a very expensive proposition. The Kingdom will loan your city money, but loans do come at a cost. For more on your city's money, click @48here. @PFinally, your Political Overseer knows your Kingdom rating and Egypt's general attitude towards you. A better resource for information on ratings is your @23Ratings&Overseer."
+            text: "A politikai felügyelő kezeli kapcsolataidat Egyiptom többi részével. @PA politikai felügyelő nyomon követi az összes nyersanyagkérést, akár más városoktól, akár a fáraótól érkeznek. Tudja, mennyi van a kért áruból a város @4Raktáraiban&udvaraiban, és értesít, amikor teljesíteni tudod a kérést. Ezután utasíthatod, hogy küldje el az árut. Általában érdemes a fáraó vagy más városok kéréseit a lehető leggyorsabban teljesíteni. Egy kérés teljes figyelmen kívül hagyása csökkentheti a @47kereskedelmet, vagy akár támadást is kiválthat a városod ellen. A késve elküldött áru is jobb, mint ha egyáltalán nem küldenél semmit. @PA politikai felügyelő a családi megtakarításaid kezelésében is segít. Tudja, mennyit takarítottál meg, és mi a jelenlegi fizetési szinted. A családi megtakarítások küldetésről küldetésre megmaradnak, kivéve ha Egyiptom központi kormányzata összeomlik (az egyes korszakok között). A politikai felügyelő parancsodra megváltoztatja a fizetésedet. Egyszerűen kattints az aktuális fizetésedet jelző gombra, majd amikor megjelenik a rangokhoz tartozó fizetések listája, válassz új fizetési szintet ezen a képernyőn. Ne feledd, hogy az egyiptomiak rosszallják, ha valaki rangjához képest túl magas fizetést állapít meg magának. @PHa családi megtakarításaid egy részét el szeretnéd költeni, a politikai felügyelő intézi a tranzakciót. Választhatsz, hogy Egyiptomnak küldesz ajándékot (más politikai vezetőknek vagy más városok lakóinak), vagy a városod kincstárának adományozol. @PEgyiptomnak küldött ajándék növelheti a @35Királysági&Megítélésedet. Ha családodnak elegendő megtakarítása van, háromféle ajándék közül választhatsz. Ne légy azonban túl nagylelkű. Ha túl gyakran küldesz ajándékokat, a címzettek elvárják őket, és haragudhatnak, ha azok elmaradnak. Emellett hajlamosak minden új ajándékot értékesebbnek várni az előzőnél. Amikor ajándékot küldesz, a politikai felügyelő gondoskodik róla, hogy sértetlenül megérkezzen. @PA családi megtakarításaidat a város kincstárának is adományozhatod. Ez jó döntés lehet, különösen ha a megtakarításaid megakadályozhatják, hogy a város adósságba kerüljön. Az adósság igen költséges lehetőség. A Királyság kölcsönt ad a városodnak, de ennek ára van. A város pénzügyeiről további információért kattints @48ide. @PVégül a politikai felügyelő ismeri a Királysági megítélésedet és Egyiptom általános hozzáállását hozzád. A megítélésekkel kapcsolatos részletesebb információkért a @23Megítélés&felügyelődhöz fordulj."
         }
     }
-    
+
     message_overseer_ratings {
         id: 23,
-        
+
         size [30, 28]
         title {
-            text: "Ratings Overseer",
+            text: "Megítélési felügyelő",
         }
         subtitle {
-            text: "Game Control",
+            text: "Játékvezérlés",
         }
         content {
-            text: "Your Ratings Overseer displays the city's current Culture, Prosperity, Monument and Kingdom ratings along with your population goal. When you click on a rating, the Ratings Overseer tells you the best way to improve that rating, or what holds the rating back. You can see how far along your city is in reaching its ratings goals by looking at the columns above each rating. When you achieve the goal set for the city at the beginning of your assignment, the column is capped. Even though you may have achieved your monument rating, the column is not capped (and the goal has not been met) until all necessary burial provisions have been dispatched by the Overseer of Monuments. @PIf the city has a @77Palace, you can quickly check the city's ratings by holding the mouse over the Palace. A small window appears that lists the ratings along with the city's unemployment rate. @PFor more detailed information on ratings and their role in the game, click @35here."
+            text: "A Megítélési felügyelő megjeleníti a város jelenlegi Kultúra-, Jólét-, Emlékmű- és Királysági megítélését, valamint a lakossági célt. Ha egy megítélésre kattintasz, a felügyelő elmondja, hogyan javíthatod azt a legjobban, vagy mi akadályozza a növekedését. A megítélések feletti oszlopok segítségével láthatod, milyen közel jár a város a célok eléréséhez. Amikor eléred a megbízatásod kezdetén kitűzött városi célt, az oszlop megtelik. Még ha el is érted az emlékmű-megítélést, az oszlop nem telik meg (és a cél nincs teljesítve), amíg az Emlékművek felügyelője el nem küldte az összes szükséges temetkezési kelléket. @PHa a városnak van @77Palotája, gyorsan ellenőrizheted a megítéléseket, ha az egeret a palota fölé viszed. Egy kis ablak jelenik meg, amely felsorolja a megítéléseket és a város munkanélküliségi arányát. @PA megítélésekről és a játékban betöltött szerepükről további részletes információért kattints @35ide."
         }
     }
 
     message_overseer_commerce {
         id: 24,
-        
+
         size [30, 28]
         title {
-            text: "Overseer of Commerce",
+            text: "A kereskedelem felügyelője",
         }
         subtitle {
-            text: "Game Control",
+            text: "Játékvezérlés",
         }
         content {
-            text: "Your Overseer of Commerce monitors the city's @46industries and @4Storage&Yards and keeps track of supply, demand and prices for goods throughout the world.  He knows how much of each commodity is stored in the city and tells you whether an item can be imported or exported.   @PYour Overseer of Commerce also updates you on the current status of each industry.  Visit him to turn city industries on or off, or to stockpile a particular good in the city's Storage Yards.  When a good is being stockpiled, it accumulates quickly in the Storage Yards because no one can use it.  It cannot be traded, and Bazaar buyers cannot procure the good for their customers.  If a raw material is being stockpiled, no shipments of the commodity will be delivered to its corresponding manufacturer.  You might want to stockpile some item against an anticipated future request for it, or you might stockpile a raw material before you actually build the industries that need it.   @PTo shut down an industry or stockpile a commodity, click on an item in the Overseer of Commerce's list.  Buttons with your different options appear in the panel that pops up. @PYour Overseer of Commerce also helps you establish the flow of trade.  He identifies which commodities can be imported or exported, based on the trade routes that you have opened.  Once you decide to trade an item, visit him and specify which items to trade by clicking on them.  You can tell him how much should be kept in the city's Storage Yards, or you can rely on his judgement and allow him to import and export food and goods as he sees fit.  The Overseer has been doing his job for a long time, and makes intelligent decisions about how much of each commodity your city should have on hand.  @PWhen importing, your Overseer continues to buy a good as long as the city has less than your chosen level (or, if using his own judgement, tries to buy just enough to maintain a small surplus in city storage).  When exporting, your Overseer sells goods any time the city has more than your chosen level.  Left to his own judgement, he evaluates whether your city needs each commodity for its own purposes, and refuses to sell more than the amount that he thinks you need to keep things running smoothly.  The Overseer is keenly attuned to the population's changing size, and he revises his decisions as the city's numbers fluctuate. @PThe entries on @46industry, @45food, and @47trade will help you understand the nuances of successful trade."
+            text: "A kereskedelem felügyelője figyeli a város @46iparágait és @4Raktárait&udvarait, valamint nyomon követi a világban elérhető áruk kínálatát, keresletét és árait. Tudja, mennyi van az egyes árucikkekből a városban, és megmondja, hogy egy adott áru importálható vagy exportálható-e. @PA kereskedelem felügyelője az egyes iparágak aktuális állapotáról is tájékoztat. Látogasd meg, ha be vagy ki szeretnéd kapcsolni a város iparágait, vagy ha egy bizonyos árut fel szeretnél halmozni a város Raktáraiban. A felhalmozott áru gyorsan gyűlik a Raktárakban, mivel senki sem használhatja fel. Nem lehet kereskedni vele, és a bazárvásárlók sem szerezhetik be vevőik számára. Ha egy nyersanyagot halmozol fel, a hozzá tartozó gyártóüzemekhez nem érkezik szállítmány az adott áruból. Érdemes lehet egy árut felhalmozni egy várható jövőbeli kérésre készülve, vagy egy nyersanyagot még azelőtt összegyűjteni, hogy megépítenéd az azt igénylő iparágakat. @PEgy iparág leállításához vagy egy áru felhalmozásához kattints a kereskedelem felügyelőjének listájában egy elemre. A megjelenő panelen gombok jelennek meg a különböző lehetőségekkel. @PA kereskedelem felügyelője a kereskedelmi folyamatok kialakításában is segít. Megmutatja, mely áruk importálhatók vagy exportálhatók a megnyitott kereskedelmi útvonalak alapján. Ha kereskedni szeretnél egy áruval, keresd fel, majd kattintással jelöld ki a kívánt árucikkeket. Megadhatod, mennyi maradjon belőlük a város Raktáraiban, vagy rábízhatod a döntést, és hagyhatod, hogy belátása szerint importáljon és exportáljon élelmiszert és árukat. A felügyelő régóta végzi a munkáját, és okos döntéseket hoz arról, mennyit kell tartania a városnak az egyes árucikkekből. @PImportáláskor a felügyelő addig vásárol egy árut, amíg a városban nincs meg a kiválasztott mennyiség (vagy saját belátása szerint csak annyit próbál vásárolni, hogy kis többlet maradjon a városi raktárban). Exportáláskor akkor ad el árut, amikor a város készlete meghaladja a beállított szintet. Ha saját belátására hagyod, felméri, hogy a városnak szüksége van-e az adott árura, és nem ad el többet annál a mennyiségnél, amely szerinte szükséges a zavartalan működéshez. A felügyelő figyelemmel kíséri a lakosság változó méretét, és a város létszámának ingadozásával módosítja döntéseit. @A @46ipar, @45élelem és @47kereskedelem bejegyzések segítenek megérteni a sikeres kereskedelem finomságait."
         }
     }
-    
+
     message_overseer_granaries {
         id: 25,
-        
+
         size [30, 28]
         title {
-            text: "Overseer of the Granaries",
+            text: "A magtárak felügyelője",
         }
         subtitle {
-            text: "Game Control",
+            text: "Játékvezérlés",
         }
         content {
-            text: "Food and population go hand in hand. The Overseer of the Granaries keeps track of the city's population and the food they consume. @PThe Overseer of the Granaries presents information on your city's population through three different graphs. By default, the first graph you see is the Population History graph. This graph shows how your population has grown or shrunk over time. If your city is doing well, this report will show more or less continuous growth.  @PTo the right of the Population History graph are two smaller graphs, the Census graph and the Society graph. Click one of these graphs to enlarge it and place it in the center of the screen.   @PThe Census graph shows you the demographic breakdown of your population by age - useful for predicting the growth or contraction of the @43work&force. Children and the elderly don't work, but do continue to eat food, drink beer and break pottery!  @PThe Society graph shows you the breakdown of your citizens by income, as measured by the quality of their housing. Very wealthy residents @41(scribes) do not engage in manual labor, either, so as your city grows richer, its workforce tends to diminish. Although they don't contribute to the labor pool, scribes do pay a lot of tax money into your Palace vaults. @PBelow the graphs are several lines of very useful information. The first line tells you how many people your current level of food production can support and anticipated population trends based on current levels of immigration and emigration. This Overseer also knows how many people the city's vacant housing can hold, how much food the Granaries in the city have stored, and how many immigrants arrived during the previous month. @PConsulting the entries on @39Population and @45Food may be helpful to understanding the Overseer of the Granaries' importance."
+            text: "Az élelem és a lakosság szorosan összefügg. A magtárak felügyelője nyomon követi a város lakosságát és az általuk elfogyasztott élelmet. @PA magtárak felügyelője három különböző grafikonnal mutatja be a város lakosságára vonatkozó adatokat. Alapértelmezés szerint először a Lakosságtörténet grafikont látod. Ez azt mutatja, hogyan nőtt vagy csökkent a lakosságod az idő múlásával. Ha a város jól működik, a jelentés többé-kevésbé folyamatos növekedést mutat. @PA Lakosságtörténet grafikontól jobbra két kisebb grafikon található: a Népszámlálás és a Társadalom grafikon. Kattints az egyikre a nagyításhoz és a képernyő közepére helyezéshez. @PA Népszámlálás grafikon a lakosság kor szerinti megoszlását mutatja – hasznos a @43munka&erő növekedésének vagy csökkenésének előrejelzéséhez. A gyermekek és az idősek nem dolgoznak, de továbbra is fogyasztanak élelmet, sört és törnek edényeket! @AA Társadalom grafikon a polgárok jövedelem szerinti megoszlását mutatja, amelyet a lakóhelyük minősége alapján mér. A nagyon gazdag lakosok @41(írástudók) szintén nem végeznek fizikai munkát, ezért ahogy a város gazdagodik, a munkaerő általában csökken. Bár nem járulnak hozzá a munkaerőhöz, az írástudók sok adót fizetnek a Palota kincstárába. @AA grafikonok alatt több hasznos információsor található. Az első sor megmutatja, hogy a jelenlegi élelmiszer-termelési szint hány embert képes ellátni, valamint a jelenlegi bevándorlási és elvándorlási arányok alapján várható lakossági változásokat. A felügyelő azt is tudja, hogy a város üres lakóhelyei hány embert tudnak befogadni, mennyi élelmet tárolnak a város magtárai, és hány bevándorló érkezett az előző hónapban. @A @39Lakosság és @45Élelem bejegyzések tanulmányozása segíthet megérteni a magtárak felügyelőjének fontosságát."
         }
     }
-    
+
     message_overseer_public_health {
         id: 26,
-        
+
         size [30, 28]
         title {
-            text: "Overseer of Public Health",
+            text: "A közegészségügy felügyelője",
         }
         subtitle {
-            text: "Game Control",
+            text: "Játékvezérlés",
         }
         content {
-            text: "Your Overseer of Public Health reports on the city's overall health. He tracks the number of @64Physician's&offices, @63Dentist's&offices, @65Apothecaries and @66Mortuaries working in the city. For more specific information on health coverage in particular sections of your city, use the @18health&overlay. @PYour Overseer of Public Health knows if a particular health risk like malaria or disease threatens the city. He also keeps track of your populace's general attitude towards their health services.  @PThe @53Health entry will help you understand the effects of health throughout your city."
+            text: "A közegészségügy felügyelője jelentést készít a város általános egészségi állapotáról. Nyomon követi a városban működő @64orvosi&rendelők, @63fogorvosi&rendelők, @65patikák és @66halottasházak számát. A város egyes részeinek egészségügyi ellátásáról részletesebb információkat a @18egészségügyi&fedvény segítségével kaphatsz. @AA közegészségügy felügyelője tudja, ha egy adott egészségügyi veszély, például malária vagy járvány fenyegeti a várost. Figyeli azt is, hogy a lakosság általánosságban hogyan vélekedik az egészségügyi szolgáltatásokról. @A @53Egészség bejegyzés segít megérteni az egészségügy városodra gyakorolt hatásait."
         }
     }
-    
+
     message_overseer_learning {
         id: 27,
-        
+
         size [30, 28]
         title {
-            text: "Overseer of Learning",
+            text: "A tanulás felügyelője",
         }
         subtitle {
-            text: "Game Control",
+            text: "Játékvezérlés",
         }
         content {
-            text: "Your Overseer of Learning apprises you of the status of education in the city.  He reports the number of active @68Scribal&Schools and @70Libraries and how many people can benefit from existing education structures.  He assesses the adequacy of access to education and also reports any demands citizens are making for new education structures.  @PTo look at coverage in specific areas of your city, use the @18education&overlay. Also, see the entry on @50education for more information. @L@LTo learn more about education in ancient Egypt, click @163here."
+            text: "A tanulás felügyelője tájékoztat a város oktatásának állapotáról. Jelenti az aktív @68írnoki&iskolák és @70könyvtárak számát, valamint azt, hogy hány ember részesülhet a meglévő oktatási intézmények szolgáltatásaiból. Felméri az oktatáshoz való hozzáférés megfelelőségét, és jelzi azt is, ha a polgárok új oktatási épületeket igényelnek. @AA város egyes területeinek ellátottságát a @18oktatási&fedvény segítségével tekintheted meg. További információkért lásd az @50oktatás bejegyzést. @L@LTöbbet tudhatsz meg az ókori Egyiptom oktatásáról, ha @163ide kattintasz."
         }
     }
 
     message_overseer_diversions {
         id: 28,
-        
+
         size [30, 28]
-        title { text: "Overseer of Diversions" }
-        subtitle { text: "Game Control"  }
+        title { text: "A szórakoztatás felügyelője" }
+        subtitle { text: "Játékvezérlés"  }
         content {
-            text: "Your Overseer of Diversions knows how many juggler's stages, musicians' stages and dancers' stages are working in the city.  The number of stages matters much more than how many @71Booths, @72Bandstands and @73Pavilions exist, so he does not bother enumerating those.  He also reports the number of @74Senet&Houses and @479Zoos that are entertaining the public.  He estimates how many people can benefit from your city's stages, Zoos and Senet Houses and gauges citizens' satisfaction with their entertainment options.  @PYou may want to consult the entry on @49entertainment to learn more about its role in your city. @L@LTo learn more about entertainment in ancient Egypt, click @165here."
+            text: "A szórakoztatás felügyelője tudja, hány zsonglőrszínpad, zenészszínpad és táncos színpad működik a városban. A színpadok száma sokkal fontosabb, mint az, hogy hány @71bódé, @72zenepavilon és @73csarnok található, ezért ezeket nem tartja számon külön. Jelenti azt is, hány @74Szenet&ház és @479állatkert szórakoztatja a közönséget. Megbecsüli, hány ember élvezheti a város színpadainak, állatkertjeinek és Szenet-házainak szolgáltatásait, valamint felméri a polgárok elégedettségét a szórakozási lehetőségeikkel kapcsolatban. @A @49szórakoztatás bejegyzés tanulmányozása segíthet jobban megérteni ennek szerepét a városodban. @L@LTöbbet tudhatsz meg az ókori Egyiptom szórakoztatásáról, ha @165ide kattintasz."
         }
     }
 
     message_overseer_temples {
         id: 29,
-        
+
         size [30, 28]
         title {
-            text: "Overseer of the Temples",
+            text: "A templomok felügyelője",
         }
         subtitle {
-            text: "Game Control",
+            text: "Játékvezérlés",
         }
         content {
-            text: "Your Overseer of the Temples knows which gods are worshiped in the city and whether or not the city has a patron god.  Perhaps most important, he also keeps track of each god's attitude.  He reports how many Shrines, Temples and Temple Complexes are working in the city and if people are demanding more access to religious facilities.  He can also help plan a festival.  @PWhen you want to hold a festival in your city, click on the 'Hold New Festival' button. Choose which god to honor and the size of the festival. Because of the expense and time involved in successfully planning a festival, a city can only have two festivals in any 12-month period. Keep in mind that you must also have a @366Festival&Square in the city before you can hold a festival. To throw a Grand festival, the city must also have enough beer for everyone. @PThe Overseer of the Temples will also tell you the citizens' specific concerns regarding religion in the city. @PRead about @51religion to learn more about the value of appeasing the gods. @L@LReligion was the basis for ancient Egyptian life. Click @399here for more."
+            text: "A templomok felügyelője tudja, mely isteneket tisztelik a városban, és hogy van-e a városnak védőistene. Talán a legfontosabb, hogy az egyes istenek hozzáállását is nyomon követi. Jelenti, hány Szentély, Templom és Templomegyüttes működik a városban, valamint hogy az emberek igényelnek-e jobb hozzáférést a vallási létesítményekhez. A fesztiválok megtervezésében is segíthet. @PHa fesztivált szeretnél rendezni a városban, kattints az „Új fesztivál rendezése” gombra. Válaszd ki, melyik istent tiszteled meg, és a fesztivál méretét. A sikeres fesztivál megtervezéséhez szükséges költségek és idő miatt egy város legfeljebb két fesztivált rendezhet bármely 12 hónapos időszakban. Ne feledd, hogy a fesztivál megtartásához a városnak rendelkeznie kell egy @366Fesztivál&térrel is. Nagyszabású fesztivál rendezéséhez elegendő sörrel is rendelkezned kell mindenki számára. @PA templomok felügyelője a polgárok vallással kapcsolatos konkrét problémáiról is tájékoztat. @AO istenek kiengesztelésének fontosságáról többet tudhatsz meg a @51vallás bejegyzésből. @L@LA vallás az ókori egyiptomi élet alapja volt. További információért kattints @399ide."
         }
     }
 
     message_overseer_treasury {
         id: 30,
-        
+
         size [30, 28]
-        title { text: "Overseer of the Treasury" }
-        subtitle { text: "Game Control" }
+        title { text: "A kincstár felügyelője" }
+        subtitle { text: "Játékvezérlés" }
         content {
-            text: "Your Overseer of the Treasury tracks every single deben that comes into or leaves the city's coffers. Examining his tally sheet helps you assess where you can cut costs or increase income. @PSummary tax information is located at the top of the Overseer of the Treasury screen. Use the scroll buttons by the tax rate to adjust it.  The default setting of 9 percent is considered reasonable by your citizens. Raising the rate much higher than 9 percent could anger your citizens and deter immigration, or even prompt people to leave. The longer you hold taxes at high levels, the angrier people grow. For more on City Sentiment, click @39here. @PThe summary also shows how much tax has been collected, how many of your citizens are registered for the tax and how much money was not collected due to an insufficient number of tax collectors. To assess which areas of your city are skipping out on their tax payments, use the @18tax&overlay.  Also, be aware that citizens become very agitated if they have to pay tax while other neighborhoods in the city do not.   @PFollowing the summary information is a tally sheet. The line items at the top of the sheet detail the city's income from taxes, gifts and exporting commodities.   @PBelow the meager list of sources of income is a lengthier list of the city's expenditures. Generally, wages and construction costs will be the largest line items, although imports can become quite costly, too. @PThe left side of the list shows the previous year's performance for purpose of comparison. You can see if a particular expenditure is skyrocketing out of control compared to the previous year. @PThe entry on @48money provides more advice on budgets. The entry on @80Tax&Collectors is also helpful. @L@LClick @173here for more on money in ancient Egypt."
+            text: "A kincstár felügyelője nyomon követ minden deben-t, amely a város kincstárába beérkezik vagy onnan távozik. A kimutatását áttekintve felmérheted, hol csökkentheted a költségeket vagy növelheted a bevételeket. @PA kincstár felügyelőjének képernyőjének tetején összesített adózási információkat találsz. Az adókulcs melletti görgetőgombokkal módosíthatod az értékét. Az alapértelmezett 9 százalékos beállítást a polgárok elfogadhatónak tartják. Ha az adókulcsot jóval 9 százalék fölé emeled, az feldühítheti a lakosságot és visszavetheti a bevándorlást, sőt akár távozásra is késztetheti az embereket. Minél tovább tartod magas szinten az adókat, annál elégedetlenebbé válnak a polgárok. A városi hangulatról további információért kattints @39ide. @PAz összesítés azt is mutatja, mennyi adót szedtél be, hány polgár van adónyilvántartásba véve, és mennyi pénz maradt beszedetlenül az elégtelen számú adószedő miatt. Annak felméréséhez, hogy a város mely részei maradnak ki az adófizetésből, használd az @18adó&fedvényt. Arra is ügyelj, hogy a polgárok nagyon felháborodnak, ha nekik adót kell fizetniük, miközben a város más részei nem teszik ezt. @PAz összesítő információk után egy kimutatás következik. A lista felső sorai a város bevételeit részletezik: adókból, ajándékokból és áruexportból származó bevételeket. @AA csekély számú bevételi forrás alatt a város kiadásainak hosszabb listája található. Általában a bérek és az építési költségek jelentik a legnagyobb tételeket, bár az import is igen költségessé válhat. @AA lista bal oldala az előző év eredményeit mutatja összehasonlítás céljából. Láthatod, ha egy adott kiadás az előző évhez képest ellenőrizhetetlenül megugrik. @A @48pénz bejegyzés további tanácsokat ad a költségvetésről. Az @80Adószedők bejegyzés szintén hasznos lehet. @L@Az ókori Egyiptom pénzügyeiről további információért kattints @173ide."
         }
     }
 
     message_chief_overseer {
         id: 31,
-        
+
         size [30, 28]
-        title { text: "Chief Overseer" }
-        subtitle { text: "Game Control" }
+        title { text: "Főfelügyelő" }
+        subtitle { text: "Játékvezérlés" }
         content {
-            text: "The Chief Overseer consults with all your other Overseers to provide a thumbnail sketch of the city's status. He's a good person to visit when you're not sure what your city needs most. Urgent items requiring immediate attention appear in yellow. Serious problems appear in white. Click on any problem for advice on how it might be addressed, and links to other advisors who might be able to help you further. @PYour Chief Overseer also provides you with the latest Nilometer reading. The Nilometer predicts the next season's flood. @PYour other overseers report to the Chief Overseer, and you should carefully consider what he has to say. He has a better idea of your city's overall condition than does anyone else, save yourself.  Heeding his warnings early could save your city from disaster."
+            text: "A főfelügyelő egyeztet az összes többi felügyelővel, hogy rövid áttekintést adjon a város állapotáról. Jó hozzá fordulni, ha nem vagy biztos benne, mire van leginkább szüksége a városodnak. A sürgős, azonnali figyelmet igénylő ügyek sárgával jelennek meg. A komoly problémák fehérrel láthatók. Kattints bármelyik problémára tanácsért, hogyan lehet megoldani, valamint olyan további tanácsadók hivatkozásaiért, akik segíthetnek. @AA főfelügyelő a legújabb nilométer-értéket is megadja. A nilométer a következő évszak áradásának mértékét jelzi előre. @AA többi felügyelő a főfelügyelőnek jelent, és érdemes alaposan megfontolnod, amit mond. A városod általános állapotát rajtad kívül senki sem ismeri jobban nála. Ha időben figyelembe veszed a figyelmeztetéseit, megóvhatod a várost a pusztulástól."
         }
     }
 
     message_world_map {
         id: 32,
-        
+
         size [30, 28]
-        title { text: "The World Map" }
-        subtitle { text: "Game Controls" }
+        title { text: "A világtérkép" }
+        subtitle { text: "Játékvezérlés" }
         content {
-            text: "The World Map shows you other important cities in the world. Perhaps its most important function is in the identification of @47trade partners. @PCities flying a flag will trade with you. Click on a flag-flying city to see which items it wants to trade, as well as the cost of opening a trade route.  Each commodity that the city buys or sells has from one to three blue dots indicating that city's level of supply or demand - one dot means they don't deal in that good very much at all, while three dots signal a strong desire to trade that item.   @PClick the 'Open Trade Route' button to initiate relations.  Your city's treasury immediately pays to open the route, and trading can begin immediately.   @PIf you have sent any companies or warships to serve the Kingdom, you can trace their journeys on the World Map.  You can also chart the progress of any enemy armies or navies as they move towards your city. @PRead the entries on @47trade, @52war and the @24Overseer&of&Commerce for more on the use of the World Map."
+            text: "A világtérkép megmutatja a világ többi fontos városát. Talán legfontosabb szerepe a @47kereskedelmi partnerek azonosítása. @PA zászlót viselő városok kereskednek veled. Kattints egy zászlós városra, hogy lásd, mely árukat szeretné kereskedni, valamint a kereskedelmi útvonal megnyitásának költségét. Minden áru mellett, amelyet a város vásárol vagy elad, egy-három kék pont jelzi a város kínálati vagy keresleti szintjét – egy pont azt jelenti, hogy az adott áruval alig foglalkoznak, míg három pont erős kereskedelmi igényt jelez. @AKattints a „Kereskedelmi útvonal megnyitása” gombra a kapcsolatok megkezdéséhez. A városod kincstára azonnal kifizeti az útvonal megnyitásának költségét, és a kereskedelem rögtön megkezdődhet. @AHa csapatokat vagy hadihajókat küldtél a Királyság szolgálatára, útjukat nyomon követheted a világtérképen. Az ellenséges seregek vagy flották mozgását is figyelemmel kísérheted, ahogy a városod felé közelednek. @A @47kereskedelem, @52háború és a @24Kereskedelem&felügyelője bejegyzések további információkat nyújtanak a világtérkép használatáról."
         }
     }
 
     message_building_buttons {
         id: 33,
-        
+
         size [30, 28]
-        title { text: "Building Buttons" }
-        subtitle { text: "Game Controls" }
+        title { text: "Építési gombok" }
+        subtitle { text: "Játékvezérlés" }
         content {
-            text: "These buttons let you actually place structures on the landscape. The building's price is shown on its button. When you select a structure to build, a ghostly green image of it attaches to your cursor. When you sweep the cursor over buildable land, that image is green; on unsuitable terrain, the green image becomes a red diamond. @PAccess help for individual buildings by clicking on existing structures with your right mouse button, or choose them from the 'Buildings' section of the @10Table&of&Contents."
+            text: "Ezekkel a gombokkal helyezheted el az épületeket a tájon. Az épület ára a gombján látható. Amikor kiválasztasz egy építendő épületet, annak halványzöld képe az egérkurzorhoz tapad. Ha a kurzort építésre alkalmas terület fölé viszed, a kép zöld marad; nem megfelelő terepen a zöld kép vörös rombusszá változik. @PEgyes épületekhez kapcsolódó segítséget a meglévő épületekre jobb egérgombbal kattintva érhetsz el, vagy válaszd ki őket a @10Tartalomjegyzék „Épületek” részéből."
         }
     }
-    
+
     message_game_control_messages {
         id: 34,
-        
+
         size [30, 28]
-        title { text: "Messages" }
-        subtitle { text: "Game Controls" }
+        title { text: "Üzenetek" }
+        subtitle { text: "Játékvezérlés" }
         content {
-            text: "When a notable event occurs in the city or elsewhere in the Kingdom, you receive a message describing the event.  Some of these messages are urgent and require quick response on your part.  They could be requests from Pharaoh or other cities, or could be directing your attention to a particular trouble spot in your city. @PWhen a new message arrives, the 'Message' button on the Control Panel lights up and a chime sounds.  Click on the button to read the message.  If the matter is extremely urgent, the message is delivered to you directly and appears on the screen automatically.  If the message is alerting you to some trouble in your city, you can click on the alarm button within the message to proceed directly to the trouble spot.   @POther messages contain instructions that help you manage the city more successfully.  These messages are useful guides that teach important game concepts and set up short-term goals.  Meeting the short-term goals outlined in these special messages enables you to win a mission and move on to the next step.  These messages are marked with a blue scroll in the message list. @PYou can erase individual messages by right-clicking on their titles in your message list.  A button at the bottom of the panel lets you delete all previously-opened messages at once, although it won't delete unread or blue-scroll (tutorial) messages.  Once you delete a message from the list, it is gone forever. You can, of course, choose to keep the message for future reference. @PExpert players might want to disable certain popup messages from the @12Options&menu.  When you enable this option, messages appear across the top of the screen and are also added to your Message box."
+            text: "Amikor figyelemre méltó esemény történik a városban vagy a Királyság más részén, üzenetet kapsz, amely leírja az eseményt. Néhány üzenet sürgős, és gyors reagálást igényel. Ezek lehetnek a fáraó vagy más városok kérései, illetve felhívhatják a figyelmedet a városod egy problémás területére. @PAmikor új üzenet érkezik, a Vezérlőpult „Üzenet” gombja világítani kezd, és egy hangjelzés hallható. Kattints a gombra az üzenet elolvasásához. Ha az ügy rendkívül sürgős, az üzenetet közvetlenül megkapod, és automatikusan megjelenik a képernyőn. Ha az üzenet a városod valamely problémájára figyelmeztet, az üzeneten belüli riasztás gombra kattintva közvetlenül a problémás helyre ugorhatsz. @PEgyéb üzenetek olyan utasításokat tartalmaznak, amelyek segítenek sikeresebben irányítani a várost. Ezek az üzenetek hasznos útmutatók, amelyek fontos játékelemeket tanítanak meg, és rövid távú célokat állítanak. A különleges üzenetekben meghatározott rövid távú célok teljesítése lehetővé teszi a küldetés megnyerését és a következő lépés megtételét. Ezeket az üzeneteket a listában kék tekercs jelöli. @PEgyes üzeneteket törölhetsz úgy, hogy jobb egérgombbal kattintasz a címükre az üzenetlistában. A panel alján található gombbal egyszerre törölheted az összes korábban megnyitott üzenetet, de az olvasatlan vagy kék tekercses (oktató) üzeneteket nem törli. Ha egy üzenetet törölsz a listából, az végleg elveszik. Természetesen dönthetsz úgy is, hogy megtartod az üzenetet későbbi használatra. @ATapasztalt játékosok az @12Beállítások&menüben kikapcsolhatnak bizonyos felugró üzeneteket. Ha engedélyezed ezt a lehetőséget, az üzenetek a képernyő tetején jelennek meg, és bekerülnek az Üzenetek ablakba is."
         }
     }
 
