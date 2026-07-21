@@ -1,0 +1,1458 @@
+log_info("akhenaten: localization_hu config started")
+
+localization_hu = [
+  {key:"#TR_NO_PATCH_TITLE", text:"Patch ???"}
+  {key:"#TR_NO_PATCH_MESSAGE", text:"Your Pharahoh installation does not have patch installed. "}
+  {key:"#TR_MISSING_FONTS_TITLE", text:"Missing fonts"}
+  {key:"#TR_MISSING_FONTS_MESSAGE", text:"Pharahoh installation requires extra font files. "}
+  {key:"#TR_NO_EDITOR_TITLE", text:"Editor not installed"}
+  {key:"#TR_NO_EDITOR_MESSAGE", text:"Your Pharahoh installation does not contain the editor files. "}
+  {key:"#TR_INVALID_LANGUAGE_TITLE", text:"Invalid language directory"}
+  {key:"#TR_INVALID_LANGUAGE_MESSAGE", text:"The directory you selected does not contain a valid language pack. Please check the log for errors."}
+  {key:"#TR_BUTTON_OK", text:"OK"}
+  {key:"#TR_BUTTON_CANCEL", text:"Cancel"}
+  {key:"#TR_BUTTON_PAUSE", text:"Pause"}
+  {key:"#TR_BUTTON_RESUME", text:"Resume"}
+  {key:"#TR_BUTTON_RESET_DEFAULTS", text:"Reset defaults"}
+  {key:"#TR_BUTTON_CONFIGURE_HOTKEYS", text:"Configure hotkeys"}
+  {key:"#TR_BUTTON_NEXT", text:"+"}
+  {key:"#TR_BUTTON_PREV", text:"-"}
+  {key:"#TR_CONFIG_TITLE", text:"Enhanced settings"}
+  {key:"#TR_CONFIG_LANGUAGE_LABEL", text:"Language:"}
+  {key:"#TR_CONFIG_LANGUAGE_DEFAULT", text:"(default)"}
+  {key:"#TR_CONFIG_PAGE_LABEL", text:"Page"}
+  {key:"#TR_CONFIG_HEADER_UI_CHANGES", text:"User interface changes"}
+  {key:"#TR_CONFIG_HEADER_GAMEPLAY_CHANGES", text:"Gameplay changes"}
+  {key:"#TR_CONFIG_HEADER_GODS_CHANGES", text:"Gods changes"}
+  {key:"#TR_CONFIG_HEADER_BUILDING_CHANGES", text:"Building changes"}
+  {key:"#TR_CONFIG_HEADER_RESOURCE_CHANGES", text:"Resource changes"}
+  {key:"#TR_CONFIG_SHOW_INTRO_VIDEO", text:"Play intro videos"}
+  {key:"#TR_CONFIG_HIDE_NEW_GAME_TOP_MENU", text:"Hide top menu new game button"}
+  {key:"#TR_CONFIG_SAVE_YEAR_KINGDOME_RATING", text:"Save kingdom rating on yearly update"}
+  {key:"#TR_CONFIG_SIDEBAR_INFO", text:"Extra information in the control panel"}
+  {key:"#TR_CONFIG_BUILDING_MOTHBALL_BUTTON", text:"Show mothball button on building info windows"}
+  {key:"#TR_CONFIG_PROMPT_SAVE_ON_EXIT", text:"Prompt to save when closing the game (Alt+F4)"}
+  {key:"#TR_CONFIG_SMOOTH_SCROLLING", text:"Enable smooth scrolling"}
+  {key:"#TR_CONFIG_SMOOTH_ZOOM", text:"Enable smooth zoom"}
+  {key:"#TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE", text:"Improve visual feedback when clearing land"}
+  {key:"#TR_CONFIG_ALLOW_CYCLING_TEMPLES", text:"Allow building each temple in succession"}
+  {key:"#TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE", text:"Show range when building reservoirs, fountains and wells"}
+  {key:"#TR_CONFIG_SHOW_CONSTRUCTION_SIZE", text:"Show draggable construction size"}
+  {key:"#TR_CONFIG_HIGHLIGHT_LEGIONS", text:"Highlight legion on cursor hover"}
+  {key:"#TR_CONFIG_ROTATE_MANUALLY", text:"Rotate Gatehouse and Triumph Arch by hotkey"}
+  {key:"#TR_CONFIG_FIX_IMMIGRATION_BUG", text:"Fix immigration bug on very hard"}
+  {key:"#TR_CONFIG_FIX_100_YEAR_GHOSTS", text:"Fix 100-year-old ghosts"}
+  {key:"#TR_CONFIG_FIX_EDITOR_EVENTS", text:"Fix Emperor change and survival time in custom missions"}
+  {key:"#TR_CONFIG_DRAW_WALKER_WAYPOINTS", text:"Draw walker waypoints on overlay after right clicking on a building"}
+  {key:"#TR_CONFIG_ZOOM_STEPPED", text:"Enable zoom (can be slow, uses more RAM)"}
+  {key:"#TR_CONFIG_COMPLETE_RATING_COLUMNS", text:"Fix uncompleted rating columns on low targets"}
+  {key:"#TR_CONFIG_GRANDFESTIVAL", text:"Grand festivals allow extra blessing from a god"}
+  {key:"#TR_CONFIG_JEALOUS_GODS", text:"Disable jealousness of gods"}
+  {key:"#TR_CONFIG_GLOBAL_LABOUR", text:"Enable global labour pool"}
+  {key:"#TR_CONFIG_SCHOOL_WALKERS", text:"Extend school walkers range"}
+  {key:"#TR_CONFIG_RETIRE_AT_60", text:"Change citizens' retirement age from 50 to 60"}
+  {key:"#TR_CONFIG_FIXED_WORKERS", text:"Fixed worker pool - 38% of population"}
+  {key:"#TR_CONFIG_EXTRA_FORTS", text:"Allow building 4 extra forts"}
+  {key:"#TR_CONFIG_WOLVES_BLOCK", text:"Block building around wolves"}
+  {key:"#TR_CONFIG_DYNAMIC_GRANARIES", text:"Block unconnected granary roads"}
+  {key:"#TR_CONFIG_MORE_STOCKPILE", text:"Houses stockpile more goods from market"}
+  {key:"#TR_CONFIG_NO_BUYER_DISTRIBUTION", text:"Buying market ladies don't distribute goods"}
+  {key:"#TR_CONFIG_IMMEDIATELY_DELETE_BUILDINGS", text:"Immediately destroy buildings"}
+  {key:"#TR_CONFIG_GETTING_GRANARIES_GO_OFFROAD", text:"Cart pushers from getting granaries can go offroad"}
+  {key:"#TR_CONFIG_GRANARIES_GET_DOUBLE", text:"Double the capacity of cart pushers from getting granaries"}
+  {key:"#TR_CONFIG_DOCK_DOUBLE_HAUL", text:"Double the haul amount of dockers (200 per trip)"}
+  {key:"#TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD", text:"Tower sentries don't need road access from barracks"}
+  {key:"#TR_CONFIG_FARMS_DELIVER_CLOSE", text:"Farms and wharves deliver only to nearby granaries"}
+  {key:"#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", text:"Food isn't delivered to getting granaries"}
+  {key:"#TR_CONFIG_ALL_HOUSES_MERGE", text:"All houses merge"}
+  {key:"#TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE", text:"Open trade route count as providing different wine type"}
+  {key:"#TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY", text:"Randomly collapsing clay pits and iron mines take some money instead"}
+  {key:"#TR_CONFIG_MULTIPLE_BARRACKS", text:"Allow building multiple barracks."}
+  {key:"#TR_CONFIG_NOT_ACCEPTING_WAREHOUSES", text:"Warehouses don't accept anything when built"}
+  {key:"#TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS", text:"Houses don't expand into gardens"}
+  {key:"#TR_CONFIG_FIX_IRRIGATION_RANGE", text:"Fix irrigation range"}
+  {key:"#TR_CONFIG_FIX_FARM_PRODUCING", text:"Fix farm producing"}
+  {key:"#TR_CONFIG_EMPIRE_MAP_RUNS_SIMULATION", text:"Run city simulation while empire map is open"}
+  {key:"#TR_CONFIG_CAMERA_KEEP_INERTIA", text:"Camera keep inertia"}
+  {key:"#TR_CONFIG_UNDERSTAFFED_ACCEPT_GOODS", text:"Understaffed accept goods"}
+  {key:"#TR_CONFIG_MULTIPLE_TEMPLE_COMPLEXES", text:"Multiple temple complexes"}
+  {key:"#TR_CONFIG_MULTIPLE_MONUMENTS", text:"Multiple monuments"}
+  {key:"#TR_CONFIG_SOIL_DEPLETION", text:"Soil depletion"}
+  {key:"#TR_CONFIG_MULTIPLE_GATHERERS", text:"Multiple gatherers"}
+  {key:"#TR_CONFIG_FIREMAN_RETURNING", text:"Fireman returning after fight fire"}
+  {key:"#TR_CONFIG_CART_SPEED_DEPENDS_QUANTITY", text:"Cart speed depends from quantity resource"}
+  {key:"#TR_CONFIG_CH_CITIZEN_ROAD_OFFSET", text:"Use different offsets for citizens in road"}
+  {key:"#TR_CONFIG_CH_WORK_CAMP_ONE_WORKER_PER_MONTH", text:"Work camp spawn one worker per month"}
+  {key:"#TR_CONFIG_CH_CLAY_PIT_FIRE_RISK_REDUCED", text:"Clay pit fire risk reduced"}
+  {key:"#TR_CONFIG_CITY_HAS_ANIMALS", text:"City has animals" }
+  {key:"#TR_CONFIG_GOLDMINE_TWICE_PRODUCTION", text:"Goldmine twice production"}
+  {key:"#TR_CONFIG_NEW_TAX_COLLECTION_SYSTEM", text:"New tax collection system"}
+  {key:"#TR_CONFIG_SMALL_HUT_NOT_CREATE_EMIGRANT", text:"Small hut houses not create enimgrant"}
+  {key:"#TR_CONFIG_DELIVERY_BOY_GOES_TO_MARKET_ALONE", text:"Delivery boy goes to market alone"}
+  {key:"#TR_CONFIG_RELIGION_COVERAGE_INFLUENCE_SENTIMENT", text:"Religion coverage influence sentiment"}
+  {key:"#TR_CONFIG_MONUMENTS_INFLUENCE_SENTIMENT", text:"Monuments influence sentiment"}
+  {key:"#TR_CONFIG_WELL_RADIUS_DEPENDS_MOISTURE", text:"Well radius depends from moisture"}
+  {key:"#TR_CONFIG_ENTER_POINT_ON_NEAREST_TILE", text:"Building entrance on the neareast tile"}
+  {key:"#TR_CONFIG_FISHING_WHARF_SPAWN_BOATS", text:"Fishing wharf spawn boats"}
+  {key:"#TR_CONFIG_CITY_FLOTSAM_ENABLED", text:"City flotsam enabled"}
+  {key:"#TR_CONFIG_COPPER_NEAR_MOUNTAINS", text:"Copper mine can build near mountains"}
+  {key:"#TR_CONFIG_RECRUITER_NOT_NEED_FORTS", text:"Recruiter not need forts"}
+  {key:"#TR_CONFIG_BUILDING_CLOSEST_ROAD", text:"Building access tile closest road"}
+  {key:"#TR_CONFIG_FLOODPLAIN_RANDOM_GROW", text:"Floodplain random grow"}
+  {key:"#TR_CONFIG_DRAW_FPS", text:"Draw FPS"}
+  {key:"#TR_CONFIG_SHOW_CURRENT_SELECT_TILE", text:"Show tile under mouse cursor on map"}
+  {key:"#TR_CONFIG_SHOW_INPUT_NEAR_CURSOR", text:"Show pressed keys and mouse buttons near cursor"}
+  {key:"#TR_CONFIG_ROAD_PREVIEW_IN_MAP_ORDER", text:"Draw road construction preview in map render order"}
+  {key:"#TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER", text:"Highlight Top Menu Items"}
+  {key:"#TR_CONFIG_EMPIRE_CITY_OLD_NAMES", text:"Show Old Names for city on empire map"}
+  {key:"#TR_CONFIG_DRAW_CLOUD_SHADOWS", text:"Draw cloud shadows (experimental)"}
+  {key:"#TR_CONFIG_CONSERVATORY_HELPS_DANCE_SCHOOL", text:"Conservatory helps dance school (reduces spawn delay)"}
+  {key:"#TR_CONFIG_JEWELS_WORKSHOPS_CULTURE_BONUS", text:"Jewels workshops give culture bonus (+1 per 3 workshops)"}
+  {key:"#TR_CONFIG_OVERLAY_SHOW_GRAY_BUILDINGS", text:"Show gray buildings on overlays when they are not displayed"}
+  {key:"#TR_CONFIG_BREWERY_REQUIRES_WATER", text:"Brewery requires water access"}
+  {key:"#TR_CONFIG_CARTPUSHERS_YIELD_BY_ID", text:"Cartpushers yield goods by worker ID"}
+  {key:"#TR_CONFIG_REBALANCE_WORKSHOP_OUTPUT", text:"Workshop output scales with difficulty"}
+  {key:"#TR_CONFIG_PREVENT_DELETE_NEAR_BURNING_RUINS", text:"Prevent deleting buildings near burning ruins"}
+  {key:"#TR_CONFIG_DISABLE_NILOMETER_POPUPS", text:"Disable nilometer flood prediction pop-ups"}
+  {key:"#TR_CONFIG_HEADER_SCENARIO_CHANGES", text:"Change scenarios"}
+  {key:"#TR_CONFIG_HEADER_RESOURCES", text:"Change resources"}
+  {key:"#TR_CONFIG_ANIMALS", text:"Change animals"}
+  {key:"#TR_CONFIG_FLOTSAM", text:"Flotsam"}
+  {key:"#TR_GAMEPLAY_GOD_DISABLED", text:"God disabled"}
+  {key:"#TR_HOTKEY_TITLE", text:"Hotkeys configuration"}
+  {key:"#TR_HOTKEY_LABEL", text:"Hotkey"}
+  {key:"#TR_HOTKEY_ALTERNATIVE_LABEL", text:"Alternative"}
+  {key:"#TR_HOTKEY_HEADER_ARROWS", text:"Arrow keys"}
+  {key:"#TR_HOTKEY_HEADER_GLOBAL", text:"Global hotkeys"}
+  {key:"#TR_HOTKEY_HEADER_CITY", text:"City hotkeys"}
+  {key:"#TR_HOTKEY_HEADER_ADVISORS", text:"Advisors"}
+  {key:"#TR_HOTKEY_HEADER_OVERLAYS", text:"Overlays"}
+  {key:"#TR_HOTKEY_HEADER_BOOKMARKS", text:"City map bookmarks"}
+  {key:"#TR_HOTKEY_HEADER_EDITOR", text:"Editor"}
+  {key:"#TR_HOTKEY_HEADER_BUILD", text:"Construction hotkeys"}
+  {key:"#TR_HOTKEY_ARROW_UP", text:"Up"}
+  {key:"#TR_HOTKEY_ARROW_DOWN", text:"Down"}
+  {key:"#TR_HOTKEY_ARROW_LEFT", text:"Left"}
+  {key:"#TR_HOTKEY_ARROW_RIGHT", text:"Right"}
+  {key:"#TR_HOTKEY_TOGGLE_FULLSCREEN", text:"Toggle fullscreen"}
+  {key:"#TR_HOTKEY_CENTER_WINDOW", text:"Center window"}
+  {key:"#TR_HOTKEY_RESIZE_TO_640", text:"Resize window to 640x480"}
+  {key:"#TR_HOTKEY_RESIZE_TO_800", text:"Resize window to 800x600"}
+  {key:"#TR_HOTKEY_RESIZE_TO_1024", text:"Resize window to 1024x768"}
+  {key:"#TR_HOTKEY_SAVE_SCREENSHOT", text:"Save screenshot"}
+  {key:"#TR_HOTKEY_SAVE_CITY_SCREENSHOT", text:"Save full city screenshot"}
+  {key:"#TR_HOTKEY_LOAD_FILE", text:"Load file"}
+  {key:"#TR_HOTKEY_SAVE_FILE", text:"Save file"}
+  {key:"#TR_HOTKEY_INCREASE_GAME_SPEED", text:"Increase game speed"}
+  {key:"#TR_HOTKEY_DECREASE_GAME_SPEED", text:"Decrease game speed"}
+  {key:"#TR_HOTKEY_TOGGLE_PAUSE", text:"Toggle pause"}
+  {key:"#TR_HOTKEY_CYCLE_LEGION", text:"Cycle through legions"}
+  {key:"#TR_HOTKEY_ROTATE_MAP_LEFT", text:"Rotate map left"}
+  {key:"#TR_HOTKEY_ROTATE_MAP_RIGHT", text:"Rotate map right"}
+  {key:"#TR_HOTKEY_SHOW_ADVISOR_LABOR", text:"Labor advisor"}
+  {key:"#TR_HOTKEY_SHOW_ADVISOR_MILITARY", text:"Military advisor"}
+  {key:"#TR_HOTKEY_SHOW_ADVISOR_IMPERIAL", text:"Imperial advisor"}
+  {key:"#TR_HOTKEY_SHOW_ADVISOR_RATINGS", text:"Ratings advisor"}
+  {key:"#TR_HOTKEY_SHOW_ADVISOR_TRADE", text:"Trade advisor"}
+  {key:"#TR_HOTKEY_SHOW_ADVISOR_POPULATION", text:"Population advisor"}
+  {key:"#TR_HOTKEY_SHOW_ADVISOR_HEALTH", text:"Health advisor"}
+  {key:"#TR_HOTKEY_SHOW_ADVISOR_EDUCATION", text:"Education advisor"}
+  {key:"#TR_HOTKEY_SHOW_ADVISOR_ENTERTAINMENT", text:"Entertainment advisor"}
+  {key:"#TR_HOTKEY_SHOW_ADVISOR_RELIGION", text:"Religion advisor"}
+  {key:"#TR_HOTKEY_SHOW_ADVISOR_FINANCIAL", text:"Financial advisor"}
+  {key:"#TR_HOTKEY_SHOW_ADVISOR_CHIEF", text:"Chief advisor"}
+  {key:"#TR_HOTKEY_SHOW_ADVISOR_HOUSING", text:"Housing advisor"}
+  {key:"#TR_HOTKEY_TOGGLE_OVERLAY", text:"Toggle current overlay"}
+  {key:"#TR_HOTKEY_SHOW_OVERLAY_WATER", text:"Show water overlay"}
+  {key:"#TR_HOTKEY_SHOW_OVERLAY_FIRE", text:"Show fire overlay"}
+  {key:"#TR_HOTKEY_SHOW_OVERLAY_DAMAGE", text:"Damage overlay"}
+  {key:"#TR_HOTKEY_SHOW_OVERLAY_CRIME", text:"Crime overlay"}
+  {key:"#TR_HOTKEY_ROTATE_BUILDING", text:"Rotate building"}
+  {key:"#TR_HOTKEY_COPY_BUILD", text:"Copy build under cursor"}
+  {key:"#TR_HOTKEY_BUILD_CLEAR_LAND", group:68, id:21}
+  {key:"#TR_HOTKEY_BUILD_VACANT_HOUSE", group:67, id:7}
+  {key:"#TR_HOTKEY_BUILD_ROAD", group:28, id:5}
+  {key:"#TR_HOTKEY_BUILD_PLAZA", group:28, id:38}
+  {key:"#TR_HOTKEY_BUILD_GARDENS", group:28, id:39}
+  {key:"#TR_HOTKEY_BUILD_FIREHOUSE", group:28, id:167}
+  {key:"#TR_HOTKEY_BUILD_ARCHITECT", group:28, id:81}
+  {key:"#TR_HOTKEY_BUILD_APOTHECARY", group:28, id:46}
+  {key:"#TR_HOTKEY_BUILD_GRANARY", group:28, id:71}
+  {key:"#TR_HOTKEY_BUILD_STORAGE_YARD", group:28, id:72}
+  {key:"#TR_HOTKEY_BUILD_BAZAAR", group:28, id:70}
+  {key:"#TR_HOTKEY_BUILD_WALL", group:28, id:6}
+  {key:"#TR_HOTKEY_BUILD_GATEHOUSE", group:28, id:58}
+  {key:"#TR_HOTKEY_BUILD_WATERLIFT", group:28, id:7}
+  {key:"#TR_HOTKEY_BUILD_CANAL", group:28, id:8}
+  {key:"#TR_HOTKEY_BUILD_WATER_SUPPLY", group:28, id:180}
+  {key:"#TR_HOTKEY_BUILD_ROADBLOCK", group:28, id:138}
+  {key:"#TR_HOTKEY_SHOW_OVERLAY_PROBLEMS", text:"Problems overlay"}
+  {key:"#TR_HOTKEY_GO_TO_BOOKMARK_1", text:"Go to bookmark 1"}
+  {key:"#TR_HOTKEY_GO_TO_BOOKMARK_2", text:"Go to bookmark 2"}
+  {key:"#TR_HOTKEY_GO_TO_BOOKMARK_3", text:"Go to bookmark 3"}
+  {key:"#TR_HOTKEY_GO_TO_BOOKMARK_4", text:"Go to bookmark 4"}
+  {key:"#TR_HOTKEY_SET_BOOKMARK_1", text:"Set bookmark 1"}
+  {key:"#TR_HOTKEY_SET_BOOKMARK_2", text:"Set bookmark 2"}
+  {key:"#TR_HOTKEY_SET_BOOKMARK_3", text:"Set bookmark 3"}
+  {key:"#TR_HOTKEY_SET_BOOKMARK_4", text:"Set bookmark 4"}
+  {key:"#TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO", text:"Toggle battle info"}
+  {key:"#TR_HOTKEY_EDIT_TITLE", text:"Press new hotkey"}
+  {key:"#TR_BUILDING_ROADBLOCK", text:"Roadblock"}
+  {key:"#TR_BUILDING_ROADBLOCK_DESC", text:"Roadblock stops loitering citizens."}
+  {key:"#TR_HEADER_HOUSING", text:"Housing"}
+  {key:"#TR_ADVISOR_HOUSING_ROOM", text:"City housing has room available for"}
+  {key:"#TR_ADVISOR_HOUSING_NO_ROOM", text:"There is no room available in city housing."}
+  {key:"#TR_ADVISOR_RESIDENCES_DEMANDING_POTTERY", text:"Residences demanding pottery"}
+  {key:"#TR_ADVISOR_RESIDENCES_DEMANDING_FURNITURE", text:"Residences demanding furniture"}
+  {key:"#TR_ADVISOR_RESIDENCES_DEMANDING_OIL", text:"Residences demanding oil"}
+  {key:"#TR_ADVISOR_RESIDENCES_DEMANDING_LINEN", text:"Residences demanding linen"}
+  {key:"#TR_ADVISOR_RESIDENCES_DEMANDING_WINE", text:"Residences demanding wine"}
+  {key:"#TR_ADVISOR_RESIDENCES_DEMANDING_BEER", text:"Residences demanding beer"}
+  {key:"#TR_ADVISOR_TOTAL_NUM_HOUSES", text:"Total residences:"}
+  {key:"#TR_ADVISOR_AVAILABLE_HOUSING_CAPACITY", text:"Available capacity:"}
+  {key:"#TR_ADVISOR_TOTAL_HOUSING_CAPACITY", text:"Total capacity:"}
+  {key:"#TR_ADVISOR_ADVISOR_HEADER_HOUSING", text:"Population - Housing"}
+  {key:"#TR_ADVISOR_BUTTON_GRAPHS", text:"Graphs"}
+  {key:"#TR_ADVISOR_HOUSING_PROSPERITY_RATING", text:"Housing prosperity rating is"}
+  {key:"#TR_ADVISOR_PERCENTAGE_IN_MANORS", text:"Percentage of your population in villas and palaces is"}
+  {key:"#TR_ADVISOR_PERCENTAGE_IN_SHANTIES", text:"Percentage of your population in tents and shacks is"}
+  {key:"#TR_ADVISOR_AVERAGE_TAX", text:"Average tax income per residence is"}
+  {key:"#TR_ADVISOR_AVERAGE_AGE", text:"Average age of your population is"}
+  {key:"#TR_ADVISOR_PERCENT_IN_WORKFORCE", text:"Percentage of your population in the workforce is"}
+  {key:"#TR_ADVISOR_BIRTHS_LAST_YEAR", text:"Births last year:"}
+  {key:"#TR_ADVISOR_DEATHS_LAST_YEAR", text:"Deaths last year:"}
+  {key:"#TR_ADVISOR_TOTAL_POPULATION", text:"residents total"}
+
+  {key: "#main_menu_mods", text:"Mods"}
+  {key: "#mission2_store_figs", text:"Build a Granary and fill it with figs"}
+
+  {key: "#message_population_title", text:"Population Milestone"}
+  {key: "#message_population_100", text:"100 people have moved into your village"}
+  {key: "#message_population_500", text:"Your budding town now houses five hundred residents"}
+  {key: "#message_population_1000", text:"One thousand people now call your city home."}
+  {key: "#message_population_2000", text:"With two thousand residents, your city is growing in importance."}
+  {key: "#message_population_3000", text:"Your city's population has reached three thousand for the first time in history."}
+  {key: "#message_population_5000", text:"Your city is getting quite large.  Now five thousand people live here."}
+  {key: "#message_population_10000", text:"Its population of ten thousand places your city in Egypt's top tier."}
+  {key: "#message_population_15000", text:"New cities can rival yours, which now houses fifteen thousand citizens."}
+  {key: "#message_population_20000", text:"Other governors and nomarchs are awed that your city houses twenty thousand people!"}
+  {key: "#message_population_25000", text:"The few immigrants who founded your city so many years ago never imagined that it would swell to twenty five thousand people!"}
+
+  {key: "#mission0_goal_create_housing", text:"Create an area of housing, and watch immigrants arrive" }
+  {key: "#mission0_goal_build_granary", text:"Build a Granary that hunters can fill with game" }
+  {key: "#mission1_goal_build_mines", text:"Mine some gold for the Palace's treasury" }
+  {key: "#mission1_goal_build_temples", text:"Build some Temples and Shrines to Bast" }
+  {key: "#mission1_goal_build_entertainment", text:"Build Booths and Juggler Schools to raise city Culture" }
+
+  {key: "#exit_this_panel", text:"Exit this panel"}
+  {key: "#display_options_title", text:"Display options"}
+  {key: "#popup_dialog_quit", text:"Quit" }
+  {key: "#popup_dialog_open_trade", text:"Open trade route" }
+  {key: "#popup_dialog_send_goods", text:"Dispatch goods?" }
+  {key: "#popup_dialog_not_enough_goods", text:"Pharaonic request" }
+  {key: "#mission_won_culture_rating", text:"Final Culture rating" }
+  {key: "#mission_won_prosperity_rating", text:"Final Prosperity rating" }
+  {key: "#mission_won_monument_rating", text:"Final Monument rating" }
+  {key: "#mission_won_treasury", text:"Final Kingdom Rating" }
+  {key: "#mission_won_kingdom_rating", text:"Final population" }
+  {key: "#popup_dialog_no_legions_available", text:"Pharaonic request" }
+  {key: "#popup_dialog_no_legions_selected", text:"Pharaonic request" }
+  {key: "#popup_dialog_send_troops", text:"Pharaonic request" }
+  {key: "#popup_dialog_delete_fort", text:"Demolishing a Fort" }
+  {key: "#popup_dialog_delete_bridge", text:"Demolishing a bridge" }
+  {key: "#popup_dialog_quit_without_saving", text:"Quit" }
+  {key: "#exit_without_saving", text:"Exit without saving?" }
+  {key: "#popup_dialog_no_festival_square", text:"Festival: No Festival Square." }
+  {key: "#popup_dialog_delete_dynasty", text:"Delete Dynasty?" }
+  {key: "#popup_dialog_no_dynasty", text:"No Dynasty" }
+  {key: "#replay_mission", text:"Replay mission" }
+  {key: "#ui_gift_to_kingdome_window_title", text:"Give to the people of Egypt"}
+  {key: "#ui_unable_to_fulfill_request", text:"Unable to fulfill request"}
+  {key: "#ui_gift_time_since_last", text:"Time since last gift"}
+  {key: "#ui_gift_label_modest", text:"Modest:"}
+  {key: "#ui_gift_label_generous", text:"Generous:"}
+  {key: "#ui_gift_label_lavish", text:"Lavish:"}
+  {key: "#ui_gift_dispatch_modest", text:"Dispatch modest gift"}
+  {key: "#ui_gift_dispatch_generous", text:"Dispatch generous gift"}
+  {key: "#ui_gift_dispatch_lavish", text:"Dispatch lavish gift"}
+  {key: "#ui_gift_cannot_afford_savings", text:"You do not have enough personal savings to make a gift to Egypt. Try paying yourself a bigger salary!"}
+  {key: "#ui_mission_choice_prompt", text:"Click on a city to govern "}
+  {key: "#granary_info_title", text:"Granary" }
+  {key: "#granary_no_road_access", text:"WARNING: This building is not adjacent to a road" }
+  {key: "#granary_kingdom_supplies_grain", text:"This Granary is not needed. Egypt provides our city with all the grain it needs. Any food we produce will go straight into any Storage Yards with empty space." }
+  {key: "#granary_storing", text:"Storing" }
+  {key: "#granary_space_for", text:"Space for" }
+  {key: "#granary_units", text:"units." }
+  {key: "#chief_overseer", text:"Chief Overseer" }
+  {key: "#chief_adv_sentiment", text:"City Sentiment" }
+  {key: "#chief_adv_migration", text:"Migration" }
+  {key: "#chief_adv_workers", text:"Employment" }
+  {key: "#chief_adv_foodstocks", text:"Food Stocks" }
+  {key: "#chief_adv_foodconsumption", text:"Food Production" }
+  {key: "#chief_adv_health", text:"Health" }
+  {key: "#chief_adv_religion", text:"Religion" }
+  {key: "#chief_adv_finance", text:"Finances" }
+  {key: "#chief_adv_crime", text:"Crime" }
+  {key: "#chief_adv_military", text:"Military" }
+  {key: "#chief_adv_kingdom", text:"Kingdom" }
+  {key: "#chief_adv_nilometr", text:"Nilometer" }
+  {key: "#trade_overseer", text:"Overseer of Commerce" }
+  {key: "#trade_overseer_hint", group:54, id:1 }
+  {key: "#building_have_no_access", text:"WARNING: This building is not adjacent to a road" }
+  {key: "#bazaar_info_title", text:"Bazaar" }
+  {key: "#well_info_title", text:"Well" }
+  {key: "#trade_overseer_prices", group:54, id:2}
+  {key: "#trade_overseer_prices_hint", group:68, id:108}
+  {key: "#trade_overseer_goto_empire", group:54, id:30}
+  {key: "#trade_overseer_goto_empire_hint", group:68, id:42}
+  {key: "#festival_square_info_title", group:188, id:0}
+  {key: "#visit_rating_advisor", text: "Visit your Ratings Overseer?"}
+  {key: "#gardens_describe", text: "This pleasant lot gives citizens relief from the noise, heat and dirt of the city with a cool oasis of green space.  Everyone wants a garden next door."}
+  {key: "#popup_dialog_proceed", text: "Proceed?"}
+
+  {key: "#must_build_on_cleared_land", group:19, id:0}
+  {key: "#out_of_credit", group:19, id:1}
+  {key: "#only_one_building_of_this_type", group:19, id:2}
+  {key: "#house_evolution_off", group:19, id:3}
+  {key: "#house_evolution_on", group:19, id:4}
+  {key: "#road_evolution_off", group:19, id:5}
+  {key: "#road_evolution_on", group:19, id:6}
+  {key: "#show_people_off", group:19, id:7}
+  {key: "#show_people_on", group:19, id:8}
+  {key: "#needs_road_access", group:19, id:9}
+  {key: "#building_not_next_to_water", group:19, id:10}
+  {key: "#not_available_in_this_assignment", group:19, id:11}
+  {key: "#not_available_yet", group:19, id:12}
+  {key: "#unused_alabaster1", group:19, id:13}
+  {key: "#unused_alabaster2", group:19, id:14}
+  {key: "#city_needs_more_workers", group:19, id:15}
+  {key: "#people_eat_more_than_produce", group:19, id:16}
+  {key: "#build_bazaars_to_distribute_food", group:19, id:17}
+  {key: "#build_farms_on_meadow", group:19, id:18}
+  {key: "#build_clay_pits_close_to_water", group:19, id:19}
+  {key: "#build_next_to_rocky_areas", group:19, id:20}
+  {key: "#build_wood_cutters_next_to_trees", group:19, id:21}
+  {key: "#build_next_to_rocky_areas_ex", group:19, id:22}
+  {key: "#scout_along_river_for_site", group:19, id:23}
+  {key: "#building_needs_copper_ore", group:19, id:24}
+  {key: "#needs_barley", group:19, id:25}
+  {key: "#building_needs_flax", group:19, id:26}
+  {key: "#building_needs_clay", group:19, id:27}
+  {key: "#needs_gems", group:19, id:28}
+  {key: "#setup_trade_route_to_import", group:19, id:29}
+  {key: "#overseer_of_commerce_to_import", group:19, id:30}
+  {key: "#build_copper_mine", group:19, id:31}
+  {key: "#build_barley_farm", group:19, id:32}
+  {key: "#build_flax_farm", group:19, id:33}
+  {key: "#build_clay_pit", group:19, id:34}
+  {key: "#build_gem_mine", group:19, id:35}
+  {key: "#needs_access_to_water_lift", group:19, id:36}
+  {key: "#needs_to_be_next_to_water_to_fill", group:19, id:37}
+  {key: "#use_irrigation_ditches", group:19, id:38}
+  {key: "#must_be_next_to_wall_for_patrol", group:19, id:39}
+  {key: "#needs_recruiter_to_conscript", group:19, id:40}
+  {key: "#soldiers_need_supplies_of_weapons", group:19, id:41}
+  {key: "#build_juggling_school", group:19, id:42}
+  {key: "#build_conservatory", group:19, id:43}
+  {key: "#build_dance_school", group:19, id:44}
+  {key: "#build_senet_house", group:19, id:45}
+  {key: "#unused_demo1", group:19, id:46}
+  {key: "#build_towers_on_thick_walls", group:19, id:47}
+  {key: "#too_close_to_enemy_troops", group:19, id:48}
+  {key: "#company_morale_too_low", group:19, id:49}
+  {key: "#army_has_full_complement_of_forts", group:19, id:50}
+  {key: "#monthly_autosave_on", group:19, id:51}
+  {key: "#monthly_autosave_off", group:19, id:52}
+  {key: "#cannot_demolish_bridge_with_people", group:19, id:53}
+  {key: "#inland_lake_has_no_sea_access", group:19, id:54}
+  {key: "#cannot_set_windows_mode", group:19, id:55}
+  {key: "#build_reed_gatherers_near_marsh", group:19, id:56}
+  {key: "#shipwrights_need_wood_for_war_vessels", group:19, id:57}
+  {key: "#palace_required_for_gold_conversion", group:19, id:58}
+  {key: "#cannot_build_over_animal_breeding_grounds", group:19, id:59}
+  {key: "#plots_too_far_from_road", group:19, id:60}
+  {key: "#city_isolated_from_kingdom_road", group:19, id:61}
+  {key: "#restore_access_or_sector_will_stagnate", group:19, id:62}
+  {key: "#data_limit_reached", group:19, id:63}
+  {key: "#only_build_roadblocks_on_roads", group:19, id:64}
+  {key: "#place_other_ferry_landing", group:19, id:65}
+  {key: "#no_valid_spot_for_ferry_landing", group:19, id:66}
+  {key: "#maximum_food_types_reached", group:19, id:67}
+  {key: "#cannot_add_meat_without_straw", group:19, id:68}
+  {key: "#cannot_produce_meat_in_city", group:19, id:69}
+  {key: "#only_one_special_rock_type", group:19, id:70}
+  {key: "#must_build_temple_complex_first", group:19, id:71}
+  {key: "#temple_complex_limits", group:19, id:72}
+  {key: "#oracle_altar_placement", group:19, id:73}
+  {key: "#needs_groundwater", group:19, id:74}
+  {key: "#entertainment_venue_at_intersection", group:19, id:75}
+  {key: "#must_have_completed_temple_first", group:19, id:76}
+  {key: "#need_500_papyrus_for_library", group:19, id:77}
+  {key: "#building_needs_reeds", group:19, id:78}
+  {key: "#build_reed_gatherer", group:19, id:79}
+  {key: "#building_needs_straw", group:19, id:80}
+  {key: "#build_grain_farm", group:19, id:81}
+  {key: "#full_complement_of_warship_wharves", group:19, id:82}
+  {key: "#need_100_blocks_of_granite_for_obelisk", group:19, id:83}
+  {key: "#need_200_blocks_of_granite_for_large_obelisk", group:19, id:84}
+  {key: "#monuments_removed", group:19, id:85}
+  {key: "#only_one_obelisk_at_a_time", group:19, id:86}
+  {key: "#no_taxes_without_palace", group:19, id:87}
+  {key: "#need_220_blocks_of_sandstone_for_sun_temple", group:19, id:88}
+  {key: "#only_one_sun_temple_at_a_time", group:19, id:89}
+  {key: "#too_few_jobs_for_population", group:19, id:90}
+  {key: "#low_food_levels", group:19, id:91}
+  {key: "#people_eating_more_than_produced", group:19, id:92}
+  {key: "#city_health_appalling_plague_imminent", group:19, id:93}
+  {key: "#city_health_terrible_plague_likely", group:19, id:94}
+  {key: "#city_health_worsening_serious_risk", group:19, id:95}
+  {key: "#city_health_getting_worse_plague_could_strike", group:19, id:96}
+  {key: "#plague_likely_health_improving", group:19, id:97}
+  {key: "#risk_of_plague_but_improving", group:19, id:98}
+  {key: "#health_improving_plague_still_possible", group:19, id:99}
+  {key: "#palace_robbed", group:19, id:100}
+  {key: "#thief_stole_savings", group:19, id:101}
+  {key: "#no_troops_for_defense", group:19, id:102}
+  {key: "#loathed_in_city", group:19, id:103}
+  {key: "#people_very_angry", group:19, id:104}
+  {key: "#people_angry", group:19, id:105}
+  {key: "#people_very_upset", group:19, id:106}
+  {key: "#people_upset", group:19, id:107}
+  {key: "#people_annoyed", group:19, id:108}
+  {key: "#people_indifferent", group:19, id:109}
+  {key: "#people_pleased", group:19, id:110}
+  {key: "#people_very_pleased", group:19, id:111}
+  {key: "#people_extremely_pleased", group:19, id:112}
+  {key: "#people_love_you", group:19, id:113}
+  {key: "#people_idolize_you", group:19, id:114}
+  {key: "#unhappiness_lack_of_food", group:19, id:115}
+  {key: "#unhappiness_lack_of_jobs", group:19, id:116}
+  {key: "#unhappiness_high_taxes", group:19, id:117}
+  {key: "#unhappiness_low_wages", group:19, id:118}
+  {key: "#unhappiness_too_many_slums", group:19, id:119}
+  {key: "#immigration_people_coming", group:19, id:120}
+  {key: "#immigration_no_housing", group:19, id:121}
+  {key: "#immigration_low_wages_deter", group:19, id:122}
+  {key: "#immigration_lack_of_jobs", group:19, id:123}
+  {key: "#immigration_lack_of_food", group:19, id:124}
+  {key: "#immigration_high_taxes", group:19, id:125}
+  {key: "#immigration_slums_deter", group:19, id:126}
+  {key: "#immigration_low_sentiment", group:19, id:127}
+  {key: "#emigration_no_housing", group:19, id:128}
+  {key: "#emigration_low_wages", group:19, id:129}
+  {key: "#emigration_high_unemployment", group:19, id:130}
+  {key: "#emigration_lack_of_food", group:19, id:131}
+  {key: "#emigration_high_taxes", group:19, id:132}
+  {key: "#emigration_slums_encourage_leaving", group:19, id:133}
+  {key: "#emigration_low_sentiment", group:19, id:134}
+  {key: "#building_needs_beer", group:19, id:135}
+  {key: "#build_brewery", group:19, id:136}
+  {key: "#needs_papyrus", group:19, id:137}
+  {key: "#build_papyrus_maker", group:19, id:138}
+  {key: "#building_needs_linen", group:19, id:139}
+  {key: "#build_weaver", group:19, id:140}
+  {key: "#building_needs_wood", group:19, id:141}
+  {key: "#build_wood_cutter", group:19, id:142}
+  {key: "#building_needs_clay_and_straw", group:19, id:143}
+  {key: "#import_clay_trade_route", group:19, id:144}
+  {key: "#import_clay_overseer", group:19, id:145}
+  {key: "#import_straw_trade_route", group:19, id:146}
+  {key: "#import_straw_overseer", group:19, id:147}
+  {key: "#monument_needs_stone_and_limestone", group:19, id:148}
+  {key: "#build_stone_quarry", group:19, id:149}
+  {key: "#import_stone_trade_route", group:19, id:150}
+  {key: "#import_stone_overseer", group:19, id:151}
+  {key: "#build_limestone_quarry", group:19, id:152}
+  {key: "#import_limestone_trade_route", group:19, id:153}
+  {key: "#import_limestone_overseer", group:19, id:154}
+  {key: "#monument_needs_plain_stone", group:19, id:155}
+  {key: "#monument_needs_limestone", group:19, id:156}
+  {key: "#monument_needs_bricks_and_limestone", group:19, id:157}
+  {key: "#build_brickworks", group:19, id:158}
+  {key: "#import_bricks_trade_route", group:19, id:159}
+  {key: "#import_bricks_overseer", group:19, id:160}
+  {key: "#monument_needs_bricks", group:19, id:161}
+  {key: "#monument_needs_sandstone", group:19, id:162}
+  {key: "#build_sandstone_quarry", group:19, id:163}
+  {key: "#import_beer_overseer", group:19, id:164}
+  {key: "#import_beer_trade_route", group:19, id:165}
+  {key: "#import_barley_overseer", group:19, id:166}
+  {key: "#import_barley_trade_route", group:19, id:167}
+  {key: "#import_reeds_overseer", group:19, id:168}
+  {key: "#import_reeds_trade_route", group:19, id:169}
+  {key: "#import_papyrus_overseer", group:19, id:170}
+  {key: "#import_papyrus_trade_route", group:19, id:171}
+  {key: "#import_flax_overseer", group:19, id:172}
+  {key: "#import_flax_trade_route", group:19, id:173}
+  {key: "#import_linen_overseer", group:19, id:174}
+  {key: "#import_linen_trade_route", group:19, id:175}
+  {key: "#building_removed_mortuaries", group:19, id:176}
+  {key: "#building_removed_senet_house", group:19, id:177}
+  {key: "#building_removed_scribal_schools", group:19, id:178}
+  {key: "#building_removed_libraries", group:19, id:179}
+  {key: "#building_removed_weaponsmiths", group:19, id:180}
+  {key: "#building_removed_chariot_maker", group:19, id:181}
+  {key: "#building_removed_fort_infantry", group:19, id:182}
+  {key: "#building_removed_fort_archers", group:19, id:183}
+  {key: "#building_removed_fort_charioteers", group:19, id:184}
+  {key: "#building_removed_academies", group:19, id:185}
+  {key: "#mausoleum_needs_sandstone", group:19, id:186}
+  {key: "#build_brewery_or_import_beer", group:19, id:187}
+  {key: "#build_papyrus_maker_or_import", group:19, id:188}
+  {key: "#build_weaver_or_import_linen", group:19, id:189}
+  {key: "#tax_collector_robbed", group:19, id:190}
+  {key: "#courthouse_robbed", group:19, id:191}
+  {key: "#mansion_destroyed", group:19, id:192}
+  {key: "#mansion_protected_by_police", text:"Protected by police"}
+  {key: "#mansion_not_protected_theft", text:"Not protected - thieves may steal savings"}
+  {key: "#palace_destroyed", group:19, id:193}
+  {key: "#tax_collector_destroyed", group:19, id:194}
+  {key: "#courthouse_destroyed", group:19, id:195}
+  {key: "#gold_miner_robbed", group:19, id:196}
+  {key: "#build_granary", group:19, id:197}
+  {key: "#build_granaries", group:19, id:198}
+  {key: "#max_docks_reached", group:19, id:199}
+  {key: "#shrines_near_road_required", group:19, id:200}
+  {key: "#build_jugglers_school", group:19, id:201}
+  {key: "#build_conservatory", group:19, id:202}
+  {key: "#build_dance_school", group:19, id:203}
+  {key: "#company_cannot_reach_destination", group:19, id:204}
+  {key: "#game_saved", group:19, id:205}
+  {key: "#must_be_on_clear_land", group:19, id:206}
+  {key: "#causeway_needs_water", group:19, id:207}
+  {key: "#festival_square_on_intersection", group:19, id:208}
+  {key: "#no_immigration_with_enemies", group:19, id:209}
+  {key: "#cheats_enabled", group:19, id:210}
+  {key: "#cheats_disabled", group:19, id:211}
+  {key: "#flood_perfect", group:19, id:212}
+  {key: "#flood_excellent", group:19, id:213}
+  {key: "#flood_good", group:19, id:214}
+  {key: "#flood_mediocre", group:19, id:215}
+  {key: "#flood_poor", group:19, id:216}
+  {key: "#flood_failed", group:19, id:217}
+  {key: "#price_increase", group:19, id:218}
+  {key: "#price_decrease", group:19, id:219}
+  {key: "#wages_lowered", group:19, id:220}
+  {key: "#wages_raised", group:19, id:221}
+  {key: "#trade_decreases", group:19, id:222}
+  {key: "#trade_increases", group:19, id:223}
+  {key: "#kingdom_standing_rises", group:19, id:224}
+  {key: "#population_milestone", group:19, id:225}
+  {key: "#minor_god_blessing", group:19, id:226}
+  {key: "#festival_starting", group:19, id:227}
+  {key: "#goods_auto_dispatched", group:19, id:228}
+  {key: "#building_removed_zoo", group:19, id:229}
+  {key: "#building_needs_game_meat", group:19, id:230}
+  {key: "#build_hunting_lodge", group:19, id:231}
+  {key: "#build_hunting_lodge_or_import", group:19, id:232}
+  {key: "#monument_needs_copper", group:19, id:233}
+  {key: "#monument_needs_marble", group:19, id:234}
+  {key: "#one_library_only", group:19, id:235}
+  {key: "#one_pharos_only", group:19, id:236}
+  {key: "#one_caesareum_only", group:19, id:237}
+  {key: "#disease_strikes", group:19, id:238}
+  {key: "#malaria_strikes", group:19, id:239}
+  {key: "#monument_needs_granite", group:19, id:240}
+  {key: "#must_be_over_rocks", group:19, id:241}
+  {key: "#pharos_not_demolishable", group:19, id:242}
+  {key: "#tomb_robbers_plundered", group:19, id:243}
+  {key: "#mausoleum_plundered", group:19, id:244}
+  {key: "#tomb_robbers_stole_provisions", group:19, id:245}
+  {key: "#tomb_robber_caught", group:19, id:246}
+  {key: "#building_needs_oil_and_pottery", group:19, id:247}
+  {key: "#build_potter", group:19, id:248}
+  {key: "#import_pottery_trade_route", group:19, id:249}
+  {key: "#import_pottery_overseer", group:19, id:250}
+  {key: "#import_oil_trade_route", group:19, id:251}
+  {key: "#import_oil_overseer", group:19, id:252}
+  {key: "#building_needs_henna", group:19, id:253}
+  {key: "#build_henna_farm", group:19, id:254}
+  {key: "#import_henna_trade_route", group:19, id:255}
+  {key: "#import_henna_overseer", group:19, id:256}
+  {key: "#building_needs_oil", group:19, id:257}
+  {key: "#building_needs_pottery", group:19, id:258}
+  {key: "#build_paint_maker_or_import", group:19, id:259}
+  {key: "#build_paint_maker", group:19, id:260}
+  {key: "#building_needs_clay_and_paint", group:19, id:261}
+  {key: "#employees_needed", group:19, id:262}
+  {key: "#must_be_over_cliffs", group:19, id:263}
+  {key: "#entrance_on_clear_land", group:19, id:264}
+  {key: "#warning_shipwright_needed", group:19, id:316}
+
+  {key: "#figure_none", group:64, id:0 }
+  {key: "#figure_immigrant", group:64, id:1 }
+  {key: "#figure_emigrant", group:64, id:2 }
+  {key: "#figure_homeless", group:64, id:3 }
+  {key: "#figure_cart_pusher", group:64, id:4 }
+  {key: "#figure_labor_seeker", group:64, id:5 }
+  {key: "#figure_explosion", group:64, id:6 }
+  {key: "#figure_tax_collector", group:64, id:7 }
+  {key: "#figure_architect", group:64, id:8 }
+  {key: "#figure_storageyard_cart", group:64, id:9 }
+  {key: "#figure_fireman", group:64, id:10 }
+  {key: "#figure_archer", group:64, id:11 }
+  {key: "#figure_fcharioteer", group:64, id:12 }
+  {key: "#figure_infantry", group:64, id:13 }
+  {key: "#figure_standard_bearer", group:64, id:14 }
+  {key: "#figure_juggler", group:64, id:15 }
+  {key: "#figure_musician", group:64, id:16 }
+  {key: "#figure_dancer", group:64, id:17 }
+  {key: "#figure_senet_player", group:64, id:18 }
+  {key: "#figure_trade_caravan", group:64, id:19 }
+  {key: "#figure_trade_ship", group:64, id:20 }
+  {key: "#figure_trade_caravan_donkey", group:64, id:21 }
+  {key: "#figure_protester", group:64, id:22 }
+  {key: "#figure_robber", group:64, id:23 }
+  {key: "#figure_tomb_rober", group:64, id:24 }
+  {key: "#figure_fishing_boat", group:64, id:25 }
+  {key: "#figure_market_trader", group:64, id:26 }
+  {key: "#figure_priest", group:64, id:27 }
+  {key: "#figure_teacher", group:64, id:28 }
+  {key: "#figure_scriber", group:64, id:29 }
+  {key: "#figure_librarian", group:64, id:30 }
+  {key: "#figure_dentist", group:64, id:31 }
+  {key: "#figure_physician", group:64, id:32 }
+  {key: "#figure_herbalist", group:64, id:33 }
+  {key: "#figure_embalmer", group:64, id:34 }
+  {key: "#figure_worker", group:64, id:35 }
+  {key: "#figure_map_flag", group:64, id:36 }
+  {key: "#figure_flotsam", group:64, id:37 }
+  {key: "#figure_docker", group:64, id:38 }
+  {key: "#figure_market_buyer", group:64, id:39 }
+  {key: "#figure_nobles", group:64, id:40 }
+  {key: "#figure_indigenous_native", group:64, id:41 }
+  {key: "#figure_tower_sentry", group:64, id:42 }
+  {key: "#figure_enemy_egyptian_spear", group:64, id:43 }
+  {key: "#figure_enemy_egyptian_archer", group:64, id:44 }
+  {key: "#figure_enemy_egyptian_fast_sword", group:64, id:45 }
+  {key: "#figure_enemy_egyptian_camel", group:64, id:46 }
+  {key: "#figure_enemy_egyptian_elephant", group:64, id:47 }
+  {key: "#figure_enemy_egyptian_chariot", group:64, id:48 }
+  {key: "#figure_enemy_egyptian_sword", group:64, id:49 }
+  {key: "#figure_enemy_egyptian_heavy_sword", group:64, id:50 }
+  {key: "#figure_enemy_egyptian_transport_ship", group:64, id:51 }
+  {key: "#figure_enemy_egyptian_mounted_archer", group:64, id:52 }
+  {key: "#figure_enemy_egyptian_axe", group:64, id:53 }
+  {key: "#figure_rioter", group:64, id:54 }
+  {key: "#figure_enemy_kingdome_javelin", group:64, id:55 }
+  {key: "#figure_enemy_kingdome_mounted", group:64, id:56 }
+  {key: "#figure_enemy_kingdome_infantry", group:64, id:57 }
+  {key: "#figure_native_trader", group:64, id:58 }
+  {key: "#figure_arrow", group:64, id:59 }
+  {key: "#figure_javelin", group:64, id:60 }
+  {key: "#figure_bolt", group:64, id:61 }
+  {key: "#figure_ballista", group:64, id:62 }
+  {key: "#figure_creature", group:64, id:63 }
+  {key: "#figure_missionary", group:64, id:64 }
+  {key: "#figure_fishing_point", group:64, id:65 }
+  {key: "#figure_delivery_boy", group:64, id:66 }
+  {key: "#figure_shipwreck", group:64, id:67 }
+  {key: "#figure_birds", group:64, id:68 }
+  {key: "#figure_ostrich", group:64, id:69 }
+  {key: "#figure_antelope", group:64, id:70 }
+  {key: "#figure_spear", group:64, id:71 }
+  {key: "#figure_charior_racer", group:64, id:72 }
+  {key: "#figure_ostrich_hunter", group:64, id:73 }
+  {key: "#figure_hunter_arrow", group:64, id:74 }
+  {key: "#figure_lumberjack", group:64, id:75 }
+  {key: "#figure_ferry_boat", group:64, id:76 }
+  {key: "#figure_transport_ship", group:64, id:77 }
+  {key: "#figure_warship", group:64, id:78 }
+  {key: "#figure_carpenter", group:64, id:79 }
+  {key: "#figure_bricklayer", group:64, id:80 }
+  {key: "#figure_stonemason", group:64, id:81 }
+  {key: "#figure_crocodile", group:64, id:82 }
+  {key: "#figure_hyena", group:64, id:83 }
+  {key: "#figure_hippo", group:64, id:84 }
+  {key: "#figure_laborer", group:64, id:85 }
+  {key: "#figure_sled", group:64, id:86 }
+  {key: "#figure_water_carrier", group:64, id:87 }
+  {key: "#figure_constable", group:64, id:88 }
+  {key: "#figure_magistrate", group:64, id:89 }
+  {key: "#figure_reed_gatherer", group:64, id:90 }
+  {key: "#figure_festival_guy", group:64, id:91 }
+  {key: "#figure_enemy_transport", group:64, id:92 }
+  {key: "#figure_enemy_warship", group:64, id:93 }
+  {key: "#figure_funeral_walker", group:64, id:94 }
+  {key: "#figure_fishing_spot", group:64, id:95 }
+  {key: "#figure_sled_puller", group:64, id:96 }
+  {key: "#figure_showman", group:64, id:97 }
+  {key: "#figure_plagued_citizen", group:64, id:98 }
+  {key: "#figure_bedouin_infantry", group:64, id:99 }
+  {key: "#figure_egyptian_warship", group:64, id:100 }
+  {key: "#figure_egyptian_transport", group:64, id:101 }
+  {key: "#figure_asp", group:64, id:102 }
+  {key: "#figure_lion", group:64, id:103 }
+  {key: "#figure_scorpion", group:64, id:104 }
+  {key: "#figure_zookeeper", group:64, id:105 }
+  {key: "#figure_frog", group:64, id:106 }
+  {key: "#figure_locust", group:64, id:107 }
+  {key: "#figure_tomb_artisan", group:64, id:108 }
+  {key: "#figure_mummy", group:64, id:109 }
+  {key: "#figure_pharaoh", group:64, id:110 }
+  {key: "#figure_governor", group:64, id:111 }
+  {key: "#figure_drunkard", group:64, id:112 }
+
+  {key: "#figure_barbarian_archer", text : "Enemy Barbarian Archer" }
+  {key: "#figure_barbarian_sword", text : "Enemy Barbarian Swordman" }
+  {key: "#figure_barbarian_transport_ship", text : "Enemy Barbarian Transport Ship" }
+  {key: "#figure_canaanite_archer", text : "Enemy Canaanite Archer" }
+  {key: "#figure_canaanite_sword", text : "Enemy Canaanite Sword" }
+  {key: "#figure_canaanite_transport_ship", text : "Enemy Canaanite Transport Ship" }
+  {key: "#figure_canaanite_war_ship", text : "Enemy Canaanite War Ship" }
+  {key: "#figure_canaanite_chariot", text : "Enemy Canaanite Chariot" }
+  {key: "#figure_kushite_spearman", text : "Enemy Kushite Spearman" }
+  {key: "#figure_kushite_axeman", text : "Enemy Kushite Axeman" }
+  {key: "#figure_kushite_transport_ship", text : "Enemy Kushite Transport Ship" }
+  {key: "#figure_kushite_war_ship", text : "Enemy Kushite War Ship" }
+  {key: "#figure_kushite_chariot", text : "Enemy Kushite Chariot" }
+  {key: "#figure_hittite_archer", text : "Enemy Hittite Archer" }
+  {key: "#figure_hittite_spearman", text : "Enemy Hittite Spearman" }
+  {key: "#figure_hittite_transport_ship", text : "Enemy Hittite Transport Ship" }
+  {key: "#figure_hittite_war_ship", text : "Enemy Hittite War Ship" }
+  {key: "#figure_hittite_chariot", text : "Enemy Hittite Chariot" }
+  {key: "#figure_persian_archer", text : "Enemy Persian Archer" }
+  {key: "#figure_persian_spearman", text : "Enemy Persian Spearman" }
+  {key: "#figure_persian_transport_ship", text : "Enemy Persian Transport Ship" }
+  {key: "#figure_persian_war_ship", text : "Enemy Persian War Ship" }
+  {key: "#figure_persian_chariot", text : "Enemy Persian Chariot" }
+  {key: "#figure_assyrian_archer", text : "Enemy Assyrian Archer" }
+  {key: "#figure_assyrian_sword", text : "Enemy Assyrian Sword" }
+  {key: "#figure_assyrian_transport_ship", text : "Enemy Assyrian Transport Ship" }
+  {key: "#figure_assyrian_war_ship", text : "Enemy Assyrian War Ship" }
+  {key: "#figure_assyrian_chariot", text : "Enemy Assyrian Chariot" }
+  {key: "#figure_egyptian_galera", text : "Enemy Egyptian Galera" }
+  {key: "#figure_libian_archer", text : "Enemy Libian Archer" }
+  {key: "#figure_libian_swordman", text : "Enemy Libian Swordman" }
+  {key: "#figure_libian_transport_ship", text : "Enemy Libian Transport Ship" }
+  {key: "#figure_libian_war_ship", text : "Enemy Libian War Ship" }
+  {key: "#figure_libian_chariot", text : "Enemy Libian Chariot" }
+  {key: "#figure_nubian_archer", text : "Enemy Nubian Archer" }
+  {key: "#figure_nubian_axeman", text : "Enemy Nubian Axeman" }
+  {key: "#figure_nubian_transport_ship", text : "Enemy Nubian Transport Ship" }
+  {key: "#figure_nubian_war_ship", text : "Enemy Nubian War Ship" }
+  {key: "#figure_nubian_chariot", text : "Enemy Nubian Chariot" }
+  {key: "#figure_phoenician_spearman", text : "Enemy Phoenician Spearman" }
+  {key: "#figure_phoenician_swordman", text : "Enemy Phoenician Swordman" }
+  {key: "#figure_phoenician_transport_ship", text : "Enemy Phoenician Transport Ship" }
+  {key: "#figure_phoenician_war_ship", text : "Enemy Phoenician War Ship" }
+  {key: "#figure_phoenician_chariot", text : "Enemy Phoenician Chariot" }
+  {key: "#figure_roman_archer", text : "Enemy Roman Archer" }
+  {key: "#figure_roman_legioner", text : "Enemy Roman Legioner" }
+  {key: "#figure_roman_transport_ship", text : "Enemy Roman Transport Ship" }
+  {key: "#figure_roman_war_ship", text : "Enemy Roman War Ship" }
+  {key: "#figure_roman_chariot", text : "Enemy Roman Chariot" }
+  {key: "#figure_seapeople_archer", text : "Enemy Seapeople Archer" }
+  {key: "#figure_seapeople_swordman", text : "Enemy Seapeople Swordman" }
+  {key: "#figure_seapeople_transport_ship", text : "Enemy Seapeople Transport Ship" }
+  {key: "#figure_seapeople_war_ship", text : "Enemy Seapeople War Ship" }
+  {key: "#figure_seapeople_chariot", text : "Enemy Seapeople Chariot" }
+  {key: "#figure_hyksos_archer", text : "Enemy Hyksos Archer" }
+  {key: "#figure_hyksos_swordman", text : "Enemy Hyksos Swordman" }
+  {key: "#figure_hyksos_transport_ship", text : "Enemy Hyksos Transport Ship" }
+  {key: "#figure_hyksos_war_ship", text : "Enemy Hyksos War Ship" }
+  {key: "#figure_hyksos_chariot", text : "Enemy Hyksos Chariot" }
+
+  {key: "#house_low_desirabilty", text:"This house will devolve soon. The falling desirability of living in this locality is dragging it down"}
+  {key: "#lacks_access_primitive_water", text:"This house will devolve soon, as it lacks access to even the most primitive water source."}
+  {key: "#not_visited_by_water_carrier", text:"This house will devolve soon, as it is not visited by a water carrier"}
+  {key: "#no_entertainment_to_be_found", text:"This house will devolve soon, as there is no entertainment to be found in the location"}
+  {key: "#any_entertainment_in_location", text:"This house will devolve soon, as there is hardly any entertainment in the location"}
+  {key: "#too_little_entertainment_in_location", text:"This house will devolve soon, as there is too little entertainment in the location"}
+  {key: "#some_entertainment_found_location", text:"This house will devolve soon. There is some entertainment to be found in the location, but not enough"}
+  {key: "#good_entertainment_found_location", text:"This house will devolve soon. There is good entertainment to be found in the location, but not enough variety"}
+  {key: "#excellent_entertainment_found_location", text:"This house will devolve soon. There is excellent entertainment to be found in the location, but venues are too crowded, or lack enough variety for the discerning scribal classes"}
+  {key: "#one_food_type_need", text:"This house will devolve soon, as it has not received any supplies of food recently from a local Bazaar"}
+  {key: "#two_food_types_need", text:"This house will devolve soon, as it currently only has access to a single type of food from its local Bazaar. This discourages the wealthier citizens."}
+  {key: "#three_food_types_need", text:"This house will devolve soon, as it currently gets only two types of food from its local Bazaar. This is discouraging the scribal classes."}
+  {key: "#no_bazaar_access", text:"This house will devolve soon. It has lost access to a Bazaar."}
+  {key: "#low_bazaar_access", text:"This house will devolve soon. Although it has access to a Bazaar, the Bazaar itself finds it hard to get supplies of food."}
+  {key: "#lost_basic_educational_facilities ", text:"This house will devolve soon, as it has lost all basic educational facilities provided by either a Scribal School or a Library."}
+  {key: "#lost_access_to_library ", text:"This house will devolve soon. Its access to education has been downgraded, as it has lost access to its Library."}
+  {key: "#lost_access_to_scribal_school ", text:"This house will devolve soon. Its access to education has been downgraded, as it has lost access to its Scribal School."}
+  {key: "#lost_access_to_higher_education ", text:"This house will devolve soon. Its previously excellent access to education was downgraded when it lost access to higher education."}
+  {key: "#no_access_to_magistrates", text:"This house will devolve soon, as it has no access to magistrates from Courthouses."}
+  {key: "#run_out_of_pottery", text:"This house will devolve soon. It has run out of pottery, and its local Bazaar has at best an erratic supply."}
+  {key: "#lost_all_access_to_local_religious", text:"This house will devolve soon, as it has lost all access to local religious facilities."}
+  {key: "#access_to_one_local_religious", text:"This house will devolve soon. Its access to local religious facilities was reduced to the Temple of only one god."}
+  {key: "#access_to_two_local_religious", text:"This house will devolve soon. Its previously excellent religious facilities were reduced to the Temples of only two gods."}
+  {key: "#lost_dentist_access", text:"This house will devolve soon, as it has lost Dentist access."}
+  {key: "#no_access_to_physician", text:"This house will devolve soon, as it now has woeful health provision. Not only does it lack access to a Mortician, but Physician access is also less than perfect."}
+  {key: "#no_access_to_mortuary", text:"This house will devolve soon, as its health provision has been cut. Physician coverage is good, but there is no local access to a Mortuary."}
+  {key: "#hard_access_to_physician", text:"This house will devolve soon, as its health provision has been cut. There is local access to a Mortuary, but a Physician's office is hard to find."}
+  {key: "#run_out_of_linen", text:"This house will devolve soon, as it has run out of linen and its local Bazaar has at best an erratic supply."}
+  {key: "#run_out_of_beer", text:"This house will devolve soon, as it has run out of beer and its local Bazaar has at best an erratic supply."}
+  {key: "#cannot_evolve_cause_low_desirability", text:"This dwelling cannot evolve until the desirability of the area improves."}
+  {key: "#cannot_evolve_most_primitive_water_source", text:"This house cannot evolve, as it does not have access to even the most primitive water source."}
+  {key: "#cannot_evolve_access_to_water_carrier", text:"This house cannot evolve, as it does not have access to a water carrier's services "}
+  {key: "#cannot_evolve_no_entertainment", text:"This house cannot evolve, as there is no entertainment to be found in the location."}
+  {key: "#cannot_evolve_hardly_any_entertainment", text:"This house cannot evolve, as there is hardly any entertainment to be found in the location."}
+  {key: "#cannot_evolve_too_little_entertainment", text:"This house cannot evolve, as there is too little entertainment to be found in the location."}
+  {key: "#cannot_evolve_some_entertainment", text:"This house cannot evolve, as there is some entertainment to be found in the location, but not enough."}
+  {key: "#cannot_evolve_good_entertainment", text:"This house cannot evolve, as there is good entertainment to be found in the location, but not enough variety."}
+  {key: "#cannot_evolve_excellent_entertainment", text:"This house cannot evolve, as there is excellent entertainment to be found in the location, but the venues are too crowded or lack enough variety for the discerning scribal classes."}
+  {key: "#cannot_evolve_needs_supply_food", text:"This house cannot evolve, as it needs a supply of food from a local Bazaar."}
+  {key: "#cannot_evolve_needs_second_type_food", text:"This house cannot evolve, as it needs a second type of food, supplied from a local Bazaar, to encourage wealthier Egyptians to move in."}
+  {key: "#cannot_evolve_needs_third_type_food", text:"This house cannot evolve, as it needs a third type of food, supplied from a local Bazaar, to encourage a higher class of Egyptians to move in."}
+  {key: "#cannot_evolve_needs_access_bazaar", text:"This house cannot evolve, as it does not have access to a local Bazaar."}
+  {key: "#cannot_evolve_needs_low_access_bazaar", text:"This house cannot evolve. Although it has access to a local Bazaar, the Bazaar itself has trouble getting supplies of food."}
+  {key: "#cannot_evolve_needs_basic_education", text:"This house cannot evolve, as it has no basic educational facilities provided by either a Scribal School or a Library."}
+  {key: "#cannot_evolve_needs_library_education", text:"This house cannot evolve, as its access to education needs to be improved by access to a Library."}
+  {key: "#cannot_evolve_needs_school_education", text:"This house cannot evolve, as its access to education needs to be improved by access to a Scribal School."}
+  {key: "#cannot_evolve_needs_academy_education", text:"unused line reporting evolution halted by lack of academy access."}
+  {key: "#cannot_evolve_needs_magistrate", text:"This house cannot evolve, as it does not have access to a local magistrate from a Courthouse."}
+  {key: "#cannot_evolve_needs_pottery", text:"This house cannot evolve. It needs supplies of pottery provided to it by its local Bazaar before a wealthier class of citizen will move in."}
+  {key: "#cannot_evolve_needs_religious", text:"This house cannot evolve, as it has no access to any local religious facilities."}
+  {key: "#cannot_evolve_needs_religious_two_gods", text:"This house has access to Temples of a single god only. It will not improve until residents can pay homage to other gods."}
+  {key: "#cannot_evolve_needs_religious_three_gods", text:"This house has access to Temples of only two gods. It will not improve until residents can pay homage to other gods."}
+  {key: "#cannot_evolve_needs_dentist", text:"This house cannot evolve, as it has no local access to a Dentist."}
+  {key: "#cannot_evolve_needs_physician", text:"This house cannot evolve, as it effectively has no health provision. It does not have access to a Physician or a Mortuary."}
+  {key: "#cannot_evolve_needs_mortuary_has_physician", text:"This house cannot evolve, as it wants greater health provision. Physician coverage is good, but there is no local access to a Mortuary."}
+  {key: "#cannot_evolve_needs_physician_mortuary_has", text:"This house cannot evolve, as it wants greater health provision. There is local access to a Mortuary, but access to a Physician is needed."}
+  {key: "#cannot_evolve_needs_linen", text:"This house cannot evolve. It needs supplies of linen provided to it by its local Bazaar before a wealthier class of citizen will move in."}
+  {key: "#cannot_evolve_needs_beer", text:"This house cannot evolve. It needs supplies of beer provided to it by its local Bazaar before a wealthier class of citizen will move in."}
+  {key: "#cannot_evolve_needs_jewlery", text:"This house cannot evolve. Before a wealthier class of citizen will move in, the local Bazaar must supply this dwelling with luxury goods, like"}
+  {key: "#trader_from", text:"from"}
+  {key: "#trader_capacity", text:"Capacity"}
+  {key: "#trader_buys", text:"Buys"}
+  {key: "#trader_sells", text:"Sells"}
+  {key: "#trader_bought", text:"Bought"}
+  {key: "#trader_sold", text:"Sold"}
+  {key: "#trader_returning_home", text:"Returning home"}
+  {key: "#trader_trading_goods", text:"Trading goods"}
+  {key: "#trader_heading_storage", text:"Heading to city Storage Yards"}
+  {key: "#trader_nothing_to_trage", text:"Nothing to trade here, just passing through"}
+  {key: "#trader_ship_waiting_free_dock", text:"Anchored, waiting for free Dock"}
+  {key: "#trader_ship_docking_trading", text:"Docked, buying and selling goods"}
+  {key: "#trader_ship_returning_home", text:"Returning home"}
+  {key: "#trader_ship_sailing_dock", text:"Sailing to city Docks"}
+  {key: "#building_employee", text:"Employee"}
+  {key: "#building_employee_needed", text:"needed"}
+  {key: "#AD", text:"AD"}
+  {key: "#BC", text:"BC"}
+
+  { key: "#trader_city_not_trades", text: "Our long and dangerous trek here was for nothing! This city won't trade." }
+  { key: "#trader_buy_for_less_sell_for_more", text: "Buy low, sell high.  That's my motto!" }
+  { key: "#trader_its_my_life", text: "It's the trader's life for me!" }
+  { key: "#trader_i_ll_be_a_hero", text: "I'll be a hero when I bring these goods back to my home land." }
+  { key: "#trader_you_talk_a_fine_bargain", text: "You talk a fine bargain, my friend.  I'll barely make back my costs." }
+
+  {key: "#dwellers_palace_are_pinnacle", group:127, id:100}
+  {key: "#house_upgrade_inprogress", group:127, id:101}
+  {key: "#house_nearby_building", group:127, id:102}
+  {key: "#having_detrimental_effect", group:127, id:103}
+  {key: "#house_upgrade_nospace", group:127, id:104}
+  {key: "#TR_CONFIG_HEADER_LANGUAGES", lang:"en", text: "Game language"}
+
+  { key: "#hunter_ostrich_good_city", lang:"en", text: "I like it here, but there is always room for improvement."}
+
+  { key: "#immigrant_im_new_here", text: "I'm new here.  I wonder what the city will offer to a person like me." }
+  { key: "#immigrant_heard_there_is_a_job_here", text: "I heard there is a job here for anyone who wants one." }
+  { key: "#immigrant_city_has_plenty_of_food", text: "People say that this city has plenty of food to go around." }
+
+  { key: "#emigrant_no_job_in_city", text: "I can't find a job here. I will look elsewhere." }
+  { key: "#emigrant_no_food_in_city", text: "There's not enough food for me to eat. I'm moving out of this desert!" }
+  { key: "#emigrant_tax_too_high", text: "Taxes are too high here. I'm surprised I wasn't taxed for leaving." }
+  { key: "#emigrant_salary_too_low", text: "I can't live on what they pay me here." }
+  { key: "#emigrant_no_house_for_me", text: "Houses I've seen are overstuffed with people. I can't stay here without a place to live." }
+
+  { key: "#recruiter_sick_people", text: "I see sick people everywhere. A plague could break out!" }
+  { key: "#recruiter_starving", text: "I'm starving. I'd rather be looking for food than for workers. " }
+  { key: "#recruiter_city_defenses_weak", text: "City defenses are so weak, I could soon be filling jobs with foreigners instead of Egyptians." }
+  { key: "#recruiter_without_workers", text: "Without workers available, my job is impossible." }
+  { key: "#recruiter_gods_unleash_fury", text: "I hope the gods don't unleash their fury. We need to pay more attention to them." }
+  { key: "#recruiter_enemies_attack", text: "Enemies could attack at any time. Our reputation is low, and no one respects us." }
+  { key: "#recruiter_able_people_out_of_work", text: "With so many able people out of work, my job ought to be easy." }
+  { key: "#recruiter_boring", text: "It's boring here. I wish I could hire more entertainers." }
+  { key: "#recruiter_living_here", text: "I don't mind living here. Things could certainly be worse." }
+  { key: "#recruiter_best_city", text: "This city is the best!" }
+  { key: "#recruiter_most_popular", text: "I'm the most popular person in the city. A lot of people need jobs." }
+  { key: "#recruiter_list_of_job_openings", text: "My list of job openings is huge, and I can't find any workers to fill the posts." }
+
+  { key: "#barge_have_no_place_for_dock", text: "I wonder if this city has any sights I could see while they unload my ship." }
+  { key: "#barge_docked_wait_for_dockpushers", text: "We're waiting for some cargo to be delivered to our ship." }
+  { key: "#barge_city_not_trades", text: "I don't know why we came. This city never trades, and the shore leave is boring." }
+  { key: "#barge_i_like_to_trage", text: "I love the art of the deal! I can't wait to trade my supplies." }
+  { key: "#barge_amazing_trades", text: "What a bountiful journey!" }
+
+  { key: "#dancer_i_like_festivals", text: "Many people have taken ill in the city. I hope I don't catch anything!" }
+  { key: "#dancer_desease_can_start_at_any_moment", text: "I can't prance and leap very well without enough food!" }
+  { key: "#dancer_no_food_in_city", text: "Invaders would have little trouble taking over our city. Nothing defends it." }
+  { key: "#dancer_city_not_safety_workers_leaving", text: "Another dance partner lost to the worker shortage! I hate dancing alone." }
+  { key: "#dancer_need_workers", text: "We should do more to appease the gods - and quickly!" }
+  { key: "#dancer_gods_are_angry", text: "This city's reputation is worse than a juggler's! I hope we aren't attacked." }
+  { key: "#dancer_city_is_bad", text: "If I weren't so light on my feet, I would trip over all these jobless people!" }
+  { key: "#dancer_much_unemployments", text: "(Yawn) I need to be entertained!" }
+  { key: "#dancer_salary_too_low", text: "This city is just about as good as any other city, I guess." }
+  { key: "#dancer_city_is_good", text: "This city is fantastic!" }
+  { key: "#dancer_city_is_amazing", text: "These festival crowds are so enthusiastic, they make me want to leap higher." }
+
+  { key: "#homeless_i_was_kicked_out_of_my_home", text: "I've been kicked out of my home, and through no fault of my own." }
+  { key: "#homeless_i_cant_find_a_place_to_live", text: "I can't find a place to live!" }
+
+  { key: "#marketboy_these_baskets_are_too_heavy", text: "These baskets are too heavy for a little kid like me!" }
+  { key: "#marketboy_bossy_lady_makes_me_carry_goods", text: "That bossy lady makes me carry goods all day!" }
+  { key: "#marketboy_one_day_ill_run_the_bazaar", text: "Maybe I just carry baskets now, but one day I'll run the Bazaar." }
+
+  { key: "#engineer_extreme_damage_level", text: "A lot of people are in much worse condition than the buildings. I hope things don't get worse." }
+  { key: "#engineer_no_food_in_city", text: "Starvation might not affect the strength of these buildings, but it sure affects mine!" }
+  { key: "#engineer_city_not_safety", text: "How are we to defend ourselves? The city's defenses are laughable." }
+  { key: "#engineer_high_damage_level", text: "Why does it matter if these buildings collapse? No workers are in them anyway." }
+  { key: "#engineer_gods_are_angry", text: "If the gods are angry, not even the best architect can fix the damage they cause." }
+  { key: "#engineer_city_has_bad_reputation", text: "Our city's reputation is so low, I fear our enemies will attack." }
+  { key: "#engineer_need_more_workers", text: "By my estimation, a lot of people are out of work." }
+  { key: "#engineer_low_entertainment", text: "Ho hum. Even architects like a little fun every now and then." }
+  { key: "#engineer_life_here_could_be_worse", text: "Life here could be a lot worse." }
+  { key: "#engineer_city_is_good", text: "This city has everything an architect's heart could desire!" }
+  { key: "#engineer_so_many_places_in_poor_condition", text: "There are so many places in poor condition, I can barely keep up." }
+  { key: "#engineer_city_is_amazing", text: "I hope I'm credited for the great condition of this city." }
+
+  { key: "#fireman_desease_can_start_at_any_moment", text: "I hope a plague doesn't break out. Plagues can spread like wildfire." }
+  { key: "#fireman_no_food_in_city", text: "Even when fires are burning, all I can think about is how hungry I am." }
+  { key: "#fireman_city_not_safety_workers_leaving", text: "If our enemies invade, the whole city could go up in flames." }
+  { key: "#fireman_need_workers", text: "I fear that some of these half-empty buildings could catch fire. I wish there were more workers." }
+  { key: "#fireman_gods_are_angry", text: "The gods' fiery wrath will come down on us if we don't pay more respect." }
+  { key: "#fireman_hight_fire_level", text: "I wouldn't dream of letting my reputation sink so low. Our city's bad reputation is inviting attack." }
+  { key: "#fireman_need_more_workers", text: "I've had more people volunteer for the fire department. These people need jobs." }
+  { key: "#fireman_low_entertainment", text: "Firefighting is hard work, and I'd love to cool off with a good show.  There's not enough of that here." }
+  { key: "#fireman_gods_are_pleasures", text: "I'm satisfied with this city." }
+  { key: "#fireman_city_is_amazing", text: "This city is cool." }
+  { key: "#fireman_fighting_fire", text: "I can't talk now.  I'm busy dousing this fire." }
+  { key: "#fireman_going_to_fire", text: "This fire could burn the whole city down if I don't act fast!" }
+  { key: "#fireman_fighting_fire_also", text: "Ooh, that's hot!" }    
+
+  { key: "#malaria_problem", text: "(Not used)" }
+  { key: "#malaria_not_a_problem", text: "Malaria doesn't seem to be a problem here." }
+  { key: "#malaria_outbreak_could_strike", text: "An outbreak of malaria could strike if something isn't done." } 
+
+  { key: "#policeman_desease_can_start_at_any_moment", text: "With so many people so weak and sickly, I fear for the future." }
+  { key: "#policeman_no_food_in_city", text: "I haven't eaten in so long, even I'm considering stealing food!" }
+  { key: "#policeman_city_not_safety", text: "If invaders do come, it looks like it will be up to me to defend the city." }
+  { key: "#policeman_need_workers", text: "If I didn't enjoy the danger of police work, I'd quickly take one of the many available jobs." }
+  { key: "#policeman_gods_are_angry", text: "If I were running things, I'd pay more attention to the gods." }
+  { key: "#policeman_no_army", text: "I've heard our city is an easy mark for invaders. We have a bad reputation." }
+  { key: "#policeman_much_unemployments", text: "I don't like to see this many jobless loiterers. I can't walk my beat without tripping over them!" }
+  { key: "#policeman_low_entertainment", text: "This city is dull. I can't find any good shows to see." }
+  { key: "#policeman_city_is_good", text: "This city isn't perfect, but then what city is?" }
+  { key: "#policeman_very_low_crime_level", text: "If only the Bazaar carried donuts, this city would be perfect." }
+  { key: "#policeman_low_crime_level", text: "Everybody's friendly here. No one is reporting any crimes." }
+  { key: "#policeman_usual_crime_level", text: "A few crimes here, a few crimes there, but nothing out of the ordinary." }
+  { key: "#policeman_need_more_workers", text: "Even I don't like to walk in this part of town!" }
+  { key: "#policeman_iam_too_busy_that_talk", text: "I'm really too busy to talk right now - ask me again later." }
+  { key: "#policeman_i_hope_my_work_is_need", text: "I'll do my part to make sure this city is safe!" }
+  { key: "#policeman_no_army_2", text: "Fighting invaders wasn't in my job description!" }
+  { key: "#policeman_enemies_are_coming_2", text: "These rascals aren't taking over the city on my watch!" }
+  { key: "#policeman_enemies_are_coming", text: "The enemy could soon win if I don't get some help! " }
+
+  { key: "#hunter_ostrich_hunting", text: "Ostriches are nearly invisible when they put their heads in the sand." }
+  { key: "#hunter_ostrich_back", text: "Now, those are some BIG drumsticks!" }
+  { key: "#hunter_ostrich_city_is_good", text: "This city is fantastic!" }
+  // test phrases
+  { key: "#hunter_ostrich_test_1", text: "This is a test phrase for checking TTS! Number 1." }
+  { key: "#hunter_ostrich_test_2", text: "Hello, player! This is another test phrase. Number 2." }
+  { key: "#hunter_ostrich_test_3", text: "Yet another test phrase. Number 3." }
+
+
+  { key: "#lumberjack_hunting", text: "I am off for a hard day's logging." }
+  { key: "#lumberjack_back", text: "This timber will be put to good use, I am sure." }
+
+  { key: "#musician_city_heath_too_low", text: "If health doesn't improve in this city, I'll be playing only funeral dirges." }
+  { key: "#musician_no_food_in_city", text: "I'd sing for my supper, but this city doesn't have enough food." }
+  { key: "#musician_city_not_safety_workers_leaving", text: "Maybe I could beat invaders over the head with my sistrum.  The city is not defended well." }
+  { key: "#musician_need_workers", text: "All my performances are solos.  This city doesn't have enough workers." }
+  { key: "#musician_gods_are_angry", text: "I hope my music soothes the gods. Their anger could soon rain down on us." }
+  { key: "#musician_city_is_bad_reputation", text: "Our terrible reputation could provoke an attack!" }
+  { key: "#musician_much_unemployments", text: "For the last time, I am not hiring any more roadies! So many people are looking for work." }
+  { key: "#musician_no_entertainment", text: "Even an entertainer likes to be entertained! There's not enough to do here." }
+  { key: "#musician_city_not_bad", text: "This city could be a lot worse, I suppose." }
+  { key: "#musician_city_is_good", text: "I hope we continue to make beautiful music in this city for a long time." }
+
+  { key: "#taxman_desease_can_start_at_any_moment", text: "It seems an illness is taxing the people's health. I pray a plague doesn't strike." }
+  { key: "#taxman_no_food_in_city", text: "I wish people could pay their taxes in food. I'm so hungry!" }
+  { key: "#taxman_city_have_no_army", text: "Our city doesn't seem capable of defending itself!" }
+  { key: "#taxman_need_more_tax_collectors", text: "No amount of tax money is going to make this city run smoothly. We need more workers!" }
+  { key: "#taxman_gods_are_angry", text: "We owe the gods a great debt, and I don't want to be here when they come to collect!" }
+  { key: "#taxman_city_is_bad", text: "I've heard that invasion is imminent given our standing in Egypt." }
+  { key: "#taxman_much_unemployments", text: "Many of these houses have unemployed workers! How can they be expected to pay tax?" }
+  { key: "#taxman_low_entertainment", text: "As much as I like collecting taxes, I'd still like to see some professional entertainment." }
+  { key: "#taxman_city_is_good", text: "Life isn't too bad here." }
+  { key: "#taxman_city_is_amazing", text: "I'd rather live here than anywhere else!" }
+  { key: "#taxman_need_workers", text: "This city could bring in so much more revenue if they'd just hire some more tax collectors." }
+  { key: "#taxman_high_taxes", text: "Seems like the nicer their houses, the more people grumble about paying their share." }
+  { key: "#taxman_much_pooh_houses", text: "I hate collecting taxes from these run-down houses. It's hardly worth my time." }
+
+  { key: "#worker_desease_can_start_at_any_moment", text: "So many people are sick. I hope things don't get worse." }
+  { key: "#worker_no_food_in_city", text: "I'm famished. It's hard to work on an empty stomach." }
+  { key: "#worker_enemies_in_city", text: "I hope our enemies don't know how easy it would be to invade us." }
+  { key: "#worker_need_workers", text: "Job openings are everywhere! Maybe I can get a job as a fire marshal!" }
+  { key: "#worker_gods_are_angry", text: "I hope the gods don't unleash their wrath.  " }
+  { key: "#worker_city_is_bad", text: "I hear that our city doesn't have a good reputation. We could come under attack!" }
+  { key: "#worker_much_unemployments", text: "I'll hold on to this job as tightly as I can. I know many people who are out of work." }
+  { key: "#worker_low_entertainment", text: "All I ever do is work. There's nothing else to do in this city." }
+  { key: "#worker_city_is_good", text: "I like it here, but there is always room for improvement." }
+  { key: "#worker_city_is_amazing", text: "I hope I live here forever!" }
+  { key: "#worker_unused", text: "(not used)" }
+  { key: "#worker_going_to_workplace", text: "I'm ready to work!" }
+  { key: "#worker_farm_is_flooded", text: "With the fields under water, I work now for glory everlasting." }    
+
+  { key: "#doctor_concerned_about_plague", text: "With city health so dismal, I'm a busy man. Still, plague threatens." }
+  { key: "#doctor_no_food_in_city", text: "Being hungry all the time isn't good for me." }
+  { key: "#doctor_defenses_are_weak", text: "I'd advise this city to bolster its defenses so our enemies do not do us damage." }
+  { key: "#doctor_need_more_workers", text: "I've seen many workers pushed to their limits. This city could use more employees." }
+  { key: "#doctor_gods_are_angry", text: "I don't think we're paying the gods enough respect. This is terribly risky behavior." }
+  { key: "#doctor_reputation_is_low", text: "Our base reputation invites others to attack." }
+  { key: "#doctor_unemployment_is_high", text: "Sitting idly by waiting for jobs is bad for our people's health!" }
+  { key: "#doctor_low_entertainment", text: "I've had people come in for checkups just because they've got nothing better to do!" }
+  { key: "#doctor_city_is_ok", text: "This city is good enough, I guess." }
+  { key: "#doctor_city_is_the_best", text: "I cannot imagine a healthier place to live." }
+  { key: "#doctor_plague_could_strike_us_dead", text: "Plague could strike us dead at any moment!" }
+
+  { key: "#water_desease_can_start_at_any_moment", text: "I'm afraid to go into some neighborhoods. People are sick, and I don't want to catch anything." }
+  { key: "#water_no_food_in_city", text: "I'm weak from hunger. I'm nearly collapsing under the weight of all this water." }
+  { key: "#water_city_have_no_army", text: "It seems that it will be up to the citizens to defend this city if it comes under attack." }
+  { key: "#water_need_workers", text: "Jobs, jobs everywhere, and not a worker to fill them." }
+  { key: "#water_gods_are_angry", text: "If I were a god, I wouldn't be pleased with this city's lack of attention to me." }
+  { key: "#water_city_is_bad", text: "I hear that other cities are laughing at us and are planning to invade." }
+  { key: "#water_much_unemployments", text: "I see plenty of people out of work as I make my deliveries." }
+  { key: "#water_low_entertainment", text: "Carrying water is not entertainment. I wish we had some real diversions here." }
+  { key: "#water_city_is_good", text: "I like living here, but if I were running the town I'd do some things differently." }
+  { key: "#water_city_is_amazing", text: "There is no better place upon this earth." }
+
+  { key: "#osiris_city_low_health", text: "The city is flooded with sick people. I hope a plague doesn't break out." }
+  { key: "#osiris_no_food_in_city", text: "No priest of Osiris should have to suffer from hunger!" }
+  { key: "#osiris_city_not_safety", text: "Our city is almost defenseless. I hope no one attacks." }
+  { key: "#osiris_need_workers", text: "Without workers, we may not be able to pay Osiris the respect he deserves." }
+  { key: "#osiris_gods_are_angry", text: "Osiris is not the only god made angry by neglect." }
+  { key: "#osiris_low_sentiment", text: "Our city is the laughingstock of Egypt. We are ripe for attack." }
+  { key: "#osiris_much_unemployments", text: "Unemployment is a serious problem in this city. I hope more jobs open up soon." }
+  { key: "#osiris_low_entertainment", text: "Even a priest needs more than prayers to be entertained." }
+  { key: "#osiris_city_is_good", text: "This city is adequate." }
+  { key: "#osiris_city_is_amazing", text: "Osiris is proud to be worshiped in such a fine city." }
+  { key: "#osiris_god_love_festival", text: "Festivals warm Osiris' heart." }
+  { key: "#osiris_city_low_mood", text: "Osiris could punish the city for its neglect with a low flood." }
+
+  { key: "#ra_city_low_health", text: "The people coming to the Temple don't look healthy. I hope the illness doesn't escalate." }
+  { key: "#ra_no_food_in_city", text: "I don't have enough food to feed Ra or myself!" }
+  { key: "#ra_city_not_safety", text: "I wish it were up to Ra to defend our city. I don't think this city does a good job of it." }
+  { key: "#ra_need_workers", text: "I hope this city finds more workers soon. Services could soon suffer." }
+  { key: "#ra_gods_are_angry", text: "This city would do well to pay more respect to the gods." }
+  { key: "#ra_low_sentiment", text: "Reputation is important. Without it, the city is prone to hostile take over." }
+  { key: "#ra_much_unemployments", text: "I've never heard more people ask Ra whether they'll finally land a job." }
+  { key: "#ra_low_entertainment", text: "I need more entertainment. Pleasing Ra all day isn't easy, and I need to relax." }
+  { key: "#ra_city_is_good", text: "I have no major complaints about this city." }
+  { key: "#ra_city_is_amazing", text: "The only place better than this city is the Field of Reeds." }
+  { key: "#ra_god_love_festival", text: "Ra loves to see his people during the festival." }
+  { key: "#ra_city_low_mood", text: "Our city is an embarrassment to the rest of the Kingdom." }
+
+  { key: "#ptah_city_low_health", text: "Poor health could result in plague if nothing is done about conditions in the city." }
+  { key: "#ptah_no_food_in_city", text: "The rumbling of my empty stomach distracts me from my duties to Ptah." }
+  { key: "#ptah_city_not_safety", text: "Our holey defenses will be useless if anyone chooses to attack us." }
+  { key: "#ptah_need_workers", text: "It saddens Ptah to see industries idle because of the worker shortage." }
+  { key: "#ptah_gods_are_angry", text: "The gods my inflict a just retribution if the city continues to ignore them." }
+  { key: "#seth_low_sentiment", text: "Our ill repute could encourage invaders." }
+  { key: "#ptah_much_unemployments", text: "Ptah wishes that all the unemployed in the city could find productive work." }
+  { key: "#ptah_low_entertainment", text: "I like to have a good time, just like anyone else. I wish there were more entertainers in this city." }
+  { key: "#ptah_city_is_good", text: "This city has its problems, but its a good place to live." }
+  { key: "#ptah_city_is_amazing", text: "This is the best crafted city in all of Egypt!" }
+  { key: "#ptah_god_love_festival", text: "Ptah knows that holidays make workers happier." }
+  { key: "#ptah_city_low_mood", text: "Ptah's guiding hand can do only so much. The industries in this city need more workers!" }
+
+  { key: "#seth_city_low_health", text: "A plague may wreak havoc on the city if health does not improve." }
+  { key: "#seth_no_food_in_city", text: "All day, I battle my hunger. I need more food." }
+  { key: "#seth_city_not_safety", text: "We'll have to rely on Seth to protect us in battle. The city isn't prepared to defend itself." }
+  { key: "#seth_need_workers", text: "Services are suffering because no workers can be found!" }
+  { key: "#seth_gods_are_angry", text: "This city should stop provoking the gods' anger with its inaction." }
+  { key: "#seth_low_sentiment", text: "We may soon find out how little others think of our city when they sweep in and destroy it." }
+  { key: "#seth_much_unemployments", text: "The legions of the unemployed clog the streets." }
+  { key: "#seth_low_entertainment", text: "It's hard to believe how dull it is here!" }
+  { key: "#seth_city_is_good", text: "This city is suitable enough for me." }
+  { key: "#seth_city_is_amazing", text: "This city is unrivaled in all Egypt!" }
+  { key: "#seth_god_love_festival", text: "Even Seth's warriors need the occasional festival." }
+  { key: "#seth_city_low_mood", text: "Glory is on the horizon! Enemies are fast approaching the city." }
+
+  { key: "#bast_city_low_health", text: "Bast cries to see so many sickly people. I hope the plague doesn't strike." }
+  { key: "#bast_no_food_in_city", text: "It's hard to get enough food in this city. Hunger strikes everyone." }
+  { key: "#bast_city_not_safety", text: "Our city's woeful defenses invite our foes to attack us." }
+  { key: "#bast_need_workers", text: "Our city cannot possible run well with so many job openings." }
+  { key: "#bast_gods_are_angry", text: "The gods are turning their backs on this city. We should pay them more respect." }
+  { key: "#seth_low_sentiment", text: "The city's reputation is terrible. An invasion could come at any time." }
+  { key: "#seth_much_unemployments", text: "Not even Bast can lighten the hearts of so many jobless people." }
+  { key: "#seth_low_entertainment", text: "Bast is horrified by the lack of entertainment in this city." }
+  { key: "#seth_city_is_good", text: "This city isn't a bad place to live." }
+  { key: "#seth_city_is_amazing", text: "This city is the greatest!" }
+  { key: "#seth_god_love_festival", text: "Bast loves a good festival." }
+  { key: "#seth_low_sentiment_2", text: "People in the city are deeply unhappy. They could soon turn to crime." }
+  { key: "#seth_low_entertainment_2", text: "What's a priestess to do? There is so little diversion here." }
+  { key: "#seth_city_low_mood_2", text: "Bast grants me power to heal the sick before they spread their disease." }
+
+  { key: "#antelope_hunter_hunting", text: "Antelopes are no match for us!" }
+  { key: "#antelope_hunter_back", text: "There will be steaks for everyone tonight." }
+  { key: "#antelope_hunter_city_is_good", text: "This city is good!" }
+
+  { key: "#mission2_pottery_step1", text: "Fill a Storage Yard with pottery" }
+  { key: "#mission2_pottery_step2", text: "Beautify your city, then review the Mission Briefing" }
+
+  { key: "#mission3_brew_beer", text: "Brew some beer for Bazaars to distribute" }
+
+  { key: "#market_buyer_returning_to", text: "Returning to" }
+  { key: "#market_buyer_collecting", text: "Collecting" }
+
+  { key: "#tutorial_goal_education", text: "Make a house evolve into a 'spacious apartment'" }
+  { key: "#tutorial_goal_scribal_school", text: "Make some papyrus and build a Scribal School" }
+  { key: "#tutorial_goal_import_bricks", text: "Import some bricks so that you can build a mastaba" }
+
+  { key: "#none", text: "Nothing" }
+  { key: "#grain", text: "Grain" }
+  { key: "#meat", text: "Meat" }
+  { key: "#lettuce", text: "Lettuce" }
+  { key: "#chickpeas", text: "Chickpeas" }
+  { key: "#pomegranates", text: "Pomegranates" }
+  { key: "#figs", text: "Figs" }
+  { key: "#fish", text: "Fish" }
+  { key: "#gamemeat", text: "Game meat" }
+  { key: "#straw", text: "Straw" }
+  { key: "#weapons", text: "Weapons" }
+  { key: "#clay", text: "Clay" }
+  { key: "#bricks", text: "Bricks" }
+  { key: "#pottery", text: "Pottery" }
+  { key: "#barley", text: "Barley" }
+  { key: "#beer", text: "Beer" }
+  { key: "#flax", text: "Flax" }
+  { key: "#linen", text: "Linen" }
+  { key: "#gems", text: "Gems" }
+  { key: "#luxury_goods", text: "Luxury goods" }
+  { key: "#timber", text: "Wood" }
+  { key: "#gold", text: "Gold" }
+  { key: "#reeds", text: "Reeds" }
+  { key: "#papyrus", text: "Papyrus" }
+  { key: "#stone", text: "Plain stone" }
+  { key: "#limestone", text: "Limestone" }
+  { key: "#granite", text: "Granite" }
+  { key: "#chariots", text: "Chariot" }
+  { key: "#copper", text: "Copper" }
+  { key: "#sandstone", text: "Sandstone" }
+  { key: "#oil", text: "Oil" }
+  { key: "#henna", text: "Henna" }
+  { key: "#paint", text: "Paint" }
+  { key: "#lamps", text: "Lamps" }
+  { key: "#marble", text: "Marble" }
+  { key: "#deben", text: "Deben" }
+  { key: "#troops", text: "Troops" }
+  { key: "#jewelry_luxury", text: "Jewelry (luxury goods)" }
+  { key: "#jewelry", text: "Jewelry" }
+  { key: "#wine_luxury", text: "Wine (luxury goods)" }
+  { key: "#wine", text: "Wine" }
+  { key: "#ivory_luxury", text: "Ivory (luxury goods)" }
+  { key: "#ivory", text: "Ivory" }
+  { key: "#ebony_luxury", text: "Ebony (luxury goods)" }
+  { key: "#ebony", text: "Ebony" }
+  { key: "#incense_luxury", text: "Incense (luxury goods)" }
+  { key: "#incense", text: "Incense" }
+  { key: "#olive_oil_luxury", text: "Olive oil (luxury goods)" }
+  { key: "#olive_oil", text: "Olive oil" }
+  { key: "#leopard_skins_luxury", text: "Leopard skins (luxury goods)" }
+  { key: "#leopard_skins", text: "Leopard skins" }
+  { key: "#perfume_luxury", text: "Perfume (luxury goods)" }
+  { key: "#perfume", text: "Perfume" }
+
+  { key: "#bandstand_none", text: "This house has no access to a musicians' stage" }
+  { key: "#bandstand_medium", text: "This house was recently passed by a musician. It will have musician access for a long time" }
+  { key: "#bandstand_high", text: "This house has musician access" }
+  { key: "#bandstand_low", text: "This house has not been passed by a musician for a while. It will soon lose musician access" }
+
+  { key: "#goods_are_finished", text: "My supplies sold like hot cakes! I'm going back to the Bazaar for more." }
+  { key: "#we_are_selling_goods", text: "I do my best to give the people what they want." }
+
+  { key: "#scriber_dicease_can_start", text: "People are sick. My medical papyri tell me that the illness could soon escalate to plague!" }
+  { key: "#scriber_no_food_in_city", text: "I'm famished. It's hard to lift my scrolls on an empty stomach." }
+  { key: "#scriber_defenses_are_weak", text: "Even the simplest enemy could manage to get through our defenses!" }
+  { key: "#scriber_need_more_workers", text: "Unless more workers arrive soon, the city will surely suffer." }
+  { key: "#scriber_gods_are_angry", text: "The literature is replete with stories of angry gods and their vengeance." }
+  { key: "#scriber_reputation_is_low", text: "History shows that a city like ours will pay serious consequences for its poor reputation." }
+  { key: "#scriber_much_unemployments", text: "There are a lot of umemployed in the city. At least they have plenty of time to read." }
+  { key: "#scriber_low_entertainment", text: "Sometimes my eyes like to rest on something other than hieroglyphs. I want to see a show!" }
+  { key: "#scriber_city_is_ok", text: "This city is comparable to others I've read about." }
+  { key: "#scriber_city_is_amazing", text: "This city is the best that history has ever known!" }
+
+  { key: "#dentist_concerned_about_plague", text: "People are so concerned about catching the plague that they're neglecting their teeth." }
+  { key: "#dentist_no_food_in_city", text: "I've had so little to eat lately...what a sad waste of perfect teeth." }
+  { key: "#dentist_defenses_are_weak", text: "The city's defenses are full of gaps. Our enemies could have their way with us." }
+  { key: "#dentist_need_more_workers", text: "This city's workforce is like an old man's mouth. So many holes to be filled!" }
+  { key: "#dentist_gods_are_angry", text: "I'm worried about this city's molars - I mean morals! We need to pay the gods more respect." }
+  { key: "#dentist_reputation_is_low", text: "Our reputation is rotten. We could be attacked." }
+  { key: "#dentist_much_unemployments", text: "I've never seen so many people out of work before!" }
+  { key: "#dentist_low_entertainment", text: "I'm bored! I guess I'll brush my teeth again." }
+  { key: "#dentist_city_is_ok", text: "This city is okay. Only a few cavities!" }
+  { key: "#dentist_city_is_amazing", text: "This city has the brightest smile in all of Egypt." }
+
+  { key: "#magistrate_i_hope_we_are_ready", text: "Health conditions in this city are criminal. Plague is the punishment that fits the crime." }
+  { key: "#magistrate_no_food_in_city", text: "I'm so hungry, a good meal will buy you any verdict you want." }
+  { key: "#magistrate_city_not_safety", text: "What woeful defenses! Our enemies could walk right into the city and take over." }
+  { key: "#magistrate_need_workers", text: "I've never seen so many job openings before!" }
+  { key: "#magistrate_gods_are_angry", text: "The gods will find us guilty of neglect if we don't start paying more attention to them." }
+  { key: "#magistrate_city_bad_reputation", text: "Our city is judged among the worst in the Kingdom. I dread the execution of our punishment." }
+  { key: "#magistrate_much_unemployments", text: "Unemployed people have too much time on their hands, and that's dangerous." }
+  { key: "#magistrate_no_entertainment_need", text: "This city is guilty of poor entertainment options!" }
+  { key: "#magistrate_city_not_bad", text: "This city is balanced: nothing too good, but nothing too bad." }
+  { key: "#magistrate_city_is_amazing", text: "I judge this city to be the best." }
+  { key: "#magistrate_not_used", text: "(not used)" }
+  { key: "#magistrate_need_embalmers", text: "I hope I will earn a funeral procession when the time comes." }
+  { key: "#magistrate_courthouse_in_peace", text: "All is quiet in the court. There is no crime here." }
+  { key: "#magistrate_i_have_only_minor_cases", text: "I've been trying only petty cases. Nothing too serious!" }
+  { key: "#magistrate_i_am_overwhelmed", text: "I can barely manage my caseload, yet the streets are still unsafe." }
+
+  { key: "#goto_site_of_event", text: "Go to site of event" }
+  { key: "#hold_festival_to", text: "Hold festival to" }
+  { key: "#god_osiris", text: "Osiris" }
+  { key: "#god_ra", text: "Ra" }
+  { key: "#god_ptah", text: "Ptah" }
+  { key: "#god_seth", text: "Seth" }
+  { key: "#god_bast", text: "Bast" }
+
+  { key: "#god_to_osiris", text: "Osiris" }
+  { key: "#god_to_ra", text: "Ra" }
+  { key: "#god_to_ptah", text: "Ptah" }
+  { key: "#god_to_seth", text: "Seth" }
+  { key: "#god_to_bast", text: "Bast" }
+
+  // group 153
+  { key: "#difficulty_settings", text: "Difficulty settings" }
+  { key: "#difficulty_row_difficulty", text: "Difficulty" }
+  { key: "#difficulty_row_gods", text: "Gods effects" }
+  { key: "#difficulty_right_click_to_continue", text: "Right click to continue" }
+
+  { key: "#difficulty_very_easy", text: "Very easy" }
+  { key: "#difficulty_easy", text: "Easy" }
+  { key: "#difficulty_normal", text: "Normal" }
+  { key: "#difficulty_hard", text: "Hard" }
+  { key: "#difficulty_very_hard", text: "Very hard" }
+
+  { key: "#difficulty_gods_effects_off", text: "Gods effects OFF" }
+  { key: "#difficulty_gods_effects_on", text: "Gods effects ON" }
+
+  // overlays. tooltips for buildings. group 66
+  // bazaar access (food stocks)
+  { key: "#food_stocks_not_provided", text: "This hut scavenges for its own food..." }
+  { key: "#food_stocks_none", text: "This house has no stocks of food" }
+  { key: "#food_stocks_low", text: "This house will soon eat through its limited stocks of food" }
+  { key: "#food_stocks_medium", text: "This house has food stocks to last for at least the coming month" }
+  { key: "#food_stocks_high", text: "This house has no problems in getting the food it requires to survive" }
+
+  // brewery overlay (beer stocks)
+  { key: "#beer_stocks_none", text: "This house has no stocks of beer" }
+  { key: "#beer_stocks_low", text: "This house will soon drink through its limited stocks of beer" }
+  { key: "#beer_stocks_medium", text: "This house has beer stocks to last for at least the coming month" }
+  { key: "#beer_stocks_high", text: "This house has no problems in getting the beer it requires" }
+
+  // apothecary access
+  { key: "#apothecary_access_none", text: "This house has no access to an Apothecary" }
+  { key: "#apothecary_access_high", text: "This house was recently passed by an herbalist. It will have Apothecary access for a long time" }
+  { key: "#apothecary_access_medium", text: "This house has Apothecary access" }
+  { key: "#apothecary_access_low", text: "Unless an herbalist passes it soon, this house will lose Apothecary access" }
+
+  // magistrate access
+  { key: "#magistrate_access_none", text: "This house has no access to a Courthouse" }
+  { key: "#magistrate_access_high", text: "This house was recently passed by a magistrate. It will have Courthouse access for a long time" }
+  { key: "#magistrate_access_medium", text: "This house has Courthouse access" }
+  { key: "#magistrate_access_low", text: "This house has not been passed by a magistrate for a while. It will soon lose Courthouse access" }
+
+  // booth access
+  { key: "#booth_access_none", text: "This house has no access to a juggler" }
+  { key: "#booth_access_high", text: "This house was recently passed by a juggler. It will have juggler access for a long time" }
+  { key: "#booth_access_medium", text: "This house has juggler access" }
+  { key: "#booth_access_low", text: "This house has not been passed by a juggler for a while. It will soon lose juggler access" }
+
+  // health overlay
+  { key: "#health_risk_none", text: "This building has no likelihood of disease." }
+  { key: "#health_risk_negligible", text: "This building is a negligible disease risk." }
+  { key: "#health_risk_some", text: "This building has some risk of disease." }
+  { key: "#health_risk_high", text: "This building has a risk of disease" }
+  { key: "#health_diseased", text: "This building is disease ridden." }
+
+  // malaria risk overlay
+  { key: "#malaria_risk_negligible", text: "This building is a negligible malaria risk." }
+  { key: "#malaria_risk_some", text: "This building has some risk of malaria." }
+  { key: "#malaria_risk_present", text: "This building has a risk of malaria" }
+  { key: "#malaria_risk_imminent", text: "This building will have malaria soon." }
+  { key: "#malaria_risk_critical", text: "Risk of malaria" }
+
+  // damage overlay
+  { key: "#damage_risk_perfect", text: "This building is in perfect structural condition" }
+  { key: "#damage_risk_negligible", text: "This building has a negligible risk of collapse" }
+  { key: "#damage_risk_low", text: "This building has a low risk of collapse" }
+  { key: "#damage_risk_some", text: "This building has some structural faults" }
+  { key: "#damage_risk_many", text: "This building has many structural faults and cracks" }
+  { key: "#damage_risk_critical", text: "This building is unstable, and is likely to collapse soon" }
+
+  // fire overlay
+  { key: "#fire_risk_none", text: "This building has no likelihood of catching fire" }
+  { key: "#fire_risk_negligible", text: "This building is a negligible fire risk" }
+  { key: "#fire_risk_low", text: "This building has some risk of fire" }
+  { key: "#fire_risk_some", text: "This building has a risk of fire" }
+  { key: "#fire_risk_high", text: "This building is a fire trap" }
+  { key: "#fire_risk_critical", text: "This building could catch fire at any moment!" }
+
+  // crime overlay
+  { key: "#crime_level_low", group:66, id:58 }
+  { key: "#crime_level_normal", group:66, id:59 }
+  { key: "#crime_level_high", group:66, id:60 }
+
+  // criminal overlay
+  { key: "#criminal_level_secure", group:66, id:61 }
+  { key: "#criminal_level_high", group:66, id:62 }
+  { key: "#criminal_level_worst", group:66, id:63 }
+
+  // desirability overlay
+  { key: "#desirability_level_low", group:66, id:91 }
+  { key: "#desirability_level_normal", group:66, id:92 }
+  { key: "#desirability_level_high", group:66, id:93 }
+
+  // labor access overlay
+  { key: "#labor_access_tooltip", group:66, id:57 }
+
+  // tax income overlay
+  { key: "#tax_income_not_registered", text: "This house is not registered for taxes, and so does not pay any tax" }
+  { key: "#tax_income_none_yet", text: "No tax collected from this house so far this year." }
+  { key: "#tax_income_collected", text: " deben collected so far this year." }
+
+  // entertainment overlay
+  { key: "#entertainment_access_none", text: "This dwelling has no access to any entertainment whatsoever" }
+  { key: "#entertainment_access_barely", text: "This dwelling barely has access to any entertainment" }
+  { key: "#entertainment_access_very_limited", text: "This dwelling has very limited access to entertainment venues" }
+  { key: "#entertainment_access_limited", text: "This dwelling has limited access to entertainment venues" }
+  { key: "#entertainment_access_some", text: "This dwelling has some access to entertainment venues" }
+  { key: "#entertainment_access_several", text: "This dwelling has access to several entertainment venues" }
+  { key: "#entertainment_access_reasonable", text: "This dwelling has reasonable access to entertainment venues" }
+  { key: "#entertainment_access_good", text: "This dwelling has good access to entertainment venues" }
+  { key: "#entertainment_access_very_good", text: "This dwelling has very good access to entertainment venues" }
+  { key: "#entertainment_access_excellent", text: "This dwelling has excellent access to entertainment venues" }
+  { key: "#entertainment_access_max", text: "This dwelling has access to all the entertainment it could ever desire" }
+
+  // senet house overlay
+  { key: "#senet_access_none", text: "This house has no access to a Senet House" }
+  { key: "#senet_access_high", text: "This house was recently passed by a senet master. It will have Senet House access for a long time" }
+  { key: "#senet_access_medium", text: "This house has Senet House access" }
+  { key: "#senet_access_low", text: "This house has not been passed by a senet master for a while. It will soon lose Senet House access" }
+
+  // pavilion overlay
+  { key: "#pavilion_access_none", text: "This house has no access to a dance stage" }
+  { key: "#pavilion_access_high", text: "This house was recently passed by a dancer. It will have dance stage access for a long time" }
+  { key: "#pavilion_access_medium", text: "This house has dance stage access" }
+  { key: "#pavilion_access_low", text: "This house has not been passed by a dancer for a while. It will soon lose dance access" }
+
+  // mortuary overlay
+  { key: "#mortuary_access_none", text: "This house has no access to a Mortuary" }
+  { key: "#mortuary_access_high", text: "This house was recently passed by a embalmer. It will have Mortuary access for a long time" }
+  { key: "#mortuary_access_medium", text: "This house has Mortuary access" }
+  { key: "#mortuary_access_low", text: "Unless a embalmer passes it soon, this house will lose Mortuary access" }
+
+  // dentist overlay
+  { key: "#dentist_access_none", text: "This house has no access to a Dentist's office" }
+  { key: "#dentist_access_high", text: "This house was recently passed by a dentist. It will have Dentist access for a long time" }
+  { key: "#dentist_access_medium", text: "This house has Dentist access" }
+  { key: "#dentist_access_low", text: "Unless a dentist walks by soon, this house will lose Dentist office access" }
+
+  // physician overlay
+  { key: "#physician_access_none", text: "No Physician access." }
+  { key: "#physician_access_low", text: "This house hasn't been passed by a physician in a while." }
+  { key: "#physician_access_medium", text: "This house has had a physician pass by." }
+  { key: "#physician_access_high", text: "This house has recently had a physician pass by." }
+
+  // education overlay
+  { key: "#education_access_none", text: "This house has no access to any Scribal Schools or Libraries" }
+  { key: "#education_access_school_or_library", text: "This house has access to a Scribal School or to a Library" }
+  { key: "#education_access_school_and_library", text: "This house has access to both a Scribal School and a Library" }
+  { key: "#education_access_academy_district", text: "This house has Scribal School and Library access. Its children are also in an Academy district" }
+
+  // religion overlay
+  { key: "#religion_access_none", text: "This house has no access to any Temples or Shrines" }
+  { key: "#religion_access_one", text: "This house has access to a Temple to a single god only" }
+  { key: "#religion_access_two", text: "This house has access to Temples to 2 different gods" }
+  { key: "#religion_access_three", text: "This house has access to Temples to 3 different gods" }
+  { key: "#religion_access_four", text: "This house has access to Temples to 4 different gods" }
+  { key: "#religion_access_all", text: "This house has access to Temples to all the gods" }
+  { key: "#religion_access_shrine_and_all", text: "This house has access to a Shrine, and Temples to all the gods" }
+
+  // scribal school overlay
+  { key: "#school_access_none", text: "This house has no access to a Scribal School" }
+  { key: "#school_access_high", text: "This house was recently passed by a scholar. It will have Scribal School access for a long time" }
+  { key: "#school_access_medium", text: "This house has Scribal School access" }
+  { key: "#school_access_low", text: "Unless a scholar passes by soon, this house will lose Scribal School access" }
+
+  // library overlay
+  { key: "#library_access_none", text: "This house has no access to a Library" }
+  { key: "#library_access_high", text: "This house was recently passed by a librarian. It will have Library access for a long time" }
+  { key: "#library_access_medium", text: "This house has Library access" }
+  { key: "#library_access_low", text: "Unless a librarian passes it soon, this house will lose Library access" }
+
+  // academy overlay
+  { key: "#academy_access_none", text: "This house has no access to an Academy" }
+  { key: "#academy_access_high", text: "This house was recently passed by a teacher. It will have Academy access for a long time" }
+  { key: "#academy_access_medium", text: "This house has Academy access" }
+  { key: "#academy_access_low", text: "Unless a teacher passes it soon, this house will lose Academy access" }
+
+  { key: "#top_menu_file", text: "File" }
+  { key: "#top_menu_file_tooltip", text: "Load, save, new game and exit" }
+  { key: "#top_menu_options", text: "Options" }
+  { key: "#top_menu_options_tooltip", text: "Display, sound, speed and difficulty settings" }
+  { key: "#top_menu_help", text: "Help" }
+  { key: "#top_menu_help_tooltip", text: "Get help, hints and information about the game" }
+  { key: "#top_menu_overseers", text: "Advisors" }
+  { key: "#top_menu_overseers_tooltip", text: "Consult your advisors about the state of the city" }
+
+  { key: "#sidebar_speed_header", text: "Speed" }
+  { key: "#no_requests", text: "There are no requests outstanding at the moment." }
+
+  // overlay menu categories
+  { key: "#overlay_menu_normal", text: "Normal" }
+  { key: "#overlay_menu_risks", text: "Risks" }
+  { key: "#overlay_menu_water", text: "Water" }
+  { key: "#overlay_menu_entertainment", text: "Entertainment" }
+  { key: "#overlay_menu_religion", text: "Religion" }
+  { key: "#overlay_menu_education", text: "Education" }
+  { key: "#overlay_menu_health", text: "Health" }
+  { key: "#overlay_menu_administration", text: "Administration" }
+  { key: "#overlay_menu_food", text: "Food" }
+  { key: "#overlay_menu_other", text: "Other" }
+
+  { key: "#overlay_fire", text: "Fire" }
+  { key: "#overlay_damage", text: "Damage" }
+  { key: "#overlay_crime", text: "Crime" }
+  { key: "#overlay_entertainment", text: "Entertainment" }
+  { key: "#overlay_booth", text: "Booth" }
+  { key: "#overlay_bandstand", text: "Bandstand" }
+  { key: "#overlay_pavilion", text: "Pavilion" }
+  { key: "#overlay_senet_house", text: "Senet house" }
+  { key: "#overlay_education", text: "Education" }
+  { key: "#overlay_scribal_school", text: "Scribal school" }
+  { key: "#overlay_library", text: "Library" }
+  { key: "#overlay_academy", text: "Academy" }
+  { key: "#overlay_apothecary", text: "Apothecary" }
+  { key: "#overlay_dentist", text: "Dentist" }
+  { key: "#overlay_physician", text: "Physician" }
+  { key: "#overlay_mortuary", text: "Mortuary" }
+  { key: "#overlay_tax_income", text: "Tax income" }
+  { key: "#overlay_bazaar_access", text: "Bazaar access" }
+  { key: "#overlay_desirability", text: "Desirability" }
+  { key: "#overlay_fertility", text: "Fertility" }
+  { key: "#overlay_magistrate", text: "Magistrate" }
+  { key: "#overlay_food_stocks", text: "Food stocks" }
+  { key: "#overlay_labor", text: "Labor" }
+  { key: "#overlay_labor_access", text: "Labor access" }
+  { key: "#overlay_native", text: "Native" }
+  { key: "#overlay_problems", text: "Problems" }
+  { key: "#overlay_routing", text: "Routing" }
+  { key: "#overlay_malaria_risk", text: "Malaria risk" }
+  { key: "#overlay_health", text: "Health" }
+  { key: "#overlay_criminal", text: "Criminal" }
+  { key: "#overlay_osiris", text: "Osiris" }
+  { key: "#overlay_ra", text: "Ra" }
+  { key: "#overlay_ptah", text: "Ptah" }
+  { key: "#overlay_seth", text: "Seth" }
+  { key: "#overlay_bast", text: "Bast" }
+  { key: "#TR_PALACE_TOOLTIP_UNEMPLOYMENT", text: "Unemployment" }
+  { key: "#TR_PALACE_TOOLTIP_CULTURE_RATING", text: "Culture rating" }
+  { key: "#TR_PALACE_TOOLTIP_PROSPERITY_RATING", text: "Prosperity rating" }
+  { key: "#TR_PALACE_TOOLTIP_MONUMENT_RATING", text: "Monument rating" }
+  { key: "#TR_PALACE_TOOLTIP_KINGDOM_RATING", text: "Kingdom rating" }
+]
