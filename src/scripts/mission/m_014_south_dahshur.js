@@ -47,7 +47,7 @@ mission14 { // South Dahshur — Snofru's Bent Pyramid
 				BUILDING_GRAIN_FARM, BUILDING_FIGS_FARM,
 				BUILDING_STONE_QUARRY, BUILDING_LIMESTONE_QUARRY, BUILDING_CLAY_PIT,
 				BUILDING_FERRY,
-				BUILDING_SMALL_STEPPED_PYRAMID, BUILDING_MEDIUM_STEPPED_PYRAMID,
+				BUILDING_SMALL_BENT_PYRAMID, BUILDING_MEDIUM_BENT_PYRAMID,
 				BUILDING_SMALL_MASTABA, BUILDING_MEDIUM_MASTABA,
 				BUILDING_LIBRARY,
 				BUILDING_FESTIVAL_SQUARE, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL, BUILDING_BANDSTAND, BUILDING_CONSERVATORY, BUILDING_PAVILLION, BUILDING_DANCE_SCHOOL,
@@ -57,17 +57,15 @@ mission14 { // South Dahshur — Snofru's Bent Pyramid
 	// Goals from the Pharaoh Heaven walkthrough (original .pak values NOT yet verified):
 	// pop 3500, culture 0 (disabled), prosperity 25, monument 21 (1 medium bent pyramid),
 	// kingdom 50.
-	// The bent pyramid (BUILDING_MEDIUM_BENT_PYRAMID = 242) is not implemented yet (task C4).
-	// A medium stepped pyramid (weight 16) stands in: 2.25*16+4.5 = 40 (additive rating,
-	// see city/monuments.js), so the temporary monument goal is 40 (needs the medium
-	// stepped pyramid finished; a small stepped alone only reaches 22).
-	// TODO(C4/F3): restore goal 21 and swap BUILDING_MEDIUM_STEPPED_PYRAMID for
-	// BUILDING_MEDIUM_BENT_PYRAMID once bent pyramids and calibrated weights land.
+	// Bent pyramids are now implemented (task C4). A finished BUILDING_MEDIUM_BENT_PYRAMID
+	// (weight 8) gives 2.25*8+4.5 = 22 (additive rating, see city/monuments.js), which
+	// satisfies the original goal of 21. Weights are still placeholders — F3 will
+	// recalibrate the per-type monument point table against the original .pak.
 	win_criteria {
 		population {enabled : true, goal : 3500 }
 		culture    {enabled : false }
 		prosperity {enabled : true, goal : 25 }
-		monuments  {enabled : true, goal : 40 }
+		monuments  {enabled : true, goal : 21 }
 		kingdom    {enabled : true, goal : 50 }
 	}
 
@@ -117,7 +115,7 @@ mission14 { // South Dahshur — Snofru's Bent Pyramid
 [es=event_mission_start, mission=mission14]
 function mission14_on_start(ev) {
 	__image_request_pak(PACK_MASTABA)
-	__image_request_pak(PACK_STEPPED_PYRAMID)
+	__image_request_pak(PACK_BENT_PYRAMID)
 	mission_show_start_message(mission, "message_mission_south_dahshur")
 	city.set_empire_available(1)
 	for (var i = ADVISOR_NONE + 1; i <= ADVISOR_DIPLOMACY; i++) {

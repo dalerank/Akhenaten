@@ -14,6 +14,11 @@ MONUMENT_WEIGHTS[BUILDING_LARGE_MASTABA]                  = 3
 // Stepped pyramids: heavier than mastaba (2), lighter than true pyramid complex (44).
 MONUMENT_WEIGHTS[BUILDING_SMALL_STEPPED_PYRAMID]           = 8
 MONUMENT_WEIGHTS[BUILDING_MEDIUM_STEPPED_PYRAMID]         = 16
+// Bent pyramids (placeholder weights, like the others — recalibrate in F3).
+// A finished medium bent gives 2.25*8+4.5 = 22, which satisfies mission 14's
+// original monument goal of 21 (Snofru's bent pyramid at South Dahshur).
+MONUMENT_WEIGHTS[BUILDING_SMALL_BENT_PYRAMID]             = 4
+MONUMENT_WEIGHTS[BUILDING_MEDIUM_BENT_PYRAMID]            = 8
 MONUMENT_WEIGHTS[BUILDING_SPHINX]                         = 1
 MONUMENT_WEIGHTS[BUILDING_MAUSOLEUM]                      = 3
 MONUMENT_WEIGHTS[BUILDING_ALEXANDRIA_LIBRARY]             = 2

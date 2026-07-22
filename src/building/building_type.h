@@ -295,6 +295,15 @@ enum e_building_type : uint16_t {
 	BUILDING_MEDIUM_STEPPED_PYRAMID_CONE = 327,
 	BUILDING_RESERVED_327 = 327,
 
+	// Bent pyramid part runtime-ids (main types are 241/242 above). Appended before
+	// BUILDING_MAX to keep savegame compatibility (existing values are not renumbered).
+	BUILDING_SMALL_BENT_PYRAMID_CORNER = 328,
+	BUILDING_SMALL_BENT_PYRAMID_WALL = 329,
+	BUILDING_SMALL_BENT_PYRAMID_CONE = 330,
+	BUILDING_MEDIUM_BENT_PYRAMID_CORNER = 331,
+	BUILDING_MEDIUM_BENT_PYRAMID_WALL = 332,
+	BUILDING_MEDIUM_BENT_PYRAMID_CONE = 333,
+
 	BUILDING_MAX,
 };
 extern const token_holder<e_building_type, BUILDING_NONE, BUILDING_MAX> e_building_type_tokens;

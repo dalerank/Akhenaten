@@ -606,6 +606,7 @@ tile2i building::access_tile() {
     case BUILDING_SMALL_MASTABA_WALL:
     case BUILDING_SMALL_MASTABA_SIDE:
     case BUILDING_SMALL_STEPPED_PYRAMID:
+    case BUILDING_SMALL_BENT_PYRAMID:
         return main()->tile.shifted(0, 10);
 
     case BUILDING_MEDIUM_MASTABA:
