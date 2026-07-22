@@ -23,6 +23,7 @@ struct city_animals_t : public game_system {
     bool breeding_ground_at(tile2i tile, int size);
     bool get_free_tile(int x, int y, int allow_negative_desirability, tile2i &outtile);
     bool get_roaming_destination(int formation_id, int allow_negative_desirability, tile2i tile, int distance, int direction, tile2i &outtile);
+    bool is_herd_spawn_accessible(tile2i tile, e_figure_type herd_type);
 
     void add_animals_point(int index, int x, int y, e_figure_type ftype, int num_animals);
     void set_animals_area(int index, int reseach_radius);

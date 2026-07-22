@@ -1,6 +1,7 @@
 #include "city_animals.h"
 
 #include "city/city.h"
+#include "core/log.h"
 #include "core/random.h"
 #include "figuretype/figure_animal.h"
 #include "figuretype/animal_hyena.h"
@@ -8,6 +9,9 @@
 #include "grid/terrain.h"
 #include "grid/soldier_strength.h"
 #include "grid/hyena_strength.h"
+#include "grid/grid.h"
+#include "grid/routing/routing.h"
+#include "grid/routing/routing_terrain.h"
 #include "city/city_figures.h"
 #include "game/game_config.h"
 #include "figure/figure.h"
@@ -16,9 +20,75 @@
 
 declare_console_var_bool(allow_span_ostrich, true)
 
+namespace {
+
+int herd_impassable_mask(e_figure_type herd_type) {
+    switch (herd_type) {
+    case FIGURE_OSTRICH:
+        return TERRAIN_IMPASSABLE_OSTRICH;
+    case FIGURE_ANTELOPE:
+        return TERRAIN_IMPASSABLE_ANTELOPE;
+    case FIGURE_CROCODILE:
+    case FIGURE_HIPPO:
+        return TERRAIN_IMPASSABLE_HIPPO;
+    default:
+        return TERRAIN_IMPASSABLE_HYENA;
+    }
+}
+
+bool herd_can_travel_to(tile2i src, tile2i dst, e_figure_type herd_type) {
+    switch (herd_type) {
+    case FIGURE_CROCODILE:
+    case FIGURE_HIPPO:
+        return map_routing_amphibia_can_travel_over_land_water(src, dst, -1, 2000);
+    default:
+        return map_routing_noncitizen_can_travel_over_land(src, dst, -1, 2000);
+    }
+}
+
+} // namespace
+
+bool city_animals_t::is_herd_spawn_accessible(tile2i tile, e_figure_type herd_type) {
+    if (!tile.valid()) {
+        return false;
+    }
+
+    const int mask = herd_impassable_mask(herd_type);
+    if (map_terrain_is(tile, mask)) {
+        return false;
+    }
+
+    static const int dx[8] = {0, 1, 1, 1, 0, -1, -1, -1};
+    static const int dy[8] = {-1, -1, 0, 1, 1, 1, 0, -1};
+    static const int distances[] = {8, 12, 16};
+
+    for (const int dist : distances) {
+        for (int d = 0; d < 8; d++) {
+            tile2i dest = tile.shifted(dx[d] * dist, dy[d] * dist);
+            if (!dest.valid() || !map_grid_is_inside(dest, 1)) {
+                continue;
+            }
+            if (map_terrain_is(dest, mask)) {
+                continue;
+            }
+            if (herd_can_travel_to(tile, dest, herd_type)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 formation* city_animals_t::create_herd(tile2i tile, e_figure_type herd_type, int num_animals) {
+    if (!is_herd_spawn_accessible(tile, herd_type)) {
+        logs::warn("animals: herd spawn at (%d,%d) type=%d has no accessible exit - skipping",
+                   tile.x(), tile.y(), (int)herd_type);
+        return nullptr;
+    }
+
     formation* formation = formation_create_herd(herd_type, tile, num_animals);
-    if (formation->id > 0) {
+    if (formation && formation->id > 0) {
         for (int fig = 0; fig < num_animals; fig++) {
             random_generate_next();
 
@@ -38,6 +108,8 @@ formation* city_animals_t::create_herd(tile2i tile, e_figure_type herd_type, int
 }
 
 void city_animals_t::create_herds() {
+    map_routing_update_land();
+
     scenario_map_foreach_herd_point([this] (tile2i p) {
         e_figure_type herd_type;
         int num_animals;
@@ -170,7 +242,7 @@ void city_animals_t::add_animals_point(int index, int x, int y, e_figure_type ft
     g_scenario.herd_points_animals[index] = tile2i{ x, y };
     g_scenario.herd_type_animals[index] = ftype;
     formation* m = create_herd(tile2i{ x, y }, ftype, num);
-    if (m->id > 0) {
+    if (m && m->id > 0) {
         m->herd_point = index;
     }
 }
