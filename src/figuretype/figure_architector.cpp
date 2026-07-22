@@ -1,19 +1,111 @@
 #include "figure_architector.h"
 
-#include "core/profiler.h"
-#include "core/log.h"
+#include "building/building.h"
 #include "city/city.h"
+#include "city/city_buildings.h"
+#include "core/calc.h"
+#include "core/log.h"
+#include "core/profiler.h"
 #include "figure/service.h"
-#include "js/js_game.h"
-#include "grid/grid.h"
+#include "game/game_config.h"
 #include "grid/building.h"
+#include "grid/grid.h"
+#include "grid/road_access.h"
+#include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_architector);
 
 const figure_architector_action_tokens_t ANK_CONFIG_ENUM(figure_architector_action_tokens)
 
+namespace {
+constexpr int ARCHITECT_DAMAGE_CLAIM_SLOT = 3;
+constexpr int ARCHITECT_DAMAGE_SEEK_COOLDOWN = 20;
+constexpr int ARCHITECT_DAMAGE_THRESHOLD = 50;
+}
+
+building_id figure_architector::find_most_damaged_building() {
+    building *home_building = home();
+    if (!home_building || !home_building->is_valid()) {
+        return 0;
+    }
+
+    int best_risk = ARCHITECT_DAMAGE_THRESHOLD;
+    int best_dist = 10000;
+    building *best = nullptr;
+    const tile2i from = tile();
+
+    buildings_valid_do([&] (building &cand) {
+        building &b = *cand.main();
+        if (b.id != cand.id) {
+            return;
+        }
+
+        if (b.damage_proof || b.collapse_risk <= ARCHITECT_DAMAGE_THRESHOLD) {
+            return;
+        }
+
+        if (!map_has_road_access(b.tile, b.size)) {
+            return;
+        }
+
+        if (b.distance_from_entry <= 0 || b.road_network_id != home_building->road_network_id) {
+            return;
+        }
+
+        if (b.has_figure(ARCHITECT_DAMAGE_CLAIM_SLOT)) {
+            figure *claimer = b.get_figure(ARCHITECT_DAMAGE_CLAIM_SLOT);
+            if (claimer && claimer->is_valid() && claimer->type == FIGURE_ARCHITECT && claimer->id != id()) {
+                return;
+            }
+        }
+
+        const int dist = calc_maximum_distance(from, b.tile);
+        if (b.collapse_risk > best_risk || (b.collapse_risk == best_risk && dist < best_dist)) {
+            best_risk = b.collapse_risk;
+            best_dist = dist;
+            best = &b;
+        }
+    });
+
+    return best ? best->id : 0;
+}
+
+bool figure_architector::seek_damaged_building() {
+    switch (action_state()) {
+    case ACTION_3_ENGINEER_ROAMING:
+    case ACTION_4_ENGINEER_RETURNING:
+        break;
+    default:
+        return false;
+    }
+
+    base.wait_ticks_missile++;
+    if (base.wait_ticks_missile < ARCHITECT_DAMAGE_SEEK_COOLDOWN) {
+        return false;
+    }
+
+    building_id bid = find_most_damaged_building();
+    if (!bid) {
+        return false;
+    }
+
+    building *target = building_get(bid);
+    base.wait_ticks_missile = 0;
+    advance_action(ACTION_5_ENGINEER_GOING_TO_DAMAGE);
+    base.set_destination(bid);
+    route_remove();
+    if (!target->has_figure(ARCHITECT_DAMAGE_CLAIM_SLOT)) {
+        target->set_figure(ARCHITECT_DAMAGE_CLAIM_SLOT, base.id);
+    }
+    return true;
+}
+
 void figure_architector::figure_action() {
     OZZY_PROFILER_FUNCTION();
+
+    if (!!game_features::gameplay_change_architect_patrol_most_damaged) {
+        seek_damaged_building();
+    }
 
     switch (action_state()) {
     default:
@@ -39,12 +131,37 @@ void figure_architector::figure_action() {
     case ACTION_4_ENGINEER_RETURNING:
         do_returnhome(TERRAIN_USAGE_ROADS, ACTION_2_ENGINEER_ENTERING_EXITING);
         break;
+
+    case ACTION_5_ENGINEER_GOING_TO_DAMAGE: {
+        building *dest = destination();
+        auto clear_claim = [&] {
+            if (dest && dest->has_figure(ARCHITECT_DAMAGE_CLAIM_SLOT, id())) {
+                dest->set_figure(ARCHITECT_DAMAGE_CLAIM_SLOT, 0);
+            }
+        };
+
+        if (!dest || !dest->is_valid() || dest->damage_proof || dest->collapse_risk <= ARCHITECT_DAMAGE_THRESHOLD) {
+            clear_claim();
+            advance_action(ACTION_4_ENGINEER_RETURNING);
+            break;
+        }
+
+        const bool arrived = do_gotobuilding(dest, true, TERRAIN_USAGE_ROADS, ACTION_4_ENGINEER_RETURNING, ACTION_4_ENGINEER_RETURNING);
+        if (arrived || action_state() != ACTION_5_ENGINEER_GOING_TO_DAMAGE) {
+            clear_claim();
+        }
+        break;
+    }
     }
 }
 
 void figure_architector::figure_before_action() {
     building* b = home();
     if (!b->is_valid() || !b->has_figure(0, id())) {
+        building *dest = destination();
+        if (dest && dest->has_figure(ARCHITECT_DAMAGE_CLAIM_SLOT, id())) {
+            dest->set_figure(ARCHITECT_DAMAGE_CLAIM_SLOT, 0);
+        }
         poof();
     }
 }

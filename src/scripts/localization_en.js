@@ -81,6 +81,7 @@ localization_en = [
   {key:"#TR_CONFIG_SOIL_DEPLETION", text:"Soil depletion"}
   {key:"#TR_CONFIG_MULTIPLE_GATHERERS", text:"Multiple gatherers"}
   {key:"#TR_CONFIG_FIREMAN_RETURNING", text:"Fireman returning after fight fire"}
+  {key:"#TR_CONFIG_ARCHITECT_PATROL_MOST_DAMAGED", text:"Architects path to most damaged buildings"}
   {key:"#TR_CONFIG_CART_SPEED_DEPENDS_QUANTITY", text:"Cart speed depends from quantity resource"}
   {key:"#TR_CONFIG_CH_CITIZEN_ROAD_OFFSET", text:"Use different offsets for citizens in road"}
   {key:"#TR_CONFIG_CH_WORK_CAMP_ONE_WORKER_PER_MONTH", text:"Work camp spawn one worker per month"}

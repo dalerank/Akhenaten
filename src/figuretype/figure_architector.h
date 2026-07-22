@@ -8,6 +8,7 @@ enum e_architector_action {
     ACTION_2_ENGINEER_ENTERING_EXITING = 2,
     ACTION_3_ENGINEER_ROAMING = 3,
     ACTION_4_ENGINEER_RETURNING = 4,
+    ACTION_5_ENGINEER_GOING_TO_DAMAGE = 5,
 
     ACTION_64_ENGINEER_MAX
 };
@@ -32,6 +33,9 @@ public:
     virtual e_overlay get_overlay() const override { return OVERLAY_DAMAGE; }
     virtual void on_action_changed(int saved_action) override;
     virtual figure_sound_t get_sound_reaction(xstring key) const override;
+
+    bool seek_damaged_building();
+    building_id find_most_damaged_building();
 };
 ANK_CONFIG_STRUCT(figure_architector::static_params,
     max_service_buildings, effect_radius, risk_reduction_strength)

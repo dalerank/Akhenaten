@@ -74,6 +74,7 @@ namespace game_features {
     game_feature gameplay_change_soil_depletion{ "gameplay_change_soil_depletion", "#TR_CONFIG_SOIL_DEPLETION", true };
     game_feature gameplay_change_multiple_gatherers{ "gameplay_change_multiple_gatherers", "#TR_CONFIG_MULTIPLE_GATHERERS", false };
     game_feature gameplay_change_fireman_returning{ "gameplay_change_fireman_returning", "#TR_CONFIG_FIREMAN_RETURNING", true };
+    game_feature gameplay_change_architect_patrol_most_damaged{ "gameplay_change_architect_patrol_most_damaged", "#TR_CONFIG_ARCHITECT_PATROL_MOST_DAMAGED", false };
     game_feature gameui_draw_fps{ "gameui_draw_fps", "#TR_CONFIG_DRAW_FPS", true };
     game_feature gameplay_change_cart_speed_depends_quntity{ "gameplay_change_cart_speed_depends_quntity", "#TR_CONFIG_CART_SPEED_DEPENDS_QUANTITY", true };
     game_feature gameplay_change_citizen_road_offset{ "gameplay_change_citizen_road_offset", "#TR_CONFIG_CH_CITIZEN_ROAD_OFFSET", true };
