@@ -26,8 +26,49 @@ function hotkey_config_rows_ui(count) {
     return rows
 }
 
+function hotkey_config_keys_match(key1, mod1, key2, mod2) {
+    return !!key1 && key1 === key2 && (mod1 | 0) === (mod2 | 0)
+}
+
+function hotkey_config_action_label(action) {
+    var widgets = window_hotkey_config.widgets
+    for (var i = 0; i < widgets.length; i++) {
+        if (widgets[i].action === +action)
+            return __loc(widgets[i].text)
+    }
+    return ""
+}
+
+function hotkey_config_find_conflict(action, is_alt, key, modifiers) {
+    if (!key)
+        return null
+
+    var mappings = window_hotkey_config.mappings
+    for (var other_action in mappings) {
+        var m = mappings[other_action]
+        var same_action = (+other_action === +action)
+
+        if (hotkey_config_keys_match(key, modifiers, m.key, m.modifiers)) {
+            if (!(same_action && !is_alt))
+                return +other_action
+        }
+        if (hotkey_config_keys_match(key, modifiers, m.alt_key, m.alt_modifiers)) {
+            if (!(same_action && is_alt))
+                return +other_action
+        }
+    }
+    return null
+}
+
 [es=event_hotkey_editor_result]
 function hotkey_config_on_editor_result(ev) {
+    var conflict_action = hotkey_config_find_conflict(ev.action, ev.is_alt, ev.key, ev.modifiers)
+    if (conflict_action !== null) {
+        var name = hotkey_config_action_label(conflict_action)
+        ui.show_ok(_format(__loc("#TR_HOTKEY_DUPLICATE_MESSAGE"), name), __loc("#TR_HOTKEY_DUPLICATE_TITLE"))
+        return
+    }
+
     var m = window_hotkey_config.mappings[ev.action]
     if (!m)
         m = window_hotkey_config.mappings[ev.action] = {}

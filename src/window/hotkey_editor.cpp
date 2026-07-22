@@ -77,11 +77,18 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 static void button_close(int ok, int param2) {
-    if (ok) {
-        data.callback(data.action, data.index, data.key, data.modifiers);
-    }
+    const int action = data.action;
+    const int index = data.index;
+    const e_key key = data.key;
+    const e_key_mode modifiers = data.modifiers;
+    auto callback = data.callback;
 
+    // Close editor before the callback so a conflict popup can open on top.
     window_go_back();
+
+    if (ok && callback) {
+        callback(action, index, key, modifiers);
+    }
 }
 
 void window_hotkey_editor_key_pressed(int key, int modifiers) {

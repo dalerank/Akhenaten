@@ -25,6 +25,9 @@
 #include "widget/widget_city.h"
 #include "window/window_advisors.h"
 #include "window/file_dialog.h"
+#include "config/hotkeys.h"
+#include "core/bstring.h"
+#include "input/keys.h"
 #include "input/scroll.h"
 
 window_city g_window_city;
@@ -77,7 +80,24 @@ void window_city_draw_paused_and_time_left() {
     if (game.paused) {
         vec2i offset{center_in_city(448), 40};
         outer_panel_draw(offset, 28, 3);
-        lang_text_draw_centered(13, 2, offset.x, 58, 448, FONT_NORMAL_BLACK_ON_LIGHT);
+
+        const hotkey_mapping *mapping = game_hotkeys::hotkey_for_action(HOTKEY_TOGGLE_PAUSE);
+        pcstr key_name = "";
+        if (mapping) {
+            e_key key = mapping->state.key;
+            e_key_mode modifiers = mapping->state.modifiers;
+            if (key == KEY_NONE) {
+                key = mapping->alt.key;
+                modifiers = mapping->alt.modifiers;
+            }
+            if (key != KEY_NONE) {
+                key_name = (pcstr)key_combination_display_name(key, modifiers);
+            }
+        }
+
+        bstring256 paused_text;
+        paused_text.printf(lang_text_from_key("#TR_GAME_PAUSED"), key_name);
+        lang_text_draw_centered(paused_text.c_str(), offset.x, 58, 448, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 }
 
