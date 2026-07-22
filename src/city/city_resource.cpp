@@ -304,7 +304,7 @@ void city_resource_determine_available() {
             }
         }
 
-        const e_resource raw = get_raw_resource(r.type); 
+        const e_resource raw = get_raw_resource(r.type);
         if (raw != r.type) {
             if (g_city.can_produce_resource(raw) || g_empire.can_import_resource(raw, false)) {
                 g_available_data.resources[r.type] = 1;

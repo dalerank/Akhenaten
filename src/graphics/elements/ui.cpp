@@ -862,7 +862,8 @@ void ui::draw_cursor_block(vec2i screen_pos, int width) {
 void ui::icon(vec2i pos, e_resource res, UiFlags flags) {
     const vec2i offset = g_state.offset();
     const int image_id = image_id_resource_icon(res);
-    push(cmd_t::image, Pos{offset + pos}, ImageId{image_id});
+    const ImgFlag_ img_flags = !!(flags & UiFlags_Grayscale) ? ImgFlag_Grayscale : ImgFlag_None;
+    push(cmd_t::image, Pos{offset + pos}, ImageId{image_id}, Mask{COLOR_WHITE}, Scale{1.0f}, ImgFlagsTag{img_flags});
     if (!!(flags & UiFlags_Outline)) {
         const image_t* img = image_get(image_id);
         ui::draw_rect(pos - vec2i{1, 1}, vec2i{img->width, img->height} + vec2i{2, 2}, COLOR_BLACK);
