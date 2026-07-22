@@ -381,6 +381,14 @@ void game_imgui_overlay_init() {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
 
+    // The game manages the mouse cursor itself via SDL_SetCursor (see platform/cursor.cpp,
+    // called every frame from input_cursor_update). The ImGui SDL2 backend also sets the SDL
+    // cursor every frame inside ImGui_ImplSDL2_NewFrame(). On Wayland these two fight each other
+    // and the cursor flickers between the in-game and system cursor several times per second
+    // (see https://github.com/dalerank/Akhenaten/issues/182). Tell ImGui to never touch the
+    // cursor so the game stays the sole owner of it.
+    ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
+
     ImGui_ImplSDL2_InitForSDLRenderer(g_render.window(), g_render.renderer());
     ImGui_ImplSDLRenderer2_Init(g_render.renderer());
 
