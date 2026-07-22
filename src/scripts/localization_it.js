@@ -106,6 +106,9 @@ localization_it = [
 
      { key: "#overlay_fire", text: "Fuoco" }
      { key: "#overlay_damage", text: "Danni" }
+     { key: "#overlay_architect_reach", text: "Portata architetto" }
+     { key: "#overlay_architect_reach_hint", text: "Clicca un ufficio architetto" }
+     { key: "#overlay_architect_reach_tile", text: "Nella zona di pattuglia" }
      { key: "#overlay_crime", text: "Criminalità" }
      { key: "#overlay_entertainment", text: "Intrattenimento" }
      { key: "#overlay_booth", text: "Giullare" }

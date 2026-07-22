@@ -81,6 +81,7 @@ localization_ru_f = [
     { key:"#TR_HOTKEY_INCREASE_GAME_SPEED", text:"Увеличить скорость игры"}
     { key:"#TR_HOTKEY_DECREASE_GAME_SPEED", text:"Уменьшить скорость игры"}
     { key:"#TR_HOTKEY_TOGGLE_PAUSE", text:"Пауза"}
+    { key:"#TR_GAME_PAUSED", text:"Пayзa в игpe (клaвишeй '%s' пpoдoлжить)"}
     { key:"#TR_HOTKEY_CYCLE_LEGION", text:"Следующий легион"}
     { key:"#TR_HOTKEY_ROTATE_MAP_LEFT", text:"Повернуть карту влево"}
     { key:"#TR_HOTKEY_ROTATE_MAP_RIGHT", text:"Повернуть карту вправо"}
@@ -112,6 +113,8 @@ localization_ru_f = [
     { key:"#TR_HOTKEY_SET_BOOKMARK_4", text:"Назначить закладку 4"}
     { key:"#TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO", text:"Информация боя"}
     { key:"#TR_HOTKEY_EDIT_TITLE", text:"Нажмите клавишу"}
+    { key:"#TR_HOTKEY_DUPLICATE_TITLE", text:"Клавиша уже используется"}
+    { key:"#TR_HOTKEY_DUPLICATE_MESSAGE", text:"Эта клавиша уже назначена на «{0}»."}
     { key:"#TR_BUILDING_ROADBLOCK", text:"Дорожный блок"}
     { key:"#TR_BUILDING_ROADBLOCK_DESC", text:"Блокирует проход бесцельно бродящим ходокам"}
     { key:"#ui_gift_to_kingdome_window_title", text:"Дaть людям Eгиптa"}
@@ -616,6 +619,9 @@ localization_ru_f = [
 
     { key: "#overlay_fire", text: "Пожар" }
     { key: "#overlay_damage", text: "Повреждения" }
+    { key: "#overlay_architect_reach", text: "Досягаемость архитектора" }
+    { key: "#overlay_architect_reach_hint", text: "Кликните по посту архитектора" }
+    { key: "#overlay_architect_reach_tile", text: "В зоне патруля архитектора" }
     { key: "#overlay_crime", text: "Преступность" }
     { key: "#overlay_entertainment", text: "Развлечения" }
     { key: "#overlay_booth", text: "Жонглёр" }

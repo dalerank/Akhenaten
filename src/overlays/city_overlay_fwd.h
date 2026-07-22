@@ -63,6 +63,7 @@ enum e_overlay : uint8_t {
     OVERLAY_ENEMIES = 43,
     OVERLAY_CRIMINAL = 44,
     OVERLAY_MALARIA_RISK = 45,
+    OVERLAY_ARCHITECT_REACH = 46,
 
     OVERLAY_SIZE
 };

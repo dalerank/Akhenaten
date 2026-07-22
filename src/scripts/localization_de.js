@@ -134,6 +134,7 @@ localization_de = [
   {key:"#TR_HOTKEY_INCREASE_GAME_SPEED", text:"Spielgeschwindigkeit erhöhen"}
   {key:"#TR_HOTKEY_DECREASE_GAME_SPEED", text:"Spielgeschwindigkeit verringern"}
   {key:"#TR_HOTKEY_TOGGLE_PAUSE", text:"Pause umschalten"}
+  {key:"#TR_GAME_PAUSED", text:"Spiel pausiert ('%s'-Taste zum Fortfahren)"}
   {key:"#TR_HOTKEY_CYCLE_LEGION", text:"Durch Legionen wechseln"}
   {key:"#TR_HOTKEY_ROTATE_MAP_LEFT", text:"Karte nach links drehen"}
   {key:"#TR_HOTKEY_ROTATE_MAP_RIGHT", text:"Karte nach rechts drehen"}
@@ -167,6 +168,8 @@ localization_de = [
   {key:"#TR_HOTKEY_SET_BOOKMARK_4", text:"Lesezeichen 4 setzen"}
   {key:"#TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO", text:"Kampfinfo umschalten"}
   {key:"#TR_HOTKEY_EDIT_TITLE", text:"Neues Tastenkürzel drücken"}
+  {key:"#TR_HOTKEY_DUPLICATE_TITLE", text:"Tastenkürzel bereits vergeben"}
+  {key:"#TR_HOTKEY_DUPLICATE_MESSAGE", text:"Diese Taste ist bereits für '{0}' vergeben."}
   {key:"#TR_BUILDING_ROADBLOCK", text:"Straßensperre"}
   {key:"#TR_BUILDING_ROADBLOCK_DESC", text:"Straßensperre stoppt herumlungernde Bürger."}
   {key:"#TR_HEADER_HOUSING", text:"Wohnraum"}
@@ -1352,6 +1355,9 @@ localization_de = [
 
   { key: "#overlay_fire", text: "Feuer" }
   { key: "#overlay_damage", text: "Schaden" }
+  { key: "#overlay_architect_reach", text: "Architekt-Reichweite" }
+  { key: "#overlay_architect_reach_hint", text: "Architekturbüro anklicken" }
+  { key: "#overlay_architect_reach_tile", text: "In der Architekten-Patrouille" }
   { key: "#overlay_crime", text: "Verbrechen" }
   { key: "#overlay_entertainment", text: "Unterhaltung" }
   { key: "#overlay_booth", text: "Gaukler" }

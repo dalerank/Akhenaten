@@ -29,6 +29,7 @@ import overlays.desirability
 import overlays.fertility
 import overlays.labor_access
 import overlays.food_stocks
+import overlays.architect_reach
 
 overlays = [
   {
@@ -100,6 +101,15 @@ overlays = [
     walkers:[]
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
+    column_anim: {pack:PACK_GENERAL, id:103}
+  }
+
+  {
+    id:OVERLAY_ARCHITECT_REACH
+    title: "#overlay_architect_reach"
+    walkers:[FIGURE_ARCHITECT]
+    buildings:[BUILDING_ARCHITECT_POST, BUILDING_ROADBLOCK]
+    column_type: COLUMN_TYPE_RISK
     column_anim: {pack:PACK_GENERAL, id:103}
   }
 ]

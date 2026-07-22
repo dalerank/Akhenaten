@@ -103,6 +103,9 @@ localization_en = [
 
      { key: "#overlay_fire", text: "화재" }
      { key: "#overlay_damage", text: "피해" }
+     { key: "#overlay_architect_reach", text: "건축가 도달 범위" }
+     { key: "#overlay_architect_reach_hint", text: "건축가 초소를 클릭하세요" }
+     { key: "#overlay_architect_reach_tile", text: "건축가 순찰 범위 안" }
      { key: "#overlay_crime", text: "범죄" }
      { key: "#overlay_entertainment", text: "오락" }
      { key: "#overlay_booth", text: "저글러" }

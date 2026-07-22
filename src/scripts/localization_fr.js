@@ -89,6 +89,7 @@ localization_fr = [
   { key:"#TR_HOTKEY_INCREASE_GAME_SPEED", text:"Augmenter la vitesse du jeu"},
   { key:"#TR_HOTKEY_DECREASE_GAME_SPEED", text:"Diminuer la vitesse du jeu"},
   { key:"#TR_HOTKEY_TOGGLE_PAUSE", text:"Activer la pause"},
+  { key:"#TR_GAME_PAUSED", text:"Jeu en pause (touche '%s' pour continuer)"},
   { key:"#TR_HOTKEY_CYCLE_LEGION", text:"Parcourir les légions en boucle"},
   { key:"#TR_HOTKEY_ROTATE_MAP_LEFT", text:"Tourner la carte vers la gauche"},
   { key:"#TR_HOTKEY_ROTATE_MAP_RIGHT", text:"Tourner la carte vers la droite"},
@@ -122,6 +123,8 @@ localization_fr = [
   { key:"#TR_HOTKEY_SET_BOOKMARK_4", text:"Définir comme point d'intérêt 4"},
   { key:"#TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO", text:"Afficher les infos de bataille"},
   { key:"#TR_HOTKEY_EDIT_TITLE", text:"Appuyez sur une touche"},
+  { key:"#TR_HOTKEY_DUPLICATE_TITLE", text:"Raccourci déjà utilisé"},
+  { key:"#TR_HOTKEY_DUPLICATE_MESSAGE", text:"Cette touche est déjà assignée à «{0}»."},
   { key:"#TR_BUILDING_ROADBLOCK", text:"Barrages"},
   { key:"#TR_BUILDING_ROADBLOCK_DESC", text:"Barrages arrêtent les citoyens errants"},
   { key:"#TR_HEADER_HOUSING", text:"Logement"},
@@ -161,6 +164,9 @@ localization_fr = [
 
   { key: "#overlay_fire", text: "Feu" }
   { key: "#overlay_damage", text: "Dégâts" }
+  { key: "#overlay_architect_reach", text: "Portée de l'architecte" }
+  { key: "#overlay_architect_reach_hint", text: "Cliquez sur un poste d'architecte" }
+  { key: "#overlay_architect_reach_tile", text: "Dans la zone de patrouille" }
   { key: "#overlay_crime", text: "Criminalité" }
   { key: "#overlay_entertainment", text: "Divertissement" }
   { key: "#overlay_booth", text: "Jongleur" }

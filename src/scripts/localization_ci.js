@@ -106,6 +106,9 @@ localization_ci = [
 
      { key: "#overlay_fire", text: "火災" }
      { key: "#overlay_damage", text: "損壞" }
+     { key: "#overlay_architect_reach", text: "建築師可達範圍" }
+     { key: "#overlay_architect_reach_hint", text: "點擊建築師崗位" }
+     { key: "#overlay_architect_reach_tile", text: "在建築師巡邏範圍內" }
      { key: "#overlay_crime", text: "犯罪" }
      { key: "#overlay_entertainment", text: "娛樂" }
      { key: "#overlay_booth", text: "雜耍" }

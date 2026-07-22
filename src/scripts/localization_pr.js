@@ -105,6 +105,9 @@ localization_pr = [
 
      { key: "#overlay_fire", text: "Fogo" }
      { key: "#overlay_damage", text: "Danos" }
+     { key: "#overlay_architect_reach", text: "Alcance do arquiteto" }
+     { key: "#overlay_architect_reach_hint", text: "Clique em um posto de arquiteto" }
+     { key: "#overlay_architect_reach_tile", text: "Na área de patrulha" }
      { key: "#overlay_crime", text: "Crime" }
      { key: "#overlay_entertainment", text: "Entretenimento" }
      { key: "#overlay_booth", text: "Malabarista" }

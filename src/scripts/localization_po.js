@@ -128,6 +128,9 @@ localization_po = [
 
  { key: "#overlay_fire", text: "Pożar" }
  { key: "#overlay_damage", text: "Szkody" }
+ { key: "#overlay_architect_reach", text: "Zasięg architekta" }
+ { key: "#overlay_architect_reach_hint", text: "Kliknij posterunek architekta" }
+ { key: "#overlay_architect_reach_tile", text: "W zasięgu patrolu" }
  { key: "#overlay_crime", text: "Przestępczość" }
  { key: "#overlay_entertainment", text: "Rozrywka" }
  { key: "#overlay_booth", text: "Żongler" }

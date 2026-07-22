@@ -104,6 +104,9 @@ localization_sp = [
 
      { key: "#overlay_fire", text: "Fuego" }
      { key: "#overlay_damage", text: "Daños" }
+     { key: "#overlay_architect_reach", text: "Alcance del arquitecto" }
+     { key: "#overlay_architect_reach_hint", text: "Haz clic en un puesto de arquitecto" }
+     { key: "#overlay_architect_reach_tile", text: "En el rango de patrulla" }
      { key: "#overlay_crime", text: "Crimen" }
      { key: "#overlay_entertainment", text: "Entretenimiento" }
      { key: "#overlay_booth", text: "Malabarista" }

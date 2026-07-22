@@ -106,6 +106,9 @@ localization_ch = [
 
      { key: "#overlay_fire", text: "火灾" }
      { key: "#overlay_damage", text: "损坏" }
+     { key: "#overlay_architect_reach", text: "建筑师可达范围" }
+     { key: "#overlay_architect_reach_hint", text: "点击建筑师岗位" }
+     { key: "#overlay_architect_reach_tile", text: "在建筑师巡逻范围内" }
      { key: "#overlay_crime", text: "犯罪" }
      { key: "#overlay_entertainment", text: "娱乐" }
      { key: "#overlay_booth", text: "杂耍" }

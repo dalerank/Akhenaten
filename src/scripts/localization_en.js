@@ -13,6 +13,7 @@ localization_en = [
   {key:"#TR_BUTTON_CANCEL", text:"Cancel"}
   {key:"#TR_BUTTON_PAUSE", text:"Pause"}
   {key:"#TR_BUTTON_RESUME", text:"Resume"}
+  {key:"#TR_GAME_PAUSED", text:"Game paused ('%s' key continues)"}
   {key:"#TR_BUTTON_RESET_DEFAULTS", text:"Reset defaults"}
   {key:"#TR_BUTTON_CONFIGURE_HOTKEYS", text:"Configure hotkeys"}
   {key:"#TR_BUTTON_NEXT", text:"+"}
@@ -199,6 +200,8 @@ localization_en = [
   {key:"#TR_HOTKEY_SET_BOOKMARK_4", text:"Set bookmark 4"}
   {key:"#TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO", text:"Toggle battle info"}
   {key:"#TR_HOTKEY_EDIT_TITLE", text:"Press new hotkey"}
+  {key:"#TR_HOTKEY_DUPLICATE_TITLE", text:"Hotkey already used"}
+  {key:"#TR_HOTKEY_DUPLICATE_MESSAGE", text:"This key is already assigned to '{0}'."}
   {key:"#TR_BUILDING_ROADBLOCK", text:"Roadblock"}
   {key:"#TR_BUILDING_ROADBLOCK_DESC", text:"Roadblock stops loitering citizens."}
   {key:"#TR_HEADER_HOUSING", text:"Housing"}
@@ -1423,6 +1426,9 @@ localization_en = [
 
   { key: "#overlay_fire", text: "Fire" }
   { key: "#overlay_damage", text: "Damage" }
+  { key: "#overlay_architect_reach", text: "Architect reach" }
+  { key: "#overlay_architect_reach_hint", text: "Click an architect post" }
+  { key: "#overlay_architect_reach_tile", text: "Within architect patrol range" }
   { key: "#overlay_crime", text: "Crime" }
   { key: "#overlay_entertainment", text: "Entertainment" }
   { key: "#overlay_booth", text: "Booth" }
