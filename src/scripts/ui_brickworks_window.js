@@ -27,7 +27,7 @@ function brickworks_info_window_on_init(window) {
     window.ready_prod.text = industry_info_window_format_progress(b, false)
     var reason = { group: b.meta_text_id, id: 0 }
     if (!b.has_road_access) {
-        reason = { group: 69, id: 25 }
+        reason = { key: "#building_no_road_access" }
     } else if (__city_resource_is_mothballed(b.output_resource_id)) {
         reason.id = 4
     } else if (b.num_workers <= 0) {
@@ -37,7 +37,7 @@ function brickworks_info_window_on_init(window) {
     } else {
         reason.id = Math.approximate_value(b.worker_percentage / 100.0, [10, 9, 8, 7, 6])
     }
-    window.warning_text.text = __loc(reason.group, reason.id)
+    window.warning_text.text = __loc(reason)
     window.resource_stored.text = __loc(b.meta_text_id, 13) + " " + workshop_format_stored_amount(b.stored_clay)
     window.resource_stored_b.text = __loc(b.meta_text_id, 14) + " " + workshop_format_stored_amount(b.stored_straw)
     window.workers_text.text = workshop_format_workers_text(b)

@@ -49,12 +49,12 @@ function info_window_education_on_init(window) {
     if (education_info_window_has_service_figure(b)) {
         reason.id = 1
     } else if (b.has_road_access == false) {
-        reason = { group: 69, id: 25 }
+        reason = { key: "#building_no_road_access" }
     } else if (b.num_workers <= 0) {
         reason.id = 2
     } else {
         reason.id = 3
     }
 
-    window.warning_text.text = __loc(reason.group, reason.id)
+    window.warning_text.text = __loc(reason)
 }

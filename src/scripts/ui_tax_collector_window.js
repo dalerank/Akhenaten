@@ -1,7 +1,7 @@
 log_info("akhenaten: ui_tax_collector_window.js loaded")
 
 function taxcollector_info_window_tax_level_text() {
-    return __loc(60, 1) + " " + city.finance.tax_percentage + "%"
+    return __loc("#tax_rate_of") + " " + city.finance.tax_percentage + "%"
 }
 
 [es=building_info_window]
@@ -45,10 +45,10 @@ function taxcollector_info_window_on_init(window) {
     var b = city.get_building(window.bid)
     var g = b.meta_text_id
     var amount = game_features.gameplay_change_new_tax_collection_system ? b.deben_storage : b.tax_income_or_storage
-    window.money_text.text = __loc(g, 2) + " " + amount + " " + __loc(8, 0)
+    window.money_text.text = __loc(g, 2) + " " + amount + " " + __loc("#debens")
 
-    var reason = b.has_road_access ? { group: g, id: 0 } : { group: 69, id: 25 }
-    window.warning_text.text = __loc(reason.group, reason.id)
+    var reason = b.has_road_access ? { group: g, id: 0 } : { key: "#building_no_road_access" }
+    window.warning_text.text = __loc(reason)
 
     var wid = Math.approximate_value(b.worker_percentage / 100.0, [10, 9, 8, 7, 6, 5])
     window.workers_desc.text = __loc(g, wid)

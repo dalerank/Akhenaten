@@ -16,7 +16,7 @@ advisor_financial_window {
                     ui {
                         treasury   : text({margin:{left:6, top:10}})
 
-                        tax_header : text({text[60, 1], margin:{left:70, top:30}, font:FONT_NORMAL_WHITE_ON_DARK})
+                        tax_header : text({text:"#tax_rate_of", margin:{left:70, top:30}, font:FONT_NORMAL_WHITE_ON_DARK})
                         tax_value  : text({margin:{left:240, top:30}, font:FONT_NORMAL_WHITE_ON_DARK})
 
                         tax_payers : text({margin:{left:10, top:60}, font:FONT_NORMAL_WHITE_ON_DARK})
@@ -49,7 +49,7 @@ function advisor_financial_window_update(window) {
     window.treasury.text = prefix + " " + Math.abs(ctreasury)
     window.treasury.font = (ctreasury < 0) ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK
 
-    window.tax_value.text = city.finance.tax_percentage + "% " + __loc(60, 4) + " " + __loc(8, 0) + " " + city.taxes.estimated_income
+    window.tax_value.text = city.finance.tax_percentage + "% " + __loc(60, 4) + " " + __loc("#debens") + " " + city.taxes.estimated_income
     window.tax_payers.text = city.taxes.percentage_taxed_people + "% " + __loc(60, 5) + " " + __loc(60, 22) + " " + city.taxes.estimated_uncollected + " Db"
 }
 

@@ -17,7 +17,7 @@ function carpenters_guild_info_window_on_init(window) {
     var g = b.meta_text_id
     var reason = { group: g, id: 0 }
     if (!b.has_road_access) {
-        reason = { group: 69, id: 25 }
+        reason = { key: "#building_no_road_access" }
     } else if (__city_resource_is_mothballed(RESOURCE_TIMBER)) {
         reason.id = 4
     } else if (b.num_workers <= 0) {
@@ -27,6 +27,6 @@ function carpenters_guild_info_window_on_init(window) {
     } else {
         reason.id = Math.approximate_value(b.worker_percentage / 100.0, [10, 9, 8, 7, 6])
     }
-    window.warning_text.text = __loc(reason.group, reason.id)
+    window.warning_text.text = __loc(reason)
     window.workers_text.text = workshop_format_workers_text(b)
 }

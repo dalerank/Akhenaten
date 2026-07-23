@@ -115,16 +115,19 @@ void building_info_window::common_info_background(object_info& c) {
 
     textid reason = { c.group_id, 0 };
     textid workers = { c.group_id, 8 };
+    pcstr reason_str = nullptr;
     if (!b->has_road_access) {
-        reason = { 69, 25 };
+        reason_str = lang_text_from_key("#building_no_road_access");
     } else if (!b->num_workers) {
         reason.id = 9;
+        reason_str = ui::str(reason);
     } else {
         reason.id = b->has_figure(0) ? 2 : 3;
         workers.id = approximate_value(b->worker_percentage() / 100.f, make_array(4, 5, 6, 7));
+        reason_str = ui::str(reason);
     }
 
-    bstring512 warning_text(ui::str(c.group_id, 1), " ", ui::str(reason));
+    bstring512 warning_text(ui::str(c.group_id, 1), " ", reason_str);
     ui["warning_text"] = warning_text;
     ui["workers_desc"] = ui::str(workers);
 }

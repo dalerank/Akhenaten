@@ -8,6 +8,14 @@ localization_ru_f = [
     { key:"#TR_INVALID_LANGUAGE_TITLE", text:"Неправильная языковая директория"}
     { key:"#TR_INVALID_LANGUAGE_MESSAGE", text:"В указанной папке языковые пакеты отсутствуют. Пожалуйста, проверьте записи журнала игры (log)."}
     { key:"#TR_BUTTON_OK", text:"Ок"}
+    { key:"#tax_rate_of", text:"Налог"}
+    { key:"#palace_vaults_hold", text:"В сейфе" }
+    { key:"#debens", text:"деньги" }
+    { key:"#building_no_road_access", text:"ВНИМАНИЕ: Это здание не соединено дорогой" }
+    { key:"#building_no_people_in_city", text:"Нет людей в городе!" }
+    { key:"#building_no_workers_nearby", text:"Нет рабочих, живущих поблизости" }
+    { key:"#building_labor_could_shift", text:"Куратор рабочих мог бы перераспределить рабочую силу" }
+    { key:"#building_poor_worker_access", text:"ВНИМАНИЕ: Плохой доступ для рабочих" }
     { key:"#TR_BUTTON_CANCEL", text:"Отмена"}
     { key:"#TR_BUTTON_RESET_DEFAULTS", text:"По умолчанию"}
     { key:"#TR_BUTTON_CONFIGURE_HOTKEYS", text:"Горячие клавиши"}

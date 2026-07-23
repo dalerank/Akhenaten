@@ -182,7 +182,6 @@ localization_base_hu = [
     { group:7, id:2, text: "Térkép betöltése" }
     { group:7, id:3, text: "Térkép mentése" }
     { group:7, id:4, text: "Kilépés a szerkesztőből" }
-    { group:8, id:0, text: "Deben" }
     { group:8, id:1, text: "Deben" }
     { group:8, id:2, text: "Személy" }
     { group:8, id:3, text: "Személyek" }
@@ -2445,7 +2444,6 @@ localization_base_hu = [
     { group:59, id:37, text: "-" }
     { group:59, id:38, text: "Papnő" }
     { group:60, id:0, text: "A kincstár felügyelője" }
-    { group:60, id:1, text: "Adókulcs:" }
     { group:60, id:2, text: "A városi kincstár vagyona:" }
     { group:60, id:3, text: "A város adóssága:" }
     { group:60, id:4, text: "várható hozama:" }
@@ -3180,16 +3178,10 @@ localization_base_hu = [
     { group:69, id:13, text: "Magas tűzveszély" }
     { group:69, id:14, text: "Nagyon magas tűzveszély" }
     { group:69, id:15, text: "Rendkívüli tűzveszély" }
-    { group:69, id:16, text: "Nincsenek emberek a városban!" }
-    { group:69, id:17, text: "Nem élnek munkások a közelben" }
-    { group:69, id:18, text: "A munkások felügyelője átcsoportosíthatna némi munkaerőt" }
-    { group:69, id:19, text: "A munkások felügyelője átcsoportosíthatna némi munkaerőt" }
-    { group:69, id:20, text: "FIGYELEM: Rossz hozzáférés a munkásokhoz" }
     { group:69, id:21, text: "Alig működik. Az ágazatunknak kétségbeejtően több munkásra van szüksége" }
     { group:69, id:22, text: "Gyengén működik. Az ágazatunknak sokkal több munkásra van szüksége" }
     { group:69, id:23, text: "Jól működik, de az ágazatunknak nagy szüksége lenne még több munkásra" }
     { group:69, id:24, text: "Csökkentett kapacitással működik. Alig érkezett munkás mostanában" }
-    { group:69, id:25, text: "FIGYELEM: Ez az épület nem kapcsolódik úthoz" }
     { group:69, id:26, text: "Létszámhiányos. Csak árut tud kiküldeni, de árut nem fogad" }
     { group:69, id:27, text: "Csak minimális személyzettel működik. Nem küld ki és nem fogad árut" }
     { group:70, id:0, text: "Nincs ember ezen a területen." }
@@ -3511,7 +3503,6 @@ localization_base_hu = [
     { group:104, id:9, text: "Nincsenek építészeink az alkalmazottak között, ezért a környék ki van szolgáltatva a változó homoknak." }
     { group:105, id:0, text: "Palota" }
     { group:105, id:1, text: "A palota városod egyik legkívánatosabb épülete és a város gazdaságának alapköve. Aranyrögöket vált át debenekre, és a város pénzkészletének egy részét tárolja." }
-    { group:105, id:2, text: "A trezorokban ennyi található:" }
     { group:106, id:0, text: "Adószedő irodája" }
     { group:106, id:1, text: "Bár nem ők a város legnépszerűbb dolgozói, az adószedők teszik lehetővé nagyszerű királyságunkat és mindazokat az előnyöket, amelyekben részesülünk." }
     { group:106, id:2, text: "A trezorokban ennyi található:" }

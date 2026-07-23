@@ -182,7 +182,6 @@ localization_base_de = [
     { group:7, id:2, text: "Karte laden" }
     { group:7, id:3, text: "Karte speichern" }
     { group:7, id:4, text: "Editor beenden" }
-    { group:8, id:0, text: "Deben" }
     { group:8, id:1, text: "Deben" }
     { group:8, id:2, text: "Person" }
     { group:8, id:3, text: "Personen" }
@@ -2418,7 +2417,6 @@ localization_base_de = [
     { group:59, id:37, text: "-" }
     { group:59, id:38, text: "Priesterin" }
     { group:60, id:0, text: "Aufseher der Schatzkammer" }
-    { group:60, id:1, text: "Steuersatz von" }
     { group:60, id:2, text: "Stadtkasse hat Vermögen von" }
     { group:60, id:3, text: "Stadt hat Schulden von" }
     { group:60, id:4, text: "ergibt geschätzte" }
@@ -3140,16 +3138,10 @@ localization_base_de = [
     { group:69, id:13, text: "Hohe Brandgefahr" }
     { group:69, id:14, text: "Sehr hohe Brandgefahr" }
     { group:69, id:15, text: "Extreme Brandgefahr" }
-    { group:69, id:16, text: "Keine Menschen in der Stadt!" }
-    { group:69, id:17, text: "Keine Arbeiter leben in der Nähe" }
-    { group:69, id:18, text: "Der Arbeiteraufseher könnte etwas Arbeitskraft umverteilen" }
-    { group:69, id:19, text: "Der Arbeiteraufseher könnte etwas Arbeitskraft umverteilen" }
-    { group:69, id:20, text: "WARNUNG: Schlechter Zugang zu Arbeitern" }
     { group:69, id:21, text: "Arbeitet kaum. Unser Sektor braucht dringend mehr Arbeiter" }
     { group:69, id:22, text: "Arbeitet schlecht. Unser Sektor braucht viel mehr Arbeiter" }
     { group:69, id:23, text: "Arbeitet gut, aber unser Sektor könnte wirklich mehr Arbeiter gebrauchen" }
     { group:69, id:24, text: "Arbeitet mit reduzierter Kapazität. Kaum Arbeiter sind kürzlich eingetroffen" }
-    { group:69, id:25, text: "WARNUNG: Dieses Gebäude grenzt nicht an eine Straße" }
     { group:69, id:26, text: "Unterbesetzt. Kann nur Waren versenden, wird keine Waren empfangen" }
     { group:69, id:27, text: "Nur Notbesetzung. Wird keine Waren versenden oder empfangen" }
     { group:70, id:0, text: "Keine Menschen in dieser Gegend." }
@@ -3471,7 +3463,6 @@ localization_base_de = [
     { group:104, id:9, text: "Ohne Architekten ist die Nachbarschaft dem wandernden Sand ausgeliefert." }
     { group:105, id:0, text: "Palast" }
     { group:105, id:1, text: "Der Palast gehört zu den begehrtesten Gebäuden Eurer Stadt und ist der Eckpfeiler der Stadtwirtschaft. Er verwandelt Goldklumpen in Deben und lagert einige der Stadtmittel." }
-    { group:105, id:2, text: "Tresore enthalten" }
     { group:106, id:0, text: "Steuereintreiberbüro" }
     { group:106, id:1, text: "Obwohl nicht die beliebtesten Arbeiter in der Stadt, ermöglichen Steuereintreiber unser großes Königreich und all die Vorteile, die uns zufließen." }
     { group:106, id:2, text: "Tresore enthalten" }

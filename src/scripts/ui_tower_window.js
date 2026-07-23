@@ -14,7 +14,7 @@ function info_window_tower_on_init(window) {
 
     var reason = { group: gid, id: 0 }
     if (b.has_road_access == false) {
-        reason = { group: 69, id: 25 }
+        reason = { key: "#building_no_road_access" }
     } else if (b.num_workers <= 0) {
         reason.id = 2
     } else if (b.has_figure(0)) {
@@ -25,5 +25,5 @@ function info_window_tower_on_init(window) {
 
     var worker_desc = b.worker_percentage > 0 ? 3 : 2
     window.workers_desc.text = __loc(gid, worker_desc)
-    window.warning_text.text = __loc(reason.group, reason.id)
+    window.warning_text.text = __loc(reason)
 }

@@ -283,6 +283,14 @@ localization_de = [
   {key: "#trade_overseer_goto_empire_hint", group:68, id:42}
   {key: "#festival_square_info_title", group:188, id:0}
   {key: "#visit_rating_advisor", text: "Euren Bewertungsaufseher besuchen?"}
+  {key: "#tax_rate_of", text: "Steuersatz von"}
+  {key: "#palace_vaults_hold", text: "Tresore enthalten"}
+  {key: "#debens", text: "Deben"}
+  {key: "#building_no_road_access", text: "WARNUNG: Dieses Gebäude grenzt nicht an eine Straße"}
+  {key: "#building_no_people_in_city", text: "Keine Menschen in der Stadt!"}
+  {key: "#building_no_workers_nearby", text: "Keine Arbeiter leben in der Nähe"}
+  {key: "#building_labor_could_shift", text: "Der Arbeiteraufseher könnte etwas Arbeitskraft umverteilen"}
+  {key: "#building_poor_worker_access", text: "WARNUNG: Schlechter Zugang zu Arbeitern"}
   {key: "#gardens_describe", text: "Dieses angenehme Grundstück verschafft Bürgern Erleichterung von Lärm, Hitze und Schmutz der Stadt mit einer kühlen Oase grünen Raums. Jeder möchte einen Garten nebenan."}
   {key: "#popup_dialog_proceed", text: "Fortfahren?"}
 

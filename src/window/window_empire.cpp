@@ -569,7 +569,7 @@ void empire_window::ui_draw_foreground(UiFlags flags) {
     const bool may_open_trade = city && !city->is_open && city->can_trade();
     ui["button_open_trade"].enabled = may_open_trade;
     if (may_open_trade) {
-        ui["button_open_trade"].text_var("%s %d %s", ui::str(8, 0), city->cost_to_open,
+        ui["button_open_trade"].text_var("%s %d %s", ui::str_from_key("#debens"), city->cost_to_open,
           ui::str(sell_res_group, 6 + city->is_sea_trade));
     }
 

@@ -33,7 +33,7 @@ function shipyard_info_window_on_init(window) {
 
     var reason = { group: gid, id: 0 }
     if (!shipyard.has_road_access) {
-        reason = { group: 69, id: 25 }
+        reason = { key: "#building_no_road_access" }
     } else if (!__city_buildings_ships_requested()) {
         reason.id = 4
     } else if (shipyard.process_type != FIGURE_NONE) {
@@ -50,5 +50,5 @@ function shipyard_info_window_on_init(window) {
         reason.id = 4
     }
 
-    window.workers_desc.text = __loc(reason.group, reason.id)
+    window.workers_desc.text = __loc(reason)
 }

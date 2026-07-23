@@ -14,16 +14,21 @@ function info_window_water_lift_init(window) {
     var b = city.get_building(window.bid)
     var reason = { group: b.meta_text_id, id: 0 }
     if (b.has_road_access == false) {
-        reason = { group: 69, id: 25 }
+        reason = { key: "#building_no_road_access" }
     } else if (b.num_workers == 0) {
         reason.id = 9
     } else {
         reason.id = b.has_figure(0) ? 2 : 3
     }
 
-    var warning_text = __loc(reason.group, 1)
-    if (reason.id) {
-        warning_text += " " + __loc(reason)
+    var warning_text
+    if (reason.key) {
+        warning_text = __loc(reason)
+    } else {
+        warning_text = __loc(reason.group, 1)
+        if (reason.id) {
+            warning_text += " " + __loc(reason)
+        }
     }
     window.warning_text.text = warning_text
 

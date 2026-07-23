@@ -22,9 +22,10 @@ void info_window_fishing_wharf::init(object_info &c) {
 
     textid reason = { c.group_id, 0 };
     if (!b->has_road_access) {
-        reason = { 69, 25 };
+        ui["warning_text"] = lang_text_from_key("#building_no_road_access");
     } else if (!b->get_figure(BUILDING_SLOT_BOAT)->is_valid()) {
         reason = { c.group_id, 2 };
+        ui["warning_text"] = reason;
     } else {
         figure *boat = b->get_figure(BUILDING_SLOT_BOAT);
         switch (boat->action_state) {
@@ -35,9 +36,9 @@ void info_window_fishing_wharf::init(object_info &c) {
         case ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH: reason.id = 7; break;
         default: reason.id = 8; break;
         }
+        ui["warning_text"] = reason;
     }
 
     ui["resource_img"].image(RESOURCE_FISH);
-    ui["warning_text"] = reason;
     ui["storage_desc"].text_var("Stored fish %d", b->stored_amount(RESOURCE_FISH));
 }

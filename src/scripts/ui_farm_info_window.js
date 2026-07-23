@@ -39,7 +39,7 @@ function info_window_farm_on_init(window) {
         reason = { group: 177, id: 5 }
     } else {
         if (!b.has_road_access) {
-            reason = { group: 69, id: 25 }
+            reason = { key: "#building_no_road_access" }
         } else if (__city_resource_is_mothballed(b.output_resource_id)) {
             reason.id = 4
         } else if (b.curse_days_left > 4) {
@@ -48,7 +48,7 @@ function info_window_farm_on_init(window) {
             reason.id = Math.approximate_value(b.worker_percentage / 100.0, [10, 9, 8, 7, 6])
         }
     }
-    window.workers_desc.text = __loc(reason.group, reason.id)
+    window.workers_desc.text = __loc(reason)
 
     var farm = city.get_farm(window.bid)
     window.progress_desc.text = farm_info_window_format_progress_desc(b, farm)

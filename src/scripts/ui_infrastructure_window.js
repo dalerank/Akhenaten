@@ -17,7 +17,7 @@ function infrastructure_common_info_window_init(window) {
     window.warning_text.text = __loc(meta_text_id, 1)
 
     if (b.has_road_access == false) {
-        reason = { group: 69, id: 25 }
+        reason = { key: "#building_no_road_access" }
     } else if (b.num_workers <= 0) {
         reason = { group: meta_text_id, id: 9 }
     } else {
@@ -25,8 +25,8 @@ function infrastructure_common_info_window_init(window) {
         reason.id = Math.approximate_value(b.worker_percentage / 100.0, [8, 7, 6, 5, 4])
     }
 
-    if (reason.group) {
+    if (reason.group || reason.key) {
         window.workers_desc.text = ""
-        window.workers_desc.text = __loc(reason.group, reason.id)
+        window.workers_desc.text = __loc(reason)
     }
 }

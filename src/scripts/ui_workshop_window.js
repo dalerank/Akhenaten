@@ -58,7 +58,7 @@ function industry_info_window_format_progress(b, spaced_pct) {
 function workshop_info_window_status_reason(b) {
     var reason = { group: b.meta_text_id, id: 0 }
     if (!b.has_road_access) {
-        return { group: 69, id: 25 }
+        return { key: "#building_no_road_access" }
     } else if (__city_resource_is_mothballed(b.output_resource_id)) {
         reason.id = 4
     } else if (b.num_workers <= 0) {
@@ -116,7 +116,7 @@ function workshop_info_window_on_init(window) {
     workshop_info_window_setup_advisors(window, b.type)
     window.ready_prod.text = industry_info_window_format_progress(b, false)
     var reason = workshop_info_window_status_reason(b)
-    window.warning_text.text = __loc(reason.group, reason.id)
+    window.warning_text.text = __loc(reason)
     window.resource_stored.text = __loc(b.meta_text_id, 12) + " " + workshop_format_stored_amount(b.first_material_stored)
     window.workers_text.text = workshop_format_workers_text(b)
 }

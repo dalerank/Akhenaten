@@ -16,12 +16,12 @@ function info_window_water_supply_warning_text(window) {
     var workers = { group:b.meta_text_id, id:0 }
 
     if (b.has_road_access == false) {
-        reason = { group:69, id:25 }
+        reason = { key: "#building_no_road_access" }
     } else {
         workers.id = Math.approximate_value(b.worker_percentage / 100.0, [7, 5, 4, 3, 2])
     }
 
-    window.warning_text.text = __loc(reason.group, reason.id)
+    window.warning_text.text = __loc(reason)
     window.workers_desc.text = __loc(workers.group, workers.id)
 
     // Set workers_text similar to draw_employment_details_ui

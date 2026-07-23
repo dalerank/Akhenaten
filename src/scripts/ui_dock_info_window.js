@@ -18,7 +18,7 @@ function info_window_dock_on_init(window) {
 
     var reason = { group: 0, id: 0 }
     if (!dock.has_road_access) {
-        reason = { group: 69, id: 25 }
+        reason = { key: "#building_no_road_access" }
     } else if (dock.has_trade_ship()) {
         reason.group = meta_text_id
         reason.id = Math.approximate_value(dock.worker_percentage / 100.0, [2, 3, 4, 5])
@@ -27,8 +27,8 @@ function info_window_dock_on_init(window) {
         reason.id = Math.approximate_value(dock.worker_percentage / 100.0, [6, 7, 8, 9])
     }
 
-    if (reason.group) {
-        window.workers_desc.text = __loc(reason.group, reason.id)
+    if (reason.group || reason.key) {
+        window.workers_desc.text = __loc(reason)
     }
 }
 

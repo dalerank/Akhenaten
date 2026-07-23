@@ -315,6 +315,14 @@ localization_en = [
   {key: "#trade_overseer_goto_empire_hint", group:68, id:42}
   {key: "#festival_square_info_title", group:188, id:0}
   {key: "#visit_rating_advisor", text: "Visit your Ratings Overseer?"}
+  {key: "#tax_rate_of", text: "Tax rate of"}
+  {key: "#palace_vaults_hold", text: "Vaults hold"}
+  {key: "#debens", text: "Debens"}
+  {key: "#building_no_road_access", text: "WARNING: This building is not adjacent to a road"}
+  {key: "#building_no_people_in_city", text: "No people in the city!"}
+  {key: "#building_no_workers_nearby", text: "No workers live nearby"}
+  {key: "#building_labor_could_shift", text: "The Overseer of Workers could shift some labor"}
+  {key: "#building_poor_worker_access", text: "WARNING: Poor access to workers"}
   {key: "#gardens_describe", text: "This pleasant lot gives citizens relief from the noise, heat and dirt of the city with a cool oasis of green space.  Everyone wants a garden next door."}
   {key: "#popup_dialog_proceed", text: "Proceed?"}
 

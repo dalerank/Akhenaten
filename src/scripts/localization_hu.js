@@ -310,6 +310,14 @@ localization_hu = [
   {key: "#trade_overseer_goto_empire_hint", group:68, id:42}
   {key: "#festival_square_info_title", group:188, id:0}
   {key: "#visit_rating_advisor", text:"Felkeresed az Értékelési felügyelőt?"}
+  {key: "#tax_rate_of", text:"Adókulcs:"}
+  {key: "#palace_vaults_hold", text:"A trezorokban ennyi található:"}
+  {key: "#debens", text:"Deben"}
+  {key: "#building_no_road_access", text:"FIGYELEM: Ez az épület nem kapcsolódik úthoz"}
+  {key: "#building_no_people_in_city", text:"Nincsenek emberek a városban!"}
+  {key: "#building_no_workers_nearby", text:"Nem élnek munkások a közelben"}
+  {key: "#building_labor_could_shift", text:"A munkások felügyelője átcsoportosíthatna némi munkaerőt"}
+  {key: "#building_poor_worker_access", text:"FIGYELEM: Rossz hozzáférés a munkásokhoz"}
   {key: "#gardens_describe", text:"Ez a kellemes terület enyhülést nyújt a polgároknak a város zajától, hőségétől és szennyeződésétől, hűs zöld oázist biztosítva. Mindenki szívesen látna egy kertet a szomszédságában."}
   {key: "#popup_dialog_proceed", text:"Folytatod?"}
 

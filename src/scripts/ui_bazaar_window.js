@@ -78,14 +78,14 @@ function bazaar_info_window_init(window) {
     var reason = { group: 0, id: 0 }
 
     if (bazaar.has_road_access == false) {
-        reason = { group: 69, id: 25 }
+        reason = { key: "#building_no_road_access" }
     } else if (bazaar.num_workers <= 0) {
         reason = { group: meta_text_id, id: 2 }
     }
 
-    if (reason.group) {
+    if (reason.group || reason.key) {
         window.workers_desc.text = ""
-        window.workers_desc.text = __loc(reason.group, reason.id)
+        window.workers_desc.text = __loc(reason)
     }
 }
 

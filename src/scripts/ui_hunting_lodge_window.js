@@ -15,7 +15,7 @@ function info_window_hunting_lodge_on_init(window) {
     var b = city.get_building(window.bid)
     var reason = { group: b.meta_text_id, id: 0 }
     if (b.has_road_access == false) {
-        reason = { group: 69, id: 25 }
+        reason = { key: "#building_no_road_access" }
     } else if (b.num_workers <= 0) {
         reason.id = 5
     } else if (__city_resource_is_mothballed(RESOURCE_GAMEMEAT)) {
@@ -24,7 +24,7 @@ function info_window_hunting_lodge_on_init(window) {
         reason.id = 11
     }
 
-    window.warning_text.text = __loc(reason.group, reason.id)
+    window.warning_text.text = __loc(reason)
 
     var workers_desc = Math.approximate_value(b.worker_percentage / 100.0, [10, 9, 8, 7, 6])
     window.workers_desc.text = __loc(b.meta_text_id, workers_desc)

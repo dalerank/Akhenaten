@@ -18,7 +18,7 @@ function warshipwharf_info_window_on_init(window) {
     var reason = { group: gid, id: 0 }
 
     if (!b.has_road_access) {
-        reason = { group: 69, id: 25 }
+        reason = { key: "#building_no_road_access" }
     } else if (!b.has_figure(BUILDING_SLOT_BOAT)) {
         reason = { group: gid, id: 2 }
     } else {
@@ -30,6 +30,6 @@ function warshipwharf_info_window_on_init(window) {
         }
     }
 
-    window.warning_text.text = __loc(reason.group, reason.id)
+    window.warning_text.text = __loc(reason)
     window.storage_desc.text = _format("Stored weapons {0}", b.stored_resource(RESOURCE_TIMBER))
 }

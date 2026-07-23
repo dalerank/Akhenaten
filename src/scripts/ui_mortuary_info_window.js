@@ -30,7 +30,7 @@ function info_window_mortuary_on_init(window) {
 
     var reason = { group: group, id: 0 }
     if (b.has_road_access == false) {
-        reason = { group: 69, id: 25 }
+        reason = { key: "#building_no_road_access" }
     } else if (b.num_workers <= 0) {
         reason.id = 4
     } else if (linen_stored < 100) {
@@ -39,5 +39,5 @@ function info_window_mortuary_on_init(window) {
         reason.id = 3
     }
 
-    window.workers_desc.text = __loc(reason.group, reason.id)
+    window.workers_desc.text = __loc(reason)
 }

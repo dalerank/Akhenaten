@@ -30,7 +30,7 @@ function change_salary_button_text() {
 function info_window_mansion_on_init(window) {
     var b = city.get_building(window.bid)
     if (b.has_road_access == false) {
-        window.warning_text.text = __loc(69, 25)
+        window.warning_text.text = __loc("#building_no_road_access")
     } else {
         window.warning_text.text = ""
     }

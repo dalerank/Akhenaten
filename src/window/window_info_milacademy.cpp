@@ -20,10 +20,12 @@ void info_window_milacademy::init(object_info &c) {
 
     textid reason{ c.group_id, 0 };
     if (!b->has_road_access)
-        reason = { 69, 25 };
-    else if (b->num_workers <= 0)
-        reason.id = 2;
-    ui["warning_text"] = ui::str(reason);
+        ui["warning_text"] = lang_text_from_key("#building_no_road_access");
+    else {
+        if (b->num_workers <= 0)
+            reason.id = 2;
+        ui["warning_text"] = ui::str(reason);
+    }
 
     int worker_desc = b->worker_percentage() > 0 ? 1 : 3;
     ui["workers_desc"] = ui::str(c.group_id, worker_desc);

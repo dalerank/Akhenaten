@@ -56,7 +56,7 @@ function info_window_recruiter_on_init(window) {
 
     var reason = { group: gid, id: 0 }
     if (b.has_road_access == false) {
-        reason = { group: 69, id: 25 }
+        reason = { key: "#building_no_road_access" }
     } else if (b.num_workers <= 0) {
         reason.id = 3
     } else if (!soldiers_requested) {
@@ -68,8 +68,8 @@ function info_window_recruiter_on_init(window) {
     }
 
     var warning_text = __loc(gid, 1)
-    if (reason.id) {
-        warning_text += " " + __loc(reason.group, reason.id)
+    if (reason.id || reason.key) {
+        warning_text += " " + __loc(reason)
     }
     window.warning_text.text = warning_text
 }

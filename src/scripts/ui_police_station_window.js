@@ -14,7 +14,7 @@ function info_window_police_station_on_init(window) {
     var b = city.get_building(window.bid)
     var reason = { group: b.meta_text_id, id: 0 }
     if (b.has_road_access == false) {
-        reason = { group: 69, id: 25 }
+        reason = { key: "#building_no_road_access" }
     } else if (b.num_workers <= 0) {
         reason.id = 9
     } else if (b.has_figure(0)) {
@@ -24,7 +24,9 @@ function info_window_police_station_on_init(window) {
     }
 
     var warning_text = __loc(b.meta_text_id, 1)
-    if (reason.id) {
+    if (reason.key) {
+        warning_text = __loc(reason)
+    } else if (reason.id) {
         warning_text += " " + __loc(reason)
     }
     window.warning_text.text = warning_text

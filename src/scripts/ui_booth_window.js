@@ -25,7 +25,7 @@ function info_window_booth_on_init(window) {
     var gid = b.meta_text_id
     var reason = { group: gid, id: 1 }
     if (!b.has_road_access) {
-        reason = { group: 69, id: 25 }
+        reason = { key: "#building_no_road_access" }
     } else if (b.num_workers <= 0) {
         reason.id = 4
     } else if (!b.num_shows) {
@@ -33,7 +33,7 @@ function info_window_booth_on_init(window) {
     } else if (b.juggler_visited) {
         reason.id = 3
     }
-    window.warning_text.text = __loc(reason.group, reason.id)
+    window.warning_text.text = __loc(reason)
 
     if (b.juggler_visited > 0) {
         window.play_text.text = __loc(gid, 6) + " " + __loc(8, 44) + " " + b.juggler_visited

@@ -180,6 +180,14 @@ localization_ru = [
     { key:"#well_info_unneeded_fountain", text: "Этот колодец не нужен. Все дома, которые он обслуживает, получают доставки от водоснабжения." }
     { key:"#well_info_unneeded_no_houses", text: "Вода этого колодца идёт впустую, так как в его зоне обслуживания нет домов." }
     { key:"#visit_rating_advisor", text:"Посетить вашего надзирателя рейтингов?" }
+    { key:"#tax_rate_of", text:"Налоговая ставка" }
+    { key:"#palace_vaults_hold", text:"Хранилища содержат" }
+    { key:"#debens", text:"Дебенов" }
+    { key:"#building_no_road_access", text:"ПРЕДУПРЕЖДЕНИЕ: Это здание не примыкает к дороге" }
+    { key:"#building_no_people_in_city", text:"В городе нет людей!" }
+    { key:"#building_no_workers_nearby", text:"Поблизости не живут рабочие" }
+    { key:"#building_labor_could_shift", text:"Надзиратель работников мог бы сместить немного рабочей силы" }
+    { key:"#building_poor_worker_access", text:"ПРЕДУПРЕЖДЕНИЕ: Плохой доступ к рабочим" }
     { key:"#gardens_describe", text:"Этот приятный участок даёт гражданам облегчение от шума, жары и грязи города с прохладным оазисом зелёного пространства. Каждый хочет сад по соседству." }
     { key:"#popup_dialog_proceed", text:"Продолжить?" }
 	{ key:"#TR_CONFIG_HEADER_LANGUAGES", lang:"en", text: "Язык игры"}

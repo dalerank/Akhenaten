@@ -35,7 +35,7 @@ function info_window_raw_material_on_init(window) {
     log_info("akhenaten: info_window_raw_material_common_init: b.type = " + b.type)
 
     if (b.has_road_access == false) {
-        reason = { group: 69, id: 25 }
+        reason = { key: "#building_no_road_access" }
     } else if (b.num_workers <= 0) {
         reason.id = 5
     } else {
@@ -43,5 +43,5 @@ function info_window_raw_material_on_init(window) {
     }
 
     var wdesc = window.workers_desc || (window.inner_panel && window.inner_panel.workers_desc)
-    if (wdesc) wdesc.text = __loc(reason.group, reason.id)
+    if (wdesc) wdesc.text = __loc(reason)
 }

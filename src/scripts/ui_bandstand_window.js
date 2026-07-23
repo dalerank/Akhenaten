@@ -26,7 +26,7 @@ function info_window_bandstand_on_init(window) {
     var d = b
     var reason = { group: gid, id: 1 }
     if (!b.has_road_access) {
-        reason = { group: 69, id: 25 }
+        reason = { key: "#building_no_road_access" }
     } else if (b.num_workers <= 0) {
         reason.id = 6
     } else if (!d.num_shows) {
@@ -38,7 +38,7 @@ function info_window_bandstand_on_init(window) {
     } else if (d.musician_visited) {
         reason.id = 4
     }
-    window.warning_text.text = __loc(reason.group, reason.id)
+    window.warning_text.text = __loc(reason)
 
     if (d.juggler_visited > 0) {
         window.play_text.text = __loc(gid, 10) + " " + __loc(8, 44) + " " + d.juggler_visited

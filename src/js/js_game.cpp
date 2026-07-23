@@ -78,13 +78,31 @@ void js_loc_native(js_State *J) {
         const xstring key = js_strnode_cstr(key_node);
         const xstring resolved = lang_xtext_from_key(key);
         J->pushstring(resolved.c_str());
-    } else {
-        int p1 = js_tointeger(J, 1);
-        int p2 = js_tointeger(J, 2);
-        verify_no_crash(p1 >= 0 && p2 >= 0);
-        pcstr result = lang_get_string(p1, p2);
-        J->pushstring(result);
+        return;
     }
+
+    if (J->isobject(1) && !js_isarray(J, 1) && js_gettop(J) < 3) {
+        J->getproperty(1, js_intern("key"));
+        if (js_isstring(J, -1)) {
+            const js_StringNode key_node = js_tostring(J, -1); js_pop(J, 1);
+            const xstring resolved = lang_xtext_from_key(js_strnode_cstr(key_node));
+            J->pushstring((js_StringNode)resolved._get());
+            return;
+        }
+        js_pop(J, 1);
+
+        J->getproperty(1, js_intern("group")); const int group = js_tointeger(J, -1); js_pop(J, 1);
+        J->getproperty(1, js_intern("id")); const int id = js_tointeger(J, -1); js_pop(J, 1);
+        verify_no_crash(group >= 0 && id >= 0);
+        J->pushstring(lang_get_string(group, id));
+        return;
+    }
+
+    int p1 = js_tointeger(J, 1);
+    int p2 = js_tointeger(J, 2);
+    verify_no_crash(p1 >= 0 && p2 >= 0);
+    pcstr result = lang_get_string(p1, p2);
+    J->pushstring(result);
 }
 
 void js_game_load_text(js_State *J) {

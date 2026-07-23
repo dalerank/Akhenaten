@@ -13,14 +13,14 @@ function health_info_window_on_init(window) {
     var b = city.get_building(window.bid)
     var reason = { group: b.meta_text_id, id: 6 }
     if (b.has_road_access == false) {
-        reason = { group: 69, id: 25 }
+        reason = { key: "#building_no_road_access" }
     } else if (b.has_figure(0)) {
         reason.id = 1
     } else if (b.num_workers <= 0) {
         reason.id = 2
     }
 
-    window.warning_text.text = __loc(reason.group, reason.id)
+    window.warning_text.text = __loc(reason)
 
     var worker_desc = b.worker_percentage > 0 ? 3 : 2
     window.workers_desc.text = __loc(b.meta_text_id, worker_desc)

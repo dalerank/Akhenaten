@@ -20,23 +20,24 @@ void info_window_bullfight::init(object_info &c) {
 
     textid reason{ c.group_id, 0 };
     if (!b->has_road_access) {
-        reason = { 69, 25 };
-    } else if (b->num_workers <= 0) {
-        reason.id = 7;
-    } else if (b->worker_percentage() >= 100) {
-        reason.id = 2;
-    } else if (b->worker_percentage() >= 75) {
-        reason.id = 3;
-    } else if (b->worker_percentage() >= 50) {
-        reason.id = 4;
-    } else if (b->worker_percentage() >= 25) {
-        reason.id = 5;
+        ui["warning_text"] = lang_text_from_key("#building_no_road_access");
     } else {
-        reason.id = 6;
+        if (b->num_workers <= 0) {
+            reason.id = 7;
+        } else if (b->worker_percentage() >= 100) {
+            reason.id = 2;
+        } else if (b->worker_percentage() >= 75) {
+            reason.id = 3;
+        } else if (b->worker_percentage() >= 50) {
+            reason.id = 4;
+        } else if (b->worker_percentage() >= 25) {
+            reason.id = 5;
+        } else {
+            reason.id = 6;
+        }
+        ui["warning_text"] = ui::str(reason);
     }
 
     int worker_desc = b->worker_percentage() > 0 ? 3 : 2;
     ui["workers_desc"] = ui::str(c.group_id, worker_desc);
-
-    ui["warning_text"] = ui::str(reason);
 }

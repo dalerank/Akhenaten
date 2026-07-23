@@ -182,7 +182,6 @@ localization_base_en = [
     { group:7, id:2, text: "Load map" }
     { group:7, id:3, text: "Save map" }
     { group:7, id:4, text: "Exit builder" }
-    { group:8, id:0, text: "Debens" }
     { group:8, id:1, text: "Deben" }
     { group:8, id:2, text: "Person" }
     { group:8, id:3, text: "People" }
@@ -2412,7 +2411,6 @@ localization_base_en = [
     { group:59, id:37, text: "-" }
     { group:59, id:38, text: "Priestess" }
     { group:60, id:0, text: "Overseer of the Treasury" }
-    { group:60, id:1, text: "Tax rate of" }
     { group:60, id:2, text: "City treasury has assets of" }
     { group:60, id:3, text: "City has a debt of" }
     { group:60, id:4, text: "yields an estimated" }
@@ -3135,16 +3133,10 @@ localization_base_en = [
     { group:69, id:13, text: "High fire risk" }
     { group:69, id:14, text: "Very high fire risk" }
     { group:69, id:15, text: "Extreme fire risk" }
-    { group:69, id:16, text: "No people in the city!" }
-    { group:69, id:17, text: "No workers live nearby" }
-    { group:69, id:18, text: "The Overseer of Workers could shift some labor" }
-    { group:69, id:19, text: "The Overseer of Workers could shift some labor" }
-    { group:69, id:20, text: "WARNING: Poor access to workers" }
     { group:69, id:21, text: "Barely working. Our sector desperately needs more workers" }
     { group:69, id:22, text: "Working poorly. Our sector needs a lot more workers" }
     { group:69, id:23, text: "Working well, but our sector could really use more workers" }
     { group:69, id:24, text: "Working at reduced capacity. Hardly any workers arrived recently" }
-    { group:69, id:25, text: "WARNING: This building is not adjacent to a road" }
     { group:69, id:26, text: "Understaffed. Can only dispatch goods, will not receive any goods" }
     { group:69, id:27, text: "Skeleton staff only. Will not dispatch or receive goods" }
     { group:70, id:0, text: "No people in this locality." }
@@ -3466,7 +3458,6 @@ localization_base_en = [
     { group:104, id:9, text: "With no architects on staff, the neighborhood is at the mercy of shifting sands." }
     { group:105, id:0, text: "Palace" }
     { group:105, id:1, text: "The Palace is among your city's most desirable buildings and the cornerstone of the city economy. It turns gold nuggets to debens and stores some of the city's funds." }
-    { group:105, id:2, text: "Vaults hold" }
     { group:106, id:0, text: "Tax Collector's office" }
     { group:106, id:1, text: "Although not the most popular workers in the city, tax collectors make possible our great Kingdom and all the benefits that flow to us." }
     { group:106, id:2, text: "Vaults hold" }
