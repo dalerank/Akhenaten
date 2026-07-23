@@ -58,11 +58,65 @@ var REQUIRED = [
     'smoke_run_complete'
 ]
 
+// Venue (entertainment) buildings can ONLY be placed on a road intersection with an
+// exact road pattern -- they cannot be force-spawned on bare land. A force-spawn
+// skips on_place / on_place_update_tiles / map_add_*_tiles, leaving the multi-tile
+// venue half-initialized; the city renderer then dereferences a null image for it
+// (building_bandstand::force_draw_height_tile -> ert_drawtile_full -> graphics.cpp
+// isometric_from_drawtile == nullptr) and segfaults. So for venues we paint the
+// required crossroad and place them through the real planner path instead.
+// Road patterns (orientation 0, [row][col], 1 = road) mirror *_ROAD_POSITIONS in
+// src/grid/orientation.cpp.
+var VENUE_ROAD_PATTERNS = {}
+VENUE_ROAD_PATTERNS[BUILDING_BOOTH]     = [[0, 1], [1, 1]]
+VENUE_ROAD_PATTERNS[BUILDING_BANDSTAND] = [[0, 1, 0], [0, 1, 0], [1, 1, 1]]
+VENUE_ROAD_PATTERNS[BUILDING_PAVILLION] = [[0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0], [1, 1, 1, 1]]
+
+// Paint the crossroad required by `type` at base tile (bx, by), then place it via
+// the real planner path (exercises on_place / on_place_update_tiles). Returns the
+// building id, or 0 if it still could not be placed (caller logs a loud skip -- we
+// never fall back to a crashing force-spawn for venues).
+function smoke_venue_place(type, bx, by) {
+    var pattern = VENUE_ROAD_PATTERNS[type]
+    if (!pattern) {
+        return 0
+    }
+    for (var dy = 0; dy < pattern.length; dy++) {
+        for (var dx = 0; dx < pattern[dy].length; dx++) {
+            if (pattern[dy][dx]) {
+                terrain.add({ x: bx + dx, y: by + dy }, TERRAIN_ROAD)
+            }
+        }
+    }
+    // Booth (venue mode 0) additionally requires a connecting road tile just past
+    // the 2x2 footprint (see the mode==0 branch in map_orientation_for_venue).
+    if (type == BUILDING_BOOTH) {
+        terrain.add({ x: bx + 1, y: by + 2 }, TERRAIN_ROAD)
+        terrain.add({ x: bx + 2, y: by + 1 }, TERRAIN_ROAD)
+    }
+    return test_building_place(type, bx, by)
+}
+
+// Distinct, well-separated crossroad slots so the three venues don't share roads.
+function smoke_venue_base(type) {
+    var cx = (__scenario_map.width / 2) | 0
+    var cy = (__scenario_map.height / 2) | 0
+    switch (type) {
+    case BUILDING_BANDSTAND: return { x: cx - 14, y: cy - 14 }
+    case BUILDING_BOOTH:     return { x: cx + 10, y: cy - 14 }
+    case BUILDING_PAVILLION: return { x: cx - 14, y: cy + 10 }
+    }
+    return { x: cx, y: cy }
+}
+
 // Get a valid building of `type`: prefer the real planner path (exercises on_place
-// -> update_animation/graphic), fall back to a fast spawn for buildings the harness
-// can't legally place (e.g. entertainment needs road adjacency). The regression we
-// guard for those is the info-window init handler, which only needs a valid building.
+// -> update_animation/graphic). Venue buildings need a real crossroad (see above);
+// non-venue land buildings fall back to a fast spawn if the planner can't place them.
 function smoke_get_building(type) {
+    if (VENUE_ROAD_PATTERNS[type]) {
+        var base = smoke_venue_base(type)
+        return smoke_venue_place(type, base.x, base.y)
+    }
     var bid = test_building_place(type, -1, -1)
     if (bid && bid > 0) {
         return bid
