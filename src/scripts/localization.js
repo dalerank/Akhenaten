@@ -228,4 +228,23 @@ game_languages = [
       { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:true, line_height:12 }
     ]
   }
+
+  {
+    lang:"hu", caption:"Magyar", key:"hungarian",
+    base_table:"localization_base_hu", table:"localization_hu", message_table:"eventmsg_hu", game_messages:"game_messages_hu"
+    symbols:"A,Á,B,C,D,E,É,F,G,H,I,Í,J,K,L,M,N,O,Ó,Ö,Ő,P,Q,R,S,T,U,Ú,Ü,Ű,V,W,X,Y,Z,a,á,b,c,d,e,é,f,g,h,i,í,j,k,l,m,n,o,ó,ö,ő,p,q,r,s,t,u,ú,ü,ű,v,w,x,y,z"
+    font:"data/neucha.ttf"
+    font_configs [
+      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true, line_height:14 },
+      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true, line_height:14 },
+      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true, line_height:14 },
+      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:true, line_height:12 }
+    ]
+  }
 ]

@@ -19,7 +19,7 @@ ANK_CONFIG_STRUCT(game_language,
     lang, caption, key, base_table,
     table, message_table, game_messages)
 
-using game_languages_vec = svector<game_language, 12>;
+using game_languages_vec = svector<game_language, 13>;
 
 const game_languages_vec & get_available_languages();
 
