@@ -1,6 +1,7 @@
 # Build unshield as a separate ExternalProject (InstallShield CAB extractor).
 # Used when Installer/*.exe is not Inno Setup (e.g. Sierra/InstallShield Pharaoh demo).
 # Source: sibling ../unshield or UNSHIELD_SOURCE_DIR.
+# Deps (zlib): system packages via find_package.
 
 include(ExternalProject)
 
@@ -17,22 +18,6 @@ if(NOT EXISTS "${UNSHIELD_SOURCE_DIR}/CMakeLists.txt")
 endif()
 
 set(AKHENATEN_HAS_UNSHIELD TRUE)
-
-# Reuse innoextract vcpkg settings when available (zlib).
-if(NOT DEFINED UNSHIELD_VCPKG_ROOT OR UNSHIELD_VCPKG_ROOT STREQUAL "")
-    if(INNOEXTRACT_VCPKG_ROOT)
-        set(UNSHIELD_VCPKG_ROOT "${INNOEXTRACT_VCPKG_ROOT}")
-    elseif(DEFINED ENV{VCPKG_ROOT} AND EXISTS "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
-        set(UNSHIELD_VCPKG_ROOT "$ENV{VCPKG_ROOT}")
-    elseif(EXISTS "D:/Work/vcpkg/scripts/buildsystems/vcpkg.cmake")
-        set(UNSHIELD_VCPKG_ROOT "D:/Work/vcpkg")
-    endif()
-endif()
-set(UNSHIELD_VCPKG_ROOT "${UNSHIELD_VCPKG_ROOT}" CACHE PATH "vcpkg root for unshield (zlib)")
-set(UNSHIELD_VCPKG_TRIPLET "${INNOEXTRACT_VCPKG_TRIPLET}" CACHE STRING "vcpkg triplet for unshield")
-if(NOT UNSHIELD_VCPKG_TRIPLET)
-    set(UNSHIELD_VCPKG_TRIPLET "x64-windows-static" CACHE STRING "vcpkg triplet for unshield" FORCE)
-endif()
 
 set(UNSHIELD_PREFIX "${CMAKE_BINARY_DIR}/external/unshield")
 set(UNSHIELD_INSTALL_DIR "${CMAKE_BINARY_DIR}/tools/unshield")
@@ -62,20 +47,22 @@ set(UNSHIELD_CMAKE_ARGS
     -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
 )
 
-if(UNSHIELD_VCPKG_ROOT AND EXISTS "${UNSHIELD_VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
-    list(APPEND UNSHIELD_CMAKE_ARGS
-        -DCMAKE_TOOLCHAIN_FILE=${UNSHIELD_VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake
-        -DVCPKG_TARGET_TRIPLET=${UNSHIELD_VCPKG_TRIPLET}
-        -DVCPKG_MANIFEST_MODE=OFF
-    )
-    if(UNSHIELD_VCPKG_TRIPLET MATCHES "static")
-        list(APPEND UNSHIELD_CMAKE_ARGS -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded)
-    endif()
-    message(STATUS "unshield: using vcpkg at ${UNSHIELD_VCPKG_ROOT} (${UNSHIELD_VCPKG_TRIPLET})")
+if(CMAKE_C_COMPILER)
+    list(APPEND UNSHIELD_CMAKE_ARGS -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER})
+endif()
+if(CMAKE_CXX_COMPILER)
+    list(APPEND UNSHIELD_CMAKE_ARGS -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER})
+endif()
+if(CMAKE_OSX_ARCHITECTURES)
+    list(APPEND UNSHIELD_CMAKE_ARGS -DCMAKE_OSX_ARCHITECTURES=${CMAKE_OSX_ARCHITECTURES})
+endif()
+if(CMAKE_OSX_DEPLOYMENT_TARGET)
+    list(APPEND UNSHIELD_CMAKE_ARGS -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET})
 endif()
 
 message(STATUS "unshield: SOURCE_DIR=${UNSHIELD_SOURCE_DIR}")
 message(STATUS "unshield: BINARY_DIR=${UNSHIELD_PREFIX}/build")
+message(STATUS "unshield: ExternalProject uses system zlib (find_package)")
 
 ExternalProject_Add(unshield_ext
     SOURCE_DIR ${UNSHIELD_SOURCE_DIR}

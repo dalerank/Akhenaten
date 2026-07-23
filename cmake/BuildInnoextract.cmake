@@ -3,7 +3,7 @@
 # Override with -DINNOEXTRACT_SOURCE_DIR=... or a sibling ../innoextract checkout.
 # Output: ${CMAKE_BINARY_DIR}/tools/innoextract/bin/innoextract[.exe]
 #
-# Tool deps (liblzma zlib bzip2): system packages, or optional vcpkg on Windows.
+# Tool deps (liblzma zlib bzip2): system packages, or innoextract FetchContent fallback.
 
 include(ExternalProject)
 
@@ -28,18 +28,6 @@ else()
     endif()
 endif()
 
-# Optional vcpkg only for the helper tool (not used by akhenaten.exe).
-set(INNOEXTRACT_VCPKG_ROOT "" CACHE PATH "Optional vcpkg root used only for building innoextract")
-if(NOT INNOEXTRACT_VCPKG_ROOT)
-    if(DEFINED ENV{VCPKG_ROOT} AND EXISTS "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
-        set(INNOEXTRACT_VCPKG_ROOT "$ENV{VCPKG_ROOT}")
-    elseif(EXISTS "D:/Work/vcpkg/scripts/buildsystems/vcpkg.cmake")
-        set(INNOEXTRACT_VCPKG_ROOT "D:/Work/vcpkg")
-    endif()
-endif()
-
-set(INNOEXTRACT_VCPKG_TRIPLET "x64-windows-static" CACHE STRING "vcpkg triplet for innoextract (Windows)")
-
 set(INNOEXTRACT_PREFIX "${CMAKE_BINARY_DIR}/external/innoextract")
 set(INNOEXTRACT_INSTALL_DIR "${CMAKE_BINARY_DIR}/tools/innoextract")
 set(INNOEXTRACT_EXE_NAME "innoextract${CMAKE_EXECUTABLE_SUFFIX}")
@@ -54,37 +42,17 @@ if(CMAKE_CONFIGURATION_TYPES)
     set(INNOEXTRACT_EXT_CONFIG "Release")
 endif()
 
+# Shared system libs — static archives (libz.a etc.) are often missing on macOS/Windows
+# without a package manager. innoextract's own default is OFF on Unix / ON on Win32.
 set(INNOEXTRACT_CMAKE_ARGS
     -DCMAKE_BUILD_TYPE=${INNOEXTRACT_EXT_CONFIG}
     -DCMAKE_INSTALL_PREFIX=${INNOEXTRACT_INSTALL_DIR}
-    -DUSE_STATIC_LIBS=ON
+    -DUSE_STATIC_LIBS=OFF
     -DUSE_LZMA=ON
     -DBUILD_TESTS=OFF
     -DDEVELOPER=OFF
     -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
 )
-
-if(INNOEXTRACT_VCPKG_ROOT)
-    if(NOT EXISTS "${INNOEXTRACT_VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
-        message(FATAL_ERROR "INNOEXTRACT_VCPKG_ROOT is set but toolchain not found: ${INNOEXTRACT_VCPKG_ROOT}")
-    endif()
-    list(APPEND INNOEXTRACT_CMAKE_ARGS
-        -DCMAKE_TOOLCHAIN_FILE=${INNOEXTRACT_VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake
-        -DVCPKG_TARGET_TRIPLET=${INNOEXTRACT_VCPKG_TRIPLET}
-        -DVCPKG_MANIFEST_MODE=OFF
-    )
-    if(INNOEXTRACT_VCPKG_TRIPLET MATCHES "static")
-        if(INNOEXTRACT_EXT_CONFIG STREQUAL "Debug")
-            list(APPEND INNOEXTRACT_CMAKE_ARGS -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDebug)
-        else()
-            list(APPEND INNOEXTRACT_CMAKE_ARGS -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded)
-        endif()
-    endif()
-    message(STATUS "innoextract: using vcpkg at ${INNOEXTRACT_VCPKG_ROOT} (${INNOEXTRACT_VCPKG_TRIPLET})")
-else()
-    message(STATUS
-        "innoextract: no vcpkg — ExternalProject will use system liblzma/zlib/bzip2 (find_package)")
-endif()
 
 if(CMAKE_C_COMPILER)
     list(APPEND INNOEXTRACT_CMAKE_ARGS -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER})
@@ -92,6 +60,14 @@ endif()
 if(CMAKE_CXX_COMPILER)
     list(APPEND INNOEXTRACT_CMAKE_ARGS -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER})
 endif()
+if(CMAKE_OSX_ARCHITECTURES)
+    list(APPEND INNOEXTRACT_CMAKE_ARGS -DCMAKE_OSX_ARCHITECTURES=${CMAKE_OSX_ARCHITECTURES})
+endif()
+if(CMAKE_OSX_DEPLOYMENT_TARGET)
+    list(APPEND INNOEXTRACT_CMAKE_ARGS -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET})
+endif()
+
+message(STATUS "innoextract: system liblzma/zlib/bzip2, or FetchContent inside innoextract")
 
 set(INNOEXTRACT_EP_EXTRA_ARGS "")
 if(CMAKE_CONFIGURATION_TYPES)
