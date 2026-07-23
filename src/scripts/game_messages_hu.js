@@ -994,336 +994,337 @@ game_messages_hu {
 
     message_building_architect_post {
         id: 81,
-        
-        size [30, 28]
+
+            size [30, 28]
         title {
-            text: "Architect's Post",
+            text: "Építészeti őrhely",
         }
         content {
-            text: "Large structures, like Storage Yards, mines, Granaries, Temples and Temple Complexes, are prone to collapse.  Architects patrolling the city's streets repair structural flaws before disaster strikes.  Architects are based in Architect's Posts. @G68 @PArchitect's Posts need road access and labor to function properly.  @PYou can check to see if a particular building has a risk of collapse by using the @18Risks:&Damage&Overlay.  If you notice that a certain building or group of buildings has a high risk of collapse, you may want to place an Architect's Post nearby to ensure that an architect provides his services. @PCollapse can have catastrophic effects.  If a @3Granary or @4Storage&Yard collapses, any food or goods stored there will be lost."
+            text: "A nagy építmények, például a raktárudvarok, bányák, magtárak, templomok és templomkomplexumok hajlamosak az összeomlásra. Az építészek a város utcáit járva kijavítják a szerkezeti hibákat, mielőtt bekövetkezne a katasztrófa. Az építészek az Építészeti őrhelyeken dolgoznak. @G68 @PAz Építészeti őrhelyek működéséhez útkapcsolatra és munkásokra van szükség. @PEgy adott épület összeomlási kockázatát a @18Kockázatok:&Károk&áttekintővel ellenőrizheted. Ha azt látod, hogy egy bizonyos épület vagy épületcsoport nagy összeomlási veszélyben van, érdemes a közelben Építészeti őrhelyet elhelyezni, hogy egy építész biztosíthassa a szolgáltatását. @PAz összeomlás katasztrofális következményekkel járhat. Ha egy @3Magtár vagy @4Raktár&udvar összeomlik, az ott tárolt élelem és áruk elvesznek."
         }
     }
 
     message_building_whipwright {
         id: 82,
-        
+
         size [30, 28]
         title {
-            text: "Shipwright",
+            text: "Hajóépítő",
         }
         content {
-            text: "Shipwrights supply boats for both commercial and military purposes. They build fishing boats for @84Fishing&Wharves, warships for @356Warship&Wharves and transport ships for @357Transport&Wharves. Shipwrights need to be built on a straight stretch of  coastline. You'll know when you have chosen a viable spot when you see a green 'ghost' of the Shipwright. @PBuild the Shipwright on a navigable body of water like the Nile or a seacoast.  Shipwrights located on narrow inlets or inland bodies of water will be unable to send their ships to the wharves that await them.  This can torpedo your whole maritime effort, as the Shipwright repeatedly builds vessels that are scuttled as soon as they determine that they cannot reach their target wharves. @PShipwrights need labor and road access to be operational. They also need a supply of wood to build transport ships and warships. They do not need wood to build fishing boats. Shipwrights receive orders to build a ship directly from the wharves. Once the boat is complete, it sails from the Shipwright to the appropriate wharf. Unless you need to build a lot of boats quickly, one Shipwright should be able to serve your needs. @PShould a warship or transport ship be damaged in combat, send it to the Shipwright for repairs. Heavily-damaged ships limp to the Shipwright on their captains' own initiative. The Shipwright will repair the damage if it has a supply of wood. @PShipwrights do not build the boats used by the @58Ferry&Landings.  Ferryman provide the boats to transport their passengers, and immigrants and emigrants have their own boats.  @PShipwrights make a lot of noise, so no one wants to live nearby. @L@LThe ancient Egyptians built boats of different shapes and sizes.  To find out more about this ancient industry, click @179here."
+            text: "A hajóépítők kereskedelmi és katonai célokra egyaránt hajókat készítenek. Halászhajókat építenek a @84Halász&kikötőknek, hadihajókat a @356Hadihajó&kikötőknek, valamint szállítóhajókat a @357Szállító&kikötőknek. A hajóépítőket egyenes partszakaszra kell építeni. Akkor tudod, hogy megfelelő helyet választottál, amikor a hajóépítő zöld „szellemképét” látod. @PA hajóépítőt hajózható vízpartra, például a Nílusra vagy tengerpartra építsd. A keskeny öblökben vagy szárazföldi vizek mellett elhelyezett hajóépítők nem tudják eljuttatni hajóikat a rájuk váró kikötőkhöz. Ez teljesen tönkreteheti tengeri törekvéseidet, mivel a hajóépítő újra és újra hajókat készít, amelyeket azonnal elsüllyesztenek, amint kiderül, hogy nem érhetik el célkikötőjüket. @PA hajóépítő működéséhez munkásokra és útkapcsolatra van szükség. Emellett faanyag kell neki szállító- és hadihajók építéséhez. Halászhajók készítéséhez nincs szüksége fára. A hajóépítők közvetlenül a kikötőktől kapják a hajóépítési megrendeléseket. Amint a hajó elkészül, a hajóépítőtől a megfelelő kikötőbe hajózik. Ha nem kell gyorsan sok hajót építened, egy hajóépítő általában elegendő lesz az igényeidhez. @PHa egy hadihajó vagy szállítóhajó megsérül a harcban, küldd a hajóépítőhöz javításra. A súlyosan sérült hajók kapitányaik kezdeményezésére vánszorognak vissza a hajóépítőhöz. A hajóépítő kijavítja a sérüléseket, ha rendelkezik faanyaggal. @PA hajóépítők nem készítik a @58Komp&átkelőhelyekhez használt csónakokat. A révészek biztosítják az utasok szállításához szükséges csónakokat, a bevándorlóknak és kivándorlóknak pedig saját hajóik vannak. @PA hajóépítők nagy zajjal dolgoznak, ezért senki sem szeretne a közelükben élni. @L@LAz ókori egyiptomiak különböző alakú és méretű hajókat építettek. Ha többet szeretnél megtudni erről az ősi iparágról, kattints @179ide."
         }
     }
-    
+
     message_building_dock {
         id: 83,
-        
-        size [30, 28]
+
+            size [30, 28]
         title {
-            text: "Dock",
+            text: "Kikötő",
         }
         content {
-            text: "Some of the city's @47trade&partners come by water.  Great trading vessels float down the Nile, but they won't do your city any good if they don't have a place to dock.  Build a Dock on the coastline for these barges to moor.  Be sure to locate the Dock on the Nile or on a seacoast, where trading vessels sail.  A Dock built on a narrow inlet or an inland body of water will be unable to receive trade ships. @PTo function properly, Docks must also have road access and labor.  Once a trade ship has docked, cart pushers from the Dock busily unload commodities and bring them to the city's @4Storage&Yards, and then load any goods the city is exporting to this partner and bring them back to the Dock.  It's a good idea to build a Storage Yard near your Dock to shorten the cart pushers' journeys. @PDocks have a negative effect on an area's @56desirability. @L@LFor more on trade in ancient Egypt, click @177here."
+            text: "A város egyes @47kereskedelmi&partnerei vízi úton érkeznek. Nagy kereskedőhajók úsznak le a Níluson, de nem sok hasznát veszed nekik, ha nincs helyük kikötni. Építs kikötőt a partvonalra, ahol ezek a bárkák horgonyozhatnak. Ügyelj rá, hogy a kikötő a Níluson vagy tengerparton legyen, ahol kereskedőhajók közlekednek. A keskeny öbölre vagy szárazföldi vízre épített kikötő nem lesz képes fogadni a kereskedőhajókat. @PA megfelelő működéshez a kikötőnek útkapcsolatra és munkásokra is szüksége van. Miután egy kereskedőhajó kikötött, a kikötő kocsihajtói serényen lerakodják az árukat, és a város @4Raktár&udvaraiba szállítják őket, majd felrakják a város által ennek a partnernek exportált árukat, és visszaviszik a kikötőbe. Érdemes raktárudvart építeni a kikötő közelében, hogy lerövidítsd a kocsihajtók útját. @PA kikötők negatívan hatnak a környék @56vonzerejére. @L@LAz ókori egyiptomi kereskedelemről további információért kattints @177ide."
         }
     }
 
     message_building_fishing_wharf {
         id: 84,
-        
-        size [30, 28]
+
+            size [30, 28]
         title {
-            text: "Fishing Wharf",
+            text: "Halászkikötő",
         }
         content {
-            text: "If you see fish periodically leaping out of a body of water, fishermen can catch these fish for food. To catch the fish, the city needs one or more fishing boats. @PFishing boats are berthed at Fishing Wharves. Fishing Wharves must be built on straight section of shore, and half of the stucture must overhang the water so that vessels can have access to them. Be sure that the fishing boat can navigate the waters around the Fishing Wharf. If you place the Fishing Wharf on a narrow inlet, fishing boats will not be able to get to them. This can torpedo your whole maritime effort, as Shipwrights repeatedly build fishing boats that are instantly scuttled when they fail to reach their destination wharf.  @PIf the city has a working @82Shipwright, building a Fishing Wharf signals the ship builders to get busy building a fishing boat. The Shipwright does not need any raw materials to build a fishing boat. @PFish stocks are limited, but cannot be completely depleted.  A large population will flounder if it tries to subsist solely on fish. @PFishing Wharves are smelly places and make @56undesirable neighbors. @L@LClick @186here to find out more about fishing in ancient Egypt."
+            text: "Ha időnként halakat látsz kiugrani egy vízfelületből, a halászok kifoghatják őket élelemként. A halászathoz a városnak egy vagy több halászhajóra van szüksége. @PA halászhajók a halászkikötőkben horgonyoznak. A halászkikötőket egyenes partszakaszra kell építeni, és az építmény felének a víz fölé kell nyúlnia, hogy a hajók hozzáférhessenek. Győződj meg róla, hogy a halászhajó hajózni tud a halászkikötő körüli vizeken. Ha a halászkikötőt keskeny öbölbe helyezed, a halászhajók nem tudják elérni. Ez teljesen tönkreteheti tengeri törekvéseidet, mivel a hajóépítők újra és újra halászhajókat építenek, amelyeket azonnal elsüllyesztenek, amikor nem érik el célkikötőjüket. @PHa a városban működő @82Hajóépítő található, egy halászkikötő megépítése jelzi a hajóépítőknek, hogy kezdjék meg egy halászhajó építését. A hajóépítőnek nincs szüksége nyersanyagra halászhajó készítéséhez. @PA halállomány korlátozott, de teljesen nem meríthető ki. Egy nagy lakosság bajba kerül, ha kizárólag halból próbál megélni. @PA halászkikötők büdös helyek, és @56nemkívánatos szomszédságot jelentenek. @L@LKattints @186ide, hogy többet tudj meg az ókori egyiptomi halászatról."
         }
     }
 
     message_building_defensive_structures {
         id: 85,
-        
+
         size [30, 28]
         title {
-            text: "Defensive Structures",
+            text: "Védelmi építmények",
         }
         content {
-            text: "The @37army and @356navy defend the city after enemies penetrate its borders.  Building defensive structures may prevent enemies from ever setting foot within the city proper. @L@LWalls @LThe most basic defensive structure is the Wall.  To build Walls, choose them from the Military Structures: Defensive Structures list.  Click and drag the mouse to build large sections of a Wall at one time, just as you can do with roads. @PWalls that are a single layer thick only slow down enemies briefly.  To best defend your city from attack, build Walls several layers thick.  It takes enemy soldiers much longer to break through a thick Wall. @PWalls are built from whatever natural materials are at hand, so no stone needs to be quarried or imported to build them.  They are nevertheless expensive to build, so think carefully about the perimeter that you want to enclose. @PWalls do not need road access and are undesirable neighbors. @L@LTowers @LBuild Towers to add a little offense to your defensive Walls.  Towers are manned by guards trained by the city's @88Recruiter to hurl javelins on any enemies brave or foolhardy enough to come within range. @PProvided the Wall is wide enough for them to walk on, Towers also send out sentries to patrol the length of the Wall and rain arrows on approaching enemies. @PTowers must be built into Walls that are two layers thick.  They also require road access, employees and sentries from a Recruiter's office.  Don't build the Walls so thick that Tower guards cannot fire over them! @L@LGatehouses @PAs comforting as it would be, you cannot completely encircle your city with Walls.  To let immigrants and merchant trade caravans in, you must have Gatehouses. @PBuild Gatehouses where your major access roads meet your city Walls.  While you are holding the mouse cursor over the desired location, press 'R' to change the direction the Gatehouse is facing.  Once placed, Gatehouses will automatically attach to any adjacent Walls.  If attack is threatened, guards will close the gates to keep out the enemy. @PLike Roadblocks, Gatehouses permit destination walkers free passage but turn roaming walkers back (click @42here for more on walkers). @PFor more information, consult the entry on @52war. @L@LCities were well defended in Ancient Egypt. Click @182here to find out more."
+            text: "A @37hadsereg és a @356haditengerészet védi a várost, miután az ellenség áttörte a határait. Védelmi építmények építésével megakadályozhatod, hogy az ellenség egyáltalán eljusson a város belsejébe. @L@LFalak @LA legalapvetőbb védelmi építmény a fal. Falak építéséhez válaszd ki őket a Katonai építmények: Védelmi építmények listából. Az egérrel kattintva és húzva egyszerre nagy falszakaszokat építhetsz, ugyanúgy, ahogy az utakat. @PAz egyrétegű falak csak rövid időre lassítják az ellenséget. A város legjobb védelme érdekében építs több réteg vastagságú falakat. A vastag falakon az ellenséges katonáknak sokkal tovább tart áttörniük. @PA falak a rendelkezésre álló természetes anyagokból épülnek, ezért nem kell követ bányászni vagy importálni hozzájuk. Ennek ellenére drága az építésük, ezért gondold át alaposan, mekkora területet szeretnél körülkeríteni. @PA falaknak nincs szükségük útkapcsolatra, és nemkívánatos szomszédságot jelentenek. @L@LTornyok @LÉpíts tornyokat, hogy némi támadóerőt adj védelmi falaidhoz. A tornyokat a város @88Toborzója által kiképzett őrök működtetik, akik lándzsákat hajítanak minden olyan ellenségre, amely elég bátor vagy vakmerő ahhoz, hogy hatótávolságukba kerüljön. @PHa a fal elég széles ahhoz, hogy járni lehessen rajta, a tornyok őrszemeket is küldenek a fal hosszának járőrözésére, akik nyilakkal árasztják el a közeledő ellenséget. @PTornyokat csak legalább kétrétegű falakba lehet építeni. Emellett útkapcsolatra, alkalmazottakra és egy toborzóiroda őrszemeire is szükségük van. Ne építsd olyan vastagra a falakat, hogy a toronyőrök ne tudjanak átlőni rajtuk! @L@LKapuépületek @PA bármennyire is megnyugtató lenne, városodat nem kerítheted teljesen körbe falakkal. Ahhoz, hogy bevándorlók és kereskedőkaravánok bejuthassanak, kapuépületekre van szükséged. @PA kapuépületeket a főbb bekötőutak és a városfalak találkozásánál építsd. Miközben a kurzort a kívánt hely fölött tartod, nyomd meg az „R” gombot a kapuépület irányának megváltoztatásához. Elhelyezés után a kapuépületek automatikusan csatlakoznak a szomszédos falakhoz. Ha támadás fenyeget, az őrök bezárják a kapukat, hogy távol tartsák az ellenséget. @PAz úttorlaszokhoz hasonlóan a kapuépületek szabad átjárást biztosítanak a célállomás felé tartó járókelőknek, de visszafordítják a céltalanul kóborlókat (a járókelőkről további információért kattints @42ide). @PA háborúról további információért lásd a @52háború részt. @L@LAz ókori Egyiptom városai jól védettek voltak. Kattints @182ide, hogy többet tudj meg."
         }
     }
 
     message_building_police_station {
         id: 86,
-        
+
         size [30, 28]
         title {
-            text: "Police Station",
+            text: "Rendőrőrs",
         }
         content {
-            text: "Constables keep crime in check as they patrol your neighborhoods. @PConstables are based in Police Stations, which require both road access and labor. A flag waves on the top of the Police Station when it is up and running. @PA constable's presence in a neighborhood reduces the likelihood that crime will arise there. Should his preventive role fail, the constable will actively combat crime.  If he finds a thief on the street, the constable subdues the ingrate and prevents him from performing his nefarious deed.  Constables are also one of your best weapons against @477tomb&robbers.  @PConstables do their best against other threats like foreign invasions and wild animal attacks.  A single constable, though, is ineffective against a pack of animals or a foreign army.  A constable will fight to the death, but will probably not put down the foe. The only chance constables have of defeating these mighty antagonists is if they are able to work together. Still, defeating an enemy army is the business of the military, and the military also proves to be most effective against a pack of wild animals. @G55 @PTo see which neighborhoods are most likely to produce criminals, use the @18Risks&Overlay.  The Risks Overlay can help you plan the placement of your Police Stations. @PAlthough no citizen would want to live in a neighborhood that was not patrolled by a constable, no one wants to live next door to the Police Station, either. Constables come and go at all hours of the day, and they frequently have unsavory characters in tow. @L@LYou have the right to find out more about ancient Egyptian law by clicking @183here."
+            text: "A rendőrök járőröznek a környékeken, és kordában tartják a bűnözést. @PA rendőrök rendőrőrsökön dolgoznak, amelyekhez útkapcsolatra és munkásokra is szükség van. A rendőrőrs tetején zászló lobog, amikor működésben van. @AEgy rendőr jelenléte csökkenti annak esélyét, hogy bűnözés alakuljon ki az adott környéken. Ha megelőző szerepe nem jár sikerrel, a rendőr aktívan fellép a bűnözés ellen. Ha tolvajt talál az utcán, a rendőr lefogja a hálátlant, és megakadályozza aljas tettének végrehajtásában. A rendőrök az egyik legjobb fegyvered a @477sírrablók ellen is. @PA rendőrök más veszélyekkel, például idegen támadásokkal és vadállatok támadásaival szemben is megteszik, amit tudnak. Egyetlen rendőr azonban hatástalan egy állatfalkával vagy idegen sereggel szemben. A rendőr életét adja a harcban, de valószínűleg nem tudja legyőzni az ellenfelet. Az egyetlen esélyük ezekkel a hatalmas ellenfelekkel szemben az, ha együtt tudnak működni. Ennek ellenére az ellenséges hadsereg legyőzése a katonaság feladata, és a vadállatfalkák ellen is a hadsereg bizonyul a leghatékonyabbnak. @G55 @PHa meg szeretnéd látni, mely környékekből kerülnek ki legnagyobb eséllyel bűnözők, használd a @18Kockázatok&áttekintőt. A Kockázatok áttekintő segíthet megtervezni a rendőrőrsök elhelyezését. @PBár egyetlen polgár sem szeretne olyan környéken élni, ahol nincs rendőri járőrözés, senki sem akar közvetlenül a rendőrőrs mellett lakni sem. A rendőrök a nap minden szakában jönnek-mennek, és gyakran kétes alakokat kísérnek. @L@LJogod van többet megtudni az ókori egyiptomi jogról, ha @183ide kattintasz."
         }
     }
 
     message_company_orders {
         id: 87,
-        
+
         size [30, 28]
         title {
-            text: "Company Orders",
+            text: "Egységparancsok",
         }
         content {
-            text: "To station a @37company in the field, or to simply instruct it to move to a new location, click on it and then click on a new location.  The company's standard will appear in the new location, and the company will march towards it, assuming that the soldiers can get there.  Note that the steep, muddy embankment between a flood plain and dry land is impassible except where a road connects the two terrains.   @PYou can issue a company the following orders:  @L@LHold Ground in Tight Formation @LIn tight formation, soldiers stand as close to each other as possible.  Because they have been told to hold ground, they will not leave their position to attack enemies.  They will attack any enemy that comes within their range, though.  The tight formation reduces the amount of ground that the soldiers can defend and makes them an easier target for enemy arrows.  Their shoulder-to-shoulder stance enhances their defensive strength in close combat.   @L@LHold Ground in Loose Formation  @LThis command can only be issued to infantry and archers; it cannot be issued to charioteers.  Soldiers in loose formation spread out to cover more ground while holding their positions.  They will attack if an enemy comes into range.  This formation makes infantry and archers less vulnerable to enemy arrows, but does not offer much protection against enemy infantry attack, as each soldier in the line can effectively only defend himself.   @L@LEngage Nearby Enemies @LWhen given this order, a company moves to attack enemies in their immediate vicinity.  The attack continues until the enemy is killed or retreats, or until you issue a different order...or until your own defeated company's morale breaks and your men head back to their Fort. @L@LMop-Up   @LWhen told to mop-up, soldiers seek out any enemies in a wide area and attack them.  Companies under mop-up orders are at their most aggressive, and they break formation entirely to fearlessly battle the foe.  Fearlessness, however, does hamper their ability to defend themselves, so this order is best used when the city's army outnumbers its enemies.   @L@LCharge  @LThe charge command can be issued only to charioteers.  Charging an enemy line breaks up its formation, making the enemy more vulnerable to attack.  When told to charge, the charioteers work the horses up into a lather, and they pull the chariots at top speed for a great distance.  Eventually, the horses tire and the chariots slow down and need to rest, so issue this order sparingly.   @L@LReturn to Fort   @LClick Return to Fort when your soldiers have done their duty and defeated the enemy.  At the Fort, they can rest up for the next battle.   If morale is low, they'll return to Fort on their own.  @L@LIn addition to issuing the specific orders outlined above, you can also tell companies to attack by selecting them and clicking on an enemy.  The company will pursue the targeted enemy to the death unless you issue a different order. @L@LFor more on ancient Egyptian warfare, click @184here."
+            text: "Egy @37egység kihelyezéséhez a harcmezőre, vagy egyszerűen új helyre vezényléséhez kattints rá, majd kattints egy új helyszínre. Az egység zászlaja megjelenik az új helyen, és az egység odavonul, feltéve, hogy a katonák el tudnak jutni oda. Ne feledd, hogy az ártér és a szárazföld közötti meredek, sáros partfal járhatatlan, kivéve ott, ahol út köti össze a két területet. @PEgy egységnek a következő parancsokat adhatod: @L@LTartsd a helyet szoros alakzatban @LSzoros alakzatban a katonák a lehető legközelebb állnak egymáshoz. Mivel parancsuk a hely megtartása, nem hagyják el pozíciójukat az ellenség megtámadására. Azonban minden közelükbe kerülő ellenséget megtámadnak. A szoros alakzat csökkenti az általuk védhető területet, és könnyebb célponttá teszi őket az ellenséges íjászok számára. Váll a váll mellett állva nagyobb védelmi erőt biztosít közelharcban. @L@LTartsd a helyet laza alakzatban @LEzt a parancsot csak gyalogosoknak és íjászoknak adhatod ki, harci szekereknek nem. Laza alakzatban a katonák szétszóródnak, hogy nagyobb területet fedjenek le, miközben megtartják helyüket. Támadnak, ha egy ellenség hatótávolságba kerül. Ez az alakzat kevésbé sebezhetővé teszi a gyalogosokat és íjászokat az ellenséges nyilakkal szemben, de kevés védelmet nyújt az ellenséges gyalogsági támadások ellen, mivel a sorban álló katonák lényegében csak saját magukat tudják védeni. @L@LKözeli ellenségek megtámadása @LEzzel a paranccsal az egység megtámadja a közvetlen közelében lévő ellenségeket. A támadás addig folytatódik, amíg az ellenséget le nem győzik vagy vissza nem vonul, illetve amíg más parancsot nem adsz... vagy amíg saját legyőzött egységed morálja össze nem omlik, és embereid vissza nem térnek erődödbe. @L@LTakarítás @LHa ezt a parancsot kapják, a katonák nagy területen keresnek ellenségeket, és megtámadják őket. A takarítási parancs alatt álló egységek a legagresszívebbek, és teljesen felbontják alakzatukat, hogy félelem nélkül harcoljanak az ellenféllel. Ez a vakmerőség azonban csökkenti védekezőképességüket, ezért ezt a parancsot leginkább akkor érdemes használni, amikor a város serege túlerőben van. @L@LRoham @LA rohamparancsot csak harci szekereknek adhatod ki. Az ellenséges sorok megrohamozása felbomlasztja alakzatukat, így sebezhetőbbé teszi őket a támadással szemben. Roham esetén a harci szekerek lovai teljes erővel vágtatnak, és nagy távolságon át maximális sebességgel húzzák a szekereket. Végül a lovak elfáradnak, a szekerek lelassulnak és pihenniük kell, ezért ezt a parancsot csak megfontoltan használd. @L@LVisszatérés az erődbe @LKattints a Visszatérés az erődbe parancsra, amikor katonáid elvégezték feladatukat és legyőzték az ellenséget. Az erődben kipihenhetik magukat a következő csatáig. Ha alacsony a moráljuk, maguktól is visszatérnek az erődbe. @L@LA fenti parancsokon kívül közvetlenül is támadásra utasíthatod az egységeket: válaszd ki őket, majd kattints egy ellenségre. Az egység haláláig üldözni fogja a kijelölt ellenséget, hacsak nem adsz másik parancsot. @L@LAz ókori egyiptomi hadviselésről további információért kattints @184ide."
         }
     }
 
     message_building_recruiter_academy {
         id: 88,
-        
+
         size [30, 28]
         title {
-            text: "Recruiter and Academy",
+            text: "Toborzó és akadémia",
         }
         content {
-            text: "Men willing to fight for their city go to the Recruiter's office to enlist. For additional training, they can proceed to the Academy. Both the Recruiter's office and the Academy need road access and labor.   @PThe Recruiter's function is very simple: he enrolls men into your city's @37army and provides them with any special weaponry they might need.  To equip would-be infantrymen, the Recruiter needs a store of weapons, either imported from a @47trade&partner or made by a @98Weaponsmith.  To enlist charioteers, the Recruiter needs chariots from a @98Chariot&Maker or from a trade partner.  Men who dream of being archers supply their own bows and arrows.  The Recruiter also assigns enlistees to sentry duty on the city's Walls and in the city's @85Towers, as needed. @PNew soldiers leave the Recruiter with dreams of glory and needed weaponry, but with little else.  The Academy trains  these green infantrymen, archers and charioteers in the finer arts of warfare.  Sentries learn their skills on the job and do not attend the Academy.  Once they have completed their studies, the soldiers proceed to their companies' Forts. @PIf there is no Academy in the city, then soldiers go directly from the Recruiter's office to the company Fort. @G57 @PBecause of the rough-and-tumble characters associated with the military, the Recruiter and the Academy have a negative effect on @56desirability. @L@LFind out more about war in ancient Egypt by clicking @184here."
+            text: "A városukért harcolni kész férfiak a toborzóirodába mennek, hogy besorozzák őket. További kiképzésért az akadémiára kerülhetnek. Mind a toborzóirodának, mind az akadémiának útkapcsolatra és munkásokra van szüksége. @PA toborzó feladata egyszerű: besorozza a férfiakat a város @37hadseregébe, és ellátja őket a szükséges különleges fegyverekkel. A leendő gyalogosok felszereléséhez a toborzónak fegyverkészletre van szüksége, amelyet egy @47kereskedelmi&partnertől importálhat, vagy egy @98Fegyverkovács készíthet el. Harci szekerekhez a toborzónak egy @98Harci&szekérkészítőtől vagy kereskedelmi partnertől származó szekerekre van szüksége. Az íjászoknak készülő férfiak saját maguk biztosítják íjaikat és nyilaikat. A toborzó szükség esetén a város falain és @85tornyaiban őrszolgálatra is beosztja a besorozottakat. @PAz új katonák dicsőségről álmodva és szükséges fegyverzettel hagyják el a toborzót, de kevés mással rendelkeznek. Az akadémia a tapasztalatlan gyalogosokat, íjászokat és harci szekereket a hadviselés kifinomultabb művészetére tanítja. Az őrszemek munka közben sajátítják el tudásukat, és nem járnak akadémiára. Tanulmányaik befejezése után a katonák egységük erődjébe vonulnak. @PHa nincs akadémia a városban, a katonák közvetlenül a toborzóirodából az egység erődjébe mennek. @G57 @PA katonasághoz kapcsolódó durva alakok miatt a toborzó és az akadémia negatívan hat a @56vonzóerőre. @L@LAz ókori egyiptomi háborúkról többet tudhatsz meg, ha @184ide kattintasz."
         }
     }
 
     message_building_grain_farm {
         id: 89,
-        
+
         size [30, 28]
         title {
-            text: "Grain Farm",
+            text: "Gabonaföld",
         }
         content {
-            text: "Grain is no different from any other food in the city, but Grain Farms do produce a raw material as a byproduct: straw. Straw serves as fodder for the cattle in @360Cattle&Ranches and is one of the raw materials required for @364brick manufacture. Straw (along with game meat) is also used as a fodder for animals in the @479Zoo.  @PStraw is harvested at the same time as grain.  A delivery person takes it directly to Cattle Ranches, Brick Makers, Zoos or @4Storage&Yards at the same time as his co-worker wheels the grain harvest to its destination Granary or Storage Yard. @PGrain Farms are undesirable neighbors and will lower the value of any nearby housing. @POther topics that may be useful include @45Food&and&Farming, @2Bazaars and @3Granaries. @L@LClick @185here to read about grain in ancient Egypt."
+            text: "A gabona nem különbözik a városban fogyasztott többi élelemtől, de a gabonaföldek melléktermékként nyersanyagot is termelnek: szalmát. A szalma takarmányként szolgál a @360Marhatenyésztő&telepek állatai számára, és az egyik nyersanyag, amely a @364téglagyártáshoz szükséges. A szalmát (a vadhússal együtt) az állatok etetésére is használják az @479Állatkertben. @PA szalmát a gabonával egy időben takarítják be. Egy szállító közvetlenül a marhatelepekre, téglakészítőkhöz, állatkertekbe vagy @4Raktár&udvarokba viszi, miközben munkatársa a gabonatermést a célként kijelölt magtárba vagy raktárudvarba szállítja. @PA gabonaföldek nemkívánatos szomszédságot jelentenek, és csökkentik a közeli lakóházak értékét. @PEgyéb hasznos témák: @45Élelem&és&mezőgazdaság, @2Bazárok és @3Magtárak. @L@LKattints @185ide, hogy olvass az ókori egyiptomi gabonatermesztésről."
         }
     }
 
     message_building_fruit_vegetables_farm {
         id: 90,
-        
+
         size [30, 28]
         title {
-            text: "Fruit and Vegetable Farms",
+            text: "Gyümölcs- és zöldségfarmok",
         }
         content {
-            text: "Fruits and vegetables are just as capable of sustaining healthy lives as any other food type and provide welcome variety in any diet. Different parts of Egypt support different crops. Among the crops that may be available to your citizens are pomegranates, figs, chickpeas and lettuce. @PFruit and vegetable farms operate like all other food farms.  They do not grow any produce except food.  Please refer to @45farming for complete advice on planning your farms to achieve the most benefit. @PBoth types of farm require labor and road access to produce crops. For farms on the flood plain, this labor comes from @8Work&Camps, so be sure to establish one or more Work Camps near your farms. @L@LEgyptians ate a variety of foods and enjoyed a flavorful cuisine. Click @187here for more on the Egyptian menu."
+            text: "A gyümölcsök és zöldségek éppúgy képesek egészséges életet biztosítani, mint bármely más élelmiszer, és kellemes változatosságot nyújtanak minden étrendben. Egyiptom különböző területei különböző növények termesztésére alkalmasak. A polgáraid számára elérhető termények között lehet gránátalma, füge, csicseriborsó és saláta. @PA gyümölcs- és zöldségfarmok ugyanúgy működnek, mint minden más élelmiszerfarm. Nem termelnek más nyersanyagot, csak élelmet. A farmok megtervezésével és a legjobb eredmény elérésével kapcsolatban lásd a @45mezőgazdaság részt. @PMindkét farmtípusnak munkásokra és útkapcsolatra van szüksége a termeléshez. Az ártérre épült farmok esetében a munkát a @8Munkatáborok biztosítják, ezért ügyelj rá, hogy egy vagy több munkatábort létesíts a farmok közelében. @L@LAz egyiptomiak sokféle ételt fogyasztottak, és ízletes konyhát élveztek. Az egyiptomi étrendről további információért kattints @187ide."
         }
     }
 
     message_building_barley_flax_henna_farm {
         id: 91,
-        
+
         size [30, 28]
         title {
-            text: "Barley, Flax and Henna Farms",
+            text: "Árpa-, len- és hennanövény-farmok",
         }
         content {
-            text: "Barley, Flax and Henna Farms are a little different from @89grain, @90fruit, and @90vegetable&farms. Barley, Flax and Henna Farms do not produce food, but rather raw materials that are manufactured into valuable products.  Barley is harvested and made into @96beer, flax is woven into @60linen, and henna is crushed and mixed with liquid to make @470paint. @PBarley, Flax and Henna Farms are built and operated just like other farms, though. They can be placed anywhere on the flood plain. Off the flood plain, they must be placed on arable meadows, identified by yellow tufts of vegetation.  You'll know you've chosen a good spot when you see a green 'ghost' of the farm before you place it. Farms must be adjacent to a road and need labor. Floodplain farms do not procure labor directly, but rely on peasants from the @8Work&Camps. Read the @45farming section before you plan your farms.   @POnce barley, flax and henna are harvested, the crops are taken to the nearest manufacturer (Brewery in the case of barley, Weaver in the case of flax, Paint Maker in the case of henna). At the manufacturers, the barley, flax or henna is manufactured into a final product that will be distributed to your citizens, used at the @363Artisans'&Guild or @47traded for profit. If there is no room at the manufacturers, or if none exist in the city, barley, flax and henna are taken to a @4Storage&Yard.  @PAll three farms have a negative impact on the @56desirability of nearby land. @L@LFor more on the history of barley farming, click @185here.  To find out about flax harvesting in ancient Egypt, click @189here.  To find out more about henna plants, click @469here."
+            text: "Az árpa-, len- és hennanövény-farmok kissé eltérnek a @89gabonaföldektől, @90gyümölcs- és @90zöldség&farmoktól. Ezek a farmok nem élelmet termelnek, hanem értékes termékekké feldolgozott nyersanyagokat. Az árpát betakarítják, majd @96sört készítenek belőle, a lent @60vászonná szövik, a hennát pedig összezúzzák és folyadékkal keverve @470festéket készítenek belőle. @PAz árpa-, len- és hennanövény-farmokat azonban ugyanúgy építik és működtetik, mint a többi farmot. Az ártéren bárhol elhelyezhetők. Az ártéren kívül termékeny réteken kell elhelyezni őket, amelyeket sárga növénycsomókról ismerhetsz fel. Tudni fogod, hogy megfelelő helyet választottál, amikor az építés előtt a farm zöld „szellemképét” látod. A farmoknak út mellett kell lenniük, és munkásokra van szükségük. Az ártéri farmok nem biztosítanak maguknak közvetlenül munkásokat, hanem a @8Munkatáborok parasztjaira támaszkodnak. Farmjaid megtervezése előtt olvasd el a @45mezőgazdaság részt. @PAmikor az árpát, lent és hennát betakarítják, a terményeket a legközelebbi feldolgozóüzembe szállítják (árpa esetén a sörfőzdébe, len esetén a szövőműhelybe, henna esetén a festékkészítőhöz). A feldolgozókban az árpából, lenből vagy hennából késztermék lesz, amelyet a polgáraid kapnak meg, a @363Kézművesek&céhe használ fel, vagy @47kereskedelemben értékesíthetsz haszonnal. Ha a feldolgozóknál nincs hely, vagy a városban egyáltalán nincsenek ilyenek, az árpát, lent és hennát egy @4Raktár&udvarba szállítják. @PMindhárom farmtípus negatívan hat a közeli területek @56vonzerejére. @L@LAz árpatermesztés történetéről további információért kattints @185ide. Az ókori egyiptomi lenbetakarításról a @189ide kattintva olvashatsz. A hennanövényekről további információért kattints @469ide."
         }
     }
 
     message_building_clay_pit {
         id: 92,
-        
+
         size [30, 28]
         title {
-            text: "Clay Pit",
+            text: "Agyagbánya",
         }
         content {
-            text: "Clay Pits produce clay that can be molded into @1pottery, combined with @89straw to make @364bricks, or delivered to an @363Artisans'&Guild and converted into plaster. @PClay Pits must have access to the road and to a supply of labor.  They can only be located near the water. @POnce Clay Pit workers dig up enough clay to fill a cart, the Clay Pit sends a delivery man to take the goods to whomever needs it. The delivery man always tries to take clay to a Brickworks, Potter or Artisans' Guild that needs the supply, favoring the nearest building. If none of these industries need the raw material, the delivery man takes the clay to the nearest @4Storage&Yard that can accept it. If no one can accept the clay, the delivery waits until space opens up. @PClay Pits are dank, ugly holes dug into the earth, and your discriminating citizens will not want to live near such an unsightly facility. @L@LThe ancient Egyptians made very good use of the rich clay and mud deposits left behind as a result of the Nile's yearly inundation.  Click @190here to find out more about this valued commodity."
+            text: "Az agyagbányák agyagot termelnek, amelyből @1kerámiát lehet készíteni, @89szalmával együtt @364téglát lehet gyártani belőle, vagy egy @363Kézművesek&céhe számára szállítható, ahol vakolattá alakítják. @PAz agyagbányáknak útkapcsolatra és munkásokra van szükségük. Csak víz közelében helyezhetők el. @PMiután az agyagbánya dolgozói elegendő agyagot ástak ki egy kocsi megtöltéséhez, a bánya szállítót küld, hogy eljuttassa az árut a szükséges helyre. A szállító mindig olyan téglagyárnak, fazekasnak vagy kézművescéhnél próbálja leadni az agyagot, amelynek szüksége van rá, és a legközelebbi épületet részesíti előnyben. Ha egyik ilyen iparágnak sincs szüksége a nyersanyagra, a szállító a legközelebbi, azt befogadni képes @4Raktár&udvarba viszi az agyagot. Ha senki sem tudja átvenni az agyagot, a szállítás várakozik, amíg hely nem szabadul fel. @PAz agyagbányák nyirkos, csúnya földbe vájt gödrök, ezért igényes polgáraid nem akarnak ilyen látványos létesítmény közelében élni. @L@LAz ókori egyiptomiak kiválóan hasznosították a Nílus éves áradásai után visszamaradó gazdag agyag- és iszaplelőhelyeket. Kattints @190ide, hogy többet tudj meg erről az értékes nyersanyagról."
         }
     }
 
     message_building_gold_copper_mine {
         id: 93,
-        
+
         size [30, 28]
         title {
-            text: "Gold and Copper Mines",
+            text: "Arany- és rézbányák",
         }
         content {
-            text: "Gold and copper are valuable metals. A city with metal ore in its area is truly lucky.  If you see rocks with shiny metallic patches, click the Industrial Structures button on the Control Panel, then choose Raw Materials to learn whether your surveyors found gold or copper ore - or both.  @PGold is a rare and precious commodity and should be mined whenever you have the opportunity to do so. Gold is @48money, and Gold Mines afford the city the opportunity to make its own. Unlike other commodities, gold is never delivered to the @4Storage&Yards. Gold can only go directly to the @77Palace, which turns it into debens and adds them to your city's treasury. @G54 @L@LCopper @LCopper is almost as valuable as gold, although it is used more conventionally. Copper is one of the few raw materials you can export for serious profit.  @PIn unsettled times, copper is extremely valuable as a resource for @98weapons, which can command a very dear price. Often your own city will need weapons to equip its infantry. Click @52here to read about war. @L@LMetal mines must be built adjacent to rocky outcroppings that bear metallic nuggets. Both mines need road access and labor, and both are among the most undesirable neighbors a city can have. @L@LThe ancient Egyptians valued gold and underwent arduous processes to extract the metal from the earth.  Click @191here to find out more about gold and its uses in ancient Egypt."
+            text: "Az arany és a réz értékes fémek. Egy város, amelynek területén fémérc található, igazán szerencsés. Ha fényes, fémes foltokkal tarkított sziklákat látsz, kattints a vezérlőpult Ipari építmények gombjára, majd válaszd a Nyersanyagok lehetőséget, hogy megtudd, felderítőid találtak-e arany- vagy rézércet – esetleg mindkettőt. @PAz arany ritka és értékes nyersanyag, ezért mindig ki kell bányászni, amikor lehetőséged van rá. Az arany @48pénz, és az aranybányák lehetőséget adnak a városnak, hogy saját maga állítsa elő. Más árukkal ellentétben az aranyat soha nem szállítják a @4Raktár&udvarokba. Az arany csak közvetlenül a @77Palotába kerülhet, ahol debenekké alakítják, majd a város kincstárához adják. @G54 @L@LRéz @LA réz majdnem olyan értékes, mint az arany, bár hagyományosabb módon használják fel. A réz egyike azon kevés nyersanyagoknak, amelyeket jelentős haszonnal exportálhatsz. @PNyugtalan időkben a réz rendkívül értékes alapanyag a @98fegyverek készítéséhez, amelyek igen magas árat érhetnek el. Gyakran saját városodnak is szüksége lesz fegyverekre a gyalogság felszereléséhez. A háborúról a @52ide kattintva olvashatsz. @L@LA fémbányákat olyan sziklás felszínek mellé kell építeni, ahol fémes rögök találhatók. Mindkét bányatípusnak útkapcsolatra és munkásokra van szüksége, és a város számára a legkevésbé kívánatos szomszédok közé tartoznak. @L@LAz ókori egyiptomiak nagyra értékelték az aranyat, és nehéz eljárásokkal nyerték ki a földből. Kattints @191ide, hogy többet tudj meg az aranyról és ókori egyiptomi felhasználásáról."
         }
     }
-    
+
     message_building_woodcutter_and_reed_gatherer {
         id: 94,
-        
+
         size [30, 28]
-        title { text: "Wood Cutter and Reed Gatherer" }
+        title { text: "Favágó és nádvágó" }
         content {
-            text: "Wood Cutters and Reed Gatherers harvest available raw materials to be used in other industries. Wood has a variety of uses.  Carpenters need wood to build ramps or scaffolds for monuments, Chariot Makers fashion their deadly vehicles from wood, and Shipwrights turn wood into warships and transports.  Reeds are used to manufacture @97papyrus.  @PWood Cutters can be located anywhere, but should ideally be near the woods to reduce the amount of time they spend commuting. Wood Cutters must have access to both the road and to local labor. Once the building is fully operational, wood cutters make their way to the forest and begin cutting down trees. @G58 @PReed Gatherers operate very similarly to Wood Cutters. Reed Gatherers should be located near a field of reeds, although you can build them anywhere. Reed fields are a very dark green with lighter green and yellow tufts. Like Wood Cutters, Reed Gatherers need road access and labor to operate. Once they have everything they need, reed gatherers venture into the marshes. @PBe careful when you are planning your Wood Cutters and Reed Gatherers. Wood and reeds gradually grow back, but both can be over-harvested. If you build too many Wood Cutters or Reed Gatherers, you run the risk of depleting the resource. Your harvesting industries will grind to a halt until the trees and reeds have a chance to grow back. @PWood is one of the most valuable commodities in Egypt.  Try not to destroy forests by clearing land - the city will be out a large source of income if you do.  Marshes cannot be cleared, and some healers associate them with malaria.   @L@LClick @192here to find out more about the importance of wood in ancient Egypt.  Click @188here to discover the many uses for reeds."
+            text: "A favágók és nádvágók rendelkezésre álló nyersanyagokat gyűjtenek be, amelyeket más iparágak használnak fel. A fának sokféle felhasználása van. Az ácsmesterek fát igényelnek rámpák vagy állványzatok építéséhez az emlékművekhez, a harci szekérkészítők fából készítik halálos járműveiket, a hajóépítők pedig hadihajókat és szállítóhajókat készítenek belőle. A nádat @97papirusz gyártására használják. @PA favágókat bárhol elhelyezheted, de ideális esetben erdők közelében legyenek, hogy csökkentsd az ingázással töltött időt. A favágóknak útkapcsolatra és helyi munkaerőre is szükségük van. Amint az épület teljesen működőképes, a favágók az erdőbe indulnak, és megkezdik a fák kivágását. @G58 @PA nádvágók nagyon hasonlóan működnek a favágókhoz. A nádvágókat érdemes nádas közelében elhelyezni, bár bárhol felépíthetők. A nádasokat sötétzöld színük, valamint világosabb zöld és sárga növénycsomóik alapján ismerheted fel. A favágókhoz hasonlóan a nádvágóknak is útkapcsolatra és munkásokra van szükségük a működéshez. Amint mindenük megvan, a nádvágók a mocsarakba indulnak. @PLégy óvatos a favágók és nádvágók megtervezésekor. A fák és a nád fokozatosan újranőnek, de mindkettőt túl lehet termelni. Ha túl sok favágót vagy nádvágót építesz, fennáll a veszélye, hogy kimeríted a készletet. Betakarító iparágaid leállnak, amíg a fák és a nád újra nem nőnek. @PA fa Egyiptom egyik legértékesebb nyersanyaga. Próbáld meg nem erdőirtással felszabadítani a területet – a város jelentős bevételi forrást veszíthet, ha így teszel. A mocsarakat nem lehet eltüntetni, és egyes gyógyítók kapcsolatba hozzák őket a maláriával. @L@LKattints @192ide, hogy többet tudj meg a fa jelentőségéről az ókori Egyiptomban. Kattints @188ide, hogy megismerd a nád sokféle felhasználását."
         }
     }
 
     message_building_stone_quarries {
         id: 95,
-        
+
         size [30, 28]
         title {
-            text: "Stone Quarries",
+            text: "Kőbányák",
         }
         content {
-            text: "Quarrymen chisel large blocks of rock at four different kinds of quarry: @L@PPlain stone Quarry @PLimestone Quarry @PGranite Quarry @PSandstone Quarry @L@LIf there are extensive rocky outcroppings in the city's area, you can probably build quarries to extract the rock.  Some areas, though, have rock that's not of construction grade, or have too little rock to support industry.  In such areas, rock is just a nuisance, because it cannot be cleared, traversed or built upon.  Click on the Industrial Structures button and check the list of raw materials available.  This list shows you what types of stone, if any, can be quarried in the area. @PYou must build quarries adjacent to rocky outcroppings.  When you pick an appropriate location, you will see a green ghost of the quarry you're trying to place.  Otherwise, you will see a red block. @PStone cannot be manufactured into other products.  Stone is, however, the stuff of monuments, and significant amounts of stone are needed to complete even some of the smaller monuments. @PQuarries, which are dug into the side of rocky outcroppings, are prone to collapse.  Be sure to build an @81Architect's&post near the quarries to prevent disaster. @PQuarries need a staff of workers and road access to operate. Because of the noise from the constant banging on the rock, quarries are undesirable neighbors.  @L@LQuarrying in ancient Egypt was a very time-consuming task. To find out more, click @193here."
+            text: "A kőfejtők nagy kőtömböket vágnak ki négy különböző bányatípusból: @L@PSima kőbánya @PMészkőbánya @PGránitbánya @PHomokkőbánya @L@LHa a város területén kiterjedt sziklás felszínek találhatók, valószínűleg kőbányákat építhetsz a kő kitermelésére. Egyes területeken azonban a kő nem építési minőségű, vagy túl kevés van belőle ahhoz, hogy ipart lehessen rá alapozni. Ilyen helyeken a kő csak akadály, mert nem lehet eltávolítani, bejárni vagy építeni rá. Kattints az Ipari építmények gombra, és ellenőrizd az elérhető nyersanyagok listáját. Ez a lista megmutatja, hogy milyen típusú követ lehet kitermelni a területen, ha egyáltalán van ilyen. @PA kőbányákat sziklás felszínek mellé kell építeni. Ha megfelelő helyet választasz, megjelenik a lerakni kívánt kőbánya zöld szellemképe. Ellenkező esetben piros blokkot látsz. @PA követ nem lehet más termékké feldolgozni. A kő azonban az emlékművek alapanyaga, és még a kisebb emlékművek elkészítéséhez is jelentős mennyiségű kőre van szükség. @PA sziklás felszínek oldalába vájt kőbányák hajlamosak az összeomlásra. Ügyelj rá, hogy építs egy @81Építészeti&őrhelyet a kőbányák közelében a katasztrófák megelőzésére. @PA kőbányák működéséhez munkásokra és útkapcsolatra van szükség. A folyamatos kőfejtés zajai miatt a kőbányák nemkívánatos szomszédságot jelentenek. @L@LAz ókori Egyiptomban a kőfejtés rendkívül időigényes feladat volt. További információért kattints @193ide."
         }
     }
 
     message_building_brewery {
         id: 96,
-        
+
         size [30, 28]
         title {
-            text: "Brewery",
+            text: "Sörfőzde",
         }
         content {
-            text: "To begin the brewing process, Breweries must have road access, labor and a supply of barley. @91Barley&Farms produce needed barley, or it can be imported from a @47trade&partner. One Barley Farm can typically supply enough barley for two Breweries. Breweries can store some barley on the premises to keep themselves working between harvests. @POnce the brewers have all the needed supplies, they brew beer. You can tell if a brewer is hard at work if you see the brewer and his staff in the Brewery. Once the brewing process is complete, delivery men first try to take the beer to a @74Senet&House. If no Senet House needs the beer, delivery men take it to a @4Storage&Yard, where it can be picked up by @2Bazaar&buyers for distribution to your citizens or @47traded for a tidy profit. Beer is one product your citizens require before they build up their homes into more @56attractive&dwellings.  @PBeer is also served at @51grand&festivals.  @L@LTo read more about beer in ancient Egypt, click @194here."
+            text: "A sörfőzés megkezdéséhez a sörfőzdének útkapcsolatra, munkásokra és árpaellátásra van szüksége. A szükséges árpát a @91Árpa&farmok termelik, vagy importálható egy @47kereskedelmi&partnertől. Egy árpafarm általában két sörfőzde ellátásához elegendő árpát tud biztosítani. A sörfőzdék bizonyos mennyiségű árpát a helyszínen is tárolhatnak, hogy a betakarítások között is működhessenek. @PAmint a sörfőzők minden szükséges készlettel rendelkeznek, sört készítenek. Láthatod, hogy egy sörfőző keményen dolgozik, ha őt és segédeit a sörfőzdében látod. A sör elkészülte után a szállítók először egy @74Szenet&házba próbálják vinni. Ha egyik Szenetház sem igényli a sört, a szállítók egy @4Raktár&udvarba viszik, ahol a @2Bazár&vásárlói felvehetik, hogy szétosszák a polgárok között, vagy @47kereskedelemben értékesítsék jó haszonért. A sör egyike azoknak a termékeknek, amelyekre a polgároknak szükségük van, mielőtt otthonaikat @56vonzóbb&lakóhelyekké fejleszthetik. @PA sört a @51nagy&ünnepségeken is felszolgálják. @L@LAz ókori egyiptomi sörről további információért kattints @194ide."
         }
     }
 
     message_building_papyrus_maker {
         id: 97,
-        
+
         size [30, 28]
         title {
-            text: "Papyrus Maker",
+            text: "Papiruszkészítő",
         }
         content {
-            text: "Papyrus Makers need labor, access to a road, and a supply of @94reeds from a Reed Gatherer or a @47trade&partner.  Papyrus makers can store a supply of reeds on the premises to keep themselves working between deliveries. @PWhen a cartload of papyrus is ready, a delivery man brings it to a @68Scribal&School or @70Library that needs it. If no education structures need papyrus, the delivery man brings the supplies to the @4Storage&Yard where it can be @47traded for profit. @G69 @PCitizens won't like living near a Papyrus Maker. The constant pounding gives them a headache. @L@LTo learn more about the manufacture of papyrus in ancient Egypt, click @195here."
+            text: "A papiruszkészítőnek munkásokra, útkapcsolatra és @94nádból származó készletre van szüksége, amelyet egy nádvágó vagy egy @47kereskedelmi&partner biztosít. A papiruszkészítők bizonyos mennyiségű nádat a helyszínen is tárolhatnak, hogy a szállítások között is dolgozhassanak. @PAmikor egy kocsirakomány papirusz elkészül, egy szállító elviszi egy olyan @68Írnok&iskolába vagy @70Könyvtárba, amelynek szüksége van rá. Ha egyik oktatási épületnek sincs szüksége papiruszra, a szállító a készletet a @4Raktár&udvarba viszi, ahol @47kereskedelemben értékesíthető haszonnal. @G69 @PA polgárok nem szeretnek papiruszkészítő közelében élni. A folyamatos ütögetés fejfájást okoz nekik. @L@LAz ókori egyiptomi papiruszkészítésről további információért kattints @195ide."
         }
     }
 
     message_building_weapongsmith_and_chariot_maker {
         id: 98,
-        
+
         size [30, 28]
         title {
-            text: "Weaponsmith and Chariot Maker",
+            text: "Fegyverkovács és harci szekérkészítő",
         }
         content {
-            text: "Weaponsmiths and Chariot Makers produce implements of war needed by certain military companies.  @PUsing copper from a @93Copper&Mine or imported from a @47trade&partner, the Weaponsmith fashions weapons.  Completed weapons are taken to a @88Recruiter, who uses them to equip @37Infantry companies, or to a @45Storage&Yard if your Recruiter already has enough on hand or if your city has no working Recruiter. @PThe Chariot Maker uses wood from a @94Wood&Cutter or @47trade&partner to manufacture magnificent war chariots.  He sends the finished product to the Recruiter to outfit @37charioteers.  If the Recruiter already has some chariots in his inventory, or if your city has no working Recruiter, the chariots are taken to a Storage Yard. @PBoth Weaponsmiths and Chariot Makers need road access and a source of labor. They make @56undesirable neighbors. @L@LLearn more about weaponry in ancient Egypt by clicking @196here."
+            text: "A fegyverkovácsok és harci szekérkészítők olyan hadi felszereléseket gyártanak, amelyekre bizonyos katonai egységeknek szükségük van. @PA fegyverkovács egy @93Rézbányából származó vagy egy @47kereskedelmi&partnertől importált rézből készít fegyvereket. Az elkészült fegyvereket egy @88Toborzóhoz szállítják, aki a @37gyalogos&egységek felszerelésére használja őket, vagy egy @45Raktár&udvarba kerülnek, ha a toborzónak már elegendő készlete van, illetve ha a városban nincs működő toborzó. @PA harci szekérkészítő egy @94Favágótól vagy @47kereskedelmi&partnertől származó fából készít pompás harci szekereket. Az elkészült szekereket a toborzónak küldi, hogy felszerelje velük a @37harci&szekérvezetőket. Ha a toborzónak már van néhány szekere a készletében, vagy ha a városban nincs működő toborzó, a szekereket egy Raktárudvarba szállítják. @PMind a fegyverkovácsoknak, mind a harci szekérkészítőknek útkapcsolatra és munkásokra van szükségük. Mindketten @56nemkívánatos szomszédságot jelentenek. @L@LAz ókori egyiptomi fegyverekről többet tudhatsz meg, ha @196ide kattintasz."
         }
     }
 
     message_building_jeweler_and_luxury_goods {
         id: 99,
-        
+
         size [30, 28]
         title {
-            text: "Jeweler and Luxury Goods",
+            text: "Ötvös és luxuscikkek",
         }
         content {
-            text: "With a supply of @361gemstones, Jewelers make fine pieces of jewelry, a luxury good. Gemstones may either be mined or imported from a @47trade&partner.  @PJewelers need road access and labor in order to operate. They have a negative effect on @56desirability.  @PJewelery is not a very lucrative export. Most of the cost of imported luxury goods lies in its transportation, not in its materials.  So, while it might cost your treasury quite a lot to import luxuries from other cities, you will not receive a comparable price for your jewelry exports. @PJewelry is but one of the luxury goods that citizens crave. The wealthiest citizens will demand a second, imported luxury good. @L@LAncient Egypt is renowned for its splendid @382jewelry. To read more about other luxury goods in ancient Egypt, click @197here."
+            text: "Megfelelő @361drágakő-készlettel az ötvösök finom ékszereket, egy luxuscikket készítenek. Drágaköveket bányászhatsz, vagy importálhatsz egy @47kereskedelmi&partnertől. @PAz ötvösök működéséhez útkapcsolatra és munkásokra van szükség. Negatívan hatnak a @56vonzóerőre. @PAz ékszer nem túl jövedelmező exportcikk. Az importált luxuscikkek árának nagy részét nem az alapanyag, hanem a szállítás költsége adja. Ezért bár a luxuscikkek más városokból történő behozatala jelentős kiadást jelenthet a kincstáradnak, az ékszerexportért nem kapsz hasonlóan magas árat. @PAz ékszer csak egyike azoknak a luxuscikkeknek, amelyekre a polgárok vágynak. A leggazdagabb polgárok egy második, importált luxuscikket is igényelnek. @L@LAz ókori Egyiptom híres volt pompás @382ékszereiről. Az ókori egyiptomi további luxuscikkekről a @197ide kattintva olvashatsz."
         }
     }
 
     message_population_milestone_100 {
         id: 100,
-        
+
         size [30, 20]
-        title { text: "Population milestone" }
+        title { text: "Népességi mérföldkő" }
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
-        content { text: "100 people have moved into your village." }
+        content { text: "100 ember költözött a faludba." }
     }
 
     message_population_milestone_500 {
         id: 101,
-        
+
         size [30, 20]
-        title { text: "Population milestone" }
+        title { text: "Népességi mérföldkő" }
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
-        content { text: "Your budding town now houses five hundred residents." }
+        content { text: "Virágzó településed már ötszáz lakosnak ad otthont." }
     }
 
     message_population_milestone_1000 {
         id: 102,
         type: 2,
-        
+
         size [30, 20]
-        title { text: "Population milestone" }
+        title { text: "Népességi mérföldkő" }
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
         video { text: "@17" }
-        content { text: "One thousand people now call your city home." }
+        content { text: "Városod immár ezer ember otthona." }
     }
     message_population_milestone_2000 {
         id: 103,
         type: 2,
-        
+
         size [30, 20]
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
-        title { text: "Population milestone" }
+        title { text: "Népességi mérföldkő" }
         video { text: "@17" }
-        content { text: "With two thousand residents, your city is growing in importance." }
+        content { text: "Kétezer lakosával városod egyre jelentősebbé válik." }
     }
     message_population_milestone_3000 {
         id: 104,
         type: 2,
-        
+
         size [30, 20]
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
-        title { text: "Population milestone" }
+        title { text: "Népességi mérföldkő" }
         video { text: "@17" }
-        content { text: "Your city's population has reached three thousand for the first time in history." }
+        content { text: "Városod népessége története során először érte el a háromezret." }
     }
     message_population_milestone_5000 {
         id: 105,
         type: 2,
-        
+
         size [30, 20]
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
-        title { text: "Population milestone" }
+        title { text: "Népességi mérföldkő" }
         video { text: "@18" }
-        content { text: "Your city is getting quite large.  Now five thousand people live here." }
+        content { text: "Városod már tekintélyes méretű: ötezer ember él benne." }
     }
     message_population_milestone_10000 {
         id: 106,
         type: 2,
-        
+
         size [30, 20]
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
-        title { text: "Population milestone" }
+        title { text: "Népességi mérföldkő" }
         video { text: "@18" }
-        content { text: "Its population of ten thousand places your city in Egypt's top tier." }
+        content { text: "Tízezres népességével városod Egyiptom legjelentősebbjei közé emelkedett." }
     }
     message_population_milestone_15000 {
         id: 107
         type: 2
-        
+
         size [30, 20]
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
-        title { text: "Population milestone" }
+        title { text: "Népességi mérföldkő" }
         video { text: "@18" }
-        content { text: "Few cities can rival yours, which now houses fifteen thousand citizens." }
+        content { text: "Kevés város vetekedhet a tiéddel, amely már tizenötezer lakost számlál." }
     }
     message_population_milestone_20000 {
         id: 108,
         type: 2,
-        
+
         size [30, 20]
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
-        title { text: "Population milestone" }
+        title { text: "Népességi mérföldkő" }
         video { text: "@19" }
-        content { text: "Other governors and nomarchs are awed that your city houses twenty thousand people!" }
+        content { text: "Más kormányzók és nomarkhoszok ámulnak, hogy városod húszezer lakosnak ad otthont!"
+        }
     }
     message_population_milestone_25000 {
         id: 109,
         type: 2,
-        
+
         size [30, 20]
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
-        title { text: "Population milestone" }
+        title { text: "Népességi mérföldkő" }
         video { text: "@19" }
-        content { text: "The few immigrants who founded your city so many years ago never imagined that it would swell to twenty five thousand people!" }
+        content { text: "Az egykori maroknyi telepes sem hitte volna, hogy városod egy nap huszonötezer lakosú lesz!" }
     }
 
     message_the_control_panel {
         id: 110,
-        
+
         size [30, 20]
-        title { text: "The Control Panel"  }
+        title { text: "Vezérlőpult" }
         content {
-            text: "This panel accesses all of the controls that you need to build and maintain your city.  The best way to understand its functions is simply to click on its various buttons - go ahead, you can't hurt anything!  If Mouse Help is turned ON (under 'Help' on the Menu Bar), put your cursor over any element for a short description of it.  For detailed explanations of every topic in Pharaoh, use the 'Help' item on the Menu Bar."
+            text: "Ez a panel biztosít hozzáférést minden eszközhöz, amelyre városod építéséhez és irányításához szükséged van. A legjobb módja a megismerésének, ha rákattintasz a különféle gombokra – csak bátran, nem tehetsz kárt semmiben! Ha az Egérsúgó be van kapcsolva (a menüsor „Súgó” menüjében), vidd a kurzort bármely elem fölé egy rövid leírásért. A játék minden funkciójának részletes ismertetését a menüsor „Súgó” menüpontjában találod."
         }
     }
 
@@ -1331,12 +1332,12 @@ game_messages_hu {
         id: 111,
         type: 2,
         message_type: 1,
-        
+
         size [30, 20]
         urgent: 1,
-        title { text: "Fire in the city" }
+            title { text: "Tűz a városban" }
         content {
-            text: "Flames are sweeping through parts of the city.  Click on 'Overlays: Risks' to see where fire could erupt next, and build Firehouses near the structures at risk."
+            text: "Lángok pusztítanak a város egyes részein. Kattints a „Fedvények: Kockázatok” nézetre, hogy lásd, hol csaphat fel legközelebb a tűz, és építs tűzoltóságokat a veszélyeztetett épületek közelébe."
         }
     }
 
@@ -1344,76 +1345,76 @@ game_messages_hu {
         id: 112
         type: 2
         message_type: 1
-        
+
         size [30, 20]
         urgent: 1
-        title { text: "Collapsed building" }
+        title { text: "Összeomlott épület" }
         content {
-            text: "Without adequate maintenence provided by architects, certain large structures in your city will collapse.  Click on 'Overlays: Risks' to see which buildings are in danger of collapsing, and build Architect's Posts nearby."
+            text: "Ha az építészek nem végzik el a szükséges karbantartást, városod egyes nagyobb épületei összeomlanak. Kattints a „Fedvények: Kockázatok” nézetre, hogy lásd, mely épületek vannak veszélyben, és építs a közelükbe építészeti hivatalt."
         }
     }
 
     message_ship_aground {
         id: 114,
         type: 2,
-        
+
         size [30, 20]
-        title { text: "Ship aground" }
-        content { text: "Some inexperienced captains learn about flood plains the hard way, when their ships run aground." }
+        title { text: "Hajó zátonyra futott" }
+        content { text: "Néhány tapasztalatlan kapitány csak akkor ismeri meg az ártéri síkságokat, amikor hajója zátonyra fut." }
     }
 
     message_out_of_money {
         id: 115,
-        
+
         size [30, 20]
-        title { text: "Out of money!" }
-        content { text: "Your treasury ran out of debens.  You are hereby granted additional funds, but no benefactor will rescue you again.  Use this gift to create money-making enterprises." }
+        title { text: "Elfogyott a pénz!" }
+        content { text: "Kincstáradból kifogytak a debenek. Most még kapsz rendkívüli támogatást, de többé senki sem fog kisegíteni. Használd ezt az adományt jövedelmező vállalkozások létrehozására." }
     }
 
     message_debt_again {
         id: 116,
-        
+
         size [30, 20]
-        title { text: "Debt!" }
-        content { text: "Your treasury bleeds money.  You can spend up to 5,000 debens' worth of credit, but @48debt can lead to the downfall of your family unless you repay it quickly." }
+        title { text: "Adósság!" }
+        content { text: "Kincstárad gyorsan kiürül. Legfeljebb 5000 deben hitelt vehetsz fel, de a @48adósság családod bukásához vezethet, ha nem törleszted mielőbb." }
     }
 
     message_out_of_money_again {
         id: 117,
-        
+
         size [30, 20]
-        title { text: "Out of money!" }
-        content { text: "City vaults have run dry, O Pharaoh.  Your loyal nomarchs donated all the debens they could spare, but they cannot afford to do so again." }
+        title { text: "Elfogyott a pénz!" }
+        content { text: "Kiürültek a város kincstárai, ó, fáraó. Hű nomarkhoszaid minden nélkülözhető debenjüket felajánlották, de erre többé nem lesz lehetőségük." }
     }
 
     message_wrath_of_the_emperor {
         id: 118,
         type: 2,
-        
+
         size [30, 20]
         urgent: 1,
-        title { text: "Wrath of the Emperor" }
+            title { text: "A fáraó haragja" }
         video { text: "@12" }
     }
 
     message_attack_called_off {
         id: 120,
         type: 2,
-        
+
         size [30, 20]
-        title { text: "Attack called off" }
+        title { text: "Lefújt támadás" }
         content {
-            text: "New orders just arrived.  They say that you have regained some respect throughout Egypt, and your destruction is no longer necessary.  I bid you farewell...for now. "
+            text: "Új parancs érkezett. Eszerint ismét kivívtál némi megbecsülést Egyiptomban, így pusztulásod már nem szükséges. Búcsúzom... egyelőre."
         }
     }
     message_debt_anniversary {
         id: 121,
-        
+
         size [30, 20]
         urgent: 1,
-        title { text: "Debt anniversary" }
+            title { text: "Az adósság évfordulója" }
         content {
-            text: "Your treasury still holds nary a deben. Each consecutive year of debt damages your reputation, and thus your @35Kingdom&rating. Perhaps you should review your knowledge of @48money."
+            text: "Kincstáradban továbbra sincs egyetlen deben sem. Minden újabb adósságban töltött év rontja hírnevedet, és ezzel @35Birodalmi értékelésedet is. Talán érdemes áttekintened a @48pénzügyekről szóló tudnivalókat."
         }
     }
 
@@ -1421,10 +1422,10 @@ game_messages_hu {
         id: 122
         type: 2
         message_type: 7
-        
+
         size [30, 20]
         urgent: 1,
-        title { text: "Barbarians attack!" }
+        title { text: "Barbár támadás!" }
         video { text: "smk\\Spy_Barbarian.smk" }
     }
 
@@ -1432,41 +1433,41 @@ game_messages_hu {
         id: 123
         type: 2
         message_type: 7
-        
+
         size [30, 20]
         urgent: 1,
-        title { text: "Legion attacks" }
+        title { text: "A légió támadása" }
     }
 
     message_distant_battle {
         id: 124
         type: MESSAGE_ARCH_MESSAGE
         message_type: MESSAGE_TYPE_DISTANT_BATTLE
-        
-        title { text: "Distant battle" }
+
+        title { text: "Távoli csata" }
         video { text: "@10" }
-        content { text: "xxxx see eventmsg.txt" }
+        content { text: "xxxx lásd eventmsg.txt" }
     }
 
     message_enemies_closing {
         id: 125
         type: 2
-        
+
         size [30, 20]
-        title { text: "Enemies closing" }
+        title { text: "Közeledő ellenség" }
         video { text: "@10" }
-        content { text: "xxxx see eventmsg.txt" }
+        content { text: "xxxx lásd eventmsg.txt" }
     }
 
     message_enemies_at_the_door {
         id: 126
         type: 2
-        
+
         size [30, 20]
         urgent: 1
-        title { text: "Enemies at the door" }
+        title { text: "Ellenség a kapuknál" }
         video { text: "@10" }
-        content { text: "xxxx see eventmsg.txt" }
+        content { text: "xxxx lásd eventmsg.txt" }
     }
 
     message_template_request {
@@ -1474,1388 +1475,1388 @@ game_messages_hu {
         type: 2
         message_type: 2
         size [30, 20]
-        title { text: "Pharaoh request goods" }
+        title { text: "A fáraó árukat kér" }
         content { text: "" }
     }
 
     message_wrath_of_bast_3 {
         id: 134,
         type: 2,
-        
+
         size [30, 20]
-        title { text: "Wrath of Bast" }
+        title { text: "Bastet haragja" }
         video { text: "@20" }
-        content { text: "Woe unto you!  Bast is appalled at your indifference.  To show that you can not preserve your city's health without worshipping her, she has filled the river with blood, poisoning the water supply. Just hope your citizens can hold on until the water is pure again." }
+        content { text: "Jaj neked! Bastet megdöbbent közönyödön. Hogy bebizonyítsa, városod egészségét nem őrzöd meg az ő tisztelete nélkül, vérrel árasztotta el a folyót, megmérgezve a vízellátást. Csak remélheted, hogy polgáraid kitartanak, amíg a víz újra megtisztul." }
     }
 
     message_city_unemployment {
         id: 135,
         type: 2,
-        
+
         size [30, 20]
-        title { text: "City unemployment" }
-        content { text: "There are too few jobs to employ everyone.  Unless new jobs are created, the unemployed may turn in desperation to crime, or even seek their fortunes elsewhere in the Kingdom." }
+        title { text: "Városi munkanélküliség" }
+        content { text: "Túl kevés a munkahely ahhoz, hogy mindenki dolgozhasson. Ha nem hozol létre új állásokat, a munkanélküliek kétségbeesésükben bűnözéshez fordulhatnak, vagy a Királyság más részein próbálhatnak szerencsét." }
     }
 
     message_employees_needed {
         id: 136,
-        
+
         size [30, 20]
-        title { text: "Employees needed" }
-        content { text: "Too few people of working age are available to fill the city's jobs. Unless you find new workers quickly, city services will deteriorate and industrial production will suffer." }
+        title { text: "Munkaerő szükséges" }
+        content { text: "Túl kevés a munkaképes korú lakos a város állásainak betöltésére. Ha nem találsz gyorsan új dolgozókat, a városi szolgáltatások romlani fognak, és az ipari termelés is visszaesik." }
     }
 
     message_common_festival {
         id: 137,
-        
+
         size [30, 20]
-        title { text: "Common festival" }
-        content { text: "Everyone appreciates getting out of work early to relax for awhile at the Festival Square, and your chosen god notices your kind gesture." }
+        title { text: "Egyszerű ünnepség" }
+        content { text: "Mindenki örül, hogy korábban abbahagyhatja a munkát, és egy kis pihenőt tölthet az Ünnepi téren. Választott istened is észreveszi kedves gesztusodat." }
     }
 
     message_lavish_festival {
         id: 138,
-        
+
         size [30, 20]
-        title { text: "Lavish festival" }
-        content { text: "The day-long festival is starting. People all over the city are heading for the Festival Square now, and seem to be in good spirits. Your chosen god appreciates your dedication." }
+        title { text: "Pompás ünnepség" }
+        content { text: "Kezdetét veszi az egész napos ünnepség. A város minden részéből az Ünnepi térre sietnek az emberek, és láthatóan jókedvűek. Választott istened nagyra értékeli odaadásodat." }
     }
 
     message_grand_festival {
         id: 139,
-        
+
         size [30, 20]
-        title { text: "Grand festival" }
-        content { text: "The much-anticipated two-day festival is under way at last! Everyone's converging on the Festival Square for free beer and wild entertainment. The god honored by this event is surely smiling upon you." }
+        title { text: "Nagyszabású ünnepség" }
+        content { text: "Végre elkezdődött a régóta várt kétnapos ünnepség! Mindenki az Ünnepi térre özönlik az ingyen sör és a féktelen mulatság kedvéért. Az esemény által tisztelt isten bizonyára mosolyog rád." }
     }
 
     message_wrath_of_osiris {
         id: 140
         type: 2
-        
+
         size [30, 20]
-        title { text: "Wrath of Osiris" }
+        title { text: "Ozirisz haragja" }
         video { text: "@24" }
-        content { text: "Osiris resents this city's appalling lack of dedication.  Unless you appease him quickly, the next flood will be much worse than expected...it may not even come at all!" }
+        content { text: "Oziriszt sérti városod megdöbbentő hitetlensége. Ha nem engeszteled ki gyorsan, a következő áradás sokkal rosszabb lesz a vártnál... talán el sem érkezik!" }
     }
 
     message_wrath_of_ptah {
         id: 141
         type: 2
-        
+
         size [30, 20]
-        title { text: "Wrath of Ptah" }
+        title { text: "Ptah haragja" }
         video { text: "@22" }
-        content { text: "You have incurred the anger of Ptah! Your city currently has no industries to punish, but mind this god carefully when you start mining, manufacturing or quarrying." }
+        content { text: "Kivívtad Ptah haragját! Városodban jelenleg nincs olyan iparág, amelyet megbüntethetne, de ügyelj erre az istenre, amikor bányászatba, gyártásba vagy kőfejtésbe kezdesz." }
     }
-    
+
     message_wrath_of_ptah_2 {
         id: 142
         type: 2
-        
+
         size [30, 20]
-        title { text: "Wrath of Ptah" }
+        title { text: "Ptah haragja" }
         video { text: "@22" }
-        content { text: "Ptah takes offense at your pride in believing that your city can be industrious without paying him respect. He destroyed some industrial buildings as a reminder to you." }
+        content { text: "Ptah neheztel büszkeségedre, amiért azt hiszed, városod az ő tisztelete nélkül is virágozhat. Emlékeztetőül elpusztított néhány ipari épületet." }
     }
 
     message_wrath_of_seth_noeffect {
         id: 143
         type: 2
-        
+
         size [30, 20]
-        title { text: "Wrath of Seth" }
+        title { text: "Seth haragja" }
         video { text: "@21" }
-        content { text: "Your city escaped the anger of Seth by having no military assets for the god to destroy. Be wary, nonetheless, of provoking the God of Destruction, for his anger takes many forms and his memory is long." }
+        content { text: "Városod elkerülte Seth haragját, mivel nem rendelkezett olyan katonai létesítményekkel, amelyeket az isten elpusztíthatott volna. Ennek ellenére óvakodj a Pusztítás Istenének felbőszítésétől, mert haragja sokféle formát ölthet, és sokáig emlékszik." }
     }
 
     message_wrath_of_bast {
         id: 144,
-        type: 2,
-        
-        size [30, 20]
-        title { text: "Wrath of Bast" }
+            type: 2,
+
+            size [30, 20]
+        title { text: "Bastet haragja" }
         video { text: "@20" }
-        content { text: "Terrible news!  Because your city neglects to show her the honor she is due, Bast, Goddess of the Home, leveled some of its best houses!" }
+        content { text: "Szörnyű hírek! Mivel városod nem adja meg neki a megérdemelt tiszteletet, Bastet, az Otthon Istennője, lerombolta néhány legjobb házadat!" }
     }
     message_blessing_from_ptah {
-    id: 145,
-        type: 2,
-        
-        size [30, 20]
-        title { text: "A blessing from Ptah" }
+        id: 145,
+            type: 2,
+
+            size [30, 20]
+        title { text: "Ptah áldása" }
         video { text: "@22" }
-        content { text: "Ptah sought a Storage Yard with room for more gems, clay, pottery, flax, linen, or jewelry. Had he found one, he would have increased your city's stores." }
+        content { text: "Ptah olyan raktárudvart keresett, ahol több drágakő, agyag, kerámia, len, vászon vagy ékszer fér el. Ha talált volna ilyet, növelte volna városod készleteit." }
     }
     message_wrath_of_osiris_2 {
         id: 147
         type: 2
-        
+
         size [30, 20]
-        title { text: "Wrath of Osiris" }
+        title { text: "Ozirisz haragja" }
         video { text: "@24" }
-        content { text: "Unhappy day!  Angered by your refusal to pay him the proper respect, Osiris sends a plague of locusts to devour your crops." }
+        content { text: "Szomorú nap! Mivel megtagadtad tőle a megfelelő tiszteletet, Ozirisz sáskák seregét küldi, hogy felfalja terményeidet." }
     }
     message_wrath_of_ptah_4 {
         id: 148,
-        type: 2,
-        
-        size [30, 20]
-        title { text: "Wrath of Ptah" }
+            type: 2,
+
+            size [30, 20]
+        title { text: "Ptah haragja" }
         video { text: "@22" }
         content {
-            text: "Ptah is indignant that you refuse to worship him.  He calls upon a plague of frogs to descend upon the city. These frogs, with their slimy skin and putrid stench, will force many from their homes."
+            text: "Ptah felháborodott, amiért megtagadod tőle a tiszteletet. Békák seregét küldi a városra. Ezek a nyálkás bőrű, bűzlő teremtmények sokakat arra kényszerítenek, hogy elhagyják otthonukat."
         }
     }
 
     message_hailstorm_wrath_of_seth {
         id: 149
         type: 2
-        
+
         size [30, 20]
-        title { text: "Wrath of Seth" }
+        title { text: "Seth haragja" }
         video { text: "@21" }
-        content { text: "Furious that you refuse to pay him homage, Seth invokes a hailstorm to rain down upon the city, striking and killing anyone who happens to be in the way!" }
+        content { text: "Mivel megtagadod tőle a hódolatot, Seth dühében jégesőt zúdít a városra, amely mindenkit lesújt és megöl, aki az útjába kerül!" }
     }
 
     message_farming {
-    id: 150,
-        
-        size [30, 20]
+        id: 150,
+
+            size [30, 20]
         image { id: 81, pos [15, 15] }
-        title { text: "Farming" }
-        subtitle { text: "History" }
+        title { text: "Mezőgazdaság" }
+        subtitle { text: "Történelem" }
         content {
-            text: "Farming and agriculture were the basis of the Egyptian economy. Abundant crops allowed Egypt to @177trade with neighbors, bringing new goods into Egypt. @L@LThe key to successful farming was the Inundation, called akhet. Every year, the Nile flooded its banks, refertilizing the soil. As long as the Inundation occurred, the Egyptians could count on having plenty of food to eat. In years of low or no Inundation, famine struck Egypt, which was sometimes enough to topple governments. @L@LTo take advantage of the restoring Inundation, dykes were built around farms to capture the water as it rose. As the Nile receded (called peret), the water, along with its nutrients, slowly soaked into the soil. After about six weeks, the farmer opened the dykes and let the rest of the water drain out. Of course, being submerged in water made the ground quite soft. Before he could sow his seed, the farmer had to wait for the land to dry out a little and become firm. @L@LFinally, during shemu, the crops were harvested. Crops meant for Egyptian consumption were stored in @5granaries. Food for export was stored in @6Storage&Yards until it could be loaded onto barges.  @L@LEstate owners or the government owned farms and employed laborers to do many of the most arduous tasks on the land. Farming was not easy work, and much of the work was done by hand. The tools farmers had at their disposal included the hoe, the hand-held plough, and the sickle. Domesticated oxen eased some of the plowing. @L@LFarming produced both raw materials and foodstuffs. @185Grain&and&barley were key food crops, and @189flax, which was manufactured into @398linen, was the most important raw material crop. @L@LFarming and agriculture were also integral to the Eygptian afterlife. Once the deceased has been granted entry into the afterlife, he finds himself working the soil in the Field of Reeds."
+            text: "A földművelés és a mezőgazdaság az egyiptomi gazdaság alapját jelentette. A bőséges termés lehetővé tette Egyiptom számára, hogy @177kereskedjen szomszédaival, új javakat hozva az országba. @L@LA sikeres földművelés kulcsa az áradás, azaz az akhet volt. Minden évben a Nílus kilépett medréből, és újra termékennyé tette a talajt. Amíg az áradás bekövetkezett, az egyiptomiak biztosak lehettek abban, hogy elegendő élelmük lesz. Az alacsony vagy elmaradó áradások éveiben éhínség sújtotta Egyiptomot, ami néha kormányzatok bukásához is vezetett. @L@LA megújuló áradás kihasználására gátakat építettek a földek köré, hogy felfogják a vizet emelkedésekor. Amikor a Nílus visszahúzódott (ezt peretnek nevezték), a víz tápanyagaival együtt lassan beszivárgott a talajba. Körülbelül hat hét múlva a földművesek megnyitották a gátakat, és a maradék vizet leengedték. Természetesen a víz alá került föld igen puhává vált. Mielőtt elvethette volna a magokat, a gazdának meg kellett várnia, hogy a talaj kissé megszáradjon és megszilárduljon. @L@LVégül a shemu idején betakarították a termést. Az egyiptomi fogyasztásra szánt növényeket a @5gabonaraktárakban tárolták. A kivitelre szánt élelmet a @6Raktárudvarokban tartották, amíg bárkákra nem rakták. @L@LA birtokosok vagy a kormány tulajdonolták a földeket, és munkásokat alkalmaztak a legnehezebb munkák elvégzésére. A földművelés nem volt könnyű munka, és a legtöbb feladatot kézzel végezték. A gazdák eszközei közé tartozott a kapa, a kézi eke és a sarló. A háziasított ökrök megkönnyítették a szántás egy részét. @L@LA mezőgazdaság nyersanyagokat és élelmiszereket egyaránt termelt. A @185gabona&és&árpa fontos élelmiszernövények voltak, míg a @189len, amelyből @398vásznat készítettek, a legfontosabb ipari növénynek számított. @L@LA földművelés és mezőgazdaság az egyiptomi túlvilághitben is fontos szerepet játszott. Miután az elhunyt bebocsátást nyert a túlvilágra, a Nádlak mezőin találta magát, ahol tovább művelte a földet."
         }
     }
 
     message_industry {
         id: 151,
-        
-        size [30, 20]
+
+            size [30, 20]
         image { id: 82, pos [15, 15] }
-        title { text: "Industry" }
-        subtitle { text: "History" }
+        title { text: "Ipar" }
+        subtitle { text: "Történelem" }
         content {
-            text: "By the Old Kingdom, manufacture of products had moved out of the domestic setting and into centralized workshops which turned out nearly all the supplies needed for daily life. Each workshop specialized in a particular product and operated very much like a modern assembly line. Each worker was responsible for a particular aspect of the finished product, rather than working on an item from beginning to end. The tools the artisans used in these workshops were the property of the state, as were any materials the workshops produced. Craftsmen earned wages, usually paid in food and necessary goods. @L@LEgyptian industry thrived and produced many products. Egyptians could find employment as @198potters, @398weavers, jewelers, tanners, @389carpenters and smelters as well as bakers and @194brewers."
+            text: "Az Óbirodalom idejére a termékek előállítása kikerült a háztartásokból, és központi műhelyekbe költözött, amelyek az élethez szükséges szinte minden eszközt előállítottak. Minden műhely egy adott termékre szakosodott, és nagyjából úgy működött, mint egy modern gyártósor. Minden munkás a késztermék egy bizonyos részéért felelt, nem pedig az elejétől a végéig dolgozott egy tárgyon. A kézművesek által használt eszközök, valamint a műhelyek által előállított anyagok az állam tulajdonát képezték. A mesterek fizetséget kaptak, amelyet általában élelmiszerben és szükséges javakban adtak. @L@LAz egyiptomi ipar virágzott, és számos terméket állított elő. Az egyiptomiak dolgozhattak @198fazekasként, @398szövőként, ékszerészként, tímárként, @389ácsként és kohászként, valamint pékek és @194sörfőzők is lehettek."
         }
     }
     message_housing {
         id: 152,
-        
-        size [30, 20]
+
+            size [30, 20]
         image { id: 83, pos [15, 15] }
-        title { text: "Housing" }
-        subtitle { text: "History" }
+        title { text: "Lakóházak" }
+        subtitle { text: "Történelem" }
         content {
-            text: "Egyptians made their homes from brick, wood, mud or occasionally stone. Housing style and size depended upon the wealth of the citizen and where he lived. Thus, rural citizens who farmed for a living resided in simple brick or pressed mud structures of two to four rooms. City homes of the working class were likewise small, and some two-story, two-family homes were built to save space in the most crowded cities. City-dwelling workers lived in brick homes of 3-7 rooms. @L@LWealthier citizens had larger homes, and some of these were quite spacious. Senior government officials sometimes had homes of 60-70 rooms, with high ceilings supported by wooden columns, reception rooms for entertaining guests, plenty of storage space and servants quarters. The most luxurious homes of all were the @175Pharaoh's&palaces.  @L@LFor the most part, Egyptian cities grew organically in whichever direction they could. A few cities, however, were planned, most notably the settlement built for workers at Deir el-Medina. @L@LMost Egyptian cities were surrounded by walls. For more on defensive structures, click @182here."
+            text: "Az egyiptomiak téglából, fából, vályogból vagy ritkábban kőből építették otthonaikat. A házak stílusa és mérete a lakó vagyonától és lakhelyétől függött. A földművelésből élő vidéki lakosok egyszerű, két-négy helyiségből álló tégla- vagy préseltvályog-házakban éltek. A városi munkásosztály otthonai hasonlóan kicsik voltak, és a zsúfoltabb városokban helytakarékosság miatt kétszintes, kétcsaládos házakat is építettek. A városi munkások 3-7 szobás téglaházakban laktak. @L@LA gazdagabb polgárok nagyobb házakkal rendelkeztek, amelyek közül néhány igen tágas volt. A magas rangú hivatalnokoknak néha 60-70 szobás otthonaik voltak, magas, fából készült oszlopokkal tartott mennyezettel, vendégfogadó termekkel, bőséges tárolóhellyel és szolgák számára kialakított helyiségekkel. A legfényűzőbb otthonok mind közül a @175fáraó&palotái voltak. @L@LAz egyiptomi városok többnyire természetes módon növekedtek abba az irányba, amerre lehetőségük nyílt. Néhány várost azonban terv szerint építettek, közülük a leghíresebb a Deir el-Medinában a munkások számára létesített település. @L@LA legtöbb egyiptomi várost falak vették körül. A védelmi építményekről bővebben kattints @182ide."
         }
     }
     message_roads {
         id: 153,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 84,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Roads",
-            pos [125, 15]
+            text: "Utak",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "The @157Nile was Egypt's main highway. Boats of all shapes and sizes tranported people, goods and materials from one point to another. The ancient Egyptians, of course, had land-based roads as well. These roads generally were not paved in any fashion, but were simply well-worn paths. In most cities, roads twisted and turned in any way necessary. In planned cities, such as the settlement for workers at Deir el-Medina, the roads were laid out in a neat grid. @L@LSome trade routes were also well-established, but these roads weren't paved, either - and they could be quite dangerous to traverse. For more on the perils of successful trade, click @177here."
+            text: "A @157Nílus volt Egyiptom fő közlekedési útvonala. Különböző alakú és méretű hajók szállították az embereket, árukat és nyersanyagokat egyik helyről a másikra. Az ókori egyiptomiaknak természetesen szárazföldi útjaik is voltak. Ezeket az utakat általában nem burkolták, hanem egyszerűen jól kitaposott ösvények voltak. A legtöbb városban az utak szükség szerint kanyarogtak. A tervezett városokban, például a Deir el-Medinai munkástelepen, az utak szabályos rácsos elrendezésben épültek. @L@LNéhány kereskedelmi útvonal is jól kiépült, de ezeket sem burkolták, és igencsak veszélyes lehetett rajtuk utazni. A sikeres kereskedelem veszélyeiről bővebben kattints @177ide."
         }
     }
     message_irrigation {
         id: 154,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 27,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Irrigation",
-            pos [125, 15]
+            text: "Öntözés",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "The Egyptians increased the amount of arable land through irrigation. Egyptians began to build a network of irrigation canals and ditches as early as the ninth dynasty, or about 2000 BC. Some canals seem to have existed before then, but they were used for transportation. The irrigation canals extended the benefits of the river, bringing nourishing silt to areas away from the river. @L@LEarly in Egyptian history, farmers who wanted to irrigate their land had a tough time of it. Farmers irrigated their land by hand, carrying a yoke with two buckets made of clay or leather to the Nile or some other water source. The farmer returned with his buckets of water to his farm, which was subdivided by small dykes. The dykes captured the water, maximizing the benefit of this slow and arduous method of irrigation.  @L@LAt the end of the 18th dynasty (about 1300 BC), the water lift, or shaduf, was introduced. The shaduf probably came to Egypt from Mesopotamia, where it had been in use as early as 2370 BC. Positioned on the bank of the Nile or other water source, the shaduf was made from a long wooden beam that rocked back and forth on a pivot. A bucket at one end of the beam was counterbalanced with a brick or other weight. A person pushed down on the end with the bucket to dip it into the water, and the brick helped the worker lift the water into the gully that was attached to the shaduf. @L@LThe introduction of the shaduf increased the arable land in Egypt by about 15 percent. Also, because it was never submerged under water, land irrigated by the shaduf could produce two harvests a year instead of one."
+            text: "Az egyiptomiak öntözéssel növelték a művelhető földek mennyiségét. Már a IX. dinasztia idején, körülbelül Kr. e. 2000-ben elkezdték öntözőcsatornák és árkok hálózatának kiépítését. Néhány csatorna valószínűleg már korábban is létezett, de azokat közlekedésre használták. Az öntözőcsatornák kiterjesztették a folyó áldásait, és tápláló iszapot juttattak a folyótól távolabb eső területekre. @L@L Egyiptom korai történetében a földjüket öntözni kívánó földművesek nehéz helyzetben voltak. A gazdák kézzel öntözték földjeiket: egy vállukon hordott rúddal két agyag- vagy bőrvödröt vittek a Nílushoz vagy más vízforráshoz. A földműves ezután vízzel teli vödrökkel tért vissza a kis gátakkal felosztott földjére. A gátak felfogták a vizet, így a lassú és fáradságos öntözési módszer hatékonyabbá vált. @L@LA XVIII. dinasztia végén (körülbelül Kr. e. 1300-ban) bevezették a vízemelőt, vagyis a sadufot. A saduf valószínűleg Mezopotámiából került Egyiptomba, ahol már Kr. e. 2370 körül használták. A Nílus vagy más vízforrás partján felállított saduf egy hosszú fagerendából állt, amely egy tengelyen előre-hátra billent. A gerenda egyik végén lévő vödröt egy tégla vagy más súly ellensúlyozta. Egy ember lenyomta a vödrös végét, hogy a vízbe merítse, majd a súly segített a munkásnak a vizet a sadufhoz csatlakozó vájatba emelni. @L@LA saduf bevezetése körülbelül 15 százalékkal növelte Egyiptom művelhető földterületét. Mivel az így öntözött földeket soha nem borította el teljesen a víz, évente két termést is hozhattak az egy helyett."
         }
     }
     message_tutorial_labor {
         id: 155
         type: 2
-        
+
         size [30, 20]
         image { id: 85, pos [15, 15] }
-        title { text: "Labor" }
-        subtitle { text: "History" }
-        content { text: "Peasants performed most of the hardest labor in ancient Egypt. Peasants tilled the soil and harvested the crops during the growing season. During the Inundation, these same workers were conscripted to do work for the state. Mostly, they worked to build pyramids and other structures, but these workers could also be tasked with maintaining the Egyptian infrastructure, like @153roads and @154Irrigation&Ditches. @L@LWhile the work the peasants performed wasn't easy, they weren't completely abused. The typical workday lasted eight hours with a break at lunch. The work week lasted eight days, with two days off at the end. In addition to these 'weekends,' work stopped for festivals. Workers could also take time off if there was sickness or death in the family. @L@LAttendance was very well documented, as were the reasons for missing work. Some reasons for missing work probably wouldn't be acceptable excuses today. One employee missed work to go drinking with a buddy. @L@LDespite what many people think, slave labor was seldom used on state construction projects. Sometimes, slaves were used in quarries, but for the most part they served in households. @L@LIf workers were not treated well, they could go on strike.  During Ramses III's reign, about 1152 BC, workers at Deir el-Medina formally stopped work to protest the delay of their compensation.  Their strike was successful, and the problem of late compensation was rectified." }
+        title { text: "Munka" }
+        subtitle { text: "Történelem" }
+        content { text: "Az ókori Egyiptomban a parasztok végezték a legtöbb nehéz fizikai munkát. A földművesek művelték a földet és takarították be a termést a növekedési időszakban. Az áradás idején ugyanezeket a munkásokat az állam szolgálatára sorozták be. Többnyire piramisok és más építmények építésén dolgoztak, de feladatuk lehetett az egyiptomi infrastruktúra, például az @153utak és az @154öntözőcsatornák karbantartása is. @L@LBár a parasztok munkája nem volt könnyű, nem bántak velük teljesen kegyetlenül. Egy átlagos munkanap nyolc órán át tartott, ebédszünettel. A munkahét nyolc napos volt, amelyet két pihenőnap követett. Ezeken a „hétvégéken” kívül az ünnepek idején is szünetelt a munka. A dolgozók betegségek vagy családi halálesetek esetén is szabadságot kaphattak. @L@L A jelenlétet és a hiányzások okait gondosan feljegyezték. Néhány hiányzási indok ma valószínűleg nem lenne elfogadható. Egy munkás például azért maradt távol, hogy egy barátjával italozzon. @L@L A közhiedelemmel ellentétben az állami építkezéseken ritkán alkalmaztak rabszolgamunkát. Néha rabszolgákat dolgoztattak kőfejtőkben, de többnyire háztartásokban szolgáltak. @L@L Ha a munkásokat nem megfelelően kezelték, sztrájkba léphettek. III. Ramszesz uralkodása alatt, körülbelül Kr. e. 1152-ben, a Deir el-Medinai munkások hivatalosan beszüntették a munkát, hogy tiltakozzanak járandóságuk késedelmes kifizetése miatt. Sztrájkjuk sikerrel járt, és a késedelmes fizetések problémáját rendezték." }
     }
     message_clean_water {
         id: 156
-        
+
         size [30, 20]
         image { id: 86, pos [15, 15] }
-        title { text: "Well and Water Supply", pos [125, 15] }
-        subtitle { text: "History" }
+        title { text: "Kút és vízellátás", pos [125, 15] }
+        subtitle { text: "Történelem" }
         content {
-            text: "Getting drinking water to the populace was a bit of a challenge in ancient Egypt. The main water source was the Nile and the Nile's water table. Away from the Nile, there were a few oases, but most of the land was arid. @L@LTo get water to neighborhoods, cisterns were built in well-to-do houses. Water carriers brought buckets full of water to these houses, and emptied them into the cisterns. @L@LThe Egyptians were adept at digging wells. Workers had to dig through 300 feet of rock for one well near the worker's settlement at Giza. Most wells had a well house capping them. From the well house, stairs wound down to the water's level. From there, people could fill their jugs with water."
+            text: "Az ivóvíz eljuttatása a lakossághoz némi kihívást jelentett az ókori Egyiptomban. A fő vízforrás a Nílus és a folyó talajvízkészlete volt. A Nílussal nem érintkező területeken néhány oázis létezett, de a föld nagy része száraz volt. @L@LA víz eljuttatására a városrészekbe ciszternákat építettek a tehetősebb házakban. Vízhordók vödrökben szállították a vizet ezekhez a házakhoz, majd a ciszternákba öntötték. @L@LAz egyiptomiak kiválóan értettek a kútfúráshoz. A gízai munkástelep közelében egy kút elkészítéséhez a munkásoknak 300 lábnyi sziklán kellett átfúrniuk magukat. A legtöbb kutat kútház fedte. A kútházból lépcsők vezettek le a víz szintjéhez. Innen az emberek megtölthették korsóikat vízzel."
         }
     }
     message_nile {
-        id: 157,
-        
+        id: 157
+
         size [30, 20]
         image {
             id: 87,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Nile",
-            pos [125, 15]
+            text: "Nílus",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Egyptian civilization simply would not exist without the Nile. In a region where rain is scarce, the Nile provides a reliable source of water to both the people and the land. By flooding its banks on a relatively predictable basis, the Nile also refertilizes farmland. @L@LThe importance of the Nile was not lost on the ancient Egyptians. Watching the Nile continuously bring the land back to life contributed volumes to Egyptian religious customs, particularly their belief in an afterlife.  @L@LThe Egyptian calendar was divided into seasons named for the different stages of the Nile. The Inundation, when the Nile was flooding its banks, was called akhet. The Inundation occurred because of yearly monsoons at the source of the Blue Nile on the Ethiopian plateaus. The Emergence, or proyet, marked the time when the Nile receded and the land began to emerge. Harvest time was called shomu, sometimes translated as drought."
+            text: "Az egyiptomi civilizáció egyszerűen nem létezhetett volna a Nílus nélkül. Egy olyan vidéken, ahol kevés az eső, a Nílus megbízható vízforrást biztosít az emberek és a föld számára egyaránt. A folyó kiszámítható időközönként kilépett medréből, és újra termékennyé tette a termőföldeket. @L@LAz ókori egyiptomiak tisztában voltak a Nílus fontosságával. A folyó állandó újjáélesztő erejének megfigyelése nagyban hozzájárult az egyiptomi vallási szokásokhoz, különösen a túlvilágról alkotott hitükhöz. @L@LAz egyiptomi naptár évszakokra oszlott, amelyeket a Nílus különböző szakaszairól neveztek el. Az áradás időszakát, amikor a Nílus elöntötte partjait, akhetnek nevezték. Az áradást az etióp fennsíkon eredő Kék-Nílus forrásvidékén jelentkező éves monszunok okozták. A visszahúzódás, vagyis a peret jelezte azt az időszakot, amikor a Nílus apadni kezdett, és a föld ismét előbukkant. A betakarítás idejét shemunak nevezték, amit néha szárazságként fordítanak."
         }
     }
     message_dentistry {
         id: 158,
-        
-        size [30, 20]
+
+            size [30, 20]
         image { id: 88, pos [15, 15] }
-        title { text: "Dentistry" }
-        subtitle { text: "History" }
+        title { text: "Fogászat" }
+        subtitle { text: "Történelem" }
         content {
-            text: "Dentistry was one of many fields that an ancient Egyptain doctor could practice. Remains of ancient Egyptians indicate that dentists were fighting an uphill battle. Tooth decay was promoted by omnipresent sand. Sand worked its way into everything, including food, and constantly crunching on sand quickly wore down the Egyptians' teeth. Tooth wear often lead to abscesses, which could cause the tooth to fall out and could even cause death. @L@LMedical papyri detail the actions dentists took to treat specific problems. For example, if a tooth fell out, the dentist bound the tooth to a neighboring tooth with gold or silver wire. There is even a recipe for fillings, involving mixing resin and malachite, but archaeologists have found no remains of teeth with the fillings still intact. @L@LArcheologists have uncovered tools that they believe were used as toothbrushes. Thus far, no discoveries of ancient Egyptian floss have been reported."
+            text: "A fogászat egyike volt annak a sok területnek, amelyen egy ókori egyiptomi orvos dolgozhatott. Az ókori egyiptomi maradványok azt mutatják, hogy a fogorvosok nehéz küzdelmet vívtak. A mindenütt jelen lévő homok elősegítette a fogszuvasodást. A homok mindenbe bekerült, még az ételbe is, és az állandó homokropogtatás gyorsan lekoptatta az egyiptomiak fogait. A fogkopás gyakran tályogokhoz vezetett, amelyek miatt a fog kieshetett, sőt akár halált is okozhattak. @L@LOrvosi papiruszok részletesen leírják, hogyan kezelték a fogorvosok az egyes problémákat. Ha például egy fog kiesett, a fogorvos arany- vagy ezüstdróttal a szomszédos fogakhoz rögzítette. Létezett egy tömési recept is, amely gyanta és malachit keverékét használta, de a régészek nem találtak olyan fogmaradványokat, amelyekben a tömés épségben fennmaradt volna. @L@L A régészek olyan eszközöket is felfedeztek, amelyekről úgy vélik, fogkefeként használták őket. Eddig nem került elő ókori egyiptomi fogselyem."
         }
     }
     message_apothecary {
         id: 159,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 89,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Apothecary",
-            pos [125, 15]
+            text: "Patika",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Ancient Egyptian medicinal and pharmaceutical practices are well-documented. Religion was instrumental in curing disease, and most prescribed cures were accompanied by prayers or spells. Medical papyri outlined specific cures, some of which seem a bit unusual by our standards. To cure indigestion, for instance, a hog's tooth was crushed and placed inside of four sugar cakes. The patient was to eat one of these cakes per day, after which time the indigestion should be cured. A cure for baldness called for a mixture of a rook's vertebra, a burnt donkey's hoof and the lard of a black snake."
+            text: "Az ókori egyiptomi gyógyászati és gyógyszerészeti gyakorlat jól dokumentált. A vallás fontos szerepet játszott a betegségek gyógyításában, és a legtöbb előírt gyógymódot imák vagy varázsigék kísérték. Az orvosi papiruszok konkrét gyógymódokat ismertettek, amelyek közül néhány mai szemmel meglehetősen különösnek tűnik. Emésztési zavar kezelésére például egy disznófogat törtek össze, majd négy cukorsüteménybe keverték. A betegnek naponta egy süteményt kellett elfogyasztania, ezután az emésztési problémának meg kellett szűnnie. A kopaszság elleni gyógymód varjúcsigolya, égetett szamárpata és fekete kígyó zsírjának keverékét írta elő."
         }
     }
     message_medicine {
         id: 160,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 90,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Medicine",
-            pos [125, 15]
+            text: "Orvoslás",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Like other parts of Egyptian society, the medical profession was highly segmented and bureaucratic. The profession was organized along hierarchical lines, with doctors holding titles such as senior doctor, inspector, overseer and master of physicians. The highest ranking doctor was the 'Chief of Physicians of the South and North.' @L@LDoctors gained their medical knowledge through studying the internal organs of animals and texts, not through observing the embalming process. Medicine was distinctly separate from the funerary rites. @L@LGood health was anchored in the concept of metu. The heart was the center of the body, and all parts of the body were linked to the heart by metu, or channels. More than a description of the circulatory system, all systems of the body were considered to be metu. Illness occurred when some part of the metu was blocked. @L@LTo cure illnesses, doctors prescribed medicine combined with prayer. For more on Egyptian pharmaceutical practices, see @159apothecaries. @L@LEgyptians suffered from polio, small pox, tuberculosis of the spine and malaria, among other maladies. The Egyptians were also prone to illness caused by parasitic worms."
+            text: "Az egyiptomi társadalom más részeihez hasonlóan az orvosi hivatás is erősen tagolt és bürokratikus volt. A szakma hierarchikus rendszerben működött, az orvosok olyan címeket viseltek, mint vezető orvos, felügyelő, elöljáró és az orvosok mestere. A legmagasabb rangú orvos a 'Dél és Észak orvosainak főnöke' címet viselte. @L@LAz orvosok tudásukat az állatok belső szerveinek és írásos szövegek tanulmányozásával szerezték, nem a balzsamozási folyamat megfigyelésével. Az orvoslás teljesen elkülönült a temetési szertartásoktól. @L@LA jó egészség alapja a metu fogalma volt. A szív volt a test központja, és a test minden része a metu, vagyis csatornák révén kapcsolódott hozzá. A keringési rendszer leírásánál többet jelentett: a test minden rendszerét metu-nak tekintették. Betegség akkor alakult ki, ha a metu valamely része elzáródott. @L@LA betegségek gyógyítására az orvosok imával kísért gyógyszereket írtak elő. Az egyiptomi gyógyszerészeti gyakorlatokról bővebben lásd: @159apothecaries. @L@LAz egyiptomiakat többek között gyermekbénulás, himlő, gerinctuberkulózis és malária is sújtotta. Emellett gyakran szenvedtek parazita férgek okozta betegségektől."
         }
     }
     message_embalmers {
         id: 161,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 23,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Embalmers",
-            pos [125, 15]
+            text: "Balzsamozók",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Embalming is the cornerstone of ancient Egyptian funerary customs. The ka, or spirit, of the deceased needed a place to live in the afterlife and, thus, needed its body. During the embalming process, the body was first rinsed in the waters of the Nile, symbolizing rebirth. Then, internal organs were removed from the corpse and stored in containers called canopic jars. The only organ that was discarded was the brain (which was removed through the nose) because the ancient Egyptians believed that it served no purpose. The canopic jars were entombed with the body. @L@LAfter removing the internal organs, the embalmer filled the body cavity with perfumes, oils, and linen and closed the body up. Then, the body was covered in natron, a type of salt. After 70 days, the body was rinsed off, wrapped in linen and smeared with tar. The tar helped to kill bacteria and fungi that would otherwise work to decompose the body. @L@LBecause of the expense of the embalming process, only the wealthiest citizens were able to afford it."
+            text: "A balzsamozás az ókori egyiptomi temetkezési szokások alapköve volt. Az elhunyt ká-jának, vagyis szellemének szüksége volt egy helyre, ahol a túlvilágon élhetett, ezért szüksége volt a testére is. A balzsamozás során a testet először a Nílus vizében mosták meg, az újjászületést jelképezve. Ezután eltávolították a holttest belső szerveit, és úgynevezett kanópuszedényekben tárolták őket. Az egyetlen eldobott szerv az agy volt (amelyet az orron keresztül távolítottak el), mert az ókori egyiptomiak úgy hitték, hogy nincs semmilyen szerepe. A kanópuszedényeket a testtel együtt temették el. @L@LA belső szervek eltávolítása után a balzsamozó illatszerekkel, olajokkal és vászonnal töltötte ki a testüreget, majd lezárta a testet. Ezután a testet nátronnal, egyfajta sóval borították be. 70 nap elteltével lemosták, vászonba tekerték és kátránnyal kenték be. A kátrány segített elpusztítani azokat a baktériumokat és gombákat, amelyek egyébként lebontották volna a testet. @L@LA balzsamozási eljárás költségei miatt csak a leggazdagabb polgárok engedhették meg maguknak."
         }
     }
     message_shrine_and_temple {
         id: 162,
-        
-        size [30, 20]
+
+            size [30, 20]
         image { id: 12, pos [15, 15] }
-        title { text: "Shrine and Temple", pos [125, 15] }
-        subtitle { text: "History" }
+        title { text: "Szentély és templom", pos [125, 15] }
+        subtitle { text: "Történelem" }
         content {
-            text: "Temples were viewed as the residences of the gods, and each temple had scores of attending @384priests to care for the god. Citizens took part in the care of the gods through offerings, but they rarely saw the statue of the god hidden deep inside the temple. Only on feast days, when the god was carried through town on a ceremonial bark, did citizens actually catch a glimpse of the deity. @L@LEgyptians turned to the gods for advice. Everyone was welcome into the forecourt of the temple, and here people could query the gods regarding subjects that puzzled them or ask forgiveness for past wrongs. The priests, hidden from view, responded to the beseechers. Citizens could also ask questions of the god on feast days when the god was out and about. @L@LIn addition to paying homage at the temples, most Egyptians had shrines in their homes. Frequently, the shrine was of Bes, the protector god of the household. Individuals seem to have had their own patron gods as well. In an attendance record uncovered at Deir el-Medina, workers are sometimes absent to celebrate the 'festival of their god.' @L@LThe concept of a patron god extended to cities, towns and regions. That idea caused shifts in the gods worshipped at different periods during Egyptian history. For more on the evolution of religion, click @399here."
+            text: "A templomokat az istenek lakhelyének tekintették, és mindegyik templomhoz számos szolgáló @384pap tartozott, akik az isten gondját viselték. A polgárok áldozatokkal vettek részt az istenek tiszteletében, de ritkán láthatták a templom mélyén elrejtett istenszobrot. Csak ünnepnapokon pillanthatták meg az istent, amikor szertartási bárkán vitték végig a városon. @L@LAz egyiptomiak az istenekhez fordultak tanácsért. A templom előudvarába bárki beléphetett, és itt az emberek az őket foglalkoztató kérdésekről kérdezhették az isteneket, vagy bocsánatot kérhettek korábbi vétkeikért. A papok, akik rejtve maradtak a szemük elől, válaszoltak a könyörgőknek. A polgárok ünnepnapokon is kérdezhették az istent, amikor az körbejárta a várost. @L@LA templomokban végzett hódolat mellett a legtöbb egyiptominak otthonában is volt szentélye. Gyakran Bes, a ház védelmező istenének szentélye volt ez. Úgy tűnik, az egyéneknek saját védőisteneik is voltak. A Deir el-Medinában feltárt jelenléti ívek szerint a munkások néha azért hiányoztak, hogy 'istenük ünnepét' megünnepeljék. @L@LA védőisten fogalma városokra, településekre és régiókra is kiterjedt. Ez az elképzelés változásokat okozott az egyiptomi történelem különböző korszakaiban tisztelt istenek körében. A vallás fejlődéséről bővebben kattints @399here."
         }
     }
     message_school_and_eduction {
         id: 163,
-        
-        size [30, 20]
+
+            size [30, 20]
         image { id: 34, pos [15, 15] }
-        title { text: "School and Education", pos [125, 15] }
-        subtitle { text: "History" }
+        title { text: "Iskola és oktatás", pos [125, 15] }
+        subtitle { text: "Történelem" }
         content {
-            text: "Education in ancient Egypt was extremely practical. Each person was educated with a specific career in mind. For many, education meant apprenticeship, and sons were generally apprenticed to their fathers to learn a craft. Some girls, too, were apprenticed to pursue careers as dancers, singers or weavers, but for the most part girls learned the art of managing a household. @L@LScribes received the most formal education. Scribal schools, called Per-Ankh or 'house of life,' were connected primarily to temples. Here, would-be scribes learned the written languages, primarily hieratic and, later, demotic, which were used for everyday business. The scribes learned their craft by copying over manuscripts onto ostraca, or old shards of stone. Only when they had mastered their craft were they entrusted with papyrus. Discipline was demanded, and physical punishment frequent. Scribal education generally occurred between the ages of 10 and 20."
+            text: "Az ókori Egyiptomban az oktatás rendkívül gyakorlatias volt. Mindenkit egy meghatározott pályára készítettek fel. Sokak számára az oktatás tanoncképzést jelentett, és a fiúkat általában apjuk tanította egy mesterség elsajátítására. Néhány lány is tanoncnak állt, hogy táncosként, énekesként vagy szövőként dolgozhasson, de a legtöbben a háztartás vezetésének művészetét tanulták meg. @L@LAz írnokok részesültek a legformálisabb oktatásban. Az írnokiskolák, amelyeket Per-Ankh-nak, vagyis 'az élet házának' neveztek, főként templomokhoz kapcsolódtak. Itt a leendő írnokok az írott nyelveket tanulták, elsősorban a hieratikus, később pedig a démotikus írást, amelyeket a mindennapi ügyintézésben használtak. Az írnokok mesterségüket kéziratok ostrakonokra, vagyis régi kődarabokra történő másolásával sajátították el. Csak miután teljesen elsajátították tudásukat, bízták rájuk a papiruszt. Szigorú fegyelemre volt szükség, és gyakoriak voltak a testi fenyítések. Az írnokképzés általában 10 és 20 éves kor között zajlott."
         }
     }
     message_library_and_literature {
         id: 164,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 91,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Library and Literature",
-            pos [125, 15]
+            text: "Könyvtár és irodalom",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Armed with a written language, the Eygptians recorded many of their stories, poems and hymns. These texts were stored in libraries associated with the Per-Ankh (house of life), or @163Scribal&School, which was adjacent to the Temple.  @L@LEgyptian literature sprang from an oral tradition, and for the most part literature was recorded as a reminder to the storyteller. Most Egyptians were illiterate, and many @387scribes were storytellers who used the written record to help them remember the stories, hymns and poems. Those who knew how to read, particularly those associated with the pharaoh's court, could gain access to the libraries and read papyri for themselves.  Some wealthy citizens had their own libraries. @L@LAncient Egyptian literature could be divided into several different genres, including autobiography, adventure tales, folktales, mythology, lament, poetry, and hymns, among others. Of these forms, autobiography was the oldest and came from the tradition of engraving a person's accomplishments on his tomb.  Satire was also popular."
+            text: "Az írott nyelv birtokában az egyiptomiak számos történetet, verset és himnuszt jegyeztek fel. Ezeket a szövegeket a Per-Ankh-hoz (az élet házához), vagyis a templom mellett található @163Írnok&iskolához kapcsolódó könyvtárakban őrizték. @L@LAz egyiptomi irodalom szóbeli hagyományból ered, és többnyire azért jegyezték le, hogy emlékeztetőül szolgáljon a mesélő számára. A legtöbb egyiptomi írástudatlan volt, és sok @387írnok egyben történetmesélő is volt, akik az írott szövegeket a történetek, himnuszok és versek felidézéséhez használták. Azok, akik tudtak olvasni, különösen a fáraó udvarához tartozók, hozzáférhettek a könyvtárakhoz és maguk is olvashatták a papiruszokat. Néhány gazdag polgár saját könyvtárral is rendelkezett. @L@LAz ókori egyiptomi irodalom több műfajra osztható, többek között önéletrajzokra, kalandtörténetekre, népmesékre, mitológiára, siralmakra, költészetre és himnuszokra. Ezek közül az önéletrajz volt a legrégebbi, és abból a hagyományból ered, hogy az emberek eredményeiket sírjuk falára vésték. A szatíra szintén népszerű volt."
         }
     }
     message_history_entertainment {
         id: 165,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 92,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Entertainment",
-            pos [125, 15]
+            text: "Szórakozás",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "The ancient Egyptians could choose from a variety of leisure activites. Sports were common, especially water sports like rowing and swimming (the wealthiest enjoyed this sport from the privacy of their own swimming pools). The Egyptians are also the first known culture to engage in fishing as a leisure activity. @L@PBoxing was a popular spectator sport, with bouts arranged specifically for the pharaoh's entertainment. Other sports included handball, a form of field hockey, gymnastics, archery and weightlifting. @L@PFor the educated, reading was a popular diversion, and the first known short story was written in ancient Egypt. Poetry was popular, but there is no evidence of any Egyptian plays. For more on reading, writing and literature, see @164libraries. @L@L@393Festivals were an important part of Egyptian life as well."
+            text: "Az ókori egyiptomiak számos szabadidős tevékenység közül választhattak. A sportok gyakoriak voltak, különösen a vízi sportok, például az evezés és az úszás (a leggazdagabbak saját medencéik magányában élvezhették ezt). Az egyiptomiak voltak az első ismert kultúra, amely a halászatot szabadidős tevékenységként űzte. @L@PAz ökölvívás népszerű látványsport volt, a mérkőzéseket kifejezetten a fáraó szórakoztatására rendezték. Más sportok közé tartozott a kézilabda, a gyeplabdához hasonló játék, a torna, az íjászat és a súlyemelés. @L@PA műveltek számára az olvasás kedvelt időtöltés volt, és az első ismert rövid történetet is az ókori Egyiptomban írták. A költészet népszerű volt, de nincs bizonyíték arra, hogy az egyiptomiak színdarabokat írtak volna. Az olvasásról, írásról és irodalomról bővebben lásd: @164libraries. @L@L@393Az ünnepek szintén fontos részét képezték az egyiptomi életnek."
         }
     }
     message_children {
         id: 166,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 93,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Children",
-            pos [125, 15]
+            text: "Gyermekek",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Children were prized in ancient Egypt and viewed as a continuation of life. Early marriage was common to facilitate large broods of children. Lower-class children followed their parents out to the fields and helped in the harvest. Middle- and upper-class children spent their days at home with their mother. When they were old enough, upper-class boys would be sent to school and then apprenticed to their fathers. @L@LEgyptian children had plenty of toys and games at their disposal, including balls, dolls, tops and wooden animals. They played games, like tug of war, and enjoyed many of the same leisure pursuits as their parents, such as swimming and fishing. @L@LChildren and their parents also kept a variety of pets. Dogs and cats were both popular pets, as were trained monkeys, birds, gazelles and, for the extremely wealthy and brave, lions."
+            text: "Az ókori Egyiptomban nagyra becsülték a gyermekeket, és az élet folytatásának tekintették őket. A korai házasság gyakori volt, hogy sok gyermek születhessen. Az alsóbb osztályok gyermekei szüleiket követték a földekre, és segítettek a betakarításban. A közép- és felsőbb osztályok gyermekei napjaikat otthon töltötték édesanyjukkal. Amikor elég idősek lettek, a felsőbb osztályú fiúkat iskolába küldték, majd apjuk mellett tanoncként dolgoztak. @L@LAz egyiptomi gyermekeknek sok játék állt rendelkezésükre, például labdák, babák, pörgettyűk és faállatok. Játékokat játszottak, például kötélhúzást, és sok olyan szabadidős tevékenységet élveztek, mint szüleik, például az úszást és a halászatot. @L@LA gyermekek és szüleik különféle háziállatokat is tartottak. A kutyák és macskák népszerű kedvencek voltak, akárcsak a betanított majmok, madarak, gazellák, valamint a rendkívül gazdagok és bátrak számára az oroszlánok."
         }
     }
     message_history_population {
         id: 167,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 94,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Population",
-            pos [125, 15]
+            text: "Népesség",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Ancient Egypt was like modern society in many ways. Many people lived in urban centers where manufacturing provided many of the jobs. Farmers tended to live in smaller, rural villages. The bulk of the population, naturally, lived near the river. @L@LThe size of Egypt's population grew over time, and its growth is directly linked to @154irrigation. During pre-Dynastic times, the population is thought to have been no larger than about 350,000. By the end of the second millenium BC, however, when irrigation practices had expanded the amount of arable land, the population is presumed to have reached about 3 million."
+            text: "Az ókori Egyiptom sok szempontból hasonlított a modern társadalomra. Sok ember élt városi központokban, ahol a gyártás számos munkahelyet biztosított. A földművesek általában kisebb, vidéki falvakban laktak. A lakosság nagy része természetesen a folyó közelében élt. @L@LAz egyiptomi népesség idővel növekedett, és növekedése közvetlenül kapcsolódik a @154öntözéshez. A dinasztiák előtti korban a népesség becslések szerint nem haladta meg a 350 000 főt. Az i. e. 2. évezred végére azonban, amikor az öntözési módszerek megnövelték a művelhető földterületet, a lakosság feltehetően elérte a 3 millió főt."
         }
     }
     message_history_society {
         id: 168,
-        
-        size [30, 20]
+
+            size [30, 20]
         image { id: 5, pos [15, 15] }
-        title { text: "Society", pos [125, 15] }
-        subtitle { text: "History" }
+        title { text: "Társadalom", pos [125, 15] }
+        subtitle { text: "Történelem" }
         content {
-            text: "Egyptian society was highly stratified with distinct and separate classes. For the most part, people remained in the class into which they were born, although there are a few examples of individuals marrying into a higher class. @L@LMembers of the lowest class were peasants. The peasants had the shortest life expectancy of any class and endured a life of hard labor, either on farms or on state construction projects. Their remains show that most peasants had bad back problems, and their vertebrae were sometimes fused together as a result of their hard work. They lived in very basic structures of a few rooms, and they were buried in simple graves and could not afford to be embalmed. @L@LThe middle class was comprised of artisans, merchants, and others involved in industry. They lived in more spacious homes and some of them could afford embalming and modest tombs. @L@LThe wealthiest class were high-ranking government officials. They could afford the finest luxuries, including embalming, and often had fine tombs built. Their diets were richer and more varied than other Egyptians. In an examination of some mummified remains of upper class Egyptians, 10 to 20 percent had arteriosclerosis - hardening of the arteries - indicating the consumption of plenty of animal fat and, perhaps, a life of stress. Wealthy men were often depicted with pot-bellies, an indication of their prosperity."
+            text: "Az egyiptomi társadalom erősen rétegzett volt, jól elkülönülő osztályokkal. Az emberek többnyire abban az osztályban maradtak, amelybe születtek, bár néhányan házasság révén magasabb osztályba kerültek. @L@LA legalacsonyabb osztály tagjai a parasztok voltak. A parasztok élettartama volt a legrövidebb az összes osztály közül, és kemény munkával töltötték életüket, akár földeken, akár állami építkezéseken dolgoztak. Maradványaik azt mutatják, hogy a legtöbb parasztnak súlyos hátproblémái voltak, és a kemény munka következtében csigolyáik néha összeforrtak. Egyszerű, néhány helyiségből álló épületekben éltek, egyszerű sírokba temették őket, és nem engedhették meg maguknak a balzsamozást. @L@LA középosztályt kézművesek, kereskedők és más iparban dolgozók alkották. Tágasabb otthonokban éltek, és néhányuk megengedhette magának a balzsamozást és szerény síremlékeket. @L@LA leggazdagabb osztályt a magas rangú állami tisztviselők alkották. Megengedhették maguknak a legnagyobb luxust, beleértve a balzsamozást is, és gyakran díszes sírokat építtettek. Étrendjük gazdagabb és változatosabb volt, mint más egyiptomiaké. A felsőbb osztályú egyiptomiak néhány mumifikált maradványának vizsgálata során 10–20%-uknál érelmeszesedést, vagyis az artériák megkeményedését találták, ami sok állati zsír fogyasztására és talán stresszes életmódra utal. A gazdag férfiakat gyakran pocakosnak ábrázolták, ami jólétük jele volt."
         }
     }
     message_history_juggling {
         id: 169,
-        
-        size [30, 20]
+
+            size [30, 20]
         image { id: 95, pos [15, 15] }
-        title { text: "Juggling", pos [125, 15] }
-        subtitle { text: "History" }
+        title { text: "Zsonglőrködés", pos [125, 15] }
+        subtitle { text: "Történelem" }
         content {
-            text: "The ancient Egyptians are the earliest known jugglers. On a Middle Kingdom tomb in Menat Khufu (Beni Hasan), paintings depict young women performing a variety of juggling feats, including women on piggy-back tossing balls to each other. @L@LThe significance of juggling in ancient Egypt isn't clear. It may have had some religious significance, or it may have been pure entertainment."
+            text: "Az ókori egyiptomiak voltak a legkorábbi ismert zsonglőrök. A Menat Hufu-i (Beni Haszán) Középbirodalmi sír festményei fiatal nőket ábrázolnak, akik különféle zsonglőrmutatványokat végeznek, többek között egymás hátán ülve labdákat dobálnak egymásnak. @L@LA zsonglőrködés jelentősége az ókori Egyiptomban nem teljesen világos. Lehetett vallási jelentősége, de akár puszta szórakozás is."
         }
     }
     message_history_music {
         id: 170,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 96,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Music",
-            pos [125, 15]
+            text: "Zene",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "The Egyptians played a variety of instruments, including flutes (which came in many different sizes), harps, lyres, lutes, tambourines and other percussion instruments. Singers were an integral part of Egyptian music, and most of the hymns and poems recorded on papyri were meant to be sung to music. @L@LPercussion instruments were particularly used in accompanying @171dance. Many dancers played castanets as they performed. @L@LThe Egyptians also played trumpets. Trumpets were associated with the military (perhaps the Egyptians had their own form of reveille) and are frequently found in the tombs of kings and military leaders. Two trumpets were found in the tomb of Tutankhamun. To hear what the trumpets sounded like, one of them was played in 1939. After a few notes, the trumpet promptly fell apart. It was restored immediately. The trumpet was also associated with @376Osiris, God of Agriculture and the Nile Flood. @L@LOther instruments also had religious significance. The sistrum, a large rattle-like instrument, was associated with @380Hathor, Goddess of Joy, Love and Festivity. Flutes were associated with @378Amon, God of the Sun."
+            text: "Az egyiptomiak sokféle hangszert használtak, köztük fuvolákat (amelyek sokféle méretben készültek), hárfákat, lírákat, lantokat, tamburinokat és más ütőhangszereket. Az énekesek az egyiptomi zene szerves részét képezték, és a papiruszokra feljegyzett himnuszok és versek többségét zenére éneklésre szánták. @L@LAz ütőhangszereket különösen a @171tánc kíséretére használták. Sok táncos kasztanyettával kísérte előadását. @L@LAz egyiptomiak trombitákat is használtak. A trombiták a hadsereghez kapcsolódtak (talán az egyiptomiaknak is volt saját ébresztőjük), és gyakran kerültek királyok és katonai vezetők sírjaiba. Tutanhamon sírjában két trombitát találtak. Hogy meghallgassák hangjukat, 1939-ben az egyiket megszólaltatták. Néhány hang után a trombita azonnal szétesett. Rögtön helyreállították. A trombita kapcsolatban állt @376Ozirisszel, a mezőgazdaság és a Nílus áradásának istenével is. @L@LMás hangszereknek szintén volt vallási jelentőségük. A szisztrum, egy nagy csörgőszerű hangszer, @380Hathorhoz, az öröm, szerelem és ünnepek istennőjéhez kapcsolódott. A fuvolák @378Amonhoz, a nap istenéhez kötődtek."
         }
     }
     message_history_dance {
         id: 171,
-        
-        size [30, 20]
+
+            size [30, 20]
         image { id: 97, pos [15, 15] }
-        title { text: "Dance", pos [125, 15] }
-        subtitle { text: "History" }
+        title { text: "Tánc", pos [125, 15] }
+        subtitle { text: "Történelem" }
         content {
-            text: "Ancient Egyptian dance evolved from rituals that hunters used to prepare for the hunt. A lead dancer, called the priest-dancer, was responsible for ensuring that the dances were performed correctly. @L@LLater, dance was an integral part of festivals and other religious celebrations but was also a form of entertainment in and of itself. Professional dance troupes performed in city squares and could be hired for private parties. The dancers were usually accompanied by @170music. Most professional dancers were female, and many had tattoos of Bes, God of Music an Dancing, on their thighs.  @L@LSome citizens also danced as a pastime, although this diversion was reserved primarily for the lower classes. The greater an Egyptian's stature, the less likely he or she was to dance. Also, men and women never danced together. Women danced with other women, and men danced with other men. @L@LApparently, Egyptian dance moves were named for what they represented, for example, 'the leading along of an animal,' 'the successful capture of a boat' and 'the funky chicken.'"
+            text: "Az ókori egyiptomi tánc a vadászok által a vadászat előkészítésére használt rítusokból fejlődött ki. Egy vezető táncos, az úgynevezett pap-táncos, felelt azért, hogy a táncokat megfelelően hajtsák végre. @L@LKésőbb a tánc az ünnepek és más vallási szertartások szerves részévé vált, de önálló szórakozási formaként is megjelent. Hivatásos tánccsoportok léptek fel a városi tereken, és magánrendezvényekre is fel lehetett őket bérelni. A táncosokat általában @170zene kísérte. A legtöbb hivatásos táncos nő volt, és sokuk combján Besnek, a zene és tánc istenének tetoválása volt. @L@LNéhány polgár szórakozásként is táncolt, bár ez elsősorban az alsóbb osztályok kedvelt időtöltése volt. Minél magasabb rangú volt egy egyiptomi, annál kevésbé valószínű, hogy táncolt. Emellett férfiak és nők soha nem táncoltak együtt. A nők más nőkkel, a férfiak más férfiakkal táncoltak. @L@LÚgy tűnik, az egyiptomi táncmozdulatokat arról nevezték el, amit ábrázoltak, például 'egy állat vezetése', 'egy hajó sikeres elfogása' és 'a mókás csirke'."
         }
     }
     message_history_senet {
         id: 172,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 98,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Senet",
-            pos [125, 15]
+            text: "Szenet",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Senet was the most popular board game in ancient Egypt. The board was rectangular and divided into three rows of 10 squares each. It was played by two players, and each player had at least five pieces. Moves were determined by a set of four throwing sticks. The rules for senet were not recorded anywhere, so no one is quite sure how the game was played. Most historians agree, however, that the game represented the journey to the afterlife. Both backgammon and hopscotch are considered to be descendants of senet. @L@LSenet, along with other games, was probably one of many amusements Egyptians undertook while at taverns or inns. After a hard day's work, many Egyptians would retire to local taverns where @194beer was served and lively conversation filled the air. Both men and women - particularly those that were still single - attended beer halls."
+            text: "A szenet volt az ókori Egyiptom legnépszerűbb táblajátéka. A tábla téglalap alakú volt, és három, egyenként 10 mezőből álló sorra osztották. Két játékos játszotta, és mindkettőnek legalább öt bábuja volt. A lépéseket négy dobópálca határozta meg. A szenet szabályait sehol sem jegyezték fel, ezért senki sem tudja pontosan, hogyan játszották. A legtöbb történész azonban egyetért abban, hogy a játék a túlvilágra vezető utazást jelképezte. A backgammon és az ugróiskola is a szenet leszármazottjának tekinthető. @L@LA szenet, más játékokkal együtt, valószínűleg egyike volt azoknak a szórakozásoknak, amelyeket az egyiptomiak kocsmákban vagy fogadókban űztek. Egy kemény munkanap után sok egyiptomi helyi kocsmákba tért be, ahol @194sört szolgáltak fel, és élénk beszélgetés töltötte be a levegőt. Férfiak és nők egyaránt – különösen a még hajadonok – látogatták a sörházakat."
         }
     }
     message_history_taxation_and_money {
         id: 173,
-        
-        size [30, 20]
+
+            size [30, 20]
         image { id: 99, pos [15, 15] }
-        title { text: "Taxation and Money", pos [125, 15] }
-        subtitle { text: "History" }
+        title { text: "Adózás és pénz", pos [125, 15] }
+        subtitle { text: "Történelem" }
         content {
-            text: "The ancient Egyptians paid tax to their pharaoh, which were paid in commodities. So, for example, a farmer had to pay pharaoh a certain amount of grain. Scribes were sent around to all the farms to determine how much each farmer owed. @L@LValue was sometimes expressed in terms of deben. Deben were metal disks that were likely first used as weights."
+            text: "Az ókori egyiptomiak adót fizettek a fáraónak, amelyet árucikkek formájában teljesítettek. Így például egy földművesnek meghatározott mennyiségű gabonát kellett adóként adnia a fáraónak. Írnokokat küldtek ki minden gazdaságba, hogy megállapítsák, mennyivel tartozik az egyes földműves. @L@LAz értéket néha debenben fejezték ki. A deben fémkorong volt, amelyet valószínűleg eredetileg súlymértékként használtak."
         }
     }
     message_history_government_and_bureaucracy {
         id: 174,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 40,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Government and Bureaucracy",
-            pos [125, 15]
+            text: "Kormányzat és bürokrácia",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Government in ancient Egypt was very bureaucratic. Every imaginable task had an associated government employee with a lofty-sounding title. Heading everything up, of course, was the pharaoh. The pharaoh's right-hand man was his vizier, who was responsible for ensuring that all pharaonic commands were carried out. Under the vizier were nomarchs (regional governors), chancellors, viceroys, overseers, mayors - the list goes on and on. And, because ancient Egypt was a theocracy, @384priests played an integral part. @L@LMany individuals held more than one title. For example, Imhotep, who served under Djoser I and oversaw the building of the Step Pyramid, held the titles of Vizier, High Priest of Ptah and Overseer of Works, among others."
+            text: "Az ókori Egyiptom kormányzata rendkívül bürokratikus volt. Minden elképzelhető feladathoz tartozott egy állami tisztviselő, gyakran tekintélyes hangzású címmel. Mindennek az élén természetesen a fáraó állt. A fáraó jobbkeze a vezír volt, aki felelt azért, hogy minden fáraói parancsot végrehajtsanak. A vezír alatt nomarkhoszok (tartományi kormányzók), kancellárok, alkirályok, felügyelők, polgármesterek és még sokan mások szolgáltak. Mivel az ókori Egyiptom teokrácia volt, a @384papok fontos szerepet töltöttek be. @L@LSok ember egynél több címet is viselt. Például Imhotep, aki Dzsószer I. uralkodása alatt szolgált és a lépcsős piramis építését felügyelte, többek között a vezír, Ptah főpapja és az építkezések felügyelője címet is birtokolta."
         }
     }
     message_history_pharaohs_home {
         id: 175,
-        
-        size [30, 20]
+
+            size [30, 20]
         image { id: 100, pos [15, 15] }
-        title { text: "Pharaoh's Home", pos [125, 15] }
-        subtitle { text: "History" }
+        title { text: "A fáraó otthona", pos [125, 15] }
+        subtitle { text: "Történelem" }
         content {
-            text: "The pharaoh's home was the most majestic dwelling in the city. While most homes had only one or two rooms, some pharaohs' mansions boasted dozens of rooms and were outfitted with the best amenities ancient Egypt could offer. @L@LLike in the @174government, Egyptians in the employ of the pharaoh held titles and were responsible for very specific tasks. Among the people the pharaoh employed were the Superintendent of Household Affairs, the Chief Manicurist and the Royal Butler. @L@LOne royal butler, named Nefer-Peret, had very specific responsibilites accorded to him. Nefer-Peret was responsible for the care of four Palestinian cows, two Egyptian cows, one bull and one bronze bucket. Nothing more, and nothing less."
+            text: "A fáraó otthona volt a város legpompásabb épülete. Míg a legtöbb ház csak egy-két szobából állt, néhány fáraói palota több tucat helyiséggel rendelkezett, és az ókori Egyiptom által kínált legjobb kényelmi felszerelésekkel volt ellátva. @L@LAhogy a @174kormányzatban, úgy a fáraó szolgálatában álló egyiptomiak is címeket viseltek, és pontosan meghatározott feladatokért feleltek. A fáraó alkalmazottai között volt a háztartási ügyek felügyelője, a királyi főmanikűrös és a királyi pohárnok. @L@LAz egyik királyi pohárnokot, Nefer-Peretet, rendkívül pontos feladatokkal bízták meg. Nefer-Peret feladata négy palesztin tehén, két egyiptomi tehén, egy bika és egy bronzvödör gondozása volt. Se több, se kevesebb."
         }
     }
     message_history_gardens_and_public_art {
         id: 176,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 38,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Gardens and Public Art",
-            pos [125, 15]
+            text: "Kertek és köztéri művészet",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Gardens were extremely popular in ancient Egypt, and most houses had gardens adjacent to them. In addition to growing @187fruits&and&vegetables in these gardens to supplement their diets, the gardens provided a place to go for respite from the hot sun. Many gardens had carefully tended trees to provide shade. @L@LArt was primarily found on the monuments and temples in town. So much time and expense was devoted to the temples and monumnents that the rest of the town tended to be rather drab by comparison."
+            text: "A kertek rendkívül népszerűek voltak az ókori Egyiptomban, és a legtöbb házhoz tartozott egy közeli kert is. Amellett, hogy ezekben a kertekben @187gyümölcsöt&és&zöldséget termesztettek étrendjük kiegészítésére, a kertek menedéket nyújtottak a forró nap elől. Sok kertben gondosan ápolt fákat ültettek az árnyék biztosítására. @L@LA művészet elsősorban a város emlékművein és templomain jelent meg. Annyi időt és pénzt fordítottak a templomokra és emlékművekre, hogy a város többi része ezekhez képest meglehetősen sivárnak tűnt."
         }
     }
     message_history_trade {
         id: 177,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 30,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Trade",
-            pos [125, 15]
+            text: "Kereskedelem",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "While ancient Egypt was replete with natural resources, the land did lack some goods. The Egyptians opened trade routes with many nearby countries and regions, including Nubia, Lebanon, Syria, Punt (which historians speculate is the coast of Somalia) and the Aegean, among others. Some sources claim that Egyptian trade extended as far north as modern-day Turkey. @L@LThe Nile again played an important role in Egyptian trade. The river was navigable through the first cataract, or set of rocky waterfalls. It acted as a road and made travel to and from Nubia relatively easy. @L@LThe Nile also helped to provide one of Egypt's main exports: grain. The Inundation proved to be much more reliable than the rain in Lebanon and Syria. As long as the Inundation occurred, Egypt had a surplus of grain, a luxury Lebanon and Syria did not frequently have. Egypt's other exports included linen, papyrus, lentils, dried fish, gold and silver vessels, ox hides and rope. @L@LIn exchange, Egypt received a variety of goods as imports. Among the most important are gold from Nubia, wood from Lebanon and olive oil from Syria. The Egyptians also imported other luxury items, such as myrrh and wine, and livestock. The Egyptians also occasionally imported weapons. @L@LLaden with goods, caravans were especially prone to attack. For protection, armed units accompanied caravans on their trade missions. Because of these armed units, some historians speculate that Egypt did not engage in free trade with its neighbors, but rather bullied neighbors into giving up goods. While coercion probably played some role in Egyptian trade, some papyri also refer to negotiations between Egypt and its trade partners. @L@LSome successful trade missions were celebrated with inscriptions and artwork. Hatshepsut, a female pharaoh, sent a fleet of ships to Punt to procure myrrh, frankincense, ivory and other fine goods. The trip was deemed so successful that it is recorded on the walls of Hatshepsut's temple at Deir el-Bahri."
+            text: "Bár az ókori Egyiptom bővelkedett természeti erőforrásokban, bizonyos javak hiányoztak az országból. Az egyiptomiak kereskedelmi útvonalakat nyitottak számos közeli országgal és térséggel, többek között Núbiával, Libanonnal, Szíriával, Punttal (amelyet a történészek feltételezése szerint Szomália partvidékével azonosítanak) és az Égei-térséggel. Egyes források szerint az egyiptomi kereskedelem egészen a mai Törökország északi részéig elért. @L@LA Nílus ismét fontos szerepet játszott az egyiptomi kereskedelemben. A folyó az első kataraktáig, vagyis a sziklás vízesések első soráig hajózható volt. Útként szolgált, és viszonylag egyszerűvé tette a Núbiába és onnan történő utazást. @L@LA Nílus Egyiptom egyik fő exportcikkének, a gabonának az előállítását is segítette. Az áradás sokkal megbízhatóbb volt, mint a libanoni és szíriai esőzések. Amíg az áradás rendszeresen bekövetkezett, Egyiptom gabonafelesleggel rendelkezett, ami Libanonban és Szíriában gyakran nem állt rendelkezésre. Egyiptom további exportcikkei közé tartozott a lenvászon, a papirusz, a lencse, a szárított hal, az arany- és ezüstedények, az ökörbőr és a kötél. @L@LCserébe Egyiptom különféle árukat importált. A legfontosabbak közé tartozott a núbiai arany, a libanoni faanyag és a szíriai olívaolaj. Az egyiptomiak más luxuscikkeket is behoztak, például mirhát, bort és állatokat. Alkalmanként fegyvereket is importáltak. @L@LAz árukkal megrakott karavánok különösen ki voltak téve a támadásoknak. Védelmük érdekében fegyveres egységek kísérték a karavánokat kereskedelmi útjaikon. E fegyveres kíséret miatt néhány történész úgy véli, hogy Egyiptom nem szabad kereskedelmet folytatott szomszédaival, hanem inkább kényszerítette őket az áruk átadására. Bár a kényszer valószínűleg szerepet játszott az egyiptomi kereskedelemben, egyes papiruszok Egyiptom és kereskedelmi partnerei közötti tárgyalásokról is beszámolnak. @L@LNéhány sikeres kereskedelmi expedíciót feliratokkal és műalkotásokkal örökítettek meg. Hatsepszut, a női fáraó, hajóflottát küldött Puntba mirha, tömjén, elefántcsont és más értékes áruk beszerzésére. Az út olyan sikeresnek bizonyult, hogy Hatsepszut deir el-bahari templomának falain is megörökítették."
         }
     }
     message_history_ships_and_ship_making {
         id: 179,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 101,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Ships and Ship Making",
-            pos [125, 15]
+            text: "Hajók és hajóépítés",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "The Nile has inspired boat makers for ages. In pre-Dynastic times, ancient Egyptians lashed together reeds of papyrus to make rafts that they propelled with poles. With the advent of pyramid building came the shipwright. Ships were important in transporting heavy materials needed for the construction of the pyramids. @L@LLike other industries in Egypt, shipwrights were government-owned operations. Equipped with woodworking tools, ship builders first made the hull of the boat by laying planks side by side and securing them with dowels, glue, and ropes designed to shrink when wet. When the ropes shrank, the hull was held fast. Hulls of larger boats were ribbed. Once the hull was complete, the shipwrights outfitted the rest of the boat, including a mast for the sail and holes for oars. Some of the larger ships had cabins. @L@LThe ships were broad-beamed and designed to ride very high on the surface of the water, which helped them stay afloat. The Nile, though relatively easy to navigate, did have its share of shoals and shallow points, and it was easy for ships to run aground. @L@LShipwrights built ships of significant size. One boat, used to transport obelisks to Hatshepsut's temple, measured 89 yards (82 meters) in length. One of the most famous archaeological finds is Khufu's barge. Found in about 1,224 pieces along the south side of Khufu's pyramid, the barge was reconstructed in the early 1960s. The boat is over 46 yards (42  meters long and 6.5 yards (6 meters) wide, with spots for 10 rowers plus an additional two that steered the boat. Historians are unsure of the significance of the boat. Some speculate that it is symbolic of Horus' sun ship. Others think that it may have been the barge that transported Khufu's remains to his pyramid, or that he used the boat during life. Regardless, the boat provides insight into the construction of Egyptian ships."
+            text: "A Nílus ősidők óta ihlette a hajókészítőket. A dinasztiák előtti korban az ókori egyiptomiak papirusznád kötegeit kötözték össze, hogy tutajokat készítsenek, amelyeket rudakkal hajtottak. A piramisépítés kezdetével megjelent a hajóépítő mesterség. A hajók fontos szerepet játszottak a piramisok építéséhez szükséges nehéz anyagok szállításában. @L@LAz egyiptomi iparágakhoz hasonlóan a hajóépítő műhelyek is állami tulajdonban voltak. Fafeldolgozó eszközökkel felszerelve a hajóépítők először a hajótestet készítették el: a deszkákat egymás mellé fektették, majd facsapokkal, ragasztóval és nedvesség hatására zsugorodó kötelekkel rögzítették őket. Amikor a kötelek összehúzódtak, a hajótest szilárdan összetartott. A nagyobb hajók testét bordákkal erősítették meg. Miután a hajótest elkészült, a hajóépítők felszerelték a hajó többi részét, többek között az árbocot a vitorlához és az evezőnyílásokat. Néhány nagyobb hajón kabinok is voltak. @L@LA hajók széles testűek voltak, és úgy tervezték őket, hogy magasra emelkedjenek a víz felszínén, ami segített nekik fennmaradni. A Nílus ugyan viszonylag könnyen hajózható volt, de akadtak rajta zátonyok és sekély részek, ahol a hajók könnyen megfeneklettek. @L@LA hajóépítők jelentős méretű hajókat készítettek. Egy hajó, amely Hatsepszut templomához szállított obeliszkeket, 89 yard (82 méter) hosszú volt. Az egyik leghíresebb régészeti lelet Hufu bárkája. A Hufu-piramis déli oldalán mintegy 1224 darabban megtalált bárkát az 1960-as évek elején állították helyre. A hajó több mint 46 yard (42 méter) hosszú és 6,5 yard (6 méter) széles, tíz evezős és további két kormányos számára kialakított hellyel. A történészek nem biztosak a hajó jelentőségében. Egyesek szerint Hórusz napbárkáját jelképezte. Mások úgy vélik, hogy ez lehetett a bárka, amely Hufu maradványait a piramisához szállította, vagy amelyet életében használt. Bárhogy is legyen, a hajó fontos betekintést nyújt az egyiptomi hajóépítésbe."
         }
     }
     message_history_enemies {
         id: 181,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 102,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Enemies",
-            pos [125, 15]
+            text: "Ellenségek",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Egypt was in frequent contact with its neighbors, and sometimes relations weren't very friendly. Egypt was invaded several times during its long history and ruled by non-Egyptians. These non-Egyptians, though, assumed the title of pharaoh, and up until the time of the Persian invasion, Egptians managed to wrestle back their land. Egypt, though, was not always the one under attack. During the New Kingdom in particular, Egypt sought to expand its empire and invaded many neighboring lands. @L@LAmong the peoples Egypt waged war against are the Nubians and the Kush. Egypt invaded Nubia fairly early in its history (as early as 2900 BC), mostly to take advantage of Nubia's rich gold and copper resources. During the late period, however, Nubia gained the upper hand, and several Nubian pharaohs ruled Egypt. @L@LAcross the Sinai peninsula were several peoples with whom Egypt waged war. Among these are the Canaanites, Philistines, Bedouins (from what is now Syria) and the Hittites. The most notable of these Asiatic peoples, though, are the Hyksos. During the Second Intermediate Period, the Hyksos ruled Egypt. They retained many of Egypt's cultural practices, and introduced many innovations, such as the horse-drawn chariot. The Hyksos ruled Egypt for about 100 years until Ahmose I defeated them and assumed power. @L@LTo the west, Egypt engaged in war with Libyan tribes, particularly the Tehenu and Temehu. The Tehenu and Temehu attempted to move into the Egyptian Delta, and they were put down strongly by Sethos I. @182Forts were built in the west to help keep the tribes at bay.  @L@LFinally, the powerful Roman Empire reached the shores of Egypt during the rule of the Ptolemies.  Egypt's waning military might yet bountiful treasury and granaries (not to mention the beguiling Cleopatra VII) quite naturally attracted the covetous eyes of Julius Caesar and his successors.  The arrival of Caesar's Roman legions on Egyptian soil marked the beginning of the end of a long history of Egyptian dominance in the Mediterranean basin, and eventually reduced the once-proud Egypt to a vassal state. @L@LClick @184here for more on Egypt's military."
+            text: "Egyiptom gyakran érintkezett szomszédaival, és ezek a kapcsolatok nem mindig voltak barátságosak. Hosszú történelme során Egyiptomot többször is megszállták, és idegenek uralkodtak felette. Ezek az idegen uralkodók azonban felvették a fáraó címet, és a perzsa hódításig az egyiptomiaknak sikerült visszaszerezniük földjüket. Egyiptom azonban nem mindig volt a támadások elszenvedője. Különösen az Újbirodalom idején Egyiptom terjeszkedni kezdett, és számos szomszédos területet meghódított. @L@LEgyiptom háborúzott többek között a núbiaiakkal és a kusitákkal. Egyiptom történelmének korai szakaszában (már i. e. 2900 körül) megtámadta Núbiát, főként annak gazdag arany- és rézlelőhelyei miatt. A késői korban azonban Núbia került fölénybe, és több núbiai fáraó is uralta Egyiptomot. @L@LA Sínai-félszigeten túl több nép is élt, amelyekkel Egyiptom háborúkat vívott. Közéjük tartoztak a kánaániak, a filiszteusok, a beduinok (a mai Szíria területéről) és a hettiták. Ezen ázsiai népek közül azonban a legjelentősebbek a hükszoszok voltak. A második átmeneti korban a hükszoszok uralták Egyiptomot. Sok egyiptomi kulturális szokást megtartottak, és számos újítást vezettek be, például a lovas harci szekeret. Körülbelül 100 évig uralkodtak, míg I. Ahmosze le nem győzte őket és át nem vette a hatalmat. @L@LNyugaton Egyiptom líbiai törzsekkel, különösen a tehenu és temehu népekkel került háborúba. Ezek a törzsek megpróbáltak betelepülni az egyiptomi Deltába, de I. Szetosz keményen visszaszorította őket. @182Erődöket építettek nyugaton, hogy távol tartsák a törzseket. @L@LVégül a hatalmas Római Birodalom a Ptolemaioszok uralma alatt érte el Egyiptom partjait. Egyiptom hanyatló katonai ereje, ám hatalmas kincstára és gabonaraktárai (nem is beszélve a lenyűgöző VII. Kleopátráról) természetesen felkeltették Julius Caesar és utódai kapzsi figyelmét. Caesar római légióinak megérkezése Egyiptom földjére egy hosszú korszak végét jelentette, amelyben Egyiptom meghatározó hatalom volt a Földközi-tenger térségében, és végül a büszke ország vazallusállammá vált. @L@LEgyiptom haderejéről bővebben kattints @184here."
         }
     }
     message_history_defensive_structures {
         id: 182,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 103,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Defensive Structures",
-            pos [125, 15]
+            text: "Védelmi építmények",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Egypt protected its cities and towns with walls and towers. Walls were generally made of brick and were built either in the form of a quadrangle or a circle around the town. Excavations at Abu (Elephantine), located in southern Egypt near the Nubian border, have uncovered a thick, curving wall with semi-circular towers interspersed.  @L@LEgypt defended its borders with a series of fortresses. Among the most well known of these fortresses are the 'Wall of the Prince,' a series of 13 fortresses built along the Nile's east bank."
+            text: "Egyiptom falakkal és tornyokkal védte városait és településeit. A falak általában téglából készültek, és négyszögletes vagy kör alakban vették körül a várost. Az Egyiptom déli részén, a núbiai határ közelében fekvő Abu (Elephantiné) ásatásai egy vastag, ívelt falat tártak fel, amelyet félkör alakú tornyok szakítottak meg. @L@LEgyiptom határait erődsorozattal védte. Ezek közül az egyik legismertebb a 'Herceg fala', amely a Nílus keleti partján épült 13 erődből álló rendszer volt."
         }
     }
     message_history_law {
         id: 183,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 104,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Law",
-            pos [125, 15]
+            text: "Törvény",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Egyptians with grievances against others could take their complaints to a magistrate. Depending on the seriousness of the offense, the case might be decided by a local magistrate or by the vizier himself. Local magistrates were sometimes lower-ranking officials in the town, like a chief workman. Scribes attended the court cases and recorded participants, witnesses, testimony and punishments. @L@LEveryone was subject to the law, upper and lower classes alike. In one scene engraved on a mastaba chapel of an Old Kingdom vizier, local governors are being punished for withholding tax revenue. Women, too, were active participants in court cases. In one case, a woman is awarded property that had been illegally claimed by her in-laws. In another case, a woman is found guilty of stealing a tool and a vessel from a shrine of Amun. @L@LPunishments for crime could be quite severe and frequently involved beatings or forced labor. During the New Kingdom's 18th dynasty, the punishment for stealing hides was 100 blows and five open wounds. Some particularly heinous crimes were punishable by cutting off the criminal's nose and banishing him or her to the outskirts of Egypt. @L@LEgyptian law was not strictly codified, and most punishments were meted out on a case-by-case basis. There are some lists of crimes and their punishments remaining, particularly from the New Kingdom, but these lists tend to be contradictory. @L@LJustice was an important concept in the afterlife as well. Before a person could enter the afterlife, he or she had to make a 'negative confession,' listing all the things the person hadn't done during his lifetime. After the negative confession, the individual's heart is weighed against a feather from Ma'at's headdress. If the heart weighs the same as the feather, he or she gains admittance into the afterlife. If it is heavier than the feather, the heart is eaten by Ammit, a hideous monster, and the person is denied access to the afterlife."
+            text: "Azok az egyiptomiak, akik sérelmet szenvedtek másoktól, panaszukkal egy bíróhoz fordulhattak. A vétség súlyosságától függően az ügyet egy helyi bíró vagy maga a vezír dönthette el. A helyi bírák néha alacsonyabb rangú tisztviselők voltak a városban, például főmunkások. Az írnokok részt vettek a tárgyalásokon, és feljegyezték a résztvevőket, tanúkat, vallomásokat és büntetéseket. @L@LA törvény mindenkire vonatkozott, a felső és alsó osztályokra egyaránt. Egy óbirodalmi vezír masztabakápolnáján látható jeleneten helyi kormányzókat büntetnek meg az adóbevételek visszatartásáért. A nők is aktív résztvevői voltak a bírósági ügyeknek. Egy esetben egy nő megkapott egy olyan tulajdont, amelyet törvénytelenül követeltek maguknak a rokonai. Egy másik esetben egy nőt bűnösnek találtak abban, hogy szerszámot és edényt lopott Ámon egyik szentélyéből. @L@LA bűncselekmények büntetése igen szigorú lehetett, és gyakran verést vagy kényszermunkát jelentett. Az Újbirodalom XVIII. dinasztiája idején a bőrök ellopásának büntetése 100 ütés és öt nyílt seb okozása volt. Néhány különösen súlyos bűntettet azzal büntettek, hogy levágták a bűnöző orrát, és Egyiptom peremére száműzték. @L@LAz egyiptomi jog nem volt szigorúan kodifikálva, és a legtöbb büntetést egyedi esetek alapján szabták ki. Néhány bűn- és büntetéslista fennmaradt, különösen az Újbirodalomból, de ezek gyakran ellentmondanak egymásnak. @L@LAz igazságosság a túlvilágon is fontos fogalom volt. Mielőtt valaki beléphetett volna a túlvilágra, 'negatív vallomást' kellett tennie, amelyben felsorolta mindazt, amit életében nem követett el. A negatív vallomás után az illető szívét megmérték Maat fejdíszének egy tollával szemben. Ha a szív súlya megegyezett a tolléval, bebocsátást nyert a túlvilágra. Ha nehezebb volt a tollnál, a szívet Ammit, a szörnyű szörnyeteg falta fel, és az illető nem juthatott be a túlvilágra."
         }
     }
     message_history_military {
         id: 184,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 105,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Military",
-            pos [125, 15]
+            text: "Hadsereg",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "The Egyptian military evolved over the thousands of years of pharaonic rule. In the Old Kingdom, armies were raised when needed and were usually comprised of nobles and their followers or foreigners. The Old Kingdom had no professional army. The men who served in the army came from different walks of life and presumably returned to their former professions as soon as the fighting was over. @L@LBy the time of the New Kingdom, however, the structure of the army had changed. The army was clearly divided into units of infantry and charioteers. The infantry could be divided into two parts: soldiers who specialized in close combat and those who specialized in longer range combat. Chariots were used for mobile long-range combat. Soldiers with bows and arrows rode each chariot, firing into the enemy. Naval combat was frequent, although the navy was not seen as a separate and distinct division of the armed forces. The navy was a part of the land forces, and soldiers who served on boats were described using the same terms as those that served on land. Again, foreigners comprised a significant portion of the army. Nubians, Libyans, Asiatics and Carians all fought on behalf of the Egyptians. @L@LThe Egyptian army was organized into battalions in the Old Kingdom. During the New Kingdom, the battalions were further subdivided into divisions, which were named after gods. Scribes and administrators would go to battle with the soldiers, presumably to keep track of the action. @L@LClick @196here to find out about the weapons the Egyptian army had at its disposal."
+            text: "Az egyiptomi hadsereg a fáraók uralma alatt eltelt több ezer év során fejlődött ki. Az Óbirodalomban a seregeket szükség esetén állították fel, és általában nemesekből, követőikből vagy idegenekből álltak. Az Óbirodalomnak nem volt hivatásos hadserege. A katonák az élet különböző területeiről kerültek ki, és valószínűleg a harcok végeztével visszatértek korábbi foglalkozásukhoz. @L@LAz Újbirodalom idejére azonban a hadsereg felépítése megváltozott. A hadsereg egyértelműen gyalogsági és harci szekér egységekre oszlott. A gyalogság két részre tagolódott: közelharcra szakosodott katonákra és hosszabb hatótávolságú harcban jártas egységekre. A harci szekereket mozgékony távolsági támadásokra használták. Az íjjal és nyíllal felszerelt katonák a szekereken állva lőtték az ellenséget. A tengeri harcok gyakoriak voltak, bár a haditengerészetet nem tekintették a fegyveres erők különálló ágának. A haditengerészet a szárazföldi erők része volt, és a hajókon szolgáló katonákat ugyanazokkal a kifejezésekkel illették, mint a szárazföldi katonákat. Az idegenek ismét jelentős részét alkották a hadseregnek. Núbiaiak, líbiaiak, ázsiaiak és káriaiak mind harcoltak az egyiptomiak oldalán. @L@LAz egyiptomi hadsereg az Óbirodalomban zászlóaljakba szerveződött. Az Újbirodalomban a zászlóaljakat tovább osztották hadosztályokra, amelyeket istenekről neveztek el. Írnokok és hivatalnokok is elkísérték a katonákat a csatába, feltehetően azért, hogy nyilvántartsák az eseményeket. @L@LAz egyiptomi hadsereg fegyvereiről bővebben kattints @196here."
         }
     }
     message_history_grain_and_barley {
         id: 185,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 106,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Grain and Barley",
-            pos [125, 15]
+            text: "Gabonafélék és árpa",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Grain farming (both wheat and barley) produced the raw material for the most basic foodstuff in ancient Egypt: bread. Wheat and barley were both turned into flour, then baked into bread. For more on the use of bread made from barley, see @194Beer. @L@LThe Egyptians used three types of wheat: emmer, einkorn and spelt. Wheat was processed into flour through threshing. Stalks of wheat were placed on the ground, and livestock or other large animals were brought in to stomp on the wheat. This pounding released the grain from the sheaves. Then, the grain was separated from the chaff and other impurities either by sifting or by throwing the wheat up in the air. The wind would carry off the lighter chaff, and the heavier wheat would fall to the ground. After the grain was processed, it was taken to the @5granaries. At the granaries, the wheat would be processed into flour and stored for future use.  @L@LTo make bread, a dough was made from flour and poured into ceramic molds of different shapes. The most popular shape was conical. The dough was baked in a hearth surrounded by hot coals and ash. Bread was baked both in the home and by professionals in bakeries. Archeologists speculate that because of the amount of ash in the air, professional bakers may not have been the healthiest people."
+            text: "A gabonatermesztés (búza és árpa egyaránt) biztosította az ókori Egyiptom legalapvetőbb élelmiszerének, a kenyérnek az alapanyagát. A búzából és az árpából is lisztet készítettek, majd kenyeret sütöttek belőlük. Az árpából készült kenyér felhasználásáról további információért lásd: @194Beer. @L@LAz egyiptomiak háromféle búzát használtak: alakor búzát, tönkölyt és kétszemű búzát. A búzát csépléssel dolgozták fel lisztté. A búzaszárakat a földre terítették, majd állatokat vagy más nagytestű jószágokat hajtottak rájuk, hogy megtapossák a búzát. Ez a zúzás kiszabadította a szemeket a kalászokból. Ezután a szemeket rostálással vagy a levegőbe szórással választották el a pelyvától és más szennyeződésektől. A szél elfújta a könnyebb pelyvát, míg a nehezebb búzaszemek a földre hullottak. A feldolgozás után a gabonát a @5gabonatárolókba vitték. Ott a búzát lisztté őrölték és későbbi felhasználásra tárolták. @L@LKenyeret úgy készítettek, hogy lisztből tésztát gyúrtak, majd különböző formájú kerámiaformákba öntötték. A legnépszerűbb forma a kúpos volt. A tésztát forró parázs és hamu által körülvett tűzhelyen sütötték meg. Kenyeret otthonokban és hivatásos pékségekben is sütöttek. A régészek szerint a levegőben lévő nagy mennyiségű hamu miatt a hivatásos pékek talán nem tartoztak a legegészségesebb emberek közé."
         }
     }
     message_history_cattle_ranching_and_fishing {
         id: 186,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 13,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Cattle Ranching and Fishing",
-            pos [125, 15]
+            text: "Állattenyésztés és halászat",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Egyptians raised several different animals on ranches or farms to be used for food. The most prevalent of these animals were long-horned cattle. These cattle were tended by herdsmen, who were typically portrayed in tomb scenes as being very lean with unshaven faces. The cattle were sent to pasture to feed. Sometimes, the cattle were sent to fields that had been recently harvested to eat straw and chaff. @L@LThe Egyptians also raised sheep, goats and pigs on farms, as well as geese and other fowl. Horses were also raised, not for food, but to be used to draw the chariots of the noblest Egyptians. The horse was introduced into Egypt by the Hyksos, one of Egypt's @181invaders. @L@LFish provided an alternate source of food, though it seems to have been eaten primarily by the lower classes. The Egyptians caught fish in several different ways. Some set out in canoes and used fishing rods with lines and hooks to catch fish one at a time. Traps were also built to catch larger numbers of fish. The most efficient way to catch fish, however, was the drag net. Because the catch would be so great, bringing a drag net back to the surface required two boats of men. @L@LThere were dangers involved in the fishing profession. One species of catfish had a poisonous spine on its dorsal fin, and there was always the danger of crocodiles. Fishermen were safe enough in their boats, but should the boat capsize, the crocodile was seldom far behind."
+            text: "Az egyiptomiak különféle állatokat tenyésztettek gazdaságokban és állattartó telepeken élelem céljára. Ezek közül a legelterjedtebbek a hosszú szarvú szarvasmarhák voltak. Ezeket pásztorok gondozták, akiket a sírjeleneteken általában sovány, borotválatlan arcú férfiakként ábrázoltak. A marhákat legelőkre hajtották táplálkozni. Néha frissen betakarított földekre küldték őket, hogy a szalmát és a pelyvát megegyék. @L@LAz egyiptomiak juhokat, kecskéket és sertéseket is tenyésztettek, valamint libákat és más szárnyasokat. A lovakat nem élelem céljára tartották, hanem azért, hogy a legelőkelőbb egyiptomiak harci szekereit húzzák. A lovat a hükszószok, Egyiptom egyik @181hódító népe hozta be az országba. @L@LA hal másfajta élelemforrást jelentett, bár úgy tűnik, főként az alsóbb osztályok fogyasztották. Az egyiptomiak többféle módon fogtak halat. Néhányan kenukban ülve horgászbotokat használtak zsinórral és horoggal, így egyenként fogták ki a halakat. Csapdákat is építettek, hogy nagyobb mennyiségű halat ejtsenek el. A leghatékonyabb módszer azonban a kerítőháló használata volt. Mivel a zsákmány igen nagy lehetett, a háló felszínre húzásához két hajónyi emberre volt szükség. @L@LA halászat veszélyes foglalkozás volt. Egyes harcsafajok hátúszóján mérgező tüske található, és mindig fennállt a krokodilok veszélye is. A halászok hajóikban többnyire biztonságban voltak, de ha a hajó felborult, a krokodil ritkán maradt távol."
         }
     }
     message_history_fruits_and_vegetables {
         id: 187,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 107,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Fruits and Vegetables",
-            pos [125, 15]
+            text: "Gyümölcsök és zöldségek",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "@185Grain and barley were the predominant foodstuffs for the ancient Egyptians, but they also cultivated a variety of fruits and vegetables. Beans, chickpeas, lentils and green peas were very popular, as were garlic, onions, leeks, lettuce and cucumbers. For fruit, figs, dates, grapes and pomegranates were consumed. Dates in particular were popular with the lower classes and were used to flavor beer. The Egyptians also spiced their food with cinnamon, coriander, cumin, dill and mustard."
+            text: "A @185gabonafélék és az árpa voltak az ókori egyiptomiak legfontosabb élelmiszerei, de sokféle gyümölcsöt és zöldséget is termesztettek. A bab, a csicseriborsó, a lencse és a zöldborsó nagyon népszerű volt, akárcsak a fokhagyma, a hagyma, a póréhagyma, a saláta és az uborka. Gyümölcsként fügét, datolyát, szőlőt és gránátalmát fogyasztottak. A datolya különösen az alsóbb osztályok körében volt kedvelt, és a sör ízesítésére is használták. Az egyiptomiak ételeiket fahéjjal, korianderrel, köménnyel, kaporral és mustárral is fűszerezték."
         }
     }
     message_history_reeds {
         id: 188,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 108,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Reeds",
-            pos [125, 15]
+            text: "Nád",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Reaching heights of up to 25 feet, papyrus reeds weren't used just for paper in Egypt. Payprus reeds were manufactured into a variety of household goods including mats, sandals and rope. The pith of the plant was enjoyed as food. Sometimes, the stem of the plant was used as a replacement for wood, and stalks of the plant would also be bound together and used as a raft. Papyrus reeds nearly became extinct, but has enjoyed a recent resurgence. Papyrus reeds are again being harvested and manufactured into paper - this time to be sold to tourists."
+            text: "A papirusznád akár 25 láb magasra is megnőhetett, és Egyiptomban nem csak papírkészítésre használták. A papirusznádból különféle háztartási tárgyakat készítettek, többek között szőnyegeket, szandálokat és köteleket. A növény belsejét élelemként fogyasztották. Néha a szárát fa helyettesítésére használták, a növény szálait pedig összekötötték, és tutajként alkalmazták. A papirusznád majdnem kihalt, de az utóbbi időben újra elterjedt. A papiruszt ismét betakarítják és papírt készítenek belőle – ezúttal turisták számára értékesítik."
         }
     }
     message_history_flax {
         id: 189,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 109,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Flax",
-            pos [125, 15]
+            text: "Len",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Flax was grown to manufacture @398linen, ancient Egypt's major textile. Because the stalk was the most important part of the plant, each plant had to be pulled from the ground rather than cut, making flax harvest a slow process. Once the flax was harvested, the roots and seed heads were removed and the stalks are laid out to dry. Then, the stalks were submerged in water for two weeks, after which they were beaten against stones and separated out into fibers. The fibers were then sent to a weaver to be made into cloth."
+            text: "A lent az ókori Egyiptom legfontosabb textilanyagának, a @398vászonnak az előállításához termesztették. Mivel a növény szára volt a legfontosabb része, minden növényt ki kellett húzni a földből, nem pedig levágni, így a len betakarítása lassú folyamat volt. A betakarítás után eltávolították a gyökereket és a magfejeket, majd a szárakat száradni hagyták. Ezután a szárakat két hétre vízbe merítették, majd köveken ütögették és rostokra választották szét őket. A rostokat ezután a takácsokhoz vitték, akik szövetet készítettek belőlük."
         }
     }
     message_history_clay {
         id: 190,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 110,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Clay",
-            pos [125, 15]
+            text: "Agyag",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Clay was easily obtained in ancient Egypt, and the quality of clay varied by region. Along the Nile, years of Inundations resulted in rich deposits of mud waiting to be dug up and molded into pottery. In the desert regions, veins of soft marl and shale could be found in limestone. Clay from the desert yielded harder pottery than clay from the Nile and produced objects that had a pink or green hue. Pottery made from Nile clay tended to be red or black. Both types of clay were processed in the same way to make @198pottery."
+            text: "Az agyag könnyen hozzáférhető volt az ókori Egyiptomban, és minősége területenként változott. A Nílus mentén az évek során bekövetkező áradások gazdag iszaplerakódásokat hoztak létre, amelyeket kiáshattak és edényekké formálhattak. A sivatagi területeken mészkőben található puha márga- és palarétegeket lehetett felfedezni. A sivatagi agyag keményebb kerámiát eredményezett, mint a nílusi agyag, és rózsaszín vagy zöldes árnyalatú tárgyakat készítettek belőle. A nílusi agyagból készült edények általában vörösek vagy feketék voltak. Mindkét agyagtípust ugyanúgy dolgozták fel, hogy @198kerámiát készítsenek belőlük."
         }
     }
     message_history_gold_and_gold_mining {
         id: 191,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 22,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Gold and Gold Mining",
-            pos [125, 15]
+            text: "Arany és aranybányászat",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Gold was found primarily in Egypt's eastern desert and in Nubia. Mining the gold could be an arduous task. In the eastern desert, for example, veins of gold were interspersed in granite. The granite was chiseled into powder, then submerged in water to separate the gold from the rock. This process was certainly very time consuming. Nevertheless, gold was relatively plentiful and was, in fact, easier to obtain than silver. @L@LTo prepare the gold for use, it was first melted down at the gold mines. Once melted, the gold was poured into water. As the gold cooled, it formed into nuggets, which were then taken to goldsmiths for use. @L@LLike almost every other commodity, gold inventory was strictly maintained by scribes. They carefully weighed out gold every morning to the smiths, and their work was carefully supervised to ensure that they weren't stealing any.  @L@LWhile gold was more plentiful than silver, by no means was there an excessive amount of gold available. As a result, most objects were gold plated instead of being made of solid gold."
+            text: "Aranyat elsősorban Egyiptom keleti sivatagában és Núbiában találtak. Az arany bányászata nehéz feladat lehetett. A keleti sivatagban például az aranyércek gránitba ágyazódva fordultak elő. A gránitot porrá zúzták, majd vízbe merítették, hogy elválasszák az aranyat a kőzettől. Ez a folyamat rendkívül időigényes lehetett. Ennek ellenére az arany viszonylag bőségesen állt rendelkezésre, és valójában könnyebb volt hozzájutni, mint az ezüsthöz. @L@LAz arany felhasználásra való előkészítéséhez először az aranybányákban megolvasztották. Az olvadt aranyat ezután vízbe öntötték. Ahogy lehűlt, rögökké alakult, amelyeket később az ötvösökhöz vittek felhasználásra. @L@LMint szinte minden más árucikket, az aranykészleteket is szigorúan nyilvántartották az írnokok. Minden reggel gondosan kimérték az aranyat az ötvösök számára, és munkájukat szigorúan felügyelték, hogy biztosan ne lopjanak belőle. @L@LBár az arany bőségesebb volt az ezüstnél, korántsem állt rendelkezésre korlátlan mennyiségben. Emiatt a legtöbb tárgyat aranyozták, ahelyett hogy tömör aranyból készítették volna."
         }
     }
     message_history_wood_and_its_uses {
         id: 192,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 111,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Wood and its Uses",
-            pos [125, 15]
+            text: "A fa és felhasználása",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Native trees were not plentiful in Egypt. While the soil on the floodplains would be fertile enough to support tree growth, the flood itself would uproot trees before they had a chance to grow. Trees that did manage to grow in Egypt included the sycamore, the persea tree, the date palm and the horseradish tree. Each of these trees was accorded religious significance and viewed as a dwelling place for the gods. @L@LBecause of their special significance, wood cutters had to receive special permission before cutting trees down. The trees that were cut produced brittle wood that had limited uses. Egypt imported most of its wood from what is now Lebanon, Syria, and Israel. When Egypt eventually conquered these lands during the New Kingdom, they harvested trees with abandon, significantly depleting the tree stock. @L@LWood was used for furniture, coffins and in buildings. Wood workers were quite adept at fashioning intricately designed pieces complete with inlays and engravings."
+            text: "Az őshonos fák nem voltak bőségesen megtalálhatók Egyiptomban. Bár az árterek talaja elég termékeny volt a fák növekedéséhez, az áradások gyakran még azelőtt kidöntötték őket, hogy megnőhettek volna. Az Egyiptomban mégis megélő fák közé tartozott a szikomorfa, a perzsafa, a datolyapálma és a tormafa. Mindegyikük vallási jelentőséggel bírt, és az istenek lakhelyének tekintették őket. @L@LFontosságuk miatt a favágóknak külön engedélyt kellett szerezniük a fák kivágása előtt. A kivágott fák törékeny fát adtak, amelynek korlátozott volt a felhasználása. Egyiptom faanyagának nagy részét a mai Libanon, Szíria és Izrael területéről importálta. Amikor Egyiptom az Újbirodalom idején végül meghódította ezeket a vidékeket, nagy mértékben kitermelték a fákat, jelentősen csökkentve az erdőállományt. @L@LA fát bútorokhoz, koporsókhoz és épületekhez használták. A famunkások igen ügyesen készítettek bonyolult díszítésű tárgyakat berakásokkal és faragásokkal."
         }
     }
     message_history_quarries {
         id: 193,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 112,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Quarries",
-            pos [125, 15]
+            text: "Kőfejtők",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "The Egyptians quarried several types of rock for their pyramids, temples and monuments, including limestone, granite, sandstone, basalt, slate, alabaster and porphyry. Quarrymen were equipped with pick axes and chisels to extract hard rock, and copper saws to extract softer rock. @L@LMost quarries operated only during the Inundation when state construction projects were at their peak. Some quarries operated year-round, especially if a large construction project, like a pyramid, was underway. @L@LTo transport the blocks to their final destination, the blocks were placed on a sled and dragged by a team of workmen. Logs were frequently laid down to act as rollers, facilitating the process. Sometimes, water was poured in front of the sled to ease friction. @L@LSlaves made up some of the labor force at quarries, although Egyptians still made up the bulk of the labor force."
+            text: "Az egyiptomiak többféle követ bányásztak piramisaikhoz, templomaikhoz és emlékműveikhez, többek között mészkövet, gránitot, homokkőt, bazaltot, palát, alabástromot és porfírt. A kőfejtők csákányokkal és vésőkkel termelték ki a kemény köveket, a puhább kövekhez pedig rézfűrészeket használtak. @L@LA legtöbb kőfejtő csak az áradás idején működött, amikor az állami építkezések a csúcspontjukon voltak. Néhány kőfejtő egész évben üzemelt, különösen ha nagy építkezés, például egy piramis építése folyt. @L@LA tömbök szállításához a végső helyükre a köveket szánokra helyezték, majd munkások csapata húzta őket. Gyakran farönköket fektettek le görgőként, megkönnyítve ezzel a folyamatot. Néha vizet öntöttek a szán elé a súrlódás csökkentésére. @L@LA kőfejtők munkaerejének egy részét rabszolgák alkották, bár a dolgozók többsége továbbra is egyiptomi volt."
         }
     }
     message_history_beer {
         id: 194,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 113,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Beer",
-            pos [125, 15]
+            text: "Sör",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Beer was the beverage of choice for ancient Egyptians. Debate rages over the particulars of the Egyptian beer industry. How was the beer brewed?  Was the beer flavored with fruit?  Did they make barley or grain beers?  And what about malting?  Research is underway to answer all of these questions. @L@LBased on pictures found on tomb walls, one beer-making method the Egyptians used involved baking a special loaf of bread. This bread was crushed and placed in a sieve. Then, water was forced through it and the ensuing concoction was bottled and fermented. Women were primarily responsible for brewing beer, and about 17 types of beer have been identified in papyri. @L@LThe Egyptians drank their beer out of specially designed mugs. The mugs were outfitted with an angled pipe, a little like a straw. At the end of the pipe was a filter, which sifted out any solid material that might be in the beer. In addition to drinking beer at home, Egyptians also drank beer in taverns and inns. For more on what went on in these neighborhood drinking establishments, click @172here."
+            text: "A sör volt az ókori egyiptomiak kedvelt itala. Az egyiptomi sörkészítés részleteiről heves viták folynak. Hogyan készítették a sört? Gyümölccsel ízesítették? Árpasört vagy gabonasört főztek? És mi a helyzet a malátázással? A kutatások jelenleg is folynak, hogy ezekre a kérdésekre választ adjanak. @L@L A sírfalak képei alapján az egyik sörkészítési módszer során az egyiptomiak különleges kenyérlepényt sütöttek. Ezt a kenyeret összetörték és szitába helyezték. Ezután vizet préseltek át rajta, a keletkező folyadékot palackozták és erjesztették. A sörfőzés elsősorban a nők feladata volt, és a papiruszokon körülbelül 17 sörfajtát azonosítottak. @L@LAz egyiptomiak külön erre a célra készített korsókból itták a sört. A korsókat ferde csővel látták el, amely kissé egy szívószálra hasonlított. A cső végén szűrő volt, amely kiszűrte a sörben található szilárd anyagokat. Az otthoni fogyasztás mellett az egyiptomiak kocsmákban és fogadókban is ittak sört. Arról, mi történt ezekben a környékbeli ivóhelyeken, kattints @172ide."
         }
     }
     message_history_papyrus_making {
         id: 195,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 48,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Papyrus Making",
-            pos [125, 15]
+            text: "Papírkészítés papiruszból",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Making papyrus was a rather involved process. First, the rind of the papyrus reed was removed so that the pith would be exposed. The pith from several plants was laid side by side, slightly overlapping, on top of a piece of cloth. Once the desired width was achieved, more strips of pith were laid on top of the first row at a right angle. Then, a second piece of cloth was placed on top, and the pith was beaten with a heavy piece of wood or a mallet. Beating the pith welded it together. The papyrus was then hung out to dry in the sun, and often the surface of the paper was polished with a stone."
+            text: "A papiruszkészítés meglehetősen összetett folyamat volt. Először eltávolították a papirusznád külső rétegét, hogy szabaddá váljon a belseje. Több növény belsejét egymás mellé fektették egy vászondarabra, kissé átfedve egymást. Amikor elérték a kívánt szélességet, az első rétegre merőlegesen újabb csíkokat helyeztek. Ezután egy másik vászondarabot tettek a tetejére, majd a papiruszt nehéz fadarabbal vagy bunkóval ütötték. Az ütögetés összedolgozta a rostokat. A papiruszt ezután a napra akasztották száradni, és gyakran egy kővel fényesítették a felületét."
         }
     }
     message_history_weapons {
         id: 196,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 114,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Weapons",
-            pos [125, 15]
+            text: "Fegyverek",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "The ancient Egyptians employed a variety of weapons in battle. For close-range fighting, soldiers used any of a number of weapons, including the mace, the dagger, the broad sword and the battle ax. The primary weapon used for longer-range battle was the bow and arrow, although slingshots were evidently used as well. Egptian weaponry evolved over time and took a big step forward after the invasion of the Hyksos. The Hyksos introduced horses and chariots to Egyptian warfare."
+            text: "Az ókori egyiptomiak sokféle fegyvert használtak a csatákban. Közelharcban a katonák számos fegyver közül választhattak, például buzogányt, tőrt, széles kardot és harci bárdot használtak. A hosszabb távú harcok elsődleges fegyvere az íj és a nyíl volt, bár nyilvánvalóan parittyákat is alkalmaztak. Az egyiptomi fegyverzet az idők során fejlődött, és nagy előrelépést tett a hükszószok inváziója után. A hükszószok vezették be a lovakat és a harci szekereket az egyiptomi hadviselésbe."
         }
     }
     message_history_luxury_goods {
         id: 197,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 115,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Luxury Goods",
-            pos [125, 15]
+            text: "Luxuscikkek",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Food, drink and clothing were enough for peasants, but the upper classes in ancient Egypt required a retinue of products to maintain their lifestyles. Chief among these luxuries was makeup. Both men and women wore eye makeup, either kohl or malachite. In addition to enhancing appearance, the Egyptians believed that eye makeup protected their vision. Women also used henna for nail polish and occasionally as hair dye. @L@LCleanliness was important to the ancient Egyptians, and in addition to regular bathing they perfumed themselves with various oils and extracts. Myrrh and frankincense were both used for this purpose. @L@LRelated to cleanliness was the use of wigs. Most Egyptians kept their hair short, possibly to prevent lice, and adorned their heads with wigs. Wigs came in various styles, and most women had more than one. Wigs were generally made from human hair, which was attached to the wig's base with string. @L@L@382Jewelry was another popular luxury item for the wealthy."
+            text: "Az élelem, az ital és a ruházat elegendő volt a parasztok számára, de az ókori Egyiptom felsőbb osztályainak számos termékre volt szükségük életmódjuk fenntartásához. Ezek közül a legfontosabb luxuscikk a smink volt. Férfiak és nők egyaránt használtak szemfestéket, például kohl-t vagy malachitot. A megjelenés javítása mellett az egyiptomiak úgy hitték, hogy a szemfesték védi a látásukat. A nők hennát is használtak körömlakként, és néha hajfestékként. @L@LA tisztaság fontos volt az ókori egyiptomiak számára, és a rendszeres fürdés mellett különféle olajokkal és kivonatokkal illatosították magukat. Erre a célra mirhát és tömjént is használtak. @L@LA tisztasághoz kapcsolódott a parókák használata is. A legtöbb egyiptomi rövidre vágta a haját, valószínűleg a tetvek elkerülése érdekében, és parókával díszítette a fejét. A parókák különböző stílusokban készültek, és a legtöbb nőnek több is volt belőlük. A parókák általában emberi hajból készültek, amelyet zsinórral erősítettek az alapjukhoz. @L@L@382Az ékszerek szintén népszerű luxuscikknek számítottak a gazdagok körében."
         }
     }
     message_history_pottery {
         id: 198,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 25,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Pottery",
-            pos [125, 15]
+            text: "Kerámia",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Very few homes were without a supply of pottery. Pottery manufacture, one of the oldest industries in ancient Egypt, originated in the home, where women produced whatever vessels were needed for cooking. Like other industries in Egypt, pottery making moved from the milieu of the home to the workshop. @L@LThe first step to making pottery was preparing the @190clay for use. The clay had to be kneaded, and often straw or chaff was added to the clay to act as a binding agent. Men kneaded the clay by hand or by foot, stepping on it make the clay workable. The clay was then placed on a wheel to be shaped. @L@LThe potter's wheel evolved through time. In its earliest form, the potter turned the wheel with one hand while molding the clay with the other. Because the potter could not turn the wheel very fast, the pottery had to be smoothed by hand later. During the New Kingdom, a second person spun the wheel with both hands while the potter shaped the vessel. This led to a much smoother finished product. By the end of the New Kingdom, the potter was again spinning his own wheel, this time with his feet, which yielded the smoothest pottery yet. @L@LAfter the vessels were shaped, they were left to dry. The pieces were decorated during the drying process. After drying, they were fired in a kiln. The kiln was a large oven with a fire chamber at its base. The fire chamber was separated from an upper chamber by a clay grid. Pottery was placed on this grid. The top chamber was sealed except for a hole to let smoke out. Once firing was complete, the product was finished and stored until needed."
+            text: "Nagyon kevés otthon nélkülözte a kerámiaedényeket. A kerámiakészítés, az ókori Egyiptom egyik legrégebbi iparága, eredetileg az otthonokban kezdődött, ahol a nők elkészítették a főzéshez szükséges edényeket. Egyiptom más iparágaihoz hasonlóan a kerámiakészítés is az otthoni környezetből műhelyekbe került. @L@LA kerámia készítésének első lépése az @190agyag előkészítése volt. Az agyagot át kellett gyúrni, és gyakran szalmát vagy pelyvát kevertek hozzá kötőanyagként. A férfiak kézzel vagy lábbal gyúrták az agyagot, rálépve, hogy megmunkálhatóvá váljon. Ezután az agyagot korongra helyezték, hogy formát adjanak neki. @L@LA fazekaskorong az idők során fejlődött. A legkorábbi változatnál a fazekas egyik kezével forgatta a korongot, miközben a másikkal formázta az agyagot. Mivel a korongot nem tudta túl gyorsan forgatni, az edényeket később kézzel kellett elsimítani. Az Újbirodalom idején egy második személy két kézzel forgatta a korongot, miközben a fazekas megformázta az edényt. Ez sokkal simább készterméket eredményezett. Az Újbirodalom végére a fazekas ismét maga forgatta a korongot, ezúttal a lábával, ami minden korábbinál simább kerámiát eredményezett. @L@LAz edények megformázása után hagyták őket megszáradni. A darabokat a száradás alatt díszítették. Száradás után kemencében kiégették őket. A kemence nagy építmény volt, amelynek alján tűztér helyezkedett el. A tűzteret egy agyagrács választotta el a felső kamrától. A kerámiát erre a rácsra helyezték. A felső kamrát lezárták, kivéve egy nyílást, amelyen a füst távozhatott. Az égetés befejezése után a készterméket tárolták, amíg szükség nem volt rá."
         }
     }
     message_history_bazaar {
         id: 199,
-        
-        size [30, 20]
+
+            size [30, 20]
         image {
             id: 116,
-            pos [15, 15]
+                pos [15, 15]
         }
         title {
-            text: "Bazaar",
-            pos [125, 15]
+            text: "Bazár",
+                pos [125, 15]
         }
         subtitle {
-            text: "History",
+            text: "Történelem",
         }
         content {
-            text: "Bazaars were noisy and crowded places. Shopkeepers, both men and women, set out their wares, and buyers came by with goods to barter for these wares. Bazaars were generally located near the Nile to take advantage of the new goods that arrived by boat. @L@LBazaar scenes were frequently depicted on tomb walls. The Fifth Dynasty tomb of Khnumhotep and Niankhkhnum, manicurists to the pharaoh, depicts a vivid market scene, complete with a trained monkey biting the ankle of a would-be shoplifter."
+            text: "A bazárok zajos és zsúfolt helyek voltak. A kereskedők, férfiak és nők egyaránt, kipakolták áruikat, a vásárlók pedig olyan termékekkel érkeztek, amelyeket ezekre az árukra cseréltek. A bazárok általában a Nílus közelében helyezkedtek el, hogy kihasználják a hajókkal érkező új árukat. @L@LA bazárjeleneteket gyakran ábrázolták a sírfalakon. Az ötödik dinasztia idején élt Hnumhotep és Niankhkhnum, a fáraó manikűröseinek sírja élénk piaci jelenetet mutat be, amelyen egy idomított majom is látható, amint megharapja egy tolvajlással próbálkozó ember bokáját."
         }
     }
     message_history_nubt {
         id: 200,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Nubt",
 
         }
         subtitle {
-            text: "A Village is Born",
+            text: "Egy falu születése",
 
         }
         content {
-            text: "@PWelcome to ancient Egypt, land of the Pharaohs! Here you'll participate in the history of one of the greatest civilizations the world has ever seen, in an epic story that spans more than fifteen centuries and two dozen generations. You must lead one family, generation by generation, from its earliest beginnings in Egyptian pre-history, through the dawn of civilization...to the establishment of a unique and powerful empire...and beyond.     @POur story begins more than five thousand years ago, along the banks of the Nile river, in an area known as Nubt.  Here a small confederacy of clans struggles to eke out an existence in the harsh environment. With you at its head, your family leads this small settlement."
+            text: "@PÜdvözlünk az ókori Egyiptomban, a fáraók földjén! Itt részese lehetsz a világ egyik legnagyobb civilizációja történelmének egy epikus történetben, amely több mint tizenöt évszázadon és két tucat nemzedéken átível. Egyetlen családot kell vezetned nemzedékről nemzedékre, az egyiptomi történelem előtti idők kezdeti éveitől a civilizáció hajnalán át... egy egyedülálló és hatalmas birodalom megszületéséig... és azon túl.     @PTörténetünk több mint ötezer évvel ezelőtt kezdődik a Nílus folyó partján, egy Nubt néven ismert területen. Itt klánok kis szövetsége küzd azért, hogy megéljen a zord környezetben. Családod vezetésével ez a kis település fejlődésnek indul."
         }
     }
     message_history_thinis_2 {
         id: 201,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
-            text: "Thinis",
+            text: "Thinisz",
 
         }
         subtitle {
-            text: "The Dawn of Civilization",
+            text: "A civilizáció hajnala",
 
         }
         content {
-            text: "@PAfter many years, and the passing of a generation, your family has resettled in the area of Thinis, in Upper Egypt. Here, a small band of local rulers is attempting to extend its influence over Lower Egypt, and all lands along the river Nile, and to unite this realm under its own house, with one supreme leader.   @PEstablishing Thinis as a thriving city, like nothing ever seen before, will prove the worthiness of the Thinite confederacy, and help them gain supremacy over Lower Egypt and the other factions vying for power. In time, this will mean providing the population with entertainment, and building wonderful temples to worship the region's patron deity. @PTo build a city this grand will require a substantial supply of cash. You'll find rich deposits of gold ore in Thinis, and harvesting them should be your first priority. "
+            text: "@PÉvek múltán, egy nemzedék elteltével családod újra letelepedett Thinisz vidékén, Felső-Egyiptomban. Itt helyi uralkodók egy kisebb csoportja megpróbálja kiterjeszteni hatalmát Alsó-Egyiptom és a Nílus teljes vidéke fölé, valamint saját dinasztiája vezetése alatt egyesíteni ezt a birodalmat egyetlen legfőbb uralkodóval. @PThinisz virágzó várossá fejlesztése, amelyhez hasonlót még soha nem látott a világ, bizonyítja majd a thiniszi szövetség rátermettségét, és segít nekik megszerezni a fennhatóságot Alsó-Egyiptom és a hatalomért versengő többi csoport felett. Idővel ez azt is jelenti majd, hogy szórakozást kell biztosítani a lakosságnak, valamint pompás templomokat kell építeni a vidék védőistenségének tiszteletére. @PEgy ilyen nagyszabású város felépítéséhez jelentős mennyiségű pénzre lesz szükség. Thiniszben gazdag aranyérc-lelőhelyeket találsz, ezért kitermelésük legyen az elsődleges feladatod."
         }
     }
     message_history_perwadjyt {
         id: 202,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Perwadjyt",
 
         }
         subtitle {
-            text: "The Precarious Nile",
+            text: "A bizonytalan Nílus",
 
         }
         content {
-            text: "The Thinite nobles still struggle to unite the lands of the Nile under one supreme ruler.  To aid them in their cause, it is hoped that you will endeavor to establish a thriving community at Perwadjyt, in the humid Delta region of Lower Egypt, thus spreading their influence throughout the length of the sacred river.  To support a population larger than that of a village, you must learn to use agriculture. @PEgyptian farmers have begun to exploit the rich, fertile soil deposited by the annual Inundation of the Nile river for growing crops.  The Nile can be hazardous, however.  Many dangers lurk along its banks and in its waters, such as deadly crocodiles, hippopotamuses and malaria-carrying mosquitoes."
+            text: "A thiniszi nemesek továbbra is küzdenek azért, hogy a Nílus vidékét egyetlen legfőbb uralkodó alatt egyesítsék. Ügyük támogatására remélik, hogy virágzó közösséget hozol létre Perwadjytban, Alsó-Egyiptom nedves deltavidékén, így kiterjesztve befolyásukat a szent folyó teljes hosszában. Egy falunál nagyobb népesség eltartásához meg kell tanulnod a mezőgazdaság használatát. @PAz egyiptomi földművesek már elkezdték kihasználni a Nílus évenkénti áradása által lerakott gazdag, termékeny talajt a növénytermesztéshez. A Nílus azonban veszélyes is lehet. Partjai és vizei számos veszélyt rejtenek, például halálos krokodilokat, vízilovakat és maláriát terjesztő szúnyogokat."
         }
     }
     message_history_nekhen {
         id: 203,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Nekhen",
 
         }
         subtitle {
-            text: "The First Pharaoh",
+            text: "Az első fáraó",
 
         }
         content {
-            text: "As the people who live along the Nile still struggle to survive in this harsh environment, a local king named Narmer has risen to power.  Though Narmer has dominion over much of this land, full unification of the twin kingdoms has yet to be achieved.  In commemoration of his accession, Narmer wishes your family to establish and govern a new city at Nekhen.  This city will have temples to many of the gods of Egypt and numerous places of entertainment."
+            text: "Miközben a Nílus mentén élő emberek továbbra is küzdenek a túlélésért ebben a zord környezetben, egy Narmer nevű helyi király hatalomra jutott. Bár Narmer uralma alatt áll e föld nagy része, a két királyság teljes egyesítése még nem valósult meg. Trónra lépésének emlékére Narmer azt kívánja, hogy családod alapítson és vezessen egy új várost Nekhenben. A városban Egyiptom számos istenének templomai és sokféle szórakozóhely lesz."
         }
     }
     message_history_men_nefer {
         id: 204,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Men-nefer",
 
         }
         subtitle {
-            text: "A Capital is Founded",
+            text: "Egy főváros alapítása",
 
         }
         content {
-            text: "After a lengthy struggle, King Hor-Aha has managed to unite the twin kingdoms of Upper and Lower Egypt, and proclaimed himself Pharaoh over all Egypt!  As a sign of his absolute sovereignty, and the establishment of this, the first dynasty of Egypt, Hor-Aha has ordered the founding of an imposing capital at Men-nefer, from which he may govern this fledgling nation.  Because of your family's many generations of faithful service to this land, Pharaoh has chosen you to be the architect of this splendid city.  Because the capital is the very symbol of our Kingdom, its citizens must enjoy a quality of life heretofore unknown in this land.  To this end you will eventually need to trade with other cities in the realm, and to provide a higher standard of education for at least some of your citizens.  You must also build a sacred mastaba tomb for the city's nobles."
+            text: "Hosszú küzdelem után Hor-Aha királynak sikerült egyesítenie Felső- és Alsó-Egyiptom kettős királyságát, és egész Egyiptom fáraójának kiáltotta ki magát! Teljes hatalmának és Egyiptom első dinasztiájának megalapítása jeleként Hor-Aha elrendelte egy hatalmas főváros alapítását Men-neferben, ahonnan kormányozhatja ezt a fiatal nemzetet. Családod sok nemzedéken át tartó hűséges szolgálatáért a fáraó téged választott ki e nagyszerű város megtervezésére. Mivel a főváros királyságunk valódi jelképe, lakóinak olyan életminőséget kell élvezniük, amely eddig ismeretlen volt ezen a földön. Ennek érdekében idővel kereskedned kell majd a birodalom más városaival, és magasabb szintű oktatást kell biztosítanod legalább néhány polgár számára. Emellett szent masztabasírt is kell építened a város nemeseinek."
         }
     }
     message_history_timna {
         id: 205,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Timna",
 
         }
         subtitle {
-            text: "An Expedition to Sinai",
+            text: "Expedíció a Sínai-félszigetre",
 
         }
         content {
-            text: "A new Pharaoh, Den, has taken the throne of Egypt.  Pharaoh is deeply concerned, as enemies have begun to threaten our borders, and our nation lacks adequate supplies of valuable copper needed to create weapons with which to equip our troops.  Pharaoh Den has ordered a mining expedition into the unforgiving land of Sinai, beyond our borders and deep within Bedouin territory.  The area known as Timna is rich in gold and copper ore, as well as precious turquoise gemstones, but it is otherwise barren.  Conditions there will be harsh, and you'll need to import many amenities, perhaps even additional food and fine linen, from Egypt.  Pharaoh will demand frequent shipments from Sinai and will ask you for money, copper, gemstones and weapons.  You can use any surplus of these items to help support the expedition.  Be always on your guard, for the Bedouin of the Sinai desert are formidable adversaries, and they will not willingly allow foreigners to occupy their land, let alone plunder their mineral wealth. @PTo lighten the burden that such living conditions impose on your city's people, build a Pavilion at some busy intersection.  Citizens can relax at the Pavilion's juggling and music stages, and, if you also build a Dance School, this new type of performance will provide great entertainment."
+            text: "Új fáraó, Den lépett Egyiptom trónjára. A fáraó mély aggodalommal tekint a helyzetre, mivel ellenségek kezdték fenyegetni határainkat, és nemzetünk nem rendelkezik elegendő értékes rézzel ahhoz, hogy fegyvereket készítsünk katonáink felszerelésére. Den fáraó bányászati expedíciót rendelt el a könyörtelen Sínai-félszigetre, határainkon túlra, mélyen a beduinok területére. A Timna néven ismert vidék gazdag arany- és rézércben, valamint értékes türkiz drágakövekben, de egyébként kopár terület. A körülmények zordak lesznek, és számos szükséges árut, talán még élelmet és finom vásznat is Egyiptomból kell majd behoznod. A fáraó gyakori szállítmányokat fog követelni a Sínai-félszigetről, és pénzt, rezet, drágaköveket, valamint fegyvereket kér majd tőled. Ezen áruk feleslegét felhasználhatod az expedíció támogatására. Mindig légy óvatos, mert a Sínai-sivatag beduinjai félelmetes ellenfelek, és nem fogják önként megengedni, hogy idegenek elfoglalják földjüket, még kevésbé azt, hogy kifosszák ásványkincseiket. @P A város lakóinak terheit enyhítendő, amelyeket ezek az életkörülmények rónak rájuk, építs pavilont egy forgalmas útkereszteződésnél. A polgárok a pavilon zsonglőr- és zenei színpadain pihenhetnek, és ha tánciskolát is építesz, ez az új előadási forma nagyszerű szórakozást biztosít."
         }
     }
     message_history_behdet {
         id: 206,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Behdet",
 
         }
         subtitle {
-            text: "Pharaoh's Navy",
+            text: "A fáraó haditengerészete",
 
         }
         content {
-            text: "Egypt's military troops are now unmatched in the known world, but the new Pharaoh, Khasekhemwy of the second dynasty, now also demands a powerful navy based at Behdet.  Nothing less than a fleet of warships will suffice to allow us dominion over the high seas, but timber is scarce, as our climate supports only a few sparse areas of forest.  Cedar may be imported at great cost from Byblos, in the land of Lebanon to the northeast.  Fortunately, exports of our native papyrus will provide a means of offsetting this expense."
+            text: "Egyiptom katonai ereje immár páratlan az ismert világban, de az új fáraó, a második dinasztiából származó Khasekhemwy most erős haditengerészetet is követel Behdet központtal. Csak egy teljes hadihajóflotta biztosíthatja számunkra a tengerek feletti uralmat, azonban a faanyag ritka, mivel éghajlatunk csak néhány gyér erdős terület fennmaradását teszi lehetővé. Cédrust nagy költséggel importálhatunk Bübloszból, a tőlünk északkeletre fekvő libanoni területekről. Szerencsére a hazai papirusz exportja lehetőséget biztosít majd ennek a kiadásnak az ellensúlyozására."
         }
     }
     message_history_abedju {
         id: 207,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Abedju",
 
         }
         subtitle {
-            text: "The Challenge of the Sea ",
+            text: "A tenger kihívása",
 
         }
         content {
-            text: "Abedju, the burial place of our forefathers, has grown over the years into a sprawling necropolis of sacred tombs.  Now, most noble men and women wish to make this their eternal resting place.  To honor them, the new Pharaoh Khasekhemwy of the second dynasty has ordered the construction of three sacred mastaba tombs (one of greater size than the other two) for the local nobility.  @PPharaoh has also ordered the creation of a powerful navy, based at Behdet.  Abedju, too must support a modest fleet of combat ships, if our shores are to remain totally secure.  This will not be easy, as timber is scarce, and our climate supports only a few sparse areas of forest.  Cedar may be imported at great cost from Byblos, in the land of Lebanon to the northeast.  Fortunately, exports of our native papyrus will provide a means of offsetting this expense."
+            text: "Abedju, őseink temetkezési helye, az évek során hatalmas, szent sírokból álló nekropolisszá fejlődött. Most a legtöbb nemes férfi és nő ezt kívánja örök nyughelyéül választani. Tiszteletükre a második dinasztia új fáraója, Khasekhemwy elrendelte három szent masztabasír építését (az egyik nagyobb méretű a másik kettőnél) a helyi nemesség számára. @PA fáraó emellett erős haditengerészet létrehozását is elrendelte Behdet központtal. Abedjunak szintén támogatnia kell egy kisebb harci hajóflottát, ha partjaink teljes biztonságát meg akarjuk őrizni. Ez nem lesz könnyű, mivel a faanyag ritka, és éghajlatunk csak néhány gyér erdős területet tart fenn. Cédrust nagy költséggel importálhatunk Bübloszból, a tőlünk északkeletre fekvő libanoni területekről. Szerencsére a hazai papirusz exportja lehetőséget biztosít majd ennek a kiadásnak az ellensúlyozására."
         }
     }
     message_history_selima {
         id: 208,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Selima",
 
         }
         subtitle {
-            text: "The Road to Africa",
+            text: "Az út Afrikába",
 
         }
         content {
-            text: "@PA new Pharaoh, Nebka, has been proclaimed, heralding the beginning of the third dynasty of Egyptian rulers.  Nebka has brought great organization and structure to Egypt, ordering that all our realm be divided into districts, or nomes, each governed by a local ruler called a 'Nomarch'.  Though this system may seem rigid, under his leadership Egypt has grown and prospered, and made many great achievements in art and architecture.  @L@PMerchant caravans, travelling oasis by oasis from deep within the African interior, have begun to provide Egypt with many rare and exotic luxury goods, now prized by our people.  Unfortunately these caravans are routinely attacked by warriors from Libya, and even by Bedouin of the Eastern Desert.  To secure these trade routes, Pharaoh Nebka, He of the Sedge and Bee, wishes you to establish a military post at the Selima Oasis, the hub of the caravan trade, far beyond the borders of our realm.   @L@PThere you will find some trees suitable for timber, the sale of which will help you raise money to fund the establishment of this outpost.  To forge weapons, you may obtain copper from our newly established mines at Timna, in the land of Sinai. @L@PFrom the Selima Oasis, you may import ebony from the African nation of Kerma.  Once you have succeeded in establishing this outpost, it shall provide a reliable source of ebony for all the cities in our realm."
+            text: "@PÚj fáraót, Nebkát kiáltották ki, ezzel kezdetét vette az egyiptomi uralkodók harmadik dinasztiája. Nebka nagy szervezettséget és rendet hozott Egyiptomba, elrendelve, hogy egész birodalmunkat körzetekre, vagyis nomoszokra osszák, amelyek élén egy helyi uralkodó, a „nomarkha” áll. Bár ez a rendszer merevnek tűnhet, vezetése alatt Egyiptom fejlődött és gyarapodott, valamint nagy eredményeket ért el a művészet és az építészet terén. @L@PA kereskedőkaravánok, amelyek oázisról oázisra haladva érkeznek Afrika belsejének mélyéről, számos ritka és különleges luxuscikkel látják el Egyiptomot, amelyek népünk körében nagy becsben állnak. Sajnos ezeket a karavánokat rendszeresen megtámadják líbiai harcosok, sőt a keleti sivatag beduinjai is. E kereskedelmi útvonalak biztosítása érdekében Nebka fáraó, a Nád és a Méh Ura, azt kívánja, hogy katonai állomást hozz létre a Selima-oázisban, a karavánkereskedelem központjában, messze birodalmunk határain túl. @L@POtt néhány faanyagnak alkalmas fát találsz, amelyek eladásából pénzt szerezhetsz az őrhely létrehozásának finanszírozására. Fegyverek készítéséhez rezet szerezhetsz a Sínai-félszigeten, Timna újonnan létesített bányáiból. @L@PA Selima-oázisból ébenfát importálhatsz az afrikai Kermából. Ha sikeresen létrehozod ezt az állomást, megbízható ébenfa-forrást biztosít majd birodalmunk minden városa számára."
         }
     }
     message_history_abu {
         id: 209,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Abu",
 
         }
         subtitle {
-            text: "The Nubian Border",
+            text: "A núbiai határ",
 
         }
         content {
-            text: "@PA new Pharaoh, Nebka, has been proclaimed, heralding the beginning of the third dynasty of Egyptian rulers.  Nebka has brought great organization and structure to Egypt, ordering that all our realm be divided into districts, or nomes, each governed by a local ruler called a 'Nomarch'.  Though this system may seem rigid, under his leadership Egypt has grown and prospered, and made many great achievements in art and architecture.   @PPharaoh wishes to extend the borders of our realm further south, into Nubia.  He orders that a city be founded at the first cataract of the Nile, on the island of Abu, that we may take advantage of the abundant deposits of gemstones, granite and sandstone to be found there.   @PThe growing necropolis of Abjedu demands these materials for the creation of more and more elaborate tombs for the nobility.  The capital at Men-nefer, too, may have need of bricks for the construction of tombs, and Pharaoh Nebka may approve requests for these and other building materials.   @PPharaoh Nebka has also ordered that one of your peers establish a military post at the Selima Oasis, to secure the caravan routes into the African interior.  Once it has been established, you may look to the Selima outpost as a source of imported ebony, a highly prized luxury good."
+            text: "@PÚj fáraót, Nebkát kiáltották ki, ezzel kezdetét vette az egyiptomi uralkodók harmadik dinasztiája. Nebka nagy szervezettséget és rendet hozott Egyiptomba, elrendelve, hogy egész birodalmunkat körzetekre, vagyis nomoszokra osszák, amelyek élén egy helyi uralkodó, a „nomarkha” áll. Bár ez a rendszer merevnek tűnhet, vezetése alatt Egyiptom fejlődött és gyarapodott, valamint nagy eredményeket ért el a művészet és az építészet terén. @P A fáraó azt kívánja, hogy birodalmunk határait délebbre, Núbia felé terjesszük ki. Elrendeli, hogy várost alapítsunk a Nílus első kataraktájánál, Abu szigetén, hogy kihasználhassuk az ott található bőséges drágakő-, gránit- és homokkőlelőhelyeket. @PAbedju növekvő nekropoliszának szüksége van ezekre az anyagokra, hogy egyre díszesebb sírokat készíthessenek a nemesség számára. Men-nefer fővárosának is szüksége lehet téglára a sírok építéséhez, és Nebka fáraó engedélyezheti ezek és más építőanyagok igénylését. @PNebka fáraó azt is elrendelte, hogy egyik társad katonai állomást hozzon létre a Selima-oázisban, biztosítva az Afrika belsejébe vezető karavánútvonalakat. Miután az állomás elkészült, a Selima-őrséget az importált ébenfa forrásaként használhatod, amely nagyra értékelt luxuscikk."
         }
     }
     message_history_saqqara {
         id: 210,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
-            text: "Saqqara",
+            text: "Szakkara",
 
         }
         subtitle {
-            text: "The First Pyramid",
+            text: "Az első piramis",
 
         }
         content {
-            text: "The accession of Pharaoh Djoser to the throne of Egypt has ushered in a new era of wisdom, learning and artistic achievement.  A royal cemetery is to be established at Saqqara, to serve as the eternal resting place for nobles such as Hezyre and Khabausokar, Pharaoh's trusted courtiers.   @PBut this site shall also contain a monument the like of which the world has never seen before.  I, the Pharaoh's royal vizier Imhotep, have conceived a new form of sacred tomb for Pharaoh.  Unlike the low mud brick mastabas of prior Pharaohs, this tomb shall rise toward the heavens, as if it were comprised of several mastabas, placed one on top of the other.  And what's more, this 'stepped pyramid' shall be constructed entirely of stone, that it may endure the passage of the eons.  Deep within, a sarcophagus of solid granite shall hold Pharaoh's body for his eternal rest. @PPriests at the necropolis of Abjedu have perfected the art of using linen to embalm the dead, thus opening the door to everlasting life to all Egyptians.  @POur trading post at the Selima Oasis still thrives, and from there you may import ebony from Africa.  @PPharaoh has given you a generous supply of cash to get started on this project.  Do not let him down."
+            text: "Dzsószer fáraó trónra lépése új korszakot hozott Egyiptom számára a bölcsesség, a tudás és a művészi teljesítmény terén. Szakkarában királyi temetőt kell létrehozni, amely örök nyughelyül szolgál majd olyan nemesek számára, mint Hezyre és Khabausokar, a fáraó megbízható udvarnokai. @PDe ez a hely egy olyan emlékműnek is otthont ad majd, amelyhez hasonlót a világ még soha nem látott. Én, Imhotep, a fáraó királyi vezírje, a fáraó számára egy újfajta szent sírhelyet terveztem. A korábbi fáraók alacsony vályogtégla masztabáival ellentétben ez a sír az ég felé fog emelkedni, mintha több egymásra helyezett masztabából állna. Ráadásul ez a „lépcsős piramis” teljes egészében kőből épül, hogy ellenálljon az idők végtelen múlásának. Mélyen belül egy tömör gránitból készült szarkofág őrzi majd a fáraó testét örök nyughelyén. @PAbedju nekropoliszának papjai tökélyre fejlesztették a halottak lenvászonnal történő bebalzsamozásának művészetét, így megnyitva az örök élet kapuját minden egyiptomi előtt. @PA Selima-oázisnál lévő kereskedelmi állomásunk továbbra is virágzik, és onnan ébenfát importálhatsz Afrikából. @PA fáraó bőséges pénzösszeget biztosított számodra a projekt megkezdéséhez. Ne okozz neki csalódást."
         }
     }
     message_history_serabit_khadim {
         id: 211,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Serabit Khadim",
 
         }
         subtitle {
-            text: "The Bedouin of the East",
+            text: "A keleti beduinok",
 
         }
         content {
-            text: "Like Den before him, Pharaoh Huni has ordered an expedition into the harsh land of Sinai to acquire turquoise gemstones and copper.  He wishes you to lead this expedition, to a place called Serabit Khadim, where the building remains of an earlier Egyptian outpost may still be found.  Their current condition is unknown, but they may still provide some means of defense for the expedition.   @PYou should be aware that the last such expedition sent to this area never returned.   A later expedition sent to recover them also did not return.  Nevertheless, if we are to arm our soldiers adequately, our Kingdom needs copper for making weapons, and this metal is scarce in our land. @PPrepare yourself, for you will be under constant threat of attack from the Bedouin of the Sinai desert, and from our enemies the Canaanites.  Mine what copper and gemstones you may under these conditions, and be prompt in fulfilling Pharaoh's requests.  You may employ jewelers to use any surplus gemstones to fashion jewelry for the people occupying the settlement."
+            text: "Den fáraóhoz hasonlóan Huni fáraó is expedíciót rendelt el a zord Sínai-félszigetre türkiz drágakövek és réz megszerzésére. Azt kívánja, hogy vezesd ezt az expedíciót egy Serabit Khadim nevű helyre, ahol egy korábbi egyiptomi őrhely épületmaradványai még megtalálhatók lehetnek. Jelenlegi állapotuk ismeretlen, de talán még mindig nyújthatnak némi védelmet az expedíció számára. @PTudnod kell, hogy az utolsó, erre a vidékre küldött expedíció soha nem tért vissza. Egy később utánuk küldött mentőexpedíció sem tért vissza. Ennek ellenére, ha megfelelően fel akarjuk fegyverezni katonáinkat, királyságunknak rézre van szüksége fegyverek készítéséhez, és ez a fém ritka földjeinken. @PKészülj fel, mert állandó támadás fenyeget majd a Sínai-sivatag beduinjai és ellenségeink, a kánaániták részéről. Ilyen körülmények között bányássz ki annyi rezet és drágakövet, amennyit csak tudsz, és időben teljesítsd a fáraó kéréseit. Ékszerészeket alkalmazhatsz, hogy a felesleges drágakövekből ékszereket készítsenek a település lakói számára."
         }
     }
     message_history_meidum {
         id: 212,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Meidum",
 
         }
         subtitle {
-            text: "A Royal Necropolis",
+            text: "Királyi nekropolisz",
 
         }
         content {
-            text: "Pharaoh Huni wishes to spend everlasting eternity in a stepped pyramid, like that of Djoser before him.  He wishes to be surrounded by the tombs of his nobles, and has chosen Meidum, in Lower Egypt, as the site for this royal necropolis.   @PAs a symbol of thanks for the many generations of faithful service provided by your house, Huni has also consented to allow you to be interred at Meidum, in your own tomb.  In doing this, he has also conferred great honor upon your family. @PTo ensure that the wisdom and learning of Egypt is preserved through the ages, Pharaoh Huni also urges the construction of royal libraries.  Once filled with scrolls of papyrus, these will provide higher education to the upper classes.  @PPharaoh has sent another of his faithful courtiers on an expedition to Serabit Khadim, in the harsh land of Sinai, to acquire turquoise gemstones.  If this expedition is a success, you may look forward to importing gemstones from there. Jewelers can use these to fashion jewelry, a valuable luxury good, for the people of your city. @PThe once-thriving city of Behdet has begun to decline, and no longer exports many of the commodities they were once known for."
+            text: "Huni fáraó örök nyugalmat kíván tölteni egy Dzsószeréhez hasonló lépcsős piramisban. Azt szeretné, hogy nemeseinek sírjai vegyék körül, ezért Meidumot választotta ki Alsó-Egyiptomban ennek a királyi nekropolisznak a helyszínéül. @P Házad sok nemzedéken át tartó hűséges szolgálatának elismeréseként Huni azt is engedélyezte, hogy saját sírodban temessenek el Meidumban. Ezzel nagy megtiszteltetésben részesítette családodat. @PEgyiptom bölcsességének és tudásának megőrzése érdekében Huni fáraó királyi könyvtárak építését is szorgalmazza. A papirusztekercsekkel megtöltött könyvtárak magasabb szintű oktatást biztosítanak majd a felsőbb osztályok számára. @PA fáraó egyik hűséges udvaroncát újabb expedícióra küldte Serabit Khadimba, a zord Sínai-félszigetre, hogy türkiz drágaköveket szerezzen. Ha az expedíció sikerrel jár, drágaköveket importálhatsz onnan. Az ékszerészek ezekből ékszereket készíthetnek, amelyek értékes luxuscikként szolgálnak majd városod lakói számára. @PAz egykor virágzó Behdet városa hanyatlásnak indult, és már nem exportálja nagy mennyiségben azokat az árukat, amelyekről korábban ismert volt."
         }
     }
     message_history_buhen {
         id: 213,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Buhen",
 
         }
         subtitle {
-            text: "Expansion to Nubia",
+            text: "Terjeszkedés Núbiába",
 
         }
         content {
-            text: "Our new Pharaoh, Snofru, is determined that this, the fourth dynasty, be remembered as the greatest ever to rule Egypt.  Pharaoh wishes that our borders be pushed even further south.  He has therefore decreed that we invade Nubia, and establish a fortified city at Buhen, beside the second cataract of the Nile.  There you must also erect a granite obelisk, to serve as a beacon that this area forever belongs to Egypt, and to Pharaoh.  There is no granite to be found so far south, however, so you will need to import it from Abu.   @PAt Buhen you will encounter fierce and seasoned Nubian warriors, who will fight to the death to prevent us from establishing a foothold so far south.  Do not despair, for after rigorous training at a Military Academy, your fighting men may emerge as seasoned veterans themselves.  What's more, our military engineers have perfected the design of several defensive structures, such as fortified Towers, Walls and Gatehouses.  These will prove invaluable in withstanding the onslaught of the Nubian army.  Transport ships may also be employed, to aid in moving your army around by water when necessary.  @PTo the north, we have opened relations with Enkomi, on the island of Cyprus.  This land is named for its abundant reserves of copper ore, which we are now able to purchase from them.  However, thanks to a recently established Egyptian mining community at Serabit Khadim, in the land of Sinai, we are able to supply our governors with copper at a much more affordable price.  Supplies from Serabit Khadim are often erratic, due to unrelenting Bedouin and Canaanite attacks against the settlement, and we are uncertain how much longer the Egyptian forces stationed there can hold out.  @PPharaoh's burial place, a unique and spectacular monument, is currently under construction at Dahshur.  From time to time Pharaoh may request that you contribute some limestone to aid in the completion of this project."
+            text: "Új fáraónk, Sznofru, eltökélte, hogy ez a negyedik dinasztia lesz Egyiptom valaha uralkodott legnagyobb dinasztiája. A fáraó azt kívánja, hogy határainkat még délebbre terjesszük ki. Ezért elrendelte Núbia meghódítását, valamint egy megerősített város alapítását Buhenben, a Nílus második kataraktája mellett. Ott egy gránitobelszket is fel kell állítanod, amely örök jelképként hirdeti, hogy ez a vidék Egyiptomhoz és a fáraóhoz tartozik. Ilyen messze délen azonban nem található gránit, ezért Abuból kell importálnod. @PBuhenben vad és tapasztalt núbiai harcosokkal találkozol majd, akik életük árán is megpróbálják megakadályozni, hogy ilyen messze délen megvessük a lábunkat. Ne csüggedj, mert a Katonai Akadémián végzett szigorú kiképzés után harcosaid maguk is tapasztalt veteránokká válhatnak. Ráadásul hadmérnökeink tökéletesítették több védelmi építmény, például az erődített tornyok, falak és kapuházak tervezését. Ezek felbecsülhetetlen segítséget nyújtanak majd a núbiai sereg támadásainak kivédésében. Szállítóhajókat is alkalmazhatsz, hogy szükség esetén vízen mozgathasd seregedet. @PÉszakon kapcsolatokat létesítettünk Enkomival, Ciprus szigetén. Ez a föld gazdag rézérckészleteiről kapta nevét, és most már vásárolhatunk tőlük rezet. A Sínai-félszigeten, Serabit Khadimnál nemrég létrehozott egyiptomi bányaközösségnek köszönhetően azonban kormányzóinkat sokkal kedvezőbb áron tudjuk rézzel ellátni. A Serabit Khadimból érkező szállítmányok gyakran bizonytalanok a települést érő állandó beduin és kánaánita támadások miatt, és nem tudjuk, meddig képesek még kitartani az ott állomásozó egyiptomi erők. @PA fáraó temetkezési helye, egyedülálló és lenyűgöző emlékmű, jelenleg építés alatt áll Dahsúrban. A fáraó időről időre kérheti, hogy mészkővel járulj hozzá a projekt befejezéséhez."
         }
     }
     message_history_south_dahshur {
         id: 214,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
-            text: "South Dahshur",
+            text: "Déli Dahsúr",
 
         }
         subtitle {
-            text: "Snofru's Bent Pyramid",
+            text: "Sznofru tört piramisa",
 
         }
         content {
-            text: "@POur new Pharaoh, Snofru, is determined that this, the fourth dynasty, be remembered as the greatest ever to rule Egypt.  His architects have contrived a tomb even more spectacular than the stepped pyramid of Huni, and Pharoah wishes you to oversee its construction.  You will need to establish a fair sized settlement South of Dahshur, the site for Pharaoh's bent pyramid.  Once in place, this city will provide the workforce necessary to complete this ambitious project. @PThe bent pyramid is to be constructed of a plain stone core, and faced with fine white limestone, that it may forever shine under the desert sun.  You will find sufficient quantities of limestone at Dahshur, but you'll need to import the necessary amount of plain stone for this undertaking. @PPharaoh wishes that our borders be pushed even further south, and to this end he has dispatched military forces to invade Nubia, and to establish a fortified city at Buhen, beside the second cataract of the Nile. @PTo the north, Egypt has opened relations with Enkomi, on the island of Cyprus.  This land is named for its abundant reserves of copper ore, which are now a major import.  @PPrecious gemstones may be obtained from a recently established Egyptian outpost at Serabit Khadim, in the land of Sinai.  Lately the supply has become erratic, however, due to unrelenting Bedouin and Canaanite attacks against the settlement, and we are uncertain how much longer the Egyptian forces stationed there can withstand them."
+            text: "@PÚj fáraónk, Sznofru, eltökélte, hogy ez a negyedik dinasztia lesz Egyiptom valaha uralkodott legnagyobb dinasztiája. Építészei egy Huni lépcsős piramisánál is lenyűgözőbb síremléket terveztek, és a fáraó azt kívánja, hogy felügyeld az építését. Megfelelő méretű települést kell alapítanod Dahsúrtól délre, a fáraó tört piramisának helyszínén. Ha elkészül, ez a város biztosítja majd a munkaerőt ehhez a nagyszabású projekthez. @PA tört piramis egyszerű kőmagból épül, amelyet finom fehér mészkővel burkolnak, hogy örökké ragyogjon a sivatagi nap alatt. Dahsúrban elegendő mészkövet találsz, de a szükséges mennyiségű egyszerű követ importálnod kell ehhez az építkezéshez. @PA fáraó azt kívánja, hogy határainkat még délebbre terjesszük, ezért katonai erőket küldött Núbia meghódítására, valamint egy megerősített város létrehozására Buhenben, a Nílus második kataraktája mellett. @PÉszakon Egyiptom kapcsolatokat létesített Enkomival, Ciprus szigetén. Ez a föld gazdag rézérckészleteiről ismert, amelyek most fontos importcikknek számítanak. @PÉrtékes drágaköveket szerezhetsz a Sínai-félszigeten, Serabit Khadimnál létrehozott egyiptomi őrhelyről. Az ellátás azonban az utóbbi időben bizonytalanná vált a települést érő állandó beduin és kánaánita támadások miatt, és nem tudjuk, meddig képesek még kitartani az ott állomásozó egyiptomi erők."
         }
     }
     message_history_north_dahshur {
         id: 215,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
-            text: "North Dahshur",
+            text: "Északi Dahsúr",
 
         }
         subtitle {
-            text: "The True Pyramid",
+            text: "Az igazi piramis",
 
         }
         content {
-            text: "@PPharaoh Snofru has brought order to Egypt, and the Kingdom now flourishes under his wise and benevolent rule.  Snofru wishes to undertake another construction project at Dahshur, even more ambitious than the bent pyramid already completed.  Royal architects, surveyors and engineers are confident that they can construct an edifice whose sides rise in one continuous angle, culminating in a perfect peak.  If successful, this will be the first true pyramid, and will be a worthy home for Pharaoh Snofru through all eternity!    @PPharaoh's wife, Queen Hetehpheres, has recently given birth to a son whom they have named 'Khufu'.  Our people look toward the day of his eventual rule with much foreboding, for the seers of Horus, God of the Pharaoh, have predicted that he will show none of his father's benevolence toward our people.  Though he will achieve many great things, they fear he will rule Egypt with unyielding tyranny.  @PYou may acquire wood from Byblos, since carpenters will have to build many ramps to allow workers to reach the summit of this great pyramid."
+            text: "@PSznofru fáraó rendet teremtett Egyiptomban, és a királyság most bölcs és jóindulatú uralma alatt virágzik. Sznofru újabb építkezési projektet kíván megvalósítani Dahsúrban, amely még a már elkészült tört piramisnál is nagyszabásúbb. A királyi építészek, földmérők és mérnökök biztosak benne, hogy olyan építményt tudnak létrehozni, amelynek oldalai egyetlen folyamatos szögben emelkednek, és tökéletes csúcsban találkoznak. Ha sikerrel járnak, ez lesz az első valódi piramis, és méltó otthona lesz Sznofru fáraónak az örökkévalóságon át! @PA fáraó felesége, Hetepheresz királyné nemrég fiút szült, akit „Kheopsznak” neveztek el. Népünk aggodalommal tekint jövőbeli uralkodásának napja elé, mert Hórusz, a fáraók istenének látnokai azt jósolták, hogy nem fogja apja jóindulatát tanúsítani népünk iránt. Bár sok nagy dolgot fog véghezvinni, attól tartanak, hogy könyörtelen zsarnokként fogja uralni Egyiptomot. @PBübloszból fát szerezhetsz, mivel az ácsoknak számos rámpát kell építeniük, hogy a munkások feljuthassanak e hatalmas piramis csúcsára."
         }
     }
     message_history_iunet {
         id: 216,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Iunet",
 
         }
         subtitle {
-            text: "The defense of Egypt",
+            text: "Egyiptom védelme",
 
         }
         content {
-            text: "@PPharaoh Khufu has taken the throne, and, as foretold by seers of Horus and Ra, our people have already begun to suffer under his oppression.  @PKhufu has ordered that a Royal Governor be dispatched at once to Iunet, to defend our land against Kushite invaders.  Iunet can support a small fishing industry, which should feed this settlement for a time.  If the Kushites invade by water, however, the river may become unsafe for fishing boats, and shore areas may be better used to support a fleet of warships.  If food becomes scarce, cattle may also be raised to provide meat, though the herds require much straw for fodder, and straw is difficult to grow in this land.  You should seek other cities with which to trade for straw, for you will also need this to make bricks for your mastaba. @PThe city of Byblos in Lebanon, land of the cedars, has begun trading with the powerful empires of the east.  These are Assyria and Ur, in the land called 'Mesopotamia', between the two great rivers, and from them the finest ivory may be obtained via Byblos.  With the arrival of rare and exotic luxury goods such as this, Iunet is sure to thrive. @PIn the capital, the Egyptian people have begun to enjoy a board game called senet.  This game is normally enjoyed over a pitcher of beer, in a public gathering place called a 'Senet House'.  Such places may provide a welcome diversion for the people of Iunet from the tyranny of Khufu's authority. @PPharaoh has ordered that countless quarries be dug at On, in the Delta region, to harvest a vast supply of fine white limestone.  Only the gods know what endeavor Pharaoh has planned for the use of this stone.  It is rumored that he is planning a colossal building project on the plateau outside Rostja, that he may usurp the renown his father, the wise and benevolent Snofru has earned from the completion of his two noble pyramids."
+            text: "@PKheopsz fáraó elfoglalta a trónt, és ahogy Hórusz és Ré látnokai megjósolták, népünk máris szenvedni kezdett elnyomása alatt. @PKheopsz elrendelte, hogy egy királyi kormányzót azonnal küldjenek Iunetbe, hogy megvédje földünket a kusita betörőktől. Iunet egy kisebb halászati iparágat képes fenntartani, amely egy ideig elláthatja ezt a települést. Ha azonban a kusiták vízen támadnak, a folyó veszélyessé válhat a halászhajók számára, és a part menti területeket inkább hadihajóflotta fenntartására lehet használni. Ha az élelem szűkössé válik, marhákat is tenyészthetsz hús biztosítására, de a csordáknak sok szalmára van szükségük takarmányként, és ezen a vidéken nehéz szalmát termeszteni. Más városokkal kell kereskedned szalmáért, mert erre lesz szükséged a masztabád tégláinak elkészítéséhez is. @PLibanon cédrusföldjén fekvő Büblosz városa kereskedni kezdett kelet hatalmas birodalmaival. Ezek Asszíria és Ur a „Mezopotámia” nevű földön, a két nagy folyó között, és rajtuk keresztül Bübloszon át a legfinomabb elefántcsont is megszerezhető. Az ilyen ritka és különleges luxuscikkek érkezésével Iunet biztosan virágzásnak indul. @PA fővárosban az egyiptomi nép megkedvelte a szenet nevű társasjátékot. Ezt a játékot általában egy korsó sör mellett élvezik egy „Szenetház” nevű nyilvános találkozóhelyen. Az ilyen helyek kellemes kikapcsolódást nyújthatnak Iunet lakóinak Kheopsz uralmának zsarnoksága elől. @PKheopsz fáraó elrendelte, hogy Onnál, a delta vidékén számtalan kőfejtőt nyissanak, hogy hatalmas mennyiségű finom fehér mészkövet termeljenek ki. Csak az istenek tudják, milyen célra tervezi a fáraó felhasználni ezt a követ. A szóbeszéd szerint hatalmas építkezést tervez a Rosztja melletti fennsíkon, hogy túlszárnyalja apja, a bölcs és jóindulatú Sznofru hírnevét, aki két nemes piramisának befejezésével szerzett dicsőséget."
         }
     }
     message_history_on {
         id: 217,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "On",
 
         }
         subtitle {
-            text: "Ivory from the East",
+            text: "Elefántcsont keletről",
 
         }
         content {
-            text: "@PPharaoh Khufu has taken the throne, and, as foretold by seers of Horus and Ra, our people have already begun to suffer under his oppression.  It is rumored that he plans to begin a colossal building project on the plateau outside Rostja, that he may usurp the renown his father, the wise and benevolent Snofru, has earned from the completion of his two noble pyramids.  @PPharaoh Khufu has ordered a cluster of quarries to be dug at Tura, in the Delta region, where rich deposits of fine white limestone have recently been discovered.  You also must build three mastaba tombs for the nobles of this region, so that Pharaoh may honor their devotion.  The quarrying settlement you found shall be named 'On', and shall serve as a plentiful source of fine white limestone for many years...though only the gods know what endeavor Pharaoh has planned for its use. @PThe city of Byblos in Lebanon, land of the cedars, has begun trading with the powerful empires of the east.  These are Assyria and Ur, in the land called 'Mesopotamia', between the two great rivers, and from them the finest ivory may be obtained via Byblos.  With the arrival of rare and exotic luxury goods such as this, On is sure to prosper. @PKhufu has also dispatched a Royal Governor to Iunet, to defend our land against Kushite invaders.  Royal viziers look with pity upon the Governor charged with this difficult and dangerous task.  @PIn the capital, the Egyptian people have begun to enjoy a board game called senet.  This game is normally enjoyed over a pitcher of beer, in a public gathering place called a 'Senet House'.  Such places may provide a welcome diversion for the people of On from the tyranny of Khufu's authority."
+            text: "@PKheopsz fáraó elfoglalta a trónt, és ahogy Hórusz és Ré látnokai megjósolták, népünk máris szenvedni kezdett elnyomása alatt. A szóbeszéd szerint hatalmas építkezést tervez a Rosztja melletti fennsíkon, hogy túlszárnyalja apja, a bölcs és jóindulatú Sznofru hírnevét, aki két nemes piramisának befejezésével szerzett dicsőséget. @PKheopsz fáraó elrendelte, hogy Túránál, a delta vidékén kőfejtők egész csoportját nyissák meg, ahol nemrég gazdag finom fehér mészkőlelőhelyeket fedeztek fel. Három masztabasírt is kell építened e vidék nemeseinek, hogy a fáraó tiszteletét fejezhesse ki odaadásukért. Az általad alapított kőfejtőtelep neve „On” lesz, és hosszú éveken át bőséges forrása marad a finom fehér mészkőnek... bár csak az istenek tudják, milyen célra tervezi a fáraó felhasználni. @PLibanon cédrusföldjén fekvő Büblosz városa kereskedni kezdett kelet hatalmas birodalmaival. Ezek Asszíria és Ur a „Mezopotámia” nevű földön, a két nagy folyó között, és rajtuk keresztül Bübloszon át a legfinomabb elefántcsont is megszerezhető. Az ilyen ritka és különleges luxuscikkek érkezésével On biztosan virágzásnak indul. @PKheopsz egy királyi kormányzót is küldött Iunetbe, hogy megvédje földünket a kusita betörőktől. A királyi vezírek együttérzéssel tekintenek a kormányzóra, akire ez a nehéz és veszélyes feladat hárult. @PA fővárosban az egyiptomi nép megkedvelte a szenet nevű társasjátékot. Ezt a játékot általában egy korsó sör mellett élvezik egy „Szenetház” nevű nyilvános találkozóhelyen. Az ilyen helyek kellemes kikapcsolódást nyújthatnak On lakóinak Kheopsz uralmának zsarnoksága elől."
         }
     }
     message_history_rostja {
         id: 218,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
-            text: "Rostja",
+            text: "Rosztja",
 
         }
         subtitle {
-            text: "The Great Pyramid and Sphinx",
+            text: "A nagy piramis és a szfinx",
 
         }
         content {
-            text: "Pharaoh Khufu has at last made his plans known, and his boundless aspirations are sure to weigh heavily upon our people.  Pharaoh both curses and blesses your family, for though you have been awarded the status of Nomarch, you have also been charged with carrying out the most ambitious building project ever to be undertaken in our land.   @PPharaoh's eternal resting place shall be a massive pyramid complex, situated far from any city, on the plateau outside Rostja.  His sarcophagus shall be made of solid granite, and his funeral barge of precious Lebanese cedar. Beside Pharaoh's pyramid complex, a smaller pyramid shall also be built for his son prince Khafra, whose tyranny rivals that of his father, though his achievements do not.  Khafra also declares that his image be carved into the living rock at Rostja, upon a huge figure called a 'sphinx', with the body of a lion and the head of a man. @PTo support the massive building effort needed for the completion of this monument, you'll need to establish a large settlement at Rostja.  As such, conditions there may not be overly refined, for your goal is only to complete these three great projects, and to honor Pharaoh.   @PYou will be provided with some of the fine white limestone needed for the outer casing of these pyramids, but you will also need to purchase much of what you'll need with the city's own funds. @PPharaoh is entrusting you, one of his royal Nomarchs, with these three sacred tasks.  You must demonstrate unwavering dedication to Pharaoh and fulfill his wishes...whatever the cost."
+            text: "Kheopsz fáraó végre nyilvánosságra hozta terveit, és határtalan becsvágya bizonyosan súlyos terhet ró majd népünkre. A fáraó egyszerre átkoz és áld benneteket, mert bár megkaptad a nomarkha rangját, rád bízták a valaha földünkön vállalt legnagyobb építkezési projekt megvalósítását is. @PA fáraó örök nyughelye egy hatalmas piramisegyüttes lesz, amelyet minden várostól távol, a Rosztja melletti fennsíkon építenek fel. Szarkofágja tömör gránitból készül, temetési bárkája pedig a drága libanoni cédrusból. A fáraó piramisegyüttese mellett egy kisebb piramist is építenek fiának, Hafré hercegnek, akinek zsarnoksága vetekszik apjáéval, bár tettei nem. Hafré azt is elrendelte, hogy képmását az élő sziklába véssék Rosztjánál egy hatalmas „szfinx” nevű alakzatként, amelynek teste oroszláné, feje pedig emberé. @PAz emlékmű elkészítéséhez szükséges hatalmas építkezési munkálatok támogatására nagy települést kell alapítanod Rosztjánál. Emiatt a körülmények nem lesznek különösebben kifinomultak, hiszen egyetlen célod e három nagyszerű építmény befejezése és a fáraó tiszteletének kivívása. @PA piramisok külső burkolatához szükséges finom fehér mészkő egy részét biztosítják számodra, de a szükséges anyagok nagy részét a város saját pénzéből kell megvásárolnod. @PA fáraó rád, egyik királyi nomarkhájára bízza ezt a három szent feladatot. Bizonyítanod kell iránta való rendíthetetlen odaadásodat, és teljesítened kell kívánságait... bármi legyen is az ára."
         }
     }
     message_history_bahariya_oasis {
         id: 219,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
-            text: "Bahariya Oasis",
+            text: "Bahariya-oázis",
 
         }
         subtitle {
-            text: "The Western Desert",
+            text: "A nyugati sivatag",
 
         }
         content {
-            text: "@PThe reigns of Khufu and Khafra have come to an end, and with them so too has the fourth dynasty of Egyptian ruling families.  But lady Khentkaues, a distant member of this family, has given birth to a new Pharaoh named 'Userkaf', and so the royal line continues unbroken.  With Userkaf begins the fifth dynasty, an era that promises much change.   @PUserkaf has decentralized the rule of our country somewhat, and has granted more power to local authorities.  Now Nomarchs such as you are free to handle their own affairs.  Pharaoh will not attempt the construction of a massive tomb to house him for eternity, for he has another project in mind for you. @PPharaoh has declared Ra, god of the sun and of the kingdom, to be King of the Gods, and intends to proclaim his sovereignty throughout the land.  Many Sun Temples already dot the Egyptian landscape, but Pharaoh wishes to extend Ra's influence to the very edge of our Kingdom. @PTo accomplish this, you must build a fortified settlement at the Bahariya Oasis, far into the Western Desert. Use what water you can find there wisely, for what little there is to be found so far from the precious Nile is usually coveted by the wild beasts of the desert.  You must also beware of attacks by Libyan warriors, and Bedouin of the desert, which have plagued the desert caravans of late.  Plan your defenses carefully, and make use of whatever resources, such as wood and game, you can find at the oasis."
+            text: "@PKheopsz és Hafré uralma véget ért, és velük együtt lezárult az egyiptomi uralkodóházak negyedik dinasztiája is. Ám Khentkausz úrnő, e család távoli rokona, életet adott egy új fáraónak, akit „Uszerkafnak” neveztek el, így a királyi vérvonal megszakítás nélkül folytatódik. Uszerkaf trónra lépésével kezdődik az ötödik dinasztia, egy korszak, amely nagy változásokat ígér. @PUszerkaf valamelyest decentralizálta országunk irányítását, és nagyobb hatalmat adott a helyi vezetőknek. Most a hozzád hasonló nomarkhák szabadabban intézhetik saját ügyeiket. A fáraó nem hatalmas sír építését tervezi örök nyughelyéül, hanem más feladatot szán neked. @PA fáraó Ré napistent, a királyság istenét az istenek királyává nyilvánította, és fennhatóságát az egész országban ki akarja hirdetni. Sok naptemplom tarkítja már Egyiptom földjét, de a fáraó Ré hatását királyságunk legtávolabbi vidékeire is ki akarja terjeszteni. @PEhhez megerősített települést kell építened a Bahariya-oázisnál, messze a nyugati sivatag mélyén. Bölcsen használd fel az ott található vizet, mert ilyen távol a drága Ní­lustól még a kevés fellelhető vizet is gyakran a sivatag vadállatai áhítják. Óvakodnod kell a líbiai harcosok és a sivatagi beduinok támadásaitól is, akik az utóbbi időben gyakran zaklatták a sivatagi karavánokat. Gondosan tervezd meg védelmedet, és használd fel az oázisban található minden erőforrást, például a fát és a vadállományt."
         }
     }
     message_history_djedu {
         id: 220,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Djedu",
 
         }
         subtitle {
-            text: "The Temple of the Sun",
+            text: "A Naptemplom",
 
         }
         content {
-            text: "@PThe reigns of Khufu and Khafra have come to an end, and with them so too has the fourth dynasty of Egyptian ruling families.  But lady Khentkaues, a distant member of this family, has given birth to a new Pharaoh named 'Userkaf', and so the royal line continues unbroken.  With Userkaf begins the fifth dyanasty, an era that promises much change.   @PUserkaf has decentralized the rule of our country somewhat, and has granted more power to local authorities.  Now Nomarchs such as you are free to handle their own affairs. Pharaoh will not attempt the construction of a massive tomb to house him for eternity, for he has another project in mind for you. @PPharaoh has declared Ra, god of the sun and of the kingdom, to be King of the Gods, and intends to proclaim his sovereignty throughout the land.  Many Sun Temples already dot the Egyptian landscape, but Pharaoh wishes that the greatest be located at Djedu, in the humid Delta region of Lower Egypt.  @PLike most of the Delta, Djedu is rich in game, fish and other wildlife and vegetation, but offers few mineral resources.  As such, sandstone needed for construction of the Sun Temple will need to be imported from the quarries at the Dunqul Oasis.  Cattle may be raised here to provide meat, though the herds require much straw for fodder. @PYou'll need to clear land in order to create a suitable location for the Sun Temple.  Be sure to sell enough of the precious timber you may harvest first, for once it is gone you may not be able to acquire more.  Behdet and Abjedu are always in need of wood, and also game, thus trade with them should help to offset the cost of constructing this sacred monument."
+            text: "@PKheopsz és Hafré uralma véget ért, és velük együtt lezárult az egyiptomi uralkodóházak negyedik dinasztiája is. Ám Khentkausz úrnő, e család távoli tagja, életet adott egy új fáraónak, akit „Uszerkafnak” neveztek el, így a királyi vérvonal megszakítás nélkül folytatódik. Uszerkaf trónra lépésével kezdődik az ötödik dinasztia, egy korszak, amely nagy változásokat ígér. @PUszerkaf valamelyest decentralizálta országunk irányítását, és nagyobb hatalmat adott a helyi vezetőknek. Most a hozzád hasonló nomarkhák szabadon intézhetik saját ügyeiket. A fáraó nem hatalmas sír építését tervezi örök nyughelyéül, hanem más feladatot szán neked. @PA fáraó Ré napistent, a Nap és a királyság istenét az istenek királyává nyilvánította, és fennhatóságát az egész országban ki akarja hirdetni. Sok naptemplom található már Egyiptomban, de a fáraó azt kívánja, hogy a legnagyobb Djeduban, Alsó-Egyiptom nedves delta vidékén álljon. @PA delta legtöbb részéhez hasonlóan Djedu is gazdag vadban, halban és más élővilágban, valamint növényzetben, de kevés ásványkinccsel rendelkezik. Ezért a Naptemplom építéséhez szükséges homokkövet a Dunqul-oázis kőfejtőiből kell importálni. Marhákat is tenyészthetsz itt hús biztosítására, de a csordáknak sok szalmára van szükségük takarmányként. @PTerületet kell megtisztítanod, hogy megfelelő helyet alakíts ki a Naptemplom számára. Először mindenképpen adj el elegendő mennyiséget az értékes fából, amelyet kitermelhetsz, mert ha elfogy, később talán nem tudsz többet szerezni. Behdetnek és Abedjunak mindig szüksége van fára és vadra, ezért a velük folytatott kereskedelem segíthet ellensúlyozni e szent emlékmű építésének költségeit."
         }
     }
     message_history_dunqul {
         id: 221,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Dunqul",
 
         }
         subtitle {
-            text: "The Kushite Threat",
+            text: "A kusita fenyegetés",
 
         }
         content {
-            text: "@PPepy has taken the throne, and awarded your family the status of Chancellor, but it has come with a price.   @PCentralized authority continues to erode, as local and regional leaders become more powerful.  Harvests in some regions are far below normal, and the specter of famine has begun to appear in Egypt.  Men-nefer, once a splendid and beautiful city, is beginning to decline.  Seers foretell difficult times to come. @PPowerful neighbors are moving to take advantage of Egypt's increasing weakness.  The outpost at Buhen is under siege from fearless Kushite soldiers sent from Kerma, the largest non-Egyptian city in Africa.  The Kush are demanding tribute, and the slightest provocation could lead to an outright attack. Nubia, too, has issued a call to war and is seeking to reclaim lost land.  @PIf Egypt is to survive, you must do what you can to preserve trade routes to keep goods flowing into and out of Egypt.  Keep the hard-won trading post at the Selima oasis open.  Pepy, anticipating his journey to the afterlife, will make frequent requests for stone to build his pyramid, and other cities, short on food, will seek sustenance from you. @PUse your resources carefully.  Valuable wood is plentiful at the oasis, but some of the forest must be destroyed to access the limited water supply."
+            text: "@PPepi elfoglalta a trónt, és családodat kancellári rangra emelte, de ennek ára volt. @PA központosított hatalom tovább gyengül, miközben a helyi és tartományi vezetők egyre erősebbé válnak. Egyes vidékeken a termés jóval elmarad a megszokottól, és az éhínség réme kezd megjelenni Egyiptomban. Men-nefer, az egykor pompás és gyönyörű város, hanyatlásnak indult. A látnokok nehéz időket jósolnak. @PErős szomszédaink Egyiptom növekvő gyengeségét kihasználva terjeszkedni készülnek. A buheni őrhelyet ostrom alatt tartják a Kermából érkezett rettenthetetlen kusita katonák, amely Afrika legnagyobb nem egyiptomi városa. Kus követelése adó fizetése, és a legkisebb provokáció is nyílt támadáshoz vezethet. Núbia szintén háborúra szólított fel, és elvesztett területeinek visszaszerzésére törekszik. @PHa Egyiptom túl akarja élni ezt a válságot, mindent meg kell tenned a kereskedelmi útvonalak megőrzéséért, hogy az áruk továbbra is áramolhassanak az országba és onnan kifelé. Tartsd nyitva a nehezen megszerzett kereskedelmi állomást a Selima-oázisnál. Pepi, aki a túlvilágra készül, gyakran fog követelni követ piramisának építéséhez, más városok pedig, amelyek élelmiszerhiánnyal küzdenek, tőled kérnek majd segítséget. @PBölcsen használd fel erőforrásaidat. Az oázisban bőségesen található értékes fa, de az erdő egy részét el kell pusztítanod, hogy hozzáférj a korlátozott vízkészlethez."
         }
     }
     message_history_dakhla {
         id: 222,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Dakhla",
 
         }
         subtitle {
-            text: "The Caravan Trail",
+            text: "A karavánút",
 
         }
         content {
-            text: "@P@PPepy has taken the throne, and awarded your family the status of Chancellor, but it has come with a price.   @PCentralized authority continues to erode as local and regional leaders become more powerful.  Harvests in some regions are far below normal, and the specter of famine has begun to appear in Egypt.  Men-nefer, once a splendid and beautiful city, is beginning to decline.  Seers foretell difficult times to come.  @POur powerful neighbors are moving to take advantage of our increasing weakness.  Our outpost at Buhen is under siege from fearless Kushite soldiers sent from Kerma, the largest non-Egyptian city in Africa.  The Kushite are demanding tribute, and the slightest provocation could lead to an outright attack.  Nubia, too, has issued a call to war and is seeking to reclaim lost land.  @PTry to keep Egypt stable by establishing an administrative post at Dakhla Oasis.  The oasis has a large stand of valuable trees, but these trees unfortunately block access to the limited water supply at the oasis.  From this important location, import ebony from the African interior.  Pepy, anticipating his journey to the after-life, will request bricks for the construction of his monument.  Other cities, short on food, will request sustenance from you."
+            text: "@P@PPepy elfoglalta a trónt, és családodat kancellári rangra emelte, de ennek ára volt. @PA központosított hatalom tovább gyengül, miközben a helyi és tartományi vezetők egyre nagyobb befolyásra tesznek szert. Egyes területeken a termés messze elmarad a megszokottól, és Egyiptomban megjelent az éhínség fenyegetése. Men-nefer, az egykor pompás és gyönyörű város hanyatlásnak indult. A jósok nehéz időket jövendölnek. @PErős szomszédaink ki akarják használni növekvő gyengeségünket. Buheni helyőrségünket ostromolják a Kermából érkezett félelmet nem ismerő kusita katonák, Afrika legnagyobb nem egyiptomi városának seregei. A kusiták adót követelnek, és a legkisebb provokáció is nyílt támadáshoz vezethet. Núbia szintén háborúra szólított fel, és vissza akarja szerezni elvesztett területeit. @PTartsd fenn Egyiptom stabilitását egy közigazgatási központ létrehozásával a Dakhla-oázisban. Az oázisban nagy értékű fák találhatók, ám ezek sajnos elzárják a hozzáférést a korlátozott vízkészlethez. Erről a fontos helyről importálj ébenfát Afrika belsejéből. Pepy, aki a túlvilági útjára készül, téglákat fog kérni emlékműve építéséhez. Más, élelmiszerhiánnyal küzdő városok is ellátmányt kérnek majd tőled."
         }
     }
     message_history_thinis {
         id: 223,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Thinis ",
 
         }
         subtitle {
-            text: "Civil War",
+            text: "Polgárháború",
 
         }
         content {
-            text: "The old way of life is gone, and most fear that Egypt will never return to its past glory.  Osiris has turned his back on his people, and a series of low Inundations has caused widespread famine.  The power of the pharaohs, once unquestionable, has evaporated, replaced by bickering provincial leaders. @POut of this chaos, two noble families have arisen and are attempting to seize control of the country.  The rulers of Henen-nesw have laid claim to the throne as the rightful heirs.  They are particularly cruel and are doing little to assuage the people's hunger.  To the south, a new family, the Inyotef house, has risen to power in Waset.  This family has done much to reunite the south, and now Henen-nesw has engaged Waset in a deadly civil war for control of all of Egypt. @PTo show their benevolence to the people of Egypt, the Inyotefs have entrusted you with rebuilding the newly conquered city of Thinis, one of the oldest cities in Egypt.  Two of Thinis' finest and most ancient buildings have survived the turmoil of its conquest: the Temple Complex of Osiris and the mansion.  The Inyotefs have decreed that should either of these buildings be destroyed, no funds will be squandered on their restoration.  The Waset rulers consider the restoration of Thinis a top priority and have gathered up considerable funds - even in this time of strife - for this purpose.  Return Thinis to its former splendor, and commission a navy and raise a strong army to defend it from the frequent attacks of those loyal to Henen-nesw, including the cities of Sauty, Nekhen and Khmun.  Be careful of the Henen-nesw rulers: they may demand tribute to see if your loyalty - and your debens - can be extorted.  Also watch out for the opportunistic Nubians who seek to take advantage of Egypt's internal struggles."
+            text: "A régi életmód eltűnt, és a legtöbben attól tartanak, hogy Egyiptom soha nem nyeri vissza korábbi dicsőségét. Ozirisz hátat fordított népének, és az alacsony áradások sorozata széles körű éhínséget okozott. A fáraók hatalma, amely egykor megkérdőjelezhetetlen volt, szertefoszlott, helyét civakodó tartományi vezetők vették át. @PEnnek a káosznak a közepette két nemesi család emelkedett fel, és megpróbálja megszerezni az ország feletti uralmat. Henen-neszu uralkodói jogos örökösként követelik maguknak a trónt. Különösen kegyetlenek, és alig tesznek valamit az emberek éhezésének enyhítésére. Délen egy új család, az Inyotef-ház került hatalomra Waszetben. Ez a család sokat tett a dél egyesítéséért, és most Henen-neszu halálos polgárháborút indított Waszet ellen egész Egyiptom irányításáért. @PAz Inyotefek jóindulatukat bizonyítva rád bízták Thinisz, Egyiptom egyik legrégebbi városának újjáépítését. A hódítás zűrzavarát két nagyszerű és ősi épület élte túl: Ozirisz templomkomplexuma és a palota. Az Inyotefek elrendelték, hogy ha bármelyik épület elpusztul, nem pazarolnak pénzt a helyreállítására. Waszet uralkodói Thinisz helyreállítását elsődleges fontosságúnak tartják, és jelentős összegeket gyűjtöttek erre a célra – még ezekben a nehéz időkben is. Állítsd vissza Thiniszt régi pompájába, szervezz hadiflottát és hozz létre erős hadsereget, hogy megvédd a Henen-neszuhoz hű erők gyakori támadásaitól, köztük Sauty, Nekhen és Khmun városaitól. Légy óvatos Henen-neszu uralkodóival: adót követelhetnek, hogy próbára tegyék hűségedet – és megpróbálják kifacsarni belőled a debenjeidet. Figyelj a lehetőségre leső núbiaiakra is, akik Egyiptom belső viszályait akarják kihasználni."
         }
     }
     message_history_waset {
         id: 224,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Waset",
 
         }
         subtitle {
-            text: "Civil War",
+            text: "Polgárháború",
 
         }
         content {
-            text: "The old way of life is gone, and most fear that Egypt will never return to its past glory.  Osiris has turned his back on the people, and a series of low Inundations has caused widespread famine.  The power of the pharaohs, once unquestionable, has evaporated, replaced by bickering provincial leaders. @POut of this chaos, two noble families have arisen and are attempting to seize control of the country.  The rulers of Henen-nesw have laid claim to the throne as the rightful heirs.  They are particularly cruel and are doing little to assuage the people's hunger.  To the south, a new family, the Inyotef house, has risen to power in Waset.  The family has done much to reunite the south, and now the rulers of Henen-nesw have engaged the rulers of Waset in a deadly civil war for control of all of Egypt. @PThe Inyotefs, busy fighting the Henen-nesw rulers, have entrusted you with building up their home city of Waset.  If the Inyotefs are to succeed in their fight against the Henen-nesw rulers and solidify their reputation in Egypt, Waset must be a touchstone on which other cities rely, providing succor or soldiers to those that request aid.  Waset, which could be the capital should the Inyotefs reign victorious, must be a great city.  Using the scarce resources available to you, build a Sun Temple and pyramid to show Egyptians the glory of the Inyotefs. @PWaset itself is not immune to attack.  The Henen-nesw rulers, and those loyal to them, may threaten your city from time to time, and Henen-nesw may try to extort debens from your city's treasury.  To defend against these considerable risks, build a strong army and navy to defend your city and to come to the defense of other threatened cities."
+            text: "A régi életmód eltűnt, és a legtöbben attól tartanak, hogy Egyiptom soha nem nyeri vissza korábbi dicsőségét. Ozirisz hátat fordított népének, és az alacsony áradások sorozata széles körű éhínséget okozott. A fáraók hatalma, amely egykor megkérdőjelezhetetlen volt, szertefoszlott, helyét civakodó tartományi vezetők vették át. @PEnnek a káosznak a közepette két nemesi család emelkedett fel, és megpróbálja megszerezni az ország feletti uralmat. Henen-neszu uralkodói jogos örökösként követelik maguknak a trónt. Különösen kegyetlenek, és alig tesznek valamit az emberek éhezésének enyhítésére. Délen egy új család, az Inyotef-ház került hatalomra Waszetben. Ez a család sokat tett a dél egyesítéséért, és most Henen-neszu uralkodói halálos polgárháborút vívnak Waszet vezetőivel egész Egyiptom irányításáért. @PA Henen-neszu uralkodóival harcoló Inyotefek rád bízták szülővárosuk, Waszet felvirágoztatását. Ha az Inyotefek győzni akarnak Henen-neszu uralkodói ellen, és megszilárdítani akarják hírnevüket Egyiptomban, Waszetnek olyan várossá kell válnia, amelyre a többi település támaszkodhat, és segítséget vagy katonákat biztosíthat a rászorulóknak. Waszetnek, amely győzelmük esetén akár az Inyotefek fővárosa is lehet, nagyszerű várossá kell válnia. A rendelkezésre álló szűkös erőforrások felhasználásával építs Naptemplomot és piramist, hogy megmutasd az egyiptomiaknak az Inyotefek dicsőségét. @PWaszet maga sincs biztonságban a támadásoktól. Henen-neszu uralkodói és híveik időről időre fenyegethetik városodat, és megpróbálhatnak debent kicsikarni a város kincstárából. E jelentős veszélyek elhárítására építs erős hadsereget és flottát, hogy megvédd városodat, és segítséget nyújts más veszélyeztetett településeknek."
         }
     }
     message_history_kebet {
         id: 225,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Kebet",
 
         }
         subtitle {
-            text: "Reunification",
+            text: "Újraegyesítés",
 
         }
         content {
-            text: "Your family's performance during the civil war has not gone unrewarded.  I, Pharaoh Mentuhotep, have awarded your family the rank of Vizier.  There is no one in all of Egypt that I trust more than you.  Now that the twin kingdoms of Upper and Lower Egypt are reunited and the capital at Waset is thriving, I need you to help me solidify my position throughout the Kingdom. @PWhile reunited, Egypt is prone to internal skirmishes, particularly in areas that were once loyal to the Henen-nesw rulers.  To help solidify our new union, I want you to rebuild and defend Kebet.  Kebet should be a glorious city that shows Egypt's citizens what is possible under my rule.   The city comes under frequent attack from remaining loyalist cities, such as Khmun, and you must be sure to defend your city's borders. @PFamine still stalks the country, and frequent requests for food will come to you from other cities in the Kingdom.  Respond as quickly as you can to their heart-rending pleas, so that all Egypt will know my benevolence and the dedication of my most trusted Vizier. @PI know that I am asking much of you, but there is no one else in Egypt capable of doing this difficult task."
+            text: "Családod teljesítménye a polgárháború során nem maradt jutalom nélkül. Én, Mentuhotep fáraó, vezíri rangra emeltem családodat. Egész Egyiptomban nincs senki, akiben jobban megbíznék nálad. Most, hogy Felső- és Alsó-Egyiptom ikerkirályságai újra egyesültek, és a waszeti főváros virágzik, szükségem van rád, hogy segíts megszilárdítani hatalmamat az egész birodalomban. @PNoha Egyiptom újra egyesült, továbbra is hajlamos a belső összecsapásokra, különösen azokon a területeken, amelyek egykor Henen-neszu uralkodóit támogatták. Új egységünk megszilárdításához azt akarom, hogy építsd újjá és védd meg Kebetet. Kebetnek dicsőséges várossá kell válnia, amely megmutatja Egyiptom népének, mire képes uralmam alatt. A várost gyakran támadják a megmaradt hűséges városok, például Khmun, ezért gondoskodnod kell határainak védelméről. @PAz éhínség továbbra is sújtja az országot, és a birodalom más városai gyakran kérnek majd tőled élelmet. A lehető leggyorsabban válaszolj szívszorító kéréseikre, hogy egész Egyiptom megismerje jóindulatomat és leghűségesebb vezírem odaadását. @PTudom, hogy sokat kérek tőled, de Egyiptomban nincs más, aki képes lenne végrehajtani ezt a nehéz feladatot."
         }
     }
     message_history_menat_khufu {
         id: 226,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Menat Khufu",
 
         }
         subtitle {
-            text: "Reunification",
+            text: "Újraegyesítés",
 
         }
         content {
-            text: "Your family's performance during the civil war has not gone unrewarded.  I, Pharaoh Mentuhotep, have awarded your family the rank vizier.  There is no one else in Egypt that I trust more than you.  Now that the twin kingdoms of Upper and Lower Egypt are reunited and the capital at Waset is thriving, I need you to help me solidify my position throughout the Kingdom. @PWhile reunited, Egypt is prone to internal skirmishes, particularly in areas that were once loyal to the Henen-nesw rulers.  To help solidify the newly reunited country, I want you to rebuild and defend Menat Khufu, which was nearly destroyed during the civil war.  Menat Khufu should be a glorious city that shows Egypt's citizens what is possible under my rule.   @PFamine still stalks the country, and frequent requests for food will come to you from other cities in the Kingdom.  Respond as quickly as you can to their heart-rending pleas, so that all Egypt will know my benevolence and the dedication of my most trusted vizier. @PI have one more noble request: I want you to build granite obelisks to further proclaim all I have done for this land in my lifetime. @PI know that I am asking much of you, but I also know that you are the only one in Egypt capable of doing what I have asked."
+            text: "Családod teljesítménye a polgárháború során nem maradt jutalom nélkül. Én, Mentuhotep fáraó, vezíri rangra emeltem családodat. Egész Egyiptomban nincs senki, akiben jobban megbíznék nálad. Most, hogy Felső- és Alsó-Egyiptom ikerkirályságai újra egyesültek, és a waszeti főváros virágzik, szükségem van rád, hogy segíts megszilárdítani hatalmamat az egész birodalomban. @PNoha Egyiptom újra egyesült, továbbra is hajlamos a belső összecsapásokra, különösen azokon a területeken, amelyek egykor Henen-neszu uralkodóit támogatták. Az újraegyesült ország megszilárdításához azt akarom, hogy építsd újjá és védd meg Menat Khufut, amely a polgárháború során majdnem teljesen elpusztult. Menat Khufunak dicsőséges várossá kell válnia, amely megmutatja Egyiptom népének, mire képes uralmam alatt. @PAz éhínség továbbra is sújtja az országot, és a birodalom más városai gyakran kérnek majd tőled élelmet. A lehető leggyorsabban válaszolj szívszorító kéréseikre, hogy egész Egyiptom megismerje jóindulatomat és leghűségesebb vezírem odaadását. @PVan még egy nemes kérésem: építs gránit obeliszkeket, hogy még inkább hirdessék mindazt, amit életem során ezért a földért tettem. @PTudom, hogy sokat kérek tőled, de azt is tudom, hogy Egyiptomban csak te vagy képes teljesíteni, amit kértem."
         }
     }
     message_history_itjtawy {
@@ -2863,185 +2864,185 @@ game_messages_hu {
         type: 3
         size [40, 30]
         title { text: "Itjtawy", pos [50, 80] }
-        subtitle { text: "A New Capital is Founded", pos [10, 30] }
+        subtitle { text: "Új főváros alapítása", pos [10, 30] }
         content {
-            text: "O Mighty Pharaoh, Beloved of Ra, how fortunate you must feel.  Your unprecedented rise to the throne of Egypt is the stuff of dreams!  A richer reward could not be fashioned by gods or people. With your family's accession, Egypt can make a new start, and perhaps we can all forget the horrors of the civil war. @PTo mark this new beginning, you should build a fine new capital.  Itjtawy, with its abundant natural resources, is a perfect location.  Using what the land has to offer, you can build a splendid city worthy of your dynasty's valor and dedication. @PTo ensure the feats of your great dynasty are always remembered, you should build two majestic brick pyramids for yourself and your family and a frightening sphinx to guard your tomb.  A family with your achievements deserves no less. @PKeep in mind, though, that some in the country question the legitimacy of your rule.  Many are still suffering the effects of the famine and grumble that you usurped the throne.  If you relieve these people's misery and help them rebuild their homes, you will certainly win their undying loyalty.  You should try to provide for your new subjects as well as you can to prevent these unfortunate people from taking up arms against you."
+            text: "Ó, hatalmas fáraó, Ré kedveltje, milyen szerencsésnek érezheted magad! Példátlan felemelkedésed Egyiptom trónjára maga is álomnak tűnik. Ennél gazdagabb jutalmat sem istenek, sem emberek nem adhatnának. Családod hatalomra kerülésével Egyiptom újrakezdhet, és talán mindannyian elfelejthetjük a polgárháború borzalmait. @PEnnek az új kezdetnek a megünneplésére építs egy nagyszerű új fővárost. Itjtawy bőséges természeti erőforrásaival tökéletes helyszín. A föld adományait felhasználva pompás várost építhetsz, amely méltó dinasztiád bátorságához és elhivatottságához. @PNagy dinasztiád tetteinek örök emlékéül építs két fenséges tégla piramist magadnak és családodnak, valamint egy félelmetes szfinxet sírod őrzésére. Egy ilyen eredményekkel rendelkező család nem érdemelhet kevesebbet. @PNe feledd azonban, hogy az országban vannak, akik megkérdőjelezik uralmad jogosságát. Sokan még mindig az éhínség következményeitől szenvednek, és azt mondják, hogy bitoroltad a trónt. Ha enyhíted ezeknek az embereknek a nyomorúságát és segítesz újjáépíteni otthonaikat, bizonyára elnyered halhatatlan hűségüket. Igyekezz a lehető legjobban gondoskodni új alattvalóidról, hogy ezek a szerencsétlen emberek ne ragadjanak fegyvert ellened."
         }
     }
     message_history_iken {
         id: 228,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Iken",
 
         }
         subtitle {
-            text: "Into Nubia",
+            text: "Núbiába vezető út",
 
         }
         content {
-            text: "Now that Egypt is firmly united under your rule, all of your court, and I, your trusted vizier, recommend that we push the borders of our country south into Nubia.  The dry riverbed at Allaqi is rich with veins of gold, and a mighty city at Iken, with you in residence, will certainly keep the Nubians from trying to attack.  Be careful of the Kushites, however.  They are a much more dangerous adversary than the Nubians and will use their swords to encourage you, O Pharaoh, to leave their kingdom alone. @PTo leave a lasting mark on Nubia, you should build a large obelisk to attest to Egypt's many achievements.  The obelisk will offer compelling evidence to the Nubians of the benefits of Egyptian rule, and be a constant reminder of our presence. @PWhile your direct attention is devoted to Iken, do not forget our intent to establish a thriving port city on the Red Sea at Sawu.  Sawu will need help from you, and will not hesitate to ask for it.  If Sawu can thrive, they will provide Iken with much-needed copper, from which weapons can be forged."
+            text: "Most, hogy Egyiptom szilárdan egyesült uralmad alatt, egész udvarod és én, hűséges vezíred, azt javasoljuk, hogy terjesszük ki országunk határait dél felé, Núbiába. Az Allaqi kiszáradt folyómedre gazdag aranyerekben, és egy hatalmas város Ikenben, ahol te is jelen vagy, bizonyára távol tartja a núbiaiakat a támadási kísérletektől. Légy azonban óvatos a kusitákkal. Ők sokkal veszélyesebb ellenfelek a núbiaiaknál, és kardjaikkal fognak arra ösztönözni téged, ó fáraó, hogy hagyd békén királyságukat. @P Hogy maradandó nyomot hagyj Núbiában, építs egy hatalmas obeliszket, amely Egyiptom számos eredményét hirdeti. Az obeliszk meggyőző bizonyítékul szolgál majd a núbiaiak számára az egyiptomi uralom előnyeiről, és állandó emlékeztető lesz jelenlétünkre. @PMiközben közvetlen figyelmed Ikenre összpontosul, ne feledkezz meg arról a célunkról sem, hogy virágzó kikötővárost hozzunk létre a Vörös-tengeren Sawunál. Sawunak szüksége lesz segítségedre, és nem fog habozni, hogy kérje azt. Ha Sawu felvirágzik, a szükséges rezet biztosíthatja Iken számára, amelyből fegyvereket kovácsolhatunk."
         }
     }
     message_history_sawu {
         id: 229,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Sawu",
 
         }
         subtitle {
-            text: "On the Shores of the Red Sea",
+            text: "A Vörös-tenger partján",
 
         }
         content {
-            text: "Now that Egypt is firmly united under your rule, we must develop trade relations with cities throughout the world to increase Egypt's wealth, O King of the Two Lands.  @PAs your people prosper, they demand more exotic items.  Tired of jewelry, an easily obtained luxury good, your people want rare and expensive luxury goods, such as incense.  Your court and I, your trusted vizier, recommend that you establish a Red Sea port at Sawu.  Sawu offers a trade route to distant Pwenet, from which the finest incense in the world may be imported, though at great cost.   @PBeside some modest veins of gold and copper ore, Sawu produces few raw materials of its own, but can thrive as a manufacturer of finished goods.  By importing raw materials from trade partners, and exporting finished products, Sawu shall be able to turn a tidy profit. @PWhile you are busy at Sawu, one of your most valiant Nomarchs is establishing a new trade center in Nubia.  His city, Iken, is likely to come under attack, so my beloved Pharaoh should be prepared to send him any resources he may need. @PUnder your rule, Sawu is sure to be one of the loveliest cities in the kingdom, suitable as a final resting place for you and your family.  As you establish the thriving port, do not neglect preparations for the afterlife.  A mausoleum and small brick pyramid will provide sumptuous quarters for you and your family after your passage to the Field of Reeds."
+            text: "Most, hogy Egyiptom szilárdan egyesült uralmad alatt, kereskedelmi kapcsolatokat kell kialakítanunk a világ városaival, hogy növeljük Egyiptom gazdagságát, ó Két Föld Királya. @PAhogy néped gyarapodik, egyre különlegesebb árukat követel. Megunva az ékszereket, ezt a könnyen beszerezhető luxuscikket, ritka és drága javakra, például tömjénre vágynak. Udvarod és én, hűséges vezíred, azt javasoljuk, hogy alapíts Vörös-tengeri kikötőt Sawunál. Sawu kereskedelmi útvonalat kínál a távoli Pwenet felé, ahonnan a világ legkiválóbb tömjénét lehet importálni, igaz, nagy költséggel. @PA néhány szerény arany- és rézlelőhelyen kívül Sawu kevés nyersanyagot termel saját maga, de készáruk gyártójaként virágozhat. Ha kereskedelmi partnereinktől nyersanyagokat importálunk, és késztermékeket exportálunk, Sawu jelentős hasznot termelhet. @PMiközben Sawun dolgozol, egyik legbátrabb nomarchád új kereskedelmi központot alapít Núbiában. Városa, Iken, valószínűleg támadások célpontjává válik, ezért szeretett fáraómnak készen kell állnia arra, hogy minden szükséges erőforrást elküldjön neki. @PUralkodásod alatt Sawu minden bizonnyal a birodalom egyik legszebb városa lesz, amely méltó végső nyughelyedhez és családodéhoz. Miközben létrehozod a virágzó kikötőt, ne hanyagold el a túlvilágra való felkészülést. Egy mauzóleum és egy kis tégla piramis pompás lakhelyet biztosít majd neked és családodnak, miután átkeltetek a Nádas-mezőkre."
         }
     }
     message_history_heh {
         id: 230,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Heh",
 
         }
         subtitle {
-            text: "The Gauntlet",
+            text: "A próbatétel",
 
         }
         content {
-            text: "Most respected Pharaoh, all that your family has fought so hard for is threatened!  The Nubian navy is patrolling the Nile, striking deep into the heart of Egyptian territory, ransacking villages and cities alike.  The Nubians are also boarding trade ships, pirating away goods.   To help your northern cities beat back the foe, you should be prepared to send warships and soldiers to the cities that need them.   @PTo prevent the Nubians from again sailing our waters, your military advisors recommend building a cluster of forts at Heh between the second and third cataracts of the Nile.  The forts will act as a cork, penning the Nubians in to the south.   @PSuccessfully driving out the Nubians rests with conquering the city of Baki.  Baki is rich in resources, and taking it over will cripple the Nubian economy.  Once you have wrested control of Baki away from the Nubians, you can begin importing sandstone from the city for your great mausoleum.  Your mausoleum at Heh will serve as a reminder of your dominance over the unruly Nubians.   @PThere are many challenges before you as you protect Egypt from the Nubians.  Pay heed, O Living Horus, to the storm rising in the east.  The thundering of horses' hooves are heard throughout Canaan, and lightning-quick chariots are laying waste to all in their path.  These formidable chariots, the likes of which have never been seen anywhere, are driven by the Hyksos warriors.  Already, storm clouds have been spotted on the Egyptian horizon, and you should steel yourself against the impending danger."
+            text: "Nagyra becsült fáraó, mindaz, amiért családod oly keményen küzdött, veszélybe került! A núbiai flotta a Nílust járőrözi, mélyen behatolva Egyiptom területére, falvakat és városokat egyaránt kifosztva. A núbiaiak kereskedelmi hajóinkat is megtámadják, és zsákmányként viszik el áruinkat. Hogy északi városaink visszaverhessék az ellenséget, készülj fel arra, hogy hadihajókat és katonákat küldj azoknak a településeknek, amelyeknek szükségük van rájuk. @PA núbiaiak újbóli hajózásának megakadályozására katonai tanácsadóid azt javasolják, hogy építs erődrendszert Hehnél, a Nílus második és harmadik kataraktája között. Az erődök dugóként zárják el az utat, és délen tartják a núbiaiakat. @PA núbiaiak sikeres kiűzéséhez Baki meghódítása vezet. Baki gazdag erőforrásokban, és elfoglalása megbénítja Núbia gazdaságát. Miután elvetted Bakit a núbiaiaktól, megkezdheted a homokkő importját a városból nagy mauzóleumodhoz. Hehi mauzóleumod emlékeztetni fog mindenkit a nyughatatlan núbiaiak felett aratott uralmadra. @PEgyiptom núbiaiaktól való megvédése számos kihívás elé állít. Figyelj, ó Élő Hórusz, a keleten gyülekező viharra. Lópaták dübörgése hallatszik egész Kánaánban, és villámgyors szekerek pusztítanak el mindent az útjukban. Ezeket a félelmetes harci szekereket, amelyekhez foghatót még sehol sem láttak, a hükszosz harcosok hajtják. Már viharfelhők gyülekeznek Egyiptom horizontján, ezért készülj fel a közelgő veszélyre."
         }
     }
     message_history_bubastis {
         id: 231,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Bubastis",
 
         }
         subtitle {
-            text: "The City of Bast",
+            text: "Baszt városa",
 
         }
         content {
-            text: "Most royal Pharaoh, with robust trade routes firmly in place, we should now show Egypt what success and wealth can bring.  Bubastis provides a perfect location for such a city: we can protect our valuable trade routes to the east while paying homage to Bast, who has watched over Egypt. @PBast's city should be like no other in Egypt.  It should be as lovely as the lotus flower, blooming forth with entertainment, schools, libraries and places of worship.  Its citizens should be well-supplied with the finer things, including imported incense.  When complete, Bubastis will be the jewel in the twin crowns. @PWhile you are building this glorious city, pay heed to the storm rising in the east.  The thundering of horses' hooves are heard throughout Canaan, and lightning-quick chariots are laying waste to all in their path.  These formidable chariots, the likes of which have never been seen anywhere, are driven by the Hyksos warriors.  Already, storm clouds have been spotted on the Egyptian horizon, and you should steel yourself against the impending danger."
+            text: "Legfenségesebb fáraó, most, hogy erős kereskedelmi útvonalaink szilárdan kiépültek, meg kell mutatnunk Egyiptomnak, milyen sikert és gazdagságot hozhat mindez. Bubasztisz tökéletes helyszínt biztosít egy ilyen város számára: megvédhetjük keleti értékes kereskedelmi útvonalainkat, miközben tiszteletünket fejezzük ki Baszt iránt, aki őrködött Egyiptom felett. @PBaszt városának olyannak kell lennie, amilyenhez nincs fogható Egyiptomban. Olyan szépnek kell lennie, mint a lótuszvirág, amely szórakozóhelyekkel, iskolákkal, könyvtárakkal és szentélyekkel bontja ki szirmait. Lakóinak bőségben kell élniük, és hozzá kell jutniuk a finomabb javakhoz, köztük az importált tömjénhez. Amikor elkészül, Bubasztisz lesz a kettős korona ékköve. @P Miközben ezt a dicsőséges várost építed, figyelj a keleten gyülekező viharra. Lópaták dübörgése hallatszik egész Kánaánban, és villámgyors szekerek pusztítanak el mindent az útjukban. Ezeket a félelmetes harci szekereket, amelyekhez foghatót még sehol sem láttak, a hükszosz harcosok hajtják. Már viharfelhők gyülekeznek Egyiptom horizontján, ezért készülj fel a közelgő veszélyre."
         }
     }
     message_history_khmun {
         id: 232,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Khmun",
 
         }
         subtitle {
-            text: "Egypt Reclaimed",
+            text: "Egyiptom visszaszerzése",
 
         }
         content {
-            text: "Most powerful Pharaoh, Egypt cries out for your help.  The menacing Hyksos have invaded our land and have set up their own capital at Rowarty.  From Rowarty, they have disrupted many of our trade routes, choking off needed supplies.  We must stop their conquest before it is too late. @PIf it pleases you, Great Pharaoh, we should reclaim the city at Khmun, which has been violated by these foul invaders.  We should also build a strong army and navy, for we may need to supply troops and arms to our compatriots in the north, especially at Rowarty, to help repel the Hyksos incursion.  They will look to you, Child of Ra, for support.  But now we too have a new weapon.  Our wise military leaders have become proficient in the use of the dreaded chariot, and we shall turn it back upon our enemies and drive them before us.  Once we drive the troublesome Hyksos out, our military advisors recommend building a fort in Sinai at Sharuhen to prevent further invasions from the east. @PIf only our trouble was limited to the north!  Reports from our southern border show that the Nubians are once again taking advantage of a distracted Egypt.  They have reclaimed the southern cities of Iken and Heh.  While these lost cities are cause for concern, we must first oust the Hyksos before we can turn our attention southward. @PThese Hyksos are most unholy invaders.  We have just discovered that they have defiled the pyramid here in Khmun.  They have stolen from the pyramid all the burial provisions that the mighty Pharaoh interred here needs in the Field of Reeds.  We should provide a new supply of grave goods so that the Pharaoh buried here can enjoy life everlasting."
+            text: "Leghatalmasabb fáraó, Egyiptom segítségért kiált. A fenyegető hükszoszok megszállták földünket, és saját fővárost alapítottak Rowartyban. Rowartyból megzavarták számos kereskedelmi útvonalunkat, elvágva a szükséges utánpótlást. Meg kell állítanunk hódításukat, mielőtt túl késő lenne. @PHa kedvedre való, nagy fáraó, vissza kell szereznünk Khmun városát, amelyet ezek az aljas betolakodók meggyaláztak. Erős hadsereget és flottát is építenünk kell, mert szükség lehet rá, hogy katonákat és fegyvereket küldjünk északi szövetségeseinknek, különösen Rowartyba, hogy segítsünk visszaverni a hükszosz támadást. Rád tekintenek majd, Ré gyermeke, támogatásért. De most nekünk is van új fegyverünk. Bölcs hadvezéreink elsajátították a rettegett harci szekér használatát, és ellenségeink ellen fordítjuk, hogy magunk előtt hajtva őket visszaszorítsuk. Miután kiűztük a bajkeverő hükszoszokat, katonai tanácsadóid azt javasolják, hogy építs erődöt a Sínai-félszigeten, Sharuhennél, hogy megakadályozzuk a keletről érkező újabb inváziókat. @P Bárcsak csak északon lennének gondjaink! Déli határainkról érkező jelentések szerint a núbiaiak ismét kihasználják Egyiptom figyelmetlenségét. Visszafoglalták Iken és Heh déli városait. Bár ezeknek az elvesztett városoknak a sorsa aggodalomra ad okot, először a hükszoszokat kell kiűznünk, mielőtt dél felé fordíthatnánk figyelmünket. @PEzek a hükszoszok szentségtelen betolakodók. Most fedeztük fel, hogy meggyalázták a khmuni piramist. Ellopták belőle mindazokat a temetési kellékeket, amelyekre az itt eltemetett hatalmas fáraónak szüksége van a Nádas-mezőkön. Új sírmellékletekkel kell ellátnunk a sírt, hogy az ott nyugvó fáraó örökké élvezhesse a túlvilági életet."
         }
     }
     message_history_sauty {
         id: 233,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Sauty",
 
         }
         subtitle {
-            text: "Egypt Reclaimed",
+            text: "Egyiptom visszaszerzése",
 
         }
         content {
-            text: " O King of the Two Lands, Egypt cries out for your help.  The menacing Hyksos have invaded our land and have set up their own capital at Rowarty.  From Rowarty, they have disrupted many of our trade routes.  We must stop their conquest before it is too late. @PHere at Sauty, we are safe from immediate attack, although the Hyksos have the gall to demand tribute. We may need to supply troops and arms to our compatriots in the north to help repel the Hyksos incursion.  They will look to you, O Mighty Pharaoh, for support.  But now we too have a new weapon.  Our wise military leaders have become proficient in the use of the dreaded chariot, and we shall turn it back upon our enemies and drive them before us. @PIf only our trouble was limited to the north!  Reports from our southern border show that the Nubians are once again taking advantage of a distracted Egypt.  They have reclaimed the southern cities of Iken and Heh. @PIf Egypt is to emerge intact from these turbulent times, much will be required of your generals in the field and on the river.  To inspire your two best generals, you have promised to build each of them a pyramid as spectacular as your own.  Holding your promise in their hearts, they are fiercely combating the foe, calling upon all their strength and sinew.   @PIf it pleases you, Mighty Pharaoh, you should build three magnificent pyramids at Sauty, one for yourself and one for each of your generals.  These three pyramids will take up considerable space, so you will need to surrender some valuable resources in order to accommodate them.  You may also need to extend your city across the Nile to avail yourself of all the resources needed for this city to flourish."
+            text: "Ó, Két Föld Királya, Egyiptom segítségért kiált. A fenyegető hükszoszok megszállták földünket, és saját fővárost alapítottak Rowartyban. Rowartyból megzavarták számos kereskedelmi útvonalunkat. Meg kell állítanunk hódításukat, mielőtt túl késő lenne. @PItt, Sautyban biztonságban vagyunk a közvetlen támadástól, bár a hükszoszoknak van merszük adót követelni. Lehet, hogy katonákat és fegyvereket kell küldenünk északi szövetségeseinknek, hogy segítsünk visszaverni a hükszosz támadást. Rád tekintenek majd, ó hatalmas fáraó, támogatásért. De most nekünk is van új fegyverünk. Bölcs hadvezéreink elsajátították a rettegett harci szekér használatát, és ellenségeink ellen fordítjuk, hogy magunk előtt hajtva őket visszaszorítsuk. @PBárcsak csak északon lennének gondjaink! Déli határainkról érkező jelentések szerint a núbiaiak ismét kihasználják Egyiptom figyelmetlenségét. Visszafoglalták Iken és Heh déli városait. @PHa Egyiptom épségben akar kikerülni ezekből a viharos időkből, sok múlik hadvezéreid teljesítményén a szárazföldön és a folyón. Két legjobb tábornokod ösztönzésére megígérted, hogy mindkettőjüknek olyan lenyűgöző piramist építesz, mint a sajátod. Ígéreted tudatában szívükben elszántan küzdenek az ellenséggel, minden erejüket és kitartásukat bevetve. @PHa kedvedre való, hatalmas fáraó, építs három nagyszerű piramist Sautyban: egyet magadnak és egyet-egyet mindkét tábornokodnak. Ez a három piramis jelentős helyet foglal majd el, ezért értékes erőforrásokról kell lemondanod, hogy helyet biztosíts számukra. Talán a Níluson túlra is ki kell terjesztened városodat, hogy minden szükséges erőforrás rendelkezésre álljon a virágzáshoz."
         }
     }
     message_history_byblos {
         id: 234,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Byblos",
 
         }
         subtitle {
-            text: "Expansion and Conquest",
+            text: "Terjeszkedés és hódítás",
 
         }
         content {
-            text: "Egypt has emerged from its recent troubles with a newfound strength.  Byblos, with all its verdant forests and rich sources of copper, is ours!  With your presence, the city is sure to thrive, and a New Kingdom will be established. @PAh, but what an alarming discovery we made after conquering Byblos!  A new, ferocious people, the Hittites, have washed over much of Asia, and some even say that their empire rivals our own for size.  Now, they have turned their eyes toward Byblos, covetous of its riches.  If we are not well prepared for their attack, we could easily lose Byblos to our foe.  @PWhile preparing to meet the Hittites, we must mark Byblos as forever Egyptian.  With your blessing, O Pharaoh, we shall erect a series of three obelisks, two small and one large, proclaiming your sovereignty and fame throughout the far stretches of your empire.  These towering monuments will remind the residents of Byblos with whom their loyalties should lie. @PWhile we occupy ourselves with matters at Byblos, other regions of Egypt are still prone to attack.  Nubians have moved north as far as the first cataract, and we must help our compatriots drive them back.  Reports from Rowarty tell of another mysterious new foe, the Sea People.  Both these enemies must be strongly put down if Egypt is to attain glory.  To show your might, be sure to send troops and warships should they be requested."
+            text: "Egyiptom új erőre kapva került ki a közelmúlt nehézségeiből. Büblosz, minden dús erdejével és gazdag rézlelőhelyével együtt a miénk! Jelenléteddel a város biztosan felvirágzik, és létrejön az Újbirodalom. @PÁm milyen riasztó felfedezést tettünk Büblosz meghódítása után! Egy új, félelmetes nép, a hettiták söpörtek végig Ázsia nagy részén, és egyesek szerint birodalmuk méretben vetekszik a miénkkel. Most Büblosz felé fordították tekintetüket, megirigyelve gazdagságát. Ha nem készülünk fel megfelelően támadásukra, könnyen elveszíthetjük Bübloszt ellenségünkkel szemben. @PMiközben a hettiták elleni összecsapásra készülünk, örökre egyiptomivá kell tennünk Bübloszt. Áldásoddal, ó fáraó, három obeliszket emelünk: két kisebbet és egy nagyot, amelyek birodalmad távoli vidékein is hirdetik felsőbbségedet és hírnevedet. Ezek a magasba törő emlékművek emlékeztetik majd Büblosz lakóit arra, hogy kinek tartoznak hűséggel. @PMiközben Büblosz ügyeivel foglalkozunk, Egyiptom más vidékei továbbra is támadásoknak vannak kitéve. A núbiaiak északra nyomultak egészen az első kataraktáig, és segítenünk kell szövetségeseinknek visszaszorítani őket. Rowartyból egy újabb rejtélyes ellenségről, a tengeri népekről érkeztek jelentések. Mindkét ellenséget határozottan le kell győzni, ha Egyiptom dicsőségre akar jutni. Hatalmad bizonyítására gondoskodj róla, hogy csapatokat és hadihajókat küldj, amikor segítséget kérnek."
         }
     }
     message_history_baki {
         id: 235,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Baki",
 
         }
         subtitle {
-            text: "The Glory of Egypt",
+            text: "Egyiptom dicsősége",
 
         }
         content {
-            text: "With the Hyksos successfully expelled from our country, our land is ripe for rebirth, a New Kingdom that outshines past glory.  Most noble Pharaoh, Baki is an ideal place to begin this New Kingdom.  We can use the large amount of gold found there to fund your new vision of Egypt.  @PWhile Egypt is on the brink of greatness, a few nagging problems remain.  Many of Egypt's cities are still recovering from the disruptions caused by the Hyksos and may need Pharaoh's help.  In other regions, Egypt's old enemies still attack us, and a new enemy, the Sea People, has been raiding our northern coast. You must be prepared to defend other Egyptian cities from our foes, both old and new. @PAs Egypt grows in stature, many cities are willing to engage in trade.  Some of these cities are so familiar with our ways, and in awe of your power, that they consider themselves Egyptian, while others are foreign to us and are trading with us for the first time.  For the glory of Egypt, take advantage of all these relationships to provide your people with all the goods they desire. @PTo usher in the new era, your royal architects crave the opportunity to build two pyramids and a stately mausoleum for you, O Pharaoh.  These will surely reflect the wealth and grandeur you have brought to Egypt."
+            text: "Miután a hükszoszokat sikeresen kiűztük országunkból, földünk készen áll az újjászületésre: egy olyan Újbirodalomra, amely felülmúlja a múlt dicsőségét. Nemes fáraó, Baki ideális helyszín ennek az Újbirodalomnak a kezdetéhez. Az ott található hatalmas mennyiségű aranyat felhasználhatjuk új egyiptomi elképzeléseid megvalósításának finanszírozására. @PEgyiptom a nagyság küszöbén áll, de néhány makacs probléma még megmaradt. Egyiptom számos városa még mindig a hükszoszok által okozott pusztításból lábadozik, és szükségük lehet a fáraó segítségére. Más vidékeken régi ellenségeink továbbra is támadnak minket, miközben egy új ellenség, a tengeri népek, északi partvidékünket fosztogatja. Fel kell készülnöd arra, hogy megvédd Egyiptom városait régi és új ellenségeinktől egyaránt. @PAhogy Egyiptom egyre nagyobb tekintélyre tesz szert, sok város hajlandó kereskedni velünk. Néhányan annyira megismerték szokásainkat és annyira csodálják hatalmadat, hogy egyiptominak tekintik magukat, míg mások idegenek számunkra, és most kereskednek velünk először. Egyiptom dicsőségére használd ki ezeket a kapcsolatokat, hogy néped minden kívánt áruhoz hozzájusson. @PAz új korszak beköszöntésére királyi építészeid alig várják, hogy két piramist és egy méltóságteljes mauzóleumot építhessenek neked, ó fáraó. Ezek méltóképpen tükrözik majd azt a gazdagságot és nagyságot, amelyet Egyiptomnak hoztál."
         }
     }
     message_history_rowarty {
         id: 236,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Rowarty ",
 
         }
         subtitle {
-            text: "The Sea People",
+            text: "A tengeri népek",
 
         }
         content {
-            text: "O Horus of Gold, our hold on Asia is strong and unchallenged, and our borders again stretch far into Nubia.  But the trouble on our northern coast is escalating.  The Sea People have become increasingly aggressive, wantonly raiding our cities.  Only Pharoah's presence will be enough to defeat this fierce and wily adversary.  If you commission a navy, supported by a strong army, surely we shall overcome the Sea People.   @PWhile you work to defeat the Sea People, your brave Nomarchs are leading attacks throughout the world.  If they are successful, Egypt will rule the world from the great Euphrates river in Asia to the sprawling Kushite city of Kerma to the south.  When you and your Nomarchs have met with sweet victory, your dynasty will be recorded as the greatest dynasty ever to keep watch over Egypt. @PMarking your far-reaching influence is a new, distant trade partner, Mycenae.  The king of Mycenae has learned of the splendor and bounty of Egypt, and wishes to engage in trade with us.  If you agree to open this trade route, O Pharaoh, your citizens will surely be provided with exotic goods unlike any they have ever seen. @PTo house your royal family for the afterlife, an awe-inspiring mausoleum and an impressive pair of brick pyramids must be built.  These monuments will remind all who follow of your deeds both on and off the battlefield."
+            text: "Ó Arany Hórusz, ázsiai uralmunk szilárd és megkérdőjelezhetetlen, határaink pedig ismét messze benyúlnak Núbiába. Ám északi partvidékünk gondjai egyre súlyosbodnak. A tengeri népek egyre agresszívebbé váltak, és gátlástalanul fosztogatják városainkat. Csak a fáraó személyes jelenléte lehet elegendő e kegyetlen és ravasz ellenfél legyőzéséhez. Ha erős hadsereggel támogatott flottát állítasz fel, bizonyára legyőzzük a tengeri népeket. @PMiközben a tengeri népek ellen harcolsz, bátor nomarcháid támadásokat vezetnek szerte a világban. Ha sikerrel járnak, Egyiptom uralma a nagy ázsiai Eufrátesz folyótól egészen délen a hatalmas kusita Kerma városáig terjed majd. Amikor te és nomarcháid elnyeritek az édes győzelmet, dinasztiádat Egyiptom történetének legnagyobbjaként jegyzik majd fel. @PTávoli befolyásunkat egy új kereskedelmi partner is jelzi: Mükéné. Mükéné királya értesült Egyiptom pompájáról és bőségéről, és kereskedni kíván velünk. Ha beleegyezel ennek a kereskedelmi útvonalnak a megnyitásába, ó fáraó, polgáraid minden bizonnyal olyan különleges árukhoz jutnak majd, amilyeneket még sosem láttak. @PKirályi családod túlvilági nyughelyéhez lenyűgöző mauzóleumot és egy impozáns iker tégla piramispárt kell építeni. Ezek az emlékművek minden utánad következő nemzedéket emlékeztetnek majd tetteidre, a csatatéren és azon kívül egyaránt."
         }
     }
     message_history_hetepsensusret {
         id: 237,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Hetepsensusret",
 
         }
         subtitle {
-            text: "The Glory of Pharaoh",
+            text: "A fáraó dicsősége",
 
         }
         content {
-            text: "Benevolent Pharaoh, you have brought peace and prosperity to our nation.  Under your wise and capable rule, Egypt is a strong and glorious country once again.  All Nomarchs are loyal to you, and no threats to our great nation remain. @PHaving accomplished all your family set out to do so many years ago, it is time to memorialize the achievements of your great dynasty.  The only way to accomplish this is to build the grandest pyramid Egypt has ever known, a pyramid even larger than Khufu's, at Rostja.  Others in your noble family have sacrificed much on the long road leading to your rule of Egypt.  They too must be remembered and honored, with a sandstone mausoleum to acknowledge their unwavering support.   @PThe ideal location for these monuments is Hetepsensusret in the rich Fayuum region.  From here, you can attend to all the affairs of state, and respond to any requests for supplies that your cities may ask of you, as you build your great pyramid."
+            text: "Jóságos fáraó, békét és jólétet hoztál nemzetünknek. Bölcs és rátermett uralmad alatt Egyiptom ismét erős és dicsőséges országgá vált. Minden nomarch hűséges hozzád, és nagy nemzetünket már nem fenyegeti veszély. @PMiután mindazt megvalósítottad, amiért családod oly sok évvel ezelőtt küzdött, eljött az idő, hogy megörökítsd nagy dinasztiád eredményeit. Ennek egyetlen módja, ha megépíted Egyiptom valaha ismert legnagyobb piramisát Rostján, még Khufu piramisánál is hatalmasabbat. Nemes családod más tagjai sok áldozatot hoztak az Egyiptom feletti uralmadhoz vezető hosszú úton. Róluk sem szabad megfeledkezni: homokkőből készült mauzóleummal kell tisztelegni előttük rendíthetetlen támogatásukért. @PEzeknek az emlékműveknek az ideális helyszíne Hetepsensusret a gazdag Fayuum régióban. Innen intézheted az állam minden ügyét, és válaszolhatsz városaid ellátmánykéréseire is, miközben felépíted hatalmas piramisodat."
         }
     }
     message_history_perwadjyt_3 {
         id: 238,
-        type: 3,
-        size [40, 30]
+            type: 3,
+            size [40, 30]
         title {
             text: "Perwadjyt",
 
         }
         subtitle {
-            text: "The Banks of the Nile",
+            text: "A Nílus partjai",
 
         }
         content {
-            text: "@PWith the aid of your family, the Thinite king Hor-Aha has successfully united the twin kingdoms of Upper and Lower Egypt, proclaimed himself Pharaoh over all Egypt, and founded an imposing capital at Men-nefer.    @PYour clan has relocated once more, this time to the humid Delta region of Lower Egypt, to an area known as Perwadjyt. Canaanite warships have been threatening this region, and you'll likely need to dispatch a few warships of your own, when the time comes. @PYour family has achieved the status of nobility. As such, it is expected that before you pass from this world into the next, you will undertake to complete an exquisite brick tomb - a mastaba - to house your body on its journey into the afterlife. @PHowever, first you must establish some farms along the banks of the Nile, to exploit the rich, fertile soil deposited by the annual Inundation of the river. This will allow your population to grow and prosper, and eventually become large enough to complete this sacred monument. But beware, for many dangers lurk among the life-giving waters of the Nile, such as deadly crocodiles, hippopotamus and malaria-carrying mosquitoes. @L@LFarming along the Nile @PYou must build farms directly on the flood plain, in order to gain the benefits of its increased fertility. Unlike most working structures, farms on the flood plain do not need direct access to employees, but do need a steady workforce of peasant laborers, supplied by work camps, to tend their fields. Build work camps fairly close to flood plain farms, so peasants won't have to walk too far to reach them. @G56 @L@LThe annual harvest @L@PEach year the Nile floods its banks, replenishing the depleted soil on the flood plain with rich, fertile mud.  Peasants harvest the annual crop just before the Inundation, and deliver it to your granaries. Because there is only one harvest per year, make sure to have enough granaries to store a sufficient amount of food for your growing population."
+            text: "@P Családod segítségével a thiniszi Hor-Aha király sikeresen egyesítette Felső- és Alsó-Egyiptom kettős királyságát, egész Egyiptom fáraójának kiáltotta ki magát, és lenyűgöző fővárost alapított Men-neferben. @PCsaládod ismét új helyre költözött, ezúttal Alsó-Egyiptom párás deltavidékére, a Perwadjyt néven ismert területre. Kánaáni hadihajók fenyegetik ezt a vidéket, és amikor eljön az idő, valószínűleg neked is ki kell küldened néhány hadihajót. @PCsaládod elnyerte a nemesi rangot. Ezért elvárható, hogy mielőtt e világból a túlvilágra távozol, elkészíts egy gyönyörű tégla síremléket – egy masztabát –, amely tested otthonául szolgál majd túlvilági utazásod során. @PMielőtt azonban ezt megtehetnéd, először farmokat kell létesítened a Nílus partján, hogy kihasználd a folyó évenkénti áradása által lerakott gazdag, termékeny talajt. Ez lehetővé teszi népességed növekedését és gyarapodását, míg végül elég nagy lesz ahhoz, hogy elkészíthesse ezt a szent emlékművet. De vigyázz, mert a Nílus életet adó vizei között számos veszély leselkedik rád, például halálos krokodilok, vízilovak és maláriát terjesztő szúnyogok. @L@L Gazdálkodás a Nílus mentén @P A termékeny ártér előnyeinek kihasználásához közvetlenül a folyó árterületére kell építened a farmokat. A legtöbb termelőépülettel ellentétben az ártéri farmoknak nincs szükségük közvetlen hozzáférésre az alkalmazottakhoz, de állandó paraszti munkaerőt igényelnek a földek műveléséhez, amelyet munkatáborok biztosítanak. A munkatáborokat viszonylag közel építsd az ártéri farmokhoz, hogy a parasztoknak ne kelljen túl messzire gyalogolniuk. @G56 @L@L Az éves aratás @L@P Minden évben a Nílus kilép medréből, és gazdag, termékeny iszappal tölti fel újra a kimerült árterület talaját. A parasztok közvetlenül az áradás előtt takarítják be az éves termést, majd a magtáraidba szállítják. Mivel évente csak egy betakarítás van, ügyelj rá, hogy elegendő magtárral rendelkezz a növekvő népességed számára szükséges élelmiszer tárolásához."
         }
     }
     message_tutorial_food_or_famine {
@@ -3049,9 +3050,9 @@ game_messages_hu {
         type: 2
         message_type: 4
         size [40, 30]
-        title { text: "Food or Famine?", pos [0, 15] }
+        title { text: "Étel vagy éhínség?", pos [0, 15] }
         content {
-            text: "@PA growing population needs a reliable source of food and some means of storing and distributing it. Certain animals, like the ostriches in this region, can be hunted for game. Granaries store game and other foods, while Bazaars distribute the food to the village's inhabitants. As with most working structures, in order to function properly these buildings must be located within reach of housing, and the city must have enough workers to staff them. @L@LHunting for food  @L@PBuild a Hunting Lodge close to the ostrich flocks, and hunters will set out in search of prey. If successful, they'll bring the carcasses back to the lodge to be butchered, after which a cart pusher will deliver them to the nearest Granary for storage.   @PDifferent workers from the Bazaar assess the needs of the neighborhoods they serve, acquire food from nearby Granaries, and deliver this food to the houses in their immediate vicinity to meet these needs. @G60 @PBuild Granaries and Bazaars by clicking on the 'Storage and Distribution Structures' button. @G77 @L@PUltimately, your goal in this mission is to transform some of your 'crude huts' into 'meager shanties'.  This is accomplished by providing them with water, and food from the Bazaar.  Also, make sure they're not too close to any unsightly industrial buildings or inferior housing, which discourage home improvements by lowering the desirability of the area.  @PYou will eventually learn various ways to increase an area's desirability. For now, though, simply avoid locating homes too near to industries.  @L@LOverseers @L@LAn Overseer of the Granaries is now available to provide information and advice. In time, you will have many advisors to help run your city. @G76  @L@PTo access them, click on the 'Overseers' icon, or right click on the appropriate building."
+            text: "@P A növekvő népességnek megbízható élelemforrásra, valamint annak tárolására és elosztására szolgáló rendszerre van szüksége. Egyes állatok, például az ezen a vidéken élő struccok, vadászhatók élelemként. A magtárak tárolják a vadászott húst és más élelmiszereket, míg a bazárok szétosztják az ételt a falu lakói között. A legtöbb termelőépülethez hasonlóan ezeknek is lakóházak közelében kell lenniük, és a városnak elegendő munkással kell rendelkeznie működtetésükhöz. @L@L Élelemvadászat @L@P Építs vadászházat a strucccsordák közelében, és a vadászok elindulnak zsákmány után kutatni. Ha sikerrel járnak, a tetemeket visszaviszik a vadászházba feldolgozásra, majd egy kocsitoló elszállítja őket a legközelebbi magtárba tárolásra. @P A bazárok különböző dolgozói felmérik az általuk ellátott környékek igényeit, élelmet szereznek a közeli magtárakból, majd a közvetlen közelükben lévő házakhoz szállítják azt. @G60 @P Építs magtárakat és bazárokat az „Tároló- és elosztóépületek” gombra kattintva. @G77 @L@P A küldetés végső célja, hogy néhány „durva kunyhót” „szegényes viskóvá” fejlessz. Ehhez vizet és a bazárból származó élelmet kell biztosítanod számukra. Ügyelj arra is, hogy ne legyenek túl közel csúnyán kinéző ipari épületekhez vagy gyenge minőségű lakóhelyekhez, mert ezek csökkentik a környék vonzerejét, és akadályozzák a házak fejlődését. @P Idővel több módszert is megtanulsz egy terület vonzerejének növelésére. Egyelőre azonban egyszerűen kerüld, hogy lakóházakat ipari épületek közelébe helyezz. @L@L Felügyelők @L@L Mostantól elérhető a Magtárak felügyelője, aki információkkal és tanácsokkal szolgál. Idővel számos tanácsadód lesz, akik segítenek városod irányításában. @G76 @L@P Elérésükhöz kattints a „Felügyelők” ikonra, vagy kattints jobb gombbal a megfelelő épületre."
         }
     }
     message_tutorial_entertainment {
@@ -3059,58 +3060,58 @@ game_messages_hu {
         type: 2
         message_type: 4
         size [40, 30]
-        title { text: "Entertainment", pos [0, 15] }
+        title { text: "Szórakoztatás", pos [0, 15] }
         content {
-            text: "As your city becomes more advanced, some citizens can enjoy leisure-time activities, such as taking in a little entertainment. A wide assortment of entertainment is one of the hallmarks of a truly cultured city, but currently you can only provide entertainment in the form of Jugglers. @L@LEntertainment Venues and Jugglers @PThe Juggler needs a venue on which to perform, the smallest of which is called a 'Booth'. Build a Booth at an intersection to stage juggling performances, and a Juggler School nearby to train performers. Both need access to employee housing, and enough workers to staff them. @PJugglers trained at the school will proceed to any nearby Booth to put on shows, imparting a modest amount of entertainment to the surrounding area. @G61 @L@LConsult your Overseer of Diversions to learn more about your city's recreational needs.  Click 'Overlays: Entertainment' to see which houses in your city have access to entertainment."
+            text: "Ahogy városod egyre fejlettebbé válik, egyes polgárok élvezhetik a szabadidős tevékenységeket, például a szórakoztató előadásokat. A szórakozás sokfélesége egy valóban művelt város egyik ismertetőjele, jelenleg azonban csak zsonglőrök segítségével tudsz szórakoztatást biztosítani. @L@L Szórakozóhelyek és zsonglőrök @L@P A zsonglőrnek előadási helyszínre van szüksége, amelynek legegyszerűbb formája a „bódé”. Építs egy bódét egy kereszteződéshez, hogy zsonglőrelőadásokat tarthass, valamint egy közeli zsonglőriskolát az előadók képzésére. Mindkettőnek hozzáférésre van szüksége a dolgozók lakóhelyeihez és elegendő munkásra a működéshez. @P Az iskolában képzett zsonglőrök a közeli bódékhoz mennek, ahol előadásokat tartanak, és mérsékelt mennyiségű szórakozást biztosítanak a környék számára. @G61 @L@L Keresd fel a Szórakoztatás felügyelőjét, hogy többet tudj meg városod kikapcsolódási igényeiről. Kattints a „Rétegek: Szórakoztatás” gombra, hogy lásd, mely házak rendelkeznek szórakozási lehetőséggel."
         }
     }
     message_gold_and_crime {
-        id: 241,
-        type: 2,
-        message_type: 4,
+        id: 241
+        type: 2
+        message_type: 4
         size [40, 30]
-        title { text: "Gold and Crime" }
+        title { text: "Arany és bűnözés" }
         content {
-            text: "@L@L Mining Gold @L@PSearch rocky areas for the presence of metal ore, evidenced by shiny metallic patches among the rocks. In order to extract the ore, you must build Gold Mines adjacent to these veins. @G53 @L@LPalace @L@PA Palace is needed to convert the raw gold ore, as well as to store the resulting gold bullion. The Palace is the seat of the city's government, and must be built where there is suitable access to ground water (grassy areas). @POnce your Palace is up and running, miners will deliver gold ore from any Gold Mines for conversion into cash, counted in 'debens'. @G54 @L@LCrime @L@PWith a supply of cash in reserve, however, comes the risk of theft. Constables can help reduce losses through theft, both by patrolling the streets to prevent crime and by subduing any criminals they encounter. @G55 @L@PThe best way to prevent crime, though, is to keep your population happy with adequate food, health care and jobs."
+            text: "@L@L Aranybányászat @L@P Keresd a sziklás területeken a fémérc jelenlétét, amelyet a kövek között látható fényes fémes foltok jeleznek. Az érc kitermeléséhez aranybányákat kell építened közvetlenül ezek mellé az erek mellé. @G53 @L@L Palota @L@P A palotára van szükség a nyers aranyérc feldolgozásához, valamint az elkészült aranyrögök tárolásához. A palota a város kormányzatának székhelye, ezért olyan helyre kell építeni, ahol megfelelő hozzáférés van a talajvízhez (füves területeken). @P Amint palotád működésbe lép, a bányászok minden aranybányából elszállítják az aranyércet, amelyet pénzzé alakítanak, és „debenben” számolnak. @G54 @L@L Bűnözés @L@P A pénzkészlet azonban magával hozza a lopás veszélyét is. A rendőrök segíthetnek csökkenteni a veszteségeket: járőröznek az utcákon a bűnözés megelőzése érdekében, és elfogják a bűnözőket, akikkel találkoznak. @G55 @L@P A bűnözés megelőzésének legjobb módja azonban az, ha lakosságodat megfelelő élelemmel, egészségügyi ellátással és munkalehetőségekkel elégedetten tartod."
         }
     }
     message_farming_along_the_nile {
-        id: 242,
-        type: 2,
-        message_type: 4,
+        id: 242
+        type: 2
+        message_type: 4
         size [40, 30]
         title {
-            text: "Farming along the Nile",
+            text: "Gazdálkodás a Nílus mentén",
 
         }
         content {
-            text: "Farming along the Nile @L@PYou must build farms directly on the flood plain, in order to gain the benefits of its increased fertility.  Unlike most working structures, farms on the flood plain do not need direct access to employees, but do need a steady workforce of peasant laborers, supplied by Work Camps, to tend their fields.  Build Work Camps fairly close to flood plain farms, so peasants won't have to walk too far to reach them. @G56 @L@PEach year the Nile floods its banks, replenishing the depleted soil on the flood plain with rich, fertile mud.  Peasants harvest the annual crop just before the inundation, and deliver it to your Granaries.  Because there is only one harvest per year, make sure your city has enough Granaries to store a sufficient amount of food for your growing population."
+            text: "Gazdálkodás a Nílus mentén @L@P A termékeny ártér előnyeinek kihasználásához közvetlenül a folyó árterületére kell építened a farmokat. A legtöbb termelőépülettel ellentétben az ártéri farmoknak nincs szükségük közvetlen hozzáférésre az alkalmazottakhoz, de állandó paraszti munkaerőt igényelnek a földek műveléséhez, amelyet munkatáborok biztosítanak. A munkatáborokat viszonylag közel építsd az ártéri farmokhoz, hogy a parasztoknak ne kelljen túl messzire gyalogolniuk. @G56 @L@P Minden évben a Nílus kilép medréből, és gazdag, termékeny iszappal tölti fel újra a kimerült árterület talaját. A parasztok közvetlenül az áradás előtt takarítják be az éves termést, majd a magtárakba szállítják. Mivel évente csak egy betakarítás van, ügyelj rá, hogy városod elegendő magtárral rendelkezzen a növekvő népesség számára szükséges élelmiszer tárolásához."
         }
     }
     message_developing_culture {
         id: 243,
-        type: 2,
-        message_type: 4,
-        size [40, 30]
+            type: 2,
+            message_type: 4,
+            size [40, 30]
         title {
-            text: "Developing Culture",
+            text: "A kultúra fejlődése",
 
         }
         content {
-            text: "Beer @LYour fellow Egyptians have perfected the art of brewing beer, which has become a very popular libation throughout Egypt!  With a supply of barley received from local farms, brewers will make beer and deliver it to Storage Yards for future distribution by Bazaar workers (as with food and pottery). @L@LMultiple Gods @LThe patron god of this region is Ra, but Osiris and Bast are also worshipped here as local deities.  Make sure this city has more Temples and Shrines dedicated to Ra, but don't neglect the local deities either!  To accommodate your most valued citizens, make sure they have access to temples dedicated to different gods. @L@LMore Entertainment @LSophisticated Egyptians like to listen to music in their leisure time, as well as take in the occasional juggling performance.  While only Jugglers can perform at the small Booth, both Jugglers and Musicians can perform together at a Bandstand. Build a Bandstand at an intersection, and a Conservatory nearby to train Musicians.  Access to multiple types of entertainment greatly enhances the quality of life in any city. @L@LLaw and Order @LA Magistrate patrolling from his Courthouse helps to reduce the risk of crime by hearing grievances and making sure that cooler heads prevail."
+            text: "Sör @L Egyiptomi társaid tökéletesítették a sörfőzés művészetét, amely Egyiptom-szerte igen népszerű itallá vált! A helyi farmokról származó árpa felhasználásával a sörfőzők sört készítenek, majd a tárolóudvarokba szállítják, ahonnan a bazár dolgozói később kiosztják (az élelemhez és a fazekasárukhoz hasonlóan). @L@L Több isten @L A vidék védőistene Ré, de Oziriszt és Basztot is helyi istenségként tisztelik itt. Ügyelj rá, hogy városodban több Rének szentelt templom és szentély legyen, de a helyi istenségekről se feledkezz meg! Legértékesebb polgáraid számára biztosíts hozzáférést a különböző isteneknek szentelt templomokhoz. @L@L Több szórakozás @L A kifinomult egyiptomiak szívesen hallgatnak zenét szabadidejükben, és időnként zsonglőrelőadásokat is megtekintenek. Míg a kis bódéban csak zsonglőrök léphetnek fel, a zenepavilonban zsonglőrök és zenészek együtt is előadhatnak. Építs zenepavilont egy kereszteződéshez, valamint egy közeli konzervatóriumot a zenészek képzésére. A többféle szórakozási lehetőség jelentősen javítja bármely város életminőségét. @L@L Törvény és rend @L A bíróságáról járőröző elöljáró segít csökkenteni a bűnözés veszélyét azáltal, hogy meghallgatja a panaszokat és gondoskodik arról, hogy a viták békésen rendeződjenek."
         }
     }
     message_getting_started {
         id: 244,
-        type: 2,
-        message_type: 4,
-        size [40, 30]
+            type: 2,
+            message_type: 4,
+            size [40, 30]
         title {
-            text: "Getting Started",
+            text: "Kezdeti lépések",
 
         }
         content {
-            text: "Begin by planning for areas of housing and industry.  By now you know what the people want, in addition to the basics of food and water.  You must provide some houses with pottery, beer, entertainment and access to religious services before you can think about higher education and trade."
+            text: "Kezdd a lakó- és ipari területek megtervezésével. Mostanra már tudod, mire van szüksége a népnek az alapvető élelem- és vízellátáson kívül. Mielőtt felsőoktatásra és kereskedelemre gondolhatnál, néhány házat el kell látnod fazekasáruval, sörrel, szórakozási lehetőségekkel és vallási szolgáltatásokkal."
         }
     }
     message_soldiers_and_forts {
@@ -3119,3073 +3120,3074 @@ game_messages_hu {
         message_type: 4
         size [40, 30]
         title {
-            text: " Soldiers and Forts",
+            text: "Katonák és erődök",
         }
         content {
-            text: "To conscript troops, build a Fort and a Recruiter.  The Recruiter will send new conscripts, one by one, to the fort until it is fully occupied.  There are two types of Fort, infantry and archer, and each Fort holds sixteen soldiers, referred to as one 'company'.  If soldiers die in combat, the Recruiter will see to it that replacements are conscripted. @G57 @L@LWeapons @PArchers supply their own bows and arrows, but infantry troops must be outfitted with copper-tipped spears.  With a supply of copper, a Weaponsmith will forge such weapons.  These are then delivered to the Recruiter, so that any new foot soldiers may be suitably equipped. @L@LGoals and Briefings @PFrom now on, your immediate goals will no longer appear at the top of your screen.  Click the 'ankh' symbol on the Control Panel to review your Mission Briefing for goals, then visit your overseers to assess your overall progress."
+            text: "Katonák toborzásához építs erődöt és toborzóépületet. A toborzóépület új újoncokat küld egyenként az erődbe, amíg az teljesen meg nem telik. Kétféle erőd létezik: gyalogos- és íjászerőd, és mindegyik tizenhat katonát fogad be, amely egy „századnak” felel meg. Ha katonák halnak meg a harcban, a toborzó gondoskodik az utánpótlás besorozásáról. @G57 @L@L Fegyverek @L@P Az íjászok saját íjaikat és nyilaikat használják, de a gyalogosokat rézhegyű lándzsákkal kell felszerelni. Megfelelő mennyiségű réz birtokában a fegyverkovács ilyen fegyvereket készít. Ezeket aztán a toborzóhoz szállítják, hogy az új gyalogosok megfelelő felszereléssel indulhassanak harcba. @L@L Célok és eligazítások @P Ettől kezdve az aktuális céljaid többé nem jelennek meg a képernyő tetején. A küldetés céljainak áttekintéséhez kattints a vezérlőpulton található „ankh” jelre, majd keresd fel a felügyelőidet, hogy felmérd városod általános fejlődését."
         }
     }
     message_trade_on_the_water {
         id: 246,
-        type: 2,
-        message_type: 4,
-        size [40, 30]
+            type: 2,
+            message_type: 4,
+            size [40, 30]
         title {
-            text: "At the Water's Edge",
+            text: "A víz partján",
 
         }
         content {
-            text: "Trade on the Water @LTrade may also be conducted by river and sea, if any such water routes currently run to the city.  To open a water trade route, visit the World Map.  To trade along a water route, your city will also need a working Dock. @L@LFishing the Nile @LThe Nile is a plentiful source of fish, a popular food in Egypt.  What's more, a diet comprised of multiple types of foods leads to better health and happiness for your people.  To harvest this rich bounty, you'll need some fishing boats. @L@LBuilding Boats and Ships @LThe Shipwright builds combat ships and fishing boats.  Each boat must be supported by its own Wharf.  Whenever there is a Wharf in need of a vessel, the Shipwright will begin constructing one for it.  Without a waiting Wharf, the Shipwright will not build any ships.   @LAlthough a single Shipwright can supply all the vessels your city needs, multiple Shipwrights will allow you to replace lost vessels much more quickly.  The Shipwright doesn't need any materials to create fishing boats, but he will need a supply of wood to construct military vessels, such as warships and transport ships. @LMilitary vessels, trade ships and fishing boats are broad-beamed and deep-keeled to navigate the Nile and coastal waters. They are not made to sail very narrow channels, and indeed cannot travel up small streams or inlets.  Nothing will stop you from building Shipwrights, Docks or Wharves in such locations, but if you do so, boats cannot travel to or from these facilities, and they will not work. @LAs you scout the shore for suitable maritime sites, bear in mind that all ships need free passage between their port and their destination.  You cannot, for example, build a Fishing Wharf on an inland lake and expect its boats to reach the fishing grounds of the Nile, even if that lake is connected to the Nile by a small stream."
+            text: "Kereskedelem vízen @L A kereskedelem folyón és tengeren is folyhat, ha ilyen vízi útvonalak vezetnek a városhoz. Vízi kereskedelmi útvonal megnyitásához keresd fel a világtérképet. Vízi kereskedelemhez városodnak működő kikötőre is szüksége lesz. @L@L Halászat a Níluson @L A Nílus bőséges halforrás, amely népszerű élelem Egyiptomban. Ráadásul a többféle élelmiszerből álló étrend jobb egészséget és nagyobb elégedettséget biztosít néped számára. E gazdag kincs kiaknázásához halászhajókra lesz szükséged. @L@L Hajók és csónakok építése @L A hajóács hadihajókat és halászhajókat épít. Minden hajót saját hajóállásnak kell kiszolgálnia. Amikor egy hajóállásnak szüksége van egy hajóra, a hajóács megkezdi annak elkészítését. Várakozó hajóállás nélkül a hajóács nem épít hajókat. @L Bár egyetlen hajóács is képes ellátni a város összes hajóigényét, több hajóács segítségével az elveszett hajókat sokkal gyorsabban pótolhatod. A halászhajók elkészítéséhez a hajóácsnak nincs szüksége nyersanyagra, de katonai hajók, például hadihajók és szállítóhajók építéséhez faanyagra lesz szüksége. @L A katonai hajók, kereskedelmi hajók és halászhajók széles testűek és mély merülésűek, hogy a Níluson és a part menti vizeken közlekedhessenek. Nem keskeny csatornákra készültek, ezért nem tudnak felhajózni kis patakokon vagy keskeny öblökön. Semmi sem akadályoz meg abban, hogy ilyen helyeken hajóácsot, kikötőt vagy hajóállást építs, de ha így teszel, a hajók nem tudnak eljutni ezekhez az építményekhez vagy onnan távozni, így azok nem működnek. @L Amikor megfelelő tengerparti helyszíneket keresel, ne feledd, hogy minden hajónak szabad útvonalra van szüksége kikötője és célállomása között. Például nem építhetsz halászhajó-állást egy belső tóra abban a reményben, hogy hajói elérik a nílusi halászterületeket, még akkor sem, ha a tavat egy kis patak összeköti a Nílussal."
         }
     }
     message_at_the_waters_edge {
         id: 247,
-        type: 2,
-        message_type: 4,
-        size [40, 30]
+            type: 2,
+            message_type: 4,
+            size [40, 30]
         title {
-            text: "At the Water's Edge",
+            text: "A víz partján",
 
         }
         content {
-            text: "Trade on the Water @LTrade may also be conducted by river and sea, if any such water routes currently run to the city.  To open a water trade route, visit the World Map.  To trade along a water route, your city will also need a working Dock. @L@LFishing the Nile @LThe Nile is a plentiful source of fish, a popular food in Egypt.  What's more, a diet comprised of multiple types of foods leads to better health and happiness for your people.  To harvest this rich bounty, you'll need some fishing boats. @L@LBuilding Boats and Ships @LThe Shipwright builds combat ships and fishing boats.  Each boat must be supported by its own Wharf.  Whenever there is a Wharf in need of a vessel, the Shipwright will begin constructing one for it.  Without a waiting Wharf, the Shipwright will not build any ships.   @LAlthough a single Shipwright can supply all the vessels your city needs, multiple Shipwrights will allow you to replace lost vessels much more quickly.  The Shipwright doesn't need any materials to create fishing boats, but he will need a supply of wood to construct military vessels, such as warships and transport ships. @LMilitary vessels, trade ships and fishing boats are broad-beamed and deep-keeled to navigate the Nile and coastal waters. They are not made to sail very narrow channels, and indeed cannot travel up small streams or inlets.  Nothing will stop you from building Shipwrights, Docks or Wharves in such locations, but if you do so, boats cannot travel to or from these facilities, and they will not work. @LAs you scout the shore for suitable maritime sites, bear in mind that all ships need free passage between their port and their destination.  You cannot, for example, build a Fishing Wharf on an inland lake and expect its boats to reach the fishing grounds of the Nile, even if that lake is connected to the Nile by a small stream. @L@LMaking Bricks @LBricks are a somewhat less expensive building material, used in the creation of certain kinds of tombs.  To make bricks, you'll need a Brickworks, and supplies of clay and straw."
+            text: "Kereskedelem vízen @L A kereskedelem folyón és tengeren is folyhat, ha ilyen vízi útvonalak vezetnek a városhoz. Vízi kereskedelmi útvonal megnyitásához keresd fel a világtérképet. Vízi kereskedelemhez városodnak működő kikötőre is szüksége lesz. @L@L Halászat a Níluson @L A Nílus bőséges halforrás, amely népszerű élelem Egyiptomban. Ráadásul a többféle élelmiszerből álló étrend jobb egészséget és nagyobb elégedettséget biztosít néped számára. E gazdag kincs kiaknázásához halászhajókra lesz szükséged. @L@L Hajók és csónakok építése @L A hajóács hadihajókat és halászhajókat épít. Minden hajót saját hajóállásnak kell kiszolgálnia. Amikor egy hajóállásnak szüksége van egy hajóra, a hajóács megkezdi annak elkészítését. Várakozó hajóállás nélkül a hajóács nem épít hajókat. @L Bár egyetlen hajóács is képes ellátni a város összes hajóigényét, több hajóács segítségével az elveszett hajókat sokkal gyorsabban pótolhatod. A halászhajók elkészítéséhez a hajóácsnak nincs szüksége nyersanyagra, de katonai hajók, például hadihajók és szállítóhajók építéséhez faanyagra lesz szüksége. @L A katonai hajók, kereskedelmi hajók és halászhajók széles testűek és mély merülésűek, hogy a Níluson és a part menti vizeken közlekedhessenek. Nem keskeny csatornákra készültek, ezért nem tudnak felhajózni kis patakokon vagy keskeny öblökön. Semmi sem akadályoz meg abban, hogy ilyen helyeken hajóácsot, kikötőt vagy hajóállást építs, de ha így teszel, a hajók nem tudnak eljutni ezekhez az építményekhez vagy onnan távozni, így azok nem működnek. @L Amikor megfelelő tengerparti helyszíneket keresel, ne feledd, hogy minden hajónak szabad útvonalra van szüksége kikötője és célállomása között. Például nem építhetsz halászhajó-állást egy belső tóra abban a reményben, hogy hajói elérik a nílusi halászterületeket, még akkor sem, ha a tavat egy kis patak összeköti a Nílussal. @L@L Téglagyártás @L A tégla valamivel olcsóbb építőanyag, amelyet bizonyos síremlékek elkészítéséhez használnak. Téglák készítéséhez téglagyárra, valamint agyagra és szalmára lesz szükséged."
         }
     }
     message_the_finer_things_tutorial {
         id: 248,
-        type: 2,
-        message_type: 4,
-        size [40, 30]
+            type: 2,
+            message_type: 4,
+            size [40, 30]
         title {
-            text: "The Finer Things",
+            text: "A kifinomult dolgok",
 
         }
         content {
-            text: "Temple Complexes @LAs devotion to their patron gods continues to grow, the Egyptian people demand bigger and bigger places of worship.  Most cities will want to erect a Temple Complex to their chosen god, so that they may fully partake of his or her benevolence.  Once built, the Temple Complex may be expanded through the addition of an Oracle and an Altar, each dedicated to other, lesser gods.  These gods, too, will impart certain benefits to the city.   @L@LLuxury Goods @LIn addition to locally made jewelry, the Egyptian people prize certain other luxury goods, which are available only through importation.  A city needs access to more than one type of luxury good in order to become truly civilized.  @L@LHarvesting Timber @G58 @LTimber is a rare and valuable commodity in the arid country of Egypt.  Regions that have forests are truly lucky.  To harvest what usable tree growth may be found, build a Woodcutter, and men will be dispatched to hew timber.  Timber is used to create warships, transport ships, as well as support structures for some monuments."
+            text: "Templomkomplexumok @L Ahogy az egyiptomiak védőisteneik iránti odaadása egyre növekszik, egyre nagyobb és nagyobb istentiszteleti helyeket követelnek. A legtöbb város templomkomplexumot szeretne emelni választott istenének, hogy teljes mértékben részesülhessen annak áldásaiból. Felépítése után a templomkomplexum tovább bővíthető egy jósda és egy oltár hozzáadásával, amelyek más, kisebb isteneknek vannak szentelve. Ezek az istenek szintén különféle előnyöket biztosítanak a város számára. @L@L Luxusjavak @L A helyben készített ékszereken kívül az egyiptomiak nagyra becsülnek bizonyos más luxuscikkeket is, amelyek csak behozatal útján érhetők el. Egy városnak többféle luxuscikkhez kell hozzáférnie ahhoz, hogy valóban civilizálttá váljon. @L@L Faanyag kitermelése @G58 @L A faanyag ritka és értékes nyersanyag Egyiptom száraz vidékén. Az erdőkkel rendelkező területek igazán szerencsések. A fellelhető hasznosítható fák kitermeléséhez építs fakitermelő helyet, és embereket küldenek ki a fa kivágására. A faanyagot hadihajók és szállítóhajók készítéséhez, valamint egyes emlékművek kiegészítő szerkezeteihez használják."
         }
     }
     message_housing_and_roads {
         id: 249,
-        type: 2,
-        message_type: 4,
-        size [40, 30]
-        title { text: "Housing and Roads" }
-        content { text: "@PThe first things this village will need are housing, to provide settlers with a suitable place to live, and a network of roads, to allow its eventual inhabitants to find their way around easily and efficiently. @PBuild areas of housing, and you'll soon see people move into the village. @G50 @L@LRoads @L@PClick and drag the mouse to build long lengths of road at one time. @G51 @PAt every intersection, walkers must choose which way to go, so each intersection lessens your control over their actual routes. @G52 @PPlan roads carefully, with as few intersections as possible, to ensure that people walk where you want them to.  @PThe path by which these immigrants reach your city is known as the Kingdom road. Migrants always need free passage from the Kingdom road to the city's housing areas. If you isolate some neighborhood from this vital link to the outside world, its homes will simply disappear. @L@LTo exit any message panel (like this one), click your right mouse button." }
+            type: 2,
+            message_type: 4,
+            size [40, 30]
+        title { text: "Lakóhelyek és utak" }
+        content { text: "@P A falu elsődleges szükségletei a lakóhelyek, amelyek megfelelő otthont biztosítanak a telepeseknek, valamint az úthálózat, amely lehetővé teszi leendő lakói számára a könnyű és hatékony közlekedést. @P Építs lakóterületeket, és hamarosan emberek költöznek a faluba. @G50 @L@L Utak @L@P Kattints és húzd az egeret hosszabb útszakaszok egyidejű építéséhez. @G51 @P Minden kereszteződésnél a járókelőknek választaniuk kell az útirányok között, így minden kereszteződés csökkenti a tényleges útvonaluk feletti irányításodat. @G52 @P Gondosan tervezd meg az utakat, és használj minél kevesebb kereszteződést, hogy biztosan arra járjanak az emberek, amerre szeretnéd. @P Az útvonalat, amelyen keresztül ezek a bevándorlók elérik városodat, királyi útnak nevezik. A bevándorlóknak mindig szabad átjárásra van szükségük a királyi út és a város lakóterületei között. Ha egy városrészt elszigetelsz ettől a külvilággal való fontos kapcsolattól, az ottani házak egyszerűen eltűnnek. @L@L Egy üzenetpanelből (mint ez is) a jobb egérgombbal léphetsz ki." }
     }
     message_basic_healthcare {
-        id: 250
-        type: 2
-        message_type: 4
-        size [40, 30]
-        title { text: "Basic Healthcare" }
-        content { text: "Your city suffers from health problems, as is to be expected with a growing population. Malaria and disease are the most common health crises that will afflict your city's households, though widespread plague can strike if healthcare is exceptionally inadequate.  @PIf a house does become infected with malaria or disease, all its occupants will die, and the house cannot be reoccupied for a certain period of time. @G64 @LMalaria @L@PMalaria is most prevalent close to water and marshland. The 'Risks: Malaria' overlay shows which houses are more likely to succumb to this illness.   @PAccess to clean water from a Water Supply and insect repellent provided by a local Apothecary both greatly reduce the risk of malaria for any given household. Like most buildings, the Apothecary only functions when it has road access and labor. @G63 @LDisease @L@PPhysicians help to reduce the risk of disease by administering medicines to the houses they serve. A steady supply of food is also essential to disease prevention. The 'Risks: Disease' overlay shows which houses are in danger of succumbing to disease." }
-    }
-    message_requests_from_other_cities {
-        id: 251
-        type: 2
-        message_type: 4
-        size [40, 30]
-        title {
-            text: "Requests from other cities"
-            pos [0, 20]
-        }
-        content {
-            text: "One of your fellow cities is in need, and has made a request of you. If you want to remain on good terms with the rest of the growing Kingdom, it is usually best to respond to requests like this willingly and promptly. @G65   @POnce your Storage Yards hold enough of the desired item, consult your Political Overseer to dispatch a delivery to the city in question."
-        }
-    }
-    message_fire_in_the_village {
-        id: 252,
-        type: 2,
-        message_type: 4,
-        size [40, 30]
-        title { text: "Fire in the village!" }
-        content { text: "A fire has broken out in the village! @L@PTo protect against future fires, you can now build Firehouses.  @PLike most non-residential buildings in the village, the Firehouse needs workers in order to operate. To find employees, someone is dispatched from the building in search of occupied houses. Once some housing is located, the building has access to employees, though this does not necessarily mean there are enough workers in the village to fill all vacant jobs. Once staffed, the Firehouse can send fire marshals out to patrol the village.  @PFire marshals inspect buildings on their routes for fire hazards, reducing their risk of catching fire as they pass. Fire marshals can provide their services to any building within two spaces of a road. @G67 @PIf he discovers a fire, the marshal moves in to douse the flames with buckets of water, then returns to his normal patrol. @G66 @PClick on 'Overlays: Risks' to see which buildings are in danger of catching fire.  If a building burns down, you can right-click on the pile of rubble left behind to learn what was there before the fire. @L@LMessages @L@PWhen you hear the chime that sounded when this panel appeared, that means a message has arrived for you. To read a message, click on the message button. @L@PSome urgent messages (like this one) are presented to you before being stored with your other messages. Less urgent notices go directly to your message box without being specially displayed, so be sure to listen for the chime.  Special instructional messages (like this one) are marked with a blue scroll so you can easily refer back to them when needed." }
-    }
-    message_tutorial_collapsed_building {
-        id: 253,
-        type: 2,
-        message_type: 4,
-        size [40, 30]
-        title { text: "Collapsed Building" }
-        content { text: "Certain large structures in your city will collapse without adequate maintenance. To ensure this does not happen, build an Architect's Post. Like the Firehouse, this structure dispatches workers, in this case architects, to patrol the streets and repair any damaged buildings encountered. @G68 @L@PClick on 'Overlays: Risks' to see which buildings are in danger of catching fire or collapsing." }
-    }
-    message_tutorial_education {
-        id: 254
-        type: 2
-        message_type: 4
-        size [40, 30]
-        title { text: "Education", pos [0, 15] }
-        content {
-            text: "Now that you've built up this city somewhat, it's time to provide education for some citizens.  @L@PSchools and Libraries cannot educate the people without papyrus on which to write. @G69 @PReed Gatherers supply Papyrus Makers with the necessary raw materials, and papyrus is then distributed directly to the city's educational facilities."
-        }
-    }
-    message_tutorial_clean_water {
-        id: 255
-        type: 2
-        message_type: 4
-        size [40, 30]
-        title {
-            text: "Clean Water",
-
-        }
-        content {
-            text: "Well done! You've managed to supply this village's Granary with food. Now the villagers need access to clean water from a Water Supply, which is much preferred over well water.    @L@LWater Supply @L@PLike Wells, these must be built on land with underlying ground water, as indicated by the presence of green grass growing. Water Supplies also need access to employees in nearby housing. @G70   @L@POnce up and running, a Water Supply will dispatch a water carrier to deliver buckets of clean drinking water to all the houses in his immediate vicinity.  Click 'Overlays: Water', to see which houses have access to clean water from a Water Supply, to simple well water, or to no water source at all. @L@LMission Briefing and Objectives @PTo complete this mission, you need to provide six 'sturdy huts' with food from a Bazaar, so they'll evolve into 'meager shanties'.  Click on the scroll icon to review your mission objectives in this and any other mission."
-        }
-    }
-
-    message_tutorial_municipal_structures {
-    id: 256,
-        type: 2
-        message_type: 4
-        size [40, 30]
-        title { text: "Municipal Structures" }
-        content {
-            text: "Great job! You've gotten some industry up and running, and now you can think about making a few improvements to your city. Beautification can be used to make some neighborhoods more desirable, while other Municipal Structures can help things run more efficiently.   @L@LGardens, Statues and Plazas@G72 @PBy making the area surrounding them more attractive, Gardens, Statues and Plazas can help houses to evolve.  Several Garden plots can be placed next to each other to form larger parks. Place Plazas on paved roads to enhance their appearance and improve the desirability of nearby land.  @L@LRoad Blocks @G62 @PRoad Blocks can be used to guide your city's walkers.  Some walkers have a specific destination in mind, while others do not.  They simply roam the streets, bestowing their benefits on any buildings they happen to pass.  Road Blocks prevent the passage of these walkers, but allow those with a specific destination to pass through and complete their errands. @L@LWater Crossings @G71 @PFerries can help your city run more smoothly. Carefully placed water crossings let the inhabitants of your city reach otherwise inaccessible parts of the landscape to find prey or other valuable resources. In some cases, they can improve the timeliness of certain delivery people by shortening their journeys."
-        }
-    }
-    message_tutorial_monuments_and_more {
-        id: 257
-        type: 2
-        message_type: 4
-        size [40, 30]
-        title {
-            text: "Monuments and More!"
-        }
-        content {
-            text: "Since you've made it this far in the demo, it's time for you to sample a little more of what Pharaoh has to offer. Be sure to consult your newly available advisors for more information and help in running your burgeoning city. @L@LMonuments @L@PYou can now start to build your Mastaba tomb! To place the mastaba, click on the 'Religious Structures: Monuments' button.  You'll need a supply of bricks, plus bricklayers and peasant laborers (supplied by Workcamps) to complete this 'monumental' task...and you only have eleven years in which to do it!@G75 @L@LOther Household Amenities @L@PIn addition to pottery, Egyptian households need a supply of beer and linen (plus a few other things not available in this demo!). Beer is made at a Brewery, from barley grown on local farms. Linen is made by a Weaver from flax, another local crop. Like food and pottery, both beer and linen are distributed to houses by the Bazaar. @L@LLaw and Order @L@PA magistrate patrolling from his Courthouse helps to reduce the risk of crime, by hearing grievances and making sure that cooler heads prevail. @L@LHealth and Sanitation @L@PEvery city needs a few embalmers to ensure sanitation, and to provide its more sophisticated inhabitants with proper burial rites. The Mortuary uses linen (made by a Weaver), and confers embalming services on houses in the surrounding area. Dentists provide the houses they serve with much desired dental care. @L@LEducation @L@PSchools and Libraries cannot educate the people without papyrus on which to write. Reed Gatherers supply Papyrus Makers with the necessary raw materials, and papyrus is then distributed directly to the city's educational facilities. @G69 @L@LWarships @L@PYou might need to defend your city's shores with sturdy warships. You'll need a Wood Cutter to supply timber to the Shipwright, which fashions these combat vessels for Warship Wharves. @L@LTaxation @L@PAlthough you cannot acquire revenue through trade and exports in this demo, you can squeeze a few debens out of your population through taxation. Build enough Tax Collectors to cover the whole city, and especially its most expensive housing."
-        }
-    }
-    message_tutorial_the_gods_of_egypt {
-        id: 258
-        type: 2
-        message_type: 4
-        size [40, 30]
-        title { text: "The Gods of Egypt" }
-        content {
-            text: "An Egyptian city cannot truly flourish without suitable places of worship, in the form of religious Temples and Shrines. These should be located close to the homes that they serve, and must be dedicated to one of five gods:  @L@POsiris - God of the Nile @PRa - God of the Kingdom @PPtah - God of Craftsmen @PSeth - God of Destruction @PBast - Goddess of the Home @L@PEvery city has different religious tendencies. In a given city, one god is usually held in particularly high esteem - and is referred to as its 'patron' god - while the other gods are worshipped as mere 'local deities' (and others may be completely unknown). The patron god of Thinis is Bast. @PBoth patron gods and local deities can become hostile if not shown the respect due their positions.  To appease the gods, build enough Temples and Shrines dedicated to each of them to serve your current population. @PA working Temple sends a priest through nearby neighborhoods, granting residents access to the worship of his god. @G73  @LFestivals @PFestivals are another way to appease the gods.  Build a Festival Pavilion in the city, and instruct your Overseer of the Temples to hold a festival for one of the gods. @L@LOverseer of the Temples @L@PConsult the Overseer of the Temples to determine the status of each of the gods in any particular city, and whether the gods are sufficiently appeased. Lightning bolts indicate that the god is feeling hostile toward your city, while a blue mystic symbol indicates that the god is feeling benevolent toward your city. The more you see of either, the more likely your city is to feel the god's presence (for better or worse!). @PClick 'Overlays: Religion' to see which houses in your city are served by Temples."
-        }
-    }
-    message_tutorial_industry {
-        id: 259
-        type: 2
-        message_type: 4
-        size [40, 30]
-        title { text: "Industry" }
-        content { text: "Now that you've given your people basic food and water, you can enhance their lifestyle with other goods, such as pottery.  \t @L@LIndustry and Pottery @L@PBuild a Clay Pit close to water, and a Potter nearby. Make sure these have access to labor as usual, and before long a cart will deliver clay to the Potter, who will create pottery for your city.  @PBuild a Storage Yard to store the final product as well as any excess clay the Potter does not need (one Clay Pit can usually supply enough clay for two Potters).   @PWorkers from the Bazaar will collect the pottery from the Storage Yard and distribute it just as they do food. @G74 @LIndustries like pottery also provide your city's inhabitants with much-needed jobs. You can now call upon your Overseer of the Workers to assist in allocating your workforce." }
-    }
-    message_tutorial_trade_with_other_cities {
-        id: 260
-        type: 2
-        message_type: 4
-        size [40, 30]
-        title { text: "Trade with other Cities" }
-        content { text: "Now that you have managed to educate some of your people, you might want to generate additional revenue by selling any surplus papyrus you have to neighboring cities.  You'll also need to import bricks from Perwadjyt in order to build the sacred mastaba tomb.  When you're ready, click on the World Map icon [graphic here] to see what other cities there are in the known world, and to begin setting up trade." }
-    }
-
-    message_tutorial_flooded_clay_pit {
-        id: 271
-        type: 2
-        message_type: 1
-        
-        size [30, 20]
-        title { text: "Flooded Clay Pit" }
-        content { text: "One of our Clay Pits suffered a terrible flood. We had to destroy the Clay Pit to prevent others from falling in." }
-    }
-    
-    message_kingdom_road_blocked {
-        id: 279
-        type: 2
-        message_type: 1
-        
-        size [30, 20]
-        title { text: "Kingdom Road blocked" }
-        content { text: "Recent construction blocked the @57Kingdom&road running through these lands.  Royal architects reopened this vital route...but they had to remove a building or two in the process!" }
-    }
-    
-    message_wrath_of_ra {
-        id: 280
-        type: 2
-        message_type: 1
-        
-        size [30, 20]
-        title { text: "Wrath of Ra" }
-        video { text: "@23" }
-        content { text: "Ra punishes your arrogance by severely lowering your reputation throughout the Kingdom. As you spurned the god, so shall other Egyptians belittle you." }
-    }
-
-    message_wrath_of_seth {
-        id: 281
-        type: 2
-        message_type: 1
-        
-        size [30, 20]
-        title { text: "Wrath of Seth" }
-        video { text: "@21" }
-        content { text: "Your disregard for Seth prompts the god to destroy all of your ships!" }
-    }
-
-    message_wrath_of_seth_2 {
-        id: 281
-        type: 2
-        message_type: 1
-        
-        size [30, 20]
-        title { text: "Wrath of Seth 2" }
-        video { text: "@21" }
-        content { text: "Your disregard for Seth prompts the god to destroy all of your ships!" }
-    }
-
-    message_the_world_map {
-        id: 282
-        type: 2
-        message_type: 4
-        size [40, 30]
-        title {
-            text: "The World Map",
-
-        }
-        content {
-            text: "The World Map shows the location of your own city, as well as other cities in the world.  Here you can pay to open up trade routes with any cities willing to trade.   @L@LOther Cities  @LCities who wish to engage in trade appear on the map in full color and fly a flag.  Cities that will not trade with your city are muted.  To set up a trade route, click on the city you wish to do business with.   @L@LImporting and Exporting @LOnce you set up a trade route, you'll still need to instruct the Overseer of Commerce as to which resources and commodities you wish to import or export.  You can never import and export the same item at the same time."
-        }
-    }
-
-    message_tutorial_monuments {
-        id: 283
-        type: 2
-        message_type: 4
-        size [40, 30]
-        title { text: "Monuments" }
-        content {
-            text: "With a supply of bricks, you're now ready to begin work on the sacred mastaba tomb.  Most monuments require both skilled and unskilled workers.   @L@LConstruction Guilds @LConstruction Guilds supply the skilled labor needed to erect monuments.  The mastaba is made entirely of bricks, and requires only Bricklayers' Guilds to build it.  You can employ as many Bricklayers' Guilds as your economy can support, but make sure you also have enough bricks being delivered to the construction site to keep them busy. @POnce the Bricklayers' Guild has adequate labor, it will dispatch bricklayers to the construction site, where they will wait for a delivery of bricks by unskilled peasant laborers. @L@LPeasant Labor @LOnce there are some bricklayers awaiting supplies at the monument site, gangs of peasant laborers will begin to haul loads of bricks to them.  Because these same laborers also must tend the fields on the flood plain, you may find that work on the monument slows down somewhat when the flood has receded and the peasants return to their fields.  You can construct additional Work Camps, so that any surplus laborers not needed to tend the fields may work on the monument year-round. @G75 @L@LBegin by clicking on the Religious Structures icon, then search for a suitable location in which to place this large building."
-        }
-    }
-    
-    message_the_finer_things {
-        id: 284
-        type: 2
-        message_type: 4
-        size [40, 30]
-        title {
-            text: "The Finer Things"
-        }
-        content {
-            text: "Temple Complexes @LAs devotion to their patron gods continues to grow, the Egyptian people demand bigger and bigger places of worship.  Most cities will want to erect a Temple Complex to their chosen god, so that they may fully partake of his or her benevolence.  Once built, the Temple Complex may be expanded through the addition of an Oracle and an Altar, each dedicated to other, lesser gods.  These gods, too, will impart certain benefits to the city.   @L@LJewelry @LWith a supply of gemstones, Jewelers in your city can fashion jewelry.  Jewelry is one type of valuable luxury good, which the higher social classes in the city demand.  @L@LLuxury Goods @LIn addition to locally made Jewelry, the Egyptian people prize certain other luxury goods, which are available only through importation.  A city needs access to more than one type of luxury good in order to become truly civilized.  @L@LQuarrying Stone @LTo quarry stone, a highly sought after building material, build a quarry next to a rock outcropping.  Quarrymen will deliver stone blocks, one at a time, to the Storage Yard.  Make sure to employ architects to ensure that quarries don't cave in!"
-        }
-    }
-
-    message_innovations {
-        id: 285
-        type: 2
-        message_type: 4
-        size [40, 30]
-        title {
-            text: "Innovations"
-        }        
-        content {
-            text: "Meadow Farming @LSome land is fertile enough for farming, even though it's not situated on the flood plain.  You can identify such meadow areas by tall, yellow plant growth.  Some farms planted on meadows can produce more than one harvest per year, though the yield is usually somewhat less than that of a floodplain farm. @G59   @L@LIrrigation @LEmploy irrigation to increase the fertility of any farmland. Irrigation ditches on the flood plain can be connected directly to the Nile, but you'll need a Water Lift to elevate the water onto dry land.   @L@LWater Lifts @LWater Lifts can be built on the edge of the flood plain, or on the coast, where you can raise water directly from the river up to dry land. Connect an irrigation ditch to the back of the Water Lift to bring irrigation water to inland farms.  @L@LStonemasons and Carpenters @LTwo new types of Construction Guild will be needed to erect the stepped pyramid: the Stonemasons' Guild and the Carpenters' Guild.  Stonemasons from the Guild wait at the construction site for blocks of stone, hauled there by peasant laborers.  These blockhaulers need ramps to reach the higher levels of the structure.  When it's time for the stepped pyramid to rise another level, a carpenter carries wood from the Guild to the site, and constructs a ramp for the blockhaulers. @L@LPreserving the Dead @LEvery city needs a few embalmers to ensure sanitation, and to provide its more sophisticated inhabitants with proper burial rites. The Mortuary uses linen, made by a Weaver, and confers embalming services on houses in the surrounding area."
-        }
-    }
-
-    message_troops_return_failed {
-        id: 287
-        type: 2
-        
-        size [30, 20]
-        title { text: "Company returns" }
-        content { text: "Under cover of night, surviving members of your disgraced company slink back to the comfort of the city's Forts, determined to never again suffer humiliation in battle." }
-    }
-    message_troops_return_victorious {
-        id: 288
-        type: 2
-        
-        size [30, 20]
-        title {
-            text: "Heroes return!"
-        }
-        content {
-            text: "Your victorious soldiers are home from the war. Their numbers might be reduced somewhat since they left, but their comrades' sacrifice was for the good of Egypt! "
-        }
-    }
-    message_city_retaken {
-        id: 289,
-        type: 2,
-        
-        size [30, 20]
-        title { text: "City retaken" }
-    }
-    message_osiris_is_upset {
-        id: 290
-        type: 2
-        
-        size [30, 20]
-        title { text: "Osiris is upset" }
-        content { text: "The lord of the Nile flood will punish this city for its lack of devotion, and next year's flood will destroy all farms in its path!" }
-    }
-    message_ra_is_upset_2 {
-        id: 291
-        type: 2
-        
-        size [30, 20]
-        title { text: "Ra is upset" }
-        video { text: "@23" }
-        content { text: "Angered by your disrespect for him, Ra lowers your own reputation in the eyes of the Kingdom." }
-    }
-    message_ptah_is_upset {
-        id: 292
-        type: 2
-        
-        size [30, 20]
-        title { text: "Ptah is upset" }
-        video { text: "@22" }
-        content { text: "Dismayed by your disinterest in him, Ptah destroys one of your Storage Yards and whatever goods it held." }
-    }
-    message_seth_is_upset {
-        id: 293
-        type: 2
-        
-        size [30, 20]
-        title { text: "Seth is upset" }
-        video { text: "@21" }
-        content { text: "To remind you that Seth protects only those who show the proper respect, the god destroys your best company of soldiers and razes their Fort." }
-    }
-    message_bast_is_upset {
-        id: 294
-        type: 2
-        
-        size [30, 20]
-        title { text: "Bast is upset" }
-        video { text: "@20" }
-        content { text: "The goddess Bast, stung by your indifference, sends a plague to stalk your city. Remember that health and happiness flow from her." }
-    }
-    message_blessing_from_osiris {
-        id: 295
-        type: 2
-        
-        size [30, 20]
-        title { text: "A blessing from Osiris" }
-        video { text: "@24" }
-        content { text: "Osiris, god of the Nile flood, blesses this city for its sincere devotion. All farms on the flood plain will harvest double what they had expected this season!" }
-    }
-    message_blessing_trade_from_ra {
-        id: 296
-        type: 2
-        
-        size [30, 20]
-        title { text: "A blessing from Ra" }
-        video { text: "@23" }
-        content { text: "Ra rewards his faithful! For the next 12 months, your city can sell its exports for half again their usual value." }
-    }
-    message_blessing_trade_from_ptah {
-        id: 297
-        type: 2
-        
-        size [30, 20]
-        title { text: "A blessing from Ptah" }
-        video { text: "@22" }
-        content { text: "Ptah singles out a Storage Yard with excess capacity, and increases the gems, clay, pottery, flax, linen, or jewelry already present there." }
-    }
-    message_blessing_trade_from_seth {
-        id: 298
-        type: 2
-        
-        size [30, 20]
-        title { text: "A blessing from Seth" }
-        video { text: "@21" }
-        content { text: "Seth approves of your fear and obedience, and so will strike down the next enemies who dare to violate your city." }
-    }
-    message_blessing_from_bast {
-        id: 299,
-        type: 2,
-        
-        size [30, 20]
-        title { text: "A blessing from Bast" }
-        video { text: "@20" }
-        content { text: "Because this city is so faithful and dedicated, Bast blesses its houses and Bazaars with a bounty of food and goods!" }
-    }
-    message_the_gods_are_wrathful {
-        id: 300
-        type: 2
-        
-        size [30, 20]
-        title { text: "The gods are wrathful" }
-        content { text: "At least one god is angry with the city. Your people beg you to build more Temples...and they always welcome a festival, too." }
-    }
-    message_illness {
-        id: 301,
-        type: 2,
-        
-        size [30, 20]
-        title { text: "Illness" }
-        video { text: "smk\\sick.smk" }
-    }
-    message_disease {
-        id: 302,
-        type: 2,
-        
-        size [30, 20]
-        title { text: "Disease" }
-        video { text: "smk\\sick.smk" }
-    }
-    message_pestilence {
-        id: 303,
-        type: 2,
-        
-        size [30, 20]
-        title { text: "Pestilence" }
-        video { text: "smk\\sick.smk" }
-    }
-    message_the_spirit_of_seth {
-        id: 304,
-        type: 2,
-        
-        size [30, 20]
-        title {
-            text: "The spirit of Seth",
-        }
-        video {
-            text: "@21"
-        }
-        content {
-            text: "Seth remembers his promise to protect you, and is delighted to slay those who were foolish enough to threaten your city."
-        }
-    }
-    message_the_emperors_respect {
-        id: 305,
-        type: 2,
-        
-        size [30, 20]
-        title {
-            text: "The Emperor's respect",
-        }
-    }
-    message_the_emperors_respect_1 {
-        id: 306,
-        type: 2,
-        
-        size [30, 20]
-        title { text: "The Emperor's respect" }
-    }
-    message_the_emperors_respect_2 {
-        id: 307,
-        type: 2,
-        
-        size [30, 20]
-        title { text: "The Emperor's respect" }
-    }
-    message_working_hippodrome {
-        id: 308,
-        type: 2,
-        
-        size [30, 20]
-        title { text: "Working hippodrome" }
-        video { text: "smk\\\\1st_chariot.smk" }
-    }
-    message_compliance_now_possible {
-        id: 309,
-        type: 2,
-        message_type: 2,
-        
-        size [30, 20]
-        title { text: "Compliance now possible" }
-        content { text: "Your Political Overseer reports that the city now has enough debens  to fulfill the recent request." }
-    }
-    message_tutorial_finances {
-        id: 310,
-        type: 2,
-        message_type: 4
-        size [40, 30]
-        title { text: "Finances" }
-        content {
-            text: "Taxation @LA large city needs to bring in additional revenue, beyond its initial funding.  One way to accomplish this is through taxation.  In order to levy taxes, your city will need a Palace and Tax Collectors.  Make sure to build enough Tax Collectors to cover the whole city, especially its more well-to-do neighborhoods.  Remember, the better the quality of life enjoyed in a given home, the more taxes its occupants will pay. @L@LYour Personal Salary @LIf you build a Mansion for yourself, you can draw a personal salary from the city's treasury.  Personal funds are retained by your family, to be used whenever the situation demands, even in subsequent missions.  Beware, though, as awarding yourself a higher salary than is due your position can have detrimental effects on your standing in the kingdom."
-        }
-    }
-    message_mission_defeat {
-        id: 311,
-        type: 2,
-        
-        size [30, 20]
-        title { text: "Defeat!" }
-        content { text: "O bitter day! Your ignoble end should have been unthinkable. You have failed your people, your ancestors and your descendants. Now Egypt yearns for another champion to take your place..." }
-    }
-    message_mission_victory {
-        id: 312,
-        type: 2,
-        
-        size [30, 20]
-        title { text: "The Winner" }
-        video { text: "smk\\win_game.smk" }
-        content { text: "Unused entry 312" }
-    }
-    message_enemy_rome_army_attacks {
-        id: 313
-        type: 2
-        message_type: 7
-        
-        size [30, 20]
-        title { text: "Enemy army attacks" }
-        video { text: "smk\\spy_army.smk" }
-        content { text: " Enemies of Rome are at the outskirts of your city. Expect them to drop in for an urn or two of wine - and whatever else strikes their fancy!" }
-    }
-    message_storage_yards_ready_to_fulfill_request {
-        id: 314,
-        type: 2,
-        message_type: 2,
-        
-        size [30, 20]
-        title {
-            text: "Compliance now possible",
-        }
-        content {
-            text: "Your Political Overseer reports that city Storage Yards  now have enough of these goods to fulfill the recent request."
-        }
-    }
-    message_kingdom_road_obstructed {
-        id: 315,
-        type: 2,
-        
-        size [30, 20]
-        title {
-            text: "Kingdom road obstructed",
-        }
-        content {
-            text: "Architects had to demolish some recent construction to restore free passage to the @57Kingdom&road."
-        }
-    }
-    message_no_working_dock {
-        id: 316,
-        type: 2,
-        
-        size [30, 20]
-        title { text: "No Working Dock" }
-        content { text: "Although you told your Overseer of Commerce to commence trade with a sea merchant, the merchant cannot land at our city! You need to construct a dock and supply it with workers. Once you have a dock operating, ships will come and begin trading." }
-    }
-    message_fishing_boats_cant_navigate {
-        id: 317,
-        type: 2,
-        
-        size [30, 20]
-        title { text: "Fishing Boats Can't Navigate" }
-        content { text: "Our fishermen report that a Bridge blocks their route! Ships cannot sail under Bridges. Remove the Bridge to let the fishing boats supply your city with fresh fish." }
-    }
-    message_health {
-        id: 318,
-        type: 3,
-        
-        size [30, 20]
-        title {
-            text: "Health",
-        }
-        content {
-            text: "People like to be healthy. If they eat well, and are visited regularly by a doctor from a clinic, they should be healthy. If their health ever drops, they have a greater chance of falling ill. @PHospitals come in handy when citizens get sick. Anyone who is sick needs a hospital to cure them. If there is no room in the hospital, they will die. @PSo: clincs help prevent illness, while hospitals cure it. @L@LOccasionally, a plague might strike, and Bast has been known to send disease to a city which has angered her. At such times good hospital coverage is the only defense. Your Overseer of Public Health can tell you whether you have good hospital coverage or not."
-        }
-    }
-    message_messages_await_you {
-        id: 319,
-        type: 3,
-        
-        size [30, 20]
-        title {
-            text: "Messages Await You",
-        }
-        content {
-            text: "When you hear a fanfare, it means that your scribe has received another message for you, and stored it in his records. @L@LSome messages, like this one, appear opened automatically for you. These are very urgent matters that your scribe feels you should see immediately. You can review them later on, if you wish, by clicking your message button. @PImportant, rather than urgent, messages are signaled by an important fanfare, but do not appear automatically. Most messages are regular messages with a regular fanfare, which you can view at your convenience. @L@LAll messages are stored by your scribe so you can refer back to them when you want to. You can also delete them if you wish to. If you want more information, choose Help from the menu bar and click on 'Messages From Your Scribes' (near the end of the Table of Contents)."
-        }
-    }
-    message_local_uprising {
-        id: 320,
-        message_type: 7
-        
-        size [30, 20]
-        urgent: 1
-        title { text: "Local uprising" }
-        content { text: "Inspired by Seth, some locals have decided to air various grievances they have long held against you!!" }
-    }
-    message_small_blessing_from_osiris {
-        id: 321
-        type: 2
-        
-        size [30, 20]
-        title { text: "A small blessing from Osiris" }
-        video { text: "@24" }
-        content { text: "Osiris has noticed your city's faithful dedication. The next Inundation of the Nile will be better than previously expected." }
-    }
-    message_minor_blessing_from_ra {
-        id: 322
-        type: 2
-        
-        size [30, 20]
-        title { text: "A Minor blessing from Ra" }
-        video { text: "@23"}
-        content { text: "Encouraged by your proper awe, Ra lifts your reputation somewhat throughout the Kingdom." }
-    }
-    message_minor_blessing_from_ptah {
-        id: 323
-        type: 2
-        
-        size [30, 20]
-        title { text: "A Minor blessing from Ptah" }
-        video { text: "@22" }
-        content { text: "Ptah is pleased by your attention, and so ensures that Shipwrights, Weavers or Jewelers throughout your city are fully stocked with raw materials." }
-    }
-    message_minor_blessing_from_seth {
-        id: 324
-        type: 2
-        
-        title { text: "A Minor blessing from Seth" }
-        video { text: "@21" }
-        content { text: "To reward your obedience to him, Seth vows to protect any of your soldiers sent to battle in far-off lands." }
-    }
-    message_small_blessing_from_bast {
-        id: 325
-        type: 2
-        
-        size [30, 20]
-        title { text: "A small blessing from Bast" }
-        video { text: "@20" }
-        content { text: "Bast is pleased that your city honors her. She has thrown a festival so that all the gods will notice your piety." }
-    }
-    message_disease_strikes {
-        id: 326,
-        type: 2,
-        message_type: 1,
-        
-        size [30, 20]
-        title {
-            text: "Disease Strikes",
-        }
-        content {
-            text: "Disease struck a household with poor healthcare access.  People are dying, and you can't help them.  Improve unhealthy areas to stave off a recurrence."
-        }
-    }
-    message_a_plague {
-        id: 327,
-        type: 2,
-        message_type: 1,
-        
-        size [30, 20]
-        title {
-            text: "A Plague",
-        }
-        content {
-            text: "Plague stalks the city!  We feared that this would happen, with overall @53city&health so poor.  Pray that our Apothecaries can handle it."
-        }
-    }
-    message_malaria {
-        id: 328,
-        type: 2,
-        message_type: 1,
-        
-        size [30, 20]
-        title {
-            text: "Malaria",
-        }
-        content {
-            text: "Some homes have come down with malaria.  Better health measures could prevent this needless waste of human life!"
-        }
-    }
-    message_blessing_reputation_from_ra {
-        id: 329,
-        type: 2,
-        
-        size [30, 20]
-        title { text: "A blessing from Ra" }
-        video { text: "@23" }
-        content {
-            text: "You have honored Ra, and so your reputation throughout the Kingdom is substantially better than it was!"
-        }
-    }
-    message_minor_blessing_trading_from_ra {
-        id: 331,
-        type: 2,
-        
-        size [30, 20]
-        title { text: "A minor blessing from Ra" }
-        video { text: "@23" }
-        content { text: "To acknowledge your respectful attitude, Ra inspires your trading partners to trade more than before." }
-    }
-    message_wrath_of_ra_2 {
-        id: 332,
-        type: 2,
-        
-        size [30, 20]
-        title { text: "Wrath of Ra" }
-        video { text: "@23" }
-        content { text: "You incurred Ra's anger! The god lowered the opinion of your city's goods, and your trade partners will now trade far less than they did previously." }
-    }
-    message_wrath_of_ra_3 {
-        id: 333,
-        type: 2,
-        
-        size [30, 20]
-        title { text: "Wrath of Ra" }
-        video { text: "@23" }
-        content { text: "As you have forsaken Ra, so shall your trade partners forsake you. No trade ships or caravans will visit your city for one full year." }
-    }
-    message_ra_is_upset {
-        id: 334,
-        type: 2,
-        
-        size [30, 20]
-        image { id: 224, pos [15, 15] }
-        title { text: "Ra is Upset!" }
-        video { text: "@23" }
-        content { text: "As you have spurned Ra, so shall your trade partners spurn your city's goods. They have decided to reduce the amount they are willing to trade with you." }
-    }
-    message_wrath_of_bast_2 {
-        id: 335,
-        type: 2,
-
-        size [30, 20]
-        title { text: "Wrath of Bast", }
-        content { text: "Your city escaped the wrath of Bast -- the goddess sought to level your finest houses, but found no homes worthy of her fury this day. Be wary, nonetheless, of provoking the Goddess of the Home, for she is patient and her memory is long. Show Bast the respect she demands before she returns." }
-    }
-    message_wrath_of_ra_4 {
-        id: 336,
-        type: 2,
-        
-        size [30, 20]
-        title {
-            text: "Wrath of Ra",
-        }
-        content {
-            text: "Ra shall see to it that you are punished for your disrespect!"
-        }
-    }
-    message_wrath_of_osiris_3 {
-        id: 337,
-        type: 2,
-        
-        size [30, 20]
-        title {
-            text: "Wrath of Osiris",
-        }
-        video {
-            text: "@24"
-        }
-        content {
-            text: "Osiris is outraged, though he is powerless to punish your city.  Enjoy this while you can, for your city may not be so lucky next time."
-        }
-    }
-    message_blessing_inundation_from_osiris {
-        id: 340,
-        type: 2,
-        
-        size [30, 28]
-        title { text: "Osiris Blesses you" }
-        video { text: "@24" }
-        content { text: "Osiris rewards those who pay him worship. The next Inundation will be significantly better than we were expecting." }
-    }
-    message_wrath_of_osiris_4 {
-        id: 341,
-        type: 2,
-        
-        size [30, 20]
-        title { text: "Wrath of Osiris" }
-        video { text: "@24" }
-        content { text: "Osiris reminds you that respect is due. The next Inundation will be poorer than we had expected." }
-    }
-    message_mediocre_inundation_seers {
-        id: 342,
-        type: 2,
-        
-        size [30, 20]
-        urgent: 1,
-        title { text: "Nilometer prediction" }
-        content { text: "Our seers warn that the coming year's Inundation is likely to be mediocre at best." }
-    }
-    message_poor_inundation_seers {
-        id: 343,
-        type: 2,
-        
-        size [30, 20]
-        urgent: 1,
-        title { text: "Nilometer prediction" }
-        content { text: "Priests expect a poor Inundation in the coming year." }
-    }
-    message_no_inundation {
-        id: 344,
-        type: 2,
-        
-        size [30, 20]
-        urgent: 1,
-        title { text: "Nilometer prediction" }
-        content { text: "Terrible news! All the omens suggest that there will be no Inundation at all this year!" }
-    }
-    message_poor_inundation {   
-        id: 345,
-        type: 2,
-        
-        size [30, 20]
-        urgent: 1,
-        title { text: "Nilometer prediction" }
-        content { text: "Priests predict a poor Inundation for the coming year. Your people beseech you to make sure Osiris is appeased, and pray for better floods in coming years." }
-    }
-    message_mediocre_inundation {
-        id: 346,
-        type: 2,
-        
-        size [30, 20]
-        urgent: 1,
-        title { text: "Nilometer prediction" }
-        content { text: "We expect the next Inundation to be mediocre, at best. Perhaps Osiris will bestow his benevolence upon is, if we make sure to appease him." }
-    }
-    message_good_inundation {
-        id: 347,
-        type: 2,
-        
-        size [30, 20]
-        urgent: 1,
-        title { text: "Nilometer prediction" }
-        content { text: "All portents point to a good Inundation in the coming year." }
-    }
-    message_excellent_inundation {
-        id: 348,
-        type: 2,
-        
-        size [30, 20]
-        urgent: 1,
-        title { text: "Nilometer prediction" }
-        content { text: "Farmers are overjoyed by predictions for an excellent Inundation in the coming year!" }
-    }
-    message_perfect_inundation {
-        id: 349,
-        type: 2,
-        
-        size [30, 20]
-        urgent: 1,
-        title { text: "Nilometer prediction" }
-        content { text: "Priests predict that the city will be blessed with a perfect Inundation in the coming year!" }
-    }
-    message_temple_complex_to_osiris {
-        id: 350,
-        
-        size [30, 20]
-        title {
-            text: "Temple Complex to Osiris",
-        }
-        subtitle {
-            text: "Religion",
-        }
-        content {
-            text: "When you build a Temple Complex for Osiris, the god is inclined to send better floods from year to year. You can build the following additions onto Osiris' Temple Complex: @L@LAltar of Sebek, God of Fertility @LSebek grants priests of Osiris the power to stretch the city's supplies of food and goods.  As priests of Osiris walk through your city, the people in the houses they pass are suddenly satisfied with less. @L@LOracle of Min, God of Regeneration @LWhen your city honors Min with an Oracle, he speeds the regrowth of trees and reeds, increases the rate at which prey animals reproduce and improves the yield from fishing and hunting. @L@LPeople love living next to a Temple Complex. For more on religion, click @51here. @L@LFind out about Osiris, Sebek and Min in ancient Egypt by clicking @376here."
-        }
-    }
-    message_temple_complex_to_ra {
-        id: 351,
-        
-        size [30, 20]
-        title {
-            text: "Temple Complex to Ra",
-        }
-        content {
-            text: "Ra smiles upon the city when it has dedicated a Temple Complex to him, and he makes sure that others in the Kingdom smile upon your city, too.  Building a Temple Complex for Ra increases your Kingdom rating and, should the city find itself in debt, allows you to pay a lower interest rate.  Building an Altar and Oracle onto the Temple Complex of Ra helps you manage the city's affairs: @L@LAltar of Ma'at, Goddess of Justice @LThrough priests of Ra, Ma'at bestows a calming effect on your city.  As they pass by houses, Ra's priests dissuade individual residents from thievery.  The simple presence of the Altar reduces the city's overall risk of crime breaking out. @L@LOracle of Horus, God of the Pharaohs @LThis Oracle increases citizens' dedication to your city and to the Kingdom, encouraging them to accept a lower wage without affecting their mood. @L@LPeople love living next to a Temple Complex. For more on religion, click @51here. @L@LFind out about Ra, Ma'at and Horus in ancient Egypt by clicking @377here."
-        }
-    }
-    message_temple_complex_to_ptah {
-        id: 352,
-        
-        size [30, 20]
-        title {
-            text: "Temple Complex to Ptah",
-        }
-        content {
-            text: "When you build him a Temple Complex, Ptah speeds the production of many of your city's industries, including Gold Mines, Copper Mines Gemstone Mines, Clay Pits, Shipwrights, Jewelers and Weavers.  The Altar and Oracle in Ptah's Temple Complex hasten the output of other industries and improve educators' abilities: @L@LAltar of Amon, God of the Sun @LHonored by your attention, Amon spurs quarries, Wood Cutters, and Brickworks to work more quickly. @L@LOracle of Thoth, God of Wisdom and Learning @LThoth's goal is to bring the light of learning to as many people as possible.  When you build an Oracle of Thoth, librarians and teachers use less papyrus to educate the city's inhabitants. @L@LPeople love living next to a Temple Complex. For more on religion, click @51here. @L@LFind out about Ptah, Amon and Thoth in ancient Egypt by clicking @378here."
-        }        
-    }
-    message_temple_complex_to_seth {
-        id: 353,
-        
-        size [30, 20]
-        title { text: "Temple Complex to Seth" }
-        content { text: "When a city has a Temple Complex dedicated to him, Seth instills a fierce will in the city's soldiers, granting them more experience, protecting them in battle.  The additions to Seth's Temple Complex are:  @L@LAltar of Anubis, God of Death @LAnubis gives easier access to eternal life for citizens in the city.  With his blessing, Mortuaries need less linen to prepare bodies for eternity.   @L@LOracle of Sekhmet, Goddess of War @LSekhmet endows priests of Seth with the power to reduce the risk of crime in the houses that they pass and to apprehend criminals in the city.  @L@LPeople love living next to a Temple Complex. For more on religion, click @51here. @L@LFind out about Seth, Anubis and Sekhmet in ancient Egypt by clicking @379here." }
-    }
-    message_temple_complex_to_bast {
-        id: 354,
-        
-        size [30, 20]
-        title { text: "Temple Complex to Bast" }
-        content { text: "Building a Temple to Bast brings good fortune to any city.  Bast helps keep citizens happy by making them satisfied with less.  As a result of her benevolence, the rate at which your citizens consume food and goods is reduced, and the effects of entertainers, educators and health providers last longer.  Her sister goddesses also improve life for your citizens: @L@LAltar of Isis, Goddess of Healing @LThrough priestesses of Bast, Isis lays her healing hands on the city's populace, removing plagued walkers from the streets and cleansing any infected houses the priestesses may pass.  Isis also takes care to improve your city's overall health. @L@LOracle of Hathor, Goddess of Joy, Love and Festivity @LHathor, flattered by the Oracle you have built for her, will improve citizens' mood, resulting in a better @39City&Sentiment. @L@LPeople love living next to a Temple Complex. For more on religion, click @51here. @L@LFind out about Bast, Isis and Hathor in ancient Egypt by clicking @380here." }
-    }
-    message_building_firehouse {
-        id: 355,
-        
-        size [30, 20]
-        title {
-            text: "Firehouse",
-        }
-        content {
-            text: "Some buildings in the city can catch fire. Likely candidates include run-down housing and industrial buildings, like Potters.  If you do nothing to stop it, fire can spread through the city, destroying whole sections at one time. To prevent this, build Firehouses near buildings that are likely to catch fire. Fire marshals from Firehouses roam the city (click @42here for more on walkers)and reduce a building's risk of catching fire as they pass by. @PShould a fire break out, nearby fire marshals proceed to the scene to extinguish the flames. If a fire marshal has a long way to travel, the flames could spread and the destruction in your city could be quite severe. @G67 @PThe @18fire&overlay is a helpful guide to fire prevention. The overlay shows the fire marshals at work, but more importantly points out which buildings are especially prone to fire. Use this information to plan the placement of your next Firehouse. @PFirehouses need road access and a labor supply in order to operate. Residents won't relish living near Firehouses."
-        }
-    }
-    message_building_warship_wharf {
-        id: 356,
-        
-        size [30, 20]
-        title {
-            text: "Warship Wharf",
-        }
-        content {
-            text: "Warship Wharves berth warships. The first thing a new Warship Wharf does is order a warship from the @82Shipwright.  @PA Warship Wharf requires both road access and labor. It must also be on straight piece of coastline, and ships must be able to easily navigate to the Wharf. Citizens will not want to live too close to a Warship Wharf. Some sailors, after all, do not have the best reputations. @PWhen a warship is not out doing battle, its crew prefers to be back in the safety of the wharf. Here, the crew can rest up for the next battle. @PRead the entry on @365warships to find out how to maneuver a ship in battle. @L@LAncient Egypt's military tradition is long and storied.  Click @184here to find out more."
-        }
-    }
-    message_building_transport_wharf {
-        id: 357,
-        
-        size [30, 20]
-        title {
-            text: "Transport Wharf",
-        }
-        content {
-            text: "Transport Wharves berth transport ships. The first thing a new Transport Wharf does is order a transport ship from a @82Shipwright.  @PA Transport Wharf requires both road access and labor. It must also be on straight piece of coastline, and ships must be able to easily navigate to the Wharf. Your citizens will not want to live too close to a Transport Wharf.  @PRead the entry on @367transport ships to find out how to maneuver a ship in battle. @L@LAncient Egypt's military tradition is long and storied.  Click @181here to find out more."
-        }
-    }
-    message_building_roadblock {
-        id: 358,
-        
-        size [30, 20]
-        title {
-            text: "Roadblock",
-        }
-        content {
-            text: "Roadblocks help you control the paths @42roaming&walkers take.  When walkers who roam the city encounter a Roadblock, they turn around.  Roadblocks do not affect destination walkers.   @PBuild a Roadblock anywhere that your roaming walkers don't need to go - for example, on the road to your industrial areas.  Be wary, though, of isolating areas entirely from walkers who roam the city.  The same Roadblock that keeps a trader from the Bazaar from wandering into the industrial sector also turns back architects, fire marshals and constables.  It also stops labor recruiters from walking from the industrial area to your housing sector where they find employees. @G62 @PWhen you erect a new Roadblock near an existing building, you might want to watch the building for a moment to ensure that its walker pops out on the correct side of the Roadblock.  Sometimes the building's employees won't grasp your intentions, and they will send their walker off in the wrong direction.  This can be particularly vexing with labor access seekers, because the building that employs them believes that it has access to labor, but the Roadblock prevents the walker from ever reaching the labor pool.  Your only recourse is to rebuild the Roadblock a space farther away. @PRoadblocks don't need employees, and their only restriction is that they be placed on roads. They have no impact on desirability."
-        }
-    }
-    message_building_hunting_lodge {
-        id: 359,
-        
-        size [30, 20]
-        title {
-            text: "Hunting Lodge",
-        }
-        content {
-            text: "Build a Hunting Lodge to send out hunters after their quarry. Ostriches, fowl and antelopes can all be hunted. @PYou can build Hunting Lodges anywhere, although it is wise to place them near their prey, which tends to stay near its breeding grounds.  Hunting Lodges require both labor and road access to function. When they are up and running, you will see a hunter standing in the yard taking target practice. @PHunters proceed from the lodge out into the fields where their prey awaits. After hunters kill their prey, they bring the animal back to the Hunting Lodge where it is made suitable to eat. Once a cartload of game meat is ready, it is brought to the @3Granaries or to the @4Storage&Yards (if they have been told to accept game meat). @G60 @PGame meat can be an important part of citizens' diets. It provides the variety that people crave. The city, however, will most likely not be able to subsist solely on game meat. Herd and flock sizes are limited, so hunting alone cannot provide all the food a large city will need. For more on feeding your people, read about @45farming&and&food production. @PGame meat (along with @89straw) is also used to help feed animals in a @479Zoo.  @PHunting Lodges have a negative effect on @56desirability. @L@LGame meat was used to supplement the ancient Egyptian diet.  And, hunting was enjoyed as sport by the elite.  Click @383here to find out more."
-        }
-    }
-    message_building_cattle_ranch {
-        id: 360,
-        
-        size [30, 20]
-        title {
-            text: "Cattle Ranch",
-        }
-        content {
-            text: "Raise cattle on a Cattle Ranch to provide meat to the city's residents. @PCattle Ranches need to be placed adjacent to a road and need access to labor. They also need straw, either from a @89Grain&Farm or imported from a @47trade&partner. Cattle Ranches do not need to be placed on fertile land, nor do they need access to water. @PRead about @45farming&and&food production to learn more about the place of meat in your citizens' diets. @PCattle ranches stink, and citizens do not enjoy living nearby. @L@LThe ancient Egyptians raised many animals for food.  Click @186here to find out more."
-        }
-    }
-    message_building_gemstone_mine {
-        id: 361,
-        
-        size [30, 20]
-        title {
-            text: "Gemstone Mine",
-        }
-        content {
-            text: "Gems are mined from rocky outcroppings. You can't tell by looking at the rock whether or not it can produce gems. If gems can be mined, Gemstone Mines will be listed in the Industrial Structures: Raw Materials list. Like @95quarries, Gemstone Mines must be placed adjacent to rocky outcroppings, and need laborers and road access.  They are also susceptible to collapse, so be sure to build an @81Architect's&Post nearby. @PGemstone Mines are dusty places, and citizens do not want to live nearby. @L@LRead more about gems in ancient Egypt by clicking @382here."
-        }
-    }
-    message_building_sphinx {
-        id: 362,
-        
-        size [30, 20]
-        title {
-            text: "Sphinx",
-        }
-        content {
-            text: "The Sphinx is an elaborately carved and painted protector of Pyramids. @PTo build a Sphinx, you must first find a location.  Pick 'Sphinx' from the Religious Structures: Monuments list.  A footprint of the sphinx appears.  As you move this footprint around the landscape, it will either be all green, or green with one or more red diamonds.  When the footprint is all green, then you have found a suitable hidden deposit of stone.  Click the mouse button, and the stone will be revealed.  If any red diamonds appear in the footprint, some flaw in the landscape prevents you from building the Sphinx here.   @PNow, the @363stonemasons and @363carpenters can get to work, assuming that you have the necessary wood.  Carpenters build scaffolding that stonemasons climb to carve the Sphinx. @PRight-click on the Sphinx to visit the @369Construction&Foreman for a progress report. @L@LClick @391here to read about the most famous Sphinx."
-        }
-    }
-    message_construction_guilds {
-        id: 363,
-        
-        size [30, 20]
-        title {
-            text: "Construction Guilds",
-        }
-        content {
-            text: "Without Construction Guilds, you won't be able to build the magnificent structures that honor Pharaoh and Egypt. @PThere are four specialized Construction Guilds: Carpenters', Bricklayers', Stonemasons' and Artisans'. Although common laborers from @8Work&Camps provide most of a monument project's muscle power, the expert guilds turn piles of raw materials into the largest and most complex buildings you will build, such as the Pyramids, @362Sphinx, @371Mastabas, @69Sun&Temple, @368Mausoleums and @392Obelisks. Each monument requires its own particular guild workers. @PConstruction guilds must have road access and a local source of labor. Carpenters' Guilds must have a supply wood on hand. Artisans' Guilds need a supply of @470paint and @92clay (for plaster) to add their finishing touches to the burial tombs. Bricklayers and stonemasons wait at the monument site for the materials they need. @PBecause of the noise, your citizens do not like living near construction guilds. @L@LTo learn more about these specialized fields in ancient Egypt, read the entries on @386bricklayers, @385stonemasons, @389carpenters and @472artisans."
-        }
-    }
-    message_building_brickworks {
-        id: 364,
-        
-        size [30, 20]
-        title {
-            text: "Brickworks",
-        }
-        content {
-            text: "Brickworks fashion @92clay and @89straw into bricks.  Bricks are used in the construction of several types of monuments and can also be @47exported for profit. @POnce a Brickworks has labor and road access, it needs a supply of raw materials to function. Brickworks need both straw and clay. Straw is produced on @89Grain&Farms and clay is dug out of the ground at @92Clay&Pits. Both raw materials can also be imported from a @47trade&partner.  @PWhen a Brickworks is producing bricks, you can see brick makers toiling in its yard. Once a load of bricks is produced, the bricks are delivered to a @4Storage&Yard. @PBrickworks make @56undesirable neighbors. @L@LClick @390here to find out more about bricks in ancient Egypt."
-        }
-    }
-    message_building_warship {
-        id: 365,
-        
-        size [30, 20]
-        title {
-            text: "Warship",
-        }
-        content {
-            text: "Warships patrol the waterways, ramming or shooting at other ships that intend to inflict harm on the city.  Warships can also attack soldiers on land with missile fire, provided they are near the coast. A warship is berthed at a @356Warship&Wharf.  You can distinguish it from a transport by its lack of a rear cabin, and its trim style. @L@LAttack Priorities @LNo matter which order you give a warship, its captain always pursues the same agenda when attacking the enemy.  In order of importance, the captain's priorities are: @L@LTransport Ships with Enemy Soldiers on Board  @LThe captain knows that his mission has largely failed if enemy soldiers reach land.  If there are any transport ships carrying enemy soldiers in the city's waters, he attacks them first, before they can unload their invaders. @L@LDisembarked Enemies near the Shore  @LIf the captain fails to prevent enemy soldiers from making landfall, he sails near the shore and rains arrows on any disembarked invaders within range.  @L@LWarships  @LEnemy warships are his third priority.  If there are no transport ships with troops aboard or disembarked enemies, the captain tries to ram any enemy warships that are present.   @L@LEmpty Enemy Transport Ships  @LEmpty enemy transports are your captain's last priority.  He'll attack them if there is nothing else for him to assail. @L@LYour captain reacts quickly to changing situations.  He'll abandon a battle if a higher priority situation develops.  For example, if he is attacking a warship when a transport ship carrying enemy soldiers sails into the area he is protecting, he'll disengage the enemy warship and target the loaded transport.  @L@LWarship Orders @LGive a warship orders by right-clicking on it.  Warships can carry out the following orders: @L@LHold Position   @LWhen told to Hold Position, the warship will not budge from the spot you designate.  It defends itself by turning to face enemy warships to minimize the damage enemies cause by ramming, and attacks enemies in range by shooting arrows.  If several warships are lined up and all have been given the Hold Position order, the warships form a blockade with the goal of keeping invaders out.   @L@LEngage Nearby Enemies   @LWhen told to Engage Nearby Enemies, the warship attacks enemies within a small radius of its location.   @L@LSeek and Destroy All Enemies   @LWhen given this command, the warship patrols the water looking for enemies to defeat.   @L@LRepair   @LShould the warship be damaged in a conflict, clicking this button sends the ship to the Shipwright for needed repairs.  When the Shipwright is finished fixing the ship, it returns to its home wharf.  If the warship is severely damaged, the ship's captain will order it to the Shipwright for repairs on his own.  Shipwrights need wood to effect repairs.   @L@LReturn to Wharf   @LClicking on this option sends the ship back to its home wharf. @L@LTo simply tell a warship to move, click on it and then click on a new location.  When it arrives at the new spot, it will follow the last order given.  If you click on an enemy, the warship will pursue the targeted enemy until it is defeated or, if it is a land target, until it is out of range. @L@LClick @184here to read about combat in ancient Egypt."
-        }
-    }
-    message_building_festival_square {
-        id: 366,
-        
-        size [30, 20]
-        title {
-            text: "Festival Square",
-        }
-        content {
-            text: "Before you can hold a festival (see @51religion for more on festivals), you must have a Festival Square in your city.  A Festival Square must be placed over a crossroads, but it does not require labor.  Each city can have only one Festival Square, and it makes a very @56desirable neighbor.   @PWhen no festival is in progress, the square is mostly deserted, although it does not affect traffic on the roads it was constructed upon.  Once the festival begins, people gather here from all over the city to enjoy the party.   @PThe ancient Egyptians held festivals to celebrate many different events.  Clicl @393here to find out more."
-        }
-    }
-    message_figure_transport_ship {
-        id: 367,
-        
-        size [30, 20]
-        title {
-            text: "Transport Ship",
-        }
-        subtitle {
-            text: "Transport Ship",
-        }
-        content {
-            text: "Transport ships carry your army across the river or over the sea to far-away lands.  Any company can board a transport ship, but a transport ship can carry only one company at a time. A transport ship is berthed at a @357Transport&Wharf.  You can distinguish it from a warship by its rear cabin and its trim style. @L@LTransport Ship Orders You can give transport ships specific orders.  To move a transport ship from one location to another, click on it and then click on a new location.  Right-click on the transport to issue any of the following commands: @L@LHold Position   @LThis commands the transport ship to stay where it is.  If the transport ship comes under attack, the captain will rotate the ship in an effort to reduce damage.  He will not, however, set sail to evade the attack.  This option should be used cautiously, because transport ships are not well-equipped to defend themselves.   @L@LEvade Enemies   @LTransport ships, especially those filled with your soldiers, are both valuable and vulnerable.  Click on Evade Enemies to give the transport ship's captain the ability to use all his powers to avoid attack.  The ship's captain always tries to Evade Enemies unless you tell him otherwise.   @L@LEmbark/Disembark   @LTo load a company of soldiers onto the transport ship, first click the Embark button, then click on the company of soldiers you wish to move over the water.  The soldiers will board the transport ship, and the ship will display the company's standard.  When you right-click on the transport ship, information on the company on board is displayed. @PTo return the soldiers to shore, click Disembark, then move the cursor to the location in which you wish to station the company. @PThe Embark/Disembark option toggles back and forth depending on whether there are soldiers currently on the transport ship.   @L@LRepair   @LIf the transport ship is damaged, click on repair to send the ship back to the @82Shipwright for repairs.  The ship's captain will bring his ship to the Shipwright on his own if the hull is severely damaged.  Shipwrights need wood in order to carry out the repairs.   @L@LReturn to Wharf   @LClick on this button to send the transport ship back to its @357Wharf."
-        }
-    }
-    message_building_mausoleum {
-        id: 368,
-        
-        size [30, 20]
-        title {
-            text: "Mausoleum",
-        }
-        content {
-            text: "Mausoleums are large tombs used to inter pharaohs and nobility.   @PTo build a Mausoleum, supplies of sandstone and wood are needed, plus at least one working @363Carpenters'&Guild, @363Stonemasons'&Guild and @8Work&Camp. @PTo place a Mausoleum, there must first be a large quantity of sandstone stored in the city's @4Storage&Yards.  Once enough stone is stored, choose Mausoleum from the Religious Structures: Monuments list.  Place the Mausoleum, using the color of the footprint as a guide (all green means you can place the structure, red diamonds mean that some landscape feature prevents building it there).  Once you've designated a place for the building, peasants from the Work Camp clear the land and lay the foundation. @POnce the foundation is in place, stonemasons begin work.  Whenever a Storage Yard accumulates four blocks of sandstone, peasants load the stone on a sledge and drag it to the construction site.  Stonemasons put the stone in place until the first story is completed.  Then, carpenters install wooden ramps so that the stonemasons can work on the second story of the Mausoleum.  When the second story is complete, the Mausoleum is finished. @L@LRead about the history of these tombs by clicking @396here."
-        }
-    }
-    message_figure_construction_foreman {
-        id: 369,
-        
-        size [30, 20]
-        title {
-            text: "Construction Foreman",
-        }
-        content {
-            text: "Once monument construction begins, the Construction Foreman provides detailed information on the status of the monument.  He keeps a running tally of how much of each construction material is needed to complete the monument.  If construction is not running smoothly, he can tell you why.  To visit the Construction Foreman, right-click on the monument site."
-        }
-    }
-    message_building_monument_construction {
-        id: 370,
-        
-        size [30, 20]
-        title {
-            text: "Monument Construction",
-        }
-        content {
-            text: "To successfully complete most missions, you will need to build at least one monument.  Some missions will require you to build several.  You can build the needed monuments in any order you choose. @PFor most monuments, @363Construction&Guild workers wait at the monument site for peasants from a @8Work&Camp to deliver needed supplies from a @4Storage&Yard.  Peasants will walk as far as they must to reach the monument site.  The @362Sphinx and @372Obelisk are constructed a little differently. @G75 @PYour city's laborers can work on more than one monument at once, and you might be tempted to order them to do so.  Be forewarned, however, that such a plan might not be as wise as it first appears.  Inefficiency can creep in when @363stonemasons and block haulers fail to coordinate their work.  Peasants might deliver construction materials to one monument site while the stonemasons wait, idle, at the site where they would prefer to work.   @PThis situation frustrates the @373Overseer&of&Monuments deeply, but it is harder than you would think to reconcile the block haulers' inflexible orders with the stonemasons' independent attitudes.  It is best to avoid such conflict altogether by ordering your city's monuments to be built sequentially, rather than simultaneously. @PBecause of their immense size, some monuments can be especially difficult to place in your city.  For the largest monuments, you won't be able to see the entire footprint of the structure at one time. @PTo assess a selected location for a monument, press the 'M' key.  The monument's footprint will freeze in the spot you selected, and you can move your viewpoint around the city as normally.  To place the monument in the selected location, provided it's a viable one, click the mouse button.  To continue to look for a suitable spot, press 'M' again.  The monument's footprint will again follow your cursor around your city. @PIn addition, some monuments must be built into cliffs. These monuments are @492Abu&Simbel and the @478Royal&Burial&Tombs.  @PFor more on monuments, read the individual entries on each. The are listed in the Help menu. @L@LTo find out more about the history of monuments, click on any of these: @391sphinx, @392pyramids, @394mastabas, @493Abu&Simbel, @481Alexandria's&Library, @482Caesareum, @475Valley&of&the&Kings and @396other&monuments."
-        }
-    }
-    message_building_mastaba {
-        id: 371,
-        
-        size [30, 20]
-        title {
-            text: "Mastaba",
-        }
-        content {
-            text: "Mastabas are fine tombs built for nobility. You will sometimes choose a mastaba for your own final resting site. @PTo build a mastaba, you'll need a large supply of @364bricks and a @363Bricklayers'&Guild. You'll also need peasants from @8Work&Camps. @PThe first step to building a mastaba is choosing a site. You'll know that you've picked a viable site if you see a green 'ghost' of the footprint of the mastaba. If the green footprint contains any red diamonds, some feature of the landscape prevents construction there.  Click the mouse button when the footprint is all green, and the mastaba's location will be locked in. Stakes mark the corners of the site. @PAfter the site is established, bricklayers and peasants get to work. Peasants drag in sledge-loads of bricks, and your bricklayers put them in place. @PThe deceased need many things in the Field of Reeds, so you will likely need to furnish the mastaba with @374burial&provisions. Your @373Overseer&of&Monuments will tell you which goods are required. Check in with the @369Construction&Foreman to find out the construction status of the mastaba. Click @370here for more on monument construction. @L@LClick @394here to learn more about mastabas in ancient Egypt."
-        }
-    }
-    message_building_obelisk {
-        id: 372,
-        
-        size [30, 20]
-        title {
-            text: "Obelisk",
-        }
-        content {
-            text: "Obelisks symbolize the rays of the sun, and great deeds and achievements are commemorated on the sides of the monument. @PObelisks are made from a large amount of @95granite, and all the granite needed for the Obelisk must be stored in the city's @4Storage&Yards before you can place the monument. @PMove the cursor over the land to pick a location for the Obelisk.  If you see an all-green footprint of the monument, you can place the obelisk.  If the footprint contains any red diamonds, some feature of the landscape prevents building the obelisk there.   @PAfter you pick a location, the granite is put into place.  Then, carpenters from the @363Carpenters'&Guild build scaffolding around the monument, and @363stonemasons come to the monument to carve intricate designs into it.  You do not need the services of peasants to build an Obelisk. @PRight-click on the monument to visit the @369Construction&Foreman.  He will update you on the status of the monument. @L@LObelisks have been reaching towards the sky for thousands of years. Click @397here to find out more about this ancient monument."
-        }
-    }
-    message_overseer_monuments {
-        id: 373,
-        
-        size [30, 20]
-        title {
-            text: "Overseer of the Monuments",
-        }
-        content {
-            text: "Your Overseer of the Monuments can tell you what is preventing construction from starting on a monument.  He also manages the dispatch of @374burial&provisions to any tombs that may require them.  For a progress report on actual monument construction, right-click on the project to visit the Construction Foreman."
-        }
-    }
-    message_burial_provisions {
-        id: 374,
-        
-        size [30, 20]
-        title {
-            text: "Burial Provisions",
-        }
-        content {
-            text: "To ensure that the deceased has all he or she needs in the afterlife, you must stock most tombs with burial provisions.  Burial provisions are materials that the deceased used while alive.  You may also need to provide materials for the construction of special accouterments needed for the afterlife, such as a funeral barge and sarcophagus.  Monuments are not complete until you supply any required burial provisions.  The @373Overseer&of&Monuments has a list of the necessary items and quantities.  When you are ready to send them, tell the Overseer of Monuments to dispatch goods to the tomb. @PYou do not have to have the full amount of the required material in the @4Storage&Yards before you can send goods to the monument.  You can send smaller portions of the required commodity until you fulfill the requirement. @PYour city may need to @47import some burial provisions. @L@LThe ancient Egyptians buried a lot of different objects along with the deceased's body. Click @395here to find out what supplies the ancient Egyptians took with them to the afterlife."
-        }
-    }
-    message_building_stepped_pyramid {
-        id: 375,
-        
-        size [30, 20]
-        title {
-            text: "Stepped Pyramid",
-        }
-        content {
-            text: "Stepped Pyramids, the first Pyramids built in Egypt, are giant staircases to the sun.  They are made entirely of @95plain&stone, although wood is required for building ramps to carry stone up to the higher levels of the Pyramid.  To build ramps and lay the stone, you'll need a @363Carpenters'&Guild and a @363Stonemasons'&Guild.  Peasants are also needed to pull the huge sledge loads of stone over to the construction site.  Once four blocks of plain stone are stored in the @4Storage&Yards, and the stonemasons are ready, peasants begin their arduous journey to the monument site. @PStepped Pyramids come in five different sizes: small, medium, large, Pyramid Complex and Grand Pyramid Complex.  Visit the @369Construction&Foreman and the @373Overseer&of&the&Monuments for more information. The entry on @370monument&construction may also be helpful. @L@LClick @392here to find out more about the vizier Imhotep's innovation: the Stepped Pyramid."
-        }
-    }
-    message_osiris_sebek_min {
-        id: 376,
-        
-        size [30, 20]
-        image {
-            id: 42,
-            pos [15, 15]
-        }
-        title {
-            text: "Osiris, Sebek and Min",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Osiris' role in Egyptian religion changed over the millennia. He, along with his wife and sister Isis and brother Seth, was one of the earliest gods and a member of the Eannead (see @399religion for more on the Eannead). @L@LThe myth that defines Osiris links him with agriculture, the Nile and funerary customs. Ra-Atum gave Osiris rule of ancient Egypt. Osiris married his sister, Isis, and taught the people many things as its ruler, most importantly the art of agriculture. After he schooled the Egyptians, Osiris left Egypt to civilize the rest of the world, leaving Isis in charge. Isis ruled well in his absence, but upon Osiris' return, his brother, Seth, began to plot against him. Seth invited Osiris to a sumptuous feast where he produced a beautiful coffin. He offered the coffin to whomever it best fit. When Osiris climbed in the coffin, Seth shut the lid and threw the coffin into the Nile. Isis managed to fish the coffin out of the Nile, but Seth caught her and hacked Osiris to pieces. Isis, distraught, cried, and her tears were believed to be the cause of the Inundation. Eventually, Isis gathered up the scattered pieces of Osiris' body except his genitalia, which had been consumed by the oxyrhynchus fish. Isis bandaged Osiris together with linen, much as mummies were bandaged. Egyptians were, understandably, banned from eating the oxyrhynchus fish. Eventually, Osiris became the god of the underworld and was the supreme judge who granted or denied entry into the afterlife. @L@LSebek, the crocodile god, was a fertility god who was worshipped primarily in the Fayuum, although he was known throughout Egypt. His name translates as 'watching over you.'  Min, god of regeneration, was also associated with male fertility and worshipped throughout Egypt."
-        }
-    }
-    message_ra_maat_horus {
-        id: 377,
-        
-        size [30, 20]
-        image {
-            id: 18,
-            pos [15, 15]
-        }
-        title {
-            text: "Ra, Ma'at and Horus",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Ra was viewed as the chief god throughout much of Egypt's history. As the forefather of all the gods in the Ennead, he was the ultimate creator god and associated with the sun. @L@LMa'at was the goddess of justice, also associated with truth and order. The ostrich's feather she wears on her head is used during the weighing of the heart, the last step that individuals must undertake before they enter the afterlife. @L@LHorus was most closely associated with the pharaohs. He was the son of Osiris and Isis and avenged his father's death by exposing Seth as the killer of Osiris. Horus was represented by a falcon. "
-        }
-    }
-    message_ptah_amon_thoth {
-        id: 378,
-        
-        size [30, 20]
-        image {
-            id: 3,
-            pos [15, 15]
-        }
-        title {
-            text: "Ptah, Amon and Thoth",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Ptah is god of the craftsmen and associated with the Men-nefer (Memphis) pharaohs who first united Egypt (see @399 religion for more on the Men-nefer pharaohs' effect on Egyptian beliefs). He was especially revered by the craftspeople at Deir El-Medina who built the tombs in the Valley of the Kings and Valley of the Queens. @L@LAmon was a sun god, particularly associated with the sun at morning. He came to prominence during the Twelfth Dynasty when Waset (Thebes) kings assumed control of Egypt. @L@LThoth was god of wisdom and learning and considered to be scribe to the other gods. He was most closely associated with Khmun (Hermopolis)."
-        }
-    }
-    message_seth_anubis_sekhmet {
-        id: 379,
-        
-        size [30, 20]
-        image {
-            id: 117,
-            pos [15, 15]
-        }
-        title {
-            text: "Seth, Anubis and Sekhmet",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Seth, brother of @376Osiris, was god of destruction. Originally, Seth was the protector of Lower Egypt. As Upper Egypt gained prominence, Upper Egypt's patron god, @377Horus, became more important, and Seth was cast in a negative light. @L@LAnubis, god of death, was the embalming god. Represented by the jackal, Anubis protected the dead. @L@LSekhmet was a lion-headed goddess of war. Wife of Ptah, she destroyed what he created. The Egyptians worshipped her in the hopes of appeasing her so that she would not unleash her fury."
-        }
-    }
-    message_bast_isis_hathor {
-        id: 380,
-        
-        size [30, 20]
-        image {
-            id: 28,
-            pos [15, 15]
-        }
-        title {
-            text: "Bast, Isis and Hathor",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Bast, a cat-headed woman or lioness, was goddess of the home as well as cats, fire and pregnant women. She protected the home both through docile and aggressive means. She was also the patron goddess of Bubastis. @L@LIsis, wife of @376Osiris and mother of @377Horus, bandaged Osiris' broken body back together. As a result, she was viewed as the goddess of healing. She was represented by a woman and is often depicted with her son. @L@LHathor was goddess of joy, love and festivity. Represented by a cow, she was the patron goddess of Iunet (Dendera), Men-nefer (Memphis), Qis (Cusae), and Perhathor (Gebelein)."
-        }
-    }
-    message_history_malaria {
-        id: 381,
-        
-        size [30, 20]
-        image {
-            id: 118,
-            pos [15, 15]
-        }
-        title {
-            text: "Malaria",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Malaria was one of the risks of living near marshes. Malaria in humans is caused by any of four parasites carried by the anopheles mosquito, which is primarily active at night. The onset of malaria is marked by fever, which is followed by muscle aches, sweating and fatigue. One of the malaria-causing parasites produces severe cases that can lead to death. @L@LTo prevent potentially fatal and, at the very least, annoyingly itchy mosquito bites, ancient Egyptians used mosquito netting on their beds. Herodotus, a Greek historian, also notes that the Egyptians elevated their beds onto towers to sleep, believing that mosquitoes could not fly at that height."
-        }
-    }
-    message_history_jewelry {
-        id: 382,
-        
-        size [30, 20]
-        image {
-            id: 33,
-            pos [15, 15]
-        }
-        title {
-            text: "Jewelry",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Jewelers took precious and semi-precious stones and manufactured them into necklaces, beaded collars, belts, and other adornments. To string the beads, the jewellers first drilled a hole in the stone using a hand drill with a flint bit. Once the holes were drilled, string was threaded through and fastened. Jewelers were also adept at using gems in inlays. @L@LFrom depictions on tomb walls, dwarves were frequently employed in the jewelry making industry."
-        }
-    }
-    message_history_hunting {
-        id: 383,
-        
-        size [30, 20]
-        image {
-            id: 119,
-            pos [15, 15]
-        }
-        title {
-            text: "Hunting",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Compared to the food grown on farms and raised on ranches, hunting contributed little to Egyptian food stock. Still, hunting was enjoyed by the upper class, and many pharaohs bragged about their skills as hunters. Gazelles, antelopes, ibex, oxen, sheep and ostriches were the main targets of hunters, although some hunted hyenas, lions and leopards for sport (and for their hides in the case of leopards and lions). Hunters used bows and arrows, lances, or spears to kill their quarry. @L@LThe Egyptians were equally fond of hunting water-based animals, including fowl and hippopotamus. Groups of men hunted the hippopotamus together with a special spear that was attached to a rope. Several men tried to hit the hippopotamus with the spears. Once enough damage had been inflicted, the men dragged the hippopotamus to shore using the rope. @L@LFowl were killed with throwing sticks, which are a little like Australian boomerangs. The hunter's helpers, either family members or servants, collected the felled fowl. Birds were also trapped in nets that were laid down on a field. The net was sprinkled with food for the birds. Once attracted to the spot, the net's corners were pulled together with the birds trapped inside."
-        }
-    }
-    message_history_priests {
-        id: 384,
-        
-        size [30, 20]
-        image {
-            id: 120,
-            pos [15, 15]
-        }
-        title {
-            text: "Priests",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "A significant portion of the ancient Egyptian population were priests. Their role extended far beyond religious duties. Because ancient Egypt was a theocracy, priests frequently assumed administrative roles within their communities, sometimes dispensing justice. @L@LThe mark of a priest was his cleanliness. The priests underwent purification rites before they could enter the temple and shaved off their hair to ensure they did not harbor lice or other impurities. Depending on which god a priest served, he was prohibited from eating certain types of food. Priests had special clothing and were also required to wear white sandals. The highest ranking priests sometimes adorned themselves with leopard skins. @L@LThe primary religious concern for the priesthood was the care and feeding of the resident god. Each temple had a statue of its patron god on the premises. Each priest in the temple had his own responsibility to make sure the god was happy. Some of the priests were in charge of making sure the god was well fed. Using food that had been given as an offering by locals or produced on the temple's estate, the priests prepared a meal for the god. The god would partake of the 'essence' of the food, and the priests ate the leftovers. The priests also clothed and bathed the god and provided entertainment. Occasionally, the god would be taken on an outing and paraded through the village (see @393festivals for more). @L@LThe priesthood was divided into distinct classes. The most elite priest was the High Priest, also called the First Prophet, who was appointed by the pharaoh. The High Priest was the ultimate authority within the temple and frequently served as an advisor to the pharaoh. Beneath the High Priest were the Deputy High Priests, or Second Prophets, who oversaw particular functions of the temple or its estate, such as the workshops or the farms. Beneath them were the priests responsible for particular functions like bathing the god or providing entertainment. Most priests served in shifts, working one month out of every three."
-        }
-    }
-    message_history_stonemasons {
-        id: 385,
-        
-        size [30, 20]
-        image {
-            id: 121,
-            pos [15, 15]
-        }
-        title {
-            text: "Stonemasons",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Stonemasons oversaw the @193quarries and construction of @392pyramids and other monuments. While they knew the ins and outs of stone and how best to extract it from the quarries, they themselves did not do most of the backbreaking labor. Peasants of the lowest class and sometimes slaves performed the hardest labor. Stonemasons supervised the process. In addition to large construction projects, the stonemason's expertise was required for smaller undertakings, such as laying the foundation of a house."
-        }
-    }
-    message_history_bricklayers {
-        id: 386,
-        
-        size [30, 20]
-        image {
-            id: 122,
-            pos [15, 15]
-        }
-        title {
-            text: "Bricklayers",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Brick laying technique has not changed very much over the millennia. The supplies are essentially the same: @390brick and mortar for binding. In ancient Egypt, mortar was made from a mixture of clay, sand, straw and chaff. The bricklayers spread the mortar with a wooden trowel and put the brick in place. They used plumb lines to ensure that the walls they built were straight."
-        }
-    }
-    message_history_scribes {
-        id: 387,
-        
-        size [30, 20]
-        image {
-            id: 21,
-            pos [15, 15]
-        }
-        title {
-            text: "Scribes",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Scribes, or sesh, permeated throughout Egyptian society and government and were associated with just about every action the government took. The ancient Egyptians kept records of almost everything, and scribes were the only ones who could perform this function. Scribes recorded how much tax each person owed the government, kept track of exports and imports and even went to battle with soldiers to record events. For private citizens, scribes drew up legal documents, like wills, and also read and wrote letters for individuals. @L@LThe tools of the trade for the scribe included papyrus, a palette with two cakes of ink (typically black and red), a pot of water, and reed brushes. The scribe dipped the brush into the water and then rubbed the brush over a cake of ink. He then wrote on the papyrus. @L@LVery few scribes knew how to write hieroglyphics. Hieroglyphics were reserved for monuments and temples. For daily use, a simpler version of hieroglyphics, called hieratic, was used.  @L@LThe written language consisted of about 700 signs and combined symbols that represented sounds with symbols that represented ideas. The script omitted vowels, so historians can only speculate on how ancient Egyptian sounded."
-        }
-    }
-    message_history_immigration {
-        id: 388,
-        
-        size [30, 20]
-        image {
-            id: 123,
-            pos [15, 15]
-        }
-        title {
-            text: "Immigration",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Egypt enjoyed a relatively stable economy and generally steady food production due to the Inundation. Egypt's neighbors knew this, and many residents of neighboring lands immigrated to Egypt. @L@LSome of Egypt's immigrants came to engage in trade. Archaeological evidence in major port cities such as Memphis reveals the existence of non-Egyptian settlements. These non-Egyptian merchants are depicted on Middle Kingdom and New Kingdom tombs. Some residents from neighboring countries, such as Libya, sprawled into ancient Egypt. By the twelfth dynasty, Libyans occupied large portions of the western Delta, and soon spread to the eastern Delta. @L@LSome came to Egypt with less than noble intensions. @181Invaders of Egypt often remained, even after their power had been lost. Many of those that stayed behind seem to have enjoyed the same rights as Egyptians, and some held high posts within the Egyptian government."
-        }
-    }
-    message_history_carpenters {
-        id: 389,
-        
-        size [30, 20]
-        image {
-            id: 124,
-            pos [15, 15]
-        }
-        title {
-            text: "Carpenters",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Carpenters fashioned many necessary objects for the Egyptians. Native @192wood was scarce, so carpenters were very efficient with the wood they had at their disposal. Imported wood was also used, but it was expensive and thus reserved for the wealthiest of citizens. @L@LCarpenters were equipped with axes, saws and adzes to turn logs into planks of usable wood. With axes, the carpenter trimmed off any branches from the logs and split the wood if he was making rafters. Saws were used to cut the logs into planks, and adzes to smooth the planks of any bumps. @L@LFinished products included chests, beds, doors and door frames, chairs and, perhaps most importantly, coffins. Instead of nails, dowels were used to hold finished pieces together. Some of the finished pieces were exquisite, with fine inlays and engravings decorating the surfaces. @L@LCarpenters were also needed for the construction of larger homes. Ceilings in wealthier houses were frequently supported with finely decorated wooden columns. @L@LBasic carpentry changed little over ancient Egyptian history, and the same basic tools were favored. The major innovation carpentry witnessed was the development of the drill. During the New Kingdom, a bow drill was used to drill holes for the dowels."
-        }
-    }
-    message_history_bricks {
-        id: 390,
-        
-        size [30, 20]
-        image {
-            id: 125,
-            pos [15, 15]
-        }
-        title {
-            text: "Bricks",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Bricks were an ideal building material for the ancient Egyptians. Because they did not conduct heat well, brick homes remained relatively cool inside during the hot summer. Bricks were manufactured by combining clay and straw. The clay was moistened, mixed with straw and then submerged in water. While submerged, the straw began to decompose, and in so doing excreted a slime that held the brick together. The brick was then dried in the sun. When the bricks were ready, the @386brick@layers could begin their work."
-        }
-    }
-    message_history_sphinx {
-        id: 391,
-        
-        size [30, 20]
-        image {
-            id: 8,
-            pos [15, 15]
-        }
-        title {
-            text: "Sphinx",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "The Sphinx, associated with Amun in ancient Egypt, has the body of a lion and the head of a king. There were many Sphinxes in Egypt, but the most famous by far is the Great Sphinx at Giza (Rostja).  @L@LBuilt around 2500 BC, the Great Sphinx seemingly guards Khafre's pyramid and sits over an old quarry. Its face is thought to be that of Khafre himself. The Sphinx is about 200 feet (60 meters) long and 65 feet (20 meters) tall. It is carved from soft sandstone. @L@LThe Sphinx was buried in sand for most of its existence. Legend has it that Thutmose IV, before he became pharaoh, was hunting in the area of the Sphinx and fell asleep on the spot where it lies. As Thutmose slept, the Sphinx told him that if he unburied the Sphinx, he would become pharaoh. Thutmose did the Sphinx's bidding and became pharaoh in 1425 BC. He recorded the story on stelae and placed it between the Sphinx's paws. @L@LThe Great Sphinx was again buried and finally uncovered for good in the 1930s. Attempts to preserve the Sphinx have met with mixed results."
-        }
-    }
-    message_history_pyramids {
-        id: 392,
-        
-        size [30, 20]
-        image {
-            id: 39,
-            pos [15, 15]
-        }
-        title {
-            text: "Pyramids",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "People have speculated for centuries on how the pyramids were built. It seems unfathomable that the ancient Egyptians, without the benefit of forklifts, cranes, backhoes and a slew of other modern equipment, could have constructed such magnificent structures. @L@LThe building of any pyramid started with a well laid-out plan. The vizier, second only to the pharaoh in rank, most likely oversaw the entire process with the royal architect (known as medjeh nesu in ancient Egyptian) specifying the plans. The royal architect was responsible for choosing material and figuring out how to get the material to the site. @L@LAfter the site was carefully chosen, astronomers determined the north-south axis of the pyramid. Then, surveyors laid out all sides of the pyramid using a special kind of cord that was so thick that it would not stretch and ruin the dimensions of the pyramid. Then, the ground was leveled, perhaps by filling ditches with water to determine a uniform plane. @L@LOnce these tasks were complete, construction was ready to begin. To kick off construction, a ceremony was held in which the pharaoh marked the corners of the pyramid with stakes, stretched a cord between the stakes, and placed a ceremonial mud brick as the first stone in the monument. @L@LAt this point, the @385stonemasons and @155laborers took over. Stonemasons carved out the underground rooms, including the burial chamber. Once these were ready, the arduous process of bringing stone blocks, some of which weighed as much as 2.5 tons, began. The stones were hauled on sleds, and ramps were probably used to reach the higher parts of the pyramid. In addition to the rough-hewn stones that made up the interior of the pyramid, finer stone encased the structure. @L@LSome pyramids stood alone, but more frequently they were part of larger pyramid complexes. The pyramid complex featured a valley temple that sat on the water or on the edge of the cultivated area. From the valley temple, a long causeway led to the mortuary temple, which was situated on the east side of the pyramid. @L@LThe form of pyramids evolved as the technology to build them was refined. The first pyramid, Djoser's Step Pyramid, does not have smooth sides. Built around 2620 BC, the Step Pyramid is a series of squares stacked on top of each other. The first true pyramid is Snofru's, built around 2550 BC. An outer casing smoothed the 'steps' of the pyramid, and this practice was soon adopted for other pyramids. The largest pyramid is Khufu's, which measures 252 x 252 yards (230 x 230 meters) and reaches heights of 160 yards (146 meters). One unique pyramid is Snofru's Bent Pyramid. The angle of the sides of the pyramid changes about two-thirds of the way to the top. The speculation is that architects determined that the pyramid would be too heavy and prone to collapse if it was continued at its original angle. And because Snofru's first pyramid collapsed, he probably thought he was better safe than sorry."
-        }
-    }
-    message_history_festivals {
-        id: 393,
-        
-        size [30, 20]
-        image {
-            id: 126,
-            pos [15, 15]
-        }
-        title {
-            text: "Festivals",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Ancient Egyptian festivals were joyous celebrations in which food was abundant and beer flowed freely. They celebrated for many different reasons: to honor a god, to mark the harvest and to recognize the longevity of the pharaoh. The last five days of the Egyptian year were spent celebrating, and numerous other festivals occurred throughout the year. @L@LIt was during festivals in honor of a deity that all people had direct access to their gods. At the center of religious festivals was the procession of the god. During the festival, the statue of the god that resided in the temple, beyond public view, was outfitted in its finest garments and paraded through town on a ceremonial bark borne by priests. The priests rested periodically, during which time rites were performed. During the New Kingdom, citizens could ask the god questions while the priests were resting. The priests bowed if the god responded positively to the question and moved back if the response was negative. At the end of the festival, the god returned to his home in the temple. @L@LSometimes, the gods travelled quite far and were transported by boat. For example, during the opet festival, Amun travelled from Karnak to his southern chapel at Luxor. To make the journey, he sailed along the Nile. Opet was one of the most joyous festivals and lasted anywhere from 11-27 days. @L@LIf a pharaoh was healthy enough to serve for 30 years, the heb-sed festival was held. Celebrated during the pharaoh's 30th year of rule and every three years thereafter, the festival featured the pharaoh performing a ritual run to prove he (or she) was still fit to rule. Some pharaohs didn't wait for 30 years to have a heb-sed and held them much earlier in their reigns. @L@LUndoubtedly, Egyptians from all walks of life welcomed festivals as a time to eat and drink very well. Festivals also offered respite from the daily grind."
-        }
-    }
-    message_history_mastaba {
-        id: 394,
-        
-        size [30, 20]
-        image {
-            id: 127,
-            pos [15, 15]
-        }
-        title {
-            text: "Mastaba",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "The earliest Old Kingdom pharaohs and nobility were buried underneath mastabas. Mastabas covered the shaft that led down to the tomb chamber. They started rather simply, as low structures with text inscribed on them, but developed into larger structures, complete with chapels. Mastabas are viewed as the forerunners of pyramids, and Djoser's Stepped Pyramid may have begun as a mastaba."
-        }
-    }
-    message_history_burial_provisions {
-        id: 395,
-        
-        size [30, 20]
-        image {
-            id: 26,
-            pos [15, 15]
-        }
-        title {
-            text: "Burial Provisions",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Tombs were well appointed with everything the deceased would need in the afterlife. Known as burial provisions, these commodities included the tools of the deceased's profession, food, toiletry, jewelry, musical instruments, makeup - basically anything that the deceased had ever used in life. Tombs were also equipped with shabtis, or 'answerers.'  These statuettes were included in the tomb just in case the deceased was asked to perform labor in the afterlife. The shabti would do the work in place of the deceased."
-        }
-    }
-    message_history_other_monuments {
-        id: 396,
-        
-        size [30, 20]
-        image {
-            id: 1,
-            pos [15, 15]
-        }
-        title {
-            text: "Other Monuments",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "In addition to @397obelisks, @394mastabas, @392pyramids and @391sphinxes, ancient Egypt had many other monuments. Among these were mausoleums and Temples of the Sun.  @L@LThe sun was viewed as a giver of life in ancient Egypt, and many Temples of the Sun were built throughout Egypt, particularly in the Fifth Dynasty. The most notable sun temples are at Abu Ghurab. Two sun temples were located here and were the scenes of animal sacrifice. @L@LMausoleums and chapels were frequently placed over tombs to serve as a place where the family of the deceased could make offerings. These offerings ensured that the deceased would continue to enjoy the afterlife. Anyone who had the resources would build these chapels for their family members, and personal mausoleums abound in the Egyptian landscape."
-        }
-    }
-    message_history_obelisk {
-        id: 397,
-        
-        size [30, 20]
-        image {
-            id: 17,
-            pos [15, 15]
-        }
-        title {
-            text: "Obelisk",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Obelisks were associated with the sun, representing either the sun's rays or the primordial mound upon which the sun first shone. Made from granite and engraved with hieroglyphs, obelisks were found outside temples, generally in pairs. @L@LThe shape of the obelisk was hewn at the quarries, and an unfinished one at Aswan reveals much about the process of quarrying such a large piece of rock. Workers used pounders of dolerite to slowly carve out the needed shape. The obelisk at Aswan was abandoned because a fissure developed in the center of the stone. @L@LOnce the obelisk was hewn from the rock, no one is quite sure how they were erected. Modern attempts at raising obelisks using what is believed to be ancient methods have failed."
-        }
-    }
-    message_history_linen_and_weaving {
-        id: 398,
-        
-        size [30, 20]
-        image {
-            id: 24,
-            pos [15, 15]
-        }
-        title {
-            text: "Linen and Weaving",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Made from @189flax, linen was the predominant textile in ancient Egypt. While some cloth was made from wool or hemp, this cloth was considered to be much inferior to linen. @L@LTo make cloth, flax fibers had to first be spun into thread. Seated in front of piles of flax, spinners twisted the fibers together and wound them into balls. Then, the thread was attached to spindles, and weaving would begin. @L@LThe Egyptians used a horizontal loom placed on the floor. The weavers threaded the loom with two parallel rows of thread (the warp). Two workers sat at either side of the loom and sent the threaded shuttle (the weft) back and forth to make cloth. @L@LDuring the New Kingdom, a vertical loom replaced the horizontal loom. The vertical loom allowed weavers to sit more comfortably on stools. @L@LThe majority of weavers were women who were frequently part of the pharaoh's harem."
-        }
-    }
-    message_history_religion {
-        id: 399,
-        
-        size [30, 20]
-        image {
-            id: 43,
-            pos [15, 15]
-        }
-        title {
-            text: "Religion",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Egyptian religion featured a well-populated pantheon of major and minor gods. Most cities, and even individuals, viewed a specific god as their patron, and this practice influenced which gods held the most importance. @L@LOne of the earliest belief structures was the Eannead, or group of nine gods. Founded in the city of On (Heliopolis), the first god in the Eannead is Atum, who linked with Ra to become Ra-Atum. Ra-Atum, though male, managed to give birth single handedly to twins, Shu and Tefnut. Shu was god of the air, and Tefnut was goddess of world order. Shu and Tefnut had four children: Isis, Osiris, Nephthys and Seth. Rounding out the nine gods is Horus, son of Isis and Osiris. Ra was eventually thought of separately from Atum and became the chief god of the Ennead. This system of gods dominated pre-Dynastic Egypt, and Ra continued to be an important god to the ancient Egyptians.  @L@LWhen Hor-Aha united Upper and Lower Egypt, his personal belief in Ptah, a creator god, changed the belief system. Hor-Aha maintained that the Eannead gods were all manifestations of Ptah. Still, Ra was the predominant god. @L@LAnother theory sprung from the Upper Egyptian city of Khmun (Hermopolis). The Hermopolitans believed in an Ogdoad, or group of eight gods. In the Ogdoad, a pair of male and female gods represent different aspects of the world. Nun and Naunent represented water, Huh and Hauhet represented unendingness, Kuk and Kauket were the darkness gods, and Amon and Amaunet were the air gods. @L@LIn the New Kingdom, Amon unseated Ra as the primary god. Amon's domination continued until the reign of Akhenaten. Akhenaten attempted to introduce monotheism into Egypt, maintaining that Aten, who was embodied by the sun's disk, was the only god. During his rule, known as the Armana period, Ahkenaten closed down the temples to other gods. Upon his death, however, polytheism was quickly reintroduced, and the temples to other gods were reopened."
-        }
-    }
-    message_mission_naqada {
-        id: 400,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Naqada",
-
-        }
-        subtitle {
-            text: "A Village is Born",
-
-        }
-        content {
-            text: "@PWelcome to ancient Egypt, land of the Pharaohs! Here you'll participate in the history of one of the greatest civilizations the world has ever seen, in an epic story that spans more than fifteen centuries and two dozen generations. You must lead one family, generation by generation, from its earliest beginnings in Egyptian pre-history, through the dawn of civilization...to the establishment of a unique and powerful empire...and beyond.     @POur story begins more than five thousand years ago, along the banks of the Nile river, in an area known as Naqada.  Here a small confederacy of clans struggles to eke out an existence in the harsh environment. With you at its head, your family leads this small settlement."
-        }
-    }
-    message_mission_thinis_2 {
-        id: 401,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Thinis",
-
-        }
-        subtitle {
-            text: "The Dawn of Civilization",
-
-        }
-        content {
-            text: "@PAfter many years, and the passing of a generation, your family has resettled in the area of Thinis, in Upper Egypt. Here, a small band of local rulers is attempting to extend its influence over Lower Egypt, and all lands along the river Nile, and to unite this realm under its own house, with one supreme leader.   @PEstablishing Thinis as a thriving city, like nothing ever seen before, will prove the worthiness of the Thinite confederacy, and help them gain supremacy over Lower Egypt and the other factions vying for power. In time, this will mean providing the population with entertainment, and building wonderful temples to worship the region's patron deity. @PTo build a city this grand will require a substantial supply of cash. You'll find rich deposits of gold ore in Thinis, and harvesting them should be your first priority. "
-        }
-    }
-    message_mission_buto_2 {
-        id: 402,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Buto",
-
-        }
-        content {
-            text: "The Thinite nobles still struggle to unite the lands of the Nile under one supreme ruler.  To aid them in their cause, it is hoped that you will endeavor to establish a thriving community at Buto, in the humid Delta region of Lower Egypt, thus spreading their influence throughout the length of the sacred river.  To support a population larger than that of a village, you must learn to use agriculture. @PEgyptian farmers have begun to exploit the rich, fertile soil deposited by the annual inundation of the Nile river for growing crops.  The Nile can be hazardous, however.  Many dangers lurk along its banks and in its waters, such as deadly crocodiles, hippopotamuses and malaria-carrying mosquitoes."
-        }
-    }
-    message_mission_hierakonpolis {
-        id: 403,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Hierakonpolis",
-
-        }
-        subtitle {
-            text: "The First Pharaoh",
-
-        }
-        content {
-            text: "As the people who live along the Nile still struggle to survive in this harsh environment, a local king named Narmer has risen to power.  Though Narmer has dominion over much of this land, full unification of the twin kingdoms has yet to be achieved.  In commemoration of his accession, Narmer wishes your family to establish and govern a new city at Hierakonpolis.  This city will have temples to many of the gods of Egypt and numerous places of entertainment."
-        }
-    }
-    message_mission_memphis {
-        id: 404,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Memphis",
-
-        }
-        subtitle {
-            text: "A Capital is Founded",
-
-        }
-        content {
-            text: "After a lengthy struggle, King Hor-Aha has managed to unite the twin kingdoms of Upper and Lower Egypt, and proclaimed himself Pharaoh over all Egypt!  As a sign of his absolute sovereignty, and the establishment of this, the first dynasty of Egypt, Hor-Aha has ordered the founding of an imposing capital at Memphis, from which he may govern this fledgling nation.  Because of your family's many generations of faithful service to this land, Pharaoh has chosen you to be the architect of this splendid city.  Because the capital is the very symbol of our Kingdom, its citizens must enjoy a quality of life heretofore unknown in this land.  To this end you will eventually need to trade with other cities in the realm, and to provide a higher standard of education for at least some of your citizens.  You must also build a sacred mastaba tomb for the city's nobles."
-        }
-    }
-    message_mission_timna {
-        id: 405,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Timna"
-        }
-        subtitle {
-            text: "An Expedition to Sinai"
-        }
-        content {
-            text: "A new Pharaoh, Den, has taken the throne of Egypt.  Pharaoh is deeply concerned, as enemies have begun to threaten our borders, and our nation lacks adequate supplies of valuable copper needed to create weapons with which to equip our troops.  Pharaoh Den has ordered a mining expedition into the unforgiving land of Sinai, beyond our borders and deep within Bedouin territory.  The area known as Timna is rich in gold and copper ore, as well as precious turquoise gemstones, but it is otherwise barren.  Conditions there will be harsh, and you'll need to import many amenities, perhaps even additional food and fine linen, from Egypt.  Pharaoh will demand frequent shipments from Sinai and will ask you for money, copper, gemstones and weapons.  You can use any surplus of these items to help support the expedition.  Be always on your guard, for the Bedouin of the Sinai desert are formidable adversaries, and they will not willingly allow foreigners to occupy their land, let alone plunder their mineral wealth. @PTo lighten the burden that such living conditions impose on your city's people, build a Pavilion at some busy intersection.  Citizens can relax at the Pavilion's juggling and music stages, and, if you also build a Dance School, this new type of performance will provide great entertainment. "
-        }
-    }
-    message_mission_apollinopolis {
-        id: 406,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Apollinopolis"
-        }
-        subtitle {
-            text: "Pharaoh's Navy",
-        }
-        content {
-            text: "Egypt's military troops are now unmatched in the known world, but the new Pharaoh, Khasekhemwy of the second dynasty, now also demands a powerful navy based at Apollinopolis.  Nothing less than a fleet of warships will suffice to allow us dominion over the high seas, but timber is scarce, as our climate supports only a few sparse areas of forest.  Cedar may be imported at great cost from Byblos, in the land of Lebanon to the northeast.  Fortunately, exports of our native papyrus will provide a means of offsetting this expense."
-        }
-    }
-    message_mission_abydos {
-        id: 407,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Abydos",
-        }
-        subtitle {
-            text: "The Challenge of the Sea ",
-
-        }
-        content {
-            text: "Abydos, the burial place of our forefathers, has grown over the years into a sprawling necropolis of sacred tombs.  Now, most noble men and women wish to make this their eternal resting place.  To honor them, the new Pharaoh Khasekhemwy of the second dynasty has ordered the construction of three sacred mastaba tombs (one of greater size than the other two) for the local nobility.  @PPharaoh has also ordered the creation of a powerful navy, based at Apollinopolis.  Abydos, too, must support a modest fleet of combat ships, if our shores are to remain totally secure.  This will not be easy, as timber is scarce, and our climate supports only a few sparse areas of forest.  Cedar may be imported at great cost from Byblos, in the land of Lebanon to the northeast.  Fortunately, exports of our native papyrus will provide a means of offsetting this expense."
-        }
-    }
-    message_mission_selima {
-        id: 408,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Selima",
-
-        }
-        subtitle {
-            text: "The Road to Africa",
-
-        }
-        content {
-            text: "@PA new Pharaoh, Nebka, has been proclaimed, heralding the beginning of the third dynasty of Egyptian rulers.  Nebka has brought great organization and structure to Egypt, ordering that all our realm be divided into districts, or nomes, each governed by a local ruler called a 'Nomarch'.  Though this system may seem rigid, under his leadership Egypt has grown and prospered, and made many great achievements in art and architecture.  @L@PMerchant caravans, travelling oasis by oasis from deep within the African interior, have begun to provide Egypt with many rare and exotic luxury goods, now prized by our people.  Unfortunately these caravans are routinely attacked by warriors from Libya, and even by Bedouin of the Eastern Desert.  To secure these trade routes, Pharaoh Nebka, He of the Sedge and Bee, wishes you to establish a military post at the Selima Oasis, the hub of the caravan trade, far beyond the borders of our realm.   @L@PThere you will find some trees suitable for timber, the sale of which will help you raise money to fund the establishment of this outpost.  To forge weapons, you may obtain copper from our newly established mines at Timna, in the land of Sinai. @L@PFrom the Selima Oasis, you may import ebony from the African nation of Kerma.  Once you have succeeded in establishing this outpost, it shall provide a reliable source of ebony for all the cities in our realm."
-        }
-    }
-    message_mission_elephantine {
-        id: 409,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Elephantine",
-
-        }
-        subtitle {
-            text: "The Nubian Border",
-
-        }
-        content {
-            text: "@PA new Pharaoh, Nebka, has been proclaimed, heralding the beginning of the third dynasty of Egyptian rulers.  Nebka has brought great organization and structure to Egypt, ordering that all our realm be divided into districts, or nomes, each governed by a local ruler called a 'Nomarch'.  Though this system may seem rigid, under his leadership Egypt has grown and prospered, and made many great achievements in art and architecture.   @PPharaoh wishes to extend the borders of our realm further south, into Nubia.  He orders that a city be founded at the first cataract of the Nile, on the island of Elephantine, that we may take advantage of the abundant deposits of gemstones, granite and sandstone to be found there.   @PThe growing necropolis of Abydos demands these materials for the creation of more and more elaborate tombs for the nobility.  The capital at Memphis, too, may have need of bricks for the construction of tombs, and Pharaoh Nebka may approve requests for these and other building materials.   @PPharaoh Nebka has also ordered that one of your peers establish a military post at the Selima Oasis, to secure the caravan routes into the African interior.  Once it has been established, you may look to the Selima outpost as a source of imported ebony, a highly prized luxury good."
-        }
-    }
-    message_mission_saqqara {
-        id: 410,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Saqqara",
-
-        }
-        subtitle {
-            text: "The First Pyramid",
-
-        }
-        content {
-            text: "The accession of Pharaoh Djoser to the throne of Egypt has ushered in a new era of wisdom, learning and artistic achievement.  A royal cemetery is to be established at Saqqara, to serve as the eternal resting place for nobles such as Hezyre and Khabausokar, Pharaoh's trusted courtiers.   @PBut this site shall also contain a monument the like of which the world has never seen before.  I, the Pharaoh's royal vizier Imhotep, have conceived a new form of sacred tomb for Pharaoh.  Unlike the low mud brick mastabas of prior Pharaohs, this tomb shall rise toward the heavens, as if it were comprised of several mastabas, placed one on top of the other.  And what's more, this 'stepped pyramid' shall be constructed entirely of stone, that it may endure the passage of the eons.  Deep within, a sarcophagus of solid granite shall hold Pharaoh's body for his eternal rest. @PPriests at the necropolis of Abydos have perfected the art of using linen to embalm the dead, thus opening the door to everlasting life to all Egyptians.  @POur trading post at the Selima Oasis still thrives, and from there you may import ebony from Africa.  @PPharaoh has given you a generous supply of cash to get started on this project.  Do not let him down."
-        }
-    }
-    message_mission_serabit_khadim {
-        id: 411,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Serabit Khadim",
-
-        }
-        subtitle {
-            text: "The Bedouin of the East",
-
-        }
-        content {
-            text: "Like Den before him, Pharaoh Huni has ordered an expedition into the harsh land of Sinai to acquire turquoise gemstones and copper.  He wishes you to lead this expedition, to a place called Serabit Khadim, where the building remains of an earlier Egyptian outpost may still be found.  Their current condition is unknown, but they may still provide some means of defense for the expedition.   @PYou should be aware that the last such expedition sent to this area never returned.   A later expedition sent to recover them also did not return.  Nevertheless, if we are to arm our soldiers adequately, our Kingdom needs copper for making weapons, and this metal is scarce in our land. @PPrepare yourself, for you will be under constant threat of attack from the Bedouin of the Sinai desert, and from our enemies the Canaanites.  Mine what copper and gemstones you may under these conditions, and be prompt in fulfilling Pharaoh's requests.  You may employ jewelers to use any surplus gemstones to fashion jewelry for the people occupying the settlement."
-        }
-    }
-    message_mission_meidum {
-        id: 412,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Meidum",
-
-        }
-        subtitle {
-            text: "A Royal Necropolis",
-
-        }
-        content {
-            text: "Pharaoh Huni wishes to spend everlasting eternity in a stepped pyramid, like that of Djoser before him.  He wishes to be surrounded by the tombs of his nobles, and has chosen Meidum, in Lower Egypt, as the site for this royal necropolis.   @PAs a symbol of thanks for the many generations of faithful service provided by your house, Huni has also consented to allow you to be interred at Meidum, in your own tomb.  In doing this, he has conferred great honor upon your family. @PTo ensure that the wisdom and learning of Egypt is preserved through the ages, Pharaoh Huni also urges the construction of royal libraries.  Once filled with scrolls of papyrus, these will provide higher education to the upper classes.  @PPharaoh has sent another of his faithful courtiers on an expedition to Serabit Khadim, in the harsh land of Sinai, to acquire turquoise gemstones.  If this expedition is a success, you may look forward to importing gemstones from there. Jewelers can use these to fashion jewelry, a valuable luxury good, for the people of your city. @PThe once-thriving city of Apollinopolis has begun to decline, and no longer exports many of the commodities they were once known for."
-        }
-    }
-    message_mission_buhen {
-        id: 413,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Buhen",
-
-        }
-        subtitle {
-            text: "Expansion to Nubia",
-
-        }
-        content {
-            text: "Our new Pharaoh, Snofru, is determined that this, the fourth dynasty, be remembered as the greatest ever to rule Egypt.  Pharaoh wishes that our borders be pushed even further south.  He has therefore decreed that we invade Nubia, and establish a fortified city at Buhen, beside the second cataract of the Nile.  There you must also erect a granite obelisk, to serve as a beacon that this area forever belongs to Egypt, and to Pharaoh.  There is no granite to be found so far south, however, so you will need to import it from Elephantine.   @PAt Buhen you will encounter fierce and seasoned Nubian warriors, who will fight to the death to prevent us from establishing a foothold so far south.  Do not despair, for after rigorous training at a Military Academy, your fighting men may emerge as seasoned veterans themselves.  What's more, our military engineers have perfected the design of several defensive structures, such as fortified Towers, Walls and Gatehouses.  These will prove invaluable in withstanding the onslaught of the Nubian army.  Transport ships may also be employed, to aid in moving your army around by water when necessary.  @PTo the north, we have opened relations with Enkomi, on the island of Cyprus.  This land is named for its abundant reserves of copper ore, which we are now able to purchase from them.  However, thanks to a recently established Egyptian mining community at Serabit Khadim, in the land of Sinai, we are able to supply our governors with copper at a much more affordable price.  Supplies from Serabit Khadim are often erratic, due to unrelenting Bedouin and Canaanite attacks against the settlement, and we are uncertain how much longer the Egyptian forces stationed there can hold out.  @PPharaoh's burial place, a unique and spectacular monument, is currently under construction at Dahshur.  From time to time Pharaoh may request that you contribute some limestone to aid in the completion of this project."
-        }
-    }
-    message_mission_south_dahshur {
-        id: 414,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "South Dahshur",
-
-        }
-        subtitle {
-            text: "Snofru's Bent Pyramid",
-
-        }
-        content {
-            text: "@POur new Pharaoh, Snofru, is determined that this, the fourth dynasty, be remembered as the greatest ever to rule Egypt.  His architects have contrived a tomb even more spectacular than the stepped pyramid of Huni, and Pharoah wishes you to oversee its construction.  You will need to establish a fair sized settlement South of Dahshur, the site for Pharaoh's bent pyramid.  Once in place, this city will provide the workforce necessary to complete this ambitious project. @PThe bent pyramid is to be constructed of a plain stone core, and faced with fine white limestone, that it may forever shine under the desert sun.  You will find sufficient quantities of limestone at Dahshur, but you'll need to import the necessary amount of plain stone for this undertaking. @PPharaoh wishes that our borders be pushed even further south, and to this end he has dispatched military forces to invade Nubia, and to establish a fortified city at Buhen, beside the second cataract of the Nile. @PTo the north, Egypt has opened relations with Enkomi, on the island of Cyprus.  This land is named for its abundant reserves of copper ore, which are now a major import.  @PPrecious gemstones may be obtained from a recently established Egyptian outpost at Serabit Khadim, in the land of Sinai.  Lately the supply has become erratic, however, due to unrelenting Bedouin and Canaanite attacks against the settlement, and we are uncertain how much longer the Egyptian forces stationed there can withstand them."
-        }
-    }
-    message_mission_north_dahshur {
-        id: 415,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "North Dahshur",
-
-        }
-        subtitle {
-            text: "The True Pyramid",
-
-        }
-        content {
-            text: "@PPharaoh Snofru has brought order to Egypt, and the kingdom now flourishes under his wise and benevolent rule.  Snofru wishes to undertake another construction project at Dahshur, even more ambitious than the bent pyramid already completed.  Royal architects, surveyors and engineers are confident that they can construct an edifice whose sides rise in one continuous angle, culminating in a perfect peak.  If successful, this will be the first true pyramid, and will be a worthy home for Pharaoh Snofru through all eternity!    @PPharaoh's wife, Queen Hetehpheres, has recently given birth to a son whom they have named 'Khufu'.  Our people look toward the day of his eventual rule with much foreboding, for the seers of Horus, God of the Pharaoh, have predicted that he will show none of his father's benevolence toward our people.  Though he will achieve many great things, they fear he will rule Egypt with unyielding tyranny.  @PYou may acquire wood from Byblos, since carpenters will have to build many ramps to allow workers to reach the summit of this great pyramid."
-        }
-    }
-    message_mission_dendera {
-        id: 416,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Dendera",
-
-        }
-        subtitle {
-            text: "The defense of Egypt",
-
-        }
-        content {
-            text: "@PPharaoh Khufu has taken the throne, and, as foretold by seers of Horus and Ra, our people have already begun to suffer under his oppression.  @PKhufu has ordered that a Royal Governor be dispatched at once to Dendera, to defend our land against Kushite invaders.  Dendera can support a small fishing industry, which should feed this settlement for a time.  If the Kushites invade by water, however, the river may become unsafe for fishing boats, and shore areas may be better used to support a fleet of warships.  If food becomes scarce, cattle may also be raised to provide meat, though the herds require much straw for fodder, and straw is difficult to grow in this land.  You should seek other cities with which to trade for straw, for you will also need this to make bricks for your mastaba. @PThe city of Byblos in Lebanon, land of the cedars, has begun trading with the powerful empires of the east.  These are Assyria and Ur, in the land called 'Mesopotamia', between the two great rivers, and from them the finest ivory may be obtained via Byblos.  With the arrival of rare and exotic luxury goods such as this, Dendera is sure to thrive. @PIn the capital, the Egyptian people have begun to enjoy a board game called senet.  This game is normally enjoyed over a pitcher of beer, in a public gathering place called a 'Senet House'.  Such places may provide a welcome diversion for the people of Dendera from the tyranny of Khufu's authority. @PPharaoh has ordered that countless quarries be dug at Heliopolis, in the Delta region, to harvest a vast supply of fine white limestone.  Only the gods know what endeavor Pharaoh has planned for the use of this stone.  It is rumored that he is planning a colossal building project on the plateau outside Giza, that he may usurp the renown his father, the wise and benevolent Snofru, has earned from the completion of his two noble pyramids."
-        }
-    }
-    message_mission_heliopolis {
-        id: 417,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Heliopolis",
-
-        }
-        subtitle {
-            text: "Ivory from the East",
-
-        }
-        content {
-            text: "@PPharaoh Khufu has taken the throne, and, as foretold by seers of Horus and Ra, our people have already begun to suffer under his oppression.  It is rumored that he plans to begin a colossal building project on the plateau outside Giza, that he may usurp the renown his father, the wise and benevolent Snofru, has earned from the completion of his two noble pyramids.  @PPharaoh Khufu has ordered a cluster of quarries to be dug at Tura, in the Delta region, where rich deposits of fine white limestone have recently been discovered.  You also must build three mastaba tombs for the nobles of this region, so that Pharaoh may honor their devotion.  The quarrying settlement you found shall be named 'Heliopolis', and shall serve as a plentiful source of fine white limestone for many years...though only the gods know what endeavor Pharaoh has planned for its use. @PThe city of Byblos in Lebanon, land of the cedars, has begun trading with the powerful empires of the east.  These are Assyria and Ur, in the land called 'Mesopotamia', between the two great rivers, and from them the finest ivory may be obtained via Byblos.  With the arrival of rare and exotic luxury goods such as this, Heliopolis is sure to prosper. @PKhufu has also dispatched a Royal Governor to Dendera, to defend our land against Kushite invaders.  Royal viziers look with pity upon the Governor charged with this difficult and dangerous task.  @PIn the capital, the Egyptian people have begun to enjoy a board game called senet.  This game is normally enjoyed over a pitcher of beer, in a public gathering place called a 'Senet House'.  Such places may provide a welcome diversion for the people of Heliopolis from the tyranny of Khufu's authority."
-        }
-    }
-    message_mission_giza {
-        id: 418,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Giza",
-
-        }
-        subtitle {
-            text: "The Great Pyramid and Sphinx",
-
-        }
-        content {
-            text: "Pharaoh Khufu has at last made his plans known, and his boundless aspirations are sure to weigh heavily upon our people.  Pharaoh both curses and blesses your family, for though you have been awarded the status of Nomarch, you have also been charged with carrying out the most ambitious building project ever to be undertaken in our land.   @PPharaoh's eternal resting place shall be a massive pyramid complex, situated far from any city, on the plateau outside Giza.  His sarcophagus shall be made of solid granite, and his funeral barge of precious Lebanese cedar. Beside Pharaoh's pyramid complex, a smaller pyramid shall also be built for his son prince Khafra, whose tyranny rivals that of his father, though his achievements do not.  Khafra also declares that his image be carved into the living rock at Giza, upon a huge figure called a 'sphinx', with the body of a lion and the head of a man. @PTo support the massive building effort needed for the completion of this monument, you'll need to establish a large settlement at Giza.  As such, conditions there may not be overly refined, for your goal is only to complete these three great projects, and to honor Pharaoh.   @PYou will be provided with some of the fine white limestone needed for the outer casing of these pyramids, but you will also need to purchase much of what you'll need with the city's own funds. @PPharaoh is entrusting you, one of his royal Nomarchs, with these three sacred tasks.  You must demonstrate unwavering dedication to Pharaoh and fulfill his wishes...whatever the cost."
-        }
-    }
-    message_mission_bahariya_oasis {
-        id: 419,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Bahariya Oasis",
-
-        }
-        subtitle {
-            text: "The Western Desert",
-
-        }
-        content {
-            text: "@PThe reigns of Khufu and Khafra have come to an end, and with them so too has the fourth dynasty of Egyptian ruling families.  But lady Khentkaues, a distant member of this family, has given birth to a new Pharaoh named 'Userkaf', and so the royal line continues unbroken.  With Userkaf begins the fifth dynasty, an era that promises much change.   @PUserkaf has decentralized the rule of our country somewhat, and has granted more power to local authorities.  Now Nomarchs such as you are free to handle their own affairs.  Pharaoh will not attempt the construction of a massive tomb to house him for eternity, for he has another project in mind for you. @PPharaoh has declared Ra, god of the sun and of the kingdom, to be King of the Gods, and intends to proclaim his sovereignty throughout the land.  Many Sun Temples already dot the Egyptian landscape, but Pharaoh wishes to extend Ra's influence to the very edge of our Kingdom. @PTo accomplish this, you must build a fortified settlement at the Bahariya Oasis, far into the Western Desert. Use what water you can find there wisely, for what little there is to be found so far from the precious Nile is usually coveted by the wild beasts of the desert.  You must also beware of attacks by Libyan warriors, and Bedouin of the desert, which have plagued the desert caravans of late.  Plan your defenses carefully, and make use of whatever resources, such as wood and game, you can find at the oasis."
-        }
-    }
-    message_mission_abusir {
-        id: 420,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Abusir",
-
-        }
-        subtitle {
-            text: "The Temple of the Sun",
-
-        }
-        content {
-            text: "@PThe reigns of Khufu and Khafra have come to an end, and with them so too has the fourth dynasty of Egyptian ruling families.  But lady Khentkaues, a distant member of this family, has given birth to a new Pharaoh named 'Userkaf', and so the royal line continues unbroken.  With Userkaf begins the fifth dynasty, an era that promises much change.   @PUserkaf has decentralized the rule of our country somewhat, and has granted more power to local authorities.  Now Nomarchs such as you are free to handle their own affairs. Pharaoh will not attempt the construction of a massive tomb to house him for eternity, for he has another project in mind for you. @PPharaoh has declared Ra, god of the sun and of the kingdom, to be King of the Gods, and intends to proclaim his sovereignty throughout the land.  Many Sun Temples already dot the Egyptian landscape, but Pharaoh wishes that the greatest be located at Abusir, in the humid Delta region of Lower Egypt.  @PLike most of the Delta, Abusir is rich in game, fish and other wildlife and vegetation, but offers few mineral resources.  As such, sandstone needed for construction of the Sun Temple will need to be imported from the quarries at the Dunqul Oasis.  Cattle may be raised here to provide meat, though the herds require much straw for fodder. @PYou'll need to clear land in order to create a suitable location for the Sun Temple.  Be sure to sell enough of the precious timber you may harvest first, for once it is gone you may not be able to acquire more.  Apollinopolis and Abydos are always in need of wood, and also game, thus trade with them should help to offset the cost of constructing this sacred monument."
-        }
-    }
-    message_mission_dunqul {
-        id: 421,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Dunqul",
-
-        }
-        subtitle {
-            text: "The Kushite Threat",
-
-        }
-        content {
-            text: "@PPepy has taken the throne, and awarded your family the status of Chancellor, but it has come with a price.    @PCentralized authority continues to erode, as local and regional leaders become more powerful.  Harvests in some regions are far below normal, and the specter of famine has begun to appear in Egypt.  Memphis, once a splendid and beautiful city, is beginning to decline.  Seers foretell difficult times to come. @PPowerful neighbors are moving to take advantage of Egypt's increasing weakness.  The outpost at Buhen is under siege from fearless Kushite soldiers sent from Kerma, the largest non-Egyptian city in Africa.  The Kush are demanding tribute, and the slightest provocation could lead to an outright attack. Nubia, too, has issued a call to war and is seeking to reclaim lost land.  @PIf Egypt is to survive, you must do what you can to preserve trade routes to keep goods flowing into and out of Egypt.  Keep the hard-won trading post at the Selima oasis open.  Pepy, anticipating his journey to the afterlife, will make frequent requests for stone to build his pyramid, and other cities, short on food, will seek sustenance from you. @PUse your resources carefully.  Valuable wood is plentiful at the oasis, but some of the forest must be destroyed to access the limited water supply."
-        }
-    }
-    message_mission_dakhla {
-        id: 422,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Dakhla",
-
-        }
-        subtitle {
-            text: "The Caravan Trail",
-
-        }
-        content {
-            text: "@PPepy has taken the throne, and awarded your family the status of Chancellor, but it has come with a price.   @PCentralized authority continues to erode as local and regional leaders become more powerful.  Harvests in some regions are far below normal, and the specter of famine has begun to appear in Egypt.  Memphis, once a splendid and beautiful city, is beginning to decline.  Seers foretell difficult times to come.  @POur powerful neighbors are moving to take advantage of our increasing weakness.  Our outpost at Buhen is under siege from fearless Kushite soldiers sent from Kerma, the largest non-Egyptian city in Africa.  The Kushite are demanding tribute, and the slightest provocation could lead to an outright attack.  Nubia, too, has issued a call to war and is seeking to reclaim lost land.  @PTry to keep Egypt stable by establishing an administrative post at Dakhla Oasis.  The oasis has a large stand of valuable trees, but these trees unfortunately block access to the limited water supply at the oasis.  From this important location, import ebony from the African interior.  Pepy, anticipating his journey to the after-life, will request bricks for the construction of his monument.  Other cities, short on food, will request sustenance from you."
-        }
-    }
-    message_mission_thinis {
-        id: 423,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Thinis ",
-
-        }
-        subtitle {
-            text: "Civil War",
-
-        }
-        content {
-            text: "The old way of life is gone, and most fear that Egypt will never return to its past glory.  Osiris has turned his back on his people, and a series of low Inundations has caused widespread famine.  The power of the pharaohs, once unquestionable, has evaporated, replaced by bickering provincial leaders. @POut of this chaos, two noble families have arisen and are attempting to seize control of the country.  The rulers of Herakleopolis have laid claim to the throne as the rightful heirs.  They are particularly cruel and are doing little to assuage the people's hunger.  To the south, a new family, the Inyotef house, has risen to power in Thebes.  This family has done much to reunite the south, and now Herakleopolis has engaged Thebes in a deadly civil war for control of all of Egypt. @PTo show their benevolence to the people of Egypt, the Inyotefs have entrusted you with rebuilding the newly conquered city of Thinis, one of the oldest cities in Egypt.  Two of Thinis' finest and most ancient buildings have survived the turmoil of its conquest: the Temple Complex of Osiris and the mansion.  The Inyotefs have decreed that should either of these buildings be destroyed, no funds will be squandered on their restoration.  The Theban rulers consider the restoration of Thinis a top priority and have gathered up considerable funds - even in this time of strife - for this purpose.  Return Thinis to its former splendor, and commission a navy and raise a strong army to defend it from the frequent attacks of those loyal to Herakleopolis, including the cities of Lykopolis, Hierakonpolis and Hermopolis.  Be careful of the Herakleopolis rulers: they may demand tribute to see if your loyalty - and your debens -- can be extorted.  Also watch out for the opportunistic Nubians who seek to take advantage of Egypt's internal struggles."
-        }
-    }
-    message_mission_thebes {
-        id: 424,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Thebes",
-
-        }
-        subtitle {
-            text: "Civil War",
-
-        }
-        content {
-            text: "The old way of life is gone, and most fear that Egypt will never return to its past glory.  Osiris has turned his back on the people, and a series of low Inundations has caused widespread famine.  The power of the pharaohs, once unquestionable, has evaporated, replaced by bickering provincial leaders. @POut of this chaos, two noble families have arisen and are attempting to seize control of the country.  The rulers of Herakleopolis have laid claim to the throne as the rightful heirs.  They are particularly cruel and are doing little to assuage the people's hunger.  To the south, a new family, the Inyotef house, has risen to power in Thebes.  The family has done much to reunite the south, and now the rulers of Herakleopolis have engaged the rulers of Thebes in a deadly civil war for control of all of Egypt. @PThe Inyotefs, busy fighting the Herakleopolis rulers, have entrusted you with building up their home city of Thebes.  If the Inyotefs are to succeed in their fight against the Herakleopolitan rulers and solidify their reputation in Egypt, Thebes must be a touchstone on which other cities rely, providing succor or soldiers to those that request aid.  Thebes, which could be the capital should the Inyotefs reign victorious, must be a great city.  Using the scarce resources available to you, build a Sun Temple and pyramid to show Egyptians the glory of the Inyotefs. @PThebes itself is not immune to attack.  The Herakleopolitan rulers, and those loyal to them, may threaten your city from time to time, and Herakleopolis may try to extort debens from your city's treasury.  To defend against these considerable risks, build a strong army and navy to defend your city and to come to the defense of other threatened cities."
-        }
-    }
-    message_mission_coptos {
-        id: 425,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Coptos",
-
-        }
-        subtitle {
-            text: "Reunification",
-
-        }
-        content {
-            text: "Your family's performance during the civil war has not gone unrewarded.  I, Pharaoh Mentuhotep, have awarded your family the rank of Vizier.  There is no one in all of Egypt that I trust more than you.  Now that the twin kingdoms of Upper and Lower Egypt are reunited and the capital at Thebes is thriving, I need you to help me solidify my position throughout the Kingdom. @PWhile reunited, Egypt is prone to internal skirmishes, particularly in areas that were once loyal to the Herakleopolitan rulers.  To help solidify our new union, I want you to rebuild and defend Coptos.  Coptos should be a glorious city that shows Egypt's citizens what is possible under my rule.   The city comes under frequent attack from remaining loyalist cities, such as Hermopolis, and you must be sure to defend your city's borders. @PFamine still stalks the country, and frequent requests for food will come to you from other cities in the Kingdom.  Respond as quickly as you can to their heart-rending pleas, so that all Egypt will know my benevolence and the dedication of my most trusted Vizier. @PI know that I am asking much of you, but there is no one else in Egypt capable of doing this difficult task."
-        }
-    }
-    message_mission_beni_hasan {
-        id: 426,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Beni Hasan",
-
-        }
-        subtitle {
-            text: "Reunification",
-
-        }
-        content {
-            text: "Your family's performance during the civil war has not gone unrewarded.  I, Pharaoh Mentuhotep, have awarded your family the rank of vizier.  There is no one else in Egypt that I trust more than you.  Now that the twin kingdoms of Upper and Lower Egypt are reunited and the capital at Thebes is thriving, I need you to help me solidify my position throughout the Kingdom. @PWhile reunited, Egypt is prone to internal skirmishes, particularly in areas that were once loyal to the Herakleopolis rulers.  To help solidify the newly reunited country, I want you to rebuild and defend Beni Hasan, which was nearly destroyed during the civil war.  Beni Hasan should be a glorious city that shows Egypt's citizens what is possible under my rule.   @PFamine still stalks the country, and frequent requests for food will come to you from other cities in the Kingdom.  Respond as quickly as you can to their heart-rending pleas, so that all Egypt will know my benevolence and the dedication of my most trusted vizier. @PI have one more noble request: I want you to build granite obelisks to further proclaim all I have done for this land in my lifetime. @PI know that I am asking much of you, but I also know that you are the only one in Egypt capable of doing what I have asked."
-        }
-    }
-    message_mission_itjtawy {
-        id: 427,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Itjtawy",
-
-        }
-        subtitle {
-            text: "A New Capital is Founded",
-
-        }
-        content {
-            text: "O mighty Pharaoh, Beloved of Ra, how fortunate you must feel.  Your unprecedented rise to the throne of Egypt is the stuff of dreams!  A richer reward could not be fashioned by gods or people. With your family's accession, Egypt can make a new start, and perhaps we can all forget the horrors of the civil war. @PTo mark this new beginning, you should build a fine new capital.  Itjtawy, with its abundant natural resources, is a perfect location.  Using what the land has to offer, you can build a splendid city worthy of your dynasty's valor and dedication. @PTo ensure the feats of your great dynasty are always remembered, you should build two majestic brick pyramids for yourself and your family and a frightening sphinx to guard your tomb.  A family with your achievements deserves no less. @PKeep in mind, though, that some in the country question the legitimacy of your rule.  Many are still suffering the effects of the famine and grumble that you usurped the throne.  If you relieve these people's misery and help them rebuild their homes, you will certainly win their undying loyalty.  You should try to provide for your new subjects as well as you can to prevent these unfortunate people from taken up arms against you."
-        }
-    }
-    message_mission_mirgissa {
-        id: 428,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Mirgissa",
-
-        }
-        subtitle {
-            text: "Into Nubia",
-
-        }
-        content {
-            text: "Now that Egypt is firmly united under your rule, all of your court, and I, your trusted vizier, recommend that we push the borders of our country south into Nubia.  The dry riverbed at Allaqi is rich with veins of gold, and a mighty city at Mirgissa, with you in residence, will certainly keep the Nubians from trying to attack.  Be careful of the Kushites, however.  They are a much more dangerous adversary than the Nubians and will use their swords to encourage you, O Pharaoh, to leave their kingdom alone. @PTo leave a lasting mark on Nubia, you should build a large obelisk to attest to Egypt's many achievements.  The obelisk will offer compelling evidence to the Nubians of the benefits of Egyptian rule, and be a constant reminder of our presence. @PWhile your direct attention is devoted to Mirgissa, do not forget our intent to establish a thriving port city on the Red Sea at Mersa.  Mersa will need help from you, and will not hesitate to ask for it.  If Mersa can thrive, they will provide Mirgissa with much-needed copper, from which weapons can be forged."
-        }
-    }
-    message_mission_mersa_gawasis {
-        id: 429,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Mersa Gawasis",
-
-        }
-        subtitle {
-            text: "On the Shores of the Red Sea",
-
-        }
-        content {
-            text: "Now that Egypt is firmly united under your rule, we must develop trade relations with cities throughout the world to increase Egypt's wealth, O King of the Two Lands.  @PAs your people prosper, they demand more exotic items.  Tired of jewelry, an easily obtained luxury good, your people want rare and expensive luxury goods, such as incense.  Your court and I, your trusted vizier, recommend that you establish a Red Sea port at Mersa.  Mersa offers a trade route to distant Punt, from which the finest incense in the world may be imported, though at great cost.   @PBeside modest veins of gold and copper ore, Mersa produces few raw materials of its own, but can thrive as a manufacturer of finished goods.  By importing raw materials from trade partners, and exporting finished products, Mersa shall be able to turn a tidy profit. @PWhile you are busy establishing Mersa, one of your most valiant Nomarchs is establishing a new trade center in Nubia.  His city, Mirgissa, is likely to come under attack, so my beloved Pharaoh should be prepared to send him any resources he may need. @PUnder your rule, Mersa is sure to be one of the loveliest cities in the Kingdom, suitable as a final resting place for you and your family.  As you establish the thriving port, do not neglect preparations for the afterlife.  A mausoleum and small brick pyramid will provide sumptuous quarters for you and your family after your passage to the Field of Reeds."
-        }
-    }
-    message_mission_semna {
-        id: 430,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Semna",
-
-        }
-        subtitle {
-            text: "The Gauntlet",
-
-        }
-        content {
-            text: "Most respected Pharaoh, all that your family has fought so hard for is threatened!  The Nubian navy is patrolling the Nile, striking deep into the heart of Egyptian territory, ransacking villages and cities alike.  The Nubians are also boarding trade ships, pirating away goods.   To help your northern cities beat back the foe, you should be prepared to send warships and soldiers to the cities that need them.   @PTo prevent the Nubians from again sailing our waters, your military advisors recommend building a cluster of forts at Semna between the second and third cataracts of the Nile.  The forts will act as a cork, penning the Nubians in to the south.   @PSuccessfully driving out the Nubians rests with conquering the city of Kuban.  Kuban is rich in resources, and taking it over will cripple the Nubian economy.  Once you have wrested control of Kuban away from the Nubians, you can begin importing sandstone from the city for your great mausoleum.  Your mausoleum at Semna will serve as a reminder of your dominance over the unruly Nubians.   @PThere are many challenges before you as you protect Egypt from the Nubians.  Pay heed, O Living Horus, to the storm rising in the east.  The thundering of horses' hooves are heard throughout Canaan, and lightning-quick chariots are laying waste to all in their path.  These formidable chariots, the likes of which have never been seen anywhere, are driven by the Hyksos warriors.  Already, storm clouds have been spotted on the Egyptian horizon, and you should steel yourself against the impending danger."
-        }
-    }
-    message_mission_bubastis {
-        id: 431,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Bubastis",
-
-        }
-        subtitle {
-            text: "The City of Bast",
-
-        }
-        content {
-            text: "Most royal Pharaoh, with robust trade routes firmly in place, we should now show Egypt what success and wealth can bring.  Bubastis provides a perfect location for such a city: we can protect our valuable trade routes to the east while paying homage to Bast, who has watched over Egypt. @PBast's city should be like no other in Egypt.  It should be as lovely as the lotus flower, blooming forth with entertainment, schools, libraries and places of worship.  Its citizens should be well-supplied with the finer things, including imported incense.  When complete, Bubastis will be the jewel in the twin crowns. @PWhile you are building this glorious city, pay heed to the storm rising in the east.  The thundering of horses' hooves are heard throughout Canaan, and lightning-quick chariots are laying waste to all in their path.  These formidable chariots, the likes of which have never been seen anywhere, are driven by the Hyksos warriors.  Already, storm clouds have been spotted on the Egyptian horizon, and you should steel yourself against the impending danger."
-        }
-    }
-    message_mission_hermopolis {
-        id: 432,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Hermopolis",
-
-        }
-        subtitle {
-            text: "Egypt Reclaimed",
-
-        }
-        content {
-            text: "Most powerful Pharaoh, Egypt cries out for your help.  The menacing Hyksos have invaded our land and have set up their own capital at Avaris.  From Avaris, they have disrupted many of our trade routes, choking off needed supplies.  We must stop their conquest before it is too late. @PIf it pleases you, Great Pharaoh, we should reclaim the city at Hermopolis, which has been violated by these foul invaders.  We should also build a strong army and navy, for we may need to supply troops and arms to our compatriots in the north, especially at Avaris, to help repel the Hyksos incursion.  They will look to you, Child of Ra, for support.  But now we too have a new weapon.  Our wise military leaders have become proficient in the use of the dreaded chariot, and we shall turn it back upon our enemies and drive them before us.  Once we drive the troublesome Hyksos out, our military advisors recommend building a fort in Sinai at Sharuhen to prevent further invasions from the east. @PIf only our trouble was limited to the north!  Reports from our southern border show that the Nubians are once again taking advantage of a distracted Egypt.  They have reclaimed the southern cities of Mirgissa and Semna.  While these lost cities are cause for concern, we must first oust the Hyksos before we can turn our attention southward. @PThese Hyksos are most unholy invaders.  We have just discovered that they have defiled the pyramid here in Hermopolis.  They have stolen from the pyramid all the burial provisions that the mighty Pharaoh interred here needs in the Field of Reeds.  We should provide a new supply of grave goods so that the Pharaoh buried here can enjoy life everlasting."
-        }
-    }
-    message_mission_lykopolis {
-        id: 433,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Lykopolis",
-
-        }
-        subtitle {
-            text: "Egypt Reclaimed",
-
-        }
-        content {
-            text: " O King of the Two Lands, Egypt cries out for your help.  The menacing Hyksos have invaded our land and have set up their own capital at Avaris.  From Avaris, they have disrupted many of our trade routes.  We must stop their conquest before it is too late. @PHere at Lykopolis, we are safe from immediate attack, although the Hyksos have the gall to demand tribute. We may need to supply troops and arms to our compatriots in the north to help repel the Hyksos incursion.  They will look to you, O Mighty Pharaoh, for support.  But now we too have a new weapon, our wise military leaders have become proficient in the use of the dreaded chariot, and we shall turn it back upon our enemies and drive them before us. @PIf only our trouble was limited to the north!  Reports from our southern border show that the Nubians are once again taking advantage of a distracted Egypt.  They have reclaimed the southern cities of Mirgissa and Semna. @PIf Egypt is to emerge intact from these turbulent times, much will be required of your generals in the field and on the river.  To inspire your two best generals, you have promised to build each of them a pyramid as spectacular as your own.  Holding your promise in their hearts, they are fiercely combating the foe, calling upon all their strength and sinew.   @PIf it pleases you, Mighty Pharaoh, you should build three magnificent pyramids at Lykopolis, one for yourself and one for each of your generals.  These three pyramids will take up considerable space, so you will need to surrender some valuable resources in order to accommodate them.  You may also need to extend your city across the Nile to avail yourself of all the resources needed for this city to flourish."
-        }
-    }
-    message_mission_byblos {
-        id: 434,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Byblos",
-
-        }
-        subtitle {
-            text: "Expansion and Conquest",
-
-        }
-        content {
-            text: "Egypt has emerged from its recent troubles with a newfound strength.  Byblos, with all its verdant forests and rich sources of copper, is ours!  With your presence, the city is sure to thrive, and a New Kingdom will be established. @PAh, but what an alarming discovery we made after conquering Byblos!  A new, ferocious people, the Hittites, have washed over much of Asia, and some even say that their empire rivals our own for size.  Now, they have turned their eyes toward Byblos, covetous of its riches.  If we are not well prepared for their attack, we could easily lose Byblos to our foe.  @PWhile preparing to meet the Hittites, we must mark Byblos as forever Egyptian.  With your blessing, O Pharaoh, we shall erect a series of three obelisks, two small and one large, proclaiming your sovereignty and fame throughout the far stretches of your empire.  These towering monuments will remind the residents of Byblos with whom their loyalties should lie. @PWhile we occupy ourselves with matters at Byblos, other regions of Egypt are still prone to attack.  Nubians have moved north as far as the first cataract, and we must help our compatriots drive them back.  Reports from Avaris tell of another mysterious new foe, the Sea People.  Both these enemies must be strongly put down if Egypt is to attain glory.  To show your might, be sure to send troops and warships should they be requested."
-        }
-    }
-    message_mission_kuban {
-        id: 435,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Kuban",
-
-        }
-        subtitle {
-            text: "The Glory of Egypt",
-
-        }
-        content {
-            text: "With the Hyksos successfully expelled from our country, our land is ripe for rebirth, a New Kingdom that outshines past glory.  Most noble Pharaoh, Kuban is an ideal place to begin this New Kingdom.  We can use the large amount of gold found there to fund your new vision of Egypt.  @PWhile Egypt is on the brink of greatness, a few nagging problems remain.  Many of Egypt's cities are still recovering from the disruptions caused by the Hyksos and may need Pharaoh's help.  In other regions, Egypt's old enemies still attack us, and a new enemy, the Sea People, has been raiding our northern coast. You must be prepared to defend other Egyptian cities from our foes, both old and new. @PAs Egypt grows in stature, many cities are willing to engage in trade.  Some of these cities are so familiar with our ways, and in awe of your power, that they consider themselves Egyptian, while others are foreign to us and are trading with us for the first time.  For the glory of Egypt, take advantage of all these relationships to provide your people with all the goods they desire. @PTo usher in the new era, your royal architects crave the opportunity to build two pyramids and a stately mausoleum for you, O Pharaoh. These will surely reflect the wealth and grandeur you have brought to Egypt."
-        }
-    }
-    message_mission_avarist {
-        id: 436,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Avaris",
-
-        }
-        subtitle {
-            text: "The Sea People",
-
-        }
-        content {
-            text: "O Horus of Gold, our hold on Asia is strong and unchallenged, and our borders again stretch far into Nubia.  But the trouble on our northern coast is escalating.  The Sea People have become increasingly aggressive, wantonly raiding our cities.  Only Pharoah's presence will be enough to defeat this fierce and wily adversary.  If you commission a navy, supported by a strong army, surely we shall overcome the Sea People.   @PWhile you work to defeat the Sea People, your brave Nomarchs are leading attacks throughout the world.  If they are successful, Egypt will rule the world from the great Euphrates river in Asia to the sprawling Kushite city of Kerma to the south.  When you and your Nomarchs have met with sweet victory, your dynasty will be recorded as the greatest dynasty ever to keep watch over Egypt. @PMarking your far-reaching influence is a new, distant trade partner, Mycenae.  The king of Mycenae has learned of the splendor and bounty of Egypt, and wishes to engage in trade with us.  If you agree to open this trade route, O Pharaoh, your citizens will surely be provided with exotic goods unlike any they have ever seen. @PTo house your royal family for the afterlife, a pair of awe-inspiring mausoleums and an impressive brick pyramid must be built.  These monuments will remind all who follow of your deeds both on and off the battlefield."
-        }
-    }
-    message_mission_kahun {
-        id: 437,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Kahun",
-
-        }
-        subtitle {
-            text: "The Glory of Pharaoh",
-
-        }
-        content {
-            text: "Benevolent Pharaoh, you have brought peace and prosperity to our nation.  Under your wise and capable rule, Egypt is a strong and glorious country once again.  All Nomarchs are loyal to you, and no threats to our great nation remain. @PHaving accomplished all your family set out to do so many years ago, it is time to memorialize the achievements of your great dynasty.  The only way to accomplish this is to build the grandest pyramid Egypt has ever known, a pyramid even larger than Khufu's, at Giza.  Others in your noble family have sacrificed much on the long road leading to your rule of Egypt.  They too must be remembered and honored, with a sandstone mausoleum to acknowledge their unwavering support.   @PThe ideal location for these monuments is Kahun in the rich Fayuum region.  From here, you can attend to all the affairs of state, and respond to any requests for supplies that your cities may ask of you, as you build your great pyramid."
-        }
-    }
-    message_mission_buto {
-        id: 438,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Buto",
-
-        }
-        content {
-            text: "@PWith the aid of your family, the Thinite king Hor-Aha has successfully united the twin kingdoms of Upper and Lower Egypt, proclaimed himself Pharaoh over all Egypt, and founded an imposing capital at Memphis.    @PYour clan has relocated once more, this time to the humid Delta region of Lower Egypt, to an area known as Buto. Canaanite warships have been threatening this region, and you'll likely need to dispatch a few warships of your own, when the time comes. @PYour family has achieved the status of nobility. As such, it is expected that before you pass from this world into the next, you will undertake to complete an exquisite brick tomb - a mastaba - to house your body on its journey into the afterlife. @PHowever, first you must establish some farms along the banks of the Nile, to exploit the rich, fertile soil deposited by the annual Inundation of the river. This will allow your population to grow and prosper, and eventually become large enough to complete this sacred monument. But beware, for many dangers lurk among the life-giving waters of the Nile, such as deadly crocodiles, hippopotamus and malaria-carrying mosquitoes. @L@L Farming along the Nile @PYou must build farms directly on the flood plain, in order to gain the benefits of its increased fertility. Unlike most working structures, farms on the flood plain do not need direct access to employees, but do need a steady workforce of peasant laborers, supplied by work camps, to tend their fields. Build work camps fairly close to flood plain farms, so peasants won't have to walk too far to reach them. @G56 @L@PEach year the Nile floods its banks, replenishing the depleted soil on the flood plain with rich, fertile mud.  Peasants harvest the annual crop just before the Inundation, and deliver it to your granaries. Because there is only one harvest per year, make sure to have enough granaries to store a sufficient amount of food for your growing population."
-        }
-    }
-    message_mission_pi_yer {
-        id: 439,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Pi-Yer",
-
-        }
-        subtitle {
-            text: "The Sea People Land",
-
-        }
-        content {
-            text: "@PThe rumblings of distress and discontent to the west have become more ominous recently.  Scouts report that several barbarian tribes speaking strange tongues have arrived on the shores of Kyrenaica to our west.  To make matters worse, these peoples now walk hand-in-hand with Maraye, the son of Did, king of the Libyans and Pharaoh's enemy.   @PWord has now reached Pharaoh Merneptah that these vile people, with all of their women, children and worldly possessions close behind, will soon be headed eastward, toward the fertile Nile delta - our homeland! - in search of a place to settle.  Already there have been minor clashes at the northern oases of Siwi and Farafra.  Your delta town of Pi-yer now stands in their way.  In a short while this slow-moving band of savages could be on your doorsteps.  Pharaoh has decreed that, should they arrive, they must not be allowed to penetrate further! @PYou will need to import wood from which to construct sturdy warships, and copper for weapons.  It is your fortune that the previously troublesome Hittites are now peaceful, thanks to the great victory at Qadesh by Ramses II, sire of the beloved Merneptah. Make your town strong, and brace your loyal troops for mortal combat."
-        }
-    }
-    message_mission_migdol {
-        id: 440,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Migdol",
-
-        }
-        subtitle {
-            text: "Repel the Assyrians",
-
-        }
-        content {
-            text: "@PSince the days of the great Shabaka, unifier of Upper and Lower Egypt and sire of Pharaoh Taharqa, conflict with the aggressive Assyrians has been the norm.  While he still lived, Pharaoh Shabaka saw that it was proper to aid our brothers in Palestine who were chaffing under the harsh rule of Assyria.  Beware!  The minions of the heathen king Asarhaddon are again on the march and, as always, their eyes are on the fertile lands of Egypt.  It is now your turn for glory!  As Royal Mayor of Migdol, you will be expected to defend against the series of attacks by these accursed foes.  Located on the eastern rim of the Nile delta, your border fortress is on the front line of Egypt's outer defenses. @PProperly training your soldiers and establishing trading links to secure weapons - or raw materials from which to make your own - will be important. @PDo not falter!  A strong military stand is vital to insure the continued independence of Egypt.  If you can hold out for a mere seven years, victory will be assured.  Taharqa, the great Pharaoh, second son of Shabaka, will be watching!"
-        }
-    }
-    message_mission_tanis {
-        id: 441,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Tanis",
-
-        }
-        subtitle {
-            text: "Rebirth of a Navy",
-
-        }
-        content {
-            text: "@PFor many generations Egyptians have been suffering under the cruel fist of Persia.  Babylon's grip upon our sacred lands is, however, not as strong as it once was.  While our accursed oppressors have been busy meddling in the politics of Greece, a series of revolts in Egypt has finally managed to loosen the hated Persian yoke.  Now, however, word has reached Pharaoh Achoris that a force commanded by Fleet Admiral Conon (a Greek lackey receiving Persian gold) has been dispatched by Artaxerxes II and is headed for our shores.  Pharaoh Achoris has wisely determined that a strong naval presence in the Nile is needed to thwart this incursion.  As Royal Governor of Tanis for the next ten years, you must build strong ships and train stalwart troops to guard the approaches by water and land. @PYou will need to establish a trade route with Enkomi to import sturdy wood with which to construct a fleet.  Copper can also be imported from Enkomi, on the island of Cyprus.  This trade route is precarious at best, as it runs close to the Levant coast, under control of our foe.  Supplying the Pharaoh with needed supplies should help to supplement your income.   @PBe aware that funds are tight in these troubled times.  To succeed, you must be savvy in business and trade as well as a skillful commander."
-        }
-    }
-    message_mission_alexandria_2 {
-        id: 442,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Alexandria",
-
-        }
-        subtitle {
-            text: "Alexander the Great",
-
-        }
-        content {
-            text: "@PThe great Alexander, son of Phillip II of Macedon and scourge of the Babylonian Empire, blessed the lands of Egypt with his presence.  With his coming, the final corrupt Persian satrap has hastily fled.  After sacrificing to the Apis bull at Memphis, Alexander has been accepted as Pharaoh.  All the people rejoice!  Before setting off on his journey to the Oracle of Amun in the Siwi Oasis, however, our leader decided to found a new city, one that he wishes to someday be the capital of his vast and expanding empire.  In his infinite wisdom, he has appointed you to be this future city's first mayor! @PThe great Alexander has bestowed upon you a generous endowment of funds from which to begin construction, and has given you the services of the esteemed Greek architect Dinocrates.  In a mere dozen years he expects you to have the commercial, cultural and military might of his city developed to high standards, as he has vowed to return.  @POur leader has even taken the time to trace the positions of the two main thoroughfares of his city.  The Canopic Street runs along an east-west axis; the other main avenue is perpendicular to it and heads inland from Cape Lochias southward toward Lake Mariut. @PAs trusted overseer of this project, you should quickly build port facilities and establish lucrative trade routes.  There should be many customers for our products, especially wheat, barley, papyrus and linen.  Do not neglect the cultural aspects of this city, nor its military, however, as there are still roaming vandals that wish to rob Egypt of her wealth."
-        }
-    }
-    message_mission_ptolemy_alexandria {
-        id: 443,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Ptolemy's Alexandria",
-
-        }
-        subtitle {
-            text: "A Beacon of Light",
-
-        }
-        content {
-            text: "@PThe legacy of Alexander the Great lives on in our proud city. Even though his mortal remains rest in Alexandria's Mausoleum, his great city continues to thrive.  It is up to you, Ptolemy I Soter, to carry on with the job the noble Alexander began.  Since its founding by Alexander barely 30 years ago, the city has become a powerful commercial hub, supplying much-needed foodstuffs and items of luxury to much of the surrounding area.  To further its economic progress and to ensure safe passage of the many ships entering the great harbor, you should construct a massive Lighthouse on Pharos Island, near the mouth of the harbor.  This structure's beacon of light will guide distant seafarers safely into the harbor, ensuring that they do not founder on its tricky shoals. @PImportant as commerce is, however, you cannot ignore the cultural and intellectual advancement of our society.  Under your leadership Alexandria can now become the intellectual capital of the known world as well.  Gather works of knowledge from near and far, and build a great Library in which to keep them.  As sure as ants are attracted to honey, learned scholars from all over will journey to this unrivaled center of knowledge and learning.   @PTo build these great monuments you will need to import a building material, such as white marble, that will be suitable for such great structures.  Enkomi, on the island of Cyprus, is a good source for this material.   @PLastly, do not ignore your military.  There always seems to be unrest in one place or another.  It might be necessary to dispatch troops to distant frontiers to protect Egypt's interests and defend her honor."
-        }
-    }
-    message_mission_maritis {
-        id: 444,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Maritis",
-
-        }
-        subtitle {
-            text: "Caesar and Cleopatra",
-
-        }
-        content {
-            text: "@PThe indelicate grasp of the Roman Empire grows stronger and reaches farther with each passing day.  Even the deadly political power struggles of Rome have reached our land.  With the recent assassination of Pompey on the shores of Egypt, Julius Caesar now has complete control of Rome's mighty legions and has cast his eyes upon the riches of Egypt - and upon the beauty of our beguiling pharaoh, Cleopatra VII, daughter of Ptolemy XII Auletes.  Our clever leader is not easily outdone on the battlefield of wits, however.  If Caesar desires to use her as a means to further Rome's influence in Egypt, so too does she plan to employ him as an instrument of maintaining the dynastic power of our great land. @PCaesar's arrival in Alexandria with his unpopular Romans has sparked an uprising among its independent minded citizens.  An unruly mob, egged on by Cleopatra's younger brother Ptolemy XIII, has cornered Caesar and his men in the royal quarter of the city.  Bitter street fighting has erupted, claiming many casualties.  In a bid to keep his seaward escape route open, Caesar burned the Egyptian fleet as it lay at anchor in Alexandria's harbor.  Unfortunately the conflagration spread to some shoreline warehouses, burning great quantities of papyrus scrolls belonging to the Great Library.   @PTo break the trap in which he now finds himself, Caesar has summoned the loyal Mithradates and his troops from Syria to effect his rescue.  After successfully storming the border fortress of Migdol, Mithradates has force-marched his men around the apex of the Nile delta so to approach Alexandria from the southeast.  The lead elements of this force are currently encamped on the outskirts of the small village of Maritis, on the eastern shore of Lake Mariut, preparing for the final leg of their journey.  @PThe baleful Ptolemy XIII has learned of the approach of these reinforcements.  In response he has marched the bulk of his more numerous army southeastward out of Alexandria.  A decisive battle on the eastern shore of Lake Mariut is about to ensue.  Can you, commanding Mithradates' Roman legions, defeat Ptolemy's rebellious Egyptian army and break through to Caesar and Cleopatra in Alexandria?  Their fate rests in your hands."
-        }
-    }
-    message_mission_cleopatra_alexandria {
-        id: 445,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Cleopatra's Alexandria",
-
-        }
-        subtitle {
-            text: "The Legacy of a Queen",
-
-        }
-        content {
-            text: "@PCaesar's bloody death at the points of assassins' daggers cast the Roman world into turmoil and has driven you, our Pharaoh, Cleopatra VII, into grief and mourning.  Gone is your lover, mentor, confidant and powerful ally.  Octavian, his teen-aged adopted great-nephew, has been named as heir but the more experienced Mark Antony, previously a consul to Caesar, has become the nominal head of state, somewhat to the ire of the young Octavian.  Not surprisingly, Caesar's will made no mention of your son by him, Ptolemy Caesar, popularly known as Caesarion. Desiring safety for yourself and your child and, as always, seeking to preserve the power of Egypt, you have departed Rome for Alexandria.  @PDespite all the leagues between Rome and yourself, you cannot leave behind all of its internecine squabbles.  Powerful men still vie for power - your support and the access to the riches of Egypt would be a great asset to any faction.  For you to back a winner in this power struggle is critical; siding with the loser could easily result in the end of Egypt.  The dramatic showdown between the rival Roman factions recently occurred at Philippi where Mark Antony's Caesarians decisively beat the forces of Brutus and Cassius.  Antony, Octavian and Lipidus have now carved up the empire for joint rule, with Antony claiming the eastern portion, which includes Egypt. @PNot long after the battle, Mark Antony summoned you to join him at Tarsus in Asia Minor, so that you might better explain why you had been slow to cast your lot with the Caesarians.  Not one to be summoned like a lapdog, you wisely declined to respond.  After all, you know better than most that it is much better to see a Roman under your own terms and conditions, not his! @PThus you, Pharaoh Cleopatra, have returned home to Alexandria, to Egypt.  It is now time to expand the glory of this magnificent city, founded by the Great Alexander whose tomb is still frequented by visitors.  Alexandria's renowned Great Library continues to attract scholars from all over the world; the bright beacon of the wondrous Pharos Lighthouse still burns so that seafarers can safely make their way through the treacherous waters of the harbor.  Now you can further enrich the beauty of the city by constructing the expansive Caesareum in honor of your former lover and your young son. Additionally, ensure your own successful passage into the afterlife by building another mausoleum so that you can be duly worshipped after your journey into the Field of Reeds.   @PThe next time Mark Antony calls for you, perhaps he will employ a bit more tact?"
-        }
-    }
-    message_mission_actium {
-        id: 446,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Actium",
-
-        }
-        subtitle {
-            text: "Antony and Cleopatra",
-
-        }
-        content {
-            text: "@POh noble Pharaoh Cleopatra VII, consort of Caesar and now Antony, the destiny of Egypt is in your hands, but your hands now nest in those of a Roman, Mark Antony - and he is deeply embroiled in the struggle for control of Rome and its legions.   @PNeeding Egypt's inestimable resources, but also desiring your love and affection, Antony agreed to your demand of marriage.  Unfortunately, word of this new union has scandalized Rome!  As you were aware, Antony was still wed to Octavia, sister of Octavian, legal heir of Caesar and, with Antony, joint wielder of Rome's might.  But with news of the polygamous ways of Antony, this relationship has become severely strained.  Octavian feels that Antony has slurred not only the honor of his sister and his family, but the prestige of Rome as well.  To settle this matter of honor, and to bring to an end the struggle for ultimate control of Rome, Octavian has duly challenged your lover, Antony to do battle.  With this in mind Antony, accompanied by you and your Egyptian fleet, has found a location on the Greek mainland near Actium for a camp.  The site offers a good harbor with many potential berths for your ships.   @PYou must quickly build up your military, especially the naval arm. Octavian has vowed to return in September of the year 31. @PNow your fate and Mark Antony's, as well as the fate of Egypt and Rome, depend once again upon the performance of military might."
-        }
-    }
-    message_mission_thutmose_valley {
-        id: 447,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Thutmose in the Valley",
-
-        }
-        subtitle {
-            text: "The First Tomb",
-
-        }
-        content {
-            text: "@PAfter many brilliant victories on distant battlefields defending the lands and people of Egypt, Pharaoh Thutmose, as all must eventually, has turned his thoughts to preparations for his travel into the afterlife.  To ensure that this journey is successful, Pharaoh wishes you to begin construction of his tomb at your earliest convenience.  Establish a village on the west bank of the Nile to provide a pool of capable workers.  Locate a suitable site for his tomb in the cliffs to the west of the village.  You will need skilled stonemasons to cut the tomb's many chambers from the rock, and talented artisans to plaster and paint the rooms.   @PTo provide light for the workers laboring in the far recesses of the tomb you will need to establish lamp maker shops.   Supply the lampmaker with pottery and imported oil for the fuel.  Plant fields of henna to provide a source of dye for brilliant colors the paint makers will need."
-        }
-    }
-    message_mission_tutankhamun_valley {
-        id: 448,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Tut in the Valley",
-
-        }
-        subtitle {
-            text: "Death of Tutankhamun",
-
-        }
-        content {
-            text: "@PA terrible tragedy has befallen our beloved young Pharaoh, Tutankhamun!  His reign, which once held much promise of glory, has been unmercifully cut short by the hand of fate.  It is time for the workers of Deir el-Medina to again prepare an eternal resting chamber for the Pharaoh.  With his unexpectedly early death, it is imperative that you compel your workers to exert maximum effort.  Tutankhamun's tomb must be fully stocked with provisions for his journey into the afterlife and ready to receive his hallowed remains within a few very short years.  Speed is of the utmost importance!"
-        }
-    }
-    message_mission_seti_valley {
-        id: 449,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Seti in the Valley",
-
-        }
-        subtitle {
-            text: "Tomb for a Pharaoh",
-
-        }
-        content {
-            text: "@POur most powerful Pharaoh, Seti, son of Ramses I, has declared that the present is the proper time to begin to prepare for his journey into the afterlife.  To this end you will begin the excavation of his royal tomb in the Valley of the Kings.  No effort is to be spared by your workers in its preparation.  Proper measures must be taken to ensure that, when completed, its craftsmanship will be unrivaled for many years to come. @PBut, as construction on this royal project proceeds, take due precautions against vandals!  Already there have been reports of bands of greedy criminals intent on enriching themselves by defiling the tombs and disturbing the peace of Egypt's eternally resting pharaohs.  Do not let this unholy act disgrace the royal tombs in The Valley or as sure as the sun rises in the east your standing in the Kingdom will be smirched."
-        }
-    }
-    message_mission_sumur {
-        id: 450,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Sumur",
-
-        }
-        subtitle {
-            text: "Lands of the Levant",
-
-        }
-        content {
-            text: "@PHail royal governor, regent of the Levant and loyal subject of our Pharaoh, the son of Ra.  It is indeed fortunate to live in this time when Egypt's benevolent hand stretches from the far reaches of Nubia to the shores of the Levant.  Infinite is the wisdom of our new Pharaoh, the most revered Ramses II, and great is his vision, for it is he that has dispatched you to rule in this fine land, now part of the ever-expanding domain of Egypt.  @PThis region, while still fraught with dangers, has many riches that must be exploited.  The verdant hills are ripe with tall trees yielding fine wood, ideal for fashioning chariots and useful in many forms of construction.  Seams of copper, while not abundant, can also be found, and will be most useful in fashioning strong weapons.  Wood and copper, so rare in our homeland, will surely be welcomed when shipped back in quantity.  It is therefore entrusted that you will oversee the establishment of a mighty port of commerce from which these valuable commodities can be exported.  Pharaoh and the people of Egypt will be most grateful! @PBut take care!  Ensure that your own trusted soldiers are equipped with fast chariots and strong weapons, for the Hittites, though smitten by Seti, father of Pharaoh, are still dangerous and may challenge our rightful authority in this bountiful land.  A strong military presence in this new territory may be necessary to quell insurrection, and will undoubtedly be most useful in the future. @PFinally, to remind the people of this region to whom they must now pay homage, Pharaoh Ramses II deems it appropriate that you erect an obelisk proclaiming his glories."
-        }
-    }
-    message_mission_qadesh {
-        id: 451,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Qadesh",
-
-        }
-        subtitle {
-            text: "The Battle of Qadesh",
-
-        }
-        content {
-            text: "@PThe land of Amurra, close by the Levantine coast, trembles beneath the hoof and foot of your mighty legions, blessed Pharaoh.  This region may be blessed with rare gems but it is also rich with discord.  Armed Hittites, led by the wretched King Mutwatalli, once again seek to contest control of this land, rightfully ours.  Captured spies speak of how his hostile bands are still far off to the north and thus pose no threat.  But is this to be believed?  Wise is the warrior who does not drop his shield in battle.   @PTo quell such rumors of insurrection you, our most revered Pharaoh, Ramses II, son of Ra, have arrived at the fortress town of Qadesh.  Already camps of two of your feared charioteer companies have been established on its outskirts.  But these are not all.  At your immediate disposal are other veteran troops - namely the experienced troops so recently engaged near Sumur.  But take heed!  It might be advisable to delay deployment of these valuable assets until the need for them is most obvious, for wise also is the warrior who has a bevy of trusted troops to summon at the height of battle. @POnce the miserable foe has been vanquished it will be necessary to revive the stagnant economy of Qadesh so that it too will contribute to the glory of Egypt.  Collect valuable gems and hire skilled jewelers to fabricate exquisite goods for Pharaoh's loyal subjects.  Luxury items of such rare beauty will surely be in much demand!"
-        }
-    }
-    message_mission_abu_simbel {
-        id: 452,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Abu Simbel",
-
-        }
-        subtitle {
-            text: "Colossi of Abu Simbel",
-
-        }
-        content {
-            text: "@PThe glory of our pharaoh, Ramses II, pervades the land.  So that the legacy of his reign will live forever it has been decreed that a great monument and temple dedicated to his rule be constructed deep in Nubia - and Pharaoh himself has selected the perfect spot for this creation.  From the rose-colored sandstone cliffs overlooking the Nile's west bank at Abu Simbel you will oversee the sculpting of four massive seated figures of His Majesty.  Surfaces of the monument, cut from the living rock, will proclaim the heroic deeds of Pharaoh during his great triumph at the battle of Qadesh.  This massive monument, while heralding the heroics of our leader, will also serve as a reminder to the peoples of Nubia of the greatness and power of Egypt, for, while Nubia is rich in deposits of gold and other rare gems, its people have always sat uneasily under Egyptian dominion.  To this end you should be ever prepared for defense, and be able to dispatch troops should Pharaoh need them. @PSandstone can be exported for construction elsewhere in the kingdom, as can other items that you should be able to produce from the bountiful resources of the region.  Precious little wood can be found, however.  You will no doubt have to establish a trade route to import this commodity, for it will be needed for the immense sculpture's scaffolding."
-        }
-    }
-    message_mission_ramses_valley {
-        id: 453,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Ramses in the Valley",
-
-        }
-        subtitle {
-            text: "An Unsurpassed Resting Place",
-
-        }
-        content {
-            text: "@PIt has been many long and glorious years since our Pharaoh, the most revered Ramses II, accepted the crook and flail from his father, Seti I.  With the blessings of Ra, he will continue to reign for many more still.  Nevertheless, it is time to begin to cut into the bowels of the earth and prepare the eternal resting place for our vaunted leader.  He has supplied your tomb architect with a plan for the largest tomb yet constructed, surpassing even that of his sire.  It is now up to you to ensure that this royal request is brought to successful completion. @PBut be forewarned!  There is an alarming degree of unrest amongst some independent minded workers and slaves, both locally and in Lower Egypt.  They follow a man that was once raised in the court of our Pharaoh, and have threatened to call their God for divine interference.  They hope that, with such deific help, they can have their way.  Even now priests and holy men are debating the validity of these threats.  While we patiently await their opinions it might be prudent to be prepared for the unexpected."
-        }
-    }
-    message_mission_pi_yer_2 {
-        id: 454,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Pi-Yer",
-
-        }
-        subtitle {
-            text: "The Sea People Land",
-
-        }
-        content {
-            text: "@PThe rumblings of distress and discontent to the west have become more ominous recently.  Scouts report that several barbarian tribes speaking strange tongues have arrived on the shores of Kyrenaica to our west.  To make matters worse, these peoples now walk hand-in-hand with Maraye, the son of Did, king of the Libyans and Pharaoh's enemy.   @PWord has now reached Pharaoh Merneptah that these vile people, with all of their women, children and worldly possessions close behind, will soon be headed eastward, toward the fertile Nile delta - our homeland! - in search of a place to settle.  Already there have been minor clashes at the northern oases of Siwi and Farafra.  Your delta town of Pi-yer now stands in their way.  In a short while this slow-moving band of savages could be on your doorsteps.  Pharaoh has decreed that, should they arrive, they must not be allowed to penetrate further! @PYou will need to import wood from which to construct sturdy warships, and copper for weapons.  It is your fortune that the previously troublesome Hittites are now peaceful, thanks to the great victory at Qadesh by Ramses II, sire of the beloved Merneptah. Make your town strong, and brace your loyal troops for mortal combat."
-        }
-    }
-    message_mission_pelusium {
-        id: 455,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Pelusium",
-
-        }
-        subtitle {
-            text: "Repel the Assyrians",
-
-        }
-        content {
-            text: "@PSince the days of the great Shabaka, unifier of Upper and Lower Egypt and sire of Pharaoh Taharqa, conflict with the aggressive Assyrians has been the norm.  While he still lived, Pharaoh Shabaka saw that it was proper to aid our brothers in Palestine who were chaffing under the harsh rule of Assyria.  Beware!  The minions of the heathen king Asarhaddon are again on the march and, as always, their eyes are on the fertile lands of Egypt.  It is now your turn for glory!  As Royal Mayor of Pelusium, you will be expected to defend against the series of attacks by these accursed foes. Located on the eastern rim of the Nile delta, your border fortress is on the front line of Egypt's outer defenses. @PProperly training your soldiers and establishing trading links to secure weapons - or raw materials from which to make your own - will be important. @PDo not falter!  A strong military stand is vital to insure the continued independence of Egypt.  If you can hold out for a mere seven years, victory will be assured.  Taharqa, the great Pharaoh, second son of Shabaka, will be watching!"
-        }
-    }
-    message_mission_tanis_2 {
-        id: 456,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Tanis",
-
-        }
-        subtitle {
-            text: "Rebirth of a Navy",
-
-        }
-        content {
-            text: "@PFor many generations Egyptians have been suffering under the cruel fist of Persia.  Babylon's grip upon our sacred lands is, however, not as strong as it once was.  While our accursed oppressors have been busy meddling in the politics of Greece, a series of revolts in Egypt has finally managed to loosen the hated Persian yoke.  Now, however, word has reached Pharaoh Achoris that a force commanded by Fleet Admiral Conon (a Greek lackey receiving Persian gold) has been dispatched by Artaxerxes II and is headed for our shores.  Pharaoh Achoris has wisely determined that a strong naval presence in the Nile is needed to thwart this incursion.  As Royal Governor of Tanis for the next ten years, you must build strong ships and train stalwart troops to guard the approaches by water and land. @PYou will need to establish a trade route with Enkomi to import sturdy wood with which to construct a fleet.  Copper can also be imported from Enkomi, on the island of Cyprus.  This trade route is precarious at best, as it runs close to the Levant coast, under control of our foe.  Supplying the Pharaoh with needed supplies should help to supplement your income.   @PBe aware that funds are tight in these troubled times.  To succeed, you must be savvy in business and trade as well as a skillful commander."
-        }
-    }
-    message_mission_alexandria {
-        id: 457,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Alexandria",
-
-        }
-        subtitle {
-            text: "Alexander the Great",
-
-        }
-        content {
-            text: "@PThe great Alexander, son of Phillip II of Macedon and scourge of the Babylonian empire, blessed the lands of Egypt with his presence.  With his coming, the final corrupt Persian satrap has hastily fled.  After sacrificing to the Apis bull at Memphis, Alexander has been accepted as Pharaoh.  All the people rejoice!  Before setting off on his journey to the Oracle of Amun in the Siwi Oasis, however, our leader decided to found a new city, one that he wishes to someday be the capital of his vast and expanding empire.  In his infinite wisdom, he has appointed you to be this future city's first mayor! @PThe great Alexander has bestowed upon you a generous endowment of funds from which to begin construction, and has given you the services of the esteemed Greek architect Dinocrates.  In a mere dozen years he expects you to have the commercial, cultural and military might of his city developed to high standards, as he has vowed to return.  @POur leader has even taken the time to trace the positions of the two main thoroughfares of his city.  The Canopic Street runs along an east-west axis; the other main avenue is perpendicular to it and heads inland from Cape Lochias southward toward Lake Mariut. @PAs trusted overseer of this project, you should quickly build port facilities and establish lucrative trade routes.  There should be many customers for our products, especially wheat, barley, papyrus and linen.  Do not neglect the cultural aspects of this city, nor its military, however, as there are still roaming vandals that wish to rob Egypt of her wealth."
-        }
-    }
-    message_mission_ptolemy_alexandria_2 {
-        id: 458,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Ptolemy's Alexandria",
-
-        }
-        subtitle {
-            text: "A Beacon of Light",
-
-        }
-        content {
-            text: "@PThe legacy of Alexander the Great lives on in our proud city. Even though his mortal remains rest in Alexandria's Mausoleum, his great city continues to thrive.  It is up to you, Ptolemy I Soter, to carry on with the job the noble Alexander began.  Since its founding by Alexander barely 30 years ago, the city has become a powerful commercial hub, supplying much-needed foodstuffs and items of luxury to much of the surrounding area.  To further its economic progress and to ensure safe passage of the many ships entering the great harbor, you should construct a massive Lighthouse on Pharos Island, near the mouth of the harbor.  This structure's beacon of light will guide distant seafarers safely into the harbor, ensuring that they do not founder on its tricky shoals. @PImportant as commerce is, however, you cannot ignore the cultural and intellectual advancement of our society.  Under your leadership Alexandria can now become the intellectual capital of the known world as well.  Gather works of knowledge from near and far, and build a great Library in which to keep them.  As sure as ants are attracted to honey, learned scholars from all over will journey to this unrivaled center of knowledge and learning.   @PTo build these great monuments you will need to import a building material, such as white marble, that will be suitable for such great structures.  Enkomi, on the island of Cyprus, is a good source for this material.   @PLastly, do not ignore your military.  There always seems to be unrest in one place or another.  It might be necessary to dispatch troops to distant frontiers to protect Egypt's interests and defend her honor."
-        }
-    }
-    message_mission_maritis_2 {
-        id: 459,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Maritis",
-
-        }
-        subtitle {
-            text: "Caesar and Cleopatra",
-
-        }
-        content {
-            text: "@PThe indelicate grasp of the Roman Empire grows stronger and reaches farther with each passing day.  Even the deadly political power struggles of Rome have reached our land.  With the recent assassination of Pompey on the shores of Egypt, Julius Caesar now has complete control of Rome's mighty legions and has cast his eyes upon the riches of Egypt - and upon the beauty of our beguiling pharaoh, Cleopatra VII, daughter of Ptolemy XII Auletes.  Our clever leader is not easily outdone on the battlefield of wits, however.  If Caesar desires to use her as a means to further Rome's influence in Egypt, so too does she plan to employ him as an instrument of maintaining the dynastic power of our great land. @PCaesar's arrival in Alexandria with his unpopular Romans has sparked an uprising among its independent minded citizens.  An unruly mob, egged on by Cleopatra's younger brother Ptolemy XIII, has cornered Caesar and his men in the royal quarter of the city.  Bitter street fighting has erupted, claiming many casualties.  In a bid to keep his seaward escape route open, Caesar burned the Egyptian fleet as it lay at anchor in Alexandria's harbor.  Unfortunately the conflagration spread to some shoreline warehouses, burning great quantities of papyrus scrolls belonging to the Great Library.   @PTo break the trap in which he now finds himself, Caesar has summoned the loyal Mithradates and his troops from Syria to effect his rescue. After successfully storming the border fortress of Pelusium, Mithradates has force-marched his men around the apex of the Nile delta so to approach Alexandria from the southeast. The lead elements of this force are currently encamped on the outskirts of the small village of Maritis, on the eastern shore of Lake Mariut, preparing for the final leg of their journey.  @PThe baleful Ptolemy XIII has learned of the approach of these reinforcements.  In response he has marched the bulk of his more numerous army southeastward out of Alexandria.  A decisive battle on the eastern shore of Lake Mariut is about to ensue.  Can you, commanding Mithradates' Roman legions, defeat Ptolemy's rebellious Egyptian army and break through to Caesar and Cleopatra in Alexandria?  Their fate rests in your hands."
-        }
-    }
-    message_mission_cleopatra_alexandria_2 {
-        id: 460,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Cleopatra's Alexandria",
-
-        }
-        subtitle {
-            text: "The Legacy of a Queen",
-
-        }
-        content {
-            text: "@PCaesar's bloody death at the point of assassins' daggers cast the Roman world into turmoil and has driven you, our Pharaoh, Cleopatra VII, into grief and mourning.  Gone is your lover, mentor, confidant and powerful ally.  Octavian, his teen-aged adopted great-nephew, has been named as heir but the more experienced Mark Antony, previously a consul to Caesar, has become the nominal head of state, somewhat to the ire of the young Octavian.  Not surprisingly, Caesar's will made no mention of your son by him, Ptolemy Caesar, popularly known as Caesarion. Desiring safety for yourself and your child and, as always, seeking to preserve the power of Egypt, you have departed Rome for Alexandria.  @PDespite all the leagues between Rome and yourself, you cannot leave behind all of its internecine squabbles.  Powerful men still vie for power - your support and the access to the riches of Egypt would be a great asset to any faction.  For you to back a winner in this power struggle is critical; siding with the loser could easily result in the end of Egypt.  The dramatic showdown between the rival Roman factions recently occurred at Philippi where Mark Antony's Caesarians decisively beat the forces of Brutus and Cassius.  Antony, Octavian and Lipidus have now carved up the empire for joint rule, with Antony claiming the eastern portion, which includes Egypt. @PNot long after the battle, Mark Antony summoned you to join him at Tarsus in Asia Minor, so that you might better explain why you had been slow to cast your lot with the Caesarians.  Not one to be summoned like a lapdog, you wisely declined to respond.  After all, you know better than most that it is much better to see a Roman under your own terms and conditions, not his! @PThus you, Pharaoh Cleopatra, have returned home to Alexandria, to Egypt.  It is now time to expand the glory of this magnificent city, founded by the Great Alexander whose tomb is still frequented by visitors.  Alexandria's renowned Great Library continues to attract scholars from all over the world; the bright beacon of the wondrous Pharos Lighthouse still burns so that seafarers can safely make their way through the treacherous waters of the harbor.  Now you can further enrich the beauty of the city by constructing the expansive Caesareum in honor of your former lover and your young son. Additionally, ensure your own successful passage into the afterlife by building another mausoleum so that you can be duly worshipped after your journey into the Field of Reeds.   @PThe next time Mark Antony calls for you, perhaps he will employ a bit more tact?"
-        }
-    }
-    message_mission_actium_2 {
-        id: 461,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Actium",
-
-        }
-        subtitle {
-            text: "Antony and Cleopatra",
-
-        }
-        content {
-            text: "@POh noble Pharaoh Cleopatra VII, consort of Caesar and now Antony, the destiny of Egypt is in your hands, but your hands now nest in those of a Roman, Mark Antony - and he is deeply embroiled in the struggle for control of Rome and its legions.   @PNeeding Egypt's inestimable resources, but also desiring your love and affection, Antony agreed to your demand of marriage.  Unfortunately, word of this new union has scandalized Rome!  As you were aware, Antony was still wed to Octavia, sister of Octavian, legal heir of Caesar and, with Antony, joint wielder of Rome's might.  But with news of the polygamous ways of Antony, this relationship has become severely strained.  Octavian feels that Antony has slurred not only the honor of his sister and his family, but the prestige of Rome as well.  To settle this matter of honor, and to bring to an end the struggle for ultimate control of Rome, Octavian has duly challenged your lover, Antony to do battle.  With this in mind Antony, accompanied by you and your Egyptian fleet, has found a location on the Greek mainland near Actium for a camp.  The site offers a good harbor with many potential berths for your ships.   @PYou must quickly build up your military, especially the naval arm. Octavian has vowed to return in September of the year 31. @PNow your fate and Mark Antony's, as well as the fate of Egypt and Rome, depend once again upon the performance of military might."
-        }
-    }
-    message_mission_deir_el_medina {
-        id: 462,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Deir el Medina",
-
-        }
-        subtitle {
-            text: "The First Tomb",
-
-        }
-        content {
-            text: "@PAfter many brilliant victories on distant battlefields defending the lands and people of Egypt, Pharaoh Thutmose, as all must eventually, has turned his thoughts to preparations for his travel into the afterlife.  To ensure that this journey is successful, Pharaoh wishes you to begin construction of his tomb at your earliest convenience.  Establish a village on the west bank of the Nile to provide a pool of capable workers.  Locate a suitable site for his tomb in the cliffs to the west of the village.  You will need skilled stonemasons to cut the tomb's many chambers from the rock, and talented artisans to plaster and paint the rooms.   @PTo provide light for the workers laboring in the far recesses of the tomb you will need to establish lamp maker shops.   Supply the lampmaker with pottery and imported oil for the fuel.  Plant fields of henna to provide a source of dye for brilliant colors the paint makers will need."
-        }
-    }
-    message_mission_tutankhamun_valley_2 {
-        id: 463,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Tut in the Valley",
-
-        }
-        subtitle {
-            text: "Death of Tutankhamun",
-
-        }
-        content {
-            text: "@PA terrible tragedy has befallen our beloved young Pharaoh, Tutankhamun!  His reign, which once held much promise of glory, has been unmercifully cut short by the hand of fate.  It is time for the workers of Deir el-Medina to again prepare an eternal resting chamber for the Pharaoh.  With his unexpectedly early death, it is imperative that you compel your workers to exert maximum effort.  Tutankhamun's tomb must be fully stocked with provisions for his journey into the afterlife and ready to receive his hallowed remains within a few very short years.  Speed is of the utmost importance!"
-        }
-    }
-    message_mission_seti_valley_2 {
-        id: 464,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Seti in the Valley",
-
-        }
-        subtitle {
-            text: "Tomb for a Pharaoh",
-
-        }
-        content {
-            text: "@POur most powerful Pharaoh, Seti, son of Ramses I, has declared that the present is the proper time to begin to prepare for his journey into the afterlife.  To this end you will begin the excavation of his royal tomb in the Valley of the Kings.  No effort is to be spared by your workers in its preparation.  Proper measures must be taken to ensure that, when completed, its craftsmanship will be unrivaled for many years to come. @PBut, as construction on this royal project proceeds, take due precautions against vandals!  Already there have been reports of bands of greedy criminals intent on enriching themselves by defiling the tombs and disturbing the peace of Egypt's eternally resting pharaohs.  Do not let this unholy act disgrace the royal tombs in The Valley or as sure as the sun rises in the east your standing in the Kingdom will be smirched."
-        }
-    }
-    message_mission_sumur_2 {
-        id: 465,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Sumur",
-
-        }
-        subtitle {
-            text: "Lands of the Levant",
-
-        }
-        content {
-            text: "@PHail royal governor, regent of the Levant and loyal subject of our Pharaoh, the son of Ra.  It is indeed fortunate to live in this time when Egypt's benevolent hand stretches from the far reaches of Nubia to the shores of the Levant.  Infinite is the wisdom of our new Pharaoh, the most revered Ramses II, and great is his vision, for it is he that has dispatched you to rule in this fine land, now part of the ever-expanding domain of Egypt.  @PThis region, while still fraught with dangers, has many riches that must be exploited.  The verdant hills are ripe with tall trees yielding fine wood, ideal for fashioning chariots and useful in many forms of construction.  Seams of copper, while not abundant, can also be found, and will be most useful in fashioning strong weapons.  Wood and copper, so rare in our homeland, will surely be welcomed when shipped back in quantity.  It is therefore entrusted that you will oversee the establishment of a mighty port of commerce from which these valuable commodities can be exported.  Pharaoh and the people of Egypt will be most grateful! @PBut take care!  Ensure that your own trusted soldiers are equipped with fast chariots and strong weapons, for the Hittites, though smitten by Seti, father of Pharaoh, are still dangerous and may challenge our rightful authority in this bountiful land.  A strong military presence in this new territory may be necessary to quell insurrection, and will undoubtedly be most useful in the future. @PFinally, to remind the people of this region to whom they must now pay homage, Pharaoh Ramses II deems it appropriate that you erect an obelisk proclaiming his glories."
-        }
-    }
-    message_mission_qadesh_2 {
-        id: 466,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Qadesh",
-
-        }
-        subtitle {
-            text: "The Battle of Qadesh",
-
-        }
-        content {
-            text: "@PThe land of Amurra, close by the Levantine coast, trembles beneath the hoof and foot of your mighty legions, blessed Pharaoh.  This region may be blessed with rare gems but it is also rich with discord.  Armed Hittites, led by the wretched King Mutwatalli, once again seek to contest control of this land, rightfully ours.  Captured spies speak of how his hostile bands are still far off to the north and thus pose no threat.  But is this to be believed?  Wise is the warrior who does not drop his shield in battle.   @PTo quell such rumors of insurrection you, our most revered Pharaoh, Ramses II, son of Ra, have arrived at the fortress town of Qadesh.  Already camps of two of your feared charioteer companies have been established on its outskirts.  But these are not all.  At your immediate disposal are other veteran troops - namely the experienced troops so recently engaged near Sumur.  But take heed!  It might be advisable to delay deployment of these valuable assets until the need for them is most obvious, for wise also is the warrior who has a bevy of trusted troops to summon at the height of battle. @POnce the miserable foe has been vanquished it will be necessary to revive the stagnant economy of Qadesh so that it too will contribute to the glory of Egypt.  Collect valuable gems and hire skilled jewelers to fabricate exquisite goods for Pharaoh's loyal subjects.  Luxury items of such rare beauty will surely be in much demand!"
-        }
-    }
-    message_mission_abu_simbel_2 {
-        id: 467,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Abu Simbel",
-
-        }
-        subtitle {
-            text: "Colossi of Abu Simbel",
-
-        }
-        content {
-            text: "@PThe glory of our pharaoh, Ramses II, pervades the land.  So that the legacy of his reign will live forever it has been decreed that a great monument and temple dedicated to his rule be constructed deep in Nubia - and Pharaoh himself has selected the perfect spot for this creation.  From the rose-colored sandstone cliffs overlooking the Nile's west bank at Abu Simbel you will oversee the sculpting of four massive seated figures of His Majesty.  Surfaces of the monument, cut from the living rock, will proclaim the heroic deeds of Pharaoh during his great triumph at the battle of Qadesh.  This massive monument, while heralding the heroics of our leader, will also serve as a reminder to the peoples of Nubia of the greatness and power of Egypt, for, while Nubia is rich in deposits of gold and other rare gems, its people have always sat uneasily under Egyptian dominion.  To this end you should be ever prepared for defense, and be able to dispatch troops should Pharaoh need them. @PSandstone can be exported for construction elsewhere in the kingdom, as can other items that you should be able to produce from the bountiful resources of the region.  Precious little wood can be found, however.  You will no doubt have to establish a trade route to import this commodity, for it will be needed for the immense sculpture's scaffolding."
-        }
-    }
-    message_mission_ramses_valley_2 {
-        id: 468,
-        type: 3,
-        size [40, 30]
-        title {
-            text: "Ramses in the Valley",
-
-        }
-        subtitle {
-            text: "An Unsurpassed Resting Place",
-
-        }
-        content {
-            text: "@PIt has been many long and glorious years since our Pharaoh, the most revered Ramses II, accepted the crook and flail from his father, Seti I.  With the blessings of Ra, he will continue to reign for many more still.  Nevertheless, it is time to begin to cut into the bowels of the earth and prepare the eternal resting place for our vaunted leader.  He has supplied your tomb architect with a plan for the largest tomb yet constructed, surpassing even that of his sire.  It is now up to you to ensure that this royal request is brought to successful completion. @PBut be forewarned!  There is an alarming degree of unrest amongst some independent minded workers and slaves, both locally and in Lower Egypt.  They follow a man that was once raised in the court of our Pharaoh, and have threatened to call their God for divine interference.  They hope that, with such deific help, they can have their way.  Even now priests and holy men are debating the validity of these threats.  While we patiently await their opinions it might be prudent to be prepared for the unexpected."
-        }
-    }
-    message_mission_henna {
-        id: 469,
-        
-        size [30, 20]
-        image {
-            id: 1008,
-            pos [15, 15]
-        }
-        title {
-            text: "Henna",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "For well over three millennia various peoples have used the shrub-like henna plant as a source for dye.  Henna (with the scientific name of Lawsonia inermis) is from the Lythraceae family and is originally native to northern Africa and the Middle East.  When crushed, its leaves and branches yield an orange-red dye that, when properly applied, can be used for coloring hair, fingernails, and skin.  Even today henna is commonly used in many religious rituals and burial rites in Asia, the Middle East and Africa, and is the basic coloring agent of many of the popular 'temporary tattoos'.  Henna is also the primary coloring agent for wide variety of hair dyes."
-        }
-    }
-    message_mission_paint_maker {
-        id: 470,
-        
-        size [30, 28]
-        title {
-            text: "Paint Maker",
-        }
-        content {
-            text: "Paint makers need a supply of @469henna to produce paint. The crushed leaves and stalks of the henna plant are used to produce various dyes, which are necessary for the manufacture of paints. Henna is grown on @91Henna&Farms, or a @47trade&route can be set up to import it.  @POnce a Paint Maker has a steady supply of labor, road access and has had a load of henna delivered to it, you will see the paint makers hard at work producing paint. When production is complete the paint will be delivered to a @4Storage&Yard. The paint is then used by @363Artisans when painting the @478Royal&Burial&Tombs. @PDue to their unpleasant odors and noise, Paint Makers are @56not&desirable neighbors. @L@LClick @472here to find out more about paint making in ancient Egypt."
-        }
-    }
-    message_illness_video {
-        id: 471,
-        type: 2,
-        
-        size [30, 20]
-        title {
-            text: "Illness",
-        }
-        video {
-            text: "smk\\sick.smk"
-        }
-    }
-    message_history_artisans {
-        id: 472,
-        
-        size [30, 20]
-        image {
-            id: 1004,
-            pos [15, 15]
-        }
-        title {
-            text: "Artisans",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "While most of the structures of ancient Egypt employed artists to apply finishing touches, it is in the New Kingdom's tombs in the @475Valley&of&the&Kings that these talented artists' extraordinary skills really shine. Practically every square inch of the interior walls and ceilings of these underground tombs proclaimed the greatness of the deceased through skillfully painted hieroglyphics and other illustrations. @PDespite the extravagance and detail of their illustrations, the ancient artists had a fairly limited palette of colors to work with and used natural brushes made from @94reeds or fibrous wood, such as palm ribs. Their pigments were frequently pre-mixed in small shops that manufactured them from natural dyes (such as @469henna ) and other natural pigments (such as calcium carbonate, charcoal, iron oxide, realgar, orpiment, azurite and malachite) ground into powder. These might then be mixed with a binding agent, such as plant gum or animal glue, and applied as paint. @PMany specialized artists worked together to create splendid bas-relief images in the tombs. First, plaster was prepared from a mixture of @190clay, water and a whitening agent and applied to the tomb's walls. Then, a rough design was traced in red onto the freshly plastered walls. A master draughtsman then refined this outline, usually in black. A master painter then made further corrections and added details to guide the bas-relief sculptor that followed him. Paint was then applied in large, flat colors. Final detailing, such as outlines and interior details, was then applied by another master artist."
-        }
-    }
-    message_building_lamp_maker {
-        id: 473,
-        
-        size [30, 28]
-        title {
-            text: "Lamp Maker",
-        }
-        content {
-            text: "The Lamp Maker prepares lamps whose light helps guide workers through the dark passageways of a @478Royal&Burial&Tomb.  @PTo make lamps, the Lamp Maker needs a supply of pottery and oil. A @1Potter can supply pottery or it can be imported from a @47trade&partner. @476Oil can only be imported. @PA lamp maker must have road access and a nearby source of labor. Once the Lamp Maker has received enough pottery and oil, you'll see the lamp makers hard at work, filling the pottery with oil to make lamps. @PLamp Makers have a negative effect on @56desirability, so don't place them too close to your housing developments. @L@LClick @474here to learn more about the lamps of ancient Egypt."
-        }
-    }
-    message_history_lamps {
-        id: 474,
-        
-        size [30, 20]
-        image {
-            id: 1003,
-            pos [15, 15]
-        }
-        title {
-            text: "Lamps",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Ancient Egyptians manufactured small ceramic lamps that burned natural @476oils or rendered animal fat as fuel. Such lamps provided a needed light source for craftsmen working deep inside a burial tomb."
-        }
-    }
-    message_history_valley_of_the_kings {
-        id: 475,
-        
-        size [30, 20]
-        image {
-            id: 1011,
-            pos [15, 15]
-        }
-        title {
-            text: "Valley of the Kings",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "@PThe Valley of the Kings was the necropolis for five centuries of pharaohs, ca. 1539-1075 BC, including Thutmose I, Tutankhamun and Ramses the Great (Ramses II).  Located on the western bank of the Nile across from the temple complex at Thebes, the Valley is overlooked by el-Qurn, an almost pyramid-shaped mountain that receives the last blessings of Ra each day before the sun sets.  Between the Valley and the great Nile are the royal mortuary temples inscribed to the pharaohs who expected to enjoy their afterlives in the Valley's tombs.  A nearby village, Deir el-Medina, housed hundreds of workers and their families. @PSpecialized workers prepared the Royal Burial Tombs, and each had an important task to carry out.  @385Masons chiseled steps and passageways into the limestone cliffs.  Stone pillars were left to hold up the roofs of large chambers.  The hewn rooms were smoothed and plastered before the @472artisans arrived to decorate the ceilings and walls with carved bas-reliefs and paintings that would help guide the pharaoh through his afterlife.  The deceased king was placed in his sarcophagus and sealed into the tomb with many treasures worthy of the deified status granted him by the ancient Egyptians.  Because of these great treasures, the tombs were frequently robbed, sometimes by the very people who were placed to guard them. @PEuropean archaeologists rediscovered the Valley of the Kings in the early 1800s.  In 1922 Howard Carter broke through the sealed tomb of Tutankhamun to find many treasures, including a golden sarcophagus.  Over the centuries, flash floods have filled many of the tombs with silt and debris, and it is a good bet that there are passageways - and maybe even some tombs - as yet undiscovered in the Valley."
-        }
-    }
-    message_history_oil {
-        id: 476,
-        
-        size [30, 20]
-        image {
-            id: 1009,
-            pos [15, 15]
-        }
-        title {
-            text: "Oil",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Most oils used by ancient Egyptians were imported from Greece, Cyprus and Phoenicia. Natural oils had many uses, such as fuel for @474lamps and for use in cooking. Oils were extracted from a variety of sources (most of which are still used today), such as sesame, linseeds, olives and natural animal fats."
-        }
-    }
-    message_figure_tomb_robber {
-        id: 477,
-        
-        size [30, 28]
-        title {
-            text: "Tomb Robber",
-        }
-        content {
-            text: "@PWhere there's a tomb, there's treasure! A tomb robber is a type of criminal that appears if @39City&Sentiment is extremely poor. He'll only strike the city, however, if there's treasure to plunder. So, if your city doesn't have any tombs (either Pyramids, @371Mastabas, @368Mausoleums or @478Royal&Burial&Tombs), he won't bother to come to your city. He also won't bother if there aren't any @374burial&provisions to be had, either because the tomb didn't require that any be dispatched or because you haven't sent them to the tomb yet. @PSometimes, tomb robbers strike even when there is no sign of crime in the city. If professional tomb robbers receive word from their cronies that there are particularly valuable burial provisions in your city's tombs, they will unleash a crime wave. You have no way of predicting when a crime wave might occur.  @PAll tomb robbers have one goal in mind: to deprive an eternally sleeping Pharaoh of the riches and treasures that have been stored away in his tomb for use in the afterlife. To affect this scheme, the tomb robber must make his way to the tomb without being apprehended.  If he meets a constable or some soldiers on his way to the tomb, he is usually quietly and effectively 'detained,' although an extremely agile thief can sometimes still escape. If the tomb robber successfully reaches a burial monument, he will secret away with some previously dispatched burial provisions and your @35Kingdom&Rating will be adversely affected, as who would want to be governed by someone that is incapable of protecting the sanctity of his ancestors' graves? @PTomb robbers aren't picky about which tombs they strike. They are perfectly willing to try to steal from a monument that was already in the city before you began your rule. Luckily, these pre-existing tombs are well sealed, and a tomb robber won't be able to steal any burial provisions from them. However, people throughout Egypt will be so astounded that one of the oldest tombs was threatened that your Kingdom rating will take quite a tumble. @PBeware! If the tomb robber makes off with burial provisions you will need to replace each stolen item before the mission can be completed. @PFor more on crime in your city, click @36here. @L@LTo learn more about the burial tombs in ancient Egypt's Valley of the Kings, click @475here."
-        }
-    }
-    message_building_royal_burial_tomb {
-        id: 478,
-        
-        size [30, 28]
-        title {
-            text: "Royal Burial Tomb",
-        }
-        content {
-            text: "@PBeginning in the New Kingdom period, ancient Egyptians began interring their pharaohs and other nobility in progressively elaborate tombs carved into the living rock in an almost inaccessible valley. @PFor work to commence on a Royal Burial Tomb you will first have to find a proper site.  Select 'Royal Burial Tomb' from the Religious Structures: Monuments list.  A large footprint appears.  The bulk of the monument must be placed on cliffs, except for the small entryway that juts out from its side. Move the footprint around the cliffs until you find a suitable spot. You'll know you've found a good place when the entire footprint turns green. Any red in the footprint indicates that you have not found a viable location for the monument. @PYou might find it easier to place the Royal Burial Tomb by temporarily flattening the cliffs. Simply press 'H' to flatten the cliffs, or choose 'Hide Cliffs' from the list of @18overlays. To raise the cliffs back to their lofty heights, press 'H' again or select 'Normal' from the overlay list. For particularly large tombs, you might also find pressing the 'M' key helpful. Pressing the 'M' key freezes the footprint in place, and you can then move your viewpoint to see if the site you've chosen is suitable. If it is, simply click the mouse button to set the monument in place. If the site is not appropriate, press 'M' again to free the footprint and continue looking for a site. @PAfter a site is selected, a shipment of lamps must be delivered to the tomb before any work can begin. Lamps are made by a @473Lamp&Maker and can also be imported from a @47trade&partner. Once 400 lamps are stored in one @4Storage&Yard, a peasant will drag a sled full of lamps to the construction site. @PAfter the lamps arrive to light their way, @363stonemasons roughly hew the tomb's many chambers from the solid rock. Once the stonemasons have completed their work in a chamber, skilled @363artisans will be summoned to begin plastering and painting the walls. These artisans will need a supply of @92clay for the plaster and paint from a @470Paint&Maker. The commodities will be delivered directily to the Artisans' Guild either by the manufacturers themselves or from a Storage Yard. If your city cannot produce one or both of these commodities, you may be able to @47import them. @PRight-click on a Royal Burial Tomb monument to visit its @369Construction&Foreman for a progress report. @L@LClick @475here to learn more about the Valley of the Kings and its Royal Burial Tombs."
-        }
-    }
-    message_building_zoo {
-        id: 479,
-        
-        size [30, 28]
-        title {
-            text: "Zoo",
-        }
-        content {
-            text: "Zoos are a popular form of @49entertainment in any city. The zoo requires road access and laborers to tend the animals, as well as a supply of @89straw and @359game&meat for feed. Straw can be harvested from Grain Farms, and hunters from the Hunters' Lodge can procure game meat. You can also set up a @47trade&route to import these items. @PCheck with your @28Overseer&of&Diversions to see how many zoos your city has, and use the @18Entertainment&Overlay to view which houses have access to the zoo and to watch the zookeepers walking around the city. @PDespite the unique distractions resident in a zoo, citizens do not like living too near them, as the bellowing noises and strong odors emanating from the animals are quite offensive to any well-cultured Egyptian. Click @56here to learn more about desirability. @L@LTo learn more about zoos in ancient Egypt, click @480here."
-        }
-    }
-    message_history_zoo {
-        id: 480,
-        
-        size [30, 20]
-        image {
-            id: 1005,
-            pos [15, 15]
-        }
-        title {
-            text: "Zoo",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Ancient Egyptians were fond of the fun and the unusual, and both could be found in quantity at a zoo. As Egypt's power and influence spread across several continents, many pharaohs received strange and exotic creatures from rulers of distant lands as gifts or tribute. These animals were presented to the pharaoh, and were then kept in special zoological gardens, which would inevitably be found a short distance from the ruler's palace. Evidently, the early zoos of Egypt were primarily for public spectacle and secondarily for study. Alexandria's Great Library purportedly had both a botanical garden and a zoological yard on its grounds."
-        }
-    }
-    message_history_alexandria_and_its_library {
-        id: 481,
-        
-        size [30, 20]
-        image {
-            id: 1001,
-            pos [15, 15]
-        }
-        title {
-            text: "Alexandria and its Library",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "From its inception, Alexander the Great hoped that Alexandria, the city at the mouth of the Nile that he founded and helped plan, would become a center of trade and culture for the Mediterranean basin. Less than fifty years after its founding in 331 BC, the booming metropolis had become a sophisticated hub of commerce, due in large part to its famed Great Library.  @PSoon after Alexander's unexpectedly early death in 323 BC, his expansive empire dissolved into three major regions. One of his closest friends and ablest generals, Ptolemy, was at the time de facto governor of Egypt. He took control of the reins of that ancient land, eventually becoming pharaoh (as Ptolemy I Soter) and thus continuing the Greek presence in Egypt begun by Alexander. It was Ptolemy that intercepted Alexander's funerary procession, bound for Macedonia, and brought his mortal remains to Alexandria for internment.  @PBesides personal glory and luxurious living, however, the early Ptolemaic rulers were, to their credit, also interested in bettering the culture of their city and its land. Alexandria, Egypt's new capital, was already the center of commerce for the known world; they wanted it to become the intellectual capital as well. To this end Alexandria's Great Library was conceived and built. The Great Library was mankind's first center of scholastic learning and research. The brilliant minds of antiquity here laid the foundations for the systematic study of astronomy, geography, literature, mathematics, medicine, and physics. It was here that Euclid first defined geometry and Eratosthenes accurately measured the circumference of the earth, arguing that India could be reached by sailing westward from Spain. @PThe Ptolemy's devoted much time and energy, and not a small portion of their wealth, to obtaining copies of every important manuscript known to man. To this end a law was passed proclaiming that every caravan and ship entering Alexandria was to be searched - not for contraband, but for articles of learning. Any map or scroll found was turned in to the library so that scribes could copy it. Thus Alexandria's scholarly haven eventually contained over 700,000 systematically cataloged papyri scrolls, including many now-lost masterpieces of art, literature and science, such as classics by Homer, Aristotle, Sophocles, Aeschylus and Euripedes.  @PBut all was not letters of learning. The legendary library's grounds also boasted a botanical gardens and a museum, as well as a temple to the nine muses (Greek gods and goddesses of the arts and sciences). A short stroll along a garden-lined palisade would take one to a @480zoo no doubt containing many exotic animals. Many were the ancient scholars that walked its colonnaded passages.  @PWhat led to the Great Library's demise is not completely clear. A good portion of its priceless works was evidently destroyed in a fire that occurred when Julius Caesar torched the ships of Cleopatra VII's brother. By the fourth century AD, as Christianity's influence was spreading, most of the remaining manuscripts of the Library were apparently destroyed in an effort to stamp out all relics of paganism and heresy. Later, in 640 AD, Arabs that swept through the almost abandoned city probably burned for fuel whatever scrolls had survived. Of the 123 plays of Sophocles that were known to be in the Great Library, only seven remain today."
-        }
-    }
-    message_history_caesareum {
-        id: 482,
-        
-        size [30, 20]
-        image {
-            id: 1002,
-            pos [15, 15]
-        }
-        title {
-            text: "Caesareum",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "Cleopatra VII began the Caesareum. It originally consisted of a small temple or altar in the middle of a sanctuary, apparently intended for the worship of Mark Antony's cult. His suicide, followed shortly thereafter by Cleopatra's death, however, meant that this monument was completed by their rival, Octavian (Augustus Caesar), who completed the structure and dedicated it to his own cult. Two obelisks (commonly referred to as Cleopatra's Needles, even though she had nothing to do with them), for centuries were prominent landmarks along Alexandria's Eastern Harbor shoreline. These obelisks, transported to Alexandria from Heliopolis by order of Octavian, marked the entrance to Caesareum long after the rest of it was destroyed. Both of the obelisks have now been removed (one stands in New York City's Central Park, the other along the banks of the Thames in London). @PPrecise details about the actual structures of the Caesareum are not known. Our knowledge of it comes from brief descriptions by some ancient authors. Its architecture, like the other great monuments of Alexandria, was in the Greek style. It evidently contained a central sanctuary set amidst open-air courts and surrounded by stoas (columned walkways) that probably served as outer 'walls' for the monument. Rooms and porticos set amidst the stoas contained scrolls and could be used for assemblies or quiet study."
-        }
-    }
-    message_plague_of_locusts {
-        id: 483,
-        type: 2,
-        
-        size [30, 20]
-        urgent: 1,
-        title {
-            text: "Plague of Locusts",
-        }
-        content {
-            text: "We have received reports of mad swarms of ravenous locusts devouring the crops throughout Egypt.  Beware their onslaught during the next growing season!"
-        }
-    }
-    message_plague_of_frogs {
-        id: 484,
-        type: 2,
-        
-        size [30, 20]
-        urgent: 1,
-        title {
-            text: "Plague of Frogs",
-        }
-        content {
-            text: "An ugly curse has descended over the land!  Multitudes of frogs pollute our streets and dwellings, forcing residents from their homes!"
-        }
-    }
-    message_hailstorm {
-        id: 485,
-        type: 2,
-        
-        size [30, 20]
-        urgent: 1,
-        title {
-            text: "Hailstorm",
-        }
-        content {
-            text: "Death and destruction is on the wind!  A savage hailstorm has come to deliver a deadly rain of ice.  May the gods have mercy on anyone not sheltered from this evil curse, for they have little hope of surviving!"
-        }
-    }
-    message_river_of_blood {
-        id: 486,
-        type: 2,
-        
-        size [30, 20]
-        urgent: 1,
-        title {
-            text: "River of Blood",
-        }
-        content {
-            text: "Woe unto us!  The waters, once the source of life and nourishment, are poisoned with blood.  How long will it be until this vulgar blight is lifted?"
-        }
-    }
-    message_history_pharos_lighthouse {
-        id: 487,
-        
-        size [30, 20]
-        image {
-            id: 1006,
-            pos [15, 15]
-        }
-        title {
-            text: "Pharos Lighthouse",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "@PEven though Alexandria's location was ideal for a commercial port, with lots of coastline and a large natural harbor, its points of egress were rife with dangerous sandbars.  It was therefore conceived that a tall lighthouse on Pharos island, near the mouth of the harbor, would not only be of benefit to mariners, but (at least if magnificent enough) would also be a wondrous new attraction to boost Alexandria's renown.  @PThe Pharos lighthouse, as it came to be known, was partially constructed largely of Proconnesian white marble, much of it imported from Princes' Islands off the coast of present-day Turkey.  It was built in three large tiers:  the base, or lowest tier, was quadrangular; the middle tier was octagonal; the topmost tier was cylindrical.  A mammoth spiral stairway leading to the top even allowed pack animals to haul wood to the top to feed the bright fire that burned there.  Topping the spectacular structure was (by some accounts) a statue of Poseidon; another account contends it was an image of Zeus - or perhaps a statue of both of them. @PThe construction of Alexandria's Pharos lighthouse was begun by the first Ptolemy (Auletes), but wasn't finished until 283 BC during the reign of his son, Ptolemy Philadelphus.  By all accounts it was an incredible sight, more than worthy of being the Seventh Wonder of the ancient world. @PThis monument's ultimate demise was brought about not by the hand of man but by a series of earthquakes that rocked the region.  Its topmost tier tumbled down during a severe quake in 303 AD.  However it was not until a massive trembler on August 8th, 1303, that most of the remaining structure came down, to be swallowed up by the surrounding waters.  Today a fort, built by the Mamluk sultan Qait Bey, can be seen on Pharos Island where the wondrous lighthouse once stood."
-        }
-    }
-    message_building_alexandria_library {
-        id: 488,
-        
-        size [30, 28]
-        title {
-            text: "Alexandria's Library",
-        }
-        content {
-            text: "Scholars and other learned men and women from the entire known world flock to Alexandria's Great Library, mankind's greatest repository of knowledge. @PTo build Alexandria's Library you must first select a suitable site. Choose Alexandria's Library from the Religious structures: Monuments list. If the footprint you see is completely green, the location you have selected is acceptable.  @PTo build Alexandria's Library, you will need the services of peasants from @8Work&Camps, stonemasons from @363Stonemasons'&Guilds, and carpenters from @363Carpenters'&Guilds. The carpenters will need @94wood to construct scaffolding, which can be imported if you cannot harvest it in your city. You will also need to @47import white marble from a trade partner. To finish the monument, you will need a supply of @93copper, either from your city's own mines or from a trade partner.  @PRight-click on Alexandria's Library during its construction to get a progress report from the @369Construction&Foreman. @L@LClick @481here to find out more about the history of Alexandria's Library."
-        }
-    }
-    message_building_pharos_lighthouse {
-        id: 489,
-        
-        size [30, 28]
-        title {
-            text: "Pharos Lighthouse",
-        }
-        content {
-            text: "Alexandria's spectacular Pharos lighthouse by day or night helps to guide mariners around the dangerous shoals of its harbor. @PThe Pharos Lighthouse can only be built on the rocky ground of Pharos Island in Alexandria's harbor. Select 'Pharos Lighthouse' from the Religious Structures: Monuments list, and then move the cursor over the rock-strewn ground near the outer harbor's entrance.  Once the monument's footprint is entirely green, you have found a suitable site that will support this structure's ponderous weight. @POnce the ground is clear you will need a supply of imported white marble.  This commodity can be obtained via a @47trade&route with another city.  @363Stonemasons from a Stonemasons' Guild will carefully place the white marble that peasants from a @8Work&Camp haul over from a @4Storage&Yard. The peasants will bring the white marble over once there are at least four blocks stored in a single Storage Yard. @363Carpenters from a Carpenters' Guild and a quantity of @94wood will also be required for building scaffolding once construction is underway. @PRight-click on the Pharos Lighthouse while it is being built to view a progress report from its @369Construction&Foreman. @L@LClick @487here to learn more about the Alexandria's Pharos Lighthouse."
-        }
-    }
-    message_building_caesareum {
-        id: 490,
-        
-        size [30, 28]
-        title {
-            text: "Caesareum",
-        }
-        content {
-            text: "One of Alexandria's finest architectural masterpieces is the Caesareum, a sprawling seaside temple and visual landmark for sailors entering Alexandria's massive harbor. @PTo build the Caesareum, first select it from the Religious Structures: Monuments list on the Control Panel. After you select it, you will see a footprint of the building. Scout around for a suitably large section of clear land and place the monument. You'll know when you've picked an appropriate spot when the footprint is entirely green.  @POnce a suitable site has been determined, construction can commence.  Peasants from a @8Work&Camp will begin by clearing the land, exposing the bedrock below.  Once the land is ready, @363stonemasons from a Stonemasons' Guild will arrive to place the white marble that peasants will deliver from a @4Storage&Yard. White marble must be @47imported from a trade partner. Peasants will drag the white marble over to the construction site as soon as four blocks of it is stored in a single Storage Yard. @P@363Carpenters from a Carpenters' Guild supplied with @94wood will also be needed to build scaffolding. If your city does not have its own source of wood, you will need to import some. Near the end of the project, a supply of granite from a Storage Yard will also be needed, which can be imported if your city cannot @95quarry its own. @PRight-click on the Caesareum during its construction and its @369Construction&Foreman will present you with a progress report. @LClick @482here for more historical information about the Caesareum."
-        }
-    }
-    message_crime_wave {
-        id: 491,
-        type: 2,
-        
-        size [30, 20]
-        urgent: 1,
-        title {
-            text: "Crime Wave",
-        }
-        content {
-            text: "May the gods have mercy on us!  A band of greedy tomb robbers that thirst for ill-gotten riches has set themselves loose upon our fair city.  Stop them before they steal the magnificent burial provisions interred with our noble dead!"
-        }
-    }
-    message_building_abu_simbel {
-        id: 492,
-        
-        size [30, 28]
-        title {
-            text: "Abu Simbel",
-        }
-        content {
-            text: "@PThe temple of Abu Simbel is a massive monument that Ramses II had hewn from the sandstone cliffs overlooking the upper Nile in Nubia. @PTo begin construction on Abu Simbel, first select it from the Religious Structures: Monuments list. A footpring of the monument will appear The bulk of the monument must be built into cliffs. The entranceway, which juts from the side of the monument, must be on clear land. You'll know you've selected a good spot when the entire footprint turns green. Click the mouse button to lock the monument into place. @PYou might find it helpful to temporarily flatten the cliff terrain while you are searching for a suitable spot to place the monument. Simply press 'H' or select 'Hide Cliffs' from the @18overlays list. You can restore the cliffs to their lofty heights by pressing 'H' again or selecting 'Normal' from the overlays list.  @POnce an appropriate site is designated, you will need an able workforce, headed by @363stonemasons from a Stonemasons' Guild to carve the rock and @363carpenters from a Carpenters' Guild to build the necessary scaffolding.  The carpenters will need @192wood for the scaffolding, which can be imported via a @47trade&route or harvested from the land by a @94Wood&Cutter. @PRight-click on the Abu Simbel monument for a progress report from its @369Construction&Foreman. @L@LClick @493here to learn more about Ramses II's most famous monument."
-        }
-    }
-    message_history_abu_simbel {
-        id: 493,
-        
-        size [30, 20]
-        image {
-            id: 1007,
-            pos [15, 15]
-        }
-        title {
-            text: "Abu Simbel",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "@PRamses the Great (Ramses II) ruled Egypt ca. 1279-1212 BC.  This long-lived pharaoh is renowned for the many temples and monuments built during his reign, the grandest of which was Abu Simbel.   @PAbout 350 miles south of Waset (Thebes), in the province of Nubia, Ramses' stonemasons carved a row of four seated statues of the pharaoh in the pink sandstone cliffs overlooking the Nile valley.  Each statue is over 66 feet tall - only the Great Sphinx at Giza is taller.  The seated figures flank a tunnel entrance that leads to an inner sanctum dug 160 feet into the cliff.  The temple faces east and was designed so that twice a year light from the rising sun penetrates to the rear wall of the sanctum, illuminating three smaller statues of Ramses, Amun and Ra.  A statue of Ptah is also located in the sanctum, but because he is associated with the underworld, his statue is positioned so that sunlight does not fall upon it.  Reliefs inside the temple also commemorate Ramses' military victories.  Nearby, a sister temple carved into the cliffs honors the goddess Hathor and Ramses' foremost wife, Queen Nefertari.  The whole complex was intended to awe the Nubian subjects and encourage tributes from them.   @PAbu Simbel was completed ca. 1256 BC.  Over the millenia sands buried it.  In 1817 archaeologist Giovanni Belzoni uncovered the massive monument.  Threatened to be covered again in the mid 1960s, this time by waters rising behind the newly constructed Aswan High Dam, Abu Simbel was cut out of the cliff and reconstructed with great precision on higher ground - an engineering feat that would surely have impressed the ancient Egyptians."
-        }
-    }
-    message_tutorial_major_plagues {
-        id: 494
-        
-        size [30, 28]
-        title { text: "Major Plagues" }
-        content { text: "There are many calamities that may befall a city, regardless of its size or wealth, and Major Plagues are some of the worst. Please note, though, that Major Plagues are not the same thing as @53plague. Plague strikes the city when city health is particularly bad. Major Plagues may strike for no reason at all.  @PAll of the Major Plagues result in lower @39city&sentiment. Their other dire consequences are described below: @L@LRiver of Blood @LWhen the River of Blood strikes the city, the river and waters of your city will turn to blood for several months and be unfit for @44drinking&water and other uses. Some of the water that houses store on site will also be contaminated and undrinkable, with those living closest to the river feeling the effects the most. People living near the water will also be at an even greater risk for disease and malaria (for more details on disease and malaria, see @53city&health). @84Fishing&Wharves, @59Water&Lifts, @94Reed&Gatherers, @62Wells and @61Water&Supplies will stop working during the plague. An unhappy @354Bast might unleash this plague upon your city, or the plague may occur for no discernable reason at all. @L@LFrogs @LWhen the Plague of Frogs is visited upon your city, legions of frogs invade your borders and infest any houses they pass. No one can live in a frog-infested house, so the residents are forced out, and no one can move back in for several months. You can try to contain the frogs by building walls around them or strategically positioning buildings to pen them in. @352Ptah can bring this curse down on your city if you displease him, or the frogs may strike of their own volition. @L@LHailstorm @LDeadly hailstones are the progeny of Hailstorms, which can kill anyone walking in your city. Hailstones are non-discriminatory and can kill soldiers (including enemies) and animals just as easily as they can kill ordinary citizens. Hailstorms also bring violent turbulence to the river, and many of your ships may sink. If you neglect @353Seth, he may bring this terror to your city. Hailstorms can also be natural weather phenomenon. @L@LLocusts @LLocusts descend upon the land and devour any crops your @45farms are growing. The crops on both the flood plain and meadowland will be completely destroyed just before the harvest, robbing your city of the harvest's benefit for the year. When you have piqued @350Osiris' anger, he may send this plague to your city. Sometimes, though, locusts will appear without provocation.   @L@LTo learn more about major plagues that afflicted the land of the pharaohs, click @495here." }
-    }
-    message_history_major_plagues {
-        id: 495,
-        
-        size [30, 20]
-        image {
-            id: 1010,
-            pos [15, 15]
-        }
-        title {
-            text: "Major Plagues",
-            pos [125, 15]
-        }
-        subtitle {
-            text: "History",
-        }
-        content {
-            text: "In the 13th century BC, during the reigns of Seti I and his son Ramses the Great (Ramses II), the Hebrews in Egypt were enslaved to work on construction projects.  According to the Book of Exodus in the Bible, the Lord God appeared to one of these children of Israel, the prophet Moses, and promised to help them escape to freedom.  Thus guided by the Lord, Moses appealed to the pharaoh to 'Let my people go,' on ten separate occasions, and Ramses denied the request each time. Each denial brought forth a different plague to afflict the pharaoh and the Egyptians while sparing the enslaved Hebrews.  First, the river turned to blood, killing the fish and making the water unfit to drink.  After Pharaoh's second denial, frogs came up from the ponds and rivers to infest the houses of the villages. The seventh plague was a thunderous hailstorm that smote men and beasts in the field and destroyed crops of barley and flax.  According to the Book of Exodus, Ramses' eighth denial to let the children of Israel leave Egypt brought forth a swarm of locusts, which darkened the land with their numbers and devoured all the green things that the hail of the previous plague had left. Ramses relented after the tenth plague killed all the first-born Egyptian children and beasts, though Ramses sent his army in pursuit of the fleeing Hebrews through the Sea of Reeds. @PThough these plagues are not recorded in contemporary Egyptian records, there are many instances of similar catastrophes occurring throughout history and prehistory.  Even as recently as the 20th century AD, hailstorms and locust swarms have plagued mankind."
-        }
-    }
-    message_mummy_attacks {
-        id: 496,
-        type: 2,
-        
-        size [30, 20]
-        urgent: 1
-        title { text: "Mummy Attacks!" }
-        content { text: "A mummy has risen and walks the streets of our city.  Stop this undead curse before it spreads throughout the land." }
-    }
+        id: 250,
+            type: 2,
+            message_type: 4,
+            size [40, 30]
+        title { text: "Alapvető egészségügy" }
+        content { text: "Városod egészségügyi problémákkal küzd, ami várható a növekvő népesség mellett. A malária és a betegségek a leggyakoribb egészségügyi válságok, amelyek a város háztartásait sújtják, bár széles körű járvány is kitörhet, ha az egészségügyi ellátás rendkívül hiányos. @P Ha egy házat malária vagy betegség fertőz meg, minden lakója meghal, és az épület egy bizonyos ideig nem lakható újra. @G64 @L Malária @L@P A malária leginkább víz és mocsaras területek közelében fordul elő. A „Kockázatok: Malária” réteg megmutatja, mely házak vannak nagyobb veszélyben. @P A Vízellátóból származó tiszta vízhez való hozzáférés, valamint a helyi patikus által biztosított rovarriasztó jelentősen csökkenti a malária kockázatát minden háztartásban. A legtöbb épülethez hasonlóan a patikus is csak akkor működik, ha útkapcsolattal és munkaerővel rendelkezik. @G63 @L Betegség @L@P Az orvosok gyógyszerek beadásával segítenek csökkenteni a betegségek kockázatát az általuk ellátott házakban. A folyamatos élelmiszerellátás szintén elengedhetetlen a betegségek megelőzéséhez. A „Kockázatok: Betegség” réteg megmutatja, mely házak vannak veszélyben."
+    }
+        message_requests_from_other_cities {
+            id: 251
+            type: 2
+            message_type: 4
+            size [40, 30]
+            title {
+                text: "Más városok kérései"
+                pos [0, 20]
+            }
+            content {
+                text: "Egyik testvérvárosod segítségre szorul, és kéréssel fordult hozzád. Ha jó kapcsolatot szeretnél fenntartani a növekvő Királyság többi városával, általában érdemes az ilyen kérésekre készségesen és gyorsan válaszolni. @G65 @P Ha a tárolóudvaraidban elegendő mennyiség van a kívánt áruból, keresd fel a Politikai felügyelőt, hogy elküldhesd a szállítmányt az adott városba."
+            }
+        }
+        message_fire_in_the_village {
+            id: 252
+            type: 2
+            message_type: 4
+            size [40, 30]
+            title { text: "Tűz ütött ki a faluban!" }
+            content { text: "Tűz ütött ki a faluban! @L@P A jövőbeli tüzek megelőzésére mostantól tűzőrségeket építhetsz. @P A falu legtöbb nem lakóépületéhez hasonlóan a tűzőrségnek is munkásokra van szüksége a működéshez. Alkalmazottak keresésére az épületből valakit kiküldenek, hogy lakott házakat keressen. Amint talál lakóépületet, az épület hozzáfér a dolgozókhoz, bár ez nem feltétlenül jelenti azt, hogy a faluban elegendő munkás van minden üres állás betöltésére. A megfelelő létszámmal működő tűzőrség tűzfelügyelőket küldhet járőrözni a faluba. @P A tűzfelügyelők útvonalukon ellenőrzik az épületeket tűzveszély szempontjából, és csökkentik a kigyulladás kockázatát, miközben elhaladnak mellettük. A tűzfelügyelők minden olyan épületet elláthatnak, amely legfeljebb két mezőre található egy úttól. @G67 @P Ha tüzet fedeznek fel, a felügyelő odamegy, vödrökkel eloltja a lángokat, majd visszatér szokásos járőrútjára. @G66 @P Kattints a „Rétegek: Kockázatok” gombra, hogy lásd, mely épületek vannak tűzveszélyben. Ha egy épület leég, jobb gombbal kattinthatsz a hátramaradt romhalmazra, hogy megtudd, mi állt ott a tűz előtt. @L@L Üzenetek @L@P Amikor meghallod azt a csengőhangot, amely akkor szólt, amikor ez a panel megjelent, az azt jelenti, hogy üzeneted érkezett. Üzenet elolvasásához kattints az üzenet gombra. @L@P Néhány sürgős üzenetet (például ezt is) még azelőtt megkapsz, hogy a többi üzeneted közé kerülne. A kevésbé sürgős értesítések közvetlenül az üzenetdobozba kerülnek külön megjelenítés nélkül, ezért mindig figyelj a csengőhangra. A különleges oktatóüzeneteket (mint ez is) kék tekercs jelöli, így később könnyen visszatérhetsz hozzájuk, amikor szükséged van rájuk."
+            }
+        }
+        message_tutorial_collapsed_building {
+            id: 253,
+                type: 2
+            message_type: 4
+            size [40, 30]
+            title { text: "Összeomlott épület" }
+            content { text: "Bizonyos nagy épületek megfelelő karbantartás nélkül összeomlanak. Ennek megelőzésére építs építészirodát. A tűzőrséghez hasonlóan ez az épület is dolgozókat küld ki, jelen esetben építészeket, akik az utcákat járva kijavítják az útjukba kerülő sérült épületeket. @G68 @L@P Kattints a „Rétegek: Kockázatok” gombra, hogy lásd, mely épületeket fenyegeti tűz vagy összeomlás veszélye."
+            }
+            message_tutorial_education {
+                id: 254
+                type: 2
+                message_type: 4
+                size [40, 30]
+                title { text: "Oktatás", pos [0, 15] }
+                content {
+                    text: "Most, hogy valamennyire felépítetted ezt a várost, ideje oktatást biztosítani néhány polgár számára. @L@P Az iskolák és könyvtárak nem tudják tanítani az embereket papirusz nélkül, amelyre írhatnak. @G69 @P A nádgyűjtők biztosítják a papiruszkészítők számára a szükséges nyersanyagokat, a papiruszt pedig közvetlenül a város oktatási intézményeihez szállítják."
+                }
+            }
+            message_tutorial_clean_water {
+                id: 255
+                type: 2
+                message_type: 4
+                size [40, 30]
+                title {
+                    text: "Tiszta víz",
+
+                }
+                content {
+                    text: "Nagyszerű! Sikerült élelemmel ellátnod a falu magtárát. Most a falusiaknak tiszta vízhez kell jutniuk egy vízellátóból, amely sokkal jobb a kútnál. @L@L Vízellátó @L@P A kutakhoz hasonlóan ezeket is olyan földre kell építeni, ahol a talajvíz elérhető, amit a zöld fű jelenléte jelez. A vízellátóknak a közeli lakóházakból származó dolgozókhoz is hozzáférésre van szükségük. @G70 @L@P Működésbe lépése után a vízellátó vízhordót küld ki, aki tiszta ivóvizet tartalmazó vödröket szállít a közvetlen közelében lévő házakhoz. Kattints a „Rétegek: Víz” gombra, hogy lásd, mely házak rendelkeznek vízellátóból származó tiszta vízzel, egyszerű kúttal, vagy egyáltalán nincs vízforrásuk. @L@L Küldetés eligazítása és céljai @P A küldetés teljesítéséhez hat „erős kunyhót” kell ellátnod élelemmel egy bazárból, hogy „szegényes viskókká” fejlődjenek. Kattints a tekercs ikonra, hogy áttekintsd ennek és más küldetéseknek a céljait."
+                }
+            }
+
+            message_tutorial_municipal_structures {
+                id: 256,
+                    type: 2,
+                    message_type: 4,
+                    size [40, 30]
+                title { text: "Középületek" }
+                content {
+                    text: "Nagyszerű munka! Sikerült némi ipart beindítanod, és most már elgondolkodhatsz városod fejlesztésén. A szépítés vonzóbbá tehet bizonyos városrészeket, míg más középületek hatékonyabbá tehetik a működést. @L@L Kertek, szobrok és terek @G72 @P A környezetük vonzóbbá tételével a kertek, szobrok és terek segíthetik a házak fejlődését. Több kertterület egymás mellé helyezve nagyobb parkokat alkothat. A tereket kövezett utakra helyezd, hogy javítsd megjelenésüket és a környező terület vonzerejét. @L@L Útzárak @G62 @P Az útzárak segítségével irányíthatod városod járókelőit. Egyes járókelőknek meghatározott céljuk van, míg másoknak nincs. Ők egyszerűen az utcákat járják, és előnyöket biztosítanak minden épületnek, amely mellett elhaladnak. Az útzárak megakadályozzák ezen járókelők áthaladását, de azokat, akiknek meghatározott céljuk van, átengedik, hogy elvégezhessék feladataikat. @L@L Vízi átkelők @G71 @P A kompok segíthetik városod gördülékenyebb működését. A gondosan elhelyezett vízi átkelők lehetővé teszik, hogy lakóid elérjék a táj egyébként hozzáférhetetlen részeit, ahol zsákmányt vagy más értékes nyersanyagokat találhatnak. Bizonyos esetekben lerövidíthetik egyes szállítók útját, így gyorsabbá tehetik a munkájukat."
+                }
+            }
+            message_tutorial_monuments_and_more {
+                id: 257
+                type: 2
+                message_type: 4
+                size [40, 30]
+                title {
+                    text: "Emlékművek és még több!"
+                }
+                content {
+                    text: "Mivel már idáig eljutottál a bemutatóban, ideje megismerned még többet abból, amit a Pharaoh kínál. Ne felejtsd el felkeresni az újonnan elérhető tanácsadóidat, akik további információkkal és segítséggel szolgálnak növekvő városod irányításához. @L@L Emlékművek @L@P Most már elkezdheted masztaba sírod építését! A masztaba elhelyezéséhez kattints a „Vallási épületek: Emlékművek” gombra. Szükséged lesz téglakészletre, valamint téglavetőkre és paraszti munkásokra (munkatáborokból), hogy teljesítsd ezt az „emlékezetes” feladatot... és mindössze tizenegy éved van rá! @G75 @L@L Egyéb háztartási szükségletek @L@P A fazekasáru mellett az egyiptomi háztartásoknak sörre és vászonra (valamint néhány más, ebben a bemutatóban nem elérhető dologra) is szükségük van. A sör a helyi farmokon termesztett árpából készül a sörfőzdében. A vásznat a takács készíti lenből, amely szintén helyi termény. Az élelemhez és fazekasáruhoz hasonlóan a sört és a vásznat is a bazár osztja szét a házak között. @L@L Törvény és rend @L@P A bíróságáról járőröző elöljáró segít csökkenteni a bűnözés kockázatát azáltal, hogy meghallgatja a panaszokat és gondoskodik arról, hogy a viták békésen rendeződjenek. @L@L Egészség és higiénia @L@P Minden városnak szüksége van néhány balzsamozóra a tisztaság fenntartásához, valamint azért, hogy fejlettebb lakói megfelelő temetési szertartásban részesüljenek. A halottasház vásznat (amelyet a takács készít) használ, és balzsamozási szolgáltatásokat biztosít a környező házak számára. A fogorvosok a hozzájuk tartozó házak lakóinak kívánt fogászati ellátást nyújtanak. @L@L Oktatás @L@P Az iskolák és könyvtárak nem tudják tanítani az embereket papirusz nélkül, amelyre írhatnak. A nádgyűjtők biztosítják a papiruszkészítők számára a szükséges nyersanyagokat, a papiruszt pedig közvetlenül a város oktatási intézményeihez szállítják. @G69 @L@L Hadihajók @L@P Lehet, hogy erős hadihajókkal kell megvédened városod partjait. Fakitermelőre lesz szükséged, hogy faanyagot biztosítson a hajóácsnak, aki ezekből a harci hajókat készíti a hadihajó-állások számára. @L@L Adózás @L@P Bár ebben a bemutatóban kereskedelemből és exportból nem szerezhetsz bevételt, adóztatással néhány debent kinyerhetsz a lakosságból. Építs elegendő adószedőt az egész város lefedésére, különösen a legdrágább lakónegyedekben."
+                }
+            }
+            message_tutorial_the_gods_of_egypt {
+                id: 258
+                type: 2
+                message_type: 4
+                size [40, 30]
+                title { text: "Egyiptom istenei" }
+                content {
+                    text: "Egy egyiptomi város nem virágozhat igazán megfelelő vallási helyek, templomok és szentélyek nélkül. Ezeket az általuk szolgált házak közelében kell elhelyezni, és az öt isten egyikének kell szentelni: @L@P Ozirisz – A Nílus istene @P Ré – A Királyság istene @P Ptah – A kézművesek istene @P Széth – A pusztítás istene @P Baszt – Az otthon istennője @L@P Minden városnak eltérő vallási szokásai vannak. Egy adott városban általában egy istent különösen nagy tisztelet övez – őt nevezik a város „védőistenének” –, míg a többi istent csupán „helyi istenségként” tisztelik (más istenek pedig teljesen ismeretlenek lehetnek). Thinis védőistene Baszt. @P Mind a védőistenek, mind a helyi istenségek ellenségessé válhatnak, ha nem kapják meg a nekik járó tiszteletet. Az istenek kiengeszteléséhez építs elegendő számú, nekik szentelt templomot és szentélyt, hogy kiszolgáld jelenlegi lakosságodat. @P Egy működő templom papot küld a közeli városrészekbe, aki hozzáférést biztosít lakóiknak istene tiszteletéhez. @G73 @L Ünnepségek @P Az ünnepségek szintén az istenek kiengesztelésének egyik módját jelentik. Építs fesztiválpavilont a városban, majd utasítsd a Templomok felügyelőjét, hogy rendezzen ünnepséget valamelyik isten tiszteletére. @L@L Templomok felügyelője @L@P A Templomok felügyelőjénél tájékozódhatsz az egyes istenek állapotáról bármely városban, és arról, hogy megfelelően kiengesztelték-e őket. A villámok azt jelzik, hogy az isten ellenséges a várossal szemben, míg a kék misztikus jel azt mutatja, hogy jóindulattal viseltetik iránta. Minél többet látsz valamelyik jelből, annál valószínűbb, hogy városod erősebben érzi az adott isten jelenlétét (jó vagy rossz értelemben). @P Kattints a „Rétegek: Vallás” gombra, hogy lásd, mely házakat szolgálják ki városod templomai."
+                }
+            }
+            message_tutorial_industry {
+                id: 259
+                type: 2
+                message_type: 4
+                size [40, 30]
+                title { text: "Ipar" }
+                content { text: "Most, hogy biztosítottad néped számára az alapvető élelmet és vizet, más árukkal, például fazekasáruval is javíthatod életmódjukat. @L@L Ipar és fazekasság @L@P Építs agyagbányát víz közelében, és egy fazekasműhelyt a közelben. Ügyelj rá, hogy ezek az épületek is hozzáférjenek a munkaerőhöz, és hamarosan egy kocsi agyagot szállít a fazekasműhelyhez, ahol fazekasárut készítenek városod számára. @P Építs tárolóudvart a késztermék, valamint a fazekas által fel nem használt felesleges agyag tárolására (egy agyagbánya általában két fazekasműhelyt is el tud látni elegendő agyaggal). @P A bazár dolgozói összegyűjtik a fazekasárut a tárolóudvarból, és ugyanúgy osztják szét, ahogy az élelmet. @G74 @L Az olyan iparágak, mint a fazekasság, a város lakóinak fontos munkalehetőségeket is biztosítanak. Mostantól a Munkások felügyelőjét is segítségül hívhatod a munkaerő elosztásában." }
+            }
+            message_tutorial_trade_with_other_cities {
+                id: 260
+                type: 2
+                message_type: 4
+                size [40, 30]
+                title { text: "Kereskedelem más városokkal" }
+                content { text: "Most, hogy sikerült néhány emberedet oktatásban részesíteni, további bevételt szerezhetsz a felesleges papirusz eladásával a szomszédos városoknak. A szent masztaba sír felépítéséhez téglát is be kell importálnod Perwadjytból. Amikor készen állsz, kattints a világtérkép ikonra [grafika helye], hogy megtekintsd az ismert világ többi városát, és megkezdhesd a kereskedelem kialakítását." }
+            }
+
+            message_tutorial_flooded_clay_pit {
+                id: 271
+                type: 2
+                message_type: 1
+
+                size [30, 20]
+                title { text: "Elárasztott agyagbánya" }
+                content { text: "Egyik agyagbányánkat szörnyű árvíz pusztította el. Le kellett rombolnunk az agyagbányát, hogy megakadályozzuk, hogy mások is beleessenek." }
+            }
+
+            message_kingdom_road_blocked {
+                id: 279
+                type: 2
+                message_type: 1
+
+                size [30, 20]
+                title { text: "A királyi út elzáródott" }
+                content { text: "A közelmúlt építkezései elzárták az ezen a vidéken áthaladó @57királyi&utat. A királyi építészek újra megnyitották ezt a fontos útvonalat... de ehhez egy-két épületet el kellett távolítaniuk!" }
+            }
+
+            message_wrath_of_ra {
+                id: 280
+                type: 2
+                message_type: 1
+
+                size [30, 20]
+                title { text: "Ré haragja" }
+                video { text: "@23" }
+                content { text: "Ré megbünteti gőgödet azzal, hogy jelentősen csökkenti hírnevedet az egész Királyságban. Ahogy te elutasítottad az istent, úgy más egyiptomiak is lenéznek majd téged." }
+            }
+
+            message_wrath_of_seth {
+                id: 281
+                type: 2
+                message_type: 1
+
+                size [30, 20]
+                title { text: "Seth haragja" }
+                video { text: "@21" }
+                content { text: "Seth iránti közönyöd arra készteti az istent, hogy elpusztítsa minden hajódat!" }
+            }
+
+            message_wrath_of_seth_2 {
+                id: 281
+                type: 2
+                message_type: 1
+
+                size [30, 20]
+                title { text: "Seth haragja 2" }
+                video { text: "@21" }
+                content { text: "Seth iránti közönyöd arra készteti az istent, hogy elpusztítsa minden hajódat!" }
+            }
+
+            message_the_world_map {
+                id: 282
+                type: 2
+                message_type: 4
+                size [40, 30]
+                title {
+                    text: "A világtérkép",
+
+                }
+                content {
+                    text: "A világtérkép megmutatja saját városod, valamint a világ többi városának helyét. Itt fizethetsz azért, hogy kereskedelmi útvonalakat nyiss meg a kereskedni hajlandó városokkal. @L@L Más városok @L A kereskedni kívánó városok színesen jelennek meg a térképen, és zászlót viselnek. Azok a városok, amelyek nem kereskednek veled, fakó színnel láthatók. Kereskedelmi útvonal létrehozásához kattints arra a városra, amellyel üzletelni szeretnél. @L@L Import és export @L Miután létrehoztál egy kereskedelmi útvonalat, a Kereskedelmi felügyelőnél még meg kell adnod, milyen nyersanyagokat és árukat kívánsz importálni vagy exportálni. Ugyanazt az árut soha nem importálhatod és exportálhatod egyszerre."
+                }
+            }
+
+            message_tutorial_monuments {
+                id: 283
+                type: 2
+                message_type: 4
+                size [40, 30]
+                title { text: "Emlékművek" }
+                content {
+                    text: "A téglakészlet biztosításával készen állsz a szent masztaba sír építésének megkezdésére. A legtöbb emlékműhöz képzett és képzetlen munkásokra is szükség van. @L@L Építőcéhek @L Az építőcéhek biztosítják az emlékművek felállításához szükséges képzett munkaerőt. A masztaba teljes egészében téglából készül, ezért csak téglakészítő céhekre van szükség az építéséhez. Annyi téglakészítő céhet alkalmazhatsz, amennyit gazdaságod elbír, de ügyelj rá, hogy elegendő tégla érkezzen az építkezéshez, hogy folyamatosan dolgozhassanak. @P Miután a téglakészítő céh elegendő munkaerővel rendelkezik, téglakészítőket küld az építkezéshez, ahol megvárják, amíg a képzetlen paraszti munkások téglát szállítanak nekik. @L@L Paraszti munkaerő @L Amint néhány téglakészítő utánpótlásra vár az emlékmű helyszínén, parasztmunkások csoportjai kezdik el hozzájuk hordani a téglát. Mivel ugyanezeknek a munkásoknak az ártéri földeken is dolgozniuk kell, az emlékmű építése lelassulhat, amikor az árvíz visszahúzódik, és a parasztok visszatérnek a földekre. További munkatáborokat építhetsz, így a földeken nem szükséges fölös munkaerő egész évben az emlékművön dolgozhat. @G75 @L@L Kezdd a Vallási épületek ikonra kattintva, majd keress megfelelő helyet ennek a nagy épületnek."
+                }
+            }
+
+            message_the_finer_things {
+                id: 284
+                type: 2
+                message_type: 4
+                size [40, 30]
+                title {
+                    text: "A kifinomultabb dolgok"
+                }
+                content {
+                    text: "Templomkomplexumok @LAhogy az egyiptomiak egyre nagyobb odaadással tisztelik védőisteneiket, egyre nagyobb szentélyeket követelnek maguknak. A legtöbb város templomkomplexumot szeretne emelni választott istenének, hogy teljes mértékben élvezhesse annak kegyeit. Elkészülte után a templomkomplexum egy jósda és egy oltár hozzáadásával bővíthető, melyeket más, kisebb isteneknek szentelnek. Ezek az istenek szintén bizonyos előnyöket biztosítanak a városnak. @L@LÉkszerek @L Megfelelő drágakőkészlet birtokában városod ékszerészei ékszereket készíthetnek. Az ékszer értékes luxuscikk, amelyet a város magasabb társadalmi rétegei igényelnek. @L@LLuxuscikkek @L A helyben készített ékszereken kívül az egyiptomiak más luxuscikkeket is nagyra becsülnek, amelyekhez csak importálással lehet hozzájutni. Egy városnak többféle luxuscikkhez is hozzá kell férnie, hogy valóban civilizálttá váljon. @L@LKőfejtés @L A kő, amely igen keresett építőanyag, kitermeléséhez építs kőfejtőt egy sziklakiemelkedés mellé. A kőfejtők egyenként szállítják a kőtömböket a tárolóudvarba. Alkalmazz építészeket, hogy megakadályozd a kőfejtők beomlását!"
+                }
+            }
+
+            message_innovations {
+                id: 285
+                type: 2
+                message_type: 4
+                size [40, 30]
+                title {
+                    text: "Újítások"
+                }
+                content {
+                    text: "Rétgazdálkodás @L Egyes földek elég termékenyek a földműveléshez akkor is, ha nem helyezkednek el az ártéren. Ezeket a réteket a magas, sárga növényzet alapján ismerheted fel. A réteken létesített egyes gazdaságok évente egynél több termést is hozhatnak, bár a hozamuk általában valamivel kisebb, mint az ártéri földeké. @G59 @L@LÖntözés @L Öntözéssel növelheted bármely termőföld termékenységét. Az ártéri öntözőcsatornák közvetlenül a Nílushoz kapcsolhatók, de szárazföldön vízemelőre lesz szükséged a víz felemeléséhez. @L@LVízemelők @L Vízemelőket az ártér szélén vagy a parton lehet építeni, ahol közvetlenül a folyóból emelhetik a vizet a szárazföldre. Kapcsolj egy öntözőcsatornát a vízemelő hátuljához, hogy az öntözővizet a belső területeken lévő földekhez vezesd. @L@LKőfaragók és ácsok @L A lépcsős piramis felépítéséhez két új építőcéhre lesz szükség: a kőfaragók céhére és az ácsok céhére. A kőfaragó céh munkásai az építkezésnél várják a kőtömböket, amelyeket paraszti munkások szállítanak oda. Ezeknek a tömbszállítóknak rámpákra van szükségük, hogy elérjék az építmény magasabb szintjeit. Amikor eljön az ideje, hogy a lépcsős piramis újabb szinttel emelkedjen, egy ács fát visz a céhtől az építkezéshez, és rámpát épít a tömbszállítóknak. @L@L A holtak megőrzése @L Minden városnak szüksége van néhány balzsamozóra a higiénia fenntartásához, valamint azért, hogy fejlettebb lakói megfelelő temetési szertartásokban részesüljenek. A halottasház a szövő által készített vásznat használja, és a környező házak számára balzsamozási szolgáltatásokat biztosít."
+                }
+            }
+
+            message_troops_return_failed {
+                id: 287
+                type: 2
+
+                size [30, 20]
+                title { text: "A század visszatér" }
+                content { text: "Az éj leple alatt a megszégyenült század túlélői visszasomfordálnak a város erődjeinek biztonságába, elhatározva, hogy többé nem szenvednek megaláztatást a csatatéren." }
+            }
+            message_troops_return_victorious {
+                id: 288
+                type: 2
+
+                size [30, 20]
+                title {
+                    text: "A hősök hazatérnek!"
+                }
+                content {
+                    text: "Győztes katonáid hazatértek a háborúból. Létszámuk talán csökkent valamelyest távozásuk óta, de bajtársaik áldozata Egyiptom javát szolgálta!"
+                }
+            }
+            message_city_retaken {
+                id: 289,
+                    type: 2,
+
+                    size [30, 20]
+                title { text: "A várost visszafoglalták" }
+            }
+            message_osiris_is_upset {
+                id: 290
+                type: 2
+
+                size [30, 20]
+                title { text: "Ozirisz haragszik" }
+                content { text: "A nílusi áradás ura megbünteti ezt a várost odaadásának hiánya miatt, és a következő évi áradás minden útjába kerülő földet elpusztít!" }
+            }
+            message_ra_is_upset_2 {
+                id: 291
+                type: 2
+
+                size [30, 20]
+                title { text: "Ré haragszik" }
+                video { text: "@23" }
+                content { text: "Ré megharagudott iránti tiszteletlenséged miatt, és csökkenti hírnevedet a Királyság szemében." }
+            }
+            message_ptah_is_upset {
+                id: 292
+                type: 2
+
+                size [30, 20]
+                title { text: "Ptah haragszik" }
+                video { text: "@22" }
+                content { text: "Ptah csalódott iránta tanúsított közönyöd miatt, ezért elpusztítja egyik tárolóudvarodat a benne tárolt javakkal együtt." }
+            }
+            message_seth_is_upset {
+                id: 293
+                type: 2
+
+                size [30, 20]
+                title { text: "Seth haragszik" }
+                video { text: "@21" }
+                content { text: "Seth emlékeztet rá, hogy az isten csak azokat védi, akik kellő tisztelettel viseltetnek iránta: elpusztítja legjobb katonai századodat, és lerombolja erődjüket." }
+            }
+            message_bast_is_upset {
+                id: 294
+                type: 2
+
+                size [30, 20]
+                title { text: "Bast haragszik" }
+                video { text: "@20" }
+                content { text: "Bast istennőt megbántotta közönyöd, ezért járványt küld városodra. Ne feledd, az egészség és a boldogság tőle ered." }
+            }
+            message_blessing_from_osiris {
+                id: 295
+                type: 2
+
+                size [30, 20]
+                title { text: "Ozirisz áldása" }
+                video { text: "@24" }
+                content { text: "Ozirisz, a nílusi áradás istene megáldja ezt a várost őszinte odaadásáért. Az ártéri földek minden gazdasága kétszer annyi termést takarít be ebben az évszakban, mint várta!" }
+            }
+            message_blessing_trade_from_ra {
+                id: 296
+                type: 2
+
+                size [30, 20]
+                title { text: "Ré áldása" }
+                video { text: "@23" }
+                content { text: "Ré megjutalmazza hűséges követőit! A következő 12 hónapban városod exportárui másfélszeres értéken adhatók el." }
+            }
+            message_blessing_trade_from_ptah {
+                id: 297
+                type: 2
+
+                size [30, 20]
+                title { text: "Ptah áldása" }
+                video { text: "@22" }
+                content { text: "Ptah kiválaszt egy szabad kapacitással rendelkező tárolóudvart, és megnöveli az ott található drágakő-, agyag-, fazekasáru-, len-, vászon- vagy ékszerkészletet." }
+            }
+            message_blessing_trade_from_seth {
+                id: 298
+                type: 2
+
+                size [30, 20]
+                title { text: "Seth áldása" }
+                video { text: "@21" }
+                content { text: "Seth helyesli félelmedet és engedelmességedet, ezért lesújt a következő ellenségekre, akik megpróbálják megsérteni városodat." }
+            }
+            message_blessing_from_bast {
+                id: 299,
+                    type: 2,
+
+                    size [30, 20]
+                title { text: "Bast áldása" }
+                video { text: "@20" }
+                content { text: "Mivel ez a város oly hűséges és odaadó, Bast bőséggel áldja meg házait és bazárjait élelemmel és javakkal!" }
+            }
+            message_the_gods_are_wrathful {
+                id: 300
+                type: 2
+
+                size [30, 20]
+                title { text: "Az istenek haragszanak" }
+                content { text: "Legalább egy isten haragszik a városra. Néped arra kér, hogy építs több templomot... és egy ünnepségnek is mindig örülnek." }
+            }
+            message_illness {
+                id: 301,
+                    type: 2,
+
+                    size [30, 20]
+                title { text: "Rosszullét" }
+                video { text: "smk\\sick.smk" }
+            }
+            message_disease {
+                id: 302,
+                    type: 2,
+
+                    size [30, 20]
+                title { text: "Betegség" }
+                video { text: "smk\\sick.smk" }
+            }
+            message_pestilence {
+                id: 303,
+                    type: 2,
+
+                    size [30, 20]
+                title { text: "Járvány" }
+                video { text: "smk\\sick.smk" }
+            }
+            message_the_spirit_of_seth {
+                id: 304,
+                    type: 2,
+
+                    size [30, 20]
+                title {
+                    text: "Seth szelleme",
+                }
+                video {
+                    text: "@21"
+                }
+                content {
+                    text: "Seth emlékszik ígéretére, hogy megvéd téged, és örömmel pusztítja el azokat, akik elég ostobák voltak ahhoz, hogy városodat fenyegessék."
+                }
+            }
+            message_the_emperors_respect {
+                id: 305,
+                    type: 2,
+
+                    size [30, 20]
+                title {
+                    text: "A császár tisztelete",
+                }
+            }
+            message_the_emperors_respect_1 {
+                id: 306,
+                    type: 2,
+
+                    size [30, 20]
+                title { text: "A császár tisztelete" }
+            }
+            message_the_emperors_respect_2 {
+                id: 307,
+                    type: 2,
+
+                    size [30, 20]
+                title { text: "A császár tisztelete" }
+            }
+            message_working_hippodrome {
+                id: 308,
+                    type: 2,
+
+                    size [30, 20]
+                title { text: "Működő hippodrom" }
+                video { text: "smk\\\\1st_chariot.smk" }
+            }
+            message_compliance_now_possible {
+                id: 309,
+                    type: 2,
+                    message_type: 2,
+
+                    size [30, 20]
+                title { text: "A teljesítés most lehetséges" }
+                content { text: "Politikai felügyelőd jelenti, hogy a városban most már elegendő deben áll rendelkezésre a legutóbbi kérés teljesítéséhez." }
+            }
+            message_tutorial_finances {
+                id: 310,
+                    type: 2,
+                    message_type: 4
+                size [40, 30]
+                title { text: "Pénzügyek" }
+                content {
+                    text: "Adózás @L Egy nagy városnak kezdeti támogatásán túl további bevételre van szüksége. Ennek egyik módja az adóztatás. Adók beszedéséhez városodnak palotára és adószedőkre lesz szüksége. Ügyelj rá, hogy elegendő adószedőt építs az egész város lefedésére, különösen a tehetősebb negyedekben. Ne feledd: minél jobb életminőséget élvez egy ház, annál több adót fizetnek a lakói. @L@L Személyes fizetésed @L Ha magadnak kúriát építesz, személyes fizetést vehetsz fel a város kincstárából. A személyes vagyonodat a családod megtartja, és bármikor felhasználhatod, még későbbi küldetések során is. Vigyázz azonban: ha a rangodhoz méltónál magasabb fizetést állapítasz meg magadnak, az károsan hathat a királyságban elfoglalt helyzetedre."
+                }
+            }
+            message_mission_defeat {
+                id: 311,
+                    type: 2,
+
+                    size [30, 20]
+                title { text: "Vereség!" }
+                content { text: "Keserű nap! Méltatlan bukásod elképzelhetetlen kellett volna, hogy legyen. Cserbenhagytad népedet, őseidet és utódaidat. Egyiptom most új bajnokra vár, aki átveszi helyed..." }
+            }
+            message_mission_victory {
+                id: 312,
+                    type: 2,
+
+                    size [30, 20]
+                title { text: "A győztes" }
+                video { text: "smk\\win_game.smk" }
+                content { text: "Nem használt bejegyzés 312" }
+            }
+            message_enemy_rome_army_attacks {
+                id: 313
+                type: 2
+                message_type: 7
+
+                size [30, 20]
+                title { text: "Ellenséges sereg támad" }
+                video { text: "smk\\spy_army.smk" }
+                content { text: " Róma ellenségei városod határában vannak. Számíts rá, hogy beugranak egy-két korsó borért - és bármi másért, ami megtetszik nekik!" }
+            }
+            message_storage_yards_ready_to_fulfill_request {
+                id: 314,
+                    type: 2,
+                    message_type: 2,
+
+                    size [30, 20]
+                title {
+                    text: "A kérés teljesíthető",
+                }
+                content {
+                    text: "Politikai felügyelőd jelenti, hogy a városi raktárakban már elegendő áru van a legutóbbi kérés teljesítéséhez."
+                }
+            }
+            message_kingdom_road_obstructed {
+                id: 315,
+                    type: 2,
+
+                    size [30, 20]
+                title {
+                    text: "A királysági út elzárva",
+                }
+                content {
+                    text: "Az építészeknek le kellett bontaniuk néhány új építményt, hogy helyreállítsák a szabad átjárást a @57Királysági&úton."
+                }
+            }
+            message_no_working_dock {
+                id: 316,
+                    type: 2,
+
+                    size [30, 20]
+                title { text: "Nincs működő kikötő" }
+                content { text: "Bár utasítottad a kereskedelmi felügyelőt, hogy kezdjen kereskedni egy tengeri kereskedővel, az nem tud kikötni városodban! Kikötőt kell építened, és munkásokat kell biztosítanod hozzá. Amint a kikötő működik, a hajók megérkeznek és megkezdik a kereskedést." }
+            }
+            message_fishing_boats_cant_navigate {
+                id: 317,
+                    type: 2,
+
+                    size [30, 20]
+                title { text: "A halászhajók nem tudnak közlekedni" }
+                content { text: "Halászaink jelentik, hogy egy híd elzárja az útjukat! A hajók nem tudnak áthajózni a hidak alatt. Távolítsd el a hidat, hogy a halászhajók friss hallal láthassák el városodat." }
+            }
+            message_health {
+                id: 318,
+                    type: 3,
+
+                    size [30, 20]
+                title {
+                    text: "Egészség",
+                }
+                content {
+                    text: "Az emberek szeretnek egészségesek lenni. Ha jól táplálkoznak, és rendszeresen meglátogatja őket egy orvos a rendelőből, egészségesek maradnak. Ha egészségük romlik, nagyobb eséllyel betegszenek meg. @PKórházakra akkor van szükség, amikor a polgárok megbetegszenek. A betegek gyógyításához kórház kell. Ha nincs hely a kórházban, meghalnak. @PTehát: a rendelők a betegségek megelőzését, a kórházak pedig a gyógyítást szolgálják. @L@LNéha járvány törhet ki, és Bast köztudottan betegséget küld azokba a városokba, amelyek haragját kivívták. Ilyenkor a megfelelő kórházi ellátás az egyetlen védelem. A közegészségügyi felügyelőd megmondhatja, hogy megfelelő-e a kórházi ellátásod."
+                }
+            }
+            message_messages_await_you {
+                id: 319,
+                    type: 3,
+
+                    size [30, 20]
+                title {
+                    text: "Üzenetek várnak rád",
+                }
+                content {
+                    text: "Amikor fanfárt hallasz, az azt jelenti, hogy írnokod új üzenetet kapott számodra, és elmentette feljegyzései közé. @L@L Néhány üzenet, mint ez is, automatikusan megnyílik előtted. Ezek sürgős ügyek, amelyekről írnokod szerint azonnal tudnod kell. Később is átnézheted őket, ha az üzenetek gombjára kattintasz. @PFontos, de nem sürgős üzeneteket különleges fanfár jelez, ám nem jelennek meg automatikusan. A legtöbb üzenet hétköznapi üzenet, amelyet normál fanfár kísér, és akkor tekintheted meg, amikor szeretnéd. @L@LÍrnokod minden üzenetet megőriz, így később bármikor visszatérhetsz hozzájuk. Ha akarod, törölheted is őket. További információért válaszd a Súgót a menüsorból, majd kattints az „Írnokaid üzenetei” lehetőségre (a tartalomjegyzék vége felé)."
+                }
+            }
+            message_local_uprising {
+                id: 320,
+                    message_type: 7
+
+                size [30, 20]
+                urgent: 1
+                title { text: "Helyi felkelés" }
+                content { text: "Seth ösztönzésére néhány helybéli úgy döntött, hogy hangot ad régóta dédelgetett sérelmeinek ellened!!" }
+            }
+            message_small_blessing_from_osiris {
+                id: 321
+                type: 2
+
+                size [30, 20]
+                title { text: "Ozirisz kisebb áldása" }
+                video { text: "@24" }
+                content { text: "Ozirisz észrevette városod hűséges odaadását. A Nílus következő áradása a vártnál kedvezőbb lesz." }
+            }
+            message_minor_blessing_from_ra {
+                id: 322
+                type: 2
+
+                size [30, 20]
+                title { text: "Ré kisebb áldása" }
+                video { text: "@23"}
+                content { text: "Helyes tiszteleted által bátorítva Ré valamelyest növeli hírnevedet az egész Királyságban." }
+            }
+            message_minor_blessing_from_ptah {
+                id: 323
+                type: 2
+
+                size [30, 20]
+                title { text: "Ptah kisebb áldása" }
+                video { text: "@22" }
+                content { text: "Ptah elégedett a figyelmeddel, ezért gondoskodik róla, hogy városod hajóácsai, takácsai vagy ékszerészei elegendő nyersanyaggal rendelkezzenek." }
+            }
+            message_minor_blessing_from_seth {
+                id: 324
+                type: 2
+
+                title { text: "Seth kisebb áldása" }
+                video { text: "@21" }
+                content { text: "Engedelmességed jutalmául Seth megfogadja, hogy megvédi a távoli földeken csatába küldött katonáidat." }
+            }
+            message_small_blessing_from_bast {
+                id: 325
+                type: 2
+
+                size [30, 20]
+                title { text: "Bast kisebb áldása" }
+                video { text: "@20" }
+                content { text: "Bast örül, hogy városod tiszteli őt. Ünnepséget rendezett, hogy minden isten felfigyeljen jámborságodra." }
+            }
+            message_disease_strikes {
+                id: 326,
+                    type: 2,
+                    message_type: 1,
+
+                    size [30, 20]
+                title {
+                    text: "Betegség pusztít",
+                }
+                content {
+                    text: "Betegség sújtott egy háztartást, ahol nem volt megfelelő az egészségügyi ellátás. Emberek halnak meg, és nem tudsz segíteni rajtuk. Javítsd az egészségtelen területeket, hogy megelőzd az újabb járványt."
+                }
+            }
+            message_a_plague {
+                id: 327,
+                    type: 2,
+                    message_type: 1,
+
+                    size [30, 20]
+                title {
+                    text: "Járvány",
+                }
+                content {
+                    text: "Járvány sújtja a várost! Attól tartottunk, hogy ez bekövetkezik, mivel az egész város @53egészségi&állapota igen rossz. Imádkozzunk, hogy patikusaink megbirkózzanak vele."
+                }
+            }
+            message_malaria {
+                id: 328,
+                    type: 2,
+                    message_type: 1,
+
+                    size [30, 20]
+                title {
+                    text: "Malária",
+                }
+                content {
+                    text: "Néhány háztartásban malária ütötte fel a fejét. Jobb egészségügyi intézkedésekkel megelőzhető lenne ez az értelmetlen emberveszteség!"
+                }
+            }
+            message_blessing_reputation_from_ra {
+                id: 329,
+                    type: 2,
+
+                    size [30, 20]
+                title { text: "Ré áldása" }
+                video { text: "@23" }
+                content {
+                    text: "Megtisztelted Rét, ezért hírneved a Királyságban jelentősen jobb lett, mint korábban volt!"
+                }
+            }
+            message_minor_blessing_trading_from_ra {
+                id: 331,
+                    type: 2,
+
+                    size [30, 20]
+                title { text: "Ré kisebb áldása" }
+                video { text: "@23" }
+                content { text: "Tiszteletteljes hozzáállásod elismeréseként Ré arra ösztönzi kereskedelmi partnereidet, hogy többet kereskedjenek, mint korábban." }
+            }
+            message_wrath_of_ra_2 {
+                id: 332,
+                    type: 2,
+
+                    size [30, 20]
+                title { text: "Ré haragja" }
+                video { text: "@23" }
+                content { text: "Kivívtad Ré haragját! Az isten rontotta városod áruinak megítélését, így kereskedelmi partnereid most jóval kevesebbet fognak kereskedni, mint korábban." }
+            }
+            message_wrath_of_ra_3 {
+                id: 333,
+                    type: 2,
+
+                    size [30, 20]
+                title { text: "Ré haragja" }
+                video { text: "@23" }
+                content { text: "Ahogy elhagytad Rét, úgy hagynak el téged kereskedelmi partnereid is. Egy teljes éven át egyetlen kereskedőhajó vagy karaván sem látogatja meg városodat." }
+            }
+            message_ra_is_upset {
+                id: 334,
+                    type: 2,
+
+                    size [30, 20]
+                image { id: 224, pos [15, 15] }
+                title { text: "Ré elégedetlen!" }
+                video { text: "@23" }
+                content { text: "Ahogy semmibe vetted Rét, úgy fogják kereskedelmi partnereid is semmibe venni városod áruit. Úgy döntöttek, csökkentik a veled folytatott kereskedelem mennyiségét." }
+            }
+            message_wrath_of_bast_2 {
+                id: 335,
+                    type: 2,
+
+                    size [30, 20]
+                title { text: "Bast haragja", }
+                content { text: "Városod elkerülte Bast haragját -- az istennő a legszebb házaidat akarta lerombolni, de ma nem talált olyan otthonokat, amelyek méltók lettek volna dühéhez. Ennek ellenére óvakodj az Otthon Istennőjének felingerlésétől, mert türelmes, és emlékezete hosszú. Mutasd meg Bastnak a neki járó tiszteletet, mielőtt visszatér." }
+            }
+            message_wrath_of_ra_4 {
+                id: 336,
+                    type: 2,
+
+                    size [30, 20]
+                title {
+                    text: "Ré haragja",
+                }
+                content {
+                    text: "Ré gondoskodni fog róla, hogy megbűnhődj tiszteletlenségedért!"
+                }
+            }
+            message_wrath_of_osiris_3 {
+                id: 337,
+                    type: 2,
+
+                    size [30, 20]
+                title {
+                    text: "Ozirisz haragja",
+                }
+                video {
+                    text: "@24"
+                }
+                content {
+                    text: "Ozirisz feldühödött, bár nincs hatalma megbüntetni városodat. Élvezd ezt, amíg lehet, mert legközelebb városod talán nem lesz ilyen szerencsés."
+                }
+            }
+            message_blessing_inundation_from_osiris {
+                id: 340,
+                    type: 2,
+
+                    size [30, 28]
+                title { text: "Ozirisz megáld téged" }
+                video { text: "@24" }
+                content { text: "Ozirisz megjutalmazza azokat, akik hódolnak előtte. A következő áradás jelentősen jobb lesz a vártnál." }
+            }
+            message_wrath_of_osiris_4 {
+                id: 341,
+                    type: 2,
+
+                    size [30, 20]
+                title { text: "Ozirisz haragja" }
+                video { text: "@24" }
+                content { text: "Ozirisz emlékeztet rá, hogy tisztelet jár neki. A következő áradás gyengébb lesz a vártnál." }
+            }
+            message_mediocre_inundation_seers {
+                id: 342,
+                    type: 2,
+
+                    size [30, 20]
+                urgent: 1,
+                    title { text: "Nilométer jóslata" }
+                content { text: "Látnokaink figyelmeztetnek, hogy a következő év áradása legfeljebb közepes lehet." }
+            }
+            message_poor_inundation_seers {
+                id: 343,
+                    type: 2,
+
+                    size [30, 20]
+                urgent: 1,
+                    title { text: "Nilométer jóslata" }
+                content { text: "A papok gyenge áradást várnak a következő évben." }
+            }
+            message_no_inundation {
+                id: 344,
+                    type: 2,
+
+                    size [30, 20]
+                urgent: 1,
+                    title { text: "Nilométer jóslata" }
+                content { text: "Szörnyű hír! Minden jel arra utal, hogy idén egyáltalán nem lesz áradás!" }
+            }
+            message_poor_inundation {
+                id: 345,
+                    type: 2,
+
+                    size [30, 20]
+                urgent: 1,
+                    title { text: "Nilométer jóslata" }
+                content { text: "A papok gyenge áradást jósolnak a következő évre. Néped arra kér, hogy gondoskodj Ozirisz kiengeszteléséről, és jobb áradásokért imádkozik az elkövetkező évekre." }
+            }
+            message_mediocre_inundation {
+                id: 346,
+                    type: 2,
+
+                    size [30, 20]
+                urgent: 1,
+                    title { text: "Nilométer jóslata" }
+                content { text: "A következő áradás várhatóan legfeljebb közepes lesz. Talán Ozirisz kegyességét élvezhetjük, ha gondoskodunk kiengeszteléséről." }
+            }
+            message_good_inundation {
+                id: 347,
+                    type: 2,
+
+                    size [30, 20]
+                urgent: 1,
+                    title { text: "Nilométer jóslata" }
+                content { text: "Minden jel arra mutat, hogy a következő évben jó áradás lesz." }
+            }
+            message_excellent_inundation {
+                id: 348,
+                    type: 2,
+
+                    size [30, 20]
+                urgent: 1,
+                    title { text: "Nilométer jóslata" }
+                content { text: "A gazdák örömmel fogadják a következő év kiváló áradásáról szóló jóslatokat!" }
+            }
+            message_perfect_inundation {
+                id: 349,
+                    type: 2,
+
+                    size [30, 20]
+                urgent: 1,
+                    title { text: "Nilométer jóslata" }
+                content { text: "A papok azt jósolják, hogy a várost tökéletes áradás áldja meg a következő évben!" }
+            }
+            message_temple_complex_to_osiris {
+                id: 350,
+
+                    size [30, 20]
+                title {
+                    text: "Ozirisz templomkomplexuma",
+                }
+                subtitle {
+                    text: "Vallás",
+                }
+                content {
+                    text: "Amikor templomkomplexumot építesz Ozirisznek, az isten hajlamos jobb áradásokat küldeni évről évre. A következő építményeket helyezheted el Ozirisz templomkomplexumában: @L@LSzebek oltára, a termékenység istene @LSzebek képessé teszi Ozirisz papjait arra, hogy városod élelmiszer- és áruellátása tovább kitartson. Ahogy Ozirisz papjai bejárják városodat, az általuk érintett házak lakói hirtelen kevesebbel is beérik. @L@LMín jóshelye, az újjászületés istene @LHa városod jóshellyel tiszteli Mínt, felgyorsítja a fák és nádasok újranövését, növeli a vadállatok szaporodási ütemét, és javítja a halászatból és vadászatból származó hozamot. @L@LAz emberek szeretnek templomkomplexum mellett élni. A vallásról további információért kattints @51ide. @L@LTudj meg többet Oziriszről, Szebekről és Mínről az ókori Egyiptomban, ha @376ide kattintasz."
+                }
+            }
+            message_temple_complex_to_ra {
+                id: 351,
+
+                    size [30, 20]
+                title {
+                    text: "Ré templomkomplexuma",
+                }
+                content {
+                    text: "Ré mosolyog a városra, amikor templomkomplexumot szentelnek neki, és gondoskodik róla, hogy a Királyság más lakói is mosolyogjanak városodra. A Rének épített templomkomplexum növeli Királyság-megítélésedet, és ha a város eladósodik, alacsonyabb kamatlábat biztosít. Ré templomkomplexumához oltár és jóshely építésével könnyebben irányíthatod a város ügyeit: @L@LMa'at oltára, az igazságosság istennője @LRé papjain keresztül Ma'at nyugalmat áraszt városodban. Ahogy elhaladnak a házak mellett, Ré papjai eltántorítják a lakókat a tolvajlástól. Az oltár puszta jelenléte is csökkenti a bűnözés kialakulásának kockázatát. @L@LHórusz jóshelye, a fáraók istene @LEz a jóshely növeli a polgárok városod és a Királyság iránti elkötelezettségét, így alacsonyabb bért is elfogadnak anélkül, hogy kedvük romlana. @L@LAz emberek szeretnek templomkomplexum mellett élni. A vallásról további információért kattints @51ide. @L@LTudj meg többet Réről, Ma'atról és Hóruszról az ókori Egyiptomban, ha @377ide kattintasz."
+                }
+            }
+            message_temple_complex_to_ptah {
+                id: 352,
+
+                    size [30, 20]
+                title {
+                    text: "Ptah templomkomplexuma",
+                }
+                content {
+                    text: "Amikor templomkomplexumot építesz neki, Ptah felgyorsítja városod számos iparágának termelését, köztük az aranybányák, rézbányák, drágakőbányák, agyaglelőhelyek, hajóácsok, ékszerészek és takácsok munkáját. Ptah templomkomplexumának oltára és jóshelye felgyorsítja más iparágak termelését, és javítja az oktatók képességeit: @L@LAmon oltára, a napisten @LFigyelmeddel megtisztelve Amon gyorsabb munkára ösztönzi a kőfejtőket, favágókat és téglagyárakat. @L@LThot jóshelye, a bölcsesség és tanulás istene @LThot célja, hogy a tanulás fényét minél több emberhez eljuttassa. Amikor Thot jóshelyét megépíted, a könyvtárosok és tanítók kevesebb papiruszt használnak a város lakóinak oktatására. @L@LAz emberek szeretnek templomkomplexum mellett élni. A vallásról további információért kattints @51ide. @L@LTudj meg többet Ptahról, Amonról és Thotról az ókori Egyiptomban, ha @378ide kattintasz."
+                }
+            }
+            message_temple_complex_to_seth {
+                id: 353,
+
+                    size [30, 20]
+                title { text: "Seth templomkomplexuma" }
+                content { text: "Amikor egy város templomkomplexumot szentel neki, Seth vad elszántságot önt a város katonáiba, több tapasztalatot adva nekik és védelmezve őket a csatában. Seth templomkomplexumának kiegészítői: @L@LAnubisz oltára, a halál istene @LAnubisz könnyebbé teszi a polgárok számára az örök élet elérését. Áldásával a halottasházaknak kevesebb vászonra van szükségük a testek örökkévalóságra való előkészítéséhez. @L@LSzakhmet jóshelye, a háború istennője @LSzakhmet képessé teszi Seth papjait arra, hogy csökkentsék a bűnözés kockázatát az általuk érintett házakban, és elfogják a bűnözőket a városban. @L@LAz emberek szeretnek templomkomplexum mellett élni. A vallásról további információért kattints @51ide. @L@LTudj meg többet Sethről, Anubiszról és Szakhmetről az ókori Egyiptomban, ha @379ide kattintasz." }
+            }
+            message_temple_complex_to_bast {
+                id: 354,
+
+                    size [30, 20]
+                title { text: "Bast templomkomplexuma" }
+                content { text: "A Bastnak épített templomkomplexum szerencsét hoz minden városnak. Bast segít boldoggá tenni a polgárokat azzal, hogy kevesebbel is elégedettek lesznek. Jóindulatának köszönhetően csökken a polgárok élelmiszer- és áru-fogyasztása, valamint a szórakoztatók, oktatók és egészségügyi dolgozók hatása tovább tart. Nővéristennői is javítják polgáraid életét: @L@LÍzisz oltára, a gyógyítás istennője @LBast papnőin keresztül Ízisz gyógyító kezét a város lakóira helyezi, eltávolítva a járvány sújtotta embereket az utcákról, és megtisztítva azokat a fertőzött házakat, amelyek mellett a papnők elhaladnak. Ízisz emellett gondoskodik városod általános egészségének javításáról is. @L@LHathor jóshelye, az öröm, szerelem és ünnepségek istennője @LHathor, akit lenyűgöz a neki épített jóshely, javítja a polgárok hangulatát, ami jobb @39Városi&hangulatot eredményez. @L@LAz emberek szeretnek templomkomplexum mellett élni. A vallásról további információért kattints @51ide. @L@LTudj meg többet Bastról, Íziszről és Hathorról az ókori Egyiptomban, ha @380ide kattintasz." }
+            }
+            message_building_firehouse {
+                id: 355,
+
+                    size [30, 20]
+                title {
+                    text: "Tűzoltóság",
+                }
+                content {
+                    text: "A város néhány épülete kigyulladhat. Valószínű célpontok a rossz állapotú lakóházak és ipari épületek, például a fazekasműhelyek. Ha nem teszel semmit a megfékezésére, a tűz végigterjedhet a városon, és egész városrészeket pusztíthat el egyszerre. Ennek megelőzésére építs tűzoltóságokat a könnyen kigyulladó épületek közelébe. A tűzoltóságok tűzoltói bejárják a várost (a járókelőkről további információért kattints @42ide), és csökkentik az épületek tűzveszélyét, amikor elhaladnak mellettük. @PHa tűz üt ki, a közeli tűzoltók a helyszínre sietnek, hogy eloltsák a lángokat. Ha egy tűzoltónak messzire kell utaznia, a lángok továbbterjedhetnek, és a pusztítás súlyos lehet a városodban. @G67 @PA @18tűz&fedőréteg hasznos útmutató a tűzmegelőzéshez. A fedőréteg megmutatja a tűzoltók munkáját, de ami még fontosabb, jelzi, mely épületek különösen hajlamosak a kigyulladásra. Használd ezt az információt következő tűzoltóságod helyének megtervezéséhez. @PTűzoltóságok működéséhez úthálózat és munkaerő szükséges. A lakók nem szívesen élnek tűzoltóságok közelében."
+                }
+            }
+            message_building_warship_wharf {
+                id: 356,
+
+                    size [30, 20]
+                title {
+                    text: "Hadihajó-kikötő",
+                }
+                content {
+                    text: "A hadihajó-kikötők hadihajókat fogadnak. Egy új hadihajó-kikötő első dolga, hogy hadihajót rendeljen a @82hajóácstól. @EA hadihajó-kikötőhöz úthálózat és munkaerő is szükséges. Egyenes partszakaszon kell elhelyezni, és a hajóknak könnyen el kell tudniuk jutniuk a kikötőhöz. A polgárok nem akarnak túl közel élni egy hadihajó-kikötőhöz. Egyes tengerészeknek ugyanis nem a legjobb a híre. @PAmikor egy hadihajó éppen nem csatázik, legénysége inkább a kikötő biztonságába tér vissza. Itt kipihenhetik magukat a következő ütközet előtt. @POlvasd el a @365hadihajók bejegyzést, hogy megtudd, hogyan irányíthatsz hajót csatában. @L@LAz ókori Egyiptom katonai hagyományai hosszú és dicsőséges múltra tekintenek vissza. További információért kattints @184ide."
+                }
+            }
+            message_building_transport_wharf {
+                id: 357,
+
+                    size [30, 20]
+                title {
+                    text: "Szállítóhajó-kikötő",
+                }
+                content {
+                    text: "A szállítóhajó-kikötők szállítóhajókat fogadnak. Egy új szállítóhajó-kikötő első dolga, hogy szállítóhajót rendeljen egy @82hajóácstól. @EA szállítóhajó-kikötőhöz úthálózat és munkaerő is szükséges. Egyenes partszakaszon kell elhelyezni, és a hajóknak könnyen el kell tudniuk jutniuk a kikötőhöz. Polgáraid nem akarnak túl közel élni egy szállítóhajó-kikötőhöz. @POlvasd el a @367szállítóhajók bejegyzést, hogy megtudd, hogyan irányíthatsz hajót csatában. @L@LAz ókori Egyiptom katonai hagyományai hosszú és dicsőséges múltra tekintenek vissza. További információért kattints @181ide."
+                }
+            }
+            message_building_roadblock {
+                id: 358,
+
+                    size [30, 20]
+                title {
+                    text: "Útzár",
+                }
+                content {
+                    text: "Az útzárak segítenek irányítani a @42vándorló&járókelők útvonalait. Amikor a várost bejáró járókelők útzárba ütköznek, visszafordulnak. Az útzárak nem befolyásolják a célállomás felé tartó járókelőket. @PÉpíts útzárat olyan helyekre, ahová a várost járó embereknek nem kell eljutniuk - például az ipari területekre vezető útra. Vigyázz azonban, hogy ne zárj el teljesen területeket a városban járó emberektől. Ugyanaz az útzár, amely megakadályozza, hogy egy bazári kereskedő az ipari negyedbe tévedjen, az építészeket, tűzoltókat és rendfenntartókat is visszafordítja. Emellett megakadályozza, hogy a munkaerő-toborzók az ipari területről a lakónegyedbe jussanak, ahol dolgozókat találnának. @G62 @PAmikor új útzárat építesz egy meglévő épület közelében, érdemes egy ideig figyelni az épületet, hogy megbizonyosodj róla: a járókelő a megfelelő oldalon lép ki az útzárhoz képest. Néha az épület dolgozói nem értik a szándékaidat, és rossz irányba küldik járókelőjüket. Ez különösen bosszantó lehet a munkaerőt kereső épületeknél, mert az őket alkalmazó épület úgy hiszi, hogy hozzáfér a munkaerőhöz, de az útzár megakadályozza, hogy a járókelő valaha elérje a munkaerőpiacot. Az egyetlen megoldás, ha az útzárat egy hellyel távolabb építed újjá. @PAz útzáraknak nincs szükségük dolgozókra, és egyetlen korlátozásuk, hogy úton kell elhelyezni őket. Nincs hatásuk a vonzerőre."
+                }
+            }
+            message_building_hunting_lodge {
+                id: 359,
+
+                    size [30, 20]
+                title {
+                    text: "Vadászház",
+                }
+                content {
+                    text: "Építs vadászházat, hogy vadászokat küldhess a zsákmány után. Struccokra, szárnyasokra és antilopokra is lehet vadászni. @PVadászházat bárhol építhetsz, bár érdemes a zsákmány közelébe helyezni őket, amely általában szaporodóhelyei közelében marad. A vadászházak működéséhez munkaerő és úthálózat is szükséges. Amikor működésbe lépnek, egy vadászt láthatsz az udvaron, amint célba lő. @PA vadászok a házból a mezőkre indulnak, ahol zsákmányuk vár rájuk. Miután elejtették az állatot, visszaviszik a vadászházba, ahol fogyasztásra alkalmassá teszik. Amikor egy kocsi rakomány vadhús elkészül, elszállítják a @3raktárakba vagy a @4tároló&udvarokba (ha azok engedélyezték a vadhús fogadását). @G60 @PA vadhús fontos része lehet a polgárok étrendjének. Változatosságot biztosít, amelyre az emberek vágynak. A város azonban valószínűleg nem tud kizárólag vadhúsból megélni. A csordák és nyájak mérete korlátozott, ezért a vadászat önmagában nem képes egy nagy város teljes élelmiszerigényét kielégíteni. A nép ellátásáról további információért olvasd el a @45mezőgazdaság&és&élelmiszer-termelés részt. @PA vadhúst (a @89szalmával együtt) állatok etetésére is használják az @479állatkertben. @PA vadászházak negatívan befolyásolják a @56vonzóerőt. @L@LAz ókori egyiptomi étrendet vadhússal egészítették ki. A vadászatot pedig a nemesek sportként is kedvelték. További információért kattints @383ide."
+                }
+            }
+            message_building_cattle_ranch {
+                id: 360,
+
+                    size [30, 20]
+                title {
+                    text: "Marhafarm",
+                }
+                content {
+                    text: "Tenyéssz marhákat egy marhafarmon, hogy hússal lásd el a város lakóit. @PA marhafarmokat út mellé kell építeni, és munkaerőre van szükségük. Szalmát is igényelnek, amelyet egy @89gabonafarmról vagy egy @47kereskedelmi&partnertől lehet beszerezni. A marhafarmokat nem kell termékeny földre építeniük, és vízellátásra sincs szükségük. @POlvasd el a @45mezőgazdaság&és&élelmiszer-termelés részt, hogy többet tudj meg a hús szerepéről polgáraid étrendjében. @PA marhafarmok bűzt árasztanak, és a lakók nem szeretnek a közelükben élni. @L@LAz ókori egyiptomiak sokféle állatot tenyésztettek élelem céljából. További információért kattints @186ide."
+                }
+            }
+            message_building_gemstone_mine {
+                id: 361,
+
+                    size [30, 20]
+                title {
+                    text: "Drágakőbánya",
+                }
+                content {
+                    text: "A drágaköveket sziklás kiemelkedésekből bányásszák. Ránézésre nem lehet megállapítani, hogy egy szikla rejt-e drágaköveket. Ha a területen bányászható drágakő található, a drágakőbányák megjelennek az Ipari épületek: Nyersanyagok listájában. A @95kőfejtőkhöz hasonlóan a drágakőbányákat is sziklás kiemelkedések mellé kell építeni, és munkaerőre, valamint úthálózatra van szükségük. Összeomlásra is hajlamosak, ezért mindenképpen építs a közelbe egy @81építész&állomást. @PA drágakőbányák poros helyek, és a polgárok nem szeretnek a közelükben élni. @L@LAz ókori Egyiptom drágaköveiről további információért kattints @382ide."
+                }
+            }
+            message_building_sphinx {
+                id: 362,
+
+                    size [30, 20]
+                title {
+                    text: "Szfinx",
+                }
+                content {
+                    text: "A Szfinx a piramisok díszesen faragott és festett őrzője. @PA Szfinx építéséhez először megfelelő helyet kell találnod. Válaszd a „Szfinx” lehetőséget a Vallási épületek: Emlékművek listájából. Megjelenik a szfinx alaprajza. Ahogy mozgatod az alaprajzot a tájon, vagy teljesen zöld lesz, vagy zöld, egy vagy több vörös gyémánttal. Ha az alaprajz teljesen zöld, megtaláltad a megfelelő rejtett kőtartalékot. Kattints az egérgombbal, és a kő feltárul. Ha vörös gyémánt jelenik meg az alaprajzban, a táj valamely hibája miatt nem építheted ide a Szfinxet. @PMost a @363kőfaragók és @363ácsok munkához láthatnak, feltéve, hogy rendelkezel a szükséges fával. Az ácsok állványzatot építenek, amelyre a kőfaragók felmásznak a Szfinx kifaragásához. @PA Szfinxre jobb gombbal kattintva meglátogathatod az @369építési&felügyelőt a munkálatok állapotjelentéséért. @L@LA leghíresebb Szfinxről szóló leírást @391ide kattintva olvashatod."
+                }
+            }
+            message_construction_guilds {
+                id: 363,
+
+                    size [30, 20]
+                title {
+                    text: "Építőcéhek",
+                }
+                content {
+                    text: "Építőcéhek nélkül nem tudod felépíteni a fáraót és Egyiptomot dicsőítő nagyszerű építményeket. @PNégy különleges építőcéh létezik: az ácsok, téglavetők, kőfaragók és kézművesek céhe. Bár a @8Munka&táborokból érkező egyszerű munkások biztosítják a legtöbb fizikai erőt egy emlékmű építéséhez, a szakértő céhek a nyersanyaghalmokat a legnagyobb és legösszetettebb épületekké alakítják, amelyeket építeni fogsz, például piramisokká, @362Szfinxekké, @371masztabákká, @69Nap&templomokká, @368mauzóleumokká és @392obeliszkekké. Minden emlékműhöz sajátos céhes munkások szükségesek. @PAz építőcéheknek úthálózatra és helyi munkaerőforrásra van szükségük. Az ácscéheknek faellátással kell rendelkezniük. A kézművescéheknek @470festékre és @92agyagra (vakolathoz) van szükségük a síremlékek utolsó díszítéseihez. A téglavetők és kőfaragók az emlékmű helyszínén várják a szükséges anyagokat. @PA zaj miatt a polgárok nem szeretnek építőcéhek közelében élni. @L@LAz ókori Egyiptom ezen különleges szakmáiról további információért olvasd el a @386téglavetők, @385kőfaragók, @389ácsok és @472kézművesek bejegyzéseit."
+                }
+            }
+            message_building_brickworks {
+                id: 364,
+
+                    size [30, 20]
+                title {
+                    text: "Téglagyár",
+                }
+                content {
+                    text: "A téglagyárak @92agyagból és @89szalmából téglákat készítenek. A téglákat többféle emlékmű építéséhez használják, és haszonnal @47exportálhatók is. @PHa egy téglagyár rendelkezik munkaerővel és úthálózattal, nyersanyagokra van szüksége a működéshez. A téglagyáraknak szalmára és agyagra is szükségük van. Szalmát a @89gabonafarmok termelnek, agyagot pedig a földből ásnak ki az @92agyaggödrökben. Mindkét nyersanyag importálható egy @47kereskedelmi&partnertől is. @PAmikor egy téglagyár téglát készít, láthatod a téglakészítőket az udvarán dolgozni. Ha elkészül egy rakomány tégla, azt egy @4tároló&udvarba szállítják. @PA téglagyárak nem kívánatos szomszédok. @L@LAz ókori Egyiptom tégláiról további információért kattints @390ide."
+                }
+            }
+            message_building_warship {
+                id: 365,
+
+                    size [30, 20]
+                title {
+                    text: "Hadihajó",
+                }
+                content {
+                    text: "A hadihajók a vízi utakat járőrözik, és döngöléssel vagy nyílzáporral támadják azokat a hajókat, amelyek ártani akarnak a városnak. A hadihajók a part közelében tartózkodó szárazföldi katonákat is támadhatják lövedékekkel. Egy hadihajó egy @356hadihajó&kikötőben állomásozik. A hátsó kabin hiánya és díszes kialakítása alapján megkülönböztethető a szállítóhajóktól. @L@LTámadási prioritások @LMindegy, milyen parancsot adsz egy hadihajónak, kapitánya támadáskor mindig ugyanazt a sorrendet követi. Fontossági sorrendben a kapitány célpontjai: @L@LEllenséges katonákat szállító szállítóhajók @LA kapitány tudja, hogy küldetése nagyrészt kudarcot vall, ha az ellenséges katonák elérik a partot. Ha a város vizein ellenséges katonákat szállító hajók vannak, először ezeket támadja meg, még mielőtt partra tehetnék támadóikat. @L@LPartra szállt ellenségek a part közelében @LHa a kapitány nem tudja megakadályozni az ellenséges katonák partra jutását, a parthoz hajózik, és nyilakkal árasztja el a hatótávolságon belüli partraszállókat. @L@LHadihajók @LAz ellenséges hadihajók a harmadik prioritást jelentik. Ha nincs csapatokat szállító hajó vagy partra szállt ellenség, a kapitány megpróbálja ledöngölni az ellenséges hadihajókat. @L@LÜres ellenséges szállítóhajók @LAz üres ellenséges szállítóhajók a kapitány utolsó célpontjai. Megtámadja őket, ha nincs más ellenség a közelben. @L@LA kapitány gyorsan reagál a változó helyzetekre. Abbahagyja a csatát, ha fontosabb célpont jelenik meg. Például ha egy hadihajót támad, de közben egy ellenséges katonákat szállító hajó érkezik a védett területre, elengedi a hadihajót, és a megrakott szállítóhajót támadja. @L@LHadihajó-parancsok @LA hadihajónak jobb gombbal kattintva adhatsz parancsot. A hadihajók a következő parancsokat hajthatják végre: @L@LÁllj a helyeden @LHa ezt a parancsot kapja, a hadihajó nem mozdul el a kijelölt helyről. Önvédelemből az ellenséges hadihajók felé fordul, hogy csökkentse a döngölés okozta sebzést, és nyilakkal támadja a hatótávolságon belüli ellenségeket. Ha több hadihajó sorakozik fel, és mindegyik az állj a helyeden parancsot kapta, blokádot alkotnak a betolakodók távoltartására. @L@L Közeli ellenségek megtámadása @LEnnek a parancsnak a hatására a hadihajó megtámadja a helye közelében lévő ellenségeket. @L@LMinden ellenség felkutatása és megsemmisítése @LEzzel a paranccsal a hadihajó járőrözni kezd a vízen, hogy ellenségeket keressen és legyőzzön. @L@LJavítás @LHa a hadihajó megsérül egy csatában, erre a gombra kattintva a hajó az ácshoz indul javításra. Amikor a hajóács befejezi a javítást, a hajó visszatér saját kikötőjébe. Súlyos sérülés esetén a kapitány magától a hajóácshoz rendeli javításra. A hajóácsoknak fára van szükségük a javításokhoz. @L@LVisszatérés a kikötőbe @LEzzel a lehetőséggel a hajó visszatér saját kikötőjébe. @L@LEgy hadihajó egyszerű mozgatásához kattints rá, majd az új helyre. Amikor odaér, követi az utoljára kiadott parancsot. Ha egy ellenségre kattintasz, a hadihajó üldözni fogja a célpontot annak legyőzéséig, vagy szárazföldi cél esetén addig, amíg az hatótávolságon belül van. @L@LAz ókori Egyiptom hadviseléséről további információért kattints @184ide."
+                }
+            }
+            message_building_festival_square {
+                id: 366,
+
+                    size [30, 20]
+                title {
+                    text: "Ünnepi tér",
+                }
+                content {
+                    text: "Mielőtt fesztivált tarthatsz (a fesztiválokról további információért lásd a @51vallás részt), városodban kell lennie egy ünnepi térnek. Az ünnepi teret egy útkereszteződésre kell építeni, de nincs szüksége munkaerőre. Minden városban csak egy ünnepi tér lehet, és nagyon @56vonzó szomszédnak számít. @PAmikor nincs fesztivál, a tér többnyire üres, de nem akadályozza a rajta áthaladó utak forgalmát. Amint a fesztivál elkezdődik, az emberek a város minden részéből ide gyűlnek ünnepelni. @PAz ókori egyiptomiak számos különböző esemény megünneplésére rendeztek fesztiválokat. További információért kattints @393ide."
+                }
+            }
+            message_figure_transport_ship {
+                id: 367,
+
+                    size [30, 20]
+                title {
+                    text: "Szállítóhajó",
+                }
+                subtitle {
+                    text: "Szállítóhajó",
+                }
+                content {
+                    text: "A szállítóhajók a hadseregedet szállítják át a folyón vagy tengeren távoli vidékekre. Bármelyik alakulat felszállhat egy szállítóhajóra, de egy hajó egyszerre csak egy alakulatot szállíthat. Egy szállítóhajó egy @357szállítóhajó&kikötőben állomásozik. A hátsó kabinja és kialakítása alapján megkülönböztethető a hadihajótól. @L@LSzállítóhajó-parancsok A szállítóhajóknak különböző parancsokat adhatsz. Egy szállítóhajó mozgatásához kattints rá, majd az új helyre. Jobb gombbal kattintva a következő parancsokat adhatod ki: @L@LÁllj a helyeden @LArra utasítja a szállítóhajót, hogy maradjon a helyén. Ha támadás éri, a kapitány elfordítja a hajót a sebzés csökkentése érdekében. Azonban nem indul el menekülni a támadás elől. Ezt a lehetőséget óvatosan használd, mert a szállítóhajók gyengén védettek. @L@LEllenség elkerülése @LA szállítóhajók, különösen a katonákkal megrakottak, értékesek és sebezhetők. Az Ellenség elkerülése paranccsal a kapitány minden képességét felhasználja a támadások elkerülésére. A kapitány mindig megpróbálja elkerülni az ellenséget, hacsak másképp nem utasítod. @L@LFelszállás/Leszállás @LKatonák hajóra rakásához először kattints a Felszállás gombra, majd a vízen átküldeni kívánt alakulatokra. A katonák felszállnak, a hajón pedig megjelenik az alakulat zászlaja. Ha jobb gombbal kattintasz a szállítóhajóra, megjelennek a fedélzeten lévő alakulat adatai. @PA katonák partra juttatásához kattints a Leszállás gombra, majd arra a helyre, ahol állomásoztatni szeretnéd az alakulatot. @PA Felszállás/Leszállás lehetőség váltakozik attól függően, hogy tartózkodnak-e katonák a hajón. @L@LJavítás @LHa a szállítóhajó megsérül, kattints a javításra, hogy visszaküldd a @82hajóácshoz. Ha a hajótest súlyosan sérült, a kapitány magától a hajóácshoz viszi a hajót. A hajóácsoknak fára van szükségük a javításokhoz. @L@LVisszatérés a kikötőbe @LEzzel a gombbal visszaküldheted a szállítóhajót a saját @357kikötőjébe."
+                }
+            }
+            message_building_mausoleum {
+                id: 368,
+
+                    size [30, 20]
+                title {
+                    text: "Mauzóleum",
+                }
+                content {
+                    text: "A mauzóleumok nagy síremlékek, amelyekbe fáraókat és nemeseket temetnek. @PMauzóleum építéséhez homokkőre és fára van szükség, valamint legalább egy működő @363ácscéhre, @363kőfaragócéhre és @8munkatáborra. @PMauzóleum elhelyezéséhez először nagy mennyiségű homokkőnek kell lennie a város @4tároló&udvaraiban. Ha elegendő kő áll rendelkezésre, válaszd a Mauzóleumot a Vallási épületek: Emlékművek listájából. Helyezd el a mauzóleumot az alaprajz színét figyelve (a teljesen zöld azt jelenti, hogy építhető, a vörös gyémántok pedig azt jelzik, hogy valamilyen tereptárgy akadályozza az építést). Miután kijelölted a helyet, a munkatábor parasztjai megtisztítják a területet és lefektetik az alapokat. @PAmint az alap elkészül, a kőfaragók munkához látnak. Amikor egy tárolóudvar négy tömb homokkövet gyűjt össze, a parasztok szánra rakják a követ, és az építkezéshez húzzák. A kőfaragók addig helyezik el a köveket, amíg az első szint el nem készül. Ezután az ácsok fa rámpákat építenek, hogy a kőfaragók a mauzóleum második szintjén dolgozhassanak. A második szint elkészülte után a mauzóleum befejeződik. @L@LAz ilyen síremlékek történetéről @396ide kattintva olvashatsz."
+                }
+            }
+            message_figure_construction_foreman {
+                id: 369,
+
+                    size [30, 20]
+                title {
+                    text: "Építési felügyelő",
+                }
+                content {
+                    text: "Amint megkezdődik egy emlékmű építése, az építési felügyelő részletes információt nyújt az emlékmű állapotáról. Folyamatosan nyilvántartja, hogy az egyes építőanyagokból mennyire van még szükség a befejezéshez. Ha az építkezés nem halad megfelelően, meg tudja mondani az okát. Az építési felügyelő meglátogatásához kattints jobb gombbal az emlékmű helyszínére."
+                }
+            }
+            message_building_monument_construction {
+                id: 370,
+
+                    size [30, 20]
+                title {
+                    text: "Emlékműépítés",
+                }
+                content {
+                    text: "A legtöbb küldetés sikeres teljesítéséhez legalább egy emlékművet kell építened. Egyes küldetések több emlékmű építését is megkövetelik. A szükséges emlékműveket tetszőleges sorrendben építheted fel. @PA legtöbb emlékműnél a @363építőcéh&dolgozói az építési helyszínen várják a @8munkatábor parasztjait, akik a szükséges anyagokat egy @4tároló&udvarból szállítják. A parasztok olyan messzire gyalogolnak, amennyire szükséges, hogy elérjék az építkezést. A @362Szfinx és a @372Obeliszk építése kissé eltérően zajlik. @G75 @PVárosod munkásai egyszerre több emlékművön is dolgozhatnak, és kísértésbe eshetsz, hogy ezt rendeld el. Vigyázz azonban, mert ez a terv nem biztos, hogy olyan bölcs, mint elsőre tűnik. Hatékonyságcsökkenés léphet fel, amikor a @363kőfaragók és a kőtömb-szállítók nem hangolják össze munkájukat. A parasztok az egyik emlékműhöz szállíthatják az építőanyagokat, miközben a kőfaragók tétlenül várnak egy másik helyszínen, ahol inkább dolgoznának. @PEz a helyzet mélyen bosszantja az @373emlékművek&felügyelőjét, de nehéz összeegyeztetni a kőszállítók merev utasításait a kőfaragók önálló hozzáállásával. A legjobb elkerülni az ilyen konfliktusokat azzal, hogy az emlékműveket egymás után, nem pedig egyszerre építteted. @PNéhány emlékmű hatalmas mérete miatt különösen nehezen helyezhető el a városban. A legnagyobb építményeknél nem láthatod egyszerre a teljes alaprajzot. @PEgy kiválasztott hely felméréséhez nyomd meg az „M” billentyűt. Az emlékmű alaprajza rögzül a kiválasztott helyen, és a városban szokásosan mozgathatod a nézetet. Ha a hely megfelelő, az egérgombbal elhelyezheted az emlékművet. Ha tovább keresnél megfelelő helyet, nyomd meg ismét az „M” billentyűt. Az alaprajz újra követni fogja a kurzorodat a városban. @PEzen kívül néhány emlékművet sziklafalba kell építeni. Ezek az emlékművek az @492Abu&Simbel és a @478Királyi&sírhelyek. @PAz emlékművekről további információért olvasd el az egyes típusok leírását. Ezeket a Súgó menüben találod. @L@LAz emlékművek történetéről további információért kattints ezek egyikére: @391szfinx, @392piramisok, @394masztabák, @493Abu&Simbel, @481Alexandriai&Könyvtár, @482Caesareum, @475Királyok&Völgye és @396egyéb&emlékművek."
+                }
+            }
+            message_building_mastaba {
+                id: 371,
+
+                    size [30, 20]
+                title {
+                    text: "Masztaba",
+                }
+                content {
+                    text: "A masztabák nemesek számára épített díszes síremlékek. Néha te magad is választhatsz egy masztabát végső nyughelyedül. @PMasztaba építéséhez nagy mennyiségű @364téglára és egy @363téglavető&céhre lesz szükséged. Emellett a @8munkatáborok parasztjaira is szükség van. @PA masztaba építésének első lépése a helyszín kiválasztása. Tudni fogod, hogy megfelelő helyet választottál, ha a masztaba alaprajzának zöld „szellemképét” látod. Ha a zöld alaprajzban vörös gyémántok vannak, a táj valamely adottsága akadályozza az építést. Ha az alaprajz teljesen zöld, kattints az egérgombbal, és a masztaba helye rögzül. A helyszín sarkait cölöpök jelölik. @PMiután a hely kijelölésre került, a téglavetők és a parasztok munkához látnak. A parasztok szánrakományokban hordják a téglákat, a téglavetők pedig elhelyezik őket. @PAz elhunytnak sok mindenre van szüksége a Nádasok Mezején, ezért valószínűleg @374temetkezési&ellátmánnyal kell felszerelned a masztabát. Az @373emlékművek&felügyelője megmondja, mely áruk szükségesek. Az építés állapotáról az @369építési&felügyelőnél érdeklődhetsz. Az emlékműépítésről további információért kattints @370ide. @L@LAz ókori Egyiptom masztabáiról további információért kattints @394ide."
+                }
+            }
+            message_building_obelisk {
+                id: 372,
+
+                    size [30, 20]
+                title {
+                    text: "Obeliszk",
+                }
+                content {
+                    text: "Az obeliszkek a nap sugarait jelképezik, oldalain pedig a nagy tetteket és eredményeket örökítik meg. @PAz obeliszkek nagy mennyiségű @95gránitból készülnek, és az obeliszkhez szükséges teljes gránitmennyiségnek a város @4tároló&udvaraiban kell lennie, mielőtt elhelyezheted az emlékművet. @PMozgasd a kurzort a föld felett az obeliszk helyének kiválasztásához. Ha az emlékmű teljesen zöld alaprajzát látod, elhelyezheted az obeliszket. Ha az alaprajzban vörös gyémántok vannak, a táj valamely adottsága megakadályozza az építést. @PMiután kiválasztottad a helyet, a gránitot elhelyezik. Ezután az @363ácscéh ácsai állványzatot építenek az emlékmű köré, és @363kőfaragók érkeznek, hogy bonyolult mintákat véssenek bele. Obeliszk építéséhez nincs szükség parasztok segítségére. @PAz emlékműre jobb gombbal kattintva meglátogathatod az @369építési&felügyelőt. Ő tájékoztat az emlékmű állapotáról. @L@LAz obeliszkek évezredek óta törnek az ég felé. További információért kattints @397ide."
+                }
+            }
+            message_overseer_monuments {
+                id: 373,
+
+                    size [30, 20]
+                title {
+                    text: "Emlékművek felügyelője",
+                }
+                content {
+                    text: "Az emlékművek felügyelője meg tudja mondani, mi akadályozza egy emlékmű építésének megkezdését. Emellett ő irányítja a szükséges @374temetkezési&ellátmányok elküldését azokhoz a sírokhoz, amelyek igénylik ezeket. A tényleges építkezés állapotáról szóló jelentésért kattints jobb gombbal a projektre, és látogasd meg az építési felügyelőt."
+                }
+            }
+            message_burial_provisions {
+                id: 374,
+
+                    size [30, 20]
+                title {
+                    text: "Temetkezési ellátmányok",
+                }
+                content {
+                    text: "Annak biztosítására, hogy az elhunytnak mindene meglegyen a túlvilágon, a legtöbb sírt fel kell töltened temetkezési ellátmányokkal. A temetkezési ellátmányok olyan anyagok, amelyeket az elhunyt életében használt. Szükség lehet a túlvilághoz szükséges különleges tárgyak elkészítéséhez való anyagokra is, például halotti bárkához vagy szarkofághoz. Az emlékművek csak akkor készülnek el teljesen, ha minden szükséges temetkezési ellátmányt biztosítottál. Az @373emlékművek&felügyelője rendelkezik a szükséges tárgyak és mennyiségek listájával. Amikor készen állsz az elküldésükre, utasítsd az emlékművek felügyelőjét, hogy küldje el az árukat a sírhoz. @PNem kell a szükséges anyag teljes mennyiségének a @4tároló&udvarokban lennie ahhoz, hogy árut küldhess az emlékműhöz. Kisebb adagokban is küldhetsz a szükséges áruból, amíg teljesíted a követelményt. @PA városodnak esetleg @47importálnia kell néhány temetkezési ellátmányt. @L@LAz ókori egyiptomiak sokféle tárgyat temettek az elhunyt mellé. Kattints @395ide, hogy megtudd, milyen ellátmányokat vittek magukkal a túlvilágra."
+                }
+            }
+            message_building_stepped_pyramid {
+                id: 375,
+
+                    size [30, 20]
+                title {
+                    text: "Lépcsős piramis",
+                }
+                content {
+                    text: "A lépcsős piramisok, az első Egyiptomban épített piramisok, hatalmas lépcsők a nap felé. Teljes egészében @95faragatlan&kőből készülnek, bár fa szükséges a rámpák építéséhez, amelyekkel a követ a piramis magasabb szintjeire juttatják. A rámpák építéséhez és a kövek elhelyezéséhez szükséged lesz egy @363ácscéhre és egy @363kőfaragócéhre. A hatalmas kőtömböket a helyszínre húzó parasztokra is szükség van. Miután négy tömb faragatlan kő a @4tároló&udvarokban van, és a kőfaragók készen állnak, a parasztok megkezdik nehéz útjukat az emlékműhöz. @PA lépcsős piramisok öt különböző méretben készülhetnek: kicsi, közepes, nagy, piramiskomplexum és nagy piramiskomplexum. További információért keresd fel az @369építési&felügyelőt és az @373emlékművek&felügyelőjét. Az @370emlékmű&építés bejegyzése is hasznos lehet. @L@LA lépcsős piramisról, Imhotep vezír újításáról további információért kattints @392ide."
+                }
+            }
+            message_osiris_sebek_min {
+                id: 376,
+
+                    size [30, 20]
+                image {
+                    id: 42,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Ozirisz, Szobek és Min",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "Ozirisz szerepe az egyiptomi vallásban az évezredek során változott. Feleségével és nővérével, Ízisszel, valamint testvérével, Szettel együtt a legősibb istenek egyike volt, és az Enneád tagja (az Enneádról további információért lásd a @399vallás részt). @L@LAz Oziriszt meghatározó mítosz a mezőgazdasághoz, a Nílushoz és a temetkezési szokásokhoz kapcsolja. Ré-Atum Ozirisznek adta az ókori Egyiptom uralmát. Ozirisz feleségül vette nővérét, Íziszt, és uralkodóként sok mindenre megtanította népét, legfőképpen a földművelés művészetére. Miután tanításait átadta az egyiptomiaknak, Ozirisz elhagyta Egyiptomot, hogy a világ többi részét civilizálja, és Íziszt hagyta hátra uralkodni. Ízisz jól vezette az országot távollétében, de amikor Ozirisz visszatért, testvére, Szeth összeesküvést kezdett szőni ellene. Szeth fényűző lakomára hívta Oziriszt, ahol egy gyönyörű koporsót mutatott be. Felajánlotta annak, akinek pontosan megfelel a mérete. Amikor Ozirisz belefeküdt a koporsóba, Szeth lezárta a tetejét, és a Nílusba dobta. Ízisznek sikerült kihalásznia a koporsót a folyóból, de Szeth elfogta őt, és darabokra vágta Oziriszt. Ízisz kétségbeesésében sírt, és könnyeiről úgy hitték, hogy azok okozzák az áradást. Végül Ízisz összegyűjtötte Ozirisz szétszóródott testrészeit, kivéve nemi szervét, amelyet egy oxirhünkhoszi hal fogyasztott el. Ízisz vászonnal kötözte össze Oziriszt, ahogy a múmiákat is bekötözték. Az egyiptomiak érthető módon nem ehettek oxirhünkhoszi halat. Később Ozirisz az alvilág istene lett, és legfőbb bíróként döntött arról, ki léphet be a túlvilágra. @L@LSzobek, a krokodilisten, termékenységi isten volt, akit elsősorban a Fajjúm vidékén tiszteltek, bár egész Egyiptomban ismerték. Neve jelentése: „aki vigyáz rád”. Min, az újjászületés istene, szintén kapcsolatban állt a férfi termékenységgel, és egész Egyiptomban tisztelték."
+                }
+            }
+            message_ra_maat_horus {
+                id: 377,
+
+                    size [30, 20]
+                image {
+                    id: 18,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Ré, Ma'at és Hórusz",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "Ré-t Egyiptom történelmének nagy részében a legfőbb istenként tisztelték. Az Enneád összes istenének ősatyjaként ő volt a végső teremtőisten, és a Naphoz kapcsolták. @L@LMa'at az igazságosság istennője volt, akit az igazsággal és a renddel is kapcsolatba hoztak. A fején viselt strucctollat a szív megmérésénél használták, amely az utolsó próba volt, amelyen az egyénnek át kellett esnie, mielőtt beléphetett a túlvilágra. @L@LHórusz legszorosabban a fáraókhoz kapcsolódott. Ozirisz és Ízisz fia volt, és apja halálát azzal bosszulta meg, hogy felfedte Szeth szerepét Ozirisz meggyilkolásában. Hóruszt sólyom alakjában ábrázolták."
+                }
+            }
+            message_ptah_amon_thoth {
+                id: 378,
+
+                    size [30, 20]
+                image {
+                    id: 3,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Ptah, Amon és Thot",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "Ptah a kézművesek istene volt, és kapcsolatban állt a Men-neferi (Memphiszi) fáraókkal, akik először egyesítették Egyiptomot (a Men-neferi fáraók egyiptomi hitvilágra gyakorolt hatásáról további információért lásd a @399vallás részt). Különösen tisztelték Deir el-Medinában élő kézművesek, akik a Királyok Völgyének és a Királynék Völgyének sírjait építették. @L@LAmon napisten volt, különösen a reggeli naphoz kapcsolták. A XII. dinasztia idején vált jelentőssé, amikor Waset (Théba) királyai átvették Egyiptom irányítását. @L@LThot a bölcsesség és a tanulás istene volt, és a többi isten írnokának tartották. Legszorosabban Khmunhoz (Hermopoliszhoz) kapcsolódott."
+                }
+            }
+            message_seth_anubis_sekhmet {
+                id: 379,
+
+                    size [30, 20]
+                image {
+                    id: 117,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Szeth, Anubisz és Szekhmet",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "Szeth, @376Ozirisz testvére, a pusztítás istene volt. Eredetileg Szeth Alsó-Egyiptom védelmezője volt. Ahogy Felső-Egyiptom egyre fontosabbá vált, Felső-Egyiptom patrónusistene, @377Hórusz is nagyobb szerepet kapott, Szeth pedig negatív megítélés alá került. @L@LAnubisz, a halál istene, a balzsamozás istene volt. Sakálként ábrázolták, és a holtak védelmezője volt. @L@LSzekhmet oroszlánfejű háborúistennő volt. Ptah feleségeként elpusztította azt, amit férje teremtett. Az egyiptomiak azért tisztelték, hogy megbékítsék őt, és ne szabadítsa rájuk haragját."
+                }
+            }
+            message_bast_isis_hathor {
+                id: 380,
+
+                    size [30, 20]
+                image {
+                    id: 28,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Bastet, Ízisz és Hathor",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "Bastet, a macskafejű nő vagy oroszlánnő, az otthon, valamint a macskák, a tűz és a terhes asszonyok istennője volt. Békés és haragos módon egyaránt védelmezte az otthont. Emellett Bubasztisz patrónusistennője volt. @L@LÍzisz, @376Ozirisz felesége és @377Hórusz anyja, összeillesztette Ozirisz összetört testét. Emiatt a gyógyítás istennőjeként tisztelték. Nő alakjában ábrázolták, és gyakran fiával együtt jelenik meg. @L@LHathor az öröm, a szerelem és az ünnepségek istennője volt. Tehénként ábrázolták, és Iunet (Dendera), Men-nefer (Memphisz), Qis (Kusze) és Perhathor (Gebelein) patrónusistennője volt."
+                }
+            }
+            message_history_malaria {
+                id: 381,
+
+                    size [30, 20]
+                image {
+                    id: 118,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Malária",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "A malária a mocsarak közelében való élet egyik veszélye volt. Az emberekben a maláriát négyféle, az elsősorban éjszaka aktív anopheles szúnyog által terjesztett parazita egyike okozza. A malária kezdetét láz jelzi, amelyet izomfájdalom, izzadás és fáradtság követ. Az egyik kórokozó súlyos megbetegedést okozhat, amely halálhoz vezethet. @L@L A halálos, vagy legalábbis kellemetlenül viszkető szúnyogcsípések elkerülésére az ókori egyiptomiak szúnyoghálót használtak ágyaik fölött. Hérodotosz görög történetíró azt is feljegyezte, hogy az egyiptomiak tornyokra emelték ágyaikat alváshoz, mert úgy hitték, a szúnyogok nem tudnak olyan magasra repülni."
+                }
+            }
+            message_history_jewelry {
+                id: 382,
+
+                    size [30, 20]
+                image {
+                    id: 33,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Ékszerek",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "Az ékszerészek drágakövekből és féldrágakövekből nyakláncokat, gyöngygallérokat, öveket és más dísztárgyakat készítettek. A gyöngyök felfűzéséhez először kézi fúróval, kovakő heggyel lyukat fúrtak a kövekbe. A lyukak elkészülte után zsinórt fűztek át rajtuk, majd rögzítették. Az ékszerészek a drágakövek berakásában is jártasak voltak. @L@L A sírfalakon látható ábrázolások alapján a törpéket gyakran alkalmazták az ékszerkészítő iparban."
+                }
+            }
+            message_history_hunting {
+                id: 383,
+
+                    size [30, 20]
+                image {
+                    id: 119,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Vadászat",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "A földeken termesztett és a tanyákon nevelt élelmiszerekhez képest a vadászat kevéssé járult hozzá az egyiptomi élelemellátáshoz. Ennek ellenére a felsőbb osztályok kedvelték a vadászatot, és sok fáraó dicsekedett vadászképességeivel. A vadászok fő célpontjai a gazellák, antilopok, kőszáli kecskék, ökrök, juhok és struccok voltak, bár egyesek sportból vadásztak hiénákra, oroszlánokra és leopárdokra is (utóbbiak esetében a bőrükért is). A vadászok íjakat és nyilakat, lándzsákat vagy dárdákat használtak zsákmányuk elejtésére. @L@L Az egyiptomiak ugyanilyen kedvelték a vízi állatok vadászatát is, beleértve a madarakat és a vízilovakat. Férficsoportok együtt vadásztak vízilóra egy kötélhez erősített különleges dárdával. Többen próbálták eltalálni az állatot a dárdákkal. Miután elegendő sebet ejtettek rajta, a kötél segítségével a partra húzták a vízilovat. @L@L A madarakat hajítóbottal ölték meg, amely kissé hasonlított az ausztrál bumerángokra. A vadász segítői, legyenek azok családtagok vagy szolgák, összegyűjtötték a leterített madarakat. A madarakat mezőre kihelyezett hálókkal is csapdába ejtették. A hálót madáreleséggel szórták meg. Amikor a madarak odagyűltek, a háló sarkait összefogták, és a madarak csapdába estek."
+                }
+            }
+            message_history_priests {
+                id: 384,
+
+                    size [30, 20]
+                image {
+                    id: 120,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Papok",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "Az ókori egyiptomi lakosság jelentős része pap volt. Szerepük messze túlmutatott a vallási feladatokon. Mivel az ókori Egyiptom teokrácia volt, a papok gyakran közösségeik közigazgatási szerepeit is betöltötték, és néha igazságot is szolgáltattak. @L@L A pap ismertetőjele a tisztaság volt. A papok megtisztulási szertartásokon estek át, mielőtt beléphettek a templomba, és leborotválták hajukat, hogy ne rejthessenek el tetveket vagy más tisztátalanságot. Attól függően, melyik istent szolgálták, bizonyos ételek fogyasztása tiltott volt számukra. A papok különleges ruházatot viseltek, és fehér szandált is kellett hordaniuk. A legmagasabb rangú papok néha leopárdbőrrel díszítették magukat. @L@L A papság legfontosabb vallási feladata a helyi isten gondozása és táplálása volt. Minden templomban megtalálható volt a védőisten szobra. A templom minden papjának megvolt a saját feladata annak biztosítására, hogy az isten elégedett legyen. Egyes papok az isten megfelelő táplálásáért feleltek. A helyiek által felajánlott vagy a templom birtokán termelt élelmiszerekből a papok ételt készítettek az isten számára. Az isten elfogyasztotta az étel 'lényegét', a maradékot pedig a papok ették meg. A papok felöltöztették és megfürdették az istent, valamint szórakozást is biztosítottak számára. Időnként az istent kirándulásra vitték, és körbehordozták a faluban (lásd még: @393festivals). @L@L A papság különböző osztályokra tagolódott. A legmagasabb rangú pap a főpap volt, akit Első Prófétának is neveztek, és a fáraó nevezte ki. A főpap volt a templom legfőbb hatósága, és gyakran a fáraó tanácsadójaként is szolgált. Alatta álltak a helyettes főpapok, vagyis a Második Próféták, akik a templom vagy birtoka bizonyos területeit felügyelték, például a műhelyeket vagy a földeket. Alattuk voltak az egyes feladatokért felelős papok, például akik az istent fürdették vagy szórakoztatták. A legtöbb pap váltásokban dolgozott, és minden három hónapból egy hónapot szolgált."
+                }
+            }
+            message_history_stonemasons {
+                id: 385,
+
+                    size [30, 20]
+                image {
+                    id: 121,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Kőfaragók",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "A kőfaragók felügyelték a @193kőbányákat, valamint a @392piramisok és más emlékművek építését. Bár ismerték a kő minden tulajdonságát és a leghatékonyabb kitermelési módokat, a nehéz fizikai munkát többnyire nem ők végezték. A legalacsonyabb osztályba tartozó parasztok, és néha rabszolgák végezték a legkeményebb munkát. A kőfaragók az egész folyamatot irányították. A nagy építkezések mellett a kőfaragók szakértelmére kisebb munkákhoz is szükség volt, például egy ház alapjának lerakásához."
+                }
+            }
+            message_history_bricklayers {
+                id: 386,
+
+                    size [30, 20]
+                image {
+                    id: 122,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Kőművesek",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "A téglafalazás technikája az évezredek során alig változott. Az alapanyagok lényegében ugyanazok: @390tégla és kötőanyagként használt habarcs. Az ókori Egyiptomban a habarcs agyag, homok, szalma és pelyva keverékéből készült. A kőművesek fa simítóval terítették el a habarcsot, majd a helyére illesztették a téglát. Függőónnal ellenőrizték, hogy az általuk épített falak egyenesek legyenek."
+                }
+            }
+            message_history_scribes {
+                id: 387,
+
+                    size [30, 20]
+                image {
+                    id: 21,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Írnokok",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "Az írnokok, vagyis a sesek, áthatották az egyiptomi társadalom és kormányzat minden részét, és szinte minden állami tevékenységhez kapcsolódtak. Az ókori egyiptomiak szinte mindenről nyilvántartást vezettek, és ezt a feladatot csak az írnokok végezhették. Az írnokok feljegyezték, hogy ki mennyi adóval tartozik az államnak, nyomon követték az exportot és importot, sőt a katonákkal együtt a csatába is elmentek, hogy rögzítsék az eseményeket. A magánszemélyek számára jogi iratokat, például végrendeleteket készítettek, valamint leveleket olvastak és írtak. @L@L Az írnokok munkaeszközei közé tartozott a papirusz, egy két tintatartós paletta (általában fekete és vörös tintával), egy víztartó edény és nádecsetek. Az írnok az ecsetet vízbe mártotta, majd a tintakorongon dörzsölte át. Ezután a papiruszra írt. @L@L Nagyon kevés írnok ismerte a hieroglifák írását. A hieroglifákat emlékműveken és templomokban használták. A mindennapi használatra a hieroglifák egyszerűbb változata, a hieratikus írás szolgált. @L@L Az írott nyelv körülbelül 700 jelből állt, és hangokat jelölő szimbólumokat eszméket jelölő jelekkel kombinált. Az írás nem jelölte a magánhangzókat, ezért a történészek csak találgathatják, hogyan hangzott az ókori egyiptomi nyelv."
+                }
+            }
+            message_history_immigration {
+                id: 388,
+
+                    size [30, 20]
+                image {
+                    id: 123,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Bevándorlás",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "Egyiptom viszonylag stabil gazdasággal és általában egyenletes élelmiszer-termeléssel rendelkezett az áradásnak köszönhetően. Egyiptom szomszédai tudtak erről, és a környező területek sok lakója bevándorolt Egyiptomba. @L@L Egyiptom néhány bevándorlója kereskedelmi céllal érkezett. A nagy kikötővárosokban, például Memphiszben talált régészeti bizonyítékok nem egyiptomi települések létezését mutatják. Ezeket a külföldi kereskedőket a Középbirodalom és az Újbirodalom sírjain is ábrázolták. Egyes szomszédos népek, például a líbiaiak, nagy számban telepedtek le az ókori Egyiptomban. A tizenkettedik dinasztia idejére a líbiaiak a nyugati Delta jelentős részét elfoglalták, majd hamarosan a keleti Deltába is elterjedtek. @L@L Néhányan kevésbé nemes szándékkal érkeztek Egyiptomba. @181Az ország megszállói gyakran akkor is ott maradtak, miután elvesztették hatalmukat. Úgy tűnik, sok itt maradt idegen ugyanolyan jogokat élvezett, mint az egyiptomiak, és néhányan magas tisztségeket is betöltöttek az egyiptomi kormányzatban."
+                }
+            }
+            message_history_carpenters {
+                id: 389,
+
+                    size [30, 20]
+                image {
+                    id: 124,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Ácsok",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "Az ácsok számos szükséges tárgyat készítettek az egyiptomiak számára. A helyi @192fa ritka volt, ezért az ácsok nagyon takarékosan bántak a rendelkezésükre álló fával. Importált fát is használtak, de az drága volt, ezért csak a leggazdagabb polgárok engedhették meg maguknak. @L@L Az ácsok fejszékkel, fűrészekkel és vésőbárdokkal dolgozták fel a rönköket használható faanyaggá. A fejszékkel eltávolították az ágakat a rönkökről, és szétválasztották a fát, ha tetőgerendákat készítettek. A fűrészekkel deszkákra vágták a rönköket, a vésőbárdokkal pedig elsimították a deszkák egyenetlenségeit. @L@L A késztermékek között ládák, ágyak, ajtók és ajtókeretek, székek, valamint talán a legfontosabbak: koporsók is szerepeltek. Szögek helyett facsapokat használtak az elkészült darabok összeillesztésére. Néhány elkészült tárgy lenyűgöző volt, felületüket finom berakások és faragások díszítették. @L@L Az ácsokra nagyobb épületek építésénél is szükség volt. A gazdagabb házak mennyezetét gyakran díszes faoszlopok tartották. @L@L Az alapvető ácsmesterség alig változott az ókori egyiptomi történelem során, és ugyanazokat az alapvető eszközöket részesítették előnyben. A legnagyobb újítás a fúró kifejlesztése volt. Az Újbirodalom idején íjfúrót használtak a facsapok számára szükséges lyukak elkészítésére."
+                }
+            }
+            message_history_bricks {
+                id: 390,
+
+                    size [30, 20]
+                image {
+                    id: 125,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Téglák",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "A tégla ideális építőanyag volt az ókori egyiptomiak számára. Mivel rosszul vezette a hőt, a téglaházak belseje viszonylag hűvös maradt a forró nyár folyamán. A téglákat agyag és szalma keverékéből készítették. Az agyagot megnedvesítették, összekeverték szalmával, majd vízbe merítették. A víz alatt a szalma bomlásnak indult, és eközben olyan nyálkás anyagot bocsátott ki, amely összetartotta a téglát. A téglát ezután napon szárították. Amikor a téglák elkészültek, a @386kőművesek megkezdhették munkájukat."
+                }
+            }
+            message_history_sphinx {
+                id: 391,
+
+                    size [30, 20]
+                image {
+                    id: 8,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Szfinx",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "A Szfinx, amely az ókori Egyiptomban Ámunhoz kapcsolódott, oroszlántesttel és királyi fejjel rendelkezik. Egyiptomban sok Szfinx létezett, de messze a leghíresebb a gízai Nagy Szfinx (Rosztja). @L@L A körülbelül Kr. e. 2500-ban épült Nagy Szfinx látszólag Hafré piramisát őrzi, és egy régi kőfejtő fölött helyezkedik el. Arcát vélhetően magáról Hafréról mintázták. A Szfinx körülbelül 60 méter hosszú és 20 méter magas. Puha homokkőből faragták ki. @L@L A Szfinx létezésének nagy részében homokba temetve állt. A legenda szerint IV. Thotmesz, még mielőtt fáraó lett volna, a Szfinx környékén vadászott, majd elaludt ott, ahol az áll. Álmában a Szfinx azt mondta neki, hogy ha kiássa, fáraóvá válik. Thotmesz teljesítette a Szfinx kérését, és Kr. e. 1425-ben fáraó lett. A történetet sztélékre vésette, és azokat a Szfinx mancsai közé helyezte. @L@L A Nagy Szfinxet később ismét betemette a homok, és végül az 1930-as években tárták fel véglegesen. A Szfinx megőrzésére tett kísérletek vegyes eredménnyel jártak."
+                }
+            }
+            message_history_pyramids {
+                id: 392,
+
+                    size [30, 20]
+                image {
+                    id: 39,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Piramisok",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "Az emberek évszázadok óta találgatják, hogyan épülhettek a piramisok. Felfoghatatlannak tűnik, hogy az ókori egyiptomiak targoncák, daruk, kotrógépek és számos más modern eszköz nélkül ilyen nagyszerű építményeket tudtak létrehozni. @L@L Minden piramis építése gondosan kidolgozott tervvel kezdődött. A vezír, aki rangban csak a fáraó mögött állt, valószínűleg az egész folyamatot felügyelte, miközben a királyi építész (ókori egyiptomi nevén medzseh neszu) elkészítette a terveket. A királyi építész felelt az anyagok kiválasztásáért és azért, hogy miként juttassák el azokat az építkezés helyszínére. @L@L Miután a helyszínt gondosan kiválasztották, a csillagászok meghatározták a piramis észak–déli tengelyét. Ezután a földmérők egy különleges zsinór segítségével kijelölték a piramis minden oldalát, amely olyan vastag volt, hogy nem nyúlhatott meg és nem torzíthatta el a méreteket. Ezután a talajt kiegyenlítették, talán úgy, hogy árkokat töltöttek fel vízzel egy egységes sík meghatározásához. @L@L Miután ezek a feladatok elkészültek, megkezdődhetett az építkezés. A munkálatok kezdetén szertartást tartottak, amely során a fáraó karókkal kijelölte a piramis sarkait, zsinórt feszített közéjük, majd egy ünnepélyes vályogtéglát helyezett el az emlékmű első köveként. @L@L Ekkor a @385kőfaragók és a @155munkások vették át a feladatot. A kőfaragók kialakították a föld alatti helyiségeket, köztük a sírkamrát. Miután ezek elkészültek, megkezdődött a nehéz munka: a kőtömbök odaszállítása, amelyek közül néhány akár 2,5 tonnát is nyomott. A köveket szánokon vontatták, és valószínűleg rámpákat használtak a piramis magasabb részeinek eléréséhez. A piramis belsejét alkotó durván megmunkált kövek mellett finomabb kőburkolat fedte az építményt. @L@L Néhány piramis önmagában állt, de gyakrabban nagyobb piramiskomplexumok részei voltak. A piramiskomplexumhoz tartozott egy völgytemplom, amely a vízparton vagy a művelt terület szélén helyezkedett el. A völgytemplomtól hosszú felvonulási út vezetett a halotti templomhoz, amely a piramistól keletre állt. @L@L A piramisok formája fejlődött, ahogy az építési technológia tökéletesedett. Az első piramis, Dzsószer lépcsős piramisa, nem rendelkezik sima oldalakkal. A Kr. e. 2620 körül épült lépcsős piramis egymásra helyezett négyzetek sorozata. Az első valódi piramis Sznofrué volt, amely Kr. e. 2550 körül épült. Külső burkolat simította el a piramis 'lépcsőit', és ezt a módszert hamarosan más piramisoknál is alkalmazták. A legnagyobb piramis Hufué, amely 230 × 230 méteres alapterületű és 146 méter magas. Egyedülálló piramis Sznofru tört piramisa. Ennek oldalainak dőlésszöge a csúcs felé vezető út körülbelül kétharmadánál megváltozik. A feltételezések szerint az építészek rájöttek, hogy a piramis túl nehéz lenne és összeomolhatna, ha az eredeti szögben folytatnák az építést. Mivel Sznofru első piramisa összeomlott, valószínűleg úgy gondolta, jobb az óvatosság."
+                }
+            }
+            message_history_festivals {
+                id: 393,
+
+                    size [30, 20]
+                image {
+                    id: 126,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Ünnepek",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "Az ókori egyiptomi ünnepek vidám események voltak, amelyeken bőségesen volt étel, és szabadon folyt a sör. Sokféle okból ünnepeltek: egy isten tiszteletére, az aratás megünneplésére vagy a fáraó hosszú életének elismerésére. Az egyiptomi év utolsó öt napját ünnepléssel töltötték, és az év során számos más ünnepet is tartottak. @L@L Az istenségek tiszteletére rendezett ünnepeken minden ember közvetlen kapcsolatba kerülhetett isteneivel. A vallási ünnepek középpontjában az isten körmenete állt. Az ünnep során a templomban, a nyilvánosság elől elzárva őrzött istenszobrot legszebb ruháiba öltöztették, majd a papok által hordozott szertartási bárkán körbehordozták a városban. A papok időnként megpihentek, eközben szertartásokat végeztek. Az Újbirodalom idején a polgárok kérdéseket tehettek fel az istennek, miközben a papok pihentek. A papok meghajoltak, ha az isten pozitív választ adott, és hátraléptek, ha a válasz negatív volt. Az ünnep végén az isten visszatért templombeli otthonába. @L@L Néha az istenek messzire utaztak, és hajóval szállították őket. Például az opét ünnepen Ámun Karnakból luxori déli kápolnájába utazott. Az út megtételéhez a Níluson hajózott. Az opét az egyik legvidámabb ünnep volt, és 11–27 napig is tarthatott. @L@L Ha egy fáraó elég egészséges volt ahhoz, hogy 30 évig uralkodjon, megrendezték a heb-szed ünnepet. A fáraó uralkodásának 30. évében, majd ezt követően háromévente megtartott ünnepen a fáraó rituális futást végzett, hogy bizonyítsa: továbbra is alkalmas az uralkodásra. Néhány fáraó nem várta meg a 30 évet a heb-szed megtartásával, hanem már uralkodása elején megrendezte. @L@L Kétségtelen, hogy az egyiptomiak minden társadalmi rétegből örömmel várták az ünnepeket, mint a bőséges evés és ivás időszakát. Az ünnepek egyben pihenést is nyújtottak a mindennapi munka terhei alól."
+                }
+            }
+            message_history_mastaba {
+                id: 394,
+
+                    size [30, 20]
+                image {
+                    id: 127,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Masztaba",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "A korai óbirodalmi fáraókat és nemeseket masztabák alá temették. A masztabák fedték a sírkamrához vezető aknát. Kezdetben egyszerű, alacsony építmények voltak, amelyekre feliratokat véstek, később azonban nagyobb építményekké fejlődtek, kápolnákkal kiegészülve. A masztabákat a piramisok elődeinek tekintik, és Dzsószer lépcsős piramisa is valószínűleg masztabaként kezdődhetett."
+                }
+            }
+            message_history_burial_provisions {
+                id: 395,
+
+                    size [30, 20]
+                image {
+                    id: 26,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Sírmellékletek",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "A sírokat mindennel felszerelték, amire az elhunytnak a túlvilágon szüksége lehetett. Ezeket sírmellékleteknek nevezték, és közéjük tartoztak az elhunyt mesterségéhez szükséges eszközök, ételek, tisztálkodási tárgyak, ékszerek, hangszerek, sminkek – gyakorlatilag bármi, amit életében használt. A sírokat usébtikkel, vagyis 'válaszadókkal' is ellátták. Ezeket a szobrocskákat azért helyezték a sírba, hogy ha az elhunytnak munkát kellett volna végeznie a túlvilágon, az usébti végezze el helyette."
+                }
+            }
+            message_history_other_monuments {
+                id: 396,
+
+                    size [30, 20]
+                image {
+                    id: 1,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Más emlékművek",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "Az @397obeliszken, @394masztabákon, @392piramisokon és @391szfinxeken kívül az ókori Egyiptomban számos más emlékmű is létezett. Ezek közé tartoztak a mauzóleumok és a Naptemplomok is. @L@L A Napot az élet adójának tekintették az ókori Egyiptomban, és sok Naptemplomot építettek szerte Egyiptomban, különösen az ötödik dinasztia idején. A legismertebb Naptemplomok Abu Ghurábban találhatók. Két Naptemplom állt itt, és ezekben állatáldozatokat mutattak be. @L@L A sírok fölé gyakran mauzóleumokat és kápolnákat emeltek, amelyek helyet biztosítottak, ahol az elhunyt családja áldozatokat mutathatott be. Ezek az áldozatok biztosították, hogy az elhunyt továbbra is élvezhesse a túlvilági létet. Bárki, akinek volt rá lehetősége, ilyen kápolnákat építtetett családtagjai számára, és Egyiptom táját számos magánmauzóleum tarkította."
+                }
+            }
+            message_history_obelisk {
+                id: 397,
+
+                    size [30, 20]
+                image {
+                    id: 17,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Obeliszk",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "Az obeliszkek a Naphoz kapcsolódtak, és vagy a napsugarakat, vagy azt az ősdombot jelképezték, amelyen a Nap először ragyogott fel. Gránitból készültek, hieroglifákkal vésték őket, és általában párokban álltak a templomok előtt. @L@L Az obeliszk formáját a kőbányákban faragták ki, és egy asszuáni befejezetlen példány sokat elárul arról, hogyan termeltek ki egy ilyen hatalmas kőtömböt. A munkások doleritből készült ütőkövekkel lassan alakították ki a kívánt formát. Az asszuáni obeliszket azért hagyták félbe, mert a kő közepén repedés keletkezett. @L@L Miután az obeliszket kifaragták a sziklából, senki sem tudja pontosan, hogyan állították fel őket. A feltételezett ókori módszerekkel végzett modern kísérletek nem jártak sikerrel."
+                }
+            }
+            message_history_linen_and_weaving {
+                id: 398,
+
+                    size [30, 20]
+                image {
+                    id: 24,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Len és szövés",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "A @189lenből készült vászon volt az ókori Egyiptom legelterjedtebb textíliája. Bár néhány szövetet gyapjúból vagy kenderből készítettek, ezeket sokkal gyengébb minőségűnek tartották a vászonnál. @L@L A szövet készítéséhez először a lenrostokat fonallá kellett sodorni. A fonók lenkupacok előtt ülve összecsavarták a rostokat, majd gombolyagokba tekerték őket. Ezután a fonalat orsókra erősítették, és megkezdődhetett a szövés. @L@L Az egyiptomiak vízszintes szövőszéket használtak, amelyet a földre helyeztek. A szövők a szövőszéket két párhuzamos fonalsorral (láncfonallal) fűzték fel. Két munkás ült a szövőszék két oldalán, és az átfűzött vetélőt oda-vissza küldték, hogy elkészüljön a szövet. @L@L Az Újbirodalom idején a függőleges szövőszék váltotta fel a vízszinteset. A függőleges szövőszék lehetővé tette, hogy a szövők kényelmesebben, ülőkén ülve dolgozzanak. @L@L A legtöbb szövő nő volt, akik gyakran a fáraó háremének tagjai közé tartoztak."
+                }
+            }
+            message_history_religion {
+                id: 399,
+
+                    size [30, 20]
+                image {
+                    id: 43,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Vallás",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "Az egyiptomi vallás nagy létszámú fő- és kisebb istenekből álló panteonnal rendelkezett. A legtöbb város, sőt az egyének is egy bizonyos istent tekintettek védőistenüknek, és ez befolyásolta, mely istenek váltak a legfontosabbá. @L@L Az egyik legkorábbi hitrendszer az Enneád, vagyis kilenc isten csoportja volt. Az On (Héliopolisz) városában kialakult rendszer első istene Atum volt, aki Rével egyesülve Ré-Atummá vált. Ré-Atum, bár férfi volt, egyedül adott életet az ikreknek, Suh-nak és Tefnutnak. Suh a levegő istene volt, Tefnut pedig a világ rendjének istennője. Suhnak és Tefnutnak négy gyermeke született: Ízisz, Ozirisz, Nephtüsz és Széth. A kilenc isten sorát Hórusz egészíti ki, Ízisz és Ozirisz fia. Ré később különvált Atumtól, és az Enneád legfőbb istenévé vált. Ez az istenrendszer uralta a dinasztiák előtti Egyiptomot, és Ré továbbra is fontos isten maradt az ókori egyiptomiak számára. @L@L Amikor Hór-Aha egyesítette Felső- és Alsó-Egyiptomot, a teremtő isten, Ptah iránti személyes hite megváltoztatta a vallási rendszert. Hór-Aha szerint az Enneád istenei mind Ptah megnyilvánulásai voltak. Ennek ellenére Ré maradt a meghatározó isten. @L@L Egy másik elmélet a felső-egyiptomi Khmun (Hermopolisz) városából származott. A hermopolisziak az Ogdoádban, vagyis nyolc isten csoportjában hittek. Az Ogdoádban férfi és női istenpárok a világ különböző részeit képviselték. Nun és Naunet a vizet, Huh és Hauhet a végtelenséget, Kuk és Kauket a sötétséget, Ámon és Amaunet pedig a levegőt jelképezték. @L@L Az Újbirodalomban Ámon váltotta fel Rét mint legfőbb istent. Ámon uralma egészen Ehnaton fáraó uralkodásáig tartott. Ehnaton megpróbálta bevezetni az egyistenhitet Egyiptomban, és azt vallotta, hogy Aton, akit a Napkorong testesített meg, az egyetlen isten. Uralkodása alatt, amelyet amarnai korszaknak neveznek, Ehnaton bezáratta a többi isten templomait. Halála után azonban gyorsan visszaállították a többistenhitet, és újra megnyitották a többi isten templomait."
+                }
+            }
+            message_mission_naqada {
+                id: 400,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Naqada",
+
+                }
+                subtitle {
+                    text: "Egy falu születése",
+
+                }
+                content {
+                    text: "@PÜdvözlünk az ókori Egyiptomban, a fáraók földjén! Itt részt vehetsz a világ egyik legnagyobb civilizációjának történetében, egy több mint tizenöt évszázadot és két tucat nemzedéket átívelő epikus történetben. Egyetlen családot kell vezetned, nemzedékről nemzedékre, az egyiptomi történelem előtti kor legkorábbi kezdeteitől a civilizáció hajnalán át... egy egyedülálló és hatalmas birodalom létrejöttéig... és azon túl.     @PTörténetünk több mint ötezer évvel ezelőtt kezdődik, a Nílus folyó partján, egy Naqada nevű vidéken. Itt klánok kis szövetsége küzd a fennmaradásért a zord környezetben. A családod élén állva neked kell vezetned ezt a kis települést."
+                }
+            }
+            message_mission_thinis_2 {
+                id: 401,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Thinis",
+
+                }
+                subtitle {
+                    text: "A civilizáció hajnala",
+
+                }
+                content {
+                    text: "@PÉvek múltán, egy nemzedék elteltével családod Felső-Egyiptomban, Thinisz vidékén telepedett le újra. Itt helyi uralkodók kis csoportja próbálja kiterjeszteni hatalmát Alsó-Egyiptom és a Nílus menti összes föld felett, hogy ezt a birodalmat saját háza alatt, egyetlen legfőbb vezetővel egyesítse.   @PThinisz virágzó várossá fejlesztése, amelyhez hasonlót még nem látott a világ, bizonyítja majd a thiniszi szövetség rátermettségét, és segít nekik megszerezni az uralmat Alsó-Egyiptom és a hatalomért versengő többi csoport felett. Idővel ez azt is jelenti, hogy szórakozást kell biztosítani a lakosságnak, és nagyszerű templomokat kell építeni a vidék védőistene tiszteletére. @PEgy ilyen hatalmas város felépítéséhez jelentős mennyiségű pénzre lesz szükség. Thiniszben gazdag aranyérclelőhelyeket találsz, és ezek kitermelése legyen az elsődleges feladatod."
+                }
+            }
+            message_mission_buto_2 {
+                id: 402,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Buto",
+
+                }
+                content {
+                    text: "A thiniszi nemesek továbbra is küzdenek azért, hogy a Nílus földjeit egyetlen legfőbb uralkodó alatt egyesítsék. Ügyük támogatására azt remélik, hogy virágzó közösséget hozol létre Butóban, Alsó-Egyiptom nedves deltavidékén, ezzel kiterjesztve befolyásukat a szent folyó teljes hosszában. Egy falunál nagyobb lakosság eltartásához meg kell tanulnod a mezőgazdaság használatát. @PAz egyiptomi földművesek elkezdték kihasználni a Nílus évenkénti áradása által lerakott gazdag, termékeny talajt a növénytermesztéshez. A Nílus azonban veszélyes is lehet. Sok veszély leselkedik partjai mentén és vizeiben, például halálos krokodilok, vízilovak és maláriát terjesztő szúnyogok."
+                }
+            }
+            message_mission_hierakonpolis {
+                id: 403,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Hierakonpolis",
+
+                }
+                subtitle {
+                    text: "Az első fáraó",
+
+                }
+                content {
+                    text: "Miközben a Nílus mentén élő emberek továbbra is küzdenek a túlélésért ebben a zord környezetben, egy Narmer nevű helyi király hatalomra emelkedett. Bár Narmer e földek nagy része felett uralkodik, a két királyság teljes egyesítése még nem történt meg. Trónra lépésének emlékére Narmer azt kívánja, hogy családod alapítson és vezessen egy új várost Hierakonpoliszban. A városban Egyiptom számos istenének templomai és sok szórakozóhely lesz."
+                }
+            }
+            message_mission_memphis {
+                id: 404,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Memphisz",
+
+                }
+                subtitle {
+                    text: "Egy főváros alapítása",
+
+                }
+                content {
+                    text: "Hosszú küzdelem után Hór-Aha király egyesítette Felső- és Alsó-Egyiptom két királyságát, és egész Egyiptom fáraójának kiáltotta ki magát! Teljhatalmának és Egyiptom első dinasztiája megalapításának jeleként Hór-Aha elrendelte egy lenyűgöző főváros felépítését Memphiszben, ahonnan kormányozhatja ezt a fiatal országot. Családod sok nemzedéken át tartó hűséges szolgálata miatt a fáraó téged választott e nagyszerű város megtervezésére. Mivel a főváros királyságunk valódi jelképe, lakóinak olyan életminőséget kell élvezniük, amely korábban ismeretlen volt ezen a földön. Ennek érdekében idővel kereskedned kell a birodalom más városaival, és magasabb szintű oktatást kell biztosítanod legalább néhány polgár számára. Emellett szent masztabasírt kell építened a város nemeseinek."
+                }
+            }
+            message_mission_timna {
+                id: 405,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Timna"
+                }
+                subtitle {
+                    text: "Expedíció a Sínai-félszigetre"
+                }
+                content {
+                    text: "Új fáraó, Den foglalta el Egyiptom trónját. A fáraó mélyen aggódik, mivel ellenségek kezdték fenyegetni határainkat, és országunk nem rendelkezik elegendő értékes rézzel, amely a hadsereg felszereléséhez szükséges fegyverek elkészítéséhez kell. Den fáraó bányászati expedíciót rendelt el a kegyetlen Sínai-félszigetre, határainkon túlra, mélyen a beduinok területére. A Timna néven ismert vidék gazdag arany- és rézércben, valamint értékes türkiz drágakövekben, de egyébként kopár. A körülmények kemények lesznek, és számos kényelmi cikket, talán még további élelmet és finom vásznat is Egyiptomból kell importálnod. A fáraó gyakori szállítmányokat követel majd a Sínai-félszigetről, és pénzt, rezet, drágaköveket és fegyvereket kér tőled. Ezen áruk feleslegét felhasználhatod az expedíció támogatására. Mindig légy óvatos, mert a Sínai-sivatag beduinjai félelmetes ellenfelek, és nem engedik szívesen, hogy idegenek elfoglalják földjüket, még kevésbé, hogy kifosszák ásványkincseiket. @P A város lakóira nehezedő nehéz életkörülmények enyhítésére építs Pavilont egy forgalmas útkereszteződéshez. A polgárok a Pavilon zsonglőr- és zeneszínpadain pihenhetnek, és ha Tánciskolát is építesz, ez az újfajta előadás nagyszerű szórakozást biztosít."
+                }
+            }
+            message_mission_apollinopolis {
+                id: 406,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Apollinopolis"
+                }
+                subtitle {
+                    text: "A fáraó haditengerészete",
+                }
+                content {
+                    text: "Egyiptom hadserege most páratlan az ismert világban, de az új fáraó, a második dinasztiabeli Kaszekhemui, most egy erős, Apollinopoliszban állomásozó haditengerészetet is követel. Semmi más, csak egy hadihajókból álló flotta biztosíthatja számunkra a tengerek feletti uralmat, de a fa ritka, mivel éghajlatunk csak kevés ritkás erdőterületet tart fenn. Cédrust nagy költséggel importálhatunk Bübloszból, a tőlünk északkeletre fekvő libanoni földről. Szerencsére őshonos papiruszunk exportja lehetőséget biztosít e kiadás ellensúlyozására."
+                }
+            }
+            message_mission_abydos {
+                id: 407,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Abydosz",
+                }
+                subtitle {
+                    text: "A tenger kihívása",
+
+                }
+                content {
+                    text: "Abydosz, őseink nyughelye, az évek során a szent sírok kiterjedt nekropoliszává fejlődött. Most a legtöbb nemes férfi és nő ezt kívánja örök nyughelyéül választani. Tiszteletükre Kaszekhemui, a második dinasztia új fáraója elrendelte három szent masztabasír építését (az egyik nagyobb legyen a másik kettőnél) a helyi nemesség számára. @P A fáraó egy erős haditengerészet létrehozását is elrendelte, amelynek bázisa Apollinopolisz lesz. Abydosznak is támogatnia kell egy kisebb harci hajóflottát, ha partjaink teljes biztonságát fenn akarjuk tartani. Ez nem lesz könnyű, mivel a fa ritka, és éghajlatunk csak kevés erdőterületet tesz lehetővé. Cédrust nagy költséggel importálhatunk Bübloszból, a tőlünk északkeletre fekvő libanoni földről. Szerencsére őshonos papiruszunk exportja lehetőséget biztosít e kiadás ellensúlyozására."
+                }
+            }
+            message_mission_selima {
+                id: 408,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Selima",
+
+                }
+                subtitle {
+                    text: "Az út Afrikába",
+
+                }
+                content {
+                    text: "@PÚj fáraót, Nebkát kiáltották ki, ezzel kezdetét vette az egyiptomi uralkodók harmadik dinasztiája. Nebka nagyobb rendet és szervezettséget hozott Egyiptomba, elrendelve, hogy birodalmunkat körzetekre, vagyis nomoszokra osszák, amelyek élén helyi uralkodók, úgynevezett 'nomarchák' állnak. Bár ez a rendszer merevnek tűnhet, vezetése alatt Egyiptom fejlődött és gyarapodott, valamint számos nagyszerű eredményt ért el a művészet és építészet terén. @L@L @P A mélyen Afrika belsejéből, oázisról oázisra haladó kereskedelmi karavánok számos ritka és egzotikus luxuscikkel kezdték ellátni Egyiptomot, amelyeket népünk nagyra becsül. Sajnos ezeket a karavánokat rendszeresen megtámadják líbiai harcosok, sőt a keleti sivatag beduinjai is. A kereskedelmi útvonalak biztosítása érdekében Nebka fáraó, a Nád és Méh ura, azt kívánja, hogy katonai állomást hozz létre a Selima-oázisban, a karavánkereskedelem központjában, messze birodalmunk határain túl. @L@L @P Itt találsz néhány faanyagnak alkalmas fát, amelyek eladásával pénzt gyűjthetsz az őrhely létrehozásának finanszírozására. Fegyverek készítéséhez rezet szerezhetsz a Sínai-félszigeten, Timnában újonnan megnyitott bányáinkból. @L@L @P A Selima-oázisból ébenfát importálhatsz az afrikai Kermából. Miután sikeresen létrehoztad ezt az őrhelyet, megbízható ébenfa-forrást biztosít majd birodalmunk minden városa számára."
+                }
+            }
+            message_mission_elephantine {
+                id: 409,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Elephantiné",
+
+                }
+                subtitle {
+                    text: "A núbiai határ",
+
+                }
+                content {
+                    text: "@PÚj fáraót, Nebkát kiáltották ki, ezzel kezdetét vette az egyiptomi uralkodók harmadik dinasztiája. Nebka nagyobb rendet és szervezettséget hozott Egyiptomba, elrendelve, hogy birodalmunkat körzetekre, vagyis nomoszokra osszák, amelyek élén helyi uralkodók, úgynevezett 'nomarchák' állnak. Bár ez a rendszer merevnek tűnhet, vezetése alatt Egyiptom fejlődött és gyarapodott, valamint számos nagyszerű eredményt ért el a művészet és építészet terén. @P A fáraó azt kívánja, hogy birodalmunk határait délebbre, Núbia felé terjesszük ki. Elrendeli egy város alapítását a Nílus első kataraktájánál, Elephantiné szigetén, hogy kihasználhassuk az ott található bőséges drágakő-, gránit- és homokkőkészleteket. @P Abydosz növekvő nekropolisza ezekből az anyagokból igényel utánpótlást, hogy egyre díszesebb sírokat készíthessenek a nemesség számára. Memphisz fővárosának is szüksége lehet téglára a sírok építéséhez, és Nebka fáraó jóváhagyhatja ezek és más építőanyagok igénylését. @P Nebka fáraó azt is elrendelte, hogy egyik társad katonai állomást hozzon létre a Selima-oázisban az Afrika belsejébe vezető karavánutak biztosítására. Miután létrejött, a Selima-őrséghelyről importált ébenfához juthatsz, amely nagyra becsült luxuscikk."
+                }
+            }
+            message_mission_saqqara {
+                id: 410,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Szakkara",
+
+                }
+                subtitle {
+                    text: "Az első piramis",
+
+                }
+                content {
+                    text: "Dzsószer fáraó trónra lépése új korszakot hozott Egyiptom számára a bölcsesség, tanulás és művészi eredmények terén. Szakkarában királyi temetőt kell létrehozni, amely örök nyughelyül szolgál olyan nemeseknek, mint Hezüré és Khabauszokar, a fáraó megbízható udvaroncai. @P De ez a hely egy olyan emlékművet is magában fog foglalni, amelyhez hasonlót a világ még soha nem látott. Én, a fáraó királyi vezírje, Imhotep, egy újfajta szent sírt terveztem a fáraó számára. A korábbi fáraók alacsony vályogtégla-masztabáival ellentétben ez a sír az ég felé fog emelkedni, mintha több, egymásra helyezett masztabából állna. Ráadásul ez a 'lépcsős piramis' teljes egészében kőből épül, hogy ellenálljon az idők múlásának. Mélyen belül egy tömör gránitból készült szarkofág őrzi majd a fáraó testét örök nyughelyén. @P Az abydoszi nekropolisz papjai tökéletesítették a len felhasználásának művészetét a halottak bebalzsamozásához, így minden egyiptomi számára megnyitották az örök élet kapuját. @P A Selima-oázisban lévő kereskedelmi állomásunk továbbra is virágzik, és onnan ébenfát importálhatsz Afrikából. @P A fáraó bőséges pénzösszeget biztosított e projekt megkezdéséhez. Ne okozz neki csalódást."
+                }
+            }
+            message_mission_serabit_khadim {
+                id: 411,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Serabit Khadim",
+
+                }
+                subtitle {
+                    text: "A kelet beduinjai",
+
+                }
+                content {
+                    text: "Akárcsak elődje, Den, Huni fáraó is expedíciót rendelt el a zord Sínai-félszigetre türkiz drágakövek és réz megszerzésére. Azt kívánja, hogy vezesd ezt az expedíciót Serabit Khadimba, ahol egy korábbi egyiptomi őrhely épületmaradványai még megtalálhatók lehetnek. Jelenlegi állapotuk ismeretlen, de talán még mindig nyújthatnak némi védelmet az expedíció számára. @P Tudnod kell, hogy az utolsó, erre a területre küldött expedíció soha nem tért vissza. Egy később küldött mentőexpedíció sem tért vissza. Ennek ellenére, ha megfelelően fel akarjuk fegyverezni katonáinkat, királyságunknak rézre van szüksége fegyverek készítéséhez, és ez a fém ritka földünkön. @P Készülj fel, mert állandó támadás fenyeget majd a Sínai-sivatag beduinjai és ellenségeink, a kánaániak részéről. A körülmények között bányássz ki minden lehetséges rezet és drágakövet, és haladéktalanul teljesítsd a fáraó kéréseit. Ékszerészeket alkalmazhatsz, hogy a felesleges drágakövekből ékszereket készítsenek a település lakói számára."
+                }
+            }
+            message_mission_meidum {
+                id: 412,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Meidum",
+
+                }
+                subtitle {
+                    text: "Királyi nekropolisz",
+
+                }
+                content {
+                    text: "Huni fáraó örök nyugalmat kíván találni egy lépcsős piramisban, akárcsak elődje, Dzsószer. Azt szeretné, hogy nemeseinek sírjai vegyék körül, ezért Alsó-Egyiptomban Meidumot választotta e királyi nekropolisz helyszínéül. @P Házad sok nemzedéken át tartó hűséges szolgálatának elismeréseként Huni azt is engedélyezte, hogy saját sírodban Meidumban temessenek el. Ezzel nagy megtiszteltetésben részesítette családodat. @P Annak biztosítására, hogy Egyiptom bölcsessége és tudása fennmaradjon az idők során, Huni fáraó királyi könyvtárak építését is sürgeti. A papirusztekercsekkel megtöltött könyvtárak magasabb szintű oktatást biztosítanak majd a felsőbb osztályok számára. @P A fáraó egy másik hűséges udvaroncát expedícióra küldte Serabit Khadimba, a zord Sínai-félszigetre türkiz drágakövek megszerzésére. Ha az expedíció sikerrel jár, onnan drágaköveket importálhatsz. Az ékszerészek ezekből értékes luxuscikket, ékszereket készíthetnek városod lakói számára. @P Az egykor virágzó Apollinopolisz hanyatlásnak indult, és már nem exportálja sok olyan árucikkét, amelyekről korábban ismert volt."
+                }
+            }
+            message_mission_buhen {
+                id: 413,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Buhen",
+
+                }
+                subtitle {
+                    text: "Terjeszkedés Núbiába",
+
+                }
+                content {
+                    text: "Új fáraónk, Sznofru, eltökélte, hogy ez a negyedik dinasztia lesz Egyiptom valaha uralkodó legnagyobb dinasztiája. A fáraó azt kívánja, hogy határainkat még délebbre terjesszük. Ezért elrendelte Núbia megszállását és egy megerősített város alapítását Buhenben, a Nílus második kataraktája mellett. Itt egy gránitobeliszket is fel kell állítanod, amely jelképezi, hogy ez a terület örökre Egyiptomhoz és a fáraóhoz tartozik. Ilyen messze délen azonban nincs gránit, ezért Elephantinéből kell importálnod. @P Buhenben kemény és tapasztalt núbiai harcosokkal találkozol majd, akik életük árán is megpróbálják megakadályozni, hogy ilyen messze délen megvessük a lábunkat. Ne ess kétségbe, mert a Katonai Akadémián végzett alapos kiképzés után harcosaid maguk is tapasztalt veteránokká válhatnak. Ráadásul katonai mérnökeink tökéletesítették számos védelmi építmény, például erődített tornyok, falak és kapuházak terveit. Ezek felbecsülhetetlen értékűek lesznek a núbiai sereg támadásainak kivédésében. Szállítóhajókat is használhatsz, hogy szükség esetén vízen mozgasd hadseregedet. @P Északon kapcsolatokat építettünk ki Enkomival, Ciprus szigetén. Ez a föld gazdag rézérckészleteiről kapta nevét, amelyet most megvásárolhatunk tőlük. A Sínai-félszigeten, Serabit Khadimban nemrég létrehozott egyiptomi bányaközösségnek köszönhetően azonban kormányzóinkat sokkal olcsóbban tudjuk rézzel ellátni. A Serabit Khadimból érkező készletek gyakran bizonytalanok a beduinok és kánaániak állandó támadásai miatt, és nem tudjuk, meddig képesek még kitartani az ott állomásozó egyiptomi erők. @P A fáraó temetkezési helye, egyedülálló és lenyűgöző emlékmű, jelenleg építés alatt áll Dahsúrban. A fáraó időről időre kérheti, hogy mészkővel járulj hozzá a projekt befejezéséhez."
+                }
+            }
+            message_mission_south_dahshur {
+                id: 414,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Dahsúr déli része",
+
+                }
+                subtitle {
+                    text: "Sznofru tört piramisa",
+
+                }
+                content {
+                    text: "@PÚj fáraónk, Sznofru, eltökélte, hogy ez a negyedik dinasztia lesz Egyiptom valaha uralkodó legnagyobb dinasztiája. Építészei egy Huni lépcsős piramisánál is lenyűgözőbb sírt terveztek, és a fáraó azt kívánja, hogy felügyeld az építését. Egy megfelelő méretű települést kell létrehoznod Dahsúrtól délre, a fáraó tört piramisának helyszínén. Ha elkészül, ez a város biztosítja majd a munkaerőt e nagyszabású projekt befejezéséhez. @P A tört piramis egyszerű kőmagból épül, amelyet finom fehér mészkővel borítanak be, hogy örökké ragyogjon a sivatagi nap alatt. Dahsúrban elegendő mészkövet találsz, de a szükséges mennyiségű egyszerű követ importálnod kell az építkezéshez. @P A fáraó azt kívánja, hogy határainkat még délebbre terjesszük, ezért katonai erőket küldött Núbia megszállására és egy megerősített város létrehozására Buhenben, a Nílus második kataraktája mellett. @P Északon Egyiptom kapcsolatokat épített ki Enkomival, Ciprus szigetén. Ez a föld gazdag rézérckészleteiről ismert, amelyek most fontos importcikké váltak. @P Értékes drágaköveket szerezhetsz a Sínai-félszigeten, Serabit Khadimban nemrég létrehozott egyiptomi őrhelyről. Az utóbbi időben azonban az ellátás bizonytalanná vált a beduinok és kánaániak állandó támadásai miatt, és nem tudjuk, meddig képesek még ellenállni az ott állomásozó egyiptomi erők."
+                }
+            }
+            message_mission_north_dahshur {
+                id: 415,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Dahsúr északi része",
+
+                }
+                subtitle {
+                    text: "Az igazi piramis",
+
+                }
+                content {
+                    text: "@P Sznofru fáraó rendet teremtett Egyiptomban, és a királyság most bölcs és jóindulatú uralma alatt virágzik. Sznofru újabb építkezési projektet kíván megvalósítani Dahsúrban, amely még a már elkészült tört piramisnál is nagyszabásúbb. A királyi építészek, földmérők és mérnökök biztosak benne, hogy olyan épületet tudnak emelni, amelynek oldalai egyetlen folyamatos szögben emelkednek, tökéletes csúcsban végződve. Ha sikerrel járnak, ez lesz az első valódi piramis, és méltó örök otthona lesz Sznofru fáraónak! @P A fáraó felesége, Hetepheresz királyné nemrég fiút szült, akit 'Kheopsznak' neveztek el. Népeink nagy aggodalommal tekintenek uralkodásának napja elé, mert Hórusz, a fáraó istenének látnokai megjövendölték, hogy nem mutat majd olyan jóindulatot népünk iránt, mint apja. Bár sok nagyszerű dolgot fog véghezvinni, attól tartanak, hogy hajlíthatatlan zsarnoksággal fogja kormányozni Egyiptomot. @P Fát szerezhetsz Bübloszból, mivel az ácsoknak számos rámpát kell építeniük, hogy a munkások elérhessék e hatalmas piramis csúcsát."
+                }
+            }
+            message_mission_dendera {
+                id: 416,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Dendera",
+
+                }
+                subtitle {
+                    text: "Egyiptom védelme",
+
+                }
+                content {
+                    text: "@P Kheopsz fáraó elfoglalta a trónt, és ahogy Hórusz és Ré látnokai megjövendölték, népünk máris szenvedni kezdett elnyomása alatt. @P Kheopsz azonnal elrendelte, hogy királyi kormányzót küldjenek Denderába, hogy megvédje földünket a kusita betolakodóktól. Dendera kisebb halászati ipart tarthat fenn, amely egy ideig elláthatja a települést. Ha azonban a kusiták vízen támadnak, a folyó veszélyessé válhat a halászhajók számára, és a partvidék jobban használható hadihajóflotta fenntartására. Ha kevés lesz az élelem, szarvasmarhát is tenyészthetsz hús biztosítására, de a csordáknak sok szalmára van szükségük takarmányként, a szalmát pedig nehéz termeszteni ezen a vidéken. Keress más városokat, amelyekkel szalmát cserélhetsz, mert erre lesz szükséged masztabád tégláinak elkészítéséhez is. @P A libanoni Büblosz, a cédrusok földje, kereskedni kezdett kelet hatalmas birodalmaival. Ezek Asszíria és Ur, a 'Mezopotámia' nevű földön, a két nagy folyó között, és rajtuk keresztül Bübloszon át a legfinomabb elefántcsontot is megszerezheted. Ritka és egzotikus luxuscikkek érkezésével, mint ez, Dendera biztosan virágozni fog. @P A fővárosban az egyiptomi nép kezd megismerkedni egy szenet nevű társasjátékkal. Ezt a játékot általában egy korsó sör mellett, egy 'Szenetház' nevű nyilvános helyen játsszák. Az ilyen helyek kellemes kikapcsolódást nyújthatnak Dendera lakóinak Kheopsz uralmának zsarnoksága elől. @P A fáraó elrendelte, hogy Héliopoliszban, a Delta vidékén számtalan kőfejtőt nyissanak a kiváló minőségű fehér mészkő hatalmas készletének kitermelésére. Csak az istenek tudják, milyen célra tervezi a fáraó felhasználni ezt a követ. A szóbeszéd szerint hatalmas építkezést tervez a gízai fennsíkon, hogy felülmúlja apja, a bölcs és jóindulatú Sznofru hírnevét, aki két nagyszerű piramisának elkészítésével szerzett dicsőséget."
+                }
+            }
+            message_mission_heliopolis {
+                id: 417,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Héliopolisz",
+
+                }
+                subtitle {
+                    text: "Elefántcsont keletről",
+
+                }
+                content {
+                    text: "@P Kheopsz fáraó elfoglalta a trónt, és ahogy Hórusz és Ré látnokai megjövendölték, népünk máris szenvedni kezdett elnyomása alatt. A szóbeszéd szerint hatalmas építkezést tervez a gízai fennsíkon, hogy felülmúlja apja, a bölcs és jóindulatú Sznofru hírnevét, aki két nagyszerű piramisának elkészítésével szerzett dicsőséget. @P Kheopsz fáraó elrendelte egy kőfejtőtelep létrehozását Túrán, a Delta vidékén, ahol nemrég gazdag kiváló minőségű fehér mészkőkészleteket fedeztek fel. Három masztabasírt is építened kell e vidék nemeseinek, hogy a fáraó tisztelegjen hűségük előtt. A kőfejtőtelep, amelyet alapítottál, a 'Héliopolisz' nevet kapja, és hosszú éveken át bőséges forrása lesz a finom fehér mészkőnek... bár csak az istenek tudják, milyen célra tervezi felhasználni a fáraó. @P A libanoni Büblosz, a cédrusok földje, kereskedni kezdett kelet hatalmas birodalmaival. Ezek Asszíria és Ur, a 'Mezopotámia' nevű földön, a két nagy folyó között, és tőlük Bübloszon keresztül a legfinomabb elefántcsont is megszerezhető. Ritka és egzotikus luxuscikkek érkezésével Héliopolisz biztosan virágozni fog. @P Kheopsz egy királyi kormányzót is küldött Denderába, hogy megvédje földünket a kusita betolakodóktól. A királyi vezírek együttérzéssel tekintenek a nehéz és veszélyes feladattal megbízott kormányzóra. @P A fővárosban az egyiptomi nép kezd megismerkedni a szenet nevű társasjátékkal. Ezt a játékot általában egy korsó sör mellett, egy 'Szenetház' nevű nyilvános helyen játsszák. Az ilyen helyek kellemes kikapcsolódást nyújthatnak Héliopolisz lakóinak Kheopsz uralmának zsarnoksága elől."
+                }
+            }
+            message_mission_giza {
+                id: 418,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Gíza",
+
+                }
+                subtitle {
+                    text: "A nagy piramis és a szfinx",
+
+                }
+                content {
+                    text: "Kheopsz fáraó végre nyilvánosságra hozta terveit, és határtalan becsvágya súlyos terhet ró majd népünkre. A fáraó egyszerre átkoz és áld téged, mert bár elnyerted a nomarcha rangját, rád bízta hazánk valaha vállalt legnagyobb építési projektjének végrehajtását. @P A fáraó örök nyughelye egy hatalmas piramiskomplexum lesz, amely minden várostól távol, a gízai fennsíkon épül fel. Szarkofágja tömör gránitból készül, temetési bárkája pedig értékes libanoni cédrusból. A fáraó piramiskomplexuma mellett egy kisebb piramis is épül fiának, Khefrének hercegnek, akinek zsarnoksága vetekszik apjáéval, bár eredményei nem. Khefré azt is elrendeli, hogy képmását Gíza élő sziklájába véssék egy hatalmas szobor formájában, amelyet 'szfinxnek' neveznek, oroszlántesttel és emberfejjel. @P A hatalmas építkezési munkálatok támogatásához, amelyek e műemlék elkészítéséhez szükségesek, nagy települést kell létrehoznod Gízában. Emiatt a körülmények nem lehetnek különösebben kifinomultak, hiszen egyetlen célod e három nagyszerű projekt befejezése és a fáraó tisztelete. @P Biztosítunk számodra némi kiváló fehér mészkövet, amely szükséges a piramisok külső burkolatához, de a szükséges anyagok nagy részét a város saját pénzéből kell megvásárolnod. @P A fáraó rád, egyik királyi nomarchájára bízza ezt a három szent feladatot. Bizonyítanod kell rendíthetetlen odaadásodat a fáraó iránt, és teljesítened kell kívánságait... bármi legyen is az ára."
+                }
+            }
+            message_mission_bahariya_oasis {
+                id: 419,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Bahariya-oázis",
+
+                }
+                subtitle {
+                    text: "A nyugati sivatag",
+
+                }
+                content {
+                    text: "@P Kheopsz és Khefré uralkodása véget ért, és velük együtt lezárult az egyiptomi uralkodócsaládok negyedik dinasztiája is. Ám Hentkausz úrnő, e család távoli tagja, életet adott egy új fáraónak, 'Uszerkafnak', így a királyi vérvonal töretlenül folytatódik. Uszerkaf trónra lépésével kezdődik az ötödik dinasztia, egy sok változást ígérő korszak. @P Uszerkaf valamelyest decentralizálta országunk irányítását, és nagyobb hatalmat adott a helyi hatóságoknak. Most az olyan nomarchák, mint te, szabadabban intézhetik saját ügyeiket. A fáraó nem hatalmas örök sír építését tervezi magának, hanem más feladatot szán neked. @P A fáraó Ré istent, a Nap és a királyság istenét az istenek királyává nyilvánította, és hatalmát az egész földön ki akarja terjeszteni. Számos Naptemplom található már Egyiptom-szerte, de a fáraó Ré befolyását királyságunk legtávolabbi szegletéig kívánja eljuttatni. @P Ennek megvalósításához megerősített települést kell építened a Bahariya-oázisban, messze a nyugati sivatagban. Bölcsen használd fel az ott található vizet, mert ilyen távol a drága Nílustól még a kevés vízforrásra is gyakran pályáznak a sivatag vadállatai. Óvakodnod kell a líbiai harcosok és a sivatagi beduinok támadásaitól is, akik az utóbbi időben gyakran zaklatták a sivatagi karavánokat. Gondosan tervezd meg védelmedet, és használd fel az oázisban található minden erőforrást, például a fát és a vadakat."
+                }
+            }
+            message_mission_abusir {
+                id: 420,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Abuszír",
+
+                }
+                subtitle {
+                    text: "A Naptemplom",
+
+                }
+                content {
+                    text: "@P Kheopsz és Khefré uralkodása véget ért, és velük együtt lezárult az egyiptomi uralkodócsaládok negyedik dinasztiája is. Ám Hentkausz úrnő, e család távoli tagja, életet adott egy új fáraónak, 'Uszerkafnak', így a királyi vérvonal töretlenül folytatódik. Uszerkaf trónra lépésével kezdődik az ötödik dinasztia, egy sok változást ígérő korszak. @P Uszerkaf valamelyest decentralizálta országunk irányítását, és nagyobb hatalmat adott a helyi hatóságoknak. Most az olyan nomarchák, mint te, szabadabban intézhetik saját ügyeiket. A fáraó nem hatalmas örök sír építését tervezi magának, hanem más feladatot szán neked. @P A fáraó Ré istent, a Nap és a királyság istenét az istenek királyává nyilvánította, és hatalmát az egész földön ki akarja terjeszteni. Számos Naptemplom található már Egyiptom-szerte, de a fáraó azt kívánja, hogy a legnagyobb Abuszírban, Alsó-Egyiptom nedves Delta vidékén épüljön fel. @P Mint a Delta nagy része, Abuszír is gazdag vadakban, halakban és más élőlényekben, valamint növényzetben, de kevés ásványkinccsel rendelkezik. Emiatt a Naptemplom építéséhez szükséges homokkövet a Dúnkul-oázis kőfejtőiből kell importálni. Szarvasmarhát is tenyészthetsz itt hús biztosítására, de a csordáknak sok szalmára van szükségük takarmányként. @P Meg kell tisztítanod a földet, hogy megfelelő helyet alakíts ki a Naptemplom számára. Ügyelj rá, hogy előbb elegendő mennyiségű értékes kitermelt fát adj el, mert ha elfogy, többé nem biztos, hogy hozzá tudsz jutni. Apollinopolisz és Abydosz mindig fahiánnyal küzd, és vadakra is szükségük van, ezért a velük folytatott kereskedelem segíthet ellensúlyozni e szent emlékmű építésének költségeit."
+                }
+            }
+            message_mission_dunqul {
+                id: 421,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Dúnkul",
+
+                }
+                subtitle {
+                    text: "A kusita fenyegetés",
+
+                }
+                content {
+                    text: "@P Pepi elfoglalta a trónt, és családodat kancellári rangra emelte, de ennek ára volt. @P A központi hatalom tovább gyengül, miközben a helyi és regionális vezetők egyre nagyobb befolyásra tesznek szert. Egyes vidékeken a termések messze elmaradnak a megszokottól, és az éhínség veszélye kezd megjelenni Egyiptomban. Memphisz, az egykor pompás és gyönyörű város, hanyatlásnak indult. A látnokok nehéz időket jósolnak. @P Erős szomszédaink kihasználják Egyiptom növekvő gyengeségét. Buhen őrhelyét ostromolják a Kermából érkezett rettenthetetlen kusita katonák, Afrika legnagyobb nem egyiptomi városának harcosai. A kusiták adót követelnek, és a legkisebb provokáció is nyílt támadáshoz vezethet. Núbia szintén háborúra szólított fel, és elvesztett földjeinek visszaszerzésére készül. @P Ha Egyiptom fenn akar maradni, mindent meg kell tenned a kereskedelmi útvonalak megőrzéséért, hogy az áruk továbbra is áramolhassanak az országba és onnan kifelé. Tartsd nyitva a nehezen megszerzett kereskedelmi állomást a Selima-oázisban. Pepi, aki az utolsó útjára készül a túlvilágra, gyakran kér majd követ piramisa építéséhez, míg más, élelemhiánnyal küzdő városok tőled kérnek segítséget. @P Gondosan használd fel erőforrásaidat. Az oázisban bőségesen található értékes fa, de az erdő egy részét el kell pusztítanod, hogy hozzáférj a korlátozott vízkészlethez."
+                }
+            }
+            message_mission_dakhla {
+                id: 422,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Dakhla",
+
+                }
+                subtitle {
+                    text: "A karavánút",
+
+                }
+                content {
+                    text: "@P Pepi elfoglalta a trónt, és családodat kancellári rangra emelte, de ennek ára volt. @P A központi hatalom tovább gyengül, miközben a helyi és regionális vezetők egyre nagyobb befolyásra tesznek szert. Egyes vidékeken a termések messze elmaradnak a megszokottól, és az éhínség veszélye kezd megjelenni Egyiptomban. Memphisz, az egykor pompás és gyönyörű város, hanyatlásnak indult. A látnokok nehéz időket jósolnak. @P Erős szomszédaink kihasználják növekvő gyengeségünket. Buhen őrhelyét ostromolják a Kermából érkezett rettenthetetlen kusita katonák, Afrika legnagyobb nem egyiptomi városának harcosai. A kusiták adót követelnek, és a legkisebb provokáció is nyílt támadáshoz vezethet. Núbia szintén háborúra szólított fel, és elvesztett földjeinek visszaszerzésére készül. @P Próbáld meg stabilan tartani Egyiptomot egy közigazgatási állomás létrehozásával a Dakhla-oázisban. Az oázisban nagy mennyiségű értékes fa található, de ezek a fák sajnos akadályozzák a korlátozott vízkészlet elérését. E fontos helyről ébenfát importálhatsz Afrika belsejéből. Pepi, aki a túlvilágra készül, téglát fog kérni emlékműve építéséhez. Más, élelemhiánnyal küzdő városok pedig élelmiszert kérnek majd tőled."
+                }
+            }
+            message_mission_thinis {
+                id: 423,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Thinisz ",
+
+                }
+                subtitle {
+                    text: "Polgárháború",
+
+                }
+                content {
+                    text: "A régi életforma eltűnt, és a legtöbben attól tartanak, hogy Egyiptom soha nem nyeri vissza korábbi dicsőségét. Ozirisz hátat fordított népének, és a sorozatos alacsony áradások széles körű éhínséget okoztak. A fáraók egykor megkérdőjelezhetetlen hatalma szertefoszlott, helyét viszálykodó tartományi vezetők vették át. @P E káoszból két nemesi család emelkedett ki, amelyek megpróbálják megszerezni az ország feletti uralmat. Hérakleopolisz uralkodói jogos örökösökként tartanak igényt a trónra. Különösen kegyetlenek, és alig tesznek valamit a nép éhezésének enyhítésére. Délen egy új család, az Inyotef-ház került hatalomra Thébában. Ez a család sokat tett a déli területek újraegyesítéséért, és most Hérakleopolisz halálos polgárháborút kezdett Théba ellen egész Egyiptom uralmáért. @P Hogy bizonyítsák jóindulatukat Egyiptom népe iránt, az Inyotefek rád bízták a frissen meghódított Thinisz, Egyiptom egyik legrégebbi városának újjáépítését. Thinisz két legszebb és legősibb épülete túlélte a hódítás zűrzavarát: Ozirisz templomkomplexuma és a palota. Az Inyotefek elrendelték, hogy ha bármelyik épület elpusztul, nem pazarolnak pénzt a helyreállítására. Théba uralkodói Thinisz újjáépítését elsődleges feladatnak tekintik, és még e nehéz időkben is jelentős összegeket gyűjtöttek erre a célra. Állítsd vissza Thinisz egykori pompáját, építs haditengerészetet és hozz létre erős hadsereget, hogy megvédd a Hérakleopoliszhoz hű erők, köztük Lükopolisz, Hierakonpolisz és Hermopolisz gyakori támadásaitól. Légy óvatos Hérakleopolisz uralkodóival: adót követelhetnek, hogy próbára tegyék hűségedet, és kicsikarják debeneidet. Figyelj az alkalomra váró núbiaiakra is, akik Egyiptom belső viszályait akarják kihasználni."
+                }
+            }
+            message_mission_thebes {
+                id: 424,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Théba",
+
+                }
+                subtitle {
+                    text: "Polgárháború",
+
+                }
+                content {
+                    text: "A régi életforma eltűnt, és a legtöbben attól tartanak, hogy Egyiptom soha nem nyeri vissza korábbi dicsőségét. Ozirisz hátat fordított népének, és a sorozatos alacsony áradások széles körű éhínséget okoztak. A fáraók egykor megkérdőjelezhetetlen hatalma szertefoszlott, helyét viszálykodó tartományi vezetők vették át. @P E káoszból két nemesi család emelkedett ki, amelyek megpróbálják megszerezni az ország feletti uralmat. Hérakleopolisz uralkodói jogos örökösökként tartanak igényt a trónra. Különösen kegyetlenek, és alig tesznek valamit a nép éhezésének enyhítésére. Délen egy új család, az Inyotef-ház került hatalomra Thébában. Ez a család sokat tett a déli területek újraegyesítéséért, és most Hérakleopolisz uralkodói halálos polgárháborút kezdtek Théba vezetői ellen egész Egyiptom uralmáért. @P Az Inyotefek, akik elfoglaltak a Hérakleopolisz elleni harccal, rád bízták szülővárosuk, Théba fejlesztését. Ha az Inyotefek győzni akarnak ellenfeleik felett és meg akarják szilárdítani hírnevüket Egyiptomban, Thébának olyan várossá kell válnia, amelyre a többi település támaszkodhat, segítséget vagy katonákat biztosítva a rászorulóknak. Théba, amely győzelem esetén akár fővárossá is válhat, nagyszerű város kell legyen. A rendelkezésre álló szűkös erőforrásokból építs Naptemplomot és piramist, hogy megmutasd az egyiptomiaknak az Inyotefek dicsőségét. @P Théba maga sem mentes a támadásoktól. Hérakleopolisz uralkodói és híveik időről időre fenyegethetik városodat, és Hérakleopolisz megpróbálhat debeneket kicsikarni a város kincstárából. E komoly veszélyek kivédésére építs erős hadsereget és haditengerészetet, hogy megvédd városodat és segítséget nyújts a veszélybe került településeknek."
+                }
+            }
+            message_mission_coptos {
+                id: 425,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Koptosz",
+
+                }
+                subtitle {
+                    text: "Újraegyesítés",
+
+                }
+                content {
+                    text: "Családod a polgárháború alatt tanúsított helytállása nem maradt jutalom nélkül. Én, Mentuhotep fáraó, vezíri rangra emeltem családodat. Egész Egyiptomban nincs senki, akiben jobban bíznék nálad. Most, hogy Felső- és Alsó-Egyiptom kettős királysága újra egyesült, és a thébai főváros virágzik, szükségem van a segítségedre, hogy megszilárdítsam hatalmamat az egész országban. @P Bár Egyiptom újra egyesült, továbbra is belső összecsapások fenyegetik, különösen azokon a területeken, amelyek egykor Hérakleopolisz uralkodóit támogatták. Az új egység megszilárdításához azt akarom, hogy építsd újjá és védd meg Koptoszt. Koptosznak dicsőséges várossá kell válnia, amely megmutatja Egyiptom népének, mire képes az én uralmam alatt. A várost gyakran támadják a megmaradt hűséges városok, például Hermopolisz, ezért gondoskodnod kell határaid védelméről. @P Az éhínség még mindig sújtja az országot, és a királyság más városai gyakran kérnek majd tőled élelmet. Válaszolj olyan gyorsan, amilyen gyorsan csak tudsz szívszorító kéréseikre, hogy egész Egyiptom megismerje jóindulatomat és leghűségesebb vezírem elkötelezettségét. @P Tudom, sokat kérek tőled, de nincs más Egyiptomban, aki képes lenne végrehajtani ezt a nehéz feladatot."
+                }
+            }
+            message_mission_beni_hasan {
+                id: 426,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Beni Haszan",
+
+                }
+                subtitle {
+                    text: "Újraegyesítés",
+
+                }
+                content {
+                    text: "Családod a polgárháború alatt tanúsított helytállása nem maradt jutalom nélkül. Én, Mentuhotep fáraó, vezíri rangra emeltem családodat. Egyiptomban nincs senki más, akiben jobban bíznék nálad. Most, hogy Felső- és Alsó-Egyiptom kettős királysága újra egyesült, és a thébai főváros virágzik, szükségem van a segítségedre, hogy megszilárdítsam hatalmamat az egész országban. @P Bár Egyiptom újra egyesült, továbbra is belső összecsapások fenyegetik, különösen azokon a területeken, amelyek egykor Hérakleopolisz uralkodóit támogatták. Az újraegyesült ország megszilárdításához azt akarom, hogy építsd újjá és védd meg Beni Haszant, amely szinte teljesen elpusztult a polgárháború alatt. Beni Haszannak dicsőséges várossá kell válnia, amely megmutatja Egyiptom népének, mire képes az én uralmam alatt. @P Az éhínség még mindig sújtja az országot, és a királyság más városai gyakran kérnek majd tőled élelmet. Válaszolj olyan gyorsan, amilyen gyorsan csak tudsz szívszorító kéréseikre, hogy egész Egyiptom megismerje jóindulatomat és leghűségesebb vezírem elkötelezettségét. @P Van még egy nemes kérésem: szeretném, ha gránit obeliszkeket építenél, hogy még életünkben hirdessék mindazt, amit ezért a földért tettem. @P Tudom, sokat kérek tőled, de azt is tudom, hogy Egyiptomban csak te vagy képes megtenni, amit kértem."
+                }
+            }
+            message_mission_itjtawy {
+                id: 427,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Itjtavi",
+
+                }
+                subtitle {
+                    text: "Új főváros alapítása",
+
+                }
+                content {
+                    text: "Ó, hatalmas Ré által szeretett fáraó, milyen szerencsésnek érezheted magad! Példátlan felemelkedésed Egyiptom trónjára maga a megtestesült álom. Ennél nagyobb jutalmat sem istenek, sem emberek nem adhatnának. Családod trónra lépésével Egyiptom új kezdetet kaphat, és talán mindannyian elfelejthetjük a polgárháború borzalmait. @P Ezen új kezdet jeleként építs egy nagyszerű új fővárost. Itjtavi, gazdag természeti erőforrásaival, tökéletes helyszín erre. A föld adományait felhasználva pompás várost építhetsz, amely méltó dinasztiád bátorságához és elkötelezettségéhez. @P Hogy nagy dinasztiád tetteire örökké emlékezzenek, építs két fenséges téglapiramist magadnak és családodnak, valamint egy félelmetes szfinxet sírod őrzésére. Egy ilyen eredményekkel rendelkező család nem érdemel kevesebbet. @P Ne feledd azonban, hogy az országban vannak, akik megkérdőjelezik uralmad jogosságát. Sokan még mindig szenvednek az éhínség következményeitől, és azt suttogják, hogy bitoroltad a trónt. Ha enyhíted e nép nyomorúságát és segítesz újjáépíteni otthonaikat, bizonyára örök hűségüket nyered el. Gondoskodj új alattvalóidról a lehető legjobban, hogy ezek a szerencsétlen emberek ne ragadjanak fegyvert ellened."
+                }
+            }
+            message_mission_mirgissa {
+                id: 428,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Mirgissza",
+
+                }
+                subtitle {
+                    text: "Núbia felé",
+
+                }
+                content {
+                    text: "Most, hogy Egyiptom szilárdan egyesült uralmad alatt, egész udvarod és én, hűséges vezíred, azt javasoljuk, hogy terjesszük ki országunk határait dél felé, Núbiába. Az Allaqi kiszáradt folyómedre gazdag aranylelőhelyekben, és egy hatalmas város Mirgisszában, ahol te is jelen vagy, bizonyára visszatartja majd a núbiaiakat a támadási kísérletektől. Légy azonban óvatos a kusitákkal. Sokkal veszélyesebb ellenfelek, mint a núbiaiak, és kardjaikkal fognak arra ösztönözni téged, ó fáraó, hogy hagyd békén királyságukat. @P Hogy maradandó nyomot hagyj Núbiában, építs egy hatalmas obeliszket, amely Egyiptom számos vívmányáról tanúskodik. Az obeliszk meggyőző bizonyítékot szolgáltat majd a núbiaiaknak az egyiptomi uralom előnyeiről, és állandó emlékeztető lesz jelenlétünkre. @P Miközben közvetlen figyelmedet Mirgisszára fordítod, ne feledd, hogy célunk egy virágzó vörös-tengeri kikötőváros létrehozása Merszában. Merszának szüksége lesz segítségedre, és nem fog habozni kérni azt. Ha Mersza virágozni tud, a szükséges rezet biztosítja majd Mirgisszának, amelyből fegyvereket kovácsolhatnak."
+                }
+            }
+            message_mission_mersa_gawasis {
+                id: 429,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Mersza Gavaszisz",
+
+                }
+                subtitle {
+                    text: "A Vörös-tenger partján",
+
+                }
+                content {
+                    text: "Most, hogy Egyiptom szilárdan egyesült uralmad alatt, kereskedelmi kapcsolatokat kell kialakítanunk a világ városaival, hogy növeljük Egyiptom gazdagságát, ó Két Föld királya. @P Ahogy néped gyarapodik, egyre különlegesebb árukat követel. Belefáradva az ékszerekbe, a könnyen beszerezhető luxuscikkekbe, néped ritka és drága árukra, például tömjénre vágyik. Udvarod és én, hűséges vezíred, azt javasoljuk, hogy alapíts vörös-tengeri kikötőt Merszában. Mersza kereskedelmi útvonalat kínál a távoli Punt földjére, ahonnan a világ legfinomabb tömjénét lehet importálni, igaz, nagy költséggel. @P A szerény arany- és rézlelőhelyeken kívül Mersza kevés nyersanyagot termel, de késztermékek előállítójaként virágozhat. Nyersanyagok importálásával kereskedelmi partnereinktől és késztermékek exportálásával Mersza jelentős haszonra tehet szert. @P Miközben te Mersza megalapításával foglalkozol, egyik legbátrabb nomarchád új kereskedelmi központot hoz létre Núbiában. Városát, Mirgisszát, valószínűleg támadások fogják érni, ezért szeretett fáraómnak készen kell állnia, hogy minden szükséges erőforrást elküldjön neki. @P Uralmad alatt Mersza bizonyára a királyság egyik legszebb városa lesz, amely méltó végső nyughelyet biztosíthat neked és családodnak. Miközben virágzó kikötődet építed, ne hanyagold el a túlvilágra való felkészülést. Egy mauzóleum és egy kis téglapiramis fényűző nyughelyet biztosít majd neked és családodnak a Nádasmezőkre való átkelés után."
+                }
+            }
+            message_mission_semna {
+                id: 430,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Szemna",
+
+                }
+                subtitle {
+                    text: "Az akadály",
+
+                }
+                content {
+                    text: "Nagyra becsült fáraó, mindaz, amiért családod olyan keményen küzdött, veszélybe került! A núbiai hadiflotta a Nílust járőrözi, mélyen behatolva Egyiptom területére, és falvakat, valamint városokat egyaránt kifoszt. A núbiaiak kereskedelmi hajóinkat is megtámadják, és elrabolják rakományukat. Hogy északi városaid visszaverhessék az ellenséget, készen kell állnod hadihajók és katonák küldésére azoknak a településeknek, amelyeknek szükségük van rájuk. @P Hogy megakadályozzuk, hogy a núbiaiak ismét hajózhassanak vizeinken, katonai tanácsadóid erődsor építését javasolják Szemnánál, a Nílus második és harmadik zuhataga között. Az erődök dugóként zárják el az utat, délen tartva a núbiaiakat. @P A núbiaiak sikeres kiűzéséhez Kuban városának meghódítása szükséges. Kuban gazdag erőforrásokban, és elfoglalása megbénítja a núbiai gazdaságot. Miután elvetted Kuban irányítását a núbiaiaktól, homokkövet importálhatsz a városból nagy mauzóleumodhoz. Szemnai mauzóleumod emlékeztetőül szolgál majd a nyugtalan núbiaiak feletti uralmadra. @P Sok kihívás áll előtted, miközben Egyiptomot véded a núbiaiaktól. Figyelj, ó Élő Hórusz, a keleten gyülekező viharra. Lódobogás mennydörgése hallatszik egész Kánaánban, és villámgyors harci szekerek pusztítanak mindent útjukban. Ezeket a félelmetes szekereket, amelyekhez hasonlót még sehol sem láttak, a hükszosz harcosok hajtják. Máris viharfelhők gyülekeznek Egyiptom látóhatárán, ezért készülj fel a közelgő veszélyre."
+                }
+            }
+            message_mission_bubastis {
+                id: 431,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Bubastis",
+
+                }
+                subtitle {
+                    text: "Bast városa",
+
+                }
+                content {
+                    text: "Felséges fáraó, a jól kiépített kereskedelmi útvonalakkal most meg kell mutatnunk Egyiptomnak, mit hozhat a siker és a gazdagság. Bubastis tökéletes helyszín egy ilyen város számára: megvédhetjük keleti kereskedelmi útjainkat, miközben hódolunk Bastnak, aki mindig őrizte Egyiptomot. @PBast városa semmihez sem fogható legyen Egyiptomban. Legyen olyan gyönyörű, mint a lótuszvirág, amely szórakozással, iskolákkal, könyvtárakkal és szent helyekkel bontja ki szirmait. Lakói bőségben éljenek, és élvezhessék a finomabb dolgokat, köztük a behozott tömjént is. Mire elkészül, Bubastis lesz a kettős korona ékköve. @PMiközben ezt a dicső várost építed, figyelj a keleten gyülekező viharra. Lópaták dübörgése hallatszik egész Kánaánban, és villámgyors harci szekerek pusztítanak el mindent útjukban. Ezeket a páratlan szekereket, amelyekhez hasonlót még sehol sem láttak, a hükszosz harcosok hajtják. Már viharfelhők jelentek meg Egyiptom horizontján, ezért készülj fel a közelgő veszélyre."
+                }
+            }
+            message_mission_hermopolis {
+                id: 432,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Hermopolis",
+
+                }
+                subtitle {
+                    text: "Egyiptom visszaszerzése",
+
+                }
+                content {
+                    text: "Hatalmas fáraó, Egyiptom segítségedért kiált. A fenyegető hükszoszok megszállták földünket, és saját fővárost alapítottak Avariszban. Innen számos kereskedelmi útvonalunkat megzavarták, elvágva a szükséges ellátmányt. Meg kell állítanunk hódításukat, mielőtt túl késő lesz. @PNagy fáraó, ha úgy kívánod, vissza kell szereznünk Hermopolis városát, amelyet ezek a tisztátalan betolakodók meggyaláztak. Erős hadsereget és flottát is építenünk kell, mert csapatokat és fegyvereket küldhetünk északi szövetségeseinknek, különösen Avariszba, hogy segítsünk visszaverni a hükszosz támadást. Rád tekintenek, Ré gyermeke, támogatásért. De most nekünk is új fegyverünk van. Bölcs hadvezéreink elsajátították a rettegett harci szekér használatát, és ellenségeink ellen fordítjuk, hogy magunk előtt hajtsuk őket. Miután kiűztük a bajkeverő hükszoszokat, katonai tanácsadóink azt javasolják, hogy építsünk erődöt a Sínai-félszigeten, Sharuhennél, hogy megakadályozzuk a további keleti betöréseket. @PHa csak északi gondjaink lennének! Déli határainkról érkező hírek szerint a núbiaiak ismét kihasználják a meggyengült Egyiptom helyzetét. Visszafoglalták Mirgissa és Semna déli városait. Bár az elvesztett városok aggodalomra adnak okot, előbb a hükszoszokat kell kiűznünk, csak utána fordíthatjuk figyelmünket dél felé. @PEzek a hükszoszok istentelen betolakodók. Most fedeztük fel, hogy meggyalázták a hermopolisi piramist. Ellopták belőle mindazokat a temetési kellékeket, amelyekre az itt eltemetett hatalmas fáraónak szüksége van a Nádas mezején. Új sírmellékletekkel kell ellátnunk a sírt, hogy az itt nyugvó fáraó örök életet élhessen."
+                }
+            }
+            message_mission_lykopolis {
+                id: 433,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Lykopolis",
+
+                }
+                subtitle {
+                    text: "Egyiptom visszaszerzése",
+
+                }
+                content {
+                    text: "Ó, Két Föld ura, Egyiptom segítségedért kiált. A fenyegető hükszoszok megszállták földünket, és saját fővárost alapítottak Avariszban. Innen számos kereskedelmi útvonalunkat megzavarták. Meg kell állítanunk hódításukat, mielőtt túl késő lesz. @PLykopolisban biztonságban vagyunk a közvetlen támadástól, bár a hükszoszok vakmerően adót követelnek tőlünk. Talán csapatokat és fegyvereket kell küldenünk északi szövetségeseinknek, hogy segítsünk visszaverni a hükszosz támadást. Rád tekintenek, hatalmas fáraó, támogatásért. De most nekünk is új fegyverünk van: bölcs hadvezéreink elsajátították a rettegett harci szekér használatát, és ellenségeink ellen fordítjuk, hogy magunk előtt hajtsuk őket. @PHa csak északi gondjaink lennének! Déli határainkról érkező hírek szerint a núbiaiak ismét kihasználják a meggyengült Egyiptom helyzetét. Visszafoglalták Mirgissa és Semna déli városait. @PHa Egyiptom sértetlenül akar kijutni ezekből a zavaros időkből, sok múlik hadvezéreiden a csatatéren és a folyón. Két legjobb tábornokod bátorítására megígérted, hogy mindkettőjüknek olyan lenyűgöző piramist építesz, mint a sajátod. Ígéreted tudatában elszántan harcolnak az ellenséggel, minden erejüket és kitartásukat latba vetve. @PHatalmas fáraó, ha úgy kívánod, építs három csodálatos piramist Lykopolisban: egyet magadnak és egyet-egyet mindkét tábornokodnak. Ez a három piramis hatalmas területet foglal majd el, ezért értékes erőforrásokról kell lemondanod a hely biztosításához. Talán városodat is ki kell terjesztened a Nílus túlpartjára, hogy minden szükséges erőforráshoz hozzájuss a város felvirágoztatásához."
+                }
+            }
+            message_mission_byblos {
+                id: 434,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Byblos",
+
+                }
+                subtitle {
+                    text: "Terjeszkedés és hódítás",
+
+                }
+                content {
+                    text: "Egyiptom új erőre kapva emelkedett ki a közelmúlt nehézségeiből. Byblos minden buja erdejével és gazdag rézlelőhelyével a miénk! Jelenléteddel a város biztosan felvirágzik, és létrejön az Újbirodalom. @PÁm milyen riasztó felfedezést tettünk Byblos meghódítása után! Egy új, vad nép, a hettiták söpörtek végig Ázsia nagy részén, és egyesek szerint birodalmuk méretben vetekszik a miénkkel. Most Byblos felé fordították tekintetüket, megirigyelve gazdagságát. Ha nem készülünk fel megfelelően támadásukra, könnyen elveszíthetjük Byblost ellenségeinkkel szemben. @PMiközben a hettiták elleni harcra készülünk, Byblost örökre egyiptomivá kell tennünk. Áldásoddal, fáraó, három obeliszket emelünk: két kisebbet és egy nagyot, hirdetve hatalmadat és hírnevedet birodalmad távoli vidékein is. Ezek a magasba törő emlékművek emlékeztetik Byblos lakóit, hogy kinek tartoznak hűséggel. @PMiközben Byblos ügyeivel foglalkozunk, Egyiptom más vidékei továbbra is támadásoknak vannak kitéve. A núbiaiak egészen az első zuhatagig északra nyomultak, és segítenünk kell honfitársainknak visszaszorítani őket. Avariszból újabb rejtélyes ellenségről érkeztek hírek: a tengeri népekről. Mindkét ellenséget határozottan le kell győznünk, ha Egyiptom dicsőségre akar jutni. Hatalmad bizonyítására küldj csapatokat és hadihajókat, ha szükség lesz rájuk."
+                }
+            }
+            message_mission_kuban {
+                id: 435,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Kuban",
+
+                }
+                subtitle {
+                    text: "Egyiptom dicsősége",
+
+                }
+                content {
+                    text: "A hükszoszok sikeres kiűzésével országunk készen áll az újjászületésre, egy olyan Újbirodalomra, amely felülmúlja a múlt dicsőségét. Nemes fáraó, Kuban ideális hely az Újbirodalom kezdetéhez. Az ott talált hatalmas mennyiségű arany segítségével megvalósíthatjuk Egyiptomról alkotott új elképzeléseidet. @PEgyiptom a nagyság küszöbén áll, de néhány gond még megmaradt. Sok városunk még mindig a hükszoszok okozta zavarokból lábadozik, és szükségük lehet a fáraó segítségére. Más vidékeken régi ellenségeink támadnak minket, míg egy új ellenség, a tengeri népek, északi partvidékünket fosztogatják. Készülj fel, hogy megvédd Egyiptom városait régi és új ellenfeleinktől egyaránt. @PEgyiptom tekintélyének növekedésével sok város hajlandó kereskedni velünk. Néhányan annyira ismerik szokásainkat, és annyira csodálják hatalmadat, hogy egyiptominak tekintik magukat, míg mások idegenek számunkra, és most kereskednek velünk először. Egyiptom dicsőségére használd ki mindezen kapcsolatokat, hogy népedet ellásd minden kívánt áruval. @PAz új korszak kezdetére királyi építészeid alig várják, hogy két piramist és egy fenséges mauzóleumot építhessenek neked, fáraó. Ezek méltón tükrözik majd azt a gazdagságot és nagyságot, amelyet Egyiptomnak hoztál."
+                }
+            }
+            message_mission_avarist {
+                id: 436,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Avarisz",
+
+                }
+                subtitle {
+                    text: "A tengeri népek",
+
+                }
+                content {
+                    text: "Ó, Arany Hórusz, Ázsiában szilárd és megkérdőjelezhetetlen a hatalmunk, határaink pedig ismét messze benyúlnak Núbiába. Ám északi partvidékünk gondjai egyre súlyosbodnak. A tengeri népek mind vakmerőbben támadják és fosztogatják városainkat. Csak a fáraó jelenléte lehet elegendő e kegyetlen és ravasz ellenség legyőzéséhez. Ha erős hadsereggel támogatott flottát építesz, bizonyosan felülkerekedünk a tengeri népeken. @PMiközben a tengeri népek ellen harcolsz, bátor nomarkhoszaid szerte a világban vezetik hadjárataikat. Ha sikerrel járnak, Egyiptom az ázsiai nagy Eufrátesz folyótól egészen délre, a hatalmas kusita Kerma városáig uralni fogja a világot. Amikor te és nomarkhoszaid elértek az édes győzelemhez, dinasztiád lesz a legnagyobb, amely valaha is őrizte Egyiptomot. @PTávoli befolyásodat jelzi egy új, messzi kereskedelmi partner, Mükéné. Mükéné királya megismerte Egyiptom pompáját és bőségét, és kereskedni kíván velünk. Ha megnyitod ezt a kereskedelmi útvonalat, fáraó, polgáraid olyan különleges árukhoz jutnak majd, amilyeneket még sosem láttak. @PKirályi családod túlvilági nyugalmának biztosítására két lenyűgöző mauzóleumot és egy hatalmas téglapiramist kell építeni. Ezek az emlékművek minden utánad következőt emlékeztetnek majd tetteidre, akár a csatatéren, akár azon kívül hajtottad végre őket."
+                }
+            }
+            message_mission_kahun {
+                id: 437,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Kahun",
+
+                }
+                subtitle {
+                    text: "A fáraó dicsősége",
+
+                }
+                content {
+                    text: "Jóságos fáraó, békét és jólétet hoztál nemzetünknek. Bölcs és rátermett uralmad alatt Egyiptom ismét erős és dicsőséges ország. Minden nomarkhosz hűséges hozzád, és nagy nemzetünket már nem fenyegeti veszély. @PMiután beteljesítetted mindazt, amit családod oly sok évvel ezelőtt kitűzött célul, eljött az idő, hogy megörökítsd nagy dinasztiád eredményeit. Ennek egyetlen módja, ha felépíted Egyiptom valaha volt legnagyobb piramisát, amely még a gízai Kheopsz-piramisnál is hatalmasabb. Nemes családod más tagjai is sok áldozatot hoztak hosszú utadon Egyiptom uralmáig. Őket is meg kell őrizni az emlékezetben és tiszteletben részesíteni egy homokkő mauzóleummal, amely hűséges támogatásukat hirdeti. @PAz emlékművek ideális helyszíne Kahun a gazdag Fajjúm vidékén. Innen intézheted az állam minden ügyét, és válaszolhatsz városaid ellátmányigényeire, miközben felépíted hatalmas piramisodat."
+                }
+            }
+            message_mission_buto {
+                id: 438,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Buto",
+
+                }
+                content {
+                    text: "@PCsaládod segítségével a thíniszi Hór-Aha király sikeresen egyesítette Felső- és Alsó-Egyiptom kettős királyságát, fáraónak kiáltotta ki magát egész Egyiptom felett, és hatalmas fővárost alapított Memphiszben. @PNemzetséged ismét átköltözött, ezúttal Alsó-Egyiptom párás Delta-vidékére, a Buto néven ismert területre. Kánaáni hadihajók fenyegetik ezt a vidéket, ezért amikor eljön az idő, néhány saját hadihajót is útnak kell indítanod. @PCsaládod elérte a nemesi rangot. Ezért elvárható, hogy mielőtt e világból a következőbe távozol, elkészíts egy gyönyörű téglából épült sírt, egy masztabát, amely tested örök nyugalmát szolgálja. @PElőbb azonban farmokat kell létesítened a Nílus partján, hogy kihasználd a folyó éves áradásai által lerakott gazdag, termékeny talajt. Ez lehetővé teszi népességed növekedését és gyarapodását, míg végül elegendően nagy lesz a szent emlékmű elkészítéséhez. De vigyázz, mert a Nílus életet adó vizei között számos veszély leselkedik, például halálos krokodilok, vízilovak és maláriát terjesztő szúnyogok. @L@L Gazdálkodás a Nílus mentén @P A termékenység előnyeinek kihasználásához közvetlenül az ártérre kell építened a farmokat. A legtöbb működő épülettel ellentétben az ártéri farmoknak nincs szükségük közvetlen dolgozói hozzáférésre, de állandó paraszti munkaerőt igényelnek, amelyet munkatáborok biztosítanak a földek műveléséhez. A munkatáborokat az ártéri farmokhoz közel építsd, hogy a parasztoknak ne kelljen messzire járniuk. @G56 @L@PA Nílus minden évben kilép medréből, és gazdag, termékeny iszappal tölti fel az ártér kimerült földjét. A parasztok az éves termést közvetlenül az áradás előtt takarítják be, majd a magtárakba szállítják. Mivel évente csak egy aratás van, gondoskodj elegendő magtárról, hogy megfelelő mennyiségű élelmet tárolhass növekvő népességed számára."
+                }
+            }
+            message_mission_pi_yer {
+                id: 439,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Pi-Yer",
+
+                }
+                subtitle {
+                    text: "A tengeri népek földje",
+
+                }
+                content {
+                    text: "@PNyugatról érkező nyugtalanság és elégedetlenség morajlása az utóbbi időben egyre fenyegetőbbé vált. Felderítőink jelentik, hogy több barbár törzs, amelyek ismeretlen nyelveket beszélnek, érkezett nyugati földjeink, Kürenaika partjaihoz. A helyzetet tovább súlyosbítja, hogy ezek a népek most Marayéval, Did fiával, a líbiaiak királyával és a fáraó ellenségével szövetkeztek. @PMerneptah fáraóhoz eljutott a hír, hogy ezek a hitvány népek, mögöttük asszonyaikkal, gyermekeikkel és minden vagyonukkal, hamarosan kelet felé indulnak, a termékeny Nílus-delta, szülőföldünk felé, hogy új lakóhelyet keressenek. Már kisebb összecsapások is történtek az északi Szíva- és Farafra-oázisoknál. Delta-vidéki városod, Pi-yer most útjukban áll. Rövid időn belül ez a lassan vonuló vad sereg a kapuid előtt állhat. A fáraó elrendelte, hogy ha megérkeznek, nem engedhetjük őket tovább nyomulni! @PErős hadihajók építéséhez fát, fegyverek készítéséhez pedig rezet kell importálnod. Szerencsédre a korábban veszélyes hettiták most békések, köszönhetően II. Ramszesz nagy kádesi győzelmének, Merneptah szeretett fáraó atyja révén. Tedd városodat erőssé, és készítsd fel hűséges katonáidat a halálos küzdelemre."
+                }
+            }
+            message_mission_migdol {
+                id: 440,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Migdol",
+
+                }
+                subtitle {
+                    text: "Az asszírok visszaverése",
+
+                }
+                content {
+                    text: "@PA nagy Sábaka, Felső- és Alsó-Egyiptom egyesítője és Taharka fáraó atyja óta az agresszív asszírokkal való konfliktus mindennapossá vált. Amíg élt, Sábaka fáraó helyesnek tartotta segíteni palesztinai testvéreinket, akik Asszíria kegyetlen uralma alatt szenvedtek. Vigyázz! Az istentelen Aszarhaddón király szolgái ismét hadba vonulnak, és mint mindig, szemük Egyiptom termékeny földjeire vetül. Most rajtad a sor, hogy dicsőséget szerezz! Migdol királyi polgármestereként elvárják tőled, hogy megvédd a várost az átkozott ellenség támadássorozatától. A Nílus-delta keleti peremén fekvő határerődöd Egyiptom külső védelmének első vonalában áll. @PFontos lesz katonáid megfelelő kiképzése és kereskedelmi kapcsolatok kiépítése, hogy fegyvereket szerezz, vagy nyersanyagokat vásárolj saját fegyvereid elkészítéséhez. @PNe inogj meg! Az erős katonai ellenállás elengedhetetlen Egyiptom függetlenségének megőrzéséhez. Ha csupán hét évig kitartasz, a győzelem biztos lesz. Taharka, a nagy fáraó, Sábaka második fia, figyelni fog!"
+                }
+            }
+            message_mission_tanis {
+                id: 441,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Tanisz",
+
+                }
+                subtitle {
+                    text: "A hadiflotta újjászületése",
+
+                }
+                content {
+                    text: "@PEgyiptom népe sok nemzedéken át szenvedett Perzsia kegyetlen uralma alatt. Babilon szorítása azonban szent földünkön már nem olyan erős, mint egykor volt. Miközben átkozott elnyomóink Görögország politikájába avatkoztak, egyiptomi felkelések sora végül meggyengítette a gyűlölt perzsa igát. Most azonban Achorisz fáraóhoz eljutott a hír, hogy Artaxerxész II. egy flottát küldött partjaink felé, amelyet Kónón admirális (egy perzsa arannyal fizetett görög kiszolgáló) vezet. A bölcs Achorisz fáraó felismerte, hogy a Níluson erős haditengerészeti jelenlétre van szükség a támadás visszaveréséhez. Tanisz következő tíz évre kinevezett királyi kormányzójaként erős hajókat kell építened és edzett katonákat kiképezned, hogy őrizd a vízi és szárazföldi megközelítési útvonalakat. @PKereskedelmi útvonalat kell létesítened Enkomival, hogy erős hajók építéséhez szükséges fát importálj. Enkomiból, Ciprus szigetéről rezet is behozhatsz. Ez a kereskedelmi útvonal azonban rendkívül veszélyes, mivel az ellenségünk ellenőrzése alatt álló levantei partok közelében halad. A fáraó szükséges ellátmányokkal való segítése kiegészítheti bevételeidet. @PTartsd szem előtt, hogy ezekben a nehéz időkben kevés a pénz. A sikerhez éppúgy jártasnak kell lenned az üzletben és kereskedelemben, mint ügyes hadvezérnek."
+                }
+            }
+            message_mission_alexandria_2 {
+                id: 442,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Alexandria",
+
+                }
+                subtitle {
+                    text: "Nagy Sándor",
+
+                }
+                content {
+                    text: "@PNagy Sándor, II. Philipposz makedón király fia és a babiloni birodalom ostora, jelenlétével megáldotta Egyiptom földjét. Érkezésével az utolsó romlott perzsa szatrapa sietve elmenekült. Miután Memphiszben áldozatot mutatott be az Ápisz bikának, Sándort fáraóként fogadták el. Minden nép örvendezik! Mielőtt azonban útnak indulna Ámun jóslatának keresésére a Szíva-oázisba, vezetőnk úgy döntött, hogy új várost alapít, amelyet egy napon hatalmas és terjeszkedő birodalma fővárosának kíván. Bölcsességében téged nevezett ki e leendő város első polgármesterévé! @PNagy Sándor bőséges pénzalapot biztosított számodra az építkezés megkezdéséhez, és a neves görög építész, Deinokratész segítségét is rendelkezésedre bocsátotta. Alig tizenkét év alatt várja, hogy városa kereskedelmi, kulturális és katonai ereje magas szintre fejlődjön, ugyanis megígérte, hogy visszatér. @PVezetőnk még arra is időt szakított, hogy kijelölje városa két főútvonalának helyét. A Kanóposz utca kelet-nyugati irányban húzódik; a másik főút merőleges rá, és a Lochias-foktól dél felé, a Mariut-tó irányába vezet. @PMint a projekt megbízható felügyelője, gyorsan építs kikötői létesítményeket és alakíts ki jövedelmező kereskedelmi útvonalakat. Sok vásárló lesz termékeinkre, különösen búzára, árpára, papiruszra és lenvászonra. Ne hanyagold el azonban a város kulturális és katonai oldalát sem, mert még mindig kóbor fosztogatók járják a vidéket, akik Egyiptom gazdagságát akarják megszerezni."
+                }
+            }
+            message_mission_ptolemy_alexandria {
+                id: 443,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Ptolemaiosz Alexandriája",
+
+                }
+                subtitle {
+                    text: "A fény jelzőtüze",
+
+                }
+                content {
+                    text: "@PNagy Sándor öröksége tovább él büszke városunkban. Bár földi maradványai Alexandria mauzóleumában nyugszanak, nagyszerű városa tovább virágzik. Rád, I. Ptolemaiosz Szótér, vár a feladat, hogy folytasd azt a munkát, amelyet a nemes Sándor kezdett el. Alig harminc évvel ezelőtti alapítása óta a város hatalmas kereskedelmi központtá vált, amely a környező vidékek nagy részét látja el nélkülözhetetlen élelmiszerekkel és fényűző árukkal. Gazdasági fejlődésének további biztosítására és a nagy kikötőbe érkező hajók biztonságos bejutásának elősegítésére hatalmas világítótornyot kell építened Pharosz szigetén, a kikötő bejárata közelében. Ennek az építménynek a fénye biztonságosan vezeti majd be a távoli hajósokat a kikötőbe, megóvva őket a veszélyes zátonyoktól. @PBár a kereskedelem fontos, nem hanyagolhatod el társadalmunk kulturális és tudományos fejlődését sem. Vezetésed alatt Alexandria a világ ismert részének szellemi fővárosává is válhat. Gyűjts tudásanyagokat közelről és távolról, és építs egy hatalmas könyvtárat, amelyben megőrizheted őket. Ahogy a méheket vonzza a méz, úgy fognak a tudósok a világ minden tájáról erre a páratlan tudás- és tanulási központra érkezni. @PE nagyszerű emlékművek felépítéséhez olyan építőanyagot kell importálnod, például fehér márványt, amely méltó ezekhez a hatalmas építményekhez. Enkomi, Ciprus szigetén, kiváló forrása ennek az anyagnak. @PVégül ne hanyagold el hadseregedet sem. Mindig akad egy hely, ahol zavargások törnek ki. Lehet, hogy távoli határvidékekre kell csapatokat küldened, hogy megvédd Egyiptom érdekeit és becsületét."
+                }
+            }
+            message_mission_maritis {
+                id: 444,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Maritis",
+
+                }
+                subtitle {
+                    text: "Caesar és Kleopátra",
+
+                }
+                content {
+                    text: "@PA Római Birodalom könyörtelen szorítása napról napra erősödik, és egyre messzebbre ér. Még Róma halálos politikai küzdelmei is elérték földünket. Pompeiusz közelmúltbeli egyiptomi partokon történt meggyilkolása után Julius Caesar teljes ellenőrzést szerzett Róma hatalmas légiói felett, és tekintetét Egyiptom gazdagságára, valamint elbűvölő fáraónőnkre, VII. Kleopátrára, XII. Ptolemaiosz Auletész lányára vetette. Bölcs vezetőnk azonban az ész harcmezején sem könnyen múlható felül. Ha Caesar őt akarja felhasználni Róma egyiptomi befolyásának növelésére, úgy ő is eszközként kívánja alkalmazni Caesart nagy országunk dinasztikus hatalmának fenntartására. @PCaesar érkezése Alexandriába népszerűtlen római katonáival felkelést szított a város függetlenségre törekvő polgárai között. Kleopátra öccse, XIII. Ptolemaiosz által feltüzelt lázadó tömeg körbezárta Caesart és embereit a város királyi negyedében. Keserves utcai harcok törtek ki, amelyek sok áldozatot követeltek. Hogy nyitva tartsa tengeri menekülési útvonalát, Caesar felgyújtatta az alexandriai kikötőben horgonyzó egyiptomi flottát. Sajnos a tűz átterjedt néhány parti raktárra is, és hatalmas mennyiségű papirusztekercset pusztított el a Nagy Könyvtár gyűjteményéből. @P Hogy kiszabaduljon a csapdából, amelyben találta magát, Caesar segítségül hívta a hűséges Mithridatészt és szíriai csapatait. Miután sikeresen elfoglalták Migdol határerődjét, Mithridatész erőltetett menetben vezette embereit a Nílus-delta csúcsán körbe, hogy délkeletről közelítsék meg Alexandriát. E sereg előőrsei jelenleg a Mariut-tó keleti partján fekvő kis falu, Maritis mellett táboroznak, és útjuk utolsó szakaszára készülnek. @PXIII. Ptolemaiosz ártalmas uralkodója értesült az erősítés közeledéséről. Válaszul nagyobb létszámú hadseregének zömét délkelet felé vezette Alexandriából. A Mariut-tó keleti partján hamarosan döntő csata veszi kezdetét. Képes leszel Mithridatész római légióit vezetve legyőzni Ptolemaiosz lázadó egyiptomi seregét, és áttörni Caesarhoz és Kleopátrához Alexandriába? Sorsuk a te kezedben van."
+                }
+            }
+            message_mission_cleopatra_alexandria {
+                id: 445,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Kleopátra Alexandriája",
+
+                }
+                subtitle {
+                    text: "Egy királynő öröksége",
+
+                }
+                content {
+                    text: "@PCaesar véres halála a gyilkosok tőreinek csapásai alatt zűrzavarba döntötte a római világot, és gyászba taszított téged, fáraónőnk, VII. Kleopátra. Elvesztetted szerelmedet, mentorodat, bizalmasodat és hatalmas szövetségesedet. Octavianust, Caesar tizenéves fogadott dédöccsét nevezték ki örökösnek, ám a tapasztaltabb Marcus Antonius, aki korábban Caesar konzula volt, lett az állam névleges vezetője, a fiatal Octavianus nem kis bosszúságára. Nem meglepő módon Caesar végrendelete egy szót sem ejtett róla, hogy fiad, Ptolemaiosz Caesar, akit közismerten Caesarionnak neveznek, részesedne az örökségből. Biztonságot keresve magadnak és gyermekednek, valamint Egyiptom hatalmának megőrzésére törekedve elhagytad Rómát, és Alexandriába távoztál. @PBármekkora távolság is választ el Rómától, annak belső viszályait nem hagyhatod teljesen magad mögött. Hatalmas férfiak küzdenek továbbra is a hatalomért, és támogatásod, valamint Egyiptom gazdagságához való hozzáférésed nagy előnyt jelentene bármelyik fél számára. Döntő fontosságú, hogy a hatalmi harc győztesét támogasd; a vesztes oldalára állni könnyen Egyiptom végéhez vezethet. A rivális római csoportok drámai összecsapása nemrég Philippinél történt, ahol Marcus Antonius caesariánusai döntő győzelmet arattak Brutus és Cassius erői felett. Antonius, Octavianus és Lepidus most felosztották egymás között a birodalmat, és közös uralmat gyakorolnak, Antonius pedig a keleti részt kapta, amelyhez Egyiptom is tartozik. @PNem sokkal a csata után Marcus Antonius Tarsusba hívatott Kis-Ázsiába, hogy megmagyarázhasd, miért késlekedtél a caesariánusok mellé állni. Nem vagy az, akit pórázon vezetve lehet hívni, ezért bölcsen elutasítottad a megjelenést. Hiszen mindenkinél jobban tudod, hogy egy rómaival sokkal jobb a saját feltételeid szerint találkozni, nem az övéi szerint! @PÍgy hát te, Kleopátra fáraónő, hazatértél Alexandriába, Egyiptomba. Eljött az idő, hogy tovább növeld e csodálatos város dicsőségét, amelyet a Nagy Sándor alapított, és amelynek sírját még mindig látogatják. Alexandria híres Nagy Könyvtára továbbra is a világ minden tájáról vonzza a tudósokat; a csodálatos Pharosz világítótornyának fényes jelzőtüze tovább ég, hogy a hajósok biztonságosan áthaladhassanak a kikötő veszélyes vizein. Most tovább gazdagíthatod a város szépségét azzal, hogy felépíted a hatalmas Caesareumot egykori szerelmed és fiad tiszteletére. Emellett biztosítsd saját sikeres túlvilági utadat is egy újabb mauzóleum építésével, hogy méltó módon tisztelhessenek, miután a Nádas mezejére távozol. @PAmikor Marcus Antonius legközelebb hív téged, talán kissé több tapintattal teszi majd?"
+                }
+            }
+            message_mission_actium {
+                id: 446,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Actium",
+
+                }
+                subtitle {
+                    text: "Antonius és Kleopátra",
+
+                }
+                content {
+                    text: "@PNemes VII. Kleopátra fáraónő, Caesar egykori hitvese és most Antonius társa, Egyiptom sorsa a te kezedben van, de kezeid most egy római, Marcus Antonius kezében nyugszanak, aki mélyen belekeveredett Róma és légiói feletti uralomért vívott küzdelembe. @PEgyiptom felbecsülhetetlen erőforrásaira szüksége volt, de szerelmedre és ragaszkodásodra is vágyott, ezért Antonius beleegyezett házassági követelésedbe. Sajnos ennek az új kapcsolatnak a híre botrányt keltett Rómában! Tudtad, hogy Antonius még mindig Octaviával, Octavianus nővérével volt házas, aki Caesar törvényes örököse, és Antoniusszal együtt Róma hatalmának birtokosa. Ám Antonius többnejűségéről szóló hírek súlyosan megterhelték kapcsolatukat. Octavianus úgy érezte, hogy Antonius nemcsak nővére és családja becsületét, hanem Róma tekintélyét is megsértette. E becsületbeli ügy rendezésére és a Róma végső uralmáért folyó küzdelem lezárására Octavianus párbajra hívta ki szerelmedet, Antoniust. Ennek tudatában Antonius, veled és egyiptomi flottáddal együtt, tábort választott a görög szárazföldön, Actium közelében. A helyszín jó kikötőt kínál számos hajó számára alkalmas horgonyhellyel. @PGyorsan fel kell építened hadseregedet, különösen haditengerészetedet. Octavianus megfogadta, hogy Kr. e. 31 szeptemberében visszatér. @PMost ismét katonai erőd teljesítményétől függ a te és Marcus Antonius sorsa, valamint Egyiptom és Róma jövője."
+                }
+            }
+            message_mission_thutmose_valley {
+                id: 447,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Thutmosz a völgyben",
+
+                }
+                subtitle {
+                    text: "Az első sír",
+
+                }
+                content {
+                    text: "@PMiután számos ragyogó győzelmet aratott távoli csatamezőkön Egyiptom földjeinek és népének védelmében, Thutmosz fáraó, ahogy mindenki végül, gondolatait túlvilági útjának előkészületeire fordította. Hogy utazása sikeres legyen, a fáraó azt kívánja, hogy a lehető leghamarabb kezdd meg sírjának építését. Alapíts falut a Nílus nyugati partján, hogy elegendő hozzáértő munkás álljon rendelkezésre. Keress megfelelő helyet sírjának a falu nyugati részén emelkedő sziklák között. Képzett kőfaragókra lesz szükséged, hogy a sír számos kamráját kivájják a sziklából, és tehetséges kézművesekre, hogy bevakolják és fessék a helyiségeket. @PA sír mélyebb részein dolgozó munkások megvilágításához lámpakészítő műhelyeket kell létesítened. A lámpakészítőket látnod kell cserépedénnyel és a tüzeléshez szükséges importált olajjal. Ültess hennamezőket, hogy festékanyagot biztosíts a festők számára szükséges ragyogó színekhez."
+                }
+            }
+            message_mission_tutankhamun_valley {
+                id: 448,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Tut a völgyben",
+
+                }
+                subtitle {
+                    text: "Tutanhamon halála",
+
+                }
+                content {
+                    text: "@PSzörnyű tragédia sújtotta szeretett ifjú fáraónkat, Tutanhamont! Uralkodása, amely egykor nagy dicsőséget ígért, a sors kegyetlen keze által idő előtt véget ért. Eljött az idő, hogy Deir el-Medina munkásai ismét örök nyughelyet készítsenek a fáraónak. Váratlanul korai halála miatt létfontosságú, hogy munkásaidat a legnagyobb erőfeszítésre ösztönözd. Tutanhamon sírját néhány rövid év alatt teljesen fel kell tölteni a túlvilági utazáshoz szükséges ellátmánnyal, és készen kell állnia megszentelt maradványainak befogadására. A gyorsaság mindennél fontosabb!"
+                }
+            }
+            message_mission_seti_valley {
+                id: 449,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Széthi a völgyben",
+
+                }
+                subtitle {
+                    text: "Sír egy fáraónak",
+
+                }
+                content {
+                    text: "@PLeghatalmasabb fáraónk, Széthi, I. Ramszesz fia kijelentette, hogy elérkezett az idő túlvilági útjának előkészítésére. Ennek érdekében meg kell kezdened királyi sírjának kivájását a Királyok Völgyében. Munkásaid semmilyen erőfeszítést nem kímélhetnek az előkészületek során. Megfelelő intézkedéseket kell tenni, hogy elkészültekor mestersége sok évig páratlan maradjon. @PÁm miközben ez a királyi építkezés folyik, tegyél óvintézkedéseket a sírrablók ellen! Már érkeztek jelentések kapzsi bűnözőbandákról, amelyek gazdagságot akarnak szerezni a sírok meggyalázásával és Egyiptom örökké nyugvó fáraóinak megzavarásával. Ne engedd, hogy ez az istentelen tett megszégyenítse a Királyok Völgyének királyi sírjait, mert különben, ahogy a nap keleten felkel, hírneved foltot kap a Királyságban."
+                }
+            }
+            message_mission_sumur {
+                id: 450,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Sumur",
+
+                }
+                subtitle {
+                    text: "A Levante földjei",
+
+                }
+                content {
+                    text: "@PÜdvözlégy, királyi kormányzó, a Levante helytartója és Ré fiának, fáraónknak hűséges alattvalója. Nagy szerencse ilyen korban élni, amikor Egyiptom jóindulatú keze Núbia távoli vidékeitől egészen a Levante partjaiig ér. Végtelen a bölcsessége új fáraónknak, a nagyra becsült II. Ramszesznek, és hatalmas az elképzelése, hiszen ő küldött téged, hogy uralkodj ezen a nagyszerű földön, amely most Egyiptom egyre növekvő birodalmának része. @PEz a vidék, bár továbbra is veszélyekkel teli, számos kincset rejt, amelyet ki kell aknáznunk. A zöldellő dombok magas fákkal vannak tele, amelyek kiváló fát adnak, ideálisak harci szekerek készítéséhez és sokféle építkezéshez. Rézlelőhelyek is találhatók itt, bár nem nagy mennyiségben, és nagyon hasznosak erős fegyverek készítéséhez. A fa és a réz, amelyek hazánkban oly ritkák, bizonyára örömmel fogadott kincsek lesznek, ha nagy mennyiségben visszaszállítják őket. Ezért rád bízzuk egy hatalmas kereskedelmi kikötő létrehozásának felügyeletét, ahonnan ezek az értékes áruk exportálhatók. A fáraó és Egyiptom népe hálás lesz érte! @PDe légy óvatos! Gondoskodj róla, hogy megbízható katonáid gyors harci szekerekkel és erős fegyverekkel legyenek felszerelve, mert a hettiták, bár a fáraó atyja, Széthi által vereséget szenvedtek, még mindig veszélyesek, és megkérdőjelezhetik jogos uralmunkat ezen a gazdag földön. Erős katonai jelenlétre lehet szükség ezen az új területen a lázadások leveréséhez, és a jövőben is nagy hasznodra válhat. @PVégül, hogy e vidék népe emlékezzen, kinek kell most hódolnia, II. Ramszesz fáraó megfelelőnek tartja, hogy egy dicsőségét hirdető obeliszket emelj."
+                }
+            }
+            message_mission_qadesh {
+                id: 451,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Qádés",
+
+                }
+                subtitle {
+                    text: "A kádesi csata",
+
+                }
+                content {
+                    text: "@PAz amurrú föld, a levantei partok közelében, hatalmas légióid patái és léptei alatt remeg, áldott fáraó. Ez a vidék ritka drágakövekkel lehet megáldva, de viszályban is bővelkedik. Fegyveres hettiták, a nyomorult Mutwatalli király vezetésével, ismét megpróbálják megszerezni az uralmat e föld felett, amely jogosan a miénk. Az elfogott kémek arról számolnak be, hogy ellenséges csapataik még messze északon járnak, így nem jelentenek veszélyt. De hihetünk-e ennek? Bölcs harcos az, aki nem ejti le pajzsát a csata közepén. @PHogy elfojtsd a lázadásról szóló híreszteléseket, te, legnagyobb tiszteletnek örvendő fáraónk, II. Ramszesz, Ré fia, megérkeztél Qádés erődvárosába. Már két rettegett harci szekérhadtest tábora is felépült a város szélén. De ez még nem minden. Közvetlen rendelkezésedre állnak más veterán csapatok is, köztük a nemrég Sumur közelében harcoló tapasztalt katonák. De vigyázz! Bölcs döntés lehet késleltetni ezen értékes erők bevetését addig, amíg valóban szükségessé nem válnak, mert bölcs az a harcos is, akinek a csata tetőpontján még megbízható tartalékai vannak. @PMiután a nyomorult ellenséget legyőzted, újjá kell éleszteni Qádés pangó gazdaságát, hogy ez a város is hozzájáruljon Egyiptom dicsőségéhez. Gyűjts értékes drágaköveket, és alkalmazz ügyes ékszerészeket, hogy pompás tárgyakat készítsenek a fáraó hűséges alattvalóinak. Ilyen ritka szépségű luxuscikkek iránt bizonyára nagy lesz a kereslet!"
+                }
+            }
+            message_mission_abu_simbel {
+                id: 452,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Abu Szimbel",
+
+                }
+                subtitle {
+                    text: "Abu Szimbel kolosszusai",
+
+                }
+                content {
+                    text: "@PFáraónk, II. Ramszesz dicsősége áthatja a földet. Hogy uralkodásának öröksége örökké éljen, elrendeltetett, hogy egy hatalmas emlékmű és templom épüljön uralma tiszteletére mélyen Núbiában, és maga a fáraó választotta ki a tökéletes helyszínt ehhez. Az Abu Szimbelnél, a Nílus nyugati partjára néző rózsaszín homokkő sziklákból négy hatalmas ülő alak kifaragását fogod felügyelni, amelyek Őfelségét ábrázolják. Az élő sziklából kivágott emlékmű felszínei a fáraó hősi tetteit hirdetik majd kádesi nagy győzelme során. Ez a hatalmas építmény, miközben vezetőnk hősiességét magasztalja, Núbia népe számára is emlékeztetőül szolgál Egyiptom nagyságára és hatalmára, hiszen bár Núbia gazdag aranyban és más ritka drágakövekben, lakói mindig nehezen fogadták el az egyiptomi uralmat. Ezért mindig készen kell állnod a védelemre, és csapatokat kell küldened, ha a fáraónak szüksége van rájuk. @PA homokkő exportálható a királyság más részein folyó építkezésekhez, ahogy más áruk is, amelyeket a vidék bőséges erőforrásaiból előállíthatsz. Fából azonban igen kevés található. Bizonyára kereskedelmi útvonalat kell létesítened ennek importálására, mert szükség lesz rá a hatalmas szobrok állványzatának elkészítéséhez."
+                }
+            }
+            message_mission_ramses_valley {
+                id: 453,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Ramszesz a völgyben",
+
+                }
+                subtitle {
+                    text: "Páratlan nyughely",
+
+                }
+                content {
+                    text: "@PSok hosszú és dicsőséges év telt el azóta, hogy legnagyobb tiszteletnek örvendő fáraónk, II. Ramszesz átvette atyja, I. Széthi jogarát és korbácsát. Ré áldásával még sokáig fog uralkodni. Mindazonáltal eljött az idő, hogy megkezdjük a föld mélyének kivájását, és előkészítsük nagy vezetőnk örök nyughelyét. A fáraó sírjának építésze számára tervet adott a valaha épített legnagyobb sírhoz, amely még atyjáét is felülmúlja. Most rajtad múlik, hogy ez a királyi kívánság sikeresen teljesüljön. @PDe légy elővigyázatos! Néhány független gondolkodású munkás és rabszolga között nyugtalanító mértékű elégedetlenség terjed, helyben és Alsó-Egyiptomban egyaránt. Egy olyan férfit követnek, akit egykor fáraónk udvarában neveltek fel, és azzal fenyegetőznek, hogy istenük segítségét kérik beavatkozás céljából. Remélik, hogy ilyen isteni támogatással elérhetik céljaikat. A papok és szent emberek még most is vitatják fenyegetéseik valódiságát. Amíg türelmesen várjuk véleményüket, bölcs dolog lehet felkészülni a váratlan eseményekre."
+                }
+            }
+            message_mission_pi_yer_2 {
+                id: 454,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Pi-Yer",
+
+                }
+                subtitle {
+                    text: "A tengeri népek földje",
+
+                }
+                content {
+                    text: "@PA nyugatról érkező nyugtalanság és elégedetlenség morajlása az utóbbi időben egyre fenyegetőbbé vált. Felderítőink jelentik, hogy több barbár törzs, amelyek ismeretlen nyelveket beszélnek, érkezett nyugati földjeink, Kürenaika partjaihoz. A helyzetet tovább súlyosbítja, hogy ezek a népek most Marayéval, Did fiával, a líbiaiak királyával és a fáraó ellenségével szövetkeztek. @PMerneptah fáraóhoz eljutott a hír, hogy ezek a hitvány népek, mögöttük asszonyaikkal, gyermekeikkel és minden vagyonukkal, hamarosan kelet felé indulnak, a termékeny Nílus-delta, szülőföldünk felé, hogy új lakóhelyet keressenek. Már kisebb összecsapások is történtek az északi Szíva- és Farafra-oázisoknál. Delta-vidéki városod, Pi-Yer most útjukban áll. Rövid időn belül ez a lassan vonuló vad sereg a kapuid előtt állhat. A fáraó elrendelte, hogy ha megérkeznek, nem engedhetjük őket tovább nyomulni! @PErős hadihajók építéséhez fát, fegyverek készítéséhez pedig rezet kell importálnod. Szerencsédre a korábban veszélyes hettiták most békések, köszönhetően II. Ramszesz nagy kádesi győzelmének, Merneptah szeretett fáraó atyja révén. Tedd városodat erőssé, és készítsd fel hűséges katonáidat a halálos küzdelemre."
+                }
+            }
+            message_mission_pelusium {
+                id: 455,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Pelusium",
+
+                }
+                subtitle {
+                    text: "Az asszírok visszaverése",
+
+                }
+                content {
+                    text: "@PA nagy Sábaka, Felső- és Alsó-Egyiptom egyesítője és Taharka fáraó atyja óta az agresszív asszírokkal való konfliktus mindennapossá vált. Amíg élt, Sábaka fáraó helyesnek tartotta segíteni palesztinai testvéreinket, akik Asszíria kegyetlen uralma alatt szenvedtek. Vigyázz! Az istentelen Aszarhaddón király szolgái ismét hadba vonulnak, és mint mindig, szemük Egyiptom termékeny földjeire vetül. Most rajtad a sor, hogy dicsőséget szerezz! Pelusium királyi polgármestereként elvárják tőled, hogy megvédd a várost az átkozott ellenség támadássorozatától. A Nílus-delta keleti peremén fekvő határerődöd Egyiptom külső védelmének első vonalában áll. @PFontos lesz katonáid megfelelő kiképzése és kereskedelmi kapcsolatok kiépítése, hogy fegyvereket szerezz, vagy nyersanyagokat vásárolj saját fegyvereid elkészítéséhez. @PNe inogj meg! Az erős katonai ellenállás elengedhetetlen Egyiptom függetlenségének megőrzéséhez. Ha csupán hét évig kitartasz, a győzelem biztos lesz. Taharka, a nagy fáraó, Sábaka második fia, figyelni fog!"
+                }
+            }
+            message_mission_tanis_2 {
+                id: 456,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Tanisz",
+
+                }
+                subtitle {
+                    text: "A hadiflotta újjászületése",
+
+                }
+                content {
+                    text: "@PEgyiptom népe sok nemzedéken át szenvedett Perzsia kegyetlen uralma alatt. Babilon szorítása azonban szent földünkön már nem olyan erős, mint egykor volt. Miközben átkozott elnyomóink Görögország politikájába avatkoztak, egyiptomi felkelések sora végül meggyengítette a gyűlölt perzsa igát. Most azonban Achorisz fáraóhoz eljutott a hír, hogy Artaxerxész II. egy flottát küldött partjaink felé, amelyet Kónón admirális (egy perzsa arannyal fizetett görög kiszolgáló) vezet. A bölcs Achorisz fáraó felismerte, hogy a Níluson erős haditengerészeti jelenlétre van szükség a támadás visszaveréséhez. Tanisz következő tíz évre kinevezett királyi kormányzójaként erős hajókat kell építened és edzett katonákat kiképezned, hogy őrizd a vízi és szárazföldi megközelítési útvonalakat. @PKereskedelmi útvonalat kell létesítened Enkomival, hogy erős hajók építéséhez szükséges fát importálj. Enkomiból, Ciprus szigetéről rezet is behozhatsz. Ez a kereskedelmi útvonal azonban rendkívül veszélyes, mivel az ellenségünk ellenőrzése alatt álló levantei partok közelében halad. A fáraó szükséges ellátmányokkal való segítése kiegészítheti bevételeidet. @PTartsd szem előtt, hogy ezekben a nehéz időkben kevés a pénz. A sikerhez éppúgy jártasnak kell lenned az üzletben és kereskedelemben, mint ügyes hadvezérnek."
+                }
+            }
+            message_mission_alexandria {
+                id: 457,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Alexandria",
+
+                }
+                subtitle {
+                    text: "Nagy Sándor",
+
+                }
+                content {
+                    text: "@PA nagy Sándor, II. Philipposz makedón király fia és a babiloni birodalom ostora, jelenlétével megáldotta Egyiptom földjét. Érkezésével az utolsó romlott perzsa szatrapa sietve elmenekült. Miután Memphiszben áldozatot mutatott be Ápisz bikának, Alexandert elfogadták fáraóként. Az egész nép ujjong! Mielőtt azonban elindult volna útjára Ámon jósdájához a Szíva-oázisba, vezetőnk úgy döntött, hogy új várost alapít, amelyet egy napon hatalmas és növekvő birodalma fővárosának kíván. Végtelen bölcsességében téged nevezett ki e jövőbeli város első polgármesterévé! @PA nagy Sándor bőkezű pénzadománnyal látott el, hogy megkezdhesd az építkezést, és rendelkezésedre bocsátotta a kiváló görög építész, Deinokratész szolgálatait. Alig tizenkét év alatt a város kereskedelmi, kulturális és katonai erejét magas szintre kell fejlesztened, mivel megígérte, hogy visszatér. @PVezetőnk még arra is időt szánt, hogy kijelölje városa két fő útvonalának helyét. A Kanópusz utca kelet-nyugati tengelyen halad; a másik főút merőleges rá, és Lochiasz-foktól dél felé, a Mariut-tó irányába vezet a szárazföld belseje felé. @PMegbízható felügyelőjeként ennek a vállalkozásnak gyorsan kikötőket kell építened és jövedelmező kereskedelmi útvonalakat kell kialakítanod. Sok vevőre számíthatunk termékeink számára, különösen búzára, árpára, papiruszra és lenre. Ne hanyagold el azonban a város kulturális fejlődését és haderejét sem, mert még mindig kóbor fosztogatók járják a vidéket, akik Egyiptom gazdagságára áhítoznak."
+                }
+            }
+            message_mission_ptolemy_alexandria_2 {
+                id: 458,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Ptolemaiosz Alexandriája",
+
+                }
+                subtitle {
+                    text: "A fény jelzője",
+
+                }
+                content {
+                    text: "@PNagy Sándor öröksége tovább él büszke városunkban. Bár földi maradványai Alexandria mauzóleumában nyugszanak, nagyszerű városa tovább virágzik. Rajtad, I. Ptolemaiosz Szótér, a nemes Alexander által megkezdett munka folytatása a sor. Alig harminc évvel Alexander alapítása után a város hatalmas kereskedelmi központtá vált, amely a környező vidék nagy részét látja el szükséges élelmiszerekkel és luxuscikkekkel. Gazdasági fejlődésének további elősegítésére és a nagy kikötőbe érkező számos hajó biztonságos bejutásának biztosítására hatalmas világítótornyot kell építened Pharosz szigetén, a kikötő bejárata közelében. Ennek az építménynek a fénye biztonságosan vezeti majd be a távoli hajósokat a kikötőbe, megakadályozva, hogy a veszélyes zátonyokon hajótörést szenvedjenek. @PA kereskedelem ugyan fontos, de nem hanyagolhatod el társadalmunk kulturális és szellemi fejlődését sem. Vezetésed alatt Alexandria az ismert világ szellemi fővárosává is válhat. Gyűjts tudományos műveket közelről és távolról, és építs hatalmas könyvtárat megőrzésükre. Ahogy a hangyákat a méz vonzza, úgy fognak a tudósok a világ minden tájáról erre a páratlan tudás- és tanulási központra seregleni. @PE nagyszerű emlékművek megépítéséhez olyan építőanyagot kell importálnod, például fehér márványt, amely alkalmas ilyen hatalmas építményekhez. Enkomi, Ciprus szigetén, jó forrása ennek az anyagnak. @PVégül ne hanyagold el a hadseregedet sem. Mindig akad valahol nyugtalanság. Szükség lehet csapatok küldésére távoli határokra, hogy megvédd Egyiptom érdekeit és becsületét."
+                }
+            }
+            message_mission_maritis_2 {
+                id: 459,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Maritis",
+
+                }
+                subtitle {
+                    text: "Caesar és Kleopátra",
+
+                }
+                content {
+                    text: "@PA Római Birodalom tapintatlan szorítása napról napra erősebbé válik, és egyre messzebbre terjed. Még Róma halálos politikai hatalmi harcai is elérték földünket. Pompeius nemrégiben történt meggyilkolásával Egyiptom partjain Julius Caesar teljes ellenőrzést szerzett Róma hatalmas légiói felett, és tekintetét Egyiptom gazdagságára, valamint elbűvölő fáraónk, VII. Kleopátra, XII. Ptolemaiosz Auletész lányának szépségére vetette. Eszes vezetőnk azonban nem könnyen múlható felül az elmék csatájában. Ha Caesar őt Egyiptomban Róma befolyásának növelésére akarja felhasználni, ő ugyanúgy eszközként kívánja alkalmazni Caesart nagy országunk dinasztikus hatalmának megőrzésére. @PCaesar érkezése Alexandriába népszerűtlen római katonáival felkelést szított a függetlenségre törekvő polgárok között. Egy féktelen tömeg, amelyet Kleopátra öccse, XIII. Ptolemaiosz buzdít, körülzárta Caesart és embereit a város királyi negyedében. Keserves utcai harcok törtek ki, amelyek sok áldozatot követeltek. Hogy tengeri menekülési útvonalát nyitva tartsa, Caesar felgyújtotta az alexandriai kikötőben horgonyzó egyiptomi flottát. A tűz sajnos átterjedt néhány parti raktárra is, és hatalmas mennyiségű, a Nagy Könyvtárhoz tartozó papirusztekercs égett el. @PHogy kiszabaduljon a csapdából, amelybe került, Caesar segítségül hívta a hűséges Mithridatészt és szíriai csapatait. Miután sikeresen elfoglalták a pelusiumi határerődöt, Mithridatész erőltetett menetben vezette embereit a Nílus-delta csúcsán körbe, hogy délkeletről közelítsék meg Alexandriát. E sereg előőrsei jelenleg Maritis kis falujának szélén táboroznak, a Mariut-tó keleti partján, útjuk utolsó szakaszára készülve. @PA baljós XIII. Ptolemaiosz tudomást szerzett az erősítés közeledéséről. Válaszul nagyobb létszámú hadseregének zömét délkelet felé vezette Alexandriából. Döntő csata készülődik a Mariut-tó keleti partján. Képes vagy-e Mithridatész római légióit irányítva legyőzni Ptolemaiosz lázadó egyiptomi seregét, és áttörni Caesarhoz és Kleopátrához Alexandriába? Sorsuk a te kezedben van."
+                }
+            }
+            message_mission_cleopatra_alexandria_2 {
+                id: 460,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Kleopátra Alexandriája",
+
+                }
+                subtitle {
+                    text: "Egy királynő öröksége",
+
+                }
+                content {
+                    text: "@PCaesar véres halála a gyilkosok tőrei által káoszba taszította a római világot, és gyászba, valamint fájdalomba döntött téged, fáraónkat, VII. Kleopátrát. Elveszett szeretőd, mentorod, bizalmasod és hatalmas szövetségesed. Octavianust, tizenéves örökbe fogadott dédöccsét jelölték örökösnek, de a tapasztaltabb Marcus Antonius, aki korábban Caesar konzula volt, vált az állam névleges vezetőjévé, a fiatal Octavianus nem kis bosszúságára. Nem meglepő módon Caesar végrendelete egy szót sem ejtett közös fiatokról, Ptolemaiosz Caesarról, akit közismerten Caesarionnak neveznek. Saját és gyermeked biztonsága, valamint Egyiptom hatalmának megőrzése érdekében, ahogy mindig, elhagytad Rómát és Alexandriába tértél vissza. @PMindazonáltal Róma és közted húzódó nagy távolság ellenére sem hagyhatod hátra belső viszályait. Hatalmas férfiak továbbra is a hatalomért küzdenek – támogatásod és Egyiptom gazdagságának hozzáférése bármely párt számára óriási előnyt jelentene. E hatalmi harcban létfontosságú, hogy a győztes mellé állj; a vesztes támogatása könnyen Egyiptom végét jelentheti. A rivális római frakciók drámai összecsapása nemrég Philippinél történt, ahol Marcus Antonius caesariánusai döntő győzelmet arattak Brutus és Cassius erői felett. Antonius, Octavianus és Lepidus most felosztották egymás között a birodalmat, és Antonius a keleti részt kapta, amelyhez Egyiptom is tartozik. @PNem sokkal a csata után Marcus Antonius magához hívatott Tarsusba, Kis-Ázsiába, hogy magyarázatot adj arra, miért késlekedtél a caesariánusok mellé állni. Nem vagy olyan, akit pórázon vezetve lehet hívogatni, ezért bölcsen elutasítottad a meghívást. Hiszen mindenkinél jobban tudod, hogy egy rómaival sokkal jobb a saját feltételeid szerint találkozni, nem az övéi szerint! @PÍgy te, Kleopátra fáraó, hazatértél Alexandriába, Egyiptomba. Elérkezett az idő, hogy tovább növeld e csodálatos város dicsőségét, amelyet Nagy Sándor alapított, és amelynek sírját még mindig látogatják az emberek. Alexandria híres Nagy Könyvtára továbbra is a világ minden tájáról vonzza a tudósokat; a csodálatos pharoszi világítótorony ragyogó fénye tovább ég, hogy a hajósok biztonságosan áthaladhassanak a kikötő veszélyes vizein. Most tovább gazdagíthatod a város szépségét a kiterjedt Caesareum felépítésével egykori szeretőd és fiad tiszteletére. Emellett biztosítsd saját sikeres túlvilági utazásodat is egy újabb mauzóleum építésével, hogy méltó módon tisztelhessenek, miután eljutottál a Nádas Mezejére. @PTalán amikor Marcus Antonius legközelebb hív téged, kissé több tapintatot fog tanúsítani?"
+                }
+            }
+            message_mission_actium_2 {
+                id: 461,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Actium",
+
+                }
+                subtitle {
+                    text: "Antonius és Kleopátra",
+
+                }
+                content {
+                    text: "@PÓ, nemes VII. Kleopátra fáraó, Caesar és most Antonius hitvese, Egyiptom sorsa a te kezedben van, de kezed most egy római, Marcus Antonius kezében nyugszik – ő pedig mélyen belekeveredett a Róma és légiói feletti uralomért folyó küzdelembe. @PMivel szüksége volt Egyiptom felbecsülhetetlen erőforrásaira, de egyben vágyott szerelmedre és szeretetedre is, Antonius beleegyezett házassági követelésedbe. Sajnos ennek az új frigynek a híre botrányt kavart Rómában! Ahogy tudtad, Antonius még mindig Octaviával, Octavianus nővérével, Caesar törvényes örökösének húgával volt házas, és Antoniusszal együtt Róma hatalmának egyik birtokosa volt. Antonius többnejű életmódjának híre azonban súlyosan megterhelte kapcsolatukat. Octavianus úgy érzi, hogy Antonius nemcsak nővére és családja becsületét sértette meg, hanem Róma tekintélyét is. Hogy ezt a becsületbeli ügyet rendezze, és véget vessen a Róma végső uralmáért folyó küzdelemnek, Octavianus párbajra hívta szeretődet, Antoniust. Ennek tudatában Antonius, veled és egyiptomi flottáddal együtt, tábort keresett a görög szárazföldön, Actium közelében. A helyszín jó kikötőt kínál, számos lehetséges hajóhellyel. @PGyorsan meg kell erősítened hadseregedet, különösen a haditengerészetet. Octavianus megfogadta, hogy Kr. e. 31 szeptemberében visszatér. @PMost a te sorsod és Marcus Antoniusé, valamint Egyiptom és Róma sorsa ismét a katonai erő teljesítményétől függ."
+                }
+            }
+            message_mission_deir_el_medina {
+                id: 462,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Deir el-Medina",
+
+                }
+                subtitle {
+                    text: "Az első sír",
+
+                }
+                content {
+                    text: "@PMiután számos ragyogó győzelmet aratott távoli csatamezőkön Egyiptom földjeinek és népének védelmében, Thutmosz fáraó, ahogy mindenki végül, gondolatait túlvilági útjának előkészületeire fordította. Hogy utazása sikeres legyen, a fáraó azt kívánja, hogy a lehető leghamarabb kezdd meg sírjának építését. Alapíts falut a Nílus nyugati partján, hogy elegendő hozzáértő munkás álljon rendelkezésre. Keress megfelelő helyet sírjának a falu nyugati részén emelkedő sziklák között. Képzett kőfaragókra lesz szükséged, hogy a sír számos kamráját kivájják a sziklából, és tehetséges kézművesekre, hogy bevakolják és fessék a helyiségeket. @PA sír mélyebb részein dolgozó munkások megvilágításához lámpakészítő műhelyeket kell létesítened. A lámpakészítőket látnod kell cserépedénnyel és a tüzeléshez szükséges importált olajjal. Ültess hennamezőket, hogy festékanyagot biztosíts a festők számára szükséges ragyogó színekhez."
+                }
+            }
+            message_mission_tutankhamun_valley_2 {
+                id: 463,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Tut a völgyben",
+
+                }
+                subtitle {
+                    text: "Tutanhamon halála",
+
+                }
+                content {
+                    text: "@PSzörnyű tragédia sújtotta szeretett ifjú fáraónkat, Tutanhamont! Uralkodása, amely egykor nagy dicsőséget ígért, a sors kegyetlen keze által idő előtt véget ért. Eljött az idő, hogy Deir el-Medina munkásai ismét örök nyughelyet készítsenek a fáraónak. Váratlanul korai halála miatt létfontosságú, hogy munkásaidat a legnagyobb erőfeszítésre ösztönözd. Tutanhamon sírját néhány rövid év alatt teljesen fel kell tölteni a túlvilági utazáshoz szükséges ellátmánnyal, és készen kell állnia megszentelt maradványainak befogadására. A gyorsaság mindennél fontosabb!"
+                }
+            }
+            message_mission_seti_valley_2 {
+                id: 464,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Széthi a völgyben",
+
+                }
+                subtitle {
+                    text: "Sír egy fáraónak",
+
+                }
+                content {
+                    text: "@PLegkiválóbb fáraónk, Széthi, I. Ramszesz fia kijelentette, hogy elérkezett az idő túlvilági útjának előkészítésére. Ennek érdekében meg kell kezdened királyi sírjának kivájását a Királyok Völgyében. Munkásaid semmilyen erőfeszítést nem kímélhetnek az előkészületek során. Megfelelő intézkedéseket kell tenni, hogy elkészültekor mestersége sok évig páratlan maradjon. @PÁm miközben ez a királyi építkezés folyik, tegyél óvintézkedéseket a sírrablók ellen! Már érkeztek jelentések kapzsi bűnözőbandákról, amelyek gazdagságot akarnak szerezni a sírok meggyalázásával és Egyiptom örökké nyugvó fáraóinak megzavarásával. Ne engedd, hogy ez az istentelen tett megszégyenítse a Völgy királyi sírjait, mert különben, ahogy a nap keleten felkel, hírneved foltot kap a Királyságban."
+                }
+            }
+            message_mission_sumur_2 {
+                id: 465,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Sumur",
+
+                }
+                subtitle {
+                    text: "A Levante földjei",
+
+                }
+                content {
+                    text: "@PÜdvözlégy, királyi kormányzó, a Levante helytartója és Ré fiának, fáraónknak hűséges alattvalója. Nagy szerencse ilyen korban élni, amikor Egyiptom jóindulatú keze Núbia távoli vidékeitől egészen a Levante partjaiig ér. Végtelen a bölcsessége új fáraónknak, a nagyra becsült II. Ramszesznek, és hatalmas az elképzelése, hiszen ő küldött téged, hogy uralkodj ezen a nagyszerű földön, amely most Egyiptom egyre növekvő birodalmának része. @PEz a vidék, bár továbbra is veszélyekkel teli, számos kincset rejt, amelyeket ki kell aknáznunk. A zöldellő dombok magas fákkal vannak tele, amelyek kiváló fát adnak, ideálisak harci szekerek készítéséhez és sokféle építkezéshez. Rézlelőhelyek is találhatók itt, bár nem nagy mennyiségben, és nagyon hasznosak erős fegyverek készítéséhez. A fa és a réz, amelyek hazánkban oly ritkák, bizonyára örömmel fogadott kincsek lesznek, ha nagy mennyiségben visszaszállítják őket. Ezért rád bízzuk egy hatalmas kereskedelmi kikötő létrehozásának felügyeletét, ahonnan ezek az értékes áruk exportálhatók. A fáraó és Egyiptom népe hálás lesz érte! @PDe légy óvatos! Gondoskodj róla, hogy megbízható katonáid gyors harci szekerekkel és erős fegyverekkel legyenek felszerelve, mert a hettiták, bár a fáraó atyja, Széthi által vereséget szenvedtek, még mindig veszélyesek, és megkérdőjelezhetik jogos uralmunkat ezen a gazdag földön. Erős katonai jelenlétre lehet szükség ezen az új területen a lázadások leveréséhez, és a jövőben is nagy hasznodra válhat. @PVégül, hogy e vidék népe emlékezzen, kinek kell most hódolnia, II. Ramszesz fáraó megfelelőnek tartja, hogy egy dicsőségét hirdető obeliszket emelj."
+                }
+            }
+            message_mission_qadesh_2 {
+                id: 466,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Qádés",
+
+                }
+                subtitle {
+                    text: "A kádesi csata",
+
+                }
+                content {
+                    text: "@PAz amurrú föld, a levantei partok közelében, hatalmas légióid patái és léptei alatt remeg, áldott fáraó. Ez a vidék ritka drágakövekkel lehet megáldva, de viszályban is bővelkedik. Fegyveres hettiták, a nyomorult Mutwatalli király vezetésével, ismét megpróbálják megszerezni az uralmat e föld felett, amely jogosan a miénk. Az elfogott kémek arról számolnak be, hogy ellenséges csapataik még messze északon járnak, így nem jelentenek veszélyt. De hihetünk-e ennek? Bölcs harcos az, aki nem ejti le pajzsát a csata közepén. @PHogy elfojtsd a lázadásról szóló híreszteléseket, te, legnagyobb tiszteletnek örvendő fáraónk, II. Ramszesz, Ré fia, megérkeztél Qádés erődvárosába. Már két rettegett harci szekérhadtest tábora is felépült a város szélén. De ez még nem minden. Közvetlen rendelkezésedre állnak más veterán csapatok is, köztük a nemrég Sumur közelében harcoló tapasztalt katonák. De vigyázz! Bölcs döntés lehet késleltetni ezen értékes erők bevetését addig, amíg valóban szükségessé nem válnak, mert bölcs az a harcos is, akinek a csata tetőpontján még megbízható tartalékai vannak. @PMiután a nyomorult ellenséget legyőzted, újjá kell éleszteni Qádés pangó gazdaságát, hogy ez a város is hozzájáruljon Egyiptom dicsőségéhez. Gyűjts értékes drágaköveket, és alkalmazz ügyes ékszerészeket, hogy pompás tárgyakat készítsenek a fáraó hűséges alattvalóinak. Ilyen ritka szépségű luxuscikkek iránt bizonyára nagy lesz a kereslet!"
+                }
+            }
+            message_mission_abu_simbel_2 {
+                id: 467,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Abu Szimbel",
+
+                }
+                subtitle {
+                    text: "Abu Szimbel kolosszusai",
+
+                }
+                content {
+                    text: "@PFáraónk, II. Ramszesz dicsősége áthatja a földet. Hogy uralkodásának öröksége örökké éljen, elrendeltetett, hogy egy hatalmas emlékmű és templom épüljön uralma tiszteletére mélyen Núbiában, és maga a fáraó választotta ki a tökéletes helyszínt ehhez. Az Abu Szimbelnél, a Nílus nyugati partjára néző rózsaszín homokkő sziklákból négy hatalmas ülő alak kifaragását fogod felügyelni, amelyek Őfelségét ábrázolják. Az élő sziklából kivágott emlékmű felszínei a fáraó hősi tetteit hirdetik majd kádesi nagy győzelme során. Ez a hatalmas építmény, miközben vezetőnk hősiességét magasztalja, Núbia népe számára is emlékeztetőül szolgál Egyiptom nagyságára és hatalmára, hiszen bár Núbia gazdag aranyban és más ritka drágakövekben, lakói mindig nehezen fogadták el az egyiptomi uralmat. Ezért mindig készen kell állnod a védelemre, és csapatokat kell küldened, ha a fáraónak szüksége van rájuk. @PA homokkő exportálható a királyság más részein folyó építkezésekhez, ahogy más áruk is, amelyeket a vidék bőséges erőforrásaiból előállíthatsz. Fából azonban igen kevés található. Bizonyára kereskedelmi útvonalat kell létesítened ennek importálására, mert szükség lesz rá a hatalmas szobrok állványzatának elkészítéséhez."
+                }
+            }
+            message_mission_ramses_valley_2 {
+                id: 468,
+                    type: 3,
+                    size [40, 30]
+                title {
+                    text: "Ramszesz a völgyben",
+
+                }
+                subtitle {
+                    text: "Páratlan nyughely",
+
+                }
+                content {
+                    text: "@PÉvek hosszú, dicsőséges sora telt el azóta, hogy legnagyobb tiszteletnek örvendő fáraónk, II. Ramszesz, átvette atyjától, I. Széthitől a pásztorbotot és az ostort. Ré áldásával még sokáig fog uralkodni. Ennek ellenére elérkezett az idő, hogy megkezdjük a föld mélyének feltárását, és előkészítsük nagyra becsült uralkodónk örök nyughelyét. Fáraónk átadta sírja építészének a valaha épített legnagyobb sír tervét, amely még atyjáét is felülmúlja. Rajtad múlik, hogy e királyi kívánság sikerrel megvalósuljon. @PDe légy elővigyázatos! Nyugtalanító mértékű elégedetlenség terjed néhány önálló gondolkodású munkás és rabszolga között, helyben és Alsó-Egyiptomban egyaránt. Egy olyan férfit követnek, akit egykor fáraónk udvarában neveltek, és azzal fenyegetőznek, hogy istenük segítségét kérik beavatkozásra. Azt remélik, hogy ilyen isteni támogatással elérhetik céljaikat. Még most is papok és szent emberek vitatják e fenyegetések hitelességét. Amíg türelmesen várunk véleményükre, bölcs dolog lehet felkészülni a váratlan eseményekre."
+                }
+            }
+            message_mission_henna {
+                id: 469,
+
+                    size [30, 20]
+                image {
+                    id: 1008,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Henna",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Története",
+                }
+                content {
+                    text: "Több mint három évezreden át különböző népek használták a cserjeszerű hennanövényt festékanyag forrásaként. A henna (tudományos nevén Lawsonia inermis) a füzényfélék családjába tartozik, és eredetileg Észak-Afrikában és a Közel-Keleten őshonos. Összezúzott levelei és ágai narancsvörös festéket adnak, amely megfelelő alkalmazás esetén haj, körmök és bőr színezésére használható. A hennát még ma is gyakran alkalmazzák számos vallási szertartásban és temetkezési rítusban Ázsiában, a Közel-Keleten és Afrikában, valamint ez a népszerű „ideiglenes tetoválások” alapvető színezőanyaga. A henna emellett sokféle hajfesték elsődleges színezőanyaga."
+                }
+            }
+            message_mission_paint_maker {
+                id: 470,
+
+                    size [30, 28]
+                title {
+                    text: "Festékkészítő",
+                }
+                content {
+                    text: "A festékkészítőknek @469henna utánpótlásra van szükségük a festék előállításához. A hennanövény összezúzott leveleit és szárát különböző festékanyagok készítésére használják, amelyek szükségesek a festék gyártásához. A hennát @91Henna&Farmokon termesztik, vagy @47kereskedelmi&útvonal hozható létre importálására. @PEgy Festékkészítő akkor dolgozik hatékonyan, ha elegendő munkással, úthálózati kapcsolattal és egy szállítmány hennával rendelkezik. A gyártás befejezése után a festéket egy @4Raktár&udvarba szállítják. A festéket ezután az @363Kézművesek használják a @478Királyi&temetkezési&sírkamrák festéséhez. @PKellemetlen szaguk és zajuk miatt a Festékkészítők @56nem&kívánatos szomszédok. @L@L Kattints @472ide, hogy többet tudj meg az ókori egyiptomi festékkészítésről."
+                }
+            }
+            message_illness_video {
+                id: 471,
+                    type: 2,
+
+                    size [30, 20]
+                title {
+                    text: "Betegség",
+                }
+                video {
+                    text: "smk\\sick.smk"
+                }
+            }
+            message_history_artisans {
+                id: 472,
+
+                    size [30, 20]
+                image {
+                    id: 1004,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Kézművesek",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Története",
+                }
+                content {
+                    text: "Bár az ókori Egyiptom legtöbb építményén művészek dolgoztak a végső díszítésen, ezeknek a tehetséges alkotóknak a rendkívüli képességei igazán az Újbirodalom sírjaiban, a @475Királyok&völgyében mutatkoznak meg. A föld alatti sírok belső falainak és mennyezeteinek szinte minden négyzetcentimétere az elhunyt nagyságát hirdette gondosan festett hieroglifákkal és más ábrázolásokkal. @PA díszes és részletgazdag képek ellenére az ókori művészek meglehetősen korlátozott színpalettával dolgoztak, és természetes ecseteket használtak @94nád vagy rostos faanyag, például pálmaágak felhasználásával. Pigmentjeiket gyakran kis műhelyekben előre elkészítették természetes festékanyagokból (például @469hennából) és más természetes ásványi pigmentekből (például kalcium-karbonátból, faszénből, vas-oxidból, realgárból, auripigmentből, azuritból és malachitból), amelyeket porrá őröltek. Ezeket ezután kötőanyaggal, például növényi gumival vagy állati enyvvvel keverték, majd festékként alkalmazták. @PSzámos különleges képzettségű művész dolgozott együtt, hogy pompás domborműveket hozzanak létre a sírokban. Először @190agyag, víz és fehérítőanyag keverékéből vakolatot készítettek, majd felvitték a sír falaira. Ezután vörössel durva vázlatot rajzoltak a friss vakolatra. Egy mesterrajzoló finomította ezt a körvonalat, általában feketével. Egy mesterszobrász további javításokat végzett és részleteket adott hozzá, hogy irányítsa az utána következő domborműkészítőt. Ezután nagy, egyszínű felületekkel felvitték a festéket. A végső részleteket, például a körvonalakat és belső elemeket, egy másik mesterművész készítette el."
+                }
+            }
+            message_building_lamp_maker {
+                id: 473,
+
+                    size [30, 28]
+                title {
+                    text: "Lámpakészítő",
+                }
+                content {
+                    text: "A Lámpakészítő olyan lámpákat készít, amelyek fénye segíti a munkásokat egy @478Királyi&temetkezési&sírkamra sötét folyosóin való közlekedésben. @P Lámpák készítéséhez a Lámpakészítőnek kerámiára és olajra van szüksége. Egy @1Fazekas kerámiát biztosíthat, vagy importálható egy @47kereskedelmi&partnertől. @476Olajat csak importálni lehet. @PEgy Lámpakészítőnek útkapcsolatra és közeli munkaerőforrásra van szüksége. Amint elegendő kerámia és olaj érkezik hozzá, láthatod, ahogy a lámpakészítők szorgosan megtöltik olajjal az edényeket, hogy lámpákat készítsenek. @PA Lámpakészítők negatívan befolyásolják a @56kívánatosságot, ezért ne helyezd őket túl közel a lakónegyedekhez. @L@L Kattints @474ide, hogy többet tudj meg az ókori Egyiptom lámpáiról."
+                }
+            }
+            message_history_lamps {
+                id: 474,
+
+                    size [30, 20]
+                image {
+                    id: 1003,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Lámpák",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Története",
+                }
+                content {
+                    text: "Az ókori egyiptomiak kis kerámialámpákat készítettek, amelyek természetes @476olajjal vagy feldolgozott állati zsiradékkal működtek. Ezek a lámpák szükséges fényforrást biztosítottak a temetkezési sírok mélyén dolgozó kézművesek számára."
+                }
+            }
+            message_history_valley_of_the_kings {
+                id: 475,
+
+                    size [30, 20]
+                image {
+                    id: 1011,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Királyok völgye",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Története",
+                }
+                content {
+                    text: "@PA Királyok völgye öt évszázadon át, körülbelül i. e. 1539-1075 között volt a fáraók temetkezési helye, köztük I. Thotmeszé, Tutanhamoné és Nagy Ramszeszé (II. Ramszeszé). A Nílus nyugati partján, Théba templomegyütteseivel szemben fekvő völgyet az el-Qurn nevű, szinte piramis alakú hegy uralja, amely minden nap a napnyugta előtt Ré utolsó áldását fogadja. A völgy és a nagy Nílus között találhatók a fáraóknak szentelt halotti templomok, akik a völgy sírjaiban várták túlvilági életüket. A közeli Deir el-Medina falu több száz munkásnak és családjaiknak adott otthont. @PA Királyi temetkezési sírokat szakképzett munkások készítették, és mindenkinek fontos feladata volt. @385Kőművesek lépcsőket és folyosókat vájtak a mészkősziklákba. A nagyobb termek mennyezetét kőoszlopok tartották. A kifaragott helyiségeket elsimították és bevakolták, mielőtt a @472kézművesek megérkeztek, hogy domborművekkel és festményekkel díszítsék a mennyezeteket és falakat, amelyek segítették a fáraót túlvilági útján. Az elhunyt királyt szarkofágjába helyezték, majd a sírt számos, isteni rangjához méltó kinccsel lezárták. Ezek a hatalmas kincsek miatt a sírokat gyakran kifosztották, néha éppen azok, akik őrzésükre lettek kijelölve. @PEurópai régészek az 1800-as évek elején fedezték fel újra a Királyok völgyét. 1922-ben Howard Carter feltörte Tutanhamon lezárt sírját, és számos kincset talált benne, köztük egy aranyszarkofágot. Az évszázadok során hirtelen áradások sok sírt iszappal és törmelékkel töltöttek fel, és jó esély van rá, hogy még ma is vannak felfedezetlen folyosók, sőt talán sírok is a völgyben."
+                }
+            }
+            message_history_oil {
+                id: 476,
+
+                    size [30, 20]
+                image {
+                    id: 1009,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Olaj",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Története",
+                }
+                content {
+                    text: "Az ókori egyiptomiak által használt olajok többségét Görögországból, Ciprusról és Föníciából importálták. A természetes olajokat sokféleképpen használták, például a @474lámpák üzemanyagaként és főzéshez. Az olajokat számos forrásból nyerték (amelyek nagy részét ma is használják), például szezámból, lenmagból, olajbogyóból és természetes állati zsiradékokból."
+                }
+            }
+            message_figure_tomb_robber {
+                id: 477,
+
+                    size [30, 28]
+                title {
+                    text: "Sírrabló",
+                }
+                content {
+                    text: "@PAhol sír van, ott kincs is akad! A sírrabló olyan bűnöző, aki akkor jelenik meg, ha a @39Városi&hangulat rendkívül rossz. Csak akkor támadja meg azonban a várost, ha van mit kifosztania. Ha városodban nincsenek sírok (sem piramisok, @371masztabák, @368mauzóleumok vagy @478Királyi&temetkezési&sírkamrák), nem fog odajönni. Akkor sem érdekli a város, ha nincsenek benne @374temetkezési&ellátmányok, akár azért, mert a sír nem igényelt ilyet, akár azért, mert még nem küldted el őket a sírhoz. @PNéha sírrablók akkor is lecsapnak, amikor a városban semmilyen bűnözés jele nem látható. Ha hivatásos sírrablók hírt kapnak társaiktól arról, hogy városod sírjaiban különösen értékes temetkezési kellékek találhatók, bűnhullámot indítanak. Nem lehet előre megjósolni, mikor következik be egy ilyen bűnhullám. @PA sírrablóknak egyetlen céljuk van: megfosztani az örök álomba merült fáraót azoktól a gazdagságoktól és kincsektől, amelyeket sírjában a túlvilági életre helyeztek el. Ehhez a tervhez a sírrablónak el kell jutnia a sírig anélkül, hogy elfognák. Ha út közben őrrel vagy katonákkal találkozik, általában csendben és hatékonyan „őrizetbe veszik”, bár egy rendkívül fürge tolvaj néha még így is elmenekülhet. Ha a sírrabló sikeresen eléri a temetkezési emlékművet, elvisz néhány korábban elküldött temetkezési kelléket, és ez hátrányosan befolyásolja a @35Királyság&értékelésedet, hiszen ki akarna olyan uralkodó alatt élni, aki képtelen megvédeni ősei sírjainak szentségét? @PA sírrablók nem válogatnak a sírok között. Ugyanolyan szívesen próbálnak meg kifosztani egy olyan emlékművet is, amely már uralkodásod kezdete előtt a városban állt. Szerencsére ezek a régi sírok jól le vannak zárva, így a sírrabló nem tud belőlük temetkezési kellékeket elvinni. Azonban Egyiptom-szerte mindenki megdöbben azon, hogy az egyik legrégebbi sírt fenyegetés érte, ezért királyságod megítélése jelentősen romlik. @PVigyázz! Ha a sírrabló elvisz temetkezési kellékeket, minden ellopott tárgyat pótolnod kell a küldetés teljesítéséhez. @PA városod bűnözéséről további információért kattints @36ide. @L@LAz ókori Egyiptom Királyok völgyének temetkezési sírjairól további információért kattints @475ide."
+                }
+            }
+            message_building_royal_burial_tomb {
+                id: 478,
+
+                    size [30, 28]
+                title {
+                    text: "Királyi temetkezési sírkamra",
+                }
+                content {
+                    text: "@PAz Újbirodalom korától kezdve az ókori egyiptomiak a fáraókat és más előkelőségeket egyre díszesebb, a sziklába vájt sírokban temették el egy szinte megközelíthetetlen völgyben. @PA Királyi temetkezési sírkamra építésének megkezdéséhez először megfelelő helyet kell találnod. Válaszd a „Királyi temetkezési sírkamra” lehetőséget a Vallási építmények: Emlékművek listájából. Egy nagy alaprajz jelenik meg. Az emlékmű nagy részét sziklákra kell helyezni, kivéve a kis bejáratot, amely oldalából nyúlik ki. Mozgasd az alaprajzot a sziklák között, amíg megfelelő helyet nem találsz. Tudni fogod, hogy jó helyet választottál, amikor az egész alaprajz zöldre vált. Az alaprajz bármely piros része azt jelzi, hogy a hely nem alkalmas az emlékmű számára. @PLehet, hogy könnyebb lesz elhelyezni a Királyi temetkezési sírkamrát, ha ideiglenesen elsimítod a sziklákat. Nyomd meg a „H” billentyűt a sziklák elegyengetéséhez, vagy válaszd a @18rétegek listájából a „Sziklák elrejtése” lehetőséget. A sziklák visszaállításához nyomd meg újra a „H” billentyűt, vagy válaszd a „Normál” lehetőséget a rétegek listájából. Különösen nagy sírok esetén az „M” billentyű is hasznos lehet. Az „M” megnyomása rögzíti az alaprajzot, így elmozdíthatod a nézetet, hogy ellenőrizd a kiválasztott helyet. Ha megfelelő, egyszerűen kattints az egérrel az emlékmű elhelyezéséhez. Ha a hely nem megfelelő, nyomd meg ismét az „M” billentyűt az alaprajz felszabadításához, és folytasd a keresést. @PMiután kiválasztottad a helyet, lámpaszállítmányt kell küldeni a sírhoz, mielőtt a munka megkezdődhet. A lámpákat egy @473Lámpakészítő készíti, de importálhatók egy @47kereskedelmi&partnertől is. Amint 400 lámpa van egy @4Raktár&udvarban, egy paraszt szánon lámpákat húz az építkezéshez. @PMiután a lámpák megérkeztek és fényt biztosítanak, a @363kőművesek durván kifaragják a sír számos kamráját a tömör sziklából. Miután a kőművesek befejeztek egy kamrát, képzett @363kézműveseket hívnak, hogy megkezdjék a falak vakolását és festését. Ezeknek a kézműveseknek @92agyagra van szükségük a vakolathoz, valamint egy @470Festékkészítő által készített festékre. Az árukat közvetlenül a Kézművesek Céhéhez szállítják az előállítók, vagy egy Raktárudvarból érkeznek. Ha városod nem képes előállítani egyik vagy mindkét árut, lehetőséged nyílhat @47importálni őket. @PKattints jobb gombbal egy Királyi temetkezési sírkamra emlékműre, hogy meglátogasd annak @369Építési&felügyelőjét a munkálatok állapotjelentéséért. @L@L Kattints @475ide, hogy többet tudj meg a Királyok völgyéről és királyi temetkezési sírkamráiról."
+                }
+            }
+            message_building_zoo {
+                id: 479,
+
+                    size [30, 28]
+                title {
+                    text: "Állatkert",
+                }
+                content {
+                    text: "Az állatkertek minden városban népszerű @49szórakozási&formát jelentenek. Az állatkerthez úthálózat, az állatok gondozásához munkások, valamint @89szalma és @359vad&hús szükséges takarmányként. A szalmát a gabonaföldekről lehet begyűjteni, a Vadászkunyhó vadászai pedig vadhúst szerezhetnek. Ezeket az árukat @47kereskedelmi&útvonalon is importálhatod. @PÉrdeklődj @28Szórakozási&felügyelődnél, hogy megtudd, hány állatkert van a városodban, és használd a @18Szórakozás&nézetet annak megtekintésére, mely házakból érhető el az állatkert, valamint hogy lásd az utcákon sétáló gondozókat. @PAz állatkert különleges látványosságai ellenére a lakosok nem szeretnek túl közel élni hozzájuk, mivel az állatok üvöltése és erős szaga igencsak sértő bármely művelt egyiptomi számára. Kattints @56ide a vonzerőről szóló további információkért. @L@LAz ókori egyiptomi állatkertekről további információért kattints @480ide."
+                }
+            }
+            message_history_zoo {
+                id: 480,
+
+                    size [30, 20]
+                image {
+                    id: 1005,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Állatkert",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "Az ókori egyiptomiak kedvelték a mulatságos és szokatlan dolgokat, és mindkettő bőségesen megtalálható volt az állatkertekben. Ahogy Egyiptom hatalma és befolyása több kontinensre is kiterjedt, sok fáraó kapott távoli vidékek uralkodóitól különleges és egzotikus állatokat ajándékként vagy hódolat jeléül. Ezeket az állatokat a fáraónak ajándékozták, majd különleges állatkertekben tartották őket, amelyek elkerülhetetlenül az uralkodó palotájának közelében helyezkedtek el. Úgy tűnik, Egyiptom korai állatkertjei elsősorban látványosságként, másodsorban pedig tanulmányozás céljára szolgáltak. Alexandria Nagy Könyvtárának állítólag botanikus kertje és állatkerti része is volt a területén."
+                }
+            }
+            message_history_alexandria_and_its_library {
+                id: 481,
+
+                    size [30, 20]
+                image {
+                    id: 1001,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Alexandria and its Library",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "Nagy Sándor kezdettől fogva azt remélte, hogy Alexandria, a Nílus torkolatánál általa alapított és megtervezésében segített város, a Földközi-tenger térségének kereskedelmi és kulturális központjává válik. Alapítása után kevesebb mint ötven évvel, Kr. e. 331-ben a virágzó metropolisz a kereskedelem kifinomult központjává vált, nagyrészt híres Nagy Könyvtárának köszönhetően. @PNem sokkal Nagy Sándor váratlanul korai, Kr. e. 323-ban bekövetkezett halála után hatalmas birodalma három nagy területre szakadt. Egyik legközelebbi barátja és legtehetségesebb hadvezére, Ptolemaiosz, ekkor Egyiptom tényleges kormányzója volt. Átvette az ősi föld irányítását, végül fáraóvá vált (I. Ptolemaiosz Szótér néven), és ezzel folytatta az Egyiptomban Sándor által megkezdett görög jelenlétet. Ptolemaiosz térítette el Sándor temetési menetét is, amely Makedóniába tartott, és ő hozta a hódító földi maradványait Alexandriába, hogy ott helyezzék nyugalomra. @PAzonban a személyes dicsőség és fényűző élet mellett a korai ptolemaioszi uralkodók becsületükre legyen mondva városuk és országuk kultúrájának fejlesztésében is érdekeltek voltak. Alexandria, Egyiptom új fővárosa, már a világ ismert részének kereskedelmi központja volt; azt akarták, hogy egyben a tudomány központjává is váljon. Ennek érdekében hozták létre és építették fel Alexandria Nagy Könyvtárát. A Nagy Könyvtár az emberiség első tudományos oktatási és kutatóközpontja volt. Az ókor ragyogó elméi itt fektették le a csillagászat, földrajz, irodalom, matematika, orvostudomány és fizika rendszeres tanulmányozásának alapjait. Itt határozta meg Eukleidész először a geometria alapjait, és Eratoszthenész itt mérte meg pontosan a Föld kerületét, miközben azt állította, hogy India Spanyolországból nyugat felé hajózva is elérhető. @PA ptolemaiosziak rengeteg időt és energiát, valamint vagyonuk jelentős részét fordították arra, hogy megszerezzék minden fontos, az emberiség által ismert kézirat másolatát. Ennek érdekében törvényt hoztak, amely kimondta, hogy minden Alexandriába érkező karavánt és hajót át kell kutatni – nem csempészáru, hanem tudományos művek után. Minden megtalált térképet vagy tekercset átadtak a könyvtárnak, hogy az írnokok lemásolhassák. Így Alexandria tudományos menedéke végül több mint 700 000, rendszerezetten katalogizált papirusztekercset őrzött, köztük számos mára elveszett művészeti, irodalmi és tudományos remekművet Homérosztól, Arisztotelésztől, Szophoklésztől, Aiszkhülosztól és Euripidésztől. @PNem minden szólt azonban a tudásról. A legendás könyvtár területén botanikus kert, múzeum és a kilenc múzsának (a művészetek és tudományok görög isteneinek és istennőinek) szentelt templom is helyet kapott. Egy rövid séta a kerttel szegélyezett palánk mentén egy @480állatkerthez vezetett, amely kétségkívül sok egzotikus állatnak adott otthont. Sok ókori tudós járta oszlopcsarnokait. @PNem teljesen világos, mi vezetett a Nagy Könyvtár pusztulásához. Felbecsülhetetlen értékű műveinek jelentős része minden bizonnyal elpusztult abban a tűzben, amely akkor keletkezett, amikor Julius Caesar felgyújtotta Kleopátra VII. fivérének hajóit. A Kr. u. 4. századra, ahogy a kereszténység befolyása terjedt, a könyvtár fennmaradt kéziratainak nagy részét állítólag megsemmisítették a pogányság és eretnekség minden emlékének eltörlésére irányuló törekvésben. Később, Kr. u. 640-ben az arabok, akik az akkor már szinte elhagyott városon átvonultak, valószínűleg tüzelőanyagként elégették a még megmaradt tekercseket. A Nagy Könyvtárban őrzött 123 Szophoklész-darabból mára mindössze hét maradt fenn."
+                }
+            }
+            message_history_caesareum {
+                id: 482,
+
+                    size [30, 20]
+                image {
+                    id: 1002,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Caesareum",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "A Caesareumot VII. Kleopátra kezdte építtetni. Eredetileg egy kis templomból vagy oltárból állt egy szentély közepén, amelyet feltehetően Marcus Antonius kultuszának tiszteletére szántak. Öngyilkossága, majd nem sokkal később Kleopátra halála azonban azt jelentette, hogy az emlékművet riválisuk, Octavianus (Augustus Caesar) fejezte be, aki saját kultuszának szentelte az épületet. Két obeliszk (amelyeket gyakran Kleopátra tűinek neveznek, noha neki semmi köze nem volt hozzájuk) évszázadokon át Alexandria keleti kikötőjének partvidékén álló jellegzetes látványosság volt. Ezeket az obeliszkeket Octavianus parancsára Héliopoliszból szállították Alexandriába, és a Caesareum bejáratát jelölték még jóval azután is, hogy az épület többi része elpusztult. Mindkét obeliszket elszállították már (az egyik New York városának Central Parkjában áll, a másik a londoni Temze partján). @PA Caesareum pontos felépítéséről nem sokat tudunk. Ismereteink néhány ókori szerző rövid leírásából származnak. Építészete, Alexandria többi nagy emlékművéhez hasonlóan, görög stílusú volt. Feltehetően egy központi szentélyből állt, amelyet nyitott udvarok vettek körül, valamint sztoák (oszlopcsarnokok) öveztek, amelyek valószínűleg az emlékmű külső 'falait' alkották. A sztoák között elhelyezkedő helyiségek és oszlopcsarnokok tekercseket őriztek, valamint gyűlések vagy csendes tanulás céljára szolgálhattak."
+                }
+            }
+            message_plague_of_locusts {
+                id: 483,
+                    type: 2,
+
+                    size [30, 20]
+                urgent: 1,
+                    title {
+                    text: "Sáskák csapása",
+                }
+                content {
+                    text: "Jelentéseket kaptunk arról, hogy éhes sáskák őrült rajai pusztítják Egyiptom terméseit. Óvakodjatok támadásuktól a következő termesztési időszakban!"
+                }
+            }
+            message_plague_of_frogs {
+                id: 484,
+                    type: 2,
+
+                    size [30, 20]
+                urgent: 1,
+                    title {
+                    text: "Békák csapása",
+                }
+                content {
+                    text: "Rút átok szállt a földre! Békák sokasága szennyezi utcáinkat és otthonainkat, lakóinkat pedig arra kényszeríti, hogy elhagyják házaikat!"
+                }
+            }
+            message_hailstorm {
+                id: 485,
+                    type: 2,
+
+                    size [30, 20]
+                urgent: 1,
+                    title {
+                    text: "Jégeső",
+                }
+                content {
+                    text: "Halál és pusztulás közeleg a széllel! Vad jégeső érkezett, hogy pusztító jégzáport zúdítson ránk. Az istenek irgalmazzanak azoknak, akik nem találnak menedéket e gonosz átok elől, mert kevés reményük van a túlélésre!"
+                }
+            }
+            message_river_of_blood {
+                id: 486,
+                    type: 2,
+
+                    size [30, 20]
+                urgent: 1,
+                    title {
+                    text: "Vérfolyam",
+                }
+                content {
+                    text: "Jaj nekünk! A vizek, amelyek egykor az élet és a táplálék forrásai voltak, vérrel mérgeződtek meg. Meddig tart még, míg megszűnik ez a gyalázatos csapás?"
+                }
+            }
+            message_history_pharos_lighthouse {
+                id: 487,
+
+                    size [30, 20]
+                image {
+                    id: 1006,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Pharoszi világítótorony",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "@PAlexandria fekvése ideális volt kereskedelmi kikötő számára, hosszú tengerparttal és nagy természetes kikötővel, azonban a kijáratait veszélyes homokpadok övezték. Ezért született meg az elképzelés, hogy a kikötő bejáratánál fekvő Pharosz szigetén álló magas világítótorony nemcsak a hajósok segítségére szolgálna, hanem (ha elég pompás lenne) új, lenyűgöző látványosságként Alexandria hírnevét is növelné. @PA pharoszi világítótorony, ahogy később nevezték, nagyrészt prokonnészoszi fehér márványból épült, amelynek jelentős részét a mai Törökország partjainál fekvő Herceg-szigetekről hozták. Három nagy szintből állt: az alsó szint négyszögletes, a középső nyolcszögletű, a legfelső pedig henger alakú volt. Egy hatalmas csigalépcső vezetett a tetejére, amely még azt is lehetővé tette, hogy teherhordó állatok fát szállítsanak fel a fényes tűz táplálására. A lenyűgöző építményt egyes beszámolók szerint Poszeidón szobra koronázta; mások szerint Zeusz képmása volt – vagy talán mindkettőjük szobra. @PA pharoszi világítótorony építését az első Ptolemaiosz (Auletész) kezdte meg, de csak fia, II. Ptolemaiosz Philadelphosz uralkodása alatt, Kr. e. 283-ban fejezték be. Minden beszámoló szerint hihetetlen látványt nyújtott, és méltán tartották az ókori világ hetedik csodájának. @PAz emlékmű végső pusztulását nem emberi kéz, hanem a térséget megrázó földrengések sorozata okozta. Legfelső szintje egy súlyos földrengés során, Kr. u. 303-ban omlott le. Azonban csak az 1303. augusztus 8-án bekövetkezett hatalmas rengés döntötte romba a megmaradt építmény nagy részét, amelyet aztán elnyeltek a környező vizek. Ma a Pharosz szigetén egy erőd látható, amelyet Kait bég mamlúk szultán építtetett azon a helyen, ahol egykor a csodálatos világítótorony állt."
+                }
+            }
+            message_building_alexandria_library {
+                id: 488,
+
+                    size [30, 28]
+                title {
+                    text: "Alexandria könyvtára",
+                }
+                content {
+                    text: "A világ minden tájáról tudósok és művelt férfiak és nők özönlenek Alexandria Nagy Könyvtárába, az emberiség legnagyobb tudástárába. @PAz Alexandria könyvtárának megépítéséhez először megfelelő helyszínt kell választanod. Válaszd ki Alexandria könyvtárát a Vallási épületek: Emlékművek listájából. Ha a megjelenő alaprajz teljesen zöld, akkor a kiválasztott hely megfelelő. @PAz Alexandria könyvtárának felépítéséhez szükséged lesz a @8Munka&táborok parasztjainak, a @363Kőfaragók&céheinek kőműveseire és a @363Ácsok&céheinek ácsaira. Az ácsoknak @94fára lesz szükségük az állványzat elkészítéséhez, amelyet importálhatsz, ha városodban nem tudsz fát kitermelni. Emellett @47fehér&márványt is importálnod kell egy kereskedelmi partnertől. Az emlékmű befejezéséhez @93réz utánpótlásra lesz szükséged, akár saját bányáidból, akár kereskedelmi partner segítségével. @PAz építés közben jobb gombbal kattints Alexandria könyvtárára, hogy jelentést kapj az előrehaladásról az @369Építési&vezetőtől. @L@LKattints @481ide Alexandria könyvtárának történetével kapcsolatos további információkért."
+                }
+            }
+            message_building_pharos_lighthouse {
+                id: 489,
+
+                    size [30, 28]
+                title {
+                    text: "Pharoszi világítótorony",
+                }
+                content {
+                    text: "Alexandria lenyűgöző pharoszi világítótornya nappal és éjjel egyaránt segíti a hajósokat a kikötő veszélyes zátonyai között való eligazodásban. @PA pharoszi világítótorony csak Alexandria kikötőjének Pharosz szigetén, a sziklás talajra építhető. Válaszd ki a „Pharoszi világítótorony” épületet a Vallási épületek: Emlékművek listájából, majd mozgasd a kurzort a külső kikötő bejárata közelében található sziklás terület fölé. Amikor az épület alaprajza teljesen zölddé válik, megfelelő helyet találtál, amely elbírja ennek a hatalmas építménynek a súlyát. @PMiután a területet megtisztították, importált fehér márványra lesz szükséged. Ezt az árut egy másik várossal létesített @47kereskedelmi&útvonalon szerezheted be. A Kőfaragók Céhének @363kőfaragói gondosan elhelyezik a fehér márványt, amelyet a @8Munka&tábor parasztjai egy @4Raktár&udvarból szállítanak oda. A parasztok akkor viszik a márványt az építkezéshez, amikor egyetlen Raktárudvarban legalább négy tömb található belőle. Az építkezés megkezdése után az Ácsok Céhének @363ácsaira és megfelelő mennyiségű @94fára is szükség lesz az állványzat elkészítéséhez. @PKattints jobb gombbal a pharoszi világítótoronyra építés közben, hogy megtekintsd az @369Építési&vezető jelentését az előrehaladásról. @L@LKattints @487ide, hogy többet tudj meg Alexandria pharoszi világítótornyáról."
+                }
+            }
+            message_building_caesareum {
+                id: 490,
+
+                    size [30, 28]
+                title {
+                    text: "Caesareum",
+                }
+                content {
+                    text: "Alexandria egyik legkiválóbb építészeti remekműve a Caesareum, egy hatalmas tengerparti templom és látványos tájékozódási pont a város óriási kikötőjébe érkező hajósok számára. @PA Caesareum megépítéséhez először válaszd ki azt a Vezérlőpulton található Vallási épületek: Emlékművek listájából. Kiválasztása után megjelenik az épület alaprajza. Keress egy megfelelően nagy, megtisztított területet, és helyezd el az emlékművet. Tudni fogod, hogy megfelelő helyet választottál, amikor az alaprajz teljesen zölddé válik. @PAmint a megfelelő helyet kijelölted, megkezdődhet az építkezés. A @8Munka&tábor parasztjai először megtisztítják a területet, feltárva az alatta lévő alapkőzetet. Amikor a terület elkészült, a Kőfaragók Céhének @363kőfaragói megérkeznek, hogy elhelyezzék a fehér márványt, amelyet a parasztok egy @4Raktár&udvarból szállítanak. A fehér márványt @47importálni kell egy kereskedelmi partnertől. A parasztok azonnal az építkezéshez húzzák a márványt, amint egyetlen Raktárudvarban négy tömbnyi mennyiség van belőle. @PAz Ácsok Céhének @363ácsaira és @94fával való ellátásukra szintén szükség lesz az állványzat felépítéséhez. Ha városod nem rendelkezik saját faforrással, importálnod kell. A munkálatok vége felé egy Raktárudvarból származó gránitra is szükség lesz, amelyet importálhatsz, ha városod nem tud saját maga @95kőfejteni. @PKattints jobb gombbal a Caesareumra építés közben, és az @369Építési&vezető jelentést készít az előrehaladásról. @LKattints @482ide a Caesareum történetével kapcsolatos további információkért."
+                }
+            }
+            message_crime_wave {
+                id: 491,
+                    type: 2,
+
+                    size [30, 20]
+                urgent: 1,
+                    title {
+                    text: "Bűnözési hullám",
+                }
+                content {
+                    text: "Az istenek irgalmazzanak nekünk! Kapzsi sírrablók egy csoportja, akik jogtalanul szerzett kincsekre áhítoznak, elszabadultak gyönyörű városunkban. Állítsd meg őket, mielőtt ellopják a nemes halottainkkal együtt eltemetett pompás temetkezési javakat!"
+                }
+            }
+            message_building_abu_simbel {
+                id: 492,
+
+                    size [30, 28]
+                title {
+                    text: "Abu Szimbel",
+                }
+                content {
+                    text: "@PAz Abu Szimbel temploma hatalmas emlékmű, amelyet II. Ramszesz vésetett ki a Núbiában, a Nílus felső folyását uraló homokkősziklákból. @PAz Abu Szimbel építésének megkezdéséhez először válaszd ki a Vallási épületek: Emlékművek listájából. Megjelenik az emlékmű alaprajza. Az építmény nagy részét a sziklákba kell építeni. A bejáratnak, amely az épület oldalából nyúlik ki, szabad területen kell elhelyezkednie. Tudni fogod, hogy megfelelő helyet választottál, amikor az egész alaprajz zölddé válik. Kattints az egérgombbal az emlékmű rögzítéséhez. @PHasznos lehet ideiglenesen lesimítani a sziklás terepet, miközben megfelelő helyet keresel az emlékmű számára. Egyszerűen nyomd meg a „H” gombot, vagy válaszd a @18rétegek&listájából a „Sziklák elrejtése” lehetőséget. A sziklákat ismét visszaállíthatod eredeti magasságukra a „H” gomb újbóli megnyomásával, vagy a rétegek listájában a „Normál” kiválasztásával. @PAmikor kijelölted a megfelelő helyet, szükséged lesz egy hozzáértő munkáscsoportra: a Kőfaragók Céhének @363kőfaragói a szikla kifaragásához, valamint az Ácsok Céhének @363ácsai a szükséges állványzat elkészítéséhez. Az ácsoknak @192fára lesz szükségük az állványzathoz, amelyet @47kereskedelmi&útvonalon importálhatsz, vagy egy @94Favágó gyűjthet be a területről. @PKattints jobb gombbal Abu Szimbel emlékművére, hogy jelentést kapj az @369Építési&vezetőtől az előrehaladásról. @L@LKattints @493ide, hogy többet tudj meg II. Ramszesz leghíresebb emlékművéről."
+                }
+            }
+            message_history_abu_simbel {
+                id: 493,
+
+                    size [30, 20]
+                image {
+                    id: 1007,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Abu Szimbel",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "@PNagy Ramszesz (II. Ramszesz) Kr. e. 1279–1212 között uralkodott Egyiptomban. Ez a hosszú életű fáraó számos uralkodása alatt épült templomról és emlékműről híres, amelyek közül a legnagyobb Abu Szimbel volt. @PA Nílus völgyére néző rózsaszín homokkősziklákba Núbia tartományában, Waszettől (Thébától) mintegy 350 mérföldre délre Ramszesz kőfaragói a fáraó négy ülő szobrát vésték ki egymás mellett. Mindegyik szobor több mint 66 láb magas – csak a gízai Nagy Szfinx magasabb náluk. Az ülő alakok egy alagút bejáratát fogják közre, amely a sziklába 160 láb mélyen vájt belső szentélyhez vezet. A templom kelet felé néz, és úgy tervezték, hogy évente kétszer a felkelő nap fénye behatoljon a szentély hátsó faláig, megvilágítva Ramszesz, Amun és Ré három kisebb szobrát. Ptah szobra szintén a szentélyben található, de mivel ő az alvilághoz kapcsolódik, szobrát úgy helyezték el, hogy a napfény ne érje. A templom belsejében található domborművek Ramszesz katonai győzelmeinek is emléket állítanak. A közelben, a sziklákba vájt testvértemplom Hathor istennőnek és Ramszesz legfőbb feleségének, Nofertari királynénak állít emléket. Az egész épületegyüttes célja a núbiai alattvalók lenyűgözése és adóik ösztönzése volt. @PAbu Szimbel építése Kr. e. 1256 körül fejeződött be. Az évezredek során homok temette maga alá. 1817-ben Giovanni Belzoni régész feltárta a hatalmas emlékművet. Az 1960-as évek közepén ismét az eltemetés veszélye fenyegette, ezúttal az újonnan épült asszuáni gát mögött emelkedő víz miatt. Abu Szimbelt kivágták a sziklából, majd nagy pontossággal magasabb területen építették újjá – olyan mérnöki teljesítményként, amely bizonyára lenyűgözte volna az ókori egyiptomiakat."
+                }
+            }
+            message_tutorial_major_plagues {
+                id: 494
+
+                size [30, 28]
+                title { text: "Nagy csapások" }
+                content { text: "Sokféle katasztrófa sújthat egy várost, méretétől és gazdagságától függetlenül, és a nagy csapások a legrosszabbak közé tartoznak. Ne feledd azonban, hogy a nagy csapások nem azonosak a @53járvánnyal. A járvány akkor sújtja a várost, amikor annak egészségi állapota különösen rossz. A nagy csapások azonban minden különösebb ok nélkül is bekövetkezhetnek. @PA nagy csapások mindegyike csökkenti a @39városi&hangulatot. Egyéb súlyos következményeiket alább olvashatod: @L@LVérfolyam @LAmikor a Vérfolyam lesújt a városodra, a folyó és a város vizei hónapokra vérré változnak, és alkalmatlanná válnak @44ivó&vízként és más célokra való használatra. A házakban tárolt víz egy része is szennyezetté és ihatatlanná válik, és a folyóhoz legközelebb élők érzik leginkább a hatásait. A víz közelében élők emellett nagyobb veszélynek vannak kitéve betegségek és malária szempontjából is (a betegségekről és maláriáról további részleteket a @53városi&egészség résznél találsz). A @84Halász&mólók, @59Víz&emelők, @94Nád&gyűjtők, @62Kutak és @61Víz&készletek nem működnek a csapás idején. Egy elégedetlen @354Baszt is rászabadíthatja ezt a csapást a városodra, de akár minden felismerhető ok nélkül is bekövetkezhet. @L@LBékák @LAmikor a Békák csapása eléri városodat, békák légiói özönlik el a határaidat, és ellepik az útjukba kerülő házakat. Senki sem élhet békákkal fertőzött házban, ezért a lakók kénytelenek kiköltözni, és hónapokig senki sem költözhet vissza. Megpróbálhatod kordában tartani a békákat úgy, hogy falakat építesz köréjük, vagy épületeket helyezel el stratégiailag, hogy bezárd őket. @352Ptah hozhatja ezt az átkot a városodra, ha nem tetszését keresed, de a békák maguktól is megjelenhetnek. @L@LJégeső @LA halálos jégdarabok a jégesők következményei, és megölhetnek bárkit, aki a városban tartózkodik. A jégdarabok nem válogatnak: éppúgy végezhetnek katonákkal (beleértve az ellenséget is) és állatokkal, mint egyszerű polgárokkal. A jégesők erőteljes viharokat is keltenek a folyón, és sok hajód elsüllyedhet. Ha elhanyagolod @353Seth-et, ő hozhatja el ezt a rettegést városodra. A jégeső természetes időjárási jelenségként is bekövetkezhet. @L@LSáskák @LA sáskák ellepik a földet, és felfalják mindazt, amit a @45gazdaságaid termesztenek. Mind az ártéri, mind a réti földek termése teljesen elpusztul közvetlenül a betakarítás előtt, megfosztva városodat az adott év termésének hasznától. Amikor felkeltetted @350Ozirisz haragját, elküldheti ezt a csapást városodra. Néha azonban a sáskák minden előzmény nélkül is megjelennek. @L@LA fáraók földjét sújtó nagy csapásokról további információért kattints @495ide." }
+            }
+            message_history_major_plagues {
+                id: 495,
+
+                    size [30, 20]
+                image {
+                    id: 1010,
+                        pos [15, 15]
+                }
+                title {
+                    text: "Nagy csapások",
+                        pos [125, 15]
+                }
+                subtitle {
+                    text: "Történelem",
+                }
+                content {
+                    text: "A Kr. e. 13. században, I. Széthi és fia, Nagy Ramszesz (II. Ramszesz) uralkodása idején az egyiptomi hébereket rabszolgasorba vetették, hogy építkezéseken dolgozzanak. A Biblia Kivonulás könyve szerint az Úr Isten megjelent Izrael egyik gyermekének, Mózes prófétának, és megígérte neki, hogy segít népének megszabadulni. Az Úr vezetésével Mózes ezért tíz alkalommal kérte a fáraótól: „Bocsásd el népemet!”, de Ramszesz minden alkalommal megtagadta a kérést. Minden egyes megtagadás újabb csapást hozott a fáraóra és az egyiptomiakra, miközben a rabszolgasorban élő hébereket megkímélte. Először a folyó változott vérré, elpusztítva a halakat és ihatatlanná téve a vizet. A fáraó második elutasítása után békák jöttek elő a tavakból és folyókból, és ellepték a falvak házait. A hetedik csapás egy mennydörgő jégeső volt, amely a mezőkön tartózkodó embereket és állatokat sújtotta, valamint elpusztította az árpa- és lenvetéseket. A Kivonulás könyve szerint Ramszesz nyolcadik megtagadása, hogy elengedje Izrael fiait Egyiptomból, sáskák raját idézte elő, amelyek sötétségbe borították a földet tömegükkel, és felfalták mindazt a zöld növényt, amit az előző csapás jégesője meghagyott. Ramszesz a tizedik csapás után engedett, amikor az elsőszülött egyiptomi gyermekek és állatok mind elpusztultak, bár később hadseregét küldte a menekülő héberek üldözésére a Nádas-tengeren át. @PBár ezek a csapások nem szerepelnek korabeli egyiptomi feljegyzésekben, a történelem és az őstörténet során számos hasonló katasztrófa történt. Még a Kr. u. 20. században is jégesők és sáskárrajok sújtották az emberiséget."
+                }
+            }
+            message_mummy_attacks {
+                id: 496,
+                    type: 2,
+
+                    size [30, 20]
+                urgent: 1
+                title { text: "Múmiatámadások!" }
+                content { text: "Egy múmia életre kelt, és városunk utcáin jár. Állítsd meg ezt az élőhalott átkot, mielőtt az egész földön elterjed." }
+            }
 }
