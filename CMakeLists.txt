@@ -7,9 +7,17 @@ set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. 
 
 option(OPTION_ENABLE_TRACY "Enable Tracy profiler support" ON)
 option(OPTION_STEAMDECK "Force Steam Deck platform defaults (GAME_PLATFORM_STEAMDECK)" OFF)
+# Build innoextract as a separate host tool (not linked into the game).
+# Desktop platforms that can spawn helpers and unpack Windows/GOG Inno Setup .exe files.
+if((WIN32 OR UNIX) AND NOT ANDROID AND NOT EMSCRIPTEN)
+    option(OPTION_ENABLE_INNOEXTRACT "Build innoextract helper for GOG/Inno Setup installers" ON)
+else()
+    option(OPTION_ENABLE_INNOEXTRACT "Build innoextract helper for GOG/Inno Setup installers" OFF)
+endif()
 
 message(STATUS "OPTION_ENABLE_TRACY: ${OPTION_ENABLE_TRACY}")
 message(STATUS "OPTION_STEAMDECK: ${OPTION_STEAMDECK}")
+message(STATUS "OPTION_ENABLE_INNOEXTRACT: ${OPTION_ENABLE_INNOEXTRACT}")
 
 if (OPTION_STEAMDECK)
     add_compile_definitions(GAME_PLATFORM_STEAMDECK)
@@ -976,6 +984,16 @@ endif()
 
 
 add_executable(${GAME} ${SOURCE_FILES})
+
+if(OPTION_ENABLE_INNOEXTRACT)
+    include(BuildInnoextract)
+    akhenaten_copy_innoextract()
+    # InstallShield fallback for Sierra demo / non-Inno installers (optional sibling ../unshield).
+    include(BuildUnshield)
+    if(AKHENATEN_HAS_UNSHIELD)
+        akhenaten_copy_unshield()
+    endif()
+endif()
 
 if (MSVC)
     # Some translation units in the main game target also hit cl.exe heap limits

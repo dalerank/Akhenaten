@@ -43,8 +43,35 @@ For the official 2023 remake called _Pharaoh: A New Era_ (a separate project fro
 After downloading the most recent binaries from above or building them from source,
 start Akhenaten and it will ask you to point to an original Pharaoh installation folder.
 
+If you only have a Pharaoh installer (`.exe`) instead of an already-installed folder,
+place it next to the Akhenaten binary as:
+
+```
+akhenaten.exe
+innoextract.exe      # GOG / Inno Setup installers
+unshield.exe         # Sierra / InstallShield (e.g. demo) — optional fallback
+Installer/
+  Setup.exe          # or pharaoh.exe demo installer
+PharaohData/         # created automatically on first launch
+```
+
+On startup (when Steam Pharaoh is not found) Akhenaten will unpack `Installer/*.exe` into
+`PharaohData`, verify `campaign.txt`, save the path to `akhenaten.cfg`, and continue.
+
+Supported formats:
+- **Inno Setup / GOG** via bundled [innoextract-nb](https://github.com/dalerank/innoextract-nb)
+  (downloaded and built with Akhenaten when `OPTION_ENABLE_INNOEXTRACT` is on)
+- **InstallShield** (Sierra demo/retail) via `7z` (outer CAB) + [unshield](https://github.com/twogood/unshield) (`data1.cab`)
+
+You can also use **Extract from installer…** in the configuration window, or:
+
+```
+akhenaten --extract-installer "C:\path\to\Setup.exe" --extract-dir "C:\path\to\pharaoh-data"
+```
+
 Akhenaten, like Julius and Augustus, requires the original assets (graphics, sounds, etc)
 from an unmodified game installation to run, in this case it needs _Pharaoh_ **as well as the _Cleopatra_ expansion.**
+The **Pharaoh demo is not supported** (it lacks `Pharaoh_Fonts` / Cleopatra image packs and will be rejected at startup).
 
 Note that you must have permission to write in the game data directory as the saves will be
 stored there; also, your game must be patched to last version (1.3 + Cleopatra) to run Akhenaten.
@@ -260,6 +287,12 @@ To use the profiler, download and run the Tracy Profiler GUI v0.13.1 from the [T
 --no-resource
           run without Pharaoh data files (skips campaign.txt and AUDIO/ probing;
           DATA_DIR is then an optional VFS base path)
+--extract-installer PATH
+          extract Pharaoh data from an Inno Setup / GOG installer via innoextract,
+          then use the extracted folder as the data directory
+--extract-dir PATH
+          output directory for --extract-installer (default: …/akhenaten/pharaoh-data
+          next to the user config file)
 --window
           enable window mode
 --render RENDERER

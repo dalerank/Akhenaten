@@ -96,6 +96,8 @@ void font_atlas_regenerate();
 void font_add_missing_glyph(uint32_t codepoint);
 uint32_t base_color_for_font(e_font font);
 
+void font_enable_sg3_fallback();
+
 bool font_need_regeneration();
 
 const font_mbsybols_t &font_get_symbols();

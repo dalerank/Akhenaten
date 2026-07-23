@@ -1,8 +1,8 @@
 #include "graphics/font.h"
 #include "content/vfs.h"
 #include "core/bstring.h"
+#include "core/log.h"
 #include "fontgen/dynamic_atlas.h"
-#include "window/popup_dialog.h"
 
 template<typename TSymbols>
 inline void add_symbols_to_font_packer(image_packer &font_packer,
@@ -101,9 +101,7 @@ bool fill_font_packer_pc(image_packer &font_packer,
                          int &cp_index) {
     vfs::path resolved_font_path = symbols_font.resolve();
     if (!vfs::file_exists(resolved_font_path)) {
-        bstring512 message_text;
-        message_text.printf("The specified font symbols file does not exist:%s", resolved_font_path.c_str());
-        popup_dialog::show_ok("Data issue", message_text.c_str());
+        logs::warn("font: TTF not found: %s", resolved_font_path.c_str());
         return false;
     }
 

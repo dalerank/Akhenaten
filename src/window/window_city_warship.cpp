@@ -16,7 +16,8 @@ static void draw_foreground_warship(int) {
     widget_top_menu_draw();
     window_city_draw();
     widget_sidebar_city_draw_foreground();
-    window_city_draw_paused_and_time_left();
+    g_window_city.draw_paused_panel();
+    window_city_draw_time_left_panel();
 }
 
 void window_city_warship_show(int warship_figure_id) {

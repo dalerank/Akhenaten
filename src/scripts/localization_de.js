@@ -134,7 +134,7 @@ localization_de = [
   {key:"#TR_HOTKEY_INCREASE_GAME_SPEED", text:"Spielgeschwindigkeit erhöhen"}
   {key:"#TR_HOTKEY_DECREASE_GAME_SPEED", text:"Spielgeschwindigkeit verringern"}
   {key:"#TR_HOTKEY_TOGGLE_PAUSE", text:"Pause umschalten"}
-  {key:"#TR_GAME_PAUSED", text:"Spiel pausiert ('%s'-Taste zum Fortfahren)"}
+  {key:"#TR_GAME_PAUSED", text:"Spiel pausiert ('{0}'-Taste zum Fortfahren)"}
   {key:"#TR_HOTKEY_CYCLE_LEGION", text:"Durch Legionen wechseln"}
   {key:"#TR_HOTKEY_ROTATE_MAP_LEFT", text:"Karte nach links drehen"}
   {key:"#TR_HOTKEY_ROTATE_MAP_RIGHT", text:"Karte nach rechts drehen"}

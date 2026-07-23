@@ -1,6 +1,7 @@
-#include "options_window.h"
+#include "platform/options_window.h"
 
 #include "platform/arguments.h"
+#include "platform/innoextract_util.h"
 #include "platform/platform.h"
 #include "platform/renderer.h"
 #include "platform/version.hpp"
@@ -419,6 +420,15 @@ void show_options_window(Arguments& args) {
     }
 
     auto video_drivers = get_video_drivers(false);
+    bool extracting = false;
+    bool extract_is_bootstrap = false;
+    bool close_bootstrap_popup = false;
+    xstring extract_out_dir;
+    bstring256 extract_status;
+    bool installer_prompt_checked = false;
+    bool installer_prompt_open = false;
+    xstring pending_installer;
+
     for (bool done = false; !done;) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
@@ -460,6 +470,146 @@ void show_options_window(Arguments& args) {
                 config.countSelectionMax = 1;
                 config.flags = ImGuiFileDialogFlags_Modal;
                 ImGuiFileDialog::Instance()->OpenDialog("ChooseFolderDlgKey", "Choose Folder", nullptr, config);
+            }
+
+            if (!platform.is_android() && !platform.is_emscripten()) {
+                ImGui::SameLine();
+                if (!installer_prompt_checked) {
+                    installer_prompt_checked = true;
+                    pending_installer = innoextract::installer_pending_bootstrap();
+                    if (!pending_installer.empty()
+                        && !innoextract::has_required_game_files(args.get_data_directory().c_str())) {
+                        installer_prompt_open = true;
+                    }
+                }
+
+                if (extracting && !innoextract::extract_job_running()) {
+                    xstring err;
+                    const bool ok = innoextract::extract_job_take_result(&err);
+                    extracting = false;
+                    if (ok) {
+                        xstring game_root = innoextract::find_extracted_game_path(extract_out_dir.c_str());
+                        if (!game_root.empty() && innoextract::has_required_game_files(game_root.c_str())) {
+                            args.set_data_directory(game_root.c_str());
+                            data_directory = args.get_data_directory().c_str();
+                            extract_status = "Extract OK";
+                            logs::info("Using extracted game data at %s", game_root.c_str());
+                        } else if (!game_root.empty()) {
+                            extract_status = "Incomplete install (demo / no Cleopatra)";
+                            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Incomplete game data",
+                              innoextract::required_game_files_help(), platform_window);
+                        } else {
+                            extract_status = "Extract finished but campaign.txt not found";
+                            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Extract failed",
+                              "Extraction finished but Pharaoh data (campaign.txt) was not found.", platform_window);
+                        }
+                    } else {
+                        extract_status = err.empty() ? "Extract failed" : err.c_str();
+                        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Extract failed",
+                          err.empty() ? "Failed to extract installer." : err.c_str(), platform_window);
+                    }
+                    if (extract_is_bootstrap) {
+                        installer_prompt_open = false;
+                        close_bootstrap_popup = true;
+                    }
+                    extract_is_bootstrap = false;
+                }
+
+                if (extracting) {
+                    ImGui::BeginDisabled();
+                }
+                if (ImGui::Button("Extract from installer…")) {
+                    IGFD::FileDialogConfig config;
+                    config.path = ".";
+                    config.countSelectionMax = 1;
+                    config.flags = ImGuiFileDialogFlags_Modal;
+                    ImGuiFileDialog::Instance()->OpenDialog("ChooseInstallerDlgKey", "Choose Installer", ".exe,.EXE",
+                      config);
+                }
+                if (extracting) {
+                    ImGui::EndDisabled();
+                }
+                if (extracting && !extract_is_bootstrap) {
+                    ImGui::ProgressBar(innoextract::extract_job_progress(), ImVec2(-1.f, 0));
+                }
+                if (extract_status.len() > 0) {
+                    ImGui::TextUnformatted(extract_status.c_str());
+                }
+
+                if (installer_prompt_open) {
+                    ImGui::OpenPopup("UnpackInstallerPopup");
+                }
+                if (ImGui::BeginPopupModal("UnpackInstallerPopup", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+                    if (close_bootstrap_popup) {
+                        close_bootstrap_popup = false;
+                        ImGui::CloseCurrentPopup();
+                    } else {
+                        const char *slash = std::strrchr(pending_installer.c_str(), '\\');
+                        const char *slash2 = std::strrchr(pending_installer.c_str(), '/');
+                        if (slash2 && (!slash || slash2 > slash)) {
+                            slash = slash2;
+                        }
+                        const char *name = slash ? slash + 1 : pending_installer.c_str();
+
+                        ImGui::TextUnformatted("We found a Pharaoh installer next to the game:");
+                        ImGui::Spacing();
+                        ImGui::TextWrapped("%s", name);
+                        ImGui::Spacing();
+                        ImGui::TextWrapped("Unpack it into the PharaohData folder now?\n(This can take several minutes.)");
+                        ImGui::Spacing();
+
+                        if (extracting) {
+                            ImGui::ProgressBar(innoextract::extract_job_progress(), ImVec2(280, 0));
+                            ImGui::TextUnformatted(extract_status.c_str());
+                        } else {
+                            if (ImGui::Button("Yes", ImVec2(120, 0))) {
+                                extract_out_dir = innoextract::pharaoh_data_directory();
+                                xstring err;
+                                if (extract_out_dir.empty()) {
+                                    extract_status = "Cannot resolve PharaohData path";
+                                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Extract failed",
+                                      extract_status.c_str(), platform_window);
+                                } else if (!innoextract::extract_job_start(pending_installer.c_str(),
+                                             extract_out_dir.c_str(), &err)) {
+                                    extract_status = err.empty() ? "Failed to start extract" : err.c_str();
+                                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Extract failed",
+                                      extract_status.c_str(), platform_window);
+                                } else {
+                                    extracting = true;
+                                    extract_is_bootstrap = true;
+                                    extract_status = "Extracting…";
+                                }
+                            }
+                            ImGui::SameLine();
+                            if (ImGui::Button("No", ImVec2(120, 0))) {
+                                logs::info("User declined unpacking installer %s", pending_installer.c_str());
+                                installer_prompt_open = false;
+                                ImGui::CloseCurrentPopup();
+                            }
+                        }
+                    }
+                    ImGui::EndPopup();
+                }
+
+                ImVec2 installer_dialog_size(window_size.x * 0.5f, window_size.y * 0.5f);
+                if (ImGuiFileDialog::Instance()->Display("ChooseInstallerDlgKey", ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize, installer_dialog_size)) {
+                    ImGui::SetWindowFocus();
+                    if (ImGuiFileDialog::Instance()->IsOk() && !extracting) {
+                        const std::string setup_path = ImGuiFileDialog::Instance()->GetFilePathName();
+                        extract_out_dir = innoextract::default_extract_directory();
+                        xstring err;
+                        if (!innoextract::extract_job_start(setup_path.c_str(), extract_out_dir.c_str(), &err)) {
+                            extract_status = err.empty() ? "Failed to start extract" : err.c_str();
+                            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Extract failed", extract_status.c_str(),
+                              platform_window);
+                        } else {
+                            extracting = true;
+                            extract_is_bootstrap = false;
+                            extract_status = "Extracting…";
+                        }
+                    }
+                    ImGuiFileDialog::Instance()->Close();
+                }
             }
 
             ImVec2 filedialog_size(window_size.x * 0.5f, window_size.y * 0.5f);

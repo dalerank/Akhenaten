@@ -13,7 +13,7 @@ localization_en = [
   {key:"#TR_BUTTON_CANCEL", text:"Cancel"}
   {key:"#TR_BUTTON_PAUSE", text:"Pause"}
   {key:"#TR_BUTTON_RESUME", text:"Resume"}
-  {key:"#TR_GAME_PAUSED", text:"Game paused ('%s' key continues)"}
+  {key:"#TR_GAME_PAUSED", text:"Game paused ('{0}' key continues)"}
   {key:"#TR_BUTTON_RESET_DEFAULTS", text:"Reset defaults"}
   {key:"#TR_BUTTON_CONFIGURE_HOTKEYS", text:"Configure hotkeys"}
   {key:"#TR_BUTTON_NEXT", text:"+"}

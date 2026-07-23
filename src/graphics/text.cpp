@@ -100,7 +100,11 @@ int get_letter_height(const uint8_t* str, e_font font) {
     int num_bytes = 1;
 
     const auto glyph = font_letter_id(def, str, &num_bytes);
-    return glyph.imagid >= 0 ? image_letter(glyph.imagid)->height : 0;
+    if (glyph.imagid < 0) {
+        return 0;
+    }
+    const image_t *letter = image_letter(glyph.imagid);
+    return letter ? letter->height : 0;
 }
 
 int text_get_width(const uint8_t* str, e_font font) {
@@ -150,7 +154,8 @@ int get_letter_width(const uint8_t* str, const font_definition* def, int* num_by
 
     const auto glyph = font_letter_id(def, str, num_bytes);
     if (glyph.imagid >= 0) {
-        return image_letter(glyph.imagid)->width + def->letter_spacing;
+        const image_t *letter = image_letter(glyph.imagid);
+        return letter ? letter->width + def->letter_spacing : 0;
     } else {
         return 0;
     }
@@ -293,10 +298,13 @@ void text_ellipsize(uint8_t* str, e_font font, int requested_width) {
         else {
             const auto glyph = font_letter_id(def, str, &num_bytes);
             if (glyph.imagid >= 0) {
-                width += image_letter(glyph.imagid)->width;
-                last_letter_spacing = def->letter_spacing;
-                width += last_letter_spacing;
-                has_chars = 1;
+                const image_t *letter = image_letter(glyph.imagid);
+                if (letter) {
+                    width += letter->width;
+                    last_letter_spacing = def->letter_spacing;
+                    width += last_letter_spacing;
+                    has_chars = 1;
+                }
             }
         }
         if (ellipsis_width + width - (has_chars ? last_letter_spacing : 0) <= requested_width)

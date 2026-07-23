@@ -19,7 +19,8 @@ void draw_foreground_military(int) {
     widget_top_menu_draw();
     window_city_draw();
     widget_sidebar_city_draw_foreground_military();
-    window_city_draw_paused_and_time_left();
+    g_window_city.draw_paused_panel();
+    window_city_draw_time_left_panel();
 }
 
 void window_city_military_show(int legion_formation_id) {

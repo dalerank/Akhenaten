@@ -1,6 +1,7 @@
 #include "font.h"
 
 #include "core/encoding/trad_chinese.h"
+#include "core/log.h"
 #include "image.h"
 #include "js/js_game.h"
 #include "graphics/imagepak_holder.h"
@@ -78,6 +79,7 @@ struct font_data_t {
     font_mbsybols_t mbsymbols;
     std::set<uint32_t> missing_glyphs;
     bool use_utf_font = false;
+    bool force_utf_font = false; // set when Pharaoh_Fonts.sg3 is unavailable
     bool needs_regeneration = false;
     bool use_internal_only = false;
     fn_fill_font_packer_t fill_font_packer = nullptr;
@@ -305,7 +307,7 @@ void font_atlas_regenerate() {
         }
     });
 
-    g_font_data.use_utf_font = (locale_short != "en");
+    g_font_data.use_utf_font = (locale_short != "en") || g_font_data.force_utf_font;
     if (!g_args.get_custom_font().empty() && !g_font_data.use_utf_font) {
         g_font_data.use_utf_font = true;
     }
@@ -342,8 +344,14 @@ void font_atlas_regenerate() {
     }
 
     if (!g_font_data.fill_font_packer(font_packer, font_pack, font_configs, utf8_symbols, symbols_font, cp_index)) {
-        g_font_data.needs_regeneration = false;
-        return;
+        // TTF missing or unreadable (common for incomplete installs) — use embedded 5x7.
+        logs::warn("font: TTF fill failed (%s) — using embedded GLCD fallback", symbols_font.c_str());
+        cp_index = 0;
+        font_pack.handle->images_array.clear();
+        if (!fill_font_packer_internal_only(font_packer, font_pack, font_configs, utf8_symbols, symbols_font, cp_index)) {
+            g_font_data.needs_regeneration = false;
+            return;
+        }
     }
 
     // Pack images into atlas
@@ -411,6 +419,17 @@ void font_atlas_regenerate() {
     image_packer_reset(font_packer);
 
     g_font_data.needs_regeneration = false;
+}
+
+void font_enable_sg3_fallback() {
+    logs::warn("font: Pharaoh_Fonts.sg3 unavailable — enabling custom font fallback");
+    g_font_data.force_utf_font = true;
+    g_font_data.use_utf_font = true;
+    font_atlas_regenerate();
+    if (g_image_data) {
+        // Treat custom atlas as the active font pack for readiness checks.
+        g_image_data->fonts_loaded = !g_font_data.mbsymbols[FONT_SMALL_PLAIN].empty();
+    }
 }
 
 void font_add_missing_glyph(uint32_t codepoint) {

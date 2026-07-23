@@ -98,6 +98,8 @@ public:
     [[nodiscard]] const xstring& get_custom_font() const { return get_str("custom_font"); }
     [[nodiscard]] const xstring& get_load_map() const { return get_str("load_map"); }
     [[nodiscard]] const xstring& get_integraltest_only() const { return get_str("integraltest_only"); }
+    [[nodiscard]] const xstring& get_extract_installer() const { return get_str("extract_installer"); }
+    [[nodiscard]] const xstring& get_extract_dir() const { return get_str("extract_dir"); }
 
     void set_custom_font(pcstr value);
 

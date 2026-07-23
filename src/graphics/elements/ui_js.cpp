@@ -61,6 +61,12 @@ void __ui_draw_image(int imgid, vec2i pos) {
     ui::eimage(imgid, pos);
 }
 ANK_FUNCTION_2(__ui_draw_image);
+
+void __ui_panel(vec2i pos, vec2i size, int flags) {
+    ui::panel(pos, size, (UiFlags)flags);
+}
+ANK_FUNCTION_3(__ui_panel);
+
 void __ui_popup_message(xstring message) {
     messages::popup(message, 0, 0);
 }

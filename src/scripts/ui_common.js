@@ -45,6 +45,7 @@ ui.reset_clip_rectangle = __ui_reset_clip_rectangle
 ui.fill_rect = __ui_fill_rect
 ui.border = __ui_border
 ui.button_border = __ui_button_border
+ui.panel = __ui_panel
 ui.label_colored = __ui_label_colored
 ui.text_abs_colored = __ui_text_abs_colored
 ui.draw_texture = __ui_draw_texture

@@ -173,6 +173,8 @@ ANK_REGISTER_STRING_ARGUMENT_HANDLER("--language", "language", "Option --languag
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--font", "custom_font", "Option --font must be followed by a font file path", "--font PATH", "use custom TTF font file (overrides font from localization.js)");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--load-map", "load_map", "Option --load-map must be followed by a map file path", "--load-map PATH", "load arbitrary .map file straight into the city, bypassing the main menu (path may be absolute, relative to PWD/data dir, or a name inside Maps/)");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--integraltest-only", "integraltest_only", "Option --integraltest-only must be followed by a test name (e.g. 06 or 06_stonemason_guild_info_window)", "--integraltest-only NAME", "with --integraltests, run only tests whose filename (stem) contains NAME (case-insensitive); useful for debugging a single failing test");
+ANK_REGISTER_STRING_ARGUMENT_HANDLER("--extract-installer", "extract_installer", "Option --extract-installer must be followed by a path to a Pharaoh installer (.exe)", "--extract-installer PATH", "extract Pharaoh data from Inno/GOG (innoextract) or InstallShield (7z+unshield) installer");
+ANK_REGISTER_STRING_ARGUMENT_HANDLER("--extract-dir", "extract_dir", "Option --extract-dir must be followed by an output directory path", "--extract-dir PATH", "output directory for --extract-installer (default: user config …/pharaoh-data)");
 
 // Register argument handler for --display-scale
 std::optional<arguments::argument_result> handle_display_scale(int argc, char **argv, int current_index) {

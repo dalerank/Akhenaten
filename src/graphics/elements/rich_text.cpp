@@ -109,9 +109,12 @@ int rich_text_t::get_lexem_width(pcstr str, int in_link) {
             // normal char
             const auto glyph = font_letter_id(normal_font_def, (const uint8_t*)str, &num_bytes);
             if (glyph.imagid >= 0) {
-                width += image_letter(glyph.imagid)->width + normal_font_def->letter_spacing;
-                last_letter_spacing = normal_font_def->letter_spacing;
-                word_char_seen = 1;
+                const image_t *letter = image_letter(glyph.imagid);
+                if (letter) {
+                    width += letter->width + normal_font_def->letter_spacing;
+                    last_letter_spacing = normal_font_def->letter_spacing;
+                    word_char_seen = 1;
+                }
             }
         }
         str += num_bytes;
@@ -177,8 +180,11 @@ int rich_text_t::get_word_width(pcstr str, int in_link, int* num_chars) {
             // normal char
             const auto glyph = font_letter_id(normal_font_def, (const uint8_t*)str, &num_bytes);
             if (glyph.imagid >= 0) {
-                width += image_letter(glyph.imagid)->width + normal_font_def->letter_spacing;
-                last_letter_spacing = normal_font_def->letter_spacing;
+                const image_t *letter = image_letter(glyph.imagid);
+                if (letter) {
+                    width += letter->width + normal_font_def->letter_spacing;
+                    last_letter_spacing = normal_font_def->letter_spacing;
+                }
             }
 
             word_char_seen = 1;
@@ -221,9 +227,13 @@ void rich_text_t::draw_line(painter &ctx, pcstr str, int x, int y, color clr, bo
                 }
 
                 const image_t* letter = image_letter('@');
-                x -= letter->width;
+                if (letter) {
+                    x -= letter->width;
+                }
                 const image_t *img = ctx.img_generic(small_image_id, { x, y });
-                x += img->width;
+                if (img) {
+                    x += img->width;
+                }
                 continue;
             } else {
                 int message_id = atoi(++str);

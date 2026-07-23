@@ -21,6 +21,7 @@
 #include "platform/screen.h"
 #include "platform/version.hpp"
 #include "platform/options_window.h"
+#include "platform/innoextract_util.h"
 #include "widget/debug_console.h"
 #include "graphics/imagepak_holder.h"
 #include "graphics/image.h"
@@ -85,6 +86,13 @@ bool pre_init_dir_attempt(const xstring& data_dir, pcstr lmsg) {
     const bool ok = vfs::platform_file_manager_set_base_path(data_dir.c_str());
     if (!ok) {
         logs::info("%s: directory not found", data_dir.c_str());
+        return false;
+    }
+
+    // Demo / base-only Pharaoh lack Cleopatra assets and crash in UI text rendering.
+    if (!g_args.no_resource() && !innoextract::has_required_game_files(data_dir.c_str())) {
+        logs::error("Incomplete Pharaoh data at %s (need Cleopatra)", data_dir.c_str());
+        return false;
     }
 
     if (game.check_valid()) {
@@ -100,7 +108,7 @@ static bool pre_init(const xstring& custom_data_dir) {
     }
 
     logs::info("Attempting to load game from working directory");
-    if (game.check_valid()) {
+    if ((!g_args.no_resource() ? innoextract::has_required_game_files(".") : true) && game.check_valid()) {
         return true;
     }
 
@@ -141,12 +149,85 @@ static void setup() {
         g_args.set_data_directory("");
     }
 
+    const bool skip_data_bootstrap = g_args.is_integral_tests() || g_args.no_resource() || platform.is_android()
+                                     || platform.is_emscripten();
+
+    // Optional: extract Pharaoh data from an Inno/GOG installer before path validation.
+    if (!skip_data_bootstrap && !g_args.get_extract_installer().empty()) {
+        xstring out_dir = g_args.get_extract_dir();
+        if (out_dir.empty()) {
+            out_dir = innoextract::default_extract_directory();
+        }
+        xstring err;
+        if (!innoextract::extract_installer(g_args.get_extract_installer().c_str(), out_dir.c_str(), &err)) {
+            logs::error("Installer extract failed: %s", err.empty() ? "unknown error" : err.c_str());
+            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Extract failed",
+              err.empty() ? "Failed to extract installer with innoextract." : err.c_str(), nullptr);
+            exit(2);
+        }
+        xstring game_root = innoextract::find_extracted_game_path(out_dir.c_str());
+        if (game_root.empty()) {
+            logs::error("Extract finished but campaign.txt was not found under %s", out_dir.c_str());
+            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Extract failed",
+              "Extraction finished but Pharaoh data (campaign.txt) was not found.", nullptr);
+            exit(2);
+        }
+        if (!innoextract::has_required_game_files(game_root.c_str())) {
+            logs::error("Extracted install is incomplete (demo / no Cleopatra): %s", game_root.c_str());
+            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Incomplete game data",
+              innoextract::required_game_files_help(), nullptr);
+            exit(2);
+        }
+        g_args.set_data_directory(game_root.c_str());
+        arguments::store(g_args);
+        logs::info("Using extracted Pharaoh data at %s", game_root.c_str());
+    }
+
+    // Prefer a usable data directory: cfg may still point at an old/demo extract.
+    // 1) keep current if complete
+    // 2) else Steam Pharaoh + Cleopatra
+    // 3) else unpack Installer/*.exe next to the binary into PharaohData
+    if (!skip_data_bootstrap && g_args.get_extract_installer().empty()) {
+        if (!innoextract::has_required_game_files(g_args.get_data_directory().c_str())) {
+            vfs::path steam_path = platform.get_steam_path();
+            if (!steam_path.empty()) {
+                vfs::path steam_data(steam_path, "/steamapps/common/Pharaoh + Cleopatra/");
+                if (innoextract::has_required_game_files(steam_data.c_str())) {
+                    g_args.set_data_directory(steam_data.c_str());
+                    arguments::store(g_args);
+                    logs::info("Using Steam Pharaoh data at %s", steam_data.c_str());
+                }
+            }
+        }
+
+        if (!innoextract::has_required_game_files(g_args.get_data_directory().c_str())) {
+            // Existing PharaohData (already complete) can be picked up without asking.
+            // If Installer/*.exe is pending, ask inside options_window instead of extracting here.
+            if (innoextract::installer_pending_bootstrap().empty()) {
+                xstring err;
+                xstring local_root = innoextract::try_bootstrap_pharaoh_data(&err);
+                if (!local_root.empty()) {
+                    g_args.set_data_directory(local_root.c_str());
+                    arguments::store(g_args);
+                    logs::info("Using local PharaohData at %s", local_root.c_str());
+                } else if (!err.empty()) {
+                    logs::warn("Local PharaohData bootstrap: %s", err.c_str());
+                }
+            }
+        }
+    }
+
     // Show configuration window if --config is set or akhenaten.cfg is missing (--noconfig-window skips).
+    // Also open it when a local Installer/*.exe is waiting so the user can confirm unpack there.
     // Skip in integral-tests mode: the dialog would block forever in a headless CI runner,
     // and SDL_CreateRenderer there fails because the dummy video driver doesn't support
     // SDL_RENDERER_ACCELERATED, which is what options_window.cpp requests.
     const bool support_window_options = !(platform.is_android() || platform.is_emscripten() || g_args.is_integral_tests());
-    if (g_args.should_show_startup_config_window() && support_window_options) {
+    const bool pending_installer = !skip_data_bootstrap && g_args.get_extract_installer().empty()
+                                   && !innoextract::installer_pending_bootstrap().empty()
+                                   && !innoextract::has_required_game_files(g_args.get_data_directory().c_str());
+    if (support_window_options
+        && (g_args.should_show_startup_config_window() || pending_installer)) {
         show_options_window(g_args);
     }
 
@@ -159,10 +240,11 @@ static void setup() {
 
     while (!pre_init(g_args.get_data_directory())) {
             platform.append_startup_log("Startup: folder validation failed");
-            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Warning",
-              "Akhenaten requires the original files from Pharaoh to run.\n"
-              "Copy your entire Pharaoh folder to your Android device into folder"
-              "/sdcard0/Android/data/com.github.dalerank.akhenaten/files",
+            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Pharaoh data required",
+              "Akhenaten requires the original files from Pharaoh + Cleopatra.\n\n"
+              "The Pharaoh demo is not supported.\n"
+              "Point data_directory to a full Cleopatra install, or place a GOG/Inno "
+              "Setup.exe under Installer/ in the launch directory (or next to akhenaten.exe).",
               nullptr);
 
 #if defined(GAME_PLATFORM_ANDROID)

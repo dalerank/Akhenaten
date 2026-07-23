@@ -57,6 +57,8 @@ Sources are collected via `file(GLOB ...)` with **no `CONFIGURE_DEPENDS`**, so a
 --log-sound           log which sound files the game tries to load
 --nocrashdlg          suppress crash dialog
 --fulldmp             create full crash dump
+--extract-installer PATH  extract Pharaoh data from Inno/GOG Setup.exe via innoextract
+--extract-dir PATH    output dir for --extract-installer (default: …/akhenaten/pharaoh-data)
 --save_debug_texture  save debug textures to DEV_TESTING/tex/
 --size WxH            window size, e.g. 800x600
 SDL_LOG_PRIORITY=debug  env var for verbose logging (info by default)

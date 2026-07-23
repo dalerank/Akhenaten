@@ -89,7 +89,7 @@ localization_fr = [
   { key:"#TR_HOTKEY_INCREASE_GAME_SPEED", text:"Augmenter la vitesse du jeu"},
   { key:"#TR_HOTKEY_DECREASE_GAME_SPEED", text:"Diminuer la vitesse du jeu"},
   { key:"#TR_HOTKEY_TOGGLE_PAUSE", text:"Activer la pause"},
-  { key:"#TR_GAME_PAUSED", text:"Jeu en pause (touche '%s' pour continuer)"},
+  { key:"#TR_GAME_PAUSED", text:"Jeu en pause (touche '{0}' pour continuer)"},
   { key:"#TR_HOTKEY_CYCLE_LEGION", text:"Parcourir les légions en boucle"},
   { key:"#TR_HOTKEY_ROTATE_MAP_LEFT", text:"Tourner la carte vers la gauche"},
   { key:"#TR_HOTKEY_ROTATE_MAP_RIGHT", text:"Tourner la carte vers la droite"},

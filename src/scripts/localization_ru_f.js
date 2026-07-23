@@ -81,7 +81,7 @@ localization_ru_f = [
     { key:"#TR_HOTKEY_INCREASE_GAME_SPEED", text:"Увеличить скорость игры"}
     { key:"#TR_HOTKEY_DECREASE_GAME_SPEED", text:"Уменьшить скорость игры"}
     { key:"#TR_HOTKEY_TOGGLE_PAUSE", text:"Пауза"}
-    { key:"#TR_GAME_PAUSED", text:"Пayзa в игpe (клaвишeй '%s' пpoдoлжить)"}
+    { key:"#TR_GAME_PAUSED", text:"Пayзa в игpe (клaвишeй '{0}' пpoдoлжить)"}
     { key:"#TR_HOTKEY_CYCLE_LEGION", text:"Следующий легион"}
     { key:"#TR_HOTKEY_ROTATE_MAP_LEFT", text:"Повернуть карту влево"}
     { key:"#TR_HOTKEY_ROTATE_MAP_RIGHT", text:"Повернуть карту вправо"}

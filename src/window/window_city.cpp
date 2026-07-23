@@ -25,20 +25,10 @@
 #include "widget/widget_city.h"
 #include "window/window_advisors.h"
 #include "window/file_dialog.h"
-#include "config/hotkeys.h"
-#include "core/bstring.h"
-#include "input/keys.h"
+#include "graphics/elements/ui.h"
 #include "input/scroll.h"
 
 window_city g_window_city;
-
-static int center_in_city(int element_width_pixels) {
-    vec2i view_pos, view_size;
-    view_pos = g_camera.offset;
-    view_size = g_camera.size_pixels;
-    int margin = (view_size.x - element_width_pixels) / 2;
-    return view_pos.x + margin;
-}
 
 int window_city::draw_background(UiFlags flags) {
     OZZY_PROFILER_FUNCTION();
@@ -51,7 +41,11 @@ void window_city_draw_background(int) {
     g_window_city.draw_background(UiFlags_None);
 }
 
-void window_city_draw_paused_and_time_left() {
+void window_city::draw_paused_panel() {
+    ui::dispatch_autoconfig_es_event(&g_window_city, __func__, {});
+}
+
+void window_city_draw_time_left_panel() {
     if (scenario_criteria_time_limit_enabled() && !g_scenario.has_won) {
         int years;
         if (scenario_criteria_max_year() <= game.simtime.year + 1) {
@@ -75,29 +69,6 @@ void window_city_draw_paused_and_time_left() {
         small_panel_draw({ 1, 25 }, 15, 1);
         int width = lang_text_draw(6, 3, 6, 29, FONT_NORMAL_BLACK_ON_LIGHT);
         text_draw_number(total_months, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK_ON_LIGHT);
-    }
-
-    if (game.paused) {
-        vec2i offset{center_in_city(448), 40};
-        outer_panel_draw(offset, 28, 3);
-
-        const hotkey_mapping *mapping = game_hotkeys::hotkey_for_action(HOTKEY_TOGGLE_PAUSE);
-        pcstr key_name = "";
-        if (mapping) {
-            e_key key = mapping->state.key;
-            e_key_mode modifiers = mapping->state.modifiers;
-            if (key == KEY_NONE) {
-                key = mapping->alt.key;
-                modifiers = mapping->alt.modifiers;
-            }
-            if (key != KEY_NONE) {
-                key_name = (pcstr)key_combination_display_name(key, modifiers);
-            }
-        }
-
-        bstring256 paused_text;
-        paused_text.printf(lang_text_from_key("#TR_GAME_PAUSED"), key_name);
-        lang_text_draw_centered(paused_text.c_str(), offset.x, 58, 448, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 }
 
@@ -168,7 +139,8 @@ void window_city_draw_foreground(int) {
     widget_top_menu_draw();
 
     if (g_window_manager.window_is("window_city") || g_window_manager.window_is("window_city_military") || g_window_manager.window_is("window_city_warship")) {
-        window_city_draw_paused_and_time_left();
+        g_window_city.draw_paused_panel();
+        window_city_draw_time_left_panel();
         draw_cancel_construction();
     }
 

@@ -325,6 +325,10 @@ bool image_load_paks() {
 
     data.allow_updata_on_load = false;
 
+    if (!data.fonts_loaded) {
+        font_enable_sg3_fallback();
+    }
+
     return true;
 }
 
