@@ -9,9 +9,9 @@ include(ExternalProject)
 
 set(INNOEXTRACT_GIT_REPOSITORY "https://github.com/dalerank/innoextract-nb.git"
     CACHE STRING "Git repository for innoextract helper sources")
-# Pin to a known-good tip of innoextract-nb (update intentionally).
-set(INNOEXTRACT_GIT_TAG "9971ddb6ff9dca19f6baed2237c1b335884e47b5"
-    CACHE STRING "Git tag/commit for innoextract helper sources")
+# Track innoextract-nb main tip (not a pinned commit).
+set(INNOEXTRACT_GIT_TAG "main"
+    CACHE STRING "Git tag/branch/commit for innoextract helper sources")
 
 set(INNOEXTRACT_SOURCE_DIR "" CACHE PATH
     "Optional local innoextract sources (skips git download when set / sibling ../innoextract exists)")
@@ -126,7 +126,7 @@ else()
         CMAKE_ARGS ${INNOEXTRACT_CMAKE_ARGS}
         ${INNOEXTRACT_EP_EXTRA_ARGS}
         BUILD_BYPRODUCTS ${INNOEXTRACT_EXE}
-        UPDATE_COMMAND ""
+        # Keep tracking branch tips (e.g. main); local SOURCE_DIR path disables update above.
     )
 endif()
 

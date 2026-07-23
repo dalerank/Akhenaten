@@ -492,6 +492,7 @@ void show_options_window(Arguments& args) {
                         if (!game_root.empty() && innoextract::has_required_game_files(game_root.c_str())) {
                             args.set_data_directory(game_root.c_str());
                             data_directory = args.get_data_directory().c_str();
+                            arguments::store(args);
                             extract_status = "Extract OK";
                             logs::info("Using extracted game data at %s", game_root.c_str());
                         } else if (!game_root.empty()) {
@@ -551,7 +552,8 @@ void show_options_window(Arguments& args) {
                         }
                         const char *name = slash ? slash + 1 : pending_installer.c_str();
 
-                        ImGui::TextUnformatted("We found a Pharaoh installer next to the game:");
+                        ImGui::TextUnformatted("We found a Pharaoh installer in the launch directory");
+                        ImGui::TextUnformatted("(or next to akhenaten.exe):");
                         ImGui::Spacing();
                         ImGui::TextWrapped("%s", name);
                         ImGui::Spacing();

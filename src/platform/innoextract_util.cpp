@@ -61,6 +61,8 @@ bool spawn_and_wait(const std::wstring &cmdline, pcstr tool_label, xstring *erro
 
     HANDLE stderr_read = nullptr;
     HANDLE stderr_write = nullptr;
+    HANDLE nul_in = nullptr;
+    HANDLE nul_out = nullptr;
     if (progress) {
         if (!CreatePipe(&stderr_read, &stderr_write, &sa, 0)) {
             if (error_out) {
@@ -69,6 +71,29 @@ bool spawn_and_wait(const std::wstring &cmdline, pcstr tool_label, xstring *erro
             return false;
         }
         SetHandleInformation(stderr_read, HANDLE_FLAG_INHERIT, 0);
+
+        // CREATE_NO_WINDOW: parent std handles are often INVALID_HANDLE_VALUE. Point the child
+        // at NUL so stdout writes (banners/logs) do not fail or block while stderr carries PROGRESS.
+        nul_in = CreateFileW(L"NUL", GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, &sa, OPEN_EXISTING, 0, nullptr);
+        nul_out = CreateFileW(L"NUL", GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, &sa, OPEN_EXISTING, 0, nullptr);
+        if (nul_in == INVALID_HANDLE_VALUE || nul_out == INVALID_HANDLE_VALUE) {
+            if (stderr_read) {
+                CloseHandle(stderr_read);
+            }
+            if (stderr_write) {
+                CloseHandle(stderr_write);
+            }
+            if (nul_in && nul_in != INVALID_HANDLE_VALUE) {
+                CloseHandle(nul_in);
+            }
+            if (nul_out && nul_out != INVALID_HANDLE_VALUE) {
+                CloseHandle(nul_out);
+            }
+            if (error_out) {
+                *error_out = xstring((std::string("Failed to open NUL for ") + tool_label).c_str());
+            }
+            return false;
+        }
     }
 
     STARTUPINFOW si;
@@ -78,20 +103,34 @@ bool spawn_and_wait(const std::wstring &cmdline, pcstr tool_label, xstring *erro
     ZeroMemory(&pi, sizeof(pi));
     if (progress) {
         si.dwFlags |= STARTF_USESTDHANDLES;
-        si.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
-        si.hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+        si.hStdInput = nul_in;
+        si.hStdOutput = nul_out;
         si.hStdError = stderr_write;
     }
+
+    auto close_spawn_handles = [&]() {
+        if (stderr_read) {
+            CloseHandle(stderr_read);
+            stderr_read = nullptr;
+        }
+        if (stderr_write) {
+            CloseHandle(stderr_write);
+            stderr_write = nullptr;
+        }
+        if (nul_in) {
+            CloseHandle(nul_in);
+            nul_in = nullptr;
+        }
+        if (nul_out) {
+            CloseHandle(nul_out);
+            nul_out = nullptr;
+        }
+    };
 
     std::wstring mutable_cmd = cmdline;
     if (!CreateProcessW(nullptr, mutable_cmd.data(), nullptr, nullptr, progress ? TRUE : FALSE, CREATE_NO_WINDOW,
           nullptr, nullptr, &si, &pi)) {
-        if (stderr_read) {
-            CloseHandle(stderr_read);
-        }
-        if (stderr_write) {
-            CloseHandle(stderr_write);
-        }
+        close_spawn_handles();
         if (error_out) {
             *error_out = xstring((std::string("Failed to start ") + tool_label + " process").c_str());
         }
@@ -99,9 +138,18 @@ bool spawn_and_wait(const std::wstring &cmdline, pcstr tool_label, xstring *erro
         return false;
     }
 
+    // Parent no longer needs inherited write ends / NUL handles.
     if (stderr_write) {
         CloseHandle(stderr_write);
         stderr_write = nullptr;
+    }
+    if (nul_in) {
+        CloseHandle(nul_in);
+        nul_in = nullptr;
+    }
+    if (nul_out) {
+        CloseHandle(nul_out);
+        nul_out = nullptr;
     }
 
     std::string line_acc;
@@ -133,6 +181,7 @@ bool spawn_and_wait(const std::wstring &cmdline, pcstr tool_label, xstring *erro
             parse_progress_chunk(line_acc, buf, nread, progress);
         }
         CloseHandle(stderr_read);
+        stderr_read = nullptr;
     }
 
     DWORD exit_code = 1;
@@ -178,6 +227,14 @@ bool spawn_argv_and_wait(char *const argv[], pcstr tool_label, xstring *error_ou
             close(pipefd[0]);
             dup2(pipefd[1], STDERR_FILENO);
             close(pipefd[1]);
+            const int devnull = open("/dev/null", O_RDWR);
+            if (devnull >= 0) {
+                dup2(devnull, STDIN_FILENO);
+                dup2(devnull, STDOUT_FILENO);
+                if (devnull > STDERR_FILENO) {
+                    close(devnull);
+                }
+            }
         }
         execv(argv[0], argv);
         _exit(127);
@@ -269,6 +326,50 @@ xstring binary_directory_impl() {
 }
 
 // Prefer the process cwd (launch directory), then the directory of akhenaten.exe.
+fs::path normalize_search_base(fs::path p) {
+    std::error_code ec;
+    fs::path canon = fs::weakly_canonical(p, ec);
+    if (!ec) {
+        p = std::move(canon);
+    } else {
+        p = p.lexically_normal();
+    }
+    // SDL_GetBasePath() often ends with a trailing separator → empty filename.
+    if (!p.has_filename() && p.has_parent_path()) {
+        p = p.parent_path();
+    }
+    return p;
+}
+
+bool same_search_base(const fs::path &a, const fs::path &b) {
+    if (a.empty() || b.empty()) {
+        return false;
+    }
+    std::error_code ec;
+    if (fs::exists(a, ec) && !ec && fs::exists(b, ec) && !ec) {
+        if (fs::equivalent(a, b, ec) && !ec) {
+            return true;
+        }
+    }
+    fs::path na = normalize_search_base(a);
+    fs::path nb = normalize_search_base(b);
+    auto sa = na.make_preferred().string();
+    auto sb = nb.make_preferred().string();
+#if defined(_WIN32)
+    for (char &c : sa) {
+        if (c >= 'A' && c <= 'Z') {
+            c = static_cast<char>(c - 'A' + 'a');
+        }
+    }
+    for (char &c : sb) {
+        if (c >= 'A' && c <= 'Z') {
+            c = static_cast<char>(c - 'A' + 'a');
+        }
+    }
+#endif
+    return sa == sb;
+}
+
 void bootstrap_search_bases(fs::path *out_a, fs::path *out_b) {
     out_a->clear();
     out_b->clear();
@@ -276,12 +377,12 @@ void bootstrap_search_bases(fs::path *out_a, fs::path *out_b) {
     std::error_code ec;
     fs::path cwd = fs::current_path(ec);
     if (!ec) {
-        *out_a = std::move(cwd);
+        *out_a = normalize_search_base(std::move(cwd));
     }
 
     if (xstring bin = binary_directory_impl(); !bin.empty()) {
-        fs::path exe_dir(bin.c_str());
-        if (out_a->empty() || exe_dir != *out_a) {
+        fs::path exe_dir = normalize_search_base(fs::path(bin.c_str()));
+        if (out_a->empty() || !same_search_base(exe_dir, *out_a)) {
             *out_b = std::move(exe_dir);
         }
     }
@@ -615,7 +716,7 @@ bool extract_installer_impl(pcstr setup_exe, pcstr out_dir, xstring *error_out, 
         logs::warn("extract: create_directories(%s): %s", out_dir, ec.message().c_str());
     }
 
-    // Prefer Inno Setup (GOG). Fall back to InstallShield (Sierra demo / retail).
+    // Prefer Inno Setup (GOG). Fall back to InstallShield only when innoextract rejects the file.
     xstring inno_err;
     if (extract_with_innoextract(setup_exe, out_dir, &inno_err, progress)) {
         if (!find_campaign_dir(fs::path(out_dir)).empty()) {
@@ -624,11 +725,16 @@ bool extract_installer_impl(pcstr setup_exe, pcstr out_dir, xstring *error_out, 
             }
             return true;
         }
-        logs::warn("innoextract finished but campaign.txt missing — trying InstallShield path");
-    } else {
-        logs::info("innoextract failed (%s) — trying InstallShield path", inno_err.c_str());
+        // innoextract accepted the archive and finished — InstallShield will not help and only
+        // produces misleading 7z/unshield errors on GOG/Inno setups.
+        logs::warn("innoextract finished but campaign.txt missing under %s", out_dir);
+        if (error_out) {
+            *error_out = "innoextract finished but Pharaoh data (campaign.txt) was not found";
+        }
+        return false;
     }
 
+    logs::info("innoextract failed (%s) — trying InstallShield path", inno_err.c_str());
     xstring ish_err;
     if (extract_with_installshield(setup_exe, out_dir, &ish_err, progress)) {
         if (progress) {
@@ -638,7 +744,10 @@ bool extract_installer_impl(pcstr setup_exe, pcstr out_dir, xstring *error_out, 
     }
 
     if (error_out) {
-        if (!ish_err.empty()) {
+        if (!inno_err.empty() && !ish_err.empty()) {
+            *error_out = xstring(
+              (std::string(inno_err.c_str()) + " — InstallShield fallback: " + ish_err.c_str()).c_str());
+        } else if (!ish_err.empty()) {
             *error_out = ish_err;
         } else if (!inno_err.empty()) {
             *error_out = inno_err;

@@ -186,7 +186,7 @@ static void setup() {
     // Prefer a usable data directory: cfg may still point at an old/demo extract.
     // 1) keep current if complete
     // 2) else Steam Pharaoh + Cleopatra
-    // 3) else unpack Installer/*.exe next to the binary into PharaohData
+    // 3) else use existing PharaohData, or ask to unpack Installer/ (cwd / next to exe)
     if (!skip_data_bootstrap && g_args.get_extract_installer().empty()) {
         if (!innoextract::has_required_game_files(g_args.get_data_directory().c_str())) {
             vfs::path steam_path = platform.get_steam_path();
