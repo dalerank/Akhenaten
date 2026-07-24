@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to build a sphinx — Akhenaten</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../devblog.html" class="active">Devblog</a></li>
+        <li><a href="../wiki/index.html">Wiki</a></li>
+        <li><a href="../screenshots.html">Screenshots</a></li>
+        <li><a href="../downloads.html">Downloads</a></li>
+        <li><a href="../contact.html">Join us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-content post-page">
+    <div class="post-meta"><time>July 24, 2026</time> — <a href="../devblog.html">← Devblog</a></div>
+    <h1>How to build a sphinx</h1>
+
+    <img src="../images/sphinx-city.jpg" alt="The completed sphinx sitting in a desert city, seen with the full HUD" class="post-image" loading="lazy" style="image-rendering:pixelated" />
+
+    <p>
+      A while back I <a href="how-to-build-a-mastaba.html">wrote about the mastaba</a> — the first monument you meet in the campaign, and the one that taught me how the original Pharaoh assembled a large structure out of small, independent, interchangeable parts. The sphinx is the next monument on that list, and it is a good illustration of why that "composite building" idea was worth all the trouble back in 1999. It is a single statue that is far too big and far too irregular to be one sprite, so under the hood it is not one building at all.
+    </p>
+
+    <h2>Three buildings pretending to be one statue</h2>
+    <p>
+      The sphinx you place is actually <strong>three separate buildings</strong>, each a 6×6 footprint, chained together the same way a fort links to its parade ground. The player never sees the seams: you drop one ghost, and the engine quietly creates the other two, links them with <code>prev_part_building_id</code> / <code>next_part_building_id</code>, and from then on they build, animate, and demolish as a unit. The three parts map onto the anatomy of the statue:
+    </p>
+    <ul>
+      <li><strong>Part A — the paws</strong>, the front of the sphinx with the outstretched forelegs.</li>
+      <li><strong>Part B — the body and head</strong>, the centre section carrying the pharaoh's face and the striped <em>nemes</em> headdress.</li>
+      <li><strong>Part C — the haunches</strong>, the rear of the body.</li>
+    </ul>
+    <p>
+      Laid out along the map, that is a 6×18 strip of tiles. When you place the main part (A), <code>on_place_update_tiles</code> spawns B and C at fixed offsets, tags each with a <code>variant</code> index (0 = paws, 1 = body, 2 = haunches), copies the current construction phase into them, and stitches the linked list together. Delete any one of them and the cascade in the cleanup pass takes the whole statue down with it. Exactly the mastaba trick, just with three body-shaped pieces instead of a run of identical walls.
+    </p>
+
+    <h2>Two textures per part — the diagonals</h2>
+    <p>
+      Here is the detail that tripped me up at first. Each part does <em>not</em> have one sprite per camera angle; it has <strong>two</strong>. The isometric city can be rotated in 90° steps, and a long horizontal statue looks meaningfully different depending on whether it is running "bottom-left to top-right" or "top-left to bottom-right" across the screen. So every part ships two frames — one for each diagonal — and the engine picks between them based on the camera:
+    </p>
+    <pre><code>const int orient_idx = (g_camera.orientation / 2) % 2;
+const xstring key = anim_key_for(stage, part, orient_idx);</code></pre>
+    <p>
+      That collapses the four map rotations into the two diagonals the artwork actually needs. The animation keys follow a rigid little grammar — <code>s&lt;stage&gt;&lt;part&gt;&lt;diagonal&gt;</code> — so <code>s6b1</code> is "stage 6, body, first diagonal" and <code>s1a2</code> is "stage 1, paws, second diagonal". Three parts × two diagonals × six stages gives the full set of 36 sprites, each living in its own texture pack (<code>PACK_SPHINX_1_A</code> … <code>PACK_SPHINX_6_C</code>).
+    </p>
+
+    <h2>Six stages of carving</h2>
+    <p>
+      Like every monument, the sphinx is built in phases, and the artwork changes as it goes — you watch a rough block of stone slowly become a face. There are <strong>six visible stages</strong>, and the phase machine resolves down to them with a small clamp: the early scaffolding phases all read as stage 1, phases 2–5 map one-to-one onto carving stages 2–5, and everything from phase 6 onward (including the <code>FINISHED</code> sentinel, which is stored as <code>-1</code>) shows the completed stage 6.
+    </p>
+    <pre><code>int building_sphinx::art_stage() const {
+    const int p = runtime_data().phase; // int8_t: FINISHED == -1
+    if (p == MONUMENT_FINISHED || p >= 6) return 6;
+    if (p <= 1) return 1;
+    return p;
+}</code></pre>
+    <p>
+      Because the three parts share the same phase value, they carve in lockstep — the head never gets ahead of the paws. Only the "main" part (the paws) actually runs the construction clock in <code>update_day</code> and requests labor during the carving stages; the other two just render whatever stage the main part has reached.
+    </p>
+    <p>
+      In gameplay terms those stages are a small production chain rather than a timer. Unlike a pyramid, the sphinx does not swallow stone or bricks — it is carved out of the rock itself — so what it actually asks for is <strong>labor and organized guilds</strong>:
+    </p>
+    <ul>
+      <li><strong>Stage 1 — scaffolding.</strong> Work Camps stage the site and Carpenters' Guilds raise wooden scaffolding around the block. The statue is still a rough, unpainted mass of stone at this point.</li>
+      <li><strong>Stages 2–5 — carving.</strong> Stonemasons work the figure over four passes, and this is where most of the shape appears: the paws stretch out, the lion's body takes form, and the pharaoh's face emerges under the <em>nemes</em> headdress. The masons are the bottleneck here — travel time from the guild to the site matters more than any raw material count.</li>
+      <li><strong>Stage 6 — finishing.</strong> The final coat: the blue-and-gold stripes on the headdress and the painted detail you can see on the completed statue.</li>
+    </ul>
+    <p>
+      The exact resource loads are still placeholders (timber for the scaffolding, then paint and clay for the finishing coat) pending the numbers from the original data files — every one of those lines is flagged <code>TODO(orig-data)</code>, so it is honest about being a guess. The construction <em>logic</em> is real; the specific "how many loads of timber" is what is left to pin down. It is fireproof and damage-proof, so once it is up it stays up.
+    </p>
+
+    <img src="../images/sphinx-statue.jpg" alt="Close-up of the finished sphinx statue" class="post-image" loading="lazy" style="image-rendering:pixelated" />
+
+    <h2>What the sphinx is for</h2>
+    <p>
+      A sphinx is not a working building — nobody is employed inside it and it produces nothing. Its job is to be a <strong>monument</strong>: a permanent boost to the city's prestige that counts toward your Kingdom rating and, in several campaigns, toward the mission victory conditions. Each monument carries a "weight" toward the rating; the sphinx's is a modest <code>1</code> (in <code>src/scripts/city/monuments.js</code>), reflecting that it is one of the lighter monuments — quick and cheap next to a full pyramid, but still a genuine landmark.
+    </p>
+    <p>
+      Its headline appearance is <strong>mission 18, Rostja</strong> — the Giza plateau — where the historical brief is to raise the great pyramid complex, the prince's pyramid, and the Sphinx (Khafra's likeness carved into the living rock). That is exactly why the sphinx is a good <em>parallel</em> project in the original game: because it feeds on labor and carving rather than the endless stone deliveries a pyramid demands, you can keep your stonemasons busy on the sphinx while the bulk of your porters and quarries pour stone into the main pyramid next door. Two monuments rising at once, sharing a workforce.
+    </p>
+    <p>
+      One thing the original enforced that Akhenaten does not yet: placement. In Pharaoh the sphinx has to sit on a suitable <strong>rock outcrop</strong> — you are literally carving the landscape — whereas for now the reimplementation lets you drop the 6×18 chain on any clear ground (the rock check is stubbed as <code>TODO(sphinx-rock)</code>). Orientation works, though: the building-rotation key lays the chain along either axis, and rotating the camera swaps each part to its other diagonal sprite so the statue always reads correctly.
+    </p>
+
+    <h2>Why bother splitting it up</h2>
+    <p>
+      The same lesson the mastaba taught applies here, only more so. A single giant sprite would be simpler to draw but impossible to build incrementally, impossible to rotate cleanly, and a nightmare to layer correctly against the little architect figure wandering across its paws for scale. Cut the statue into three ordinary buildings, give each two diagonals and six carving stages, let the shared isometric renderer sort them against everything else on the map, and the hard problems mostly evaporate. It really was a clever piece of engineering for a game that had to run in 64MB of RAM — and it is still a pleasure to watch the face slowly emerge from the stone.
+    </p>
+
+    <div class="post-nav">
+      <a href="how-to-build-a-mastaba.html">← Related: How to build a mastaba</a>
+      <span></span>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>
