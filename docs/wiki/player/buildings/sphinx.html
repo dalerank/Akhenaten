@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sphinx — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .bld-header-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      margin-bottom: 2rem;
+    }
+    .bld-header-right {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .bld-image-wrap { text-align: center; }
+    .bld-image-wrap img {
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      image-rendering: pixelated;
+      max-width: 275px;
+      height: auto;
+      background: #1a1810;
+    }
+    .bld-image-wrap figcaption {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+    .bld-infobox {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.9rem 1.1rem;
+    }
+    .bld-infobox h4 {
+      margin: 0 0 0.6rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--gold);
+    }
+    .bld-infobox dl {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.2rem 1rem;
+      margin: 0;
+    }
+    .bld-infobox dt { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; padding-top: 0.1rem; }
+    .bld-infobox dd { margin: 0; font-size: 0.85rem; color: var(--text); }
+    .bld-infobox .sep { grid-column: 1/-1; border: none; border-top: 1px solid var(--border); margin: 0.4rem 0; }
+    .bld-stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .bld-stat { text-align: center; }
+    .bld-stat .val { font-size: 1.3rem; font-weight: 700; color: var(--gold); display: block; }
+    .bld-stat .lbl { font-size: 0.7rem; color: var(--text-muted); }
+    .chain-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.8rem 1.1rem;
+      margin: 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-size: 0.88rem;
+      flex-wrap: wrap;
+    }
+    .chain-box .step {
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 3px;
+      padding: 0.3rem 0.7rem;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .chain-box .arrow { color: var(--gold); font-size: 1.1rem; }
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .kw  { color: #c9a84c; } .num { color: #9ecbff; } .str { color: #7ec87e; } .cmt { color: #5a5650; font-style: italic; }
+    .file-ref { display: inline-block; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .bld-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .bld-nav a { color: var(--gold); }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+    .note-box {
+      background: rgba(201,168,76,0.06);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 4px;
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      margin: 1rem 0;
+    }
+    .ext-link { font-size: 0.8rem; color: var(--text-muted); }
+    .ext-link a { color: var(--gold); }
+    @media (max-width: 700px) {
+      .bld-header-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">← All Buildings</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Monuments</div>
+        <ul>
+          <li><a href="monuments.html">Overview</a></li>
+          <li><a href="sphinx.html" class="active">Sphinx</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#construction">Construction</a></li>
+          <li><a href="#placement">Placement</a></li>
+          <li><a href="#missions">Missions</a></li>
+          <li><a href="#tips">Tips</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Buildings</a> /
+        <a href="monuments.html">Monuments</a> /
+        Sphinx
+      </div>
+
+      <h1>Sphinx</h1>
+
+      <div class="bld-header-grid">
+        <figure class="bld-image-wrap">
+          <img src="sphinx.png" alt="Sphinx monument artwork from Pharaoh" width="275" height="200" />
+          <figcaption>Pharaoh monument artwork</figcaption>
+        </figure>
+        <div class="bld-header-right">
+          <div>
+            <p>The <strong>Sphinx</strong> is a monument: a lion’s body with a human head, carved from a rock outcrop. Compared with pyramids it is relatively simple and quick to finish — mainly timber scaffolding, carpenters, and stonemasons.</p>
+            <p>In the original game, placing the site generates a rock formation to carve. In Akhenaten that rock restriction is not enforced yet (<code>TODO(sphinx-rock)</code>); the monument can be placed on ordinary clear land.</p>
+            <p class="ext-link">Source summary adapted from
+              <a href="https://impressionsgames.fandom.com/wiki/Sphinx" target="_blank" rel="noopener">Impressions Games Fandom — Sphinx</a>
+              and <a href="https://pharaoh.heavengames.com/strategy/monuments/" target="_blank" rel="noopener">Pharaoh Heaven monuments chart</a>.</p>
+          </div>
+          <div class="bld-infobox">
+            <h4>Stats</h4>
+            <div class="bld-stat-row" style="margin-bottom:0.9rem">
+              <div class="bld-stat"><span class="val">6×18</span><span class="lbl">Footprint</span></div>
+              <div class="bld-stat"><span class="val">3×6×6</span><span class="lbl">Parts</span></div>
+              <div class="bld-stat"><span class="val">1</span><span class="lbl">Monument wt.</span></div>
+            </div>
+            <hr class="sep" />
+            <dl>
+              <dt>Cost (Normal)</dt>
+              <dd>4&nbsp;500 Db</dd>
+              <dt>Cost by difficulty</dt>
+              <dd style="font-size:0.78rem;color:var(--text-muted)">
+                VE 2&nbsp;500 · Easy 3&nbsp;500 · <strong style="color:var(--text)">Normal 4&nbsp;500</strong> · Hard 6&nbsp;500 · VH 10&nbsp;000
+              </dd>
+              <dt>Materials</dt>
+              <dd>Timber (scaffolding); finishing paint &amp; clay <em>(Akhenaten stub)</em></dd>
+              <dt>Guilds</dt>
+              <dd>Carpenters · Stonemasons</dd>
+              <dt>Labor</dt>
+              <dd><a href="work-camp.html">Work Camp</a> laborers + guild craftsmen</dd>
+              <dt>Fire / damage</dt>
+              <dd>Fireproof · damage-proof</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <div class="chain-box">
+        <span class="step">Timber</span>
+        <span class="arrow">→</span>
+        <span class="step">Carpenters’ Guild</span>
+        <span class="arrow">→</span>
+        <span class="step">Scaffolding</span>
+        <span class="arrow">→</span>
+        <span class="step">Stonemasons’ Guild</span>
+        <span class="arrow">→</span>
+        <span class="step"><strong>Sphinx carved</strong></span>
+      </div>
+
+      <h2 id="overview">Overview</h2>
+      <p>Sphinxes are among the lighter monuments in Pharaoh. They do not consume plain stone or bricks like pyramids or mastabas: the sculpture is carved from the monument’s rock mass. Construction still needs organized labor — Work Camps haul and stage work, carpenters raise wooden scaffolding, and stonemasons sculpt through several art stages.</p>
+      <p>In Akhenaten the Sphinx is implemented as <strong>three linked buildings</strong> of 6×6 tiles each (paws / head / rear), placed together for a combined <strong>6×18</strong> footprint. They share construction progress and are demolished together.</p>
+
+      <div class="note-box">
+        <strong>Akhenaten status (C6):</strong> placeable, multi-part, info window, and integral test are in.
+        Resource counts and finishing paint/clay are temporary stubs (<code>TODO(orig-data)</code>).
+        Original rock-deposit placement is deferred (<code>TODO(sphinx-rock)</code>).
+        Mission 18 Rostja still uses a stand-in monument goal until true pyramid (C3) returns the original target of 53.
+      </div>
+
+      <h2 id="construction">Construction</h2>
+      <p>Original-game guidance (Fandom / community charts):</p>
+      <ul>
+        <li><strong>Footprint:</strong> 6×18 tiles.</li>
+        <li><strong>Timber:</strong> scaffolding via Carpenters’ Guilds (often cited ~5 wood loads; 2–3 guilds recommended).</li>
+        <li><strong>Stonemasons:</strong> carve the figure across stages (often cited ~17 masons; one guild is a common start).</li>
+        <li><strong>Work Camps:</strong> supply unskilled labor; keep camps and guilds near the site.</li>
+      </ul>
+      <p>Akhenaten’s temporary phase scheme (stub amounts): early phases need timber and carpenters; mid phases call for stonemasons; late finishing uses paint and clay. Exact original load counts are not yet restored.</p>
+
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Art stage</th><th>Role (approx.)</th><th>Guilds / materials (temp.)</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Excavation / scaffolding start</td><td>Timber · Carpenters</td></tr>
+            <tr><td>2–5</td><td>Carving body and head</td><td>Timber as needed · Stonemasons</td></tr>
+            <tr><td>6</td><td>Finishing / painting</td><td>Paint · Clay (artisans when wired)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="placement">Placement</h2>
+      <p>In the original Pharaoh, the Sphinx must sit on a suitable rock mass (help text id 362). Akhenaten currently allows placement on clear land without that check. Orient the 6×18 chain with the building rotation key; camera rotation switches between the two diagonal sprites for each part.</p>
+      <p>The construction site does not need road access on every tile, but Work Camps, guilds, and storage yards must have road access and a clear path toward the monument.</p>
+
+      <h2 id="missions">Missions</h2>
+      <ul>
+        <li><a href="../missions/rostja.html">18 — Rostja</a> — Great Pyramid complex, prince’s pyramid, and the Sphinx (Khafra’s image in living rock). Original monument goal 53; temporary stand-in until C3+C6 mission restore.</li>
+        <li>Later campaigns (e.g. Itjtawy) may also require a sphinx once those missions are fully wired.</li>
+      </ul>
+
+      <h2 id="tips">Tips</h2>
+      <ul>
+        <li>Stock timber early — scaffolding stalls the whole carve if carpenters run dry.</li>
+        <li>Place Carpenters’ and Stonemasons’ Guilds and Work Camps next to the site; travel time dominates sphinx build speed more than raw stone volume.</li>
+        <li>Do not stockpile timber (or paint/clay when finishing) in the Overseer of Commerce, or deliveries will freeze.</li>
+        <li>Compared with a true pyramid, the Sphinx is a good parallel project while large stone deliveries feed the main pyramid.</li>
+      </ul>
+
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">All paths relative to the repository root. Plan: <span class="file-ref">REMAKE_SPHINX_PLAN.md</span>.</p>
+
+        <details open>
+          <summary>Building config — <code>src/scripts/building/sphinx.js</code></summary>
+          <div class="details-body">
+            <pre><code><span class="kw">building_sphinx</span> {
+  <span class="kw">building_size</span> : <span class="num">6</span>
+  <span class="kw">init_tiles</span> [6, 18]
+  <span class="kw">part_b_offset</span> [[0, 6], [-6, 0], [0, -6], [6, 0]]
+  <span class="kw">part_c_offset</span> [[0, 12], [-12, 0], [0, -12], [12, 0]]
+  <span class="kw">cost</span> [ <span class="num">2500</span>, <span class="num">3500</span>, <span class="num">4500</span>, <span class="num">6500</span>, <span class="num">10000</span> ]
+  <span class="kw">meta</span> { help_id: <span class="num">362</span>, text_id: <span class="num">178</span> }
+  <span class="kw">info_title_id</span> [198, 21]
+  <span class="kw">flags</span> { is_monument: <span class="kw">true</span> }
+}</code></pre>
+            <p>Animations <code>s1a1</code>…<code>s6c2</code> map packs <code>PACK_SPHINX_{stage}_{part}</code> (dense indices <code>53000..53036</code> in <span class="file-ref">src/scripts/imagepaks.js</span>).</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>C++ class — <code>src/building/monument_sphinx.{h,cpp}</code></summary>
+          <div class="details-body">
+            <p><code>BUILDING_SPHINX</code> (=210). Three instances linked with <code>prev/next_part_building_id</code>;
+            part id in <code>runtime_data.variant</code> (0=a, 1=b, 2=c). Placement hook:
+            <code>on_place_update_tiles</code>. Camera refresh: <code>update_map_orientation</code>.
+            Info UI: <span class="file-ref">src/window/window_sphinx_info.cpp</span>.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Messages &amp; weight</summary>
+          <div class="details-body">
+            <ul>
+              <li>Title: text group <strong>198:21</strong> «Sphinx»</li>
+              <li>Progress / status: group <strong>178</strong> (e.g. 45–48, 79)</li>
+              <li>Foreman: group <strong>199</strong> (39, 41, 42)</li>
+              <li>Help dialog: <code>message_building_sphinx</code> id <strong>362</strong></li>
+              <li>Monument weight: <code>MONUMENT_WEIGHTS[BUILDING_SPHINX] = 1</code> in
+                <span class="file-ref">src/scripts/city/monuments.js</span></li>
+            </ul>
+          </div>
+        </details>
+
+        <details>
+          <summary>Tests</summary>
+          <div class="details-body">
+            <p><span class="file-ref">tests/43_sphinx_place.js</span> — planner place → 3 linked parts + info window.
+            Run: <code>--integraltests --integraltest-only 43_sphinx</code>.</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="bld-nav">
+        <a href="monuments.html">← Monuments</a>
+        <a href="index.html#monuments">All Buildings →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>

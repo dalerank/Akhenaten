@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monuments — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .bld-note { font-size: 0.75rem; color: var(--text-muted); }
+    .tag-cleo {
+      font-size: 0.68rem; font-family: 'Consolas', monospace;
+      background: rgba(138,171,220,0.1); border: 1px solid rgba(138,171,220,0.3);
+      color: #8aabdc; border-radius: 2px; padding: 0.05rem 0.35rem;
+      vertical-align: middle; margin-left: 0.3rem; white-space: nowrap;
+    }
+    .chain-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.8rem 1.1rem;
+      margin: 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-size: 0.88rem;
+      flex-wrap: wrap;
+    }
+    .chain-box .step {
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 3px;
+      padding: 0.3rem 0.7rem;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .chain-box .arrow { color: var(--gold); font-size: 1.1rem; }
+    .note-box {
+      background: rgba(201,168,76,0.06);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 4px;
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      margin: 1rem 0;
+    }
+    .file-ref {
+      display: inline-block; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78rem;
+      background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem;
+    }
+    .bld-nav {
+      display: flex; justify-content: space-between; margin-top: 2.5rem;
+      padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem;
+    }
+    .bld-nav a { color: var(--gold); }
+    .ext-link { font-size: 0.8rem; color: var(--text-muted); }
+    .ext-link a { color: var(--gold); }
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary {
+      padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600;
+      color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 {
+      color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em;
+      text-transform: uppercase; border-color: rgba(255,255,255,0.08);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="../index.html">← Player Guide</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Buildings</div>
+        <ul>
+          <li><a href="index.html">All Buildings</a></li>
+          <li><a href="housing.html">Housing</a></li>
+          <li><a href="food.html">Food Production</a></li>
+          <li><a href="industry.html">Industry</a></li>
+          <li><a href="religion.html">Religion</a></li>
+          <li><a href="education.html">Education</a></li>
+          <li><a href="entertainment.html">Entertainment</a></li>
+          <li><a href="health.html">Health</a></li>
+          <li><a href="military.html">Military</a></li>
+          <li><a href="monuments.html" class="active">Monuments</a></li>
+          <li style="padding-left:0.9rem"><a href="sphinx.html">— Sphinx</a></li>
+          <li><a href="work-camp.html">Work Camp</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#how">How construction works</a></li>
+          <li><a href="#guilds">Guilds &amp; labour</a></li>
+          <li><a href="#chart">Size &amp; materials</a></li>
+          <li><a href="#cleo">Cleopatra monuments</a></li>
+          <li><a href="#rating">Monument rating</a></li>
+          <li><a href="#tips">Tips</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Buildings</a> /
+        Monuments
+      </div>
+
+      <h1>Monuments</h1>
+
+      <h2 id="overview">Overview</h2>
+      <p>
+        Monuments are large multi-phase construction projects. Many campaign missions require a
+        <strong>Monuments</strong> rating high enough to finish the city; some also demand a specific
+        monument type. Construction depends on raw materials (bricks, stone, timber, and later marble
+        or sandstone), <a href="work-camp.html">Work Camps</a> for peasant labour, and the right
+        <strong>construction guilds</strong> to direct the work.
+      </p>
+      <p>
+        Detailed pages for individual monuments will appear here as they are documented. Currently:
+        <a href="sphinx.html">Sphinx</a>.
+      </p>
+      <p class="ext-link">
+        Size and materials charts adapted from
+        <a href="https://pharaoh.heavengames.com/strategy/monuments/" target="_blank" rel="noopener">Pharaoh Heaven — Monuments</a>
+        and the
+        <a href="https://caesar3.heavengames.com/cgi-bin/caeforumscgi/display.cgi?action=st&amp;fn=25&amp;tn=3035" target="_blank" rel="noopener">Pharaoh/Cleopatra Monuments Chart</a>.
+      </p>
+
+      <h2 id="how">How construction works</h2>
+      <div class="chain-box">
+        <span class="step">Place site</span>
+        <span class="arrow">→</span>
+        <span class="step">Stock materials</span>
+        <span class="arrow">→</span>
+        <span class="step">Work Camps + guilds</span>
+        <span class="arrow">→</span>
+        <span class="step">Phases / courses</span>
+        <span class="arrow">→</span>
+        <span class="step">Finished monument</span>
+      </div>
+      <ol>
+        <li><strong>Place the footprint</strong> on clear ground (or cliffs / rock where the monument requires it).</li>
+        <li><strong>Deliver materials</strong> to storage yards near the site. Quarries and brickworks are often the bottleneck.</li>
+        <li><strong>Staff Work Camps</strong> so labourers walk to the monument. The same camps also serve farms — harvest season can starve construction.</li>
+        <li><strong>Staff the required guilds</strong> (bricklayers, stonemasons, carpenters, and in Cleopatra artisans). Guild members supervise on site.</li>
+        <li>Work proceeds in <strong>phases</strong> (mastaba courses, pyramid courses, scaffolding, finishing). Progress shows in the monument info window.</li>
+      </ol>
+      <div class="note-box">
+        Monuments do not need a road connection. Place them where materials and labour can reach them
+        reasonably quickly — not across the entire map from your quarries and camps.
+      </div>
+
+      <h2 id="guilds">Guilds &amp; labour</h2>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead>
+            <tr><th>Building</th><th>Role</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="work-camp.html">Work Camp</a></td>
+              <td class="bld-note">Peasant labour for clearing, hauling, and building courses. Shared with floodplain farming.</td>
+            </tr>
+            <tr>
+              <td>Bricklayers’ Guild</td>
+              <td class="bld-note">Brick mastabas and brick-core pyramids.</td>
+            </tr>
+            <tr>
+              <td>Stonemasons’ Guild</td>
+              <td class="bld-note">Stone tombs, stepped / true / bent pyramids, sphinx, obelisks, mausoleum, sun temple, most Cleopatra monuments.</td>
+            </tr>
+            <tr>
+              <td>Carpenters’ Guild</td>
+              <td class="bld-note">Wooden scaffolding and ramps (pyramids, sphinx, mausoleum, obelisks, etc.).</td>
+            </tr>
+            <tr>
+              <td>Artisans’ Guild <span class="tag-cleo">Cleo</span></td>
+              <td class="bld-note">Painting and finishing for royal burial tombs and several Cleopatra monuments.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        You often need <em>more than one</em> guild of the same type on large monuments. Keep storage yards
+        supplied; idle guilds with empty yards do nothing.
+      </p>
+
+      <h2 id="chart">Size &amp; materials</h2>
+      <p>
+        Footprints and primary needs for the base game. Exact material <em>counts</em> vary by size; see
+        Pharaoh Heaven for full loadouts. The short list on
+        <a href="index.html#monuments">All Buildings → Monuments</a> matches Akhenaten’s building catalogue.
+      </p>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead>
+            <tr><th>Monument</th><th>Footprint</th><th>Materials</th><th>Guilds / labour</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Mastaba</td>
+              <td class="bld-note">Small 4×10 · Med 6×14 · Large 8×18</td>
+              <td class="bld-note">Bricks</td>
+              <td class="bld-note">Bricklayers + Work Camps</td>
+            </tr>
+            <tr>
+              <td>Stepped pyramid</td>
+              <td class="bld-note">8×8 … 24×24 (5 sizes)</td>
+              <td class="bld-note">Plain stone, timber</td>
+              <td class="bld-note">Stonemasons + Carpenters + Work Camps</td>
+            </tr>
+            <tr>
+              <td>True pyramid (stone core)</td>
+              <td class="bld-note">8×8 … 24×24</td>
+              <td class="bld-note">Plain stone, limestone, timber</td>
+              <td class="bld-note">Stonemasons + Carpenters + Work Camps</td>
+            </tr>
+            <tr>
+              <td>Brick-core pyramid</td>
+              <td class="bld-note">8×8 … 24×24</td>
+              <td class="bld-note">Bricks, limestone, timber</td>
+              <td class="bld-note">Bricklayers + Stonemasons + Carpenters + Work Camps</td>
+            </tr>
+            <tr>
+              <td>Bent pyramid</td>
+              <td class="bld-note">Small 8×8 · Large 12×12</td>
+              <td class="bld-note">Plain stone, limestone, timber</td>
+              <td class="bld-note">Stonemasons + Carpenters + Work Camps</td>
+            </tr>
+            <tr>
+              <td><a href="sphinx.html">Sphinx</a></td>
+              <td class="bld-note">6×18 (3×6×6 parts)</td>
+              <td class="bld-note">Timber (+ paint/clay finish in Akhenaten stub)</td>
+              <td class="bld-note">Carpenters + Stonemasons (no Work Camp in original chart)</td>
+            </tr>
+            <tr>
+              <td>Obelisk</td>
+              <td class="bld-note">Small 3×3 · Large 5×5</td>
+              <td class="bld-note">Granite, timber</td>
+              <td class="bld-note">Stonemasons + Carpenters</td>
+            </tr>
+            <tr>
+              <td>Mausoleum</td>
+              <td class="bld-note">8×22</td>
+              <td class="bld-note">Sandstone, timber</td>
+              <td class="bld-note">Stonemasons + Carpenters + Work Camps</td>
+            </tr>
+            <tr>
+              <td>Sun Temple</td>
+              <td class="bld-note">10×10 + path + 3×3 hall</td>
+              <td class="bld-note">Sandstone, timber</td>
+              <td class="bld-note">Stonemasons + Carpenters + Work Camps</td>
+            </tr>
+            <tr>
+              <td>Royal tombs</td>
+              <td class="bld-note">Several sizes</td>
+              <td class="bld-note">Stone / granite (larger tiers)</td>
+              <td class="bld-note">Stonemasons (+ Artisans on grand)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="cleo">Cleopatra monuments</h2>
+      <p>
+        The Cleopatra expansion adds cliff tombs and Alexandria-era monuments. They use sandstone or marble,
+        often need the Artisans’ Guild, and some must sit on cliffs or a special island.
+      </p>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead>
+            <tr><th>Monument</th><th>Footprint</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Royal Burial Tomb <span class="tag-cleo">Cleo</span></td>
+              <td class="bld-note">11×20 … 23×29</td>
+              <td class="bld-note">Cut into cliff; lamps + paint; Artisans + Work Camps</td>
+            </tr>
+            <tr>
+              <td>Abu Simbel <span class="tag-cleo">Cleo</span></td>
+              <td class="bld-note">9×21</td>
+              <td class="bld-note">Entirely on cliffs; four colossi; Stonemasons + Artisans</td>
+            </tr>
+            <tr>
+              <td>Great Library of Alexandria <span class="tag-cleo">Cleo</span></td>
+              <td class="bld-note">13×14</td>
+              <td class="bld-note">Marble + timber; papyrus supply; Artisans</td>
+            </tr>
+            <tr>
+              <td>Pharos Lighthouse <span class="tag-cleo">Cleo</span></td>
+              <td class="bld-note">6×6</td>
+              <td class="bld-note">Marble; three-tier tower on Pharos Island</td>
+            </tr>
+            <tr>
+              <td>Caesareum <span class="tag-cleo">Cleo</span></td>
+              <td class="bld-note">15×15</td>
+              <td class="bld-note">Marble + sandstone; temple complex with obelisks</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="rating">Monument rating</h2>
+      <p>
+        Finished (and partially built) monuments contribute to the city’s <strong>Monuments</strong> rating.
+        In Akhenaten the score is approximate and additive: each monument type has a weight in
+        <span class="file-ref">src/scripts/city/monuments.js</span>, then
+        <code>rating ≈ 2.25 × Σ(weight × progress) + 4.5</code>. Exact original per-monument points are still a
+        remake task (F3). Examples with current weights: one finished small mastaba → 9; three → 18;
+        one medium stepped pyramid → 40.
+      </p>
+
+      <h2 id="tips">Tips</h2>
+      <ul>
+        <li>Start material production early — stone and bricks take longer than the build phases themselves.</li>
+        <li>Build one monument first; when a course finishes and labour frees up, start the next.</li>
+        <li>During floodplain harvest, expect Work Camp labour to thin out; stockpile stone beforehand.</li>
+        <li>Place storage yards and guilds near the site so cart pushers and guild walkers waste less time.</li>
+        <li>Import granite, limestone, or sandstone when the map has no matching quarry.</li>
+      </ul>
+
+      <div class="dev-section" id="dev">
+        <h2>Developer reference</h2>
+        <details>
+          <summary>Scripts &amp; rating</summary>
+          <div class="details-body">
+            <ul>
+              <li><span class="file-ref">src/scripts/city/monuments.js</span> — <code>MONUMENT_WEIGHTS</code>, monthly rating update</li>
+              <li>Per-building configs under <span class="file-ref">src/scripts/building/</span> (e.g. <code>sphinx.js</code>)</li>
+              <li>Catalogue summary: <a href="index.html#monuments">buildings/index.html#monuments</a></li>
+            </ul>
+          </div>
+        </details>
+        <details>
+          <summary>Documented monument pages</summary>
+          <div class="details-body">
+            <ul>
+              <li><a href="sphinx.html">Sphinx</a> — <code>BUILDING_SPHINX</code> (=210), C6 remake</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+
+      <div class="bld-nav">
+        <a href="index.html#monuments">← All Buildings</a>
+        <a href="sphinx.html">Sphinx →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>
