@@ -14,6 +14,7 @@ import building.roadblock
 import building.house
 import building.monument
 import building.mastaba
+import building.sphinx
 import building.pyramid
 import building.farm
 import building.fort

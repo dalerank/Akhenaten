@@ -9,6 +9,9 @@
  */
 int io_read_sg3_entries_num(vfs::path filepath);
 
+// True when group 0 starts at entry 0 — classic Pharaoh paks with SYSTEM.BMP (201 slots).
+bool io_read_sg3_has_system_bmp(vfs::path filepath);
+
 int io_read_sgx_entries_num(vfs::path filename);
 
 /**

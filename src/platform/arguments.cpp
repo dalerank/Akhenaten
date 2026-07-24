@@ -152,6 +152,8 @@ static int parse_decimal_as_percentage(const char *str) {
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--window", "window", true, "enable window mode");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nosound", "sound", false, "disable audio: skip sound manager init and audio file probing at startup");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--no-logo", "no_logo", true, "skip logo screen; go straight to main menu");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nointro", "nointro", true, "skip the intro video on startup");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nomouse", "nomouse", true, "disable mouse-driven input (e.g. edge/drag camera scrolling); useful for tests/screenshots");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--logjsfiles", "logjsfiles", true, "print logs which files open with js");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-js-handlers", "log_js_handlers", true, "print logs when JavaScript event handlers are registered");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nocrashdlg", "crashdlg", false, "do not show crash dialog");
@@ -175,6 +177,7 @@ ANK_REGISTER_STRING_ARGUMENT_HANDLER("--load-map", "load_map", "Option --load-ma
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--integraltest-only", "integraltest_only", "Option --integraltest-only must be followed by a test name (e.g. 06 or 06_stonemason_guild_info_window)", "--integraltest-only NAME", "with --integraltests, run only tests whose filename (stem) contains NAME (case-insensitive); useful for debugging a single failing test");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--extract-installer", "extract_installer", "Option --extract-installer must be followed by a path to a Pharaoh installer (.exe)", "--extract-installer PATH", "extract Pharaoh data from Inno/GOG (innoextract) or InstallShield (7z+unshield) installer");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--extract-dir", "extract_dir", "Option --extract-dir must be followed by an output directory path", "--extract-dir PATH", "output directory for --extract-installer (default: user config …/pharaoh-data)");
+ANK_REGISTER_STRING_ARGUMENT_HANDLER("--screenshot-dir", "screenshot_dir", "Option --screenshot-dir must be followed by a directory path", "--screenshot-dir PATH", "directory to save screenshots into (created if missing; default: working dir)");
 
 // Register argument handler for --display-scale
 std::optional<arguments::argument_result> handle_display_scale(int argc, char **argv, int current_index) {

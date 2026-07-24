@@ -33,6 +33,29 @@ int io_read_sg3_entries_num(vfs::path filepath) {
     return sgx_header.entries_num;
 }
 
+bool io_read_sg3_has_system_bmp(vfs::path filepath) {
+    vfs::path fs_file = filepath.resolve();
+    if (fs_file.empty()) {
+        return false;
+    }
+
+    FILE *fp = vfs::file_open_os(fs_file, "rb");
+    if (!fp) {
+        return false;
+    }
+
+    // Skip PAK_HEADER_INFO_BYTES (80), then read group_image_ids[0].
+    if (fseek(fp, 80, SEEK_SET) != 0) {
+        vfs::file_close(fp);
+        return false;
+    }
+
+    uint16_t first_group = 0xffff;
+    const size_t n = fread(&first_group, sizeof(first_group), 1, fp);
+    vfs::file_close(fp);
+    return n == 1 && first_group == 0;
+}
+
 int io_read_sgx_entries_num(vfs::path filename) {
     vfs::ZipArchive archive(filename);
     if (!archive.isValid()) {

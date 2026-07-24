@@ -16,6 +16,8 @@
 
 #include "building/building.h"
 #include "building/building_static_params.h"
+#include "building/monuments.h"
+#include "graphics/view/view.h"
 #include "figure/figure.h"
 #include "figure/figure_impl.h"
 #include "graphics/color.h"
@@ -34,6 +36,12 @@
 #include <cstring>
 #include <fstream>
 #include <string>
+
+// SDL_main.h does `#define main SDL_main`; undo it here so building::main() etc.
+// are not macro-mangled (this TU is not the program entry point).
+#ifdef main
+#undef main
+#endif
 
 static bool file_contains_marker(pcstr path, pcstr marker, const size_t marker_len) {
     std::ifstream in(path, std::ios::binary);
@@ -304,6 +312,51 @@ void __test_show_tile_info(int bid) {
     events::emit(event_show_tile_info{ b->tile, true, "test" });
 }
 ANK_FUNCTION_1(__test_show_tile_info);
+
+// Force a monument (and all its linked parts) to a given construction phase.
+// Used by tests to walk a monument through its build stages without the delivery loop.
+static void __test_monument_set_phase(int bid, int phase) {
+    building *b = building_get(bid);
+    building *head = b ? b->main() : nullptr;
+    auto mm = head ? head->dcast_monument() : nullptr;
+    if (!mm) {
+        return;
+    }
+    mm->set_phase(phase);
+    for (building *p = head->has_next() ? head->next() : nullptr; p; p = p->has_next() ? p->next() : nullptr) {
+        if (auto pm = p->dcast_monument()) {
+            pm->set_phase(phase);
+        }
+    }
+}
+ANK_FUNCTION_2(__test_monument_set_phase);
+
+// Return the current resolved image id for a monument building (per phase + variant + camera).
+static int __test_building_current_image(int bid) {
+    building *b = building_get(bid);
+    auto m = b ? b->dcast_monument() : nullptr;
+    return m ? m->building_image_get() : 0;
+}
+ANK_FUNCTION_1(__test_building_current_image);
+
+// Center the camera on a building: monuments use center_point() (footprint centre),
+// other buildings use the footprint middle tile.
+static void __test_camera_center_building(int bid) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return;
+    }
+    tile2i c = b->tile.shifted(b->size / 2, b->size / 2);
+    if (auto m = b->dcast_monument()) {
+        c = m->center_point();
+    }
+    if (!c.valid()) {
+        return;
+    }
+    vec2i screen = g_camera.tile_to_screen(c);
+    g_camera.go_to_screen_tile(screen, true);
+}
+ANK_FUNCTION_1(__test_camera_center_building);
 
 ANK_DECLARE_JSFUNCTION_ITERATOR(register_test_js_functions);
 inline void register_test_js_functions(js_State *J) {

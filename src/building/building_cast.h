@@ -80,6 +80,7 @@ GENERATE_SMART_CAST_BUILDING(mortuary)
 GENERATE_SMART_CAST_BUILDING(pyramid)
 GENERATE_SMART_CAST_BUILDING(small_stepped_pyramid)
 GENERATE_SMART_CAST_BUILDING(medium_stepped_pyramid)
+GENERATE_SMART_CAST_BUILDING(sphinx)
 
 template <typename dest_type, typename r_type = std::add_pointer_t<std::remove_pointer_t<dest_type>>>
 inline r_type smart_cast(building *b);

@@ -266,6 +266,8 @@ int building_monument::progress() {
             messages::popup("message_monument_complete", 0, bmain->tile().grid_offset());
         } else if (bmain->dcast_pyramid()) {
             messages::popup("message_monument_complete", 0, bmain->tile().grid_offset());
+        } else if (bmain->dcast_sphinx()) {
+            messages::popup("message_monument_complete", 0, bmain->tile().grid_offset());
         }
     }
     return 1;

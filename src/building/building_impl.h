@@ -150,6 +150,7 @@ public:
     ALLOW_SMART_CAST_BUILDING_I(pyramid)
     ALLOW_SMART_CAST_BUILDING_I(small_stepped_pyramid)
     ALLOW_SMART_CAST_BUILDING_I(medium_stepped_pyramid)
+    ALLOW_SMART_CAST_BUILDING_I(sphinx)
 
     building_impl *next();
     bool has_next() const;

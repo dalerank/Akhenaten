@@ -161,9 +161,7 @@ bool image_ensure_pak_loaded(int pak_id) {
         return false;
     }
 
-    if (pak.custom || pak.entries_num == 0) {
-        pak.entries_num = pak.handle->get_entry_count();
-    }
+    pak.entries_num = pak.handle->get_entry_count();
     pak.load_status = IMAGEPAK_LOAD_LOADED;
 
     const Uint32 elapsed = SDL_GetTicks() - t0;
@@ -277,7 +275,7 @@ bool image_load_paks() {
 
         imagepak::useridx_update(pakidx);
 
-        const int pack_entries = imagepak::get_entries_num(imgpak.name);
+        const int pack_entries = imagepak::get_entries_num(imgpak.name, imgpak.system);
         if (pack_entries > 0) {
             imgpak.entries_num = pack_entries;
             imagepak::update_max_imgid(imgpak.index + imgpak.entries_num);
@@ -299,9 +297,7 @@ bool image_load_paks() {
         delete imgpak.handle;
         imgpak.handle = new imagepak(pakidx, imgpak.name, imgpak.index, imgpak.system, false, imgpak.custom);
         if (image_pak_load_succeeded(imgpak.handle)) {
-            if (imgpak.custom || imgpak.entries_num == 0) {
-                imgpak.entries_num = imgpak.handle->get_entry_count();
-            }
+            imgpak.entries_num = imgpak.handle->get_entry_count();
             imgpak.load_status = IMAGEPAK_LOAD_LOADED;
         } else {
             delete imgpak.handle;

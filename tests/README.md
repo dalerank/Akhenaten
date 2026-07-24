@@ -14,6 +14,30 @@ build\Debug\akhenaten.exe --integraltests --no-logo --no-resource --window --siz
 
 `--window --size 800x600` keeps `screen_width`/`screen_height` stable so input-simulation tests can rely on fixed pixel coordinates instead of recomputing them per machine.
 
+### Running with Pharaoh resources (real image packs / data)
+
+The suite normally runs hermetic (`--no-resource`). To exercise tests that need the real
+game data (e.g. monument image packs like the sphinx `sphinx1a..6c` `.sg3`), **omit
+`--no-resource`** and pass the Pharaoh data directory as the last positional argument. Add
+`--nointro` so startup does not enter the intro video (which otherwise plays, and crashes
+under `--nosound` in `video_init`):
+
+```bash
+# Windows, with resources (data dir last)
+build\Debug\akhenaten.exe --integraltests --nointro --no-logo --window --size 800x600 "d:/Work/Cleop"
+```
+
+Screenshot-producing tests also want `--nomouse` (suppresses mouse-edge/drag camera
+scroll so a programmatically centered view doesn't drift) and optionally
+`--screenshot-dir PATH` (created if missing) to collect the PNGs:
+
+```bash
+build\Debug\akhenaten.exe --integraltests --integraltest-only 43_sphinx --nointro --nomouse --no-logo --window --size 800x600 --screenshot-dir out\shots "d:/Work/Cleop"
+```
+
+Both modes pass equally (42/42 as of 2026-07-24); use the resource mode to verify pack
+loading / art resolution for data-dependent buildings.
+
 Run a single file (substring match, case-insensitive):
 
 ```bash
@@ -64,6 +88,7 @@ C++ smoke checks run first (before JS files): `SDL_strlen`/`strcmp`, `vec2i`, `g
 | `40_hippo_spawn.js` | Spawn `FIGURE_HIPPO` on land and water; `update_animation` → `walk` / `swim` (#77) |
 | `41_city_smoke_run.js` | Broad crash smoke (TS1): place ~12 building types via the real planner path, open each info window (`[es=(info_window_*, init)]`), advance the sim; driver's whole-log `!!! TypeError:` scan catches on_place/update/init crashes broadly. Per-type `smoke_ok:*` markers isolate the culprit; `smoke_skip:*` logged loudly |
 | `42_enemy_config_valid.js` | Static validator (V1) for all 13 `enemy_*` configs in `enemies.js`: `percentage_type1+2+3 == 100`, a nonzero share has a non-NONE `figure_types[i]` (F1), and every declared figure type resolves to a registered enemy class via `__test_enemy_figure_registered` (F2) |
+| `43_sphinx_place.js` | C6 Sphinx: planner-place `BUILDING_SPHINX`, assert 3 linked parts (`next_part_building_id`), open info window without TypeError |
 
 Farm **placement** tests (34/35) cover `can_place` / terrain rules; **37** covers preview image helpers.
 When adding more preview draw coverage, follow JS draw conventions in

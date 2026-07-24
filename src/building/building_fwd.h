@@ -80,6 +80,7 @@ class building_small_stepped_pyramid;
 class building_medium_stepped_pyramid;
 class building_small_bent_pyramid;
 class building_medium_bent_pyramid;
+class building_sphinx;
 
 using e_building_need_rules = uint32_t;
 

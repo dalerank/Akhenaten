@@ -93,8 +93,17 @@ ANK_FUNCTION(__city_planner_last_created_building_id);
 
 void __city_planner_validate_last_created() {
     building *b = g_city_planner.last_created_building;
-    if (b && b->id > 0) {
+    if (!b || b->id <= 0) {
+        return;
+    }
+    // Promote the whole multi-part chain (fort ground, sphinx a/b/c, mastaba, …).
+    // JS Building properties only bind when state == VALID.
+    for (int guard = 0; b && b->id > 0 && guard < 128; ++guard) {
         b->state = BUILDING_STATE_VALID;
+        if (!b->has_next()) {
+            break;
+        }
+        b = b->next();
     }
 }
 ANK_FUNCTION(__city_planner_validate_last_created);

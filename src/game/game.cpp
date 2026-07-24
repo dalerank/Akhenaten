@@ -408,7 +408,7 @@ bool game_init(game_opts opts) {
         events::emit(event_show_main_menu{ true });
     } else {
         game.logo_show_patch_message = 0;
-        if (!!game_features::gameui_show_intro_video) {
+        if (!!game_features::gameui_show_intro_video && !g_args.no_intro()) {
             window_intro_video_show();
         } else {
             g_sound.play_intro();

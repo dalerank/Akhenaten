@@ -18,7 +18,7 @@ imagepaks = [
   {id: PACK_LIB_EXTRA, name:"LibExtra", index:24000, delayed:true, system:false}, // 24000 --> 24000 + 201 + 27
   {id: PACK_LIB_EXTRA_2, name:"LibExtra2", index:24230, delayed:true, system:false}, // 24230 --> 24230 + 201 + 27
   {id: PACK_LIB_MAUS_CARRYOVER, name:"MausCarryover", index:24460, delayed:true, system:false}, // 24460 --> 24460 + 201 + 9
-  {id: PACK_LIB_MAUSOLEUM_0, name:"mausoleum0_extra", index:24690, delayed:true, system:false}, // 24690 --> 24690 + 201 + 16  
+  {id: PACK_LIB_MAUSOLEUM_0, name:"mausoleum0_extra", index:24690, delayed:true, system:false}, // 24690 --> 24690 + 201 + 16
   {id: PACK_LIB_MAUSOLEUM_1, name:"mausoleum1_extra", index:24910, delayed:true, system:false}, // 24910 --> 24910 + 201 + 16
   {id: PACK_LIB_MAUSOLEUM_2, name:"mausoleum2_extra", index:25130, delayed:true, system:false}, // 25130 --> 25130 + 201 + 16
   {id: PACK_PYRAMID, name:"Pyramid", index:34000, delayed:true, system:false}, // 34000 --> 34000 + 201 + 228
@@ -40,13 +40,25 @@ imagepaks = [
   {id: PACK_OBELISK_X5_D, name:"obelisk5x5d", index:52430, delayed:true, system:false}, // 52430 --> 36067 + 201 + 1
   {id: PACK_OBELISK_X5_E, name:"obelisk5x5e", index:52640, delayed:true, system:false}, // 52430 --> 36068 + 201 + 1
   {id: PACK_OBELISK_X5_F, name:"obelisk5x5f", index:51850, delayed:true, system:false}, // 52430 --> 36069 + 201 + 1
-  {id: PACK_SPHINX_1_A, name:"sphinx1a", index:53000, delayed:true, system:false}, // 53000 --> 53000 + 201 + 2
-  {id: PACK_SPHINX_1_B, name:"sphinx1b", index:53430, delayed:true, system:false}, // 53430 --> 53430 + 201 + 2
-  {id: PACK_SPHINX_1_C, name:"sphinx1c", index:53640, delayed:true, system:false}, // 53640 --> 53640 + 201 + 2
-  {id: PACK_SPHINX_1_D, name:"sphinx1d", index:53850, delayed:true, system:false}, // 53850 --> 53850 + 201 + 2
-  {id: PACK_SPHINX_2_A, name:"sphinx2a", index:54000, delayed:true, system:false}, // 54000 --> 54000 + 201 + 2
-  {id: PACK_SPHINX_2_B, name:"sphinx2b", index:54220, delayed:true, system:false}, // 54220 --> 54220 + 201 + 2
-  {id: PACK_SPHINX_2_C, name:"sphinx2c", index:54430, delayed:true, system:false}, // 36082 --> 36084 + 201 + 2
+  {id: PACK_SPHINX_1_A, name:"sphinx1a", index:53000, delayed:true, system:false}, // 2 textures (no SYSTEM slots)
+  {id: PACK_SPHINX_1_B, name:"sphinx1b", index:53002, delayed:true, system:false},
+  {id: PACK_SPHINX_1_C, name:"sphinx1c", index:53004, delayed:true, system:false},
+  {id: PACK_SPHINX_1_D, name:"sphinx1d", index:53006, delayed:true, system:false}, // broken asset — keep slot
+  {id: PACK_SPHINX_2_A, name:"sphinx2a", index:53008, delayed:true, system:false},
+  {id: PACK_SPHINX_2_B, name:"sphinx2b", index:53010, delayed:true, system:false},
+  {id: PACK_SPHINX_2_C, name:"sphinx2c", index:53012, delayed:true, system:false},
+  {id: PACK_SPHINX_3_A, name:"sphinx3a", index:53014, delayed:true, system:false},
+  {id: PACK_SPHINX_3_B, name:"sphinx3b", index:53016, delayed:true, system:false},
+  {id: PACK_SPHINX_3_C, name:"sphinx3c", index:53018, delayed:true, system:false},
+  {id: PACK_SPHINX_4_A, name:"sphinx4a", index:53020, delayed:true, system:false},
+  {id: PACK_SPHINX_4_B, name:"sphinx4b", index:53022, delayed:true, system:false},
+  {id: PACK_SPHINX_4_C, name:"sphinx4c", index:53024, delayed:true, system:false},
+  {id: PACK_SPHINX_5_A, name:"sphinx5a", index:53026, delayed:true, system:false},
+  {id: PACK_SPHINX_5_B, name:"sphinx5b", index:53028, delayed:true, system:false},
+  {id: PACK_SPHINX_5_C, name:"sphinx5c", index:53030, delayed:true, system:false},
+  {id: PACK_SPHINX_6_A, name:"sphinx6a", index:53032, delayed:true, system:false},
+  {id: PACK_SPHINX_6_B, name:"sphinx6b", index:53034, delayed:true, system:false},
+  {id: PACK_SPHINX_6_C, name:"sphinx6c", index:53036, delayed:true, system:false},
   {id: PACK_SUN_TEMPLE_EXTRA, name:"sun_temple_extra", index:55000, delayed:true, system:false}, // 55000 --> 55000 + 201 + 15
   {id: PACK_SUN_TEMPLE_1, name:"suntemple1", index:55220, delayed:true, system:false}, // 55220 --> 55220 + 201 + 2
   {id: PACK_SUN_TEMPLE_2, name:"suntemple2", index:55440, delayed:true, system:false}, // 55440 --> 55440 + 201 + 2
@@ -70,8 +82,8 @@ imagepaks = [
   {id: PACK_ENEMY_PHOENICIAN, name:"Phoenician", index:47600, delayed:true, system:false}, // 47600 --> 47600 + 834 + 201
   {id: PACK_ENEMY_ROMAN, name:"Roman", index:48700, delayed:true, system:false}, // 48700 --> 48700 + 874 + 201
   {id: PACK_ENEMY_SEAPEOPLE, name:"SeaPeople", index:49800, delayed:true, system:false}, // 49000 --> 49850 + 833 + 201
-  {id: PACK_TOMB_RAMSES, name:"TombRam", index:59000, delayed:true, system:false}, // 59000 --> 59000 + 269 + 201 
-  {id: PACK_TOMB_RAMSES_FINAL, name:"TombRamFin", index:59500, delayed:true, system:false}, // 59500 --> 59500 + 269 + 201 
+  {id: PACK_TOMB_RAMSES, name:"TombRam", index:59000, delayed:true, system:false}, // 59000 --> 59000 + 269 + 201
+  {id: PACK_TOMB_RAMSES_FINAL, name:"TombRamFin", index:59500, delayed:true, system:false}, // 59500 --> 59500 + 269 + 201
   {id: PACK_CUSTOM, name:"pharaoh_custom_pack", index:60000, system:false, custom:true},  // 60000 -->
   {id: PACK_CUSTOM_FONT, name:"pharaoh_fonts_pack", index:25500, system:false, custom:true},  // 25500 --> 25500
   {id: PACK_CUSTOM_HOUSE, name:"pharaoh_houses_pack", index:60200, system:false, custom:true},  // 60200 -->

@@ -90,6 +90,8 @@ public:
     [[nodiscard]] bool should_unpack_scripts() const { return is("unpack_scripts", false); }
     [[nodiscard]] bool is_integral_tests() const { return is("integral_tests", false); }
     [[nodiscard]] bool no_logo() const { return is("no_logo", false); }
+    [[nodiscard]] bool no_intro() const { return is("nointro", false); }
+    [[nodiscard]] bool no_mouse() const { return is("nomouse", false); }
     [[nodiscard]] bool no_resource() const { return is("no_resource", false); }
 
     [[nodiscard]] const xstring& get_language() const { return get_str("language"); }
@@ -100,6 +102,7 @@ public:
     [[nodiscard]] const xstring& get_integraltest_only() const { return get_str("integraltest_only"); }
     [[nodiscard]] const xstring& get_extract_installer() const { return get_str("extract_installer"); }
     [[nodiscard]] const xstring& get_extract_dir() const { return get_str("extract_dir"); }
+    [[nodiscard]] const xstring& get_screenshot_dir() const { return get_str("screenshot_dir"); }
 
     void set_custom_font(pcstr value);
 

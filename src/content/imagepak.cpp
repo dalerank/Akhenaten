@@ -923,7 +923,8 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
         }
 
         if (has_system_bmp && !should_load_system_sprites && i < (system_img_size+1)) {
-            // continue;
+            // System placeholders: still parse metadata (buffer must advance) but do not
+            // reserve atlas space — they are dropped from images_array below.
         } else {
             // record atlas rect sizes in the packer
             image_packer_rect& rect = packer.rects[i];
@@ -931,6 +932,44 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
             rect.input.height = img.height;
         }
         img.debug.max_frame = 0xff;
+    }
+
+    // Drop SYSTEM.BMP slots from the image array / global index range when the pack
+    // was registered with system:false. Fonts keep the classic layout (sgx_index-201).
+    const int system_skip = (has_system_bmp && !should_load_system_sprites && !should_convert_fonts)
+        ? (int)(system_img_size + 1)
+        : 0;
+    if (system_skip > 0 && (int)entries_num > system_skip && (int)images_array.size() >= system_skip) {
+        for (int g = 0; g < (int)groups_num; ++g) {
+            if (group_image_ids[g] >= system_skip) {
+                group_image_ids[g] = (uint16_t)(group_image_ids[g] - system_skip);
+            }
+        }
+
+        images_array.erase(images_array.begin(), images_array.begin() + system_skip);
+        entries_num = (uint16_t)(entries_num - system_skip);
+
+        for (int i = 0; i < (int)entries_num; ++i) {
+            image_t &img = images_array[i];
+            img.sgx_index = i;
+            img.rect_index = i;
+        }
+
+        image_packer_reset(packer);
+        result = packer.init(entries_num * 2, max_texture_sizes);
+        if (result != IMAGE_PACKER_OK) {
+            return false;
+        }
+        packer.options.fail_policy = IMAGE_PACKER_NEW_IMAGE;
+        packer.options.reduce_image_size = 1;
+        packer.options.sort_by = IMAGE_PACKER_SORT_BY_AREA;
+
+        for (int i = 0; i < (int)entries_num; ++i) {
+            const image_t &img = images_array[i];
+            image_packer_rect &rect = packer.rects[i];
+            rect.input.width = img.width;
+            rect.input.height = img.height;
+        }
     }
 
     for (int i = 0, rect_i = entries_num; i < entries_num; ++i) {
@@ -980,7 +1019,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
 
     // finish filling in image and atlas information
     for (auto &img: images_array) {
-        if (has_system_bmp && !should_load_system_sprites && img.sgx_index < 201) {
+        if (system_skip == 0 && has_system_bmp && !should_load_system_sprites && img.sgx_index < 201) {
             continue;
         }
 
@@ -1124,18 +1163,25 @@ void imagepak::update_max_imgid(uint16_t imgid) {
     max_seen_imgid = std::max(max_seen_imgid, imgid);
 }
 
-int imagepak::get_entries_num(xstring pak_name) {
+int imagepak::get_entries_num(xstring pak_name, bool load_system_sprites) {
     vfs::path filename_sgx(pak_name.c_str());
     if (!vfs::file_has_extension(filename_sgx, "sgx")) {
         filename_sgx.append(".sgx");
         filename_sgx = filename_sgx.resolve();
     }
-    
+
     if (!filename_sgx.empty() && vfs::file_exists(filename_sgx.c_str())) {
         return io_read_sgx_entries_num(filename_sgx);
     }
 
     vfs::path filename_full("Data/", pak_name.c_str());
     vfs::path filename_sg3(filename_full, ".sg3");
-    return io_read_sg3_entries_num(filename_sg3);
+    int entries = io_read_sg3_entries_num(filename_sg3);
+    // Match load_pak compaction: system:false drops the 201 SYSTEM.BMP slots from the
+    // global index span (fonts keep the classic layout and are not counted here).
+    constexpr int system_slots = 201;
+    if (!load_system_sprites && entries > system_slots && io_read_sg3_has_system_bmp(filename_sg3)) {
+        entries -= system_slots;
+    }
+    return entries;
 }

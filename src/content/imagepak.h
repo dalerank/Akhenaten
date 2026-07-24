@@ -72,8 +72,7 @@ public:
 
     static void update_max_imgid(uint16_t imgid);
     static uint16_t get_maxseen_imgid() { return max_seen_imgid; }
-
-    static int get_entries_num(xstring pak_name);
+    static int get_entries_num(xstring pak_name, bool load_system_sprites = true);
 
     void cleanup_and_destroy();
 };
