@@ -35,6 +35,7 @@ game = extend(__game, {
 
     toggle_writing_video: __game_toggle_writing_video
     save_screenshot: __game_save_screenshot
+    set_screenshot_dir: __game_set_screenshot_dir
 
     languages {
         @count : { get: __game_languages_count }

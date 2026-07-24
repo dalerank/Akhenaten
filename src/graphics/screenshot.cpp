@@ -10,6 +10,7 @@
 #include "game/game_config.h"
 #include "content/vfs.h"
 #include "grid/grid.h"
+#include "platform/arguments.h"
 #include "platform/renderer.h"
 #include "graphics/screen.h"
 #include "graphics/graphics.h"
@@ -103,24 +104,51 @@ static int image_create(vec2i size, int has_alpha_channel, int rows_in_memory) {
     return 1;
 }
 
+static bstring256 g_screenshot_dir;
+static bool g_screenshot_dir_inited = false;
+
+void graphics_set_screenshot_dir(const char *dir) {
+    g_screenshot_dir = (dir && *dir) ? dir : "";
+    g_screenshot_dir_inited = true;
+}
+
+// Directory screenshots go into: explicit setter wins, else --screenshot-dir, else empty.
+static const char *screenshot_dir() {
+    if (!g_screenshot_dir_inited) {
+        const xstring &cli = g_args.get_screenshot_dir();
+        g_screenshot_dir = cli.empty() ? "" : cli.c_str();
+        g_screenshot_dir_inited = true;
+    }
+    return g_screenshot_dir.c_str();
+}
+
 static const char *generate_filename(screenshot_type type) {
     static bstring256 filename;
+    bstring128 base;
     time_t curtime = time(NULL);
     struct tm *loctime = localtime(&curtime);
     switch (type) {
     case SCREENSHOT_FULL_CITY:
-        strftime(filename, bstring256::capacity, "full_city_%Y_%m_%d_%H_%M_%S.png", loctime);
+        strftime(base, bstring128::capacity, "full_city_%Y_%m_%d_%H_%M_%S.png", loctime);
         break;
 
     case SCREENSHOT_MINIMAP:
-        strftime(filename, bstring256::capacity, "minimap_%Y_%m_%d_%H_%M_%S.png", loctime);
+        strftime(base, bstring128::capacity, "minimap_%Y_%m_%d_%H_%M_%S.png", loctime);
         break;
 
     case SCREENSHOT_DISPLAY:
     default:
-        strftime(filename, bstring256::capacity, "city_%Y_%m_%d_%H_%M_%S.png", loctime);
+        strftime(base, bstring128::capacity, "city_%Y_%m_%d_%H_%M_%S.png", loctime);
         break;
-    }    
+    }
+
+    const char *dir = screenshot_dir();
+    if (dir && *dir) {
+        vfs::create_folders(dir);
+        filename.printf("%s/%s", dir, base.c_str());
+    } else {
+        filename.printf("%s", base.c_str());
+    }
     return filename;
 }
 
@@ -322,13 +350,17 @@ static void create_full_city_screenshot() {
 
                //SDL_Rect rect{0, 0, canvas_width, canvas_height};
                //SDL_FillRect(surface, &rect, ((yy + i) % 2) ? 0xff00ff00 : 0xff0000ff);
-                viewport_t local_view_data = full_city_view_data;
+                // draw_without_overlay() iterates the GLOBAL g_camera (not ctx.view), so we
+                // must reposition g_camera itself for each strip — moving a local copy renders
+                // the same view every time (buildings/monuments dropped). g_camera is restored
+                // to original_camera_pixels after the loop.
                 painter local_context;
-                local_context.view = &local_view_data;
+                local_context.view = &g_camera;
                 local_context.global_render_scale = 1.f;
                 local_context.renderer = g_render.renderer();
 
-                local_view_data.go_to_pixel(vec2i{mm_view.min.x + width, current_height}, false);
+                g_camera.go_to_pixel(vec2i{mm_view.min.x + width, current_height}, false);
+                g_render.clear_screen();
                 g_screen_city.draw_without_overlay(local_context, 0);
                 g_render.save_screen_buffer(local_context, &canvas[width], x_offset, TOP_MENU_HEIGHT + y_offset, image_section_width, canvas_height - y_offset, city_canvas_pixels.x);
                 //SDL_Rect rect2 = {x_offset, y_offset, canvas_width, canvas_height};
@@ -425,3 +457,8 @@ void __game_save_screenshot(int type) {
     graphics_save_screenshot((screenshot_type)type);
 }
 ANK_FUNCTION_1(__game_save_screenshot)
+
+void __game_set_screenshot_dir(pcstr dir) {
+    graphics_set_screenshot_dir(dir);
+}
+ANK_FUNCTION_1(__game_set_screenshot_dir)

@@ -7,6 +7,7 @@
 #include "input/touch.h"
 #include "game/game_config.h"
 #include "game/game.h"
+#include "platform/arguments.h"
 
 #include <cmath>
 #include <stdlib.h>
@@ -418,6 +419,12 @@ static int get_alignment_delta(int direction, int camera_max_offset, int camera_
 
 static bool set_scroll_speed_from_input(const mouse* m, scroll_type type) {
     auto &data = g_input_scroll_data;
+
+    if (g_args.no_mouse()) {
+        clear_scroll_speed();
+        return false;
+    }
+
     const bool keep_inertia = !!game_features::gameui_keep_camera_inertia;
     if (set_scroll_speed_from_drag(keep_inertia)) {
         return true;
