@@ -1154,6 +1154,14 @@ void build_planner::update_preview(tile2i cursor_tile) {
         return;
     }
 
+    if (!cursor_tile.valid()) {
+        // Cursor is outside the camera viewport (e.g. hovering the top menu bar
+        // while a building is selected) -- keep showing the ghost at its last
+        // valid position instead of re-running placement checks against a
+        // bogus off-map tile every frame.
+        return;
+    }
+
     end = cursor_tile;
     update_coord_caches();
 

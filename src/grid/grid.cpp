@@ -295,6 +295,12 @@ void map_grid_bound_area(tile2i &tmin, tile2i &tmax) {
     if (tmin.y() < 0) { tmin.set_y(0); }
     if (tmax.x() >= scenario_map_data()->width) { tmax.set_x(scenario_map_data()->width - 1); }
     if (tmax.y() >= scenario_map_data()->height) { tmax.set_y(scenario_map_data()->height - 1); }
+    // tmin/tmax can each independently land out of range on the OTHER side too
+    // (e.g. an already off-map source tile), which the checks above don't cover.
+    if (tmax.x() < 0) { tmax.set_x(0); }
+    if (tmax.y() < 0) { tmax.set_y(0); }
+    if (tmin.x() >= scenario_map_data()->width) { tmin.set_x(scenario_map_data()->width - 1); }
+    if (tmin.y() >= scenario_map_data()->height) { tmin.set_y(scenario_map_data()->height - 1); }
 }
 
 grid_area map_grid_get_area(tile2i tile, int size, int radius) {

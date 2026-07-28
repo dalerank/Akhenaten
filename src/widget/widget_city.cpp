@@ -90,7 +90,7 @@ static tile2i city_planner_cursor_tile_from_mouse() {
 
 tile2i screen_city_t::update_city_view_coords(vec2i pixel) {
     if (!g_camera.contains_pixel(pixel)) {
-        return tile2i(0);
+        return tile2i::invalid;
     }
 
     vec2i screen = g_camera.pixel_to_screentile(pixel);
