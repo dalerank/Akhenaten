@@ -165,7 +165,7 @@ void mods_download_mod_async(xstring name) {
             return;
         }
 
-        std::filesystem::path mods_dir = std::filesystem::path(base_path) / "Mods";
+        std::filesystem::path mods_dir = std::filesystem::path(base_path) / "mods";
         std::filesystem::create_directories(mods_dir);
 
         // Create filename with .sgx extension
@@ -237,7 +237,7 @@ void mods_download_mod_async(xstring name) {
         // Update mod info
         mod.downloaded = true;
         mod.download_progress = 100;
-        mod.path.printf("Mods/%s", filename.c_str());
+        mod.path.printf("mods/%s", filename.c_str());
 
         // Initialize mod metadata (similar to mods_init)
         mod.useridx = imagepak::get_max_useridx() + 1;
@@ -331,7 +331,7 @@ void mods_init() {
             auto it = g_mods.list.find(mod_name);
             if (it == g_mods.list.end()) {
                 mod_info& mod = g_mods.list[mod_name];
-                mod.path.printf("Mods/%s", files->files[i]);
+                mod.path.printf("mods/%s", files->files[i]);
                 mod.name = mod_name;
                 mod.downloaded = true;
                 mod.useridx = imagepak::get_max_useridx() + 1;
@@ -353,8 +353,8 @@ void mods_init() {
         }
     };
 
-    const dir_listing* sgx_files = vfs::dir_find_files_with_extension("Mods", "sgx");
-    append_mods("Mods/", sgx_files);
+    const dir_listing* sgx_files = vfs::dir_find_files_with_extension("mods", "sgx");
+    append_mods("mods/", sgx_files);
 }
 
 const mod_info& mods_find(xstring hash) {

@@ -441,7 +441,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
     int bmp_last_group_id = 0;
     int last_idx_in_bmp = 1;
 
-    pcstr allow_dirs_to_find[] = { "Mods", "Data" };
+    pcstr allow_dirs_to_find[] = { "mods", "data" };
     bool found = false;
     vfs::path datafile;
 

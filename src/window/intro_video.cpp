@@ -1,6 +1,7 @@
 #include "intro_video.h"
 
 #include "core/log.h"
+#include "content/vfs.h"
 #include "graphics/graphics.h"
 #include "graphics/screen.h"
 #include "graphics/video.h"
@@ -19,6 +20,8 @@ static struct {
 // Original/Steam use BINKS/; some GOG layouts ship the same files under Video/.
 static const char* PH_INTRO_CANDIDATES[] = {
     "BINKS/high/Intro_big.bik",
+    "BINKS/High/Intro_big.bik",
+    "Binks/High/Intro_big.bik",
     "Video/High/Intro_big.bik",
     "BINKS/low/intro.bik",
     "Video/Low/intro.bik",
@@ -28,6 +31,9 @@ static int start_intro_video(void) {
     const int candidates = (int)(sizeof(PH_INTRO_CANDIDATES) / sizeof(PH_INTRO_CANDIDATES[0]));
     for (int i = 0; i < candidates; i++) {
         const char* path = PH_INTRO_CANDIDATES[i];
+        if (!vfs::file_exists(path)) {
+            continue;
+        }
         if (video_start(path)) {
             video_size(&data.width, &data.height);
             video_init();
@@ -37,6 +43,13 @@ static int start_intro_video(void) {
         }
         logs::info("Intro video: could not open %s", path);
     }
+
+    bstring1024 candidates_log;
+    for (int i = 0; i < candidates; i++) {
+        if (i > 0) candidates_log.append("\n");
+        candidates_log.append(PH_INTRO_CANDIDATES[i]);
+    }
+    logs::error("Intro video: none of the candidate paths exist:\n%s", candidates_log.c_str());
     return 0;
 }
 

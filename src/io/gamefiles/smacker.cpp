@@ -373,7 +373,7 @@ static int read_header(smacker s) {
     }
     // check signature
     if (header[0] != 'S' || header[1] != 'M' || header[2] != 'K' || header[3] != '2') {
-        logs::error("SMK: file is not an SMK2 video");
+        logs::debug("SMK: file is not an SMK2 video");
         return 0;
     }
     s->width = read_i32(&header[4]);
