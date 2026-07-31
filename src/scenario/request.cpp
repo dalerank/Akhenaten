@@ -288,11 +288,6 @@ scenario_request scenario_request_get_visible(int index) {
         return {};
     }
 
-    // NOTE: must scan the full event list, not just the first MAX_REQUESTS slots --
-    // scenarios routinely accumulate more than MAX_REQUESTS total events (chain
-    // reactions from completed/refused/late requests, gifts, other scenario events),
-    // which can push a later request's event past slot MAX_REQUESTS. Matches the
-    // bound used by scenario_get_visible_requests()/scenario_requests_active_count().
     for (int i = 0; i < total_events; i++) {
         const event_ph_t* event = g_scenario.events.at(i);
         if (!(event->type == EVENT_TYPE_REQUEST && event->is_active && event->event_state <= e_event_state_overdue)) {
