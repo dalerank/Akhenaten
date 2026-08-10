@@ -2211,6 +2211,9 @@ void ui::emenu_header::load(archive arch, element* parent, items& elems) {
 
     _font = arch.r_type<e_font>("font", FONT_NORMAL_BLACK_ON_LIGHT);
     _tooltip = arch.r_string("tooltip");
+    if (!!_tooltip && _tooltip[0] == '#') {
+        _tooltip = lang_text_from_key(_tooltip.c_str());
+    }
 
     const bool has_dyn_tooltip = (!!_tooltip && strstr(_tooltip.c_str(), "${") != nullptr);
     _tooltip_format = has_dyn_tooltip ? _tooltip : "";
@@ -2219,6 +2222,9 @@ void ui::emenu_header::load(archive arch, element* parent, items& elems) {
     _textfn_js = arch.r_function("textfn");
 
     impl.text = arch.r_string("text");
+    if (!!impl.text && impl.text[0] == '#') {
+        impl.text = lang_text_from_key(impl.text.c_str());
+    }
 
     const bool has_dyn_text = (!!impl.text && strstr(impl.text.c_str(), "${") != nullptr);
     _text_format = has_dyn_text ? impl.text : "";
@@ -2245,6 +2251,10 @@ void ui::emenu_header::load_items(archive arch, xstring section, element::items&
         menu_item& item = impl.items.emplace_back();
         item.id = key;
         item.text = elem.r_string("text");
+
+        if (!item.text.empty() && item.text[0] == '#') {
+            item.text = lang_text_from_key(item.text.c_str());
+        }
 
         const bool has_dyn_loc = (strstr(item.text.c_str(), "${") != nullptr);
         if (has_dyn_loc) {

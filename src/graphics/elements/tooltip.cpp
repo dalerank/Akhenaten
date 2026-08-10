@@ -43,10 +43,15 @@ void tooltip_context::draw_tooltip_impl() {
     }
 
     bstring1024 ptext = text.c_str();
+    if (!ptext.empty() && ptext[0] == '#') {
+        ptext = lang_text_from_key(ptext);
+    }
+
     const bool need_localize = ptext.find('$') >= 0;
     if (need_localize) {
         ui_scope_property holder;
-        ui::format(ptext, &holder, text.c_str());
+        bstring1024 fmt_src = ptext.c_str();
+        ui::format(ptext, &holder, fmt_src.c_str());
     }
 
     int width = 200;
