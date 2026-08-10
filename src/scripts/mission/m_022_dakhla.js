@@ -21,6 +21,11 @@ log_info("akhenaten: mission 22 dakhla started")
 
 mission22 { // Dakhla Oasis — The Caravan Trail
 	map_file : "data/maps/m_022_dakhla.map"
+
+	// Map points from data/maps/m_022_dakhla.map.
+	herd_points_predator [ [41, 107], [85, 103], [63, 66] ]
+	herd_points_prey [ [86, 45], [64, 87] ]
+
 	start_message : "message_mission_dakhla"
 	selection_title : "Dakhla"
 	player_rank : 8

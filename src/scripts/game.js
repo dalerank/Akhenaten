@@ -50,6 +50,7 @@ game = extend(__game, {
     editor_load_scenario: __game_editor_load_scenario
     editor_write_scenario: __game_editor_write_scenario
     init_editor: __game_init_editor
+    exit_editor: __game_exit_editor
     editor_is_active: __editor_is_active
     last_advisor: ADVISOR_NONE
 })
@@ -240,6 +241,13 @@ function game_on_mission_won_troop_carry(ev) {
 
 [es=event_exit_to_menu_requested]
 function game_on_exit_to_menu_requested(ev) {
+    __video_stop()
+    if (game.editor_is_active()) {
+        ui.show_yesno("#popup_dialog_quit", function() {
+            game.exit_editor()
+        })
+        return
+    }
     game_confirm_exit_to_main_menu()
 }
 
@@ -322,7 +330,7 @@ function app_clear_pending_exit_after_save() {
 function app_open_save_dialog_for_exit() {
     app_pending_exit_after_save = true
     ui.window_city_show()
-    window_file_dialog_save_show()
+    window_show_by_id("file_dialog_save")
 }
 
 function app_finish_exit_after_save() {

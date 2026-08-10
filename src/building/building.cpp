@@ -70,6 +70,9 @@ const e_destroy_reason_tokens_t ANK_CONFIG_ENUM(e_destroy_reason_tokens);
 using e_building_type_tokens_t = token_holder<e_building_type, BUILDING_NONE, BUILDING_MAX>;
 const e_building_type_tokens_t ANK_CONFIG_ENUM(e_building_type_tokens);
 
+using e_house_level_tokens_t = token_holder<e_house_level, HOUSE_CRUDE_HUT, HOUSE_LEVEL_MAX>;
+const e_house_level_tokens_t ANK_CONFIG_ENUM(e_house_level_tokens);
+
 static std::array<const building_static_params*, BUILDING_MAX> *building_impl_params = nullptr;
 
 building_static_params building_static_params::dummy;

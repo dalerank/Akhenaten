@@ -8,10 +8,25 @@
 #include "city/city_floods.h"
 #include "city/city_health.h"
 #include "city/city_labor.h"
+#include "city/city_recorded_paths.h"
 #include "city/ratings.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_worker);
+
+static void worker_handoff_path_to_camp(figure &f) {
+    if (!f.trail_path_id) {
+        return;
+    }
+    building *h = f.home();
+    if (!h || !h->params().flags.keeps_visitor_paths) {
+        return;
+    }
+    building *main = h->main();
+    if (main) {
+        g_recorded_paths.handoff_to_building(f, main->id);
+    }
+}
 
 tile2i figure_worker::monumen_tile4work(building *b) {
     building_monument *mastaba = b->dcast_monument();
@@ -105,6 +120,7 @@ void figure_worker::figure_action() {
 
     case ACTION_10_WORKER_GOING:
         if (do_gotobuilding(destination(), stop_at_road, terrain_usage, ACTION_15_REACHED_DESTINATION, ACTION_14_WORKER_CHECK_DESTINATION)) {
+            worker_handoff_path_to_camp(base);
             if (b_dest->is_floodplain_farm()) {
                 auto &d = b_dest->dcast_farm()->runtime_data();
                 b_dest->num_workers = std::clamp<int>((1.f - bhome->tile.dist(b_dest->tile) / 20.f) * 12, 2, 10);
@@ -148,6 +164,7 @@ void figure_worker::figure_action() {
 
     case ACTION_13_WORKER_BACK_FROM_WORKS:
         if (do_gotobuilding(destination(), stop_at_road, TERRAIN_USAGE_PREFER_ROADS, ACTION_15_REACHED_DESTINATION, ACTION_14_WORKER_CHECK_DESTINATION)) {
+            worker_handoff_path_to_camp(base);
             poof();
         }
         break;

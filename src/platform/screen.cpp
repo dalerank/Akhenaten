@@ -20,34 +20,17 @@
 
 #include <stdlib.h>
 
-struct platform_screen_t {
-    SDL_Window* window;
-    vec2i pos;
-    int centered;
-    vec2i minimum = {640, 480};
-    int scale_percentage = 100;
+platform_screen_t g_platform_screen;
 
-    int scale_logical_to_pixels(int logical_value) { return logical_value * scale_percentage / 100; }
-    int scale_pixels_to_logical(int pixel_value) { return pixel_value * 100 / scale_percentage; }
-
-    void set_scale_percentage(int new_scale, int pixel_width, int pixel_height);
-    int create(const xstring& title, const xstring& renderer, bool fullscreen, int display_scale_percentage,
-      vec2i screen_size);
-    bool resize(int pixel_width, int pixel_height, int save);
-    int scale_display(int display_scale_percentage);
-    void destroy();
-    void set_fullscreen();
-    void move(int x, int y);
-    void set_windowed();
-    void set_window_size(int logical_width, int logical_height);
-    void recreate_texture();
-};
-
-static platform_screen_t g_sdl_screen;
+namespace {
+SDL_Window* as_sdl_window(void* window) {
+    return static_cast<SDL_Window*>(window);
+}
+} // namespace
 
 static int get_max_scale_percentage(int pixel_width, int pixel_height) {
-    int width_scale_pct = pixel_width * 100 / g_sdl_screen.minimum.x;
-    int height_scale_pct = pixel_height * 100 / g_sdl_screen.minimum.y;
+    int width_scale_pct = pixel_width * 100 / g_platform_screen.minimum.x;
+    int height_scale_pct = pixel_height * 100 / g_platform_screen.minimum.y;
     return SDL_min(width_scale_pct, height_scale_pct);
 }
 
@@ -68,7 +51,8 @@ void platform_screen_t::set_scale_percentage(int new_scale, int pixel_width, int
         logs::info("Maximum scale of %i applied", scale_percentage);
     }
 
-    SDL_SetWindowMinimumSize(window, scale_logical_to_pixels(minimum.x), scale_logical_to_pixels(minimum.y));
+    SDL_SetWindowMinimumSize(as_sdl_window(window), scale_logical_to_pixels(minimum.x),
+      scale_logical_to_pixels(minimum.y));
 
     const char* scale_quality = "linear";
 #if !defined(GAME_PLATFORM_ANDROID)
@@ -81,23 +65,8 @@ void platform_screen_t::set_scale_percentage(int new_scale, int pixel_width, int
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, scale_quality);
 }
 
-#if defined(GAME_PLATFORM_ANDROID)
-static void set_scale_for_screen(int pixel_width, int pixel_height) {
-    g_sdl_screen.set_scale_percentage(android_get_screen_density() * 100, pixel_width, pixel_height);
-    // config_set(CONFIG_SCREEN_CURSOR_SCALE, g_sdl_screen.scale_percentage);
-    if (g_sdl_screen.window) {
-        // system_init_cursors(g_sdl_screen.scale_percentage);
-    }
-    logs::info("Auto-setting scale to %i", g_sdl_screen.scale_percentage);
-}
-#endif
-
-int platform_screen_get_scale() {
-    return g_sdl_screen.scale_percentage;
-}
-
-void* platform_screen_surfce_format() {
-    SDL_Surface* scr_surface = SDL_GetWindowSurface(g_sdl_screen.window);
+void* platform_screen_t::surface_format() {
+    SDL_Surface* scr_surface = SDL_GetWindowSurface(as_sdl_window(window));
     return scr_surface->format;
 }
 
@@ -113,11 +82,6 @@ static void set_window_icon() {
     // SDL_FreeSurface(surface);
 }
 #endif
-
-int platform_screen_create(const xstring& title, const xstring& renderer, bool fullscreen, int display_scale_percentage,
-  vec2i screen_size) {
-    return g_sdl_screen.create(title, renderer, fullscreen, display_scale_percentage, screen_size);
-}
 
 int platform_screen_t::create(const xstring& title, const xstring& renderer, bool fullscreen,
   int display_scale_percentage, vec2i screen_size) {
@@ -150,7 +114,7 @@ int platform_screen_t::create(const xstring& title, const xstring& renderer, boo
         wsize.y = scale_logical_to_pixels(wsize.y);
     }
 
-    platform_screen_destroy();
+    destroy();
 
 #if defined(GAME_PLATFORM_ANDROID)
     // Fix for wrong colors on some android devices
@@ -190,46 +154,37 @@ int platform_screen_t::create(const xstring& title, const xstring& renderer, boo
     // For emscripten and fullscreen-only platforms, always get the actual window size
     // as the canvas size may differ from the requested size
     if (g_render.is_fullscreen_only() || platform.is_emscripten()) {
-        SDL_GetWindowSize(window, &wsize.x, &wsize.y);
+        SDL_GetWindowSize(as_sdl_window(window), &wsize.x, &wsize.y);
     }
 
-    if (!platform_renderer_init(window, renderer)) {
+    if (!platform_renderer_init(as_sdl_window(window), renderer)) {
         return 0;
     }
 
     vec2i tmp_size;
-    SDL_SetWindowIcon(window, load_icon_surface(":akhenaten_72.png", tmp_size));
+    SDL_SetWindowIcon(as_sdl_window(window), load_icon_surface(":akhenaten_72.png", tmp_size));
 
 #if !defined(__APPLE__)
     if (fullscreen && SDL_GetNumVideoDisplays() > 1) {
-        SDL_SetWindowGrab(window, SDL_TRUE);
+        SDL_SetWindowGrab(as_sdl_window(window), SDL_TRUE);
     }
 #endif // !__APPLE__
     set_scale_percentage(display_scale_percentage, wsize.x, wsize.y);
-    int error = platform_screen_resize(wsize.x, wsize.y, 1);
-
-    return error;
-}
-
-void platform_screen_destroy() {
-    g_sdl_screen.destroy();
+    return resize(wsize.x, wsize.y, 1);
 }
 
 void platform_screen_t::destroy() {
     platform_renderer_destroy();
     if (window) {
-        SDL_DestroyWindow(window);
-        window = 0;
+        SDL_DestroyWindow(as_sdl_window(window));
+        window = nullptr;
     }
 }
 
-bool platform_screen_resize(int pixel_width, int pixel_height, int save) {
-    return g_sdl_screen.resize(pixel_width, pixel_height, save);
-}
-
 bool platform_screen_t::resize(int pixel_width, int pixel_height, int save) {
-#ifdef __ANDROID__
-    set_scale_for_screen(pixel_width, pixel_height);
+#if defined(GAME_PLATFORM_ANDROID)
+    set_scale_percentage(android_get_screen_density() * 100, pixel_width, pixel_height);
+    logs::info("Auto-setting scale to %i", scale_percentage);
 #endif
 
     int logical_width = scale_pixels_to_logical(pixel_width);
@@ -249,14 +204,10 @@ bool platform_screen_t::resize(int pixel_width, int pixel_height, int save) {
 
 int platform_screen_t::scale_display(int display_scale_percentage) {
     int width, height;
-    SDL_GetWindowSize(window, &width, &height);
+    SDL_GetWindowSize(as_sdl_window(window), &width, &height);
     set_scale_percentage(display_scale_percentage, width, height);
-    platform_screen_resize(width, height, 1);
+    resize(width, height, 1);
     return scale_percentage;
-}
-
-void platform_screen_move(int x, int y) {
-    g_sdl_screen.move(x, y);
 }
 
 void platform_screen_t::move(int x, int y) {
@@ -264,50 +215,42 @@ void platform_screen_t::move(int x, int y) {
         pos.x = x;
         pos.y = y;
         centered = 0;
-        SDL_SetWindowPosition(window, x, y);
+        SDL_SetWindowPosition(as_sdl_window(window), x, y);
     }
 }
 
-void platform_screen_set_fullscreen() {
-    g_sdl_screen.set_fullscreen();
-}
-
 void platform_screen_t::set_fullscreen() {
-    SDL_GetWindowPosition(g_sdl_screen.window, &g_sdl_screen.pos.x, &g_sdl_screen.pos.y);
-    int display = SDL_GetWindowDisplayIndex(g_sdl_screen.window);
+    SDL_GetWindowPosition(as_sdl_window(window), &pos.x, &pos.y);
+    int display = SDL_GetWindowDisplayIndex(as_sdl_window(window));
     SDL_DisplayMode mode;
 
     if (platform.is_emscripten()) {
         // For emscripten, get the actual window size after setting fullscreen
         // as SDL_GetDesktopDisplayMode may return incorrect values
-        if (0 != SDL_SetWindowFullscreen(g_sdl_screen.window, SDL_WINDOW_FULLSCREEN_DESKTOP)) {
+        if (0 != SDL_SetWindowFullscreen(as_sdl_window(window), SDL_WINDOW_FULLSCREEN_DESKTOP)) {
             logs::info("Unable to enter fullscreen: %s", SDL_GetError());
             return;
         }
-        SDL_GetWindowSize(g_sdl_screen.window, &mode.w, &mode.h);
+        SDL_GetWindowSize(as_sdl_window(window), &mode.w, &mode.h);
         logs::info("User to fullscreen %d x %d on display %d", mode.w, mode.h, display);
     } else {
         SDL_GetDesktopDisplayMode(display, &mode);
         logs::info("User to fullscreen %d x %d on display %d", mode.w, mode.h, display);
-        if (0 != SDL_SetWindowFullscreen(g_sdl_screen.window, SDL_WINDOW_FULLSCREEN_DESKTOP)) {
+        if (0 != SDL_SetWindowFullscreen(as_sdl_window(window), SDL_WINDOW_FULLSCREEN_DESKTOP)) {
             logs::info("Unable to enter fullscreen: %s", SDL_GetError());
             return;
         }
-        SDL_SetWindowDisplayMode(g_sdl_screen.window, &mode);
+        SDL_SetWindowDisplayMode(as_sdl_window(window), &mode);
     }
 
     if (!platform.is_macos()) {
         if (SDL_GetNumVideoDisplays() > 1) {
-            SDL_SetWindowGrab(g_sdl_screen.window, SDL_TRUE);
+            SDL_SetWindowGrab(as_sdl_window(window), SDL_TRUE);
         }
     }
 
     game.set_fullscreen(true);
     game_features::gameopt_display_size.set({mode.w, mode.h});
-}
-
-void platform_screen_set_windowed() {
-    g_sdl_screen.set_windowed();
 }
 
 void platform_screen_t::set_windowed() {
@@ -317,22 +260,18 @@ void platform_screen_t::set_windowed() {
     auto wsize = game_features::gameopt_display_size.to_vec2i();
     int pixel_width = scale_logical_to_pixels(wsize.x);
     int pixel_height = scale_logical_to_pixels(wsize.y);
-    int display = SDL_GetWindowDisplayIndex(window);
+    int display = SDL_GetWindowDisplayIndex(as_sdl_window(window));
     logs::info("User to windowed %d x %d on display %d", pixel_width, pixel_height, display);
-    SDL_SetWindowFullscreen(window, 0);
-    SDL_SetWindowSize(window, pixel_width, pixel_height);
+    SDL_SetWindowFullscreen(as_sdl_window(window), 0);
+    SDL_SetWindowSize(as_sdl_window(window), pixel_width, pixel_height);
     if (centered) {
-        platform_screen_center_window();
+        center_window();
     }
-    if (SDL_GetWindowGrab(window) == SDL_TRUE) {
-        SDL_SetWindowGrab(window, SDL_FALSE);
+    if (SDL_GetWindowGrab(as_sdl_window(window)) == SDL_TRUE) {
+        SDL_SetWindowGrab(as_sdl_window(window), SDL_FALSE);
     }
     game.set_fullscreen(false);
     game_features::gameopt_display_size.set({pixel_width, pixel_height});
-}
-
-void platform_screen_set_window_size(int logical_width, int logical_height) {
-    g_sdl_screen.set_window_size(logical_width, logical_height);
 }
 
 void platform_screen_t::set_window_size(int logical_width, int logical_height) {
@@ -341,63 +280,62 @@ void platform_screen_t::set_window_size(int logical_width, int logical_height) {
     }
     int pixel_width = scale_logical_to_pixels(logical_width);
     int pixel_height = scale_logical_to_pixels(logical_height);
-    int display = SDL_GetWindowDisplayIndex(window);
+    int display = SDL_GetWindowDisplayIndex(as_sdl_window(window));
     if (game.is_fullscreen()) {
-        SDL_SetWindowFullscreen(window, 0);
+        SDL_SetWindowFullscreen(as_sdl_window(window), 0);
     } else {
-        SDL_GetWindowPosition(window, &pos.x, &pos.y);
+        SDL_GetWindowPosition(as_sdl_window(window), &pos.x, &pos.y);
     }
-    if (SDL_GetWindowFlags(window) & SDL_WINDOW_MAXIMIZED) {
-        SDL_RestoreWindow(window);
+    if (SDL_GetWindowFlags(as_sdl_window(window)) & SDL_WINDOW_MAXIMIZED) {
+        SDL_RestoreWindow(as_sdl_window(window));
     }
-    SDL_SetWindowSize(window, pixel_width, pixel_height);
+    SDL_SetWindowSize(as_sdl_window(window), pixel_width, pixel_height);
     if (centered) {
-        platform_screen_center_window();
+        center_window();
     }
     logs::info("User resize to %d x %d on display %d", pixel_width, pixel_height, display);
-    if (SDL_GetWindowGrab(window) == SDL_TRUE) {
-        SDL_SetWindowGrab(window, SDL_FALSE);
+    if (SDL_GetWindowGrab(as_sdl_window(window)) == SDL_TRUE) {
+        SDL_SetWindowGrab(as_sdl_window(window), SDL_FALSE);
     }
     game.set_fullscreen(false);
     game_features::gameopt_display_size.set({pixel_width, pixel_height});
 }
 
-void platform_screen_center_window() {
-    int display = SDL_GetWindowDisplayIndex(g_sdl_screen.window);
-    SDL_SetWindowPosition(g_sdl_screen.window, SDL_WINDOWPOS_CENTERED_DISPLAY(display),
+void platform_screen_t::center_window() {
+    int display = SDL_GetWindowDisplayIndex(as_sdl_window(window));
+    SDL_SetWindowPosition(as_sdl_window(window), SDL_WINDOWPOS_CENTERED_DISPLAY(display),
       SDL_WINDOWPOS_CENTERED_DISPLAY(display));
-    g_sdl_screen.centered = 1;
+    centered = 1;
 }
 
-#ifdef _WIN32
 void platform_screen_t::recreate_texture() {
+#if defined(GAME_PLATFORM_WIN)
     // On Windows, if ctrl + alt + del is pressed during fullscreen, the rendering context may be lost for a few frames
     // after restoring the window, preventing the texture from being recreated. This forces an attempt to recreate the
     // texture every frame to bypass that issue.
     if (game.is_fullscreen() && platform_renderer_lost_render_texture()) {
         SDL_DisplayMode mode;
-        SDL_GetWindowDisplayMode(window, &mode);
+        SDL_GetWindowDisplayMode(as_sdl_window(window), &mode);
         g_screen.set_resolution(scale_pixels_to_logical(mode.w), scale_pixels_to_logical(mode.h));
         platform_renderer_create_render_texture(screen_width(), screen_height());
     }
-}
 #endif
-
-void platform_screen_show_error_message_box(const char* title, const char* message) {
-    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, title, message, g_sdl_screen.window);
 }
 
-void platform_screen_warp_mouse(int *x, int *y) {
+void platform_screen_t::show_error_message_box(const char* title, const char* message) {
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, title, message, as_sdl_window(window));
+}
+
+void platform_screen_t::warp_mouse(int* x, int* y) {
     *x = calc_bound(*x, 0, screen_width() - 1);
     *y = calc_bound(*y, 0, screen_height() - 1);
-    SDL_WarpMouseInWindow(g_sdl_screen.window, g_sdl_screen.scale_logical_to_pixels(*x),
-      g_sdl_screen.scale_logical_to_pixels(*y));
+    SDL_WarpMouseInWindow(as_sdl_window(window), scale_logical_to_pixels(*x), scale_logical_to_pixels(*y));
 }
 
-void system_get_max_resolution(int* width, int* height) {
+vec2i platform_screen_t::get_max_resolution() {
     SDL_DisplayMode mode;
-    int index = SDL_GetWindowDisplayIndex(g_sdl_screen.window);
+    int index = SDL_GetWindowDisplayIndex(as_sdl_window(window));
     SDL_GetCurrentDisplayMode(index, &mode);
-    *width = g_sdl_screen.scale_pixels_to_logical(mode.w);
-    *height = g_sdl_screen.scale_pixels_to_logical(mode.h);
+    return {scale_pixels_to_logical(mode.w), scale_pixels_to_logical(mode.h)};
 }
+

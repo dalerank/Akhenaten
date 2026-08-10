@@ -308,7 +308,7 @@
       </div>
       <div class="tutorial-step">
         <span class="step-tag">Modest Homesteads</span>
-        <span>Goal tooltip first asks for Modest Homesteads (<code>#reach_modest_houses_number</code>). The script sets <code>modest_houses_reached</code> when enough Modest Homestead buildings exist (see Developer notes).</span>
+        <span>Goal tooltip first asks for Modest Homesteads (<code>#reach_modest_houses_number</code>). The script sets <code>modest_houses_reached</code> when ≥ <strong>10</strong> houses are at Modest Homestead or higher (<code>mission.modest_houses_needed</code>).</span>
       </div>
       <div class="tutorial-step">
         <span class="step-tag">300 beer in yards</span>
@@ -391,12 +391,12 @@
 
   <span class="kw">vars</span> {
     <span class="kw">beer_stored</span> : <span class="num">300</span>
+    <span class="kw">modest_houses_needed</span> : <span class="num">10</span>
     <span class="kw">victory_last_action_delay</span> : <span class="num">3</span>
     beer_stored_handled / tax_collector_built / modest_houses_reached / …
   }
 }</code></pre>
-            <p>Empire is disabled on start via <code>city.set_empire_available(-1)</code>.</p>
-            <p><strong>Script notes:</strong> <code>mission3_handle_spacious_apartment</code> counts <code>BUILDING_HOUSE_MODEST_HOMESTEAD</code> and references <code>modest_houses_needed</code> / <code>spacious_apartment_built</code>, which are not declared in <code>vars</code> — treat the Modest Homestead step as partially wired when editing this mission.</p>
+            <p>Empire is disabled on start via <code>city.set_empire_available(-1)</code>. Modest Homestead milestone counts houses at level ≥ 6 (Modest Homestead and above) so further evolution still satisfies the tooltip gate; it is not a victory reason.</p>
           </div>
         </details>
 
@@ -406,31 +406,31 @@
             <ul class="event-list">
               <li>
                 <span class="ev-name">event_mission_start</span>
-                <span class="ev-line">~65</span>
-                <span class="ev-desc">Shows <code>message_developing_culture</code>; disables empire; restores Tax Collector / Mansion if beer or tax flags already set; enables Labor, Entertainment, Religion, Financial advisors; binds goal tooltip.</span>
+                <span class="ev-line">~67</span>
+                <span class="ev-desc">Shows <code>message_developing_culture</code>; disables empire; restores Tax Collector / Mansion if beer flag already set; enables Labor, Entertainment, Religion, Financial advisors; binds goal tooltip.</span>
                 <span class="ev-fn">mission3_on_start</span>
               </li>
               <li>
                 <span class="ev-name">event_warehouse_filled</span>
-                <span class="ev-line">~87</span>
+                <span class="ev-line">~82</span>
                 <span class="ev-desc">When total beer in yards ≥ 300: unlock Tax Collector + Personal Mansion; popup <code>message_tutorial_finances</code>.</span>
                 <span class="ev-fn">mission3_warehouse_beer_check</span>
               </li>
               <li>
                 <span class="ev-name">event_building_create</span>
-                <span class="ev-line">~107</span>
+                <span class="ev-line">~102</span>
                 <span class="ev-desc">Sets <code>tax_collector_built</code> when a Tax Collector is placed.</span>
                 <span class="ev-fn">mission3_on_build_tax_collector</span>
               </li>
               <li>
                 <span class="ev-name">event_advance_day</span>
-                <span class="ev-line">~122</span>
-                <span class="ev-desc">Sets <code>modest_houses_reached</code> when Modest Homestead count meets threshold (see script notes).</span>
-                <span class="ev-fn">mission3_handle_spacious_apartment</span>
+                <span class="ev-line">~117</span>
+                <span class="ev-desc">Sets <code>modest_houses_reached</code> when ≥ 10 houses are at Modest Homestead or higher.</span>
+                <span class="ev-fn">mission3_handle_modest_houses</span>
               </li>
               <li>
                 <span class="ev-name">event_update_victory_state</span>
-                <span class="ev-line">~137</span>
+                <span class="ev-line">~138</span>
                 <span class="ev-desc">Gates victory on beer + tax flags and the 3-day post-action delay.</span>
                 <span class="ev-fn">mission3_handle_victory_state</span>
               </li>
@@ -465,7 +465,7 @@
                 </tr>
               </tbody>
             </table>
-            <p style="margin-top:0.75rem">Tooltip strings: <code>#mission3_brew_beer</code> in <span class="file-ref">src/scripts/localization_en.js</span>; <code>#reach_modest_houses_number</code> / <code>#build_tax_collector</code> referenced by the goal tooltip (ensure they exist in localization).</p>
+            <p style="margin-top:0.75rem">Tooltip strings in <span class="file-ref">src/scripts/localization_en.js</span>: <code>#reach_modest_houses_number</code>, <code>#mission3_brew_beer</code>, <code>#build_tax_collector</code>.</p>
           </div>
         </details>
 

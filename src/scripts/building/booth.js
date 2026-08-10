@@ -34,6 +34,11 @@ function building_booth_on_place_checks(ev) {
     city.warnings.show_if_not(has_juggler_school, "#build_juggling_school")
 }
 
+[es=(building_booth, draw_usable_paths)]
+function building_booth_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}
+
 [es=(building_booth, ghost_preview)]
 function building_booth_ghost_preview(ev) {
     var pixel = ev.pixel
@@ -42,7 +47,7 @@ function building_booth_ghost_preview(ev) {
 
     var orientation = __map_venue_build_orientation(ev.end, e_venue_mode_booth)
     if (orientation < 0) {
-        city.planner.draw_flat_tiles(pixel, building_size * building_size)
+        city_planner.draw_flat_tiles(pixel, building_size * building_size)
         return
     }
 
@@ -54,10 +59,10 @@ function building_booth_ghost_preview(ev) {
             x: pixel.x + (col - row) * 30,
             y: pixel.y + (col + row) * 15 - 15
         }
-        city.planner.draw_isometric_ghost(tile_pixel, square_id + i)
+        city_planner.draw_isometric_ghost(tile_pixel, square_id + i)
     }
 
     var booth_id = params.first_img("booth")
     var off = building_booth.preview_booth_offsets[Math.floor(orientation / 2)]
-    city.planner.draw_ghost({ x: pixel.x + off[0], y: pixel.y + off[1] }, booth_id)
+    city_planner.draw_ghost({ x: pixel.x + off[0], y: pixel.y + off[1] }, booth_id)
 }

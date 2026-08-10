@@ -36,7 +36,16 @@ bool io_buffer::read(size_t version) {
     return io_sync(CHUNK_ACCESS_READ, version);
 }
 bool io_buffer::write() {
-    return io_sync(CHUNK_ACCESS_WRITE, latest_save_version);
+    return io_sync(CHUNK_ACCESS_WRITE, save_data_version());
+}
+
+void io_buffer::apply_default(size_t version) {
+    if (default_callback != nullptr) {
+        default_callback(version);
+        return;
+    }
+
+    reset_data(version);
 }
 
 io_buffer::io_buffer() {
@@ -44,6 +53,10 @@ io_buffer::io_buffer() {
 }
 io_buffer::io_buffer(io_buffer_bind bclb) {
     bind_callback = bclb;
+}
+io_buffer::io_buffer(io_buffer_bind bclb, io_buffer_default dclb) {
+    bind_callback = bclb;
+    default_callback = dclb;
 }
 io_buffer::~io_buffer() {
     // this DOES NOT free up the internal buffer memory (for now)!!!

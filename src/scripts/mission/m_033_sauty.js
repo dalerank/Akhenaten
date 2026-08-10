@@ -13,6 +13,10 @@ log_info("akhenaten: mission 33 sauty started")
 
 mission33 { // Sauty (Lykopolis) — Egypt Reclaimed
 	map_file : "data/maps/m_033_sauty.map"
+
+	// Map points from data/maps/m_033_sauty.map.
+	herd_points_predator [ [71, 95], [62, 60], [73, 57], [67, 112] ]
+
 	start_message : "message_mission_lykopolis"
 	selection_title : "Sauty"
 	player_rank : 10

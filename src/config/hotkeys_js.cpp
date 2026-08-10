@@ -1,10 +1,11 @@
 #include "hotkeys.h"
 
 #include "input/keys.h"
+#include "input/hotkey.h"
+#include "core/app.h"
 #include "game/game_events.h"
 #include "js/js_events.h"
 #include "js/js_game.h"
-#include "window/hotkey_editor.h"
 #include "core/profiler.h"
 
 struct event_hotkey_editor_result {
@@ -15,9 +16,24 @@ struct event_hotkey_editor_result {
 };
 ANK_SCRIPT_EVENT(event_hotkey_editor_result, action, is_alt, key, modifiers)
 
-static void hotkey_editor_js_callback(int action, int index, e_key key, e_key_mode modifiers) {
-    events::emit(event_hotkey_editor_result{action, index, (int)key, (int)modifiers});
-}
+struct event_hotkey_editor_key {
+    int key;
+    int modifiers;
+    int pressed;
+};
+ANK_SCRIPT_EVENT(event_hotkey_editor_key, key, modifiers, pressed)
+
+ANK_SCRIPT_EVENT(event_hotkey_fired, action)
+ANK_SCRIPT_EVENT(event_hotkey_overlay, value)
+ANK_SCRIPT_EVENT(event_toggle_overlay, value)
+ANK_SCRIPT_EVENT(event_toggle_flat_buildings, value)
+ANK_SCRIPT_EVENT(event_toggle_legion, value)
+ANK_SCRIPT_EVENT(event_editor_toggle_battle_info, value)
+ANK_SCRIPT_EVENT(event_debug_tile_change, value)
+ANK_SCRIPT_EVENT(event_debug_render_change, value)
+ANK_SCRIPT_EVENT(event_app_center_screen, value)
+ANK_SCRIPT_EVENT(event_app_screenshot, value)
+ANK_SCRIPT_EVENT(event_app_city_screenshot, value)
 
 static bvariant_map hotkey_mapping_to_js(const hotkey_mapping *mapping) {
     bvariant_map result;
@@ -64,10 +80,5 @@ xstring __hotkey_key_display_name(int key, int modifiers) {
     return name ? xstring((pcstr)name) : xstring();
 }
 ANK_FUNCTION_2(__hotkey_key_display_name)
-
-void __hotkey_editor_show(int action, int is_alt) {
-    window_hotkey_editor_show(action, is_alt, hotkey_editor_js_callback);
-}
-ANK_FUNCTION_2(__hotkey_editor_show)
 
 e_hotkey_action_tokens_t ANK_CONFIG_ENUM(e_hotkey_action_tokens);

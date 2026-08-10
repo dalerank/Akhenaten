@@ -17,6 +17,10 @@ log_info("akhenaten: mission 45 pi-yer started")
 
 mission45 { // Pi-Yer — The Sea People Land
 	map_file : "data/maps/m_045_pi_yer.map"
+
+	// Map points from data/maps/m_045_pi_yer.map.
+	herd_points_predator [ [21, 46] ]
+
 	start_message : "message_mission_pi_yer"
 	selection_title : "Pi-Yer"
 	player_rank : 4

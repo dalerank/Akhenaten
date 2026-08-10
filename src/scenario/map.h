@@ -19,6 +19,5 @@ bool scenario_map_has_river_exit();
 tile2i scenario_map_river_entry();
 tile2i scenario_map_river_exit();
 
-void scenario_map_foreach_herd_point(std::function<void(tile2i)> callback);
 void scenario_map_foreach_prey_point(std::function<void(tile2i)> callback);
 void scenario_map_foreach_fishing_point(void (*callback)(tile2i));

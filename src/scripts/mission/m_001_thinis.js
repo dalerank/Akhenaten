@@ -2,6 +2,13 @@ log_info("akhenaten: mission 1 started")
 
 mission1 {
 	map_file : "data/maps/m_001_thinis.map"
+
+	// Tutorial hunt: fixed ostrich counts. First tile from map; second is the remake spawn.
+	herd_points_prey [
+		{ tile: [67, 84], type: FIGURE_OSTRICH, count: 8, radius: 16 }
+		{ tile: [55, 95], type: FIGURE_OSTRICH, count: 8, radius: 16 }
+	]
+
 	start_message : "message_gold_and_crime"
 	selection_title : "Thinis"
 	env {
@@ -44,18 +51,18 @@ mission1 {
 		last_action_time : 0
 		start_message_shown : false
 	}
-}
 
-function mission1_get_goal_tooltip() {
-	if (!mission.gold_mined_handled) {
-		return "#mission1_goal_build_temples"
+	goal_tooltip: function() {
+		if (!mission.gold_mined_handled) {
+			return "#mission1_goal_build_temples"
+		}
+
+		if (!mission.temples_built) {
+			return "#mission1_goal_build_entertainment"
+		}
+
+		return "#mission1_goal_build_mines"
 	}
-
-	if (!mission.temples_built) {
-		return "#mission1_goal_build_entertainment"
-	}
-
-	return "#mission1_goal_build_mines"
 }
 
 [es=event_mission_start, mission=mission1]
@@ -77,17 +84,6 @@ function mission1_on_start(ev) {
 	city.set_advisor_available(ADVISOR_ENTERTAINMENT, mission.temples_built)
 
     city.set_advisor_available(ADVISOR_POPULATION, 1)
-	city.goal_tooltip = mission1_get_goal_tooltip
-}
-
-[es=(city_animals, create_herds), mission=mission1]
-function mission1_register_animals(ev) {
-	city.remove_animals()
-	city.add_animals_point(0, /*x*/58, /*y*/77, FIGURE_OSTRICH, 8)
-	city.set_animals_area(0, 16)
-
-	city.add_animals_point(1, /*x*/55, /*y*/95, FIGURE_OSTRICH, 8)
-	city.set_animals_area(1, 16)
 }
 
 [event=event_advance_day, mission=mission1]

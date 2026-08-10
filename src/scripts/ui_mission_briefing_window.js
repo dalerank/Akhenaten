@@ -118,10 +118,6 @@ function mission_briefing_window_on_init(window) {
     window.ironwill_check.readonly = !can_edit_options
     window.ironwill_check.darkened = can_edit_options ? 0 : 1
 
-    var goal_tooltip_text = city.goal_tooltip()
-    window.goal_immediate.enabled = !!goal_tooltip_text
-    window.goal_immediate.text = goal_tooltip_text
-
     var city_title = __lang_message_title_text(text_id)
     window.title.text = city_title
     window.subtitle.text = __lang_message_subtitle_text(text_id)
@@ -133,22 +129,34 @@ function mission_briefing_window_on_init(window) {
 
     var goals = ["goal_0", "goal_1", "goal_2", "goal_3", "goal_4", "goal_5"]
     var gi = 0
+    var i
+    for (i = 0; i < goals.length; i++) {
+        window[goals[i]].enabled = false
+        window[goals[i]].text = ""
+    }
     function setup_goal(group, tid, value) {
-        var el = window[goals[gi]]
-        var enabled = (value > 0)
-        el.enabled = enabled
-        if (enabled) {
-            el.text = __loc(group, tid) + ": " + value
-            gi++
+        if (!(value > 0) || gi >= goals.length) {
+            return
         }
+        var el = window[goals[gi]]
+        el.enabled = true
+        el.text = __loc(group, tid) + ": " + value
+        gi++
     }
 
-    setup_goal(62, 11, city.winning.population.goal)
-    setup_goal(29, 20 + city.winning.housing_level.goal, city.winning.housing_count.goal)
-    setup_goal(62, 12, city.winning.culture.goal)
-    setup_goal(62, 13, city.winning.prosperity.goal)
-    setup_goal(62, 14, city.winning.monuments.goal)
-    setup_goal(62, 15, city.winning.kingdom.goal)
+    // scenario.*_goal already returns 0 when the criterion is disabled.
+    setup_goal(62, 11, scenario.population_goal)
+    if (scenario.housing_count_goal > 0 && scenario.housing_level_goal > 0) {
+        setup_goal(29, 20 + scenario.housing_level_goal, scenario.housing_count_goal)
+    }
+    setup_goal(62, 12, scenario.culture_goal)
+    setup_goal(62, 13, scenario.prosperity_goal)
+    setup_goal(62, 14, scenario.monuments_goal)
+    setup_goal(62, 15, scenario.kingdom_goal)
+
+    var goal_tooltip_text = (cfg && cfg.goal_tooltip) ? cfg.goal_tooltip() : ""
+    window.goal_immediate.enabled = !!goal_tooltip_text
+    window.goal_immediate.text = goal_tooltip_text
 
     var fork_scenario_id = game.mission_choice_open_scenario_id
     var src = get_mission_config(fork_scenario_id)

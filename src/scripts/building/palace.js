@@ -182,3 +182,18 @@ function building_town_palace_draw_tooltip(ev) {
 function building_city_palace_draw_tooltip(ev) {
     building_palace_show_tooltip(ev)
 }
+
+[es=(building_village_palace, draw_usable_paths)]
+function building_village_palace_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}
+
+[es=(building_town_palace, draw_usable_paths)]
+function building_town_palace_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}
+
+[es=(building_city_palace, draw_usable_paths)]
+function building_city_palace_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}

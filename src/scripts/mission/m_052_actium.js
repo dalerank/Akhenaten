@@ -15,6 +15,10 @@ log_info("akhenaten: mission 52 actium started")
 
 mission52 { // Actium - Antony and Cleopatra
 	map_file : "data/maps/m_052_actium.map"
+
+	// Map points from data/maps/m_052_actium.map.
+	herd_points_prey [ [78, 98] ]
+
 	start_message : "message_mission_actium"
 	selection_title : "Actium"
 	player_rank : 10
@@ -88,7 +92,7 @@ mission52 { // Actium - Antony and Cleopatra
 	invasion_points_land [ [17, 13], [31, 3] ]
 	invasion_points_sea [ [52, 56], [38, 66] ]
 	fishing_points [ [50, 45], [73, 22] ]
-	herd_points_animals [ [78, 98] ]
+	herd_points_predator [ [78, 98] ]
 
 	hide_pak_burial : true
 	burial_provisions [ ]

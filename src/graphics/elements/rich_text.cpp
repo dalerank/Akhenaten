@@ -347,9 +347,9 @@ int rich_text_t::draw_impl(pcstr text, vec2i offset, int box_width, int height_l
             if (line_has_content && current_width + last_word_width >= adjusted_box_width) {
                 break;
             }
-            
+
             current_width += last_word_width;
-            
+
             for (int i = 0; i < word_num_chars; i++) {
                 char c = *text++;
                 if (c == '@') {
@@ -367,7 +367,7 @@ int rich_text_t::draw_impl(pcstr text, vec2i offset, int box_width, int height_l
                         int id_word_width = get_lexem_width(text - 2, 0);
 
                         const image_t *img = image_get(small_image_id);
-                        const int img_width = img->width;
+                        const int img_width = img ? img->width : 0;
 
                         current_width -= id_word_width;
                         current_width -= img_width;
@@ -390,8 +390,19 @@ int rich_text_t::draw_impl(pcstr text, vec2i offset, int box_width, int height_l
                         while (c >= '0' && c <= '9') {
                             c = *text++;
                         }
-                        image_id += image_id_from_group(GROUP_MESSAGE_IMAGES) - 1;
-                        image_height_lines = image_get(image_id)->height / 16 + 2;
+                        const int message_images = image_id_from_group(GROUP_MESSAGE_IMAGES);
+                        if (message_images < 0) {
+                            image_id = 0;
+                            image_height_lines = 0;
+                        } else {
+                            image_id += message_images - 1;
+                            if (const image_t *img = image_get(image_id)) {
+                                image_height_lines = img->height / 16 + 2;
+                            } else {
+                                image_id = 0;
+                                image_height_lines = 0;
+                            }
+                        }
                         if (line > 0) {
                             lines_before_image = 1;
                         }
@@ -404,9 +415,9 @@ int rich_text_t::draw_impl(pcstr text, vec2i offset, int box_width, int height_l
                     tmp_line.append(c);
                 }
             }
-            
+
             line_has_content = 1;
-            
+
             if (!text || !*text) {
                 has_more_characters = 0;
             }
@@ -432,16 +443,20 @@ int rich_text_t::draw_impl(pcstr text, vec2i offset, int box_width, int height_l
                     lines_before_image--;
                 else {
                     const image_t* img = image_get(image_id);
-                    image_height_lines = img->height / 16 + 2;
-                    int image_offset_x = adjusted_offset.x + (adjusted_box_width - img->width) / 2 - 4;
-                    if (line < adjusted_height_lines + dscrollbar.scroll_position) {
-                        if (line >= dscrollbar.scroll_position)
-                            ctx.img_generic(image_id, { image_offset_x, y + 8 });
-                        else {
-                            ctx.img_generic(image_id, { image_offset_x, y + 8 - 16 * (dscrollbar.scroll_position - line) });
+                    if (!img) {
+                        image_id = 0;
+                    } else {
+                        image_height_lines = img->height / 16 + 2;
+                        int image_offset_x = adjusted_offset.x + (adjusted_box_width - img->width) / 2 - 4;
+                        if (line < adjusted_height_lines + dscrollbar.scroll_position) {
+                            if (line >= dscrollbar.scroll_position)
+                                ctx.img_generic(image_id, { image_offset_x, y + 8 });
+                            else {
+                                ctx.img_generic(image_id, { image_offset_x, y + 8 - 16 * (dscrollbar.scroll_position - line) });
+                            }
                         }
+                        image_id = 0;
                     }
-                    image_id = 0;
                 }
             }
         }

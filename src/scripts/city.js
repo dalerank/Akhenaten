@@ -189,7 +189,6 @@ city {
     @overlay_show_building: { set: __city_overlay_set_show_building }
     @overlay_color_mask: { set: __city_overlay_set_color_mask }
 
-    goal_tooltip: function() { return "" }
     remove_animals : __city_remove_animals
     add_animals_point : __city_add_animals_point
     set_animals_area : __city_set_animals_area
@@ -200,6 +199,7 @@ city {
     count_total_buildings : __city_count_total_buildings
     total_housing_buildings : __city_total_housing_buildings
     housing_type_count_at : __city_housing_type_count_at
+    count_houses_at_least : __city_count_houses_at_least
     houses_demanding_goods_at : __city_houses_demanding_goods_at
     open_housing_capacity : __city_open_housing_capacity
     total_housing_capacity : __city_total_housing_capacity

@@ -90,7 +90,8 @@ function window_scenario_selection_campaign_on_period_changed(ev) {
 
     // Loc group 294 packs each period as title / short blurb / family narrative / locked.
     // Explore History shows the family narrative (offset +2), matching original Pharaoh.
-    ev.campaign_hover_thumb.image = get_image({ pack:PACK_UNLOADED, id:28, offset:h }).tid
+    var thumb = get_image({ pack:PACK_UNLOADED, id:28, offset:h })
+    ev.campaign_hover_thumb.image = thumb ? thumb.tid : -1
     ev.campaign_hover_subtitle.text = __loc(294, h * 4)
     ev.campaign_hover_body.text = __loc(294, h * 4 + 2)
 }

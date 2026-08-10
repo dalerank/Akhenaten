@@ -13,11 +13,6 @@ public:
     building_gatehouse(building &b) : building_impl(b) {}
     virtual building_gatehouse *dcast_gatehouse() override { return this; }
 
-    struct preview : building_planer_renderer {
-        virtual void ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
-        virtual void ghost_blocked(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel, bool fully_blocked) const override;
-    };
-
     struct gatehouse_params_t {
         building_gatehouse_ghost ghost;
     };
@@ -25,7 +20,6 @@ public:
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_place(int orientation, int variant) override;
-    virtual void on_place_checks() override;
     virtual void update_map_orientation(int orientation) override;
 
     struct back_tile_orientation {
@@ -63,19 +57,11 @@ class building_decorative_gatehouse : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_DECORATIVE_GATEHOUSE, building_decorative_gatehouse, building_impl)
 
-    struct preview : building_planer_renderer {
-        virtual void setup_preview_graphics(build_planner &planer) const override;
-        virtual void ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
-        virtual void ghost_blocked(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel, bool fully_blocked) const override;
-        virtual int can_place(build_planner &p, tile2i tile, tile2i end, int state) const override;
-    };
-
     static void update_footprint(building &b);
     static tile2i footprint_anchor(tile2i end, int layout_orientation);
 
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
-    virtual void on_place_checks() override;
     virtual void update_map_orientation(int orientation) override;
     virtual void spawn_figure() override;
 
@@ -86,12 +72,6 @@ public:
 class building_tower_gatehouse : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_TOWER_GATEHOUSE, building_tower_gatehouse, building_impl)
-
-    struct preview : building_planer_renderer {
-        virtual void ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
-        virtual void ghost_blocked(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel, bool fully_blocked) const override;
-        virtual int can_place(build_planner &p, tile2i tile, tile2i end, int state) const override;
-    };
 
     virtual void update_map_orientation(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;

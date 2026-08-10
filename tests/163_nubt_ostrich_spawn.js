@@ -1,5 +1,4 @@
-// Regression #616/#621: Nubt create_herds JS handler must place ostriches.
-// Mission config clears map herd points; animals come only from mission0_register_animals.
+// Regression #616/#621: Nubt mission0 herd_points_prey must place ostriches on load.
 // Markers:
 //   [test-marker] nubt_ostriches_ok
 
@@ -11,7 +10,7 @@ function test163_fail(msg) {
 }
 
 function run_test() {
-    __log_info_native('[test:163] Nubt ostrich spawn via create_herds handler')
+    __log_info_native('[test:163] Nubt ostrich spawn via herd_points_prey')
     __game_load_mission(0, 1)
 
     var ostriches = __test_count_figures(FIGURE_OSTRICH)

@@ -362,6 +362,7 @@ imagepak::imagepak(uint8_t ipack, xstring pak_name, int starting_index, bool sys
     //    images = nullptr;
     //    image_data = nullptr;
     entries_num = 0;
+    groups_num = 0;
     pack = ipack;
     std::memset(group_image_ids, 0, PAK_GROUPS_MAX * sizeof(uint16_t));
     should_load_system_sprites = system_sprites;

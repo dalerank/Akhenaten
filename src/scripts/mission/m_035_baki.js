@@ -81,7 +81,7 @@ mission35 { // Baki (Kuban) — The Glory of Egypt
 	// pak inv_sea [75,198] (water). Packed loc2=sea[0] → via_sea (E3c).
 	invasion_points_sea [ [75, 198] ]
 
-	herd_points_animals [
+	herd_points_predator [
 		[55, 129], [72, 180], [156, 84]
 	]
 	herd_points_prey [

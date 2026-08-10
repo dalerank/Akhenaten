@@ -17,11 +17,7 @@ city.victory = extend(__city_victory, {
 
     houses_of_required_level: function() {
         var min_level = city.winning.housing_level.enabled ? city.winning.housing_level.goal : 0
-        var count = 0
-        for (var i = min_level; i < 20; i++) {
-            count += city.housing_type_count_at(i)
-        }
-        return count
+        return city.count_houses_at_least(min_level)
     },
 
     is_housing_condition_met: function() {

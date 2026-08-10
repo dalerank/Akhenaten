@@ -2,7 +2,6 @@
 
 #include "input/keys.h"
 #include "config/hotkeys.h"
-#include "core/custom_span.hpp"
 #include "core/xfunction.h"
 
 struct event_hotkey_overlay { int value; };
@@ -34,6 +33,9 @@ struct event_toggle_legion { int value; };
 struct event_copy_build_from_cursor { int value; };
 struct event_show_main_menu { bool play_intro; };
 struct event_exit_to_menu_requested { int reserved; };
+struct event_hotkey_fired { int action; };
+struct event_hotkey_key { int key; int modifiers; int pressed; int repeat; };
+struct event_hotkey_bindings_changed { int reserved; };
 
 struct hotkeys {
     // fixed keys with multiple functions
@@ -41,14 +43,7 @@ struct hotkeys {
     int escape_pressed;
 
     xfunction<void()> callback;
-
-    static void install(const xspan<hotkey_mapping> &mappings);
 };
 
 const hotkeys* hotkey_state(void);
 void hotkey_reset_state(void);
-
-void hotkey_key_pressed(int key, int modifiers, int repeat);
-void hotkey_key_released(int key, int modifiers);
-
-void hotkey_handle_escape(void);

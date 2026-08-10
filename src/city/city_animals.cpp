@@ -50,8 +50,8 @@ e_figure_type climate_legacy_animal_type() {
 }
 
 bool scenario_has_prey_points() {
-    for (const tile2i &tile : g_scenario.herd_points_prey) {
-        if (tile.valid()) {
+    for (const herd_point_t &hp : g_scenario.herd_points_prey) {
+        if (hp.valid()) {
             return true;
         }
     }
@@ -119,24 +119,30 @@ int herd_impassable_mask(e_figure_type herd_type) {
 }
 
 int climate_herd_count(e_figure_type type) {
+    // A herd point must never roll an empty herd — prey herds are the only food source
+    // for hunting lodges, and ostrich respawn needs at least one live figure to seed from.
     switch (type) {
     case FIGURE_ANTELOPE:
-        return rand() % 10;
+        return 1 + (rand() % 10);
     case FIGURE_BIRDS:
-        return rand() % 8;
+        return 1 + (rand() % 8);
     case FIGURE_OSTRICH:
-        return rand() % 12;
+        return 1 + (rand() % 12);
     case FIGURE_CROCODILE:
     case FIGURE_HIPPO:
-        return rand() % 8;
+        return 1 + (rand() % 8);
     case FIGURE_HYENA:
     case FIGURE_SCORPION:
     case FIGURE_LION:
     case FIGURE_ASP:
         return 2 + (rand() % 5);
     default:
-        return rand() % 8;
+        return 1 + (rand() % 8);
     }
+}
+
+bool figure_is_prey(e_figure_type type) {
+    return type == FIGURE_OSTRICH || type == FIGURE_ANTELOPE || type == FIGURE_BIRDS;
 }
 
 bool herd_can_travel_to(tile2i src, tile2i dst, e_figure_type herd_type) {
@@ -159,6 +165,11 @@ bool city_animals_t::is_herd_spawn_accessible(tile2i tile, e_figure_type herd_ty
     const int mask = herd_impassable_mask(herd_type);
     if (map_terrain_is(tile, mask)) {
         return false;
+    }
+
+    // Birds fly over the terrain, so the land-routing probe below does not apply to them.
+    if (herd_type == FIGURE_BIRDS) {
+        return true;
     }
 
     static const int dx[8] = {0, 1, 1, 1, 0, -1, -1, -1};
@@ -185,9 +196,33 @@ bool city_animals_t::is_herd_spawn_accessible(tile2i tile, e_figure_type herd_ty
 
 formation* city_animals_t::create_herd(tile2i tile, e_figure_type herd_type, int num_animals) {
     if (!is_herd_spawn_accessible(tile, herd_type)) {
-        logs::warn("animals: herd spawn at (%d,%d) type=%d has no accessible exit - skipping",
-                   tile.x(), tile.y(), (int)herd_type);
-        return nullptr;
+        // Map points sit on the terrain the designer picked, which is not always walkable for
+        // the climate animal (marsh for antelopes, dunes for hyenas). Nudge onto a neighbour
+        // tile instead of dropping the herd — #624: a skipped prey herd leaves the mission
+        // without any huntable wildlife.
+        const tile2i original = tile;
+        tile = tile2i::invalid;
+        for (int radius = 1; radius <= 4 && !tile.valid(); radius++) {
+            grid_area area = map_grid_get_area(original, 1, radius);
+            for (int y = area.tmin_y; y <= area.tmax_y && !tile.valid(); y++) {
+                for (int x = area.tmin_x; x <= area.tmax_x; x++) {
+                    tile2i candidate(x, y);
+                    if (is_herd_spawn_accessible(candidate, herd_type)) {
+                        tile = candidate;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!tile.valid()) {
+            logs::warn("animals: herd spawn at (%d,%d) type=%d has no accessible exit - skipping",
+                       original.x(), original.y(), (int)herd_type);
+            return nullptr;
+        }
+
+        logs::info("animals: herd spawn at (%d,%d) type=%d moved to (%d,%d)", original.x(), original.y(),
+                   (int)herd_type, tile.x(), tile.y());
     }
 
     formation* formation = formation_create_herd(herd_type, tile, num_animals);
@@ -213,30 +248,28 @@ formation* city_animals_t::create_herd(tile2i tile, e_figure_type herd_type, int
 void city_animals_t::create_herds() {
     map_routing_update_land();
 
-    // Cleopatra maps: prey points + killer (predator) points, Killer Type = alt_predator_type.
-    // Legacy maps: only herd_points_animals → keep pre-Cleopatra climate animal (ostrich/…).
-    if (scenario_has_prey_points()) {
-        const e_figure_type prey = climate_prey_type();
-        if (prey != FIGURE_NONE) {
-            scenario_map_foreach_prey_point([this, prey](tile2i p) {
-                this->create_herd(p, prey, climate_herd_count(prey));
-            });
+    // Killer points hold predators and prey points hold prey on every map, Pharaoh and
+    // Cleopatra alike — only the Killer Type pairing (alt_predator_type) is Cleopatra's.
+    // Per-point type/count/radius come from mission JS (herd_point_t); zeros use climate defaults.
+    auto spawn_points = [this](const auto &points, e_figure_type climate_type) {
+        for (const herd_point_t &hp : points) {
+            if (!hp.valid()) {
+                continue;
+            }
+            const e_figure_type type = (hp.type != FIGURE_NONE) ? hp.type : climate_type;
+            if (type == FIGURE_NONE) {
+                continue;
+            }
+            const int count = hp.count > 0 ? hp.count : climate_herd_count(type);
+            formation *m = create_herd(hp.tile, type, count);
+            if (m && m->id > 0 && hp.radius > 0) {
+                m->reseach_radius = hp.radius;
+            }
         }
+    };
 
-        const e_figure_type predator = climate_predator_type();
-        if (predator != FIGURE_NONE) {
-            scenario_map_foreach_herd_point([this, predator](tile2i p) {
-                this->create_herd(p, predator, climate_herd_count(predator));
-            });
-        }
-    } else {
-        const e_figure_type herd_type = climate_legacy_animal_type();
-        if (herd_type != FIGURE_NONE) {
-            scenario_map_foreach_herd_point([this, herd_type](tile2i p) {
-                this->create_herd(p, herd_type, climate_herd_count(herd_type));
-            });
-        }
-    }
+    spawn_points(g_scenario.herd_points_prey, climate_prey_type());
+    spawn_points(g_scenario.herd_points_predator, climate_predator_type());
 
     emit(esid(__func__));
 }
@@ -341,18 +374,34 @@ bool city_animals_t::get_roaming_destination(int formation_id, int allow_negativ
 }
 
 void city_animals_t::add_animals_point(int index, int x, int y, e_figure_type ftype, int num) {
-    if (index < 0 || index >= MAX_PREDATOR_HERD_POINTS) {
+    if (index < 0 || index > UINT8_MAX) {
         return;
     }
-    if (g_scenario.herd_points_animals.size() < MAX_PREDATOR_HERD_POINTS) {
-        g_scenario.herd_points_animals.resize(MAX_PREDATOR_HERD_POINTS, tile2i::invalid);
+
+    formation *m = create_herd(tile2i{ x, y }, ftype, num);
+    if (!m || m->id <= 0) {
+        return;
     }
-    g_scenario.herd_points_animals[index] = tile2i{ x, y };
-    g_scenario.herd_type_animals[index] = ftype;
-    formation* m = create_herd(tile2i{ x, y }, ftype, num);
-    if (m && m->id > 0) {
-        m->herd_point = index;
+
+    m->herd_point = index;
+
+    // Prey belongs in the prey array, or the mission reads as predator-only and the hunting
+    // lodge resolves the wrong hunter. Record the tile the herd actually got, not the
+    // requested one — create_herd() may have nudged it onto walkable ground.
+    const bool prey = figure_is_prey(ftype);
+    auto &points = prey ? g_scenario.herd_points_prey : g_scenario.herd_points_predator;
+    const size_t capacity = prey ? MAX_PREY_HERD_POINTS : MAX_PREDATOR_HERD_POINTS;
+    if (points.size() >= capacity) {
+        logs::warn("animals: no free %s point slot for herd at (%d,%d)", prey ? "prey" : "killer", m->tile.x(),
+                   m->tile.y());
+        return;
     }
+
+    herd_point_t hp;
+    hp.tile = m->tile;
+    hp.type = ftype;
+    hp.count = (int16_t)num;
+    points.push_back(hp);
 }
 
 void city_animals_t::set_animals_area(int index, int reseach_radius) {
@@ -543,13 +592,13 @@ void city_animals_t::remove_all() {
         }
     }
 
-    // create_herd() figure_create's animals and sets f->formation_id but never
-    // slots them into formation::figures[], so valid_figures() above misses
-    // them. Sweep by figure type to actually clear the world.
     figure_valid_do([] (figure &f) {
         f.poof();
     }, make_array(FIGURE_CROCODILE, FIGURE_OSTRICH, FIGURE_ANTELOPE, FIGURE_HYENA, FIGURE_BIRDS,
                   FIGURE_HIPPO, FIGURE_LION, FIGURE_SCORPION, FIGURE_ASP));
+
+    g_scenario.herd_points_prey.clear();
+    g_scenario.herd_points_predator.clear();
 }
 
 void city_animals_t::update() {

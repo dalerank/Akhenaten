@@ -630,6 +630,10 @@ io_buffer *iob_campaign_carry_troops = new io_buffer([](io_buffer *iob, size_t v
     }
     iob->bind_u8(g_campaign_carry.notice_posted);
     iob->bind____skip(7);
+}, [](size_t version) {
+    // troop carry lives outside city_data, so a save without this chunk would keep
+    // the previous session's snapshot - the exact bug pre_load() was patched for
+    g_campaign_carry.clear_troops();
 });
 
 // 8 slots × 12 bytes = 96
@@ -644,4 +648,6 @@ io_buffer *iob_campaign_carry_monuments = new io_buffer([](io_buffer *iob, size_
         iob->bind_i16(s.tile_x);
         iob->bind_i16(s.tile_y);
     }
+}, [](size_t version) {
+    g_campaign_carry.clear_monuments();
 });

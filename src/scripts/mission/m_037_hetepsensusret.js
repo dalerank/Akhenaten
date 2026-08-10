@@ -87,7 +87,7 @@ mission37 { // Hetepsensusret (Kahun) — The Glory of Pharaoh
 		[135, 90], [155, 170], [60, 164]
 	]
 	// pak type FIGURE_NONE — spawn slots only.
-	herd_points_animals [
+	herd_points_predator [
 		[144, 160], [26, 131], [106, 24], [139, 106]
 	]
 	herd_points_prey [

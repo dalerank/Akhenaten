@@ -25,6 +25,10 @@ log_info("akhenaten: mission 12 meidum started")
 
 mission12 { // Meidum
 	map_file : "data/maps/m_012_meidum.map"
+
+	// Map points from data/maps/m_012_meidum.map.
+	herd_points_predator [ [90, 11], [129, 109] ]
+
 	start_message : "message_mission_meidum"
 	selection_title : "Meidum"
 	player_rank : 4

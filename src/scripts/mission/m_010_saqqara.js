@@ -5,6 +5,18 @@ log_info("akhenaten: mission 10 saqqara started")
 
 mission10 { // Saqqara â€” The First Pyramid
 	map_file : "data/maps/m_010_saqqara.map"
+
+	// Map points from data/maps/m_010_saqqara.map; fixed counts for year-1 gamemeat request.
+	herd_points_predator [
+		{ tile: [81, 152], type: FIGURE_HYENA, count: 5, radius: 16 }
+	]
+	herd_points_prey [
+		{ tile: [50, 73], type: FIGURE_OSTRICH, count: 5, radius: 16 }
+		{ tile: [93, 116], type: FIGURE_OSTRICH, count: 5, radius: 16 }
+		{ tile: [138, 96], type: FIGURE_OSTRICH, count: 5, radius: 16 }
+		{ tile: [154, 77], type: FIGURE_OSTRICH, count: 5, radius: 16 }
+	]
+
 	start_message : "message_history_saqqara"
 	selection_title : "Saqqara"
 	player_rank : 1
@@ -435,20 +447,6 @@ function mission10_on_start(ev) {
 	for (var i = ADVISOR_NONE + 1; i <= ADVISOR_DIPLOMACY; i++) {
 		city.set_advisor_available(i, 1)
 	}
-}
-
-[es=(city_animals, create_herds), mission=mission10]
-function mission10_register_animals(ev) {
-	city.remove_animals()
-
-	city.add_animals_point(0, /*x*/55, /*y*/75, FIGURE_OSTRICH, 5)
-	city.set_animals_area(0, 16)
-
-	city.add_animals_point(1, /*x*/85, /*y*/135, FIGURE_OSTRICH, 5)
-	city.set_animals_area(1, 16)
-
-	city.add_animals_point(1, /*x*/90, /*y*/155, FIGURE_HYENA, 5)
-	city.set_animals_area(1, 16)
 }
 
 // pak: year=1 month=11 gamemeat 7 / 4mo once; okâ†’+5 refuseâ†’âˆ’5

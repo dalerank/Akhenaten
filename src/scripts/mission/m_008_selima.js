@@ -7,6 +7,10 @@ log_info("akhenaten: mission 8 selima started")
 
 mission8 { // Selima — The Road to Africa
 	map_file : "data/maps/m_008_selima.map"
+
+	// Map points from data/maps/m_008_selima.map.
+	herd_points_prey [ [70, 49], [53, 87] ]
+
 	start_message : "message_the_finer_things_tutorial"
 	selection_title : "Selima"
 	player_rank : 3

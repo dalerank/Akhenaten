@@ -11,6 +11,8 @@
 #include "grid/image.h"
 #include "grid/building_tiles.h"
 #include "grid/orientation.h"
+#include "grid/building.h"
+#include "grid/terrain.h"
 #include "grid/routing/routing.h"
 #include "grid/figure.h"
 #include "building/construction/routed.h"
@@ -84,6 +86,22 @@ void __city_planner_set_tiles_building(int image_id, int size) {
     g_city_planner.set_tiles_building(image_id, size);
 }
 ANK_FUNCTION_2(__city_planner_set_tiles_building);
+
+void __city_planner_init_tiles(int size_x, int size_y) {
+    g_city_planner.init_tiles(size_x, size_y);
+}
+ANK_FUNCTION_2(__city_planner_init_tiles);
+
+void __city_planner_update_tiles_building(int image_id) {
+    g_city_planner.update_tiles_building(image_id);
+}
+ANK_FUNCTION_1(__city_planner_update_tiles_building);
+
+void __city_planner_draw_tile_graphics_array(tile2i start, tile2i end, vec2i pixel) {
+    painter ctx = game.painter();
+    g_city_planner.draw_tile_graphics_array(ctx, start, end, pixel);
+}
+ANK_FUNCTION_3(__city_planner_draw_tile_graphics_array);
 
 int __city_planner_last_created_building_id() {
     building *b = g_city_planner.last_created_building;
@@ -178,6 +196,29 @@ void __city_planner_set_warning(xstring warning) {
     g_city_planner.set_warning(warning);
 }
 ANK_FUNCTION_1(__city_planner_set_warning);
+
+bool __city_planner_is_blocked_for_building(tile2i tile, int size, unsigned int restricted_terrain) {
+    blocked_tile_vec blocked_tiles;
+    return !!build_planner::is_blocked_for_building(tile, size, blocked_tiles, restricted_terrain);
+}
+ANK_FUNCTION_3(__city_planner_is_blocked_for_building);
+
+int __map_orientation_for_gatehouse(tile2i tile) {
+    return map_orientation_for_gatehouse(tile.x(), tile.y());
+}
+ANK_FUNCTION_1(__map_orientation_for_gatehouse);
+
+int __map_adjust_building_determine_orientation(tile2i tile, int size, int adjust_xy, int adjacent, int btype) {
+    const adjust_orientation result = map_adjust_building_determine_orientation(
+        tile, size, !!adjust_xy, !!adjacent, (e_building_type)btype);
+    return result.match ? result.orientation : -1;
+}
+ANK_FUNCTION_5(__map_adjust_building_determine_orientation);
+
+bool __map_terrain_is_adjacent_to_wall(tile2i tile, int size) {
+    return map_terrain_is_adjacent_to_wall(tile.x(), tile.y(), size);
+}
+ANK_FUNCTION_2(__map_terrain_is_adjacent_to_wall);
 
 tile2i __map_tile_shift_offset(tile2i tile, int offset) {
     return tile.shifted(offset);

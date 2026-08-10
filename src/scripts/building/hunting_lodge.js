@@ -62,3 +62,8 @@ function building_hunting_lodge_on_update_graphic(ev) {
     var animkey = building.play_animation ? "work" : "none"
     building.set_animation(animkey)
 }
+
+[es=(building_hunting_lodge, draw_usable_paths)]
+function building_hunting_lodge_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}

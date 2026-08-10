@@ -1134,6 +1134,9 @@ io_buffer* iob_invasion_warnings = new io_buffer([](io_buffer* iob, size_t versi
 // v172 stub: keep chunk in schema so old saves load; ignore contents.
 io_buffer *iob_invasion_event_pending = new io_buffer([] (io_buffer *iob, size_t version) {
     iob->bind____skip(272);
+}, [] (size_t version) {
+    // v172 stub: the chunk holds no state, it only keeps a slot in the old positional
+    // layout. The defaulter exists to mark it optional for saves older than v172.
 });
 
 // v173: active binds + history ring (audit/debug; binds are gameplay mid-fight).
@@ -1167,6 +1170,13 @@ io_buffer *iob_invasion_runtime = new io_buffer([] (io_buffer *iob, size_t versi
         iob->bind_u8(h.want_destroy);
         iob->bind_u8(h.outcome);
         iob->bind____skip(2);
+    }
+}, [] (size_t version) {
+    // saves older than v173 have no resolve binds or history ring
+    g_invasions.history_count = 0;
+    g_invasions.history_next = 0;
+    for (auto &b : g_invasions.binds) {
+        b = {};
     }
 });
 

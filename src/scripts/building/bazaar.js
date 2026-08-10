@@ -25,3 +25,8 @@ city.get_bazaar = function(building_id) {
     }
     return new Bazaar(building_id)
 }
+
+[es=(building_bazaar, draw_usable_paths)]
+function building_bazaar_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}

@@ -884,10 +884,13 @@ io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob, size_t vers
             }
         }
 
-        if (last_object_was_used)
-            last_object_was_used = full->in_use;
-        else
-            full->in_use = last_object_was_used;
+        if (iob->is_read_access()) {
+            if (last_object_was_used) {
+                last_object_was_used = full->in_use;
+            } else {
+                full->in_use = 0;
+            }
+        }
     }
 });
 

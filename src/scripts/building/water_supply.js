@@ -52,3 +52,8 @@ function building_water_supply_update_graphic(ev) {
     var animkey = building.is_fancy ? "fancy_work" : "base_work"
     building.set_animation(animkey)
 }
+
+[es=(building_water_supply, draw_usable_paths)]
+function building_water_supply_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}

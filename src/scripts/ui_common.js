@@ -34,6 +34,17 @@ ui.image = function(image, pos) {
     }
 }
 
+ui.image_scaled = function(image, pos, scale) {
+    if (!image || !pos) {
+        return
+    }
+    var tid = (typeof image === "number") ? image : image.tid
+    if (tid === undefined || tid === null) {
+        return
+    }
+    __ui_draw_image_scaled(tid, pos, scale)
+}
+
 ui.button_none = 0
 ui.button_clicked = 1
 ui.button_hovered = 2

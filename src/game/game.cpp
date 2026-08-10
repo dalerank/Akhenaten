@@ -22,6 +22,7 @@
 #include "config/hotkeys.h"
 #include "io/gamefiles/lang.h"
 #include "content/content.h"
+#include "content/vfs.h"
 #include "platform/arguments.h"
 #include "platform/platform.h"
 #include "mission.h"
@@ -313,7 +314,7 @@ static int get_elapsed_ticks() {
         return 0;
     }
 
-    if (scroll_in_progress() && !scroll_is_smooth()) {
+    if (g_scroll.in_progress() && !g_scroll.is_smooth()) {
         return 0;
     }
 
@@ -358,6 +359,9 @@ bool game_t::check_valid() {
 }
 
 bool game_init(game_opts opts) {
+    vfs::create_folders(vfs::SAVE_FOLDER);
+    vfs::create_folders(vfs::MAPS_FOLDER);
+
     if (!image_load_paks()) {
         logs::error("unable to load main graphics");
         return false;

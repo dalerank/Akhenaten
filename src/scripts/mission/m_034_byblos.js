@@ -12,6 +12,11 @@ log_info("akhenaten: mission 34 byblos started")
 
 mission34 { // Byblos — Expansion and Conquest
 	map_file : "data/maps/m_034_byblos.map"
+
+	// Map points from data/maps/m_034_byblos.map.
+	herd_points_predator [ [79, 11] ]
+	fishing_points [ [65, 143], [19, 96], [32, 100], [35, 111], [49, 116], [50, 128], [68, 138], [59, 136] ]
+
 	start_message : "message_mission_byblos"
 	selection_title : "Byblos"
 	player_rank : 10

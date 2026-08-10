@@ -18,6 +18,10 @@ log_info("akhenaten: mission 18 rostja started")
 
 mission18 { // Rostja (Giza) — The Great Pyramid and Sphinx
 	map_file : "data/maps/m_018_rostja.map"
+
+	// Map points from data/maps/m_018_rostja.map.
+	herd_points_prey [ [47, 86], [19, 80], [62, 110], [107, 49] ]
+
 	start_message : "message_mission_giza"
 	selection_title : "Rostja"
 	player_rank : 6

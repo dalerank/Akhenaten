@@ -1,7 +1,6 @@
 #include "building_statue.h"
 
 #include "building/building.h"
-#include "building/rotation.h"
 #include "city/object_info.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
@@ -72,8 +71,8 @@ int building_statue::get_image(e_building_type type, int orientation, int varian
     return (imdesc + orientation).tid();
 }
 
-void building_statue::on_create(int o) {
-    int orientation = (4 + building_rotation_global_rotation() + g_camera.orientation / 2) % 4;
+void building_statue::on_create(int orientation) {
+    base.orientation = orientation;
 
     auto &d = runtime_data();
     d.variant = g_city_planner.building_variant;
@@ -81,18 +80,15 @@ void building_statue::on_create(int o) {
 }
 
 void building_statue::on_place_update_tiles(int orientation, int variant) {
+    base.orientation = orientation;
     int orientation_rel = g_camera.relative_orientation(orientation);
-
     int image_id = get_image(type(), orientation_rel, variant);
     map_building_tiles_add(id(), tile(), size(), image_id, TERRAIN_BUILDING);
 }
 
-void building_statue::update_map_orientation(int map_orientation) {
-    int variant = runtime_data().variant;
-    int combined = 0;
-
-    int orientation = combined % 4 - (map_orientation / 2);
-    int image_id = get_image(type(), orientation - 1, variant);
+void building_statue::update_map_orientation(int /*map_orientation*/) {
+    int orientation_rel = g_camera.relative_orientation(base.orientation);
+    int image_id = get_image(type(), orientation_rel, runtime_data().variant);
     map_building_tiles_add(id(), tile(), base.size, image_id, TERRAIN_BUILDING);
 }
 

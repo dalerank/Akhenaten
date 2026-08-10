@@ -16,7 +16,6 @@
 #include "widget/sidebar/editor.h"
 #include "widget/top_menu_editor.h"
 #include "window/editor/attributes.h"
-#include "window/file_dialog.h"
 #include "window/popup_dialog.h"
 #include "platform/renderer.h"
 

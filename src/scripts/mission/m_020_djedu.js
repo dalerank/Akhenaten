@@ -26,6 +26,12 @@ log_info("akhenaten: mission 20 djedu started")
 
 mission20 { // Djedu (Abusir) — The Temple of the Sun
 	map_file : "data/maps/m_020_djedu.map"
+
+	// Map points from data/maps/m_020_djedu.map.
+	herd_points_predator [ [61, 106], [66, 110], [41, 32] ]
+	herd_points_prey [ [73, 97] ]
+	fishing_points [ [93, 102], [84, 39] ]
+
 	start_message : "message_mission_abusir"
 	selection_title : "Djedu"
 	player_rank : 7

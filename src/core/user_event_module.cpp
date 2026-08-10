@@ -17,7 +17,7 @@ void user_event_module_t::handle_resize(SDL_Event* ev) {
         return;
     }
 
-    platform_screen_set_window_size(INTPTR(ev->user.data1), INTPTR(ev->user.data2));
+    g_platform_screen.set_window_size(INTPTR(ev->user.data1), INTPTR(ev->user.data2));
 }
 
 void user_event_module_t::handle_fullscreen(SDL_Event* ev) {
@@ -25,7 +25,7 @@ void user_event_module_t::handle_fullscreen(SDL_Event* ev) {
         return;
     }
 
-    platform_screen_set_fullscreen();
+    g_platform_screen.set_fullscreen();
 }
 
 void user_event_module_t::handle_windowed(SDL_Event* ev) {
@@ -33,7 +33,7 @@ void user_event_module_t::handle_windowed(SDL_Event* ev) {
         return;
     }
 
-    platform_screen_set_windowed();
+    g_platform_screen.set_windowed();
 }
 
 void user_event_module_t::handle_center_window(SDL_Event* ev) {
@@ -41,7 +41,7 @@ void user_event_module_t::handle_center_window(SDL_Event* ev) {
         return;
     }
 
-    platform_screen_center_window();
+    g_platform_screen.center_window();
 }
 
 void ANK_REGISTER_APPLICATION_MODULE(register_user_event_module) {

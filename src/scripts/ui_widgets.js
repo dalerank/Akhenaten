@@ -359,13 +359,6 @@ info_window_gatehouse = {
     })
 }
 
-info_window_milacademy = {
-    ui : baseui(building_info_window, {
-
-    })
-}
-
-
 minimap_window {
     draw_size [73, 111]
 

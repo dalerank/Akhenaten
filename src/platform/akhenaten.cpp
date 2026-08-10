@@ -14,7 +14,6 @@
 #include "game/game_config.h"
 #include "platform/arguments.h"
 #include "platform/integral_tests.h"
-#include "platform/cursor.h"
 #include "content/content.h"
 #include "platform/platform.h"
 #include "platform/prefs.h"
@@ -60,7 +59,7 @@ static_assert(SDL_VERSION_ATLEAST(2, 0, 17));
 namespace {
 
     void show_usage() {
-        platform_screen_show_error_message_box("Command line interface", Arguments::usage());
+        g_platform_screen.show_error_message_box("Command line interface", Arguments::usage());
     }
 
 } // namespace
@@ -390,7 +389,7 @@ static void setup() {
     }
 
     // set up game display
-    if (!platform_screen_create("Akhenaten", g_args.get_renderer(), g_args.is_fullscreen(),
+    if (!g_platform_screen.create("Akhenaten", g_args.get_renderer(), g_args.is_fullscreen(),
           g_args.get_display_scale_percentage(), g_args.get_window_size())) {
         logs::info("Exiting: SDL create window failed");
         exit(-2);
@@ -399,10 +398,12 @@ static void setup() {
     game.set_cli_fullscreen(g_args.is_fullscreen());
     if (g_args.has_window_pos()) {
         const auto& pos = g_args.get_window_pos();
-        platform_screen_move(pos.x, pos.y);
+        g_platform_screen.move(pos.x, pos.y);
     }
-    platform_init_cursors(g_args.get_cursor_scale_percentage()); // this has to come after platform_screen_create,
-                                                                 // otherwise it fails on Nintendo Switch
+
+    // After the window exists (required for cursor init on Nintendo Switch).
+    g_app.register_modules();
+
     image_data_init();                                           // image paks structures init
 
     vfs::path scripts_base_path(vfs::SCRIPTS_FOLDER);
@@ -456,7 +457,7 @@ static void teardown() {
     logs::info("Exiting game");
     game.exit();
     js_vm_shutdown();
-    platform_screen_destroy();
+    g_platform_screen.destroy();
     SDL_Quit();
 }
 
@@ -635,8 +636,6 @@ int main(int argc, char** argv) {
     crashhandler_install();
 
     logs::initialize();
-
-    g_app.register_modules();
 
     setup();
 

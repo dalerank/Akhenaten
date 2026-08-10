@@ -1,5 +1,6 @@
 #include "window/console.h"
 #include "game/game.h"
+#include "game/game_events.h"
 #include "input/mouse.h"
 #include "input/hotkey.h"
 #include "input/keyboard.h"
@@ -112,7 +113,7 @@ void keyboard_module_t::handle_key_down(SDL_Event* ev) {
         return;
     }
 
-    hotkey_key_pressed(key, mod, event->repeat);
+    events::emit(event_hotkey_key{ key, mod, 1, event->repeat });
 }
 
 void keyboard_module_t::handle_key_up(SDL_Event* ev) {
@@ -135,7 +136,7 @@ void keyboard_module_t::handle_key_up(SDL_Event* ev) {
 
     e_key key = (e_key)keyboard_t::get_key_from_scancode(event->keysym.scancode);
     int mod = get_modifier(event->keysym.mod);
-    hotkey_key_released(key, mod);
+    events::emit(event_hotkey_key{ key, mod, 0, 0 });
 }
 
 void keyboard_module_t::handle_text(SDL_Event* event) {

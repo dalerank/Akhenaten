@@ -22,9 +22,8 @@ city.festival = extend(__city_festival, {
     not_enough_alcohol: false,
 })
 
-// Loc key #god_<name> (matches C++ e_god_short + "#god_")
 city.festival.selected_god_loc_key = function() {
-    return "#god_" + city.gods.get_name(city.festival.selected_god).toLowerCase()
+    return "#" + city.gods.get_name(city.festival.selected_god).toLowerCase()
 }
 
 city.festival.get_advice = function() {

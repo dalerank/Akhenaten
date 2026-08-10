@@ -6,6 +6,10 @@ log_info("akhenaten: mission 9 abu started")
 
 mission9 { // Abu — The Nubian Border
 	map_file : "data/maps/m_009_abu.map"
+
+	// Map points from data/maps/m_009_abu.map.
+	herd_points_predator [ [96, 104], [50, 90], [38, 50] ]
+
 	start_message : "message_history_abu"
 	selection_title : "Abu"
 	env {

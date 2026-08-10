@@ -27,6 +27,12 @@ log_info("akhenaten: mission 25 kebet started")
 
 mission25 { // Kebet (Coptos) — Reunification; briefing key = coptos
 	map_file : "data/maps/m_025_kebet.map"
+
+	// Map points from data/maps/m_025_kebet.map.
+	herd_points_predator [ [123, 115], [56, 60], [70, 52] ]
+	herd_points_prey [ [87, 8] ]
+	fishing_points [ [54, 47], [75, 66], [87, 90], [129, 111], [100, 97] ]
+
 	start_message : "message_mission_coptos"
 	selection_title : "Kebet"
 	player_rank : 9

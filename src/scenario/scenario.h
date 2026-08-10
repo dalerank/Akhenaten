@@ -32,6 +32,38 @@ struct event_level_post_load {
     int scenario_id;
 };
 
+// Mission-JS herd spawn: [x,y] or { tile, type, count, radius }. type/count 0 → climate default.
+struct herd_point_t {
+    tile2i tile = tile2i::invalid;
+    e_figure_type type = FIGURE_NONE;
+    int16_t count = 0;
+    int16_t radius = 0;
+
+    bool valid() const {
+        return tile.valid();
+    }
+};
+
+namespace archive_helper {
+template<>
+inline void reader<herd_point_t>(archive arch, herd_point_t &p) {
+    p = herd_point_t{};
+    // Object form { tile, type, count, radius }. Missing "tile" → def sentinel, then [x,y]/{x,y}.
+    const vec2i k_no_tile(-100000, -100000);
+    const vec2i from_tile = arch.r_vec2i("tile", k_no_tile);
+    if (from_tile.x != k_no_tile.x || from_tile.y != k_no_tile.y) {
+        p.tile = tile2i(from_tile.x, from_tile.y);
+        p.type = arch.r_type<e_figure_type>("type", FIGURE_NONE);
+        p.count = (int16_t)arch.r_int("count", 0);
+        p.radius = (int16_t)arch.r_int("radius", 0);
+        return;
+    }
+
+    const vec2i t = arch.r_vec2i_impl({0, 0}, "x", "y");
+    p.tile = tile2i(t.x, t.y);
+}
+}
+
 struct scenario_data_buffers {
     buffer* mission_index = nullptr;
     buffer* map_name = nullptr;
@@ -247,9 +279,8 @@ struct scenario_data_t {
     tile2i river_exit_point;
 
     tile2i earthquake_point;
-    hvector<tile2i, MAX_PREDATOR_HERD_POINTS> herd_points_animals;
-    e_figure_type herd_type_animals[MAX_PREDATOR_HERD_POINTS];
-    hvector<tile2i, MAX_PREY_HERD_POINTS> herd_points_prey;
+    hvector<herd_point_t, MAX_PREDATOR_HERD_POINTS> herd_points_predator;
+    hvector<herd_point_t, MAX_PREY_HERD_POINTS> herd_points_prey;
     hvector<tile2i, MAX_FISH_POINTS> fishing_points;
     hvector<tile2i, MAX_DISEMBARK_POINTS> disembark_points;
     hvector<tile2i, MAX_INVASION_POINTS_LAND> invasion_points_land;

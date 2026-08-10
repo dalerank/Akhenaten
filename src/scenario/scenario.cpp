@@ -143,9 +143,18 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid, bool is_new_m
         arch.r_vector("disembark_points", disembark_points, MAX_DISEMBARK_POINTS);
 
         // fishing / herd points: mission config only (map/pak discarded). Absent key → empty.
+        // herd entries: [x,y] or { tile:[x,y], type, count, radius }.
         arch.r("fishing_points", fishing_points);
-        arch.r("herd_points_animals", herd_points_animals);
+        arch.r("herd_points_predator", herd_points_predator);
         arch.r("herd_points_prey", herd_points_prey);
+
+        // Legacy positional types overlay (prefer per-point type in the object form).
+        const auto herd_types = arch.r_array_num<e_figure_type>("herd_types_predator");
+        for (size_t i = 0; i < herd_types.size() && i < herd_points_predator.size(); i++) {
+            if (herd_types[i] != FIGURE_NONE && herd_points_predator[i].type == FIGURE_NONE) {
+                herd_points_predator[i].type = herd_types[i];
+            }
+        }
 
         // Mission list is unlock source of truth; appeased/bonuses come from save chunk.
         g_city.local_cults.load_mission_unlocks(arch.r_array_str("local_cults"));
@@ -316,13 +325,15 @@ io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version)
     iob->bind(BIND_SIGNATURE_INT16, &g_scenario.is_open_play);
     iob->bind(BIND_SIGNATURE_INT16, &g_scenario.player_rank);
 
-    iob->bind_hvector_tiles_xy_u16(g_scenario.herd_points_animals, MAX_PREDATOR_HERD_POINTS);
+    iob->bind_hvector_point_tiles_xy_u16(g_scenario.herd_points_predator);
 
     iob->bind_hvector_tiles_xy_u16(g_scenario.fishing_points, MAX_FISH_POINTS);
 
     iob->bind(BIND_SIGNATURE_UINT16, &g_scenario.alt_predator_type);
 
-    for (int i = 0; i < MAX_PREDATOR_HERD_POINTS; i++) { iob->bind(BIND_SIGNATURE_UINT16, &g_scenario.herd_type_animals[i]); }
+    for (int i = 0; i < MAX_PREDATOR_HERD_POINTS; i++) {
+        iob->bind(BIND_SIGNATURE_UINT16, &g_scenario.herd_points_predator[i].type);
+    }
     iob->bind____skip(34);
 
     iob->bind_hvector_tiles_xy_u16(g_scenario.invasion_points_land, MAX_INVASION_POINTS_LAND);
@@ -395,7 +406,7 @@ io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version)
     iob->bind____skip(1); // -1 or -31
     iob->bind____skip(1); // -1
 
-    iob->bind_hvector_tiles_xy_i32(g_scenario.herd_points_prey, MAX_PREY_HERD_POINTS);
+    iob->bind_hvector_point_tiles_xy_i32(g_scenario.herd_points_prey);
     for (int i = 0; i < scenario_data_t::SCENARIO_PAK_RESERVED_INT16S; i++) {
         iob->bind(BIND_SIGNATURE_INT16, &g_scenario.pak_reserved[i]);
     }

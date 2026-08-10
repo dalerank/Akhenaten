@@ -55,3 +55,8 @@ function building_firehouse_on_update_graphic(ev) {
     building.set_animation(animkey)
 }
 
+[es=(building_firehouse, draw_usable_paths)]
+function building_firehouse_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}
+

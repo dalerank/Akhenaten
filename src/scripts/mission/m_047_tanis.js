@@ -90,7 +90,7 @@ mission47 { // Tanis - Rebirth of a Navy
 	invasion_points_land [ [107, 87], [86, 73] ]
 	invasion_points_sea [ [145, 5], [166, 13] ]
 	fishing_points [ [46, 101], [96, 66], [59, 78] ]
-	herd_points_animals [ [65, 75], [135, 58] ]
+	herd_points_predator [ [65, 75], [135, 58] ]
 
 	hide_pak_burial : true
 	burial_provisions [ ]

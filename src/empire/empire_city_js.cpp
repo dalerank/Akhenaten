@@ -8,7 +8,6 @@
 #include "mujs/jsvalue.h"
 #include "mujs/mujs.h"
 
-#include <cstddef>
 #include <cstdio>
 
 int __city_resource_stack_proper_quantity(int resource, int value);
@@ -57,10 +56,13 @@ static void js_push_empire_city_object(js_State* J, int id, js_Object* proto) {
     empire_city* c = g_empire.city(id);
     if (!c || !c->in_use) {
         id = 0;
+        c = g_empire.city(id);
     }
+    full_empire_object* full = (c && c->in_use) ? g_empire.ref_full_object(c->empire_object_id) : nullptr;
     js_pushobject(J, jsV_newobject(J, JS_COBJECT, proto));
     js_pushnumber(J, (double)id);
     js_setproperty(J, -2, js_intern("id"));
+    js_register_cobj_ptr_property(J, full);
 }
 
 static void js_push_empire_city(js_State* J, int id, js_Object* proto) {
@@ -118,6 +120,7 @@ static void jsB_new_EmpireCity(js_State* J) {
 void js_register_empire_city_map_proto(js_State* J) {
     g_empire_city_map_proto = jsV_newobject(J, JS_COBJECT, J->Object_prototype);
     js_pushobject(J, g_empire_city_map_proto);
+    JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, full_empire_object, trade_route_open);
     jsB_propf(J, js_intern("EmpireCityObject.prototype.__property_getter"), empire_city_map_proto___property_getter, 1);
     jsB_propf(J, js_intern("EmpireCityObject.prototype.toString"), empire_city_map_proto_toString, 0);
     js_newcconstructor(J, jsB_new_EmpireCityObject, jsB_new_EmpireCityObject, js_intern("EmpireCityObject"), 1);

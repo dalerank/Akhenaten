@@ -223,4 +223,8 @@ io_buffer *iob_recorded_paths = new io_buffer([](io_buffer *iob, size_t version)
             }
         }
     }
+}, [](size_t version) {
+    // saves older than v188 have no trails; without this they would inherit the
+    // previous session's pool
+    g_recorded_paths.clear();
 });

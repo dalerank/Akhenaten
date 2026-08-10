@@ -171,16 +171,15 @@ building_menu_ctrl.update_temple_complexes = function() {
         return
     }
 
-    var has_complex = __city_has_temple_complex()
     var complex_id = __city_temple_complex_id()
+    var complex = complex_id ? new BuildingTempleComplex(complex_id) : null
     var types_count = __city_temple_complex_types_count()
 
-    if (has_complex) {
+    if (complex) {
         for (var i = 0; i < types_count; i++) {
             building_menu_ctrl.set_visible(__city_temple_complex_type_at(i), false)
         }
 
-        var complex = new BuildingTempleComplex(complex_id)
         var has_altar = complex.has_upgrade(1)
         var altar_count = complex.allowed_altar_count()
         for (var i = 0; i < altar_count; i++) {

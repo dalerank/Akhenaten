@@ -4,7 +4,7 @@
 #include "js_game.h"
 #include "input/hotkey.h"
 #include "mujs/mujs.h"
-#include "window/file_dialog.h"
+#include "window/file_dialog_common.h"
 #include "game/game.h"
 #include "game/resource.h"
 #include "game/mission.h"
@@ -93,6 +93,10 @@ void js_register_game_constants(js_State* J) {
     _R(COLOR_TOOLTIP_BORDER)
     _R(COLOR_TOOLTIP_TEXT)
 
+    _R(KEY_NONE)
+    _R(KEY_ENTER)
+    _R(KEY_ESCAPE)
+    _R(HOTKEY_MAX_ITEMS)
     _R(KEY_MOD_NONE)
     _R(KEY_MOD_SHIFT)
     _R(KEY_MOD_CTRL)
@@ -165,6 +169,8 @@ void js_register_game_constants(js_State* J) {
     _R(TERRAIN_IRRIGATION_RANGE)
     _R(TERRAIN_ROAD_BLOCKED)
     _R(TERRAIN_PLANER_FUTURE)
+    _R(TERRAIN_NOT_CLEAR)
+    _R(TERRAIN_ALL)
 
     _R(WELL_NECESSARY)
     _R(WELL_UNNECESSARY_FOUNTAIN)

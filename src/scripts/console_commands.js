@@ -224,6 +224,12 @@ function console_command_addmoney(args) {
     city.warnings.show("Added money")
 }
 
+[console_command=unlock_buildings]
+function console_command_unlock_buildings(args) {
+    emit event_building_menu_update{ stage: "enable_all" }
+    city.warnings.show("All buildings unlocked")
+}
+
 [console_command=crashme]
 function console_command_crashme(args) {
     __debug_crash()

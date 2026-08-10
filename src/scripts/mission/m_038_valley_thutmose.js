@@ -2,6 +2,10 @@ log_info("akhenaten: mission 38 valley thutmose started")
 
 mission38 { // Thutmose in the Valley — The First Tomb
 	map_file : "data/maps/m_038_valley_thutmose.map"
+
+	// Map points from data/maps/m_038_valley_thutmose.map.
+	herd_points_predator [ [215, 111], [60, 83], [86, 66] ]
+
 	start_message : "message_mission_thutmose_valley"
 	selection_title : "Thutmose in the Valley"
 	player_rank : 5

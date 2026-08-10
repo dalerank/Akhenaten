@@ -4,6 +4,10 @@ log_info("akhenaten: mission 6 behdet started")
 
 mission6 { // Behdet — The Royal Navy
 	map_file : "data/maps/m_006_behdet.map"
+
+	// Map points from data/maps/m_006_behdet.map.
+	fishing_points [ [73, 38], [89, 61] ]
+
 	start_message : "message_soldiers_and_forts"
 	selection_title : "Behdet"
 	player_rank : 2

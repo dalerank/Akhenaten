@@ -45,6 +45,7 @@
 #include "mujs/jscompile.h"
 #include "mujs/jsstring.h"
 #include "graphics/window.h"
+#include "graphics/video.h"
 #include "graphics/elements/ui.h"
 #include "graphics/elements/ui_js.h"
 #include "window/file_dialog_common.h"
@@ -145,20 +146,28 @@ void js_game_get_image(js_State *J) {
         desc.path = path.c_str();
         tid = desc.tid();
     } else if (J->isobject(1) && !js_isarray(J, 1)) {
-        J->getproperty(1, property_pack);
-        int16_t pack = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
-        js_pop(J, 1);
+        J->getproperty(1, property_tid);
+        if (!js_isundefined(J, -1)) {
+            tid = (int)js_tointeger(J, -1);
+            js_pop(J, 1);
+        } else {
+            js_pop(J, 1);
 
-        J->getproperty(1, property_id);
-        int16_t id = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
-        js_pop(J, 1);
+            J->getproperty(1, property_pack);
+            int16_t pack = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
+            js_pop(J, 1);
 
-        J->getproperty(1, property_offset);
-        int16_t offset = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
-        js_pop(J, 1);
+            J->getproperty(1, property_id);
+            int16_t id = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
+            js_pop(J, 1);
 
-        image_desc desc{ pack, id, offset };
-        tid = desc.tid();
+            J->getproperty(1, property_offset);
+            int16_t offset = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
+            js_pop(J, 1);
+
+            image_desc desc{ pack, id, offset };
+            tid = desc.tid();
+        }
     } else if (js_isnumber(J, 1) || js_iscnumber(J, 1)) {
         int16_t pack = js_touint32(J, 1);
         int16_t id = (js_isnumber(J, 2) || js_iscnumber(J, 2)) ? js_touint32(J, 2) : 0;
@@ -188,6 +197,15 @@ void js_game_get_image(js_State *J) {
 
     js_pushnumber(J, img->height);
     js_setproperty(J, -2, property_height);
+
+    js_pushnumber(J, img->animation.speed_id);
+    js_setproperty(J, -2, js_intern("animation_speed_id"));
+
+    js_pushnumber(J, img->animation.sprite_offset.x);
+    js_setproperty(J, -2, js_intern("animation_offset_x"));
+
+    js_pushnumber(J, img->animation.sprite_offset.y);
+    js_setproperty(J, -2, js_intern("animation_offset_y"));
 }
 
 bool js_has_event_handlers(const xstring &event_name) {
@@ -505,7 +523,9 @@ bool __game_delete_map(pcstr filename_short) { return GamestateIO::delete_map(fi
 bool __game_editor_load_scenario(pcstr path) { return game_file_editor_load_scenario(path) != 0; } ANK_FUNCTION_1(__game_editor_load_scenario)
 bool __game_editor_write_scenario(pcstr path) { return game_file_editor_write_scenario(path) != 0; } ANK_FUNCTION_1(__game_editor_write_scenario)
 bool __game_init_editor() { return game_init_editor(); } ANK_FUNCTION(__game_init_editor)
+void __game_exit_editor() { game_exit_editor(); } ANK_FUNCTION(__game_exit_editor)
 bool __editor_is_active() { return editor_is_active() != 0; } ANK_FUNCTION(__editor_is_active)
+void __video_stop() { video_stop(); } ANK_FUNCTION(__video_stop)
 void __game_load_mission(int scenario_id, int start_immediately) { GamestateIO::load_mission(scenario_id, !!start_immediately); } ANK_FUNCTION_2(__game_load_mission)
 bool __game_load_map(pcstr filename_short, int start_immediately) { return GamestateIO::load_map(filename_short, true, !!start_immediately); } ANK_FUNCTION_2(__game_load_map)
 void __game_start_loaded_file() { GamestateIO::start_loaded_file(); } ANK_FUNCTION(__game_start_loaded_file)

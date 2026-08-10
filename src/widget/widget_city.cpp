@@ -1,4 +1,4 @@
-﻿#include "widget/widget_city.h"
+#include "widget/widget_city.h"
 
 #include "graphics/image.h"
 #include "graphics/graphics.h"
@@ -21,6 +21,7 @@
 #include "core/string.h"
 #include "figure/formation_batalion.h"
 #include "game/cheats.h"
+#include "game/game_events.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "grid/bridge.h"
@@ -100,8 +101,8 @@ void screen_city_t::update_zoom_level(painter &ctx) {
 }
 
 void screen_city_t::scroll_map(const mouse* m) {
-    vec2i delta;
-    if (scroll_get_delta(m, &delta, SCROLL_TYPE_CITY)) {
+    vec2i delta = g_scroll.get_delta(m, scroll_t::CITY);
+    if (delta.x || delta.y) {
         g_camera.scroll(delta.x, delta.y);
         sound_city_decay_views();
     }
@@ -656,7 +657,7 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
     // unfinished monuments return 0 from city_flat_building_texture_id).
     const int flat_img = (flatten && tile_building) ? city_flat_building_texture_id(*tile_building) : 0;
     // Multi-part complexes: skip part feet when the finished flat sprite is in use.
-    // Unfinished monuments return flat_img 0 → parts keep construction feet.
+    // Unfinished monuments return flat_img 0 ? parts keep construction feet.
     if (flat_img > 0 && tile_building && !tile_building->is_main()) {
         map_render_set(tile, 0);
         return;
@@ -940,9 +941,9 @@ void screen_city_t::draw_ornaments_and_animations_height(vec2i point, tile2i til
         color_mask = COLOR_MASK_RED;
     }
 
-    // Anchor for create_subcommand (pyramid bricks/stairs, plague skull, …).
+    // Anchor for create_subcommand (pyramid bricks/stairs, plague skull, ).
     // draw_isometric_nonterrain_height often creates no parent (non-tall map
-    // image) — then subcommands attach to the *previous* tile and sort with its
+    // image)  then subcommands attach to the *previous* tile and sort with its
     // pixel. That shows up as crushed/mis-layered sprites on the left viewport
     // edge when a tall monument is partially off-screen. ert_none draws nothing.
     {
@@ -1167,15 +1168,15 @@ void screen_city_t::handle_touch_scroll(const touch_t * t, bool fore_capture_inp
         if (t->has_started) {
             vec2i view_pos = g_camera.offset;
             vec2i view_size = g_camera.size_pixels;
-            scroll_set_custom_margins(view_pos.x, view_pos.y, view_size.x, view_size.y);
+            g_scroll.set_custom_margins(view_pos, view_size);
         }
         if (t->has_ended) {
-            scroll_restore_margins();
+            g_scroll.restore_margins();
         }
 
         return;
     }
-    scroll_restore_margins();
+    g_scroll.restore_margins();
 
     if (!capture_input) {
         return;
@@ -1183,7 +1184,7 @@ void screen_city_t::handle_touch_scroll(const touch_t * t, bool fore_capture_inp
 
     int was_click = touch_was_click(get_latest_touch());
     if (t->has_started || was_click) {
-        scroll_drag_start(scroll_drag_source::touch);
+        g_scroll.drag_start(scroll_t::drag_source::touch);
         return;
     }
 
@@ -1192,7 +1193,7 @@ void screen_city_t::handle_touch_scroll(const touch_t * t, bool fore_capture_inp
     }
 
     if (t->has_ended) {
-        scroll_drag_end();
+        g_scroll.drag_end();
     }
 }
 
@@ -1214,7 +1215,7 @@ void screen_city_t::handle_first_touch(tile2i tile) {
         }
 
         if (type == BUILDING_NONE && allow_building_info(tile)) {
-            scroll_drag_end();
+            g_scroll.drag_end();
             capture_input = false;
             events::emit(event_show_tile_info{ tile, false, SOURCE_LOCATION });
             return;
@@ -1294,7 +1295,7 @@ static void handle_last_touch(void) {
 void screen_city_t::handle_touch() {
     const touch_t * first = get_earliest_touch();
     if (!first->in_use) {
-        scroll_restore_margins();
+        g_scroll.restore_margins();
         return;
     }
 
@@ -1308,7 +1309,7 @@ void screen_city_t::handle_touch() {
 
     if (first->has_started && input_coords_in_city(first->current_point.x, first->current_point.y)) {
         capture_input = true;
-        scroll_restore_margins();
+        g_scroll.restore_margins();
     }
 
     handle_last_touch();
@@ -1336,7 +1337,7 @@ void screen_city_t::military_map_click(int legion_formation_id, tile2i tile) {
     if (other_formation_id && other_formation_id == legion_formation_id) {
         formation_batalion_return_home(m);
     } else if (invasion_auto_resolve_target_blocked(tile)) {
-        // March onto a frozen pending wave — blocked; reposition elsewhere OK.
+        // March onto a frozen pending wave  blocked; reposition elsewhere OK.
         events::emit(event_city_warning{ "#warning_auto_resolve_orders_blocked" });
     } else {
         formation_batalion_move_to(m, tile);
@@ -1509,7 +1510,7 @@ void screen_city_t::transport_map_click(int transport_figure_id, int pick_mode, 
         };
         tile2i water = tile;
         if (!is_nav_water(water)) {
-            // Shore click → adjacent water that can actually land (has shore).
+            // Shore click ? adjacent water that can actually land (has shore).
             static const vec2i dirs[] = {
                 {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}
             };
@@ -1742,7 +1743,7 @@ void screen_city_t::handle_mouse(const mouse* m) {
 
     if (!!game_features::gameopt_middle_mouse_camera_pan
         && m->middle.went_down && input_coords_in_city(m->x, m->y) && !g_city_planner.build_type) {
-        scroll_drag_start(scroll_drag_source::middle_mouse_pan);
+        g_scroll.drag_start(scroll_t::drag_source::middle_mouse_pan);
     }
 
     bool action_in_warnings = false;
@@ -1777,7 +1778,7 @@ void screen_city_t::handle_mouse(const mouse* m) {
     }
 
     if (m->middle.went_up) {
-        scroll_drag_end();
+        g_scroll.drag_end();
     }
 }
 void screen_city_t::handle_escape(const hotkeys *h) {
@@ -1790,7 +1791,7 @@ void screen_city_t::handle_escape(const hotkeys *h) {
         return;
     }
 
-    hotkey_handle_escape();
+    events::emit(event_exit_to_menu_requested{ 0 });
 }
 
 void screen_city_t::handle_input(const mouse* m, const hotkeys* h) {
@@ -1821,7 +1822,7 @@ xstring screen_city_t::get_overlay_tooltip(tooltip_context *c, tile2i tile) {
     }
 
     // Tile-map overlays (irrigation, hide cliffs, bridges, desirability) use
-    // get_tooltip on bare land — do not require a building id.
+    // get_tooltip on bare land  do not require a building id.
     if (!tooltip) {
         city_overlay_ptr->get_tooltip(c, tile, tooltip);
     }

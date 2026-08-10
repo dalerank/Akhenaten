@@ -426,7 +426,7 @@ void building_house::change_to(building &b, e_building_type new_type, bool force
 }
 
 int16_t building_house::population_room() const {
-    if (runtime_data().frog_infest_days > 0) {
+    if (runtime_data().frog_infest_days > 0 || base.has_plague) {
         return 0;
     }
 

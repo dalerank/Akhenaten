@@ -21,6 +21,31 @@ Farm.prototype.requested_workers = function() {
   return __farm_requested_workers(this.id)
 }
 
+function building_farm_next_harvest_month(bid) {
+  var b = city.get_building(bid)
+  if (!b) {
+    return MONTH_JANUARY
+  }
+  var cfg = get_building_config_by_id(b.type)
+  var months = cfg && cfg.month_harvest
+  if (!months || !months.length) {
+    return MONTH_JANUARY
+  }
+  var current = game.simtime.month
+  var day = game.simtime.day
+  for (var i = 0; i < months.length; i++) {
+    var month = months[i]
+    if (month > current || (month === current && day < 2)) {
+      return month
+    }
+  }
+  return months[0]
+}
+
+Farm.prototype.next_harvest_month = function() {
+  return building_farm_next_harvest_month(this.id)
+}
+
 // end prototype for farm buildings
 
 building_meadow_farm_tile_offsets = [
@@ -786,7 +811,7 @@ function building_farm_footprint_check(tile, size) {
   var valid_tiles = 0
 
   for (var i = 0; i < num_tiles; i++) {
-    var offset = city.planner.tile_grid_offset(orientation, i)
+    var offset = city_planner.tile_grid_offset(orientation, i)
     var check_tile = __map_tile_shift_offset(tile, offset)
     var tile_blocked = (__building_at(check_tile.x, check_tile.y) != 0) || __map_has_figure_at(check_tile)
     tiles.push({ tile: check_tile, blocked: tile_blocked })
@@ -805,7 +830,7 @@ function building_farm_footprint_check(tile, size) {
   if (valid_tiles < building_farm_required_valid_tiles) {
     tiles = []
     for (var i = 0; i < num_tiles; i++) {
-      var offset = city.planner.tile_grid_offset(orientation, i)
+      var offset = city_planner.tile_grid_offset(orientation, i)
       var check_tile = __map_tile_shift_offset(tile, offset)
       var is_valid = terrain.is(check_tile, TERRAIN_MEADOW | TERRAIN_FLOODPLAIN)
       tiles.push({ tile: check_tile, blocked: !is_valid })
@@ -819,9 +844,9 @@ function building_farm_footprint_check(tile, size) {
 function building_farm_draw_partially_blocked(tiles) {
   for (var i = 0; i < tiles.length; i++) {
     var entry = tiles[i]
-    var pixel = city.planner.tile_to_pixel(entry.tile)
+    var pixel = city_planner.tile_to_pixel(entry.tile)
     var color = entry.blocked ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30
-    city.planner.draw_flat_tile(pixel, color)
+    city_planner.draw_flat_tile(pixel, color)
   }
 }
 
@@ -845,7 +870,7 @@ function building_farm_draw_crops(type, progress, tile, point) {
   var step = offsets.length >= 9 ? 200 : 400
   for (var i = 0; i < offsets.length; i++) {
     var growth = Math.min(5, Math.max(0, Math.floor((progress - i * step) / 100)))
-    city.planner.draw_from_below(
+    city_planner.draw_from_below(
       { x: point.x + offsets[i][0], y: point.y + offsets[i][1] },
       image_crops + growth
     )
@@ -853,7 +878,7 @@ function building_farm_draw_crops(type, progress, tile, point) {
 }
 
 function building_farm_ghost_preview(ev) {
-  var params = city.get_building_params_by_type(city.planner.build_type)
+  var params = city.get_building_params_by_type(city_planner.build_type)
   var check = building_farm_footprint_check(ev.end, params.building_size)
   if (check.blocked) {
     building_farm_draw_partially_blocked(check.tiles)
@@ -861,20 +886,20 @@ function building_farm_ghost_preview(ev) {
   }
 
   var ghost_pixel = { x: ev.pixel.x - 60, y: ev.pixel.y + 30 }
-  var image_id = building_farm_get_image(city.planner.build_type, ev.end)
-  city.planner.draw_ghost(ghost_pixel, image_id)
-  building_farm_draw_crops(city.planner.build_type, 0, ev.end, ghost_pixel)
+  var image_id = building_farm_get_image(city_planner.build_type, ev.end)
+  city_planner.draw_ghost(ghost_pixel, image_id)
+  building_farm_draw_crops(city_planner.build_type, 0, ev.end, ghost_pixel)
 }
 
 function building_farm_finalize_check(ev) {
-  var params = city.get_building_params_by_type(city.planner.build_type)
+  var params = city.get_building_params_by_type(city_planner.build_type)
   var orientation = Math.floor(__camera.orientation / 2)
   var num_tiles = params.building_size * params.building_size
   var meadow_tiles = 0
   var blocked_tiles = 0
 
   for (var i = 0; i < num_tiles; i++) {
-    var offset = city.planner.tile_grid_offset(orientation, i)
+    var offset = city_planner.tile_grid_offset(orientation, i)
     var check_tile = __map_tile_shift_offset(ev.start, offset)
     var tile_blocked = (__building_at(check_tile.x, check_tile.y) != 0) || __map_has_figure_at(check_tile)
     if (tile_blocked) {
@@ -886,18 +911,18 @@ function building_farm_finalize_check(ev) {
   }
 
   if (blocked_tiles > 0) {
-    city.planner.set_warning("Some tiles blocked")
-    city.planner.finalize_check_result = CAN_NOT_PLACE
+    city_planner.set_warning("Some tiles blocked")
+    city_planner.finalize_check_result = CAN_NOT_PLACE
     return
   }
 
   if (meadow_tiles < building_farm_required_valid_tiles) {
-    city.planner.set_warning("Need more meadow tiles")
-    city.planner.finalize_check_result = CAN_NOT_PLACE
+    city_planner.set_warning("Need more meadow tiles")
+    city_planner.finalize_check_result = CAN_NOT_PLACE
     return
   }
 
-  city.planner.finalize_check_result = ev.state
+  city_planner.finalize_check_result = ev.state
 }
 
 function building_floodplain_farm_on_update_graphic(ev) {

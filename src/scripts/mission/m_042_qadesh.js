@@ -2,6 +2,10 @@ log_info("akhenaten: mission 42 qadesh started")
 
 mission42 {
 	map_file : "data/maps/m_042_qadesh.map"
+
+	// Map points from data/maps/m_042_qadesh.map.
+	herd_points_predator [ [88, 92] ]
+
 	start_message : "message_mission_qadesh"
 	selection_title : "Qadesh"
 	player_rank : 10

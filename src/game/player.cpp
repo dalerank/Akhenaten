@@ -192,7 +192,7 @@ bool player_data_prepare_savegame(const char* filename_short) {
     logs::info("Save player data: writing %s (dir %s)", savefile.c_str(), folders.c_str());
     vfs::create_folders(folders);
     // write file (serialize applies content_path internally; do not pass pre-resolved path)
-    bool save_ok = FILEIO.serialize(savefile, 0, FILE_FORMAT_SAVE_FILE, latest_save_version, [] (e_file_format file_format, const int file_version) {
+    bool save_ok = FILEIO.serialize(savefile, 0, FILE_FORMAT_SAVE_FILE, save_data_version(), [] (e_file_format file_format, const int file_version) {
         FILEIO.push_chunk(4, false, "family_index", 0);
     });
     if (save_ok) {

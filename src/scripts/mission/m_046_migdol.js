@@ -85,7 +85,7 @@ mission46 { // Migdol - Repel the Assyrians
 	river_exit_point [48, 102]
 	// pak inv land/sea empty - omit (invasions fall back to map exit).
 	fishing_points [ [14, 54], [34, 79], [22, 43] ]
-	herd_points_animals [ [95, 62] ]
+	herd_points_predator [ [95, 62] ]
 	herd_points_prey [ [27, 68] ]
 
 	hide_pak_burial : true

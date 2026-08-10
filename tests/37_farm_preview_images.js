@@ -64,8 +64,8 @@ function run_test() {
     }
     __log_marker('farm_preview_floodplain_route_ok')
 
-    var pixel = city.planner.tile_to_pixel(tile)
-    city.planner.draw_from_below(pixel, crops_flood)
+    var pixel = city_planner.tile_to_pixel(tile)
+    city_planner.draw_from_below(pixel, crops_flood)
     __log_marker('farm_preview_draw_from_below_ok')
 
     __test_signal_ready()

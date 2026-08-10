@@ -91,13 +91,10 @@ static int image_find_pak_id_by_name(const xstring &name) {
 }
 
 static bool image_pak_load_succeeded(const imagepak *pak) {
-    if (!pak) {
-        return false;
-    }
-    if (g_args.no_resource()) {
-        return true;
-    }
-    return !pak->atlas_pages.empty();
+    // Failed loads call cleanup_and_destroy() and leave an empty husk. Never
+    // treat that as success — including under --no-resource (CI hermetic runs),
+    // where a fake LOADED pack later crashes image lookups (e.g. phoenician).
+    return pak != nullptr && !pak->atlas_pages.empty();
 }
 
 bool image_pak_is_loaded(int pak_id) {
@@ -124,6 +121,10 @@ bool image_ensure_pak_loaded(int pak_id) {
         return false;
     }
 
+    if (pak.load_status == IMAGEPAK_LOAD_FAILED) {
+        return false;
+    }
+
     if (pak.load_status == IMAGEPAK_LOAD_LOADED && pak.handle != nullptr) {
         return true;
     }
@@ -132,7 +133,13 @@ bool image_ensure_pak_loaded(int pak_id) {
         return false;
     }
 
-    if (pak.handle != nullptr && pak.load_status != IMAGEPAK_LOAD_FAILED) {
+    if (pak.handle != nullptr) {
+        if (!image_pak_load_succeeded(pak.handle)) {
+            delete pak.handle;
+            pak.handle = nullptr;
+            pak.load_status = IMAGEPAK_LOAD_FAILED;
+            return false;
+        }
         if (pak.entries_num == 0) {
             pak.entries_num = pak.handle->get_entry_count();
         }
@@ -177,6 +184,10 @@ bool image_request_pak(int pak_id) {
 
     auto &pak = g_image_data->pak_list[pak_id];
     if (pak.name.empty()) {
+        return false;
+    }
+
+    if (pak.load_status == IMAGEPAK_LOAD_FAILED) {
         return false;
     }
 
@@ -353,8 +364,8 @@ static imagepak* pak_from_collection_id(int collection) {
     }
 
     const auto &imgpak = data.pak_list[collection];
-    if (g_args.no_resource()) {
-        return imgpak.handle;
+    if (!imgpak.handle) {
+        return nullptr;
     }
 
     if (imgpak.handle->image_ids().size() == 0) {
@@ -369,10 +380,6 @@ int image_id_from_group(int collection, int group) {
     imagepak* pak = pak_from_collection_id(collection);
     if (pak == nullptr) {
         return -1;
-    }
-
-    if (g_args.no_resource()) {
-        return 0;
     }
 
     int result = pak->get_global_image_index(group);
@@ -510,7 +517,14 @@ const image_t* image_letter(int letter_id) {
 
 const image_t* image_get_enemy(int type, int id) {
     auto& data = *g_image_data;
-    return data.pak_list[type].handle->get_image(id);
+    if (type < 0 || type >= static_cast<int>(data.pak_list.size())) {
+        return nullptr;
+    }
+    if (!image_ensure_pak_loaded(type)) {
+        return nullptr;
+    }
+    auto *handle = data.pak_list[type].handle;
+    return handle ? handle->get_image(id) : nullptr;
 }
 
 int image_t::isometric_size() const {

@@ -36,7 +36,15 @@
 //  185 akhenaten: (reserved / in-tree)
 //  186 akhenaten: labor STORAGE category priority (enhanced labor split LC4)
 //  188 akhenaten: recorded cart trails (pool + last-4 building rings)
-constexpr uint32_t latest_save_version = 188;
+//  189 akhenaten: sectioned .svx container (chunk layout unchanged)
+constexpr uint32_t latest_save_version = 189;
+
+// Two numbers that are easy to confuse, so they get one accessor each:
+//   save_data_version   - WHAT sits inside the chunks. Drives if (version > N) in binds.
+//   svx_container_version - HOW chunks are laid out in the .svx file. Only the
+//                           container reader/writer cares, and it never affects binds.
+uint32_t save_data_version();
+uint32_t svx_container_version();
 
 vfs::path fullpath_saves(vfs::path filename);
 vfs::path fullpath_maps(char* full, vfs::path filename);

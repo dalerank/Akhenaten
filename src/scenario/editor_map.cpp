@@ -32,25 +32,25 @@ void scenario_editor_set_river_exit_point(int x, int y) {
 }
 
 void scenario_editor_clear_predator_herd_points(void) {
-    g_scenario.herd_points_animals.assign(MAX_PREDATOR_HERD_POINTS, tile2i::invalid);
+    g_scenario.herd_points_predator.assign(MAX_PREDATOR_HERD_POINTS, herd_point_t{});
     g_scenario.is_saved = 0;
 }
 
 tile2i scenario_editor_predator_herd_point(int id) {
-    if (id < 0 || (size_t)id >= g_scenario.herd_points_animals.size()) {
+    if (id < 0 || (size_t)id >= g_scenario.herd_points_predator.size()) {
         return tile2i::invalid;
     }
-    return g_scenario.herd_points_animals[id];
+    return g_scenario.herd_points_predator[id].tile;
 }
 
 void scenario_editor_set_predator_herd_point(int id, int x, int y) {
     if (id < 0 || id >= MAX_PREDATOR_HERD_POINTS) {
         return;
     }
-    if (g_scenario.herd_points_animals.size() < MAX_PREDATOR_HERD_POINTS) {
-        g_scenario.herd_points_animals.resize(MAX_PREDATOR_HERD_POINTS, tile2i::invalid);
+    if (g_scenario.herd_points_predator.size() < MAX_PREDATOR_HERD_POINTS) {
+        g_scenario.herd_points_predator.resize(MAX_PREDATOR_HERD_POINTS);
     }
-    g_scenario.herd_points_animals[id] = tile2i{ x, y };
+    g_scenario.herd_points_predator[id].tile = tile2i{ x, y };
     g_scenario.is_saved = 0;
 }
 

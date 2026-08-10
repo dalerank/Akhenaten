@@ -20,6 +20,11 @@ log_info("akhenaten: mission 24 waset started")
 
 mission24 { // Waset (Thebes) — Civil War
 	map_file : "data/maps/m_024_waset.map"
+
+	// Map points from data/maps/m_024_waset.map.
+	herd_points_predator [ [94, 93], [32, 107] ]
+	fishing_points [ [96, 118], [58, 50] ]
+
 	start_message : "message_mission_thebes"
 	selection_title : "Waset"
 	player_rank : 8

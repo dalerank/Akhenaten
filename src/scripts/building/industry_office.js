@@ -103,9 +103,9 @@ function building_industry_office_ghost_preview(ev) {
   var radius = building_industry_office.management_radius || 7
   var size = building_industry_office.building_size || 2
   var overlay = get_image({ pack: PACK_TERRAIN, id: 21 }).tid
-  var pixels = __camera_tile_range_pixels(city.planner.end, size, radius)
+  var pixels = __camera_tile_range_pixels(city_planner.end, size, radius)
   for (var i = 0; i < pixels.length; i++) {
-    city.planner.draw_overlay_tile(pixels[i], overlay, COLOR_MASK_BLUE, 1.0)
+    city_planner.draw_overlay_tile(pixels[i], overlay, COLOR_MASK_BLUE, 1.0)
   }
 
   var offsets = [
@@ -114,7 +114,7 @@ function building_industry_office_ghost_preview(ev) {
     [0, 30]
   ]
   for (var j = 0; j < offsets.length; j++) {
-    city.planner.draw_flat_tile(
+    city_planner.draw_flat_tile(
       { x: pixel.x + offsets[j][0], y: pixel.y + offsets[j][1] },
       COLOR_MASK_GREEN)
   }

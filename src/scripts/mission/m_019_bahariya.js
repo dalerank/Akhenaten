@@ -16,6 +16,11 @@ log_info("akhenaten: mission 19 bahariya started")
 
 mission19 { // Bahariya Oasis — The Western Desert
 	map_file : "data/maps/m_019_bahariya.map"
+
+	// Map points from data/maps/m_019_bahariya.map.
+	herd_points_predator [ [92, 64] ]
+	herd_points_prey [ [69, 70], [93, 97] ]
+
 	start_message : "message_mission_bahariya_oasis"
 	selection_title : "Bahariya"
 	player_rank : 6

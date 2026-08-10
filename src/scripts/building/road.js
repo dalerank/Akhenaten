@@ -118,18 +118,18 @@ function building_road_preview_image(tile, pathTiles) {
 
 function building_road_draw_preview_tile(tile, pathTiles) {
     var preview = building_road_preview_image(tile, pathTiles)
-    var pixel = city.planner.tile_to_pixel(tile)
+    var pixel = city_planner.tile_to_pixel(tile)
     if (preview.blocked) {
-        city.planner.draw_blocked(pixel)
+        city_planner.draw_blocked(pixel)
     } else {
-        city.planner.draw_ghost(pixel, preview.image_id)
+        city_planner.draw_ghost(pixel, preview.image_id)
     }
 }
 
 [es=(building_road, ghost_preview)]
 function building_road_ghost_preview(ev) {
     if (ev.in_progress) {
-        var tiles = city.planner.preview_path
+        var tiles = city_planner.preview_path
         if (!tiles || tiles.length == 0) {
             if (building_road_should_draw_overlay_preview(ev.end, null)) {
                 building_road_draw_preview_tile(ev.end, null)
@@ -148,8 +148,8 @@ function building_road_ghost_preview(ev) {
 [es=(building_road, construction_update)]
 function building_road_construction_update(ev) {
     __game_undo_restore_map(0)
-    city.planner.preview_path = null
-    city.planner.construction_update_items = 0
+    city_planner.preview_path = null
+    city_planner.construction_update_items = 0
 
     var start = { x: ev.start_x, y: ev.start_y }
     var end = { x: ev.end_x, y: ev.end_y }
@@ -164,7 +164,7 @@ function building_road_construction_update(ev) {
     }
 
     var items = __place_routed_building(start, end, ROUTED_BUILDING_ROAD)
-    city.planner.preview_path = preview.tiles
+    city_planner.preview_path = preview.tiles
     building_road_mark_preview_for_map_order(preview.tiles)
-    city.planner.construction_update_items = items
+    city_planner.construction_update_items = items
 }

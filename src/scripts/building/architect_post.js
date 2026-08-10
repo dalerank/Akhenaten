@@ -35,3 +35,8 @@ function building_architect_post_update_graphic(ev) {
     var animkey = building.play_animation ? "work" : "none"
     building.set_animation(animkey)
 }
+
+[es=(building_architect_post, draw_usable_paths)]
+function building_architect_post_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}

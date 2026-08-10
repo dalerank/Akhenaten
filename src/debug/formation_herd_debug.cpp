@@ -8,17 +8,12 @@
 #include "graphics/text.h"
 #include "graphics/view/view.h"
 #include "grid/hyena_strength.h"
-#include "scenario/scenario.h"
 
 #include <vector>
 
 static tile2i herd_spawn_point(const formation *m) {
-    if (m->herd_point >= 0 && (size_t)m->herd_point < g_scenario.herd_points_animals.size()) {
-        tile2i spawn_point = g_scenario.herd_points_animals[m->herd_point];
-        if (spawn_point.valid()) {
-            return spawn_point;
-        }
-    }
+    // herd_point is the mission-script herd id, not a slot in herd_points_predator — the
+    // formation itself carries the tile the herd was created on.
     return m->home.valid() ? m->home : m->tile;
 }
 

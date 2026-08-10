@@ -26,17 +26,18 @@ mission3 {
 
 	sounds {
 		briefing : "Voice/Mission/203_mission.mp3"
-		victory : "Voice/Mission/203_victory.mp3"  
+		victory : "Voice/Mission/203_victory.mp3"
 	}
 
 	win_criteria {
 		population    {enabled : true, goal : 1000 }
 		housing_count {enabled : true, goal : 10 }
-		housing_level {enabled : true, goal : 8 }
+		housing_level {enabled : true, goal : HOUSE_MODEST_APARTMENT }
 	}
 
 	vars {
 		beer_stored : 300
+		modest_houses_needed : 10
 		victory_last_action_delay : 3
 
 		beer_stored_handled : false
@@ -45,33 +46,28 @@ mission3 {
 		last_action_time : 0
 		start_message_shown : false
 	}
-}
 
-function mission3_get_goal_tooltip() {
-	if (!mission.modest_houses_reached) {
-		return "#reach_modest_houses_number"
+	goal_tooltip: function() {
+		if (!mission.beer_stored_handled) {
+			return "#mission3_brew_beer"
+		}
+
+		if (!mission.tax_collector_built) {
+			return "#build_tax_collector"
+		}
+
+		if (city.count_houses_at_least(HOUSE_MODEST_HOMESTEAD) < mission.modest_houses_needed) {
+			return "#reach_modest_houses_number"
+		}
+
+		return ""
 	}
-
-	if (!mission.beer_stored_handled) {
-		return "#mission3_brew_beer"
-	}
-
-	if (!mission.tax_collector_built) {
-		return "#build_tax_collector"
-	}
-
-	return ""
 }
 
 [es=event_mission_start, mission=mission3]
 function mission3_on_start(ev) {
 	mission_show_start_message(mission, "message_developing_culture")
 	city.set_empire_available(-1)
-
-	if (mission.tax_collector_built) {
-		city.use_building(BUILDING_TAX_COLLECTOR, true)
-		city.use_building(BUILDING_PERSONAL_MANSION, true)
-	}
 
 	if (mission.beer_stored_handled) {
 		city.use_building(BUILDING_TAX_COLLECTOR, true)
@@ -82,7 +78,6 @@ function mission3_on_start(ev) {
 	city.set_advisor_available(ADVISOR_ENTERTAINMENT, 1)
 	city.set_advisor_available(ADVISOR_RELIGION, 1)
 	city.set_advisor_available(ADVISOR_FINANCIAL, 1)
-	city.goal_tooltip = mission3_get_goal_tooltip
 }
 
 [event=event_warehouse_filled, mission=mission3]
@@ -121,18 +116,16 @@ function mission3_on_build_tax_collector(ev) {
 }
 
 [event=event_advance_day, mission=mission3]
-function mission3_handle_spacious_apartment() {
-    if (mission.spacious_apartment_built) {
-        return
-    }
+function mission3_handle_modest_houses() {
+	if (mission.modest_houses_reached) {
+		return
+	}
 
-    var modest_houses_count = city.count_total_buildings(BUILDING_HOUSE_MODEST_HOMESTEAD);
-    if (modest_houses_count < mission.modest_houses_needed) {
-        return
-    }
+	if (city.count_houses_at_least(HOUSE_MODEST_HOMESTEAD) < mission.modest_houses_needed) {
+		return
+	}
 
-    mission.modest_houses_reached = true
-    mission.last_action_time = game.absolute_day
+	mission.modest_houses_reached = true
 }
 
 [event=event_update_victory_state, mission=mission3]

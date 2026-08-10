@@ -4,6 +4,7 @@
 #include "input/keyboard.h"
 #include "content/vfs.h"
 #include "core/log.h"
+#include "game/game_events.h"
 #include "js/js_game.h"
 #include "core/svector.h"
 
@@ -180,7 +181,7 @@ void game_hotkeys::load() {
                 states[i]->key = vkey;
                 states[i]->modifiers = vmodifiers;
             }
-        }        
+        }
     });
 
     // Cleopatra overlays claim bare Y/Z/H. Old conf may still bind vacant house /
@@ -202,7 +203,7 @@ void game_hotkeys::load() {
 }
 
 void game_hotkeys::install() {
-    hotkeys::install(make_span(_hotkeys));
+    events::emit(event_hotkey_bindings_changed{ 0 });
 }
 
 void game_hotkeys::save() {

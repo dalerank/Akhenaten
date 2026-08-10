@@ -39,8 +39,8 @@ advisor_financial_window {
     })
 }
 
-function advisor_financial_window_inc_tax() { city.finance.tax_percentage = city.finance.tax_percentage + 1 }
-function advisor_financial_window_dec_tax() { city.finance.tax_percentage = city.finance.tax_percentage - 1 }
+function advisor_financial_window_inc_tax() { emit event_finance_change_tax{ value: 1 } }
+function advisor_financial_window_dec_tax() { emit event_finance_change_tax{ value: -1 } }
 
 function advisor_financial_window_update(window) {
     var ctreasury = city.finance.treasury

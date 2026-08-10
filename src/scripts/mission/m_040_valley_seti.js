@@ -13,6 +13,10 @@ log_info("akhenaten: mission 40 valley seti started")
 
 mission40 { // Seti in the Valley — Tomb for a Pharaoh
 	map_file : "data/maps/m_040_valley_seti.map"
+
+	// Map points from data/maps/m_040_valley_seti.map.
+	herd_points_predator [ [216, 111], [87, 67], [60, 83], [88, 164] ]
+
 	start_message : "message_mission_seti_valley"
 	selection_title : "Seti in the Valley"
 	player_rank : 6

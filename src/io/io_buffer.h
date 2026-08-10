@@ -48,6 +48,15 @@ enum bind_signature_e {
 class io_buffer;
 using io_buffer_bind = void(io_buffer *io, size_t version);
 
+// Called instead of read() when the chunk is absent from the file being loaded.
+//
+// Having one is also how a chunk declares itself OPTIONAL. Only chunks added after
+// a save format version can legitimately be missing - everything else is mandatory,
+// and the loader refuses a file that lacks it rather than starting a city with a
+// whole system silently blank. So: add a chunk behind a version gate, add its
+// defaulter in the same breath.
+using io_buffer_default = void(size_t version);
+
 class io_buffer {
 private:
     int size = 0;
@@ -60,6 +69,7 @@ private:
 
     // manually defined external binding schema
     io_buffer_bind *bind_callback;
+    io_buffer_default *default_callback = nullptr;
 
     // this is the parent of the below READ / WRITE functions, written
     // into a single generalized form.
@@ -70,6 +80,12 @@ protected:
     virtual void bind_data(size_t version) {
         bind_callback(this, version);
     }
+
+    // Subclasses (io_image_grid and friends) override bind_data instead of passing a
+    // callback, so they need a matching virtual way to declare their defaults - a
+    // function pointer would always be null for them.
+    virtual void reset_data(size_t version) {}
+    virtual bool has_reset_data() const { return false; }
 
 public:
     inline int get_size() { return size; }
@@ -180,6 +196,25 @@ public:
         }
     }
 
+    // Same SoA layout for points that expose a tile2i `tile` member (e.g. herd_point_t).
+    template<size_t Cap, typename PointT>
+    void bind_hvector_point_tiles_xy(hvector<PointT, Cap> &pts, bind_signature_e coord_sig, size_t slots = Cap) {
+        assert(slots <= Cap);
+        const PointT empty{};
+        if (is_read_access()) {
+            pts.assign(slots, empty);
+        } else {
+            pts.resize(slots, empty);
+        }
+        for (size_t i = 0; i < slots; ++i) {
+            pts[i].tile.invalidate_offset();
+            bind(coord_sig, pts[i].tile.private_access(_X));
+        }
+        for (size_t i = 0; i < slots; ++i) {
+            bind(coord_sig, pts[i].tile.private_access(_Y));
+        }
+    }
+
     template<size_t Cap>
     void bind_hvector_tiles_xy_i32(hvector<tile2i, Cap> &pts, size_t slots = Cap) {
         bind_hvector_tiles_xy(pts, BIND_SIGNATURE_INT32, slots);
@@ -188,6 +223,16 @@ public:
     template<size_t Cap>
     void bind_hvector_tiles_xy_u16(hvector<tile2i, Cap> &pts, size_t slots = Cap) {
         bind_hvector_tiles_xy(pts, BIND_SIGNATURE_UINT16, slots);
+    }
+
+    template<size_t Cap, typename PointT>
+    void bind_hvector_point_tiles_xy_i32(hvector<PointT, Cap> &pts, size_t slots = Cap) {
+        bind_hvector_point_tiles_xy(pts, BIND_SIGNATURE_INT32, slots);
+    }
+
+    template<size_t Cap, typename PointT>
+    void bind_hvector_point_tiles_xy_u16(hvector<PointT, Cap> &pts, size_t slots = Cap) {
+        bind_hvector_point_tiles_xy(pts, BIND_SIGNATURE_UINT16, slots);
     }
 
     void bind(bind_signature_e signature, grid_xx *ext) {
@@ -213,9 +258,14 @@ public:
     bool read(size_t version);
     bool write();
 
+    // does this chunk know how to put its state back to a known default?
+    bool has_default() const { return default_callback != nullptr || has_reset_data(); }
+    void apply_default(size_t version);
+
     io_buffer();
     io_buffer(io_buffer_bind bclb);
-    ~io_buffer();
+    io_buffer(io_buffer_bind bclb, io_buffer_default dclb);
+    virtual ~io_buffer();
 };
 
 void default_bind(io_buffer *iob, size_t version);

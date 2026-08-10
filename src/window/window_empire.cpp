@@ -84,6 +84,31 @@ struct empire_window_draw_battle_icon {
 };
 ANK_REGISTER_STRUCT_WRITER(empire_window_draw_battle_icon, draw_offset, pos, image_id, path, years, object_index);
 
+struct empire_window_draw_city {
+    vec2i draw_offset;
+    vec2i pos;
+    int object_index = 0;
+    int city_id = 0;
+    int text_align = 0;
+    int width = 0;
+};
+ANK_REGISTER_STRUCT_WRITER(empire_window_draw_city, draw_offset, pos, object_index, city_id, text_align, width);
+
+struct empire_window_draw_text {
+    vec2i draw_offset;
+    vec2i pos;
+    xstring label;
+};
+ANK_REGISTER_STRUCT_WRITER(empire_window_draw_text, draw_offset, pos, label);
+
+struct empire_window_draw_sprite {
+    vec2i draw_offset;
+    vec2i pos;
+    int image_id = 0;
+    int object_index = 0;
+};
+ANK_REGISTER_STRUCT_WRITER(empire_window_draw_sprite, draw_offset, pos, image_id, object_index);
+
 struct empire_window_init_event {
     vec2i pos;
 };
@@ -240,9 +265,9 @@ bool empire_window::is_outside_map(int x, int y) {
 int empire_window::ui_handle_mouse(const mouse* m) {
     const hotkeys* h = hotkey_state();
 
-    vec2i position;
     last_mouse_pos = {m->x, m->y};
-    if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE)) {
+    vec2i position = g_scroll.get_delta(m, scroll_t::EMPIRE);
+    if (position.x || position.y) {
         const float scale = map_scale();
         scroll_remainder_x += position.x / std::max(0.001f, scale);
         scroll_remainder_y += position.y / std::max(0.001f, scale);
@@ -255,9 +280,13 @@ int empire_window::ui_handle_mouse(const mouse* m) {
         }
     }
 
+    if (!m->is_touch && m->left.went_down && !is_outside_map(m->x, m->y)) {
+        g_scroll.drag_start(scroll_t::drag_source::mouse);
+    }
+
     if (!!game_features::gameopt_middle_mouse_camera_pan
         && m->middle.went_down && !is_outside_map(m->x, m->y)) {
-        scroll_drag_start(scroll_drag_source::middle_mouse_pan);
+        g_scroll.drag_start(scroll_t::drag_source::middle_mouse_pan);
     }
 
     if (m->is_touch) {
@@ -265,15 +294,22 @@ int empire_window::ui_handle_mouse(const mouse* m) {
         if (!is_outside_map(t->current_point.x, t->current_point.y)) {
             if (t->has_started) {
                 is_scrolling = 1;
-                scroll_drag_start(scroll_drag_source::touch);
+                g_scroll.drag_start(scroll_t::drag_source::touch);
             }
         }
 
         if (t->has_ended) {
             is_scrolling = 0;
             finished_scroll = !touch_was_click(t);
-            scroll_drag_end();
+            g_scroll.drag_end();
         }
+    }
+
+    if (!m->is_touch && m->left.went_up) {
+        finished_scroll = g_scroll.drag_end();
+    }
+    if (m->middle.went_up) {
+        g_scroll.drag_end();
     }
 
     determine_selected_object(m);
@@ -290,13 +326,9 @@ int empire_window::ui_handle_mouse(const mouse* m) {
             return 0;
         }
     } else if (input_go_back_requested(m, h)) {
-        scroll_drag_end();
+        g_scroll.drag_end();
         window_city_show();
         return 0;
-    }
-
-    if (m->middle.went_up) {
-        scroll_drag_end();
     }
 
     ui.begin_widget({0, 0});
@@ -307,15 +339,14 @@ int empire_window::ui_handle_mouse(const mouse* m) {
 }
 
 void empire_window::draw_empire_object(int object_index, const empire_object& obj) {
-    if (obj.type == EMPIRE_OBJECT_LAND_TRADE_ROUTE || obj.type == EMPIRE_OBJECT_SEA_TRADE_ROUTE) {
-        if (!g_empire.is_trade_route_open(obj.trade_route_id)) {
-            return;
-        }
+    // Routes are drawn via draw_trade_route(); pak Cleopatra IDs here are unmapped and cover cities.
+    if (obj.type == EMPIRE_OBJECT_LAND_TRADE_ROUTE || obj.type == EMPIRE_OBJECT_SEA_TRADE_ROUTE
+        || obj.type == EMPIRE_OBJECT_TRADER) {
+        return;
     }
 
     vec2i pos;
     int image_id;
-    pcstr tooltip_text = "";
     if (scenario_empire_is_expanded()) {
         pos = obj.expanded.pos;
         image_id = obj.expanded.image_id;
@@ -324,172 +355,54 @@ void empire_window::draw_empire_object(int object_index, const empire_object& ob
         image_id = obj.image_id;
     }
 
-    const float scale = map_scale();
-    const vec2i draw_pos = map_to_screen(pos);
-
-    if (obj.type == EMPIRE_OBJECT_CITY) {
-        painter ctx = game.painter();
-        int empire_city_id = g_empire.get_city_for_object(object_index);
-        const empire_city* city = g_empire.city(empire_city_id);
+    const e_empire_object ot = (e_empire_object)obj.type;
+    if (ot == EMPIRE_OBJECT_CITY) {
+        const int city_id = g_empire.get_city_for_object(object_index);
+        const empire_city* city = g_empire.city(city_id);
         if (!city || !city->shows_as_trade_city_on_map()) {
             return;
         }
-
-        // Type→texture from empire_city_images (empire.js); pak Cleopatra IDs are ignored.
-        image_id = empire_city_images.image_id(city->type, scenario_empire_is_expanded());
-        if (image_id <= 0) {
-            return;
-        }
-
-        const image_t* img = image_get(image_id);
-        if (!img) {
-            return;
-        }
-        sprite spr;
-        spr.img = img;
-        ctx.draw(spr, draw_pos, COLOR_MASK_NONE, scale, scale);
-        const vec2i scaled_img_size{
-            std::max(1, (int)std::lround(img->width * scale)),
-            std::max(1, (int)std::lround(img->height * scale))
-        };
-
-        // draw siege icon if city is under siege
-        if (city && city->is_sieged()) {
-            image_desc siege_icon_desc = image_desc_from_name("pharaoh_general/empire_bits_00001");
-            if (siege_icon_desc.pack != PACK_NONE) {
-                const image_t* siege_icon = image_get(siege_icon_desc);
-                if (siege_icon) {
-                    vec2i siege_icon_pos
-                      = draw_pos + vec2i{scaled_img_size.x / 2 - siege_icon->width / 2, -siege_icon->height - 5};
-                    ui::eimage(siege_icon_desc, siege_icon_pos);
-                }
-            }
-        }
-
-        // draw routes! (highlighted path for the selected city is deferred to the end of draw_map)
-        draw_trade_route(city, object_index, false);
-
-        const int letter_height = font_definition_for(FONT_SMALL_PLAIN)->line_height;
-        vec2i text_pos = draw_pos + vec2i{scaled_img_size.x, (scaled_img_size.y - letter_height) / 2};
-
-        tooltip_text = city->name_str;
-
-        switch (obj.text_align) {
-        case 0:
-            ui::label_colored(tooltip_text, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj.width);
-            break;
-        case 1:
-            ui::label_colored(tooltip_text, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj.width);
-            break;
-        case 2:
-            ui::label_colored(tooltip_text, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj.width);
-            break;
-        case 3:
-            ui::label_colored(tooltip_text, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj.width);
-            break;
-        }
-
-        // draw "under siege" text if city is under siege
-        if (city && city->is_sieged()) {
-            vec2i siege_text_pos = text_pos + vec2i{0, letter_height + 2};
-            ui::label_colored("under siege", siege_text_pos, FONT_SMALL_PLAIN, COLOR_FONT_RED, obj.width);
-        }
-
-        if (city && city->type != EMPIRE_CITY_OURS
-            && last_mouse_pos.x > draw_pos.x && last_mouse_pos.y > draw_pos.y
-            && last_mouse_pos.x < draw_pos.x + scaled_img_size.x
-            && last_mouse_pos.y < draw_pos.y + scaled_img_size.y) {
-            hovered_object_tooltip = tooltip_text;
-        }
-
-        if (img->animation.speed_id) {
-            int new_animation = g_empire.update_animation(object_index, obj, image_id);
-            const image_t* anim_img = image_get(image_id + new_animation);
-            if (anim_img) {
-                const vec2i anim_offset{
-                    (int)std::lround(img->animation.sprite_offset.x * scale),
-                    (int)std::lround(img->animation.sprite_offset.y * scale)
-                };
-                sprite spr_anim;
-                spr_anim.img = anim_img;
-                ctx.draw(spr_anim, draw_pos + anim_offset, COLOR_MASK_NONE, scale, scale);
-            }
-        }
+        ui.event(empire_window_draw_city{draw_offset, pos, object_index, city_id, obj.text_align, obj.width},
+          get_section(), "draw_map", empire_object_tokens.name(ot));
         return;
+    }
 
-    } else if (obj.type == EMPIRE_OBJECT_TEXT) {
+    if (ot == EMPIRE_OBJECT_TEXT) {
         const full_empire_object* full = g_empire.get_full_object(object_index);
-        vec2i text_pos = map_to_screen(pos);
-
         xstring label;
         if (full && !!full->text_key) {
             label = lang_xtext_from_key(full->text_key);
         } else if (full) {
             label = ui::str(196, full->city_name_id);
         }
-        ui::label_colored(label.c_str(), text_pos - vec2i{5, 0}, FONT_SMALL_PLAIN, COLOR_FONT_SHITTY_BROWN, 100);
+        ui.event(empire_window_draw_text{draw_offset, pos, label}, get_section(), "draw_map",
+          empire_object_tokens.name(ot));
         return;
     }
 
-    if (obj.type == EMPIRE_OBJECT_BATTLE_ICON) {
+    if (ot == EMPIRE_OBJECT_BATTLE_ICON) {
         ui.event(empire_window_draw_battle_icon{draw_offset, pos, image_id, obj.invasion_path_id, obj.invasion_years,
                    object_index},
-          get_section(), "draw_map", empire_object_tokens.name(EMPIRE_OBJECT_BATTLE_ICON));
+          get_section(), "draw_map", empire_object_tokens.name(ot));
         return;
     }
 
-    if (obj.type == EMPIRE_OBJECT_ENEMY_ARMY) {
-        if (g_distant_battle.battle.months_until_battle <= 0)
-            return;
-
-        if (g_distant_battle.enemy_months_traveled() != obj.distant_battle_travel_months)
-            return;
-    }
-
-    if (obj.type == EMPIRE_OBJECT_KINGDOME_ARMY) {
-        if (!g_distant_battle.kingdome_army_is_traveling())
-            return;
-
-        if (city_military_distant_battle_kingdome_months_traveled() != obj.distant_battle_travel_months)
-            return;
-    }
-
-    if (obj.type == EMPIRE_OBJECT_TRADER) {
-        return;
-    }
-
-    {
-        painter ctx = game.painter();
-        const image_t* img = image_get(image_id);
-        if (!img) {
+    if (ot == EMPIRE_OBJECT_ENEMY_ARMY) {
+        if (g_distant_battle.battle.months_until_battle <= 0
+            || g_distant_battle.enemy_months_traveled() != obj.distant_battle_travel_months) {
             return;
         }
-        sprite spr;
-        spr.img = img;
-        ctx.draw(spr, draw_pos, COLOR_MASK_NONE, scale, scale);
-        const vec2i scaled_img_size{
-            std::max(1, (int)std::lround(img->width * scale)),
-            std::max(1, (int)std::lround(img->height * scale))
-        };
-        if (last_mouse_pos.x > draw_pos.x && last_mouse_pos.y > draw_pos.y && last_mouse_pos.x < draw_pos.x + scaled_img_size.x
-            && last_mouse_pos.y < draw_pos.y + scaled_img_size.y) {
-            hovered_object_tooltip = tooltip_text;
-        }
+    }
 
-        if (img && img->animation.speed_id) {
-            int new_animation = g_empire.update_animation(object_index, obj, image_id);
-            const image_t* anim_img = image_get(image_id + new_animation);
-            if (anim_img) {
-                const vec2i anim_offset{
-                    (int)std::lround(img->animation.sprite_offset.x * scale),
-                    (int)std::lround(img->animation.sprite_offset.y * scale)
-                };
-                sprite spr_anim;
-                spr_anim.img = anim_img;
-                ctx.draw(spr_anim, draw_pos + anim_offset, COLOR_MASK_NONE, scale, scale);
-            }
+    if (ot == EMPIRE_OBJECT_KINGDOME_ARMY) {
+        if (!g_distant_battle.kingdome_army_is_traveling()
+            || city_military_distant_battle_kingdome_months_traveled() != obj.distant_battle_travel_months) {
+            return;
         }
     }
+
+    ui.event(empire_window_draw_sprite{draw_offset, pos, image_id, object_index}, get_section(), "draw_map",
+      empire_object_tokens.name(ot));
 }
 
 void empire_window::draw_map() {
@@ -670,6 +583,36 @@ void __empire_window_set_map_bounds(int min_x, int min_y, int max_x, int max_y) 
     g_empire_window.max_pos = {max_x, max_y};
 }
 ANK_FUNCTION_4(__empire_window_set_map_bounds)
+
+void __empire_window_set_hovered_tooltip(pcstr text) {
+    g_empire_window.hovered_object_tooltip = text ? text : "";
+}
+ANK_FUNCTION_1(__empire_window_set_hovered_tooltip)
+
+void __empire_window_draw_city_trade_route(int city_id, int object_index, int force) {
+    g_empire_window.draw_trade_route(g_empire.city(city_id), object_index, force != 0);
+}
+ANK_FUNCTION_3(__empire_window_draw_city_trade_route)
+
+int __empire_update_map_animation(int object_index, int image_id) {
+    const empire_object* obj = g_empire.get_object(object_index);
+    if (!obj || image_id <= 0) {
+        return 0;
+    }
+    return g_empire.update_animation(object_index, *obj, image_id);
+}
+ANK_FUNCTION_2(__empire_update_map_animation)
+
+pcstr __empire_city_display_name(int city_id) {
+    const empire_city* city = g_empire.city(city_id);
+    return (city && city->in_use) ? city->name_str.c_str() : "";
+}
+ANK_FUNCTION_1(__empire_city_display_name)
+
+int __empire_city_image_id(int city_type) {
+    return empire_city_images.image_id((e_empire_city)city_type, scenario_empire_is_expanded());
+}
+ANK_FUNCTION_1(__empire_city_image_id)
 
 vec2i empire_window::map_clip_origin() const {
     return min_pos + start_pos;

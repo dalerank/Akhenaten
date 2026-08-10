@@ -2,6 +2,10 @@ log_info("akhenaten: mission 13 buhen started")
 
 mission13 { // Buhen — Expansion to Nubia
 	map_file : "data/maps/m_013_buhen.map"
+
+	// Map points from data/maps/m_013_buhen.map.
+	herd_points_prey [ [76, 29], [93, 53] ]
+
 	start_message : "message_mission_buhen"
 	selection_title : "Buhen"
 	player_rank : 5

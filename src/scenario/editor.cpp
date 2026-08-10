@@ -73,10 +73,8 @@ void scenario_editor_create(int map_size) {
     g_scenario.invasion_points_sea.assign(MAX_INVASION_POINTS_SEA, tile2i::invalid);
 
     g_scenario.fishing_points.assign(MAX_FISH_POINTS, tile2i::invalid);
-
-    g_scenario.herd_points_animals.assign(MAX_PREDATOR_HERD_POINTS, tile2i::invalid);
-
-    g_scenario.herd_points_prey.assign(MAX_PREY_HERD_POINTS, tile2i::invalid);
+    g_scenario.herd_points_predator.assign(MAX_PREDATOR_HERD_POINTS, herd_point_t{});
+    g_scenario.herd_points_prey.assign(MAX_PREY_HERD_POINTS, herd_point_t{});
 
     g_scenario.events.clear_for_editor();
 

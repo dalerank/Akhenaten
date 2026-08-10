@@ -79,7 +79,7 @@
 #include "widget/widget_top_menu_game.h"
 #include "widget/widget_figure_follow.h"
 #include "window/window_city.h"
-#include "window/file_dialog.h"
+#include "window/file_dialog_common.h"
 #include "game/game_events.h"
 #include "empire/empire.h"
 #include "city/city_warnings.h"
@@ -115,6 +115,14 @@
 
 static pcstr MISSION_PACK_FILE = "mission1.pak";
 
+uint32_t save_data_version() {
+    return latest_save_version;
+}
+
+uint32_t svx_container_version() {
+    return svx::CONTAINER_REV;
+}
+
 vfs::path fullpath_saves(vfs::path filename) {
     if (strncasecmp(filename, "Save/", 5) == 0 || strncasecmp(filename, "Save\\", 5) == 0) {
         return vfs::path(filename);
@@ -127,7 +135,7 @@ vfs::path fullpath_maps(vfs::path filename) {
     if (strncasecmp(filename, "Maps/", 5) == 0 || strncasecmp(filename, "Maps\\", 5) == 0) {
         return filename;
     }
-    return vfs::path( "Maps/", filename.c_str() );
+    return vfs::path(vfs::MAPS_FOLDER, "/", filename.c_str());
 }
 
 static buffer* small_buffer = new buffer(4);
@@ -522,8 +530,15 @@ static void file_schema(e_file_format file_format, const int file_version) {
 
     case FILE_FORMAT_SAVE_FILE_EXT:
         FILEIO.push_chunk(4, false, "scenario_mission_index", iob_scenario_mission_id);
-        FILEIO.push_chunk(4, false, "file_version", iob_file_version);
-        FILEIO.push_chunk(6004, false, "chunks_schema", iob_chunks_schema);
+        if (!FILEIO.is_sectioned()) {
+            // Two dead chunks that only the positional layout needs. file_version is
+            // read into a static nobody uses, and chunks_schema writes 6004 zero bytes
+            // because chunks_in_used is never set. They must keep their slots for old
+            // .svx files - dropping them would shift every following chunk by 6008
+            // bytes - but the container carries the version in its header instead.
+            FILEIO.push_chunk(4, false, "file_version", iob_file_version);
+            FILEIO.push_chunk(6004, false, "chunks_schema", iob_chunks_schema);
+        }
         FILEIO.push_chunk(51984 * 4, false, "image_grid", &io_image_grid::instance());        // (228²) * 4 <<
         FILEIO.push_chunk(51984, false, "edge_grid", iob_edge_grid);                       // (228²) * 1
         FILEIO.push_chunk(103968, false, "building_grid", iob_building_grid);              // (228²) * 2
@@ -645,8 +660,9 @@ static void file_schema(e_file_format file_format, const int file_version) {
             FILEIO.push_chunk(1480, false, "invasion_runtime", iob_invasion_runtime);
         }
         if (file_version > 174) {
+            // 25 chars: a section name must fit svx::NAME_LEN (32)
             FILEIO.push_chunk(BUILDING_STORAGE_EMPTY_ALL_BACKUP_CHUNK_SIZE, false,
-                              "building_storages_empty_all_backup",
+                              "storages_empty_all_backup",
                               iob_building_storages_empty_all_backup);
         }
         if (file_version > 175) {
@@ -702,7 +718,7 @@ bool GamestateIO::write_savegame(pcstr filename_short) {
 
     e_file_format format = get_format_from_file(filename_short);
     assert(format == FILE_FORMAT_SAVE_FILE_EXT);
-    bool save_ok = FILEIO.serialize(full, 0, format, latest_save_version, file_schema);
+    bool save_ok = FILEIO.serialize(full, 0, format, save_data_version(), file_schema);
     if (save_ok) {
         if (!autosave_module_t::is_monthly_filename(filename_short)) {
             game_features::gameopt_last_save_filename = full.c_str();

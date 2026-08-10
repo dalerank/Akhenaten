@@ -9,7 +9,7 @@ log_info("akhenaten: mission 128 alexandria started")
 // pak sea=0 discarded — polylines 20/21 are type=2 sea).
 // Tyre foreign non-trade display. Invasion points SoA-misread as empty in dump —
 // interleaved file values land[93,210] sea[203,125] restored in JS.
-// fishing_points / herd_points_animals: config-only (omit → empty), like invasion_points.
+// fishing_points / herd_points_predator: config-only (omit → empty), like invasion_points.
 // Events: bricks×11/12mo recurring y1m4+; clay flood y6m5+; gold collapse y6m4+;
 // contaminated water y3m9+; beduin×19 y8m0+ recurring (18mo warning, Libyan sprites).
 //
@@ -95,7 +95,7 @@ mission128 { // Alexandria.map — An Alexandrian Affair
 	fishing_points [
 		[41, 98], [83, 47], [145, 90], [157, 139], [133, 150], [49, 157]
 	]
-	herd_points_animals [
+	herd_points_predator [
 		[113, 159], [142, 146], [143, 122], [149, 80]
 	]
 

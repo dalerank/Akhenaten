@@ -75,5 +75,8 @@ void map_copper_init() {
 
 io_buffer* iob_copper = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_terrain_copper);
+}, [](size_t version) {
+    // saves older than this grid carry no ore at all
+    map_grid_clear(g_terrain_copper);
 });
 

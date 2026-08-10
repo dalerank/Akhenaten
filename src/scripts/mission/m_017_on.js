@@ -16,6 +16,11 @@ log_info("akhenaten: mission 17 on started")
 
 mission17 { // On (Heliopolis) — Ivory from the East
 	map_file : "data/maps/m_017_on.map"
+
+	// Map points from data/maps/m_017_on.map.
+	herd_points_predator [ [84, 108], [72, 52], [69, 11] ]
+	herd_points_prey [ [72, 116], [96, 107] ]
+
 	start_message : "message_mission_heliopolis"
 	selection_title : "On"
 	player_rank : 6

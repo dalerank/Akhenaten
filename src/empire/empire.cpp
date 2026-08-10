@@ -136,6 +136,14 @@ void empire_t::load_mission_metadata(const mission_id_t &missionid) {
         }
 
         city.name_str = empire_city::get_display_name(city.name_id);
+
+        if (full_empire_object *full = ref_full_object(city.empire_object_id)) {
+            if (full->obj.type == EMPIRE_OBJECT_CITY) {
+                full->in_use = 1;
+                full->city_name_id = city.name_id;
+                full->city_type = city.type;
+            }
+        }
     }
 }
 

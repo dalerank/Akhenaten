@@ -16,7 +16,6 @@
 #include "game/game_config.h"
 #include "game/cheats.h"
 #include "game/undo.h"
-#include "window/file_dialog.h"
 #include "window/message_dialog.h"
 #include "io/gamestate/boilerplate.h"
 #include "building/construction/build_planner.h"

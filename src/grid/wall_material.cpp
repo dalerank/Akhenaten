@@ -77,4 +77,7 @@ e_building_type wall_building_type_from_material(e_wall_material material) {
 
 io_buffer *iob_wall_material_grid = new io_buffer([](io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_wall_material_grid);
+}, [](size_t version) {
+    // older saves have no material grid; post_load migrates it from terrain bits
+    map_grid_clear(g_wall_material_grid);
 });

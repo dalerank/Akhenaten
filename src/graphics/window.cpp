@@ -27,7 +27,7 @@ static void noop_input(const mouse* m, const hotkeys* h) {
 static void reset_input() {
     mouse::ref().reset_button_state();
     reset_touches(1);
-    scroll_stop();
+    g_scroll.stop();
 }
 
 static void increase_queue_index() {

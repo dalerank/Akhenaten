@@ -2,6 +2,11 @@ log_info("akhenaten: mission 29 sawu started")
 
 mission29 { // Sawu (Mersa Gawasis) — Shores of the Red Sea; briefing key = mersa_gawasis
 	map_file : "data/maps/m_029_sawu.map"
+
+	// Map points from data/maps/m_029_sawu.map.
+	herd_points_predator [ [64, 86], [126, 112] ]
+	fishing_points [ [82, 15], [151, 80], [25, 97] ]
+
 	start_message : "message_mission_mersa_gawasis"
 	selection_title : "Sawu"
 	player_rank : 10

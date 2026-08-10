@@ -2,6 +2,10 @@ log_info("akhenaten: mission 44 ramses in the valley started")
 
 mission44 {
 	map_file : "data/maps/m_044_ramses_in_the_valley.map"
+
+	// Map points from data/maps/m_044_ramses_in_the_valley.map.
+	herd_points_predator [ [213, 113], [212, 105], [79, 52], [102, 86] ]
+
 	start_message : "message_mission_ramses_valley"
 	selection_title : "Ramses in the Valley"
 	player_rank : 6

@@ -48,18 +48,10 @@ tile2i scenario_map_river_exit() {
     return g_scenario.river_exit_point;
 }
 
-void scenario_map_foreach_herd_point(std::function<void(tile2i)> callback) {
-    for (const tile2i &tile : g_scenario.herd_points_animals) {
-        if (tile.valid()) {
-            callback(tile);
-        }
-    }
-}
-
 void scenario_map_foreach_prey_point(std::function<void(tile2i)> callback) {
-    for (const tile2i &tile : g_scenario.herd_points_prey) {
-        if (tile.valid()) {
-            callback(tile);
+    for (const herd_point_t &hp : g_scenario.herd_points_prey) {
+        if (hp.valid()) {
+            callback(hp.tile);
         }
     }
 }

@@ -459,10 +459,10 @@
                 <span></span>
               </li>
               <li>
-                <span class="ev-name">city_animals / create_herds</span>
-                <span class="ev-line">line 83</span>
-                <span class="ev-desc">Clears animals then places two ostrich herds (8 each) at (58,77) and (55,95) with roam area 16.</span>
-                <span class="ev-fn">mission1_register_animals</span>
+                <span class="ev-name">mission config — herd_points_prey</span>
+                <span class="ev-line">mission1</span>
+                <span class="ev-desc">Places two fixed ostrich herds (8 each, roam radius 16) at (67, 84) and (55, 95).</span>
+                <span class="ev-fn">herd_points_prey</span>
                 <span></span>
               </li>
               <li>
@@ -541,7 +541,7 @@
           <div class="details-body">
             <p>The original Pharaoh save file that provides the map layout, terrain, gold ore deposits, and starting positions for Thinis is:</p>
             <p><span class="file-ref">bin_x64/Missions/mission_01.sav</span></p>
-            <p>This binary file is loaded by the engine before the JS script runs. It encodes the tile map, Nile course, gold deposit positions, and the kingdom road entry point. Ostrich herds are placed from JS via <code>mission1_register_animals</code> (<code>city_animals</code> / <code>create_herds</code>). To replace the map entirely, swap the <code>.sav</code> file; the JS script will still apply on top of it.</p>
+            <p>This binary file is loaded by the engine before the JS script runs. It encodes the tile map, Nile course, gold deposit positions, and the kingdom road entry point. Ostrich herds come from <code>herd_points_prey</code> in the mission config. To replace the map entirely, swap the <code>.sav</code> file; the JS script will still apply on top of it.</p>
             <p>The scripting system is loaded from <span class="file-ref">src/scripts/missions.js</span>, which imports <code>mission_1_thinis.js</code> by path. If you rename or move the file, update the import there.</p>
           </div>
         </details>

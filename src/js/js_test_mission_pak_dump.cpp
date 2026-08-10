@@ -172,29 +172,33 @@ static void dump_map_points() {
     dump_tile("pak_earthquake", g_scenario.earthquake_point);
 
     int herd_n = 0;
-    for (int i = 0; i < (int)g_scenario.herd_points_animals.size(); i++) {
-        tile2i t = g_scenario.herd_points_animals[i];
-        if (!t.valid()) {
+    for (int i = 0; i < (int)g_scenario.herd_points_predator.size(); i++) {
+        const herd_point_t &hp = g_scenario.herd_points_predator[i];
+        if (!hp.valid()) {
             continue;
         }
-        e_figure_type ft = (i < MAX_PREDATOR_HERD_POINTS) ? g_scenario.herd_type_animals[i] : FIGURE_NONE;
         dump_marker("pak_herd:i=%d|x=%d|y=%d|type=%d(%s)",
             i,
-            t.x(),
-            t.y(),
-            (int)ft,
-            safe_token(e_figure_type_tokens.name(ft)));
+            hp.tile.x(),
+            hp.tile.y(),
+            (int)hp.type,
+            safe_token(e_figure_type_tokens.name(hp.type)));
         herd_n++;
     }
     dump_marker("pak_herd_count:%d", herd_n);
 
     int prey_n = 0;
     for (int i = 0; i < (int)g_scenario.herd_points_prey.size(); i++) {
-        tile2i t = g_scenario.herd_points_prey[i];
-        if (!t.valid()) {
+        const herd_point_t &hp = g_scenario.herd_points_prey[i];
+        if (!hp.valid()) {
             continue;
         }
-        dump_marker("pak_prey:i=%d|x=%d|y=%d", i, t.x(), t.y());
+        dump_marker("pak_prey:i=%d|x=%d|y=%d|type=%d(%s)",
+            i,
+            hp.tile.x(),
+            hp.tile.y(),
+            (int)hp.type,
+            safe_token(e_figure_type_tokens.name(hp.type)));
         prey_n++;
     }
     dump_marker("pak_prey_count:%d", prey_n);
@@ -1105,6 +1109,88 @@ static int __test_dump_scenario_events() {
     return 1;
 }
 ANK_FUNCTION(__test_dump_scenario_events);
+
+// Compact herd/prey/fishing point dump for porting map points into mission JS.
+static void dump_herd_points(int scenario_id) {
+    auto join_herd_points = [](char *out, size_t out_sz, const auto &points) {
+        out[0] = 0;
+        size_t used = 0;
+        for (const herd_point_t &hp : points) {
+            if (!hp.valid()) {
+                continue;
+            }
+            const int w = snprintf(out + used, out_sz - used, "%s[%d, %d]", used ? ", " : "", hp.tile.x(),
+                                   hp.tile.y());
+            if (w <= 0 || used + (size_t)w >= out_sz) {
+                break;
+            }
+            used += (size_t)w;
+        }
+    };
+    auto join_tiles = [](char *out, size_t out_sz, const auto &points) {
+        out[0] = 0;
+        size_t used = 0;
+        for (const tile2i &t : points) {
+            if (!t.valid()) {
+                continue;
+            }
+            const int w = snprintf(out + used, out_sz - used, "%s[%d, %d]", used ? ", " : "", t.x(), t.y());
+            if (w <= 0 || used + (size_t)w >= out_sz) {
+                break;
+            }
+            used += (size_t)w;
+        }
+    };
+
+    char predator[256];
+    char prey[256];
+    char fish[512];
+    join_herd_points(predator, sizeof predator, g_scenario.herd_points_predator);
+    join_herd_points(prey, sizeof prey, g_scenario.herd_points_prey);
+    join_tiles(fish, sizeof fish, g_scenario.fishing_points);
+
+    char types[128] = {0};
+    size_t tused = 0;
+    for (size_t i = 0; i < g_scenario.herd_points_predator.size(); i++) {
+        const int w = snprintf(types + tused, sizeof types - tused, "%s%d", tused ? "," : "",
+                               (int)g_scenario.herd_points_predator[i].type);
+        if (w <= 0 || tused + (size_t)w >= sizeof types) {
+            break;
+        }
+        tused += (size_t)w;
+    }
+
+    dump_marker("herd_dump:id=%d|climate=%s|animals_flag=%d|alt_predator=%d|types=%s", scenario_id,
+                climate_name(g_scenario.climate), g_scenario.env.has_animals ? 1 : 0,
+                g_scenario.alt_predator_type ? 1 : 0, types[0] ? types : "-");
+    dump_marker("herd_dump_predator:id=%d|%s", scenario_id, predator[0] ? predator : "-");
+    dump_marker("herd_dump_prey:id=%d|%s", scenario_id, prey[0] ? prey : "-");
+    dump_marker("herd_dump_fish:id=%d|%s", scenario_id, fish[0] ? fish : "-");
+}
+
+static int __test_mission_herd_dump(int scenario_id) {
+    if (g_args.no_resource()) {
+        dump_marker("herd_dump_skipped:no_resource");
+        return 0;
+    }
+    if (!GamestateIO::load_mission_pak_raw(scenario_id)) {
+        dump_marker("herd_dump_fail:%d", scenario_id);
+        return 0;
+    }
+    dump_herd_points(scenario_id);
+    return 1;
+}
+ANK_FUNCTION_1(__test_mission_herd_dump);
+
+static int __test_mission_map_herd_dump(int scenario_id, pcstr map_path) {
+    if (!map_path || !map_path[0] || !GamestateIO::load_mission_map_raw(scenario_id, map_path)) {
+        dump_marker("herd_dump_fail:%d", scenario_id);
+        return 0;
+    }
+    dump_herd_points(scenario_id);
+    return 1;
+}
+ANK_FUNCTION_2(__test_mission_map_herd_dump);
 
 static void dump_bridge_allow_summary(int scenario_id, pcstr src) {
     const int16_t bridge = g_scenario.pak_editor_allow_flag(scenario_data_t::EDITOR_ALLOW_SLOT_BRIDGE);

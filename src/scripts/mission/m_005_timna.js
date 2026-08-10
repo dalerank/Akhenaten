@@ -5,6 +5,10 @@ log_info("akhenaten: mission 5 timna started")
 
 mission5 { // Timna
 	map_file : "data/maps/m_005_timna.map"
+
+	// Map points from data/maps/m_005_timna.map.
+	herd_points_prey [ [82, 96] ]
+
 	start_message : "message_history_military"
 	selection_title : "Timna"
 	env {

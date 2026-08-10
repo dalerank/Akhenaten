@@ -57,7 +57,6 @@ function floods_ui_format_next_line(quality, month) {
 }
 
 // Nilometer expected_month is early/late Jun–Sep half-index (0–7).
-// Farm flood_info appends group 44:180+half ("Early June" … "Late September").
 function floods_expected_half_month(month_half) {
     var m = (month_half !== undefined && month_half !== null) ? month_half : city.floods.expected_month()
     if (m < 0) {
@@ -69,8 +68,12 @@ function floods_expected_half_month(month_half) {
     return m | 0
 }
 
+// Farm flood_info uses plain calendar months (group 160), same as OG / #572.
+// Half 0–1→June … 6–7→September.
 function floods_ui_format_farm_flood_month(month_half) {
-    return __loc(44, 180 + floods_expected_half_month(month_half))
+    var half = floods_expected_half_month(month_half)
+    var month = 5 + Math.floor(half / 2)
+    return __loc(160, month)
 }
 
 function floods_ui_phase_key(state) {

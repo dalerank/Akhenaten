@@ -6,7 +6,7 @@ Bridge between game C++ and embedded MuJS scripts (`src/scripts/`).
 
 Ghost preview for buildings is increasingly implemented in JS
 (`[es=(building_*, ghost_preview)]`). Shared paint entry points live on
-`city.planner` (`src/scripts/city/planner.js` → `src/js/city_planner_js.cpp`).
+`city_planner` (`src/scripts/city/planner.js` → `src/js/city_planner_js.cpp`).
 
 **Conventions** (full detail: `src/building/CLAUDE.md` → «JS ghost_preview / placement draw APIs»):
 

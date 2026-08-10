@@ -66,10 +66,6 @@ function empire_window_draw_trade_resource_row(offset, flags, resource, tradeNow
     var ox = offset.x
     var oy = offset.y
     ui.resource_icon_flags({ x: ox + 1, y: oy + 1 }, resource, UiFlags_Outline)
-    var clicked = ui.button({text:"", pos[ox - 2, oy - 2], size[105, 24], font:FONT_SMALL_PLAIN, body:false, tooltip:__loc(23, resource)})
-    if (clicked == ui.button_clicked) {
-        show_trade_resource_settings_window(resource)
-    }
 
     var text = "0"
     if (tradeNow < 0) {
@@ -78,7 +74,10 @@ function empire_window_draw_trade_resource_row(offset, flags, resource, tradeNow
         text = String(tradeNow) + " " + __loc(47, 12) + " " + String(tradeMax)
     }
 
-    ui.label(text, { x: ox + 40, y: oy }, font)
+    var clicked = ui.button({text:text, pos[ox - 2, oy - 2], size[105, 24], font:font, flags: UiFlags_NoBody, tooltip:__loc(23, resource)})
+    if (clicked == ui.button_clicked) {
+        show_trade_resource_settings_window(resource)
+    }
     var img = null
     switch (tradeMax) {
     case 1500:
@@ -260,6 +259,7 @@ function empire_window_confirm_open_trade() {
     }
 
     city.is_open = true
+    city.empire_object.trade_route_open = 1
     emit event_finance_request{ type: efinance_request_construction, deben: city.cost_to_open }
     emit event_show_window{ id: "trade_opened_window" }
 }
@@ -388,6 +388,110 @@ function empire_window_es_draw_city_buy_items(window) {
         }
     }
  }
+
+function empire_window_city_image(type) {
+    var tid = __empire_city_image_id(type)
+    if (tid <= 0) {
+        return null
+    }
+    return get_image({ tid: tid })
+}
+
+function empire_window_draw_map_animation(object_index, img, draw_pos, scale) {
+    if (!img || !img.animation_speed_id) {
+        return
+    }
+    var frame = __empire_update_map_animation(object_index, img.tid)
+    var anim = get_image({ tid: img.tid + frame })
+    if (!anim) {
+        return
+    }
+    ui.image_scaled(anim, {
+        x: draw_pos.x + Math.round((img.animation_offset_x || 0) * scale),
+        y: draw_pos.y + Math.round((img.animation_offset_y || 0) * scale)
+    }, scale)
+}
+
+[es=(empire_window, draw_map, EMPIRE_OBJECT_CITY)]
+function empire_window_draw_city(ev) {
+    var city = empire.get_city(ev.city_id)
+    if (!city) {
+        return
+    }
+
+    var img = empire_window_city_image(city.type)
+    if (!img) {
+        return
+    }
+
+    var scale = empire_window_map_scale()
+    var draw_pos = empire_window_map_point(ev.draw_offset, ev.pos)
+    ui.image_scaled(img, draw_pos, scale)
+
+    var scaled_w = Math.max(1, Math.round(img.width * scale))
+    var scaled_h = Math.max(1, Math.round(img.height * scale))
+    var name = __empire_city_display_name(ev.city_id)
+
+    if (city.is_sieged) {
+        var siege = get_image("pharaoh_general/empire_bits_00001")
+        if (siege) {
+            ui.image(siege, {
+                x: draw_pos.x + ((scaled_w / 2 - siege.width / 2) | 0),
+                y: draw_pos.y - siege.height - 5
+            })
+        }
+    }
+
+    __empire_window_draw_city_trade_route(ev.city_id, ev.object_index, 0)
+
+    var letter_h = 11
+    var text_pos = {
+        x: draw_pos.x + scaled_w,
+        y: draw_pos.y + (((scaled_h - letter_h) / 2) | 0)
+    }
+    ui.label_colored(name, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED)
+
+    if (city.is_sieged) {
+        ui.label_colored("under siege", { x: text_pos.x, y: text_pos.y + letter_h + 2 }, FONT_SMALL_PLAIN, COLOR_FONT_RED)
+    }
+
+    if (city.type != EMPIRE_CITY_OURS
+        && __mouse.x > draw_pos.x && __mouse.y > draw_pos.y
+        && __mouse.x < draw_pos.x + scaled_w && __mouse.y < draw_pos.y + scaled_h) {
+        __empire_window_set_hovered_tooltip(name)
+    }
+
+    empire_window_draw_map_animation(ev.object_index, img, draw_pos, scale)
+}
+
+[es=(empire_window, draw_map, EMPIRE_OBJECT_TEXT)]
+function empire_window_draw_text(ev) {
+    var sp = empire_window_map_point(ev.draw_offset, ev.pos)
+    ui.label_colored(ev.label, { x: sp.x - 5, y: sp.y }, FONT_SMALL_PLAIN, COLOR_FONT_SHITTY_BROWN)
+}
+
+function empire_window_draw_sprite_object(ev) {
+    if (!ev.image_id) {
+        return
+    }
+    var img = get_image({ tid: ev.image_id })
+    if (!img) {
+        return
+    }
+    var scale = empire_window_map_scale()
+    var draw_pos = empire_window_map_point(ev.draw_offset, ev.pos)
+    ui.image_scaled(img, draw_pos, scale)
+    empire_window_draw_map_animation(ev.object_index, img, draw_pos, scale)
+}
+
+[es=(empire_window, draw_map, EMPIRE_OBJECT_ORNAMENT)]
+function empire_window_draw_ornament(ev) { empire_window_draw_sprite_object(ev) }
+
+[es=(empire_window, draw_map, EMPIRE_OBJECT_KINGDOME_ARMY)]
+function empire_window_draw_kingdome_army(ev) { empire_window_draw_sprite_object(ev) }
+
+[es=(empire_window, draw_map, EMPIRE_OBJECT_ENEMY_ARMY)]
+function empire_window_draw_enemy_army(ev) { empire_window_draw_sprite_object(ev) }
 
 /** Sprites along one segment (spacing matches former C++ trade route / distant battle path). */
 function empire_window_route_segment_sprites(img, p1, p2) {

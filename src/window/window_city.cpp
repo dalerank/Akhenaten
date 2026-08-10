@@ -1,4 +1,4 @@
-﻿#include "window_city.h"
+#include "window_city.h"
 
 #include "overlays/city_overlay.h"
 #include "building/construction/build_planner.h"
@@ -25,7 +25,6 @@
 #include "widget/widget_city.h"
 #include "widget/widget_figure_follow.h"
 #include "window/window_advisors.h"
-#include "window/file_dialog.h"
 #include "graphics/elements/ui.h"
 #include "input/scroll.h"
 
@@ -92,7 +91,7 @@ bool window_city_draw_construction_cost_and_size() {
         return false;
     }
 
-    if (scroll_in_progress()) {
+    if (g_scroll.in_progress()) {
         return false;
     }
 

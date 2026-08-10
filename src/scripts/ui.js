@@ -61,6 +61,7 @@ import ui_advisor_monuments
 import ui_labor_priority_window
 import ui_window_features
 import ui_hotkey_config_window
+import ui_hotkey_editor_window
 import ui_file_dialog_common
 import ui_file_dialog_save
 import ui_file_dialog_load
@@ -81,6 +82,7 @@ import ui_invasion_quick_battle_window
 import ui_resource_settings_window
 import ui_police_station_window
 import ui_recruiter_window
+import ui_milacademy_info_window
 import ui_tower_window
 import ui_message_dialog
 import ui_display_options_window

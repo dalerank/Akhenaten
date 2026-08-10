@@ -332,7 +332,8 @@ int ui::message_dialog_base::get_message_image_id(const lang_message& msg) {
         // message id = 0 ==> "about": fixed image position
         return image_id_from_group(PACK_UNLOADED, 25);
     } else {
-        return image_id_from_group(GROUP_MESSAGE_IMAGES) + msg.image.id - 1;
+        const int base = image_id_from_group(GROUP_MESSAGE_IMAGES);
+        return base < 0 ? 0 : (base + msg.image.id - 1);
     }
 }
 

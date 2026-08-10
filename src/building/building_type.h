@@ -379,6 +379,7 @@ enum e_house_level {
     HOUSE_PALATIAL_ESTATE = 19,
 	HOUSE_LEVEL_MAX = 20,
 };
+extern const token_holder<e_house_level, HOUSE_CRUDE_HUT, HOUSE_LEVEL_MAX> e_house_level_tokens;
 
 enum e_damage_type : uint8_t {
 	// origin game types

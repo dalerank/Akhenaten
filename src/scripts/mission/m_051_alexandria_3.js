@@ -92,7 +92,7 @@ mission51 { // Cleopatra's Alexandria - The Legacy of a Queen
 	fishing_points [
 		[80, 37], [115, 10], [127, 22], [89, 39], [104, 16]
 	]
-	herd_points_animals [ [176, 150], [75, 179], [69, 152] ]
+	herd_points_predator [ [176, 150], [75, 179], [69, 152] ]
 
 	hide_pak_burial : true
 	burial_provisions [

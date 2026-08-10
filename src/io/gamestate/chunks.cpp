@@ -8,7 +8,7 @@
 
 static int file_version;
 io_buffer* iob_file_version = new io_buffer([](io_buffer* iob, size_t version) {
-    file_version = latest_save_version;
+    file_version = save_data_version();
     iob->bind(BIND_SIGNATURE_INT32, &file_version);
 });
 

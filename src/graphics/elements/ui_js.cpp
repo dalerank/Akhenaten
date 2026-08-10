@@ -29,6 +29,7 @@
 #include "core/flat_map.h"
 #include "game/game.h"
 #include "graphics/image.h"
+#include "graphics/painter.h"
 #include "graphics/elements/ui_scope_property.h"
 #include "graphics/elements/arrow_button.h"
 #include "input/mouse.h"
@@ -51,6 +52,18 @@ void __ui_draw_image(int imgid, vec2i pos) {
     ui::eimage(imgid, pos);
 }
 ANK_FUNCTION_2(__ui_draw_image);
+
+void __ui_draw_image_scaled(int imgid, vec2i pos, float scale) {
+    const image_t* img = image_get(imgid);
+    if (!img) {
+        return;
+    }
+    painter ctx = game.painter();
+    sprite spr;
+    spr.img = img;
+    ctx.draw(spr, pos, COLOR_MASK_NONE, scale, scale);
+}
+ANK_FUNCTION_3(__ui_draw_image_scaled);
 
 void __ui_panel(vec2i pos, vec2i size, int flags) {
     ui::panel(pos, size, (UiFlags)flags);
@@ -140,13 +153,16 @@ int ANK_FUNCTION_UNIFIED(__ui_draw_button)(const bvariant_map &args) {
     const xstring tooltip = args.s("tooltip");
 
     int flags = args.int32_or_def("flags", 0);
-    // Only disable the border/body when the flag is explicitly the bool false.
-    // Several button configs pass these keys as non-bool (e.g. body:"" or border:3),
-    // and as_bool() throws bad_variant_access on a non-bool variant -> hard crash.
+    // Disable border/body only when explicitly false (bool or 0). Other types
+    // (e.g. body:"" or border:3) keep the default chrome.
     const auto border = args["border"];
-    flags |= (border.is_bool() && !border.as_bool() ? UiFlags_NoBorder : 0);
+    if ((border.is_bool() && !border.as_bool()) || (border.is_int32() && border.as_int32() == 0)) {
+        flags |= UiFlags_NoBorder;
+    }
     const auto body = args["body"];
-    flags |= (body.is_bool() && !body.as_bool() ? UiFlags_NoBody : 0);
+    if ((body.is_bool() && !body.as_bool()) || (body.is_int32() && body.as_int32() == 0)) {
+        flags |= UiFlags_NoBody;
+    }
 
     const bool is_underlying = g_window_manager.underlying_windows_redrawing > 0;
     flags |= is_underlying ? UiFlags_Readonly : UiFlags_None;

@@ -323,7 +323,7 @@ bool editor_map_meta_write(pcstr map_path) {
     vfs::path meta = editor_map_meta_path(map_path);
     FILE *fp = vfs::file_open_os(meta.c_str(), "wb");
     if (!fp) {
-        vfs::create_folders("Maps");
+        vfs::create_folders(vfs::MAPS_FOLDER);
         fp = vfs::file_open_os(meta.c_str(), "wb");
     }
     if (!fp) {

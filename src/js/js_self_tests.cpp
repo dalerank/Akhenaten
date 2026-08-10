@@ -87,4 +87,10 @@ void mujs_run_self_tests(js_State *J)
         "(function(){ function two_writes(){ __mujs_self_test_cptr.u8_a = 7; var x = 42; "
         "__mujs_self_test_cptr.u8_b = x; } two_writes(); "
         "return __mujs_self_test_cptr.u8_a === 7 && __mujs_self_test_cptr.u8_b === 42; })()");
+    /* defineProperty setter must win over leftover JS_CPTR cell (finance tax_percentage). */
+    mujs_self_test_js(J, "cptr_accessor_setter_precedence",
+        "(function(){ var seen = -1; Object.defineProperty(__mujs_self_test_cptr, 'u8_a', {"
+        " set: function(v) { seen = v; __mujs_self_test_cptr.u8_b = v; } });"
+        " __mujs_self_test_cptr.u8_a = 9;"
+        " return seen === 9 && __mujs_self_test_cptr.u8_b === 9; })()");
 }

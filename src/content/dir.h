@@ -27,6 +27,7 @@ struct dir_listing {
 namespace vfs {
 
 constexpr pcstr SAVE_FOLDER = "Save";
+constexpr pcstr MAPS_FOLDER = "Maps";
 constexpr pcstr SCRIPTS_FOLDER = "Scripts";
 constexpr pcstr content_audio = "AUDIO/";
 

@@ -38,7 +38,6 @@ function festival_square_info_window_init(window) {
 
 [es=(festival_square_info_window, ui_draw_foreground)]
 function festival_square_info_window_ui_draw_foreground(window) {
-    log_info("akhenaten: festival square info window ui draw foreground")
     if (!festival_square_info_window.needs_sync) {
         return
     }

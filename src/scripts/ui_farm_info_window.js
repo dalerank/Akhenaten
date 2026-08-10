@@ -7,6 +7,11 @@ function farm_info_window_format_progress_desc(b, farm) {
         + __loc(b.meta_text_id, 12) + " " + fertility + "% " + __loc(b.meta_text_id, 13)
 }
 
+function farm_info_window_workers_desc(window) {
+    return window.workers_desc
+        || (window.inner_panel && window.inner_panel.workers_desc)
+}
+
 [es=building_info_window]
 info_window_farm {
     related_buildings [
@@ -22,11 +27,11 @@ info_window_farm {
     ui : baseui(building_info_window, {
         background    : outer_panel({size: [29, 19]}),
         resource      : resource_icon({ pos:[10, 10], prop:"${building.output_resource}" }),
-        workers_desc  : text({ pos: [70, 116], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(23) }),
-        farm_desc     : text({ pos: [32, 40], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(26), multiline:true }),
-        farm_state    : text({ pos: [32, 186], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true }),
-        flood_info    : text({ pos: [32, 206], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        progress_desc : text({ pos: [32, 226], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+        progress_desc : text({ pos: [32, 40], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+        labor_status  : text({ pos: [32, 66], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(26), multiline:true }),
+        flood_info    : text({ pos: [32, 186], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+        farm_state    : text({ pos: [32, 206], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true }),
+        farm_desc     : text({ pos: [32, 226], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(26), multiline:true }),
         basin_info    : text({ pos: [32, 246], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(26), multiline:true }),
     })
 }
@@ -36,22 +41,28 @@ function info_window_farm_on_init(window) {
     var b = city.get_building(window.bid)
     var gid = b.meta_text_id
     var on_floodplain = terrain.is(b.tile, TERRAIN_FLOODPLAIN)
-    var reason = { group: gid, id: 0 }
-    if (!b.num_workers) {
-        // Floodplain farms need Work Camp laborers (177:5); meadow uses crop-group id 5.
-        reason = on_floodplain ? { group: 177, id: 5 } : { group: gid, id: 5 }
-    } else {
-        if (!b.has_road_access) {
-            reason = { key: "#building_no_road_access" }
-        } else if (__city_resource_is_mothballed(b.output_resource_id)) {
-            reason.id = 4
-        } else if (b.curse_days_left > 4) {
-            reason.id = 11
-        } else {
-            reason.id = Math.approximate_value(b.worker_percentage / 100.0, [10, 9, 8, 7, 6])
-        }
+    if (window.warning_text) {
+        window.warning_text.text = ""
     }
-    window.workers_desc.text = __loc(reason)
+    var labor_reason = { group: gid, id: 0 }
+    if (!b.num_workers) {
+        labor_reason.id = 5
+    } else if (!b.has_road_access) {
+        labor_reason = { key: "#building_no_road_access" }
+    } else if (__city_resource_is_mothballed(b.output_resource_id)) {
+        labor_reason.id = 4
+    } else if (b.curse_days_left > 4) {
+        labor_reason.id = 11
+    } else {
+        labor_reason.id = Math.approximate_value(b.worker_percentage / 100.0, [10, 9, 8, 7, 6])
+    }
+    window.labor_status.text = __loc(labor_reason)
+
+    var wdesc = farm_info_window_workers_desc(window)
+    if (wdesc) {
+        // Floodplain farms with no staff show Work Camp hint inside the employee panel.
+        wdesc.text = (!b.num_workers && on_floodplain) ? __loc(177, 5) : ""
+    }
 
     var farm = city.get_farm(window.bid)
     if (!farm) {
@@ -80,7 +91,8 @@ function info_window_farm_on_init(window) {
             window.basin_info.text = ""
         }
     } else {
-        window.flood_info.text = ""
+        var next_month = building_farm_next_harvest_month(b.id)
+        window.flood_info.text = __loc(gid, 14) + " " + __loc(160, next_month)
         window.basin_info.text = ""
     }
 }

@@ -180,10 +180,16 @@ void map_bridge_migrate_from_sprite() {
     }
 }
 
+// Both bridge grids default to empty: saves older than v171 keep bridges in the
+// sprite grid, and map_bridge_migrate_from_sprite() rebuilds them during post_load.
 io_buffer *iob_bridge_part_grid = new io_buffer([] (io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_bridge_part_grid);
+}, [] (size_t version) {
+    map_grid_clear(g_bridge_part_grid);
 });
 
 io_buffer *iob_bridge_type_grid = new io_buffer([] (io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_bridge_type_grid);
+}, [] (size_t version) {
+    map_grid_clear(g_bridge_type_grid);
 });

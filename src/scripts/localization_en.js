@@ -1306,6 +1306,8 @@ localization_en = [
   { key: "#mission2_pottery_step2", text: "Beautify your city, then review the Mission Briefing" }
 
   { key: "#mission3_brew_beer", text: "Brew some beer for Bazaars to distribute" }
+  { key: "#reach_modest_houses_number", text: "Evolve 10 houses to Modest Homestead" }
+  { key: "#build_tax_collector", text: "Build a Tax Collector" }
 
   { key: "#market_buyer_returning_to", text: "Returning to" }
   { key: "#market_buyer_collecting", text: "Collecting" }
@@ -1313,6 +1315,15 @@ localization_en = [
   { key: "#tutorial_goal_education", text: "Make a house evolve into a 'spacious apartment'" }
   { key: "#tutorial_goal_scribal_school", text: "Make some papyrus and build a Scribal School" }
   { key: "#tutorial_goal_import_bricks", text: "Import some bricks so that you can build a mastaba" }
+
+  { key: "#mission4_goal_spacious_apartment", text: "1/4 Evolve a house into a Spacious Apartment (food, water, pottery, entertainment)" }
+  { key: "#mission4_goal_reed_gatherer", text: "2/4 Build a Reed Gatherer near marshland" }
+  { key: "#mission4_goal_papyrus_maker", text: "2/4 Build a Papyrus Maker and supply it with reeds" }
+  { key: "#mission4_goal_scribal_school", text: "2/4 Build a Scribal School, then store 100 papyrus in a Yard" }
+  { key: "#mission4_goal_store_papyrus", text: "2/4 Store 100 papyrus in a Storage Yard to unlock trade" }
+  { key: "#mission4_goal_import_bricks", text: "3/4 Perwadjyt (300 db) sells bricks only — import 100. Nekhen (550) buys papyrus" }
+  { key: "#mission4_goal_build_mastaba", text: "4/4 Build a Bricklayers' Guild and place a Small Mastaba" }
+  { key: "#mission4_goal_export_papyrus", text: "Open Nekhen (550 db), export papyrus, then hit ratings (1500 / 15 / 20 / 9 / 40)" }
 
   { key: "#none", text: "Nothing" }
   { key: "#grain", text: "Grain" }

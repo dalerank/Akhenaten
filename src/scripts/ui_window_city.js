@@ -38,7 +38,7 @@ function window_city_on_save_city(ev) {
         game_toast_ironwill_save_blocked()
         return
     }
-    window_file_dialog_save_show()
+    window_show_by_id("file_dialog_save")
 }
 
 [es=event_load_city]
@@ -50,7 +50,7 @@ function window_city_on_load_city(ev) {
         game_toast_ironwill_load_blocked()
         return
     }
-    window_file_dialog_load_show()
+    window_show_by_id("file_dialog_load")
 }
 
 // Single-slot quicksave. Ironwill: game_allows_player_save() / midgame load gate.

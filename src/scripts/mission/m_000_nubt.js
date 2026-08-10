@@ -2,6 +2,12 @@ log_info("akhenaten: mission 0 nubt started")
 
 mission0 { // Nubt
 	map_file : "data/maps/m_000_nubt.map"
+
+	// Tutorial hunt: fixed ostrich count (not climate roll). Tile from data/maps/m_000_nubt.map.
+	herd_points_prey [
+		{ tile: [44, 58], type: FIGURE_OSTRICH, count: 8, radius: 16 }
+	]
+
 	start_message : "message_housing_and_roads"
 	selection_title : "Nubt"
 	env {
@@ -50,6 +56,14 @@ mission0 { // Nubt
 		last_action_time : 0
 		start_message_shown : false
 	}
+
+	goal_tooltip: function() {
+		if (mission.tutorial_granary_opened) {
+			return "#mission0_goal_build_granary"
+		}
+
+		return "#mission0_goal_create_housing"
+	}
 }
 
 [es=event_mission_start, mission=mission0]
@@ -71,15 +85,6 @@ function mission0_on_start(ev) {
 	city.use_building(BUILDING_WATER_SUPPLY, mission.tutorial_gamemeat_stored)
 
 	migration.set_population_cap("first_mission_population_cap", mission.population_cap)
-	city.goal_tooltip = mission0_get_goal_tooltip
-}
-
-[es=(city_animals, create_herds), mission=mission0]
-function mission0_register_animals(ev) {
-	city.remove_animals()
-
-	city.add_animals_point(0, /*x*/40, /*y*/60, FIGURE_OSTRICH, 8)
-	city.set_animals_area(0, 16)
 }
 
 [event=event_advance_day, mission=mission0]
@@ -109,14 +114,6 @@ function mission0_handle_fire_event(ev) {
 
 	var house = city.get_random_house()
 	house.add_fire_damage(2000)
-}
-
-function mission0_get_goal_tooltip() {
-	if (mission.tutorial_granary_opened) {
-		return "#mission0_goal_build_granary"
-	}
-
-	return "#mission0_goal_create_housing"
 }
 
 [event=event_fire_damage, mission=mission0]

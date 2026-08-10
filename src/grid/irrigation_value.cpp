@@ -230,5 +230,8 @@ int irrigation_value_t::get_avg(tile2i tile, int size) {
 
 io_buffer* iob_irrigation_value_grid = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_irrigation_value_grid);
+}, [](size_t version) {
+    // recomputed from water sources when the grid is absent
+    map_grid_clear(g_irrigation_value_grid);
 });
 

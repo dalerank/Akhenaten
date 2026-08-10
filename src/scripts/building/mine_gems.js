@@ -7,3 +7,8 @@ function building_mine_gems_on_before_collapse(ev) {
     }
     emit event_finance_request { type: efinance_request_disasters, deben: 250 }
 }
+
+[es=(building_mine_gems, draw_usable_paths)]
+function building_mine_gems_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}

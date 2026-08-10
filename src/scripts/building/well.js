@@ -55,12 +55,12 @@ function building_well_update_month(ev) {
 function building_well_ghost_preview(ev) {
     if (game_features.gameui_show_water_structure_range) {
         var overlay = get_image({ pack: PACK_TERRAIN, id: 21 }).tid
-        var pixels = __camera_tile_range_pixels(city.planner.end, 1, 2)
+        var pixels = __camera_tile_range_pixels(city_planner.end, 1, 2)
         for (var i = 0; i < pixels.length; i++) {
-            city.planner.draw_overlay_tile(pixels[i], overlay, COLOR_MASK_BLUE, 1.0)
+            city_planner.draw_overlay_tile(pixels[i], overlay, COLOR_MASK_BLUE, 1.0)
         }
     }
 
     var params = city.get_building_params_by_type(BUILDING_WELL)
-    city.planner.draw_ghost(ev.pixel, params.preview_image)
+    city_planner.draw_ghost(ev.pixel, params.preview_image)
 }

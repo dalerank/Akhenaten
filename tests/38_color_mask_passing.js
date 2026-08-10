@@ -53,7 +53,7 @@ function run_test() {
     // Exercise the real draw binding (the one J1 changed) with a full mask: it must not
     // raise a MuJS TypeError. draw_flat_tile draws a solid-color tile with no image lookup.
     test_ensure_city_session('data/default.map')
-    city.planner.draw_flat_tile({ x: 100, y: 100 }, COLOR_MASK_GREEN)
+    city_planner.draw_flat_tile({ x: 100, y: 100 }, COLOR_MASK_GREEN)
     __log_marker('color_mask_draw_no_throw_ok')
 
     __test_signal_ready()

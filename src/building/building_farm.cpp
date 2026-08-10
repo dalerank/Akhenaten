@@ -185,8 +185,8 @@ bool building_farm::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     if (is_currently_flooded()) {
         return true;
     }
-    draw_workers(ctx, &base, t, point);
     draw_crops(ctx, type(), progress(), tile(), point, mask);
+    draw_workers(ctx, &base, t, point);
 
     return true;
 }

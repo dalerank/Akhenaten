@@ -2,6 +2,10 @@ log_info("akhenaten: mission 43 abu simbel started")
 
 mission43 {
 	map_file : "data/maps/m_043_abu_simbel.map"
+
+	// Map points from data/maps/m_043_abu_simbel.map.
+	herd_points_predator [ [43, 19], [14, 60] ]
+
 	start_message : "message_mission_abu_simbel"
 	selection_title : "Abu Simbel"
 	player_rank : 5

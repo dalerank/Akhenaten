@@ -1,4 +1,4 @@
-﻿#include "map_editor_tool.h"
+#include "map_editor_tool.h"
 #include <graphics/view/zoom.h>
 
 #include "editor/tool.h"
@@ -6,6 +6,7 @@
 #include "editor/tool_restriction.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "graphics/view/view.h" // screen_tile / map_tile_to_view, no longer via scroll.h
 #include "grid/terrain.h"
 #include "input/scroll.h"
 #include "scenario/scenario.h"
@@ -119,7 +120,7 @@ static void draw_map_flag(int x, int y, int is_ok) {
 }
 
 void map_editor_tool_draw(painter &ctx, tile2i tile) {
-    if (!tile.grid_offset() || scroll_in_progress() || !editor_tool_is_active())
+    if (!tile.grid_offset() || g_scroll.in_progress() || !editor_tool_is_active())
         return;
 
     int type = editor_tool_type();

@@ -88,7 +88,7 @@ function hotkey_config_on_edit_key(ev) {
     var widget = cfg.widgets[ev.param1 + cfg.scroll_position]
     if (!widget || widget.action === cfg.header_action)
         return
-    __hotkey_editor_show(widget.action, ev.param2)
+    hotkey_editor_show(widget.action, ev.param2)
 }
 
 [es=(window_hotkey_config, reset_defaults)]

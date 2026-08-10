@@ -64,7 +64,7 @@ function storage_yard_hut_corner(global_rotation, camera_orientation) {
 function building_storage_yard_ghost_preview(ev) {
     var pixel = ev.pixel
     var params = city.get_building_params_by_type(BUILDING_STORAGE_YARD)
-    var corner = storage_yard_hut_corner(city.planner.global_rotation, __camera.orientation)
+    var corner = storage_yard_hut_corner(city_planner.global_rotation, __camera.orientation)
     var hut_id = params.first_img("base")
     var space_id = get_image(building_storage_yard.preview_space).tid
     var cover = building_storage_yard.animations.cover
@@ -76,13 +76,13 @@ function building_storage_yard_ghost_preview(ev) {
         var off = offsets[i]
         var tile_pixel = { x: pixel.x + off[0], y: pixel.y + off[1] }
         if (i == corner) {
-            city.planner.draw_ghost(tile_pixel, hut_id)
-            city.planner.draw_ghost_overlay(
+            city_planner.draw_ghost(tile_pixel, hut_id)
+            city_planner.draw_ghost_overlay(
                 { x: tile_pixel.x + cover_off[0], y: tile_pixel.y + cover_off[1] },
                 cover_id
             )
         } else {
-            city.planner.draw_ghost(tile_pixel, space_id)
+            city_planner.draw_ghost(tile_pixel, space_id)
         }
     }
 }

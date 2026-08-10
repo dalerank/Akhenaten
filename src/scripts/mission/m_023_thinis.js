@@ -25,6 +25,10 @@ log_info("akhenaten: mission 23 thinis civil-war started")
 
 mission23 { // Thinis — Civil War FIP; != mission1 Dawn
 	map_file : "data/maps/m_023_thinis.map"
+
+	// Map points from data/maps/m_023_thinis.map.
+	herd_points_prey [ [162, 169], [198, 96] ]
+
 	start_message : "message_mission_thinis"
 	selection_title : "Thinis"
 	player_rank : 9

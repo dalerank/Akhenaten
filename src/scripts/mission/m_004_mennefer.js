@@ -202,22 +202,36 @@ mission4 {
 		last_action_time : 0
 		start_message_shown : false
 	}
-}
 
-function mission4_get_goal_tooltip() {
-	if (!mission.spacious_apartment_built) {
-		return "#tutorial_goal_education"
+	goal_tooltip: function() {
+		if (!mission.spacious_apartment_built) {
+			return "#mission4_goal_spacious_apartment"
+		}
+
+		if (!mission.papyrus_made_handled) {
+			if (city.count_total_buildings(BUILDING_REED_GATHERER) < 1) {
+				return "#mission4_goal_reed_gatherer"
+			}
+			if (city.count_total_buildings(BUILDING_PAPYRUS_WORKSHOP) < 1) {
+				return "#mission4_goal_papyrus_maker"
+			}
+			if (city.count_total_buildings(BUILDING_SCRIBAL_SCHOOL) < 1) {
+				return "#mission4_goal_scribal_school"
+			}
+			return "#mission4_goal_store_papyrus"
+		}
+
+		if (!mission.bricks_bought_handled) {
+			return "#mission4_goal_import_bricks"
+		}
+
+		if (city.count_total_buildings(BUILDING_BRICKLAYERS_GUILD) < 1
+			|| city.count_total_buildings(BUILDING_SMALL_MASTABA) < 1) {
+			return "#mission4_goal_build_mastaba"
+		}
+
+		return "#mission4_goal_export_papyrus"
 	}
-
-	if (!mission.papyrus_made_handled) {
-		return "#tutorial_goal_scribal_school"
-	}
-
-	if (!mission.bricks_bought_handled) {
-		return "#tutorial_goal_import_bricks"
-	}
-
-	return ""
 }
 
 function mission4_fire_request(tag, resource, amount, months, ok_tag, fail_tag, late_tag, ok_amt, fail_amt, late_amt) {
@@ -244,6 +258,7 @@ function mission4_on_start(ev) {
 	if (mission.papyrus_made_handled) {
 		city.set_advisor_available(ADVISOR_TRADE, 1)
 		city.use_building(BUILDING_DOCK, true)
+		city.set_empire_available(1)
 	}
 
 	if (mission.spacious_apartment_built) {
@@ -291,7 +306,6 @@ function mission4_handle_spacious_apartment() {
 	city.use_building(BUILDING_SCRIBAL_SCHOOL, true)
 
     ui.popup_message("message_tutorial_education")
-	city.goal_tooltip = mission4_get_goal_tooltip
 }
 
 [event=event_update_victory_state, mission=mission4]

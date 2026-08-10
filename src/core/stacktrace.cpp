@@ -12,7 +12,7 @@
 #endif
 
 static void display_crash_message() {
-    platform_screen_show_error_message_box(
+    g_platform_screen.show_error_message_box(
       "Ozzy has crashed :(",
       "There was an unrecoverable error, which will now close.\n"
       "The piece of code that caused the crash has been saved to akhenaten-log.txt.\n"

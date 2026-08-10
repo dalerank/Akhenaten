@@ -16,7 +16,6 @@
 #include "construction/build_planner.h"
 #include "grid/image.h"
 #include "city/city.h"
-#include "city/city_warnings.h"
 #include "grid/road_access.h"
 #include "grid/orientation.h"
 #include "grid/routing/routing_terrain.h"
@@ -40,171 +39,62 @@ inline void reader<building_decorative_gatehouse::static_params>(archive arch, b
 }
 } // namespace archive_helper
 
-template<typename T>
-const building_gatehouse::gatehouse_params_t &gatehouse_static_params(const building_static_params &params) {
-    using static_params = typename T::static_params;
-    const auto &bparams = (const static_params &)params;
-    return (const building_gatehouse::gatehouse_params_t &)bparams;
-}
-
-const building_gatehouse::gatehouse_params_t &get_gatehouse_params(e_building_type type) {
-    const auto &params = building_static_params::get(type);
-
-    switch (params.type) {
-    case BUILDING_BRICK_GATEHOUSE: return gatehouse_static_params<building_brick_gatehouse>(params);
-    case BUILDING_MUD_GATEHOUSE: return gatehouse_static_params<building_mud_gatehouse>(params);
-    }
-
-    static building_gatehouse::gatehouse_params_t dummy;
-    return dummy;
-};
-
 building_gatehouse::back_tile_orientation building_gatehouse::second_part_tile(build_planner &planer, tile2i end, int city_orientation) {
-    int local_rotation = -1;
-    blocked_tile_vec tmp_tiles;
-    tile2i possible_next, possible_next_w, tile_second_part;
+    struct candidate_t {
+        tile2i tile;
+        int orientation = -1;
+        bool ok = false;
+        bool road = false;
+    };
 
-    uint32_t restricted_terrain = TERRAIN_ALL;
-    restricted_terrain -= TERRAIN_ROAD;
-    bool tmp_blocked;
+    const uint32_t restricted_terrain = TERRAIN_ALL - TERRAIN_ROAD;
+    auto make_candidate = [&] (tile2i tile, int orientation) {
+        candidate_t c;
+        c.tile = tile;
+        c.orientation = orientation;
+        blocked_tile_vec tmp_tiles;
+        c.ok = !planer.is_blocked_for_building(tile, 1, tmp_tiles, restricted_terrain);
+        c.road = c.ok && map_terrain_is(tile, TERRAIN_ROAD);
+        return c;
+    };
 
+    candidate_t first, second;
     switch (city_orientation) {
     case 0:
-        possible_next = end.shifted(0, -1);
-        tmp_tiles.clear();
-        tmp_blocked = !!planer.is_blocked_for_building(possible_next, 1, tmp_tiles, restricted_terrain);
-        if (!tmp_blocked) {
-            local_rotation = 0;
-            tile_second_part = possible_next;
-        }
-
-        possible_next_w = end.shifted(1, 0);
-        tmp_tiles.clear();
-        tmp_blocked = !!planer.is_blocked_for_building(possible_next_w, 1, tmp_tiles, restricted_terrain);
-        if (!tmp_blocked) {
-            local_rotation = 1;
-            tile_second_part = possible_next_w;
-            break;
-        }
+        first = make_candidate(end.shifted(0, -1), 0);
+        second = make_candidate(end.shifted(1, 0), 1);
         break;
-
     case 1:
-        possible_next = end.shifted(0, -1);
-        tmp_tiles.clear();
-        tmp_blocked = !!planer.is_blocked_for_building(possible_next, 1, tmp_tiles, restricted_terrain);
-        if (!tmp_blocked) {
-            local_rotation = 1;
-            tile_second_part = possible_next;
-        }
-
-        possible_next_w = end.shifted(1, 0);
-        tmp_tiles.clear();
-        tmp_blocked = !!planer.is_blocked_for_building(possible_next_w, 1, tmp_tiles, restricted_terrain);
-        if (!tmp_blocked) {
-            local_rotation = 2;
-            tile_second_part = possible_next_w;
-            break;
-        }
+        first = make_candidate(end.shifted(0, -1), 1);
+        second = make_candidate(end.shifted(1, 0), 2);
         break;
-
     case 2:
-        possible_next = end.shifted(0, 1);
-        tmp_tiles.clear();
-        tmp_blocked = !!planer.is_blocked_for_building(possible_next, 1, tmp_tiles, restricted_terrain);
-        if (!tmp_blocked) {
-            local_rotation = 2;
-            tile_second_part = possible_next;
-        }
-
-        possible_next_w = end.shifted(1, 0);
-        tmp_tiles.clear();
-        tmp_blocked = !!planer.is_blocked_for_building(possible_next_w, 1, tmp_tiles, restricted_terrain);
-        if (!tmp_blocked) {
-            local_rotation = 3;
-            tile_second_part = possible_next_w;
-            break;
-        }
+        first = make_candidate(end.shifted(0, 1), 2);
+        second = make_candidate(end.shifted(1, 0), 3);
         break;
-
     case 3:
-        possible_next = end.shifted(0, 1);
-        tmp_tiles.clear();
-        tmp_blocked = !!planer.is_blocked_for_building(possible_next, 1, tmp_tiles, restricted_terrain);
-        if (!tmp_blocked) {
-            local_rotation = 3;
-            tile_second_part = possible_next;
-        }
-
-        possible_next_w = end.shifted(-1, 0);
-        tmp_tiles.clear();
-        tmp_blocked = !!planer.is_blocked_for_building(possible_next_w, 1, tmp_tiles, restricted_terrain);
-        if (!tmp_blocked) {
-            local_rotation = 0;
-            tile_second_part = possible_next_w;
-            break;
-        }
+        first = make_candidate(end.shifted(0, 1), 3);
+        second = make_candidate(end.shifted(-1, 0), 0);
         break;
+    default:
+        return { tile2i(), -1 };
     }
 
-    return { tile_second_part, local_rotation };
-}
-
-void building_gatehouse::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
-    bool fully_blocked = false;
-    bool blocked = false;
-    if (g_city.finance.is_out_of_money()) {
-        fully_blocked = true;
-        blocked = true;
+    const candidate_t *picked = nullptr;
+    if (first.road != second.road) {
+        picked = first.road ? &first : &second;
+    } else if (first.road && second.road) {
+        picked = (building_rotation_get_road_orientation() == 2) ? &second : &first;
+    } else if (second.ok) {
+        picked = &second;
+    } else if (first.ok) {
+        picked = &first;
     }
 
-    uint32_t restricted_terrain = TERRAIN_ALL;
-    restricted_terrain -= TERRAIN_ROAD;
-    
-    const int city_orientation = g_camera.orientation / 2;
-  
-    back_tile_orientation back_tile = building_gatehouse::second_part_tile(planer, end, city_orientation);
-
-    blocked_tile_vec blocked_tiles_main;
-    blocked_tile_vec blocked_tiles_second;
-
-    if (back_tile.orientation >= 0) {
-        blocked |= !!planer.is_blocked_for_building(end, 1, blocked_tiles_main, restricted_terrain);
-        blocked |= !!planer.is_blocked_for_building(back_tile.tile, 1, blocked_tiles_second, restricted_terrain);
-    } else {
-        blocked = true;
-        blocked_tiles_main.clear();
-        blocked_tiles_second.clear();
-        blocked_tiles_main.push_back({ end, true });
-        blocked_tiles_main.push_back({ end.shifted(0, -1), true });
+    if (!picked) {
+        return { tile2i(), -1 };
     }
-
-    const int final_rot = (city_orientation + back_tile.orientation) % 8;
-    const auto &gate_params = get_gatehouse_params(planer.build_type);
-    vec2i main_pixel = pixel + gate_params.ghost.main_view_offset[final_rot];
-    vec2i ground_pixel = pixel + gate_params.ghost.part_view_offset[final_rot];
-
-    if (blocked) {
-        planer.draw_partially_blocked(ctx, fully_blocked, blocked_tiles_main);
-        planer.draw_partially_blocked(ctx, fully_blocked, blocked_tiles_second);
-        return;
-    }
-
-    const auto &params = building_static_params::get(planer.build_type);
-    if (back_tile.orientation == 0 || back_tile.orientation == 2) {
-        int image_id = params.first_img("base_n");
-        int image_sec_id = params.first_img("base_second_n");
-        planer.draw_building_ghost(ctx, image_sec_id, ground_pixel);
-        planer.draw_building_ghost(ctx, image_id, main_pixel);
-    } else {
-        int image_id = params.first_img("base_w");
-        int image_sec_id = params.first_img("base_second_w");
-        planer.draw_building_ghost(ctx, image_sec_id, main_pixel);
-        planer.draw_building_ghost(ctx, image_id, ground_pixel);
-    }
-}
-
-void building_gatehouse::preview::ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel, bool fully_blocked) const {
-    ghost_preview(planer, ctx, start, end, pixel);
+    return { picked->tile, picked->orientation };
 }
 
 void building_gatehouse::on_create(int orientation) {
@@ -424,17 +314,6 @@ void building_gatehouse::on_place(int orientation, int variant) {
     // Update routing for walls and land after placing gatehouse
     map_routing_update_land();
     map_routing_update_walls();
-}
-
-void building_gatehouse::on_place_checks() {
-    building_impl::on_place_checks();
-
-    // Use main part of the building for wall proximity check
-    building *main_building = base.main();
-
-    construction_warnings warnings;
-    const bool near_walls = !map_terrain_is_adjacent_to_wall(main_building->tile.x(), main_building->tile.y(), main_building->size);
-    warnings.add_if(!near_walls, "#warning_shipwright_needed");
 }
 
 void building_gatehouse::spawn_figure() {
@@ -728,58 +607,6 @@ void building_decorative_gatehouse::update_footprint(building &b) {
     }
 }
 
-void building_decorative_gatehouse::preview::setup_preview_graphics(build_planner &planer) const {
-    planer.init_tiles(5, 2);
-}
-
-void building_decorative_gatehouse::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
-    const auto &params = building_static_params::get(planer.build_type);
-
-    int gate_orientation = map_orientation_for_gatehouse(end.x(), end.y());
-    const int layout_orientation = gate_orientation == 1 ? 1 : 0;
-    const tile2i anchor = building_decorative_gatehouse::footprint_anchor(end, layout_orientation);
-
-    blocked_tile_vec blocked_tiles;
-    bool blocked = false;
-    for (int i = 0; i < (int)(sizeof(COMPOSITE_TILES) / sizeof(COMPOSITE_TILES[0])); i++) {
-        const tile2i world_tile = composite_world_tile(anchor, layout_orientation, COMPOSITE_TILES[i]);
-        blocked_tile_vec local_blocked;
-        blocked |= !!planer.is_blocked_for_building(world_tile, 1, local_blocked, TERRAIN_ALL);
-        for (const auto &entry : local_blocked) {
-            blocked_tiles.push_back(entry);
-        }
-    }
-
-    if (gate_orientation == 0) {
-        blocked = true;
-    }
-
-    if (blocked) {
-        planer.draw_partially_blocked(ctx, false, blocked_tiles);
-        return;
-    }
-
-    for (int i = 0; i < (int)(sizeof(COMPOSITE_TILES) / sizeof(COMPOSITE_TILES[0])); i++) {
-        const tile2i world_tile = composite_world_tile(anchor, layout_orientation, COMPOSITE_TILES[i]);
-        const int image_id = params.first_img(COMPOSITE_ANIM_KEYS[i]);
-        tile2i end_tile = end;
-        tile2i draw_tile = world_tile;
-        const vec2i tile_pixel = pixel + draw_tile.to_view() - end_tile.to_view();
-        planer.draw_building_ghost(ctx, image_id, tile_pixel);
-    }
-}
-
-void building_decorative_gatehouse::preview::ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel, bool fully_blocked) const {
-    ghost_preview(planer, ctx, start, end, pixel);
-}
-
-int building_decorative_gatehouse::preview::can_place(build_planner &p, tile2i tile, tile2i end, int state) const {
-    if (map_orientation_for_gatehouse(end.x(), end.y()) == 0) {
-        return CAN_NOT_PLACE;
-    }
-    return state;
-}
-
 void building_decorative_gatehouse::on_create(int orientation) {
     building_impl::on_create(orientation);
 
@@ -795,14 +622,6 @@ void building_decorative_gatehouse::on_place_update_tiles(int orientation, int v
     building_mud_wall::update_all_walls();
     map_routing_update_land();
     map_routing_update_walls();
-}
-
-void building_decorative_gatehouse::on_place_checks() {
-    building_impl::on_place_checks();
-
-    construction_warnings warnings;
-    const bool near_walls = !map_terrain_is_adjacent_to_wall(tile().x(), tile().y(), 5);
-    warnings.add_if(!near_walls, "#warning_shipwright_needed");
 }
 
 void building_decorative_gatehouse::update_map_orientation(int orientation) {
@@ -833,40 +652,6 @@ void building_decorative_gatehouse::spawn_figure() {
     if (!base.has_figure(0)) {
         building_barracks_request_tower_sentry();
     }
-}
-
-void building_tower_gatehouse::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
-    uint32_t restricted_terrain = TERRAIN_ALL;
-    restricted_terrain -= TERRAIN_WALL;
-
-    const auto &params = building_static_params::get(planer.build_type);
-    auto result = map_adjust_building_determine_orientation(end, params.building_size, true, true, BUILDING_MUD_GATEHOUSE);
-
-    blocked_tile_vec blocked_tiles;
-    bool fully_blocked = (!result.match);
-    bool blocked = !!planer.is_blocked_for_building(end, 2, blocked_tiles, restricted_terrain);
-    blocked |= (result.orientation < 0) || fully_blocked;
-
-    if (blocked) {
-        planer.draw_partially_blocked(ctx, fully_blocked, blocked_tiles);
-        return;
-    }
-
-    int image_id = params.base_img();
-    image_id += (result.orientation == 0 || result.orientation == 2) ? 1 : 0;
-    planer.update_tiles_building(image_id);
-
-    building_planer_renderer::ghost_preview(planer, ctx, tile, end, pixel);
-}
-
-void building_tower_gatehouse::preview::ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel, bool fully_blocked) const {
-    ghost_preview(planer, ctx, start, end, pixel);
-}
-
-int building_tower_gatehouse::preview::can_place(build_planner &p, tile2i tile, tile2i end, int state) const {
-    const auto &params = building_static_params::get(p.build_type);
-    auto match = map_adjust_building_determine_orientation(tile, params.building_size, true, true, BUILDING_MUD_GATEHOUSE);
-    return (match.orientation < 0 ? CAN_NOT_PLACE : state);
 }
 
 void building_tower_gatehouse::update_map_orientation(int map_orientation) {

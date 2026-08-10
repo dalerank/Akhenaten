@@ -177,7 +177,15 @@ void figure_impl::figure_roaming_action() {
         break;
 
     case ACTION_126_ROAMER_RETURNING:
-        base.do_returnhome();
+        if (base.do_returnhome()) {
+            building *h = home();
+            if (h && h->params().flags.keeps_visitor_paths) {
+                building *main = h->main();
+                if (main) {
+                    g_recorded_paths.handoff_to_building(base, main->id);
+                }
+            }
+        }
         break;
     }
 }

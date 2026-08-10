@@ -1368,6 +1368,9 @@ io_buffer* iob_city_data_extra = new io_buffer([](io_buffer* iob, size_t version
 
 io_buffer *iob_labor_storage_priority = new io_buffer([](io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &g_city.labor.categories[LABOR_CATEGORY_STORAGE].priority);
+}, [](size_t version) {
+    // before the labor split, STORAGE had no priority of its own
+    g_city.labor.categories[LABOR_CATEGORY_STORAGE].priority = 0;
 });
 
 io_buffer *iob_enhanced_religion = new io_buffer([](io_buffer *iob, size_t version) {
@@ -1392,6 +1395,9 @@ io_buffer *iob_enhanced_religion = new io_buffer([](io_buffer *iob, size_t versi
     iob->bind(BIND_SIGNATURE_UINT8, &lc.reserved_pad[2]);
     // 4*4 + 13 = 29; pad to 64
     iob->bind____skip(35);
+}, [](size_t version) {
+    // pre-Enhanced saves have no local cults and no festival calendar state
+    g_city.local_cults = {};
 });
 
 io_buffer* iob_city_graph_order = new io_buffer([](io_buffer* iob, size_t version) {

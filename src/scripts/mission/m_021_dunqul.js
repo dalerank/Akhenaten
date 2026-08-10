@@ -22,6 +22,11 @@ log_info("akhenaten: mission 21 dunqul started")
 
 mission21 { // Dunqul Oasis — The Kushite Threat
 	map_file : "data/maps/m_021_dunqul.map"
+
+	// Map points from data/maps/m_021_dunqul.map.
+	herd_points_predator [ [104, 128], [158, 80], [52, 45], [80, 76] ]
+	herd_points_prey [ [101, 106], [65, 80], [142, 98] ]
+
 	start_message : "message_mission_dunqul"
 	selection_title : "Dunqul"
 	player_rank : 8

@@ -2,6 +2,10 @@ log_info("akhenaten: mission 30 heh started")
 
 mission30 { // Heh (Semna) — The Gauntlet
 	map_file : "data/maps/m_030_heh.map"
+
+	// Map points from data/maps/m_030_heh.map.
+	herd_points_predator [ [12, 72], [100, 33], [100, 40] ]
+
 	start_message : "message_mission_semna"
 	selection_title : "Heh"
 	player_rank : 10

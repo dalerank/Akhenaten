@@ -77,7 +77,7 @@ mission48 { // Alexandria - Alexander the Great
 	fishing_points [
 		[79, 53], [112, 11], [55, 69], [88, 33], [121, 39], [73, 66], [105, 24]
 	]
-	herd_points_animals [ [31, 129], [177, 140], [103, 174], [43, 100] ]
+	herd_points_predator [ [31, 129], [177, 140], [103, 174], [43, 100] ]
 
 	hide_pak_burial : true
 	burial_provisions [

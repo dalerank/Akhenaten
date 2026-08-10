@@ -21,16 +21,17 @@ building_temple_osiris {
     flags {
       is_temple: true
       is_religion: true
+      keeps_visitor_paths: true
     }
   }
-  
+
   building_temple_ra {
     animations {
       preview { pack:PACK_GENERAL, id:21 }
       base { pack:PACK_GENERAL, id:21 }
       work { pos[80, -123], pack:PACK_GENERAL, id:21, offset:1, max_frames:11 }
     }
-  
+
     min_houses_coverage : 50
     labor_category : LABOR_CATEGORY_RELIGION
     building_size : 3
@@ -45,16 +46,17 @@ building_temple_osiris {
     flags {
       is_temple: true
       is_religion: true
+      keeps_visitor_paths: true
     }
   }
-  
+
   building_temple_ptah {
     animations : {
       preview : { pack:PACK_GENERAL, id:20 },
       base : { pack:PACK_GENERAL, id:20 },
       work : { pos : [70, -103], pack:PACK_GENERAL, id:20, offset:1, max_frames:11 },
     }
-  
+
     min_houses_coverage : 50
     labor_category : LABOR_CATEGORY_RELIGION
     building_size : 3
@@ -69,16 +71,17 @@ building_temple_osiris {
     flags {
       is_temple: true
       is_religion: true
+      keeps_visitor_paths: true
     }
   }
-  
+
   building_temple_seth {
     animations {
       preview { pack:PACK_GENERAL, id:19 }
       base { pack:PACK_GENERAL, id:19 }
       work { pos[70, -133], pack:PACK_GENERAL, id:19, offset:1, max_frames:11 }
     }
-  
+
     min_houses_coverage : 50
     labor_category : LABOR_CATEGORY_RELIGION
     building_size : 3
@@ -93,16 +96,17 @@ building_temple_osiris {
     flags {
       is_temple: true
       is_religion: true
+      keeps_visitor_paths: true
     }
   }
-  
+
   building_temple_bast {
     animations {
       preview { pack:PACK_GENERAL, id:76 }
       base { pack:PACK_GENERAL, id:76 }
       work { pos[85, -115], pack:PACK_GENERAL, id:76, offset:1, max_frames:11 }
     }
-  
+
     min_houses_coverage : 50
     labor_category : LABOR_CATEGORY_RELIGION
     building_size : 3
@@ -117,5 +121,31 @@ building_temple_osiris {
     flags {
       is_temple: true
       is_religion: true
+      keeps_visitor_paths: true
     }
   }
+
+[es=(building_temple_osiris, draw_usable_paths)]
+function building_temple_osiris_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}
+
+[es=(building_temple_ra, draw_usable_paths)]
+function building_temple_ra_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}
+
+[es=(building_temple_ptah, draw_usable_paths)]
+function building_temple_ptah_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}
+
+[es=(building_temple_seth, draw_usable_paths)]
+function building_temple_seth_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}
+
+[es=(building_temple_bast, draw_usable_paths)]
+function building_temple_bast_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}

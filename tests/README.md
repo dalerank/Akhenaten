@@ -123,7 +123,8 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `69_scorpion_spawn.js` | Cleopatra `FIGURE_SCORPION`: spawn + type + `update_animation` → `walk` (SprMain2 group 10; CF3c) |
 | `70_asp_spawn.js` | Cleopatra `FIGURE_ASP`: spawn + type + `update_animation` → `walk` (SprMain2 group 0; CF3 spawn) |
 | `138_alt_predator_herds.js` | CF3a-smoke: `climate_predator_type` 6-way map + `create_herds` humid→asp / arid→scorpion / central→lion on killer points |
-| `163_nubt_ostrich_spawn.js` | #616/#621: mission 0 load must spawn ostriches via `[es=(city_animals, create_herds)]` (ANK_ESID must hash caller `__func__`) |
+| `163_nubt_ostrich_spawn.js` | #616/#621: mission 0 load must spawn ostriches from `herd_points_prey` (create_herds path) |
+| `181_mission_herd_points.js` | #624: every campaign mission with prey points in config must actually spawn prey |
 | `168_editor_map_roundtrip.js` | ED1–ED3/ED6: `game.init_editor` → write/load `Maps/_editor_rt.map` → `editor_is_active` |
 | `171_editor_request_slots.js` | ED4a: editor request slots (tag 8000+N) ↔ `EVENT_TYPE_REQUEST` save/get/delete + sparse |
 | `172_editor_map_meta_roundtrip.js` | ED4b/ED5: map write strips events; `*.meta.js` requests/invasions/price/demand round-trip |
@@ -304,6 +305,7 @@ After each test script loads, the driver calls `js_vm_sync({})` so any top-level
 | `__test_show_tile_info(bid)` | undefined | Open building info window for `bid` |
 | `__test_info_ui_text(element_id)` | string | Text of a named element on the current building/terrain info window (e.g. `workers_text`) |
 | `__test_color_roundtrip(color)` | number | Echo a `color` (uint32) back through the binding conversion; asserts full `COLOR_MASK_*` survive MuJS→C++ (J1) |
+| `__test_count_scenario_map_points(kind)` | int | Valid map points of `prey` / `animals` / `fishing` in the loaded scenario |
 | `__test_enemy_figure_registered(type)` | boolean | Spawn `type` and report whether it resolved to a registered enemy class (`dcast_enemy` != null); false for a missing `FIGURE_METAINFO` (F2) |
 | `__test_monument_set_phase(bid, phase)` | undefined | Force monument (+ linked parts) construction phase |
 | `__test_monument_add_resource(bid, resource, amount)` | boolean | Deliver resource units into monument (`deliver_resource`) |

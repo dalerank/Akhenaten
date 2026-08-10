@@ -1773,14 +1773,14 @@ static void __test_set_scenario_prey_point(int index, int x, int y) {
         return;
     }
     if ((int)g_scenario.herd_points_prey.size() <= index) {
-        g_scenario.herd_points_prey.resize(index + 1, tile2i::invalid);
+        g_scenario.herd_points_prey.resize(index + 1);
     }
-    g_scenario.herd_points_prey[index] = tile2i(x, y);
+    g_scenario.herd_points_prey[index].tile = tile2i(x, y);
 }
 ANK_FUNCTION_3(__test_set_scenario_prey_point);
 
 static void __test_clear_scenario_herd_points() {
-    g_scenario.herd_points_animals.clear();
+    g_scenario.herd_points_predator.clear();
 }
 ANK_FUNCTION(__test_clear_scenario_herd_points);
 
@@ -1788,12 +1788,44 @@ static void __test_set_scenario_herd_point(int index, int x, int y) {
     if (index < 0 || index >= MAX_PREDATOR_HERD_POINTS) {
         return;
     }
-    if ((int)g_scenario.herd_points_animals.size() <= index) {
-        g_scenario.herd_points_animals.resize(index + 1, tile2i::invalid);
+    if ((int)g_scenario.herd_points_predator.size() <= index) {
+        g_scenario.herd_points_predator.resize(index + 1);
     }
-    g_scenario.herd_points_animals[index] = tile2i(x, y);
+    g_scenario.herd_points_predator[index].tile = tile2i(x, y);
 }
 ANK_FUNCTION_3(__test_set_scenario_herd_point);
+
+static int __test_count_scenario_map_points(pcstr kind) {
+    auto count_valid_herd = [](const auto &points) {
+        int n = 0;
+        for (const herd_point_t &hp : points) {
+            n += hp.valid() ? 1 : 0;
+        }
+        return n;
+    };
+    auto count_valid_tiles = [](const auto &points) {
+        int n = 0;
+        for (const tile2i &t : points) {
+            n += t.valid() ? 1 : 0;
+        }
+        return n;
+    };
+
+    if (!kind) {
+        return 0;
+    }
+    if (!strcmp(kind, "prey")) {
+        return count_valid_herd(g_scenario.herd_points_prey);
+    }
+    if (!strcmp(kind, "predator")) {
+        return count_valid_herd(g_scenario.herd_points_predator);
+    }
+    if (!strcmp(kind, "fishing")) {
+        return count_valid_tiles(g_scenario.fishing_points);
+    }
+    return 0;
+}
+ANK_FUNCTION_1(__test_count_scenario_map_points);
 
 static int __test_climate_predator_type() {
     return (int)climate_predator_type();
@@ -3492,6 +3524,38 @@ static int __test_building_road_access_tile(int bid) {
     return m->road_access.grid_offset();
 }
 ANK_FUNCTION_1(__test_building_road_access_tile);
+
+static void __test_building_road_access_set_stale(int bid) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return;
+    }
+    building *m = b->main();
+    if (!m) {
+        return;
+    }
+    m->has_road_access = true;
+    m->road_network_id = 1;
+    m->distance_from_entry = 1;
+    m->road_access = m->tile;
+}
+ANK_FUNCTION_1(__test_building_road_access_set_stale);
+
+static int __test_building_road_access_fields_cleared(int bid) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return 0;
+    }
+    building *m = b->main();
+    if (!m) {
+        return 0;
+    }
+    return (!m->has_road_access && m->road_network_id == 0 && m->distance_from_entry == 0
+            && !m->road_access.valid())
+        ? 1
+        : 0;
+}
+ANK_FUNCTION_1(__test_building_road_access_fields_cleared);
 
 static int __test_building_road_access_match_preview(int bid) {
     building *b = building_get(bid);

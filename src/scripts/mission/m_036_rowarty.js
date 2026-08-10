@@ -93,7 +93,7 @@ mission36 { // Rowarty (Avaris) — The Sea People
 		[218, 85], [209, 109], [166, 6], [40, 183]
 	]
 	// pak type FIGURE_NONE — spawn slots only.
-	herd_points_animals [
+	herd_points_predator [
 		[157, 66], [96, 54], [119, 175]
 	]
 

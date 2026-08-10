@@ -17,6 +17,10 @@ log_info("akhenaten: mission 41 sumur started")
 
 mission41 { // Sumur — Lands of the Levant
 	map_file : "data/maps/m_041_sumur.map"
+
+	// Map points from data/maps/m_041_sumur.map.
+	herd_points_predator [ [113, 63], [73, 24] ]
+
 	start_message : "message_mission_sumur"
 	selection_title : "Sumur"
 	player_rank : 6

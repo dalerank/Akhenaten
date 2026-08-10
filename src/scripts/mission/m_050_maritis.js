@@ -89,7 +89,7 @@ mission50 { // Maritis - Caesar and Cleopatra
 	fishing_points [
 		[41, 99], [69, 110], [56, 93], [31, 76]
 	]
-	herd_points_animals [ [80, 123], [35, 88], [60, 25] ]
+	herd_points_predator [ [80, 123], [35, 88], [60, 25] ]
 
 	hide_pak_burial : true
 	burial_provisions [ ]

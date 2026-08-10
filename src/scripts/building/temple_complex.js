@@ -44,6 +44,7 @@ building_temple_complex_osiris {
     flags {
       is_temple_complex: true
       is_religion: true
+      keeps_visitor_paths: true
     }
   }
 
@@ -118,12 +119,12 @@ building_temple_complex_osiris {
       statue_2s { id:6, offset:4 }
       statue_2w { id:6, offset:6 }
     }
-  
+
     building_size : 3,
     planner_update_rule {
       unique_building : true
     }
-  
+
     min_houses_coverage : 100
     damage_proof : true
     fire_proof : true
@@ -133,16 +134,17 @@ building_temple_complex_osiris {
     laborers[50]
     fire_risk[0]
     damage_risk[2]
-  
+
     allowed_altar [ BUILDING_TEMPLE_COMPLEX_ALTAR_ANUBIS ]
     allowed_oracle [ BUILDING_TEMPLE_COMPLEX_ORACLE_SEKHMET ]
 
     flags {
       is_temple_complex: true
       is_religion: true
+      keeps_visitor_paths: true
     }
   }
-  
+
   building_temple_complex_altar_anubis {
     // BUILDING_TEMPLE_COMPLEX_ALTAR_ANUBIS
     animations  {
@@ -158,7 +160,7 @@ building_temple_complex_osiris {
       fancy_s { id:7, offset:1 }
     }
     build_menu_text [ 189, 6 ]
-  
+
     building_size : 3
     labor_category : LABOR_CATEGORY_RELIGION
     needs {
@@ -218,12 +220,12 @@ building_temple_complex_osiris {
       statue_2s { id:6, offset:4 }
       statue_2w { id:6, offset:6 }
     }
-  
+
     building_size : 3
     planner_update_rule {
       unique_building : true
     }
-  
+
     min_houses_coverage : 100
     damage_proof : true
     fire_proof : true
@@ -233,16 +235,17 @@ building_temple_complex_osiris {
     laborers[50]
     fire_risk[0]
     damage_risk[2]
-  
+
     allowed_altar [ BUILDING_TEMPLE_COMPLEX_ALTAR_SEBEK ]
     allowed_oracle [ BUILDING_TEMPLE_COMPLEX_ORACLE_MIN ]
 
     flags {
       is_temple_complex: true
       is_religion: true
+      keeps_visitor_paths: true
     }
   }
-  
+
   building_temple_complex_altar_sebek {
     animations  {
       _pack { pack:PACK_TEMPLE_RA }
@@ -318,12 +321,12 @@ building_temple_complex_osiris {
       statue_2s { id:6, offset:4 }
       statue_2w { id:6, offset:6 }
     }
-  
+
     building_size : 3
     planner_update_rule {
       unique_building : true
     }
-  
+
     min_houses_coverage : 100
     damage_proof : true
     fire_proof : true
@@ -333,16 +336,17 @@ building_temple_complex_osiris {
     laborers[50]
     fire_risk[0]
     damage_risk[2]
-  
+
     allowed_altar [ BUILDING_TEMPLE_COMPLEX_ALTAR_MAAT ]
     allowed_oracle [ BUILDING_TEMPLE_COMPLEX_ORACLE_HORUS ]
 
     flags {
       is_temple_complex: true
       is_religion: true
+      keeps_visitor_paths: true
     }
   }
-  
+
   building_temple_complex_altar_maat {
     animations  {
       _pack { pack:PACK_TEMPLE_RA }
@@ -416,12 +420,12 @@ building_temple_complex_osiris {
       statue_2s { id:6, offset:4 }
       statue_2w { id:6, offset:6 }
     }
-  
+
     building_size : 3
     planner_update_rule {
       unique_building : true
     }
-  
+
     min_houses_coverage : 100
     damage_proof : true
     fire_proof : true,
@@ -431,16 +435,17 @@ building_temple_complex_osiris {
     laborers[50]
     fire_risk[0]
     damage_risk[2]
-  
+
     allowed_altar [ BUILDING_TEMPLE_COMPLEX_ALTAR_ISIS ]
     allowed_oracle [ BUILDING_TEMPLE_COMPLEX_ORACLE_HATHOR ]
 
     flags {
       is_temple_complex: true
       is_religion: true
+      keeps_visitor_paths: true
     }
   }
-  
+
   building_temple_complex_altar_isis {
     animations  {
       _pack { pack:PACK_TEMPLE_BAST }
@@ -455,7 +460,7 @@ building_temple_complex_osiris {
       fancy_s { id:7, offset:1 }
     }
     build_menu_text [ 189, 8 ]
-  
+
     building_size : 3
     labor_category : LABOR_CATEGORY_RELIGION
     needs {
@@ -465,7 +470,7 @@ building_temple_complex_osiris {
     fire_proof : true
     cost [ 180, 250, 300, 500, 800 ]
   }
-  
+
   building_temple_complex_oracle_hathor {
     animations {
       _pack { pack:PACK_TEMPLE_BAST }
@@ -480,14 +485,39 @@ building_temple_complex_osiris {
       fancy_s { id:7, offset:3 }
     }
     build_menu_text [ 189, 9 ]
-  
+
     building_size : 3
     labor_category : LABOR_CATEGORY_RELIGION
     needs {
       oracle : true
     }
-  
+
     damage_proof : true
     fire_proof : true
     cost [ 180, 250, 300, 500, 800 ]
   }
+
+[es=(building_temple_complex_osiris, draw_usable_paths)]
+function building_temple_complex_osiris_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}
+
+[es=(building_temple_complex_ra, draw_usable_paths)]
+function building_temple_complex_ra_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}
+
+[es=(building_temple_complex_ptah, draw_usable_paths)]
+function building_temple_complex_ptah_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}
+
+[es=(building_temple_complex_seth, draw_usable_paths)]
+function building_temple_complex_seth_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}
+
+[es=(building_temple_complex_bast, draw_usable_paths)]
+function building_temple_complex_bast_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}

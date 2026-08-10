@@ -159,12 +159,28 @@ int __city_total_housing_buildings() {
 ANK_FUNCTION(__city_total_housing_buildings)
 
 int __city_housing_type_count_at(int index) {
-    if (index < 0 || index > 19) {
+    if (index < 0 || index >= HOUSE_LEVEL_MAX) {
         return 0;
     }
     return g_city.population.housing_type_counts[index];
 }
 ANK_FUNCTION_1(__city_housing_type_count_at)
+
+int __city_count_houses_at_least(int min_level) {
+    if (min_level < HOUSE_CRUDE_HUT) {
+        min_level = HOUSE_CRUDE_HUT;
+    }
+    if (min_level >= HOUSE_LEVEL_MAX) {
+        return 0;
+    }
+
+    int count = 0;
+    for (int level = min_level; level < HOUSE_LEVEL_MAX; level++) {
+        count += g_city.population.housing_type_counts[level];
+    }
+    return count;
+}
+ANK_FUNCTION_1(__city_count_houses_at_least)
 
 int __city_houses_demanding_goods_at(int index) {
     if (index < 0 || index > 3) {

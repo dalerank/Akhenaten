@@ -655,8 +655,19 @@ static void jsR_setproperty(js_State* J, js_Object* obj, const js_StringNode nam
     int k;
     int own;
 
-    /* If property exists and is JS_CPTR / JS_CPTROFF, write to *ptr and keep the cell */
     ref = jsV_getpropertyx(J, obj, name, &own);
+
+    /* Accessor setter wins over JS_CPTR write-through (symmetric with get). */
+    if (ref && ref->setter) {
+        js_pushobject(J, ref->setter);
+        js_pushobject(J, obj);
+        js_pushvalue(J, *value);
+        J->call(1);
+        js_pop(J, 1);
+        return;
+    }
+
+    /* If property exists and is JS_CPTR / JS_CPTROFF, write to *ptr and keep the cell */
     if (ref && ref->value.type == JS_TOBJECT) {
         js_Object *o = ref->value.u.object;
         if (o->type == JS_CPTR || o->type == JS_CPTROFF) {

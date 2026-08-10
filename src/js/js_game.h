@@ -16,6 +16,7 @@
 #include "core/variant.h"
 #include "core/svector.h"
 #include "core/hvector.h"
+#include "core/profiler.h" // ANK_FUNCTION_* expand to OZZY_PROFILER_FUNCTION()
 #include "grid/grid.h"
 #include "grid/point.h"
 
@@ -161,7 +162,8 @@ namespace js_helpers {
         if (js_isundefined(J, idx)) {
             return bvariant(); // none
         } else if (js_isboolean(J, idx)) {
-            return bvariant(js_toboolean(J, idx));
+            // js_toboolean returns int; cast so we hit bvariant(bool), not bvariant(int32).
+            return bvariant(js_toboolean(J, idx) != 0);
         } else if (js_isstring(J, idx)) {
             xstring str;
             str._set(js_tostring(J, idx));
@@ -410,7 +412,7 @@ namespace js_helpers {
 
     inline bvariant js_bvariant_from_js_value(js_State *J, int idx) {
         if (js_isboolean(J, idx)) {
-            return bvariant(js_toboolean(J, idx));
+            return bvariant(js_toboolean(J, idx) != 0);
         }
         if (js_isstring(J, idx)) {
             xstring pp;

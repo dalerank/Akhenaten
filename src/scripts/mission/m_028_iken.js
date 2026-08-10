@@ -2,6 +2,11 @@ log_info("akhenaten: mission 28 iken started")
 
 mission28 { // Iken (Mirgissa) — Into Nubia; briefing key = mirgissa
 	map_file : "data/maps/m_028_iken.map"
+
+	// Map points from data/maps/m_028_iken.map.
+	herd_points_predator [ [93, 187], [152, 165], [154, 50] ]
+	herd_points_prey [ [125, 20], [205, 101] ]
+
 	start_message : "message_mission_mirgissa"
 	selection_title : "Iken"
 	player_rank : 10

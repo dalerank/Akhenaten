@@ -2,10 +2,10 @@
 
 #include <cstdint>
 
-enum { 
-    ENGINE_MODE_RELEASE = 0, 
-    ENGINE_MODE_DEBUG = 1, 
-    ENGINE_MODE_MAX = 2 
+enum {
+    ENGINE_MODE_RELEASE = 0,
+    ENGINE_MODE_DEBUG = 1,
+    ENGINE_MODE_MAX = 2
 };
 
 #define MAX_REQUESTS 20

@@ -1,7 +1,9 @@
-#include "input/cursor.h"
+#include "platform/cursor.h"
+
+#include "core/app.h"
 #include "input/mouse.h"
 #include "graphics/color.h"
-#include "platform/cursor.h"
+#include "platform/arguments.h"
 #include "platform/vita/vita.h"
 #include <vita2d.h>
 
@@ -9,10 +11,10 @@
 
 #define CURSOR_SIZE 32
 
-static vita_cursor cursors[CURSOR_MAX];
-vita_cursor* current_cursor;
+namespace {
+vita_cursor cursors[CURSOR_MAX];
 
-static vita2d_texture* init_cursor(const cursor* c) {
+vita2d_texture* init_cursor(const cursor* c) {
     vita2d_texture* tex
       = vita2d_create_empty_texture_format(CURSOR_SIZE, CURSOR_SIZE, SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ARGB);
     color_t* cursor_buf = vita2d_texture_get_datap(tex);
@@ -35,17 +37,33 @@ static vita2d_texture* init_cursor(const cursor* c) {
 
     return tex;
 }
+} // namespace
 
-void platform_init_cursors(int scale_percentage) {
+vita_cursor* current_cursor;
+
+cursor_scale platform_cursor_t::scale_for(int /*scale_percentage*/) {
+    return CURSOR_SCALE_1;
+}
+
+void platform_cursor_t::init(int /*scale_percentage*/) {
     for (int i = 0; i < CURSOR_MAX; i++) {
-        const cursor* c = input_cursor_data(i, CURSOR_SCALE_1);
+        const cursor* c = input_cursor_data((cursor_shape)i, CURSOR_SCALE_1);
         cursors[i].texture = init_cursor(c);
         cursors[i].hotspot_x = c->hotspot_x;
         cursors[i].hotspot_y = c->hotspot_y;
     }
-    mouse_set_cursor(CURSOR_ARROW);
+    set(CURSOR_ARROW);
+}
+
+void platform_cursor_t::set(int cursor_id) {
+    current_id = cursor_id;
+    current_cursor = &cursors[cursor_id];
 }
 
 void mouse_set_cursor(int cursor_id) {
-    current_cursor = &cursors[cursor_id];
+    xvalue<platform_cursor_t>::ref().set(cursor_id);
+}
+
+void ANK_REGISTER_APPLICATION_MODULE(register_platform_cursor_module) {
+    xvalue<platform_cursor_t>::ref().init(g_args.get_cursor_scale_percentage());
 }

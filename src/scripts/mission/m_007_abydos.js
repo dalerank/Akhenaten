@@ -4,6 +4,11 @@ log_info("akhenaten: mission 7 abydos started")
 
 mission7 { // Abydos / Abedju — The Challenge of the Sea
 	map_file : "data/maps/m_007_abydos.map"
+
+	// Map points from data/maps/m_007_abydos.map.
+	herd_points_predator [ [88, 57], [74, 71], [92, 35] ]
+	fishing_points [ [95, 66], [76, 65], [110, 71] ]
+
 	start_message : "message_soldiers_and_forts"
 	selection_title : "Abydos"
 	env {

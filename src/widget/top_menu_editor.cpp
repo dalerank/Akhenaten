@@ -14,7 +14,6 @@
 #include "scenario/scenario.h"
 #include "window/editor/empire.h"
 #include "window/editor/window_editor.h"
-#include "window/file_dialog.h"
 #include "window/message_dialog.h"
 #include "window/popup_dialog.h"
 #include "window/select_list.h"
@@ -275,13 +274,13 @@ static void menu_file_new_map(int param) {
 static void menu_file_load_map(int param) {
     clear_state();
     window_editor_map_show();
-    window_file_dialog_load_scenario_show();
+    autoconfig_window::show("file_dialog_load_scenario");
 }
 
 static void menu_file_save_map(int param) {
     clear_state();
     window_editor_map_show();
-    window_file_dialog_save_scenario_show();
+    autoconfig_window::show("file_dialog_save_scenario");
 }
 
 static void menu_file_exit_editor(int param) {

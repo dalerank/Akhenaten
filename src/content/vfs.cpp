@@ -291,6 +291,30 @@ bool file_remove(pcstr filename) {
     return res;
 }
 
+bool file_rename(pcstr from, pcstr to) {
+    if (!from || !*from || !to || !*to) {
+        return false;
+    }
+
+#if defined(GAME_PLATFORM_ANDROID)
+    // POSIX rename() replaces an existing destination atomically
+    const bool res = (::rename(from, to) == 0);
+    if (!res) {
+        logs::error("unable to rename %s -> %s", from, to);
+    }
+#else
+    std::error_code err;
+    std::filesystem::rename(from, to, err);
+    const bool res = !err;
+    if (!res) {
+        logs::error("unable to rename %s -> %s: %s", from, to, err.message().c_str());
+    }
+#endif
+
+    sync_em_fs();
+    return res;
+}
+
 void umount_pack(pcstr filename) {
     const auto it = std::find_if(g_mounted_archives.begin(), g_mounted_archives.end(), [filename] (const ZipArchive *arch) {
         return arch->filepath() == filename;

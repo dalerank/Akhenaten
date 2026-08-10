@@ -13,6 +13,10 @@ log_info("akhenaten: mission 32 khmun started")
 
 mission32 { // Khmun (Hermopolis) — Egypt Reclaimed
 	map_file : "data/maps/m_032_khmun.map"
+
+	// Map points from data/maps/m_032_khmun.map.
+	herd_points_predator [ [50, 32], [79, 35], [30, 92], [38, 39] ]
+
 	start_message : "message_mission_hermopolis"
 	selection_title : "Khmun"
 	player_rank : 10

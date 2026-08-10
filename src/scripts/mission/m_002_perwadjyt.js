@@ -2,6 +2,10 @@ log_info("akhenaten: mission 2 started")
 
 mission2 {
 	map_file : "data/maps/m_002_perwadjyt.map"
+
+	// Map points from data/maps/m_002_perwadjyt.map.
+	herd_points_predator [ [71, 36], [17, 65] ]
+
 	start_message : "message_farming_along_the_nile"
 	selection_title : "Perwadjyt"
 	env {
@@ -50,28 +54,28 @@ mission2 {
 		pottery_step2_stored_handled : false
 		start_message_shown : false
 	}
+
+	goal_tooltip: function() {
+		if (!mission.figs_stored_handled) {
+			return "#mission2_store_figs"
+		}
+
+		if (!mission.pottery_step1_stored_handled) {
+			return "#mission2_pottery_step1"
+		}
+
+		if (!mission.pottery_step2_stored_handled) {
+			return "#mission2_pottery_step2"
+		}
+
+		return ""
+	}
 }
 
 [es=event_migration_update, mission=mission2]
 function mission2_handle_population_cap(ev) {
     var max_pop = (!mission.pottery_step1_stored_handled) ? mission.pottery_step1_population_cap : 0;
     migration.set_population_cap("pottery_not_produced_population_cap", max_pop)
-}
-
-function mission2_get_goal_tooltip() {
-	if (!mission.figs_stored_handled) {
-		return "#mission2_store_figs"
-	}
-
-	if (!mission.pottery_step1_stored_handled) {
-		return "#mission2_pottery_step1"
-	}
-
-	if (!mission.pottery_step2_stored_handled) {
-		return "#mission2_pottery_step2"
-	}
-
-	return ""
 }
 
 [es=event_mission_start, mission=mission2]
@@ -110,7 +114,6 @@ function mission2_on_start(ev) {
 	city.set_advisor_available(ADVISOR_POPULATION, 1)
 	city.set_advisor_available(ADVISOR_ENTERTAINMENT, 1)
 	city.set_advisor_available(ADVISOR_RELIGION, 1)
-	city.goal_tooltip = mission2_get_goal_tooltip
 }
 
 [es=event_granary_resource_added, mission=mission2]

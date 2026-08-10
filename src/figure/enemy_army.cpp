@@ -144,4 +144,8 @@ io_buffer *iob_enemy_armies_stats = new io_buffer([] (io_buffer *iob, size_t ver
         iob->bind_u16(g_enemy_armies.data[i].grab_money);
         iob->bind____skip(64);
     }
+}, [] (size_t version) {
+    // saves older than v170 carry no army stats at all
+    g_enemy_army_in_city = {};
+    g_enemy_armies.clear();
 });

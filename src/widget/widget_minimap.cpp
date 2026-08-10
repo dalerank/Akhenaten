@@ -1,4 +1,4 @@
-﻿#include "widget_minimap.h"
+#include "widget_minimap.h"
 
 #include "building/building.h"
 #include "core/profiler.h"
@@ -146,7 +146,7 @@ void minimap_window::draw_foreground(UiFlags flags) {
     painter ctx = game.painter();
     graphics_set_clip_rectangle(screen_offset, size);
 
-    if (refresh_requested || scroll_in_progress() || draw_force) {
+    if (refresh_requested || g_scroll.in_progress() || draw_force) {
         draw_uncached(screen_offset);
         refresh_requested = 0;
     } else {

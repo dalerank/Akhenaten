@@ -91,7 +91,7 @@ void city_population_t::update_room() {
         const int mul = house->is_merged() ? 4 : 1;
         int max_pop = house->model().max_people * mul;
 
-        if (house->runtime_data().frog_infest_days > 0) {
+        if (house->runtime_data().frog_infest_days > 0 || house->base.has_plague) {
             max_pop = people;
         }
 

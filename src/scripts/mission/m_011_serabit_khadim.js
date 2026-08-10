@@ -9,6 +9,15 @@ log_info("akhenaten: mission 11 serabit khadim started")
 
 mission11 { // Serabit Khadim — The Bedouin of the East
 	map_file : "data/maps/m_011_serabit_khadim.map"
+
+	// Map points from data/maps/m_011_serabit_khadim.map; fixed herd sizes.
+	herd_points_predator [
+		{ tile: [74, 25], type: FIGURE_HYENA, count: 5, radius: 16 }
+	]
+	herd_points_prey [
+		{ tile: [28, 43], type: FIGURE_OSTRICH, count: 5, radius: 16 }
+	]
+
 	start_message : "message_mission_serabit_khadim"
 	selection_title : "Serabit Khadim"
 	player_rank : 5
@@ -488,18 +497,6 @@ function mission11_on_start(ev) {
 	for (var i = ADVISOR_NONE + 1; i <= ADVISOR_DIPLOMACY; i++) {
 		city.set_advisor_available(i, 1)
 	}
-}
-
-[es=(city_animals, create_herds), mission=mission11]
-function mission11_register_animals(ev) {
-	// pak animals=0; remake herds for hunting lodges (desert food).
-	city.remove_animals()
-
-	city.add_animals_point(0, /*x*/55, /*y*/75, FIGURE_OSTRICH, 5)
-	city.set_animals_area(0, 16)
-
-	city.add_animals_point(1, /*x*/85, /*y*/135, FIGURE_OSTRICH, 5)
-	city.set_animals_area(1, 16)
 }
 
 // pak: year=1 month=7 gift chickpeas 32 once (no ok/refuse chain).

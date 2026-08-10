@@ -91,7 +91,7 @@ mission49 { // Ptolemy's Alexandria - A Beacon of Light
 	fishing_points [
 		[95, 32], [127, 22], [102, 23]
 	]
-	herd_points_animals [ [30, 124], [78, 185], [69, 165] ]
+	herd_points_predator [ [30, 124], [78, 185], [69, 165] ]
 
 	hide_pak_burial : true
 	burial_provisions [ ]

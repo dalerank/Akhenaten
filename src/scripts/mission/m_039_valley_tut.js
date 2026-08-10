@@ -2,6 +2,10 @@ log_info("akhenaten: mission 39 valley tut started")
 
 mission39 { // Tut in the Valley — Death of Tutankhamun
 	map_file : "data/maps/m_039_valley_tut.map"
+
+	// Map points from data/maps/m_039_valley_tut.map.
+	herd_points_predator [ [71, 58], [59, 83], [104, 85] ]
+
 	start_message : "message_mission_tutankhamun_valley"
 	selection_title : "Tut in the Valley"
 	player_rank : 6

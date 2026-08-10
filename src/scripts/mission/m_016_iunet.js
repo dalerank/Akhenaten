@@ -15,6 +15,11 @@ log_info("akhenaten: mission 16 iunet started")
 
 mission16 { // Iunet (Dendera) — The Defense of Egypt
 	map_file : "data/maps/m_016_iunet.map"
+
+	// Map points from data/maps/m_016_iunet.map.
+	herd_points_predator [ [39, 63], [113, 85] ]
+	fishing_points [ [73, 41], [110, 53], [106, 80], [48, 62] ]
+
 	start_message : "message_mission_dendera"
 	selection_title : "Iunet"
 	player_rank : 6

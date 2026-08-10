@@ -85,7 +85,7 @@ void app_handle_close_request() {
 
 void app_terminate(const char* message) noexcept {
     logs::critical("%s", message);
-    platform_screen_show_error_message_box("CRASHED", message);
+    g_platform_screen.show_error_message_box("CRASHED", message);
 
     std::terminate();
 }
@@ -133,14 +133,14 @@ void application_t::handle_window_event(void* ev) {
         break;
     case SDL_WINDOWEVENT_SIZE_CHANGED:
         logs::info("Window resized to %d x %d", (int)event.data1, (int)event.data2);
-        platform_screen_resize(event.data1, event.data2, 1);
+        g_platform_screen.resize(event.data1, event.data2, 1);
         break;
     case SDL_WINDOWEVENT_RESIZED:
         logs::info("System resize to %d x %d", (int)event.data1, (int)event.data2);
         break;
     case SDL_WINDOWEVENT_MOVED:
         logs::info("Window move to coordinates x: %d y: %d\n", (int)event.data1, (int)event.data2);
-        platform_screen_move(event.data1, event.data2);
+        g_platform_screen.move(event.data1, event.data2);
         break;
 
     case SDL_WINDOWEVENT_SHOWN:

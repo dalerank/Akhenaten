@@ -24,6 +24,9 @@ city_planner = extend(__city_planner, {
     draw_flat_tile: __city_planner_draw_flat_tile
     draw_isometric_ghost: __city_planner_draw_isometric_ghost
     draw_overlay_tile: __city_planner_draw_overlay_tile
+    draw_tile_graphics_array: __city_planner_draw_tile_graphics_array
+    init_tiles: __city_planner_init_tiles
+    update_tiles_building: __city_planner_update_tiles_building
     tile_to_pixel: __lookup_tile_to_pixel
     tile_grid_offset: __city_planner_tile_grid_offset
     set_warning: __city_planner_set_warning
@@ -59,5 +62,3 @@ function city_planner_on_rotate_building(ev) {
 function city_planner_on_change_building_variant(ev) {
     __city_planner_next_building_variant()
 }
-
-city.planner = city_planner

@@ -84,6 +84,16 @@ bool file_exists(const T& filename) {
  */
 bool file_remove(pcstr filename);
 
+/**
+ * Rename a file, replacing the destination if it already exists.
+ * Used to publish a fully written temporary file over its target in one step,
+ * so an interrupted write cannot leave a truncated file behind.
+ * @param from Existing file
+ * @param to Destination, overwritten if present
+ * @return boolean true if the rename was successful, false otherwise
+ */
+bool file_rename(pcstr from, pcstr to);
+
 bool mount_pack(pcstr filename);
 void umount_pack(pcstr filename);
 

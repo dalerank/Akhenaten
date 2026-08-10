@@ -92,7 +92,7 @@ mission31 { // Bubastis — The City of Bast
 	fishing_points [
 		[75, 55], [64, 54], [67, 48], [-1, -1], [19, 83]
 	]
-	herd_points_animals [
+	herd_points_predator [
 		[27, 87], [98, 43], [124, 58], [86, 34]
 	]
 	herd_points_prey [

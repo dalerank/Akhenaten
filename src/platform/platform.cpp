@@ -1,4 +1,5 @@
 #include "platform.h"
+#include "platform/screen.h"
 #include "js/js_game.h"
 #include "core/bstring.h"
 
@@ -20,7 +21,6 @@ pcstr platform_request_initial_data_directory();
 void platform_append_startup_log(pcstr message);
 void platform_hide_startup_log();
 bool platform_run_main_loop(platform_pump_frame_cb pump_frame, platform_should_continue_cb should_continue);
-void platform_screen_warp_mouse(int *x, int *y);
 void platform_show_virtual_keyboard(const uint8_t *text, int max_length);
 void platform_hide_virtual_keyboard(void);
 
@@ -71,7 +71,7 @@ bool platform_t::run_main_loop(platform_pump_frame_cb pump_frame, platform_shoul
 }
 
 void platform_t::screen_warp_mouse(int *x, int *y) {
-    platform_screen_warp_mouse(x, y);
+    g_platform_screen.warp_mouse(x, y);
 }
 
 void platform_t::show_virtual_keyboard(const uint8_t *text, int max_length) {

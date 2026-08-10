@@ -97,7 +97,7 @@ function burial_provisions_on_click_item(p) {
     }
     burial_dispatch_resource = res
     burial_dispatch_amount = Math.min(remaining, stored)
-    show_window_by_id("burial_dispatch_window")
+    window_show_by_id("burial_dispatch_window")
 }
 
 function burial_dispatch_max_allowed() {

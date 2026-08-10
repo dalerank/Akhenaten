@@ -696,4 +696,7 @@ io_buffer *iob_invasion_auto_resolve = new io_buffer([](io_buffer *iob, size_t v
         iob->bind____skip(1);
     }
     iob->bind____skip(6);
+}, [](size_t version) {
+    // saves older than v177 have no pending auto-resolve queue
+    g_invasion_auto_resolve = {};
 });

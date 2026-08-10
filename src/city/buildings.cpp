@@ -260,8 +260,11 @@ const e_building_type _temple_complex_types[] = {
 building_id city_buildings_t::temple_complex_id() {
     for (const e_building_type type : _temple_complex_types) {
         const auto &complexes = tracked_buildings().at(type);
-        if (!complexes.empty()) {
-            return complexes.front();
+        for (building_id id : complexes) {
+            building *b = building_get(id);
+            if (b && b->is_valid() && b->type == type) {
+                return id;
+            }
         }
     }
 
@@ -269,12 +272,7 @@ building_id city_buildings_t::temple_complex_id() {
 }
 
 bool city_buildings_t::has_temple_complex() {
-    bool has_temple_complex = false;
-    for (const e_building_type type : _temple_complex_types) {
-        has_temple_complex |= count_total(type) > 0;
-    }
-
-    return has_temple_complex;
+    return temple_complex_id() > 0;
 }
 
 span_const<e_building_type> city_buildings_t::temple_complex_types() {

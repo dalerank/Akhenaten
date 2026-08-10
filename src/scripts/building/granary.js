@@ -77,3 +77,8 @@ function building_granary_on_place_checks(ev) {
     var has_bazaar = city.count_active_buildings(BUILDING_BAZAAR) > 0
     city.warnings.show_if_not(has_bazaar, "#build_bazaars_to_distribute_food")
 }
+
+[es=(building_granary, draw_usable_paths)]
+function building_granary_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}
