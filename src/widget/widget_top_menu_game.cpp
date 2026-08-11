@@ -135,6 +135,12 @@ void top_menu_widget_t::calculate_menu_dimensions(menu_header& menu) {
 void top_menu_widget_t::sub_menu_draw_text(const xstring header, const xstring focus_item_id) {
     auto &impl = ((ui::emenu_header *)&headers[header])->impl;
 
+    for (auto &item : impl.items) {
+        if (!item.text.empty() && item.text[0] == '#') {
+            item.text = lang_text_from_key(item.text.c_str());
+        }
+    }
+
     if (impl.calculated_width_blocks == 0 || impl.calculated_height_blocks == 0) {
         calculate_menu_dimensions(impl);
     }
