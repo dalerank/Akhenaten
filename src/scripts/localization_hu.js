@@ -10,12 +10,12 @@ localization_hu = [
   {key:"#TR_INVALID_LANGUAGE_TITLE", text:"Érvénytelen nyelvi mappa"}
   {key:"#TR_INVALID_LANGUAGE_MESSAGE", text:"A kiválasztott mappa nem tartalmaz érvényes nyelvi csomagot. A részletekért ellenőrizd a naplót."}
   {key:"#TR_BUTTON_OK", text:"OK"}
-  {key:"#TR_CONFIG_IRONWILL", text:"Ironwill mód — mentés csak a főmenübe lépéskor (Save, Ctrl+S, autosave, quicksave/load tiltva)"}
+  {key:"#TR_CONFIG_IRONWILL", text:"Vasfegyelem mód — mentés csak a főmenübe lépéskor (Save, Ctrl+S, autosave, quicksave/load tiltva)"}
   {key:"#TR_CONFIG_UNLOCK_ALL_CAMPAIGNS", text:"Összes kampányidőszak feloldása a Family History-ban"}
-  {key:"#ironwill_briefing_label", text:"Ironwill"}
-  {key:"#ironwill_save_blocked", text:"Ironwill: mentés csak kilépéskor a menübe"}
-  {key:"#ironwill_load_blocked", text:"Ironwill: betöltés csak a főmenüből (Continue)"}
-  {key:"#ironwill_save_failed", text:"Ironwill mentés sikertelen — a városban maradsz"}
+  {key:"#ironwill_briefing_label", text:"Vasfegyelem"}
+  {key:"#ironwill_save_blocked", text:"Vasfegyelem: mentés csak kilépéskor a menübe"}
+  {key:"#ironwill_load_blocked", text:"Vasfegyelem: betöltés csak a főmenüből (Continue)"}
+  {key:"#ironwill_save_failed", text:"Vasfegyelem mentés sikertelen — a városban maradsz"}
   {key:"#TR_BUTTON_CANCEL", text:"Mégse"}
   {key:"#TR_BUTTON_PAUSE", text:"Szünet"}
   {key:"#TR_BUTTON_RESUME", text:"Folytatás"}

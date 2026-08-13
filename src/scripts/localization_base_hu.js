@@ -163,7 +163,7 @@ localization_base_hu = [
     { group:8, id:2, text: "Személy" }
     { group:8, id:3, text: "Személyek" }
     { group:8, id:4, text: "Hónap" }
-    { group:8, id:5, text: "Hónapok" }
+    { group:8, id:5, text: "hónap" }
     { group:8, id:6, text: "Magtár" }
     { group:8, id:7, text: "Magtárak" }
     { group:8, id:8, text: "Év" }
@@ -2646,11 +2646,11 @@ localization_base_hu = [
     { group:62, id:8, text: "Gratulálunk!" }
     { group:62, id:9, text: "nem használt 2636 (demóüzenet)" }
     { group:62, id:10, text: "Célkitűzések" }
-    { group:62, id:11, text: "Népesség:" }
-    { group:62, id:12, text: "Kultúra értékelése:" }
-    { group:62, id:13, text: "Jólét értékelése:" }
-    { group:62, id:14, text: "Emlékmű értékelése:" }
-    { group:62, id:15, text: "Királyság értékelése:" }
+    { group:62, id:11, text: "Népesség" }
+    { group:62, id:12, text: "Kultúra értékelése" }
+    { group:62, id:13, text: "Jólét értékelése" }
+    { group:62, id:14, text: "Emlékmű értékelése" }
+    { group:62, id:15, text: "Királyság értékelése" }
     { group:62, id:16, text: "Milyen sötét véget ért egy ilyen fényes kezdet! Kudarccal gyalázatot hoztál Egyiptomra és őseidre, és beszennyezted még meg nem született utódaid nevét is. Csatlakozhattál volna azokhoz a kiválasztottakhoz, akik halhatatlanságot nyernek a Nádföldeken. Ehelyett siratatlanul a homályba távozol. Mások lépnek majd elő, hogy elfogadják a fáraó kihívását..." }
     { group:62, id:17, text: "Építs tűzoltóállomásokat" }
     { group:62, id:18, text: "Építs építészirodákat" }
