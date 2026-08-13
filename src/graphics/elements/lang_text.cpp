@@ -208,9 +208,7 @@ bool lang_android_load_localization_base_en_direct(pcstr path) {
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_localization) {
     g_config_arch.r("game_languages", game_languages);
     g_localization.clear();
-
     lang_reload_localized_files();
-
     lang_reload_localized_tables();
 }
 
