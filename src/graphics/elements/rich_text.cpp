@@ -159,12 +159,15 @@ int rich_text_t::get_word_width(pcstr str, int in_link, int* num_chars) {
                     break;
                 } else {
                     (*num_chars)++;
+                    const bool is_link = (*str >= '0' && *str <= '9');
                     while (*str >= '0' && *str <= '9') {
                         str++;
                         (*num_chars)++;
                     }
-                    in_link = 1;
-                    start_link = 1;
+                    if (is_link) {
+                        in_link = 1;
+                        start_link = 1;
+                    }
                 }
             }
         }
@@ -176,6 +179,11 @@ int rich_text_t::get_word_width(pcstr str, int in_link, int* num_chars) {
 
             width += normal_font_def->space_width;
             last_letter_spacing = 0;
+            start_link = 0;
+        } else if (*str == '&' && in_link) {
+            width += normal_font_def->space_width;
+            last_letter_spacing = 0;
+            word_char_seen = 1;
         } else if ((unsigned char)*str > ' ') {
             // normal char
             const auto glyph = font_letter_id(normal_font_def, (const uint8_t*)str, &num_bytes);
@@ -188,9 +196,14 @@ int rich_text_t::get_word_width(pcstr str, int in_link, int* num_chars) {
             }
 
             word_char_seen = 1;
-            if (num_bytes > 1 && start_link) {
-                // add space before links in multibyte charsets
-                width += normal_font_def->space_width;
+            if (start_link) {
+                // In CJK charsets (Chinese, Korean - 3-byte UTF-8 glyphs) a link
+                // can start with a wide glyph with no space before it; insert a
+                // leading space so it doesn't glue to the preceding text.
+                // Accented Latin / Cyrillic (2-byte) must NOT get this space.
+                if (num_bytes > 2) {
+                    width += normal_font_def->space_width;
+                }
                 start_link = 0;
             }
         }
@@ -261,16 +274,18 @@ void rich_text_t::draw_line(painter &ctx, pcstr str, int x, int y, color clr, bo
 
             int num_bytes = 1;
             
-            // Handle spaces separately, just like text_draw does
-            if (*str == ' ') {
+            // Handle spaces separately, just like text_draw does.
+            if (*str == ' ' || (*str == '&' && num_link_chars > 0)) {
                 x += def->space_width;
                 num_bytes = 1;
+                start_link = 0;
             } else {
                 const auto glyph = font_letter_id(def, (const uint8_t*)str, &num_bytes);
                 if (glyph.imagid >= 0) {
-                    if (num_bytes > 1 && start_link) {
-                        // add space before links in multibyte charsets
-                        x += def->space_width;
+                    if (start_link) {
+                        if (num_bytes > 2) {
+                            x += def->space_width;
+                        }
                         start_link = 0;
                     }
 
@@ -287,6 +302,9 @@ void rich_text_t::draw_line(painter &ctx, pcstr str, int x, int y, color clr, bo
 
             if (num_link_chars > 0) {
                 num_link_chars -= num_bytes;
+                if (num_link_chars == 0) {
+                    def = normal_font_def;
+                }
             }
 
             str += num_bytes;
