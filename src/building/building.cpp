@@ -239,7 +239,7 @@ bool building_impl::add_overlay(const xstring &name) {
                    list.end());
     }
 
-    if (base.overlay_anims.size() >= base.overlay_anims.fixed_capacity) {
+    if (base.overlay_anims.size() >= base.overlay_anims.capacity()) {
         return false;
     }
 
