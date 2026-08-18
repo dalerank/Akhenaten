@@ -244,9 +244,27 @@ bool building_exists_at(tile2i tile, building *b) {
     return false;
 }
 
+static void building_reset_lifetime(building *b) {
+    b->overlay_anims.~hvector();
+    b->anim.~animation_context();
+    for (auto &a : b->anims) {
+        a.~animation_context();
+    }
+    b->minimap_anim.~animation_t();
+
+    memset(b, 0, sizeof(building));
+
+    new (&b->overlay_anims) hvector<building_overlay_anim, 4>();
+    new (&b->anim) animation_context();
+    for (auto &a : b->anims) {
+        new (&a) animation_context();
+    }
+    new (&b->minimap_anim) animation_t();
+}
+
 void building_clear_all() {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
-        memset(&g_all_buildings[i], 0, sizeof(building));
+        building_reset_lifetime(&g_all_buildings[i]);
         g_all_buildings[i].id = i;
     }
 }
@@ -254,7 +272,7 @@ void building_clear_all() {
 static void building_delete_UNSAFE(building *b) {
     b->clear_related_data();
     int id = b->id;
-    memset(b, 0, sizeof(building));
+    building_reset_lifetime(b);
     b->id = id;
 }
 
