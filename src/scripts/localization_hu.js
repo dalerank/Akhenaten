@@ -1662,7 +1662,7 @@ localization_hu = [
   { key: "#month_dec", text: "dec." }
   { key: "#top_menu_debug", text: "Debug" }
   { key: "#top_menu_debug_render", text: "Render" }
-  { key: "#top_menu_cheat_console", text: "Csalókonszol" }
+  { key: "#top_menu_cheat_console", text: "Csalókonzol" }
   { key: "#top_menu_properties_on", text: "Tulajdonságok BE" }
   { key: "#top_menu_properties_off", text: "Tulajdonságok KI" }
   { key: "#top_menu_terrain_paint_on", text: "Terepfestés BE" }

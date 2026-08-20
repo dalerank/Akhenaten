@@ -2368,13 +2368,13 @@ localization_base_hu = [
 
     { group:59, id:0, text: "Templomok felügyelője" }
     { group:59, id:1, text: "Templomok" }
-    { group:59, id:2, text: "Templomkomplexumok" }
+    { group:59, id:2, text: "komplexumok" }
     { group:59, id:3, text: "Megbékítés" }
     { group:59, id:4, text: "N/A" }
     { group:59, id:5, text: "Templom" }
-    { group:59, id:6, text: "Hónapok" }
-    { group:59, id:7, text: "Fesztivál" }
-    { group:59, id:8, text: "óta" }
+    { group:59, id:6, text: "Fesztivál óta" }
+    { group:59, id:7, text: "hónapok" }
+    { group:59, id:8, text: "eltelt" }
     { group:59, id:9, text: "A lakosok kezdenek spirituális igényeket támasztani. A közeli imahelyek hiánya visszafogja a város fejlődését." }
     { group:59, id:10, text: "Egyre többen tartanak attól, hogy ha legalább egy imahely nincs a környékükön, az istenek megsértve érzik magukat." }
     { group:59, id:11, text: "A kifinomultabb lakosok egy másik vallás közeli elérhetőségét szeretnék. A vallási sokszínűség hiánya korlátozza a város fejlődését bizonyos területeken." }
@@ -3083,6 +3083,7 @@ localization_base_hu = [
     { group:68, id:132, text: "Kattints ide, hogy a problémás helyre ugorj" }
     { group:68, id:133, text: "Ajándék küldése Egyiptomnak" }
     { group:68, id:134, text: "Kattints ide a vállalat alapításának módosításához" }
+    { group:68, id:135, text: "Munkanélküliség" }
     { group:68, id:140, text: "Kattints ide a szállítóhajó parancsainak kiadásához" }
     { group:68, id:141, text: "Kattints ide a hadihajó parancsainak kiadásához" }
     { group:68, id:142, text: "Adókulcs" }
