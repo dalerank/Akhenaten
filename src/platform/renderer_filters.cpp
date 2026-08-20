@@ -154,7 +154,7 @@ void platform_render_init_filters() {
 
     gpupixel::GPUPixelContext::initOpengl();
 
-    data.sourceImage = gpupixel::SourceImage::create_from_memory(0, 0, 4, nullptr);
+    data.sourceImage = gpupixel::SourceImage::create_from_memory(1, 1, 4, nullptr);
     if (!data.sourceImage) {
         logs::warn("GPU filters disabled: failed to initialize GPUPixel shaders");
         data.render_support_filters = false;
@@ -204,6 +204,51 @@ void platform_render_init_filters() {
     }
 
     data.sourceImage->addTarget(data.outputImage);
+}
+
+void platform_render_shutdown_filters() {
+    auto &data = g_renderer_filter;
+
+    if (!data.render_support_filters) {
+        return;
+    }
+
+    glGetError();
+
+    data.outputImage.reset();
+    data.sourceImage.reset();
+
+    data.bilaterial.reset();
+    data.grayscale.reset();
+    data.brightness.reset();
+    data.contrast.reset();
+    data.saturation.reset();
+    data.exposure.reset();
+    data.hue.reset();
+    data.colorInvert.reset();
+    data.posterize.reset();
+    data.gaussianBlur.reset();
+    data.boxBlur.reset();
+    data.beautyFace.reset();
+    data.blusher.reset();
+    data.boxDifference.reset();
+    data.boxMonoBlur.reset();
+    data.cannyEdgeDetection.reset();
+    data.crosshatch.reset();
+    data.emboss.reset();
+    data.faceReshape.reset();
+    data.glassSphere.reset();
+    data.halftone.reset();
+    data.lipstick.reset();
+    data.nonMaximumSuppression.reset();
+    data.pixellation.reset();
+    data.rgb.reset();
+    data.smoothToon.reset();
+    data.toon.reset();
+    data.weakPixelInclusion.reset();
+    data.whiteBalance.reset();
+
+    data.render_support_filters = false;
 }
 
 void game_debug_show_filter_property_float(gpupixel::FilterPtr filter, const char *name, const float step = 1.f) {
@@ -980,6 +1025,8 @@ bool platform_render_whiteBalance_options() {
 void platform_render_proceed_filter(int w, int h, int format, const std::vector<uint8_t>&pixels, std::vector<uint8_t> &output_pixels) {
     auto &data = g_renderer_filter;
 
+    glGetError();
+
     data.sourceImage->init(w, h, SDL_BYTESPERPIXEL(format), (uint8_t *)pixels.data());
     data.sourceImage->proceed();
 
@@ -1145,6 +1192,7 @@ void config_load_filter_properties(bool header) {
 #else
 
 void platform_render_init_filters() {}
+void platform_render_shutdown_filters() {}
 bool platform_render_support_filters() { return false; }
 bool platform_render_any_filter_active() { return false; }
 void platform_render_proceed_filter(int w, int h, int format, const std::vector<uint8_t> &pixels, std::vector<uint8_t> &output_pixels) {}

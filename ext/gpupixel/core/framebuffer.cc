@@ -34,6 +34,7 @@ Framebuffer::Framebuffer(int width, int height, bool onlyGenerateTexture /* = fa
 
 Framebuffer::~Framebuffer() {
     gpupixel::GPUPixelContext::getInstance()->runSync([&] {
+        glGetError();
         bool bDeleteTex = (_texture != -1);
         bool bDeleteFB = (_framebuffer != -1);
 

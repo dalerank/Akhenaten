@@ -43,6 +43,7 @@ void platform_renderer_resume();
 void platform_renderer_destroy();
 void platform_render_setup_options(xstring driver);
 void platform_render_init_filters();
+void platform_render_shutdown_filters();
 bool platform_render_support_filters();
 bool platform_render_any_filter_active();
 void platform_render_create_context();

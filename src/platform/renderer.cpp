@@ -1283,6 +1283,7 @@ void platform_renderer_resume() {
 void platform_renderer_destroy(void) {
     auto &data = g_renderer_data;
     destroy_render_texture();
+    platform_render_shutdown_filters();
     if (data.renderer) {
         SDL_DestroyRenderer(data.renderer);
         data.renderer = 0;
