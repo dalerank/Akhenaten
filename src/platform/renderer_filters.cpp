@@ -154,6 +154,13 @@ void platform_render_init_filters() {
 
     gpupixel::GPUPixelContext::initOpengl();
 
+    // Create the source image with a non-zero size (1x1). A 0x0 source image
+    // would create a degenerate 0x0 framebuffer texture on startup, which Mesa
+    // rejects with GL_INVALID_VALUE (glTexImage2D/glFramebufferTexture2D) and
+    // left a stale error behind that gpupixel's CHECK_GL later misreported as
+    // its own "GL ERROR ... framebuffer.cc:41". The real dimensions are set
+    // later in platform_render_proceed_filter() -> sourceImage->init(w,h,...),
+    // so this placeholder only needs to be a valid texture.
     data.sourceImage = gpupixel::SourceImage::create_from_memory(1, 1, 4, nullptr);
     if (!data.sourceImage) {
         logs::warn("GPU filters disabled: failed to initialize GPUPixel shaders");
@@ -1025,6 +1032,10 @@ bool platform_render_whiteBalance_options() {
 void platform_render_proceed_filter(int w, int h, int format, const std::vector<uint8_t>&pixels, std::vector<uint8_t> &output_pixels) {
     auto &data = g_renderer_filter;
 
+    // GPUPixel shares the SDL OpenGL context. SDL renderer calls (rendercopy,
+    // readpixels, ...) may leave an unread GL error behind; gpupixel's CHECK_GL
+    // would then misattribute that stale error to itself and spam bogus
+    // "GL ERROR" log lines. Clear the error state before gpupixel does any GL.
     glGetError();
 
     data.sourceImage->init(w, h, SDL_BYTESPERPIXEL(format), (uint8_t *)pixels.data());
