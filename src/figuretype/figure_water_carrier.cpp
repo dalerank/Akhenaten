@@ -95,7 +95,7 @@ sound_key figure_water_carrier::phrase_key() const {
     }
 
     int index = rand() % keys.size();
-    return keys[index];
+    return xstring().printf("water_%s", keys[index].c_str());
 }
 
 int figure_water_carrier::provide_service() {

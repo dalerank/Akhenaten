@@ -102,7 +102,7 @@ sound_key figure_tax_collector::phrase_key() const {
         {"much_pooh_houses", poor_taxed > 50},
         {"desease_can_start_at_any_moment", g_city.health.value < 30},
         {"no_food_in_city", g_city.sentiment.low_mood_cause == LOW_MOOD_NO_FOOD},
-        {"buyer_city_have_no_army", formation_get_num_forts() < 1},
+        {"city_have_no_army", formation_get_num_forts() < 1},
         {"need_workers", g_city.labor.workers_needed >= 10},
         {"gods_are_angry", g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT},
         {"city_is_bad", g_city.kingdome.rating < 30},
@@ -115,7 +115,7 @@ sound_key figure_tax_collector::phrase_key() const {
     std::erase_if(keys, [] (auto &it) { return !it.valid; });
 
     int index = rand() % keys.size();
-    return keys[index].prefix;
+    return xstring().printf("taxman_%s", keys[index].prefix.c_str());
 }
 
 void figure_tax_collector::figure_before_action() {
