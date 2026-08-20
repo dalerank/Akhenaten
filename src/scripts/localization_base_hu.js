@@ -5625,4 +5625,19 @@ localization_base_hu = [
     { group:313, id:10, text: "Ezt a Festékkészítőt csak néhány munkás szolgálja ki. A kis létszámú személyzet alig tud egyáltalán festéket előállítani." }
     { group:313, id:11, text: "Ennek a műhelynek hennára van szüksége egy Hennafarmról vagy raktárból, mielőtt bármilyen festéket készíthetne." }
     { group:313, id:12, text: "Henna:" }
+    { group:314, id:0, text: "Lámpakészítő" }
+    { group:314, id:1, text: "Itt olajjal töltik meg a kerámiát, hogy lámpákat készítsenek, amelyek megvilágítják a királyi sírok sötét folyosóit." }
+    { group:314, id:2, text: "A termelés" }
+    { group:314, id:3, text: "befejeződött." }
+    { group:314, id:4, text: "A kereskedelmi felügyelőd leállította a lámpatermelést." }
+    { group:314, id:5, text: "Ennek a Lámpakészítőnek nincsenek alkalmazottai, ezért nem fog lámpákat gyártani." }
+    { group:314, id:6, text: "Teljes létszámú személyzettel ez a Lámpakészítő olyan gyorsan és hatékonyan termel lámpákat, amennyire csak képes." }
+    { group:314, id:7, text: "Ennek a Lámpakészítőnek kissé kevés a dolgozója, ezért a lámpatermelés akadozik." }
+    { group:314, id:8, text: "Ennek a Lámpakészítőnek nincs elég munkása, ezért lassabban termel lámpákat a kelleténél." }
+    { group:314, id:9, text: "Ennek a Lámpakészítőnek sokkal több munkásra van szüksége. A lámpatermelés itt szinte teljesen lelassult." }
+    { group:314, id:10, text: "Ezt a Lámpakészítőt csak néhány munkás szolgálja ki. A kis létszámú személyzet alig tud egyáltalán lámpát előállítani." }
+    { group:314, id:11, text: "Ennek a műhelynek olajra van szüksége, amelyet csak importálni lehet, mielőtt bármilyen lámpát készíthetne." }
+    { group:314, id:12, text: "Ennek a műhelynek kerámiára van szüksége egy Fazekastól vagy raktárból, mielőtt bármilyen lámpát készíthetne." }
+    { group:314, id:13, text: "Olaj:" }
+    { group:314, id:14, text: "Kerámia:" }
 ]

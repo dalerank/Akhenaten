@@ -123,6 +123,7 @@ import ui_booth_window
 import ui_farm_info_window
 import ui_courthouse_window
 import ui_statue_window
+import ui_legacy_building_info_window
 import ui_window_city
 import ui_architect_post_window
 import ui_well_info_window

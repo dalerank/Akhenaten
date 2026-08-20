@@ -41,7 +41,7 @@ building_food_mill {
   max_search_distance : 40
   min_workers_percent_for_tasks : 50
   min_houses_coverage : 100
-  meta { help_id: 3, text_id: 98 }
+  meta { text_id: 98, help_link:"message_building_granary" }
   info_sound : "Wavs/MARKET.WAV"
   cost [ 40, 60, 100, 150, 250 ]
   desirability { value[-2], step[1], step_size[1], range[4] }

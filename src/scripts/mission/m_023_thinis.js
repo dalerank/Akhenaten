@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 23 thinis civil-war started")
 
-// Empire / events verified vs mission1.pak scenario 23 (2026-07-26 dump).
+// Empire / events aligned with original campaign scenario 23 (2026-07-26 dump).
 // Empire id=23. Scenario enemy ENEMY_6_KUSHITE (Nubian opportunism); Egyptian = loyalist/favour.
 // Gods: Osiris, Ra, Ptah. Funds Normal 13350 / loan 4200 / debt 20. Rank 9. Climate northern.
 // Win: pop 4500 / culture 25 / prosperity 35 / monuments 0 / kingdom 90 / housing count 10 + level 10.

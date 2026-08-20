@@ -99,6 +99,11 @@ file_dialog_load_scenario {
     })
 }
 
+[es=(file_dialog_load_scenario, go_back)]
+function file_dialog_load_scenario_es_go_back(window) {
+    window_go_back()
+}
+
 [es=(file_dialog_load_scenario, on_filename_input)]
 function file_dialog_load_scenario_es_on_filename_input(ev) {
     file_dialog_load_scenario_set_show_filename(ev.value)

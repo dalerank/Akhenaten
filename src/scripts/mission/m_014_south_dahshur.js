@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 14 south dahshur started")
 
-// Empire / requests / events verified vs mission1.pak scenario 14 (2026-07-26 dump).
+// Empire / requests / events aligned with original campaign scenario 14 (2026-07-26 dump).
 // Favour Pharaoh army size=49 (by_favour) → chain size=21; proxied via
 // mission_pharaoh_favour_invasion_tick until B2-migrate. No timed enemy raids in pak.
 // Scenario enemy is ENEMY_5_HYKSOS (pak_enemy_id=5) — used if invasions spawn; favour
@@ -72,7 +72,7 @@ mission14 { // South Dahshur — Snofru's Bent Pyramid
 		BUILDING_SCRIBAL_SCHOOL,
 	]
 
-	// Goals verified vs mission1.pak scenario 14: pop 1/3500, culture 0/15 (disabled),
+	// Goals aligned with original campaign scenario 14: pop 1/3500, culture 0/15 (disabled),
 	// prosperity 1/25, monuments 1/21, kingdom 1/50, housing_level 1/19 (count goal 0 ignored).
 	// Medium bent pyramid (weight 8) → 2.25*8+4.5 = 22 under additive formula — meets 21.
 	win_criteria {
@@ -84,7 +84,7 @@ mission14 { // South Dahshur — Snofru's Bent Pyramid
 		housing_level {enabled : true, goal : 19 }
 	}
 
-	// Map points from mission1.pak scenario 14.
+	// Map points from original campaign scenario 14.
 	entry_point [41, 28]
 	exit_point [116, 93]
 	river_entry_point [123, 84]
@@ -95,7 +95,7 @@ mission14 { // South Dahshur — Snofru's Bent Pyramid
 
 	enable_scenario_events : true
 
-	// Empire from mission1.pak scenario 14 (empire id=13) — full map objects.
+	// Empire from original campaign scenario 14 (empire id=13) — full map objects.
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [

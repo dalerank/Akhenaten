@@ -47,6 +47,11 @@ struct js_Property;
 #define JS_TRYLIMIT 64		/* exception stack size */
 #define JS_GCLIMIT 10000	/* run gc cycle every N allocations */
 
+/* 0 = soft log on ephemeral escape; 1 = js_error. */
+#ifndef JS_FRAME_ESCAPE_HARD
+#define JS_FRAME_ESCAPE_HARD 1
+#endif
+
 /* instruction size -- change to int if you get integer overflow syntax errors */
 typedef int js_Instruction;
 
@@ -173,6 +178,12 @@ struct js_State
 	js_Function *gcfun;
 	js_Object *gcobj;
 	js_String *gcstr;
+
+	/* draw frame-zone: nested depth; ephemeral objects use frame_alloc */
+	int frame_zone_depth;
+	unsigned frame_escape_count;
+	void (*frame_arena_release)(void *actx);
+	void *frame_arena_release_actx;
 	js_Import jscimport;
 	js_Emit jscemit;
 	void (*dumpfunction)(js_State *J, const char *);

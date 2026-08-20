@@ -25,7 +25,7 @@ building_water_lift {
     shoreline : true
     floodplain_shoreline : true
   }
-  meta { help_id: 59, text_id: 107 }
+  meta { text_id: 107, help_link:"message_game_concept_irrigation" }
   info_sound : "Wavs/waterwheel.WAV"
   cost [ 6, 12, 25, 50, 100 ]
   desirability { value[-3], step[1], step_size[1], range[3] }

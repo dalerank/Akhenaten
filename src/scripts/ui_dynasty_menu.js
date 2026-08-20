@@ -39,12 +39,37 @@ window_dinasty_menu {
         background      : outer_panel({size[24, 19]})
 
         title       : text_center({pos[0, 20], size[px(24), 20], font:FONT_LARGE_BLACK_ON_LIGHT})
-        btnresume   : button({margin{centerx: -135, top: 40 + 1 * 40}, size[270, 25], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: dynasty_menu_btn_resume })
-        btnexplore  : button({margin{centerx: -135, top: 40 + 2 * 40}, size[270, 25], text[293, 6], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: dynasty_menu_btn_explore })
-        btnload     : button({margin{centerx: -135, top: 40 + 3 * 40}, size[270, 25], text[293, 2], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: show_window_by_id("file_dialog_load") })
-        btncustom   : button({margin{centerx: -135, top: 40 + 4 * 40}, size[270, 25], text[293, 3], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: dynasty_menu_btn_custom })
-        btnback     : button({margin{centerx: -135, top: 40 + 5 * 40}, size[270, 25], text[293, 4], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: window_go_back })
+        btnresume   : button({margin{centerx: -135, top: 40 + 1 * 40}, size[270, 25], font:FONT_NORMAL_BLACK_ON_LIGHT })
+        btnexplore  : button({margin{centerx: -135, top: 40 + 2 * 40}, size[270, 25], text[293, 6], font:FONT_NORMAL_BLACK_ON_LIGHT })
+        btnload     : button({margin{centerx: -135, top: 40 + 3 * 40}, size[270, 25], text[293, 2], font:FONT_NORMAL_BLACK_ON_LIGHT })
+        btncustom   : button({margin{centerx: -135, top: 40 + 4 * 40}, size[270, 25], text[293, 3], font:FONT_NORMAL_BLACK_ON_LIGHT })
+        btnback     : button({margin{centerx: -135, top: 40 + 5 * 40}, size[270, 25], text[293, 4], font:FONT_NORMAL_BLACK_ON_LIGHT })
     }
+}
+
+[es=(window_dinasty_menu, btnresume)]
+function window_dinasty_menu_btnresume(window) {
+    dynasty_menu_btn_resume()
+}
+
+[es=(window_dinasty_menu, btnexplore)]
+function window_dinasty_menu_btnexplore(window) {
+    dynasty_menu_btn_explore()
+}
+
+[es=(window_dinasty_menu, btnload)]
+function window_dinasty_menu_btnload(window) {
+    emit event_show_window{ id: "file_dialog_load" }
+}
+
+[es=(window_dinasty_menu, btncustom)]
+function window_dinasty_menu_btncustom(window) {
+    dynasty_menu_btn_custom()
+}
+
+[es=(window_dinasty_menu, btnback)]
+function window_dinasty_menu_btnback(window) {
+    window_go_back()
 }
 
 [es=(window_dinasty_menu, init)]

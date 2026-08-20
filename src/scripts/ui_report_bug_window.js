@@ -21,8 +21,13 @@ report_bug_window {
 
         lb_submit: label({ margin:{centerx:-70, bottom:-35}, text:"Submit?"})
         btn_submit: ok_button({ margin:{centerx:0, bottom:-40}, text:"", onclick_event:"on_submit" })
-        btn_cancel: cancel_button({ margin:{centerx:50, bottom:-40}, onclick: window_go_back })
+        btn_cancel: cancel_button({ margin:{centerx:50, bottom:-40}, onclick_event: "go_back" })
     }
+}
+
+[es=(report_bug_window, go_back)]
+function report_bug_window_go_back(window) {
+    window_go_back()
 }
 
 [es=(report_bug_window, on_submit)]

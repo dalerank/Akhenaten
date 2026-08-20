@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 25 kebet started")
 
-// Empire / events verified vs mission1.pak scenario 25 (2026-07-26 dump).
+// Empire / events aligned with original campaign scenario 25 (2026-07-26 dump).
 // Empire id=24. Scenario enemy ENEMY_6_KUSHITE; every invasion in the pak is
 // invader=egypt(2) (Khmun loyalists) or pharaoh(3) on the favour trigger.
 // Gods: Osiris (patron x2), Ra, Seth. Funds Normal 20000 / loan 3500 / debt 20. Rank 9.

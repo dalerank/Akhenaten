@@ -19,7 +19,7 @@ building_small_obelisk {
     fire_proof : true
     damage_proof : true
     info_title_id [198, 22]
-    meta { help_id: 372, text_id: 178 }
+    meta { text_id: 178, help_link:"message_building_obelisk" }
     info_sound : "Wavs/rock3.wav"
     cost [ 1500, 2000, 2500, 3500, 5000 ]
     flags {
@@ -48,7 +48,7 @@ building_large_obelisk {
     fire_proof : true
     damage_proof : true
     info_title_id [198, 23]
-    meta { help_id: 372, text_id: 178 }
+    meta { text_id: 178, help_link:"message_building_obelisk" }
     info_sound : "Wavs/rock3.wav"
     cost [ 3000, 4000, 5000, 7000, 10000 ]
     flags {

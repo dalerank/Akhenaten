@@ -16,9 +16,24 @@ building_small_mastaba {
     info_title_id[198, 18]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:4, text_id:178 }
+    meta { text_id:178, help_link:"message_building_mastaba" }
     info_sound : "Wavs/rock3.wav"
     init_tiles [10, 4]
+
+    // RESOURCE_NONE count = architects (ARCHITECTS). Phase 8 = finished.
+    construction {
+        phases [
+            { id: 0, resources: [ { resource: RESOURCE_NONE, count: 1 } ] }
+            { id: 1, resources: [ { resource: RESOURCE_NONE, count: 1 } ] }
+            { id: 2, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_BRICKS, count: 4800 } ] }
+            { id: 3, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 2000 }, { resource: RESOURCE_BRICKS, count: 4000 } ] }
+            { id: 4, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 1600 }, { resource: RESOURCE_BRICKS, count: 3200 } ] }
+            { id: 5, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 1200 }, { resource: RESOURCE_BRICKS, count: 2400 } ] }
+            { id: 6, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 800 }, { resource: RESOURCE_BRICKS, count: 1600 } ] }
+            { id: 7, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 400 }, { resource: RESOURCE_BRICKS, count: 800 } ] }
+            { id: 8, resources: [ { resource: RESOURCE_NONE, count: 0 } ] }
+        ]
+    }
 
     flags {
         is_monument: true
@@ -81,9 +96,23 @@ building_small_mastaba {
     info_title_id [198, 19]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:4, text_id:178 }
+    meta { text_id:178, help_link:"message_building_mastaba" }
     info_sound : "Wavs/rock3.wav"
     init_tiles [14, 6]
+
+    construction {
+        phases [
+            { id: 0, resources: [ { resource: RESOURCE_NONE, count: 1 } ] }
+            { id: 1, resources: [ { resource: RESOURCE_NONE, count: 1 } ] }
+            { id: 2, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_BRICKS, count: 8000 } ] }
+            { id: 3, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 4000 }, { resource: RESOURCE_BRICKS, count: 8000 } ] }
+            { id: 4, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 3200 }, { resource: RESOURCE_BRICKS, count: 6400 } ] }
+            { id: 5, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 2400 }, { resource: RESOURCE_BRICKS, count: 4800 } ] }
+            { id: 6, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 1600 }, { resource: RESOURCE_BRICKS, count: 3200 } ] }
+            { id: 7, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 800 }, { resource: RESOURCE_BRICKS, count: 1600 } ] }
+            { id: 8, resources: [ { resource: RESOURCE_NONE, count: 0 } ] }
+        ]
+    }
 
     flags {
         is_monument: true
@@ -152,9 +181,24 @@ building_small_mastaba {
     info_title_id [198, 20]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:4, text_id:178 }
+    meta { text_id:178, help_link:"message_building_mastaba" }
     info_sound : "Wavs/rock3.wav"
     init_tiles [18, 8]
+
+    // Provisional: medium × (144/84)=×12/7, rounded to 400. No Heaven/OG per-phase dump.
+    construction {
+        phases [
+            { id: 0, resources: [ { resource: RESOURCE_NONE, count: 1 } ] }
+            { id: 1, resources: [ { resource: RESOURCE_NONE, count: 1 } ] }
+            { id: 2, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_BRICKS, count: 13600 } ] }
+            { id: 3, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 6800 }, { resource: RESOURCE_BRICKS, count: 13600 } ] }
+            { id: 4, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 5600 }, { resource: RESOURCE_BRICKS, count: 10800 } ] }
+            { id: 5, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 4000 }, { resource: RESOURCE_BRICKS, count: 8400 } ] }
+            { id: 6, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 2800 }, { resource: RESOURCE_BRICKS, count: 5600 } ] }
+            { id: 7, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 1400 }, { resource: RESOURCE_BRICKS, count: 2800 } ] }
+            { id: 8, resources: [ { resource: RESOURCE_NONE, count: 0 } ] }
+        ]
+    }
 
     flags {
         is_monument: true

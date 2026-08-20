@@ -139,6 +139,7 @@ struct js_Object {
     js_Object *gcnext;
     js_FunctionModifier *modifiers; /* object modifiers/attributes */
     volatile uint32_t gcmark;
+    uint8_t ephemeral; /* 1 = frame-zone arena; not on gcobj */
 
     ~js_Object() {
     }

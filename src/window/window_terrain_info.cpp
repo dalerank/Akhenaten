@@ -1,31 +1,14 @@
 #include "window_terrain_info.h"
 
 #include "city/object_info.h"
-#include "graphics/elements/lang_text.h"
-#include "graphics/elements/panel.h"
 #include "grid/bridge.h"
 #include "grid/terrain.h"
 #include "grid/property.h"
-#include "grid/canals.h"
-#include "grid/image.h"
 #include "grid/wall_material.h"
 #include "sound/sound.h"
-#include "building/building_garden.h"
-#include "building/building_plaza.h"
-#include "building/building_irrigation_ditch.h"
 #include "window/building/common.h"
-#include "window_figure_info.h"
+#include "window/message_dialog.h"
 #include "city/city.h"
-
-void window_building_draw_canal(object_info* c) {
-    c->help_id = 60;
-    window_building_play_sound(c, "Wavs/aquaduct.wav");
-    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
-    lang_text_draw_centered(141, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    int water_start_image = building_irrigation_ditch::images().begin;
-    bool canal_has_water = !!map_canal_at(c->grid_offset) && ((map_image_at(c->grid_offset) - water_start_image) < 15);
-    window_building_draw_description_at(c, 16 * c->bgsize.y - 144, 141, canal_has_water ? 1 : 2);
-}
 
 void terrain_info_window::window_info_background(object_info &c) {
     update_buttons(c);
@@ -87,11 +70,8 @@ void terrain_info_window::init(object_info &c) {
     case terrain_info_water:
     case terrain_info_rubble:
     case terrain_info_bridge:
-        break;
-
     case terrain_info_canal:
-        c.help_id = 60;
-        window_building_draw_canal(&c);
+    case terrain_info_tree:
         break;
     }
 
@@ -103,7 +83,16 @@ void terrain_info_window::init(object_info &c) {
         }
     }
 
-    c.help_id = io.r_int("help_id");
+    xstring help = io.r_string("help_id");
+    if (!help.empty()) {
+        c.help_link = help;
+        c.help_id = 0;
+    } else {
+        c.help_link = {};
+        c.help_id = 0;
+        help = "message_dialog_help";
+    }
+    window_message_setup_help_id(help);
 }
 
 bool terrain_info_window::check(object_info &c) {

@@ -84,12 +84,15 @@ static void storage_yard_proto_toString(js_State *J) {
 static js_Object *g_storage_yard_proto = nullptr;
 
 static void jsB_new_StorageYard(js_State *J) {
-    const int id = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
+    int id = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
     building_storage_yard *yard = storage_yard_cast(building_get(id));
     if (!yard) {
         js_pushnull(J);
         return;
     }
+
+    // Room tiles resolve to the yard; always store the yard building id.
+    id = yard->id();
 
     js_pushobject(J, jsV_newobject(J, JS_COBJECT, g_storage_yard_proto));
     js_pushnumber(J, id);

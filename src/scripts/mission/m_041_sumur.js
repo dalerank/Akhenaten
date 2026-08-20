@@ -1,6 +1,7 @@
 log_info("akhenaten: mission 41 sumur started")
 
-// Cleop mission1.pak scenario 41 (dump 2026-07-28). Empire id=23.
+// Cleopatra campaign scenario 41. Empire id=23.
+
 // Scenario enemy ENEMY_2_CANAANITE (briefing = Hittites — pak id wins).
 // Gods: Ra(2), Ptah(1). MM subtitle: Lands of the Levant. Start year -1300.
 // Funds Normal 5565 / loan 1500 / debt_interest 9. Rank 6 (pak).

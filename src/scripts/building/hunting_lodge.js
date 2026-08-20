@@ -5,8 +5,18 @@ building_hunting_lodge {
         preview { pack:PACK_GENERAL, id:176}
         base { pack:PACK_GENERAL, id:176}
         work { pos:[20, -15], pack:PACK_GENERAL, id:176, offset:1, max_frames:18, duration:3 }
-        gamemeat { pos:[61, 14], pack:PACK_GENERAL, id:205, max_frames:5 }
         minimap {pack:PACK_GENERAL, id:149, offset:160}
+    }
+    overlay_anims {
+        gamemeat {
+            pos:[61, 14]
+            pack:PACK_GENERAL
+            id:205
+            max_frames:5
+            stack: false
+            resource: RESOURCE_GAMEMEAT
+            default_active: true
+        }
     }
 
     labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
@@ -14,7 +24,7 @@ building_hunting_lodge {
         resource : RESOURCE_GAMEMEAT
     }
 
-    meta { help_id:90, text_id:154 }
+    meta { text_id:154, help_link:"message_building_hunting_lodge" }
     info_sound : "Wavs/lo_hunt.wav"
     building_size : 2
     min_houses_coverage : 100

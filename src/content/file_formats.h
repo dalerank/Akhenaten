@@ -10,7 +10,6 @@ enum e_file_format {
     FILE_FORMAT_SGX,
     FILE_FORMAT_555,
     //
-    FILE_FORMAT_MISSION_PAK,
     FILE_FORMAT_SAVE_FILE,
     FILE_FORMAT_MAP_FILE,
     //

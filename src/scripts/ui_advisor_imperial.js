@@ -79,6 +79,7 @@ function scenario_request_handle(rq) {
     })
 }
 
+[es=(advisor_imperial_window, click_item)]
 function imperial_requests_on_click_item(p) {
     if (p.text === "distant") {
         __imperial_dispatch_distant_battle()
@@ -164,7 +165,7 @@ advisor_imperial_window {
                     draw_scrollbar_always: false
                     draw_paneling: false
                     onrender_item: imperial_requests_on_render_item
-                    onclick_item: imperial_requests_on_click_item
+                    onclick_event: "click_item"
                 })
 
                 bottom_panel : inner_panel({pos[64, 324], size[32, 6] })
@@ -172,12 +173,10 @@ advisor_imperial_window {
 
                 donate_to_city : button({pos[320, 330], size[250, 20]
                                          text{group:52, id:2}, tooltip:"${68.96}", font:FONT_NORMAL_WHITE_ON_DARK
-                                         onclick: show_window_by_id("donate_to_city_window")
                                         })
 
                 send_gift    : button({pos[320, 352], size[250, 20]
-                                       text{group:52, id:49}, tooltip:"${68.133}", font:FONT_NORMAL_WHITE_ON_DARK,
-                                       onclick: show_window_by_id("gift_to_kingdome_window")
+                                       text{group:52, id:49}, tooltip:"${68.133}", font:FONT_NORMAL_WHITE_ON_DARK
                                       })
 
                 personal_savings : label({pos[72, 374]
@@ -186,7 +185,7 @@ advisor_imperial_window {
                 money_lost   : label({pos[272, 374], textfn: function() { return "0 " + __loc(52, 79) } })
                 no_requests  : label({margin{ left:40, centery:0}, text:"#no_requests", font:FONT_NORMAL_WHITE_ON_DARK })
 
-                salary_rank  : button({pos[70, 392], size[500, 24], tooltip[68, 97], textfn:salary_rank_text, font:FONT_NORMAL_WHITE_ON_DARK, onclick: show_window_by_id("set_salary_window") })
+                salary_rank  : button({pos[70, 392], size[500, 24], tooltip[68, 97], textfn:salary_rank_text, font:FONT_NORMAL_WHITE_ON_DARK })
 
                 big_text     : text_center({pos[60, 295], size[400, 20], font:FONT_NORMAL_BLACK_ON_LIGHT})
                 top_text     : text_center({pos[504, 130], size[100, 20], font:FONT_NORMAL_BLACK_ON_LIGHT})
@@ -205,6 +204,21 @@ function imperial_visible_request_view(index) {
     }
     v.resource = city_resource_view(v.resource_id)
     return v
+}
+
+[es=(advisor_imperial_window, donate_to_city)]
+function advisor_imperial_window_donate_to_city(window) {
+    emit event_show_window{ id: "donate_to_city_window" }
+}
+
+[es=(advisor_imperial_window, send_gift)]
+function advisor_imperial_window_send_gift(window) {
+    emit event_show_window{ id: "gift_to_kingdome_window" }
+}
+
+[es=(advisor_imperial_window, salary_rank)]
+function advisor_imperial_window_salary_rank(window) {
+    emit event_show_window{ id: "set_salary_window" }
 }
 
 [es=(advisor_imperial_window, init)]

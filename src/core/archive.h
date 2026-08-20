@@ -600,8 +600,16 @@ struct g_archive_section {
 
     inline int r_int(pcstr prop_name, int def = 0) {
         int result = def;
-        g_config_arch.r_section(prop_name, [&] (archive arch) {
+        g_config_arch.r_section(name.c_str(), [&](archive arch) {
             result = arch.r_int(prop_name, def);
+        });
+        return result;
+    }
+
+    inline xstring r_string(pcstr prop_name, pcstr def = "") {
+        xstring result = def;
+        g_config_arch.r_section(name.c_str(), [&](archive arch) {
+            result = arch.r_string(prop_name, def);
         });
         return result;
     }

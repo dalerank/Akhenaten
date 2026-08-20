@@ -77,19 +77,3 @@ void building_wood_cutter::update_animation() {
         base.play_animation = false;
     }
 }
-
-bool building_wood_cutter::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    draw_normal_anim(ctx, point, tile, color_mask);
-
-    int amount = ceil((float)base.stored_amount(RESOURCE_TIMBER) / 100.0) - 1;
-    if (amount >= 0) {
-        const auto &eanim = anim(animkeys().wood);
-
-        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
-        command.image_id = eanim.first_img() + amount;
-        command.pixel = point + eanim.pos;
-        command.mask = color_mask;
-    }
-
-    return true;
-}

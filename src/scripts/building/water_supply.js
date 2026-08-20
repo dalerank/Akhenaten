@@ -12,7 +12,7 @@ building_water_supply {
   min_houses_coverage : 50
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
   fire_proof : true
-  meta { help_id:61, text_id:108 }
+  meta { text_id:108, help_link:"message_building_water_supply" }
   info_sound : "Wavs/WELL.WAV"
   building_size : 2
   needs {

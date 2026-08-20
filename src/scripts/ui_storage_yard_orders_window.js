@@ -1,5 +1,14 @@
 log_info("akhenaten: ui storage yard orders window started")
 
+var __storage_yard_orders_yard = null
+
+function storage_yard_orders_ensure_yard() {
+    if (!__storage_yard_orders_yard) {
+        __storage_yard_orders_yard = city.get_storage_yard(city.object_info.bid)
+    }
+    return __storage_yard_orders_yard
+}
+
 function storage_yard_order_instruction(storage, resource) {
     var state = storage.resource_state(resource)
 
@@ -18,15 +27,29 @@ function storage_yard_order_instruction(storage, resource) {
     }
 }
 
+function storage_yard_orders_empty_all_text() {
+    var yard = storage_yard_orders_ensure_yard()
+    if (!yard) {
+        return __loc(99, 4)
+    }
+    return yard.is_empty_all() ? __loc(99, 5) : __loc(99, 4)
+}
+
+[es=(storage_yard_orders_window, click_item)]
 function storage_yard_orders_list_on_click_item(p) {
-    storage_yard_orders_window.storage_yard.cycle_resource_state(p.user_data)
+    var yard = storage_yard_orders_ensure_yard()
+    if (!yard) {
+        return
+    }
+    yard.cycle_resource_state(p.user_data)
 }
 
 function storage_yard_orders_list_on_render_item(p) {
     var resId = p.user_data
-    var storage = storage_yard_orders_window.storage_yard
-    if (resId == RESOURCE_NONE || !storage)
+    var storage = storage_yard_orders_ensure_yard()
+    if (resId == RESOURCE_NONE || !storage) {
         return
+    }
 
     ui.resource_icon([p.x + 25, p.y + 2], resId)
     ui.label_ex(__loc(23, resId), [p.x + 65, p.y], FONT_NORMAL_WHITE_ON_DARK, UiFlags_AlignYCentered, 150)
@@ -56,7 +79,6 @@ storage_yard_orders_window {
     pos: [(sw(0) - px(29)) / 2, (sh(0) - px(17)) / 2]
     draw_underlying: true
     allow_rmb_goback: true
-    storage_yard: null
 
     ui {
         background   : outer_panel({size[29, 17]}),
@@ -73,30 +95,45 @@ storage_yard_orders_window {
             draw_scrollbar_always: false
             draw_paneling: true
             onrender_item: storage_yard_orders_list_on_render_item
-            onclick_item: storage_yard_orders_list_on_click_item
+            onclick_event: "click_item"
         })
         empty_all    : button({pos[80, -1]
                                size[300, 24]
                                margin{bottom:-64}
-                               textfn: function() { return storage_yard_orders_window.storage_yard.is_empty_all() ? __loc(99, 5) : __loc(99, 4) }
-                               onclick: function() { storage_yard_orders_window.storage_yard.toggle_empty_all() }
+                               textfn: storage_yard_orders_empty_all_text
                               })
 
         accept_none  : button({pos[80, -1]
                                size[300, 24]
                                margin{bottom:-38}
                                text:{group:99, id:7}
-                               onclick: function() { storage_yard_orders_window.storage_yard.accept_none() }
                               })
 
         button_help   : help_button({})
-        button_close  : close_button({ onclick: window_go_back })
+        button_close  : close_button({})
+    }
+}
+
+
+[es=(storage_yard_orders_window, empty_all)]
+function storage_yard_orders_window_empty_all(window) {
+    var yard = storage_yard_orders_ensure_yard()
+    if (yard) {
+        yard.toggle_empty_all()
+    }
+}
+
+[es=(storage_yard_orders_window, accept_none)]
+function storage_yard_orders_window_accept_none(window) {
+    var yard = storage_yard_orders_ensure_yard()
+    if (yard) {
+        yard.accept_none()
     }
 }
 
 [es=(storage_yard_orders_window, init)]
 function storage_yard_orders_window_init(window) {
-    storage_yard_orders_window.storage_yard = city.get_storage_yard(city.object_info.bid)
+    __storage_yard_orders_yard = city.get_storage_yard(city.object_info.bid)
 
     window.goods_list.clear()
     for (var name in city.resources.available) {

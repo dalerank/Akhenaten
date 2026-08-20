@@ -55,7 +55,7 @@ building_abu_simbel {
     fire_proof : true
     damage_proof : true
     info_title_id [198, 37]
-    meta { help_id: 492, text_id: 178 }
+    meta { text_id: 178, help_link:"message_building_abu_simbel" }
     info_sound : "Wavs/rock3.wav"
     cost [ 5000, 6500, 8000, 11000, 16000 ]
     flags {

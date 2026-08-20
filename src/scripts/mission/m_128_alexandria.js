@@ -1,7 +1,7 @@
 log_info("akhenaten: mission 128 alexandria started")
 
-// Custom map Cleop/Maps/Alexandria.map ("An Alexandrian Affair") — dump 2026-07-26
-// via __test_mission_map_dump (no JS overlay). Empire id=0; our city = Perwadjyt.
+// Custom map Cleop/Maps/Alexandria.map ("An Alexandrian Affair").
+// Empire id=0; our city = Perwadjyt.
 // Monuments (group 198): 24 Sun Temple, 17 Grand Pyramid Complex, 15 Large Pyramid.
 // Allowed structures (scenario reserved[0..46]): all 47 editor flags ON.
 // Triage: SKIP map_obj idx=11 empty; SKIP orphan routes 19 (no polyline), 22, 25.

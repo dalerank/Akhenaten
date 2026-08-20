@@ -13,8 +13,8 @@ taxcollector_info_window {
         title         : text({pos: [0, 12], size: [px(29), 20], text:"${text.0}", font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
         deben_icon    : resource_icon({pos: [16, 46], resource:RESOURCE_GOLD}),
         tax_level     : label({pos:[px(29) / 2 + 40, 46], textfn: taxcollector_info_window_tax_level_text, font : FONT_NORMAL_BLACK_ON_LIGHT }),
-        dec_tax       : arrowdown({pos:[px(29) / 2 + 170, 38], onclick: function() { emit event_finance_change_tax{ value: -1 } } }),
-        inc_tax       : arrowup({pos:[px(29) / 2 + 193, 38], onclick: function() { emit event_finance_change_tax{ value: 1 } } }),
+        dec_tax       : arrowdown({pos:[px(29) / 2 + 170, 38] }),
+        inc_tax       : arrowup({pos:[px(29) / 2 + 193, 38] }),
         money_text    : text({pos: [44, 44], wrap:px(26), font : FONT_NORMAL_BLACK_ON_LIGHT }),
         warning_text  : text({pos: [28, 66], font : FONT_NORMAL_BLACK_ON_LIGHT }),
         building_desc : text({pos: [28, 86], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
@@ -26,19 +26,19 @@ taxcollector_info_window {
         show_overlay  : button({
                                 margin:{right:-64, bottom:-40}, size:[23, 23]
                                 textfn: building_info_window_text_overlay
-                                onclick: building_info_window_toggle_overlay
                                })
 
         mothball      : button({
                                 margin:{right:-90, bottom:-40}, size:[23, 23]
                                 textfn: building_info_window_text_mothball
-                                onclick: building_info_window_toggle_mothball
                                })
 
         button_help   : help_button({}),
         button_close  : close_button({}),
     }
 }
+
+
 
 [es=(taxcollector_info_window, init)]
 function taxcollector_info_window_on_init(window) {
@@ -52,4 +52,14 @@ function taxcollector_info_window_on_init(window) {
 
     var wid = Math.approximate_value(b.worker_percentage / 100.0, [10, 9, 8, 7, 6, 5])
     window.workers_desc.text = __loc(g, wid)
+}
+
+[es=(taxcollector_info_window, dec_tax)]
+function taxcollector_info_window_dec_tax(window) {
+    emit event_finance_change_tax{ value: -1 }
+}
+
+[es=(taxcollector_info_window, inc_tax)]
+function taxcollector_info_window_inc_tax(window) {
+    emit event_finance_change_tax{ value: 1 }
 }

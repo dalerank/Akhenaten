@@ -313,11 +313,11 @@
           <span class="obj-value">off</span>
         </li>
       </ul>
-      <p>Goals match <code>mission1.pak</code> scenario 11. Kingdom 80 is the real difficulty: refused or late requests hit reputation hard. Keeping copper, weapons, and luxury goods flowing is the core of the mission.</p>
+      <p>Goals match original campaign scenario 11. Kingdom 80 is the real difficulty: refused or late requests hit reputation hard. Keeping copper, weapons, and luxury goods flowing is the core of the mission.</p>
 
       <!-- ─── Scripted events ───────────────────────────────── -->
       <h2 id="events">Scripted events</h2>
-      <p>Full empire redefine + event schedule verified against pak scenario 11 (2026-07-25 dump). Empire id <strong>8</strong>. Scenario enemy is <strong>Libyan</strong> (<code>ENEMY_7_LIBIAN</code>). No land/sea invasion spawn points in pak. Favour-KR Pharaoh army size <strong>51</strong> (attack random). Timed raids use pak attack targets (vaults / food / best buildings / random).</p>
+      <p>Full empire redefine + event schedule verified against original campaign scenario 11 (2026-07-25 dump). Empire id <strong>8</strong>. Scenario enemy is <strong>Libyan</strong> (<code>ENEMY_7_LIBIAN</code>). No land/sea invasion spawn points on the map. Favour-KR Pharaoh army size <strong>51</strong> (attack random). Timed raids use map attack targets (vaults / food / best buildings / random).</p>
 
       <div class="tutorial-step">
         <span class="step-tag">Year 1+ · month 0</span>
@@ -435,7 +435,7 @@
   <span class="kw">exit_point</span>  [83, 84]
   <span class="cmt">// empire id=8; hide_pak_* + cities/routes/ornaments/texts</span>
 }</code></pre>
-            <p>Goals match pak (pop 2000, kingdom 80, housing 4). Trade: Men-nefer / Selima / Abu / Nekhen / Behdet — all land, start closed. Display: Byblos, Kerma, Kyrene, Saqqara. Kebet is not on this scenario.</p>
+            <p>Goals match the original campaign (pop 2000, kingdom 80, housing 4). Trade: Men-nefer / Selima / Abu / Nekhen / Behdet — all land, start closed. Display: Byblos, Kerma, Kyrene, Saqqara. Kebet is not on this scenario.</p>
           </div>
         </details>
 
@@ -465,7 +465,6 @@
                 <span class="ev-fn">mission11_libyan_* / beduin_* / favour</span>
               </li>
             </ul>
-            <p>Dump helper: <span class="file-ref">src/js/js_test_mission_pak_dump.cpp</span> (<code>__test_mission_pak_dump</code> / <code>GamestateIO::load_mission_pak_raw</code>; ad-hoc <code>tests/99_tmp_*.js</code>).</p>
           </div>
         </details>
 
@@ -497,8 +496,8 @@
         <details>
           <summary>Save file and map data</summary>
           <div class="details-body">
-            <p>The map layout, terrain, ore deposits, and the kingdom road entry point come from the original Pharaoh campaign pack:</p>
-            <p><span class="file-ref">mission1.pak</span> (scenario offset for id 11 — see <code>GamestateIO::get_campaign_scenario_offset</code>, <span class="file-ref">src/io/gamestate/boilerplate.cpp:120</span>)</p>
+            <p>The map layout, terrain, ore deposits, and the kingdom road entry point come from the shipped campaign map:</p>
+            <p><span class="file-ref">data/maps/m_011_serabit_khadim.map</span> (<code>map_file</code> in <span class="file-ref">src/scripts/mission/m_011_serabit_khadim.js</span>)</p>
             <p>The binary map is loaded by the engine before the JS script runs. The scripting system is loaded from <span class="file-ref">src/scripts/missions.js</span>, which imports <code>mission/m_011_serabit_khadim.js</code> by path. If you rename or move the file, update the import there.</p>
           </div>
         </details>

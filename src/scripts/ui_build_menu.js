@@ -19,8 +19,21 @@ build_menu_widget = {
     btn_w_cost_offset : -82
     btn_w_tot_margin : 10
     btn_w_tot_offset : 20
-    y_menu_offsets : [0, 322, 306, 274, 258, 226, 210, 178, 162,  130, 114, 82, 66, 34, 18,
-                      -30, -46, -62, -78, -78, -94, -94, -110, -110, 0,   0,   0,  0,  0,  0]
+    btn_item_h : 24
+    btn_y_offset_one : 322
+    btn_y_min : 30
+}
+
+build_menu_widget.y_offset_for = function(num_items) {
+    if (num_items <= 0) {
+        return 0
+    }
+    var y_offset = build_menu_widget.btn_y_offset_one - build_menu_widget.btn_item_h * (num_items - 1)
+    var start_y = build_menu_widget.btn_w_start_pos.y
+    if (start_y + y_offset < build_menu_widget.btn_y_min) {
+        y_offset = build_menu_widget.btn_y_min - start_y
+    }
+    return y_offset
 }
 
 build_menu_widget.set_submenu = function(submenu) {
@@ -140,7 +153,7 @@ function build_menu_widget_ui_draw_foreground(window) {
     var label_margin = btn_w_tot + build_menu_widget.btn_w_tot_margin
     var submenu = build_menu_widget.selected_submenu
     var num_items = building_menu_ctrl.count_items(submenu)
-    var y_offset = build_menu_widget.y_menu_offsets[num_items]
+    var y_offset = build_menu_widget.y_offset_for(num_items)
     var item = window.item
     var item_index = -1
 
@@ -177,7 +190,7 @@ function build_menu_widget_ui_draw_foreground(window) {
             font, UiFlags_None, build_menu_widget.btn_text_w_size.x)
 
         var cost = 0
-        if (type != BUILDING_MENU_FORTS) {
+        if (!building_menu_ctrl.is_submenu(type)) {
             var params = city.get_building_params_by_type(type)
             cost = params.cost
         }

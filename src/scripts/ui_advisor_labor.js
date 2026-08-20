@@ -32,8 +32,8 @@ advisor_labors_window {
                 employed        : text({pos[32, 325],font : FONT_NORMAL_BLACK_ON_LIGHT })
                 // wages panel
                 wages_panel     : inner_panel({pos[64, 350], size[32, 2]})
-                dec_wages       : arrowdown({pos[158, 354], tiny:false, onclick: advisor_labors_window_dec_wages })
-                inc_wages       : arrowup({pos[182, 354], tiny:false, onclick: advisor_labors_window_inc_wages })
+                dec_wages       : arrowdown({pos[158, 354], tiny:false })
+                inc_wages       : arrowup({pos[182, 354], tiny:false })
                 wages_title     : text({text{group:50, id:14}, pos[70, 359], font:FONT_NORMAL_WHITE_ON_DARK})
                 wages_value     : text({
                                           pos[230, 359]
@@ -47,11 +47,13 @@ advisor_labors_window {
     })
 }
 
-function advisor_labors_window_dec_wages() {
+[es=(advisor_labors_window, dec_wages)]
+function advisor_labors_window_on_dec_wages(window) {
     emit event_finance_change_wages{ value:-1 }
 }
 
-function advisor_labors_window_inc_wages() {
+[es=(advisor_labors_window, inc_wages)]
+function advisor_labors_window_on_inc_wages(window) {
     emit event_finance_change_wages{ value:1 }
 }
 

@@ -89,6 +89,11 @@ file_dialog_delete {
     })
 }
 
+[es=(file_dialog_delete, go_back)]
+function file_dialog_delete_es_go_back(window) {
+    window_go_back()
+}
+
 [es=(file_dialog_delete, on_filename_input)]
 function file_dialog_delete_es_on_filename_input(ev) {
     file_dialog_delete_set_show_filename(ev.value)

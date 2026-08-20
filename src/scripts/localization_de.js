@@ -1469,6 +1469,14 @@ localization_de = [
   { key: "#zoo_access_medium", group:66, id:170 }
   { key: "#zoo_access_low", group:66, id:171 }
   { key: "#overlay_zoo", text: "Zoo" }
+  // zoo info window (group 308)
+  { key: "#zoo_info_ok", group:308, id:1 }
+  { key: "#zoo_info_needs_meat", group:308, id:2 }
+  { key: "#zoo_info_needs_straw", group:308, id:3 }
+  { key: "#zoo_info_no_workers", group:308, id:4 }
+  { key: "#zoo_info_empty_cages", group:308, id:5 }
+  { key: "#zoo_info_game_meat", group:308, id:6 }
+  { key: "#zoo_info_straw", group:308, id:7 }
 
   // pavilion overlay
   { key: "#pavilion_access_none", text: "Dieses Haus hat keinen Zugang zu einer Tanzbühne" }
@@ -1520,6 +1528,10 @@ localization_de = [
   { key: "#library_access_high", text: "Dieses Haus wurde kürzlich von einem Bibliothekar besucht. Es wird für lange Zeit Bibliothekszugang haben" }
   { key: "#library_access_medium", text: "Dieses Haus hat Bibliothekszugang" }
   { key: "#library_access_low", text: "Wenn nicht bald ein Bibliothekar vorbeikommt, wird dieses Haus den Bibliothekszugang verlieren" }
+  { key: "#library_info", group:87, id:1 }
+  { key: "#library_info_idle", group:87, id:2 }
+  { key: "#library_info_ok", group:87, id:3 }
+  { key: "#sheets_of_papyrus", group:23, id:77 }
 
   // academy overlay
   { key: "#academy_access_none", text: "Dieses Haus hat keinen Zugang zu einer Akademie" }
@@ -1600,6 +1612,16 @@ localization_de = [
   { key: "#top_menu_buildings_off", text: "Gebäude AUS" }
   { key: "#top_menu_js_debugger_on", text: "JS-Debugger AN" }
   { key: "#top_menu_js_debugger_off", text: "JS-Debugger AUS" }
+  { key: "#top_menu_editor_new_map", text: "Neue Karte" }
+  { key: "#top_menu_editor_load_map", text: "Karte laden" }
+  { key: "#top_menu_editor_save_map", text: "Karte speichern" }
+  { key: "#top_menu_editor_exit", text: "Editor beenden" }
+  { key: "#top_menu_editor_resets", text: "Zurücksetzen" }
+  { key: "#top_menu_editor_clear_herds", text: "Killer-Pkt. löschen" }
+  { key: "#top_menu_editor_clear_fish", text: "Fische löschen" }
+  { key: "#top_menu_editor_clear_invasions", text: "Invasionen löschen" }
+  { key: "#top_menu_editor_empire", text: "Königreich" }
+  { key: "#top_menu_editor_empire_choose", text: "Königreich bearbeiten" }
 
   { key: "#sidebar_speed_header", text: "Geschwindigkeit" }
 

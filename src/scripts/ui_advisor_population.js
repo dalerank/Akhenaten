@@ -48,16 +48,19 @@ function advisor_population_on_init(window) {
 	advisors_toolbar_refresh(window, ADVISOR_POPULATION)
 }
 
-function advisor_population_on_housing_button() {
+[es=(advisor_population_window, housing_button)]
+function advisor_population_window_on_housing_button(window) {
 	window_advisors_show_advisor(ADVISOR_HOUSING)
 }
 
-function advisor_population_on_next_graph() {
+[es=(advisor_population_window, next_graph)]
+function advisor_population_window_on_next_graph(window) {
 	advisor_population_window.graph_order++
 	advisor_population_window.graph_order %= 3
 }
 
-function advisor_population_on_prev_graph() {
+[es=(advisor_population_window, prev_graph)]
+function advisor_population_window_on_prev_graph(window) {
 	advisor_population_window.graph_order--
 	if (advisor_population_window.graph_order < 0) {
 		advisor_population_window.graph_order = 2
@@ -113,14 +116,13 @@ advisor_population_window = {
 					composite: true
 					border: 3
 					tooltip: [68, 106]
-					onclick: advisor_population_on_housing_button,
 				}),
 
 				top_text     : text({pos:[503, 44], font:FONT_NORMAL_BLACK_ON_DARK})
-				next_graph   : button({pos:[503, 61], size:[104, 55], tooltip:[68, 106], ondraw_event: "ondraw_top", onclick: advisor_population_on_next_graph }),
+				next_graph   : button({pos:[503, 61], size:[104, 55], tooltip:[68, 106], ondraw_event: "ondraw_top" }),
 
 				bot_text     : text({pos:[503, 144], font:FONT_NORMAL_BLACK_ON_DARK}),
-				prev_graph   : button({pos:[503, 161], size:[104, 55], tooltip:[68, 106], ondraw_event: "ondraw_bottom", onclick: advisor_population_on_prev_graph }),
+				prev_graph   : button({pos:[503, 161], size:[104, 55], tooltip:[68, 106], ondraw_event: "ondraw_bottom" }),
 
 				big_text     : label({font : FONT_NORMAL_BLACK_ON_DARK, pos:[60, 44]}),
 				big_graph_tx : label({pos:[65, 65], size:[395, 195], ondraw_event: "ondraw_big"}),

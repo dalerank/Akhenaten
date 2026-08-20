@@ -46,7 +46,13 @@ public:
         hvector<mastaba_part, 40> config_south;
         hvector<mastaba_part, 40> config_west;
         vec2i init_tiles;
+        // Construction phases live here (parts resolve to main type via get_mastaba_params).
+        monument construction;
+
+        void finalize_construction(e_building_type btype);
     };
+
+    virtual const monument &config() const override;
 
     bool draw_ornaments_and_animations_flat_impl(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
     bool draw_ornaments_and_animations_hight_impl(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
@@ -70,6 +76,7 @@ public:
     virtual building_small_mastaba *dcast_small_mastaba() override { return this; }
 
     struct static_params : public base_params, public building_static_params {
+        void archive_load(archive arch);
     } BUILDING_STATIC_DATA_T;
 
     virtual void update_day() override;
@@ -78,13 +85,12 @@ public:
     virtual int building_image_get() const override;
     virtual grid_area get_area() const override;
 
-    virtual const monument &config() const override;
     virtual tile2i center_point() const override;
     virtual tile2i access_point() const override;
 
 };
 ANK_CONFIG_STRUCT(building_small_mastaba::static_params,
-    init_tiles, config_north, config_east, config_south, config_west);
+    init_tiles, config_north, config_east, config_south, config_west, construction);
 
 class building_small_mastaba_part_side : public building_small_mastaba {
 public:
@@ -108,6 +114,7 @@ public:
     virtual building_medium_mastaba *dcast_medium_mastaba() override { return this; }
 
     struct static_params : public base_params, public building_static_params {
+        void archive_load(archive arch);
     } BUILDING_STATIC_DATA_T;
 
     virtual void update_day() override;
@@ -116,13 +123,12 @@ public:
     virtual int building_image_get() const override;
     virtual grid_area get_area() const override;
 
-    virtual const monument &config() const override;
     virtual tile2i center_point() const override;
     virtual tile2i access_point() const override;
 
 };
 ANK_CONFIG_STRUCT(building_medium_mastaba::static_params,
-    init_tiles, config_north, config_east, config_south, config_west);
+    init_tiles, config_north, config_east, config_south, config_west, construction);
 
 class building_medium_mastaba_part_side : public building_medium_mastaba {
 public:
@@ -146,6 +152,7 @@ public:
     virtual building_large_mastaba *dcast_large_mastaba() override { return this; }
 
     struct static_params : public base_params, public building_static_params {
+        void archive_load(archive arch);
     } BUILDING_STATIC_DATA_T;
 
     virtual void update_day() override;
@@ -154,13 +161,12 @@ public:
     virtual int building_image_get() const override;
     virtual grid_area get_area() const override;
 
-    virtual const monument &config() const override;
     virtual tile2i center_point() const override;
     virtual tile2i access_point() const override;
 
 };
 ANK_CONFIG_STRUCT(building_large_mastaba::static_params,
-    init_tiles, config_north, config_east, config_south, config_west);
+    init_tiles, config_north, config_east, config_south, config_west, construction);
 
 class building_large_mastaba_part_side : public building_large_mastaba {
 public:

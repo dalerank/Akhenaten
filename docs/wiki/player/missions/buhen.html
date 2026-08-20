@@ -171,13 +171,13 @@
         <li><span class="obj-label">Kingdom rating</span><span class="obj-value">75 — the toughest requirement here</span></li>
         <li><span class="obj-label">Housing level</span><span class="obj-value">10</span></li>
       </ul>
-      <p>All goals match <code>mission1.pak</code> scenario 13 except the monument rating, which is a temporary stand-in — see the deviation note below.</p>
+      <p>All goals match original campaign scenario 13 except the monument rating, which is a temporary stand-in — see the deviation note below.</p>
       <div class="deviation-note">
         <strong>Temporary deviation from the original:</strong> the pak's raw monument goal is <strong>6</strong>, but one finished small obelisk (weight 2) already produces rating 9 under the current additive formula in <code>city/monuments.js</code> (<code>2.25 × 2 + 4.5 = 9</code>). The goal is set to 9 to match what the building actually yields; it reverts to 6 once per-type weights are recalibrated against the original point table (pending weight recalibration).
       </div>
 
       <h2 id="events">Scripted events</h2>
-      <p>Full empire redefine + event schedule verified against pak scenario 13 (2026-07-26 dump). Empire id <strong>13</strong>. Scenario enemy is <strong>Kushite</strong> (<code>ENEMY_6_KUSHITE</code>) — not Nubian, despite the briefing text. Pharaoh's favour chains <strong>three</strong> waves if kingdom rating collapses: size <strong>22 → 21 → 28</strong>. Timed raids and favour are proxied in JS until B2-migrate.</p>
+      <p>Full empire redefine + event schedule verified against original campaign scenario 13 (2026-07-26 dump). Empire id <strong>13</strong>. Scenario enemy is <strong>Kushite</strong> (<code>ENEMY_6_KUSHITE</code>) — not Nubian, despite the briefing text. Pharaoh's favour chains <strong>three</strong> waves if kingdom rating collapses: size <strong>22 → 21 → 28</strong>. Timed raids and favour are proxied in JS until B2-migrate.</p>
 
       <div class="tutorial-step">
         <span class="step-tag">Year 1 · month 6</span>
@@ -266,7 +266,7 @@
         <details>
           <summary>Mission script — <code>src/scripts/mission/m_013_buhen.js</code></summary>
           <div class="details-body">
-            <p>The entire mission — configuration block, variables, and all event handlers — lives in one file, imported by <span class="file-ref">src/scripts/missions.js</span>. Key parts of the <code>mission13 { … }</code> block (verified vs <code>mission1.pak</code> scenario 13, 2026-07-26 dump):</p>
+            <p>The entire mission — configuration block, variables, and all event handlers — lives in one file, imported by <span class="file-ref">src/scripts/missions.js</span>. Key parts of the <code>mission13 { … }</code> block (verified vs original campaign scenario 13, 2026-07-26 dump):</p>
             <pre><code><span class="kw">mission13</span> { <span class="cmt">// Buhen — Expansion to Nubia</span>
   <span class="kw">player_rank</span> : <span class="num">5</span>
   <span class="kw">next_mission</span> : <span class="num">15</span>          <span class="cmt">// converges on North Dahshur</span>
@@ -326,7 +326,6 @@
                 <span class="ev-fn">mission13_event_i&lt;n&gt;_kushite_invasion / mission13_pharaoh_favour_invasion</span>
               </li>
             </ul>
-            <p>Dump helper: <span class="file-ref">src/js/js_test_mission_pak_dump.cpp</span> (<code>__test_mission_pak_dump</code> / <code>GamestateIO::load_mission_pak_raw</code>; ad-hoc <code>tests/99_tmp_mission13_dump.js</code>, deleted after verification).</p>
           </div>
         </details>
 
@@ -364,8 +363,8 @@
         <details>
           <summary>Save file and map data</summary>
           <div class="details-body">
-            <p>The map layout, terrain, and the kingdom road entry point come from the original Pharaoh campaign pack:</p>
-            <p><span class="file-ref">mission1.pak</span> (scenario offset for id 13 — see <code>GamestateIO::get_campaign_scenario_offset</code>, <span class="file-ref">src/io/gamestate/boilerplate.cpp:120</span>)</p>
+            <p>The map layout, terrain, and the kingdom road entry point come from the shipped campaign map:</p>
+            <p><span class="file-ref">data/maps/m_013_buhen.map</span> (<code>map_file</code> in <span class="file-ref">src/scripts/mission/m_013_buhen.js</span>)</p>
             <p>The binary map is loaded by the engine before the JS script runs. The scripting system is loaded from <span class="file-ref">src/scripts/missions.js</span>, which imports <code>mission/m_013_buhen.js</code> by path. If you rename or move the file, update the import there.</p>
           </div>
         </details>

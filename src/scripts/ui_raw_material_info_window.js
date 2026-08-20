@@ -1,5 +1,6 @@
 log_info("akhenaten: raw material info window started")
 
+[es=building_info_window]
 raw_material_info_window {
     ui : baseui(building_info_window, {
         resource_img  : resource_icon({ pos:[14, 14], prop:"${building.output_resource}" }),

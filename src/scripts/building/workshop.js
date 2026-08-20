@@ -19,7 +19,7 @@ building_brewery {
   progress_max : 400,
   production_rate : 50,
   production_rate_dcy : [100, 80, 70, 60, 50],
-  meta { help_id:96, text_id:122 }
+  meta { text_id:122, help_link:"message_building_brewery" }
   info_sound : "Wavs/brewery.wav"
   building_size : 2
   cost [ 15, 25, 50, 80, 120 ]
@@ -91,7 +91,7 @@ building_weaver = {
     resource : RESOURCE_LINEN
   }
   building_size : 2,
-  meta : { help_id:97, text_id:123 }
+  meta : { text_id:123, help_link:"message_building_weaver" }
   info_sound : "Wavs/flaxfarm.wav"
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   cost: [ 16, 30, 50, 100, 150 ]
@@ -131,7 +131,7 @@ building_jewels_workshop = {
     resource : RESOURCE_LUXURY_GOODS
   }
   building_size : 2,
-  meta : { help_id:99, text_id:125 }
+  meta : { text_id:125, help_link:"message_building_jeweler_and_luxury_goods" }
   info_sound : "Wavs/gem_r.wav"
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   cost: [ 18, 30, 50, 100, 200 ]
@@ -147,15 +147,13 @@ building_jewels_workshop = {
 
 building_lamp_workshop {
   animations {
-    _pack { pack:PACK_GENERAL }
-    preview { id:125 }
-    base { id:125 }
-    work { pos [36, -4], id:125, offset:1, max_frames:18 }
-    clay { pos[65, 3], id:207 }
+    preview { pack:PACK_EXPANSION, id:26 }
+    base { pack:PACK_EXPANSION, id:26 }
+    work { pos [10, -14], pack:PACK_EXPANSION, id:26, offset:1, max_frames:10, duration:4 }
   }
   input {
     resource : RESOURCE_OIL
-    resource_second : RESOURCE_TIMBER
+    resource_second : RESOURCE_POTTERY
   }
   output {
     resource : RESOURCE_LAMPS
@@ -169,6 +167,7 @@ building_lamp_workshop {
   laborers [12]
   fire_risk [4]
   damage_risk [3]
+  meta { text_id: 314, help_link:"message_building_lamp_maker" }
   info_advisors [ADVISOR_LABOR]
   flags {
     is_workshop: true
@@ -178,11 +177,10 @@ building_lamp_workshop {
 
 building_paint_workshop {
   animations {
-    _pack { pack:PACK_GENERAL }
-    preview { id:125 }
-    base { id:125 }
-    work { pos [36, -4], id:125, offset:1, max_frames:18 }
-    henna { pos [65, 3], id:207 }
+    preview { pack:PACK_EXPANSION, id:27 }
+    base { pack:PACK_EXPANSION, id:27 }
+    work { pos [17, -14], pack:PACK_EXPANSION, id:27, offset:1, max_frames:10, duration:4 }
+    henna { pos [65, 3], pack:PACK_GENERAL, id:207 }
   }
 
   input {
@@ -201,7 +199,7 @@ building_paint_workshop {
   laborers [12]
   fire_risk [3]
   damage_risk [1]
-  meta { help_id: 470, text_id: 313 }
+  meta { text_id: 313, help_link:"message_mission_paint_maker" }
   info_advisors [ADVISOR_LABOR]
   flags {
     is_workshop: true

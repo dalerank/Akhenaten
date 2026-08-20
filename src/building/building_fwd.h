@@ -159,13 +159,14 @@ struct building_flags_rule {
     bool no_road_access;
     bool non_deletable;
     bool keeps_visitor_paths;
+    bool perimeter_access;
 };
 ANK_CONFIG_STRUCT(building_flags_rule,
     is_monument, is_extractor, is_harvester, is_farm, is_fort, is_education, is_palace, is_temple,
     is_shrine, is_tax_collector, is_statue, is_administration, is_water_crossing, is_infrastructure,
     is_beautification, is_guild, is_industry, is_workshop, is_house, is_wall, is_defense, is_temple_complex,
     is_religion, is_military, is_entertainment, is_food, allow_rotate, no_road_access, non_deletable,
-    keeps_visitor_paths)
+    keeps_visitor_paths, perimeter_access)
 
 struct building_crime_t {
     svector<int8_t, 6> value;
@@ -229,11 +230,10 @@ using building_output = building_input;
 ANK_CONFIG_STRUCT(building_input, resource, resource_second)
 
 struct metainfo {
-    uint16_t help_id;
     uint16_t text_id;
     xstring help_link;
 };
-ANK_CONFIG_STRUCT(metainfo, help_id, text_id, help_link)
+ANK_CONFIG_STRUCT(metainfo, text_id, help_link)
 
 struct building_planner_update_rule {
     bool canals;

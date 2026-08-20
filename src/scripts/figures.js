@@ -762,7 +762,7 @@ figure_magistrate {
 
 	category: figure_category_citizen
 	max_damage: 10
-	meta { help_id: 182, text_id: 210 }
+	meta { text_id: 210, help_link:"message_history_defensive_structures" }
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length : 800
 }
@@ -1790,7 +1790,7 @@ figure_warship {
 	missile_attack_value : 6
 	missile_delay : 200
 
-	meta { help_id: 84, text_id: 184 }
+	meta { text_id: 184, help_link:"message_building_warship" }
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
@@ -1814,7 +1814,7 @@ figure_transport_ship = {
 	category: figure_category_citizen
 	max_damage: 250
 	terrain_usage : TERRAIN_USAGE_ANY
-	meta { help_id: 367, text_id: 184 }
+	meta { text_id: 184, help_link:"message_figure_transport_ship" }
 }
 
 figure_soldier_archer {

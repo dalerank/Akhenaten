@@ -4,8 +4,8 @@
 #include "grid/image.h"
 #include "io/chunk_serializer.h"
 
-// Classic Pharaoh .sav / mission .pak - positional, compressed chunks.
-void file_schema_pak_sav(const int file_version) {
+// Classic Pharaoh .sav — positional, compressed chunks.
+void file_schema_sav(const int file_version) {
     g_chunk_io.push_chunk(4, false, "scenario_mission_index", iob_scenario_mission_id);
     g_chunk_io.push_chunk(4, false, "file_version", iob_file_version);
     g_chunk_io.push_chunk(6004, false, "chunks_schema", iob_chunks_schema);

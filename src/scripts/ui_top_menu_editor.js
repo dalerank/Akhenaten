@@ -103,9 +103,6 @@ function top_menu_editor_activate_item(menu, item) {
 		return
 	}
 	top_menu_editor_state.item_clicked = 1
-	if (item.onclick) {
-		item.onclick(item.parameter)
-	}
 }
 
 function top_menu_editor_calc_menu_size(menu) {
@@ -138,15 +135,8 @@ function top_menu_editor_calc_menu_size(menu) {
 	}
 }
 
-function top_menu_editor_show_window(window_id) {
-	return function() {
-		top_menu_editor_dismiss()
-		ui.window_editor_map_show()
-		window_show_by_id(window_id)
-	}
-}
-
-function top_menu_editor_new_map() {
+[es=(top_menu_editor_submenu, new_map)]
+function top_menu_editor_new_map(ev) {
 	top_menu_editor_dismiss()
 	__ui_window_select_list_show(50, 50, 33, 7, top_menu_editor_map_size_selected)
 }
@@ -161,19 +151,22 @@ function top_menu_editor_map_size_selected(size) {
 	}
 }
 
-function top_menu_editor_load_map() {
+[es=(top_menu_editor_submenu, load_map)]
+function top_menu_editor_load_map(ev) {
 	top_menu_editor_dismiss()
 	ui.window_editor_map_show()
 	window_show_by_id("file_dialog_load_scenario")
 }
 
-function top_menu_editor_save_map() {
+[es=(top_menu_editor_submenu, save_map)]
+function top_menu_editor_save_map(ev) {
 	top_menu_editor_dismiss()
 	ui.window_editor_map_show()
 	window_show_by_id("file_dialog_save_scenario")
 }
 
-function top_menu_editor_exit() {
+[es=(top_menu_editor_submenu, exit)]
+function top_menu_editor_exit(ev) {
 	top_menu_editor_dismiss()
 	ui.window_editor_map_show()
 
@@ -188,35 +181,53 @@ function top_menu_editor_exit() {
 	)
 }
 
-function top_menu_editor_show_help() {
+[es=(top_menu_editor_submenu, help)]
+function top_menu_editor_show_help(ev) {
 	top_menu_editor_dismiss()
 	__ui_window_message_dialog_editor("message_dialog_editor_help")
 }
 
-function top_menu_editor_show_about() {
+[es=(top_menu_editor_submenu, about)]
+function top_menu_editor_show_about(ev) {
 	top_menu_editor_dismiss()
 	__ui_window_message_dialog_editor("message_dialog_editor_about")
 }
 
-function top_menu_editor_reset_herds() {
+[es=(top_menu_editor_submenu, herds)]
+function top_menu_editor_reset_herds(ev) {
 	__scenario_editor_clear_predator_herd_points()
 	top_menu_editor_dismiss()
 }
 
-function top_menu_editor_reset_fish() {
+[es=(top_menu_editor_submenu, fish)]
+function top_menu_editor_reset_fish(ev) {
 	__scenario_editor_clear_fishing_points()
 	top_menu_editor_dismiss()
 }
 
-function top_menu_editor_reset_invasions() {
+[es=(top_menu_editor_submenu, invasions)]
+function top_menu_editor_reset_invasions(ev) {
 	__scenario_editor_clear_invasion_points()
 	top_menu_editor_dismiss()
 }
 
-function top_menu_editor_empire_choose() {
+[es=(top_menu_editor_submenu, choose)]
+function top_menu_editor_empire_choose(ev) {
 	top_menu_editor_dismiss()
 	__ui_window_editor_empire_show()
 }
+
+function top_menu_editor_open_window(window_id) {
+	top_menu_editor_dismiss()
+	ui.window_editor_map_show()
+	window_show_by_id(window_id)
+}
+
+[es=(top_menu_editor_submenu, sound)]
+function top_menu_editor_sound_options(ev) { top_menu_editor_open_window("sound_options_window") }
+
+[es=(top_menu_editor_submenu, speed)]
+function top_menu_editor_speed_options(ev) { top_menu_editor_open_window("speed_options_window") }
 
 top_menu_editor_widget {
 	offset {x: 10, y: 6}
@@ -229,44 +240,44 @@ top_menu_editor_widget {
 	menus [
 		{
 			id: "file"
-			text: { group: 7, id: 0 }
+			text: "#top_menu_file"
 			items [
-				{ id: "new_map", text: { group: 7, id: 1 }, onclick: top_menu_editor_new_map }
-				{ id: "load_map", text: { group: 7, id: 2 }, onclick: top_menu_editor_load_map }
-				{ id: "save_map", text: { group: 7, id: 3 }, onclick: top_menu_editor_save_map }
-				{ id: "exit", text: { group: 7, id: 4 }, onclick: top_menu_editor_exit }
+				{ id: "new_map", text: "#top_menu_editor_new_map" }
+				{ id: "load_map", text: "#top_menu_editor_load_map" }
+				{ id: "save_map", text: "#top_menu_editor_save_map" }
+				{ id: "exit", text: "#top_menu_editor_exit" }
 			]
 		}
 		{
 			id: "options"
 			text: "#top_menu_options"
 			items [
-				{ id: "sound", text: "#top_menu_sound_settings", onclick: top_menu_editor_show_window("sound_options_window") }
-				{ id: "speed", text: "#top_menu_speed_settings", onclick: top_menu_editor_show_window("speed_options_window") }
+				{ id: "sound", text: "#top_menu_sound_settings" }
+				{ id: "speed", text: "#top_menu_speed_settings" }
 			]
 		}
 		{
 			id: "help"
 			text: "#top_menu_help"
 			items [
-				{ id: "help", text: "#top_menu_help_item", onclick: top_menu_editor_show_help }
-				{ id: "about", text: "#top_menu_about", onclick: top_menu_editor_show_about }
+				{ id: "help", text: "#top_menu_help_item" }
+				{ id: "about", text: "#top_menu_about" }
 			]
 		}
 		{
 			id: "resets"
-			text: { group: 10, id: 0 }
+			text: "#top_menu_editor_resets"
 			items [
-				{ id: "herds", text: { group: 10, id: 1 }, onclick: top_menu_editor_reset_herds }
-				{ id: "fish", text: { group: 10, id: 2 }, onclick: top_menu_editor_reset_fish }
-				{ id: "invasions", text: { group: 10, id: 3 }, onclick: top_menu_editor_reset_invasions }
+				{ id: "herds", text: "#top_menu_editor_clear_herds" }
+				{ id: "fish", text: "#top_menu_editor_clear_fish" }
+				{ id: "invasions", text: "#top_menu_editor_clear_invasions" }
 			]
 		}
 		{
 			id: "empire"
-			text: { group: 149, id: 0 }
+			text: "#top_menu_editor_empire"
 			items [
-				{ id: "choose", text: { group: 149, id: 1 }, onclick: top_menu_editor_empire_choose }
+				{ id: "choose", text: "#top_menu_editor_empire_choose" }
 			]
 		}
 	]
@@ -340,7 +351,9 @@ function top_menu_editor_submenu_ui_draw_foreground(window) {
 			font: font,
 			border: false,
 			body: false,
-			flags: UiFlags_AlignYCentered
+			flags: UiFlags_AlignYCentered,
+			onclick_event: item.onclick_event || menu.onclick_event || item.id,
+			param1: item.parameter | 0
 		})
 		if (clicked == ui.button_clicked) {
 			top_menu_editor_activate_item(menu, item)

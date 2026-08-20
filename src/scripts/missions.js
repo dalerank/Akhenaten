@@ -53,12 +53,7 @@ custom_missions = [
 ]
 
 function get_mission_config(scenario_id) {
-    var name = "mission" + scenario_id
-    try {
-        return eval(name)
-    } catch (e) {
-        return undefined
-    }
+    return __js_global("mission" + scenario_id)
 }
 
 function mission_is_playable(scenario_id) {

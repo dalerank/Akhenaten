@@ -83,7 +83,9 @@ void js_loc_native(js_State *J) {
         return;
     }
 
-    if (J->isobject(1) && !js_isarray(J, 1) && js_gettop(J) < 3) {
+    // __loc is registered with arity 2, so a one-arg call still has gettop==3
+    // (arg2 is undefined). Treat that as the object form, not group/id 0/0.
+    if (J->isobject(1) && !js_isarray(J, 1) && (js_gettop(J) < 3 || js_isundefined(J, 2))) {
         J->getproperty(1, js_intern("key"));
         if (js_isstring(J, -1)) {
             const xstring key_node = js_toxstring(J, -1); js_pop(J, 1);
@@ -227,6 +229,17 @@ static void js_create_element_proxy(js_State *J, ui::widget* w, pcstr element_id
     js_setproperty(J, -2, js_intern(element_id));  // event_obj at -2, proxy at -1
 }
 
+js_StringNode property_mission = js_intern("mission");
+js_StringNode property_event = js_intern("event");
+js_StringNode property_es = js_intern("es");
+js_StringNode property_memory = js_intern("memory");
+js_StringNode property_frame = js_intern("frame");
+
+static bool js_callable_wants_frame(js_State *J, int idx) {
+    return js_hasmodifier(J, idx, property_memory)
+        && (js_getmodifier(J, idx, property_memory) == property_frame);
+}
+
 void js_call_event_handlers(const xstring &event_name, const bvariant_map &object) {
     OZZY_PROFILER_SECTION(_, event_name.c_str())
 
@@ -258,6 +271,9 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
             js_pop(J, 1);
             continue;
         }
+
+        const bool use_frame = js_callable_wants_frame(J, -1);
+        js_frame_zone zone(use_frame ? J : nullptr);
 
         js_pushnull(J); // this
 
@@ -343,10 +359,6 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
         }
     }
 }
-
-js_StringNode property_mission = js_intern("mission");
-js_StringNode property_event = js_intern("event");
-js_StringNode property_es = js_intern("es");
 
 xstring to_xstring(const js_StringNode str) {
     xstring r;
@@ -576,6 +588,20 @@ void js_unref_function(xstring onclick_ref) {
     }
 }
 
+static pcstr js_error_message(js_State *J, int idx) {
+    // Error objects are not JS strings; js_toxstring would yield empty/(null) in logs.
+    static js_StringNode property_message = js_intern("message");
+    if (J->isobject(idx) && J->hasproperty(idx, property_message)) {
+        J->getproperty(idx, property_message);
+        pcstr msg = js_strnode_cstr(js_tostring(J, -1));
+        js_pop(J, 1);
+        if (msg && msg[0]) {
+            return msg;
+        }
+    }
+    return js_strnode_cstr(js_tostring(J, idx));
+}
+
 void js_call_function(xstring js_ref) {
     if (js_ref.empty()) {
         return;
@@ -584,13 +610,13 @@ void js_call_function(xstring js_ref) {
     js_State *J = js_vm_state();
     assert(J);
 
-    // Get the function from registry using the reference
     js_getregistry(J, (js_StringNode)js_ref._get());
     if (J->iscallable(-1)) {
+        js_frame_zone zone(js_callable_wants_frame(J, -1) ? J : nullptr);
         js_pushnull(J);  // 'this' context
         int result = J->pcall(0);
         if (result != 0) {
-            logs::error("JS onclick callback error: %s", js_toxstring(J, -1).c_str());
+            logs::error("JS onclick callback error: %s", js_error_message(J, -1));
         }
         js_pop(J, 1); // result or error
     } else {
@@ -608,11 +634,12 @@ void js_call_function_bool(xstring js_ref, bool param) {
 
     js_getregistry(J, (js_StringNode)js_ref._get());
     if (J->iscallable(-1)) {
+        js_frame_zone zone(js_callable_wants_frame(J, -1) ? J : nullptr);
         js_pushnull(J);
         js_pushboolean(J, param);
         int result = J->pcall(1);
         if (result != 0) {
-            logs::error("JS dialog callback error: %s", js_toxstring(J, -1).c_str());
+            logs::error("JS dialog callback error: %s", js_error_message(J, -1));
         }
         js_pop(J, 1); // result or error
     } else {
@@ -628,15 +655,15 @@ bvariant js_call_function(xstring js_ref, int param1, int param2) {
     js_State *J = js_vm_state();
     assert(J);
 
-    // Get the function from registry using the reference
     js_getregistry(J, (js_StringNode)js_ref._get());
     if (J->iscallable(-1)) {
+        js_frame_zone zone(js_callable_wants_frame(J, -1) ? J : nullptr);
         js_pushnull(J);  // 'this' context
         js_pushnumber(J, (double)param1);
         js_pushnumber(J, (double)param2);
         int result = J->pcall(2);
         if (result != 0) {
-            logs::error("JS textfn callback error: %s", js_toxstring(J, -1).c_str());
+            logs::error("JS textfn callback error: %s", js_error_message(J, -1));
             js_pop(J, 1);
             return bvariant();
         }
@@ -664,11 +691,12 @@ bvariant js_call_function(xstring js_ref, const bvariant_map &params) {
 
     js_getregistry(J, (js_StringNode)js_ref._get());
     if (J->iscallable(-1)) {
+        js_frame_zone zone(js_callable_wants_frame(J, -1) ? J : nullptr);
         js_pushnull(J);
         js_push_bvariant_map_object(J, params);
         int result = J->pcall(1);
         if (result != 0) {
-            logs::error("JS callback error (bvariant_map): %s", js_toxstring(J, -1).c_str());
+            logs::error("JS callback error (bvariant_map): %s", js_error_message(J, -1));
             js_pop(J, 1);
             return bvariant();
         }

@@ -34,7 +34,7 @@ building_firehouse {
 
     labor_category : LABOR_CATEGORY_INFRASTRUCTURE
     min_houses_coverage : 50
-    meta { help_id: 355, text_id: 164 }
+    meta { text_id: 164, help_link:"message_building_firehouse" }
     info_sound : "Wavs/prefecture.wav"
     building_size : 1
     cost [ 6, 12, 25, 40, 60 ]

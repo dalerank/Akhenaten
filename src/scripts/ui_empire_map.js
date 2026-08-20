@@ -1,62 +1,61 @@
 log_info("akhenaten: ui empire map started")
 
-function empire_window_screen_bounds() {
-    return { min_pos: {x: 0, y: 0}, max_pos: {x: screen.width, y: screen.height} }
+function empire_window_set_xy(dst, x, y) {
+    dst.x = x
+    dst.y = y
+}
+
+function empire_window_refresh_screen_bounds() {
+    var sb = empire_window.screen_bounds
+    empire_window_set_xy(sb.min_pos, 0, 0)
+    empire_window_set_xy(sb.max_pos, screen.width, screen.height)
+    sb.ready = true
 }
 
 function empire_window_rebuild_camera() {
     var sb = empire_window.screen_bounds
     var map = empire_window.map_size
-    if (!sb || !map) {
-        empire_window.camera = null
+    var cam = empire_window.camera
+    if (!sb.ready || !map) {
+        cam.valid = false
         return null
     }
 
-    var clip = {
-        x: sb.min_pos.x + empire_window.start_pos.x,
-        y: sb.min_pos.y + empire_window.start_pos.y
-    }
-    var area = {
-        x: Math.max(1, (sb.max_pos.x - sb.min_pos.x) - empire_window.finish_pos.x),
-        y: Math.max(1, (sb.max_pos.y - sb.min_pos.y) - empire_window.finish_pos.y)
-    }
-    var scale = Math.max(area.x / map.x, area.y / map.y)
+    var clip_x = sb.min_pos.x + empire_window.start_pos.x
+    var clip_y = sb.min_pos.y + empire_window.start_pos.y
+    var area_x = Math.max(1, (sb.max_pos.x - sb.min_pos.x) - empire_window.finish_pos.x)
+    var area_y = Math.max(1, (sb.max_pos.y - sb.min_pos.y) - empire_window.finish_pos.y)
+    var scale = Math.max(area_x / map.x, area_y / map.y)
     var scale_safe = Math.max(0.001, scale)
-    var scaled = {
-        x: Math.max(1, Math.round(map.x * scale)),
-        y: Math.max(1, Math.round(map.y * scale))
-    }
-    var base = {
-        x: clip.x + Math.max(0, ((area.x - scaled.x) / 2) | 0),
-        y: clip.y + Math.max(0, ((area.y - scaled.y) / 2) | 0)
-    }
+    var scaled_x = Math.max(1, Math.round(map.x * scale))
+    var scaled_y = Math.max(1, Math.round(map.y * scale))
+    var base_x = clip_x + Math.max(0, ((area_x - scaled_x) / 2) | 0)
+    var base_y = clip_y + Math.max(0, ((area_y - scaled_y) / 2) | 0)
     var scroll = __empire_map_get_scroll()
-    var draw_origin = {
-        x: base.x - Math.round(scroll.x * scale),
-        y: base.y - Math.round(scroll.y * scale)
-    }
-    var viewport = {
-        x: Math.min(map.x, Math.max(1, Math.round(area.x / scale_safe))),
-        y: Math.min(map.y, Math.max(1, Math.round(area.y / scale_safe)))
-    }
+    var origin_x = base_x - Math.round(scroll.x * scale)
+    var origin_y = base_y - Math.round(scroll.y * scale)
+    var vp_x = Math.min(map.x, Math.max(1, Math.round(area_x / scale_safe)))
+    var vp_y = Math.min(map.y, Math.max(1, Math.round(area_y / scale_safe)))
 
-    var cam = {
-        scale: scale,
-        scale_safe: scale_safe,
-        clip: clip,
-        area: area,
-        base: base,
-        draw_origin: draw_origin,
-        viewport: viewport,
-        map: map
-    }
-    empire_window.camera = cam
-    empire_window.draw_offset = draw_origin
+    cam.scale = scale
+    cam.scale_safe = scale_safe
+    empire_window_set_xy(cam.clip, clip_x, clip_y)
+    empire_window_set_xy(cam.area, area_x, area_y)
+    empire_window_set_xy(cam.base, base_x, base_y)
+    empire_window_set_xy(cam.draw_origin, origin_x, origin_y)
+    empire_window_set_xy(cam.viewport, vp_x, vp_y)
+    empire_window_set_xy(cam.map, map.x, map.y)
+    empire_window_set_xy(empire_window.draw_offset, origin_x, origin_y)
+    cam.valid = true
     return cam
 }
 
 function empire_window_camera() {
-    return empire_window.camera || empire_window_rebuild_camera()
+    var cam = empire_window.camera
+    if (cam.valid) {
+        return cam
+    }
+    return empire_window_rebuild_camera()
 }
 
 function empire_window_map_scale() {
@@ -430,7 +429,7 @@ function empire_window_city_at_screen_pos(draw_offset, mx, my) {
 
 function empire_window_update_map_hover_tooltip(draw_offset) {
     ui.set_tooltip("")
-    if (!empire_window.camera || empire_window_is_outside_map(__mouse.x, __mouse.y)) {
+    if (!empire_window.camera.valid || empire_window_is_outside_map(__mouse.x, __mouse.y)) {
         return
     }
     var city = empire_window_city_at_screen_pos(draw_offset, __mouse.x, __mouse.y)

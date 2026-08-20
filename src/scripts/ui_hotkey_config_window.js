@@ -264,9 +264,14 @@ window_hotkey_config {
         list_scroll: scrollbar({ pos: [580, 72], size: [0, 352] })
 
         btn_defaults: button({ pos: [240, 430], size: [160, 30], text: "#TR_BUTTON_RESET_DEFAULTS", onclick_event: "reset_defaults" })
-        btn_cancel: button({ pos: [410, 430], size: [100, 30], text: "#TR_BUTTON_CANCEL", onclick: window_go_back })
+        btn_cancel: button({ pos: [410, 430], size: [100, 30], text: "#TR_BUTTON_CANCEL" })
         btn_save: button({ pos: [520, 430], size: [100, 30], text: "#TR_BUTTON_OK", onclick_event: "save" })
     }, hotkey_config_rows_ui(HOTKEY_CONFIG_VISIBLE_ROWS))
+}
+
+[es=(window_hotkey_config, btn_cancel)]
+function window_hotkey_config_btn_cancel(window) {
+    window_go_back()
 }
 
 [es=(window_hotkey_config, init)]

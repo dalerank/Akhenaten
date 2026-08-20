@@ -11,7 +11,9 @@
 #include "core/profiler.h"
 #include "grid/routing/routing_terrain.h"
 #include "graphics/elements/ui.h"
+#include "grid/grid.h"
 #include "grid/road_access.h"
+#include "grid/road_network.h"
 #include "game/game_config.h"
 #include "scenario/scenario.h"
 #include "sound/effect.h"
@@ -185,6 +187,44 @@ granary_task_status building_granary::determine_worker_task() {
     return {GRANARY_TASK_NONE, RESOURCE_NONE};
 }
 
+tile2i building_granary_access_on_network(const building &granary, int road_network_id, tile2i prefer_near) {
+    if (road_network_id <= 0 || !granary.has_road_access) {
+        return tile2i::invalid;
+    }
+
+    const building *main = granary.main();
+    if (!main || !main->is_valid()) {
+        return tile2i::invalid;
+    }
+
+    offsets_array offsets;
+    map_grid_adjacent_offsets(main->size, offsets);
+    const int base_offset = main->tile.grid_offset();
+    const bool use_prefer = prefer_near.valid();
+
+    tile2i best = tile2i::invalid;
+    float best_dist = 1e9f;
+    for (const auto &tile_delta : offsets) {
+        const int grid_offset = base_offset + tile_delta;
+        if (!road_tile_valid_access(grid_offset)) {
+            continue;
+        }
+        if (map_road_network_get(grid_offset) != road_network_id) {
+            continue;
+        }
+        tile2i candidate(grid_offset);
+        if (!use_prefer) {
+            return candidate;
+        }
+        const float d = candidate.dist(prefer_near);
+        if (d < best_dist) {
+            best_dist = d;
+            best = candidate;
+        }
+    }
+    return best;
+}
+
 int building_granary_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, int force_on_stockpile, int* understaffed, tile2i* dst) {
     if (g_scenario.kingdom_supplies_grain)
         return 0;
@@ -210,7 +250,7 @@ int building_granary_for_storing(tile2i tile, e_resource resource, int distance_
         if (!granary || !granary->is_valid())
             continue;
 
-        if (!granary->has_road_access() || granary->distance_from_entry() <= 0 || granary->road_network() != road_network_id)
+        if (!granary->has_road_access() || !building_granary_touches_network(granary->base, road_network_id))
             continue;
 
         if (!game_features::gameplay_change_understaffed_accept_goods) {
@@ -248,8 +288,8 @@ int building_granary_for_storing(tile2i tile, e_resource resource, int distance_
     // If found accepting granary, use it
     if (min_building_id != 0) {
         building* min = building_get(min_building_id);
-        tile2i granary_tile = min->tile.shifted(1, 1);
-        map_point_store_result(granary_tile, *dst);
+        tile2i access = building_granary_access_on_network(*min, road_network_id, tile);
+        map_point_store_result(access.valid() ? access : min->tile.shifted(1, 1), *dst);
         return min_building_id;
     }
 
@@ -263,7 +303,7 @@ int building_granary_for_storing(tile2i tile, e_resource resource, int distance_
             if (!granary || !granary->is_valid())
                 continue;
 
-            if (!granary->has_road_access() || granary->distance_from_entry() <= 0 || granary->road_network() != road_network_id)
+            if (!granary->has_road_access() || !building_granary_touches_network(granary->base, road_network_id))
                 continue;
 
             if (!game_features::gameplay_change_understaffed_accept_goods) {
@@ -295,13 +335,12 @@ int building_granary_for_storing(tile2i tile, e_resource resource, int distance_
         }
     }
 
-    // deliver to center of granary
     if (min_building_id == 0) {
         return 0;
     }
     building* min = building_get(min_building_id);
-    tile2i granary_tile = min->tile.shifted(1, 1);
-    map_point_store_result(granary_tile, *dst);
+    tile2i access = building_granary_access_on_network(*min, road_network_id, tile);
+    map_point_store_result(access.valid() ? access : min->tile.shifted(1, 1), *dst);
     return min_building_id;
 }
 
@@ -324,7 +363,7 @@ int building_getting_granary_for_storing(tile2i tile, e_resource resource, int d
         if (!granary || !granary->is_valid())
             continue;
 
-        if (!granary->has_road_access() || granary->distance_from_entry() <= 0 || granary->road_network() != road_network_id)
+        if (!granary->has_road_access() || !building_granary_touches_network(granary->base, road_network_id))
             continue;
 
         int pct_workers = granary->worker_percentage();
@@ -349,8 +388,8 @@ int building_getting_granary_for_storing(tile2i tile, e_resource resource, int d
         return 0;
     }
     building* min = building_get(min_building_id);
-    tile2i storing_tile = min->tile.shifted(1, 1);
-    map_point_store_result(storing_tile, *dst);
+    tile2i access = building_granary_access_on_network(*min, road_network_id, tile);
+    map_point_store_result(access.valid() ? access : min->tile.shifted(1, 1), *dst);
     return min_building_id;
 }
 

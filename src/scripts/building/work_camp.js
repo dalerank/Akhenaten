@@ -9,7 +9,7 @@ building_work_camp = {
     }
 
     labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
-    meta { help_id: 81, text_id: 179 }
+    meta { text_id: 179, help_link:"message_work_camp_history" }
     info_sound : "Wavs/eng_r.wav"
     building_size : 2
     cost [ 12, 20, 40, 80, 120 ]

@@ -13,7 +13,7 @@ building_architect_post {
     sound_channel : SOUND_CHANNEL_CITY_ENGINEERS_POST
     min_houses_coverage : 50
     building_size : 1
-    meta { help_id: 81, text_id: 104 }
+    meta { text_id: 104, help_link:"message_building_architect_post" }
     info_sound : "Wavs/eng.wav"
     cost [ 6, 12, 25, 40, 60 ]
     laborers[5], fire_risk[0], damage_risk[0]

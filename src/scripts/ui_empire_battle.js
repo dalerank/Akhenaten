@@ -5,6 +5,9 @@ function empire_window_draw_object_info_kingdome_army(ev, obj) {
     if (battle.egyptian_months_to_travel_back > 0) {
         if (battle.egyptian_months_traveled === obj.distant_battle_travel_months) {
             var sb = empire_window.screen_bounds
+            if (!sb.ready) {
+                return
+            }
             var ox = ((sb.min_pos.x + sb.max_pos.x - 240) / 2) | 0
             var oy = sb.max_pos.y - 68
             var text_id = battle.egyptian_months_to_travel_forth ? 15 : 16
@@ -19,6 +22,9 @@ function empire_window_draw_object_info_enemy_army(ev, obj) {
         // enemy_months_traveled() historically returned egyptian_months_traveled.
         if (battle.egyptian_months_traveled === obj.distant_battle_travel_months) {
             var sb = empire_window.screen_bounds
+            if (!sb.ready) {
+                return
+            }
             var ox = ((sb.min_pos.x + sb.max_pos.x - 240) / 2) | 0
             var oy = sb.max_pos.y - 68
             __lang_text_draw_multiline(47, 14, ox, oy, 240, FONT_NORMAL_BLACK_ON_LIGHT)
@@ -26,7 +32,7 @@ function empire_window_draw_object_info_enemy_army(ev, obj) {
     }
 }
 
-[es=(empire_window, draw_object_info)]
+[es=(empire_window, draw_object_info), memory=frame]
 function empire_window_draw_object_info(ev) {
     var obj = empire_window.selected_object
     if (!obj) {
@@ -123,7 +129,7 @@ function empire_window_draw_distant_battle_icon(ev) {
     }
 
     var battle_icon_pos = vec2i(empire_window_map_point(ev.draw_offset, ecity.empire_object.pos))
-                            .add({x:-battle_icon.width / 2, y:-battle_icon.height / 2})
+                            .add({x: -battle_icon.width / 2, y: -battle_icon.height / 2})
 
     ui.image(battle_icon, battle_icon_pos)
 }
@@ -139,7 +145,7 @@ function empire_window_draw_dispatched_army_icon(ev) {
     }
 
     var army_icon_pos = vec2i(empire_window_map_point(ev.draw_offset, empire.dispatched_army.pos))
-                            .add({x:-army_icon.width / 2, y:-army_icon.height / 2})
+                            .add({x: -army_icon.width / 2, y: -army_icon.height / 2})
 
     ui.image(army_icon, army_icon_pos)
 }

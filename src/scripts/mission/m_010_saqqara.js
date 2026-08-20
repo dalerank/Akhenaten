@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 10 saqqara started")
 
-// Empire / requests / events verified vs mission1.pak scenario 10 (2026-07-25 dump).
+// Empire / requests / events aligned with original campaign scenario 10 (2026-07-25 dump).
 // Favour Pharaoh army size=69 (by_favour, attack=RANDOM) via mission_pharaoh_favour_invasion_tick.
 
 mission10 { // Saqqara â€” The First Pyramid
@@ -87,7 +87,7 @@ mission10 { // Saqqara â€” The First Pyramid
 		BUILDING_SCRIBAL_SCHOOL,
 	]
 
-	// Goals match mission1.pak scenario 10.
+	// Goals match original campaign scenario 10.
 	win_criteria {
 		population    {enabled : true, goal : 3500 }
 		culture       {enabled : false }
@@ -97,7 +97,7 @@ mission10 { // Saqqara â€” The First Pyramid
 		housing_level {enabled : true, goal : 10 }
 	}
 
-	// Map points from mission1.pak scenario 10 (no disembark / invasion points).
+	// Map points from original campaign scenario 10 (no disembark / invasion points).
 	entry_point [130, 123]
 	exit_point [41, 44]
 	river_entry_point [159, 94]
@@ -105,7 +105,7 @@ mission10 { // Saqqara â€” The First Pyramid
 
 	enable_scenario_events : true
 
-	// Empire from mission1.pak scenario 10 (empire id=1) â€” full map objects.
+	// Empire from original campaign scenario 10 (empire id=1) â€” full map objects.
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [

@@ -48,7 +48,7 @@ building_sphinx {
     fire_proof : true
     damage_proof : true
     info_title_id [198, 21]
-    meta { help_id: 362, text_id: 178 }
+    meta { text_id: 178, help_link:"message_building_sphinx" }
     info_sound : "Wavs/rock3.wav"
     cost [ 2500, 3500, 4500, 6500, 10000 ]
     flags {

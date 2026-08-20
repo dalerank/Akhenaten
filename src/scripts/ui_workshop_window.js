@@ -10,11 +10,6 @@ function workshop_format_workers_text(b) {
     return b.num_workers + " " + employee + " (" + b.max_workers + " " + __loc(69, 0)
 }
 
-function workshop_info_window_open_industry() {
-    var b = city.get_building(city.object_info.bid)
-    show_trade_resource_settings_window(b.output_resource_id)
-}
-
 function workshop_info_window_show_advisor(slot) {
     var b = city.get_building(city.object_info.bid)
     var cfg = get_building_config_by_id(b.type)
@@ -27,10 +22,6 @@ function workshop_info_window_show_advisor(slot) {
         window_advisors_show_advisor(advisor)
     }
 }
-
-function workshop_info_window_show_advisor_0() { workshop_info_window_show_advisor(0) }
-function workshop_info_window_show_advisor_1() { workshop_info_window_show_advisor(1) }
-function workshop_info_window_show_advisor_2() { workshop_info_window_show_advisor(2) }
 
 function workshop_info_window_setup_advisors(window, building_type) {
     var cfg = get_building_config_by_id(building_type)
@@ -75,7 +66,7 @@ function workshop_info_window_status_reason(b) {
 workshop_info_window {
     related_buildings [BUILDING_BREWERY_WORKSHOP, BUILDING_POTTERY_WORKSHOP
                        BUILDING_PAPYRUS_WORKSHOP, BUILDING_CHARIOTS_WORKSHOP, BUILDING_CATTLE_RANCH
-                       BUILDING_LAMP_WORKSHOP, BUILDING_PAINT_WORKSHOP, BUILDING_WEAPONSMITH, BUILDING_JEWELS_WORKSHOP]
+                       BUILDING_PAINT_WORKSHOP, BUILDING_WEAPONSMITH, BUILDING_JEWELS_WORKSHOP]
     ui {
         background    : outer_panel({size[29, 16] }),
         title         : text({pos[0, 12], size[px(29), 20], text:"${building.name}", font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
@@ -89,23 +80,43 @@ workshop_info_window {
         workers_text  : text({pos[60, 158], font: FONT_NORMAL_BLACK_ON_DARK })
 
         button_help   : help_button({})
-        advisor_btn_0 : image_button({margin{left:40, bottom:-40}, size[28, 28], enabled:false, onclick: workshop_info_window_show_advisor_0 })
-        advisor_btn_1 : image_button({margin{left:65, bottom:-40}, size[28, 28], enabled:false, onclick: workshop_info_window_show_advisor_1 })
-        advisor_btn_2 : image_button({margin{left:96, bottom:-40}, size[28, 28], enabled:false, onclick: workshop_info_window_show_advisor_2 })
+        advisor_btn_0 : image_button({margin{left:40, bottom:-40}, size[28, 28], enabled:false})
+        advisor_btn_1 : image_button({margin{left:65, bottom:-40}, size[28, 28], enabled:false})
+        advisor_btn_2 : image_button({margin{left:96, bottom:-40}, size[28, 28], enabled:false})
 
         industry_button : button({
                                 margin{right:-120, bottom:-40}, size[23, 23]
                                 text:"i"
-                                onclick: workshop_info_window_open_industry
                                })
         mothball      : button({
                                 margin{right:-90, bottom:-40}, size[23, 23]
                                 textfn: building_info_window_text_mothball
-                                onclick: building_info_window_toggle_mothball
                                })
         button_close  : close_button({})
     }
 }
+
+[es=(workshop_info_window, advisor_btn_0)]
+function workshop_info_window_on_advisor_btn_0(window) {
+    workshop_info_window_show_advisor(0)
+}
+
+[es=(workshop_info_window, advisor_btn_1)]
+function workshop_info_window_on_advisor_btn_1(window) {
+    workshop_info_window_show_advisor(1)
+}
+
+[es=(workshop_info_window, advisor_btn_2)]
+function workshop_info_window_on_advisor_btn_2(window) {
+    workshop_info_window_show_advisor(2)
+}
+
+[es=(workshop_info_window, industry_button)]
+function workshop_info_window_on_industry_button(window) {
+    var b = city.get_building(city.object_info.bid)
+    show_trade_resource_settings_window(b.output_resource_id)
+}
+
 
 [es=(workshop_info_window, init)]
 function workshop_info_window_on_init(window) {

@@ -38,7 +38,7 @@ building_mortuary {
   min_houses_coverage : 50
   building_size : 2
   labor_category : LABOR_CATEGORY_WATER_HEALTH
-  meta { help_id:66, text_id:82 }
+  meta { text_id:82, help_link:"message_building_mortuary" }
   info_sound : "Wavs/mortuary.wav"
   cost [ 20, 30, 50, 100, 200 ]
   desirability { value[-3], step[2], step_size[1], range[2] }

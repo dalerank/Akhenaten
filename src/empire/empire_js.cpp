@@ -186,4 +186,6 @@ void js_register_empire_objects(js_State *J) {
     js_register_empire_object_proto(J);
     js_register_empire_city_map_proto(J);
     js_register_empire_city_proto(J);
+    js_register_empire_trader_proto(J);
+    js_register_invasion_warning_proto(J);
 }

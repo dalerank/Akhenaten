@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 7 abydos started")
 
-// Empire / requests / invasions verified vs mission1.pak scenario 7 (2026-07-25 dump).
+// Empire / requests / invasions aligned with original campaign scenario 7 (2026-07-25 dump).
 
 mission7 { // Abydos / Abedju — The Challenge of the Sea
 	map_file : "data/maps/m_007_abydos.map"
@@ -75,7 +75,7 @@ mission7 { // Abydos / Abedju — The Challenge of the Sea
 					BUILDING_FESTIVAL_SQUARE, BUILDING_PAVILLION, BUILDING_DANCE_SCHOOL, BUILDING_SENET_HOUSE
 				]
 
-	// Win ratings match mission1.pak scenario 7.
+	// Win ratings match original campaign scenario 7.
 	win_criteria {
 		population    {enabled : true, goal : 2500 }
 		culture       {enabled : true, goal : 25 }
@@ -85,7 +85,7 @@ mission7 { // Abydos / Abedju — The Challenge of the Sea
 		housing_level {enabled : true, goal : 10 }
 	}
 
-	// Map points from mission1.pak scenario 7.
+	// Map points from original campaign scenario 7.
 	entry_point [3, 66]
 	exit_point [83, 126]
 	river_entry_point [129, 61]
@@ -94,7 +94,7 @@ mission7 { // Abydos / Abedju — The Challenge of the Sea
 	invasion_points_land [ [66, 5], [2, 69] ]
 	invasion_points_sea [ [127, 59] ]
 
-	// Empire from mission1.pak scenario 7 (empire id=0) — full map objects.
+	// Empire from original campaign scenario 7 (empire id=0) — full map objects.
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [

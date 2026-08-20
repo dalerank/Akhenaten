@@ -34,11 +34,6 @@ function file_dialog_save_handle_commit(ev) {
     app_finish_exit_after_save()
 }
 
-function file_dialog_save_on_cancel() {
-    app_clear_pending_exit_after_save()
-    window_go_back()
-}
-
 [es=(file_dialog_save, go_back)]
 function file_dialog_save_es_go_back(window) {
     app_clear_pending_exit_after_save()
@@ -53,9 +48,7 @@ file_dialog_save {
     show_filename: ""
     show_filename_applied: ""
 
-    ui: baseui(file_dialog_chrome_base, {
-        btn_cancel: cancel_button({ margin{centerx:50, bottom:-40}, onclick: file_dialog_save_on_cancel })
-    })
+    ui: baseui(file_dialog_chrome_base, {})
 }
 
 [es=(file_dialog_save, on_filename_input)]

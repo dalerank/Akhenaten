@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 6 behdet started")
 
-// Empire / requests / invasions verified vs mission1.pak scenario 6 (2026-07-25 dump).
+// Empire / requests / invasions aligned with original campaign scenario 6 (2026-07-25 dump).
 
 mission6 { // Behdet — The Royal Navy
 	map_file : "data/maps/m_006_behdet.map"
@@ -70,7 +70,7 @@ mission6 { // Behdet — The Royal Navy
 					BUILDING_FESTIVAL_SQUARE, BUILDING_PAVILLION, BUILDING_DANCE_SCHOOL,
 				]
 
-	// Win ratings match mission1.pak scenario 6.
+	// Win ratings match original campaign scenario 6.
 	win_criteria {
 		population    {enabled : true, goal : 2500 }
 		culture       {enabled : true, goal : 15 }
@@ -80,7 +80,7 @@ mission6 { // Behdet — The Royal Navy
 		housing_level {enabled : true, goal : 10 }
 	}
 
-	// Map points from mission1.pak scenario 6.
+	// Map points from original campaign scenario 6.
 	entry_point [21, 34]
 	exit_point [79, 88]
 	river_entry_point [96, 68]
@@ -89,7 +89,7 @@ mission6 { // Behdet — The Royal Navy
 	disembark_points [ [59, 40], [-1, -1], [68, 42] ]
 	invasion_points_sea [ [97, 67] ]
 
-	// Empire from mission1.pak scenario 6 (empire id=1) — full map objects.
+	// Empire from original campaign scenario 6 (empire id=1) — full map objects.
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [

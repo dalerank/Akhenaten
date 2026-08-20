@@ -17,7 +17,7 @@ window_new_career {
             onclick_event: "pick_name"
             ondoubleclick_event: "pick_name_ok"
         })
-        btn_back   : button({margin{left:31, top:312}, size[px(9), 26], text[12, 0], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: window_go_back})
+        btn_back   : button({margin{left:31, top:312}, size[px(9), 26], text[12, 0], font:FONT_NORMAL_BLACK_ON_LIGHT })
         btn_ok     : button({margin{centerx:16, top:312}, size[px(9), 26], text[13, 5], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick_event: "ok"})
     }
 }
@@ -69,6 +69,11 @@ function new_career_fill_egyptian_names(window) {
         }
         window.name_list.add_item(name, i)
     }
+}
+
+[es=(window_new_career, btn_back)]
+function window_new_career_btn_back(window) {
+    window_go_back()
 }
 
 [es=(window_new_career, pick_name)]

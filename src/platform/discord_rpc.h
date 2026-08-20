@@ -8,6 +8,7 @@
 
 struct discord_rpc_t {
     discord_rpc_t();
+    ~discord_rpc_t();
 
     discord_rpc_t(const discord_rpc_t&) = delete;
     discord_rpc_t& operator=(const discord_rpc_t&) = delete;

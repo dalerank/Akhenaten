@@ -18,6 +18,38 @@ city.get_well = function(building_id) {
     return new BuildingWell(building_id)
 }
 
+building_well {
+  animations {
+    preview { pack: PACK_GENERAL, id:23, max_frames:1 }
+    base { pack: PACK_GENERAL, id:23, max_frames:1 }
+    base_work { pack: PACK_GENERAL, id:23, max_frames:1 }
+    fancy { pack: PACK_GENERAL, id:23, offset:2, max_frames:1 }
+    fancy_work { pack: PACK_GENERAL, id:23, offset:3, max_frames:1 }
+    minimap {pack:PACK_GENERAL, id:151},
+  }
+
+  fire_proof : true
+  building_size : 1
+  meta { text_id:109, help_link:"message_building_well" }
+  info_sound : "Wavs/WELL.WAV"
+  needs {
+    groundwater : true
+  }
+
+  labor_category : LABOR_CATEGORY_WATER_HEALTH
+  cost [ 1, 2, 5, 10, 20 ]
+  desirability_range_check : 4
+  desirability_fancy : 30
+  unnecessary_range_check : 3
+  laborers[0]
+  fire_risk[0]
+  damage_risk[0]
+  desirability { value[1], step[1], step_size[-1], range[1] }
+  flags {
+    no_road_access: true
+  }
+}
+
 [es=(building_well, on_place_checks)]
 function building_well_on_place_checks(ev) {
     var b = city.get_building(ev.bid)

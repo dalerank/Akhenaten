@@ -43,7 +43,7 @@ building_mausoleum {
     fire_proof : true
     damage_proof : true
     info_title_id [198, 25]
-    meta { help_id: 368, text_id: 178 }
+    meta { text_id: 178, help_link:"message_building_mausoleum" }
     info_sound : "Wavs/rock3.wav"
     cost [ 3500, 4500, 6000, 8500, 12000 ]
     flags {

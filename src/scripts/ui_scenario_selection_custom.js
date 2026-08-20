@@ -11,6 +11,7 @@ function window_scenario_selection_custom_on_init(ev) {
     }
 }
 
+[es=(window_scenario_selection_custom, click_item)]
 function window_scenario_selection_custom_on_map_list_click(p) {
     if (!p || p.text === "") {
         return
@@ -29,6 +30,11 @@ function window_scenario_selection_custom_btn_start() {
         return
     }
     __game_start_loaded_file()
+}
+
+[es=(window_scenario_selection_custom, btn_start)]
+function window_scenario_selection_custom_on_btn_start(window) {
+    window_scenario_selection_custom_btn_start()
 }
 
 [es=(window_scenario_selection_custom, mission_changed)]
@@ -95,10 +101,10 @@ window_scenario_selection_custom {
             view_items:14
             scrollbar_margin_x:10
             draw_scrollbar_always:false
-            onclick_item: window_scenario_selection_custom_on_map_list_click
+            onclick_event: "click_item"
         })
 
-        btn_start              : image_button({ pos[780, 582], size[27, 27], pack:PACK_GENERAL, id:193, offset:4, onclick: window_scenario_selection_custom_btn_start })
+        btn_start              : image_button({ pos[780, 582], size[27, 27], pack:PACK_GENERAL, id:193, offset:4 })
 
         side_mission_title     : text_center({ pos[545, 162], size[265, 36], align:"center", text:"", font:FONT_LARGE_BLACK_ON_DARK, clip_area:true })
         side_subtitle          : text_center({ pos[545, 200], size[265, 20], align:"center", text:"", font:FONT_NORMAL_WHITE_ON_DARK })

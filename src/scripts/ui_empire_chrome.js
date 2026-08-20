@@ -1,6 +1,6 @@
 log_info("akhenaten: ui empire chrome started")
 
-[es=(empire_window, draw_pause_button)]
+[es=(empire_window, draw_pause_button), memory=frame]
 function empire_window_draw_pause_button(window) {
     var btn = window.button_pause
     btn.tooltip = game.paused ? __loc("#TR_BUTTON_RESUME") : __loc("#TR_BUTTON_PAUSE")
@@ -30,8 +30,12 @@ function empire_window_draw_pause_button(window) {
 }
 
 function empire_window_draw_paneling(window) {
-    var min_pos = empire_window.screen_bounds.min_pos
-    var max_pos = empire_window.screen_bounds.max_pos
+    var sb = empire_window.screen_bounds
+    if (!sb.ready) {
+        return
+    }
+    var min_pos = sb.min_pos
+    var max_pos = sb.max_pos
 
     var bottom = get_image(empire_window.bottom_image)
     var hbar = get_image(empire_window.horizontal_bar)

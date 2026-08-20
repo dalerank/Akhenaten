@@ -332,14 +332,14 @@
           <span class="obj-value">11</span>
         </li>
       </ul>
-      <p>Population, culture, prosperity, kingdom, and housing match <code>mission1.pak</code> scenario 12. The monument rating uses the reimplementation additive scale: original pak goal was 39, which is incompatible with the additive formula — see the deviation note.</p>
+      <p>Population, culture, prosperity, kingdom, and housing match original campaign scenario 12. The monument rating uses the reimplementation additive scale: original campaign goal was 39, which is incompatible with the additive formula — see the deviation note.</p>
       <div class="deviation-note">
         <strong>Deviation from the original monument number:</strong> the original requires a small stepped pyramid <em>plus a stepped pyramid complex</em> at monument rating <strong>39</strong>. With the additive formula <code>2.25·Σ+4.5</code> (clamped to 100) and weights small=8 / on-land complex=24, finished both yield <strong>76</strong>. Weight 44 would saturate the 100-cap from the complex alone. Causeway water-gate (Slice A) is enforced; temples/full W=44 still open. Pak-39 needs a pak-compatible formula fork.
       </div>
 
       <!-- ─── Scripted events ───────────────────────────────── -->
       <h2 id="events">Scripted events</h2>
-      <p>Full empire redefine + event schedule verified against pak scenario 12 (2026-07-25 dump). Empire id <strong>1</strong>. Scenario enemy is <strong>Hyksos</strong> (<code>ENEMY_5_HYKSOS</code>) — not Libyan. Favour-KR Pharaoh army size <strong>25</strong>, chaining to a second wave of <strong>60</strong> if unresolved. Timed raids and favour are proxied in JS until B2-migrate.</p>
+      <p>Full empire redefine + event schedule verified against original campaign scenario 12 (2026-07-25 dump). Empire id <strong>1</strong>. Scenario enemy is <strong>Hyksos</strong> (<code>ENEMY_5_HYKSOS</code>) — not Libyan. Favour-KR Pharaoh army size <strong>25</strong>, chaining to a second wave of <strong>60</strong> if unresolved. Timed raids and favour are proxied in JS until B2-migrate.</p>
 
       <div class="tutorial-step">
         <span class="step-tag">Year 3 · month 4</span>
@@ -440,7 +440,7 @@
             <p>The entire mission — configuration block, variables, and all event handlers — lives in one file:</p>
             <p><span class="file-ref">src/scripts/mission/m_012_meidum.js</span></p>
             <p>This file is imported by <span class="file-ref">src/scripts/missions.js</span>. The <code>mission12 { … }</code> block at the top is the static configuration parsed at startup:</p>
-            <pre><code><span class="cmt">// m_012_meidum.js — full empire redefine, verified vs mission1.pak scenario 12 (2026-07-25)</span>
+            <pre><code><span class="cmt">// m_012_meidum.js — full empire redefine, verified vs original campaign scenario 12 (2026-07-25)</span>
 <span class="kw">mission12</span> {
   <span class="kw">map_file</span> : <span class="str">"data/maps/m_012_meidum.map"</span>
   <span class="kw">start_message</span> : <span class="str">"message_mission_meidum"</span>
@@ -506,7 +506,6 @@
                 <span class="ev-fn">mission12_event_i70_hyksos_invasion_recurring / mission12_pharaoh_favour_invasion</span>
               </li>
             </ul>
-            <p>Dump helper: <span class="file-ref">src/js/js_test_mission_pak_dump.cpp</span> (<code>__test_mission_pak_dump</code> / <code>GamestateIO::load_mission_pak_raw</code>; ad-hoc <code>tests/99_tmp_mission12_dump.js</code>).</p>
           </div>
         </details>
 
@@ -550,8 +549,8 @@
         <details>
           <summary>Save file and map data</summary>
           <div class="details-body">
-            <p>The map layout, terrain, marshland island, and the kingdom road entry point come from the original Pharaoh campaign pack:</p>
-            <p><span class="file-ref">mission1.pak</span> (scenario offset for id 12 — see <code>GamestateIO::get_campaign_scenario_offset</code>, <span class="file-ref">src/io/gamestate/boilerplate.cpp:120</span>)</p>
+            <p>The map layout, terrain, marshland island, and the kingdom road entry point come from the shipped campaign map:</p>
+            <p><span class="file-ref">data/maps/m_012_meidum.map</span> (<code>map_file</code> in <span class="file-ref">src/scripts/mission/m_012_meidum.js</span>)</p>
             <p>The binary map is loaded by the engine before the JS script runs. The scripting system is loaded from <span class="file-ref">src/scripts/missions.js</span>, which imports <code>mission/m_012_meidum.js</code> by path. If you rename or move the file, update the import there.</p>
           </div>
         </details>

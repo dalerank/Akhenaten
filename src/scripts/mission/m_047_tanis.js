@@ -1,6 +1,7 @@
 log_info("akhenaten: mission 47 tanis started")
 
-// Cleop mission1.pak scenario 47 (dump 2026-07-31). Empire id=1.
+// Cleopatra campaign scenario 47. Empire id=1.
+
 // Scenario enemy ENEMY_11_ROMAN (briefing = Persian / Conon - pak id wins).
 // Gods: Osiris(1), Ra(2), Seth(1). MM subtitle: Rebirth of a Navy. Start year -395.
 // Funds Normal 8000 / loan 2000 / debt_interest 8. Rank 6 (pak).

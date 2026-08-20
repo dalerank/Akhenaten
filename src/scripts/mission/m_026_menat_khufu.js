@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 26 menat khufu started")
 
-// Empire / events verified vs mission1.pak scenario 26 (2026-07-26 dump).
+// Empire / events aligned with original campaign scenario 26 (2026-07-26 dump).
 // Empire id=1. Scenario enemy ENEMY_6_KUSHITE. Favour invasions invader=pharaoh(3) → ENEMY_3_EGYPTIAN.
 // Gods: Osiris(2), Ra(1), Bast(1) — no JS override. Funds Normal 10000 / loan 2500 / debt 20. Rank 9.
 // Win: pop 7000 / culture 60 / prosperity 50 / monuments 21 (2×small obelisk 2+2 + Small

@@ -52,7 +52,7 @@ window_mission_lost {
         title               : text({pos:[0, 32], text:{group:62, id:1}, font: FONT_LARGE_BLACK_ON_LIGHT, align:"center", size:[px(32), 20] })
         warning_text        : text({pos:[32, 72], text:{group:62, id:16}, wrap:px(32), font: FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
 
-        replay_mission      : button({margin:{centerx:-135, bottom:-40}, size:[270, 25], text:"#replay_mission" })
+        replay_mission      : button({margin:{centerx:-135, bottom:-40}, size:[270, 25], text:"#replay_mission", onclick_event: "replay_mission" })
     }
 }
 
@@ -179,8 +179,11 @@ function window_mission_lost_on_init(window) {
     __game_sound.music_stop()
     __game_sound.speech_stop()
     __game_sound.speech_play("Wavs/lose_game.wav")
+}
 
-    window.replay_mission.onclick = mission_end_replay_mission
+[es=(window_mission_lost, replay_mission)]
+function window_mission_lost_on_replay_mission(window) {
+    mission_end_replay_mission()
 }
 
 function mission_end_replay_mission() {

@@ -48,8 +48,8 @@ info_window_palace {
         resource_img  : resource_icon({pos[16, 36], resource:RESOURCE_GOLD})
         vaults_hold   : text({pos[44, 43], font: FONT_NORMAL_BLACK_ON_LIGHT })
         tax_level     : label({pos:[px(29) / 2 + 40, 46], textfn: palace_info_window_tax_level_text, font : FONT_NORMAL_BLACK_ON_LIGHT })
-        dec_tax       : arrowdown({pos:[px(29) / 2 + 170, 38], onclick: function() { emit event_finance_change_tax{ value: -1 } } })
-        inc_tax       : arrowup({pos:[px(29) / 2 + 193, 38], onclick: function() { emit event_finance_change_tax{ value: 1 } } })
+        dec_tax       : arrowdown({pos:[px(29) / 2 + 170, 38] })
+        inc_tax       : arrowup({pos:[px(29) / 2 + 193, 38] })
         warning_text  : text({pos[32, 66], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
         inner_panel   : inner_panel({pos[16, 136], size: [27, 4],
                                                                 ui : {
@@ -76,4 +76,14 @@ function palace_info_window_init(window) {
 
     var emp = palace_employment_text(palace)
     window.workers_desc.text = emp ? __loc(emp) : ""
+}
+
+[es=(info_window_palace, dec_tax)]
+function info_window_palace_dec_tax(window) {
+    emit event_finance_change_tax{ value: -1 }
+}
+
+[es=(info_window_palace, inc_tax)]
+function info_window_palace_inc_tax(window) {
+    emit event_finance_change_tax{ value: 1 }
 }

@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 17 on started")
 
-// Empire / requests / events verified vs mission1.pak scenario 17 (2026-07-26 dump).
+// Empire / requests / events aligned with original campaign scenario 17 (2026-07-26 dump).
 // Empire id=1. Scenario enemy ENEMY_4_HITTITE (no timed raids — only favour Pharaoh).
 // Gods: Osiris, Ra, Bast. Favour Pharaoh 20→20→20→20→20 (five waves).
 // Triage: SKIP MESSAGE i=6 (orphan chain_only, no inbound); SKIP map_obj idx=9 empty;

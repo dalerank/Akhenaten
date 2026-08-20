@@ -42,15 +42,25 @@ building_info_window {
         show_overlay   : button({
                                   margin{right:-64, bottom:-40}, size[23, 23]
                                   textfn: building_info_window_text_overlay
-                                  onclick: building_info_window_toggle_overlay
                                 })
         mothball       : button({
                                   margin{right:-90, bottom:-40}, size[23, 23]
                                   textfn: building_info_window_text_mothball
-                                  onclick: building_info_window_toggle_mothball
                                 })
 
         button_help    : help_button({})
         button_close   : close_button({})
     }
+}
+
+
+// Child windows tagged [es=building_info_window] fall back to these handlers.
+[es=(building_info_window, show_overlay)]
+function building_info_window_on_show_overlay(window) {
+    building_info_window_toggle_overlay()
+}
+
+[es=(building_info_window, mothball)]
+function building_info_window_on_mothball(window) {
+    building_info_window_toggle_mothball()
 }

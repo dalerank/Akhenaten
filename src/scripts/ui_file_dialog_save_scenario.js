@@ -49,6 +49,11 @@ file_dialog_save_scenario {
     })
 }
 
+[es=(file_dialog_save_scenario, go_back)]
+function file_dialog_save_scenario_es_go_back(window) {
+    window_go_back()
+}
+
 [es=(file_dialog_save_scenario, on_filename_input)]
 function file_dialog_save_scenario_es_on_filename_input(ev) {
     file_dialog_save_scenario_set_show_filename(ev.value)

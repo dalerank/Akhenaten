@@ -410,7 +410,7 @@
           <div class="details-body">
             <p>The entire mission — configuration block, variables, and all event handlers — lives in one file:</p>
             <p><span class="file-ref">src/scripts/mission/m_002_perwadjyt.js</span></p>
-            <p><strong>REMAP (editor Bridge):</strong> <code>mission1.pak</code> slot 28 Bridge is OFF for this mission, but the pottery step-2 tutorial still unlocks <code>BUILDING_LOW_BRIDGE</code> (and Ferry) via <code>city.use_building</code>. Menu truth is JS; pak is audit. See <span class="file-ref">docs/bridge_editor_allow_triage.md</span>.</p>
+            <p><strong>REMAP (editor Bridge):</strong> campaign map slot 28 Bridge is OFF for this mission, but the pottery step-2 tutorial still unlocks <code>BUILDING_LOW_BRIDGE</code> (and Ferry) via <code>city.use_building</code>. Menu truth is JS; map editor flags are audit. See <span class="file-ref">docs/bridge_editor_allow_triage.md</span>.</p>
             <p>This file is imported by <span class="file-ref">src/scripts/missions.js</span>. The <code>mission2 { … }</code> block at the top is the static configuration parsed at startup:</p>
             <pre><code><span class="cmt">// lines 3 – 47  (m_002_perwadjyt.js)</span>
 <span class="kw">mission2</span> {

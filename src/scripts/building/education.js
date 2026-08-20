@@ -8,7 +8,7 @@ building_library {
   }
 
   min_houses_coverage : 50
-  meta { help_id: 70, text_id: 87 }
+  meta { text_id: 87, help_link:"message_building_library" }
   labor_category : LABOR_CATEGORY_EDUCATION
   building_size : 3
   cost [ 90, 140, 200, 300, 400 ]

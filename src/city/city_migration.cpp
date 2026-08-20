@@ -1,9 +1,12 @@
 #include "city_migration.h"
 
+#include "building/building_house.h"
 #include "city/city.h"
 #include "city/city_message.h"
 #include "city/city_warnings.h"
 #include "core/calc.h"
+#include "core/log.h"
+#include "game/game.h"
 #include "game/game_events.h"
 #include "js/js_game.h"
 
@@ -188,6 +191,71 @@ void city_migration_t::update_conditions() {
 }
 
 void city_migration_t::update_month() {
+    int houses_total = 0;
+    int houses_with_room = 0;
+    int houses_no_entry = 0;
+    int houses_immigrant_slot = 0;
+    int houses_immigrant_slot_dead = 0;
+    int vacant_lots = 0;
+    int vacant_lots_with_room = 0;
+    int room_reachable = 0;
+
+    buildings_house_do([&](building_house *house) {
+        if (house->state() != BUILDING_STATE_VALID) {
+            return;
+        }
+
+        ++houses_total;
+        const int room = house->population_room();
+        const bool no_entry = house->distance_from_entry() <= 0;
+        const bool vacant = house->is_vacant_lot();
+
+        if (vacant) {
+            ++vacant_lots;
+            if (room > 0) {
+                ++vacant_lots_with_room;
+            }
+        }
+
+        if (no_entry) {
+            ++houses_no_entry;
+        } else if (room > 0) {
+            ++houses_with_room;
+            room_reachable += room;
+        }
+
+        if (house->base.has_figure(BUILDING_SLOT_IMMIGRANT, -1)) {
+            ++houses_immigrant_slot;
+            if (house->get_figure(BUILDING_SLOT_IMMIGRANT)->state != FIGURE_STATE_ALIVE) {
+                ++houses_immigrant_slot_dead;
+            }
+        }
+    });
+
+    logs::info("[migration] %d.%02d pop=%d room=%d/%d reachable_room=%d sentiment=%d unemp=%d%%",
+               game.simtime.year, game.simtime.month + 1,
+               g_city.population.current, g_city.population.room_in_houses, g_city.population.total_capacity,
+               room_reachable, g_city.sentiment.value, g_city.labor.unemployment_percentage);
+    logs::info("[migration] pct=%d (sent=%d unemp=%d) queue=%d/%d batch=%d/%d duration=%d/%d",
+               percentage, percentage_by_sentiment, percentage_by_unemployments,
+               immigration_queue_size, emigration_queue_size,
+               immigration_amount_per_batch, emigration_amount_per_batch,
+               immigration_duration, emigration_duration);
+    logs::info("[migration] newcomers=%d last_day immigrated=%d emigrated=%d refused=%d cause=%d cap=%d invading=%d pop_cap=%d",
+               newcomers, immigrated_today, emigrated_today, refused_immigrants_today,
+               no_immigration_cause, migration_cap ? 1 : 0, invading_cap ? 1 : 0, population_cap);
+    logs::info("[migration] houses=%d with_room=%d no_entry=%d immigrant_slot=%d (dead=%d) vacant=%d/%d",
+               houses_total, houses_with_room, houses_no_entry,
+               houses_immigrant_slot, houses_immigrant_slot_dead,
+               vacant_lots_with_room, vacant_lots);
+
+    for (const auto &it : g_migration_cap_reasons) {
+        logs::info("[migration] cap_reason '%s'=%d", it.first.c_str(), it.second);
+    }
+    for (const auto &it : g_migration_unemployment_cap_reasons) {
+        logs::info("[migration] unemp_cap '%s'=[%d,%d]", it.first.c_str(), it.second.first, it.second.second);
+    }
+
     reset_newcomers();
 }
 

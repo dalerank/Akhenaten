@@ -32,7 +32,7 @@ building_dock = {
   }
   min_houses_coverage : 50
   building_size : 3
-  meta : { help_id:82, text_id:101 }
+  meta : { text_id:101, help_link:"message_building_dock" }
   info_sound : "Wavs/DOCK1.WAV"
   sound_channel : SOUND_CHANNEL_CITY_DOCK
   needs : {

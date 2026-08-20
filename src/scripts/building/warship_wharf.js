@@ -14,8 +14,8 @@ building_warship_wharf = {
     wait_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:4 },
   },
   building_size : 3,
-  meta : { help_id: 84, text_id: 175 }
-  planer_update_rule : {
+  meta : { text_id: 175, help_link:"message_building_warship_wharf" }
+  planner_update_rule : {
     relative_orientation: 1
   }
 

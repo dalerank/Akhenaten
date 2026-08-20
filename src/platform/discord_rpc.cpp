@@ -14,6 +14,10 @@
 #include <cstring>
 #include <cstdio>
 #include <ctime>
+#include <chrono>
+#include <condition_variable>
+#include <mutex>
+#include <thread>
 
 #ifdef GAME_PLATFORM_WIN
 #define WIN32_LEAN_AND_MEAN
@@ -29,17 +33,25 @@
 
 struct discord_rpc_t::impl {
     char app_id[64] = {};
-    bool logged_fail = false;
     int64_t start_timestamp = 0;
+    uint32_t nonce = 0;
+
+    std::mutex mtx;
+    std::condition_variable cv;
+    std::thread worker;
+    bool stop = false;
+    bool activity_dirty = false;
+    bool clear_requested = false;
     xstring pending_details;
     xstring pending_state;
-    uint32_t nonce = 0;
 
 #ifdef GAME_PLATFORM_WIN
     void* pipe_handle = (void*)(intptr_t)(-1);
 #else
     int fd = -1;
 #endif
+
+    ~impl();
 
     bool is_connected() const;
     bool raw_write(pcstr buf, uint32_t len);
@@ -52,6 +64,8 @@ struct discord_rpc_t::impl {
     bool do_handshake();
     bool try_connect();
     void do_send_activity(const xstring& details, const xstring& state);
+    void do_clear_activity();
+    void worker_loop();
 
     void init(pcstr id);
     void shutdown();
@@ -94,9 +108,21 @@ bool discord_rpc_t::impl::open_pipe() {
 bool discord_rpc_t::impl::read_blocking(void* buf, uint32_t len) {
     char* ptr = (char*)buf;
     uint32_t remaining = len;
+    const DWORD timeout_ms = 2000;
+    const DWORD start = GetTickCount();
     while (remaining > 0) {
+        DWORD avail = 0;
+        if (!PeekNamedPipe((HANDLE)pipe_handle, nullptr, 0, nullptr, &avail, nullptr))
+            return false;
+        if (avail == 0) {
+            if (GetTickCount() - start >= timeout_ms)
+                return false;
+            Sleep(10);
+            continue;
+        }
+        DWORD to_read = remaining < avail ? remaining : avail;
         DWORD rb = 0;
-        if (!ReadFile((HANDLE)pipe_handle, ptr, remaining, &rb, nullptr) || rb == 0)
+        if (!ReadFile((HANDLE)pipe_handle, ptr, to_read, &rb, nullptr) || rb == 0)
             return false;
         ptr += rb;
         remaining -= rb;
@@ -332,61 +358,7 @@ void discord_rpc_t::impl::do_send_activity(const xstring& details, const xstring
     }
 }
 
-void discord_rpc_t::impl::init(pcstr id) {
-    strncpy(app_id, id, sizeof(app_id) - 1);
-    app_id[sizeof(app_id) - 1] = 0;
-    start_timestamp = (int64_t)time(nullptr);
-    logged_fail = false;
-
-    if (!try_connect()) {
-        DISCORD_LOG("discord_rpc: Discord not running, Rich Presence disabled");
-        logged_fail = true;
-    } else {
-        DISCORD_LOG("discord_rpc: connected to Discord IPC");
-        do_send_activity(xstring("Akhenaten"), xstring("In menus"));
-    }
-}
-
-void discord_rpc_t::impl::shutdown() {
-    if (is_connected()) {
-        send_packet(2, "{}");
-        close_pipe();
-    }
-}
-
-void discord_rpc_t::impl::tick() {
-    if (!is_connected()) {
-        if (logged_fail) {
-            return;
-        }
-
-        if (!try_connect()) {
-            return;
-        }
-        DISCORD_LOG("discord_rpc: reconnected to Discord IPC");
-        logged_fail = false;
-        do_send_activity(
-            pending_details.empty() ? xstring("Akhenaten") : pending_details,
-            pending_state.empty()   ? xstring("In menus")  : pending_state);
-        return;
-    }
-    drain_incoming();
-}
-
-void discord_rpc_t::impl::set_activity(const xstring& details, const xstring& state) {
-    pending_details = details;
-    pending_state = state;
-    if (!is_connected())
-        return;
-    do_send_activity(details, state);
-}
-
-void discord_rpc_t::impl::clear_activity() {
-    pending_details = xstring();
-    pending_state = xstring();
-    if (!is_connected())
-        return;
-
+void discord_rpc_t::impl::do_clear_activity() {
     int pid =
 #ifdef GAME_PLATFORM_WIN
       (int)GetCurrentProcessId();
@@ -402,12 +374,147 @@ void discord_rpc_t::impl::clear_activity() {
     }
 }
 
+void discord_rpc_t::impl::worker_loop() {
+    bool ever_connected = false;
+
+    while (true) {
+        {
+            std::unique_lock<std::mutex> lock(mtx);
+            if (stop)
+                break;
+        }
+
+        if (!is_connected()) {
+            if (!try_connect()) {
+                std::unique_lock<std::mutex> lock(mtx);
+                cv.wait_for(lock, std::chrono::seconds(ever_connected ? 5 : 15), [this] { return stop; });
+                if (stop)
+                    break;
+                continue;
+            }
+            ever_connected = true;
+            DISCORD_LOG("discord_rpc: connected to Discord IPC");
+
+            bool clear = false;
+            xstring details;
+            xstring state;
+            {
+                std::lock_guard<std::mutex> lock(mtx);
+                clear = clear_requested;
+                details = pending_details;
+                state = pending_state;
+                activity_dirty = false;
+                clear_requested = false;
+            }
+            if (clear)
+                do_clear_activity();
+            else
+                do_send_activity(details, state);
+        }
+
+        bool dirty = false;
+        bool clear = false;
+        xstring details;
+        xstring state;
+        {
+            std::unique_lock<std::mutex> lock(mtx);
+            cv.wait_for(lock, std::chrono::milliseconds(500), [this] {
+                return stop || activity_dirty || clear_requested;
+            });
+            if (stop)
+                break;
+            dirty = activity_dirty;
+            clear = clear_requested;
+            details = pending_details;
+            state = pending_state;
+            activity_dirty = false;
+            clear_requested = false;
+        }
+
+        if (!is_connected())
+            continue;
+
+        if (clear)
+            do_clear_activity();
+        else if (dirty)
+            do_send_activity(details, state);
+
+        drain_incoming();
+    }
+
+    if (is_connected()) {
+        send_packet(2, "{}");
+        close_pipe();
+    }
+}
+
+discord_rpc_t::impl::~impl() {
+    shutdown();
+}
+
+void discord_rpc_t::impl::init(pcstr id) {
+    strncpy(app_id, id, sizeof(app_id) - 1);
+    app_id[sizeof(app_id) - 1] = 0;
+    start_timestamp = (int64_t)time(nullptr);
+
+    {
+        std::lock_guard<std::mutex> lock(mtx);
+        stop = false;
+        pending_details = xstring("Akhenaten");
+        pending_state = xstring("In menus");
+        activity_dirty = true;
+        clear_requested = false;
+    }
+
+    if (worker.joinable())
+        return;
+    worker = std::thread([this] { worker_loop(); });
+}
+
+void discord_rpc_t::impl::shutdown() {
+    {
+        std::lock_guard<std::mutex> lock(mtx);
+        stop = true;
+    }
+    cv.notify_all();
+    if (worker.joinable())
+        worker.join();
+}
+
+void discord_rpc_t::impl::tick() {
+    cv.notify_all();
+}
+
+void discord_rpc_t::impl::set_activity(const xstring& details, const xstring& state) {
+    {
+        std::lock_guard<std::mutex> lock(mtx);
+        pending_details = details;
+        pending_state = state;
+        activity_dirty = true;
+        clear_requested = false;
+    }
+    cv.notify_all();
+}
+
+void discord_rpc_t::impl::clear_activity() {
+    {
+        std::lock_guard<std::mutex> lock(mtx);
+        pending_details = xstring();
+        pending_state = xstring();
+        activity_dirty = false;
+        clear_requested = true;
+    }
+    cv.notify_all();
+}
+
 // -----------------------------------------------------------------------
 // discord_rpc_t (facade)
 // -----------------------------------------------------------------------
 
 discord_rpc_t::discord_rpc_t() : d(std::make_unique<impl>()) {
 }
+
+discord_rpc_t::~discord_rpc_t() = default;
 
 void discord_rpc_t::init(pcstr app_id) {
     d->init(app_id);

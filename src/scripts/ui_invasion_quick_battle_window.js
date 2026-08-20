@@ -1,17 +1,5 @@
 log_info("akhenaten: ui invasion quick battle window started")
 
-function invasion_quick_battle_resolve_now() {
-    __invasion_auto_resolve_try_now()
-    // C++ already opens the next head window or closes this one — do not yank the queue UI.
-    if (__invasion_auto_resolve_pending_count() == 0) {
-        ui.window_city_show()
-    }
-}
-
-function invasion_quick_battle_wait() {
-    ui.window_city_show()
-}
-
 function invasion_quick_battle_bribe_feature_on() {
     return game_features.get('gameplay_enhanced_invasion_bribe') === true
 }
@@ -25,25 +13,6 @@ function invasion_quick_battle_bribe_text() {
     return __loc("#invasion_bribe_cost_line")
         .replace("{cost}", "" + cost)
         .replace("{treasury}", "" + tre)
-}
-
-function invasion_quick_battle_bribe_now() {
-    if (!invasion_quick_battle_bribe_feature_on()) {
-        return
-    }
-    // seq 0 = auto-resolve queue head only (same as cost/allowed display).
-    if (__invasion_bribe_allowed(0) != 1) {
-        return
-    }
-    var cost = __invasion_bribe_cost(0)
-    if (cost <= 0 || city.finance.treasury < cost) {
-        return
-    }
-    if (__invasion_bribe_try(0) == 1) {
-        if (__invasion_auto_resolve_pending_count() == 0) {
-            ui.window_city_show()
-        }
-    }
 }
 
 function invasion_quick_battle_strength_text() {
@@ -99,15 +68,46 @@ invasion_quick_battle_window {
 
         btn_resolve      : button({pos[40, 180], size[140, 24],
                                    text: "#invasion_quick_battle_resolve",
-                                   font: FONT_NORMAL_BLACK_ON_LIGHT
-                                   onclick: invasion_quick_battle_resolve_now})
+                                   font: FONT_NORMAL_BLACK_ON_LIGHT})
         btn_bribe        : button({pos[190, 180], size[140, 24],
                                    text: "#invasion_bribe_button",
-                                   font: FONT_NORMAL_BLACK_ON_LIGHT
-                                   onclick: invasion_quick_battle_bribe_now})
+                                   font: FONT_NORMAL_BLACK_ON_LIGHT})
         btn_wait         : button({pos[340, 180], size[120, 24],
                                    text: "#invasion_quick_battle_wait",
-                                   font: FONT_NORMAL_BLACK_ON_LIGHT
-                                   onclick: invasion_quick_battle_wait})
+                                   font: FONT_NORMAL_BLACK_ON_LIGHT})
     }
+}
+
+[es=(invasion_quick_battle_window, btn_resolve)]
+function invasion_quick_battle_window_on_resolve(window) {
+    __invasion_auto_resolve_try_now()
+    // C++ already opens the next head window or closes this one — do not yank the queue UI.
+    if (__invasion_auto_resolve_pending_count() == 0) {
+        ui.window_city_show()
+    }
+}
+
+[es=(invasion_quick_battle_window, btn_bribe)]
+function invasion_quick_battle_window_on_bribe(window) {
+    if (!invasion_quick_battle_bribe_feature_on()) {
+        return
+    }
+    // seq 0 = auto-resolve queue head only (same as cost/allowed display).
+    if (__invasion_bribe_allowed(0) != 1) {
+        return
+    }
+    var cost = __invasion_bribe_cost(0)
+    if (cost <= 0 || city.finance.treasury < cost) {
+        return
+    }
+    if (__invasion_bribe_try(0) == 1) {
+        if (__invasion_auto_resolve_pending_count() == 0) {
+            ui.window_city_show()
+        }
+    }
+}
+
+[es=(invasion_quick_battle_window, btn_wait)]
+function invasion_quick_battle_window_on_wait(window) {
+    ui.window_city_show()
 }

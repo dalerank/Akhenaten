@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 27 itjtawy started")
 
-// Empire / events verified vs mission1.pak scenario 27 (2026-07-26 dump); see
+// Empire / events aligned with original campaign scenario 27 (2026-07-26 dump); see
 // tmp/mission27_clean.txt (triage) and tmp/mission27_key.txt (raw dump).
 // Empire id=1. Scenario enemy ENEMY_7_LIBIAN (briefing sprites only - every timed
 // invasion in the pak is invader=egypt(2) -> ENEMY_3_EGYPTIAN, incl. the by_favour pair).

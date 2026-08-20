@@ -156,11 +156,6 @@ function top_menu_activate_item(menu, item) {
 		return
 	}
 	top_menu_state.item_clicked = 1
-	if (item.onclick) {
-		item.onclick(item.parameter)
-	} else if (menu.onclick) {
-		menu.onclick(item.parameter)
-	}
 }
 
 function top_menu_calc_menu_size(menu) {
@@ -218,12 +213,12 @@ top_menu_widget {
 			text: "#top_menu_file"
 			tooltip: "#top_menu_file_tooltip"
 			items [
-				{ id: "new_game", text: "#top_menu_new_game", onclick: top_menu_new_game }
-				{ id: "replay_map", text: "#replay_mission", onclick: top_menu_replay_map }
-				{ id: "load_game", text: "#top_menu_load_game", onclick: top_menu_load_map }
-				{ id: "save_game", text: "#top_menu_save_game", onclick: top_menu_save_map }
-				{ id: "delete_game", text: "#top_menu_delete_game", onclick: top_menu_delete_map }
-				{ id: "exit_game", text: "#top_menu_exit_game", onclick: top_menu_exit_game }
+				{ id: "new_game", text: "#top_menu_new_game" }
+				{ id: "replay_map", text: "#replay_mission" }
+				{ id: "load_game", text: "#top_menu_load_game" }
+				{ id: "save_game", text: "#top_menu_save_game" }
+				{ id: "delete_game", text: "#top_menu_delete_game" }
+				{ id: "exit_game", text: "#top_menu_exit_game" }
 			]
 		}
 		{
@@ -231,17 +226,17 @@ top_menu_widget {
 			text: "#top_menu_options"
 			tooltip: "#top_menu_options_tooltip"
 			items [
-				{ id: "display_options", text: "#top_menu_display_settings", onclick: top_menu_show_window_by_id("display_options_window") }
-				{ id: "sound_options", text: "#top_menu_sound_settings", onclick: top_menu_show_window_by_id("sound_options_window") }
-				{ id: "speed_options", text: "#top_menu_speed_settings", onclick: top_menu_show_window_by_id("speed_options_window") }
-				{ id: "pyramid_speedup", textfn: top_menu_pyramid_speedup_text, onclick: top_menu_pyramid_speedup_toggle }
-				{ id: "difficulty_options", text: "#top_menu_difficulty", onclick: top_menu_show_window_by_id("difficulty_options_window") }
-				{ id: "popup_messages", text: "#top_menu_popup_messages", onclick: top_menu_show_window_by_id("popup_messages_window") }
-				{ id: "cities_options", textfn: top_menu_cities_old_text, onclick: top_menu_cities_old_toggle }
-				{ id: "autosave_options", textfn: top_menu_autosave_options_text, onclick: top_menu_autosave_options_toggle }
-				{ id: "autosave_slots", textfn: top_menu_autosave_slots_text, onclick: top_menu_autosave_slots_cycle }
-				{ id: "hotkeys_options", text: "#TR_BUTTON_CONFIGURE_HOTKEYS", onclick: top_menu_show_window_by_id("window_hotkey_config") }
-				{ id: "enhanced_options", text: "#TR_CONFIG_TITLE", onclick: top_menu_features }
+				{ id: "display_options", text: "#top_menu_display_settings" }
+				{ id: "sound_options", text: "#top_menu_sound_settings" }
+				{ id: "speed_options", text: "#top_menu_speed_settings" }
+				{ id: "pyramid_speedup", textfn: top_menu_pyramid_speedup_text }
+				{ id: "difficulty_options", text: "#top_menu_difficulty" }
+				{ id: "popup_messages", text: "#top_menu_popup_messages" }
+				{ id: "cities_options", textfn: top_menu_cities_old_text }
+				{ id: "autosave_options", textfn: top_menu_autosave_options_text }
+				{ id: "autosave_slots", textfn: top_menu_autosave_slots_text }
+				{ id: "hotkeys_options", text: "#TR_BUTTON_CONFIGURE_HOTKEYS" }
+				{ id: "enhanced_options", text: "#TR_CONFIG_TITLE" }
 			]
 		}
 		{
@@ -249,17 +244,17 @@ top_menu_widget {
 			text: "#top_menu_help"
 			tooltip: "#top_menu_help_tooltip"
 			items [
-				{ id: "help", text: "#top_menu_help_item", onclick: top_menu_show_help }
-				{ id: "mouse", textfn: top_menu_tooltip_text, onclick: top_menu_tooltip_toggle }
-				{ id: "warnings", textfn: top_menu_warnings_text, onclick: top_menu_warnings_toggle }
-				{ id: "about", text: "#top_menu_about", onclick: top_menu_show_about }
+				{ id: "help", text: "#top_menu_help_item" }
+				{ id: "mouse", textfn: top_menu_tooltip_text }
+				{ id: "warnings", textfn: top_menu_warnings_text }
+				{ id: "about", text: "#top_menu_about" }
 			]
 		}
 		{
 			id: "advisors"
 			text: "#top_menu_overseers"
 			tooltip: "#top_menu_overseers_tooltip"
-			onclick: top_menu_open_advisor
+			onclick_event: "open_advisor"
 			items [
 				{ id: "advisor_labor", text: "#top_menu_advisor_labor", parameter: ADVISOR_LABOR }
 				{ id: "advisor_military", text: "#top_menu_advisor_military", parameter: ADVISOR_MILITARY }
@@ -279,20 +274,20 @@ top_menu_widget {
 			id: "debug"
 			text: "#top_menu_debug"
 			items [
-				{ id: "properties", textfn: top_menu_debug_properties_text, onclick: top_menu_debug_properties_toggle }
-				{ id: "terrain_paint", textfn: top_menu_debug_terrain_paint_text, onclick: top_menu_debug_terrain_paint_toggle }
-				{ id: "make_screenshot", text: "#TR_HOTKEY_SAVE_SCREENSHOT", onclick: top_menu_make_screenshot }
-				{ id: "make_full_screenshot", text: "#TR_HOTKEY_SAVE_CITY_SCREENSHOT", onclick: top_menu_make_fullscreenshot }
-				{ id: "write_video", textfn: top_menu_debug_write_video_text, onclick: video_capture.toggle }
-				{ id: "show_console", text: "#top_menu_cheat_console", onclick: top_menu_show_console }
-				{ id: "js_debugger", textfn: top_menu_js_debugger_text, onclick: top_menu_js_debugger_toggle }
+				{ id: "properties", textfn: top_menu_debug_properties_text }
+				{ id: "terrain_paint", textfn: top_menu_debug_terrain_paint_text }
+				{ id: "make_screenshot", text: "#TR_HOTKEY_SAVE_SCREENSHOT" }
+				{ id: "make_full_screenshot", text: "#TR_HOTKEY_SAVE_CITY_SCREENSHOT" }
+				{ id: "write_video", textfn: top_menu_debug_write_video_text }
+				{ id: "show_console", text: "#top_menu_cheat_console" }
+				{ id: "js_debugger", textfn: top_menu_js_debugger_text }
 			]
 		}
 		{
 			id: "debug_render"
 			text: "#top_menu_debug_render"
 			items [
-				{ id: "buildings", textfn: top_menu_debug_buildings_text, onclick: top_menu_debug_buildings_toggle }
+				{ id: "buildings", textfn: top_menu_debug_buildings_text }
 			]
 		}
 	]
@@ -370,7 +365,9 @@ function top_menu_submenu_ui_draw_foreground(window) {
 			font: font,
 			border: false,
 			body: false,
-			flags: UiFlags_AlignYCentered
+			flags: UiFlags_AlignYCentered,
+			onclick_event: item.onclick_event || menu.onclick_event || item.id,
+			param1: item.parameter | 0
 		})
 		if (clicked == ui.button_clicked) {
 			top_menu_activate_item(menu, item)

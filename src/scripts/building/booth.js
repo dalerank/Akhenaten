@@ -13,7 +13,7 @@ building_booth {
 
     min_houses_coverage : 100
     labor_category : LABOR_CATEGORY_ENTERTAINMENT
-    meta { help_id:71, text_id:72 }
+    meta { text_id:72, help_link:"message_building_booth" }
     info_sound : "Wavs/jugger_r.wav"
     building_size : 2
     cost [ 10, 20, 40, 80, 150 ]

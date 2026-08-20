@@ -42,7 +42,7 @@ building_granary {
 
     min_houses_coverage : 100
     labor_category : LABOR_CATEGORY_INFRASTRUCTURE
-    meta { help_id: 3, text_id: 98 }
+    meta { text_id: 98, help_link:"message_building_granary" }
     info_sound : "Wavs/GRANARY1.wav"
     building_size : 4
     planner_update_rule {
@@ -52,6 +52,7 @@ building_granary {
     flags {
         is_food: true
         keeps_visitor_paths: true
+        perimeter_access: true
     }
 
     cost [ 50, 70, 100, 200, 300 ]

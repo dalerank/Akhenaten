@@ -306,6 +306,7 @@ namespace ui {
 
     struct emenu_header;
     struct eimage_button;
+    struct egeneric_button;
     struct escrollable_list;
     struct escrollbar;
     struct etext;
@@ -432,9 +433,9 @@ namespace ui {
         bool fill_height = false;
         bool _hover = false;
 
-        /** JS registry refs by name (onclick, textfn, …). Max 6 entries. */
+        /** JS registry refs by name (textfn, checkedfn, …). Max 6 entries. */
         flat_map<xstring, xstring, 6> _js_refs;
-        flat_map<xstring, xstring, 6> _events;
+        flat_map<xstring, xstring, 8> _events;
 
         virtual ~element();
 
@@ -502,6 +503,7 @@ namespace ui {
 
         virtual emenu_header* dcast_menu_header() { return nullptr; }
         virtual eimage_button* dcast_image_button() { return nullptr; }
+        virtual egeneric_button* dcast_generic_button() { return nullptr; }
         virtual escrollable_list* dcast_scrollable_list() { return nullptr; }
         virtual escrollbar* dcast_escrollbar() { return nullptr; }
         virtual etext* dcast_etext() { return nullptr; }
@@ -569,24 +571,18 @@ namespace ui {
             text(formated_text);
         }
 
-        static const xstring ONCLICK;
-        static const xstring ONHOVER;
-        static const xstring ONUNHOVER;
-        static const xstring ONRCLICK;
         static const xstring TEXTFN;
         static const xstring CHECKEDFN;
         static const xstring ONINPUT;
         static const xstring ONDRAW;
         static const xstring ONDRAW_EVENT;
         static const xstring ONCLICK_EVENT;
+        static const xstring ONRCLICK_EVENT;
         static const xstring ONHOVER_EVENT;
         static const xstring ONUNHOVER_EVENT;
         static const xstring ONDOUBLECLICK_EVENT;
         static const xstring ONINPUT_EVENT;
         static const xstring ONRENDER_ITEM;
-        static const xstring ONCLICK_ITEM;
-        static const xstring ONRIGHTCLICK_ITEM;
-        static const xstring ONDOUBLECLICK_ITEM;
         static const xstring EMPTY_JS_REF;
     };
 
@@ -899,9 +895,6 @@ namespace ui {
         virtual void tooltip(const xstring& t) override { _tooltip = t; }
         virtual void select(bool v) override { _selected = v; }
 
-        void js_call();
-        void js_rcall();
-
         virtual element& onclick(button_onclick_cb func) override {
             _func = func;
             return *this;
@@ -921,6 +914,7 @@ namespace ui {
 
         static const xstring skind() { return "UIButton"; }
         virtual xstring kind() const override { return egeneric_button::skind(); }
+        virtual egeneric_button* dcast_generic_button() override { return this; }
     };
 
     struct echeckbox : public egeneric_button {
@@ -943,6 +937,8 @@ namespace ui {
         bool allow_repeat = true;
         /// Step index for hold-to-repeat; passed to arw_button (survives between frames).
         int repeats = 0;
+        int param1 = 0;
+        int param2 = 0;
         bool _hover_prev = false;
 
         button_onclick_cb _func;
@@ -958,8 +954,6 @@ namespace ui {
             _sfunc = func;
             return *this;
         }
-
-        void js_call();
     };
 
     struct eimage_button : public element {
@@ -1089,8 +1083,8 @@ namespace ui {
             }
         }
 
-        /** Script/autoconfig window id; nullptr if this root widget is not a named window. */
-        virtual xstring get_section() const { return {}; }
+        /** Script/autoconfig window id; empty if this root widget was never load()'d. */
+        virtual xstring get_section() const { return io.name; }
     };
 
     widget* get_current_widget();

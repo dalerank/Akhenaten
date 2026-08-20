@@ -47,7 +47,12 @@ static js_Property sentinel = {
 static js_Property* newproperty(js_State* J, js_Object* obj, const js_StringNode name) {
     OZZY_PROFILER_FUNCTION();
 
-    js_Property *node = (js_Property *)js_malloc(J, sizeof * node);
+    js_Property *node;
+    if (obj && obj->ephemeral) {
+        node = (js_Property *)js_frame_alloc(J, sizeof * node);
+    } else {
+        node = (js_Property *)js_malloc(J, sizeof * node);
+    }
     node->name = nullptr;
     node->name = name;
     node->left = node->right = &sentinel;
@@ -152,7 +157,9 @@ static void freeproperty(js_State *J, js_Object *obj, js_Property *node) {
         obj->tailp = node->prevp;
     *node->prevp = node->next;
     node->name = nullptr;
-    js_free(J, node);
+    if (!obj->ephemeral) {
+        js_free(J, node);
+    }
     --obj->count;
 }
 
@@ -203,11 +210,20 @@ js_Property* prop_delete(js_State* J, js_Object* obj, js_Property* node, const j
 js_Object *jsV_newobject(js_State *J, enum js_Class type, js_Object *prototype) {
     OZZY_PROFILER_FUNCTION();
 
-    js_Object *obj = (js_Object *)js_malloc(J, sizeof * obj);
+    js_Object *obj;
+    const int ephemeral = J->frame_zone_depth > 0;
+    if (ephemeral) {
+        obj = (js_Object *)js_frame_alloc(J, sizeof * obj);
+    } else {
+        obj = (js_Object *)js_malloc(J, sizeof * obj);
+    }
     memset(obj, 0, sizeof(js_Object));
-    obj->gcnext = J->gcobj;
-    J->gcobj = obj;
-    ++J->gccounter;
+    if (!ephemeral) {
+        obj->gcnext = J->gcobj;
+        J->gcobj = obj;
+        ++J->gccounter;
+    }
+    obj->ephemeral = ephemeral ? 1 : 0;
 
     obj->type = type;
     obj->properties = &sentinel;
@@ -303,7 +319,7 @@ static void itwalk(js_State *J, js_Object *io, js_Object *top, int own) {
     int k;
 
 #define ITADD(x) \
-	js_Iterator *node = (js_Iterator*)js_malloc(J, sizeof *node); \
+	js_Iterator *node = (js_Iterator*)(io->ephemeral ? js_frame_alloc(J, (int)sizeof(*node)) : js_malloc(J, (int)sizeof(*node))); \
 	node->name = x; \
 	node->next = NULL; \
 	if (!tail) { \
@@ -363,9 +379,13 @@ const js_StringNode jsV_nextiterator(js_State *J, js_Object *io) {
     }
 
     while (io->u.iter.head) {
-        js_Iterator *next = io->u.iter.head->next;
-        const js_StringNode name = io->u.iter.head->name;
-        js_free(J, io->u.iter.head);
+        js_Iterator *node = io->u.iter.head;
+        js_Iterator *next = node->next;
+        const js_StringNode name = node->name;
+        /* Ephemeral iterators allocate nodes in the frame arena — never js_free them. */
+        if (!io->ephemeral) {
+            js_free(J, node);
+        }
         io->u.iter.head = next;
 
         if (io->u.iter.target->vgetproperty(name))
@@ -373,6 +393,10 @@ const js_StringNode jsV_nextiterator(js_State *J, js_Object *io) {
 
         if (io->u.iter.target->type == JS_CSTRING)
             if (js_isarrayindex(J, js_strnode_cstr(name), &k) && k < io->u.iter.target->u.s.length)
+                return name;
+
+        if (io->u.iter.target->type == JS_CVEC2I)
+            if (name == property_x || name == property_y)
                 return name;
     }
     return NULL;

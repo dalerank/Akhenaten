@@ -1531,6 +1531,14 @@ localization_hu = [
   { key: "#zoo_access_medium", group:66, id:170 }
   { key: "#zoo_access_low", group:66, id:171 }
   { key: "#overlay_zoo", text: "Állatkert" }
+  // zoo info window (group 308)
+  { key: "#zoo_info_ok", group:308, id:1 }
+  { key: "#zoo_info_needs_meat", group:308, id:2 }
+  { key: "#zoo_info_needs_straw", group:308, id:3 }
+  { key: "#zoo_info_no_workers", group:308, id:4 }
+  { key: "#zoo_info_empty_cages", group:308, id:5 }
+  { key: "#zoo_info_game_meat", group:308, id:6 }
+  { key: "#zoo_info_straw", group:308, id:7 }
 // pavilion overlay
   { key: "#pavilion_access_none", text: "Ennek a háznak nincs hozzáférése táncszínpadhoz" }
   { key: "#pavilion_access_high", text: "Ezt a házat nemrég meglátogatta egy táncos. Sokáig lesz hozzáférése táncszínpadhoz" }
@@ -1581,6 +1589,10 @@ localization_hu = [
   { key: "#library_access_high", text: "Ezt a házat nemrég meglátogatta egy könyvtáros. Sokáig lesz hozzáférése könyvtárhoz" }
   { key: "#library_access_medium", text: "Ennek a háznak van hozzáférése könyvtárhoz" }
   { key: "#library_access_low", text: "Ha hamarosan nem jár erre egy könyvtáros, ez a ház elveszíti a könyvtárhoz való hozzáférést" }
+  { key: "#library_info", group:87, id:1 }
+  { key: "#library_info_idle", group:87, id:2 }
+  { key: "#library_info_ok", group:87, id:3 }
+  { key: "#sheets_of_papyrus", group:23, id:77 }
 
 // academy overlay
   { key: "#academy_access_none", text: "Ennek a háznak nincs hozzáférése akadémiához" }
@@ -1661,6 +1673,16 @@ localization_hu = [
   { key: "#top_menu_buildings_off", text: "Épületek KI" }
   { key: "#top_menu_js_debugger_on", text: "JS debugger BE" }
   { key: "#top_menu_js_debugger_off", text: "JS debugger KI" }
+  { key: "#top_menu_editor_new_map", text: "Új térkép" }
+  { key: "#top_menu_editor_load_map", text: "Térkép betöltése" }
+  { key: "#top_menu_editor_save_map", text: "Térkép mentése" }
+  { key: "#top_menu_editor_exit", text: "Kilépés a szerkesztőből" }
+  { key: "#top_menu_editor_resets", text: "Visszaállítások" }
+  { key: "#top_menu_editor_clear_herds", text: "Gyilkospontok törlése" }
+  { key: "#top_menu_editor_clear_fish", text: "Halak törlése" }
+  { key: "#top_menu_editor_clear_invasions", text: "Inváziók törlése" }
+  { key: "#top_menu_editor_empire", text: "Királyság" }
+  { key: "#top_menu_editor_empire_choose", text: "Királyság szerkesztése" }
 
   { key: "#sidebar_speed_header", text: "Sebesség" }
   { key: "#no_requests", text: "Jelenleg nincs teljesítendő kérés." }

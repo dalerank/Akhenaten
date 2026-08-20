@@ -15,7 +15,7 @@ building_low_bridge {
   }
   fire_proof : true
   damage_proof : true
-  meta { help_id: 58, text_id: 70 }
+  meta { text_id: 70, help_link:"message_game_concept_water_crossings" }
   cost [8, 32, 40, 48, 60]
   laborers[0]
   fire_risk[0]

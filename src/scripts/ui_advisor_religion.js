@@ -142,7 +142,7 @@ advisor_religion_window = {
 				fest_icon : { type : "image", pack:PACK_UNLOADED, id:21, offset:15, pos:[460, 255 + 68] },
 				fest_months_last : { type : "label", pos:[112, 328], font:FONT_NORMAL_WHITE_ON_DARK},
 				planed_festival : { type : "text", pos: [102, 284 + 68], font : FONT_NORMAL_BLACK_ON_DARK, align:"center" },
-				hold_festival_btn : { type:"generic_button", pos:[102, 278 + 68], size:[300, 24], onclick: advisor_religion_window_hold_festival },
+				hold_festival_btn : { type:"generic_button", pos:[102, 278 + 68], size:[300, 24] },
 				festival_advice : { type : "text", pos: [56, 305 + 68], wrap:400, font : FONT_NORMAL_WHITE_ON_DARK, multiline:true },
 
 				button_help   : help_button({})
@@ -151,7 +151,8 @@ advisor_religion_window = {
 	})
 }
 
-function advisor_religion_window_hold_festival() {
+[es=(advisor_religion_window, hold_festival_btn)]
+function advisor_religion_window_on_hold_festival(window) {
 	if (city.count_total_buildings(BUILDING_FESTIVAL_SQUARE) === 0) {
 		ui.show_ok("#popup_dialog_no_festival_square")
 		return

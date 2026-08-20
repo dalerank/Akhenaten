@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 22 dakhla started")
 
-// Empire / events verified vs mission1.pak scenario 22 (2026-07-26 dump).
+// Empire / events aligned with original campaign scenario 22 (2026-07-26 dump).
 // Empire id=1. Enemy ENEMY_6_KUSHITE. Favour Pharaoh×90.
 // Gods: Ra, Ptah, Bast. Funds Normal 6000 / loan 2500 / debt 8. Rank 8.
 // Win: pop 5000 / culture 50 / prosperity 45 / monuments TEMP 9 (pak 6 small obelisk) / kingdom 65 / housing 11.

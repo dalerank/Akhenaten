@@ -16,12 +16,21 @@
 #include <array>
 
 #define MAX_CHANNELS 70
+#define HEALTH_CITY_VIEWS_THRESHOLD 500
+#define HEALTH_CITY_DELAY_MILLIS 90000
 
 city_sounds_t g_city_sounds;
 const e_sound_channel_city_tokens_t ANK_CONFIG_ENUM(e_sound_channel_city_tokens);
 
 const city_sounds_t &sound_city_channels() {
     return g_city_sounds;
+}
+
+static bool is_health_city_channel(int channel) {
+    return channel == SOUND_CHANNEL_CITY_APOTHECARY
+        || channel == SOUND_CHANNEL_CITY_PHYSICIAN
+        || channel == SOUND_CHANNEL_CITY_MORTUARY
+        || channel == SOUND_CHANNEL_CITY_DENTIST;
 }
 
 void sound_city_init() {
@@ -35,8 +44,8 @@ void sound_city_init() {
     int i = SOUND_CHANNEL_CITY_START;
     for (auto &channel: channels) {
         channel.in_use = 1;
-        channel.views_threshold = 200;
-        channel.delay_millis = 30000;
+        channel.views_threshold = is_health_city_channel(i) ? HEALTH_CITY_VIEWS_THRESHOLD : 200;
+        channel.delay_millis = is_health_city_channel(i) ? HEALTH_CITY_DELAY_MILLIS : 30000;
         channel.last_played_time = 35000;
         channel.channel = i++;
     }
@@ -159,6 +168,11 @@ void sound_city_mark_building_view(building* b, int direction) {
         }
     }
 
+    if (is_health_city_channel(system_channel_index)
+        && (b->num_workers <= 0 || g_city.health.value >= 40)) {
+        return;
+    }
+
     channels[channel].available = 1;
     ++channels[channel].total_views;
     ++channels[channel].direction_views[direction];
@@ -215,8 +229,14 @@ void sound_city_play() {
         channels[i].should_play = 0;
         if (channels[i].available) {
             channels[i].available = 0;
-            if (channels[i].total_views >= channels[i].views_threshold) {
-                if (now - channels[i].last_played_time >= channels[i].delay_millis)
+            const int views_threshold = is_health_city_channel(channels[i].channel)
+                ? HEALTH_CITY_VIEWS_THRESHOLD
+                : channels[i].views_threshold;
+            const time_millis delay_millis = is_health_city_channel(channels[i].channel)
+                ? HEALTH_CITY_DELAY_MILLIS
+                : channels[i].delay_millis;
+            if (channels[i].total_views >= views_threshold) {
+                if (now - channels[i].last_played_time >= delay_millis)
                     channels[i].should_play = 1;
             }
         } else {

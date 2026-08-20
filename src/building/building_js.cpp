@@ -230,6 +230,30 @@ void __building_set_animation(js_State *J) {
     js_helpers::js_push_void(J);
 }
 
+void __building_add_overlay(js_State *J) {
+    const int bid = building_this_id(J);
+    const xstring name = js_helpers::js_to_value<xstring>(J, 1);
+    building *b = building_get(bid);
+    js_helpers::js_push_value(J, b && b->is_valid() ? b->dcast()->add_overlay(name) : false);
+}
+
+void __building_remove_overlay(js_State *J) {
+    const int bid = building_this_id(J);
+    const xstring name = js_helpers::js_to_value<xstring>(J, 1);
+    building *b = building_get(bid);
+    if (b && b->is_valid()) {
+        b->dcast()->remove_overlay(name);
+    }
+    js_helpers::js_push_void(J);
+}
+
+void __building_has_overlay(js_State *J) {
+    const int bid = building_this_id(J);
+    const xstring name = js_helpers::js_to_value<xstring>(J, 1);
+    building *b = building_get(bid);
+    js_helpers::js_push_value(J, b && b->is_valid() ? b->dcast()->has_overlay(name) : false);
+}
+
 void __building_set_fancy(js_State *J) {
     const int bid = building_this_id(J);
     const bool is_fancy = js_helpers::js_to_value<bool>(J, 1);
@@ -469,6 +493,9 @@ void js_register_building(js_State *J) {
     jsB_propf(J, js_intern("Building.prototype.stored_resource"), __building_stored_resource, 1);
     jsB_propf(J, js_intern("Building.prototype.consume_resource"), __building_consume_resource, 2);
     jsB_propf(J, js_intern("Building.prototype.set_animation"), __building_set_animation, 1);
+    jsB_propf(J, js_intern("Building.prototype.add_overlay"), __building_add_overlay, 1);
+    jsB_propf(J, js_intern("Building.prototype.remove_overlay"), __building_remove_overlay, 1);
+    jsB_propf(J, js_intern("Building.prototype.has_overlay"), __building_has_overlay, 1);
     jsB_propf(J, js_intern("Building.prototype.set_fancy"), __building_set_fancy, 1);
     jsB_propf(J, js_intern("Building.prototype.__is_fancy"), __building_is_fancy, 0);
     jsB_propf(J, js_intern("Building.prototype.common_spawn_roamer"), __building_common_spawn_roamer, 3);

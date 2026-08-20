@@ -4,6 +4,11 @@ function advisor_housing_on_graphs_button() {
 	window_advisors_show_advisor(ADVISOR_POPULATION)
 }
 
+[es=(advisor_housing_window, graphs_btn)]
+function advisor_housing_window_on_graphs_btn(window) {
+	advisor_housing_on_graphs_button()
+}
+
 [es=(advisor_housing_window, ondraw_housing_chart)]
 function advisor_housing_es_ondraw_chart(window) {
 	var elm = window.housing_graph
@@ -109,7 +114,6 @@ advisor_housing_window {
 										composite: true
 										border: 3
 										tooltip: [68, 106]
-										onclick: advisor_housing_on_graphs_button,
 									}),
 
 				stat_total_label : label({ font: FONT_NORMAL_BLACK_ON_DARK, text: "#TR_ADVISOR_TOTAL_NUM_HOUSES", pos: [370, 354] })

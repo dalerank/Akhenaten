@@ -31,15 +31,15 @@ info_window_granary {
         show_overlay : button({
                                margin:{right:-64, bottom:-40}, size:[23, 23]
                                textfn: building_info_window_text_overlay
-                               onclick: building_info_window_toggle_overlay
                               })
         mothball     : button({
                                margin:{right:-90, bottom:-40}, size:[23, 23]
                                textfn: building_info_window_text_mothball
-                               onclick: building_info_window_toggle_mothball
                               })
     }
 }
+
+
 
 [es=(info_window_granary, init)]
 function info_window_granary_on_init(window) {

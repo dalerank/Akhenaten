@@ -1,0 +1,26 @@
+name: Akhenaten UI ES-only check
+
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - "src/scripts/**"
+      - ".github/scripts/check_ui_es_only.sh"
+      - ".github/workflows/akhenaten_ui_es_only.yml"
+  pull_request:
+    branches: [ "master" ]
+    paths:
+      - "src/scripts/**"
+      - ".github/scripts/check_ui_es_only.sh"
+      - ".github/workflows/akhenaten_ui_es_only.yml"
+
+jobs:
+  ui-es-only:
+    name: grep onclick patterns
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install ripgrep
+        run: sudo apt -qq update && sudo apt install -y ripgrep
+      - name: Check UI ES-only patterns
+        run: bash .github/scripts/check_ui_es_only.sh

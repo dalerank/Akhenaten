@@ -16,7 +16,7 @@ building_village_palace {
   planner_update_rule {
     unique_building : true
   }
-  meta { help_id:77, text_id:105 }
+  meta { text_id:105, help_link:"message_building_palace" }
   info_sound : "Wavs/palace.wav"
   building_size : 4
   needs {
@@ -46,7 +46,7 @@ building_town_palace {
     unique_building : true
   }
 
-  meta { help_id:77, text_id:105 }
+  meta { text_id:105, help_link:"message_building_palace" }
   info_sound : "Wavs/palace.wav"
   building_size : 5
 
@@ -80,7 +80,7 @@ building_city_palace {
     unique_building : true
   }
 
-  meta { help_id:77, text_id:105 }
+  meta { text_id:105, help_link:"message_building_palace" }
   info_sound : "Wavs/palace.wav"
   building_size : 6
 

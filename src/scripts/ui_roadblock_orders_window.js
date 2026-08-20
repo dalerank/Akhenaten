@@ -17,6 +17,7 @@ function roadblock_permission_status_text(roadblock, permission) {
     return { text: __loc(99, 8), font: FONT_NORMAL_BLACK_ON_DARK }
 }
 
+[es=(roadblock_orders_window, click_item)]
 function roadblock_orders_list_on_click_item(p) {
     roadblock_orders_window.roadblock.toggle_permission(p.user_data)
 }
@@ -73,12 +74,13 @@ roadblock_orders_window {
             draw_scrollbar_always: false,
             draw_paneling: true,
             onrender_item: roadblock_orders_list_on_render_item,
-            onclick_item: roadblock_orders_list_on_click_item
+            onclick_event: "click_item"
         }),
         button_help  : help_button({}),
-        button_close : close_button({ onclick: window_go_back })
+        button_close : close_button({})
     }
 }
+
 
 [es=(roadblock_orders_window, init)]
 function roadblock_orders_window_on_init(window) {

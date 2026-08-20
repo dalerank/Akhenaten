@@ -135,6 +135,7 @@ function mission_choice_window_on_init(window) {
 
     var n = choices.length
     var i = 0
+    game.mission_choice_point_ids = [-1, -1, -1, -1]
     for (i = 0; i < 4; i++) {
         var btn = window["point" + i]
         if (!btn) {
@@ -143,7 +144,6 @@ function mission_choice_window_on_init(window) {
         btn.enabled = false
         btn.image = 0
         btn.tooltip = ""
-        btn.onclick = null
     }
 
     for (i = 0; i < n; i++) {
@@ -152,15 +152,42 @@ function mission_choice_window_on_init(window) {
             break
         }
         var pt = choices[i]
-        var tBtn = mission_choice_image_tid(pt.image)
         btn.image = mission_choice_image_tid(pt.image)
         btn.pos = mission_choice_xy(pt.pos)
         btn.tooltip = mission_choice_resolve_text(pt.tooltip)
         btn.enabled = true
-        ;(function (point_btn, scenarioId) {
-            point_btn.onclick = function () {
-                mission_choice_branch_start(scenarioId)
-            }
-        })(btn, pt.id)
+        game.mission_choice_point_ids[i] = pt.id
     }
+}
+
+function mission_choice_activate_point(index) {
+    var ids = game.mission_choice_point_ids
+    if (!ids || index < 0 || index >= ids.length) {
+        return
+    }
+    var scenario_id = ids[index]
+    if (scenario_id === undefined || scenario_id === null || scenario_id < 0) {
+        return
+    }
+    mission_choice_branch_start(scenario_id)
+}
+
+[es=(mission_choice_window, point0)]
+function mission_choice_window_on_point0(window) {
+    mission_choice_activate_point(0)
+}
+
+[es=(mission_choice_window, point1)]
+function mission_choice_window_on_point1(window) {
+    mission_choice_activate_point(1)
+}
+
+[es=(mission_choice_window, point2)]
+function mission_choice_window_on_point2(window) {
+    mission_choice_activate_point(2)
+}
+
+[es=(mission_choice_window, point3)]
+function mission_choice_window_on_point3(window) {
+    mission_choice_activate_point(3)
 }

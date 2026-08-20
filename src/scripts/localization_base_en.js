@@ -5434,4 +5434,19 @@ localization_base_en = [
     { group:313, id:10, text: "Only a few workers are employed by this Paint Maker. The small staff can hardly turn out any paint at all." }
     { group:313, id:11, text: "This workshop needs henna from a Henna Farm or Storage Yard before it can make any paint. " }
     { group:313, id:12, text: "Henna:" }
+    { group:314, id:0, text: "Lamp Maker" }
+    { group:314, id:1, text: "Pottery is filled with oil here to make lamps that light the dark recesses of Royal Burial Tombs." }
+    { group:314, id:2, text: "Production is" }
+    { group:314, id:3, text: "complete." }
+    { group:314, id:4, text: "Your Overseer of Commerce has stopped lamp production." }
+    { group:314, id:5, text: "This Lamp Maker has no employees, and will produce no lamps as a result." }
+    { group:314, id:6, text: "With a full staff, this Lamp Maker produces lamps as quickly and efficiently as it can." }
+    { group:314, id:7, text: "This Lamp Maker's staffing level is a little thin, so lamp production is compromised." }
+    { group:314, id:8, text: "This Lamp Maker is understaffed, and produces lamps more slowly than it should." }
+    { group:314, id:9, text: "This Lamp Maker needs many more workers. Lamp production here has slowed to a crawl." }
+    { group:314, id:10, text: "Only a few workers are employed by this Lamp Maker. The small staff can hardly turn out any lamps at all." }
+    { group:314, id:11, text: "This workshop needs oil, which can only be imported, before it can make any lamps." }
+    { group:314, id:12, text: "This workshop needs pottery from a Potter or Storage Yard before it can make any lamps." }
+    { group:314, id:13, text: "Oil:" }
+    { group:314, id:14, text: "Pottery:" }
 ]

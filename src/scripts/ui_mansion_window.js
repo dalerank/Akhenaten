@@ -8,7 +8,7 @@ info_window_mansion {
         background    : outer_panel({size[29, 20]}),
 
         title       : text({pos[0, 16], text:"${building.name}", size[px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        change_salary : button({textfn:change_salary_button_text, onclick:show_window_by_id("set_salary_window_mansion"), margin{centerx:-200, top:70}, size[400, 30], font: FONT_NORMAL_BLACK_ON_DARK }),
+        change_salary : button({textfn:change_salary_button_text, margin{centerx:-200, top:70}, size[400, 30], font: FONT_NORMAL_BLACK_ON_DARK }),
 
         resource_img  : resource_icon({pos[16, 44], resource:RESOURCE_GOLD}),
         savings_hold  : text({pos[44, 44], font: FONT_NORMAL_BLACK_ON_LIGHT }),
@@ -24,6 +24,11 @@ info_window_mansion {
 
 function change_salary_button_text() {
     return __loc(52, player.salary_rank + 4) + " " + player.salary_amount + " " + __loc(52, 3)
+}
+
+[es=(info_window_mansion, change_salary)]
+function info_window_mansion_change_salary(window) {
+    emit event_show_window{ id: "set_salary_window_mansion" }
 }
 
 [es=(info_window_mansion, init)]

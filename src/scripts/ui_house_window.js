@@ -371,7 +371,7 @@ info_window_vacant_lot {
         return house && house.is_vacant_lot
     }
 
-    help_id : 128
+    help_id : "message_housing_and_desirability"
     ui {
         background   : outer_panel({size: [29, 21] })
         title          : text({pos: [0, 16], text:"${128.0}", size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"})

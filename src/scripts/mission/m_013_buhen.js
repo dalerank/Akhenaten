@@ -58,7 +58,7 @@ mission13 { // Buhen — Expansion to Nubia
 		BUILDING_SCRIBAL_SCHOOL,
 	]
 
-	// Goals verified vs mission1.pak scenario 13: pop 1/3000, culture 1/25, prosperity
+	// Goals aligned with original campaign scenario 13: pop 1/3000, culture 1/25, prosperity
 	// 1/25, monuments TEMP 9 (pak raw 6; one small obelisk → formula 9, see header),
 	// kingdom 1/75, housing_level 1/10 (housing count goal 0 ignored).
 	win_criteria {
@@ -70,7 +70,7 @@ mission13 { // Buhen — Expansion to Nubia
 		housing_level {enabled : true, goal : 10 }
 	}
 
-	// Map points from mission1.pak scenario 13 (disembark slot i=2 only; invasion points
+	// Map points from original campaign scenario 13 (disembark slot i=2 only; invasion points
 	// omitted — pak inv_land_count=0 inv_sea_count=0).
 	entry_point [22, 33]
 	exit_point [43, 12]
@@ -80,7 +80,7 @@ mission13 { // Buhen — Expansion to Nubia
 
 	enable_scenario_events : true
 
-	// Empire from mission1.pak scenario 13 (empire id=13) — full map objects.
+	// Empire from original campaign scenario 13 (empire id=13) — full map objects.
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [

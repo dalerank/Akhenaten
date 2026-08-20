@@ -110,21 +110,3 @@ void building_hunting_lodge::spawn_figure() {
         base.figure_spawn_delay = 0;
     }
 }
-
-bool building_hunting_lodge::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    building_impl::draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
-
-    int amount = ceil((float)stored_amount(RESOURCE_GAMEMEAT) / 100.0) - 1;
-    if (amount >= 0) {
-        const auto &ranim = anim(animkeys().gamemeat);
-        if (ranim.max_frames > 0) {
-            amount = std::min(amount, (int)ranim.max_frames - 1);
-        }
-        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
-        command.image_id = ranim.first_img() + amount;
-        command.pixel = point + ranim.pos;
-        command.mask = color_mask;
-    }
-
-    return true;
-}

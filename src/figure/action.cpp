@@ -3,7 +3,9 @@
 
 #include "js/js_game.h"
 #include "grid/terrain.h"
+#include "grid/road_network.h"
 
+#include "building/building_granary.h"
 #include "city/entertainment.h"
 #include "city/city.h"
 #include "city/city.h"
@@ -62,6 +64,27 @@ bool figure::do_gotobuilding(building* dest, bool stop_at_road, e_terrain_usage 
             if (main->has_road_access) {
                 found_road = true;
                 finish_tile = main->road_access;
+            }
+        } else if (dest->dcast_granary()) {
+            building* main = dest->main();
+            int net = map_road_network_get(tile);
+            if (net <= 0 && home()) {
+                net = home()->road_network_id;
+            }
+            tile2i prefer = tile;
+            if (home()) {
+                prefer = home()->road_access.valid() ? home()->road_access : home()->tile;
+            }
+            finish_tile = building_granary_access_on_network(*main, net, prefer);
+            found_road = finish_tile.valid();
+            if (found_road && is_coords_within_range(tile.x(), tile.y(), main->tile.x(), main->tile.y(), main->size, 1)
+                && map_road_network_get(tile) == net) {
+                finish_tile = tile;
+            }
+            if (!found_road && main->has_road_access
+                && map_road_network_get(main->road_access) == net) {
+                finish_tile = main->road_access;
+                found_road = true;
             }
         } else {
             building* main = dest->main();

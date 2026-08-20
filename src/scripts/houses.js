@@ -9,7 +9,7 @@ building_house_crude_hut {
     minimap{ id:148 }
   }
 
-  meta { help_id:128, text_id:-1 }
+  meta { text_id:-1, help_link:"message_housing_and_desirability" }
 
   building_size : 1
   can_merge : true

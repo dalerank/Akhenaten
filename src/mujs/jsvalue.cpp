@@ -516,6 +516,9 @@ void js_newstring(js_State* J, const char* v) {
 }
 
 void js_newfunction(js_State* J, js_Function* fun, js_Environment* scope) {
+    if (J->frame_zone_depth > 0) {
+        js_error(J, "closure in frame zone");
+    }
     js_Object* obj = jsV_newobject(J, JS_CFUNCTION, J->Function_prototype);
     obj->u.f.function = fun;
     obj->u.f.scope = scope;
@@ -533,6 +536,9 @@ void js_newfunction(js_State* J, js_Function* fun, js_Environment* scope) {
 }
 
 void js_newscript(js_State* J, js_Function* fun, js_Environment* scope) {
+    if (J->frame_zone_depth > 0) {
+        js_error(J, "script in frame zone");
+    }
     js_Object* obj = jsV_newobject(J, JS_CSCRIPT, NULL);
     obj->u.f.function = fun;
     obj->u.f.scope = scope;

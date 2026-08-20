@@ -1,6 +1,7 @@
 log_info("akhenaten: mission 40 valley seti started")
 
-// Cleop mission1.pak scenario 40 (dump 2026-07-28). Empire id=21.
+// Cleopatra campaign scenario 40. Empire id=21.
+
 // Enemy ENEMY_6_KUSHITE. Gods: Osiris(1), Ra(2), Ptah(1). Start year -1290.
 // MM subtitle: Tomb for a Pharaoh. Rank 6 (pak). Funds Normal 13720 / loan 3000 / debt 8.
 // Win: pop 3000 / culture 40 / prosperity 70 / monuments 33 (Large W=13 → trunc(33);

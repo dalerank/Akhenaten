@@ -28,7 +28,7 @@ bool destination_is_storage_yard_goto(building &dest) {
         || dest.dcast_storage_room();
 }
 
-tile2i delivery_finish_tile_for_destination(building &dest) {
+tile2i delivery_finish_tile_for_destination(building &dest, tile2i from_tile, int road_network_id) {
     building *main = dest.main();
     if (!main || !main->is_valid()) {
         return tile2i::invalid;
@@ -38,6 +38,17 @@ tile2i delivery_finish_tile_for_destination(building &dest) {
         return map_closest_road_within_radius(main->tile, 3, 1);
     }
 
+    if (main->dcast_granary()) {
+        int net = road_network_id;
+        if (net <= 0) {
+            net = map_road_network_get(from_tile);
+        }
+        tile2i finish = building_granary_access_on_network(*main, net, from_tile);
+        if (finish.valid()) {
+            return finish;
+        }
+    }
+
     if (main->has_road_access && main->road_access.valid()) {
         return main->road_access;
     }
@@ -45,7 +56,7 @@ tile2i delivery_finish_tile_for_destination(building &dest) {
     return map_closest_road_within_radius(dest.tile, dest.size, 1);
 }
 
-void resolve_prediction_access_tile(cartpusher_deliveryman_prediction &pred) {
+void resolve_prediction_access_tile(cartpusher_deliveryman_prediction &pred, tile2i from_tile, int road_network_id) {
     if (!pred.destination) {
         return;
     }
@@ -53,7 +64,7 @@ void resolve_prediction_access_tile(cartpusher_deliveryman_prediction &pred) {
     if (!dest || !dest->is_valid()) {
         return;
     }
-    tile2i finish = delivery_finish_tile_for_destination(*dest);
+    tile2i finish = delivery_finish_tile_for_destination(*dest, from_tile, road_network_id);
     if (finish.valid()) {
         pred.access_tile = finish;
     }
@@ -137,7 +148,7 @@ cartpusher_deliveryman_prediction cartpusher_predict_deliveryman_destination(til
 
     const auto finish = [&]() {
         result.understaffed = understaffed;
-        resolve_prediction_access_tile(result);
+        resolve_prediction_access_tile(result, from_tile, road_network_id);
         return result;
     };
 
@@ -269,7 +280,7 @@ delivery_path_query building_predict_delivery(const building &b, e_resource r) {
                 if (tile_is_citizen_road(f->destination_tile)) {
                     q.to_access = f->destination_tile;
                 } else {
-                    q.to_access = delivery_finish_tile_for_destination(*dest);
+                    q.to_access = delivery_finish_tile_for_destination(*dest, q.from_access, map_road_network_get(q.from_access));
                 }
                 if (!q.from_access.valid()) {
                     q.from_access = map_closest_road_within_radius(m->tile, m->size, 1);
@@ -327,9 +338,17 @@ bool delivery_path_fill_road(delivery_path_query &q, uint8_t *dirs, int *out_len
         return true;
     }
 
+    building *dest = building_get(q.to);
+    if (dest && dest->is_valid() && dest->dcast_granary()) {
+        int net = map_road_network_get(q.from_access);
+        tile2i finish = building_granary_access_on_network(*dest->main(), net, q.from_access);
+        if (finish.valid()) {
+            to_access = finish;
+        }
+    }
+
     bool can = map_routing_citizen_can_travel_over_road(q.from_access, to_access);
 
-    building *dest = building_get(q.to);
     if (dest && dest->is_valid()) {
         tile2i reach;
         if (destination_is_storage_yard_goto(*dest)) {
@@ -338,7 +357,7 @@ bool delivery_path_fill_road(delivery_path_query &q, uint8_t *dirs, int *out_len
                 to_access = reach;
                 can = true;
             }
-        } else if (!can) {
+        } else if (!can && !dest->dcast_granary()) {
             // Stale road_access / off-road snap — try perimeter road (cart else-branch).
             if (map_closest_reachable_road_within_radius(dest->tile, dest->size, 1, reach)) {
                 to_access = reach;

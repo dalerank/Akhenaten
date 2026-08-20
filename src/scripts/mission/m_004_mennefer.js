@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 4 started")
 
-// Trade + pharaoh request chains verified vs mission1.pak scenario 4 (2026-07-25 dump).
+// Trade + pharaoh request chains aligned with original campaign scenario 4 (2026-07-25 dump).
 
 mission4 {
 	map_file : "data/maps/m_004_mennefer.map"
@@ -35,7 +35,7 @@ mission4 {
 		victory : "Voice/Mission/204_victory.mp3"
 	}
 
-	// Win ratings match mission1.pak; housing_level goal 10 from pak (count goal 0 ignored).
+	// Win ratings match original campaign; housing_level goal 10 from original (count goal 0 ignored).
 	win_criteria {
 		population    {enabled : true, goal : 1500 }
 		culture       {enabled : true, goal : 15 }
@@ -45,13 +45,13 @@ mission4 {
 		housing_level {enabled : true, goal : 10 }
 	}
 
-	// Map points from mission1.pak scenario 4.
+	// Map points from original campaign scenario 4.
 	entry_point [34, 35]
 	exit_point [110, 99]
 	river_entry_point [70, 2]
 	river_exit_point [137, 69]
 
-	// Empire cities from mission1.pak scenario 4 (empire id=1) — full map objects, not pak patch.
+	// Empire cities from original campaign scenario 4 (empire id=1) — full map objects, not a partial patch.
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [
@@ -130,7 +130,7 @@ mission4 {
 		}
 	]
 
-	// Trade route polylines from mission1.pak empire_map_routes (scenario 4).
+	// Trade route polylines from original campaign empire_map_routes (scenario 4).
 	// type: 1=land, 2=sea. Route 3 (Nubt) is empty in pak.
 	hide_pak_routes : true
 	empire_routes [
@@ -164,7 +164,7 @@ mission4 {
 		}
 	]
 
-	// Region labels from mission1.pak empire_map_objects (scenario 4 dump).
+	// Region labels from original campaign empire_map_objects (scenario 4 dump).
 	hide_pak_objects : true
 	empire_texts [
 		{ name : "#crete", pos : [83, 159] }

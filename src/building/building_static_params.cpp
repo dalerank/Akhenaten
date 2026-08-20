@@ -10,6 +10,10 @@
 #include "grid/terrain.h"
 #include "building/construction/build_planner.h"
 
+bool building_overlay_anim::archive_load(archive arch) {
+    return animation_t::archive_load(arch);
+}
+
 void building_static_params::archive_unload() {
 }
 

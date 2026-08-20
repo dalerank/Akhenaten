@@ -15,7 +15,7 @@ building_weaponsmith = {
     resource : RESOURCE_WEAPONS
   }
   labor_category : LABOR_CATEGORY_MILITARY
-  meta : { help_id: 98, text_id: 124 }
+  meta : { text_id: 124, help_link:"message_building_weapongsmith_and_chariot_maker" }
   info_sound : "Wavs/weapon.wav"
   building_size: 2
   cost: [ 24, 40, 80, 120, 150 ]

@@ -74,6 +74,7 @@
 #include "city/city_religion_seth.h"
 #include "grid/road_access.h"
 #include "grid/road_network.h"
+#include "grid/tiles.h"
 #include "grid/routing/routing_terrain.h"
 #include "game/autosave_module.h"
 #include "core/bstring.h"
@@ -798,6 +799,47 @@ static event_ph_t *__test_find_request_by_tag(int tag) {
     }
     return nullptr;
 }
+
+int __test_request_exists(int tag) {
+    return __test_find_request_by_tag(tag) ? 1 : 0;
+}
+ANK_FUNCTION_1(__test_request_exists);
+
+int __test_request_is_active(int tag) {
+    event_ph_t *e = __test_find_request_by_tag(tag);
+    return (e && e->is_active) ? 1 : 0;
+}
+ANK_FUNCTION_1(__test_request_is_active);
+
+int __test_request_months_left(int tag) {
+    event_ph_t *e = __test_find_request_by_tag(tag);
+    return e ? (int)e->quest_months_left : -1;
+}
+ANK_FUNCTION_1(__test_request_months_left);
+
+int __test_request_state(int tag) {
+    event_ph_t *e = __test_find_request_by_tag(tag);
+    return e ? (int)e->event_state : -1;
+}
+ANK_FUNCTION_1(__test_request_state);
+
+int __test_request_resource(int tag) {
+    event_ph_t *e = __test_find_request_by_tag(tag);
+    return e ? (int)e->item.value : -1;
+}
+ANK_FUNCTION_1(__test_request_resource);
+
+int __test_request_amount(int tag) {
+    event_ph_t *e = __test_find_request_by_tag(tag);
+    return e ? (int)e->amount.value : -1;
+}
+ANK_FUNCTION_1(__test_request_amount);
+
+int __test_request_sender_faction(int tag) {
+    event_ph_t *e = __test_find_request_by_tag(tag);
+    return e ? (int)e->sender_faction : -1;
+}
+ANK_FUNCTION_1(__test_request_sender_faction);
 
 // Force overdue grace with months_left months remaining (for late-fulfill tests).
 void __test_request_force_overdue(int tag, int months_left) {
@@ -3599,9 +3641,50 @@ static void __test_check_kingdome_access() {
 ANK_FUNCTION(__test_check_kingdome_access);
 
 static void __test_update_road_network() {
+    map_tiles_update_all_roads();
+    map_routing_update_land();
     g_city.map.update_road_network();
 }
 ANK_FUNCTION(__test_update_road_network);
+
+static int __test_tile_road_network(int grid_offset) {
+    if (grid_offset < 0) {
+        return 0;
+    }
+    return map_road_network_get(grid_offset);
+}
+ANK_FUNCTION_1(__test_tile_road_network);
+
+static int __test_grid_offset_xy(int x, int y) {
+    if (x < 0 || y < 0) {
+        return -1;
+    }
+    return tile2i(x, y).grid_offset();
+}
+ANK_FUNCTION_2(__test_grid_offset_xy);
+
+static int __test_granary_touches_network(int bid, int road_network_id) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid() || !b->dcast_granary()) {
+        return 0;
+    }
+    return building_granary_touches_network(*b, road_network_id) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_granary_touches_network);
+
+static int __test_granary_access_on_network(int bid, int road_network_id, int prefer_grid_offset) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid() || !b->dcast_granary()) {
+        return -1;
+    }
+    tile2i prefer = tile2i::invalid;
+    if (prefer_grid_offset >= 0) {
+        prefer = tile2i(prefer_grid_offset);
+    }
+    tile2i access = building_granary_access_on_network(*b, road_network_id, prefer);
+    return access.valid() ? access.grid_offset() : -1;
+}
+ANK_FUNCTION_3(__test_granary_access_on_network);
 
 static void __test_update_farms() {
     building_industry_update_farms();

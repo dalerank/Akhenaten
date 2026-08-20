@@ -57,6 +57,7 @@ struct object_info {
     svector<e_figure_type, 16> forbidden_figure_types;
     int grid_offset = 0;
     int help_id;
+    xstring help_link;
     uint16_t group_id;
     bool can_play_sound;
     building_id bid = 0;

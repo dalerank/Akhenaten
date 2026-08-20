@@ -1,6 +1,7 @@
 log_info("akhenaten: mission 46 migdol started")
 
-// Cleop mission1.pak scenario 46 (dump 2026-07-31). Empire id=1.
+// Cleopatra campaign scenario 46. Empire id=1.
+
 // Scenario enemy ENEMY_8_NUBIAN (briefing = Assyrians / Asarhaddon - pak id wins).
 // Gods: Osiris(1), Ptah(1), Seth(2). MM subtitle: Repel the Assyrians. Start year -677.
 // Funds Normal 15002 / loan 2500 / debt_interest 7. Rank 5 (pak).

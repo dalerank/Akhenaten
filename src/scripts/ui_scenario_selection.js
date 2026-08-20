@@ -264,6 +264,12 @@ function window_scenario_selection_btn_start() {
     __game_start_loaded_file()
 }
 
+[es=(window_scenario_selection, btn_start)]
+function window_scenario_selection_on_btn_start(window) {
+    window_scenario_selection_btn_start()
+}
+
+[es=(window_scenario_selection, click_item)]
 function window_scenario_selection_on_map_list_click(entry) {
     // user_data carries the real scenario id of the clicked step (set in
     // on_init). Load it directly: campaign scenario ids are not necessarily
@@ -301,11 +307,11 @@ window_scenario_selection {
             view_items:14
             scrollbar_margin_x:10
             draw_scrollbar_always:false
-            onclick_item: window_scenario_selection_on_map_list_click
+            onclick_event: "click_item"
         })
 
         btn_scores             : large_button({ pos[550, 542], size[240, 30], text[44, 221], body:2, font:FONT_NORMAL_BLACK_ON_DARK, onclick_event: "show_scores" })
-        btn_start              : image_button({ pos[780, 582], size[27, 27], pack:PACK_GENERAL, id:193, offset:4, onclick: window_scenario_selection_btn_start })
+        btn_start              : image_button({ pos[780, 582], size[27, 27], pack:PACK_GENERAL, id:193, offset:4 })
 
         side_hdr_period        : text_center({ pos[545, 165], size[265, 20], align:"center", text:"", font:FONT_NORMAL_BLACK_ON_LIGHT })
         side_mission_title     : text_center({ pos[545, 192], size[265, 36], align:"center", text:"", font:FONT_LARGE_BLACK_ON_DARK, clip_area:true })

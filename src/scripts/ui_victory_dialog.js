@@ -1,24 +1,5 @@
 log_info("akhenaten: ui victory dialog started")
 
-function victory_dialog_btn_accept() {
-    ui.window_city_show()
-}
-
-function victory_dialog_continue(months) {
-    city.victory.continue_governing(months)
-    ui.window_city_show()
-    __city_victory_reset()
-    __game_sound.music_update(1)
-}
-
-function victory_dialog_continue_2() {
-    victory_dialog_continue(24)
-}
-
-function victory_dialog_continue_5() {
-    victory_dialog_continue(60)
-}
-
 [es=(window_victory_dialog, init)]
 function window_victory_dialog_on_init(window) {
     __log_marker("window_show:window_victory_dialog")
@@ -64,9 +45,35 @@ window_victory_dialog {
         title_campaign_end   : text_center({pos: [0, 16], size: [px(32), 20], text: "", font: FONT_LARGE_BLACK_ON_LIGHT, enabled: false})
         desc_campaign_end    : multiline({pos: [16, 47], size: [480, 120], text: [62, 26], font: FONT_NORMAL_BLACK_ON_LIGHT, enabled: false})
 
-        btn_accept           : large_button({pos: [32, 112], size: [480, 20], text: [62, 3], font: FONT_NORMAL_BLACK_ON_DARK, enabled: false, onclick: victory_dialog_btn_accept})
-        btn_continue_2       : large_button({pos: [32, 144], size: [480, 20], text: [62, 4], font: FONT_NORMAL_BLACK_ON_DARK, enabled: false, onclick: victory_dialog_continue_2})
-        btn_continue_5       : large_button({pos: [32, 176], size: [480, 20], text: [62, 5], font: FONT_NORMAL_BLACK_ON_DARK, enabled: false, onclick: victory_dialog_continue_5})
-        btn_lost             : large_button({pos: [32, 96], size: [480, 20], text: [62, 6], font: FONT_NORMAL_BLACK_ON_DARK, enabled: false, onclick: victory_dialog_btn_accept})
+        btn_accept           : large_button({pos: [32, 112], size: [480, 20], text: [62, 3], font: FONT_NORMAL_BLACK_ON_DARK, enabled: false})
+        btn_continue_2       : large_button({pos: [32, 144], size: [480, 20], text: [62, 4], font: FONT_NORMAL_BLACK_ON_DARK, enabled: false})
+        btn_continue_5       : large_button({pos: [32, 176], size: [480, 20], text: [62, 5], font: FONT_NORMAL_BLACK_ON_DARK, enabled: false})
+        btn_lost             : large_button({pos: [32, 96], size: [480, 20], text: [62, 6], font: FONT_NORMAL_BLACK_ON_DARK, enabled: false})
     }
+}
+
+[es=(window_victory_dialog, btn_accept)]
+function window_victory_dialog_btn_accept(window) {
+    ui.window_city_show()
+}
+
+[es=(window_victory_dialog, btn_continue_2)]
+function window_victory_dialog_btn_continue_2(window) {
+    city.victory.continue_governing(24)
+    ui.window_city_show()
+    __city_victory_reset()
+    __game_sound.music_update(1)
+}
+
+[es=(window_victory_dialog, btn_continue_5)]
+function window_victory_dialog_btn_continue_5(window) {
+    city.victory.continue_governing(60)
+    ui.window_city_show()
+    __city_victory_reset()
+    __game_sound.music_update(1)
+}
+
+[es=(window_victory_dialog, btn_lost)]
+function window_victory_dialog_btn_lost(window) {
+    ui.window_city_show()
 }

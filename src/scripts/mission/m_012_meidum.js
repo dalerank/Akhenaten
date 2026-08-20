@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 12 meidum started")
 
-// Empire / requests / events verified vs mission1.pak scenario 12 (2026-07-25 dump).
+// Empire / requests / events aligned with original campaign scenario 12 (2026-07-25 dump).
 // Favour Pharaoh army size=25 (by_favour) → chain size=60; proxied in JS until B2
 // (mission_pharaoh_favour_invasion_tick, same pattern as Saqqara/Serabit).
 // Enemy is ENEMY_5_HYKSOS (pak_enemy_id=5) — NOT Libyan. Recurring raid y7m6 size=17.
@@ -102,7 +102,7 @@ mission12 { // Meidum
 		BUILDING_SCRIBAL_SCHOOL,
 	]
 
-	// Goals verified vs mission1.pak scenario 12: pop 1/3000, culture 1/25, prosperity 1/25,
+	// Goals aligned with original campaign scenario 12: pop 1/3000, culture 1/25, prosperity 1/25,
 	// monuments 1/39 (pak), kingdom 1/40, housing_level 1/11.
 	// Goal = trunc(2.25*(8+24)+4.5) = 76 (complex weight = large until the causeway lands).
 	win_criteria {
@@ -114,7 +114,7 @@ mission12 { // Meidum
 		housing_level {enabled : true, goal : 11 }
 	}
 
-	// Map points from mission1.pak scenario 12 (disembark count=0 — omitted).
+	// Map points from original campaign scenario 12 (disembark count=0 — omitted).
 	entry_point [111, 141]
 	exit_point [32, 54]
 	river_entry_point [130, 122]
@@ -124,7 +124,7 @@ mission12 { // Meidum
 
 	enable_scenario_events : true
 
-	// Empire from mission1.pak scenario 12 (empire id=1) — full map objects.
+	// Empire from original campaign scenario 12 (empire id=1) — full map objects.
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [

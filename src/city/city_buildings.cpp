@@ -297,6 +297,7 @@ void building_update_state(void) {
     bool roads_recalc = false;
     bool water_routes_recalc = false;
     bool canals_recalc = false;
+    bool buildings_removed = false;
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = &g_all_buildings[i];
@@ -320,6 +321,7 @@ void building_update_state(void) {
                 roads_recalc = true; // always recalc underlying road tiles
                 lands_recalc = true;
                 building_delete_UNSAFE(b);
+                buildings_removed = true;
             } else if (b->state == BUILDING_STATE_RUBBLE) {
                 auto house = b->dcast_house();
                 if (house && house->runtime_data().hsize > 0) {
@@ -327,10 +329,16 @@ void building_update_state(void) {
                 }
 
                 building_delete_UNSAFE(b);
+                buildings_removed = true;
             } else if (b->state == BUILDING_STATE_DELETED_BY_GAME) {
                 building_delete_UNSAFE(b);
+                buildings_removed = true;
             }
         }
+    }
+
+    if (buildings_removed) {
+        g_city.buildings.update_counters();
     }
 
     if (walls_recalc) {

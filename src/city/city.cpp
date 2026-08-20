@@ -1537,7 +1537,7 @@ bool city_t::determine_granary_get_foods(resource_list &foods, int road_network)
             return;
         }
 
-        if (road_network != granary->road_network()) {
+        if (!building_granary_touches_network(b, road_network)) {
             return;
         }
 

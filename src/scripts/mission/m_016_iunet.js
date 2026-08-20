@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 16 iunet started")
 
-// Empire / requests / events verified vs mission1.pak scenario 16 (2026-07-26 dump).
+// Empire / requests / events aligned with original campaign scenario 16 (2026-07-26 dump).
 // Empire id=1. Scenario enemy ENEMY_4_HITTITE (briefing text says Kushite — pak wins).
 // Gods: Ra, Seth, Bast. Favour Pharaoh 15→45→30→30.
 // Triage: SKIP invasion i=3 amount=0; NEW_TRADE i=1/6 remap Iunet→Men-nefer / Abu

@@ -11,7 +11,7 @@ festival_square_info_window {
         workers_panel   : inner_panel({ pos[16, 96], size[27, 7] })
 
         fest_months_last: text({pos[32, 112], size[px(25), 20], text:"${city.months_since_festival} ${8.5} ${58.15}", font:FONT_NORMAL_WHITE_ON_DARK, align:"center"}),
-        hold_festival   : button({pos[60, 134], size:[px(22), 25], font:FONT_NORMAL_WHITE_ON_DARK, text:"${58.16}", onclick: festival_square_info_window_hold_festival}),
+        hold_festival   : button({pos[60, 134], size:[px(22), 25], font:FONT_NORMAL_WHITE_ON_DARK, text:"${58.16}"}),
         planed_festival : text({pos[102, 134], font : FONT_NORMAL_BLACK_ON_DARK, align:"center" })
         festival_advice : text({pos[36, 164], wrap:400, font : FONT_NORMAL_WHITE_ON_DARK, multiline:true })
 
@@ -20,7 +20,8 @@ festival_square_info_window {
     }
 }
 
-function festival_square_info_window_hold_festival() {
+[es=(festival_square_info_window, hold_festival)]
+function festival_square_info_window_on_hold_festival(window) {
     if (city.festival.is_planned) {
         return
     }

@@ -1,23 +1,5 @@
 log_info("akhenaten: industry office window started")
 
-function industry_office_info_window_mothball_all() {
-    var office = city.get_industry_office(city.object_info.bid)
-    if (!office || !office.is_management_active()) {
-        return
-    }
-    office.mothball_all()
-    industry_office_info_window_refresh(city.object_info.bid)
-}
-
-function industry_office_info_window_unmothball_all() {
-    var office = city.get_industry_office(city.object_info.bid)
-    if (!office || !office.is_management_active()) {
-        return
-    }
-    office.unmothball_all()
-    industry_office_info_window_refresh(city.object_info.bid)
-}
-
 function industry_office_info_window_refresh(bid) {
     var window = city.object_info
     if (!window || window.bid != bid) {
@@ -34,10 +16,8 @@ industry_office_info_window {
         resource_icon  : resource_icon({pos: [32, 100] }),
         resource_stored : text({pos: [60, 100], size: [px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT }),
         managed_text   : text({pos: [32, 120], size: [px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT }),
-        mothball_all   : button({pos: [32, 230], size: [px(12), 25], text: "#industry_office_mothball_all",
-                                 onclick: industry_office_info_window_mothball_all }),
-        unmothball_all : button({pos: [px(15), 230], size: [px(12), 25], text: "#industry_office_unmothball_all",
-                                 onclick: industry_office_info_window_unmothball_all }),
+        mothball_all   : button({pos: [32, 230], size: [px(12), 25], text: "#industry_office_mothball_all" }),
+        unmothball_all : button({pos: [px(15), 230], size: [px(12), 25], text: "#industry_office_unmothball_all" }),
         inner_panel    : inner_panel({pos : [16, 145], size: [27, 5],
             ui : {
                 workers_img  : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
@@ -46,6 +26,26 @@ industry_office_info_window {
             }
         }),
     })
+}
+
+[es=(industry_office_info_window, mothball_all)]
+function industry_office_info_window_on_mothball_all(window) {
+    var office = city.get_industry_office(window.bid)
+    if (!office || !office.is_management_active()) {
+        return
+    }
+    office.mothball_all()
+    industry_office_info_window_refresh(window.bid)
+}
+
+[es=(industry_office_info_window, unmothball_all)]
+function industry_office_info_window_on_unmothball_all(window) {
+    var office = city.get_industry_office(window.bid)
+    if (!office || !office.is_management_active()) {
+        return
+    }
+    office.unmothball_all()
+    industry_office_info_window_refresh(window.bid)
 }
 
 [es=(industry_office_info_window, init)]

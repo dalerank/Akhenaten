@@ -9,13 +9,13 @@ shrine_info_window {
         show_overlay : button({
             margin:{right:-64, bottom:-40}, size:[23, 23]
             textfn: building_info_window_text_overlay
-            onclick: building_info_window_toggle_overlay
         })
 
         button_help  : help_button({})
         button_close : close_button({})
     }
 }
+
 
 [es=building_info_window]
 info_window_shrine {
@@ -51,4 +51,22 @@ function info_window_shrine_common_init(window) {
 [es=(info_window_shrine, init)]
 function info_window_shrine_on_init(window) {
     info_window_shrine_common_init(window)
+}
+
+[es=building_info_window]
+info_window_oracle {
+    related_buildings [BUILDING_ORACLE]
+    help_id : "message_building_shrine_and_temple"
+    ui {
+        background   : outer_panel({ size: [29, 14] })
+        title        : text({ pos[0, 12], size[px(29), 13], text:[110, 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center" })
+        describe     : text({ pos[32, 56], wrap:px(27), text:[110, 1], font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
+        button_help  : help_button({})
+        button_close : close_button({})
+    }
+}
+
+[es=(info_window_oracle, init)]
+function info_window_oracle_on_init(window) {
+    __game_sound.speech_play("Wavs/oracle.wav")
 }

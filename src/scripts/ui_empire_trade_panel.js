@@ -98,25 +98,25 @@ function empire_window_draw_trade_resource_list(elm, layout, city, mode, show_tr
     }
 }
 
-[es=(empire_window, draw_city_want_sell_items)]
+[es=(empire_window, draw_city_want_sell_items), memory=frame]
 function empire_window_es_draw_city_want_sell_items(window) {
     var city = empire.get_city(empire_window.selected_city)
     empire_window_draw_trade_resource_list(window[window.active_id], empire_window.want_item, city, "sell", false)
 }
 
-[es=(empire_window, draw_city_want_buy_items)]
+[es=(empire_window, draw_city_want_buy_items), memory=frame]
 function empire_window_es_draw_city_want_buy_items(window) {
     var city = empire.get_city(empire_window.selected_city)
     empire_window_draw_trade_resource_list(window[window.active_id], empire_window.want_item, city, "buy", false)
 }
 
-[es=(empire_window, draw_city_sell_items)]
+[es=(empire_window, draw_city_sell_items), memory=frame]
 function empire_window_es_draw_city_sell_items(window) {
     var city = empire.get_city(empire_window.selected_city)
     empire_window_draw_trade_resource_list(window[window.active_id], empire_window.trade_item, city, "sell", true)
 }
 
-[es=(empire_window, draw_city_buy_items)]
+[es=(empire_window, draw_city_buy_items), memory=frame]
 function empire_window_es_draw_city_buy_items(window) {
     var city = empire.get_city(empire_window.selected_city)
     empire_window_draw_trade_resource_list(window[window.active_id], empire_window.trade_item, city, "buy", true)
@@ -124,6 +124,9 @@ function empire_window_es_draw_city_buy_items(window) {
 
 function empire_window_layout_ui(window) {
     var sb = empire_window.screen_bounds
+    if (!sb.ready) {
+        return
+    }
     var centerX = ((sb.min_pos.x + sb.max_pos.x) / 2) | 0
     var width = sb.max_pos.x - sb.min_pos.x
     var infoTop = sb.max_pos.y - 121

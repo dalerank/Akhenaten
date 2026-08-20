@@ -116,6 +116,11 @@ gift_to_kingdome_window {
 	    })
 
         send_gift 		: button({ margin{left:20, bottom:-40}, size[260, 20], textfn: gift_to_kingdome_send_button_text, onclick_event: "send_gift" })
-        button_close    : button({ margin{right:-180, bottom:-40}, size[160, 20], text:"#TR_BUTTON_CANCEL", onclick: window_go_back})
+        button_close    : button({ margin{right:-180, bottom:-40}, size[160, 20], text:"#TR_BUTTON_CANCEL"})
     }
+}
+
+[es=(gift_to_kingdome_window, button_close)]
+function gift_to_kingdome_window_button_close(window) {
+    window_go_back()
 }

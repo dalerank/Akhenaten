@@ -53,7 +53,7 @@
 #endif
 
 struct {
-    const size_t FRAME_ALLOC_BUFFER_SIZE = 64 * 1024;
+    const size_t FRAME_ALLOC_BUFFER_SIZE = 256 * 1024;
     svector<vfs::path, 4> scripts_folders;
     hvector<vfs::path, 16> files2load;
     std::unordered_set<std::string> queued_files;
@@ -889,8 +889,23 @@ static void js_native_debugger_stop(js_State *J) {
     js_pushboolean(J, true);
 }
 
+/** Property lookup on the global object (undefined if missing). Safe in frame zone — no eval/try. */
+static void js_native_global_get(js_State *J) {
+    if (!js_isstring(J, 1) && !js_iscnumber(J, 1) && !js_isnumber(J, 1)) {
+        J->pushundefined();
+        return;
+    }
+    const char *name = js_strnode_cstr(js_tostring(J, 1));
+    if (!name || !*name) {
+        J->pushundefined();
+        return;
+    }
+    js_getglobal(J, name);
+}
+
 void js_register_vm_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_vm_load_module, "include", 1);
+    REGISTER_GLOBAL_FUNCTION(J, js_native_global_get, "__js_global", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_native_debugger_is_running, "__js_debugger_is_running", 0);
     REGISTER_GLOBAL_FUNCTION(J, js_native_debugger_port, "__js_debugger_port", 0);
     REGISTER_GLOBAL_FUNCTION(J, js_native_debugger_start, "__js_debugger_start", 1);
@@ -969,6 +984,10 @@ void *js_frame_alloc_wrapper(void *actx, void *ptr, int size) {
     return new_ptr;
 }
 
+static void js_vm_frame_arena_release(void * /*actx*/) {
+    vm.frame_alloc_ctx.release();
+}
+
 void js_reset_vm_state() {
     if (vm.J) {
         js_freestate(vm.J);
@@ -983,6 +1002,7 @@ void js_reset_vm_state() {
 
     vm.J = js_newstate(js_alloc_wrapper, nullptr, JS_STRICT);
     js_set_framealloc(vm.J, js_frame_alloc_wrapper, nullptr);
+    js_set_frame_arena_release(vm.J, js_vm_frame_arena_release, nullptr);
     js_atpanic(vm.J, js_game_panic);
     js_registerimport(vm.J, js_game_import);
     js_registeremit(vm.J, js_game_emit);
@@ -1028,7 +1048,9 @@ void js_reset_vm_state() {
 }
 
 void js_vm_frame_begin() {
-    vm.frame_alloc_ctx.release();
+    if (!vm.J || vm.J->frame_zone_depth == 0) {
+        vm.frame_alloc_ctx.release();
+    }
     if (vm.J && vm.J->gccounter > JS_GCLIMIT * 10) {
         vm.J->gccounter = 0;
         vm.J->gc(0);

@@ -38,7 +38,7 @@ mission2 {
 		housing_level {enabled : true, goal : 6 }
 	}
 
-	// Map invasion points from mission1.pak scenario 2.
+	// Map invasion points from original campaign scenario 2.
 	invasion_points_sea [ [36, 22] ]
 
 	vars {

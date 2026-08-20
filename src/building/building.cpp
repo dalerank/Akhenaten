@@ -47,6 +47,8 @@
 
 #include <string.h>
 #include <map>
+#include <algorithm>
+#include <cmath>
 
 #include "dev/debug.h"
 #include "js/js_game.h"
@@ -214,6 +216,104 @@ metainfo building_impl::get_info() const {
 
 void building_impl::set_animation(const animation_t &anim) {
     base.anim.setup(anim);
+}
+
+bool building_impl::add_overlay(const xstring &name) {
+    if (name.empty() || has_overlay(name)) {
+        return false;
+    }
+
+    const auto &defs = current_params().overlay_anims;
+    auto it = defs.find(name);
+    if (it == defs.end()) {
+        return false;
+    }
+
+    const e_resource resource = it->second.resource;
+    if (resource != RESOURCE_NONE) {
+        auto &list = base.overlay_anims;
+        list.erase(std::remove_if(list.begin(), list.end(),
+                                  [resource](const building_overlay_anim &ov) {
+                                      return ov.resource == resource;
+                                  }),
+                   list.end());
+    }
+
+    if (base.overlay_anims.size() >= base.overlay_anims.capacity()) {
+        return false;
+    }
+
+    base.overlay_anims.push_back(it->second);
+    return true;
+}
+
+void building_impl::remove_overlay(const xstring &name) {
+    auto &list = base.overlay_anims;
+    for (auto it = list.begin(); it != list.end(); ++it) {
+        if (it->key == name) {
+            list.erase(it);
+            return;
+        }
+    }
+}
+
+bool building_impl::has_overlay(const xstring &name) const {
+    for (const auto &ov : base.overlay_anims) {
+        if (ov.key == name) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void building_impl::seed_default_overlays() {
+    base.overlay_anims.clear();
+    for (const auto &kv : current_params().overlay_anims) {
+        if (kv.second.default_active) {
+            add_overlay(kv.first);
+        }
+    }
+}
+
+void building_impl::draw_overlay_anims(painter &ctx, vec2i point, color color_mask) const {
+    for (const auto &ov : base.overlay_anims) {
+        const int img = ov.first_img();
+        if (!img) {
+            continue;
+        }
+
+        int amount = 0;
+        if (ov.resource != RESOURCE_NONE) {
+            amount = (int)ceil((float)stored_amount(ov.resource) / 100.0f) - 1;
+            if (amount < 0) {
+                continue;
+            }
+        } else if (ov.stack) {
+            amount = 1;
+        }
+
+        if (ov.stack) {
+            const int stacks = std::min(amount, (int)ov.max_count);
+            vec2i pos = ov.pos;
+            for (int i = 0; i < stacks; ++i) {
+                auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
+                command.image_id = img;
+                command.pixel = point + pos;
+                command.mask = color_mask;
+                pos += ov.step;
+            }
+        } else {
+            int frame = amount;
+            if (ov.max_frames > 0) {
+                frame = std::min(frame, (int)ov.max_frames - 1);
+            }
+            frame = std::min(frame, (int)ov.max_count);
+            auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
+            command.image_id = img + frame;
+            command.pixel = point + ov.pos;
+            command.mask = color_mask;
+        }
+    }
 }
 
 xstring building_impl::get_sound() {

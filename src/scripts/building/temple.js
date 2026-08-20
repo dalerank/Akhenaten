@@ -10,7 +10,7 @@ building_temple_osiris {
     min_houses_coverage : 50
     labor_category : LABOR_CATEGORY_RELIGION
     building_size : 3
-    meta { help_id: 67, text_id: 92 }
+    meta { text_id: 92, help_link:"message_building_shrine_and_temple" }
     info_sound : "Wavs/tem_osiris_l.wav"
     cost [ 30, 50, 80, 150, 300 ]
     desirability { value[6], step[2], step_size[-2], range[6] }
@@ -35,7 +35,7 @@ building_temple_osiris {
     min_houses_coverage : 50
     labor_category : LABOR_CATEGORY_RELIGION
     building_size : 3
-    meta  { help_id: 67, text_id: 93 }
+    meta  { text_id: 93, help_link:"message_building_shrine_and_temple" }
     info_sound : "Wavs/tem_RA_L.wav"
     cost [ 30, 50, 80, 150, 300 ]
     desirability { value[6], step[2], step_size[-2], range[6] }
@@ -60,7 +60,7 @@ building_temple_osiris {
     min_houses_coverage : 50
     labor_category : LABOR_CATEGORY_RELIGION
     building_size : 3
-    meta { help_id: 67, text_id: 94 }
+    meta { text_id: 94, help_link:"message_building_shrine_and_temple" }
     info_sound : "Wavs/tem_ptah_l.wav"
     cost [ 30, 50, 80, 150, 300 ]
     desirability { value[6], step[2], step_size[-2], range[6] }
@@ -85,7 +85,7 @@ building_temple_osiris {
     min_houses_coverage : 50
     labor_category : LABOR_CATEGORY_RELIGION
     building_size : 3
-    meta { help_id: 67, text_id: 95 }
+    meta { text_id: 95, help_link:"message_building_shrine_and_temple" }
     info_sound : "Wavs/tem_seth_l.wav"
     cost [ 30, 50, 80, 150, 300 ]
     desirability { value[6], step[2], step_size[-2], range[6] }
@@ -110,7 +110,7 @@ building_temple_osiris {
     min_houses_coverage : 50
     labor_category : LABOR_CATEGORY_RELIGION
     building_size : 3
-    meta { help_id: 67, text_id: 96 }
+    meta { text_id: 96, help_link:"message_building_shrine_and_temple" }
     info_sound : "Wavs/tem_bast_l.wav"
     cost [ 30, 50, 80, 150, 300 ]
     desirability { value[6], step[2], step_size[-2], range[6] }

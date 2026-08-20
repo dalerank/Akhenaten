@@ -75,14 +75,22 @@ window_hotkey_editor {
         btn_cancel: button({
             pos[24, 100], size[120, 24],
             text: "#TR_BUTTON_CANCEL",
-            font: FONT_NORMAL_BLACK_ON_LIGHT,
-            onclick: function() { hotkey_editor_close(false) }
+            font: FONT_NORMAL_BLACK_ON_LIGHT
         })
         btn_ok: button({
             pos[160, 100], size[120, 24],
             text: "#TR_BUTTON_OK",
-            font: FONT_NORMAL_BLACK_ON_LIGHT,
-            onclick: function() { hotkey_editor_close(true) }
+            font: FONT_NORMAL_BLACK_ON_LIGHT
         })
     }
+}
+
+[es=(window_hotkey_editor, btn_cancel)]
+function window_hotkey_editor_btn_cancel(window) {
+    hotkey_editor_close(false)
+}
+
+[es=(window_hotkey_editor, btn_ok)]
+function window_hotkey_editor_btn_ok(window) {
+    hotkey_editor_close(true)
 }

@@ -37,7 +37,7 @@ building_small_royal_tomb {
     fire_proof : true
     damage_proof : true
     info_title_id [198, 33]
-    meta { help_id: 478, text_id: 178 }
+    meta { text_id: 178, help_link:"message_building_royal_burial_tomb" }
     info_sound : "Wavs/rock3.wav"
     cost [ 2500, 3500, 4500, 6000, 8500 ]
     flags {
@@ -78,7 +78,7 @@ building_medium_royal_tomb {
     fire_proof : true
     damage_proof : true
     info_title_id [198, 34]
-    meta { help_id: 478, text_id: 178 }
+    meta { text_id: 178, help_link:"message_building_royal_burial_tomb" }
     info_sound : "Wavs/rock3.wav"
     cost [ 3500, 4500, 6000, 8500, 11000 ]
     flags {
@@ -119,7 +119,7 @@ building_large_royal_tomb {
     fire_proof : true
     damage_proof : true
     info_title_id [198, 35]
-    meta { help_id: 478, text_id: 178 }
+    meta { text_id: 178, help_link:"message_building_royal_burial_tomb" }
     info_sound : "Wavs/rock3.wav"
     cost [ 5000, 6500, 8500, 11000, 15000 ]
     flags {
@@ -159,7 +159,7 @@ building_grand_royal_tomb {
     fire_proof : true
     damage_proof : true
     info_title_id [198, 36]
-    meta { help_id: 478, text_id: 178 }
+    meta { text_id: 178, help_link:"message_building_royal_burial_tomb" }
     info_sound : "Wavs/rock3.wav"
     cost [ 8000, 10000, 13000, 17000, 22000 ]
     flags {

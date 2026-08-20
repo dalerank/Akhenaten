@@ -443,7 +443,15 @@ building *building_bazaar::get_storage_destination(e_bazaar_fetch_group group, c
     std::fill(std::begin(resources), std::end(resources), resource_data{0, current_params().max_search_distance, 0});
     const bool mill_enabled = game_features::gameplay_enhanced_food_mill.to_bool();
     buildings_valid_do([&](building &b) {
-        if (!b.has_road_access || b.distance_from_entry <= 0 || b.road_network_id != base.road_network_id) {
+        if (!b.has_road_access) {
+            return;
+        }
+
+        if (b.params().flags.perimeter_access) {
+            if (!building_granary_touches_network(b, base.road_network_id)) {
+                return;
+            }
+        } else if (b.distance_from_entry <= 0 || b.road_network_id != base.road_network_id) {
             return;
         }
 

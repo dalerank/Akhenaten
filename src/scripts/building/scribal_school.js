@@ -10,7 +10,7 @@ building_scribal_school = {
   input : {
     resource : RESOURCE_PAPYRUS
   }
-  meta : { help_id: 68, text_id: 85 }
+  meta : { text_id: 85, help_link:"message_building_scribal_school" }
   info_sound : "Wavs/school_scribe.wav"
   min_houses_coverage : 50
   building_size : 2

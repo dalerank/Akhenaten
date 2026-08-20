@@ -106,6 +106,24 @@ void run_es_hash_unit_tests() {
                   "ANK_ESID esid(__func__) uses caller name, not esid");
 }
 
+void run_multi_es_handler_unit_tests() {
+    // Parent fallback: windows tagged [es=advisor_window] resolve
+    // missing exact handlers via advisor_window+event.
+    const bstring64 show = js_helpers::es_hash_str("advisor_window", "show_advisor");
+    const bstring64 close = js_helpers::es_hash_str("advisor_window", "close_advisors");
+    const bstring64 overlay = js_helpers::es_hash_str("building_info_window", "show_overlay");
+    const bstring64 mothball = js_helpers::es_hash_str("building_info_window", "mothball");
+
+    expect_true(js_has_event_handlers(xstring(show.c_str())),
+                "es_parent: advisor_window+show_advisor registered");
+    expect_true(js_has_event_handlers(xstring(close.c_str())),
+                "es_parent: advisor_window+close_advisors registered");
+    expect_true(js_has_event_handlers(xstring(overlay.c_str())),
+                "es_parent: building_info_window+show_overlay registered");
+    expect_true(js_has_event_handlers(xstring(mothball.c_str())),
+                "es_parent: building_info_window+mothball registered");
+}
+
 // Regression: bstring::cat() previously used snprintf(_data, _size, "%s%s", _data, s),
 // which aliased source and destination buffers — undefined behavior per C11
 // §7.21.6.5/2. MSVC/UCRT tolerated it, glibc dropped the prefix and broke
@@ -317,6 +335,7 @@ void run_integral_tests_impl() {
 
     run_bstring_cat_unit_tests();
     run_es_hash_unit_tests();
+    run_multi_es_handler_unit_tests();
     run_archive_property_unit_tests();
     run_xvalue_unit_tests();
 }

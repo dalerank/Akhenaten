@@ -1,7 +1,6 @@
 log_info("akhenaten: mission 129 bridges started")
 
-// Custom map Cleop/Maps/Bridges.map — dump 2026-07-26 via __test_mission_map_dump
-// (load_mission_map_raw, no JS overlay) + reserved[0..46] editor flags from scenario_info.
+// Custom map Cleop/Maps/Bridges.map + reserved[0..46] editor flags from scenario_info.
 // Empire id=1; our city = Djedu (sells fish/clay/timber/granite/copper). Abu display-only.
 // Monuments (group 198): 23 Large Obelisk, 22 Small Obelisk → rating goal 13
 //   (weights 4+2 → 2.25*6+4.5 = 18 ≥ 13 under current formula).

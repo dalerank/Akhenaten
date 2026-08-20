@@ -161,7 +161,7 @@
       <p>Dahshur is the royal necropolis south of Saqqara where Snofru built the Bent Pyramid — so called because its angle changes partway up, a mid-construction correction that makes it the transitional monument between step and true pyramids. In the campaign this is the builder branch of the Snofru fork: a peaceful construction mission where the whole city exists to feed the pyramid stone and limestone.</p>
 
       <h2 id="objectives">Objectives</h2>
-      <p>All goals match <code>mission1.pak</code> scenario 14 (2026-07-26 dump).</p>
+      <p>All goals match original campaign scenario 14 (2026-07-26 dump).</p>
       <ul class="objectives-list">
         <li><span class="obj-label">Population</span><span class="obj-value">3 500 citizens</span></li>
         <li><span class="obj-label">Culture rating</span><span class="obj-value">not required</span></li>
@@ -175,7 +175,7 @@
       </div>
 
       <h2 id="events">Scripted events</h2>
-      <p>Full empire redefine + event schedule verified against pak scenario 14. Empire id <strong>13</strong> (same fork map as Buhen). Scenario enemy is <strong>Hyksos</strong> (<code>ENEMY_5_HYKSOS</code>); there are <strong>no</strong> timed enemy raids — only Pharaoh's favour punishment (size <strong>49 → 21</strong>) if kingdom rating collapses. Favour / invasions stay JS-proxied until B2-migrate.</p>
+      <p>Full empire redefine + event schedule verified against original campaign scenario 14. Empire id <strong>13</strong> (same fork map as Buhen). Scenario enemy is <strong>Hyksos</strong> (<code>ENEMY_5_HYKSOS</code>); there are <strong>no</strong> timed enemy raids — only Pharaoh's favour punishment (size <strong>49 → 21</strong>) if kingdom rating collapses. Favour / invasions stay JS-proxied until B2-migrate.</p>
       <div class="tutorial-step"><span class="step-tag">Year 1 · month 6</span><span>Oil ladder root: <strong>500 oil</strong> / 12 months. Success KR steps chain further oil asks (1 000 → 2 000 → 4 000); refuse/late branches escalate amounts up to <strong>8 000</strong> and eventually land on CITY_UNDER_SIEGE Dahshur → Byblos falls → copper/gems price &amp; demand cascade.</span></div>
       <div class="tutorial-step"><span class="step-tag">Year 2 · month 10+</span><span>Recurring Pharaoh request: <strong>10 grain</strong> / 24 months (idle-gated). Completing +8 kingdom; refuse −8; late −4.</span></div>
       <div class="tutorial-step"><span class="step-tag">Year 4 · month 8</span><span>Limestone <strong>×32</strong> / 24 months → ok: KR+8 then stone gift ×64; refuse: KR−15 then stone demand −8; late: KR−5 then stone gift ×32.</span></div>
@@ -261,7 +261,6 @@
               <li><span class="ev-name">Wage decrease (i=11)</span><span class="ev-desc">y5m0+ amount 1 recurring.</span><span class="ev-fn">mission14_event_i11_wage_decrease</span></li>
               <li><span class="ev-name">Favour (i=37→38)</span><span class="ev-desc">Pharaoh army 49→21 via shared helper.</span><span class="ev-fn">mission14_pharaoh_favour_invasion</span></li>
             </ul>
-            <p>Dump: <code>__test_mission_pak_dump(14)</code> / Cleop <code>mission1.pak</code> (ad-hoc test deleted after verification).</p>
           </div>
         </details>
 

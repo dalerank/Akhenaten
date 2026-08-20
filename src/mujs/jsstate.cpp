@@ -358,6 +358,36 @@ void js_set_framealloc(js_State* J, js_Alloc frame_alloc, void* frame_actx) {
     J->frame_actx = frame_actx;
 }
 
+void js_set_frame_arena_release(js_State* J, js_FrameArenaRelease fn, void* actx) {
+    J->frame_arena_release = fn;
+    J->frame_arena_release_actx = actx;
+}
+
+void js_enter_frame_zone(js_State* J) {
+    if (!J) {
+        return;
+    }
+    ++J->frame_zone_depth;
+}
+
+void js_leave_frame_zone(js_State* J) {
+    if (!J || J->frame_zone_depth <= 0) {
+        return;
+    }
+    --J->frame_zone_depth;
+    if (J->frame_zone_depth == 0 && J->frame_arena_release) {
+        J->frame_arena_release(J->frame_arena_release_actx);
+    }
+}
+
+int js_in_frame_zone(js_State* J) {
+    return J && J->frame_zone_depth > 0;
+}
+
+unsigned js_frame_escape_count(js_State* J) {
+    return J ? J->frame_escape_count : 0;
+}
+
 js_State* js_newstate(js_Alloc alloc, void* actx, int flags) {
     js_State* J;
 

@@ -50,11 +50,12 @@ info_window_storageyard {
 
         button_help   : help_button({}),
         button_close  : close_button({}),
-        mothball      : button({margin:{right:-90, bottom:-40}, size:[23, 23], textfn:building_info_window_text_mothball, onclick: building_info_window_toggle_mothball }),
+        mothball      : button({margin:{right:-90, bottom:-40}, size:[23, 23], textfn:building_info_window_text_mothball}),
 
         first_advisor : image_button({margin:{left:40, bottom:-40}, size:[28, 28], pack:PACK_GENERAL, id:106 }),
     }
 }
+
 
 [es=(info_window_storageyard, init)]
 function info_window_storageyard_on_init(window) {

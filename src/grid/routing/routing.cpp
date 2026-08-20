@@ -232,7 +232,9 @@ bool map_can_place_initial_road_or_canal(int grid_offset, int is_canal) {
         break;
 
     case CITIZEN_2_PASSABLE_TERRAIN:
-        return false;
+        if (!map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) || map_terrain_is(grid_offset, TERRAIN_WATER)) {
+            return false;
+        }
         break;
 
     case CITIZEN_0_ROAD:

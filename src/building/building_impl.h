@@ -231,6 +231,11 @@ public:
     void set_animation(const animation_t &anim);
     xstring get_sound();
     inline void set_animation(const xstring &key) { set_animation(anim(key)); }
+    bool add_overlay(const xstring &name);
+    void remove_overlay(const xstring &name);
+    bool has_overlay(const xstring &name) const;
+    void seed_default_overlays();
+    void draw_overlay_anims(painter &ctx, vec2i point, color color_mask) const;
 
     static void acquire(e_building_type e, building &b);
 

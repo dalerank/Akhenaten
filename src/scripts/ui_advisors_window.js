@@ -49,26 +49,20 @@ advisor_window_base {
     ui {
         advisors_backdrop : image({ pack:PACK_UNLOADED, id:11, pos:[sw(-1024)/2, sh(-768)/2] })
         advisors_strip    : image({ pack:PACK_GENERAL, id:160, pos:[sw(-640)/2, sh(400)/2] })
-        labor_btn         : image_button({ pos:[sw(-640)/2 + 12, sh(418)/2], size:[33, 32], pack:PACK_GENERAL, id:159, offset:0, tooltip:[68, 71], onclick: show_advisor_window(ADVISOR_LABOR) })
-        military_btn      : image_button({ pos:[sw(-640)/2 + 52, sh(418)/2], size:[39, 32], pack:PACK_GENERAL, id:159, offset:4, tooltip:[68, 72], onclick: show_advisor_window(ADVISOR_MILITARY) })
-        imperial_btn      : image_button({ pos:[sw(-640)/2 + 96, sh(418)/2], size:[34, 32], pack:PACK_GENERAL, id:159, offset:8, tooltip:[68, 73], onclick: show_advisor_window(ADVISOR_IMPERIAL) })
-        ratings_btn       : image_button({ pos:[sw(-640)/2 + 135, sh(418)/2], size:[38, 32], pack:PACK_GENERAL, id:159, offset:12, tooltip:[68, 74], onclick: show_advisor_window(ADVISOR_RATINGS) })
-        trade_btn         : image_button({ pos:[sw(-640)/2 + 178, sh(418)/2], size:[46, 32], pack:PACK_GENERAL, id:159, offset:16, tooltip:[68, 75], onclick: show_advisor_window(ADVISOR_TRADE) })
-        population_btn    : image_button({ pos:[sw(-640)/2 + 229, sh(418)/2], size:[48, 32], pack:PACK_GENERAL, id:159, offset:20, tooltip:[68, 76], onclick: show_advisor_window(ADVISOR_POPULATION) })
-        health_btn        : image_button({ pos:[sw(-640)/2 + 282, sh(418)/2], size:[35, 32], pack:PACK_GENERAL, id:159, offset:24, tooltip:[68, 77], onclick: show_advisor_window(ADVISOR_HEALTH) })
-        education_btn     : image_button({ pos:[sw(-640)/2 + 322, sh(418)/2], size:[38, 32], pack:PACK_GENERAL, id:159, offset:28, tooltip:[68, 78], onclick: show_advisor_window(ADVISOR_EDUCATION) })
-        entertainment_btn : image_button({ pos:[sw(-640)/2 + 363, sh(418)/2], size:[39, 32], pack:PACK_GENERAL, id:159, offset:32, tooltip:[68, 79], onclick: show_advisor_window(ADVISOR_ENTERTAINMENT) })
-        religion_btn      : image_button({ pos:[sw(-640)/2 + 406, sh(418)/2], size:[35, 32], pack:PACK_GENERAL, id:159, offset:36, tooltip:[68, 80], onclick: show_advisor_window(ADVISOR_RELIGION) })
-        financial_btn     : image_button({ pos:[sw(-640)/2 + 445, sh(418)/2], size:[40, 32], pack:PACK_GENERAL, id:159, offset:40, tooltip:[68, 81], onclick: show_advisor_window(ADVISOR_FINANCIAL) })
-        chief_btn         : image_button({ pos:[sw(-640)/2 + 490, sh(418)/2], size:[46, 32], pack:PACK_GENERAL, id:159, offset:44, tooltip:[68, 82], onclick: show_advisor_window(ADVISOR_CHIEF) })
-        monuments_btn     : image_button({ pos:[sw(-640)/2 + 542, sh(418)/2], size:[40, 32], pack:PACK_GENERAL, id:159, offset:48, tooltip:[68, 83], onclick: show_advisor_window(ADVISOR_MONUMENTS) })
-        back_btn          : image_button({ pos:[sw(-640)/2 + 588, sh(418)/2], size:[40, 32], pack:PACK_GENERAL, id:159, offset:52, tooltip:[68, 84], onclick: ui.window_city_show })
-    }
-}
-
-function show_advisor_window(advisor) {
-    return function() {
-        window_advisors_show_advisor(advisor)
+        labor_btn         : image_button({ pos:[sw(-640)/2 + 12, sh(418)/2], size:[33, 32], pack:PACK_GENERAL, id:159, offset:0, tooltip:[68, 71], param1: ADVISOR_LABOR, onclick_event: "show_advisor" })
+        military_btn      : image_button({ pos:[sw(-640)/2 + 52, sh(418)/2], size:[39, 32], pack:PACK_GENERAL, id:159, offset:4, tooltip:[68, 72], param1: ADVISOR_MILITARY, onclick_event: "show_advisor" })
+        imperial_btn      : image_button({ pos:[sw(-640)/2 + 96, sh(418)/2], size:[34, 32], pack:PACK_GENERAL, id:159, offset:8, tooltip:[68, 73], param1: ADVISOR_IMPERIAL, onclick_event: "show_advisor" })
+        ratings_btn       : image_button({ pos:[sw(-640)/2 + 135, sh(418)/2], size:[38, 32], pack:PACK_GENERAL, id:159, offset:12, tooltip:[68, 74], param1: ADVISOR_RATINGS, onclick_event: "show_advisor" })
+        trade_btn         : image_button({ pos:[sw(-640)/2 + 178, sh(418)/2], size:[46, 32], pack:PACK_GENERAL, id:159, offset:16, tooltip:[68, 75], param1: ADVISOR_TRADE, onclick_event: "show_advisor" })
+        population_btn    : image_button({ pos:[sw(-640)/2 + 229, sh(418)/2], size:[48, 32], pack:PACK_GENERAL, id:159, offset:20, tooltip:[68, 76], param1: ADVISOR_POPULATION, onclick_event: "show_advisor" })
+        health_btn        : image_button({ pos:[sw(-640)/2 + 282, sh(418)/2], size:[35, 32], pack:PACK_GENERAL, id:159, offset:24, tooltip:[68, 77], param1: ADVISOR_HEALTH, onclick_event: "show_advisor" })
+        education_btn     : image_button({ pos:[sw(-640)/2 + 322, sh(418)/2], size:[38, 32], pack:PACK_GENERAL, id:159, offset:28, tooltip:[68, 78], param1: ADVISOR_EDUCATION, onclick_event: "show_advisor" })
+        entertainment_btn : image_button({ pos:[sw(-640)/2 + 363, sh(418)/2], size:[39, 32], pack:PACK_GENERAL, id:159, offset:32, tooltip:[68, 79], param1: ADVISOR_ENTERTAINMENT, onclick_event: "show_advisor" })
+        religion_btn      : image_button({ pos:[sw(-640)/2 + 406, sh(418)/2], size:[35, 32], pack:PACK_GENERAL, id:159, offset:36, tooltip:[68, 80], param1: ADVISOR_RELIGION, onclick_event: "show_advisor" })
+        financial_btn     : image_button({ pos:[sw(-640)/2 + 445, sh(418)/2], size:[40, 32], pack:PACK_GENERAL, id:159, offset:40, tooltip:[68, 81], param1: ADVISOR_FINANCIAL, onclick_event: "show_advisor" })
+        chief_btn         : image_button({ pos:[sw(-640)/2 + 490, sh(418)/2], size:[46, 32], pack:PACK_GENERAL, id:159, offset:44, tooltip:[68, 82], param1: ADVISOR_CHIEF, onclick_event: "show_advisor" })
+        monuments_btn     : image_button({ pos:[sw(-640)/2 + 542, sh(418)/2], size:[40, 32], pack:PACK_GENERAL, id:159, offset:48, tooltip:[68, 83], param1: ADVISOR_MONUMENTS, onclick_event: "show_advisor" })
+        back_btn          : image_button({ pos:[sw(-640)/2 + 588, sh(418)/2], size:[40, 32], pack:PACK_GENERAL, id:159, offset:52, tooltip:[68, 84], onclick_event: "close_advisors" })
     }
 }
 
@@ -140,4 +134,15 @@ function on_event_show_advisor_hotkey(ev) {
     } else {
         window_advisors_show_advisor(ev.advisor)
     }
+}
+
+// Windows tagged [es=advisor_window] fall back here when they have no exact handler.
+[es=(advisor_window, show_advisor)]
+function advisor_strip_on_show_advisor(ev) {
+    window_advisors_show_advisor(Math.round(ev.param1))
+}
+
+[es=(advisor_window, close_advisors)]
+function advisor_strip_on_close_advisors() {
+    ui.window_city_show()
 }

@@ -14,7 +14,6 @@ struct format_alias {
     {FILE_FORMAT_SGX, "sg2"},
     {FILE_FORMAT_SGX, "sg3"},
     {FILE_FORMAT_555, "555"},
-    {FILE_FORMAT_MISSION_PAK, "pak"},
     {FILE_FORMAT_SAVE_FILE, "sav"},
     {FILE_FORMAT_MAP_FILE, "map"},
     {FILE_FORMAT_JAS_RECORDS, "jas"},

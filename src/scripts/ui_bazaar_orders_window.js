@@ -62,6 +62,7 @@ function bazaar_orders_text_min() {
     return __loc("#bazaar_min_variety") + " " + bazaar.min_variety()
 }
 
+[es=(bazaar_orders_window, click_item)]
 function bazaar_orders_list_on_click_item(p) {
     if (!bazaar_orders_good_available(p.user_data)) {
         return
@@ -121,16 +122,32 @@ bazaar_orders_window {
             draw_scrollbar_always: false
             draw_paneling: true
             onrender_item: bazaar_orders_list_on_render_item
-            onclick_item: bazaar_orders_list_on_click_item
+            onclick_event: "click_item"
         })
-        desired_btn  : button({pos[16, -1], size[200, 24], textfn: bazaar_orders_text_desired, margin{bottom:-64}, onclick: bazaar_orders_cycle_desired })
-        min_btn      : button({pos[226, -1], size[200, 24], textfn: bazaar_orders_text_min, margin{bottom:-64}, onclick: bazaar_orders_cycle_min })
-        accept_none  : button({pos[80, -1], size[300, 24], text:{group:99, id:7}, margin{bottom:-38}, onclick: bazaar_orders_window_accept_none })
+        desired_btn  : button({pos[16, -1], size[200, 24], textfn: bazaar_orders_text_desired, margin{bottom:-64}})
+        min_btn      : button({pos[226, -1], size[200, 24], textfn: bazaar_orders_text_min, margin{bottom:-64}})
+        accept_none  : button({pos[80, -1], size[300, 24], text:{group:99, id:7}, margin{bottom:-38}})
 
         button_help   : help_button({})
-        button_close  : close_button({ onclick: window_go_back })
+        button_close  : close_button({})
     }
 }
+
+[es=(bazaar_orders_window, desired_btn)]
+function bazaar_orders_window_on_desired_btn(window) {
+    bazaar_orders_cycle_desired()
+}
+
+[es=(bazaar_orders_window, min_btn)]
+function bazaar_orders_window_on_min_btn(window) {
+    bazaar_orders_cycle_min()
+}
+
+[es=(bazaar_orders_window, accept_none)]
+function bazaar_orders_window_on_accept_none(window) {
+    bazaar_orders_window_accept_none()
+}
+
 
 [es=(bazaar_orders_window, init)]
 function bazaar_orders_window_init(window) {

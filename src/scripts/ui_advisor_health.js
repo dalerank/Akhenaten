@@ -49,7 +49,7 @@ function advisor_health_facilities_on_render_item(p) {
 	var covPct10 = city.coverage[row.id]
 	var totalStr = city.count_total_buildings(btype) + " " + __loc(8, row.nameLoc8)
 	var careStr = (1000 * act) + " " + __loc(56, 6)
-	var covgStr = __loc(57, ((covPct10 / 10) | 0) + 11)
+	var covgStr = __loc(56, ((covPct10 / 10) | 0) + 43)
 	var py = p.y
 	var flagsCell = UiFlags_AlignYCentered | UiFlags_AlignCentered
 	ui.label_ex(totalStr, {x: p.x + 15, y: py}, font, UiFlags_AlignYCentered, 125)

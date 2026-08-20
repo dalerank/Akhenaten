@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 18 rostja started")
 
-// Empire / requests / events verified vs mission1.pak scenario 18 (2026-07-26 dump).
+// Empire / requests / events aligned with original campaign scenario 18 (2026-07-26 dump).
 // Empire id=18. Enemy ENEMY_5_HYKSOS. Gods: Ra, Ptah.
 // Trade: On (sea 500) / Byblos (sea 1250). Display routes 3/4 (Iunet/Dahshur).
 // Favour Pharaoh 50→20→50. Timed Hyksos×6 y5m7; recurring×10 y26m10+.

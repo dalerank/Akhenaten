@@ -20,7 +20,7 @@ building_bricks_workshop = {
   production_rate_dcy : [100, 80, 70, 60, 50],
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   building_size : 2,
-  meta : { help_id:1, text_id:180 }
+  meta : { text_id:180, help_link:"message_building_brickworks" }
   info_sound : "Wavs/brick.wav"
   cost: [ 12, 20, 30, 40, 50 ]
   desirability : { value:[-4], step:[1], step_size:[1], range: [4] }

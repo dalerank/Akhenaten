@@ -23,16 +23,21 @@ hold_festival_window {
         middle_festival : button({margin{centerx:-215, bottom:-110 }, size[430, 26], rich:true, onclick_event: "festival_select_middle"})
         large_festival  : button({margin{centerx:-215, bottom:-80 }, size[430, 26], rich:true, onclick_event: "festival_select_grand"})
         button_ok       : image_button({margin{centerx:20, bottom:-40 }, size[39, 26], pack:PACK_GENERAL, id:96, offset:0, onclick_event: "festival_schedule_ok"})
-        button_cancel   : image_button({margin{centerx:70, bottom:-40 }, size[39, 26], pack:PACK_GENERAL, id:96, offset:4, onclick: window_go_back })
+        button_cancel   : image_button({margin{centerx:70, bottom:-40 }, size[39, 26], pack:PACK_GENERAL, id:96, offset:4 })
         festival_type   : text({margin{centerx:-115, bottom:-35 }, size[544, -1] })
 
-        button_help     : image_button({margin{left:14, bottom:-40}, size[27, 27], pack:PACK_GENERAL, id:134, offset:0 })
+        button_help     : help_button({})
     }
 }
 
 hold_festival_window.show = function(with_background, on_close_cb) {
     hold_festival_window.on_close_cb = on_close_cb
     emit event_show_window{ id:"hold_festival_window" }
+}
+
+[es=(hold_festival_window, button_cancel)]
+function hold_festival_window_button_cancel(window) {
+    window_go_back()
 }
 
 [es=(hold_festival_window, init)]
@@ -53,7 +58,6 @@ function hold_festival_window_init(window) {
 
     window.large_festival.text = __loc(58, 32) + " " + city.festival.grand_cost + " @I" + deben_tid + " " + city.festival.grand_alcohol + "  @I" + beer_tid
     window.large_festival.darkened = is_out_of_money || city.festival.not_enough_alcohol
-    window.button_help.onclick = function() { ui.window_message_dialog_show("message_overseer_temples") }
 
     window.needs_sync = true
 }
@@ -74,6 +78,11 @@ function hold_festival_window_setup_god_buttons(window) {
     if (first_known_god >= 0 && city.festival.selected_god == GOD_UNKNOWN) {
         city.festival.selected_god = first_known_god
     }
+}
+
+[es=(hold_festival_window, help)]
+function hold_festival_window_on_help(window) {
+    ui.window_message_dialog_show("message_overseer_temples")
 }
 
 [es=(hold_festival_window, festival_schedule_ok)]

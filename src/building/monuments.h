@@ -12,20 +12,23 @@
 #define ARCHITECTS RESOURCE_NONE
 
 struct monument_phase_resource {
-    e_resource resource;
-    uint16_t count;
+    e_resource resource = RESOURCE_NONE;
+    uint16_t count = 0;
 };
 ANK_CONFIG_STRUCT(monument_phase_resource, resource, count)
 
 struct monument_phase {
-    uint8_t id;
-    std::array<monument_phase_resource, 6> resources;
+    uint8_t id = 0;
+    // Default-init zeros unused slots; archive only overwrites the first N from JS.
+    std::array<monument_phase_resource, 6> resources{};
 };
+ANK_CONFIG_STRUCT(monument_phase, id, resources)
 
 struct monument {
-    e_building_type btype;
+    e_building_type btype = BUILDING_NONE;
     hvector<monument_phase, 16> phases;
 };
+ANK_CONFIG_STRUCT(monument, phases)
 
 class building_monument : public building_impl {
 public:

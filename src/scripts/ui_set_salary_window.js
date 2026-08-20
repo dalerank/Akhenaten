@@ -4,6 +4,7 @@ function salary_rank_text(rank, _) {
     return city.rank_title(rank) + ": " + city.rank_salary(rank) + " " + __loc("#top_menu_funds")
 }
 
+[es=(set_salary_window, click_item), es=(set_salary_window_mansion, click_item)]
 function set_salary_window_list_on_click_item(p) {
     city.apply_salary_rank(p.user_data)
     window_go_back()
@@ -41,11 +42,21 @@ set_salary_window {
                                 draw_scrollbar_always: false
                                 draw_paneling: true
                                 onrender_item: set_salary_window_list_on_render_item
-                                onclick_item: set_salary_window_list_on_click_item
+                                onclick_event: "click_item"
                             })
         explanation_text : text({pos[16, 304], size[px(22), -1], wrap:px(22), font: FONT_NORMAL_BLACK_ON_LIGHT, multiline:true})
-        btn_cancel       : button({margin{centerx: -80, bottom: -40}, size[160, 20], text[13, 4], font: FONT_NORMAL_BLACK_ON_LIGHT, onclick: window_go_back})
+        btn_cancel       : button({margin{centerx: -80, bottom: -40}, size[160, 20], text[13, 4], font: FONT_NORMAL_BLACK_ON_LIGHT })
     }
+}
+
+[es=(set_salary_window, btn_cancel)]
+function set_salary_window_btn_cancel(window) {
+    window_go_back()
+}
+
+[es=(set_salary_window_mansion, btn_cancel)]
+function set_salary_window_mansion_btn_cancel(window) {
+    window_go_back()
 }
 
 [es=modal_window]

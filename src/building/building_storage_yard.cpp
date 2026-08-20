@@ -351,7 +351,7 @@ static bool determine_granary_accept_foods(resource_list &foods, int road_networ
             return;
         }
 
-        if (road_network != granary->road_network()) {
+        if (!building_granary_touches_network(b, road_network)) {
             return;
         }
 

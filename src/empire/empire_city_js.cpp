@@ -1,6 +1,7 @@
 #include "empire/empire.h"
 #include "empire/empire_city.h"
 #include "empire/empire_object.h"
+#include "empire/empire_traders.h"
 #include "js/js_game.h"
 #include "js/js.h"
 #include "js/js_mujs_bound_offset.h"
@@ -8,6 +9,7 @@
 #include "mujs/jsvalue.h"
 #include "mujs/mujs.h"
 #include "scenario/scenario.h"
+#include "scenario/scenario_invasion.h"
 
 #include <cstdio>
 
@@ -213,4 +215,132 @@ void js_register_empire_city_proto(js_State* J) {
 
     js_newcconstructor(J, jsB_new_EmpireCity, jsB_new_EmpireCity, js_intern("EmpireCity"), 1);
     js_defglobal(J, js_intern("EmpireCity"), JS_DONTENUM);
+}
+
+static js_Object* g_empire_trader_proto = nullptr;
+static js_Object* g_invasion_warning_proto = nullptr;
+
+static void proto_set_readonly(js_State* J) {
+    (void)J;
+}
+
+static void proto_def_readonly(js_State* J, js_CFunction get, const char* name) {
+    js_newcfunction(J, get, js_intern(""), 0);
+    js_newcfunction(J, proto_set_readonly, js_intern(""), 1);
+    js_defaccessor(J, -3, js_intern(name), 0);
+}
+
+static int empire_trader_this_index(js_State* J) {
+    J->getproperty(J->toobject(0), js_intern("id"));
+    const int id = (int)js_tointeger(J, -1);
+    js_pop(J, 1);
+    return id;
+}
+
+static empire_trader* empire_trader_this_ptr(js_State* J) {
+    const int index = empire_trader_this_index(J);
+    if (index < 0 || index >= (int)g_empire_traders.traders.size()) {
+        return nullptr;
+    }
+    return &g_empire_traders.traders[index];
+}
+
+static void empire_trader_proto_current_position(js_State* J) {
+    empire_trader* t = empire_trader_this_ptr(J);
+    js_helpers::js_push_value<vec2i>(J, t ? t->current_position : vec2i{});
+}
+
+static void empire_trader_proto_faces_left(js_State* J) {
+    empire_trader* t = empire_trader_this_ptr(J);
+    js_helpers::js_push_value(J, t ? t->faces_left() : false);
+}
+
+static void empire_trader_proto_toString(js_State* J) {
+    char buf[64];
+    snprintf(buf, sizeof buf, "EmpireTrader(%d)", empire_trader_this_index(J));
+    J->pushstring(buf);
+}
+
+static void js_push_empire_trader(js_State* J, int index) {
+    empire_trader* t = nullptr;
+    if (index >= 0 && index < (int)g_empire_traders.traders.size()) {
+        t = &g_empire_traders.traders[index];
+    }
+    js_pushobject(J, jsV_newobject(J, JS_COBJECT, g_empire_trader_proto));
+    js_pushnumber(J, (double)index);
+    js_setproperty(J, -2, js_intern("id"));
+    js_register_cobj_ptr_property(J, t);
+}
+
+static void jsB_new_EmpireTrader(js_State* J) {
+    const int index = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
+    js_push_empire_trader(J, index);
+}
+
+void js_register_empire_trader_proto(js_State* J) {
+    g_empire_trader_proto = jsV_newobject(J, JS_COBJECT, J->Object_prototype);
+    js_pushobject(J, g_empire_trader_proto);
+    JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, empire_trader, is_ship);
+    JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, empire_trader, is_active);
+    JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, empire_trader, trade_route_id);
+    JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, empire_trader, destination_city_id);
+    proto_def_readonly(J, empire_trader_proto_current_position, "current_position");
+    proto_def_readonly(J, empire_trader_proto_faces_left, "faces_left");
+    jsB_propf(J, js_intern("EmpireTrader.prototype.toString"), empire_trader_proto_toString, 0);
+    js_newcconstructor(J, jsB_new_EmpireTrader, jsB_new_EmpireTrader, js_intern("EmpireTrader"), 1);
+    js_defglobal(J, js_intern("EmpireTrader"), JS_DONTENUM);
+}
+
+static int invasion_warning_this_index(js_State* J) {
+    J->getproperty(J->toobject(0), js_intern("id"));
+    const int id = (int)js_tointeger(J, -1);
+    js_pop(J, 1);
+    return id;
+}
+
+static invasion_warning_t* invasion_warning_this_ptr(js_State* J) {
+    const int index = invasion_warning_this_index(J);
+    if (index < 0 || index >= (int)g_invasions.warnings.size()) {
+        return nullptr;
+    }
+    return &g_invasions.warnings[index];
+}
+
+static void invasion_warning_proto_pos(js_State* J) {
+    invasion_warning_t* w = invasion_warning_this_ptr(J);
+    js_helpers::js_push_value<vec2i>(J, w ? w->pos : vec2i{});
+}
+
+static void invasion_warning_proto_toString(js_State* J) {
+    char buf[64];
+    snprintf(buf, sizeof buf, "InvasionWarning(%d)", invasion_warning_this_index(J));
+    J->pushstring(buf);
+}
+
+static void js_push_invasion_warning(js_State* J, int index) {
+    invasion_warning_t* w = nullptr;
+    if (index >= 0 && index < (int)g_invasions.warnings.size()) {
+        w = &g_invasions.warnings[index];
+    }
+    js_pushobject(J, jsV_newobject(J, JS_COBJECT, g_invasion_warning_proto));
+    js_pushnumber(J, (double)index);
+    js_setproperty(J, -2, js_intern("id"));
+    js_register_cobj_ptr_property(J, w);
+}
+
+static void jsB_new_InvasionWarning(js_State* J) {
+    const int index = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
+    js_push_invasion_warning(J, index);
+}
+
+void js_register_invasion_warning_proto(js_State* J) {
+    g_invasion_warning_proto = jsV_newobject(J, JS_COBJECT, J->Object_prototype);
+    js_pushobject(J, g_invasion_warning_proto);
+    JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, invasion_warning_t, in_use);
+    JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, invasion_warning_t, handled);
+    JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, invasion_warning_t, image_id);
+    proto_def_readonly(J, invasion_warning_proto_pos, "pos");
+    jsB_propf(J, js_intern("InvasionWarning.prototype.toString"), invasion_warning_proto_toString, 0);
+    js_newcconstructor(J, jsB_new_InvasionWarning, jsB_new_InvasionWarning, js_intern("InvasionWarning"), 1);
+    js_defglobal(J, js_intern("InvasionWarning"), JS_DONTENUM);
 }

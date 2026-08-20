@@ -205,10 +205,16 @@ function window_features_rebuild_button_features(window) {
         var option = window["bfeature" + i]
         var label = window["tfeature" + i]
         var f = window_features.button_features[i]
-        option.onclick = f ? f.toggle : undefined
         option.enabled = f ? true : false
         option.checkedfn = f ? f.checkedfn : undefined
         label.text = f ? f.text : ""
+    }
+}
+
+function window_features_toggle_slot(index) {
+    var f = window_features.button_features[index]
+    if (f && f.toggle) {
+        f.toggle(0, 0)
     }
 }
 
@@ -267,8 +273,8 @@ window_features {
 
         title         : text({pos:[0, 16], size:[px(40), 20], align:"center", font:FONT_LARGE_BLACK_ON_LIGHT})
 
-        btn_prev      : button({margin:{left:20, top:16}, size:[50, 25], text:"Prev",  onclick: window_features_btn_prev})
-        btn_next      : button({margin:{right:-70, top:16}, size:[50, 25], text:"Next", onclick: window_features_btn_next})
+        btn_prev      : button({margin:{left:20, top:16}, size:[50, 25], text:"Prev"})
+        btn_next      : button({margin:{right:-70, top:16}, size:[50, 25], text:"Next"})
 
         bfeature0     : checkbox({pos:wposbtn(0)})
         tfeature0     : text({pos:wpostxt(0)  })
@@ -299,11 +305,70 @@ window_features {
         bfeature13    : checkbox({pos:wposbtn(13)})
         tfeature13    : text({pos:wpostxt(13) })
 
-        btn_defaults  : button({pos:[250, 436], size:[150, 30], text:"#TR_BUTTON_RESET_DEFAULTS",      onclick: window_features_btn_defaults}),
-        btn_hotkeys   : button({pos:[90,  436], size:[150, 30], text:"#TR_BUTTON_CONFIGURE_HOTKEYS",   onclick: window_features_btn_hotkeys}),
-        btn_close     : button({pos:[410, 436], size:[100, 30], text:"#TR_BUTTON_CANCEL",              onclick: window_features_btn_close}),
-        btn_save      : button({pos:[520, 436], size:[100, 30], text:"#TR_BUTTON_OK",                  onclick: window_features_btn_save})
+        btn_defaults  : button({pos:[250, 436], size:[150, 30], text:"#TR_BUTTON_RESET_DEFAULTS"})
+        btn_hotkeys   : button({pos:[90,  436], size:[150, 30], text:"#TR_BUTTON_CONFIGURE_HOTKEYS"})
+        btn_close     : button({pos:[410, 436], size:[100, 30], text:"#TR_BUTTON_CANCEL"})
+        btn_save      : button({pos:[520, 436], size:[100, 30], text:"#TR_BUTTON_OK"})
     }
+}
+
+[es=(window_features, bfeature0)]
+function window_features_on_bfeature0(window) { window_features_toggle_slot(0) }
+[es=(window_features, bfeature1)]
+function window_features_on_bfeature1(window) { window_features_toggle_slot(1) }
+[es=(window_features, bfeature2)]
+function window_features_on_bfeature2(window) { window_features_toggle_slot(2) }
+[es=(window_features, bfeature3)]
+function window_features_on_bfeature3(window) { window_features_toggle_slot(3) }
+[es=(window_features, bfeature4)]
+function window_features_on_bfeature4(window) { window_features_toggle_slot(4) }
+[es=(window_features, bfeature5)]
+function window_features_on_bfeature5(window) { window_features_toggle_slot(5) }
+[es=(window_features, bfeature6)]
+function window_features_on_bfeature6(window) { window_features_toggle_slot(6) }
+[es=(window_features, bfeature7)]
+function window_features_on_bfeature7(window) { window_features_toggle_slot(7) }
+[es=(window_features, bfeature8)]
+function window_features_on_bfeature8(window) { window_features_toggle_slot(8) }
+[es=(window_features, bfeature9)]
+function window_features_on_bfeature9(window) { window_features_toggle_slot(9) }
+[es=(window_features, bfeature10)]
+function window_features_on_bfeature10(window) { window_features_toggle_slot(10) }
+[es=(window_features, bfeature11)]
+function window_features_on_bfeature11(window) { window_features_toggle_slot(11) }
+[es=(window_features, bfeature12)]
+function window_features_on_bfeature12(window) { window_features_toggle_slot(12) }
+[es=(window_features, bfeature13)]
+function window_features_on_bfeature13(window) { window_features_toggle_slot(13) }
+
+[es=(window_features, btn_defaults)]
+function window_features_on_btn_defaults(window) {
+    window_features_btn_defaults()
+}
+
+[es=(window_features, btn_hotkeys)]
+function window_features_on_btn_hotkeys(window) {
+    window_features_btn_hotkeys()
+}
+
+[es=(window_features, btn_close)]
+function window_features_on_btn_close(window) {
+    window_features_btn_close()
+}
+
+[es=(window_features, btn_save)]
+function window_features_on_btn_save(window) {
+    window_features_btn_save()
+}
+
+[es=(window_features, btn_prev)]
+function window_features_on_btn_prev(window) {
+    window_features_btn_prev()
+}
+
+[es=(window_features, btn_next)]
+function window_features_on_btn_next(window) {
+    window_features_btn_next()
 }
 
 // ---- Init ----

@@ -111,17 +111,7 @@ empire.get_object = function(object_id) {
 }
 
 empire.get_trader = function(index) {
-    return {
-        trader_index: index
-        __property_getter: function(property) { return __empire_trader_get_property(this.trader_index, property) }
-        @current_position {}
-        @is_ship {}
-        @is_active {}
-        @id {}
-        @trade_route_id {}
-        @destination_city_id {}
-        @faces_left { get: function() { return __empire_trader_faces_left(this.trader_index) } }
-    }
+    return new EmpireTrader(index)
 }
 
 empire.get_city = function(city_id) {

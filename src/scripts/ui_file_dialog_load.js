@@ -107,6 +107,11 @@ file_dialog_load {
     })
 }
 
+[es=(file_dialog_load, go_back)]
+function file_dialog_load_es_go_back(window) {
+    window_go_back()
+}
+
 [es=(file_dialog_load, on_filename_input)]
 function file_dialog_load_es_on_filename_input(ev) {
     file_dialog_load_set_show_filename(ev.value)

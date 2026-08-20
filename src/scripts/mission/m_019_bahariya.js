@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 19 bahariya started")
 
-// Empire / invasions verified vs mission1.pak scenario 19 (2026-07-26 dump).
+// Empire / invasions aligned with original campaign scenario 19 (2026-07-26 dump).
 // Empire id=18. Enemy ENEMY_5_HYKSOS (scenario); timed enemy + beduin raids (Libyan sprites).
 // Gods: Ra, Seth. Funds Normal 7500 / loan 2500 / debt 20.
 // Win: pop 3000 / culture 15 / prosperity 25 / monuments 13 / kingdom 40 / housing 10.

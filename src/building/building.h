@@ -30,6 +30,7 @@
 #include "core/xfunction.h"
 #include "core/archive.h"
 #include "core/object_property.h"
+#include "core/svector.h"
 
 #include <stdint.h>
 #include <algorithm>
@@ -245,6 +246,7 @@ public:
     uint16_t deben_storage;
     animation_context anim;
     std::array<animation_context, 4> anims;
+    svector<building_overlay_anim, 4> overlay_anims;
     std::array<figure_id, max_figures> figure_ids;
     char runtime_data[186] = { 0 };
     bool play_animation = false;

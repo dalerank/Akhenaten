@@ -154,7 +154,8 @@ void figure_info_window::init(object_info &c) {
     }
 
     const auto &meta = figure_static_params::get(f->type).meta;
-    c.help_id = meta.help_id;
+    c.help_link = meta.help_link;
+    c.help_id = 0;
     c.group_id = meta.text_id;
 
     auto sound_reaction = f->dcast()->get_sound_reaction(f->phrase_key);

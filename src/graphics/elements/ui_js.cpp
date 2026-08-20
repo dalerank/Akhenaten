@@ -219,6 +219,13 @@ int ANK_FUNCTION_UNIFIED(__ui_draw_button)(const bvariant_map &args) {
     int lmb_click = 0;
     generic_buttons_handle_mouse(&mouse::ref(), vec2i{0, 0}, &btn, 1, nullptr, &lmb_click);
     if (lmb_click) {
+        const xstring onclick_event = args.s("onclick_event");
+        if (!onclick_event.empty()) {
+            const int32_t p1 = args.i32("param1", 0);
+            const int32_t p2 = args.i32("param2", 0);
+            ui::dispatch_autoconfig_es_event(ui::get_current_widget(), onclick_event,
+                bvariant_map{{"param1", p1}, {"param2", p2}});
+        }
         return 1;
     }
     return btn.hovered ? 2 : 0;
@@ -592,29 +599,6 @@ void ui::proxy_set_tooltip(js_State* J) {
     J->pushundefined();
 }
 
-void ui::proxy_set_onclick(js_State* J) {
-    auto elem = GET_ELEM(J);
-    if (!elem) {
-        J->pushundefined();
-        return;
-    }
-
-    if (js_isnull(J, 1) || js_isundefined(J, 1)) {
-        elem->set_ref(ui::element::ONCLICK, "");
-        J->pushundefined();
-        return;
-    }
-
-    if (!J->iscallable(1)) {
-        elem->set_ref(ui::element::ONCLICK, "");
-        J->pushundefined();
-        return;
-    }
-
-    js_copy(J, 1);
-    elem->set_ref(ui::element::ONCLICK, js_xref(J));
-    J->pushundefined();
-}
 void ui::proxy_set_ondraw(js_State* J) {
     auto elem = GET_ELEM(J);
     if (!elem) {

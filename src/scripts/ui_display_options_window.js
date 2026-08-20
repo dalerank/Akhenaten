@@ -71,6 +71,11 @@ display_options_window {
         save_changes: text({margin{left:px(24)/2 - 80, bottom:-35}, text[43, 5]})
 
         btnok       : ok_button({margin{left:px(24)/2 + 10, bottom:-40}, onclick_event: "apply_resolution" })
-        btncancel   : cancel_button({margin{left:px(24)/2 + 60, bottom:-40}, onclick: window_go_back })
+        btncancel   : cancel_button({margin{left:px(24)/2 + 60, bottom:-40}, onclick_event: "go_back" })
     }
+}
+
+[es=(display_options_window, go_back)]
+function display_options_window_go_back(window) {
+    window_go_back()
 }

@@ -17,6 +17,7 @@
 #include "grid/image.h"
 #include "grid/road_access.h"
 #include "js/js_game.h"
+#include "building/building_granary.h"
 
 #include <algorithm>
 
@@ -227,7 +228,11 @@ int building_food_mill::better_getting_source() {
         }
 
         if (!game_features::gameplay_change_getting_granaries_go_offroad) {
-            if (dest->road_network() != road_network()) {
+            if (b.dcast_granary()) {
+                if (!building_granary_touches_network(b, road_network())) {
+                    continue;
+                }
+            } else if (dest->road_network() != road_network()) {
                 continue;
             }
         }
@@ -278,6 +283,11 @@ granary_getting_result building_food_mill::find_storage_for_getting() {
     }
 
     building *better_b = building_get(min_building_id);
+    if (better_b->dcast_granary()) {
+        tile2i prefer = base.road_access.valid() ? base.road_access : base.tile;
+        tile2i access = building_granary_access_on_network(*better_b, road_network(), prefer);
+        return {min_building_id, access.valid() ? access : better_b->access_tile()};
+    }
     return {min_building_id, better_b->access_tile()};
 }
 

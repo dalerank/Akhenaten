@@ -8,8 +8,8 @@ building_large_statue = {
       {pack: PACK_EXPANSION, id: 35, offset:5},
     ]
     meta : {
-      help_id:79
       text_id:80
+      help_link:"message_building_garden_plaze_statue"
     }
     info_sound : "Wavs/statue1.wav"
     building_size : 3

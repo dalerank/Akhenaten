@@ -809,6 +809,13 @@ localization_ru = [
     { key: "#zoo_access_medium", text: "У этого дома есть доступ к зоопарку" }
     { key: "#zoo_access_low", text: "Мимо этого дома давно не проходил смотритель зоопарка. Он скоро потеряет доступ к зоопарку" }
     { key: "#building_removed_zoo", text: "Зоопарк не может работать и был удалён. Город не может производить или импортировать солому либо дичь." }
+    { key: "#zoo_info_ok", text: "Экзотические животные со всего мира радуют толпы горожан в зоопарке." }
+    { key: "#zoo_info_needs_meat", text: "В этом зоопарке есть смотрители, но нужен запас дичи, прежде чем животные смогут назвать его домом." }
+    { key: "#zoo_info_needs_straw", text: "В этом зоопарке есть сотрудники, но без соломы он не может принимать животных." }
+    { key: "#zoo_info_no_workers", text: "Люди боятся посещать зоопарк без смотрителей. Пока зоопарк не найдёт сотрудников, он не принесёт району никакой пользы." }
+    { key: "#zoo_info_empty_cages", text: "Без животных этот зоопарк - не более чем пустые клетки." }
+    { key: "#zoo_info_game_meat", text: "Дичь:" }
+    { key: "#zoo_info_straw", text: "Солома:" }
     { key: "#building_needs_game_meat", text: "Этому зданию нужна дичь" }
 
     // pavilion overlay
@@ -861,6 +868,10 @@ localization_ru = [
     { key: "#library_access_high", text: "Мимо этого дома недавно проходил библиотекарь. У него будет доступ к библиотеке надолго" }
     { key: "#library_access_medium", text: "У этого дома есть доступ к библиотеке" }
     { key: "#library_access_low", text: "Если библиотекарь не пройдёт мимо него скоро, этот дом потеряет доступ к библиотеке" }
+    { key: "#library_info", group:87, id:1 }
+    { key: "#library_info_idle", group:87, id:2 }
+    { key: "#library_info_ok", group:87, id:3 }
+    { key: "#sheets_of_papyrus", group:23, id:77 }
 
     // academy overlay
     { key: "#academy_access_none", text: "У этого дома нет доступа к академии" }
@@ -944,6 +955,16 @@ localization_ru = [
     { key: "#top_menu_buildings_off", text: "Здания ВЫКЛ" }
     { key: "#top_menu_js_debugger_on", text: "JS-отладчик ВКЛ" }
     { key: "#top_menu_js_debugger_off", text: "JS-отладчик ВЫКЛ" }
+    { key: "#top_menu_editor_new_map", text: "Новая карта" }
+    { key: "#top_menu_editor_load_map", text: "Загрузить карту" }
+    { key: "#top_menu_editor_save_map", text: "Сохранить карту" }
+    { key: "#top_menu_editor_exit", text: "Выйти из редактора" }
+    { key: "#top_menu_editor_resets", text: "Сброс" }
+    { key: "#top_menu_editor_clear_herds", text: "Очистить точки убийц" }
+    { key: "#top_menu_editor_clear_fish", text: "Очистить рыбу" }
+    { key: "#top_menu_editor_clear_invasions", text: "Очистить вторжения" }
+    { key: "#top_menu_editor_empire", text: "Королевство" }
+    { key: "#top_menu_editor_empire_choose", text: "Редактировать королевство" }
 
     { key: "#sidebar_speed_header", text: "Скорость" }
 

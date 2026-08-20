@@ -7,7 +7,7 @@ building_shrine_osiris = {
     }
     labor_category : LABOR_CATEGORY_RELIGION
     overlay : OVERLAY_RELIGION_OSIRIS
-    meta : { help_id: 67, text_id: 161 }
+    meta : { text_id: 161, help_link:"message_building_shrine_and_temple" }
     info_sound : "Wavs/shr_osiris.wav"
     building_size : 1
     cost: [ 20, 30, 50, 80, 120 ]
@@ -27,7 +27,7 @@ building_shrine_osiris = {
     },
     labor_category : LABOR_CATEGORY_RELIGION,
     overlay : OVERLAY_RELIGION_RA,
-    meta : { help_id: 67, text_id: 161 }
+    meta : { text_id: 161, help_link:"message_building_shrine_and_temple" }
     info_sound : "Wavs/SHR_RA.wav"
     building_size : 1
     cost: [ 20, 30, 50, 80, 120 ]
@@ -47,7 +47,7 @@ building_shrine_osiris = {
     },
     labor_category : LABOR_CATEGORY_RELIGION,
     overlay : OVERLAY_RELIGION_PTAH,
-    meta : { help_id: 67, text_id: 161 }
+    meta : { text_id: 161, help_link:"message_building_shrine_and_temple" }
     info_sound : "Wavs/SHR_PTAH.wav"
     building_size : 1
     cost: [ 20, 30, 50, 80, 120 ]
@@ -67,7 +67,7 @@ building_shrine_osiris = {
     },
     labor_category : LABOR_CATEGORY_RELIGION,
     overlay : OVERLAY_RELIGION_SETH,
-    meta : { help_id: 67, text_id: 161 }
+    meta : { text_id: 161, help_link:"message_building_shrine_and_temple" }
     info_sound : "Wavs/SHR_SETH.wav"
     building_size : 1
     cost: [ 20, 30, 50, 80, 120 ]
@@ -87,7 +87,7 @@ building_shrine_osiris = {
     },
     labor_category : LABOR_CATEGORY_RELIGION,
     overlay : OVERLAY_RELIGION_BAST,
-    meta : { help_id: 67, text_id: 161 }
+    meta : { text_id: 161, help_link:"message_building_shrine_and_temple" }
     info_sound : "Wavs/SHR_BAST.wav"
     building_size : 1
     cost: [ 20, 30, 50, 80, 120 ]

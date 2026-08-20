@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 21 dunqul started")
 
-// Empire / events verified vs mission1.pak scenario 21 (2026-07-26 dump).
+// Empire / events aligned with original campaign scenario 21 (2026-07-26 dump).
 // Empire id=0. Enemy ENEMY_4_HITTITE (scenario); beduin raids (Libyan sprites); favour Pharaoh×66.
 // Gods: Ra, Ptah, Seth. Funds Normal 6000 / loan 1500 / debt 15. Rank 8.
 // Win: pop 3500 / culture 20 / prosperity 20 / monuments TEMP 9 (pak 6 small obelisk) / kingdom 80 / housing 14.

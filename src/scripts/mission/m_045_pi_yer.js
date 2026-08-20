@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 45 pi-yer started")
 
-// Empire / events verified vs Cleop mission1.pak scenario 45 (2026-07-28 dump).
+// Empire / events verified vs Cleop original campaign scenario 45 (2026-07-28 dump).
 // Empire id=1. Scenario enemy ENEMY_1_ASSYRIAN (briefing = Sea Peoples / Maraye — pak id wins).
 // Gods: Osiris(2), Seth(1). Subtitle: The Sea People Land. Start year -1235.
 // Funds Normal 10080 / loan 3000 / debt_interest 7. Rank 4 (pak; first AC mission).

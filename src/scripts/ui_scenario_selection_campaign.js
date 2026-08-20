@@ -64,26 +64,6 @@ function campaign_period_set_selected(index) {
     emit window_scenario_selection_campaign.period_changed { index: index }
 }
 
-function campaign_period_select(index) {
-    return function() {
-        campaign_period_set_selected(index)
-    }
-}
-
-function campaign_period_hover(index) {
-    return function() {
-        window_scenario_selection_campaign.period_hover = index
-        emit window_scenario_selection_campaign.period_changed { index: index }
-    }
-}
-
-function campaign_period_unhover() {
-    window_scenario_selection_campaign.period_hover = -1
-    emit window_scenario_selection_campaign.period_changed {
-        index: window_scenario_selection_campaign.period_selected
-    }
-}
-
 function campaign_period_refresh_ui(ev) {
     var tab = window_scenario_selection_campaign.active_tab
     var campaigns = (tab === CAMPAIGN_TAB_CAMPAIGNS)
@@ -182,32 +162,76 @@ window_scenario_selection_campaign {
         campaign_hover_thumb : image_queue({ pos[270, 200], size[256, 152], fit:true, fade_ms:280, pack:PACK_UNLOADED, id:28, offset:0 })
 
         // Button block below portrait (thumb bottom ~352), with clear gap under the frame.
-        tab_individual : large_button({ pos[210, 370], size[144, 24], text[294, 38], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: campaign_tab_individual })
-        tab_campaigns  : large_button({ pos[362, 370], size[144, 24], text[294, 39], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: campaign_tab_campaigns })
+        tab_individual : large_button({ pos[210, 370], size[144, 24], text[294, 38], font:FONT_NORMAL_BLACK_ON_LIGHT })
+        tab_campaigns  : large_button({ pos[362, 370], size[144, 24], text[294, 39], font:FONT_NORMAL_BLACK_ON_LIGHT })
 
         // Original Explore History: Pharaoh section (2-col), then Cleopatra section (2-col) below.
         hdr_pharaoh : text({ pos[210, 420], size[144, 18], text[294, 41], font:FONT_NORMAL_BLACK_ON_LIGHT })
-        camp_0 : large_button({ pos[210, 445], size[144, 25], text[294, 0], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: campaign_period_select(0), onhover: campaign_period_hover(0), onunhover: campaign_period_unhover })
-        camp_1 : large_button({ pos[210, 475], size[144, 25], text[294, 4], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: campaign_period_select(1), onhover: campaign_period_hover(1), onunhover: campaign_period_unhover })
-        camp_2 : large_button({ pos[362, 415], size[144, 25], text[294, 8], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: campaign_period_select(2), onhover: campaign_period_hover(2), onunhover: campaign_period_unhover })
-        camp_3 : large_button({ pos[362, 445], size[144, 25], text[294, 12], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: campaign_period_select(3), onhover: campaign_period_hover(3), onunhover: campaign_period_unhover })
-        camp_4 : large_button({ pos[362, 475], size[144, 25], text[294, 16], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: campaign_period_select(4), onhover: campaign_period_hover(4), onunhover: campaign_period_unhover })
+        camp_0 : large_button({ pos[210, 445], size[144, 25], text[294, 0], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 0, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
+        camp_1 : large_button({ pos[210, 475], size[144, 25], text[294, 4], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 1, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
+        camp_2 : large_button({ pos[362, 415], size[144, 25], text[294, 8], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 2, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
+        camp_3 : large_button({ pos[362, 445], size[144, 25], text[294, 12], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 3, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
+        camp_4 : large_button({ pos[362, 475], size[144, 25], text[294, 16], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 4, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
 
         hdr_cleopatra : text({ pos[210, 515], size[144, 18], text[294, 42], font:FONT_NORMAL_BLACK_ON_LIGHT })
-        camp_5 : large_button({ pos[210, 530], size[144, 25], text[294, 20], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: campaign_period_select(5), onhover: campaign_period_hover(5), onunhover: campaign_period_unhover })
-        camp_6 : large_button({ pos[210, 560], size[144, 25], text[294, 24], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: campaign_period_select(6), onhover: campaign_period_hover(6), onunhover: campaign_period_unhover })
-        camp_7 : large_button({ pos[362, 530], size[144, 25], text[294, 28], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: campaign_period_select(7), onhover: campaign_period_hover(7), onunhover: campaign_period_unhover })
-        camp_8 : large_button({ pos[362, 560], size[144, 25], text[294, 32], font:FONT_NORMAL_BLACK_ON_LIGHT, onclick: campaign_period_select(8), onhover: campaign_period_hover(8), onunhover: campaign_period_unhover })
+        camp_5 : large_button({ pos[210, 530], size[144, 25], text[294, 20], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 5, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
+        camp_6 : large_button({ pos[210, 560], size[144, 25], text[294, 24], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 6, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
+        camp_7 : large_button({ pos[362, 530], size[144, 25], text[294, 28], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 7, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
+        camp_8 : large_button({ pos[362, 560], size[144, 25], text[294, 32], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 8, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
 
         campaign_hover_subtitle : text_center({ pos[545, 208], size[265, 22], align:"center", font:FONT_LARGE_BLACK_ON_DARK })
         campaign_hover_body : text({ pos[545, 250], size[265, 200], wrap:px(16), font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
 
         // Exit / Play along the bottom edge of the dialog.
-        btn_exit : image_button({ pos[215, 590], size[31, 20], pack:PACK_GENERAL, id:90, offset:8, onclick: window_go_back })
+        btn_exit : image_button({ pos[215, 590], size[31, 20], pack:PACK_GENERAL, id:90, offset:8 })
         lbl_exit : text({ pos[250, 592], text[44, 217], font:FONT_NORMAL_BLACK_ON_LIGHT })
-        btn_exit_hit : button({ pos[215, 605], size[110, 30], text:"", hbody:false, border:false, onclick: window_go_back })
+        btn_exit_hit : button({ pos[215, 605], size[110, 30], text:"", hbody:false, border:false })
 
         lbl_play : text({ pos[735, 590], text[294, 37], font:FONT_NORMAL_BLACK_ON_LIGHT })
-        btn_play : image_button({ pos[780, 585], size[27, 27], pack:PACK_GENERAL, id:193, offset:4, onclick: campaign_btn_play })
+        btn_play : image_button({ pos[780, 585], size[27, 27], pack:PACK_GENERAL, id:193, offset:4 })
     }
+}
+
+[es=(window_scenario_selection_campaign, select_period)]
+function window_scenario_selection_campaign_on_select_period(window, ev) {
+    campaign_period_set_selected(Math.round(ev.param1))
+}
+
+[es=(window_scenario_selection_campaign, hover_period)]
+function window_scenario_selection_campaign_on_hover_period(window, ev) {
+    window_scenario_selection_campaign.period_hover = Math.round(ev.param1)
+    emit window_scenario_selection_campaign.period_changed { index: Math.round(ev.param1) }
+}
+
+[es=(window_scenario_selection_campaign, unhover_period)]
+function window_scenario_selection_campaign_on_unhover_period(window) {
+    window_scenario_selection_campaign.period_hover = -1
+    emit window_scenario_selection_campaign.period_changed {
+        index: window_scenario_selection_campaign.period_selected
+    }
+}
+
+[es=(window_scenario_selection_campaign, tab_individual)]
+function window_scenario_selection_campaign_on_tab_individual(window) {
+    campaign_tab_individual()
+}
+
+[es=(window_scenario_selection_campaign, tab_campaigns)]
+function window_scenario_selection_campaign_on_tab_campaigns(window) {
+    campaign_tab_campaigns()
+}
+
+[es=(window_scenario_selection_campaign, btn_exit)]
+function window_scenario_selection_campaign_on_btn_exit(window) {
+    window_go_back()
+}
+
+[es=(window_scenario_selection_campaign, btn_exit_hit)]
+function window_scenario_selection_campaign_on_btn_exit_hit(window) {
+    window_go_back()
+}
+
+[es=(window_scenario_selection_campaign, btn_play)]
+function window_scenario_selection_campaign_on_btn_play(window) {
+    campaign_btn_play()
 }

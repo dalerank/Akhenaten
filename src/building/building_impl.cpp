@@ -22,6 +22,10 @@
 #include "js/js_game.h"
 #include "js/js_struct.h"
 #include "game/game_config.h"
+#include "graphics/graphics.h"
+
+#include <algorithm>
+#include <cmath>
 
 struct building_ev { building_id bid; };
 ANK_REGISTER_STRUCT_WRITER(building_ev, bid)
@@ -45,6 +49,7 @@ void building_impl::on_place(int orientation, int variant) {
     base.output_resource_second_rate = p.output_resource_second_rate;
 
     on_place_update_tiles(orientation, variant);
+    seed_default_overlays();
     update_animation();
     update_graphic();
 }
@@ -101,6 +106,7 @@ void building_impl::remove_dead_figures() {
 
 void building_impl::on_post_load() {
     base.setup_static_flags();
+    seed_default_overlays();
     update_animation();
     update_graphic();
     remove_dead_figures();
@@ -183,6 +189,8 @@ bool building_impl::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
 
         ImageDraw::generic_sub(ctx, ImageId{skull_img}, Pixel{vec2i{point.x + 18, point.y - 32}}, Mask{color_mask});
     }
+
+    draw_overlay_anims(ctx, point, color_mask);
 
     return false;
 }

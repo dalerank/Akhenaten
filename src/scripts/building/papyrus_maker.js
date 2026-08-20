@@ -16,7 +16,7 @@ building_papyrus_maker = {
   production_rate : 50,
   production_rate_dcy : [100, 80, 70, 60, 50],
   building_size : 2,
-  meta : { help_id:1, text_id:190 }
+  meta : { text_id:190, help_link:"message_building_papyrus_maker" }
   info_sound : "Wavs/paper.wav"
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   cost: [ 20, 30, 50, 100, 200 ]

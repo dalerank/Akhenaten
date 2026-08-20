@@ -72,4 +72,5 @@ import building.brick_gatehouse
 import building.mud_gatehouse
 import building.decorative_gatehouse
 import building.tower_gatehouse
-
+import building.zoo
+import building.conservatory

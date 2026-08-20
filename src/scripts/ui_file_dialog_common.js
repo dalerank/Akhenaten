@@ -89,6 +89,6 @@ file_dialog_chrome_base {
 
         hint: text({ margin{centerx:-80, bottom:-35}, align: "center", font: FONT_NORMAL_BLACK_ON_LIGHT, text: "" })
         btn_ok: ok_button({ margin{centerx:0, bottom:-40}, onclick_event: "on_ok" })
-        btn_cancel: cancel_button({ margin{centerx:50, bottom:-40}, onclick: window_go_back })
+        btn_cancel: cancel_button({ margin{centerx:50, bottom:-40}, onclick_event: "go_back" })
     }
 }

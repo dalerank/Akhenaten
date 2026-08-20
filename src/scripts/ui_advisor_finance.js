@@ -21,8 +21,8 @@ advisor_financial_window {
 
                         tax_payers : text({margin:{left:10, top:60}, font:FONT_NORMAL_WHITE_ON_DARK})
 
-                        dec_tax    : arrowdown({margin:{left:170, top:25}, tiny:false, onclick:advisor_financial_window_dec_tax})
-                        inc_tax    : arrowup({margin:{left:195, top:25}, tiny:false, onclick:advisor_financial_window_inc_tax})
+                        dec_tax    : arrowdown({margin:{left:170, top:25}, tiny:false})
+                        inc_tax    : arrowup({margin:{left:195, top:25}, tiny:false})
                     }
                 })
 
@@ -39,8 +39,15 @@ advisor_financial_window {
     })
 }
 
-function advisor_financial_window_inc_tax() { emit event_finance_change_tax{ value: 1 } }
-function advisor_financial_window_dec_tax() { emit event_finance_change_tax{ value: -1 } }
+[es=(advisor_financial_window, dec_tax)]
+function advisor_financial_window_on_dec_tax(window) {
+    emit event_finance_change_tax{ value: -1 }
+}
+
+[es=(advisor_financial_window, inc_tax)]
+function advisor_financial_window_on_inc_tax(window) {
+    emit event_finance_change_tax{ value: 1 }
+}
 
 function advisor_financial_window_update(window) {
     var ctreasury = city.finance.treasury

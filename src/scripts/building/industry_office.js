@@ -15,7 +15,7 @@ building_industry_office {
   building_size : 2
   management_radius : 7
   max_storage_amount : 100
-  meta { help_id: 2, text_id: 97 }
+  meta { text_id: 97, help_link:"message_game_concept_industry" }
   info_sound : "Wavs/forum.WAV"
   cost [ 25, 40, 70, 120, 200 ]
   desirability { value[2], step[1], step_size[-1], range[3] }

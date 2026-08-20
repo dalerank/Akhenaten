@@ -3,23 +3,39 @@ log_info("akhenaten: building menu ctrl started")
 var building_menu_ctrl = {
     enabled: {}
     visible: {}
+    count_cache: {}
+    submenu_ids: null
+}
+
+building_menu_ctrl.invalidate_counts = function() {
+    building_menu_ctrl.count_cache = {}
 }
 
 building_menu_ctrl.is_submenu = function(type) {
-    for (var i = 0; i < building_menu.length; i++) {
-        if (building_menu[i].id == type) return true
+    if (!building_menu_ctrl.submenu_ids) {
+        building_menu_ctrl.submenu_ids = {}
+        for (var i = 0; i < building_menu.length; i++) {
+            building_menu_ctrl.submenu_ids[building_menu[i].id] = true
+        }
     }
-    return false
+    return !!building_menu_ctrl.submenu_ids[type]
 }
 
-building_menu_ctrl.set_all = function(en) {
+building_menu_ctrl.set_all = function(en, sync_scenario) {
     building_menu_ctrl.enabled = {}
     building_menu_ctrl.visible = {}
+    building_menu_ctrl.invalidate_counts()
     for (var i = 0; i < building_menu.length; i++) {
         var group = building_menu[i]
         building_menu_ctrl.enabled[group.id] = en
+        if (sync_scenario) {
+            __scenario_building_allow(group.id, en)
+        }
         for (var j = 0; j < group.items.length; j++) {
             building_menu_ctrl.enabled[group.items[j]] = en
+            if (sync_scenario) {
+                __scenario_building_allow(group.items[j], en)
+            }
         }
     }
 }
@@ -53,6 +69,7 @@ building_menu_ctrl.use_building = function(type, en) {
         en = true
     }
     building_menu_ctrl.enabled[type] = en
+    building_menu_ctrl.invalidate_counts()
     __scenario_building_allow(type, en)
 
     function show_category(type, en) {
@@ -81,6 +98,11 @@ building_menu_ctrl.use_building = function(type, en) {
 }
 
 building_menu_ctrl.count_items = function(submenu) {
+    var cached = building_menu_ctrl.count_cache[submenu]
+    if (cached !== undefined && cached !== null) {
+        return cached
+    }
+
     for (var i = 0; i < building_menu.length; i++) {
         if (building_menu[i].id != submenu) continue
         var group = building_menu[i]
@@ -93,8 +115,10 @@ building_menu_ctrl.count_items = function(submenu) {
                 count += building_menu_ctrl.is_enabled(item_type) ? 1 : 0
             }
         }
+        building_menu_ctrl.count_cache[submenu] = count
         return count
     }
+    building_menu_ctrl.count_cache[submenu] = 0
     return 0
 }
 
@@ -234,9 +258,10 @@ building_menu_ctrl.apply_enhanced_buildings = function() {
 
 building_menu_ctrl.update = function(stage) {
     if (stage == "disable_all") {
-        building_menu_ctrl.set_all(false)
+        building_menu_ctrl.set_all(false, true)
     } else if (stage == "stage_normal") {
-        building_menu_ctrl.set_all(false)
+        // Menu flags only — allowed_buildings stay from mission config.
+        building_menu_ctrl.set_all(false, false)
         for (var i = 0; i < BUILDING_MAX; i++) {
             if (__scenario_building_allowed(i)) {
                 building_menu_ctrl.use_building(i, true)
@@ -246,7 +271,8 @@ building_menu_ctrl.update = function(stage) {
         building_menu_ctrl.enable_correct_palace_tier()
         building_menu_ctrl.update_temple_complexes()
     } else if (stage == "enable_all") {
-        building_menu_ctrl.set_all(true)
+        // Menu + scenario allow: planner gates ghost on scenario_building_allowed.
+        building_menu_ctrl.set_all(true, true)
     } else if (stage == "apply_enhanced") {
         building_menu_ctrl.apply_enhanced_buildings()
         emit event_building_menu_changed{ temp: true }

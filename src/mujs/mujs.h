@@ -86,6 +86,29 @@ js_State *js_newstate(js_Alloc alloc, void *actx, int flags);
 void js_setcontext(js_State *J, void *uctx);
 void *js_getcontext(js_State *J);
 void js_set_framealloc(js_State *J, js_Alloc frame_alloc, void *frame_actx);
+typedef void (*js_FrameArenaRelease)(void *actx);
+void js_set_frame_arena_release(js_State *J, js_FrameArenaRelease fn, void *actx);
+
+/** Draw frame-zone: temps allocate from frame arena; must not escape to heap objects. */
+void js_enter_frame_zone(js_State *J);
+void js_leave_frame_zone(js_State *J);
+int js_in_frame_zone(js_State *J);
+unsigned js_frame_escape_count(js_State *J);
+
+struct js_frame_zone {
+	js_State *J;
+	explicit js_frame_zone(js_State *state) : J(state) {
+		if (J)
+			js_enter_frame_zone(J);
+	}
+	~js_frame_zone() {
+		if (J)
+			js_leave_frame_zone(J);
+	}
+	js_frame_zone(const js_frame_zone &) = delete;
+	js_frame_zone &operator=(const js_frame_zone &) = delete;
+};
+
 /* Global: when enable != 0, property AA-tree miss scans the object's enumeration list (slow). */
 void js_set_property_list_lookup_fallback(int enable);
 js_Panic js_atpanic(js_State *J, js_Panic panic);

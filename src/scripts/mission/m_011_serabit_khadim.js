@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 11 serabit khadim started")
 
-// Empire / requests / invasions verified vs mission1.pak scenario 11 (2026-07-25 dump).
+// Empire / requests / invasions aligned with original campaign scenario 11 (2026-07-25 dump).
 // Favour Pharaoh army size=51 (by_favour, attack=RANDOM) via mission_pharaoh_favour_invasion_tick.
 // Triage: skip year=100 CLAY_PIT_FLOOD junk; skip broken ok→99 after KR+6;
 // omit invasion/disembark (pak count 0); routes 3/5/9/11 orphan skip.
@@ -79,7 +79,7 @@ mission11 { // Serabit Khadim — The Bedouin of the East
 		BUILDING_MUD_WALL, BUILDING_MUD_GATEHOUSE, BUILDING_MUD_TOWER,
 	]
 
-	// Goals match mission1.pak scenario 11 (housing_level 4; culture/prosperity/monuments off).
+	// Goals match original campaign scenario 11 (housing_level 4; culture/prosperity/monuments off).
 	win_criteria {
 		population    {enabled : true, goal : 2000 }
 		culture       {enabled : false }
@@ -89,13 +89,13 @@ mission11 { // Serabit Khadim — The Bedouin of the East
 		housing_level {enabled : true, goal : 4 }
 	}
 
-	// Map points from mission1.pak scenario 11 (no river / disembark / invasion points).
+	// Map points from original campaign scenario 11 (no river / disembark / invasion points).
 	entry_point [28, 84]
 	exit_point [83, 84]
 
 	enable_scenario_events : true
 
-	// Empire from mission1.pak scenario 11 (empire id=8) — full map objects.
+	// Empire from original campaign scenario 11 (empire id=8) — full map objects.
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [

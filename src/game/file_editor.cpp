@@ -197,13 +197,10 @@ int game_file_editor_write_scenario(const char* scenario_file) {
     editor_requests_preserve_begin();
 
     bool ok = false;
-    if (path_looks_absolute(scenario_file)
+    const bool relative = !(path_looks_absolute(scenario_file)
         || strncasecmp(scenario_file, "Maps/", 5) == 0
-        || strncasecmp(scenario_file, "Maps\\", 5) == 0) {
-        ok = GamestateIO::write_map_path(scenario_file);
-    } else {
-        ok = GamestateIO::write_map(scenario_file);
-    }
+        || strncasecmp(scenario_file, "Maps\\", 5) == 0);
+    ok = GamestateIO::write_map(scenario_file, relative);
 
     editor_requests_preserve_end();
 

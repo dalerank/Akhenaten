@@ -1,11 +1,7 @@
 log_info("akhenaten: building info started")
 
 function get_building_config(name) {
-    try {
-        return eval(name)
-    } catch (e) {
-        return undefined
-    }
+    return __js_global(name)
 }
 
 function get_building_config_by_id(type) {
@@ -21,35 +17,6 @@ build_planner_clear_land {
   show_in_debug: false
   planner_update_rule {
     is_draggable : true
-  }
-}
-
-building_cattle_ranch {
-  animations {
-    preview { pack:PACK_GENERAL, id:105, },
-    base { pack:PACK_GENERAL, id:105, offset:0 },
-    work {  pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    minimap { pack:PACK_GENERAL, id:149, offset:160 },
-  }
-  min_houses_coverage : 100
-  input {
-    resource : RESOURCE_STRAW
-  }
-  output {
-    resource : RESOURCE_MEAT
-  }
-  building_size : 3
-  meta { help_id:1, text_id:117 }
-  info_sound : "Wavs/cowfarm_r.wav"
-  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
-  cost [ 15, 20, 30, 50, 80 ]
-  desirability { value:[-4], step:[1], step_size:[1], range: [4] }
-  laborers[12]
-  fire_risk[1]
-  damage_risk[2]
-  info_advisors [ADVISOR_LABOR]
-  flags {
-    is_food: true
   }
 }
 
@@ -71,31 +38,6 @@ building_burning_ruin = {
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
 }
 
-building_courthouse {
-  animations {
-    preview { pack:PACK_GENERAL, id:62, }
-    base { pack:PACK_GENERAL, id:62, }
-    work { pos[80, -80], pack:PACK_GENERAL, id:62, offset:1, max_frames:11 }
-  }
-
-  labor_category : LABOR_CATEGORY_INFRASTRUCTURE
-  overlay : OVERLAY_COUTHOUSE
-  min_houses_coverage : 50
-  building_size : 3
-  meta { help_id:75, text_id:176 }
-  info_sound : "Wavs/forum.WAV"
-  cost [ 30, 50, 100, 200, 400 ]
-  desirability { value[8], step[2], step_size[-2], range[3] }
-  crime { value[-5], step[1], step_size[-1], range[4] }
-  laborers[10]
-  fire_risk[0]
-  damage_risk[1]
-
-  flags {
-    is_administration: true
-  }
-}
-
 building_stonemason_guild = {
   animations : {
     preview : { pack:PACK_GENERAL, id:88 },
@@ -105,7 +47,7 @@ building_stonemason_guild = {
 
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
   building_size: 2
-  meta : { help_id: 363, text_id: 173 }
+  meta : { text_id: 173, help_link:"message_construction_guilds" }
   cost: [ 30, 50, 80, 100, 150 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
   laborers:[12], fire_risk:[0], damage_risk: [1]
@@ -128,7 +70,7 @@ building_bricklayers_guild = {
     resource : RESOURCE_BRICKS
   }
   min_houses_coverage : 100
-  meta : { help_id:92, text_id:172 }
+  meta : { text_id:172, help_link:"message_construction_guilds" }
   building_size : 2
   cost: [ 20, 40, 80, 120, 200 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
@@ -149,6 +91,7 @@ building_carpenters_guild = {
   }
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
   building_size : 2
+  meta : { help_link:"message_construction_guilds" }
   cost : [ 10, 15, 30, 50, 100 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
   laborers:[8], fire_risk:[4], damage_risk: [2]
@@ -165,7 +108,7 @@ building_military_academy = {
     base : { pos : [0, 0], pack:PACK_GENERAL, id:173 },
     work : { pos : [33, -38], pack:PACK_GENERAL, id:173, offset:1, max_frames:12 }
   },
-  meta : { help_id: 88, text_id: 135 }
+  meta : { text_id: 135, help_link:"message_building_recruiter_academy" }
   building_size : 4,
   min_houses_coverage : 50
   cost : [ 240, 300, 500, 1000, 1500 ]
@@ -182,82 +125,13 @@ building_military_academy_adv = {
     base : { pos : [0, 0], pack:PACK_GENERAL, id:173 },
     work : { pos : [33, -38], pack:PACK_GENERAL, id:173, offset:1, max_frames:12 }
   },
-  meta : { help_id: 88, text_id: 135 }
+  meta : { text_id: 135, help_link:"message_building_recruiter_academy" }
   building_size : 4,
   cost : [ 300, 500, 1000, 1500, 2000 ]
   desirability : { value:[8], step:[2], step_size:[-2], range: [6] }
   laborers:[30], fire_risk:[4], damage_risk: [1]
   flags {
     is_military: true
-  }
-}
-
-building_bazaar {
-  animations {
-    preview {pack:PACK_GENERAL, id:22, }
-    base {pack:PACK_GENERAL, id:22, }
-    base_work { pack:PACK_GENERAL, id:22, offset:0 }
-    fancy { pack:PACK_GENERAL, id:45 }
-    fancy_work { pack:PACK_GENERAL, id:45, offset:0 }
-    minimap {pack:PACK_GENERAL, id:149, offset:160}
-  }
-
-  max_search_distance : 40
-  fancy_treshold_desirability : 30
-  min_houses_coverage : 50
-  overlay : OVERLAY_BAZAAR_ACCESS
-  minimal_pick_food_amount : 100
-
-  pick_food_below [600, 400, 200, 100]
-  pick_good_below [150, 100, 50, 25]
-  max_buyers : 2
-  food_variety_target : 2
-
-  building_size : 2
-  meta { help_id: 2, text_id: 97 }
-  info_sound : "Wavs/MARKET.WAV"
-  cost [ 8, 15, 30, 50, 100 ]
-  desirability { value[-2], step[1], step_size[1], range[6] }
-
-  laborers[5]
-  fire_risk[4]
-  damage_risk[2]
-
-  flags {
-    is_food: true
-    keeps_visitor_paths: true
-  }
-}
-
-building_well {
-  animations {
-    preview { pack: PACK_GENERAL, id:23, max_frames:1 }
-    base { pack: PACK_GENERAL, id:23, max_frames:1 }
-    base_work { pack: PACK_GENERAL, id:23, max_frames:1 }
-    fancy { pack: PACK_GENERAL, id:23, offset:2, max_frames:1 }
-    fancy_work { pack: PACK_GENERAL, id:23, offset:3, max_frames:1 }
-    minimap {pack:PACK_GENERAL, id:151},
-  }
-
-  fire_proof : true
-  building_size : 1
-  meta { help_id:62, text_id:109 }
-  info_sound : "Wavs/WELL.WAV"
-  needs {
-    groundwater : true
-  }
-
-  labor_category : LABOR_CATEGORY_WATER_HEALTH
-  cost [ 1, 2, 5, 10, 20 ]
-  desirability_range_check : 4
-  desirability_fancy : 30
-  unnecessary_range_check : 3
-  laborers[0]
-  fire_risk[0]
-  damage_risk[0]
-  desirability { value[1], step[1], step_size[-1], range[1] }
-  flags {
-    no_road_access: true
   }
 }
 
@@ -276,7 +150,7 @@ building_reed_gatherer {
     is_industry: true
   }
   building_size : 2
-  meta { help_id : 92, text_id : 116 }
+  meta { text_id : 116, help_link:"message_building_woodcutter_and_reed_gatherer" }
   info_sound : "Wavs/reedfarm.wav"
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   min_houses_coverage : 100
@@ -294,7 +168,15 @@ building_wood_cutter {
     preview { pos : [0, 0], pack:PACK_GENERAL, id:65 }
     base { pos : [0, 0], pack:PACK_GENERAL, id:65 }
     work { pos : [30, -17], pack:PACK_GENERAL, id:65, offset:1, max_frames:12, duration:4 }
-    wood { pos : [65, 3], pack:PACK_GENERAL, id:202 }
+  }
+  overlay_anims {
+    wood {
+      pos : [65, 3]
+      pack:PACK_GENERAL
+      id:202
+      resource : RESOURCE_TIMBER
+      default_active : true
+    }
   }
   output {
     resource : RESOURCE_TIMBER
@@ -304,7 +186,7 @@ building_wood_cutter {
     is_industry: true
   }
   building_size : 2
-  meta { help_id:94, text_id:120 }
+  meta { text_id:120, help_link:"message_building_woodcutter_and_reed_gatherer" }
   info_sound : "Wavs/lumber.wav"
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   min_houses_coverage : 100
@@ -327,7 +209,7 @@ building_artisans_guild = {
     resource_second : RESOURCE_CLAY
   }
   min_houses_coverage : 100
-  meta : { help_id: 363, text_id: 312 }
+  meta : { text_id: 312, help_link:"message_construction_guilds" }
   building_size: 2
   cost: [ 30, 50, 80, 100, 150 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
@@ -348,7 +230,7 @@ building_tax_collector = {
     work : { pos : [60, -45], pack:PACK_GENERAL, id:63, offset:1, max_frames:11 },
   }
   labor_category : LABOR_CATEGORY_GOVERNMENT
-  meta : { help_id:76, text_id:106 }
+  meta : { text_id:106, help_link:"message_building_tax_collector" }
   info_sound : "Wavs/taxfarm.wav"
   building_size : 2
   min_houses_coverage : 50
@@ -368,7 +250,7 @@ building_tax_collector_up = {
     work : { pos : [10, 10], pack:PACK_GENERAL, id:64, offset:1, max_frames:11 }
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
-  meta : { help_id:76, text_id:120 }
+  meta : { text_id:120, help_link:"message_building_tax_collector" }
   info_sound : "Wavs/taxfarm.wav"
   building_size : 2
   cost: [ 15, 24, 40, 80, 100 ]
@@ -388,7 +270,7 @@ building_recruiter = {
   }
   labor_category : LABOR_CATEGORY_MILITARY
   min_houses_coverage : 100
-  meta : { help_id:37, text_id:136 }
+  meta : { text_id:136, help_link:"message_building_recruiter_academy" }
   info_sound : "Wavs/barracks.WAV"
   building_size : 3
   planner_update_rule : {
@@ -408,7 +290,7 @@ building_festival_square = {
     square : { pos:[0, 0], pack:PACK_GENERAL, id:49 },
   },
   building_size : 5,
-  meta : { help_id: 366, text_id: 188 }
+  meta : { text_id: 188, help_link:"message_building_festival_square" }
   info_sound : "Wavs/prefecture.wav"
   fire_proof : true,
   damage_proof : true,
@@ -431,7 +313,7 @@ building_roadblock = {
   building_size : 1,
   fire_proof : true,
   damage_proof : true,
-  meta : { help_id: 358, text_id: 155 }
+  meta : { text_id: 155, help_link:"message_building_roadblock" }
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   cost : [1, 2, 5, 10, 20 ]
   flags {
@@ -448,6 +330,7 @@ building_brick_tower = {
   fire_proof : true,
   labor_category : LABOR_CATEGORY_MILITARY,
   min_houses_coverage : 50
+  meta : { help_link:"message_building_defensive_structures" }
   cost : [ 50, 100, 150, 300, 500 ]
   desirability : { value:[16], step:[2], step_size:[-3], range: [5] }
   laborers:[20], fire_risk:[0], damage_risk: [4]
@@ -466,6 +349,7 @@ building_clay_tower = {
   fire_proof : true,
   labor_category : LABOR_CATEGORY_MILITARY,
   min_houses_coverage : 50
+  meta : { help_link:"message_building_defensive_structures" }
   cost : [ 50, 80, 100, 150, 300 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [6] }
   laborers:[20], fire_risk:[4], damage_risk: [4]
@@ -482,7 +366,7 @@ building_mud_tower = {
   }
   building_size : 2
   fire_proof : true
-  meta : { help_id: 85, text_id: 159 }
+  meta : { text_id: 159, help_link:"message_building_defensive_structures" }
   labor_category : LABOR_CATEGORY_MILITARY
   min_houses_coverage : 50
   cost: [ 30, 50, 100, 150, 200 ]
@@ -516,7 +400,7 @@ building_ferry {
     is_infrastructure: true
   }
   fire_proof : true,
-  meta { help_id: 85, text_id: 91 }
+  meta { text_id: 91, help_link:"message_game_concept_water_crossings" }
   labor_category : LABOR_CATEGORY_GOVERNMENT
   cost [8, 15, 30, 50, 100 ]
   desirability { value[-5], step[2], step_size[2], range[4] }
@@ -541,10 +425,10 @@ building_shipyard = {
     resource : RESOURCE_TIMBER
   }
   building_size : 3
-  planer_update_rule : {
+  planner_update_rule : {
     relative_orientation: 1
   }
-  meta : { help_id: 82, text_id: 100 }
+  meta : { text_id: 100, help_link:"message_building_whipwright" }
   info_sound : "Wavs/shipyrd.wav"
   needs : {
     water_access : true
@@ -560,27 +444,6 @@ building_shipyard = {
   }
 }
 
-building_dentist {
-  animations {
-    preview { pack:PACK_GENERAL, id:67 }
-    base { pack:PACK_GENERAL, id:67 }
-    work { pack:PACK_GENERAL, id:67, offset:1, max_frames:12 }
-  }
-
-  overlay : OVERLAY_DENTIST
-  labor_category : LABOR_CATEGORY_WATER_HEALTH
-  min_houses_coverage : 50
-  max_serve_clients : 1000
-  building_size : 1
-  meta { help_id:65, text_id:84 }
-  info_sound : "Wavs/dentist.wav"
-  cost [ 10, 15, 30, 50, 80 ]
-  desirability { value[2], step[1], step_size[-1], range[2] }
-  laborers[5]
-  fire_risk[4]
-  damage_risk[2]
-}
-
 building_plaza {
   animations {
     preview { pack:PACK_GENERAL, id:168 },
@@ -592,7 +455,7 @@ building_plaza {
 
   fire_proof : true
   damage_proof : true
-  meta { help_id : 80, text_id : 137 }
+  meta { text_id : 137, help_link:"message_building_garden_plaze_statue" }
   info_sound : "Wavs/FANFARE1.wav"
   building_size : 1
   cost [ 3, 5, 10, 15, 20 ]
@@ -631,7 +494,7 @@ building_garden {
 
   fire_proof : true
   damage_proof : true
-  meta { help_id:80, text_id:79 }
+  meta { text_id:79, help_link:"message_building_garden_plaze_statue" }
   info_sound : "Wavs/park1.wav"
   building_size : 1
   cost [ 3, 5, 10, 15, 20 ]
@@ -682,69 +545,6 @@ building_irrigation_ditch {
   }
 }
 
-building_mine_copper {
-  animations {
-    preview { pack:PACK_GENERAL, id:196 },
-    base { pack:PACK_GENERAL, id:196 },
-    work { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2, internal_offset:true }
-  },
-  output {
-    resource : RESOURCE_COPPER
-  }
-  progress_max : 200,
-  production_rate : 100,
-  meta { help_id:93, text_id:193 }
-  info_sound : "Wavs/gold.wav"
-  building_size : 2,
-  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  needs {
-    rock : true
-    ore : true
-  }
-  flags {
-    is_extractor: true
-    is_industry: true
-    keeps_visitor_paths: true
-  }
-  cost [ 50, 75, 100, 150, 300 ]
-  desirability { value[-12], step[2], step_size[2], range[6] }
-  laborers[10]
-  fire_risk[0]
-  damage_risk[2]
-}
-
-building_mine_gems {
-  animations {
-    preview { pack:PACK_GENERAL, id:188 },
-    base { pack:PACK_GENERAL, id:188 },
-    work { pos [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2, internal_offset:true },
-    gems { pos : [93, 0], pack:PACK_GENERAL, id:203 }
-  }
-
-  output {
-    resource : RESOURCE_GEMS
-  }
-  progress_max : 200,
-  production_rate : 100,
-  production_divider : 3,
-  building_size : 2,
-  meta { help_id:93, text_id:163 }
-  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  needs {
-    rock : true
-  }
-  flags {
-    is_extractor: true
-    is_industry: true
-    keeps_visitor_paths: true
-  }
-  cost [ 50, 75, 100, 150, 300 ]
-  desirability { value[-12], step[2], step_size[2], range[6] }
-  laborers[8]
-  fire_risk[0]
-  damage_risk[2]
-}
-
 building_sandstone_quarry {
   animations {
     preview { pack:PACK_GENERAL, id:197 },
@@ -757,8 +557,7 @@ building_sandstone_quarry {
   progress_max : 200,
   production_rate : 100,
   building_size : 2,
-  meta { help_id:93, text_id:162 }
-  //help_id:92, type:"sandstone_quarry", text_id:194
+  meta { text_id:162, help_link:"message_building_stone_quarries" }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   needs {
     rock : true
@@ -780,7 +579,7 @@ building_marble_quarry {
     base { pack:PACK_GENERAL, id:197 },
     work { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16 }
   }
-  meta { help_id:95, text_id:118 }
+  meta { text_id:118, help_link:"message_building_stone_quarries" }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   cost[ 15, 30, 50, 80, 150 ]
   desirability { value[-6], step[1], step_size[1], range[6] }
@@ -807,7 +606,7 @@ building_stone_quarry {
   progress_max : 200,
   production_rate : 100,
   building_size : 2,
-  meta { help_id:93, text_id:118 }
+  meta { text_id:118, help_link:"message_building_stone_quarries" }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   needs {
     rock : true
@@ -837,9 +636,8 @@ building_granite_quarry {
   progress_max : 200,
   production_rate : 100,
   building_size : 2,
-  meta { help_id:93, text_id:162 }
+  meta { text_id:162, help_link:"message_building_stone_quarries" }
   info_sound : "Wavs/marble.wav"
-  //help_id:92, text_id:192
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   needs {
     rock : true
@@ -867,8 +665,7 @@ building_limestone_quarry {
   progress_max : 200,
   production_rate : 100,
   building_size : 2,
-  meta { help_id:93, text_id:162 }
-  //help_id:93, text_id:119}
+  meta { text_id:162, help_link:"message_building_stone_quarries" }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   needs {
     rock : true
@@ -883,39 +680,6 @@ building_limestone_quarry {
     is_extractor: true
     is_industry: true
   }
-}
-
-building_mine_gold {
-  animations {
-    _pack { pack:PACK_GENERAL }
-    preview { id:185 }
-    base { id:185 }
-    work { pos [54, 15], pack:PACK_SPR_AMBIENT, internal_offset:true, id:48, max_frames: 16, duration:2 }
-  }
-  output {
-    resource : RESOURCE_GOLD
-  }
-  building_size : 2
-  meta { help_id:93, text_id:162 }
-  info_sound : "Wavs/gold.wav"
-  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
-  needs {
-    rock : true
-    ore : true
-  }
-  flags {
-    is_extractor: true
-    is_industry: true
-    keeps_visitor_paths: true
-  }
-  cost [ 50, 100, 150, 250, 400 ]
-  desirability { value[-16], step[2], step_size[3], range[6] }
-  laborers [12]
-  fire_risk [0]
-  damage_risk [2]
-  progress_max : 200
-  production_rate : 100
-  production_divider : 10
 }
 
 building_clay_gatehouse = {
@@ -936,7 +700,7 @@ building_clay_gatehouse = {
   }
 
   building_size : 1
-  meta : { help_id:85, text_id:90 }
+  meta : { text_id:90, help_link:"message_building_defensive_structures" }
   cost : [ 60, 90, 150, 250, 300 ]
   desirability : { value:[-5], step:[1], step_size:[1], range: [5] }
   laborers:[9], fire_risk:[0], damage_risk: [2]
@@ -964,7 +728,7 @@ building_brick_gatehouse = {
   }
 
   building_size : 1
-  meta : { help_id:85, text_id:90 }
+  meta : { text_id:90, help_link:"message_building_defensive_structures" }
   cost : [ 60, 90, 150, 250, 300 ]
   desirability : { value:[-7], step:[1], step_size:[1], range: [6] }
   laborers:[9], fire_risk:[0], damage_risk: [2]
@@ -987,7 +751,7 @@ building_tower_gatehouse = {
 
   info_title_id:"#tower_gatehouse"
   building_size : 2
-  meta : { help_id:85, text_id:90 }
+  meta : { text_id:90, help_link:"message_building_defensive_structures" }
   cost : [ 200, 300, 400, 500, 600 ]
   desirability : { value:[4], step:[1], step_size:[1], range: [3] }
   laborers:[6], fire_risk:[0], damage_risk: [2]
@@ -1015,7 +779,7 @@ building_mud_gatehouse = {
   }
 
   building_size : 1
-  meta : { help_id:85, text_id:90 }
+  meta : { text_id:90, help_link:"message_building_defensive_structures" }
   cost : [ 50, 70, 100, 150, 200 ]
   desirability : { value:[-6], step:[1], step_size:[2], range: [6] }
   laborers:[3], fire_risk:[0], damage_risk: [3]
@@ -1042,7 +806,7 @@ building_decorative_gatehouse = {
   }
 
   building_size : 5
-  meta : { help_id:85, text_id:90 }
+  meta : { text_id:90, help_link:"message_building_defensive_structures" }
   cost : [ 100, 150, 200, 300, 400 ]
   desirability : { value:[-6], step:[1], step_size:[2], range: [6] }
   laborers:[3], fire_risk:[0], damage_risk: [3]
@@ -1095,28 +859,6 @@ building_mud_wall = {
   }
 }
 
-building_physician {
-  animations {
-    _pack { pack:PACK_GENERAL }
-    preview { id:70 }
-    base { id:70 }
-    work { pos [60, -60], id:70, offset:1, max_frames:11 }
-  }
-
-  min_houses_coverage : 50
-  max_serve_clients : 1000
-  overlay: OVERLAY_PHYSICIAN
-  labor_category : LABOR_CATEGORY_WATER_HEALTH,
-  meta { help_id: 64, text_id: 83 }
-  info_sound : "Wavs/physician.wav"
-  building_size : 2
-  cost [ 10, 15, 30, 50, 100 ]
-  desirability { value[2], step[1], step_size[-1], range[2] }
-  laborers [8]
-  fire_risk [3]
-  damage_risk [3]
-}
-
 building_police_station = {
   animations {
     preview { pack:PACK_GENERAL, id:64 },
@@ -1127,7 +869,7 @@ building_police_station = {
 
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
   min_houses_coverage : 50
-  meta : { help_id: 86, text_id: 88 }
+  meta : { text_id: 88, help_link:"message_building_police_station" }
   building_size : 1
   cost [ 6, 12, 25, 40, 60 ]
   desirability { value[-2], step[1], step_size[1], range[2] }
@@ -1138,25 +880,4 @@ building_police_station = {
   flags {
     is_infrastructure: true
   }
-}
-
-building_conservatory {
-  animations {
-    preview { pack:PACK_GENERAL, id:51 }
-    base { pack:PACK_GENERAL, id:51 }
-    work { pos[52, -18], pack:PACK_SPR_AMBIENT, id:10, max_frames:11, duration:4 }
-  }
-
-  spawn_interval : 10
-  labor_category : LABOR_CATEGORY_ENTERTAINMENT
-  overlay : OVERLAY_ENTERTAINMENT
-  min_houses_coverage : 50
-  meta { help_id:75, text_id:75 }
-  info_sound : "Wavs/music_school.wav"
-  building_size : 3
-  cost [ 20, 50, 90, 150, 200 ]
-  desirability { value[-3], step[1], step_size[1], range[3] }
-  laborers[8]
-  fire_risk[4]
-  damage_risk[2]
 }

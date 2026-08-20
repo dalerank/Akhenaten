@@ -5,15 +5,12 @@
 #include "graphics/window.h"
 #include "grid/building.h"
 #include "building/building_house.h"
-#include "building/culture.h"
-#include "building/government.h"
 #include "building/monuments.h"
 #include "window/building/common.h"
 #include "window/message_dialog.h"
 #include "sound/sound.h"
 #include "game/game.h"
 #include "dev/debug.h"
-#include "io/gamefiles/lang.h"
 #include "core/variant.h"
 #include "js/js_struct.h"
 #include "core/profiler.h"
@@ -65,26 +62,6 @@ bool building_info_window::check(object_info &c) {
     return building_type_any_of(b->type, related_buildings);
 }
 
-static void draw_native(object_info* c, int group_id) {
-    c->help_id = 0;
-    window_building_play_sound(c, "Wavs/empty_land.wav");
-    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
-    lang_text_draw_centered(group_id, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    window_building_draw_description_at(c, 106, group_id, 1);
-}
-
-void window_building_draw_native_hut(object_info* c) {
-    draw_native(c, 131);
-}
-
-void window_building_draw_native_meeting(object_info* c) {
-    draw_native(c, 132);
-}
-
-void window_building_draw_native_crops(object_info* c) {
-    draw_native(c, 133);
-}
-
 void building_info_window::window_info_foreground(object_info &c) {
     common_info_window::window_info_foreground(c);
     ui_draw_foreground(c);
@@ -94,16 +71,6 @@ void building_info_window::ui_draw_foreground(object_info& c) {
     ui.begin_widget(c.offset);
     ui.event(building_info_window_draw{c.offset, c.bid}, get_section(), __func__);
     ui.end_widget();
-}
-
-void window_building_draw_mission_post(object_info* c) {
-    c->help_id = 8;
-    window_building_play_sound(c, "Wavs/mission.wav");
-    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
-    lang_text_draw_centered(134, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    window_building_draw_description(c, 134, 1);
-    inner_panel_draw(c->offset + vec2i{ 16, 136 }, { c->bgsize.x - 2, 4 });
-    window_building_draw_employment_without_house_cover(c, 142);
 }
 
 void building_info_window::common_info_background(object_info& c) {
@@ -225,21 +192,18 @@ void building_info_window::init(object_info &c) {
     ui.event(building_info_window_init{ pos, c.bid });
     ui.end_widget();
 
-    xstring correct_help_id = help_id;
+    // Window override → meta.help_link → table of contents.
+    xstring correct_help = help_id;
     const auto &meta = b->params().meta;
-    if (!correct_help_id) {
-        correct_help_id = meta.help_link;
+    if (!correct_help) {
+        correct_help = meta.help_link;
+    }
+    if (!correct_help) {
+        correct_help = "message_table_of_contents";
     }
 
-    if (!correct_help_id && meta.help_id) {
-        correct_help_id = lang_get_message_id(meta.help_id);
-    }
-
-    if (!correct_help_id) {
-        correct_help_id = "message_table_of_contents";
-    }
-
-    window_message_setup_help_id(correct_help_id);
+    window_message_setup_help_id(correct_help);
+    c.help_link = correct_help;
 
     c.go_to_advisor = {ADVISOR_NONE, ADVISOR_NONE, ADVISOR_NONE};
     if (first_advisor != ADVISOR_NONE) {
@@ -257,24 +221,11 @@ void building_info_window::init(object_info &c) {
         c.can_play_sound = 0;
     }
 
-    switch (b->type) {
-    case BUILDING_ORACLE: window_building_draw_oracle(&c); break;
-    case BUILDING_RESERVED_TRIUMPHAL_ARCH_56: window_building_draw_triumphal_arch(&c); break;
-
-    case BUILDING_UNUSED_NATIVE_HUT_88: window_building_draw_native_hut(&c); break;
-    case BUILDING_UNUSED_NATIVE_MEETING_89: window_building_draw_native_meeting(&c); break;
-    case BUILDING_UNUSED_NATIVE_CROPS_93: window_building_draw_native_crops(&c); break;
-    case BUILDING_RESERVER_MISSION_POST_80: window_building_draw_mission_post(&c); break;
-
-    default:
-        break;
-    }
-
     b->dcast()->highlight_waypoints();
     c.bid = b->main()->id;
 
     const auto &params = b->dcast()->current_params();
-    c.help_id = params.meta.help_id;
+    c.help_id = 0;
     c.group_id = params.meta.text_id;
 }
 

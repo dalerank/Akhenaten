@@ -5435,4 +5435,19 @@ localization_base_de = [
     { group:313, id:10, text: "Nur wenige Arbeiter sind bei dieser Farbenwerkstatt beschäftigt. Der kleine Stab kann kaum Farbe produzieren." }
     { group:313, id:11, text: "Diese Werkstatt braucht Henna von einer Hennafarm oder einem Lagerhof, bevor sie Farbe herstellen kann. " }
     { group:313, id:12, text: "Henna:" }
+    { group:314, id:0, text: "Lampenwerkstatt" }
+    { group:314, id:1, text: "Hier wird Keramik mit Öl gefüllt, um Lampen herzustellen, die die dunklen Gänge königlicher Gräber erhellen." }
+    { group:314, id:2, text: "Produktion ist" }
+    { group:314, id:3, text: "abgeschlossen." }
+    { group:314, id:4, text: "Euer Handelsaufseher hat die Lampenproduktion gestoppt." }
+    { group:314, id:5, text: "Diese Lampenwerkstatt hat keine Angestellten und wird daher keine Lampen herstellen." }
+    { group:314, id:6, text: "Mit voller Belegschaft produziert diese Lampenwerkstatt Lampen so schnell und effizient wie möglich." }
+    { group:314, id:7, text: "Der Personalstand dieser Lampenwerkstatt ist etwas dünn, daher ist die Lampenproduktion beeinträchtigt." }
+    { group:314, id:8, text: "Diese Lampenwerkstatt ist unterbesetzt und produziert Lampen langsamer, als sie sollte." }
+    { group:314, id:9, text: "Diese Lampenwerkstatt braucht viel mehr Arbeiter. Die Lampenproduktion hier hat sich auf ein Kriechen verlangsamt." }
+    { group:314, id:10, text: "Nur wenige Arbeiter sind bei dieser Lampenwerkstatt beschäftigt. Der kleine Stab kann kaum Lampen produzieren." }
+    { group:314, id:11, text: "Diese Werkstatt braucht Öl, das nur importiert werden kann, bevor sie Lampen herstellen kann." }
+    { group:314, id:12, text: "Diese Werkstatt braucht Keramik von einem Töpfer oder Lagerhof, bevor sie Lampen herstellen kann." }
+    { group:314, id:13, text: "Öl:" }
+    { group:314, id:14, text: "Keramik:" }
 ]

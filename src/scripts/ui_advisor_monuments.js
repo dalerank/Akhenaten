@@ -40,6 +40,7 @@ function monuments_advisor_on_render_item(p) {
     }
 }
 
+[es=(advisor_monuments_window, click_monument)]
 function monuments_advisor_on_click_item(p) {
     var bid = p.user_data
     city.camera_go_to(__building_tile(bid))
@@ -83,6 +84,7 @@ function burial_provisions_on_render_item(p) {
     }
 }
 
+[es=(advisor_monuments_window, click_burial)]
 function burial_provisions_on_click_item(p) {
     var res = p.user_data
     var remaining = __scenario_burial_provisions_remaining(res)
@@ -114,11 +116,6 @@ function burial_dispatch_clamp_amount() {
     if (burial_dispatch_amount < 0) {
         burial_dispatch_amount = 0
     }
-}
-
-function burial_dispatch_change(delta) {
-    burial_dispatch_amount += delta
-    burial_dispatch_clamp_amount()
 }
 
 function burial_dispatch_set_all() {
@@ -184,7 +181,7 @@ advisor_monuments_window {
                     draw_scrollbar_always: false
                     draw_paneling: false
                     onrender_item: monuments_advisor_on_render_item
-                    onclick_item: monuments_advisor_on_click_item
+                    onclick_event: "click_monument"
                 })
                 no_monuments : label({pos[120, 110], text:"${53.69}", font:FONT_NORMAL_WHITE_ON_DARK })
 
@@ -203,7 +200,7 @@ advisor_monuments_window {
                     draw_scrollbar_always: false
                     draw_paneling: false
                     onrender_item: burial_provisions_on_render_item
-                    onclick_item: burial_provisions_on_click_item
+                    onclick_event: "click_burial"
                 })
                 no_burial : label({pos[100, 280], text:"${199.12}", font:FONT_NORMAL_WHITE_ON_DARK })
 
@@ -265,24 +262,46 @@ burial_dispatch_window {
 
         amounts_panel    : inner_panel({pos[32, 56], size[24, 4]
             ui {
-                btn_all   : button({pos[16, 12], size[80, 24], text[199, 5], font: FONT_NORMAL_WHITE_ON_DARK
-                                    onclick: burial_dispatch_set_all})
+                btn_all   : button({pos[16, 12], size[80, 24], text[199, 5], font: FONT_NORMAL_WHITE_ON_DARK})
             }
         })
 
         hint_label       : text({pos[48, 100], text[199, 3], font: FONT_NORMAL_WHITE_ON_DARK})
-        arrow_down       : arrowdown({pos[160, 96], tiny: false, allow_repeat: true
-                                      onclick: function() { burial_dispatch_change(-1) }})
-        arrow_up         : arrowup({pos[184, 96], tiny: false, allow_repeat: true
-                                    onclick: function() { burial_dispatch_change(1) }})
+        arrow_down       : arrowdown({pos[160, 96], tiny: false, allow_repeat: true })
+        arrow_up         : arrowup({pos[184, 96], tiny: false, allow_repeat: true })
         amount_value     : label({pos[220, 100], font: FONT_NORMAL_WHITE_ON_DARK
                                   textfn: burial_dispatch_amount_text})
 
-        btn_dispatch     : button({pos[48, 140], size[160, 24], text[199, 6], font: FONT_NORMAL_BLACK_ON_LIGHT
-                                    onclick: burial_dispatch_do_dispatch})
-        btn_cancel       : button({pos[240, 140], size[160, 24], text[199, 7], font: FONT_NORMAL_BLACK_ON_LIGHT
-                                    onclick: burial_dispatch_cancel})
+        btn_dispatch     : button({pos[48, 140], size[160, 24], text[199, 6], font: FONT_NORMAL_BLACK_ON_LIGHT})
+        btn_cancel       : button({pos[240, 140], size[160, 24], text[199, 7], font: FONT_NORMAL_BLACK_ON_LIGHT})
     }
+}
+
+[es=(burial_dispatch_window, btn_all)]
+function burial_dispatch_window_btn_all(window) {
+    burial_dispatch_set_all()
+}
+
+[es=(burial_dispatch_window, btn_dispatch)]
+function burial_dispatch_window_btn_dispatch(window) {
+    burial_dispatch_do_dispatch()
+}
+
+[es=(burial_dispatch_window, btn_cancel)]
+function burial_dispatch_window_btn_cancel(window) {
+    burial_dispatch_cancel()
+}
+
+[es=(burial_dispatch_window, arrow_down)]
+function burial_dispatch_window_arrow_down(window) {
+    burial_dispatch_amount -= 1
+    burial_dispatch_clamp_amount()
+}
+
+[es=(burial_dispatch_window, arrow_up)]
+function burial_dispatch_window_arrow_up(window) {
+    burial_dispatch_amount += 1
+    burial_dispatch_clamp_amount()
 }
 
 [es=(burial_dispatch_window, init)]

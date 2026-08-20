@@ -32,8 +32,8 @@ difficulty_options_window {
         background       : outer_panel({size[24, 12]})
         title            : header({pos[0, 16], size[px(24), 20], text:"#difficulty_settings", align:"center"})
 
-        arrow_diff_down  : arrowdown({pos[240, 54], tiny:false, allow_repeat: true, onclick: game_decrease_difficulty_if_allowed })
-        arrow_diff_up    : arrowup({pos[264, 54], tiny:false, allow_repeat: true, onclick: game_increase_difficulty_if_allowed })
+        arrow_diff_down  : arrowdown({pos[240, 54], tiny:false, allow_repeat: true, onclick_event: "dec_diff" })
+        arrow_diff_up    : arrowup({pos[264, 54], tiny:false, allow_repeat: true, onclick_event: "inc_diff" })
         difficulty_value : text({pos[22, 62], size[244, 20], font: FONT_NORMAL_BLACK_ON_LIGHT, align:"center"})
 
         btn_gods         : button({pos[238, 102], size[50, 22], font: FONT_NORMAL_BLACK_ON_DARK, onclick_event: "toggle_gods"})
@@ -41,4 +41,14 @@ difficulty_options_window {
 
         footer           : text({pos[0, 156], size[px(24), 20], text:"#difficulty_right_click_to_continue", font: FONT_NORMAL_BLACK_ON_LIGHT, align:"center"})
     }
+}
+
+[es=(difficulty_options_window, dec_diff)]
+function difficulty_options_window_on_dec_diff(window) {
+    game_decrease_difficulty_if_allowed()
+}
+
+[es=(difficulty_options_window, inc_diff)]
+function difficulty_options_window_on_inc_diff(window) {
+    game_increase_difficulty_if_allowed()
 }

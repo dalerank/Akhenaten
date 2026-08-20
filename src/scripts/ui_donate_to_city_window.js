@@ -1,14 +1,5 @@
 log_info("akhenaten: ui donate to city window started")
 
-function donate_to_city_do_donate() {
-    city.kingdome.donate_savings_to_city()
-    window_advisors_show()
-}
-
-function donate_to_city_cancel() {
-    window_advisors_show()
-}
-
 [es=(donate_to_city_window, init)]
 function donate_to_city_window_init(window) {
     city.kingdome.set_donation_amount(city.kingdome.donate_amount)
@@ -28,30 +19,67 @@ donate_to_city_window {
 
         amounts_panel    : inner_panel({pos[48, 48], size[26, 4]
             ui {
-                btn_0     : button({pos[16, 8], size[64, 20], text:"0", font: FONT_NORMAL_WHITE_ON_DARK
-                                    onclick: function() { city.kingdome.set_donation_amount(0) }})
-                btn_500   : button({pos[96, 8], size[64, 20], text:"500", font: FONT_NORMAL_WHITE_ON_DARK
-                                    onclick: function() { city.kingdome.set_donation_amount(500) }})
-                btn_2000  : button({pos[176, 8], size[64, 20], text:"2000", font: FONT_NORMAL_WHITE_ON_DARK
-                                    onclick: function() { city.kingdome.set_donation_amount(2000) }})
-                btn_5000  : button({pos[256, 8], size[64, 20], text:"5000", font: FONT_NORMAL_WHITE_ON_DARK
-                                    onclick: function() { city.kingdome.set_donation_amount(5000) }})
-                btn_all   : button({pos[336, 8], size[64, 20], text[52, 19], font: FONT_NORMAL_WHITE_ON_DARK
-                                    onclick: function() { city.kingdome.set_donation_amount(1000000) }})
+                btn_0     : button({pos[16, 8], size[64, 20], text:"0", font: FONT_NORMAL_WHITE_ON_DARK })
+                btn_500   : button({pos[96, 8], size[64, 20], text:"500", font: FONT_NORMAL_WHITE_ON_DARK })
+                btn_2000  : button({pos[176, 8], size[64, 20], text:"2000", font: FONT_NORMAL_WHITE_ON_DARK })
+                btn_5000  : button({pos[256, 8], size[64, 20], text:"5000", font: FONT_NORMAL_WHITE_ON_DARK })
+                btn_all   : button({pos[336, 8], size[64, 20], text[52, 19], font: FONT_NORMAL_WHITE_ON_DARK })
             }
         })
 
         hint_label       : text({pos[64, 88], text[52, 17], font: FONT_NORMAL_WHITE_ON_DARK})
-        arrow_down       : arrowdown({pos[176, 82], tiny: false, allow_repeat: true
-                                      onclick: function() { city.kingdome.change_donation_amount(-10) }})
-        arrow_up         : arrowup({pos[200, 82], tiny: false, allow_repeat: true
-                                    onclick: function() { city.kingdome.change_donation_amount(10) }})
+        arrow_down       : arrowdown({pos[176, 82], tiny: false, allow_repeat: true })
+        arrow_up         : arrowup({pos[200, 82], tiny: false, allow_repeat: true })
         amount_value     : label({pos[256, 88], font: FONT_NORMAL_WHITE_ON_DARK
                                   textfn: function() { return String(city.kingdome.donate_amount) }})
 
-        btn_donate       : button({pos[80, 123], size[160, 20], text[52, 18], font: FONT_NORMAL_BLACK_ON_LIGHT
-                                    onclick: donate_to_city_do_donate})
-        btn_cancel       : button({pos[272, 123], size[160, 20], text[13, 4], font: FONT_NORMAL_BLACK_ON_LIGHT
-                                    onclick: donate_to_city_cancel})
+        btn_donate       : button({pos[80, 123], size[160, 20], text[52, 18], font: FONT_NORMAL_BLACK_ON_LIGHT })
+        btn_cancel       : button({pos[272, 123], size[160, 20], text[13, 4], font: FONT_NORMAL_BLACK_ON_LIGHT })
     }
+}
+
+[es=(donate_to_city_window, btn_donate)]
+function donate_to_city_btn_donate(window) {
+    city.kingdome.donate_savings_to_city()
+    window_advisors_show()
+}
+
+[es=(donate_to_city_window, btn_cancel)]
+function donate_to_city_btn_cancel(window) {
+    window_advisors_show()
+}
+
+[es=(donate_to_city_window, btn_0)]
+function donate_to_city_btn_0(window) {
+    city.kingdome.set_donation_amount(0)
+}
+
+[es=(donate_to_city_window, btn_500)]
+function donate_to_city_btn_500(window) {
+    city.kingdome.set_donation_amount(500)
+}
+
+[es=(donate_to_city_window, btn_2000)]
+function donate_to_city_btn_2000(window) {
+    city.kingdome.set_donation_amount(2000)
+}
+
+[es=(donate_to_city_window, btn_5000)]
+function donate_to_city_btn_5000(window) {
+    city.kingdome.set_donation_amount(5000)
+}
+
+[es=(donate_to_city_window, btn_all)]
+function donate_to_city_btn_all(window) {
+    city.kingdome.set_donation_amount(1000000)
+}
+
+[es=(donate_to_city_window, arrow_down)]
+function donate_to_city_arrow_down(window) {
+    city.kingdome.change_donation_amount(-10)
+}
+
+[es=(donate_to_city_window, arrow_up)]
+function donate_to_city_arrow_up(window) {
+    city.kingdome.change_donation_amount(10)
 }

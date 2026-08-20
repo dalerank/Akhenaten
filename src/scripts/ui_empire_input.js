@@ -22,7 +22,7 @@ function empire_window_apply_map_scroll_delta(dx, dy, scale) {
     if (map_delta.x || map_delta.y) {
         __empire_map_scroll_map(map_delta)
         // Scroll changed: keep camera.draw_origin in sync for the rest of the frame.
-        if (empire_window.camera) {
+        if (empire_window.camera.valid) {
             empire_window_rebuild_camera()
         }
     }
@@ -45,7 +45,7 @@ function empire_window_determine_selected_object() {
 
 [es=(empire_window, ui_handle_mouse)]
 function empire_window_ui_handle_mouse(window) {
-    if (!empire_window.screen_bounds) {
+    if (!empire_window.screen_bounds.ready) {
         return
     }
     empire_window_rebuild_camera()
@@ -55,16 +55,17 @@ function empire_window_ui_handle_mouse(window) {
     if (!m.is_touch && m.left.went_down && !empire_window_is_outside_map(m.x, m.y)) {
         empire_window.left_panning = true
         empire_window.left_pan_travel = 0
-        empire_window.left_pan_last_pos = { x: m.x, y: m.y }
+        empire_window_set_xy(empire_window.left_pan_last_pos, m.x, m.y)
     }
 
     if (!m.is_touch && empire_window.left_panning && m.left.is_down) {
-        var dx = m.x - empire_window.left_pan_last_pos.x
-        var dy = m.y - empire_window.left_pan_last_pos.y
+        var last = empire_window.left_pan_last_pos
+        var dx = m.x - last.x
+        var dy = m.y - last.y
         if (dx || dy) {
             empire_window_apply_map_scroll_delta(-dx, -dy, scale)
             empire_window.left_pan_travel += Math.abs(dx) + Math.abs(dy)
-            empire_window.left_pan_last_pos = { x: m.x, y: m.y }
+            empire_window_set_xy(empire_window.left_pan_last_pos, m.x, m.y)
         }
     }
 

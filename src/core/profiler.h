@@ -4,6 +4,7 @@
 
 #define OZZY_PROFILER_BEGIN_FRAME( ... )
 #define OZZY_PROFILER_FUNCTION( ... )
+#define OZZY_PROFILER_FUNCTION_NAME( ... )
 #define OZZY_PROFILER_SECTION( ... )
 #define OZZY_PROFILER_TAG( ... )
 #define OZZY_PROFILER_LOG( ... )
@@ -193,11 +194,28 @@ inline uint64_t TracyAllocSrclocName(uint32_t Line,
 		strlen( TracyGetStr( name ) ) );                                               \
 	TracyCZoneCtx ctx = ___tracy_emit_zone_begin_alloc( TracyConcat( __tracy_source_location, TracyLine ), active );
 
+// Dynamic Function field (not just Name) so Find Zone / tooltips group by the substituted name.
+#define TracyCDynZoneFn( ctx, function, source, line, active )                              \
+	const auto TracyConcat( __tracy_source_location, TracyLine ) = TracyAllocSrclocName(    \
+		static_cast<uint32_t>( line ),                                                      \
+		TracyGetStr( source ),                                                              \
+		strlen( TracyGetStr( source ) ),                                               \
+		TracyGetStr( function ),                                                            \
+		strlen( TracyGetStr( function ) ),                                             \
+		TracyGetStr( function ),                                                            \
+		strlen( TracyGetStr( function ) ) );                                           \
+	TracyCZoneCtx ctx = ___tracy_emit_zone_begin_alloc( TracyConcat( __tracy_source_location, TracyLine ), active );
+
 #define OZZY_PROFILER_BEGIN_FRAME( ... ) FrameMark;
 
 #define OZZY_PROFILER_FUNCTION( ... )																\
 	TracyCZoneC( ___tracy_function_ctx, (uint32_t)__VA_ARGS__ + 0, true );					\
 	Profiler::TracyScope ___TracyFunction { ___tracy_function_ctx };
+
+#define OZZY_PROFILER_FUNCTION_NAME( name, source, line, ... )                                              \
+	TracyCDynZoneFn( TracyConcat( ___tracy_fn_dyn_ctx, TracyLine ), name, source, line, true );         \
+	Profiler::TracyScope TracyConcat( ___TracyFnDynamic, TracyLine ) { TracyConcat( ___tracy_fn_dyn_ctx, TracyLine ) }; \
+	___tracy_emit_zone_color( TracyConcat( ___tracy_fn_dyn_ctx, TracyLine ), (uint32_t)__VA_ARGS__ + 0 );
 
 #define OZZY_PROFILER_SECTION_DYNAMIC( name, ... )                                                           \
 	TracyCDynZoneN( TracyConcat( ___tracy_scope_dyn_ctx, TracyLine ), name, true );                      \

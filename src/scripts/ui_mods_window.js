@@ -1,5 +1,6 @@
 log_info("akhenaten: mods window started")
 
+[es=(mods_window, doubleclick_item)]
 function mods_window_on_double_click(p) {
     if (!p || !p.text) return
     var modId = p.text
@@ -56,19 +57,17 @@ mods_window {
         unpack_scripts : large_button({ size[156, 25]
                                         text:"Unpack scripts"
                                         margin{right:-156, top:20}
-                                        onclick: mods_unpack_scripts
                                       })
 
         refresh_mods : large_button({ size[156, 25]
                                       text:"Check on github"
                                       margin{right:-156, top:44}
-                                      onclick: __mods_download_info_async
                                     })
 
         mods         : scrollable_list({pos[16, 75], size[36, 23], view_items:11,
                                         draw_scrollbar_always:true
                                         onrender_item: mods_window_on_render_item
-                                        ondoubleclick_item: mods_window_on_double_click })
+                                        ondoubleclick_event: "doubleclick_item" })
 
         bottom_text  : text({text:"Right click to exit, double click to toggle mod"
                              font:FONT_NORMAL_BLACK_ON_LIGHT, size[px(40), 20]
@@ -76,6 +75,16 @@ mods_window {
                              align:"center"
                              margin{bottom:-35}})
     }
+}
+
+[es=(mods_window, unpack_scripts)]
+function mods_window_on_unpack_scripts(window) {
+    mods_unpack_scripts()
+}
+
+[es=(mods_window, refresh_mods)]
+function mods_window_on_refresh_mods(window) {
+    __mods_download_info_async()
 }
 
 [es=(mods_window, ui_draw_foreground)]

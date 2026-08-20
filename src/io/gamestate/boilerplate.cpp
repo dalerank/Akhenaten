@@ -1,4 +1,5 @@
 #include "boilerplate.h"
+#include "boilerplate_detail.h"
 
 #include "building/construction/build_planner.h"
 #include "building/building_granary.h"
@@ -114,8 +115,6 @@
 #include <sys/stat.h>
 #endif
 
-static pcstr MISSION_PACK_FILE = "mission1.pak";
-
 uint32_t save_data_version() {
     return latest_save_version;
 }
@@ -137,180 +136,6 @@ vfs::path fullpath_maps(vfs::path filename) {
         return filename;
     }
     return vfs::path(vfs::MAPS_FOLDER, "/", filename.c_str());
-}
-
-static buffer* small_buffer = new buffer(4);
-int GamestateIO::get_campaign_scenario_offset(int scenario_id) {
-    // init 4-byte buffer and read from file header corresponding to scenario index (i.e. mission 20 = offset 20*4 = 80)
-    small_buffer->clear();
-    if (!io_read_file_part_into_buffer(MISSION_PACK_FILE, NOT_LOCALIZED, small_buffer, 4, 4 * scenario_id))
-        return 0;
-    return small_buffer->read_i32();
-}
-const int GamestateIO::read_file_version(const char* filename, int offset) {
-    small_buffer->clear();
-    if (!io_read_file_part_into_buffer(filename, NOT_LOCALIZED, small_buffer, 4, offset + 4))
-        return -1;
-    return small_buffer->read_i32();
-}
-
-static void pre_load() { // do we NEED this...?
-    OZZY_PROFILER_FUNCTION();
-    g_scenario.campaign_scenario_id = -1;
-    grid_xx::init_all_grids();
-
-    // clear data
-    g_city.victory.reset();
-    g_city.migration.reset();
-    g_city_planner.reset();
-    g_city.init();
-    g_message_manager.init();
-    game.init_state();
-    game.animation_timers_init();
-    sound_city_init();
-    building_clear_all();
-    building_storage_clear_all();
-    g_city.figures.init_figures();
-    g_enemy_armies.clear();
-    figure_name_init();
-    g_formations.clear_all();
-    figure_route_clear_all();
-    g_recorded_paths.clear();
-    map_clear_floodplain_growth();
-    // Troop carry lives outside city_data; clear so old saves (no chunk) and map
-    // loads cannot inherit a stale snapshot from the previous session.
-    g_campaign_carry.clear();
-
-    game.time_init(2098);
-    map_monuments_clear();
-    // clear grids
-    map_image_clear();
-    map_building_clear();
-    map_terrain_clear();
-    map_canal_clear();
-    map_figure_clear();
-    map_property_clear();
-    map_sprite_clear();
-    map_bridge_grids_clear();
-    map_random_clear();
-    g_desirability.clear_map();
-    map_elevation_clear();
-    map_soldier_strength_clear();
-    map_road_network_clear();
-
-    map_image_context_init();
-    map_random_init();
-    map_tiles_gardens_clear_all();
-
-    events::emit(event_game_mission_pre_load{});
-    events::process();
-
-    figure_follow_stop(false);
-}
-
-static void post_load() {
-    city_set_player_name(game_features::gameopt_player_name.to_string());
-    mission_id_t missionid(g_scenario.campaign_scenario_id);
-
-    bool is_new_mission = (game.session.last_loaded == e_session_mission);
-    if (is_new_mission) {
-        g_scenario.vars.clear();
-    }
-
-    g_scenario.load_metadata(missionid, is_new_mission);
-    js_register_mission_vars(g_scenario.vars);
-
-    g_empire.load_mission_metadata(missionid, /*preserve_runtime=*/!is_new_mission);
-    js_register_game_handlers(missionid.value());
-
-    // camera
-    //    g_camera.refresh_camera_position();
-    //    city_view_refresh_viewport();
-
-    // problems / overlays
-    g_message_manager.init_problem_areas();
-    g_city.reset_overlay();
-    game_undo_disable();
-
-    g_distant_battle.determine_distant_battle_city();
-
-    int karmy = g_empire.init_distant_battle_travel_months(EMPIRE_OBJECT_KINGDOME_ARMY);
-    g_scenario.distant_battle_set_kingdome_travel_months(karmy);
-
-    int kenemy = g_empire.init_distant_battle_travel_months(EMPIRE_OBJECT_ENEMY_ARMY);
-    g_scenario.distant_battle_set_enemy_travel_months(kenemy);
-
-    //map
-    map_image_fix_icorrect_tiles();
-    map_bridge_migrate_from_sprite();
-    map_wall_material_migrate_from_terrain();
-
-    // Enhanced auto-resolve: honor feature after load, drop ghost pending, reopen UI.
-    g_invasion_auto_resolve.on_after_load();
-
-    // building counts / storage
-    city_resource_determine_available();
-    g_city.update_allowed_foods();
-    g_city.buildings.update_counters();
-    g_city.on_post_load();
-    g_city.resource.calculate_stocks();
-    city_resource_calculate_storageyard_stocks();
-    building_storage_reset_building_ids();
-    g_city.avg_coverage.update();
-    g_empire_traders.purge_dead();
-
-    g_city.religion.ra_no_traders_months_left = std::clamp<int>(g_city.religion.ra_no_traders_months_left, 0, 12);
-    g_city.religion.ra_harshly_reduced_trading_months_left = std::clamp<int>(g_city.religion.ra_harshly_reduced_trading_months_left, 0, 12);
-
-    // Save/map chunks already hold prices; reset only for a fresh mission start.
-    if (is_new_mission) {
-        trade_prices_reset();
-    }
-
-    // city data special cases
-    switch (game.session.last_loaded) {
-    default:
-        assert(false);
-        break;
-
-    case e_session_mission:
-        game_features::gameopt_game_speed.set( 80 );
-        g_city.init_campaign_mission();
-        g_city.init_mission_resources(g_scenario.init_resources);
-        // Pass JS player_rank from load_metadata � not campaign_scenario_id.
-        g_city.kingdome.load_scenario(g_city.kingdome.player_rank, game.session.last_loaded);
-        events::emit(event_building_menu_update{ "stage_normal" });
-        break;
-
-    case e_session_save:
-        events::emit(event_building_menu_update{ "stage_normal" });
-        break;
-
-    case e_session_custom_map:
-        g_city.init_custom_map();
-        g_city.init_mission_resources(g_scenario.init_resources);
-        g_city.kingdome.load_scenario(g_city.kingdome.player_rank, game.session.last_loaded);
-        events::emit(event_building_menu_update{ "stage_normal" });
-        break;
-    }
-
-    // city messages
-    city_message_clear_scroll();
-
-    // city sounds
-    sound_city_init();
-    map_tiles_gardens_update_all();
-
-    events::emit(event_level_post_load{
-        static_cast<int>(game.session.last_loaded),
-        g_scenario.campaign_scenario_id});
-}
-
-
-
-bool GamestateIO::write_mission(const int scenario_id) {
-    // TODO?
-    return false;
 }
 
 bool GamestateIO::write_family_marker(pcstr filename_short) {
@@ -360,84 +185,14 @@ bool GamestateIO::write_savegame(pcstr filename_short) {
     return save_ok;
 }
 
-bool GamestateIO::write_map(pcstr filename_short) {
-    vfs::path full = fullpath_maps(filename_short);
-
-    // write file
-    return g_chunk_io.serialize(full, 0, FILE_FORMAT_MAP_FILE, 160, file_schema);
-}
-
-bool GamestateIO::write_map_path(pcstr path) {
+bool GamestateIO::write_map(pcstr path, bool relative) {
     if (!path || !path[0]) {
         return false;
     }
+    if (relative) {
+        return g_chunk_io.serialize(fullpath_maps(path), 0, FILE_FORMAT_MAP_FILE, 160, file_schema);
+    }
     return g_chunk_io.serialize(path, 0, FILE_FORMAT_MAP_FILE, 160, file_schema);
-}
-
-bool GamestateIO::export_mission_map(const int scenario_id, pcstr path) {
-    if (!load_mission_pak_raw(scenario_id)) {
-        return false;
-    }
-    return write_map_path(path);
-}
-
-bool GamestateIO::load_mission_pak_raw(const int scenario_id) {
-    const int offset = get_campaign_scenario_offset(scenario_id);
-    if (offset <= 0) {
-        return false;
-    }
-
-    // mission pack files do not store carry savings / troops / campaign rank; preserve across pre_load().
-    const uint16_t saved_carry = g_city.kingdome.campaign_carry_personal_savings;
-    const int32_t saved_rank = g_scenario.campaign_mission_rank;
-    const campaign_carry_t saved_troops = g_campaign_carry;
-
-    pre_load();
-    vfs::path mission_pak_path = vfs::path(MISSION_PACK_FILE).resolve();
-    auto mission_pak = vfs::file_open(mission_pak_path);
-    if (!g_chunk_io.unserialize(mission_pak, offset, FILE_FORMAT_MISSION_PAK, GamestateIO::read_file_version, file_schema)) {
-        return false;
-    }
-
-    g_city.kingdome.campaign_carry_personal_savings = saved_carry;
-    g_scenario.campaign_mission_rank = saved_rank;
-    g_campaign_carry = saved_troops;
-
-    game.session.last_loaded = e_session_mission;
-    game.session.last_loaded_mission = MISSION_PACK_FILE;
-    g_scenario.campaign_scenario_id = scenario_id;
-
-    g_scenario.scmode = e_scenario_normal;
-    return true;
-}
-
-bool GamestateIO::load_mission_map_raw(const int scenario_id, pcstr map_path) {
-    if (!map_path || !map_path[0]) {
-        return false;
-    }
-
-    // Same carry/rank/troops preservation as load_mission_pak_raw.
-    const uint16_t saved_carry = g_city.kingdome.campaign_carry_personal_savings;
-    const int32_t saved_rank = g_scenario.campaign_mission_rank;
-    const campaign_carry_t saved_troops = g_campaign_carry;
-
-    pre_load();
-    vfs::path full = vfs::path(map_path).resolve();
-    auto mapfile = vfs::file_open(full);
-    if (!g_chunk_io.unserialize(mapfile, 0, FILE_FORMAT_MAP_FILE, GamestateIO::read_file_version, file_schema)) {
-        return false;
-    }
-
-    g_city.kingdome.campaign_carry_personal_savings = saved_carry;
-    g_scenario.campaign_mission_rank = saved_rank;
-    g_campaign_carry = saved_troops;
-
-    // Campaign session so post_load() applies JS metadata as a new mission (not custom-map hacks).
-    game.session.last_loaded = e_session_mission;
-    game.session.last_loaded_mission = map_path;
-    g_scenario.campaign_scenario_id = scenario_id;
-    g_scenario.scmode = e_scenario_normal;
-    return true;
 }
 
 bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
@@ -446,32 +201,31 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
         map_file = arch.r_string("map_file");
     });
 
-    bool loaded = false;
-    bool map_file_missing = false;
-    if (!map_file.empty()) {
-        const vfs::path map_full = vfs::path(map_file.c_str()).resolve();
-        if (!vfs::file_exists(map_full)) {
-            map_file_missing = true;
-            logs::warn("Mission %d: map file missing: %s (falling back to %s)",
-                       scenario_id, map_file.c_str(), MISSION_PACK_FILE);
-        } else {
-            loaded = load_mission_map_raw(scenario_id, map_file.c_str());
-            if (!loaded) {
-                logs::warn("Mission %d: map_file '%s' failed to load, falling back to %s",
-                           scenario_id, map_file.c_str(), MISSION_PACK_FILE);
-            }
-        }
+    if (map_file.empty()) {
+        logs::error("Mission %d: no map_file in mission script", scenario_id);
+        return false;
     }
-    if (!loaded && !load_mission_pak_raw(scenario_id)) {
+
+    const vfs::path map_full = vfs::path(map_file.c_str()).resolve();
+    if (!vfs::file_exists(map_full)) {
+        logs::error("Mission %d: map file missing: %s", scenario_id, map_file.c_str());
+        bstring512 body;
+        body.printf("Map file not found:\n%s", map_file.c_str());
+        popup_dialog::show_ok(lang_text_from_key("#popup_dialog_map_file_missing"), body.c_str());
+        return false;
+    }
+
+    if (!GamestateLoadDetail::load_mission_map_raw(scenario_id, map_file.c_str())) {
+        logs::error("Mission %d: map_file '%s' failed to load", scenario_id, map_file.c_str());
         return false;
     }
 
     // Scenario selection loads with start_immediately=false, so start_loaded_file()
     // (which also calls init_cities) never runs. post_load() needs EMPIRE_CITY_OURS via
-    // update_allowed_foods() � rebuild cities from empire objects first.
+    // update_allowed_foods() — rebuild cities from empire objects first.
     g_empire.init_cities();
 
-    post_load();
+    GamestateLoadDetail::post_load();
 
     g_empire.fix_trade_routes();
 
@@ -482,13 +236,6 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
         // replay mission autosave file
         bstring256 filename("autosave_replay.", saved_game_data_expanded.extension);
         GamestateIO::write_savegame(filename);
-    }
-
-    if (map_file_missing) {
-        bstring512 body;
-        body.printf("Map file not found:\n%s\n\nFalling back to %s.",
-                    map_file.c_str(), MISSION_PACK_FILE);
-        popup_dialog::show_ok(lang_text_from_key("#popup_dialog_map_file_missing"), body.c_str());
     }
 
     return true;
@@ -504,16 +251,16 @@ bool GamestateIO::load_savegame(pcstr filename_short, bool start_immediately) {
     }
 
     // read file
-    pre_load();
+    GamestateLoadDetail::pre_load();
     e_file_format file_format = get_format_from_file(filename_short);
     auto savegame = vfs::file_open(full);
-    if (!g_chunk_io.unserialize(savegame, 0, file_format, GamestateIO::read_file_version, file_schema)) {
+    if (!g_chunk_io.unserialize(savegame, 0, file_format, GamestateLoadDetail::read_file_version, file_schema)) {
         return false;
     }
 
     game.session.last_loaded = e_session_save;
     game.session.last_loaded_mission = filename_short;
-    post_load();
+    GamestateLoadDetail::post_load();
 
     // finish loading and start
     if (start_immediately) {
@@ -533,9 +280,9 @@ bool GamestateIO::load_map(pcstr filename, bool relative, bool start_immediately
     }
 
     // read file
-    pre_load();
+    GamestateLoadDetail::pre_load();
     auto mapfile = vfs::file_open(fullpath);
-    if (!g_chunk_io.unserialize(mapfile, 0, FILE_FORMAT_MAP_FILE, GamestateIO::read_file_version, file_schema)) {
+    if (!g_chunk_io.unserialize(mapfile, 0, FILE_FORMAT_MAP_FILE, GamestateLoadDetail::read_file_version, file_schema)) {
         return false;
     }
 
@@ -560,7 +307,7 @@ bool GamestateIO::load_map(pcstr filename, bool relative, bool start_immediately
         }
     }
 
-    post_load();
+    GamestateLoadDetail::post_load();
 
     if (start_immediately) {
         start_loaded_file();
@@ -676,11 +423,6 @@ void GamestateIO::start_loaded_file() {
         g_sound.music_update(true);
     }
     game.session.last_loaded = e_session_none;
-}
-
-bool GamestateIO::delete_mission(const int scenario_id) {
-    // TODO?
-    return false;
 }
 
 bool GamestateIO::delete_savegame(vfs::path filename_short) {

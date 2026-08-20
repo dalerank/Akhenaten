@@ -1,5 +1,6 @@
 log_info("akhenaten: mortuary info window started")
 
+[es=building_info_window]
 mortuary_info_window {
     ui : baseui(building_info_window, {
         warning_text   : text({ pos:[28, 40], wrap:px(27), font: FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),

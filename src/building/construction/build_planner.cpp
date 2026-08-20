@@ -1148,7 +1148,7 @@ void build_planner::construction_finalize() { // confirm final placement
     formation_move_herds_away(end);
     events::emit(event_finance_request{efinance_request_construction, total_cost });
     game_undo_finish_build(total_cost);
-    map_tiles_update_region_empty_land(false, start.shifted(-2, -2), end.shifted(size.x + 2, size.y + 2));
+    map_tiles_update_region_empty_land(false, start.shifted(-3, -3), end.shifted(size.x + 3, size.y + 3));
     map_routing_update_land();
     map_routing_update_walls();
 

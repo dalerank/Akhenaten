@@ -9,18 +9,16 @@ temple_info_window {
         workers_img  : image({ pack:PACK_GENERAL, id:134, offset:14, pos[40, 70] })
         workers_text : text({ text:"${building.num_workers} ${loc.building_employee} ( ${model.laborers} ${loc.building_employee_needed} )", pos[70, 74], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) })
         workers_desc : text({ pos[70, 74 + 16], font: FONT_NORMAL_BLACK_ON_DARK })
-        button_help  : image_button({ margin:{left:14, bottom:-40}, size[27, 27], pack:PACK_GENERAL, id:134 })
-        button_close : image_button({ margin:{right:-40, bottom:-40}, size[27, 27], pack:PACK_GENERAL, id:134, offset:4 })
+        button_help  : help_button({})
+        button_close : close_button({})
         show_overlay : button({
             margin:{right:-64, bottom:-40}, size:[23, 23]
             textfn: building_info_window_text_overlay
-            onclick: building_info_window_toggle_overlay
         })
         god_image    : image({ pos[190, 134] })
         mothball     : button({
                                margin:{right:-90, bottom:-40}, size[23, 23]
                                textfn:building_info_window_text_mothball
-                               onclick: building_info_window_toggle_mothball
                               })
     }
 }
@@ -36,19 +34,17 @@ info_window_temple_complex {
         workers_img  : image({ pack:PACK_GENERAL, id:134, offset:14, pos[40, 70] })
         workers_text : text({ text:"${building.num_workers} ${loc.building_employee} ( ${model.laborers}  ${loc.building_employee_needed} )", pos[70, 74], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) })
         workers_desc : text({ pos[70, 74 + 16], font: FONT_NORMAL_BLACK_ON_DARK })
-        button_help  : image_button({ margin{left:14, bottom:-40}, size[27, 27], pack:PACK_GENERAL, id:134 })
-        button_close : image_button({ margin{right:-40, bottom:-40}, size[27, 27], pack:PACK_GENERAL, id:134, offset:4 })
+        button_help  : help_button({})
+        button_close : close_button({})
         show_overlay : button({
             margin{right:-64, bottom:-40}, size[23, 23]
             textfn: building_info_window_text_overlay
-            onclick: building_info_window_toggle_overlay
         })
         god_image    : image({ pos[190, 134] })
 
         mothball     : button({
                                 margin{right:-90, bottom:-40}, size[23, 23]
                                 textfn:building_info_window_text_mothball
-                                onclick: building_info_window_toggle_mothball
                               })
     }
 }
@@ -59,6 +55,10 @@ info_window_temple {
     ui : baseui(temple_info_window, {
     })
 }
+
+
+
+
 
 function info_window_temple_common_init(window) {
     var b = city.get_building(window.bid)

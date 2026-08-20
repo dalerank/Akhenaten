@@ -87,7 +87,7 @@ mission15 { // North Dahshur — The True Pyramid
 		housing_level {enabled : true, goal : 10 }
 	}
 
-	// Map points from mission1.pak scenario 15 (invasion points omitted — pak 0/0).
+	// Map points from original campaign scenario 15 (invasion points omitted — none on map).
 	entry_point [53, 16]
 	exit_point [96, 113]
 	river_entry_point [120, 87]

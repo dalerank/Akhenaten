@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 20 djedu started")
 
-// Empire / requests verified vs mission1.pak scenario 20 (2026-07-26 dump).
+// Empire / requests aligned with original campaign scenario 20 (2026-07-26 dump).
 // Empire id=19. Enemy ENEMY_5_HYKSOS. Gods: Osiris, Ra, Bast.
 // Funds Normal 7500 / loan 2500 / debt 20. Rank 7.
 // Win: pop 4500 / culture 45 / prosperity 40 / monuments 13 / kingdom 50 / housing 10.

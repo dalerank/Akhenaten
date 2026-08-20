@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 5 timna started")
 
-// Trade / requests / invasions verified vs mission1.pak scenario 5 (2026-07-24 dump).
+// Trade / requests / invasions aligned with original campaign scenario 5 (2026-07-24 dump).
 // Stub events/attacks/trade_routes removed — they were never wired (enable_scenario_events:false).
 
 mission5 { // Timna
@@ -73,7 +73,7 @@ mission5 { // Timna
 		housing_level {enabled : true, goal : 10 }
 	}
 
-	// Map points from mission1.pak scenario 5 (no river / disembark / earthquake).
+	// Map points from original campaign scenario 5 (no river / disembark / earthquake).
 	entry_point [47, 117]
 	exit_point [41, 28]
 	invasion_points_land [ [62, 9], [105, 35], [21, 51], [41, 109] ]
@@ -83,7 +83,7 @@ mission5 { // Timna
 		tutorial_guilds { buildings: [BUILDING_STORAGE_YARD, BUILDING_TAX_COLLECTOR, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL] }
 	}
 
-	// Empire from mission1.pak scenario 5 (empire id=1) — full map objects.
+	// Empire from original campaign scenario 5 (empire id=1) — full map objects.
 	// Trade partners: Nekhen / Nubt / Thinis (closed land). Men-nefer + Perwadjyt display-only.
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
@@ -198,7 +198,7 @@ mission5 { // Timna
 		}
 	]
 
-	// Trade + approach polylines from mission1.pak empire_map_routes (scenario 5).
+	// Trade + approach polylines from original campaign empire_map_routes (scenario 5).
 	hide_pak_routes : true
 	empire_routes [
 		{

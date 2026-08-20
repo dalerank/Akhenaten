@@ -20,7 +20,7 @@ building_pottery {
     production_rate_dcy : [100, 80, 70, 60, 50]
     labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
     building_size : 2
-    meta { help_id:1, text_id:126 }
+    meta { text_id:126, help_link:"message_potter_history" }
     info_sound : "Wavs/pottery.wav"
     cost [ 12, 20, 30, 40, 50 ]
     desirability {

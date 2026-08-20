@@ -54,7 +54,6 @@ namespace ui {
     void proxy_get_selected(js_State* J);
     void proxy_set_selected(js_State* J);
     void proxy_set_tooltip(js_State* J);
-    void proxy_set_onclick(js_State* J);
     void proxy_set_ondraw(js_State* J);
     void proxy_set_textfn(js_State* J);
     void proxy_set_checkedfn(js_State* J);

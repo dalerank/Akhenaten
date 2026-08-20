@@ -43,6 +43,7 @@ function message_list_window_open_entry(index) {
     __ui_window_message_dialog_show_city_message(mmMsg, index, year, month, param1, param2, 0)
 }
 
+[es=(message_list_window, click_item)]
 function message_list_window_on_click_item(p) {
     if (!p) {
         return
@@ -69,6 +70,7 @@ function message_list_window_delete_at(message_index) {
     __city_message_delete(message_index)
 }
 
+[es=(message_list_window, rightclick_item)]
 function message_list_window_on_rightclick_item(p) {
     if (!p) {
         return
@@ -102,8 +104,8 @@ message_list_window {
                                          view_items:15
                                          draw_scrollbar_always:true
                                          onrender_item: message_list_window_on_render_item
-                                         onclick_item: message_list_window_on_click_item
-                                         onrightclick_item: message_list_window_on_rightclick_item })
+                                         onclick_event: "click_item"
+                                         onrclick_event: "rightclick_item" })
 
         message_icon  : dummy({pos[0, 0]})
         message_row   : dummy({pos[0, 0], size[px(13), 20]})
@@ -115,7 +117,13 @@ message_list_window {
         help_text     : text({margin{left:50, bottom:-45}, size[16 * 26 - 100, -1], text[63, 4], font:FONT_NORMAL_BLACK_ON_LIGHT, multiline:true, wrap:16 * 26 - 100})
         empty_text    : text({margin{left:32, centery:-20}, size[16 * 26 - 48, -1], text[63, 1], enabled:false, font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:16 * 26 - 48})
 
-        btnhelp       : help_button({tooltip:"#message_game_control_messages", onclick: function() { window_message_dialog_show("message_dialog_messages") } })
-        btnclose      : close_button({tooltip:"#exit_this_panel", onclick: window_go_back })
+        btnhelp       : help_button({tooltip:"#message_game_control_messages", onclick_event: "help" })
+        btnclose      : close_button({tooltip:"#exit_this_panel", onclick_event: "go_back" })
     }
 }
+
+[es=(message_list_window, help)]
+function message_list_window_on_help(window) {
+    window_message_dialog_show("message_dialog_messages")
+}
+

@@ -17,7 +17,7 @@ building_storage_yard {
     preview_space: { pack: PACK_GENERAL, id: 83 }
 
     labor_category: LABOR_CATEGORY_INDUSTRY_COMMERCE
-    meta: { help_id: 4, text_id: 99 }
+    meta: { text_id: 99, help_link:"message_building_storage_yard" }
     info_sound: "Wavs/warehouse1.wav"
     building_size: 3
     min_houses_coverage: 100

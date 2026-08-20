@@ -6,9 +6,22 @@
 #include "city/labor_category.h"
 #include "graphics/animation.h"
 #include "game/difficulty.h"
+#include "game/resource.h"
 #include "overlays/city_overlay_fwd.h"
 #include "core/xfunction.h"
 #include "sound/sound_city.h"
+
+#include <unordered_map>
+
+struct building_overlay_anim : animation_t {
+    e_resource resource = RESOURCE_NONE;
+    bool stack = false;
+    vec2i step = {5, -5};
+    int8_t max_count = 8;
+    bool default_active = false;
+
+    bool archive_load(archive arch);
+};
 
 struct building_static_params {
     static building_static_params dummy;
@@ -22,6 +35,7 @@ struct building_static_params {
     int output_resource_second_rate;
     e_labor_category labor_category;
     animations_t animations;
+    std::unordered_map<xstring, building_overlay_anim> overlay_anims;
     uint8_t building_size;
     uint8_t min_houses_coverage;
     uint16_t production_rate;
@@ -62,9 +76,13 @@ struct building_static_params {
     static const building_static_params &get(e_building_type);
     static building_static_params &ref(e_building_type e);
 };
+ANK_CONFIG_STRUCT(building_overlay_anim,
+    pos, pack, id, offset, path, max_frames, duration, start_frame, can_reverse, reverse,
+    resource, stack, step, max_count, default_active)
+
 ANK_CONFIG_STRUCT(building_static_params,
     labor_category, fire_proof, damage_proof, input, output,
-    fire_proof, damage_proof, animations, laborers, fire_risk, damage_risk, planner_update_rule, needs, flags,
+    fire_proof, damage_proof, animations, overlay_anims, laborers, fire_risk, damage_risk, planner_update_rule, needs, flags,
     build_menu_text, info_sound, cost, desirability, crime,
     output_resource_second_rate, building_size, info_title_id, progress_max, overlay, sound_channel,
     max_service, max_storage_amount,

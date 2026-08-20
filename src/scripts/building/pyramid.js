@@ -30,7 +30,7 @@ building_small_stepped_pyramid {
     info_title_id [198, 8]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:375, text_id:178 }
+    meta { text_id:178, help_link:"message_building_stepped_pyramid" }
     init_tiles [8, 8]
 
     flags {
@@ -142,7 +142,7 @@ building_small_stepped_pyramid {
     info_title_id [198, 9]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:375, text_id:178 }
+    meta { text_id:178, help_link:"message_building_stepped_pyramid" }
     init_tiles [12, 12]
 
     enter_offset : [2, 12]
@@ -315,7 +315,7 @@ building_small_stepped_pyramid {
     info_title_id [198, 10]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:375, text_id:178 }
+    meta { text_id:178, help_link:"message_building_stepped_pyramid" }
     init_tiles [20, 20]
 
     enter_offset : [2, 20]
@@ -574,7 +574,7 @@ building_small_stepped_pyramid {
     info_title_id [198, 11]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:375, text_id:178 }
+    meta { text_id:178, help_link:"message_building_stepped_pyramid" }
     init_tiles [20, 20]
 
     enter_offset : [2, 20]
@@ -829,7 +829,7 @@ building_small_stepped_pyramid {
     info_title_id [198, 12]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:375, text_id:178 }
+    meta { text_id:178, help_link:"message_building_stepped_pyramid" }
     init_tiles [20, 20]
 
     enter_offset : [2, 20]
@@ -1084,7 +1084,7 @@ building_small_stepped_pyramid {
     info_title_id [198, 1]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:375, text_id:178 }
+    meta { text_id:178, help_link:"message_bent_pyramid" }
     init_tiles [8, 8]
 
     flags {
@@ -1139,7 +1139,7 @@ building_small_stepped_pyramid {
     info_title_id [198, 2]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:375, text_id:178 }
+    meta { text_id:178, help_link:"message_bent_pyramid" }
     init_tiles [12, 12]
 
     enter_offset : [2, 12]
@@ -1310,7 +1310,7 @@ building_small_stepped_pyramid {
     info_title_id [198, 13]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:375, text_id:178 }
+    meta { text_id:178, help_link:"message_true_pyramid" }
     init_tiles [8, 8]
 
     flags {
@@ -1365,7 +1365,7 @@ building_small_stepped_pyramid {
     info_title_id [198, 3]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:55, text_id:178 }
+    meta { text_id:178, help_link:"message_brick_core_pyramid" }
     init_tiles [8, 8]
 
     flags {
@@ -1420,7 +1420,7 @@ building_small_stepped_pyramid {
     info_title_id [198, 4]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:55, text_id:178 }
+    meta { text_id:178, help_link:"message_brick_core_pyramid" }
     init_tiles [12, 12]
 
     flags {
@@ -1589,7 +1589,7 @@ building_small_stepped_pyramid {
     info_title_id [198, 5]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:55, text_id:178 }
+    meta { text_id:178, help_link:"message_brick_core_pyramid" }
     init_tiles [16, 16]
 
     flags {
@@ -1757,7 +1757,7 @@ building_small_stepped_pyramid {
     info_title_id [198, 6]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:55, text_id:178 }
+    meta { text_id:178, help_link:"message_brick_core_pyramid" }
     init_tiles [20, 20]
 
     flags {
@@ -1815,7 +1815,7 @@ building_small_stepped_pyramid {
     info_title_id [198, 7]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:55, text_id:178 }
+    meta { text_id:178, help_link:"message_brick_core_pyramid" }
     init_tiles [20, 20]
 
     flags {
@@ -1866,7 +1866,7 @@ building_small_stepped_pyramid {
     info_title_id [198, 13]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:375, text_id:178 }
+    meta { text_id:178, help_link:"message_true_pyramid" }
     init_tiles [12, 12]
 
     flags {
@@ -2039,7 +2039,7 @@ building_small_stepped_pyramid {
     info_title_id [198, 14]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:375, text_id:178 }
+    meta { text_id:178, help_link:"message_true_pyramid" }
     init_tiles [20, 20]
 
     enter_offset : [2, 20]
@@ -2304,7 +2304,7 @@ building_small_stepped_pyramid {
     info_title_id [198, 15]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:375, text_id:178 }
+    meta { text_id:178, help_link:"message_true_pyramid" }
     init_tiles [20, 20]
 
     enter_offset : [2, 20]
@@ -2565,7 +2565,7 @@ building_small_stepped_pyramid {
     info_title_id [198, 16]
     fire_proof :  true
     damage_proof : true
-    meta { help_id:375, text_id:178 }
+    meta { text_id:178, help_link:"message_true_pyramid" }
     init_tiles [20, 20]
 
     enter_offset : [2, 20]

@@ -18,6 +18,7 @@ building_chariots_workshop = {
   production_rate : 20,
   production_rate_dcy : [100, 80, 70, 60, 50],
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  meta { help_link:"message_building_weapongsmith_and_chariot_maker" }
   building_size : 2,
   cost: [ 50, 100, 150, 300, 500 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [6] }

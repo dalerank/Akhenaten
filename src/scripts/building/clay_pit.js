@@ -13,7 +13,7 @@ building_clay_pit {
   progress_max : 200,
   building_size : 2,
   production_rate : 100,
-  meta { help_id:92, text_id:121 }
+  meta { text_id:121, help_link:"message_building_clay_pit" }
   info_sound : "Wavs/clay.wav"
   sound_channel : SOUND_CHANNEL_CITY_CLAY_PIT
   needs {

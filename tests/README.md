@@ -81,6 +81,7 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `10_work_camp_info_window.js` | Work camp info window |
 | `11_work_camp_map_placement.js` | Work camp placed via `test_building_place` (real `city_planner` path) |
 | `12_road_segment_placement.js` | Road via `build_planner` on a valid segment near map center; all routed tiles have `TERRAIN_ROAD` |
+| `182_floodplain_road_click.js` | #648: single-tile road start on dry floodplain (`map_can_place_initial` allows CITIZEN_2 floodplain) |
 | `13_pottery_workshop_placement.js` | Pottery workshop via `test_building_place` |
 | `14_hotkey_config_window.js` | Hotkey config window (`window_show_by_id`) |
 | `15_victory_dialog_window.js` | `show_victory_dialog` console command → victory dialog |
@@ -157,8 +158,7 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `133_pyramid_complex_causeway.js` | Complex causeway: grand east-only (south reject), plain south place+claim, demolish clears strip |
 | `134_grand_stepped_place.js` | C1c grand stepped 252: south reject, east place+claim, type/parts/schedule |
 | `113_frog_plague.js` | CF1 Frog: register/anim walk+idle; Ptah/EVENT/cheat swarm; happiness; house infest + lockout; saveload; timer poof |
-| `114_bridge_editor_allow_dump.js` | UB1/BR1 canary: Bridges/Alexandria Bridge ON; Nubt/Perwadjyt OFF; Nekhen ON (skip `--no-resource`). Table: [`docs/bridge_editor_allow_triage.md`](../docs/bridge_editor_allow_triage.md) |
-| `115_bridge_menu_smoke.js` | BR2: Perwadjyt Low Bridge locked→`use_building` unlock; Bridges.map day-0 ON (else Nekhen hermetic fallback) |
+| `115_bridge_menu_smoke.js` | BR2: Perwadjyt Low Bridge locked→`use_building` unlock; Bridges.map day-0 ON (else Nekhen hermetic fallback). Editor-flag table: [`docs/bridge_editor_allow_triage.md`](../docs/bridge_editor_allow_triage.md) |
 | `116_canal_shore_refresh.js` | IR3a: adding WATER next to existing canal restamps neighbor canal image |
 | `77_brick_wall_placement.js` | Brick wall L-drag; material; clear+undo; mud↔brick overwrite no-op |
 | `76_invasion_auto_resolve.js` | Enhanced auto-resolve invasions (AC*): freeze/pending, lose/win KR, queue timer, flag OFF, natives out, Pharaoh, queue full, save/load, chain spawn |
@@ -198,6 +198,7 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `132_nilometer_ui.js` | Enhanced nilometer helpers: flag OFF default, hide/floodplain gates, quality tiers, phase keys, water bar |
 | `169_invasion_warnings_saveload.js` | B3/B4: invasion_warnings saveload + MESSAGE phrase from reasons / fallback |
 | `170_iunet_request_outcomes.js` | B13a: Iunet meat/pottery late→hittite×10 once; ok leaf; limestone refuse→egypt×24 ≠ favour |
+| `184_request_saveload.js` | Pharaoh request `.svx` round-trip: tag/state/months/faction; fulfill after load keeps `event_request_cleared.tag_id` |
 | `176_north_dahshur_henna_raid.js` | B12/B13d: North Dahshur henna refuse/late→Hyksos×12; on-time fulfill no raid |
 
 Farm **placement** tests (34/35) cover `can_place` / terrain rules; **37** covers preview image helpers.

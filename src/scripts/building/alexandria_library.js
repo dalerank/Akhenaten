@@ -21,7 +21,7 @@ building_alexandria_library {
     fire_proof : true
     damage_proof : true
     info_title_id [198, 29]
-    meta { help_id: 488, text_id: 178 }
+    meta { text_id: 178, help_link:"message_building_alexandria_library" }
     info_sound : "Wavs/rock3.wav"
     cost [ 5000, 6500, 8000, 11000, 16000 ]
     flags {

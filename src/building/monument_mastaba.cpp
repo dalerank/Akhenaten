@@ -101,48 +101,25 @@ declare_console_command_p(monument_up) {
     }
 }
 
-struct monument_small_mastaba : public monument {
-    monument_small_mastaba() : monument{ BUILDING_SMALL_MASTABA } {
-        phases.push_back({ 0, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
-        phases.push_back({ 1, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
-        phases.push_back({ 2, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_BRICKS, 4800} });
-        phases.push_back({ 3, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 2000}, {RESOURCE_BRICKS, 4000} });
-        phases.push_back({ 4, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 1600}, {RESOURCE_BRICKS, 3200} });
-        phases.push_back({ 5, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 1200}, {RESOURCE_BRICKS, 2400} });
-        phases.push_back({ 6, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 800}, {RESOURCE_BRICKS, 1600} });
-        phases.push_back({ 7, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 400}, {RESOURCE_BRICKS, 800} });
-        phases.push_back({ 8, monument_phase_resource{RESOURCE_NONE, 0} });
-    }
-} g_monument_small_mastaba;
+void building_mastaba::base_params::finalize_construction(e_building_type type) {
+    construction.btype = type;
+}
 
-struct monument_medium_mastaba : public monument {
-    monument_medium_mastaba() : monument{ BUILDING_MEDIUM_MASTABA } {
-        phases.push_back({ 0, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
-        phases.push_back({ 1, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
-        phases.push_back({ 2, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_BRICKS, 8000} });
-        phases.push_back({ 3, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 4000}, {RESOURCE_BRICKS, 8000} });
-        phases.push_back({ 4, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 3200}, {RESOURCE_BRICKS, 6400} });
-        phases.push_back({ 5, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 2400}, {RESOURCE_BRICKS, 4800} });
-        phases.push_back({ 6, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 1600}, {RESOURCE_BRICKS, 3200} });
-        phases.push_back({ 7, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 800}, {RESOURCE_BRICKS, 1600} });
-        phases.push_back({ 8, monument_phase_resource{RESOURCE_NONE, 0} });
-    }
-} g_monument_medium_mastaba;
+void building_small_mastaba::static_params::archive_load(archive /*arch*/) {
+    finalize_construction(BUILDING_SMALL_MASTABA);
+}
 
-// Provisional: medium × (144/84)=×12/7, rounded to 400. No Heaven/OG per-phase dump.
-struct monument_large_mastaba : public monument {
-    monument_large_mastaba() : monument{ BUILDING_LARGE_MASTABA } {
-        phases.push_back({ 0, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
-        phases.push_back({ 1, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
-        phases.push_back({ 2, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_BRICKS, 13600} });
-        phases.push_back({ 3, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 6800}, {RESOURCE_BRICKS, 13600} });
-        phases.push_back({ 4, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 5600}, {RESOURCE_BRICKS, 10800} });
-        phases.push_back({ 5, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 4000}, {RESOURCE_BRICKS, 8400} });
-        phases.push_back({ 6, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 2800}, {RESOURCE_BRICKS, 5600} });
-        phases.push_back({ 7, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 1400}, {RESOURCE_BRICKS, 2800} });
-        phases.push_back({ 8, monument_phase_resource{RESOURCE_NONE, 0} });
-    }
-} g_monument_large_mastaba;
+void building_medium_mastaba::static_params::archive_load(archive /*arch*/) {
+    finalize_construction(BUILDING_MEDIUM_MASTABA);
+}
+
+void building_large_mastaba::static_params::archive_load(archive /*arch*/) {
+    finalize_construction(BUILDING_LARGE_MASTABA);
+}
+
+const monument &building_mastaba::config() const {
+    return get_mastaba_params(type()).construction;
+}
 
 template<typename T>
 const building_mastaba::base_params &mastaba_base_params(const building_static_params &params) {
@@ -249,9 +226,11 @@ void building_mastaba::preview::ghost_preview(build_planner &planer, painter &ct
     case 3: size = { size_b.x, size_b.y }; break;
     }
 
+    // Match build_planner::update_coord_caches: +mapX → (+30,+15), +mapY → (-30,+15).
+    // Swapped deltas draw the long axis on the wrong iso diagonal (preview T-B vs place L-R).
     for (int i = 0; i < size.x; ++i) {
         for (int j = 0; j < size.y; ++j) {
-            vec2i p = pixel + (vec2i(-30, 15) * i) + (vec2i(30, 15) * j);
+            vec2i p = pixel + (vec2i(30, 15) * i) + (vec2i(-30, 15) * j);
             int image_id = get_image(end.shifted(i, j), end, size);
 
             auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile_full);
@@ -922,10 +901,6 @@ bool building_small_mastaba::draw_ornaments_and_animations_height(painter &ctx, 
     return draw_ornaments_and_animations_hight_impl(ctx, point, tile, color_mask, get_mastaba_params(BUILDING_SMALL_MASTABA).init_tiles);
 }
 
-const monument &building_small_mastaba::config() const {
-    return g_monument_small_mastaba;
-}
-
 tile2i building_small_mastaba::center_point() const {
     tile2i main = tile();
     tile2i end = main.shifted(3, 9);
@@ -934,10 +909,6 @@ tile2i building_small_mastaba::center_point() const {
 
 tile2i building_small_mastaba::access_point() const {
     return main()->tile().shifted(0, 10);
-}
-
-const monument &building_medium_mastaba::config() const {
-    return g_monument_medium_mastaba;
 }
 
 tile2i building_medium_mastaba::center_point() const {
@@ -997,10 +968,6 @@ void building_medium_mastaba::update_day() {
     }
 
     building_mastaba::update_day(current_params().init_tiles);
-}
-
-const monument &building_large_mastaba::config() const {
-    return g_monument_large_mastaba;
 }
 
 tile2i building_large_mastaba::center_point() const {

@@ -650,6 +650,36 @@ void js_State::getproperty(js_Object* obj, const js_StringNode name) {
     }
 }
 
+static void jsR_check_ephemeral_escape(js_State* J, js_Object* dst, const js_Value* value) {
+    if (!value || value->type != JS_TOBJECT || !value->u.object || !value->u.object->ephemeral) {
+        return;
+    }
+    if (dst && dst->ephemeral) {
+        return;
+    }
+    ++J->frame_escape_count;
+#if JS_FRAME_ESCAPE_HARD
+    js_error(J, "ephemeral object escaped to heap");
+#else
+    fprintf(stderr, "mujs: ephemeral object escaped to heap (count=%u)\n", J->frame_escape_count);
+#endif
+}
+
+static void jsR_check_ephemeral_object_escape(js_State* J, js_Object* dst, js_Object* obj) {
+    if (!obj || !obj->ephemeral) {
+        return;
+    }
+    if (dst && dst->ephemeral) {
+        return;
+    }
+    ++J->frame_escape_count;
+#if JS_FRAME_ESCAPE_HARD
+    js_error(J, "ephemeral object escaped to heap");
+#else
+    fprintf(stderr, "mujs: ephemeral object escaped to heap (count=%u)\n", J->frame_escape_count);
+#endif
+}
+
 static void jsR_setproperty(js_State* J, js_Object* obj, const js_StringNode name) {
     js_Value *value = stackidx(J, -1);
     js_Property *ref;
@@ -784,9 +814,10 @@ static void jsR_setproperty(js_State* J, js_Object* obj, const js_StringNode nam
         ref = jsV_setproperty(J, obj, name);
 
     if (ref) {
-        if (!(ref->atts & JS_READONLY))
+        if (!(ref->atts & JS_READONLY)) {
+            jsR_check_ephemeral_escape(J, obj, value);
             ref->value = *value;
-        else
+        } else
             goto readonly;
     }
 
@@ -852,10 +883,17 @@ static void jsR_defproperty(js_State* J, js_Object* obj, const js_StringNode nam
               js_strnode_cstr(name), js_strnode_cstr(name));
         }
         if (value) {
-            if (!(ref->atts & JS_READONLY))
+            if (!(ref->atts & JS_READONLY)) {
+                jsR_check_ephemeral_escape(J, obj, value);
                 ref->value = *value;
-            else if (J->strict)
+            } else if (J->strict)
                 js_typeerror(J, "'%s' is read-only", js_strnode_cstr(name));
+        }
+        if (getter) {
+            jsR_check_ephemeral_object_escape(J, obj, getter);
+        }
+        if (setter) {
+            jsR_check_ephemeral_object_escape(J, obj, setter);
         }
         if (getter) {
             if (!(ref->atts & JS_DONTCONF))
@@ -1035,6 +1073,9 @@ const js_StringNode js_nextiterator(js_State *J, int idx) {
 /* Environment records */
 
 js_Environment *jsR_newenvironment(js_State *J, js_Object *vars, js_Environment *outer) {
+    if (J->frame_zone_depth > 0) {
+        js_error(J, "environment in frame zone");
+    }
     js_Environment *E = (js_Environment*)js_malloc(J, sizeof * E);
     memset(E, 0, sizeof(js_Environment));
     E->gcmark = 0;
@@ -1097,9 +1138,10 @@ static void js_setvar(js_State* J, const js_StringNode name) {
                     return;
                 }
             }
-            if (!(ref->atts & JS_READONLY))
+            if (!(ref->atts & JS_READONLY)) {
+                jsR_check_ephemeral_escape(J, E->variables, stackidx(J, -1));
                 ref->value = *stackidx(J, -1);
-            else if (J->strict)
+            } else if (J->strict)
                 js_typeerror(J, "'%s' is read-only", js_strnode_cstr(name));
             return;
         }
@@ -1149,7 +1191,9 @@ void js_State::restorescope() {
 }
 
 void js_State::callwfunction(int n, js_Function *F, js_Environment *scope) {
-    OZZY_PROFILER_FUNCTION();
+    const char *js_fn = js_strnode_cstr(F->name);
+    const char *js_file = js_strnode_cstr(F->filename);
+    OZZY_PROFILER_FUNCTION_NAME(js_fn[0] ? js_fn : "(anonymous)", js_file[0] ? js_file : "js", F->line);
 
     js_Value v;
     int i;
@@ -1261,9 +1305,29 @@ void js_State::pushtrace(const char *name, const char *file, int line) {
     trace[tracetop].line = line;
 }
 
-void js_State::call(int n) {
-    OZZY_PROFILER_FUNCTION();
+static void jsR_profiler_callable(js_Object *obj, const char **name, const char **file, int *line) {
+    if (obj->type == JS_CFUNCTION || obj->type == JS_CSCRIPT) {
+        *name = js_strnode_cstr(obj->u.f.function->name);
+        *file = js_strnode_cstr(obj->u.f.function->filename);
+        *line = obj->u.f.function->line;
+    } else if (obj->type == JS_CCFUNCTION) {
+        *name = js_strnode_cstr(obj->u.c.name);
+        *file = "native";
+        *line = 0;
+    } else {
+        *name = "(callable)";
+        *file = "js";
+        *line = 0;
+    }
+    if (!(*name)[0]) {
+        *name = "(anonymous)";
+    }
+    if (!(*file)[0]) {
+        *file = "js";
+    }
+}
 
+void js_State::call(int n) {
     js_Object *obj;
     int savebot;
 
@@ -1273,6 +1337,12 @@ void js_State::call(int n) {
     }
 
     obj = toobject(-n - 2);
+
+    const char *js_fn;
+    const char *js_file;
+    int js_line;
+    jsR_profiler_callable(obj, &js_fn, &js_file, &js_line);
+    OZZY_PROFILER_FUNCTION_NAME(js_fn, js_file, js_line);
 
     savebot = bot;
     bot = top - n - 1;
@@ -1373,7 +1443,13 @@ int js_pconstruct(js_State *J, int n) {
 }
 
 int js_State::pcall(int n) {
-    OZZY_PROFILER_FUNCTION();
+    const char *js_fn = "(callable)";
+    const char *js_file = "js";
+    int js_line = 0;
+    if (iscallable(-n - 2)) {
+        jsR_profiler_callable(toobject(-n - 2), &js_fn, &js_file, &js_line);
+    }
+    OZZY_PROFILER_FUNCTION_NAME(js_fn, js_file, js_line);
 
     int savetop = top - n - 2;
     if (js_try(this)) {
@@ -1488,7 +1564,9 @@ void js_trap(js_State *J, int pc) {
 }
 
 void js_State::r_run(js_Function *F) {
-    OZZY_PROFILER_FUNCTION();
+    const char *js_fn = js_strnode_cstr(F->name);
+    const char *js_file = js_strnode_cstr(F->filename);
+    OZZY_PROFILER_FUNCTION_NAME(js_fn[0] ? js_fn : "(anonymous)", js_file[0] ? js_file : "js", F->line);
 
     js_Function **FT = F->funtab;
     double *NT = F->numtab;

@@ -10,8 +10,10 @@ Chunk-based save/load, mod image loading, and localization strings.
 | `chunk_container.h` | `svx` — sectioned `.svx` container + shared prefixed zip codec |
 | `io_buffer.h` | Typed bind/read/write into chunk buffers; optional defaulters |
 | `gamestate/boilerplate.h` | `GamestateIO` facade, `save_data_version()` |
+| `gamestate/boilerplate_detail.h` | `GamestateLoadDetail` — pre/post load, version probe, raw map load |
+| `gamestate/save_versions.h` | `latest_save_version` changelog |
 | `gamestate/file_schemas.h` | Format schema entry points (`file_schema`, builders) |
-| `gamestate/file_schema_*.cpp` | Per-format `push_chunk` lists (map / pak+sav / svx) |
+| `gamestate/file_schema_*.cpp` | Per-format `push_chunk` lists (map / sav / svx) |
 | `gamestate/chunks.h` | Global `io_buffer*` declarations for game data chunks |
 | `io.h` | Low-level file reads (`io_read_file_into_buffer`, sg3/sgx counts) |
 | `mods/mods.h` | Mod image loading: group/name lookup, PNG support |
@@ -25,7 +27,7 @@ GamestateIO::write_savegame / load_savegame / write_map / write_family_marker / 
 ChunkSerializer (g_chunk_io)  — push_chunk schema, fill buffers, apply state
         ↓
   .svx  → svx sectioned container (by name, CRC, defaulters)
-  .sav / .map / .pak → legacy positional stream (unchanged Pharaoh layouts)
+  .sav / .map → legacy positional stream (unchanged Pharaoh layouts)
 ```
 
 `write_family_marker` writes a tiny positional `.sav` stub (`family_index`) so `Save/<player>/` exists when starting a dynasty — not a city save (no Ironwill / last_save).
@@ -46,7 +48,7 @@ g_chunk_io.unserialize(reader, 0, format, GamestateIO::read_file_version, file_s
 ```
 
 - Schema is built by `file_schema` in `gamestate/file_schemas.cpp`, with per-format
-  lists in `file_schema_map.cpp`, `file_schema_pak_sav.cpp` (`.sav`/`.pak` + family marker),
+  lists in `file_schema_map.cpp`, `file_schema_sav.cpp` (`.sav` + family marker),
   `file_schema_svx.cpp`. Legacy positional `.svx` and sectioned `.svx` share
   `file_schema_svx`; dead padding chunks are gated with `g_chunk_io.is_sectioned()`.
 - Writes go through `<path>.tmp` then rename (atomic when `offset == 0`).
