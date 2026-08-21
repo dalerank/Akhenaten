@@ -761,7 +761,7 @@ localization_hu = [
   {key: "#figure_immigrant", group:64, id:1 }
   {key: "#figure_emigrant", group:64, id:2 }
   {key: "#figure_homeless", group:64, id:3 }
-  {key: "#figure_cart_pusher", group:64, id:4 }
+  {key: "#figure_cartpusher", group:64, id:4 }
   {key: "#figure_labor_seeker", group:64, id:5 }
   {key: "#figure_explosion", group:64, id:6 }
   {key: "#figure_tax_collector", group:64, id:7 }
@@ -1101,6 +1101,13 @@ localization_hu = [
   { key: "#fireman_fighting_fire", text: "Most nem beszélhetek. Épp ezt a tüzet oltom." }
   { key: "#fireman_going_to_fire", text: "Ez a tűz az egész várost elpusztíthatja, ha nem cselekszem gyorsan!" }
   { key: "#fireman_fighting_fire_also", text: "Hű, ez forró!" }
+
+  { key: "#cartpusher_have_no_place_for_goods", text: "Nem viszem tovább ezeket a készleteket, amíg nincs valaki, aki lerakodja őket."}
+  { key: "#cartpusher_i_have_time_for_rest", text: "Senki sem tudja átvenni ezeket az árukat! Semmi baj, a maradékot felhasználhatom."}
+  { key: "#cartpusher_road_too_long", text: "Ezekkel az árukkal át kell kelnem az egész városon. Egész nap eltart majd!"}
+  { key: "#cartpusher_i_have_no_destination", text: "Többet dolgozunk a ránk eső résznél. Több segítségre van szükségünk."}
+  { key: "#cartpusher_back_to_home", text: "Itt várok, amíg lesz hely ezeknek a holmiknak."}
+  { key: "#cartpusher_delivering_items", text: "Már ott vagyok? Nem tudom sokkal tovább cipelni ezeket az árukat."}
 
   { key: "#malaria_problem", text: "(Nincs használatban)" }
   { key: "#malaria_not_a_problem", text: "Úgy tűnik, itt nem jelent problémát a malária." }

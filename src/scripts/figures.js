@@ -1111,12 +1111,12 @@ figure_cartpusher {
 	}
 
 	sounds {
-	  	cartpusher_have_no_place_for_goods { sound:"cartpusher_e01.wav", group:222, text:0}
-		cartpusher_i_have_time_for_rest { sound:"cartpusher_e02.wav", group:222, text:1}
-		cartpusher_road_too_long { sound:"cartpusher_e03.wav", group:222, text:2}
-		cartpusher_i_have_no_destination { sound:"cartpusher_e01.wav", group:223, text:0}
-		cartpusher_back_to_home { sound:"cartpusher_e02.wav", group:223, text:1}
-		cartpusher_delivering_items { sound:"cartpusher_e03.wav", group:223, text:2}
+	  	cartpusher_have_no_place_for_goods { sound:"cartpusher_e01.wav"}
+		cartpusher_i_have_time_for_rest { sound:"cartpusher_e02.wav"}
+		cartpusher_road_too_long { sound:"cartpusher_e03.wav"}
+		cartpusher_i_have_no_destination { sound:"cartpusher_e01.wav"}
+		cartpusher_back_to_home { sound:"cartpusher_e02.wav"}
+		cartpusher_delivering_items { sound:"cartpusher_e03.wav"}
 	}
 
 	use_cart : true

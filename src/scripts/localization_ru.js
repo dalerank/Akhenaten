@@ -475,6 +475,13 @@ localization_ru = [
     { key: "#fireman_going_to_fire", text: "Этот пожар может сжечь весь город дотла, если я не буду действовать быстро!" }
     { key: "#fireman_fighting_fire_also", text: "Ух, это горячо!" }
 
+    { key: "#cartpusher_have_no_place_for_goods", text: "Я не повезу эти припасы дальше, пока кто-нибудь не будет доступен, чтобы их разгрузить."}
+    { key: "#cartpusher_i_have_time_for_rest", text: "Никто не может принять эти товары! Это нормально, я могу использовать отдых."}
+    { key: "#cartpusher_road_too_long", text: "Мне придётся идти через весь город с этими товарами. Это займёт весь день!"}
+    { key: "#cartpusher_i_have_no_destination", text: "Мы делаем больше, чем наша доля работы. Нам нужно больше помощи."}
+    { key: "#cartpusher_back_to_home", text: "Я подожду здесь, пока освободится место для этого."}
+    { key: "#cartpusher_delivering_items", text: "Я уже там? Я не могу тащить эти товары намного дальше."}
+
     { key: "#malaria_problem", text: "(Не используется)" }
     { key: "#malaria_not_a_problem", text: "Малярия, похоже, здесь не проблема." }
     { key: "#malaria_outbreak_could_strike", text: "Вспышка малярии может произойти, если ничего не сделать." }

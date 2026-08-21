@@ -791,7 +791,7 @@ localization_en = [
   {key: "#figure_immigrant", group:64, id:1 }
   {key: "#figure_emigrant", group:64, id:2 }
   {key: "#figure_homeless", group:64, id:3 }
-  {key: "#figure_cart_pusher", group:64, id:4 }
+  {key: "#figure_cartpusher", group:64, id:4 }
   {key: "#figure_labor_seeker", group:64, id:5 }
   {key: "#figure_explosion", group:64, id:6 }
   {key: "#figure_tax_collector", group:64, id:7 }
@@ -1130,7 +1130,14 @@ localization_en = [
   { key: "#fireman_city_is_amazing", text: "This city is cool." }
   { key: "#fireman_fighting_fire", text: "I can't talk now.  I'm busy dousing this fire." }
   { key: "#fireman_going_to_fire", text: "This fire could burn the whole city down if I don't act fast!" }
-  { key: "#fireman_fighting_fire_also", text: "Ooh, that's hot!" }    
+  { key: "#fireman_fighting_fire_also", text: "Ooh, that's hot!" }
+
+  { key: "#cartpusher_have_no_place_for_goods", text: "I'm not taking these supplies any further until someone's available to unload them."}
+  { key: "#cartpusher_i_have_time_for_rest", text: "No one can accept these goods! That's okay, I can use the rest."}
+  { key: "#cartpusher_road_too_long", text: "I have to go clear across the city with these goods. It'll take all day!"}
+  { key: "#cartpusher_i_have_no_destination", text: "We're doing more than our share of work.  We need more help."}
+  { key: "#cartpusher_back_to_home", text: "I'll wait here until some space for this stuff opens up."}
+  { key: "#cartpusher_delivering_items", text: "Am I there yet?  I can't haul these goods much further."}
 
   { key: "#malaria_problem", text: "(Not used)" }
   { key: "#malaria_not_a_problem", text: "Malaria doesn't seem to be a problem here." }

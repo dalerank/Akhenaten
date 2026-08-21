@@ -31,7 +31,7 @@ void figure_carrier_info_window::init(object_info &c) {
 
     if (f->action_state() != ACTION_132_DOCKER_IDLING && f->base.resource_id && f->base.resource_amount_full > 0) {
         int resource_img = image_id_resource_icon(f->base.resource_id);
-        ui["items"].text_var("@I%u& %u %s %s", resource_img, f->base.resource_amount_full, ui::str(129, 20), ui::str(23, f->base.resource_id));
+        ui["items"].text_var("@I%u %u %s %s", resource_img, f->base.resource_amount_full, ui::str(129, 20), ui::str(23, f->base.resource_id));
     }
 
     ui["debug_stuck"] = "";
@@ -78,6 +78,4 @@ void figure_carrier_info_window::init(object_info &c) {
 
     building *source_building = f->home();
     building *target_building = f->destination();
-
-    ui["phrase"] = f->phrase_key();
 }
