@@ -32,7 +32,7 @@ void figure_fireman::figure_before_action() {
 
 sound_key figure_fireman::phrase_key() const {
     if (base.action_state == ACTION_74_FIREMAN_GOING_TO_FIRE) {
-        return "going_to_fire";
+        return "fireman_going_to_fire";
     }
 
     svector<sound_key, 10> keys;
@@ -41,7 +41,7 @@ sound_key figure_fireman::phrase_key() const {
         keys.push_back("fighting_fire");
 
         int index = rand() % keys.size();
-        return keys[index];
+        return xstring().printf("fireman_%s", keys[index].c_str());
     }
 
     if (g_city.health.value < 20) {
