@@ -732,7 +732,7 @@ localization_base_hu = [
     { group:23, id:18, text: "Drágakövek" }
     { group:23, id:19, text: "Luxuscikkek" }
     { group:23, id:20, text: "Fa" }
-    { group:23, id:21, text: "Arany" }
+    { group:23, id:21, text: "arany" }
     { group:23, id:22, text: "Nád" }
     { group:23, id:23, text: "Papirusz" }
     { group:23, id:24, text: "Egyszerű kő" }
@@ -766,7 +766,6 @@ localization_base_hu = [
     { group:23, id:52, text: "Parfüm (luxuscikkek)" }
     { group:23, id:53, text: "Parfüm" }
     { group:23, id:54, text: "Ez a hely szándékosan üresen maradt" }
-
     { group:23, id:55, text: "zsák gabona" }
     { group:23, id:56, text: "húsdarabok" }
     { group:23, id:57, text: "fej saláta" }
@@ -5191,12 +5190,6 @@ localization_base_hu = [
     { group:219, id:9, text: "Ez a város nagyszerű!" }
     { group:219, id:10, text: "A bazárnak szüksége van néhány árucikkre, és én be fogom szerezni őket." }
     { group:219, id:11, text: "Ezek az áruk remek kiegészítői lesznek a bazárnak." }
-    { group:222, id:0, text: "Nem viszem tovább ezeket a készleteket, amíg nincs valaki, aki lerakodja őket." }
-    { group:222, id:1, text: "Senki sem tudja átvenni ezeket az árukat! Semmi baj, a maradékot felhasználhatom." }
-    { group:222, id:2, text: "Ezekkel az árukkal át kell kelnem az egész városon. Egész nap eltart majd!" }
-    { group:223, id:0, text: "Többet dolgozunk a ránk eső résznél. Több segítségre van szükségünk." }
-    { group:223, id:1, text: "Itt várok, amíg lesz hely ezeknek a holmiknak." }
-    { group:223, id:2, text: "Már ott vagyok? Nem tudom sokkal tovább cipelni ezeket az árukat." }
     { group:226, id:0, text: "Még soha nem láttam ennyi beteget. Remélem, nem tör ki a pestis." }
     { group:226, id:1, text: "Nehéz elkapni ezeket a bunkókat, amikor az éhségtől a hasadat fogod." }
     { group:226, id:2, text: "Talán ezekkel a bunkókkal megdobálhatom az ellenséget, ha támadnak. Alig védi valami ezt a várost." }

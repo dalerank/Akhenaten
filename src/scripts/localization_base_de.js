@@ -5013,12 +5013,6 @@ localization_base_de = [
     { group:219, id:9, text: "Diese Stadt ist spitze!" }
     { group:219, id:10, text: "Der Basar braucht einige Waren, und ich werde sie besorgen." }
     { group:219, id:11, text: "Diese Waren werden willkommene Ergänzungen für den Basar sein." }
-    { group:222, id:0, text: "Ich nehme diese Lieferungen nicht weiter mit, bis jemand verfügbar ist, sie zu entladen." }
-    { group:222, id:1, text: "Niemand kann diese Waren annehmen! Das ist okay, ich kann die Rast gebrauchen." }
-    { group:222, id:2, text: "Ich muss quer durch die ganze Stadt mit diesen Waren. Es wird den ganzen Tag dauern!" }
-    { group:223, id:0, text: "Wir tun mehr als unseren Anteil an Arbeit. Wir brauchen mehr Hilfe." }
-    { group:223, id:1, text: "Ich werde hier warten, bis etwas Platz für dieses Zeug frei wird." }
-    { group:223, id:2, text: "Bin ich schon da? Ich kann diese Waren nicht viel weiter schleppen." }   
     { group:226, id:0, text: "Ich habe noch nie so viele kranke Menschen gesehen. Ich hoffe, es bricht keine Seuche aus." }
     { group:226, id:1, text: "Es ist schwer, diese Keulen zu fangen, wenn man sich vor Hungerqualen krümmt." }
     { group:226, id:2, text: "Vielleicht kann ich diese Keulen auf den Feind werfen, sollte er angreifen. Wenig anderes verteidigt diese Stadt." }

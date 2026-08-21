@@ -5008,12 +5008,6 @@ localization_base_en = [
     { group:219, id:9, text: "This city is tops!" }
     { group:219, id:10, text: "The bazaar needs some items, and I'm going to get them." }
     { group:219, id:11, text: "These goods will make welcome additions to the bazaar." }
-    { group:222, id:0, text: "I'm not taking these supplies any further until someone's available to unload them." }
-    { group:222, id:1, text: "No one can accept these goods! That's okay, I can use the rest." }
-    { group:222, id:2, text: "I have to go clear across the city with these goods. It'll take all day!" }
-    { group:223, id:0, text: "We're doing more than our share of work.  We need more help." }
-    { group:223, id:1, text: "I'll wait here until some space for this stuff opens up." }
-    { group:223, id:2, text: "Am I there yet?  I can't haul these goods much further." }   
     { group:226, id:0, text: "I've never seen so many sick people. I hope a plague doesn't break out." }
     { group:226, id:1, text: "It's hard to catch these clubs when you're doubled over with hunger pangs." }
     { group:226, id:2, text: "Maybe I can throw these clubs at the enemy should they attack. Little else is defending this city." }
