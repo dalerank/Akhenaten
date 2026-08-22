@@ -1010,18 +1010,18 @@ localization_de = [
   { key: "#emigrant_salary_too_low", text: "Ich kann nicht von dem leben, was sie mir hier zahlen." }
   { key: "#emigrant_no_house_for_me", text: "Die Häuser, die ich gesehen habe, sind vollgestopft mit Menschen. Ich kann nicht ohne Unterkunft bleiben." }
   
-  { key: "#recruiter_sick_people", text: "Ich sehe überall kranke Menschen. Eine Seuche könnte ausbrechen!" }
-  { key: "#recruiter_starving", text: "Ich verhungere. Ich würde lieber nach Nahrung suchen als nach Arbeitern. " }
-  { key: "#recruiter_city_defenses_weak", text: "Die Stadtverteidigungen sind so schwach, ich könnte bald Stellen mit Ausländern statt Ägyptern besetzen." }
-  { key: "#recruiter_without_workers", text: "Ohne verfügbare Arbeiter ist mein Job unmöglich." }
-  { key: "#recruiter_gods_unleash_fury", text: "Ich hoffe, die Götter entfesseln nicht ihre Wut. Wir müssen ihnen mehr Aufmerksamkeit schenken." }
+  { key: "#recruiter_disease_in_city", text: "Ich sehe überall kranke Menschen. Eine Seuche könnte ausbrechen!" }
+  { key: "#recruiter_no_food_in_city", text: "Ich verhungere. Ich würde lieber nach Nahrung suchen als nach Arbeitern. " }
+  { key: "#recruiter_city_not_safety", text: "Die Stadtverteidigungen sind so schwach, ich könnte bald Stellen mit Ausländern statt Ägyptern besetzen." }
+  { key: "#recruiter_need_workers", text: "Ohne verfügbare Arbeiter ist mein Job unmöglich." }
+  { key: "#recruiter_gods_are_angry", text: "Ich hoffe, die Götter entfesseln nicht ihre Wut. Wir müssen ihnen mehr Aufmerksamkeit schenken." }
   { key: "#recruiter_enemies_attack", text: "Feinde könnten jederzeit angreifen. Unser Ruf ist niedrig, und niemand respektiert uns." }
-  { key: "#recruiter_able_people_out_of_work", text: "Mit so vielen fähigen Menschen ohne Arbeit sollte mein Job einfach sein." }
+  { key: "#recruiter_i_looking_for_the_workers", text: "Mit so vielen fähigen Menschen ohne Arbeit sollte mein Job einfach sein." }
   { key: "#recruiter_boring", text: "Es ist langweilig hier. Ich wünschte, ich könnte mehr Unterhalter einstellen." }
   { key: "#recruiter_living_here", text: "Mir macht das Leben hier nichts aus. Es könnte sicherlich schlimmer sein." }
-  { key: "#recruiter_best_city", text: "Diese Stadt ist die beste!" }
-  { key: "#recruiter_most_popular", text: "Ich bin die beliebteste Person in der Stadt. Viele Leute brauchen Jobs." }
-  { key: "#recruiter_list_of_job_openings", text: "Meine Liste offener Stellen ist riesig, und ich kann keine Arbeiter finden, um sie zu besetzen." }
+  { key: "#recruiter_city_is_amazing", text: "Diese Stadt ist die beste!" }
+  { key: "#recruiter_i_want_to_leave_city", text: "Ich bin die beliebteste Person in der Stadt. Viele Leute brauchen Jobs." }
+  { key: "#recruiter_much_unemployments", text: "Meine Liste offener Stellen ist riesig, und ich kann keine Arbeiter finden, um sie zu besetzen." }
   
   { key: "#barge_have_no_place_for_dock", text: "Ich frage mich, ob diese Stadt Sehenswürdigkeiten hat, die ich sehen könnte, während sie mein Schiff entladen." }
   { key: "#barge_docked_wait_for_dockpushers", text: "Wir warten darauf, dass Fracht zu unserem Schiff geliefert wird." }

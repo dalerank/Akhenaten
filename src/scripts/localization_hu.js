@@ -1037,18 +1037,18 @@ localization_hu = [
   { key: "#emigrant_salary_too_low", text: "Nem tudok megélni abból, amit itt fizetnek nekem." }
   { key: "#emigrant_no_house_for_me", text: "A házak, amelyeket láttam, zsúfolásig tele vannak emberekkel. Nem maradhatok itt lakóhely nélkül." }
 
-  { key: "#recruiter_sick_people", text: "Mindenütt betegeket látok. Járvány törhet ki!" }
-  { key: "#recruiter_starving", text: "Éhezem. Inkább élelmet keresnék, mint munkásokat." }
-  { key: "#recruiter_city_defenses_weak", text: "A város védelme olyan gyenge, hogy hamarosan egyiptomiak helyett külföldiekkel kell feltöltenem a munkahelyeket." }
-  { key: "#recruiter_without_workers", text: "Elérhető munkások nélkül lehetetlen a munkám." }
-  { key: "#recruiter_gods_unleash_fury", text: "Remélem, az istenek nem zúdítják ránk haragjukat. Többet kellene törődnünk velük." }
+  { key: "#recruiter_disease_in_city", text: "Mindenütt betegeket látok. Járvány törhet ki!" }
+  { key: "#recruiter_no_food_in_city", text: "Éhezem. Inkább élelmet keresnék, mint munkásokat." }
+  { key: "#recruiter_city_not_safety", text: "A város védelme olyan gyenge, hogy hamarosan egyiptomiak helyett külföldiekkel kell feltöltenem a munkahelyeket." }
+  { key: "#recruiter_need_workers", text: "Elérhető munkások nélkül lehetetlen a munkám." }
+  { key: "#recruiter_gods_are_angry", text: "Remélem, az istenek nem zúdítják ránk haragjukat. Többet kellene törődnünk velük." }
   { key: "#recruiter_enemies_attack", text: "Az ellenség bármikor támadhat. Rossz a hírnevünk, és senki sem tisztel minket." }
-  { key: "#recruiter_able_people_out_of_work", text: "Ennyi munkaképes ember munkanélküliként mellett a feladatom könnyű kellene legyen." }
+  { key: "#recruiter_i_looking_for_the_workers", text: "Ennyi munkaképes ember munkanélküliként mellett a feladatom könnyű kellene legyen." }
   { key: "#recruiter_boring", text: "Unalmas itt. Bárcsak több szórakoztatót alkalmazhatnék." }
   { key: "#recruiter_living_here", text: "Nem bánok itt élni. Bizonyára lehetne sokkal rosszabb is." }
-  { key: "#recruiter_best_city", text: "Ez a város a legjobb!" }
-  { key: "#recruiter_most_popular", text: "Én vagyok a város legnépszerűbb embere. Sok embernek kell munka." }
-  { key: "#recruiter_list_of_job_openings", text: "Óriási a betöltetlen állások listája, de nem találok munkásokat." }
+  { key: "#recruiter_city_is_amazing", text: "Ez a város a legjobb!" }
+  { key: "#recruiter_i_want_to_leave_city", text: "Én vagyok a város legnépszerűbb embere. Sok embernek kell munka." }
+  { key: "#recruiter_much_unemployments", text: "Óriási a betöltetlen állások listája, de nem találok munkásokat." }
 
   { key: "#barge_have_no_place_for_dock", text: "Vajon van ebben a városban valami látnivaló, amit megnézhetek, amíg kirakodják a hajómat?" }
   { key: "#barge_docked_wait_for_dockpushers", text: "Arra várunk, hogy valaki elszállítsa a hajónkra érkező rakományt." }

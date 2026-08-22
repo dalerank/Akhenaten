@@ -1067,18 +1067,18 @@ localization_en = [
   { key: "#emigrant_salary_too_low", text: "I can't live on what they pay me here." }
   { key: "#emigrant_no_house_for_me", text: "Houses I've seen are overstuffed with people. I can't stay here without a place to live." }
 
-  { key: "#recruiter_sick_people", text: "I see sick people everywhere. A plague could break out!" }
-  { key: "#recruiter_starving", text: "I'm starving. I'd rather be looking for food than for workers. " }
-  { key: "#recruiter_city_defenses_weak", text: "City defenses are so weak, I could soon be filling jobs with foreigners instead of Egyptians." }
-  { key: "#recruiter_without_workers", text: "Without workers available, my job is impossible." }
-  { key: "#recruiter_gods_unleash_fury", text: "I hope the gods don't unleash their fury. We need to pay more attention to them." }
+  { key: "#recruiter_disease_in_city", text: "I see sick people everywhere. A plague could break out!" }
+  { key: "#recruiter_no_food_in_city", text: "I'm starving. I'd rather be looking for food than for workers. " }
+  { key: "#recruiter_city_not_safety", text: "City defenses are so weak, I could soon be filling jobs with foreigners instead of Egyptians." }
+  { key: "#recruiter_need_workers", text: "Without workers available, my job is impossible." }
+  { key: "#recruiter_gods_are_angry", text: "I hope the gods don't unleash their fury. We need to pay more attention to them." }
   { key: "#recruiter_enemies_attack", text: "Enemies could attack at any time. Our reputation is low, and no one respects us." }
-  { key: "#recruiter_able_people_out_of_work", text: "With so many able people out of work, my job ought to be easy." }
+  { key: "#recruiter_i_looking_for_the_workers", text: "With so many able people out of work, my job ought to be easy." }
   { key: "#recruiter_boring", text: "It's boring here. I wish I could hire more entertainers." }
   { key: "#recruiter_living_here", text: "I don't mind living here. Things could certainly be worse." }
-  { key: "#recruiter_best_city", text: "This city is the best!" }
-  { key: "#recruiter_most_popular", text: "I'm the most popular person in the city. A lot of people need jobs." }
-  { key: "#recruiter_list_of_job_openings", text: "My list of job openings is huge, and I can't find any workers to fill the posts." }
+  { key: "#recruiter_city_is_amazing", text: "This city is the best!" }
+  { key: "#recruiter_i_want_to_leave_city", text: "I'm the most popular person in the city. A lot of people need jobs." }
+  { key: "#recruiter_much_unemployments", text: "My list of job openings is huge, and I can't find any workers to fill the posts." }
 
   { key: "#barge_have_no_place_for_dock", text: "I wonder if this city has any sights I could see while they unload my ship." }
   { key: "#barge_docked_wait_for_dockpushers", text: "We're waiting for some cargo to be delivered to our ship." }
