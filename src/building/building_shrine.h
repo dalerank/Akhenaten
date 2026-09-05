@@ -6,6 +6,8 @@ class building_shrine : public building_impl {
 public:
     building_shrine(building &b) : building_impl(b) {}
     virtual building_shrine *dcast_shrine() override { return this; }
+
+    virtual void on_place_checks() override;
 };
 
 struct building_shrine_osiris : public building_shrine {

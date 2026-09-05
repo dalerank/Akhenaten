@@ -17,6 +17,7 @@ building_shrine_osiris = {
     flags {
       is_shrine: true
       is_religion: true
+      no_road_access: true
     }
   }
 
@@ -37,6 +38,7 @@ building_shrine_osiris = {
     flags {
       is_shrine: true
       is_religion: true
+      no_road_access: true
     }
   }
 
@@ -57,6 +59,7 @@ building_shrine_osiris = {
     flags {
       is_shrine: true
       is_religion: true
+      no_road_access: true
     }
   }
 
@@ -77,6 +80,7 @@ building_shrine_osiris = {
     flags {
       is_shrine: true
       is_religion: true
+      no_road_access: true
     }
   }
 
@@ -97,5 +101,6 @@ building_shrine_osiris = {
     flags {
       is_shrine: true
       is_religion: true
+      no_road_access: true
     }
   }

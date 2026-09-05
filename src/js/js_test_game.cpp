@@ -73,6 +73,8 @@
 #include "city/city_maintenance.h"
 #include "city/city_religion_seth.h"
 #include "grid/road_access.h"
+#include "city/city_warnings.h"
+#include "core/xstring.h"
 #include "grid/road_network.h"
 #include "grid/tiles.h"
 #include "grid/routing/routing_terrain.h"
@@ -103,6 +105,7 @@
 
 #include <SDL.h>
 #include <algorithm>
+#include <vector>
 #include <cstdio>
 #include <cstring>
 #include <fstream>
@@ -3705,6 +3708,31 @@ static int __test_building_type_hover_road_access(int type) {
     return building_type_hover_road_access((e_building_type)type) ? 1 : 0;
 }
 ANK_FUNCTION_1(__test_building_type_hover_road_access);
+
+// Construction warnings captured since the last __test_construction_warnings_reset().
+static std::vector<xstring> g_test_construction_warnings;
+static bool g_test_construction_warnings_subscribed = false;
+
+static void __test_construction_warnings_reset() {
+    if (!g_test_construction_warnings_subscribed) {
+        g_test_construction_warnings_subscribed = true;
+        events::subscribe_permanent(
+          [](event_construction_warning ev) { g_test_construction_warnings.push_back(ev.id); });
+    }
+    g_test_construction_warnings.clear();
+}
+ANK_FUNCTION(__test_construction_warnings_reset);
+
+static int __test_construction_warning_count(pcstr id) {
+    int count = 0;
+    for (const xstring& w : g_test_construction_warnings) {
+        if (w == id) {
+            ++count;
+        }
+    }
+    return count;
+}
+ANK_FUNCTION_1(__test_construction_warning_count);
 
 static void __test_link_producer_for_delivery(int producer_id, int storage_id) {
     building *producer = building_get(producer_id);
