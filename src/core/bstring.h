@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <string_view>
 #include <type_traits>
 
 #include "core/core.h"
@@ -285,6 +286,7 @@ public:
 
     inline operator char*() { return _data; }
     inline operator const char*() const { return _data; }
+    inline operator std::string_view() const { return std::string_view(_data); }
 
     inline pcstr strstr(const_ref sub_str) const { return ::strstr(_data, sub_str._data); }
     inline pcstr strstr(const_ref sub_str) { return ::strstr(_data, sub_str._data); }
