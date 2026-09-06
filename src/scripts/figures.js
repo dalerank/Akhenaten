@@ -13,6 +13,7 @@ import figure.carpenter
 import figure.caravan_donkey
 import figure.cartpusher
 import figure.constable
+import figure.dancer
 
 figure_fireman {
   overlay : OVERLAY_WATER
@@ -1434,35 +1435,6 @@ figure_herbalist {
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length : 384
 	permission : epermission_medicine
-}
-
-figure_dancer {
-  overlay : OVERLAY_PAVILION
-	animations {
-		walk { pack:PACK_SPR_MAIN, id:128, max_frames:12 }
-		death { pospack:PACK_SPR_MAIN, id:129, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_DANCER }
-	}
-
-	sounds {
-		dancer_i_like_festivals {sound:"dancer_e01.wav"}
-		dancer_desease_can_start_at_any_moment {sound:"dancer_g01.wav"}
-		dancer_no_food_in_city {sound:"dancer_g02.wav"}
-		dancer_city_not_safety_workers_leaving {sound:"dancer_g03.wav"}
-		dancer_need_workers {sound:"dancer_g04.wav"}
-		dancer_gods_are_angry {sound:"dancer_g05.wav"}
-		dancer_city_is_bad {sound:"dancer_g06.wav"}
-		dancer_much_unemployments {sound:"dancer_g07.wav"}
-		dancer_salary_too_low {sound:"dancer_g08.wav"}
-		dancer_city_is_good {sound:"dancer_g09.wav"}
-		dancer_city_is_amazing {sound:"dancer_g10.wav"}
-	}
-
-    category: figure_category_citizen
-	max_damage : 20
-	terrain_usage : TERRAIN_USAGE_ROADS
-	max_roam_length : 512
-	permission : epermission_entertainer  // roadblock option
 }
 
 figure_musician = {
