@@ -1443,6 +1443,23 @@ void city_restore_campaign_player_name() {
     g_city.kingdome.player_name = g_city.kingdome.campaign_player_name;
 }
 
+mission_result_t city_make_mission_result(int scenario_id) {
+    mission_result_t result;
+
+    result.scenario_id = scenario_id;
+    result.rating_culture = g_city.ratings.culture;
+    result.rating_prosperity = g_city.ratings.prosperity;
+    result.rating_kingdom = g_city.kingdome.rating;
+    result.final_population = g_city.population.current;
+    result.final_funds = g_city.finance.treasury;
+    result.completion_months = (uint32_t)(game.simtime.years_since_start() * simulation_time_t::months_in_year
+                                          + game.simtime.month + 1);
+    result.difficulty = game_difficulty();
+    result.player_name = g_city.kingdome.player_name;
+
+    return result;
+}
+
 struct cproperty {
     xstring domain;
     xstring name;

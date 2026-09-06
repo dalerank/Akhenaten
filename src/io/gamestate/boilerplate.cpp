@@ -123,12 +123,17 @@ uint32_t svx_container_version() {
     return svx::CONTAINER_REV;
 }
 
+vfs::path fullpath_player_folder(pcstr player_name) {
+    return vfs::path(vfs::SAVE_FOLDER, "/", player_name ? player_name : "");
+}
+
 vfs::path fullpath_saves(vfs::path filename) {
     if (strncasecmp(filename, "Save/", 5) == 0 || strncasecmp(filename, "Save\\", 5) == 0) {
         return vfs::path(filename);
     }
 
-    return vfs::path(vfs::SAVE_FOLDER, "/", game_features::gameopt_player_name.to_string().c_str(), "/", filename);
+    const vfs::path folder = fullpath_player_folder(game_features::gameopt_player_name.to_string().c_str());
+    return vfs::path(folder.c_str(), "/", filename);
 }
 
 vfs::path fullpath_maps(vfs::path filename) {

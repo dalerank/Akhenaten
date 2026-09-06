@@ -11,6 +11,7 @@
 uint32_t save_data_version();
 uint32_t svx_container_version();
 
+vfs::path fullpath_player_folder(pcstr player_name);
 vfs::path fullpath_saves(vfs::path filename);
 vfs::path fullpath_maps(vfs::path filename);
 

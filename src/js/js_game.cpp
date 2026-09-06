@@ -24,7 +24,6 @@
 #include "editor/editor.h"
 #include "game/mission.h"
 #include "game/game_events.h"
-#include "game/player.h"
 #include "scenario/scenario.h"
 #include "scenario/editor_map.h"
 #include "core/encoding.h"
@@ -554,18 +553,9 @@ bool __game_has_campaign_data() { return game_has_campaign_data(); } ANK_FUNCTIO
 int __game_campaign_id_for_scenario(int scenario_id) { return get_scenario_campaign_id(scenario_id); } ANK_FUNCTION_1(__game_campaign_id_for_scenario)
 void __game_speech_stop() { g_sound.speech_stop(); } ANK_FUNCTION(__game_speech_stop)
 bool __game_file_exists(pcstr path) { return path && *path && vfs::file_exists(path); } ANK_FUNCTION_1(__game_file_exists)
-pcstr __game_get_last_autosave() { const char* p = player_get_last_autosave(); return p ? p : ""; } ANK_FUNCTION(__game_get_last_autosave)
-void __game_load_player_data(pcstr name) { player_data_load((const uint8_t*)name); } ANK_FUNCTION_1(__game_load_player_data)
-void __game_delete_player(pcstr name) { player_data_delete((const uint8_t*)name); } ANK_FUNCTION_1(__game_delete_player)
 bool __game_gods_enabled() { return game_features::gameopt_gods_enabled.to_bool(); } ANK_FUNCTION(__game_gods_enabled)
 bool __game_is_integral_tests() { return g_args.is_integral_tests(); } ANK_FUNCTION(__game_is_integral_tests)
 void __scenario_init() { g_scenario.init(); } ANK_FUNCTION(__scenario_init)
-void __game_player_data_new(pcstr name_utf8) {
-    uint8_t internal[MAX_PLAYER_NAME];
-    encoding_from_utf8(name_utf8 ? name_utf8 : "", internal, MAX_PLAYER_NAME);
-    player_data_new(internal);
-} ANK_FUNCTION_1(__game_player_data_new)
-
 void __debug_crash() {
     events::emit(event_city_warning{ "Trying to crash the game" });
     const int *p = nullptr;
@@ -719,67 +709,6 @@ bvariant js_call_function(xstring js_ref, const bvariant_map &params) {
 
     return bvariant();
 }
-
-// High scores
-void __highscores_load() { highscores_load(); }
-ANK_FUNCTION(__highscores_load)
-
-int __highscores_count() { return highscores_count(); }
-ANK_FUNCTION(__highscores_count)
-
-bool __highscore_nonempty(int rank) {
-    const auto* r = highscores_get(rank);
-    return r && r->nonempty;
-}
-ANK_FUNCTION_1(__highscore_nonempty)
-
-int __highscore_score(int rank) {
-    const auto* r = highscores_get(rank);
-    return r && r->nonempty ? (int)records_calc_score(r) : 0;
-}
-ANK_FUNCTION_1(__highscore_score)
-
-int __highscore_mission(int rank) {
-    const auto* r = highscores_get(rank);
-    return r && r->nonempty ? (int)r->mission_idx : 0;
-}
-ANK_FUNCTION_1(__highscore_mission)
-
-int __highscore_culture(int rank) {
-    const auto* r = highscores_get(rank);
-    return r && r->nonempty ? (int)r->rating_culture : 0;
-}
-ANK_FUNCTION_1(__highscore_culture)
-
-int __highscore_prosperity(int rank) {
-    const auto* r = highscores_get(rank);
-    return r && r->nonempty ? (int)r->rating_prosperity : 0;
-}
-ANK_FUNCTION_1(__highscore_prosperity)
-
-int __highscore_kingdom(int rank) {
-    const auto* r = highscores_get(rank);
-    return r && r->nonempty ? (int)r->rating_kingdom : 0;
-}
-ANK_FUNCTION_1(__highscore_kingdom)
-
-int __highscore_population(int rank) {
-    const auto* r = highscores_get(rank);
-    return r && r->nonempty ? (int)r->final_population : 0;
-}
-ANK_FUNCTION_1(__highscore_population)
-
-int __highscore_funds(int rank) {
-    const auto* r = highscores_get(rank);
-    return r && r->nonempty ? (int)r->final_funds : 0;
-}
-ANK_FUNCTION_1(__highscore_funds)
-
-int __highscore_months(int rank) {
-    const auto* r = highscores_get(rank);
-    return r && r->nonempty ? (int)r->completion_months : 0;
-}
-ANK_FUNCTION_1(__highscore_months)
 
 void __lang_text_draw_multiline(int group, int number, int x, int y, int box_width, int font) {
     lang_text_draw_multiline(group, number, vec2i{x, y}, box_width, (e_font)font);

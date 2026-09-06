@@ -159,7 +159,7 @@ int64_t buffer::read_i64() {
 
 size_t buffer::read_raw(void* value, size_t s) {
     size_t result = 0;
-    if (is_valid(sizeof(result))) {
+    if (is_valid(s)) {
         memcpy(value, &data.at(index), s);
         index += s;
         result = s;

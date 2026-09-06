@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 #include "city/city_kingdome_relations.h"
+#include "game/player_record.h"
 #include "city/entertainment.h"
 #include "city/city_industry.h"
 #include "city/city_population.h"
@@ -236,6 +237,8 @@ struct city_t {
 
 pcstr city_player_name();
 void city_set_player_name(xstring name);
+// Snapshot of what the city achieved, handed to the player profile when a mission is won.
+mission_result_t city_make_mission_result(int scenario_id);
 void city_restore_campaign_player_name();
 bvariant city_get_property(xstring domain, xstring name);
 

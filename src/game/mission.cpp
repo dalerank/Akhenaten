@@ -5,7 +5,7 @@
 #include "core/string.h"
 #include "content/vfs.h"
 #include "io/io.h"
-#include "game/player.h"
+#include "game/player_profile.h"
 #include "js/js_game.h"
 
 const e_campaign_tokens_t ANK_CONFIG_ENUM(e_campaign_tokens);
@@ -94,8 +94,7 @@ int get_first_mission_in_campaign(int campaign_id) {
 bool game_scenario_beaten(int scenario_id) {
     if (scenario_id < 0 || scenario_id >= SCENARIO_MAX)
         return false;
-    auto record = player_get_scenario_record(scenario_id);
-    return record->nonempty;
+    return g_player.beaten(scenario_id);
 }
 
 #define TMP_BUFFER_SIZE 10000

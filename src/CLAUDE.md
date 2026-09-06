@@ -29,6 +29,8 @@
 g_city           // city_t — city simulation aggregate root
 g_window_manager // windows_manager_t — modal window stack
 g_chunk_io       // ChunkSerializer — save/map/pak chunk schema I/O
+g_player         // player_profile_t — current dynasty: name, campaign progress, last autosave
+g_highscores     // highscores_t — Save/highscore.jas table, one per installation
 ```
 
 ## Common Patterns Across the Codebase

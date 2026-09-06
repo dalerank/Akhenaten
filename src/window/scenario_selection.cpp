@@ -2,7 +2,6 @@
 #include "core/tokenum.h"
 #include "game/game.h"
 #include "game/mission.h"
-#include "game/player.h"
 #include "js/js_game.h"
 #include "scenario/scenario.h"
 #include "scenario/scenario_invasion.h"
@@ -39,35 +38,3 @@ int __game_mission_scenario_beaten(int scenario_id) {
 }
 ANK_FUNCTION_1(__game_mission_scenario_beaten)
 
-int __game_player_scenario_record_completion_months(int scenario_id) {
-    return (int)player_get_scenario_record(scenario_id)->completion_months;
-}
-ANK_FUNCTION_1(__game_player_scenario_record_completion_months)
-int __game_player_scenario_record_final_population(int scenario_id) {
-    return (int)player_get_scenario_record(scenario_id)->final_population;
-}
-ANK_FUNCTION_1(__game_player_scenario_record_final_population)
-int __game_player_scenario_record_final_funds(int scenario_id) {
-    return (int)player_get_scenario_record(scenario_id)->final_funds;
-}
-ANK_FUNCTION_1(__game_player_scenario_record_final_funds)
-int __game_player_scenario_record_rating_culture(int scenario_id) {
-    return (int)player_get_scenario_record(scenario_id)->rating_culture;
-}
-ANK_FUNCTION_1(__game_player_scenario_record_rating_culture)
-int __game_player_scenario_record_rating_prosperity(int scenario_id) {
-    return (int)player_get_scenario_record(scenario_id)->rating_prosperity;
-}
-ANK_FUNCTION_1(__game_player_scenario_record_rating_prosperity)
-int __game_player_scenario_record_rating_kingdom(int scenario_id) {
-    return (int)player_get_scenario_record(scenario_id)->rating_kingdom;
-}
-ANK_FUNCTION_1(__game_player_scenario_record_rating_kingdom)
-int __game_player_scenario_record_difficulty(int scenario_id) {
-    return (int)player_get_scenario_record(scenario_id)->difficulty;
-}
-ANK_FUNCTION_1(__game_player_scenario_record_difficulty)
-int __game_player_scenario_record_score(int scenario_id) {
-    return (int)player_get_scenario_record(scenario_id)->score;
-}
-ANK_FUNCTION_1(__game_player_scenario_record_score)
