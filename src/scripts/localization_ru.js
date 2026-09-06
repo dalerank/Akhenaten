@@ -486,6 +486,18 @@ localization_ru = [
 
     { key: "#brick_bricklaying_time_at_monument", text: "Пора класть кирпичи на монументе!" }
     { key: "#brick_monument_will_be_strong", text: "Этот монумент будет крепким!" }
+    { key: "#brick_waiting_for_bricks", text: "Всё ещё жду кирпичи. Крестьяне, пошевеливайтесь!" }
+    { key: "#brick_looking_for_spot", text: "Ищу следующий участок стены, который поднять." }
+    { key: "#brick_work_statue", text: "Чуть раствора — и статуя снова будет выглядеть гордо." }
+    { key: "#brick_return_to_guild", text: "Обратно в гильдию. Рукам не помешает отдых." }
+    { key: "#brick_leaving_site", text: "Тут больше делать нечего — ухожу со стройки." }
+    { key: "#brick_disease_risk", text: "Тут пахнет болезнью. Трудно класть кирпичи, когда трясутся руки." }
+    { key: "#brick_no_food_in_city", text: "Амбары пусты? Голодный каменщик кривые стены кладёт." }
+    { key: "#brick_city_have_no_army", text: "Нет фортов? Один набег — и монумент станет руинами ещё до конца стройки." }
+    { key: "#brick_gods_are_angry", text: "Боги злятся. Даже сырцовые кирпичи трескаются под их взглядом." }
+    { key: "#brick_low_entertainment", text: "Праздников давно не было. Даже каменщикам нужен день без лесов." }
+    { key: "#brick_city_is_good", text: "Этот город крепкий! Хороший фундамент для великих монументов." }
+    { key: "#brick_city_is_amazing", text: "Лучший город, для которого я строил. Эти стены будут стоять вечно!" }
 
     { key: "#fireman_desease_can_start_at_any_moment", text: "Надеюсь, чума не вспыхнет. Чума может распространяться как лесной пожар." }
     { key: "#fireman_no_food_in_city", text: "Даже когда пожары горят, всё, о чём я могу думать, это насколько я голоден." }

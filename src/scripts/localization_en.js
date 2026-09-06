@@ -1123,6 +1123,18 @@ localization_en = [
 
   { key: "#brick_bricklaying_time_at_monument", text: "It's bricklaying time at the monument!" }
   { key: "#brick_monument_will_be_strong", text: "This monument will be strong!" }
+  { key: "#brick_waiting_for_bricks", text: "Still waiting on those bricks. Peasants, hurry up!" }
+  { key: "#brick_looking_for_spot", text: "Looking for the next stretch of wall to raise." }
+  { key: "#brick_work_statue", text: "A little mortar and this statue will look proud again." }
+  { key: "#brick_return_to_guild", text: "Back to the guild. My arms could use a rest." }
+  { key: "#brick_leaving_site", text: "Nothing more to do here — clearing off the site." }
+  { key: "#brick_disease_risk", text: "This place smells of sickness. Hard to lay bricks when your hands shake." }
+  { key: "#brick_no_food_in_city", text: "Empty granaries? A hungry bricklayer lays crooked walls." }
+  { key: "#brick_city_have_no_army", text: "No forts? One raid and this monument is rubble before it's finished." }
+  { key: "#brick_gods_are_angry", text: "The gods look angry. Even mudbricks crack under their gaze." }
+  { key: "#brick_low_entertainment", text: "No festivals for ages. Even bricklayers need a day off the scaffold." }
+  { key: "#brick_city_is_good", text: "This city is solid! Good foundations for great monuments." }
+  { key: "#brick_city_is_amazing", text: "Best city I've built for. These walls will stand forever!" }
 
   { key: "#fireman_desease_can_start_at_any_moment", text: "I hope a plague doesn't break out. Plagues can spread like wildfire." }
   { key: "#fireman_no_food_in_city", text: "Even when fires are burning, all I can think about is how hungry I am." }
