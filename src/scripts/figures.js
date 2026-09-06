@@ -14,6 +14,8 @@ import figure.caravan_donkey
 import figure.cartpusher
 import figure.constable
 import figure.dancer
+import figure.delivery_boy
+import figure.dentist
 
 figure_fireman {
   overlay : OVERLAY_WATER
@@ -797,33 +799,6 @@ figure_scriber {
 	max_roam_length : 384
 }
 
-figure_dentist {
-	animations {
-		walk { pack:PACK_SPR_MAIN, id:182, max_frames:12 }
-		death { pack:PACK_SPR_MAIN, id:183, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_DENTIST }
-	}
-
-	sounds {
-		dentist_concerned_about_plague {sound:"dentist_g01.wav"}
-		dentist_no_food_in_city {sound:"dentist_g02.wav"}
-		dentist_defenses_weak {sound:"dentist_g03.wav"}
-		dentist_need_more_workers {sound:"dentist_g04.wav"}
-		dentist_gods_are_angry {sound:"dentist_g05.wav"}
-		dentist_reputation_is_low {sound:"dentist_g06.wav"}
-		dentist_unemployment_is_high {sound:"dentist_g07.wav"}
-		dentist_low_entertainment {sound:"dentist_g08.wav"}
-		dentist_city_is_ok {sound:"dentist_g09.wav"}
-		dentist_city_is_the_best {sound:"dentist_g10.wav"}
-	}
-
-	category: figure_category_citizen
-	max_damage : 10
-	terrain_usage : TERRAIN_USAGE_ROADS
-	max_roam_length : 384
-	permission : epermission_medicine
-}
-
 figure_embalmer {
   overlay : OVERLAY_MORTUARY
 	animations {
@@ -938,25 +913,6 @@ figure_market_buyer {
 	max_damage : 10
 	terrain_usage : TERRAIN_USAGE_ROADS,
 	record_path : true
-}
-
-figure_delivery_boy {
-  overlay : OVERLAY_BAZAAR_ACCESS
-	animations {
-		walk { pack:PACK_SPR_MAIN, id:9, max_frames:12 }
-		death { pack:PACK_SPR_MAIN, id:10, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_DELIVERY_BOY }
-	}
-
-	sounds {
-		marketboy_these_baskets_are_too_heavy {sound: "marketboy_e01.wav"}
-		marketboy_bossy_lady_makes_me_carry_goods {sound: "marketboy_e02.wav"}
-		marketboy_one_day_ill_run_the_bazaar {sound: "marketboy_e03.wav"}
-	}
-
-	category: figure_category_citizen
-	max_damage: 10
-	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
 figure_stonemason {

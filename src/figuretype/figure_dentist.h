@@ -17,9 +17,8 @@ public:
     virtual void on_create() override {}
     virtual void figure_before_action() override;
     virtual void figure_action() override;
-    virtual sound_key phrase_key() const override;
     virtual int provide_service() override;
-    
+
     building_id find_noble_house_with_bad_teeth();
     void treat_nobles_in_house(building_house *house);
 };
