@@ -59,6 +59,15 @@ mods {
             url : "https://f003.backblazeb2.com/file/akhenaten-mods/pharaoh_russian_voices.sgx"
             email : "dalerankn8@gmail.com"
         }
+
+        {
+            name : "pharaoh_sounds_pack"
+            desc : "Custom walker speech (hunters, caravan donkey)"
+            version : "1.1.0"
+            author : "dalerank"
+            url : "https://f003.backblazeb2.com/file/akhenaten-mods/pharaoh_sounds_pack.sgx"
+            email : "dalerankn8@gmail.com"
+        }
     ]
 
     count : __mods_count

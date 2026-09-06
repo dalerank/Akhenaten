@@ -9,6 +9,7 @@ import figure.antelope_hunter
 import figure.birds_hunter
 import figure.architector
 import figure.bricklayer
+import figure.caravan_donkey
 
 figure_fireman {
   overlay : OVERLAY_WATER
@@ -1346,17 +1347,6 @@ figure_trade_caravan {
 	max_capacity : 800
 	min_capacity : 100
 	capacity_random : 701
-}
-
-figure_caravan_donkey = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:52, max_frames:12 }
-		death : { pack:PACK_SPR_MAIN, id:53, max_frames:8, loop:false }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_TRADE_CARAVAN_DONKEY }
-	}
-	category: figure_category_citizen
-	max_damage : 20
-	terrain_usage : TERRAIN_USAGE_PREFER_ROADS,
 }
 
 figure_homeless = {

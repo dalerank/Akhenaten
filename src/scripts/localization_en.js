@@ -1049,6 +1049,22 @@ localization_en = [
   { key: "#trader_i_ll_be_a_hero", text: "I'll be a hero when I bring these goods back to my home land." }
   { key: "#trader_you_talk_a_fine_bargain", text: "You talk a fine bargain, my friend.  I'll barely make back my costs." }
 
+  { key: "#donkey_cicero_breathe", text: "While I breathe, I hope. Also, while I haul pottery." }
+  { key: "#donkey_cicero_books", text: "A room without books is like a body without a soul. A caravan without grain is worse." }
+  { key: "#donkey_cicero_garden", text: "If you have a garden and a library, you have everything you need. I have a saddle. Close enough." }
+  { key: "#donkey_cicero_gratitude", text: "Gratitude is the parent of all virtues. A carrot would also help." }
+  { key: "#donkey_cicero_friendship", text: "Friendship improves happiness and abates misery. So does walking slower than the lead trader." }
+  { key: "#donkey_cicero_money", text: "Nothing is so firmly established that money cannot destroy it. Ask my saddle sores." }
+  { key: "#donkey_cicero_memory", text: "The life of the dead is placed in the memory of the living. I still remember that oasis." }
+  { key: "#donkey_cicero_moderation", text: "Never go to excess, but let moderation be your guide. Especially with cargo weight." }
+  { key: "#donkey_cicero_mistakes", text: "Any man can make mistakes, but only an idiot persists in his error. I took a wrong turn once. Once." }
+  { key: "#donkey_cicero_history", text: "To be ignorant of what occurred before you were born is to remain always a child. Or a donkey. Wait." }
+  { key: "#donkey_cicero_laws", text: "Laws are silent in times of war. Donkeys are not. Hee-haw." }
+  { key: "#donkey_cicero_not_alone", text: "We are not born for ourselves alone. Clearly. I was born for this pack." }
+  { key: "#donkey_cicero_meta", text: "They call me a beast of burden, yet I quote Cicero. Who is the philosopher now?" }
+  { key: "#donkey_cicero_runaway", text: "I flee, therefore I am. Cicero would understand. Probably." }
+
+  { key: "#immigrant_im_new_here", text: "I'm new here." }
   {key: "#dwellers_palace_are_pinnacle", group:127, id:100}
   {key: "#house_upgrade_inprogress", group:127, id:101}
   {key: "#house_nearby_building", group:127, id:102}

@@ -54,11 +54,6 @@ function figure_caravan_donkey_setup_phrase(ev) {
 		return
 	}
 
-	if (f.action_state == FIGURE_ACTION_132_FOLLOWER_RUNAWAY) {
-		figure_apply_phrase(f, "donkey_cicero_runaway")
-		return
-	}
-
 	var keys = figure_caravan_donkey_phrase_keys()
 	figure_apply_phrase(f, keys[Math.floor(Math.random() * keys.length)])
 }
