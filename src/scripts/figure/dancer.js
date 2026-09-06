@@ -4,7 +4,7 @@ figure_dancer {
 	overlay : OVERLAY_PAVILION
 	animations {
 		walk { pack:PACK_SPR_MAIN, id:128, max_frames:12 }
-		death { pospack:PACK_SPR_MAIN, id:129, max_frames:8, loop:false }
+		death { pack:PACK_SPR_MAIN, id:129, max_frames:8, loop:false }
 		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_DANCER }
 	}
 
