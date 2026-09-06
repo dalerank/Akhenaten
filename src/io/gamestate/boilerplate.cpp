@@ -78,7 +78,6 @@
 #include "sound/sound_city.h"
 #include "sound/sound.h"
 #include "js/js_game.h"
-#include "widget/widget_figure_follow.h"
 #include "window/window_city.h"
 #include "window/file_dialog_common.h"
 #include "game/game_events.h"

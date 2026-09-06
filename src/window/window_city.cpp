@@ -132,11 +132,11 @@ void window_city::draw_foreground(UiFlags flags) {
     widget_sidebar_city_draw_foreground();
     ui::dispatch_autoconfig_es_event(this, __func__, {});
 
-    if (g_window_manager.window_is("window_city") || g_window_manager.window_is("window_city_military") || g_window_manager.window_is("window_city_warship")) {
+    if (window_is_city_view()) {
         draw_paused_panel();
         window_city_draw_time_left_panel();
         draw_cancel_construction();
-        figure_follow_draw_panel();
+        g_figure_follow.draw_panel();
     }
 
     window_city_draw_construction_cost_and_size();
@@ -189,7 +189,7 @@ void window_city::handle_input(const mouse* m, const hotkeys* h) {
         return;
     }
 
-    if (figure_follow_handle_escape(h)) {
+    if (g_figure_follow.handle_escape(h)) {
         city_has_loaded = true;
         return;
     }
@@ -198,7 +198,7 @@ void window_city::handle_input(const mouse* m, const hotkeys* h) {
         ui::dispatch_autoconfig_es_event(this, "handle_top_menu", {});
     }
 
-    if (figure_follow_handle_mouse(m)) {
+    if (g_figure_follow.handle_mouse(m)) {
         city_has_loaded = true;
         return;
     }
@@ -220,9 +220,15 @@ void window_city_draw_panels() {
     g_window_city.draw_background(UiFlags_None);
 }
 
+bool window_is_city_view() {
+    return g_window_manager.window_is("window_city")
+        || g_window_manager.window_is("window_city_military")
+        || g_window_manager.window_is("window_city_warship");
+}
+
 void window_city_draw() {
     OZZY_PROFILER_FUNCTION();
-    figure_follow_capture_if_due();
+    g_figure_follow.capture_if_due();
     painter ctx = game.painter();
     g_screen_city.draw(ctx);
 

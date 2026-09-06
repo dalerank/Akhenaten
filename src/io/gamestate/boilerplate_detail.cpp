@@ -118,7 +118,7 @@ void GamestateLoadDetail::pre_load() { // do we NEED this...?
     events::emit(event_game_mission_pre_load{});
     events::process();
 
-    figure_follow_stop(false);
+    g_figure_follow.stop();
 }
 
 void GamestateLoadDetail::post_load() {

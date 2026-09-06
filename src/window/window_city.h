@@ -24,6 +24,9 @@ struct window_city : public autoconfig_window_t<window_city> {
 extern window_city g_window_city;
 extern bool city_has_loaded;
 
+// True for the three windows that show the city view and share its overlays.
+bool window_is_city_view();
+
 void window_city_draw_all();
 void window_city_draw_panels();
 void window_city_draw();
