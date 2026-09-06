@@ -32,6 +32,8 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_cartpusher);
 
+const figure_cartpusher_action_tokens_t ANK_CONFIG_ENUM(figure_cartpusher_action_tokens)
+
 static const int CART_OFFSET_MULTIPLE_LOADS_FOOD[] = {0, 0, 8, 16, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static const int CART_OFFSET_MULTIPLE_LOADS_NON_FOOD[] = {0, 0, 0, 0, 0, 8, 0, 16, 24, 32, 40, 48, 56, 64, 72, 80};
 static const int CART_OFFSET_8_LOADS_FOOD[] = {0, 40, 48, 56, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -606,25 +608,3 @@ void figure_cartpusher::update_animation() {
     d.movement_check_progress = base.progress_on_tile;
 }
 
-sound_key figure_cartpusher::phrase_key() const {
-    if (action_state(ACTION_8_RECALCULATE)) {
-        return "cartpusher_no_found_destination";
-    }
-
-    if (action_state(ACTION_20_CARTPUSHER_INITIAL, ACTION_24_CARTPUSHER_AT_WAREHOUSE)) {
-        return "cartpusher_i_have_no_destination";
-    }
-
-    if (action_state(ACTION_27_CARTPUSHER_RETURNING)) {
-        return "cartpusher_back_to_home";
-    }
-
-    if (action_state(ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE,
-                     ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY,
-                     ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP,
-                     ACTION_11_CARTPUSHER_DELIVERING_GOLD)) {
-        return "cartpusher_delivering_items";
-    }
-
-    return "cartpusher_default";
-}

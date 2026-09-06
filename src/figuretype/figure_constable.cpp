@@ -36,66 +36,6 @@ void figure_constable::update_animation() {
     image_set_animation(anim_key);
 }
 
-sound_key figure_constable::phrase_key() const {
-    svector<sound_key, 10> keys;
-
-    if (base.min_max_seen < 10) {
-        keys.push_back("policeman_very_low_crime_level");
-    } else if (base.min_max_seen < 30) {
-        keys.push_back("policeman_low_crime_level");
-    } else {
-        keys.push_back("policeman_usual_crime_level");
-    }
-
-    if (formation_get_num_forts() < 0) {
-        keys.push_back("policeman_city_not_safety");
-        keys.push_back("policeman_enemies_are_coming");
-        keys.push_back("policeman_no_army");
-        keys.push_back("policeman_no_army_2");
-    }
-
-    if (g_city.labor.workers_needed >= 10) {
-        keys.push_back("policeman_need_workers");
-    }
-
-    if (g_city.labor.workers_needed >= 20) {
-        keys.push_back("policeman_need_more_workers");
-    }
-
-    if (g_city.health.value < 20) {
-        keys.push_back("policeman_desease_can_start_at_any_moment");
-    }
-
-    if (g_city.sentiment.low_mood_cause == LOW_MOOD_NO_FOOD) {
-        keys.push_back("policeman_no_food_in_city");
-    }
-
-    if (g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("policeman_gods_are_angry");
-    }
-
-    if (g_city.labor.unemployment_percentage >= 15) {
-        keys.push_back("policeman_much_unemployments");
-    }
-
-    if (g_city.festival.entertainment_is_low()) {  // low entertainment
-        keys.push_back("policeman_low_entertainment");
-    }
-
-    const int sentiment = g_city.sentiment.value;
-    if (sentiment > 90) {
-        keys.push_back("policeman_city_is_amazing");
-    } else  if (sentiment > 40) {
-        keys.push_back("policeman_city_is_good");
-    }
-
-    keys.push_back("policeman_iam_too_busy_that_talk");
-    keys.push_back("policeman_i_hope_my_work_is_need");
-
-    int index = rand() % keys.size();
-    return keys[index];
-}
-
 int figure_constable::provide_service() {
     int max_criminal_active = 0;
     int houses_serviced = figure_provide_service(tile(), &base, [&] (building* b, figure *f) {

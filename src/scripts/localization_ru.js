@@ -514,6 +514,20 @@ localization_ru = [
     { key: "#brick_city_is_good", text: "Этот город крепкий! Хороший фундамент для великих монументов." }
     { key: "#brick_city_is_amazing", text: "Лучший город, для которого я строил. Эти стены будут стоять вечно!" }
 
+    { key: "#carpenter_work_my_tools_need_for_monument", text: "Мои инструменты нужны на монументе!" }
+    { key: "#carpenter_this_monument_will_be_short", text: "Этот монумент ненадолго задержит — древесина готова." }
+    { key: "#carpenter_work_wall", text: "Сначала леса. Потом настоящая работа наверху." }
+    { key: "#carpenter_looking_for_spot", text: "Ищу следующую балку, которую поставить." }
+    { key: "#carpenter_return_to_guild", text: "Обратно в гильдию. Опять опилки в волосах." }
+    { key: "#carpenter_work_garden", text: "Чуть столярки — и этот сад будет как надо." }
+    { key: "#carpenter_disease_risk", text: "Тут пахнет болезнью. Трудно держать долото, когда трясутся руки." }
+    { key: "#carpenter_no_food_in_city", text: "Амбары пусты? Голодный столяр кривой брус пилит." }
+    { key: "#carpenter_city_have_no_army", text: "Нет фортов? Один набег — и эти леса станут дровами." }
+    { key: "#carpenter_gods_are_angry", text: "Боги злятся. Даже хороший кедр коробится под их взглядом." }
+    { key: "#carpenter_low_entertainment", text: "Праздников давно не было. Даже столярам нужен день без лесов." }
+    { key: "#carpenter_city_is_good", text: "Этот город крепкий! Хорошая столярка любит хороший фундамент." }
+    { key: "#carpenter_city_is_amazing", text: "Лучший город, для которого я строил. Эти балки будут держать вечно!" }
+
     { key: "#fireman_desease_can_start_at_any_moment", text: "Надеюсь, чума не вспыхнет. Чума может распространяться как лесной пожар." }
     { key: "#fireman_no_food_in_city", text: "Даже когда пожары горят, всё, о чём я могу думать, это насколько я голоден." }
     { key: "#fireman_city_not_safety_workers_leaving", text: "Если наши враги вторгнутся, весь город может сгореть дотла." }
@@ -534,6 +548,13 @@ localization_ru = [
     { key: "#cartpusher_i_have_no_destination", text: "Мы делаем больше, чем наша доля работы. Нам нужно больше помощи."}
     { key: "#cartpusher_back_to_home", text: "Я подожду здесь, пока освободится место для этого."}
     { key: "#cartpusher_delivering_items", text: "Я уже там? Я не могу тащить эти товары намного дальше."}
+    { key: "#cartpusher_disease_risk", text: "Тут пахнет болезнью. Трудно толкать тележку в лихорадке." }
+    { key: "#cartpusher_no_food_in_city", text: "Амбары пусты? Тогда ради чего я всё это таскаю?" }
+    { key: "#cartpusher_city_have_no_army", text: "Нет фортов? Один набег — и моя тележка станет добычей." }
+    { key: "#cartpusher_gods_are_angry", text: "Боги злятся. Даже колёса скрипят, будто дурное знамение." }
+    { key: "#cartpusher_low_entertainment", text: "Праздников давно не было. Спине носильщика тоже нужен выходной." }
+    { key: "#cartpusher_city_is_good", text: "Этот город крепкий! Короткие дороги и полные склады." }
+    { key: "#cartpusher_city_is_amazing", text: "Лучший город, для которого я таскал грузы. Эти клади сами катятся!" }
 
     { key: "#malaria_problem", text: "(Не используется)" }
     { key: "#malaria_not_a_problem", text: "Малярия, похоже, здесь не проблема." }
@@ -548,6 +569,7 @@ localization_ru = [
     { key: "#policeman_much_unemployments", text: "Мне не нравится видеть столько безработных бездельников. Я не могу ходить по своему участку, не споткнувшись о них!" }
     { key: "#policeman_low_entertainment", text: "Этот город скучен. Я не могу найти хороших шоу для просмотра." }
     { key: "#policeman_city_is_good", text: "Этот город не идеален, но какой город идеален?" }
+    { key: "#policeman_city_is_amazing", text: "Никогда не чувствовал себя спокойнее на обходе. Этот город потрясающий!" }
     { key: "#policeman_very_low_crime_level", text: "Если бы только базар торговал пончиками, этот город был бы идеальным." }
     { key: "#policeman_low_crime_level", text: "Здесь все дружелюбны. Никто не сообщает о преступлениях." }
     { key: "#policeman_usual_crime_level", text: "Несколько преступлений здесь, несколько преступлений там, но ничего необычного." }

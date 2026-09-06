@@ -3,17 +3,21 @@
 #include "figure/figure.h"
 
 enum e_carpenter_action : uint16_t {
-    ACTION_10_CARPENTER_CREATED = 10,
-    ACTION_11_CARPENTER_GOING = 11,
-    ACTION_14_CARPENTER_WORK_GROUND = 14,
-    ACTION_15_CARPENTER_WORK_VERT = 15,
-    ACTION_16_CARPENTER_RETURN_HOME = 16,
-    ACTION_17_CARPENTER_LOOKING_FOR_WORK_TILE = 17,
-    ACTION_18_CARPENTER_RANDOM_TILE = 18,
-    ACTION_20_CARPENTER_DESTROY = 20,
-    ACTION_30_CARPENTER_CREATED_ROAMING = 30,
-    ACTION_31_CARPENTER_GOING_TO_GARDEN = 31,
+    ACTION_0_CARPENTER_CREATED = 0,
+    ACTION_1_CARPENTER_GOING = 1,
+    ACTION_2_CARPENTER_WORK_GROUND = 2,
+    ACTION_3_CARPENTER_WORK_VERT = 3,
+    ACTION_4_CARPENTER_RETURN_HOME = 4,
+    ACTION_5_CARPENTER_LOOKING_FOR_WORK_TILE = 5,
+    ACTION_6_CARPENTER_RANDOM_TILE = 6,
+    ACTION_7_CARPENTER_DESTROY = 7,
+    ACTION_8_CARPENTER_CREATED_ROAMING = 8,
+    ACTION_9_CARPENTER_GOING_TO_GARDEN = 9,
+
+    ACTION_10_CARPENTER_MAX
 };
+using figure_carpenter_action_tokens_t = token_holder<e_carpenter_action, ACTION_0_CARPENTER_CREATED, ACTION_10_CARPENTER_MAX>;
+extern const figure_carpenter_action_tokens_t figure_carpenter_action_tokens;
 
 class figure_carpenter : public figure_impl {
 public:
@@ -29,9 +33,5 @@ public:
     virtual void on_create() override {}
     virtual void figure_action() override;
     virtual void on_destroy() override;
-    //virtual void figure_before_action() override;
     virtual void update_animation() override;
-    //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
-    //virtual bool is_common_roaming() override { return false; }
-    virtual sound_key phrase_key() const override;
 };

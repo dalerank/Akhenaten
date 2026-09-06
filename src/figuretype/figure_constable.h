@@ -26,9 +26,7 @@ public:
     virtual void figure_action() override;
     virtual void figure_before_action() override;
     virtual void update_animation() override;
-    virtual sound_key phrase_key() const override;
     virtual int provide_service() override;
-    //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
 
     bool fight_enemy(int category, int max_distance);
     // Arrest nearby criminal (tomb robber / mugger). force skips the TEMP 75% roll.

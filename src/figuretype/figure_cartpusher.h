@@ -2,7 +2,8 @@
 
 #include "figure/figure.h"
 
-enum e_cartpusher_action {
+enum e_cartpusher_action : uint16_t {
+    ACTION_0_CARTPUSHER_NONE = 0,
     ACTION_9_CARTPUSHER_DELIVERING_GOODS = 9,
     ACTION_10_CARTPUSHER_DELIVERING_FOOD = 10,
     ACTION_11_CARTPUSHER_DELIVERING_GOLD = 11,
@@ -18,11 +19,15 @@ enum e_cartpusher_action {
     ACTION_26_CARTPUSHER_AT_WORKSHOP = 26,
     ACTION_27_CARTPUSHER_RETURNING = 27,
     ACTION_51_CARTPUSHER_DELIVERING_RESOURCE = 51,
-    ACTION_56_CARTPUSHER_RETURNING_WITH_FOOD = 56,
     ACTION_53_CARTPUSHER_RETURNING_EMPTY = 53,
     ACTION_54_CARTPUSHER_GETTING_FOOD = 54,
+    ACTION_56_CARTPUSHER_RETURNING_WITH_FOOD = 56,
     ACTION_57_CARTPUSHER_GETTING_RESOURCE = 57,
+
+    ACTION_58_CARTPUSHER_MAX
 };
+using figure_cartpusher_action_tokens_t = token_holder<e_cartpusher_action, ACTION_0_CARTPUSHER_NONE, ACTION_58_CARTPUSHER_MAX>;
+extern const figure_cartpusher_action_tokens_t figure_cartpusher_action_tokens;
 
 class figure_carrier : public figure_impl {
 public:
@@ -53,7 +58,6 @@ public:
     virtual void figure_before_action() override;
     virtual void figure_action() override;
     virtual void update_animation() override;
-    virtual sound_key phrase_key() const override;
     virtual bool can_move_by_water() const override;
 
     void do_deliver(bool storageyard_cart, int action_done, int action_fail);

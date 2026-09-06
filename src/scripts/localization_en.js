@@ -1064,7 +1064,6 @@ localization_en = [
   { key: "#donkey_cicero_meta", text: "They call me a beast of burden, yet I quote Cicero. Who is the philosopher now?" }
   { key: "#donkey_cicero_runaway", text: "I flee, therefore I am. Cicero would understand. Probably." }
 
-  { key: "#immigrant_im_new_here", text: "I'm new here." }
   {key: "#dwellers_palace_are_pinnacle", group:127, id:100}
   {key: "#house_upgrade_inprogress", group:127, id:101}
   {key: "#house_nearby_building", group:127, id:102}
@@ -1152,6 +1151,20 @@ localization_en = [
   { key: "#brick_city_is_good", text: "This city is solid! Good foundations for great monuments." }
   { key: "#brick_city_is_amazing", text: "Best city I've built for. These walls will stand forever!" }
 
+  { key: "#carpenter_work_my_tools_need_for_monument", text: "My tools are needed at the monument!" }
+  { key: "#carpenter_this_monument_will_be_short", text: "This monument won't take long — the timber's ready." }
+  { key: "#carpenter_work_wall", text: "Scaffolding first. Then the real work begins up high." }
+  { key: "#carpenter_looking_for_spot", text: "Looking for the next beam that needs setting." }
+  { key: "#carpenter_return_to_guild", text: "Back to the guild. Sawdust in my hair again." }
+  { key: "#carpenter_work_garden", text: "A little joinery and this garden will look proper." }
+  { key: "#carpenter_disease_risk", text: "This place smells of sickness. Hard to hold a chisel with shaky hands." }
+  { key: "#carpenter_no_food_in_city", text: "Empty granaries? A hungry carpenter cuts crooked timber." }
+  { key: "#carpenter_city_have_no_army", text: "No forts? One raid and this scaffolding is firewood." }
+  { key: "#carpenter_gods_are_angry", text: "The gods look angry. Even good cedar warps under their gaze." }
+  { key: "#carpenter_low_entertainment", text: "No festivals for ages. Even carpenters need a day off the scaffold." }
+  { key: "#carpenter_city_is_good", text: "This city is solid! Good timber work deserves good foundations." }
+  { key: "#carpenter_city_is_amazing", text: "Best city I've built for. These beams will hold forever!" }
+
   { key: "#fireman_desease_can_start_at_any_moment", text: "I hope a plague doesn't break out. Plagues can spread like wildfire." }
   { key: "#fireman_no_food_in_city", text: "Even when fires are burning, all I can think about is how hungry I am." }
   { key: "#fireman_city_not_safety_workers_leaving", text: "If our enemies invade, the whole city could go up in flames." }
@@ -1172,6 +1185,13 @@ localization_en = [
   { key: "#cartpusher_i_have_no_destination", text: "We're doing more than our share of work.  We need more help."}
   { key: "#cartpusher_back_to_home", text: "I'll wait here until some space for this stuff opens up."}
   { key: "#cartpusher_delivering_items", text: "Am I there yet?  I can't haul these goods much further."}
+  { key: "#cartpusher_disease_risk", text: "This place smells of sickness. Hard to push a cart when you feel feverish." }
+  { key: "#cartpusher_no_food_in_city", text: "Empty granaries? Then what am I hauling all this for?" }
+  { key: "#cartpusher_city_have_no_army", text: "No forts? One raid and my cart is spoils of war." }
+  { key: "#cartpusher_gods_are_angry", text: "The gods look angry. Even the wheels squeak like an omen." }
+  { key: "#cartpusher_low_entertainment", text: "No festivals for ages. A cartpusher's back needs a holiday too." }
+  { key: "#cartpusher_city_is_good", text: "This city is solid! Short roads and full warehouses." }
+  { key: "#cartpusher_city_is_amazing", text: "Best city I've hauled for. These loads practically roll themselves!" }
 
   { key: "#malaria_problem", text: "(Not used)" }
   { key: "#malaria_not_a_problem", text: "Malaria doesn't seem to be a problem here." }
@@ -1186,6 +1206,7 @@ localization_en = [
   { key: "#policeman_much_unemployments", text: "I don't like to see this many jobless loiterers. I can't walk my beat without tripping over them!" }
   { key: "#policeman_low_entertainment", text: "This city is dull. I can't find any good shows to see." }
   { key: "#policeman_city_is_good", text: "This city isn't perfect, but then what city is?" }
+  { key: "#policeman_city_is_amazing", text: "I've never felt safer walking a beat. This city is amazing!" }
   { key: "#policeman_very_low_crime_level", text: "If only the Bazaar carried donuts, this city would be perfect." }
   { key: "#policeman_low_crime_level", text: "Everybody's friendly here. No one is reporting any crimes." }
   { key: "#policeman_usual_crime_level", text: "A few crimes here, a few crimes there, but nothing out of the ordinary." }

@@ -307,6 +307,7 @@ void js_register_figure(js_State *J) {
     JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, figure, draw_mode);
     JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, figure, phrase_key);
     JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, figure, phrase_sound);
+    JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, figure, min_max_seen);
 
     jsB_propf(J, js_intern("Figure.prototype.__property_getter"), figure_proto___property_getter, 1);
     jsB_propf(J, js_intern("Figure.prototype.__valid"), figure_proto___valid, 0);

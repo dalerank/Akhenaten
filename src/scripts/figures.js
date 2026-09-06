@@ -9,7 +9,10 @@ import figure.antelope_hunter
 import figure.birds_hunter
 import figure.architector
 import figure.bricklayer
+import figure.carpenter
 import figure.caravan_donkey
+import figure.cartpusher
+import figure.constable
 
 figure_fireman {
   overlay : OVERLAY_WATER
@@ -955,27 +958,6 @@ figure_delivery_boy {
 	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
-figure_carpenter {
-	animations {
-		_pack { pack:PACK_SPR_MAIN }
-		walk { id:145, max_frames:12 }
-		death { id:146, max_frames:8, loop:false }
-		work_ground { id:147, max_frames:7 }
-		work_wall { id:148, max_frames:7 }
-		climbing { id:149, max_frames:3 }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_CARPENTER }
-	}
-
-	sounds {
-		carpenter_work_my_tools_need_for_monument { sound:"carpenter_e01.wav"}
-		carpenter_this_monument_will_be_short { sound:"carpenter_e02.wav"}
-	}
-
-	category: figure_category_citizen
-	max_damage: 10
-	terrain_usage : TERRAIN_USAGE_ROADS,
-}
-
 figure_stonemason {
 	animations {
 		walk { pack:PACK_SPR_MAIN, id:150, max_frames:12 }
@@ -1007,33 +989,6 @@ figure_cart {
 	limestone: { pack:PACK_SPR_MAIN, id:104 }
 	bricks: { pack:PACK_SPR_MAIN, id:89 }
 	empty: { pack:PACK_SPR_MAIN, id:77 }
-}
-
-figure_cartpusher {
-	animations {
-		_pack { pack:PACK_SPR_MAIN }
-		walk { id:43, max_frames:12 }
-		idle { id:43, max_frames:1, loop:false }
-		death { id:44, max_frames:8, loop:false }
-		swim { id:138, max_frames:4, duration:4 }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_CART_PUSHER }
-	}
-
-	sounds {
-	  	cartpusher_have_no_place_for_goods { sound:"cartpusher_e01.wav"}
-		cartpusher_i_have_time_for_rest { sound:"cartpusher_e02.wav"}
-		cartpusher_road_too_long { sound:"cartpusher_e03.wav"}
-		cartpusher_i_have_no_destination { sound:"cartpusher_e01.wav"}
-		cartpusher_back_to_home { sound:"cartpusher_e02.wav"}
-		cartpusher_delivering_items { sound:"cartpusher_e03.wav"}
-	}
-
-	use_cart : true
-	wait_on_calculate_destination : 30
-	category: figure_category_citizen
-	max_damage : 20
-	terrain_usage : TERRAIN_USAGE_ROADS,
-	record_path : true
 }
 
 figure_zookeeper {
@@ -1459,45 +1414,6 @@ figure_librarian {
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length : 384
 	permission : epermission_education
-}
-
-figure_constable {
-  overlay : OVERLAY_CRIME
-	animations {
-		_pack { pack:PACK_SPR_MAIN }
-		walk { id:20, max_frames:12 }
-		death { id:21, max_frames:8, loop:false }
-		attack { id:21, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_CONSTABLE }
-	}
-
-	sounds {
-		policeman_low_crime_level {sound: "police_e01.WAV"}
-		policeman_usual_crime_level {sound: "police_e02.WAV"}
-		policeman_very_low_crime_level {sound: "police_e03.WAV"}
-		policeman_iam_too_busy_that_talk {sound: "police_e04.WAV"}
-		policeman_i_hope_my_work_is_need {sound: "police_e05.WAV"}
-		policeman_city_not_safety {sound: "police_e06.WAV"}
-		policeman_need_workers {sound: "police_e07.WAV"}
-		policeman_enemies_are_coming {sound: "police_e08.WAV"}
-		policeman_desease_can_start_at_any_moment {sound: "police_g01.WAV"}
-		policeman_no_food_in_city {sound: "police_g02.WAV"}
-		policeman_no_army {sound: "police_g03.WAV"}
-		policeman_need_more_workers {sound: "police_g04.WAV"}
-		policeman_gods_are_angry {sound: "police_g05.WAV"}
-		policeman_no_army_2 {sound: "police_g06.wav"}
-		policeman_much_unemployments {sound: "police_g07.WAV"}
-		policeman_low_entertainment {sound: "police_g08.WAV"}
-		policeman_city_is_good {sound: "police_g09.WAV"}
-		policeman_city_is_amazing {sound: "police_g10.WAV"}
-	}
-
-	category: figure_category_citizen
-	max_damage: 100
-	attack_value: 5
-	defense_value: 3
-	terrain_usage : TERRAIN_USAGE_ROADS
-	max_roam_length : 640
 }
 
 figure_herbalist {

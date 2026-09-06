@@ -82,7 +82,7 @@ void building_carpenters_guild::spawn_figure() {
     });
 
     if (monument) {
-        auto f = base.create_figure_with_destination(FIGURE_CARPENTER, monument, (e_figure_action)ACTION_10_CARPENTER_CREATED, BUILDING_SLOT_SERVICE);
+        auto f = base.create_figure_with_destination(FIGURE_CARPENTER, monument, (e_figure_action)ACTION_0_CARPENTER_CREATED, BUILDING_SLOT_SERVICE);
         // Prefer monument access_point; access_tile alone can miss enter_offset.
         auto *mm = monument->dcast_monument();
         f->destination_tile = mm ? mm->access_point() : monument->access_tile();
@@ -117,7 +117,7 @@ void building_carpenters_guild::spawn_figure() {
     });
 
     if (min_service_statue) {
-        auto f = base.create_figure_with_destination(FIGURE_CARPENTER, &min_service_statue->base, (e_figure_action)ACTION_30_CARPENTER_CREATED_ROAMING, BUILDING_SLOT_SERVICE);
+        auto f = base.create_figure_with_destination(FIGURE_CARPENTER, &min_service_statue->base, (e_figure_action)ACTION_8_CARPENTER_CREATED_ROAMING, BUILDING_SLOT_SERVICE);
         min_service_statue->add_workers(f->id);
         f->wait_ticks = random_short() % 30;
         auto carpenter = smart_cast<figure_carpenter>(f);
