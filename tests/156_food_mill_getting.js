@@ -12,6 +12,20 @@ var __test156_ok = {
     flag_off: false
 }
 
+// #644: a granary is reached through its perimeter road tiles, so faking road_network_id is not
+// enough -- lay a real road along one side of the footprint and take the network the map computes.
+function grant_granary_road(bid) {
+    var b = city.get_building(bid)
+    var t = __building_tile(bid)
+    var dx
+    for (dx = -1; dx <= b.size; dx++) {
+        terrain.add({ x: t.x + dx, y: t.y - 1 }, TERRAIN_ROAD)
+    }
+    __test_update_road_network()
+    b.has_road_access = true
+    return __test_tile_road_network(__test_grid_offset_xy(t.x, t.y - 1))
+}
+
 function run_test() {
     __log_info_native('[test:156] food mill getting carts')
     test_ensure_city_session('data/default.map')
@@ -39,11 +53,12 @@ function run_test() {
         terrain.add({ x: mt.x + dx, y: mt.y + 3 }, TERRAIN_ROAD)
     }
 
+    var road_net = grant_granary_road(granary)
     city.get_building(mill).has_road_access = true
     city.get_building(granary).has_road_access = true
-    city.get_building(mill).road_network_id = 1
+    city.get_building(mill).road_network_id = road_net
     city.get_building(mill).distance_from_entry = 1
-    city.get_building(granary).road_network_id = 1
+    city.get_building(granary).road_network_id = road_net
     city.get_building(granary).distance_from_entry = 2
     __test_building_set_workers(mill, 12)
     __test_building_set_workers(granary, 20)

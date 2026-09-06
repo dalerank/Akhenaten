@@ -66,14 +66,18 @@ function run_test() {
     }
     __log_marker('monument_carry_survive_troop_clear_ok')
 
-    // CO1b: fresh map + bad previous-map tile (1,1) cannot fit 13×14 → scan fallback.
+    // CO1b: fresh map + previous-map tile the 13×14 footprint cannot fit on (runs off the
+    //       map edge) → clear-land / rock scan fallback. default.map is empty, so a low tile
+    //       like 1,1 would legitimately fit and would not exercise the fallback at all.
     test_reload_city_session('data/default.map')
     city.finance.treasury = 50000
     if (!__scenario_building_allowed(BUILDING_ALEXANDRIA_LIBRARY)) {
         __scenario_building_allow(BUILDING_ALEXANDRIA_LIBRARY, true)
     }
     __campaign_carry_clear()
-    __campaign_carry_set_monument(0, BUILDING_ALEXANDRIA_LIBRARY, 1, 1, 0, 0)
+    var bad_x = __scenario_map.width - 2
+    var bad_y = __scenario_map.height - 2
+    __campaign_carry_set_monument(0, BUILDING_ALEXANDRIA_LIBRARY, bad_x, bad_y, 0, 0)
     __campaign_carry_apply_monuments()
     __test_pump_frames(2)
     found = find_preexisting_library()
@@ -83,7 +87,7 @@ function run_test() {
         return
     }
     var tile = __building_tile(found)
-    if (!tile || (tile.x == 1 && tile.y == 1)) {
+    if (!tile || (tile.x == bad_x && tile.y == bad_y)) {
         __log_info_native('[test:137] CO1b expected relocated tile, got '
             + (tile ? (tile.x + ',' + tile.y) : 'null'))
         __test_signal_ready()

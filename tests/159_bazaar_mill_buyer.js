@@ -18,6 +18,20 @@ var __test159_ok = {
     food_months: false
 }
 
+// #644: a granary is reached through its perimeter road tiles, so faking road_network_id is not
+// enough -- lay a real road along one side of the footprint and take the network the map computes.
+function grant_granary_road(bid) {
+    var b = city.get_building(bid)
+    var t = __building_tile(bid)
+    var dx
+    for (dx = -1; dx <= b.size; dx++) {
+        terrain.add({ x: t.x + dx, y: t.y - 1 }, TERRAIN_ROAD)
+    }
+    __test_update_road_network()
+    b.has_road_access = true
+    return __test_tile_road_network(__test_grid_offset_xy(t.x, t.y - 1))
+}
+
 function run_test() {
     __log_info_native('[test:159] bazaar mill buyer (FM3)')
     test_ensure_city_session('data/default.map')
@@ -57,6 +71,7 @@ function run_test() {
     __log_marker('bazaar_mill_defaults_ok')
     __test159_ok.defaults = true
 
+    city.get_building(bid).road_network_id = grant_granary_road(granary)
     if (!__test_bazaar_link_storage(bid, mill)
         || !__test_bazaar_link_storage(bid, granary)
         || !__test_bazaar_link_storage(bid, sy)) {
