@@ -14,6 +14,8 @@ function run_test() {
     __image_request_pak(PACK_ENEMY_EGYPTIAN)
     __test_pump_frames(2)
     __test_clear_enemy_formations()
+    // The city session is shared with every earlier test: drop leftover invasion bookkeeping.
+    __test_kingdome_invasion_reset()
 
     // Disable auto-resolve so wipe path is manual kill tally.
     var flags_prev = game_features.get('gameplay_enhanced_auto_resolve_invasions')
@@ -44,6 +46,8 @@ function run_test() {
     __log_marker('favour_smoke_spawn_ok')
 
     __test_pump_frames(2)
+    // pump_frames often advances 0 sim ticks, and the counter is rebuilt by the figure pass.
+    __test_figures_update()
     var ks = __test_city_kingdome_soldiers()
     if (ks <= 0) {
         __log_info_native('[test:109] kingdome_soldiers=0 after spawn')

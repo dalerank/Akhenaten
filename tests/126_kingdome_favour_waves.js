@@ -23,6 +23,8 @@ function run_test() {
 
     __image_request_pak(PACK_ENEMY_EGYPTIAN)
     __test_pump_frames(2)
+    // The city session is shared with every earlier test: drop leftover invasion bookkeeping.
+    __test_kingdome_invasion_reset()
     __test_clear_enemy_formations()
 
     var flags_prev = game_features.get('gameplay_enhanced_auto_resolve_invasions')
@@ -44,6 +46,9 @@ function run_test() {
         invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM
     })
     __test_pump_frames(4)
+    // process_invasion() clears the slot when kingdome_soldiers is still 0, and that counter is
+    // rebuilt by the figure pass -- pump_frames alone often advances 0 sim ticks.
+    __test_figures_update()
 
     if (!seq1 || seq1 <= 0) {
         __log_info_native('[test:126] wave1 spawn failed seq=' + seq1)
@@ -83,6 +88,7 @@ function run_test() {
         invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM
     })
     __test_pump_frames(4)
+    __test_figures_update()
 
     if (!seq2 || seq2 <= 0) {
         __log_info_native('[test:126] wave2 spawn failed seq=' + seq2)

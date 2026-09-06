@@ -1711,6 +1711,13 @@ static int __test_kingdome_invasion_size() {
 }
 ANK_FUNCTION(__test_kingdome_invasion_size);
 
+// Tests share one city session, so a run that spawned a kingdome invasion leaves its
+// bookkeeping behind for whoever comes next.
+static void __test_kingdome_invasion_reset() {
+    g_city.kingdome.invasion = {};
+}
+ANK_FUNCTION(__test_kingdome_invasion_reset);
+
 static void __test_process_kingdome_invasion() {
     g_city.kingdome.process_invasion();
 }

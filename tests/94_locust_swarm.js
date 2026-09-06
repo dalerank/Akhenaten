@@ -172,8 +172,9 @@ function run_test() {
     __test94_sentiment_ok = true
 
     // --- Crop Busters cheat / debug console ---
+    // The C++ cheat moved to console_commands.js and was renamed on the way.
     test94_remove_locusts()
-    __test_run_console_command('crop_busters')
+    __test_run_console_command('locust_apply_plague')
     if (test94_count_locusts() < 1) {
         __log_info_native('[test:94] crop_busters expected locusts')
         __test_signal_ready()
