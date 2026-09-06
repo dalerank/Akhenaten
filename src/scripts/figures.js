@@ -16,6 +16,9 @@ import figure.constable
 import figure.dancer
 import figure.delivery_boy
 import figure.dentist
+import figure.docker
+import figure.drunkard
+import figure.embalmer
 
 figure_fireman {
   overlay : OVERLAY_WATER
@@ -799,35 +802,6 @@ figure_scriber {
 	max_roam_length : 384
 }
 
-figure_embalmer {
-  overlay : OVERLAY_MORTUARY
-	animations {
-		walk { pack:PACK_SPR_MAIN, id:195, max_frames:12 }
-		death { pack:PACK_SPR_MAIN, id:196, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_EMBALMER }
-	}
-
-	sounds {
-		embalmer_health_worsening : {sound:"embalmer_e01.WAV"}
-		embalmer_concerned_about_plague : {sound:"embalmer_g01.WAV"}
-		embalmer_no_food_in_city : {sound:"embalmer_g02.WAV"}
-		embalmer_defenses_weak : {sound:"embalmer_g03.WAV"}
-		embalmer_need_more_workers : {sound:"embalmer_g04.WAV"}
-		embalmer_gods_are_angry : {sound:"embalmer_g05.WAV"}
-		embalmer_reputation_is_low : {sound:"embalmer_g06.WAV"}
-		embalmer_unemployment_is_high : {sound:"embalmer_g07.WAV"}
-		embalmer_low_entertainment : {sound:"embalmer_g08.WAV"}
-		embalmer_city_is_ok : {sound:"embalmer_g09.WAV"}
-		embalmer_city_is_the_best : {sound:"embalmer_g10.WAV"}
-	}
-
-	category: figure_category_citizen
-	max_damage : 10
-	terrain_usage : TERRAIN_USAGE_ROADS
-	max_roam_length : 384
-	permission : epermission_medicine
-}
-
 figure_worker {
   overlay : OVERLAY_LABOR
 	animations {
@@ -975,25 +949,6 @@ figure_zookeeper {
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length: 640
 	permission : epermission_entertainer
-}
-
-figure_docker {
-	animations {
-		walk {  pack:PACK_SPR_MAIN, id:43, max_frames:12 }
-		death {  pack:PACK_SPR_MAIN, id:44, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_DOCKER }
-	}
-
-	sounds {
-		docker_need_more_help {sound:"dockpusher_e01.wav"}
-		docker_wait_until_space_opens_up {sound:"dockpusher_e02.wav"}
-		docker_cant_haul_goods_much_farther {sound:"dockpusher_e03.wav"}
-	}
-
-	use_cart : true
-	category: figure_category_citizen
-	max_damage : 10
-	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
 // TODO: dump SprMain2 / Expansion walk/work/death ids — temporarily reuse bricklayer SprMain.

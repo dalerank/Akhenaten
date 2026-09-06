@@ -110,7 +110,7 @@ void building_dock::spawn_figure() {
     
     if (existing_dockers < max_dockers) {
         figure *f = figure_create(FIGURE_DOCKER, base.road_access, DIR_4_BOTTOM_LEFT);
-        f->action_state = ACTION_132_DOCKER_IDLING;
+        f->action_state = ACTION_0_DOCKER_IDLING;
         f->set_home(&base);
         for (int i = 0; i < 3; i++) {
             if (!d.docker_ids[i]) {
@@ -170,8 +170,8 @@ int building_dock::count_idle_dockers() const {
     for (int i = 0; i < 3; i++) {
         if (d.docker_ids[i]) {
             figure* f = figure_get(d.docker_ids[i]);
-            if (f->action_state == ACTION_132_DOCKER_IDLING
-                || f->action_state == ACTION_133_DOCKER_IMPORT_QUEUE) {
+            if (f->action_state == ACTION_0_DOCKER_IDLING
+                || f->action_state == ACTION_1_DOCKER_IMPORT_QUEUE) {
                 num_idle++;
             }
         }

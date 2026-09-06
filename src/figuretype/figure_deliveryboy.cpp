@@ -87,19 +87,6 @@ void figure_delivery_boy::figure_action() {
     delivery_boy_deposit_or_return(*this);
 }
 
-sound_key figure_delivery_boy::phrase_key() const {
-    svector<sound_key, 10> keys{"those_baskets_too_heavy",
-                                "i_works_all_day",
-                                "upon_ill_be_market_owner"};
-
-    int index = rand() % keys.size();
-    return keys[index];
-}
-
-figure_sound_t figure_delivery_boy::get_sound_reaction(xstring key) const {
-    return current_params().sounds[key];
-}
-
 void figure_delivery_boy::update_animation() {
     figure_impl::update_animation();
 }

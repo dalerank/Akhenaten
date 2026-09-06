@@ -83,16 +83,16 @@ int figure_trade_ship::is_trading() const {
             continue;
 
         switch (f->action_state) {
-        case ACTION_133_DOCKER_IMPORT_QUEUE:
-        case ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE:
-        case ACTION_138_DOCKER_IMPORT_RETURNING:
-        case ACTION_139_DOCKER_IMPORT_AT_WAREHOUSE:
+        case ACTION_1_DOCKER_IMPORT_QUEUE:
+        case ACTION_3_DOCKER_IMPORT_GOING_TO_WAREHOUSE:
+        case ACTION_6_DOCKER_IMPORT_RETURNING:
+        case ACTION_7_DOCKER_IMPORT_AT_WAREHOUSE:
             return TRADE_SHIP_BUYING;
 
-        case ACTION_134_DOCKER_EXPORT_QUEUE:
-        case ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE:
-        case ACTION_137_DOCKER_EXPORT_RETURNING:
-        case ACTION_140_DOCKER_EXPORT_AT_WAREHOUSE:
+        case ACTION_2_DOCKER_EXPORT_QUEUE:
+        case ACTION_4_DOCKER_EXPORT_GOING_TO_WAREHOUSE:
+        case ACTION_5_DOCKER_EXPORT_RETURNING:
+        case ACTION_9_DOCKER_EXPORT_AT_WAREHOUSE:
             return TRADE_SHIP_SELLING;
         }
     }
@@ -552,7 +552,7 @@ void figure_trade_ship::update_day() {
     if (dock) {
         for (const int docker_id : dock->runtime_data().docker_ids) {
             figure *docker = figure_get(docker_id);
-            if (docker->state == FIGURE_STATE_ALIVE && docker->action_state != ACTION_132_DOCKER_IDLING) {
+            if (docker->state == FIGURE_STATE_ALIVE && docker->action_state != ACTION_0_DOCKER_IDLING) {
                 return;
             }
         }

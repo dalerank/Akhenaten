@@ -3,6 +3,7 @@
 #include "figure/figure.h"
 #include "figure/figure_static_params.h"
 #include "game/resource.h"
+#include "core/calc.h"
 #include "core/direction.h"
 #include "window/window_info.h"
 #include "city/city.h"
@@ -87,6 +88,18 @@ int __figure_get_home_building_id(int fid) {
     return f ? f->homeID() : 0;
 }
 ANK_FUNCTION_1(__figure_get_home_building_id)
+
+int __figure_source_dest_max_distance(int fid) {
+    if (!fid) {
+        return 0;
+    }
+    figure *f = figure_get(fid);
+    if (!f || !f->is_valid()) {
+        return 0;
+    }
+    return calc_maximum_distance(f->destination_tile, f->source_tile);
+}
+ANK_FUNCTION_1(__figure_source_dest_max_distance)
 
 int __figure_get_state(int fid) {
     if (!fid) {

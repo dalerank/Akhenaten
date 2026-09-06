@@ -471,9 +471,20 @@ localization_ru = [
     { key: "#homeless_i_was_kicked_out_of_my_home", text: "Меня выгнали из моего дома, и это не моя вина." }
     { key: "#homeless_i_cant_find_a_place_to_live", text: "Я не могу найти место для жизни!" }
 
-    { key: "#marketboy_these_baskets_are_too_heavy", text: "Эти корзины слишком тяжелы для такого маленького ребёнка, как я!" }
-    { key: "#marketboy_bossy_lady_makes_me_carry_goods", text: "Эта властная дама заставляет меня носить товары весь день!" }
-    { key: "#marketboy_one_day_ill_run_the_bazaar", text: "Может быть, я сейчас просто ношу корзины, но однажды я буду управлять базаром." }
+    { key: "#marketboy_these_baskets_are_too_heavy", text: "Эти корзины слишком тяжёлые для такого маленького ребёнка, как я!" }
+    { key: "#marketboy_bossy_lady_makes_me_carry_goods", text: "Эта властная дама заставляет меня таскать товары весь день!" }
+    { key: "#marketboy_one_day_ill_run_the_bazaar", text: "Сейчас я только ношу корзины, но однажды буду управлять базаром." }
+    { key: "#marketboy_runaway", text: "Она меня бросила! Ладно — сам понесу эти корзины домой." }
+    { key: "#marketboy_disease_risk", text: "Все кашляют. Можно поставить корзины и помыть руки?" }
+    { key: "#marketboy_no_food_in_city", text: "Амбары пусты? Тогда зачем я таскаю еду по всему городу?" }
+    { key: "#marketboy_city_have_no_army", text: "Нет фортов? Если набегут — сначала схватят мои корзины!" }
+    { key: "#marketboy_need_workers", text: "Базару нужны руки. А мои уже заняты!" }
+    { key: "#marketboy_gods_are_angry", text: "Боги злятся. Может, им тоже не нравится мятый фрукт." }
+    { key: "#marketboy_city_is_bad", text: "Город злой. Даже собаки лают на мои корзины." }
+    { key: "#marketboy_much_unemployment", text: "Столько бездельников — и никто не поможет понести!" }
+    { key: "#marketboy_low_entertainment", text: "Праздников давно не было. Хоть бы парад сократил дорогу." }
+    { key: "#marketboy_city_is_good", text: "Город ничего. Короткие дороги и покупательница знает путь." }
+    { key: "#marketboy_city_is_amazing", text: "Лучший город для корзин! Когда-нибудь у меня будет своя лавка." }
 
     { key: "#engineer_extreme_damage_level", text: "Многие люди в гораздо худшем состоянии, чем здания. Надеюсь, всё не станет хуже." }
     { key: "#engineer_i_am_works", text: "Эти стены не рухнут на моей смене." }
@@ -555,6 +566,17 @@ localization_ru = [
     { key: "#cartpusher_low_entertainment", text: "Праздников давно не было. Спине носильщика тоже нужен выходной." }
     { key: "#cartpusher_city_is_good", text: "Этот город крепкий! Короткие дороги и полные склады." }
     { key: "#cartpusher_city_is_amazing", text: "Лучший город, для которого я таскал грузы. Эти клади сами катятся!" }
+
+    { key: "#docker_need_more_help", text: "Мы делаем больше, чем наша доля работы. Нам нужно больше помощи." }
+    { key: "#docker_wait_until_space_opens_up", text: "Я подожду здесь, пока освободится место для этого." }
+    { key: "#docker_cant_haul_goods_much_farther", text: "Я уже там? Я не могу тащить эти товары намного дальше." }
+    { key: "#docker_disease_risk", text: "На пристани пахнет болезнью. Трудно таскать груз, когда воздух тяжёлый." }
+    { key: "#docker_no_food_in_city", text: "Амбары пусты? Корабли приходят голодными — и мы тоже." }
+    { key: "#docker_city_have_no_army", text: "Нет фортов? Один набег — и эта гавань станет добычей." }
+    { key: "#docker_gods_are_angry", text: "Боги злятся. Даже река, кажется, тянет не туда." }
+    { key: "#docker_low_entertainment", text: "Праздников давно не было. Докерам тоже нужен сход на берег." }
+    { key: "#docker_city_is_good", text: "В этой гавани всё споро! Короткие рейсы и полные склады." }
+    { key: "#docker_city_is_amazing", text: "Лучший порт, где я работал. Эти ящики сами выходят на берег!" }
 
     { key: "#malaria_problem", text: "(Не используется)" }
     { key: "#malaria_not_a_problem", text: "Малярия, похоже, здесь не проблема." }
@@ -797,6 +819,35 @@ localization_ru = [
     { key: "#dentist_low_entertainment", text: "Мне скучно! Думаю, я почищу зубы снова." }
     { key: "#dentist_city_is_ok", text: "Этот город нормальный. Всего несколько полостей!" }
     { key: "#dentist_city_is_amazing", text: "У этого города самая яркая улыбка во всём Египте." }
+
+    { key: "#embalmer_concerned_about_plague", text: "Судя по количеству больных людей в этом городе, у меня скоро будут заняты руки!" }
+    { key: "#embalmer_no_food_in_city", text: "Я голодаю. Вскоре я буду худее мумии!" }
+    { key: "#embalmer_defenses_weak", text: "Город не надёжно завёрнут в оборону. Враг мог бы легко победить нас." }
+    { key: "#embalmer_need_more_workers", text: "Если бы я когда-нибудь хотел оставить бальзамирование, сейчас мой шанс. Так много вакансий!" }
+    { key: "#embalmer_gods_are_angry", text: "Боги могут вскоре разрушить наш город, если мы не проявим к ним больше уважения." }
+    { key: "#embalmer_reputation_is_low", text: "Плохая репутация города может быть смертью для нас всех. Мы можем быть атакованы в любой момент." }
+    { key: "#embalmer_unemployment_is_high", text: "Когда я вижу столько людей без работы, это заставляет меня радоваться, что у меня есть работа." }
+    { key: "#embalmer_low_entertainment", text: "Этот город мёртв, как и тела, с которыми я работаю весь день. Хотел бы я, чтобы город был жив развлечениями." }
+    { key: "#embalmer_city_is_ok", text: "Я мог бы также жить здесь. Это примерно так же хорошо, как где угодно ещё." }
+    { key: "#embalmer_city_is_the_best", text: "Мне действительно жаль моих клиентов. Они не здесь, чтобы наслаждаться этим невероятным городом!" }
+    { key: "#embalmer_health_worsening", text: "Здоровье, кажется, ухудшается по всему городу." }
+
+    { key: "#drunkard_need_drink", text: "Я высох, как пустыня. Пора выпить!" }
+    { key: "#drunkard_going_to_tavern", text: "Дом сенет, я иду! Без меня не начинайте." }
+    { key: "#drunkard_time_for_beer", text: "Ах, пиво! Единственная река, в которой не жалко утонуть." }
+    { key: "#drunkard_feeling_dizzy", text: "Улица плывёт. Или это я?" }
+    { key: "#drunkard_oh_my_stomach", text: "Ух... живот. Слишком много пива, слишком мало ума." }
+    { key: "#drunkard_going_home", text: "Домой... если вспомню, какая дверь моя." }
+    { key: "#drunkard_disease_risk", text: "Все болеют. Пиво — единственное лекарство, которому я верю." }
+    { key: "#drunkard_no_food_in_city", text: "Еды в городе нет? Ну, пиво — тоже еда, если прищуриться." }
+    { key: "#drunkard_city_have_no_army", text: "Нет фортов? Если набегут — спрячьте меня за кувшином пива." }
+    { key: "#drunkard_need_workers", text: "Мало рабочих? Наймите меня — буду носить пиво." }
+    { key: "#drunkard_gods_are_angry", text: "Боги злятся. Налейте им кружку — может, угомонятся." }
+    { key: "#drunkard_city_is_bad", text: "Репутация города хуже моего похмелья." }
+    { key: "#drunkard_much_unemployment", text: "Столько бездельников. Идеальная компания для выпивки!" }
+    { key: "#drunkard_low_entertainment", text: "Праздников нет? Тогда дом сенет — единственное шоу в городе." }
+    { key: "#drunkard_city_is_good", text: "Город ничего. До пива близко, домой — далеко." }
+    { key: "#drunkard_city_is_amazing", text: "Лучший город для любителя кружки! Пусть кувшины не пустеют." }
 
     { key: "#magistrate_i_hope_we_are_ready", text: "Условия здоровья в этом городе преступны. Чума - наказание, которое соответствует преступлению." }
     { key: "#magistrate_no_food_in_city", text: "Я так голоден, хорошая еда купит вам любой приговор, который вы хотите." }

@@ -62,8 +62,8 @@ mods {
 
         {
             name : "pharaoh_sounds_pack"
-            desc : "Custom walker speech (hunters, caravan donkey)"
-            version : "1.1.0"
+            desc : "Custom walker speech (hunters, donkey, marketboy, drunkard)"
+            version : "1.3.0"
             author : "dalerank"
             url : "https://f003.backblazeb2.com/file/akhenaten-mods/pharaoh_sounds_pack.sgx"
             email : "dalerankn8@gmail.com"

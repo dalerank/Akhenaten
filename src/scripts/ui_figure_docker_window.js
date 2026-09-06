@@ -1,7 +1,5 @@
 log_info("akhenaten: ui figure docker window started")
 
-var ACTION_132_DOCKER_IDLING = 132
-
 function figure_docker_carrying_line_text(fid) {
     if (!fid) {
         return ""
@@ -11,7 +9,7 @@ function figure_docker_carrying_line_text(fid) {
     if (!f.valid) {
         return ""
     }
-    if (f.action_state == ACTION_132_DOCKER_IDLING) {
+    if (f.action_state == ACTION_0_DOCKER_IDLING) {
         return ""
     }
     if (!f.resource || f.resource_amount <= 0) {

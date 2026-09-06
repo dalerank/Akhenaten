@@ -26,6 +26,8 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_docker);
 
+const figure_docker_action_tokens_t ANK_CONFIG_ENUM(figure_docker_action_tokens)
+
 std::array<vec2i, 8> ANK_VARIABLE(docker_cart_offsets); //= { {17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12} };
 
 namespace {
@@ -408,7 +410,7 @@ bool figure_docker::deliver_import_resource(building* b) {
 
     set_destination(result.bid);
     base.wait_ticks = 0;
-    advance_action(ACTION_133_DOCKER_IMPORT_QUEUE);
+    advance_action(ACTION_1_DOCKER_IMPORT_QUEUE);
     base.destination_tile = result.tile;
     base.resource_id = resource;
     base.resource_amount_full = dock_haul_amount();
@@ -441,7 +443,7 @@ bool figure_docker::fetch_export_resource(building* b) {
 
     ship->runtime_data().amount_bought += dock_haul_amount();
     set_destination(result.bid);
-    advance_action(ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE);
+    advance_action(ACTION_4_DOCKER_EXPORT_GOING_TO_WAREHOUSE);
     base.wait_ticks = 0;
     base.destination_tile = result.tile;
     base.resource_id = resource;
@@ -449,7 +451,7 @@ bool figure_docker::fetch_export_resource(building* b) {
 }
 
 void figure_docker::figure_before_action() {
-    if (action_state() == ACTION_132_DOCKER_IDLING) {
+    if (action_state() == ACTION_0_DOCKER_IDLING) {
         base.routing_try_reroute_counter = 0;
     }
 }
@@ -492,7 +494,7 @@ void figure_docker::figure_action() {
 
     base.terrain_usage = TERRAIN_USAGE_ROADS;
     switch (action_state()) {
-    case ACTION_8_RECALCULATE:
+    case ACTION_8_DOCKER_RECALCULATE:
         // Without this case a routing failure leaves the docker non-idle, so the moored ship's failed_dock_attempts never advances.
         if (++base.routing_try_reroute_counter > 5) {
             base.routing_try_reroute_counter = 0;
@@ -503,10 +505,10 @@ void figure_docker::figure_action() {
         base.cart_image_id = 0;
         base.wait_ticks = 0;
         set_destination(home(), home()->tile);
-        advance_action(ACTION_138_DOCKER_IMPORT_RETURNING);
+        advance_action(ACTION_6_DOCKER_IMPORT_RETURNING);
         break;
 
-    case ACTION_132_DOCKER_IDLING:
+    case ACTION_0_DOCKER_IDLING:
         base.resource_id = RESOURCE_NONE;
         base.cart_image_id = 0;
         base.animctx.frame = 0;
@@ -515,7 +517,7 @@ void figure_docker::figure_action() {
         }
         break;
 
-    case ACTION_133_DOCKER_IMPORT_QUEUE:
+    case ACTION_1_DOCKER_IMPORT_QUEUE:
         base.cart_image_id = 0;
         base.animctx.frame = 0;
         if (dock.queued_docker_id <= 0) {
@@ -527,7 +529,7 @@ void figure_docker::figure_action() {
             dock.num_ships = 120;
             base.wait_ticks++;
             if (base.wait_ticks >= 80) {
-                advance_action(ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE);
+                advance_action(ACTION_3_DOCKER_IMPORT_GOING_TO_WAREHOUSE);
                 base.wait_ticks = 0;
                 //                    set_cart_graphic();
                 dock.queued_docker_id = 0;
@@ -538,8 +540,8 @@ void figure_docker::figure_action() {
                 if (dock.docker_ids[i]) {
                     figure* docker = figure_get(dock.docker_ids[i]);
                     if (docker->id == dock.queued_docker_id && docker->state == FIGURE_STATE_ALIVE) {
-                        if (docker->action_state == ACTION_133_DOCKER_IMPORT_QUEUE
-                            || docker->action_state == ACTION_134_DOCKER_EXPORT_QUEUE) {
+                        if (docker->action_state == ACTION_1_DOCKER_IMPORT_QUEUE
+                            || docker->action_state == ACTION_2_DOCKER_EXPORT_QUEUE) {
                             has_queued_docker = 1;
                         }
                     }
@@ -552,7 +554,7 @@ void figure_docker::figure_action() {
         }
         break;
 
-    case ACTION_134_DOCKER_EXPORT_QUEUE:
+    case ACTION_2_DOCKER_EXPORT_QUEUE:
         if (dock.queued_docker_id <= 0) {
             dock.queued_docker_id = id();
             base.wait_ticks = 0;
@@ -561,7 +563,7 @@ void figure_docker::figure_action() {
             dock.num_ships = 120;
             base.wait_ticks++;
             if (base.wait_ticks >= 80) {
-                advance_action(ACTION_132_DOCKER_IDLING);
+                advance_action(ACTION_0_DOCKER_IDLING);
                 base.wait_ticks = 0;
                 base.main_image_id = 0;
                 base.cart_image_id = 0;
@@ -570,29 +572,29 @@ void figure_docker::figure_action() {
         }
         base.wait_ticks++;
         if (base.wait_ticks >= 20) {
-            advance_action(ACTION_132_DOCKER_IDLING);
+            advance_action(ACTION_0_DOCKER_IDLING);
             base.wait_ticks = 0;
         }
         base.animctx.frame = 0;
         break;
 
-    case ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_139_DOCKER_IMPORT_AT_WAREHOUSE, ACTION_8_RECALCULATE);
+    case ACTION_3_DOCKER_IMPORT_GOING_TO_WAREHOUSE:
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_7_DOCKER_IMPORT_AT_WAREHOUSE, ACTION_8_DOCKER_RECALCULATE);
 
         if (destination()->state != BUILDING_STATE_VALID) {
             poof();
         }
         break;
 
-    case ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_140_DOCKER_EXPORT_AT_WAREHOUSE, ACTION_8_RECALCULATE);     
+    case ACTION_4_DOCKER_EXPORT_GOING_TO_WAREHOUSE:
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_9_DOCKER_EXPORT_AT_WAREHOUSE, ACTION_8_DOCKER_RECALCULATE);     
         if (destination()->state != BUILDING_STATE_VALID) {
-            advance_action(ACTION_137_DOCKER_EXPORT_RETURNING);
+            advance_action(ACTION_5_DOCKER_EXPORT_RETURNING);
         }
         break;
 
-    case ACTION_137_DOCKER_EXPORT_RETURNING:
-        if (do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_134_DOCKER_EXPORT_QUEUE, ACTION_8_RECALCULATE)) {
+    case ACTION_5_DOCKER_EXPORT_RETURNING:
+        if (do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_2_DOCKER_EXPORT_QUEUE, ACTION_8_DOCKER_RECALCULATE)) {
             load_resource(RESOURCE_NONE, 0);
         }
 
@@ -601,11 +603,11 @@ void figure_docker::figure_action() {
         }
         break;
 
-    case ACTION_138_DOCKER_IMPORT_RETURNING:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_132_DOCKER_IDLING, ACTION_8_RECALCULATE);
+    case ACTION_6_DOCKER_IMPORT_RETURNING:
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_0_DOCKER_IDLING, ACTION_8_DOCKER_RECALCULATE);
         break;
 
-    case ACTION_139_DOCKER_IMPORT_AT_WAREHOUSE:
+    case ACTION_7_DOCKER_IMPORT_AT_WAREHOUSE:
         base.wait_ticks++;
         if (base.wait_ticks > 10) {
             auto ship = figure_get<figure_trade_ship>(dock.trade_ship);
@@ -625,12 +627,12 @@ void figure_docker::figure_action() {
                 for (int i = 0; i < chunks; i++) {
                     trader().record_sold_resource(base.resource_id);
                 }
-                advance_action(ACTION_138_DOCKER_IMPORT_RETURNING);
+                advance_action(ACTION_6_DOCKER_IMPORT_RETURNING);
                 load_resource(RESOURCE_NONE, 0);
                 set_destination(home(), home()->tile);
                 fetch_export_resource(b);
             } else {
-                advance_action(ACTION_138_DOCKER_IMPORT_RETURNING);
+                advance_action(ACTION_6_DOCKER_IMPORT_RETURNING);
                 base.destination_tile = base.source_tile;
             }
             base.wait_ticks = 0;
@@ -638,11 +640,11 @@ void figure_docker::figure_action() {
         base.animctx.frame = 0;
         break;
 
-    case ACTION_140_DOCKER_EXPORT_AT_WAREHOUSE:
+    case ACTION_9_DOCKER_EXPORT_AT_WAREHOUSE:
         base.wait_ticks++;
         if (base.wait_ticks > 10) {
             auto trade_city = trader_city();
-            advance_action(ACTION_138_DOCKER_IMPORT_RETURNING);
+            advance_action(ACTION_6_DOCKER_IMPORT_RETURNING);
             base.wait_ticks = 0;
             const int reserved = dock_haul_amount();
             const int taken = try_export_resource(destination(), base.resource_id, trade_city);
@@ -666,7 +668,7 @@ void figure_docker::figure_action() {
                 }
                 load_resource(base.resource_id, loaded);
                 set_destination(home(), home()->tile);
-                advance_action(ACTION_137_DOCKER_EXPORT_RETURNING);
+                advance_action(ACTION_5_DOCKER_EXPORT_RETURNING);
             } else {
                 fetch_export_resource(b);
             }
@@ -674,41 +676,6 @@ void figure_docker::figure_action() {
         base.animctx.frame = 0;
         break;
     }
-}
-
-sound_key figure_docker::phrase_key() const {
-    svector<sound_key, 3> keys;
-    
-    auto dock = ((building*)home())->dcast_dock();
-    if (dock) {
-        // When waiting in queue - space is limited
-        if (action_state() == ACTION_133_DOCKER_IMPORT_QUEUE || 
-            action_state() == ACTION_134_DOCKER_EXPORT_QUEUE) {
-            keys.push_back("docker_wait_until_space_opens_up");
-        }
-        
-        // When there are multiple ships or high activity - need more help
-        if (dock->runtime_data().num_ships > 60) {
-            keys.push_back("docker_need_more_help");
-        }
-    }
-    
-    // When going to warehouse - check distance
-    if (action_state() == ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE || 
-        action_state() == ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE) {
-        int dist = calc_maximum_distance(base.destination_tile, base.source_tile);
-        if (dist >= 25) {
-            keys.push_back("docker_cant_haul_goods_much_farther");
-        }
-    }
-    
-    // Default fallback
-    if (keys.empty()) {
-        keys.push_back("docker_need_more_help");
-    }
-    
-    int index = rand() % keys.size();
-    return keys[index];
 }
 
 void figure_docker::update_animation() {

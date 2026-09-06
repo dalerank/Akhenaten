@@ -1120,6 +1120,17 @@ localization_en = [
   { key: "#marketboy_these_baskets_are_too_heavy", text: "These baskets are too heavy for a little kid like me!" }
   { key: "#marketboy_bossy_lady_makes_me_carry_goods", text: "That bossy lady makes me carry goods all day!" }
   { key: "#marketboy_one_day_ill_run_the_bazaar", text: "Maybe I just carry baskets now, but one day I'll run the Bazaar." }
+  { key: "#marketboy_runaway", text: "She left me behind! Fine — I'm taking these baskets home myself." }
+  { key: "#marketboy_disease_risk", text: "Everyone's coughing. Can I put the baskets down and wash my hands?" }
+  { key: "#marketboy_no_food_in_city", text: "Empty granaries? Then why am I hauling food all over town?" }
+  { key: "#marketboy_city_have_no_army", text: "No forts? If raiders come, they'll snatch my baskets first!" }
+  { key: "#marketboy_need_workers", text: "The bazaar needs more hands. Mine are already full!" }
+  { key: "#marketboy_gods_are_angry", text: "The gods look angry. Maybe they don't like bruised fruit either." }
+  { key: "#marketboy_city_is_bad", text: "This city feels mean. Even the dogs bark at my baskets." }
+  { key: "#marketboy_much_unemployment", text: "So many idle people — and nobody offers to help carry!" }
+  { key: "#marketboy_low_entertainment", text: "No festivals for ages. At least a parade would make this walk shorter." }
+  { key: "#marketboy_city_is_good", text: "This city's alright. Short roads and a buyer who knows the way." }
+  { key: "#marketboy_city_is_amazing", text: "Best city to run baskets in! Someday I'll own the stall." }
 
   { key: "#engineer_extreme_damage_level", text: "A lot of people are in much worse condition than the buildings. I hope things don't get worse." }
   { key: "#engineer_i_am_works", text: "These walls won't collapse on my watch." }
@@ -1192,6 +1203,17 @@ localization_en = [
   { key: "#cartpusher_low_entertainment", text: "No festivals for ages. A cartpusher's back needs a holiday too." }
   { key: "#cartpusher_city_is_good", text: "This city is solid! Short roads and full warehouses." }
   { key: "#cartpusher_city_is_amazing", text: "Best city I've hauled for. These loads practically roll themselves!" }
+
+  { key: "#docker_need_more_help", text: "We're doing more than our share of work. We need more help." }
+  { key: "#docker_wait_until_space_opens_up", text: "I'll wait here until some space for this stuff opens up." }
+  { key: "#docker_cant_haul_goods_much_farther", text: "Am I there yet? I can't haul these goods much farther." }
+  { key: "#docker_disease_risk", text: "This dock smells of sickness. Hard to haul cargo when the air is foul." }
+  { key: "#docker_no_food_in_city", text: "Empty granaries? Ships come in hungry, and so do we." }
+  { key: "#docker_city_have_no_army", text: "No forts? One raid and this harbor is loot." }
+  { key: "#docker_gods_are_angry", text: "The gods look angry. Even the river seems to pull the wrong way." }
+  { key: "#docker_low_entertainment", text: "No festivals for ages. Dockers need a shore leave too." }
+  { key: "#docker_city_is_good", text: "This harbor runs smooth! Short hauls and full warehouses." }
+  { key: "#docker_city_is_amazing", text: "Best port I've worked. These crates practically walk ashore!" }
 
   { key: "#malaria_problem", text: "(Not used)" }
   { key: "#malaria_not_a_problem", text: "Malaria doesn't seem to be a problem here." }
@@ -1520,6 +1542,35 @@ localization_en = [
   { key: "#dentist_low_entertainment", text: "I'm bored! I guess I'll brush my teeth again." }
   { key: "#dentist_city_is_ok", text: "This city is okay. Only a few cavities!" }
   { key: "#dentist_city_is_amazing", text: "This city has the brightest smile in all of Egypt." }
+
+  { key: "#embalmer_concerned_about_plague", text: "Judging by the number of sick people in this city, I could soon have my hands full!" }
+  { key: "#embalmer_no_food_in_city", text: "I'm famished. Before long, I'll be skinnier than a mummy!" }
+  { key: "#embalmer_defenses_weak", text: "The city is not securely wrapped in defenses. An enemy could easily defeat us." }
+  { key: "#embalmer_need_more_workers", text: "If I ever wanted to leave embalming behind, now is my chance. So many job openings!" }
+  { key: "#embalmer_gods_are_angry", text: "The gods could soon unravel our city if we don't pay them more respect." }
+  { key: "#embalmer_reputation_is_low", text: "The city's bad reputation could be the death of us all. We could be attacked at any moment." }
+  { key: "#embalmer_unemployment_is_high", text: "When I see so many people out of work, it makes me glad that I have a job." }
+  { key: "#embalmer_low_entertainment", text: "This city is as dead as the bodies I work with all day. I wish the city were alive with entertainment." }
+  { key: "#embalmer_city_is_ok", text: "I might as well live here. It's about as good as anywhere else." }
+  { key: "#embalmer_city_is_the_best", text: "I feel truly sorry for my clients. They aren't around to enjoy this incredible city!" }
+  { key: "#embalmer_health_worsening", text: "Health seems to be worsening throughout the city." }
+
+  { key: "#drunkard_need_drink", text: "I'm as dry as the desert. Time for a drink!" }
+  { key: "#drunkard_going_to_tavern", text: "Senet House, here I come! Don't start without me." }
+  { key: "#drunkard_time_for_beer", text: "Ah, beer! The only river I never mind drowning in." }
+  { key: "#drunkard_feeling_dizzy", text: "The street keeps moving. Or is that just me?" }
+  { key: "#drunkard_oh_my_stomach", text: "Ugh... my stomach. Too much beer, not enough sense." }
+  { key: "#drunkard_going_home", text: "Home... if I can remember which door is mine." }
+  { key: "#drunkard_disease_risk", text: "Everyone's sick. Beer is the only medicine I trust." }
+  { key: "#drunkard_no_food_in_city", text: "No food in the city? Fine — beer is a meal if you squint." }
+  { key: "#drunkard_city_have_no_army", text: "No forts? If invaders come, hide me behind a beer jar." }
+  { key: "#drunkard_need_workers", text: "Not enough workers? Hire me — I'll fetch the beer." }
+  { key: "#drunkard_gods_are_angry", text: "The gods are angry. Pour them a round and maybe they'll calm down." }
+  { key: "#drunkard_city_is_bad", text: "This city's reputation is worse than my hangover." }
+  { key: "#drunkard_much_unemployment", text: "So many idle people. Perfect drinking company!" }
+  { key: "#drunkard_low_entertainment", text: "No festivals? Then the Senet House is the only show in town." }
+  { key: "#drunkard_city_is_good", text: "This city isn't bad. Short walk to the beer, long walk home." }
+  { key: "#drunkard_city_is_amazing", text: "Best city for a tippler! May the jars never run dry." }
 
   { key: "#magistrate_i_hope_we_are_ready", text: "Health conditions in this city are criminal. Plague is the punishment that fits the crime." }
   { key: "#magistrate_no_food_in_city", text: "I'm so hungry, a good meal will buy you any verdict you want." }
