@@ -478,7 +478,7 @@ bool imagepak::load_zip_pak(vfs::path pak, int starting_index) {
     archive arch = config::load(configname);
 
     global_image_index_offset = starting_index;
-    g_config_arch.r_array(pak, [&] (archive arch) {
+    g_config_arch.r_array(pak.c_str(), [&](archive arch) {
         int start_index = arch.r_int("start_index");
         int finish_index = arch.r_int("finish_index");
         if (finish_index <= 0) {
@@ -601,7 +601,7 @@ bool imagepak::load_zip_pak(vfs::path pak, int starting_index) {
     }
 
     int tmp_group_id = 0, atlas_rect_id = 0;
-    g_config_arch.r_array(pak, [&] (archive arch) {
+    g_config_arch.r_array(pak.c_str(), [&](archive arch) {
         bstring128 prefix = arch.r_string("prefix").c_str();
         int start_index = arch.r_int("start_index");
         int finish_index = arch.r_int("finish_index");
