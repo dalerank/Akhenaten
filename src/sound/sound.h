@@ -7,6 +7,7 @@
 #include "sound/channel.h"
 #include "sound/effect.h"
 #include <array>
+#include <string_view>
 #include <stdint.h>
 
 struct music_player_t;
@@ -43,16 +44,21 @@ public:
     void write_custom_music_data(void *audio_data, int len);
     uint64_t custom_music_playback_micros() const;
     uint64_t custom_music_buffered_micros() const;
-    bool play_music(pcstr filename, int volume_pct);
+    bool play_music(pcstr filename, int volume_pct, bool loop = true);
+    bool music_playing();
     void stop_music();
     bool is_audio_stream_active();
     void set_volume(int b, int e, int percentage);
     void music_update(bool forces);
+    void music_next_track();
+    void music_frame();
+    int music_load_playlist_text(std::string_view text);
+    int music_playlist_size() const;
     void play_editor();
     void play_intro();
     void music_stop();
     const xstring& music_current_track() const;
-    void play_track(const xstring track);
+    void play_track(const xstring track, bool loop = true);
     void play_effect(int effect);
     void stop_city_channels();
 

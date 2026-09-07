@@ -5,6 +5,12 @@ music = {
 	combat_long: "combat_long"
 	combat_short: "combat_short"
 
+	// Vanilla playlist from the game folder: per-mission main (M) and alternate
+	// (A) tunes with a post-tune delay and population range. Maps without an
+	// entry fall back to music_populations below.
+	playlist_file: "music.txt"
+	post_tune_delay_sec: 20
+
 	soundtracks : [
 		{ key: "none", file:"" },
 		{ key: "setup", file:"AUDIO/Music/Setup.mp3" },

@@ -304,6 +304,22 @@ pcstr __test_music_current_track() {
 }
 ANK_FUNCTION(__test_music_current_track);
 
+void __test_music_next_track() {
+    g_sound.music_next_track();
+}
+ANK_FUNCTION(__test_music_next_track);
+
+int __test_music_load_playlist(pcstr text) {
+    return g_sound.music_load_playlist_text(text ? text : "");
+}
+ANK_FUNCTION_1(__test_music_load_playlist);
+
+void __test_set_campaign_scenario_id(int id) {
+    g_scenario.campaign_scenario_id = id;
+    g_scenario.scmode = e_scenario_normal;
+}
+ANK_FUNCTION_1(__test_set_campaign_scenario_id);
+
 void __test_process_events() {
     events::process();
 }
