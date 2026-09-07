@@ -53,11 +53,15 @@ music = {
 		{ key: "plague_hailstorm", file:"AUDIO/Ambient/Hailstorm.mp3" },
 	]
 
+	// City music by population tier. `pop` is the tier's lower bound; the first
+	// tier also covers everything below it. On mission start / save load the game
+	// picks a random track from the tier that differs from the current one.
+	// Pools follow the tracks the original music.txt uses most for these ranges.
 	music_populations : [
-		{ pop:1000, track:"city_1" },
-		{ pop:2000, track:"city_2" },
-		{ pop:5000, track:"city_3" },
-		{ pop:7000, track:"city_4" },
-		{ pop:99000, track:"city_5" },
+		{ pop:0,    tracks:["city_1", "city_2", "city_7", "city_20", "city_21", "city_37"] },
+		{ pop:500,  tracks:["city_3", "city_11", "city_20", "city_21", "city_25", "city_32"] },
+		{ pop:1000, tracks:["city_2", "city_11", "city_21", "city_22", "city_25", "city_32"] },
+		{ pop:1500, tracks:["city_3", "city_7", "city_11", "city_12", "city_14", "city_22"] },
+		{ pop:2000, tracks:["city_11", "city_12", "city_14", "city_29", "city_30", "city_31"] },
 	]
 }

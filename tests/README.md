@@ -147,6 +147,7 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `78_building_road_access.js` | Building road-access marker (EE*): Preview/Commit resolve, booth assume, temple variant, config flag |
 | `95_delivery_paths.js` | Delivery paths (DP*): allowlist, pottery→SY, Empty All / understaffed reasons, clay→workshop, feature flag |
 | `96_dike_place.js` | Enhanced dikes (DK1): place strip on floodplain, clear+undo, flag OFF rejects (`gameplay_enhanced_flood_basins`) |
+| `187_music_random_track.js` | #634: forced `music_update(1)` re-rolls a different random city track from the population tier; regular updates keep the track until the tier changes |
 | `98_flood_basin_seal.js` | Flood basins (FB1): sealed detect, spur/thick crest, breach hole, flag OFF |
 | `99_flood_basin_bonus.js` | Flood basins (FB2): fertility bump + farm progress in sealed basin |
 | `107_flood_basin_irrigation_hold.js` | Flood basins (DK3): half-rate canal decay, IRRIGATION_RANGE restamp/clip, reseal, flag OFF |

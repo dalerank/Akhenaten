@@ -51,6 +51,7 @@ public:
     void play_editor();
     void play_intro();
     void music_stop();
+    const xstring& music_current_track() const;
     void play_track(const xstring track);
     void play_effect(int effect);
     void stop_city_channels();

@@ -67,6 +67,7 @@
 #include "city/city_animals.h"
 #include "graphics/color.h"
 #include "city/city.h"
+#include "sound/sound.h"
 #include "city/city_message.h"
 #include "city/city_industry.h"
 #include "city/city_buildings.h"
@@ -292,6 +293,16 @@ void __test_set_treasury(int amount) {
     g_city.finance.treasury = amount;
 }
 ANK_FUNCTION_1(__test_set_treasury);
+
+void __test_set_city_population(int amount) {
+    g_city.population.current = amount;
+}
+ANK_FUNCTION_1(__test_set_city_population);
+
+pcstr __test_music_current_track() {
+    return g_sound.music_current_track().c_str();
+}
+ANK_FUNCTION(__test_music_current_track);
 
 void __test_process_events() {
     events::process();

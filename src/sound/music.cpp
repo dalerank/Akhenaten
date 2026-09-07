@@ -6,6 +6,7 @@
 #include "core/profiler.h"
 #include "game/game_config.h"
 #include "core/calc.h"
+#include "core/random.h"
 #include "content/dir.h"
 #include "sound/sound.h"
 #include "js/js_game.h"
@@ -28,14 +29,14 @@ struct music_data_t {
 
     struct pop_soundtrack {
         int pop;
-        xstring track;
+        svector<xstring, 8> tracks;
     };
 
     svector<soundtrack, 64> soundtracks;
     svector<pop_soundtrack, 16> music_populations;
 };
 ANK_CONFIG_STRUCT(music_data_t::soundtrack, key, file)
-ANK_CONFIG_STRUCT(music_data_t::pop_soundtrack, pop, track)
+ANK_CONFIG_STRUCT(music_data_t::pop_soundtrack, pop, tracks)
 ANK_CONFIG_STRUCT(music_data_t, menu_track, combat_long, combat_short, soundtracks, music_populations)
 
 music_data_t ANK_VARIABLE(music);
@@ -80,6 +81,34 @@ void sound_manager_t::play_editor() {
     }
 }
 
+static const svector<xstring, 8>& music_city_tracks(int population) {
+    const music_data_t::pop_soundtrack* tier = &music.music_populations.front();
+
+    for (const auto& p : music.music_populations) {
+        if (p.pop > population) {
+            break;
+        }
+        tier = &p;
+    }
+
+    return tier->tracks;
+}
+
+static xstring music_random_city_track(const svector<xstring, 8>& pool, const xstring& exclude) {
+    svector<xstring, 8> candidates;
+    for (const auto& t : pool) {
+        if (t != exclude) {
+            candidates.push_back(t);
+        }
+    }
+
+    if (candidates.empty()) {
+        return pool.empty() ? xstring() : pool.front();
+    }
+
+    return candidates[random_int_between(0, (int)candidates.size())];
+}
+
 void sound_manager_t::music_update(bool force) {
     OZZY_PROFILER_FUNCTION();
     if (music.next_check && !force) {
@@ -99,15 +128,17 @@ void sound_manager_t::music_update(bool force) {
     } else if (total_enemies > 0) {
         track = music.combat_short;
     } else {
-        track = music.music_populations.front().track;
-        const int city_population = g_city.population.current;
+        const auto& pool = music_city_tracks(g_city.population.current);
+        const bool current_in_pool = std::find(pool.begin(), pool.end(), music.current_track) != pool.end();
 
-        for (const auto &p : music.music_populations) {
-            if (p.pop > city_population) {
-                break;
-            }
-            track = p.track;
+        // Regular updates keep the current track while the city stays in the same
+        // population tier. A forced update (mission start, save load) re-rolls a
+        // different random track from the tier like the original game does.
+        if (!force && current_in_pool) {
+            return;
         }
+
+        track = music_random_city_track(pool, music.current_track);
     }
 
     if (track == music.current_track) {
@@ -124,6 +155,10 @@ void sound_manager_t::on_sound_effect(event_sound_effect ev) {
 
 void sound_manager_t::on_sound_track(event_sound_track ev) {
     play_track(ev.track);
+}
+
+const xstring& sound_manager_t::music_current_track() const {
+    return music.current_track;
 }
 
 void sound_manager_t::music_stop() {
