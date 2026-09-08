@@ -48,6 +48,8 @@ import figure.market_buyer
 import figure.market_trader
 import figure.mummy
 import figure.noble
+import figure.pharaoh
+import figure.physician
 
 figure_water_carrier {
   overlay : OVERLAY_WATER
@@ -705,36 +707,6 @@ figure_worker {
 	record_path : true
 }
 
-figure_physician {
-  overlay : OVERLAY_PHYSICIAN
-	animations {
-		walk {  pack:PACK_SPR_MAIN, id:71, max_frames:12 }
-		death {  pack:PACK_SPR_MAIN, id:72, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_PHYSICIAN }
-	}
-
-	sounds {
-		doctor_plague_could_strike_us_dead {sound:"doctor_e01.wav" }
-		doctor_concerned_about_plague {sound:"doctor_g01.wav" }
-		doctor_no_food_in_city {sound:"doctor_g02.wav" }
-		doctor_defenses_weak {sound:"doctor_g03.wav" }
-		doctor_need_more_workers {sound:"doctor_g04.wav" }
-		doctor_gods_are_angry {sound:"doctor_g05.wav" }
-		doctor_reputation_is_low {sound:"doctor_g06.wav" }
-		doctor_unemployment_is_high {sound:"doctor_g07.wav" }
-		doctor_low_entertainment {sound:"doctor_g08.wav" }
-		doctor_city_is_ok {sound:"doctor_g09.wav" }
-		doctor_city_is_the_best {sound:"doctor_g10.wav" }
-	}
-
-    category: figure_category_citizen
-	max_damage : 10
-	terrain_usage : TERRAIN_USAGE_ROADS
-	max_roam_length : 384
-	permission : epermission_medicine
-	health_heal_amount : 1
-}
-
 figure_stonemason {
 	animations {
 		walk { pack:PACK_SPR_MAIN, id:150, max_frames:12 }
@@ -857,20 +829,6 @@ figure_locust {
 	swarm_days: 48
 	happiness_hit: -10
 	float_height: 20
-}
-
-// Cinematic / victory VFX walker — walk-only (SprMain 28); no death group.
-figure_pharaoh {
-	animations {
-		walk { pack:PACK_SPR_MAIN, id:28, max_frames:12 }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_PHARAOH }
-	}
-
-	category: figure_category_special
-	max_damage: 10
-	terrain_usage: TERRAIN_USAGE_ANY
-	max_amount: 2
-	max_roam_length: 320
 }
 
 figure_trade_ship = {

@@ -44,7 +44,3 @@ void figure_pharaoh::update_animation() {
     // Walk-only art; ignore corpse death key (missing group).
     image_set_animation(animkeys().walk);
 }
-
-sound_key figure_pharaoh::phrase_key() const {
-    return {};
-}

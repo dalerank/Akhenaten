@@ -829,6 +829,15 @@ localization_en = [
   {key: "#figure_docker", group:64, id:38 }
   {key: "#figure_market_buyer", group:64, id:39 }
   {key: "#figure_nobles", group:64, id:40 }
+  { key: "#pharaoh_inspecting_city", text: "I walk among my people. Let them see their Pharaoh." }
+  { key: "#pharaoh_disease_risk", text: "Fever in my streets? My physicians will put this right." }
+  { key: "#pharaoh_no_food_in_city", text: "Empty granaries under my rule? That will not stand." }
+  { key: "#pharaoh_city_have_no_army", text: "No forts? One raid and my city falls. Raise the banners." }
+  { key: "#pharaoh_gods_are_angry", text: "The gods frown upon us. Even Pharaoh must heed the temples." }
+  { key: "#pharaoh_low_entertainment", text: "No festival for ages. My people deserve music and wine." }
+  { key: "#pharaoh_city_is_good", text: "A fine city. Order, bread, and loyalty — as it should be." }
+  { key: "#pharaoh_city_is_amazing", text: "This city shines like the Nile at dawn. Egypt itself is proud!" }
+
   { key: "#noble_taking_a_stroll", text: "A leisurely stroll. The common folk should make way." }
   { key: "#noble_returning_home", text: "Back to my manor. These dusty streets tire a person of quality." }
   { key: "#noble_disease_risk", text: "Fever in the streets? Keep the rabble away from my courtyard." }

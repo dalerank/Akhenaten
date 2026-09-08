@@ -17,5 +17,4 @@ public:
     virtual void figure_action() override;
     virtual void figure_roaming_action() override { /* avoid double-roam + home-less return */ }
     virtual void update_animation() override;
-    virtual sound_key phrase_key() const override;
 };
