@@ -14,6 +14,9 @@ import figure.caravan_donkey
 import figure.cartpusher
 import figure.constable
 import figure.dancer
+import figure.musician
+import figure.juggler
+import figure.senet_player
 import figure.delivery_boy
 import figure.dentist
 import figure.docker
@@ -26,41 +29,10 @@ import figure.enemy_fast_sword
 import figure.enemy_spearman
 import figure.enemy_transport
 import figure.enemy_warship
-
-figure_fireman {
-  overlay : OVERLAY_WATER
-	animations {
-		_pack { pack:PACK_SPR_MAIN }
-	  walk { id:6, max_frames:12 }
-	  death { id:7, max_frames:8, loop:false }
-   	fight_fire { id:8, max_frames:36 }
-   	big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_FIREMAN }
-  }
-
-  sounds {
-  	fireman_fighting_fire {sound:"fireman_e01.wav"}
-	fireman_going_to_fire {sound:"fireman_e02.wav"}
-	fireman_fighting_fire_also {sound:"fireman_e03.wav"}
-	fireman_desease_can_start_at_any_moment {sound:"fireman_g01.wav"}
-	fireman_no_food_in_city {sound:"fireman_g02.wav"}
-	fireman_city_not_safety_workers_leaving {sound:"fireman_g03.wav"}
-	fireman_need_workers {sound:"fireman_g04.wav"}
-	fireman_gods_are_angry {sound:"fireman_g05.wav"}
-	fireman_hight_fire_level {sound:"fireman_g06.wav"}
-	fireman_need_more_workers {sound:"fireman_g07.wav"}
-	fireman_low_entertainment {sound:"fireman_g08.wav"}
-	fireman_gods_are_pleasures {sound:"fireman_g09.wav"}
-	fireman_city_is_amazing {sound:"fireman_g10.wav"}
-  }
-
-  category : figure_category_citizen
-	max_damage : 20
-	terrain_usage : TERRAIN_USAGE_ANIMAL
-	max_roam_length : 640
-	permission : epermission_maintenance
-	fire_detection_distance : 10
-	record_path : true
-}
+import figure.ferry_boat
+import figure.fishing_boat
+import figure.fireman
+import figure.flotsam
 
 figure_water_carrier {
   overlay : OVERLAY_WATER
@@ -510,29 +482,6 @@ figure_hippo = {
 	terrain_usage : TERRAIN_USAGE_AMPHIBIA
 }
 
-figure_ferry_boat {
-	animations {
-		_pack { pack:PACK_SPR_MAIN }
-		walk { id:138, max_frames:4, duration:4 }
-		idle { id:139, offset:3, max_frames:1 }
-		death { id: 15, max_frames:8, loop:false }
-		swim { id:138, max_frames:4, duration:4 }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_FERRY_BOAT }
-	}
-
-	sounds {
-		ferry_boat_ready { sound:"ferry_boat_e01.wav"}
-		ferry_boat_going { sound:"ferry_boat_e02.wav"}
-		ferry_boat_at_destination { sound:"ferry_boat_e03.wav"}
-		ferry_boat_returning { sound:"ferry_boat_e04.wav"}
-		ferry_boat_waiting { sound:"ferry_boat_e05.wav"}
-	}
-
-	category: figure_category_citizen
-	max_damage: 20
-	terrain_usage: TERRAIN_USAGE_ANY
-}
-
 figure_immigrant {
 	animations {
 		_pack { pack:PACK_SPR_MAIN }
@@ -740,17 +689,6 @@ figure_lumberjack {
 	attack_value: 4
 	terrain_usage : TERRAIN_USAGE_ANY
 	max_amount : 50
-}
-
-figure_flotsam = {
-	animations : {
-		walk : {pack:PACK_SPR_AMBIENT, id:0, max_frames: 12}
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_FLOTSAM }
-	}
-
-	category: figure_category_inactive
-	max_damage : 0
-	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
 figure_academy_scriber {
@@ -1334,35 +1272,6 @@ figure_herbalist {
 	permission : epermission_medicine
 }
 
-figure_musician = {
-  overlay : OVERLAY_BANDSTAND
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:191, max_frames:12 },
-		death : { pack:PACK_SPR_MAIN, id:192, max_frames:8, loop:false },
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_MUSICIAN }
-	}
-
-	sounds : {
-		musician_i_like_festivals : { sound:"musician_e01.wav" }
- 		musician_city_heath_too_low : { sound:"musician_g01.wav" }
- 		musician_no_food_in_city : { sound:"musician_g02.wav" }
- 		musician_city_not_safety_workers_leaving : { sound:"musician_g03.wav" }
- 		musician_need_workers : { sound:"musician_g04.wav" }
- 		musician_gods_are_angry : { sound:"musician_g05.wav" }
- 		musician_city_is_bad_reputation : { sound:"musician_g06.wav" }
- 		musician_much_unemployments : { sound:"musician_g07.wav" }
- 		musician_no_entertainment_need : { sound:"musician_g08.wav" }
- 		musician_city_not_bad : { sound:"musician_g09.wav" }
- 		musician_city_is_good : { sound:"musician_g10.wav" }
-	}
-
-  category: figure_category_citizen
-	max_damage : 20
-	terrain_usage : TERRAIN_USAGE_ROADS
-	max_roam_length : 512
-	permission: epermission_entertainer
-}
-
 figure_soldier_infantry {
   overlay : OVERLAY_PAVILION
 	animations {
@@ -1400,34 +1309,6 @@ figure_fishing_spot = {
 	}
 
 	terrain_usage : TERRAIN_USAGE_ANY,
-}
-
-figure_fishing_boat = {
-	animations : {
-		walk : {pack:PACK_SPR_MAIN, id:134, max_frames:4, duration:3 }
-		swim : {pack:PACK_SPR_MAIN, id:134, max_frames:4, duration:3 }
-		death : {pack:PACK_SPR_MAIN, id:135, max_frames:8, loop:false }
-		work : {pack:PACK_SPR_MAIN, id:135, max_frames:6, duration:5 }
-		idle : {pack:PACK_SPR_MAIN, id:136, offset:3, max_frames:1 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_FISHING_BOAT }
-	}
-
-	sounds : {
-		fishing_boat_ready : {sound:"fishing_e01.wav"}
-		fishing_boat_going_to_fish : {sound:"fishing_e02.wav"}
-		fishing_boat_fishing : {sound:"fishing_e03.wav"}
-		fishing_boat_going_to_wharf : {sound:"fishing_e01.wav"}
-		fishing_boat_at_wharf : {sound:"fishing_e01.wav"}
-		fishing_boat_returning_with_fish : {sound:"fishing_e02.wav"}
-		fishing_boat_looking_for_spot : {sound:"fishing_e02.wav"}
-	}
-
-	category: figure_category_citizen
-	max_damage : 20
-	terrain_usage : TERRAIN_USAGE_ANY
-	fish_per_trip : 50
-	fishing_time_base : 200
-	fishing_time_multiplier : 1
 }
 
 figure_warship {
@@ -1521,63 +1402,6 @@ figure_soldier_charioteer {
     max_damage : 120
     attack_value : 8
 	terrain_usage : TERRAIN_USAGE_ANY
-}
-
-figure_juggler {
-  overlay : OVERLAY_BOOTH
-	animations {
-		walk { pack:PACK_SPR_MAIN, id:130, max_frames:12 }
-		death { pack:PACK_SPR_MAIN, id:131, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_JUGGLER }
-	}
-
-	sounds {
-		juggler_i_like_festivals {sound:"juggler_e01.wav" }
-		juggler_disease_in_city {sound:"juggler_g01.wav" }
-		juggler_city_low_sentiment {sound:"juggler_g02.wav" }
-		juggler_city_not_safety_workers_leaving {sound:"juggler_g03.wav" }
-		juggler_salary_too_low {sound:"juggler_g04.wav" }
-		juggler_gods_are_angry {sound:"juggler_g05.wav" }
-		juggler_city_verylow_sentiment {sound:"juggler_g06.wav" }
-		juggler_much_unemployments {sound:"juggler_g07.wav" }
-		juggler_low_entertainment {sound:"juggler_g08.wav" }
-		juggler_city_is_good {sound:"juggler_g09.wav" }
-		juggler_city_is_amazing {sound:"juggler_g10.wav" }
-	}
-
-    category: figure_category_citizen
-	max_damage : 20
-	max_roam_length: 640
-	permission : epermission_entertainer  // roadblock option
-	record_path : true
-}
-
-figure_senet_player {
-  overlay : OVERLAY_SENET_HOUSE
-	animations {
-		walk { pack:PACK_SPR_MAIN, id:132, max_frames:12 }
-		death { pack:PACK_SPR_MAIN, id:133, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_SENET_PLAYER }
-	}
-
-	sounds {
-		senet_i_like_festivals { sound:"juggler_e01.wav" }
-		senet_disease_in_city { sound:"juggler_g01.wav" }
-		senet_city_low_sentiment { sound:"juggler_g02.wav" }
-		senet_city_not_safety_workers_leaving { sound:"juggler_g03.wav" }
-		senet_salary_too_low { sound:"juggler_g04.wav" }
-		senet_gods_are_angry { sound:"juggler_g05.wav" }
-		senet_city_verylow_sentiment { sound:"juggler_g06.wav" }
-		senet_much_unemployments { sound:"juggler_g07.wav" }
-		senet_low_entertainment { sound:"juggler_g08.wav" }
-		senet_city_is_good { sound:"juggler_g09.wav" }
-		senet_city_is_amazing { sound:"juggler_g10.wav" }
-	}
-
-    category: figure_category_citizen
-	max_damage : 20
-	max_roam_length: 640
-	permission : epermission_entertainer  // for roadblocks
 }
 
 figure_market_trader = {

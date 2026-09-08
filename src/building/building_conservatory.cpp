@@ -46,7 +46,7 @@ void building_conservatory::spend_musician_to_festival_square() {
             if (square->is_valid() && map_has_road_access(square->tile, square->size)) {
                 // Check if we have road access and workers
                 if (has_road_access() && worker_percentage() > 0) {
-                    create_figure_with_destination(FIGURE_MUSICIAN, square, (e_figure_action)ACTION_96_ENTERTAINER_GOING_TO_SQUARE);
+                    create_figure_with_destination(FIGURE_MUSICIAN, square, (e_figure_action)ACTION_6_ENTERTAINER_GOING_TO_SQUARE);
                 }
             }
         }
@@ -132,7 +132,7 @@ void building_conservatory::spawn_figure() {
         building_id bid = determine_dancer_school_destination();
         building* dance_school = building_get(bid);
         if (dance_school->is_valid() && dance_school->type == BUILDING_DANCE_SCHOOL) {
-            create_figure_with_destination(FIGURE_MUSICIAN, dance_school, (e_figure_action)ACTION_92_ENTERTAINER_GOING_TO_VENUE);
+            create_figure_with_destination(FIGURE_MUSICIAN, dance_school, (e_figure_action)ACTION_2_ENTERTAINER_GOING_TO_VENUE);
             d.spawned_entertainer_days = current_params().spawn_interval;
             d.spawned_special_figure = true;
             return;
@@ -143,10 +143,10 @@ void building_conservatory::spawn_figure() {
     int dest_id = figure_entertainer::determine_venue_destination(base.road_access, FIGURE_MUSICIAN, {BUILDING_PAVILLION, BUILDING_BANDSTAND});
     building* dest = building_get(dest_id);
     if (dest->id > 0) {
-        create_figure_with_destination(FIGURE_MUSICIAN, dest, (e_figure_action)ACTION_92_ENTERTAINER_GOING_TO_VENUE);
+        create_figure_with_destination(FIGURE_MUSICIAN, dest, (e_figure_action)ACTION_2_ENTERTAINER_GOING_TO_VENUE);
         d.spawned_entertainer_days = current_params().spawn_interval;
     } else {
-        common_spawn_roamer(FIGURE_MUSICIAN, current_params().min_houses_coverage, (e_figure_action)ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
+        common_spawn_roamer(FIGURE_MUSICIAN, current_params().min_houses_coverage, (e_figure_action)ACTION_0_ENTERTAINER_AT_SCHOOL_CREATED);
     }
 }
 

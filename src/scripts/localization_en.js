@@ -1064,6 +1064,20 @@ localization_en = [
   { key: "#donkey_cicero_meta", text: "They call me a beast of burden, yet I quote Cicero. Who is the philosopher now?" }
   { key: "#donkey_cicero_runaway", text: "I flee, therefore I am. Cicero would understand. Probably." }
 
+  { key: "#flotsam_plato_unexamined", text: "The unexamined life is not worth living. The unexamined current is how I got here." }
+  { key: "#flotsam_plato_cave", text: "Prisoners in a cave see only shadows. I see the riverbank — upside down." }
+  { key: "#flotsam_plato_wise", text: "Wise men speak because they have something to say. Driftwood just floats." }
+  { key: "#flotsam_plato_courage", text: "Courage is knowing what not to fear. I do not fear the Nile. I am of the Nile." }
+  { key: "#flotsam_plato_knowledge", text: "Knowledge under compulsion obtains no hold. Neither does cargo, apparently." }
+  { key: "#flotsam_plato_opinion", text: "Opinion is the medium between knowledge and ignorance. I am the medium between ship and shore." }
+  { key: "#flotsam_plato_love", text: "At the touch of love, everyone becomes a poet. At the touch of a reef, everyone becomes flotsam." }
+  { key: "#flotsam_plato_justice", text: "Justice first resides in the hearts of citizens. Also: cork helps." }
+  { key: "#flotsam_plato_music", text: "Music gives a soul to the universe. The Nile gives me a destination I did not choose." }
+  { key: "#flotsam_plato_ignorance", text: "Ignorance is the root and stem of every evil. Also poor caulking." }
+  { key: "#flotsam_plato_excess", text: "Excess produces a change in the opposite direction. Ask this barrel." }
+  { key: "#flotsam_plato_war", text: "Only the dead have seen the end of war. The rest of us have seen the end of the hull." }
+  { key: "#flotsam_plato_meta", text: "They call me debris. I quote Plato. Who is the philosopher now?" }
+
   {key: "#dwellers_palace_are_pinnacle", group:127, id:100}
   {key: "#house_upgrade_inprogress", group:127, id:101}
   {key: "#house_nearby_building", group:127, id:102}
@@ -1300,6 +1314,37 @@ localization_en = [
   { key: "#enemy_warship_city_is_amazing", text: "Such prosperity. The spoils will be magnificent." }
   { key: "#enemy_warship_for_glory", text: "For glory and the sea!" }
 
+  { key: "#ferry_boat_ready", text: "Ready at the landing. Who's crossing?" }
+  { key: "#ferry_boat_going", text: "Cast off! Next shore ahead." }
+  { key: "#ferry_boat_at_destination", text: "We've arrived. Step carefully onto the dock." }
+  { key: "#ferry_boat_returning", text: "Heading back. Keep clear of the current." }
+  { key: "#ferry_boat_waiting", text: "Waiting for a destination ferry across the water." }
+  { key: "#ferry_boat_disease_risk", text: "This crossing smells of sickness. Hard to pole when the air is foul." }
+  { key: "#ferry_boat_no_food_in_city", text: "Empty granaries? Hungry passengers still want across." }
+  { key: "#ferry_boat_city_have_no_army", text: "No forts? One raid and this ferry is loot." }
+  { key: "#ferry_boat_gods_are_angry", text: "The gods look angry. Even the current pulls the wrong way." }
+  { key: "#ferry_boat_low_entertainment", text: "No festivals for ages. Ferrymen need a shore leave too." }
+  { key: "#ferry_boat_city_is_good", text: "This crossing runs smooth! Short trips and full landings." }
+  { key: "#ferry_boat_city_is_amazing", text: "Best ferry I've worked. These landings practically greet you!" }
+
+  { key: "#fishing_boat_ready", text: "Boat ready at the wharf. Crew waiting for the tide." }
+  { key: "#fishing_boat_going_to_fish", text: "Sailing out to the fishing grounds." }
+  { key: "#fishing_boat_fishing", text: "Hauling in fish. Keep the nets steady!" }
+  { key: "#fishing_boat_going_to_wharf", text: "Heading back to the wharf with empty holds." }
+  { key: "#fishing_boat_at_wharf", text: "Tied up at the wharf. Restocking for another trip." }
+  { key: "#fishing_boat_returning_with_fish", text: "Sailing back with a full catch!" }
+  { key: "#fishing_boat_looking_for_spot", text: "Looking for a fishing spot. These waters are tricky." }
+  { key: "#fishing_boat_disease_risk", text: "The harbor reeks of sickness. Hard to fish when the crew is weak." }
+  { key: "#fishing_boat_no_food_in_city", text: "City granaries empty? Good — they'll want our catch." }
+  { key: "#fishing_boat_city_have_no_army", text: "No forts? Raiders could seize every boat on this shore." }
+  { key: "#fishing_boat_need_workers", text: "Wharves need hands. A boat alone can't feed the city." }
+  { key: "#fishing_boat_gods_are_angry", text: "The gods are angry. Even the fish avoid our nets." }
+  { key: "#fishing_boat_city_is_bad", text: "Pharaoh's favour is ash. No fleet will mourn this place." }
+  { key: "#fishing_boat_much_unemployment", text: "Idle folk ashore, and still not enough crews for the boats." }
+  { key: "#fishing_boat_low_entertainment", text: "No festivals for ages. Fishermen need a shore leave too." }
+  { key: "#fishing_boat_city_is_good", text: "Fine waters and a busy wharf. Not a bad berth." }
+  { key: "#fishing_boat_city_is_amazing", text: "Best fishing I've known. Nets fill before noon!" }
+
   { key: "#malaria_problem", text: "(Not used)" }
   { key: "#malaria_not_a_problem", text: "Malaria doesn't seem to be a problem here." }
   { key: "#malaria_outbreak_could_strike", text: "An outbreak of malaria could strike if something isn't done." } 
@@ -1378,6 +1423,8 @@ localization_en = [
   { key: "#lumberjack_hunting", text: "I am off for a hard day's logging." }
   { key: "#lumberjack_back", text: "This timber will be put to good use, I am sure." }
 
+  { key: "#musician_i_like_festivals", text: "These festival crowds are wonderful! Everyone sings along." }
+
   { key: "#musician_city_heath_too_low", text: "If health doesn't improve in this city, I'll be playing only funeral dirges." }
   { key: "#musician_no_food_in_city", text: "I'd sing for my supper, but this city doesn't have enough food." }
   { key: "#musician_city_not_safety_workers_leaving", text: "Maybe I could beat invaders over the head with my sistrum.  The city is not defended well." }
@@ -1386,9 +1433,36 @@ localization_en = [
   { key: "#musician_city_is_bad_reputation", text: "Our terrible reputation could provoke an attack!" }
   { key: "#musician_much_unemployments", text: "For the last time, I am not hiring any more roadies! So many people are looking for work." }
   { key: "#musician_no_entertainment", text: "Even an entertainer likes to be entertained! There's not enough to do here." }
+  { key: "#musician_no_entertainment_need", text: "Even an entertainer likes to be entertained! There's not enough to do here." }
   { key: "#musician_city_not_bad", text: "This city could be a lot worse, I suppose." }
   { key: "#musician_city_is_good", text: "I hope we continue to make beautiful music in this city for a long time." }
 
+  { key: "#juggler_disease_in_city", group:226, id:0 }
+  { key: "#juggler_city_low_sentiment", group:226, id:1 }
+  { key: "#juggler_city_not_safety_workers_leaving", group:226, id:2 }
+  { key: "#juggler_salary_too_low", group:226, id:3 }
+  { key: "#juggler_gods_are_angry", group:226, id:4 }
+  { key: "#juggler_city_verylow_sentiment", group:226, id:5 }
+  { key: "#juggler_much_unemployments", group:226, id:6 }
+  { key: "#juggler_low_entertainment", group:226, id:7 }
+  { key: "#juggler_city_is_good", group:226, id:8 }
+  { key: "#juggler_city_is_amazing", group:226, id:9 }
+  { key: "#juggler_i_like_festivals", group:226, id:10 }
+
+  { key: "#senet_disease_in_city", group:229, id:0 }
+  { key: "#senet_city_low_sentiment", group:229, id:1 }
+  { key: "#senet_city_not_safety_workers_leaving", group:229, id:2 }
+  { key: "#senet_salary_too_low", group:229, id:3 }
+  { key: "#senet_gods_are_angry", group:229, id:4 }
+  { key: "#senet_city_verylow_sentiment", group:229, id:5 }
+  { key: "#senet_much_unemployments", group:229, id:6 }
+  { key: "#senet_low_entertainment", group:229, id:7 }
+  { key: "#senet_city_is_good", group:229, id:8 }
+  { key: "#senet_city_is_amazing", group:229, id:9 }
+  { key: "#senet_i_like_festivals", text: "Festival games are the finest. Everyone wants a match." }
+
+
+  
   { key: "#taxman_desease_can_start_at_any_moment", text: "It seems an illness is taxing the people's health. I pray a plague doesn't strike." }
   { key: "#taxman_no_food_in_city", text: "I wish people could pay their taxes in food. I'm so hungry!" }
   { key: "#taxman_city_have_no_army", text: "Our city doesn't seem capable of defending itself!" }

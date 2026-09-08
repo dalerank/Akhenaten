@@ -2,7 +2,6 @@
 
 #include "figure/route.h"
 #include "figure_shipwreck.h"
-#include "figure_fishing_boat.h"
 #include "window/building/figures.h"
 #include "grid/water.h"
 #include "grid/figure.h"
@@ -20,6 +19,8 @@
 #include "js/js_game.h"
 #include "scenario/scenario.h"
 #include <algorithm>
+
+const e_fishing_boat_action_tokens_t ANK_CONFIG_ENUM(e_fishing_boat_action_tokens)
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_fishing_boat);
 
@@ -89,13 +90,13 @@ void figure_fishing_boat::figure_action() {
     building_fishing_wharf* wharf = home_building ? home_building->dcast_fishing_wharf() : nullptr;
     if (!wharf) {
         // Wharf was destroyed, find nearest working wharf and go there to disappear
-        if (action_state() != ACTION_196_FISHING_BOAT_RETURN_TO_RANDOM_WHARF) {
+        if (action_state() != ACTION_8_FISHING_BOAT_RETURN_TO_RANDOM_WHARF) {
             water_dest result = map_water_get_closest_wharf(base);
             if (result.found) {
                 set_destination(result.bid);
                 base.destination_tile = result.tile;
                 route_remove();
-                advance_action(ACTION_196_FISHING_BOAT_RETURN_TO_RANDOM_WHARF);
+                advance_action(ACTION_8_FISHING_BOAT_RETURN_TO_RANDOM_WHARF);
                 return;
             } else {
                 // No working wharves available, disappear immediately
@@ -114,34 +115,34 @@ void figure_fishing_boat::figure_action() {
 
     if (wharf && wharf->num_workers() == 0) {
         switch(action_state()) {
-        case ACTION_194_FISHING_BOAT_AT_WHARF:
-        case ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH:
+        case ACTION_4_FISHING_BOAT_AT_WHARF:
+        case ACTION_5_FISHING_BOAT_RETURNING_WITH_FISH:
             break;
 
         default:
             set_destination(&wharf->base);
             base.destination_tile = wharf->get_water_access_tiles().point_a;
             route_remove();
-            advance_action(ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH);
+            advance_action(ACTION_5_FISHING_BOAT_RETURNING_WITH_FISH);
             return;
         }
     }
 
     int wharf_boat_id = wharf ? wharf->get_figure_id(BUILDING_SLOT_BOAT) : 0;
-    if (action_state() != ACTION_190_FISHING_BOAT_CREATED && wharf_boat_id != id()) {
+    if (action_state() != ACTION_0_FISHING_BOAT_CREATED && wharf_boat_id != id()) {
         water_dest result = map_water_get_wharf_for_new_fishing_boat(base);
         building* new_home = building_get(result.bid);
         if (new_home->id) {
             set_home(new_home->id);
             new_home->set_figure(BUILDING_SLOT_BOAT, &base);
-            advance_action(ACTION_193_FISHING_BOAT_GOING_TO_WHARF);
+            advance_action(ACTION_3_FISHING_BOAT_GOING_TO_WHARF);
             base.destination_tile = result.tile;
             base.source_tile = result.tile;
             runtime_data().had_home = true;
             route_remove();
         } else {
             if (runtime_data().had_home) {
-                advance_action(ACTION_196_FISHING_BOAT_FIND_RANDOM_WHARF_FOR_RETURN);
+                advance_action(ACTION_7_FISHING_BOAT_FIND_RANDOM_WHARF_FOR_RETURN);
                 return;
             } else {
                 poof();
@@ -153,7 +154,7 @@ void figure_fishing_boat::figure_action() {
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;
     switch (action_state()) {
-    case ACTION_190_FISHING_BOAT_CREATED:
+    case ACTION_0_FISHING_BOAT_CREATED:
         base.wait_ticks++;
         if (base.wait_ticks >= 50) {
             base.wait_ticks = 0;
@@ -161,7 +162,7 @@ void figure_fishing_boat::figure_action() {
             if (result.bid) {
                 wharf->base.remove_figure_by_id(id()); // remove from original building
                 set_home(result.bid);
-                advance_action(ACTION_193_FISHING_BOAT_GOING_TO_WHARF);
+                advance_action(ACTION_3_FISHING_BOAT_GOING_TO_WHARF);
                 base.destination_tile = result.tile;
                 base.source_tile = result.tile;
                 runtime_data().had_home = true;
@@ -170,20 +171,20 @@ void figure_fishing_boat::figure_action() {
         }
         break;
 
-    case ACTION_196_FISHING_BOAT_FIND_RANDOM_WHARF_FOR_RETURN:
+    case ACTION_7_FISHING_BOAT_FIND_RANDOM_WHARF_FOR_RETURN:
     {
         water_dest result = map_water_get_closest_wharf(base);
         building *dest_wharf = building_get(result.bid);
         if (result.found) {
             set_destination(dest_wharf);
-            advance_action(ACTION_196_FISHING_BOAT_RETURN_TO_RANDOM_WHARF);
+            advance_action(ACTION_8_FISHING_BOAT_RETURN_TO_RANDOM_WHARF);
         } else {
             poof();
         }
     }
     break;
 
-    case ACTION_196_FISHING_BOAT_RETURN_TO_RANDOM_WHARF:
+    case ACTION_8_FISHING_BOAT_RETURN_TO_RANDOM_WHARF:
     {
         base.move_ticks(1);
         base.height_adjusted_ticks = 0;
@@ -193,24 +194,24 @@ void figure_fishing_boat::figure_action() {
     }
     break;
 
-    case ACTION_191_FISHING_BOAT_GOING_TO_FISH:
+    case ACTION_1_FISHING_BOAT_GOING_TO_FISH:
         base.move_ticks(1);
         base.height_adjusted_ticks = 0;
         if (direction() == DIR_FIGURE_NONE) {
             // Reached the sticky fishing spot. Commit unconditionally — collisions
             // with other boats are tolerated; both can fish on/near the same tile.
             runtime_data().fishing_point_check_attempts = 0;
-            advance_action(ACTION_192_FISHING_BOAT_FISHING);
+            advance_action(ACTION_2_FISHING_BOAT_FISHING);
             base.direction = base.previous_tile_direction;
             base.wait_ticks = 0;
         } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
             runtime_data().fishing_point_check_attempts = 0;
-            advance_action(ACTION_193_FISHING_BOAT_GOING_TO_WHARF);
+            advance_action(ACTION_3_FISHING_BOAT_GOING_TO_WHARF);
             base.destination_tile = base.source_tile;
         }
         break;
 
-    case ACTION_192_FISHING_BOAT_FISHING: {
+    case ACTION_2_FISHING_BOAT_FISHING: {
             base.wait_ticks++;
 
             // Calculate fishing time based on worker percentage
@@ -231,18 +232,18 @@ void figure_fishing_boat::figure_action() {
 
             if (base.wait_ticks >= fishing_time) {
                 base.wait_ticks = 0;
-                advance_action(ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH);
+                advance_action(ACTION_5_FISHING_BOAT_RETURNING_WITH_FISH);
                 base.destination_tile = base.source_tile;
                 route_remove();
             }
         }
         break;
 
-    case ACTION_193_FISHING_BOAT_GOING_TO_WHARF:
+    case ACTION_3_FISHING_BOAT_GOING_TO_WHARF:
         base.move_ticks(1);
         base.height_adjusted_ticks = 0;
         if (direction() == DIR_FIGURE_NONE) {
-            advance_action(ACTION_194_FISHING_BOAT_AT_WHARF);
+            advance_action(ACTION_4_FISHING_BOAT_AT_WHARF);
             base.wait_ticks = 0;
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
@@ -253,18 +254,18 @@ void figure_fishing_boat::figure_action() {
         }
         break;
 
-    case ACTION_196_FISHING_BOAT_RANDOM_FPOINT: {
+    case ACTION_6_FISHING_BOAT_RANDOM_FPOINT: {
             base.wait_ticks = 0;
             tile2i fish_tile = g_city.fishing_points.random_fishing_point(tile(), true);
             if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
                 runtime_data().fishing_point_check_attempts = 0;
-                advance_action(ACTION_191_FISHING_BOAT_GOING_TO_FISH);
+                advance_action(ACTION_1_FISHING_BOAT_GOING_TO_FISH);
                 base.destination_tile = fish_tile;
                 route_remove();
             }
         } break;
 
-    case ACTION_194_FISHING_BOAT_AT_WHARF: {
+    case ACTION_4_FISHING_BOAT_AT_WHARF: {
             int max_storage = wharf->current_params().max_storage;
             int current_storage = wharf->stored_amount(RESOURCE_FISH);
 
@@ -305,7 +306,7 @@ void figure_fishing_boat::figure_action() {
                     if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
                         wharf->runtime_data().no_fishing_points_warning_shown = 0;
                         runtime_data().fishing_point_check_attempts = 0;
-                        advance_action(ACTION_191_FISHING_BOAT_GOING_TO_FISH);
+                        advance_action(ACTION_1_FISHING_BOAT_GOING_TO_FISH);
                         base.destination_tile = fish_tile;
                         route_remove();
                     } else {
@@ -324,11 +325,11 @@ void figure_fishing_boat::figure_action() {
             }
         } break;
 
-    case ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH:
+    case ACTION_5_FISHING_BOAT_RETURNING_WITH_FISH:
         base.move_ticks(1);
         base.height_adjusted_ticks = 0;
         if (direction() == DIR_FIGURE_NONE) {
-            advance_action(ACTION_194_FISHING_BOAT_AT_WHARF);
+            advance_action(ACTION_4_FISHING_BOAT_AT_WHARF);
             base.wait_ticks = 0;
             wharf->base.figure_spawn_delay = 1;
             
@@ -365,31 +366,15 @@ bool figure_fishing_boat::window_info_background(object_info &c) {
     return true;
 }
 
-sound_key figure_fishing_boat::phrase_key() const {
-    switch (action_state()) {
-    case ACTION_190_FISHING_BOAT_CREATED: return "fishing_boat_ready";
-    case ACTION_191_FISHING_BOAT_GOING_TO_FISH: return "fishing_boat_going_to_fish";
-    case ACTION_192_FISHING_BOAT_FISHING: return "fishing_boat_fishing";
-    case ACTION_193_FISHING_BOAT_GOING_TO_WHARF: return "fishing_boat_going_to_wharf";
-    case ACTION_194_FISHING_BOAT_AT_WHARF: return "fishing_boat_at_wharf";
-    case ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH: return "fishing_boat_returning_with_fish";
-    case ACTION_196_FISHING_BOAT_RANDOM_FPOINT:
-    case ACTION_196_FISHING_BOAT_FIND_RANDOM_WHARF_FOR_RETURN:
-    case ACTION_196_FISHING_BOAT_RETURN_TO_RANDOM_WHARF:
-        return "fishing_boat_looking_for_spot";
-    }
-
-    return "fishing_boat_ready";
-}
 
 void figure_fishing_boat::update_animation() {
     pcstr anim_key = "walk";
     switch (action_state()) {
-    case ACTION_192_FISHING_BOAT_FISHING:
+    case ACTION_2_FISHING_BOAT_FISHING:
         anim_key = "work";
         break;
 
-    case ACTION_194_FISHING_BOAT_AT_WHARF:
+    case ACTION_4_FISHING_BOAT_AT_WHARF:
         anim_key = "idle";
         break;
     }

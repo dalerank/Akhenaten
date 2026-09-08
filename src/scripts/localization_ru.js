@@ -445,6 +445,20 @@ localization_ru = [
     { key: "#donkey_cicero_meta", text: "Меня зовут вьючным животным, а я цитирую Цицерона. Кто тут философ?" }
     { key: "#donkey_cicero_runaway", text: "Бегу — значит существую. Цицерон бы понял. Наверное." }
 
+    { key: "#flotsam_plato_unexamined", text: "Непроверенная жизнь не стоит того, чтобы жить. Непроверенное течение — вот как я здесь оказался." }
+    { key: "#flotsam_plato_cave", text: "Узники в пещере видят лишь тени. Я вижу берег — вверх ногами." }
+    { key: "#flotsam_plato_wise", text: "Мудрецы говорят, потому что им есть что сказать. Бревно просто плывёт." }
+    { key: "#flotsam_plato_courage", text: "Мужество — знать, чего не бояться. Я не боюсь Нила. Я — от Нила." }
+    { key: "#flotsam_plato_knowledge", text: "Знание по принуждению не удерживается. Груз, похоже, тоже." }
+    { key: "#flotsam_plato_opinion", text: "Мнение — между знанием и невежеством. Я — между кораблём и берегом." }
+    { key: "#flotsam_plato_love", text: "От прикосновения любви все становятся поэтами. От рифа — сплавом." }
+    { key: "#flotsam_plato_justice", text: "Справедливость сначала живёт в сердцах граждан. Ещё помогает пробка." }
+    { key: "#flotsam_plato_music", text: "Музыка даёт душу вселенной. Нил даёт мне цель, которую я не выбирал." }
+    { key: "#flotsam_plato_ignorance", text: "Невежество — корень всякого зла. И плохая конопатка тоже." }
+    { key: "#flotsam_plato_excess", text: "Избыток ведёт к обратному. Спросите у этой бочки." }
+    { key: "#flotsam_plato_war", text: "Только мёртвые видели конец войны. Остальные видели конец корпуса." }
+    { key: "#flotsam_plato_meta", text: "Меня зовут обломком, а я цитирую Платона. Кто тут философ?" }
+
     { key: "#recruiter_disease_in_city", text: "Я вижу больных людей повсюду. Может вспыхнуть чума!" }
     { key: "#recruiter_no_food_in_city", text: "Я голодаю. Я предпочёл бы искать еду, а не работников. " }
     { key: "#recruiter_city_not_safety", text: "Городская оборона настолько слаба, что скоро я мог бы заполнять вакансии иностранцами вместо египтян." }
@@ -663,6 +677,37 @@ localization_ru = [
     { key: "#enemy_warship_city_is_amazing", text: "Такое богатство. Добыча будет великолепной." }
     { key: "#enemy_warship_for_glory", text: "За славу и море!" }
 
+    { key: "#ferry_boat_ready", text: "У пристани готов. Кто переправляется?" }
+    { key: "#ferry_boat_going", text: "Отчаливаем! Следующий берег впереди." }
+    { key: "#ferry_boat_at_destination", text: "Прибыли. Осторожно на причал." }
+    { key: "#ferry_boat_returning", text: "Возвращаемся. Не мешайте течению." }
+    { key: "#ferry_boat_waiting", text: "Ждём паром на другой стороне." }
+    { key: "#ferry_boat_disease_risk", text: "На переправе пахнет хворью. Трудно грести в таком воздухе." }
+    { key: "#ferry_boat_no_food_in_city", text: "Пустые амбары? Голодные пассажиры всё равно хотят на тот берег." }
+    { key: "#ferry_boat_city_have_no_army", text: "Нет фортов? Один набег — и этот паром станет добычей." }
+    { key: "#ferry_boat_gods_are_angry", text: "Боги злятся. Даже течение тянет не туда." }
+    { key: "#ferry_boat_low_entertainment", text: "Праздников давно не было. Паромщикам тоже нужен сход на берег." }
+    { key: "#ferry_boat_city_is_good", text: "Эта переправа споро! Короткие рейсы и полные пристани." }
+    { key: "#ferry_boat_city_is_amazing", text: "Лучший паром, где я работал. Эти причалы сами вас встречают!" }
+
+    { key: "#fishing_boat_ready", text: "Лодка у пристани. Экипаж ждёт прилива." }
+    { key: "#fishing_boat_going_to_fish", text: "Идём к рыболовным угодьям." }
+    { key: "#fishing_boat_fishing", text: "Тащим рыбу. Держите сети!" }
+    { key: "#fishing_boat_going_to_wharf", text: "Возвращаемся к пристани с пустыми трюмами." }
+    { key: "#fishing_boat_at_wharf", text: "У причала. Готовимся к новому рейсу." }
+    { key: "#fishing_boat_returning_with_fish", text: "Идём назад с полным уловом!" }
+    { key: "#fishing_boat_looking_for_spot", text: "Ищем место для лова. Воды непростые." }
+    { key: "#fishing_boat_disease_risk", text: "Гавань воняет болезнью. Трудно ловить, когда экипаж слаб." }
+    { key: "#fishing_boat_no_food_in_city", text: "Амбары пусты? Отлично — наш улов купят." }
+    { key: "#fishing_boat_city_have_no_army", text: "Нет фортов? Налётчики заберут каждую лодку." }
+    { key: "#fishing_boat_need_workers", text: "Пристаням нужны руки. Одна лодка город не прокормит." }
+    { key: "#fishing_boat_gods_are_angry", text: "Боги злы. Даже рыба обходит наши сети." }
+    { key: "#fishing_boat_city_is_bad", text: "Милость фараона — пепел. Флот это место не оплачет." }
+    { key: "#fishing_boat_much_unemployment", text: "На берегу праздные, а экипажей на лодки всё равно мало." }
+    { key: "#fishing_boat_low_entertainment", text: "Праздников давно не было. Рыбакам тоже нужен сход на берег." }
+    { key: "#fishing_boat_city_is_good", text: "Хорошие воды и бойкая пристань. Неплохой причал." }
+    { key: "#fishing_boat_city_is_amazing", text: "Лучшая рыбалка, что знал. Сети полны до полудня!" }
+
     { key: "#malaria_problem", text: "(Не используется)" }
     { key: "#malaria_not_a_problem", text: "Малярия, похоже, здесь не проблема." }
     { key: "#malaria_outbreak_could_strike", text: "Вспышка малярии может произойти, если ничего не сделать." }
@@ -749,9 +794,35 @@ localization_ru = [
     { key: "#musician_city_is_bad_reputation", text: "Наша ужасная репутация может спровоцировать нападение!" }
     { key: "#musician_much_unemployments", text: "В последний раз говорю, я не нанимаю больше подсобников! Так много людей ищет работу." }
     { key: "#musician_no_entertainment", text: "Даже артист любит развлекаться! Здесь недостаточно чем заняться." }
+    { key: "#musician_no_entertainment_need", text: "Даже артист любит развлекаться! Здесь недостаточно чем заняться." }
     { key: "#musician_city_not_bad", text: "Этот город мог бы быть намного хуже, полагаю." }
     { key: "#musician_city_is_good", text: "Надеюсь, мы продолжим создавать прекрасную музыку в этом городе надолго." }
     { key: "#musician_i_like_festivals", text: "Эти фестивали великолепны! Все подпевают." }
+
+    { key: "#juggler_disease_in_city", text: "Я никогда не видел столько больных. Надеюсь, чумы не будет." }
+    { key: "#juggler_city_low_sentiment", text: "Трудно ловить булавы, когда корчит от голода." }
+    { key: "#juggler_city_not_safety_workers_leaving", text: "Может, кину булавы во врага, если нападут. Больше город почти ничто не защищает." }
+    { key: "#juggler_salary_too_low", text: "Вакансий полно! Интересно, смогу ли жонглировать несколькими работами." }
+    { key: "#juggler_gods_are_angry", text: "Жду худшего. Боги, должно быть, думают, что мы о них забыли." }
+    { key: "#juggler_city_verylow_sentiment", text: "У этого города репутация хуже моей. Надеюсь, нас не атакуют." }
+    { key: "#juggler_much_unemployments", text: "Хотел бы, чтобы в городе было больше работы. Мои зрители не могут мне платить." }
+    { key: "#juggler_low_entertainment", text: "Я могу жонглировать лишь до определённого предела. Хотел бы, чтобы в городе было больше артистов." }
+    { key: "#juggler_city_is_good", text: "Этот город не так уж плох." }
+    { key: "#juggler_city_is_amazing", text: "Нет места, где я предпочел бы жонглировать." }
+    { key: "#juggler_i_like_festivals", text: "Обожаю работать на праздниках. Все такие счастливые!" }
+
+    { key: "#senet_disease_in_city", text: "Здоровье людей под угрозой. Риск чумы велик." }
+    { key: "#senet_city_low_sentiment", text: "Я голоден как бегемот, но еды почти нет." }
+    { key: "#senet_city_not_safety_workers_leaving", text: "Пора учить военное дело. С такой слабой защитой мы в опасности." }
+    { key: "#senet_salary_too_low", text: "Нехватка рабочих может серьёзно навредить городу." }
+    { key: "#senet_gods_are_angry", text: "По правде говоря, я бы не рискнул так плохо обращаться с богами." }
+    { key: "#senet_city_verylow_sentiment", text: "Репутация города в лучшем случае пятнистая. Нас могут атаковать." }
+    { key: "#senet_much_unemployments", text: "Для большинства поиск работы здесь — пустая затея, кончающаяся неудачей." }
+    { key: "#senet_low_entertainment", text: "Городу пора осознать нехватку развлечений!" }
+    { key: "#senet_city_is_good", text: "Я не жалею, что живу здесь." }
+    { key: "#senet_city_is_amazing", text: "Этот город захватил моё сердце. Я люблю его!" }
+    { key: "#senet_i_like_festivals", text: "Праздничные партии — лучшие. Все хотят сыграть." }
+
 
     { key: "#taxman_desease_can_start_at_any_moment", text: "Кажется, болезнь облагает налогом здоровье людей. Молюсь, чтобы чума не поразила." }
     { key: "#taxman_no_food_in_city", text: "Хотел бы я, чтобы люди могли платить свои налоги едой. Я так голоден!" }

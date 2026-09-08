@@ -60,7 +60,7 @@ function building_fishing_wharf_update_graphic(ev) {
     var image = __map_image_at(building.tile)
     var suffix = building_wharf_orient_suffix(image, base)
 
-    if (boat.action_state != ACTION_194_FISHING_BOAT_AT_WHARF) {
+    if (boat.action_state != ACTION_4_FISHING_BOAT_AT_WHARF) {
         building.set_animation("wait" + suffix)
         return
     }

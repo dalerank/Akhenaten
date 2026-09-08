@@ -153,7 +153,7 @@ void building_ferry::spawn_figure() {
         if (map_terrain_is(dock_tile.grid_offset(), TERRAIN_WATER)) {
             figure* f = figure_create(FIGURE_FERRY_BOAT, dock_tile, DIR_4_BOTTOM_LEFT);
             if (f) {
-                f->action_state = ACTION_200_FERRY_BOAT_CREATED;
+                f->action_state = ACTION_0_FERRY_BOAT_CREATED;
                 f->set_home(id());
                 base.set_figure(BUILDING_SLOT_BOAT, f);
                 random_generate_next();

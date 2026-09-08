@@ -3,16 +3,20 @@
 #include "figure/figure.h"
 
 enum e_fishing_boat_action : uint16_t {
-    ACTION_190_FISHING_BOAT_CREATED = 190,
-    ACTION_191_FISHING_BOAT_GOING_TO_FISH = 191,
-    ACTION_192_FISHING_BOAT_FISHING = 192,
-    ACTION_193_FISHING_BOAT_GOING_TO_WHARF = 193,
-    ACTION_194_FISHING_BOAT_AT_WHARF = 194,
-    ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH = 195,
-    ACTION_196_FISHING_BOAT_RANDOM_FPOINT = 196,
-    ACTION_196_FISHING_BOAT_FIND_RANDOM_WHARF_FOR_RETURN = 197,
-    ACTION_196_FISHING_BOAT_RETURN_TO_RANDOM_WHARF = 198,
+    ACTION_0_FISHING_BOAT_CREATED = 0,
+    ACTION_1_FISHING_BOAT_GOING_TO_FISH = 1,
+    ACTION_2_FISHING_BOAT_FISHING = 2,
+    ACTION_3_FISHING_BOAT_GOING_TO_WHARF = 3,
+    ACTION_4_FISHING_BOAT_AT_WHARF = 4,
+    ACTION_5_FISHING_BOAT_RETURNING_WITH_FISH = 5,
+    ACTION_6_FISHING_BOAT_RANDOM_FPOINT = 6,
+    ACTION_7_FISHING_BOAT_FIND_RANDOM_WHARF_FOR_RETURN = 7,
+    ACTION_8_FISHING_BOAT_RETURN_TO_RANDOM_WHARF = 8,
+
+    ACTION_9_FISHING_BOAT_MAX
 };
+using e_fishing_boat_action_tokens_t = token_holder<e_fishing_boat_action, ACTION_0_FISHING_BOAT_CREATED, ACTION_9_FISHING_BOAT_MAX>;
+extern const e_fishing_boat_action_tokens_t e_fishing_boat_action_tokens;
 
 class figure_fishing_boat : public figure_impl {
 public:
@@ -39,7 +43,6 @@ public:
     virtual void figure_action() override;
     virtual void kill() override;
     //virtual e_overlay get_overlay() const override { return OVERLAY_APOTHECARY; }
-    virtual sound_key phrase_key() const override;
     virtual bool window_info_background(object_info &ctx) override;
     virtual void update_animation() override;
 };

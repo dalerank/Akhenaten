@@ -108,7 +108,7 @@ void building_booth::spawn_figure() {
 
     auto &d = runtime_data();
     if (d.juggler_visited > 0) {
-        create_roaming_figure(FIGURE_JUGGLER, (e_figure_action)ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_JUGGLER);
+        create_roaming_figure(FIGURE_JUGGLER, (e_figure_action)ACTION_4_ENTERTAINER_ROAMING, BUILDING_SLOT_JUGGLER);
     }
 }
 

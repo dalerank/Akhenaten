@@ -55,10 +55,10 @@ void building_juggler_school::spawn_figure() {
 
     building* dest = building_get(venue_destination);
     if (dest->id > 0) {
-        create_figure_with_destination(FIGURE_JUGGLER, dest, (e_figure_action)ACTION_92_ENTERTAINER_GOING_TO_VENUE, BUILDING_SLOT_JUGGLER);
+        create_figure_with_destination(FIGURE_JUGGLER, dest, (e_figure_action)ACTION_2_ENTERTAINER_GOING_TO_VENUE, BUILDING_SLOT_JUGGLER);
         d.spawned_entertainer_days = spawn_interval_days;
     } else {
-        create_roaming_figure(FIGURE_JUGGLER, (e_figure_action)ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED, BUILDING_SLOT_JUGGLER);
+        create_roaming_figure(FIGURE_JUGGLER, (e_figure_action)ACTION_0_ENTERTAINER_AT_SCHOOL_CREATED, BUILDING_SLOT_JUGGLER);
         d.spawned_entertainer_days = spawn_interval_days;
     }
 }

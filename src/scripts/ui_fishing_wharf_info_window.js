@@ -22,11 +22,11 @@ function info_window_fishing_wharf_on_init(window) {
     } else {
         var boat = b.get_figure(BUILDING_SLOT_BOAT)
         switch (boat.action_state) {
-        case ACTION_191_FISHING_BOAT_GOING_TO_FISH: reason.id = 3; break
-        case ACTION_192_FISHING_BOAT_FISHING: reason.id = 4; break
-        case ACTION_193_FISHING_BOAT_GOING_TO_WHARF: reason.id = 5; break
-        case ACTION_194_FISHING_BOAT_AT_WHARF: reason.id = 6; break
-        case ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH: reason.id = 7; break
+        case ACTION_1_FISHING_BOAT_GOING_TO_FISH: reason.id = 3; break
+        case ACTION_2_FISHING_BOAT_FISHING: reason.id = 4; break
+        case ACTION_3_FISHING_BOAT_GOING_TO_WHARF: reason.id = 5; break
+        case ACTION_4_FISHING_BOAT_AT_WHARF: reason.id = 6; break
+        case ACTION_5_FISHING_BOAT_RETURNING_WITH_FISH: reason.id = 7; break
         default: reason.id = 8; break
         }
     }

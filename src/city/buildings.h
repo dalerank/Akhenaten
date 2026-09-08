@@ -30,6 +30,8 @@ struct city_buildings_t {
     int8_t warships_requested;
     int8_t transport_ships_requested;
 
+    bool has_high_fire_risk = false;
+
     using tracked_building_ids = std::vector<building_id>;
     using tracked_buildings_t = std::array<tracked_building_ids, BUILDING_MAX>;
     const tracked_buildings_t &tracked_buildings() const;

@@ -56,5 +56,5 @@ void building_zoo::spawn_figure() {
     consume_resource(RESOURCE_GAMEMEAT, need);
     // Animals are present once feed is consumed; ACTION_94 roamers never hit update_shows().
     runtime_data().juggler_visited = 32;
-    create_roaming_figure(FIGURE_ZOOKEEPER, (e_figure_action)ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_SERVICE);
+    create_roaming_figure(FIGURE_ZOOKEEPER, (e_figure_action)ACTION_4_ENTERTAINER_ROAMING, BUILDING_SLOT_SERVICE);
 }

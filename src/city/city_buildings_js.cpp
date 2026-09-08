@@ -234,3 +234,8 @@ hvector<building_id, 64> __city_find_manageable_industry(tile2i tile, int size, 
     return buildings_find_manageable_industry_in_radius(tile, size, radius);
 }
 ANK_FUNCTION_3(__city_find_manageable_industry)
+
+bool __city_has_high_fire_risk() {
+    return g_city.buildings.has_high_fire_risk;
+}
+ANK_FUNCTION(__city_has_high_fire_risk)

@@ -9,7 +9,5 @@ public:
 
     virtual void update_shows() override;
     virtual svector<e_building_type, 4> allow_venue_types() const override;
-    virtual sound_key phrase_key() const override;
     virtual int provide_service() override;
-    virtual figure_sound_t get_sound_reaction(xstring key) const override;
 };

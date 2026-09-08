@@ -10,7 +10,6 @@
 #include "building/building_burning_ruin.h"
 #include "building/building_firehouse.h"
 #include "graphics/animation.h"
-#include "city/city_health.h"
 #include "city/city.h"
 #include "city/city_recorded_paths.h"
 #include "figure/service.h"
@@ -28,68 +27,6 @@ void figure_fireman::figure_before_action() {
     if (!b->is_valid() || !b->has_figure(0, id())) {
         poof();
     }
-}
-
-sound_key figure_fireman::phrase_key() const {
-    if (base.action_state == ACTION_74_FIREMAN_GOING_TO_FIRE) {
-        return "fireman_going_to_fire";
-    }
-
-    svector<sound_key, 10> keys;
-    if (base.action_state == ACTION_75_FIREMAN_AT_FIRE) {
-        keys.push_back("fighting_fire_also");
-        keys.push_back("fighting_fire");
-
-        int index = rand() % keys.size();
-        return xstring().printf("fireman_%s", keys[index].c_str());
-    }
-
-    if (g_city.health.value < 20) {
-        keys.push_back("desease_can_start_at_any_moment");
-    }
-
-    if (g_city.sentiment.low_mood_cause == LOW_MOOD_NO_FOOD) {
-        keys.push_back("no_food_in_city");
-    }
-
-    if (formation_get_num_forts() < 1) {
-        keys.push_back("city_not_safety_workers_leaving");
-    }
-
-    if (g_city.labor.workers_needed >= 10) {
-        keys.push_back("need_workers");
-    }
-
-    if (g_city.labor.workers_needed >= 20) {
-        keys.push_back("need_more_workers");
-    }
-
-    int houses_risk_fire = 0;
-    buildings_valid_do([&] (building &b) {
-        houses_risk_fire += (b.fire_risk > 70) ? 1 : 0;
-    });
-
-    if (houses_risk_fire > 0) {
-        keys.push_back("hight_fire_level");
-    }
-
-    if (g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("gods_are_angry");
-    } else {
-        keys.push_back("gods_are_pleasures");
-    }
-
-    if (g_city.festival.entertainment_is_low()) {  // low entertainment
-        keys.push_back("low_entertainment");
-    }
-
-    const int sentiment = g_city.sentiment.value;
-    if (sentiment > 90) {
-        keys.push_back("city_is_amazing");
-    }
-
-    int index = rand() % keys.size();
-    return xstring().printf("fireman_%s", keys[index].c_str());
 }
 
 void figure_fireman::figure_action() { // doubles as fireman! not as policeman!!!
@@ -271,10 +208,6 @@ int figure_fireman::provide_service() {
     });
     base.min_max_seen = min_happiness;
     return result;
-}
-
-figure_sound_t figure_fireman::get_sound_reaction(xstring key) const {
-    return current_params().sounds[key];
 }
 
 void figure_fireman::update_animation() {

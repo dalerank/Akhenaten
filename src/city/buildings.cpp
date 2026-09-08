@@ -222,10 +222,15 @@ void city_buildings_t::shutdown() {
 }
 
 void city_buildings_t::update_tick(bool refresh_only) {
+    has_high_fire_risk = false;
     for (auto it = building_begin(), end = building_end(); it != end; ++it) {
-        if (it->is_valid()) {
-            it->dcast()->on_tick(refresh_only);
+        if (!it->is_valid()) {
+            continue;
         }
+        if (it->fire_risk > 70) {
+            has_high_fire_risk = true;
+        }
+        it->dcast()->on_tick(refresh_only);
     }
 }
 

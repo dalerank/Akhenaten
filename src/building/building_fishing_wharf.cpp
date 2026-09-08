@@ -77,7 +77,7 @@ void building_fishing_wharf::spawn_figure() {
                 if (!!game_features::gameplay_fishing_wharf_spawn_boats && dock_tile > 0) {
                     tile2i dtile(dock_tile);
                     figure* f = figure_create(FIGURE_FISHING_BOAT, dtile, DIR_4_BOTTOM_LEFT);
-                    f->action_state = ACTION_190_FISHING_BOAT_CREATED;
+                    f->action_state = ACTION_0_FISHING_BOAT_CREATED;
                     f->set_home(id());
                     base.set_figure(BUILDING_SLOT_BOAT, f);
                     random_generate_next();

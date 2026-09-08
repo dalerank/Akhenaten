@@ -21,6 +21,8 @@
 #include "core/random.h"
 #include <cstdlib>
 
+const e_ferry_boat_action_tokens_t ANK_CONFIG_ENUM(e_ferry_boat_action_tokens)
+
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_ferry_boat);
 
 void figure_ferry_boat::on_create() {
@@ -105,73 +107,73 @@ void figure_ferry_boat::figure_action() {
     assert(base.allow_move_type == EMOVE_WATER);
 
     switch (action_state()) {
-    case ACTION_200_FERRY_BOAT_CREATED:
+    case ACTION_0_FERRY_BOAT_CREATED:
         base.wait_ticks++;
         if (base.wait_ticks >= 20) {
             base.wait_ticks = 0;
             update_destination();
             if (d.destination_ferry_id > 0) {
-                advance_action(ACTION_201_FERRY_BOAT_GOING_TO_DESTINATION);
+                advance_action(ACTION_1_FERRY_BOAT_GOING_TO_DESTINATION);
                 base.destination_tile = d.destination_tile;
                 route_remove();
             } else {
-                advance_action(ACTION_204_FERRY_BOAT_WAITING);
+                advance_action(ACTION_4_FERRY_BOAT_WAITING);
             }
         }
         break;
 
-    case ACTION_204_FERRY_BOAT_WAITING:
+    case ACTION_4_FERRY_BOAT_WAITING:
         base.wait_ticks++;
         if (base.wait_ticks >= 100) {
             base.wait_ticks = 0;
             update_destination();
             if (d.destination_ferry_id > 0) {
-                advance_action(ACTION_201_FERRY_BOAT_GOING_TO_DESTINATION);
+                advance_action(ACTION_1_FERRY_BOAT_GOING_TO_DESTINATION);
                 base.destination_tile = d.destination_tile;
                 route_remove();
             }
         }
         break;
 
-    case ACTION_201_FERRY_BOAT_GOING_TO_DESTINATION:
+    case ACTION_1_FERRY_BOAT_GOING_TO_DESTINATION:
         base.move_ticks(1);
         base.height_adjusted_ticks = 0;
         
         if (direction() == DIR_FIGURE_NONE) {
 
-            advance_action(ACTION_202_FERRY_BOAT_AT_DESTINATION);
+            advance_action(ACTION_2_FERRY_BOAT_AT_DESTINATION);
             base.wait_ticks = 0;
             d.wait_ticks_at_destination = 50 + (random_short() % 50);
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
 
-            advance_action(ACTION_203_FERRY_BOAT_RETURNING);
+            advance_action(ACTION_3_FERRY_BOAT_RETURNING);
             water_access_tiles fpoints = map_water_get_access_points(*home_ferry, home_ferry->dcast()->get_orientation(), 1);
             base.destination_tile = fpoints.point_a;
             route_remove();
         }
         break;
 
-    case ACTION_202_FERRY_BOAT_AT_DESTINATION:
+    case ACTION_2_FERRY_BOAT_AT_DESTINATION:
         base.wait_ticks++;
         d.wait_ticks_at_destination--;
         if (d.wait_ticks_at_destination <= 0) {
             // Возвращаемся домой
-            advance_action(ACTION_203_FERRY_BOAT_RETURNING);
+            advance_action(ACTION_3_FERRY_BOAT_RETURNING);
             water_access_tiles fpoints = map_water_get_access_points(*home_ferry, home_ferry->dcast()->get_orientation(), 1);
             base.destination_tile = fpoints.point_a;
             route_remove();
         }
         break;
 
-    case ACTION_203_FERRY_BOAT_RETURNING:
+    case ACTION_3_FERRY_BOAT_RETURNING:
         base.move_ticks(1);
         base.height_adjusted_ticks = 0;
         
         if (direction() == DIR_FIGURE_NONE) {
             // Вернулись домой, ищем новое назначение
-            advance_action(ACTION_200_FERRY_BOAT_CREATED);
+            advance_action(ACTION_0_FERRY_BOAT_CREATED);
             base.wait_ticks = 0;
             d.destination_ferry_id = 0;
             update_destination();
@@ -199,31 +201,15 @@ bool figure_ferry_boat::window_info_background(object_info &c) {
     return true;
 }
 
-sound_key figure_ferry_boat::phrase_key() const {
-    switch (action_state()) {
-    case ACTION_200_FERRY_BOAT_CREATED:
-        return "ferry_boat_ready";
-    case ACTION_201_FERRY_BOAT_GOING_TO_DESTINATION:
-        return "ferry_boat_going";
-    case ACTION_202_FERRY_BOAT_AT_DESTINATION:
-        return "ferry_boat_at_destination";
-    case ACTION_203_FERRY_BOAT_RETURNING:
-        return "ferry_boat_returning";
-    case ACTION_204_FERRY_BOAT_WAITING:
-        return "ferry_boat_waiting";
-    }
-    return "ferry_boat_ready";
-}
-
 void figure_ferry_boat::update_animation() {
     pcstr anim_key = "swim";
     switch (action_state()) {
-    case ACTION_202_FERRY_BOAT_AT_DESTINATION:
-    case ACTION_204_FERRY_BOAT_WAITING:
+    case ACTION_2_FERRY_BOAT_AT_DESTINATION:
+    case ACTION_4_FERRY_BOAT_WAITING:
         anim_key = "idle";
         break;
-    case ACTION_201_FERRY_BOAT_GOING_TO_DESTINATION:
-    case ACTION_203_FERRY_BOAT_RETURNING:
+    case ACTION_1_FERRY_BOAT_GOING_TO_DESTINATION:
+    case ACTION_3_FERRY_BOAT_RETURNING:
         anim_key = "swim";
         break;
     }

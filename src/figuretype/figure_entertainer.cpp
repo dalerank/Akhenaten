@@ -11,6 +11,9 @@
 #include "grid/building.h"
 #include "figure/service.h"
 #include "building/building_house.h"
+#include "js/js_game.h"
+
+const e_entertainer_action_tokens_t ANK_CONFIG_ENUM(e_entertainer_action_tokens)
 
 int figure_entertainer::provide_entertainment(int shows, void (*callback)(building*, int)) {
     int serviced = 0;
@@ -132,14 +135,14 @@ void figure_entertainer::figure_action() {
         base.figure_combat_handle_corpse();
         break;
 
-    case ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED:
+    case ACTION_0_ENTERTAINER_AT_SCHOOL_CREATED:
         base.animctx.frame = 0;
         base.wait_ticks_missile = 0;
         base.wait_ticks--;
         if (base.wait_ticks <= 0) { // todo: summarize
             tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
             if (road_tile.valid()) {
-                base.action_state = ACTION_91_ENTERTAINER_EXITING_SCHOOL;
+                base.action_state = ACTION_1_ENTERTAINER_EXITING_SCHOOL;
                 base.set_cross_country_destination(road_tile);
                 base.roam_length = 0;
             } else {
@@ -148,7 +151,7 @@ void figure_entertainer::figure_action() {
         }
         break;
 
-    case ACTION_91_ENTERTAINER_EXITING_SCHOOL:
+    case ACTION_1_ENTERTAINER_EXITING_SCHOOL:
         base.use_cross_country = true;
         if (base.move_ticks_cross_country(1) == 1) {
             int dst_building_id = determine_venue_destination(tile(), type(), allow_venue_types());
@@ -158,19 +161,19 @@ void figure_entertainer::figure_action() {
                 tile2i road_tile = map_closest_road_within_radius(b_dst->tile, b_dst->size, 2);
                 if (road_tile.valid()) {
                     set_destination(dst_building_id);
-                    advance_action(ACTION_92_ENTERTAINER_GOING_TO_VENUE);
+                    advance_action(ACTION_2_ENTERTAINER_GOING_TO_VENUE);
                     base.destination_tile = road_tile;
                     base.roam_length = 0;
                 } else {
-                    advance_action(ACTION_93_ENTERTAINER_GOING_TO_RANDOM_ROAD);
+                    advance_action(ACTION_3_ENTERTAINER_GOING_TO_RANDOM_ROAD);
                 }
             } else {
-                advance_action(ACTION_93_ENTERTAINER_GOING_TO_RANDOM_ROAD);
+                advance_action(ACTION_3_ENTERTAINER_GOING_TO_RANDOM_ROAD);
             }
         }
         break;
 
-    case ACTION_93_ENTERTAINER_GOING_TO_RANDOM_ROAD:
+    case ACTION_3_ENTERTAINER_GOING_TO_RANDOM_ROAD:
         {
             int dst_building_id = determine_closest_venue_destination(tile(), allow_venue_types());
             if (dst_building_id) { // todo: summarize
@@ -178,19 +181,19 @@ void figure_entertainer::figure_action() {
                 tile2i road_tile = map_closest_road_within_radius(b_dst->tile, b_dst->size, 2);
                 if (road_tile.valid()) {
                     set_destination(dst_building_id);
-                    advance_action(ACTION_92_ENTERTAINER_GOING_TO_VENUE);
+                    advance_action(ACTION_2_ENTERTAINER_GOING_TO_VENUE);
                     base.destination_tile = road_tile;
                     base.roam_length = 0;
                 } else {
-                    advance_action(ACTION_13_ENTERTAINER_RETURNING_EMPTY);
+                    advance_action(ACTION_7_ENTERTAINER_RETURNING_EMPTY);
                 }
             } else {
-                advance_action(ACTION_13_ENTERTAINER_RETURNING_EMPTY);
+                advance_action(ACTION_7_ENTERTAINER_RETURNING_EMPTY);
             }
         }
         break;
 
-    case ACTION_92_ENTERTAINER_GOING_TO_VENUE:
+    case ACTION_2_ENTERTAINER_GOING_TO_VENUE:
         //            is_ghost = false;
         base.roam_length++;
         if (base.roam_length >= 3200) {
@@ -203,16 +206,16 @@ void figure_entertainer::figure_action() {
             if (b_dst && b_dst->num_workers > labores / 2) {
                 update_shows();
             } else {
-                advance_action(ACTION_13_ENTERTAINER_RETURNING_EMPTY);
+                advance_action(ACTION_7_ENTERTAINER_RETURNING_EMPTY);
             }
         }
         break;
 
-    case ACTION_94_ENTERTAINER_ROAMING:
-        do_roam(TERRAIN_USAGE_ROADS, ACTION_13_ENTERTAINER_RETURNING_EMPTY);
+    case ACTION_4_ENTERTAINER_ROAMING:
+        do_roam(TERRAIN_USAGE_ROADS, ACTION_7_ENTERTAINER_RETURNING_EMPTY);
         break;
 
-    case ACTION_96_ENTERTAINER_GOING_TO_SQUARE:
+    case ACTION_6_ENTERTAINER_GOING_TO_SQUARE:
         base.roam_length++;
         if (base.roam_length >= 3200) {
             poof();
@@ -220,11 +223,11 @@ void figure_entertainer::figure_action() {
 
         if (do_gotobuilding(destination())) {
             // Reached the square, now return home
-            advance_action(ACTION_13_ENTERTAINER_RETURNING_EMPTY);
+            advance_action(ACTION_7_ENTERTAINER_RETURNING_EMPTY);
         }
         break;
 
-    case ACTION_13_ENTERTAINER_RETURNING_EMPTY:
+    case ACTION_7_ENTERTAINER_RETURNING_EMPTY:
         if (do_returnhome(TERRAIN_USAGE_ROADS)) {
             building *h = home();
             if (h && h->params().flags.keeps_visitor_paths) {
@@ -262,8 +265,8 @@ void figure_entertainer::update_animation() {
 }
 
 building *figure_entertainer::current_destination() {
-    if (action_state() == ACTION_94_ENTERTAINER_ROAMING
-        || action_state() == ACTION_95_ENTERTAINER_RETURNING) {
+    if (action_state() == ACTION_4_ENTERTAINER_ROAMING
+        || action_state() == ACTION_5_ENTERTAINER_RETURNING) {
         return home();
     }
 
