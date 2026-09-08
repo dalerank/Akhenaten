@@ -165,10 +165,13 @@ struct building_store : public std::array<resource_value, 4> {
 class building {
 public:
     enum { max_figures = 4 };
-    using ptr_buffer_t = char[16];
+    // The impl object is constructed in place in this buffer (see acquire_impl), so the buffer
+    // has to carry an alignment that a bare char array does not: alignof(char[16]) is 1, while
+    // every building_impl starts with a vtable pointer.
+    struct alignas(8) ptr_buffer_t { char data[16]; };
 
 private:
-    ptr_buffer_t _ptr_buffer = { 0 };
+    ptr_buffer_t _ptr_buffer = {};
     class building_impl *_ptr = nullptr; // dcast
 
 public:
@@ -248,7 +251,9 @@ public:
     std::array<animation_context, 4> anims;
     svector<building_overlay_anim, 4> overlay_anims;
     std::array<figure_id, max_figures> figure_ids;
-    char runtime_data[186] = { 0 };
+
+    static constexpr std::size_t runtime_data_align = 8;
+    alignas(runtime_data_align) char runtime_data[186] = { 0 };
     bool play_animation = false;
 
     building();
@@ -457,6 +462,10 @@ public:
 
     template<typename T>
     building_impl *acquire_impl() {
+        // Impl subclasses are expected to hold no members of their own -- their state lives in
+        // runtime_data. One that did would run over _ptr and the fields after it.
+        static_assert(sizeof(T) <= sizeof(ptr_buffer_t), "building impl does not fit the inline buffer");
+        static_assert(alignof(T) <= alignof(ptr_buffer_t), "building impl needs a stricter alignment");
         new (&_ptr_buffer) T(*this);
         _ptr = (building_impl *)&_ptr_buffer;
         return _ptr;
@@ -480,9 +489,13 @@ ANK_CONFIG_PROPERTY(building, has_road_access, num_workers, max_workers, type, o
     using model_type = buildings::model_t<clsid>;                                                       \
     using inherited = base_class;
 
+#define BUILDING_RUNTIME_DATA_CHECKS(type)                                                              \
+    static_assert(sizeof(type) < sizeof(building::runtime_data), #type " does not fit building::runtime_data"); \
+    static_assert(alignof(type) <= building::runtime_data_align, #type " needs a stricter alignment")
+
 #define BUILDING_RUNTIME_DATA(type) ;                                                                   \
-    type& runtime_data() { return *(type*)this->base.runtime_data; }                                    \
-    const type& runtime_data() const { static_assert(sizeof(type) < sizeof(building::runtime_data)); return *(type*)this->base.runtime_data; } \
+    type& runtime_data() { BUILDING_RUNTIME_DATA_CHECKS(type); return *(type*)this->base.runtime_data; } \
+    const type& runtime_data() const { BUILDING_RUNTIME_DATA_CHECKS(type); return *(type*)this->base.runtime_data; } \
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override;           \
     virtual bool set_property(const xstring &domain, const xstring &name, const bvariant &value) override;
 
@@ -526,7 +539,7 @@ inline bool building_type_any_of(e_building_type type, const std::initializer_li
 }
 
 inline bool building_type_any_of(building &b, const e_building_type &type) {
-    return b.type = type;
+    return b.type == type;
 }
 
 inline bool building_type_any_of(building &b, const std::initializer_list<e_building_type> &types) {

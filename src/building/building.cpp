@@ -178,7 +178,14 @@ void building_impl::acquire(e_building_type e, building &b) {
         }
     }
 
-    //assert(false && "Cant find building type in config");
+    if (e > BUILDING_NONE && e < BUILDING_MAX) {
+        static std::array<bool, BUILDING_MAX> reported{};
+        if (!reported[e]) {
+            reported[e] = true;
+            logs::error("No building model registered for type %d, falling back to the base impl", (int)e);
+        }
+    }
+
     b.acquire_impl<building_impl>();
 }
 

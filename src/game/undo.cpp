@@ -191,12 +191,21 @@ static void add_building_to_terrain(building* b) {
 }
 
 static void restore_housing(building* b) {
+    b->reset_impl();
     auto house = b->dcast_house();
+    if (!house) {
+        return;
+    }
+
     auto &housed = house->runtime_data();
     auto &data = g_undo_data;
     int size = housed.hsize;
     for (int x = b->tile.x(); x < b->tile.x() + size; x++)
         for (int y = b->tile.y(); y < b->tile.y() + size; y++) {
+            if (data.newhouses_num >= MAX_UNDO_BUILDINGS) {
+                return;
+            }
+
             int grid_offset = MAP_OFFSET(x, y);
             data.newhouses_offsets[data.newhouses_num] = grid_offset + 1;
             data.newhouses_num++;
