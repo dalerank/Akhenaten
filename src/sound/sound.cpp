@@ -231,6 +231,16 @@ void sound_manager_t::begin_frame() {
 
     const auto speech_volume = calc_bound(game_features::gameopt_sound_speech_volume.to_int(), 0, 100);
     set_channel_volume(SOUND_CHANNEL_SPEECH, speech_volume);
+
+    music_frame();
+}
+
+bool sound_manager_t::music_playing() {
+    if (!initialized || !_music_player || !_music_player->music) {
+        return false;
+    }
+
+    return Mix_PlayingMusic() != 0;
 }
 
 void sound_manager_t::init_channels() {
@@ -442,7 +452,7 @@ static void load_music_for_vita(const char* filename) {
 }
 #endif
 
-bool sound_manager_t::play_music(pcstr filename, int volume_pct) {
+bool sound_manager_t::play_music(pcstr filename, int volume_pct, bool loop) {
     if (!initialized) {
         return false;
     }
@@ -473,7 +483,7 @@ bool sound_manager_t::play_music(pcstr filename, int volume_pct) {
         _music_player->current_music_data.reset();
         logs::warn("Error opening music file '%s'. Reason: %s", filename, Mix_GetError());
     } else {
-        if (Mix_PlayMusic(_music_player->music, -1) == -1) {
+        if (Mix_PlayMusic(_music_player->music, loop ? -1 : 1) == -1) {
             Mix_FreeMusic(_music_player->music);
             _music_player->music = nullptr;
             _music_player->current_music_data.reset();
