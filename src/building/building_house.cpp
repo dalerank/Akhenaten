@@ -7,6 +7,7 @@
 #include "core/object_property.h"
 #include "core/custom_span.hpp"
 #include "city/city_labor.h"
+#include "figuretype/figure_noble.h"
 #include "game/difficulty.h"
 #include "game/resource.h"
 #include "graphics/image.h"
@@ -226,7 +227,7 @@ void building_house::spawn_figure() {
     }
 
     if (is_nobles() && house_population() > 20) {
-        common_spawn_roamer(FIGURE_NOBLES, 0, (e_figure_action)125);
+        common_spawn_roamer(FIGURE_NOBLES, 0, (e_figure_action)ACTION_0_NOBLE_ROAMING);
     }
 }
 

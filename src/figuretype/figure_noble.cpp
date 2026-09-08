@@ -3,6 +3,8 @@
 #include "figure/action.h"
 #include "js/js_game.h"
 
+const e_noble_action_tokens_t ANK_CONFIG_ENUM(e_noble_action_tokens)
+
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_noble);
 
 void figure_noble::figure_action() {
@@ -11,11 +13,11 @@ void figure_noble::figure_action() {
         base.figure_combat_handle_corpse();
         break;
 
-    case ACTION_125_ROAMER_ROAMING:
-        do_roam(TERRAIN_USAGE_ROADS, ACTION_126_ROAMER_RETURNING);
+    case ACTION_0_NOBLE_ROAMING:
+        do_roam(TERRAIN_USAGE_ROADS, ACTION_1_NOBLE_RETURNING);
         break;
 
-    case ACTION_126_ROAMER_RETURNING:
+    case ACTION_1_NOBLE_RETURNING:
         do_returnhome(TERRAIN_USAGE_ROADS);
         break;
     }

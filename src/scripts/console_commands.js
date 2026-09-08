@@ -26,7 +26,7 @@ function console_command_spawnnobles(args) {
 		if (!house.has_road_access) {
 			continue
 		}
-		__building_create_roaming_figure(house.id, FIGURE_NOBLES, ACTION_125_ROAMER_ROAMING, BUILDING_SLOT_SERVICE)
+		__building_create_roaming_figure(house.id, FIGURE_NOBLES, ACTION_0_NOBLE_ROAMING, BUILDING_SLOT_SERVICE)
 	}
 }
 

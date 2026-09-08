@@ -829,6 +829,15 @@ localization_en = [
   {key: "#figure_docker", group:64, id:38 }
   {key: "#figure_market_buyer", group:64, id:39 }
   {key: "#figure_nobles", group:64, id:40 }
+  { key: "#noble_taking_a_stroll", text: "A leisurely stroll. The common folk should make way." }
+  { key: "#noble_returning_home", text: "Back to my manor. These dusty streets tire a person of quality." }
+  { key: "#noble_disease_risk", text: "Fever in the streets? Keep the rabble away from my courtyard." }
+  { key: "#noble_no_food_in_city", text: "Empty granaries? A noble should never dine on excuses." }
+  { key: "#noble_city_have_no_army", text: "No forts? One raid and my estate is ashes. Unacceptable." }
+  { key: "#noble_gods_are_angry", text: "The gods look angry. Even linen and gold cannot bribe heaven." }
+  { key: "#noble_low_entertainment", text: "No festivals for ages. A noble needs music, wine, and spectacle." }
+  { key: "#noble_city_is_good", text: "A decent city. My neighbors almost look respectable." }
+  { key: "#noble_city_is_amazing", text: "Finest city for a manor! Even Pharaoh would envy these streets." }
   {key: "#figure_indigenous_native", group:64, id:41 }
   {key: "#figure_tower_sentry", group:64, id:42 }
   {key: "#figure_enemy_egyptian_spear", group:64, id:43 }
@@ -1780,6 +1789,17 @@ localization_en = [
 
   { key: "#goods_are_finished", text: "My supplies sold like hot cakes! I'm going back to the Bazaar for more." }
   { key: "#we_are_selling_goods", text: "I do my best to give the people what they want." }
+  { key: "#seller_city_has_low_health", text: "People are sick — hard to sell when nobody wants to leave the house." }
+  { key: "#seller_no_food_in_city", text: "Empty shelves and empty stomachs. What am I supposed to sell?" }
+  { key: "#seller_city_have_no_army", text: "No forts? Raiders will loot this bazaar before I finish my round." }
+  { key: "#seller_much_unemployments", text: "Idle people hang around, but their purses are empty." }
+  { key: "#seller_gods_are_angry", text: "The gods look angry. Even the best bargains won't appease them." }
+  { key: "#seller_city_is_bad_reputation", text: "This city's reputation is so low, customers don't trust the prices." }
+  { key: "#seller_too_much_unemployments", text: "Too many out of work. Hungry folk make poor customers." }
+  { key: "#seller_low_entertainment", text: "No festival for ages. A parade would bring buyers to my baskets." }
+  { key: "#seller_city_is_good", text: "This city is fine — short streets and steady customers." }
+  { key: "#seller_city_is_amazing", text: "Best city to hawk goods in! My baskets empty themselves." }
+
 
   { key: "#scriber_dicease_can_start", text: "People are sick. My medical papyri tell me that the illness could soon escalate to plague!" }
   { key: "#scriber_no_food_in_city", text: "I'm famished. It's hard to lift my scrolls on an empty stomach." }
