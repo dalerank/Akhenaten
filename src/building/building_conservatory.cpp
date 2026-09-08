@@ -3,7 +3,6 @@
 #include "building/building_dance_school.h"
 #include "building/building_festival_square.h"
 #include "figuretype/figure_entertainer.h"
-#include "widget/city/ornaments.h"
 #include "city/city_labor.h"
 #include "city/city_buildings.h"
 #include "city/city.h"
@@ -159,9 +158,4 @@ void building_conservatory::update_graphic() {
     set_animation(animkey);
 
     building_impl::update_graphic();
-}
-
-bool building_conservatory::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    draw_normal_anim(ctx, point, tile, color_mask);
-    return true;
 }

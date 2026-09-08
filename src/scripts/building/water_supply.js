@@ -25,6 +25,7 @@ building_water_supply {
   damage_risk[0]
   flags {
     keeps_visitor_paths: true
+    draw_normal_anim: true
   }
 }
 

@@ -17,6 +17,9 @@ building_library {
   fire_risk[6]
   damage_risk[1]
   max_service: 800
+  flags {
+    draw_normal_anim: true
+  }
 }
 
 [es=(building_library, spawn_figure)]
@@ -51,4 +54,7 @@ building_academy {
   fire_risk [4]
   damage_risk [1]
   max_service: 100
+  flags {
+    draw_normal_anim: true
+  }
 }

@@ -14,7 +14,6 @@ public:
         uint8_t unnecessary_range_check;
     } BUILDING_STATIC_DATA_T;
 
-    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_WELL; }
     virtual void update_animation() override;
 };

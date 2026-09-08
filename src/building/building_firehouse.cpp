@@ -2,7 +2,6 @@
 
 #include "figuretype/figure_fireman.h"
 #include "graphics/animation.h"
-#include "widget/city/ornaments.h"
 #include "js/js_game.h"
 
 BUILDING_RUNTIME_DATA_IMPL(building_firehouse)
@@ -10,12 +9,6 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_firehouse);
 
 void building_firehouse::spawn_figure() {
     common_spawn_roamer(FIGURE_FIREMAN, current_params().min_houses_coverage, (e_figure_action)ACTION_70_FIREMAN_CREATED);
-}
-
-bool building_firehouse::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    draw_normal_anim(ctx, point, tile, color_mask);
-
-    return true;
 }
 
 void building_firehouse::update_month() {

@@ -16,7 +16,6 @@
 #include "window/building/common.h"
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
-#include "widget/city/ornaments.h"
 #include "graphics/animation.h"
 #include "figuretype/figure_entertainer.h"
 #include "js/js_game.h"
@@ -85,10 +84,5 @@ void building_dancer_school::spawn_figure() {
 
 void building_dancer_school::update_graphic() {
     update_graphic_work_anim();
-}
-
-bool building_dancer_school::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    draw_normal_anim(ctx, point, tile, color_mask);
-    return true;
 }
 

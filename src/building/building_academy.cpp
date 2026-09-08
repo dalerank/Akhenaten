@@ -14,9 +14,3 @@ void building_academy::spawn_figure() {
 void building_academy::update_graphic() {
     update_graphic_work_anim();
 }
-
-bool building_academy::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
-    draw_normal_anim(ctx, point, tile, mask);
-
-    return true;
-}

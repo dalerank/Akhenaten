@@ -3,7 +3,6 @@
 #include "building/building_dance_school.h"
 #include "figuretype/figure_entertainer.h"
 #include "city/city_labor.h"
-#include "widget/city/ornaments.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "js/js_game.h"
@@ -35,7 +34,7 @@ void building_juggler_school::spawn_figure() {
 
     int pct_workers = worker_percentage();
     int spawn_interval_days;
-    
+
     const auto &params = current_params();
     if (pct_workers >= 100) {
         spawn_interval_days = params.spawn_delay_100_percent;
@@ -61,10 +60,4 @@ void building_juggler_school::spawn_figure() {
         create_roaming_figure(FIGURE_JUGGLER, (e_figure_action)ACTION_0_ENTERTAINER_AT_SCHOOL_CREATED, BUILDING_SLOT_JUGGLER);
         d.spawned_entertainer_days = spawn_interval_days;
     }
-}
-
-bool building_juggler_school::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    draw_normal_anim(ctx, point, tile, color_mask);
-
-    return true;
 }

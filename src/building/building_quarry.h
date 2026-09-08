@@ -32,10 +32,10 @@ protected:
         if (best_resource <= 0) {
             return;
         }
-        
+
         building_industry::update_production();
         int delta_progress = d.progress - current_progress;
-       
+
         deplete_resource(best_tile, delta_progress);
     }
 };
@@ -46,7 +46,6 @@ public:
 
     virtual int animation_speed(int speed) const override { return 3; }
     virtual int produce_uptick_per_day() const override { return base.num_workers > 0 ? std::max<int>(1, base.num_workers / 2) : 0; }
-    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void update_production() override;
 };
 
@@ -67,7 +66,6 @@ public:
 
     virtual int animation_speed(int speed) const override { return 3; }
     virtual int produce_uptick_per_day() const override { return base.num_workers > 0 ? std::max<int>(1, base.num_workers / 2) : 0; }
-    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void update_production() override;
 };
 
@@ -77,6 +75,5 @@ public:
 
     virtual int animation_speed(int speed) const override { return 3; }
     virtual int produce_uptick_per_day() const override { return base.num_workers > 0 ? std::max<int>(1, base.num_workers / 2) : 0; }
-    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void update_production() override;
 };

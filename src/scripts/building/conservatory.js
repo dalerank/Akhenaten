@@ -19,4 +19,7 @@ building_conservatory {
   laborers[8]
   fire_risk[4]
   damage_risk[2]
+  flags {
+    draw_normal_anim: true
+  }
 }

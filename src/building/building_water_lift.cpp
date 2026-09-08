@@ -6,7 +6,6 @@
 #include "city/city_labor.h"
 #include "grid/canals.h"
 #include "grid/building.h"
-#include "widget/city/ornaments.h"
 #include "graphics/elements/ui.h"
 #include "js/js_game.h"
 
@@ -60,11 +59,6 @@ int building_water_lift::animation_speed(int speed) const {
     }
 
     return speed;
-}
-
-bool building_water_lift::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    draw_normal_anim(ctx, point, tile, color_mask);
-    return true;
 }
 
 void building_water_lift::update_map_orientation(int orientation) {

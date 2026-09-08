@@ -22,6 +22,7 @@ building_courthouse {
 
   flags {
     is_administration: true
+    draw_normal_anim: true
   }
 }
 

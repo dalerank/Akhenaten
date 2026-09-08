@@ -104,11 +104,6 @@ void building_burning_ruin::update_animation() {
     es(__func__);
 }
 
-bool building_burning_ruin::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    draw_normal_anim(ctx, point, tile, color_mask);
-    return true;
-}
-
 bool building_burning_ruin::target_route_tile_blocked(int grid_offset) const {
     return (state() != BUILDING_STATE_RUBBLE);
 }

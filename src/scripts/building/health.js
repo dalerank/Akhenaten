@@ -19,6 +19,9 @@ building_apothecary {
     laborers[5]
     fire_risk[4]
     damage_risk[2]
+    flags {
+        draw_normal_anim: true
+    }
 }
 
 building_dentist {
@@ -40,6 +43,9 @@ building_dentist {
   laborers[5]
   fire_risk[4]
   damage_risk[2]
+  flags {
+    draw_normal_anim: true
+  }
 }
 
 building_physician {
@@ -63,6 +69,9 @@ building_physician {
   laborers [8]
   fire_risk [3]
   damage_risk [3]
+  flags {
+    draw_normal_anim: true
+  }
 }
 
 [es=(building_apothecary, spawn_figure)]

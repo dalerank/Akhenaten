@@ -25,12 +25,11 @@ public:
     virtual void update_day() override;
     virtual void on_tick(bool refresh_only) override;
     virtual void update_graphic() override;
-    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_DANCE_SCHOOL; }
-    
+
     /**
      * @brief Gets the number of conservatories currently helping this dance school.
-     * 
+     *
      * @return Number of conservatories helping (0-255, stored in ent_reserved_u8)
      */
     uint8_t conservatory_help() const;

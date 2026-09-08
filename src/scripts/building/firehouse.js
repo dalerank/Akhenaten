@@ -45,6 +45,7 @@ building_firehouse {
     flags {
         is_infrastructure: true
         keeps_visitor_paths: true
+        draw_normal_anim: true
     }
 }
 

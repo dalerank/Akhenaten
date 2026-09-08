@@ -9,5 +9,4 @@ public:
     virtual building_courthouse *dcast_courthouse() override { return this; }
 
     virtual bool is_administration() const override { return true; }
-    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
 };

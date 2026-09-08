@@ -35,7 +35,10 @@ building_burning_ruin = {
   building_size : 1,
   fire_proof : true,
   damage_proof : true,
-  desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
+  desirability : { value:[-3], step:[1], step_size:[1], range: [3] },
+  flags {
+    draw_normal_anim: true
+  }
 }
 
 building_stonemason_guild = {
@@ -565,6 +568,7 @@ building_sandstone_quarry {
   flags {
     is_extractor: true
     is_industry: true
+    draw_normal_anim: true
   }
   cost [ 15, 30, 50, 80, 150 ]
   desirability { value[-6], step[1], step_size[1], range[6] }
@@ -645,6 +649,7 @@ building_granite_quarry {
   flags {
     is_extractor: true
     is_industry: true
+    draw_normal_anim: true
   }
   cost [ 20, 40, 80, 150, 200 ]
   desirability { value[-6], step[1], step_size[1], range[6] }
@@ -679,6 +684,7 @@ building_limestone_quarry {
   flags {
     is_extractor: true
     is_industry: true
+    draw_normal_anim: true
   }
 }
 

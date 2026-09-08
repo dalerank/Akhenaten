@@ -3,7 +3,6 @@
 #include "building/building_house.h"
 #include "city/city_buildings.h"
 #include "io/gamefiles/lang.h"
-#include "widget/city/ornaments.h"
 #include "js/js_game.h"
 #include "figuretype/figure_dentist.h"
 
@@ -12,12 +11,6 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_dentist);
 
 void building_dentist::update_graphic() {
     update_graphic_work_anim();
-}
-
-bool building_dentist::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    draw_normal_anim(ctx, point, tile, color_mask);
-
-    return true;
 }
 
 void building_dentist::spawn_figure() {

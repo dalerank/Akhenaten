@@ -21,7 +21,6 @@ public:
     virtual void update_day() override;
     virtual void update_graphic() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_JUGGLER_SCHOOL; }
-    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
 };
 ANK_CONFIG_STRUCT(building_juggler_school::static_params, 
     spawn_delay_100_percent, spawn_delay_75_percent, spawn_delay_50_percent, 

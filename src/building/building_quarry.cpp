@@ -16,24 +16,9 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_stone_quarry);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_limestone_quarry);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_granite_quarry);
 
-bool building_sandstone_quarry::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    draw_normal_anim(ctx, point, tile, color_mask);
-    return true;
-}
-
 bool building_stone_quarry::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     draw_normal_anim(ctx, point, tile, color_mask);
     draw_normal_anim(ctx, base.anims[work_2], point, tile, color_mask);
-    return true;
-}
-
-bool building_limestone_quarry::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    draw_normal_anim(ctx, point, tile, color_mask);
-    return true;
-}
-
-bool building_granite_quarry::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    draw_normal_anim(ctx, point, tile, color_mask);
     return true;
 }
 

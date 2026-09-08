@@ -48,6 +48,7 @@ building_juggler_school {
   damage_risk[2]
   flags {
     is_entertainment: true
+    draw_normal_anim: true
   }
 }
 
@@ -71,6 +72,7 @@ building_dancer_school {
   damage_risk[2]
   flags {
     is_entertainment: true
+    draw_normal_anim: true
   }
 }
 

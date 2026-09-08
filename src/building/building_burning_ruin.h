@@ -15,7 +15,6 @@ public:
     virtual void on_tick(bool refresh_only) override;
     virtual void update_animation() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_BURNING_RUIN; }
-    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual bool target_route_tile_blocked(int grid_offset) const override;
     bool update();
 

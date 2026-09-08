@@ -47,6 +47,7 @@ building_well {
   desirability { value[1], step[1], step_size[-1], range[1] }
   flags {
     no_road_access: true
+    draw_normal_anim: true
   }
 }
 

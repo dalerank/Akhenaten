@@ -35,4 +35,7 @@ building_water_lift {
   irrigation_radius : 2
   canal_fill_water_level : 32
   base_irrigation_value : 32
+  flags {
+    draw_normal_anim: true
+  }
 }

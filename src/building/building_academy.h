@@ -24,11 +24,4 @@ public:
 
     // Updates the building graphics/animations depending on state.
     virtual void update_graphic() override;
-
-    // Renders decorative elements and animations at height level.
-    // ctx   — drawing context;
-    // point — screen coordinates of the tile's base point;
-    // tile  — map tile coordinates;
-    // mask  — color mask/shadows/lighting.
-    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
 };
