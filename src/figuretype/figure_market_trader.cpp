@@ -50,18 +50,6 @@ void figure_market_trader::figure_action() {
     }
 }
 
-figure_sound_t figure_market_trader::get_sound_reaction(xstring key) const {
-    return current_params().sounds[key];
-}
-
-sound_key figure_market_trader::phrase_key() const {
-    if (base.action_state == ACTION_126_ROAMER_RETURNING) {
-        return "goods_are_finished";
-    } else {
-        return "we_are_selling_goods";
-    }
-}
-
 int figure_market_trader::provide_service() {
     int houses_serviced = provide_market_goods(home(), tile());
     figure_provide_service(tile(), &base, [] (building *b, figure *f) {
