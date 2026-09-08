@@ -19,9 +19,7 @@
 #include "graphics/elements/ui.h"
 #include "graphics/image_groups.h"
 #include "game/game_config.h"
-#include "city/city_health.h"
 #include "grid/building.h"
-#include "city/ratings.h"
 #include "city/city.h"
 #include "core/object_property.h"
 #include "js/js_game.h"
@@ -116,58 +114,6 @@ void figure_market_buyer::figure_action() {
     case ACTION_150_MARKET_BUYER_ATTACKED:
         kill();
     }
-}
-
-sound_key figure_market_buyer::phrase_key() const {
-    svector<sound_key, 10> keys;
-    if (action_state() == ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
-        keys.push_back("buyer_goto_store");
-    } else if (action_state() == ACTION_146_MARKET_BUYER_RETURNING) {
-        keys.push_back("buyer_back_to_market");
-    }
-
-    if (g_city.health.value < 30) {
-        keys.push_back("buyer_city_has_low_health");
-    }
-
-    if (g_city.sentiment.low_mood_cause == LOW_MOOD_NO_FOOD) {
-        keys.push_back("buyer_no_food_in_city");
-    }
-
-    if (formation_get_num_forts() < 1) {
-        keys.push_back("buyer_city_have_no_army");
-    }
-
-    if (g_city.sentiment.low_mood_cause == LOW_MOOD_NO_JOBS) {
-        keys.push_back("buyer_much_unemployments");
-    }
-
-    if (g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("buyer_gods_are_angry");
-    }
-
-    if (g_city.kingdome.rating < 30) {
-        keys.push_back("buyer_city_is_bad_reputation");
-    }
-
-    if (g_city.labor.unemployment_percentage >= 15) {
-        keys.push_back("buyer_too_much_unemployments");
-    }
-
-    if (g_city.festival.entertainment_is_low()) {  // low entertainment
-        keys.push_back("buyer_low_entertainment");
-    }
-
-    const int sentiment = g_city.sentiment.value;
-    if (sentiment > 90) {
-        keys.push_back("buyer_city_is_amazing");
-    } else if (sentiment > 50) {
-        keys.push_back("buyer_city_is_good");
-    }
-
-    int index = rand() % keys.size();
-    return keys[index];
-
 }
 
 void distribute_good(building* b, building* market, int stock_wanted, int inventory_resource) {

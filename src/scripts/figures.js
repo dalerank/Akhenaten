@@ -44,6 +44,8 @@ import figure.labor_seeker
 import figure.librarian
 import figure.lumberjack
 import figure.magistrate
+import figure.market_buyer
+import figure.market_trader
 
 figure_water_carrier {
   overlay : OVERLAY_WATER
@@ -741,35 +743,6 @@ figure_physician {
 	health_heal_amount : 1
 }
 
-figure_market_buyer {
-  overlay : OVERLAY_BAZAAR_ACCESS
-	animations {
-		walk { pack:PACK_SPR_MAIN, id:16, max_frames:12 }
-		death { pack:PACK_SPR_MAIN, id:17, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_MARKET_BUYER }
-	}
-
-	sounds {
-		buyer_goto_store {sound:"mkt_buyer_e01.wav", group:244, text:0 }
-		buyer_back_to_market {sound:"mkt_buyer_e02.wav", group:244, text:0 }
-		buyer_city_has_low_health {sound:"mkt_buyer_g01.wav", group:244, text:0 }
-		buyer_no_food_in_city {sound:"mkt_buyer_g02.wav", group:244, text:0 }
-		buyer_city_have_no_army {sound:"mkt_buyer_g03.wav", group:244, text:0 }
-		buyer_much_unemployments {sound:"mkt_buyer_g04.wav", group:244, text:0 }
-		buyer_gods_are_angry {sound:"mkt_buyer_g05.wav", group:244, text:0 }
-		buyer_city_is_bad_reputation {sound:"mkt_buyer_g06.wav", group:244, text:0 }
-		buyer_too_much_unemployments {sound:"mkt_buyer_g07.wav", group:244, text:0 }
-		buyer_low_entertainment {sound:"mkt_buyer_g08.wav", group:244, text:0 }
-		buyer_city_is_good {sound:"mkt_buyer_g09.wav", group:244, text:0 }
-		buyer_city_is_amazing {sound:"mkt_buyer_g10.wav", group:244, text:0 }
-	}
-
-	category: figure_category_citizen
-	max_damage : 10
-	terrain_usage : TERRAIN_USAGE_ROADS,
-	record_path : true
-}
-
 figure_stonemason {
 	animations {
 		walk { pack:PACK_SPR_MAIN, id:150, max_frames:12 }
@@ -1286,5 +1259,4 @@ figure_tax_collector {
 	max_damage : 20
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length : 512
-	permission : epermission_tax_collector
-}
+	permission : e

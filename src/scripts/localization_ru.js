@@ -529,6 +529,19 @@ localization_ru = [
     { key: "#homeless_city_bad_reputation", text: "Репутация города пуста, как мой спальный мешок." }
     { key: "#homeless_city_is_good", text: "Город для других хорош. Мне бы только дверь, которая откроется." }
 
+    { key: "#buyer_goto_store", text: "Иду на зернохранилище и склад. Пожелайте мне крепких ног!" }
+    { key: "#buyer_back_to_market", text: "Обратно на базар с полной поклажей. Не отставайте, мальчики!" }
+    { key: "#buyer_city_has_low_health", text: "Люди болеют — и всё равно ждут свежую еду на столе." }
+    { key: "#buyer_no_food_in_city", text: "Пустые амбары! Чем мне наполнять эти корзины?" }
+    { key: "#buyer_city_have_no_army", text: "Нет фортов? Налётчики могут утащить каждую корзину по дороге." }
+    { key: "#buyer_much_unemployments", text: "Столько праздных рук, а помочь тащить товар некому." }
+    { key: "#buyer_gods_are_angry", text: "Боги выглядят сердитыми. Даже базар не поторгуется с ними." }
+    { key: "#buyer_city_is_bad_reputation", text: "Репутация города так низка, что торговцы не рискнут везти сюда телеги." }
+    { key: "#buyer_too_much_unemployments", text: "Безработица высока. Голодные люди — плохие покупатели." }
+    { key: "#buyer_low_entertainment", text: "Давно не было праздника. Немного музыки сократило бы эти походы." }
+    { key: "#buyer_city_is_good", text: "Город неплох — короткие дороги и полные полки." }
+    { key: "#buyer_city_is_amazing", text: "Лучший город для закупщицы! Всё нужное — за углом." }
+
     { key: "#marketboy_these_baskets_are_too_heavy", text: "Эти корзины слишком тяжёлые для такого маленького ребёнка, как я!" }
     { key: "#marketboy_bossy_lady_makes_me_carry_goods", text: "Эта властная дама заставляет меня таскать товары весь день!" }
     { key: "#marketboy_one_day_ill_run_the_bazaar", text: "Сейчас я только ношу корзины, но однажды буду управлять базаром." }

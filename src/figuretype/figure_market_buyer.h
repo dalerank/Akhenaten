@@ -18,7 +18,6 @@ public:
 
     virtual void figure_before_action() override;
     virtual void figure_action() override;
-    virtual sound_key phrase_key() const override;
     virtual int provide_service() override;
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
     virtual xstring action_tip() const override;

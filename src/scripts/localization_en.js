@@ -1175,6 +1175,19 @@ localization_en = [
   { key: "#homeless_city_bad_reputation", text: "This city's reputation is as empty as my bedroll." }
   { key: "#homeless_city_is_good", text: "The city seems fine for others. I just need a door that opens for me." }
 
+  { key: "#buyer_goto_store", text: "I'm off to the granary and storage yard. Wish me strong legs!" }
+  { key: "#buyer_back_to_market", text: "Back to the bazaar with a full load. Don't dawdle, boys!" }
+  { key: "#buyer_city_has_low_health", text: "People are sick — and they still expect fresh food on their tables." }
+  { key: "#buyer_no_food_in_city", text: "Empty granaries! How am I supposed to fill these baskets?" }
+  { key: "#buyer_city_have_no_army", text: "No forts? Raiders could snatch every basket on the road." }
+  { key: "#buyer_much_unemployments", text: "So many idle hands, yet nobody helps me haul the goods." }
+  { key: "#buyer_gods_are_angry", text: "The gods look angry. Even the bazaar can't bargain with them." }
+  { key: "#buyer_city_is_bad_reputation", text: "This city's reputation is so low, traders won't risk their carts here." }
+  { key: "#buyer_too_much_unemployments", text: "Unemployment is high. Hungry people make poor customers." }
+  { key: "#buyer_low_entertainment", text: "No festival for ages. A little music would make these trips shorter." }
+  { key: "#buyer_city_is_good", text: "This city is fine — short roads and full shelves." }
+  { key: "#buyer_city_is_amazing", text: "Best city for a bazaar buyer! Everything I need is just around the corner." }
+
   { key: "#marketboy_these_baskets_are_too_heavy", text: "These baskets are too heavy for a little kid like me!" }
   { key: "#marketboy_bossy_lady_makes_me_carry_goods", text: "That bossy lady makes me carry goods all day!" }
   { key: "#marketboy_one_day_ill_run_the_bazaar", text: "Maybe I just carry baskets now, but one day I'll run the Bazaar." }
