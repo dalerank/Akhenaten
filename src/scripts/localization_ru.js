@@ -853,6 +853,13 @@ localization_ru = [
 
     { key: "#lumberjack_hunting", text: "Я отправляюсь на тяжёлый день лесозаготовок." }
     { key: "#lumberjack_back", text: "Эта древесина будет хорошо использована, я уверен." }
+    { key: "#lumberjack_disease_risk", text: "В городе лихорадка. С дрожащими руками топор не удержать." }
+    { key: "#lumberjack_no_food_in_city", text: "Пустые амбары? Голодный дровосек рубит криво." }
+    { key: "#lumberjack_city_have_no_army", text: "Нет фортов? Один набег — и эти деревья станут дровами для захватчиков." }
+    { key: "#lumberjack_gods_are_angry", text: "Боги хмурятся. Даже хороший кедр коробится под их взглядом." }
+    { key: "#lumberjack_low_entertainment", text: "Фестивалей давно не было. Даже дровосекам нужен день без топора." }
+    { key: "#lumberjack_city_is_good", text: "Город крепкий! Хорошему лесу — хорошие основы." }
+    { key: "#lumberjack_city_is_amazing", text: "Лучший город, для которого я рубил. Эти балки будут стоять вечно!" }
 
     { key: "#musician_city_heath_too_low", text: "Если здоровье не улучшится в этом городе, я буду играть только похоронные песни." }
     { key: "#musician_no_food_in_city", text: "Я бы пела за еду, но в этом городе недостаточно еды." }
@@ -1073,7 +1080,11 @@ localization_ru = [
     { key: "#drunkard_city_is_good", text: "Город ничего. До пива близко, домой — далеко." }
     { key: "#drunkard_city_is_amazing", text: "Лучший город для любителя кружки! Пусть кувшины не пустеют." }
 
-    { key: "#magistrate_i_hope_we_are_ready", text: "Условия здоровья в этом городе преступны. Чума - наказание, которое соответствует преступлению." }
+    { key: "#magistrate_i_hope_we_are_ready", text: "Надеюсь, я заслужу похоронную процессию, когда придёт время." }
+    { key: "#magistrate_no_criminals_in_city", text: "В суде всё спокойно. Здесь нет преступлений." }
+    { key: "#magistrate_all_good_in_city", text: "Я рассматривал только мелкие дела. Ничего слишком серьёзного!" }
+    { key: "#magistrate_streets_still_arent_safety", text: "Я едва могу справиться с моей нагрузкой дел, но улицы всё ещё небезопасны." }
+    { key: "#magistrate_disease_in_city", text: "Условия здоровья в этом городе преступны. Чума - наказание, которое соответствует преступлению." }
     { key: "#magistrate_no_food_in_city", text: "Я так голоден, хорошая еда купит вам любой приговор, который вы хотите." }
     { key: "#magistrate_city_not_safety", text: "Какая скорбная оборона! Наши враги могут просто войти в город и захватить его." }
     { key: "#magistrate_need_workers", text: "Я никогда раньше не видел столько вакансий!" }
@@ -1269,6 +1280,17 @@ localization_ru = [
     { key: "#library_access_high", text: "Мимо этого дома недавно проходил библиотекарь. У него будет доступ к библиотеке надолго" }
     { key: "#library_access_medium", text: "У этого дома есть доступ к библиотеке" }
     { key: "#library_access_low", text: "Если библиотекарь не пройдёт мимо него скоро, этот дом потеряет доступ к библиотеке" }
+    { key: "#library_read_about_festivals", text: "Я читал о праздниках в далёких городах. Нам бы тоже не помешал один." }
+    { key: "#library_people_are_sick", text: "Люди болеют. Даже медицинские папирусы выглядят обеспокоенными." }
+    { key: "#library_no_food_in_city", text: "Трудно сосредоточиться на свитках, когда город голодает." }
+    { key: "#library_defenses_are_weak", text: "Оборона тонка, как папирус. Один набег — и библиотека сгорит." }
+    { key: "#library_need_more_workers", text: "Без работников даже полки останутся непрочитанными." }
+    { key: "#library_gods_are_angry", text: "Тексты предупреждают о гневе богов. Стоит прислушаться." }
+    { key: "#library_reputation_is_low", text: "Город с плохой репутацией редко надолго сохраняет библиотеки." }
+    { key: "#library_high_unemployment", text: "Столько праздных рук. Хотя бы время есть взять свиток." }
+    { key: "#library_low_entertainment", text: "Глазам нужен отдых от иероглифов. Хочу на представление!" }
+    { key: "#library_city_is_ok", text: "Город неплох — сравним с другими, что я каталогизировал." }
+    { key: "#library_city_is_amazing", text: "Этот город достоин лучших хроник!" }
     { key: "#library_info", group:87, id:1 }
     { key: "#library_info_idle", group:87, id:2 }
     { key: "#library_info_ok", group:87, id:3 }

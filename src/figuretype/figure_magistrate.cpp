@@ -1,8 +1,5 @@
 #include "figure_magistrate.h"
 
-#include "city/city.h"
-#include "city/city_labor.h"
-#include "city/ratings.h"
 #include "figure/service.h"
 #include "building/building_house.h"
 #include "js/js_game.h"
@@ -57,74 +54,6 @@ void figure_magistrate::figure_before_action() {
     }
 }
 
-sound_key figure_magistrate::phrase_key() const {
-    int houses_in_disease = 0;
-    buildings_house_do([&] (auto house) {
-        if (house->house_population() <= 0) {
-            return;
-        }
-
-        houses_in_disease = (house->base.disease_days > 0) ? 1 : 0;
-    });
-
-    if (houses_in_disease > 0) {
-        return "disease_in_city";
-    }
-
-    svector<sound_key, 10> keys;
-    const int criminals = g_city.sentiment.criminals;
-    if (criminals <= 0) {
-        keys.push_back("no_criminals_in_city");
-    }
-
-    if (formation_get_num_forts() < 1) {
-        keys.push_back("city_not_safety");
-    }
-
-    if (g_city.labor.workers_needed >= 10) {
-        keys.push_back("need_workers");
-    }
-
-    if (g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("gods_are_angry");
-    }
-
-    if (g_city.sentiment.low_mood_cause == LOW_MOOD_NO_FOOD) {
-        keys.push_back("no_food_in_city");
-    }
-
-    if (g_city.kingdome.rating < 10) {
-        keys.push_back("city_bad_reputation");
-    }
-
-    if (g_city.sentiment.low_mood_cause == LOW_MOOD_NO_JOBS) {
-        keys.push_back("much_unemployments");
-    }
-
-    const house_demands &demands = g_city.houses;
-    if (demands.missing.more_entertainment > 0) {
-        keys.push_back("no_entertainment_need");
-    }
-
-    const int sentiment = g_city.sentiment.value;
-    if (sentiment > 90) {
-        keys.push_back("city_is_amazing");
-    } else if (sentiment > 30) {
-        keys.push_back("city_not_bad");
-    }
-
-    if (base.min_max_seen > 60) {
-        keys.push_back("all_good_in_city");
-    } else {
-        keys.push_back("streets_still_arent_safety");
-    }
-
-    keys.push_back("i_hope_we_are_ready");
-
-    int index = rand() % keys.size();
-    return xstring().printf("magistrate_%s", keys[index].c_str());
-}
-
 int figure_magistrate::provide_service() {
     int max_criminal_active = 0;
     int houses_serviced = figure_provide_service(tile(), &base, [&] (building *b, figure *f) {
@@ -154,10 +83,6 @@ int figure_magistrate::provide_service() {
         base.min_max_seen -= 10;
 
     return houses_serviced;
-}
-
-figure_sound_t figure_magistrate::get_sound_reaction(xstring key) const {
-    return current_params().sounds[key];
 }
 
 // Same as policeman, but can't fight

@@ -1,6 +1,7 @@
 #include "building_wood_cuter.h"
 
 #include "figure/figure.h"
+#include "figuretype/figure_lumberjack.h"
 #include "core/random.h"
 #include "js/js_game.h"
 #include "widget/city/ornaments.h"
@@ -58,7 +59,7 @@ void building_wood_cutter::spawn_figure() {
 
             const bool can_spawn = can_spawn_lumberjack(runtime_data().max_gatheres, 50);
             if (can_spawn) {
-                auto f = create_figure_generic(FIGURE_LUMBERJACK, ACTION_8_RECALCULATE, BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
+                auto f = create_figure_generic(FIGURE_LUMBERJACK, ACTION_1_LUMBERJACK_RECALCULATE, BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
                 random_generate_next();
                 f->wait_ticks = random_short() % 30; // ok
             }

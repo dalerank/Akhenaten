@@ -41,6 +41,9 @@ import figure.herbalist
 import figure.homeless
 import figure.immigrant
 import figure.labor_seeker
+import figure.librarian
+import figure.lumberjack
+import figure.magistrate
 
 figure_water_carrier {
   overlay : OVERLAY_WATER
@@ -624,60 +627,6 @@ figure_native_trader = {
 	max_damage: 10
 }
 
-figure_magistrate {
-  overlay : OVERLAY_COUTHOUSE
-	animations {
-		walk { pack: PACK_SPR_MAIN, id: 212, max_frames:12 }
-		death { pack: PACK_SPR_MAIN, id: 213, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_MAGISTRATE }
-	}
-
-	sounds {
-		magistrate_i_hope_we_are_ready {sound: "magistrate_e02.wav" }
-		magistrate_no_criminals_in_city {sound: "magistrate_e03.wav" }
-		magistrate_all_good_in_city {sound: "magistrate_e04.wav" }
-		magistrate_streets_still_arent_safety {sound: "magistrate_e05.wav" }
-		magistrate_disease_in_city {sound: "magistrate_g01.wav" }
-		magistrate_no_food_in_city {sound: "magistrate_g02.wav" }
-		magistrate_city_not_safety {sound: "magistrate_g03.wav" }
-		magistrate_need_workers {sound: "magistrate_g04.wav" }
-		magistrate_gods_are_angry {sound: "magistrate_g05.wav" }
-		magistrate_city_bad_reputation {sound: "magistrate_g06.wav" }
-		magistrate_much_unemployments {sound: "magistrate_g07.wav" }
-		magistrate_no_entertainment_need {sound: "magistrate_g08.wav" }
-		magistrate_city_not_bad {sound: "magistrate_g09.wav" }
-		magistrate_city_is_amazing {sound: "magistrate_g10.wav" }
-	}
-
-	category: figure_category_citizen
-	max_damage: 10
-	meta { text_id: 210, help_link:"message_history_defensive_structures" }
-	terrain_usage : TERRAIN_USAGE_ROADS
-	max_roam_length : 800
-}
-
-figure_lumberjack {
-	animations {
-		_pack { pack:PACK_SPR_MAIN }
-		walk  { id:73, max_frames:12 }
-		death { id:74, max_frames:8, loop:false  }
-		work  { id:75, max_frames:12 }
-		back  { id:76, max_frames:12 }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_LUMBERJACK }
-	}
-
-	sounds {
-		lumberjack_hunting {sound:"woodcutter_e01.wav" }
-    	lumberjack_back {sound:"woodcutter_e02.wav" }
-	}
-
-	category: figure_category_armed
-	max_damage: 40
-	attack_value: 4
-	terrain_usage : TERRAIN_USAGE_ANY
-	max_amount : 50
-}
-
 figure_academy_scriber {
   overlay : OVERLAY_SCRIBAL_SCHOOL
 	animations {
@@ -1110,35 +1059,6 @@ figure_teacher {
 
     category : figure_category_citizen
 	max_damage : 20
-	terrain_usage : TERRAIN_USAGE_ROADS
-	max_roam_length : 384
-	permission : epermission_education
-}
-
-figure_librarian {
-  overlay : OVERLAY_LIBRARY
-	animations {
-		walk { pack:PACK_SPR_MAIN, id:57, max_frames:12 }
-		death { pack:PACK_SPR_MAIN, id:58, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_LIBRARIAN }
-	}
-
-	sounds {
-		library_read_about_festivals { sound: "library_e01.wav"}
-		library_people_are_sick { sound: "library_g01.wav"}
-		library_no_food_in_city { sound: "library_g02.wav"}
-		library_defenses_are_weak { sound: "library_g03.wav"}
-		library_need_more_workers { sound: "library_g04.wav"}
-		library_gods_are_angry { sound: "library_g05.wav"}
-		library_reputation_is_low { sound: "library_g06.wav"}
-		library_high_unemployment { sound: "library_g07.wav"}
-		library_low_entertainment { sound: "library_g08.wav"}
-		library_city_is_ok { sound: "library_g09.wav"}
-		library_city_is_amazing { sound: "library_g10.wav"}
-	}
-
-	category: figure_category_citizen
-	max_damage : 10
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length : 384
 	permission : epermission_education

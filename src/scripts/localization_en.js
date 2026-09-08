@@ -1490,6 +1490,13 @@ localization_en = [
 
   { key: "#lumberjack_hunting", text: "I am off for a hard day's logging." }
   { key: "#lumberjack_back", text: "This timber will be put to good use, I am sure." }
+  { key: "#lumberjack_disease_risk", text: "Fever in the city. Hard to swing an axe with shaky hands." }
+  { key: "#lumberjack_no_food_in_city", text: "Empty granaries? A hungry woodcutter cuts crooked timber." }
+  { key: "#lumberjack_city_have_no_army", text: "No forts? One raid and these trees are firewood for invaders." }
+  { key: "#lumberjack_gods_are_angry", text: "The gods look angry. Even good cedar warps under their gaze." }
+  { key: "#lumberjack_low_entertainment", text: "No festivals for ages. Even woodcutters need a day off the trees." }
+  { key: "#lumberjack_city_is_good", text: "This city is solid! Good timber deserves good foundations." }
+  { key: "#lumberjack_city_is_amazing", text: "Best city I've logged for. These beams will hold forever!" }
 
   { key: "#musician_i_like_festivals", text: "These festival crowds are wonderful! Everyone sings along." }
 
@@ -1799,7 +1806,11 @@ localization_en = [
   { key: "#drunkard_city_is_good", text: "This city isn't bad. Short walk to the beer, long walk home." }
   { key: "#drunkard_city_is_amazing", text: "Best city for a tippler! May the jars never run dry." }
 
-  { key: "#magistrate_i_hope_we_are_ready", text: "Health conditions in this city are criminal. Plague is the punishment that fits the crime." }
+  { key: "#magistrate_i_hope_we_are_ready", text: "I hope I will earn a funeral procession when the time comes." }
+  { key: "#magistrate_no_criminals_in_city", text: "All is quiet in the court. There is no crime here." }
+  { key: "#magistrate_all_good_in_city", text: "I've been trying only petty cases. Nothing too serious!" }
+  { key: "#magistrate_streets_still_arent_safety", text: "I can barely manage my caseload, yet the streets are still unsafe." }
+  { key: "#magistrate_disease_in_city", text: "Health conditions in this city are criminal. Plague is the punishment that fits the crime." }
   { key: "#magistrate_no_food_in_city", text: "I'm so hungry, a good meal will buy you any verdict you want." }
   { key: "#magistrate_city_not_safety", text: "What woeful defenses! Our enemies could walk right into the city and take over." }
   { key: "#magistrate_need_workers", text: "I've never seen so many job openings before!" }
@@ -2012,6 +2023,17 @@ localization_en = [
   { key: "#library_access_high", text: "This house was recently passed by a librarian. It will have Library access for a long time" }
   { key: "#library_access_medium", text: "This house has Library access" }
   { key: "#library_access_low", text: "Unless a librarian passes it soon, this house will lose Library access" }
+  { key: "#library_read_about_festivals", text: "I've read about festivals in far-off cities. We could use one here." }
+  { key: "#library_people_are_sick", text: "People are sick. Even the medical papyri look worried." }
+  { key: "#library_no_food_in_city", text: "It's hard to focus on scrolls when the city is hungry." }
+  { key: "#library_defenses_are_weak", text: "Our defenses are as thin as papyrus. One raid and the library burns." }
+  { key: "#library_need_more_workers", text: "Without more workers, even the shelves will go unread." }
+  { key: "#library_gods_are_angry", text: "The texts warn of angry gods. We should heed them." }
+  { key: "#library_reputation_is_low", text: "A city with a poor reputation seldom keeps its libraries long." }
+  { key: "#library_high_unemployment", text: "So many idle hands. At least they have time to borrow a scroll." }
+  { key: "#library_low_entertainment", text: "Sometimes the eyes need rest from hieroglyphs. I want a show!" }
+  { key: "#library_city_is_ok", text: "This city is fine — comparable to others I've catalogued." }
+  { key: "#library_city_is_amazing", text: "This city belongs in the finest histories!" }
   { key: "#library_info", group:87, id:1 }
   { key: "#library_info_idle", group:87, id:2 }
   { key: "#library_info_ok", group:87, id:3 }
