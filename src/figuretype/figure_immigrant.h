@@ -1,19 +1,23 @@
+#pragma once
+
 #include "figure/figure.h"
 
 struct event_create_immigrant {
     building_id bid;
     int num_people;
     pcstr src_location;
-    //xfunction<void()> payload;
 };
 
 enum e_immigrant_action : uint16_t {
-    ACTION_1_IMMIGRANT_CREATED = 1,
-    ACTION_2_IMMIGRANT_ARRIVING = 2,
-    ACTION_3_IMMIGRANT_ENTERING_HOUSE = 3,
-    ACTION_6_IMMIGRANT_LEAVING = 6,
-    ACTION_9_IMMIGRANT_ENTERING_HOUSE = 9
+    ACTION_0_IMMIGRANT_CREATED = 0,
+    ACTION_1_IMMIGRANT_ARRIVING = 1,
+    ACTION_2_IMMIGRANT_ENTERING_HOUSE = 2,
+    ACTION_3_IMMIGRANT_LEAVING = 3,
+
+    ACTION_4_IMMIGRANT_MAX
 };
+using e_immigrant_action_tokens_t = token_holder<e_immigrant_action, ACTION_0_IMMIGRANT_CREATED, ACTION_4_IMMIGRANT_MAX>;
+extern const e_immigrant_action_tokens_t e_immigrant_action_tokens;
 
 class figure_immigrant : public figure_impl {
 public:
@@ -33,7 +37,6 @@ public:
     virtual void update_animation() override;
     virtual bool can_move_by_water() const override;
     virtual figure_sound_t get_sound_reaction(xstring key) const override;
-    virtual sound_key phrase_key() const override;
     virtual void debug_show_properties() override;
     virtual void debug_draw(painter &ctx) override;
     virtual bool is_home(const building *b) const override {

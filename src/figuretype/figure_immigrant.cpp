@@ -15,6 +15,8 @@
 
 #include "js/js_game.h"
 
+const e_immigrant_action_tokens_t ANK_CONFIG_ENUM(e_immigrant_action_tokens)
+
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_immigrant);
 
 void ANK_PERMANENT_CALLBACK(event_create_immigrant, ev) {
@@ -35,7 +37,7 @@ void ANK_PERMANENT_CALLBACK(event_create_immigrant, ev) {
         return;
     }
 
-    imm->advance_action(ACTION_1_IMMIGRANT_CREATED);
+    imm->advance_action(ACTION_0_IMMIGRANT_CREATED);
     house->base.set_figure(BUILDING_SLOT_IMMIGRANT, imm->id());
 
     const int rand_ticks = (rand() & 0x7f);
@@ -79,17 +81,16 @@ void figure_immigrant::figure_action() {
     }
 
     switch (action_state()) {
-    case ACTION_1_IMMIGRANT_CREATED:
+    case ACTION_0_IMMIGRANT_CREATED:
     case ACTION_8_RECALCULATE:
         base.animctx.frame = 0;
         base.wait_ticks--;
         if (base.wait_ticks <= 0) {
-            advance_action(ACTION_2_IMMIGRANT_ARRIVING);
+            advance_action(ACTION_1_IMMIGRANT_ARRIVING);
         }
         break;
 
-    case ACTION_2_IMMIGRANT_ARRIVING:
-    case ACTION_9_IMMIGRANT_ENTERING_HOUSE: // arriving
+    case ACTION_1_IMMIGRANT_ARRIVING:
         {
             OZZY_PROFILER_FUNCTION();
             if (direction() <= DIR_FIGURE_NONE) {
@@ -107,7 +108,7 @@ void figure_immigrant::figure_action() {
                 }
             }
 
-            do_gotobuilding(home, true, TERRAIN_USAGE_ANY, ACTION_3_IMMIGRANT_ENTERING_HOUSE, ACTION_8_RECALCULATE);
+            do_gotobuilding(home, true, TERRAIN_USAGE_ANY, ACTION_2_IMMIGRANT_ENTERING_HOUSE, ACTION_8_RECALCULATE);
             const bool isfloodplain = map_terrain_is(tile(), TERRAIN_FLOODPLAIN);
             if (isfloodplain) {
                 map_set_floodplain_growth(tile().grid_offset(), 0);
@@ -131,7 +132,7 @@ void figure_immigrant::figure_action() {
         }
         break;
 
-    case ACTION_3_IMMIGRANT_ENTERING_HOUSE:
+    case ACTION_2_IMMIGRANT_ENTERING_HOUSE:
         if (do_enterbuilding(false, home)) {
             building_house *house = home->dcast_house();
             if (house && house->population_room() > 0) {
@@ -152,7 +153,7 @@ void figure_immigrant::figure_before_action() {
         return;
     }
     if (b_imm->type == BUILDING_BURNING_RUIN) {
-        advance_action(ACTION_1_IMMIGRANT_CREATED);
+        advance_action(ACTION_0_IMMIGRANT_CREATED);
         return;
     }
 
@@ -169,8 +170,8 @@ void figure_immigrant::update_animation() {
 
     int dir = base.figure_image_direction();
     switch (action_state()) {
-    case ACTION_2_IMMIGRANT_ARRIVING:
-    case ACTION_6_IMMIGRANT_LEAVING:
+    case ACTION_1_IMMIGRANT_ARRIVING:
+    case ACTION_3_IMMIGRANT_LEAVING:
         base.cart_image_id = anim(animkeys().cart).first_img() + dir;
         set_cart_offset((dir + 4) % 8);
         break;
@@ -184,11 +185,6 @@ bool figure_immigrant::can_move_by_water() const {
 
 figure_sound_t figure_immigrant::get_sound_reaction(xstring key) const {
     return current_params().sounds[key];
-}
-
-sound_key figure_immigrant::phrase_key() const {
-    svector<sound_key, 10> keys = {"immigrant_im_new_here", "immigrant_heard_there_is_a_job_here", "immigrant_city_has_plenty_of_food"};
-    return keys[rand() % keys.size()];
 }
 
 void figure_immigrant::debug_show_properties() {

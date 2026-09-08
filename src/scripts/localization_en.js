@@ -1103,6 +1103,15 @@ localization_en = [
   { key: "#immigrant_im_new_here", text: "I'm new here.  I wonder what the city will offer to a person like me." }
   { key: "#immigrant_heard_there_is_a_job_here", text: "I heard there is a job here for anyone who wants one." }
   { key: "#immigrant_city_has_plenty_of_food", text: "People say that this city has plenty of food to go around." }
+  { key: "#immigrant_disease_risk", text: "Sickness in the streets? I hoped this city would be healthier." }
+  { key: "#immigrant_city_have_no_army", text: "No forts? I left danger behind — or so I thought." }
+  { key: "#immigrant_need_workers", text: "So many empty workshops. Good — that means work for me." }
+  { key: "#immigrant_gods_are_angry", text: "Even the gods seem restless. Bad omen for a newcomer." }
+  { key: "#immigrant_city_is_bad", text: "Pharaoh's favour feels thin. Did I come to the wrong city?" }
+  { key: "#immigrant_much_unemployment", text: "Crowds of idle folk. Will there still be a place for me?" }
+  { key: "#immigrant_low_entertainment", text: "No festivals for ages. A dull welcome for new arrivals." }
+  { key: "#immigrant_city_is_good", text: "This looks like a fine place to start anew!" }
+  { key: "#immigrant_city_is_amazing", text: "What a city! I am glad I made the journey." }
 
   { key: "#emigrant_no_job_in_city", text: "I can't find a job here. I will look elsewhere." }
   { key: "#emigrant_no_food_in_city", text: "There's not enough food for me to eat. I'm moving out of this desert!" }
@@ -1151,6 +1160,17 @@ localization_en = [
 
   { key: "#homeless_i_was_kicked_out_of_my_home", text: "I've been kicked out of my home, and through no fault of my own." }
   { key: "#homeless_i_cant_find_a_place_to_live", text: "I can't find a place to live!" }
+  { key: "#homeless_no_job_in_city", text: "No work and no roof. This city has nothing for me." }
+  { key: "#homeless_no_food_in_city", text: "I'm starving and homeless. I can't stay here." }
+  { key: "#homeless_tax_too_high", text: "Taxes took my house. Now they want what's left of my dignity." }
+  { key: "#homeless_salary_too_low", text: "Wages here won't even buy me a corner to sleep in." }
+  { key: "#homeless_found_new_house", text: "A house with room! Maybe my luck is turning." }
+  { key: "#homeless_no_house_for_me", text: "There's nowhere left for me in this city. I'm leaving." }
+  { key: "#homeless_need_workers", text: "They need workers, yet I sleep in the street. Make it make sense." }
+  { key: "#homeless_city_is_bad", text: "Pharaoh's favour is ash. No wonder I lost my home." }
+  { key: "#homeless_gods_are_angry", text: "The gods are angry. First the temples suffer — then people like me." }
+  { key: "#homeless_city_bad_reputation", text: "This city's reputation is as empty as my bedroll." }
+  { key: "#homeless_city_is_good", text: "The city seems fine for others. I just need a door that opens for me." }
 
   { key: "#marketboy_these_baskets_are_too_heavy", text: "These baskets are too heavy for a little kid like me!" }
   { key: "#marketboy_bossy_lady_makes_me_carry_goods", text: "That bossy lady makes me carry goods all day!" }
@@ -1385,7 +1405,14 @@ localization_en = [
 
   { key: "#malaria_problem", text: "(Not used)" }
   { key: "#malaria_not_a_problem", text: "Malaria doesn't seem to be a problem here." }
-  { key: "#malaria_outbreak_could_strike", text: "An outbreak of malaria could strike if something isn't done." } 
+  { key: "#malaria_outbreak_could_strike", text: "An outbreak of malaria could strike if something isn't done." }
+
+  { key: "#herbalist_no_food_in_city", text: "Empty granaries? Hard to heal when the city starves." }
+  { key: "#herbalist_city_have_no_army", text: "No forts? One raid and my herbs are ash." }
+  { key: "#herbalist_gods_are_angry", text: "The gods look angry. Even good remedies fail under their gaze." }
+  { key: "#herbalist_low_entertainment", text: "No festivals for ages. Even herbalists need a day off the rounds." }
+  { key: "#herbalist_city_is_good", text: "This city is healthy enough! Short walks and strong houses." }
+  { key: "#herbalist_city_is_amazing", text: "Best city I've tended. These streets almost heal themselves!" }
 
   { key: "#policeman_desease_can_start_at_any_moment", text: "With so many people so weak and sickly, I fear for the future." }
   { key: "#policeman_no_food_in_city", text: "I haven't eaten in so long, even I'm considering stealing food!" }

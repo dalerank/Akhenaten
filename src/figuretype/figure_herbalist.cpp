@@ -21,7 +21,6 @@ void figure_herbalist::figure_before_action() {
 
 void figure_herbalist::figure_action() {
     OZZY_PROFILER_FUNCTION();
-    //    building *b = building_get(building_id);
     switch (action_state()) {
     default:
         advance_action(ACTION_5_HERBALIST_RETURNING);
@@ -53,18 +52,7 @@ figure_sound_t figure_herbalist::get_sound_reaction(xstring key) const {
     return current_params().sounds[key];
 }
 
-sound_key figure_herbalist::phrase_key() const {
-    if (runtime_data().see_low_health > 0) {
-        return "have_malaria_risk_here";
-    } else {
-        return "no_threat_malaria_here";
-    }
-
-    return {};
-}
-
 int figure_herbalist::provide_service() {
-    int minmax = 0;
     int houses_serviced = figure_provide_service(tile(), &base, [&] (building *b, figure*) {
         runtime_data().see_low_health += (b->common_health < 20) ? 1 : 0;
         b->common_health = std::max<uint8_t>(b->common_health, 50);
@@ -99,7 +87,9 @@ int figure_herbalist::provide_service() {
         }
     });
 
-    // Help: herbalists remove plagued citizens they meet.
+    // Expose malaria sightings to JS setup_phrase (same field constable uses for crime).
+    base.min_max_seen = runtime_data().see_low_health;
+
     figure_plagued_citizen::cure_nearby(tile(), 1);
 
     return houses_serviced;

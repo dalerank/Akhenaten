@@ -408,6 +408,15 @@ localization_ru = [
     { key: "#immigrant_im_new_here", text: "Я здесь новенький. Интересно, что город предложит такому человеку, как я." }
     { key: "#immigrant_heard_there_is_a_job_here", text: "Я слышал, здесь есть работа для любого, кто её хочет." }
     { key: "#immigrant_city_has_plenty_of_food", text: "Люди говорят, что в этом городе много еды на всех." }
+    { key: "#immigrant_disease_risk", text: "На улицах хворь? Я надеялся, что город здоровее." }
+    { key: "#immigrant_city_have_no_army", text: "Нет фортов? Я ушёл от опасности — или так казалось." }
+    { key: "#immigrant_need_workers", text: "Столько пустых мастерских. Хорошо — значит, будет работа." }
+    { key: "#immigrant_gods_are_angry", text: "Даже боги беспокойны. Плохая примета для пришельца." }
+    { key: "#immigrant_city_is_bad", text: "Милость фараона тонка. Не в тот ли город я пришёл?" }
+    { key: "#immigrant_much_unemployment", text: "Толпы праздных. Останется ли место и для меня?" }
+    { key: "#immigrant_low_entertainment", text: "Праздников давно не было. Скучная встреча для новоприбывших." }
+    { key: "#immigrant_city_is_good", text: "Похоже, здесь можно начать заново!" }
+    { key: "#immigrant_city_is_amazing", text: "Какой город! Рад, что решился на этот путь." }
     { key: "#immigration_people_wont_come", text: "Люди не хотят приходить в ваш город" }
 
     { key: "#emigrant_no_job_in_city", text: "Я не могу найти здесь работу. Я буду искать в другом месте." }
@@ -505,6 +514,17 @@ localization_ru = [
 
     { key: "#homeless_i_was_kicked_out_of_my_home", text: "Меня выгнали из моего дома, и это не моя вина." }
     { key: "#homeless_i_cant_find_a_place_to_live", text: "Я не могу найти место для жизни!" }
+    { key: "#homeless_no_job_in_city", text: "Нет работы и нет крыши. Этому городу я не нужен." }
+    { key: "#homeless_no_food_in_city", text: "Я голоден и бездомный. Здесь оставаться нельзя." }
+    { key: "#homeless_tax_too_high", text: "Налоги отняли мой дом. Теперь хотят и остатки достоинства." }
+    { key: "#homeless_salary_too_low", text: "Здешняя плата не купит даже угол, где переночевать." }
+    { key: "#homeless_found_new_house", text: "Дом со свободным местом! Может, удача повернулась." }
+    { key: "#homeless_no_house_for_me", text: "В этом городе для меня больше нет места. Ухожу." }
+    { key: "#homeless_need_workers", text: "Работники нужны, а я сплю на улице. Объясните логику." }
+    { key: "#homeless_city_is_bad", text: "Милость фараона — пепел. Неудивительно, что я лишился дома." }
+    { key: "#homeless_gods_are_angry", text: "Боги сердятся. Сначала страдают храмы — потом такие, как я." }
+    { key: "#homeless_city_bad_reputation", text: "Репутация города пуста, как мой спальный мешок." }
+    { key: "#homeless_city_is_good", text: "Город для других хорош. Мне бы только дверь, которая откроется." }
 
     { key: "#marketboy_these_baskets_are_too_heavy", text: "Эти корзины слишком тяжёлые для такого маленького ребёнка, как я!" }
     { key: "#marketboy_bossy_lady_makes_me_carry_goods", text: "Эта властная дама заставляет меня таскать товары весь день!" }
@@ -749,6 +769,13 @@ localization_ru = [
     { key: "#malaria_problem", text: "(Не используется)" }
     { key: "#malaria_not_a_problem", text: "Малярия, похоже, здесь не проблема." }
     { key: "#malaria_outbreak_could_strike", text: "Вспышка малярии может произойти, если ничего не сделать." }
+
+    { key: "#herbalist_no_food_in_city", text: "Пустые амбары? Трудно лечить, когда город голодает." }
+    { key: "#herbalist_city_have_no_army", text: "Нет фортов? Один набег — и мои травы станут пеплом." }
+    { key: "#herbalist_gods_are_angry", text: "Боги злятся. Даже хорошие снадобья не помогают под их взглядом." }
+    { key: "#herbalist_low_entertainment", text: "Праздников давно не было. Даже травникам нужен день без обхода." }
+    { key: "#herbalist_city_is_good", text: "В этом городе достаточно здорово! Короткие обходы и крепкие дома." }
+    { key: "#herbalist_city_is_amazing", text: "Лучший город, где я лечил. Эти улицы почти сами исцеляются!" }
 
     { key: "#policeman_desease_can_start_at_any_moment", text: "С таким количеством слабых и больных людей я боюсь за будущее." }
     { key: "#policeman_no_food_in_city", text: "Я так долго не ел, что даже я подумываю о краже еды!" }

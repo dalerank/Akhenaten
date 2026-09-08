@@ -34,7 +34,5 @@ public:
             (base.home_building_id == b->id || runtime_data().adv_home_building_id == b->id); 
     }
 
-    virtual sound_key phrase_key() const override;
-
     int find_closest_house_with_room(tile2i tile);
 };

@@ -36,6 +36,9 @@ import figure.flotsam
 import figure.frog
 import figure.funeral_walker
 import figure.governor
+import figure.herbalist
+import figure.homeless
+import figure.immigrant
 
 figure_water_carrier {
   overlay : OVERLAY_WATER
@@ -483,27 +486,6 @@ figure_hippo = {
 	max_damage: 250
 	attack_value: 12
 	terrain_usage : TERRAIN_USAGE_AMPHIBIA
-}
-
-figure_immigrant {
-	animations {
-		_pack { pack:PACK_SPR_MAIN }
-		walk { id: 14, max_frames:12 }
-		death { id: 15, max_frames:8, loop:false }
-		swim { id:138, max_frames:4, duration:4 }
-   	    cart { id:52, max_frames:1 }
-   	    big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_IMMIGRANT }
-	}
-
-	sounds {
-		immigrant_im_new_here { sound:"immigrant_e01.wav"}
-		immigrant_heard_there_is_a_job_here { sound:"immigrant_e02.wav"}
-		immigrant_city_has_plenty_of_food { sound:"immigrant_e03.wav"}
-	}
-
-	category: figure_category_citizen
-	max_damage: 20
-	terrain_usage: TERRAIN_USAGE_ANIMAL
 }
 
 figure_hunter_arrow {
@@ -1084,18 +1066,6 @@ figure_trade_caravan {
 	capacity_random : 701
 }
 
-figure_homeless = {
-	animations : {
-		walk : { pack: PACK_SPR_MAIN, id: 12, max_frames:12 }
-		death : { pack: PACK_SPR_MAIN, id: 13, max_frames:8, loop:false }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_HOMELESS }
-	}
-
-  category: figure_category_citizen
-	max_damage : 20
-	terrain_usage : TERRAIN_USAGE_PREFER_ROADS
-}
-
 // Plague carrier — SprMain GROUP_FIGURE_DESEASED (203/205).
 // TEMP: same strip ids as figure_drunkard (art collision; follow-up after pak dump).
 figure_plagued_citizen {
@@ -1194,26 +1164,6 @@ figure_librarian {
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length : 384
 	permission : epermission_education
-}
-
-figure_herbalist {
-  overlay : OVERLAY_APOTHECARY
-	animations {
-		walk { pack:PACK_SPR_MAIN, id:180, max_frames:12 }
-		death { pack:PACK_SPR_MAIN, id:181, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_HERBALIST }
-	}
-
-	sounds {
-		malaria_not_a_problem {sound:"apothecary_e02.wav", group: 241, text:1}
-        malaria_outbreak_could_strike {sound:"apothecary_e03.wav", group: 241, text:2}
-	}
-
-    category: figure_category_citizen
-	max_damage : 10
-	terrain_usage : TERRAIN_USAGE_ROADS
-	max_roam_length : 384
-	permission : epermission_medicine
 }
 
 figure_soldier_infantry {
