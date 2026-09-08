@@ -1169,27 +1169,6 @@ figure_soldier_charioteer {
 	terrain_usage : TERRAIN_USAGE_ANY
 }
 
-figure_market_trader = {
-  overlay : OVERLAY_BAZAAR_ACCESS
-	animations {
-		walk {  pack:PACK_SPR_MAIN, id:18, max_frames:12 }
-		death {  pack:PACK_SPR_MAIN, id:19, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_MARKET_TRADER }
-	}
-
-	sounds {
-		goods_are_finished : {sound:"mkt_seller_e01.wav" }
- 	  	we_are_selling_goods : {sound:"mkt_seller_e02.wav" }
-	}
-
- 	 category: figure_category_citizen
-	max_damage : 10
-	terrain_usage : TERRAIN_USAGE_ROADS
-	max_roam_length : 384
-	permission : epermission_market
-	record_path : true
-}
-
 figure_reed_gatherer {
 	animations {
 		walk { pack:PACK_SPR_MAIN, id:37, max_frames:12 }
@@ -1259,4 +1238,5 @@ figure_tax_collector {
 	max_damage : 20
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length : 512
-	permission : e
+	permission : epermission_tax_collector
+}
